@@ -11,7 +11,7 @@ public struct TME : IFlatbufferObject
 {
   private Table __p;
   public ByteBuffer ByteBuffer { get { return __p.bb; } }
-  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_24_3_25(); }
+  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_25_12_19(); }
   public static TME GetRootAsTME(ByteBuffer _bb) { return GetRootAsTME(_bb, new TME()); }
   public static TME GetRootAsTME(ByteBuffer _bb, TME obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
   public static bool TMEBufferHasIdentifier(ByteBuffer _bb) { return Table.__has_identifier(_bb, "$TME"); }

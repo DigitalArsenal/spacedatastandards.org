@@ -51,6 +51,10 @@ func (rcv *CustomAlgorithm) NAME() []byte {
 	return nil
 }
 
+func (rcv *CustomAlgorithm) Name() []byte {
+	return rcv.NAME()
+}
+
 /// Algorithm name
 /// Short description
 func (rcv *CustomAlgorithm) SHORT_DESCRIPTION() []byte {
@@ -59,6 +63,10 @@ func (rcv *CustomAlgorithm) SHORT_DESCRIPTION() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *CustomAlgorithm) ShortDescription() []byte {
+	return rcv.SHORT_DESCRIPTION()
 }
 
 /// Short description
@@ -71,6 +79,10 @@ func (rcv *CustomAlgorithm) LONG_DESCRIPTION() []byte {
 	return nil
 }
 
+func (rcv *CustomAlgorithm) LongDescription() []byte {
+	return rcv.LONG_DESCRIPTION()
+}
+
 /// Long description
 /// Programming language
 func (rcv *CustomAlgorithm) LANGUAGE() []byte {
@@ -79,6 +91,10 @@ func (rcv *CustomAlgorithm) LANGUAGE() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *CustomAlgorithm) Language() []byte {
+	return rcv.LANGUAGE()
 }
 
 /// Programming language
@@ -91,6 +107,10 @@ func (rcv *CustomAlgorithm) ALGORITHM_TEXT() []byte {
 	return nil
 }
 
+func (rcv *CustomAlgorithm) AlgorithmText() []byte {
+	return rcv.ALGORITHM_TEXT()
+}
+
 /// Algorithm text/code
 /// External algorithm reference
 func (rcv *CustomAlgorithm) EXTERNAL_ALGORITHM_REF() []byte {
@@ -101,6 +121,10 @@ func (rcv *CustomAlgorithm) EXTERNAL_ALGORITHM_REF() []byte {
 	return nil
 }
 
+func (rcv *CustomAlgorithm) ExternalAlgorithmRef() []byte {
+	return rcv.EXTERNAL_ALGORITHM_REF()
+}
+
 /// External algorithm reference
 /// Input bindings
 func (rcv *CustomAlgorithm) INPUTS(obj *AlgorithmInput, j int) bool {
@@ -109,10 +133,17 @@ func (rcv *CustomAlgorithm) INPUTS(obj *AlgorithmInput, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(AlgorithmInput)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *CustomAlgorithm) Inputs(obj *AlgorithmInput, j int) bool {
+	return rcv.INPUTS(obj, j)
 }
 
 func (rcv *CustomAlgorithm) INPUTSLength() int {
@@ -123,6 +154,10 @@ func (rcv *CustomAlgorithm) INPUTSLength() int {
 	return 0
 }
 
+func (rcv *CustomAlgorithm) InputsLength() int {
+	return rcv.INPUTSLength()
+}
+
 /// Input bindings
 /// Output bindings
 func (rcv *CustomAlgorithm) OUTPUTS(obj *AlgorithmOutput, j int) bool {
@@ -131,10 +166,17 @@ func (rcv *CustomAlgorithm) OUTPUTS(obj *AlgorithmOutput, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(AlgorithmOutput)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *CustomAlgorithm) Outputs(obj *AlgorithmOutput, j int) bool {
+	return rcv.OUTPUTS(obj, j)
 }
 
 func (rcv *CustomAlgorithm) OUTPUTSLength() int {
@@ -145,6 +187,10 @@ func (rcv *CustomAlgorithm) OUTPUTSLength() int {
 	return 0
 }
 
+func (rcv *CustomAlgorithm) OutputsLength() int {
+	return rcv.OUTPUTSLength()
+}
+
 /// Output bindings
 /// Trigger conditions
 func (rcv *CustomAlgorithm) TRIGGERS(obj *AlgorithmTrigger, j int) bool {
@@ -153,10 +199,17 @@ func (rcv *CustomAlgorithm) TRIGGERS(obj *AlgorithmTrigger, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(AlgorithmTrigger)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *CustomAlgorithm) Triggers(obj *AlgorithmTrigger, j int) bool {
+	return rcv.TRIGGERS(obj, j)
 }
 
 func (rcv *CustomAlgorithm) TRIGGERSLength() int {
@@ -167,6 +220,10 @@ func (rcv *CustomAlgorithm) TRIGGERSLength() int {
 	return 0
 }
 
+func (rcv *CustomAlgorithm) TriggersLength() int {
+	return rcv.TRIGGERSLength()
+}
+
 /// Trigger conditions
 func CustomAlgorithmStart(builder *flatbuffers.Builder) {
 	builder.StartObject(9)
@@ -174,38 +231,74 @@ func CustomAlgorithmStart(builder *flatbuffers.Builder) {
 func CustomAlgorithmAddNAME(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(NAME), 0)
 }
+func CustomAlgorithmAddName(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
+	CustomAlgorithmAddNAME(builder, NAME)
+}
 func CustomAlgorithmAddSHORT_DESCRIPTION(builder *flatbuffers.Builder, SHORT_DESCRIPTION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(SHORT_DESCRIPTION), 0)
+}
+func CustomAlgorithmAddShortDescription(builder *flatbuffers.Builder, SHORT_DESCRIPTION flatbuffers.UOffsetT) {
+	CustomAlgorithmAddSHORT_DESCRIPTION(builder, SHORT_DESCRIPTION)
 }
 func CustomAlgorithmAddLONG_DESCRIPTION(builder *flatbuffers.Builder, LONG_DESCRIPTION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(LONG_DESCRIPTION), 0)
 }
+func CustomAlgorithmAddLongDescription(builder *flatbuffers.Builder, LONG_DESCRIPTION flatbuffers.UOffsetT) {
+	CustomAlgorithmAddLONG_DESCRIPTION(builder, LONG_DESCRIPTION)
+}
 func CustomAlgorithmAddLANGUAGE(builder *flatbuffers.Builder, LANGUAGE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(LANGUAGE), 0)
+}
+func CustomAlgorithmAddLanguage(builder *flatbuffers.Builder, LANGUAGE flatbuffers.UOffsetT) {
+	CustomAlgorithmAddLANGUAGE(builder, LANGUAGE)
 }
 func CustomAlgorithmAddALGORITHM_TEXT(builder *flatbuffers.Builder, ALGORITHM_TEXT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(ALGORITHM_TEXT), 0)
 }
+func CustomAlgorithmAddAlgorithmText(builder *flatbuffers.Builder, ALGORITHM_TEXT flatbuffers.UOffsetT) {
+	CustomAlgorithmAddALGORITHM_TEXT(builder, ALGORITHM_TEXT)
+}
 func CustomAlgorithmAddEXTERNAL_ALGORITHM_REF(builder *flatbuffers.Builder, EXTERNAL_ALGORITHM_REF flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(EXTERNAL_ALGORITHM_REF), 0)
+}
+func CustomAlgorithmAddExternalAlgorithmRef(builder *flatbuffers.Builder, EXTERNAL_ALGORITHM_REF flatbuffers.UOffsetT) {
+	CustomAlgorithmAddEXTERNAL_ALGORITHM_REF(builder, EXTERNAL_ALGORITHM_REF)
 }
 func CustomAlgorithmAddINPUTS(builder *flatbuffers.Builder, INPUTS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(INPUTS), 0)
 }
+func CustomAlgorithmAddInputs(builder *flatbuffers.Builder, INPUTS flatbuffers.UOffsetT) {
+	CustomAlgorithmAddINPUTS(builder, INPUTS)
+}
 func CustomAlgorithmStartINPUTSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func CustomAlgorithmStartInputsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return CustomAlgorithmStartINPUTSVector(builder, numElems)
 }
 func CustomAlgorithmAddOUTPUTS(builder *flatbuffers.Builder, OUTPUTS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(OUTPUTS), 0)
 }
+func CustomAlgorithmAddOutputs(builder *flatbuffers.Builder, OUTPUTS flatbuffers.UOffsetT) {
+	CustomAlgorithmAddOUTPUTS(builder, OUTPUTS)
+}
 func CustomAlgorithmStartOUTPUTSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func CustomAlgorithmStartOutputsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return CustomAlgorithmStartOUTPUTSVector(builder, numElems)
 }
 func CustomAlgorithmAddTRIGGERS(builder *flatbuffers.Builder, TRIGGERS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(TRIGGERS), 0)
 }
+func CustomAlgorithmAddTriggers(builder *flatbuffers.Builder, TRIGGERS flatbuffers.UOffsetT) {
+	CustomAlgorithmAddTRIGGERS(builder, TRIGGERS)
+}
 func CustomAlgorithmStartTRIGGERSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func CustomAlgorithmStartTriggersVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return CustomAlgorithmStartTRIGGERSVector(builder, numElems)
 }
 func CustomAlgorithmEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

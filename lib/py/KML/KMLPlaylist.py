@@ -73,6 +73,12 @@ def KMLPlaylistStartPRIMITIVESVector(builder, numElems):
 def StartPRIMITIVESVector(builder, numElems):
     return KMLPlaylistStartPRIMITIVESVector(builder, numElems)
 
+def KMLPlaylistCreatePRIMITIVESVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreatePRIMITIVESVector(builder, data):
+    KMLPlaylistCreatePRIMITIVESVector(builder, data)
+
 def KMLPlaylistEnd(builder):
     return builder.EndObject()
 
@@ -88,14 +94,17 @@ except:
 class KMLPlaylistT(object):
 
     # KMLPlaylistT
-    def __init__(self):
-        self.PRIMITIVES = None  # type: List[KMLTourPrimitive.KMLTourPrimitiveT]
+    def __init__(
+        self,
+        PRIMITIVES = None,
+    ):
+        self.PRIMITIVES = PRIMITIVES  # type: Optional[List[KMLTourPrimitive.KMLTourPrimitiveT]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        kmlplaylist = KMLPlaylist()
-        kmlplaylist.Init(buf, pos)
-        return cls.InitFromObj(kmlplaylist)
+        tmpKmlplaylist = KMLPlaylist()
+        tmpKmlplaylist.Init(buf, pos)
+        return cls.InitFromObj(tmpKmlplaylist)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -103,22 +112,22 @@ class KMLPlaylistT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, kmlplaylist):
+    def InitFromObj(cls, tmpKmlplaylist):
         x = KMLPlaylistT()
-        x._UnPack(kmlplaylist)
+        x._UnPack(tmpKmlplaylist)
         return x
 
     # KMLPlaylistT
-    def _UnPack(self, kmlplaylist):
-        if kmlplaylist is None:
+    def _UnPack(self, KMLPlaylist):
+        if KMLPlaylist is None:
             return
-        if not kmlplaylist.PRIMITIVESIsNone():
+        if not KMLPlaylist.PRIMITIVESIsNone():
             self.PRIMITIVES = []
-            for i in range(kmlplaylist.PRIMITIVESLength()):
-                if kmlplaylist.PRIMITIVES(i) is None:
+            for i in range(KMLPlaylist.PRIMITIVESLength()):
+                if KMLPlaylist.PRIMITIVES(i) is None:
                     self.PRIMITIVES.append(None)
                 else:
-                    kMLTourPrimitive_ = KMLTourPrimitive.KMLTourPrimitiveT.InitFromObj(kmlplaylist.PRIMITIVES(i))
+                    kMLTourPrimitive_ = KMLTourPrimitive.KMLTourPrimitiveT.InitFromObj(KMLPlaylist.PRIMITIVES(i))
                     self.PRIMITIVES.append(kMLTourPrimitive_)
 
     # KMLPlaylistT
@@ -134,5 +143,5 @@ class KMLPlaylistT(object):
         KMLPlaylistStart(builder)
         if self.PRIMITIVES is not None:
             KMLPlaylistAddPRIMITIVES(builder, PRIMITIVES)
-        kmlplaylist = KMLPlaylistEnd(builder)
-        return kmlplaylist
+        KMLPlaylist = KMLPlaylistEnd(builder)
+        return KMLPlaylist

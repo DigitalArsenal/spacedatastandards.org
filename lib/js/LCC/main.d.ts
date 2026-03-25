@@ -1,3 +1,3 @@
-export { LCC, LCCT } from './LCC.js';
-export { legacyCountryCode } from './legacyCountryCode.js';
+export * from './LCC.js';
+export * from './legacyCountryCode.js';
 //# sourceMappingURL=main.d.ts.map

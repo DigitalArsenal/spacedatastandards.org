@@ -2,4 +2,14 @@
 
 # namespace: 
 
-# NOTE orbitType.py does not declare any structs or enums
+class orbitType(object):
+    # 0
+    ORBIT = 0
+    # 1
+    LANDING = 1
+    # 2
+    IMPACT = 2
+    # 3
+    DOCKED = 3
+    # 4
+    ROUNDTRIP = 4

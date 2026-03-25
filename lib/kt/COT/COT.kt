@@ -32,7 +32,7 @@ class COT : Table() {
     /**
      * Schema version
      */
-    val VERSION : String?
+    val version : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class COT : Table() {
                 null
             }
         }
-    val VERSIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun VERSIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val versionAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun versionInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Globally unique event identifier
      */
-    val UID : String?
+    val uid : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -55,13 +55,13 @@ class COT : Table() {
                 null
             }
         }
-    val UIDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun UIDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val uidAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun uidInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * CoT event type (dot-delimited MIL-STD-2525/APP-6 hierarchy)
      * e.g. "a-f-G-U-C" = atom, friend, Ground, Unit, Combat
      */
-    val TYPE : String?
+    val type : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -70,12 +70,12 @@ class COT : Table() {
                 null
             }
         }
-    val TYPEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun TYPEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val typeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun typeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
     /**
      * How the event was generated (e.g. "m-g" = machine GPS)
      */
-    val HOW : Byte
+    val how : Byte
         get() {
             val o = __offset(10)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -83,7 +83,7 @@ class COT : Table() {
     /**
      * Time the event was generated (ISO 8601)
      */
-    val TIME : String?
+    val time : String?
         get() {
             val o = __offset(12)
             return if (o != 0) {
@@ -92,12 +92,12 @@ class COT : Table() {
                 null
             }
         }
-    val TIMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
-    fun TIMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
+    val timeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(12, 1)
+    fun timeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 12, 1)
     /**
      * Time the event information was valid (ISO 8601)
      */
-    val START : String?
+    val start : String?
         get() {
             val o = __offset(14)
             return if (o != 0) {
@@ -106,12 +106,12 @@ class COT : Table() {
                 null
             }
         }
-    val STARTAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(14, 1)
-    fun STARTInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 14, 1)
+    val startAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(14, 1)
+    fun startInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 14, 1)
     /**
      * Time the event information is no longer valid (ISO 8601)
      */
-    val STALE : String?
+    val stale : String?
         get() {
             val o = __offset(16)
             return if (o != 0) {
@@ -120,12 +120,12 @@ class COT : Table() {
                 null
             }
         }
-    val STALEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(16, 1)
-    fun STALEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 16, 1)
+    val staleAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(16, 1)
+    fun staleInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 16, 1)
     /**
      * Access control marking
      */
-    val ACCESS : String?
+    val access : String?
         get() {
             val o = __offset(18)
             return if (o != 0) {
@@ -134,12 +134,12 @@ class COT : Table() {
                 null
             }
         }
-    val ACCESSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(18, 1)
-    fun ACCESSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 18, 1)
+    val accessAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(18, 1)
+    fun accessInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 18, 1)
     /**
      * Quality of service
      */
-    val QOS : String?
+    val qos : String?
         get() {
             val o = __offset(20)
             return if (o != 0) {
@@ -148,12 +148,12 @@ class COT : Table() {
                 null
             }
         }
-    val QOSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(20, 1)
-    fun QOSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 20, 1)
+    val qosAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(20, 1)
+    fun qosInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 20, 1)
     /**
      * Operational status
      */
-    val OPEX : String?
+    val opex : String?
         get() {
             val o = __offset(22)
             return if (o != 0) {
@@ -162,13 +162,13 @@ class COT : Table() {
                 null
             }
         }
-    val OPEXAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(22, 1)
-    fun OPEXInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 22, 1)
+    val opexAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(22, 1)
+    fun opexInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 22, 1)
     /**
      * Point location
      */
-    val POINT : COTPoint? get() = POINT(COTPoint())
-    fun POINT(obj: COTPoint) : COTPoint? {
+    val point : COTPoint? get() = point(COTPoint())
+    fun point(obj: COTPoint) : COTPoint? {
         val o = __offset(24)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -179,8 +179,8 @@ class COT : Table() {
     /**
      * Detailed event information
      */
-    val DETAIL : COTDetail? get() = DETAIL(COTDetail())
-    fun DETAIL(obj: COTDetail) : COTDetail? {
+    val detail : COTDetail? get() = detail(COTDetail())
+    fun detail(obj: COTDetail) : COTDetail? {
         val o = __offset(26)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -189,42 +189,42 @@ class COT : Table() {
         }
     }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsCOT(_bb: ByteBuffer): COT = getRootAsCOT(_bb, COT())
         fun getRootAsCOT(_bb: ByteBuffer, obj: COT): COT {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun COTBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$COT")
-        fun createCOT(builder: FlatBufferBuilder, VERSIONOffset: Int, UIDOffset: Int, TYPEOffset: Int, HOW: Byte, TIMEOffset: Int, STARTOffset: Int, STALEOffset: Int, ACCESSOffset: Int, QOSOffset: Int, OPEXOffset: Int, POINTOffset: Int, DETAILOffset: Int) : Int {
+        fun createCOT(builder: FlatBufferBuilder, versionOffset: Int, uidOffset: Int, typeOffset: Int, how: Byte, timeOffset: Int, startOffset: Int, staleOffset: Int, accessOffset: Int, qosOffset: Int, opexOffset: Int, pointOffset: Int, detailOffset: Int) : Int {
             builder.startTable(12)
-            addDETAIL(builder, DETAILOffset)
-            addPOINT(builder, POINTOffset)
-            addOPEX(builder, OPEXOffset)
-            addQOS(builder, QOSOffset)
-            addACCESS(builder, ACCESSOffset)
-            addSTALE(builder, STALEOffset)
-            addSTART(builder, STARTOffset)
-            addTIME(builder, TIMEOffset)
-            addTYPE(builder, TYPEOffset)
-            addUID(builder, UIDOffset)
-            addVERSION(builder, VERSIONOffset)
-            addHOW(builder, HOW)
+            addDETAIL(builder, detailOffset)
+            addPOINT(builder, pointOffset)
+            addOPEX(builder, opexOffset)
+            addQOS(builder, qosOffset)
+            addACCESS(builder, accessOffset)
+            addSTALE(builder, staleOffset)
+            addSTART(builder, startOffset)
+            addTIME(builder, timeOffset)
+            addTYPE(builder, typeOffset)
+            addUID(builder, uidOffset)
+            addVERSION(builder, versionOffset)
+            addHOW(builder, how)
             return endCOT(builder)
         }
         fun startCOT(builder: FlatBufferBuilder) = builder.startTable(12)
-        fun addVERSION(builder: FlatBufferBuilder, VERSION: Int) = builder.addOffset(0, VERSION, 0)
-        fun addUID(builder: FlatBufferBuilder, UID: Int) = builder.addOffset(1, UID, 0)
-        fun addTYPE(builder: FlatBufferBuilder, TYPE: Int) = builder.addOffset(2, TYPE, 0)
-        fun addHOW(builder: FlatBufferBuilder, HOW: Byte) = builder.addByte(3, HOW, 0)
-        fun addTIME(builder: FlatBufferBuilder, TIME: Int) = builder.addOffset(4, TIME, 0)
-        fun addSTART(builder: FlatBufferBuilder, START: Int) = builder.addOffset(5, START, 0)
-        fun addSTALE(builder: FlatBufferBuilder, STALE: Int) = builder.addOffset(6, STALE, 0)
-        fun addACCESS(builder: FlatBufferBuilder, ACCESS: Int) = builder.addOffset(7, ACCESS, 0)
-        fun addQOS(builder: FlatBufferBuilder, QOS: Int) = builder.addOffset(8, QOS, 0)
-        fun addOPEX(builder: FlatBufferBuilder, OPEX: Int) = builder.addOffset(9, OPEX, 0)
-        fun addPOINT(builder: FlatBufferBuilder, POINT: Int) = builder.addOffset(10, POINT, 0)
-        fun addDETAIL(builder: FlatBufferBuilder, DETAIL: Int) = builder.addOffset(11, DETAIL, 0)
+        fun addVERSION(builder: FlatBufferBuilder, version: Int) = builder.addOffset(0, version, 0)
+        fun addUID(builder: FlatBufferBuilder, uid: Int) = builder.addOffset(1, uid, 0)
+        fun addTYPE(builder: FlatBufferBuilder, type: Int) = builder.addOffset(2, type, 0)
+        fun addHOW(builder: FlatBufferBuilder, how: Byte) = builder.addByte(3, how, 0)
+        fun addTIME(builder: FlatBufferBuilder, time: Int) = builder.addOffset(4, time, 0)
+        fun addSTART(builder: FlatBufferBuilder, start: Int) = builder.addOffset(5, start, 0)
+        fun addSTALE(builder: FlatBufferBuilder, stale: Int) = builder.addOffset(6, stale, 0)
+        fun addACCESS(builder: FlatBufferBuilder, access: Int) = builder.addOffset(7, access, 0)
+        fun addQOS(builder: FlatBufferBuilder, qos: Int) = builder.addOffset(8, qos, 0)
+        fun addOPEX(builder: FlatBufferBuilder, opex: Int) = builder.addOffset(9, opex, 0)
+        fun addPOINT(builder: FlatBufferBuilder, point: Int) = builder.addOffset(10, point, 0)
+        fun addDETAIL(builder: FlatBufferBuilder, detail: Int) = builder.addOffset(11, detail, 0)
         fun endCOT(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

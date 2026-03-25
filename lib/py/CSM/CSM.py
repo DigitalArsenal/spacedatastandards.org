@@ -184,22 +184,33 @@ except:
 class CSMT(object):
 
     # CSMT
-    def __init__(self):
-        self.OBJECT_1 = None  # type: Optional[CAT.CATT]
-        self.DSE_1 = 0.0  # type: float
-        self.OBJECT_2 = None  # type: Optional[CAT.CATT]
-        self.DSE_2 = 0.0  # type: float
-        self.TCA = 0.0  # type: float
-        self.TCA_RANGE = 0.0  # type: float
-        self.TCA_RELATIVE_SPEED = 0.0  # type: float
-        self.MAX_PROB = 0.0  # type: float
-        self.DILUTION = 0.0  # type: float
+    def __init__(
+        self,
+        OBJECT_1 = None,
+        DSE_1 = 0.0,
+        OBJECT_2 = None,
+        DSE_2 = 0.0,
+        TCA = 0.0,
+        TCA_RANGE = 0.0,
+        TCA_RELATIVE_SPEED = 0.0,
+        MAX_PROB = 0.0,
+        DILUTION = 0.0,
+    ):
+        self.OBJECT_1 = OBJECT_1  # type: Optional[CAT.CATT]
+        self.DSE_1 = DSE_1  # type: float
+        self.OBJECT_2 = OBJECT_2  # type: Optional[CAT.CATT]
+        self.DSE_2 = DSE_2  # type: float
+        self.TCA = TCA  # type: float
+        self.TCA_RANGE = TCA_RANGE  # type: float
+        self.TCA_RELATIVE_SPEED = TCA_RELATIVE_SPEED  # type: float
+        self.MAX_PROB = MAX_PROB  # type: float
+        self.DILUTION = DILUTION  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        CSM = CSM()
-        CSM.Init(buf, pos)
-        return cls.InitFromObj(CSM)
+        tmpCsm = CSM()
+        tmpCsm.Init(buf, pos)
+        return cls.InitFromObj(tmpCsm)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -207,9 +218,9 @@ class CSMT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, CSM):
+    def InitFromObj(cls, tmpCsm):
         x = CSMT()
-        x._UnPack(CSM)
+        x._UnPack(tmpCsm)
         return x
 
     # CSMT

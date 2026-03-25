@@ -2,4 +2,7 @@
 
 # namespace: 
 
-# NOTE CZMHorizontalOrigin.py does not declare any structs or enums
+class CZMHorizontalOrigin(object):
+    LEFT = 0
+    CENTER = 1
+    RIGHT = 2

@@ -512,6 +512,16 @@ def VCMStartCOVARIANCEVector(builder, numElems):
 def StartCOVARIANCEVector(builder, numElems):
     return VCMStartCOVARIANCEVector(builder, numElems)
 
+def VCMCreateCOVARIANCEVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateCOVARIANCEVector(builder, data):
+    VCMCreateCOVARIANCEVector(builder, data)
+
 def VCMAddUSER_DEFINED_BIP_0044_TYPE(builder, USER_DEFINED_BIP_0044_TYPE):
     builder.PrependUint32Slot(30, USER_DEFINED_BIP_0044_TYPE, 0)
 
@@ -562,48 +572,85 @@ except:
 class VCMT(object):
 
     # VCMT
-    def __init__(self):
-        self.CCSDS_OMM_VERS = 0.0  # type: float
-        self.CREATION_DATE = None  # type: str
-        self.ORIGINATOR = None  # type: str
-        self.OBJECT_NAME = None  # type: str
-        self.OBJECT_ID = None  # type: str
-        self.CENTER_NAME = None  # type: str
-        self.REF_FRAME = None  # type: str
-        self.TIME_SYSTEM = None  # type: str
-        self.STATE_VECTOR = None  # type: Optional[VCMStateVector.VCMStateVectorT]
-        self.KEPLERIAN_ELEMENTS = None  # type: Optional[keplerianElements.keplerianElementsT]
-        self.EQUINOCTIAL_ELEMENTS = None  # type: Optional[equinoctialElements.equinoctialElementsT]
-        self.GM = 0.0  # type: float
-        self.ATMOSPHERIC_MODEL_DATA = None  # type: Optional[VCMAtmosphericModelData.VCMAtmosphericModelDataT]
-        self.PROPAGATOR_SETTINGS = None  # type: Optional[propagatorConfig.propagatorConfigT]
-        self.UVW_SIGMAS = None  # type: Optional[uvwSigmas.uvwSigmasT]
-        self.MASS = 0.0  # type: float
-        self.SOLAR_RAD_AREA = 0.0  # type: float
-        self.SOLAR_RAD_COEFF = 0.0  # type: float
-        self.DRAG_AREA = 0.0  # type: float
-        self.DRAG_COEFF = 0.0  # type: float
-        self.SRP = 0  # type: int
-        self.CLASSIFICATION_TYPE = None  # type: str
-        self.NORAD_CAT_ID = 0  # type: int
-        self.ELEMENT_SET_NO = 0  # type: int
-        self.REV_AT_EPOCH = 0.0  # type: float
-        self.BSTAR = 0.0  # type: float
-        self.MEAN_MOTION_DOT = 0.0  # type: float
-        self.MEAN_MOTION_DDOT = 0.0  # type: float
-        self.COV_REFERENCE_FRAME = None  # type: str
-        self.COVARIANCE = None  # type: List[float]
-        self.USER_DEFINED_BIP_0044_TYPE = 0  # type: int
-        self.USER_DEFINED_OBJECT_DESIGNATOR = None  # type: str
-        self.USER_DEFINED_EARTH_MODEL = None  # type: str
-        self.USER_DEFINED_EPOCH_TIMESTAMP = 0.0  # type: float
-        self.USER_DEFINED_MICROSECONDS = 0.0  # type: float
+    def __init__(
+        self,
+        CCSDS_OMM_VERS = 0.0,
+        CREATION_DATE = None,
+        ORIGINATOR = None,
+        OBJECT_NAME = None,
+        OBJECT_ID = None,
+        CENTER_NAME = None,
+        REF_FRAME = None,
+        TIME_SYSTEM = None,
+        STATE_VECTOR = None,
+        KEPLERIAN_ELEMENTS = None,
+        EQUINOCTIAL_ELEMENTS = None,
+        GM = 0.0,
+        ATMOSPHERIC_MODEL_DATA = None,
+        PROPAGATOR_SETTINGS = None,
+        UVW_SIGMAS = None,
+        MASS = 0.0,
+        SOLAR_RAD_AREA = 0.0,
+        SOLAR_RAD_COEFF = 0.0,
+        DRAG_AREA = 0.0,
+        DRAG_COEFF = 0.0,
+        SRP = 0,
+        CLASSIFICATION_TYPE = None,
+        NORAD_CAT_ID = 0,
+        ELEMENT_SET_NO = 0,
+        REV_AT_EPOCH = 0.0,
+        BSTAR = 0.0,
+        MEAN_MOTION_DOT = 0.0,
+        MEAN_MOTION_DDOT = 0.0,
+        COV_REFERENCE_FRAME = None,
+        COVARIANCE = None,
+        USER_DEFINED_BIP_0044_TYPE = 0,
+        USER_DEFINED_OBJECT_DESIGNATOR = None,
+        USER_DEFINED_EARTH_MODEL = None,
+        USER_DEFINED_EPOCH_TIMESTAMP = 0.0,
+        USER_DEFINED_MICROSECONDS = 0.0,
+    ):
+        self.CCSDS_OMM_VERS = CCSDS_OMM_VERS  # type: float
+        self.CREATION_DATE = CREATION_DATE  # type: Optional[str]
+        self.ORIGINATOR = ORIGINATOR  # type: Optional[str]
+        self.OBJECT_NAME = OBJECT_NAME  # type: Optional[str]
+        self.OBJECT_ID = OBJECT_ID  # type: Optional[str]
+        self.CENTER_NAME = CENTER_NAME  # type: Optional[str]
+        self.REF_FRAME = REF_FRAME  # type: Optional[str]
+        self.TIME_SYSTEM = TIME_SYSTEM  # type: Optional[str]
+        self.STATE_VECTOR = STATE_VECTOR  # type: Optional[VCMStateVector.VCMStateVectorT]
+        self.KEPLERIAN_ELEMENTS = KEPLERIAN_ELEMENTS  # type: Optional[keplerianElements.keplerianElementsT]
+        self.EQUINOCTIAL_ELEMENTS = EQUINOCTIAL_ELEMENTS  # type: Optional[equinoctialElements.equinoctialElementsT]
+        self.GM = GM  # type: float
+        self.ATMOSPHERIC_MODEL_DATA = ATMOSPHERIC_MODEL_DATA  # type: Optional[VCMAtmosphericModelData.VCMAtmosphericModelDataT]
+        self.PROPAGATOR_SETTINGS = PROPAGATOR_SETTINGS  # type: Optional[propagatorConfig.propagatorConfigT]
+        self.UVW_SIGMAS = UVW_SIGMAS  # type: Optional[uvwSigmas.uvwSigmasT]
+        self.MASS = MASS  # type: float
+        self.SOLAR_RAD_AREA = SOLAR_RAD_AREA  # type: float
+        self.SOLAR_RAD_COEFF = SOLAR_RAD_COEFF  # type: float
+        self.DRAG_AREA = DRAG_AREA  # type: float
+        self.DRAG_COEFF = DRAG_COEFF  # type: float
+        self.SRP = SRP  # type: int
+        self.CLASSIFICATION_TYPE = CLASSIFICATION_TYPE  # type: Optional[str]
+        self.NORAD_CAT_ID = NORAD_CAT_ID  # type: int
+        self.ELEMENT_SET_NO = ELEMENT_SET_NO  # type: int
+        self.REV_AT_EPOCH = REV_AT_EPOCH  # type: float
+        self.BSTAR = BSTAR  # type: float
+        self.MEAN_MOTION_DOT = MEAN_MOTION_DOT  # type: float
+        self.MEAN_MOTION_DDOT = MEAN_MOTION_DDOT  # type: float
+        self.COV_REFERENCE_FRAME = COV_REFERENCE_FRAME  # type: Optional[str]
+        self.COVARIANCE = COVARIANCE  # type: Optional[List[float]]
+        self.USER_DEFINED_BIP_0044_TYPE = USER_DEFINED_BIP_0044_TYPE  # type: int
+        self.USER_DEFINED_OBJECT_DESIGNATOR = USER_DEFINED_OBJECT_DESIGNATOR  # type: Optional[str]
+        self.USER_DEFINED_EARTH_MODEL = USER_DEFINED_EARTH_MODEL  # type: Optional[str]
+        self.USER_DEFINED_EPOCH_TIMESTAMP = USER_DEFINED_EPOCH_TIMESTAMP  # type: float
+        self.USER_DEFINED_MICROSECONDS = USER_DEFINED_MICROSECONDS  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        VCM = VCM()
-        VCM.Init(buf, pos)
-        return cls.InitFromObj(VCM)
+        tmpVcm = VCM()
+        tmpVcm.Init(buf, pos)
+        return cls.InitFromObj(tmpVcm)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -611,9 +658,9 @@ class VCMT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, VCM):
+    def InitFromObj(cls, tmpVcm):
         x = VCMT()
-        x._UnPack(VCM)
+        x._UnPack(tmpVcm)
         return x
 
     # VCMT

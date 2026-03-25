@@ -32,7 +32,7 @@ class KMLModel : Table() {
     /**
      * Altitude mode
      */
-    val ALTITUDE_MODE : Byte
+    val altitudeMode : Byte
         get() {
             val o = __offset(4)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -40,7 +40,7 @@ class KMLModel : Table() {
     /**
      * Location longitude
      */
-    val LOCATION_LON : Double
+    val locationLon : Double
         get() {
             val o = __offset(6)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -48,7 +48,7 @@ class KMLModel : Table() {
     /**
      * Location latitude
      */
-    val LOCATION_LAT : Double
+    val locationLat : Double
         get() {
             val o = __offset(8)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -56,7 +56,7 @@ class KMLModel : Table() {
     /**
      * Location altitude
      */
-    val LOCATION_ALT : Double
+    val locationAlt : Double
         get() {
             val o = __offset(10)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -64,7 +64,7 @@ class KMLModel : Table() {
     /**
      * Orientation heading
      */
-    val ORIENTATION_HEADING : Double
+    val orientationHeading : Double
         get() {
             val o = __offset(12)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -72,7 +72,7 @@ class KMLModel : Table() {
     /**
      * Orientation tilt
      */
-    val ORIENTATION_TILT : Double
+    val orientationTilt : Double
         get() {
             val o = __offset(14)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -80,7 +80,7 @@ class KMLModel : Table() {
     /**
      * Orientation roll
      */
-    val ORIENTATION_ROLL : Double
+    val orientationRoll : Double
         get() {
             val o = __offset(16)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -88,7 +88,7 @@ class KMLModel : Table() {
     /**
      * Scale X
      */
-    val SCALE_X : Double
+    val scaleX : Double
         get() {
             val o = __offset(18)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -96,7 +96,7 @@ class KMLModel : Table() {
     /**
      * Scale Y
      */
-    val SCALE_Y : Double
+    val scaleY : Double
         get() {
             val o = __offset(20)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -104,7 +104,7 @@ class KMLModel : Table() {
     /**
      * Scale Z
      */
-    val SCALE_Z : Double
+    val scaleZ : Double
         get() {
             val o = __offset(22)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -112,7 +112,7 @@ class KMLModel : Table() {
     /**
      * Link to 3D model file
      */
-    val LINK_HREF : String?
+    val linkHref : String?
         get() {
             val o = __offset(24)
             return if (o != 0) {
@@ -121,13 +121,13 @@ class KMLModel : Table() {
                 null
             }
         }
-    val LINK_HREFAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(24, 1)
-    fun LINK_HREFInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 24, 1)
+    val linkHrefAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(24, 1)
+    fun linkHrefInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 24, 1)
     /**
      * Resource map aliases
      */
-    fun RESOURCE_MAP(j: Int) : KMLResourceMapAlias? = RESOURCE_MAP(KMLResourceMapAlias(), j)
-    fun RESOURCE_MAP(obj: KMLResourceMapAlias, j: Int) : KMLResourceMapAlias? {
+    fun resourceMap(j: Int) : KMLResourceMapAlias? = resourceMap(KMLResourceMapAlias(), j)
+    fun resourceMap(obj: KMLResourceMapAlias, j: Int) : KMLResourceMapAlias? {
         val o = __offset(26)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -135,46 +135,46 @@ class KMLModel : Table() {
             null
         }
     }
-    val RESOURCE_MAPLength : Int
+    val resourceMapLength : Int
         get() {
             val o = __offset(26); return if (o != 0) __vector_len(o) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsKMLModel(_bb: ByteBuffer): KMLModel = getRootAsKMLModel(_bb, KMLModel())
         fun getRootAsKMLModel(_bb: ByteBuffer, obj: KMLModel): KMLModel {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createKMLModel(builder: FlatBufferBuilder, ALTITUDE_MODE: Byte, LOCATION_LON: Double, LOCATION_LAT: Double, LOCATION_ALT: Double, ORIENTATION_HEADING: Double, ORIENTATION_TILT: Double, ORIENTATION_ROLL: Double, SCALE_X: Double, SCALE_Y: Double, SCALE_Z: Double, LINK_HREFOffset: Int, RESOURCE_MAPOffset: Int) : Int {
+        fun createKMLModel(builder: FlatBufferBuilder, altitudeMode: Byte, locationLon: Double, locationLat: Double, locationAlt: Double, orientationHeading: Double, orientationTilt: Double, orientationRoll: Double, scaleX: Double, scaleY: Double, scaleZ: Double, linkHrefOffset: Int, resourceMapOffset: Int) : Int {
             builder.startTable(12)
-            addSCALE_Z(builder, SCALE_Z)
-            addSCALE_Y(builder, SCALE_Y)
-            addSCALE_X(builder, SCALE_X)
-            addORIENTATION_ROLL(builder, ORIENTATION_ROLL)
-            addORIENTATION_TILT(builder, ORIENTATION_TILT)
-            addORIENTATION_HEADING(builder, ORIENTATION_HEADING)
-            addLOCATION_ALT(builder, LOCATION_ALT)
-            addLOCATION_LAT(builder, LOCATION_LAT)
-            addLOCATION_LON(builder, LOCATION_LON)
-            addRESOURCE_MAP(builder, RESOURCE_MAPOffset)
-            addLINK_HREF(builder, LINK_HREFOffset)
-            addALTITUDE_MODE(builder, ALTITUDE_MODE)
+            addSCALEZ(builder, scaleZ)
+            addSCALEY(builder, scaleY)
+            addSCALEX(builder, scaleX)
+            addORIENTATIONROLL(builder, orientationRoll)
+            addORIENTATIONTILT(builder, orientationTilt)
+            addORIENTATIONHEADING(builder, orientationHeading)
+            addLOCATIONALT(builder, locationAlt)
+            addLOCATIONLAT(builder, locationLat)
+            addLOCATIONLON(builder, locationLon)
+            addRESOURCEMAP(builder, resourceMapOffset)
+            addLINKHREF(builder, linkHrefOffset)
+            addALTITUDEMODE(builder, altitudeMode)
             return endKMLModel(builder)
         }
         fun startKMLModel(builder: FlatBufferBuilder) = builder.startTable(12)
-        fun addALTITUDE_MODE(builder: FlatBufferBuilder, ALTITUDE_MODE: Byte) = builder.addByte(0, ALTITUDE_MODE, 0)
-        fun addLOCATION_LON(builder: FlatBufferBuilder, LOCATION_LON: Double) = builder.addDouble(1, LOCATION_LON, 0.0)
-        fun addLOCATION_LAT(builder: FlatBufferBuilder, LOCATION_LAT: Double) = builder.addDouble(2, LOCATION_LAT, 0.0)
-        fun addLOCATION_ALT(builder: FlatBufferBuilder, LOCATION_ALT: Double) = builder.addDouble(3, LOCATION_ALT, 0.0)
-        fun addORIENTATION_HEADING(builder: FlatBufferBuilder, ORIENTATION_HEADING: Double) = builder.addDouble(4, ORIENTATION_HEADING, 0.0)
-        fun addORIENTATION_TILT(builder: FlatBufferBuilder, ORIENTATION_TILT: Double) = builder.addDouble(5, ORIENTATION_TILT, 0.0)
-        fun addORIENTATION_ROLL(builder: FlatBufferBuilder, ORIENTATION_ROLL: Double) = builder.addDouble(6, ORIENTATION_ROLL, 0.0)
-        fun addSCALE_X(builder: FlatBufferBuilder, SCALE_X: Double) = builder.addDouble(7, SCALE_X, 0.0)
-        fun addSCALE_Y(builder: FlatBufferBuilder, SCALE_Y: Double) = builder.addDouble(8, SCALE_Y, 0.0)
-        fun addSCALE_Z(builder: FlatBufferBuilder, SCALE_Z: Double) = builder.addDouble(9, SCALE_Z, 0.0)
-        fun addLINK_HREF(builder: FlatBufferBuilder, LINK_HREF: Int) = builder.addOffset(10, LINK_HREF, 0)
-        fun addRESOURCE_MAP(builder: FlatBufferBuilder, RESOURCE_MAP: Int) = builder.addOffset(11, RESOURCE_MAP, 0)
+        fun addALTITUDEMODE(builder: FlatBufferBuilder, altitudeMode: Byte) = builder.addByte(0, altitudeMode, 0)
+        fun addLOCATIONLON(builder: FlatBufferBuilder, locationLon: Double) = builder.addDouble(1, locationLon, 0.0)
+        fun addLOCATIONLAT(builder: FlatBufferBuilder, locationLat: Double) = builder.addDouble(2, locationLat, 0.0)
+        fun addLOCATIONALT(builder: FlatBufferBuilder, locationAlt: Double) = builder.addDouble(3, locationAlt, 0.0)
+        fun addORIENTATIONHEADING(builder: FlatBufferBuilder, orientationHeading: Double) = builder.addDouble(4, orientationHeading, 0.0)
+        fun addORIENTATIONTILT(builder: FlatBufferBuilder, orientationTilt: Double) = builder.addDouble(5, orientationTilt, 0.0)
+        fun addORIENTATIONROLL(builder: FlatBufferBuilder, orientationRoll: Double) = builder.addDouble(6, orientationRoll, 0.0)
+        fun addSCALEX(builder: FlatBufferBuilder, scaleX: Double) = builder.addDouble(7, scaleX, 0.0)
+        fun addSCALEY(builder: FlatBufferBuilder, scaleY: Double) = builder.addDouble(8, scaleY, 0.0)
+        fun addSCALEZ(builder: FlatBufferBuilder, scaleZ: Double) = builder.addDouble(9, scaleZ, 0.0)
+        fun addLINKHREF(builder: FlatBufferBuilder, linkHref: Int) = builder.addOffset(10, linkHref, 0)
+        fun addRESOURCEMAP(builder: FlatBufferBuilder, resourceMap: Int) = builder.addOffset(11, resourceMap, 0)
         fun createResourceMapVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {

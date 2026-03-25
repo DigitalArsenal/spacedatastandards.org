@@ -2,4 +2,134 @@
 
 # namespace: 
 
-# NOTE ContainerBinaryEncoding.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Binary encoding specification for container
+class ContainerBinaryEncoding(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = ContainerBinaryEncoding()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsContainerBinaryEncoding(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def ContainerBinaryEncodingBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x58\x54\x43", size_prefixed=size_prefixed)
+
+    # ContainerBinaryEncoding
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Error detection type
+    # ContainerBinaryEncoding
+    def ERROR_DETECTION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # CRC polynomial (for CRC error detection)
+    # ContainerBinaryEncoding
+    def CRC_POLYNOMIAL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Size in bits
+    # ContainerBinaryEncoding
+    def SIZE_IN_BITS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+        return 0
+
+def ContainerBinaryEncodingStart(builder):
+    builder.StartObject(3)
+
+def Start(builder):
+    ContainerBinaryEncodingStart(builder)
+
+def ContainerBinaryEncodingAddERROR_DETECTION(builder, ERROR_DETECTION):
+    builder.PrependInt8Slot(0, ERROR_DETECTION, 0)
+
+def AddERROR_DETECTION(builder, ERROR_DETECTION):
+    ContainerBinaryEncodingAddERROR_DETECTION(builder, ERROR_DETECTION)
+
+def ContainerBinaryEncodingAddCRC_POLYNOMIAL(builder, CRC_POLYNOMIAL):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(CRC_POLYNOMIAL), 0)
+
+def AddCRC_POLYNOMIAL(builder, CRC_POLYNOMIAL):
+    ContainerBinaryEncodingAddCRC_POLYNOMIAL(builder, CRC_POLYNOMIAL)
+
+def ContainerBinaryEncodingAddSIZE_IN_BITS(builder, SIZE_IN_BITS):
+    builder.PrependUint32Slot(2, SIZE_IN_BITS, 0)
+
+def AddSIZE_IN_BITS(builder, SIZE_IN_BITS):
+    ContainerBinaryEncodingAddSIZE_IN_BITS(builder, SIZE_IN_BITS)
+
+def ContainerBinaryEncodingEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return ContainerBinaryEncodingEnd(builder)
+
+
+class ContainerBinaryEncodingT(object):
+
+    # ContainerBinaryEncodingT
+    def __init__(
+        self,
+        ERROR_DETECTION = 0,
+        CRC_POLYNOMIAL = None,
+        SIZE_IN_BITS = 0,
+    ):
+        self.ERROR_DETECTION = ERROR_DETECTION  # type: int
+        self.CRC_POLYNOMIAL = CRC_POLYNOMIAL  # type: Optional[str]
+        self.SIZE_IN_BITS = SIZE_IN_BITS  # type: int
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpContainerBinaryEncoding = ContainerBinaryEncoding()
+        tmpContainerBinaryEncoding.Init(buf, pos)
+        return cls.InitFromObj(tmpContainerBinaryEncoding)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpContainerBinaryEncoding):
+        x = ContainerBinaryEncodingT()
+        x._UnPack(tmpContainerBinaryEncoding)
+        return x
+
+    # ContainerBinaryEncodingT
+    def _UnPack(self, ContainerBinaryEncoding):
+        if ContainerBinaryEncoding is None:
+            return
+        self.ERROR_DETECTION = ContainerBinaryEncoding.ERROR_DETECTION()
+        self.CRC_POLYNOMIAL = ContainerBinaryEncoding.CRC_POLYNOMIAL()
+        self.SIZE_IN_BITS = ContainerBinaryEncoding.SIZE_IN_BITS()
+
+    # ContainerBinaryEncodingT
+    def Pack(self, builder):
+        if self.CRC_POLYNOMIAL is not None:
+            CRC_POLYNOMIAL = builder.CreateString(self.CRC_POLYNOMIAL)
+        ContainerBinaryEncodingStart(builder)
+        ContainerBinaryEncodingAddERROR_DETECTION(builder, self.ERROR_DETECTION)
+        if self.CRC_POLYNOMIAL is not None:
+            ContainerBinaryEncodingAddCRC_POLYNOMIAL(builder, CRC_POLYNOMIAL)
+        ContainerBinaryEncodingAddSIZE_IN_BITS(builder, self.SIZE_IN_BITS)
+        ContainerBinaryEncoding = ContainerBinaryEncodingEnd(builder)
+        return ContainerBinaryEncoding

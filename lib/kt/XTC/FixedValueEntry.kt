@@ -32,7 +32,7 @@ class FixedValueEntry : Table() {
     /**
      * Binary value (hex string)
      */
-    val BINARY_VALUE : String?
+    val binaryValue : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class FixedValueEntry : Table() {
                 null
             }
         }
-    val BINARY_VALUEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun BINARY_VALUEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val binaryValueAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun binaryValueInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Size in bits
      */
-    val SIZE_IN_BITS : UShort
+    val sizeInBits : UShort
         get() {
             val o = __offset(6)
             return if(o != 0) bb.getShort(o + bb_pos).toUShort() else 0u
@@ -54,7 +54,7 @@ class FixedValueEntry : Table() {
     /**
      * Name/description
      */
-    val NAME : String?
+    val name : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -63,13 +63,13 @@ class FixedValueEntry : Table() {
                 null
             }
         }
-    val NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val nameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun nameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
     /**
      * Location in container
      */
-    val LOCATION : LocationInContainer? get() = LOCATION(LocationInContainer())
-    fun LOCATION(obj: LocationInContainer) : LocationInContainer? {
+    val location : LocationInContainer? get() = location(LocationInContainer())
+    fun location(obj: LocationInContainer) : LocationInContainer? {
         val o = __offset(10)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -78,25 +78,25 @@ class FixedValueEntry : Table() {
         }
     }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsFixedValueEntry(_bb: ByteBuffer): FixedValueEntry = getRootAsFixedValueEntry(_bb, FixedValueEntry())
         fun getRootAsFixedValueEntry(_bb: ByteBuffer, obj: FixedValueEntry): FixedValueEntry {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createFixedValueEntry(builder: FlatBufferBuilder, BINARY_VALUEOffset: Int, SIZE_IN_BITS: UShort, NAMEOffset: Int, LOCATIONOffset: Int) : Int {
+        fun createFixedValueEntry(builder: FlatBufferBuilder, binaryValueOffset: Int, sizeInBits: UShort, nameOffset: Int, locationOffset: Int) : Int {
             builder.startTable(4)
-            addLOCATION(builder, LOCATIONOffset)
-            addNAME(builder, NAMEOffset)
-            addBINARY_VALUE(builder, BINARY_VALUEOffset)
-            addSIZE_IN_BITS(builder, SIZE_IN_BITS)
+            addLOCATION(builder, locationOffset)
+            addNAME(builder, nameOffset)
+            addBINARYVALUE(builder, binaryValueOffset)
+            addSIZEINBITS(builder, sizeInBits)
             return endFixedValueEntry(builder)
         }
         fun startFixedValueEntry(builder: FlatBufferBuilder) = builder.startTable(4)
-        fun addBINARY_VALUE(builder: FlatBufferBuilder, BINARY_VALUE: Int) = builder.addOffset(0, BINARY_VALUE, 0)
-        fun addSIZE_IN_BITS(builder: FlatBufferBuilder, SIZE_IN_BITS: UShort) = builder.addShort(1, SIZE_IN_BITS.toShort(), 0)
-        fun addNAME(builder: FlatBufferBuilder, NAME: Int) = builder.addOffset(2, NAME, 0)
-        fun addLOCATION(builder: FlatBufferBuilder, LOCATION: Int) = builder.addOffset(3, LOCATION, 0)
+        fun addBINARYVALUE(builder: FlatBufferBuilder, binaryValue: Int) = builder.addOffset(0, binaryValue, 0)
+        fun addSIZEINBITS(builder: FlatBufferBuilder, sizeInBits: UShort) = builder.addShort(1, sizeInBits.toShort(), 0)
+        fun addNAME(builder: FlatBufferBuilder, name: Int) = builder.addOffset(2, name, 0)
+        fun addLOCATION(builder: FlatBufferBuilder, location: Int) = builder.addOffset(3, location, 0)
         fun endFixedValueEntry(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

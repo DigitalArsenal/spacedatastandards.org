@@ -2,4 +2,17 @@
 
 # namespace: 
 
-# NOTE SeekerType.py does not declare any structs or enums
+class SeekerType(object):
+    NONE = 0
+    IR_UNCOOLED = 1
+    IR_COOLED = 2
+    IR_IMAGING = 3
+    IR_2COLOR = 4
+    RADAR_SARH = 5
+    RADAR_ARH = 6
+    RADAR_PASSIVE = 7
+    TV_OPTICAL = 8
+    LASER_SH = 9
+    GPS_INS = 10
+    ACOUSTIC = 11
+    WIRE = 12

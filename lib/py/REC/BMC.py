@@ -2,4 +2,285 @@
 
 # namespace: 
 
-# NOTE BMC.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Beam Contour
+class BMC(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = BMC()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsBMC(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def BMCBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x42\x4D\x43", size_prefixed=size_prefixed)
+
+    # BMC
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # BMC
+    def ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # BMC
+    def TYPE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # BMC
+    def CONTOUR_IDX(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # BMC
+    def GAIN(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # BMC
+    def REGION_NAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # BMC
+    def GEOGRAPHY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # BMC
+    def GEOGRAPHY_TEXT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # BMC
+    def GEOGRAPHY_JSON(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # BMC
+    def GEOGRAPHY_TYPE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # BMC
+    def GEOGRAPHY_NDIMS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # BMC
+    def GEOGRAPHY_SRID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+def BMCStart(builder):
+    builder.StartObject(11)
+
+def Start(builder):
+    BMCStart(builder)
+
+def BMCAddID(builder, ID):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(ID), 0)
+
+def AddID(builder, ID):
+    BMCAddID(builder, ID)
+
+def BMCAddTYPE(builder, TYPE):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(TYPE), 0)
+
+def AddTYPE(builder, TYPE):
+    BMCAddTYPE(builder, TYPE)
+
+def BMCAddCONTOUR_IDX(builder, CONTOUR_IDX):
+    builder.PrependInt32Slot(2, CONTOUR_IDX, 0)
+
+def AddCONTOUR_IDX(builder, CONTOUR_IDX):
+    BMCAddCONTOUR_IDX(builder, CONTOUR_IDX)
+
+def BMCAddGAIN(builder, GAIN):
+    builder.PrependFloat64Slot(3, GAIN, 0.0)
+
+def AddGAIN(builder, GAIN):
+    BMCAddGAIN(builder, GAIN)
+
+def BMCAddREGION_NAME(builder, REGION_NAME):
+    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(REGION_NAME), 0)
+
+def AddREGION_NAME(builder, REGION_NAME):
+    BMCAddREGION_NAME(builder, REGION_NAME)
+
+def BMCAddGEOGRAPHY(builder, GEOGRAPHY):
+    builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(GEOGRAPHY), 0)
+
+def AddGEOGRAPHY(builder, GEOGRAPHY):
+    BMCAddGEOGRAPHY(builder, GEOGRAPHY)
+
+def BMCAddGEOGRAPHY_TEXT(builder, GEOGRAPHY_TEXT):
+    builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(GEOGRAPHY_TEXT), 0)
+
+def AddGEOGRAPHY_TEXT(builder, GEOGRAPHY_TEXT):
+    BMCAddGEOGRAPHY_TEXT(builder, GEOGRAPHY_TEXT)
+
+def BMCAddGEOGRAPHY_JSON(builder, GEOGRAPHY_JSON):
+    builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(GEOGRAPHY_JSON), 0)
+
+def AddGEOGRAPHY_JSON(builder, GEOGRAPHY_JSON):
+    BMCAddGEOGRAPHY_JSON(builder, GEOGRAPHY_JSON)
+
+def BMCAddGEOGRAPHY_TYPE(builder, GEOGRAPHY_TYPE):
+    builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(GEOGRAPHY_TYPE), 0)
+
+def AddGEOGRAPHY_TYPE(builder, GEOGRAPHY_TYPE):
+    BMCAddGEOGRAPHY_TYPE(builder, GEOGRAPHY_TYPE)
+
+def BMCAddGEOGRAPHY_NDIMS(builder, GEOGRAPHY_NDIMS):
+    builder.PrependInt32Slot(9, GEOGRAPHY_NDIMS, 0)
+
+def AddGEOGRAPHY_NDIMS(builder, GEOGRAPHY_NDIMS):
+    BMCAddGEOGRAPHY_NDIMS(builder, GEOGRAPHY_NDIMS)
+
+def BMCAddGEOGRAPHY_SRID(builder, GEOGRAPHY_SRID):
+    builder.PrependInt32Slot(10, GEOGRAPHY_SRID, 0)
+
+def AddGEOGRAPHY_SRID(builder, GEOGRAPHY_SRID):
+    BMCAddGEOGRAPHY_SRID(builder, GEOGRAPHY_SRID)
+
+def BMCEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return BMCEnd(builder)
+
+
+class BMCT(object):
+
+    # BMCT
+    def __init__(
+        self,
+        ID = None,
+        TYPE = None,
+        CONTOUR_IDX = 0,
+        GAIN = 0.0,
+        REGION_NAME = None,
+        GEOGRAPHY = None,
+        GEOGRAPHY_TEXT = None,
+        GEOGRAPHY_JSON = None,
+        GEOGRAPHY_TYPE = None,
+        GEOGRAPHY_NDIMS = 0,
+        GEOGRAPHY_SRID = 0,
+    ):
+        self.ID = ID  # type: Optional[str]
+        self.TYPE = TYPE  # type: Optional[str]
+        self.CONTOUR_IDX = CONTOUR_IDX  # type: int
+        self.GAIN = GAIN  # type: float
+        self.REGION_NAME = REGION_NAME  # type: Optional[str]
+        self.GEOGRAPHY = GEOGRAPHY  # type: Optional[str]
+        self.GEOGRAPHY_TEXT = GEOGRAPHY_TEXT  # type: Optional[str]
+        self.GEOGRAPHY_JSON = GEOGRAPHY_JSON  # type: Optional[str]
+        self.GEOGRAPHY_TYPE = GEOGRAPHY_TYPE  # type: Optional[str]
+        self.GEOGRAPHY_NDIMS = GEOGRAPHY_NDIMS  # type: int
+        self.GEOGRAPHY_SRID = GEOGRAPHY_SRID  # type: int
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpBmc = BMC()
+        tmpBmc.Init(buf, pos)
+        return cls.InitFromObj(tmpBmc)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpBmc):
+        x = BMCT()
+        x._UnPack(tmpBmc)
+        return x
+
+    # BMCT
+    def _UnPack(self, BMC):
+        if BMC is None:
+            return
+        self.ID = BMC.ID()
+        self.TYPE = BMC.TYPE()
+        self.CONTOUR_IDX = BMC.CONTOUR_IDX()
+        self.GAIN = BMC.GAIN()
+        self.REGION_NAME = BMC.REGION_NAME()
+        self.GEOGRAPHY = BMC.GEOGRAPHY()
+        self.GEOGRAPHY_TEXT = BMC.GEOGRAPHY_TEXT()
+        self.GEOGRAPHY_JSON = BMC.GEOGRAPHY_JSON()
+        self.GEOGRAPHY_TYPE = BMC.GEOGRAPHY_TYPE()
+        self.GEOGRAPHY_NDIMS = BMC.GEOGRAPHY_NDIMS()
+        self.GEOGRAPHY_SRID = BMC.GEOGRAPHY_SRID()
+
+    # BMCT
+    def Pack(self, builder):
+        if self.ID is not None:
+            ID = builder.CreateString(self.ID)
+        if self.TYPE is not None:
+            TYPE = builder.CreateString(self.TYPE)
+        if self.REGION_NAME is not None:
+            REGION_NAME = builder.CreateString(self.REGION_NAME)
+        if self.GEOGRAPHY is not None:
+            GEOGRAPHY = builder.CreateString(self.GEOGRAPHY)
+        if self.GEOGRAPHY_TEXT is not None:
+            GEOGRAPHY_TEXT = builder.CreateString(self.GEOGRAPHY_TEXT)
+        if self.GEOGRAPHY_JSON is not None:
+            GEOGRAPHY_JSON = builder.CreateString(self.GEOGRAPHY_JSON)
+        if self.GEOGRAPHY_TYPE is not None:
+            GEOGRAPHY_TYPE = builder.CreateString(self.GEOGRAPHY_TYPE)
+        BMCStart(builder)
+        if self.ID is not None:
+            BMCAddID(builder, ID)
+        if self.TYPE is not None:
+            BMCAddTYPE(builder, TYPE)
+        BMCAddCONTOUR_IDX(builder, self.CONTOUR_IDX)
+        BMCAddGAIN(builder, self.GAIN)
+        if self.REGION_NAME is not None:
+            BMCAddREGION_NAME(builder, REGION_NAME)
+        if self.GEOGRAPHY is not None:
+            BMCAddGEOGRAPHY(builder, GEOGRAPHY)
+        if self.GEOGRAPHY_TEXT is not None:
+            BMCAddGEOGRAPHY_TEXT(builder, GEOGRAPHY_TEXT)
+        if self.GEOGRAPHY_JSON is not None:
+            BMCAddGEOGRAPHY_JSON(builder, GEOGRAPHY_JSON)
+        if self.GEOGRAPHY_TYPE is not None:
+            BMCAddGEOGRAPHY_TYPE(builder, GEOGRAPHY_TYPE)
+        BMCAddGEOGRAPHY_NDIMS(builder, self.GEOGRAPHY_NDIMS)
+        BMCAddGEOGRAPHY_SRID(builder, self.GEOGRAPHY_SRID)
+        BMC = BMCEnd(builder)
+        return BMC

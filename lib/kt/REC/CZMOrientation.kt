@@ -32,7 +32,7 @@ class CZMOrientation : Table() {
     /**
      * X component
      */
-    val UNIT_QUATERNION_X : Double
+    val unitQuaternionX : Double
         get() {
             val o = __offset(4)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -40,7 +40,7 @@ class CZMOrientation : Table() {
     /**
      * Y component
      */
-    val UNIT_QUATERNION_Y : Double
+    val unitQuaternionY : Double
         get() {
             val o = __offset(6)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -48,7 +48,7 @@ class CZMOrientation : Table() {
     /**
      * Z component
      */
-    val UNIT_QUATERNION_Z : Double
+    val unitQuaternionZ : Double
         get() {
             val o = __offset(8)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -56,31 +56,31 @@ class CZMOrientation : Table() {
     /**
      * W component
      */
-    val UNIT_QUATERNION_W : Double
+    val unitQuaternionW : Double
         get() {
             val o = __offset(10)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsCZMOrientation(_bb: ByteBuffer): CZMOrientation = getRootAsCZMOrientation(_bb, CZMOrientation())
         fun getRootAsCZMOrientation(_bb: ByteBuffer, obj: CZMOrientation): CZMOrientation {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createCZMOrientation(builder: FlatBufferBuilder, UNIT_QUATERNION_X: Double, UNIT_QUATERNION_Y: Double, UNIT_QUATERNION_Z: Double, UNIT_QUATERNION_W: Double) : Int {
+        fun createCZMOrientation(builder: FlatBufferBuilder, unitQuaternionX: Double, unitQuaternionY: Double, unitQuaternionZ: Double, unitQuaternionW: Double) : Int {
             builder.startTable(4)
-            addUNIT_QUATERNION_W(builder, UNIT_QUATERNION_W)
-            addUNIT_QUATERNION_Z(builder, UNIT_QUATERNION_Z)
-            addUNIT_QUATERNION_Y(builder, UNIT_QUATERNION_Y)
-            addUNIT_QUATERNION_X(builder, UNIT_QUATERNION_X)
+            addUNITQUATERNIONW(builder, unitQuaternionW)
+            addUNITQUATERNIONZ(builder, unitQuaternionZ)
+            addUNITQUATERNIONY(builder, unitQuaternionY)
+            addUNITQUATERNIONX(builder, unitQuaternionX)
             return endCZMOrientation(builder)
         }
         fun startCZMOrientation(builder: FlatBufferBuilder) = builder.startTable(4)
-        fun addUNIT_QUATERNION_X(builder: FlatBufferBuilder, UNIT_QUATERNION_X: Double) = builder.addDouble(0, UNIT_QUATERNION_X, 0.0)
-        fun addUNIT_QUATERNION_Y(builder: FlatBufferBuilder, UNIT_QUATERNION_Y: Double) = builder.addDouble(1, UNIT_QUATERNION_Y, 0.0)
-        fun addUNIT_QUATERNION_Z(builder: FlatBufferBuilder, UNIT_QUATERNION_Z: Double) = builder.addDouble(2, UNIT_QUATERNION_Z, 0.0)
-        fun addUNIT_QUATERNION_W(builder: FlatBufferBuilder, UNIT_QUATERNION_W: Double) = builder.addDouble(3, UNIT_QUATERNION_W, 0.0)
+        fun addUNITQUATERNIONX(builder: FlatBufferBuilder, unitQuaternionX: Double) = builder.addDouble(0, unitQuaternionX, 0.0)
+        fun addUNITQUATERNIONY(builder: FlatBufferBuilder, unitQuaternionY: Double) = builder.addDouble(1, unitQuaternionY, 0.0)
+        fun addUNITQUATERNIONZ(builder: FlatBufferBuilder, unitQuaternionZ: Double) = builder.addDouble(2, unitQuaternionZ, 0.0)
+        fun addUNITQUATERNIONW(builder: FlatBufferBuilder, unitQuaternionW: Double) = builder.addDouble(3, unitQuaternionW, 0.0)
         fun endCZMOrientation(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

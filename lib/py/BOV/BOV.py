@@ -149,21 +149,31 @@ def End(builder):
 class BOVT(object):
 
     # BOVT
-    def __init__(self):
-        self.E_COORDINATE = 0.0  # type: float
-        self.F_COORDINATE = 0.0  # type: float
-        self.G_COORDINATE = 0.0  # type: float
-        self.E_DOT = 0.0  # type: float
-        self.F_DOT = 0.0  # type: float
-        self.G_DOT = 0.0  # type: float
-        self.EPOCH = None  # type: str
-        self.TIME_FROM_LAUNCH = 0.0  # type: float
+    def __init__(
+        self,
+        E_COORDINATE = 0.0,
+        F_COORDINATE = 0.0,
+        G_COORDINATE = 0.0,
+        E_DOT = 0.0,
+        F_DOT = 0.0,
+        G_DOT = 0.0,
+        EPOCH = None,
+        TIME_FROM_LAUNCH = 0.0,
+    ):
+        self.E_COORDINATE = E_COORDINATE  # type: float
+        self.F_COORDINATE = F_COORDINATE  # type: float
+        self.G_COORDINATE = G_COORDINATE  # type: float
+        self.E_DOT = E_DOT  # type: float
+        self.F_DOT = F_DOT  # type: float
+        self.G_DOT = G_DOT  # type: float
+        self.EPOCH = EPOCH  # type: Optional[str]
+        self.TIME_FROM_LAUNCH = TIME_FROM_LAUNCH  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        BOV = BOV()
-        BOV.Init(buf, pos)
-        return cls.InitFromObj(BOV)
+        tmpBov = BOV()
+        tmpBov.Init(buf, pos)
+        return cls.InitFromObj(tmpBov)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -171,9 +181,9 @@ class BOVT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, BOV):
+    def InitFromObj(cls, tmpBov):
         x = BOVT()
-        x._UnPack(BOV)
+        x._UnPack(tmpBov)
         return x
 
     # BOVT

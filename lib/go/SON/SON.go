@@ -62,12 +62,20 @@ func (rcv *SON) COMMAND() []byte {
 	return nil
 }
 
+func (rcv *SON) Command() []byte {
+	return rcv.COMMAND()
+}
+
 func (rcv *SON) ACTIVE_CONFIG() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *SON) ActiveConfig() []byte {
+	return rcv.ACTIVE_CONFIG()
 }
 
 func (rcv *SON) PASSIVE_CONFIG() []byte {
@@ -78,12 +86,20 @@ func (rcv *SON) PASSIVE_CONFIG() []byte {
 	return nil
 }
 
+func (rcv *SON) PassiveConfig() []byte {
+	return rcv.PASSIVE_CONFIG()
+}
+
 func (rcv *SON) TL_REQUEST() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *SON) TlRequest() []byte {
+	return rcv.TL_REQUEST()
 }
 
 func (rcv *SON) ENVIRONMENT() []byte {
@@ -94,12 +110,20 @@ func (rcv *SON) ENVIRONMENT() []byte {
 	return nil
 }
 
+func (rcv *SON) Environment() []byte {
+	return rcv.ENVIRONMENT()
+}
+
 func (rcv *SON) TARGET_SIGNATURE() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *SON) TargetSignature() []byte {
+	return rcv.TARGET_SIGNATURE()
 }
 
 func (rcv *SON) TMA_INPUT() []byte {
@@ -110,6 +134,10 @@ func (rcv *SON) TMA_INPUT() []byte {
 	return nil
 }
 
+func (rcv *SON) TmaInput() []byte {
+	return rcv.TMA_INPUT()
+}
+
 func (rcv *SON) TORPEDO_SEEKER() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
 	if o != 0 {
@@ -118,32 +146,60 @@ func (rcv *SON) TORPEDO_SEEKER() []byte {
 	return nil
 }
 
+func (rcv *SON) TorpedoSeeker() []byte {
+	return rcv.TORPEDO_SEEKER()
+}
+
 func SONStart(builder *flatbuffers.Builder) {
 	builder.StartObject(8)
 }
 func SONAddCOMMAND(builder *flatbuffers.Builder, COMMAND flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(COMMAND), 0)
 }
+func SONAddCommand(builder *flatbuffers.Builder, COMMAND flatbuffers.UOffsetT) {
+	SONAddCOMMAND(builder, COMMAND)
+}
 func SONAddACTIVE_CONFIG(builder *flatbuffers.Builder, ACTIVE_CONFIG flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(ACTIVE_CONFIG), 0)
+}
+func SONAddActiveConfig(builder *flatbuffers.Builder, ACTIVE_CONFIG flatbuffers.UOffsetT) {
+	SONAddACTIVE_CONFIG(builder, ACTIVE_CONFIG)
 }
 func SONAddPASSIVE_CONFIG(builder *flatbuffers.Builder, PASSIVE_CONFIG flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(PASSIVE_CONFIG), 0)
 }
+func SONAddPassiveConfig(builder *flatbuffers.Builder, PASSIVE_CONFIG flatbuffers.UOffsetT) {
+	SONAddPASSIVE_CONFIG(builder, PASSIVE_CONFIG)
+}
 func SONAddTL_REQUEST(builder *flatbuffers.Builder, TL_REQUEST flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(TL_REQUEST), 0)
+}
+func SONAddTlRequest(builder *flatbuffers.Builder, TL_REQUEST flatbuffers.UOffsetT) {
+	SONAddTL_REQUEST(builder, TL_REQUEST)
 }
 func SONAddENVIRONMENT(builder *flatbuffers.Builder, ENVIRONMENT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(ENVIRONMENT), 0)
 }
+func SONAddEnvironment(builder *flatbuffers.Builder, ENVIRONMENT flatbuffers.UOffsetT) {
+	SONAddENVIRONMENT(builder, ENVIRONMENT)
+}
 func SONAddTARGET_SIGNATURE(builder *flatbuffers.Builder, TARGET_SIGNATURE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(TARGET_SIGNATURE), 0)
+}
+func SONAddTargetSignature(builder *flatbuffers.Builder, TARGET_SIGNATURE flatbuffers.UOffsetT) {
+	SONAddTARGET_SIGNATURE(builder, TARGET_SIGNATURE)
 }
 func SONAddTMA_INPUT(builder *flatbuffers.Builder, TMA_INPUT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(TMA_INPUT), 0)
 }
+func SONAddTmaInput(builder *flatbuffers.Builder, TMA_INPUT flatbuffers.UOffsetT) {
+	SONAddTMA_INPUT(builder, TMA_INPUT)
+}
 func SONAddTORPEDO_SEEKER(builder *flatbuffers.Builder, TORPEDO_SEEKER flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(TORPEDO_SEEKER), 0)
+}
+func SONAddTorpedoSeeker(builder *flatbuffers.Builder, TORPEDO_SEEKER flatbuffers.UOffsetT) {
+	SONAddTORPEDO_SEEKER(builder, TORPEDO_SEEKER)
 }
 func SONEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

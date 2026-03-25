@@ -51,6 +51,10 @@ func (rcv *mnvOrbitalState) ID_ELSET() []byte {
 	return nil
 }
 
+func (rcv *mnvOrbitalState) IdElset() []byte {
+	return rcv.ID_ELSET()
+}
+
 /// Element set identifier
 /// Element set data reference
 func (rcv *mnvOrbitalState) ELSET() []byte {
@@ -59,6 +63,10 @@ func (rcv *mnvOrbitalState) ELSET() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *mnvOrbitalState) Elset() []byte {
+	return rcv.ELSET()
 }
 
 /// Element set data reference
@@ -71,6 +79,10 @@ func (rcv *mnvOrbitalState) ID_STATE_VECTOR() []byte {
 	return nil
 }
 
+func (rcv *mnvOrbitalState) IdStateVector() []byte {
+	return rcv.ID_STATE_VECTOR()
+}
+
 /// State vector identifier
 /// State vector data reference
 func (rcv *mnvOrbitalState) STATE_VECTOR() []byte {
@@ -79,6 +91,10 @@ func (rcv *mnvOrbitalState) STATE_VECTOR() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *mnvOrbitalState) StateVector() []byte {
+	return rcv.STATE_VECTOR()
 }
 
 /// State vector data reference
@@ -91,9 +107,17 @@ func (rcv *mnvOrbitalState) POS_X() float64 {
 	return 0.0
 }
 
+func (rcv *mnvOrbitalState) PosX() float64 {
+	return rcv.POS_X()
+}
+
 /// Position X (km)
 func (rcv *mnvOrbitalState) MutatePOS_X(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(12, n)
+}
+
+func (rcv *mnvOrbitalState) MutatePosX(n float64) bool {
+	return rcv.MutatePOS_X(n)
 }
 
 /// Position Y (km)
@@ -105,9 +129,17 @@ func (rcv *mnvOrbitalState) POS_Y() float64 {
 	return 0.0
 }
 
+func (rcv *mnvOrbitalState) PosY() float64 {
+	return rcv.POS_Y()
+}
+
 /// Position Y (km)
 func (rcv *mnvOrbitalState) MutatePOS_Y(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(14, n)
+}
+
+func (rcv *mnvOrbitalState) MutatePosY(n float64) bool {
+	return rcv.MutatePOS_Y(n)
 }
 
 /// Position Z (km)
@@ -119,9 +151,17 @@ func (rcv *mnvOrbitalState) POS_Z() float64 {
 	return 0.0
 }
 
+func (rcv *mnvOrbitalState) PosZ() float64 {
+	return rcv.POS_Z()
+}
+
 /// Position Z (km)
 func (rcv *mnvOrbitalState) MutatePOS_Z(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(16, n)
+}
+
+func (rcv *mnvOrbitalState) MutatePosZ(n float64) bool {
+	return rcv.MutatePOS_Z(n)
 }
 
 /// Velocity X (km/s)
@@ -133,9 +173,17 @@ func (rcv *mnvOrbitalState) VEL_X() float64 {
 	return 0.0
 }
 
+func (rcv *mnvOrbitalState) VelX() float64 {
+	return rcv.VEL_X()
+}
+
 /// Velocity X (km/s)
 func (rcv *mnvOrbitalState) MutateVEL_X(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(18, n)
+}
+
+func (rcv *mnvOrbitalState) MutateVelX(n float64) bool {
+	return rcv.MutateVEL_X(n)
 }
 
 /// Velocity Y (km/s)
@@ -147,9 +195,17 @@ func (rcv *mnvOrbitalState) VEL_Y() float64 {
 	return 0.0
 }
 
+func (rcv *mnvOrbitalState) VelY() float64 {
+	return rcv.VEL_Y()
+}
+
 /// Velocity Y (km/s)
 func (rcv *mnvOrbitalState) MutateVEL_Y(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(20, n)
+}
+
+func (rcv *mnvOrbitalState) MutateVelY(n float64) bool {
+	return rcv.MutateVEL_Y(n)
 }
 
 /// Velocity Z (km/s)
@@ -161,9 +217,17 @@ func (rcv *mnvOrbitalState) VEL_Z() float64 {
 	return 0.0
 }
 
+func (rcv *mnvOrbitalState) VelZ() float64 {
+	return rcv.VEL_Z()
+}
+
 /// Velocity Z (km/s)
 func (rcv *mnvOrbitalState) MutateVEL_Z(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(22, n)
+}
+
+func (rcv *mnvOrbitalState) MutateVelZ(n float64) bool {
+	return rcv.MutateVEL_Z(n)
 }
 
 /// Radiation pressure coefficient (Cr)
@@ -175,9 +239,17 @@ func (rcv *mnvOrbitalState) RADIATION_PRESS_COEFF() float64 {
 	return 0.0
 }
 
+func (rcv *mnvOrbitalState) RadiationPressCoeff() float64 {
+	return rcv.RADIATION_PRESS_COEFF()
+}
+
 /// Radiation pressure coefficient (Cr)
 func (rcv *mnvOrbitalState) MutateRADIATION_PRESS_COEFF(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(24, n)
+}
+
+func (rcv *mnvOrbitalState) MutateRadiationPressCoeff(n float64) bool {
+	return rcv.MutateRADIATION_PRESS_COEFF(n)
 }
 
 /// Ballistic coefficient (m^2/kg)
@@ -189,9 +261,17 @@ func (rcv *mnvOrbitalState) BALLISTIC_COEFF() float64 {
 	return 0.0
 }
 
+func (rcv *mnvOrbitalState) BallisticCoeff() float64 {
+	return rcv.BALLISTIC_COEFF()
+}
+
 /// Ballistic coefficient (m^2/kg)
 func (rcv *mnvOrbitalState) MutateBALLISTIC_COEFF(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(26, n)
+}
+
+func (rcv *mnvOrbitalState) MutateBallisticCoeff(n float64) bool {
+	return rcv.MutateBALLISTIC_COEFF(n)
 }
 
 /// Apogee altitude (km)
@@ -203,9 +283,17 @@ func (rcv *mnvOrbitalState) APOGEE() float64 {
 	return 0.0
 }
 
+func (rcv *mnvOrbitalState) Apogee() float64 {
+	return rcv.APOGEE()
+}
+
 /// Apogee altitude (km)
 func (rcv *mnvOrbitalState) MutateAPOGEE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(28, n)
+}
+
+func (rcv *mnvOrbitalState) MutateApogee(n float64) bool {
+	return rcv.MutateAPOGEE(n)
 }
 
 /// Perigee altitude (km)
@@ -217,9 +305,17 @@ func (rcv *mnvOrbitalState) PERIGEE() float64 {
 	return 0.0
 }
 
+func (rcv *mnvOrbitalState) Perigee() float64 {
+	return rcv.PERIGEE()
+}
+
 /// Perigee altitude (km)
 func (rcv *mnvOrbitalState) MutatePERIGEE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(30, n)
+}
+
+func (rcv *mnvOrbitalState) MutatePerigee(n float64) bool {
+	return rcv.MutatePERIGEE(n)
 }
 
 /// Inclination (degrees)
@@ -231,9 +327,17 @@ func (rcv *mnvOrbitalState) INCLINATION() float64 {
 	return 0.0
 }
 
+func (rcv *mnvOrbitalState) Inclination() float64 {
+	return rcv.INCLINATION()
+}
+
 /// Inclination (degrees)
 func (rcv *mnvOrbitalState) MutateINCLINATION(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(32, n)
+}
+
+func (rcv *mnvOrbitalState) MutateInclination(n float64) bool {
+	return rcv.MutateINCLINATION(n)
 }
 
 /// Eccentricity
@@ -245,9 +349,17 @@ func (rcv *mnvOrbitalState) ECCENTRICITY() float64 {
 	return 0.0
 }
 
+func (rcv *mnvOrbitalState) Eccentricity() float64 {
+	return rcv.ECCENTRICITY()
+}
+
 /// Eccentricity
 func (rcv *mnvOrbitalState) MutateECCENTRICITY(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(34, n)
+}
+
+func (rcv *mnvOrbitalState) MutateEccentricity(n float64) bool {
+	return rcv.MutateECCENTRICITY(n)
 }
 
 /// Orbital period (minutes)
@@ -259,9 +371,17 @@ func (rcv *mnvOrbitalState) PERIOD() float64 {
 	return 0.0
 }
 
+func (rcv *mnvOrbitalState) Period() float64 {
+	return rcv.PERIOD()
+}
+
 /// Orbital period (minutes)
 func (rcv *mnvOrbitalState) MutatePERIOD(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(36, n)
+}
+
+func (rcv *mnvOrbitalState) MutatePeriod(n float64) bool {
+	return rcv.MutatePERIOD(n)
 }
 
 /// Right ascension of ascending node (degrees)
@@ -273,9 +393,17 @@ func (rcv *mnvOrbitalState) RAAN() float64 {
 	return 0.0
 }
 
+func (rcv *mnvOrbitalState) Raan() float64 {
+	return rcv.RAAN()
+}
+
 /// Right ascension of ascending node (degrees)
 func (rcv *mnvOrbitalState) MutateRAAN(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(38, n)
+}
+
+func (rcv *mnvOrbitalState) MutateRaan(n float64) bool {
+	return rcv.MutateRAAN(n)
 }
 
 /// Semi-major axis (km)
@@ -287,9 +415,17 @@ func (rcv *mnvOrbitalState) SMA() float64 {
 	return 0.0
 }
 
+func (rcv *mnvOrbitalState) Sma() float64 {
+	return rcv.SMA()
+}
+
 /// Semi-major axis (km)
 func (rcv *mnvOrbitalState) MutateSMA(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(40, n)
+}
+
+func (rcv *mnvOrbitalState) MutateSma(n float64) bool {
+	return rcv.MutateSMA(n)
 }
 
 /// GEO longitude (degrees east)
@@ -301,9 +437,17 @@ func (rcv *mnvOrbitalState) GEO_LONGITUDE() float64 {
 	return 0.0
 }
 
+func (rcv *mnvOrbitalState) GeoLongitude() float64 {
+	return rcv.GEO_LONGITUDE()
+}
+
 /// GEO longitude (degrees east)
 func (rcv *mnvOrbitalState) MutateGEO_LONGITUDE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(42, n)
+}
+
+func (rcv *mnvOrbitalState) MutateGeoLongitude(n float64) bool {
+	return rcv.MutateGEO_LONGITUDE(n)
 }
 
 /// Longitude drift rate (degrees/day)
@@ -315,9 +459,17 @@ func (rcv *mnvOrbitalState) DRIFT_RATE() float64 {
 	return 0.0
 }
 
+func (rcv *mnvOrbitalState) DriftRate() float64 {
+	return rcv.DRIFT_RATE()
+}
+
 /// Longitude drift rate (degrees/day)
 func (rcv *mnvOrbitalState) MutateDRIFT_RATE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(44, n)
+}
+
+func (rcv *mnvOrbitalState) MutateDriftRate(n float64) bool {
+	return rcv.MutateDRIFT_RATE(n)
 }
 
 /// Position uncertainty U (km, 1-sigma)
@@ -329,9 +481,17 @@ func (rcv *mnvOrbitalState) SIGMA_U() float64 {
 	return 0.0
 }
 
+func (rcv *mnvOrbitalState) SigmaU() float64 {
+	return rcv.SIGMA_U()
+}
+
 /// Position uncertainty U (km, 1-sigma)
 func (rcv *mnvOrbitalState) MutateSIGMA_U(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(46, n)
+}
+
+func (rcv *mnvOrbitalState) MutateSigmaU(n float64) bool {
+	return rcv.MutateSIGMA_U(n)
 }
 
 /// Position uncertainty V (km, 1-sigma)
@@ -343,9 +503,17 @@ func (rcv *mnvOrbitalState) SIGMA_V() float64 {
 	return 0.0
 }
 
+func (rcv *mnvOrbitalState) SigmaV() float64 {
+	return rcv.SIGMA_V()
+}
+
 /// Position uncertainty V (km, 1-sigma)
 func (rcv *mnvOrbitalState) MutateSIGMA_V(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(48, n)
+}
+
+func (rcv *mnvOrbitalState) MutateSigmaV(n float64) bool {
+	return rcv.MutateSIGMA_V(n)
 }
 
 /// Position uncertainty W (km, 1-sigma)
@@ -357,9 +525,17 @@ func (rcv *mnvOrbitalState) SIGMA_W() float64 {
 	return 0.0
 }
 
+func (rcv *mnvOrbitalState) SigmaW() float64 {
+	return rcv.SIGMA_W()
+}
+
 /// Position uncertainty W (km, 1-sigma)
 func (rcv *mnvOrbitalState) MutateSIGMA_W(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(50, n)
+}
+
+func (rcv *mnvOrbitalState) MutateSigmaW(n float64) bool {
+	return rcv.MutateSIGMA_W(n)
 }
 
 func mnvOrbitalStateStart(builder *flatbuffers.Builder) {
@@ -368,74 +544,146 @@ func mnvOrbitalStateStart(builder *flatbuffers.Builder) {
 func mnvOrbitalStateAddID_ELSET(builder *flatbuffers.Builder, ID_ELSET flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ID_ELSET), 0)
 }
+func mnvOrbitalStateAddIdElset(builder *flatbuffers.Builder, ID_ELSET flatbuffers.UOffsetT) {
+	mnvOrbitalStateAddID_ELSET(builder, ID_ELSET)
+}
 func mnvOrbitalStateAddELSET(builder *flatbuffers.Builder, ELSET flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(ELSET), 0)
+}
+func mnvOrbitalStateAddElset(builder *flatbuffers.Builder, ELSET flatbuffers.UOffsetT) {
+	mnvOrbitalStateAddELSET(builder, ELSET)
 }
 func mnvOrbitalStateAddID_STATE_VECTOR(builder *flatbuffers.Builder, ID_STATE_VECTOR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(ID_STATE_VECTOR), 0)
 }
+func mnvOrbitalStateAddIdStateVector(builder *flatbuffers.Builder, ID_STATE_VECTOR flatbuffers.UOffsetT) {
+	mnvOrbitalStateAddID_STATE_VECTOR(builder, ID_STATE_VECTOR)
+}
 func mnvOrbitalStateAddSTATE_VECTOR(builder *flatbuffers.Builder, STATE_VECTOR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(STATE_VECTOR), 0)
+}
+func mnvOrbitalStateAddStateVector(builder *flatbuffers.Builder, STATE_VECTOR flatbuffers.UOffsetT) {
+	mnvOrbitalStateAddSTATE_VECTOR(builder, STATE_VECTOR)
 }
 func mnvOrbitalStateAddPOS_X(builder *flatbuffers.Builder, POS_X float64) {
 	builder.PrependFloat64Slot(4, POS_X, 0.0)
 }
+func mnvOrbitalStateAddPosX(builder *flatbuffers.Builder, POS_X float64) {
+	mnvOrbitalStateAddPOS_X(builder, POS_X)
+}
 func mnvOrbitalStateAddPOS_Y(builder *flatbuffers.Builder, POS_Y float64) {
 	builder.PrependFloat64Slot(5, POS_Y, 0.0)
+}
+func mnvOrbitalStateAddPosY(builder *flatbuffers.Builder, POS_Y float64) {
+	mnvOrbitalStateAddPOS_Y(builder, POS_Y)
 }
 func mnvOrbitalStateAddPOS_Z(builder *flatbuffers.Builder, POS_Z float64) {
 	builder.PrependFloat64Slot(6, POS_Z, 0.0)
 }
+func mnvOrbitalStateAddPosZ(builder *flatbuffers.Builder, POS_Z float64) {
+	mnvOrbitalStateAddPOS_Z(builder, POS_Z)
+}
 func mnvOrbitalStateAddVEL_X(builder *flatbuffers.Builder, VEL_X float64) {
 	builder.PrependFloat64Slot(7, VEL_X, 0.0)
+}
+func mnvOrbitalStateAddVelX(builder *flatbuffers.Builder, VEL_X float64) {
+	mnvOrbitalStateAddVEL_X(builder, VEL_X)
 }
 func mnvOrbitalStateAddVEL_Y(builder *flatbuffers.Builder, VEL_Y float64) {
 	builder.PrependFloat64Slot(8, VEL_Y, 0.0)
 }
+func mnvOrbitalStateAddVelY(builder *flatbuffers.Builder, VEL_Y float64) {
+	mnvOrbitalStateAddVEL_Y(builder, VEL_Y)
+}
 func mnvOrbitalStateAddVEL_Z(builder *flatbuffers.Builder, VEL_Z float64) {
 	builder.PrependFloat64Slot(9, VEL_Z, 0.0)
+}
+func mnvOrbitalStateAddVelZ(builder *flatbuffers.Builder, VEL_Z float64) {
+	mnvOrbitalStateAddVEL_Z(builder, VEL_Z)
 }
 func mnvOrbitalStateAddRADIATION_PRESS_COEFF(builder *flatbuffers.Builder, RADIATION_PRESS_COEFF float64) {
 	builder.PrependFloat64Slot(10, RADIATION_PRESS_COEFF, 0.0)
 }
+func mnvOrbitalStateAddRadiationPressCoeff(builder *flatbuffers.Builder, RADIATION_PRESS_COEFF float64) {
+	mnvOrbitalStateAddRADIATION_PRESS_COEFF(builder, RADIATION_PRESS_COEFF)
+}
 func mnvOrbitalStateAddBALLISTIC_COEFF(builder *flatbuffers.Builder, BALLISTIC_COEFF float64) {
 	builder.PrependFloat64Slot(11, BALLISTIC_COEFF, 0.0)
+}
+func mnvOrbitalStateAddBallisticCoeff(builder *flatbuffers.Builder, BALLISTIC_COEFF float64) {
+	mnvOrbitalStateAddBALLISTIC_COEFF(builder, BALLISTIC_COEFF)
 }
 func mnvOrbitalStateAddAPOGEE(builder *flatbuffers.Builder, APOGEE float64) {
 	builder.PrependFloat64Slot(12, APOGEE, 0.0)
 }
+func mnvOrbitalStateAddApogee(builder *flatbuffers.Builder, APOGEE float64) {
+	mnvOrbitalStateAddAPOGEE(builder, APOGEE)
+}
 func mnvOrbitalStateAddPERIGEE(builder *flatbuffers.Builder, PERIGEE float64) {
 	builder.PrependFloat64Slot(13, PERIGEE, 0.0)
+}
+func mnvOrbitalStateAddPerigee(builder *flatbuffers.Builder, PERIGEE float64) {
+	mnvOrbitalStateAddPERIGEE(builder, PERIGEE)
 }
 func mnvOrbitalStateAddINCLINATION(builder *flatbuffers.Builder, INCLINATION float64) {
 	builder.PrependFloat64Slot(14, INCLINATION, 0.0)
 }
+func mnvOrbitalStateAddInclination(builder *flatbuffers.Builder, INCLINATION float64) {
+	mnvOrbitalStateAddINCLINATION(builder, INCLINATION)
+}
 func mnvOrbitalStateAddECCENTRICITY(builder *flatbuffers.Builder, ECCENTRICITY float64) {
 	builder.PrependFloat64Slot(15, ECCENTRICITY, 0.0)
+}
+func mnvOrbitalStateAddEccentricity(builder *flatbuffers.Builder, ECCENTRICITY float64) {
+	mnvOrbitalStateAddECCENTRICITY(builder, ECCENTRICITY)
 }
 func mnvOrbitalStateAddPERIOD(builder *flatbuffers.Builder, PERIOD float64) {
 	builder.PrependFloat64Slot(16, PERIOD, 0.0)
 }
+func mnvOrbitalStateAddPeriod(builder *flatbuffers.Builder, PERIOD float64) {
+	mnvOrbitalStateAddPERIOD(builder, PERIOD)
+}
 func mnvOrbitalStateAddRAAN(builder *flatbuffers.Builder, RAAN float64) {
 	builder.PrependFloat64Slot(17, RAAN, 0.0)
+}
+func mnvOrbitalStateAddRaan(builder *flatbuffers.Builder, RAAN float64) {
+	mnvOrbitalStateAddRAAN(builder, RAAN)
 }
 func mnvOrbitalStateAddSMA(builder *flatbuffers.Builder, SMA float64) {
 	builder.PrependFloat64Slot(18, SMA, 0.0)
 }
+func mnvOrbitalStateAddSma(builder *flatbuffers.Builder, SMA float64) {
+	mnvOrbitalStateAddSMA(builder, SMA)
+}
 func mnvOrbitalStateAddGEO_LONGITUDE(builder *flatbuffers.Builder, GEO_LONGITUDE float64) {
 	builder.PrependFloat64Slot(19, GEO_LONGITUDE, 0.0)
+}
+func mnvOrbitalStateAddGeoLongitude(builder *flatbuffers.Builder, GEO_LONGITUDE float64) {
+	mnvOrbitalStateAddGEO_LONGITUDE(builder, GEO_LONGITUDE)
 }
 func mnvOrbitalStateAddDRIFT_RATE(builder *flatbuffers.Builder, DRIFT_RATE float64) {
 	builder.PrependFloat64Slot(20, DRIFT_RATE, 0.0)
 }
+func mnvOrbitalStateAddDriftRate(builder *flatbuffers.Builder, DRIFT_RATE float64) {
+	mnvOrbitalStateAddDRIFT_RATE(builder, DRIFT_RATE)
+}
 func mnvOrbitalStateAddSIGMA_U(builder *flatbuffers.Builder, SIGMA_U float64) {
 	builder.PrependFloat64Slot(21, SIGMA_U, 0.0)
+}
+func mnvOrbitalStateAddSigmaU(builder *flatbuffers.Builder, SIGMA_U float64) {
+	mnvOrbitalStateAddSIGMA_U(builder, SIGMA_U)
 }
 func mnvOrbitalStateAddSIGMA_V(builder *flatbuffers.Builder, SIGMA_V float64) {
 	builder.PrependFloat64Slot(22, SIGMA_V, 0.0)
 }
+func mnvOrbitalStateAddSigmaV(builder *flatbuffers.Builder, SIGMA_V float64) {
+	mnvOrbitalStateAddSIGMA_V(builder, SIGMA_V)
+}
 func mnvOrbitalStateAddSIGMA_W(builder *flatbuffers.Builder, SIGMA_W float64) {
 	builder.PrependFloat64Slot(23, SIGMA_W, 0.0)
+}
+func mnvOrbitalStateAddSigmaW(builder *flatbuffers.Builder, SIGMA_W float64) {
+	mnvOrbitalStateAddSIGMA_W(builder, SIGMA_W)
 }
 func mnvOrbitalStateEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

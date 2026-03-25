@@ -349,6 +349,12 @@ def IDMStartBANDVector(builder, numElems):
 def StartBANDVector(builder, numElems):
     return IDMStartBANDVector(builder, numElems)
 
+def IDMCreateBANDVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateBANDVector(builder, data):
+    IDMCreateBANDVector(builder, data)
+
 def IDMAddPOLARIZATION_TYPE(builder, POLARIZATION_TYPE):
     builder.PrependInt8Slot(7, POLARIZATION_TYPE, 0)
 
@@ -498,42 +504,73 @@ except:
 class IDMT(object):
 
     # IDMT
-    def __init__(self):
-        self.ID = None  # type: str
-        self.NAME = None  # type: str
-        self.DATA_MODE = 0  # type: int
-        self.UPLINK = None  # type: Optional[FrequencyRange.FrequencyRangeT]
-        self.DOWNLINK = None  # type: Optional[FrequencyRange.FrequencyRangeT]
-        self.BEACON = None  # type: Optional[FrequencyRange.FrequencyRangeT]
-        self.BAND = None  # type: List[Band.BandT]
-        self.POLARIZATION_TYPE = 0  # type: int
-        self.SIMPLE_POLARIZATION = 0  # type: int
-        self.STOKES_PARAMETERS = None  # type: Optional[StokesParameters.StokesParametersT]
-        self.POWER_REQUIRED = 0.0  # type: float
-        self.POWER_TYPE = None  # type: str
-        self.TRANSMIT = False  # type: bool
-        self.RECEIVE = False  # type: bool
-        self.SENSOR_TYPE = 0  # type: int
-        self.SOURCE = None  # type: str
-        self.LAST_OB_TIME = None  # type: str
-        self.LOWER_LEFT_ELEVATION_LIMIT = 0.0  # type: float
-        self.UPPER_LEFT_AZIMUTH_LIMIT = 0.0  # type: float
-        self.LOWER_RIGHT_ELEVATION_LIMIT = 0.0  # type: float
-        self.LOWER_LEFT_AZIMUTH_LIMIT = 0.0  # type: float
-        self.UPPER_RIGHT_ELEVATION_LIMIT = 0.0  # type: float
-        self.UPPER_RIGHT_AZIMUTH_LIMIT = 0.0  # type: float
-        self.LOWER_RIGHT_AZIMUTH_LIMIT = 0.0  # type: float
-        self.UPPER_LEFT_ELEVATION_LIMIT = 0.0  # type: float
-        self.RIGHT_GEO_BELT_LIMIT = 0.0  # type: float
-        self.LEFT_GEO_BELT_LIMIT = 0.0  # type: float
-        self.MAGNITUDE_LIMIT = 0.0  # type: float
-        self.TASKABLE = False  # type: bool
+    def __init__(
+        self,
+        ID = None,
+        NAME = None,
+        DATA_MODE = 0,
+        UPLINK = None,
+        DOWNLINK = None,
+        BEACON = None,
+        BAND = None,
+        POLARIZATION_TYPE = 0,
+        SIMPLE_POLARIZATION = 0,
+        STOKES_PARAMETERS = None,
+        POWER_REQUIRED = 0.0,
+        POWER_TYPE = None,
+        TRANSMIT = False,
+        RECEIVE = False,
+        SENSOR_TYPE = 0,
+        SOURCE = None,
+        LAST_OB_TIME = None,
+        LOWER_LEFT_ELEVATION_LIMIT = 0.0,
+        UPPER_LEFT_AZIMUTH_LIMIT = 0.0,
+        LOWER_RIGHT_ELEVATION_LIMIT = 0.0,
+        LOWER_LEFT_AZIMUTH_LIMIT = 0.0,
+        UPPER_RIGHT_ELEVATION_LIMIT = 0.0,
+        UPPER_RIGHT_AZIMUTH_LIMIT = 0.0,
+        LOWER_RIGHT_AZIMUTH_LIMIT = 0.0,
+        UPPER_LEFT_ELEVATION_LIMIT = 0.0,
+        RIGHT_GEO_BELT_LIMIT = 0.0,
+        LEFT_GEO_BELT_LIMIT = 0.0,
+        MAGNITUDE_LIMIT = 0.0,
+        TASKABLE = False,
+    ):
+        self.ID = ID  # type: Optional[str]
+        self.NAME = NAME  # type: Optional[str]
+        self.DATA_MODE = DATA_MODE  # type: int
+        self.UPLINK = UPLINK  # type: Optional[FrequencyRange.FrequencyRangeT]
+        self.DOWNLINK = DOWNLINK  # type: Optional[FrequencyRange.FrequencyRangeT]
+        self.BEACON = BEACON  # type: Optional[FrequencyRange.FrequencyRangeT]
+        self.BAND = BAND  # type: Optional[List[Band.BandT]]
+        self.POLARIZATION_TYPE = POLARIZATION_TYPE  # type: int
+        self.SIMPLE_POLARIZATION = SIMPLE_POLARIZATION  # type: int
+        self.STOKES_PARAMETERS = STOKES_PARAMETERS  # type: Optional[StokesParameters.StokesParametersT]
+        self.POWER_REQUIRED = POWER_REQUIRED  # type: float
+        self.POWER_TYPE = POWER_TYPE  # type: Optional[str]
+        self.TRANSMIT = TRANSMIT  # type: bool
+        self.RECEIVE = RECEIVE  # type: bool
+        self.SENSOR_TYPE = SENSOR_TYPE  # type: int
+        self.SOURCE = SOURCE  # type: Optional[str]
+        self.LAST_OB_TIME = LAST_OB_TIME  # type: Optional[str]
+        self.LOWER_LEFT_ELEVATION_LIMIT = LOWER_LEFT_ELEVATION_LIMIT  # type: float
+        self.UPPER_LEFT_AZIMUTH_LIMIT = UPPER_LEFT_AZIMUTH_LIMIT  # type: float
+        self.LOWER_RIGHT_ELEVATION_LIMIT = LOWER_RIGHT_ELEVATION_LIMIT  # type: float
+        self.LOWER_LEFT_AZIMUTH_LIMIT = LOWER_LEFT_AZIMUTH_LIMIT  # type: float
+        self.UPPER_RIGHT_ELEVATION_LIMIT = UPPER_RIGHT_ELEVATION_LIMIT  # type: float
+        self.UPPER_RIGHT_AZIMUTH_LIMIT = UPPER_RIGHT_AZIMUTH_LIMIT  # type: float
+        self.LOWER_RIGHT_AZIMUTH_LIMIT = LOWER_RIGHT_AZIMUTH_LIMIT  # type: float
+        self.UPPER_LEFT_ELEVATION_LIMIT = UPPER_LEFT_ELEVATION_LIMIT  # type: float
+        self.RIGHT_GEO_BELT_LIMIT = RIGHT_GEO_BELT_LIMIT  # type: float
+        self.LEFT_GEO_BELT_LIMIT = LEFT_GEO_BELT_LIMIT  # type: float
+        self.MAGNITUDE_LIMIT = MAGNITUDE_LIMIT  # type: float
+        self.TASKABLE = TASKABLE  # type: bool
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        IDM = IDM()
-        IDM.Init(buf, pos)
-        return cls.InitFromObj(IDM)
+        tmpIdm = IDM()
+        tmpIdm.Init(buf, pos)
+        return cls.InitFromObj(tmpIdm)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -541,9 +578,9 @@ class IDMT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, IDM):
+    def InitFromObj(cls, tmpIdm):
         x = IDMT()
-        x._UnPack(IDM)
+        x._UnPack(tmpIdm)
         return x
 
     # IDMT

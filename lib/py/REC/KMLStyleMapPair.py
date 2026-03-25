@@ -2,4 +2,116 @@
 
 # namespace: 
 
-# NOTE KMLStyleMapPair.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Style map pair
+class KMLStyleMapPair(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = KMLStyleMapPair()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsKMLStyleMapPair(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def KMLStyleMapPairBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x4B\x4D\x4C", size_prefixed=size_prefixed)
+
+    # KMLStyleMapPair
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # State (normal or highlight)
+    # KMLStyleMapPair
+    def STATE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # Style URL or inline style ID
+    # KMLStyleMapPair
+    def STYLE_URL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+def KMLStyleMapPairStart(builder):
+    builder.StartObject(2)
+
+def Start(builder):
+    KMLStyleMapPairStart(builder)
+
+def KMLStyleMapPairAddSTATE(builder, STATE):
+    builder.PrependInt8Slot(0, STATE, 0)
+
+def AddSTATE(builder, STATE):
+    KMLStyleMapPairAddSTATE(builder, STATE)
+
+def KMLStyleMapPairAddSTYLE_URL(builder, STYLE_URL):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(STYLE_URL), 0)
+
+def AddSTYLE_URL(builder, STYLE_URL):
+    KMLStyleMapPairAddSTYLE_URL(builder, STYLE_URL)
+
+def KMLStyleMapPairEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return KMLStyleMapPairEnd(builder)
+
+
+class KMLStyleMapPairT(object):
+
+    # KMLStyleMapPairT
+    def __init__(
+        self,
+        STATE = 0,
+        STYLE_URL = None,
+    ):
+        self.STATE = STATE  # type: int
+        self.STYLE_URL = STYLE_URL  # type: Optional[str]
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpKmlstyleMapPair = KMLStyleMapPair()
+        tmpKmlstyleMapPair.Init(buf, pos)
+        return cls.InitFromObj(tmpKmlstyleMapPair)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpKmlstyleMapPair):
+        x = KMLStyleMapPairT()
+        x._UnPack(tmpKmlstyleMapPair)
+        return x
+
+    # KMLStyleMapPairT
+    def _UnPack(self, KMLStyleMapPair):
+        if KMLStyleMapPair is None:
+            return
+        self.STATE = KMLStyleMapPair.STATE()
+        self.STYLE_URL = KMLStyleMapPair.STYLE_URL()
+
+    # KMLStyleMapPairT
+    def Pack(self, builder):
+        if self.STYLE_URL is not None:
+            STYLE_URL = builder.CreateString(self.STYLE_URL)
+        KMLStyleMapPairStart(builder)
+        KMLStyleMapPairAddSTATE(builder, self.STATE)
+        if self.STYLE_URL is not None:
+            KMLStyleMapPairAddSTYLE_URL(builder, STYLE_URL)
+        KMLStyleMapPair = KMLStyleMapPairEnd(builder)
+        return KMLStyleMapPair

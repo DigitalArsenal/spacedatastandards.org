@@ -2,4 +2,116 @@
 
 # namespace: 
 
-# NOTE CZMInterpolation.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Interpolation settings for sampled data
+class CZMInterpolation(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = CZMInterpolation()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsCZMInterpolation(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def CZMInterpolationBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x43\x5A\x4D", size_prefixed=size_prefixed)
+
+    # CZMInterpolation
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Algorithm: LINEAR, LAGRANGE, HERMITE
+    # CZMInterpolation
+    def ALGORITHM(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Polynomial degree (1=linear, 5=typical Lagrange)
+    # CZMInterpolation
+    def DEGREE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+def CZMInterpolationStart(builder):
+    builder.StartObject(2)
+
+def Start(builder):
+    CZMInterpolationStart(builder)
+
+def CZMInterpolationAddALGORITHM(builder, ALGORITHM):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(ALGORITHM), 0)
+
+def AddALGORITHM(builder, ALGORITHM):
+    CZMInterpolationAddALGORITHM(builder, ALGORITHM)
+
+def CZMInterpolationAddDEGREE(builder, DEGREE):
+    builder.PrependInt32Slot(1, DEGREE, 0)
+
+def AddDEGREE(builder, DEGREE):
+    CZMInterpolationAddDEGREE(builder, DEGREE)
+
+def CZMInterpolationEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return CZMInterpolationEnd(builder)
+
+
+class CZMInterpolationT(object):
+
+    # CZMInterpolationT
+    def __init__(
+        self,
+        ALGORITHM = None,
+        DEGREE = 0,
+    ):
+        self.ALGORITHM = ALGORITHM  # type: Optional[str]
+        self.DEGREE = DEGREE  # type: int
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpCzminterpolation = CZMInterpolation()
+        tmpCzminterpolation.Init(buf, pos)
+        return cls.InitFromObj(tmpCzminterpolation)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpCzminterpolation):
+        x = CZMInterpolationT()
+        x._UnPack(tmpCzminterpolation)
+        return x
+
+    # CZMInterpolationT
+    def _UnPack(self, CZMInterpolation):
+        if CZMInterpolation is None:
+            return
+        self.ALGORITHM = CZMInterpolation.ALGORITHM()
+        self.DEGREE = CZMInterpolation.DEGREE()
+
+    # CZMInterpolationT
+    def Pack(self, builder):
+        if self.ALGORITHM is not None:
+            ALGORITHM = builder.CreateString(self.ALGORITHM)
+        CZMInterpolationStart(builder)
+        if self.ALGORITHM is not None:
+            CZMInterpolationAddALGORITHM(builder, ALGORITHM)
+        CZMInterpolationAddDEGREE(builder, self.DEGREE)
+        CZMInterpolation = CZMInterpolationEnd(builder)
+        return CZMInterpolation

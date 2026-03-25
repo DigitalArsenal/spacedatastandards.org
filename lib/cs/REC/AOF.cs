@@ -11,7 +11,7 @@ public struct AOF : IFlatbufferObject
 {
   private Table __p;
   public ByteBuffer ByteBuffer { get { return __p.bb; } }
-  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_24_3_25(); }
+  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_25_12_19(); }
   public static AOF GetRootAsAOF(ByteBuffer _bb) { return GetRootAsAOF(_bb, new AOF()); }
   public static AOF GetRootAsAOF(ByteBuffer _bb, AOF obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
   public static bool AOFBufferHasIdentifier(ByteBuffer _bb) { return Table.__has_identifier(_bb, "$AOF"); }

@@ -51,6 +51,10 @@ func (rcv *commsTransponder) TRANSPONDER_ID() []byte {
 	return nil
 }
 
+func (rcv *commsTransponder) TransponderId() []byte {
+	return rcv.TRANSPONDER_ID()
+}
+
 /// Transponder identifier
 /// Transponder name
 func (rcv *commsTransponder) NAME() []byte {
@@ -59,6 +63,10 @@ func (rcv *commsTransponder) NAME() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *commsTransponder) Name() []byte {
+	return rcv.NAME()
 }
 
 /// Transponder name
@@ -71,6 +79,10 @@ func (rcv *commsTransponder) TYPE() []byte {
 	return nil
 }
 
+func (rcv *commsTransponder) Type() []byte {
+	return rcv.TYPE()
+}
+
 /// Transponder type (e.g., BENT_PIPE, REGENERATIVE, OBP)
 /// Operating band (e.g., C, Ku, Ka, L, S, X)
 func (rcv *commsTransponder) BAND() []byte {
@@ -79,6 +91,10 @@ func (rcv *commsTransponder) BAND() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *commsTransponder) Band() []byte {
+	return rcv.BAND()
 }
 
 /// Operating band (e.g., C, Ku, Ka, L, S, X)
@@ -91,9 +107,17 @@ func (rcv *commsTransponder) UPLINK_FREQ_MIN() float64 {
 	return 0.0
 }
 
+func (rcv *commsTransponder) UplinkFreqMin() float64 {
+	return rcv.UPLINK_FREQ_MIN()
+}
+
 /// Uplink frequency range minimum in MHz
 func (rcv *commsTransponder) MutateUPLINK_FREQ_MIN(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(12, n)
+}
+
+func (rcv *commsTransponder) MutateUplinkFreqMin(n float64) bool {
+	return rcv.MutateUPLINK_FREQ_MIN(n)
 }
 
 /// Uplink frequency range maximum in MHz
@@ -105,9 +129,17 @@ func (rcv *commsTransponder) UPLINK_FREQ_MAX() float64 {
 	return 0.0
 }
 
+func (rcv *commsTransponder) UplinkFreqMax() float64 {
+	return rcv.UPLINK_FREQ_MAX()
+}
+
 /// Uplink frequency range maximum in MHz
 func (rcv *commsTransponder) MutateUPLINK_FREQ_MAX(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(14, n)
+}
+
+func (rcv *commsTransponder) MutateUplinkFreqMax(n float64) bool {
+	return rcv.MutateUPLINK_FREQ_MAX(n)
 }
 
 /// Downlink frequency range minimum in MHz
@@ -119,9 +151,17 @@ func (rcv *commsTransponder) DOWNLINK_FREQ_MIN() float64 {
 	return 0.0
 }
 
+func (rcv *commsTransponder) DownlinkFreqMin() float64 {
+	return rcv.DOWNLINK_FREQ_MIN()
+}
+
 /// Downlink frequency range minimum in MHz
 func (rcv *commsTransponder) MutateDOWNLINK_FREQ_MIN(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(16, n)
+}
+
+func (rcv *commsTransponder) MutateDownlinkFreqMin(n float64) bool {
+	return rcv.MutateDOWNLINK_FREQ_MIN(n)
 }
 
 /// Downlink frequency range maximum in MHz
@@ -133,9 +173,17 @@ func (rcv *commsTransponder) DOWNLINK_FREQ_MAX() float64 {
 	return 0.0
 }
 
+func (rcv *commsTransponder) DownlinkFreqMax() float64 {
+	return rcv.DOWNLINK_FREQ_MAX()
+}
+
 /// Downlink frequency range maximum in MHz
 func (rcv *commsTransponder) MutateDOWNLINK_FREQ_MAX(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(18, n)
+}
+
+func (rcv *commsTransponder) MutateDownlinkFreqMax(n float64) bool {
+	return rcv.MutateDOWNLINK_FREQ_MAX(n)
 }
 
 /// Saturated EIRP in dBW
@@ -147,9 +195,17 @@ func (rcv *commsTransponder) EIRP() float64 {
 	return 0.0
 }
 
+func (rcv *commsTransponder) Eirp() float64 {
+	return rcv.EIRP()
+}
+
 /// Saturated EIRP in dBW
 func (rcv *commsTransponder) MutateEIRP(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(20, n)
+}
+
+func (rcv *commsTransponder) MutateEirp(n float64) bool {
+	return rcv.MutateEIRP(n)
 }
 
 /// G/T in dB/K
@@ -161,9 +217,17 @@ func (rcv *commsTransponder) G_OVER_T() float64 {
 	return 0.0
 }
 
+func (rcv *commsTransponder) GOverT() float64 {
+	return rcv.G_OVER_T()
+}
+
 /// G/T in dB/K
 func (rcv *commsTransponder) MutateG_OVER_T(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(22, n)
+}
+
+func (rcv *commsTransponder) MutateGOverT(n float64) bool {
+	return rcv.MutateG_OVER_T(n)
 }
 
 /// Total bandwidth in MHz
@@ -175,9 +239,17 @@ func (rcv *commsTransponder) BANDWIDTH() float64 {
 	return 0.0
 }
 
+func (rcv *commsTransponder) Bandwidth() float64 {
+	return rcv.BANDWIDTH()
+}
+
 /// Total bandwidth in MHz
 func (rcv *commsTransponder) MutateBANDWIDTH(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(24, n)
+}
+
+func (rcv *commsTransponder) MutateBandwidth(n float64) bool {
+	return rcv.MutateBANDWIDTH(n)
 }
 
 /// Number of channels
@@ -189,9 +261,17 @@ func (rcv *commsTransponder) NUM_CHANNELS() uint32 {
 	return 0
 }
 
+func (rcv *commsTransponder) NumChannels() uint32 {
+	return rcv.NUM_CHANNELS()
+}
+
 /// Number of channels
 func (rcv *commsTransponder) MutateNUM_CHANNELS(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(26, n)
+}
+
+func (rcv *commsTransponder) MutateNumChannels(n uint32) bool {
+	return rcv.MutateNUM_CHANNELS(n)
 }
 
 /// Channels on this transponder
@@ -201,10 +281,17 @@ func (rcv *commsTransponder) CHANNELS(obj *commsChannel, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(commsChannel)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *commsTransponder) Channels(obj *commsChannel, j int) bool {
+	return rcv.CHANNELS(obj, j)
 }
 
 func (rcv *commsTransponder) CHANNELSLength() int {
@@ -213,6 +300,10 @@ func (rcv *commsTransponder) CHANNELSLength() int {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *commsTransponder) ChannelsLength() int {
+	return rcv.CHANNELSLength()
 }
 
 /// Channels on this transponder
@@ -225,6 +316,10 @@ func (rcv *commsTransponder) POLARIZATION() []byte {
 	return nil
 }
 
+func (rcv *commsTransponder) Polarization() []byte {
+	return rcv.POLARIZATION()
+}
+
 /// Polarization (e.g., RHCP, LHCP, LINEAR_H, LINEAR_V)
 func commsTransponderStart(builder *flatbuffers.Builder) {
 	builder.StartObject(14)
@@ -232,47 +327,92 @@ func commsTransponderStart(builder *flatbuffers.Builder) {
 func commsTransponderAddTRANSPONDER_ID(builder *flatbuffers.Builder, TRANSPONDER_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(TRANSPONDER_ID), 0)
 }
+func commsTransponderAddTransponderId(builder *flatbuffers.Builder, TRANSPONDER_ID flatbuffers.UOffsetT) {
+	commsTransponderAddTRANSPONDER_ID(builder, TRANSPONDER_ID)
+}
 func commsTransponderAddNAME(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(NAME), 0)
+}
+func commsTransponderAddName(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
+	commsTransponderAddNAME(builder, NAME)
 }
 func commsTransponderAddTYPE(builder *flatbuffers.Builder, TYPE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(TYPE), 0)
 }
+func commsTransponderAddType(builder *flatbuffers.Builder, TYPE flatbuffers.UOffsetT) {
+	commsTransponderAddTYPE(builder, TYPE)
+}
 func commsTransponderAddBAND(builder *flatbuffers.Builder, BAND flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(BAND), 0)
+}
+func commsTransponderAddBand(builder *flatbuffers.Builder, BAND flatbuffers.UOffsetT) {
+	commsTransponderAddBAND(builder, BAND)
 }
 func commsTransponderAddUPLINK_FREQ_MIN(builder *flatbuffers.Builder, UPLINK_FREQ_MIN float64) {
 	builder.PrependFloat64Slot(4, UPLINK_FREQ_MIN, 0.0)
 }
+func commsTransponderAddUplinkFreqMin(builder *flatbuffers.Builder, UPLINK_FREQ_MIN float64) {
+	commsTransponderAddUPLINK_FREQ_MIN(builder, UPLINK_FREQ_MIN)
+}
 func commsTransponderAddUPLINK_FREQ_MAX(builder *flatbuffers.Builder, UPLINK_FREQ_MAX float64) {
 	builder.PrependFloat64Slot(5, UPLINK_FREQ_MAX, 0.0)
+}
+func commsTransponderAddUplinkFreqMax(builder *flatbuffers.Builder, UPLINK_FREQ_MAX float64) {
+	commsTransponderAddUPLINK_FREQ_MAX(builder, UPLINK_FREQ_MAX)
 }
 func commsTransponderAddDOWNLINK_FREQ_MIN(builder *flatbuffers.Builder, DOWNLINK_FREQ_MIN float64) {
 	builder.PrependFloat64Slot(6, DOWNLINK_FREQ_MIN, 0.0)
 }
+func commsTransponderAddDownlinkFreqMin(builder *flatbuffers.Builder, DOWNLINK_FREQ_MIN float64) {
+	commsTransponderAddDOWNLINK_FREQ_MIN(builder, DOWNLINK_FREQ_MIN)
+}
 func commsTransponderAddDOWNLINK_FREQ_MAX(builder *flatbuffers.Builder, DOWNLINK_FREQ_MAX float64) {
 	builder.PrependFloat64Slot(7, DOWNLINK_FREQ_MAX, 0.0)
+}
+func commsTransponderAddDownlinkFreqMax(builder *flatbuffers.Builder, DOWNLINK_FREQ_MAX float64) {
+	commsTransponderAddDOWNLINK_FREQ_MAX(builder, DOWNLINK_FREQ_MAX)
 }
 func commsTransponderAddEIRP(builder *flatbuffers.Builder, EIRP float64) {
 	builder.PrependFloat64Slot(8, EIRP, 0.0)
 }
+func commsTransponderAddEirp(builder *flatbuffers.Builder, EIRP float64) {
+	commsTransponderAddEIRP(builder, EIRP)
+}
 func commsTransponderAddG_OVER_T(builder *flatbuffers.Builder, G_OVER_T float64) {
 	builder.PrependFloat64Slot(9, G_OVER_T, 0.0)
+}
+func commsTransponderAddGOverT(builder *flatbuffers.Builder, G_OVER_T float64) {
+	commsTransponderAddG_OVER_T(builder, G_OVER_T)
 }
 func commsTransponderAddBANDWIDTH(builder *flatbuffers.Builder, BANDWIDTH float64) {
 	builder.PrependFloat64Slot(10, BANDWIDTH, 0.0)
 }
+func commsTransponderAddBandwidth(builder *flatbuffers.Builder, BANDWIDTH float64) {
+	commsTransponderAddBANDWIDTH(builder, BANDWIDTH)
+}
 func commsTransponderAddNUM_CHANNELS(builder *flatbuffers.Builder, NUM_CHANNELS uint32) {
 	builder.PrependUint32Slot(11, NUM_CHANNELS, 0)
+}
+func commsTransponderAddNumChannels(builder *flatbuffers.Builder, NUM_CHANNELS uint32) {
+	commsTransponderAddNUM_CHANNELS(builder, NUM_CHANNELS)
 }
 func commsTransponderAddCHANNELS(builder *flatbuffers.Builder, CHANNELS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(12, flatbuffers.UOffsetT(CHANNELS), 0)
 }
+func commsTransponderAddChannels(builder *flatbuffers.Builder, CHANNELS flatbuffers.UOffsetT) {
+	commsTransponderAddCHANNELS(builder, CHANNELS)
+}
 func commsTransponderStartCHANNELSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
+func commsTransponderStartChannelsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return commsTransponderStartCHANNELSVector(builder, numElems)
+}
 func commsTransponderAddPOLARIZATION(builder *flatbuffers.Builder, POLARIZATION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(13, flatbuffers.UOffsetT(POLARIZATION), 0)
+}
+func commsTransponderAddPolarization(builder *flatbuffers.Builder, POLARIZATION flatbuffers.UOffsetT) {
+	commsTransponderAddPOLARIZATION(builder, POLARIZATION)
 }
 func commsTransponderEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

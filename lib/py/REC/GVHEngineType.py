@@ -2,4 +2,10 @@
 
 # namespace: 
 
-# NOTE GVHEngineType.py does not declare any structs or enums
+class GVHEngineType(object):
+    DIESEL = 0
+    GASOLINE = 1
+    GAS_TURBINE = 2
+    MULTIFUEL = 3
+    HYBRID = 4
+    ELECTRIC = 5

@@ -65,6 +65,18 @@
       "type" : "string",
       "enum": ["DRY", "WET"]
     },
+    "polynomialBasisType" : {
+      "type" : "string",
+      "enum": ["CHEBYSHEV", "LEGENDRE", "HERMITE", "LAGRANGE", "POWER_SERIES"]
+    },
+    "ppeAnomalyType" : {
+      "type" : "string",
+      "enum": ["TRUE_ANOMALY", "MEAN_ANOMALY", "ECCENTRIC_ANOMALY"]
+    },
+    "sizeShapeType" : {
+      "type" : "string",
+      "enum": ["SMA", "R_PERIAPSIS"]
+    },
     "CelestialFrameWrapper" : {
       "type" : "object",
       "properties" : {
@@ -443,254 +455,189 @@
       },
       "additionalProperties" : false
     },
-    "ephemerisDataLine" : {
+    "PPEPositionRecord" : {
       "type" : "object",
-      "description" : "A single ephemeris data line (for non-uniform time steps only)\nUse this format when time intervals between states are irregular.\nFor uniform time steps, use the compact EPHEMERIS_DATA array instead.",
+      "description" : "A single time-segment record of polynomial coefficients for Cartesian position\n(and optionally velocity). Coefficients are stored per axis.\n\nTo evaluate position at time t within this record's validity window:\n1. Compute normalized time: tau = (t - EPOCH_MID) / EPOCH_HALF_SPAN\nwhere tau is in [-1, +1].\n2. Evaluate the polynomial basis of degree (NUM_COEFFICIENTS - 1) using\nthe coefficients for each axis.\n\nVelocity coefficients, if present, follow the same evaluation procedure.\nIf HAS_VELOCITY_COEFFICIENTS is false, velocity can be obtained by\nanalytically differentiating the position polynomial.",
       "properties" : {
-        "EPOCH" : {
+        "EPOCH_MID" : {
                 "type" : "string",
-                "description" : "Epoch time, in ISO 8601 UTC format (required for non-uniform steps)"
+                "description" : "Midpoint epoch of this record's validity window (ISO 8601 UTC or TDB).\nTogether with EPOCH_HALF_SPAN, defines the time interval:\n[EPOCH_MID - EPOCH_HALF_SPAN, EPOCH_MID + EPOCH_HALF_SPAN]"
               },
-        "X" : {
+        "EPOCH_HALF_SPAN" : {
                 "type" : "number",
-                "description" : "Position vector X-component km"
+                "description" : "Half-span of the validity window in seconds.\nThe full span is 2 * EPOCH_HALF_SPAN seconds centered on EPOCH_MID."
               },
-        "Y" : {
-                "type" : "number",
-                "description" : "Position vector Y-component km"
+        "NUM_COEFFICIENTS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Number of polynomial coefficients per axis.\nThe polynomial degree is (NUM_COEFFICIENTS - 1).\nTypical values: 8-32 for high-fidelity ephemeris fits."
               },
-        "Z" : {
-                "type" : "number",
-                "description" : "Position vector Z-component km"
+        "BASIS_TYPE" : {
+                "$ref" : "#/definitions/polynomialBasisType",
+                "description" : "Polynomial basis type for interpreting the coefficient arrays."
               },
-        "X_DOT" : {
-                "type" : "number",
-                "description" : "Velocity vector X-component km/s"
+        "POS_COEFF_X" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Position coefficients for X-axis (km).\nLength must equal NUM_COEFFICIENTS. Ordered c0, c1, ..., c_{N-1}."
               },
-        "Y_DOT" : {
-                "type" : "number",
-                "description" : "Velocity vector Y-component km/s"
+        "POS_COEFF_Y" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Position coefficients for Y-axis (km).\nLength must equal NUM_COEFFICIENTS."
               },
-        "Z_DOT" : {
-                "type" : "number",
-                "description" : "Velocity vector Z-component km/s"
+        "POS_COEFF_Z" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Position coefficients for Z-axis (km).\nLength must equal NUM_COEFFICIENTS."
               },
-        "X_DDOT" : {
-                "type" : "number",
-                "description" : "Optional: Acceleration vector X-component km/s²"
+        "HAS_VELOCITY_COEFFICIENTS" : {
+                "type" : "boolean",
+                "description" : "Whether explicit velocity coefficients are provided.\nIf false, velocity should be derived by differentiating the position polynomial."
               },
-        "Y_DDOT" : {
-                "type" : "number",
-                "description" : "Optional: Acceleration vector Y-component km/s²"
+        "VEL_COEFF_X" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Velocity coefficients for X-axis (km/s). Optional.\nLength must equal NUM_COEFFICIENTS if present."
               },
-        "Z_DDOT" : {
+        "VEL_COEFF_Y" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Velocity coefficients for Y-axis (km/s). Optional."
+              },
+        "VEL_COEFF_Z" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Velocity coefficients for Z-axis (km/s). Optional."
+              },
+        "MAX_POSITION_RESIDUAL" : {
                 "type" : "number",
-                "description" : "Optional: Acceleration vector Z-component km/s²"
+                "description" : "Maximum position fit residual over this segment (km). Optional quality metric."
+              },
+        "RMS_POSITION_RESIDUAL" : {
+                "type" : "number",
+                "description" : "RMS position fit residual over this segment (km). Optional quality metric."
               }
       },
+      "required" : ["EPOCH_MID", "POS_COEFF_X", "POS_COEFF_Y", "POS_COEFF_Z"],
       "additionalProperties" : false
     },
-    "covarianceMatrixLine" : {
+    "PPEOrbitalElementRecord" : {
       "type" : "object",
-      "description" : "Position/Velocity Covariance Matrix Line",
+      "description" : "A single time-segment record of polynomial coefficients for classical orbital elements.\n\nThe six classical elements are:\n1. SMA or R_PERIAPSIS (size/shape) — see SIZE_SHAPE_TYPE\n2. Eccentricity (dimensionless)\n3. Inclination (degrees)\n4. Right Ascension of Ascending Node / RAAN (degrees)\n5. Argument of Periapsis (degrees)\n6. Anomaly (degrees) — see ANOMALY_TYPE\n\nEvaluation follows the same normalized-time procedure as PPEPositionRecord.",
       "properties" : {
-        "EPOCH" : {
+        "EPOCH_MID" : {
                 "type" : "string",
-                "description" : "Epoch"
+                "description" : "Midpoint epoch of this record's validity window (ISO 8601 UTC or TDB)."
               },
-        "CX_X" : {
+        "EPOCH_HALF_SPAN" : {
                 "type" : "number",
-                "description" : "Covariance matrix [1,1] km**2"
+                "description" : "Half-span of the validity window in seconds."
               },
-        "CY_X" : {
-                "type" : "number",
-                "description" : "Covariance matrix [2,1] km**2"
+        "NUM_COEFFICIENTS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Number of polynomial coefficients per element."
               },
-        "CY_Y" : {
-                "type" : "number",
-                "description" : "Covariance matrix [2,2] km**2"
+        "BASIS_TYPE" : {
+                "$ref" : "#/definitions/polynomialBasisType",
+                "description" : "Polynomial basis type for interpreting the coefficient arrays."
               },
-        "CZ_X" : {
-                "type" : "number",
-                "description" : "Covariance matrix [3,1] km**2"
+        "SIZE_SHAPE_TYPE" : {
+                "$ref" : "#/definitions/sizeShapeType",
+                "description" : "Parameterization of the first orbital element (SMA vs R_PERIAPSIS)."
               },
-        "CZ_Y" : {
-                "type" : "number",
-                "description" : "Covariance matrix [3,2] km**2"
+        "ANOMALY_TYPE" : {
+                "$ref" : "#/definitions/ppeAnomalyType",
+                "description" : "Anomaly type for the sixth orbital element."
               },
-        "CZ_Z" : {
-                "type" : "number",
-                "description" : "Covariance matrix [3,3] km**2"
+        "COEFF_SIZE_SHAPE" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Coefficients for SMA or radius of periapsis (km).\nLength must equal NUM_COEFFICIENTS."
               },
-        "CX_DOT_X" : {
-                "type" : "number",
-                "description" : "Covariance matrix [4,1] km**2/s"
+        "COEFF_ECCENTRICITY" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Coefficients for eccentricity (dimensionless).\nLength must equal NUM_COEFFICIENTS."
               },
-        "CX_DOT_Y" : {
-                "type" : "number",
-                "description" : "Covariance matrix [4,2] km**2/s"
+        "COEFF_INCLINATION" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Coefficients for inclination (degrees).\nLength must equal NUM_COEFFICIENTS."
               },
-        "CX_DOT_Z" : {
-                "type" : "number",
-                "description" : "Covariance matrix [4,3] km**2/s"
+        "COEFF_RAAN" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Coefficients for RAAN (degrees).\nLength must equal NUM_COEFFICIENTS."
               },
-        "CX_DOT_X_DOT" : {
-                "type" : "number",
-                "description" : "Covariance matrix [4,4] km**2/s**2"
+        "COEFF_ARG_PERIAPSIS" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Coefficients for argument of periapsis (degrees).\nLength must equal NUM_COEFFICIENTS."
               },
-        "CY_DOT_X" : {
-                "type" : "number",
-                "description" : "Covariance matrix [5,1] km**2/s"
+        "COEFF_ANOMALY" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Coefficients for anomaly (degrees). See ANOMALY_TYPE for interpretation.\nLength must equal NUM_COEFFICIENTS."
               },
-        "CY_DOT_Y" : {
+        "MAX_ELEMENT_RESIDUAL" : {
                 "type" : "number",
-                "description" : "Covariance matrix [5,2] km**2/s"
+                "description" : "Maximum element fit residual over this segment. Optional quality metric.\nUnits depend on the element (km for SMA, degrees for angles, dimensionless for ecc)."
               },
-        "CY_DOT_Z" : {
+        "RMS_ELEMENT_RESIDUAL" : {
                 "type" : "number",
-                "description" : "Covariance matrix [5,3] km**2/s"
-              },
-        "CY_DOT_X_DOT" : {
-                "type" : "number",
-                "description" : "Covariance matrix [5,4] km**2/s**2"
-              },
-        "CY_DOT_Y_DOT" : {
-                "type" : "number",
-                "description" : "Covariance matrix [5,5] km**2/s**2"
-              },
-        "CZ_DOT_X" : {
-                "type" : "number",
-                "description" : "Covariance matrix [6,1] km**2/s"
-              },
-        "CZ_DOT_Y" : {
-                "type" : "number",
-                "description" : "Covariance matrix [6,2] km**2/s"
-              },
-        "CZ_DOT_Z" : {
-                "type" : "number",
-                "description" : "Covariance matrix [6,3] km**2/s"
-              },
-        "CZ_DOT_X_DOT" : {
-                "type" : "number",
-                "description" : "Covariance matrix [6,4] km**2/s**2"
-              },
-        "CZ_DOT_Y_DOT" : {
-                "type" : "number",
-                "description" : "Covariance matrix [6,5] km**2/s**2"
-              },
-        "CZ_DOT_Z_DOT" : {
-                "type" : "number",
-                "description" : "Covariance matrix [6,6] km**2/s**2"
+                "description" : "RMS element fit residual over this segment. Optional quality metric."
               }
       },
+      "required" : ["EPOCH_MID", "COEFF_SIZE_SHAPE", "COEFF_ECCENTRICITY", "COEFF_INCLINATION", "COEFF_RAAN", "COEFF_ARG_PERIAPSIS", "COEFF_ANOMALY"],
       "additionalProperties" : false
     },
-    "ephemerisDataBlock" : {
+    "PPE" : {
       "type" : "object",
-      "description" : "OEM Ephemeris Data Block",
+      "description" : "Polynomial Ephemeris — top-level message containing metadata and\none or more polynomial coefficient records for a single space object.\n\nA PPE message may contain position records, orbital element records, or both.\nRecords should be ordered chronologically by EPOCH_MID and should collectively\ncover the time span [START_TIME, STOP_TIME] without gaps.",
       "properties" : {
         "COMMENT" : {
-                "type" : "string",
-                "description" : "Plain-Text Comment"
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Plain-text comments."
               },
         "OBJECT" : {
                 "$ref" : "#/definitions/CAT",
-                "description" : "Satellite name for the first object"
+                "description" : "Space object identification."
               },
         "CENTER_NAME" : {
                 "type" : "string",
-                "description" : "Origin of reference frame (EARTH, MARS, MOON, etc.)"
+                "description" : "Origin of the reference frame (e.g., EARTH, MOON, MARS)."
               },
         "REFERENCE_FRAME" : {
                 "$ref" : "#/definitions/RFM",
-                "description" : "Name of the reference frame (TEME, EME2000, etc.)"
-              },
-        "REFERENCE_FRAME_EPOCH" : {
-                "type" : "string",
-                "description" : "Epoch of reference frame, if not intrinsic to the definition of the reference frame"
-              },
-        "COV_REFERENCE_FRAME" : {
-                "$ref" : "#/definitions/RFM",
-                "description" : "Reference frame for the covariance matrix"
+                "description" : "Reference frame for position/velocity coefficients."
               },
         "TIME_SYSTEM" : {
                 "$ref" : "#/definitions/timeSystem",
-                "description" : "Time system used for the orbit state and covariance matrix. (UTC)"
+                "description" : "Time system used for all epochs in this message."
               },
         "START_TIME" : {
                 "type" : "string",
-                "description" : "Start of TOTAL time span covered by ephemeris data and covariance data (ISO 8601)"
-              },
-        "USEABLE_START_TIME" : {
-                "type" : "string",
-                "description" : "Optional start USEABLE time span covered by ephemeris data (ISO 8601)"
-              },
-        "USEABLE_STOP_TIME" : {
-                "type" : "string",
-                "description" : "Optional end of USEABLE time span covered by ephemeris data (ISO 8601)"
+                "description" : "Start of the total time span covered by this ephemeris (ISO 8601)."
               },
         "STOP_TIME" : {
                 "type" : "string",
-                "description" : "End of TOTAL time span covered by ephemeris data and covariance data (ISO 8601)"
+                "description" : "End of the total time span covered by this ephemeris (ISO 8601)."
               },
-        "INTERPOLATION" : {
+        "DEFAULT_BASIS_TYPE" : {
+                "$ref" : "#/definitions/polynomialBasisType",
+                "description" : "Default polynomial basis type for all records in this message.\nIndividual records may override this with their own BASIS_TYPE field."
+              },
+        "POSITION_RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/PPEPositionRecord"},
+                "description" : "Array of position polynomial records.\nEach record covers a time segment; together they span [START_TIME, STOP_TIME]."
+              },
+        "ORBITAL_ELEMENT_RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/PPEOrbitalElementRecord"},
+                "description" : "Array of orbital element polynomial records.\nEach record covers a time segment; together they span [START_TIME, STOP_TIME]."
+              },
+        "EPHEMERIS_SOURCE" : {
                 "type" : "string",
-                "description" : "Recommended interpolation method for ephemeris data (Hermite, Linear, Lagrange, etc.)"
+                "description" : "Generating ephemeris source (e.g., \"JPL DE440\", \"HPOP v2.1\", \"Basilisk chebyPosEphem\")."
               },
-        "INTERPOLATION_DEGREE" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
-                "description" : "Recommended interpolation degree for ephemeris data"
-              },
-        "STEP_SIZE" : {
+        "NOMINAL_SEGMENT_SPAN" : {
                 "type" : "number",
-                "description" : "Time interval between ephemeris states in seconds.\nIf > 0: Use compact EPHEMERIS_DATA array (times are implicit).\nIf 0 or omitted: Use EPHEMERIS_DATA_LINES with explicit epochs."
+                "description" : "Fit span in seconds used to generate each polynomial segment.\nInformational; actual spans are in individual records."
               },
-        "STATE_VECTOR_SIZE" : {
-                "type" : "integer", "minimum" : 0, "maximum" :255,
-                "description" : "Number of components per state vector in EPHEMERIS_DATA array.\n6 = position + velocity (X, Y, Z, X_DOT, Y_DOT, Z_DOT)\n9 = position + velocity + acceleration (adds X_DDOT, Y_DDOT, Z_DDOT)\nOnly used when STEP_SIZE > 0. Default is 6."
-              },
-        "EPHEMERIS_DATA" : {
-                "type" : "array", "items" : {"type" : "number"},
-                "description" : "Compact ephemeris data as row-major array of doubles.\nOnly used when STEP_SIZE > 0.\nLayout: [x0,y0,z0,xdot0,ydot0,zdot0, x1,y1,z1,xdot1,ydot1,zdot1, ...]\nUnits: position in km, velocity in km/s, acceleration in km/s²\nLength must be divisible by STATE_VECTOR_SIZE.\nNumber of states = length(EPHEMERIS_DATA) / STATE_VECTOR_SIZE"
-              },
-        "EPHEMERIS_DATA_LINES" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/ephemerisDataLine"},
-                "description" : "Array of ephemeris data lines with explicit epochs.\nOnly used when STEP_SIZE == 0 or omitted (non-uniform time steps).\nEach line contains its own EPOCH timestamp."
-              },
-        "COVARIANCE_MATRIX_LINES" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/covarianceMatrixLine"},
-                "description" : "Array of covariance matrix lines (optional)"
-              }
-      },
-      "additionalProperties" : false
-    },
-    "OEM" : {
-      "type" : "object",
-      "description" : "Orbit Ephemeris Message",
-      "properties" : {
-        "CLASSIFICATION" : {
-                "type" : "string",
-                "description" : "OEM Header\nClassification marking of the data in IC/CAPCO Portion-marked format."
-              },
-        "CCSDS_OEM_VERS" : {
-                "type" : "number",
-                "description" : "OEM Version"
-              },
-        "CREATION_DATE" : {
-                "type" : "string",
-                "description" : "Creation Date"
-              },
-        "ORIGINATOR" : {
-                "type" : "string",
-                "description" : "Originator"
-              },
-        "EPHEMERIS_DATA_BLOCK" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/ephemerisDataBlock"},
-                "description" : "Array of ephemeris data blocks"
+        "NOMINAL_NUM_COEFFICIENTS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Nominal number of coefficients per segment.\nInformational; actual counts are in individual records."
               }
       },
       "additionalProperties" : false
     }
   },
-  "$ref" : "#/definitions/OEM"
+  "$ref" : "#/definitions/PPE"
 }

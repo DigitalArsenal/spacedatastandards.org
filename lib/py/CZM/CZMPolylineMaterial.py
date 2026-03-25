@@ -144,18 +144,25 @@ except:
 class CZMPolylineMaterialT(object):
 
     # CZMPolylineMaterialT
-    def __init__(self):
-        self.SOLID_COLOR = None  # type: Optional[CZMSolidColorMaterial.CZMSolidColorMaterialT]
-        self.POLYLINE_OUTLINE = None  # type: Optional[CZMPolylineOutlineMaterial.CZMPolylineOutlineMaterialT]
-        self.POLYLINE_ARROW = None  # type: Optional[CZMPolylineArrowMaterial.CZMPolylineArrowMaterialT]
-        self.POLYLINE_DASH = None  # type: Optional[CZMPolylineDashMaterial.CZMPolylineDashMaterialT]
-        self.POLYLINE_GLOW = None  # type: Optional[CZMPolylineGlowMaterial.CZMPolylineGlowMaterialT]
+    def __init__(
+        self,
+        SOLID_COLOR = None,
+        POLYLINE_OUTLINE = None,
+        POLYLINE_ARROW = None,
+        POLYLINE_DASH = None,
+        POLYLINE_GLOW = None,
+    ):
+        self.SOLID_COLOR = SOLID_COLOR  # type: Optional[CZMSolidColorMaterial.CZMSolidColorMaterialT]
+        self.POLYLINE_OUTLINE = POLYLINE_OUTLINE  # type: Optional[CZMPolylineOutlineMaterial.CZMPolylineOutlineMaterialT]
+        self.POLYLINE_ARROW = POLYLINE_ARROW  # type: Optional[CZMPolylineArrowMaterial.CZMPolylineArrowMaterialT]
+        self.POLYLINE_DASH = POLYLINE_DASH  # type: Optional[CZMPolylineDashMaterial.CZMPolylineDashMaterialT]
+        self.POLYLINE_GLOW = POLYLINE_GLOW  # type: Optional[CZMPolylineGlowMaterial.CZMPolylineGlowMaterialT]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        czmpolylineMaterial = CZMPolylineMaterial()
-        czmpolylineMaterial.Init(buf, pos)
-        return cls.InitFromObj(czmpolylineMaterial)
+        tmpCzmpolylineMaterial = CZMPolylineMaterial()
+        tmpCzmpolylineMaterial.Init(buf, pos)
+        return cls.InitFromObj(tmpCzmpolylineMaterial)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -163,25 +170,25 @@ class CZMPolylineMaterialT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, czmpolylineMaterial):
+    def InitFromObj(cls, tmpCzmpolylineMaterial):
         x = CZMPolylineMaterialT()
-        x._UnPack(czmpolylineMaterial)
+        x._UnPack(tmpCzmpolylineMaterial)
         return x
 
     # CZMPolylineMaterialT
-    def _UnPack(self, czmpolylineMaterial):
-        if czmpolylineMaterial is None:
+    def _UnPack(self, CZMPolylineMaterial):
+        if CZMPolylineMaterial is None:
             return
-        if czmpolylineMaterial.SOLID_COLOR() is not None:
-            self.SOLID_COLOR = CZMSolidColorMaterial.CZMSolidColorMaterialT.InitFromObj(czmpolylineMaterial.SOLID_COLOR())
-        if czmpolylineMaterial.POLYLINE_OUTLINE() is not None:
-            self.POLYLINE_OUTLINE = CZMPolylineOutlineMaterial.CZMPolylineOutlineMaterialT.InitFromObj(czmpolylineMaterial.POLYLINE_OUTLINE())
-        if czmpolylineMaterial.POLYLINE_ARROW() is not None:
-            self.POLYLINE_ARROW = CZMPolylineArrowMaterial.CZMPolylineArrowMaterialT.InitFromObj(czmpolylineMaterial.POLYLINE_ARROW())
-        if czmpolylineMaterial.POLYLINE_DASH() is not None:
-            self.POLYLINE_DASH = CZMPolylineDashMaterial.CZMPolylineDashMaterialT.InitFromObj(czmpolylineMaterial.POLYLINE_DASH())
-        if czmpolylineMaterial.POLYLINE_GLOW() is not None:
-            self.POLYLINE_GLOW = CZMPolylineGlowMaterial.CZMPolylineGlowMaterialT.InitFromObj(czmpolylineMaterial.POLYLINE_GLOW())
+        if CZMPolylineMaterial.SOLID_COLOR() is not None:
+            self.SOLID_COLOR = CZMSolidColorMaterial.CZMSolidColorMaterialT.InitFromObj(CZMPolylineMaterial.SOLID_COLOR())
+        if CZMPolylineMaterial.POLYLINE_OUTLINE() is not None:
+            self.POLYLINE_OUTLINE = CZMPolylineOutlineMaterial.CZMPolylineOutlineMaterialT.InitFromObj(CZMPolylineMaterial.POLYLINE_OUTLINE())
+        if CZMPolylineMaterial.POLYLINE_ARROW() is not None:
+            self.POLYLINE_ARROW = CZMPolylineArrowMaterial.CZMPolylineArrowMaterialT.InitFromObj(CZMPolylineMaterial.POLYLINE_ARROW())
+        if CZMPolylineMaterial.POLYLINE_DASH() is not None:
+            self.POLYLINE_DASH = CZMPolylineDashMaterial.CZMPolylineDashMaterialT.InitFromObj(CZMPolylineMaterial.POLYLINE_DASH())
+        if CZMPolylineMaterial.POLYLINE_GLOW() is not None:
+            self.POLYLINE_GLOW = CZMPolylineGlowMaterial.CZMPolylineGlowMaterialT.InitFromObj(CZMPolylineMaterial.POLYLINE_GLOW())
 
     # CZMPolylineMaterialT
     def Pack(self, builder):
@@ -206,5 +213,5 @@ class CZMPolylineMaterialT(object):
             CZMPolylineMaterialAddPOLYLINE_DASH(builder, POLYLINE_DASH)
         if self.POLYLINE_GLOW is not None:
             CZMPolylineMaterialAddPOLYLINE_GLOW(builder, POLYLINE_GLOW)
-        czmpolylineMaterial = CZMPolylineMaterialEnd(builder)
-        return czmpolylineMaterial
+        CZMPolylineMaterial = CZMPolylineMaterialEnd(builder)
+        return CZMPolylineMaterial

@@ -51,9 +51,17 @@ func (rcv *KMLLatLonAltBox) NORTH() float64 {
 	return 0.0
 }
 
+func (rcv *KMLLatLonAltBox) North() float64 {
+	return rcv.NORTH()
+}
+
 /// North latitude
 func (rcv *KMLLatLonAltBox) MutateNORTH(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(4, n)
+}
+
+func (rcv *KMLLatLonAltBox) MutateNorth(n float64) bool {
+	return rcv.MutateNORTH(n)
 }
 
 /// South latitude
@@ -65,9 +73,17 @@ func (rcv *KMLLatLonAltBox) SOUTH() float64 {
 	return 0.0
 }
 
+func (rcv *KMLLatLonAltBox) South() float64 {
+	return rcv.SOUTH()
+}
+
 /// South latitude
 func (rcv *KMLLatLonAltBox) MutateSOUTH(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(6, n)
+}
+
+func (rcv *KMLLatLonAltBox) MutateSouth(n float64) bool {
+	return rcv.MutateSOUTH(n)
 }
 
 /// East longitude
@@ -79,9 +95,17 @@ func (rcv *KMLLatLonAltBox) EAST() float64 {
 	return 0.0
 }
 
+func (rcv *KMLLatLonAltBox) East() float64 {
+	return rcv.EAST()
+}
+
 /// East longitude
 func (rcv *KMLLatLonAltBox) MutateEAST(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(8, n)
+}
+
+func (rcv *KMLLatLonAltBox) MutateEast(n float64) bool {
+	return rcv.MutateEAST(n)
 }
 
 /// West longitude
@@ -93,9 +117,17 @@ func (rcv *KMLLatLonAltBox) WEST() float64 {
 	return 0.0
 }
 
+func (rcv *KMLLatLonAltBox) West() float64 {
+	return rcv.WEST()
+}
+
 /// West longitude
 func (rcv *KMLLatLonAltBox) MutateWEST(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(10, n)
+}
+
+func (rcv *KMLLatLonAltBox) MutateWest(n float64) bool {
+	return rcv.MutateWEST(n)
 }
 
 /// Minimum altitude
@@ -107,9 +139,17 @@ func (rcv *KMLLatLonAltBox) MIN_ALTITUDE() float64 {
 	return 0.0
 }
 
+func (rcv *KMLLatLonAltBox) MinAltitude() float64 {
+	return rcv.MIN_ALTITUDE()
+}
+
 /// Minimum altitude
 func (rcv *KMLLatLonAltBox) MutateMIN_ALTITUDE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(12, n)
+}
+
+func (rcv *KMLLatLonAltBox) MutateMinAltitude(n float64) bool {
+	return rcv.MutateMIN_ALTITUDE(n)
 }
 
 /// Maximum altitude
@@ -121,9 +161,17 @@ func (rcv *KMLLatLonAltBox) MAX_ALTITUDE() float64 {
 	return 0.0
 }
 
+func (rcv *KMLLatLonAltBox) MaxAltitude() float64 {
+	return rcv.MAX_ALTITUDE()
+}
+
 /// Maximum altitude
 func (rcv *KMLLatLonAltBox) MutateMAX_ALTITUDE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(14, n)
+}
+
+func (rcv *KMLLatLonAltBox) MutateMaxAltitude(n float64) bool {
+	return rcv.MutateMAX_ALTITUDE(n)
 }
 
 /// Altitude mode
@@ -135,9 +183,17 @@ func (rcv *KMLLatLonAltBox) ALTITUDE_MODE() KMLAltitudeMode {
 	return 0
 }
 
+func (rcv *KMLLatLonAltBox) AltitudeMode() KMLAltitudeMode {
+	return rcv.ALTITUDE_MODE()
+}
+
 /// Altitude mode
 func (rcv *KMLLatLonAltBox) MutateALTITUDE_MODE(n KMLAltitudeMode) bool {
 	return rcv._tab.MutateInt8Slot(16, int8(n))
+}
+
+func (rcv *KMLLatLonAltBox) MutateAltitudeMode(n KMLAltitudeMode) bool {
+	return rcv.MutateALTITUDE_MODE(n)
 }
 
 func KMLLatLonAltBoxStart(builder *flatbuffers.Builder) {
@@ -146,23 +202,44 @@ func KMLLatLonAltBoxStart(builder *flatbuffers.Builder) {
 func KMLLatLonAltBoxAddNORTH(builder *flatbuffers.Builder, NORTH float64) {
 	builder.PrependFloat64Slot(0, NORTH, 0.0)
 }
+func KMLLatLonAltBoxAddNorth(builder *flatbuffers.Builder, NORTH float64) {
+	KMLLatLonAltBoxAddNORTH(builder, NORTH)
+}
 func KMLLatLonAltBoxAddSOUTH(builder *flatbuffers.Builder, SOUTH float64) {
 	builder.PrependFloat64Slot(1, SOUTH, 0.0)
+}
+func KMLLatLonAltBoxAddSouth(builder *flatbuffers.Builder, SOUTH float64) {
+	KMLLatLonAltBoxAddSOUTH(builder, SOUTH)
 }
 func KMLLatLonAltBoxAddEAST(builder *flatbuffers.Builder, EAST float64) {
 	builder.PrependFloat64Slot(2, EAST, 0.0)
 }
+func KMLLatLonAltBoxAddEast(builder *flatbuffers.Builder, EAST float64) {
+	KMLLatLonAltBoxAddEAST(builder, EAST)
+}
 func KMLLatLonAltBoxAddWEST(builder *flatbuffers.Builder, WEST float64) {
 	builder.PrependFloat64Slot(3, WEST, 0.0)
+}
+func KMLLatLonAltBoxAddWest(builder *flatbuffers.Builder, WEST float64) {
+	KMLLatLonAltBoxAddWEST(builder, WEST)
 }
 func KMLLatLonAltBoxAddMIN_ALTITUDE(builder *flatbuffers.Builder, MIN_ALTITUDE float64) {
 	builder.PrependFloat64Slot(4, MIN_ALTITUDE, 0.0)
 }
+func KMLLatLonAltBoxAddMinAltitude(builder *flatbuffers.Builder, MIN_ALTITUDE float64) {
+	KMLLatLonAltBoxAddMIN_ALTITUDE(builder, MIN_ALTITUDE)
+}
 func KMLLatLonAltBoxAddMAX_ALTITUDE(builder *flatbuffers.Builder, MAX_ALTITUDE float64) {
 	builder.PrependFloat64Slot(5, MAX_ALTITUDE, 0.0)
 }
+func KMLLatLonAltBoxAddMaxAltitude(builder *flatbuffers.Builder, MAX_ALTITUDE float64) {
+	KMLLatLonAltBoxAddMAX_ALTITUDE(builder, MAX_ALTITUDE)
+}
 func KMLLatLonAltBoxAddALTITUDE_MODE(builder *flatbuffers.Builder, ALTITUDE_MODE KMLAltitudeMode) {
 	builder.PrependInt8Slot(6, int8(ALTITUDE_MODE), 0)
+}
+func KMLLatLonAltBoxAddAltitudeMode(builder *flatbuffers.Builder, ALTITUDE_MODE KMLAltitudeMode) {
+	KMLLatLonAltBoxAddALTITUDE_MODE(builder, ALTITUDE_MODE)
 }
 func KMLLatLonAltBoxEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

@@ -73,15 +73,19 @@ def End(builder):
 class SplinePointT(object):
 
     # SplinePointT
-    def __init__(self):
-        self.RAW = 0.0  # type: float
-        self.CALIBRATED = 0.0  # type: float
+    def __init__(
+        self,
+        RAW = 0.0,
+        CALIBRATED = 0.0,
+    ):
+        self.RAW = RAW  # type: float
+        self.CALIBRATED = CALIBRATED  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        splinePoint = SplinePoint()
-        splinePoint.Init(buf, pos)
-        return cls.InitFromObj(splinePoint)
+        tmpSplinePoint = SplinePoint()
+        tmpSplinePoint.Init(buf, pos)
+        return cls.InitFromObj(tmpSplinePoint)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -89,22 +93,22 @@ class SplinePointT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, splinePoint):
+    def InitFromObj(cls, tmpSplinePoint):
         x = SplinePointT()
-        x._UnPack(splinePoint)
+        x._UnPack(tmpSplinePoint)
         return x
 
     # SplinePointT
-    def _UnPack(self, splinePoint):
-        if splinePoint is None:
+    def _UnPack(self, SplinePoint):
+        if SplinePoint is None:
             return
-        self.RAW = splinePoint.RAW()
-        self.CALIBRATED = splinePoint.CALIBRATED()
+        self.RAW = SplinePoint.RAW()
+        self.CALIBRATED = SplinePoint.CALIBRATED()
 
     # SplinePointT
     def Pack(self, builder):
         SplinePointStart(builder)
         SplinePointAddRAW(builder, self.RAW)
         SplinePointAddCALIBRATED(builder, self.CALIBRATED)
-        splinePoint = SplinePointEnd(builder)
-        return splinePoint
+        SplinePoint = SplinePointEnd(builder)
+        return SplinePoint

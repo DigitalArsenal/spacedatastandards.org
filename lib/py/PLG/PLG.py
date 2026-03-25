@@ -387,6 +387,16 @@ def PLGStartWASM_HASHVector(builder, numElems):
 def StartWASM_HASHVector(builder, numElems):
     return PLGStartWASM_HASHVector(builder, numElems)
 
+def PLGCreateWASM_HASHVector(builder, data):
+    data = list(data)
+    builder.StartVector(1, len(data), 1)
+    for item in reversed(data):
+        builder.PrependUint8(item)
+    return builder.EndVector()
+
+def CreateWASM_HASHVector(builder, data):
+    PLGCreateWASM_HASHVector(builder, data)
+
 def PLGAddWASM_SIZE(builder, WASM_SIZE):
     builder.PrependUint64Slot(7, WASM_SIZE, 0)
 
@@ -411,6 +421,12 @@ def PLGStartENTRY_FUNCTIONSVector(builder, numElems):
 def StartENTRY_FUNCTIONSVector(builder, numElems):
     return PLGStartENTRY_FUNCTIONSVector(builder, numElems)
 
+def PLGCreateENTRY_FUNCTIONSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateENTRY_FUNCTIONSVector(builder, data):
+    PLGCreateENTRY_FUNCTIONSVector(builder, data)
+
 def PLGAddREQUIRED_SCHEMAS(builder, REQUIRED_SCHEMAS):
     builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(REQUIRED_SCHEMAS), 0)
 
@@ -422,6 +438,12 @@ def PLGStartREQUIRED_SCHEMASVector(builder, numElems):
 
 def StartREQUIRED_SCHEMASVector(builder, numElems):
     return PLGStartREQUIRED_SCHEMASVector(builder, numElems)
+
+def PLGCreateREQUIRED_SCHEMASVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateREQUIRED_SCHEMASVector(builder, data):
+    PLGCreateREQUIRED_SCHEMASVector(builder, data)
 
 def PLGAddDEPENDENCIES(builder, DEPENDENCIES):
     builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(DEPENDENCIES), 0)
@@ -435,6 +457,12 @@ def PLGStartDEPENDENCIESVector(builder, numElems):
 def StartDEPENDENCIESVector(builder, numElems):
     return PLGStartDEPENDENCIESVector(builder, numElems)
 
+def PLGCreateDEPENDENCIESVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateDEPENDENCIESVector(builder, data):
+    PLGCreateDEPENDENCIESVector(builder, data)
+
 def PLGAddCAPABILITIES(builder, CAPABILITIES):
     builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(CAPABILITIES), 0)
 
@@ -446,6 +474,12 @@ def PLGStartCAPABILITIESVector(builder, numElems):
 
 def StartCAPABILITIESVector(builder, numElems):
     return PLGStartCAPABILITIESVector(builder, numElems)
+
+def PLGCreateCAPABILITIESVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateCAPABILITIESVector(builder, data):
+    PLGCreateCAPABILITIESVector(builder, data)
 
 def PLGAddPROVIDER_PEER_ID(builder, PROVIDER_PEER_ID):
     builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(PROVIDER_PEER_ID), 0)
@@ -476,6 +510,12 @@ def PLGStartMIN_PERMISSIONSVector(builder, numElems):
 
 def StartMIN_PERMISSIONSVector(builder, numElems):
     return PLGStartMIN_PERMISSIONSVector(builder, numElems)
+
+def PLGCreateMIN_PERMISSIONSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateMIN_PERMISSIONSVector(builder, data):
+    PLGCreateMIN_PERMISSIONSVector(builder, data)
 
 def PLGAddCREATED_AT(builder, CREATED_AT):
     builder.PrependUint64Slot(17, CREATED_AT, 0)
@@ -519,6 +559,16 @@ def PLGStartSIGNATUREVector(builder, numElems):
 def StartSIGNATUREVector(builder, numElems):
     return PLGStartSIGNATUREVector(builder, numElems)
 
+def PLGCreateSIGNATUREVector(builder, data):
+    data = list(data)
+    builder.StartVector(1, len(data), 1)
+    for item in reversed(data):
+        builder.PrependUint8(item)
+    return builder.EndVector()
+
+def CreateSIGNATUREVector(builder, data):
+    PLGCreateSIGNATUREVector(builder, data)
+
 def PLGEnd(builder):
     return builder.EndObject()
 
@@ -536,36 +586,61 @@ except:
 class PLGT(object):
 
     # PLGT
-    def __init__(self):
-        self.PLUGIN_ID = None  # type: str
-        self.NAME = None  # type: str
-        self.VERSION = None  # type: str
-        self.DESCRIPTION = None  # type: str
-        self.PLUGIN_TYPE = 0  # type: int
-        self.ABI_VERSION = 1  # type: int
-        self.WASM_HASH = None  # type: List[int]
-        self.WASM_SIZE = 0  # type: int
-        self.WASM_CID = None  # type: str
-        self.ENTRY_FUNCTIONS = None  # type: List[EntryFunction.EntryFunctionT]
-        self.REQUIRED_SCHEMAS = None  # type: List[str]
-        self.DEPENDENCIES = None  # type: List[PluginDependency.PluginDependencyT]
-        self.CAPABILITIES = None  # type: List[PluginCapability.PluginCapabilityT]
-        self.PROVIDER_PEER_ID = None  # type: str
-        self.PROVIDER_EPM_CID = None  # type: str
-        self.ENCRYPTED = True  # type: bool
-        self.MIN_PERMISSIONS = None  # type: List[str]
-        self.CREATED_AT = 0  # type: int
-        self.UPDATED_AT = 0  # type: int
-        self.DOCUMENTATION_URL = None  # type: str
-        self.ICON_URL = None  # type: str
-        self.LICENSE = None  # type: str
-        self.SIGNATURE = None  # type: List[int]
+    def __init__(
+        self,
+        PLUGIN_ID = None,
+        NAME = None,
+        VERSION = None,
+        DESCRIPTION = None,
+        PLUGIN_TYPE = 0,
+        ABI_VERSION = 1,
+        WASM_HASH = None,
+        WASM_SIZE = 0,
+        WASM_CID = None,
+        ENTRY_FUNCTIONS = None,
+        REQUIRED_SCHEMAS = None,
+        DEPENDENCIES = None,
+        CAPABILITIES = None,
+        PROVIDER_PEER_ID = None,
+        PROVIDER_EPM_CID = None,
+        ENCRYPTED = True,
+        MIN_PERMISSIONS = None,
+        CREATED_AT = 0,
+        UPDATED_AT = 0,
+        DOCUMENTATION_URL = None,
+        ICON_URL = None,
+        LICENSE = None,
+        SIGNATURE = None,
+    ):
+        self.PLUGIN_ID = PLUGIN_ID  # type: Optional[str]
+        self.NAME = NAME  # type: Optional[str]
+        self.VERSION = VERSION  # type: Optional[str]
+        self.DESCRIPTION = DESCRIPTION  # type: Optional[str]
+        self.PLUGIN_TYPE = PLUGIN_TYPE  # type: int
+        self.ABI_VERSION = ABI_VERSION  # type: int
+        self.WASM_HASH = WASM_HASH  # type: Optional[List[int]]
+        self.WASM_SIZE = WASM_SIZE  # type: int
+        self.WASM_CID = WASM_CID  # type: Optional[str]
+        self.ENTRY_FUNCTIONS = ENTRY_FUNCTIONS  # type: Optional[List[EntryFunction.EntryFunctionT]]
+        self.REQUIRED_SCHEMAS = REQUIRED_SCHEMAS  # type: Optional[List[Optional[str]]]
+        self.DEPENDENCIES = DEPENDENCIES  # type: Optional[List[PluginDependency.PluginDependencyT]]
+        self.CAPABILITIES = CAPABILITIES  # type: Optional[List[PluginCapability.PluginCapabilityT]]
+        self.PROVIDER_PEER_ID = PROVIDER_PEER_ID  # type: Optional[str]
+        self.PROVIDER_EPM_CID = PROVIDER_EPM_CID  # type: Optional[str]
+        self.ENCRYPTED = ENCRYPTED  # type: bool
+        self.MIN_PERMISSIONS = MIN_PERMISSIONS  # type: Optional[List[Optional[str]]]
+        self.CREATED_AT = CREATED_AT  # type: int
+        self.UPDATED_AT = UPDATED_AT  # type: int
+        self.DOCUMENTATION_URL = DOCUMENTATION_URL  # type: Optional[str]
+        self.ICON_URL = ICON_URL  # type: Optional[str]
+        self.LICENSE = LICENSE  # type: Optional[str]
+        self.SIGNATURE = SIGNATURE  # type: Optional[List[int]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        PLG = PLG()
-        PLG.Init(buf, pos)
-        return cls.InitFromObj(PLG)
+        tmpPlg = PLG()
+        tmpPlg.Init(buf, pos)
+        return cls.InitFromObj(tmpPlg)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -573,9 +648,9 @@ class PLGT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, PLG):
+    def InitFromObj(cls, tmpPlg):
         x = PLGT()
-        x._UnPack(PLG)
+        x._UnPack(tmpPlg)
         return x
 
     # PLGT

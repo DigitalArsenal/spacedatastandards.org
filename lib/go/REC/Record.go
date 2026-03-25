@@ -42,7 +42,7 @@ func (rcv *Record) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
-func (rcv *Record) ValueType() RecordType {
+func (rcv *Record) value_type() RecordType {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
 		return RecordType(rcv._tab.GetByte(o + rcv._tab.Pos))
@@ -50,12 +50,20 @@ func (rcv *Record) ValueType() RecordType {
 	return 0
 }
 
-func (rcv *Record) MutateValueType(n RecordType) bool {
+func (rcv *Record) ValueType() RecordType {
+	return rcv.value_type()
+}
+
+func (rcv *Record) Mutatevalue_type(n RecordType) bool {
 	return rcv._tab.MutateByteSlot(4, byte(n))
 }
 
+func (rcv *Record) MutateValueType(n RecordType) bool {
+	return rcv.Mutatevalue_type(n)
+}
+
 /// The record data (union of all supported standards)
-func (rcv *Record) Value(obj *flatbuffers.Table) bool {
+func (rcv *Record) value(obj *flatbuffers.Table) bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
 		rcv._tab.Union(obj, o)
@@ -64,9 +72,13 @@ func (rcv *Record) Value(obj *flatbuffers.Table) bool {
 	return false
 }
 
+func (rcv *Record) Value(obj *flatbuffers.Table) bool {
+	return rcv.value(obj)
+}
+
 /// The record data (union of all supported standards)
 /// Standard identifier (e.g., "OMM", "CDM", "CAT")
-func (rcv *Record) Standard() []byte {
+func (rcv *Record) standard() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
@@ -74,18 +86,31 @@ func (rcv *Record) Standard() []byte {
 	return nil
 }
 
+func (rcv *Record) Standard() []byte {
+	return rcv.standard()
+}
+
 /// Standard identifier (e.g., "OMM", "CDM", "CAT")
 func RecordStart(builder *flatbuffers.Builder) {
 	builder.StartObject(3)
 }
-func RecordAddValueType(builder *flatbuffers.Builder, valueType RecordType) {
-	builder.PrependByteSlot(0, byte(valueType), 0)
+func RecordAddvalue_type(builder *flatbuffers.Builder, value_type RecordType) {
+	builder.PrependByteSlot(0, byte(value_type), 0)
 }
-func RecordAddValue(builder *flatbuffers.Builder, value flatbuffers.UOffsetT) {
+func RecordAddValueType(builder *flatbuffers.Builder, value_type RecordType) {
+	RecordAddvalue_type(builder, value_type)
+}
+func RecordAddvalue(builder *flatbuffers.Builder, value flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(value), 0)
 }
-func RecordAddStandard(builder *flatbuffers.Builder, standard flatbuffers.UOffsetT) {
+func RecordAddValue(builder *flatbuffers.Builder, value flatbuffers.UOffsetT) {
+	RecordAddvalue(builder, value)
+}
+func RecordAddstandard(builder *flatbuffers.Builder, standard flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(standard), 0)
+}
+func RecordAddStandard(builder *flatbuffers.Builder, standard flatbuffers.UOffsetT) {
+	RecordAddstandard(builder, standard)
 }
 func RecordEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

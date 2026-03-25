@@ -49,10 +49,17 @@ func (rcv *KMLMultiGeometry) POINTS(obj *KMLPoint, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(KMLPoint)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *KMLMultiGeometry) Points(obj *KMLPoint, j int) bool {
+	return rcv.POINTS(obj, j)
 }
 
 func (rcv *KMLMultiGeometry) POINTSLength() int {
@@ -63,6 +70,10 @@ func (rcv *KMLMultiGeometry) POINTSLength() int {
 	return 0
 }
 
+func (rcv *KMLMultiGeometry) PointsLength() int {
+	return rcv.POINTSLength()
+}
+
 /// Child points
 /// Child line strings
 func (rcv *KMLMultiGeometry) LINE_STRINGS(obj *KMLLineString, j int) bool {
@@ -71,10 +82,17 @@ func (rcv *KMLMultiGeometry) LINE_STRINGS(obj *KMLLineString, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(KMLLineString)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *KMLMultiGeometry) LineStrings(obj *KMLLineString, j int) bool {
+	return rcv.LINE_STRINGS(obj, j)
 }
 
 func (rcv *KMLMultiGeometry) LINE_STRINGSLength() int {
@@ -85,6 +103,10 @@ func (rcv *KMLMultiGeometry) LINE_STRINGSLength() int {
 	return 0
 }
 
+func (rcv *KMLMultiGeometry) LineStringsLength() int {
+	return rcv.LINE_STRINGSLength()
+}
+
 /// Child line strings
 /// Child polygons
 func (rcv *KMLMultiGeometry) POLYGONS(obj *KMLPolygon, j int) bool {
@@ -93,10 +115,17 @@ func (rcv *KMLMultiGeometry) POLYGONS(obj *KMLPolygon, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(KMLPolygon)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *KMLMultiGeometry) Polygons(obj *KMLPolygon, j int) bool {
+	return rcv.POLYGONS(obj, j)
 }
 
 func (rcv *KMLMultiGeometry) POLYGONSLength() int {
@@ -107,6 +136,10 @@ func (rcv *KMLMultiGeometry) POLYGONSLength() int {
 	return 0
 }
 
+func (rcv *KMLMultiGeometry) PolygonsLength() int {
+	return rcv.POLYGONSLength()
+}
+
 /// Child polygons
 /// Nested multi-geometries
 func (rcv *KMLMultiGeometry) MULTI_GEOMETRIES(obj *KMLMultiGeometry, j int) bool {
@@ -115,10 +148,17 @@ func (rcv *KMLMultiGeometry) MULTI_GEOMETRIES(obj *KMLMultiGeometry, j int) bool
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(KMLMultiGeometry)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *KMLMultiGeometry) MultiGeometries(obj *KMLMultiGeometry, j int) bool {
+	return rcv.MULTI_GEOMETRIES(obj, j)
 }
 
 func (rcv *KMLMultiGeometry) MULTI_GEOMETRIESLength() int {
@@ -129,6 +169,10 @@ func (rcv *KMLMultiGeometry) MULTI_GEOMETRIESLength() int {
 	return 0
 }
 
+func (rcv *KMLMultiGeometry) MultiGeometriesLength() int {
+	return rcv.MULTI_GEOMETRIESLength()
+}
+
 /// Nested multi-geometries
 /// Child linear rings (standalone)
 func (rcv *KMLMultiGeometry) LINEAR_RINGS(obj *KMLLinearRing, j int) bool {
@@ -137,10 +181,17 @@ func (rcv *KMLMultiGeometry) LINEAR_RINGS(obj *KMLLinearRing, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(KMLLinearRing)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *KMLMultiGeometry) LinearRings(obj *KMLLinearRing, j int) bool {
+	return rcv.LINEAR_RINGS(obj, j)
 }
 
 func (rcv *KMLMultiGeometry) LINEAR_RINGSLength() int {
@@ -151,6 +202,10 @@ func (rcv *KMLMultiGeometry) LINEAR_RINGSLength() int {
 	return 0
 }
 
+func (rcv *KMLMultiGeometry) LinearRingsLength() int {
+	return rcv.LINEAR_RINGSLength()
+}
+
 /// Child linear rings (standalone)
 /// Child 3D models
 func (rcv *KMLMultiGeometry) MODELS(obj *KMLModel, j int) bool {
@@ -159,10 +214,17 @@ func (rcv *KMLMultiGeometry) MODELS(obj *KMLModel, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(KMLModel)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *KMLMultiGeometry) Models(obj *KMLModel, j int) bool {
+	return rcv.MODELS(obj, j)
 }
 
 func (rcv *KMLMultiGeometry) MODELSLength() int {
@@ -173,6 +235,10 @@ func (rcv *KMLMultiGeometry) MODELSLength() int {
 	return 0
 }
 
+func (rcv *KMLMultiGeometry) ModelsLength() int {
+	return rcv.MODELSLength()
+}
+
 /// Child 3D models
 /// Child tracks
 func (rcv *KMLMultiGeometry) TRACKS(obj *KMLTrack, j int) bool {
@@ -181,10 +247,17 @@ func (rcv *KMLMultiGeometry) TRACKS(obj *KMLTrack, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(KMLTrack)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *KMLMultiGeometry) Tracks(obj *KMLTrack, j int) bool {
+	return rcv.TRACKS(obj, j)
 }
 
 func (rcv *KMLMultiGeometry) TRACKSLength() int {
@@ -195,6 +268,10 @@ func (rcv *KMLMultiGeometry) TRACKSLength() int {
 	return 0
 }
 
+func (rcv *KMLMultiGeometry) TracksLength() int {
+	return rcv.TRACKSLength()
+}
+
 /// Child tracks
 /// Child multi-tracks
 func (rcv *KMLMultiGeometry) MULTI_TRACKS(obj *KMLMultiTrack, j int) bool {
@@ -203,10 +280,17 @@ func (rcv *KMLMultiGeometry) MULTI_TRACKS(obj *KMLMultiTrack, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(KMLMultiTrack)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *KMLMultiGeometry) MultiTracks(obj *KMLMultiTrack, j int) bool {
+	return rcv.MULTI_TRACKS(obj, j)
 }
 
 func (rcv *KMLMultiGeometry) MULTI_TRACKSLength() int {
@@ -217,6 +301,10 @@ func (rcv *KMLMultiGeometry) MULTI_TRACKSLength() int {
 	return 0
 }
 
+func (rcv *KMLMultiGeometry) MultiTracksLength() int {
+	return rcv.MULTI_TRACKSLength()
+}
+
 /// Child multi-tracks
 func KMLMultiGeometryStart(builder *flatbuffers.Builder) {
 	builder.StartObject(8)
@@ -224,50 +312,98 @@ func KMLMultiGeometryStart(builder *flatbuffers.Builder) {
 func KMLMultiGeometryAddPOINTS(builder *flatbuffers.Builder, POINTS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(POINTS), 0)
 }
+func KMLMultiGeometryAddPoints(builder *flatbuffers.Builder, POINTS flatbuffers.UOffsetT) {
+	KMLMultiGeometryAddPOINTS(builder, POINTS)
+}
 func KMLMultiGeometryStartPOINTSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func KMLMultiGeometryStartPointsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return KMLMultiGeometryStartPOINTSVector(builder, numElems)
 }
 func KMLMultiGeometryAddLINE_STRINGS(builder *flatbuffers.Builder, LINE_STRINGS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(LINE_STRINGS), 0)
 }
+func KMLMultiGeometryAddLineStrings(builder *flatbuffers.Builder, LINE_STRINGS flatbuffers.UOffsetT) {
+	KMLMultiGeometryAddLINE_STRINGS(builder, LINE_STRINGS)
+}
 func KMLMultiGeometryStartLINE_STRINGSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func KMLMultiGeometryStartLineStringsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return KMLMultiGeometryStartLINE_STRINGSVector(builder, numElems)
 }
 func KMLMultiGeometryAddPOLYGONS(builder *flatbuffers.Builder, POLYGONS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(POLYGONS), 0)
 }
+func KMLMultiGeometryAddPolygons(builder *flatbuffers.Builder, POLYGONS flatbuffers.UOffsetT) {
+	KMLMultiGeometryAddPOLYGONS(builder, POLYGONS)
+}
 func KMLMultiGeometryStartPOLYGONSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func KMLMultiGeometryStartPolygonsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return KMLMultiGeometryStartPOLYGONSVector(builder, numElems)
 }
 func KMLMultiGeometryAddMULTI_GEOMETRIES(builder *flatbuffers.Builder, MULTI_GEOMETRIES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(MULTI_GEOMETRIES), 0)
 }
+func KMLMultiGeometryAddMultiGeometries(builder *flatbuffers.Builder, MULTI_GEOMETRIES flatbuffers.UOffsetT) {
+	KMLMultiGeometryAddMULTI_GEOMETRIES(builder, MULTI_GEOMETRIES)
+}
 func KMLMultiGeometryStartMULTI_GEOMETRIESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func KMLMultiGeometryStartMultiGeometriesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return KMLMultiGeometryStartMULTI_GEOMETRIESVector(builder, numElems)
 }
 func KMLMultiGeometryAddLINEAR_RINGS(builder *flatbuffers.Builder, LINEAR_RINGS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(LINEAR_RINGS), 0)
 }
+func KMLMultiGeometryAddLinearRings(builder *flatbuffers.Builder, LINEAR_RINGS flatbuffers.UOffsetT) {
+	KMLMultiGeometryAddLINEAR_RINGS(builder, LINEAR_RINGS)
+}
 func KMLMultiGeometryStartLINEAR_RINGSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func KMLMultiGeometryStartLinearRingsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return KMLMultiGeometryStartLINEAR_RINGSVector(builder, numElems)
 }
 func KMLMultiGeometryAddMODELS(builder *flatbuffers.Builder, MODELS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(MODELS), 0)
 }
+func KMLMultiGeometryAddModels(builder *flatbuffers.Builder, MODELS flatbuffers.UOffsetT) {
+	KMLMultiGeometryAddMODELS(builder, MODELS)
+}
 func KMLMultiGeometryStartMODELSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func KMLMultiGeometryStartModelsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return KMLMultiGeometryStartMODELSVector(builder, numElems)
 }
 func KMLMultiGeometryAddTRACKS(builder *flatbuffers.Builder, TRACKS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(TRACKS), 0)
 }
+func KMLMultiGeometryAddTracks(builder *flatbuffers.Builder, TRACKS flatbuffers.UOffsetT) {
+	KMLMultiGeometryAddTRACKS(builder, TRACKS)
+}
 func KMLMultiGeometryStartTRACKSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func KMLMultiGeometryStartTracksVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return KMLMultiGeometryStartTRACKSVector(builder, numElems)
 }
 func KMLMultiGeometryAddMULTI_TRACKS(builder *flatbuffers.Builder, MULTI_TRACKS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(MULTI_TRACKS), 0)
 }
+func KMLMultiGeometryAddMultiTracks(builder *flatbuffers.Builder, MULTI_TRACKS flatbuffers.UOffsetT) {
+	KMLMultiGeometryAddMULTI_TRACKS(builder, MULTI_TRACKS)
+}
 func KMLMultiGeometryStartMULTI_TRACKSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func KMLMultiGeometryStartMultiTracksVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return KMLMultiGeometryStartMULTI_TRACKSVector(builder, numElems)
 }
 func KMLMultiGeometryEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

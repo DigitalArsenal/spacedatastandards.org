@@ -2,9 +2,13 @@
 // swiftlint:disable all
 // swiftformat:disable all
 
+#if canImport(Common)
+import Common
+#endif
+
 import FlatBuffers
 
-public enum GJNGeometryType: Int8, Enum, Verifiable {
+public enum GJNGeometryType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -22,9 +26,9 @@ public enum GJNGeometryType: Int8, Enum, Verifiable {
 
 
 ///  A single position (longitude, latitude, optional altitude)
-public struct GJNPosition: FlatBufferObject, Verifiable {
+public struct GJNPosition: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -83,9 +87,9 @@ public struct GJNPosition: FlatBufferObject, Verifiable {
 }
 
 ///  A linear ring is a closed LineString with 4+ positions (first = last)
-public struct GJNLinearRing: FlatBufferObject, Verifiable {
+public struct GJNLinearRing: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -101,9 +105,7 @@ public struct GJNLinearRing: FlatBufferObject, Verifiable {
   }
 
   ///  Ordered positions forming the ring
-  public var hasPositions: Bool { let o = _accessor.offset(VTOFFSET.POSITIONS.v); return o == 0 ? false : true }
-  public var POSITIONSCount: Int32 { let o = _accessor.offset(VTOFFSET.POSITIONS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func POSITIONS(at index: Int32) -> GJNPosition? { let o = _accessor.offset(VTOFFSET.POSITIONS.v); return o == 0 ? nil : GJNPosition(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var POSITIONS: FlatbufferVector<GJNPosition> { return _accessor.vector(at: VTOFFSET.POSITIONS.v, byteSize: 4) }
   public static func startGJNLinearRing(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 1) }
   public static func addVectorOf(POSITIONS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POSITIONS, at: VTOFFSET.POSITIONS.p) }
   public static func endGJNLinearRing(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
@@ -124,9 +126,9 @@ public struct GJNLinearRing: FlatBufferObject, Verifiable {
 }
 
 ///  A polygon represented as an array of rings (outer boundary + holes)
-public struct GJNPolygonRings: FlatBufferObject, Verifiable {
+public struct GJNPolygonRings: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -142,9 +144,7 @@ public struct GJNPolygonRings: FlatBufferObject, Verifiable {
   }
 
   ///  Rings: first is outer boundary, rest are holes
-  public var hasRings: Bool { let o = _accessor.offset(VTOFFSET.RINGS.v); return o == 0 ? false : true }
-  public var RINGSCount: Int32 { let o = _accessor.offset(VTOFFSET.RINGS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func RINGS(at index: Int32) -> GJNLinearRing? { let o = _accessor.offset(VTOFFSET.RINGS.v); return o == 0 ? nil : GJNLinearRing(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var RINGS: FlatbufferVector<GJNLinearRing> { return _accessor.vector(at: VTOFFSET.RINGS.v, byteSize: 4) }
   public static func startGJNPolygonRings(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 1) }
   public static func addVectorOf(RINGS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RINGS, at: VTOFFSET.RINGS.p) }
   public static func endGJNPolygonRings(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
@@ -165,9 +165,9 @@ public struct GJNPolygonRings: FlatBufferObject, Verifiable {
 }
 
 ///  GeoJSON Geometry object
-public struct GJNGeometry: FlatBufferObject, Verifiable {
+public struct GJNGeometry: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -191,25 +191,17 @@ public struct GJNGeometry: FlatBufferObject, Verifiable {
   ///  Geometry type
   public var TYPE: GJNGeometryType { let o = _accessor.offset(VTOFFSET.TYPE.v); return o == 0 ? .point : GJNGeometryType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .point }
   ///  Single position (for Point)
-  public var POINT: GJNPosition? { let o = _accessor.offset(VTOFFSET.POINT.v); return o == 0 ? nil : GJNPosition(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var POINT: GJNPosition? { let o = _accessor.offset(VTOFFSET.POINT.v); return o == 0 ? nil : GJNPosition(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Array of positions (for MultiPoint, LineString)
-  public var hasPositions: Bool { let o = _accessor.offset(VTOFFSET.POSITIONS.v); return o == 0 ? false : true }
-  public var POSITIONSCount: Int32 { let o = _accessor.offset(VTOFFSET.POSITIONS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func POSITIONS(at index: Int32) -> GJNPosition? { let o = _accessor.offset(VTOFFSET.POSITIONS.v); return o == 0 ? nil : GJNPosition(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var POSITIONS: FlatbufferVector<GJNPosition> { return _accessor.vector(at: VTOFFSET.POSITIONS.v, byteSize: 4) }
   ///  Array of position arrays (for MultiLineString, Polygon rings)
-  public var hasRings: Bool { let o = _accessor.offset(VTOFFSET.RINGS.v); return o == 0 ? false : true }
-  public var RINGSCount: Int32 { let o = _accessor.offset(VTOFFSET.RINGS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func RINGS(at index: Int32) -> GJNLinearRing? { let o = _accessor.offset(VTOFFSET.RINGS.v); return o == 0 ? nil : GJNLinearRing(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var RINGS: FlatbufferVector<GJNLinearRing> { return _accessor.vector(at: VTOFFSET.RINGS.v, byteSize: 4) }
   ///  Array of polygons each as array of rings (for MultiPolygon)
-  public var hasPolygonRings: Bool { let o = _accessor.offset(VTOFFSET.POLYGON_RINGS.v); return o == 0 ? false : true }
-  public var POLYGON_RINGSCount: Int32 { let o = _accessor.offset(VTOFFSET.POLYGON_RINGS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func POLYGON_RINGS(at index: Int32) -> GJNPolygonRings? { let o = _accessor.offset(VTOFFSET.POLYGON_RINGS.v); return o == 0 ? nil : GJNPolygonRings(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var POLYGON_RINGS: FlatbufferVector<GJNPolygonRings> { return _accessor.vector(at: VTOFFSET.POLYGON_RINGS.v, byteSize: 4) }
   ///  Child geometries (for GeometryCollection)
-  public var hasGeometries: Bool { let o = _accessor.offset(VTOFFSET.GEOMETRIES.v); return o == 0 ? false : true }
-  public var GEOMETRIESCount: Int32 { let o = _accessor.offset(VTOFFSET.GEOMETRIES.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func GEOMETRIES(at index: Int32) -> GJNGeometry? { let o = _accessor.offset(VTOFFSET.GEOMETRIES.v); return o == 0 ? nil : GJNGeometry(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var GEOMETRIES: FlatbufferVector<GJNGeometry> { return _accessor.vector(at: VTOFFSET.GEOMETRIES.v, byteSize: 4) }
   ///  Bounding box (optional, per RFC 7946 Section 5)
-  public var BBOX: GJNBoundingBox? { let o = _accessor.offset(VTOFFSET.BBOX.v); return o == 0 ? nil : GJNBoundingBox(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var BBOX: GJNBoundingBox? { let o = _accessor.offset(VTOFFSET.BBOX.v); return o == 0 ? nil : GJNBoundingBox(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public static func startGJNGeometry(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 7) }
   public static func add(TYPE: GJNGeometryType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TYPE.rawValue, def: 0, at: VTOFFSET.TYPE.p) }
   public static func add(POINT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POINT, at: VTOFFSET.POINT.p) }
@@ -254,9 +246,9 @@ public struct GJNGeometry: FlatBufferObject, Verifiable {
 }
 
 ///  A key-value property entry for Feature properties
-public struct GJNProperty: FlatBufferObject, Verifiable {
+public struct GJNProperty: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -349,9 +341,9 @@ public struct GJNProperty: FlatBufferObject, Verifiable {
 }
 
 ///  GeoJSON Feature object
-public struct GJNFeature: FlatBufferObject, Verifiable {
+public struct GJNFeature: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -377,11 +369,9 @@ public struct GJNFeature: FlatBufferObject, Verifiable {
   public var ID: String? { let o = _accessor.offset(VTOFFSET.ID.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ID.v) }
   ///  Geometry of the feature
-  public var GEOMETRY: GJNGeometry? { let o = _accessor.offset(VTOFFSET.GEOMETRY.v); return o == 0 ? nil : GJNGeometry(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var GEOMETRY: GJNGeometry? { let o = _accessor.offset(VTOFFSET.GEOMETRY.v); return o == 0 ? nil : GJNGeometry(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Properties as key-value pairs
-  public var hasProperties: Bool { let o = _accessor.offset(VTOFFSET.PROPERTIES.v); return o == 0 ? false : true }
-  public var PROPERTIESCount: Int32 { let o = _accessor.offset(VTOFFSET.PROPERTIES.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func PROPERTIES(at index: Int32) -> GJNProperty? { let o = _accessor.offset(VTOFFSET.PROPERTIES.v); return o == 0 ? nil : GJNProperty(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var PROPERTIES: FlatbufferVector<GJNProperty> { return _accessor.vector(at: VTOFFSET.PROPERTIES.v, byteSize: 4) }
   ///  Numeric feature identifier (use when ID_IS_NUMERIC is true)
   public var NUM_ID: Double { let o = _accessor.offset(VTOFFSET.NUM_ID.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  True if the feature id is numeric rather than string
@@ -391,7 +381,7 @@ public struct GJNFeature: FlatBufferObject, Verifiable {
   ///  True if properties was JSON null (vs empty object)
   public var PROPERTIES_IS_NULL: Bool { let o = _accessor.offset(VTOFFSET.PROPERTIES_IS_NULL.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Bounding box (optional, per RFC 7946 Section 5)
-  public var BBOX: GJNBoundingBox? { let o = _accessor.offset(VTOFFSET.BBOX.v); return o == 0 ? nil : GJNBoundingBox(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var BBOX: GJNBoundingBox? { let o = _accessor.offset(VTOFFSET.BBOX.v); return o == 0 ? nil : GJNBoundingBox(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public static func startGJNFeature(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 8) }
   public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VTOFFSET.ID.p) }
   public static func add(GEOMETRY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GEOMETRY, at: VTOFFSET.GEOMETRY.p) }
@@ -443,9 +433,9 @@ public struct GJNFeature: FlatBufferObject, Verifiable {
 }
 
 ///  GeoJSON Bounding Box [west, south, east, north] or [west, south, min-alt, east, north, max-alt]
-public struct GJNBoundingBox: FlatBufferObject, Verifiable {
+public struct GJNBoundingBox: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -525,9 +515,9 @@ public struct GJNBoundingBox: FlatBufferObject, Verifiable {
 }
 
 ///  GeoJSON FeatureCollection
-public struct GJN: FlatBufferObject, Verifiable {
+public struct GJN: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -544,11 +534,9 @@ public struct GJN: FlatBufferObject, Verifiable {
   }
 
   ///  Features in the collection
-  public var hasFeatures: Bool { let o = _accessor.offset(VTOFFSET.FEATURES.v); return o == 0 ? false : true }
-  public var FEATURESCount: Int32 { let o = _accessor.offset(VTOFFSET.FEATURES.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func FEATURES(at index: Int32) -> GJNFeature? { let o = _accessor.offset(VTOFFSET.FEATURES.v); return o == 0 ? nil : GJNFeature(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var FEATURES: FlatbufferVector<GJNFeature> { return _accessor.vector(at: VTOFFSET.FEATURES.v, byteSize: 4) }
   ///  Bounding box (optional)
-  public var BBOX: GJNBoundingBox? { let o = _accessor.offset(VTOFFSET.BBOX.v); return o == 0 ? nil : GJNBoundingBox(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var BBOX: GJNBoundingBox? { let o = _accessor.offset(VTOFFSET.BBOX.v); return o == 0 ? nil : GJNBoundingBox(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public static func startGJN(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 2) }
   public static func addVectorOf(FEATURES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FEATURES, at: VTOFFSET.FEATURES.p) }
   public static func add(BBOX: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BBOX, at: VTOFFSET.BBOX.p) }

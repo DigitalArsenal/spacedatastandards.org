@@ -32,7 +32,7 @@ class MetaCommand : Table() {
     /**
      * Command name
      */
-    val NAME : String?
+    val name : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class MetaCommand : Table() {
                 null
             }
         }
-    val NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val nameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun nameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Short description
      */
-    val SHORT_DESCRIPTION : String?
+    val shortDescription : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -55,12 +55,12 @@ class MetaCommand : Table() {
                 null
             }
         }
-    val SHORT_DESCRIPTIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun SHORT_DESCRIPTIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val shortDescriptionAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun shortDescriptionInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * Long description
      */
-    val LONG_DESCRIPTION : String?
+    val longDescription : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -69,12 +69,12 @@ class MetaCommand : Table() {
                 null
             }
         }
-    val LONG_DESCRIPTIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun LONG_DESCRIPTIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val longDescriptionAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun longDescriptionInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
     /**
      * Abstract command (base only)
      */
-    val ABSTRACT : Boolean
+    val abstract : Boolean
         get() {
             val o = __offset(10)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -82,8 +82,8 @@ class MetaCommand : Table() {
     /**
      * Argument list
      */
-    fun ARGUMENTS(j: Int) : Argument? = ARGUMENTS(Argument(), j)
-    fun ARGUMENTS(obj: Argument, j: Int) : Argument? {
+    fun arguments(j: Int) : Argument? = arguments(Argument(), j)
+    fun arguments(obj: Argument, j: Int) : Argument? {
         val o = __offset(12)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -91,15 +91,15 @@ class MetaCommand : Table() {
             null
         }
     }
-    val ARGUMENTSLength : Int
+    val argumentsLength : Int
         get() {
             val o = __offset(12); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Command container
      */
-    val COMMAND_CONTAINER : CommandContainer? get() = COMMAND_CONTAINER(CommandContainer())
-    fun COMMAND_CONTAINER(obj: CommandContainer) : CommandContainer? {
+    val commandContainer : CommandContainer? get() = commandContainer(CommandContainer())
+    fun commandContainer(obj: CommandContainer) : CommandContainer? {
         val o = __offset(14)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -110,8 +110,8 @@ class MetaCommand : Table() {
     /**
      * Base metacommand (inheritance)
      */
-    val BASE_META_COMMAND : BaseMetaCommand? get() = BASE_META_COMMAND(BaseMetaCommand())
-    fun BASE_META_COMMAND(obj: BaseMetaCommand) : BaseMetaCommand? {
+    val baseMetaCommand : BaseMetaCommand? get() = baseMetaCommand(BaseMetaCommand())
+    fun baseMetaCommand(obj: BaseMetaCommand) : BaseMetaCommand? {
         val o = __offset(16)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -122,8 +122,8 @@ class MetaCommand : Table() {
     /**
      * Command verifiers
      */
-    fun VERIFIERS(j: Int) : CommandVerifier? = VERIFIERS(CommandVerifier(), j)
-    fun VERIFIERS(obj: CommandVerifier, j: Int) : CommandVerifier? {
+    fun verifiers(j: Int) : CommandVerifier? = verifiers(CommandVerifier(), j)
+    fun verifiers(obj: CommandVerifier, j: Int) : CommandVerifier? {
         val o = __offset(18)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -131,15 +131,15 @@ class MetaCommand : Table() {
             null
         }
     }
-    val VERIFIERSLength : Int
+    val verifiersLength : Int
         get() {
             val o = __offset(18); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Command significance
      */
-    val SIGNIFICANCE : CommandSignificance? get() = SIGNIFICANCE(CommandSignificance())
-    fun SIGNIFICANCE(obj: CommandSignificance) : CommandSignificance? {
+    val significance : CommandSignificance? get() = significance(CommandSignificance())
+    fun significance(obj: CommandSignificance) : CommandSignificance? {
         val o = __offset(20)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -150,8 +150,8 @@ class MetaCommand : Table() {
     /**
      * Interlock constraints
      */
-    fun INTERLOCKS(j: Int) : Interlock? = INTERLOCKS(Interlock(), j)
-    fun INTERLOCKS(obj: Interlock, j: Int) : Interlock? {
+    fun interlocks(j: Int) : Interlock? = interlocks(Interlock(), j)
+    fun interlocks(obj: Interlock, j: Int) : Interlock? {
         val o = __offset(22)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -159,15 +159,15 @@ class MetaCommand : Table() {
             null
         }
     }
-    val INTERLOCKSLength : Int
+    val interlocksLength : Int
         get() {
             val o = __offset(22); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Default significance
      */
-    val DEFAULT_SIGNIFICANCE : CommandSignificance? get() = DEFAULT_SIGNIFICANCE(CommandSignificance())
-    fun DEFAULT_SIGNIFICANCE(obj: CommandSignificance) : CommandSignificance? {
+    val defaultSignificance : CommandSignificance? get() = defaultSignificance(CommandSignificance())
+    fun defaultSignificance(obj: CommandSignificance) : CommandSignificance? {
         val o = __offset(24)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -176,33 +176,33 @@ class MetaCommand : Table() {
         }
     }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsMetaCommand(_bb: ByteBuffer): MetaCommand = getRootAsMetaCommand(_bb, MetaCommand())
         fun getRootAsMetaCommand(_bb: ByteBuffer, obj: MetaCommand): MetaCommand {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createMetaCommand(builder: FlatBufferBuilder, NAMEOffset: Int, SHORT_DESCRIPTIONOffset: Int, LONG_DESCRIPTIONOffset: Int, ABSTRACT: Boolean, ARGUMENTSOffset: Int, COMMAND_CONTAINEROffset: Int, BASE_META_COMMANDOffset: Int, VERIFIERSOffset: Int, SIGNIFICANCEOffset: Int, INTERLOCKSOffset: Int, DEFAULT_SIGNIFICANCEOffset: Int) : Int {
+        fun createMetaCommand(builder: FlatBufferBuilder, nameOffset: Int, shortDescriptionOffset: Int, longDescriptionOffset: Int, abstract: Boolean, argumentsOffset: Int, commandContainerOffset: Int, baseMetaCommandOffset: Int, verifiersOffset: Int, significanceOffset: Int, interlocksOffset: Int, defaultSignificanceOffset: Int) : Int {
             builder.startTable(11)
-            addDEFAULT_SIGNIFICANCE(builder, DEFAULT_SIGNIFICANCEOffset)
-            addINTERLOCKS(builder, INTERLOCKSOffset)
-            addSIGNIFICANCE(builder, SIGNIFICANCEOffset)
-            addVERIFIERS(builder, VERIFIERSOffset)
-            addBASE_META_COMMAND(builder, BASE_META_COMMANDOffset)
-            addCOMMAND_CONTAINER(builder, COMMAND_CONTAINEROffset)
-            addARGUMENTS(builder, ARGUMENTSOffset)
-            addLONG_DESCRIPTION(builder, LONG_DESCRIPTIONOffset)
-            addSHORT_DESCRIPTION(builder, SHORT_DESCRIPTIONOffset)
-            addNAME(builder, NAMEOffset)
-            addABSTRACT(builder, ABSTRACT)
+            addDEFAULTSIGNIFICANCE(builder, defaultSignificanceOffset)
+            addINTERLOCKS(builder, interlocksOffset)
+            addSIGNIFICANCE(builder, significanceOffset)
+            addVERIFIERS(builder, verifiersOffset)
+            addBASEMETACOMMAND(builder, baseMetaCommandOffset)
+            addCOMMANDCONTAINER(builder, commandContainerOffset)
+            addARGUMENTS(builder, argumentsOffset)
+            addLONGDESCRIPTION(builder, longDescriptionOffset)
+            addSHORTDESCRIPTION(builder, shortDescriptionOffset)
+            addNAME(builder, nameOffset)
+            addABSTRACT(builder, abstract)
             return endMetaCommand(builder)
         }
         fun startMetaCommand(builder: FlatBufferBuilder) = builder.startTable(11)
-        fun addNAME(builder: FlatBufferBuilder, NAME: Int) = builder.addOffset(0, NAME, 0)
-        fun addSHORT_DESCRIPTION(builder: FlatBufferBuilder, SHORT_DESCRIPTION: Int) = builder.addOffset(1, SHORT_DESCRIPTION, 0)
-        fun addLONG_DESCRIPTION(builder: FlatBufferBuilder, LONG_DESCRIPTION: Int) = builder.addOffset(2, LONG_DESCRIPTION, 0)
-        fun addABSTRACT(builder: FlatBufferBuilder, ABSTRACT: Boolean) = builder.addBoolean(3, ABSTRACT, false)
-        fun addARGUMENTS(builder: FlatBufferBuilder, ARGUMENTS: Int) = builder.addOffset(4, ARGUMENTS, 0)
+        fun addNAME(builder: FlatBufferBuilder, name: Int) = builder.addOffset(0, name, 0)
+        fun addSHORTDESCRIPTION(builder: FlatBufferBuilder, shortDescription: Int) = builder.addOffset(1, shortDescription, 0)
+        fun addLONGDESCRIPTION(builder: FlatBufferBuilder, longDescription: Int) = builder.addOffset(2, longDescription, 0)
+        fun addABSTRACT(builder: FlatBufferBuilder, abstract: Boolean) = builder.addBoolean(3, abstract, false)
+        fun addARGUMENTS(builder: FlatBufferBuilder, arguments: Int) = builder.addOffset(4, arguments, 0)
         fun createArgumentsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -211,9 +211,9 @@ class MetaCommand : Table() {
             return builder.endVector()
         }
         fun startArgumentsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addCOMMAND_CONTAINER(builder: FlatBufferBuilder, COMMAND_CONTAINER: Int) = builder.addOffset(5, COMMAND_CONTAINER, 0)
-        fun addBASE_META_COMMAND(builder: FlatBufferBuilder, BASE_META_COMMAND: Int) = builder.addOffset(6, BASE_META_COMMAND, 0)
-        fun addVERIFIERS(builder: FlatBufferBuilder, VERIFIERS: Int) = builder.addOffset(7, VERIFIERS, 0)
+        fun addCOMMANDCONTAINER(builder: FlatBufferBuilder, commandContainer: Int) = builder.addOffset(5, commandContainer, 0)
+        fun addBASEMETACOMMAND(builder: FlatBufferBuilder, baseMetaCommand: Int) = builder.addOffset(6, baseMetaCommand, 0)
+        fun addVERIFIERS(builder: FlatBufferBuilder, verifiers: Int) = builder.addOffset(7, verifiers, 0)
         fun createVerifiersVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -222,8 +222,8 @@ class MetaCommand : Table() {
             return builder.endVector()
         }
         fun startVerifiersVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addSIGNIFICANCE(builder: FlatBufferBuilder, SIGNIFICANCE: Int) = builder.addOffset(8, SIGNIFICANCE, 0)
-        fun addINTERLOCKS(builder: FlatBufferBuilder, INTERLOCKS: Int) = builder.addOffset(9, INTERLOCKS, 0)
+        fun addSIGNIFICANCE(builder: FlatBufferBuilder, significance: Int) = builder.addOffset(8, significance, 0)
+        fun addINTERLOCKS(builder: FlatBufferBuilder, interlocks: Int) = builder.addOffset(9, interlocks, 0)
         fun createInterlocksVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -232,7 +232,7 @@ class MetaCommand : Table() {
             return builder.endVector()
         }
         fun startInterlocksVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addDEFAULT_SIGNIFICANCE(builder: FlatBufferBuilder, DEFAULT_SIGNIFICANCE: Int) = builder.addOffset(10, DEFAULT_SIGNIFICANCE, 0)
+        fun addDEFAULTSIGNIFICANCE(builder: FlatBufferBuilder, defaultSignificance: Int) = builder.addOffset(10, defaultSignificance, 0)
         fun endMetaCommand(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

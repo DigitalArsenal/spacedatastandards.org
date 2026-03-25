@@ -143,20 +143,29 @@ def End(builder):
 class KMLLineStyleT(object):
 
     # KMLLineStyleT
-    def __init__(self):
-        self.COLOR = None  # type: str
-        self.COLOR_MODE = 0  # type: int
-        self.WIDTH = 0.0  # type: float
-        self.GX_OUTER_COLOR = None  # type: str
-        self.GX_OUTER_WIDTH = 0.0  # type: float
-        self.GX_PHYSICAL_WIDTH = 0.0  # type: float
-        self.GX_LABEL_VISIBILITY = False  # type: bool
+    def __init__(
+        self,
+        COLOR = None,
+        COLOR_MODE = 0,
+        WIDTH = 0.0,
+        GX_OUTER_COLOR = None,
+        GX_OUTER_WIDTH = 0.0,
+        GX_PHYSICAL_WIDTH = 0.0,
+        GX_LABEL_VISIBILITY = False,
+    ):
+        self.COLOR = COLOR  # type: Optional[str]
+        self.COLOR_MODE = COLOR_MODE  # type: int
+        self.WIDTH = WIDTH  # type: float
+        self.GX_OUTER_COLOR = GX_OUTER_COLOR  # type: Optional[str]
+        self.GX_OUTER_WIDTH = GX_OUTER_WIDTH  # type: float
+        self.GX_PHYSICAL_WIDTH = GX_PHYSICAL_WIDTH  # type: float
+        self.GX_LABEL_VISIBILITY = GX_LABEL_VISIBILITY  # type: bool
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        kmllineStyle = KMLLineStyle()
-        kmllineStyle.Init(buf, pos)
-        return cls.InitFromObj(kmllineStyle)
+        tmpKmllineStyle = KMLLineStyle()
+        tmpKmllineStyle.Init(buf, pos)
+        return cls.InitFromObj(tmpKmllineStyle)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -164,22 +173,22 @@ class KMLLineStyleT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, kmllineStyle):
+    def InitFromObj(cls, tmpKmllineStyle):
         x = KMLLineStyleT()
-        x._UnPack(kmllineStyle)
+        x._UnPack(tmpKmllineStyle)
         return x
 
     # KMLLineStyleT
-    def _UnPack(self, kmllineStyle):
-        if kmllineStyle is None:
+    def _UnPack(self, KMLLineStyle):
+        if KMLLineStyle is None:
             return
-        self.COLOR = kmllineStyle.COLOR()
-        self.COLOR_MODE = kmllineStyle.COLOR_MODE()
-        self.WIDTH = kmllineStyle.WIDTH()
-        self.GX_OUTER_COLOR = kmllineStyle.GX_OUTER_COLOR()
-        self.GX_OUTER_WIDTH = kmllineStyle.GX_OUTER_WIDTH()
-        self.GX_PHYSICAL_WIDTH = kmllineStyle.GX_PHYSICAL_WIDTH()
-        self.GX_LABEL_VISIBILITY = kmllineStyle.GX_LABEL_VISIBILITY()
+        self.COLOR = KMLLineStyle.COLOR()
+        self.COLOR_MODE = KMLLineStyle.COLOR_MODE()
+        self.WIDTH = KMLLineStyle.WIDTH()
+        self.GX_OUTER_COLOR = KMLLineStyle.GX_OUTER_COLOR()
+        self.GX_OUTER_WIDTH = KMLLineStyle.GX_OUTER_WIDTH()
+        self.GX_PHYSICAL_WIDTH = KMLLineStyle.GX_PHYSICAL_WIDTH()
+        self.GX_LABEL_VISIBILITY = KMLLineStyle.GX_LABEL_VISIBILITY()
 
     # KMLLineStyleT
     def Pack(self, builder):
@@ -197,5 +206,5 @@ class KMLLineStyleT(object):
         KMLLineStyleAddGX_OUTER_WIDTH(builder, self.GX_OUTER_WIDTH)
         KMLLineStyleAddGX_PHYSICAL_WIDTH(builder, self.GX_PHYSICAL_WIDTH)
         KMLLineStyleAddGX_LABEL_VISIBILITY(builder, self.GX_LABEL_VISIBILITY)
-        kmllineStyle = KMLLineStyleEnd(builder)
-        return kmllineStyle
+        KMLLineStyle = KMLLineStyleEnd(builder)
+        return KMLLineStyle

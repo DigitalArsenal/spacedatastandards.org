@@ -52,12 +52,20 @@ func (rcv *PolynomialCalibrator) COEFFICIENTS(j int) float64 {
 	return 0
 }
 
+func (rcv *PolynomialCalibrator) Coefficients(j int) float64 {
+	return rcv.COEFFICIENTS(j)
+}
+
 func (rcv *PolynomialCalibrator) COEFFICIENTSLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *PolynomialCalibrator) CoefficientsLength() int {
+	return rcv.COEFFICIENTSLength()
 }
 
 /// Polynomial terms (index is power, value is coefficient)
@@ -70,14 +78,24 @@ func (rcv *PolynomialCalibrator) MutateCOEFFICIENTS(j int, n float64) bool {
 	return false
 }
 
+func (rcv *PolynomialCalibrator) MutateCoefficients(j int, n float64) bool {
+	return rcv.MutateCOEFFICIENTS(j, n)
+}
+
 func PolynomialCalibratorStart(builder *flatbuffers.Builder) {
 	builder.StartObject(1)
 }
 func PolynomialCalibratorAddCOEFFICIENTS(builder *flatbuffers.Builder, COEFFICIENTS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(COEFFICIENTS), 0)
 }
+func PolynomialCalibratorAddCoefficients(builder *flatbuffers.Builder, COEFFICIENTS flatbuffers.UOffsetT) {
+	PolynomialCalibratorAddCOEFFICIENTS(builder, COEFFICIENTS)
+}
 func PolynomialCalibratorStartCOEFFICIENTSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(8, numElems, 8)
+}
+func PolynomialCalibratorStartCoefficientsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return PolynomialCalibratorStartCOEFFICIENTSVector(builder, numElems)
 }
 func PolynomialCalibratorEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

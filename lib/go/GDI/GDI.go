@@ -63,6 +63,10 @@ func (rcv *GDI) ID() []byte {
 	return nil
 }
 
+func (rcv *GDI) Id() []byte {
+	return rcv.ID()
+}
+
 /// Unique identifier
 /// Sensor identifier
 func (rcv *GDI) ID_SENSOR() []byte {
@@ -71,6 +75,10 @@ func (rcv *GDI) ID_SENSOR() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *GDI) IdSensor() []byte {
+	return rcv.ID_SENSOR()
 }
 
 /// Sensor identifier
@@ -83,6 +91,10 @@ func (rcv *GDI) ORIG_SENSOR_ID() []byte {
 	return nil
 }
 
+func (rcv *GDI) OrigSensorId() []byte {
+	return rcv.ORIG_SENSOR_ID()
+}
+
 /// Original sensor identifier
 /// Image capture time (ISO 8601)
 func (rcv *GDI) IMAGE_TIME() []byte {
@@ -91,6 +103,10 @@ func (rcv *GDI) IMAGE_TIME() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *GDI) ImageTime() []byte {
+	return rcv.IMAGE_TIME()
 }
 
 /// Image capture time (ISO 8601)
@@ -103,6 +119,10 @@ func (rcv *GDI) FILENAME() []byte {
 	return nil
 }
 
+func (rcv *GDI) Filename() []byte {
+	return rcv.FILENAME()
+}
+
 /// Image filename
 /// Image format
 func (rcv *GDI) FORMAT() imageFormat {
@@ -113,9 +133,17 @@ func (rcv *GDI) FORMAT() imageFormat {
 	return 0
 }
 
+func (rcv *GDI) Format() imageFormat {
+	return rcv.FORMAT()
+}
+
 /// Image format
 func (rcv *GDI) MutateFORMAT(n imageFormat) bool {
 	return rcv._tab.MutateInt8Slot(14, int8(n))
+}
+
+func (rcv *GDI) MutateFormat(n imageFormat) bool {
+	return rcv.MutateFORMAT(n)
 }
 
 /// File size (bytes)
@@ -127,9 +155,17 @@ func (rcv *GDI) FILESIZE() int64 {
 	return 0
 }
 
+func (rcv *GDI) Filesize() int64 {
+	return rcv.FILESIZE()
+}
+
 /// File size (bytes)
 func (rcv *GDI) MutateFILESIZE(n int64) bool {
 	return rcv._tab.MutateInt64Slot(16, n)
+}
+
+func (rcv *GDI) MutateFilesize(n int64) bool {
+	return rcv.MutateFILESIZE(n)
 }
 
 /// File checksum value
@@ -139,6 +175,10 @@ func (rcv *GDI) CHECKSUM_VALUE() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *GDI) ChecksumValue() []byte {
+	return rcv.CHECKSUM_VALUE()
 }
 
 /// File checksum value
@@ -151,6 +191,10 @@ func (rcv *GDI) REGION_GEO_JSON() []byte {
 	return nil
 }
 
+func (rcv *GDI) RegionGeoJson() []byte {
+	return rcv.REGION_GEO_JSON()
+}
+
 /// Region GeoJSON boundary
 /// Region text description
 func (rcv *GDI) REGION_TEXT() []byte {
@@ -159,6 +203,10 @@ func (rcv *GDI) REGION_TEXT() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *GDI) RegionText() []byte {
+	return rcv.REGION_TEXT()
 }
 
 /// Region text description
@@ -171,6 +219,10 @@ func (rcv *GDI) REGION() []byte {
 	return nil
 }
 
+func (rcv *GDI) Region() []byte {
+	return rcv.REGION()
+}
+
 /// Region name
 /// Region type
 func (rcv *GDI) REGION_TYPE() []byte {
@@ -179,6 +231,10 @@ func (rcv *GDI) REGION_TYPE() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *GDI) RegionType() []byte {
+	return rcv.REGION_TYPE()
 }
 
 /// Region type
@@ -191,9 +247,17 @@ func (rcv *GDI) REGION_NDIMS() byte {
 	return 0
 }
 
+func (rcv *GDI) RegionNdims() byte {
+	return rcv.REGION_NDIMS()
+}
+
 /// Region geometry dimensions
 func (rcv *GDI) MutateREGION_NDIMS(n byte) bool {
 	return rcv._tab.MutateByteSlot(28, n)
+}
+
+func (rcv *GDI) MutateRegionNdims(n byte) bool {
+	return rcv.MutateREGION_NDIMS(n)
 }
 
 /// Region spatial reference ID
@@ -205,9 +269,17 @@ func (rcv *GDI) REGION_SRID() uint16 {
 	return 0
 }
 
+func (rcv *GDI) RegionSrid() uint16 {
+	return rcv.REGION_SRID()
+}
+
 /// Region spatial reference ID
 func (rcv *GDI) MutateREGION_SRID(n uint16) bool {
 	return rcv._tab.MutateUint16Slot(30, n)
+}
+
+func (rcv *GDI) MutateRegionSrid(n uint16) bool {
+	return rcv.MutateREGION_SRID(n)
 }
 
 /// Subject object identifier
@@ -217,6 +289,10 @@ func (rcv *GDI) SUBJECT_ID() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *GDI) SubjectId() []byte {
+	return rcv.SUBJECT_ID()
 }
 
 /// Subject object identifier
@@ -229,6 +305,10 @@ func (rcv *GDI) NAME() []byte {
 	return nil
 }
 
+func (rcv *GDI) Name() []byte {
+	return rcv.NAME()
+}
+
 /// Image name or title
 /// Transaction identifier
 func (rcv *GDI) TRANSACTION_ID() []byte {
@@ -237,6 +317,10 @@ func (rcv *GDI) TRANSACTION_ID() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *GDI) TransactionId() []byte {
+	return rcv.TRANSACTION_ID()
 }
 
 /// Transaction identifier
@@ -250,12 +334,20 @@ func (rcv *GDI) TAGS(j int) []byte {
 	return nil
 }
 
+func (rcv *GDI) Tags(j int) []byte {
+	return rcv.TAGS(j)
+}
+
 func (rcv *GDI) TAGSLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *GDI) TagsLength() int {
+	return rcv.TAGSLength()
 }
 
 /// Associated tags
@@ -269,12 +361,20 @@ func (rcv *GDI) KEYWORDS(j int) []byte {
 	return nil
 }
 
+func (rcv *GDI) Keywords(j int) []byte {
+	return rcv.KEYWORDS(j)
+}
+
 func (rcv *GDI) KEYWORDSLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *GDI) KeywordsLength() int {
+	return rcv.KEYWORDSLength()
 }
 
 /// Keywords for search/classification
@@ -287,6 +387,10 @@ func (rcv *GDI) NOTES() []byte {
 	return nil
 }
 
+func (rcv *GDI) Notes() []byte {
+	return rcv.NOTES()
+}
+
 /// Notes
 func GDIStart(builder *flatbuffers.Builder) {
 	builder.StartObject(20)
@@ -294,68 +398,134 @@ func GDIStart(builder *flatbuffers.Builder) {
 func GDIAddID(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ID), 0)
 }
+func GDIAddId(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
+	GDIAddID(builder, ID)
+}
 func GDIAddID_SENSOR(builder *flatbuffers.Builder, ID_SENSOR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(ID_SENSOR), 0)
+}
+func GDIAddIdSensor(builder *flatbuffers.Builder, ID_SENSOR flatbuffers.UOffsetT) {
+	GDIAddID_SENSOR(builder, ID_SENSOR)
 }
 func GDIAddORIG_SENSOR_ID(builder *flatbuffers.Builder, ORIG_SENSOR_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(ORIG_SENSOR_ID), 0)
 }
+func GDIAddOrigSensorId(builder *flatbuffers.Builder, ORIG_SENSOR_ID flatbuffers.UOffsetT) {
+	GDIAddORIG_SENSOR_ID(builder, ORIG_SENSOR_ID)
+}
 func GDIAddIMAGE_TIME(builder *flatbuffers.Builder, IMAGE_TIME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(IMAGE_TIME), 0)
+}
+func GDIAddImageTime(builder *flatbuffers.Builder, IMAGE_TIME flatbuffers.UOffsetT) {
+	GDIAddIMAGE_TIME(builder, IMAGE_TIME)
 }
 func GDIAddFILENAME(builder *flatbuffers.Builder, FILENAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(FILENAME), 0)
 }
+func GDIAddFilename(builder *flatbuffers.Builder, FILENAME flatbuffers.UOffsetT) {
+	GDIAddFILENAME(builder, FILENAME)
+}
 func GDIAddFORMAT(builder *flatbuffers.Builder, FORMAT imageFormat) {
 	builder.PrependInt8Slot(5, int8(FORMAT), 0)
+}
+func GDIAddFormat(builder *flatbuffers.Builder, FORMAT imageFormat) {
+	GDIAddFORMAT(builder, FORMAT)
 }
 func GDIAddFILESIZE(builder *flatbuffers.Builder, FILESIZE int64) {
 	builder.PrependInt64Slot(6, FILESIZE, 0)
 }
+func GDIAddFilesize(builder *flatbuffers.Builder, FILESIZE int64) {
+	GDIAddFILESIZE(builder, FILESIZE)
+}
 func GDIAddCHECKSUM_VALUE(builder *flatbuffers.Builder, CHECKSUM_VALUE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(CHECKSUM_VALUE), 0)
+}
+func GDIAddChecksumValue(builder *flatbuffers.Builder, CHECKSUM_VALUE flatbuffers.UOffsetT) {
+	GDIAddCHECKSUM_VALUE(builder, CHECKSUM_VALUE)
 }
 func GDIAddREGION_GEO_JSON(builder *flatbuffers.Builder, REGION_GEO_JSON flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(REGION_GEO_JSON), 0)
 }
+func GDIAddRegionGeoJson(builder *flatbuffers.Builder, REGION_GEO_JSON flatbuffers.UOffsetT) {
+	GDIAddREGION_GEO_JSON(builder, REGION_GEO_JSON)
+}
 func GDIAddREGION_TEXT(builder *flatbuffers.Builder, REGION_TEXT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(REGION_TEXT), 0)
+}
+func GDIAddRegionText(builder *flatbuffers.Builder, REGION_TEXT flatbuffers.UOffsetT) {
+	GDIAddREGION_TEXT(builder, REGION_TEXT)
 }
 func GDIAddREGION(builder *flatbuffers.Builder, REGION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(REGION), 0)
 }
+func GDIAddRegion(builder *flatbuffers.Builder, REGION flatbuffers.UOffsetT) {
+	GDIAddREGION(builder, REGION)
+}
 func GDIAddREGION_TYPE(builder *flatbuffers.Builder, REGION_TYPE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(REGION_TYPE), 0)
+}
+func GDIAddRegionType(builder *flatbuffers.Builder, REGION_TYPE flatbuffers.UOffsetT) {
+	GDIAddREGION_TYPE(builder, REGION_TYPE)
 }
 func GDIAddREGION_NDIMS(builder *flatbuffers.Builder, REGION_NDIMS byte) {
 	builder.PrependByteSlot(12, REGION_NDIMS, 0)
 }
+func GDIAddRegionNdims(builder *flatbuffers.Builder, REGION_NDIMS byte) {
+	GDIAddREGION_NDIMS(builder, REGION_NDIMS)
+}
 func GDIAddREGION_SRID(builder *flatbuffers.Builder, REGION_SRID uint16) {
 	builder.PrependUint16Slot(13, REGION_SRID, 0)
+}
+func GDIAddRegionSrid(builder *flatbuffers.Builder, REGION_SRID uint16) {
+	GDIAddREGION_SRID(builder, REGION_SRID)
 }
 func GDIAddSUBJECT_ID(builder *flatbuffers.Builder, SUBJECT_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(14, flatbuffers.UOffsetT(SUBJECT_ID), 0)
 }
+func GDIAddSubjectId(builder *flatbuffers.Builder, SUBJECT_ID flatbuffers.UOffsetT) {
+	GDIAddSUBJECT_ID(builder, SUBJECT_ID)
+}
 func GDIAddNAME(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(15, flatbuffers.UOffsetT(NAME), 0)
+}
+func GDIAddName(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
+	GDIAddNAME(builder, NAME)
 }
 func GDIAddTRANSACTION_ID(builder *flatbuffers.Builder, TRANSACTION_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(16, flatbuffers.UOffsetT(TRANSACTION_ID), 0)
 }
+func GDIAddTransactionId(builder *flatbuffers.Builder, TRANSACTION_ID flatbuffers.UOffsetT) {
+	GDIAddTRANSACTION_ID(builder, TRANSACTION_ID)
+}
 func GDIAddTAGS(builder *flatbuffers.Builder, TAGS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(17, flatbuffers.UOffsetT(TAGS), 0)
+}
+func GDIAddTags(builder *flatbuffers.Builder, TAGS flatbuffers.UOffsetT) {
+	GDIAddTAGS(builder, TAGS)
 }
 func GDIStartTAGSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
+func GDIStartTagsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return GDIStartTAGSVector(builder, numElems)
+}
 func GDIAddKEYWORDS(builder *flatbuffers.Builder, KEYWORDS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(18, flatbuffers.UOffsetT(KEYWORDS), 0)
+}
+func GDIAddKeywords(builder *flatbuffers.Builder, KEYWORDS flatbuffers.UOffsetT) {
+	GDIAddKEYWORDS(builder, KEYWORDS)
 }
 func GDIStartKEYWORDSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
+func GDIStartKeywordsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return GDIStartKEYWORDSVector(builder, numElems)
+}
 func GDIAddNOTES(builder *flatbuffers.Builder, NOTES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(19, flatbuffers.UOffsetT(NOTES), 0)
+}
+func GDIAddNotes(builder *flatbuffers.Builder, NOTES flatbuffers.UOffsetT) {
+	GDIAddNOTES(builder, NOTES)
 }
 func GDIEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

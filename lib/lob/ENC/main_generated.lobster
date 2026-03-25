@@ -105,30 +105,30 @@ struct ENCBuilder:
     def end():
         return b_.EndObject()
 
-def ENCStartEPHEMERAL_PUBLIC_KEYVector(b_:flatbuffers.builder, n_:int):
+def ENCStartEPHEMERALPUBLICKEYVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(1, n_, 1)
-def ENCCreateEPHEMERAL_PUBLIC_KEYVector(b_:flatbuffers.builder, v_:[int]):
+def ENCCreateEPHEMERALPUBLICKEYVector(b_:flatbuffers.builder, v_:[int]):
     b_.StartVector(1, v_.length, 1)
     reverse(v_) e_: b_.PrependUint8(e_)
     return b_.EndVector(v_.length)
 
-def ENCStartNONCE_STARTVector(b_:flatbuffers.builder, n_:int):
+def ENCStartNONCESTARTVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(1, n_, 1)
-def ENCCreateNONCE_STARTVector(b_:flatbuffers.builder, v_:[int]):
+def ENCCreateNONCESTARTVector(b_:flatbuffers.builder, v_:[int]):
     b_.StartVector(1, v_.length, 1)
     reverse(v_) e_: b_.PrependUint8(e_)
     return b_.EndVector(v_.length)
 
-def ENCStartRECIPIENT_KEY_IDVector(b_:flatbuffers.builder, n_:int):
+def ENCStartRECIPIENTKEYIDVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(1, n_, 1)
-def ENCCreateRECIPIENT_KEY_IDVector(b_:flatbuffers.builder, v_:[int]):
+def ENCCreateRECIPIENTKEYIDVector(b_:flatbuffers.builder, v_:[int]):
     b_.StartVector(1, v_.length, 1)
     reverse(v_) e_: b_.PrependUint8(e_)
     return b_.EndVector(v_.length)
 
-def ENCStartSCHEMA_HASHVector(b_:flatbuffers.builder, n_:int):
+def ENCStartSCHEMAHASHVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(1, n_, 1)
-def ENCCreateSCHEMA_HASHVector(b_:flatbuffers.builder, v_:[int]):
+def ENCCreateSCHEMAHASHVector(b_:flatbuffers.builder, v_:[int]):
     b_.StartVector(1, v_.length, 1)
     reverse(v_) e_: b_.PrependUint8(e_)
     return b_.EndVector(v_.length)

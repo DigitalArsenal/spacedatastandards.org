@@ -2,4 +2,9 @@
 
 # namespace: 
 
-# NOTE manifoldStatus.py does not declare any structs or enums
+class manifoldStatus(object):
+    CANDIDATE = 0
+    CONFIRMED = 1
+    REJECTED = 2
+    CORRELATED = 3
+    EXPIRED = 4

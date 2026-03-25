@@ -87,16 +87,21 @@ def End(builder):
 class CZMCartographicDegreesT(object):
 
     # CZMCartographicDegreesT
-    def __init__(self):
-        self.LONGITUDE = 0.0  # type: float
-        self.LATITUDE = 0.0  # type: float
-        self.HEIGHT = 0.0  # type: float
+    def __init__(
+        self,
+        LONGITUDE = 0.0,
+        LATITUDE = 0.0,
+        HEIGHT = 0.0,
+    ):
+        self.LONGITUDE = LONGITUDE  # type: float
+        self.LATITUDE = LATITUDE  # type: float
+        self.HEIGHT = HEIGHT  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        czmcartographicDegrees = CZMCartographicDegrees()
-        czmcartographicDegrees.Init(buf, pos)
-        return cls.InitFromObj(czmcartographicDegrees)
+        tmpCzmcartographicDegrees = CZMCartographicDegrees()
+        tmpCzmcartographicDegrees.Init(buf, pos)
+        return cls.InitFromObj(tmpCzmcartographicDegrees)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -104,18 +109,18 @@ class CZMCartographicDegreesT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, czmcartographicDegrees):
+    def InitFromObj(cls, tmpCzmcartographicDegrees):
         x = CZMCartographicDegreesT()
-        x._UnPack(czmcartographicDegrees)
+        x._UnPack(tmpCzmcartographicDegrees)
         return x
 
     # CZMCartographicDegreesT
-    def _UnPack(self, czmcartographicDegrees):
-        if czmcartographicDegrees is None:
+    def _UnPack(self, CZMCartographicDegrees):
+        if CZMCartographicDegrees is None:
             return
-        self.LONGITUDE = czmcartographicDegrees.LONGITUDE()
-        self.LATITUDE = czmcartographicDegrees.LATITUDE()
-        self.HEIGHT = czmcartographicDegrees.HEIGHT()
+        self.LONGITUDE = CZMCartographicDegrees.LONGITUDE()
+        self.LATITUDE = CZMCartographicDegrees.LATITUDE()
+        self.HEIGHT = CZMCartographicDegrees.HEIGHT()
 
     # CZMCartographicDegreesT
     def Pack(self, builder):
@@ -123,5 +128,5 @@ class CZMCartographicDegreesT(object):
         CZMCartographicDegreesAddLONGITUDE(builder, self.LONGITUDE)
         CZMCartographicDegreesAddLATITUDE(builder, self.LATITUDE)
         CZMCartographicDegreesAddHEIGHT(builder, self.HEIGHT)
-        czmcartographicDegrees = CZMCartographicDegreesEnd(builder)
-        return czmcartographicDegrees
+        CZMCartographicDegrees = CZMCartographicDegreesEnd(builder)
+        return CZMCartographicDegrees

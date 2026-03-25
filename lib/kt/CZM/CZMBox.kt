@@ -32,7 +32,7 @@ class CZMBox : Table() {
     /**
      * Whether the box is displayed
      */
-    val SHOW : Boolean
+    val show : Boolean
         get() {
             val o = __offset(4)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -40,7 +40,7 @@ class CZMBox : Table() {
     /**
      * Width (X) in meters
      */
-    val DIMENSIONS_X : Double
+    val dimensionsX : Double
         get() {
             val o = __offset(6)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -48,7 +48,7 @@ class CZMBox : Table() {
     /**
      * Depth (Y) in meters
      */
-    val DIMENSIONS_Y : Double
+    val dimensionsY : Double
         get() {
             val o = __offset(8)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -56,7 +56,7 @@ class CZMBox : Table() {
     /**
      * Height (Z) in meters
      */
-    val DIMENSIONS_Z : Double
+    val dimensionsZ : Double
         get() {
             val o = __offset(10)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -64,7 +64,7 @@ class CZMBox : Table() {
     /**
      * Height reference
      */
-    val HEIGHT_REFERENCE : String?
+    val heightReference : String?
         get() {
             val o = __offset(12)
             return if (o != 0) {
@@ -73,12 +73,12 @@ class CZMBox : Table() {
                 null
             }
         }
-    val HEIGHT_REFERENCEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
-    fun HEIGHT_REFERENCEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
+    val heightReferenceAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(12, 1)
+    fun heightReferenceInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 12, 1)
     /**
      * Fill flag
      */
-    val FILL : Boolean
+    val fill : Boolean
         get() {
             val o = __offset(14)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -86,8 +86,8 @@ class CZMBox : Table() {
     /**
      * Surface material
      */
-    val MATERIAL : CZMMaterial? get() = MATERIAL(CZMMaterial())
-    fun MATERIAL(obj: CZMMaterial) : CZMMaterial? {
+    val material : CZMMaterial? get() = material(CZMMaterial())
+    fun material(obj: CZMMaterial) : CZMMaterial? {
         val o = __offset(16)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -98,7 +98,7 @@ class CZMBox : Table() {
     /**
      * Outline flag
      */
-    val OUTLINE : Boolean
+    val outline : Boolean
         get() {
             val o = __offset(18)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -106,8 +106,8 @@ class CZMBox : Table() {
     /**
      * Outline color
      */
-    val OUTLINE_COLOR : CZMColor? get() = OUTLINE_COLOR(CZMColor())
-    fun OUTLINE_COLOR(obj: CZMColor) : CZMColor? {
+    val outlineColor : CZMColor? get() = outlineColor(CZMColor())
+    fun outlineColor(obj: CZMColor) : CZMColor? {
         val o = __offset(20)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -118,7 +118,7 @@ class CZMBox : Table() {
     /**
      * Outline width
      */
-    val OUTLINE_WIDTH : Double
+    val outlineWidth : Double
         get() {
             val o = __offset(22)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -126,7 +126,7 @@ class CZMBox : Table() {
     /**
      * Shadow mode
      */
-    val SHADOWS : String?
+    val shadows : String?
         get() {
             val o = __offset(24)
             return if (o != 0) {
@@ -135,12 +135,12 @@ class CZMBox : Table() {
                 null
             }
         }
-    val SHADOWSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(24, 1)
-    fun SHADOWSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 24, 1)
+    val shadowsAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(24, 1)
+    fun shadowsInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 24, 1)
     /**
      * Distance display condition near
      */
-    val DISTANCE_DISPLAY_CONDITION_NEAR : Double
+    val distanceDisplayConditionNear : Double
         get() {
             val o = __offset(26)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -148,49 +148,49 @@ class CZMBox : Table() {
     /**
      * Distance display condition far
      */
-    val DISTANCE_DISPLAY_CONDITION_FAR : Double
+    val distanceDisplayConditionFar : Double
         get() {
             val o = __offset(28)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsCZMBox(_bb: ByteBuffer): CZMBox = getRootAsCZMBox(_bb, CZMBox())
         fun getRootAsCZMBox(_bb: ByteBuffer, obj: CZMBox): CZMBox {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createCZMBox(builder: FlatBufferBuilder, SHOW: Boolean, DIMENSIONS_X: Double, DIMENSIONS_Y: Double, DIMENSIONS_Z: Double, HEIGHT_REFERENCEOffset: Int, FILL: Boolean, MATERIALOffset: Int, OUTLINE: Boolean, OUTLINE_COLOROffset: Int, OUTLINE_WIDTH: Double, SHADOWSOffset: Int, DISTANCE_DISPLAY_CONDITION_NEAR: Double, DISTANCE_DISPLAY_CONDITION_FAR: Double) : Int {
+        fun createCZMBox(builder: FlatBufferBuilder, show: Boolean, dimensionsX: Double, dimensionsY: Double, dimensionsZ: Double, heightReferenceOffset: Int, fill: Boolean, materialOffset: Int, outline: Boolean, outlineColorOffset: Int, outlineWidth: Double, shadowsOffset: Int, distanceDisplayConditionNear: Double, distanceDisplayConditionFar: Double) : Int {
             builder.startTable(13)
-            addDISTANCE_DISPLAY_CONDITION_FAR(builder, DISTANCE_DISPLAY_CONDITION_FAR)
-            addDISTANCE_DISPLAY_CONDITION_NEAR(builder, DISTANCE_DISPLAY_CONDITION_NEAR)
-            addOUTLINE_WIDTH(builder, OUTLINE_WIDTH)
-            addDIMENSIONS_Z(builder, DIMENSIONS_Z)
-            addDIMENSIONS_Y(builder, DIMENSIONS_Y)
-            addDIMENSIONS_X(builder, DIMENSIONS_X)
-            addSHADOWS(builder, SHADOWSOffset)
-            addOUTLINE_COLOR(builder, OUTLINE_COLOROffset)
-            addMATERIAL(builder, MATERIALOffset)
-            addHEIGHT_REFERENCE(builder, HEIGHT_REFERENCEOffset)
-            addOUTLINE(builder, OUTLINE)
-            addFILL(builder, FILL)
-            addSHOW(builder, SHOW)
+            addDISTANCEDISPLAYCONDITIONFAR(builder, distanceDisplayConditionFar)
+            addDISTANCEDISPLAYCONDITIONNEAR(builder, distanceDisplayConditionNear)
+            addOUTLINEWIDTH(builder, outlineWidth)
+            addDIMENSIONSZ(builder, dimensionsZ)
+            addDIMENSIONSY(builder, dimensionsY)
+            addDIMENSIONSX(builder, dimensionsX)
+            addSHADOWS(builder, shadowsOffset)
+            addOUTLINECOLOR(builder, outlineColorOffset)
+            addMATERIAL(builder, materialOffset)
+            addHEIGHTREFERENCE(builder, heightReferenceOffset)
+            addOUTLINE(builder, outline)
+            addFILL(builder, fill)
+            addSHOW(builder, show)
             return endCZMBox(builder)
         }
         fun startCZMBox(builder: FlatBufferBuilder) = builder.startTable(13)
-        fun addSHOW(builder: FlatBufferBuilder, SHOW: Boolean) = builder.addBoolean(0, SHOW, false)
-        fun addDIMENSIONS_X(builder: FlatBufferBuilder, DIMENSIONS_X: Double) = builder.addDouble(1, DIMENSIONS_X, 0.0)
-        fun addDIMENSIONS_Y(builder: FlatBufferBuilder, DIMENSIONS_Y: Double) = builder.addDouble(2, DIMENSIONS_Y, 0.0)
-        fun addDIMENSIONS_Z(builder: FlatBufferBuilder, DIMENSIONS_Z: Double) = builder.addDouble(3, DIMENSIONS_Z, 0.0)
-        fun addHEIGHT_REFERENCE(builder: FlatBufferBuilder, HEIGHT_REFERENCE: Int) = builder.addOffset(4, HEIGHT_REFERENCE, 0)
-        fun addFILL(builder: FlatBufferBuilder, FILL: Boolean) = builder.addBoolean(5, FILL, false)
-        fun addMATERIAL(builder: FlatBufferBuilder, MATERIAL: Int) = builder.addOffset(6, MATERIAL, 0)
-        fun addOUTLINE(builder: FlatBufferBuilder, OUTLINE: Boolean) = builder.addBoolean(7, OUTLINE, false)
-        fun addOUTLINE_COLOR(builder: FlatBufferBuilder, OUTLINE_COLOR: Int) = builder.addOffset(8, OUTLINE_COLOR, 0)
-        fun addOUTLINE_WIDTH(builder: FlatBufferBuilder, OUTLINE_WIDTH: Double) = builder.addDouble(9, OUTLINE_WIDTH, 0.0)
-        fun addSHADOWS(builder: FlatBufferBuilder, SHADOWS: Int) = builder.addOffset(10, SHADOWS, 0)
-        fun addDISTANCE_DISPLAY_CONDITION_NEAR(builder: FlatBufferBuilder, DISTANCE_DISPLAY_CONDITION_NEAR: Double) = builder.addDouble(11, DISTANCE_DISPLAY_CONDITION_NEAR, 0.0)
-        fun addDISTANCE_DISPLAY_CONDITION_FAR(builder: FlatBufferBuilder, DISTANCE_DISPLAY_CONDITION_FAR: Double) = builder.addDouble(12, DISTANCE_DISPLAY_CONDITION_FAR, 0.0)
+        fun addSHOW(builder: FlatBufferBuilder, show: Boolean) = builder.addBoolean(0, show, false)
+        fun addDIMENSIONSX(builder: FlatBufferBuilder, dimensionsX: Double) = builder.addDouble(1, dimensionsX, 0.0)
+        fun addDIMENSIONSY(builder: FlatBufferBuilder, dimensionsY: Double) = builder.addDouble(2, dimensionsY, 0.0)
+        fun addDIMENSIONSZ(builder: FlatBufferBuilder, dimensionsZ: Double) = builder.addDouble(3, dimensionsZ, 0.0)
+        fun addHEIGHTREFERENCE(builder: FlatBufferBuilder, heightReference: Int) = builder.addOffset(4, heightReference, 0)
+        fun addFILL(builder: FlatBufferBuilder, fill: Boolean) = builder.addBoolean(5, fill, false)
+        fun addMATERIAL(builder: FlatBufferBuilder, material: Int) = builder.addOffset(6, material, 0)
+        fun addOUTLINE(builder: FlatBufferBuilder, outline: Boolean) = builder.addBoolean(7, outline, false)
+        fun addOUTLINECOLOR(builder: FlatBufferBuilder, outlineColor: Int) = builder.addOffset(8, outlineColor, 0)
+        fun addOUTLINEWIDTH(builder: FlatBufferBuilder, outlineWidth: Double) = builder.addDouble(9, outlineWidth, 0.0)
+        fun addSHADOWS(builder: FlatBufferBuilder, shadows: Int) = builder.addOffset(10, shadows, 0)
+        fun addDISTANCEDISPLAYCONDITIONNEAR(builder: FlatBufferBuilder, distanceDisplayConditionNear: Double) = builder.addDouble(11, distanceDisplayConditionNear, 0.0)
+        fun addDISTANCEDISPLAYCONDITIONFAR(builder: FlatBufferBuilder, distanceDisplayConditionFar: Double) = builder.addDouble(12, distanceDisplayConditionFar, 0.0)
         fun endCZMBox(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

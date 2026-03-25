@@ -29,7 +29,7 @@ class CustomFrameWrapper(object):
         self._tab = flatbuffers.table.Table(buf, pos)
 
     # CustomFrameWrapper
-    def Frame(self):
+    def frame(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
@@ -41,11 +41,11 @@ def CustomFrameWrapperStart(builder):
 def Start(builder):
     CustomFrameWrapperStart(builder)
 
-def CustomFrameWrapperAddFrame(builder, frame):
+def CustomFrameWrapperAddframe(builder, frame):
     builder.PrependInt8Slot(0, frame, 0)
 
-def AddFrame(builder, frame):
-    CustomFrameWrapperAddFrame(builder, frame)
+def Addframe(builder, frame):
+    CustomFrameWrapperAddframe(builder, frame)
 
 def CustomFrameWrapperEnd(builder):
     return builder.EndObject()
@@ -57,14 +57,17 @@ def End(builder):
 class CustomFrameWrapperT(object):
 
     # CustomFrameWrapperT
-    def __init__(self):
-        self.frame = 0  # type: int
+    def __init__(
+        self,
+        frame = 0,
+    ):
+        self.frame = frame  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        customFrameWrapper = CustomFrameWrapper()
-        customFrameWrapper.Init(buf, pos)
-        return cls.InitFromObj(customFrameWrapper)
+        tmpCustomFrameWrapper = CustomFrameWrapper()
+        tmpCustomFrameWrapper.Init(buf, pos)
+        return cls.InitFromObj(tmpCustomFrameWrapper)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -72,20 +75,20 @@ class CustomFrameWrapperT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, customFrameWrapper):
+    def InitFromObj(cls, tmpCustomFrameWrapper):
         x = CustomFrameWrapperT()
-        x._UnPack(customFrameWrapper)
+        x._UnPack(tmpCustomFrameWrapper)
         return x
 
     # CustomFrameWrapperT
-    def _UnPack(self, customFrameWrapper):
-        if customFrameWrapper is None:
+    def _UnPack(self, CustomFrameWrapper):
+        if CustomFrameWrapper is None:
             return
-        self.frame = customFrameWrapper.Frame()
+        self.frame = CustomFrameWrapper.frame()
 
     # CustomFrameWrapperT
     def Pack(self, builder):
         CustomFrameWrapperStart(builder)
-        CustomFrameWrapperAddFrame(builder, self.frame)
-        customFrameWrapper = CustomFrameWrapperEnd(builder)
-        return customFrameWrapper
+        CustomFrameWrapperAddframe(builder, self.frame)
+        CustomFrameWrapper = CustomFrameWrapperEnd(builder)
+        return CustomFrameWrapper

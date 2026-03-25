@@ -138,6 +138,12 @@ def PricingTierStartFEATURESVector(builder, numElems):
 def StartFEATURESVector(builder, numElems):
     return PricingTierStartFEATURESVector(builder, numElems)
 
+def PricingTierCreateFEATURESVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateFEATURESVector(builder, data):
+    PricingTierCreateFEATURESVector(builder, data)
+
 def PricingTierEnd(builder):
     return builder.EndObject()
 
@@ -152,19 +158,27 @@ except:
 class PricingTierT(object):
 
     # PricingTierT
-    def __init__(self):
-        self.NAME = None  # type: str
-        self.PRICE_AMOUNT = 0  # type: int
-        self.PRICE_CURRENCY = None  # type: str
-        self.DURATION_DAYS = 0  # type: int
-        self.RATE_LIMIT = 0  # type: int
-        self.FEATURES = None  # type: List[str]
+    def __init__(
+        self,
+        NAME = None,
+        PRICE_AMOUNT = 0,
+        PRICE_CURRENCY = None,
+        DURATION_DAYS = 0,
+        RATE_LIMIT = 0,
+        FEATURES = None,
+    ):
+        self.NAME = NAME  # type: Optional[str]
+        self.PRICE_AMOUNT = PRICE_AMOUNT  # type: int
+        self.PRICE_CURRENCY = PRICE_CURRENCY  # type: Optional[str]
+        self.DURATION_DAYS = DURATION_DAYS  # type: int
+        self.RATE_LIMIT = RATE_LIMIT  # type: int
+        self.FEATURES = FEATURES  # type: Optional[List[Optional[str]]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        pricingTier = PricingTier()
-        pricingTier.Init(buf, pos)
-        return cls.InitFromObj(pricingTier)
+        tmpPricingTier = PricingTier()
+        tmpPricingTier.Init(buf, pos)
+        return cls.InitFromObj(tmpPricingTier)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -172,24 +186,24 @@ class PricingTierT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, pricingTier):
+    def InitFromObj(cls, tmpPricingTier):
         x = PricingTierT()
-        x._UnPack(pricingTier)
+        x._UnPack(tmpPricingTier)
         return x
 
     # PricingTierT
-    def _UnPack(self, pricingTier):
-        if pricingTier is None:
+    def _UnPack(self, PricingTier):
+        if PricingTier is None:
             return
-        self.NAME = pricingTier.NAME()
-        self.PRICE_AMOUNT = pricingTier.PRICE_AMOUNT()
-        self.PRICE_CURRENCY = pricingTier.PRICE_CURRENCY()
-        self.DURATION_DAYS = pricingTier.DURATION_DAYS()
-        self.RATE_LIMIT = pricingTier.RATE_LIMIT()
-        if not pricingTier.FEATURESIsNone():
+        self.NAME = PricingTier.NAME()
+        self.PRICE_AMOUNT = PricingTier.PRICE_AMOUNT()
+        self.PRICE_CURRENCY = PricingTier.PRICE_CURRENCY()
+        self.DURATION_DAYS = PricingTier.DURATION_DAYS()
+        self.RATE_LIMIT = PricingTier.RATE_LIMIT()
+        if not PricingTier.FEATURESIsNone():
             self.FEATURES = []
-            for i in range(pricingTier.FEATURESLength()):
-                self.FEATURES.append(pricingTier.FEATURES(i))
+            for i in range(PricingTier.FEATURESLength()):
+                self.FEATURES.append(PricingTier.FEATURES(i))
 
     # PricingTierT
     def Pack(self, builder):
@@ -215,5 +229,5 @@ class PricingTierT(object):
         PricingTierAddRATE_LIMIT(builder, self.RATE_LIMIT)
         if self.FEATURES is not None:
             PricingTierAddFEATURES(builder, FEATURES)
-        pricingTier = PricingTierEnd(builder)
-        return pricingTier
+        PricingTier = PricingTierEnd(builder)
+        return PricingTier

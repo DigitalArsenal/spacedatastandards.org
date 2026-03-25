@@ -181,6 +181,16 @@ def TCFStartDATAVector(builder, numElems):
 def StartDATAVector(builder, numElems):
     return TCFStartDATAVector(builder, numElems)
 
+def TCFCreateDATAVector(builder, data):
+    data = list(data)
+    builder.StartVector(1, len(data), 1)
+    for item in reversed(data):
+        builder.PrependUint8(item)
+    return builder.EndVector()
+
+def CreateDATAVector(builder, data):
+    TCFCreateDATAVector(builder, data)
+
 def TCFAddFECF(builder, FECF):
     builder.PrependUint16Slot(8, FECF, 0)
 
@@ -201,22 +211,33 @@ except:
 class TCFT(object):
 
     # TCFT
-    def __init__(self):
-        self.VERSION = 0  # type: int
-        self.BYPASS_FLAG = False  # type: bool
-        self.CONTROL_CMD_FLAG = False  # type: bool
-        self.SPACECRAFT_ID = 0  # type: int
-        self.VIRTUAL_CHANNEL_ID = 0  # type: int
-        self.FRAME_LENGTH = 0  # type: int
-        self.FRAME_SEQUENCE_NUM = 0  # type: int
-        self.DATA = None  # type: List[int]
-        self.FECF = 0  # type: int
+    def __init__(
+        self,
+        VERSION = 0,
+        BYPASS_FLAG = False,
+        CONTROL_CMD_FLAG = False,
+        SPACECRAFT_ID = 0,
+        VIRTUAL_CHANNEL_ID = 0,
+        FRAME_LENGTH = 0,
+        FRAME_SEQUENCE_NUM = 0,
+        DATA = None,
+        FECF = 0,
+    ):
+        self.VERSION = VERSION  # type: int
+        self.BYPASS_FLAG = BYPASS_FLAG  # type: bool
+        self.CONTROL_CMD_FLAG = CONTROL_CMD_FLAG  # type: bool
+        self.SPACECRAFT_ID = SPACECRAFT_ID  # type: int
+        self.VIRTUAL_CHANNEL_ID = VIRTUAL_CHANNEL_ID  # type: int
+        self.FRAME_LENGTH = FRAME_LENGTH  # type: int
+        self.FRAME_SEQUENCE_NUM = FRAME_SEQUENCE_NUM  # type: int
+        self.DATA = DATA  # type: Optional[List[int]]
+        self.FECF = FECF  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        TCF = TCF()
-        TCF.Init(buf, pos)
-        return cls.InitFromObj(TCF)
+        tmpTcf = TCF()
+        tmpTcf.Init(buf, pos)
+        return cls.InitFromObj(tmpTcf)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -224,9 +245,9 @@ class TCFT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, TCF):
+    def InitFromObj(cls, tmpTcf):
         x = TCFT()
-        x._UnPack(TCF)
+        x._UnPack(tmpTcf)
         return x
 
     # TCFT

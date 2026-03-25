@@ -29,52 +29,52 @@ class STV : Table() {
         __init(_i, _bb)
         return this
     }
-    val EPOCH : Double
+    val epoch : Double
         get() {
             val o = __offset(4)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val POS_X : Double
+    val posX : Double
         get() {
             val o = __offset(6)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val POS_Y : Double
+    val posY : Double
         get() {
             val o = __offset(8)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val POS_Z : Double
+    val posZ : Double
         get() {
             val o = __offset(10)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val VEL_X : Double
+    val velX : Double
         get() {
             val o = __offset(12)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val VEL_Y : Double
+    val velY : Double
         get() {
             val o = __offset(14)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val VEL_Z : Double
+    val velZ : Double
         get() {
             val o = __offset(16)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val REF_FRAME : UByte
+    val refFrame : UByte
         get() {
             val o = __offset(18)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
         }
-    val FLAGS : UByte
+    val flags : UByte
         get() {
             val o = __offset(20)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
         }
-    fun RESERVED(j: Int) : UByte {
+    fun reserved(j: Int) : UByte {
         val o = __offset(22)
         return if (o != 0) {
             bb.get(__vector(o) + j * 1).toUByte()
@@ -82,45 +82,45 @@ class STV : Table() {
             0u
         }
     }
-    val RESERVEDLength : Int
+    val reservedLength : Int
         get() {
             val o = __offset(22); return if (o != 0) __vector_len(o) else 0
         }
-    val RESERVEDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(22, 1)
-    fun RESERVEDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 22, 1)
+    val reservedAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(22, 1)
+    fun reservedInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 22, 1)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsSTV(_bb: ByteBuffer): STV = getRootAsSTV(_bb, STV())
         fun getRootAsSTV(_bb: ByteBuffer, obj: STV): STV {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun STVBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$STV")
-        fun createSTV(builder: FlatBufferBuilder, EPOCH: Double, POS_X: Double, POS_Y: Double, POS_Z: Double, VEL_X: Double, VEL_Y: Double, VEL_Z: Double, REF_FRAME: UByte, FLAGS: UByte, RESERVEDOffset: Int) : Int {
+        fun createSTV(builder: FlatBufferBuilder, epoch: Double, posX: Double, posY: Double, posZ: Double, velX: Double, velY: Double, velZ: Double, refFrame: UByte, flags: UByte, reservedOffset: Int) : Int {
             builder.startTable(10)
-            addVEL_Z(builder, VEL_Z)
-            addVEL_Y(builder, VEL_Y)
-            addVEL_X(builder, VEL_X)
-            addPOS_Z(builder, POS_Z)
-            addPOS_Y(builder, POS_Y)
-            addPOS_X(builder, POS_X)
-            addEPOCH(builder, EPOCH)
-            addRESERVED(builder, RESERVEDOffset)
-            addFLAGS(builder, FLAGS)
-            addREF_FRAME(builder, REF_FRAME)
+            addVELZ(builder, velZ)
+            addVELY(builder, velY)
+            addVELX(builder, velX)
+            addPOSZ(builder, posZ)
+            addPOSY(builder, posY)
+            addPOSX(builder, posX)
+            addEPOCH(builder, epoch)
+            addRESERVED(builder, reservedOffset)
+            addFLAGS(builder, flags)
+            addREFFRAME(builder, refFrame)
             return endSTV(builder)
         }
         fun startSTV(builder: FlatBufferBuilder) = builder.startTable(10)
-        fun addEPOCH(builder: FlatBufferBuilder, EPOCH: Double) = builder.addDouble(0, EPOCH, 0.0)
-        fun addPOS_X(builder: FlatBufferBuilder, POS_X: Double) = builder.addDouble(1, POS_X, 0.0)
-        fun addPOS_Y(builder: FlatBufferBuilder, POS_Y: Double) = builder.addDouble(2, POS_Y, 0.0)
-        fun addPOS_Z(builder: FlatBufferBuilder, POS_Z: Double) = builder.addDouble(3, POS_Z, 0.0)
-        fun addVEL_X(builder: FlatBufferBuilder, VEL_X: Double) = builder.addDouble(4, VEL_X, 0.0)
-        fun addVEL_Y(builder: FlatBufferBuilder, VEL_Y: Double) = builder.addDouble(5, VEL_Y, 0.0)
-        fun addVEL_Z(builder: FlatBufferBuilder, VEL_Z: Double) = builder.addDouble(6, VEL_Z, 0.0)
-        fun addREF_FRAME(builder: FlatBufferBuilder, REF_FRAME: UByte) = builder.addByte(7, REF_FRAME.toByte(), 0)
-        fun addFLAGS(builder: FlatBufferBuilder, FLAGS: UByte) = builder.addByte(8, FLAGS.toByte(), 0)
-        fun addRESERVED(builder: FlatBufferBuilder, RESERVED: Int) = builder.addOffset(9, RESERVED, 0)
+        fun addEPOCH(builder: FlatBufferBuilder, epoch: Double) = builder.addDouble(0, epoch, 0.0)
+        fun addPOSX(builder: FlatBufferBuilder, posX: Double) = builder.addDouble(1, posX, 0.0)
+        fun addPOSY(builder: FlatBufferBuilder, posY: Double) = builder.addDouble(2, posY, 0.0)
+        fun addPOSZ(builder: FlatBufferBuilder, posZ: Double) = builder.addDouble(3, posZ, 0.0)
+        fun addVELX(builder: FlatBufferBuilder, velX: Double) = builder.addDouble(4, velX, 0.0)
+        fun addVELY(builder: FlatBufferBuilder, velY: Double) = builder.addDouble(5, velY, 0.0)
+        fun addVELZ(builder: FlatBufferBuilder, velZ: Double) = builder.addDouble(6, velZ, 0.0)
+        fun addREFFRAME(builder: FlatBufferBuilder, refFrame: UByte) = builder.addByte(7, refFrame.toByte(), 0)
+        fun addFLAGS(builder: FlatBufferBuilder, flags: UByte) = builder.addByte(8, flags.toByte(), 0)
+        fun addRESERVED(builder: FlatBufferBuilder, reserved: Int) = builder.addOffset(9, reserved, 0)
         @kotlin.ExperimentalUnsignedTypes
         fun createReservedVector(builder: FlatBufferBuilder, data: UByteArray) : Int {
             builder.startVector(1, data.size, 1)

@@ -106,16 +106,21 @@ except:
 class CommandContainerEntryT(object):
 
     # CommandContainerEntryT
-    def __init__(self):
-        self.ARGUMENT_REF_ENTRY = None  # type: Optional[ArgumentRefEntry.ArgumentRefEntryT]
-        self.PARAMETER_REF_ENTRY = None  # type: Optional[ParameterRefEntry.ParameterRefEntryT]
-        self.FIXED_VALUE_ENTRY = None  # type: Optional[FixedValueEntry.FixedValueEntryT]
+    def __init__(
+        self,
+        ARGUMENT_REF_ENTRY = None,
+        PARAMETER_REF_ENTRY = None,
+        FIXED_VALUE_ENTRY = None,
+    ):
+        self.ARGUMENT_REF_ENTRY = ARGUMENT_REF_ENTRY  # type: Optional[ArgumentRefEntry.ArgumentRefEntryT]
+        self.PARAMETER_REF_ENTRY = PARAMETER_REF_ENTRY  # type: Optional[ParameterRefEntry.ParameterRefEntryT]
+        self.FIXED_VALUE_ENTRY = FIXED_VALUE_ENTRY  # type: Optional[FixedValueEntry.FixedValueEntryT]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        commandContainerEntry = CommandContainerEntry()
-        commandContainerEntry.Init(buf, pos)
-        return cls.InitFromObj(commandContainerEntry)
+        tmpCommandContainerEntry = CommandContainerEntry()
+        tmpCommandContainerEntry.Init(buf, pos)
+        return cls.InitFromObj(tmpCommandContainerEntry)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -123,21 +128,21 @@ class CommandContainerEntryT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, commandContainerEntry):
+    def InitFromObj(cls, tmpCommandContainerEntry):
         x = CommandContainerEntryT()
-        x._UnPack(commandContainerEntry)
+        x._UnPack(tmpCommandContainerEntry)
         return x
 
     # CommandContainerEntryT
-    def _UnPack(self, commandContainerEntry):
-        if commandContainerEntry is None:
+    def _UnPack(self, CommandContainerEntry):
+        if CommandContainerEntry is None:
             return
-        if commandContainerEntry.ARGUMENT_REF_ENTRY() is not None:
-            self.ARGUMENT_REF_ENTRY = ArgumentRefEntry.ArgumentRefEntryT.InitFromObj(commandContainerEntry.ARGUMENT_REF_ENTRY())
-        if commandContainerEntry.PARAMETER_REF_ENTRY() is not None:
-            self.PARAMETER_REF_ENTRY = ParameterRefEntry.ParameterRefEntryT.InitFromObj(commandContainerEntry.PARAMETER_REF_ENTRY())
-        if commandContainerEntry.FIXED_VALUE_ENTRY() is not None:
-            self.FIXED_VALUE_ENTRY = FixedValueEntry.FixedValueEntryT.InitFromObj(commandContainerEntry.FIXED_VALUE_ENTRY())
+        if CommandContainerEntry.ARGUMENT_REF_ENTRY() is not None:
+            self.ARGUMENT_REF_ENTRY = ArgumentRefEntry.ArgumentRefEntryT.InitFromObj(CommandContainerEntry.ARGUMENT_REF_ENTRY())
+        if CommandContainerEntry.PARAMETER_REF_ENTRY() is not None:
+            self.PARAMETER_REF_ENTRY = ParameterRefEntry.ParameterRefEntryT.InitFromObj(CommandContainerEntry.PARAMETER_REF_ENTRY())
+        if CommandContainerEntry.FIXED_VALUE_ENTRY() is not None:
+            self.FIXED_VALUE_ENTRY = FixedValueEntry.FixedValueEntryT.InitFromObj(CommandContainerEntry.FIXED_VALUE_ENTRY())
 
     # CommandContainerEntryT
     def Pack(self, builder):
@@ -154,5 +159,5 @@ class CommandContainerEntryT(object):
             CommandContainerEntryAddPARAMETER_REF_ENTRY(builder, PARAMETER_REF_ENTRY)
         if self.FIXED_VALUE_ENTRY is not None:
             CommandContainerEntryAddFIXED_VALUE_ENTRY(builder, FIXED_VALUE_ENTRY)
-        commandContainerEntry = CommandContainerEntryEnd(builder)
-        return commandContainerEntry
+        CommandContainerEntry = CommandContainerEntryEnd(builder)
+        return CommandContainerEntry

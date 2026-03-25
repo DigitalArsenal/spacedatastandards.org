@@ -114,17 +114,23 @@ except:
 class CZMCheckerboardMaterialT(object):
 
     # CZMCheckerboardMaterialT
-    def __init__(self):
-        self.EVEN_COLOR = None  # type: Optional[CZMColor.CZMColorT]
-        self.ODD_COLOR = None  # type: Optional[CZMColor.CZMColorT]
-        self.REPEAT_X = 0.0  # type: float
-        self.REPEAT_Y = 0.0  # type: float
+    def __init__(
+        self,
+        EVEN_COLOR = None,
+        ODD_COLOR = None,
+        REPEAT_X = 0.0,
+        REPEAT_Y = 0.0,
+    ):
+        self.EVEN_COLOR = EVEN_COLOR  # type: Optional[CZMColor.CZMColorT]
+        self.ODD_COLOR = ODD_COLOR  # type: Optional[CZMColor.CZMColorT]
+        self.REPEAT_X = REPEAT_X  # type: float
+        self.REPEAT_Y = REPEAT_Y  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        czmcheckerboardMaterial = CZMCheckerboardMaterial()
-        czmcheckerboardMaterial.Init(buf, pos)
-        return cls.InitFromObj(czmcheckerboardMaterial)
+        tmpCzmcheckerboardMaterial = CZMCheckerboardMaterial()
+        tmpCzmcheckerboardMaterial.Init(buf, pos)
+        return cls.InitFromObj(tmpCzmcheckerboardMaterial)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -132,21 +138,21 @@ class CZMCheckerboardMaterialT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, czmcheckerboardMaterial):
+    def InitFromObj(cls, tmpCzmcheckerboardMaterial):
         x = CZMCheckerboardMaterialT()
-        x._UnPack(czmcheckerboardMaterial)
+        x._UnPack(tmpCzmcheckerboardMaterial)
         return x
 
     # CZMCheckerboardMaterialT
-    def _UnPack(self, czmcheckerboardMaterial):
-        if czmcheckerboardMaterial is None:
+    def _UnPack(self, CZMCheckerboardMaterial):
+        if CZMCheckerboardMaterial is None:
             return
-        if czmcheckerboardMaterial.EVEN_COLOR() is not None:
-            self.EVEN_COLOR = CZMColor.CZMColorT.InitFromObj(czmcheckerboardMaterial.EVEN_COLOR())
-        if czmcheckerboardMaterial.ODD_COLOR() is not None:
-            self.ODD_COLOR = CZMColor.CZMColorT.InitFromObj(czmcheckerboardMaterial.ODD_COLOR())
-        self.REPEAT_X = czmcheckerboardMaterial.REPEAT_X()
-        self.REPEAT_Y = czmcheckerboardMaterial.REPEAT_Y()
+        if CZMCheckerboardMaterial.EVEN_COLOR() is not None:
+            self.EVEN_COLOR = CZMColor.CZMColorT.InitFromObj(CZMCheckerboardMaterial.EVEN_COLOR())
+        if CZMCheckerboardMaterial.ODD_COLOR() is not None:
+            self.ODD_COLOR = CZMColor.CZMColorT.InitFromObj(CZMCheckerboardMaterial.ODD_COLOR())
+        self.REPEAT_X = CZMCheckerboardMaterial.REPEAT_X()
+        self.REPEAT_Y = CZMCheckerboardMaterial.REPEAT_Y()
 
     # CZMCheckerboardMaterialT
     def Pack(self, builder):
@@ -161,5 +167,5 @@ class CZMCheckerboardMaterialT(object):
             CZMCheckerboardMaterialAddODD_COLOR(builder, ODD_COLOR)
         CZMCheckerboardMaterialAddREPEAT_X(builder, self.REPEAT_X)
         CZMCheckerboardMaterialAddREPEAT_Y(builder, self.REPEAT_Y)
-        czmcheckerboardMaterial = CZMCheckerboardMaterialEnd(builder)
-        return czmcheckerboardMaterial
+        CZMCheckerboardMaterial = CZMCheckerboardMaterialEnd(builder)
+        return CZMCheckerboardMaterial

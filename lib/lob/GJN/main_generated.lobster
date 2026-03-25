@@ -198,9 +198,9 @@ def GJNGeometryCreateRINGSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-def GJNGeometryStartPOLYGON_RINGSVector(b_:flatbuffers.builder, n_:int):
+def GJNGeometryStartPOLYGONRINGSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def GJNGeometryCreatePOLYGON_RINGSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def GJNGeometryCreatePOLYGONRINGSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)

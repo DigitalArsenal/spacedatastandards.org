@@ -1,2 +1,2 @@
-export { TCF, TCFT } from './TCF.js';
+export * from './TCF.js';
 //# sourceMappingURL=main.d.ts.map

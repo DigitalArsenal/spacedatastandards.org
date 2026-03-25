@@ -115,6 +115,12 @@ def AggregateParameterTypeStartMEMBERSVector(builder, numElems):
 def StartMEMBERSVector(builder, numElems):
     return AggregateParameterTypeStartMEMBERSVector(builder, numElems)
 
+def AggregateParameterTypeCreateMEMBERSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateMEMBERSVector(builder, data):
+    AggregateParameterTypeCreateMEMBERSVector(builder, data)
+
 def AggregateParameterTypeEnd(builder):
     return builder.EndObject()
 
@@ -130,17 +136,23 @@ except:
 class AggregateParameterTypeT(object):
 
     # AggregateParameterTypeT
-    def __init__(self):
-        self.NAME = None  # type: str
-        self.SHORT_DESCRIPTION = None  # type: str
-        self.LONG_DESCRIPTION = None  # type: str
-        self.MEMBERS = None  # type: List[AggregateMember.AggregateMemberT]
+    def __init__(
+        self,
+        NAME = None,
+        SHORT_DESCRIPTION = None,
+        LONG_DESCRIPTION = None,
+        MEMBERS = None,
+    ):
+        self.NAME = NAME  # type: Optional[str]
+        self.SHORT_DESCRIPTION = SHORT_DESCRIPTION  # type: Optional[str]
+        self.LONG_DESCRIPTION = LONG_DESCRIPTION  # type: Optional[str]
+        self.MEMBERS = MEMBERS  # type: Optional[List[AggregateMember.AggregateMemberT]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        aggregateParameterType = AggregateParameterType()
-        aggregateParameterType.Init(buf, pos)
-        return cls.InitFromObj(aggregateParameterType)
+        tmpAggregateParameterType = AggregateParameterType()
+        tmpAggregateParameterType.Init(buf, pos)
+        return cls.InitFromObj(tmpAggregateParameterType)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -148,25 +160,25 @@ class AggregateParameterTypeT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, aggregateParameterType):
+    def InitFromObj(cls, tmpAggregateParameterType):
         x = AggregateParameterTypeT()
-        x._UnPack(aggregateParameterType)
+        x._UnPack(tmpAggregateParameterType)
         return x
 
     # AggregateParameterTypeT
-    def _UnPack(self, aggregateParameterType):
-        if aggregateParameterType is None:
+    def _UnPack(self, AggregateParameterType):
+        if AggregateParameterType is None:
             return
-        self.NAME = aggregateParameterType.NAME()
-        self.SHORT_DESCRIPTION = aggregateParameterType.SHORT_DESCRIPTION()
-        self.LONG_DESCRIPTION = aggregateParameterType.LONG_DESCRIPTION()
-        if not aggregateParameterType.MEMBERSIsNone():
+        self.NAME = AggregateParameterType.NAME()
+        self.SHORT_DESCRIPTION = AggregateParameterType.SHORT_DESCRIPTION()
+        self.LONG_DESCRIPTION = AggregateParameterType.LONG_DESCRIPTION()
+        if not AggregateParameterType.MEMBERSIsNone():
             self.MEMBERS = []
-            for i in range(aggregateParameterType.MEMBERSLength()):
-                if aggregateParameterType.MEMBERS(i) is None:
+            for i in range(AggregateParameterType.MEMBERSLength()):
+                if AggregateParameterType.MEMBERS(i) is None:
                     self.MEMBERS.append(None)
                 else:
-                    aggregateMember_ = AggregateMember.AggregateMemberT.InitFromObj(aggregateParameterType.MEMBERS(i))
+                    aggregateMember_ = AggregateMember.AggregateMemberT.InitFromObj(AggregateParameterType.MEMBERS(i))
                     self.MEMBERS.append(aggregateMember_)
 
     # AggregateParameterTypeT
@@ -194,5 +206,5 @@ class AggregateParameterTypeT(object):
             AggregateParameterTypeAddLONG_DESCRIPTION(builder, LONG_DESCRIPTION)
         if self.MEMBERS is not None:
             AggregateParameterTypeAddMEMBERS(builder, MEMBERS)
-        aggregateParameterType = AggregateParameterTypeEnd(builder)
-        return aggregateParameterType
+        AggregateParameterType = AggregateParameterTypeEnd(builder)
+        return AggregateParameterType

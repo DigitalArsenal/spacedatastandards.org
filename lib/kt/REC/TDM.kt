@@ -32,7 +32,7 @@ class TDM : Table() {
     /**
      * Unique identifier for the observation OBSERVER -  [Specific CCSDS Document]
      */
-    val OBSERVER_ID : String?
+    val observerId : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class TDM : Table() {
                 null
             }
         }
-    val OBSERVER_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun OBSERVER_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val observerIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun observerIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Cartesian X coordinate of the OBSERVER location in chosen reference frame
      */
-    val OBSERVER_X : Double
+    val observerX : Double
         get() {
             val o = __offset(6)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -54,7 +54,7 @@ class TDM : Table() {
     /**
      * Cartesian Y coordinate of the OBSERVER location in chosen reference frame 
      */
-    val OBSERVER_Y : Double
+    val observerY : Double
         get() {
             val o = __offset(8)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -62,7 +62,7 @@ class TDM : Table() {
     /**
      * Cartesian Z coordinate of the OBSERVER location in chosen reference frame 
      */
-    val OBSERVER_Z : Double
+    val observerZ : Double
         get() {
             val o = __offset(10)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -70,7 +70,7 @@ class TDM : Table() {
     /**
      * Cartesian X coordinate of the OBSERVER velocity in chosen reference frame
      */
-    val OBSERVER_VX : Double
+    val observerVx : Double
         get() {
             val o = __offset(12)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -78,7 +78,7 @@ class TDM : Table() {
     /**
      * Cartesian Y coordinate of the OBSERVER velocity in chosen reference frame 
      */
-    val OBSERVER_VY : Double
+    val observerVy : Double
         get() {
             val o = __offset(14)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -86,7 +86,7 @@ class TDM : Table() {
     /**
      * Cartesian Z coordinate of the OBSERVER velocity in chosen reference frame 
      */
-    val OBSERVER_VZ : Double
+    val observerVz : Double
         get() {
             val o = __offset(16)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -94,8 +94,8 @@ class TDM : Table() {
     /**
      * Reference frame used for OBSERVER location Cartesian coordinates (e.g., ECEF, ECI)
      */
-    val OBSERVER_POSITION_REFERENCE_FRAME : RFM? get() = OBSERVER_POSITION_REFERENCE_FRAME(RFM())
-    fun OBSERVER_POSITION_REFERENCE_FRAME(obj: RFM) : RFM? {
+    val observerPositionReferenceFrame : RFM? get() = observerPositionReferenceFrame(RFM())
+    fun observerPositionReferenceFrame(obj: RFM) : RFM? {
         val o = __offset(18)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -106,8 +106,8 @@ class TDM : Table() {
     /**
      * Reference frame used for obs location Cartesian coordinates (e.g., ECEF, ECI)
      */
-    val OBS_REFERENCE_FRAME : RFM? get() = OBS_REFERENCE_FRAME(RFM())
-    fun OBS_REFERENCE_FRAME(obj: RFM) : RFM? {
+    val obsReferenceFrame : RFM? get() = obsReferenceFrame(RFM())
+    fun obsReferenceFrame(obj: RFM) : RFM? {
         val o = __offset(20)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -118,7 +118,7 @@ class TDM : Table() {
     /**
      * Epoch time or observation time, in ISO 8601 UTC format -  CCSDS 503.0-B-1
      */
-    val EPOCH : String?
+    val epoch : String?
         get() {
             val o = __offset(22)
             return if (o != 0) {
@@ -127,13 +127,13 @@ class TDM : Table() {
                 null
             }
         }
-    val EPOCHAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(22, 1)
-    fun EPOCHInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 22, 1)
+    val epochAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(22, 1)
+    fun epochInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 22, 1)
     /**
      * Time interval between observations in seconds (required).
      * Time reconstruction: time[i] = OBSERVATION_START_TIME + (i * OBSERVATION_STEP_SIZE)
      */
-    val OBSERVATION_STEP_SIZE : Double
+    val observationStepSize : Double
         get() {
             val o = __offset(24)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -141,7 +141,7 @@ class TDM : Table() {
     /**
      * Start time for observation time reconstruction (ISO 8601 UTC format).
      */
-    val OBSERVATION_START_TIME : String?
+    val observationStartTime : String?
         get() {
             val o = __offset(26)
             return if (o != 0) {
@@ -150,12 +150,12 @@ class TDM : Table() {
                 null
             }
         }
-    val OBSERVATION_START_TIMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(26, 1)
-    fun OBSERVATION_START_TIMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 26, 1)
+    val observationStartTimeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(26, 1)
+    fun observationStartTimeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 26, 1)
     /**
      * TDM version number -  CCSDS 503.0-B-1, Page D-9
      */
-    val CCSDS_TDM_VERS : String?
+    val ccsdsTdmVers : String?
         get() {
             val o = __offset(28)
             return if (o != 0) {
@@ -164,12 +164,12 @@ class TDM : Table() {
                 null
             }
         }
-    val CCSDS_TDM_VERSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(28, 1)
-    fun CCSDS_TDM_VERSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 28, 1)
+    val ccsdsTdmVersAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(28, 1)
+    fun ccsdsTdmVersInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 28, 1)
     /**
      * Comments regarding TDM -  various sections, e.g., Page D-9
      */
-    fun COMMENT(j: Int) : String? {
+    fun comment(j: Int) : String? {
         val o = __offset(30)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
@@ -177,14 +177,14 @@ class TDM : Table() {
             null
         }
     }
-    val COMMENTLength : Int
+    val commentLength : Int
         get() {
             val o = __offset(30); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Date of TDM creation -  CCSDS 503.0-B-1, Page D-9
      */
-    val CREATION_DATE : String?
+    val creationDate : String?
         get() {
             val o = __offset(32)
             return if (o != 0) {
@@ -193,12 +193,12 @@ class TDM : Table() {
                 null
             }
         }
-    val CREATION_DATEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(32, 1)
-    fun CREATION_DATEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 32, 1)
+    val creationDateAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(32, 1)
+    fun creationDateInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 32, 1)
     /**
      * Originator of the TDM -  CCSDS 503.0-B-1, Page D-9
      */
-    val ORIGINATOR : String?
+    val originator : String?
         get() {
             val o = __offset(34)
             return if (o != 0) {
@@ -207,12 +207,12 @@ class TDM : Table() {
                 null
             }
         }
-    val ORIGINATORAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(34, 1)
-    fun ORIGINATORInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 34, 1)
+    val originatorAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(34, 1)
+    fun originatorInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 34, 1)
     /**
      * Start of metadata section -  CCSDS 503.0-B-1, Page D-9
      */
-    val META_START : String?
+    val metaStart : String?
         get() {
             val o = __offset(36)
             return if (o != 0) {
@@ -221,12 +221,12 @@ class TDM : Table() {
                 null
             }
         }
-    val META_STARTAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(36, 1)
-    fun META_STARTInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 36, 1)
+    val metaStartAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(36, 1)
+    fun metaStartInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 36, 1)
     /**
      * Time system used -  CCSDS 503.0-B-1, Page D-9
      */
-    val TIME_SYSTEM : String?
+    val timeSystem : String?
         get() {
             val o = __offset(38)
             return if (o != 0) {
@@ -235,12 +235,12 @@ class TDM : Table() {
                 null
             }
         }
-    val TIME_SYSTEMAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(38, 1)
-    fun TIME_SYSTEMInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 38, 1)
+    val timeSystemAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(38, 1)
+    fun timeSystemInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 38, 1)
     /**
      * Start time of the data -  CCSDS 503.0-B-1, Page D-9
      */
-    val START_TIME : String?
+    val startTime : String?
         get() {
             val o = __offset(40)
             return if (o != 0) {
@@ -249,12 +249,12 @@ class TDM : Table() {
                 null
             }
         }
-    val START_TIMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(40, 1)
-    fun START_TIMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 40, 1)
+    val startTimeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(40, 1)
+    fun startTimeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 40, 1)
     /**
      * Stop time of the data -  CCSDS 503.0-B-1, Page D-9
      */
-    val STOP_TIME : String?
+    val stopTime : String?
         get() {
             val o = __offset(42)
             return if (o != 0) {
@@ -263,12 +263,12 @@ class TDM : Table() {
                 null
             }
         }
-    val STOP_TIMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(42, 1)
-    fun STOP_TIMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 42, 1)
+    val stopTimeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(42, 1)
+    fun stopTimeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 42, 1)
     /**
      * First participant in the TDM -  CCSDS 503.0-B-1, Page D-9
      */
-    val PARTICIPANT_1 : String?
+    val participant1 : String?
         get() {
             val o = __offset(44)
             return if (o != 0) {
@@ -277,12 +277,12 @@ class TDM : Table() {
                 null
             }
         }
-    val PARTICIPANT_1AsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(44, 1)
-    fun PARTICIPANT_1InByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 44, 1)
+    val participant1AsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(44, 1)
+    fun participant1InByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 44, 1)
     /**
      * Second participant in the TDM -  CCSDS 503.0-B-1, Page D-9
      */
-    val PARTICIPANT_2 : String?
+    val participant2 : String?
         get() {
             val o = __offset(46)
             return if (o != 0) {
@@ -291,12 +291,12 @@ class TDM : Table() {
                 null
             }
         }
-    val PARTICIPANT_2AsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(46, 1)
-    fun PARTICIPANT_2InByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 46, 1)
+    val participant2AsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(46, 1)
+    fun participant2InByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 46, 1)
     /**
      * Third participant in the TDM (if applicable) -  CCSDS 503.0-B-1, Page D-9
      */
-    val PARTICIPANT_3 : String?
+    val participant3 : String?
         get() {
             val o = __offset(48)
             return if (o != 0) {
@@ -305,12 +305,12 @@ class TDM : Table() {
                 null
             }
         }
-    val PARTICIPANT_3AsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(48, 1)
-    fun PARTICIPANT_3InByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 48, 1)
+    val participant3AsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(48, 1)
+    fun participant3InByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 48, 1)
     /**
      * Fourth participant in the TDM (if applicable) -  CCSDS 503.0-B-1, Page D-9
      */
-    val PARTICIPANT_4 : String?
+    val participant4 : String?
         get() {
             val o = __offset(50)
             return if (o != 0) {
@@ -319,12 +319,12 @@ class TDM : Table() {
                 null
             }
         }
-    val PARTICIPANT_4AsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(50, 1)
-    fun PARTICIPANT_4InByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 50, 1)
+    val participant4AsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(50, 1)
+    fun participant4InByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 50, 1)
     /**
      * Fifth participant in the TDM (if applicable) -  CCSDS 503.0-B-1, Page D-9, max participants
      */
-    val PARTICIPANT_5 : String?
+    val participant5 : String?
         get() {
             val o = __offset(52)
             return if (o != 0) {
@@ -333,12 +333,12 @@ class TDM : Table() {
                 null
             }
         }
-    val PARTICIPANT_5AsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(52, 1)
-    fun PARTICIPANT_5InByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 52, 1)
+    val participant5AsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(52, 1)
+    fun participant5InByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 52, 1)
     /**
      * Mode of TDM -  CCSDS 503.0-B-1, Page D-9
      */
-    val MODE : String?
+    val mode : String?
         get() {
             val o = __offset(54)
             return if (o != 0) {
@@ -347,12 +347,12 @@ class TDM : Table() {
                 null
             }
         }
-    val MODEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(54, 1)
-    fun MODEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 54, 1)
+    val modeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(54, 1)
+    fun modeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 54, 1)
     /**
      * First path in TDM -  CCSDS 503.0-B-1, Page D-9
      */
-    val PATH_1 : UShort
+    val path1 : UShort
         get() {
             val o = __offset(56)
             return if(o != 0) bb.getShort(o + bb_pos).toUShort() else 0u
@@ -360,7 +360,7 @@ class TDM : Table() {
     /**
      * Second path in TDM (if applicable) -  CCSDS 503.0-B-1, Page D-9
      */
-    val PATH_2 : UShort
+    val path2 : UShort
         get() {
             val o = __offset(58)
             return if(o != 0) bb.getShort(o + bb_pos).toUShort() else 0u
@@ -368,7 +368,7 @@ class TDM : Table() {
     /**
      * Transmit band -  CCSDS 503.0-B-1, Page D-9
      */
-    val TRANSMIT_BAND : String?
+    val transmitBand : String?
         get() {
             val o = __offset(60)
             return if (o != 0) {
@@ -377,12 +377,12 @@ class TDM : Table() {
                 null
             }
         }
-    val TRANSMIT_BANDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(60, 1)
-    fun TRANSMIT_BANDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 60, 1)
+    val transmitBandAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(60, 1)
+    fun transmitBandInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 60, 1)
     /**
      * Receive band -  CCSDS 503.0-B-1, Page D-9
      */
-    val RECEIVE_BAND : String?
+    val receiveBand : String?
         get() {
             val o = __offset(62)
             return if (o != 0) {
@@ -391,12 +391,12 @@ class TDM : Table() {
                 null
             }
         }
-    val RECEIVE_BANDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(62, 1)
-    fun RECEIVE_BANDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 62, 1)
+    val receiveBandAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(62, 1)
+    fun receiveBandInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 62, 1)
     /**
      * Integration interval -  CCSDS 503.0-B-1, Page D-9
      */
-    val INTEGRATION_INTERVAL : Float
+    val integrationInterval : Float
         get() {
             val o = __offset(64)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -404,7 +404,7 @@ class TDM : Table() {
     /**
      * Integration reference -  CCSDS 503.0-B-1, Page D-9
      */
-    val INTEGRATION_REF : String?
+    val integrationRef : String?
         get() {
             val o = __offset(66)
             return if (o != 0) {
@@ -413,12 +413,12 @@ class TDM : Table() {
                 null
             }
         }
-    val INTEGRATION_REFAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(66, 1)
-    fun INTEGRATION_REFInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 66, 1)
+    val integrationRefAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(66, 1)
+    fun integrationRefInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 66, 1)
     /**
      * Receive delay for second participant -  CCSDS 503.0-B-1, Page D-9
      */
-    val RECEIVE_DELAY_2 : Double
+    val receiveDelay2 : Double
         get() {
             val o = __offset(68)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -426,7 +426,7 @@ class TDM : Table() {
     /**
      * Receive delay for third participant -  CCSDS 503.0-B-1, Page D-9
      */
-    val RECEIVE_DELAY_3 : Double
+    val receiveDelay3 : Double
         get() {
             val o = __offset(70)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -434,7 +434,7 @@ class TDM : Table() {
     /**
      * Data quality -  CCSDS 503.0-B-1, Page D-9
      */
-    val DATA_QUALITY : String?
+    val dataQuality : String?
         get() {
             val o = __offset(72)
             return if (o != 0) {
@@ -443,12 +443,12 @@ class TDM : Table() {
                 null
             }
         }
-    val DATA_QUALITYAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(72, 1)
-    fun DATA_QUALITYInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 72, 1)
+    val dataQualityAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(72, 1)
+    fun dataQualityInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 72, 1)
     /**
      * End of metadata section -  CCSDS 503.0-B-1, Page D-9
      */
-    val META_STOP : String?
+    val metaStop : String?
         get() {
             val o = __offset(74)
             return if (o != 0) {
@@ -457,12 +457,12 @@ class TDM : Table() {
                 null
             }
         }
-    val META_STOPAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(74, 1)
-    fun META_STOPInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 74, 1)
+    val metaStopAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(74, 1)
+    fun metaStopInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 74, 1)
     /**
      * Start of data section -  CCSDS 503.0-B-1, Page D-9
      */
-    val DATA_START : String?
+    val dataStart : String?
         get() {
             val o = __offset(76)
             return if (o != 0) {
@@ -471,12 +471,12 @@ class TDM : Table() {
                 null
             }
         }
-    val DATA_STARTAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(76, 1)
-    fun DATA_STARTInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 76, 1)
+    val dataStartAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(76, 1)
+    fun dataStartInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 76, 1)
     /**
      * Transmit frequency for first participant -  CCSDS 503.0-B-1, Page D-9
      */
-    val TRANSMIT_FREQ_1 : Double
+    val transmitFreq1 : Double
         get() {
             val o = __offset(78)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -484,7 +484,7 @@ class TDM : Table() {
     /**
      * Receive frequency -  CCSDS 503.0-B-1, Page D-9
      */
-    fun RECEIVE_FREQ(j: Int) : Double {
+    fun receiveFreq(j: Int) : Double {
         val o = __offset(80)
         return if (o != 0) {
             bb.getDouble(__vector(o) + j * 8)
@@ -492,16 +492,16 @@ class TDM : Table() {
             0.0
         }
     }
-    val RECEIVE_FREQLength : Int
+    val receiveFreqLength : Int
         get() {
             val o = __offset(80); return if (o != 0) __vector_len(o) else 0
         }
-    val RECEIVE_FREQAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(80, 8)
-    fun RECEIVE_FREQInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 80, 8)
+    val receiveFreqAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(80, 8)
+    fun receiveFreqInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 80, 8)
     /**
      * End of data section -  CCSDS 503.0-B-1, Page D-9
      */
-    val DATA_STOP : String?
+    val dataStop : String?
         get() {
             val o = __offset(82)
             return if (o != 0) {
@@ -510,13 +510,13 @@ class TDM : Table() {
                 null
             }
         }
-    val DATA_STOPAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(82, 1)
-    fun DATA_STOPInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 82, 1)
+    val dataStopAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(82, 1)
+    fun dataStopInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 82, 1)
     /**
      * Additional properties as required by the specific application of the TDM...
      * Reference for time tagging -  CCSDS 503.0-B-1, Page D-10
      */
-    val TIMETAG_REF : String?
+    val timetagRef : String?
         get() {
             val o = __offset(84)
             return if (o != 0) {
@@ -525,13 +525,13 @@ class TDM : Table() {
                 null
             }
         }
-    val TIMETAG_REFAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(84, 1)
-    fun TIMETAG_REFInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 84, 1)
+    val timetagRefAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(84, 1)
+    fun timetagRefInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 84, 1)
     /**
      * Type of angle data -  CCSDS 503.0-B-1, Page D-12
      * Can be AZEL, RADEC, XEYN, XSYE, or another value with provided ICD
      */
-    val ANGLE_TYPE : String?
+    val angleType : String?
         get() {
             val o = __offset(86)
             return if (o != 0) {
@@ -540,12 +540,12 @@ class TDM : Table() {
                 null
             }
         }
-    val ANGLE_TYPEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(86, 1)
-    fun ANGLE_TYPEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 86, 1)
+    val angleTypeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(86, 1)
+    fun angleTypeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 86, 1)
     /**
      * First angle value -  CCSDS 503.0-B-1, Page D-12
      */
-    fun ANGLE_1(j: Int) : Float {
+    fun angle1(j: Int) : Float {
         val o = __offset(88)
         return if (o != 0) {
             bb.getFloat(__vector(o) + j * 4)
@@ -553,16 +553,16 @@ class TDM : Table() {
             0.0f
         }
     }
-    val ANGLE_1Length : Int
+    val angle1Length : Int
         get() {
             val o = __offset(88); return if (o != 0) __vector_len(o) else 0
         }
-    val ANGLE_1AsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(88, 4)
-    fun ANGLE_1InByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 88, 4)
+    val angle1AsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(88, 4)
+    fun angle1InByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 88, 4)
     /**
      * Second angle value -  CCSDS 503.0-B-1, Page D-12
      */
-    fun ANGLE_2(j: Int) : Float {
+    fun angle2(j: Int) : Float {
         val o = __offset(90)
         return if (o != 0) {
             bb.getFloat(__vector(o) + j * 4)
@@ -570,16 +570,16 @@ class TDM : Table() {
             0.0f
         }
     }
-    val ANGLE_2Length : Int
+    val angle2Length : Int
         get() {
             val o = __offset(90); return if (o != 0) __vector_len(o) else 0
         }
-    val ANGLE_2AsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(90, 4)
-    fun ANGLE_2InByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 90, 4)
+    val angle2AsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(90, 4)
+    fun angle2InByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 90, 4)
     /**
      * Uncertainty of first angle -  CCSDS 503.0-B-1
      */
-    val ANGLE_UNCERTAINTY_1 : Float
+    val angleUncertainty1 : Float
         get() {
             val o = __offset(92)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -587,7 +587,7 @@ class TDM : Table() {
     /**
      * Uncertainty of second angle -  CCSDS 503.0-B-1
      */
-    val ANGLE_UNCERTAINTY_2 : Float
+    val angleUncertainty2 : Float
         get() {
             val o = __offset(94)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -595,7 +595,7 @@ class TDM : Table() {
     /**
      * Rate of change of range -  CCSDS 503.0-B-1
      */
-    val RANGE_RATE : Double
+    val rangeRate : Double
         get() {
             val o = __offset(96)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -603,7 +603,7 @@ class TDM : Table() {
     /**
      * Uncertainty in range -  CCSDS 503.0-B-1
      */
-    val RANGE_UNCERTAINTY : Double
+    val rangeUncertainty : Double
         get() {
             val o = __offset(98)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -611,7 +611,7 @@ class TDM : Table() {
     /**
      * Mode of range data -  CCSDS 503.0-B-1, Page D-10
      */
-    val RANGE_MODE : String?
+    val rangeMode : String?
         get() {
             val o = __offset(100)
             return if (o != 0) {
@@ -620,12 +620,12 @@ class TDM : Table() {
                 null
             }
         }
-    val RANGE_MODEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(100, 1)
-    fun RANGE_MODEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 100, 1)
+    val rangeModeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(100, 1)
+    fun rangeModeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 100, 1)
     /**
      * Modulus value for range data -  CCSDS 503.0-B-1, Page D-10
      */
-    val RANGE_MODULUS : Double
+    val rangeModulus : Double
         get() {
             val o = __offset(102)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -633,7 +633,7 @@ class TDM : Table() {
     /**
      * First correction angle -  CCSDS 503.0-B-1, Page D-12
      */
-    val CORRECTION_ANGLE_1 : Float
+    val correctionAngle1 : Float
         get() {
             val o = __offset(104)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -641,7 +641,7 @@ class TDM : Table() {
     /**
      * Second correction angle -  CCSDS 503.0-B-1, Page D-12
      */
-    val CORRECTION_ANGLE_2 : Float
+    val correctionAngle2 : Float
         get() {
             val o = __offset(106)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -649,7 +649,7 @@ class TDM : Table() {
     /**
      * Indicator of corrections applied -  CCSDS 503.0-B-1, Page D-12
      */
-    val CORRECTIONS_APPLIED : String?
+    val correctionsApplied : String?
         get() {
             val o = __offset(108)
             return if (o != 0) {
@@ -658,12 +658,12 @@ class TDM : Table() {
                 null
             }
         }
-    val CORRECTIONS_APPLIEDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(108, 1)
-    fun CORRECTIONS_APPLIEDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 108, 1)
+    val correctionsAppliedAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(108, 1)
+    fun correctionsAppliedInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 108, 1)
     /**
      * Dry component of tropospheric delay -  CCSDS 503.0-B-1, Page D-14
      */
-    fun TROPO_DRY(j: Int) : Double {
+    fun tropoDry(j: Int) : Double {
         val o = __offset(110)
         return if (o != 0) {
             bb.getDouble(__vector(o) + j * 8)
@@ -671,16 +671,16 @@ class TDM : Table() {
             0.0
         }
     }
-    val TROPO_DRYLength : Int
+    val tropoDryLength : Int
         get() {
             val o = __offset(110); return if (o != 0) __vector_len(o) else 0
         }
-    val TROPO_DRYAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(110, 8)
-    fun TROPO_DRYInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 110, 8)
+    val tropoDryAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(110, 8)
+    fun tropoDryInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 110, 8)
     /**
      * Wet component of tropospheric delay -  CCSDS 503.0-B-1, Page D-14
      */
-    fun TROPO_WET(j: Int) : Double {
+    fun tropoWet(j: Int) : Double {
         val o = __offset(112)
         return if (o != 0) {
             bb.getDouble(__vector(o) + j * 8)
@@ -688,16 +688,16 @@ class TDM : Table() {
             0.0
         }
     }
-    val TROPO_WETLength : Int
+    val tropoWetLength : Int
         get() {
             val o = __offset(112); return if (o != 0) __vector_len(o) else 0
         }
-    val TROPO_WETAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(112, 8)
-    fun TROPO_WETInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 112, 8)
+    val tropoWetAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(112, 8)
+    fun tropoWetInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 112, 8)
     /**
      * Slant total electron content -  CCSDS 503.0-B-1, Page D-13
      */
-    fun STEC(j: Int) : Double {
+    fun stec(j: Int) : Double {
         val o = __offset(114)
         return if (o != 0) {
             bb.getDouble(__vector(o) + j * 8)
@@ -705,16 +705,16 @@ class TDM : Table() {
             0.0
         }
     }
-    val STECLength : Int
+    val stecLength : Int
         get() {
             val o = __offset(114); return if (o != 0) __vector_len(o) else 0
         }
-    val STECAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(114, 8)
-    fun STECInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 114, 8)
+    val stecAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(114, 8)
+    fun stecInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 114, 8)
     /**
      * Atmospheric pressure -  CCSDS 503.0-B-1, Page D-14
      */
-    fun PRESSURE(j: Int) : Double {
+    fun pressure(j: Int) : Double {
         val o = __offset(116)
         return if (o != 0) {
             bb.getDouble(__vector(o) + j * 8)
@@ -722,16 +722,16 @@ class TDM : Table() {
             0.0
         }
     }
-    val PRESSURELength : Int
+    val pressureLength : Int
         get() {
             val o = __offset(116); return if (o != 0) __vector_len(o) else 0
         }
-    val PRESSUREAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(116, 8)
-    fun PRESSUREInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 116, 8)
+    val pressureAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(116, 8)
+    fun pressureInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 116, 8)
     /**
      * Relative humidity -  CCSDS 503.0-B-1, Page D-14
      */
-    fun RHUMIDITY(j: Int) : Double {
+    fun rhumidity(j: Int) : Double {
         val o = __offset(118)
         return if (o != 0) {
             bb.getDouble(__vector(o) + j * 8)
@@ -739,16 +739,16 @@ class TDM : Table() {
             0.0
         }
     }
-    val RHUMIDITYLength : Int
+    val rhumidityLength : Int
         get() {
             val o = __offset(118); return if (o != 0) __vector_len(o) else 0
         }
-    val RHUMIDITYAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(118, 8)
-    fun RHUMIDITYInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 118, 8)
+    val rhumidityAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(118, 8)
+    fun rhumidityInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 118, 8)
     /**
      * Ambient temperature -  CCSDS 503.0-B-1, Page D-14
      */
-    fun TEMPERATURE(j: Int) : Double {
+    fun temperature(j: Int) : Double {
         val o = __offset(120)
         return if (o != 0) {
             bb.getDouble(__vector(o) + j * 8)
@@ -756,16 +756,16 @@ class TDM : Table() {
             0.0
         }
     }
-    val TEMPERATURELength : Int
+    val temperatureLength : Int
         get() {
             val o = __offset(120); return if (o != 0) __vector_len(o) else 0
         }
-    val TEMPERATUREAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(120, 8)
-    fun TEMPERATUREInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 120, 8)
+    val temperatureAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(120, 8)
+    fun temperatureInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 120, 8)
     /**
      * Clock bias values -  CCSDS 503.0-B-1, Page D-15
      */
-    fun CLOCK_BIAS(j: Int) : Double {
+    fun clockBias(j: Int) : Double {
         val o = __offset(122)
         return if (o != 0) {
             bb.getDouble(__vector(o) + j * 8)
@@ -773,16 +773,16 @@ class TDM : Table() {
             0.0
         }
     }
-    val CLOCK_BIASLength : Int
+    val clockBiasLength : Int
         get() {
             val o = __offset(122); return if (o != 0) __vector_len(o) else 0
         }
-    val CLOCK_BIASAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(122, 8)
-    fun CLOCK_BIASInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 122, 8)
+    val clockBiasAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(122, 8)
+    fun clockBiasInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 122, 8)
     /**
      * Clock drift values -  CCSDS 503.0-B-1, Page D-15
      */
-    fun CLOCK_DRIFT(j: Int) : Double {
+    fun clockDrift(j: Int) : Double {
         val o = __offset(124)
         return if (o != 0) {
             bb.getDouble(__vector(o) + j * 8)
@@ -790,100 +790,100 @@ class TDM : Table() {
             0.0
         }
     }
-    val CLOCK_DRIFTLength : Int
+    val clockDriftLength : Int
         get() {
             val o = __offset(124); return if (o != 0) __vector_len(o) else 0
         }
-    val CLOCK_DRIFTAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(124, 8)
-    fun CLOCK_DRIFTInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 124, 8)
+    val clockDriftAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(124, 8)
+    fun clockDriftInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 124, 8)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsTDM(_bb: ByteBuffer): TDM = getRootAsTDM(_bb, TDM())
         fun getRootAsTDM(_bb: ByteBuffer, obj: TDM): TDM {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun TDMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$TDM")
-        fun createTDM(builder: FlatBufferBuilder, OBSERVER_IDOffset: Int, OBSERVER_X: Double, OBSERVER_Y: Double, OBSERVER_Z: Double, OBSERVER_VX: Double, OBSERVER_VY: Double, OBSERVER_VZ: Double, OBSERVER_POSITION_REFERENCE_FRAMEOffset: Int, OBS_REFERENCE_FRAMEOffset: Int, EPOCHOffset: Int, OBSERVATION_STEP_SIZE: Double, OBSERVATION_START_TIMEOffset: Int, CCSDS_TDM_VERSOffset: Int, COMMENTOffset: Int, CREATION_DATEOffset: Int, ORIGINATOROffset: Int, META_STARTOffset: Int, TIME_SYSTEMOffset: Int, START_TIMEOffset: Int, STOP_TIMEOffset: Int, PARTICIPANT_1Offset: Int, PARTICIPANT_2Offset: Int, PARTICIPANT_3Offset: Int, PARTICIPANT_4Offset: Int, PARTICIPANT_5Offset: Int, MODEOffset: Int, PATH_1: UShort, PATH_2: UShort, TRANSMIT_BANDOffset: Int, RECEIVE_BANDOffset: Int, INTEGRATION_INTERVAL: Float, INTEGRATION_REFOffset: Int, RECEIVE_DELAY_2: Double, RECEIVE_DELAY_3: Double, DATA_QUALITYOffset: Int, META_STOPOffset: Int, DATA_STARTOffset: Int, TRANSMIT_FREQ_1: Double, RECEIVE_FREQOffset: Int, DATA_STOPOffset: Int, TIMETAG_REFOffset: Int, ANGLE_TYPEOffset: Int, ANGLE_1Offset: Int, ANGLE_2Offset: Int, ANGLE_UNCERTAINTY_1: Float, ANGLE_UNCERTAINTY_2: Float, RANGE_RATE: Double, RANGE_UNCERTAINTY: Double, RANGE_MODEOffset: Int, RANGE_MODULUS: Double, CORRECTION_ANGLE_1: Float, CORRECTION_ANGLE_2: Float, CORRECTIONS_APPLIEDOffset: Int, TROPO_DRYOffset: Int, TROPO_WETOffset: Int, STECOffset: Int, PRESSUREOffset: Int, RHUMIDITYOffset: Int, TEMPERATUREOffset: Int, CLOCK_BIASOffset: Int, CLOCK_DRIFTOffset: Int) : Int {
+        fun createTDM(builder: FlatBufferBuilder, observerIdOffset: Int, observerX: Double, observerY: Double, observerZ: Double, observerVx: Double, observerVy: Double, observerVz: Double, observerPositionReferenceFrameOffset: Int, obsReferenceFrameOffset: Int, epochOffset: Int, observationStepSize: Double, observationStartTimeOffset: Int, ccsdsTdmVersOffset: Int, commentOffset: Int, creationDateOffset: Int, originatorOffset: Int, metaStartOffset: Int, timeSystemOffset: Int, startTimeOffset: Int, stopTimeOffset: Int, participant1Offset: Int, participant2Offset: Int, participant3Offset: Int, participant4Offset: Int, participant5Offset: Int, modeOffset: Int, path1: UShort, path2: UShort, transmitBandOffset: Int, receiveBandOffset: Int, integrationInterval: Float, integrationRefOffset: Int, receiveDelay2: Double, receiveDelay3: Double, dataQualityOffset: Int, metaStopOffset: Int, dataStartOffset: Int, transmitFreq1: Double, receiveFreqOffset: Int, dataStopOffset: Int, timetagRefOffset: Int, angleTypeOffset: Int, angle1Offset: Int, angle2Offset: Int, angleUncertainty1: Float, angleUncertainty2: Float, rangeRate: Double, rangeUncertainty: Double, rangeModeOffset: Int, rangeModulus: Double, correctionAngle1: Float, correctionAngle2: Float, correctionsAppliedOffset: Int, tropoDryOffset: Int, tropoWetOffset: Int, stecOffset: Int, pressureOffset: Int, rhumidityOffset: Int, temperatureOffset: Int, clockBiasOffset: Int, clockDriftOffset: Int) : Int {
             builder.startTable(61)
-            addRANGE_MODULUS(builder, RANGE_MODULUS)
-            addRANGE_UNCERTAINTY(builder, RANGE_UNCERTAINTY)
-            addRANGE_RATE(builder, RANGE_RATE)
-            addTRANSMIT_FREQ_1(builder, TRANSMIT_FREQ_1)
-            addRECEIVE_DELAY_3(builder, RECEIVE_DELAY_3)
-            addRECEIVE_DELAY_2(builder, RECEIVE_DELAY_2)
-            addOBSERVATION_STEP_SIZE(builder, OBSERVATION_STEP_SIZE)
-            addOBSERVER_VZ(builder, OBSERVER_VZ)
-            addOBSERVER_VY(builder, OBSERVER_VY)
-            addOBSERVER_VX(builder, OBSERVER_VX)
-            addOBSERVER_Z(builder, OBSERVER_Z)
-            addOBSERVER_Y(builder, OBSERVER_Y)
-            addOBSERVER_X(builder, OBSERVER_X)
-            addCLOCK_DRIFT(builder, CLOCK_DRIFTOffset)
-            addCLOCK_BIAS(builder, CLOCK_BIASOffset)
-            addTEMPERATURE(builder, TEMPERATUREOffset)
-            addRHUMIDITY(builder, RHUMIDITYOffset)
-            addPRESSURE(builder, PRESSUREOffset)
-            addSTEC(builder, STECOffset)
-            addTROPO_WET(builder, TROPO_WETOffset)
-            addTROPO_DRY(builder, TROPO_DRYOffset)
-            addCORRECTIONS_APPLIED(builder, CORRECTIONS_APPLIEDOffset)
-            addCORRECTION_ANGLE_2(builder, CORRECTION_ANGLE_2)
-            addCORRECTION_ANGLE_1(builder, CORRECTION_ANGLE_1)
-            addRANGE_MODE(builder, RANGE_MODEOffset)
-            addANGLE_UNCERTAINTY_2(builder, ANGLE_UNCERTAINTY_2)
-            addANGLE_UNCERTAINTY_1(builder, ANGLE_UNCERTAINTY_1)
-            addANGLE_2(builder, ANGLE_2Offset)
-            addANGLE_1(builder, ANGLE_1Offset)
-            addANGLE_TYPE(builder, ANGLE_TYPEOffset)
-            addTIMETAG_REF(builder, TIMETAG_REFOffset)
-            addDATA_STOP(builder, DATA_STOPOffset)
-            addRECEIVE_FREQ(builder, RECEIVE_FREQOffset)
-            addDATA_START(builder, DATA_STARTOffset)
-            addMETA_STOP(builder, META_STOPOffset)
-            addDATA_QUALITY(builder, DATA_QUALITYOffset)
-            addINTEGRATION_REF(builder, INTEGRATION_REFOffset)
-            addINTEGRATION_INTERVAL(builder, INTEGRATION_INTERVAL)
-            addRECEIVE_BAND(builder, RECEIVE_BANDOffset)
-            addTRANSMIT_BAND(builder, TRANSMIT_BANDOffset)
-            addMODE(builder, MODEOffset)
-            addPARTICIPANT_5(builder, PARTICIPANT_5Offset)
-            addPARTICIPANT_4(builder, PARTICIPANT_4Offset)
-            addPARTICIPANT_3(builder, PARTICIPANT_3Offset)
-            addPARTICIPANT_2(builder, PARTICIPANT_2Offset)
-            addPARTICIPANT_1(builder, PARTICIPANT_1Offset)
-            addSTOP_TIME(builder, STOP_TIMEOffset)
-            addSTART_TIME(builder, START_TIMEOffset)
-            addTIME_SYSTEM(builder, TIME_SYSTEMOffset)
-            addMETA_START(builder, META_STARTOffset)
-            addORIGINATOR(builder, ORIGINATOROffset)
-            addCREATION_DATE(builder, CREATION_DATEOffset)
-            addCOMMENT(builder, COMMENTOffset)
-            addCCSDS_TDM_VERS(builder, CCSDS_TDM_VERSOffset)
-            addOBSERVATION_START_TIME(builder, OBSERVATION_START_TIMEOffset)
-            addEPOCH(builder, EPOCHOffset)
-            addOBS_REFERENCE_FRAME(builder, OBS_REFERENCE_FRAMEOffset)
-            addOBSERVER_POSITION_REFERENCE_FRAME(builder, OBSERVER_POSITION_REFERENCE_FRAMEOffset)
-            addOBSERVER_ID(builder, OBSERVER_IDOffset)
-            addPATH_2(builder, PATH_2)
-            addPATH_1(builder, PATH_1)
+            addRANGEMODULUS(builder, rangeModulus)
+            addRANGEUNCERTAINTY(builder, rangeUncertainty)
+            addRANGERATE(builder, rangeRate)
+            addTRANSMITFREQ1(builder, transmitFreq1)
+            addRECEIVEDELAY3(builder, receiveDelay3)
+            addRECEIVEDELAY2(builder, receiveDelay2)
+            addOBSERVATIONSTEPSIZE(builder, observationStepSize)
+            addOBSERVERVZ(builder, observerVz)
+            addOBSERVERVY(builder, observerVy)
+            addOBSERVERVX(builder, observerVx)
+            addOBSERVERZ(builder, observerZ)
+            addOBSERVERY(builder, observerY)
+            addOBSERVERX(builder, observerX)
+            addCLOCKDRIFT(builder, clockDriftOffset)
+            addCLOCKBIAS(builder, clockBiasOffset)
+            addTEMPERATURE(builder, temperatureOffset)
+            addRHUMIDITY(builder, rhumidityOffset)
+            addPRESSURE(builder, pressureOffset)
+            addSTEC(builder, stecOffset)
+            addTROPOWET(builder, tropoWetOffset)
+            addTROPODRY(builder, tropoDryOffset)
+            addCORRECTIONSAPPLIED(builder, correctionsAppliedOffset)
+            addCORRECTIONANGLE2(builder, correctionAngle2)
+            addCORRECTIONANGLE1(builder, correctionAngle1)
+            addRANGEMODE(builder, rangeModeOffset)
+            addANGLEUNCERTAINTY2(builder, angleUncertainty2)
+            addANGLEUNCERTAINTY1(builder, angleUncertainty1)
+            addANGLE2(builder, angle2Offset)
+            addANGLE1(builder, angle1Offset)
+            addANGLETYPE(builder, angleTypeOffset)
+            addTIMETAGREF(builder, timetagRefOffset)
+            addDATASTOP(builder, dataStopOffset)
+            addRECEIVEFREQ(builder, receiveFreqOffset)
+            addDATASTART(builder, dataStartOffset)
+            addMETASTOP(builder, metaStopOffset)
+            addDATAQUALITY(builder, dataQualityOffset)
+            addINTEGRATIONREF(builder, integrationRefOffset)
+            addINTEGRATIONINTERVAL(builder, integrationInterval)
+            addRECEIVEBAND(builder, receiveBandOffset)
+            addTRANSMITBAND(builder, transmitBandOffset)
+            addMODE(builder, modeOffset)
+            addPARTICIPANT5(builder, participant5Offset)
+            addPARTICIPANT4(builder, participant4Offset)
+            addPARTICIPANT3(builder, participant3Offset)
+            addPARTICIPANT2(builder, participant2Offset)
+            addPARTICIPANT1(builder, participant1Offset)
+            addSTOPTIME(builder, stopTimeOffset)
+            addSTARTTIME(builder, startTimeOffset)
+            addTIMESYSTEM(builder, timeSystemOffset)
+            addMETASTART(builder, metaStartOffset)
+            addORIGINATOR(builder, originatorOffset)
+            addCREATIONDATE(builder, creationDateOffset)
+            addCOMMENT(builder, commentOffset)
+            addCCSDSTDMVERS(builder, ccsdsTdmVersOffset)
+            addOBSERVATIONSTARTTIME(builder, observationStartTimeOffset)
+            addEPOCH(builder, epochOffset)
+            addOBSREFERENCEFRAME(builder, obsReferenceFrameOffset)
+            addOBSERVERPOSITIONREFERENCEFRAME(builder, observerPositionReferenceFrameOffset)
+            addOBSERVERID(builder, observerIdOffset)
+            addPATH2(builder, path2)
+            addPATH1(builder, path1)
             return endTDM(builder)
         }
         fun startTDM(builder: FlatBufferBuilder) = builder.startTable(61)
-        fun addOBSERVER_ID(builder: FlatBufferBuilder, OBSERVER_ID: Int) = builder.addOffset(0, OBSERVER_ID, 0)
-        fun addOBSERVER_X(builder: FlatBufferBuilder, OBSERVER_X: Double) = builder.addDouble(1, OBSERVER_X, 0.0)
-        fun addOBSERVER_Y(builder: FlatBufferBuilder, OBSERVER_Y: Double) = builder.addDouble(2, OBSERVER_Y, 0.0)
-        fun addOBSERVER_Z(builder: FlatBufferBuilder, OBSERVER_Z: Double) = builder.addDouble(3, OBSERVER_Z, 0.0)
-        fun addOBSERVER_VX(builder: FlatBufferBuilder, OBSERVER_VX: Double) = builder.addDouble(4, OBSERVER_VX, 0.0)
-        fun addOBSERVER_VY(builder: FlatBufferBuilder, OBSERVER_VY: Double) = builder.addDouble(5, OBSERVER_VY, 0.0)
-        fun addOBSERVER_VZ(builder: FlatBufferBuilder, OBSERVER_VZ: Double) = builder.addDouble(6, OBSERVER_VZ, 0.0)
-        fun addOBSERVER_POSITION_REFERENCE_FRAME(builder: FlatBufferBuilder, OBSERVER_POSITION_REFERENCE_FRAME: Int) = builder.addOffset(7, OBSERVER_POSITION_REFERENCE_FRAME, 0)
-        fun addOBS_REFERENCE_FRAME(builder: FlatBufferBuilder, OBS_REFERENCE_FRAME: Int) = builder.addOffset(8, OBS_REFERENCE_FRAME, 0)
-        fun addEPOCH(builder: FlatBufferBuilder, EPOCH: Int) = builder.addOffset(9, EPOCH, 0)
-        fun addOBSERVATION_STEP_SIZE(builder: FlatBufferBuilder, OBSERVATION_STEP_SIZE: Double) = builder.addDouble(10, OBSERVATION_STEP_SIZE, 0.0)
-        fun addOBSERVATION_START_TIME(builder: FlatBufferBuilder, OBSERVATION_START_TIME: Int) = builder.addOffset(11, OBSERVATION_START_TIME, 0)
-        fun addCCSDS_TDM_VERS(builder: FlatBufferBuilder, CCSDS_TDM_VERS: Int) = builder.addOffset(12, CCSDS_TDM_VERS, 0)
-        fun addCOMMENT(builder: FlatBufferBuilder, COMMENT: Int) = builder.addOffset(13, COMMENT, 0)
+        fun addOBSERVERID(builder: FlatBufferBuilder, observerId: Int) = builder.addOffset(0, observerId, 0)
+        fun addOBSERVERX(builder: FlatBufferBuilder, observerX: Double) = builder.addDouble(1, observerX, 0.0)
+        fun addOBSERVERY(builder: FlatBufferBuilder, observerY: Double) = builder.addDouble(2, observerY, 0.0)
+        fun addOBSERVERZ(builder: FlatBufferBuilder, observerZ: Double) = builder.addDouble(3, observerZ, 0.0)
+        fun addOBSERVERVX(builder: FlatBufferBuilder, observerVx: Double) = builder.addDouble(4, observerVx, 0.0)
+        fun addOBSERVERVY(builder: FlatBufferBuilder, observerVy: Double) = builder.addDouble(5, observerVy, 0.0)
+        fun addOBSERVERVZ(builder: FlatBufferBuilder, observerVz: Double) = builder.addDouble(6, observerVz, 0.0)
+        fun addOBSERVERPOSITIONREFERENCEFRAME(builder: FlatBufferBuilder, observerPositionReferenceFrame: Int) = builder.addOffset(7, observerPositionReferenceFrame, 0)
+        fun addOBSREFERENCEFRAME(builder: FlatBufferBuilder, obsReferenceFrame: Int) = builder.addOffset(8, obsReferenceFrame, 0)
+        fun addEPOCH(builder: FlatBufferBuilder, epoch: Int) = builder.addOffset(9, epoch, 0)
+        fun addOBSERVATIONSTEPSIZE(builder: FlatBufferBuilder, observationStepSize: Double) = builder.addDouble(10, observationStepSize, 0.0)
+        fun addOBSERVATIONSTARTTIME(builder: FlatBufferBuilder, observationStartTime: Int) = builder.addOffset(11, observationStartTime, 0)
+        fun addCCSDSTDMVERS(builder: FlatBufferBuilder, ccsdsTdmVers: Int) = builder.addOffset(12, ccsdsTdmVers, 0)
+        fun addCOMMENT(builder: FlatBufferBuilder, comment: Int) = builder.addOffset(13, comment, 0)
         fun createCommentVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -892,31 +892,31 @@ class TDM : Table() {
             return builder.endVector()
         }
         fun startCommentVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addCREATION_DATE(builder: FlatBufferBuilder, CREATION_DATE: Int) = builder.addOffset(14, CREATION_DATE, 0)
-        fun addORIGINATOR(builder: FlatBufferBuilder, ORIGINATOR: Int) = builder.addOffset(15, ORIGINATOR, 0)
-        fun addMETA_START(builder: FlatBufferBuilder, META_START: Int) = builder.addOffset(16, META_START, 0)
-        fun addTIME_SYSTEM(builder: FlatBufferBuilder, TIME_SYSTEM: Int) = builder.addOffset(17, TIME_SYSTEM, 0)
-        fun addSTART_TIME(builder: FlatBufferBuilder, START_TIME: Int) = builder.addOffset(18, START_TIME, 0)
-        fun addSTOP_TIME(builder: FlatBufferBuilder, STOP_TIME: Int) = builder.addOffset(19, STOP_TIME, 0)
-        fun addPARTICIPANT_1(builder: FlatBufferBuilder, PARTICIPANT_1: Int) = builder.addOffset(20, PARTICIPANT_1, 0)
-        fun addPARTICIPANT_2(builder: FlatBufferBuilder, PARTICIPANT_2: Int) = builder.addOffset(21, PARTICIPANT_2, 0)
-        fun addPARTICIPANT_3(builder: FlatBufferBuilder, PARTICIPANT_3: Int) = builder.addOffset(22, PARTICIPANT_3, 0)
-        fun addPARTICIPANT_4(builder: FlatBufferBuilder, PARTICIPANT_4: Int) = builder.addOffset(23, PARTICIPANT_4, 0)
-        fun addPARTICIPANT_5(builder: FlatBufferBuilder, PARTICIPANT_5: Int) = builder.addOffset(24, PARTICIPANT_5, 0)
-        fun addMODE(builder: FlatBufferBuilder, MODE: Int) = builder.addOffset(25, MODE, 0)
-        fun addPATH_1(builder: FlatBufferBuilder, PATH_1: UShort) = builder.addShort(26, PATH_1.toShort(), 0)
-        fun addPATH_2(builder: FlatBufferBuilder, PATH_2: UShort) = builder.addShort(27, PATH_2.toShort(), 0)
-        fun addTRANSMIT_BAND(builder: FlatBufferBuilder, TRANSMIT_BAND: Int) = builder.addOffset(28, TRANSMIT_BAND, 0)
-        fun addRECEIVE_BAND(builder: FlatBufferBuilder, RECEIVE_BAND: Int) = builder.addOffset(29, RECEIVE_BAND, 0)
-        fun addINTEGRATION_INTERVAL(builder: FlatBufferBuilder, INTEGRATION_INTERVAL: Float) = builder.addFloat(30, INTEGRATION_INTERVAL, 0.0)
-        fun addINTEGRATION_REF(builder: FlatBufferBuilder, INTEGRATION_REF: Int) = builder.addOffset(31, INTEGRATION_REF, 0)
-        fun addRECEIVE_DELAY_2(builder: FlatBufferBuilder, RECEIVE_DELAY_2: Double) = builder.addDouble(32, RECEIVE_DELAY_2, 0.0)
-        fun addRECEIVE_DELAY_3(builder: FlatBufferBuilder, RECEIVE_DELAY_3: Double) = builder.addDouble(33, RECEIVE_DELAY_3, 0.0)
-        fun addDATA_QUALITY(builder: FlatBufferBuilder, DATA_QUALITY: Int) = builder.addOffset(34, DATA_QUALITY, 0)
-        fun addMETA_STOP(builder: FlatBufferBuilder, META_STOP: Int) = builder.addOffset(35, META_STOP, 0)
-        fun addDATA_START(builder: FlatBufferBuilder, DATA_START: Int) = builder.addOffset(36, DATA_START, 0)
-        fun addTRANSMIT_FREQ_1(builder: FlatBufferBuilder, TRANSMIT_FREQ_1: Double) = builder.addDouble(37, TRANSMIT_FREQ_1, 0.0)
-        fun addRECEIVE_FREQ(builder: FlatBufferBuilder, RECEIVE_FREQ: Int) = builder.addOffset(38, RECEIVE_FREQ, 0)
+        fun addCREATIONDATE(builder: FlatBufferBuilder, creationDate: Int) = builder.addOffset(14, creationDate, 0)
+        fun addORIGINATOR(builder: FlatBufferBuilder, originator: Int) = builder.addOffset(15, originator, 0)
+        fun addMETASTART(builder: FlatBufferBuilder, metaStart: Int) = builder.addOffset(16, metaStart, 0)
+        fun addTIMESYSTEM(builder: FlatBufferBuilder, timeSystem: Int) = builder.addOffset(17, timeSystem, 0)
+        fun addSTARTTIME(builder: FlatBufferBuilder, startTime: Int) = builder.addOffset(18, startTime, 0)
+        fun addSTOPTIME(builder: FlatBufferBuilder, stopTime: Int) = builder.addOffset(19, stopTime, 0)
+        fun addPARTICIPANT1(builder: FlatBufferBuilder, participant1: Int) = builder.addOffset(20, participant1, 0)
+        fun addPARTICIPANT2(builder: FlatBufferBuilder, participant2: Int) = builder.addOffset(21, participant2, 0)
+        fun addPARTICIPANT3(builder: FlatBufferBuilder, participant3: Int) = builder.addOffset(22, participant3, 0)
+        fun addPARTICIPANT4(builder: FlatBufferBuilder, participant4: Int) = builder.addOffset(23, participant4, 0)
+        fun addPARTICIPANT5(builder: FlatBufferBuilder, participant5: Int) = builder.addOffset(24, participant5, 0)
+        fun addMODE(builder: FlatBufferBuilder, mode: Int) = builder.addOffset(25, mode, 0)
+        fun addPATH1(builder: FlatBufferBuilder, path1: UShort) = builder.addShort(26, path1.toShort(), 0)
+        fun addPATH2(builder: FlatBufferBuilder, path2: UShort) = builder.addShort(27, path2.toShort(), 0)
+        fun addTRANSMITBAND(builder: FlatBufferBuilder, transmitBand: Int) = builder.addOffset(28, transmitBand, 0)
+        fun addRECEIVEBAND(builder: FlatBufferBuilder, receiveBand: Int) = builder.addOffset(29, receiveBand, 0)
+        fun addINTEGRATIONINTERVAL(builder: FlatBufferBuilder, integrationInterval: Float) = builder.addFloat(30, integrationInterval, 0.0)
+        fun addINTEGRATIONREF(builder: FlatBufferBuilder, integrationRef: Int) = builder.addOffset(31, integrationRef, 0)
+        fun addRECEIVEDELAY2(builder: FlatBufferBuilder, receiveDelay2: Double) = builder.addDouble(32, receiveDelay2, 0.0)
+        fun addRECEIVEDELAY3(builder: FlatBufferBuilder, receiveDelay3: Double) = builder.addDouble(33, receiveDelay3, 0.0)
+        fun addDATAQUALITY(builder: FlatBufferBuilder, dataQuality: Int) = builder.addOffset(34, dataQuality, 0)
+        fun addMETASTOP(builder: FlatBufferBuilder, metaStop: Int) = builder.addOffset(35, metaStop, 0)
+        fun addDATASTART(builder: FlatBufferBuilder, dataStart: Int) = builder.addOffset(36, dataStart, 0)
+        fun addTRANSMITFREQ1(builder: FlatBufferBuilder, transmitFreq1: Double) = builder.addDouble(37, transmitFreq1, 0.0)
+        fun addRECEIVEFREQ(builder: FlatBufferBuilder, receiveFreq: Int) = builder.addOffset(38, receiveFreq, 0)
         fun createReceiveFreqVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
             builder.startVector(8, data.size, 8)
             for (i in data.size - 1 downTo 0) {
@@ -925,10 +925,10 @@ class TDM : Table() {
             return builder.endVector()
         }
         fun startReceiveFreqVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
-        fun addDATA_STOP(builder: FlatBufferBuilder, DATA_STOP: Int) = builder.addOffset(39, DATA_STOP, 0)
-        fun addTIMETAG_REF(builder: FlatBufferBuilder, TIMETAG_REF: Int) = builder.addOffset(40, TIMETAG_REF, 0)
-        fun addANGLE_TYPE(builder: FlatBufferBuilder, ANGLE_TYPE: Int) = builder.addOffset(41, ANGLE_TYPE, 0)
-        fun addANGLE_1(builder: FlatBufferBuilder, ANGLE_1: Int) = builder.addOffset(42, ANGLE_1, 0)
+        fun addDATASTOP(builder: FlatBufferBuilder, dataStop: Int) = builder.addOffset(39, dataStop, 0)
+        fun addTIMETAGREF(builder: FlatBufferBuilder, timetagRef: Int) = builder.addOffset(40, timetagRef, 0)
+        fun addANGLETYPE(builder: FlatBufferBuilder, angleType: Int) = builder.addOffset(41, angleType, 0)
+        fun addANGLE1(builder: FlatBufferBuilder, angle1: Int) = builder.addOffset(42, angle1, 0)
         fun createAngle1Vector(builder: FlatBufferBuilder, data: FloatArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -937,7 +937,7 @@ class TDM : Table() {
             return builder.endVector()
         }
         fun startAngle1Vector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addANGLE_2(builder: FlatBufferBuilder, ANGLE_2: Int) = builder.addOffset(43, ANGLE_2, 0)
+        fun addANGLE2(builder: FlatBufferBuilder, angle2: Int) = builder.addOffset(43, angle2, 0)
         fun createAngle2Vector(builder: FlatBufferBuilder, data: FloatArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -946,16 +946,16 @@ class TDM : Table() {
             return builder.endVector()
         }
         fun startAngle2Vector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addANGLE_UNCERTAINTY_1(builder: FlatBufferBuilder, ANGLE_UNCERTAINTY_1: Float) = builder.addFloat(44, ANGLE_UNCERTAINTY_1, 0.0)
-        fun addANGLE_UNCERTAINTY_2(builder: FlatBufferBuilder, ANGLE_UNCERTAINTY_2: Float) = builder.addFloat(45, ANGLE_UNCERTAINTY_2, 0.0)
-        fun addRANGE_RATE(builder: FlatBufferBuilder, RANGE_RATE: Double) = builder.addDouble(46, RANGE_RATE, 0.0)
-        fun addRANGE_UNCERTAINTY(builder: FlatBufferBuilder, RANGE_UNCERTAINTY: Double) = builder.addDouble(47, RANGE_UNCERTAINTY, 0.0)
-        fun addRANGE_MODE(builder: FlatBufferBuilder, RANGE_MODE: Int) = builder.addOffset(48, RANGE_MODE, 0)
-        fun addRANGE_MODULUS(builder: FlatBufferBuilder, RANGE_MODULUS: Double) = builder.addDouble(49, RANGE_MODULUS, 0.0)
-        fun addCORRECTION_ANGLE_1(builder: FlatBufferBuilder, CORRECTION_ANGLE_1: Float) = builder.addFloat(50, CORRECTION_ANGLE_1, 0.0)
-        fun addCORRECTION_ANGLE_2(builder: FlatBufferBuilder, CORRECTION_ANGLE_2: Float) = builder.addFloat(51, CORRECTION_ANGLE_2, 0.0)
-        fun addCORRECTIONS_APPLIED(builder: FlatBufferBuilder, CORRECTIONS_APPLIED: Int) = builder.addOffset(52, CORRECTIONS_APPLIED, 0)
-        fun addTROPO_DRY(builder: FlatBufferBuilder, TROPO_DRY: Int) = builder.addOffset(53, TROPO_DRY, 0)
+        fun addANGLEUNCERTAINTY1(builder: FlatBufferBuilder, angleUncertainty1: Float) = builder.addFloat(44, angleUncertainty1, 0.0)
+        fun addANGLEUNCERTAINTY2(builder: FlatBufferBuilder, angleUncertainty2: Float) = builder.addFloat(45, angleUncertainty2, 0.0)
+        fun addRANGERATE(builder: FlatBufferBuilder, rangeRate: Double) = builder.addDouble(46, rangeRate, 0.0)
+        fun addRANGEUNCERTAINTY(builder: FlatBufferBuilder, rangeUncertainty: Double) = builder.addDouble(47, rangeUncertainty, 0.0)
+        fun addRANGEMODE(builder: FlatBufferBuilder, rangeMode: Int) = builder.addOffset(48, rangeMode, 0)
+        fun addRANGEMODULUS(builder: FlatBufferBuilder, rangeModulus: Double) = builder.addDouble(49, rangeModulus, 0.0)
+        fun addCORRECTIONANGLE1(builder: FlatBufferBuilder, correctionAngle1: Float) = builder.addFloat(50, correctionAngle1, 0.0)
+        fun addCORRECTIONANGLE2(builder: FlatBufferBuilder, correctionAngle2: Float) = builder.addFloat(51, correctionAngle2, 0.0)
+        fun addCORRECTIONSAPPLIED(builder: FlatBufferBuilder, correctionsApplied: Int) = builder.addOffset(52, correctionsApplied, 0)
+        fun addTROPODRY(builder: FlatBufferBuilder, tropoDry: Int) = builder.addOffset(53, tropoDry, 0)
         fun createTropoDryVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
             builder.startVector(8, data.size, 8)
             for (i in data.size - 1 downTo 0) {
@@ -964,7 +964,7 @@ class TDM : Table() {
             return builder.endVector()
         }
         fun startTropoDryVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
-        fun addTROPO_WET(builder: FlatBufferBuilder, TROPO_WET: Int) = builder.addOffset(54, TROPO_WET, 0)
+        fun addTROPOWET(builder: FlatBufferBuilder, tropoWet: Int) = builder.addOffset(54, tropoWet, 0)
         fun createTropoWetVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
             builder.startVector(8, data.size, 8)
             for (i in data.size - 1 downTo 0) {
@@ -973,7 +973,7 @@ class TDM : Table() {
             return builder.endVector()
         }
         fun startTropoWetVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
-        fun addSTEC(builder: FlatBufferBuilder, STEC: Int) = builder.addOffset(55, STEC, 0)
+        fun addSTEC(builder: FlatBufferBuilder, stec: Int) = builder.addOffset(55, stec, 0)
         fun createStecVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
             builder.startVector(8, data.size, 8)
             for (i in data.size - 1 downTo 0) {
@@ -982,7 +982,7 @@ class TDM : Table() {
             return builder.endVector()
         }
         fun startStecVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
-        fun addPRESSURE(builder: FlatBufferBuilder, PRESSURE: Int) = builder.addOffset(56, PRESSURE, 0)
+        fun addPRESSURE(builder: FlatBufferBuilder, pressure: Int) = builder.addOffset(56, pressure, 0)
         fun createPressureVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
             builder.startVector(8, data.size, 8)
             for (i in data.size - 1 downTo 0) {
@@ -991,7 +991,7 @@ class TDM : Table() {
             return builder.endVector()
         }
         fun startPressureVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
-        fun addRHUMIDITY(builder: FlatBufferBuilder, RHUMIDITY: Int) = builder.addOffset(57, RHUMIDITY, 0)
+        fun addRHUMIDITY(builder: FlatBufferBuilder, rhumidity: Int) = builder.addOffset(57, rhumidity, 0)
         fun createRhumidityVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
             builder.startVector(8, data.size, 8)
             for (i in data.size - 1 downTo 0) {
@@ -1000,7 +1000,7 @@ class TDM : Table() {
             return builder.endVector()
         }
         fun startRhumidityVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
-        fun addTEMPERATURE(builder: FlatBufferBuilder, TEMPERATURE: Int) = builder.addOffset(58, TEMPERATURE, 0)
+        fun addTEMPERATURE(builder: FlatBufferBuilder, temperature: Int) = builder.addOffset(58, temperature, 0)
         fun createTemperatureVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
             builder.startVector(8, data.size, 8)
             for (i in data.size - 1 downTo 0) {
@@ -1009,7 +1009,7 @@ class TDM : Table() {
             return builder.endVector()
         }
         fun startTemperatureVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
-        fun addCLOCK_BIAS(builder: FlatBufferBuilder, CLOCK_BIAS: Int) = builder.addOffset(59, CLOCK_BIAS, 0)
+        fun addCLOCKBIAS(builder: FlatBufferBuilder, clockBias: Int) = builder.addOffset(59, clockBias, 0)
         fun createClockBiasVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
             builder.startVector(8, data.size, 8)
             for (i in data.size - 1 downTo 0) {
@@ -1018,7 +1018,7 @@ class TDM : Table() {
             return builder.endVector()
         }
         fun startClockBiasVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
-        fun addCLOCK_DRIFT(builder: FlatBufferBuilder, CLOCK_DRIFT: Int) = builder.addOffset(60, CLOCK_DRIFT, 0)
+        fun addCLOCKDRIFT(builder: FlatBufferBuilder, clockDrift: Int) = builder.addOffset(60, clockDrift, 0)
         fun createClockDriftVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
             builder.startVector(8, data.size, 8)
             for (i in data.size - 1 downTo 0) {

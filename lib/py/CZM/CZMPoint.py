@@ -221,24 +221,37 @@ except:
 class CZMPointT(object):
 
     # CZMPointT
-    def __init__(self):
-        self.SHOW = False  # type: bool
-        self.COLOR = None  # type: Optional[CZMColor.CZMColorT]
-        self.OUTLINE_COLOR = None  # type: Optional[CZMColor.CZMColorT]
-        self.OUTLINE_WIDTH = 0.0  # type: float
-        self.PIXEL_SIZE = 0.0  # type: float
-        self.HEIGHT_REFERENCE = 0  # type: int
-        self.SCALE_BY_DISTANCE = None  # type: Optional[CZMNearFarScalar.CZMNearFarScalarT]
-        self.TRANSLUCENCY_BY_DISTANCE = None  # type: Optional[CZMNearFarScalar.CZMNearFarScalarT]
-        self.DISTANCE_DISPLAY_CONDITION_NEAR = 0.0  # type: float
-        self.DISTANCE_DISPLAY_CONDITION_FAR = 0.0  # type: float
-        self.DISABLE_DEPTH_TEST_DISTANCE = 0.0  # type: float
+    def __init__(
+        self,
+        SHOW = False,
+        COLOR = None,
+        OUTLINE_COLOR = None,
+        OUTLINE_WIDTH = 0.0,
+        PIXEL_SIZE = 0.0,
+        HEIGHT_REFERENCE = 0,
+        SCALE_BY_DISTANCE = None,
+        TRANSLUCENCY_BY_DISTANCE = None,
+        DISTANCE_DISPLAY_CONDITION_NEAR = 0.0,
+        DISTANCE_DISPLAY_CONDITION_FAR = 0.0,
+        DISABLE_DEPTH_TEST_DISTANCE = 0.0,
+    ):
+        self.SHOW = SHOW  # type: bool
+        self.COLOR = COLOR  # type: Optional[CZMColor.CZMColorT]
+        self.OUTLINE_COLOR = OUTLINE_COLOR  # type: Optional[CZMColor.CZMColorT]
+        self.OUTLINE_WIDTH = OUTLINE_WIDTH  # type: float
+        self.PIXEL_SIZE = PIXEL_SIZE  # type: float
+        self.HEIGHT_REFERENCE = HEIGHT_REFERENCE  # type: int
+        self.SCALE_BY_DISTANCE = SCALE_BY_DISTANCE  # type: Optional[CZMNearFarScalar.CZMNearFarScalarT]
+        self.TRANSLUCENCY_BY_DISTANCE = TRANSLUCENCY_BY_DISTANCE  # type: Optional[CZMNearFarScalar.CZMNearFarScalarT]
+        self.DISTANCE_DISPLAY_CONDITION_NEAR = DISTANCE_DISPLAY_CONDITION_NEAR  # type: float
+        self.DISTANCE_DISPLAY_CONDITION_FAR = DISTANCE_DISPLAY_CONDITION_FAR  # type: float
+        self.DISABLE_DEPTH_TEST_DISTANCE = DISABLE_DEPTH_TEST_DISTANCE  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        czmpoint = CZMPoint()
-        czmpoint.Init(buf, pos)
-        return cls.InitFromObj(czmpoint)
+        tmpCzmpoint = CZMPoint()
+        tmpCzmpoint.Init(buf, pos)
+        return cls.InitFromObj(tmpCzmpoint)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -246,30 +259,30 @@ class CZMPointT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, czmpoint):
+    def InitFromObj(cls, tmpCzmpoint):
         x = CZMPointT()
-        x._UnPack(czmpoint)
+        x._UnPack(tmpCzmpoint)
         return x
 
     # CZMPointT
-    def _UnPack(self, czmpoint):
-        if czmpoint is None:
+    def _UnPack(self, CZMPoint):
+        if CZMPoint is None:
             return
-        self.SHOW = czmpoint.SHOW()
-        if czmpoint.COLOR() is not None:
-            self.COLOR = CZMColor.CZMColorT.InitFromObj(czmpoint.COLOR())
-        if czmpoint.OUTLINE_COLOR() is not None:
-            self.OUTLINE_COLOR = CZMColor.CZMColorT.InitFromObj(czmpoint.OUTLINE_COLOR())
-        self.OUTLINE_WIDTH = czmpoint.OUTLINE_WIDTH()
-        self.PIXEL_SIZE = czmpoint.PIXEL_SIZE()
-        self.HEIGHT_REFERENCE = czmpoint.HEIGHT_REFERENCE()
-        if czmpoint.SCALE_BY_DISTANCE() is not None:
-            self.SCALE_BY_DISTANCE = CZMNearFarScalar.CZMNearFarScalarT.InitFromObj(czmpoint.SCALE_BY_DISTANCE())
-        if czmpoint.TRANSLUCENCY_BY_DISTANCE() is not None:
-            self.TRANSLUCENCY_BY_DISTANCE = CZMNearFarScalar.CZMNearFarScalarT.InitFromObj(czmpoint.TRANSLUCENCY_BY_DISTANCE())
-        self.DISTANCE_DISPLAY_CONDITION_NEAR = czmpoint.DISTANCE_DISPLAY_CONDITION_NEAR()
-        self.DISTANCE_DISPLAY_CONDITION_FAR = czmpoint.DISTANCE_DISPLAY_CONDITION_FAR()
-        self.DISABLE_DEPTH_TEST_DISTANCE = czmpoint.DISABLE_DEPTH_TEST_DISTANCE()
+        self.SHOW = CZMPoint.SHOW()
+        if CZMPoint.COLOR() is not None:
+            self.COLOR = CZMColor.CZMColorT.InitFromObj(CZMPoint.COLOR())
+        if CZMPoint.OUTLINE_COLOR() is not None:
+            self.OUTLINE_COLOR = CZMColor.CZMColorT.InitFromObj(CZMPoint.OUTLINE_COLOR())
+        self.OUTLINE_WIDTH = CZMPoint.OUTLINE_WIDTH()
+        self.PIXEL_SIZE = CZMPoint.PIXEL_SIZE()
+        self.HEIGHT_REFERENCE = CZMPoint.HEIGHT_REFERENCE()
+        if CZMPoint.SCALE_BY_DISTANCE() is not None:
+            self.SCALE_BY_DISTANCE = CZMNearFarScalar.CZMNearFarScalarT.InitFromObj(CZMPoint.SCALE_BY_DISTANCE())
+        if CZMPoint.TRANSLUCENCY_BY_DISTANCE() is not None:
+            self.TRANSLUCENCY_BY_DISTANCE = CZMNearFarScalar.CZMNearFarScalarT.InitFromObj(CZMPoint.TRANSLUCENCY_BY_DISTANCE())
+        self.DISTANCE_DISPLAY_CONDITION_NEAR = CZMPoint.DISTANCE_DISPLAY_CONDITION_NEAR()
+        self.DISTANCE_DISPLAY_CONDITION_FAR = CZMPoint.DISTANCE_DISPLAY_CONDITION_FAR()
+        self.DISABLE_DEPTH_TEST_DISTANCE = CZMPoint.DISABLE_DEPTH_TEST_DISTANCE()
 
     # CZMPointT
     def Pack(self, builder):
@@ -297,5 +310,5 @@ class CZMPointT(object):
         CZMPointAddDISTANCE_DISPLAY_CONDITION_NEAR(builder, self.DISTANCE_DISPLAY_CONDITION_NEAR)
         CZMPointAddDISTANCE_DISPLAY_CONDITION_FAR(builder, self.DISTANCE_DISPLAY_CONDITION_FAR)
         CZMPointAddDISABLE_DEPTH_TEST_DISTANCE(builder, self.DISABLE_DEPTH_TEST_DISTANCE)
-        czmpoint = CZMPointEnd(builder)
-        return czmpoint
+        CZMPoint = CZMPointEnd(builder)
+        return CZMPoint

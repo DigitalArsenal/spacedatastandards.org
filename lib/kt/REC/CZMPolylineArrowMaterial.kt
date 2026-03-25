@@ -32,8 +32,8 @@ class CZMPolylineArrowMaterial : Table() {
     /**
      * Arrow color
      */
-    val COLOR : CZMColor? get() = COLOR(CZMColor())
-    fun COLOR(obj: CZMColor) : CZMColor? {
+    val color : CZMColor? get() = color(CZMColor())
+    fun color(obj: CZMColor) : CZMColor? {
         val o = __offset(4)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -42,19 +42,19 @@ class CZMPolylineArrowMaterial : Table() {
         }
     }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsCZMPolylineArrowMaterial(_bb: ByteBuffer): CZMPolylineArrowMaterial = getRootAsCZMPolylineArrowMaterial(_bb, CZMPolylineArrowMaterial())
         fun getRootAsCZMPolylineArrowMaterial(_bb: ByteBuffer, obj: CZMPolylineArrowMaterial): CZMPolylineArrowMaterial {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createCZMPolylineArrowMaterial(builder: FlatBufferBuilder, COLOROffset: Int) : Int {
+        fun createCZMPolylineArrowMaterial(builder: FlatBufferBuilder, colorOffset: Int) : Int {
             builder.startTable(1)
-            addCOLOR(builder, COLOROffset)
+            addCOLOR(builder, colorOffset)
             return endCZMPolylineArrowMaterial(builder)
         }
         fun startCZMPolylineArrowMaterial(builder: FlatBufferBuilder) = builder.startTable(1)
-        fun addCOLOR(builder: FlatBufferBuilder, COLOR: Int) = builder.addOffset(0, COLOR, 0)
+        fun addCOLOR(builder: FlatBufferBuilder, color: Int) = builder.addOffset(0, color, 0)
         fun endCZMPolylineArrowMaterial(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

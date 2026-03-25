@@ -87,16 +87,21 @@ def End(builder):
 class KMLCoordinateT(object):
 
     # KMLCoordinateT
-    def __init__(self):
-        self.LONGITUDE = 0.0  # type: float
-        self.LATITUDE = 0.0  # type: float
-        self.ALTITUDE = 0.0  # type: float
+    def __init__(
+        self,
+        LONGITUDE = 0.0,
+        LATITUDE = 0.0,
+        ALTITUDE = 0.0,
+    ):
+        self.LONGITUDE = LONGITUDE  # type: float
+        self.LATITUDE = LATITUDE  # type: float
+        self.ALTITUDE = ALTITUDE  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        kmlcoordinate = KMLCoordinate()
-        kmlcoordinate.Init(buf, pos)
-        return cls.InitFromObj(kmlcoordinate)
+        tmpKmlcoordinate = KMLCoordinate()
+        tmpKmlcoordinate.Init(buf, pos)
+        return cls.InitFromObj(tmpKmlcoordinate)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -104,18 +109,18 @@ class KMLCoordinateT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, kmlcoordinate):
+    def InitFromObj(cls, tmpKmlcoordinate):
         x = KMLCoordinateT()
-        x._UnPack(kmlcoordinate)
+        x._UnPack(tmpKmlcoordinate)
         return x
 
     # KMLCoordinateT
-    def _UnPack(self, kmlcoordinate):
-        if kmlcoordinate is None:
+    def _UnPack(self, KMLCoordinate):
+        if KMLCoordinate is None:
             return
-        self.LONGITUDE = kmlcoordinate.LONGITUDE()
-        self.LATITUDE = kmlcoordinate.LATITUDE()
-        self.ALTITUDE = kmlcoordinate.ALTITUDE()
+        self.LONGITUDE = KMLCoordinate.LONGITUDE()
+        self.LATITUDE = KMLCoordinate.LATITUDE()
+        self.ALTITUDE = KMLCoordinate.ALTITUDE()
 
     # KMLCoordinateT
     def Pack(self, builder):
@@ -123,5 +128,5 @@ class KMLCoordinateT(object):
         KMLCoordinateAddLONGITUDE(builder, self.LONGITUDE)
         KMLCoordinateAddLATITUDE(builder, self.LATITUDE)
         KMLCoordinateAddALTITUDE(builder, self.ALTITUDE)
-        kmlcoordinate = KMLCoordinateEnd(builder)
-        return kmlcoordinate
+        KMLCoordinate = KMLCoordinateEnd(builder)
+        return KMLCoordinate

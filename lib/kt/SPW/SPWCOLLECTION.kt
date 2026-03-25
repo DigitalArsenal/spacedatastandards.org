@@ -26,8 +26,8 @@ class SPWCOLLECTION : Table() {
         __init(_i, _bb)
         return this
     }
-    fun RECORDS(j: Int) : SPW? = RECORDS(SPW(), j)
-    fun RECORDS(obj: SPW, j: Int) : SPW? {
+    fun records(j: Int) : SPW? = records(SPW(), j)
+    fun records(obj: SPW, j: Int) : SPW? {
         val o = __offset(4)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -35,24 +35,24 @@ class SPWCOLLECTION : Table() {
             null
         }
     }
-    val RECORDSLength : Int
+    val recordsLength : Int
         get() {
             val o = __offset(4); return if (o != 0) __vector_len(o) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsSPWCOLLECTION(_bb: ByteBuffer): SPWCOLLECTION = getRootAsSPWCOLLECTION(_bb, SPWCOLLECTION())
         fun getRootAsSPWCOLLECTION(_bb: ByteBuffer, obj: SPWCOLLECTION): SPWCOLLECTION {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createSPWCOLLECTION(builder: FlatBufferBuilder, RECORDSOffset: Int) : Int {
+        fun createSPWCOLLECTION(builder: FlatBufferBuilder, recordsOffset: Int) : Int {
             builder.startTable(1)
-            addRECORDS(builder, RECORDSOffset)
+            addRECORDS(builder, recordsOffset)
             return endSPWCOLLECTION(builder)
         }
         fun startSPWCOLLECTION(builder: FlatBufferBuilder) = builder.startTable(1)
-        fun addRECORDS(builder: FlatBufferBuilder, RECORDS: Int) = builder.addOffset(0, RECORDS, 0)
+        fun addRECORDS(builder: FlatBufferBuilder, records: Int) = builder.addOffset(0, records, 0)
         fun createRecordsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {

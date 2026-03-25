@@ -32,7 +32,7 @@ class EOO : Table() {
     /**
      * Unique identifier of the record.
      */
-    val ID : String?
+    val id : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class EOO : Table() {
                 null
             }
         }
-    val IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val idAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun idInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Classification marking of the data in IC/CAPCO Portion-marked format.
      */
-    val CLASSIFICATION : String?
+    val classification : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -55,12 +55,12 @@ class EOO : Table() {
                 null
             }
         }
-    val CLASSIFICATIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun CLASSIFICATIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val classificationAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun classificationInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * Ob detection time in ISO 8601 UTC (YYYY-MM-DDTHH:MM:SS.ssssssZ), up to microsecond precision.
      */
-    val OB_TIME : String?
+    val obTime : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -69,12 +69,12 @@ class EOO : Table() {
                 null
             }
         }
-    val OB_TIMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun OB_TIMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val obTimeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun obTimeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
     /**
      * Correlation score of the observation when compared to a known orbit state.
      */
-    val CORR_QUALITY : Float
+    val corrQuality : Float
         get() {
             val o = __offset(10)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -82,7 +82,7 @@ class EOO : Table() {
     /**
      * Server will auto-populate with SAT_NO if available.
      */
-    val ID_ON_ORBIT : String?
+    val idOnOrbit : String?
         get() {
             val o = __offset(12)
             return if (o != 0) {
@@ -91,12 +91,12 @@ class EOO : Table() {
                 null
             }
         }
-    val ID_ON_ORBITAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
-    fun ID_ON_ORBITInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
+    val idOnOrbitAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(12, 1)
+    fun idOnOrbitInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 12, 1)
     /**
      * Unique ID of the sensor. Must have a corresponding sensor record on the server.
      */
-    val SENSOR_ID : String?
+    val sensorId : String?
         get() {
             val o = __offset(14)
             return if (o != 0) {
@@ -105,12 +105,12 @@ class EOO : Table() {
                 null
             }
         }
-    val SENSOR_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(14, 1)
-    fun SENSOR_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 14, 1)
+    val sensorIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(14, 1)
+    fun sensorIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 14, 1)
     /**
      * Accepted Collection Method
      */
-    val COLLECT_METHOD : Byte
+    val collectMethod : Byte
         get() {
             val o = __offset(16)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -118,7 +118,7 @@ class EOO : Table() {
     /**
      * 18SDS satellite number. Only list if correlated against the 18SDS catalog.
      */
-    val NORAD_CAT_ID : Int
+    val noradCatId : Int
         get() {
             val o = __offset(18)
             return if(o != 0) bb.getInt(o + bb_pos) else 0
@@ -126,7 +126,7 @@ class EOO : Table() {
     /**
      * Identifier for the collectRequest message if the collection was in response to tasking.
      */
-    val TASK_ID : String?
+    val taskId : String?
         get() {
             val o = __offset(20)
             return if (o != 0) {
@@ -135,12 +135,12 @@ class EOO : Table() {
                 null
             }
         }
-    val TASK_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(20, 1)
-    fun TASK_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 20, 1)
+    val taskIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(20, 1)
+    fun taskIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 20, 1)
     /**
      * Optional identifier to track a transaction.
      */
-    val TRANSACTION_ID : String?
+    val transactionId : String?
         get() {
             val o = __offset(22)
             return if (o != 0) {
@@ -149,12 +149,12 @@ class EOO : Table() {
                 null
             }
         }
-    val TRANSACTION_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(22, 1)
-    fun TRANSACTION_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 22, 1)
+    val transactionIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(22, 1)
+    fun transactionIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 22, 1)
     /**
      * The user-defined set ID of a sequence of images.
      */
-    val IMAGE_SET_ID : String?
+    val imageSetId : String?
         get() {
             val o = __offset(24)
             return if (o != 0) {
@@ -163,12 +163,12 @@ class EOO : Table() {
                 null
             }
         }
-    val IMAGE_SET_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(24, 1)
-    fun IMAGE_SET_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 24, 1)
+    val imageSetIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(24, 1)
+    fun imageSetIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 24, 1)
     /**
      * The number of images in an image set.
      */
-    val IMAGE_SET_LENGTH : Int
+    val imageSetLength : Int
         get() {
             val o = __offset(26)
             return if(o != 0) bb.getInt(o + bb_pos) else 0
@@ -176,7 +176,7 @@ class EOO : Table() {
     /**
      * The sequence ID of an image within an image set.
      */
-    val SEQUENCE_ID : Int
+    val sequenceId : Int
         get() {
             val o = __offset(28)
             return if(o != 0) bb.getInt(o + bb_pos) else 0
@@ -184,7 +184,7 @@ class EOO : Table() {
     /**
      * The position of this observation within a track (FENCE, FIRST, IN, LAST, SINGLE).
      */
-    val OB_POSITION : Byte
+    val obPosition : Byte
         get() {
             val o = __offset(30)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -192,7 +192,7 @@ class EOO : Table() {
     /**
      * Provider maintained ID. May not be consistent with 18SDS SAT_NO.
      */
-    val ORIG_OBJECT_ID : String?
+    val origObjectId : String?
         get() {
             val o = __offset(32)
             return if (o != 0) {
@@ -201,12 +201,12 @@ class EOO : Table() {
                 null
             }
         }
-    val ORIG_OBJECT_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(32, 1)
-    fun ORIG_OBJECT_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 32, 1)
+    val origObjectIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(32, 1)
+    fun origObjectIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 32, 1)
     /**
      * Sensor ID.
      */
-    val ORIG_SENSOR_ID : String?
+    val origSensorId : String?
         get() {
             val o = __offset(34)
             return if (o != 0) {
@@ -215,12 +215,12 @@ class EOO : Table() {
                 null
             }
         }
-    val ORIG_SENSOR_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(34, 1)
-    fun ORIG_SENSOR_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 34, 1)
+    val origSensorIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(34, 1)
+    fun origSensorIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 34, 1)
     /**
      * Required if correlation is attempted. Indicates whether correlation succeeded.
      */
-    val UCT : Boolean
+    val uct : Boolean
         get() {
             val o = __offset(36)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -228,7 +228,7 @@ class EOO : Table() {
     /**
      * Line of sight azimuth angle in degrees and topocentric frame.
      */
-    val AZIMUTH : Float
+    val azimuth : Float
         get() {
             val o = __offset(38)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -236,7 +236,7 @@ class EOO : Table() {
     /**
      * One sigma uncertainty in the line of sight azimuth angle, in degrees.
      */
-    val AZIMUTH_UNC : Float
+    val azimuthUnc : Float
         get() {
             val o = __offset(40)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -244,7 +244,7 @@ class EOO : Table() {
     /**
      * Sensor line of sight azimuth angle bias in degrees.
      */
-    val AZIMUTH_BIAS : Float
+    val azimuthBias : Float
         get() {
             val o = __offset(42)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -252,7 +252,7 @@ class EOO : Table() {
     /**
      * Rate of change of the line of sight azimuth in degrees per second.
      */
-    val AZIMUTH_RATE : Float
+    val azimuthRate : Float
         get() {
             val o = __offset(44)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -260,7 +260,7 @@ class EOO : Table() {
     /**
      * Line of sight elevation in degrees and topocentric frame.
      */
-    val ELEVATION : Float
+    val elevation : Float
         get() {
             val o = __offset(46)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -268,7 +268,7 @@ class EOO : Table() {
     /**
      * One sigma uncertainty in the line of sight elevation angle, in degrees.
      */
-    val ELEVATION_UNC : Float
+    val elevationUnc : Float
         get() {
             val o = __offset(48)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -276,7 +276,7 @@ class EOO : Table() {
     /**
      * Sensor line of sight elevation bias in degrees.
      */
-    val ELEVATION_BIAS : Float
+    val elevationBias : Float
         get() {
             val o = __offset(50)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -284,7 +284,7 @@ class EOO : Table() {
     /**
      * Rate of change of the line of sight elevation in degrees per second.
      */
-    val ELEVATION_RATE : Float
+    val elevationRate : Float
         get() {
             val o = __offset(52)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -292,7 +292,7 @@ class EOO : Table() {
     /**
      * Line of sight range in km. Reported value should include all applicable corrections.
      */
-    val RANGE : Float
+    val range : Float
         get() {
             val o = __offset(54)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -300,7 +300,7 @@ class EOO : Table() {
     /**
      * One sigma uncertainty in the line of sight range, in km.
      */
-    val RANGE_UNC : Float
+    val rangeUnc : Float
         get() {
             val o = __offset(56)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -308,7 +308,7 @@ class EOO : Table() {
     /**
      * Sensor line of sight range bias in km.
      */
-    val RANGE_BIAS : Float
+    val rangeBias : Float
         get() {
             val o = __offset(58)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -316,7 +316,7 @@ class EOO : Table() {
     /**
      * Range rate in km/s. Reported value should include all applicable corrections.
      */
-    val RANGE_RATE : Float
+    val rangeRate : Float
         get() {
             val o = __offset(60)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -324,7 +324,7 @@ class EOO : Table() {
     /**
      * One sigma uncertainty in the line of sight range rate, in km/sec.
      */
-    val RANGE_RATE_UNC : Float
+    val rangeRateUnc : Float
         get() {
             val o = __offset(62)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -332,7 +332,7 @@ class EOO : Table() {
     /**
      * Right ascension in degrees. Required metric reporting field for EO observations.
      */
-    val RA : Float
+    val ra : Float
         get() {
             val o = __offset(64)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -340,7 +340,7 @@ class EOO : Table() {
     /**
      * Line of sight right ascension rate of change, in degrees/sec.
      */
-    val RA_RATE : Float
+    val raRate : Float
         get() {
             val o = __offset(66)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -348,7 +348,7 @@ class EOO : Table() {
     /**
      * One sigma uncertainty in the line of sight right ascension angle, in degrees.
      */
-    val RA_UNC : Float
+    val raUnc : Float
         get() {
             val o = __offset(68)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -356,7 +356,7 @@ class EOO : Table() {
     /**
      * Sensor line of sight right ascension bias in degrees.
      */
-    val RA_BIAS : Float
+    val raBias : Float
         get() {
             val o = __offset(70)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -364,7 +364,7 @@ class EOO : Table() {
     /**
      * Declination in degrees. Required metric reporting field for EO observations.
      */
-    val DECLINATION : Float
+    val declination : Float
         get() {
             val o = __offset(72)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -372,7 +372,7 @@ class EOO : Table() {
     /**
      * Line of sight declination rate of change, in degrees/sec.
      */
-    val DECLINATION_RATE : Float
+    val declinationRate : Float
         get() {
             val o = __offset(74)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -380,7 +380,7 @@ class EOO : Table() {
     /**
      * One sigma uncertainty in the line of sight declination angle, in degrees.
      */
-    val DECLINATION_UNC : Float
+    val declinationUnc : Float
         get() {
             val o = __offset(76)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -388,7 +388,7 @@ class EOO : Table() {
     /**
      * Sensor line of sight declination angle bias in degrees.
      */
-    val DECLINATION_BIAS : Float
+    val declinationBias : Float
         get() {
             val o = __offset(78)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -396,7 +396,7 @@ class EOO : Table() {
     /**
      * X-component of the unit vector representing the line-of-sight direction in the observer's reference frame.
      */
-    val LOSX : Float
+    val losx : Float
         get() {
             val o = __offset(80)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -404,7 +404,7 @@ class EOO : Table() {
     /**
      * Y-component of the unit vector representing the line-of-sight direction in the observer's reference frame.
      */
-    val LOSY : Float
+    val losy : Float
         get() {
             val o = __offset(82)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -412,7 +412,7 @@ class EOO : Table() {
     /**
      * Z-component of the unit vector representing the line-of-sight direction in the observer's reference frame.
      */
-    val LOSZ : Float
+    val losz : Float
         get() {
             val o = __offset(84)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -420,7 +420,7 @@ class EOO : Table() {
     /**
      * One sigma uncertainty in the line-of-sight direction vector components.
      */
-    val LOS_UNC : Float
+    val losUnc : Float
         get() {
             val o = __offset(86)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -428,7 +428,7 @@ class EOO : Table() {
     /**
      * X-component of the velocity vector along the line of sight, in km/s.
      */
-    val LOSXVEL : Float
+    val losxvel : Float
         get() {
             val o = __offset(88)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -436,7 +436,7 @@ class EOO : Table() {
     /**
      * Y-component of the velocity vector along the line of sight, in km/s.
      */
-    val LOSYVEL : Float
+    val losyvel : Float
         get() {
             val o = __offset(90)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -444,7 +444,7 @@ class EOO : Table() {
     /**
      * Z-component of the velocity vector along the line of sight, in km/s.
      */
-    val LOSZVEL : Float
+    val loszvel : Float
         get() {
             val o = __offset(92)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -452,7 +452,7 @@ class EOO : Table() {
     /**
      * WGS-84 latitude in decimal degrees at the time of the observation.
      */
-    val SENLAT : Float
+    val senlat : Float
         get() {
             val o = __offset(94)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -460,7 +460,7 @@ class EOO : Table() {
     /**
      * WGS-84 longitude in decimal degrees at the time of the observation.
      */
-    val SENLON : Float
+    val senlon : Float
         get() {
             val o = __offset(96)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -468,7 +468,7 @@ class EOO : Table() {
     /**
      * Sensor height in km relative to the WGS-84 ellipsoid at the time of the observation.
      */
-    val SENALT : Float
+    val senalt : Float
         get() {
             val o = __offset(98)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -476,7 +476,7 @@ class EOO : Table() {
     /**
      * Cartesian X position in km at the time of the observation.
      */
-    val SENX : Float
+    val senx : Float
         get() {
             val o = __offset(100)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -484,7 +484,7 @@ class EOO : Table() {
     /**
      * Cartesian Y position in km at the time of the observation.
      */
-    val SENY : Float
+    val seny : Float
         get() {
             val o = __offset(102)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -492,7 +492,7 @@ class EOO : Table() {
     /**
      * Cartesian Z position in km at the time of the observation.
      */
-    val SENZ : Float
+    val senz : Float
         get() {
             val o = __offset(104)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -500,7 +500,7 @@ class EOO : Table() {
     /**
      * Total number of satellites in the field of view.
      */
-    val FOV_COUNT : Int
+    val fovCount : Int
         get() {
             val o = __offset(106)
             return if(o != 0) bb.getInt(o + bb_pos) else 0
@@ -508,7 +508,7 @@ class EOO : Table() {
     /**
      * Number of uncorrelated satellites in the field of view (JCO).
      */
-    val FOV_COUNT_UCTS : Int
+    val fovCountUcts : Int
         get() {
             val o = __offset(108)
             return if(o != 0) bb.getInt(o + bb_pos) else 0
@@ -518,7 +518,7 @@ class EOO : Table() {
      * the exposure duration should be the total integration time. This field is highly recommended / required if the 
      * observations are going to be used for photometric processing.
      */
-    val EXP_DURATION : Float
+    val expDuration : Float
         get() {
             val o = __offset(110)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -526,7 +526,7 @@ class EOO : Table() {
     /**
      * Formula: 2.5 * log_10 (zero_mag_counts / EXP_DURATION).
      */
-    val ZEROPTD : Float
+    val zeroptd : Float
         get() {
             val o = __offset(112)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -534,7 +534,7 @@ class EOO : Table() {
     /**
      * Net object signature = counts / EXP_DURATION.
      */
-    val NET_OBJ_SIG : Float
+    val netObjSig : Float
         get() {
             val o = __offset(114)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -542,7 +542,7 @@ class EOO : Table() {
     /**
      * Net object signature uncertainty = counts uncertainty / EXP_DURATION.
      */
-    val NET_OBJ_SIG_UNC : Float
+    val netObjSigUnc : Float
         get() {
             val o = __offset(116)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -550,7 +550,7 @@ class EOO : Table() {
     /**
      * Measure of observed brightness calibrated against the Gaia G-band.
      */
-    val MAG : Float
+    val mag : Float
         get() {
             val o = __offset(118)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -558,7 +558,7 @@ class EOO : Table() {
     /**
      * Uncertainty of the observed brightness.
      */
-    val MAG_UNC : Float
+    val magUnc : Float
         get() {
             val o = __offset(120)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -566,7 +566,7 @@ class EOO : Table() {
     /**
      * [Definition needed].
      */
-    val MAG_NORM_RANGE : Float
+    val magNormRange : Float
         get() {
             val o = __offset(122)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -575,7 +575,7 @@ class EOO : Table() {
      * Computed estimate of the latitude, positive degrees north. It should be computed based on the assumed slant range 
      * and corresponding viewing geometry. It must NOT be computed from the orbit state.
      */
-    val GEOLAT : Float
+    val geolat : Float
         get() {
             val o = __offset(124)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -584,7 +584,7 @@ class EOO : Table() {
      * Computed estimate of the longitude as +/- 180 degrees east. It should be computed based on the assumed slant range 
      * and viewing geometry. It must NOT be computed from the orbit state.
      */
-    val GEOLON : Float
+    val geolon : Float
         get() {
             val o = __offset(126)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -592,7 +592,7 @@ class EOO : Table() {
     /**
      * Computed estimate of satellite altitude in km at the reported location. It must NOT be computed from the orbit state.
      */
-    val GEOALT : Float
+    val geoalt : Float
         get() {
             val o = __offset(128)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -600,7 +600,7 @@ class EOO : Table() {
     /**
      * Computed estimate of the slant range in km. It must NOT be computed from the orbit state.
      */
-    val GEORANGE : Float
+    val georange : Float
         get() {
             val o = __offset(130)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -609,7 +609,7 @@ class EOO : Table() {
      * Average Sky Background signal, in Magnitudes. Sky Background refers to the incoming light from an apparently 
      * empty part of the night sky.
      */
-    val SKY_BKGRND : Float
+    val skyBkgrnd : Float
         get() {
             val o = __offset(132)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -620,7 +620,7 @@ class EOO : Table() {
      * describes the absorption and scattering of electromagnetic radiation by dust and gas between an emitting astronomical 
      * object and the observer.
      */
-    val PRIMARY_EXTINCTION : Float
+    val primaryExtinction : Float
         get() {
             val o = __offset(134)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -628,7 +628,7 @@ class EOO : Table() {
     /**
      * Primary Extinction Coefficient Uncertainty, in Magnitudes.
      */
-    val PRIMARY_EXTINCTION_UNC : Float
+    val primaryExtinctionUnc : Float
         get() {
             val o = __offset(136)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -637,7 +637,7 @@ class EOO : Table() {
      * The angle, in degrees, between the target-to-observer vector and the target-to-sun vector. Recommend using the 
      * calculation listed in the EOSSA documentation, pg 106 of the EOSSA spec.
      */
-    val SOLAR_PHASE_ANGLE : Float
+    val solarPhaseAngle : Float
         get() {
             val o = __offset(138)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -647,7 +647,7 @@ class EOO : Table() {
      * onto the equatorial plane. The convention used is negative when closing (i.e., before the opposition) 
      * and positive when opening (after the opposition).
      */
-    val SOLAR_EQ_PHASE_ANGLE : Float
+    val solarEqPhaseAngle : Float
         get() {
             val o = __offset(140)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -655,7 +655,7 @@ class EOO : Table() {
     /**
      * Angle from the sun to the equatorial plane.
      */
-    val SOLAR_DEC_ANGLE : Float
+    val solarDecAngle : Float
         get() {
             val o = __offset(142)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -663,7 +663,7 @@ class EOO : Table() {
     /**
      * Shutter delay in seconds.
      */
-    val SHUTTER_DELAY : Float
+    val shutterDelay : Float
         get() {
             val o = __offset(144)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -671,7 +671,7 @@ class EOO : Table() {
     /**
      * Sensor timing bias in seconds.
      */
-    val TIMING_BIAS : Float
+    val timingBias : Float
         get() {
             val o = __offset(146)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -679,7 +679,7 @@ class EOO : Table() {
     /**
      * Optional URI location in the document repository of the raw file parsed by the system to produce this record. 
      */
-    val RAW_FILE_URI : String?
+    val rawFileUri : String?
         get() {
             val o = __offset(148)
             return if (o != 0) {
@@ -688,12 +688,12 @@ class EOO : Table() {
                 null
             }
         }
-    val RAW_FILE_URIAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(148, 1)
-    fun RAW_FILE_URIInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 148, 1)
+    val rawFileUriAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(148, 1)
+    fun rawFileUriInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 148, 1)
     /**
      * Intensity of the target for IR observations, in kw/sr/em.
      */
-    val INTENSITY : Float
+    val intensity : Float
         get() {
             val o = __offset(150)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -701,7 +701,7 @@ class EOO : Table() {
     /**
      * Background intensity for IR observations, in kw/sr/um.
      */
-    val BG_INTENSITY : Float
+    val bgIntensity : Float
         get() {
             val o = __offset(152)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -709,7 +709,7 @@ class EOO : Table() {
     /**
      * Optional source-provided and searchable metadata or descriptor of the data.
      */
-    val DESCRIPTOR : String?
+    val descriptor : String?
         get() {
             val o = __offset(154)
             return if (o != 0) {
@@ -718,12 +718,12 @@ class EOO : Table() {
                 null
             }
         }
-    val DESCRIPTORAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(154, 1)
-    fun DESCRIPTORInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 154, 1)
+    val descriptorAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(154, 1)
+    fun descriptorInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 154, 1)
     /**
      * Source of the data.
      */
-    val SOURCE : String?
+    val source : String?
         get() {
             val o = __offset(156)
             return if (o != 0) {
@@ -732,14 +732,14 @@ class EOO : Table() {
                 null
             }
         }
-    val SOURCEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(156, 1)
-    fun SOURCEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 156, 1)
+    val sourceAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(156, 1)
+    fun sourceInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 156, 1)
     /**
      * Originating system or organization which produced the data, if different from the source.
      * The origin may be different than the source if the source was a mediating system which forwarded 
      * the data on behalf of the origin system. If null, the source may be assumed to be the origin.
      */
-    val ORIGIN : String?
+    val origin : String?
         get() {
             val o = __offset(158)
             return if (o != 0) {
@@ -748,12 +748,12 @@ class EOO : Table() {
                 null
             }
         }
-    val ORIGINAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(158, 1)
-    fun ORIGINInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 158, 1)
+    val originAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(158, 1)
+    fun originInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 158, 1)
     /**
      * Indicator of whether the data is EXERCISE, REAL, SIMULATED, or TEST.
      */
-    val DATA_MODE : Byte
+    val dataMode : Byte
         get() {
             val o = __offset(160)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -761,7 +761,7 @@ class EOO : Table() {
     /**
      * Time the row was created in the database, auto-populated by the system.
      */
-    val CREATED_AT : String?
+    val createdAt : String?
         get() {
             val o = __offset(162)
             return if (o != 0) {
@@ -770,12 +770,12 @@ class EOO : Table() {
                 null
             }
         }
-    val CREATED_ATAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(162, 1)
-    fun CREATED_ATInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 162, 1)
+    val createdAtAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(162, 1)
+    fun createdAtInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 162, 1)
     /**
      * Application user who created the row in the database, auto-populated by the system.
      */
-    val CREATED_BY : String?
+    val createdBy : String?
         get() {
             val o = __offset(164)
             return if (o != 0) {
@@ -784,13 +784,13 @@ class EOO : Table() {
                 null
             }
         }
-    val CREATED_BYAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(164, 1)
-    fun CREATED_BYInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 164, 1)
+    val createdByAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(164, 1)
+    fun createdByInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 164, 1)
     /**
      * EO observations are assumed to be topocentric J2000 coordinates ('J2000') as defined by the IAU, unless otherwise specified.
      */
-    val REFERENCE_FRAME : RFM? get() = REFERENCE_FRAME(RFM())
-    fun REFERENCE_FRAME(obj: RFM) : RFM? {
+    val referenceFrame : RFM? get() = referenceFrame(RFM())
+    fun referenceFrame(obj: RFM) : RFM? {
         val o = __offset(166)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -803,8 +803,8 @@ class EOO : Table() {
      * unless otherwise specified. (ITRF is equivalent to Earth-Centered Earth-Fixed (ECEF) for this purpose). 
      * Lat / long / height values should be reported using the WGS-84 ellipsoid, where applicable.
      */
-    val SEN_REFERENCE_FRAME : RFM? get() = SEN_REFERENCE_FRAME(RFM())
-    fun SEN_REFERENCE_FRAME(obj: RFM) : RFM? {
+    val senReferenceFrame : RFM? get() = senReferenceFrame(RFM())
+    fun senReferenceFrame(obj: RFM) : RFM? {
         val o = __offset(168)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -815,7 +815,7 @@ class EOO : Table() {
     /**
      * Boolean indicating that the target object was in umbral eclipse at the time of this observation.
      */
-    val UMBRA : Boolean
+    val umbra : Boolean
         get() {
             val o = __offset(170)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -824,7 +824,7 @@ class EOO : Table() {
      * Boolean indicating that the target object was in a penumbral eclipse at the time of this observation.
      * This field is highly recommended if the observations will be used for photometric processing.
      */
-    val PENUMBRA : Boolean
+    val penumbra : Boolean
         get() {
             val o = __offset(172)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -832,7 +832,7 @@ class EOO : Table() {
     /**
      * The originating source network on which this record was created, auto-populated by the system.
      */
-    val ORIG_NETWORK : String?
+    val origNetwork : String?
         get() {
             val o = __offset(174)
             return if (o != 0) {
@@ -841,12 +841,12 @@ class EOO : Table() {
                 null
             }
         }
-    val ORIG_NETWORKAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(174, 1)
-    fun ORIG_NETWORKInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 174, 1)
+    val origNetworkAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(174, 1)
+    fun origNetworkInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 174, 1)
     /**
      * The source from which this record was received.
      */
-    val SOURCE_DL : String?
+    val sourceDl : String?
         get() {
             val o = __offset(176)
             return if (o != 0) {
@@ -855,12 +855,12 @@ class EOO : Table() {
                 null
             }
         }
-    val SOURCE_DLAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(176, 1)
-    fun SOURCE_DLInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 176, 1)
+    val sourceDlAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(176, 1)
+    fun sourceDlInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 176, 1)
     /**
      * Device Type
      */
-    val TYPE : Byte
+    val type : Byte
         get() {
             val o = __offset(178)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -868,7 +868,7 @@ class EOO : Table() {
     /**
      * True if measured, false if computed. Required if azimuth is reported.
      */
-    val AZIMUTH_MEASURED : Boolean
+    val azimuthMeasured : Boolean
         get() {
             val o = __offset(180)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -876,7 +876,7 @@ class EOO : Table() {
     /**
      * True if measured, false if computed. Required if elevation is reported.
      */
-    val ELEVATION_MEASURED : Boolean
+    val elevationMeasured : Boolean
         get() {
             val o = __offset(182)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -884,7 +884,7 @@ class EOO : Table() {
     /**
      * True if measured, false if computed. Required if range is reported.
      */
-    val RANGE_MEASURED : Boolean
+    val rangeMeasured : Boolean
         get() {
             val o = __offset(184)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -892,7 +892,7 @@ class EOO : Table() {
     /**
      * True if measured, false if computed. Required if range-rate is reported.
      */
-    val RANGERATE_MEASURED : Boolean
+    val rangerateMeasured : Boolean
         get() {
             val o = __offset(186)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -900,7 +900,7 @@ class EOO : Table() {
     /**
      * True if measured, false if computed. Required if right ascension is reported.
      */
-    val RA_MEASURED : Boolean
+    val raMeasured : Boolean
         get() {
             val o = __offset(188)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -908,7 +908,7 @@ class EOO : Table() {
     /**
      * True if measured, false if computed. Required if declination is reported.
      */
-    val DECLINATION_MEASURED : Boolean
+    val declinationMeasured : Boolean
         get() {
             val o = __offset(190)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -916,7 +916,7 @@ class EOO : Table() {
     /**
      * National Imagery Interpretability Rating Scale (NIIRS). Ranging from 0 (lowest) to 9 (highest).
      */
-    val NIIRS : Float
+    val niirs : Float
         get() {
             val o = __offset(192)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -924,7 +924,7 @@ class EOO : Table() {
     /**
      * Ground sample distance in meters per pixel.
      */
-    val METERS_PER_PIXEL : Float
+    val metersPerPixel : Float
         get() {
             val o = __offset(194)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -932,7 +932,7 @@ class EOO : Table() {
     /**
      * Signal-to-noise ratio of the image. Higher values indicate cleaner imagery.
      */
-    val IMAGE_SNR : Float
+    val imageSnr : Float
         get() {
             val o = __offset(196)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -940,7 +940,7 @@ class EOO : Table() {
     /**
      * Bit depth of the image (e.g., 8, 12, 16).
      */
-    val IMAGE_BIT_DEPTH : Int
+    val imageBitDepth : Int
         get() {
             val o = __offset(198)
             return if(o != 0) bb.getInt(o + bb_pos) else 0
@@ -948,7 +948,7 @@ class EOO : Table() {
     /**
      * Width of the image in pixels.
      */
-    val IMAGE_WIDTH : Int
+    val imageWidth : Int
         get() {
             val o = __offset(200)
             return if(o != 0) bb.getInt(o + bb_pos) else 0
@@ -956,7 +956,7 @@ class EOO : Table() {
     /**
      * Height of the image in pixels.
      */
-    val IMAGE_HEIGHT : Int
+    val imageHeight : Int
         get() {
             val o = __offset(202)
             return if(o != 0) bb.getInt(o + bb_pos) else 0
@@ -964,7 +964,7 @@ class EOO : Table() {
     /**
      * Compression type used for the image, e.g., "JPEG", "PNG", "RAW", etc.
      */
-    val IMAGE_COMPRESSION : String?
+    val imageCompression : String?
         get() {
             val o = __offset(204)
             return if (o != 0) {
@@ -973,12 +973,12 @@ class EOO : Table() {
                 null
             }
         }
-    val IMAGE_COMPRESSIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(204, 1)
-    fun IMAGE_COMPRESSIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 204, 1)
+    val imageCompressionAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(204, 1)
+    fun imageCompressionInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 204, 1)
     /**
      * Compression ratio used (original size / compressed size), if applicable.
      */
-    val IMAGE_COMPRESSION_RATIO : Float
+    val imageCompressionRatio : Float
         get() {
             val o = __offset(206)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -986,7 +986,7 @@ class EOO : Table() {
     /**
      * URI to the processed image used for this observation.
      */
-    val PROCESSED_IMAGE_URI : String?
+    val processedImageUri : String?
         get() {
             val o = __offset(208)
             return if (o != 0) {
@@ -995,12 +995,12 @@ class EOO : Table() {
                 null
             }
         }
-    val PROCESSED_IMAGE_URIAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(208, 1)
-    fun PROCESSED_IMAGE_URIInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 208, 1)
+    val processedImageUriAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(208, 1)
+    fun processedImageUriInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 208, 1)
     /**
      * Flag indicating whether the image was auto-enhanced (e.g., contrast stretch, denoise).
      */
-    val IMAGE_AUTO_ENHANCED : Boolean
+    val imageAutoEnhanced : Boolean
         get() {
             val o = __offset(210)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -1008,7 +1008,7 @@ class EOO : Table() {
     /**
      * True if the observation was taken with multiple frames stacked into one image.
      */
-    val MULTI_FRAME_STACKED : Boolean
+    val multiFrameStacked : Boolean
         get() {
             val o = __offset(212)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -1016,7 +1016,7 @@ class EOO : Table() {
     /**
      * True if synthetic tracking was used to create the image.
      */
-    val SYNTHETIC_TRACKING_USED : Boolean
+    val syntheticTrackingUsed : Boolean
         get() {
             val o = __offset(214)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -1024,7 +1024,7 @@ class EOO : Table() {
     /**
      * Sharpness metric of the image based on the Tenengrad method or variance of Laplacian. Higher values indicate sharper images.
      */
-    val IMAGE_SHARPNESS : Float
+    val imageSharpness : Float
         get() {
             val o = __offset(216)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -1032,7 +1032,7 @@ class EOO : Table() {
     /**
      * Noise level of the image, estimated via pixel intensity variance in background regions.
      */
-    val IMAGE_NOISE_STDDEV : Float
+    val imageNoiseStddev : Float
         get() {
             val o = __offset(218)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -1040,7 +1040,7 @@ class EOO : Table() {
     /**
      * Contrast metric of the image, such as Michelson contrast or RMS contrast.
      */
-    val IMAGE_CONTRAST : Float
+    val imageContrast : Float
         get() {
             val o = __offset(220)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -1048,7 +1048,7 @@ class EOO : Table() {
     /**
      * Dynamic range of the image (max pixel value / min pixel value), indicating tonal spread.
      */
-    val IMAGE_DYNAMIC_RANGE : Float
+    val imageDynamicRange : Float
         get() {
             val o = __offset(222)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -1056,7 +1056,7 @@ class EOO : Table() {
     /**
      * Entropy of the image, representing the richness of information content. Higher entropy suggests higher texture detail.
      */
-    val IMAGE_ENTROPY : Float
+    val imageEntropy : Float
         get() {
             val o = __offset(224)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -1064,7 +1064,7 @@ class EOO : Table() {
     /**
      * Background uniformity metric (e.g., mean gradient in background areas). Lower values indicate more uniform background.
      */
-    val BACKGROUND_UNIFORMITY : Float
+    val backgroundUniformity : Float
         get() {
             val o = __offset(226)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -1072,7 +1072,7 @@ class EOO : Table() {
     /**
      * Mean background level, computed from non-object regions in pixel units.
      */
-    val BACKGROUND_MEAN_LEVEL : Float
+    val backgroundMeanLevel : Float
         get() {
             val o = __offset(228)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -1080,7 +1080,7 @@ class EOO : Table() {
     /**
      * Percentage of saturated pixels in the image. Indicates overexposure when high.
      */
-    val SATURATED_PIXEL_PERCENT : Float
+    val saturatedPixelPercent : Float
         get() {
             val o = __offset(230)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -1088,7 +1088,7 @@ class EOO : Table() {
     /**
      * Percentage of dead or zero-value pixels in the image. Indicates sensor defects or underexposure.
      */
-    val DEAD_PIXEL_PERCENT : Float
+    val deadPixelPercent : Float
         get() {
             val o = __offset(232)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -1096,7 +1096,7 @@ class EOO : Table() {
     /**
      * Estimated Point Spread Function (PSF) Full Width at Half Maximum (FWHM) in pixels. Indicates image blur or focus.
      */
-    val PSF_FWHM : Float
+    val psfFwhm : Float
         get() {
             val o = __offset(234)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -1104,7 +1104,7 @@ class EOO : Table() {
     /**
      * Estimated percentage of cloud cover in the image. Derived using cloud detection algorithms such as Fmask or machine learning classifiers.
      */
-    val CLOUD_COVER_PERCENT : Float
+    val cloudCoverPercent : Float
         get() {
             val o = __offset(236)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -1112,7 +1112,7 @@ class EOO : Table() {
     /**
      * Confidence score of the cloud detection result, from 0 (low confidence) to 1 (high confidence).
      */
-    val CLOUD_DETECTION_CONFIDENCE : Float
+    val cloudDetectionConfidence : Float
         get() {
             val o = __offset(238)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -1120,7 +1120,7 @@ class EOO : Table() {
     /**
      * Estimated percentage of the image obscured by haze or atmospheric scattering effects.
      */
-    val HAZE_PERCENT : Float
+    val hazePercent : Float
         get() {
             val o = __offset(240)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -1128,7 +1128,7 @@ class EOO : Table() {
     /**
      * Estimated aerosol optical thickness (AOT) at 550 nm, indicating particulate matter in the atmosphere affecting image clarity.
      */
-    val AEROSOL_OPTICAL_THICKNESS : Float
+    val aerosolOpticalThickness : Float
         get() {
             val o = __offset(242)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -1136,7 +1136,7 @@ class EOO : Table() {
     /**
      * Estimated water vapor content (e.g., total column precipitable water) at the time of imaging, in mm.
      */
-    val WATER_VAPOR_CONTENT : Float
+    val waterVaporContent : Float
         get() {
             val o = __offset(244)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -1144,7 +1144,7 @@ class EOO : Table() {
     /**
      * Sun elevation angle at the time of image capture, in degrees above the horizon.
      */
-    val SUN_ELEVATION : Float
+    val sunElevation : Float
         get() {
             val o = __offset(246)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -1152,7 +1152,7 @@ class EOO : Table() {
     /**
      * Sun azimuth angle at the time of image capture, in degrees from true north.
      */
-    val SUN_AZIMUTH : Float
+    val sunAzimuth : Float
         get() {
             val o = __offset(248)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -1160,7 +1160,7 @@ class EOO : Table() {
     /**
      * View zenith angle (sensor line-of-sight angle from nadir), in degrees.
      */
-    val VIEW_ZENITH_ANGLE : Float
+    val viewZenithAngle : Float
         get() {
             val o = __offset(250)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -1168,7 +1168,7 @@ class EOO : Table() {
     /**
      * View azimuth angle (direction of sensor relative to north), in degrees.
      */
-    val VIEW_AZIMUTH_ANGLE : Float
+    val viewAzimuthAngle : Float
         get() {
             val o = __offset(252)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -1176,7 +1176,7 @@ class EOO : Table() {
     /**
      * Off-nadir angle of the sensor at the time of image capture, in degrees.
      */
-    val OFF_NADIR_ANGLE : Float
+    val offNadirAngle : Float
         get() {
             val o = __offset(254)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -1184,7 +1184,7 @@ class EOO : Table() {
     /**
      * Ground coverage width of the image swath in kilometers.
      */
-    val SWATH_WIDTH_KM : Float
+    val swathWidthKm : Float
         get() {
             val o = __offset(256)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -1192,7 +1192,7 @@ class EOO : Table() {
     /**
      * Mean terrain elevation in the image footprint, in meters above sea level.
      */
-    val MEAN_TERRAIN_ELEVATION : Float
+    val meanTerrainElevation : Float
         get() {
             val o = __offset(258)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -1200,7 +1200,7 @@ class EOO : Table() {
     /**
      * Standard deviation of terrain elevation in the image footprint, in meters.
      */
-    val TERRAIN_ELEVATION_STDDEV : Float
+    val terrainElevationStddev : Float
         get() {
             val o = __offset(260)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -1208,7 +1208,7 @@ class EOO : Table() {
     /**
      * Percentage of the image affected by shadows, derived via topographic or object shadow detection.
      */
-    val SHADOW_COVER_PERCENT : Float
+    val shadowCoverPercent : Float
         get() {
             val o = __offset(262)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -1216,7 +1216,7 @@ class EOO : Table() {
     /**
      * Flag indicating whether sunglint is present in the image (true if high reflectance from water surface due to sun geometry).
      */
-    val SUNGLINT_PRESENT : Boolean
+    val sunglintPresent : Boolean
         get() {
             val o = __offset(264)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -1224,7 +1224,7 @@ class EOO : Table() {
     /**
      * Percentage of image affected by sunglint.
      */
-    val SUNGLINT_PERCENT : Float
+    val sunglintPercent : Float
         get() {
             val o = __offset(266)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -1232,7 +1232,7 @@ class EOO : Table() {
     /**
      * Estimated percentage of snow or ice coverage in the image footprint.
      */
-    val SNOW_ICE_COVER_PERCENT : Float
+    val snowIceCoverPercent : Float
         get() {
             val o = __offset(268)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -1240,13 +1240,13 @@ class EOO : Table() {
     /**
      * Total area covered by valid data (non-masked, usable imagery) in square kilometers.
      */
-    val VALID_DATA_AREA_KM2 : Float
+    val validDataAreaKm2 : Float
         get() {
             val o = __offset(270)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsEOO(_bb: ByteBuffer): EOO = getRootAsEOO(_bb, EOO())
         fun getRootAsEOO(_bb: ByteBuffer, obj: EOO): EOO {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
@@ -1254,140 +1254,140 @@ class EOO : Table() {
         }
         fun EOOBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$EOO")
         fun startEOO(builder: FlatBufferBuilder) = builder.startTable(134)
-        fun addID(builder: FlatBufferBuilder, ID: Int) = builder.addOffset(0, ID, 0)
-        fun addCLASSIFICATION(builder: FlatBufferBuilder, CLASSIFICATION: Int) = builder.addOffset(1, CLASSIFICATION, 0)
-        fun addOB_TIME(builder: FlatBufferBuilder, OB_TIME: Int) = builder.addOffset(2, OB_TIME, 0)
-        fun addCORR_QUALITY(builder: FlatBufferBuilder, CORR_QUALITY: Float) = builder.addFloat(3, CORR_QUALITY, 0.0)
-        fun addID_ON_ORBIT(builder: FlatBufferBuilder, ID_ON_ORBIT: Int) = builder.addOffset(4, ID_ON_ORBIT, 0)
-        fun addSENSOR_ID(builder: FlatBufferBuilder, SENSOR_ID: Int) = builder.addOffset(5, SENSOR_ID, 0)
-        fun addCOLLECT_METHOD(builder: FlatBufferBuilder, COLLECT_METHOD: Byte) = builder.addByte(6, COLLECT_METHOD, 0)
-        fun addNORAD_CAT_ID(builder: FlatBufferBuilder, NORAD_CAT_ID: Int) = builder.addInt(7, NORAD_CAT_ID, 0)
-        fun addTASK_ID(builder: FlatBufferBuilder, TASK_ID: Int) = builder.addOffset(8, TASK_ID, 0)
-        fun addTRANSACTION_ID(builder: FlatBufferBuilder, TRANSACTION_ID: Int) = builder.addOffset(9, TRANSACTION_ID, 0)
-        fun addIMAGE_SET_ID(builder: FlatBufferBuilder, IMAGE_SET_ID: Int) = builder.addOffset(10, IMAGE_SET_ID, 0)
-        fun addIMAGE_SET_LENGTH(builder: FlatBufferBuilder, IMAGE_SET_LENGTH: Int) = builder.addInt(11, IMAGE_SET_LENGTH, 0)
-        fun addSEQUENCE_ID(builder: FlatBufferBuilder, SEQUENCE_ID: Int) = builder.addInt(12, SEQUENCE_ID, 0)
-        fun addOB_POSITION(builder: FlatBufferBuilder, OB_POSITION: Byte) = builder.addByte(13, OB_POSITION, 0)
-        fun addORIG_OBJECT_ID(builder: FlatBufferBuilder, ORIG_OBJECT_ID: Int) = builder.addOffset(14, ORIG_OBJECT_ID, 0)
-        fun addORIG_SENSOR_ID(builder: FlatBufferBuilder, ORIG_SENSOR_ID: Int) = builder.addOffset(15, ORIG_SENSOR_ID, 0)
-        fun addUCT(builder: FlatBufferBuilder, UCT: Boolean) = builder.addBoolean(16, UCT, false)
-        fun addAZIMUTH(builder: FlatBufferBuilder, AZIMUTH: Float) = builder.addFloat(17, AZIMUTH, 0.0)
-        fun addAZIMUTH_UNC(builder: FlatBufferBuilder, AZIMUTH_UNC: Float) = builder.addFloat(18, AZIMUTH_UNC, 0.0)
-        fun addAZIMUTH_BIAS(builder: FlatBufferBuilder, AZIMUTH_BIAS: Float) = builder.addFloat(19, AZIMUTH_BIAS, 0.0)
-        fun addAZIMUTH_RATE(builder: FlatBufferBuilder, AZIMUTH_RATE: Float) = builder.addFloat(20, AZIMUTH_RATE, 0.0)
-        fun addELEVATION(builder: FlatBufferBuilder, ELEVATION: Float) = builder.addFloat(21, ELEVATION, 0.0)
-        fun addELEVATION_UNC(builder: FlatBufferBuilder, ELEVATION_UNC: Float) = builder.addFloat(22, ELEVATION_UNC, 0.0)
-        fun addELEVATION_BIAS(builder: FlatBufferBuilder, ELEVATION_BIAS: Float) = builder.addFloat(23, ELEVATION_BIAS, 0.0)
-        fun addELEVATION_RATE(builder: FlatBufferBuilder, ELEVATION_RATE: Float) = builder.addFloat(24, ELEVATION_RATE, 0.0)
-        fun addRANGE(builder: FlatBufferBuilder, RANGE: Float) = builder.addFloat(25, RANGE, 0.0)
-        fun addRANGE_UNC(builder: FlatBufferBuilder, RANGE_UNC: Float) = builder.addFloat(26, RANGE_UNC, 0.0)
-        fun addRANGE_BIAS(builder: FlatBufferBuilder, RANGE_BIAS: Float) = builder.addFloat(27, RANGE_BIAS, 0.0)
-        fun addRANGE_RATE(builder: FlatBufferBuilder, RANGE_RATE: Float) = builder.addFloat(28, RANGE_RATE, 0.0)
-        fun addRANGE_RATE_UNC(builder: FlatBufferBuilder, RANGE_RATE_UNC: Float) = builder.addFloat(29, RANGE_RATE_UNC, 0.0)
-        fun addRA(builder: FlatBufferBuilder, RA: Float) = builder.addFloat(30, RA, 0.0)
-        fun addRA_RATE(builder: FlatBufferBuilder, RA_RATE: Float) = builder.addFloat(31, RA_RATE, 0.0)
-        fun addRA_UNC(builder: FlatBufferBuilder, RA_UNC: Float) = builder.addFloat(32, RA_UNC, 0.0)
-        fun addRA_BIAS(builder: FlatBufferBuilder, RA_BIAS: Float) = builder.addFloat(33, RA_BIAS, 0.0)
-        fun addDECLINATION(builder: FlatBufferBuilder, DECLINATION: Float) = builder.addFloat(34, DECLINATION, 0.0)
-        fun addDECLINATION_RATE(builder: FlatBufferBuilder, DECLINATION_RATE: Float) = builder.addFloat(35, DECLINATION_RATE, 0.0)
-        fun addDECLINATION_UNC(builder: FlatBufferBuilder, DECLINATION_UNC: Float) = builder.addFloat(36, DECLINATION_UNC, 0.0)
-        fun addDECLINATION_BIAS(builder: FlatBufferBuilder, DECLINATION_BIAS: Float) = builder.addFloat(37, DECLINATION_BIAS, 0.0)
-        fun addLOSX(builder: FlatBufferBuilder, LOSX: Float) = builder.addFloat(38, LOSX, 0.0)
-        fun addLOSY(builder: FlatBufferBuilder, LOSY: Float) = builder.addFloat(39, LOSY, 0.0)
-        fun addLOSZ(builder: FlatBufferBuilder, LOSZ: Float) = builder.addFloat(40, LOSZ, 0.0)
-        fun addLOS_UNC(builder: FlatBufferBuilder, LOS_UNC: Float) = builder.addFloat(41, LOS_UNC, 0.0)
-        fun addLOSXVEL(builder: FlatBufferBuilder, LOSXVEL: Float) = builder.addFloat(42, LOSXVEL, 0.0)
-        fun addLOSYVEL(builder: FlatBufferBuilder, LOSYVEL: Float) = builder.addFloat(43, LOSYVEL, 0.0)
-        fun addLOSZVEL(builder: FlatBufferBuilder, LOSZVEL: Float) = builder.addFloat(44, LOSZVEL, 0.0)
-        fun addSENLAT(builder: FlatBufferBuilder, SENLAT: Float) = builder.addFloat(45, SENLAT, 0.0)
-        fun addSENLON(builder: FlatBufferBuilder, SENLON: Float) = builder.addFloat(46, SENLON, 0.0)
-        fun addSENALT(builder: FlatBufferBuilder, SENALT: Float) = builder.addFloat(47, SENALT, 0.0)
-        fun addSENX(builder: FlatBufferBuilder, SENX: Float) = builder.addFloat(48, SENX, 0.0)
-        fun addSENY(builder: FlatBufferBuilder, SENY: Float) = builder.addFloat(49, SENY, 0.0)
-        fun addSENZ(builder: FlatBufferBuilder, SENZ: Float) = builder.addFloat(50, SENZ, 0.0)
-        fun addFOV_COUNT(builder: FlatBufferBuilder, FOV_COUNT: Int) = builder.addInt(51, FOV_COUNT, 0)
-        fun addFOV_COUNT_UCTS(builder: FlatBufferBuilder, FOV_COUNT_UCTS: Int) = builder.addInt(52, FOV_COUNT_UCTS, 0)
-        fun addEXP_DURATION(builder: FlatBufferBuilder, EXP_DURATION: Float) = builder.addFloat(53, EXP_DURATION, 0.0)
-        fun addZEROPTD(builder: FlatBufferBuilder, ZEROPTD: Float) = builder.addFloat(54, ZEROPTD, 0.0)
-        fun addNET_OBJ_SIG(builder: FlatBufferBuilder, NET_OBJ_SIG: Float) = builder.addFloat(55, NET_OBJ_SIG, 0.0)
-        fun addNET_OBJ_SIG_UNC(builder: FlatBufferBuilder, NET_OBJ_SIG_UNC: Float) = builder.addFloat(56, NET_OBJ_SIG_UNC, 0.0)
-        fun addMAG(builder: FlatBufferBuilder, MAG: Float) = builder.addFloat(57, MAG, 0.0)
-        fun addMAG_UNC(builder: FlatBufferBuilder, MAG_UNC: Float) = builder.addFloat(58, MAG_UNC, 0.0)
-        fun addMAG_NORM_RANGE(builder: FlatBufferBuilder, MAG_NORM_RANGE: Float) = builder.addFloat(59, MAG_NORM_RANGE, 0.0)
-        fun addGEOLAT(builder: FlatBufferBuilder, GEOLAT: Float) = builder.addFloat(60, GEOLAT, 0.0)
-        fun addGEOLON(builder: FlatBufferBuilder, GEOLON: Float) = builder.addFloat(61, GEOLON, 0.0)
-        fun addGEOALT(builder: FlatBufferBuilder, GEOALT: Float) = builder.addFloat(62, GEOALT, 0.0)
-        fun addGEORANGE(builder: FlatBufferBuilder, GEORANGE: Float) = builder.addFloat(63, GEORANGE, 0.0)
-        fun addSKY_BKGRND(builder: FlatBufferBuilder, SKY_BKGRND: Float) = builder.addFloat(64, SKY_BKGRND, 0.0)
-        fun addPRIMARY_EXTINCTION(builder: FlatBufferBuilder, PRIMARY_EXTINCTION: Float) = builder.addFloat(65, PRIMARY_EXTINCTION, 0.0)
-        fun addPRIMARY_EXTINCTION_UNC(builder: FlatBufferBuilder, PRIMARY_EXTINCTION_UNC: Float) = builder.addFloat(66, PRIMARY_EXTINCTION_UNC, 0.0)
-        fun addSOLAR_PHASE_ANGLE(builder: FlatBufferBuilder, SOLAR_PHASE_ANGLE: Float) = builder.addFloat(67, SOLAR_PHASE_ANGLE, 0.0)
-        fun addSOLAR_EQ_PHASE_ANGLE(builder: FlatBufferBuilder, SOLAR_EQ_PHASE_ANGLE: Float) = builder.addFloat(68, SOLAR_EQ_PHASE_ANGLE, 0.0)
-        fun addSOLAR_DEC_ANGLE(builder: FlatBufferBuilder, SOLAR_DEC_ANGLE: Float) = builder.addFloat(69, SOLAR_DEC_ANGLE, 0.0)
-        fun addSHUTTER_DELAY(builder: FlatBufferBuilder, SHUTTER_DELAY: Float) = builder.addFloat(70, SHUTTER_DELAY, 0.0)
-        fun addTIMING_BIAS(builder: FlatBufferBuilder, TIMING_BIAS: Float) = builder.addFloat(71, TIMING_BIAS, 0.0)
-        fun addRAW_FILE_URI(builder: FlatBufferBuilder, RAW_FILE_URI: Int) = builder.addOffset(72, RAW_FILE_URI, 0)
-        fun addINTENSITY(builder: FlatBufferBuilder, INTENSITY: Float) = builder.addFloat(73, INTENSITY, 0.0)
-        fun addBG_INTENSITY(builder: FlatBufferBuilder, BG_INTENSITY: Float) = builder.addFloat(74, BG_INTENSITY, 0.0)
-        fun addDESCRIPTOR(builder: FlatBufferBuilder, DESCRIPTOR: Int) = builder.addOffset(75, DESCRIPTOR, 0)
-        fun addSOURCE(builder: FlatBufferBuilder, SOURCE: Int) = builder.addOffset(76, SOURCE, 0)
-        fun addORIGIN(builder: FlatBufferBuilder, ORIGIN: Int) = builder.addOffset(77, ORIGIN, 0)
-        fun addDATA_MODE(builder: FlatBufferBuilder, DATA_MODE: Byte) = builder.addByte(78, DATA_MODE, 0)
-        fun addCREATED_AT(builder: FlatBufferBuilder, CREATED_AT: Int) = builder.addOffset(79, CREATED_AT, 0)
-        fun addCREATED_BY(builder: FlatBufferBuilder, CREATED_BY: Int) = builder.addOffset(80, CREATED_BY, 0)
-        fun addREFERENCE_FRAME(builder: FlatBufferBuilder, REFERENCE_FRAME: Int) = builder.addOffset(81, REFERENCE_FRAME, 0)
-        fun addSEN_REFERENCE_FRAME(builder: FlatBufferBuilder, SEN_REFERENCE_FRAME: Int) = builder.addOffset(82, SEN_REFERENCE_FRAME, 0)
-        fun addUMBRA(builder: FlatBufferBuilder, UMBRA: Boolean) = builder.addBoolean(83, UMBRA, false)
-        fun addPENUMBRA(builder: FlatBufferBuilder, PENUMBRA: Boolean) = builder.addBoolean(84, PENUMBRA, false)
-        fun addORIG_NETWORK(builder: FlatBufferBuilder, ORIG_NETWORK: Int) = builder.addOffset(85, ORIG_NETWORK, 0)
-        fun addSOURCE_DL(builder: FlatBufferBuilder, SOURCE_DL: Int) = builder.addOffset(86, SOURCE_DL, 0)
-        fun addTYPE(builder: FlatBufferBuilder, TYPE: Byte) = builder.addByte(87, TYPE, 0)
-        fun addAZIMUTH_MEASURED(builder: FlatBufferBuilder, AZIMUTH_MEASURED: Boolean) = builder.addBoolean(88, AZIMUTH_MEASURED, false)
-        fun addELEVATION_MEASURED(builder: FlatBufferBuilder, ELEVATION_MEASURED: Boolean) = builder.addBoolean(89, ELEVATION_MEASURED, false)
-        fun addRANGE_MEASURED(builder: FlatBufferBuilder, RANGE_MEASURED: Boolean) = builder.addBoolean(90, RANGE_MEASURED, false)
-        fun addRANGERATE_MEASURED(builder: FlatBufferBuilder, RANGERATE_MEASURED: Boolean) = builder.addBoolean(91, RANGERATE_MEASURED, false)
-        fun addRA_MEASURED(builder: FlatBufferBuilder, RA_MEASURED: Boolean) = builder.addBoolean(92, RA_MEASURED, false)
-        fun addDECLINATION_MEASURED(builder: FlatBufferBuilder, DECLINATION_MEASURED: Boolean) = builder.addBoolean(93, DECLINATION_MEASURED, false)
-        fun addNIIRS(builder: FlatBufferBuilder, NIIRS: Float) = builder.addFloat(94, NIIRS, 0.0)
-        fun addMETERS_PER_PIXEL(builder: FlatBufferBuilder, METERS_PER_PIXEL: Float) = builder.addFloat(95, METERS_PER_PIXEL, 0.0)
-        fun addIMAGE_SNR(builder: FlatBufferBuilder, IMAGE_SNR: Float) = builder.addFloat(96, IMAGE_SNR, 0.0)
-        fun addIMAGE_BIT_DEPTH(builder: FlatBufferBuilder, IMAGE_BIT_DEPTH: Int) = builder.addInt(97, IMAGE_BIT_DEPTH, 0)
-        fun addIMAGE_WIDTH(builder: FlatBufferBuilder, IMAGE_WIDTH: Int) = builder.addInt(98, IMAGE_WIDTH, 0)
-        fun addIMAGE_HEIGHT(builder: FlatBufferBuilder, IMAGE_HEIGHT: Int) = builder.addInt(99, IMAGE_HEIGHT, 0)
-        fun addIMAGE_COMPRESSION(builder: FlatBufferBuilder, IMAGE_COMPRESSION: Int) = builder.addOffset(100, IMAGE_COMPRESSION, 0)
-        fun addIMAGE_COMPRESSION_RATIO(builder: FlatBufferBuilder, IMAGE_COMPRESSION_RATIO: Float) = builder.addFloat(101, IMAGE_COMPRESSION_RATIO, 0.0)
-        fun addPROCESSED_IMAGE_URI(builder: FlatBufferBuilder, PROCESSED_IMAGE_URI: Int) = builder.addOffset(102, PROCESSED_IMAGE_URI, 0)
-        fun addIMAGE_AUTO_ENHANCED(builder: FlatBufferBuilder, IMAGE_AUTO_ENHANCED: Boolean) = builder.addBoolean(103, IMAGE_AUTO_ENHANCED, false)
-        fun addMULTI_FRAME_STACKED(builder: FlatBufferBuilder, MULTI_FRAME_STACKED: Boolean) = builder.addBoolean(104, MULTI_FRAME_STACKED, false)
-        fun addSYNTHETIC_TRACKING_USED(builder: FlatBufferBuilder, SYNTHETIC_TRACKING_USED: Boolean) = builder.addBoolean(105, SYNTHETIC_TRACKING_USED, false)
-        fun addIMAGE_SHARPNESS(builder: FlatBufferBuilder, IMAGE_SHARPNESS: Float) = builder.addFloat(106, IMAGE_SHARPNESS, 0.0)
-        fun addIMAGE_NOISE_STDDEV(builder: FlatBufferBuilder, IMAGE_NOISE_STDDEV: Float) = builder.addFloat(107, IMAGE_NOISE_STDDEV, 0.0)
-        fun addIMAGE_CONTRAST(builder: FlatBufferBuilder, IMAGE_CONTRAST: Float) = builder.addFloat(108, IMAGE_CONTRAST, 0.0)
-        fun addIMAGE_DYNAMIC_RANGE(builder: FlatBufferBuilder, IMAGE_DYNAMIC_RANGE: Float) = builder.addFloat(109, IMAGE_DYNAMIC_RANGE, 0.0)
-        fun addIMAGE_ENTROPY(builder: FlatBufferBuilder, IMAGE_ENTROPY: Float) = builder.addFloat(110, IMAGE_ENTROPY, 0.0)
-        fun addBACKGROUND_UNIFORMITY(builder: FlatBufferBuilder, BACKGROUND_UNIFORMITY: Float) = builder.addFloat(111, BACKGROUND_UNIFORMITY, 0.0)
-        fun addBACKGROUND_MEAN_LEVEL(builder: FlatBufferBuilder, BACKGROUND_MEAN_LEVEL: Float) = builder.addFloat(112, BACKGROUND_MEAN_LEVEL, 0.0)
-        fun addSATURATED_PIXEL_PERCENT(builder: FlatBufferBuilder, SATURATED_PIXEL_PERCENT: Float) = builder.addFloat(113, SATURATED_PIXEL_PERCENT, 0.0)
-        fun addDEAD_PIXEL_PERCENT(builder: FlatBufferBuilder, DEAD_PIXEL_PERCENT: Float) = builder.addFloat(114, DEAD_PIXEL_PERCENT, 0.0)
-        fun addPSF_FWHM(builder: FlatBufferBuilder, PSF_FWHM: Float) = builder.addFloat(115, PSF_FWHM, 0.0)
-        fun addCLOUD_COVER_PERCENT(builder: FlatBufferBuilder, CLOUD_COVER_PERCENT: Float) = builder.addFloat(116, CLOUD_COVER_PERCENT, 0.0)
-        fun addCLOUD_DETECTION_CONFIDENCE(builder: FlatBufferBuilder, CLOUD_DETECTION_CONFIDENCE: Float) = builder.addFloat(117, CLOUD_DETECTION_CONFIDENCE, 0.0)
-        fun addHAZE_PERCENT(builder: FlatBufferBuilder, HAZE_PERCENT: Float) = builder.addFloat(118, HAZE_PERCENT, 0.0)
-        fun addAEROSOL_OPTICAL_THICKNESS(builder: FlatBufferBuilder, AEROSOL_OPTICAL_THICKNESS: Float) = builder.addFloat(119, AEROSOL_OPTICAL_THICKNESS, 0.0)
-        fun addWATER_VAPOR_CONTENT(builder: FlatBufferBuilder, WATER_VAPOR_CONTENT: Float) = builder.addFloat(120, WATER_VAPOR_CONTENT, 0.0)
-        fun addSUN_ELEVATION(builder: FlatBufferBuilder, SUN_ELEVATION: Float) = builder.addFloat(121, SUN_ELEVATION, 0.0)
-        fun addSUN_AZIMUTH(builder: FlatBufferBuilder, SUN_AZIMUTH: Float) = builder.addFloat(122, SUN_AZIMUTH, 0.0)
-        fun addVIEW_ZENITH_ANGLE(builder: FlatBufferBuilder, VIEW_ZENITH_ANGLE: Float) = builder.addFloat(123, VIEW_ZENITH_ANGLE, 0.0)
-        fun addVIEW_AZIMUTH_ANGLE(builder: FlatBufferBuilder, VIEW_AZIMUTH_ANGLE: Float) = builder.addFloat(124, VIEW_AZIMUTH_ANGLE, 0.0)
-        fun addOFF_NADIR_ANGLE(builder: FlatBufferBuilder, OFF_NADIR_ANGLE: Float) = builder.addFloat(125, OFF_NADIR_ANGLE, 0.0)
-        fun addSWATH_WIDTH_KM(builder: FlatBufferBuilder, SWATH_WIDTH_KM: Float) = builder.addFloat(126, SWATH_WIDTH_KM, 0.0)
-        fun addMEAN_TERRAIN_ELEVATION(builder: FlatBufferBuilder, MEAN_TERRAIN_ELEVATION: Float) = builder.addFloat(127, MEAN_TERRAIN_ELEVATION, 0.0)
-        fun addTERRAIN_ELEVATION_STDDEV(builder: FlatBufferBuilder, TERRAIN_ELEVATION_STDDEV: Float) = builder.addFloat(128, TERRAIN_ELEVATION_STDDEV, 0.0)
-        fun addSHADOW_COVER_PERCENT(builder: FlatBufferBuilder, SHADOW_COVER_PERCENT: Float) = builder.addFloat(129, SHADOW_COVER_PERCENT, 0.0)
-        fun addSUNGLINT_PRESENT(builder: FlatBufferBuilder, SUNGLINT_PRESENT: Boolean) = builder.addBoolean(130, SUNGLINT_PRESENT, false)
-        fun addSUNGLINT_PERCENT(builder: FlatBufferBuilder, SUNGLINT_PERCENT: Float) = builder.addFloat(131, SUNGLINT_PERCENT, 0.0)
-        fun addSNOW_ICE_COVER_PERCENT(builder: FlatBufferBuilder, SNOW_ICE_COVER_PERCENT: Float) = builder.addFloat(132, SNOW_ICE_COVER_PERCENT, 0.0)
-        fun addVALID_DATA_AREA_KM2(builder: FlatBufferBuilder, VALID_DATA_AREA_KM2: Float) = builder.addFloat(133, VALID_DATA_AREA_KM2, 0.0)
+        fun addID(builder: FlatBufferBuilder, id: Int) = builder.addOffset(0, id, 0)
+        fun addCLASSIFICATION(builder: FlatBufferBuilder, classification: Int) = builder.addOffset(1, classification, 0)
+        fun addOBTIME(builder: FlatBufferBuilder, obTime: Int) = builder.addOffset(2, obTime, 0)
+        fun addCORRQUALITY(builder: FlatBufferBuilder, corrQuality: Float) = builder.addFloat(3, corrQuality, 0.0)
+        fun addIDONORBIT(builder: FlatBufferBuilder, idOnOrbit: Int) = builder.addOffset(4, idOnOrbit, 0)
+        fun addSENSORID(builder: FlatBufferBuilder, sensorId: Int) = builder.addOffset(5, sensorId, 0)
+        fun addCOLLECTMETHOD(builder: FlatBufferBuilder, collectMethod: Byte) = builder.addByte(6, collectMethod, 0)
+        fun addNORADCATID(builder: FlatBufferBuilder, noradCatId: Int) = builder.addInt(7, noradCatId, 0)
+        fun addTASKID(builder: FlatBufferBuilder, taskId: Int) = builder.addOffset(8, taskId, 0)
+        fun addTRANSACTIONID(builder: FlatBufferBuilder, transactionId: Int) = builder.addOffset(9, transactionId, 0)
+        fun addIMAGESETID(builder: FlatBufferBuilder, imageSetId: Int) = builder.addOffset(10, imageSetId, 0)
+        fun addIMAGESETLENGTH(builder: FlatBufferBuilder, imageSetLength: Int) = builder.addInt(11, imageSetLength, 0)
+        fun addSEQUENCEID(builder: FlatBufferBuilder, sequenceId: Int) = builder.addInt(12, sequenceId, 0)
+        fun addOBPOSITION(builder: FlatBufferBuilder, obPosition: Byte) = builder.addByte(13, obPosition, 0)
+        fun addORIGOBJECTID(builder: FlatBufferBuilder, origObjectId: Int) = builder.addOffset(14, origObjectId, 0)
+        fun addORIGSENSORID(builder: FlatBufferBuilder, origSensorId: Int) = builder.addOffset(15, origSensorId, 0)
+        fun addUCT(builder: FlatBufferBuilder, uct: Boolean) = builder.addBoolean(16, uct, false)
+        fun addAZIMUTH(builder: FlatBufferBuilder, azimuth: Float) = builder.addFloat(17, azimuth, 0.0)
+        fun addAZIMUTHUNC(builder: FlatBufferBuilder, azimuthUnc: Float) = builder.addFloat(18, azimuthUnc, 0.0)
+        fun addAZIMUTHBIAS(builder: FlatBufferBuilder, azimuthBias: Float) = builder.addFloat(19, azimuthBias, 0.0)
+        fun addAZIMUTHRATE(builder: FlatBufferBuilder, azimuthRate: Float) = builder.addFloat(20, azimuthRate, 0.0)
+        fun addELEVATION(builder: FlatBufferBuilder, elevation: Float) = builder.addFloat(21, elevation, 0.0)
+        fun addELEVATIONUNC(builder: FlatBufferBuilder, elevationUnc: Float) = builder.addFloat(22, elevationUnc, 0.0)
+        fun addELEVATIONBIAS(builder: FlatBufferBuilder, elevationBias: Float) = builder.addFloat(23, elevationBias, 0.0)
+        fun addELEVATIONRATE(builder: FlatBufferBuilder, elevationRate: Float) = builder.addFloat(24, elevationRate, 0.0)
+        fun addRANGE(builder: FlatBufferBuilder, range: Float) = builder.addFloat(25, range, 0.0)
+        fun addRANGEUNC(builder: FlatBufferBuilder, rangeUnc: Float) = builder.addFloat(26, rangeUnc, 0.0)
+        fun addRANGEBIAS(builder: FlatBufferBuilder, rangeBias: Float) = builder.addFloat(27, rangeBias, 0.0)
+        fun addRANGERATE(builder: FlatBufferBuilder, rangeRate: Float) = builder.addFloat(28, rangeRate, 0.0)
+        fun addRANGERATEUNC(builder: FlatBufferBuilder, rangeRateUnc: Float) = builder.addFloat(29, rangeRateUnc, 0.0)
+        fun addRA(builder: FlatBufferBuilder, ra: Float) = builder.addFloat(30, ra, 0.0)
+        fun addRARATE(builder: FlatBufferBuilder, raRate: Float) = builder.addFloat(31, raRate, 0.0)
+        fun addRAUNC(builder: FlatBufferBuilder, raUnc: Float) = builder.addFloat(32, raUnc, 0.0)
+        fun addRABIAS(builder: FlatBufferBuilder, raBias: Float) = builder.addFloat(33, raBias, 0.0)
+        fun addDECLINATION(builder: FlatBufferBuilder, declination: Float) = builder.addFloat(34, declination, 0.0)
+        fun addDECLINATIONRATE(builder: FlatBufferBuilder, declinationRate: Float) = builder.addFloat(35, declinationRate, 0.0)
+        fun addDECLINATIONUNC(builder: FlatBufferBuilder, declinationUnc: Float) = builder.addFloat(36, declinationUnc, 0.0)
+        fun addDECLINATIONBIAS(builder: FlatBufferBuilder, declinationBias: Float) = builder.addFloat(37, declinationBias, 0.0)
+        fun addLOSX(builder: FlatBufferBuilder, losx: Float) = builder.addFloat(38, losx, 0.0)
+        fun addLOSY(builder: FlatBufferBuilder, losy: Float) = builder.addFloat(39, losy, 0.0)
+        fun addLOSZ(builder: FlatBufferBuilder, losz: Float) = builder.addFloat(40, losz, 0.0)
+        fun addLOSUNC(builder: FlatBufferBuilder, losUnc: Float) = builder.addFloat(41, losUnc, 0.0)
+        fun addLOSXVEL(builder: FlatBufferBuilder, losxvel: Float) = builder.addFloat(42, losxvel, 0.0)
+        fun addLOSYVEL(builder: FlatBufferBuilder, losyvel: Float) = builder.addFloat(43, losyvel, 0.0)
+        fun addLOSZVEL(builder: FlatBufferBuilder, loszvel: Float) = builder.addFloat(44, loszvel, 0.0)
+        fun addSENLAT(builder: FlatBufferBuilder, senlat: Float) = builder.addFloat(45, senlat, 0.0)
+        fun addSENLON(builder: FlatBufferBuilder, senlon: Float) = builder.addFloat(46, senlon, 0.0)
+        fun addSENALT(builder: FlatBufferBuilder, senalt: Float) = builder.addFloat(47, senalt, 0.0)
+        fun addSENX(builder: FlatBufferBuilder, senx: Float) = builder.addFloat(48, senx, 0.0)
+        fun addSENY(builder: FlatBufferBuilder, seny: Float) = builder.addFloat(49, seny, 0.0)
+        fun addSENZ(builder: FlatBufferBuilder, senz: Float) = builder.addFloat(50, senz, 0.0)
+        fun addFOVCOUNT(builder: FlatBufferBuilder, fovCount: Int) = builder.addInt(51, fovCount, 0)
+        fun addFOVCOUNTUCTS(builder: FlatBufferBuilder, fovCountUcts: Int) = builder.addInt(52, fovCountUcts, 0)
+        fun addEXPDURATION(builder: FlatBufferBuilder, expDuration: Float) = builder.addFloat(53, expDuration, 0.0)
+        fun addZEROPTD(builder: FlatBufferBuilder, zeroptd: Float) = builder.addFloat(54, zeroptd, 0.0)
+        fun addNETOBJSIG(builder: FlatBufferBuilder, netObjSig: Float) = builder.addFloat(55, netObjSig, 0.0)
+        fun addNETOBJSIGUNC(builder: FlatBufferBuilder, netObjSigUnc: Float) = builder.addFloat(56, netObjSigUnc, 0.0)
+        fun addMAG(builder: FlatBufferBuilder, mag: Float) = builder.addFloat(57, mag, 0.0)
+        fun addMAGUNC(builder: FlatBufferBuilder, magUnc: Float) = builder.addFloat(58, magUnc, 0.0)
+        fun addMAGNORMRANGE(builder: FlatBufferBuilder, magNormRange: Float) = builder.addFloat(59, magNormRange, 0.0)
+        fun addGEOLAT(builder: FlatBufferBuilder, geolat: Float) = builder.addFloat(60, geolat, 0.0)
+        fun addGEOLON(builder: FlatBufferBuilder, geolon: Float) = builder.addFloat(61, geolon, 0.0)
+        fun addGEOALT(builder: FlatBufferBuilder, geoalt: Float) = builder.addFloat(62, geoalt, 0.0)
+        fun addGEORANGE(builder: FlatBufferBuilder, georange: Float) = builder.addFloat(63, georange, 0.0)
+        fun addSKYBKGRND(builder: FlatBufferBuilder, skyBkgrnd: Float) = builder.addFloat(64, skyBkgrnd, 0.0)
+        fun addPRIMARYEXTINCTION(builder: FlatBufferBuilder, primaryExtinction: Float) = builder.addFloat(65, primaryExtinction, 0.0)
+        fun addPRIMARYEXTINCTIONUNC(builder: FlatBufferBuilder, primaryExtinctionUnc: Float) = builder.addFloat(66, primaryExtinctionUnc, 0.0)
+        fun addSOLARPHASEANGLE(builder: FlatBufferBuilder, solarPhaseAngle: Float) = builder.addFloat(67, solarPhaseAngle, 0.0)
+        fun addSOLAREQPHASEANGLE(builder: FlatBufferBuilder, solarEqPhaseAngle: Float) = builder.addFloat(68, solarEqPhaseAngle, 0.0)
+        fun addSOLARDECANGLE(builder: FlatBufferBuilder, solarDecAngle: Float) = builder.addFloat(69, solarDecAngle, 0.0)
+        fun addSHUTTERDELAY(builder: FlatBufferBuilder, shutterDelay: Float) = builder.addFloat(70, shutterDelay, 0.0)
+        fun addTIMINGBIAS(builder: FlatBufferBuilder, timingBias: Float) = builder.addFloat(71, timingBias, 0.0)
+        fun addRAWFILEURI(builder: FlatBufferBuilder, rawFileUri: Int) = builder.addOffset(72, rawFileUri, 0)
+        fun addINTENSITY(builder: FlatBufferBuilder, intensity: Float) = builder.addFloat(73, intensity, 0.0)
+        fun addBGINTENSITY(builder: FlatBufferBuilder, bgIntensity: Float) = builder.addFloat(74, bgIntensity, 0.0)
+        fun addDESCRIPTOR(builder: FlatBufferBuilder, descriptor: Int) = builder.addOffset(75, descriptor, 0)
+        fun addSOURCE(builder: FlatBufferBuilder, source: Int) = builder.addOffset(76, source, 0)
+        fun addORIGIN(builder: FlatBufferBuilder, origin: Int) = builder.addOffset(77, origin, 0)
+        fun addDATAMODE(builder: FlatBufferBuilder, dataMode: Byte) = builder.addByte(78, dataMode, 0)
+        fun addCREATEDAT(builder: FlatBufferBuilder, createdAt: Int) = builder.addOffset(79, createdAt, 0)
+        fun addCREATEDBY(builder: FlatBufferBuilder, createdBy: Int) = builder.addOffset(80, createdBy, 0)
+        fun addREFERENCEFRAME(builder: FlatBufferBuilder, referenceFrame: Int) = builder.addOffset(81, referenceFrame, 0)
+        fun addSENREFERENCEFRAME(builder: FlatBufferBuilder, senReferenceFrame: Int) = builder.addOffset(82, senReferenceFrame, 0)
+        fun addUMBRA(builder: FlatBufferBuilder, umbra: Boolean) = builder.addBoolean(83, umbra, false)
+        fun addPENUMBRA(builder: FlatBufferBuilder, penumbra: Boolean) = builder.addBoolean(84, penumbra, false)
+        fun addORIGNETWORK(builder: FlatBufferBuilder, origNetwork: Int) = builder.addOffset(85, origNetwork, 0)
+        fun addSOURCEDL(builder: FlatBufferBuilder, sourceDl: Int) = builder.addOffset(86, sourceDl, 0)
+        fun addTYPE(builder: FlatBufferBuilder, type: Byte) = builder.addByte(87, type, 0)
+        fun addAZIMUTHMEASURED(builder: FlatBufferBuilder, azimuthMeasured: Boolean) = builder.addBoolean(88, azimuthMeasured, false)
+        fun addELEVATIONMEASURED(builder: FlatBufferBuilder, elevationMeasured: Boolean) = builder.addBoolean(89, elevationMeasured, false)
+        fun addRANGEMEASURED(builder: FlatBufferBuilder, rangeMeasured: Boolean) = builder.addBoolean(90, rangeMeasured, false)
+        fun addRANGERATEMEASURED(builder: FlatBufferBuilder, rangerateMeasured: Boolean) = builder.addBoolean(91, rangerateMeasured, false)
+        fun addRAMEASURED(builder: FlatBufferBuilder, raMeasured: Boolean) = builder.addBoolean(92, raMeasured, false)
+        fun addDECLINATIONMEASURED(builder: FlatBufferBuilder, declinationMeasured: Boolean) = builder.addBoolean(93, declinationMeasured, false)
+        fun addNIIRS(builder: FlatBufferBuilder, niirs: Float) = builder.addFloat(94, niirs, 0.0)
+        fun addMETERSPERPIXEL(builder: FlatBufferBuilder, metersPerPixel: Float) = builder.addFloat(95, metersPerPixel, 0.0)
+        fun addIMAGESNR(builder: FlatBufferBuilder, imageSnr: Float) = builder.addFloat(96, imageSnr, 0.0)
+        fun addIMAGEBITDEPTH(builder: FlatBufferBuilder, imageBitDepth: Int) = builder.addInt(97, imageBitDepth, 0)
+        fun addIMAGEWIDTH(builder: FlatBufferBuilder, imageWidth: Int) = builder.addInt(98, imageWidth, 0)
+        fun addIMAGEHEIGHT(builder: FlatBufferBuilder, imageHeight: Int) = builder.addInt(99, imageHeight, 0)
+        fun addIMAGECOMPRESSION(builder: FlatBufferBuilder, imageCompression: Int) = builder.addOffset(100, imageCompression, 0)
+        fun addIMAGECOMPRESSIONRATIO(builder: FlatBufferBuilder, imageCompressionRatio: Float) = builder.addFloat(101, imageCompressionRatio, 0.0)
+        fun addPROCESSEDIMAGEURI(builder: FlatBufferBuilder, processedImageUri: Int) = builder.addOffset(102, processedImageUri, 0)
+        fun addIMAGEAUTOENHANCED(builder: FlatBufferBuilder, imageAutoEnhanced: Boolean) = builder.addBoolean(103, imageAutoEnhanced, false)
+        fun addMULTIFRAMESTACKED(builder: FlatBufferBuilder, multiFrameStacked: Boolean) = builder.addBoolean(104, multiFrameStacked, false)
+        fun addSYNTHETICTRACKINGUSED(builder: FlatBufferBuilder, syntheticTrackingUsed: Boolean) = builder.addBoolean(105, syntheticTrackingUsed, false)
+        fun addIMAGESHARPNESS(builder: FlatBufferBuilder, imageSharpness: Float) = builder.addFloat(106, imageSharpness, 0.0)
+        fun addIMAGENOISESTDDEV(builder: FlatBufferBuilder, imageNoiseStddev: Float) = builder.addFloat(107, imageNoiseStddev, 0.0)
+        fun addIMAGECONTRAST(builder: FlatBufferBuilder, imageContrast: Float) = builder.addFloat(108, imageContrast, 0.0)
+        fun addIMAGEDYNAMICRANGE(builder: FlatBufferBuilder, imageDynamicRange: Float) = builder.addFloat(109, imageDynamicRange, 0.0)
+        fun addIMAGEENTROPY(builder: FlatBufferBuilder, imageEntropy: Float) = builder.addFloat(110, imageEntropy, 0.0)
+        fun addBACKGROUNDUNIFORMITY(builder: FlatBufferBuilder, backgroundUniformity: Float) = builder.addFloat(111, backgroundUniformity, 0.0)
+        fun addBACKGROUNDMEANLEVEL(builder: FlatBufferBuilder, backgroundMeanLevel: Float) = builder.addFloat(112, backgroundMeanLevel, 0.0)
+        fun addSATURATEDPIXELPERCENT(builder: FlatBufferBuilder, saturatedPixelPercent: Float) = builder.addFloat(113, saturatedPixelPercent, 0.0)
+        fun addDEADPIXELPERCENT(builder: FlatBufferBuilder, deadPixelPercent: Float) = builder.addFloat(114, deadPixelPercent, 0.0)
+        fun addPSFFWHM(builder: FlatBufferBuilder, psfFwhm: Float) = builder.addFloat(115, psfFwhm, 0.0)
+        fun addCLOUDCOVERPERCENT(builder: FlatBufferBuilder, cloudCoverPercent: Float) = builder.addFloat(116, cloudCoverPercent, 0.0)
+        fun addCLOUDDETECTIONCONFIDENCE(builder: FlatBufferBuilder, cloudDetectionConfidence: Float) = builder.addFloat(117, cloudDetectionConfidence, 0.0)
+        fun addHAZEPERCENT(builder: FlatBufferBuilder, hazePercent: Float) = builder.addFloat(118, hazePercent, 0.0)
+        fun addAEROSOLOPTICALTHICKNESS(builder: FlatBufferBuilder, aerosolOpticalThickness: Float) = builder.addFloat(119, aerosolOpticalThickness, 0.0)
+        fun addWATERVAPORCONTENT(builder: FlatBufferBuilder, waterVaporContent: Float) = builder.addFloat(120, waterVaporContent, 0.0)
+        fun addSUNELEVATION(builder: FlatBufferBuilder, sunElevation: Float) = builder.addFloat(121, sunElevation, 0.0)
+        fun addSUNAZIMUTH(builder: FlatBufferBuilder, sunAzimuth: Float) = builder.addFloat(122, sunAzimuth, 0.0)
+        fun addVIEWZENITHANGLE(builder: FlatBufferBuilder, viewZenithAngle: Float) = builder.addFloat(123, viewZenithAngle, 0.0)
+        fun addVIEWAZIMUTHANGLE(builder: FlatBufferBuilder, viewAzimuthAngle: Float) = builder.addFloat(124, viewAzimuthAngle, 0.0)
+        fun addOFFNADIRANGLE(builder: FlatBufferBuilder, offNadirAngle: Float) = builder.addFloat(125, offNadirAngle, 0.0)
+        fun addSWATHWIDTHKM(builder: FlatBufferBuilder, swathWidthKm: Float) = builder.addFloat(126, swathWidthKm, 0.0)
+        fun addMEANTERRAINELEVATION(builder: FlatBufferBuilder, meanTerrainElevation: Float) = builder.addFloat(127, meanTerrainElevation, 0.0)
+        fun addTERRAINELEVATIONSTDDEV(builder: FlatBufferBuilder, terrainElevationStddev: Float) = builder.addFloat(128, terrainElevationStddev, 0.0)
+        fun addSHADOWCOVERPERCENT(builder: FlatBufferBuilder, shadowCoverPercent: Float) = builder.addFloat(129, shadowCoverPercent, 0.0)
+        fun addSUNGLINTPRESENT(builder: FlatBufferBuilder, sunglintPresent: Boolean) = builder.addBoolean(130, sunglintPresent, false)
+        fun addSUNGLINTPERCENT(builder: FlatBufferBuilder, sunglintPercent: Float) = builder.addFloat(131, sunglintPercent, 0.0)
+        fun addSNOWICECOVERPERCENT(builder: FlatBufferBuilder, snowIceCoverPercent: Float) = builder.addFloat(132, snowIceCoverPercent, 0.0)
+        fun addVALIDDATAAREAKM2(builder: FlatBufferBuilder, validDataAreaKm2: Float) = builder.addFloat(133, validDataAreaKm2, 0.0)
         fun endEOO(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

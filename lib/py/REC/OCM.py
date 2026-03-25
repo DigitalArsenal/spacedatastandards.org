@@ -2,4 +2,705 @@
 
 # namespace: 
 
-# NOTE OCM.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Orbit Comprehensive Message
+class OCM(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = OCM()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsOCM(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def OCMBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x4F\x43\x4D", size_prefixed=size_prefixed)
+
+    # OCM
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Header section of the OCM.
+    # OCM
+    def HEADER(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from Header import Header
+            obj = Header()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Metadata section of the OCM.
+    # OCM
+    def METADATA(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from Metadata import Metadata
+            obj = Metadata()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Trajectory state representation type.
+    # Determines how orbit state data is parameterized in this message.
+    # For CARTESIAN_PV/CARTESIAN_PVA, use STATE_DATA array.
+    # For POLYNOMIAL_POS/POLYNOMIAL_OE, use the corresponding polynomial record arrays.
+    # OCM
+    def TRAJ_TYPE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # Legacy trajectory type string for backward compatibility and extended types
+    # (e.g., "PROPAGATED", "ESTIMATED", "FILTERED").
+    # OCM
+    def TRAJ_TYPE_DESCRIPTION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Time interval between state vectors in seconds (required for time-series data).
+    # OCM
+    def STATE_STEP_SIZE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Number of components per state vector.
+    # 6 = position + velocity (X, Y, Z, X_DOT, Y_DOT, Z_DOT)
+    # 9 = position + velocity + acceleration (adds X_DDOT, Y_DDOT, Z_DDOT)
+    # OCM
+    def STATE_VECTOR_SIZE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
+        return 6
+
+    # State data as row-major array of doubles.
+    # Layout: [X0, Y0, Z0, X_DOT0, Y_DOT0, Z_DOT0, X1, Y1, Z1, ...]
+    # Time reconstruction: epoch[i] = METADATA.START_TIME + (i * STATE_STEP_SIZE)
+    # Length must be divisible by STATE_VECTOR_SIZE.
+    # OCM
+    def STATE_DATA(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # OCM
+    def STATE_DATAAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
+
+    # OCM
+    def STATE_DATALength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # OCM
+    def STATE_DATAIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        return o == 0
+
+    # Covariance data as flat array (21 elements per epoch for 6x6 lower triangular).
+    # Time alignment matches STATE_DATA epochs.
+    # OCM
+    def COVARIANCE_DATA(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # OCM
+    def COVARIANCE_DATAAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
+
+    # OCM
+    def COVARIANCE_DATALength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # OCM
+    def COVARIANCE_DATAIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        return o == 0
+
+    # Polynomial position records.
+    # Used when TRAJ_TYPE is POLYNOMIAL_POS. Each record covers a time segment
+    # with polynomial coefficients for X, Y, Z position (and optionally velocity).
+    # See PPE schema for record structure and evaluation procedure.
+    # OCM
+    def POLYNOMIAL_POSITION_RECORDS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from PPEPositionRecord import PPEPositionRecord
+            obj = PPEPositionRecord()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # OCM
+    def POLYNOMIAL_POSITION_RECORDSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # OCM
+    def POLYNOMIAL_POSITION_RECORDSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        return o == 0
+
+    # Polynomial orbital element records.
+    # Used when TRAJ_TYPE is POLYNOMIAL_OE. Each record covers a time segment
+    # with polynomial coefficients for classical orbital elements.
+    # See PPE schema for record structure and evaluation procedure.
+    # OCM
+    def POLYNOMIAL_OE_RECORDS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from PPEOrbitalElementRecord import PPEOrbitalElementRecord
+            obj = PPEOrbitalElementRecord()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # OCM
+    def POLYNOMIAL_OE_RECORDSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # OCM
+    def POLYNOMIAL_OE_RECORDSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        return o == 0
+
+    # Physical properties of the space object.
+    # OCM
+    def PHYSICAL_PROPERTIES(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from PhysicalProperties import PhysicalProperties
+            obj = PhysicalProperties()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Maneuver data.
+    # OCM
+    def MANEUVER_DATA(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from Maneuver import Maneuver
+            obj = Maneuver()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # OCM
+    def MANEUVER_DATALength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # OCM
+    def MANEUVER_DATAIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        return o == 0
+
+    # Perturbations parameters used.
+    # OCM
+    def PERTURBATIONS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from Perturbations import Perturbations
+            obj = Perturbations()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Orbit determination data.
+    # OCM
+    def ORBIT_DETERMINATION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from OrbitDetermination import OrbitDetermination
+            obj = OrbitDetermination()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # User-defined parameters and supplemental comments.
+    # OCM
+    def USER_DEFINED_PARAMETERS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from UserDefinedParameters import UserDefinedParameters
+            obj = UserDefinedParameters()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # OCM
+    def USER_DEFINED_PARAMETERSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # OCM
+    def USER_DEFINED_PARAMETERSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        return o == 0
+
+def OCMStart(builder):
+    builder.StartObject(15)
+
+def Start(builder):
+    OCMStart(builder)
+
+def OCMAddHEADER(builder, HEADER):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(HEADER), 0)
+
+def AddHEADER(builder, HEADER):
+    OCMAddHEADER(builder, HEADER)
+
+def OCMAddMETADATA(builder, METADATA):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(METADATA), 0)
+
+def AddMETADATA(builder, METADATA):
+    OCMAddMETADATA(builder, METADATA)
+
+def OCMAddTRAJ_TYPE(builder, TRAJ_TYPE):
+    builder.PrependInt8Slot(2, TRAJ_TYPE, 0)
+
+def AddTRAJ_TYPE(builder, TRAJ_TYPE):
+    OCMAddTRAJ_TYPE(builder, TRAJ_TYPE)
+
+def OCMAddTRAJ_TYPE_DESCRIPTION(builder, TRAJ_TYPE_DESCRIPTION):
+    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(TRAJ_TYPE_DESCRIPTION), 0)
+
+def AddTRAJ_TYPE_DESCRIPTION(builder, TRAJ_TYPE_DESCRIPTION):
+    OCMAddTRAJ_TYPE_DESCRIPTION(builder, TRAJ_TYPE_DESCRIPTION)
+
+def OCMAddSTATE_STEP_SIZE(builder, STATE_STEP_SIZE):
+    builder.PrependFloat64Slot(4, STATE_STEP_SIZE, 0.0)
+
+def AddSTATE_STEP_SIZE(builder, STATE_STEP_SIZE):
+    OCMAddSTATE_STEP_SIZE(builder, STATE_STEP_SIZE)
+
+def OCMAddSTATE_VECTOR_SIZE(builder, STATE_VECTOR_SIZE):
+    builder.PrependUint8Slot(5, STATE_VECTOR_SIZE, 6)
+
+def AddSTATE_VECTOR_SIZE(builder, STATE_VECTOR_SIZE):
+    OCMAddSTATE_VECTOR_SIZE(builder, STATE_VECTOR_SIZE)
+
+def OCMAddSTATE_DATA(builder, STATE_DATA):
+    builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(STATE_DATA), 0)
+
+def AddSTATE_DATA(builder, STATE_DATA):
+    OCMAddSTATE_DATA(builder, STATE_DATA)
+
+def OCMStartSTATE_DATAVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
+def StartSTATE_DATAVector(builder, numElems):
+    return OCMStartSTATE_DATAVector(builder, numElems)
+
+def OCMCreateSTATE_DATAVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateSTATE_DATAVector(builder, data):
+    OCMCreateSTATE_DATAVector(builder, data)
+
+def OCMAddCOVARIANCE_DATA(builder, COVARIANCE_DATA):
+    builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(COVARIANCE_DATA), 0)
+
+def AddCOVARIANCE_DATA(builder, COVARIANCE_DATA):
+    OCMAddCOVARIANCE_DATA(builder, COVARIANCE_DATA)
+
+def OCMStartCOVARIANCE_DATAVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
+def StartCOVARIANCE_DATAVector(builder, numElems):
+    return OCMStartCOVARIANCE_DATAVector(builder, numElems)
+
+def OCMCreateCOVARIANCE_DATAVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateCOVARIANCE_DATAVector(builder, data):
+    OCMCreateCOVARIANCE_DATAVector(builder, data)
+
+def OCMAddPOLYNOMIAL_POSITION_RECORDS(builder, POLYNOMIAL_POSITION_RECORDS):
+    builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(POLYNOMIAL_POSITION_RECORDS), 0)
+
+def AddPOLYNOMIAL_POSITION_RECORDS(builder, POLYNOMIAL_POSITION_RECORDS):
+    OCMAddPOLYNOMIAL_POSITION_RECORDS(builder, POLYNOMIAL_POSITION_RECORDS)
+
+def OCMStartPOLYNOMIAL_POSITION_RECORDSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartPOLYNOMIAL_POSITION_RECORDSVector(builder, numElems):
+    return OCMStartPOLYNOMIAL_POSITION_RECORDSVector(builder, numElems)
+
+def OCMCreatePOLYNOMIAL_POSITION_RECORDSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreatePOLYNOMIAL_POSITION_RECORDSVector(builder, data):
+    OCMCreatePOLYNOMIAL_POSITION_RECORDSVector(builder, data)
+
+def OCMAddPOLYNOMIAL_OE_RECORDS(builder, POLYNOMIAL_OE_RECORDS):
+    builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(POLYNOMIAL_OE_RECORDS), 0)
+
+def AddPOLYNOMIAL_OE_RECORDS(builder, POLYNOMIAL_OE_RECORDS):
+    OCMAddPOLYNOMIAL_OE_RECORDS(builder, POLYNOMIAL_OE_RECORDS)
+
+def OCMStartPOLYNOMIAL_OE_RECORDSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartPOLYNOMIAL_OE_RECORDSVector(builder, numElems):
+    return OCMStartPOLYNOMIAL_OE_RECORDSVector(builder, numElems)
+
+def OCMCreatePOLYNOMIAL_OE_RECORDSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreatePOLYNOMIAL_OE_RECORDSVector(builder, data):
+    OCMCreatePOLYNOMIAL_OE_RECORDSVector(builder, data)
+
+def OCMAddPHYSICAL_PROPERTIES(builder, PHYSICAL_PROPERTIES):
+    builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(PHYSICAL_PROPERTIES), 0)
+
+def AddPHYSICAL_PROPERTIES(builder, PHYSICAL_PROPERTIES):
+    OCMAddPHYSICAL_PROPERTIES(builder, PHYSICAL_PROPERTIES)
+
+def OCMAddMANEUVER_DATA(builder, MANEUVER_DATA):
+    builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(MANEUVER_DATA), 0)
+
+def AddMANEUVER_DATA(builder, MANEUVER_DATA):
+    OCMAddMANEUVER_DATA(builder, MANEUVER_DATA)
+
+def OCMStartMANEUVER_DATAVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartMANEUVER_DATAVector(builder, numElems):
+    return OCMStartMANEUVER_DATAVector(builder, numElems)
+
+def OCMCreateMANEUVER_DATAVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateMANEUVER_DATAVector(builder, data):
+    OCMCreateMANEUVER_DATAVector(builder, data)
+
+def OCMAddPERTURBATIONS(builder, PERTURBATIONS):
+    builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(PERTURBATIONS), 0)
+
+def AddPERTURBATIONS(builder, PERTURBATIONS):
+    OCMAddPERTURBATIONS(builder, PERTURBATIONS)
+
+def OCMAddORBIT_DETERMINATION(builder, ORBIT_DETERMINATION):
+    builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(ORBIT_DETERMINATION), 0)
+
+def AddORBIT_DETERMINATION(builder, ORBIT_DETERMINATION):
+    OCMAddORBIT_DETERMINATION(builder, ORBIT_DETERMINATION)
+
+def OCMAddUSER_DEFINED_PARAMETERS(builder, USER_DEFINED_PARAMETERS):
+    builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(USER_DEFINED_PARAMETERS), 0)
+
+def AddUSER_DEFINED_PARAMETERS(builder, USER_DEFINED_PARAMETERS):
+    OCMAddUSER_DEFINED_PARAMETERS(builder, USER_DEFINED_PARAMETERS)
+
+def OCMStartUSER_DEFINED_PARAMETERSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartUSER_DEFINED_PARAMETERSVector(builder, numElems):
+    return OCMStartUSER_DEFINED_PARAMETERSVector(builder, numElems)
+
+def OCMCreateUSER_DEFINED_PARAMETERSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateUSER_DEFINED_PARAMETERSVector(builder, data):
+    OCMCreateUSER_DEFINED_PARAMETERSVector(builder, data)
+
+def OCMEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return OCMEnd(builder)
+
+import Header
+import Maneuver
+import Metadata
+import OrbitDetermination
+import PPEOrbitalElementRecord
+import PPEPositionRecord
+import Perturbations
+import PhysicalProperties
+import UserDefinedParameters
+try:
+    from typing import List, Optional
+except:
+    pass
+
+class OCMT(object):
+
+    # OCMT
+    def __init__(
+        self,
+        HEADER = None,
+        METADATA = None,
+        TRAJ_TYPE = 0,
+        TRAJ_TYPE_DESCRIPTION = None,
+        STATE_STEP_SIZE = 0.0,
+        STATE_VECTOR_SIZE = 6,
+        STATE_DATA = None,
+        COVARIANCE_DATA = None,
+        POLYNOMIAL_POSITION_RECORDS = None,
+        POLYNOMIAL_OE_RECORDS = None,
+        PHYSICAL_PROPERTIES = None,
+        MANEUVER_DATA = None,
+        PERTURBATIONS = None,
+        ORBIT_DETERMINATION = None,
+        USER_DEFINED_PARAMETERS = None,
+    ):
+        self.HEADER = HEADER  # type: Optional[Header.HeaderT]
+        self.METADATA = METADATA  # type: Optional[Metadata.MetadataT]
+        self.TRAJ_TYPE = TRAJ_TYPE  # type: int
+        self.TRAJ_TYPE_DESCRIPTION = TRAJ_TYPE_DESCRIPTION  # type: Optional[str]
+        self.STATE_STEP_SIZE = STATE_STEP_SIZE  # type: float
+        self.STATE_VECTOR_SIZE = STATE_VECTOR_SIZE  # type: int
+        self.STATE_DATA = STATE_DATA  # type: Optional[List[float]]
+        self.COVARIANCE_DATA = COVARIANCE_DATA  # type: Optional[List[float]]
+        self.POLYNOMIAL_POSITION_RECORDS = POLYNOMIAL_POSITION_RECORDS  # type: Optional[List[PPEPositionRecord.PPEPositionRecordT]]
+        self.POLYNOMIAL_OE_RECORDS = POLYNOMIAL_OE_RECORDS  # type: Optional[List[PPEOrbitalElementRecord.PPEOrbitalElementRecordT]]
+        self.PHYSICAL_PROPERTIES = PHYSICAL_PROPERTIES  # type: Optional[PhysicalProperties.PhysicalPropertiesT]
+        self.MANEUVER_DATA = MANEUVER_DATA  # type: Optional[List[Maneuver.ManeuverT]]
+        self.PERTURBATIONS = PERTURBATIONS  # type: Optional[Perturbations.PerturbationsT]
+        self.ORBIT_DETERMINATION = ORBIT_DETERMINATION  # type: Optional[OrbitDetermination.OrbitDeterminationT]
+        self.USER_DEFINED_PARAMETERS = USER_DEFINED_PARAMETERS  # type: Optional[List[UserDefinedParameters.UserDefinedParametersT]]
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpOcm = OCM()
+        tmpOcm.Init(buf, pos)
+        return cls.InitFromObj(tmpOcm)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpOcm):
+        x = OCMT()
+        x._UnPack(tmpOcm)
+        return x
+
+    # OCMT
+    def _UnPack(self, OCM):
+        if OCM is None:
+            return
+        if OCM.HEADER() is not None:
+            self.HEADER = Header.HeaderT.InitFromObj(OCM.HEADER())
+        if OCM.METADATA() is not None:
+            self.METADATA = Metadata.MetadataT.InitFromObj(OCM.METADATA())
+        self.TRAJ_TYPE = OCM.TRAJ_TYPE()
+        self.TRAJ_TYPE_DESCRIPTION = OCM.TRAJ_TYPE_DESCRIPTION()
+        self.STATE_STEP_SIZE = OCM.STATE_STEP_SIZE()
+        self.STATE_VECTOR_SIZE = OCM.STATE_VECTOR_SIZE()
+        if not OCM.STATE_DATAIsNone():
+            if np is None:
+                self.STATE_DATA = []
+                for i in range(OCM.STATE_DATALength()):
+                    self.STATE_DATA.append(OCM.STATE_DATA(i))
+            else:
+                self.STATE_DATA = OCM.STATE_DATAAsNumpy()
+        if not OCM.COVARIANCE_DATAIsNone():
+            if np is None:
+                self.COVARIANCE_DATA = []
+                for i in range(OCM.COVARIANCE_DATALength()):
+                    self.COVARIANCE_DATA.append(OCM.COVARIANCE_DATA(i))
+            else:
+                self.COVARIANCE_DATA = OCM.COVARIANCE_DATAAsNumpy()
+        if not OCM.POLYNOMIAL_POSITION_RECORDSIsNone():
+            self.POLYNOMIAL_POSITION_RECORDS = []
+            for i in range(OCM.POLYNOMIAL_POSITION_RECORDSLength()):
+                if OCM.POLYNOMIAL_POSITION_RECORDS(i) is None:
+                    self.POLYNOMIAL_POSITION_RECORDS.append(None)
+                else:
+                    pPEPositionRecord_ = PPEPositionRecord.PPEPositionRecordT.InitFromObj(OCM.POLYNOMIAL_POSITION_RECORDS(i))
+                    self.POLYNOMIAL_POSITION_RECORDS.append(pPEPositionRecord_)
+        if not OCM.POLYNOMIAL_OE_RECORDSIsNone():
+            self.POLYNOMIAL_OE_RECORDS = []
+            for i in range(OCM.POLYNOMIAL_OE_RECORDSLength()):
+                if OCM.POLYNOMIAL_OE_RECORDS(i) is None:
+                    self.POLYNOMIAL_OE_RECORDS.append(None)
+                else:
+                    pPEOrbitalElementRecord_ = PPEOrbitalElementRecord.PPEOrbitalElementRecordT.InitFromObj(OCM.POLYNOMIAL_OE_RECORDS(i))
+                    self.POLYNOMIAL_OE_RECORDS.append(pPEOrbitalElementRecord_)
+        if OCM.PHYSICAL_PROPERTIES() is not None:
+            self.PHYSICAL_PROPERTIES = PhysicalProperties.PhysicalPropertiesT.InitFromObj(OCM.PHYSICAL_PROPERTIES())
+        if not OCM.MANEUVER_DATAIsNone():
+            self.MANEUVER_DATA = []
+            for i in range(OCM.MANEUVER_DATALength()):
+                if OCM.MANEUVER_DATA(i) is None:
+                    self.MANEUVER_DATA.append(None)
+                else:
+                    maneuver_ = Maneuver.ManeuverT.InitFromObj(OCM.MANEUVER_DATA(i))
+                    self.MANEUVER_DATA.append(maneuver_)
+        if OCM.PERTURBATIONS() is not None:
+            self.PERTURBATIONS = Perturbations.PerturbationsT.InitFromObj(OCM.PERTURBATIONS())
+        if OCM.ORBIT_DETERMINATION() is not None:
+            self.ORBIT_DETERMINATION = OrbitDetermination.OrbitDeterminationT.InitFromObj(OCM.ORBIT_DETERMINATION())
+        if not OCM.USER_DEFINED_PARAMETERSIsNone():
+            self.USER_DEFINED_PARAMETERS = []
+            for i in range(OCM.USER_DEFINED_PARAMETERSLength()):
+                if OCM.USER_DEFINED_PARAMETERS(i) is None:
+                    self.USER_DEFINED_PARAMETERS.append(None)
+                else:
+                    userDefinedParameters_ = UserDefinedParameters.UserDefinedParametersT.InitFromObj(OCM.USER_DEFINED_PARAMETERS(i))
+                    self.USER_DEFINED_PARAMETERS.append(userDefinedParameters_)
+
+    # OCMT
+    def Pack(self, builder):
+        if self.HEADER is not None:
+            HEADER = self.HEADER.Pack(builder)
+        if self.METADATA is not None:
+            METADATA = self.METADATA.Pack(builder)
+        if self.TRAJ_TYPE_DESCRIPTION is not None:
+            TRAJ_TYPE_DESCRIPTION = builder.CreateString(self.TRAJ_TYPE_DESCRIPTION)
+        if self.STATE_DATA is not None:
+            if np is not None and type(self.STATE_DATA) is np.ndarray:
+                STATE_DATA = builder.CreateNumpyVector(self.STATE_DATA)
+            else:
+                OCMStartSTATE_DATAVector(builder, len(self.STATE_DATA))
+                for i in reversed(range(len(self.STATE_DATA))):
+                    builder.PrependFloat64(self.STATE_DATA[i])
+                STATE_DATA = builder.EndVector()
+        if self.COVARIANCE_DATA is not None:
+            if np is not None and type(self.COVARIANCE_DATA) is np.ndarray:
+                COVARIANCE_DATA = builder.CreateNumpyVector(self.COVARIANCE_DATA)
+            else:
+                OCMStartCOVARIANCE_DATAVector(builder, len(self.COVARIANCE_DATA))
+                for i in reversed(range(len(self.COVARIANCE_DATA))):
+                    builder.PrependFloat64(self.COVARIANCE_DATA[i])
+                COVARIANCE_DATA = builder.EndVector()
+        if self.POLYNOMIAL_POSITION_RECORDS is not None:
+            POLYNOMIAL_POSITION_RECORDSlist = []
+            for i in range(len(self.POLYNOMIAL_POSITION_RECORDS)):
+                POLYNOMIAL_POSITION_RECORDSlist.append(self.POLYNOMIAL_POSITION_RECORDS[i].Pack(builder))
+            OCMStartPOLYNOMIAL_POSITION_RECORDSVector(builder, len(self.POLYNOMIAL_POSITION_RECORDS))
+            for i in reversed(range(len(self.POLYNOMIAL_POSITION_RECORDS))):
+                builder.PrependUOffsetTRelative(POLYNOMIAL_POSITION_RECORDSlist[i])
+            POLYNOMIAL_POSITION_RECORDS = builder.EndVector()
+        if self.POLYNOMIAL_OE_RECORDS is not None:
+            POLYNOMIAL_OE_RECORDSlist = []
+            for i in range(len(self.POLYNOMIAL_OE_RECORDS)):
+                POLYNOMIAL_OE_RECORDSlist.append(self.POLYNOMIAL_OE_RECORDS[i].Pack(builder))
+            OCMStartPOLYNOMIAL_OE_RECORDSVector(builder, len(self.POLYNOMIAL_OE_RECORDS))
+            for i in reversed(range(len(self.POLYNOMIAL_OE_RECORDS))):
+                builder.PrependUOffsetTRelative(POLYNOMIAL_OE_RECORDSlist[i])
+            POLYNOMIAL_OE_RECORDS = builder.EndVector()
+        if self.PHYSICAL_PROPERTIES is not None:
+            PHYSICAL_PROPERTIES = self.PHYSICAL_PROPERTIES.Pack(builder)
+        if self.MANEUVER_DATA is not None:
+            MANEUVER_DATAlist = []
+            for i in range(len(self.MANEUVER_DATA)):
+                MANEUVER_DATAlist.append(self.MANEUVER_DATA[i].Pack(builder))
+            OCMStartMANEUVER_DATAVector(builder, len(self.MANEUVER_DATA))
+            for i in reversed(range(len(self.MANEUVER_DATA))):
+                builder.PrependUOffsetTRelative(MANEUVER_DATAlist[i])
+            MANEUVER_DATA = builder.EndVector()
+        if self.PERTURBATIONS is not None:
+            PERTURBATIONS = self.PERTURBATIONS.Pack(builder)
+        if self.ORBIT_DETERMINATION is not None:
+            ORBIT_DETERMINATION = self.ORBIT_DETERMINATION.Pack(builder)
+        if self.USER_DEFINED_PARAMETERS is not None:
+            USER_DEFINED_PARAMETERSlist = []
+            for i in range(len(self.USER_DEFINED_PARAMETERS)):
+                USER_DEFINED_PARAMETERSlist.append(self.USER_DEFINED_PARAMETERS[i].Pack(builder))
+            OCMStartUSER_DEFINED_PARAMETERSVector(builder, len(self.USER_DEFINED_PARAMETERS))
+            for i in reversed(range(len(self.USER_DEFINED_PARAMETERS))):
+                builder.PrependUOffsetTRelative(USER_DEFINED_PARAMETERSlist[i])
+            USER_DEFINED_PARAMETERS = builder.EndVector()
+        OCMStart(builder)
+        if self.HEADER is not None:
+            OCMAddHEADER(builder, HEADER)
+        if self.METADATA is not None:
+            OCMAddMETADATA(builder, METADATA)
+        OCMAddTRAJ_TYPE(builder, self.TRAJ_TYPE)
+        if self.TRAJ_TYPE_DESCRIPTION is not None:
+            OCMAddTRAJ_TYPE_DESCRIPTION(builder, TRAJ_TYPE_DESCRIPTION)
+        OCMAddSTATE_STEP_SIZE(builder, self.STATE_STEP_SIZE)
+        OCMAddSTATE_VECTOR_SIZE(builder, self.STATE_VECTOR_SIZE)
+        if self.STATE_DATA is not None:
+            OCMAddSTATE_DATA(builder, STATE_DATA)
+        if self.COVARIANCE_DATA is not None:
+            OCMAddCOVARIANCE_DATA(builder, COVARIANCE_DATA)
+        if self.POLYNOMIAL_POSITION_RECORDS is not None:
+            OCMAddPOLYNOMIAL_POSITION_RECORDS(builder, POLYNOMIAL_POSITION_RECORDS)
+        if self.POLYNOMIAL_OE_RECORDS is not None:
+            OCMAddPOLYNOMIAL_OE_RECORDS(builder, POLYNOMIAL_OE_RECORDS)
+        if self.PHYSICAL_PROPERTIES is not None:
+            OCMAddPHYSICAL_PROPERTIES(builder, PHYSICAL_PROPERTIES)
+        if self.MANEUVER_DATA is not None:
+            OCMAddMANEUVER_DATA(builder, MANEUVER_DATA)
+        if self.PERTURBATIONS is not None:
+            OCMAddPERTURBATIONS(builder, PERTURBATIONS)
+        if self.ORBIT_DETERMINATION is not None:
+            OCMAddORBIT_DETERMINATION(builder, ORBIT_DETERMINATION)
+        if self.USER_DEFINED_PARAMETERS is not None:
+            OCMAddUSER_DEFINED_PARAMETERS(builder, USER_DEFINED_PARAMETERS)
+        OCM = OCMEnd(builder)
+        return OCM

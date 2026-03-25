@@ -32,8 +32,8 @@ class KMLRegion : Table() {
     /**
      * LatLonAltBox
      */
-    val LAT_LON_ALT_BOX : KMLLatLonAltBox? get() = LAT_LON_ALT_BOX(KMLLatLonAltBox())
-    fun LAT_LON_ALT_BOX(obj: KMLLatLonAltBox) : KMLLatLonAltBox? {
+    val latLonAltBox : KMLLatLonAltBox? get() = latLonAltBox(KMLLatLonAltBox())
+    fun latLonAltBox(obj: KMLLatLonAltBox) : KMLLatLonAltBox? {
         val o = __offset(4)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -44,8 +44,8 @@ class KMLRegion : Table() {
     /**
      * Level of detail
      */
-    val LOD : KMLLod? get() = LOD(KMLLod())
-    fun LOD(obj: KMLLod) : KMLLod? {
+    val lod : KMLLod? get() = lod(KMLLod())
+    fun lod(obj: KMLLod) : KMLLod? {
         val o = __offset(6)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -54,21 +54,21 @@ class KMLRegion : Table() {
         }
     }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsKMLRegion(_bb: ByteBuffer): KMLRegion = getRootAsKMLRegion(_bb, KMLRegion())
         fun getRootAsKMLRegion(_bb: ByteBuffer, obj: KMLRegion): KMLRegion {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createKMLRegion(builder: FlatBufferBuilder, LAT_LON_ALT_BOXOffset: Int, LODOffset: Int) : Int {
+        fun createKMLRegion(builder: FlatBufferBuilder, latLonAltBoxOffset: Int, lodOffset: Int) : Int {
             builder.startTable(2)
-            addLOD(builder, LODOffset)
-            addLAT_LON_ALT_BOX(builder, LAT_LON_ALT_BOXOffset)
+            addLOD(builder, lodOffset)
+            addLATLONALTBOX(builder, latLonAltBoxOffset)
             return endKMLRegion(builder)
         }
         fun startKMLRegion(builder: FlatBufferBuilder) = builder.startTable(2)
-        fun addLAT_LON_ALT_BOX(builder: FlatBufferBuilder, LAT_LON_ALT_BOX: Int) = builder.addOffset(0, LAT_LON_ALT_BOX, 0)
-        fun addLOD(builder: FlatBufferBuilder, LOD: Int) = builder.addOffset(1, LOD, 0)
+        fun addLATLONALTBOX(builder: FlatBufferBuilder, latLonAltBox: Int) = builder.addOffset(0, latLonAltBox, 0)
+        fun addLOD(builder: FlatBufferBuilder, lod: Int) = builder.addOffset(1, lod, 0)
         fun endKMLRegion(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

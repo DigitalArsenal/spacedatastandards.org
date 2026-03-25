@@ -63,6 +63,10 @@ func (rcv *SOI) ID() []byte {
 	return nil
 }
 
+func (rcv *SOI) Id() []byte {
+	return rcv.ID()
+}
+
 /// Unique identifier
 /// Message creation date (ISO 8601)
 func (rcv *SOI) MSG_CREATE_DATE() []byte {
@@ -71,6 +75,10 @@ func (rcv *SOI) MSG_CREATE_DATE() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *SOI) MsgCreateDate() []byte {
+	return rcv.MSG_CREATE_DATE()
 }
 
 /// Message creation date (ISO 8601)
@@ -83,6 +91,10 @@ func (rcv *SOI) ID_SENSOR() []byte {
 	return nil
 }
 
+func (rcv *SOI) IdSensor() []byte {
+	return rcv.ID_SENSOR()
+}
+
 /// Sensor identifier
 /// Original sensor identifier
 func (rcv *SOI) ORIG_SENSOR_ID() []byte {
@@ -91,6 +103,10 @@ func (rcv *SOI) ORIG_SENSOR_ID() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *SOI) OrigSensorId() []byte {
+	return rcv.ORIG_SENSOR_ID()
 }
 
 /// Original sensor identifier
@@ -103,6 +119,10 @@ func (rcv *SOI) SENSOR_AS_ID() []byte {
 	return nil
 }
 
+func (rcv *SOI) SensorAsId() []byte {
+	return rcv.SENSOR_AS_ID()
+}
+
 /// Sensor observation set identifier
 /// Satellite catalog number
 func (rcv *SOI) SAT_NO() uint32 {
@@ -113,9 +133,17 @@ func (rcv *SOI) SAT_NO() uint32 {
 	return 0
 }
 
+func (rcv *SOI) SatNo() uint32 {
+	return rcv.SAT_NO()
+}
+
 /// Satellite catalog number
 func (rcv *SOI) MutateSAT_NO(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(14, n)
+}
+
+func (rcv *SOI) MutateSatNo(n uint32) bool {
+	return rcv.MutateSAT_NO(n)
 }
 
 /// International designator
@@ -125,6 +153,10 @@ func (rcv *SOI) ORIG_OBJECT_ID() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *SOI) OrigObjectId() []byte {
+	return rcv.ORIG_OBJECT_ID()
 }
 
 /// International designator
@@ -137,6 +169,10 @@ func (rcv *SOI) SATELLITE_NAME() []byte {
 	return nil
 }
 
+func (rcv *SOI) SatelliteName() []byte {
+	return rcv.SATELLITE_NAME()
+}
+
 /// Satellite common name
 /// True if uncorrelated target
 func (rcv *SOI) UCT() bool {
@@ -147,9 +183,17 @@ func (rcv *SOI) UCT() bool {
 	return false
 }
 
+func (rcv *SOI) Uct() bool {
+	return rcv.UCT()
+}
+
 /// True if uncorrelated target
 func (rcv *SOI) MutateUCT(n bool) bool {
 	return rcv._tab.MutateBoolSlot(20, n)
+}
+
+func (rcv *SOI) MutateUct(n bool) bool {
+	return rcv.MutateUCT(n)
 }
 
 /// Sensor geodetic latitude (degrees)
@@ -161,9 +205,17 @@ func (rcv *SOI) SENLAT() float64 {
 	return 0.0
 }
 
+func (rcv *SOI) Senlat() float64 {
+	return rcv.SENLAT()
+}
+
 /// Sensor geodetic latitude (degrees)
 func (rcv *SOI) MutateSENLAT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(22, n)
+}
+
+func (rcv *SOI) MutateSenlat(n float64) bool {
+	return rcv.MutateSENLAT(n)
 }
 
 /// Sensor geodetic longitude (degrees)
@@ -175,9 +227,17 @@ func (rcv *SOI) SENLON() float64 {
 	return 0.0
 }
 
+func (rcv *SOI) Senlon() float64 {
+	return rcv.SENLON()
+}
+
 /// Sensor geodetic longitude (degrees)
 func (rcv *SOI) MutateSENLON(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(24, n)
+}
+
+func (rcv *SOI) MutateSenlon(n float64) bool {
+	return rcv.MutateSENLON(n)
 }
 
 /// Sensor altitude (km)
@@ -189,9 +249,17 @@ func (rcv *SOI) SENALT() float64 {
 	return 0.0
 }
 
+func (rcv *SOI) Senalt() float64 {
+	return rcv.SENALT()
+}
+
 /// Sensor altitude (km)
 func (rcv *SOI) MutateSENALT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(26, n)
+}
+
+func (rcv *SOI) MutateSenalt(n float64) bool {
+	return rcv.MutateSENALT(n)
 }
 
 /// Sensor ECEF X position (km)
@@ -203,9 +271,17 @@ func (rcv *SOI) SENX() float64 {
 	return 0.0
 }
 
+func (rcv *SOI) Senx() float64 {
+	return rcv.SENX()
+}
+
 /// Sensor ECEF X position (km)
 func (rcv *SOI) MutateSENX(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(28, n)
+}
+
+func (rcv *SOI) MutateSenx(n float64) bool {
+	return rcv.MutateSENX(n)
 }
 
 /// Sensor ECEF Y position (km)
@@ -217,9 +293,17 @@ func (rcv *SOI) SENY() float64 {
 	return 0.0
 }
 
+func (rcv *SOI) Seny() float64 {
+	return rcv.SENY()
+}
+
 /// Sensor ECEF Y position (km)
 func (rcv *SOI) MutateSENY(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(30, n)
+}
+
+func (rcv *SOI) MutateSeny(n float64) bool {
+	return rcv.MutateSENY(n)
 }
 
 /// Sensor ECEF Z position (km)
@@ -231,9 +315,17 @@ func (rcv *SOI) SENZ() float64 {
 	return 0.0
 }
 
+func (rcv *SOI) Senz() float64 {
+	return rcv.SENZ()
+}
+
 /// Sensor ECEF Z position (km)
 func (rcv *SOI) MutateSENZ(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(32, n)
+}
+
+func (rcv *SOI) MutateSenz(n float64) bool {
+	return rcv.MutateSENZ(n)
 }
 
 /// Sensor ECEF X velocity (km/s)
@@ -245,9 +337,17 @@ func (rcv *SOI) SENVELX() float64 {
 	return 0.0
 }
 
+func (rcv *SOI) Senvelx() float64 {
+	return rcv.SENVELX()
+}
+
 /// Sensor ECEF X velocity (km/s)
 func (rcv *SOI) MutateSENVELX(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(34, n)
+}
+
+func (rcv *SOI) MutateSenvelx(n float64) bool {
+	return rcv.MutateSENVELX(n)
 }
 
 /// Sensor ECEF Y velocity (km/s)
@@ -259,9 +359,17 @@ func (rcv *SOI) SENVELY() float64 {
 	return 0.0
 }
 
+func (rcv *SOI) Senvely() float64 {
+	return rcv.SENVELY()
+}
+
 /// Sensor ECEF Y velocity (km/s)
 func (rcv *SOI) MutateSENVELY(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(36, n)
+}
+
+func (rcv *SOI) MutateSenvely(n float64) bool {
+	return rcv.MutateSENVELY(n)
 }
 
 /// Sensor ECEF Z velocity (km/s)
@@ -273,9 +381,17 @@ func (rcv *SOI) SENVELZ() float64 {
 	return 0.0
 }
 
+func (rcv *SOI) Senvelz() float64 {
+	return rcv.SENVELZ()
+}
+
 /// Sensor ECEF Z velocity (km/s)
 func (rcv *SOI) MutateSENVELZ(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(38, n)
+}
+
+func (rcv *SOI) MutateSenvelz(n float64) bool {
+	return rcv.MutateSENVELZ(n)
 }
 
 /// Sensor reference frame
@@ -285,6 +401,10 @@ func (rcv *SOI) SEN_REFERENCE_FRAME() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *SOI) SenReferenceFrame() []byte {
+	return rcv.SEN_REFERENCE_FRAME()
 }
 
 /// Sensor reference frame
@@ -297,9 +417,17 @@ func (rcv *SOI) OBS_TYPE() soiObsType {
 	return 0
 }
 
+func (rcv *SOI) ObsType() soiObsType {
+	return rcv.OBS_TYPE()
+}
+
 /// Observation type
 func (rcv *SOI) MutateOBS_TYPE(n soiObsType) bool {
 	return rcv._tab.MutateInt8Slot(42, int8(n))
+}
+
+func (rcv *SOI) MutateObsType(n soiObsType) bool {
+	return rcv.MutateOBS_TYPE(n)
 }
 
 /// Collection mode
@@ -311,9 +439,17 @@ func (rcv *SOI) COLLECTION_MODE() soiCollectionMode {
 	return 0
 }
 
+func (rcv *SOI) CollectionMode() soiCollectionMode {
+	return rcv.COLLECTION_MODE()
+}
+
 /// Collection mode
 func (rcv *SOI) MutateCOLLECTION_MODE(n soiCollectionMode) bool {
 	return rcv._tab.MutateInt8Slot(44, int8(n))
+}
+
+func (rcv *SOI) MutateCollectionMode(n soiCollectionMode) bool {
+	return rcv.MutateCOLLECTION_MODE(n)
 }
 
 /// Observation start time (ISO 8601)
@@ -323,6 +459,10 @@ func (rcv *SOI) START_TIME() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *SOI) StartTime() []byte {
+	return rcv.START_TIME()
 }
 
 /// Observation start time (ISO 8601)
@@ -335,6 +475,10 @@ func (rcv *SOI) END_TIME() []byte {
 	return nil
 }
 
+func (rcv *SOI) EndTime() []byte {
+	return rcv.END_TIME()
+}
+
 /// Observation end time (ISO 8601)
 /// Number of observations in set
 func (rcv *SOI) NUM_OBS() uint32 {
@@ -345,9 +489,17 @@ func (rcv *SOI) NUM_OBS() uint32 {
 	return 0
 }
 
+func (rcv *SOI) NumObs() uint32 {
+	return rcv.NUM_OBS()
+}
+
 /// Number of observations in set
 func (rcv *SOI) MutateNUM_OBS(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(50, n)
+}
+
+func (rcv *SOI) MutateNumObs(n uint32) bool {
+	return rcv.MutateNUM_OBS(n)
 }
 
 /// Observation reference frame
@@ -357,6 +509,10 @@ func (rcv *SOI) REFERENCE_FRAME() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *SOI) ReferenceFrame() []byte {
+	return rcv.REFERENCE_FRAME()
 }
 
 /// Observation reference frame
@@ -369,9 +525,17 @@ func (rcv *SOI) POLAR_ANGLE_START() float64 {
 	return 0.0
 }
 
+func (rcv *SOI) PolarAngleStart() float64 {
+	return rcv.POLAR_ANGLE_START()
+}
+
 /// Polar angle at start (degrees)
 func (rcv *SOI) MutatePOLAR_ANGLE_START(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(54, n)
+}
+
+func (rcv *SOI) MutatePolarAngleStart(n float64) bool {
+	return rcv.MutatePOLAR_ANGLE_START(n)
 }
 
 /// Polar angle at end (degrees)
@@ -383,9 +547,17 @@ func (rcv *SOI) POLAR_ANGLE_END() float64 {
 	return 0.0
 }
 
+func (rcv *SOI) PolarAngleEnd() float64 {
+	return rcv.POLAR_ANGLE_END()
+}
+
 /// Polar angle at end (degrees)
 func (rcv *SOI) MutatePOLAR_ANGLE_END(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(56, n)
+}
+
+func (rcv *SOI) MutatePolarAngleEnd(n float64) bool {
+	return rcv.MutatePOLAR_ANGLE_END(n)
 }
 
 /// Line-of-sight declination at start (degrees)
@@ -397,9 +569,17 @@ func (rcv *SOI) LOS_DECLINATION_START() float64 {
 	return 0.0
 }
 
+func (rcv *SOI) LosDeclinationStart() float64 {
+	return rcv.LOS_DECLINATION_START()
+}
+
 /// Line-of-sight declination at start (degrees)
 func (rcv *SOI) MutateLOS_DECLINATION_START(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(58, n)
+}
+
+func (rcv *SOI) MutateLosDeclinationStart(n float64) bool {
+	return rcv.MutateLOS_DECLINATION_START(n)
 }
 
 /// Line-of-sight declination at end (degrees)
@@ -411,9 +591,17 @@ func (rcv *SOI) LOS_DECLINATION_END() float64 {
 	return 0.0
 }
 
+func (rcv *SOI) LosDeclinationEnd() float64 {
+	return rcv.LOS_DECLINATION_END()
+}
+
 /// Line-of-sight declination at end (degrees)
 func (rcv *SOI) MutateLOS_DECLINATION_END(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(60, n)
+}
+
+func (rcv *SOI) MutateLosDeclinationEnd(n float64) bool {
+	return rcv.MutateLOS_DECLINATION_END(n)
 }
 
 /// Pointing azimuth at start (degrees)
@@ -425,9 +613,17 @@ func (rcv *SOI) POINTING_ANGLE_AZ_START() float64 {
 	return 0.0
 }
 
+func (rcv *SOI) PointingAngleAzStart() float64 {
+	return rcv.POINTING_ANGLE_AZ_START()
+}
+
 /// Pointing azimuth at start (degrees)
 func (rcv *SOI) MutatePOINTING_ANGLE_AZ_START(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(62, n)
+}
+
+func (rcv *SOI) MutatePointingAngleAzStart(n float64) bool {
+	return rcv.MutatePOINTING_ANGLE_AZ_START(n)
 }
 
 /// Pointing azimuth at end (degrees)
@@ -439,9 +635,17 @@ func (rcv *SOI) POINTING_ANGLE_AZ_END() float64 {
 	return 0.0
 }
 
+func (rcv *SOI) PointingAngleAzEnd() float64 {
+	return rcv.POINTING_ANGLE_AZ_END()
+}
+
 /// Pointing azimuth at end (degrees)
 func (rcv *SOI) MutatePOINTING_ANGLE_AZ_END(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(64, n)
+}
+
+func (rcv *SOI) MutatePointingAngleAzEnd(n float64) bool {
+	return rcv.MutatePOINTING_ANGLE_AZ_END(n)
 }
 
 /// Pointing elevation at start (degrees)
@@ -453,9 +657,17 @@ func (rcv *SOI) POINTING_ANGLE_EL_START() float64 {
 	return 0.0
 }
 
+func (rcv *SOI) PointingAngleElStart() float64 {
+	return rcv.POINTING_ANGLE_EL_START()
+}
+
 /// Pointing elevation at start (degrees)
 func (rcv *SOI) MutatePOINTING_ANGLE_EL_START(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(66, n)
+}
+
+func (rcv *SOI) MutatePointingAngleElStart(n float64) bool {
+	return rcv.MutatePOINTING_ANGLE_EL_START(n)
 }
 
 /// Pointing elevation at end (degrees)
@@ -467,9 +679,17 @@ func (rcv *SOI) POINTING_ANGLE_EL_END() float64 {
 	return 0.0
 }
 
+func (rcv *SOI) PointingAngleElEnd() float64 {
+	return rcv.POINTING_ANGLE_EL_END()
+}
+
 /// Pointing elevation at end (degrees)
 func (rcv *SOI) MutatePOINTING_ANGLE_EL_END(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(68, n)
+}
+
+func (rcv *SOI) MutatePointingAngleElEnd(n float64) bool {
+	return rcv.MutatePOINTING_ANGLE_EL_END(n)
 }
 
 /// Focal plane array width (pixels)
@@ -481,9 +701,17 @@ func (rcv *SOI) PIXEL_ARRAY_WIDTH() uint16 {
 	return 0
 }
 
+func (rcv *SOI) PixelArrayWidth() uint16 {
+	return rcv.PIXEL_ARRAY_WIDTH()
+}
+
 /// Focal plane array width (pixels)
 func (rcv *SOI) MutatePIXEL_ARRAY_WIDTH(n uint16) bool {
 	return rcv._tab.MutateUint16Slot(70, n)
+}
+
+func (rcv *SOI) MutatePixelArrayWidth(n uint16) bool {
+	return rcv.MutatePIXEL_ARRAY_WIDTH(n)
 }
 
 /// Focal plane array height (pixels)
@@ -495,9 +723,17 @@ func (rcv *SOI) PIXEL_ARRAY_HEIGHT() uint16 {
 	return 0
 }
 
+func (rcv *SOI) PixelArrayHeight() uint16 {
+	return rcv.PIXEL_ARRAY_HEIGHT()
+}
+
 /// Focal plane array height (pixels)
 func (rcv *SOI) MutatePIXEL_ARRAY_HEIGHT(n uint16) bool {
 	return rcv._tab.MutateUint16Slot(72, n)
+}
+
+func (rcv *SOI) MutatePixelArrayHeight(n uint16) bool {
+	return rcv.MutatePIXEL_ARRAY_HEIGHT(n)
 }
 
 /// Number of spectral filters used
@@ -509,9 +745,17 @@ func (rcv *SOI) NUM_SPECTRAL_FILTERS() byte {
 	return 0
 }
 
+func (rcv *SOI) NumSpectralFilters() byte {
+	return rcv.NUM_SPECTRAL_FILTERS()
+}
+
 /// Number of spectral filters used
 func (rcv *SOI) MutateNUM_SPECTRAL_FILTERS(n byte) bool {
 	return rcv._tab.MutateByteSlot(74, n)
+}
+
+func (rcv *SOI) MutateNumSpectralFilters(n byte) bool {
+	return rcv.MutateNUM_SPECTRAL_FILTERS(n)
 }
 
 /// Spectral filter identifiers
@@ -524,12 +768,20 @@ func (rcv *SOI) SPECTRAL_FILTERS(j int) []byte {
 	return nil
 }
 
+func (rcv *SOI) SpectralFilters(j int) []byte {
+	return rcv.SPECTRAL_FILTERS(j)
+}
+
 func (rcv *SOI) SPECTRAL_FILTERSLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(76))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *SOI) SpectralFiltersLength() int {
+	return rcv.SPECTRAL_FILTERSLength()
 }
 
 /// Spectral filter identifiers
@@ -542,9 +794,17 @@ func (rcv *SOI) GAIN() float64 {
 	return 0.0
 }
 
+func (rcv *SOI) Gain() float64 {
+	return rcv.GAIN()
+}
+
 /// Detector gain setting
 func (rcv *SOI) MutateGAIN(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(78, n)
+}
+
+func (rcv *SOI) MutateGain(n float64) bool {
+	return rcv.MutateGAIN(n)
 }
 
 /// Horizontal binning factor
@@ -556,9 +816,17 @@ func (rcv *SOI) BINNING_HORIZ() byte {
 	return 0
 }
 
+func (rcv *SOI) BinningHoriz() byte {
+	return rcv.BINNING_HORIZ()
+}
+
 /// Horizontal binning factor
 func (rcv *SOI) MutateBINNING_HORIZ(n byte) bool {
 	return rcv._tab.MutateByteSlot(80, n)
+}
+
+func (rcv *SOI) MutateBinningHoriz(n byte) bool {
+	return rcv.MutateBINNING_HORIZ(n)
 }
 
 /// Vertical binning factor
@@ -570,9 +838,17 @@ func (rcv *SOI) BINNING_VERT() byte {
 	return 0
 }
 
+func (rcv *SOI) BinningVert() byte {
+	return rcv.BINNING_VERT()
+}
+
 /// Vertical binning factor
 func (rcv *SOI) MutateBINNING_VERT(n byte) bool {
 	return rcv._tab.MutateByteSlot(82, n)
+}
+
+func (rcv *SOI) MutateBinningVert(n byte) bool {
+	return rcv.MutateBINNING_VERT(n)
 }
 
 /// Solar visual magnitude
@@ -584,9 +860,17 @@ func (rcv *SOI) SOLAR_MAG() float64 {
 	return 0.0
 }
 
+func (rcv *SOI) SolarMag() float64 {
+	return rcv.SOLAR_MAG()
+}
+
 /// Solar visual magnitude
 func (rcv *SOI) MutateSOLAR_MAG(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(84, n)
+}
+
+func (rcv *SOI) MutateSolarMag(n float64) bool {
+	return rcv.MutateSOLAR_MAG(n)
 }
 
 /// Minimum pixel value in observation
@@ -598,9 +882,17 @@ func (rcv *SOI) PIXEL_MIN() int32 {
 	return 0
 }
 
+func (rcv *SOI) PixelMin() int32 {
+	return rcv.PIXEL_MIN()
+}
+
 /// Minimum pixel value in observation
 func (rcv *SOI) MutatePIXEL_MIN(n int32) bool {
 	return rcv._tab.MutateInt32Slot(86, n)
+}
+
+func (rcv *SOI) MutatePixelMin(n int32) bool {
+	return rcv.MutatePIXEL_MIN(n)
 }
 
 /// Maximum pixel value in observation
@@ -612,9 +904,17 @@ func (rcv *SOI) PIXEL_MAX() int32 {
 	return 0
 }
 
+func (rcv *SOI) PixelMax() int32 {
+	return rcv.PIXEL_MAX()
+}
+
 /// Maximum pixel value in observation
 func (rcv *SOI) MutatePIXEL_MAX(n int32) bool {
 	return rcv._tab.MutateInt32Slot(88, n)
+}
+
+func (rcv *SOI) MutatePixelMax(n int32) bool {
+	return rcv.MutatePIXEL_MAX(n)
 }
 
 /// Processing software version
@@ -624,6 +924,10 @@ func (rcv *SOI) SOFTWARE_VERSION() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *SOI) SoftwareVersion() []byte {
+	return rcv.SOFTWARE_VERSION()
 }
 
 /// Processing software version
@@ -636,6 +940,10 @@ func (rcv *SOI) STAR_CAT_NAME() []byte {
 	return nil
 }
 
+func (rcv *SOI) StarCatName() []byte {
+	return rcv.STAR_CAT_NAME()
+}
+
 /// Star catalog used for calibration
 /// Correlation quality score
 func (rcv *SOI) CORR_QUALITY() float64 {
@@ -646,9 +954,17 @@ func (rcv *SOI) CORR_QUALITY() float64 {
 	return 0.0
 }
 
+func (rcv *SOI) CorrQuality() float64 {
+	return rcv.CORR_QUALITY()
+}
+
 /// Correlation quality score
 func (rcv *SOI) MutateCORR_QUALITY(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(94, n)
+}
+
+func (rcv *SOI) MutateCorrQuality(n float64) bool {
+	return rcv.MutateCORR_QUALITY(n)
 }
 
 /// Calibration type
@@ -660,9 +976,17 @@ func (rcv *SOI) CALIBRATION_TYPE() soiCalibrationType {
 	return 0
 }
 
+func (rcv *SOI) CalibrationType() soiCalibrationType {
+	return rcv.CALIBRATION_TYPE()
+}
+
 /// Calibration type
 func (rcv *SOI) MutateCALIBRATION_TYPE(n soiCalibrationType) bool {
 	return rcv._tab.MutateInt8Slot(96, int8(n))
+}
+
+func (rcv *SOI) MutateCalibrationType(n soiCalibrationType) bool {
+	return rcv.MutateCALIBRATION_TYPE(n)
 }
 
 /// Valid calibration identifiers
@@ -672,6 +996,10 @@ func (rcv *SOI) VALID_CALIBRATIONS() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *SOI) ValidCalibrations() []byte {
+	return rcv.VALID_CALIBRATIONS()
 }
 
 /// Valid calibration identifiers
@@ -684,9 +1012,17 @@ func (rcv *SOI) PERCENT_SAT_THRESHOLD() float64 {
 	return 0.0
 }
 
+func (rcv *SOI) PercentSatThreshold() float64 {
+	return rcv.PERCENT_SAT_THRESHOLD()
+}
+
 /// Percent saturation threshold
 func (rcv *SOI) MutatePERCENT_SAT_THRESHOLD(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(100, n)
+}
+
+func (rcv *SOI) MutatePercentSatThreshold(n float64) bool {
+	return rcv.MutatePERCENT_SAT_THRESHOLD(n)
 }
 
 /// True if change detected from baseline
@@ -698,9 +1034,17 @@ func (rcv *SOI) CHANGE_DETECTED() bool {
 	return false
 }
 
+func (rcv *SOI) ChangeDetected() bool {
+	return rcv.CHANGE_DETECTED()
+}
+
 /// True if change detected from baseline
 func (rcv *SOI) MutateCHANGE_DETECTED(n bool) bool {
 	return rcv._tab.MutateBoolSlot(102, n)
+}
+
+func (rcv *SOI) MutateChangeDetected(n bool) bool {
+	return rcv.MutateCHANGE_DETECTED(n)
 }
 
 /// True if periodicity change detected
@@ -712,9 +1056,17 @@ func (rcv *SOI) PERIODICITY_CHANGE_DETECTED() bool {
 	return false
 }
 
+func (rcv *SOI) PeriodicityChangeDetected() bool {
+	return rcv.PERIODICITY_CHANGE_DETECTED()
+}
+
 /// True if periodicity change detected
 func (rcv *SOI) MutatePERIODICITY_CHANGE_DETECTED(n bool) bool {
 	return rcv._tab.MutateBoolSlot(104, n)
+}
+
+func (rcv *SOI) MutatePeriodicityChangeDetected(n bool) bool {
+	return rcv.MutatePERIODICITY_CHANGE_DETECTED(n)
 }
 
 /// True if brightness variance change detected
@@ -726,9 +1078,17 @@ func (rcv *SOI) BRIGHTNESS_VARIANCE_CHANGE_DETECTED() bool {
 	return false
 }
 
+func (rcv *SOI) BrightnessVarianceChangeDetected() bool {
+	return rcv.BRIGHTNESS_VARIANCE_CHANGE_DETECTED()
+}
+
 /// True if brightness variance change detected
 func (rcv *SOI) MutateBRIGHTNESS_VARIANCE_CHANGE_DETECTED(n bool) bool {
 	return rcv._tab.MutateBoolSlot(106, n)
+}
+
+func (rcv *SOI) MutateBrightnessVarianceChangeDetected(n bool) bool {
+	return rcv.MutateBRIGHTNESS_VARIANCE_CHANGE_DETECTED(n)
 }
 
 /// True if solar phase angle brightness change detected
@@ -740,9 +1100,17 @@ func (rcv *SOI) SOLAR_PHASE_ANGLE_BRIGHTNESS_CHANGE_DETECTED() bool {
 	return false
 }
 
+func (rcv *SOI) SolarPhaseAngleBrightnessChangeDetected() bool {
+	return rcv.SOLAR_PHASE_ANGLE_BRIGHTNESS_CHANGE_DETECTED()
+}
+
 /// True if solar phase angle brightness change detected
 func (rcv *SOI) MutateSOLAR_PHASE_ANGLE_BRIGHTNESS_CHANGE_DETECTED(n bool) bool {
 	return rcv._tab.MutateBoolSlot(108, n)
+}
+
+func (rcv *SOI) MutateSolarPhaseAngleBrightnessChangeDetected(n bool) bool {
+	return rcv.MutateSOLAR_PHASE_ANGLE_BRIGHTNESS_CHANGE_DETECTED(n)
 }
 
 /// Change confidence assessment
@@ -752,6 +1120,10 @@ func (rcv *SOI) CHANGE_CONF() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *SOI) ChangeConf() []byte {
+	return rcv.CHANGE_CONF()
 }
 
 /// Change confidence assessment
@@ -764,6 +1136,10 @@ func (rcv *SOI) COLLECTION_DENSITY_CONF() []byte {
 	return nil
 }
 
+func (rcv *SOI) CollectionDensityConf() []byte {
+	return rcv.COLLECTION_DENSITY_CONF()
+}
+
 /// Collection density confidence
 /// Periodicity sampling confidence
 func (rcv *SOI) PERIODICITY_SAMPLING_CONF() []byte {
@@ -772,6 +1148,10 @@ func (rcv *SOI) PERIODICITY_SAMPLING_CONF() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *SOI) PeriodicitySamplingConf() []byte {
+	return rcv.PERIODICITY_SAMPLING_CONF()
 }
 
 /// Periodicity sampling confidence
@@ -784,6 +1164,10 @@ func (rcv *SOI) PERIODICITY_DETECTION_CONF() []byte {
 	return nil
 }
 
+func (rcv *SOI) PeriodicityDetectionConf() []byte {
+	return rcv.PERIODICITY_DETECTION_CONF()
+}
+
 /// Periodicity detection confidence
 /// Collection identifier
 func (rcv *SOI) COLLECTION_ID() []byte {
@@ -792,6 +1176,10 @@ func (rcv *SOI) COLLECTION_ID() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *SOI) CollectionId() []byte {
+	return rcv.COLLECTION_ID()
 }
 
 /// Collection identifier
@@ -805,12 +1193,20 @@ func (rcv *SOI) CALIBRATIONS(j int) []byte {
 	return nil
 }
 
+func (rcv *SOI) Calibrations(j int) []byte {
+	return rcv.CALIBRATIONS(j)
+}
+
 func (rcv *SOI) CALIBRATIONSLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(120))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *SOI) CalibrationsLength() int {
+	return rcv.CALIBRATIONSLength()
 }
 
 /// Calibration record references
@@ -824,12 +1220,20 @@ func (rcv *SOI) TAGS(j int) []byte {
 	return nil
 }
 
+func (rcv *SOI) Tags(j int) []byte {
+	return rcv.TAGS(j)
+}
+
 func (rcv *SOI) TAGSLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(122))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *SOI) TagsLength() int {
+	return rcv.TAGSLength()
 }
 
 /// Associated tags
@@ -840,6 +1244,10 @@ func (rcv *SOI) TRANSACTION_ID() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *SOI) TransactionId() []byte {
+	return rcv.TRANSACTION_ID()
 }
 
 /// Transaction identifier
@@ -853,12 +1261,20 @@ func (rcv *SOI) OPTICAL_SOIOBSERVATION_LIST(j int) []byte {
 	return nil
 }
 
+func (rcv *SOI) OpticalSoiobservationList(j int) []byte {
+	return rcv.OPTICAL_SOIOBSERVATION_LIST(j)
+}
+
 func (rcv *SOI) OPTICAL_SOIOBSERVATION_LISTLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(126))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *SOI) OpticalSoiobservationListLength() int {
+	return rcv.OPTICAL_SOIOBSERVATION_LISTLength()
 }
 
 /// Optical SOI observation references
@@ -872,12 +1288,20 @@ func (rcv *SOI) RADAR_SOIOBSERVATION_LIST(j int) []byte {
 	return nil
 }
 
+func (rcv *SOI) RadarSoiobservationList(j int) []byte {
+	return rcv.RADAR_SOIOBSERVATION_LIST(j)
+}
+
 func (rcv *SOI) RADAR_SOIOBSERVATION_LISTLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(128))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *SOI) RadarSoiobservationListLength() int {
+	return rcv.RADAR_SOIOBSERVATION_LISTLength()
 }
 
 /// Radar SOI observation references
@@ -887,206 +1311,410 @@ func SOIStart(builder *flatbuffers.Builder) {
 func SOIAddID(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ID), 0)
 }
+func SOIAddId(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
+	SOIAddID(builder, ID)
+}
 func SOIAddMSG_CREATE_DATE(builder *flatbuffers.Builder, MSG_CREATE_DATE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(MSG_CREATE_DATE), 0)
+}
+func SOIAddMsgCreateDate(builder *flatbuffers.Builder, MSG_CREATE_DATE flatbuffers.UOffsetT) {
+	SOIAddMSG_CREATE_DATE(builder, MSG_CREATE_DATE)
 }
 func SOIAddID_SENSOR(builder *flatbuffers.Builder, ID_SENSOR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(ID_SENSOR), 0)
 }
+func SOIAddIdSensor(builder *flatbuffers.Builder, ID_SENSOR flatbuffers.UOffsetT) {
+	SOIAddID_SENSOR(builder, ID_SENSOR)
+}
 func SOIAddORIG_SENSOR_ID(builder *flatbuffers.Builder, ORIG_SENSOR_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(ORIG_SENSOR_ID), 0)
+}
+func SOIAddOrigSensorId(builder *flatbuffers.Builder, ORIG_SENSOR_ID flatbuffers.UOffsetT) {
+	SOIAddORIG_SENSOR_ID(builder, ORIG_SENSOR_ID)
 }
 func SOIAddSENSOR_AS_ID(builder *flatbuffers.Builder, SENSOR_AS_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(SENSOR_AS_ID), 0)
 }
+func SOIAddSensorAsId(builder *flatbuffers.Builder, SENSOR_AS_ID flatbuffers.UOffsetT) {
+	SOIAddSENSOR_AS_ID(builder, SENSOR_AS_ID)
+}
 func SOIAddSAT_NO(builder *flatbuffers.Builder, SAT_NO uint32) {
 	builder.PrependUint32Slot(5, SAT_NO, 0)
+}
+func SOIAddSatNo(builder *flatbuffers.Builder, SAT_NO uint32) {
+	SOIAddSAT_NO(builder, SAT_NO)
 }
 func SOIAddORIG_OBJECT_ID(builder *flatbuffers.Builder, ORIG_OBJECT_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(ORIG_OBJECT_ID), 0)
 }
+func SOIAddOrigObjectId(builder *flatbuffers.Builder, ORIG_OBJECT_ID flatbuffers.UOffsetT) {
+	SOIAddORIG_OBJECT_ID(builder, ORIG_OBJECT_ID)
+}
 func SOIAddSATELLITE_NAME(builder *flatbuffers.Builder, SATELLITE_NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(SATELLITE_NAME), 0)
+}
+func SOIAddSatelliteName(builder *flatbuffers.Builder, SATELLITE_NAME flatbuffers.UOffsetT) {
+	SOIAddSATELLITE_NAME(builder, SATELLITE_NAME)
 }
 func SOIAddUCT(builder *flatbuffers.Builder, UCT bool) {
 	builder.PrependBoolSlot(8, UCT, false)
 }
+func SOIAddUct(builder *flatbuffers.Builder, UCT bool) {
+	SOIAddUCT(builder, UCT)
+}
 func SOIAddSENLAT(builder *flatbuffers.Builder, SENLAT float64) {
 	builder.PrependFloat64Slot(9, SENLAT, 0.0)
+}
+func SOIAddSenlat(builder *flatbuffers.Builder, SENLAT float64) {
+	SOIAddSENLAT(builder, SENLAT)
 }
 func SOIAddSENLON(builder *flatbuffers.Builder, SENLON float64) {
 	builder.PrependFloat64Slot(10, SENLON, 0.0)
 }
+func SOIAddSenlon(builder *flatbuffers.Builder, SENLON float64) {
+	SOIAddSENLON(builder, SENLON)
+}
 func SOIAddSENALT(builder *flatbuffers.Builder, SENALT float64) {
 	builder.PrependFloat64Slot(11, SENALT, 0.0)
+}
+func SOIAddSenalt(builder *flatbuffers.Builder, SENALT float64) {
+	SOIAddSENALT(builder, SENALT)
 }
 func SOIAddSENX(builder *flatbuffers.Builder, SENX float64) {
 	builder.PrependFloat64Slot(12, SENX, 0.0)
 }
+func SOIAddSenx(builder *flatbuffers.Builder, SENX float64) {
+	SOIAddSENX(builder, SENX)
+}
 func SOIAddSENY(builder *flatbuffers.Builder, SENY float64) {
 	builder.PrependFloat64Slot(13, SENY, 0.0)
+}
+func SOIAddSeny(builder *flatbuffers.Builder, SENY float64) {
+	SOIAddSENY(builder, SENY)
 }
 func SOIAddSENZ(builder *flatbuffers.Builder, SENZ float64) {
 	builder.PrependFloat64Slot(14, SENZ, 0.0)
 }
+func SOIAddSenz(builder *flatbuffers.Builder, SENZ float64) {
+	SOIAddSENZ(builder, SENZ)
+}
 func SOIAddSENVELX(builder *flatbuffers.Builder, SENVELX float64) {
 	builder.PrependFloat64Slot(15, SENVELX, 0.0)
+}
+func SOIAddSenvelx(builder *flatbuffers.Builder, SENVELX float64) {
+	SOIAddSENVELX(builder, SENVELX)
 }
 func SOIAddSENVELY(builder *flatbuffers.Builder, SENVELY float64) {
 	builder.PrependFloat64Slot(16, SENVELY, 0.0)
 }
+func SOIAddSenvely(builder *flatbuffers.Builder, SENVELY float64) {
+	SOIAddSENVELY(builder, SENVELY)
+}
 func SOIAddSENVELZ(builder *flatbuffers.Builder, SENVELZ float64) {
 	builder.PrependFloat64Slot(17, SENVELZ, 0.0)
+}
+func SOIAddSenvelz(builder *flatbuffers.Builder, SENVELZ float64) {
+	SOIAddSENVELZ(builder, SENVELZ)
 }
 func SOIAddSEN_REFERENCE_FRAME(builder *flatbuffers.Builder, SEN_REFERENCE_FRAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(18, flatbuffers.UOffsetT(SEN_REFERENCE_FRAME), 0)
 }
+func SOIAddSenReferenceFrame(builder *flatbuffers.Builder, SEN_REFERENCE_FRAME flatbuffers.UOffsetT) {
+	SOIAddSEN_REFERENCE_FRAME(builder, SEN_REFERENCE_FRAME)
+}
 func SOIAddOBS_TYPE(builder *flatbuffers.Builder, OBS_TYPE soiObsType) {
 	builder.PrependInt8Slot(19, int8(OBS_TYPE), 0)
+}
+func SOIAddObsType(builder *flatbuffers.Builder, OBS_TYPE soiObsType) {
+	SOIAddOBS_TYPE(builder, OBS_TYPE)
 }
 func SOIAddCOLLECTION_MODE(builder *flatbuffers.Builder, COLLECTION_MODE soiCollectionMode) {
 	builder.PrependInt8Slot(20, int8(COLLECTION_MODE), 0)
 }
+func SOIAddCollectionMode(builder *flatbuffers.Builder, COLLECTION_MODE soiCollectionMode) {
+	SOIAddCOLLECTION_MODE(builder, COLLECTION_MODE)
+}
 func SOIAddSTART_TIME(builder *flatbuffers.Builder, START_TIME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(21, flatbuffers.UOffsetT(START_TIME), 0)
+}
+func SOIAddStartTime(builder *flatbuffers.Builder, START_TIME flatbuffers.UOffsetT) {
+	SOIAddSTART_TIME(builder, START_TIME)
 }
 func SOIAddEND_TIME(builder *flatbuffers.Builder, END_TIME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(22, flatbuffers.UOffsetT(END_TIME), 0)
 }
+func SOIAddEndTime(builder *flatbuffers.Builder, END_TIME flatbuffers.UOffsetT) {
+	SOIAddEND_TIME(builder, END_TIME)
+}
 func SOIAddNUM_OBS(builder *flatbuffers.Builder, NUM_OBS uint32) {
 	builder.PrependUint32Slot(23, NUM_OBS, 0)
+}
+func SOIAddNumObs(builder *flatbuffers.Builder, NUM_OBS uint32) {
+	SOIAddNUM_OBS(builder, NUM_OBS)
 }
 func SOIAddREFERENCE_FRAME(builder *flatbuffers.Builder, REFERENCE_FRAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(24, flatbuffers.UOffsetT(REFERENCE_FRAME), 0)
 }
+func SOIAddReferenceFrame(builder *flatbuffers.Builder, REFERENCE_FRAME flatbuffers.UOffsetT) {
+	SOIAddREFERENCE_FRAME(builder, REFERENCE_FRAME)
+}
 func SOIAddPOLAR_ANGLE_START(builder *flatbuffers.Builder, POLAR_ANGLE_START float64) {
 	builder.PrependFloat64Slot(25, POLAR_ANGLE_START, 0.0)
+}
+func SOIAddPolarAngleStart(builder *flatbuffers.Builder, POLAR_ANGLE_START float64) {
+	SOIAddPOLAR_ANGLE_START(builder, POLAR_ANGLE_START)
 }
 func SOIAddPOLAR_ANGLE_END(builder *flatbuffers.Builder, POLAR_ANGLE_END float64) {
 	builder.PrependFloat64Slot(26, POLAR_ANGLE_END, 0.0)
 }
+func SOIAddPolarAngleEnd(builder *flatbuffers.Builder, POLAR_ANGLE_END float64) {
+	SOIAddPOLAR_ANGLE_END(builder, POLAR_ANGLE_END)
+}
 func SOIAddLOS_DECLINATION_START(builder *flatbuffers.Builder, LOS_DECLINATION_START float64) {
 	builder.PrependFloat64Slot(27, LOS_DECLINATION_START, 0.0)
+}
+func SOIAddLosDeclinationStart(builder *flatbuffers.Builder, LOS_DECLINATION_START float64) {
+	SOIAddLOS_DECLINATION_START(builder, LOS_DECLINATION_START)
 }
 func SOIAddLOS_DECLINATION_END(builder *flatbuffers.Builder, LOS_DECLINATION_END float64) {
 	builder.PrependFloat64Slot(28, LOS_DECLINATION_END, 0.0)
 }
+func SOIAddLosDeclinationEnd(builder *flatbuffers.Builder, LOS_DECLINATION_END float64) {
+	SOIAddLOS_DECLINATION_END(builder, LOS_DECLINATION_END)
+}
 func SOIAddPOINTING_ANGLE_AZ_START(builder *flatbuffers.Builder, POINTING_ANGLE_AZ_START float64) {
 	builder.PrependFloat64Slot(29, POINTING_ANGLE_AZ_START, 0.0)
+}
+func SOIAddPointingAngleAzStart(builder *flatbuffers.Builder, POINTING_ANGLE_AZ_START float64) {
+	SOIAddPOINTING_ANGLE_AZ_START(builder, POINTING_ANGLE_AZ_START)
 }
 func SOIAddPOINTING_ANGLE_AZ_END(builder *flatbuffers.Builder, POINTING_ANGLE_AZ_END float64) {
 	builder.PrependFloat64Slot(30, POINTING_ANGLE_AZ_END, 0.0)
 }
+func SOIAddPointingAngleAzEnd(builder *flatbuffers.Builder, POINTING_ANGLE_AZ_END float64) {
+	SOIAddPOINTING_ANGLE_AZ_END(builder, POINTING_ANGLE_AZ_END)
+}
 func SOIAddPOINTING_ANGLE_EL_START(builder *flatbuffers.Builder, POINTING_ANGLE_EL_START float64) {
 	builder.PrependFloat64Slot(31, POINTING_ANGLE_EL_START, 0.0)
+}
+func SOIAddPointingAngleElStart(builder *flatbuffers.Builder, POINTING_ANGLE_EL_START float64) {
+	SOIAddPOINTING_ANGLE_EL_START(builder, POINTING_ANGLE_EL_START)
 }
 func SOIAddPOINTING_ANGLE_EL_END(builder *flatbuffers.Builder, POINTING_ANGLE_EL_END float64) {
 	builder.PrependFloat64Slot(32, POINTING_ANGLE_EL_END, 0.0)
 }
+func SOIAddPointingAngleElEnd(builder *flatbuffers.Builder, POINTING_ANGLE_EL_END float64) {
+	SOIAddPOINTING_ANGLE_EL_END(builder, POINTING_ANGLE_EL_END)
+}
 func SOIAddPIXEL_ARRAY_WIDTH(builder *flatbuffers.Builder, PIXEL_ARRAY_WIDTH uint16) {
 	builder.PrependUint16Slot(33, PIXEL_ARRAY_WIDTH, 0)
+}
+func SOIAddPixelArrayWidth(builder *flatbuffers.Builder, PIXEL_ARRAY_WIDTH uint16) {
+	SOIAddPIXEL_ARRAY_WIDTH(builder, PIXEL_ARRAY_WIDTH)
 }
 func SOIAddPIXEL_ARRAY_HEIGHT(builder *flatbuffers.Builder, PIXEL_ARRAY_HEIGHT uint16) {
 	builder.PrependUint16Slot(34, PIXEL_ARRAY_HEIGHT, 0)
 }
+func SOIAddPixelArrayHeight(builder *flatbuffers.Builder, PIXEL_ARRAY_HEIGHT uint16) {
+	SOIAddPIXEL_ARRAY_HEIGHT(builder, PIXEL_ARRAY_HEIGHT)
+}
 func SOIAddNUM_SPECTRAL_FILTERS(builder *flatbuffers.Builder, NUM_SPECTRAL_FILTERS byte) {
 	builder.PrependByteSlot(35, NUM_SPECTRAL_FILTERS, 0)
+}
+func SOIAddNumSpectralFilters(builder *flatbuffers.Builder, NUM_SPECTRAL_FILTERS byte) {
+	SOIAddNUM_SPECTRAL_FILTERS(builder, NUM_SPECTRAL_FILTERS)
 }
 func SOIAddSPECTRAL_FILTERS(builder *flatbuffers.Builder, SPECTRAL_FILTERS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(36, flatbuffers.UOffsetT(SPECTRAL_FILTERS), 0)
 }
+func SOIAddSpectralFilters(builder *flatbuffers.Builder, SPECTRAL_FILTERS flatbuffers.UOffsetT) {
+	SOIAddSPECTRAL_FILTERS(builder, SPECTRAL_FILTERS)
+}
 func SOIStartSPECTRAL_FILTERSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func SOIStartSpectralFiltersVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return SOIStartSPECTRAL_FILTERSVector(builder, numElems)
 }
 func SOIAddGAIN(builder *flatbuffers.Builder, GAIN float64) {
 	builder.PrependFloat64Slot(37, GAIN, 0.0)
 }
+func SOIAddGain(builder *flatbuffers.Builder, GAIN float64) {
+	SOIAddGAIN(builder, GAIN)
+}
 func SOIAddBINNING_HORIZ(builder *flatbuffers.Builder, BINNING_HORIZ byte) {
 	builder.PrependByteSlot(38, BINNING_HORIZ, 0)
+}
+func SOIAddBinningHoriz(builder *flatbuffers.Builder, BINNING_HORIZ byte) {
+	SOIAddBINNING_HORIZ(builder, BINNING_HORIZ)
 }
 func SOIAddBINNING_VERT(builder *flatbuffers.Builder, BINNING_VERT byte) {
 	builder.PrependByteSlot(39, BINNING_VERT, 0)
 }
+func SOIAddBinningVert(builder *flatbuffers.Builder, BINNING_VERT byte) {
+	SOIAddBINNING_VERT(builder, BINNING_VERT)
+}
 func SOIAddSOLAR_MAG(builder *flatbuffers.Builder, SOLAR_MAG float64) {
 	builder.PrependFloat64Slot(40, SOLAR_MAG, 0.0)
+}
+func SOIAddSolarMag(builder *flatbuffers.Builder, SOLAR_MAG float64) {
+	SOIAddSOLAR_MAG(builder, SOLAR_MAG)
 }
 func SOIAddPIXEL_MIN(builder *flatbuffers.Builder, PIXEL_MIN int32) {
 	builder.PrependInt32Slot(41, PIXEL_MIN, 0)
 }
+func SOIAddPixelMin(builder *flatbuffers.Builder, PIXEL_MIN int32) {
+	SOIAddPIXEL_MIN(builder, PIXEL_MIN)
+}
 func SOIAddPIXEL_MAX(builder *flatbuffers.Builder, PIXEL_MAX int32) {
 	builder.PrependInt32Slot(42, PIXEL_MAX, 0)
+}
+func SOIAddPixelMax(builder *flatbuffers.Builder, PIXEL_MAX int32) {
+	SOIAddPIXEL_MAX(builder, PIXEL_MAX)
 }
 func SOIAddSOFTWARE_VERSION(builder *flatbuffers.Builder, SOFTWARE_VERSION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(43, flatbuffers.UOffsetT(SOFTWARE_VERSION), 0)
 }
+func SOIAddSoftwareVersion(builder *flatbuffers.Builder, SOFTWARE_VERSION flatbuffers.UOffsetT) {
+	SOIAddSOFTWARE_VERSION(builder, SOFTWARE_VERSION)
+}
 func SOIAddSTAR_CAT_NAME(builder *flatbuffers.Builder, STAR_CAT_NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(44, flatbuffers.UOffsetT(STAR_CAT_NAME), 0)
+}
+func SOIAddStarCatName(builder *flatbuffers.Builder, STAR_CAT_NAME flatbuffers.UOffsetT) {
+	SOIAddSTAR_CAT_NAME(builder, STAR_CAT_NAME)
 }
 func SOIAddCORR_QUALITY(builder *flatbuffers.Builder, CORR_QUALITY float64) {
 	builder.PrependFloat64Slot(45, CORR_QUALITY, 0.0)
 }
+func SOIAddCorrQuality(builder *flatbuffers.Builder, CORR_QUALITY float64) {
+	SOIAddCORR_QUALITY(builder, CORR_QUALITY)
+}
 func SOIAddCALIBRATION_TYPE(builder *flatbuffers.Builder, CALIBRATION_TYPE soiCalibrationType) {
 	builder.PrependInt8Slot(46, int8(CALIBRATION_TYPE), 0)
+}
+func SOIAddCalibrationType(builder *flatbuffers.Builder, CALIBRATION_TYPE soiCalibrationType) {
+	SOIAddCALIBRATION_TYPE(builder, CALIBRATION_TYPE)
 }
 func SOIAddVALID_CALIBRATIONS(builder *flatbuffers.Builder, VALID_CALIBRATIONS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(47, flatbuffers.UOffsetT(VALID_CALIBRATIONS), 0)
 }
+func SOIAddValidCalibrations(builder *flatbuffers.Builder, VALID_CALIBRATIONS flatbuffers.UOffsetT) {
+	SOIAddVALID_CALIBRATIONS(builder, VALID_CALIBRATIONS)
+}
 func SOIAddPERCENT_SAT_THRESHOLD(builder *flatbuffers.Builder, PERCENT_SAT_THRESHOLD float64) {
 	builder.PrependFloat64Slot(48, PERCENT_SAT_THRESHOLD, 0.0)
+}
+func SOIAddPercentSatThreshold(builder *flatbuffers.Builder, PERCENT_SAT_THRESHOLD float64) {
+	SOIAddPERCENT_SAT_THRESHOLD(builder, PERCENT_SAT_THRESHOLD)
 }
 func SOIAddCHANGE_DETECTED(builder *flatbuffers.Builder, CHANGE_DETECTED bool) {
 	builder.PrependBoolSlot(49, CHANGE_DETECTED, false)
 }
+func SOIAddChangeDetected(builder *flatbuffers.Builder, CHANGE_DETECTED bool) {
+	SOIAddCHANGE_DETECTED(builder, CHANGE_DETECTED)
+}
 func SOIAddPERIODICITY_CHANGE_DETECTED(builder *flatbuffers.Builder, PERIODICITY_CHANGE_DETECTED bool) {
 	builder.PrependBoolSlot(50, PERIODICITY_CHANGE_DETECTED, false)
+}
+func SOIAddPeriodicityChangeDetected(builder *flatbuffers.Builder, PERIODICITY_CHANGE_DETECTED bool) {
+	SOIAddPERIODICITY_CHANGE_DETECTED(builder, PERIODICITY_CHANGE_DETECTED)
 }
 func SOIAddBRIGHTNESS_VARIANCE_CHANGE_DETECTED(builder *flatbuffers.Builder, BRIGHTNESS_VARIANCE_CHANGE_DETECTED bool) {
 	builder.PrependBoolSlot(51, BRIGHTNESS_VARIANCE_CHANGE_DETECTED, false)
 }
+func SOIAddBrightnessVarianceChangeDetected(builder *flatbuffers.Builder, BRIGHTNESS_VARIANCE_CHANGE_DETECTED bool) {
+	SOIAddBRIGHTNESS_VARIANCE_CHANGE_DETECTED(builder, BRIGHTNESS_VARIANCE_CHANGE_DETECTED)
+}
 func SOIAddSOLAR_PHASE_ANGLE_BRIGHTNESS_CHANGE_DETECTED(builder *flatbuffers.Builder, SOLAR_PHASE_ANGLE_BRIGHTNESS_CHANGE_DETECTED bool) {
 	builder.PrependBoolSlot(52, SOLAR_PHASE_ANGLE_BRIGHTNESS_CHANGE_DETECTED, false)
+}
+func SOIAddSolarPhaseAngleBrightnessChangeDetected(builder *flatbuffers.Builder, SOLAR_PHASE_ANGLE_BRIGHTNESS_CHANGE_DETECTED bool) {
+	SOIAddSOLAR_PHASE_ANGLE_BRIGHTNESS_CHANGE_DETECTED(builder, SOLAR_PHASE_ANGLE_BRIGHTNESS_CHANGE_DETECTED)
 }
 func SOIAddCHANGE_CONF(builder *flatbuffers.Builder, CHANGE_CONF flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(53, flatbuffers.UOffsetT(CHANGE_CONF), 0)
 }
+func SOIAddChangeConf(builder *flatbuffers.Builder, CHANGE_CONF flatbuffers.UOffsetT) {
+	SOIAddCHANGE_CONF(builder, CHANGE_CONF)
+}
 func SOIAddCOLLECTION_DENSITY_CONF(builder *flatbuffers.Builder, COLLECTION_DENSITY_CONF flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(54, flatbuffers.UOffsetT(COLLECTION_DENSITY_CONF), 0)
+}
+func SOIAddCollectionDensityConf(builder *flatbuffers.Builder, COLLECTION_DENSITY_CONF flatbuffers.UOffsetT) {
+	SOIAddCOLLECTION_DENSITY_CONF(builder, COLLECTION_DENSITY_CONF)
 }
 func SOIAddPERIODICITY_SAMPLING_CONF(builder *flatbuffers.Builder, PERIODICITY_SAMPLING_CONF flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(55, flatbuffers.UOffsetT(PERIODICITY_SAMPLING_CONF), 0)
 }
+func SOIAddPeriodicitySamplingConf(builder *flatbuffers.Builder, PERIODICITY_SAMPLING_CONF flatbuffers.UOffsetT) {
+	SOIAddPERIODICITY_SAMPLING_CONF(builder, PERIODICITY_SAMPLING_CONF)
+}
 func SOIAddPERIODICITY_DETECTION_CONF(builder *flatbuffers.Builder, PERIODICITY_DETECTION_CONF flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(56, flatbuffers.UOffsetT(PERIODICITY_DETECTION_CONF), 0)
+}
+func SOIAddPeriodicityDetectionConf(builder *flatbuffers.Builder, PERIODICITY_DETECTION_CONF flatbuffers.UOffsetT) {
+	SOIAddPERIODICITY_DETECTION_CONF(builder, PERIODICITY_DETECTION_CONF)
 }
 func SOIAddCOLLECTION_ID(builder *flatbuffers.Builder, COLLECTION_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(57, flatbuffers.UOffsetT(COLLECTION_ID), 0)
 }
+func SOIAddCollectionId(builder *flatbuffers.Builder, COLLECTION_ID flatbuffers.UOffsetT) {
+	SOIAddCOLLECTION_ID(builder, COLLECTION_ID)
+}
 func SOIAddCALIBRATIONS(builder *flatbuffers.Builder, CALIBRATIONS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(58, flatbuffers.UOffsetT(CALIBRATIONS), 0)
+}
+func SOIAddCalibrations(builder *flatbuffers.Builder, CALIBRATIONS flatbuffers.UOffsetT) {
+	SOIAddCALIBRATIONS(builder, CALIBRATIONS)
 }
 func SOIStartCALIBRATIONSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
+func SOIStartCalibrationsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return SOIStartCALIBRATIONSVector(builder, numElems)
+}
 func SOIAddTAGS(builder *flatbuffers.Builder, TAGS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(59, flatbuffers.UOffsetT(TAGS), 0)
+}
+func SOIAddTags(builder *flatbuffers.Builder, TAGS flatbuffers.UOffsetT) {
+	SOIAddTAGS(builder, TAGS)
 }
 func SOIStartTAGSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
+func SOIStartTagsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return SOIStartTAGSVector(builder, numElems)
+}
 func SOIAddTRANSACTION_ID(builder *flatbuffers.Builder, TRANSACTION_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(60, flatbuffers.UOffsetT(TRANSACTION_ID), 0)
+}
+func SOIAddTransactionId(builder *flatbuffers.Builder, TRANSACTION_ID flatbuffers.UOffsetT) {
+	SOIAddTRANSACTION_ID(builder, TRANSACTION_ID)
 }
 func SOIAddOPTICAL_SOIOBSERVATION_LIST(builder *flatbuffers.Builder, OPTICAL_SOIOBSERVATION_LIST flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(61, flatbuffers.UOffsetT(OPTICAL_SOIOBSERVATION_LIST), 0)
 }
+func SOIAddOpticalSoiobservationList(builder *flatbuffers.Builder, OPTICAL_SOIOBSERVATION_LIST flatbuffers.UOffsetT) {
+	SOIAddOPTICAL_SOIOBSERVATION_LIST(builder, OPTICAL_SOIOBSERVATION_LIST)
+}
 func SOIStartOPTICAL_SOIOBSERVATION_LISTVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func SOIStartOpticalSoiobservationListVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return SOIStartOPTICAL_SOIOBSERVATION_LISTVector(builder, numElems)
 }
 func SOIAddRADAR_SOIOBSERVATION_LIST(builder *flatbuffers.Builder, RADAR_SOIOBSERVATION_LIST flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(62, flatbuffers.UOffsetT(RADAR_SOIOBSERVATION_LIST), 0)
 }
+func SOIAddRadarSoiobservationList(builder *flatbuffers.Builder, RADAR_SOIOBSERVATION_LIST flatbuffers.UOffsetT) {
+	SOIAddRADAR_SOIOBSERVATION_LIST(builder, RADAR_SOIOBSERVATION_LIST)
+}
 func SOIStartRADAR_SOIOBSERVATION_LISTVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func SOIStartRadarSoiobservationListVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return SOIStartRADAR_SOIOBSERVATION_LISTVector(builder, numElems)
 }
 func SOIEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

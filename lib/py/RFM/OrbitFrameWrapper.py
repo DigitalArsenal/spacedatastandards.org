@@ -29,7 +29,7 @@ class OrbitFrameWrapper(object):
         self._tab = flatbuffers.table.Table(buf, pos)
 
     # OrbitFrameWrapper
-    def Frame(self):
+    def frame(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
@@ -41,11 +41,11 @@ def OrbitFrameWrapperStart(builder):
 def Start(builder):
     OrbitFrameWrapperStart(builder)
 
-def OrbitFrameWrapperAddFrame(builder, frame):
+def OrbitFrameWrapperAddframe(builder, frame):
     builder.PrependInt8Slot(0, frame, 0)
 
-def AddFrame(builder, frame):
-    OrbitFrameWrapperAddFrame(builder, frame)
+def Addframe(builder, frame):
+    OrbitFrameWrapperAddframe(builder, frame)
 
 def OrbitFrameWrapperEnd(builder):
     return builder.EndObject()
@@ -57,14 +57,17 @@ def End(builder):
 class OrbitFrameWrapperT(object):
 
     # OrbitFrameWrapperT
-    def __init__(self):
-        self.frame = 0  # type: int
+    def __init__(
+        self,
+        frame = 0,
+    ):
+        self.frame = frame  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        orbitFrameWrapper = OrbitFrameWrapper()
-        orbitFrameWrapper.Init(buf, pos)
-        return cls.InitFromObj(orbitFrameWrapper)
+        tmpOrbitFrameWrapper = OrbitFrameWrapper()
+        tmpOrbitFrameWrapper.Init(buf, pos)
+        return cls.InitFromObj(tmpOrbitFrameWrapper)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -72,20 +75,20 @@ class OrbitFrameWrapperT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, orbitFrameWrapper):
+    def InitFromObj(cls, tmpOrbitFrameWrapper):
         x = OrbitFrameWrapperT()
-        x._UnPack(orbitFrameWrapper)
+        x._UnPack(tmpOrbitFrameWrapper)
         return x
 
     # OrbitFrameWrapperT
-    def _UnPack(self, orbitFrameWrapper):
-        if orbitFrameWrapper is None:
+    def _UnPack(self, OrbitFrameWrapper):
+        if OrbitFrameWrapper is None:
             return
-        self.frame = orbitFrameWrapper.Frame()
+        self.frame = OrbitFrameWrapper.frame()
 
     # OrbitFrameWrapperT
     def Pack(self, builder):
         OrbitFrameWrapperStart(builder)
-        OrbitFrameWrapperAddFrame(builder, self.frame)
-        orbitFrameWrapper = OrbitFrameWrapperEnd(builder)
-        return orbitFrameWrapper
+        OrbitFrameWrapperAddframe(builder, self.frame)
+        OrbitFrameWrapper = OrbitFrameWrapperEnd(builder)
+        return OrbitFrameWrapper

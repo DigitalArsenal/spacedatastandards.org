@@ -2,10 +2,14 @@
 // swiftlint:disable all
 // swiftformat:disable all
 
+#if canImport(Common)
+import Common
+#endif
+
 import FlatBuffers
 
 ///  Access type for data listings
-public enum accessType: Int8, Enum, Verifiable {
+public enum accessType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -24,7 +28,7 @@ public enum accessType: Int8, Enum, Verifiable {
 
 
 ///  Payment method accepted
-public enum paymentMethod: Int8, Enum, Verifiable {
+public enum paymentMethod: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -47,9 +51,9 @@ public enum paymentMethod: Int8, Enum, Verifiable {
 
 
 ///  Spatial coverage definition
-public struct SpatialCoverage: FlatBufferObject, Verifiable {
+public struct SpatialCoverage: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -70,13 +74,9 @@ public struct SpatialCoverage: FlatBufferObject, Verifiable {
   public var TYPE: String? { let o = _accessor.offset(VTOFFSET.TYPE.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TYPE.v) }
   ///  Regions covered, e.g., ["LEO", "GEO", "MEO"]
-  public var hasRegions: Bool { let o = _accessor.offset(VTOFFSET.REGIONS.v); return o == 0 ? false : true }
-  public var REGIONSCount: Int32 { let o = _accessor.offset(VTOFFSET.REGIONS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func REGIONS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.REGIONS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  public var REGIONS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.REGIONS.v, byteSize: 4) }
   ///  Specific NORAD IDs or catalog numbers
-  public var hasObjectIds: Bool { let o = _accessor.offset(VTOFFSET.OBJECT_IDS.v); return o == 0 ? false : true }
-  public var OBJECT_IDSCount: Int32 { let o = _accessor.offset(VTOFFSET.OBJECT_IDS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func OBJECT_IDS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.OBJECT_IDS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  public var OBJECT_IDS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.OBJECT_IDS.v, byteSize: 4) }
   public static func startSpatialCoverage(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 3) }
   public static func add(TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TYPE, at: VTOFFSET.TYPE.p) }
   public static func addVectorOf(REGIONS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REGIONS, at: VTOFFSET.REGIONS.p) }
@@ -105,9 +105,9 @@ public struct SpatialCoverage: FlatBufferObject, Verifiable {
 }
 
 ///  Temporal coverage definition
-public struct TemporalCoverage: FlatBufferObject, Verifiable {
+public struct TemporalCoverage: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -168,9 +168,9 @@ public struct TemporalCoverage: FlatBufferObject, Verifiable {
 }
 
 ///  Data coverage combining spatial and temporal
-public struct DataCoverage: FlatBufferObject, Verifiable {
+public struct DataCoverage: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -187,9 +187,9 @@ public struct DataCoverage: FlatBufferObject, Verifiable {
   }
 
   ///  Spatial coverage definition
-  public var SPATIAL: SpatialCoverage? { let o = _accessor.offset(VTOFFSET.SPATIAL.v); return o == 0 ? nil : SpatialCoverage(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var SPATIAL: SpatialCoverage? { let o = _accessor.offset(VTOFFSET.SPATIAL.v); return o == 0 ? nil : SpatialCoverage(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Temporal coverage definition
-  public var TEMPORAL: TemporalCoverage? { let o = _accessor.offset(VTOFFSET.TEMPORAL.v); return o == 0 ? nil : TemporalCoverage(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var TEMPORAL: TemporalCoverage? { let o = _accessor.offset(VTOFFSET.TEMPORAL.v); return o == 0 ? nil : TemporalCoverage(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public static func startDataCoverage(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 2) }
   public static func add(SPATIAL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SPATIAL, at: VTOFFSET.SPATIAL.p) }
   public static func add(TEMPORAL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TEMPORAL, at: VTOFFSET.TEMPORAL.p) }
@@ -214,9 +214,9 @@ public struct DataCoverage: FlatBufferObject, Verifiable {
 }
 
 ///  Pricing tier for a listing
-public struct PricingTier: FlatBufferObject, Verifiable {
+public struct PricingTier: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -249,9 +249,7 @@ public struct PricingTier: FlatBufferObject, Verifiable {
   ///  Rate limit in requests per hour
   public var RATE_LIMIT: UInt32 { let o = _accessor.offset(VTOFFSET.RATE_LIMIT.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  List of features included in this tier
-  public var hasFeatures: Bool { let o = _accessor.offset(VTOFFSET.FEATURES.v); return o == 0 ? false : true }
-  public var FEATURESCount: Int32 { let o = _accessor.offset(VTOFFSET.FEATURES.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func FEATURES(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.FEATURES.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  public var FEATURES: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.FEATURES.v, byteSize: 4) }
   public static func startPricingTier(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 6) }
   public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
   public static func add(PRICE_AMOUNT: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PRICE_AMOUNT, def: 0, at: VTOFFSET.PRICE_AMOUNT.p) }
@@ -292,9 +290,9 @@ public struct PricingTier: FlatBufferObject, Verifiable {
 }
 
 ///  Storefront Listing - Data marketplace listing
-public struct STF: FlatBufferObject, Verifiable {
+public struct STF: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -340,11 +338,9 @@ public struct STF: FlatBufferObject, Verifiable {
   public var DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.DESCRIPTION.v) }
   ///  SDS data types offered, e.g., ["OMM", "CDM", "TLE"]
-  public var hasDataTypes: Bool { let o = _accessor.offset(VTOFFSET.DATA_TYPES.v); return o == 0 ? false : true }
-  public var DATA_TYPESCount: Int32 { let o = _accessor.offset(VTOFFSET.DATA_TYPES.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func DATA_TYPES(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.DATA_TYPES.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  public var DATA_TYPES: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.DATA_TYPES.v, byteSize: 4) }
   ///  Coverage information (spatial and temporal)
-  public var COVERAGE: DataCoverage? { let o = _accessor.offset(VTOFFSET.COVERAGE.v); return o == 0 ? nil : DataCoverage(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var COVERAGE: DataCoverage? { let o = _accessor.offset(VTOFFSET.COVERAGE.v); return o == 0 ? nil : DataCoverage(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  IPFS CID of sample data
   public var SAMPLE_CID: String? { let o = _accessor.offset(VTOFFSET.SAMPLE_CID.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var SAMPLE_CIDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SAMPLE_CID.v) }
@@ -353,13 +349,9 @@ public struct STF: FlatBufferObject, Verifiable {
   ///  Whether encryption is required for data delivery
   public var ENCRYPTION_REQUIRED: Bool { let o = _accessor.offset(VTOFFSET.ENCRYPTION_REQUIRED.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Available pricing tiers
-  public var hasPricing: Bool { let o = _accessor.offset(VTOFFSET.PRICING.v); return o == 0 ? false : true }
-  public var PRICINGCount: Int32 { let o = _accessor.offset(VTOFFSET.PRICING.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func PRICING(at index: Int32) -> PricingTier? { let o = _accessor.offset(VTOFFSET.PRICING.v); return o == 0 ? nil : PricingTier(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var PRICING: FlatbufferVector<PricingTier> { return _accessor.vector(at: VTOFFSET.PRICING.v, byteSize: 4) }
   ///  Payment methods accepted
-  public var hasAcceptedPayments: Bool { let o = _accessor.offset(VTOFFSET.ACCEPTED_PAYMENTS.v); return o == 0 ? false : true }
-  public var ACCEPTED_PAYMENTSCount: Int32 { let o = _accessor.offset(VTOFFSET.ACCEPTED_PAYMENTS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func ACCEPTED_PAYMENTS(at index: Int32) -> paymentMethod? { let o = _accessor.offset(VTOFFSET.ACCEPTED_PAYMENTS.v); return o == 0 ? paymentMethod.cryptoEth : paymentMethod(rawValue: _accessor.directRead(of: Int8.self, offset: _accessor.vector(at: o) + index * 1)) }
+  public var ACCEPTED_PAYMENTS: FlatbufferVector<paymentMethod> { return _accessor.vector(at: VTOFFSET.ACCEPTED_PAYMENTS.v, byteSize: 1) }
   ///  Unix timestamp when listing was created
   public var CREATED_AT: UInt64 { let o = _accessor.offset(VTOFFSET.CREATED_AT.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
   ///  Unix timestamp when listing was last updated
@@ -367,10 +359,8 @@ public struct STF: FlatBufferObject, Verifiable {
   ///  Whether the listing is currently active
   public var ACTIVE: Bool { let o = _accessor.offset(VTOFFSET.ACTIVE.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Ed25519 signature from provider
-  public var hasSignature: Bool { let o = _accessor.offset(VTOFFSET.SIGNATURE.v); return o == 0 ? false : true }
-  public var SIGNATURECount: Int32 { let o = _accessor.offset(VTOFFSET.SIGNATURE.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func SIGNATURE(at index: Int32) -> UInt8 { let o = _accessor.offset(VTOFFSET.SIGNATURE.v); return o == 0 ? 0 : _accessor.directRead(of: UInt8.self, offset: _accessor.vector(at: o) + index * 1) }
-  public var SIGNATURE: [UInt8] { return _accessor.getVector(at: VTOFFSET.SIGNATURE.v) ?? [] }
+  public var SIGNATURE: FlatbufferVector<UInt8> { return _accessor.vector(at: VTOFFSET.SIGNATURE.v, byteSize: 1) }
+  public func withUnsafePointerToSignature<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.SIGNATURE.v, body: body) }
   public static func startSTF(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 16) }
   public static func add(LISTING_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LISTING_ID, at: VTOFFSET.LISTING_ID.p) }
   public static func add(PROVIDER_PEER_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROVIDER_PEER_ID, at: VTOFFSET.PROVIDER_PEER_ID.p) }

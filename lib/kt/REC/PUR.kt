@@ -32,63 +32,63 @@ class PUR : Table() {
     /**
      * Unique identifier for this purchase request
      */
-    val REQUEST_ID : String
+    val requestId : String
         get() {
             val o = __offset(4)
             return if (o != 0) {
                 __string(o + bb_pos)
             } else {
-                throw AssertionError("No value for (required) field REQUEST_ID")
+                throw AssertionError("No value for (required) field requestId")
             }
         }
-    val REQUEST_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun REQUEST_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val requestIdAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
+    fun requestIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * ID of the listing being purchased
      */
-    val LISTING_ID : String
+    val listingId : String
         get() {
             val o = __offset(6)
             return if (o != 0) {
                 __string(o + bb_pos)
             } else {
-                throw AssertionError("No value for (required) field LISTING_ID")
+                throw AssertionError("No value for (required) field listingId")
             }
         }
-    val LISTING_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun LISTING_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val listingIdAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
+    fun listingIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * Name of the pricing tier selected
      */
-    val TIER_NAME : String
+    val tierName : String
         get() {
             val o = __offset(8)
             return if (o != 0) {
                 __string(o + bb_pos)
             } else {
-                throw AssertionError("No value for (required) field TIER_NAME")
+                throw AssertionError("No value for (required) field tierName")
             }
         }
-    val TIER_NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun TIER_NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val tierNameAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
+    fun tierNameInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
     /**
      * Peer ID of the buyer
      */
-    val BUYER_PEER_ID : String
+    val buyerPeerId : String
         get() {
             val o = __offset(10)
             return if (o != 0) {
                 __string(o + bb_pos)
             } else {
-                throw AssertionError("No value for (required) field BUYER_PEER_ID")
+                throw AssertionError("No value for (required) field buyerPeerId")
             }
         }
-    val BUYER_PEER_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
-    fun BUYER_PEER_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
+    val buyerPeerIdAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
+    fun buyerPeerIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
     /**
      * Buyer's encryption public key for encrypted delivery
      */
-    fun BUYER_ENCRYPTION_PUBKEY(j: Int) : UByte {
+    fun buyerEncryptionPubkey(j: Int) : UByte {
         val o = __offset(12)
         return if (o != 0) {
             bb.get(__vector(o) + j * 1).toUByte()
@@ -96,16 +96,16 @@ class PUR : Table() {
             0u
         }
     }
-    val BUYER_ENCRYPTION_PUBKEYLength : Int
+    val buyerEncryptionPubkeyLength : Int
         get() {
             val o = __offset(12); return if (o != 0) __vector_len(o) else 0
         }
-    val BUYER_ENCRYPTION_PUBKEYAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
-    fun BUYER_ENCRYPTION_PUBKEYInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
+    val buyerEncryptionPubkeyAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(12, 1)
+    fun buyerEncryptionPubkeyInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 12, 1)
     /**
      * Payment method used
      */
-    val PAYMENT_METHOD : Byte
+    val paymentMethod : Byte
         get() {
             val o = __offset(14)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -113,7 +113,7 @@ class PUR : Table() {
     /**
      * Payment amount in smallest unit
      */
-    val PAYMENT_AMOUNT : ULong
+    val paymentAmount : ULong
         get() {
             val o = __offset(16)
             return if(o != 0) bb.getLong(o + bb_pos).toULong() else 0UL
@@ -121,7 +121,7 @@ class PUR : Table() {
     /**
      * Currency of payment
      */
-    val PAYMENT_CURRENCY : String?
+    val paymentCurrency : String?
         get() {
             val o = __offset(18)
             return if (o != 0) {
@@ -130,12 +130,12 @@ class PUR : Table() {
                 null
             }
         }
-    val PAYMENT_CURRENCYAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(18, 1)
-    fun PAYMENT_CURRENCYInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 18, 1)
+    val paymentCurrencyAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(18, 1)
+    fun paymentCurrencyInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 18, 1)
     /**
      * Transaction hash for cryptocurrency payments
      */
-    val PAYMENT_TX_HASH : String?
+    val paymentTxHash : String?
         get() {
             val o = __offset(20)
             return if (o != 0) {
@@ -144,12 +144,12 @@ class PUR : Table() {
                 null
             }
         }
-    val PAYMENT_TX_HASHAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(20, 1)
-    fun PAYMENT_TX_HASHInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 20, 1)
+    val paymentTxHashAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(20, 1)
+    fun paymentTxHashInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 20, 1)
     /**
      * Blockchain network: "ethereum", "solana", "bitcoin"
      */
-    val PAYMENT_CHAIN : String?
+    val paymentChain : String?
         get() {
             val o = __offset(22)
             return if (o != 0) {
@@ -158,12 +158,12 @@ class PUR : Table() {
                 null
             }
         }
-    val PAYMENT_CHAINAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(22, 1)
-    fun PAYMENT_CHAINInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 22, 1)
+    val paymentChainAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(22, 1)
+    fun paymentChainInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 22, 1)
     /**
      * Reference ID for credit/fiat payments
      */
-    val PAYMENT_REFERENCE : String?
+    val paymentReference : String?
         get() {
             val o = __offset(24)
             return if (o != 0) {
@@ -172,12 +172,12 @@ class PUR : Table() {
                 null
             }
         }
-    val PAYMENT_REFERENCEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(24, 1)
-    fun PAYMENT_REFERENCEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 24, 1)
+    val paymentReferenceAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(24, 1)
+    fun paymentReferenceInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 24, 1)
     /**
      * Ed25519 signature from buyer
      */
-    fun BUYER_SIGNATURE(j: Int) : UByte {
+    fun buyerSignature(j: Int) : UByte {
         val o = __offset(26)
         return if (o != 0) {
             bb.get(__vector(o) + j * 1).toUByte()
@@ -185,51 +185,51 @@ class PUR : Table() {
             0u
         }
     }
-    val BUYER_SIGNATURELength : Int
+    val buyerSignatureLength : Int
         get() {
             val o = __offset(26); return if (o != 0) __vector_len(o) else 0
         }
-    val BUYER_SIGNATUREAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(26, 1)
-    fun BUYER_SIGNATUREInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 26, 1)
+    val buyerSignatureAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(26, 1)
+    fun buyerSignatureInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 26, 1)
     /**
      * Unix timestamp of the request
      */
-    val TIMESTAMP : ULong
+    val timestamp : ULong
         get() {
             val o = __offset(28)
             return if(o != 0) bb.getLong(o + bb_pos).toULong() else 0UL
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsPUR(_bb: ByteBuffer): PUR = getRootAsPUR(_bb, PUR())
         fun getRootAsPUR(_bb: ByteBuffer, obj: PUR): PUR {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun PURBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$PUR")
-        fun createPUR(builder: FlatBufferBuilder, REQUEST_IDOffset: Int, LISTING_IDOffset: Int, TIER_NAMEOffset: Int, BUYER_PEER_IDOffset: Int, BUYER_ENCRYPTION_PUBKEYOffset: Int, PAYMENT_METHOD: Byte, PAYMENT_AMOUNT: ULong, PAYMENT_CURRENCYOffset: Int, PAYMENT_TX_HASHOffset: Int, PAYMENT_CHAINOffset: Int, PAYMENT_REFERENCEOffset: Int, BUYER_SIGNATUREOffset: Int, TIMESTAMP: ULong) : Int {
+        fun createPUR(builder: FlatBufferBuilder, requestIdOffset: Int, listingIdOffset: Int, tierNameOffset: Int, buyerPeerIdOffset: Int, buyerEncryptionPubkeyOffset: Int, paymentMethod: Byte, paymentAmount: ULong, paymentCurrencyOffset: Int, paymentTxHashOffset: Int, paymentChainOffset: Int, paymentReferenceOffset: Int, buyerSignatureOffset: Int, timestamp: ULong) : Int {
             builder.startTable(13)
-            addTIMESTAMP(builder, TIMESTAMP)
-            addPAYMENT_AMOUNT(builder, PAYMENT_AMOUNT)
-            addBUYER_SIGNATURE(builder, BUYER_SIGNATUREOffset)
-            addPAYMENT_REFERENCE(builder, PAYMENT_REFERENCEOffset)
-            addPAYMENT_CHAIN(builder, PAYMENT_CHAINOffset)
-            addPAYMENT_TX_HASH(builder, PAYMENT_TX_HASHOffset)
-            addPAYMENT_CURRENCY(builder, PAYMENT_CURRENCYOffset)
-            addBUYER_ENCRYPTION_PUBKEY(builder, BUYER_ENCRYPTION_PUBKEYOffset)
-            addBUYER_PEER_ID(builder, BUYER_PEER_IDOffset)
-            addTIER_NAME(builder, TIER_NAMEOffset)
-            addLISTING_ID(builder, LISTING_IDOffset)
-            addREQUEST_ID(builder, REQUEST_IDOffset)
-            addPAYMENT_METHOD(builder, PAYMENT_METHOD)
+            addTIMESTAMP(builder, timestamp)
+            addPAYMENTAMOUNT(builder, paymentAmount)
+            addBUYERSIGNATURE(builder, buyerSignatureOffset)
+            addPAYMENTREFERENCE(builder, paymentReferenceOffset)
+            addPAYMENTCHAIN(builder, paymentChainOffset)
+            addPAYMENTTXHASH(builder, paymentTxHashOffset)
+            addPAYMENTCURRENCY(builder, paymentCurrencyOffset)
+            addBUYERENCRYPTIONPUBKEY(builder, buyerEncryptionPubkeyOffset)
+            addBUYERPEERID(builder, buyerPeerIdOffset)
+            addTIERNAME(builder, tierNameOffset)
+            addLISTINGID(builder, listingIdOffset)
+            addREQUESTID(builder, requestIdOffset)
+            addPAYMENTMETHOD(builder, paymentMethod)
             return endPUR(builder)
         }
         fun startPUR(builder: FlatBufferBuilder) = builder.startTable(13)
-        fun addREQUEST_ID(builder: FlatBufferBuilder, REQUEST_ID: Int) = builder.addOffset(0, REQUEST_ID, 0)
-        fun addLISTING_ID(builder: FlatBufferBuilder, LISTING_ID: Int) = builder.addOffset(1, LISTING_ID, 0)
-        fun addTIER_NAME(builder: FlatBufferBuilder, TIER_NAME: Int) = builder.addOffset(2, TIER_NAME, 0)
-        fun addBUYER_PEER_ID(builder: FlatBufferBuilder, BUYER_PEER_ID: Int) = builder.addOffset(3, BUYER_PEER_ID, 0)
-        fun addBUYER_ENCRYPTION_PUBKEY(builder: FlatBufferBuilder, BUYER_ENCRYPTION_PUBKEY: Int) = builder.addOffset(4, BUYER_ENCRYPTION_PUBKEY, 0)
+        fun addREQUESTID(builder: FlatBufferBuilder, requestId: Int) = builder.addOffset(0, requestId, 0)
+        fun addLISTINGID(builder: FlatBufferBuilder, listingId: Int) = builder.addOffset(1, listingId, 0)
+        fun addTIERNAME(builder: FlatBufferBuilder, tierName: Int) = builder.addOffset(2, tierName, 0)
+        fun addBUYERPEERID(builder: FlatBufferBuilder, buyerPeerId: Int) = builder.addOffset(3, buyerPeerId, 0)
+        fun addBUYERENCRYPTIONPUBKEY(builder: FlatBufferBuilder, buyerEncryptionPubkey: Int) = builder.addOffset(4, buyerEncryptionPubkey, 0)
         @kotlin.ExperimentalUnsignedTypes
         fun createBuyerEncryptionPubkeyVector(builder: FlatBufferBuilder, data: UByteArray) : Int {
             builder.startVector(1, data.size, 1)
@@ -239,13 +239,13 @@ class PUR : Table() {
             return builder.endVector()
         }
         fun startBuyerEncryptionPubkeyVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(1, numElems, 1)
-        fun addPAYMENT_METHOD(builder: FlatBufferBuilder, PAYMENT_METHOD: Byte) = builder.addByte(5, PAYMENT_METHOD, 0)
-        fun addPAYMENT_AMOUNT(builder: FlatBufferBuilder, PAYMENT_AMOUNT: ULong) = builder.addLong(6, PAYMENT_AMOUNT.toLong(), 0)
-        fun addPAYMENT_CURRENCY(builder: FlatBufferBuilder, PAYMENT_CURRENCY: Int) = builder.addOffset(7, PAYMENT_CURRENCY, 0)
-        fun addPAYMENT_TX_HASH(builder: FlatBufferBuilder, PAYMENT_TX_HASH: Int) = builder.addOffset(8, PAYMENT_TX_HASH, 0)
-        fun addPAYMENT_CHAIN(builder: FlatBufferBuilder, PAYMENT_CHAIN: Int) = builder.addOffset(9, PAYMENT_CHAIN, 0)
-        fun addPAYMENT_REFERENCE(builder: FlatBufferBuilder, PAYMENT_REFERENCE: Int) = builder.addOffset(10, PAYMENT_REFERENCE, 0)
-        fun addBUYER_SIGNATURE(builder: FlatBufferBuilder, BUYER_SIGNATURE: Int) = builder.addOffset(11, BUYER_SIGNATURE, 0)
+        fun addPAYMENTMETHOD(builder: FlatBufferBuilder, paymentMethod: Byte) = builder.addByte(5, paymentMethod, 0)
+        fun addPAYMENTAMOUNT(builder: FlatBufferBuilder, paymentAmount: ULong) = builder.addLong(6, paymentAmount.toLong(), 0)
+        fun addPAYMENTCURRENCY(builder: FlatBufferBuilder, paymentCurrency: Int) = builder.addOffset(7, paymentCurrency, 0)
+        fun addPAYMENTTXHASH(builder: FlatBufferBuilder, paymentTxHash: Int) = builder.addOffset(8, paymentTxHash, 0)
+        fun addPAYMENTCHAIN(builder: FlatBufferBuilder, paymentChain: Int) = builder.addOffset(9, paymentChain, 0)
+        fun addPAYMENTREFERENCE(builder: FlatBufferBuilder, paymentReference: Int) = builder.addOffset(10, paymentReference, 0)
+        fun addBUYERSIGNATURE(builder: FlatBufferBuilder, buyerSignature: Int) = builder.addOffset(11, buyerSignature, 0)
         @kotlin.ExperimentalUnsignedTypes
         fun createBuyerSignatureVector(builder: FlatBufferBuilder, data: UByteArray) : Int {
             builder.startVector(1, data.size, 1)
@@ -255,7 +255,7 @@ class PUR : Table() {
             return builder.endVector()
         }
         fun startBuyerSignatureVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(1, numElems, 1)
-        fun addTIMESTAMP(builder: FlatBufferBuilder, TIMESTAMP: ULong) = builder.addLong(12, TIMESTAMP.toLong(), 0)
+        fun addTIMESTAMP(builder: FlatBufferBuilder, timestamp: ULong) = builder.addLong(12, timestamp.toLong(), 0)
         fun endPUR(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
                 builder.required(o, 4)

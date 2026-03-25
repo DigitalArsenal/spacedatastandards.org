@@ -62,12 +62,20 @@ func (rcv *AST) COMMAND() []byte {
 	return nil
 }
 
+func (rcv *AST) Command() []byte {
+	return rcv.COMMAND()
+}
+
 func (rcv *AST) PROPAGATION_REQUEST() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *AST) PropagationRequest() []byte {
+	return rcv.PROPAGATION_REQUEST()
 }
 
 func (rcv *AST) TLE() []byte {
@@ -78,12 +86,20 @@ func (rcv *AST) TLE() []byte {
 	return nil
 }
 
+func (rcv *AST) Tle() []byte {
+	return rcv.TLE()
+}
+
 func (rcv *AST) INITIAL_ELEMENTS() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *AST) InitialElements() []byte {
+	return rcv.INITIAL_ELEMENTS()
 }
 
 func (rcv *AST) INITIAL_STATE() []byte {
@@ -94,6 +110,10 @@ func (rcv *AST) INITIAL_STATE() []byte {
 	return nil
 }
 
+func (rcv *AST) InitialState() []byte {
+	return rcv.INITIAL_STATE()
+}
+
 func (rcv *AST) EPOCH_MS() int64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
@@ -102,8 +122,16 @@ func (rcv *AST) EPOCH_MS() int64 {
 	return 0
 }
 
+func (rcv *AST) EpochMs() int64 {
+	return rcv.EPOCH_MS()
+}
+
 func (rcv *AST) MutateEPOCH_MS(n int64) bool {
 	return rcv._tab.MutateInt64Slot(14, n)
+}
+
+func (rcv *AST) MutateEpochMs(n int64) bool {
+	return rcv.MutateEPOCH_MS(n)
 }
 
 func (rcv *AST) MANEUVER_PLAN() []byte {
@@ -114,6 +142,10 @@ func (rcv *AST) MANEUVER_PLAN() []byte {
 	return nil
 }
 
+func (rcv *AST) ManeuverPlan() []byte {
+	return rcv.MANEUVER_PLAN()
+}
+
 func (rcv *AST) CONJUNCTION_PRIMARY() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
 	if o != 0 {
@@ -122,12 +154,20 @@ func (rcv *AST) CONJUNCTION_PRIMARY() []byte {
 	return nil
 }
 
+func (rcv *AST) ConjunctionPrimary() []byte {
+	return rcv.CONJUNCTION_PRIMARY()
+}
+
 func (rcv *AST) CONJUNCTION_SECONDARY() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *AST) ConjunctionSecondary() []byte {
+	return rcv.CONJUNCTION_SECONDARY()
 }
 
 func (rcv *AST) OBSERVATIONS(j int) []byte {
@@ -139,12 +179,20 @@ func (rcv *AST) OBSERVATIONS(j int) []byte {
 	return nil
 }
 
+func (rcv *AST) Observations(j int) []byte {
+	return rcv.OBSERVATIONS(j)
+}
+
 func (rcv *AST) OBSERVATIONSLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *AST) ObservationsLength() int {
+	return rcv.OBSERVATIONSLength()
 }
 
 func (rcv *AST) OD_CONFIG() []byte {
@@ -155,12 +203,20 @@ func (rcv *AST) OD_CONFIG() []byte {
 	return nil
 }
 
+func (rcv *AST) OdConfig() []byte {
+	return rcv.OD_CONFIG()
+}
+
 func (rcv *AST) GROUND_STATION() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *AST) GroundStation() []byte {
+	return rcv.GROUND_STATION()
 }
 
 func (rcv *AST) FORMATION_CONFIG() []byte {
@@ -171,6 +227,10 @@ func (rcv *AST) FORMATION_CONFIG() []byte {
 	return nil
 }
 
+func (rcv *AST) FormationConfig() []byte {
+	return rcv.FORMATION_CONFIG()
+}
+
 func (rcv *AST) TARGET_ELEMENTS() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
 	if o != 0 {
@@ -179,53 +239,102 @@ func (rcv *AST) TARGET_ELEMENTS() []byte {
 	return nil
 }
 
+func (rcv *AST) TargetElements() []byte {
+	return rcv.TARGET_ELEMENTS()
+}
+
 func ASTStart(builder *flatbuffers.Builder) {
 	builder.StartObject(14)
 }
 func ASTAddCOMMAND(builder *flatbuffers.Builder, COMMAND flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(COMMAND), 0)
 }
+func ASTAddCommand(builder *flatbuffers.Builder, COMMAND flatbuffers.UOffsetT) {
+	ASTAddCOMMAND(builder, COMMAND)
+}
 func ASTAddPROPAGATION_REQUEST(builder *flatbuffers.Builder, PROPAGATION_REQUEST flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(PROPAGATION_REQUEST), 0)
+}
+func ASTAddPropagationRequest(builder *flatbuffers.Builder, PROPAGATION_REQUEST flatbuffers.UOffsetT) {
+	ASTAddPROPAGATION_REQUEST(builder, PROPAGATION_REQUEST)
 }
 func ASTAddTLE(builder *flatbuffers.Builder, TLE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(TLE), 0)
 }
+func ASTAddTle(builder *flatbuffers.Builder, TLE flatbuffers.UOffsetT) {
+	ASTAddTLE(builder, TLE)
+}
 func ASTAddINITIAL_ELEMENTS(builder *flatbuffers.Builder, INITIAL_ELEMENTS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(INITIAL_ELEMENTS), 0)
+}
+func ASTAddInitialElements(builder *flatbuffers.Builder, INITIAL_ELEMENTS flatbuffers.UOffsetT) {
+	ASTAddINITIAL_ELEMENTS(builder, INITIAL_ELEMENTS)
 }
 func ASTAddINITIAL_STATE(builder *flatbuffers.Builder, INITIAL_STATE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(INITIAL_STATE), 0)
 }
+func ASTAddInitialState(builder *flatbuffers.Builder, INITIAL_STATE flatbuffers.UOffsetT) {
+	ASTAddINITIAL_STATE(builder, INITIAL_STATE)
+}
 func ASTAddEPOCH_MS(builder *flatbuffers.Builder, EPOCH_MS int64) {
 	builder.PrependInt64Slot(5, EPOCH_MS, 0)
+}
+func ASTAddEpochMs(builder *flatbuffers.Builder, EPOCH_MS int64) {
+	ASTAddEPOCH_MS(builder, EPOCH_MS)
 }
 func ASTAddMANEUVER_PLAN(builder *flatbuffers.Builder, MANEUVER_PLAN flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(MANEUVER_PLAN), 0)
 }
+func ASTAddManeuverPlan(builder *flatbuffers.Builder, MANEUVER_PLAN flatbuffers.UOffsetT) {
+	ASTAddMANEUVER_PLAN(builder, MANEUVER_PLAN)
+}
 func ASTAddCONJUNCTION_PRIMARY(builder *flatbuffers.Builder, CONJUNCTION_PRIMARY flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(CONJUNCTION_PRIMARY), 0)
+}
+func ASTAddConjunctionPrimary(builder *flatbuffers.Builder, CONJUNCTION_PRIMARY flatbuffers.UOffsetT) {
+	ASTAddCONJUNCTION_PRIMARY(builder, CONJUNCTION_PRIMARY)
 }
 func ASTAddCONJUNCTION_SECONDARY(builder *flatbuffers.Builder, CONJUNCTION_SECONDARY flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(CONJUNCTION_SECONDARY), 0)
 }
+func ASTAddConjunctionSecondary(builder *flatbuffers.Builder, CONJUNCTION_SECONDARY flatbuffers.UOffsetT) {
+	ASTAddCONJUNCTION_SECONDARY(builder, CONJUNCTION_SECONDARY)
+}
 func ASTAddOBSERVATIONS(builder *flatbuffers.Builder, OBSERVATIONS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(OBSERVATIONS), 0)
+}
+func ASTAddObservations(builder *flatbuffers.Builder, OBSERVATIONS flatbuffers.UOffsetT) {
+	ASTAddOBSERVATIONS(builder, OBSERVATIONS)
 }
 func ASTStartOBSERVATIONSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
+func ASTStartObservationsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return ASTStartOBSERVATIONSVector(builder, numElems)
+}
 func ASTAddOD_CONFIG(builder *flatbuffers.Builder, OD_CONFIG flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(OD_CONFIG), 0)
+}
+func ASTAddOdConfig(builder *flatbuffers.Builder, OD_CONFIG flatbuffers.UOffsetT) {
+	ASTAddOD_CONFIG(builder, OD_CONFIG)
 }
 func ASTAddGROUND_STATION(builder *flatbuffers.Builder, GROUND_STATION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(GROUND_STATION), 0)
 }
+func ASTAddGroundStation(builder *flatbuffers.Builder, GROUND_STATION flatbuffers.UOffsetT) {
+	ASTAddGROUND_STATION(builder, GROUND_STATION)
+}
 func ASTAddFORMATION_CONFIG(builder *flatbuffers.Builder, FORMATION_CONFIG flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(12, flatbuffers.UOffsetT(FORMATION_CONFIG), 0)
 }
+func ASTAddFormationConfig(builder *flatbuffers.Builder, FORMATION_CONFIG flatbuffers.UOffsetT) {
+	ASTAddFORMATION_CONFIG(builder, FORMATION_CONFIG)
+}
 func ASTAddTARGET_ELEMENTS(builder *flatbuffers.Builder, TARGET_ELEMENTS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(13, flatbuffers.UOffsetT(TARGET_ELEMENTS), 0)
+}
+func ASTAddTargetElements(builder *flatbuffers.Builder, TARGET_ELEMENTS flatbuffers.UOffsetT) {
+	ASTAddTARGET_ELEMENTS(builder, TARGET_ELEMENTS)
 }
 func ASTEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

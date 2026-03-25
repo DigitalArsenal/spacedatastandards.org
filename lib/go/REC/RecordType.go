@@ -97,48 +97,49 @@ const (
 	RecordTypePLG  RecordType = 87
 	RecordTypePLK  RecordType = 88
 	RecordTypePNM  RecordType = 89
-	RecordTypePRG  RecordType = 90
-	RecordTypePUR  RecordType = 91
-	RecordTypeRAF  RecordType = 92
-	RecordTypeRCF  RecordType = 93
-	RecordTypeRDM  RecordType = 94
-	RecordTypeRDO  RecordType = 95
-	RecordTypeREV  RecordType = 96
-	RecordTypeRFB  RecordType = 97
-	RecordTypeRFE  RecordType = 98
-	RecordTypeRFM  RecordType = 99
-	RecordTypeRFO  RecordType = 100
-	RecordTypeROC  RecordType = 101
-	RecordTypeSAR  RecordType = 102
-	RecordTypeSCM  RecordType = 103
-	RecordTypeSDL  RecordType = 104
-	RecordTypeSEN  RecordType = 105
-	RecordTypeSEO  RecordType = 106
-	RecordTypeSEV  RecordType = 107
-	RecordTypeSIT  RecordType = 108
-	RecordTypeSKI  RecordType = 109
-	RecordTypeSNR  RecordType = 110
-	RecordTypeSOI  RecordType = 111
-	RecordTypeSON  RecordType = 112
-	RecordTypeSPP  RecordType = 113
-	RecordTypeSPW  RecordType = 114
-	RecordTypeSTF  RecordType = 115
-	RecordTypeSTR  RecordType = 116
-	RecordTypeSTV  RecordType = 117
-	RecordTypeSWR  RecordType = 118
-	RecordTypeTCF  RecordType = 119
-	RecordTypeTDM  RecordType = 120
-	RecordTypeTIM  RecordType = 121
-	RecordTypeTKG  RecordType = 122
-	RecordTypeTME  RecordType = 123
-	RecordTypeTMF  RecordType = 124
-	RecordTypeTPN  RecordType = 125
-	RecordTypeTRK  RecordType = 126
-	RecordTypeTRN  RecordType = 127
-	RecordTypeVCM  RecordType = 128
-	RecordTypeWPN  RecordType = 129
-	RecordTypeWTH  RecordType = 130
-	RecordTypeXTC  RecordType = 131
+	RecordTypePPE  RecordType = 90
+	RecordTypePRG  RecordType = 91
+	RecordTypePUR  RecordType = 92
+	RecordTypeRAF  RecordType = 93
+	RecordTypeRCF  RecordType = 94
+	RecordTypeRDM  RecordType = 95
+	RecordTypeRDO  RecordType = 96
+	RecordTypeREV  RecordType = 97
+	RecordTypeRFB  RecordType = 98
+	RecordTypeRFE  RecordType = 99
+	RecordTypeRFM  RecordType = 100
+	RecordTypeRFO  RecordType = 101
+	RecordTypeROC  RecordType = 102
+	RecordTypeSAR  RecordType = 103
+	RecordTypeSCM  RecordType = 104
+	RecordTypeSDL  RecordType = 105
+	RecordTypeSEN  RecordType = 106
+	RecordTypeSEO  RecordType = 107
+	RecordTypeSEV  RecordType = 108
+	RecordTypeSIT  RecordType = 109
+	RecordTypeSKI  RecordType = 110
+	RecordTypeSNR  RecordType = 111
+	RecordTypeSOI  RecordType = 112
+	RecordTypeSON  RecordType = 113
+	RecordTypeSPP  RecordType = 114
+	RecordTypeSPW  RecordType = 115
+	RecordTypeSTF  RecordType = 116
+	RecordTypeSTR  RecordType = 117
+	RecordTypeSTV  RecordType = 118
+	RecordTypeSWR  RecordType = 119
+	RecordTypeTCF  RecordType = 120
+	RecordTypeTDM  RecordType = 121
+	RecordTypeTIM  RecordType = 122
+	RecordTypeTKG  RecordType = 123
+	RecordTypeTME  RecordType = 124
+	RecordTypeTMF  RecordType = 125
+	RecordTypeTPN  RecordType = 126
+	RecordTypeTRK  RecordType = 127
+	RecordTypeTRN  RecordType = 128
+	RecordTypeVCM  RecordType = 129
+	RecordTypeWPN  RecordType = 130
+	RecordTypeWTH  RecordType = 131
+	RecordTypeXTC  RecordType = 132
 )
 
 var EnumNamesRecordType = map[RecordType]string{
@@ -232,6 +233,7 @@ var EnumNamesRecordType = map[RecordType]string{
 	RecordTypePLG:  "PLG",
 	RecordTypePLK:  "PLK",
 	RecordTypePNM:  "PNM",
+	RecordTypePPE:  "PPE",
 	RecordTypePRG:  "PRG",
 	RecordTypePUR:  "PUR",
 	RecordTypeRAF:  "RAF",
@@ -367,6 +369,7 @@ var EnumValuesRecordType = map[string]RecordType{
 	"PLG":  RecordTypePLG,
 	"PLK":  RecordTypePLK,
 	"PNM":  RecordTypePNM,
+	"PPE":  RecordTypePPE,
 	"PRG":  RecordTypePRG,
 	"PUR":  RecordTypePUR,
 	"RAF":  RecordTypeRAF,

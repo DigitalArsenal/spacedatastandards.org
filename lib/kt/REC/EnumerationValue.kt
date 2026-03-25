@@ -32,7 +32,7 @@ class EnumerationValue : Table() {
     /**
      * Label/name for this value
      */
-    val LABEL : String?
+    val label : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class EnumerationValue : Table() {
                 null
             }
         }
-    val LABELAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun LABELInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val labelAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun labelInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Numeric value
      */
-    val VALUE : Long
+    val value : Long
         get() {
             val o = __offset(6)
             return if(o != 0) bb.getLong(o + bb_pos) else 0L
@@ -54,7 +54,7 @@ class EnumerationValue : Table() {
     /**
      * Maximum value (for ranges)
      */
-    val MAX_VALUE : Long
+    val maxValue : Long
         get() {
             val o = __offset(8)
             return if(o != 0) bb.getLong(o + bb_pos) else 0L
@@ -62,7 +62,7 @@ class EnumerationValue : Table() {
     /**
      * Description of this enumeration value
      */
-    val DESCRIPTION : String?
+    val description : String?
         get() {
             val o = __offset(10)
             return if (o != 0) {
@@ -71,28 +71,28 @@ class EnumerationValue : Table() {
                 null
             }
         }
-    val DESCRIPTIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
-    fun DESCRIPTIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
+    val descriptionAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(10, 1)
+    fun descriptionInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 10, 1)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsEnumerationValue(_bb: ByteBuffer): EnumerationValue = getRootAsEnumerationValue(_bb, EnumerationValue())
         fun getRootAsEnumerationValue(_bb: ByteBuffer, obj: EnumerationValue): EnumerationValue {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createEnumerationValue(builder: FlatBufferBuilder, LABELOffset: Int, VALUE: Long, MAX_VALUE: Long, DESCRIPTIONOffset: Int) : Int {
+        fun createEnumerationValue(builder: FlatBufferBuilder, labelOffset: Int, value: Long, maxValue: Long, descriptionOffset: Int) : Int {
             builder.startTable(4)
-            addMAX_VALUE(builder, MAX_VALUE)
-            addVALUE(builder, VALUE)
-            addDESCRIPTION(builder, DESCRIPTIONOffset)
-            addLABEL(builder, LABELOffset)
+            addMAXVALUE(builder, maxValue)
+            addVALUE(builder, value)
+            addDESCRIPTION(builder, descriptionOffset)
+            addLABEL(builder, labelOffset)
             return endEnumerationValue(builder)
         }
         fun startEnumerationValue(builder: FlatBufferBuilder) = builder.startTable(4)
-        fun addLABEL(builder: FlatBufferBuilder, LABEL: Int) = builder.addOffset(0, LABEL, 0)
-        fun addVALUE(builder: FlatBufferBuilder, VALUE: Long) = builder.addLong(1, VALUE, 0L)
-        fun addMAX_VALUE(builder: FlatBufferBuilder, MAX_VALUE: Long) = builder.addLong(2, MAX_VALUE, 0L)
-        fun addDESCRIPTION(builder: FlatBufferBuilder, DESCRIPTION: Int) = builder.addOffset(3, DESCRIPTION, 0)
+        fun addLABEL(builder: FlatBufferBuilder, label: Int) = builder.addOffset(0, label, 0)
+        fun addVALUE(builder: FlatBufferBuilder, value: Long) = builder.addLong(1, value, 0L)
+        fun addMAXVALUE(builder: FlatBufferBuilder, maxValue: Long) = builder.addLong(2, maxValue, 0L)
+        fun addDESCRIPTION(builder: FlatBufferBuilder, description: Int) = builder.addOffset(3, description, 0)
         fun endEnumerationValue(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

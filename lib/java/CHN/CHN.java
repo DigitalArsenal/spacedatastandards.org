@@ -12,7 +12,6 @@ import com.google.flatbuffers.LongVector;
 import com.google.flatbuffers.ShortVector;
 import com.google.flatbuffers.StringVector;
 import com.google.flatbuffers.Struct;
-import com.google.flatbuffers.Table;
 import com.google.flatbuffers.UnionVector;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -21,8 +20,8 @@ import java.nio.ByteOrder;
  * Communications Channel
  */
 @SuppressWarnings("unused")
-public final class CHN extends Table {
-  public static void ValidateVersion() { Constants.FLATBUFFERS_24_3_25(); }
+public final class CHN extends com.google.flatbuffers.Table {
+  public static void ValidateVersion() { Constants.FLATBUFFERS_25_12_19(); }
   public static CHN getRootAsCHN(ByteBuffer _bb) { return getRootAsCHN(_bb, new CHN()); }
   public static CHN getRootAsCHN(ByteBuffer _bb, CHN obj) { _bb.order(ByteOrder.LITTLE_ENDIAN); return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb)); }
   public static boolean CHNBufferHasIdentifier(ByteBuffer _bb) { return __has_identifier(_bb, "$CHN"); }

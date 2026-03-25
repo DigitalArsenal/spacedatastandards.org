@@ -175,6 +175,16 @@ def EMEStartENCRYPTED_BLOBVector(builder, numElems):
 def StartENCRYPTED_BLOBVector(builder, numElems):
     return EMEStartENCRYPTED_BLOBVector(builder, numElems)
 
+def EMECreateENCRYPTED_BLOBVector(builder, data):
+    data = list(data)
+    builder.StartVector(1, len(data), 1)
+    for item in reversed(data):
+        builder.PrependUint8(item)
+    return builder.EndVector()
+
+def CreateENCRYPTED_BLOBVector(builder, data):
+    EMECreateENCRYPTED_BLOBVector(builder, data)
+
 def EMEAddEPHEMERAL_PUBLIC_KEY(builder, EPHEMERAL_PUBLIC_KEY):
     builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(EPHEMERAL_PUBLIC_KEY), 0)
 
@@ -198,6 +208,16 @@ def EMEStartNONCE_STARTVector(builder, numElems):
 
 def StartNONCE_STARTVector(builder, numElems):
     return EMEStartNONCE_STARTVector(builder, numElems)
+
+def EMECreateNONCE_STARTVector(builder, data):
+    data = list(data)
+    builder.StartVector(1, len(data), 1)
+    for item in reversed(data):
+        builder.PrependUint8(item)
+    return builder.EndVector()
+
+def CreateNONCE_STARTVector(builder, data):
+    EMECreateNONCE_STARTVector(builder, data)
 
 def EMEAddTAG(builder, TAG):
     builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(TAG), 0)
@@ -255,24 +275,37 @@ except:
 class EMET(object):
 
     # EMET
-    def __init__(self):
-        self.ENCRYPTED_BLOB = None  # type: List[int]
-        self.EPHEMERAL_PUBLIC_KEY = None  # type: str
-        self.MAC = None  # type: str
-        self.NONCE_START = None  # type: List[int]
-        self.TAG = None  # type: str
-        self.IV = None  # type: str
-        self.SALT = None  # type: str
-        self.PUBLIC_KEY_IDENTIFIER = None  # type: str
-        self.CIPHER_SUITE = None  # type: str
-        self.KDF_PARAMETERS = None  # type: str
-        self.ENCRYPTION_ALGORITHM_PARAMETERS = None  # type: str
+    def __init__(
+        self,
+        ENCRYPTED_BLOB = None,
+        EPHEMERAL_PUBLIC_KEY = None,
+        MAC = None,
+        NONCE_START = None,
+        TAG = None,
+        IV = None,
+        SALT = None,
+        PUBLIC_KEY_IDENTIFIER = None,
+        CIPHER_SUITE = None,
+        KDF_PARAMETERS = None,
+        ENCRYPTION_ALGORITHM_PARAMETERS = None,
+    ):
+        self.ENCRYPTED_BLOB = ENCRYPTED_BLOB  # type: Optional[List[int]]
+        self.EPHEMERAL_PUBLIC_KEY = EPHEMERAL_PUBLIC_KEY  # type: Optional[str]
+        self.MAC = MAC  # type: Optional[str]
+        self.NONCE_START = NONCE_START  # type: Optional[List[int]]
+        self.TAG = TAG  # type: Optional[str]
+        self.IV = IV  # type: Optional[str]
+        self.SALT = SALT  # type: Optional[str]
+        self.PUBLIC_KEY_IDENTIFIER = PUBLIC_KEY_IDENTIFIER  # type: Optional[str]
+        self.CIPHER_SUITE = CIPHER_SUITE  # type: Optional[str]
+        self.KDF_PARAMETERS = KDF_PARAMETERS  # type: Optional[str]
+        self.ENCRYPTION_ALGORITHM_PARAMETERS = ENCRYPTION_ALGORITHM_PARAMETERS  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        EME = EME()
-        EME.Init(buf, pos)
-        return cls.InitFromObj(EME)
+        tmpEme = EME()
+        tmpEme.Init(buf, pos)
+        return cls.InitFromObj(tmpEme)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -280,9 +313,9 @@ class EMET(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, EME):
+    def InitFromObj(cls, tmpEme):
         x = EMET()
-        x._UnPack(EME)
+        x._UnPack(tmpEme)
         return x
 
     # EMET

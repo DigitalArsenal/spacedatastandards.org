@@ -32,7 +32,7 @@ class attitudeState : Table() {
     /**
      * Attitude state type
      */
-    val ATT_TYPE : Byte
+    val attType : Byte
         get() {
             val o = __offset(4)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -40,7 +40,7 @@ class attitudeState : Table() {
     /**
      * Reference frame A
      */
-    val REF_FRAME_A : String?
+    val refFrameA : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -49,12 +49,12 @@ class attitudeState : Table() {
                 null
             }
         }
-    val REF_FRAME_AAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun REF_FRAME_AInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val refFrameAAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun refFrameAInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * Reference frame B
      */
-    val REF_FRAME_B : String?
+    val refFrameB : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -63,12 +63,12 @@ class attitudeState : Table() {
                 null
             }
         }
-    val REF_FRAME_BAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun REF_FRAME_BInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val refFrameBAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun refFrameBInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
     /**
      * Attitude direction (A2B or B2A)
      */
-    val ATT_DIR : String?
+    val attDir : String?
         get() {
             val o = __offset(10)
             return if (o != 0) {
@@ -77,12 +77,12 @@ class attitudeState : Table() {
                 null
             }
         }
-    val ATT_DIRAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
-    fun ATT_DIRInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
+    val attDirAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(10, 1)
+    fun attDirInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 10, 1)
     /**
      * Epoch (ISO 8601)
      */
-    val EPOCH : String?
+    val epoch : String?
         get() {
             val o = __offset(12)
             return if (o != 0) {
@@ -91,12 +91,12 @@ class attitudeState : Table() {
                 null
             }
         }
-    val EPOCHAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
-    fun EPOCHInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
+    val epochAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(12, 1)
+    fun epochInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 12, 1)
     /**
      * Quaternion scalar component (q0 or qc)
      */
-    val Q1 : Double
+    val q1 : Double
         get() {
             val o = __offset(14)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -104,7 +104,7 @@ class attitudeState : Table() {
     /**
      * Quaternion vector component i
      */
-    val Q2 : Double
+    val q2 : Double
         get() {
             val o = __offset(16)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -112,7 +112,7 @@ class attitudeState : Table() {
     /**
      * Quaternion vector component j
      */
-    val Q3 : Double
+    val q3 : Double
         get() {
             val o = __offset(18)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -120,7 +120,7 @@ class attitudeState : Table() {
     /**
      * Quaternion vector component k
      */
-    val QC : Double
+    val qc : Double
         get() {
             val o = __offset(20)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -128,7 +128,7 @@ class attitudeState : Table() {
     /**
      * Euler angle X in degrees
      */
-    val ANGLE_1 : Double
+    val angle1 : Double
         get() {
             val o = __offset(22)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -136,7 +136,7 @@ class attitudeState : Table() {
     /**
      * Euler angle Y in degrees
      */
-    val ANGLE_2 : Double
+    val angle2 : Double
         get() {
             val o = __offset(24)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -144,7 +144,7 @@ class attitudeState : Table() {
     /**
      * Euler angle Z in degrees
      */
-    val ANGLE_3 : Double
+    val angle3 : Double
         get() {
             val o = __offset(26)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -152,7 +152,7 @@ class attitudeState : Table() {
     /**
      * Euler rotation sequence (e.g., 321, 313)
      */
-    val EULER_ROT_SEQ : String?
+    val eulerRotSeq : String?
         get() {
             val o = __offset(28)
             return if (o != 0) {
@@ -161,12 +161,12 @@ class attitudeState : Table() {
                 null
             }
         }
-    val EULER_ROT_SEQAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(28, 1)
-    fun EULER_ROT_SEQInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 28, 1)
+    val eulerRotSeqAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(28, 1)
+    fun eulerRotSeqInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 28, 1)
     /**
      * Angular velocity X in deg/s
      */
-    val ANGVEL_X : Double
+    val angvelX : Double
         get() {
             val o = __offset(30)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -174,7 +174,7 @@ class attitudeState : Table() {
     /**
      * Angular velocity Y in deg/s
      */
-    val ANGVEL_Y : Double
+    val angvelY : Double
         get() {
             val o = __offset(32)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -182,7 +182,7 @@ class attitudeState : Table() {
     /**
      * Angular velocity Z in deg/s
      */
-    val ANGVEL_Z : Double
+    val angvelZ : Double
         get() {
             val o = __offset(34)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -190,7 +190,7 @@ class attitudeState : Table() {
     /**
      * Spin alpha in degrees
      */
-    val SPIN_ALPHA : Double
+    val spinAlpha : Double
         get() {
             val o = __offset(36)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -198,7 +198,7 @@ class attitudeState : Table() {
     /**
      * Spin delta in degrees
      */
-    val SPIN_DELTA : Double
+    val spinDelta : Double
         get() {
             val o = __offset(38)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -206,7 +206,7 @@ class attitudeState : Table() {
     /**
      * Spin angle in degrees
      */
-    val SPIN_ANGLE : Double
+    val spinAngle : Double
         get() {
             val o = __offset(40)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -214,7 +214,7 @@ class attitudeState : Table() {
     /**
      * Spin angle velocity in deg/s
      */
-    val SPIN_ANGLE_VEL : Double
+    val spinAngleVel : Double
         get() {
             val o = __offset(42)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -222,7 +222,7 @@ class attitudeState : Table() {
     /**
      * Nutation angle in degrees
      */
-    val NUTATION : Double
+    val nutation : Double
         get() {
             val o = __offset(44)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -230,7 +230,7 @@ class attitudeState : Table() {
     /**
      * Nutation period in seconds
      */
-    val NUTATION_PERIOD : Double
+    val nutationPeriod : Double
         get() {
             val o = __offset(46)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -238,69 +238,69 @@ class attitudeState : Table() {
     /**
      * Nutation phase in degrees
      */
-    val NUTATION_PHASE : Double
+    val nutationPhase : Double
         get() {
             val o = __offset(48)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsattitudeState(_bb: ByteBuffer): attitudeState = getRootAsattitudeState(_bb, attitudeState())
         fun getRootAsattitudeState(_bb: ByteBuffer, obj: attitudeState): attitudeState {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createattitudeState(builder: FlatBufferBuilder, ATT_TYPE: Byte, REF_FRAME_AOffset: Int, REF_FRAME_BOffset: Int, ATT_DIROffset: Int, EPOCHOffset: Int, Q1: Double, Q2: Double, Q3: Double, QC: Double, ANGLE_1: Double, ANGLE_2: Double, ANGLE_3: Double, EULER_ROT_SEQOffset: Int, ANGVEL_X: Double, ANGVEL_Y: Double, ANGVEL_Z: Double, SPIN_ALPHA: Double, SPIN_DELTA: Double, SPIN_ANGLE: Double, SPIN_ANGLE_VEL: Double, NUTATION: Double, NUTATION_PERIOD: Double, NUTATION_PHASE: Double) : Int {
+        fun createattitudeState(builder: FlatBufferBuilder, attType: Byte, refFrameAOffset: Int, refFrameBOffset: Int, attDirOffset: Int, epochOffset: Int, q1: Double, q2: Double, q3: Double, qc: Double, angle1: Double, angle2: Double, angle3: Double, eulerRotSeqOffset: Int, angvelX: Double, angvelY: Double, angvelZ: Double, spinAlpha: Double, spinDelta: Double, spinAngle: Double, spinAngleVel: Double, nutation: Double, nutationPeriod: Double, nutationPhase: Double) : Int {
             builder.startTable(23)
-            addNUTATION_PHASE(builder, NUTATION_PHASE)
-            addNUTATION_PERIOD(builder, NUTATION_PERIOD)
-            addNUTATION(builder, NUTATION)
-            addSPIN_ANGLE_VEL(builder, SPIN_ANGLE_VEL)
-            addSPIN_ANGLE(builder, SPIN_ANGLE)
-            addSPIN_DELTA(builder, SPIN_DELTA)
-            addSPIN_ALPHA(builder, SPIN_ALPHA)
-            addANGVEL_Z(builder, ANGVEL_Z)
-            addANGVEL_Y(builder, ANGVEL_Y)
-            addANGVEL_X(builder, ANGVEL_X)
-            addANGLE_3(builder, ANGLE_3)
-            addANGLE_2(builder, ANGLE_2)
-            addANGLE_1(builder, ANGLE_1)
-            addQC(builder, QC)
-            addQ3(builder, Q3)
-            addQ2(builder, Q2)
-            addQ1(builder, Q1)
-            addEULER_ROT_SEQ(builder, EULER_ROT_SEQOffset)
-            addEPOCH(builder, EPOCHOffset)
-            addATT_DIR(builder, ATT_DIROffset)
-            addREF_FRAME_B(builder, REF_FRAME_BOffset)
-            addREF_FRAME_A(builder, REF_FRAME_AOffset)
-            addATT_TYPE(builder, ATT_TYPE)
+            addNUTATIONPHASE(builder, nutationPhase)
+            addNUTATIONPERIOD(builder, nutationPeriod)
+            addNUTATION(builder, nutation)
+            addSPINANGLEVEL(builder, spinAngleVel)
+            addSPINANGLE(builder, spinAngle)
+            addSPINDELTA(builder, spinDelta)
+            addSPINALPHA(builder, spinAlpha)
+            addANGVELZ(builder, angvelZ)
+            addANGVELY(builder, angvelY)
+            addANGVELX(builder, angvelX)
+            addANGLE3(builder, angle3)
+            addANGLE2(builder, angle2)
+            addANGLE1(builder, angle1)
+            addQC(builder, qc)
+            addQ3(builder, q3)
+            addQ2(builder, q2)
+            addQ1(builder, q1)
+            addEULERROTSEQ(builder, eulerRotSeqOffset)
+            addEPOCH(builder, epochOffset)
+            addATTDIR(builder, attDirOffset)
+            addREFFRAMEB(builder, refFrameBOffset)
+            addREFFRAMEA(builder, refFrameAOffset)
+            addATTTYPE(builder, attType)
             return endattitudeState(builder)
         }
         fun startattitudeState(builder: FlatBufferBuilder) = builder.startTable(23)
-        fun addATT_TYPE(builder: FlatBufferBuilder, ATT_TYPE: Byte) = builder.addByte(0, ATT_TYPE, 0)
-        fun addREF_FRAME_A(builder: FlatBufferBuilder, REF_FRAME_A: Int) = builder.addOffset(1, REF_FRAME_A, 0)
-        fun addREF_FRAME_B(builder: FlatBufferBuilder, REF_FRAME_B: Int) = builder.addOffset(2, REF_FRAME_B, 0)
-        fun addATT_DIR(builder: FlatBufferBuilder, ATT_DIR: Int) = builder.addOffset(3, ATT_DIR, 0)
-        fun addEPOCH(builder: FlatBufferBuilder, EPOCH: Int) = builder.addOffset(4, EPOCH, 0)
-        fun addQ1(builder: FlatBufferBuilder, Q1: Double) = builder.addDouble(5, Q1, 0.0)
-        fun addQ2(builder: FlatBufferBuilder, Q2: Double) = builder.addDouble(6, Q2, 0.0)
-        fun addQ3(builder: FlatBufferBuilder, Q3: Double) = builder.addDouble(7, Q3, 0.0)
-        fun addQC(builder: FlatBufferBuilder, QC: Double) = builder.addDouble(8, QC, 0.0)
-        fun addANGLE_1(builder: FlatBufferBuilder, ANGLE_1: Double) = builder.addDouble(9, ANGLE_1, 0.0)
-        fun addANGLE_2(builder: FlatBufferBuilder, ANGLE_2: Double) = builder.addDouble(10, ANGLE_2, 0.0)
-        fun addANGLE_3(builder: FlatBufferBuilder, ANGLE_3: Double) = builder.addDouble(11, ANGLE_3, 0.0)
-        fun addEULER_ROT_SEQ(builder: FlatBufferBuilder, EULER_ROT_SEQ: Int) = builder.addOffset(12, EULER_ROT_SEQ, 0)
-        fun addANGVEL_X(builder: FlatBufferBuilder, ANGVEL_X: Double) = builder.addDouble(13, ANGVEL_X, 0.0)
-        fun addANGVEL_Y(builder: FlatBufferBuilder, ANGVEL_Y: Double) = builder.addDouble(14, ANGVEL_Y, 0.0)
-        fun addANGVEL_Z(builder: FlatBufferBuilder, ANGVEL_Z: Double) = builder.addDouble(15, ANGVEL_Z, 0.0)
-        fun addSPIN_ALPHA(builder: FlatBufferBuilder, SPIN_ALPHA: Double) = builder.addDouble(16, SPIN_ALPHA, 0.0)
-        fun addSPIN_DELTA(builder: FlatBufferBuilder, SPIN_DELTA: Double) = builder.addDouble(17, SPIN_DELTA, 0.0)
-        fun addSPIN_ANGLE(builder: FlatBufferBuilder, SPIN_ANGLE: Double) = builder.addDouble(18, SPIN_ANGLE, 0.0)
-        fun addSPIN_ANGLE_VEL(builder: FlatBufferBuilder, SPIN_ANGLE_VEL: Double) = builder.addDouble(19, SPIN_ANGLE_VEL, 0.0)
-        fun addNUTATION(builder: FlatBufferBuilder, NUTATION: Double) = builder.addDouble(20, NUTATION, 0.0)
-        fun addNUTATION_PERIOD(builder: FlatBufferBuilder, NUTATION_PERIOD: Double) = builder.addDouble(21, NUTATION_PERIOD, 0.0)
-        fun addNUTATION_PHASE(builder: FlatBufferBuilder, NUTATION_PHASE: Double) = builder.addDouble(22, NUTATION_PHASE, 0.0)
+        fun addATTTYPE(builder: FlatBufferBuilder, attType: Byte) = builder.addByte(0, attType, 0)
+        fun addREFFRAMEA(builder: FlatBufferBuilder, refFrameA: Int) = builder.addOffset(1, refFrameA, 0)
+        fun addREFFRAMEB(builder: FlatBufferBuilder, refFrameB: Int) = builder.addOffset(2, refFrameB, 0)
+        fun addATTDIR(builder: FlatBufferBuilder, attDir: Int) = builder.addOffset(3, attDir, 0)
+        fun addEPOCH(builder: FlatBufferBuilder, epoch: Int) = builder.addOffset(4, epoch, 0)
+        fun addQ1(builder: FlatBufferBuilder, q1: Double) = builder.addDouble(5, q1, 0.0)
+        fun addQ2(builder: FlatBufferBuilder, q2: Double) = builder.addDouble(6, q2, 0.0)
+        fun addQ3(builder: FlatBufferBuilder, q3: Double) = builder.addDouble(7, q3, 0.0)
+        fun addQC(builder: FlatBufferBuilder, qc: Double) = builder.addDouble(8, qc, 0.0)
+        fun addANGLE1(builder: FlatBufferBuilder, angle1: Double) = builder.addDouble(9, angle1, 0.0)
+        fun addANGLE2(builder: FlatBufferBuilder, angle2: Double) = builder.addDouble(10, angle2, 0.0)
+        fun addANGLE3(builder: FlatBufferBuilder, angle3: Double) = builder.addDouble(11, angle3, 0.0)
+        fun addEULERROTSEQ(builder: FlatBufferBuilder, eulerRotSeq: Int) = builder.addOffset(12, eulerRotSeq, 0)
+        fun addANGVELX(builder: FlatBufferBuilder, angvelX: Double) = builder.addDouble(13, angvelX, 0.0)
+        fun addANGVELY(builder: FlatBufferBuilder, angvelY: Double) = builder.addDouble(14, angvelY, 0.0)
+        fun addANGVELZ(builder: FlatBufferBuilder, angvelZ: Double) = builder.addDouble(15, angvelZ, 0.0)
+        fun addSPINALPHA(builder: FlatBufferBuilder, spinAlpha: Double) = builder.addDouble(16, spinAlpha, 0.0)
+        fun addSPINDELTA(builder: FlatBufferBuilder, spinDelta: Double) = builder.addDouble(17, spinDelta, 0.0)
+        fun addSPINANGLE(builder: FlatBufferBuilder, spinAngle: Double) = builder.addDouble(18, spinAngle, 0.0)
+        fun addSPINANGLEVEL(builder: FlatBufferBuilder, spinAngleVel: Double) = builder.addDouble(19, spinAngleVel, 0.0)
+        fun addNUTATION(builder: FlatBufferBuilder, nutation: Double) = builder.addDouble(20, nutation, 0.0)
+        fun addNUTATIONPERIOD(builder: FlatBufferBuilder, nutationPeriod: Double) = builder.addDouble(21, nutationPeriod, 0.0)
+        fun addNUTATIONPHASE(builder: FlatBufferBuilder, nutationPhase: Double) = builder.addDouble(22, nutationPhase, 0.0)
         fun endattitudeState(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

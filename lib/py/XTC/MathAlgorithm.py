@@ -129,6 +129,12 @@ def MathAlgorithmStartTRIGGERSVector(builder, numElems):
 def StartTRIGGERSVector(builder, numElems):
     return MathAlgorithmStartTRIGGERSVector(builder, numElems)
 
+def MathAlgorithmCreateTRIGGERSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateTRIGGERSVector(builder, data):
+    MathAlgorithmCreateTRIGGERSVector(builder, data)
+
 def MathAlgorithmEnd(builder):
     return builder.EndObject()
 
@@ -144,18 +150,25 @@ except:
 class MathAlgorithmT(object):
 
     # MathAlgorithmT
-    def __init__(self):
-        self.NAME = None  # type: str
-        self.SHORT_DESCRIPTION = None  # type: str
-        self.MATH_OPERATION = None  # type: str
-        self.OUTPUT_PARAMETER_REF = None  # type: str
-        self.TRIGGERS = None  # type: List[AlgorithmTrigger.AlgorithmTriggerT]
+    def __init__(
+        self,
+        NAME = None,
+        SHORT_DESCRIPTION = None,
+        MATH_OPERATION = None,
+        OUTPUT_PARAMETER_REF = None,
+        TRIGGERS = None,
+    ):
+        self.NAME = NAME  # type: Optional[str]
+        self.SHORT_DESCRIPTION = SHORT_DESCRIPTION  # type: Optional[str]
+        self.MATH_OPERATION = MATH_OPERATION  # type: Optional[str]
+        self.OUTPUT_PARAMETER_REF = OUTPUT_PARAMETER_REF  # type: Optional[str]
+        self.TRIGGERS = TRIGGERS  # type: Optional[List[AlgorithmTrigger.AlgorithmTriggerT]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        mathAlgorithm = MathAlgorithm()
-        mathAlgorithm.Init(buf, pos)
-        return cls.InitFromObj(mathAlgorithm)
+        tmpMathAlgorithm = MathAlgorithm()
+        tmpMathAlgorithm.Init(buf, pos)
+        return cls.InitFromObj(tmpMathAlgorithm)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -163,26 +176,26 @@ class MathAlgorithmT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, mathAlgorithm):
+    def InitFromObj(cls, tmpMathAlgorithm):
         x = MathAlgorithmT()
-        x._UnPack(mathAlgorithm)
+        x._UnPack(tmpMathAlgorithm)
         return x
 
     # MathAlgorithmT
-    def _UnPack(self, mathAlgorithm):
-        if mathAlgorithm is None:
+    def _UnPack(self, MathAlgorithm):
+        if MathAlgorithm is None:
             return
-        self.NAME = mathAlgorithm.NAME()
-        self.SHORT_DESCRIPTION = mathAlgorithm.SHORT_DESCRIPTION()
-        self.MATH_OPERATION = mathAlgorithm.MATH_OPERATION()
-        self.OUTPUT_PARAMETER_REF = mathAlgorithm.OUTPUT_PARAMETER_REF()
-        if not mathAlgorithm.TRIGGERSIsNone():
+        self.NAME = MathAlgorithm.NAME()
+        self.SHORT_DESCRIPTION = MathAlgorithm.SHORT_DESCRIPTION()
+        self.MATH_OPERATION = MathAlgorithm.MATH_OPERATION()
+        self.OUTPUT_PARAMETER_REF = MathAlgorithm.OUTPUT_PARAMETER_REF()
+        if not MathAlgorithm.TRIGGERSIsNone():
             self.TRIGGERS = []
-            for i in range(mathAlgorithm.TRIGGERSLength()):
-                if mathAlgorithm.TRIGGERS(i) is None:
+            for i in range(MathAlgorithm.TRIGGERSLength()):
+                if MathAlgorithm.TRIGGERS(i) is None:
                     self.TRIGGERS.append(None)
                 else:
-                    algorithmTrigger_ = AlgorithmTrigger.AlgorithmTriggerT.InitFromObj(mathAlgorithm.TRIGGERS(i))
+                    algorithmTrigger_ = AlgorithmTrigger.AlgorithmTriggerT.InitFromObj(MathAlgorithm.TRIGGERS(i))
                     self.TRIGGERS.append(algorithmTrigger_)
 
     # MathAlgorithmT
@@ -214,5 +227,5 @@ class MathAlgorithmT(object):
             MathAlgorithmAddOUTPUT_PARAMETER_REF(builder, OUTPUT_PARAMETER_REF)
         if self.TRIGGERS is not None:
             MathAlgorithmAddTRIGGERS(builder, TRIGGERS)
-        mathAlgorithm = MathAlgorithmEnd(builder)
-        return mathAlgorithm
+        MathAlgorithm = MathAlgorithmEnd(builder)
+        return MathAlgorithm

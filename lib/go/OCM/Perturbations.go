@@ -51,12 +51,20 @@ func (rcv *Perturbations) COMMENT(j int) []byte {
 	return nil
 }
 
+func (rcv *Perturbations) Comment(j int) []byte {
+	return rcv.COMMENT(j)
+}
+
 func (rcv *Perturbations) COMMENTLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *Perturbations) CommentLength() int {
+	return rcv.COMMENTLength()
 }
 
 /// Comments in the Perturbations section.
@@ -74,6 +82,10 @@ func (rcv *Perturbations) ATMOSPHERIC_MODEL(obj *ATM) *ATM {
 	return nil
 }
 
+func (rcv *Perturbations) AtmosphericModel(obj *ATM) *ATM {
+	return rcv.ATMOSPHERIC_MODEL(obj)
+}
+
 /// Atmospheric model used.
 /// Gravity model used.
 func (rcv *Perturbations) GRAVITY_MODEL() []byte {
@@ -82,6 +94,10 @@ func (rcv *Perturbations) GRAVITY_MODEL() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *Perturbations) GravityModel() []byte {
+	return rcv.GRAVITY_MODEL()
 }
 
 /// Gravity model used.
@@ -94,9 +110,17 @@ func (rcv *Perturbations) GRAVITY_DEGREE() int32 {
 	return 0
 }
 
+func (rcv *Perturbations) GravityDegree() int32 {
+	return rcv.GRAVITY_DEGREE()
+}
+
 /// Degree of the gravity model.
 func (rcv *Perturbations) MutateGRAVITY_DEGREE(n int32) bool {
 	return rcv._tab.MutateInt32Slot(10, n)
+}
+
+func (rcv *Perturbations) MutateGravityDegree(n int32) bool {
+	return rcv.MutateGRAVITY_DEGREE(n)
 }
 
 /// Order of the gravity model.
@@ -108,9 +132,17 @@ func (rcv *Perturbations) GRAVITY_ORDER() int32 {
 	return 0
 }
 
+func (rcv *Perturbations) GravityOrder() int32 {
+	return rcv.GRAVITY_ORDER()
+}
+
 /// Order of the gravity model.
 func (rcv *Perturbations) MutateGRAVITY_ORDER(n int32) bool {
 	return rcv._tab.MutateInt32Slot(12, n)
+}
+
+func (rcv *Perturbations) MutateGravityOrder(n int32) bool {
+	return rcv.MutateGRAVITY_ORDER(n)
 }
 
 /// Gravitational constant times the mass of the central body.
@@ -122,9 +154,17 @@ func (rcv *Perturbations) GM() float64 {
 	return 0.0
 }
 
+func (rcv *Perturbations) Gm() float64 {
+	return rcv.GM()
+}
+
 /// Gravitational constant times the mass of the central body.
 func (rcv *Perturbations) MutateGM(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(14, n)
+}
+
+func (rcv *Perturbations) MutateGm(n float64) bool {
+	return rcv.MutateGM(n)
 }
 
 /// List of celestial bodies included in n-body perturbations.
@@ -137,12 +177,20 @@ func (rcv *Perturbations) N_BODY_PERTURBATIONS(j int) []byte {
 	return nil
 }
 
+func (rcv *Perturbations) NBodyPerturbations(j int) []byte {
+	return rcv.N_BODY_PERTURBATIONS(j)
+}
+
 func (rcv *Perturbations) N_BODY_PERTURBATIONSLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *Perturbations) NBodyPerturbationsLength() int {
+	return rcv.N_BODY_PERTURBATIONSLength()
 }
 
 /// List of celestial bodies included in n-body perturbations.
@@ -155,6 +203,10 @@ func (rcv *Perturbations) OCEAN_TIDES_MODEL() []byte {
 	return nil
 }
 
+func (rcv *Perturbations) OceanTidesModel() []byte {
+	return rcv.OCEAN_TIDES_MODEL()
+}
+
 /// Ocean tides model used.
 /// Solid tides model used.
 func (rcv *Perturbations) SOLID_TIDES_MODEL() []byte {
@@ -163,6 +215,10 @@ func (rcv *Perturbations) SOLID_TIDES_MODEL() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *Perturbations) SolidTidesModel() []byte {
+	return rcv.SOLID_TIDES_MODEL()
 }
 
 /// Solid tides model used.
@@ -175,6 +231,10 @@ func (rcv *Perturbations) ATMOSPHERIC_TIDES_MODEL() []byte {
 	return nil
 }
 
+func (rcv *Perturbations) AtmosphericTidesModel() []byte {
+	return rcv.ATMOSPHERIC_TIDES_MODEL()
+}
+
 /// Atmospheric tides model used.
 /// Geopotential model used.
 func (rcv *Perturbations) GEOPOTENTIAL_MODEL() []byte {
@@ -183,6 +243,10 @@ func (rcv *Perturbations) GEOPOTENTIAL_MODEL() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *Perturbations) GeopotentialModel() []byte {
+	return rcv.GEOPOTENTIAL_MODEL()
 }
 
 /// Geopotential model used.
@@ -195,6 +259,10 @@ func (rcv *Perturbations) SOLAR_RAD_PRESSURE() []byte {
 	return nil
 }
 
+func (rcv *Perturbations) SolarRadPressure() []byte {
+	return rcv.SOLAR_RAD_PRESSURE()
+}
+
 /// Solar radiation pressure model used.
 /// Albedo model used.
 func (rcv *Perturbations) ALBEDO() []byte {
@@ -203,6 +271,10 @@ func (rcv *Perturbations) ALBEDO() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *Perturbations) Albedo() []byte {
+	return rcv.ALBEDO()
 }
 
 /// Albedo model used.
@@ -215,6 +287,10 @@ func (rcv *Perturbations) THERMAL() []byte {
 	return nil
 }
 
+func (rcv *Perturbations) Thermal() []byte {
+	return rcv.THERMAL()
+}
+
 /// Thermal model used.
 /// Relativity model used.
 func (rcv *Perturbations) RELATIVITY() []byte {
@@ -223,6 +299,10 @@ func (rcv *Perturbations) RELATIVITY() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *Perturbations) Relativity() []byte {
+	return rcv.RELATIVITY()
 }
 
 /// Relativity model used.
@@ -235,6 +315,10 @@ func (rcv *Perturbations) ATMOSPHERIC_DRAG() []byte {
 	return nil
 }
 
+func (rcv *Perturbations) AtmosphericDrag() []byte {
+	return rcv.ATMOSPHERIC_DRAG()
+}
+
 /// Atmospheric drag model used.
 /// Fixed geomagnetic Kp index used.
 func (rcv *Perturbations) FIXED_GEOMAG_KP() float64 {
@@ -245,9 +329,17 @@ func (rcv *Perturbations) FIXED_GEOMAG_KP() float64 {
 	return 0.0
 }
 
+func (rcv *Perturbations) FixedGeomagKp() float64 {
+	return rcv.FIXED_GEOMAG_KP()
+}
+
 /// Fixed geomagnetic Kp index used.
 func (rcv *Perturbations) MutateFIXED_GEOMAG_KP(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(36, n)
+}
+
+func (rcv *Perturbations) MutateFixedGeomagKp(n float64) bool {
+	return rcv.MutateFIXED_GEOMAG_KP(n)
 }
 
 /// Fixed F10.7 solar flux value used.
@@ -259,9 +351,17 @@ func (rcv *Perturbations) FIXED_F10P7() float64 {
 	return 0.0
 }
 
+func (rcv *Perturbations) FixedF10p7() float64 {
+	return rcv.FIXED_F10P7()
+}
+
 /// Fixed F10.7 solar flux value used.
 func (rcv *Perturbations) MutateFIXED_F10P7(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(38, n)
+}
+
+func (rcv *Perturbations) MutateFixedF10p7(n float64) bool {
+	return rcv.MutateFIXED_F10P7(n)
 }
 
 /// Fixed mean F10.7 solar flux value used.
@@ -273,9 +373,17 @@ func (rcv *Perturbations) FIXED_F10P7_MEAN() float64 {
 	return 0.0
 }
 
+func (rcv *Perturbations) FixedF10p7Mean() float64 {
+	return rcv.FIXED_F10P7_MEAN()
+}
+
 /// Fixed mean F10.7 solar flux value used.
 func (rcv *Perturbations) MutateFIXED_F10P7_MEAN(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(40, n)
+}
+
+func (rcv *Perturbations) MutateFixedF10p7Mean(n float64) bool {
+	return rcv.MutateFIXED_F10P7_MEAN(n)
 }
 
 func PerturbationsStart(builder *flatbuffers.Builder) {
@@ -284,65 +392,128 @@ func PerturbationsStart(builder *flatbuffers.Builder) {
 func PerturbationsAddCOMMENT(builder *flatbuffers.Builder, COMMENT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(COMMENT), 0)
 }
+func PerturbationsAddComment(builder *flatbuffers.Builder, COMMENT flatbuffers.UOffsetT) {
+	PerturbationsAddCOMMENT(builder, COMMENT)
+}
 func PerturbationsStartCOMMENTVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func PerturbationsStartCommentVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return PerturbationsStartCOMMENTVector(builder, numElems)
 }
 func PerturbationsAddATMOSPHERIC_MODEL(builder *flatbuffers.Builder, ATMOSPHERIC_MODEL flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(ATMOSPHERIC_MODEL), 0)
 }
+func PerturbationsAddAtmosphericModel(builder *flatbuffers.Builder, ATMOSPHERIC_MODEL flatbuffers.UOffsetT) {
+	PerturbationsAddATMOSPHERIC_MODEL(builder, ATMOSPHERIC_MODEL)
+}
 func PerturbationsAddGRAVITY_MODEL(builder *flatbuffers.Builder, GRAVITY_MODEL flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(GRAVITY_MODEL), 0)
+}
+func PerturbationsAddGravityModel(builder *flatbuffers.Builder, GRAVITY_MODEL flatbuffers.UOffsetT) {
+	PerturbationsAddGRAVITY_MODEL(builder, GRAVITY_MODEL)
 }
 func PerturbationsAddGRAVITY_DEGREE(builder *flatbuffers.Builder, GRAVITY_DEGREE int32) {
 	builder.PrependInt32Slot(3, GRAVITY_DEGREE, 0)
 }
+func PerturbationsAddGravityDegree(builder *flatbuffers.Builder, GRAVITY_DEGREE int32) {
+	PerturbationsAddGRAVITY_DEGREE(builder, GRAVITY_DEGREE)
+}
 func PerturbationsAddGRAVITY_ORDER(builder *flatbuffers.Builder, GRAVITY_ORDER int32) {
 	builder.PrependInt32Slot(4, GRAVITY_ORDER, 0)
+}
+func PerturbationsAddGravityOrder(builder *flatbuffers.Builder, GRAVITY_ORDER int32) {
+	PerturbationsAddGRAVITY_ORDER(builder, GRAVITY_ORDER)
 }
 func PerturbationsAddGM(builder *flatbuffers.Builder, GM float64) {
 	builder.PrependFloat64Slot(5, GM, 0.0)
 }
+func PerturbationsAddGm(builder *flatbuffers.Builder, GM float64) {
+	PerturbationsAddGM(builder, GM)
+}
 func PerturbationsAddN_BODY_PERTURBATIONS(builder *flatbuffers.Builder, N_BODY_PERTURBATIONS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(N_BODY_PERTURBATIONS), 0)
+}
+func PerturbationsAddNBodyPerturbations(builder *flatbuffers.Builder, N_BODY_PERTURBATIONS flatbuffers.UOffsetT) {
+	PerturbationsAddN_BODY_PERTURBATIONS(builder, N_BODY_PERTURBATIONS)
 }
 func PerturbationsStartN_BODY_PERTURBATIONSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
+func PerturbationsStartNBodyPerturbationsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return PerturbationsStartN_BODY_PERTURBATIONSVector(builder, numElems)
+}
 func PerturbationsAddOCEAN_TIDES_MODEL(builder *flatbuffers.Builder, OCEAN_TIDES_MODEL flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(OCEAN_TIDES_MODEL), 0)
+}
+func PerturbationsAddOceanTidesModel(builder *flatbuffers.Builder, OCEAN_TIDES_MODEL flatbuffers.UOffsetT) {
+	PerturbationsAddOCEAN_TIDES_MODEL(builder, OCEAN_TIDES_MODEL)
 }
 func PerturbationsAddSOLID_TIDES_MODEL(builder *flatbuffers.Builder, SOLID_TIDES_MODEL flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(SOLID_TIDES_MODEL), 0)
 }
+func PerturbationsAddSolidTidesModel(builder *flatbuffers.Builder, SOLID_TIDES_MODEL flatbuffers.UOffsetT) {
+	PerturbationsAddSOLID_TIDES_MODEL(builder, SOLID_TIDES_MODEL)
+}
 func PerturbationsAddATMOSPHERIC_TIDES_MODEL(builder *flatbuffers.Builder, ATMOSPHERIC_TIDES_MODEL flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(ATMOSPHERIC_TIDES_MODEL), 0)
+}
+func PerturbationsAddAtmosphericTidesModel(builder *flatbuffers.Builder, ATMOSPHERIC_TIDES_MODEL flatbuffers.UOffsetT) {
+	PerturbationsAddATMOSPHERIC_TIDES_MODEL(builder, ATMOSPHERIC_TIDES_MODEL)
 }
 func PerturbationsAddGEOPOTENTIAL_MODEL(builder *flatbuffers.Builder, GEOPOTENTIAL_MODEL flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(GEOPOTENTIAL_MODEL), 0)
 }
+func PerturbationsAddGeopotentialModel(builder *flatbuffers.Builder, GEOPOTENTIAL_MODEL flatbuffers.UOffsetT) {
+	PerturbationsAddGEOPOTENTIAL_MODEL(builder, GEOPOTENTIAL_MODEL)
+}
 func PerturbationsAddSOLAR_RAD_PRESSURE(builder *flatbuffers.Builder, SOLAR_RAD_PRESSURE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(SOLAR_RAD_PRESSURE), 0)
+}
+func PerturbationsAddSolarRadPressure(builder *flatbuffers.Builder, SOLAR_RAD_PRESSURE flatbuffers.UOffsetT) {
+	PerturbationsAddSOLAR_RAD_PRESSURE(builder, SOLAR_RAD_PRESSURE)
 }
 func PerturbationsAddALBEDO(builder *flatbuffers.Builder, ALBEDO flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(12, flatbuffers.UOffsetT(ALBEDO), 0)
 }
+func PerturbationsAddAlbedo(builder *flatbuffers.Builder, ALBEDO flatbuffers.UOffsetT) {
+	PerturbationsAddALBEDO(builder, ALBEDO)
+}
 func PerturbationsAddTHERMAL(builder *flatbuffers.Builder, THERMAL flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(13, flatbuffers.UOffsetT(THERMAL), 0)
+}
+func PerturbationsAddThermal(builder *flatbuffers.Builder, THERMAL flatbuffers.UOffsetT) {
+	PerturbationsAddTHERMAL(builder, THERMAL)
 }
 func PerturbationsAddRELATIVITY(builder *flatbuffers.Builder, RELATIVITY flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(14, flatbuffers.UOffsetT(RELATIVITY), 0)
 }
+func PerturbationsAddRelativity(builder *flatbuffers.Builder, RELATIVITY flatbuffers.UOffsetT) {
+	PerturbationsAddRELATIVITY(builder, RELATIVITY)
+}
 func PerturbationsAddATMOSPHERIC_DRAG(builder *flatbuffers.Builder, ATMOSPHERIC_DRAG flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(15, flatbuffers.UOffsetT(ATMOSPHERIC_DRAG), 0)
+}
+func PerturbationsAddAtmosphericDrag(builder *flatbuffers.Builder, ATMOSPHERIC_DRAG flatbuffers.UOffsetT) {
+	PerturbationsAddATMOSPHERIC_DRAG(builder, ATMOSPHERIC_DRAG)
 }
 func PerturbationsAddFIXED_GEOMAG_KP(builder *flatbuffers.Builder, FIXED_GEOMAG_KP float64) {
 	builder.PrependFloat64Slot(16, FIXED_GEOMAG_KP, 0.0)
 }
+func PerturbationsAddFixedGeomagKp(builder *flatbuffers.Builder, FIXED_GEOMAG_KP float64) {
+	PerturbationsAddFIXED_GEOMAG_KP(builder, FIXED_GEOMAG_KP)
+}
 func PerturbationsAddFIXED_F10P7(builder *flatbuffers.Builder, FIXED_F10P7 float64) {
 	builder.PrependFloat64Slot(17, FIXED_F10P7, 0.0)
 }
+func PerturbationsAddFixedF10p7(builder *flatbuffers.Builder, FIXED_F10P7 float64) {
+	PerturbationsAddFIXED_F10P7(builder, FIXED_F10P7)
+}
 func PerturbationsAddFIXED_F10P7_MEAN(builder *flatbuffers.Builder, FIXED_F10P7_MEAN float64) {
 	builder.PrependFloat64Slot(18, FIXED_F10P7_MEAN, 0.0)
+}
+func PerturbationsAddFixedF10p7Mean(builder *flatbuffers.Builder, FIXED_F10P7_MEAN float64) {
+	PerturbationsAddFIXED_F10P7_MEAN(builder, FIXED_F10P7_MEAN)
 }
 func PerturbationsEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

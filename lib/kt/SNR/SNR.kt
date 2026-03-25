@@ -29,82 +29,82 @@ class SNR : Table() {
         __init(_i, _bb)
         return this
     }
-    val TYPE : UByte
+    val type : UByte
         get() {
             val o = __offset(4)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
         }
-    val MODE : UByte
+    val mode : UByte
         get() {
             val o = __offset(6)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
         }
-    val RESERVED1 : UShort
+    val reserved1 : UShort
         get() {
             val o = __offset(8)
             return if(o != 0) bb.getShort(o + bb_pos).toUShort() else 0u
         }
-    val MAX_RANGE : Double
+    val maxRange : Double
         get() {
             val o = __offset(10)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val MIN_RANGE : Double
+    val minRange : Double
         get() {
             val o = __offset(12)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val FOV_AZIMUTH : Float
+    val fovAzimuth : Float
         get() {
             val o = __offset(14)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
-    val FOV_ELEVATION : Float
+    val fovElevation : Float
         get() {
             val o = __offset(16)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
-    val ANGULAR_RESOLUTION : Float
+    val angularResolution : Float
         get() {
             val o = __offset(18)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
-    val RANGE_RESOLUTION : Float
+    val rangeResolution : Float
         get() {
             val o = __offset(20)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
-    val UPDATE_RATE : Float
+    val updateRate : Float
         get() {
             val o = __offset(22)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
-    val DETECTION_THRESHOLD : Float
+    val detectionThreshold : Float
         get() {
             val o = __offset(24)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
-    val AZIMUTH_SCAN_RATE : Float
+    val azimuthScanRate : Float
         get() {
             val o = __offset(26)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
-    val ELEVATION_SCAN_RATE : Float
+    val elevationScanRate : Float
         get() {
             val o = __offset(28)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
-    val POWER : Float
+    val power : Float
         get() {
             val o = __offset(30)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
-    val FREQUENCY : Float
+    val frequency : Float
         get() {
             val o = __offset(32)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
-    fun RESERVED(j: Int) : UByte {
+    fun reserved(j: Int) : UByte {
         val o = __offset(34)
         return if (o != 0) {
             bb.get(__vector(o) + j * 1).toUByte()
@@ -112,57 +112,57 @@ class SNR : Table() {
             0u
         }
     }
-    val RESERVEDLength : Int
+    val reservedLength : Int
         get() {
             val o = __offset(34); return if (o != 0) __vector_len(o) else 0
         }
-    val RESERVEDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(34, 1)
-    fun RESERVEDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 34, 1)
+    val reservedAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(34, 1)
+    fun reservedInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 34, 1)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsSNR(_bb: ByteBuffer): SNR = getRootAsSNR(_bb, SNR())
         fun getRootAsSNR(_bb: ByteBuffer, obj: SNR): SNR {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun SNRBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$SNR")
-        fun createSNR(builder: FlatBufferBuilder, TYPE: UByte, MODE: UByte, RESERVED1: UShort, MAX_RANGE: Double, MIN_RANGE: Double, FOV_AZIMUTH: Float, FOV_ELEVATION: Float, ANGULAR_RESOLUTION: Float, RANGE_RESOLUTION: Float, UPDATE_RATE: Float, DETECTION_THRESHOLD: Float, AZIMUTH_SCAN_RATE: Float, ELEVATION_SCAN_RATE: Float, POWER: Float, FREQUENCY: Float, RESERVEDOffset: Int) : Int {
+        fun createSNR(builder: FlatBufferBuilder, type: UByte, mode: UByte, reserved1: UShort, maxRange: Double, minRange: Double, fovAzimuth: Float, fovElevation: Float, angularResolution: Float, rangeResolution: Float, updateRate: Float, detectionThreshold: Float, azimuthScanRate: Float, elevationScanRate: Float, power: Float, frequency: Float, reservedOffset: Int) : Int {
             builder.startTable(16)
-            addMIN_RANGE(builder, MIN_RANGE)
-            addMAX_RANGE(builder, MAX_RANGE)
-            addRESERVED(builder, RESERVEDOffset)
-            addFREQUENCY(builder, FREQUENCY)
-            addPOWER(builder, POWER)
-            addELEVATION_SCAN_RATE(builder, ELEVATION_SCAN_RATE)
-            addAZIMUTH_SCAN_RATE(builder, AZIMUTH_SCAN_RATE)
-            addDETECTION_THRESHOLD(builder, DETECTION_THRESHOLD)
-            addUPDATE_RATE(builder, UPDATE_RATE)
-            addRANGE_RESOLUTION(builder, RANGE_RESOLUTION)
-            addANGULAR_RESOLUTION(builder, ANGULAR_RESOLUTION)
-            addFOV_ELEVATION(builder, FOV_ELEVATION)
-            addFOV_AZIMUTH(builder, FOV_AZIMUTH)
-            addRESERVED1(builder, RESERVED1)
-            addMODE(builder, MODE)
-            addTYPE(builder, TYPE)
+            addMINRANGE(builder, minRange)
+            addMAXRANGE(builder, maxRange)
+            addRESERVED(builder, reservedOffset)
+            addFREQUENCY(builder, frequency)
+            addPOWER(builder, power)
+            addELEVATIONSCANRATE(builder, elevationScanRate)
+            addAZIMUTHSCANRATE(builder, azimuthScanRate)
+            addDETECTIONTHRESHOLD(builder, detectionThreshold)
+            addUPDATERATE(builder, updateRate)
+            addRANGERESOLUTION(builder, rangeResolution)
+            addANGULARRESOLUTION(builder, angularResolution)
+            addFOVELEVATION(builder, fovElevation)
+            addFOVAZIMUTH(builder, fovAzimuth)
+            addRESERVED1(builder, reserved1)
+            addMODE(builder, mode)
+            addTYPE(builder, type)
             return endSNR(builder)
         }
         fun startSNR(builder: FlatBufferBuilder) = builder.startTable(16)
-        fun addTYPE(builder: FlatBufferBuilder, TYPE: UByte) = builder.addByte(0, TYPE.toByte(), 0)
-        fun addMODE(builder: FlatBufferBuilder, MODE: UByte) = builder.addByte(1, MODE.toByte(), 0)
-        fun addRESERVED1(builder: FlatBufferBuilder, RESERVED1: UShort) = builder.addShort(2, RESERVED1.toShort(), 0)
-        fun addMAX_RANGE(builder: FlatBufferBuilder, MAX_RANGE: Double) = builder.addDouble(3, MAX_RANGE, 0.0)
-        fun addMIN_RANGE(builder: FlatBufferBuilder, MIN_RANGE: Double) = builder.addDouble(4, MIN_RANGE, 0.0)
-        fun addFOV_AZIMUTH(builder: FlatBufferBuilder, FOV_AZIMUTH: Float) = builder.addFloat(5, FOV_AZIMUTH, 0.0)
-        fun addFOV_ELEVATION(builder: FlatBufferBuilder, FOV_ELEVATION: Float) = builder.addFloat(6, FOV_ELEVATION, 0.0)
-        fun addANGULAR_RESOLUTION(builder: FlatBufferBuilder, ANGULAR_RESOLUTION: Float) = builder.addFloat(7, ANGULAR_RESOLUTION, 0.0)
-        fun addRANGE_RESOLUTION(builder: FlatBufferBuilder, RANGE_RESOLUTION: Float) = builder.addFloat(8, RANGE_RESOLUTION, 0.0)
-        fun addUPDATE_RATE(builder: FlatBufferBuilder, UPDATE_RATE: Float) = builder.addFloat(9, UPDATE_RATE, 0.0)
-        fun addDETECTION_THRESHOLD(builder: FlatBufferBuilder, DETECTION_THRESHOLD: Float) = builder.addFloat(10, DETECTION_THRESHOLD, 0.0)
-        fun addAZIMUTH_SCAN_RATE(builder: FlatBufferBuilder, AZIMUTH_SCAN_RATE: Float) = builder.addFloat(11, AZIMUTH_SCAN_RATE, 0.0)
-        fun addELEVATION_SCAN_RATE(builder: FlatBufferBuilder, ELEVATION_SCAN_RATE: Float) = builder.addFloat(12, ELEVATION_SCAN_RATE, 0.0)
-        fun addPOWER(builder: FlatBufferBuilder, POWER: Float) = builder.addFloat(13, POWER, 0.0)
-        fun addFREQUENCY(builder: FlatBufferBuilder, FREQUENCY: Float) = builder.addFloat(14, FREQUENCY, 0.0)
-        fun addRESERVED(builder: FlatBufferBuilder, RESERVED: Int) = builder.addOffset(15, RESERVED, 0)
+        fun addTYPE(builder: FlatBufferBuilder, type: UByte) = builder.addByte(0, type.toByte(), 0)
+        fun addMODE(builder: FlatBufferBuilder, mode: UByte) = builder.addByte(1, mode.toByte(), 0)
+        fun addRESERVED1(builder: FlatBufferBuilder, reserved1: UShort) = builder.addShort(2, reserved1.toShort(), 0)
+        fun addMAXRANGE(builder: FlatBufferBuilder, maxRange: Double) = builder.addDouble(3, maxRange, 0.0)
+        fun addMINRANGE(builder: FlatBufferBuilder, minRange: Double) = builder.addDouble(4, minRange, 0.0)
+        fun addFOVAZIMUTH(builder: FlatBufferBuilder, fovAzimuth: Float) = builder.addFloat(5, fovAzimuth, 0.0)
+        fun addFOVELEVATION(builder: FlatBufferBuilder, fovElevation: Float) = builder.addFloat(6, fovElevation, 0.0)
+        fun addANGULARRESOLUTION(builder: FlatBufferBuilder, angularResolution: Float) = builder.addFloat(7, angularResolution, 0.0)
+        fun addRANGERESOLUTION(builder: FlatBufferBuilder, rangeResolution: Float) = builder.addFloat(8, rangeResolution, 0.0)
+        fun addUPDATERATE(builder: FlatBufferBuilder, updateRate: Float) = builder.addFloat(9, updateRate, 0.0)
+        fun addDETECTIONTHRESHOLD(builder: FlatBufferBuilder, detectionThreshold: Float) = builder.addFloat(10, detectionThreshold, 0.0)
+        fun addAZIMUTHSCANRATE(builder: FlatBufferBuilder, azimuthScanRate: Float) = builder.addFloat(11, azimuthScanRate, 0.0)
+        fun addELEVATIONSCANRATE(builder: FlatBufferBuilder, elevationScanRate: Float) = builder.addFloat(12, elevationScanRate, 0.0)
+        fun addPOWER(builder: FlatBufferBuilder, power: Float) = builder.addFloat(13, power, 0.0)
+        fun addFREQUENCY(builder: FlatBufferBuilder, frequency: Float) = builder.addFloat(14, frequency, 0.0)
+        fun addRESERVED(builder: FlatBufferBuilder, reserved: Int) = builder.addOffset(15, reserved, 0)
         @kotlin.ExperimentalUnsignedTypes
         fun createReservedVector(builder: FlatBufferBuilder, data: UByteArray) : Int {
             builder.startVector(1, data.size, 1)

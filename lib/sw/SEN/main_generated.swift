@@ -2,9 +2,13 @@
 // swiftlint:disable all
 // swiftformat:disable all
 
+#if canImport(Common)
+import Common
+#endif
+
 import FlatBuffers
 
-public enum sensorStatus: Int8, Enum, Verifiable {
+public enum sensorStatus: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -21,7 +25,7 @@ public enum sensorStatus: Int8, Enum, Verifiable {
 }
 
 
-public enum maintenanceType: Int8, Enum, Verifiable {
+public enum maintenanceType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -39,9 +43,9 @@ public enum maintenanceType: Int8, Enum, Verifiable {
 
 
 ///  Sensor Maintenance Event
-public struct sensorMaintenanceEvent: FlatBufferObject, Verifiable {
+public struct sensorMaintenanceEvent: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -72,9 +76,7 @@ public struct sensorMaintenanceEvent: FlatBufferObject, Verifiable {
   public var DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.DESCRIPTION.v) }
   ///  Components affected
-  public var hasComponents: Bool { let o = _accessor.offset(VTOFFSET.COMPONENTS.v); return o == 0 ? false : true }
-  public var COMPONENTSCount: Int32 { let o = _accessor.offset(VTOFFSET.COMPONENTS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func COMPONENTS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.COMPONENTS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  public var COMPONENTS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.COMPONENTS.v, byteSize: 4) }
   public static func startsensorMaintenanceEvent(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
   public static func add(START_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: START_TIME, at: VTOFFSET.START_TIME.p) }
   public static func add(END_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: END_TIME, at: VTOFFSET.END_TIME.p) }
@@ -111,9 +113,9 @@ public struct sensorMaintenanceEvent: FlatBufferObject, Verifiable {
 }
 
 ///  Sensor Tasking Plan
-public struct sensorPlan: FlatBufferObject, Verifiable {
+public struct sensorPlan: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -196,9 +198,9 @@ public struct sensorPlan: FlatBufferObject, Verifiable {
 }
 
 ///  Sensor Operational Statistics
-public struct sensorStats: FlatBufferObject, Verifiable {
+public struct sensorStats: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -293,9 +295,9 @@ public struct sensorStats: FlatBufferObject, Verifiable {
 }
 
 ///  Sensor Management
-public struct SEN: FlatBufferObject, Verifiable {
+public struct SEN: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -346,17 +348,11 @@ public struct SEN: FlatBufferObject, Verifiable {
   public var STATUS_TIME: String? { let o = _accessor.offset(VTOFFSET.STATUS_TIME.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var STATUS_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.STATUS_TIME.v) }
   ///  Maintenance history
-  public var hasMaintenance: Bool { let o = _accessor.offset(VTOFFSET.MAINTENANCE.v); return o == 0 ? false : true }
-  public var MAINTENANCECount: Int32 { let o = _accessor.offset(VTOFFSET.MAINTENANCE.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func MAINTENANCE(at index: Int32) -> sensorMaintenanceEvent? { let o = _accessor.offset(VTOFFSET.MAINTENANCE.v); return o == 0 ? nil : sensorMaintenanceEvent(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var MAINTENANCE: FlatbufferVector<sensorMaintenanceEvent> { return _accessor.vector(at: VTOFFSET.MAINTENANCE.v, byteSize: 4) }
   ///  Observation plans/taskings
-  public var hasPlans: Bool { let o = _accessor.offset(VTOFFSET.PLANS.v); return o == 0 ? false : true }
-  public var PLANSCount: Int32 { let o = _accessor.offset(VTOFFSET.PLANS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func PLANS(at index: Int32) -> sensorPlan? { let o = _accessor.offset(VTOFFSET.PLANS.v); return o == 0 ? nil : sensorPlan(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var PLANS: FlatbufferVector<sensorPlan> { return _accessor.vector(at: VTOFFSET.PLANS.v, byteSize: 4) }
   ///  Operational statistics
-  public var hasStatistics: Bool { let o = _accessor.offset(VTOFFSET.STATISTICS.v); return o == 0 ? false : true }
-  public var STATISTICSCount: Int32 { let o = _accessor.offset(VTOFFSET.STATISTICS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func STATISTICS(at index: Int32) -> sensorStats? { let o = _accessor.offset(VTOFFSET.STATISTICS.v); return o == 0 ? nil : sensorStats(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var STATISTICS: FlatbufferVector<sensorStats> { return _accessor.vector(at: VTOFFSET.STATISTICS.v, byteSize: 4) }
   ///  Additional notes
   public var NOTES: String? { let o = _accessor.offset(VTOFFSET.NOTES.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var NOTESSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NOTES.v) }

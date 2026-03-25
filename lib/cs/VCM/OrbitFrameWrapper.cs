@@ -10,23 +10,23 @@ public struct OrbitFrameWrapper : IFlatbufferObject
 {
   private Table __p;
   public ByteBuffer ByteBuffer { get { return __p.bb; } }
-  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_24_3_25(); }
+  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_25_12_19(); }
   public static OrbitFrameWrapper GetRootAsOrbitFrameWrapper(ByteBuffer _bb) { return GetRootAsOrbitFrameWrapper(_bb, new OrbitFrameWrapper()); }
   public static OrbitFrameWrapper GetRootAsOrbitFrameWrapper(ByteBuffer _bb, OrbitFrameWrapper obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public OrbitFrameWrapper __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
-  public OrbitFrame Frame { get { int o = __p.__offset(4); return o != 0 ? (OrbitFrame)__p.bb.GetSbyte(o + __p.bb_pos) : OrbitFrame.EQW_INERTIAL; } }
+  public OrbitFrame frame { get { int o = __p.__offset(4); return o != 0 ? (OrbitFrame)__p.bb.GetSbyte(o + __p.bb_pos) : OrbitFrame.EQW_INERTIAL; } }
 
   public static Offset<OrbitFrameWrapper> CreateOrbitFrameWrapper(FlatBufferBuilder builder,
       OrbitFrame frame = OrbitFrame.EQW_INERTIAL) {
     builder.StartTable(1);
-    OrbitFrameWrapper.AddFrame(builder, frame);
+    OrbitFrameWrapper.Addframe(builder, frame);
     return OrbitFrameWrapper.EndOrbitFrameWrapper(builder);
   }
 
   public static void StartOrbitFrameWrapper(FlatBufferBuilder builder) { builder.StartTable(1); }
-  public static void AddFrame(FlatBufferBuilder builder, OrbitFrame frame) { builder.AddSbyte(0, (sbyte)frame, 0); }
+  public static void Addframe(FlatBufferBuilder builder, OrbitFrame frame) { builder.AddSbyte(0, (sbyte)frame, 0); }
   public static Offset<OrbitFrameWrapper> EndOrbitFrameWrapper(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<OrbitFrameWrapper>(o);
@@ -37,22 +37,22 @@ public struct OrbitFrameWrapper : IFlatbufferObject
     return _o;
   }
   public void UnPackTo(OrbitFrameWrapperT _o) {
-    _o.Frame = this.Frame;
+    _o.frame = this.frame;
   }
   public static Offset<OrbitFrameWrapper> Pack(FlatBufferBuilder builder, OrbitFrameWrapperT _o) {
     if (_o == null) return default(Offset<OrbitFrameWrapper>);
     return CreateOrbitFrameWrapper(
       builder,
-      _o.Frame);
+      _o.frame);
   }
 }
 
 public class OrbitFrameWrapperT
 {
-  public OrbitFrame Frame { get; set; }
+  public OrbitFrame frame { get; set; }
 
   public OrbitFrameWrapperT() {
-    this.Frame = OrbitFrame.EQW_INERTIAL;
+    this.frame = OrbitFrame.EQW_INERTIAL;
   }
 }
 
@@ -62,7 +62,7 @@ static public class OrbitFrameWrapperVerify
   static public bool Verify(Google.FlatBuffers.Verifier verifier, uint tablePos)
   {
     return verifier.VerifyTableStart(tablePos)
-      && verifier.VerifyField(tablePos, 4 /*Frame*/, 1 /*OrbitFrame*/, 1, false)
+      && verifier.VerifyField(tablePos, 4 /*frame*/, 1 /*OrbitFrame*/, 1, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

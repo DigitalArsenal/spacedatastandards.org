@@ -2,4 +2,501 @@
 
 # namespace: 
 
-# NOTE PhysicalProperties.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+class PhysicalProperties(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = PhysicalProperties()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsPhysicalProperties(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def PhysicalPropertiesBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x4F\x43\x4D", size_prefixed=size_prefixed)
+
+    # PhysicalProperties
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Comments in the Physical Properties section.
+    # PhysicalProperties
+    def COMMENT(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
+        return ""
+
+    # PhysicalProperties
+    def COMMENTLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # PhysicalProperties
+    def COMMENTIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        return o == 0
+
+    # Wet mass of the space object.
+    # PhysicalProperties
+    def WET_MASS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Dry mass of the space object.
+    # PhysicalProperties
+    def DRY_MASS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Units for mass values.
+    # PhysicalProperties
+    def MASS_UNITS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Quaternion component q1 of orientation from OEB to EME2000.
+    # PhysicalProperties
+    def OEB_Q1(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Quaternion component q2.
+    # PhysicalProperties
+    def OEB_Q2(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Quaternion component q3.
+    # PhysicalProperties
+    def OEB_Q3(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Quaternion scalar component qc.
+    # PhysicalProperties
+    def OEB_QC(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Maximum dimension of the object along OEB frame axes.
+    # PhysicalProperties
+    def OEB_MAX(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Intermediate dimension along OEB frame axes.
+    # PhysicalProperties
+    def OEB_INT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Minimum dimension of the object along OEB frame axes.
+    # PhysicalProperties
+    def OEB_MIN(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Area along OEB_MAX axis.
+    # PhysicalProperties
+    def AREA_ALONG_OEB_MAX(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Area along OEB_INT axis.
+    # PhysicalProperties
+    def AREA_ALONG_OEB_INT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Area along OEB_MIN axis.
+    # PhysicalProperties
+    def AREA_ALONG_OEB_MIN(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Units for area values.
+    # PhysicalProperties
+    def AREA_UNITS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Constant area for drag computations.
+    # PhysicalProperties
+    def DRAG_CONST_AREA(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Nominal drag coefficient.
+    # PhysicalProperties
+    def DRAG_COEFF_NOM(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Uncertainty in the drag coefficient.
+    # PhysicalProperties
+    def DRAG_UNCERTAINTY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Constant area for solar radiation pressure computations.
+    # PhysicalProperties
+    def SRP_CONST_AREA(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Nominal solar radiation pressure coefficient.
+    # PhysicalProperties
+    def SOLAR_RAD_COEFF(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Uncertainty in the solar radiation pressure coefficient.
+    # PhysicalProperties
+    def SRP_UNCERTAINTY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+def PhysicalPropertiesStart(builder):
+    builder.StartObject(21)
+
+def Start(builder):
+    PhysicalPropertiesStart(builder)
+
+def PhysicalPropertiesAddCOMMENT(builder, COMMENT):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(COMMENT), 0)
+
+def AddCOMMENT(builder, COMMENT):
+    PhysicalPropertiesAddCOMMENT(builder, COMMENT)
+
+def PhysicalPropertiesStartCOMMENTVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartCOMMENTVector(builder, numElems):
+    return PhysicalPropertiesStartCOMMENTVector(builder, numElems)
+
+def PhysicalPropertiesCreateCOMMENTVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateCOMMENTVector(builder, data):
+    PhysicalPropertiesCreateCOMMENTVector(builder, data)
+
+def PhysicalPropertiesAddWET_MASS(builder, WET_MASS):
+    builder.PrependFloat64Slot(1, WET_MASS, 0.0)
+
+def AddWET_MASS(builder, WET_MASS):
+    PhysicalPropertiesAddWET_MASS(builder, WET_MASS)
+
+def PhysicalPropertiesAddDRY_MASS(builder, DRY_MASS):
+    builder.PrependFloat64Slot(2, DRY_MASS, 0.0)
+
+def AddDRY_MASS(builder, DRY_MASS):
+    PhysicalPropertiesAddDRY_MASS(builder, DRY_MASS)
+
+def PhysicalPropertiesAddMASS_UNITS(builder, MASS_UNITS):
+    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(MASS_UNITS), 0)
+
+def AddMASS_UNITS(builder, MASS_UNITS):
+    PhysicalPropertiesAddMASS_UNITS(builder, MASS_UNITS)
+
+def PhysicalPropertiesAddOEB_Q1(builder, OEB_Q1):
+    builder.PrependFloat64Slot(4, OEB_Q1, 0.0)
+
+def AddOEB_Q1(builder, OEB_Q1):
+    PhysicalPropertiesAddOEB_Q1(builder, OEB_Q1)
+
+def PhysicalPropertiesAddOEB_Q2(builder, OEB_Q2):
+    builder.PrependFloat64Slot(5, OEB_Q2, 0.0)
+
+def AddOEB_Q2(builder, OEB_Q2):
+    PhysicalPropertiesAddOEB_Q2(builder, OEB_Q2)
+
+def PhysicalPropertiesAddOEB_Q3(builder, OEB_Q3):
+    builder.PrependFloat64Slot(6, OEB_Q3, 0.0)
+
+def AddOEB_Q3(builder, OEB_Q3):
+    PhysicalPropertiesAddOEB_Q3(builder, OEB_Q3)
+
+def PhysicalPropertiesAddOEB_QC(builder, OEB_QC):
+    builder.PrependFloat64Slot(7, OEB_QC, 0.0)
+
+def AddOEB_QC(builder, OEB_QC):
+    PhysicalPropertiesAddOEB_QC(builder, OEB_QC)
+
+def PhysicalPropertiesAddOEB_MAX(builder, OEB_MAX):
+    builder.PrependFloat64Slot(8, OEB_MAX, 0.0)
+
+def AddOEB_MAX(builder, OEB_MAX):
+    PhysicalPropertiesAddOEB_MAX(builder, OEB_MAX)
+
+def PhysicalPropertiesAddOEB_INT(builder, OEB_INT):
+    builder.PrependFloat64Slot(9, OEB_INT, 0.0)
+
+def AddOEB_INT(builder, OEB_INT):
+    PhysicalPropertiesAddOEB_INT(builder, OEB_INT)
+
+def PhysicalPropertiesAddOEB_MIN(builder, OEB_MIN):
+    builder.PrependFloat64Slot(10, OEB_MIN, 0.0)
+
+def AddOEB_MIN(builder, OEB_MIN):
+    PhysicalPropertiesAddOEB_MIN(builder, OEB_MIN)
+
+def PhysicalPropertiesAddAREA_ALONG_OEB_MAX(builder, AREA_ALONG_OEB_MAX):
+    builder.PrependFloat64Slot(11, AREA_ALONG_OEB_MAX, 0.0)
+
+def AddAREA_ALONG_OEB_MAX(builder, AREA_ALONG_OEB_MAX):
+    PhysicalPropertiesAddAREA_ALONG_OEB_MAX(builder, AREA_ALONG_OEB_MAX)
+
+def PhysicalPropertiesAddAREA_ALONG_OEB_INT(builder, AREA_ALONG_OEB_INT):
+    builder.PrependFloat64Slot(12, AREA_ALONG_OEB_INT, 0.0)
+
+def AddAREA_ALONG_OEB_INT(builder, AREA_ALONG_OEB_INT):
+    PhysicalPropertiesAddAREA_ALONG_OEB_INT(builder, AREA_ALONG_OEB_INT)
+
+def PhysicalPropertiesAddAREA_ALONG_OEB_MIN(builder, AREA_ALONG_OEB_MIN):
+    builder.PrependFloat64Slot(13, AREA_ALONG_OEB_MIN, 0.0)
+
+def AddAREA_ALONG_OEB_MIN(builder, AREA_ALONG_OEB_MIN):
+    PhysicalPropertiesAddAREA_ALONG_OEB_MIN(builder, AREA_ALONG_OEB_MIN)
+
+def PhysicalPropertiesAddAREA_UNITS(builder, AREA_UNITS):
+    builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(AREA_UNITS), 0)
+
+def AddAREA_UNITS(builder, AREA_UNITS):
+    PhysicalPropertiesAddAREA_UNITS(builder, AREA_UNITS)
+
+def PhysicalPropertiesAddDRAG_CONST_AREA(builder, DRAG_CONST_AREA):
+    builder.PrependFloat64Slot(15, DRAG_CONST_AREA, 0.0)
+
+def AddDRAG_CONST_AREA(builder, DRAG_CONST_AREA):
+    PhysicalPropertiesAddDRAG_CONST_AREA(builder, DRAG_CONST_AREA)
+
+def PhysicalPropertiesAddDRAG_COEFF_NOM(builder, DRAG_COEFF_NOM):
+    builder.PrependFloat64Slot(16, DRAG_COEFF_NOM, 0.0)
+
+def AddDRAG_COEFF_NOM(builder, DRAG_COEFF_NOM):
+    PhysicalPropertiesAddDRAG_COEFF_NOM(builder, DRAG_COEFF_NOM)
+
+def PhysicalPropertiesAddDRAG_UNCERTAINTY(builder, DRAG_UNCERTAINTY):
+    builder.PrependFloat64Slot(17, DRAG_UNCERTAINTY, 0.0)
+
+def AddDRAG_UNCERTAINTY(builder, DRAG_UNCERTAINTY):
+    PhysicalPropertiesAddDRAG_UNCERTAINTY(builder, DRAG_UNCERTAINTY)
+
+def PhysicalPropertiesAddSRP_CONST_AREA(builder, SRP_CONST_AREA):
+    builder.PrependFloat64Slot(18, SRP_CONST_AREA, 0.0)
+
+def AddSRP_CONST_AREA(builder, SRP_CONST_AREA):
+    PhysicalPropertiesAddSRP_CONST_AREA(builder, SRP_CONST_AREA)
+
+def PhysicalPropertiesAddSOLAR_RAD_COEFF(builder, SOLAR_RAD_COEFF):
+    builder.PrependFloat64Slot(19, SOLAR_RAD_COEFF, 0.0)
+
+def AddSOLAR_RAD_COEFF(builder, SOLAR_RAD_COEFF):
+    PhysicalPropertiesAddSOLAR_RAD_COEFF(builder, SOLAR_RAD_COEFF)
+
+def PhysicalPropertiesAddSRP_UNCERTAINTY(builder, SRP_UNCERTAINTY):
+    builder.PrependFloat64Slot(20, SRP_UNCERTAINTY, 0.0)
+
+def AddSRP_UNCERTAINTY(builder, SRP_UNCERTAINTY):
+    PhysicalPropertiesAddSRP_UNCERTAINTY(builder, SRP_UNCERTAINTY)
+
+def PhysicalPropertiesEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return PhysicalPropertiesEnd(builder)
+
+try:
+    from typing import List
+except:
+    pass
+
+class PhysicalPropertiesT(object):
+
+    # PhysicalPropertiesT
+    def __init__(
+        self,
+        COMMENT = None,
+        WET_MASS = 0.0,
+        DRY_MASS = 0.0,
+        MASS_UNITS = None,
+        OEB_Q1 = 0.0,
+        OEB_Q2 = 0.0,
+        OEB_Q3 = 0.0,
+        OEB_QC = 0.0,
+        OEB_MAX = 0.0,
+        OEB_INT = 0.0,
+        OEB_MIN = 0.0,
+        AREA_ALONG_OEB_MAX = 0.0,
+        AREA_ALONG_OEB_INT = 0.0,
+        AREA_ALONG_OEB_MIN = 0.0,
+        AREA_UNITS = None,
+        DRAG_CONST_AREA = 0.0,
+        DRAG_COEFF_NOM = 0.0,
+        DRAG_UNCERTAINTY = 0.0,
+        SRP_CONST_AREA = 0.0,
+        SOLAR_RAD_COEFF = 0.0,
+        SRP_UNCERTAINTY = 0.0,
+    ):
+        self.COMMENT = COMMENT  # type: Optional[List[Optional[str]]]
+        self.WET_MASS = WET_MASS  # type: float
+        self.DRY_MASS = DRY_MASS  # type: float
+        self.MASS_UNITS = MASS_UNITS  # type: Optional[str]
+        self.OEB_Q1 = OEB_Q1  # type: float
+        self.OEB_Q2 = OEB_Q2  # type: float
+        self.OEB_Q3 = OEB_Q3  # type: float
+        self.OEB_QC = OEB_QC  # type: float
+        self.OEB_MAX = OEB_MAX  # type: float
+        self.OEB_INT = OEB_INT  # type: float
+        self.OEB_MIN = OEB_MIN  # type: float
+        self.AREA_ALONG_OEB_MAX = AREA_ALONG_OEB_MAX  # type: float
+        self.AREA_ALONG_OEB_INT = AREA_ALONG_OEB_INT  # type: float
+        self.AREA_ALONG_OEB_MIN = AREA_ALONG_OEB_MIN  # type: float
+        self.AREA_UNITS = AREA_UNITS  # type: Optional[str]
+        self.DRAG_CONST_AREA = DRAG_CONST_AREA  # type: float
+        self.DRAG_COEFF_NOM = DRAG_COEFF_NOM  # type: float
+        self.DRAG_UNCERTAINTY = DRAG_UNCERTAINTY  # type: float
+        self.SRP_CONST_AREA = SRP_CONST_AREA  # type: float
+        self.SOLAR_RAD_COEFF = SOLAR_RAD_COEFF  # type: float
+        self.SRP_UNCERTAINTY = SRP_UNCERTAINTY  # type: float
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpPhysicalProperties = PhysicalProperties()
+        tmpPhysicalProperties.Init(buf, pos)
+        return cls.InitFromObj(tmpPhysicalProperties)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpPhysicalProperties):
+        x = PhysicalPropertiesT()
+        x._UnPack(tmpPhysicalProperties)
+        return x
+
+    # PhysicalPropertiesT
+    def _UnPack(self, PhysicalProperties):
+        if PhysicalProperties is None:
+            return
+        if not PhysicalProperties.COMMENTIsNone():
+            self.COMMENT = []
+            for i in range(PhysicalProperties.COMMENTLength()):
+                self.COMMENT.append(PhysicalProperties.COMMENT(i))
+        self.WET_MASS = PhysicalProperties.WET_MASS()
+        self.DRY_MASS = PhysicalProperties.DRY_MASS()
+        self.MASS_UNITS = PhysicalProperties.MASS_UNITS()
+        self.OEB_Q1 = PhysicalProperties.OEB_Q1()
+        self.OEB_Q2 = PhysicalProperties.OEB_Q2()
+        self.OEB_Q3 = PhysicalProperties.OEB_Q3()
+        self.OEB_QC = PhysicalProperties.OEB_QC()
+        self.OEB_MAX = PhysicalProperties.OEB_MAX()
+        self.OEB_INT = PhysicalProperties.OEB_INT()
+        self.OEB_MIN = PhysicalProperties.OEB_MIN()
+        self.AREA_ALONG_OEB_MAX = PhysicalProperties.AREA_ALONG_OEB_MAX()
+        self.AREA_ALONG_OEB_INT = PhysicalProperties.AREA_ALONG_OEB_INT()
+        self.AREA_ALONG_OEB_MIN = PhysicalProperties.AREA_ALONG_OEB_MIN()
+        self.AREA_UNITS = PhysicalProperties.AREA_UNITS()
+        self.DRAG_CONST_AREA = PhysicalProperties.DRAG_CONST_AREA()
+        self.DRAG_COEFF_NOM = PhysicalProperties.DRAG_COEFF_NOM()
+        self.DRAG_UNCERTAINTY = PhysicalProperties.DRAG_UNCERTAINTY()
+        self.SRP_CONST_AREA = PhysicalProperties.SRP_CONST_AREA()
+        self.SOLAR_RAD_COEFF = PhysicalProperties.SOLAR_RAD_COEFF()
+        self.SRP_UNCERTAINTY = PhysicalProperties.SRP_UNCERTAINTY()
+
+    # PhysicalPropertiesT
+    def Pack(self, builder):
+        if self.COMMENT is not None:
+            COMMENTlist = []
+            for i in range(len(self.COMMENT)):
+                COMMENTlist.append(builder.CreateString(self.COMMENT[i]))
+            PhysicalPropertiesStartCOMMENTVector(builder, len(self.COMMENT))
+            for i in reversed(range(len(self.COMMENT))):
+                builder.PrependUOffsetTRelative(COMMENTlist[i])
+            COMMENT = builder.EndVector()
+        if self.MASS_UNITS is not None:
+            MASS_UNITS = builder.CreateString(self.MASS_UNITS)
+        if self.AREA_UNITS is not None:
+            AREA_UNITS = builder.CreateString(self.AREA_UNITS)
+        PhysicalPropertiesStart(builder)
+        if self.COMMENT is not None:
+            PhysicalPropertiesAddCOMMENT(builder, COMMENT)
+        PhysicalPropertiesAddWET_MASS(builder, self.WET_MASS)
+        PhysicalPropertiesAddDRY_MASS(builder, self.DRY_MASS)
+        if self.MASS_UNITS is not None:
+            PhysicalPropertiesAddMASS_UNITS(builder, MASS_UNITS)
+        PhysicalPropertiesAddOEB_Q1(builder, self.OEB_Q1)
+        PhysicalPropertiesAddOEB_Q2(builder, self.OEB_Q2)
+        PhysicalPropertiesAddOEB_Q3(builder, self.OEB_Q3)
+        PhysicalPropertiesAddOEB_QC(builder, self.OEB_QC)
+        PhysicalPropertiesAddOEB_MAX(builder, self.OEB_MAX)
+        PhysicalPropertiesAddOEB_INT(builder, self.OEB_INT)
+        PhysicalPropertiesAddOEB_MIN(builder, self.OEB_MIN)
+        PhysicalPropertiesAddAREA_ALONG_OEB_MAX(builder, self.AREA_ALONG_OEB_MAX)
+        PhysicalPropertiesAddAREA_ALONG_OEB_INT(builder, self.AREA_ALONG_OEB_INT)
+        PhysicalPropertiesAddAREA_ALONG_OEB_MIN(builder, self.AREA_ALONG_OEB_MIN)
+        if self.AREA_UNITS is not None:
+            PhysicalPropertiesAddAREA_UNITS(builder, AREA_UNITS)
+        PhysicalPropertiesAddDRAG_CONST_AREA(builder, self.DRAG_CONST_AREA)
+        PhysicalPropertiesAddDRAG_COEFF_NOM(builder, self.DRAG_COEFF_NOM)
+        PhysicalPropertiesAddDRAG_UNCERTAINTY(builder, self.DRAG_UNCERTAINTY)
+        PhysicalPropertiesAddSRP_CONST_AREA(builder, self.SRP_CONST_AREA)
+        PhysicalPropertiesAddSOLAR_RAD_COEFF(builder, self.SOLAR_RAD_COEFF)
+        PhysicalPropertiesAddSRP_UNCERTAINTY(builder, self.SRP_UNCERTAINTY)
+        PhysicalProperties = PhysicalPropertiesEnd(builder)
+        return PhysicalProperties

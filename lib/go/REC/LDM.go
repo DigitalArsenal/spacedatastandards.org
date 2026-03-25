@@ -68,6 +68,10 @@ func (rcv *LDM) SITE(obj *SIT) *SIT {
 	return nil
 }
 
+func (rcv *LDM) Site(obj *SIT) *SIT {
+	return rcv.SITE(obj)
+}
+
 /// Launch Site Information
 /// Azimuth at Launch (in Degrees)
 func (rcv *LDM) AZIMUTH() float32 {
@@ -78,9 +82,17 @@ func (rcv *LDM) AZIMUTH() float32 {
 	return 0.0
 }
 
+func (rcv *LDM) Azimuth() float32 {
+	return rcv.AZIMUTH()
+}
+
 /// Azimuth at Launch (in Degrees)
 func (rcv *LDM) MutateAZIMUTH(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(6, n)
+}
+
+func (rcv *LDM) MutateAzimuth(n float32) bool {
+	return rcv.MutateAZIMUTH(n)
 }
 
 /// References for Launch Data
@@ -90,6 +102,10 @@ func (rcv *LDM) REFERENCES() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *LDM) References() []byte {
+	return rcv.REFERENCES()
 }
 
 /// References for Launch Data
@@ -102,6 +118,10 @@ func (rcv *LDM) AGENCY_NAME() []byte {
 	return nil
 }
 
+func (rcv *LDM) AgencyName() []byte {
+	return rcv.AGENCY_NAME()
+}
+
 /// Launching Agency Name
 /// Points of Contact for Launch
 func (rcv *LDM) POINTS_OF_CONTACT(obj *EPM, j int) bool {
@@ -110,10 +130,17 @@ func (rcv *LDM) POINTS_OF_CONTACT(obj *EPM, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(EPM)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *LDM) PointsOfContact(obj *EPM, j int) bool {
+	return rcv.POINTS_OF_CONTACT(obj, j)
 }
 
 func (rcv *LDM) POINTS_OF_CONTACTLength() int {
@@ -124,6 +151,10 @@ func (rcv *LDM) POINTS_OF_CONTACTLength() int {
 	return 0
 }
 
+func (rcv *LDM) PointsOfContactLength() int {
+	return rcv.POINTS_OF_CONTACTLength()
+}
+
 /// Points of Contact for Launch
 /// Operations Points of Contact for Launch
 func (rcv *LDM) OPERATIONS_POINTS_OF_CONTACT(obj *EPM, j int) bool {
@@ -132,10 +163,17 @@ func (rcv *LDM) OPERATIONS_POINTS_OF_CONTACT(obj *EPM, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(EPM)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *LDM) OperationsPointsOfContact(obj *EPM, j int) bool {
+	return rcv.OPERATIONS_POINTS_OF_CONTACT(obj, j)
 }
 
 func (rcv *LDM) OPERATIONS_POINTS_OF_CONTACTLength() int {
@@ -146,6 +184,10 @@ func (rcv *LDM) OPERATIONS_POINTS_OF_CONTACTLength() int {
 	return 0
 }
 
+func (rcv *LDM) OperationsPointsOfContactLength() int {
+	return rcv.OPERATIONS_POINTS_OF_CONTACTLength()
+}
+
 /// Operations Points of Contact for Launch
 /// Net Launch Time (UTC Format)
 func (rcv *LDM) NET() []byte {
@@ -154,6 +196,10 @@ func (rcv *LDM) NET() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *LDM) Net() []byte {
+	return rcv.NET()
 }
 
 /// Net Launch Time (UTC Format)
@@ -171,6 +217,10 @@ func (rcv *LDM) ROCKET_CONFIGURATION(obj *ROC) *ROC {
 	return nil
 }
 
+func (rcv *LDM) RocketConfiguration(obj *ROC) *ROC {
+	return rcv.ROCKET_CONFIGURATION(obj)
+}
+
 /// Rocket Configuration Details
 /// Mission Name
 func (rcv *LDM) MISSION_NAME() []byte {
@@ -179,6 +229,10 @@ func (rcv *LDM) MISSION_NAME() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *LDM) MissionName() []byte {
+	return rcv.MISSION_NAME()
 }
 
 /// Mission Name
@@ -191,6 +245,10 @@ func (rcv *LDM) MISSION_DESCRIPTION() []byte {
 	return nil
 }
 
+func (rcv *LDM) MissionDescription() []byte {
+	return rcv.MISSION_DESCRIPTION()
+}
+
 /// Description of the Mission
 /// Type of the Mission (e.g., Test Flight, Satellite Deployment)
 func (rcv *LDM) MISSION_TYPE() []byte {
@@ -199,6 +257,10 @@ func (rcv *LDM) MISSION_TYPE() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *LDM) MissionType() []byte {
+	return rcv.MISSION_TYPE()
 }
 
 /// Type of the Mission (e.g., Test Flight, Satellite Deployment)
@@ -211,6 +273,10 @@ func (rcv *LDM) ORBIT_TYPE() []byte {
 	return nil
 }
 
+func (rcv *LDM) OrbitType() []byte {
+	return rcv.ORBIT_TYPE()
+}
+
 /// Target Orbit Type (e.g., LEO, GEO)
 /// Weather and Environmental Conditions at Launch
 func (rcv *LDM) WEATHER_CONDITIONS() []byte {
@@ -219,6 +285,10 @@ func (rcv *LDM) WEATHER_CONDITIONS() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *LDM) WeatherConditions() []byte {
+	return rcv.WEATHER_CONDITIONS()
 }
 
 /// Weather and Environmental Conditions at Launch
@@ -231,6 +301,10 @@ func (rcv *LDM) LAUNCH_STATUS() []byte {
 	return nil
 }
 
+func (rcv *LDM) LaunchStatus() []byte {
+	return rcv.LAUNCH_STATUS()
+}
+
 /// Launch Outcome and Status (e.g., Successful, Failed)
 /// Webcast URL for the Launch
 func (rcv *LDM) WEBCAST_URL() []byte {
@@ -239,6 +313,10 @@ func (rcv *LDM) WEBCAST_URL() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *LDM) WebcastUrl() []byte {
+	return rcv.WEBCAST_URL()
 }
 
 /// Webcast URL for the Launch
@@ -252,12 +330,20 @@ func (rcv *LDM) MEDIA_LINKS(j int) []byte {
 	return nil
 }
 
+func (rcv *LDM) MediaLinks(j int) []byte {
+	return rcv.MEDIA_LINKS(j)
+}
+
 func (rcv *LDM) MEDIA_LINKSLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *LDM) MediaLinksLength() int {
+	return rcv.MEDIA_LINKSLength()
 }
 
 /// Media Links Related to the Launch
@@ -271,12 +357,20 @@ func (rcv *LDM) EARLIEST_LAUNCH_TIMES(j int) []byte {
 	return nil
 }
 
+func (rcv *LDM) EarliestLaunchTimes(j int) []byte {
+	return rcv.EARLIEST_LAUNCH_TIMES(j)
+}
+
 func (rcv *LDM) EARLIEST_LAUNCH_TIMESLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *LDM) EarliestLaunchTimesLength() int {
+	return rcv.EARLIEST_LAUNCH_TIMESLength()
 }
 
 /// Earliest Possible Launch Times
@@ -290,12 +384,20 @@ func (rcv *LDM) LATEST_LAUNCH_TIMES(j int) []byte {
 	return nil
 }
 
+func (rcv *LDM) LatestLaunchTimes(j int) []byte {
+	return rcv.LATEST_LAUNCH_TIMES(j)
+}
+
 func (rcv *LDM) LATEST_LAUNCH_TIMESLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *LDM) LatestLaunchTimesLength() int {
+	return rcv.LATEST_LAUNCH_TIMESLength()
 }
 
 /// Latest Possible Launch Times
@@ -309,12 +411,20 @@ func (rcv *LDM) LCOLA_WINDOW_CLOSURES(j int) []byte {
 	return nil
 }
 
+func (rcv *LDM) LcolaWindowClosures(j int) []byte {
+	return rcv.LCOLA_WINDOW_CLOSURES(j)
+}
+
 func (rcv *LDM) LCOLA_WINDOW_CLOSURESLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *LDM) LcolaWindowClosuresLength() int {
+	return rcv.LCOLA_WINDOW_CLOSURESLength()
 }
 
 /// Launch Collision Avoidance Information
@@ -325,10 +435,17 @@ func (rcv *LDM) OBJECTS(obj *CAT, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(CAT)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *LDM) Objects(obj *CAT, j int) bool {
+	return rcv.OBJECTS(obj, j)
 }
 
 func (rcv *LDM) OBJECTSLength() int {
@@ -337,6 +454,10 @@ func (rcv *LDM) OBJECTSLength() int {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *LDM) ObjectsLength() int {
+	return rcv.OBJECTSLength()
 }
 
 /// Payload Information (Catalog Entities)
@@ -350,12 +471,20 @@ func (rcv *LDM) TRACKING_REQUIREMENTS(j int) []byte {
 	return nil
 }
 
+func (rcv *LDM) TrackingRequirements(j int) []byte {
+	return rcv.TRACKING_REQUIREMENTS(j)
+}
+
 func (rcv *LDM) TRACKING_REQUIREMENTSLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(44))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *LDM) TrackingRequirementsLength() int {
+	return rcv.TRACKING_REQUIREMENTSLength()
 }
 
 /// Tracking and Collision Avoidance Requirements
@@ -368,6 +497,10 @@ func (rcv *LDM) COLA_SCREEN_DURATION() []byte {
 	return nil
 }
 
+func (rcv *LDM) ColaScreenDuration() []byte {
+	return rcv.COLA_SCREEN_DURATION()
+}
+
 /// Duration of Collision Avoidance Screen (in Seconds)
 /// Probability of Collision Threshold (Percentage)
 func (rcv *LDM) PROBABILITY_OF_COLLISION_THRESHOLD() []byte {
@@ -376,6 +509,10 @@ func (rcv *LDM) PROBABILITY_OF_COLLISION_THRESHOLD() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *LDM) ProbabilityOfCollisionThreshold() []byte {
+	return rcv.PROBABILITY_OF_COLLISION_THRESHOLD()
 }
 
 /// Probability of Collision Threshold (Percentage)
@@ -388,6 +525,10 @@ func (rcv *LDM) COLA_RUNS_REQUIRED() []byte {
 	return nil
 }
 
+func (rcv *LDM) ColaRunsRequired() []byte {
+	return rcv.COLA_RUNS_REQUIRED()
+}
+
 /// Number of Required Collision Avoidance Runs
 /// Points of Contact for Collision Avoidance
 func (rcv *LDM) COLA_POINTS_OF_CONTACT(obj *EPM, j int) bool {
@@ -396,10 +537,17 @@ func (rcv *LDM) COLA_POINTS_OF_CONTACT(obj *EPM, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(EPM)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *LDM) ColaPointsOfContact(obj *EPM, j int) bool {
+	return rcv.COLA_POINTS_OF_CONTACT(obj, j)
 }
 
 func (rcv *LDM) COLA_POINTS_OF_CONTACTLength() int {
@@ -408,6 +556,10 @@ func (rcv *LDM) COLA_POINTS_OF_CONTACTLength() int {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *LDM) ColaPointsOfContactLength() int {
+	return rcv.COLA_POINTS_OF_CONTACTLength()
 }
 
 /// Points of Contact for Collision Avoidance
@@ -421,12 +573,20 @@ func (rcv *LDM) ORBITAL_PARAMETERS(j int) []byte {
 	return nil
 }
 
+func (rcv *LDM) OrbitalParameters(j int) []byte {
+	return rcv.ORBITAL_PARAMETERS(j)
+}
+
 func (rcv *LDM) ORBITAL_PARAMETERSLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(54))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *LDM) OrbitalParametersLength() int {
+	return rcv.ORBITAL_PARAMETERSLength()
 }
 
 /// Orbital Parameters of the Launch
@@ -437,10 +597,17 @@ func (rcv *LDM) BURN_OUT_VECTORS(obj *BOV, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(BOV)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *LDM) BurnOutVectors(obj *BOV, j int) bool {
+	return rcv.BURN_OUT_VECTORS(obj, j)
 }
 
 func (rcv *LDM) BURN_OUT_VECTORSLength() int {
@@ -451,6 +618,10 @@ func (rcv *LDM) BURN_OUT_VECTORSLength() int {
 	return 0
 }
 
+func (rcv *LDM) BurnOutVectorsLength() int {
+	return rcv.BURN_OUT_VECTORSLength()
+}
+
 /// Burn Out Vectors for the Launch
 func LDMStart(builder *flatbuffers.Builder) {
 	builder.StartObject(27)
@@ -458,116 +629,230 @@ func LDMStart(builder *flatbuffers.Builder) {
 func LDMAddSITE(builder *flatbuffers.Builder, SITE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(SITE), 0)
 }
+func LDMAddSite(builder *flatbuffers.Builder, SITE flatbuffers.UOffsetT) {
+	LDMAddSITE(builder, SITE)
+}
 func LDMAddAZIMUTH(builder *flatbuffers.Builder, AZIMUTH float32) {
 	builder.PrependFloat32Slot(1, AZIMUTH, 0.0)
+}
+func LDMAddAzimuth(builder *flatbuffers.Builder, AZIMUTH float32) {
+	LDMAddAZIMUTH(builder, AZIMUTH)
 }
 func LDMAddREFERENCES(builder *flatbuffers.Builder, REFERENCES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(REFERENCES), 0)
 }
+func LDMAddReferences(builder *flatbuffers.Builder, REFERENCES flatbuffers.UOffsetT) {
+	LDMAddREFERENCES(builder, REFERENCES)
+}
 func LDMAddAGENCY_NAME(builder *flatbuffers.Builder, AGENCY_NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(AGENCY_NAME), 0)
+}
+func LDMAddAgencyName(builder *flatbuffers.Builder, AGENCY_NAME flatbuffers.UOffsetT) {
+	LDMAddAGENCY_NAME(builder, AGENCY_NAME)
 }
 func LDMAddPOINTS_OF_CONTACT(builder *flatbuffers.Builder, POINTS_OF_CONTACT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(POINTS_OF_CONTACT), 0)
 }
+func LDMAddPointsOfContact(builder *flatbuffers.Builder, POINTS_OF_CONTACT flatbuffers.UOffsetT) {
+	LDMAddPOINTS_OF_CONTACT(builder, POINTS_OF_CONTACT)
+}
 func LDMStartPOINTS_OF_CONTACTVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func LDMStartPointsOfContactVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return LDMStartPOINTS_OF_CONTACTVector(builder, numElems)
 }
 func LDMAddOPERATIONS_POINTS_OF_CONTACT(builder *flatbuffers.Builder, OPERATIONS_POINTS_OF_CONTACT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(OPERATIONS_POINTS_OF_CONTACT), 0)
 }
+func LDMAddOperationsPointsOfContact(builder *flatbuffers.Builder, OPERATIONS_POINTS_OF_CONTACT flatbuffers.UOffsetT) {
+	LDMAddOPERATIONS_POINTS_OF_CONTACT(builder, OPERATIONS_POINTS_OF_CONTACT)
+}
 func LDMStartOPERATIONS_POINTS_OF_CONTACTVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func LDMStartOperationsPointsOfContactVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return LDMStartOPERATIONS_POINTS_OF_CONTACTVector(builder, numElems)
 }
 func LDMAddNET(builder *flatbuffers.Builder, NET flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(NET), 0)
 }
+func LDMAddNet(builder *flatbuffers.Builder, NET flatbuffers.UOffsetT) {
+	LDMAddNET(builder, NET)
+}
 func LDMAddROCKET_CONFIGURATION(builder *flatbuffers.Builder, ROCKET_CONFIGURATION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(ROCKET_CONFIGURATION), 0)
+}
+func LDMAddRocketConfiguration(builder *flatbuffers.Builder, ROCKET_CONFIGURATION flatbuffers.UOffsetT) {
+	LDMAddROCKET_CONFIGURATION(builder, ROCKET_CONFIGURATION)
 }
 func LDMAddMISSION_NAME(builder *flatbuffers.Builder, MISSION_NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(MISSION_NAME), 0)
 }
+func LDMAddMissionName(builder *flatbuffers.Builder, MISSION_NAME flatbuffers.UOffsetT) {
+	LDMAddMISSION_NAME(builder, MISSION_NAME)
+}
 func LDMAddMISSION_DESCRIPTION(builder *flatbuffers.Builder, MISSION_DESCRIPTION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(MISSION_DESCRIPTION), 0)
+}
+func LDMAddMissionDescription(builder *flatbuffers.Builder, MISSION_DESCRIPTION flatbuffers.UOffsetT) {
+	LDMAddMISSION_DESCRIPTION(builder, MISSION_DESCRIPTION)
 }
 func LDMAddMISSION_TYPE(builder *flatbuffers.Builder, MISSION_TYPE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(MISSION_TYPE), 0)
 }
+func LDMAddMissionType(builder *flatbuffers.Builder, MISSION_TYPE flatbuffers.UOffsetT) {
+	LDMAddMISSION_TYPE(builder, MISSION_TYPE)
+}
 func LDMAddORBIT_TYPE(builder *flatbuffers.Builder, ORBIT_TYPE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(ORBIT_TYPE), 0)
+}
+func LDMAddOrbitType(builder *flatbuffers.Builder, ORBIT_TYPE flatbuffers.UOffsetT) {
+	LDMAddORBIT_TYPE(builder, ORBIT_TYPE)
 }
 func LDMAddWEATHER_CONDITIONS(builder *flatbuffers.Builder, WEATHER_CONDITIONS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(12, flatbuffers.UOffsetT(WEATHER_CONDITIONS), 0)
 }
+func LDMAddWeatherConditions(builder *flatbuffers.Builder, WEATHER_CONDITIONS flatbuffers.UOffsetT) {
+	LDMAddWEATHER_CONDITIONS(builder, WEATHER_CONDITIONS)
+}
 func LDMAddLAUNCH_STATUS(builder *flatbuffers.Builder, LAUNCH_STATUS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(13, flatbuffers.UOffsetT(LAUNCH_STATUS), 0)
+}
+func LDMAddLaunchStatus(builder *flatbuffers.Builder, LAUNCH_STATUS flatbuffers.UOffsetT) {
+	LDMAddLAUNCH_STATUS(builder, LAUNCH_STATUS)
 }
 func LDMAddWEBCAST_URL(builder *flatbuffers.Builder, WEBCAST_URL flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(14, flatbuffers.UOffsetT(WEBCAST_URL), 0)
 }
+func LDMAddWebcastUrl(builder *flatbuffers.Builder, WEBCAST_URL flatbuffers.UOffsetT) {
+	LDMAddWEBCAST_URL(builder, WEBCAST_URL)
+}
 func LDMAddMEDIA_LINKS(builder *flatbuffers.Builder, MEDIA_LINKS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(15, flatbuffers.UOffsetT(MEDIA_LINKS), 0)
+}
+func LDMAddMediaLinks(builder *flatbuffers.Builder, MEDIA_LINKS flatbuffers.UOffsetT) {
+	LDMAddMEDIA_LINKS(builder, MEDIA_LINKS)
 }
 func LDMStartMEDIA_LINKSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
+func LDMStartMediaLinksVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return LDMStartMEDIA_LINKSVector(builder, numElems)
+}
 func LDMAddEARLIEST_LAUNCH_TIMES(builder *flatbuffers.Builder, EARLIEST_LAUNCH_TIMES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(16, flatbuffers.UOffsetT(EARLIEST_LAUNCH_TIMES), 0)
+}
+func LDMAddEarliestLaunchTimes(builder *flatbuffers.Builder, EARLIEST_LAUNCH_TIMES flatbuffers.UOffsetT) {
+	LDMAddEARLIEST_LAUNCH_TIMES(builder, EARLIEST_LAUNCH_TIMES)
 }
 func LDMStartEARLIEST_LAUNCH_TIMESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
+func LDMStartEarliestLaunchTimesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return LDMStartEARLIEST_LAUNCH_TIMESVector(builder, numElems)
+}
 func LDMAddLATEST_LAUNCH_TIMES(builder *flatbuffers.Builder, LATEST_LAUNCH_TIMES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(17, flatbuffers.UOffsetT(LATEST_LAUNCH_TIMES), 0)
+}
+func LDMAddLatestLaunchTimes(builder *flatbuffers.Builder, LATEST_LAUNCH_TIMES flatbuffers.UOffsetT) {
+	LDMAddLATEST_LAUNCH_TIMES(builder, LATEST_LAUNCH_TIMES)
 }
 func LDMStartLATEST_LAUNCH_TIMESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
+func LDMStartLatestLaunchTimesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return LDMStartLATEST_LAUNCH_TIMESVector(builder, numElems)
+}
 func LDMAddLCOLA_WINDOW_CLOSURES(builder *flatbuffers.Builder, LCOLA_WINDOW_CLOSURES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(18, flatbuffers.UOffsetT(LCOLA_WINDOW_CLOSURES), 0)
+}
+func LDMAddLcolaWindowClosures(builder *flatbuffers.Builder, LCOLA_WINDOW_CLOSURES flatbuffers.UOffsetT) {
+	LDMAddLCOLA_WINDOW_CLOSURES(builder, LCOLA_WINDOW_CLOSURES)
 }
 func LDMStartLCOLA_WINDOW_CLOSURESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
+func LDMStartLcolaWindowClosuresVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return LDMStartLCOLA_WINDOW_CLOSURESVector(builder, numElems)
+}
 func LDMAddOBJECTS(builder *flatbuffers.Builder, OBJECTS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(19, flatbuffers.UOffsetT(OBJECTS), 0)
+}
+func LDMAddObjects(builder *flatbuffers.Builder, OBJECTS flatbuffers.UOffsetT) {
+	LDMAddOBJECTS(builder, OBJECTS)
 }
 func LDMStartOBJECTSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
+func LDMStartObjectsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return LDMStartOBJECTSVector(builder, numElems)
+}
 func LDMAddTRACKING_REQUIREMENTS(builder *flatbuffers.Builder, TRACKING_REQUIREMENTS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(20, flatbuffers.UOffsetT(TRACKING_REQUIREMENTS), 0)
+}
+func LDMAddTrackingRequirements(builder *flatbuffers.Builder, TRACKING_REQUIREMENTS flatbuffers.UOffsetT) {
+	LDMAddTRACKING_REQUIREMENTS(builder, TRACKING_REQUIREMENTS)
 }
 func LDMStartTRACKING_REQUIREMENTSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
+func LDMStartTrackingRequirementsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return LDMStartTRACKING_REQUIREMENTSVector(builder, numElems)
+}
 func LDMAddCOLA_SCREEN_DURATION(builder *flatbuffers.Builder, COLA_SCREEN_DURATION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(21, flatbuffers.UOffsetT(COLA_SCREEN_DURATION), 0)
+}
+func LDMAddColaScreenDuration(builder *flatbuffers.Builder, COLA_SCREEN_DURATION flatbuffers.UOffsetT) {
+	LDMAddCOLA_SCREEN_DURATION(builder, COLA_SCREEN_DURATION)
 }
 func LDMAddPROBABILITY_OF_COLLISION_THRESHOLD(builder *flatbuffers.Builder, PROBABILITY_OF_COLLISION_THRESHOLD flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(22, flatbuffers.UOffsetT(PROBABILITY_OF_COLLISION_THRESHOLD), 0)
 }
+func LDMAddProbabilityOfCollisionThreshold(builder *flatbuffers.Builder, PROBABILITY_OF_COLLISION_THRESHOLD flatbuffers.UOffsetT) {
+	LDMAddPROBABILITY_OF_COLLISION_THRESHOLD(builder, PROBABILITY_OF_COLLISION_THRESHOLD)
+}
 func LDMAddCOLA_RUNS_REQUIRED(builder *flatbuffers.Builder, COLA_RUNS_REQUIRED flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(23, flatbuffers.UOffsetT(COLA_RUNS_REQUIRED), 0)
+}
+func LDMAddColaRunsRequired(builder *flatbuffers.Builder, COLA_RUNS_REQUIRED flatbuffers.UOffsetT) {
+	LDMAddCOLA_RUNS_REQUIRED(builder, COLA_RUNS_REQUIRED)
 }
 func LDMAddCOLA_POINTS_OF_CONTACT(builder *flatbuffers.Builder, COLA_POINTS_OF_CONTACT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(24, flatbuffers.UOffsetT(COLA_POINTS_OF_CONTACT), 0)
 }
+func LDMAddColaPointsOfContact(builder *flatbuffers.Builder, COLA_POINTS_OF_CONTACT flatbuffers.UOffsetT) {
+	LDMAddCOLA_POINTS_OF_CONTACT(builder, COLA_POINTS_OF_CONTACT)
+}
 func LDMStartCOLA_POINTS_OF_CONTACTVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func LDMStartColaPointsOfContactVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return LDMStartCOLA_POINTS_OF_CONTACTVector(builder, numElems)
 }
 func LDMAddORBITAL_PARAMETERS(builder *flatbuffers.Builder, ORBITAL_PARAMETERS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(25, flatbuffers.UOffsetT(ORBITAL_PARAMETERS), 0)
 }
+func LDMAddOrbitalParameters(builder *flatbuffers.Builder, ORBITAL_PARAMETERS flatbuffers.UOffsetT) {
+	LDMAddORBITAL_PARAMETERS(builder, ORBITAL_PARAMETERS)
+}
 func LDMStartORBITAL_PARAMETERSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func LDMStartOrbitalParametersVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return LDMStartORBITAL_PARAMETERSVector(builder, numElems)
 }
 func LDMAddBURN_OUT_VECTORS(builder *flatbuffers.Builder, BURN_OUT_VECTORS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(26, flatbuffers.UOffsetT(BURN_OUT_VECTORS), 0)
 }
+func LDMAddBurnOutVectors(builder *flatbuffers.Builder, BURN_OUT_VECTORS flatbuffers.UOffsetT) {
+	LDMAddBURN_OUT_VECTORS(builder, BURN_OUT_VECTORS)
+}
 func LDMStartBURN_OUT_VECTORSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func LDMStartBurnOutVectorsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return LDMStartBURN_OUT_VECTORSVector(builder, numElems)
 }
 func LDMEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

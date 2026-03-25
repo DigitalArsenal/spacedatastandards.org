@@ -2,9 +2,13 @@
 // swiftlint:disable all
 // swiftformat:disable all
 
+#if canImport(Common)
+import Common
+#endif
+
 import FlatBuffers
 
-public enum analyticType: Int8, Enum, Verifiable {
+public enum analyticType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -24,9 +28,9 @@ public enum analyticType: Int8, Enum, Verifiable {
 
 
 ///  Analytic Imagery Product
-public struct ANI: FlatBufferObject, Verifiable {
+public struct ANI: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -102,19 +106,13 @@ public struct ANI: FlatBufferObject, Verifiable {
   ///  Detected object count
   public var OBJECT_COUNT: UInt32 { let o = _accessor.offset(VTOFFSET.OBJECT_COUNT.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  Classification labels
-  public var hasLabels: Bool { let o = _accessor.offset(VTOFFSET.LABELS.v); return o == 0 ? false : true }
-  public var LABELSCount: Int32 { let o = _accessor.offset(VTOFFSET.LABELS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func LABELS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.LABELS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  public var LABELS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.LABELS.v, byteSize: 4) }
   ///  Classification confidence scores (0.0-1.0)
-  public var hasConfidence: Bool { let o = _accessor.offset(VTOFFSET.CONFIDENCE.v); return o == 0 ? false : true }
-  public var CONFIDENCECount: Int32 { let o = _accessor.offset(VTOFFSET.CONFIDENCE.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func CONFIDENCE(at index: Int32) -> Double { let o = _accessor.offset(VTOFFSET.CONFIDENCE.v); return o == 0 ? 0 : _accessor.directRead(of: Double.self, offset: _accessor.vector(at: o) + index * 8) }
-  public var CONFIDENCE: [Double] { return _accessor.getVector(at: VTOFFSET.CONFIDENCE.v) ?? [] }
+  public var CONFIDENCE: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.CONFIDENCE.v, byteSize: 8) }
+  public func withUnsafePointerToConfidence<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.CONFIDENCE.v, body: body) }
   ///  Feature vector or extracted parameters
-  public var hasFeatures: Bool { let o = _accessor.offset(VTOFFSET.FEATURES.v); return o == 0 ? false : true }
-  public var FEATURESCount: Int32 { let o = _accessor.offset(VTOFFSET.FEATURES.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func FEATURES(at index: Int32) -> Double { let o = _accessor.offset(VTOFFSET.FEATURES.v); return o == 0 ? 0 : _accessor.directRead(of: Double.self, offset: _accessor.vector(at: o) + index * 8) }
-  public var FEATURES: [Double] { return _accessor.getVector(at: VTOFFSET.FEATURES.v) ?? [] }
+  public var FEATURES: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.FEATURES.v, byteSize: 8) }
+  public func withUnsafePointerToFeatures<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.FEATURES.v, body: body) }
   ///  Quality score (0.0-1.0)
   public var QUALITY: Double { let o = _accessor.offset(VTOFFSET.QUALITY.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Additional notes

@@ -32,8 +32,8 @@ class GJNPolygonRings : Table() {
     /**
      * Rings: first is outer boundary, rest are holes
      */
-    fun RINGS(j: Int) : GJNLinearRing? = RINGS(GJNLinearRing(), j)
-    fun RINGS(obj: GJNLinearRing, j: Int) : GJNLinearRing? {
+    fun rings(j: Int) : GJNLinearRing? = rings(GJNLinearRing(), j)
+    fun rings(obj: GJNLinearRing, j: Int) : GJNLinearRing? {
         val o = __offset(4)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -41,24 +41,24 @@ class GJNPolygonRings : Table() {
             null
         }
     }
-    val RINGSLength : Int
+    val ringsLength : Int
         get() {
             val o = __offset(4); return if (o != 0) __vector_len(o) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsGJNPolygonRings(_bb: ByteBuffer): GJNPolygonRings = getRootAsGJNPolygonRings(_bb, GJNPolygonRings())
         fun getRootAsGJNPolygonRings(_bb: ByteBuffer, obj: GJNPolygonRings): GJNPolygonRings {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createGJNPolygonRings(builder: FlatBufferBuilder, RINGSOffset: Int) : Int {
+        fun createGJNPolygonRings(builder: FlatBufferBuilder, ringsOffset: Int) : Int {
             builder.startTable(1)
-            addRINGS(builder, RINGSOffset)
+            addRINGS(builder, ringsOffset)
             return endGJNPolygonRings(builder)
         }
         fun startGJNPolygonRings(builder: FlatBufferBuilder) = builder.startTable(1)
-        fun addRINGS(builder: FlatBufferBuilder, RINGS: Int) = builder.addOffset(0, RINGS, 0)
+        fun addRINGS(builder: FlatBufferBuilder, rings: Int) = builder.addOffset(0, rings, 0)
         fun createRingsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {

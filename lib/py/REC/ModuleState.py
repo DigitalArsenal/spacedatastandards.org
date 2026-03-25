@@ -2,4 +2,9 @@
 
 # namespace: 
 
-# NOTE ModuleState.py does not declare any structs or enums
+class ModuleState(object):
+    OPERATIONAL = 0
+    DAMAGED = 1
+    CRITICAL = 2
+    DESTROYED = 3
+    REPAIRING = 4

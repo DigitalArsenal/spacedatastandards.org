@@ -171,6 +171,12 @@ def GPXTrackStartLINKSVector(builder, numElems):
 def StartLINKSVector(builder, numElems):
     return GPXTrackStartLINKSVector(builder, numElems)
 
+def GPXTrackCreateLINKSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateLINKSVector(builder, data):
+    GPXTrackCreateLINKSVector(builder, data)
+
 def GPXTrackAddNUMBER(builder, NUMBER):
     builder.PrependUint32Slot(5, NUMBER, 0)
 
@@ -195,6 +201,12 @@ def GPXTrackStartSEGMENTSVector(builder, numElems):
 def StartSEGMENTSVector(builder, numElems):
     return GPXTrackStartSEGMENTSVector(builder, numElems)
 
+def GPXTrackCreateSEGMENTSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateSEGMENTSVector(builder, data):
+    GPXTrackCreateSEGMENTSVector(builder, data)
+
 def GPXTrackEnd(builder):
     return builder.EndObject()
 
@@ -211,21 +223,31 @@ except:
 class GPXTrackT(object):
 
     # GPXTrackT
-    def __init__(self):
-        self.NAME = None  # type: str
-        self.COMMENT = None  # type: str
-        self.DESCRIPTION = None  # type: str
-        self.SOURCE = None  # type: str
-        self.LINKS = None  # type: List[GPXLink.GPXLinkT]
-        self.NUMBER = 0  # type: int
-        self.TYPE = None  # type: str
-        self.SEGMENTS = None  # type: List[GPXTrackSegment.GPXTrackSegmentT]
+    def __init__(
+        self,
+        NAME = None,
+        COMMENT = None,
+        DESCRIPTION = None,
+        SOURCE = None,
+        LINKS = None,
+        NUMBER = 0,
+        TYPE = None,
+        SEGMENTS = None,
+    ):
+        self.NAME = NAME  # type: Optional[str]
+        self.COMMENT = COMMENT  # type: Optional[str]
+        self.DESCRIPTION = DESCRIPTION  # type: Optional[str]
+        self.SOURCE = SOURCE  # type: Optional[str]
+        self.LINKS = LINKS  # type: Optional[List[GPXLink.GPXLinkT]]
+        self.NUMBER = NUMBER  # type: int
+        self.TYPE = TYPE  # type: Optional[str]
+        self.SEGMENTS = SEGMENTS  # type: Optional[List[GPXTrackSegment.GPXTrackSegmentT]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        gpxtrack = GPXTrack()
-        gpxtrack.Init(buf, pos)
-        return cls.InitFromObj(gpxtrack)
+        tmpGpxtrack = GPXTrack()
+        tmpGpxtrack.Init(buf, pos)
+        return cls.InitFromObj(tmpGpxtrack)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -233,36 +255,36 @@ class GPXTrackT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, gpxtrack):
+    def InitFromObj(cls, tmpGpxtrack):
         x = GPXTrackT()
-        x._UnPack(gpxtrack)
+        x._UnPack(tmpGpxtrack)
         return x
 
     # GPXTrackT
-    def _UnPack(self, gpxtrack):
-        if gpxtrack is None:
+    def _UnPack(self, GPXTrack):
+        if GPXTrack is None:
             return
-        self.NAME = gpxtrack.NAME()
-        self.COMMENT = gpxtrack.COMMENT()
-        self.DESCRIPTION = gpxtrack.DESCRIPTION()
-        self.SOURCE = gpxtrack.SOURCE()
-        if not gpxtrack.LINKSIsNone():
+        self.NAME = GPXTrack.NAME()
+        self.COMMENT = GPXTrack.COMMENT()
+        self.DESCRIPTION = GPXTrack.DESCRIPTION()
+        self.SOURCE = GPXTrack.SOURCE()
+        if not GPXTrack.LINKSIsNone():
             self.LINKS = []
-            for i in range(gpxtrack.LINKSLength()):
-                if gpxtrack.LINKS(i) is None:
+            for i in range(GPXTrack.LINKSLength()):
+                if GPXTrack.LINKS(i) is None:
                     self.LINKS.append(None)
                 else:
-                    gPXLink_ = GPXLink.GPXLinkT.InitFromObj(gpxtrack.LINKS(i))
+                    gPXLink_ = GPXLink.GPXLinkT.InitFromObj(GPXTrack.LINKS(i))
                     self.LINKS.append(gPXLink_)
-        self.NUMBER = gpxtrack.NUMBER()
-        self.TYPE = gpxtrack.TYPE()
-        if not gpxtrack.SEGMENTSIsNone():
+        self.NUMBER = GPXTrack.NUMBER()
+        self.TYPE = GPXTrack.TYPE()
+        if not GPXTrack.SEGMENTSIsNone():
             self.SEGMENTS = []
-            for i in range(gpxtrack.SEGMENTSLength()):
-                if gpxtrack.SEGMENTS(i) is None:
+            for i in range(GPXTrack.SEGMENTSLength()):
+                if GPXTrack.SEGMENTS(i) is None:
                     self.SEGMENTS.append(None)
                 else:
-                    gPXTrackSegment_ = GPXTrackSegment.GPXTrackSegmentT.InitFromObj(gpxtrack.SEGMENTS(i))
+                    gPXTrackSegment_ = GPXTrackSegment.GPXTrackSegmentT.InitFromObj(GPXTrack.SEGMENTS(i))
                     self.SEGMENTS.append(gPXTrackSegment_)
 
     # GPXTrackT
@@ -309,5 +331,5 @@ class GPXTrackT(object):
             GPXTrackAddTYPE(builder, TYPE)
         if self.SEGMENTS is not None:
             GPXTrackAddSEGMENTS(builder, SEGMENTS)
-        gpxtrack = GPXTrackEnd(builder)
-        return gpxtrack
+        GPXTrack = GPXTrackEnd(builder)
+        return GPXTrack

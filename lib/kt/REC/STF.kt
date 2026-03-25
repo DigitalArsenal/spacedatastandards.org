@@ -32,35 +32,35 @@ class STF : Table() {
     /**
      * Unique identifier for the listing
      */
-    val LISTING_ID : String
+    val listingId : String
         get() {
             val o = __offset(4)
             return if (o != 0) {
                 __string(o + bb_pos)
             } else {
-                throw AssertionError("No value for (required) field LISTING_ID")
+                throw AssertionError("No value for (required) field listingId")
             }
         }
-    val LISTING_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun LISTING_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val listingIdAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
+    fun listingIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Peer ID of the data provider
      */
-    val PROVIDER_PEER_ID : String
+    val providerPeerId : String
         get() {
             val o = __offset(6)
             return if (o != 0) {
                 __string(o + bb_pos)
             } else {
-                throw AssertionError("No value for (required) field PROVIDER_PEER_ID")
+                throw AssertionError("No value for (required) field providerPeerId")
             }
         }
-    val PROVIDER_PEER_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun PROVIDER_PEER_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val providerPeerIdAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
+    fun providerPeerIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * IPFS CID of provider's EPM (Entity Profile Message)
      */
-    val PROVIDER_EPM_CID : String?
+    val providerEpmCid : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -69,26 +69,26 @@ class STF : Table() {
                 null
             }
         }
-    val PROVIDER_EPM_CIDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun PROVIDER_EPM_CIDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val providerEpmCidAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun providerEpmCidInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
     /**
      * Title of the data listing
      */
-    val TITLE : String
+    val title : String
         get() {
             val o = __offset(10)
             return if (o != 0) {
                 __string(o + bb_pos)
             } else {
-                throw AssertionError("No value for (required) field TITLE")
+                throw AssertionError("No value for (required) field title")
             }
         }
-    val TITLEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
-    fun TITLEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
+    val titleAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
+    fun titleInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
     /**
      * Detailed description of the data offering
      */
-    val DESCRIPTION : String?
+    val description : String?
         get() {
             val o = __offset(12)
             return if (o != 0) {
@@ -97,12 +97,12 @@ class STF : Table() {
                 null
             }
         }
-    val DESCRIPTIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
-    fun DESCRIPTIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
+    val descriptionAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(12, 1)
+    fun descriptionInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 12, 1)
     /**
      * SDS data types offered, e.g., ["OMM", "CDM", "TLE"]
      */
-    fun DATA_TYPES(j: Int) : String? {
+    fun dataTypes(j: Int) : String? {
         val o = __offset(14)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
@@ -110,15 +110,15 @@ class STF : Table() {
             null
         }
     }
-    val DATA_TYPESLength : Int
+    val dataTypesLength : Int
         get() {
             val o = __offset(14); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Coverage information (spatial and temporal)
      */
-    val COVERAGE : DataCoverage? get() = COVERAGE(DataCoverage())
-    fun COVERAGE(obj: DataCoverage) : DataCoverage? {
+    val coverage : DataCoverage? get() = coverage(DataCoverage())
+    fun coverage(obj: DataCoverage) : DataCoverage? {
         val o = __offset(16)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -129,7 +129,7 @@ class STF : Table() {
     /**
      * IPFS CID of sample data
      */
-    val SAMPLE_CID : String?
+    val sampleCid : String?
         get() {
             val o = __offset(18)
             return if (o != 0) {
@@ -138,12 +138,12 @@ class STF : Table() {
                 null
             }
         }
-    val SAMPLE_CIDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(18, 1)
-    fun SAMPLE_CIDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 18, 1)
+    val sampleCidAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(18, 1)
+    fun sampleCidInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 18, 1)
     /**
      * Type of access offered
      */
-    val ACCESS_TYPE : Byte
+    val accessType : Byte
         get() {
             val o = __offset(20)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -151,7 +151,7 @@ class STF : Table() {
     /**
      * Whether encryption is required for data delivery
      */
-    val ENCRYPTION_REQUIRED : Boolean
+    val encryptionRequired : Boolean
         get() {
             val o = __offset(22)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -159,8 +159,8 @@ class STF : Table() {
     /**
      * Available pricing tiers
      */
-    fun PRICING(j: Int) : PricingTier? = PRICING(PricingTier(), j)
-    fun PRICING(obj: PricingTier, j: Int) : PricingTier? {
+    fun pricing(j: Int) : PricingTier? = pricing(PricingTier(), j)
+    fun pricing(obj: PricingTier, j: Int) : PricingTier? {
         val o = __offset(24)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -168,14 +168,14 @@ class STF : Table() {
             null
         }
     }
-    val PRICINGLength : Int
+    val pricingLength : Int
         get() {
             val o = __offset(24); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Payment methods accepted
      */
-    fun ACCEPTED_PAYMENTS(j: Int) : Byte {
+    fun acceptedPayments(j: Int) : Byte {
         val o = __offset(26)
         return if (o != 0) {
             bb.get(__vector(o) + j * 1)
@@ -183,16 +183,16 @@ class STF : Table() {
             0
         }
     }
-    val ACCEPTED_PAYMENTSLength : Int
+    val acceptedPaymentsLength : Int
         get() {
             val o = __offset(26); return if (o != 0) __vector_len(o) else 0
         }
-    val ACCEPTED_PAYMENTSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(26, 1)
-    fun ACCEPTED_PAYMENTSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 26, 1)
+    val acceptedPaymentsAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(26, 1)
+    fun acceptedPaymentsInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 26, 1)
     /**
      * Unix timestamp when listing was created
      */
-    val CREATED_AT : ULong
+    val createdAt : ULong
         get() {
             val o = __offset(28)
             return if(o != 0) bb.getLong(o + bb_pos).toULong() else 0UL
@@ -200,7 +200,7 @@ class STF : Table() {
     /**
      * Unix timestamp when listing was last updated
      */
-    val UPDATED_AT : ULong
+    val updatedAt : ULong
         get() {
             val o = __offset(30)
             return if(o != 0) bb.getLong(o + bb_pos).toULong() else 0UL
@@ -208,7 +208,7 @@ class STF : Table() {
     /**
      * Whether the listing is currently active
      */
-    val ACTIVE : Boolean
+    val active : Boolean
         get() {
             val o = __offset(32)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -216,7 +216,7 @@ class STF : Table() {
     /**
      * Ed25519 signature from provider
      */
-    fun SIGNATURE(j: Int) : UByte {
+    fun signature(j: Int) : UByte {
         val o = __offset(34)
         return if (o != 0) {
             bb.get(__vector(o) + j * 1).toUByte()
@@ -224,47 +224,47 @@ class STF : Table() {
             0u
         }
     }
-    val SIGNATURELength : Int
+    val signatureLength : Int
         get() {
             val o = __offset(34); return if (o != 0) __vector_len(o) else 0
         }
-    val SIGNATUREAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(34, 1)
-    fun SIGNATUREInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 34, 1)
+    val signatureAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(34, 1)
+    fun signatureInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 34, 1)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsSTF(_bb: ByteBuffer): STF = getRootAsSTF(_bb, STF())
         fun getRootAsSTF(_bb: ByteBuffer, obj: STF): STF {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun STFBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$STF")
-        fun createSTF(builder: FlatBufferBuilder, LISTING_IDOffset: Int, PROVIDER_PEER_IDOffset: Int, PROVIDER_EPM_CIDOffset: Int, TITLEOffset: Int, DESCRIPTIONOffset: Int, DATA_TYPESOffset: Int, COVERAGEOffset: Int, SAMPLE_CIDOffset: Int, ACCESS_TYPE: Byte, ENCRYPTION_REQUIRED: Boolean, PRICINGOffset: Int, ACCEPTED_PAYMENTSOffset: Int, CREATED_AT: ULong, UPDATED_AT: ULong, ACTIVE: Boolean, SIGNATUREOffset: Int) : Int {
+        fun createSTF(builder: FlatBufferBuilder, listingIdOffset: Int, providerPeerIdOffset: Int, providerEpmCidOffset: Int, titleOffset: Int, descriptionOffset: Int, dataTypesOffset: Int, coverageOffset: Int, sampleCidOffset: Int, accessType: Byte, encryptionRequired: Boolean, pricingOffset: Int, acceptedPaymentsOffset: Int, createdAt: ULong, updatedAt: ULong, active: Boolean, signatureOffset: Int) : Int {
             builder.startTable(16)
-            addUPDATED_AT(builder, UPDATED_AT)
-            addCREATED_AT(builder, CREATED_AT)
-            addSIGNATURE(builder, SIGNATUREOffset)
-            addACCEPTED_PAYMENTS(builder, ACCEPTED_PAYMENTSOffset)
-            addPRICING(builder, PRICINGOffset)
-            addSAMPLE_CID(builder, SAMPLE_CIDOffset)
-            addCOVERAGE(builder, COVERAGEOffset)
-            addDATA_TYPES(builder, DATA_TYPESOffset)
-            addDESCRIPTION(builder, DESCRIPTIONOffset)
-            addTITLE(builder, TITLEOffset)
-            addPROVIDER_EPM_CID(builder, PROVIDER_EPM_CIDOffset)
-            addPROVIDER_PEER_ID(builder, PROVIDER_PEER_IDOffset)
-            addLISTING_ID(builder, LISTING_IDOffset)
-            addACTIVE(builder, ACTIVE)
-            addENCRYPTION_REQUIRED(builder, ENCRYPTION_REQUIRED)
-            addACCESS_TYPE(builder, ACCESS_TYPE)
+            addUPDATEDAT(builder, updatedAt)
+            addCREATEDAT(builder, createdAt)
+            addSIGNATURE(builder, signatureOffset)
+            addACCEPTEDPAYMENTS(builder, acceptedPaymentsOffset)
+            addPRICING(builder, pricingOffset)
+            addSAMPLECID(builder, sampleCidOffset)
+            addCOVERAGE(builder, coverageOffset)
+            addDATATYPES(builder, dataTypesOffset)
+            addDESCRIPTION(builder, descriptionOffset)
+            addTITLE(builder, titleOffset)
+            addPROVIDEREPMCID(builder, providerEpmCidOffset)
+            addPROVIDERPEERID(builder, providerPeerIdOffset)
+            addLISTINGID(builder, listingIdOffset)
+            addACTIVE(builder, active)
+            addENCRYPTIONREQUIRED(builder, encryptionRequired)
+            addACCESSTYPE(builder, accessType)
             return endSTF(builder)
         }
         fun startSTF(builder: FlatBufferBuilder) = builder.startTable(16)
-        fun addLISTING_ID(builder: FlatBufferBuilder, LISTING_ID: Int) = builder.addOffset(0, LISTING_ID, 0)
-        fun addPROVIDER_PEER_ID(builder: FlatBufferBuilder, PROVIDER_PEER_ID: Int) = builder.addOffset(1, PROVIDER_PEER_ID, 0)
-        fun addPROVIDER_EPM_CID(builder: FlatBufferBuilder, PROVIDER_EPM_CID: Int) = builder.addOffset(2, PROVIDER_EPM_CID, 0)
-        fun addTITLE(builder: FlatBufferBuilder, TITLE: Int) = builder.addOffset(3, TITLE, 0)
-        fun addDESCRIPTION(builder: FlatBufferBuilder, DESCRIPTION: Int) = builder.addOffset(4, DESCRIPTION, 0)
-        fun addDATA_TYPES(builder: FlatBufferBuilder, DATA_TYPES: Int) = builder.addOffset(5, DATA_TYPES, 0)
+        fun addLISTINGID(builder: FlatBufferBuilder, listingId: Int) = builder.addOffset(0, listingId, 0)
+        fun addPROVIDERPEERID(builder: FlatBufferBuilder, providerPeerId: Int) = builder.addOffset(1, providerPeerId, 0)
+        fun addPROVIDEREPMCID(builder: FlatBufferBuilder, providerEpmCid: Int) = builder.addOffset(2, providerEpmCid, 0)
+        fun addTITLE(builder: FlatBufferBuilder, title: Int) = builder.addOffset(3, title, 0)
+        fun addDESCRIPTION(builder: FlatBufferBuilder, description: Int) = builder.addOffset(4, description, 0)
+        fun addDATATYPES(builder: FlatBufferBuilder, dataTypes: Int) = builder.addOffset(5, dataTypes, 0)
         fun createDataTypesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -273,11 +273,11 @@ class STF : Table() {
             return builder.endVector()
         }
         fun startDataTypesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addCOVERAGE(builder: FlatBufferBuilder, COVERAGE: Int) = builder.addOffset(6, COVERAGE, 0)
-        fun addSAMPLE_CID(builder: FlatBufferBuilder, SAMPLE_CID: Int) = builder.addOffset(7, SAMPLE_CID, 0)
-        fun addACCESS_TYPE(builder: FlatBufferBuilder, ACCESS_TYPE: Byte) = builder.addByte(8, ACCESS_TYPE, 0)
-        fun addENCRYPTION_REQUIRED(builder: FlatBufferBuilder, ENCRYPTION_REQUIRED: Boolean) = builder.addBoolean(9, ENCRYPTION_REQUIRED, false)
-        fun addPRICING(builder: FlatBufferBuilder, PRICING: Int) = builder.addOffset(10, PRICING, 0)
+        fun addCOVERAGE(builder: FlatBufferBuilder, coverage: Int) = builder.addOffset(6, coverage, 0)
+        fun addSAMPLECID(builder: FlatBufferBuilder, sampleCid: Int) = builder.addOffset(7, sampleCid, 0)
+        fun addACCESSTYPE(builder: FlatBufferBuilder, accessType: Byte) = builder.addByte(8, accessType, 0)
+        fun addENCRYPTIONREQUIRED(builder: FlatBufferBuilder, encryptionRequired: Boolean) = builder.addBoolean(9, encryptionRequired, false)
+        fun addPRICING(builder: FlatBufferBuilder, pricing: Int) = builder.addOffset(10, pricing, 0)
         fun createPricingVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -286,7 +286,7 @@ class STF : Table() {
             return builder.endVector()
         }
         fun startPricingVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addACCEPTED_PAYMENTS(builder: FlatBufferBuilder, ACCEPTED_PAYMENTS: Int) = builder.addOffset(11, ACCEPTED_PAYMENTS, 0)
+        fun addACCEPTEDPAYMENTS(builder: FlatBufferBuilder, acceptedPayments: Int) = builder.addOffset(11, acceptedPayments, 0)
         fun createAcceptedPaymentsVector(builder: FlatBufferBuilder, data: ByteArray) : Int {
             builder.startVector(1, data.size, 1)
             for (i in data.size - 1 downTo 0) {
@@ -295,10 +295,10 @@ class STF : Table() {
             return builder.endVector()
         }
         fun startAcceptedPaymentsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(1, numElems, 1)
-        fun addCREATED_AT(builder: FlatBufferBuilder, CREATED_AT: ULong) = builder.addLong(12, CREATED_AT.toLong(), 0)
-        fun addUPDATED_AT(builder: FlatBufferBuilder, UPDATED_AT: ULong) = builder.addLong(13, UPDATED_AT.toLong(), 0)
-        fun addACTIVE(builder: FlatBufferBuilder, ACTIVE: Boolean) = builder.addBoolean(14, ACTIVE, false)
-        fun addSIGNATURE(builder: FlatBufferBuilder, SIGNATURE: Int) = builder.addOffset(15, SIGNATURE, 0)
+        fun addCREATEDAT(builder: FlatBufferBuilder, createdAt: ULong) = builder.addLong(12, createdAt.toLong(), 0)
+        fun addUPDATEDAT(builder: FlatBufferBuilder, updatedAt: ULong) = builder.addLong(13, updatedAt.toLong(), 0)
+        fun addACTIVE(builder: FlatBufferBuilder, active: Boolean) = builder.addBoolean(14, active, false)
+        fun addSIGNATURE(builder: FlatBufferBuilder, signature: Int) = builder.addOffset(15, signature, 0)
         @kotlin.ExperimentalUnsignedTypes
         fun createSignatureVector(builder: FlatBufferBuilder, data: UByteArray) : Int {
             builder.startVector(1, data.size, 1)

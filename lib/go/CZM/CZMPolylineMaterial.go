@@ -56,6 +56,10 @@ func (rcv *CZMPolylineMaterial) SOLID_COLOR(obj *CZMSolidColorMaterial) *CZMSoli
 	return nil
 }
 
+func (rcv *CZMPolylineMaterial) SolidColor(obj *CZMSolidColorMaterial) *CZMSolidColorMaterial {
+	return rcv.SOLID_COLOR(obj)
+}
+
 /// Solid color material
 /// Polyline outline material
 func (rcv *CZMPolylineMaterial) POLYLINE_OUTLINE(obj *CZMPolylineOutlineMaterial) *CZMPolylineOutlineMaterial {
@@ -69,6 +73,10 @@ func (rcv *CZMPolylineMaterial) POLYLINE_OUTLINE(obj *CZMPolylineOutlineMaterial
 		return obj
 	}
 	return nil
+}
+
+func (rcv *CZMPolylineMaterial) PolylineOutline(obj *CZMPolylineOutlineMaterial) *CZMPolylineOutlineMaterial {
+	return rcv.POLYLINE_OUTLINE(obj)
 }
 
 /// Polyline outline material
@@ -86,6 +94,10 @@ func (rcv *CZMPolylineMaterial) POLYLINE_ARROW(obj *CZMPolylineArrowMaterial) *C
 	return nil
 }
 
+func (rcv *CZMPolylineMaterial) PolylineArrow(obj *CZMPolylineArrowMaterial) *CZMPolylineArrowMaterial {
+	return rcv.POLYLINE_ARROW(obj)
+}
+
 /// Polyline arrow material
 /// Polyline dash material
 func (rcv *CZMPolylineMaterial) POLYLINE_DASH(obj *CZMPolylineDashMaterial) *CZMPolylineDashMaterial {
@@ -99,6 +111,10 @@ func (rcv *CZMPolylineMaterial) POLYLINE_DASH(obj *CZMPolylineDashMaterial) *CZM
 		return obj
 	}
 	return nil
+}
+
+func (rcv *CZMPolylineMaterial) PolylineDash(obj *CZMPolylineDashMaterial) *CZMPolylineDashMaterial {
+	return rcv.POLYLINE_DASH(obj)
 }
 
 /// Polyline dash material
@@ -116,6 +132,10 @@ func (rcv *CZMPolylineMaterial) POLYLINE_GLOW(obj *CZMPolylineGlowMaterial) *CZM
 	return nil
 }
 
+func (rcv *CZMPolylineMaterial) PolylineGlow(obj *CZMPolylineGlowMaterial) *CZMPolylineGlowMaterial {
+	return rcv.POLYLINE_GLOW(obj)
+}
+
 /// Polyline glow material
 func CZMPolylineMaterialStart(builder *flatbuffers.Builder) {
 	builder.StartObject(5)
@@ -123,17 +143,32 @@ func CZMPolylineMaterialStart(builder *flatbuffers.Builder) {
 func CZMPolylineMaterialAddSOLID_COLOR(builder *flatbuffers.Builder, SOLID_COLOR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(SOLID_COLOR), 0)
 }
+func CZMPolylineMaterialAddSolidColor(builder *flatbuffers.Builder, SOLID_COLOR flatbuffers.UOffsetT) {
+	CZMPolylineMaterialAddSOLID_COLOR(builder, SOLID_COLOR)
+}
 func CZMPolylineMaterialAddPOLYLINE_OUTLINE(builder *flatbuffers.Builder, POLYLINE_OUTLINE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(POLYLINE_OUTLINE), 0)
+}
+func CZMPolylineMaterialAddPolylineOutline(builder *flatbuffers.Builder, POLYLINE_OUTLINE flatbuffers.UOffsetT) {
+	CZMPolylineMaterialAddPOLYLINE_OUTLINE(builder, POLYLINE_OUTLINE)
 }
 func CZMPolylineMaterialAddPOLYLINE_ARROW(builder *flatbuffers.Builder, POLYLINE_ARROW flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(POLYLINE_ARROW), 0)
 }
+func CZMPolylineMaterialAddPolylineArrow(builder *flatbuffers.Builder, POLYLINE_ARROW flatbuffers.UOffsetT) {
+	CZMPolylineMaterialAddPOLYLINE_ARROW(builder, POLYLINE_ARROW)
+}
 func CZMPolylineMaterialAddPOLYLINE_DASH(builder *flatbuffers.Builder, POLYLINE_DASH flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(POLYLINE_DASH), 0)
 }
+func CZMPolylineMaterialAddPolylineDash(builder *flatbuffers.Builder, POLYLINE_DASH flatbuffers.UOffsetT) {
+	CZMPolylineMaterialAddPOLYLINE_DASH(builder, POLYLINE_DASH)
+}
 func CZMPolylineMaterialAddPOLYLINE_GLOW(builder *flatbuffers.Builder, POLYLINE_GLOW flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(POLYLINE_GLOW), 0)
+}
+func CZMPolylineMaterialAddPolylineGlow(builder *flatbuffers.Builder, POLYLINE_GLOW flatbuffers.UOffsetT) {
+	CZMPolylineMaterialAddPOLYLINE_GLOW(builder, POLYLINE_GLOW)
 }
 func CZMPolylineMaterialEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

@@ -32,7 +32,7 @@ class KMLScreenOverlay : Table() {
     /**
      * Name
      */
-    val NAME : String?
+    val name : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class KMLScreenOverlay : Table() {
                 null
             }
         }
-    val NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val nameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun nameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Description
      */
-    val DESCRIPTION : String?
+    val description : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -55,12 +55,12 @@ class KMLScreenOverlay : Table() {
                 null
             }
         }
-    val DESCRIPTIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun DESCRIPTIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val descriptionAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun descriptionInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * Visibility
      */
-    val VISIBILITY : Boolean
+    val visibility : Boolean
         get() {
             val o = __offset(8)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -68,7 +68,7 @@ class KMLScreenOverlay : Table() {
     /**
      * Icon/image URL
      */
-    val ICON_HREF : String?
+    val iconHref : String?
         get() {
             val o = __offset(10)
             return if (o != 0) {
@@ -77,12 +77,12 @@ class KMLScreenOverlay : Table() {
                 null
             }
         }
-    val ICON_HREFAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
-    fun ICON_HREFInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
+    val iconHrefAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(10, 1)
+    fun iconHrefInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 10, 1)
     /**
      * Color
      */
-    val COLOR : String?
+    val color : String?
         get() {
             val o = __offset(12)
             return if (o != 0) {
@@ -91,12 +91,12 @@ class KMLScreenOverlay : Table() {
                 null
             }
         }
-    val COLORAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
-    fun COLORInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
+    val colorAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(12, 1)
+    fun colorInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 12, 1)
     /**
      * Draw order
      */
-    val DRAW_ORDER : Int
+    val drawOrder : Int
         get() {
             val o = __offset(14)
             return if(o != 0) bb.getInt(o + bb_pos) else 0
@@ -104,7 +104,7 @@ class KMLScreenOverlay : Table() {
     /**
      * Overlay X position
      */
-    val OVERLAY_XY_X : Double
+    val overlayXyX : Double
         get() {
             val o = __offset(16)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -112,7 +112,7 @@ class KMLScreenOverlay : Table() {
     /**
      * Overlay Y position
      */
-    val OVERLAY_XY_Y : Double
+    val overlayXyY : Double
         get() {
             val o = __offset(18)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -120,7 +120,7 @@ class KMLScreenOverlay : Table() {
     /**
      * Overlay X units
      */
-    val OVERLAY_XY_XUNITS : Byte
+    val overlayXyXunits : Byte
         get() {
             val o = __offset(20)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -128,7 +128,7 @@ class KMLScreenOverlay : Table() {
     /**
      * Overlay Y units
      */
-    val OVERLAY_XY_YUNITS : Byte
+    val overlayXyYunits : Byte
         get() {
             val o = __offset(22)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -136,7 +136,7 @@ class KMLScreenOverlay : Table() {
     /**
      * Screen X position
      */
-    val SCREEN_XY_X : Double
+    val screenXyX : Double
         get() {
             val o = __offset(24)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -144,7 +144,7 @@ class KMLScreenOverlay : Table() {
     /**
      * Screen Y position
      */
-    val SCREEN_XY_Y : Double
+    val screenXyY : Double
         get() {
             val o = __offset(26)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -152,7 +152,7 @@ class KMLScreenOverlay : Table() {
     /**
      * Screen X units
      */
-    val SCREEN_XY_XUNITS : Byte
+    val screenXyXunits : Byte
         get() {
             val o = __offset(28)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -160,7 +160,7 @@ class KMLScreenOverlay : Table() {
     /**
      * Screen Y units
      */
-    val SCREEN_XY_YUNITS : Byte
+    val screenXyYunits : Byte
         get() {
             val o = __offset(30)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -168,7 +168,7 @@ class KMLScreenOverlay : Table() {
     /**
      * Rotation X
      */
-    val ROTATION_XY_X : Double
+    val rotationXyX : Double
         get() {
             val o = __offset(32)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -176,7 +176,7 @@ class KMLScreenOverlay : Table() {
     /**
      * Rotation Y
      */
-    val ROTATION_XY_Y : Double
+    val rotationXyY : Double
         get() {
             val o = __offset(34)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -184,7 +184,7 @@ class KMLScreenOverlay : Table() {
     /**
      * Rotation X units
      */
-    val ROTATION_XY_XUNITS : Byte
+    val rotationXyXunits : Byte
         get() {
             val o = __offset(36)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -192,7 +192,7 @@ class KMLScreenOverlay : Table() {
     /**
      * Rotation Y units
      */
-    val ROTATION_XY_YUNITS : Byte
+    val rotationXyYunits : Byte
         get() {
             val o = __offset(38)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -200,7 +200,7 @@ class KMLScreenOverlay : Table() {
     /**
      * Size X
      */
-    val SIZE_X : Double
+    val sizeX : Double
         get() {
             val o = __offset(40)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -208,7 +208,7 @@ class KMLScreenOverlay : Table() {
     /**
      * Size Y
      */
-    val SIZE_Y : Double
+    val sizeY : Double
         get() {
             val o = __offset(42)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -216,7 +216,7 @@ class KMLScreenOverlay : Table() {
     /**
      * Size X units
      */
-    val SIZE_XUNITS : Byte
+    val sizeXunits : Byte
         get() {
             val o = __offset(44)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -224,7 +224,7 @@ class KMLScreenOverlay : Table() {
     /**
      * Size Y units
      */
-    val SIZE_YUNITS : Byte
+    val sizeYunits : Byte
         get() {
             val o = __offset(46)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -232,69 +232,69 @@ class KMLScreenOverlay : Table() {
     /**
      * Rotation in degrees
      */
-    val ROTATION : Double
+    val rotation : Double
         get() {
             val o = __offset(48)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsKMLScreenOverlay(_bb: ByteBuffer): KMLScreenOverlay = getRootAsKMLScreenOverlay(_bb, KMLScreenOverlay())
         fun getRootAsKMLScreenOverlay(_bb: ByteBuffer, obj: KMLScreenOverlay): KMLScreenOverlay {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createKMLScreenOverlay(builder: FlatBufferBuilder, NAMEOffset: Int, DESCRIPTIONOffset: Int, VISIBILITY: Boolean, ICON_HREFOffset: Int, COLOROffset: Int, DRAW_ORDER: Int, OVERLAY_XY_X: Double, OVERLAY_XY_Y: Double, OVERLAY_XY_XUNITS: Byte, OVERLAY_XY_YUNITS: Byte, SCREEN_XY_X: Double, SCREEN_XY_Y: Double, SCREEN_XY_XUNITS: Byte, SCREEN_XY_YUNITS: Byte, ROTATION_XY_X: Double, ROTATION_XY_Y: Double, ROTATION_XY_XUNITS: Byte, ROTATION_XY_YUNITS: Byte, SIZE_X: Double, SIZE_Y: Double, SIZE_XUNITS: Byte, SIZE_YUNITS: Byte, ROTATION: Double) : Int {
+        fun createKMLScreenOverlay(builder: FlatBufferBuilder, nameOffset: Int, descriptionOffset: Int, visibility: Boolean, iconHrefOffset: Int, colorOffset: Int, drawOrder: Int, overlayXyX: Double, overlayXyY: Double, overlayXyXunits: Byte, overlayXyYunits: Byte, screenXyX: Double, screenXyY: Double, screenXyXunits: Byte, screenXyYunits: Byte, rotationXyX: Double, rotationXyY: Double, rotationXyXunits: Byte, rotationXyYunits: Byte, sizeX: Double, sizeY: Double, sizeXunits: Byte, sizeYunits: Byte, rotation: Double) : Int {
             builder.startTable(23)
-            addROTATION(builder, ROTATION)
-            addSIZE_Y(builder, SIZE_Y)
-            addSIZE_X(builder, SIZE_X)
-            addROTATION_XY_Y(builder, ROTATION_XY_Y)
-            addROTATION_XY_X(builder, ROTATION_XY_X)
-            addSCREEN_XY_Y(builder, SCREEN_XY_Y)
-            addSCREEN_XY_X(builder, SCREEN_XY_X)
-            addOVERLAY_XY_Y(builder, OVERLAY_XY_Y)
-            addOVERLAY_XY_X(builder, OVERLAY_XY_X)
-            addDRAW_ORDER(builder, DRAW_ORDER)
-            addCOLOR(builder, COLOROffset)
-            addICON_HREF(builder, ICON_HREFOffset)
-            addDESCRIPTION(builder, DESCRIPTIONOffset)
-            addNAME(builder, NAMEOffset)
-            addSIZE_YUNITS(builder, SIZE_YUNITS)
-            addSIZE_XUNITS(builder, SIZE_XUNITS)
-            addROTATION_XY_YUNITS(builder, ROTATION_XY_YUNITS)
-            addROTATION_XY_XUNITS(builder, ROTATION_XY_XUNITS)
-            addSCREEN_XY_YUNITS(builder, SCREEN_XY_YUNITS)
-            addSCREEN_XY_XUNITS(builder, SCREEN_XY_XUNITS)
-            addOVERLAY_XY_YUNITS(builder, OVERLAY_XY_YUNITS)
-            addOVERLAY_XY_XUNITS(builder, OVERLAY_XY_XUNITS)
-            addVISIBILITY(builder, VISIBILITY)
+            addROTATION(builder, rotation)
+            addSIZEY(builder, sizeY)
+            addSIZEX(builder, sizeX)
+            addROTATIONXYY(builder, rotationXyY)
+            addROTATIONXYX(builder, rotationXyX)
+            addSCREENXYY(builder, screenXyY)
+            addSCREENXYX(builder, screenXyX)
+            addOVERLAYXYY(builder, overlayXyY)
+            addOVERLAYXYX(builder, overlayXyX)
+            addDRAWORDER(builder, drawOrder)
+            addCOLOR(builder, colorOffset)
+            addICONHREF(builder, iconHrefOffset)
+            addDESCRIPTION(builder, descriptionOffset)
+            addNAME(builder, nameOffset)
+            addSIZEYUNITS(builder, sizeYunits)
+            addSIZEXUNITS(builder, sizeXunits)
+            addROTATIONXYYUNITS(builder, rotationXyYunits)
+            addROTATIONXYXUNITS(builder, rotationXyXunits)
+            addSCREENXYYUNITS(builder, screenXyYunits)
+            addSCREENXYXUNITS(builder, screenXyXunits)
+            addOVERLAYXYYUNITS(builder, overlayXyYunits)
+            addOVERLAYXYXUNITS(builder, overlayXyXunits)
+            addVISIBILITY(builder, visibility)
             return endKMLScreenOverlay(builder)
         }
         fun startKMLScreenOverlay(builder: FlatBufferBuilder) = builder.startTable(23)
-        fun addNAME(builder: FlatBufferBuilder, NAME: Int) = builder.addOffset(0, NAME, 0)
-        fun addDESCRIPTION(builder: FlatBufferBuilder, DESCRIPTION: Int) = builder.addOffset(1, DESCRIPTION, 0)
-        fun addVISIBILITY(builder: FlatBufferBuilder, VISIBILITY: Boolean) = builder.addBoolean(2, VISIBILITY, false)
-        fun addICON_HREF(builder: FlatBufferBuilder, ICON_HREF: Int) = builder.addOffset(3, ICON_HREF, 0)
-        fun addCOLOR(builder: FlatBufferBuilder, COLOR: Int) = builder.addOffset(4, COLOR, 0)
-        fun addDRAW_ORDER(builder: FlatBufferBuilder, DRAW_ORDER: Int) = builder.addInt(5, DRAW_ORDER, 0)
-        fun addOVERLAY_XY_X(builder: FlatBufferBuilder, OVERLAY_XY_X: Double) = builder.addDouble(6, OVERLAY_XY_X, 0.0)
-        fun addOVERLAY_XY_Y(builder: FlatBufferBuilder, OVERLAY_XY_Y: Double) = builder.addDouble(7, OVERLAY_XY_Y, 0.0)
-        fun addOVERLAY_XY_XUNITS(builder: FlatBufferBuilder, OVERLAY_XY_XUNITS: Byte) = builder.addByte(8, OVERLAY_XY_XUNITS, 0)
-        fun addOVERLAY_XY_YUNITS(builder: FlatBufferBuilder, OVERLAY_XY_YUNITS: Byte) = builder.addByte(9, OVERLAY_XY_YUNITS, 0)
-        fun addSCREEN_XY_X(builder: FlatBufferBuilder, SCREEN_XY_X: Double) = builder.addDouble(10, SCREEN_XY_X, 0.0)
-        fun addSCREEN_XY_Y(builder: FlatBufferBuilder, SCREEN_XY_Y: Double) = builder.addDouble(11, SCREEN_XY_Y, 0.0)
-        fun addSCREEN_XY_XUNITS(builder: FlatBufferBuilder, SCREEN_XY_XUNITS: Byte) = builder.addByte(12, SCREEN_XY_XUNITS, 0)
-        fun addSCREEN_XY_YUNITS(builder: FlatBufferBuilder, SCREEN_XY_YUNITS: Byte) = builder.addByte(13, SCREEN_XY_YUNITS, 0)
-        fun addROTATION_XY_X(builder: FlatBufferBuilder, ROTATION_XY_X: Double) = builder.addDouble(14, ROTATION_XY_X, 0.0)
-        fun addROTATION_XY_Y(builder: FlatBufferBuilder, ROTATION_XY_Y: Double) = builder.addDouble(15, ROTATION_XY_Y, 0.0)
-        fun addROTATION_XY_XUNITS(builder: FlatBufferBuilder, ROTATION_XY_XUNITS: Byte) = builder.addByte(16, ROTATION_XY_XUNITS, 0)
-        fun addROTATION_XY_YUNITS(builder: FlatBufferBuilder, ROTATION_XY_YUNITS: Byte) = builder.addByte(17, ROTATION_XY_YUNITS, 0)
-        fun addSIZE_X(builder: FlatBufferBuilder, SIZE_X: Double) = builder.addDouble(18, SIZE_X, 0.0)
-        fun addSIZE_Y(builder: FlatBufferBuilder, SIZE_Y: Double) = builder.addDouble(19, SIZE_Y, 0.0)
-        fun addSIZE_XUNITS(builder: FlatBufferBuilder, SIZE_XUNITS: Byte) = builder.addByte(20, SIZE_XUNITS, 0)
-        fun addSIZE_YUNITS(builder: FlatBufferBuilder, SIZE_YUNITS: Byte) = builder.addByte(21, SIZE_YUNITS, 0)
-        fun addROTATION(builder: FlatBufferBuilder, ROTATION: Double) = builder.addDouble(22, ROTATION, 0.0)
+        fun addNAME(builder: FlatBufferBuilder, name: Int) = builder.addOffset(0, name, 0)
+        fun addDESCRIPTION(builder: FlatBufferBuilder, description: Int) = builder.addOffset(1, description, 0)
+        fun addVISIBILITY(builder: FlatBufferBuilder, visibility: Boolean) = builder.addBoolean(2, visibility, false)
+        fun addICONHREF(builder: FlatBufferBuilder, iconHref: Int) = builder.addOffset(3, iconHref, 0)
+        fun addCOLOR(builder: FlatBufferBuilder, color: Int) = builder.addOffset(4, color, 0)
+        fun addDRAWORDER(builder: FlatBufferBuilder, drawOrder: Int) = builder.addInt(5, drawOrder, 0)
+        fun addOVERLAYXYX(builder: FlatBufferBuilder, overlayXyX: Double) = builder.addDouble(6, overlayXyX, 0.0)
+        fun addOVERLAYXYY(builder: FlatBufferBuilder, overlayXyY: Double) = builder.addDouble(7, overlayXyY, 0.0)
+        fun addOVERLAYXYXUNITS(builder: FlatBufferBuilder, overlayXyXunits: Byte) = builder.addByte(8, overlayXyXunits, 0)
+        fun addOVERLAYXYYUNITS(builder: FlatBufferBuilder, overlayXyYunits: Byte) = builder.addByte(9, overlayXyYunits, 0)
+        fun addSCREENXYX(builder: FlatBufferBuilder, screenXyX: Double) = builder.addDouble(10, screenXyX, 0.0)
+        fun addSCREENXYY(builder: FlatBufferBuilder, screenXyY: Double) = builder.addDouble(11, screenXyY, 0.0)
+        fun addSCREENXYXUNITS(builder: FlatBufferBuilder, screenXyXunits: Byte) = builder.addByte(12, screenXyXunits, 0)
+        fun addSCREENXYYUNITS(builder: FlatBufferBuilder, screenXyYunits: Byte) = builder.addByte(13, screenXyYunits, 0)
+        fun addROTATIONXYX(builder: FlatBufferBuilder, rotationXyX: Double) = builder.addDouble(14, rotationXyX, 0.0)
+        fun addROTATIONXYY(builder: FlatBufferBuilder, rotationXyY: Double) = builder.addDouble(15, rotationXyY, 0.0)
+        fun addROTATIONXYXUNITS(builder: FlatBufferBuilder, rotationXyXunits: Byte) = builder.addByte(16, rotationXyXunits, 0)
+        fun addROTATIONXYYUNITS(builder: FlatBufferBuilder, rotationXyYunits: Byte) = builder.addByte(17, rotationXyYunits, 0)
+        fun addSIZEX(builder: FlatBufferBuilder, sizeX: Double) = builder.addDouble(18, sizeX, 0.0)
+        fun addSIZEY(builder: FlatBufferBuilder, sizeY: Double) = builder.addDouble(19, sizeY, 0.0)
+        fun addSIZEXUNITS(builder: FlatBufferBuilder, sizeXunits: Byte) = builder.addByte(20, sizeXunits, 0)
+        fun addSIZEYUNITS(builder: FlatBufferBuilder, sizeYunits: Byte) = builder.addByte(21, sizeYunits, 0)
+        fun addROTATION(builder: FlatBufferBuilder, rotation: Double) = builder.addDouble(22, rotation, 0.0)
         fun endKMLScreenOverlay(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

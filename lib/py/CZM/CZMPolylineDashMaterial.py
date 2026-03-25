@@ -114,17 +114,23 @@ except:
 class CZMPolylineDashMaterialT(object):
 
     # CZMPolylineDashMaterialT
-    def __init__(self):
-        self.COLOR = None  # type: Optional[CZMColor.CZMColorT]
-        self.GAP_COLOR = None  # type: Optional[CZMColor.CZMColorT]
-        self.DASH_LENGTH = 0.0  # type: float
-        self.DASH_PATTERN = 0  # type: int
+    def __init__(
+        self,
+        COLOR = None,
+        GAP_COLOR = None,
+        DASH_LENGTH = 0.0,
+        DASH_PATTERN = 0,
+    ):
+        self.COLOR = COLOR  # type: Optional[CZMColor.CZMColorT]
+        self.GAP_COLOR = GAP_COLOR  # type: Optional[CZMColor.CZMColorT]
+        self.DASH_LENGTH = DASH_LENGTH  # type: float
+        self.DASH_PATTERN = DASH_PATTERN  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        czmpolylineDashMaterial = CZMPolylineDashMaterial()
-        czmpolylineDashMaterial.Init(buf, pos)
-        return cls.InitFromObj(czmpolylineDashMaterial)
+        tmpCzmpolylineDashMaterial = CZMPolylineDashMaterial()
+        tmpCzmpolylineDashMaterial.Init(buf, pos)
+        return cls.InitFromObj(tmpCzmpolylineDashMaterial)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -132,21 +138,21 @@ class CZMPolylineDashMaterialT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, czmpolylineDashMaterial):
+    def InitFromObj(cls, tmpCzmpolylineDashMaterial):
         x = CZMPolylineDashMaterialT()
-        x._UnPack(czmpolylineDashMaterial)
+        x._UnPack(tmpCzmpolylineDashMaterial)
         return x
 
     # CZMPolylineDashMaterialT
-    def _UnPack(self, czmpolylineDashMaterial):
-        if czmpolylineDashMaterial is None:
+    def _UnPack(self, CZMPolylineDashMaterial):
+        if CZMPolylineDashMaterial is None:
             return
-        if czmpolylineDashMaterial.COLOR() is not None:
-            self.COLOR = CZMColor.CZMColorT.InitFromObj(czmpolylineDashMaterial.COLOR())
-        if czmpolylineDashMaterial.GAP_COLOR() is not None:
-            self.GAP_COLOR = CZMColor.CZMColorT.InitFromObj(czmpolylineDashMaterial.GAP_COLOR())
-        self.DASH_LENGTH = czmpolylineDashMaterial.DASH_LENGTH()
-        self.DASH_PATTERN = czmpolylineDashMaterial.DASH_PATTERN()
+        if CZMPolylineDashMaterial.COLOR() is not None:
+            self.COLOR = CZMColor.CZMColorT.InitFromObj(CZMPolylineDashMaterial.COLOR())
+        if CZMPolylineDashMaterial.GAP_COLOR() is not None:
+            self.GAP_COLOR = CZMColor.CZMColorT.InitFromObj(CZMPolylineDashMaterial.GAP_COLOR())
+        self.DASH_LENGTH = CZMPolylineDashMaterial.DASH_LENGTH()
+        self.DASH_PATTERN = CZMPolylineDashMaterial.DASH_PATTERN()
 
     # CZMPolylineDashMaterialT
     def Pack(self, builder):
@@ -161,5 +167,5 @@ class CZMPolylineDashMaterialT(object):
             CZMPolylineDashMaterialAddGAP_COLOR(builder, GAP_COLOR)
         CZMPolylineDashMaterialAddDASH_LENGTH(builder, self.DASH_LENGTH)
         CZMPolylineDashMaterialAddDASH_PATTERN(builder, self.DASH_PATTERN)
-        czmpolylineDashMaterial = CZMPolylineDashMaterialEnd(builder)
-        return czmpolylineDashMaterial
+        CZMPolylineDashMaterial = CZMPolylineDashMaterialEnd(builder)
+        return CZMPolylineDashMaterial

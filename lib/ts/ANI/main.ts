@@ -2,5 +2,5 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export { ANI, ANIT } from './ANI.js';
-export { analyticType } from './analyticType.js';
+export * from './analyticType.js';
+export * from './ANI.js';

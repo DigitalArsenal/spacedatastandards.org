@@ -11,7 +11,7 @@ public struct TMF : IFlatbufferObject
 {
   private Table __p;
   public ByteBuffer ByteBuffer { get { return __p.bb; } }
-  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_24_3_25(); }
+  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_25_12_19(); }
   public static TMF GetRootAsTMF(ByteBuffer _bb) { return GetRootAsTMF(_bb, new TMF()); }
   public static TMF GetRootAsTMF(ByteBuffer _bb, TMF obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
   public static bool TMFBufferHasIdentifier(ByteBuffer _bb) { return Table.__has_identifier(_bb, "$TMF"); }

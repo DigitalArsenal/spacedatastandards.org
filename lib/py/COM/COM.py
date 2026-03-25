@@ -251,6 +251,16 @@ def COMStartCONNECTED_NODESVector(builder, numElems):
 def StartCONNECTED_NODESVector(builder, numElems):
     return COMStartCONNECTED_NODESVector(builder, numElems)
 
+def COMCreateCONNECTED_NODESVector(builder, data):
+    data = list(data)
+    builder.StartVector(4, len(data), 4)
+    for item in reversed(data):
+        builder.PrependUint32(item)
+    return builder.EndVector()
+
+def CreateCONNECTED_NODESVector(builder, data):
+    COMCreateCONNECTED_NODESVector(builder, data)
+
 def COMAddACTIVE_LINKS(builder, ACTIVE_LINKS):
     builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(ACTIVE_LINKS), 0)
 
@@ -262,6 +272,16 @@ def COMStartACTIVE_LINKSVector(builder, numElems):
 
 def StartACTIVE_LINKSVector(builder, numElems):
     return COMStartACTIVE_LINKSVector(builder, numElems)
+
+def COMCreateACTIVE_LINKSVector(builder, data):
+    data = list(data)
+    builder.StartVector(1, len(data), 1)
+    for item in reversed(data):
+        builder.PrependInt8(item)
+    return builder.EndVector()
+
+def CreateACTIVE_LINKSVector(builder, data):
+    COMCreateACTIVE_LINKSVector(builder, data)
 
 def COMAddLAST_UPDATE_MS(builder, LAST_UPDATE_MS):
     builder.PrependInt64Slot(13, LAST_UPDATE_MS, 0)
@@ -283,27 +303,43 @@ except:
 class COMT(object):
 
     # COMT
-    def __init__(self):
-        self.SYSTEM_ID = 0  # type: int
-        self.ENTITY_ID = 0  # type: int
-        self.IS_TRANSMITTING = False  # type: bool
-        self.IS_RECEIVING = False  # type: bool
-        self.CURRENT_FREQUENCY_HZ = 0.0  # type: float
-        self.CURRENT_POWER_WATTS = 0.0  # type: float
-        self.CURRENT_DATA_RATE_BPS = 0.0  # type: float
-        self.MESSAGES_SENT = 0  # type: int
-        self.MESSAGES_RECEIVED = 0  # type: int
-        self.BYTES_SENT = 0  # type: int
-        self.BYTES_RECEIVED = 0  # type: int
-        self.CONNECTED_NODES = None  # type: List[int]
-        self.ACTIVE_LINKS = None  # type: List[int]
-        self.LAST_UPDATE_MS = 0  # type: int
+    def __init__(
+        self,
+        SYSTEM_ID = 0,
+        ENTITY_ID = 0,
+        IS_TRANSMITTING = False,
+        IS_RECEIVING = False,
+        CURRENT_FREQUENCY_HZ = 0.0,
+        CURRENT_POWER_WATTS = 0.0,
+        CURRENT_DATA_RATE_BPS = 0.0,
+        MESSAGES_SENT = 0,
+        MESSAGES_RECEIVED = 0,
+        BYTES_SENT = 0,
+        BYTES_RECEIVED = 0,
+        CONNECTED_NODES = None,
+        ACTIVE_LINKS = None,
+        LAST_UPDATE_MS = 0,
+    ):
+        self.SYSTEM_ID = SYSTEM_ID  # type: int
+        self.ENTITY_ID = ENTITY_ID  # type: int
+        self.IS_TRANSMITTING = IS_TRANSMITTING  # type: bool
+        self.IS_RECEIVING = IS_RECEIVING  # type: bool
+        self.CURRENT_FREQUENCY_HZ = CURRENT_FREQUENCY_HZ  # type: float
+        self.CURRENT_POWER_WATTS = CURRENT_POWER_WATTS  # type: float
+        self.CURRENT_DATA_RATE_BPS = CURRENT_DATA_RATE_BPS  # type: float
+        self.MESSAGES_SENT = MESSAGES_SENT  # type: int
+        self.MESSAGES_RECEIVED = MESSAGES_RECEIVED  # type: int
+        self.BYTES_SENT = BYTES_SENT  # type: int
+        self.BYTES_RECEIVED = BYTES_RECEIVED  # type: int
+        self.CONNECTED_NODES = CONNECTED_NODES  # type: Optional[List[int]]
+        self.ACTIVE_LINKS = ACTIVE_LINKS  # type: Optional[List[int]]
+        self.LAST_UPDATE_MS = LAST_UPDATE_MS  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        COM = COM()
-        COM.Init(buf, pos)
-        return cls.InitFromObj(COM)
+        tmpCom = COM()
+        tmpCom.Init(buf, pos)
+        return cls.InitFromObj(tmpCom)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -311,9 +347,9 @@ class COMT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, COM):
+    def InitFromObj(cls, tmpCom):
         x = COMT()
-        x._UnPack(COM)
+        x._UnPack(tmpCom)
         return x
 
     # COMT

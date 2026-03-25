@@ -8,9 +8,9 @@
 
 // Ensure the included flatbuffers.h is the same version as when this file was
 // generated, otherwise it may not be compatible.
-static_assert(FLATBUFFERS_VERSION_MAJOR == 24 &&
-              FLATBUFFERS_VERSION_MINOR == 3 &&
-              FLATBUFFERS_VERSION_REVISION == 25,
+static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
+              FLATBUFFERS_VERSION_MINOR == 12 &&
+              FLATBUFFERS_VERSION_REVISION == 19,
              "Non-compatible flatbuffers version included");
 
 struct BOV;
@@ -53,7 +53,8 @@ struct BOV FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   double TIME_FROM_LAUNCH() const {
     return GetField<double>(VT_TIME_FROM_LAUNCH, 0.0);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<double>(verifier, VT_E_COORDINATE, 8) &&
            VerifyField<double>(verifier, VT_F_COORDINATE, 8) &&
@@ -174,14 +175,16 @@ inline bool SizePrefixedBOVBufferHasIdentifier(const void *buf) {
       buf, BOVIdentifier(), true);
 }
 
+template <bool B = false>
 inline bool VerifyBOVBuffer(
-    ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifyBuffer<BOV>(BOVIdentifier());
+    ::flatbuffers::VerifierTemplate<B> &verifier) {
+  return verifier.template VerifyBuffer<BOV>(BOVIdentifier());
 }
 
+template <bool B = false>
 inline bool VerifySizePrefixedBOVBuffer(
-    ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifySizePrefixedBuffer<BOV>(BOVIdentifier());
+    ::flatbuffers::VerifierTemplate<B> &verifier) {
+  return verifier.template VerifySizePrefixedBuffer<BOV>(BOVIdentifier());
 }
 
 inline void FinishBOVBuffer(

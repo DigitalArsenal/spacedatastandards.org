@@ -63,6 +63,10 @@ func (rcv *SEO) ID() []byte {
 	return nil
 }
 
+func (rcv *SEO) Id() []byte {
+	return rcv.ID()
+}
+
 /// Unique identifier
 /// Message type code
 func (rcv *SEO) MSG_TYPE() []byte {
@@ -71,6 +75,10 @@ func (rcv *SEO) MSG_TYPE() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *SEO) MsgType() []byte {
+	return rcv.MSG_TYPE()
 }
 
 /// Message type code
@@ -83,6 +91,10 @@ func (rcv *SEO) GEN_SYSTEM() []byte {
 	return nil
 }
 
+func (rcv *SEO) GenSystem() []byte {
+	return rcv.GEN_SYSTEM()
+}
+
 /// Generating system
 /// External reference identifier
 func (rcv *SEO) EXTERNAL_ID() []byte {
@@ -91,6 +103,10 @@ func (rcv *SEO) EXTERNAL_ID() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *SEO) ExternalId() []byte {
+	return rcv.EXTERNAL_ID()
 }
 
 /// External reference identifier
@@ -103,9 +119,17 @@ func (rcv *SEO) DATA_TYPE() seoDataType {
 	return 0
 }
 
+func (rcv *SEO) DataType() seoDataType {
+	return rcv.DATA_TYPE()
+}
+
 /// Type of environmental data
 func (rcv *SEO) MutateDATA_TYPE(n seoDataType) bool {
 	return rcv._tab.MutateInt8Slot(12, int8(n))
+}
+
+func (rcv *SEO) MutateDataType(n seoDataType) bool {
+	return rcv.MutateDATA_TYPE(n)
 }
 
 /// Generation time (ISO 8601)
@@ -115,6 +139,10 @@ func (rcv *SEO) GEN_TIME() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *SEO) GenTime() []byte {
+	return rcv.GEN_TIME()
 }
 
 /// Generation time (ISO 8601)
@@ -127,9 +155,17 @@ func (rcv *SEO) FORECAST() bool {
 	return false
 }
 
+func (rcv *SEO) Forecast() bool {
+	return rcv.FORECAST()
+}
+
 /// True if this is a forecast
 func (rcv *SEO) MutateFORECAST(n bool) bool {
 	return rcv._tab.MutateBoolSlot(16, n)
+}
+
+func (rcv *SEO) MutateForecast(n bool) bool {
+	return rcv.MutateFORECAST(n)
 }
 
 /// True if derived from other measurements
@@ -141,9 +177,17 @@ func (rcv *SEO) DERIVED() bool {
 	return false
 }
 
+func (rcv *SEO) Derived() bool {
+	return rcv.DERIVED()
+}
+
 /// True if derived from other measurements
 func (rcv *SEO) MutateDERIVED(n bool) bool {
 	return rcv._tab.MutateBoolSlot(18, n)
+}
+
+func (rcv *SEO) MutateDerived(n bool) bool {
+	return rcv.MutateDERIVED(n)
 }
 
 /// Satellite catalog number (if space-based)
@@ -155,9 +199,17 @@ func (rcv *SEO) SAT_NO() uint32 {
 	return 0
 }
 
+func (rcv *SEO) SatNo() uint32 {
+	return rcv.SAT_NO()
+}
+
 /// Satellite catalog number (if space-based)
 func (rcv *SEO) MutateSAT_NO(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(20, n)
+}
+
+func (rcv *SEO) MutateSatNo(n uint32) bool {
+	return rcv.MutateSAT_NO(n)
 }
 
 /// International designator
@@ -167,6 +219,10 @@ func (rcv *SEO) ORIG_OBJECT_ID() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *SEO) OrigObjectId() []byte {
+	return rcv.ORIG_OBJECT_ID()
 }
 
 /// International designator
@@ -179,6 +235,10 @@ func (rcv *SEO) ID_SENSOR() []byte {
 	return nil
 }
 
+func (rcv *SEO) IdSensor() []byte {
+	return rcv.ID_SENSOR()
+}
+
 /// Sensor identifier
 /// Original sensor identifier
 func (rcv *SEO) ORIG_SENSOR_ID() []byte {
@@ -187,6 +247,10 @@ func (rcv *SEO) ORIG_SENSOR_ID() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *SEO) OrigSensorId() []byte {
+	return rcv.ORIG_SENSOR_ID()
 }
 
 /// Original sensor identifier
@@ -199,9 +263,17 @@ func (rcv *SEO) OBSERVATORY_TYPE() seoObservatoryType {
 	return 0
 }
 
+func (rcv *SEO) ObservatoryType() seoObservatoryType {
+	return rcv.OBSERVATORY_TYPE()
+}
+
 /// Observatory type
 func (rcv *SEO) MutateOBSERVATORY_TYPE(n seoObservatoryType) bool {
 	return rcv._tab.MutateInt8Slot(28, int8(n))
+}
+
+func (rcv *SEO) MutateObservatoryType(n seoObservatoryType) bool {
+	return rcv.MutateOBSERVATORY_TYPE(n)
 }
 
 /// Observatory name
@@ -211,6 +283,10 @@ func (rcv *SEO) OBSERVATORY_NAME() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *SEO) ObservatoryName() []byte {
+	return rcv.OBSERVATORY_NAME()
 }
 
 /// Observatory name
@@ -223,6 +299,10 @@ func (rcv *SEO) OBSERVATORY_NOTES() []byte {
 	return nil
 }
 
+func (rcv *SEO) ObservatoryNotes() []byte {
+	return rcv.OBSERVATORY_NOTES()
+}
+
 /// Observatory notes
 /// Instrument type description
 func (rcv *SEO) INSTRUMENT_TYPE() []byte {
@@ -231,6 +311,10 @@ func (rcv *SEO) INSTRUMENT_TYPE() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *SEO) InstrumentType() []byte {
+	return rcv.INSTRUMENT_TYPE()
 }
 
 /// Instrument type description
@@ -243,9 +327,17 @@ func (rcv *SEO) LAT() float64 {
 	return 0.0
 }
 
+func (rcv *SEO) Lat() float64 {
+	return rcv.LAT()
+}
+
 /// Observatory latitude (degrees)
 func (rcv *SEO) MutateLAT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(36, n)
+}
+
+func (rcv *SEO) MutateLat(n float64) bool {
+	return rcv.MutateLAT(n)
 }
 
 /// Observatory longitude (degrees)
@@ -257,9 +349,17 @@ func (rcv *SEO) LON() float64 {
 	return 0.0
 }
 
+func (rcv *SEO) Lon() float64 {
+	return rcv.LON()
+}
+
 /// Observatory longitude (degrees)
 func (rcv *SEO) MutateLON(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(38, n)
+}
+
+func (rcv *SEO) MutateLon(n float64) bool {
+	return rcv.MutateLON(n)
 }
 
 /// Observatory altitude (km)
@@ -271,9 +371,17 @@ func (rcv *SEO) ALT() float64 {
 	return 0.0
 }
 
+func (rcv *SEO) Alt() float64 {
+	return rcv.ALT()
+}
+
 /// Observatory altitude (km)
 func (rcv *SEO) MutateALT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(40, n)
+}
+
+func (rcv *SEO) MutateAlt(n float64) bool {
+	return rcv.MutateALT(n)
 }
 
 /// Sensor reference frame
@@ -283,6 +391,10 @@ func (rcv *SEO) SEN_REFERENCE_FRAME() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *SEO) SenReferenceFrame() []byte {
+	return rcv.SEN_REFERENCE_FRAME()
 }
 
 /// Sensor reference frame
@@ -296,12 +408,20 @@ func (rcv *SEO) SEN_POS(j int) float64 {
 	return 0
 }
 
+func (rcv *SEO) SenPos(j int) float64 {
+	return rcv.SEN_POS(j)
+}
+
 func (rcv *SEO) SEN_POSLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(44))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *SEO) SenPosLength() int {
+	return rcv.SEN_POSLength()
 }
 
 /// Sensor position (km, 3 components)
@@ -314,6 +434,10 @@ func (rcv *SEO) MutateSEN_POS(j int, n float64) bool {
 	return false
 }
 
+func (rcv *SEO) MutateSenPos(j int, n float64) bool {
+	return rcv.MutateSEN_POS(j, n)
+}
+
 /// Sensor velocity (km/s, 3 components)
 func (rcv *SEO) SEN_VEL(j int) float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(46))
@@ -324,12 +448,20 @@ func (rcv *SEO) SEN_VEL(j int) float64 {
 	return 0
 }
 
+func (rcv *SEO) SenVel(j int) float64 {
+	return rcv.SEN_VEL(j)
+}
+
 func (rcv *SEO) SEN_VELLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(46))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *SEO) SenVelLength() int {
+	return rcv.SEN_VELLength()
 }
 
 /// Sensor velocity (km/s, 3 components)
@@ -342,6 +474,10 @@ func (rcv *SEO) MutateSEN_VEL(j int, n float64) bool {
 	return false
 }
 
+func (rcv *SEO) MutateSenVel(j int, n float64) bool {
+	return rcv.MutateSEN_VEL(j, n)
+}
+
 /// Measurement type description
 func (rcv *SEO) MEAS_TYPE() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(48))
@@ -349,6 +485,10 @@ func (rcv *SEO) MEAS_TYPE() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *SEO) MeasType() []byte {
+	return rcv.MEAS_TYPE()
 }
 
 /// Measurement type description
@@ -361,9 +501,17 @@ func (rcv *SEO) PARTICLE_TYPE() seoParticleType {
 	return 0
 }
 
+func (rcv *SEO) ParticleType() seoParticleType {
+	return rcv.PARTICLE_TYPE()
+}
+
 /// Particle type measured
 func (rcv *SEO) MutatePARTICLE_TYPE(n seoParticleType) bool {
 	return rcv._tab.MutateInt8Slot(50, int8(n))
+}
+
+func (rcv *SEO) MutateParticleType(n seoParticleType) bool {
+	return rcv.MutatePARTICLE_TYPE(n)
 }
 
 /// Energy level or range (keV or MeV)
@@ -373,6 +521,10 @@ func (rcv *SEO) SEN_ENERGY_LEVEL() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *SEO) SenEnergyLevel() []byte {
+	return rcv.SEN_ENERGY_LEVEL()
 }
 
 /// Energy level or range (keV or MeV)
@@ -385,6 +537,10 @@ func (rcv *SEO) OB_SET_ID() []byte {
 	return nil
 }
 
+func (rcv *SEO) ObSetId() []byte {
+	return rcv.OB_SET_ID()
+}
+
 /// Observation set identifier
 /// Observation time (ISO 8601)
 func (rcv *SEO) OB_TIME() []byte {
@@ -393,6 +549,10 @@ func (rcv *SEO) OB_TIME() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *SEO) ObTime() []byte {
+	return rcv.OB_TIME()
 }
 
 /// Observation time (ISO 8601)
@@ -406,12 +566,20 @@ func (rcv *SEO) VALUES(j int) float64 {
 	return 0
 }
 
+func (rcv *SEO) Values(j int) float64 {
+	return rcv.VALUES(j)
+}
+
 func (rcv *SEO) VALUESLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(58))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *SEO) ValuesLength() int {
+	return rcv.VALUESLength()
 }
 
 /// Measurement values
@@ -424,6 +592,10 @@ func (rcv *SEO) MutateVALUES(j int, n float64) bool {
 	return false
 }
 
+func (rcv *SEO) MutateValues(j int, n float64) bool {
+	return rcv.MutateVALUES(j, n)
+}
+
 /// Measurement uncertainties
 func (rcv *SEO) UNCERTAINTIES(j int) float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(60))
@@ -434,12 +606,20 @@ func (rcv *SEO) UNCERTAINTIES(j int) float64 {
 	return 0
 }
 
+func (rcv *SEO) Uncertainties(j int) float64 {
+	return rcv.UNCERTAINTIES(j)
+}
+
 func (rcv *SEO) UNCERTAINTIESLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(60))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *SEO) UncertaintiesLength() int {
+	return rcv.UNCERTAINTIESLength()
 }
 
 /// Measurement uncertainties
@@ -452,6 +632,10 @@ func (rcv *SEO) MutateUNCERTAINTIES(j int, n float64) bool {
 	return false
 }
 
+func (rcv *SEO) MutateUncertainties(j int, n float64) bool {
+	return rcv.MutateUNCERTAINTIES(j, n)
+}
+
 /// Units for measurement values
 func (rcv *SEO) UNITS() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(62))
@@ -459,6 +643,10 @@ func (rcv *SEO) UNITS() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *SEO) Units() []byte {
+	return rcv.UNITS()
 }
 
 /// Units for measurement values
@@ -471,6 +659,10 @@ func (rcv *SEO) QUALITY() []byte {
 	return nil
 }
 
+func (rcv *SEO) Quality() []byte {
+	return rcv.QUALITY()
+}
+
 /// Data quality indicator
 /// Description
 func (rcv *SEO) DESCRIPTION() []byte {
@@ -481,6 +673,10 @@ func (rcv *SEO) DESCRIPTION() []byte {
 	return nil
 }
 
+func (rcv *SEO) Description() []byte {
+	return rcv.DESCRIPTION()
+}
+
 /// Description
 /// Event descriptor
 func (rcv *SEO) DESCRIPTOR() []byte {
@@ -489,6 +685,10 @@ func (rcv *SEO) DESCRIPTOR() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *SEO) Descriptor() []byte {
+	return rcv.DESCRIPTOR()
 }
 
 /// Event descriptor
@@ -502,12 +702,20 @@ func (rcv *SEO) SRC_TYPS(j int) []byte {
 	return nil
 }
 
+func (rcv *SEO) SrcTyps(j int) []byte {
+	return rcv.SRC_TYPS(j)
+}
+
 func (rcv *SEO) SRC_TYPSLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(70))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *SEO) SrcTypsLength() int {
+	return rcv.SRC_TYPSLength()
 }
 
 /// Source types
@@ -521,12 +729,20 @@ func (rcv *SEO) SRC_IDS(j int) []byte {
 	return nil
 }
 
+func (rcv *SEO) SrcIds(j int) []byte {
+	return rcv.SRC_IDS(j)
+}
+
 func (rcv *SEO) SRC_IDSLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(72))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *SEO) SrcIdsLength() int {
+	return rcv.SRC_IDSLength()
 }
 
 /// Source identifiers
@@ -536,125 +752,248 @@ func SEOStart(builder *flatbuffers.Builder) {
 func SEOAddID(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ID), 0)
 }
+func SEOAddId(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
+	SEOAddID(builder, ID)
+}
 func SEOAddMSG_TYPE(builder *flatbuffers.Builder, MSG_TYPE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(MSG_TYPE), 0)
+}
+func SEOAddMsgType(builder *flatbuffers.Builder, MSG_TYPE flatbuffers.UOffsetT) {
+	SEOAddMSG_TYPE(builder, MSG_TYPE)
 }
 func SEOAddGEN_SYSTEM(builder *flatbuffers.Builder, GEN_SYSTEM flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(GEN_SYSTEM), 0)
 }
+func SEOAddGenSystem(builder *flatbuffers.Builder, GEN_SYSTEM flatbuffers.UOffsetT) {
+	SEOAddGEN_SYSTEM(builder, GEN_SYSTEM)
+}
 func SEOAddEXTERNAL_ID(builder *flatbuffers.Builder, EXTERNAL_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(EXTERNAL_ID), 0)
+}
+func SEOAddExternalId(builder *flatbuffers.Builder, EXTERNAL_ID flatbuffers.UOffsetT) {
+	SEOAddEXTERNAL_ID(builder, EXTERNAL_ID)
 }
 func SEOAddDATA_TYPE(builder *flatbuffers.Builder, DATA_TYPE seoDataType) {
 	builder.PrependInt8Slot(4, int8(DATA_TYPE), 0)
 }
+func SEOAddDataType(builder *flatbuffers.Builder, DATA_TYPE seoDataType) {
+	SEOAddDATA_TYPE(builder, DATA_TYPE)
+}
 func SEOAddGEN_TIME(builder *flatbuffers.Builder, GEN_TIME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(GEN_TIME), 0)
+}
+func SEOAddGenTime(builder *flatbuffers.Builder, GEN_TIME flatbuffers.UOffsetT) {
+	SEOAddGEN_TIME(builder, GEN_TIME)
 }
 func SEOAddFORECAST(builder *flatbuffers.Builder, FORECAST bool) {
 	builder.PrependBoolSlot(6, FORECAST, false)
 }
+func SEOAddForecast(builder *flatbuffers.Builder, FORECAST bool) {
+	SEOAddFORECAST(builder, FORECAST)
+}
 func SEOAddDERIVED(builder *flatbuffers.Builder, DERIVED bool) {
 	builder.PrependBoolSlot(7, DERIVED, false)
+}
+func SEOAddDerived(builder *flatbuffers.Builder, DERIVED bool) {
+	SEOAddDERIVED(builder, DERIVED)
 }
 func SEOAddSAT_NO(builder *flatbuffers.Builder, SAT_NO uint32) {
 	builder.PrependUint32Slot(8, SAT_NO, 0)
 }
+func SEOAddSatNo(builder *flatbuffers.Builder, SAT_NO uint32) {
+	SEOAddSAT_NO(builder, SAT_NO)
+}
 func SEOAddORIG_OBJECT_ID(builder *flatbuffers.Builder, ORIG_OBJECT_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(ORIG_OBJECT_ID), 0)
+}
+func SEOAddOrigObjectId(builder *flatbuffers.Builder, ORIG_OBJECT_ID flatbuffers.UOffsetT) {
+	SEOAddORIG_OBJECT_ID(builder, ORIG_OBJECT_ID)
 }
 func SEOAddID_SENSOR(builder *flatbuffers.Builder, ID_SENSOR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(ID_SENSOR), 0)
 }
+func SEOAddIdSensor(builder *flatbuffers.Builder, ID_SENSOR flatbuffers.UOffsetT) {
+	SEOAddID_SENSOR(builder, ID_SENSOR)
+}
 func SEOAddORIG_SENSOR_ID(builder *flatbuffers.Builder, ORIG_SENSOR_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(ORIG_SENSOR_ID), 0)
+}
+func SEOAddOrigSensorId(builder *flatbuffers.Builder, ORIG_SENSOR_ID flatbuffers.UOffsetT) {
+	SEOAddORIG_SENSOR_ID(builder, ORIG_SENSOR_ID)
 }
 func SEOAddOBSERVATORY_TYPE(builder *flatbuffers.Builder, OBSERVATORY_TYPE seoObservatoryType) {
 	builder.PrependInt8Slot(12, int8(OBSERVATORY_TYPE), 0)
 }
+func SEOAddObservatoryType(builder *flatbuffers.Builder, OBSERVATORY_TYPE seoObservatoryType) {
+	SEOAddOBSERVATORY_TYPE(builder, OBSERVATORY_TYPE)
+}
 func SEOAddOBSERVATORY_NAME(builder *flatbuffers.Builder, OBSERVATORY_NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(13, flatbuffers.UOffsetT(OBSERVATORY_NAME), 0)
+}
+func SEOAddObservatoryName(builder *flatbuffers.Builder, OBSERVATORY_NAME flatbuffers.UOffsetT) {
+	SEOAddOBSERVATORY_NAME(builder, OBSERVATORY_NAME)
 }
 func SEOAddOBSERVATORY_NOTES(builder *flatbuffers.Builder, OBSERVATORY_NOTES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(14, flatbuffers.UOffsetT(OBSERVATORY_NOTES), 0)
 }
+func SEOAddObservatoryNotes(builder *flatbuffers.Builder, OBSERVATORY_NOTES flatbuffers.UOffsetT) {
+	SEOAddOBSERVATORY_NOTES(builder, OBSERVATORY_NOTES)
+}
 func SEOAddINSTRUMENT_TYPE(builder *flatbuffers.Builder, INSTRUMENT_TYPE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(15, flatbuffers.UOffsetT(INSTRUMENT_TYPE), 0)
+}
+func SEOAddInstrumentType(builder *flatbuffers.Builder, INSTRUMENT_TYPE flatbuffers.UOffsetT) {
+	SEOAddINSTRUMENT_TYPE(builder, INSTRUMENT_TYPE)
 }
 func SEOAddLAT(builder *flatbuffers.Builder, LAT float64) {
 	builder.PrependFloat64Slot(16, LAT, 0.0)
 }
+func SEOAddLat(builder *flatbuffers.Builder, LAT float64) {
+	SEOAddLAT(builder, LAT)
+}
 func SEOAddLON(builder *flatbuffers.Builder, LON float64) {
 	builder.PrependFloat64Slot(17, LON, 0.0)
+}
+func SEOAddLon(builder *flatbuffers.Builder, LON float64) {
+	SEOAddLON(builder, LON)
 }
 func SEOAddALT(builder *flatbuffers.Builder, ALT float64) {
 	builder.PrependFloat64Slot(18, ALT, 0.0)
 }
+func SEOAddAlt(builder *flatbuffers.Builder, ALT float64) {
+	SEOAddALT(builder, ALT)
+}
 func SEOAddSEN_REFERENCE_FRAME(builder *flatbuffers.Builder, SEN_REFERENCE_FRAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(19, flatbuffers.UOffsetT(SEN_REFERENCE_FRAME), 0)
+}
+func SEOAddSenReferenceFrame(builder *flatbuffers.Builder, SEN_REFERENCE_FRAME flatbuffers.UOffsetT) {
+	SEOAddSEN_REFERENCE_FRAME(builder, SEN_REFERENCE_FRAME)
 }
 func SEOAddSEN_POS(builder *flatbuffers.Builder, SEN_POS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(20, flatbuffers.UOffsetT(SEN_POS), 0)
 }
+func SEOAddSenPos(builder *flatbuffers.Builder, SEN_POS flatbuffers.UOffsetT) {
+	SEOAddSEN_POS(builder, SEN_POS)
+}
 func SEOStartSEN_POSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(8, numElems, 8)
+}
+func SEOStartSenPosVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return SEOStartSEN_POSVector(builder, numElems)
 }
 func SEOAddSEN_VEL(builder *flatbuffers.Builder, SEN_VEL flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(21, flatbuffers.UOffsetT(SEN_VEL), 0)
 }
+func SEOAddSenVel(builder *flatbuffers.Builder, SEN_VEL flatbuffers.UOffsetT) {
+	SEOAddSEN_VEL(builder, SEN_VEL)
+}
 func SEOStartSEN_VELVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(8, numElems, 8)
+}
+func SEOStartSenVelVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return SEOStartSEN_VELVector(builder, numElems)
 }
 func SEOAddMEAS_TYPE(builder *flatbuffers.Builder, MEAS_TYPE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(22, flatbuffers.UOffsetT(MEAS_TYPE), 0)
 }
+func SEOAddMeasType(builder *flatbuffers.Builder, MEAS_TYPE flatbuffers.UOffsetT) {
+	SEOAddMEAS_TYPE(builder, MEAS_TYPE)
+}
 func SEOAddPARTICLE_TYPE(builder *flatbuffers.Builder, PARTICLE_TYPE seoParticleType) {
 	builder.PrependInt8Slot(23, int8(PARTICLE_TYPE), 0)
+}
+func SEOAddParticleType(builder *flatbuffers.Builder, PARTICLE_TYPE seoParticleType) {
+	SEOAddPARTICLE_TYPE(builder, PARTICLE_TYPE)
 }
 func SEOAddSEN_ENERGY_LEVEL(builder *flatbuffers.Builder, SEN_ENERGY_LEVEL flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(24, flatbuffers.UOffsetT(SEN_ENERGY_LEVEL), 0)
 }
+func SEOAddSenEnergyLevel(builder *flatbuffers.Builder, SEN_ENERGY_LEVEL flatbuffers.UOffsetT) {
+	SEOAddSEN_ENERGY_LEVEL(builder, SEN_ENERGY_LEVEL)
+}
 func SEOAddOB_SET_ID(builder *flatbuffers.Builder, OB_SET_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(25, flatbuffers.UOffsetT(OB_SET_ID), 0)
+}
+func SEOAddObSetId(builder *flatbuffers.Builder, OB_SET_ID flatbuffers.UOffsetT) {
+	SEOAddOB_SET_ID(builder, OB_SET_ID)
 }
 func SEOAddOB_TIME(builder *flatbuffers.Builder, OB_TIME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(26, flatbuffers.UOffsetT(OB_TIME), 0)
 }
+func SEOAddObTime(builder *flatbuffers.Builder, OB_TIME flatbuffers.UOffsetT) {
+	SEOAddOB_TIME(builder, OB_TIME)
+}
 func SEOAddVALUES(builder *flatbuffers.Builder, VALUES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(27, flatbuffers.UOffsetT(VALUES), 0)
+}
+func SEOAddValues(builder *flatbuffers.Builder, VALUES flatbuffers.UOffsetT) {
+	SEOAddVALUES(builder, VALUES)
 }
 func SEOStartVALUESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(8, numElems, 8)
 }
+func SEOStartValuesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return SEOStartVALUESVector(builder, numElems)
+}
 func SEOAddUNCERTAINTIES(builder *flatbuffers.Builder, UNCERTAINTIES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(28, flatbuffers.UOffsetT(UNCERTAINTIES), 0)
+}
+func SEOAddUncertainties(builder *flatbuffers.Builder, UNCERTAINTIES flatbuffers.UOffsetT) {
+	SEOAddUNCERTAINTIES(builder, UNCERTAINTIES)
 }
 func SEOStartUNCERTAINTIESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(8, numElems, 8)
 }
+func SEOStartUncertaintiesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return SEOStartUNCERTAINTIESVector(builder, numElems)
+}
 func SEOAddUNITS(builder *flatbuffers.Builder, UNITS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(29, flatbuffers.UOffsetT(UNITS), 0)
+}
+func SEOAddUnits(builder *flatbuffers.Builder, UNITS flatbuffers.UOffsetT) {
+	SEOAddUNITS(builder, UNITS)
 }
 func SEOAddQUALITY(builder *flatbuffers.Builder, QUALITY flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(30, flatbuffers.UOffsetT(QUALITY), 0)
 }
+func SEOAddQuality(builder *flatbuffers.Builder, QUALITY flatbuffers.UOffsetT) {
+	SEOAddQUALITY(builder, QUALITY)
+}
 func SEOAddDESCRIPTION(builder *flatbuffers.Builder, DESCRIPTION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(31, flatbuffers.UOffsetT(DESCRIPTION), 0)
+}
+func SEOAddDescription(builder *flatbuffers.Builder, DESCRIPTION flatbuffers.UOffsetT) {
+	SEOAddDESCRIPTION(builder, DESCRIPTION)
 }
 func SEOAddDESCRIPTOR(builder *flatbuffers.Builder, DESCRIPTOR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(32, flatbuffers.UOffsetT(DESCRIPTOR), 0)
 }
+func SEOAddDescriptor(builder *flatbuffers.Builder, DESCRIPTOR flatbuffers.UOffsetT) {
+	SEOAddDESCRIPTOR(builder, DESCRIPTOR)
+}
 func SEOAddSRC_TYPS(builder *flatbuffers.Builder, SRC_TYPS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(33, flatbuffers.UOffsetT(SRC_TYPS), 0)
+}
+func SEOAddSrcTyps(builder *flatbuffers.Builder, SRC_TYPS flatbuffers.UOffsetT) {
+	SEOAddSRC_TYPS(builder, SRC_TYPS)
 }
 func SEOStartSRC_TYPSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
+func SEOStartSrcTypsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return SEOStartSRC_TYPSVector(builder, numElems)
+}
 func SEOAddSRC_IDS(builder *flatbuffers.Builder, SRC_IDS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(34, flatbuffers.UOffsetT(SRC_IDS), 0)
 }
+func SEOAddSrcIds(builder *flatbuffers.Builder, SRC_IDS flatbuffers.UOffsetT) {
+	SEOAddSRC_IDS(builder, SRC_IDS)
+}
 func SEOStartSRC_IDSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func SEOStartSrcIdsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return SEOStartSRC_IDSVector(builder, numElems)
 }
 func SEOEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

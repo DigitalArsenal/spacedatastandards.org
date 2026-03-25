@@ -41,13 +41,13 @@ class SCM : Table() {
                 null
             }
         }
-    val versionAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun versionInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val versionAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun versionInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Standards Dictionary
      */
-    fun RECORDS(j: Int) : SCHEMA_STANDARD? = RECORDS(SCHEMA_STANDARD(), j)
-    fun RECORDS(obj: SCHEMA_STANDARD, j: Int) : SCHEMA_STANDARD? {
+    fun records(j: Int) : SCHEMA_STANDARD? = records(SCHEMA_STANDARD(), j)
+    fun records(obj: SCHEMA_STANDARD, j: Int) : SCHEMA_STANDARD? {
         val o = __offset(6)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -55,27 +55,27 @@ class SCM : Table() {
             null
         }
     }
-    val RECORDSLength : Int
+    val recordsLength : Int
         get() {
             val o = __offset(6); return if (o != 0) __vector_len(o) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsSCM(_bb: ByteBuffer): SCM = getRootAsSCM(_bb, SCM())
         fun getRootAsSCM(_bb: ByteBuffer, obj: SCM): SCM {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun SCMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$SCM")
-        fun createSCM(builder: FlatBufferBuilder, versionOffset: Int, RECORDSOffset: Int) : Int {
+        fun createSCM(builder: FlatBufferBuilder, versionOffset: Int, recordsOffset: Int) : Int {
             builder.startTable(2)
-            addRECORDS(builder, RECORDSOffset)
+            addRECORDS(builder, recordsOffset)
             addVersion(builder, versionOffset)
             return endSCM(builder)
         }
         fun startSCM(builder: FlatBufferBuilder) = builder.startTable(2)
         fun addVersion(builder: FlatBufferBuilder, version: Int) = builder.addOffset(0, version, 0)
-        fun addRECORDS(builder: FlatBufferBuilder, RECORDS: Int) = builder.addOffset(1, RECORDS, 0)
+        fun addRECORDS(builder: FlatBufferBuilder, records: Int) = builder.addOffset(1, records, 0)
         fun createRecordsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {

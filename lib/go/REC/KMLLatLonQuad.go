@@ -49,10 +49,17 @@ func (rcv *KMLLatLonQuad) COORDINATES(obj *KMLCoordinate, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(KMLCoordinate)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *KMLLatLonQuad) Coordinates(obj *KMLCoordinate, j int) bool {
+	return rcv.COORDINATES(obj, j)
 }
 
 func (rcv *KMLLatLonQuad) COORDINATESLength() int {
@@ -63,6 +70,10 @@ func (rcv *KMLLatLonQuad) COORDINATESLength() int {
 	return 0
 }
 
+func (rcv *KMLLatLonQuad) CoordinatesLength() int {
+	return rcv.COORDINATESLength()
+}
+
 /// Four corner coordinates
 func KMLLatLonQuadStart(builder *flatbuffers.Builder) {
 	builder.StartObject(1)
@@ -70,8 +81,14 @@ func KMLLatLonQuadStart(builder *flatbuffers.Builder) {
 func KMLLatLonQuadAddCOORDINATES(builder *flatbuffers.Builder, COORDINATES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(COORDINATES), 0)
 }
+func KMLLatLonQuadAddCoordinates(builder *flatbuffers.Builder, COORDINATES flatbuffers.UOffsetT) {
+	KMLLatLonQuadAddCOORDINATES(builder, COORDINATES)
+}
 func KMLLatLonQuadStartCOORDINATESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func KMLLatLonQuadStartCoordinatesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return KMLLatLonQuadStartCOORDINATESVector(builder, numElems)
 }
 func KMLLatLonQuadEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

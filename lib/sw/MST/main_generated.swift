@@ -2,9 +2,13 @@
 // swiftlint:disable all
 // swiftformat:disable all
 
+#if canImport(Common)
+import Common
+#endif
+
 import FlatBuffers
 
-public enum missileStatus: Int8, Enum, Verifiable {
+public enum missileStatus: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -22,7 +26,7 @@ public enum missileStatus: Int8, Enum, Verifiable {
 }
 
 
-public enum missileEnvironment: Int8, Enum, Verifiable {
+public enum missileEnvironment: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -37,7 +41,7 @@ public enum missileEnvironment: Int8, Enum, Verifiable {
 }
 
 
-public enum aouReportType: Int8, Enum, Verifiable {
+public enum aouReportType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -52,9 +56,9 @@ public enum aouReportType: Int8, Enum, Verifiable {
 
 
 ///  Missile Track
-public struct MST: FlatBufferObject, Verifiable {
+public struct MST: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -244,25 +248,17 @@ public struct MST: FlatBufferObject, Verifiable {
   ///  Number of components per vector (default 6: X, Y, Z, VX, VY, VZ)
   public var VECTOR_COMPONENTS: UInt8 { let o = _accessor.offset(VTOFFSET.VECTOR_COMPONENTS.v); return o == 0 ? 6 : _accessor.readBuffer(of: UInt8.self, at: o) }
   ///  Vector data as flat array [X0, Y0, Z0, VX0, VY0, VZ0, X1, ...]
-  public var hasVectors: Bool { let o = _accessor.offset(VTOFFSET.VECTORS.v); return o == 0 ? false : true }
-  public var VECTORSCount: Int32 { let o = _accessor.offset(VTOFFSET.VECTORS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func VECTORS(at index: Int32) -> Double { let o = _accessor.offset(VTOFFSET.VECTORS.v); return o == 0 ? 0 : _accessor.directRead(of: Double.self, offset: _accessor.vector(at: o) + index * 8) }
-  public var VECTORS: [Double] { return _accessor.getVector(at: VTOFFSET.VECTORS.v) ?? [] }
+  public var VECTORS: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.VECTORS.v, byteSize: 8) }
+  public func withUnsafePointerToVectors<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.VECTORS.v, body: body) }
   ///  AOU report data as flat array
-  public var hasAouRpt: Bool { let o = _accessor.offset(VTOFFSET.AOU_RPT.v); return o == 0 ? false : true }
-  public var AOU_RPTCount: Int32 { let o = _accessor.offset(VTOFFSET.AOU_RPT.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func AOU_RPT(at index: Int32) -> Double { let o = _accessor.offset(VTOFFSET.AOU_RPT.v); return o == 0 ? 0 : _accessor.directRead(of: Double.self, offset: _accessor.vector(at: o) + index * 8) }
-  public var AOU_RPT: [Double] { return _accessor.getVector(at: VTOFFSET.AOU_RPT.v) ?? [] }
+  public var AOU_RPT: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.AOU_RPT.v, byteSize: 8) }
+  public func withUnsafePointerToAouRpt<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.AOU_RPT.v, body: body) }
   ///  Launch AOU data as flat array
-  public var hasLaunchAou: Bool { let o = _accessor.offset(VTOFFSET.LAUNCH_AOU.v); return o == 0 ? false : true }
-  public var LAUNCH_AOUCount: Int32 { let o = _accessor.offset(VTOFFSET.LAUNCH_AOU.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func LAUNCH_AOU(at index: Int32) -> Double { let o = _accessor.offset(VTOFFSET.LAUNCH_AOU.v); return o == 0 ? 0 : _accessor.directRead(of: Double.self, offset: _accessor.vector(at: o) + index * 8) }
-  public var LAUNCH_AOU: [Double] { return _accessor.getVector(at: VTOFFSET.LAUNCH_AOU.v) ?? [] }
+  public var LAUNCH_AOU: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.LAUNCH_AOU.v, byteSize: 8) }
+  public func withUnsafePointerToLaunchAou<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.LAUNCH_AOU.v, body: body) }
   ///  Impact AOU data as flat array
-  public var hasImpactAou: Bool { let o = _accessor.offset(VTOFFSET.IMPACT_AOU.v); return o == 0 ? false : true }
-  public var IMPACT_AOUCount: Int32 { let o = _accessor.offset(VTOFFSET.IMPACT_AOU.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func IMPACT_AOU(at index: Int32) -> Double { let o = _accessor.offset(VTOFFSET.IMPACT_AOU.v); return o == 0 ? 0 : _accessor.directRead(of: Double.self, offset: _accessor.vector(at: o) + index * 8) }
-  public var IMPACT_AOU: [Double] { return _accessor.getVector(at: VTOFFSET.IMPACT_AOU.v) ?? [] }
+  public var IMPACT_AOU: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.IMPACT_AOU.v, byteSize: 8) }
+  public func withUnsafePointerToImpactAou<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.IMPACT_AOU.v, body: body) }
   public static func startMST(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 53) }
   public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VTOFFSET.ID.p) }
   public static func add(MSG_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MSG_TYPE, at: VTOFFSET.MSG_TYPE.p) }

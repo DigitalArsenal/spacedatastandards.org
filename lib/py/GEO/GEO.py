@@ -339,34 +339,57 @@ def End(builder):
 class GEOT(object):
 
     # GEOT
-    def __init__(self):
-        self.ID = None  # type: str
-        self.ORIG_OBJECT_ID = None  # type: str
-        self.SAT_NO = 0  # type: int
-        self.ON_ORBIT = None  # type: str
-        self.STATION_KEEPING = 0  # type: int
-        self.SS = 0.0  # type: float
-        self.SC = 0.0  # type: float
-        self.RELATIVE_ENERGY = 0.0  # type: float
-        self.LONGITUDE_RATE = 0.0  # type: float
-        self.LONGITUDE_MIN = 0.0  # type: float
-        self.LONGITUDE_MAX = 0.0  # type: float
-        self.CONFIDENCE = 0  # type: int
-        self.TROUGH = 0  # type: int
-        self.PLANE_CHANGE_STATUS = None  # type: str
-        self.LOST_FLAG = False  # type: bool
-        self.SEMI_ANNUAL_CORR_FLAG = False  # type: bool
-        self.OBJECT_STATUS = None  # type: str
-        self.INCLINATION = 0.0  # type: float
-        self.ECCENTRICITY = 0.0  # type: float
-        self.EPOCH = None  # type: str
-        self.RAW_FILE_URI = None  # type: str
+    def __init__(
+        self,
+        ID = None,
+        ORIG_OBJECT_ID = None,
+        SAT_NO = 0,
+        ON_ORBIT = None,
+        STATION_KEEPING = 0,
+        SS = 0.0,
+        SC = 0.0,
+        RELATIVE_ENERGY = 0.0,
+        LONGITUDE_RATE = 0.0,
+        LONGITUDE_MIN = 0.0,
+        LONGITUDE_MAX = 0.0,
+        CONFIDENCE = 0,
+        TROUGH = 0,
+        PLANE_CHANGE_STATUS = None,
+        LOST_FLAG = False,
+        SEMI_ANNUAL_CORR_FLAG = False,
+        OBJECT_STATUS = None,
+        INCLINATION = 0.0,
+        ECCENTRICITY = 0.0,
+        EPOCH = None,
+        RAW_FILE_URI = None,
+    ):
+        self.ID = ID  # type: Optional[str]
+        self.ORIG_OBJECT_ID = ORIG_OBJECT_ID  # type: Optional[str]
+        self.SAT_NO = SAT_NO  # type: int
+        self.ON_ORBIT = ON_ORBIT  # type: Optional[str]
+        self.STATION_KEEPING = STATION_KEEPING  # type: int
+        self.SS = SS  # type: float
+        self.SC = SC  # type: float
+        self.RELATIVE_ENERGY = RELATIVE_ENERGY  # type: float
+        self.LONGITUDE_RATE = LONGITUDE_RATE  # type: float
+        self.LONGITUDE_MIN = LONGITUDE_MIN  # type: float
+        self.LONGITUDE_MAX = LONGITUDE_MAX  # type: float
+        self.CONFIDENCE = CONFIDENCE  # type: int
+        self.TROUGH = TROUGH  # type: int
+        self.PLANE_CHANGE_STATUS = PLANE_CHANGE_STATUS  # type: Optional[str]
+        self.LOST_FLAG = LOST_FLAG  # type: bool
+        self.SEMI_ANNUAL_CORR_FLAG = SEMI_ANNUAL_CORR_FLAG  # type: bool
+        self.OBJECT_STATUS = OBJECT_STATUS  # type: Optional[str]
+        self.INCLINATION = INCLINATION  # type: float
+        self.ECCENTRICITY = ECCENTRICITY  # type: float
+        self.EPOCH = EPOCH  # type: Optional[str]
+        self.RAW_FILE_URI = RAW_FILE_URI  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        GEO = GEO()
-        GEO.Init(buf, pos)
-        return cls.InitFromObj(GEO)
+        tmpGeo = GEO()
+        tmpGeo.Init(buf, pos)
+        return cls.InitFromObj(tmpGeo)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -374,9 +397,9 @@ class GEOT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, GEO):
+    def InitFromObj(cls, tmpGeo):
         x = GEOT()
-        x._UnPack(GEO)
+        x._UnPack(tmpGeo)
         return x
 
     # GEOT

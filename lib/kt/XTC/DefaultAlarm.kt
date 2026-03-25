@@ -32,7 +32,7 @@ class DefaultAlarm : Table() {
     /**
      * Minimum violations before alarm triggers
      */
-    val MIN_VIOLATIONS : UShort
+    val minViolations : UShort
         get() {
             val o = __offset(4)
             return if(o != 0) bb.getShort(o + bb_pos).toUShort() else 0u
@@ -40,8 +40,8 @@ class DefaultAlarm : Table() {
     /**
      * Static numeric alarm ranges
      */
-    val STATIC_ALARM_RANGES : StaticAlarmRanges? get() = STATIC_ALARM_RANGES(StaticAlarmRanges())
-    fun STATIC_ALARM_RANGES(obj: StaticAlarmRanges) : StaticAlarmRanges? {
+    val staticAlarmRanges : StaticAlarmRanges? get() = staticAlarmRanges(StaticAlarmRanges())
+    fun staticAlarmRanges(obj: StaticAlarmRanges) : StaticAlarmRanges? {
         val o = __offset(6)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -52,8 +52,8 @@ class DefaultAlarm : Table() {
     /**
      * Enumeration alarms for enumerated types
      */
-    fun ENUMERATION_ALARMS(j: Int) : EnumerationAlarm? = ENUMERATION_ALARMS(EnumerationAlarm(), j)
-    fun ENUMERATION_ALARMS(obj: EnumerationAlarm, j: Int) : EnumerationAlarm? {
+    fun enumerationAlarms(j: Int) : EnumerationAlarm? = enumerationAlarms(EnumerationAlarm(), j)
+    fun enumerationAlarms(obj: EnumerationAlarm, j: Int) : EnumerationAlarm? {
         val o = __offset(8)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -61,28 +61,28 @@ class DefaultAlarm : Table() {
             null
         }
     }
-    val ENUMERATION_ALARMSLength : Int
+    val enumerationAlarmsLength : Int
         get() {
             val o = __offset(8); return if (o != 0) __vector_len(o) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsDefaultAlarm(_bb: ByteBuffer): DefaultAlarm = getRootAsDefaultAlarm(_bb, DefaultAlarm())
         fun getRootAsDefaultAlarm(_bb: ByteBuffer, obj: DefaultAlarm): DefaultAlarm {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createDefaultAlarm(builder: FlatBufferBuilder, MIN_VIOLATIONS: UShort, STATIC_ALARM_RANGESOffset: Int, ENUMERATION_ALARMSOffset: Int) : Int {
+        fun createDefaultAlarm(builder: FlatBufferBuilder, minViolations: UShort, staticAlarmRangesOffset: Int, enumerationAlarmsOffset: Int) : Int {
             builder.startTable(3)
-            addENUMERATION_ALARMS(builder, ENUMERATION_ALARMSOffset)
-            addSTATIC_ALARM_RANGES(builder, STATIC_ALARM_RANGESOffset)
-            addMIN_VIOLATIONS(builder, MIN_VIOLATIONS)
+            addENUMERATIONALARMS(builder, enumerationAlarmsOffset)
+            addSTATICALARMRANGES(builder, staticAlarmRangesOffset)
+            addMINVIOLATIONS(builder, minViolations)
             return endDefaultAlarm(builder)
         }
         fun startDefaultAlarm(builder: FlatBufferBuilder) = builder.startTable(3)
-        fun addMIN_VIOLATIONS(builder: FlatBufferBuilder, MIN_VIOLATIONS: UShort) = builder.addShort(0, MIN_VIOLATIONS.toShort(), 0)
-        fun addSTATIC_ALARM_RANGES(builder: FlatBufferBuilder, STATIC_ALARM_RANGES: Int) = builder.addOffset(1, STATIC_ALARM_RANGES, 0)
-        fun addENUMERATION_ALARMS(builder: FlatBufferBuilder, ENUMERATION_ALARMS: Int) = builder.addOffset(2, ENUMERATION_ALARMS, 0)
+        fun addMINVIOLATIONS(builder: FlatBufferBuilder, minViolations: UShort) = builder.addShort(0, minViolations.toShort(), 0)
+        fun addSTATICALARMRANGES(builder: FlatBufferBuilder, staticAlarmRanges: Int) = builder.addOffset(1, staticAlarmRanges, 0)
+        fun addENUMERATIONALARMS(builder: FlatBufferBuilder, enumerationAlarms: Int) = builder.addOffset(2, enumerationAlarms, 0)
         fun createEnumerationAlarmsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {

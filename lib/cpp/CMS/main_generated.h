@@ -8,9 +8,9 @@
 
 // Ensure the included flatbuffers.h is the same version as when this file was
 // generated, otherwise it may not be compatible.
-static_assert(FLATBUFFERS_VERSION_MAJOR == 24 &&
-              FLATBUFFERS_VERSION_MINOR == 3 &&
-              FLATBUFFERS_VERSION_REVISION == 25,
+static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
+              FLATBUFFERS_VERSION_MINOR == 12 &&
+              FLATBUFFERS_VERSION_REVISION == 19,
              "Non-compatible flatbuffers version included");
 
 struct commsChannel;
@@ -194,7 +194,8 @@ struct commsChannel FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   double POWER() const {
     return GetField<double>(VT_POWER, 0.0);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_CHANNEL_ID) &&
            verifier.VerifyString(CHANNEL_ID()) &&
@@ -386,7 +387,8 @@ struct commsTransponder FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *POLARIZATION() const {
     return GetPointer<const ::flatbuffers::String *>(VT_POLARIZATION);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_TRANSPONDER_ID) &&
            verifier.VerifyString(TRANSPONDER_ID()) &&
@@ -624,7 +626,8 @@ struct CMS FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *NOTES() const {
     return GetPointer<const ::flatbuffers::String *>(VT_NOTES);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_ID) &&
            verifier.VerifyString(ID()) &&
@@ -818,14 +821,16 @@ inline bool SizePrefixedCMSBufferHasIdentifier(const void *buf) {
       buf, CMSIdentifier(), true);
 }
 
+template <bool B = false>
 inline bool VerifyCMSBuffer(
-    ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifyBuffer<CMS>(CMSIdentifier());
+    ::flatbuffers::VerifierTemplate<B> &verifier) {
+  return verifier.template VerifyBuffer<CMS>(CMSIdentifier());
 }
 
+template <bool B = false>
 inline bool VerifySizePrefixedCMSBuffer(
-    ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifySizePrefixedBuffer<CMS>(CMSIdentifier());
+    ::flatbuffers::VerifierTemplate<B> &verifier) {
+  return verifier.template VerifySizePrefixedBuffer<CMS>(CMSIdentifier());
 }
 
 inline void FinishCMSBuffer(

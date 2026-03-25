@@ -2,9 +2,13 @@
 // swiftlint:disable all
 // swiftformat:disable all
 
+#if canImport(Common)
+import Common
+#endif
+
 import FlatBuffers
 
-public enum TimeScale: Int8, Enum, Verifiable {
+public enum TimeScale: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -28,7 +32,7 @@ public enum TimeScale: Int8, Enum, Verifiable {
 }
 
 
-public enum DateFormat: Int8, Enum, Verifiable {
+public enum DateFormat: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -45,7 +49,7 @@ public enum DateFormat: Int8, Enum, Verifiable {
 }
 
 
-public enum ClockType: Int8, Enum, Verifiable {
+public enum ClockType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -62,9 +66,9 @@ public enum ClockType: Int8, Enum, Verifiable {
 
 
 ///  Time Systems
-public struct TME: FlatBufferObject, Verifiable {
+public struct TME: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -104,10 +108,8 @@ public struct TME: FlatBufferObject, Verifiable {
   public var SOLAR_POSITION_QUERYSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SOLAR_POSITION_QUERY.v) }
   public var LUNAR_POSITION_QUERY: String? { let o = _accessor.offset(VTOFFSET.LUNAR_POSITION_QUERY.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var LUNAR_POSITION_QUERYSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LUNAR_POSITION_QUERY.v) }
-  public var hasSunriseSunsetQuery: Bool { let o = _accessor.offset(VTOFFSET.SUNRISE_SUNSET_QUERY.v); return o == 0 ? false : true }
-  public var SUNRISE_SUNSET_QUERYCount: Int32 { let o = _accessor.offset(VTOFFSET.SUNRISE_SUNSET_QUERY.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func SUNRISE_SUNSET_QUERY(at index: Int32) -> Double { let o = _accessor.offset(VTOFFSET.SUNRISE_SUNSET_QUERY.v); return o == 0 ? 0 : _accessor.directRead(of: Double.self, offset: _accessor.vector(at: o) + index * 8) }
-  public var SUNRISE_SUNSET_QUERY: [Double] { return _accessor.getVector(at: VTOFFSET.SUNRISE_SUNSET_QUERY.v) ?? [] }
+  public var SUNRISE_SUNSET_QUERY: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.SUNRISE_SUNSET_QUERY.v, byteSize: 8) }
+  public func withUnsafePointerToSunriseSunsetQuery<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.SUNRISE_SUNSET_QUERY.v, body: body) }
   public var CLOCK_PROPAGATION: String? { let o = _accessor.offset(VTOFFSET.CLOCK_PROPAGATION.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var CLOCK_PROPAGATIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CLOCK_PROPAGATION.v) }
   public static func startTME(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 10) }

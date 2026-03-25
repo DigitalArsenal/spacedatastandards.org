@@ -8,9 +8,9 @@
 
 // Ensure the included flatbuffers.h is the same version as when this file was
 // generated, otherwise it may not be compatible.
-static_assert(FLATBUFFERS_VERSION_MAJOR == 24 &&
-              FLATBUFFERS_VERSION_MINOR == 3 &&
-              FLATBUFFERS_VERSION_REVISION == 25,
+static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
+              FLATBUFFERS_VERSION_MINOR == 12 &&
+              FLATBUFFERS_VERSION_REVISION == 19,
              "Non-compatible flatbuffers version included");
 
 struct ROC;
@@ -98,7 +98,8 @@ struct ROC FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::Vector<::flatbuffers::Offset<SUSTAINER>> *SUSTAINERS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<SUSTAINER>> *>(VT_SUSTAINERS);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_NAME) &&
            verifier.VerifyString(NAME()) &&
@@ -213,7 +214,8 @@ struct STAGE FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   double BURN_DURATION() const {
     return GetField<double>(VT_BURN_DURATION, 0.0);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<int32_t>(verifier, VT_STAGE_NUMBER, 4) &&
            VerifyOffset(verifier, VT_ENGINES) &&
@@ -311,7 +313,8 @@ struct SUSTAINER FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   double BURN_DURATION() const {
     return GetField<double>(VT_BURN_DURATION, 0.0);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_SUSTAINER_NAME) &&
            verifier.VerifyString(SUSTAINER_NAME()) &&
@@ -390,7 +393,8 @@ struct ENGINE FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   double THRUST() const {
     return GetField<double>(VT_THRUST, 0.0);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_ENGINE_NAME) &&
            verifier.VerifyString(ENGINE_NAME()) &&
@@ -471,14 +475,16 @@ inline bool SizePrefixedROCBufferHasIdentifier(const void *buf) {
       buf, ROCIdentifier(), true);
 }
 
+template <bool B = false>
 inline bool VerifyROCBuffer(
-    ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifyBuffer<ROC>(ROCIdentifier());
+    ::flatbuffers::VerifierTemplate<B> &verifier) {
+  return verifier.template VerifyBuffer<ROC>(ROCIdentifier());
 }
 
+template <bool B = false>
 inline bool VerifySizePrefixedROCBuffer(
-    ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifySizePrefixedBuffer<ROC>(ROCIdentifier());
+    ::flatbuffers::VerifierTemplate<B> &verifier) {
+  return verifier.template VerifySizePrefixedBuffer<ROC>(ROCIdentifier());
 }
 
 inline void FinishROCBuffer(

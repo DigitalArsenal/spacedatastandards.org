@@ -2,4 +2,9 @@
 
 # namespace: 
 
-# NOTE LeadMethod.py does not declare any structs or enums
+class LeadMethod(object):
+    NONE = 0
+    PREDICTIVE = 1
+    COLLISION = 2
+    CONSTANT_BEARING = 3
+    PURSUIT = 4

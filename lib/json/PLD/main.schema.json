@@ -192,35 +192,7 @@
               }
       },
       "additionalProperties" : false
-    },
-    "PLD" : {
-      "type" : "object",
-      "description" : "Payload Information",
-      "properties" : {
-        "PAYLOAD_DURATION" : {
-                "type" : "string"
-              },
-        "MASS_AT_LAUNCH" : {
-                "type" : "number"
-              },
-        "DIMENSIONS" : {
-                "type" : "string"
-              },
-        "SOLAR_ARRAY_AREA" : {
-                "type" : "number"
-              },
-        "SOLAR_ARRAY_DIMENSIONS" : {
-                "type" : "string"
-              },
-        "NOMINAL_OPERATIONAL_LIFETIME" : {
-                "type" : "string"
-              },
-        "INSTRUMENTS" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/IDM"}
-              }
-      },
-      "additionalProperties" : false
     }
   },
-  "$ref" : "#/definitions/PLD"
+  "$ref" : "#/definitions/IDM"
 }

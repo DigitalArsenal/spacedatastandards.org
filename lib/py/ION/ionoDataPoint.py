@@ -157,21 +157,31 @@ def End(builder):
 class ionoDataPointT(object):
 
     # ionoDataPointT
-    def __init__(self):
-        self.EPOCH = None  # type: str
-        self.LAYER = 0  # type: int
-        self.CRITICAL_FREQ = 0.0  # type: float
-        self.VIRTUAL_HEIGHT = 0.0  # type: float
-        self.TRUE_HEIGHT = 0.0  # type: float
-        self.PEAK_DENSITY = 0.0  # type: float
-        self.TEC = 0.0  # type: float
-        self.TEC_UNCERTAINTY = 0.0  # type: float
+    def __init__(
+        self,
+        EPOCH = None,
+        LAYER = 0,
+        CRITICAL_FREQ = 0.0,
+        VIRTUAL_HEIGHT = 0.0,
+        TRUE_HEIGHT = 0.0,
+        PEAK_DENSITY = 0.0,
+        TEC = 0.0,
+        TEC_UNCERTAINTY = 0.0,
+    ):
+        self.EPOCH = EPOCH  # type: Optional[str]
+        self.LAYER = LAYER  # type: int
+        self.CRITICAL_FREQ = CRITICAL_FREQ  # type: float
+        self.VIRTUAL_HEIGHT = VIRTUAL_HEIGHT  # type: float
+        self.TRUE_HEIGHT = TRUE_HEIGHT  # type: float
+        self.PEAK_DENSITY = PEAK_DENSITY  # type: float
+        self.TEC = TEC  # type: float
+        self.TEC_UNCERTAINTY = TEC_UNCERTAINTY  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        ionoDataPoint = ionoDataPoint()
-        ionoDataPoint.Init(buf, pos)
-        return cls.InitFromObj(ionoDataPoint)
+        tmpIonoDataPoint = ionoDataPoint()
+        tmpIonoDataPoint.Init(buf, pos)
+        return cls.InitFromObj(tmpIonoDataPoint)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -179,9 +189,9 @@ class ionoDataPointT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, ionoDataPoint):
+    def InitFromObj(cls, tmpIonoDataPoint):
         x = ionoDataPointT()
-        x._UnPack(ionoDataPoint)
+        x._UnPack(tmpIonoDataPoint)
         return x
 
     # ionoDataPointT

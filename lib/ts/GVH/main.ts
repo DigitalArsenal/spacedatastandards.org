@@ -2,7 +2,7 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export { DriveType } from './DriveType.js';
-export { GVH, GVHT } from './GVH.js';
-export { GVHEngineType } from './GVHEngineType.js';
-export { VehicleType } from './VehicleType.js';
+export * from './DriveType.js';
+export * from './GVH.js';
+export * from './GVHEngineType.js';
+export * from './VehicleType.js';

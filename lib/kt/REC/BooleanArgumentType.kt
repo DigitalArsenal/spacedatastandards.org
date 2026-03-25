@@ -32,7 +32,7 @@ class BooleanArgumentType : Table() {
     /**
      * Type name
      */
-    val NAME : String?
+    val name : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class BooleanArgumentType : Table() {
                 null
             }
         }
-    val NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val nameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun nameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Short description
      */
-    val SHORT_DESCRIPTION : String?
+    val shortDescription : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -55,12 +55,12 @@ class BooleanArgumentType : Table() {
                 null
             }
         }
-    val SHORT_DESCRIPTIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun SHORT_DESCRIPTIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val shortDescriptionAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun shortDescriptionInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * Long description
      */
-    val LONG_DESCRIPTION : String?
+    val longDescription : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -69,13 +69,13 @@ class BooleanArgumentType : Table() {
                 null
             }
         }
-    val LONG_DESCRIPTIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun LONG_DESCRIPTIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val longDescriptionAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun longDescriptionInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
     /**
      * Data encoding
      */
-    val DATA_ENCODING : IntegerDataEncoding? get() = DATA_ENCODING(IntegerDataEncoding())
-    fun DATA_ENCODING(obj: IntegerDataEncoding) : IntegerDataEncoding? {
+    val dataEncoding : IntegerDataEncoding? get() = dataEncoding(IntegerDataEncoding())
+    fun dataEncoding(obj: IntegerDataEncoding) : IntegerDataEncoding? {
         val o = __offset(10)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -86,7 +86,7 @@ class BooleanArgumentType : Table() {
     /**
      * String representation of true value
      */
-    val ONE_STRING_VALUE : String?
+    val oneStringValue : String?
         get() {
             val o = __offset(12)
             return if (o != 0) {
@@ -95,12 +95,12 @@ class BooleanArgumentType : Table() {
                 null
             }
         }
-    val ONE_STRING_VALUEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
-    fun ONE_STRING_VALUEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
+    val oneStringValueAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(12, 1)
+    fun oneStringValueInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 12, 1)
     /**
      * String representation of false value
      */
-    val ZERO_STRING_VALUE : String?
+    val zeroStringValue : String?
         get() {
             val o = __offset(14)
             return if (o != 0) {
@@ -109,42 +109,42 @@ class BooleanArgumentType : Table() {
                 null
             }
         }
-    val ZERO_STRING_VALUEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(14, 1)
-    fun ZERO_STRING_VALUEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 14, 1)
+    val zeroStringValueAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(14, 1)
+    fun zeroStringValueInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 14, 1)
     /**
      * Initial/default value
      */
-    val INITIAL_VALUE : Boolean
+    val initialValue : Boolean
         get() {
             val o = __offset(16)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsBooleanArgumentType(_bb: ByteBuffer): BooleanArgumentType = getRootAsBooleanArgumentType(_bb, BooleanArgumentType())
         fun getRootAsBooleanArgumentType(_bb: ByteBuffer, obj: BooleanArgumentType): BooleanArgumentType {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createBooleanArgumentType(builder: FlatBufferBuilder, NAMEOffset: Int, SHORT_DESCRIPTIONOffset: Int, LONG_DESCRIPTIONOffset: Int, DATA_ENCODINGOffset: Int, ONE_STRING_VALUEOffset: Int, ZERO_STRING_VALUEOffset: Int, INITIAL_VALUE: Boolean) : Int {
+        fun createBooleanArgumentType(builder: FlatBufferBuilder, nameOffset: Int, shortDescriptionOffset: Int, longDescriptionOffset: Int, dataEncodingOffset: Int, oneStringValueOffset: Int, zeroStringValueOffset: Int, initialValue: Boolean) : Int {
             builder.startTable(7)
-            addZERO_STRING_VALUE(builder, ZERO_STRING_VALUEOffset)
-            addONE_STRING_VALUE(builder, ONE_STRING_VALUEOffset)
-            addDATA_ENCODING(builder, DATA_ENCODINGOffset)
-            addLONG_DESCRIPTION(builder, LONG_DESCRIPTIONOffset)
-            addSHORT_DESCRIPTION(builder, SHORT_DESCRIPTIONOffset)
-            addNAME(builder, NAMEOffset)
-            addINITIAL_VALUE(builder, INITIAL_VALUE)
+            addZEROSTRINGVALUE(builder, zeroStringValueOffset)
+            addONESTRINGVALUE(builder, oneStringValueOffset)
+            addDATAENCODING(builder, dataEncodingOffset)
+            addLONGDESCRIPTION(builder, longDescriptionOffset)
+            addSHORTDESCRIPTION(builder, shortDescriptionOffset)
+            addNAME(builder, nameOffset)
+            addINITIALVALUE(builder, initialValue)
             return endBooleanArgumentType(builder)
         }
         fun startBooleanArgumentType(builder: FlatBufferBuilder) = builder.startTable(7)
-        fun addNAME(builder: FlatBufferBuilder, NAME: Int) = builder.addOffset(0, NAME, 0)
-        fun addSHORT_DESCRIPTION(builder: FlatBufferBuilder, SHORT_DESCRIPTION: Int) = builder.addOffset(1, SHORT_DESCRIPTION, 0)
-        fun addLONG_DESCRIPTION(builder: FlatBufferBuilder, LONG_DESCRIPTION: Int) = builder.addOffset(2, LONG_DESCRIPTION, 0)
-        fun addDATA_ENCODING(builder: FlatBufferBuilder, DATA_ENCODING: Int) = builder.addOffset(3, DATA_ENCODING, 0)
-        fun addONE_STRING_VALUE(builder: FlatBufferBuilder, ONE_STRING_VALUE: Int) = builder.addOffset(4, ONE_STRING_VALUE, 0)
-        fun addZERO_STRING_VALUE(builder: FlatBufferBuilder, ZERO_STRING_VALUE: Int) = builder.addOffset(5, ZERO_STRING_VALUE, 0)
-        fun addINITIAL_VALUE(builder: FlatBufferBuilder, INITIAL_VALUE: Boolean) = builder.addBoolean(6, INITIAL_VALUE, false)
+        fun addNAME(builder: FlatBufferBuilder, name: Int) = builder.addOffset(0, name, 0)
+        fun addSHORTDESCRIPTION(builder: FlatBufferBuilder, shortDescription: Int) = builder.addOffset(1, shortDescription, 0)
+        fun addLONGDESCRIPTION(builder: FlatBufferBuilder, longDescription: Int) = builder.addOffset(2, longDescription, 0)
+        fun addDATAENCODING(builder: FlatBufferBuilder, dataEncoding: Int) = builder.addOffset(3, dataEncoding, 0)
+        fun addONESTRINGVALUE(builder: FlatBufferBuilder, oneStringValue: Int) = builder.addOffset(4, oneStringValue, 0)
+        fun addZEROSTRINGVALUE(builder: FlatBufferBuilder, zeroStringValue: Int) = builder.addOffset(5, zeroStringValue, 0)
+        fun addINITIALVALUE(builder: FlatBufferBuilder, initialValue: Boolean) = builder.addBoolean(6, initialValue, false)
         fun endBooleanArgumentType(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

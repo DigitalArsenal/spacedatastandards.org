@@ -32,7 +32,7 @@ class COTPoint : Table() {
     /**
      * Latitude in decimal degrees (WGS84)
      */
-    val LATITUDE : Double
+    val latitude : Double
         get() {
             val o = __offset(4)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -40,7 +40,7 @@ class COTPoint : Table() {
     /**
      * Longitude in decimal degrees (WGS84)
      */
-    val LONGITUDE : Double
+    val longitude : Double
         get() {
             val o = __offset(6)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -48,7 +48,7 @@ class COTPoint : Table() {
     /**
      * Height above WGS84 ellipsoid in meters
      */
-    val HAE : Double
+    val hae : Double
         get() {
             val o = __offset(8)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -56,7 +56,7 @@ class COTPoint : Table() {
     /**
      * Circular error in meters (95% confidence)
      */
-    val CE : Double
+    val ce : Double
         get() {
             val o = __offset(10)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -64,33 +64,33 @@ class COTPoint : Table() {
     /**
      * Linear error (vertical) in meters (95% confidence)
      */
-    val LE : Double
+    val le : Double
         get() {
             val o = __offset(12)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsCOTPoint(_bb: ByteBuffer): COTPoint = getRootAsCOTPoint(_bb, COTPoint())
         fun getRootAsCOTPoint(_bb: ByteBuffer, obj: COTPoint): COTPoint {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createCOTPoint(builder: FlatBufferBuilder, LATITUDE: Double, LONGITUDE: Double, HAE: Double, CE: Double, LE: Double) : Int {
+        fun createCOTPoint(builder: FlatBufferBuilder, latitude: Double, longitude: Double, hae: Double, ce: Double, le: Double) : Int {
             builder.startTable(5)
-            addLE(builder, LE)
-            addCE(builder, CE)
-            addHAE(builder, HAE)
-            addLONGITUDE(builder, LONGITUDE)
-            addLATITUDE(builder, LATITUDE)
+            addLE(builder, le)
+            addCE(builder, ce)
+            addHAE(builder, hae)
+            addLONGITUDE(builder, longitude)
+            addLATITUDE(builder, latitude)
             return endCOTPoint(builder)
         }
         fun startCOTPoint(builder: FlatBufferBuilder) = builder.startTable(5)
-        fun addLATITUDE(builder: FlatBufferBuilder, LATITUDE: Double) = builder.addDouble(0, LATITUDE, 0.0)
-        fun addLONGITUDE(builder: FlatBufferBuilder, LONGITUDE: Double) = builder.addDouble(1, LONGITUDE, 0.0)
-        fun addHAE(builder: FlatBufferBuilder, HAE: Double) = builder.addDouble(2, HAE, 0.0)
-        fun addCE(builder: FlatBufferBuilder, CE: Double) = builder.addDouble(3, CE, 0.0)
-        fun addLE(builder: FlatBufferBuilder, LE: Double) = builder.addDouble(4, LE, 0.0)
+        fun addLATITUDE(builder: FlatBufferBuilder, latitude: Double) = builder.addDouble(0, latitude, 0.0)
+        fun addLONGITUDE(builder: FlatBufferBuilder, longitude: Double) = builder.addDouble(1, longitude, 0.0)
+        fun addHAE(builder: FlatBufferBuilder, hae: Double) = builder.addDouble(2, hae, 0.0)
+        fun addCE(builder: FlatBufferBuilder, ce: Double) = builder.addDouble(3, ce, 0.0)
+        fun addLE(builder: FlatBufferBuilder, le: Double) = builder.addDouble(4, le, 0.0)
         fun endCOTPoint(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

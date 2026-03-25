@@ -51,9 +51,17 @@ func (rcv *CZMNearFarScalar) NEAR_DISTANCE() float64 {
 	return 0.0
 }
 
+func (rcv *CZMNearFarScalar) NearDistance() float64 {
+	return rcv.NEAR_DISTANCE()
+}
+
 /// Near distance in meters
 func (rcv *CZMNearFarScalar) MutateNEAR_DISTANCE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(4, n)
+}
+
+func (rcv *CZMNearFarScalar) MutateNearDistance(n float64) bool {
+	return rcv.MutateNEAR_DISTANCE(n)
 }
 
 /// Value at near distance
@@ -65,9 +73,17 @@ func (rcv *CZMNearFarScalar) NEAR_VALUE() float64 {
 	return 0.0
 }
 
+func (rcv *CZMNearFarScalar) NearValue() float64 {
+	return rcv.NEAR_VALUE()
+}
+
 /// Value at near distance
 func (rcv *CZMNearFarScalar) MutateNEAR_VALUE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(6, n)
+}
+
+func (rcv *CZMNearFarScalar) MutateNearValue(n float64) bool {
+	return rcv.MutateNEAR_VALUE(n)
 }
 
 /// Far distance in meters
@@ -79,9 +95,17 @@ func (rcv *CZMNearFarScalar) FAR_DISTANCE() float64 {
 	return 0.0
 }
 
+func (rcv *CZMNearFarScalar) FarDistance() float64 {
+	return rcv.FAR_DISTANCE()
+}
+
 /// Far distance in meters
 func (rcv *CZMNearFarScalar) MutateFAR_DISTANCE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(8, n)
+}
+
+func (rcv *CZMNearFarScalar) MutateFarDistance(n float64) bool {
+	return rcv.MutateFAR_DISTANCE(n)
 }
 
 /// Value at far distance
@@ -93,9 +117,17 @@ func (rcv *CZMNearFarScalar) FAR_VALUE() float64 {
 	return 0.0
 }
 
+func (rcv *CZMNearFarScalar) FarValue() float64 {
+	return rcv.FAR_VALUE()
+}
+
 /// Value at far distance
 func (rcv *CZMNearFarScalar) MutateFAR_VALUE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(10, n)
+}
+
+func (rcv *CZMNearFarScalar) MutateFarValue(n float64) bool {
+	return rcv.MutateFAR_VALUE(n)
 }
 
 func CZMNearFarScalarStart(builder *flatbuffers.Builder) {
@@ -104,14 +136,26 @@ func CZMNearFarScalarStart(builder *flatbuffers.Builder) {
 func CZMNearFarScalarAddNEAR_DISTANCE(builder *flatbuffers.Builder, NEAR_DISTANCE float64) {
 	builder.PrependFloat64Slot(0, NEAR_DISTANCE, 0.0)
 }
+func CZMNearFarScalarAddNearDistance(builder *flatbuffers.Builder, NEAR_DISTANCE float64) {
+	CZMNearFarScalarAddNEAR_DISTANCE(builder, NEAR_DISTANCE)
+}
 func CZMNearFarScalarAddNEAR_VALUE(builder *flatbuffers.Builder, NEAR_VALUE float64) {
 	builder.PrependFloat64Slot(1, NEAR_VALUE, 0.0)
+}
+func CZMNearFarScalarAddNearValue(builder *flatbuffers.Builder, NEAR_VALUE float64) {
+	CZMNearFarScalarAddNEAR_VALUE(builder, NEAR_VALUE)
 }
 func CZMNearFarScalarAddFAR_DISTANCE(builder *flatbuffers.Builder, FAR_DISTANCE float64) {
 	builder.PrependFloat64Slot(2, FAR_DISTANCE, 0.0)
 }
+func CZMNearFarScalarAddFarDistance(builder *flatbuffers.Builder, FAR_DISTANCE float64) {
+	CZMNearFarScalarAddFAR_DISTANCE(builder, FAR_DISTANCE)
+}
 func CZMNearFarScalarAddFAR_VALUE(builder *flatbuffers.Builder, FAR_VALUE float64) {
 	builder.PrependFloat64Slot(3, FAR_VALUE, 0.0)
+}
+func CZMNearFarScalarAddFarValue(builder *flatbuffers.Builder, FAR_VALUE float64) {
+	CZMNearFarScalarAddFAR_VALUE(builder, FAR_VALUE)
 }
 func CZMNearFarScalarEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

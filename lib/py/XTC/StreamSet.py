@@ -125,6 +125,12 @@ def StreamSetStartFIXED_FRAME_STREAMSVector(builder, numElems):
 def StartFIXED_FRAME_STREAMSVector(builder, numElems):
     return StreamSetStartFIXED_FRAME_STREAMSVector(builder, numElems)
 
+def StreamSetCreateFIXED_FRAME_STREAMSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateFIXED_FRAME_STREAMSVector(builder, data):
+    StreamSetCreateFIXED_FRAME_STREAMSVector(builder, data)
+
 def StreamSetAddVARIABLE_FRAME_STREAMS(builder, VARIABLE_FRAME_STREAMS):
     builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(VARIABLE_FRAME_STREAMS), 0)
 
@@ -137,6 +143,12 @@ def StreamSetStartVARIABLE_FRAME_STREAMSVector(builder, numElems):
 def StartVARIABLE_FRAME_STREAMSVector(builder, numElems):
     return StreamSetStartVARIABLE_FRAME_STREAMSVector(builder, numElems)
 
+def StreamSetCreateVARIABLE_FRAME_STREAMSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateVARIABLE_FRAME_STREAMSVector(builder, data):
+    StreamSetCreateVARIABLE_FRAME_STREAMSVector(builder, data)
+
 def StreamSetAddCUSTOM_STREAMS(builder, CUSTOM_STREAMS):
     builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(CUSTOM_STREAMS), 0)
 
@@ -148,6 +160,12 @@ def StreamSetStartCUSTOM_STREAMSVector(builder, numElems):
 
 def StartCUSTOM_STREAMSVector(builder, numElems):
     return StreamSetStartCUSTOM_STREAMSVector(builder, numElems)
+
+def StreamSetCreateCUSTOM_STREAMSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateCUSTOM_STREAMSVector(builder, data):
+    StreamSetCreateCUSTOM_STREAMSVector(builder, data)
 
 def StreamSetEnd(builder):
     return builder.EndObject()
@@ -166,16 +184,21 @@ except:
 class StreamSetT(object):
 
     # StreamSetT
-    def __init__(self):
-        self.FIXED_FRAME_STREAMS = None  # type: List[FixedFrameStream.FixedFrameStreamT]
-        self.VARIABLE_FRAME_STREAMS = None  # type: List[VariableFrameStream.VariableFrameStreamT]
-        self.CUSTOM_STREAMS = None  # type: List[CustomStream.CustomStreamT]
+    def __init__(
+        self,
+        FIXED_FRAME_STREAMS = None,
+        VARIABLE_FRAME_STREAMS = None,
+        CUSTOM_STREAMS = None,
+    ):
+        self.FIXED_FRAME_STREAMS = FIXED_FRAME_STREAMS  # type: Optional[List[FixedFrameStream.FixedFrameStreamT]]
+        self.VARIABLE_FRAME_STREAMS = VARIABLE_FRAME_STREAMS  # type: Optional[List[VariableFrameStream.VariableFrameStreamT]]
+        self.CUSTOM_STREAMS = CUSTOM_STREAMS  # type: Optional[List[CustomStream.CustomStreamT]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        streamSet = StreamSet()
-        streamSet.Init(buf, pos)
-        return cls.InitFromObj(streamSet)
+        tmpStreamSet = StreamSet()
+        tmpStreamSet.Init(buf, pos)
+        return cls.InitFromObj(tmpStreamSet)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -183,38 +206,38 @@ class StreamSetT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, streamSet):
+    def InitFromObj(cls, tmpStreamSet):
         x = StreamSetT()
-        x._UnPack(streamSet)
+        x._UnPack(tmpStreamSet)
         return x
 
     # StreamSetT
-    def _UnPack(self, streamSet):
-        if streamSet is None:
+    def _UnPack(self, StreamSet):
+        if StreamSet is None:
             return
-        if not streamSet.FIXED_FRAME_STREAMSIsNone():
+        if not StreamSet.FIXED_FRAME_STREAMSIsNone():
             self.FIXED_FRAME_STREAMS = []
-            for i in range(streamSet.FIXED_FRAME_STREAMSLength()):
-                if streamSet.FIXED_FRAME_STREAMS(i) is None:
+            for i in range(StreamSet.FIXED_FRAME_STREAMSLength()):
+                if StreamSet.FIXED_FRAME_STREAMS(i) is None:
                     self.FIXED_FRAME_STREAMS.append(None)
                 else:
-                    fixedFrameStream_ = FixedFrameStream.FixedFrameStreamT.InitFromObj(streamSet.FIXED_FRAME_STREAMS(i))
+                    fixedFrameStream_ = FixedFrameStream.FixedFrameStreamT.InitFromObj(StreamSet.FIXED_FRAME_STREAMS(i))
                     self.FIXED_FRAME_STREAMS.append(fixedFrameStream_)
-        if not streamSet.VARIABLE_FRAME_STREAMSIsNone():
+        if not StreamSet.VARIABLE_FRAME_STREAMSIsNone():
             self.VARIABLE_FRAME_STREAMS = []
-            for i in range(streamSet.VARIABLE_FRAME_STREAMSLength()):
-                if streamSet.VARIABLE_FRAME_STREAMS(i) is None:
+            for i in range(StreamSet.VARIABLE_FRAME_STREAMSLength()):
+                if StreamSet.VARIABLE_FRAME_STREAMS(i) is None:
                     self.VARIABLE_FRAME_STREAMS.append(None)
                 else:
-                    variableFrameStream_ = VariableFrameStream.VariableFrameStreamT.InitFromObj(streamSet.VARIABLE_FRAME_STREAMS(i))
+                    variableFrameStream_ = VariableFrameStream.VariableFrameStreamT.InitFromObj(StreamSet.VARIABLE_FRAME_STREAMS(i))
                     self.VARIABLE_FRAME_STREAMS.append(variableFrameStream_)
-        if not streamSet.CUSTOM_STREAMSIsNone():
+        if not StreamSet.CUSTOM_STREAMSIsNone():
             self.CUSTOM_STREAMS = []
-            for i in range(streamSet.CUSTOM_STREAMSLength()):
-                if streamSet.CUSTOM_STREAMS(i) is None:
+            for i in range(StreamSet.CUSTOM_STREAMSLength()):
+                if StreamSet.CUSTOM_STREAMS(i) is None:
                     self.CUSTOM_STREAMS.append(None)
                 else:
-                    customStream_ = CustomStream.CustomStreamT.InitFromObj(streamSet.CUSTOM_STREAMS(i))
+                    customStream_ = CustomStream.CustomStreamT.InitFromObj(StreamSet.CUSTOM_STREAMS(i))
                     self.CUSTOM_STREAMS.append(customStream_)
 
     # StreamSetT
@@ -250,5 +273,5 @@ class StreamSetT(object):
             StreamSetAddVARIABLE_FRAME_STREAMS(builder, VARIABLE_FRAME_STREAMS)
         if self.CUSTOM_STREAMS is not None:
             StreamSetAddCUSTOM_STREAMS(builder, CUSTOM_STREAMS)
-        streamSet = StreamSetEnd(builder)
-        return streamSet
+        StreamSet = StreamSetEnd(builder)
+        return StreamSet

@@ -62,8 +62,16 @@ func (rcv *ACR) POSITION_X() float64 {
 	return 0.0
 }
 
+func (rcv *ACR) PositionX() float64 {
+	return rcv.POSITION_X()
+}
+
 func (rcv *ACR) MutatePOSITION_X(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(4, n)
+}
+
+func (rcv *ACR) MutatePositionX(n float64) bool {
+	return rcv.MutatePOSITION_X(n)
 }
 
 func (rcv *ACR) POSITION_Y() float64 {
@@ -74,8 +82,16 @@ func (rcv *ACR) POSITION_Y() float64 {
 	return 0.0
 }
 
+func (rcv *ACR) PositionY() float64 {
+	return rcv.POSITION_Y()
+}
+
 func (rcv *ACR) MutatePOSITION_Y(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(6, n)
+}
+
+func (rcv *ACR) MutatePositionY(n float64) bool {
+	return rcv.MutatePOSITION_Y(n)
 }
 
 func (rcv *ACR) POSITION_Z() float64 {
@@ -86,8 +102,16 @@ func (rcv *ACR) POSITION_Z() float64 {
 	return 0.0
 }
 
+func (rcv *ACR) PositionZ() float64 {
+	return rcv.POSITION_Z()
+}
+
 func (rcv *ACR) MutatePOSITION_Z(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(8, n)
+}
+
+func (rcv *ACR) MutatePositionZ(n float64) bool {
+	return rcv.MutatePOSITION_Z(n)
 }
 
 func (rcv *ACR) VELOCITY_X() float64 {
@@ -98,8 +122,16 @@ func (rcv *ACR) VELOCITY_X() float64 {
 	return 0.0
 }
 
+func (rcv *ACR) VelocityX() float64 {
+	return rcv.VELOCITY_X()
+}
+
 func (rcv *ACR) MutateVELOCITY_X(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(10, n)
+}
+
+func (rcv *ACR) MutateVelocityX(n float64) bool {
+	return rcv.MutateVELOCITY_X(n)
 }
 
 func (rcv *ACR) VELOCITY_Y() float64 {
@@ -110,8 +142,16 @@ func (rcv *ACR) VELOCITY_Y() float64 {
 	return 0.0
 }
 
+func (rcv *ACR) VelocityY() float64 {
+	return rcv.VELOCITY_Y()
+}
+
 func (rcv *ACR) MutateVELOCITY_Y(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(12, n)
+}
+
+func (rcv *ACR) MutateVelocityY(n float64) bool {
+	return rcv.MutateVELOCITY_Y(n)
 }
 
 func (rcv *ACR) VELOCITY_Z() float64 {
@@ -122,8 +162,16 @@ func (rcv *ACR) VELOCITY_Z() float64 {
 	return 0.0
 }
 
+func (rcv *ACR) VelocityZ() float64 {
+	return rcv.VELOCITY_Z()
+}
+
 func (rcv *ACR) MutateVELOCITY_Z(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(14, n)
+}
+
+func (rcv *ACR) MutateVelocityZ(n float64) bool {
+	return rcv.MutateVELOCITY_Z(n)
 }
 
 func (rcv *ACR) ATTITUDE_X() float64 {
@@ -134,8 +182,16 @@ func (rcv *ACR) ATTITUDE_X() float64 {
 	return 0.0
 }
 
+func (rcv *ACR) AttitudeX() float64 {
+	return rcv.ATTITUDE_X()
+}
+
 func (rcv *ACR) MutateATTITUDE_X(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(16, n)
+}
+
+func (rcv *ACR) MutateAttitudeX(n float64) bool {
+	return rcv.MutateATTITUDE_X(n)
 }
 
 func (rcv *ACR) ATTITUDE_Y() float64 {
@@ -146,8 +202,16 @@ func (rcv *ACR) ATTITUDE_Y() float64 {
 	return 0.0
 }
 
+func (rcv *ACR) AttitudeY() float64 {
+	return rcv.ATTITUDE_Y()
+}
+
 func (rcv *ACR) MutateATTITUDE_Y(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(18, n)
+}
+
+func (rcv *ACR) MutateAttitudeY(n float64) bool {
+	return rcv.MutateATTITUDE_Y(n)
 }
 
 func (rcv *ACR) ATTITUDE_Z() float64 {
@@ -158,8 +222,16 @@ func (rcv *ACR) ATTITUDE_Z() float64 {
 	return 0.0
 }
 
+func (rcv *ACR) AttitudeZ() float64 {
+	return rcv.ATTITUDE_Z()
+}
+
 func (rcv *ACR) MutateATTITUDE_Z(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(20, n)
+}
+
+func (rcv *ACR) MutateAttitudeZ(n float64) bool {
+	return rcv.MutateATTITUDE_Z(n)
 }
 
 func (rcv *ACR) ATTITUDE_W() float64 {
@@ -170,8 +242,16 @@ func (rcv *ACR) ATTITUDE_W() float64 {
 	return 0.0
 }
 
+func (rcv *ACR) AttitudeW() float64 {
+	return rcv.ATTITUDE_W()
+}
+
 func (rcv *ACR) MutateATTITUDE_W(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(22, n)
+}
+
+func (rcv *ACR) MutateAttitudeW(n float64) bool {
+	return rcv.MutateATTITUDE_W(n)
 }
 
 func (rcv *ACR) OMEGA_X() float64 {
@@ -182,8 +262,16 @@ func (rcv *ACR) OMEGA_X() float64 {
 	return 0.0
 }
 
+func (rcv *ACR) OmegaX() float64 {
+	return rcv.OMEGA_X()
+}
+
 func (rcv *ACR) MutateOMEGA_X(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(24, n)
+}
+
+func (rcv *ACR) MutateOmegaX(n float64) bool {
+	return rcv.MutateOMEGA_X(n)
 }
 
 func (rcv *ACR) OMEGA_Y() float64 {
@@ -194,8 +282,16 @@ func (rcv *ACR) OMEGA_Y() float64 {
 	return 0.0
 }
 
+func (rcv *ACR) OmegaY() float64 {
+	return rcv.OMEGA_Y()
+}
+
 func (rcv *ACR) MutateOMEGA_Y(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(26, n)
+}
+
+func (rcv *ACR) MutateOmegaY(n float64) bool {
+	return rcv.MutateOMEGA_Y(n)
 }
 
 func (rcv *ACR) OMEGA_Z() float64 {
@@ -206,8 +302,16 @@ func (rcv *ACR) OMEGA_Z() float64 {
 	return 0.0
 }
 
+func (rcv *ACR) OmegaZ() float64 {
+	return rcv.OMEGA_Z()
+}
+
 func (rcv *ACR) MutateOMEGA_Z(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(28, n)
+}
+
+func (rcv *ACR) MutateOmegaZ(n float64) bool {
+	return rcv.MutateOMEGA_Z(n)
 }
 
 func (rcv *ACR) MASS() float64 {
@@ -218,8 +322,16 @@ func (rcv *ACR) MASS() float64 {
 	return 0.0
 }
 
+func (rcv *ACR) Mass() float64 {
+	return rcv.MASS()
+}
+
 func (rcv *ACR) MutateMASS(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(30, n)
+}
+
+func (rcv *ACR) MutateMass(n float64) bool {
+	return rcv.MutateMASS(n)
 }
 
 func (rcv *ACR) CG_X() float32 {
@@ -230,8 +342,16 @@ func (rcv *ACR) CG_X() float32 {
 	return 0.0
 }
 
+func (rcv *ACR) CgX() float32 {
+	return rcv.CG_X()
+}
+
 func (rcv *ACR) MutateCG_X(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(32, n)
+}
+
+func (rcv *ACR) MutateCgX(n float32) bool {
+	return rcv.MutateCG_X(n)
 }
 
 func (rcv *ACR) CG_Z() float32 {
@@ -242,8 +362,16 @@ func (rcv *ACR) CG_Z() float32 {
 	return 0.0
 }
 
+func (rcv *ACR) CgZ() float32 {
+	return rcv.CG_Z()
+}
+
 func (rcv *ACR) MutateCG_Z(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(34, n)
+}
+
+func (rcv *ACR) MutateCgZ(n float32) bool {
+	return rcv.MutateCG_Z(n)
 }
 
 func (rcv *ACR) AERO() []byte {
@@ -254,12 +382,20 @@ func (rcv *ACR) AERO() []byte {
 	return nil
 }
 
+func (rcv *ACR) Aero() []byte {
+	return rcv.AERO()
+}
+
 func (rcv *ACR) CONTROLS() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *ACR) Controls() []byte {
+	return rcv.CONTROLS()
 }
 
 func (rcv *ACR) ENGINE() []byte {
@@ -270,6 +406,10 @@ func (rcv *ACR) ENGINE() []byte {
 	return nil
 }
 
+func (rcv *ACR) Engine() []byte {
+	return rcv.ENGINE()
+}
+
 func (rcv *ACR) GEAR_STATE() byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(42))
 	if o != 0 {
@@ -278,8 +418,16 @@ func (rcv *ACR) GEAR_STATE() byte {
 	return 0
 }
 
+func (rcv *ACR) GearState() byte {
+	return rcv.GEAR_STATE()
+}
+
 func (rcv *ACR) MutateGEAR_STATE(n byte) bool {
 	return rcv._tab.MutateByteSlot(42, n)
+}
+
+func (rcv *ACR) MutateGearState(n byte) bool {
+	return rcv.MutateGEAR_STATE(n)
 }
 
 func (rcv *ACR) GEAR_POSITION() byte {
@@ -290,8 +438,16 @@ func (rcv *ACR) GEAR_POSITION() byte {
 	return 0
 }
 
+func (rcv *ACR) GearPosition() byte {
+	return rcv.GEAR_POSITION()
+}
+
 func (rcv *ACR) MutateGEAR_POSITION(n byte) bool {
 	return rcv._tab.MutateByteSlot(44, n)
+}
+
+func (rcv *ACR) MutateGearPosition(n byte) bool {
+	return rcv.MutateGEAR_POSITION(n)
 }
 
 func (rcv *ACR) FLAP_POSITION() byte {
@@ -302,8 +458,16 @@ func (rcv *ACR) FLAP_POSITION() byte {
 	return 0
 }
 
+func (rcv *ACR) FlapPosition() byte {
+	return rcv.FLAP_POSITION()
+}
+
 func (rcv *ACR) MutateFLAP_POSITION(n byte) bool {
 	return rcv._tab.MutateByteSlot(46, n)
+}
+
+func (rcv *ACR) MutateFlapPosition(n byte) bool {
+	return rcv.MutateFLAP_POSITION(n)
 }
 
 func (rcv *ACR) SPEEDBRAKE_POS() byte {
@@ -314,8 +478,16 @@ func (rcv *ACR) SPEEDBRAKE_POS() byte {
 	return 0
 }
 
+func (rcv *ACR) SpeedbrakePos() byte {
+	return rcv.SPEEDBRAKE_POS()
+}
+
 func (rcv *ACR) MutateSPEEDBRAKE_POS(n byte) bool {
 	return rcv._tab.MutateByteSlot(48, n)
+}
+
+func (rcv *ACR) MutateSpeedbrakePos(n byte) bool {
+	return rcv.MutateSPEEDBRAKE_POS(n)
 }
 
 func (rcv *ACR) FLIGHT_PHASE() byte {
@@ -326,8 +498,16 @@ func (rcv *ACR) FLIGHT_PHASE() byte {
 	return 0
 }
 
+func (rcv *ACR) FlightPhase() byte {
+	return rcv.FLIGHT_PHASE()
+}
+
 func (rcv *ACR) MutateFLIGHT_PHASE(n byte) bool {
 	return rcv._tab.MutateByteSlot(50, n)
+}
+
+func (rcv *ACR) MutateFlightPhase(n byte) bool {
+	return rcv.MutateFLIGHT_PHASE(n)
 }
 
 func (rcv *ACR) AUTOPILOT_MODE() byte {
@@ -338,8 +518,16 @@ func (rcv *ACR) AUTOPILOT_MODE() byte {
 	return 0
 }
 
+func (rcv *ACR) AutopilotMode() byte {
+	return rcv.AUTOPILOT_MODE()
+}
+
 func (rcv *ACR) MutateAUTOPILOT_MODE(n byte) bool {
 	return rcv._tab.MutateByteSlot(52, n)
+}
+
+func (rcv *ACR) MutateAutopilotMode(n byte) bool {
+	return rcv.MutateAUTOPILOT_MODE(n)
 }
 
 func (rcv *ACR) WEIGHT_ON_WHEELS() byte {
@@ -350,8 +538,16 @@ func (rcv *ACR) WEIGHT_ON_WHEELS() byte {
 	return 0
 }
 
+func (rcv *ACR) WeightOnWheels() byte {
+	return rcv.WEIGHT_ON_WHEELS()
+}
+
 func (rcv *ACR) MutateWEIGHT_ON_WHEELS(n byte) bool {
 	return rcv._tab.MutateByteSlot(54, n)
+}
+
+func (rcv *ACR) MutateWeightOnWheels(n byte) bool {
+	return rcv.MutateWEIGHT_ON_WHEELS(n)
 }
 
 func (rcv *ACR) RESERVED() byte {
@@ -362,8 +558,16 @@ func (rcv *ACR) RESERVED() byte {
 	return 0
 }
 
+func (rcv *ACR) Reserved() byte {
+	return rcv.RESERVED()
+}
+
 func (rcv *ACR) MutateRESERVED(n byte) bool {
 	return rcv._tab.MutateByteSlot(56, n)
+}
+
+func (rcv *ACR) MutateReserved(n byte) bool {
+	return rcv.MutateRESERVED(n)
 }
 
 func ACRStart(builder *flatbuffers.Builder) {
@@ -372,83 +576,164 @@ func ACRStart(builder *flatbuffers.Builder) {
 func ACRAddPOSITION_X(builder *flatbuffers.Builder, POSITION_X float64) {
 	builder.PrependFloat64Slot(0, POSITION_X, 0.0)
 }
+func ACRAddPositionX(builder *flatbuffers.Builder, POSITION_X float64) {
+	ACRAddPOSITION_X(builder, POSITION_X)
+}
 func ACRAddPOSITION_Y(builder *flatbuffers.Builder, POSITION_Y float64) {
 	builder.PrependFloat64Slot(1, POSITION_Y, 0.0)
+}
+func ACRAddPositionY(builder *flatbuffers.Builder, POSITION_Y float64) {
+	ACRAddPOSITION_Y(builder, POSITION_Y)
 }
 func ACRAddPOSITION_Z(builder *flatbuffers.Builder, POSITION_Z float64) {
 	builder.PrependFloat64Slot(2, POSITION_Z, 0.0)
 }
+func ACRAddPositionZ(builder *flatbuffers.Builder, POSITION_Z float64) {
+	ACRAddPOSITION_Z(builder, POSITION_Z)
+}
 func ACRAddVELOCITY_X(builder *flatbuffers.Builder, VELOCITY_X float64) {
 	builder.PrependFloat64Slot(3, VELOCITY_X, 0.0)
+}
+func ACRAddVelocityX(builder *flatbuffers.Builder, VELOCITY_X float64) {
+	ACRAddVELOCITY_X(builder, VELOCITY_X)
 }
 func ACRAddVELOCITY_Y(builder *flatbuffers.Builder, VELOCITY_Y float64) {
 	builder.PrependFloat64Slot(4, VELOCITY_Y, 0.0)
 }
+func ACRAddVelocityY(builder *flatbuffers.Builder, VELOCITY_Y float64) {
+	ACRAddVELOCITY_Y(builder, VELOCITY_Y)
+}
 func ACRAddVELOCITY_Z(builder *flatbuffers.Builder, VELOCITY_Z float64) {
 	builder.PrependFloat64Slot(5, VELOCITY_Z, 0.0)
+}
+func ACRAddVelocityZ(builder *flatbuffers.Builder, VELOCITY_Z float64) {
+	ACRAddVELOCITY_Z(builder, VELOCITY_Z)
 }
 func ACRAddATTITUDE_X(builder *flatbuffers.Builder, ATTITUDE_X float64) {
 	builder.PrependFloat64Slot(6, ATTITUDE_X, 0.0)
 }
+func ACRAddAttitudeX(builder *flatbuffers.Builder, ATTITUDE_X float64) {
+	ACRAddATTITUDE_X(builder, ATTITUDE_X)
+}
 func ACRAddATTITUDE_Y(builder *flatbuffers.Builder, ATTITUDE_Y float64) {
 	builder.PrependFloat64Slot(7, ATTITUDE_Y, 0.0)
+}
+func ACRAddAttitudeY(builder *flatbuffers.Builder, ATTITUDE_Y float64) {
+	ACRAddATTITUDE_Y(builder, ATTITUDE_Y)
 }
 func ACRAddATTITUDE_Z(builder *flatbuffers.Builder, ATTITUDE_Z float64) {
 	builder.PrependFloat64Slot(8, ATTITUDE_Z, 0.0)
 }
+func ACRAddAttitudeZ(builder *flatbuffers.Builder, ATTITUDE_Z float64) {
+	ACRAddATTITUDE_Z(builder, ATTITUDE_Z)
+}
 func ACRAddATTITUDE_W(builder *flatbuffers.Builder, ATTITUDE_W float64) {
 	builder.PrependFloat64Slot(9, ATTITUDE_W, 0.0)
+}
+func ACRAddAttitudeW(builder *flatbuffers.Builder, ATTITUDE_W float64) {
+	ACRAddATTITUDE_W(builder, ATTITUDE_W)
 }
 func ACRAddOMEGA_X(builder *flatbuffers.Builder, OMEGA_X float64) {
 	builder.PrependFloat64Slot(10, OMEGA_X, 0.0)
 }
+func ACRAddOmegaX(builder *flatbuffers.Builder, OMEGA_X float64) {
+	ACRAddOMEGA_X(builder, OMEGA_X)
+}
 func ACRAddOMEGA_Y(builder *flatbuffers.Builder, OMEGA_Y float64) {
 	builder.PrependFloat64Slot(11, OMEGA_Y, 0.0)
+}
+func ACRAddOmegaY(builder *flatbuffers.Builder, OMEGA_Y float64) {
+	ACRAddOMEGA_Y(builder, OMEGA_Y)
 }
 func ACRAddOMEGA_Z(builder *flatbuffers.Builder, OMEGA_Z float64) {
 	builder.PrependFloat64Slot(12, OMEGA_Z, 0.0)
 }
+func ACRAddOmegaZ(builder *flatbuffers.Builder, OMEGA_Z float64) {
+	ACRAddOMEGA_Z(builder, OMEGA_Z)
+}
 func ACRAddMASS(builder *flatbuffers.Builder, MASS float64) {
 	builder.PrependFloat64Slot(13, MASS, 0.0)
+}
+func ACRAddMass(builder *flatbuffers.Builder, MASS float64) {
+	ACRAddMASS(builder, MASS)
 }
 func ACRAddCG_X(builder *flatbuffers.Builder, CG_X float32) {
 	builder.PrependFloat32Slot(14, CG_X, 0.0)
 }
+func ACRAddCgX(builder *flatbuffers.Builder, CG_X float32) {
+	ACRAddCG_X(builder, CG_X)
+}
 func ACRAddCG_Z(builder *flatbuffers.Builder, CG_Z float32) {
 	builder.PrependFloat32Slot(15, CG_Z, 0.0)
+}
+func ACRAddCgZ(builder *flatbuffers.Builder, CG_Z float32) {
+	ACRAddCG_Z(builder, CG_Z)
 }
 func ACRAddAERO(builder *flatbuffers.Builder, AERO flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(16, flatbuffers.UOffsetT(AERO), 0)
 }
+func ACRAddAero(builder *flatbuffers.Builder, AERO flatbuffers.UOffsetT) {
+	ACRAddAERO(builder, AERO)
+}
 func ACRAddCONTROLS(builder *flatbuffers.Builder, CONTROLS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(17, flatbuffers.UOffsetT(CONTROLS), 0)
+}
+func ACRAddControls(builder *flatbuffers.Builder, CONTROLS flatbuffers.UOffsetT) {
+	ACRAddCONTROLS(builder, CONTROLS)
 }
 func ACRAddENGINE(builder *flatbuffers.Builder, ENGINE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(18, flatbuffers.UOffsetT(ENGINE), 0)
 }
+func ACRAddEngine(builder *flatbuffers.Builder, ENGINE flatbuffers.UOffsetT) {
+	ACRAddENGINE(builder, ENGINE)
+}
 func ACRAddGEAR_STATE(builder *flatbuffers.Builder, GEAR_STATE byte) {
 	builder.PrependByteSlot(19, GEAR_STATE, 0)
+}
+func ACRAddGearState(builder *flatbuffers.Builder, GEAR_STATE byte) {
+	ACRAddGEAR_STATE(builder, GEAR_STATE)
 }
 func ACRAddGEAR_POSITION(builder *flatbuffers.Builder, GEAR_POSITION byte) {
 	builder.PrependByteSlot(20, GEAR_POSITION, 0)
 }
+func ACRAddGearPosition(builder *flatbuffers.Builder, GEAR_POSITION byte) {
+	ACRAddGEAR_POSITION(builder, GEAR_POSITION)
+}
 func ACRAddFLAP_POSITION(builder *flatbuffers.Builder, FLAP_POSITION byte) {
 	builder.PrependByteSlot(21, FLAP_POSITION, 0)
+}
+func ACRAddFlapPosition(builder *flatbuffers.Builder, FLAP_POSITION byte) {
+	ACRAddFLAP_POSITION(builder, FLAP_POSITION)
 }
 func ACRAddSPEEDBRAKE_POS(builder *flatbuffers.Builder, SPEEDBRAKE_POS byte) {
 	builder.PrependByteSlot(22, SPEEDBRAKE_POS, 0)
 }
+func ACRAddSpeedbrakePos(builder *flatbuffers.Builder, SPEEDBRAKE_POS byte) {
+	ACRAddSPEEDBRAKE_POS(builder, SPEEDBRAKE_POS)
+}
 func ACRAddFLIGHT_PHASE(builder *flatbuffers.Builder, FLIGHT_PHASE byte) {
 	builder.PrependByteSlot(23, FLIGHT_PHASE, 0)
+}
+func ACRAddFlightPhase(builder *flatbuffers.Builder, FLIGHT_PHASE byte) {
+	ACRAddFLIGHT_PHASE(builder, FLIGHT_PHASE)
 }
 func ACRAddAUTOPILOT_MODE(builder *flatbuffers.Builder, AUTOPILOT_MODE byte) {
 	builder.PrependByteSlot(24, AUTOPILOT_MODE, 0)
 }
+func ACRAddAutopilotMode(builder *flatbuffers.Builder, AUTOPILOT_MODE byte) {
+	ACRAddAUTOPILOT_MODE(builder, AUTOPILOT_MODE)
+}
 func ACRAddWEIGHT_ON_WHEELS(builder *flatbuffers.Builder, WEIGHT_ON_WHEELS byte) {
 	builder.PrependByteSlot(25, WEIGHT_ON_WHEELS, 0)
 }
+func ACRAddWeightOnWheels(builder *flatbuffers.Builder, WEIGHT_ON_WHEELS byte) {
+	ACRAddWEIGHT_ON_WHEELS(builder, WEIGHT_ON_WHEELS)
+}
 func ACRAddRESERVED(builder *flatbuffers.Builder, RESERVED byte) {
 	builder.PrependByteSlot(26, RESERVED, 0)
+}
+func ACRAddReserved(builder *flatbuffers.Builder, RESERVED byte) {
+	ACRAddRESERVED(builder, RESERVED)
 }
 func ACREnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

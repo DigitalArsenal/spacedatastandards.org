@@ -2,4 +2,140 @@
 
 # namespace: 
 
-# NOTE AggregateMember.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Aggregate member definition
+class AggregateMember(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = AggregateMember()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsAggregateMember(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def AggregateMemberBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x58\x54\x43", size_prefixed=size_prefixed)
+
+    # AggregateMember
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Member name
+    # AggregateMember
+    def NAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Reference to parameter type
+    # AggregateMember
+    def TYPE_REF(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Short description
+    # AggregateMember
+    def SHORT_DESCRIPTION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+def AggregateMemberStart(builder):
+    builder.StartObject(3)
+
+def Start(builder):
+    AggregateMemberStart(builder)
+
+def AggregateMemberAddNAME(builder, NAME):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(NAME), 0)
+
+def AddNAME(builder, NAME):
+    AggregateMemberAddNAME(builder, NAME)
+
+def AggregateMemberAddTYPE_REF(builder, TYPE_REF):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(TYPE_REF), 0)
+
+def AddTYPE_REF(builder, TYPE_REF):
+    AggregateMemberAddTYPE_REF(builder, TYPE_REF)
+
+def AggregateMemberAddSHORT_DESCRIPTION(builder, SHORT_DESCRIPTION):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(SHORT_DESCRIPTION), 0)
+
+def AddSHORT_DESCRIPTION(builder, SHORT_DESCRIPTION):
+    AggregateMemberAddSHORT_DESCRIPTION(builder, SHORT_DESCRIPTION)
+
+def AggregateMemberEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return AggregateMemberEnd(builder)
+
+
+class AggregateMemberT(object):
+
+    # AggregateMemberT
+    def __init__(
+        self,
+        NAME = None,
+        TYPE_REF = None,
+        SHORT_DESCRIPTION = None,
+    ):
+        self.NAME = NAME  # type: Optional[str]
+        self.TYPE_REF = TYPE_REF  # type: Optional[str]
+        self.SHORT_DESCRIPTION = SHORT_DESCRIPTION  # type: Optional[str]
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpAggregateMember = AggregateMember()
+        tmpAggregateMember.Init(buf, pos)
+        return cls.InitFromObj(tmpAggregateMember)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpAggregateMember):
+        x = AggregateMemberT()
+        x._UnPack(tmpAggregateMember)
+        return x
+
+    # AggregateMemberT
+    def _UnPack(self, AggregateMember):
+        if AggregateMember is None:
+            return
+        self.NAME = AggregateMember.NAME()
+        self.TYPE_REF = AggregateMember.TYPE_REF()
+        self.SHORT_DESCRIPTION = AggregateMember.SHORT_DESCRIPTION()
+
+    # AggregateMemberT
+    def Pack(self, builder):
+        if self.NAME is not None:
+            NAME = builder.CreateString(self.NAME)
+        if self.TYPE_REF is not None:
+            TYPE_REF = builder.CreateString(self.TYPE_REF)
+        if self.SHORT_DESCRIPTION is not None:
+            SHORT_DESCRIPTION = builder.CreateString(self.SHORT_DESCRIPTION)
+        AggregateMemberStart(builder)
+        if self.NAME is not None:
+            AggregateMemberAddNAME(builder, NAME)
+        if self.TYPE_REF is not None:
+            AggregateMemberAddTYPE_REF(builder, TYPE_REF)
+        if self.SHORT_DESCRIPTION is not None:
+            AggregateMemberAddSHORT_DESCRIPTION(builder, SHORT_DESCRIPTION)
+        AggregateMember = AggregateMemberEnd(builder)
+        return AggregateMember

@@ -2,4 +2,13 @@
 
 # namespace: 
 
-# NOTE busSize.py does not declare any structs or enums
+class busSize(object):
+    FEMTO = 0
+    PICO = 1
+    NANO = 2
+    MICRO = 3
+    MINI = 4
+    SMALL = 5
+    MEDIUM = 6
+    LARGE = 7
+    HEAVY = 8

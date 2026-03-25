@@ -175,6 +175,16 @@ def SDLStartIVVector(builder, numElems):
 def StartIVVector(builder, numElems):
     return SDLStartIVVector(builder, numElems)
 
+def SDLCreateIVVector(builder, data):
+    data = list(data)
+    builder.StartVector(1, len(data), 1)
+    for item in reversed(data):
+        builder.PrependUint8(item)
+    return builder.EndVector()
+
+def CreateIVVector(builder, data):
+    SDLCreateIVVector(builder, data)
+
 def SDLAddMAC_LENGTH(builder, MAC_LENGTH):
     builder.PrependUint8Slot(3, MAC_LENGTH, 0)
 
@@ -192,6 +202,16 @@ def SDLStartMACVector(builder, numElems):
 
 def StartMACVector(builder, numElems):
     return SDLStartMACVector(builder, numElems)
+
+def SDLCreateMACVector(builder, data):
+    data = list(data)
+    builder.StartVector(1, len(data), 1)
+    for item in reversed(data):
+        builder.PrependUint8(item)
+    return builder.EndVector()
+
+def CreateMACVector(builder, data):
+    SDLCreateMACVector(builder, data)
 
 def SDLAddPAD_LENGTH(builder, PAD_LENGTH):
     builder.PrependUint8Slot(5, PAD_LENGTH, 0)
@@ -211,6 +231,16 @@ def SDLStartPAYLOADVector(builder, numElems):
 def StartPAYLOADVector(builder, numElems):
     return SDLStartPAYLOADVector(builder, numElems)
 
+def SDLCreatePAYLOADVector(builder, data):
+    data = list(data)
+    builder.StartVector(1, len(data), 1)
+    for item in reversed(data):
+        builder.PrependUint8(item)
+    return builder.EndVector()
+
+def CreatePAYLOADVector(builder, data):
+    SDLCreatePAYLOADVector(builder, data)
+
 def SDLEnd(builder):
     return builder.EndObject()
 
@@ -225,20 +255,29 @@ except:
 class SDLT(object):
 
     # SDLT
-    def __init__(self):
-        self.SPI = 0  # type: int
-        self.IV_LENGTH = 0  # type: int
-        self.IV = None  # type: List[int]
-        self.MAC_LENGTH = 0  # type: int
-        self.MAC = None  # type: List[int]
-        self.PAD_LENGTH = 0  # type: int
-        self.PAYLOAD = None  # type: List[int]
+    def __init__(
+        self,
+        SPI = 0,
+        IV_LENGTH = 0,
+        IV = None,
+        MAC_LENGTH = 0,
+        MAC = None,
+        PAD_LENGTH = 0,
+        PAYLOAD = None,
+    ):
+        self.SPI = SPI  # type: int
+        self.IV_LENGTH = IV_LENGTH  # type: int
+        self.IV = IV  # type: Optional[List[int]]
+        self.MAC_LENGTH = MAC_LENGTH  # type: int
+        self.MAC = MAC  # type: Optional[List[int]]
+        self.PAD_LENGTH = PAD_LENGTH  # type: int
+        self.PAYLOAD = PAYLOAD  # type: Optional[List[int]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        SDL = SDL()
-        SDL.Init(buf, pos)
-        return cls.InitFromObj(SDL)
+        tmpSdl = SDL()
+        tmpSdl.Init(buf, pos)
+        return cls.InitFromObj(tmpSdl)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -246,9 +285,9 @@ class SDLT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, SDL):
+    def InitFromObj(cls, tmpSdl):
         x = SDLT()
-        x._UnPack(SDL)
+        x._UnPack(tmpSdl)
         return x
 
     # SDLT

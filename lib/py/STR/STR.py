@@ -591,52 +591,93 @@ def End(builder):
 class STRT(object):
 
     # STRT
-    def __init__(self):
-        self.ID = None  # type: str
-        self.CS_ID = 0  # type: int
-        self.GNC_CAT_ID = 0  # type: int
-        self.GAIADR3_CAT_ID = 0  # type: int
-        self.HIP_CAT_ID = 0  # type: int
-        self.CAT_VERSION = None  # type: str
-        self.ASTROMETRY_ORIGIN = None  # type: str
-        self.STAR_EPOCH = 0.0  # type: float
-        self.RA = 0.0  # type: float
-        self.RA_UNC = 0.0  # type: float
-        self.DEC = 0.0  # type: float
-        self.DEC_UNC = 0.0  # type: float
-        self.POS_UNC_FLAG = False  # type: bool
-        self.PARALLAX = 0.0  # type: float
-        self.PARALLAX_UNC = 0.0  # type: float
-        self.PMRA = 0.0  # type: float
-        self.PMRA_UNC = 0.0  # type: float
-        self.PMDEC = 0.0  # type: float
-        self.PMDEC_UNC = 0.0  # type: float
-        self.PM_UNC_FLAG = False  # type: bool
-        self.GMAG = 0.0  # type: float
-        self.GMAG_UNC = 0.0  # type: float
-        self.BPMAG = 0.0  # type: float
-        self.BPMAG_UNC = 0.0  # type: float
-        self.RPMAG = 0.0  # type: float
-        self.RPMAG_UNC = 0.0  # type: float
-        self.JMAG = 0.0  # type: float
-        self.JMAG_UNC = 0.0  # type: float
-        self.KMAG = 0.0  # type: float
-        self.KMAG_UNC = 0.0  # type: float
-        self.HMAG = 0.0  # type: float
-        self.HMAG_UNC = 0.0  # type: float
-        self.VAR_FLAG = False  # type: bool
-        self.MULT_FLAG = False  # type: bool
-        self.NEIGHBOR_ID = 0  # type: int
-        self.NEIGHBOR_FLAG = False  # type: bool
-        self.NEIGHBOR_DISTANCE = 0.0  # type: float
-        self.SHIFT_FLAG = False  # type: bool
-        self.SHIFT = 0.0  # type: float
+    def __init__(
+        self,
+        ID = None,
+        CS_ID = 0,
+        GNC_CAT_ID = 0,
+        GAIADR3_CAT_ID = 0,
+        HIP_CAT_ID = 0,
+        CAT_VERSION = None,
+        ASTROMETRY_ORIGIN = None,
+        STAR_EPOCH = 0.0,
+        RA = 0.0,
+        RA_UNC = 0.0,
+        DEC = 0.0,
+        DEC_UNC = 0.0,
+        POS_UNC_FLAG = False,
+        PARALLAX = 0.0,
+        PARALLAX_UNC = 0.0,
+        PMRA = 0.0,
+        PMRA_UNC = 0.0,
+        PMDEC = 0.0,
+        PMDEC_UNC = 0.0,
+        PM_UNC_FLAG = False,
+        GMAG = 0.0,
+        GMAG_UNC = 0.0,
+        BPMAG = 0.0,
+        BPMAG_UNC = 0.0,
+        RPMAG = 0.0,
+        RPMAG_UNC = 0.0,
+        JMAG = 0.0,
+        JMAG_UNC = 0.0,
+        KMAG = 0.0,
+        KMAG_UNC = 0.0,
+        HMAG = 0.0,
+        HMAG_UNC = 0.0,
+        VAR_FLAG = False,
+        MULT_FLAG = False,
+        NEIGHBOR_ID = 0,
+        NEIGHBOR_FLAG = False,
+        NEIGHBOR_DISTANCE = 0.0,
+        SHIFT_FLAG = False,
+        SHIFT = 0.0,
+    ):
+        self.ID = ID  # type: Optional[str]
+        self.CS_ID = CS_ID  # type: int
+        self.GNC_CAT_ID = GNC_CAT_ID  # type: int
+        self.GAIADR3_CAT_ID = GAIADR3_CAT_ID  # type: int
+        self.HIP_CAT_ID = HIP_CAT_ID  # type: int
+        self.CAT_VERSION = CAT_VERSION  # type: Optional[str]
+        self.ASTROMETRY_ORIGIN = ASTROMETRY_ORIGIN  # type: Optional[str]
+        self.STAR_EPOCH = STAR_EPOCH  # type: float
+        self.RA = RA  # type: float
+        self.RA_UNC = RA_UNC  # type: float
+        self.DEC = DEC  # type: float
+        self.DEC_UNC = DEC_UNC  # type: float
+        self.POS_UNC_FLAG = POS_UNC_FLAG  # type: bool
+        self.PARALLAX = PARALLAX  # type: float
+        self.PARALLAX_UNC = PARALLAX_UNC  # type: float
+        self.PMRA = PMRA  # type: float
+        self.PMRA_UNC = PMRA_UNC  # type: float
+        self.PMDEC = PMDEC  # type: float
+        self.PMDEC_UNC = PMDEC_UNC  # type: float
+        self.PM_UNC_FLAG = PM_UNC_FLAG  # type: bool
+        self.GMAG = GMAG  # type: float
+        self.GMAG_UNC = GMAG_UNC  # type: float
+        self.BPMAG = BPMAG  # type: float
+        self.BPMAG_UNC = BPMAG_UNC  # type: float
+        self.RPMAG = RPMAG  # type: float
+        self.RPMAG_UNC = RPMAG_UNC  # type: float
+        self.JMAG = JMAG  # type: float
+        self.JMAG_UNC = JMAG_UNC  # type: float
+        self.KMAG = KMAG  # type: float
+        self.KMAG_UNC = KMAG_UNC  # type: float
+        self.HMAG = HMAG  # type: float
+        self.HMAG_UNC = HMAG_UNC  # type: float
+        self.VAR_FLAG = VAR_FLAG  # type: bool
+        self.MULT_FLAG = MULT_FLAG  # type: bool
+        self.NEIGHBOR_ID = NEIGHBOR_ID  # type: int
+        self.NEIGHBOR_FLAG = NEIGHBOR_FLAG  # type: bool
+        self.NEIGHBOR_DISTANCE = NEIGHBOR_DISTANCE  # type: float
+        self.SHIFT_FLAG = SHIFT_FLAG  # type: bool
+        self.SHIFT = SHIFT  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        STR = STR()
-        STR.Init(buf, pos)
-        return cls.InitFromObj(STR)
+        tmpStr = STR()
+        tmpStr.Init(buf, pos)
+        return cls.InitFromObj(tmpStr)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -644,9 +685,9 @@ class STRT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, STR):
+    def InitFromObj(cls, tmpStr):
         x = STRT()
-        x._UnPack(STR)
+        x._UnPack(tmpStr)
         return x
 
     # STRT

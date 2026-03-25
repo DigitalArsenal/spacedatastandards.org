@@ -63,6 +63,10 @@ func (rcv *RDO) ID() []byte {
 	return nil
 }
 
+func (rcv *RDO) Id() []byte {
+	return rcv.ID()
+}
+
 /// Unique identifier
 /// Observation time (ISO 8601)
 func (rcv *RDO) OB_TIME() []byte {
@@ -71,6 +75,10 @@ func (rcv *RDO) OB_TIME() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *RDO) ObTime() []byte {
+	return rcv.OB_TIME()
 }
 
 /// Observation time (ISO 8601)
@@ -83,6 +91,10 @@ func (rcv *RDO) ID_SENSOR() []byte {
 	return nil
 }
 
+func (rcv *RDO) IdSensor() []byte {
+	return rcv.ID_SENSOR()
+}
+
 /// Sensor identifier
 /// Original sensor identifier
 func (rcv *RDO) ORIG_SENSOR_ID() []byte {
@@ -91,6 +103,10 @@ func (rcv *RDO) ORIG_SENSOR_ID() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *RDO) OrigSensorId() []byte {
+	return rcv.ORIG_SENSOR_ID()
 }
 
 /// Original sensor identifier
@@ -103,9 +119,17 @@ func (rcv *RDO) SAT_NO() uint32 {
 	return 0
 }
 
+func (rcv *RDO) SatNo() uint32 {
+	return rcv.SAT_NO()
+}
+
 /// Satellite catalog number
 func (rcv *RDO) MutateSAT_NO(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(12, n)
+}
+
+func (rcv *RDO) MutateSatNo(n uint32) bool {
+	return rcv.MutateSAT_NO(n)
 }
 
 /// International designator
@@ -115,6 +139,10 @@ func (rcv *RDO) ORIG_OBJECT_ID() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *RDO) OrigObjectId() []byte {
+	return rcv.ORIG_OBJECT_ID()
 }
 
 /// International designator
@@ -127,6 +155,10 @@ func (rcv *RDO) ON_ORBIT() []byte {
 	return nil
 }
 
+func (rcv *RDO) OnOrbit() []byte {
+	return rcv.ON_ORBIT()
+}
+
 /// On-orbit reference
 /// True if uncorrelated target
 func (rcv *RDO) UCT() bool {
@@ -137,9 +169,17 @@ func (rcv *RDO) UCT() bool {
 	return false
 }
 
+func (rcv *RDO) Uct() bool {
+	return rcv.UCT()
+}
+
 /// True if uncorrelated target
 func (rcv *RDO) MutateUCT(n bool) bool {
 	return rcv._tab.MutateBoolSlot(18, n)
+}
+
+func (rcv *RDO) MutateUct(n bool) bool {
+	return rcv.MutateUCT(n)
 }
 
 /// Observation type
@@ -151,9 +191,17 @@ func (rcv *RDO) OBS_TYPE() radarObsType {
 	return 0
 }
 
+func (rcv *RDO) ObsType() radarObsType {
+	return rcv.OBS_TYPE()
+}
+
 /// Observation type
 func (rcv *RDO) MutateOBS_TYPE(n radarObsType) bool {
 	return rcv._tab.MutateInt8Slot(20, int8(n))
+}
+
+func (rcv *RDO) MutateObsType(n radarObsType) bool {
+	return rcv.MutateOBS_TYPE(n)
 }
 
 /// Task identifier
@@ -163,6 +211,10 @@ func (rcv *RDO) TASK_ID() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *RDO) TaskId() []byte {
+	return rcv.TASK_ID()
 }
 
 /// Task identifier
@@ -175,6 +227,10 @@ func (rcv *RDO) TRANSACTION_ID() []byte {
 	return nil
 }
 
+func (rcv *RDO) TransactionId() []byte {
+	return rcv.TRANSACTION_ID()
+}
+
 /// Transaction identifier
 /// Track identifier
 func (rcv *RDO) TRACK_ID() []byte {
@@ -183,6 +239,10 @@ func (rcv *RDO) TRACK_ID() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *RDO) TrackId() []byte {
+	return rcv.TRACK_ID()
 }
 
 /// Track identifier
@@ -195,6 +255,10 @@ func (rcv *RDO) OB_POSITION() []byte {
 	return nil
 }
 
+func (rcv *RDO) ObPosition() []byte {
+	return rcv.OB_POSITION()
+}
+
 /// Observation position identifier
 /// Sensor reference frame
 func (rcv *RDO) SEN_REFERENCE_FRAME() []byte {
@@ -203,6 +267,10 @@ func (rcv *RDO) SEN_REFERENCE_FRAME() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *RDO) SenReferenceFrame() []byte {
+	return rcv.SEN_REFERENCE_FRAME()
 }
 
 /// Sensor reference frame
@@ -215,9 +283,17 @@ func (rcv *RDO) AZIMUTH() float64 {
 	return 0.0
 }
 
+func (rcv *RDO) Azimuth() float64 {
+	return rcv.AZIMUTH()
+}
+
 /// Azimuth angle (degrees)
 func (rcv *RDO) MutateAZIMUTH(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(32, n)
+}
+
+func (rcv *RDO) MutateAzimuth(n float64) bool {
+	return rcv.MutateAZIMUTH(n)
 }
 
 /// Azimuth uncertainty (degrees, 1-sigma)
@@ -229,9 +305,17 @@ func (rcv *RDO) AZIMUTH_UNC() float64 {
 	return 0.0
 }
 
+func (rcv *RDO) AzimuthUnc() float64 {
+	return rcv.AZIMUTH_UNC()
+}
+
 /// Azimuth uncertainty (degrees, 1-sigma)
 func (rcv *RDO) MutateAZIMUTH_UNC(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(34, n)
+}
+
+func (rcv *RDO) MutateAzimuthUnc(n float64) bool {
+	return rcv.MutateAZIMUTH_UNC(n)
 }
 
 /// Azimuth bias (degrees)
@@ -243,9 +327,17 @@ func (rcv *RDO) AZIMUTH_BIAS() float64 {
 	return 0.0
 }
 
+func (rcv *RDO) AzimuthBias() float64 {
+	return rcv.AZIMUTH_BIAS()
+}
+
 /// Azimuth bias (degrees)
 func (rcv *RDO) MutateAZIMUTH_BIAS(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(36, n)
+}
+
+func (rcv *RDO) MutateAzimuthBias(n float64) bool {
+	return rcv.MutateAZIMUTH_BIAS(n)
 }
 
 /// Azimuth rate (degrees/s)
@@ -257,9 +349,17 @@ func (rcv *RDO) AZIMUTH_RATE() float64 {
 	return 0.0
 }
 
+func (rcv *RDO) AzimuthRate() float64 {
+	return rcv.AZIMUTH_RATE()
+}
+
 /// Azimuth rate (degrees/s)
 func (rcv *RDO) MutateAZIMUTH_RATE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(38, n)
+}
+
+func (rcv *RDO) MutateAzimuthRate(n float64) bool {
+	return rcv.MutateAZIMUTH_RATE(n)
 }
 
 /// Elevation angle (degrees)
@@ -271,9 +371,17 @@ func (rcv *RDO) ELEVATION() float64 {
 	return 0.0
 }
 
+func (rcv *RDO) Elevation() float64 {
+	return rcv.ELEVATION()
+}
+
 /// Elevation angle (degrees)
 func (rcv *RDO) MutateELEVATION(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(40, n)
+}
+
+func (rcv *RDO) MutateElevation(n float64) bool {
+	return rcv.MutateELEVATION(n)
 }
 
 /// Elevation uncertainty (degrees, 1-sigma)
@@ -285,9 +393,17 @@ func (rcv *RDO) ELEVATION_UNC() float64 {
 	return 0.0
 }
 
+func (rcv *RDO) ElevationUnc() float64 {
+	return rcv.ELEVATION_UNC()
+}
+
 /// Elevation uncertainty (degrees, 1-sigma)
 func (rcv *RDO) MutateELEVATION_UNC(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(42, n)
+}
+
+func (rcv *RDO) MutateElevationUnc(n float64) bool {
+	return rcv.MutateELEVATION_UNC(n)
 }
 
 /// Elevation bias (degrees)
@@ -299,9 +415,17 @@ func (rcv *RDO) ELEVATION_BIAS() float64 {
 	return 0.0
 }
 
+func (rcv *RDO) ElevationBias() float64 {
+	return rcv.ELEVATION_BIAS()
+}
+
 /// Elevation bias (degrees)
 func (rcv *RDO) MutateELEVATION_BIAS(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(44, n)
+}
+
+func (rcv *RDO) MutateElevationBias(n float64) bool {
+	return rcv.MutateELEVATION_BIAS(n)
 }
 
 /// Elevation rate (degrees/s)
@@ -313,9 +437,17 @@ func (rcv *RDO) ELEVATION_RATE() float64 {
 	return 0.0
 }
 
+func (rcv *RDO) ElevationRate() float64 {
+	return rcv.ELEVATION_RATE()
+}
+
 /// Elevation rate (degrees/s)
 func (rcv *RDO) MutateELEVATION_RATE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(46, n)
+}
+
+func (rcv *RDO) MutateElevationRate(n float64) bool {
+	return rcv.MutateELEVATION_RATE(n)
 }
 
 /// Slant range (km)
@@ -327,9 +459,17 @@ func (rcv *RDO) RANGE() float64 {
 	return 0.0
 }
 
+func (rcv *RDO) Range() float64 {
+	return rcv.RANGE()
+}
+
 /// Slant range (km)
 func (rcv *RDO) MutateRANGE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(48, n)
+}
+
+func (rcv *RDO) MutateRange(n float64) bool {
+	return rcv.MutateRANGE(n)
 }
 
 /// Range uncertainty (km, 1-sigma)
@@ -341,9 +481,17 @@ func (rcv *RDO) RANGE_UNC() float64 {
 	return 0.0
 }
 
+func (rcv *RDO) RangeUnc() float64 {
+	return rcv.RANGE_UNC()
+}
+
 /// Range uncertainty (km, 1-sigma)
 func (rcv *RDO) MutateRANGE_UNC(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(50, n)
+}
+
+func (rcv *RDO) MutateRangeUnc(n float64) bool {
+	return rcv.MutateRANGE_UNC(n)
 }
 
 /// Range bias (km)
@@ -355,9 +503,17 @@ func (rcv *RDO) RANGE_BIAS() float64 {
 	return 0.0
 }
 
+func (rcv *RDO) RangeBias() float64 {
+	return rcv.RANGE_BIAS()
+}
+
 /// Range bias (km)
 func (rcv *RDO) MutateRANGE_BIAS(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(52, n)
+}
+
+func (rcv *RDO) MutateRangeBias(n float64) bool {
+	return rcv.MutateRANGE_BIAS(n)
 }
 
 /// Range rate (km/s)
@@ -369,9 +525,17 @@ func (rcv *RDO) RANGE_RATE() float64 {
 	return 0.0
 }
 
+func (rcv *RDO) RangeRate() float64 {
+	return rcv.RANGE_RATE()
+}
+
 /// Range rate (km/s)
 func (rcv *RDO) MutateRANGE_RATE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(54, n)
+}
+
+func (rcv *RDO) MutateRangeRate(n float64) bool {
+	return rcv.MutateRANGE_RATE(n)
 }
 
 /// Range rate uncertainty (km/s, 1-sigma)
@@ -383,9 +547,17 @@ func (rcv *RDO) RANGE_RATE_UNC() float64 {
 	return 0.0
 }
 
+func (rcv *RDO) RangeRateUnc() float64 {
+	return rcv.RANGE_RATE_UNC()
+}
+
 /// Range rate uncertainty (km/s, 1-sigma)
 func (rcv *RDO) MutateRANGE_RATE_UNC(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(56, n)
+}
+
+func (rcv *RDO) MutateRangeRateUnc(n float64) bool {
+	return rcv.MutateRANGE_RATE_UNC(n)
 }
 
 /// Range acceleration (km/s^2)
@@ -397,9 +569,17 @@ func (rcv *RDO) RANGE_ACCEL() float64 {
 	return 0.0
 }
 
+func (rcv *RDO) RangeAccel() float64 {
+	return rcv.RANGE_ACCEL()
+}
+
 /// Range acceleration (km/s^2)
 func (rcv *RDO) MutateRANGE_ACCEL(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(58, n)
+}
+
+func (rcv *RDO) MutateRangeAccel(n float64) bool {
+	return rcv.MutateRANGE_ACCEL(n)
 }
 
 /// Range acceleration uncertainty (km/s^2, 1-sigma)
@@ -411,9 +591,17 @@ func (rcv *RDO) RANGE_ACCEL_UNC() float64 {
 	return 0.0
 }
 
+func (rcv *RDO) RangeAccelUnc() float64 {
+	return rcv.RANGE_ACCEL_UNC()
+}
+
 /// Range acceleration uncertainty (km/s^2, 1-sigma)
 func (rcv *RDO) MutateRANGE_ACCEL_UNC(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(60, n)
+}
+
+func (rcv *RDO) MutateRangeAccelUnc(n float64) bool {
+	return rcv.MutateRANGE_ACCEL_UNC(n)
 }
 
 /// Doppler shift (Hz)
@@ -425,9 +613,17 @@ func (rcv *RDO) DOPPLER() float64 {
 	return 0.0
 }
 
+func (rcv *RDO) Doppler() float64 {
+	return rcv.DOPPLER()
+}
+
 /// Doppler shift (Hz)
 func (rcv *RDO) MutateDOPPLER(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(62, n)
+}
+
+func (rcv *RDO) MutateDoppler(n float64) bool {
+	return rcv.MutateDOPPLER(n)
 }
 
 /// Doppler uncertainty (Hz, 1-sigma)
@@ -439,9 +635,17 @@ func (rcv *RDO) DOPPLER_UNC() float64 {
 	return 0.0
 }
 
+func (rcv *RDO) DopplerUnc() float64 {
+	return rcv.DOPPLER_UNC()
+}
+
 /// Doppler uncertainty (Hz, 1-sigma)
 func (rcv *RDO) MutateDOPPLER_UNC(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(64, n)
+}
+
+func (rcv *RDO) MutateDopplerUnc(n float64) bool {
+	return rcv.MutateDOPPLER_UNC(n)
 }
 
 /// Right ascension (degrees)
@@ -453,9 +657,17 @@ func (rcv *RDO) RA() float64 {
 	return 0.0
 }
 
+func (rcv *RDO) Ra() float64 {
+	return rcv.RA()
+}
+
 /// Right ascension (degrees)
 func (rcv *RDO) MutateRA(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(66, n)
+}
+
+func (rcv *RDO) MutateRa(n float64) bool {
+	return rcv.MutateRA(n)
 }
 
 /// Declination (degrees)
@@ -467,9 +679,17 @@ func (rcv *RDO) DECLINATION() float64 {
 	return 0.0
 }
 
+func (rcv *RDO) Declination() float64 {
+	return rcv.DECLINATION()
+}
+
 /// Declination (degrees)
 func (rcv *RDO) MutateDECLINATION(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(68, n)
+}
+
+func (rcv *RDO) MutateDeclination(n float64) bool {
+	return rcv.MutateDECLINATION(n)
 }
 
 /// Target position X (km, ECI)
@@ -523,9 +743,17 @@ func (rcv *RDO) XVEL() float64 {
 	return 0.0
 }
 
+func (rcv *RDO) Xvel() float64 {
+	return rcv.XVEL()
+}
+
 /// Target velocity X (km/s, ECI)
 func (rcv *RDO) MutateXVEL(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(76, n)
+}
+
+func (rcv *RDO) MutateXvel(n float64) bool {
+	return rcv.MutateXVEL(n)
 }
 
 /// Target velocity Y (km/s, ECI)
@@ -537,9 +765,17 @@ func (rcv *RDO) YVEL() float64 {
 	return 0.0
 }
 
+func (rcv *RDO) Yvel() float64 {
+	return rcv.YVEL()
+}
+
 /// Target velocity Y (km/s, ECI)
 func (rcv *RDO) MutateYVEL(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(78, n)
+}
+
+func (rcv *RDO) MutateYvel(n float64) bool {
+	return rcv.MutateYVEL(n)
 }
 
 /// Target velocity Z (km/s, ECI)
@@ -551,9 +787,17 @@ func (rcv *RDO) ZVEL() float64 {
 	return 0.0
 }
 
+func (rcv *RDO) Zvel() float64 {
+	return rcv.ZVEL()
+}
+
 /// Target velocity Z (km/s, ECI)
 func (rcv *RDO) MutateZVEL(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(80, n)
+}
+
+func (rcv *RDO) MutateZvel(n float64) bool {
+	return rcv.MutateZVEL(n)
 }
 
 /// Sensor position X (km, ECEF)
@@ -565,9 +809,17 @@ func (rcv *RDO) SENX() float64 {
 	return 0.0
 }
 
+func (rcv *RDO) Senx() float64 {
+	return rcv.SENX()
+}
+
 /// Sensor position X (km, ECEF)
 func (rcv *RDO) MutateSENX(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(82, n)
+}
+
+func (rcv *RDO) MutateSenx(n float64) bool {
+	return rcv.MutateSENX(n)
 }
 
 /// Sensor position Y (km, ECEF)
@@ -579,9 +831,17 @@ func (rcv *RDO) SENY() float64 {
 	return 0.0
 }
 
+func (rcv *RDO) Seny() float64 {
+	return rcv.SENY()
+}
+
 /// Sensor position Y (km, ECEF)
 func (rcv *RDO) MutateSENY(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(84, n)
+}
+
+func (rcv *RDO) MutateSeny(n float64) bool {
+	return rcv.MutateSENY(n)
 }
 
 /// Sensor position Z (km, ECEF)
@@ -593,9 +853,17 @@ func (rcv *RDO) SENZ() float64 {
 	return 0.0
 }
 
+func (rcv *RDO) Senz() float64 {
+	return rcv.SENZ()
+}
+
 /// Sensor position Z (km, ECEF)
 func (rcv *RDO) MutateSENZ(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(86, n)
+}
+
+func (rcv *RDO) MutateSenz(n float64) bool {
+	return rcv.MutateSENZ(n)
 }
 
 /// Radar cross-section (dBsm)
@@ -607,9 +875,17 @@ func (rcv *RDO) RCS() float64 {
 	return 0.0
 }
 
+func (rcv *RDO) Rcs() float64 {
+	return rcv.RCS()
+}
+
 /// Radar cross-section (dBsm)
 func (rcv *RDO) MutateRCS(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(88, n)
+}
+
+func (rcv *RDO) MutateRcs(n float64) bool {
+	return rcv.MutateRCS(n)
 }
 
 /// RCS uncertainty (dBsm, 1-sigma)
@@ -621,9 +897,17 @@ func (rcv *RDO) RCS_UNC() float64 {
 	return 0.0
 }
 
+func (rcv *RDO) RcsUnc() float64 {
+	return rcv.RCS_UNC()
+}
+
 /// RCS uncertainty (dBsm, 1-sigma)
 func (rcv *RDO) MutateRCS_UNC(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(90, n)
+}
+
+func (rcv *RDO) MutateRcsUnc(n float64) bool {
+	return rcv.MutateRCS_UNC(n)
 }
 
 /// Orthogonal polarization RCS (dBsm)
@@ -635,9 +919,17 @@ func (rcv *RDO) ORTHOGONAL_RCS() float64 {
 	return 0.0
 }
 
+func (rcv *RDO) OrthogonalRcs() float64 {
+	return rcv.ORTHOGONAL_RCS()
+}
+
 /// Orthogonal polarization RCS (dBsm)
 func (rcv *RDO) MutateORTHOGONAL_RCS(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(92, n)
+}
+
+func (rcv *RDO) MutateOrthogonalRcs(n float64) bool {
+	return rcv.MutateORTHOGONAL_RCS(n)
 }
 
 /// Orthogonal RCS uncertainty (dBsm, 1-sigma)
@@ -649,9 +941,17 @@ func (rcv *RDO) ORTHOGONAL_RCS_UNC() float64 {
 	return 0.0
 }
 
+func (rcv *RDO) OrthogonalRcsUnc() float64 {
+	return rcv.ORTHOGONAL_RCS_UNC()
+}
+
 /// Orthogonal RCS uncertainty (dBsm, 1-sigma)
 func (rcv *RDO) MutateORTHOGONAL_RCS_UNC(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(94, n)
+}
+
+func (rcv *RDO) MutateOrthogonalRcsUnc(n float64) bool {
+	return rcv.MutateORTHOGONAL_RCS_UNC(n)
 }
 
 /// Signal-to-noise ratio (dB)
@@ -663,9 +963,17 @@ func (rcv *RDO) SNR() float64 {
 	return 0.0
 }
 
+func (rcv *RDO) Snr() float64 {
+	return rcv.SNR()
+}
+
 /// Signal-to-noise ratio (dB)
 func (rcv *RDO) MutateSNR(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(96, n)
+}
+
+func (rcv *RDO) MutateSnr(n float64) bool {
+	return rcv.MutateSNR(n)
 }
 
 /// Beam identifier
@@ -677,9 +985,17 @@ func (rcv *RDO) BEAM() float64 {
 	return 0.0
 }
 
+func (rcv *RDO) Beam() float64 {
+	return rcv.BEAM()
+}
+
 /// Beam identifier
 func (rcv *RDO) MutateBEAM(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(98, n)
+}
+
+func (rcv *RDO) MutateBeam(n float64) bool {
+	return rcv.MutateBEAM(n)
 }
 
 /// Timing bias (seconds)
@@ -691,9 +1007,17 @@ func (rcv *RDO) TIMING_BIAS() float64 {
 	return 0.0
 }
 
+func (rcv *RDO) TimingBias() float64 {
+	return rcv.TIMING_BIAS()
+}
+
 /// Timing bias (seconds)
 func (rcv *RDO) MutateTIMING_BIAS(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(100, n)
+}
+
+func (rcv *RDO) MutateTimingBias(n float64) bool {
+	return rcv.MutateTIMING_BIAS(n)
 }
 
 /// Reference to raw data file
@@ -705,6 +1029,10 @@ func (rcv *RDO) RAW_FILE_URI() []byte {
 	return nil
 }
 
+func (rcv *RDO) RawFileUri() []byte {
+	return rcv.RAW_FILE_URI()
+}
+
 /// Reference to raw data file
 /// Event descriptor
 func (rcv *RDO) DESCRIPTOR() []byte {
@@ -713,6 +1041,10 @@ func (rcv *RDO) DESCRIPTOR() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *RDO) Descriptor() []byte {
+	return rcv.DESCRIPTOR()
 }
 
 /// Event descriptor
@@ -726,12 +1058,20 @@ func (rcv *RDO) TAGS(j int) []byte {
 	return nil
 }
 
+func (rcv *RDO) Tags(j int) []byte {
+	return rcv.TAGS(j)
+}
+
 func (rcv *RDO) TAGSLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(106))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *RDO) TagsLength() int {
+	return rcv.TAGSLength()
 }
 
 /// Associated tags
@@ -741,101 +1081,200 @@ func RDOStart(builder *flatbuffers.Builder) {
 func RDOAddID(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ID), 0)
 }
+func RDOAddId(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
+	RDOAddID(builder, ID)
+}
 func RDOAddOB_TIME(builder *flatbuffers.Builder, OB_TIME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(OB_TIME), 0)
+}
+func RDOAddObTime(builder *flatbuffers.Builder, OB_TIME flatbuffers.UOffsetT) {
+	RDOAddOB_TIME(builder, OB_TIME)
 }
 func RDOAddID_SENSOR(builder *flatbuffers.Builder, ID_SENSOR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(ID_SENSOR), 0)
 }
+func RDOAddIdSensor(builder *flatbuffers.Builder, ID_SENSOR flatbuffers.UOffsetT) {
+	RDOAddID_SENSOR(builder, ID_SENSOR)
+}
 func RDOAddORIG_SENSOR_ID(builder *flatbuffers.Builder, ORIG_SENSOR_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(ORIG_SENSOR_ID), 0)
+}
+func RDOAddOrigSensorId(builder *flatbuffers.Builder, ORIG_SENSOR_ID flatbuffers.UOffsetT) {
+	RDOAddORIG_SENSOR_ID(builder, ORIG_SENSOR_ID)
 }
 func RDOAddSAT_NO(builder *flatbuffers.Builder, SAT_NO uint32) {
 	builder.PrependUint32Slot(4, SAT_NO, 0)
 }
+func RDOAddSatNo(builder *flatbuffers.Builder, SAT_NO uint32) {
+	RDOAddSAT_NO(builder, SAT_NO)
+}
 func RDOAddORIG_OBJECT_ID(builder *flatbuffers.Builder, ORIG_OBJECT_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(ORIG_OBJECT_ID), 0)
+}
+func RDOAddOrigObjectId(builder *flatbuffers.Builder, ORIG_OBJECT_ID flatbuffers.UOffsetT) {
+	RDOAddORIG_OBJECT_ID(builder, ORIG_OBJECT_ID)
 }
 func RDOAddON_ORBIT(builder *flatbuffers.Builder, ON_ORBIT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(ON_ORBIT), 0)
 }
+func RDOAddOnOrbit(builder *flatbuffers.Builder, ON_ORBIT flatbuffers.UOffsetT) {
+	RDOAddON_ORBIT(builder, ON_ORBIT)
+}
 func RDOAddUCT(builder *flatbuffers.Builder, UCT bool) {
 	builder.PrependBoolSlot(7, UCT, false)
+}
+func RDOAddUct(builder *flatbuffers.Builder, UCT bool) {
+	RDOAddUCT(builder, UCT)
 }
 func RDOAddOBS_TYPE(builder *flatbuffers.Builder, OBS_TYPE radarObsType) {
 	builder.PrependInt8Slot(8, int8(OBS_TYPE), 0)
 }
+func RDOAddObsType(builder *flatbuffers.Builder, OBS_TYPE radarObsType) {
+	RDOAddOBS_TYPE(builder, OBS_TYPE)
+}
 func RDOAddTASK_ID(builder *flatbuffers.Builder, TASK_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(TASK_ID), 0)
+}
+func RDOAddTaskId(builder *flatbuffers.Builder, TASK_ID flatbuffers.UOffsetT) {
+	RDOAddTASK_ID(builder, TASK_ID)
 }
 func RDOAddTRANSACTION_ID(builder *flatbuffers.Builder, TRANSACTION_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(TRANSACTION_ID), 0)
 }
+func RDOAddTransactionId(builder *flatbuffers.Builder, TRANSACTION_ID flatbuffers.UOffsetT) {
+	RDOAddTRANSACTION_ID(builder, TRANSACTION_ID)
+}
 func RDOAddTRACK_ID(builder *flatbuffers.Builder, TRACK_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(TRACK_ID), 0)
+}
+func RDOAddTrackId(builder *flatbuffers.Builder, TRACK_ID flatbuffers.UOffsetT) {
+	RDOAddTRACK_ID(builder, TRACK_ID)
 }
 func RDOAddOB_POSITION(builder *flatbuffers.Builder, OB_POSITION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(12, flatbuffers.UOffsetT(OB_POSITION), 0)
 }
+func RDOAddObPosition(builder *flatbuffers.Builder, OB_POSITION flatbuffers.UOffsetT) {
+	RDOAddOB_POSITION(builder, OB_POSITION)
+}
 func RDOAddSEN_REFERENCE_FRAME(builder *flatbuffers.Builder, SEN_REFERENCE_FRAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(13, flatbuffers.UOffsetT(SEN_REFERENCE_FRAME), 0)
+}
+func RDOAddSenReferenceFrame(builder *flatbuffers.Builder, SEN_REFERENCE_FRAME flatbuffers.UOffsetT) {
+	RDOAddSEN_REFERENCE_FRAME(builder, SEN_REFERENCE_FRAME)
 }
 func RDOAddAZIMUTH(builder *flatbuffers.Builder, AZIMUTH float64) {
 	builder.PrependFloat64Slot(14, AZIMUTH, 0.0)
 }
+func RDOAddAzimuth(builder *flatbuffers.Builder, AZIMUTH float64) {
+	RDOAddAZIMUTH(builder, AZIMUTH)
+}
 func RDOAddAZIMUTH_UNC(builder *flatbuffers.Builder, AZIMUTH_UNC float64) {
 	builder.PrependFloat64Slot(15, AZIMUTH_UNC, 0.0)
+}
+func RDOAddAzimuthUnc(builder *flatbuffers.Builder, AZIMUTH_UNC float64) {
+	RDOAddAZIMUTH_UNC(builder, AZIMUTH_UNC)
 }
 func RDOAddAZIMUTH_BIAS(builder *flatbuffers.Builder, AZIMUTH_BIAS float64) {
 	builder.PrependFloat64Slot(16, AZIMUTH_BIAS, 0.0)
 }
+func RDOAddAzimuthBias(builder *flatbuffers.Builder, AZIMUTH_BIAS float64) {
+	RDOAddAZIMUTH_BIAS(builder, AZIMUTH_BIAS)
+}
 func RDOAddAZIMUTH_RATE(builder *flatbuffers.Builder, AZIMUTH_RATE float64) {
 	builder.PrependFloat64Slot(17, AZIMUTH_RATE, 0.0)
+}
+func RDOAddAzimuthRate(builder *flatbuffers.Builder, AZIMUTH_RATE float64) {
+	RDOAddAZIMUTH_RATE(builder, AZIMUTH_RATE)
 }
 func RDOAddELEVATION(builder *flatbuffers.Builder, ELEVATION float64) {
 	builder.PrependFloat64Slot(18, ELEVATION, 0.0)
 }
+func RDOAddElevation(builder *flatbuffers.Builder, ELEVATION float64) {
+	RDOAddELEVATION(builder, ELEVATION)
+}
 func RDOAddELEVATION_UNC(builder *flatbuffers.Builder, ELEVATION_UNC float64) {
 	builder.PrependFloat64Slot(19, ELEVATION_UNC, 0.0)
+}
+func RDOAddElevationUnc(builder *flatbuffers.Builder, ELEVATION_UNC float64) {
+	RDOAddELEVATION_UNC(builder, ELEVATION_UNC)
 }
 func RDOAddELEVATION_BIAS(builder *flatbuffers.Builder, ELEVATION_BIAS float64) {
 	builder.PrependFloat64Slot(20, ELEVATION_BIAS, 0.0)
 }
+func RDOAddElevationBias(builder *flatbuffers.Builder, ELEVATION_BIAS float64) {
+	RDOAddELEVATION_BIAS(builder, ELEVATION_BIAS)
+}
 func RDOAddELEVATION_RATE(builder *flatbuffers.Builder, ELEVATION_RATE float64) {
 	builder.PrependFloat64Slot(21, ELEVATION_RATE, 0.0)
+}
+func RDOAddElevationRate(builder *flatbuffers.Builder, ELEVATION_RATE float64) {
+	RDOAddELEVATION_RATE(builder, ELEVATION_RATE)
 }
 func RDOAddRANGE(builder *flatbuffers.Builder, RANGE float64) {
 	builder.PrependFloat64Slot(22, RANGE, 0.0)
 }
+func RDOAddRange(builder *flatbuffers.Builder, RANGE float64) {
+	RDOAddRANGE(builder, RANGE)
+}
 func RDOAddRANGE_UNC(builder *flatbuffers.Builder, RANGE_UNC float64) {
 	builder.PrependFloat64Slot(23, RANGE_UNC, 0.0)
+}
+func RDOAddRangeUnc(builder *flatbuffers.Builder, RANGE_UNC float64) {
+	RDOAddRANGE_UNC(builder, RANGE_UNC)
 }
 func RDOAddRANGE_BIAS(builder *flatbuffers.Builder, RANGE_BIAS float64) {
 	builder.PrependFloat64Slot(24, RANGE_BIAS, 0.0)
 }
+func RDOAddRangeBias(builder *flatbuffers.Builder, RANGE_BIAS float64) {
+	RDOAddRANGE_BIAS(builder, RANGE_BIAS)
+}
 func RDOAddRANGE_RATE(builder *flatbuffers.Builder, RANGE_RATE float64) {
 	builder.PrependFloat64Slot(25, RANGE_RATE, 0.0)
+}
+func RDOAddRangeRate(builder *flatbuffers.Builder, RANGE_RATE float64) {
+	RDOAddRANGE_RATE(builder, RANGE_RATE)
 }
 func RDOAddRANGE_RATE_UNC(builder *flatbuffers.Builder, RANGE_RATE_UNC float64) {
 	builder.PrependFloat64Slot(26, RANGE_RATE_UNC, 0.0)
 }
+func RDOAddRangeRateUnc(builder *flatbuffers.Builder, RANGE_RATE_UNC float64) {
+	RDOAddRANGE_RATE_UNC(builder, RANGE_RATE_UNC)
+}
 func RDOAddRANGE_ACCEL(builder *flatbuffers.Builder, RANGE_ACCEL float64) {
 	builder.PrependFloat64Slot(27, RANGE_ACCEL, 0.0)
+}
+func RDOAddRangeAccel(builder *flatbuffers.Builder, RANGE_ACCEL float64) {
+	RDOAddRANGE_ACCEL(builder, RANGE_ACCEL)
 }
 func RDOAddRANGE_ACCEL_UNC(builder *flatbuffers.Builder, RANGE_ACCEL_UNC float64) {
 	builder.PrependFloat64Slot(28, RANGE_ACCEL_UNC, 0.0)
 }
+func RDOAddRangeAccelUnc(builder *flatbuffers.Builder, RANGE_ACCEL_UNC float64) {
+	RDOAddRANGE_ACCEL_UNC(builder, RANGE_ACCEL_UNC)
+}
 func RDOAddDOPPLER(builder *flatbuffers.Builder, DOPPLER float64) {
 	builder.PrependFloat64Slot(29, DOPPLER, 0.0)
+}
+func RDOAddDoppler(builder *flatbuffers.Builder, DOPPLER float64) {
+	RDOAddDOPPLER(builder, DOPPLER)
 }
 func RDOAddDOPPLER_UNC(builder *flatbuffers.Builder, DOPPLER_UNC float64) {
 	builder.PrependFloat64Slot(30, DOPPLER_UNC, 0.0)
 }
+func RDOAddDopplerUnc(builder *flatbuffers.Builder, DOPPLER_UNC float64) {
+	RDOAddDOPPLER_UNC(builder, DOPPLER_UNC)
+}
 func RDOAddRA(builder *flatbuffers.Builder, RA float64) {
 	builder.PrependFloat64Slot(31, RA, 0.0)
 }
+func RDOAddRa(builder *flatbuffers.Builder, RA float64) {
+	RDOAddRA(builder, RA)
+}
 func RDOAddDECLINATION(builder *flatbuffers.Builder, DECLINATION float64) {
 	builder.PrependFloat64Slot(32, DECLINATION, 0.0)
+}
+func RDOAddDeclination(builder *flatbuffers.Builder, DECLINATION float64) {
+	RDOAddDECLINATION(builder, DECLINATION)
 }
 func RDOAddX(builder *flatbuffers.Builder, X float64) {
 	builder.PrependFloat64Slot(33, X, 0.0)
@@ -849,53 +1288,104 @@ func RDOAddZ(builder *flatbuffers.Builder, Z float64) {
 func RDOAddXVEL(builder *flatbuffers.Builder, XVEL float64) {
 	builder.PrependFloat64Slot(36, XVEL, 0.0)
 }
+func RDOAddXvel(builder *flatbuffers.Builder, XVEL float64) {
+	RDOAddXVEL(builder, XVEL)
+}
 func RDOAddYVEL(builder *flatbuffers.Builder, YVEL float64) {
 	builder.PrependFloat64Slot(37, YVEL, 0.0)
+}
+func RDOAddYvel(builder *flatbuffers.Builder, YVEL float64) {
+	RDOAddYVEL(builder, YVEL)
 }
 func RDOAddZVEL(builder *flatbuffers.Builder, ZVEL float64) {
 	builder.PrependFloat64Slot(38, ZVEL, 0.0)
 }
+func RDOAddZvel(builder *flatbuffers.Builder, ZVEL float64) {
+	RDOAddZVEL(builder, ZVEL)
+}
 func RDOAddSENX(builder *flatbuffers.Builder, SENX float64) {
 	builder.PrependFloat64Slot(39, SENX, 0.0)
+}
+func RDOAddSenx(builder *flatbuffers.Builder, SENX float64) {
+	RDOAddSENX(builder, SENX)
 }
 func RDOAddSENY(builder *flatbuffers.Builder, SENY float64) {
 	builder.PrependFloat64Slot(40, SENY, 0.0)
 }
+func RDOAddSeny(builder *flatbuffers.Builder, SENY float64) {
+	RDOAddSENY(builder, SENY)
+}
 func RDOAddSENZ(builder *flatbuffers.Builder, SENZ float64) {
 	builder.PrependFloat64Slot(41, SENZ, 0.0)
+}
+func RDOAddSenz(builder *flatbuffers.Builder, SENZ float64) {
+	RDOAddSENZ(builder, SENZ)
 }
 func RDOAddRCS(builder *flatbuffers.Builder, RCS float64) {
 	builder.PrependFloat64Slot(42, RCS, 0.0)
 }
+func RDOAddRcs(builder *flatbuffers.Builder, RCS float64) {
+	RDOAddRCS(builder, RCS)
+}
 func RDOAddRCS_UNC(builder *flatbuffers.Builder, RCS_UNC float64) {
 	builder.PrependFloat64Slot(43, RCS_UNC, 0.0)
+}
+func RDOAddRcsUnc(builder *flatbuffers.Builder, RCS_UNC float64) {
+	RDOAddRCS_UNC(builder, RCS_UNC)
 }
 func RDOAddORTHOGONAL_RCS(builder *flatbuffers.Builder, ORTHOGONAL_RCS float64) {
 	builder.PrependFloat64Slot(44, ORTHOGONAL_RCS, 0.0)
 }
+func RDOAddOrthogonalRcs(builder *flatbuffers.Builder, ORTHOGONAL_RCS float64) {
+	RDOAddORTHOGONAL_RCS(builder, ORTHOGONAL_RCS)
+}
 func RDOAddORTHOGONAL_RCS_UNC(builder *flatbuffers.Builder, ORTHOGONAL_RCS_UNC float64) {
 	builder.PrependFloat64Slot(45, ORTHOGONAL_RCS_UNC, 0.0)
+}
+func RDOAddOrthogonalRcsUnc(builder *flatbuffers.Builder, ORTHOGONAL_RCS_UNC float64) {
+	RDOAddORTHOGONAL_RCS_UNC(builder, ORTHOGONAL_RCS_UNC)
 }
 func RDOAddSNR(builder *flatbuffers.Builder, SNR float64) {
 	builder.PrependFloat64Slot(46, SNR, 0.0)
 }
+func RDOAddSnr(builder *flatbuffers.Builder, SNR float64) {
+	RDOAddSNR(builder, SNR)
+}
 func RDOAddBEAM(builder *flatbuffers.Builder, BEAM float64) {
 	builder.PrependFloat64Slot(47, BEAM, 0.0)
+}
+func RDOAddBeam(builder *flatbuffers.Builder, BEAM float64) {
+	RDOAddBEAM(builder, BEAM)
 }
 func RDOAddTIMING_BIAS(builder *flatbuffers.Builder, TIMING_BIAS float64) {
 	builder.PrependFloat64Slot(48, TIMING_BIAS, 0.0)
 }
+func RDOAddTimingBias(builder *flatbuffers.Builder, TIMING_BIAS float64) {
+	RDOAddTIMING_BIAS(builder, TIMING_BIAS)
+}
 func RDOAddRAW_FILE_URI(builder *flatbuffers.Builder, RAW_FILE_URI flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(49, flatbuffers.UOffsetT(RAW_FILE_URI), 0)
+}
+func RDOAddRawFileUri(builder *flatbuffers.Builder, RAW_FILE_URI flatbuffers.UOffsetT) {
+	RDOAddRAW_FILE_URI(builder, RAW_FILE_URI)
 }
 func RDOAddDESCRIPTOR(builder *flatbuffers.Builder, DESCRIPTOR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(50, flatbuffers.UOffsetT(DESCRIPTOR), 0)
 }
+func RDOAddDescriptor(builder *flatbuffers.Builder, DESCRIPTOR flatbuffers.UOffsetT) {
+	RDOAddDESCRIPTOR(builder, DESCRIPTOR)
+}
 func RDOAddTAGS(builder *flatbuffers.Builder, TAGS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(51, flatbuffers.UOffsetT(TAGS), 0)
 }
+func RDOAddTags(builder *flatbuffers.Builder, TAGS flatbuffers.UOffsetT) {
+	RDOAddTAGS(builder, TAGS)
+}
 func RDOStartTAGSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func RDOStartTagsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return RDOStartTAGSVector(builder, numElems)
 }
 func RDOEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

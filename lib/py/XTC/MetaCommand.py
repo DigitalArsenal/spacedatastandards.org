@@ -229,6 +229,12 @@ def MetaCommandStartARGUMENTSVector(builder, numElems):
 def StartARGUMENTSVector(builder, numElems):
     return MetaCommandStartARGUMENTSVector(builder, numElems)
 
+def MetaCommandCreateARGUMENTSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateARGUMENTSVector(builder, data):
+    MetaCommandCreateARGUMENTSVector(builder, data)
+
 def MetaCommandAddCOMMAND_CONTAINER(builder, COMMAND_CONTAINER):
     builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(COMMAND_CONTAINER), 0)
 
@@ -253,6 +259,12 @@ def MetaCommandStartVERIFIERSVector(builder, numElems):
 def StartVERIFIERSVector(builder, numElems):
     return MetaCommandStartVERIFIERSVector(builder, numElems)
 
+def MetaCommandCreateVERIFIERSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateVERIFIERSVector(builder, data):
+    MetaCommandCreateVERIFIERSVector(builder, data)
+
 def MetaCommandAddSIGNIFICANCE(builder, SIGNIFICANCE):
     builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(SIGNIFICANCE), 0)
 
@@ -270,6 +282,12 @@ def MetaCommandStartINTERLOCKSVector(builder, numElems):
 
 def StartINTERLOCKSVector(builder, numElems):
     return MetaCommandStartINTERLOCKSVector(builder, numElems)
+
+def MetaCommandCreateINTERLOCKSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateINTERLOCKSVector(builder, data):
+    MetaCommandCreateINTERLOCKSVector(builder, data)
 
 def MetaCommandAddDEFAULT_SIGNIFICANCE(builder, DEFAULT_SIGNIFICANCE):
     builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(DEFAULT_SIGNIFICANCE), 0)
@@ -297,24 +315,37 @@ except:
 class MetaCommandT(object):
 
     # MetaCommandT
-    def __init__(self):
-        self.NAME = None  # type: str
-        self.SHORT_DESCRIPTION = None  # type: str
-        self.LONG_DESCRIPTION = None  # type: str
-        self.ABSTRACT = False  # type: bool
-        self.ARGUMENTS = None  # type: List[Argument.ArgumentT]
-        self.COMMAND_CONTAINER = None  # type: Optional[CommandContainer.CommandContainerT]
-        self.BASE_META_COMMAND = None  # type: Optional[BaseMetaCommand.BaseMetaCommandT]
-        self.VERIFIERS = None  # type: List[CommandVerifier.CommandVerifierT]
-        self.SIGNIFICANCE = None  # type: Optional[CommandSignificance.CommandSignificanceT]
-        self.INTERLOCKS = None  # type: List[Interlock.InterlockT]
-        self.DEFAULT_SIGNIFICANCE = None  # type: Optional[CommandSignificance.CommandSignificanceT]
+    def __init__(
+        self,
+        NAME = None,
+        SHORT_DESCRIPTION = None,
+        LONG_DESCRIPTION = None,
+        ABSTRACT = False,
+        ARGUMENTS = None,
+        COMMAND_CONTAINER = None,
+        BASE_META_COMMAND = None,
+        VERIFIERS = None,
+        SIGNIFICANCE = None,
+        INTERLOCKS = None,
+        DEFAULT_SIGNIFICANCE = None,
+    ):
+        self.NAME = NAME  # type: Optional[str]
+        self.SHORT_DESCRIPTION = SHORT_DESCRIPTION  # type: Optional[str]
+        self.LONG_DESCRIPTION = LONG_DESCRIPTION  # type: Optional[str]
+        self.ABSTRACT = ABSTRACT  # type: bool
+        self.ARGUMENTS = ARGUMENTS  # type: Optional[List[Argument.ArgumentT]]
+        self.COMMAND_CONTAINER = COMMAND_CONTAINER  # type: Optional[CommandContainer.CommandContainerT]
+        self.BASE_META_COMMAND = BASE_META_COMMAND  # type: Optional[BaseMetaCommand.BaseMetaCommandT]
+        self.VERIFIERS = VERIFIERS  # type: Optional[List[CommandVerifier.CommandVerifierT]]
+        self.SIGNIFICANCE = SIGNIFICANCE  # type: Optional[CommandSignificance.CommandSignificanceT]
+        self.INTERLOCKS = INTERLOCKS  # type: Optional[List[Interlock.InterlockT]]
+        self.DEFAULT_SIGNIFICANCE = DEFAULT_SIGNIFICANCE  # type: Optional[CommandSignificance.CommandSignificanceT]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        metaCommand = MetaCommand()
-        metaCommand.Init(buf, pos)
-        return cls.InitFromObj(metaCommand)
+        tmpMetaCommand = MetaCommand()
+        tmpMetaCommand.Init(buf, pos)
+        return cls.InitFromObj(tmpMetaCommand)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -322,51 +353,51 @@ class MetaCommandT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, metaCommand):
+    def InitFromObj(cls, tmpMetaCommand):
         x = MetaCommandT()
-        x._UnPack(metaCommand)
+        x._UnPack(tmpMetaCommand)
         return x
 
     # MetaCommandT
-    def _UnPack(self, metaCommand):
-        if metaCommand is None:
+    def _UnPack(self, MetaCommand):
+        if MetaCommand is None:
             return
-        self.NAME = metaCommand.NAME()
-        self.SHORT_DESCRIPTION = metaCommand.SHORT_DESCRIPTION()
-        self.LONG_DESCRIPTION = metaCommand.LONG_DESCRIPTION()
-        self.ABSTRACT = metaCommand.ABSTRACT()
-        if not metaCommand.ARGUMENTSIsNone():
+        self.NAME = MetaCommand.NAME()
+        self.SHORT_DESCRIPTION = MetaCommand.SHORT_DESCRIPTION()
+        self.LONG_DESCRIPTION = MetaCommand.LONG_DESCRIPTION()
+        self.ABSTRACT = MetaCommand.ABSTRACT()
+        if not MetaCommand.ARGUMENTSIsNone():
             self.ARGUMENTS = []
-            for i in range(metaCommand.ARGUMENTSLength()):
-                if metaCommand.ARGUMENTS(i) is None:
+            for i in range(MetaCommand.ARGUMENTSLength()):
+                if MetaCommand.ARGUMENTS(i) is None:
                     self.ARGUMENTS.append(None)
                 else:
-                    argument_ = Argument.ArgumentT.InitFromObj(metaCommand.ARGUMENTS(i))
+                    argument_ = Argument.ArgumentT.InitFromObj(MetaCommand.ARGUMENTS(i))
                     self.ARGUMENTS.append(argument_)
-        if metaCommand.COMMAND_CONTAINER() is not None:
-            self.COMMAND_CONTAINER = CommandContainer.CommandContainerT.InitFromObj(metaCommand.COMMAND_CONTAINER())
-        if metaCommand.BASE_META_COMMAND() is not None:
-            self.BASE_META_COMMAND = BaseMetaCommand.BaseMetaCommandT.InitFromObj(metaCommand.BASE_META_COMMAND())
-        if not metaCommand.VERIFIERSIsNone():
+        if MetaCommand.COMMAND_CONTAINER() is not None:
+            self.COMMAND_CONTAINER = CommandContainer.CommandContainerT.InitFromObj(MetaCommand.COMMAND_CONTAINER())
+        if MetaCommand.BASE_META_COMMAND() is not None:
+            self.BASE_META_COMMAND = BaseMetaCommand.BaseMetaCommandT.InitFromObj(MetaCommand.BASE_META_COMMAND())
+        if not MetaCommand.VERIFIERSIsNone():
             self.VERIFIERS = []
-            for i in range(metaCommand.VERIFIERSLength()):
-                if metaCommand.VERIFIERS(i) is None:
+            for i in range(MetaCommand.VERIFIERSLength()):
+                if MetaCommand.VERIFIERS(i) is None:
                     self.VERIFIERS.append(None)
                 else:
-                    commandVerifier_ = CommandVerifier.CommandVerifierT.InitFromObj(metaCommand.VERIFIERS(i))
+                    commandVerifier_ = CommandVerifier.CommandVerifierT.InitFromObj(MetaCommand.VERIFIERS(i))
                     self.VERIFIERS.append(commandVerifier_)
-        if metaCommand.SIGNIFICANCE() is not None:
-            self.SIGNIFICANCE = CommandSignificance.CommandSignificanceT.InitFromObj(metaCommand.SIGNIFICANCE())
-        if not metaCommand.INTERLOCKSIsNone():
+        if MetaCommand.SIGNIFICANCE() is not None:
+            self.SIGNIFICANCE = CommandSignificance.CommandSignificanceT.InitFromObj(MetaCommand.SIGNIFICANCE())
+        if not MetaCommand.INTERLOCKSIsNone():
             self.INTERLOCKS = []
-            for i in range(metaCommand.INTERLOCKSLength()):
-                if metaCommand.INTERLOCKS(i) is None:
+            for i in range(MetaCommand.INTERLOCKSLength()):
+                if MetaCommand.INTERLOCKS(i) is None:
                     self.INTERLOCKS.append(None)
                 else:
-                    interlock_ = Interlock.InterlockT.InitFromObj(metaCommand.INTERLOCKS(i))
+                    interlock_ = Interlock.InterlockT.InitFromObj(MetaCommand.INTERLOCKS(i))
                     self.INTERLOCKS.append(interlock_)
-        if metaCommand.DEFAULT_SIGNIFICANCE() is not None:
-            self.DEFAULT_SIGNIFICANCE = CommandSignificance.CommandSignificanceT.InitFromObj(metaCommand.DEFAULT_SIGNIFICANCE())
+        if MetaCommand.DEFAULT_SIGNIFICANCE() is not None:
+            self.DEFAULT_SIGNIFICANCE = CommandSignificance.CommandSignificanceT.InitFromObj(MetaCommand.DEFAULT_SIGNIFICANCE())
 
     # MetaCommandT
     def Pack(self, builder):
@@ -430,5 +461,5 @@ class MetaCommandT(object):
             MetaCommandAddINTERLOCKS(builder, INTERLOCKS)
         if self.DEFAULT_SIGNIFICANCE is not None:
             MetaCommandAddDEFAULT_SIGNIFICANCE(builder, DEFAULT_SIGNIFICANCE)
-        metaCommand = MetaCommandEnd(builder)
-        return metaCommand
+        MetaCommand = MetaCommandEnd(builder)
+        return MetaCommand

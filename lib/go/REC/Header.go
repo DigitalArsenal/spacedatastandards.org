@@ -50,6 +50,10 @@ func (rcv *Header) CCSDS_OCM_VERS() []byte {
 	return nil
 }
 
+func (rcv *Header) CcsdsOcmVers() []byte {
+	return rcv.CCSDS_OCM_VERS()
+}
+
 /// Format version in the form of 'x.y', where 'y' is incremented for minor changes, and 'x' for major changes.
 /// Comments (a contiguous set of one or more comment lines may be provided immediately after the version number).
 func (rcv *Header) COMMENT(j int) []byte {
@@ -61,12 +65,20 @@ func (rcv *Header) COMMENT(j int) []byte {
 	return nil
 }
 
+func (rcv *Header) Comment(j int) []byte {
+	return rcv.COMMENT(j)
+}
+
 func (rcv *Header) COMMENTLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *Header) CommentLength() int {
+	return rcv.COMMENTLength()
 }
 
 /// Comments (a contiguous set of one or more comment lines may be provided immediately after the version number).
@@ -79,6 +91,10 @@ func (rcv *Header) CLASSIFICATION() []byte {
 	return nil
 }
 
+func (rcv *Header) Classification() []byte {
+	return rcv.CLASSIFICATION()
+}
+
 /// User-defined free-text message classification/caveats of this OCM.
 /// File creation date/time in UTC.
 func (rcv *Header) CREATION_DATE() []byte {
@@ -87,6 +103,10 @@ func (rcv *Header) CREATION_DATE() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *Header) CreationDate() []byte {
+	return rcv.CREATION_DATE()
 }
 
 /// File creation date/time in UTC.
@@ -99,6 +119,10 @@ func (rcv *Header) ORIGINATOR() []byte {
 	return nil
 }
 
+func (rcv *Header) Originator() []byte {
+	return rcv.ORIGINATOR()
+}
+
 /// Creating agency or operator.
 /// Free-text field containing an ID that uniquely identifies a message from this originator.
 func (rcv *Header) MESSAGE_ID() []byte {
@@ -109,6 +133,10 @@ func (rcv *Header) MESSAGE_ID() []byte {
 	return nil
 }
 
+func (rcv *Header) MessageId() []byte {
+	return rcv.MESSAGE_ID()
+}
+
 /// Free-text field containing an ID that uniquely identifies a message from this originator.
 func HeaderStart(builder *flatbuffers.Builder) {
 	builder.StartObject(6)
@@ -116,23 +144,44 @@ func HeaderStart(builder *flatbuffers.Builder) {
 func HeaderAddCCSDS_OCM_VERS(builder *flatbuffers.Builder, CCSDS_OCM_VERS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(CCSDS_OCM_VERS), 0)
 }
+func HeaderAddCcsdsOcmVers(builder *flatbuffers.Builder, CCSDS_OCM_VERS flatbuffers.UOffsetT) {
+	HeaderAddCCSDS_OCM_VERS(builder, CCSDS_OCM_VERS)
+}
 func HeaderAddCOMMENT(builder *flatbuffers.Builder, COMMENT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(COMMENT), 0)
+}
+func HeaderAddComment(builder *flatbuffers.Builder, COMMENT flatbuffers.UOffsetT) {
+	HeaderAddCOMMENT(builder, COMMENT)
 }
 func HeaderStartCOMMENTVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
+func HeaderStartCommentVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return HeaderStartCOMMENTVector(builder, numElems)
+}
 func HeaderAddCLASSIFICATION(builder *flatbuffers.Builder, CLASSIFICATION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(CLASSIFICATION), 0)
+}
+func HeaderAddClassification(builder *flatbuffers.Builder, CLASSIFICATION flatbuffers.UOffsetT) {
+	HeaderAddCLASSIFICATION(builder, CLASSIFICATION)
 }
 func HeaderAddCREATION_DATE(builder *flatbuffers.Builder, CREATION_DATE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(CREATION_DATE), 0)
 }
+func HeaderAddCreationDate(builder *flatbuffers.Builder, CREATION_DATE flatbuffers.UOffsetT) {
+	HeaderAddCREATION_DATE(builder, CREATION_DATE)
+}
 func HeaderAddORIGINATOR(builder *flatbuffers.Builder, ORIGINATOR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(ORIGINATOR), 0)
 }
+func HeaderAddOriginator(builder *flatbuffers.Builder, ORIGINATOR flatbuffers.UOffsetT) {
+	HeaderAddORIGINATOR(builder, ORIGINATOR)
+}
 func HeaderAddMESSAGE_ID(builder *flatbuffers.Builder, MESSAGE_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(MESSAGE_ID), 0)
+}
+func HeaderAddMessageId(builder *flatbuffers.Builder, MESSAGE_ID flatbuffers.UOffsetT) {
+	HeaderAddMESSAGE_ID(builder, MESSAGE_ID)
 }
 func HeaderEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

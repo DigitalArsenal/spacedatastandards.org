@@ -364,6 +364,12 @@ def ANIStartLABELSVector(builder, numElems):
 def StartLABELSVector(builder, numElems):
     return ANIStartLABELSVector(builder, numElems)
 
+def ANICreateLABELSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateLABELSVector(builder, data):
+    ANICreateLABELSVector(builder, data)
+
 def ANIAddCONFIDENCE(builder, CONFIDENCE):
     builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(CONFIDENCE), 0)
 
@@ -376,6 +382,16 @@ def ANIStartCONFIDENCEVector(builder, numElems):
 def StartCONFIDENCEVector(builder, numElems):
     return ANIStartCONFIDENCEVector(builder, numElems)
 
+def ANICreateCONFIDENCEVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateCONFIDENCEVector(builder, data):
+    ANICreateCONFIDENCEVector(builder, data)
+
 def ANIAddFEATURES(builder, FEATURES):
     builder.PrependUOffsetTRelativeSlot(18, flatbuffers.number_types.UOffsetTFlags.py_type(FEATURES), 0)
 
@@ -387,6 +403,16 @@ def ANIStartFEATURESVector(builder, numElems):
 
 def StartFEATURESVector(builder, numElems):
     return ANIStartFEATURESVector(builder, numElems)
+
+def ANICreateFEATURESVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateFEATURESVector(builder, data):
+    ANICreateFEATURESVector(builder, data)
 
 def ANIAddQUALITY(builder, QUALITY):
     builder.PrependFloat64Slot(19, QUALITY, 0.0)
@@ -414,34 +440,57 @@ except:
 class ANIT(object):
 
     # ANIT
-    def __init__(self):
-        self.ID = None  # type: str
-        self.SOURCE_ID = None  # type: str
-        self.SOURCE_TYPE = None  # type: str
-        self.ANALYTIC_TYPE = 0  # type: int
-        self.ALGORITHM = None  # type: str
-        self.ALGORITHM_VERSION = None  # type: str
-        self.PROCESSING_TIME = None  # type: str
-        self.OBS_TIME = None  # type: str
-        self.SAT_NO = 0  # type: int
-        self.OBJECT_DESIGNATOR = None  # type: str
-        self.RA = 0.0  # type: float
-        self.DEC = 0.0  # type: float
-        self.FOV = 0.0  # type: float
-        self.VISUAL_MAG = 0.0  # type: float
-        self.MAG_UNCERTAINTY = 0.0  # type: float
-        self.OBJECT_COUNT = 0  # type: int
-        self.LABELS = None  # type: List[str]
-        self.CONFIDENCE = None  # type: List[float]
-        self.FEATURES = None  # type: List[float]
-        self.QUALITY = 0.0  # type: float
-        self.NOTES = None  # type: str
+    def __init__(
+        self,
+        ID = None,
+        SOURCE_ID = None,
+        SOURCE_TYPE = None,
+        ANALYTIC_TYPE = 0,
+        ALGORITHM = None,
+        ALGORITHM_VERSION = None,
+        PROCESSING_TIME = None,
+        OBS_TIME = None,
+        SAT_NO = 0,
+        OBJECT_DESIGNATOR = None,
+        RA = 0.0,
+        DEC = 0.0,
+        FOV = 0.0,
+        VISUAL_MAG = 0.0,
+        MAG_UNCERTAINTY = 0.0,
+        OBJECT_COUNT = 0,
+        LABELS = None,
+        CONFIDENCE = None,
+        FEATURES = None,
+        QUALITY = 0.0,
+        NOTES = None,
+    ):
+        self.ID = ID  # type: Optional[str]
+        self.SOURCE_ID = SOURCE_ID  # type: Optional[str]
+        self.SOURCE_TYPE = SOURCE_TYPE  # type: Optional[str]
+        self.ANALYTIC_TYPE = ANALYTIC_TYPE  # type: int
+        self.ALGORITHM = ALGORITHM  # type: Optional[str]
+        self.ALGORITHM_VERSION = ALGORITHM_VERSION  # type: Optional[str]
+        self.PROCESSING_TIME = PROCESSING_TIME  # type: Optional[str]
+        self.OBS_TIME = OBS_TIME  # type: Optional[str]
+        self.SAT_NO = SAT_NO  # type: int
+        self.OBJECT_DESIGNATOR = OBJECT_DESIGNATOR  # type: Optional[str]
+        self.RA = RA  # type: float
+        self.DEC = DEC  # type: float
+        self.FOV = FOV  # type: float
+        self.VISUAL_MAG = VISUAL_MAG  # type: float
+        self.MAG_UNCERTAINTY = MAG_UNCERTAINTY  # type: float
+        self.OBJECT_COUNT = OBJECT_COUNT  # type: int
+        self.LABELS = LABELS  # type: Optional[List[Optional[str]]]
+        self.CONFIDENCE = CONFIDENCE  # type: Optional[List[float]]
+        self.FEATURES = FEATURES  # type: Optional[List[float]]
+        self.QUALITY = QUALITY  # type: float
+        self.NOTES = NOTES  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        ANI = ANI()
-        ANI.Init(buf, pos)
-        return cls.InitFromObj(ANI)
+        tmpAni = ANI()
+        tmpAni.Init(buf, pos)
+        return cls.InitFromObj(tmpAni)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -449,9 +498,9 @@ class ANIT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, ANI):
+    def InitFromObj(cls, tmpAni):
         x = ANIT()
-        x._UnPack(ANI)
+        x._UnPack(tmpAni)
         return x
 
     # ANIT

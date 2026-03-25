@@ -51,6 +51,10 @@ func (rcv *SUSTAINER) SUSTAINER_NAME() []byte {
 	return nil
 }
 
+func (rcv *SUSTAINER) SustainerName() []byte {
+	return rcv.SUSTAINER_NAME()
+}
+
 /// Name of the Sustainer
 /// Thrust Produced by the Sustainer (in Newtons)
 func (rcv *SUSTAINER) THRUST() float64 {
@@ -61,9 +65,17 @@ func (rcv *SUSTAINER) THRUST() float64 {
 	return 0.0
 }
 
+func (rcv *SUSTAINER) Thrust() float64 {
+	return rcv.THRUST()
+}
+
 /// Thrust Produced by the Sustainer (in Newtons)
 func (rcv *SUSTAINER) MutateTHRUST(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(6, n)
+}
+
+func (rcv *SUSTAINER) MutateThrust(n float64) bool {
+	return rcv.MutateTHRUST(n)
 }
 
 /// Duration of the Burn (in Seconds)
@@ -75,9 +87,17 @@ func (rcv *SUSTAINER) BURN_DURATION() float64 {
 	return 0.0
 }
 
+func (rcv *SUSTAINER) BurnDuration() float64 {
+	return rcv.BURN_DURATION()
+}
+
 /// Duration of the Burn (in Seconds)
 func (rcv *SUSTAINER) MutateBURN_DURATION(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(8, n)
+}
+
+func (rcv *SUSTAINER) MutateBurnDuration(n float64) bool {
+	return rcv.MutateBURN_DURATION(n)
 }
 
 func SUSTAINERStart(builder *flatbuffers.Builder) {
@@ -86,11 +106,20 @@ func SUSTAINERStart(builder *flatbuffers.Builder) {
 func SUSTAINERAddSUSTAINER_NAME(builder *flatbuffers.Builder, SUSTAINER_NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(SUSTAINER_NAME), 0)
 }
+func SUSTAINERAddSustainerName(builder *flatbuffers.Builder, SUSTAINER_NAME flatbuffers.UOffsetT) {
+	SUSTAINERAddSUSTAINER_NAME(builder, SUSTAINER_NAME)
+}
 func SUSTAINERAddTHRUST(builder *flatbuffers.Builder, THRUST float64) {
 	builder.PrependFloat64Slot(1, THRUST, 0.0)
 }
+func SUSTAINERAddThrust(builder *flatbuffers.Builder, THRUST float64) {
+	SUSTAINERAddTHRUST(builder, THRUST)
+}
 func SUSTAINERAddBURN_DURATION(builder *flatbuffers.Builder, BURN_DURATION float64) {
 	builder.PrependFloat64Slot(2, BURN_DURATION, 0.0)
+}
+func SUSTAINERAddBurnDuration(builder *flatbuffers.Builder, BURN_DURATION float64) {
+	SUSTAINERAddBURN_DURATION(builder, BURN_DURATION)
 }
 func SUSTAINEREnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

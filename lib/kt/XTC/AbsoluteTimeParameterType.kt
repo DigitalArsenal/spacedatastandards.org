@@ -32,7 +32,7 @@ class AbsoluteTimeParameterType : Table() {
     /**
      * Type name
      */
-    val NAME : String?
+    val name : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class AbsoluteTimeParameterType : Table() {
                 null
             }
         }
-    val NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val nameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun nameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Short description
      */
-    val SHORT_DESCRIPTION : String?
+    val shortDescription : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -55,12 +55,12 @@ class AbsoluteTimeParameterType : Table() {
                 null
             }
         }
-    val SHORT_DESCRIPTIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun SHORT_DESCRIPTIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val shortDescriptionAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun shortDescriptionInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * Long description
      */
-    val LONG_DESCRIPTION : String?
+    val longDescription : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -69,12 +69,12 @@ class AbsoluteTimeParameterType : Table() {
                 null
             }
         }
-    val LONG_DESCRIPTIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun LONG_DESCRIPTIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val longDescriptionAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun longDescriptionInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
     /**
      * Reference epoch
      */
-    val EPOCH : Byte
+    val epoch : Byte
         get() {
             val o = __offset(10)
             return if(o != 0) bb.get(o + bb_pos) else 2
@@ -82,7 +82,7 @@ class AbsoluteTimeParameterType : Table() {
     /**
      * Custom epoch date (ISO 8601) when EPOCH=CUSTOM
      */
-    val EPOCH_DATE : String?
+    val epochDate : String?
         get() {
             val o = __offset(12)
             return if (o != 0) {
@@ -91,13 +91,13 @@ class AbsoluteTimeParameterType : Table() {
                 null
             }
         }
-    val EPOCH_DATEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
-    fun EPOCH_DATEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
+    val epochDateAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(12, 1)
+    fun epochDateInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 12, 1)
     /**
      * Data encoding
      */
-    val DATA_ENCODING : IntegerDataEncoding? get() = DATA_ENCODING(IntegerDataEncoding())
-    fun DATA_ENCODING(obj: IntegerDataEncoding) : IntegerDataEncoding? {
+    val dataEncoding : IntegerDataEncoding? get() = dataEncoding(IntegerDataEncoding())
+    fun dataEncoding(obj: IntegerDataEncoding) : IntegerDataEncoding? {
         val o = __offset(14)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -108,7 +108,7 @@ class AbsoluteTimeParameterType : Table() {
     /**
      * Time unit scale factor
      */
-    val SCALE : Double
+    val scale : Double
         get() {
             val o = __offset(16)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -116,7 +116,7 @@ class AbsoluteTimeParameterType : Table() {
     /**
      * Time unit offset
      */
-    val OFFSET : Double
+    val offset : Double
         get() {
             val o = __offset(18)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -124,8 +124,8 @@ class AbsoluteTimeParameterType : Table() {
     /**
      * Default alarm
      */
-    val DEFAULT_ALARM : DefaultAlarm? get() = DEFAULT_ALARM(DefaultAlarm())
-    fun DEFAULT_ALARM(obj: DefaultAlarm) : DefaultAlarm? {
+    val defaultAlarm : DefaultAlarm? get() = defaultAlarm(DefaultAlarm())
+    fun defaultAlarm(obj: DefaultAlarm) : DefaultAlarm? {
         val o = __offset(20)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -136,8 +136,8 @@ class AbsoluteTimeParameterType : Table() {
     /**
      * Context alarms
      */
-    fun CONTEXT_ALARMS(j: Int) : ContextAlarm? = CONTEXT_ALARMS(ContextAlarm(), j)
-    fun CONTEXT_ALARMS(obj: ContextAlarm, j: Int) : ContextAlarm? {
+    fun contextAlarms(j: Int) : ContextAlarm? = contextAlarms(ContextAlarm(), j)
+    fun contextAlarms(obj: ContextAlarm, j: Int) : ContextAlarm? {
         val o = __offset(22)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -145,42 +145,42 @@ class AbsoluteTimeParameterType : Table() {
             null
         }
     }
-    val CONTEXT_ALARMSLength : Int
+    val contextAlarmsLength : Int
         get() {
             val o = __offset(22); return if (o != 0) __vector_len(o) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsAbsoluteTimeParameterType(_bb: ByteBuffer): AbsoluteTimeParameterType = getRootAsAbsoluteTimeParameterType(_bb, AbsoluteTimeParameterType())
         fun getRootAsAbsoluteTimeParameterType(_bb: ByteBuffer, obj: AbsoluteTimeParameterType): AbsoluteTimeParameterType {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createAbsoluteTimeParameterType(builder: FlatBufferBuilder, NAMEOffset: Int, SHORT_DESCRIPTIONOffset: Int, LONG_DESCRIPTIONOffset: Int, EPOCH: Byte, EPOCH_DATEOffset: Int, DATA_ENCODINGOffset: Int, SCALE: Double, OFFSET: Double, DEFAULT_ALARMOffset: Int, CONTEXT_ALARMSOffset: Int) : Int {
+        fun createAbsoluteTimeParameterType(builder: FlatBufferBuilder, nameOffset: Int, shortDescriptionOffset: Int, longDescriptionOffset: Int, epoch: Byte, epochDateOffset: Int, dataEncodingOffset: Int, scale: Double, offset: Double, defaultAlarmOffset: Int, contextAlarmsOffset: Int) : Int {
             builder.startTable(10)
-            addOFFSET(builder, OFFSET)
-            addSCALE(builder, SCALE)
-            addCONTEXT_ALARMS(builder, CONTEXT_ALARMSOffset)
-            addDEFAULT_ALARM(builder, DEFAULT_ALARMOffset)
-            addDATA_ENCODING(builder, DATA_ENCODINGOffset)
-            addEPOCH_DATE(builder, EPOCH_DATEOffset)
-            addLONG_DESCRIPTION(builder, LONG_DESCRIPTIONOffset)
-            addSHORT_DESCRIPTION(builder, SHORT_DESCRIPTIONOffset)
-            addNAME(builder, NAMEOffset)
-            addEPOCH(builder, EPOCH)
+            addOFFSET(builder, offset)
+            addSCALE(builder, scale)
+            addCONTEXTALARMS(builder, contextAlarmsOffset)
+            addDEFAULTALARM(builder, defaultAlarmOffset)
+            addDATAENCODING(builder, dataEncodingOffset)
+            addEPOCHDATE(builder, epochDateOffset)
+            addLONGDESCRIPTION(builder, longDescriptionOffset)
+            addSHORTDESCRIPTION(builder, shortDescriptionOffset)
+            addNAME(builder, nameOffset)
+            addEPOCH(builder, epoch)
             return endAbsoluteTimeParameterType(builder)
         }
         fun startAbsoluteTimeParameterType(builder: FlatBufferBuilder) = builder.startTable(10)
-        fun addNAME(builder: FlatBufferBuilder, NAME: Int) = builder.addOffset(0, NAME, 0)
-        fun addSHORT_DESCRIPTION(builder: FlatBufferBuilder, SHORT_DESCRIPTION: Int) = builder.addOffset(1, SHORT_DESCRIPTION, 0)
-        fun addLONG_DESCRIPTION(builder: FlatBufferBuilder, LONG_DESCRIPTION: Int) = builder.addOffset(2, LONG_DESCRIPTION, 0)
-        fun addEPOCH(builder: FlatBufferBuilder, EPOCH: Byte) = builder.addByte(3, EPOCH, 2)
-        fun addEPOCH_DATE(builder: FlatBufferBuilder, EPOCH_DATE: Int) = builder.addOffset(4, EPOCH_DATE, 0)
-        fun addDATA_ENCODING(builder: FlatBufferBuilder, DATA_ENCODING: Int) = builder.addOffset(5, DATA_ENCODING, 0)
-        fun addSCALE(builder: FlatBufferBuilder, SCALE: Double) = builder.addDouble(6, SCALE, 0.0)
-        fun addOFFSET(builder: FlatBufferBuilder, OFFSET: Double) = builder.addDouble(7, OFFSET, 0.0)
-        fun addDEFAULT_ALARM(builder: FlatBufferBuilder, DEFAULT_ALARM: Int) = builder.addOffset(8, DEFAULT_ALARM, 0)
-        fun addCONTEXT_ALARMS(builder: FlatBufferBuilder, CONTEXT_ALARMS: Int) = builder.addOffset(9, CONTEXT_ALARMS, 0)
+        fun addNAME(builder: FlatBufferBuilder, name: Int) = builder.addOffset(0, name, 0)
+        fun addSHORTDESCRIPTION(builder: FlatBufferBuilder, shortDescription: Int) = builder.addOffset(1, shortDescription, 0)
+        fun addLONGDESCRIPTION(builder: FlatBufferBuilder, longDescription: Int) = builder.addOffset(2, longDescription, 0)
+        fun addEPOCH(builder: FlatBufferBuilder, epoch: Byte) = builder.addByte(3, epoch, 2)
+        fun addEPOCHDATE(builder: FlatBufferBuilder, epochDate: Int) = builder.addOffset(4, epochDate, 0)
+        fun addDATAENCODING(builder: FlatBufferBuilder, dataEncoding: Int) = builder.addOffset(5, dataEncoding, 0)
+        fun addSCALE(builder: FlatBufferBuilder, scale: Double) = builder.addDouble(6, scale, 0.0)
+        fun addOFFSET(builder: FlatBufferBuilder, offset: Double) = builder.addDouble(7, offset, 0.0)
+        fun addDEFAULTALARM(builder: FlatBufferBuilder, defaultAlarm: Int) = builder.addOffset(8, defaultAlarm, 0)
+        fun addCONTEXTALARMS(builder: FlatBufferBuilder, contextAlarms: Int) = builder.addOffset(9, contextAlarms, 0)
         fun createContextAlarmsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {

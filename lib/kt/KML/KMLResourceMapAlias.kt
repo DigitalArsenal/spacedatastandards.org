@@ -32,7 +32,7 @@ class KMLResourceMapAlias : Table() {
     /**
      * Target href
      */
-    val TARGET_HREF : String?
+    val targetHref : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class KMLResourceMapAlias : Table() {
                 null
             }
         }
-    val TARGET_HREFAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun TARGET_HREFInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val targetHrefAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun targetHrefInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Source href
      */
-    val SOURCE_HREF : String?
+    val sourceHref : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -55,24 +55,24 @@ class KMLResourceMapAlias : Table() {
                 null
             }
         }
-    val SOURCE_HREFAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun SOURCE_HREFInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val sourceHrefAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun sourceHrefInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsKMLResourceMapAlias(_bb: ByteBuffer): KMLResourceMapAlias = getRootAsKMLResourceMapAlias(_bb, KMLResourceMapAlias())
         fun getRootAsKMLResourceMapAlias(_bb: ByteBuffer, obj: KMLResourceMapAlias): KMLResourceMapAlias {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createKMLResourceMapAlias(builder: FlatBufferBuilder, TARGET_HREFOffset: Int, SOURCE_HREFOffset: Int) : Int {
+        fun createKMLResourceMapAlias(builder: FlatBufferBuilder, targetHrefOffset: Int, sourceHrefOffset: Int) : Int {
             builder.startTable(2)
-            addSOURCE_HREF(builder, SOURCE_HREFOffset)
-            addTARGET_HREF(builder, TARGET_HREFOffset)
+            addSOURCEHREF(builder, sourceHrefOffset)
+            addTARGETHREF(builder, targetHrefOffset)
             return endKMLResourceMapAlias(builder)
         }
         fun startKMLResourceMapAlias(builder: FlatBufferBuilder) = builder.startTable(2)
-        fun addTARGET_HREF(builder: FlatBufferBuilder, TARGET_HREF: Int) = builder.addOffset(0, TARGET_HREF, 0)
-        fun addSOURCE_HREF(builder: FlatBufferBuilder, SOURCE_HREF: Int) = builder.addOffset(1, SOURCE_HREF, 0)
+        fun addTARGETHREF(builder: FlatBufferBuilder, targetHref: Int) = builder.addOffset(0, targetHref, 0)
+        fun addSOURCEHREF(builder: FlatBufferBuilder, sourceHref: Int) = builder.addOffset(1, sourceHref, 0)
         fun endKMLResourceMapAlias(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

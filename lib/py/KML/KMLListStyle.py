@@ -109,6 +109,12 @@ def KMLListStyleStartITEM_ICONSVector(builder, numElems):
 def StartITEM_ICONSVector(builder, numElems):
     return KMLListStyleStartITEM_ICONSVector(builder, numElems)
 
+def KMLListStyleCreateITEM_ICONSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateITEM_ICONSVector(builder, data):
+    KMLListStyleCreateITEM_ICONSVector(builder, data)
+
 def KMLListStyleAddMAX_SNIPPET_LINES(builder, MAX_SNIPPET_LINES):
     builder.PrependInt32Slot(3, MAX_SNIPPET_LINES, 0)
 
@@ -130,17 +136,23 @@ except:
 class KMLListStyleT(object):
 
     # KMLListStyleT
-    def __init__(self):
-        self.LIST_ITEM_TYPE = 0  # type: int
-        self.BG_COLOR = None  # type: str
-        self.ITEM_ICONS = None  # type: List[KMLItemIcon.KMLItemIconT]
-        self.MAX_SNIPPET_LINES = 0  # type: int
+    def __init__(
+        self,
+        LIST_ITEM_TYPE = 0,
+        BG_COLOR = None,
+        ITEM_ICONS = None,
+        MAX_SNIPPET_LINES = 0,
+    ):
+        self.LIST_ITEM_TYPE = LIST_ITEM_TYPE  # type: int
+        self.BG_COLOR = BG_COLOR  # type: Optional[str]
+        self.ITEM_ICONS = ITEM_ICONS  # type: Optional[List[KMLItemIcon.KMLItemIconT]]
+        self.MAX_SNIPPET_LINES = MAX_SNIPPET_LINES  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        kmllistStyle = KMLListStyle()
-        kmllistStyle.Init(buf, pos)
-        return cls.InitFromObj(kmllistStyle)
+        tmpKmllistStyle = KMLListStyle()
+        tmpKmllistStyle.Init(buf, pos)
+        return cls.InitFromObj(tmpKmllistStyle)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -148,26 +160,26 @@ class KMLListStyleT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, kmllistStyle):
+    def InitFromObj(cls, tmpKmllistStyle):
         x = KMLListStyleT()
-        x._UnPack(kmllistStyle)
+        x._UnPack(tmpKmllistStyle)
         return x
 
     # KMLListStyleT
-    def _UnPack(self, kmllistStyle):
-        if kmllistStyle is None:
+    def _UnPack(self, KMLListStyle):
+        if KMLListStyle is None:
             return
-        self.LIST_ITEM_TYPE = kmllistStyle.LIST_ITEM_TYPE()
-        self.BG_COLOR = kmllistStyle.BG_COLOR()
-        if not kmllistStyle.ITEM_ICONSIsNone():
+        self.LIST_ITEM_TYPE = KMLListStyle.LIST_ITEM_TYPE()
+        self.BG_COLOR = KMLListStyle.BG_COLOR()
+        if not KMLListStyle.ITEM_ICONSIsNone():
             self.ITEM_ICONS = []
-            for i in range(kmllistStyle.ITEM_ICONSLength()):
-                if kmllistStyle.ITEM_ICONS(i) is None:
+            for i in range(KMLListStyle.ITEM_ICONSLength()):
+                if KMLListStyle.ITEM_ICONS(i) is None:
                     self.ITEM_ICONS.append(None)
                 else:
-                    kMLItemIcon_ = KMLItemIcon.KMLItemIconT.InitFromObj(kmllistStyle.ITEM_ICONS(i))
+                    kMLItemIcon_ = KMLItemIcon.KMLItemIconT.InitFromObj(KMLListStyle.ITEM_ICONS(i))
                     self.ITEM_ICONS.append(kMLItemIcon_)
-        self.MAX_SNIPPET_LINES = kmllistStyle.MAX_SNIPPET_LINES()
+        self.MAX_SNIPPET_LINES = KMLListStyle.MAX_SNIPPET_LINES()
 
     # KMLListStyleT
     def Pack(self, builder):
@@ -188,5 +200,5 @@ class KMLListStyleT(object):
         if self.ITEM_ICONS is not None:
             KMLListStyleAddITEM_ICONS(builder, ITEM_ICONS)
         KMLListStyleAddMAX_SNIPPET_LINES(builder, self.MAX_SNIPPET_LINES)
-        kmllistStyle = KMLListStyleEnd(builder)
-        return kmllistStyle
+        KMLListStyle = KMLListStyleEnd(builder)
+        return KMLListStyle

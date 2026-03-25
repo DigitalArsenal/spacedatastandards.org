@@ -2,4 +2,7 @@
 
 # namespace: 
 
-# NOTE CZMArcType.py does not declare any structs or enums
+class CZMArcType(object):
+    NONE = 0
+    GEODESIC = 1
+    RHUMB = 2

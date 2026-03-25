@@ -32,7 +32,7 @@ class KMLLatLonAltBox : Table() {
     /**
      * North latitude
      */
-    val NORTH : Double
+    val north : Double
         get() {
             val o = __offset(4)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -40,7 +40,7 @@ class KMLLatLonAltBox : Table() {
     /**
      * South latitude
      */
-    val SOUTH : Double
+    val south : Double
         get() {
             val o = __offset(6)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -48,7 +48,7 @@ class KMLLatLonAltBox : Table() {
     /**
      * East longitude
      */
-    val EAST : Double
+    val east : Double
         get() {
             val o = __offset(8)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -56,7 +56,7 @@ class KMLLatLonAltBox : Table() {
     /**
      * West longitude
      */
-    val WEST : Double
+    val west : Double
         get() {
             val o = __offset(10)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -64,7 +64,7 @@ class KMLLatLonAltBox : Table() {
     /**
      * Minimum altitude
      */
-    val MIN_ALTITUDE : Double
+    val minAltitude : Double
         get() {
             val o = __offset(12)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -72,7 +72,7 @@ class KMLLatLonAltBox : Table() {
     /**
      * Maximum altitude
      */
-    val MAX_ALTITUDE : Double
+    val maxAltitude : Double
         get() {
             val o = __offset(14)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -80,37 +80,37 @@ class KMLLatLonAltBox : Table() {
     /**
      * Altitude mode
      */
-    val ALTITUDE_MODE : Byte
+    val altitudeMode : Byte
         get() {
             val o = __offset(16)
             return if(o != 0) bb.get(o + bb_pos) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsKMLLatLonAltBox(_bb: ByteBuffer): KMLLatLonAltBox = getRootAsKMLLatLonAltBox(_bb, KMLLatLonAltBox())
         fun getRootAsKMLLatLonAltBox(_bb: ByteBuffer, obj: KMLLatLonAltBox): KMLLatLonAltBox {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createKMLLatLonAltBox(builder: FlatBufferBuilder, NORTH: Double, SOUTH: Double, EAST: Double, WEST: Double, MIN_ALTITUDE: Double, MAX_ALTITUDE: Double, ALTITUDE_MODE: Byte) : Int {
+        fun createKMLLatLonAltBox(builder: FlatBufferBuilder, north: Double, south: Double, east: Double, west: Double, minAltitude: Double, maxAltitude: Double, altitudeMode: Byte) : Int {
             builder.startTable(7)
-            addMAX_ALTITUDE(builder, MAX_ALTITUDE)
-            addMIN_ALTITUDE(builder, MIN_ALTITUDE)
-            addWEST(builder, WEST)
-            addEAST(builder, EAST)
-            addSOUTH(builder, SOUTH)
-            addNORTH(builder, NORTH)
-            addALTITUDE_MODE(builder, ALTITUDE_MODE)
+            addMAXALTITUDE(builder, maxAltitude)
+            addMINALTITUDE(builder, minAltitude)
+            addWEST(builder, west)
+            addEAST(builder, east)
+            addSOUTH(builder, south)
+            addNORTH(builder, north)
+            addALTITUDEMODE(builder, altitudeMode)
             return endKMLLatLonAltBox(builder)
         }
         fun startKMLLatLonAltBox(builder: FlatBufferBuilder) = builder.startTable(7)
-        fun addNORTH(builder: FlatBufferBuilder, NORTH: Double) = builder.addDouble(0, NORTH, 0.0)
-        fun addSOUTH(builder: FlatBufferBuilder, SOUTH: Double) = builder.addDouble(1, SOUTH, 0.0)
-        fun addEAST(builder: FlatBufferBuilder, EAST: Double) = builder.addDouble(2, EAST, 0.0)
-        fun addWEST(builder: FlatBufferBuilder, WEST: Double) = builder.addDouble(3, WEST, 0.0)
-        fun addMIN_ALTITUDE(builder: FlatBufferBuilder, MIN_ALTITUDE: Double) = builder.addDouble(4, MIN_ALTITUDE, 0.0)
-        fun addMAX_ALTITUDE(builder: FlatBufferBuilder, MAX_ALTITUDE: Double) = builder.addDouble(5, MAX_ALTITUDE, 0.0)
-        fun addALTITUDE_MODE(builder: FlatBufferBuilder, ALTITUDE_MODE: Byte) = builder.addByte(6, ALTITUDE_MODE, 0)
+        fun addNORTH(builder: FlatBufferBuilder, north: Double) = builder.addDouble(0, north, 0.0)
+        fun addSOUTH(builder: FlatBufferBuilder, south: Double) = builder.addDouble(1, south, 0.0)
+        fun addEAST(builder: FlatBufferBuilder, east: Double) = builder.addDouble(2, east, 0.0)
+        fun addWEST(builder: FlatBufferBuilder, west: Double) = builder.addDouble(3, west, 0.0)
+        fun addMINALTITUDE(builder: FlatBufferBuilder, minAltitude: Double) = builder.addDouble(4, minAltitude, 0.0)
+        fun addMAXALTITUDE(builder: FlatBufferBuilder, maxAltitude: Double) = builder.addDouble(5, maxAltitude, 0.0)
+        fun addALTITUDEMODE(builder: FlatBufferBuilder, altitudeMode: Byte) = builder.addByte(6, altitudeMode, 0)
         fun endKMLLatLonAltBox(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

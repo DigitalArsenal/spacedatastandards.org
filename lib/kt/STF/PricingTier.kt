@@ -32,7 +32,7 @@ class PricingTier : Table() {
     /**
      * Tier name, e.g., "Basic", "Pro", "Enterprise"
      */
-    val NAME : String?
+    val name : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class PricingTier : Table() {
                 null
             }
         }
-    val NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val nameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun nameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Price in smallest unit (cents, satoshis, etc.)
      */
-    val PRICE_AMOUNT : ULong
+    val priceAmount : ULong
         get() {
             val o = __offset(6)
             return if(o != 0) bb.getLong(o + bb_pos).toULong() else 0UL
@@ -54,7 +54,7 @@ class PricingTier : Table() {
     /**
      * Currency code: "USD", "ETH", "SOL", "SDN_CREDITS"
      */
-    val PRICE_CURRENCY : String?
+    val priceCurrency : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -63,12 +63,12 @@ class PricingTier : Table() {
                 null
             }
         }
-    val PRICE_CURRENCYAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun PRICE_CURRENCYInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val priceCurrencyAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun priceCurrencyInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
     /**
      * Duration in days (0 = one-time purchase)
      */
-    val DURATION_DAYS : UInt
+    val durationDays : UInt
         get() {
             val o = __offset(10)
             return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
@@ -76,7 +76,7 @@ class PricingTier : Table() {
     /**
      * Rate limit in requests per hour
      */
-    val RATE_LIMIT : UInt
+    val rateLimit : UInt
         get() {
             val o = __offset(12)
             return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
@@ -84,7 +84,7 @@ class PricingTier : Table() {
     /**
      * List of features included in this tier
      */
-    fun FEATURES(j: Int) : String? {
+    fun features(j: Int) : String? {
         val o = __offset(14)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
@@ -92,34 +92,34 @@ class PricingTier : Table() {
             null
         }
     }
-    val FEATURESLength : Int
+    val featuresLength : Int
         get() {
             val o = __offset(14); return if (o != 0) __vector_len(o) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsPricingTier(_bb: ByteBuffer): PricingTier = getRootAsPricingTier(_bb, PricingTier())
         fun getRootAsPricingTier(_bb: ByteBuffer, obj: PricingTier): PricingTier {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createPricingTier(builder: FlatBufferBuilder, NAMEOffset: Int, PRICE_AMOUNT: ULong, PRICE_CURRENCYOffset: Int, DURATION_DAYS: UInt, RATE_LIMIT: UInt, FEATURESOffset: Int) : Int {
+        fun createPricingTier(builder: FlatBufferBuilder, nameOffset: Int, priceAmount: ULong, priceCurrencyOffset: Int, durationDays: UInt, rateLimit: UInt, featuresOffset: Int) : Int {
             builder.startTable(6)
-            addPRICE_AMOUNT(builder, PRICE_AMOUNT)
-            addFEATURES(builder, FEATURESOffset)
-            addRATE_LIMIT(builder, RATE_LIMIT)
-            addDURATION_DAYS(builder, DURATION_DAYS)
-            addPRICE_CURRENCY(builder, PRICE_CURRENCYOffset)
-            addNAME(builder, NAMEOffset)
+            addPRICEAMOUNT(builder, priceAmount)
+            addFEATURES(builder, featuresOffset)
+            addRATELIMIT(builder, rateLimit)
+            addDURATIONDAYS(builder, durationDays)
+            addPRICECURRENCY(builder, priceCurrencyOffset)
+            addNAME(builder, nameOffset)
             return endPricingTier(builder)
         }
         fun startPricingTier(builder: FlatBufferBuilder) = builder.startTable(6)
-        fun addNAME(builder: FlatBufferBuilder, NAME: Int) = builder.addOffset(0, NAME, 0)
-        fun addPRICE_AMOUNT(builder: FlatBufferBuilder, PRICE_AMOUNT: ULong) = builder.addLong(1, PRICE_AMOUNT.toLong(), 0)
-        fun addPRICE_CURRENCY(builder: FlatBufferBuilder, PRICE_CURRENCY: Int) = builder.addOffset(2, PRICE_CURRENCY, 0)
-        fun addDURATION_DAYS(builder: FlatBufferBuilder, DURATION_DAYS: UInt) = builder.addInt(3, DURATION_DAYS.toInt(), 0)
-        fun addRATE_LIMIT(builder: FlatBufferBuilder, RATE_LIMIT: UInt) = builder.addInt(4, RATE_LIMIT.toInt(), 0)
-        fun addFEATURES(builder: FlatBufferBuilder, FEATURES: Int) = builder.addOffset(5, FEATURES, 0)
+        fun addNAME(builder: FlatBufferBuilder, name: Int) = builder.addOffset(0, name, 0)
+        fun addPRICEAMOUNT(builder: FlatBufferBuilder, priceAmount: ULong) = builder.addLong(1, priceAmount.toLong(), 0)
+        fun addPRICECURRENCY(builder: FlatBufferBuilder, priceCurrency: Int) = builder.addOffset(2, priceCurrency, 0)
+        fun addDURATIONDAYS(builder: FlatBufferBuilder, durationDays: UInt) = builder.addInt(3, durationDays.toInt(), 0)
+        fun addRATELIMIT(builder: FlatBufferBuilder, rateLimit: UInt) = builder.addInt(4, rateLimit.toInt(), 0)
+        fun addFEATURES(builder: FlatBufferBuilder, features: Int) = builder.addOffset(5, features, 0)
         fun createFeaturesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {

@@ -218,24 +218,37 @@ except:
 class KMLPhotoOverlayT(object):
 
     # KMLPhotoOverlayT
-    def __init__(self):
-        self.NAME = None  # type: str
-        self.DESCRIPTION = None  # type: str
-        self.VISIBILITY = False  # type: bool
-        self.ICON_HREF = None  # type: str
-        self.COLOR = None  # type: str
-        self.DRAW_ORDER = 0  # type: int
-        self.ROTATION = 0.0  # type: float
-        self.VIEW_VOLUME = None  # type: Optional[KMLViewVolume.KMLViewVolumeT]
-        self.IMAGE_PYRAMID = None  # type: Optional[KMLImagePyramid.KMLImagePyramidT]
-        self.POINT = None  # type: Optional[KMLPoint.KMLPointT]
-        self.SHAPE = 0  # type: int
+    def __init__(
+        self,
+        NAME = None,
+        DESCRIPTION = None,
+        VISIBILITY = False,
+        ICON_HREF = None,
+        COLOR = None,
+        DRAW_ORDER = 0,
+        ROTATION = 0.0,
+        VIEW_VOLUME = None,
+        IMAGE_PYRAMID = None,
+        POINT = None,
+        SHAPE = 0,
+    ):
+        self.NAME = NAME  # type: Optional[str]
+        self.DESCRIPTION = DESCRIPTION  # type: Optional[str]
+        self.VISIBILITY = VISIBILITY  # type: bool
+        self.ICON_HREF = ICON_HREF  # type: Optional[str]
+        self.COLOR = COLOR  # type: Optional[str]
+        self.DRAW_ORDER = DRAW_ORDER  # type: int
+        self.ROTATION = ROTATION  # type: float
+        self.VIEW_VOLUME = VIEW_VOLUME  # type: Optional[KMLViewVolume.KMLViewVolumeT]
+        self.IMAGE_PYRAMID = IMAGE_PYRAMID  # type: Optional[KMLImagePyramid.KMLImagePyramidT]
+        self.POINT = POINT  # type: Optional[KMLPoint.KMLPointT]
+        self.SHAPE = SHAPE  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        kmlphotoOverlay = KMLPhotoOverlay()
-        kmlphotoOverlay.Init(buf, pos)
-        return cls.InitFromObj(kmlphotoOverlay)
+        tmpKmlphotoOverlay = KMLPhotoOverlay()
+        tmpKmlphotoOverlay.Init(buf, pos)
+        return cls.InitFromObj(tmpKmlphotoOverlay)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -243,29 +256,29 @@ class KMLPhotoOverlayT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, kmlphotoOverlay):
+    def InitFromObj(cls, tmpKmlphotoOverlay):
         x = KMLPhotoOverlayT()
-        x._UnPack(kmlphotoOverlay)
+        x._UnPack(tmpKmlphotoOverlay)
         return x
 
     # KMLPhotoOverlayT
-    def _UnPack(self, kmlphotoOverlay):
-        if kmlphotoOverlay is None:
+    def _UnPack(self, KMLPhotoOverlay):
+        if KMLPhotoOverlay is None:
             return
-        self.NAME = kmlphotoOverlay.NAME()
-        self.DESCRIPTION = kmlphotoOverlay.DESCRIPTION()
-        self.VISIBILITY = kmlphotoOverlay.VISIBILITY()
-        self.ICON_HREF = kmlphotoOverlay.ICON_HREF()
-        self.COLOR = kmlphotoOverlay.COLOR()
-        self.DRAW_ORDER = kmlphotoOverlay.DRAW_ORDER()
-        self.ROTATION = kmlphotoOverlay.ROTATION()
-        if kmlphotoOverlay.VIEW_VOLUME() is not None:
-            self.VIEW_VOLUME = KMLViewVolume.KMLViewVolumeT.InitFromObj(kmlphotoOverlay.VIEW_VOLUME())
-        if kmlphotoOverlay.IMAGE_PYRAMID() is not None:
-            self.IMAGE_PYRAMID = KMLImagePyramid.KMLImagePyramidT.InitFromObj(kmlphotoOverlay.IMAGE_PYRAMID())
-        if kmlphotoOverlay.POINT() is not None:
-            self.POINT = KMLPoint.KMLPointT.InitFromObj(kmlphotoOverlay.POINT())
-        self.SHAPE = kmlphotoOverlay.SHAPE()
+        self.NAME = KMLPhotoOverlay.NAME()
+        self.DESCRIPTION = KMLPhotoOverlay.DESCRIPTION()
+        self.VISIBILITY = KMLPhotoOverlay.VISIBILITY()
+        self.ICON_HREF = KMLPhotoOverlay.ICON_HREF()
+        self.COLOR = KMLPhotoOverlay.COLOR()
+        self.DRAW_ORDER = KMLPhotoOverlay.DRAW_ORDER()
+        self.ROTATION = KMLPhotoOverlay.ROTATION()
+        if KMLPhotoOverlay.VIEW_VOLUME() is not None:
+            self.VIEW_VOLUME = KMLViewVolume.KMLViewVolumeT.InitFromObj(KMLPhotoOverlay.VIEW_VOLUME())
+        if KMLPhotoOverlay.IMAGE_PYRAMID() is not None:
+            self.IMAGE_PYRAMID = KMLImagePyramid.KMLImagePyramidT.InitFromObj(KMLPhotoOverlay.IMAGE_PYRAMID())
+        if KMLPhotoOverlay.POINT() is not None:
+            self.POINT = KMLPoint.KMLPointT.InitFromObj(KMLPhotoOverlay.POINT())
+        self.SHAPE = KMLPhotoOverlay.SHAPE()
 
     # KMLPhotoOverlayT
     def Pack(self, builder):
@@ -302,5 +315,5 @@ class KMLPhotoOverlayT(object):
         if self.POINT is not None:
             KMLPhotoOverlayAddPOINT(builder, POINT)
         KMLPhotoOverlayAddSHAPE(builder, self.SHAPE)
-        kmlphotoOverlay = KMLPhotoOverlayEnd(builder)
-        return kmlphotoOverlay
+        KMLPhotoOverlay = KMLPhotoOverlayEnd(builder)
+        return KMLPhotoOverlay

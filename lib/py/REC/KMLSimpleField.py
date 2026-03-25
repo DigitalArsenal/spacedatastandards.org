@@ -2,4 +2,140 @@
 
 # namespace: 
 
-# NOTE KMLSimpleField.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Schema simple field definition
+class KMLSimpleField(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = KMLSimpleField()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsKMLSimpleField(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def KMLSimpleFieldBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x4B\x4D\x4C", size_prefixed=size_prefixed)
+
+    # KMLSimpleField
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Field name
+    # KMLSimpleField
+    def NAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Field type (xsd:string, xsd:int, xsd:float, etc.)
+    # KMLSimpleField
+    def FIELD_TYPE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Display name
+    # KMLSimpleField
+    def DISPLAY_NAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+def KMLSimpleFieldStart(builder):
+    builder.StartObject(3)
+
+def Start(builder):
+    KMLSimpleFieldStart(builder)
+
+def KMLSimpleFieldAddNAME(builder, NAME):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(NAME), 0)
+
+def AddNAME(builder, NAME):
+    KMLSimpleFieldAddNAME(builder, NAME)
+
+def KMLSimpleFieldAddFIELD_TYPE(builder, FIELD_TYPE):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(FIELD_TYPE), 0)
+
+def AddFIELD_TYPE(builder, FIELD_TYPE):
+    KMLSimpleFieldAddFIELD_TYPE(builder, FIELD_TYPE)
+
+def KMLSimpleFieldAddDISPLAY_NAME(builder, DISPLAY_NAME):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(DISPLAY_NAME), 0)
+
+def AddDISPLAY_NAME(builder, DISPLAY_NAME):
+    KMLSimpleFieldAddDISPLAY_NAME(builder, DISPLAY_NAME)
+
+def KMLSimpleFieldEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return KMLSimpleFieldEnd(builder)
+
+
+class KMLSimpleFieldT(object):
+
+    # KMLSimpleFieldT
+    def __init__(
+        self,
+        NAME = None,
+        FIELD_TYPE = None,
+        DISPLAY_NAME = None,
+    ):
+        self.NAME = NAME  # type: Optional[str]
+        self.FIELD_TYPE = FIELD_TYPE  # type: Optional[str]
+        self.DISPLAY_NAME = DISPLAY_NAME  # type: Optional[str]
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpKmlsimpleField = KMLSimpleField()
+        tmpKmlsimpleField.Init(buf, pos)
+        return cls.InitFromObj(tmpKmlsimpleField)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpKmlsimpleField):
+        x = KMLSimpleFieldT()
+        x._UnPack(tmpKmlsimpleField)
+        return x
+
+    # KMLSimpleFieldT
+    def _UnPack(self, KMLSimpleField):
+        if KMLSimpleField is None:
+            return
+        self.NAME = KMLSimpleField.NAME()
+        self.FIELD_TYPE = KMLSimpleField.FIELD_TYPE()
+        self.DISPLAY_NAME = KMLSimpleField.DISPLAY_NAME()
+
+    # KMLSimpleFieldT
+    def Pack(self, builder):
+        if self.NAME is not None:
+            NAME = builder.CreateString(self.NAME)
+        if self.FIELD_TYPE is not None:
+            FIELD_TYPE = builder.CreateString(self.FIELD_TYPE)
+        if self.DISPLAY_NAME is not None:
+            DISPLAY_NAME = builder.CreateString(self.DISPLAY_NAME)
+        KMLSimpleFieldStart(builder)
+        if self.NAME is not None:
+            KMLSimpleFieldAddNAME(builder, NAME)
+        if self.FIELD_TYPE is not None:
+            KMLSimpleFieldAddFIELD_TYPE(builder, FIELD_TYPE)
+        if self.DISPLAY_NAME is not None:
+            KMLSimpleFieldAddDISPLAY_NAME(builder, DISPLAY_NAME)
+        KMLSimpleField = KMLSimpleFieldEnd(builder)
+        return KMLSimpleField

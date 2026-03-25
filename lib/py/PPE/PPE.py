@@ -218,6 +218,12 @@ def PPEStartCOMMENTVector(builder, numElems):
 def StartCOMMENTVector(builder, numElems):
     return PPEStartCOMMENTVector(builder, numElems)
 
+def PPECreateCOMMENTVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateCOMMENTVector(builder, data):
+    PPECreateCOMMENTVector(builder, data)
+
 def PPEAddOBJECT(builder, OBJECT):
     builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(OBJECT), 0)
 
@@ -272,6 +278,12 @@ def PPEStartPOSITION_RECORDSVector(builder, numElems):
 def StartPOSITION_RECORDSVector(builder, numElems):
     return PPEStartPOSITION_RECORDSVector(builder, numElems)
 
+def PPECreatePOSITION_RECORDSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreatePOSITION_RECORDSVector(builder, data):
+    PPECreatePOSITION_RECORDSVector(builder, data)
+
 def PPEAddORBITAL_ELEMENT_RECORDS(builder, ORBITAL_ELEMENT_RECORDS):
     builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(ORBITAL_ELEMENT_RECORDS), 0)
 
@@ -283,6 +295,12 @@ def PPEStartORBITAL_ELEMENT_RECORDSVector(builder, numElems):
 
 def StartORBITAL_ELEMENT_RECORDSVector(builder, numElems):
     return PPEStartORBITAL_ELEMENT_RECORDSVector(builder, numElems)
+
+def PPECreateORBITAL_ELEMENT_RECORDSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateORBITAL_ELEMENT_RECORDSVector(builder, data):
+    PPECreateORBITAL_ELEMENT_RECORDSVector(builder, data)
 
 def PPEAddEPHEMERIS_SOURCE(builder, EPHEMERIS_SOURCE):
     builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(EPHEMERIS_SOURCE), 0)
@@ -320,26 +338,41 @@ except:
 class PPET(object):
 
     # PPET
-    def __init__(self):
-        self.COMMENT = None  # type: List[str]
-        self.OBJECT = None  # type: Optional[CAT.CATT]
-        self.CENTER_NAME = None  # type: str
-        self.REFERENCE_FRAME = None  # type: Optional[RFM.RFMT]
-        self.TIME_SYSTEM = 0  # type: int
-        self.START_TIME = None  # type: str
-        self.STOP_TIME = None  # type: str
-        self.DEFAULT_BASIS_TYPE = 0  # type: int
-        self.POSITION_RECORDS = None  # type: List[PPEPositionRecord.PPEPositionRecordT]
-        self.ORBITAL_ELEMENT_RECORDS = None  # type: List[PPEOrbitalElementRecord.PPEOrbitalElementRecordT]
-        self.EPHEMERIS_SOURCE = None  # type: str
-        self.NOMINAL_SEGMENT_SPAN = 0.0  # type: float
-        self.NOMINAL_NUM_COEFFICIENTS = 0  # type: int
+    def __init__(
+        self,
+        COMMENT = None,
+        OBJECT = None,
+        CENTER_NAME = None,
+        REFERENCE_FRAME = None,
+        TIME_SYSTEM = 0,
+        START_TIME = None,
+        STOP_TIME = None,
+        DEFAULT_BASIS_TYPE = 0,
+        POSITION_RECORDS = None,
+        ORBITAL_ELEMENT_RECORDS = None,
+        EPHEMERIS_SOURCE = None,
+        NOMINAL_SEGMENT_SPAN = 0.0,
+        NOMINAL_NUM_COEFFICIENTS = 0,
+    ):
+        self.COMMENT = COMMENT  # type: Optional[List[Optional[str]]]
+        self.OBJECT = OBJECT  # type: Optional[CAT.CATT]
+        self.CENTER_NAME = CENTER_NAME  # type: Optional[str]
+        self.REFERENCE_FRAME = REFERENCE_FRAME  # type: Optional[RFM.RFMT]
+        self.TIME_SYSTEM = TIME_SYSTEM  # type: int
+        self.START_TIME = START_TIME  # type: Optional[str]
+        self.STOP_TIME = STOP_TIME  # type: Optional[str]
+        self.DEFAULT_BASIS_TYPE = DEFAULT_BASIS_TYPE  # type: int
+        self.POSITION_RECORDS = POSITION_RECORDS  # type: Optional[List[PPEPositionRecord.PPEPositionRecordT]]
+        self.ORBITAL_ELEMENT_RECORDS = ORBITAL_ELEMENT_RECORDS  # type: Optional[List[PPEOrbitalElementRecord.PPEOrbitalElementRecordT]]
+        self.EPHEMERIS_SOURCE = EPHEMERIS_SOURCE  # type: Optional[str]
+        self.NOMINAL_SEGMENT_SPAN = NOMINAL_SEGMENT_SPAN  # type: float
+        self.NOMINAL_NUM_COEFFICIENTS = NOMINAL_NUM_COEFFICIENTS  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        PPE = PPE()
-        PPE.Init(buf, pos)
-        return cls.InitFromObj(PPE)
+        tmpPpe = PPE()
+        tmpPpe.Init(buf, pos)
+        return cls.InitFromObj(tmpPpe)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -347,9 +380,9 @@ class PPET(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, PPE):
+    def InitFromObj(cls, tmpPpe):
         x = PPET()
-        x._UnPack(PPE)
+        x._UnPack(tmpPpe)
         return x
 
     # PPET

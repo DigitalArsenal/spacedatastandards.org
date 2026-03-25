@@ -63,6 +63,10 @@ func (rcv *IDM) ID() []byte {
 	return nil
 }
 
+func (rcv *IDM) Id() []byte {
+	return rcv.ID()
+}
+
 /// Unique identifier for the EMT
 /// Name of the EMT
 func (rcv *IDM) NAME() []byte {
@@ -71,6 +75,10 @@ func (rcv *IDM) NAME() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *IDM) Name() []byte {
+	return rcv.NAME()
 }
 
 /// Name of the EMT
@@ -83,9 +91,17 @@ func (rcv *IDM) DATA_MODE() DataMode {
 	return 0
 }
 
+func (rcv *IDM) DataMode() DataMode {
+	return rcv.DATA_MODE()
+}
+
 /// Mode of the data (real, simulated, synthetic)
 func (rcv *IDM) MutateDATA_MODE(n DataMode) bool {
 	return rcv._tab.MutateInt8Slot(8, int8(n))
+}
+
+func (rcv *IDM) MutateDataMode(n DataMode) bool {
+	return rcv.MutateDATA_MODE(n)
 }
 
 /// Uplink frequency range
@@ -100,6 +116,10 @@ func (rcv *IDM) UPLINK(obj *FrequencyRange) *FrequencyRange {
 		return obj
 	}
 	return nil
+}
+
+func (rcv *IDM) Uplink(obj *FrequencyRange) *FrequencyRange {
+	return rcv.UPLINK(obj)
 }
 
 /// Uplink frequency range
@@ -117,6 +137,10 @@ func (rcv *IDM) DOWNLINK(obj *FrequencyRange) *FrequencyRange {
 	return nil
 }
 
+func (rcv *IDM) Downlink(obj *FrequencyRange) *FrequencyRange {
+	return rcv.DOWNLINK(obj)
+}
+
 /// Downlink frequency range
 /// Beacon frequency range
 func (rcv *IDM) BEACON(obj *FrequencyRange) *FrequencyRange {
@@ -132,6 +156,10 @@ func (rcv *IDM) BEACON(obj *FrequencyRange) *FrequencyRange {
 	return nil
 }
 
+func (rcv *IDM) Beacon(obj *FrequencyRange) *FrequencyRange {
+	return rcv.BEACON(obj)
+}
+
 /// Beacon frequency range
 /// Bands associated with the EMT
 func (rcv *IDM) BAND(obj *Band, j int) bool {
@@ -140,10 +168,17 @@ func (rcv *IDM) BAND(obj *Band, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(Band)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *IDM) Band(obj *Band, j int) bool {
+	return rcv.BAND(obj, j)
 }
 
 func (rcv *IDM) BANDLength() int {
@@ -152,6 +187,10 @@ func (rcv *IDM) BANDLength() int {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *IDM) BandLength() int {
+	return rcv.BANDLength()
 }
 
 /// Bands associated with the EMT
@@ -164,9 +203,17 @@ func (rcv *IDM) POLARIZATION_TYPE() PolarizationType {
 	return 0
 }
 
+func (rcv *IDM) PolarizationType() PolarizationType {
+	return rcv.POLARIZATION_TYPE()
+}
+
 /// Type of polarization used
 func (rcv *IDM) MutatePOLARIZATION_TYPE(n PolarizationType) bool {
 	return rcv._tab.MutateInt8Slot(18, int8(n))
+}
+
+func (rcv *IDM) MutatePolarizationType(n PolarizationType) bool {
+	return rcv.MutatePOLARIZATION_TYPE(n)
 }
 
 /// Simple polarization configuration
@@ -178,9 +225,17 @@ func (rcv *IDM) SIMPLE_POLARIZATION() SimplePolarization {
 	return 0
 }
 
+func (rcv *IDM) SimplePolarization() SimplePolarization {
+	return rcv.SIMPLE_POLARIZATION()
+}
+
 /// Simple polarization configuration
 func (rcv *IDM) MutateSIMPLE_POLARIZATION(n SimplePolarization) bool {
 	return rcv._tab.MutateInt8Slot(20, int8(n))
+}
+
+func (rcv *IDM) MutateSimplePolarization(n SimplePolarization) bool {
+	return rcv.MutateSIMPLE_POLARIZATION(n)
 }
 
 /// Stokes parameters for polarization characterization
@@ -197,6 +252,10 @@ func (rcv *IDM) STOKES_PARAMETERS(obj *StokesParameters) *StokesParameters {
 	return nil
 }
 
+func (rcv *IDM) StokesParameters(obj *StokesParameters) *StokesParameters {
+	return rcv.STOKES_PARAMETERS(obj)
+}
+
 /// Stokes parameters for polarization characterization
 /// Power required in Watts
 func (rcv *IDM) POWER_REQUIRED() float64 {
@@ -207,9 +266,17 @@ func (rcv *IDM) POWER_REQUIRED() float64 {
 	return 0.0
 }
 
+func (rcv *IDM) PowerRequired() float64 {
+	return rcv.POWER_REQUIRED()
+}
+
 /// Power required in Watts
 func (rcv *IDM) MutatePOWER_REQUIRED(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(24, n)
+}
+
+func (rcv *IDM) MutatePowerRequired(n float64) bool {
+	return rcv.MutatePOWER_REQUIRED(n)
 }
 
 /// Type of power (eg. AC or DC)
@@ -219,6 +286,10 @@ func (rcv *IDM) POWER_TYPE() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *IDM) PowerType() []byte {
+	return rcv.POWER_TYPE()
 }
 
 /// Type of power (eg. AC or DC)
@@ -231,9 +302,17 @@ func (rcv *IDM) TRANSMIT() bool {
 	return false
 }
 
+func (rcv *IDM) Transmit() bool {
+	return rcv.TRANSMIT()
+}
+
 /// Indicates if the EMT can transmit
 func (rcv *IDM) MutateTRANSMIT(n bool) bool {
 	return rcv._tab.MutateBoolSlot(28, n)
+}
+
+func (rcv *IDM) MutateTransmit(n bool) bool {
+	return rcv.MutateTRANSMIT(n)
 }
 
 /// Indicates if the EMT can receive
@@ -245,9 +324,17 @@ func (rcv *IDM) RECEIVE() bool {
 	return false
 }
 
+func (rcv *IDM) Receive() bool {
+	return rcv.RECEIVE()
+}
+
 /// Indicates if the EMT can receive
 func (rcv *IDM) MutateRECEIVE(n bool) bool {
 	return rcv._tab.MutateBoolSlot(30, n)
+}
+
+func (rcv *IDM) MutateReceive(n bool) bool {
+	return rcv.MutateRECEIVE(n)
 }
 
 /// Type of the sensor
@@ -259,9 +346,17 @@ func (rcv *IDM) SENSOR_TYPE() DeviceType {
 	return 0
 }
 
+func (rcv *IDM) SensorType() DeviceType {
+	return rcv.SENSOR_TYPE()
+}
+
 /// Type of the sensor
 func (rcv *IDM) MutateSENSOR_TYPE(n DeviceType) bool {
 	return rcv._tab.MutateInt8Slot(32, int8(n))
+}
+
+func (rcv *IDM) MutateSensorType(n DeviceType) bool {
+	return rcv.MutateSENSOR_TYPE(n)
 }
 
 /// Source of the data
@@ -271,6 +366,10 @@ func (rcv *IDM) SOURCE() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *IDM) Source() []byte {
+	return rcv.SOURCE()
 }
 
 /// Source of the data
@@ -283,6 +382,10 @@ func (rcv *IDM) LAST_OB_TIME() []byte {
 	return nil
 }
 
+func (rcv *IDM) LastObTime() []byte {
+	return rcv.LAST_OB_TIME()
+}
+
 /// Timestamp of the last observation
 /// Lower left elevation limit
 func (rcv *IDM) LOWER_LEFT_ELEVATION_LIMIT() float64 {
@@ -293,9 +396,17 @@ func (rcv *IDM) LOWER_LEFT_ELEVATION_LIMIT() float64 {
 	return 0.0
 }
 
+func (rcv *IDM) LowerLeftElevationLimit() float64 {
+	return rcv.LOWER_LEFT_ELEVATION_LIMIT()
+}
+
 /// Lower left elevation limit
 func (rcv *IDM) MutateLOWER_LEFT_ELEVATION_LIMIT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(38, n)
+}
+
+func (rcv *IDM) MutateLowerLeftElevationLimit(n float64) bool {
+	return rcv.MutateLOWER_LEFT_ELEVATION_LIMIT(n)
 }
 
 /// Upper left azimuth limit
@@ -307,9 +418,17 @@ func (rcv *IDM) UPPER_LEFT_AZIMUTH_LIMIT() float64 {
 	return 0.0
 }
 
+func (rcv *IDM) UpperLeftAzimuthLimit() float64 {
+	return rcv.UPPER_LEFT_AZIMUTH_LIMIT()
+}
+
 /// Upper left azimuth limit
 func (rcv *IDM) MutateUPPER_LEFT_AZIMUTH_LIMIT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(40, n)
+}
+
+func (rcv *IDM) MutateUpperLeftAzimuthLimit(n float64) bool {
+	return rcv.MutateUPPER_LEFT_AZIMUTH_LIMIT(n)
 }
 
 /// Lower right elevation limit
@@ -321,9 +440,17 @@ func (rcv *IDM) LOWER_RIGHT_ELEVATION_LIMIT() float64 {
 	return 0.0
 }
 
+func (rcv *IDM) LowerRightElevationLimit() float64 {
+	return rcv.LOWER_RIGHT_ELEVATION_LIMIT()
+}
+
 /// Lower right elevation limit
 func (rcv *IDM) MutateLOWER_RIGHT_ELEVATION_LIMIT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(42, n)
+}
+
+func (rcv *IDM) MutateLowerRightElevationLimit(n float64) bool {
+	return rcv.MutateLOWER_RIGHT_ELEVATION_LIMIT(n)
 }
 
 /// Lower left azimuth limit
@@ -335,9 +462,17 @@ func (rcv *IDM) LOWER_LEFT_AZIMUTH_LIMIT() float64 {
 	return 0.0
 }
 
+func (rcv *IDM) LowerLeftAzimuthLimit() float64 {
+	return rcv.LOWER_LEFT_AZIMUTH_LIMIT()
+}
+
 /// Lower left azimuth limit
 func (rcv *IDM) MutateLOWER_LEFT_AZIMUTH_LIMIT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(44, n)
+}
+
+func (rcv *IDM) MutateLowerLeftAzimuthLimit(n float64) bool {
+	return rcv.MutateLOWER_LEFT_AZIMUTH_LIMIT(n)
 }
 
 /// Upper right elevation limit
@@ -349,9 +484,17 @@ func (rcv *IDM) UPPER_RIGHT_ELEVATION_LIMIT() float64 {
 	return 0.0
 }
 
+func (rcv *IDM) UpperRightElevationLimit() float64 {
+	return rcv.UPPER_RIGHT_ELEVATION_LIMIT()
+}
+
 /// Upper right elevation limit
 func (rcv *IDM) MutateUPPER_RIGHT_ELEVATION_LIMIT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(46, n)
+}
+
+func (rcv *IDM) MutateUpperRightElevationLimit(n float64) bool {
+	return rcv.MutateUPPER_RIGHT_ELEVATION_LIMIT(n)
 }
 
 /// Upper right azimuth limit
@@ -363,9 +506,17 @@ func (rcv *IDM) UPPER_RIGHT_AZIMUTH_LIMIT() float64 {
 	return 0.0
 }
 
+func (rcv *IDM) UpperRightAzimuthLimit() float64 {
+	return rcv.UPPER_RIGHT_AZIMUTH_LIMIT()
+}
+
 /// Upper right azimuth limit
 func (rcv *IDM) MutateUPPER_RIGHT_AZIMUTH_LIMIT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(48, n)
+}
+
+func (rcv *IDM) MutateUpperRightAzimuthLimit(n float64) bool {
+	return rcv.MutateUPPER_RIGHT_AZIMUTH_LIMIT(n)
 }
 
 /// Lower right azimuth limit
@@ -377,9 +528,17 @@ func (rcv *IDM) LOWER_RIGHT_AZIMUTH_LIMIT() float64 {
 	return 0.0
 }
 
+func (rcv *IDM) LowerRightAzimuthLimit() float64 {
+	return rcv.LOWER_RIGHT_AZIMUTH_LIMIT()
+}
+
 /// Lower right azimuth limit
 func (rcv *IDM) MutateLOWER_RIGHT_AZIMUTH_LIMIT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(50, n)
+}
+
+func (rcv *IDM) MutateLowerRightAzimuthLimit(n float64) bool {
+	return rcv.MutateLOWER_RIGHT_AZIMUTH_LIMIT(n)
 }
 
 /// Upper left elevation limit
@@ -391,9 +550,17 @@ func (rcv *IDM) UPPER_LEFT_ELEVATION_LIMIT() float64 {
 	return 0.0
 }
 
+func (rcv *IDM) UpperLeftElevationLimit() float64 {
+	return rcv.UPPER_LEFT_ELEVATION_LIMIT()
+}
+
 /// Upper left elevation limit
 func (rcv *IDM) MutateUPPER_LEFT_ELEVATION_LIMIT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(52, n)
+}
+
+func (rcv *IDM) MutateUpperLeftElevationLimit(n float64) bool {
+	return rcv.MutateUPPER_LEFT_ELEVATION_LIMIT(n)
 }
 
 /// Right geostationary belt limit
@@ -405,9 +572,17 @@ func (rcv *IDM) RIGHT_GEO_BELT_LIMIT() float64 {
 	return 0.0
 }
 
+func (rcv *IDM) RightGeoBeltLimit() float64 {
+	return rcv.RIGHT_GEO_BELT_LIMIT()
+}
+
 /// Right geostationary belt limit
 func (rcv *IDM) MutateRIGHT_GEO_BELT_LIMIT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(54, n)
+}
+
+func (rcv *IDM) MutateRightGeoBeltLimit(n float64) bool {
+	return rcv.MutateRIGHT_GEO_BELT_LIMIT(n)
 }
 
 /// Left geostationary belt limit
@@ -419,9 +594,17 @@ func (rcv *IDM) LEFT_GEO_BELT_LIMIT() float64 {
 	return 0.0
 }
 
+func (rcv *IDM) LeftGeoBeltLimit() float64 {
+	return rcv.LEFT_GEO_BELT_LIMIT()
+}
+
 /// Left geostationary belt limit
 func (rcv *IDM) MutateLEFT_GEO_BELT_LIMIT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(56, n)
+}
+
+func (rcv *IDM) MutateLeftGeoBeltLimit(n float64) bool {
+	return rcv.MutateLEFT_GEO_BELT_LIMIT(n)
 }
 
 /// Magnitude limit of the sensor
@@ -433,9 +616,17 @@ func (rcv *IDM) MAGNITUDE_LIMIT() float64 {
 	return 0.0
 }
 
+func (rcv *IDM) MagnitudeLimit() float64 {
+	return rcv.MAGNITUDE_LIMIT()
+}
+
 /// Magnitude limit of the sensor
 func (rcv *IDM) MutateMAGNITUDE_LIMIT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(58, n)
+}
+
+func (rcv *IDM) MutateMagnitudeLimit(n float64) bool {
+	return rcv.MutateMAGNITUDE_LIMIT(n)
 }
 
 /// Indicates if the site is taskable
@@ -447,9 +638,17 @@ func (rcv *IDM) TASKABLE() bool {
 	return false
 }
 
+func (rcv *IDM) Taskable() bool {
+	return rcv.TASKABLE()
+}
+
 /// Indicates if the site is taskable
 func (rcv *IDM) MutateTASKABLE(n bool) bool {
 	return rcv._tab.MutateBoolSlot(60, n)
+}
+
+func (rcv *IDM) MutateTaskable(n bool) bool {
+	return rcv.MutateTASKABLE(n)
 }
 
 func IDMStart(builder *flatbuffers.Builder) {
@@ -458,92 +657,182 @@ func IDMStart(builder *flatbuffers.Builder) {
 func IDMAddID(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ID), 0)
 }
+func IDMAddId(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
+	IDMAddID(builder, ID)
+}
 func IDMAddNAME(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(NAME), 0)
+}
+func IDMAddName(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
+	IDMAddNAME(builder, NAME)
 }
 func IDMAddDATA_MODE(builder *flatbuffers.Builder, DATA_MODE DataMode) {
 	builder.PrependInt8Slot(2, int8(DATA_MODE), 0)
 }
+func IDMAddDataMode(builder *flatbuffers.Builder, DATA_MODE DataMode) {
+	IDMAddDATA_MODE(builder, DATA_MODE)
+}
 func IDMAddUPLINK(builder *flatbuffers.Builder, UPLINK flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(UPLINK), 0)
+}
+func IDMAddUplink(builder *flatbuffers.Builder, UPLINK flatbuffers.UOffsetT) {
+	IDMAddUPLINK(builder, UPLINK)
 }
 func IDMAddDOWNLINK(builder *flatbuffers.Builder, DOWNLINK flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(DOWNLINK), 0)
 }
+func IDMAddDownlink(builder *flatbuffers.Builder, DOWNLINK flatbuffers.UOffsetT) {
+	IDMAddDOWNLINK(builder, DOWNLINK)
+}
 func IDMAddBEACON(builder *flatbuffers.Builder, BEACON flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(BEACON), 0)
+}
+func IDMAddBeacon(builder *flatbuffers.Builder, BEACON flatbuffers.UOffsetT) {
+	IDMAddBEACON(builder, BEACON)
 }
 func IDMAddBAND(builder *flatbuffers.Builder, BAND flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(BAND), 0)
 }
+func IDMAddBand(builder *flatbuffers.Builder, BAND flatbuffers.UOffsetT) {
+	IDMAddBAND(builder, BAND)
+}
 func IDMStartBANDVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func IDMStartBandVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return IDMStartBANDVector(builder, numElems)
 }
 func IDMAddPOLARIZATION_TYPE(builder *flatbuffers.Builder, POLARIZATION_TYPE PolarizationType) {
 	builder.PrependInt8Slot(7, int8(POLARIZATION_TYPE), 0)
 }
+func IDMAddPolarizationType(builder *flatbuffers.Builder, POLARIZATION_TYPE PolarizationType) {
+	IDMAddPOLARIZATION_TYPE(builder, POLARIZATION_TYPE)
+}
 func IDMAddSIMPLE_POLARIZATION(builder *flatbuffers.Builder, SIMPLE_POLARIZATION SimplePolarization) {
 	builder.PrependInt8Slot(8, int8(SIMPLE_POLARIZATION), 0)
+}
+func IDMAddSimplePolarization(builder *flatbuffers.Builder, SIMPLE_POLARIZATION SimplePolarization) {
+	IDMAddSIMPLE_POLARIZATION(builder, SIMPLE_POLARIZATION)
 }
 func IDMAddSTOKES_PARAMETERS(builder *flatbuffers.Builder, STOKES_PARAMETERS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(STOKES_PARAMETERS), 0)
 }
+func IDMAddStokesParameters(builder *flatbuffers.Builder, STOKES_PARAMETERS flatbuffers.UOffsetT) {
+	IDMAddSTOKES_PARAMETERS(builder, STOKES_PARAMETERS)
+}
 func IDMAddPOWER_REQUIRED(builder *flatbuffers.Builder, POWER_REQUIRED float64) {
 	builder.PrependFloat64Slot(10, POWER_REQUIRED, 0.0)
+}
+func IDMAddPowerRequired(builder *flatbuffers.Builder, POWER_REQUIRED float64) {
+	IDMAddPOWER_REQUIRED(builder, POWER_REQUIRED)
 }
 func IDMAddPOWER_TYPE(builder *flatbuffers.Builder, POWER_TYPE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(POWER_TYPE), 0)
 }
+func IDMAddPowerType(builder *flatbuffers.Builder, POWER_TYPE flatbuffers.UOffsetT) {
+	IDMAddPOWER_TYPE(builder, POWER_TYPE)
+}
 func IDMAddTRANSMIT(builder *flatbuffers.Builder, TRANSMIT bool) {
 	builder.PrependBoolSlot(12, TRANSMIT, false)
+}
+func IDMAddTransmit(builder *flatbuffers.Builder, TRANSMIT bool) {
+	IDMAddTRANSMIT(builder, TRANSMIT)
 }
 func IDMAddRECEIVE(builder *flatbuffers.Builder, RECEIVE bool) {
 	builder.PrependBoolSlot(13, RECEIVE, false)
 }
+func IDMAddReceive(builder *flatbuffers.Builder, RECEIVE bool) {
+	IDMAddRECEIVE(builder, RECEIVE)
+}
 func IDMAddSENSOR_TYPE(builder *flatbuffers.Builder, SENSOR_TYPE DeviceType) {
 	builder.PrependInt8Slot(14, int8(SENSOR_TYPE), 0)
+}
+func IDMAddSensorType(builder *flatbuffers.Builder, SENSOR_TYPE DeviceType) {
+	IDMAddSENSOR_TYPE(builder, SENSOR_TYPE)
 }
 func IDMAddSOURCE(builder *flatbuffers.Builder, SOURCE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(15, flatbuffers.UOffsetT(SOURCE), 0)
 }
+func IDMAddSource(builder *flatbuffers.Builder, SOURCE flatbuffers.UOffsetT) {
+	IDMAddSOURCE(builder, SOURCE)
+}
 func IDMAddLAST_OB_TIME(builder *flatbuffers.Builder, LAST_OB_TIME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(16, flatbuffers.UOffsetT(LAST_OB_TIME), 0)
+}
+func IDMAddLastObTime(builder *flatbuffers.Builder, LAST_OB_TIME flatbuffers.UOffsetT) {
+	IDMAddLAST_OB_TIME(builder, LAST_OB_TIME)
 }
 func IDMAddLOWER_LEFT_ELEVATION_LIMIT(builder *flatbuffers.Builder, LOWER_LEFT_ELEVATION_LIMIT float64) {
 	builder.PrependFloat64Slot(17, LOWER_LEFT_ELEVATION_LIMIT, 0.0)
 }
+func IDMAddLowerLeftElevationLimit(builder *flatbuffers.Builder, LOWER_LEFT_ELEVATION_LIMIT float64) {
+	IDMAddLOWER_LEFT_ELEVATION_LIMIT(builder, LOWER_LEFT_ELEVATION_LIMIT)
+}
 func IDMAddUPPER_LEFT_AZIMUTH_LIMIT(builder *flatbuffers.Builder, UPPER_LEFT_AZIMUTH_LIMIT float64) {
 	builder.PrependFloat64Slot(18, UPPER_LEFT_AZIMUTH_LIMIT, 0.0)
+}
+func IDMAddUpperLeftAzimuthLimit(builder *flatbuffers.Builder, UPPER_LEFT_AZIMUTH_LIMIT float64) {
+	IDMAddUPPER_LEFT_AZIMUTH_LIMIT(builder, UPPER_LEFT_AZIMUTH_LIMIT)
 }
 func IDMAddLOWER_RIGHT_ELEVATION_LIMIT(builder *flatbuffers.Builder, LOWER_RIGHT_ELEVATION_LIMIT float64) {
 	builder.PrependFloat64Slot(19, LOWER_RIGHT_ELEVATION_LIMIT, 0.0)
 }
+func IDMAddLowerRightElevationLimit(builder *flatbuffers.Builder, LOWER_RIGHT_ELEVATION_LIMIT float64) {
+	IDMAddLOWER_RIGHT_ELEVATION_LIMIT(builder, LOWER_RIGHT_ELEVATION_LIMIT)
+}
 func IDMAddLOWER_LEFT_AZIMUTH_LIMIT(builder *flatbuffers.Builder, LOWER_LEFT_AZIMUTH_LIMIT float64) {
 	builder.PrependFloat64Slot(20, LOWER_LEFT_AZIMUTH_LIMIT, 0.0)
+}
+func IDMAddLowerLeftAzimuthLimit(builder *flatbuffers.Builder, LOWER_LEFT_AZIMUTH_LIMIT float64) {
+	IDMAddLOWER_LEFT_AZIMUTH_LIMIT(builder, LOWER_LEFT_AZIMUTH_LIMIT)
 }
 func IDMAddUPPER_RIGHT_ELEVATION_LIMIT(builder *flatbuffers.Builder, UPPER_RIGHT_ELEVATION_LIMIT float64) {
 	builder.PrependFloat64Slot(21, UPPER_RIGHT_ELEVATION_LIMIT, 0.0)
 }
+func IDMAddUpperRightElevationLimit(builder *flatbuffers.Builder, UPPER_RIGHT_ELEVATION_LIMIT float64) {
+	IDMAddUPPER_RIGHT_ELEVATION_LIMIT(builder, UPPER_RIGHT_ELEVATION_LIMIT)
+}
 func IDMAddUPPER_RIGHT_AZIMUTH_LIMIT(builder *flatbuffers.Builder, UPPER_RIGHT_AZIMUTH_LIMIT float64) {
 	builder.PrependFloat64Slot(22, UPPER_RIGHT_AZIMUTH_LIMIT, 0.0)
+}
+func IDMAddUpperRightAzimuthLimit(builder *flatbuffers.Builder, UPPER_RIGHT_AZIMUTH_LIMIT float64) {
+	IDMAddUPPER_RIGHT_AZIMUTH_LIMIT(builder, UPPER_RIGHT_AZIMUTH_LIMIT)
 }
 func IDMAddLOWER_RIGHT_AZIMUTH_LIMIT(builder *flatbuffers.Builder, LOWER_RIGHT_AZIMUTH_LIMIT float64) {
 	builder.PrependFloat64Slot(23, LOWER_RIGHT_AZIMUTH_LIMIT, 0.0)
 }
+func IDMAddLowerRightAzimuthLimit(builder *flatbuffers.Builder, LOWER_RIGHT_AZIMUTH_LIMIT float64) {
+	IDMAddLOWER_RIGHT_AZIMUTH_LIMIT(builder, LOWER_RIGHT_AZIMUTH_LIMIT)
+}
 func IDMAddUPPER_LEFT_ELEVATION_LIMIT(builder *flatbuffers.Builder, UPPER_LEFT_ELEVATION_LIMIT float64) {
 	builder.PrependFloat64Slot(24, UPPER_LEFT_ELEVATION_LIMIT, 0.0)
+}
+func IDMAddUpperLeftElevationLimit(builder *flatbuffers.Builder, UPPER_LEFT_ELEVATION_LIMIT float64) {
+	IDMAddUPPER_LEFT_ELEVATION_LIMIT(builder, UPPER_LEFT_ELEVATION_LIMIT)
 }
 func IDMAddRIGHT_GEO_BELT_LIMIT(builder *flatbuffers.Builder, RIGHT_GEO_BELT_LIMIT float64) {
 	builder.PrependFloat64Slot(25, RIGHT_GEO_BELT_LIMIT, 0.0)
 }
+func IDMAddRightGeoBeltLimit(builder *flatbuffers.Builder, RIGHT_GEO_BELT_LIMIT float64) {
+	IDMAddRIGHT_GEO_BELT_LIMIT(builder, RIGHT_GEO_BELT_LIMIT)
+}
 func IDMAddLEFT_GEO_BELT_LIMIT(builder *flatbuffers.Builder, LEFT_GEO_BELT_LIMIT float64) {
 	builder.PrependFloat64Slot(26, LEFT_GEO_BELT_LIMIT, 0.0)
+}
+func IDMAddLeftGeoBeltLimit(builder *flatbuffers.Builder, LEFT_GEO_BELT_LIMIT float64) {
+	IDMAddLEFT_GEO_BELT_LIMIT(builder, LEFT_GEO_BELT_LIMIT)
 }
 func IDMAddMAGNITUDE_LIMIT(builder *flatbuffers.Builder, MAGNITUDE_LIMIT float64) {
 	builder.PrependFloat64Slot(27, MAGNITUDE_LIMIT, 0.0)
 }
+func IDMAddMagnitudeLimit(builder *flatbuffers.Builder, MAGNITUDE_LIMIT float64) {
+	IDMAddMAGNITUDE_LIMIT(builder, MAGNITUDE_LIMIT)
+}
 func IDMAddTASKABLE(builder *flatbuffers.Builder, TASKABLE bool) {
 	builder.PrependBoolSlot(28, TASKABLE, false)
+}
+func IDMAddTaskable(builder *flatbuffers.Builder, TASKABLE bool) {
+	IDMAddTASKABLE(builder, TASKABLE)
 }
 func IDMEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

@@ -2,4 +2,12 @@
 
 # namespace: 
 
-# NOTE odMethod.py does not declare any structs or enums
+class odMethod(object):
+    BATCH_LEAST_SQUARES = 0
+    SEQUENTIAL_LEAST_SQUARES = 1
+    EXTENDED_KALMAN = 2
+    UNSCENTED_KALMAN = 3
+    SPECIAL_PERTURBATIONS = 4
+    GENERAL_PERTURBATIONS = 5
+    DIFFERENTIAL_CORRECTION = 6
+    UNKNOWN = 7

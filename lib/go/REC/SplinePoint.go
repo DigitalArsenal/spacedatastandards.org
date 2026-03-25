@@ -51,9 +51,17 @@ func (rcv *SplinePoint) RAW() float64 {
 	return 0.0
 }
 
+func (rcv *SplinePoint) Raw() float64 {
+	return rcv.RAW()
+}
+
 /// Raw value
 func (rcv *SplinePoint) MutateRAW(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(4, n)
+}
+
+func (rcv *SplinePoint) MutateRaw(n float64) bool {
+	return rcv.MutateRAW(n)
 }
 
 /// Calibrated/engineering value
@@ -65,9 +73,17 @@ func (rcv *SplinePoint) CALIBRATED() float64 {
 	return 0.0
 }
 
+func (rcv *SplinePoint) Calibrated() float64 {
+	return rcv.CALIBRATED()
+}
+
 /// Calibrated/engineering value
 func (rcv *SplinePoint) MutateCALIBRATED(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(6, n)
+}
+
+func (rcv *SplinePoint) MutateCalibrated(n float64) bool {
+	return rcv.MutateCALIBRATED(n)
 }
 
 func SplinePointStart(builder *flatbuffers.Builder) {
@@ -76,8 +92,14 @@ func SplinePointStart(builder *flatbuffers.Builder) {
 func SplinePointAddRAW(builder *flatbuffers.Builder, RAW float64) {
 	builder.PrependFloat64Slot(0, RAW, 0.0)
 }
+func SplinePointAddRaw(builder *flatbuffers.Builder, RAW float64) {
+	SplinePointAddRAW(builder, RAW)
+}
 func SplinePointAddCALIBRATED(builder *flatbuffers.Builder, CALIBRATED float64) {
 	builder.PrependFloat64Slot(1, CALIBRATED, 0.0)
+}
+func SplinePointAddCalibrated(builder *flatbuffers.Builder, CALIBRATED float64) {
+	SplinePointAddCALIBRATED(builder, CALIBRATED)
 }
 func SplinePointEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

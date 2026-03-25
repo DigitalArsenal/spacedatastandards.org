@@ -2,4 +2,535 @@
 
 # namespace: 
 
-# NOTE Perturbations.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+class Perturbations(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = Perturbations()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsPerturbations(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def PerturbationsBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x4F\x43\x4D", size_prefixed=size_prefixed)
+
+    # Perturbations
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Comments in the Perturbations section.
+    # Perturbations
+    def COMMENT(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
+        return ""
+
+    # Perturbations
+    def COMMENTLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # Perturbations
+    def COMMENTIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        return o == 0
+
+    # Atmospheric model used.
+    # Perturbations
+    def ATMOSPHERIC_MODEL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from ATM import ATM
+            obj = ATM()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Gravity model used.
+    # Perturbations
+    def GRAVITY_MODEL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Degree of the gravity model.
+    # Perturbations
+    def GRAVITY_DEGREE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # Order of the gravity model.
+    # Perturbations
+    def GRAVITY_ORDER(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # Gravitational constant times the mass of the central body.
+    # Perturbations
+    def GM(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # List of celestial bodies included in n-body perturbations.
+    # Perturbations
+    def N_BODY_PERTURBATIONS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
+        return ""
+
+    # Perturbations
+    def N_BODY_PERTURBATIONSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # Perturbations
+    def N_BODY_PERTURBATIONSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        return o == 0
+
+    # Ocean tides model used.
+    # Perturbations
+    def OCEAN_TIDES_MODEL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Solid tides model used.
+    # Perturbations
+    def SOLID_TIDES_MODEL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Atmospheric tides model used.
+    # Perturbations
+    def ATMOSPHERIC_TIDES_MODEL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Geopotential model used.
+    # Perturbations
+    def GEOPOTENTIAL_MODEL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Solar radiation pressure model used.
+    # Perturbations
+    def SOLAR_RAD_PRESSURE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Albedo model used.
+    # Perturbations
+    def ALBEDO(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Thermal model used.
+    # Perturbations
+    def THERMAL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Relativity model used.
+    # Perturbations
+    def RELATIVITY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Atmospheric drag model used.
+    # Perturbations
+    def ATMOSPHERIC_DRAG(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Fixed geomagnetic Kp index used.
+    # Perturbations
+    def FIXED_GEOMAG_KP(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Fixed F10.7 solar flux value used.
+    # Perturbations
+    def FIXED_F10P7(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Fixed mean F10.7 solar flux value used.
+    # Perturbations
+    def FIXED_F10P7_MEAN(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+def PerturbationsStart(builder):
+    builder.StartObject(19)
+
+def Start(builder):
+    PerturbationsStart(builder)
+
+def PerturbationsAddCOMMENT(builder, COMMENT):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(COMMENT), 0)
+
+def AddCOMMENT(builder, COMMENT):
+    PerturbationsAddCOMMENT(builder, COMMENT)
+
+def PerturbationsStartCOMMENTVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartCOMMENTVector(builder, numElems):
+    return PerturbationsStartCOMMENTVector(builder, numElems)
+
+def PerturbationsCreateCOMMENTVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateCOMMENTVector(builder, data):
+    PerturbationsCreateCOMMENTVector(builder, data)
+
+def PerturbationsAddATMOSPHERIC_MODEL(builder, ATMOSPHERIC_MODEL):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(ATMOSPHERIC_MODEL), 0)
+
+def AddATMOSPHERIC_MODEL(builder, ATMOSPHERIC_MODEL):
+    PerturbationsAddATMOSPHERIC_MODEL(builder, ATMOSPHERIC_MODEL)
+
+def PerturbationsAddGRAVITY_MODEL(builder, GRAVITY_MODEL):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(GRAVITY_MODEL), 0)
+
+def AddGRAVITY_MODEL(builder, GRAVITY_MODEL):
+    PerturbationsAddGRAVITY_MODEL(builder, GRAVITY_MODEL)
+
+def PerturbationsAddGRAVITY_DEGREE(builder, GRAVITY_DEGREE):
+    builder.PrependInt32Slot(3, GRAVITY_DEGREE, 0)
+
+def AddGRAVITY_DEGREE(builder, GRAVITY_DEGREE):
+    PerturbationsAddGRAVITY_DEGREE(builder, GRAVITY_DEGREE)
+
+def PerturbationsAddGRAVITY_ORDER(builder, GRAVITY_ORDER):
+    builder.PrependInt32Slot(4, GRAVITY_ORDER, 0)
+
+def AddGRAVITY_ORDER(builder, GRAVITY_ORDER):
+    PerturbationsAddGRAVITY_ORDER(builder, GRAVITY_ORDER)
+
+def PerturbationsAddGM(builder, GM):
+    builder.PrependFloat64Slot(5, GM, 0.0)
+
+def AddGM(builder, GM):
+    PerturbationsAddGM(builder, GM)
+
+def PerturbationsAddN_BODY_PERTURBATIONS(builder, N_BODY_PERTURBATIONS):
+    builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(N_BODY_PERTURBATIONS), 0)
+
+def AddN_BODY_PERTURBATIONS(builder, N_BODY_PERTURBATIONS):
+    PerturbationsAddN_BODY_PERTURBATIONS(builder, N_BODY_PERTURBATIONS)
+
+def PerturbationsStartN_BODY_PERTURBATIONSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartN_BODY_PERTURBATIONSVector(builder, numElems):
+    return PerturbationsStartN_BODY_PERTURBATIONSVector(builder, numElems)
+
+def PerturbationsCreateN_BODY_PERTURBATIONSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateN_BODY_PERTURBATIONSVector(builder, data):
+    PerturbationsCreateN_BODY_PERTURBATIONSVector(builder, data)
+
+def PerturbationsAddOCEAN_TIDES_MODEL(builder, OCEAN_TIDES_MODEL):
+    builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(OCEAN_TIDES_MODEL), 0)
+
+def AddOCEAN_TIDES_MODEL(builder, OCEAN_TIDES_MODEL):
+    PerturbationsAddOCEAN_TIDES_MODEL(builder, OCEAN_TIDES_MODEL)
+
+def PerturbationsAddSOLID_TIDES_MODEL(builder, SOLID_TIDES_MODEL):
+    builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(SOLID_TIDES_MODEL), 0)
+
+def AddSOLID_TIDES_MODEL(builder, SOLID_TIDES_MODEL):
+    PerturbationsAddSOLID_TIDES_MODEL(builder, SOLID_TIDES_MODEL)
+
+def PerturbationsAddATMOSPHERIC_TIDES_MODEL(builder, ATMOSPHERIC_TIDES_MODEL):
+    builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(ATMOSPHERIC_TIDES_MODEL), 0)
+
+def AddATMOSPHERIC_TIDES_MODEL(builder, ATMOSPHERIC_TIDES_MODEL):
+    PerturbationsAddATMOSPHERIC_TIDES_MODEL(builder, ATMOSPHERIC_TIDES_MODEL)
+
+def PerturbationsAddGEOPOTENTIAL_MODEL(builder, GEOPOTENTIAL_MODEL):
+    builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(GEOPOTENTIAL_MODEL), 0)
+
+def AddGEOPOTENTIAL_MODEL(builder, GEOPOTENTIAL_MODEL):
+    PerturbationsAddGEOPOTENTIAL_MODEL(builder, GEOPOTENTIAL_MODEL)
+
+def PerturbationsAddSOLAR_RAD_PRESSURE(builder, SOLAR_RAD_PRESSURE):
+    builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(SOLAR_RAD_PRESSURE), 0)
+
+def AddSOLAR_RAD_PRESSURE(builder, SOLAR_RAD_PRESSURE):
+    PerturbationsAddSOLAR_RAD_PRESSURE(builder, SOLAR_RAD_PRESSURE)
+
+def PerturbationsAddALBEDO(builder, ALBEDO):
+    builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(ALBEDO), 0)
+
+def AddALBEDO(builder, ALBEDO):
+    PerturbationsAddALBEDO(builder, ALBEDO)
+
+def PerturbationsAddTHERMAL(builder, THERMAL):
+    builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(THERMAL), 0)
+
+def AddTHERMAL(builder, THERMAL):
+    PerturbationsAddTHERMAL(builder, THERMAL)
+
+def PerturbationsAddRELATIVITY(builder, RELATIVITY):
+    builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(RELATIVITY), 0)
+
+def AddRELATIVITY(builder, RELATIVITY):
+    PerturbationsAddRELATIVITY(builder, RELATIVITY)
+
+def PerturbationsAddATMOSPHERIC_DRAG(builder, ATMOSPHERIC_DRAG):
+    builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(ATMOSPHERIC_DRAG), 0)
+
+def AddATMOSPHERIC_DRAG(builder, ATMOSPHERIC_DRAG):
+    PerturbationsAddATMOSPHERIC_DRAG(builder, ATMOSPHERIC_DRAG)
+
+def PerturbationsAddFIXED_GEOMAG_KP(builder, FIXED_GEOMAG_KP):
+    builder.PrependFloat64Slot(16, FIXED_GEOMAG_KP, 0.0)
+
+def AddFIXED_GEOMAG_KP(builder, FIXED_GEOMAG_KP):
+    PerturbationsAddFIXED_GEOMAG_KP(builder, FIXED_GEOMAG_KP)
+
+def PerturbationsAddFIXED_F10P7(builder, FIXED_F10P7):
+    builder.PrependFloat64Slot(17, FIXED_F10P7, 0.0)
+
+def AddFIXED_F10P7(builder, FIXED_F10P7):
+    PerturbationsAddFIXED_F10P7(builder, FIXED_F10P7)
+
+def PerturbationsAddFIXED_F10P7_MEAN(builder, FIXED_F10P7_MEAN):
+    builder.PrependFloat64Slot(18, FIXED_F10P7_MEAN, 0.0)
+
+def AddFIXED_F10P7_MEAN(builder, FIXED_F10P7_MEAN):
+    PerturbationsAddFIXED_F10P7_MEAN(builder, FIXED_F10P7_MEAN)
+
+def PerturbationsEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return PerturbationsEnd(builder)
+
+import ATM
+try:
+    from typing import List, Optional
+except:
+    pass
+
+class PerturbationsT(object):
+
+    # PerturbationsT
+    def __init__(
+        self,
+        COMMENT = None,
+        ATMOSPHERIC_MODEL = None,
+        GRAVITY_MODEL = None,
+        GRAVITY_DEGREE = 0,
+        GRAVITY_ORDER = 0,
+        GM = 0.0,
+        N_BODY_PERTURBATIONS = None,
+        OCEAN_TIDES_MODEL = None,
+        SOLID_TIDES_MODEL = None,
+        ATMOSPHERIC_TIDES_MODEL = None,
+        GEOPOTENTIAL_MODEL = None,
+        SOLAR_RAD_PRESSURE = None,
+        ALBEDO = None,
+        THERMAL = None,
+        RELATIVITY = None,
+        ATMOSPHERIC_DRAG = None,
+        FIXED_GEOMAG_KP = 0.0,
+        FIXED_F10P7 = 0.0,
+        FIXED_F10P7_MEAN = 0.0,
+    ):
+        self.COMMENT = COMMENT  # type: Optional[List[Optional[str]]]
+        self.ATMOSPHERIC_MODEL = ATMOSPHERIC_MODEL  # type: Optional[ATM.ATMT]
+        self.GRAVITY_MODEL = GRAVITY_MODEL  # type: Optional[str]
+        self.GRAVITY_DEGREE = GRAVITY_DEGREE  # type: int
+        self.GRAVITY_ORDER = GRAVITY_ORDER  # type: int
+        self.GM = GM  # type: float
+        self.N_BODY_PERTURBATIONS = N_BODY_PERTURBATIONS  # type: Optional[List[Optional[str]]]
+        self.OCEAN_TIDES_MODEL = OCEAN_TIDES_MODEL  # type: Optional[str]
+        self.SOLID_TIDES_MODEL = SOLID_TIDES_MODEL  # type: Optional[str]
+        self.ATMOSPHERIC_TIDES_MODEL = ATMOSPHERIC_TIDES_MODEL  # type: Optional[str]
+        self.GEOPOTENTIAL_MODEL = GEOPOTENTIAL_MODEL  # type: Optional[str]
+        self.SOLAR_RAD_PRESSURE = SOLAR_RAD_PRESSURE  # type: Optional[str]
+        self.ALBEDO = ALBEDO  # type: Optional[str]
+        self.THERMAL = THERMAL  # type: Optional[str]
+        self.RELATIVITY = RELATIVITY  # type: Optional[str]
+        self.ATMOSPHERIC_DRAG = ATMOSPHERIC_DRAG  # type: Optional[str]
+        self.FIXED_GEOMAG_KP = FIXED_GEOMAG_KP  # type: float
+        self.FIXED_F10P7 = FIXED_F10P7  # type: float
+        self.FIXED_F10P7_MEAN = FIXED_F10P7_MEAN  # type: float
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpPerturbations = Perturbations()
+        tmpPerturbations.Init(buf, pos)
+        return cls.InitFromObj(tmpPerturbations)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpPerturbations):
+        x = PerturbationsT()
+        x._UnPack(tmpPerturbations)
+        return x
+
+    # PerturbationsT
+    def _UnPack(self, Perturbations):
+        if Perturbations is None:
+            return
+        if not Perturbations.COMMENTIsNone():
+            self.COMMENT = []
+            for i in range(Perturbations.COMMENTLength()):
+                self.COMMENT.append(Perturbations.COMMENT(i))
+        if Perturbations.ATMOSPHERIC_MODEL() is not None:
+            self.ATMOSPHERIC_MODEL = ATM.ATMT.InitFromObj(Perturbations.ATMOSPHERIC_MODEL())
+        self.GRAVITY_MODEL = Perturbations.GRAVITY_MODEL()
+        self.GRAVITY_DEGREE = Perturbations.GRAVITY_DEGREE()
+        self.GRAVITY_ORDER = Perturbations.GRAVITY_ORDER()
+        self.GM = Perturbations.GM()
+        if not Perturbations.N_BODY_PERTURBATIONSIsNone():
+            self.N_BODY_PERTURBATIONS = []
+            for i in range(Perturbations.N_BODY_PERTURBATIONSLength()):
+                self.N_BODY_PERTURBATIONS.append(Perturbations.N_BODY_PERTURBATIONS(i))
+        self.OCEAN_TIDES_MODEL = Perturbations.OCEAN_TIDES_MODEL()
+        self.SOLID_TIDES_MODEL = Perturbations.SOLID_TIDES_MODEL()
+        self.ATMOSPHERIC_TIDES_MODEL = Perturbations.ATMOSPHERIC_TIDES_MODEL()
+        self.GEOPOTENTIAL_MODEL = Perturbations.GEOPOTENTIAL_MODEL()
+        self.SOLAR_RAD_PRESSURE = Perturbations.SOLAR_RAD_PRESSURE()
+        self.ALBEDO = Perturbations.ALBEDO()
+        self.THERMAL = Perturbations.THERMAL()
+        self.RELATIVITY = Perturbations.RELATIVITY()
+        self.ATMOSPHERIC_DRAG = Perturbations.ATMOSPHERIC_DRAG()
+        self.FIXED_GEOMAG_KP = Perturbations.FIXED_GEOMAG_KP()
+        self.FIXED_F10P7 = Perturbations.FIXED_F10P7()
+        self.FIXED_F10P7_MEAN = Perturbations.FIXED_F10P7_MEAN()
+
+    # PerturbationsT
+    def Pack(self, builder):
+        if self.COMMENT is not None:
+            COMMENTlist = []
+            for i in range(len(self.COMMENT)):
+                COMMENTlist.append(builder.CreateString(self.COMMENT[i]))
+            PerturbationsStartCOMMENTVector(builder, len(self.COMMENT))
+            for i in reversed(range(len(self.COMMENT))):
+                builder.PrependUOffsetTRelative(COMMENTlist[i])
+            COMMENT = builder.EndVector()
+        if self.ATMOSPHERIC_MODEL is not None:
+            ATMOSPHERIC_MODEL = self.ATMOSPHERIC_MODEL.Pack(builder)
+        if self.GRAVITY_MODEL is not None:
+            GRAVITY_MODEL = builder.CreateString(self.GRAVITY_MODEL)
+        if self.N_BODY_PERTURBATIONS is not None:
+            N_BODY_PERTURBATIONSlist = []
+            for i in range(len(self.N_BODY_PERTURBATIONS)):
+                N_BODY_PERTURBATIONSlist.append(builder.CreateString(self.N_BODY_PERTURBATIONS[i]))
+            PerturbationsStartN_BODY_PERTURBATIONSVector(builder, len(self.N_BODY_PERTURBATIONS))
+            for i in reversed(range(len(self.N_BODY_PERTURBATIONS))):
+                builder.PrependUOffsetTRelative(N_BODY_PERTURBATIONSlist[i])
+            N_BODY_PERTURBATIONS = builder.EndVector()
+        if self.OCEAN_TIDES_MODEL is not None:
+            OCEAN_TIDES_MODEL = builder.CreateString(self.OCEAN_TIDES_MODEL)
+        if self.SOLID_TIDES_MODEL is not None:
+            SOLID_TIDES_MODEL = builder.CreateString(self.SOLID_TIDES_MODEL)
+        if self.ATMOSPHERIC_TIDES_MODEL is not None:
+            ATMOSPHERIC_TIDES_MODEL = builder.CreateString(self.ATMOSPHERIC_TIDES_MODEL)
+        if self.GEOPOTENTIAL_MODEL is not None:
+            GEOPOTENTIAL_MODEL = builder.CreateString(self.GEOPOTENTIAL_MODEL)
+        if self.SOLAR_RAD_PRESSURE is not None:
+            SOLAR_RAD_PRESSURE = builder.CreateString(self.SOLAR_RAD_PRESSURE)
+        if self.ALBEDO is not None:
+            ALBEDO = builder.CreateString(self.ALBEDO)
+        if self.THERMAL is not None:
+            THERMAL = builder.CreateString(self.THERMAL)
+        if self.RELATIVITY is not None:
+            RELATIVITY = builder.CreateString(self.RELATIVITY)
+        if self.ATMOSPHERIC_DRAG is not None:
+            ATMOSPHERIC_DRAG = builder.CreateString(self.ATMOSPHERIC_DRAG)
+        PerturbationsStart(builder)
+        if self.COMMENT is not None:
+            PerturbationsAddCOMMENT(builder, COMMENT)
+        if self.ATMOSPHERIC_MODEL is not None:
+            PerturbationsAddATMOSPHERIC_MODEL(builder, ATMOSPHERIC_MODEL)
+        if self.GRAVITY_MODEL is not None:
+            PerturbationsAddGRAVITY_MODEL(builder, GRAVITY_MODEL)
+        PerturbationsAddGRAVITY_DEGREE(builder, self.GRAVITY_DEGREE)
+        PerturbationsAddGRAVITY_ORDER(builder, self.GRAVITY_ORDER)
+        PerturbationsAddGM(builder, self.GM)
+        if self.N_BODY_PERTURBATIONS is not None:
+            PerturbationsAddN_BODY_PERTURBATIONS(builder, N_BODY_PERTURBATIONS)
+        if self.OCEAN_TIDES_MODEL is not None:
+            PerturbationsAddOCEAN_TIDES_MODEL(builder, OCEAN_TIDES_MODEL)
+        if self.SOLID_TIDES_MODEL is not None:
+            PerturbationsAddSOLID_TIDES_MODEL(builder, SOLID_TIDES_MODEL)
+        if self.ATMOSPHERIC_TIDES_MODEL is not None:
+            PerturbationsAddATMOSPHERIC_TIDES_MODEL(builder, ATMOSPHERIC_TIDES_MODEL)
+        if self.GEOPOTENTIAL_MODEL is not None:
+            PerturbationsAddGEOPOTENTIAL_MODEL(builder, GEOPOTENTIAL_MODEL)
+        if self.SOLAR_RAD_PRESSURE is not None:
+            PerturbationsAddSOLAR_RAD_PRESSURE(builder, SOLAR_RAD_PRESSURE)
+        if self.ALBEDO is not None:
+            PerturbationsAddALBEDO(builder, ALBEDO)
+        if self.THERMAL is not None:
+            PerturbationsAddTHERMAL(builder, THERMAL)
+        if self.RELATIVITY is not None:
+            PerturbationsAddRELATIVITY(builder, RELATIVITY)
+        if self.ATMOSPHERIC_DRAG is not None:
+            PerturbationsAddATMOSPHERIC_DRAG(builder, ATMOSPHERIC_DRAG)
+        PerturbationsAddFIXED_GEOMAG_KP(builder, self.FIXED_GEOMAG_KP)
+        PerturbationsAddFIXED_F10P7(builder, self.FIXED_F10P7)
+        PerturbationsAddFIXED_F10P7_MEAN(builder, self.FIXED_F10P7_MEAN)
+        Perturbations = PerturbationsEnd(builder)
+        return Perturbations

@@ -51,6 +51,10 @@ func (rcv *AggregateArgumentType) NAME() []byte {
 	return nil
 }
 
+func (rcv *AggregateArgumentType) Name() []byte {
+	return rcv.NAME()
+}
+
 /// Type name
 /// Short description
 func (rcv *AggregateArgumentType) SHORT_DESCRIPTION() []byte {
@@ -59,6 +63,10 @@ func (rcv *AggregateArgumentType) SHORT_DESCRIPTION() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *AggregateArgumentType) ShortDescription() []byte {
+	return rcv.SHORT_DESCRIPTION()
 }
 
 /// Short description
@@ -71,6 +79,10 @@ func (rcv *AggregateArgumentType) LONG_DESCRIPTION() []byte {
 	return nil
 }
 
+func (rcv *AggregateArgumentType) LongDescription() []byte {
+	return rcv.LONG_DESCRIPTION()
+}
+
 /// Long description
 /// Member list
 func (rcv *AggregateArgumentType) MEMBERS(obj *AggregateMember, j int) bool {
@@ -79,10 +91,17 @@ func (rcv *AggregateArgumentType) MEMBERS(obj *AggregateMember, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(AggregateMember)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *AggregateArgumentType) Members(obj *AggregateMember, j int) bool {
+	return rcv.MEMBERS(obj, j)
 }
 
 func (rcv *AggregateArgumentType) MEMBERSLength() int {
@@ -93,6 +112,10 @@ func (rcv *AggregateArgumentType) MEMBERSLength() int {
 	return 0
 }
 
+func (rcv *AggregateArgumentType) MembersLength() int {
+	return rcv.MEMBERSLength()
+}
+
 /// Member list
 func AggregateArgumentTypeStart(builder *flatbuffers.Builder) {
 	builder.StartObject(4)
@@ -100,17 +123,32 @@ func AggregateArgumentTypeStart(builder *flatbuffers.Builder) {
 func AggregateArgumentTypeAddNAME(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(NAME), 0)
 }
+func AggregateArgumentTypeAddName(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
+	AggregateArgumentTypeAddNAME(builder, NAME)
+}
 func AggregateArgumentTypeAddSHORT_DESCRIPTION(builder *flatbuffers.Builder, SHORT_DESCRIPTION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(SHORT_DESCRIPTION), 0)
+}
+func AggregateArgumentTypeAddShortDescription(builder *flatbuffers.Builder, SHORT_DESCRIPTION flatbuffers.UOffsetT) {
+	AggregateArgumentTypeAddSHORT_DESCRIPTION(builder, SHORT_DESCRIPTION)
 }
 func AggregateArgumentTypeAddLONG_DESCRIPTION(builder *flatbuffers.Builder, LONG_DESCRIPTION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(LONG_DESCRIPTION), 0)
 }
+func AggregateArgumentTypeAddLongDescription(builder *flatbuffers.Builder, LONG_DESCRIPTION flatbuffers.UOffsetT) {
+	AggregateArgumentTypeAddLONG_DESCRIPTION(builder, LONG_DESCRIPTION)
+}
 func AggregateArgumentTypeAddMEMBERS(builder *flatbuffers.Builder, MEMBERS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(MEMBERS), 0)
 }
+func AggregateArgumentTypeAddMembers(builder *flatbuffers.Builder, MEMBERS flatbuffers.UOffsetT) {
+	AggregateArgumentTypeAddMEMBERS(builder, MEMBERS)
+}
 func AggregateArgumentTypeStartMEMBERSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func AggregateArgumentTypeStartMembersVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return AggregateArgumentTypeStartMEMBERSVector(builder, numElems)
 }
 func AggregateArgumentTypeEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

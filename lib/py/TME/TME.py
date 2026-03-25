@@ -185,6 +185,16 @@ def TMEStartSUNRISE_SUNSET_QUERYVector(builder, numElems):
 def StartSUNRISE_SUNSET_QUERYVector(builder, numElems):
     return TMEStartSUNRISE_SUNSET_QUERYVector(builder, numElems)
 
+def TMECreateSUNRISE_SUNSET_QUERYVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateSUNRISE_SUNSET_QUERYVector(builder, data):
+    TMECreateSUNRISE_SUNSET_QUERYVector(builder, data)
+
 def TMEAddCLOCK_PROPAGATION(builder, CLOCK_PROPAGATION):
     builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(CLOCK_PROPAGATION), 0)
 
@@ -205,23 +215,35 @@ except:
 class TMET(object):
 
     # TMET
-    def __init__(self):
-        self.COMMAND = None  # type: str
-        self.CONVERSION_REQUEST = None  # type: str
-        self.LEAP_SECOND_QUERY = None  # type: str
-        self.EOP_QUERY = None  # type: str
-        self.SIDEREAL_QUERY = None  # type: str
-        self.INTERVAL_REQUEST = None  # type: str
-        self.SOLAR_POSITION_QUERY = None  # type: str
-        self.LUNAR_POSITION_QUERY = None  # type: str
-        self.SUNRISE_SUNSET_QUERY = None  # type: List[float]
-        self.CLOCK_PROPAGATION = None  # type: str
+    def __init__(
+        self,
+        COMMAND = None,
+        CONVERSION_REQUEST = None,
+        LEAP_SECOND_QUERY = None,
+        EOP_QUERY = None,
+        SIDEREAL_QUERY = None,
+        INTERVAL_REQUEST = None,
+        SOLAR_POSITION_QUERY = None,
+        LUNAR_POSITION_QUERY = None,
+        SUNRISE_SUNSET_QUERY = None,
+        CLOCK_PROPAGATION = None,
+    ):
+        self.COMMAND = COMMAND  # type: Optional[str]
+        self.CONVERSION_REQUEST = CONVERSION_REQUEST  # type: Optional[str]
+        self.LEAP_SECOND_QUERY = LEAP_SECOND_QUERY  # type: Optional[str]
+        self.EOP_QUERY = EOP_QUERY  # type: Optional[str]
+        self.SIDEREAL_QUERY = SIDEREAL_QUERY  # type: Optional[str]
+        self.INTERVAL_REQUEST = INTERVAL_REQUEST  # type: Optional[str]
+        self.SOLAR_POSITION_QUERY = SOLAR_POSITION_QUERY  # type: Optional[str]
+        self.LUNAR_POSITION_QUERY = LUNAR_POSITION_QUERY  # type: Optional[str]
+        self.SUNRISE_SUNSET_QUERY = SUNRISE_SUNSET_QUERY  # type: Optional[List[float]]
+        self.CLOCK_PROPAGATION = CLOCK_PROPAGATION  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        TME = TME()
-        TME.Init(buf, pos)
-        return cls.InitFromObj(TME)
+        tmpTme = TME()
+        tmpTme.Init(buf, pos)
+        return cls.InitFromObj(tmpTme)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -229,9 +251,9 @@ class TMET(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, TME):
+    def InitFromObj(cls, tmpTme):
         x = TMET()
-        x._UnPack(TME)
+        x._UnPack(tmpTme)
         return x
 
     # TMET

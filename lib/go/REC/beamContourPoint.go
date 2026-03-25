@@ -51,9 +51,17 @@ func (rcv *beamContourPoint) LATITUDE() float64 {
 	return 0.0
 }
 
+func (rcv *beamContourPoint) Latitude() float64 {
+	return rcv.LATITUDE()
+}
+
 /// Latitude in degrees
 func (rcv *beamContourPoint) MutateLATITUDE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(4, n)
+}
+
+func (rcv *beamContourPoint) MutateLatitude(n float64) bool {
+	return rcv.MutateLATITUDE(n)
 }
 
 /// Longitude in degrees
@@ -65,9 +73,17 @@ func (rcv *beamContourPoint) LONGITUDE() float64 {
 	return 0.0
 }
 
+func (rcv *beamContourPoint) Longitude() float64 {
+	return rcv.LONGITUDE()
+}
+
 /// Longitude in degrees
 func (rcv *beamContourPoint) MutateLONGITUDE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(6, n)
+}
+
+func (rcv *beamContourPoint) MutateLongitude(n float64) bool {
+	return rcv.MutateLONGITUDE(n)
 }
 
 /// Gain level in dBi at this contour
@@ -79,9 +95,17 @@ func (rcv *beamContourPoint) GAIN() float64 {
 	return 0.0
 }
 
+func (rcv *beamContourPoint) Gain() float64 {
+	return rcv.GAIN()
+}
+
 /// Gain level in dBi at this contour
 func (rcv *beamContourPoint) MutateGAIN(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(8, n)
+}
+
+func (rcv *beamContourPoint) MutateGain(n float64) bool {
+	return rcv.MutateGAIN(n)
 }
 
 func beamContourPointStart(builder *flatbuffers.Builder) {
@@ -90,11 +114,20 @@ func beamContourPointStart(builder *flatbuffers.Builder) {
 func beamContourPointAddLATITUDE(builder *flatbuffers.Builder, LATITUDE float64) {
 	builder.PrependFloat64Slot(0, LATITUDE, 0.0)
 }
+func beamContourPointAddLatitude(builder *flatbuffers.Builder, LATITUDE float64) {
+	beamContourPointAddLATITUDE(builder, LATITUDE)
+}
 func beamContourPointAddLONGITUDE(builder *flatbuffers.Builder, LONGITUDE float64) {
 	builder.PrependFloat64Slot(1, LONGITUDE, 0.0)
 }
+func beamContourPointAddLongitude(builder *flatbuffers.Builder, LONGITUDE float64) {
+	beamContourPointAddLONGITUDE(builder, LONGITUDE)
+}
 func beamContourPointAddGAIN(builder *flatbuffers.Builder, GAIN float64) {
 	builder.PrependFloat64Slot(2, GAIN, 0.0)
+}
+func beamContourPointAddGain(builder *flatbuffers.Builder, GAIN float64) {
+	beamContourPointAddGAIN(builder, GAIN)
 }
 func beamContourPointEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

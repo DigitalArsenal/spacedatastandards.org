@@ -140,6 +140,12 @@ def SEVStartOB_ARRAYVector(builder, numElems):
 def StartOB_ARRAYVector(builder, numElems):
     return SEVStartOB_ARRAYVector(builder, numElems)
 
+def SEVCreateOB_ARRAYVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateOB_ARRAYVector(builder, data):
+    SEVCreateOB_ARRAYVector(builder, data)
+
 def SEVAddOB_BOOL(builder, OB_BOOL):
     builder.PrependBoolSlot(5, OB_BOOL, 0)
 
@@ -172,21 +178,31 @@ except:
 class SEVT(object):
 
     # SEVT
-    def __init__(self):
-        self.OB_TYPE = None  # type: str
-        self.OB_UO_M = None  # type: str
-        self.OB_VALUE = 0.0  # type: float
-        self.OB_STRING = None  # type: str
-        self.OB_ARRAY = None  # type: List[str]
-        self.OB_BOOL = False  # type: bool
-        self.OB_QUALITY = None  # type: str
-        self.OB_DESCRIPTION = None  # type: str
+    def __init__(
+        self,
+        OB_TYPE = None,
+        OB_UO_M = None,
+        OB_VALUE = 0.0,
+        OB_STRING = None,
+        OB_ARRAY = None,
+        OB_BOOL = False,
+        OB_QUALITY = None,
+        OB_DESCRIPTION = None,
+    ):
+        self.OB_TYPE = OB_TYPE  # type: Optional[str]
+        self.OB_UO_M = OB_UO_M  # type: Optional[str]
+        self.OB_VALUE = OB_VALUE  # type: float
+        self.OB_STRING = OB_STRING  # type: Optional[str]
+        self.OB_ARRAY = OB_ARRAY  # type: Optional[List[Optional[str]]]
+        self.OB_BOOL = OB_BOOL  # type: bool
+        self.OB_QUALITY = OB_QUALITY  # type: Optional[str]
+        self.OB_DESCRIPTION = OB_DESCRIPTION  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        SEV = SEV()
-        SEV.Init(buf, pos)
-        return cls.InitFromObj(SEV)
+        tmpSev = SEV()
+        tmpSev.Init(buf, pos)
+        return cls.InitFromObj(tmpSev)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -194,9 +210,9 @@ class SEVT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, SEV):
+    def InitFromObj(cls, tmpSev):
         x = SEVT()
-        x._UnPack(SEV)
+        x._UnPack(tmpSev)
         return x
 
     # SEVT

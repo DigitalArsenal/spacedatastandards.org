@@ -2,4 +2,168 @@
 
 # namespace: 
 
-# NOTE KMLTour.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# gx:Tour
+class KMLTour(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = KMLTour()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsKMLTour(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def KMLTourBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x4B\x4D\x4C", size_prefixed=size_prefixed)
+
+    # KMLTour
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Tour name
+    # KMLTour
+    def NAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Description
+    # KMLTour
+    def DESCRIPTION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Visibility
+    # KMLTour
+    def VISIBILITY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # Playlist
+    # KMLTour
+    def PLAYLIST(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from KMLPlaylist import KMLPlaylist
+            obj = KMLPlaylist()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+def KMLTourStart(builder):
+    builder.StartObject(4)
+
+def Start(builder):
+    KMLTourStart(builder)
+
+def KMLTourAddNAME(builder, NAME):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(NAME), 0)
+
+def AddNAME(builder, NAME):
+    KMLTourAddNAME(builder, NAME)
+
+def KMLTourAddDESCRIPTION(builder, DESCRIPTION):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(DESCRIPTION), 0)
+
+def AddDESCRIPTION(builder, DESCRIPTION):
+    KMLTourAddDESCRIPTION(builder, DESCRIPTION)
+
+def KMLTourAddVISIBILITY(builder, VISIBILITY):
+    builder.PrependBoolSlot(2, VISIBILITY, 0)
+
+def AddVISIBILITY(builder, VISIBILITY):
+    KMLTourAddVISIBILITY(builder, VISIBILITY)
+
+def KMLTourAddPLAYLIST(builder, PLAYLIST):
+    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(PLAYLIST), 0)
+
+def AddPLAYLIST(builder, PLAYLIST):
+    KMLTourAddPLAYLIST(builder, PLAYLIST)
+
+def KMLTourEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return KMLTourEnd(builder)
+
+import KMLPlaylist
+try:
+    from typing import Optional
+except:
+    pass
+
+class KMLTourT(object):
+
+    # KMLTourT
+    def __init__(
+        self,
+        NAME = None,
+        DESCRIPTION = None,
+        VISIBILITY = False,
+        PLAYLIST = None,
+    ):
+        self.NAME = NAME  # type: Optional[str]
+        self.DESCRIPTION = DESCRIPTION  # type: Optional[str]
+        self.VISIBILITY = VISIBILITY  # type: bool
+        self.PLAYLIST = PLAYLIST  # type: Optional[KMLPlaylist.KMLPlaylistT]
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpKmltour = KMLTour()
+        tmpKmltour.Init(buf, pos)
+        return cls.InitFromObj(tmpKmltour)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpKmltour):
+        x = KMLTourT()
+        x._UnPack(tmpKmltour)
+        return x
+
+    # KMLTourT
+    def _UnPack(self, KMLTour):
+        if KMLTour is None:
+            return
+        self.NAME = KMLTour.NAME()
+        self.DESCRIPTION = KMLTour.DESCRIPTION()
+        self.VISIBILITY = KMLTour.VISIBILITY()
+        if KMLTour.PLAYLIST() is not None:
+            self.PLAYLIST = KMLPlaylist.KMLPlaylistT.InitFromObj(KMLTour.PLAYLIST())
+
+    # KMLTourT
+    def Pack(self, builder):
+        if self.NAME is not None:
+            NAME = builder.CreateString(self.NAME)
+        if self.DESCRIPTION is not None:
+            DESCRIPTION = builder.CreateString(self.DESCRIPTION)
+        if self.PLAYLIST is not None:
+            PLAYLIST = self.PLAYLIST.Pack(builder)
+        KMLTourStart(builder)
+        if self.NAME is not None:
+            KMLTourAddNAME(builder, NAME)
+        if self.DESCRIPTION is not None:
+            KMLTourAddDESCRIPTION(builder, DESCRIPTION)
+        KMLTourAddVISIBILITY(builder, self.VISIBILITY)
+        if self.PLAYLIST is not None:
+            KMLTourAddPLAYLIST(builder, PLAYLIST)
+        KMLTour = KMLTourEnd(builder)
+        return KMLTour

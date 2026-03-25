@@ -89,6 +89,16 @@ def GeometryStartCOORDINATESVector(builder, numElems):
 def StartCOORDINATESVector(builder, numElems):
     return GeometryStartCOORDINATESVector(builder, numElems)
 
+def GeometryCreateCOORDINATESVector(builder, data):
+    data = list(data)
+    builder.StartVector(4, len(data), 4)
+    for item in reversed(data):
+        builder.PrependFloat32(item)
+    return builder.EndVector()
+
+def CreateCOORDINATESVector(builder, data):
+    GeometryCreateCOORDINATESVector(builder, data)
+
 def GeometryEnd(builder):
     return builder.EndObject()
 
@@ -103,15 +113,19 @@ except:
 class GeometryT(object):
 
     # GeometryT
-    def __init__(self):
-        self.GEOMETRY_TYPE = None  # type: str
-        self.COORDINATES = None  # type: List[float]
+    def __init__(
+        self,
+        GEOMETRY_TYPE = None,
+        COORDINATES = None,
+    ):
+        self.GEOMETRY_TYPE = GEOMETRY_TYPE  # type: Optional[str]
+        self.COORDINATES = COORDINATES  # type: Optional[List[float]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        geometry = Geometry()
-        geometry.Init(buf, pos)
-        return cls.InitFromObj(geometry)
+        tmpGeometry = Geometry()
+        tmpGeometry.Init(buf, pos)
+        return cls.InitFromObj(tmpGeometry)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -119,23 +133,23 @@ class GeometryT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, geometry):
+    def InitFromObj(cls, tmpGeometry):
         x = GeometryT()
-        x._UnPack(geometry)
+        x._UnPack(tmpGeometry)
         return x
 
     # GeometryT
-    def _UnPack(self, geometry):
-        if geometry is None:
+    def _UnPack(self, Geometry):
+        if Geometry is None:
             return
-        self.GEOMETRY_TYPE = geometry.GEOMETRY_TYPE()
-        if not geometry.COORDINATESIsNone():
+        self.GEOMETRY_TYPE = Geometry.GEOMETRY_TYPE()
+        if not Geometry.COORDINATESIsNone():
             if np is None:
                 self.COORDINATES = []
-                for i in range(geometry.COORDINATESLength()):
-                    self.COORDINATES.append(geometry.COORDINATES(i))
+                for i in range(Geometry.COORDINATESLength()):
+                    self.COORDINATES.append(Geometry.COORDINATES(i))
             else:
-                self.COORDINATES = geometry.COORDINATESAsNumpy()
+                self.COORDINATES = Geometry.COORDINATESAsNumpy()
 
     # GeometryT
     def Pack(self, builder):
@@ -154,5 +168,5 @@ class GeometryT(object):
             GeometryAddGEOMETRY_TYPE(builder, GEOMETRY_TYPE)
         if self.COORDINATES is not None:
             GeometryAddCOORDINATES(builder, COORDINATES)
-        geometry = GeometryEnd(builder)
-        return geometry
+        Geometry = GeometryEnd(builder)
+        return Geometry

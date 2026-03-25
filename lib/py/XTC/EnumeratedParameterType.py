@@ -185,6 +185,12 @@ def EnumeratedParameterTypeStartCONTEXT_ALARMSVector(builder, numElems):
 def StartCONTEXT_ALARMSVector(builder, numElems):
     return EnumeratedParameterTypeStartCONTEXT_ALARMSVector(builder, numElems)
 
+def EnumeratedParameterTypeCreateCONTEXT_ALARMSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateCONTEXT_ALARMSVector(builder, data):
+    EnumeratedParameterTypeCreateCONTEXT_ALARMSVector(builder, data)
+
 def EnumeratedParameterTypeAddENUMERATION_LIST(builder, ENUMERATION_LIST):
     builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(ENUMERATION_LIST), 0)
 
@@ -196,6 +202,12 @@ def EnumeratedParameterTypeStartENUMERATION_LISTVector(builder, numElems):
 
 def StartENUMERATION_LISTVector(builder, numElems):
     return EnumeratedParameterTypeStartENUMERATION_LISTVector(builder, numElems)
+
+def EnumeratedParameterTypeCreateENUMERATION_LISTVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateENUMERATION_LISTVector(builder, data):
+    EnumeratedParameterTypeCreateENUMERATION_LISTVector(builder, data)
 
 def EnumeratedParameterTypeAddINITIAL_VALUE(builder, INITIAL_VALUE):
     builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(INITIAL_VALUE), 0)
@@ -221,21 +233,31 @@ except:
 class EnumeratedParameterTypeT(object):
 
     # EnumeratedParameterTypeT
-    def __init__(self):
-        self.NAME = None  # type: str
-        self.SHORT_DESCRIPTION = None  # type: str
-        self.LONG_DESCRIPTION = None  # type: str
-        self.DATA_ENCODING = None  # type: Optional[IntegerDataEncoding.IntegerDataEncodingT]
-        self.DEFAULT_ALARM = None  # type: Optional[DefaultAlarm.DefaultAlarmT]
-        self.CONTEXT_ALARMS = None  # type: List[ContextAlarm.ContextAlarmT]
-        self.ENUMERATION_LIST = None  # type: List[EnumerationValue.EnumerationValueT]
-        self.INITIAL_VALUE = None  # type: str
+    def __init__(
+        self,
+        NAME = None,
+        SHORT_DESCRIPTION = None,
+        LONG_DESCRIPTION = None,
+        DATA_ENCODING = None,
+        DEFAULT_ALARM = None,
+        CONTEXT_ALARMS = None,
+        ENUMERATION_LIST = None,
+        INITIAL_VALUE = None,
+    ):
+        self.NAME = NAME  # type: Optional[str]
+        self.SHORT_DESCRIPTION = SHORT_DESCRIPTION  # type: Optional[str]
+        self.LONG_DESCRIPTION = LONG_DESCRIPTION  # type: Optional[str]
+        self.DATA_ENCODING = DATA_ENCODING  # type: Optional[IntegerDataEncoding.IntegerDataEncodingT]
+        self.DEFAULT_ALARM = DEFAULT_ALARM  # type: Optional[DefaultAlarm.DefaultAlarmT]
+        self.CONTEXT_ALARMS = CONTEXT_ALARMS  # type: Optional[List[ContextAlarm.ContextAlarmT]]
+        self.ENUMERATION_LIST = ENUMERATION_LIST  # type: Optional[List[EnumerationValue.EnumerationValueT]]
+        self.INITIAL_VALUE = INITIAL_VALUE  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        enumeratedParameterType = EnumeratedParameterType()
-        enumeratedParameterType.Init(buf, pos)
-        return cls.InitFromObj(enumeratedParameterType)
+        tmpEnumeratedParameterType = EnumeratedParameterType()
+        tmpEnumeratedParameterType.Init(buf, pos)
+        return cls.InitFromObj(tmpEnumeratedParameterType)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -243,39 +265,39 @@ class EnumeratedParameterTypeT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, enumeratedParameterType):
+    def InitFromObj(cls, tmpEnumeratedParameterType):
         x = EnumeratedParameterTypeT()
-        x._UnPack(enumeratedParameterType)
+        x._UnPack(tmpEnumeratedParameterType)
         return x
 
     # EnumeratedParameterTypeT
-    def _UnPack(self, enumeratedParameterType):
-        if enumeratedParameterType is None:
+    def _UnPack(self, EnumeratedParameterType):
+        if EnumeratedParameterType is None:
             return
-        self.NAME = enumeratedParameterType.NAME()
-        self.SHORT_DESCRIPTION = enumeratedParameterType.SHORT_DESCRIPTION()
-        self.LONG_DESCRIPTION = enumeratedParameterType.LONG_DESCRIPTION()
-        if enumeratedParameterType.DATA_ENCODING() is not None:
-            self.DATA_ENCODING = IntegerDataEncoding.IntegerDataEncodingT.InitFromObj(enumeratedParameterType.DATA_ENCODING())
-        if enumeratedParameterType.DEFAULT_ALARM() is not None:
-            self.DEFAULT_ALARM = DefaultAlarm.DefaultAlarmT.InitFromObj(enumeratedParameterType.DEFAULT_ALARM())
-        if not enumeratedParameterType.CONTEXT_ALARMSIsNone():
+        self.NAME = EnumeratedParameterType.NAME()
+        self.SHORT_DESCRIPTION = EnumeratedParameterType.SHORT_DESCRIPTION()
+        self.LONG_DESCRIPTION = EnumeratedParameterType.LONG_DESCRIPTION()
+        if EnumeratedParameterType.DATA_ENCODING() is not None:
+            self.DATA_ENCODING = IntegerDataEncoding.IntegerDataEncodingT.InitFromObj(EnumeratedParameterType.DATA_ENCODING())
+        if EnumeratedParameterType.DEFAULT_ALARM() is not None:
+            self.DEFAULT_ALARM = DefaultAlarm.DefaultAlarmT.InitFromObj(EnumeratedParameterType.DEFAULT_ALARM())
+        if not EnumeratedParameterType.CONTEXT_ALARMSIsNone():
             self.CONTEXT_ALARMS = []
-            for i in range(enumeratedParameterType.CONTEXT_ALARMSLength()):
-                if enumeratedParameterType.CONTEXT_ALARMS(i) is None:
+            for i in range(EnumeratedParameterType.CONTEXT_ALARMSLength()):
+                if EnumeratedParameterType.CONTEXT_ALARMS(i) is None:
                     self.CONTEXT_ALARMS.append(None)
                 else:
-                    contextAlarm_ = ContextAlarm.ContextAlarmT.InitFromObj(enumeratedParameterType.CONTEXT_ALARMS(i))
+                    contextAlarm_ = ContextAlarm.ContextAlarmT.InitFromObj(EnumeratedParameterType.CONTEXT_ALARMS(i))
                     self.CONTEXT_ALARMS.append(contextAlarm_)
-        if not enumeratedParameterType.ENUMERATION_LISTIsNone():
+        if not EnumeratedParameterType.ENUMERATION_LISTIsNone():
             self.ENUMERATION_LIST = []
-            for i in range(enumeratedParameterType.ENUMERATION_LISTLength()):
-                if enumeratedParameterType.ENUMERATION_LIST(i) is None:
+            for i in range(EnumeratedParameterType.ENUMERATION_LISTLength()):
+                if EnumeratedParameterType.ENUMERATION_LIST(i) is None:
                     self.ENUMERATION_LIST.append(None)
                 else:
-                    enumerationValue_ = EnumerationValue.EnumerationValueT.InitFromObj(enumeratedParameterType.ENUMERATION_LIST(i))
+                    enumerationValue_ = EnumerationValue.EnumerationValueT.InitFromObj(EnumeratedParameterType.ENUMERATION_LIST(i))
                     self.ENUMERATION_LIST.append(enumerationValue_)
-        self.INITIAL_VALUE = enumeratedParameterType.INITIAL_VALUE()
+        self.INITIAL_VALUE = EnumeratedParameterType.INITIAL_VALUE()
 
     # EnumeratedParameterTypeT
     def Pack(self, builder):
@@ -324,5 +346,5 @@ class EnumeratedParameterTypeT(object):
             EnumeratedParameterTypeAddENUMERATION_LIST(builder, ENUMERATION_LIST)
         if self.INITIAL_VALUE is not None:
             EnumeratedParameterTypeAddINITIAL_VALUE(builder, INITIAL_VALUE)
-        enumeratedParameterType = EnumeratedParameterTypeEnd(builder)
-        return enumeratedParameterType
+        EnumeratedParameterType = EnumeratedParameterTypeEnd(builder)
+        return EnumeratedParameterType

@@ -11,7 +11,7 @@ public struct SCM : IFlatbufferObject
 {
   private Table __p;
   public ByteBuffer ByteBuffer { get { return __p.bb; } }
-  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_24_3_25(); }
+  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_25_12_19(); }
   public static SCM GetRootAsSCM(ByteBuffer _bb) { return GetRootAsSCM(_bb, new SCM()); }
   public static SCM GetRootAsSCM(ByteBuffer _bb, SCM obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
   public static bool SCMBufferHasIdentifier(ByteBuffer _bb) { return Table.__has_identifier(_bb, "$SCM"); }
@@ -20,13 +20,13 @@ public struct SCM : IFlatbufferObject
   public SCM __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
   /// Version of Space Data Standards
-  public string Version { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string version { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetVersionBytes() { return __p.__vector_as_span<byte>(4, 1); }
+  public Span<byte> GetversionBytes() { return __p.__vector_as_span<byte>(4, 1); }
 #else
-  public ArraySegment<byte>? GetVersionBytes() { return __p.__vector_as_arraysegment(4); }
+  public ArraySegment<byte>? GetversionBytes() { return __p.__vector_as_arraysegment(4); }
 #endif
-  public byte[] GetVersionArray() { return __p.__vector_as_array<byte>(4); }
+  public byte[] GetversionArray() { return __p.__vector_as_array<byte>(4); }
   /// Standards Dictionary
   public SCHEMA_STANDARD? RECORDS(int j) { int o = __p.__offset(6); return o != 0 ? (SCHEMA_STANDARD?)(new SCHEMA_STANDARD()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
   public int RECORDSLength { get { int o = __p.__offset(6); return o != 0 ? __p.__vector_len(o) : 0; } }
@@ -36,12 +36,12 @@ public struct SCM : IFlatbufferObject
       VectorOffset RECORDSOffset = default(VectorOffset)) {
     builder.StartTable(2);
     SCM.AddRECORDS(builder, RECORDSOffset);
-    SCM.AddVersion(builder, versionOffset);
+    SCM.Addversion(builder, versionOffset);
     return SCM.EndSCM(builder);
   }
 
   public static void StartSCM(FlatBufferBuilder builder) { builder.StartTable(2); }
-  public static void AddVersion(FlatBufferBuilder builder, StringOffset versionOffset) { builder.AddOffset(0, versionOffset.Value, 0); }
+  public static void Addversion(FlatBufferBuilder builder, StringOffset versionOffset) { builder.AddOffset(0, versionOffset.Value, 0); }
   public static void AddRECORDS(FlatBufferBuilder builder, VectorOffset RECORDSOffset) { builder.AddOffset(1, RECORDSOffset.Value, 0); }
   public static VectorOffset CreateRECORDSVector(FlatBufferBuilder builder, Offset<SCHEMA_STANDARD>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static VectorOffset CreateRECORDSVectorBlock(FlatBufferBuilder builder, Offset<SCHEMA_STANDARD>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
@@ -60,13 +60,13 @@ public struct SCM : IFlatbufferObject
     return _o;
   }
   public void UnPackTo(SCMT _o) {
-    _o.Version = this.Version;
+    _o.version = this.version;
     _o.RECORDS = new List<SCHEMA_STANDARDT>();
     for (var _j = 0; _j < this.RECORDSLength; ++_j) {_o.RECORDS.Add(this.RECORDS(_j).HasValue ? this.RECORDS(_j).Value.UnPack() : null);}
   }
   public static Offset<SCM> Pack(FlatBufferBuilder builder, SCMT _o) {
     if (_o == null) return default(Offset<SCM>);
-    var _version = _o.Version == null ? default(StringOffset) : builder.CreateString(_o.Version);
+    var _version = _o.version == null ? default(StringOffset) : builder.CreateString(_o.version);
     var _RECORDS = default(VectorOffset);
     if (_o.RECORDS != null) {
       var __RECORDS = new Offset<SCHEMA_STANDARD>[_o.RECORDS.Count];
@@ -82,11 +82,11 @@ public struct SCM : IFlatbufferObject
 
 public class SCMT
 {
-  public string Version { get; set; }
+  public string version { get; set; }
   public List<SCHEMA_STANDARDT> RECORDS { get; set; }
 
   public SCMT() {
-    this.Version = null;
+    this.version = null;
     this.RECORDS = null;
   }
   public static SCMT DeserializeFromBinary(byte[] fbBuffer) {
@@ -105,7 +105,7 @@ static public class SCMVerify
   static public bool Verify(Google.FlatBuffers.Verifier verifier, uint tablePos)
   {
     return verifier.VerifyTableStart(tablePos)
-      && verifier.VerifyString(tablePos, 4 /*Version*/, false)
+      && verifier.VerifyString(tablePos, 4 /*version*/, false)
       && verifier.VerifyVectorOfTables(tablePos, 6 /*RECORDS*/, SCHEMA_STANDARDVerify.Verify, false)
       && verifier.VerifyTableEnd(tablePos);
   }

@@ -63,9 +63,17 @@ func (rcv *CFP) VERSION() byte {
 	return 0
 }
 
+func (rcv *CFP) Version() byte {
+	return rcv.VERSION()
+}
+
 /// PDU version
 func (rcv *CFP) MutateVERSION(n byte) bool {
 	return rcv._tab.MutateByteSlot(4, n)
+}
+
+func (rcv *CFP) MutateVersion(n byte) bool {
+	return rcv.MutateVERSION(n)
 }
 
 /// PDU type
@@ -77,9 +85,17 @@ func (rcv *CFP) PDU_TYPE() pduType {
 	return 0
 }
 
+func (rcv *CFP) PduType() pduType {
+	return rcv.PDU_TYPE()
+}
+
 /// PDU type
 func (rcv *CFP) MutatePDU_TYPE(n pduType) bool {
 	return rcv._tab.MutateInt8Slot(6, int8(n))
+}
+
+func (rcv *CFP) MutatePduType(n pduType) bool {
+	return rcv.MutatePDU_TYPE(n)
 }
 
 /// Direction (toward receiver or sender)
@@ -91,9 +107,17 @@ func (rcv *CFP) DIRECTION() byte {
 	return 0
 }
 
+func (rcv *CFP) Direction() byte {
+	return rcv.DIRECTION()
+}
+
 /// Direction (toward receiver or sender)
 func (rcv *CFP) MutateDIRECTION(n byte) bool {
 	return rcv._tab.MutateByteSlot(8, n)
+}
+
+func (rcv *CFP) MutateDirection(n byte) bool {
+	return rcv.MutateDIRECTION(n)
 }
 
 /// Transmission mode
@@ -105,9 +129,17 @@ func (rcv *CFP) TRANSMISSION_MODE() transmissionMode {
 	return 0
 }
 
+func (rcv *CFP) TransmissionMode() transmissionMode {
+	return rcv.TRANSMISSION_MODE()
+}
+
 /// Transmission mode
 func (rcv *CFP) MutateTRANSMISSION_MODE(n transmissionMode) bool {
 	return rcv._tab.MutateInt8Slot(10, int8(n))
+}
+
+func (rcv *CFP) MutateTransmissionMode(n transmissionMode) bool {
+	return rcv.MutateTRANSMISSION_MODE(n)
 }
 
 /// CRC present flag
@@ -119,9 +151,17 @@ func (rcv *CFP) CRC_FLAG() bool {
 	return false
 }
 
+func (rcv *CFP) CrcFlag() bool {
+	return rcv.CRC_FLAG()
+}
+
 /// CRC present flag
 func (rcv *CFP) MutateCRC_FLAG(n bool) bool {
 	return rcv._tab.MutateBoolSlot(12, n)
+}
+
+func (rcv *CFP) MutateCrcFlag(n bool) bool {
+	return rcv.MutateCRC_FLAG(n)
 }
 
 /// Large file flag
@@ -133,9 +173,17 @@ func (rcv *CFP) LARGE_FILE_FLAG() bool {
 	return false
 }
 
+func (rcv *CFP) LargeFileFlag() bool {
+	return rcv.LARGE_FILE_FLAG()
+}
+
 /// Large file flag
 func (rcv *CFP) MutateLARGE_FILE_FLAG(n bool) bool {
 	return rcv._tab.MutateBoolSlot(14, n)
+}
+
+func (rcv *CFP) MutateLargeFileFlag(n bool) bool {
+	return rcv.MutateLARGE_FILE_FLAG(n)
 }
 
 /// Data field length
@@ -147,9 +195,17 @@ func (rcv *CFP) DATA_FIELD_LENGTH() uint16 {
 	return 0
 }
 
+func (rcv *CFP) DataFieldLength() uint16 {
+	return rcv.DATA_FIELD_LENGTH()
+}
+
 /// Data field length
 func (rcv *CFP) MutateDATA_FIELD_LENGTH(n uint16) bool {
 	return rcv._tab.MutateUint16Slot(16, n)
+}
+
+func (rcv *CFP) MutateDataFieldLength(n uint16) bool {
+	return rcv.MutateDATA_FIELD_LENGTH(n)
 }
 
 /// Source entity ID
@@ -161,9 +217,17 @@ func (rcv *CFP) SOURCE_ENTITY_ID() uint64 {
 	return 0
 }
 
+func (rcv *CFP) SourceEntityId() uint64 {
+	return rcv.SOURCE_ENTITY_ID()
+}
+
 /// Source entity ID
 func (rcv *CFP) MutateSOURCE_ENTITY_ID(n uint64) bool {
 	return rcv._tab.MutateUint64Slot(18, n)
+}
+
+func (rcv *CFP) MutateSourceEntityId(n uint64) bool {
+	return rcv.MutateSOURCE_ENTITY_ID(n)
 }
 
 /// Transaction sequence number
@@ -175,9 +239,17 @@ func (rcv *CFP) TRANSACTION_SEQ_NUM() uint64 {
 	return 0
 }
 
+func (rcv *CFP) TransactionSeqNum() uint64 {
+	return rcv.TRANSACTION_SEQ_NUM()
+}
+
 /// Transaction sequence number
 func (rcv *CFP) MutateTRANSACTION_SEQ_NUM(n uint64) bool {
 	return rcv._tab.MutateUint64Slot(20, n)
+}
+
+func (rcv *CFP) MutateTransactionSeqNum(n uint64) bool {
+	return rcv.MutateTRANSACTION_SEQ_NUM(n)
 }
 
 /// Destination entity ID
@@ -189,9 +261,17 @@ func (rcv *CFP) DESTINATION_ENTITY_ID() uint64 {
 	return 0
 }
 
+func (rcv *CFP) DestinationEntityId() uint64 {
+	return rcv.DESTINATION_ENTITY_ID()
+}
+
 /// Destination entity ID
 func (rcv *CFP) MutateDESTINATION_ENTITY_ID(n uint64) bool {
 	return rcv._tab.MutateUint64Slot(22, n)
+}
+
+func (rcv *CFP) MutateDestinationEntityId(n uint64) bool {
+	return rcv.MutateDESTINATION_ENTITY_ID(n)
 }
 
 /// File checksum type
@@ -203,9 +283,17 @@ func (rcv *CFP) CHECKSUM_TYPE() byte {
 	return 0
 }
 
+func (rcv *CFP) ChecksumType() byte {
+	return rcv.CHECKSUM_TYPE()
+}
+
 /// File checksum type
 func (rcv *CFP) MutateCHECKSUM_TYPE(n byte) bool {
 	return rcv._tab.MutateByteSlot(24, n)
+}
+
+func (rcv *CFP) MutateChecksumType(n byte) bool {
+	return rcv.MutateCHECKSUM_TYPE(n)
 }
 
 /// File size
@@ -217,9 +305,17 @@ func (rcv *CFP) FILE_SIZE() uint64 {
 	return 0
 }
 
+func (rcv *CFP) FileSize() uint64 {
+	return rcv.FILE_SIZE()
+}
+
 /// File size
 func (rcv *CFP) MutateFILE_SIZE(n uint64) bool {
 	return rcv._tab.MutateUint64Slot(26, n)
+}
+
+func (rcv *CFP) MutateFileSize(n uint64) bool {
+	return rcv.MutateFILE_SIZE(n)
 }
 
 /// Source filename
@@ -231,6 +327,10 @@ func (rcv *CFP) SOURCE_FILENAME() []byte {
 	return nil
 }
 
+func (rcv *CFP) SourceFilename() []byte {
+	return rcv.SOURCE_FILENAME()
+}
+
 /// Source filename
 /// Destination filename
 func (rcv *CFP) DESTINATION_FILENAME() []byte {
@@ -239,6 +339,10 @@ func (rcv *CFP) DESTINATION_FILENAME() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *CFP) DestinationFilename() []byte {
+	return rcv.DESTINATION_FILENAME()
 }
 
 /// Destination filename
@@ -252,6 +356,10 @@ func (rcv *CFP) DATA(j int) byte {
 	return 0
 }
 
+func (rcv *CFP) Data(j int) byte {
+	return rcv.DATA(j)
+}
+
 func (rcv *CFP) DATALength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
 	if o != 0 {
@@ -260,12 +368,20 @@ func (rcv *CFP) DATALength() int {
 	return 0
 }
 
+func (rcv *CFP) DataLength() int {
+	return rcv.DATALength()
+}
+
 func (rcv *CFP) DATABytes() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *CFP) DataBytes() []byte {
+	return rcv.DATABytes()
 }
 
 /// PDU data
@@ -278,56 +394,108 @@ func (rcv *CFP) MutateDATA(j int, n byte) bool {
 	return false
 }
 
+func (rcv *CFP) MutateData(j int, n byte) bool {
+	return rcv.MutateDATA(j, n)
+}
+
 func CFPStart(builder *flatbuffers.Builder) {
 	builder.StartObject(15)
 }
 func CFPAddVERSION(builder *flatbuffers.Builder, VERSION byte) {
 	builder.PrependByteSlot(0, VERSION, 0)
 }
+func CFPAddVersion(builder *flatbuffers.Builder, VERSION byte) {
+	CFPAddVERSION(builder, VERSION)
+}
 func CFPAddPDU_TYPE(builder *flatbuffers.Builder, PDU_TYPE pduType) {
 	builder.PrependInt8Slot(1, int8(PDU_TYPE), 0)
+}
+func CFPAddPduType(builder *flatbuffers.Builder, PDU_TYPE pduType) {
+	CFPAddPDU_TYPE(builder, PDU_TYPE)
 }
 func CFPAddDIRECTION(builder *flatbuffers.Builder, DIRECTION byte) {
 	builder.PrependByteSlot(2, DIRECTION, 0)
 }
+func CFPAddDirection(builder *flatbuffers.Builder, DIRECTION byte) {
+	CFPAddDIRECTION(builder, DIRECTION)
+}
 func CFPAddTRANSMISSION_MODE(builder *flatbuffers.Builder, TRANSMISSION_MODE transmissionMode) {
 	builder.PrependInt8Slot(3, int8(TRANSMISSION_MODE), 0)
+}
+func CFPAddTransmissionMode(builder *flatbuffers.Builder, TRANSMISSION_MODE transmissionMode) {
+	CFPAddTRANSMISSION_MODE(builder, TRANSMISSION_MODE)
 }
 func CFPAddCRC_FLAG(builder *flatbuffers.Builder, CRC_FLAG bool) {
 	builder.PrependBoolSlot(4, CRC_FLAG, false)
 }
+func CFPAddCrcFlag(builder *flatbuffers.Builder, CRC_FLAG bool) {
+	CFPAddCRC_FLAG(builder, CRC_FLAG)
+}
 func CFPAddLARGE_FILE_FLAG(builder *flatbuffers.Builder, LARGE_FILE_FLAG bool) {
 	builder.PrependBoolSlot(5, LARGE_FILE_FLAG, false)
+}
+func CFPAddLargeFileFlag(builder *flatbuffers.Builder, LARGE_FILE_FLAG bool) {
+	CFPAddLARGE_FILE_FLAG(builder, LARGE_FILE_FLAG)
 }
 func CFPAddDATA_FIELD_LENGTH(builder *flatbuffers.Builder, DATA_FIELD_LENGTH uint16) {
 	builder.PrependUint16Slot(6, DATA_FIELD_LENGTH, 0)
 }
+func CFPAddDataFieldLength(builder *flatbuffers.Builder, DATA_FIELD_LENGTH uint16) {
+	CFPAddDATA_FIELD_LENGTH(builder, DATA_FIELD_LENGTH)
+}
 func CFPAddSOURCE_ENTITY_ID(builder *flatbuffers.Builder, SOURCE_ENTITY_ID uint64) {
 	builder.PrependUint64Slot(7, SOURCE_ENTITY_ID, 0)
+}
+func CFPAddSourceEntityId(builder *flatbuffers.Builder, SOURCE_ENTITY_ID uint64) {
+	CFPAddSOURCE_ENTITY_ID(builder, SOURCE_ENTITY_ID)
 }
 func CFPAddTRANSACTION_SEQ_NUM(builder *flatbuffers.Builder, TRANSACTION_SEQ_NUM uint64) {
 	builder.PrependUint64Slot(8, TRANSACTION_SEQ_NUM, 0)
 }
+func CFPAddTransactionSeqNum(builder *flatbuffers.Builder, TRANSACTION_SEQ_NUM uint64) {
+	CFPAddTRANSACTION_SEQ_NUM(builder, TRANSACTION_SEQ_NUM)
+}
 func CFPAddDESTINATION_ENTITY_ID(builder *flatbuffers.Builder, DESTINATION_ENTITY_ID uint64) {
 	builder.PrependUint64Slot(9, DESTINATION_ENTITY_ID, 0)
+}
+func CFPAddDestinationEntityId(builder *flatbuffers.Builder, DESTINATION_ENTITY_ID uint64) {
+	CFPAddDESTINATION_ENTITY_ID(builder, DESTINATION_ENTITY_ID)
 }
 func CFPAddCHECKSUM_TYPE(builder *flatbuffers.Builder, CHECKSUM_TYPE byte) {
 	builder.PrependByteSlot(10, CHECKSUM_TYPE, 0)
 }
+func CFPAddChecksumType(builder *flatbuffers.Builder, CHECKSUM_TYPE byte) {
+	CFPAddCHECKSUM_TYPE(builder, CHECKSUM_TYPE)
+}
 func CFPAddFILE_SIZE(builder *flatbuffers.Builder, FILE_SIZE uint64) {
 	builder.PrependUint64Slot(11, FILE_SIZE, 0)
+}
+func CFPAddFileSize(builder *flatbuffers.Builder, FILE_SIZE uint64) {
+	CFPAddFILE_SIZE(builder, FILE_SIZE)
 }
 func CFPAddSOURCE_FILENAME(builder *flatbuffers.Builder, SOURCE_FILENAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(12, flatbuffers.UOffsetT(SOURCE_FILENAME), 0)
 }
+func CFPAddSourceFilename(builder *flatbuffers.Builder, SOURCE_FILENAME flatbuffers.UOffsetT) {
+	CFPAddSOURCE_FILENAME(builder, SOURCE_FILENAME)
+}
 func CFPAddDESTINATION_FILENAME(builder *flatbuffers.Builder, DESTINATION_FILENAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(13, flatbuffers.UOffsetT(DESTINATION_FILENAME), 0)
+}
+func CFPAddDestinationFilename(builder *flatbuffers.Builder, DESTINATION_FILENAME flatbuffers.UOffsetT) {
+	CFPAddDESTINATION_FILENAME(builder, DESTINATION_FILENAME)
 }
 func CFPAddDATA(builder *flatbuffers.Builder, DATA flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(14, flatbuffers.UOffsetT(DATA), 0)
 }
+func CFPAddData(builder *flatbuffers.Builder, DATA flatbuffers.UOffsetT) {
+	CFPAddDATA(builder, DATA)
+}
 func CFPStartDATAVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(1, numElems, 1)
+}
+func CFPStartDataVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return CFPStartDATAVector(builder, numElems)
 }
 func CFPEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

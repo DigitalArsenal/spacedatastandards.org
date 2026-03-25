@@ -41,7 +41,7 @@ func (rcv *SpacecraftFrameWrapper) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
-func (rcv *SpacecraftFrameWrapper) Frame() SpacecraftFrame {
+func (rcv *SpacecraftFrameWrapper) frame() SpacecraftFrame {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
 		return SpacecraftFrame(rcv._tab.GetInt8(o + rcv._tab.Pos))
@@ -49,15 +49,26 @@ func (rcv *SpacecraftFrameWrapper) Frame() SpacecraftFrame {
 	return 0
 }
 
-func (rcv *SpacecraftFrameWrapper) MutateFrame(n SpacecraftFrame) bool {
+func (rcv *SpacecraftFrameWrapper) Frame() SpacecraftFrame {
+	return rcv.frame()
+}
+
+func (rcv *SpacecraftFrameWrapper) Mutateframe(n SpacecraftFrame) bool {
 	return rcv._tab.MutateInt8Slot(4, int8(n))
+}
+
+func (rcv *SpacecraftFrameWrapper) MutateFrame(n SpacecraftFrame) bool {
+	return rcv.Mutateframe(n)
 }
 
 func SpacecraftFrameWrapperStart(builder *flatbuffers.Builder) {
 	builder.StartObject(1)
 }
-func SpacecraftFrameWrapperAddFrame(builder *flatbuffers.Builder, frame SpacecraftFrame) {
+func SpacecraftFrameWrapperAddframe(builder *flatbuffers.Builder, frame SpacecraftFrame) {
 	builder.PrependInt8Slot(0, int8(frame), 0)
+}
+func SpacecraftFrameWrapperAddFrame(builder *flatbuffers.Builder, frame SpacecraftFrame) {
+	SpacecraftFrameWrapperAddframe(builder, frame)
 }
 func SpacecraftFrameWrapperEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

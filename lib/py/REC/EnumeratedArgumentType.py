@@ -2,4 +2,257 @@
 
 # namespace: 
 
-# NOTE EnumeratedArgumentType.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Enumerated argument type
+class EnumeratedArgumentType(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = EnumeratedArgumentType()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsEnumeratedArgumentType(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def EnumeratedArgumentTypeBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x58\x54\x43", size_prefixed=size_prefixed)
+
+    # EnumeratedArgumentType
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Type name
+    # EnumeratedArgumentType
+    def NAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Short description
+    # EnumeratedArgumentType
+    def SHORT_DESCRIPTION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Long description
+    # EnumeratedArgumentType
+    def LONG_DESCRIPTION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Data encoding
+    # EnumeratedArgumentType
+    def DATA_ENCODING(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from IntegerDataEncoding import IntegerDataEncoding
+            obj = IntegerDataEncoding()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Enumeration values list
+    # EnumeratedArgumentType
+    def ENUMERATION_LIST(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from EnumerationValue import EnumerationValue
+            obj = EnumerationValue()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # EnumeratedArgumentType
+    def ENUMERATION_LISTLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # EnumeratedArgumentType
+    def ENUMERATION_LISTIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        return o == 0
+
+    # Initial/default value label
+    # EnumeratedArgumentType
+    def INITIAL_VALUE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+def EnumeratedArgumentTypeStart(builder):
+    builder.StartObject(6)
+
+def Start(builder):
+    EnumeratedArgumentTypeStart(builder)
+
+def EnumeratedArgumentTypeAddNAME(builder, NAME):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(NAME), 0)
+
+def AddNAME(builder, NAME):
+    EnumeratedArgumentTypeAddNAME(builder, NAME)
+
+def EnumeratedArgumentTypeAddSHORT_DESCRIPTION(builder, SHORT_DESCRIPTION):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(SHORT_DESCRIPTION), 0)
+
+def AddSHORT_DESCRIPTION(builder, SHORT_DESCRIPTION):
+    EnumeratedArgumentTypeAddSHORT_DESCRIPTION(builder, SHORT_DESCRIPTION)
+
+def EnumeratedArgumentTypeAddLONG_DESCRIPTION(builder, LONG_DESCRIPTION):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(LONG_DESCRIPTION), 0)
+
+def AddLONG_DESCRIPTION(builder, LONG_DESCRIPTION):
+    EnumeratedArgumentTypeAddLONG_DESCRIPTION(builder, LONG_DESCRIPTION)
+
+def EnumeratedArgumentTypeAddDATA_ENCODING(builder, DATA_ENCODING):
+    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(DATA_ENCODING), 0)
+
+def AddDATA_ENCODING(builder, DATA_ENCODING):
+    EnumeratedArgumentTypeAddDATA_ENCODING(builder, DATA_ENCODING)
+
+def EnumeratedArgumentTypeAddENUMERATION_LIST(builder, ENUMERATION_LIST):
+    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(ENUMERATION_LIST), 0)
+
+def AddENUMERATION_LIST(builder, ENUMERATION_LIST):
+    EnumeratedArgumentTypeAddENUMERATION_LIST(builder, ENUMERATION_LIST)
+
+def EnumeratedArgumentTypeStartENUMERATION_LISTVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartENUMERATION_LISTVector(builder, numElems):
+    return EnumeratedArgumentTypeStartENUMERATION_LISTVector(builder, numElems)
+
+def EnumeratedArgumentTypeCreateENUMERATION_LISTVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateENUMERATION_LISTVector(builder, data):
+    EnumeratedArgumentTypeCreateENUMERATION_LISTVector(builder, data)
+
+def EnumeratedArgumentTypeAddINITIAL_VALUE(builder, INITIAL_VALUE):
+    builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(INITIAL_VALUE), 0)
+
+def AddINITIAL_VALUE(builder, INITIAL_VALUE):
+    EnumeratedArgumentTypeAddINITIAL_VALUE(builder, INITIAL_VALUE)
+
+def EnumeratedArgumentTypeEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return EnumeratedArgumentTypeEnd(builder)
+
+import EnumerationValue
+import IntegerDataEncoding
+try:
+    from typing import List, Optional
+except:
+    pass
+
+class EnumeratedArgumentTypeT(object):
+
+    # EnumeratedArgumentTypeT
+    def __init__(
+        self,
+        NAME = None,
+        SHORT_DESCRIPTION = None,
+        LONG_DESCRIPTION = None,
+        DATA_ENCODING = None,
+        ENUMERATION_LIST = None,
+        INITIAL_VALUE = None,
+    ):
+        self.NAME = NAME  # type: Optional[str]
+        self.SHORT_DESCRIPTION = SHORT_DESCRIPTION  # type: Optional[str]
+        self.LONG_DESCRIPTION = LONG_DESCRIPTION  # type: Optional[str]
+        self.DATA_ENCODING = DATA_ENCODING  # type: Optional[IntegerDataEncoding.IntegerDataEncodingT]
+        self.ENUMERATION_LIST = ENUMERATION_LIST  # type: Optional[List[EnumerationValue.EnumerationValueT]]
+        self.INITIAL_VALUE = INITIAL_VALUE  # type: Optional[str]
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpEnumeratedArgumentType = EnumeratedArgumentType()
+        tmpEnumeratedArgumentType.Init(buf, pos)
+        return cls.InitFromObj(tmpEnumeratedArgumentType)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpEnumeratedArgumentType):
+        x = EnumeratedArgumentTypeT()
+        x._UnPack(tmpEnumeratedArgumentType)
+        return x
+
+    # EnumeratedArgumentTypeT
+    def _UnPack(self, EnumeratedArgumentType):
+        if EnumeratedArgumentType is None:
+            return
+        self.NAME = EnumeratedArgumentType.NAME()
+        self.SHORT_DESCRIPTION = EnumeratedArgumentType.SHORT_DESCRIPTION()
+        self.LONG_DESCRIPTION = EnumeratedArgumentType.LONG_DESCRIPTION()
+        if EnumeratedArgumentType.DATA_ENCODING() is not None:
+            self.DATA_ENCODING = IntegerDataEncoding.IntegerDataEncodingT.InitFromObj(EnumeratedArgumentType.DATA_ENCODING())
+        if not EnumeratedArgumentType.ENUMERATION_LISTIsNone():
+            self.ENUMERATION_LIST = []
+            for i in range(EnumeratedArgumentType.ENUMERATION_LISTLength()):
+                if EnumeratedArgumentType.ENUMERATION_LIST(i) is None:
+                    self.ENUMERATION_LIST.append(None)
+                else:
+                    enumerationValue_ = EnumerationValue.EnumerationValueT.InitFromObj(EnumeratedArgumentType.ENUMERATION_LIST(i))
+                    self.ENUMERATION_LIST.append(enumerationValue_)
+        self.INITIAL_VALUE = EnumeratedArgumentType.INITIAL_VALUE()
+
+    # EnumeratedArgumentTypeT
+    def Pack(self, builder):
+        if self.NAME is not None:
+            NAME = builder.CreateString(self.NAME)
+        if self.SHORT_DESCRIPTION is not None:
+            SHORT_DESCRIPTION = builder.CreateString(self.SHORT_DESCRIPTION)
+        if self.LONG_DESCRIPTION is not None:
+            LONG_DESCRIPTION = builder.CreateString(self.LONG_DESCRIPTION)
+        if self.DATA_ENCODING is not None:
+            DATA_ENCODING = self.DATA_ENCODING.Pack(builder)
+        if self.ENUMERATION_LIST is not None:
+            ENUMERATION_LISTlist = []
+            for i in range(len(self.ENUMERATION_LIST)):
+                ENUMERATION_LISTlist.append(self.ENUMERATION_LIST[i].Pack(builder))
+            EnumeratedArgumentTypeStartENUMERATION_LISTVector(builder, len(self.ENUMERATION_LIST))
+            for i in reversed(range(len(self.ENUMERATION_LIST))):
+                builder.PrependUOffsetTRelative(ENUMERATION_LISTlist[i])
+            ENUMERATION_LIST = builder.EndVector()
+        if self.INITIAL_VALUE is not None:
+            INITIAL_VALUE = builder.CreateString(self.INITIAL_VALUE)
+        EnumeratedArgumentTypeStart(builder)
+        if self.NAME is not None:
+            EnumeratedArgumentTypeAddNAME(builder, NAME)
+        if self.SHORT_DESCRIPTION is not None:
+            EnumeratedArgumentTypeAddSHORT_DESCRIPTION(builder, SHORT_DESCRIPTION)
+        if self.LONG_DESCRIPTION is not None:
+            EnumeratedArgumentTypeAddLONG_DESCRIPTION(builder, LONG_DESCRIPTION)
+        if self.DATA_ENCODING is not None:
+            EnumeratedArgumentTypeAddDATA_ENCODING(builder, DATA_ENCODING)
+        if self.ENUMERATION_LIST is not None:
+            EnumeratedArgumentTypeAddENUMERATION_LIST(builder, ENUMERATION_LIST)
+        if self.INITIAL_VALUE is not None:
+            EnumeratedArgumentTypeAddINITIAL_VALUE(builder, INITIAL_VALUE)
+        EnumeratedArgumentType = EnumeratedArgumentTypeEnd(builder)
+        return EnumeratedArgumentType

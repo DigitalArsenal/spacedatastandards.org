@@ -68,6 +68,10 @@ func (rcv *CSM) OBJECT_1(obj *CAT) *CAT {
 	return nil
 }
 
+func (rcv *CSM) Object1(obj *CAT) *CAT {
+	return rcv.OBJECT_1(obj)
+}
+
 /// Satellite name for the first object
 /// Days since epoch for the first object
 func (rcv *CSM) DSE_1() float64 {
@@ -78,9 +82,17 @@ func (rcv *CSM) DSE_1() float64 {
 	return 0.0
 }
 
+func (rcv *CSM) Dse1() float64 {
+	return rcv.DSE_1()
+}
+
 /// Days since epoch for the first object
 func (rcv *CSM) MutateDSE_1(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(6, n)
+}
+
+func (rcv *CSM) MutateDse1(n float64) bool {
+	return rcv.MutateDSE_1(n)
 }
 
 /// Satellite name for the second object
@@ -97,6 +109,10 @@ func (rcv *CSM) OBJECT_2(obj *CAT) *CAT {
 	return nil
 }
 
+func (rcv *CSM) Object2(obj *CAT) *CAT {
+	return rcv.OBJECT_2(obj)
+}
+
 /// Satellite name for the second object
 /// Days since epoch for the second object
 func (rcv *CSM) DSE_2() float64 {
@@ -107,9 +123,17 @@ func (rcv *CSM) DSE_2() float64 {
 	return 0.0
 }
 
+func (rcv *CSM) Dse2() float64 {
+	return rcv.DSE_2()
+}
+
 /// Days since epoch for the second object
 func (rcv *CSM) MutateDSE_2(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(10, n)
+}
+
+func (rcv *CSM) MutateDse2(n float64) bool {
+	return rcv.MutateDSE_2(n)
 }
 
 /// Time of closest approach as a Unix timestamp
@@ -121,9 +145,17 @@ func (rcv *CSM) TCA() float64 {
 	return 0.0
 }
 
+func (rcv *CSM) Tca() float64 {
+	return rcv.TCA()
+}
+
 /// Time of closest approach as a Unix timestamp
 func (rcv *CSM) MutateTCA(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(12, n)
+}
+
+func (rcv *CSM) MutateTca(n float64) bool {
+	return rcv.MutateTCA(n)
 }
 
 /// The distance or range between the two objects at TCA
@@ -135,9 +167,17 @@ func (rcv *CSM) TCA_RANGE() float64 {
 	return 0.0
 }
 
+func (rcv *CSM) TcaRange() float64 {
+	return rcv.TCA_RANGE()
+}
+
 /// The distance or range between the two objects at TCA
 func (rcv *CSM) MutateTCA_RANGE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(14, n)
+}
+
+func (rcv *CSM) MutateTcaRange(n float64) bool {
+	return rcv.MutateTCA_RANGE(n)
 }
 
 /// The magnitude of the relative velocity at TCA
@@ -149,9 +189,17 @@ func (rcv *CSM) TCA_RELATIVE_SPEED() float64 {
 	return 0.0
 }
 
+func (rcv *CSM) TcaRelativeSpeed() float64 {
+	return rcv.TCA_RELATIVE_SPEED()
+}
+
 /// The magnitude of the relative velocity at TCA
 func (rcv *CSM) MutateTCA_RELATIVE_SPEED(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(16, n)
+}
+
+func (rcv *CSM) MutateTcaRelativeSpeed(n float64) bool {
+	return rcv.MutateTCA_RELATIVE_SPEED(n)
 }
 
 /// Maximum probability
@@ -163,9 +211,17 @@ func (rcv *CSM) MAX_PROB() float64 {
 	return 0.0
 }
 
+func (rcv *CSM) MaxProb() float64 {
+	return rcv.MAX_PROB()
+}
+
 /// Maximum probability
 func (rcv *CSM) MutateMAX_PROB(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(18, n)
+}
+
+func (rcv *CSM) MutateMaxProb(n float64) bool {
+	return rcv.MutateMAX_PROB(n)
 }
 
 /// Standard deviation that produces the maximum probability
@@ -177,9 +233,17 @@ func (rcv *CSM) DILUTION() float64 {
 	return 0.0
 }
 
+func (rcv *CSM) Dilution() float64 {
+	return rcv.DILUTION()
+}
+
 /// Standard deviation that produces the maximum probability
 func (rcv *CSM) MutateDILUTION(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(20, n)
+}
+
+func (rcv *CSM) MutateDilution(n float64) bool {
+	return rcv.MutateDILUTION(n)
 }
 
 func CSMStart(builder *flatbuffers.Builder) {
@@ -188,29 +252,56 @@ func CSMStart(builder *flatbuffers.Builder) {
 func CSMAddOBJECT_1(builder *flatbuffers.Builder, OBJECT_1 flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(OBJECT_1), 0)
 }
+func CSMAddObject1(builder *flatbuffers.Builder, OBJECT_1 flatbuffers.UOffsetT) {
+	CSMAddOBJECT_1(builder, OBJECT_1)
+}
 func CSMAddDSE_1(builder *flatbuffers.Builder, DSE_1 float64) {
 	builder.PrependFloat64Slot(1, DSE_1, 0.0)
+}
+func CSMAddDse1(builder *flatbuffers.Builder, DSE_1 float64) {
+	CSMAddDSE_1(builder, DSE_1)
 }
 func CSMAddOBJECT_2(builder *flatbuffers.Builder, OBJECT_2 flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(OBJECT_2), 0)
 }
+func CSMAddObject2(builder *flatbuffers.Builder, OBJECT_2 flatbuffers.UOffsetT) {
+	CSMAddOBJECT_2(builder, OBJECT_2)
+}
 func CSMAddDSE_2(builder *flatbuffers.Builder, DSE_2 float64) {
 	builder.PrependFloat64Slot(3, DSE_2, 0.0)
+}
+func CSMAddDse2(builder *flatbuffers.Builder, DSE_2 float64) {
+	CSMAddDSE_2(builder, DSE_2)
 }
 func CSMAddTCA(builder *flatbuffers.Builder, TCA float64) {
 	builder.PrependFloat64Slot(4, TCA, 0.0)
 }
+func CSMAddTca(builder *flatbuffers.Builder, TCA float64) {
+	CSMAddTCA(builder, TCA)
+}
 func CSMAddTCA_RANGE(builder *flatbuffers.Builder, TCA_RANGE float64) {
 	builder.PrependFloat64Slot(5, TCA_RANGE, 0.0)
+}
+func CSMAddTcaRange(builder *flatbuffers.Builder, TCA_RANGE float64) {
+	CSMAddTCA_RANGE(builder, TCA_RANGE)
 }
 func CSMAddTCA_RELATIVE_SPEED(builder *flatbuffers.Builder, TCA_RELATIVE_SPEED float64) {
 	builder.PrependFloat64Slot(6, TCA_RELATIVE_SPEED, 0.0)
 }
+func CSMAddTcaRelativeSpeed(builder *flatbuffers.Builder, TCA_RELATIVE_SPEED float64) {
+	CSMAddTCA_RELATIVE_SPEED(builder, TCA_RELATIVE_SPEED)
+}
 func CSMAddMAX_PROB(builder *flatbuffers.Builder, MAX_PROB float64) {
 	builder.PrependFloat64Slot(7, MAX_PROB, 0.0)
 }
+func CSMAddMaxProb(builder *flatbuffers.Builder, MAX_PROB float64) {
+	CSMAddMAX_PROB(builder, MAX_PROB)
+}
 func CSMAddDILUTION(builder *flatbuffers.Builder, DILUTION float64) {
 	builder.PrependFloat64Slot(8, DILUTION, 0.0)
+}
+func CSMAddDilution(builder *flatbuffers.Builder, DILUTION float64) {
+	CSMAddDILUTION(builder, DILUTION)
 }
 func CSMEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

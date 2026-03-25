@@ -32,7 +32,7 @@ class KMLNetworkLink : Table() {
     /**
      * Name of the network link
      */
-    val NAME : String?
+    val name : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class KMLNetworkLink : Table() {
                 null
             }
         }
-    val NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val nameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun nameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Description
      */
-    val DESCRIPTION : String?
+    val description : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -55,12 +55,12 @@ class KMLNetworkLink : Table() {
                 null
             }
         }
-    val DESCRIPTIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun DESCRIPTIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val descriptionAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun descriptionInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * Whether the link is visible
      */
-    val VISIBILITY : Boolean
+    val visibility : Boolean
         get() {
             val o = __offset(8)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -68,7 +68,7 @@ class KMLNetworkLink : Table() {
     /**
      * Whether open in tree view
      */
-    val OPEN : Boolean
+    val open : Boolean
         get() {
             val o = __offset(10)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -76,7 +76,7 @@ class KMLNetworkLink : Table() {
     /**
      * Link URL
      */
-    val HREF : String?
+    val href : String?
         get() {
             val o = __offset(12)
             return if (o != 0) {
@@ -85,12 +85,12 @@ class KMLNetworkLink : Table() {
                 null
             }
         }
-    val HREFAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
-    fun HREFInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
+    val hrefAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(12, 1)
+    fun hrefInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 12, 1)
     /**
      * Refresh mode
      */
-    val REFRESH_MODE : Byte
+    val refreshMode : Byte
         get() {
             val o = __offset(14)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -98,7 +98,7 @@ class KMLNetworkLink : Table() {
     /**
      * Refresh interval in seconds
      */
-    val REFRESH_INTERVAL : Double
+    val refreshInterval : Double
         get() {
             val o = __offset(16)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -106,7 +106,7 @@ class KMLNetworkLink : Table() {
     /**
      * View refresh mode
      */
-    val VIEW_REFRESH_MODE : Byte
+    val viewRefreshMode : Byte
         get() {
             val o = __offset(18)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -114,7 +114,7 @@ class KMLNetworkLink : Table() {
     /**
      * View refresh time in seconds
      */
-    val VIEW_REFRESH_TIME : Double
+    val viewRefreshTime : Double
         get() {
             val o = __offset(20)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -122,7 +122,7 @@ class KMLNetworkLink : Table() {
     /**
      * Whether to refresh on visibility change
      */
-    val REFRESH_VISIBILITY : Boolean
+    val refreshVisibility : Boolean
         get() {
             val o = __offset(22)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -130,7 +130,7 @@ class KMLNetworkLink : Table() {
     /**
      * Whether to fly to view on refresh
      */
-    val FLY_TO_VIEW : Boolean
+    val flyToView : Boolean
         get() {
             val o = __offset(24)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -138,8 +138,8 @@ class KMLNetworkLink : Table() {
     /**
      * Full link element
      */
-    val LINK : KMLLink? get() = LINK(KMLLink())
-    fun LINK(obj: KMLLink) : KMLLink? {
+    val link : KMLLink? get() = link(KMLLink())
+    fun link(obj: KMLLink) : KMLLink? {
         val o = __offset(26)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -148,41 +148,41 @@ class KMLNetworkLink : Table() {
         }
     }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsKMLNetworkLink(_bb: ByteBuffer): KMLNetworkLink = getRootAsKMLNetworkLink(_bb, KMLNetworkLink())
         fun getRootAsKMLNetworkLink(_bb: ByteBuffer, obj: KMLNetworkLink): KMLNetworkLink {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createKMLNetworkLink(builder: FlatBufferBuilder, NAMEOffset: Int, DESCRIPTIONOffset: Int, VISIBILITY: Boolean, OPEN: Boolean, HREFOffset: Int, REFRESH_MODE: Byte, REFRESH_INTERVAL: Double, VIEW_REFRESH_MODE: Byte, VIEW_REFRESH_TIME: Double, REFRESH_VISIBILITY: Boolean, FLY_TO_VIEW: Boolean, LINKOffset: Int) : Int {
+        fun createKMLNetworkLink(builder: FlatBufferBuilder, nameOffset: Int, descriptionOffset: Int, visibility: Boolean, open: Boolean, hrefOffset: Int, refreshMode: Byte, refreshInterval: Double, viewRefreshMode: Byte, viewRefreshTime: Double, refreshVisibility: Boolean, flyToView: Boolean, linkOffset: Int) : Int {
             builder.startTable(12)
-            addVIEW_REFRESH_TIME(builder, VIEW_REFRESH_TIME)
-            addREFRESH_INTERVAL(builder, REFRESH_INTERVAL)
-            addLINK(builder, LINKOffset)
-            addHREF(builder, HREFOffset)
-            addDESCRIPTION(builder, DESCRIPTIONOffset)
-            addNAME(builder, NAMEOffset)
-            addFLY_TO_VIEW(builder, FLY_TO_VIEW)
-            addREFRESH_VISIBILITY(builder, REFRESH_VISIBILITY)
-            addVIEW_REFRESH_MODE(builder, VIEW_REFRESH_MODE)
-            addREFRESH_MODE(builder, REFRESH_MODE)
-            addOPEN(builder, OPEN)
-            addVISIBILITY(builder, VISIBILITY)
+            addVIEWREFRESHTIME(builder, viewRefreshTime)
+            addREFRESHINTERVAL(builder, refreshInterval)
+            addLINK(builder, linkOffset)
+            addHREF(builder, hrefOffset)
+            addDESCRIPTION(builder, descriptionOffset)
+            addNAME(builder, nameOffset)
+            addFLYTOVIEW(builder, flyToView)
+            addREFRESHVISIBILITY(builder, refreshVisibility)
+            addVIEWREFRESHMODE(builder, viewRefreshMode)
+            addREFRESHMODE(builder, refreshMode)
+            addOPEN(builder, open)
+            addVISIBILITY(builder, visibility)
             return endKMLNetworkLink(builder)
         }
         fun startKMLNetworkLink(builder: FlatBufferBuilder) = builder.startTable(12)
-        fun addNAME(builder: FlatBufferBuilder, NAME: Int) = builder.addOffset(0, NAME, 0)
-        fun addDESCRIPTION(builder: FlatBufferBuilder, DESCRIPTION: Int) = builder.addOffset(1, DESCRIPTION, 0)
-        fun addVISIBILITY(builder: FlatBufferBuilder, VISIBILITY: Boolean) = builder.addBoolean(2, VISIBILITY, false)
-        fun addOPEN(builder: FlatBufferBuilder, OPEN: Boolean) = builder.addBoolean(3, OPEN, false)
-        fun addHREF(builder: FlatBufferBuilder, HREF: Int) = builder.addOffset(4, HREF, 0)
-        fun addREFRESH_MODE(builder: FlatBufferBuilder, REFRESH_MODE: Byte) = builder.addByte(5, REFRESH_MODE, 0)
-        fun addREFRESH_INTERVAL(builder: FlatBufferBuilder, REFRESH_INTERVAL: Double) = builder.addDouble(6, REFRESH_INTERVAL, 0.0)
-        fun addVIEW_REFRESH_MODE(builder: FlatBufferBuilder, VIEW_REFRESH_MODE: Byte) = builder.addByte(7, VIEW_REFRESH_MODE, 0)
-        fun addVIEW_REFRESH_TIME(builder: FlatBufferBuilder, VIEW_REFRESH_TIME: Double) = builder.addDouble(8, VIEW_REFRESH_TIME, 0.0)
-        fun addREFRESH_VISIBILITY(builder: FlatBufferBuilder, REFRESH_VISIBILITY: Boolean) = builder.addBoolean(9, REFRESH_VISIBILITY, false)
-        fun addFLY_TO_VIEW(builder: FlatBufferBuilder, FLY_TO_VIEW: Boolean) = builder.addBoolean(10, FLY_TO_VIEW, false)
-        fun addLINK(builder: FlatBufferBuilder, LINK: Int) = builder.addOffset(11, LINK, 0)
+        fun addNAME(builder: FlatBufferBuilder, name: Int) = builder.addOffset(0, name, 0)
+        fun addDESCRIPTION(builder: FlatBufferBuilder, description: Int) = builder.addOffset(1, description, 0)
+        fun addVISIBILITY(builder: FlatBufferBuilder, visibility: Boolean) = builder.addBoolean(2, visibility, false)
+        fun addOPEN(builder: FlatBufferBuilder, open: Boolean) = builder.addBoolean(3, open, false)
+        fun addHREF(builder: FlatBufferBuilder, href: Int) = builder.addOffset(4, href, 0)
+        fun addREFRESHMODE(builder: FlatBufferBuilder, refreshMode: Byte) = builder.addByte(5, refreshMode, 0)
+        fun addREFRESHINTERVAL(builder: FlatBufferBuilder, refreshInterval: Double) = builder.addDouble(6, refreshInterval, 0.0)
+        fun addVIEWREFRESHMODE(builder: FlatBufferBuilder, viewRefreshMode: Byte) = builder.addByte(7, viewRefreshMode, 0)
+        fun addVIEWREFRESHTIME(builder: FlatBufferBuilder, viewRefreshTime: Double) = builder.addDouble(8, viewRefreshTime, 0.0)
+        fun addREFRESHVISIBILITY(builder: FlatBufferBuilder, refreshVisibility: Boolean) = builder.addBoolean(9, refreshVisibility, false)
+        fun addFLYTOVIEW(builder: FlatBufferBuilder, flyToView: Boolean) = builder.addBoolean(10, flyToView, false)
+        fun addLINK(builder: FlatBufferBuilder, link: Int) = builder.addOffset(11, link, 0)
         fun endKMLNetworkLink(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

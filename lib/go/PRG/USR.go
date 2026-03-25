@@ -49,6 +49,10 @@ func (rcv *USR) ID() []byte {
 	return nil
 }
 
+func (rcv *USR) Id() []byte {
+	return rcv.ID()
+}
+
 func (rcv *USR) MESSAGE_TYPES(j int) []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
@@ -56,6 +60,10 @@ func (rcv *USR) MESSAGE_TYPES(j int) []byte {
 		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
 	}
 	return nil
+}
+
+func (rcv *USR) MessageTypes(j int) []byte {
+	return rcv.MESSAGE_TYPES(j)
 }
 
 func (rcv *USR) MESSAGE_TYPESLength() int {
@@ -66,17 +74,30 @@ func (rcv *USR) MESSAGE_TYPESLength() int {
 	return 0
 }
 
+func (rcv *USR) MessageTypesLength() int {
+	return rcv.MESSAGE_TYPESLength()
+}
+
 func USRStart(builder *flatbuffers.Builder) {
 	builder.StartObject(2)
 }
 func USRAddID(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ID), 0)
 }
+func USRAddId(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
+	USRAddID(builder, ID)
+}
 func USRAddMESSAGE_TYPES(builder *flatbuffers.Builder, MESSAGE_TYPES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(MESSAGE_TYPES), 0)
 }
+func USRAddMessageTypes(builder *flatbuffers.Builder, MESSAGE_TYPES flatbuffers.UOffsetT) {
+	USRAddMESSAGE_TYPES(builder, MESSAGE_TYPES)
+}
 func USRStartMESSAGE_TYPESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func USRStartMessageTypesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return USRStartMESSAGE_TYPESVector(builder, numElems)
 }
 func USREnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

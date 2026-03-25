@@ -32,8 +32,8 @@ class KMLPlaylist : Table() {
     /**
      * Tour primitives
      */
-    fun PRIMITIVES(j: Int) : KMLTourPrimitive? = PRIMITIVES(KMLTourPrimitive(), j)
-    fun PRIMITIVES(obj: KMLTourPrimitive, j: Int) : KMLTourPrimitive? {
+    fun primitives(j: Int) : KMLTourPrimitive? = primitives(KMLTourPrimitive(), j)
+    fun primitives(obj: KMLTourPrimitive, j: Int) : KMLTourPrimitive? {
         val o = __offset(4)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -41,24 +41,24 @@ class KMLPlaylist : Table() {
             null
         }
     }
-    val PRIMITIVESLength : Int
+    val primitivesLength : Int
         get() {
             val o = __offset(4); return if (o != 0) __vector_len(o) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsKMLPlaylist(_bb: ByteBuffer): KMLPlaylist = getRootAsKMLPlaylist(_bb, KMLPlaylist())
         fun getRootAsKMLPlaylist(_bb: ByteBuffer, obj: KMLPlaylist): KMLPlaylist {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createKMLPlaylist(builder: FlatBufferBuilder, PRIMITIVESOffset: Int) : Int {
+        fun createKMLPlaylist(builder: FlatBufferBuilder, primitivesOffset: Int) : Int {
             builder.startTable(1)
-            addPRIMITIVES(builder, PRIMITIVESOffset)
+            addPRIMITIVES(builder, primitivesOffset)
             return endKMLPlaylist(builder)
         }
         fun startKMLPlaylist(builder: FlatBufferBuilder) = builder.startTable(1)
-        fun addPRIMITIVES(builder: FlatBufferBuilder, PRIMITIVES: Int) = builder.addOffset(0, PRIMITIVES, 0)
+        fun addPRIMITIVES(builder: FlatBufferBuilder, primitives: Int) = builder.addOffset(0, primitives, 0)
         fun createPrimitivesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {

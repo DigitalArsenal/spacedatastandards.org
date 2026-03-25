@@ -128,18 +128,25 @@ except:
 class CZMStripeMaterialT(object):
 
     # CZMStripeMaterialT
-    def __init__(self):
-        self.ORIENTATION = None  # type: str
-        self.EVEN_COLOR = None  # type: Optional[CZMColor.CZMColorT]
-        self.ODD_COLOR = None  # type: Optional[CZMColor.CZMColorT]
-        self.OFFSET = 0.0  # type: float
-        self.REPEAT_COUNT = 0.0  # type: float
+    def __init__(
+        self,
+        ORIENTATION = None,
+        EVEN_COLOR = None,
+        ODD_COLOR = None,
+        OFFSET = 0.0,
+        REPEAT_COUNT = 0.0,
+    ):
+        self.ORIENTATION = ORIENTATION  # type: Optional[str]
+        self.EVEN_COLOR = EVEN_COLOR  # type: Optional[CZMColor.CZMColorT]
+        self.ODD_COLOR = ODD_COLOR  # type: Optional[CZMColor.CZMColorT]
+        self.OFFSET = OFFSET  # type: float
+        self.REPEAT_COUNT = REPEAT_COUNT  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        czmstripeMaterial = CZMStripeMaterial()
-        czmstripeMaterial.Init(buf, pos)
-        return cls.InitFromObj(czmstripeMaterial)
+        tmpCzmstripeMaterial = CZMStripeMaterial()
+        tmpCzmstripeMaterial.Init(buf, pos)
+        return cls.InitFromObj(tmpCzmstripeMaterial)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -147,22 +154,22 @@ class CZMStripeMaterialT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, czmstripeMaterial):
+    def InitFromObj(cls, tmpCzmstripeMaterial):
         x = CZMStripeMaterialT()
-        x._UnPack(czmstripeMaterial)
+        x._UnPack(tmpCzmstripeMaterial)
         return x
 
     # CZMStripeMaterialT
-    def _UnPack(self, czmstripeMaterial):
-        if czmstripeMaterial is None:
+    def _UnPack(self, CZMStripeMaterial):
+        if CZMStripeMaterial is None:
             return
-        self.ORIENTATION = czmstripeMaterial.ORIENTATION()
-        if czmstripeMaterial.EVEN_COLOR() is not None:
-            self.EVEN_COLOR = CZMColor.CZMColorT.InitFromObj(czmstripeMaterial.EVEN_COLOR())
-        if czmstripeMaterial.ODD_COLOR() is not None:
-            self.ODD_COLOR = CZMColor.CZMColorT.InitFromObj(czmstripeMaterial.ODD_COLOR())
-        self.OFFSET = czmstripeMaterial.OFFSET()
-        self.REPEAT_COUNT = czmstripeMaterial.REPEAT_COUNT()
+        self.ORIENTATION = CZMStripeMaterial.ORIENTATION()
+        if CZMStripeMaterial.EVEN_COLOR() is not None:
+            self.EVEN_COLOR = CZMColor.CZMColorT.InitFromObj(CZMStripeMaterial.EVEN_COLOR())
+        if CZMStripeMaterial.ODD_COLOR() is not None:
+            self.ODD_COLOR = CZMColor.CZMColorT.InitFromObj(CZMStripeMaterial.ODD_COLOR())
+        self.OFFSET = CZMStripeMaterial.OFFSET()
+        self.REPEAT_COUNT = CZMStripeMaterial.REPEAT_COUNT()
 
     # CZMStripeMaterialT
     def Pack(self, builder):
@@ -181,5 +188,5 @@ class CZMStripeMaterialT(object):
             CZMStripeMaterialAddODD_COLOR(builder, ODD_COLOR)
         CZMStripeMaterialAddOFFSET(builder, self.OFFSET)
         CZMStripeMaterialAddREPEAT_COUNT(builder, self.REPEAT_COUNT)
-        czmstripeMaterial = CZMStripeMaterialEnd(builder)
-        return czmstripeMaterial
+        CZMStripeMaterial = CZMStripeMaterialEnd(builder)
+        return CZMStripeMaterial

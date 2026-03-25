@@ -63,6 +63,10 @@ func (rcv *OOE) ID() []byte {
 	return nil
 }
 
+func (rcv *OOE) Id() []byte {
+	return rcv.ID()
+}
+
 /// Unique identifier
 /// Satellite catalog number
 func (rcv *OOE) SAT_NO() uint32 {
@@ -73,9 +77,17 @@ func (rcv *OOE) SAT_NO() uint32 {
 	return 0
 }
 
+func (rcv *OOE) SatNo() uint32 {
+	return rcv.SAT_NO()
+}
+
 /// Satellite catalog number
 func (rcv *OOE) MutateSAT_NO(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(6, n)
+}
+
+func (rcv *OOE) MutateSatNo(n uint32) bool {
+	return rcv.MutateSAT_NO(n)
 }
 
 /// International designator
@@ -85,6 +97,10 @@ func (rcv *OOE) ORIG_OBJECT_ID() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *OOE) OrigObjectId() []byte {
+	return rcv.ORIG_OBJECT_ID()
 }
 
 /// International designator
@@ -97,6 +113,10 @@ func (rcv *OOE) DERIVED_FROM() []byte {
 	return nil
 }
 
+func (rcv *OOE) DerivedFrom() []byte {
+	return rcv.DERIVED_FROM()
+}
+
 /// Source record this was derived from
 /// Classification date (ISO 8601)
 func (rcv *OOE) DECLASSIFICATION_DATE() []byte {
@@ -105,6 +125,10 @@ func (rcv *OOE) DECLASSIFICATION_DATE() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *OOE) DeclassificationDate() []byte {
+	return rcv.DECLASSIFICATION_DATE()
 }
 
 /// Classification date (ISO 8601)
@@ -117,6 +141,10 @@ func (rcv *OOE) DECLASSIFICATION_STRING() []byte {
 	return nil
 }
 
+func (rcv *OOE) DeclassificationString() []byte {
+	return rcv.DECLASSIFICATION_STRING()
+}
+
 /// Classification marking
 /// Event time (ISO 8601)
 func (rcv *OOE) EVENT_TIME() []byte {
@@ -125,6 +153,10 @@ func (rcv *OOE) EVENT_TIME() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *OOE) EventTime() []byte {
+	return rcv.EVENT_TIME()
 }
 
 /// Event time (ISO 8601)
@@ -137,6 +169,10 @@ func (rcv *OOE) EVENT_TIME_NOTES() []byte {
 	return nil
 }
 
+func (rcv *OOE) EventTimeNotes() []byte {
+	return rcv.EVENT_TIME_NOTES()
+}
+
 /// Notes on event time accuracy
 /// Event category
 func (rcv *OOE) CATEGORY() eventCategory {
@@ -147,9 +183,17 @@ func (rcv *OOE) CATEGORY() eventCategory {
 	return 0
 }
 
+func (rcv *OOE) Category() eventCategory {
+	return rcv.CATEGORY()
+}
+
 /// Event category
 func (rcv *OOE) MutateCATEGORY(n eventCategory) bool {
 	return rcv._tab.MutateInt8Slot(20, int8(n))
+}
+
+func (rcv *OOE) MutateCategory(n eventCategory) bool {
+	return rcv.MutateCATEGORY(n)
 }
 
 /// Event result/outcome
@@ -161,9 +205,17 @@ func (rcv *OOE) RESULT() eventResult {
 	return 0
 }
 
+func (rcv *OOE) Result() eventResult {
+	return rcv.RESULT()
+}
+
 /// Event result/outcome
 func (rcv *OOE) MutateRESULT(n eventResult) bool {
 	return rcv._tab.MutateInt8Slot(22, int8(n))
+}
+
+func (rcv *OOE) MutateResult(n eventResult) bool {
+	return rcv.MutateRESULT(n)
 }
 
 /// Event type detail
@@ -173,6 +225,10 @@ func (rcv *OOE) EVENT_TYPE() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *OOE) EventType() []byte {
+	return rcv.EVENT_TYPE()
 }
 
 /// Event type detail
@@ -185,6 +241,10 @@ func (rcv *OOE) OPERATOR_ORG_ID() []byte {
 	return nil
 }
 
+func (rcv *OOE) OperatorOrgId() []byte {
+	return rcv.OPERATOR_ORG_ID()
+}
+
 /// Operator organization identifier
 /// Owner organization identifier
 func (rcv *OOE) OWNER_ORG_ID() []byte {
@@ -193,6 +253,10 @@ func (rcv *OOE) OWNER_ORG_ID() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *OOE) OwnerOrgId() []byte {
+	return rcv.OWNER_ORG_ID()
 }
 
 /// Owner organization identifier
@@ -205,6 +269,10 @@ func (rcv *OOE) LESSEE_ORG_ID() []byte {
 	return nil
 }
 
+func (rcv *OOE) LesseeOrgId() []byte {
+	return rcv.LESSEE_ORG_ID()
+}
+
 /// Lessee organization identifier
 /// Operated on behalf of organization
 func (rcv *OOE) OPERATED_ON_BEHALF_OF_ORG_ID() []byte {
@@ -213,6 +281,10 @@ func (rcv *OOE) OPERATED_ON_BEHALF_OF_ORG_ID() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *OOE) OperatedOnBehalfOfOrgId() []byte {
+	return rcv.OPERATED_ON_BEHALF_OF_ORG_ID()
 }
 
 /// Operated on behalf of organization
@@ -225,9 +297,17 @@ func (rcv *OOE) GEO_POSITION() float64 {
 	return 0.0
 }
 
+func (rcv *OOE) GeoPosition() float64 {
+	return rcv.GEO_POSITION()
+}
+
 /// GEO longitude at event time (degrees east)
 func (rcv *OOE) MutateGEO_POSITION(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(34, n)
+}
+
+func (rcv *OOE) MutateGeoPosition(n float64) bool {
+	return rcv.MutateGEO_POSITION(n)
 }
 
 /// Orbital plane slot
@@ -237,6 +317,10 @@ func (rcv *OOE) PLANE_SLOT() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *OOE) PlaneSlot() []byte {
+	return rcv.PLANE_SLOT()
 }
 
 /// Orbital plane slot
@@ -249,6 +333,10 @@ func (rcv *OOE) PLANE_NUMBER() []byte {
 	return nil
 }
 
+func (rcv *OOE) PlaneNumber() []byte {
+	return rcv.PLANE_NUMBER()
+}
+
 /// Orbital plane number
 /// Position status at event time
 func (rcv *OOE) POSITION_STATUS() []byte {
@@ -257,6 +345,10 @@ func (rcv *OOE) POSITION_STATUS() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *OOE) PositionStatus() []byte {
+	return rcv.POSITION_STATUS()
 }
 
 /// Position status at event time
@@ -269,6 +361,10 @@ func (rcv *OOE) UNTIL_TIME() []byte {
 	return nil
 }
 
+func (rcv *OOE) UntilTime() []byte {
+	return rcv.UNTIL_TIME()
+}
+
 /// Time until expected recovery (ISO 8601)
 /// Official loss date (ISO 8601)
 func (rcv *OOE) OFFICIAL_LOSS_DATE() []byte {
@@ -277,6 +373,10 @@ func (rcv *OOE) OFFICIAL_LOSS_DATE() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *OOE) OfficialLossDate() []byte {
+	return rcv.OFFICIAL_LOSS_DATE()
 }
 
 /// Official loss date (ISO 8601)
@@ -289,9 +389,17 @@ func (rcv *OOE) NET_AMOUNT() float64 {
 	return 0.0
 }
 
+func (rcv *OOE) NetAmount() float64 {
+	return rcv.NET_AMOUNT()
+}
+
 /// Financial loss amount (USD)
 func (rcv *OOE) MutateNET_AMOUNT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(46, n)
+}
+
+func (rcv *OOE) MutateNetAmount(n float64) bool {
+	return rcv.MutateNET_AMOUNT(n)
 }
 
 /// Root cause description
@@ -301,6 +409,10 @@ func (rcv *OOE) UNDERLYING_CAUSE() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *OOE) UnderlyingCause() []byte {
+	return rcv.UNDERLYING_CAUSE()
 }
 
 /// Root cause description
@@ -313,9 +425,17 @@ func (rcv *OOE) CAPABILITY_LOSS() float64 {
 	return 0.0
 }
 
+func (rcv *OOE) CapabilityLoss() float64 {
+	return rcv.CAPABILITY_LOSS()
+}
+
 /// Capability loss fraction (0-1)
 func (rcv *OOE) MutateCAPABILITY_LOSS(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(50, n)
+}
+
+func (rcv *OOE) MutateCapabilityLoss(n float64) bool {
+	return rcv.MutateCAPABILITY_LOSS(n)
 }
 
 /// Capacity loss fraction (0-1)
@@ -327,9 +447,17 @@ func (rcv *OOE) CAPACITY_LOSS() float64 {
 	return 0.0
 }
 
+func (rcv *OOE) CapacityLoss() float64 {
+	return rcv.CAPACITY_LOSS()
+}
+
 /// Capacity loss fraction (0-1)
 func (rcv *OOE) MutateCAPACITY_LOSS(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(52, n)
+}
+
+func (rcv *OOE) MutateCapacityLoss(n float64) bool {
+	return rcv.MutateCAPACITY_LOSS(n)
 }
 
 /// Insurance loss amount (USD)
@@ -341,9 +469,17 @@ func (rcv *OOE) INSURANCE_LOSS() float64 {
 	return 0.0
 }
 
+func (rcv *OOE) InsuranceLoss() float64 {
+	return rcv.INSURANCE_LOSS()
+}
+
 /// Insurance loss amount (USD)
 func (rcv *OOE) MutateINSURANCE_LOSS(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(54, n)
+}
+
+func (rcv *OOE) MutateInsuranceLoss(n float64) bool {
+	return rcv.MutateINSURANCE_LOSS(n)
 }
 
 /// Third-party insurance loss (USD)
@@ -355,9 +491,17 @@ func (rcv *OOE) THIRD_PARTY_INSURANCE_LOSS() float64 {
 	return 0.0
 }
 
+func (rcv *OOE) ThirdPartyInsuranceLoss() float64 {
+	return rcv.THIRD_PARTY_INSURANCE_LOSS()
+}
+
 /// Third-party insurance loss (USD)
 func (rcv *OOE) MutateTHIRD_PARTY_INSURANCE_LOSS(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(56, n)
+}
+
+func (rcv *OOE) MutateThirdPartyInsuranceLoss(n float64) bool {
+	return rcv.MutateTHIRD_PARTY_INSURANCE_LOSS(n)
 }
 
 /// Number of personnel injured
@@ -369,9 +513,17 @@ func (rcv *OOE) INJURED() uint16 {
 	return 0
 }
 
+func (rcv *OOE) Injured() uint16 {
+	return rcv.INJURED()
+}
+
 /// Number of personnel injured
 func (rcv *OOE) MutateINJURED(n uint16) bool {
 	return rcv._tab.MutateUint16Slot(58, n)
+}
+
+func (rcv *OOE) MutateInjured(n uint16) bool {
+	return rcv.MutateINJURED(n)
 }
 
 /// Number of fatalities
@@ -383,9 +535,17 @@ func (rcv *OOE) KILLED() uint16 {
 	return 0
 }
 
+func (rcv *OOE) Killed() uint16 {
+	return rcv.KILLED()
+}
+
 /// Number of fatalities
 func (rcv *OOE) MutateKILLED(n uint16) bool {
 	return rcv._tab.MutateUint16Slot(60, n)
+}
+
+func (rcv *OOE) MutateKilled(n uint16) bool {
+	return rcv.MutateKILLED(n)
 }
 
 /// Spacecraft age at event (years)
@@ -397,9 +557,17 @@ func (rcv *OOE) AGE_AT_EVENT() float64 {
 	return 0.0
 }
 
+func (rcv *OOE) AgeAtEvent() float64 {
+	return rcv.AGE_AT_EVENT()
+}
+
 /// Spacecraft age at event (years)
 func (rcv *OOE) MutateAGE_AT_EVENT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(62, n)
+}
+
+func (rcv *OOE) MutateAgeAtEvent(n float64) bool {
+	return rcv.MutateAGE_AT_EVENT(n)
 }
 
 /// Design life remaining at event (years)
@@ -411,9 +579,17 @@ func (rcv *OOE) LIFE_LOST() float64 {
 	return 0.0
 }
 
+func (rcv *OOE) LifeLost() float64 {
+	return rcv.LIFE_LOST()
+}
+
 /// Design life remaining at event (years)
 func (rcv *OOE) MutateLIFE_LOST(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(64, n)
+}
+
+func (rcv *OOE) MutateLifeLost(n float64) bool {
+	return rcv.MutateLIFE_LOST(n)
 }
 
 /// Flight phase achieved
@@ -423,6 +599,10 @@ func (rcv *OOE) ACHIEVED_FLIGHT_PHASE() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *OOE) AchievedFlightPhase() []byte {
+	return rcv.ACHIEVED_FLIGHT_PHASE()
 }
 
 /// Flight phase achieved
@@ -435,6 +615,10 @@ func (rcv *OOE) OCCURRENCE_FLIGHT_PHASE() []byte {
 	return nil
 }
 
+func (rcv *OOE) OccurrenceFlightPhase() []byte {
+	return rcv.OCCURRENCE_FLIGHT_PHASE()
+}
+
 /// Flight phase at occurrence
 /// Stage at fault
 func (rcv *OOE) STAGE_AT_FAULT() []byte {
@@ -443,6 +627,10 @@ func (rcv *OOE) STAGE_AT_FAULT() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *OOE) StageAtFault() []byte {
+	return rcv.STAGE_AT_FAULT()
 }
 
 /// Stage at fault
@@ -455,6 +643,10 @@ func (rcv *OOE) EQUIPMENT_AT_FAULT() []byte {
 	return nil
 }
 
+func (rcv *OOE) EquipmentAtFault() []byte {
+	return rcv.EQUIPMENT_AT_FAULT()
+}
+
 /// Equipment at fault
 /// Equipment type at fault
 func (rcv *OOE) EQUIPMENT_TYPE_AT_FAULT() []byte {
@@ -463,6 +655,10 @@ func (rcv *OOE) EQUIPMENT_TYPE_AT_FAULT() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *OOE) EquipmentTypeAtFault() []byte {
+	return rcv.EQUIPMENT_TYPE_AT_FAULT()
 }
 
 /// Equipment type at fault
@@ -475,6 +671,10 @@ func (rcv *OOE) EQUIPMENT_PART_AT_FAULT() []byte {
 	return nil
 }
 
+func (rcv *OOE) EquipmentPartAtFault() []byte {
+	return rcv.EQUIPMENT_PART_AT_FAULT()
+}
+
 /// Equipment part at fault
 /// Consequential equipment failure
 func (rcv *OOE) CONSEQUENTIAL_EQUIPMENT_FAILURE() []byte {
@@ -483,6 +683,10 @@ func (rcv *OOE) CONSEQUENTIAL_EQUIPMENT_FAILURE() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *OOE) ConsequentialEquipmentFailure() []byte {
+	return rcv.CONSEQUENTIAL_EQUIPMENT_FAILURE()
 }
 
 /// Consequential equipment failure
@@ -495,9 +699,17 @@ func (rcv *OOE) INCLINED() bool {
 	return false
 }
 
+func (rcv *OOE) Inclined() bool {
+	return rcv.INCLINED()
+}
+
 /// True if orbit is inclined
 func (rcv *OOE) MutateINCLINED(n bool) bool {
 	return rcv._tab.MutateBoolSlot(80, n)
+}
+
+func (rcv *OOE) MutateInclined(n bool) bool {
+	return rcv.MutateINCLINED(n)
 }
 
 /// Event description
@@ -507,6 +719,10 @@ func (rcv *OOE) DESCRIPTION() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *OOE) Description() []byte {
+	return rcv.DESCRIPTION()
 }
 
 /// Event description
@@ -519,6 +735,10 @@ func (rcv *OOE) REMARKS() []byte {
 	return nil
 }
 
+func (rcv *OOE) Remarks() []byte {
+	return rcv.REMARKS()
+}
+
 /// Additional remarks
 /// Object status after event
 func (rcv *OOE) OBJECT_STATUS() []byte {
@@ -527,6 +747,10 @@ func (rcv *OOE) OBJECT_STATUS() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *OOE) ObjectStatus() []byte {
+	return rcv.OBJECT_STATUS()
 }
 
 /// Object status after event
@@ -539,6 +763,10 @@ func (rcv *OOE) SATELLITE_POSITION() []byte {
 	return nil
 }
 
+func (rcv *OOE) SatellitePosition() []byte {
+	return rcv.SATELLITE_POSITION()
+}
+
 /// Satellite position after event
 /// On-orbit reference
 func (rcv *OOE) ON_ORBIT() []byte {
@@ -549,6 +777,10 @@ func (rcv *OOE) ON_ORBIT() []byte {
 	return nil
 }
 
+func (rcv *OOE) OnOrbit() []byte {
+	return rcv.ON_ORBIT()
+}
+
 /// On-orbit reference
 func OOEStart(builder *flatbuffers.Builder) {
 	builder.StartObject(44)
@@ -556,134 +788,266 @@ func OOEStart(builder *flatbuffers.Builder) {
 func OOEAddID(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ID), 0)
 }
+func OOEAddId(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
+	OOEAddID(builder, ID)
+}
 func OOEAddSAT_NO(builder *flatbuffers.Builder, SAT_NO uint32) {
 	builder.PrependUint32Slot(1, SAT_NO, 0)
+}
+func OOEAddSatNo(builder *flatbuffers.Builder, SAT_NO uint32) {
+	OOEAddSAT_NO(builder, SAT_NO)
 }
 func OOEAddORIG_OBJECT_ID(builder *flatbuffers.Builder, ORIG_OBJECT_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(ORIG_OBJECT_ID), 0)
 }
+func OOEAddOrigObjectId(builder *flatbuffers.Builder, ORIG_OBJECT_ID flatbuffers.UOffsetT) {
+	OOEAddORIG_OBJECT_ID(builder, ORIG_OBJECT_ID)
+}
 func OOEAddDERIVED_FROM(builder *flatbuffers.Builder, DERIVED_FROM flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(DERIVED_FROM), 0)
+}
+func OOEAddDerivedFrom(builder *flatbuffers.Builder, DERIVED_FROM flatbuffers.UOffsetT) {
+	OOEAddDERIVED_FROM(builder, DERIVED_FROM)
 }
 func OOEAddDECLASSIFICATION_DATE(builder *flatbuffers.Builder, DECLASSIFICATION_DATE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(DECLASSIFICATION_DATE), 0)
 }
+func OOEAddDeclassificationDate(builder *flatbuffers.Builder, DECLASSIFICATION_DATE flatbuffers.UOffsetT) {
+	OOEAddDECLASSIFICATION_DATE(builder, DECLASSIFICATION_DATE)
+}
 func OOEAddDECLASSIFICATION_STRING(builder *flatbuffers.Builder, DECLASSIFICATION_STRING flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(DECLASSIFICATION_STRING), 0)
+}
+func OOEAddDeclassificationString(builder *flatbuffers.Builder, DECLASSIFICATION_STRING flatbuffers.UOffsetT) {
+	OOEAddDECLASSIFICATION_STRING(builder, DECLASSIFICATION_STRING)
 }
 func OOEAddEVENT_TIME(builder *flatbuffers.Builder, EVENT_TIME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(EVENT_TIME), 0)
 }
+func OOEAddEventTime(builder *flatbuffers.Builder, EVENT_TIME flatbuffers.UOffsetT) {
+	OOEAddEVENT_TIME(builder, EVENT_TIME)
+}
 func OOEAddEVENT_TIME_NOTES(builder *flatbuffers.Builder, EVENT_TIME_NOTES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(EVENT_TIME_NOTES), 0)
+}
+func OOEAddEventTimeNotes(builder *flatbuffers.Builder, EVENT_TIME_NOTES flatbuffers.UOffsetT) {
+	OOEAddEVENT_TIME_NOTES(builder, EVENT_TIME_NOTES)
 }
 func OOEAddCATEGORY(builder *flatbuffers.Builder, CATEGORY eventCategory) {
 	builder.PrependInt8Slot(8, int8(CATEGORY), 0)
 }
+func OOEAddCategory(builder *flatbuffers.Builder, CATEGORY eventCategory) {
+	OOEAddCATEGORY(builder, CATEGORY)
+}
 func OOEAddRESULT(builder *flatbuffers.Builder, RESULT eventResult) {
 	builder.PrependInt8Slot(9, int8(RESULT), 0)
+}
+func OOEAddResult(builder *flatbuffers.Builder, RESULT eventResult) {
+	OOEAddRESULT(builder, RESULT)
 }
 func OOEAddEVENT_TYPE(builder *flatbuffers.Builder, EVENT_TYPE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(EVENT_TYPE), 0)
 }
+func OOEAddEventType(builder *flatbuffers.Builder, EVENT_TYPE flatbuffers.UOffsetT) {
+	OOEAddEVENT_TYPE(builder, EVENT_TYPE)
+}
 func OOEAddOPERATOR_ORG_ID(builder *flatbuffers.Builder, OPERATOR_ORG_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(OPERATOR_ORG_ID), 0)
+}
+func OOEAddOperatorOrgId(builder *flatbuffers.Builder, OPERATOR_ORG_ID flatbuffers.UOffsetT) {
+	OOEAddOPERATOR_ORG_ID(builder, OPERATOR_ORG_ID)
 }
 func OOEAddOWNER_ORG_ID(builder *flatbuffers.Builder, OWNER_ORG_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(12, flatbuffers.UOffsetT(OWNER_ORG_ID), 0)
 }
+func OOEAddOwnerOrgId(builder *flatbuffers.Builder, OWNER_ORG_ID flatbuffers.UOffsetT) {
+	OOEAddOWNER_ORG_ID(builder, OWNER_ORG_ID)
+}
 func OOEAddLESSEE_ORG_ID(builder *flatbuffers.Builder, LESSEE_ORG_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(13, flatbuffers.UOffsetT(LESSEE_ORG_ID), 0)
+}
+func OOEAddLesseeOrgId(builder *flatbuffers.Builder, LESSEE_ORG_ID flatbuffers.UOffsetT) {
+	OOEAddLESSEE_ORG_ID(builder, LESSEE_ORG_ID)
 }
 func OOEAddOPERATED_ON_BEHALF_OF_ORG_ID(builder *flatbuffers.Builder, OPERATED_ON_BEHALF_OF_ORG_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(14, flatbuffers.UOffsetT(OPERATED_ON_BEHALF_OF_ORG_ID), 0)
 }
+func OOEAddOperatedOnBehalfOfOrgId(builder *flatbuffers.Builder, OPERATED_ON_BEHALF_OF_ORG_ID flatbuffers.UOffsetT) {
+	OOEAddOPERATED_ON_BEHALF_OF_ORG_ID(builder, OPERATED_ON_BEHALF_OF_ORG_ID)
+}
 func OOEAddGEO_POSITION(builder *flatbuffers.Builder, GEO_POSITION float64) {
 	builder.PrependFloat64Slot(15, GEO_POSITION, 0.0)
+}
+func OOEAddGeoPosition(builder *flatbuffers.Builder, GEO_POSITION float64) {
+	OOEAddGEO_POSITION(builder, GEO_POSITION)
 }
 func OOEAddPLANE_SLOT(builder *flatbuffers.Builder, PLANE_SLOT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(16, flatbuffers.UOffsetT(PLANE_SLOT), 0)
 }
+func OOEAddPlaneSlot(builder *flatbuffers.Builder, PLANE_SLOT flatbuffers.UOffsetT) {
+	OOEAddPLANE_SLOT(builder, PLANE_SLOT)
+}
 func OOEAddPLANE_NUMBER(builder *flatbuffers.Builder, PLANE_NUMBER flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(17, flatbuffers.UOffsetT(PLANE_NUMBER), 0)
+}
+func OOEAddPlaneNumber(builder *flatbuffers.Builder, PLANE_NUMBER flatbuffers.UOffsetT) {
+	OOEAddPLANE_NUMBER(builder, PLANE_NUMBER)
 }
 func OOEAddPOSITION_STATUS(builder *flatbuffers.Builder, POSITION_STATUS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(18, flatbuffers.UOffsetT(POSITION_STATUS), 0)
 }
+func OOEAddPositionStatus(builder *flatbuffers.Builder, POSITION_STATUS flatbuffers.UOffsetT) {
+	OOEAddPOSITION_STATUS(builder, POSITION_STATUS)
+}
 func OOEAddUNTIL_TIME(builder *flatbuffers.Builder, UNTIL_TIME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(19, flatbuffers.UOffsetT(UNTIL_TIME), 0)
+}
+func OOEAddUntilTime(builder *flatbuffers.Builder, UNTIL_TIME flatbuffers.UOffsetT) {
+	OOEAddUNTIL_TIME(builder, UNTIL_TIME)
 }
 func OOEAddOFFICIAL_LOSS_DATE(builder *flatbuffers.Builder, OFFICIAL_LOSS_DATE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(20, flatbuffers.UOffsetT(OFFICIAL_LOSS_DATE), 0)
 }
+func OOEAddOfficialLossDate(builder *flatbuffers.Builder, OFFICIAL_LOSS_DATE flatbuffers.UOffsetT) {
+	OOEAddOFFICIAL_LOSS_DATE(builder, OFFICIAL_LOSS_DATE)
+}
 func OOEAddNET_AMOUNT(builder *flatbuffers.Builder, NET_AMOUNT float64) {
 	builder.PrependFloat64Slot(21, NET_AMOUNT, 0.0)
+}
+func OOEAddNetAmount(builder *flatbuffers.Builder, NET_AMOUNT float64) {
+	OOEAddNET_AMOUNT(builder, NET_AMOUNT)
 }
 func OOEAddUNDERLYING_CAUSE(builder *flatbuffers.Builder, UNDERLYING_CAUSE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(22, flatbuffers.UOffsetT(UNDERLYING_CAUSE), 0)
 }
+func OOEAddUnderlyingCause(builder *flatbuffers.Builder, UNDERLYING_CAUSE flatbuffers.UOffsetT) {
+	OOEAddUNDERLYING_CAUSE(builder, UNDERLYING_CAUSE)
+}
 func OOEAddCAPABILITY_LOSS(builder *flatbuffers.Builder, CAPABILITY_LOSS float64) {
 	builder.PrependFloat64Slot(23, CAPABILITY_LOSS, 0.0)
+}
+func OOEAddCapabilityLoss(builder *flatbuffers.Builder, CAPABILITY_LOSS float64) {
+	OOEAddCAPABILITY_LOSS(builder, CAPABILITY_LOSS)
 }
 func OOEAddCAPACITY_LOSS(builder *flatbuffers.Builder, CAPACITY_LOSS float64) {
 	builder.PrependFloat64Slot(24, CAPACITY_LOSS, 0.0)
 }
+func OOEAddCapacityLoss(builder *flatbuffers.Builder, CAPACITY_LOSS float64) {
+	OOEAddCAPACITY_LOSS(builder, CAPACITY_LOSS)
+}
 func OOEAddINSURANCE_LOSS(builder *flatbuffers.Builder, INSURANCE_LOSS float64) {
 	builder.PrependFloat64Slot(25, INSURANCE_LOSS, 0.0)
+}
+func OOEAddInsuranceLoss(builder *flatbuffers.Builder, INSURANCE_LOSS float64) {
+	OOEAddINSURANCE_LOSS(builder, INSURANCE_LOSS)
 }
 func OOEAddTHIRD_PARTY_INSURANCE_LOSS(builder *flatbuffers.Builder, THIRD_PARTY_INSURANCE_LOSS float64) {
 	builder.PrependFloat64Slot(26, THIRD_PARTY_INSURANCE_LOSS, 0.0)
 }
+func OOEAddThirdPartyInsuranceLoss(builder *flatbuffers.Builder, THIRD_PARTY_INSURANCE_LOSS float64) {
+	OOEAddTHIRD_PARTY_INSURANCE_LOSS(builder, THIRD_PARTY_INSURANCE_LOSS)
+}
 func OOEAddINJURED(builder *flatbuffers.Builder, INJURED uint16) {
 	builder.PrependUint16Slot(27, INJURED, 0)
+}
+func OOEAddInjured(builder *flatbuffers.Builder, INJURED uint16) {
+	OOEAddINJURED(builder, INJURED)
 }
 func OOEAddKILLED(builder *flatbuffers.Builder, KILLED uint16) {
 	builder.PrependUint16Slot(28, KILLED, 0)
 }
+func OOEAddKilled(builder *flatbuffers.Builder, KILLED uint16) {
+	OOEAddKILLED(builder, KILLED)
+}
 func OOEAddAGE_AT_EVENT(builder *flatbuffers.Builder, AGE_AT_EVENT float64) {
 	builder.PrependFloat64Slot(29, AGE_AT_EVENT, 0.0)
+}
+func OOEAddAgeAtEvent(builder *flatbuffers.Builder, AGE_AT_EVENT float64) {
+	OOEAddAGE_AT_EVENT(builder, AGE_AT_EVENT)
 }
 func OOEAddLIFE_LOST(builder *flatbuffers.Builder, LIFE_LOST float64) {
 	builder.PrependFloat64Slot(30, LIFE_LOST, 0.0)
 }
+func OOEAddLifeLost(builder *flatbuffers.Builder, LIFE_LOST float64) {
+	OOEAddLIFE_LOST(builder, LIFE_LOST)
+}
 func OOEAddACHIEVED_FLIGHT_PHASE(builder *flatbuffers.Builder, ACHIEVED_FLIGHT_PHASE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(31, flatbuffers.UOffsetT(ACHIEVED_FLIGHT_PHASE), 0)
+}
+func OOEAddAchievedFlightPhase(builder *flatbuffers.Builder, ACHIEVED_FLIGHT_PHASE flatbuffers.UOffsetT) {
+	OOEAddACHIEVED_FLIGHT_PHASE(builder, ACHIEVED_FLIGHT_PHASE)
 }
 func OOEAddOCCURRENCE_FLIGHT_PHASE(builder *flatbuffers.Builder, OCCURRENCE_FLIGHT_PHASE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(32, flatbuffers.UOffsetT(OCCURRENCE_FLIGHT_PHASE), 0)
 }
+func OOEAddOccurrenceFlightPhase(builder *flatbuffers.Builder, OCCURRENCE_FLIGHT_PHASE flatbuffers.UOffsetT) {
+	OOEAddOCCURRENCE_FLIGHT_PHASE(builder, OCCURRENCE_FLIGHT_PHASE)
+}
 func OOEAddSTAGE_AT_FAULT(builder *flatbuffers.Builder, STAGE_AT_FAULT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(33, flatbuffers.UOffsetT(STAGE_AT_FAULT), 0)
+}
+func OOEAddStageAtFault(builder *flatbuffers.Builder, STAGE_AT_FAULT flatbuffers.UOffsetT) {
+	OOEAddSTAGE_AT_FAULT(builder, STAGE_AT_FAULT)
 }
 func OOEAddEQUIPMENT_AT_FAULT(builder *flatbuffers.Builder, EQUIPMENT_AT_FAULT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(34, flatbuffers.UOffsetT(EQUIPMENT_AT_FAULT), 0)
 }
+func OOEAddEquipmentAtFault(builder *flatbuffers.Builder, EQUIPMENT_AT_FAULT flatbuffers.UOffsetT) {
+	OOEAddEQUIPMENT_AT_FAULT(builder, EQUIPMENT_AT_FAULT)
+}
 func OOEAddEQUIPMENT_TYPE_AT_FAULT(builder *flatbuffers.Builder, EQUIPMENT_TYPE_AT_FAULT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(35, flatbuffers.UOffsetT(EQUIPMENT_TYPE_AT_FAULT), 0)
+}
+func OOEAddEquipmentTypeAtFault(builder *flatbuffers.Builder, EQUIPMENT_TYPE_AT_FAULT flatbuffers.UOffsetT) {
+	OOEAddEQUIPMENT_TYPE_AT_FAULT(builder, EQUIPMENT_TYPE_AT_FAULT)
 }
 func OOEAddEQUIPMENT_PART_AT_FAULT(builder *flatbuffers.Builder, EQUIPMENT_PART_AT_FAULT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(36, flatbuffers.UOffsetT(EQUIPMENT_PART_AT_FAULT), 0)
 }
+func OOEAddEquipmentPartAtFault(builder *flatbuffers.Builder, EQUIPMENT_PART_AT_FAULT flatbuffers.UOffsetT) {
+	OOEAddEQUIPMENT_PART_AT_FAULT(builder, EQUIPMENT_PART_AT_FAULT)
+}
 func OOEAddCONSEQUENTIAL_EQUIPMENT_FAILURE(builder *flatbuffers.Builder, CONSEQUENTIAL_EQUIPMENT_FAILURE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(37, flatbuffers.UOffsetT(CONSEQUENTIAL_EQUIPMENT_FAILURE), 0)
+}
+func OOEAddConsequentialEquipmentFailure(builder *flatbuffers.Builder, CONSEQUENTIAL_EQUIPMENT_FAILURE flatbuffers.UOffsetT) {
+	OOEAddCONSEQUENTIAL_EQUIPMENT_FAILURE(builder, CONSEQUENTIAL_EQUIPMENT_FAILURE)
 }
 func OOEAddINCLINED(builder *flatbuffers.Builder, INCLINED bool) {
 	builder.PrependBoolSlot(38, INCLINED, false)
 }
+func OOEAddInclined(builder *flatbuffers.Builder, INCLINED bool) {
+	OOEAddINCLINED(builder, INCLINED)
+}
 func OOEAddDESCRIPTION(builder *flatbuffers.Builder, DESCRIPTION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(39, flatbuffers.UOffsetT(DESCRIPTION), 0)
+}
+func OOEAddDescription(builder *flatbuffers.Builder, DESCRIPTION flatbuffers.UOffsetT) {
+	OOEAddDESCRIPTION(builder, DESCRIPTION)
 }
 func OOEAddREMARKS(builder *flatbuffers.Builder, REMARKS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(40, flatbuffers.UOffsetT(REMARKS), 0)
 }
+func OOEAddRemarks(builder *flatbuffers.Builder, REMARKS flatbuffers.UOffsetT) {
+	OOEAddREMARKS(builder, REMARKS)
+}
 func OOEAddOBJECT_STATUS(builder *flatbuffers.Builder, OBJECT_STATUS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(41, flatbuffers.UOffsetT(OBJECT_STATUS), 0)
+}
+func OOEAddObjectStatus(builder *flatbuffers.Builder, OBJECT_STATUS flatbuffers.UOffsetT) {
+	OOEAddOBJECT_STATUS(builder, OBJECT_STATUS)
 }
 func OOEAddSATELLITE_POSITION(builder *flatbuffers.Builder, SATELLITE_POSITION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(42, flatbuffers.UOffsetT(SATELLITE_POSITION), 0)
 }
+func OOEAddSatellitePosition(builder *flatbuffers.Builder, SATELLITE_POSITION flatbuffers.UOffsetT) {
+	OOEAddSATELLITE_POSITION(builder, SATELLITE_POSITION)
+}
 func OOEAddON_ORBIT(builder *flatbuffers.Builder, ON_ORBIT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(43, flatbuffers.UOffsetT(ON_ORBIT), 0)
+}
+func OOEAddOnOrbit(builder *flatbuffers.Builder, ON_ORBIT flatbuffers.UOffsetT) {
+	OOEAddON_ORBIT(builder, ON_ORBIT)
 }
 func OOEEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

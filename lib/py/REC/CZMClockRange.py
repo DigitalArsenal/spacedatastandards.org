@@ -2,4 +2,7 @@
 
 # namespace: 
 
-# NOTE CZMClockRange.py does not declare any structs or enums
+class CZMClockRange(object):
+    UNBOUNDED = 0
+    CLAMPED = 1
+    LOOP_STOP = 2

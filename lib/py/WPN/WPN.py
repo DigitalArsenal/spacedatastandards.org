@@ -282,6 +282,16 @@ def WPNStartRESERVEDVector(builder, numElems):
 def StartRESERVEDVector(builder, numElems):
     return WPNStartRESERVEDVector(builder, numElems)
 
+def WPNCreateRESERVEDVector(builder, data):
+    data = list(data)
+    builder.StartVector(1, len(data), 1)
+    for item in reversed(data):
+        builder.PrependUint8(item)
+    return builder.EndVector()
+
+def CreateRESERVEDVector(builder, data):
+    WPNCreateRESERVEDVector(builder, data)
+
 def WPNEnd(builder):
     return builder.EndObject()
 
@@ -296,30 +306,49 @@ except:
 class WPNT(object):
 
     # WPNT
-    def __init__(self):
-        self.CALIBER = 0.0  # type: float
-        self.MUZZLE_VELOCITY = 0.0  # type: float
-        self.RATE_OF_FIRE = 0.0  # type: float
-        self.DISPERSION = 0.0  # type: float
-        self.AMMO_CAPACITY = 0  # type: int
-        self.BURST_LENGTH = 0  # type: int
-        self.RELOAD_TIME = 0.0  # type: float
-        self.OVERHEAT_ROUNDS = 0  # type: int
-        self.COOLDOWN_RATE = 0.0  # type: float
-        self.ELEVATION_MIN = 0.0  # type: float
-        self.ELEVATION_MAX = 0.0  # type: float
-        self.TRAVERSE_MIN = 0.0  # type: float
-        self.TRAVERSE_MAX = 0.0  # type: float
-        self.SLEW_RATE = 0.0  # type: float
-        self.WEAPON_TYPE = 0  # type: int
-        self.FUZE_TYPE = 0  # type: int
-        self.RESERVED = None  # type: List[int]
+    def __init__(
+        self,
+        CALIBER = 0.0,
+        MUZZLE_VELOCITY = 0.0,
+        RATE_OF_FIRE = 0.0,
+        DISPERSION = 0.0,
+        AMMO_CAPACITY = 0,
+        BURST_LENGTH = 0,
+        RELOAD_TIME = 0.0,
+        OVERHEAT_ROUNDS = 0,
+        COOLDOWN_RATE = 0.0,
+        ELEVATION_MIN = 0.0,
+        ELEVATION_MAX = 0.0,
+        TRAVERSE_MIN = 0.0,
+        TRAVERSE_MAX = 0.0,
+        SLEW_RATE = 0.0,
+        WEAPON_TYPE = 0,
+        FUZE_TYPE = 0,
+        RESERVED = None,
+    ):
+        self.CALIBER = CALIBER  # type: float
+        self.MUZZLE_VELOCITY = MUZZLE_VELOCITY  # type: float
+        self.RATE_OF_FIRE = RATE_OF_FIRE  # type: float
+        self.DISPERSION = DISPERSION  # type: float
+        self.AMMO_CAPACITY = AMMO_CAPACITY  # type: int
+        self.BURST_LENGTH = BURST_LENGTH  # type: int
+        self.RELOAD_TIME = RELOAD_TIME  # type: float
+        self.OVERHEAT_ROUNDS = OVERHEAT_ROUNDS  # type: int
+        self.COOLDOWN_RATE = COOLDOWN_RATE  # type: float
+        self.ELEVATION_MIN = ELEVATION_MIN  # type: float
+        self.ELEVATION_MAX = ELEVATION_MAX  # type: float
+        self.TRAVERSE_MIN = TRAVERSE_MIN  # type: float
+        self.TRAVERSE_MAX = TRAVERSE_MAX  # type: float
+        self.SLEW_RATE = SLEW_RATE  # type: float
+        self.WEAPON_TYPE = WEAPON_TYPE  # type: int
+        self.FUZE_TYPE = FUZE_TYPE  # type: int
+        self.RESERVED = RESERVED  # type: Optional[List[int]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        WPN = WPN()
-        WPN.Init(buf, pos)
-        return cls.InitFromObj(WPN)
+        tmpWpn = WPN()
+        tmpWpn.Init(buf, pos)
+        return cls.InitFromObj(tmpWpn)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -327,9 +356,9 @@ class WPNT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, WPN):
+    def InitFromObj(cls, tmpWpn):
         x = WPNT()
-        x._UnPack(WPN)
+        x._UnPack(tmpWpn)
         return x
 
     # WPNT

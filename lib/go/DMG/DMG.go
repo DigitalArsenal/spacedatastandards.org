@@ -62,8 +62,16 @@ func (rcv *DMG) OVERALL_HEALTH() float32 {
 	return 0.0
 }
 
+func (rcv *DMG) OverallHealth() float32 {
+	return rcv.OVERALL_HEALTH()
+}
+
 func (rcv *DMG) MutateOVERALL_HEALTH(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(4, n)
+}
+
+func (rcv *DMG) MutateOverallHealth(n float32) bool {
+	return rcv.MutateOVERALL_HEALTH(n)
 }
 
 func (rcv *DMG) MOBILITY() float32 {
@@ -74,8 +82,16 @@ func (rcv *DMG) MOBILITY() float32 {
 	return 0.0
 }
 
+func (rcv *DMG) Mobility() float32 {
+	return rcv.MOBILITY()
+}
+
 func (rcv *DMG) MutateMOBILITY(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(6, n)
+}
+
+func (rcv *DMG) MutateMobility(n float32) bool {
+	return rcv.MutateMOBILITY(n)
 }
 
 func (rcv *DMG) FIREPOWER() float32 {
@@ -86,8 +102,16 @@ func (rcv *DMG) FIREPOWER() float32 {
 	return 0.0
 }
 
+func (rcv *DMG) Firepower() float32 {
+	return rcv.FIREPOWER()
+}
+
 func (rcv *DMG) MutateFIREPOWER(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(8, n)
+}
+
+func (rcv *DMG) MutateFirepower(n float32) bool {
+	return rcv.MutateFIREPOWER(n)
 }
 
 func (rcv *DMG) MODULE_COUNT() byte {
@@ -98,8 +122,16 @@ func (rcv *DMG) MODULE_COUNT() byte {
 	return 0
 }
 
+func (rcv *DMG) ModuleCount() byte {
+	return rcv.MODULE_COUNT()
+}
+
 func (rcv *DMG) MutateMODULE_COUNT(n byte) bool {
 	return rcv._tab.MutateByteSlot(10, n)
+}
+
+func (rcv *DMG) MutateModuleCount(n byte) bool {
+	return rcv.MutateMODULE_COUNT(n)
 }
 
 func (rcv *DMG) CREW_COUNT() byte {
@@ -110,8 +142,16 @@ func (rcv *DMG) CREW_COUNT() byte {
 	return 0
 }
 
+func (rcv *DMG) CrewCount() byte {
+	return rcv.CREW_COUNT()
+}
+
 func (rcv *DMG) MutateCREW_COUNT(n byte) bool {
 	return rcv._tab.MutateByteSlot(12, n)
+}
+
+func (rcv *DMG) MutateCrewCount(n byte) bool {
+	return rcv.MutateCREW_COUNT(n)
 }
 
 func (rcv *DMG) FIRE_COUNT() byte {
@@ -122,8 +162,16 @@ func (rcv *DMG) FIRE_COUNT() byte {
 	return 0
 }
 
+func (rcv *DMG) FireCount() byte {
+	return rcv.FIRE_COUNT()
+}
+
 func (rcv *DMG) MutateFIRE_COUNT(n byte) bool {
 	return rcv._tab.MutateByteSlot(14, n)
+}
+
+func (rcv *DMG) MutateFireCount(n byte) bool {
+	return rcv.MutateFIRE_COUNT(n)
 }
 
 func (rcv *DMG) FLOOD_COUNT() byte {
@@ -134,8 +182,16 @@ func (rcv *DMG) FLOOD_COUNT() byte {
 	return 0
 }
 
+func (rcv *DMG) FloodCount() byte {
+	return rcv.FLOOD_COUNT()
+}
+
 func (rcv *DMG) MutateFLOOD_COUNT(n byte) bool {
 	return rcv._tab.MutateByteSlot(16, n)
+}
+
+func (rcv *DMG) MutateFloodCount(n byte) bool {
+	return rcv.MutateFLOOD_COUNT(n)
 }
 
 func (rcv *DMG) IS_DESTROYED() byte {
@@ -146,8 +202,16 @@ func (rcv *DMG) IS_DESTROYED() byte {
 	return 0
 }
 
+func (rcv *DMG) IsDestroyed() byte {
+	return rcv.IS_DESTROYED()
+}
+
 func (rcv *DMG) MutateIS_DESTROYED(n byte) bool {
 	return rcv._tab.MutateByteSlot(18, n)
+}
+
+func (rcv *DMG) MutateIsDestroyed(n byte) bool {
+	return rcv.MutateIS_DESTROYED(n)
 }
 
 func (rcv *DMG) DESTRUCTION_CAUSE() byte {
@@ -158,8 +222,16 @@ func (rcv *DMG) DESTRUCTION_CAUSE() byte {
 	return 0
 }
 
+func (rcv *DMG) DestructionCause() byte {
+	return rcv.DESTRUCTION_CAUSE()
+}
+
 func (rcv *DMG) MutateDESTRUCTION_CAUSE(n byte) bool {
 	return rcv._tab.MutateByteSlot(20, n)
+}
+
+func (rcv *DMG) MutateDestructionCause(n byte) bool {
+	return rcv.MutateDESTRUCTION_CAUSE(n)
 }
 
 func (rcv *DMG) EXTINGUISHERS() byte {
@@ -170,8 +242,16 @@ func (rcv *DMG) EXTINGUISHERS() byte {
 	return 0
 }
 
+func (rcv *DMG) Extinguishers() byte {
+	return rcv.EXTINGUISHERS()
+}
+
 func (rcv *DMG) MutateEXTINGUISHERS(n byte) bool {
 	return rcv._tab.MutateByteSlot(22, n)
+}
+
+func (rcv *DMG) MutateExtinguishers(n byte) bool {
+	return rcv.MutateEXTINGUISHERS(n)
 }
 
 func (rcv *DMG) REPAIR_ACTIVE() byte {
@@ -182,8 +262,16 @@ func (rcv *DMG) REPAIR_ACTIVE() byte {
 	return 0
 }
 
+func (rcv *DMG) RepairActive() byte {
+	return rcv.REPAIR_ACTIVE()
+}
+
 func (rcv *DMG) MutateREPAIR_ACTIVE(n byte) bool {
 	return rcv._tab.MutateByteSlot(24, n)
+}
+
+func (rcv *DMG) MutateRepairActive(n byte) bool {
+	return rcv.MutateREPAIR_ACTIVE(n)
 }
 
 func (rcv *DMG) RELOAD_MULTIPLIER() float32 {
@@ -194,8 +282,16 @@ func (rcv *DMG) RELOAD_MULTIPLIER() float32 {
 	return 0.0
 }
 
+func (rcv *DMG) ReloadMultiplier() float32 {
+	return rcv.RELOAD_MULTIPLIER()
+}
+
 func (rcv *DMG) MutateRELOAD_MULTIPLIER(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(26, n)
+}
+
+func (rcv *DMG) MutateReloadMultiplier(n float32) bool {
+	return rcv.MutateRELOAD_MULTIPLIER(n)
 }
 
 func (rcv *DMG) ACCURACY_MULTIPLIER() float32 {
@@ -206,8 +302,16 @@ func (rcv *DMG) ACCURACY_MULTIPLIER() float32 {
 	return 0.0
 }
 
+func (rcv *DMG) AccuracyMultiplier() float32 {
+	return rcv.ACCURACY_MULTIPLIER()
+}
+
 func (rcv *DMG) MutateACCURACY_MULTIPLIER(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(28, n)
+}
+
+func (rcv *DMG) MutateAccuracyMultiplier(n float32) bool {
+	return rcv.MutateACCURACY_MULTIPLIER(n)
 }
 
 func (rcv *DMG) CREW_ALIVE() byte {
@@ -218,8 +322,16 @@ func (rcv *DMG) CREW_ALIVE() byte {
 	return 0
 }
 
+func (rcv *DMG) CrewAlive() byte {
+	return rcv.CREW_ALIVE()
+}
+
 func (rcv *DMG) MutateCREW_ALIVE(n byte) bool {
 	return rcv._tab.MutateByteSlot(30, n)
+}
+
+func (rcv *DMG) MutateCrewAlive(n byte) bool {
+	return rcv.MutateCREW_ALIVE(n)
 }
 
 func (rcv *DMG) CREW_WOUNDED() byte {
@@ -230,8 +342,16 @@ func (rcv *DMG) CREW_WOUNDED() byte {
 	return 0
 }
 
+func (rcv *DMG) CrewWounded() byte {
+	return rcv.CREW_WOUNDED()
+}
+
 func (rcv *DMG) MutateCREW_WOUNDED(n byte) bool {
 	return rcv._tab.MutateByteSlot(32, n)
+}
+
+func (rcv *DMG) MutateCrewWounded(n byte) bool {
+	return rcv.MutateCREW_WOUNDED(n)
 }
 
 func (rcv *DMG) RESERVED(j int) byte {
@@ -243,6 +363,10 @@ func (rcv *DMG) RESERVED(j int) byte {
 	return 0
 }
 
+func (rcv *DMG) Reserved(j int) byte {
+	return rcv.RESERVED(j)
+}
+
 func (rcv *DMG) RESERVEDLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
 	if o != 0 {
@@ -251,12 +375,20 @@ func (rcv *DMG) RESERVEDLength() int {
 	return 0
 }
 
+func (rcv *DMG) ReservedLength() int {
+	return rcv.RESERVEDLength()
+}
+
 func (rcv *DMG) RESERVEDBytes() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *DMG) ReservedBytes() []byte {
+	return rcv.RESERVEDBytes()
 }
 
 func (rcv *DMG) MutateRESERVED(j int, n byte) bool {
@@ -268,59 +400,114 @@ func (rcv *DMG) MutateRESERVED(j int, n byte) bool {
 	return false
 }
 
+func (rcv *DMG) MutateReserved(j int, n byte) bool {
+	return rcv.MutateRESERVED(j, n)
+}
+
 func DMGStart(builder *flatbuffers.Builder) {
 	builder.StartObject(16)
 }
 func DMGAddOVERALL_HEALTH(builder *flatbuffers.Builder, OVERALL_HEALTH float32) {
 	builder.PrependFloat32Slot(0, OVERALL_HEALTH, 0.0)
 }
+func DMGAddOverallHealth(builder *flatbuffers.Builder, OVERALL_HEALTH float32) {
+	DMGAddOVERALL_HEALTH(builder, OVERALL_HEALTH)
+}
 func DMGAddMOBILITY(builder *flatbuffers.Builder, MOBILITY float32) {
 	builder.PrependFloat32Slot(1, MOBILITY, 0.0)
+}
+func DMGAddMobility(builder *flatbuffers.Builder, MOBILITY float32) {
+	DMGAddMOBILITY(builder, MOBILITY)
 }
 func DMGAddFIREPOWER(builder *flatbuffers.Builder, FIREPOWER float32) {
 	builder.PrependFloat32Slot(2, FIREPOWER, 0.0)
 }
+func DMGAddFirepower(builder *flatbuffers.Builder, FIREPOWER float32) {
+	DMGAddFIREPOWER(builder, FIREPOWER)
+}
 func DMGAddMODULE_COUNT(builder *flatbuffers.Builder, MODULE_COUNT byte) {
 	builder.PrependByteSlot(3, MODULE_COUNT, 0)
+}
+func DMGAddModuleCount(builder *flatbuffers.Builder, MODULE_COUNT byte) {
+	DMGAddMODULE_COUNT(builder, MODULE_COUNT)
 }
 func DMGAddCREW_COUNT(builder *flatbuffers.Builder, CREW_COUNT byte) {
 	builder.PrependByteSlot(4, CREW_COUNT, 0)
 }
+func DMGAddCrewCount(builder *flatbuffers.Builder, CREW_COUNT byte) {
+	DMGAddCREW_COUNT(builder, CREW_COUNT)
+}
 func DMGAddFIRE_COUNT(builder *flatbuffers.Builder, FIRE_COUNT byte) {
 	builder.PrependByteSlot(5, FIRE_COUNT, 0)
+}
+func DMGAddFireCount(builder *flatbuffers.Builder, FIRE_COUNT byte) {
+	DMGAddFIRE_COUNT(builder, FIRE_COUNT)
 }
 func DMGAddFLOOD_COUNT(builder *flatbuffers.Builder, FLOOD_COUNT byte) {
 	builder.PrependByteSlot(6, FLOOD_COUNT, 0)
 }
+func DMGAddFloodCount(builder *flatbuffers.Builder, FLOOD_COUNT byte) {
+	DMGAddFLOOD_COUNT(builder, FLOOD_COUNT)
+}
 func DMGAddIS_DESTROYED(builder *flatbuffers.Builder, IS_DESTROYED byte) {
 	builder.PrependByteSlot(7, IS_DESTROYED, 0)
+}
+func DMGAddIsDestroyed(builder *flatbuffers.Builder, IS_DESTROYED byte) {
+	DMGAddIS_DESTROYED(builder, IS_DESTROYED)
 }
 func DMGAddDESTRUCTION_CAUSE(builder *flatbuffers.Builder, DESTRUCTION_CAUSE byte) {
 	builder.PrependByteSlot(8, DESTRUCTION_CAUSE, 0)
 }
+func DMGAddDestructionCause(builder *flatbuffers.Builder, DESTRUCTION_CAUSE byte) {
+	DMGAddDESTRUCTION_CAUSE(builder, DESTRUCTION_CAUSE)
+}
 func DMGAddEXTINGUISHERS(builder *flatbuffers.Builder, EXTINGUISHERS byte) {
 	builder.PrependByteSlot(9, EXTINGUISHERS, 0)
+}
+func DMGAddExtinguishers(builder *flatbuffers.Builder, EXTINGUISHERS byte) {
+	DMGAddEXTINGUISHERS(builder, EXTINGUISHERS)
 }
 func DMGAddREPAIR_ACTIVE(builder *flatbuffers.Builder, REPAIR_ACTIVE byte) {
 	builder.PrependByteSlot(10, REPAIR_ACTIVE, 0)
 }
+func DMGAddRepairActive(builder *flatbuffers.Builder, REPAIR_ACTIVE byte) {
+	DMGAddREPAIR_ACTIVE(builder, REPAIR_ACTIVE)
+}
 func DMGAddRELOAD_MULTIPLIER(builder *flatbuffers.Builder, RELOAD_MULTIPLIER float32) {
 	builder.PrependFloat32Slot(11, RELOAD_MULTIPLIER, 0.0)
+}
+func DMGAddReloadMultiplier(builder *flatbuffers.Builder, RELOAD_MULTIPLIER float32) {
+	DMGAddRELOAD_MULTIPLIER(builder, RELOAD_MULTIPLIER)
 }
 func DMGAddACCURACY_MULTIPLIER(builder *flatbuffers.Builder, ACCURACY_MULTIPLIER float32) {
 	builder.PrependFloat32Slot(12, ACCURACY_MULTIPLIER, 0.0)
 }
+func DMGAddAccuracyMultiplier(builder *flatbuffers.Builder, ACCURACY_MULTIPLIER float32) {
+	DMGAddACCURACY_MULTIPLIER(builder, ACCURACY_MULTIPLIER)
+}
 func DMGAddCREW_ALIVE(builder *flatbuffers.Builder, CREW_ALIVE byte) {
 	builder.PrependByteSlot(13, CREW_ALIVE, 0)
+}
+func DMGAddCrewAlive(builder *flatbuffers.Builder, CREW_ALIVE byte) {
+	DMGAddCREW_ALIVE(builder, CREW_ALIVE)
 }
 func DMGAddCREW_WOUNDED(builder *flatbuffers.Builder, CREW_WOUNDED byte) {
 	builder.PrependByteSlot(14, CREW_WOUNDED, 0)
 }
+func DMGAddCrewWounded(builder *flatbuffers.Builder, CREW_WOUNDED byte) {
+	DMGAddCREW_WOUNDED(builder, CREW_WOUNDED)
+}
 func DMGAddRESERVED(builder *flatbuffers.Builder, RESERVED flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(15, flatbuffers.UOffsetT(RESERVED), 0)
 }
+func DMGAddReserved(builder *flatbuffers.Builder, RESERVED flatbuffers.UOffsetT) {
+	DMGAddRESERVED(builder, RESERVED)
+}
 func DMGStartRESERVEDVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(1, numElems, 1)
+}
+func DMGStartReservedVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return DMGStartRESERVEDVector(builder, numElems)
 }
 func DMGEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

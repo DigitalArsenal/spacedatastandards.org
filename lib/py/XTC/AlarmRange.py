@@ -101,17 +101,23 @@ def End(builder):
 class AlarmRangeT(object):
 
     # AlarmRangeT
-    def __init__(self):
-        self.MIN_INCLUSIVE = 0.0  # type: float
-        self.MAX_INCLUSIVE = 0.0  # type: float
-        self.MIN_EXCLUSIVE = 0.0  # type: float
-        self.MAX_EXCLUSIVE = 0.0  # type: float
+    def __init__(
+        self,
+        MIN_INCLUSIVE = 0.0,
+        MAX_INCLUSIVE = 0.0,
+        MIN_EXCLUSIVE = 0.0,
+        MAX_EXCLUSIVE = 0.0,
+    ):
+        self.MIN_INCLUSIVE = MIN_INCLUSIVE  # type: float
+        self.MAX_INCLUSIVE = MAX_INCLUSIVE  # type: float
+        self.MIN_EXCLUSIVE = MIN_EXCLUSIVE  # type: float
+        self.MAX_EXCLUSIVE = MAX_EXCLUSIVE  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        alarmRange = AlarmRange()
-        alarmRange.Init(buf, pos)
-        return cls.InitFromObj(alarmRange)
+        tmpAlarmRange = AlarmRange()
+        tmpAlarmRange.Init(buf, pos)
+        return cls.InitFromObj(tmpAlarmRange)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -119,19 +125,19 @@ class AlarmRangeT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, alarmRange):
+    def InitFromObj(cls, tmpAlarmRange):
         x = AlarmRangeT()
-        x._UnPack(alarmRange)
+        x._UnPack(tmpAlarmRange)
         return x
 
     # AlarmRangeT
-    def _UnPack(self, alarmRange):
-        if alarmRange is None:
+    def _UnPack(self, AlarmRange):
+        if AlarmRange is None:
             return
-        self.MIN_INCLUSIVE = alarmRange.MIN_INCLUSIVE()
-        self.MAX_INCLUSIVE = alarmRange.MAX_INCLUSIVE()
-        self.MIN_EXCLUSIVE = alarmRange.MIN_EXCLUSIVE()
-        self.MAX_EXCLUSIVE = alarmRange.MAX_EXCLUSIVE()
+        self.MIN_INCLUSIVE = AlarmRange.MIN_INCLUSIVE()
+        self.MAX_INCLUSIVE = AlarmRange.MAX_INCLUSIVE()
+        self.MIN_EXCLUSIVE = AlarmRange.MIN_EXCLUSIVE()
+        self.MAX_EXCLUSIVE = AlarmRange.MAX_EXCLUSIVE()
 
     # AlarmRangeT
     def Pack(self, builder):
@@ -140,5 +146,5 @@ class AlarmRangeT(object):
         AlarmRangeAddMAX_INCLUSIVE(builder, self.MAX_INCLUSIVE)
         AlarmRangeAddMIN_EXCLUSIVE(builder, self.MIN_EXCLUSIVE)
         AlarmRangeAddMAX_EXCLUSIVE(builder, self.MAX_EXCLUSIVE)
-        alarmRange = AlarmRangeEnd(builder)
-        return alarmRange
+        AlarmRange = AlarmRangeEnd(builder)
+        return AlarmRange

@@ -1,2 +1,2 @@
-export { OPM, OPMT } from './OPM.js';
+export * from './OPM.js';
 //# sourceMappingURL=main.d.ts.map

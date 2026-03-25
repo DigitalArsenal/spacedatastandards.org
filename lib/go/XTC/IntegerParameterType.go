@@ -51,6 +51,10 @@ func (rcv *IntegerParameterType) NAME() []byte {
 	return nil
 }
 
+func (rcv *IntegerParameterType) Name() []byte {
+	return rcv.NAME()
+}
+
 /// Type name
 /// Short description
 func (rcv *IntegerParameterType) SHORT_DESCRIPTION() []byte {
@@ -59,6 +63,10 @@ func (rcv *IntegerParameterType) SHORT_DESCRIPTION() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *IntegerParameterType) ShortDescription() []byte {
+	return rcv.SHORT_DESCRIPTION()
 }
 
 /// Short description
@@ -71,6 +79,10 @@ func (rcv *IntegerParameterType) LONG_DESCRIPTION() []byte {
 	return nil
 }
 
+func (rcv *IntegerParameterType) LongDescription() []byte {
+	return rcv.LONG_DESCRIPTION()
+}
+
 /// Long description
 /// Units
 func (rcv *IntegerParameterType) UNITS(obj *Unit, j int) bool {
@@ -79,10 +91,17 @@ func (rcv *IntegerParameterType) UNITS(obj *Unit, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(Unit)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *IntegerParameterType) Units(obj *Unit, j int) bool {
+	return rcv.UNITS(obj, j)
 }
 
 func (rcv *IntegerParameterType) UNITSLength() int {
@@ -91,6 +110,10 @@ func (rcv *IntegerParameterType) UNITSLength() int {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *IntegerParameterType) UnitsLength() int {
+	return rcv.UNITSLength()
 }
 
 /// Units
@@ -108,6 +131,10 @@ func (rcv *IntegerParameterType) DATA_ENCODING(obj *IntegerDataEncoding) *Intege
 	return nil
 }
 
+func (rcv *IntegerParameterType) DataEncoding(obj *IntegerDataEncoding) *IntegerDataEncoding {
+	return rcv.DATA_ENCODING(obj)
+}
+
 /// Data encoding
 /// Default alarm
 func (rcv *IntegerParameterType) DEFAULT_ALARM(obj *DefaultAlarm) *DefaultAlarm {
@@ -123,6 +150,10 @@ func (rcv *IntegerParameterType) DEFAULT_ALARM(obj *DefaultAlarm) *DefaultAlarm 
 	return nil
 }
 
+func (rcv *IntegerParameterType) DefaultAlarm(obj *DefaultAlarm) *DefaultAlarm {
+	return rcv.DEFAULT_ALARM(obj)
+}
+
 /// Default alarm
 /// Context alarms
 func (rcv *IntegerParameterType) CONTEXT_ALARMS(obj *ContextAlarm, j int) bool {
@@ -131,10 +162,17 @@ func (rcv *IntegerParameterType) CONTEXT_ALARMS(obj *ContextAlarm, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(ContextAlarm)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *IntegerParameterType) ContextAlarms(obj *ContextAlarm, j int) bool {
+	return rcv.CONTEXT_ALARMS(obj, j)
 }
 
 func (rcv *IntegerParameterType) CONTEXT_ALARMSLength() int {
@@ -143,6 +181,10 @@ func (rcv *IntegerParameterType) CONTEXT_ALARMSLength() int {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *IntegerParameterType) ContextAlarmsLength() int {
+	return rcv.CONTEXT_ALARMSLength()
 }
 
 /// Context alarms
@@ -155,9 +197,17 @@ func (rcv *IntegerParameterType) VALID_MIN() int64 {
 	return 0
 }
 
+func (rcv *IntegerParameterType) ValidMin() int64 {
+	return rcv.VALID_MIN()
+}
+
 /// Minimum valid value
 func (rcv *IntegerParameterType) MutateVALID_MIN(n int64) bool {
 	return rcv._tab.MutateInt64Slot(18, n)
+}
+
+func (rcv *IntegerParameterType) MutateValidMin(n int64) bool {
+	return rcv.MutateVALID_MIN(n)
 }
 
 /// Maximum valid value
@@ -169,9 +219,17 @@ func (rcv *IntegerParameterType) VALID_MAX() int64 {
 	return 0
 }
 
+func (rcv *IntegerParameterType) ValidMax() int64 {
+	return rcv.VALID_MAX()
+}
+
 /// Maximum valid value
 func (rcv *IntegerParameterType) MutateVALID_MAX(n int64) bool {
 	return rcv._tab.MutateInt64Slot(20, n)
+}
+
+func (rcv *IntegerParameterType) MutateValidMax(n int64) bool {
+	return rcv.MutateVALID_MAX(n)
 }
 
 /// Signed integer (true) or unsigned (false)
@@ -183,9 +241,17 @@ func (rcv *IntegerParameterType) SIGNED() bool {
 	return false
 }
 
+func (rcv *IntegerParameterType) Signed() bool {
+	return rcv.SIGNED()
+}
+
 /// Signed integer (true) or unsigned (false)
 func (rcv *IntegerParameterType) MutateSIGNED(n bool) bool {
 	return rcv._tab.MutateBoolSlot(22, n)
+}
+
+func (rcv *IntegerParameterType) MutateSigned(n bool) bool {
+	return rcv.MutateSIGNED(n)
 }
 
 /// Size in bits
@@ -197,9 +263,17 @@ func (rcv *IntegerParameterType) SIZE_IN_BITS() uint16 {
 	return 0
 }
 
+func (rcv *IntegerParameterType) SizeInBits() uint16 {
+	return rcv.SIZE_IN_BITS()
+}
+
 /// Size in bits
 func (rcv *IntegerParameterType) MutateSIZE_IN_BITS(n uint16) bool {
 	return rcv._tab.MutateUint16Slot(24, n)
+}
+
+func (rcv *IntegerParameterType) MutateSizeInBits(n uint16) bool {
+	return rcv.MutateSIZE_IN_BITS(n)
 }
 
 /// Initial/default value
@@ -211,9 +285,17 @@ func (rcv *IntegerParameterType) INITIAL_VALUE() int64 {
 	return 0
 }
 
+func (rcv *IntegerParameterType) InitialValue() int64 {
+	return rcv.INITIAL_VALUE()
+}
+
 /// Initial/default value
 func (rcv *IntegerParameterType) MutateINITIAL_VALUE(n int64) bool {
 	return rcv._tab.MutateInt64Slot(26, n)
+}
+
+func (rcv *IntegerParameterType) MutateInitialValue(n int64) bool {
+	return rcv.MutateINITIAL_VALUE(n)
 }
 
 func IntegerParameterTypeStart(builder *flatbuffers.Builder) {
@@ -222,44 +304,86 @@ func IntegerParameterTypeStart(builder *flatbuffers.Builder) {
 func IntegerParameterTypeAddNAME(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(NAME), 0)
 }
+func IntegerParameterTypeAddName(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
+	IntegerParameterTypeAddNAME(builder, NAME)
+}
 func IntegerParameterTypeAddSHORT_DESCRIPTION(builder *flatbuffers.Builder, SHORT_DESCRIPTION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(SHORT_DESCRIPTION), 0)
+}
+func IntegerParameterTypeAddShortDescription(builder *flatbuffers.Builder, SHORT_DESCRIPTION flatbuffers.UOffsetT) {
+	IntegerParameterTypeAddSHORT_DESCRIPTION(builder, SHORT_DESCRIPTION)
 }
 func IntegerParameterTypeAddLONG_DESCRIPTION(builder *flatbuffers.Builder, LONG_DESCRIPTION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(LONG_DESCRIPTION), 0)
 }
+func IntegerParameterTypeAddLongDescription(builder *flatbuffers.Builder, LONG_DESCRIPTION flatbuffers.UOffsetT) {
+	IntegerParameterTypeAddLONG_DESCRIPTION(builder, LONG_DESCRIPTION)
+}
 func IntegerParameterTypeAddUNITS(builder *flatbuffers.Builder, UNITS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(UNITS), 0)
+}
+func IntegerParameterTypeAddUnits(builder *flatbuffers.Builder, UNITS flatbuffers.UOffsetT) {
+	IntegerParameterTypeAddUNITS(builder, UNITS)
 }
 func IntegerParameterTypeStartUNITSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
+func IntegerParameterTypeStartUnitsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return IntegerParameterTypeStartUNITSVector(builder, numElems)
+}
 func IntegerParameterTypeAddDATA_ENCODING(builder *flatbuffers.Builder, DATA_ENCODING flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(DATA_ENCODING), 0)
+}
+func IntegerParameterTypeAddDataEncoding(builder *flatbuffers.Builder, DATA_ENCODING flatbuffers.UOffsetT) {
+	IntegerParameterTypeAddDATA_ENCODING(builder, DATA_ENCODING)
 }
 func IntegerParameterTypeAddDEFAULT_ALARM(builder *flatbuffers.Builder, DEFAULT_ALARM flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(DEFAULT_ALARM), 0)
 }
+func IntegerParameterTypeAddDefaultAlarm(builder *flatbuffers.Builder, DEFAULT_ALARM flatbuffers.UOffsetT) {
+	IntegerParameterTypeAddDEFAULT_ALARM(builder, DEFAULT_ALARM)
+}
 func IntegerParameterTypeAddCONTEXT_ALARMS(builder *flatbuffers.Builder, CONTEXT_ALARMS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(CONTEXT_ALARMS), 0)
+}
+func IntegerParameterTypeAddContextAlarms(builder *flatbuffers.Builder, CONTEXT_ALARMS flatbuffers.UOffsetT) {
+	IntegerParameterTypeAddCONTEXT_ALARMS(builder, CONTEXT_ALARMS)
 }
 func IntegerParameterTypeStartCONTEXT_ALARMSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
+func IntegerParameterTypeStartContextAlarmsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return IntegerParameterTypeStartCONTEXT_ALARMSVector(builder, numElems)
+}
 func IntegerParameterTypeAddVALID_MIN(builder *flatbuffers.Builder, VALID_MIN int64) {
 	builder.PrependInt64Slot(7, VALID_MIN, 0)
+}
+func IntegerParameterTypeAddValidMin(builder *flatbuffers.Builder, VALID_MIN int64) {
+	IntegerParameterTypeAddVALID_MIN(builder, VALID_MIN)
 }
 func IntegerParameterTypeAddVALID_MAX(builder *flatbuffers.Builder, VALID_MAX int64) {
 	builder.PrependInt64Slot(8, VALID_MAX, 0)
 }
+func IntegerParameterTypeAddValidMax(builder *flatbuffers.Builder, VALID_MAX int64) {
+	IntegerParameterTypeAddVALID_MAX(builder, VALID_MAX)
+}
 func IntegerParameterTypeAddSIGNED(builder *flatbuffers.Builder, SIGNED bool) {
 	builder.PrependBoolSlot(9, SIGNED, false)
+}
+func IntegerParameterTypeAddSigned(builder *flatbuffers.Builder, SIGNED bool) {
+	IntegerParameterTypeAddSIGNED(builder, SIGNED)
 }
 func IntegerParameterTypeAddSIZE_IN_BITS(builder *flatbuffers.Builder, SIZE_IN_BITS uint16) {
 	builder.PrependUint16Slot(10, SIZE_IN_BITS, 0)
 }
+func IntegerParameterTypeAddSizeInBits(builder *flatbuffers.Builder, SIZE_IN_BITS uint16) {
+	IntegerParameterTypeAddSIZE_IN_BITS(builder, SIZE_IN_BITS)
+}
 func IntegerParameterTypeAddINITIAL_VALUE(builder *flatbuffers.Builder, INITIAL_VALUE int64) {
 	builder.PrependInt64Slot(11, INITIAL_VALUE, 0)
+}
+func IntegerParameterTypeAddInitialValue(builder *flatbuffers.Builder, INITIAL_VALUE int64) {
+	IntegerParameterTypeAddINITIAL_VALUE(builder, INITIAL_VALUE)
 }
 func IntegerParameterTypeEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

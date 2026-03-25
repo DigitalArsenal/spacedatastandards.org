@@ -544,6 +544,12 @@ def DOAStartTAGSVector(builder, numElems):
 def StartTAGSVector(builder, numElems):
     return DOAStartTAGSVector(builder, numElems)
 
+def DOACreateTAGSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateTAGSVector(builder, data):
+    DOACreateTAGSVector(builder, data)
+
 def DOAEnd(builder):
     return builder.EndObject()
 
@@ -558,48 +564,85 @@ except:
 class DOAT(object):
 
     # DOAT
-    def __init__(self):
-        self.ID = None  # type: str
-        self.OB_TIME = None  # type: str
-        self.SAT_NO = 0  # type: int
-        self.ORIG_OBJECT_ID = None  # type: str
-        self.ON_ORBIT = None  # type: str
-        self.UCT = False  # type: bool
-        self.TASK_ID = None  # type: str
-        self.TRANSACTION_ID = None  # type: str
-        self.COLLECTION_MODE = 0  # type: int
-        self.ID_SENSOR1 = None  # type: str
-        self.ORIG_SENSOR_ID1 = None  # type: str
-        self.SENLAT = 0.0  # type: float
-        self.SENLON = 0.0  # type: float
-        self.SENALT = 0.0  # type: float
-        self.SENSOR1_DELAY = 0.0  # type: float
-        self.ID_SENSOR2 = None  # type: str
-        self.ORIG_SENSOR_ID2 = None  # type: str
-        self.SEN2LAT = 0.0  # type: float
-        self.SEN2LON = 0.0  # type: float
-        self.SEN2ALT = 0.0  # type: float
-        self.SENSOR2_DELAY = 0.0  # type: float
-        self.FREQUENCY = 0.0  # type: float
-        self.BANDWIDTH = 0.0  # type: float
-        self.SNR = 0.0  # type: float
-        self.DELTA_RANGE = 0.0  # type: float
-        self.DELTA_RANGE_UNC = 0.0  # type: float
-        self.DELTA_RANGE_RATE = 0.0  # type: float
-        self.DELTA_RANGE_RATE_UNC = 0.0  # type: float
-        self.TDOA = 0.0  # type: float
-        self.TDOA_UNC = 0.0  # type: float
-        self.FDOA = 0.0  # type: float
-        self.FDOA_UNC = 0.0  # type: float
-        self.RAW_FILE_URI = None  # type: str
-        self.DESCRIPTOR = None  # type: str
-        self.TAGS = None  # type: List[str]
+    def __init__(
+        self,
+        ID = None,
+        OB_TIME = None,
+        SAT_NO = 0,
+        ORIG_OBJECT_ID = None,
+        ON_ORBIT = None,
+        UCT = False,
+        TASK_ID = None,
+        TRANSACTION_ID = None,
+        COLLECTION_MODE = 0,
+        ID_SENSOR1 = None,
+        ORIG_SENSOR_ID1 = None,
+        SENLAT = 0.0,
+        SENLON = 0.0,
+        SENALT = 0.0,
+        SENSOR1_DELAY = 0.0,
+        ID_SENSOR2 = None,
+        ORIG_SENSOR_ID2 = None,
+        SEN2LAT = 0.0,
+        SEN2LON = 0.0,
+        SEN2ALT = 0.0,
+        SENSOR2_DELAY = 0.0,
+        FREQUENCY = 0.0,
+        BANDWIDTH = 0.0,
+        SNR = 0.0,
+        DELTA_RANGE = 0.0,
+        DELTA_RANGE_UNC = 0.0,
+        DELTA_RANGE_RATE = 0.0,
+        DELTA_RANGE_RATE_UNC = 0.0,
+        TDOA = 0.0,
+        TDOA_UNC = 0.0,
+        FDOA = 0.0,
+        FDOA_UNC = 0.0,
+        RAW_FILE_URI = None,
+        DESCRIPTOR = None,
+        TAGS = None,
+    ):
+        self.ID = ID  # type: Optional[str]
+        self.OB_TIME = OB_TIME  # type: Optional[str]
+        self.SAT_NO = SAT_NO  # type: int
+        self.ORIG_OBJECT_ID = ORIG_OBJECT_ID  # type: Optional[str]
+        self.ON_ORBIT = ON_ORBIT  # type: Optional[str]
+        self.UCT = UCT  # type: bool
+        self.TASK_ID = TASK_ID  # type: Optional[str]
+        self.TRANSACTION_ID = TRANSACTION_ID  # type: Optional[str]
+        self.COLLECTION_MODE = COLLECTION_MODE  # type: int
+        self.ID_SENSOR1 = ID_SENSOR1  # type: Optional[str]
+        self.ORIG_SENSOR_ID1 = ORIG_SENSOR_ID1  # type: Optional[str]
+        self.SENLAT = SENLAT  # type: float
+        self.SENLON = SENLON  # type: float
+        self.SENALT = SENALT  # type: float
+        self.SENSOR1_DELAY = SENSOR1_DELAY  # type: float
+        self.ID_SENSOR2 = ID_SENSOR2  # type: Optional[str]
+        self.ORIG_SENSOR_ID2 = ORIG_SENSOR_ID2  # type: Optional[str]
+        self.SEN2LAT = SEN2LAT  # type: float
+        self.SEN2LON = SEN2LON  # type: float
+        self.SEN2ALT = SEN2ALT  # type: float
+        self.SENSOR2_DELAY = SENSOR2_DELAY  # type: float
+        self.FREQUENCY = FREQUENCY  # type: float
+        self.BANDWIDTH = BANDWIDTH  # type: float
+        self.SNR = SNR  # type: float
+        self.DELTA_RANGE = DELTA_RANGE  # type: float
+        self.DELTA_RANGE_UNC = DELTA_RANGE_UNC  # type: float
+        self.DELTA_RANGE_RATE = DELTA_RANGE_RATE  # type: float
+        self.DELTA_RANGE_RATE_UNC = DELTA_RANGE_RATE_UNC  # type: float
+        self.TDOA = TDOA  # type: float
+        self.TDOA_UNC = TDOA_UNC  # type: float
+        self.FDOA = FDOA  # type: float
+        self.FDOA_UNC = FDOA_UNC  # type: float
+        self.RAW_FILE_URI = RAW_FILE_URI  # type: Optional[str]
+        self.DESCRIPTOR = DESCRIPTOR  # type: Optional[str]
+        self.TAGS = TAGS  # type: Optional[List[Optional[str]]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        DOA = DOA()
-        DOA.Init(buf, pos)
-        return cls.InitFromObj(DOA)
+        tmpDoa = DOA()
+        tmpDoa.Init(buf, pos)
+        return cls.InitFromObj(tmpDoa)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -607,9 +650,9 @@ class DOAT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, DOA):
+    def InitFromObj(cls, tmpDoa):
         x = DOAT()
-        x._UnPack(DOA)
+        x._UnPack(tmpDoa)
         return x
 
     # DOAT

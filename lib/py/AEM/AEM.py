@@ -111,6 +111,12 @@ def AEMStartSEGMENTSVector(builder, numElems):
 def StartSEGMENTSVector(builder, numElems):
     return AEMStartSEGMENTSVector(builder, numElems)
 
+def AEMCreateSEGMENTSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateSEGMENTSVector(builder, data):
+    AEMCreateSEGMENTSVector(builder, data)
+
 def AEMEnd(builder):
     return builder.EndObject()
 
@@ -126,17 +132,23 @@ except:
 class AEMT(object):
 
     # AEMT
-    def __init__(self):
-        self.CCSDS_AEM_VERS = None  # type: str
-        self.CREATION_DATE = None  # type: str
-        self.ORIGINATOR = None  # type: str
-        self.SEGMENTS = None  # type: List[AEMSegment.AEMSegmentT]
+    def __init__(
+        self,
+        CCSDS_AEM_VERS = None,
+        CREATION_DATE = None,
+        ORIGINATOR = None,
+        SEGMENTS = None,
+    ):
+        self.CCSDS_AEM_VERS = CCSDS_AEM_VERS  # type: Optional[str]
+        self.CREATION_DATE = CREATION_DATE  # type: Optional[str]
+        self.ORIGINATOR = ORIGINATOR  # type: Optional[str]
+        self.SEGMENTS = SEGMENTS  # type: Optional[List[AEMSegment.AEMSegmentT]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        AEM = AEM()
-        AEM.Init(buf, pos)
-        return cls.InitFromObj(AEM)
+        tmpAem = AEM()
+        tmpAem.Init(buf, pos)
+        return cls.InitFromObj(tmpAem)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -144,9 +156,9 @@ class AEMT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, AEM):
+    def InitFromObj(cls, tmpAem):
         x = AEMT()
-        x._UnPack(AEM)
+        x._UnPack(tmpAem)
         return x
 
     # AEMT

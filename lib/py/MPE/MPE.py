@@ -185,23 +185,35 @@ def End(builder):
 class MPET(object):
 
     # MPET
-    def __init__(self):
-        self.ENTITY_ID = None  # type: str
-        self.EPOCH = 0.0  # type: float
-        self.MEAN_MOTION = 0.0  # type: float
-        self.ECCENTRICITY = 0.0  # type: float
-        self.INCLINATION = 0.0  # type: float
-        self.RA_OF_ASC_NODE = 0.0  # type: float
-        self.ARG_OF_PERICENTER = 0.0  # type: float
-        self.MEAN_ANOMALY = 0.0  # type: float
-        self.BSTAR = 0.0  # type: float
-        self.MEAN_ELEMENT_THEORY = 0  # type: int
+    def __init__(
+        self,
+        ENTITY_ID = None,
+        EPOCH = 0.0,
+        MEAN_MOTION = 0.0,
+        ECCENTRICITY = 0.0,
+        INCLINATION = 0.0,
+        RA_OF_ASC_NODE = 0.0,
+        ARG_OF_PERICENTER = 0.0,
+        MEAN_ANOMALY = 0.0,
+        BSTAR = 0.0,
+        MEAN_ELEMENT_THEORY = 0,
+    ):
+        self.ENTITY_ID = ENTITY_ID  # type: Optional[str]
+        self.EPOCH = EPOCH  # type: float
+        self.MEAN_MOTION = MEAN_MOTION  # type: float
+        self.ECCENTRICITY = ECCENTRICITY  # type: float
+        self.INCLINATION = INCLINATION  # type: float
+        self.RA_OF_ASC_NODE = RA_OF_ASC_NODE  # type: float
+        self.ARG_OF_PERICENTER = ARG_OF_PERICENTER  # type: float
+        self.MEAN_ANOMALY = MEAN_ANOMALY  # type: float
+        self.BSTAR = BSTAR  # type: float
+        self.MEAN_ELEMENT_THEORY = MEAN_ELEMENT_THEORY  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        MPE = MPE()
-        MPE.Init(buf, pos)
-        return cls.InitFromObj(MPE)
+        tmpMpe = MPE()
+        tmpMpe.Init(buf, pos)
+        return cls.InitFromObj(tmpMpe)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -209,9 +221,9 @@ class MPET(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, MPE):
+    def InitFromObj(cls, tmpMpe):
         x = MPET()
-        x._UnPack(MPE)
+        x._UnPack(tmpMpe)
         return x
 
     # MPET

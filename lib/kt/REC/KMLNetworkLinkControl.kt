@@ -32,7 +32,7 @@ class KMLNetworkLinkControl : Table() {
     /**
      * Minimum refresh period in seconds
      */
-    val MIN_REFRESH_PERIOD : Double
+    val minRefreshPeriod : Double
         get() {
             val o = __offset(4)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -40,7 +40,7 @@ class KMLNetworkLinkControl : Table() {
     /**
      * Maximum session length in seconds
      */
-    val MAX_SESSION_LENGTH : Double
+    val maxSessionLength : Double
         get() {
             val o = __offset(6)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -48,7 +48,7 @@ class KMLNetworkLinkControl : Table() {
     /**
      * Cookie
      */
-    val COOKIE : String?
+    val cookie : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -57,12 +57,12 @@ class KMLNetworkLinkControl : Table() {
                 null
             }
         }
-    val COOKIEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun COOKIEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val cookieAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun cookieInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
     /**
      * Message to display
      */
-    val MESSAGE : String?
+    val message : String?
         get() {
             val o = __offset(10)
             return if (o != 0) {
@@ -71,12 +71,12 @@ class KMLNetworkLinkControl : Table() {
                 null
             }
         }
-    val MESSAGEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
-    fun MESSAGEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
+    val messageAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(10, 1)
+    fun messageInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 10, 1)
     /**
      * Link name override
      */
-    val LINK_NAME : String?
+    val linkName : String?
         get() {
             val o = __offset(12)
             return if (o != 0) {
@@ -85,12 +85,12 @@ class KMLNetworkLinkControl : Table() {
                 null
             }
         }
-    val LINK_NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
-    fun LINK_NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
+    val linkNameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(12, 1)
+    fun linkNameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 12, 1)
     /**
      * Link description override
      */
-    val LINK_DESCRIPTION : String?
+    val linkDescription : String?
         get() {
             val o = __offset(14)
             return if (o != 0) {
@@ -99,12 +99,12 @@ class KMLNetworkLinkControl : Table() {
                 null
             }
         }
-    val LINK_DESCRIPTIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(14, 1)
-    fun LINK_DESCRIPTIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 14, 1)
+    val linkDescriptionAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(14, 1)
+    fun linkDescriptionInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 14, 1)
     /**
      * Link snippet override
      */
-    val LINK_SNIPPET : String?
+    val linkSnippet : String?
         get() {
             val o = __offset(16)
             return if (o != 0) {
@@ -113,12 +113,12 @@ class KMLNetworkLinkControl : Table() {
                 null
             }
         }
-    val LINK_SNIPPETAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(16, 1)
-    fun LINK_SNIPPETInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 16, 1)
+    val linkSnippetAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(16, 1)
+    fun linkSnippetInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 16, 1)
     /**
      * Expiration time (ISO 8601)
      */
-    val EXPIRES : String?
+    val expires : String?
         get() {
             val o = __offset(18)
             return if (o != 0) {
@@ -127,13 +127,13 @@ class KMLNetworkLinkControl : Table() {
                 null
             }
         }
-    val EXPIRESAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(18, 1)
-    fun EXPIRESInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 18, 1)
+    val expiresAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(18, 1)
+    fun expiresInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 18, 1)
     /**
      * Update
      */
-    val UPDATE : KMLUpdate? get() = UPDATE(KMLUpdate())
-    fun UPDATE(obj: KMLUpdate) : KMLUpdate? {
+    val update : KMLUpdate? get() = update(KMLUpdate())
+    fun update(obj: KMLUpdate) : KMLUpdate? {
         val o = __offset(20)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -144,8 +144,8 @@ class KMLNetworkLinkControl : Table() {
     /**
      * LookAt
      */
-    val LOOK_AT : KMLLookAt? get() = LOOK_AT(KMLLookAt())
-    fun LOOK_AT(obj: KMLLookAt) : KMLLookAt? {
+    val lookAt : KMLLookAt? get() = lookAt(KMLLookAt())
+    fun lookAt(obj: KMLLookAt) : KMLLookAt? {
         val o = __offset(22)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -156,8 +156,8 @@ class KMLNetworkLinkControl : Table() {
     /**
      * Camera
      */
-    val CAMERA : KMLCamera? get() = CAMERA(KMLCamera())
-    fun CAMERA(obj: KMLCamera) : KMLCamera? {
+    val camera : KMLCamera? get() = camera(KMLCamera())
+    fun camera(obj: KMLCamera) : KMLCamera? {
         val o = __offset(24)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -166,39 +166,39 @@ class KMLNetworkLinkControl : Table() {
         }
     }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsKMLNetworkLinkControl(_bb: ByteBuffer): KMLNetworkLinkControl = getRootAsKMLNetworkLinkControl(_bb, KMLNetworkLinkControl())
         fun getRootAsKMLNetworkLinkControl(_bb: ByteBuffer, obj: KMLNetworkLinkControl): KMLNetworkLinkControl {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createKMLNetworkLinkControl(builder: FlatBufferBuilder, MIN_REFRESH_PERIOD: Double, MAX_SESSION_LENGTH: Double, COOKIEOffset: Int, MESSAGEOffset: Int, LINK_NAMEOffset: Int, LINK_DESCRIPTIONOffset: Int, LINK_SNIPPETOffset: Int, EXPIRESOffset: Int, UPDATEOffset: Int, LOOK_ATOffset: Int, CAMERAOffset: Int) : Int {
+        fun createKMLNetworkLinkControl(builder: FlatBufferBuilder, minRefreshPeriod: Double, maxSessionLength: Double, cookieOffset: Int, messageOffset: Int, linkNameOffset: Int, linkDescriptionOffset: Int, linkSnippetOffset: Int, expiresOffset: Int, updateOffset: Int, lookAtOffset: Int, cameraOffset: Int) : Int {
             builder.startTable(11)
-            addMAX_SESSION_LENGTH(builder, MAX_SESSION_LENGTH)
-            addMIN_REFRESH_PERIOD(builder, MIN_REFRESH_PERIOD)
-            addCAMERA(builder, CAMERAOffset)
-            addLOOK_AT(builder, LOOK_ATOffset)
-            addUPDATE(builder, UPDATEOffset)
-            addEXPIRES(builder, EXPIRESOffset)
-            addLINK_SNIPPET(builder, LINK_SNIPPETOffset)
-            addLINK_DESCRIPTION(builder, LINK_DESCRIPTIONOffset)
-            addLINK_NAME(builder, LINK_NAMEOffset)
-            addMESSAGE(builder, MESSAGEOffset)
-            addCOOKIE(builder, COOKIEOffset)
+            addMAXSESSIONLENGTH(builder, maxSessionLength)
+            addMINREFRESHPERIOD(builder, minRefreshPeriod)
+            addCAMERA(builder, cameraOffset)
+            addLOOKAT(builder, lookAtOffset)
+            addUPDATE(builder, updateOffset)
+            addEXPIRES(builder, expiresOffset)
+            addLINKSNIPPET(builder, linkSnippetOffset)
+            addLINKDESCRIPTION(builder, linkDescriptionOffset)
+            addLINKNAME(builder, linkNameOffset)
+            addMESSAGE(builder, messageOffset)
+            addCOOKIE(builder, cookieOffset)
             return endKMLNetworkLinkControl(builder)
         }
         fun startKMLNetworkLinkControl(builder: FlatBufferBuilder) = builder.startTable(11)
-        fun addMIN_REFRESH_PERIOD(builder: FlatBufferBuilder, MIN_REFRESH_PERIOD: Double) = builder.addDouble(0, MIN_REFRESH_PERIOD, 0.0)
-        fun addMAX_SESSION_LENGTH(builder: FlatBufferBuilder, MAX_SESSION_LENGTH: Double) = builder.addDouble(1, MAX_SESSION_LENGTH, 0.0)
-        fun addCOOKIE(builder: FlatBufferBuilder, COOKIE: Int) = builder.addOffset(2, COOKIE, 0)
-        fun addMESSAGE(builder: FlatBufferBuilder, MESSAGE: Int) = builder.addOffset(3, MESSAGE, 0)
-        fun addLINK_NAME(builder: FlatBufferBuilder, LINK_NAME: Int) = builder.addOffset(4, LINK_NAME, 0)
-        fun addLINK_DESCRIPTION(builder: FlatBufferBuilder, LINK_DESCRIPTION: Int) = builder.addOffset(5, LINK_DESCRIPTION, 0)
-        fun addLINK_SNIPPET(builder: FlatBufferBuilder, LINK_SNIPPET: Int) = builder.addOffset(6, LINK_SNIPPET, 0)
-        fun addEXPIRES(builder: FlatBufferBuilder, EXPIRES: Int) = builder.addOffset(7, EXPIRES, 0)
-        fun addUPDATE(builder: FlatBufferBuilder, UPDATE: Int) = builder.addOffset(8, UPDATE, 0)
-        fun addLOOK_AT(builder: FlatBufferBuilder, LOOK_AT: Int) = builder.addOffset(9, LOOK_AT, 0)
-        fun addCAMERA(builder: FlatBufferBuilder, CAMERA: Int) = builder.addOffset(10, CAMERA, 0)
+        fun addMINREFRESHPERIOD(builder: FlatBufferBuilder, minRefreshPeriod: Double) = builder.addDouble(0, minRefreshPeriod, 0.0)
+        fun addMAXSESSIONLENGTH(builder: FlatBufferBuilder, maxSessionLength: Double) = builder.addDouble(1, maxSessionLength, 0.0)
+        fun addCOOKIE(builder: FlatBufferBuilder, cookie: Int) = builder.addOffset(2, cookie, 0)
+        fun addMESSAGE(builder: FlatBufferBuilder, message: Int) = builder.addOffset(3, message, 0)
+        fun addLINKNAME(builder: FlatBufferBuilder, linkName: Int) = builder.addOffset(4, linkName, 0)
+        fun addLINKDESCRIPTION(builder: FlatBufferBuilder, linkDescription: Int) = builder.addOffset(5, linkDescription, 0)
+        fun addLINKSNIPPET(builder: FlatBufferBuilder, linkSnippet: Int) = builder.addOffset(6, linkSnippet, 0)
+        fun addEXPIRES(builder: FlatBufferBuilder, expires: Int) = builder.addOffset(7, expires, 0)
+        fun addUPDATE(builder: FlatBufferBuilder, update: Int) = builder.addOffset(8, update, 0)
+        fun addLOOKAT(builder: FlatBufferBuilder, lookAt: Int) = builder.addOffset(9, lookAt, 0)
+        fun addCAMERA(builder: FlatBufferBuilder, camera: Int) = builder.addOffset(10, camera, 0)
         fun endKMLNetworkLinkControl(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

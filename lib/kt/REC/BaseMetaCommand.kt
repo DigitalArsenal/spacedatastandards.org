@@ -32,7 +32,7 @@ class BaseMetaCommand : Table() {
     /**
      * MetaCommand reference
      */
-    val META_COMMAND_REF : String?
+    val metaCommandRef : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,13 +41,13 @@ class BaseMetaCommand : Table() {
                 null
             }
         }
-    val META_COMMAND_REFAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun META_COMMAND_REFInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val metaCommandRefAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun metaCommandRefInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Argument assignments for inherited arguments
      */
-    fun ARGUMENT_ASSIGNMENTS(j: Int) : ArgumentAssignment? = ARGUMENT_ASSIGNMENTS(ArgumentAssignment(), j)
-    fun ARGUMENT_ASSIGNMENTS(obj: ArgumentAssignment, j: Int) : ArgumentAssignment? {
+    fun argumentAssignments(j: Int) : ArgumentAssignment? = argumentAssignments(ArgumentAssignment(), j)
+    fun argumentAssignments(obj: ArgumentAssignment, j: Int) : ArgumentAssignment? {
         val o = __offset(6)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -55,26 +55,26 @@ class BaseMetaCommand : Table() {
             null
         }
     }
-    val ARGUMENT_ASSIGNMENTSLength : Int
+    val argumentAssignmentsLength : Int
         get() {
             val o = __offset(6); return if (o != 0) __vector_len(o) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsBaseMetaCommand(_bb: ByteBuffer): BaseMetaCommand = getRootAsBaseMetaCommand(_bb, BaseMetaCommand())
         fun getRootAsBaseMetaCommand(_bb: ByteBuffer, obj: BaseMetaCommand): BaseMetaCommand {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createBaseMetaCommand(builder: FlatBufferBuilder, META_COMMAND_REFOffset: Int, ARGUMENT_ASSIGNMENTSOffset: Int) : Int {
+        fun createBaseMetaCommand(builder: FlatBufferBuilder, metaCommandRefOffset: Int, argumentAssignmentsOffset: Int) : Int {
             builder.startTable(2)
-            addARGUMENT_ASSIGNMENTS(builder, ARGUMENT_ASSIGNMENTSOffset)
-            addMETA_COMMAND_REF(builder, META_COMMAND_REFOffset)
+            addARGUMENTASSIGNMENTS(builder, argumentAssignmentsOffset)
+            addMETACOMMANDREF(builder, metaCommandRefOffset)
             return endBaseMetaCommand(builder)
         }
         fun startBaseMetaCommand(builder: FlatBufferBuilder) = builder.startTable(2)
-        fun addMETA_COMMAND_REF(builder: FlatBufferBuilder, META_COMMAND_REF: Int) = builder.addOffset(0, META_COMMAND_REF, 0)
-        fun addARGUMENT_ASSIGNMENTS(builder: FlatBufferBuilder, ARGUMENT_ASSIGNMENTS: Int) = builder.addOffset(1, ARGUMENT_ASSIGNMENTS, 0)
+        fun addMETACOMMANDREF(builder: FlatBufferBuilder, metaCommandRef: Int) = builder.addOffset(0, metaCommandRef, 0)
+        fun addARGUMENTASSIGNMENTS(builder: FlatBufferBuilder, argumentAssignments: Int) = builder.addOffset(1, argumentAssignments, 0)
         fun createArgumentAssignmentsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {

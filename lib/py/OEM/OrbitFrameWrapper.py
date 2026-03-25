@@ -2,4 +2,93 @@
 
 # namespace: 
 
-# NOTE OrbitFrameWrapper.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+class OrbitFrameWrapper(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = OrbitFrameWrapper()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsOrbitFrameWrapper(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def OrbitFrameWrapperBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x52\x46\x4D", size_prefixed=size_prefixed)
+
+    # OrbitFrameWrapper
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # OrbitFrameWrapper
+    def frame(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+def OrbitFrameWrapperStart(builder):
+    builder.StartObject(1)
+
+def Start(builder):
+    OrbitFrameWrapperStart(builder)
+
+def OrbitFrameWrapperAddframe(builder, frame):
+    builder.PrependInt8Slot(0, frame, 0)
+
+def Addframe(builder, frame):
+    OrbitFrameWrapperAddframe(builder, frame)
+
+def OrbitFrameWrapperEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return OrbitFrameWrapperEnd(builder)
+
+
+class OrbitFrameWrapperT(object):
+
+    # OrbitFrameWrapperT
+    def __init__(
+        self,
+        frame = 0,
+    ):
+        self.frame = frame  # type: int
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpOrbitFrameWrapper = OrbitFrameWrapper()
+        tmpOrbitFrameWrapper.Init(buf, pos)
+        return cls.InitFromObj(tmpOrbitFrameWrapper)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpOrbitFrameWrapper):
+        x = OrbitFrameWrapperT()
+        x._UnPack(tmpOrbitFrameWrapper)
+        return x
+
+    # OrbitFrameWrapperT
+    def _UnPack(self, OrbitFrameWrapper):
+        if OrbitFrameWrapper is None:
+            return
+        self.frame = OrbitFrameWrapper.frame()
+
+    # OrbitFrameWrapperT
+    def Pack(self, builder):
+        OrbitFrameWrapperStart(builder)
+        OrbitFrameWrapperAddframe(builder, self.frame)
+        OrbitFrameWrapper = OrbitFrameWrapperEnd(builder)
+        return OrbitFrameWrapper

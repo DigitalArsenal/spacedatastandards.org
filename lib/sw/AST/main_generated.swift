@@ -2,9 +2,13 @@
 // swiftlint:disable all
 // swiftformat:disable all
 
+#if canImport(Common)
+import Common
+#endif
+
 import FlatBuffers
 
-public enum PropagatorMethod: Int8, Enum, Verifiable {
+public enum PropagatorMethod: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -25,7 +29,7 @@ public enum PropagatorMethod: Int8, Enum, Verifiable {
 }
 
 
-public enum ForceModel: Int8, Enum, Verifiable {
+public enum ForceModel: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -47,7 +51,7 @@ public enum ForceModel: Int8, Enum, Verifiable {
 }
 
 
-public enum OrbitalRegime: Int8, Enum, Verifiable {
+public enum OrbitalRegime: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -68,7 +72,7 @@ public enum OrbitalRegime: Int8, Enum, Verifiable {
 }
 
 
-public enum TimeReference: Int8, Enum, Verifiable {
+public enum TimeReference: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -85,7 +89,7 @@ public enum TimeReference: Int8, Enum, Verifiable {
 }
 
 
-public enum ReferenceFrame: Int8, Enum, Verifiable {
+public enum ReferenceFrame: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -106,9 +110,9 @@ public enum ReferenceFrame: Int8, Enum, Verifiable {
 
 
 ///  Astrodynamics
-public struct AST: FlatBufferObject, Verifiable {
+public struct AST: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -153,9 +157,7 @@ public struct AST: FlatBufferObject, Verifiable {
   public var CONJUNCTION_PRIMARYSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CONJUNCTION_PRIMARY.v) }
   public var CONJUNCTION_SECONDARY: String? { let o = _accessor.offset(VTOFFSET.CONJUNCTION_SECONDARY.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var CONJUNCTION_SECONDARYSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CONJUNCTION_SECONDARY.v) }
-  public var hasObservations: Bool { let o = _accessor.offset(VTOFFSET.OBSERVATIONS.v); return o == 0 ? false : true }
-  public var OBSERVATIONSCount: Int32 { let o = _accessor.offset(VTOFFSET.OBSERVATIONS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func OBSERVATIONS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.OBSERVATIONS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  public var OBSERVATIONS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.OBSERVATIONS.v, byteSize: 4) }
   public var OD_CONFIG: String? { let o = _accessor.offset(VTOFFSET.OD_CONFIG.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var OD_CONFIGSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OD_CONFIG.v) }
   public var GROUND_STATION: String? { let o = _accessor.offset(VTOFFSET.GROUND_STATION.v); return o == 0 ? nil : _accessor.string(at: o) }

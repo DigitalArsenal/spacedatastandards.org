@@ -41,7 +41,7 @@ func (rcv *CelestialFrameWrapper) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
-func (rcv *CelestialFrameWrapper) Frame() CelestialFrame {
+func (rcv *CelestialFrameWrapper) frame() CelestialFrame {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
 		return CelestialFrame(rcv._tab.GetInt8(o + rcv._tab.Pos))
@@ -49,15 +49,26 @@ func (rcv *CelestialFrameWrapper) Frame() CelestialFrame {
 	return 0
 }
 
-func (rcv *CelestialFrameWrapper) MutateFrame(n CelestialFrame) bool {
+func (rcv *CelestialFrameWrapper) Frame() CelestialFrame {
+	return rcv.frame()
+}
+
+func (rcv *CelestialFrameWrapper) Mutateframe(n CelestialFrame) bool {
 	return rcv._tab.MutateInt8Slot(4, int8(n))
+}
+
+func (rcv *CelestialFrameWrapper) MutateFrame(n CelestialFrame) bool {
+	return rcv.Mutateframe(n)
 }
 
 func CelestialFrameWrapperStart(builder *flatbuffers.Builder) {
 	builder.StartObject(1)
 }
-func CelestialFrameWrapperAddFrame(builder *flatbuffers.Builder, frame CelestialFrame) {
+func CelestialFrameWrapperAddframe(builder *flatbuffers.Builder, frame CelestialFrame) {
 	builder.PrependInt8Slot(0, int8(frame), 0)
+}
+func CelestialFrameWrapperAddFrame(builder *flatbuffers.Builder, frame CelestialFrame) {
+	CelestialFrameWrapperAddframe(builder, frame)
 }
 func CelestialFrameWrapperEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

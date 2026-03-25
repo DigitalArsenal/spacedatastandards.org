@@ -87,16 +87,21 @@ def End(builder):
 class RateInStreamT(object):
 
     # RateInStreamT
-    def __init__(self):
-        self.STREAM_REF = None  # type: str
-        self.RATE = 0.0  # type: float
-        self.BASIS = 0  # type: int
+    def __init__(
+        self,
+        STREAM_REF = None,
+        RATE = 0.0,
+        BASIS = 0,
+    ):
+        self.STREAM_REF = STREAM_REF  # type: Optional[str]
+        self.RATE = RATE  # type: float
+        self.BASIS = BASIS  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        rateInStream = RateInStream()
-        rateInStream.Init(buf, pos)
-        return cls.InitFromObj(rateInStream)
+        tmpRateInStream = RateInStream()
+        tmpRateInStream.Init(buf, pos)
+        return cls.InitFromObj(tmpRateInStream)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -104,18 +109,18 @@ class RateInStreamT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, rateInStream):
+    def InitFromObj(cls, tmpRateInStream):
         x = RateInStreamT()
-        x._UnPack(rateInStream)
+        x._UnPack(tmpRateInStream)
         return x
 
     # RateInStreamT
-    def _UnPack(self, rateInStream):
-        if rateInStream is None:
+    def _UnPack(self, RateInStream):
+        if RateInStream is None:
             return
-        self.STREAM_REF = rateInStream.STREAM_REF()
-        self.RATE = rateInStream.RATE()
-        self.BASIS = rateInStream.BASIS()
+        self.STREAM_REF = RateInStream.STREAM_REF()
+        self.RATE = RateInStream.RATE()
+        self.BASIS = RateInStream.BASIS()
 
     # RateInStreamT
     def Pack(self, builder):
@@ -126,5 +131,5 @@ class RateInStreamT(object):
             RateInStreamAddSTREAM_REF(builder, STREAM_REF)
         RateInStreamAddRATE(builder, self.RATE)
         RateInStreamAddBASIS(builder, self.BASIS)
-        rateInStream = RateInStreamEnd(builder)
-        return rateInStream
+        RateInStream = RateInStreamEnd(builder)
+        return RateInStream

@@ -51,6 +51,10 @@ func (rcv *CZMStripeMaterial) ORIENTATION() []byte {
 	return nil
 }
 
+func (rcv *CZMStripeMaterial) Orientation() []byte {
+	return rcv.ORIENTATION()
+}
+
 /// Stripe orientation
 /// Even color
 func (rcv *CZMStripeMaterial) EVEN_COLOR(obj *CZMColor) *CZMColor {
@@ -64,6 +68,10 @@ func (rcv *CZMStripeMaterial) EVEN_COLOR(obj *CZMColor) *CZMColor {
 		return obj
 	}
 	return nil
+}
+
+func (rcv *CZMStripeMaterial) EvenColor(obj *CZMColor) *CZMColor {
+	return rcv.EVEN_COLOR(obj)
 }
 
 /// Even color
@@ -81,6 +89,10 @@ func (rcv *CZMStripeMaterial) ODD_COLOR(obj *CZMColor) *CZMColor {
 	return nil
 }
 
+func (rcv *CZMStripeMaterial) OddColor(obj *CZMColor) *CZMColor {
+	return rcv.ODD_COLOR(obj)
+}
+
 /// Odd color
 /// Offset
 func (rcv *CZMStripeMaterial) OFFSET() float64 {
@@ -91,9 +103,17 @@ func (rcv *CZMStripeMaterial) OFFSET() float64 {
 	return 0.0
 }
 
+func (rcv *CZMStripeMaterial) Offset() float64 {
+	return rcv.OFFSET()
+}
+
 /// Offset
 func (rcv *CZMStripeMaterial) MutateOFFSET(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(10, n)
+}
+
+func (rcv *CZMStripeMaterial) MutateOffset(n float64) bool {
+	return rcv.MutateOFFSET(n)
 }
 
 /// Number of times to repeat
@@ -105,9 +125,17 @@ func (rcv *CZMStripeMaterial) REPEAT_COUNT() float64 {
 	return 0.0
 }
 
+func (rcv *CZMStripeMaterial) RepeatCount() float64 {
+	return rcv.REPEAT_COUNT()
+}
+
 /// Number of times to repeat
 func (rcv *CZMStripeMaterial) MutateREPEAT_COUNT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(12, n)
+}
+
+func (rcv *CZMStripeMaterial) MutateRepeatCount(n float64) bool {
+	return rcv.MutateREPEAT_COUNT(n)
 }
 
 func CZMStripeMaterialStart(builder *flatbuffers.Builder) {
@@ -116,17 +144,32 @@ func CZMStripeMaterialStart(builder *flatbuffers.Builder) {
 func CZMStripeMaterialAddORIENTATION(builder *flatbuffers.Builder, ORIENTATION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ORIENTATION), 0)
 }
+func CZMStripeMaterialAddOrientation(builder *flatbuffers.Builder, ORIENTATION flatbuffers.UOffsetT) {
+	CZMStripeMaterialAddORIENTATION(builder, ORIENTATION)
+}
 func CZMStripeMaterialAddEVEN_COLOR(builder *flatbuffers.Builder, EVEN_COLOR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(EVEN_COLOR), 0)
+}
+func CZMStripeMaterialAddEvenColor(builder *flatbuffers.Builder, EVEN_COLOR flatbuffers.UOffsetT) {
+	CZMStripeMaterialAddEVEN_COLOR(builder, EVEN_COLOR)
 }
 func CZMStripeMaterialAddODD_COLOR(builder *flatbuffers.Builder, ODD_COLOR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(ODD_COLOR), 0)
 }
+func CZMStripeMaterialAddOddColor(builder *flatbuffers.Builder, ODD_COLOR flatbuffers.UOffsetT) {
+	CZMStripeMaterialAddODD_COLOR(builder, ODD_COLOR)
+}
 func CZMStripeMaterialAddOFFSET(builder *flatbuffers.Builder, OFFSET float64) {
 	builder.PrependFloat64Slot(3, OFFSET, 0.0)
 }
+func CZMStripeMaterialAddOffset(builder *flatbuffers.Builder, OFFSET float64) {
+	CZMStripeMaterialAddOFFSET(builder, OFFSET)
+}
 func CZMStripeMaterialAddREPEAT_COUNT(builder *flatbuffers.Builder, REPEAT_COUNT float64) {
 	builder.PrependFloat64Slot(4, REPEAT_COUNT, 0.0)
+}
+func CZMStripeMaterialAddRepeatCount(builder *flatbuffers.Builder, REPEAT_COUNT float64) {
+	CZMStripeMaterialAddREPEAT_COUNT(builder, REPEAT_COUNT)
 }
 func CZMStripeMaterialEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

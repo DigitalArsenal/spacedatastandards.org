@@ -159,6 +159,12 @@ def FloatArgumentTypeStartUNITSVector(builder, numElems):
 def StartUNITSVector(builder, numElems):
     return FloatArgumentTypeStartUNITSVector(builder, numElems)
 
+def FloatArgumentTypeCreateUNITSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateUNITSVector(builder, data):
+    FloatArgumentTypeCreateUNITSVector(builder, data)
+
 def FloatArgumentTypeAddDATA_ENCODING(builder, DATA_ENCODING):
     builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(DATA_ENCODING), 0)
 
@@ -205,22 +211,33 @@ except:
 class FloatArgumentTypeT(object):
 
     # FloatArgumentTypeT
-    def __init__(self):
-        self.NAME = None  # type: str
-        self.SHORT_DESCRIPTION = None  # type: str
-        self.LONG_DESCRIPTION = None  # type: str
-        self.UNITS = None  # type: List[Unit.UnitT]
-        self.DATA_ENCODING = None  # type: Optional[FloatDataEncoding.FloatDataEncodingT]
-        self.VALID_MIN = 0.0  # type: float
-        self.VALID_MAX = 0.0  # type: float
-        self.SIZE_IN_BITS = 0  # type: int
-        self.INITIAL_VALUE = 0.0  # type: float
+    def __init__(
+        self,
+        NAME = None,
+        SHORT_DESCRIPTION = None,
+        LONG_DESCRIPTION = None,
+        UNITS = None,
+        DATA_ENCODING = None,
+        VALID_MIN = 0.0,
+        VALID_MAX = 0.0,
+        SIZE_IN_BITS = 0,
+        INITIAL_VALUE = 0.0,
+    ):
+        self.NAME = NAME  # type: Optional[str]
+        self.SHORT_DESCRIPTION = SHORT_DESCRIPTION  # type: Optional[str]
+        self.LONG_DESCRIPTION = LONG_DESCRIPTION  # type: Optional[str]
+        self.UNITS = UNITS  # type: Optional[List[Unit.UnitT]]
+        self.DATA_ENCODING = DATA_ENCODING  # type: Optional[FloatDataEncoding.FloatDataEncodingT]
+        self.VALID_MIN = VALID_MIN  # type: float
+        self.VALID_MAX = VALID_MAX  # type: float
+        self.SIZE_IN_BITS = SIZE_IN_BITS  # type: int
+        self.INITIAL_VALUE = INITIAL_VALUE  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        floatArgumentType = FloatArgumentType()
-        floatArgumentType.Init(buf, pos)
-        return cls.InitFromObj(floatArgumentType)
+        tmpFloatArgumentType = FloatArgumentType()
+        tmpFloatArgumentType.Init(buf, pos)
+        return cls.InitFromObj(tmpFloatArgumentType)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -228,32 +245,32 @@ class FloatArgumentTypeT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, floatArgumentType):
+    def InitFromObj(cls, tmpFloatArgumentType):
         x = FloatArgumentTypeT()
-        x._UnPack(floatArgumentType)
+        x._UnPack(tmpFloatArgumentType)
         return x
 
     # FloatArgumentTypeT
-    def _UnPack(self, floatArgumentType):
-        if floatArgumentType is None:
+    def _UnPack(self, FloatArgumentType):
+        if FloatArgumentType is None:
             return
-        self.NAME = floatArgumentType.NAME()
-        self.SHORT_DESCRIPTION = floatArgumentType.SHORT_DESCRIPTION()
-        self.LONG_DESCRIPTION = floatArgumentType.LONG_DESCRIPTION()
-        if not floatArgumentType.UNITSIsNone():
+        self.NAME = FloatArgumentType.NAME()
+        self.SHORT_DESCRIPTION = FloatArgumentType.SHORT_DESCRIPTION()
+        self.LONG_DESCRIPTION = FloatArgumentType.LONG_DESCRIPTION()
+        if not FloatArgumentType.UNITSIsNone():
             self.UNITS = []
-            for i in range(floatArgumentType.UNITSLength()):
-                if floatArgumentType.UNITS(i) is None:
+            for i in range(FloatArgumentType.UNITSLength()):
+                if FloatArgumentType.UNITS(i) is None:
                     self.UNITS.append(None)
                 else:
-                    unit_ = Unit.UnitT.InitFromObj(floatArgumentType.UNITS(i))
+                    unit_ = Unit.UnitT.InitFromObj(FloatArgumentType.UNITS(i))
                     self.UNITS.append(unit_)
-        if floatArgumentType.DATA_ENCODING() is not None:
-            self.DATA_ENCODING = FloatDataEncoding.FloatDataEncodingT.InitFromObj(floatArgumentType.DATA_ENCODING())
-        self.VALID_MIN = floatArgumentType.VALID_MIN()
-        self.VALID_MAX = floatArgumentType.VALID_MAX()
-        self.SIZE_IN_BITS = floatArgumentType.SIZE_IN_BITS()
-        self.INITIAL_VALUE = floatArgumentType.INITIAL_VALUE()
+        if FloatArgumentType.DATA_ENCODING() is not None:
+            self.DATA_ENCODING = FloatDataEncoding.FloatDataEncodingT.InitFromObj(FloatArgumentType.DATA_ENCODING())
+        self.VALID_MIN = FloatArgumentType.VALID_MIN()
+        self.VALID_MAX = FloatArgumentType.VALID_MAX()
+        self.SIZE_IN_BITS = FloatArgumentType.SIZE_IN_BITS()
+        self.INITIAL_VALUE = FloatArgumentType.INITIAL_VALUE()
 
     # FloatArgumentTypeT
     def Pack(self, builder):
@@ -288,5 +305,5 @@ class FloatArgumentTypeT(object):
         FloatArgumentTypeAddVALID_MAX(builder, self.VALID_MAX)
         FloatArgumentTypeAddSIZE_IN_BITS(builder, self.SIZE_IN_BITS)
         FloatArgumentTypeAddINITIAL_VALUE(builder, self.INITIAL_VALUE)
-        floatArgumentType = FloatArgumentTypeEnd(builder)
-        return floatArgumentType
+        FloatArgumentType = FloatArgumentTypeEnd(builder)
+        return FloatArgumentType

@@ -353,34 +353,57 @@ except:
 class CZMEllipsoidT(object):
 
     # CZMEllipsoidT
-    def __init__(self):
-        self.SHOW = False  # type: bool
-        self.RADII_X = 0.0  # type: float
-        self.RADII_Y = 0.0  # type: float
-        self.RADII_Z = 0.0  # type: float
-        self.INNER_RADII_X = 0.0  # type: float
-        self.INNER_RADII_Y = 0.0  # type: float
-        self.INNER_RADII_Z = 0.0  # type: float
-        self.MINIMUM_CLOCK = 0.0  # type: float
-        self.MAXIMUM_CLOCK = 0.0  # type: float
-        self.MINIMUM_CONE = 0.0  # type: float
-        self.MAXIMUM_CONE = 0.0  # type: float
-        self.HEIGHT_REFERENCE = None  # type: str
-        self.FILL = False  # type: bool
-        self.MATERIAL = None  # type: Optional[CZMMaterial.CZMMaterialT]
-        self.OUTLINE = False  # type: bool
-        self.OUTLINE_COLOR = None  # type: Optional[CZMColor.CZMColorT]
-        self.OUTLINE_WIDTH = 0.0  # type: float
-        self.STACK_PARTITIONS = 0  # type: int
-        self.SLICE_PARTITIONS = 0  # type: int
-        self.SUBDIVISIONS = 0  # type: int
-        self.SHADOWS = None  # type: str
+    def __init__(
+        self,
+        SHOW = False,
+        RADII_X = 0.0,
+        RADII_Y = 0.0,
+        RADII_Z = 0.0,
+        INNER_RADII_X = 0.0,
+        INNER_RADII_Y = 0.0,
+        INNER_RADII_Z = 0.0,
+        MINIMUM_CLOCK = 0.0,
+        MAXIMUM_CLOCK = 0.0,
+        MINIMUM_CONE = 0.0,
+        MAXIMUM_CONE = 0.0,
+        HEIGHT_REFERENCE = None,
+        FILL = False,
+        MATERIAL = None,
+        OUTLINE = False,
+        OUTLINE_COLOR = None,
+        OUTLINE_WIDTH = 0.0,
+        STACK_PARTITIONS = 0,
+        SLICE_PARTITIONS = 0,
+        SUBDIVISIONS = 0,
+        SHADOWS = None,
+    ):
+        self.SHOW = SHOW  # type: bool
+        self.RADII_X = RADII_X  # type: float
+        self.RADII_Y = RADII_Y  # type: float
+        self.RADII_Z = RADII_Z  # type: float
+        self.INNER_RADII_X = INNER_RADII_X  # type: float
+        self.INNER_RADII_Y = INNER_RADII_Y  # type: float
+        self.INNER_RADII_Z = INNER_RADII_Z  # type: float
+        self.MINIMUM_CLOCK = MINIMUM_CLOCK  # type: float
+        self.MAXIMUM_CLOCK = MAXIMUM_CLOCK  # type: float
+        self.MINIMUM_CONE = MINIMUM_CONE  # type: float
+        self.MAXIMUM_CONE = MAXIMUM_CONE  # type: float
+        self.HEIGHT_REFERENCE = HEIGHT_REFERENCE  # type: Optional[str]
+        self.FILL = FILL  # type: bool
+        self.MATERIAL = MATERIAL  # type: Optional[CZMMaterial.CZMMaterialT]
+        self.OUTLINE = OUTLINE  # type: bool
+        self.OUTLINE_COLOR = OUTLINE_COLOR  # type: Optional[CZMColor.CZMColorT]
+        self.OUTLINE_WIDTH = OUTLINE_WIDTH  # type: float
+        self.STACK_PARTITIONS = STACK_PARTITIONS  # type: int
+        self.SLICE_PARTITIONS = SLICE_PARTITIONS  # type: int
+        self.SUBDIVISIONS = SUBDIVISIONS  # type: int
+        self.SHADOWS = SHADOWS  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        czmellipsoid = CZMEllipsoid()
-        czmellipsoid.Init(buf, pos)
-        return cls.InitFromObj(czmellipsoid)
+        tmpCzmellipsoid = CZMEllipsoid()
+        tmpCzmellipsoid.Init(buf, pos)
+        return cls.InitFromObj(tmpCzmellipsoid)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -388,38 +411,38 @@ class CZMEllipsoidT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, czmellipsoid):
+    def InitFromObj(cls, tmpCzmellipsoid):
         x = CZMEllipsoidT()
-        x._UnPack(czmellipsoid)
+        x._UnPack(tmpCzmellipsoid)
         return x
 
     # CZMEllipsoidT
-    def _UnPack(self, czmellipsoid):
-        if czmellipsoid is None:
+    def _UnPack(self, CZMEllipsoid):
+        if CZMEllipsoid is None:
             return
-        self.SHOW = czmellipsoid.SHOW()
-        self.RADII_X = czmellipsoid.RADII_X()
-        self.RADII_Y = czmellipsoid.RADII_Y()
-        self.RADII_Z = czmellipsoid.RADII_Z()
-        self.INNER_RADII_X = czmellipsoid.INNER_RADII_X()
-        self.INNER_RADII_Y = czmellipsoid.INNER_RADII_Y()
-        self.INNER_RADII_Z = czmellipsoid.INNER_RADII_Z()
-        self.MINIMUM_CLOCK = czmellipsoid.MINIMUM_CLOCK()
-        self.MAXIMUM_CLOCK = czmellipsoid.MAXIMUM_CLOCK()
-        self.MINIMUM_CONE = czmellipsoid.MINIMUM_CONE()
-        self.MAXIMUM_CONE = czmellipsoid.MAXIMUM_CONE()
-        self.HEIGHT_REFERENCE = czmellipsoid.HEIGHT_REFERENCE()
-        self.FILL = czmellipsoid.FILL()
-        if czmellipsoid.MATERIAL() is not None:
-            self.MATERIAL = CZMMaterial.CZMMaterialT.InitFromObj(czmellipsoid.MATERIAL())
-        self.OUTLINE = czmellipsoid.OUTLINE()
-        if czmellipsoid.OUTLINE_COLOR() is not None:
-            self.OUTLINE_COLOR = CZMColor.CZMColorT.InitFromObj(czmellipsoid.OUTLINE_COLOR())
-        self.OUTLINE_WIDTH = czmellipsoid.OUTLINE_WIDTH()
-        self.STACK_PARTITIONS = czmellipsoid.STACK_PARTITIONS()
-        self.SLICE_PARTITIONS = czmellipsoid.SLICE_PARTITIONS()
-        self.SUBDIVISIONS = czmellipsoid.SUBDIVISIONS()
-        self.SHADOWS = czmellipsoid.SHADOWS()
+        self.SHOW = CZMEllipsoid.SHOW()
+        self.RADII_X = CZMEllipsoid.RADII_X()
+        self.RADII_Y = CZMEllipsoid.RADII_Y()
+        self.RADII_Z = CZMEllipsoid.RADII_Z()
+        self.INNER_RADII_X = CZMEllipsoid.INNER_RADII_X()
+        self.INNER_RADII_Y = CZMEllipsoid.INNER_RADII_Y()
+        self.INNER_RADII_Z = CZMEllipsoid.INNER_RADII_Z()
+        self.MINIMUM_CLOCK = CZMEllipsoid.MINIMUM_CLOCK()
+        self.MAXIMUM_CLOCK = CZMEllipsoid.MAXIMUM_CLOCK()
+        self.MINIMUM_CONE = CZMEllipsoid.MINIMUM_CONE()
+        self.MAXIMUM_CONE = CZMEllipsoid.MAXIMUM_CONE()
+        self.HEIGHT_REFERENCE = CZMEllipsoid.HEIGHT_REFERENCE()
+        self.FILL = CZMEllipsoid.FILL()
+        if CZMEllipsoid.MATERIAL() is not None:
+            self.MATERIAL = CZMMaterial.CZMMaterialT.InitFromObj(CZMEllipsoid.MATERIAL())
+        self.OUTLINE = CZMEllipsoid.OUTLINE()
+        if CZMEllipsoid.OUTLINE_COLOR() is not None:
+            self.OUTLINE_COLOR = CZMColor.CZMColorT.InitFromObj(CZMEllipsoid.OUTLINE_COLOR())
+        self.OUTLINE_WIDTH = CZMEllipsoid.OUTLINE_WIDTH()
+        self.STACK_PARTITIONS = CZMEllipsoid.STACK_PARTITIONS()
+        self.SLICE_PARTITIONS = CZMEllipsoid.SLICE_PARTITIONS()
+        self.SUBDIVISIONS = CZMEllipsoid.SUBDIVISIONS()
+        self.SHADOWS = CZMEllipsoid.SHADOWS()
 
     # CZMEllipsoidT
     def Pack(self, builder):
@@ -457,5 +480,5 @@ class CZMEllipsoidT(object):
         CZMEllipsoidAddSUBDIVISIONS(builder, self.SUBDIVISIONS)
         if self.SHADOWS is not None:
             CZMEllipsoidAddSHADOWS(builder, SHADOWS)
-        czmellipsoid = CZMEllipsoidEnd(builder)
-        return czmellipsoid
+        CZMEllipsoid = CZMEllipsoidEnd(builder)
+        return CZMEllipsoid

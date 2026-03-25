@@ -87,16 +87,21 @@ def End(builder):
 class KMLDataT(object):
 
     # KMLDataT
-    def __init__(self):
-        self.NAME = None  # type: str
-        self.DISPLAY_NAME = None  # type: str
-        self.VALUE = None  # type: str
+    def __init__(
+        self,
+        NAME = None,
+        DISPLAY_NAME = None,
+        VALUE = None,
+    ):
+        self.NAME = NAME  # type: Optional[str]
+        self.DISPLAY_NAME = DISPLAY_NAME  # type: Optional[str]
+        self.VALUE = VALUE  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        kmldata = KMLData()
-        kmldata.Init(buf, pos)
-        return cls.InitFromObj(kmldata)
+        tmpKmldata = KMLData()
+        tmpKmldata.Init(buf, pos)
+        return cls.InitFromObj(tmpKmldata)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -104,18 +109,18 @@ class KMLDataT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, kmldata):
+    def InitFromObj(cls, tmpKmldata):
         x = KMLDataT()
-        x._UnPack(kmldata)
+        x._UnPack(tmpKmldata)
         return x
 
     # KMLDataT
-    def _UnPack(self, kmldata):
-        if kmldata is None:
+    def _UnPack(self, KMLData):
+        if KMLData is None:
             return
-        self.NAME = kmldata.NAME()
-        self.DISPLAY_NAME = kmldata.DISPLAY_NAME()
-        self.VALUE = kmldata.VALUE()
+        self.NAME = KMLData.NAME()
+        self.DISPLAY_NAME = KMLData.DISPLAY_NAME()
+        self.VALUE = KMLData.VALUE()
 
     # KMLDataT
     def Pack(self, builder):
@@ -132,5 +137,5 @@ class KMLDataT(object):
             KMLDataAddDISPLAY_NAME(builder, DISPLAY_NAME)
         if self.VALUE is not None:
             KMLDataAddVALUE(builder, VALUE)
-        kmldata = KMLDataEnd(builder)
-        return kmldata
+        KMLData = KMLDataEnd(builder)
+        return KMLData

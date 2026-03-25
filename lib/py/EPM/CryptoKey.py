@@ -143,20 +143,29 @@ def End(builder):
 class CryptoKeyT(object):
 
     # CryptoKeyT
-    def __init__(self):
-        self.PUBLIC_KEY = None  # type: str
-        self.XPUB = None  # type: str
-        self.PRIVATE_KEY = None  # type: str
-        self.XPRIV = None  # type: str
-        self.KEY_ADDRESS = None  # type: str
-        self.ADDRESS_TYPE = None  # type: str
-        self.KEY_TYPE = 0  # type: int
+    def __init__(
+        self,
+        PUBLIC_KEY = None,
+        XPUB = None,
+        PRIVATE_KEY = None,
+        XPRIV = None,
+        KEY_ADDRESS = None,
+        ADDRESS_TYPE = None,
+        KEY_TYPE = 0,
+    ):
+        self.PUBLIC_KEY = PUBLIC_KEY  # type: Optional[str]
+        self.XPUB = XPUB  # type: Optional[str]
+        self.PRIVATE_KEY = PRIVATE_KEY  # type: Optional[str]
+        self.XPRIV = XPRIV  # type: Optional[str]
+        self.KEY_ADDRESS = KEY_ADDRESS  # type: Optional[str]
+        self.ADDRESS_TYPE = ADDRESS_TYPE  # type: Optional[str]
+        self.KEY_TYPE = KEY_TYPE  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        cryptoKey = CryptoKey()
-        cryptoKey.Init(buf, pos)
-        return cls.InitFromObj(cryptoKey)
+        tmpCryptoKey = CryptoKey()
+        tmpCryptoKey.Init(buf, pos)
+        return cls.InitFromObj(tmpCryptoKey)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -164,22 +173,22 @@ class CryptoKeyT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, cryptoKey):
+    def InitFromObj(cls, tmpCryptoKey):
         x = CryptoKeyT()
-        x._UnPack(cryptoKey)
+        x._UnPack(tmpCryptoKey)
         return x
 
     # CryptoKeyT
-    def _UnPack(self, cryptoKey):
-        if cryptoKey is None:
+    def _UnPack(self, CryptoKey):
+        if CryptoKey is None:
             return
-        self.PUBLIC_KEY = cryptoKey.PUBLIC_KEY()
-        self.XPUB = cryptoKey.XPUB()
-        self.PRIVATE_KEY = cryptoKey.PRIVATE_KEY()
-        self.XPRIV = cryptoKey.XPRIV()
-        self.KEY_ADDRESS = cryptoKey.KEY_ADDRESS()
-        self.ADDRESS_TYPE = cryptoKey.ADDRESS_TYPE()
-        self.KEY_TYPE = cryptoKey.KEY_TYPE()
+        self.PUBLIC_KEY = CryptoKey.PUBLIC_KEY()
+        self.XPUB = CryptoKey.XPUB()
+        self.PRIVATE_KEY = CryptoKey.PRIVATE_KEY()
+        self.XPRIV = CryptoKey.XPRIV()
+        self.KEY_ADDRESS = CryptoKey.KEY_ADDRESS()
+        self.ADDRESS_TYPE = CryptoKey.ADDRESS_TYPE()
+        self.KEY_TYPE = CryptoKey.KEY_TYPE()
 
     # CryptoKeyT
     def Pack(self, builder):
@@ -209,5 +218,5 @@ class CryptoKeyT(object):
         if self.ADDRESS_TYPE is not None:
             CryptoKeyAddADDRESS_TYPE(builder, ADDRESS_TYPE)
         CryptoKeyAddKEY_TYPE(builder, self.KEY_TYPE)
-        cryptoKey = CryptoKeyEnd(builder)
-        return cryptoKey
+        CryptoKey = CryptoKeyEnd(builder)
+        return CryptoKey

@@ -51,6 +51,10 @@ func (rcv *sensorStats) PERIOD_START() []byte {
 	return nil
 }
 
+func (rcv *sensorStats) PeriodStart() []byte {
+	return rcv.PERIOD_START()
+}
+
 /// Statistics period start (ISO 8601)
 /// Statistics period end (ISO 8601)
 func (rcv *sensorStats) PERIOD_END() []byte {
@@ -59,6 +63,10 @@ func (rcv *sensorStats) PERIOD_END() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *sensorStats) PeriodEnd() []byte {
+	return rcv.PERIOD_END()
 }
 
 /// Statistics period end (ISO 8601)
@@ -71,9 +79,17 @@ func (rcv *sensorStats) OBS_ATTEMPTED() uint32 {
 	return 0
 }
 
+func (rcv *sensorStats) ObsAttempted() uint32 {
+	return rcv.OBS_ATTEMPTED()
+}
+
 /// Total observation attempts
 func (rcv *sensorStats) MutateOBS_ATTEMPTED(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(8, n)
+}
+
+func (rcv *sensorStats) MutateObsAttempted(n uint32) bool {
+	return rcv.MutateOBS_ATTEMPTED(n)
 }
 
 /// Successful observations
@@ -85,9 +101,17 @@ func (rcv *sensorStats) OBS_SUCCESSFUL() uint32 {
 	return 0
 }
 
+func (rcv *sensorStats) ObsSuccessful() uint32 {
+	return rcv.OBS_SUCCESSFUL()
+}
+
 /// Successful observations
 func (rcv *sensorStats) MutateOBS_SUCCESSFUL(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(10, n)
+}
+
+func (rcv *sensorStats) MutateObsSuccessful(n uint32) bool {
+	return rcv.MutateOBS_SUCCESSFUL(n)
 }
 
 /// Failed observations
@@ -99,9 +123,17 @@ func (rcv *sensorStats) OBS_FAILED() uint32 {
 	return 0
 }
 
+func (rcv *sensorStats) ObsFailed() uint32 {
+	return rcv.OBS_FAILED()
+}
+
 /// Failed observations
 func (rcv *sensorStats) MutateOBS_FAILED(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(12, n)
+}
+
+func (rcv *sensorStats) MutateObsFailed(n uint32) bool {
+	return rcv.MutateOBS_FAILED(n)
 }
 
 /// Uptime fraction (0.0-1.0)
@@ -113,9 +145,17 @@ func (rcv *sensorStats) UPTIME() float64 {
 	return 0.0
 }
 
+func (rcv *sensorStats) Uptime() float64 {
+	return rcv.UPTIME()
+}
+
 /// Uptime fraction (0.0-1.0)
 func (rcv *sensorStats) MutateUPTIME(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(14, n)
+}
+
+func (rcv *sensorStats) MutateUptime(n float64) bool {
+	return rcv.MutateUPTIME(n)
 }
 
 /// Average tracking accuracy in arcseconds
@@ -127,9 +167,17 @@ func (rcv *sensorStats) AVG_ACCURACY() float64 {
 	return 0.0
 }
 
+func (rcv *sensorStats) AvgAccuracy() float64 {
+	return rcv.AVG_ACCURACY()
+}
+
 /// Average tracking accuracy in arcseconds
 func (rcv *sensorStats) MutateAVG_ACCURACY(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(16, n)
+}
+
+func (rcv *sensorStats) MutateAvgAccuracy(n float64) bool {
+	return rcv.MutateAVG_ACCURACY(n)
 }
 
 /// Detected objects count
@@ -141,9 +189,17 @@ func (rcv *sensorStats) DETECTIONS() uint32 {
 	return 0
 }
 
+func (rcv *sensorStats) Detections() uint32 {
+	return rcv.DETECTIONS()
+}
+
 /// Detected objects count
 func (rcv *sensorStats) MutateDETECTIONS(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(18, n)
+}
+
+func (rcv *sensorStats) MutateDetections(n uint32) bool {
+	return rcv.MutateDETECTIONS(n)
 }
 
 /// Uncorrelated tracks count
@@ -155,9 +211,17 @@ func (rcv *sensorStats) UCT_COUNT() uint32 {
 	return 0
 }
 
+func (rcv *sensorStats) UctCount() uint32 {
+	return rcv.UCT_COUNT()
+}
+
 /// Uncorrelated tracks count
 func (rcv *sensorStats) MutateUCT_COUNT(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(20, n)
+}
+
+func (rcv *sensorStats) MutateUctCount(n uint32) bool {
+	return rcv.MutateUCT_COUNT(n)
 }
 
 func sensorStatsStart(builder *flatbuffers.Builder) {
@@ -166,29 +230,56 @@ func sensorStatsStart(builder *flatbuffers.Builder) {
 func sensorStatsAddPERIOD_START(builder *flatbuffers.Builder, PERIOD_START flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(PERIOD_START), 0)
 }
+func sensorStatsAddPeriodStart(builder *flatbuffers.Builder, PERIOD_START flatbuffers.UOffsetT) {
+	sensorStatsAddPERIOD_START(builder, PERIOD_START)
+}
 func sensorStatsAddPERIOD_END(builder *flatbuffers.Builder, PERIOD_END flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(PERIOD_END), 0)
+}
+func sensorStatsAddPeriodEnd(builder *flatbuffers.Builder, PERIOD_END flatbuffers.UOffsetT) {
+	sensorStatsAddPERIOD_END(builder, PERIOD_END)
 }
 func sensorStatsAddOBS_ATTEMPTED(builder *flatbuffers.Builder, OBS_ATTEMPTED uint32) {
 	builder.PrependUint32Slot(2, OBS_ATTEMPTED, 0)
 }
+func sensorStatsAddObsAttempted(builder *flatbuffers.Builder, OBS_ATTEMPTED uint32) {
+	sensorStatsAddOBS_ATTEMPTED(builder, OBS_ATTEMPTED)
+}
 func sensorStatsAddOBS_SUCCESSFUL(builder *flatbuffers.Builder, OBS_SUCCESSFUL uint32) {
 	builder.PrependUint32Slot(3, OBS_SUCCESSFUL, 0)
+}
+func sensorStatsAddObsSuccessful(builder *flatbuffers.Builder, OBS_SUCCESSFUL uint32) {
+	sensorStatsAddOBS_SUCCESSFUL(builder, OBS_SUCCESSFUL)
 }
 func sensorStatsAddOBS_FAILED(builder *flatbuffers.Builder, OBS_FAILED uint32) {
 	builder.PrependUint32Slot(4, OBS_FAILED, 0)
 }
+func sensorStatsAddObsFailed(builder *flatbuffers.Builder, OBS_FAILED uint32) {
+	sensorStatsAddOBS_FAILED(builder, OBS_FAILED)
+}
 func sensorStatsAddUPTIME(builder *flatbuffers.Builder, UPTIME float64) {
 	builder.PrependFloat64Slot(5, UPTIME, 0.0)
+}
+func sensorStatsAddUptime(builder *flatbuffers.Builder, UPTIME float64) {
+	sensorStatsAddUPTIME(builder, UPTIME)
 }
 func sensorStatsAddAVG_ACCURACY(builder *flatbuffers.Builder, AVG_ACCURACY float64) {
 	builder.PrependFloat64Slot(6, AVG_ACCURACY, 0.0)
 }
+func sensorStatsAddAvgAccuracy(builder *flatbuffers.Builder, AVG_ACCURACY float64) {
+	sensorStatsAddAVG_ACCURACY(builder, AVG_ACCURACY)
+}
 func sensorStatsAddDETECTIONS(builder *flatbuffers.Builder, DETECTIONS uint32) {
 	builder.PrependUint32Slot(7, DETECTIONS, 0)
 }
+func sensorStatsAddDetections(builder *flatbuffers.Builder, DETECTIONS uint32) {
+	sensorStatsAddDETECTIONS(builder, DETECTIONS)
+}
 func sensorStatsAddUCT_COUNT(builder *flatbuffers.Builder, UCT_COUNT uint32) {
 	builder.PrependUint32Slot(8, UCT_COUNT, 0)
+}
+func sensorStatsAddUctCount(builder *flatbuffers.Builder, UCT_COUNT uint32) {
+	sensorStatsAddUCT_COUNT(builder, UCT_COUNT)
 }
 func sensorStatsEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

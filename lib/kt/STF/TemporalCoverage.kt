@@ -32,7 +32,7 @@ class TemporalCoverage : Table() {
     /**
      * Start epoch in ISO 8601 format
      */
-    val START_EPOCH : String?
+    val startEpoch : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class TemporalCoverage : Table() {
                 null
             }
         }
-    val START_EPOCHAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun START_EPOCHInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val startEpochAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun startEpochInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * End epoch in ISO 8601 format
      */
-    val END_EPOCH : String?
+    val endEpoch : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -55,12 +55,12 @@ class TemporalCoverage : Table() {
                 null
             }
         }
-    val END_EPOCHAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun END_EPOCHInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val endEpochAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun endEpochInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * Update frequency: "realtime", "hourly", "daily"
      */
-    val UPDATE_FREQUENCY : String?
+    val updateFrequency : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -69,36 +69,36 @@ class TemporalCoverage : Table() {
                 null
             }
         }
-    val UPDATE_FREQUENCYAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun UPDATE_FREQUENCYInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val updateFrequencyAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun updateFrequencyInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
     /**
      * Days of historical data available
      */
-    val HISTORICAL_DEPTH : UInt
+    val historicalDepth : UInt
         get() {
             val o = __offset(10)
             return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsTemporalCoverage(_bb: ByteBuffer): TemporalCoverage = getRootAsTemporalCoverage(_bb, TemporalCoverage())
         fun getRootAsTemporalCoverage(_bb: ByteBuffer, obj: TemporalCoverage): TemporalCoverage {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createTemporalCoverage(builder: FlatBufferBuilder, START_EPOCHOffset: Int, END_EPOCHOffset: Int, UPDATE_FREQUENCYOffset: Int, HISTORICAL_DEPTH: UInt) : Int {
+        fun createTemporalCoverage(builder: FlatBufferBuilder, startEpochOffset: Int, endEpochOffset: Int, updateFrequencyOffset: Int, historicalDepth: UInt) : Int {
             builder.startTable(4)
-            addHISTORICAL_DEPTH(builder, HISTORICAL_DEPTH)
-            addUPDATE_FREQUENCY(builder, UPDATE_FREQUENCYOffset)
-            addEND_EPOCH(builder, END_EPOCHOffset)
-            addSTART_EPOCH(builder, START_EPOCHOffset)
+            addHISTORICALDEPTH(builder, historicalDepth)
+            addUPDATEFREQUENCY(builder, updateFrequencyOffset)
+            addENDEPOCH(builder, endEpochOffset)
+            addSTARTEPOCH(builder, startEpochOffset)
             return endTemporalCoverage(builder)
         }
         fun startTemporalCoverage(builder: FlatBufferBuilder) = builder.startTable(4)
-        fun addSTART_EPOCH(builder: FlatBufferBuilder, START_EPOCH: Int) = builder.addOffset(0, START_EPOCH, 0)
-        fun addEND_EPOCH(builder: FlatBufferBuilder, END_EPOCH: Int) = builder.addOffset(1, END_EPOCH, 0)
-        fun addUPDATE_FREQUENCY(builder: FlatBufferBuilder, UPDATE_FREQUENCY: Int) = builder.addOffset(2, UPDATE_FREQUENCY, 0)
-        fun addHISTORICAL_DEPTH(builder: FlatBufferBuilder, HISTORICAL_DEPTH: UInt) = builder.addInt(3, HISTORICAL_DEPTH.toInt(), 0)
+        fun addSTARTEPOCH(builder: FlatBufferBuilder, startEpoch: Int) = builder.addOffset(0, startEpoch, 0)
+        fun addENDEPOCH(builder: FlatBufferBuilder, endEpoch: Int) = builder.addOffset(1, endEpoch, 0)
+        fun addUPDATEFREQUENCY(builder: FlatBufferBuilder, updateFrequency: Int) = builder.addOffset(2, updateFrequency, 0)
+        fun addHISTORICALDEPTH(builder: FlatBufferBuilder, historicalDepth: UInt) = builder.addInt(3, historicalDepth.toInt(), 0)
         fun endTemporalCoverage(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

@@ -353,35 +353,59 @@ def End(builder):
 class covarianceMatrixLineT(object):
 
     # covarianceMatrixLineT
-    def __init__(self):
-        self.EPOCH = None  # type: str
-        self.CX_X = 0.0  # type: float
-        self.CY_X = 0.0  # type: float
-        self.CY_Y = 0.0  # type: float
-        self.CZ_X = 0.0  # type: float
-        self.CZ_Y = 0.0  # type: float
-        self.CZ_Z = 0.0  # type: float
-        self.CX_DOT_X = 0.0  # type: float
-        self.CX_DOT_Y = 0.0  # type: float
-        self.CX_DOT_Z = 0.0  # type: float
-        self.CX_DOT_X_DOT = 0.0  # type: float
-        self.CY_DOT_X = 0.0  # type: float
-        self.CY_DOT_Y = 0.0  # type: float
-        self.CY_DOT_Z = 0.0  # type: float
-        self.CY_DOT_X_DOT = 0.0  # type: float
-        self.CY_DOT_Y_DOT = 0.0  # type: float
-        self.CZ_DOT_X = 0.0  # type: float
-        self.CZ_DOT_Y = 0.0  # type: float
-        self.CZ_DOT_Z = 0.0  # type: float
-        self.CZ_DOT_X_DOT = 0.0  # type: float
-        self.CZ_DOT_Y_DOT = 0.0  # type: float
-        self.CZ_DOT_Z_DOT = 0.0  # type: float
+    def __init__(
+        self,
+        EPOCH = None,
+        CX_X = 0.0,
+        CY_X = 0.0,
+        CY_Y = 0.0,
+        CZ_X = 0.0,
+        CZ_Y = 0.0,
+        CZ_Z = 0.0,
+        CX_DOT_X = 0.0,
+        CX_DOT_Y = 0.0,
+        CX_DOT_Z = 0.0,
+        CX_DOT_X_DOT = 0.0,
+        CY_DOT_X = 0.0,
+        CY_DOT_Y = 0.0,
+        CY_DOT_Z = 0.0,
+        CY_DOT_X_DOT = 0.0,
+        CY_DOT_Y_DOT = 0.0,
+        CZ_DOT_X = 0.0,
+        CZ_DOT_Y = 0.0,
+        CZ_DOT_Z = 0.0,
+        CZ_DOT_X_DOT = 0.0,
+        CZ_DOT_Y_DOT = 0.0,
+        CZ_DOT_Z_DOT = 0.0,
+    ):
+        self.EPOCH = EPOCH  # type: Optional[str]
+        self.CX_X = CX_X  # type: float
+        self.CY_X = CY_X  # type: float
+        self.CY_Y = CY_Y  # type: float
+        self.CZ_X = CZ_X  # type: float
+        self.CZ_Y = CZ_Y  # type: float
+        self.CZ_Z = CZ_Z  # type: float
+        self.CX_DOT_X = CX_DOT_X  # type: float
+        self.CX_DOT_Y = CX_DOT_Y  # type: float
+        self.CX_DOT_Z = CX_DOT_Z  # type: float
+        self.CX_DOT_X_DOT = CX_DOT_X_DOT  # type: float
+        self.CY_DOT_X = CY_DOT_X  # type: float
+        self.CY_DOT_Y = CY_DOT_Y  # type: float
+        self.CY_DOT_Z = CY_DOT_Z  # type: float
+        self.CY_DOT_X_DOT = CY_DOT_X_DOT  # type: float
+        self.CY_DOT_Y_DOT = CY_DOT_Y_DOT  # type: float
+        self.CZ_DOT_X = CZ_DOT_X  # type: float
+        self.CZ_DOT_Y = CZ_DOT_Y  # type: float
+        self.CZ_DOT_Z = CZ_DOT_Z  # type: float
+        self.CZ_DOT_X_DOT = CZ_DOT_X_DOT  # type: float
+        self.CZ_DOT_Y_DOT = CZ_DOT_Y_DOT  # type: float
+        self.CZ_DOT_Z_DOT = CZ_DOT_Z_DOT  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        covarianceMatrixLine = covarianceMatrixLine()
-        covarianceMatrixLine.Init(buf, pos)
-        return cls.InitFromObj(covarianceMatrixLine)
+        tmpCovarianceMatrixLine = covarianceMatrixLine()
+        tmpCovarianceMatrixLine.Init(buf, pos)
+        return cls.InitFromObj(tmpCovarianceMatrixLine)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -389,9 +413,9 @@ class covarianceMatrixLineT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, covarianceMatrixLine):
+    def InitFromObj(cls, tmpCovarianceMatrixLine):
         x = covarianceMatrixLineT()
-        x._UnPack(covarianceMatrixLine)
+        x._UnPack(tmpCovarianceMatrixLine)
         return x
 
     # covarianceMatrixLineT

@@ -73,6 +73,12 @@ def ParameterSetStartPARAMETERSVector(builder, numElems):
 def StartPARAMETERSVector(builder, numElems):
     return ParameterSetStartPARAMETERSVector(builder, numElems)
 
+def ParameterSetCreatePARAMETERSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreatePARAMETERSVector(builder, data):
+    ParameterSetCreatePARAMETERSVector(builder, data)
+
 def ParameterSetEnd(builder):
     return builder.EndObject()
 
@@ -88,14 +94,17 @@ except:
 class ParameterSetT(object):
 
     # ParameterSetT
-    def __init__(self):
-        self.PARAMETERS = None  # type: List[Parameter.ParameterT]
+    def __init__(
+        self,
+        PARAMETERS = None,
+    ):
+        self.PARAMETERS = PARAMETERS  # type: Optional[List[Parameter.ParameterT]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        parameterSet = ParameterSet()
-        parameterSet.Init(buf, pos)
-        return cls.InitFromObj(parameterSet)
+        tmpParameterSet = ParameterSet()
+        tmpParameterSet.Init(buf, pos)
+        return cls.InitFromObj(tmpParameterSet)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -103,22 +112,22 @@ class ParameterSetT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, parameterSet):
+    def InitFromObj(cls, tmpParameterSet):
         x = ParameterSetT()
-        x._UnPack(parameterSet)
+        x._UnPack(tmpParameterSet)
         return x
 
     # ParameterSetT
-    def _UnPack(self, parameterSet):
-        if parameterSet is None:
+    def _UnPack(self, ParameterSet):
+        if ParameterSet is None:
             return
-        if not parameterSet.PARAMETERSIsNone():
+        if not ParameterSet.PARAMETERSIsNone():
             self.PARAMETERS = []
-            for i in range(parameterSet.PARAMETERSLength()):
-                if parameterSet.PARAMETERS(i) is None:
+            for i in range(ParameterSet.PARAMETERSLength()):
+                if ParameterSet.PARAMETERS(i) is None:
                     self.PARAMETERS.append(None)
                 else:
-                    parameter_ = Parameter.ParameterT.InitFromObj(parameterSet.PARAMETERS(i))
+                    parameter_ = Parameter.ParameterT.InitFromObj(ParameterSet.PARAMETERS(i))
                     self.PARAMETERS.append(parameter_)
 
     # ParameterSetT
@@ -134,5 +143,5 @@ class ParameterSetT(object):
         ParameterSetStart(builder)
         if self.PARAMETERS is not None:
             ParameterSetAddPARAMETERS(builder, PARAMETERS)
-        parameterSet = ParameterSetEnd(builder)
-        return parameterSet
+        ParameterSet = ParameterSetEnd(builder)
+        return ParameterSet

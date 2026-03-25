@@ -51,6 +51,10 @@ func (rcv *KMLTour) NAME() []byte {
 	return nil
 }
 
+func (rcv *KMLTour) Name() []byte {
+	return rcv.NAME()
+}
+
 /// Tour name
 /// Description
 func (rcv *KMLTour) DESCRIPTION() []byte {
@@ -59,6 +63,10 @@ func (rcv *KMLTour) DESCRIPTION() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *KMLTour) Description() []byte {
+	return rcv.DESCRIPTION()
 }
 
 /// Description
@@ -71,9 +79,17 @@ func (rcv *KMLTour) VISIBILITY() bool {
 	return false
 }
 
+func (rcv *KMLTour) Visibility() bool {
+	return rcv.VISIBILITY()
+}
+
 /// Visibility
 func (rcv *KMLTour) MutateVISIBILITY(n bool) bool {
 	return rcv._tab.MutateBoolSlot(8, n)
+}
+
+func (rcv *KMLTour) MutateVisibility(n bool) bool {
+	return rcv.MutateVISIBILITY(n)
 }
 
 /// Playlist
@@ -90,6 +106,10 @@ func (rcv *KMLTour) PLAYLIST(obj *KMLPlaylist) *KMLPlaylist {
 	return nil
 }
 
+func (rcv *KMLTour) Playlist(obj *KMLPlaylist) *KMLPlaylist {
+	return rcv.PLAYLIST(obj)
+}
+
 /// Playlist
 func KMLTourStart(builder *flatbuffers.Builder) {
 	builder.StartObject(4)
@@ -97,14 +117,26 @@ func KMLTourStart(builder *flatbuffers.Builder) {
 func KMLTourAddNAME(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(NAME), 0)
 }
+func KMLTourAddName(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
+	KMLTourAddNAME(builder, NAME)
+}
 func KMLTourAddDESCRIPTION(builder *flatbuffers.Builder, DESCRIPTION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(DESCRIPTION), 0)
+}
+func KMLTourAddDescription(builder *flatbuffers.Builder, DESCRIPTION flatbuffers.UOffsetT) {
+	KMLTourAddDESCRIPTION(builder, DESCRIPTION)
 }
 func KMLTourAddVISIBILITY(builder *flatbuffers.Builder, VISIBILITY bool) {
 	builder.PrependBoolSlot(2, VISIBILITY, false)
 }
+func KMLTourAddVisibility(builder *flatbuffers.Builder, VISIBILITY bool) {
+	KMLTourAddVISIBILITY(builder, VISIBILITY)
+}
 func KMLTourAddPLAYLIST(builder *flatbuffers.Builder, PLAYLIST flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(PLAYLIST), 0)
+}
+func KMLTourAddPlaylist(builder *flatbuffers.Builder, PLAYLIST flatbuffers.UOffsetT) {
+	KMLTourAddPLAYLIST(builder, PLAYLIST)
 }
 func KMLTourEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

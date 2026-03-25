@@ -32,7 +32,7 @@ class ANI : Table() {
     /**
      * Unique identifier
      */
-    val ID : String?
+    val id : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class ANI : Table() {
                 null
             }
         }
-    val IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val idAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun idInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Reference to source imagery (e.g., SKI, GDI, EOO)
      */
-    val SOURCE_ID : String?
+    val sourceId : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -55,12 +55,12 @@ class ANI : Table() {
                 null
             }
         }
-    val SOURCE_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun SOURCE_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val sourceIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun sourceIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * Source imagery type
      */
-    val SOURCE_TYPE : String?
+    val sourceType : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -69,12 +69,12 @@ class ANI : Table() {
                 null
             }
         }
-    val SOURCE_TYPEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun SOURCE_TYPEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val sourceTypeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun sourceTypeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
     /**
      * Analytic product type
      */
-    val ANALYTIC_TYPE : Byte
+    val analyticType : Byte
         get() {
             val o = __offset(10)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -82,7 +82,7 @@ class ANI : Table() {
     /**
      * Processing algorithm or pipeline name
      */
-    val ALGORITHM : String?
+    val algorithm : String?
         get() {
             val o = __offset(12)
             return if (o != 0) {
@@ -91,12 +91,12 @@ class ANI : Table() {
                 null
             }
         }
-    val ALGORITHMAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
-    fun ALGORITHMInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
+    val algorithmAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(12, 1)
+    fun algorithmInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 12, 1)
     /**
      * Algorithm version
      */
-    val ALGORITHM_VERSION : String?
+    val algorithmVersion : String?
         get() {
             val o = __offset(14)
             return if (o != 0) {
@@ -105,12 +105,12 @@ class ANI : Table() {
                 null
             }
         }
-    val ALGORITHM_VERSIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(14, 1)
-    fun ALGORITHM_VERSIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 14, 1)
+    val algorithmVersionAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(14, 1)
+    fun algorithmVersionInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 14, 1)
     /**
      * Processing epoch (ISO 8601)
      */
-    val PROCESSING_TIME : String?
+    val processingTime : String?
         get() {
             val o = __offset(16)
             return if (o != 0) {
@@ -119,12 +119,12 @@ class ANI : Table() {
                 null
             }
         }
-    val PROCESSING_TIMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(16, 1)
-    fun PROCESSING_TIMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 16, 1)
+    val processingTimeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(16, 1)
+    fun processingTimeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 16, 1)
     /**
      * Original observation epoch (ISO 8601)
      */
-    val OBS_TIME : String?
+    val obsTime : String?
         get() {
             val o = __offset(18)
             return if (o != 0) {
@@ -133,12 +133,12 @@ class ANI : Table() {
                 null
             }
         }
-    val OBS_TIMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(18, 1)
-    fun OBS_TIMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 18, 1)
+    val obsTimeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(18, 1)
+    fun obsTimeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 18, 1)
     /**
      * Target satellite number (if applicable)
      */
-    val SAT_NO : UInt
+    val satNo : UInt
         get() {
             val o = __offset(20)
             return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
@@ -146,7 +146,7 @@ class ANI : Table() {
     /**
      * Target object designator
      */
-    val OBJECT_DESIGNATOR : String?
+    val objectDesignator : String?
         get() {
             val o = __offset(22)
             return if (o != 0) {
@@ -155,12 +155,12 @@ class ANI : Table() {
                 null
             }
         }
-    val OBJECT_DESIGNATORAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(22, 1)
-    fun OBJECT_DESIGNATORInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 22, 1)
+    val objectDesignatorAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(22, 1)
+    fun objectDesignatorInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 22, 1)
     /**
      * Center right ascension in degrees
      */
-    val RA : Double
+    val ra : Double
         get() {
             val o = __offset(24)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -168,7 +168,7 @@ class ANI : Table() {
     /**
      * Center declination in degrees
      */
-    val DEC : Double
+    val dec : Double
         get() {
             val o = __offset(26)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -176,7 +176,7 @@ class ANI : Table() {
     /**
      * Field of view in degrees
      */
-    val FOV : Double
+    val fov : Double
         get() {
             val o = __offset(28)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -184,7 +184,7 @@ class ANI : Table() {
     /**
      * Visual magnitude estimate
      */
-    val VISUAL_MAG : Double
+    val visualMag : Double
         get() {
             val o = __offset(30)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -192,7 +192,7 @@ class ANI : Table() {
     /**
      * Magnitude uncertainty
      */
-    val MAG_UNCERTAINTY : Double
+    val magUncertainty : Double
         get() {
             val o = __offset(32)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -200,7 +200,7 @@ class ANI : Table() {
     /**
      * Detected object count
      */
-    val OBJECT_COUNT : UInt
+    val objectCount : UInt
         get() {
             val o = __offset(34)
             return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
@@ -208,7 +208,7 @@ class ANI : Table() {
     /**
      * Classification labels
      */
-    fun LABELS(j: Int) : String? {
+    fun labels(j: Int) : String? {
         val o = __offset(36)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
@@ -216,14 +216,14 @@ class ANI : Table() {
             null
         }
     }
-    val LABELSLength : Int
+    val labelsLength : Int
         get() {
             val o = __offset(36); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Classification confidence scores (0.0-1.0)
      */
-    fun CONFIDENCE(j: Int) : Double {
+    fun confidence(j: Int) : Double {
         val o = __offset(38)
         return if (o != 0) {
             bb.getDouble(__vector(o) + j * 8)
@@ -231,16 +231,16 @@ class ANI : Table() {
             0.0
         }
     }
-    val CONFIDENCELength : Int
+    val confidenceLength : Int
         get() {
             val o = __offset(38); return if (o != 0) __vector_len(o) else 0
         }
-    val CONFIDENCEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(38, 8)
-    fun CONFIDENCEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 38, 8)
+    val confidenceAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(38, 8)
+    fun confidenceInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 38, 8)
     /**
      * Feature vector or extracted parameters
      */
-    fun FEATURES(j: Int) : Double {
+    fun features(j: Int) : Double {
         val o = __offset(40)
         return if (o != 0) {
             bb.getDouble(__vector(o) + j * 8)
@@ -248,16 +248,16 @@ class ANI : Table() {
             0.0
         }
     }
-    val FEATURESLength : Int
+    val featuresLength : Int
         get() {
             val o = __offset(40); return if (o != 0) __vector_len(o) else 0
         }
-    val FEATURESAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(40, 8)
-    fun FEATURESInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 40, 8)
+    val featuresAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(40, 8)
+    fun featuresInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 40, 8)
     /**
      * Quality score (0.0-1.0)
      */
-    val QUALITY : Double
+    val quality : Double
         get() {
             val o = __offset(42)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -265,7 +265,7 @@ class ANI : Table() {
     /**
      * Additional notes
      */
-    val NOTES : String?
+    val notes : String?
         get() {
             val o = __offset(44)
             return if (o != 0) {
@@ -274,59 +274,59 @@ class ANI : Table() {
                 null
             }
         }
-    val NOTESAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(44, 1)
-    fun NOTESInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 44, 1)
+    val notesAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(44, 1)
+    fun notesInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 44, 1)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsANI(_bb: ByteBuffer): ANI = getRootAsANI(_bb, ANI())
         fun getRootAsANI(_bb: ByteBuffer, obj: ANI): ANI {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun ANIBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$ANI")
-        fun createANI(builder: FlatBufferBuilder, IDOffset: Int, SOURCE_IDOffset: Int, SOURCE_TYPEOffset: Int, ANALYTIC_TYPE: Byte, ALGORITHMOffset: Int, ALGORITHM_VERSIONOffset: Int, PROCESSING_TIMEOffset: Int, OBS_TIMEOffset: Int, SAT_NO: UInt, OBJECT_DESIGNATOROffset: Int, RA: Double, DEC: Double, FOV: Double, VISUAL_MAG: Double, MAG_UNCERTAINTY: Double, OBJECT_COUNT: UInt, LABELSOffset: Int, CONFIDENCEOffset: Int, FEATURESOffset: Int, QUALITY: Double, NOTESOffset: Int) : Int {
+        fun createANI(builder: FlatBufferBuilder, idOffset: Int, sourceIdOffset: Int, sourceTypeOffset: Int, analyticType: Byte, algorithmOffset: Int, algorithmVersionOffset: Int, processingTimeOffset: Int, obsTimeOffset: Int, satNo: UInt, objectDesignatorOffset: Int, ra: Double, dec: Double, fov: Double, visualMag: Double, magUncertainty: Double, objectCount: UInt, labelsOffset: Int, confidenceOffset: Int, featuresOffset: Int, quality: Double, notesOffset: Int) : Int {
             builder.startTable(21)
-            addQUALITY(builder, QUALITY)
-            addMAG_UNCERTAINTY(builder, MAG_UNCERTAINTY)
-            addVISUAL_MAG(builder, VISUAL_MAG)
-            addFOV(builder, FOV)
-            addDEC(builder, DEC)
-            addRA(builder, RA)
-            addNOTES(builder, NOTESOffset)
-            addFEATURES(builder, FEATURESOffset)
-            addCONFIDENCE(builder, CONFIDENCEOffset)
-            addLABELS(builder, LABELSOffset)
-            addOBJECT_COUNT(builder, OBJECT_COUNT)
-            addOBJECT_DESIGNATOR(builder, OBJECT_DESIGNATOROffset)
-            addSAT_NO(builder, SAT_NO)
-            addOBS_TIME(builder, OBS_TIMEOffset)
-            addPROCESSING_TIME(builder, PROCESSING_TIMEOffset)
-            addALGORITHM_VERSION(builder, ALGORITHM_VERSIONOffset)
-            addALGORITHM(builder, ALGORITHMOffset)
-            addSOURCE_TYPE(builder, SOURCE_TYPEOffset)
-            addSOURCE_ID(builder, SOURCE_IDOffset)
-            addID(builder, IDOffset)
-            addANALYTIC_TYPE(builder, ANALYTIC_TYPE)
+            addQUALITY(builder, quality)
+            addMAGUNCERTAINTY(builder, magUncertainty)
+            addVISUALMAG(builder, visualMag)
+            addFOV(builder, fov)
+            addDEC(builder, dec)
+            addRA(builder, ra)
+            addNOTES(builder, notesOffset)
+            addFEATURES(builder, featuresOffset)
+            addCONFIDENCE(builder, confidenceOffset)
+            addLABELS(builder, labelsOffset)
+            addOBJECTCOUNT(builder, objectCount)
+            addOBJECTDESIGNATOR(builder, objectDesignatorOffset)
+            addSATNO(builder, satNo)
+            addOBSTIME(builder, obsTimeOffset)
+            addPROCESSINGTIME(builder, processingTimeOffset)
+            addALGORITHMVERSION(builder, algorithmVersionOffset)
+            addALGORITHM(builder, algorithmOffset)
+            addSOURCETYPE(builder, sourceTypeOffset)
+            addSOURCEID(builder, sourceIdOffset)
+            addID(builder, idOffset)
+            addANALYTICTYPE(builder, analyticType)
             return endANI(builder)
         }
         fun startANI(builder: FlatBufferBuilder) = builder.startTable(21)
-        fun addID(builder: FlatBufferBuilder, ID: Int) = builder.addOffset(0, ID, 0)
-        fun addSOURCE_ID(builder: FlatBufferBuilder, SOURCE_ID: Int) = builder.addOffset(1, SOURCE_ID, 0)
-        fun addSOURCE_TYPE(builder: FlatBufferBuilder, SOURCE_TYPE: Int) = builder.addOffset(2, SOURCE_TYPE, 0)
-        fun addANALYTIC_TYPE(builder: FlatBufferBuilder, ANALYTIC_TYPE: Byte) = builder.addByte(3, ANALYTIC_TYPE, 0)
-        fun addALGORITHM(builder: FlatBufferBuilder, ALGORITHM: Int) = builder.addOffset(4, ALGORITHM, 0)
-        fun addALGORITHM_VERSION(builder: FlatBufferBuilder, ALGORITHM_VERSION: Int) = builder.addOffset(5, ALGORITHM_VERSION, 0)
-        fun addPROCESSING_TIME(builder: FlatBufferBuilder, PROCESSING_TIME: Int) = builder.addOffset(6, PROCESSING_TIME, 0)
-        fun addOBS_TIME(builder: FlatBufferBuilder, OBS_TIME: Int) = builder.addOffset(7, OBS_TIME, 0)
-        fun addSAT_NO(builder: FlatBufferBuilder, SAT_NO: UInt) = builder.addInt(8, SAT_NO.toInt(), 0)
-        fun addOBJECT_DESIGNATOR(builder: FlatBufferBuilder, OBJECT_DESIGNATOR: Int) = builder.addOffset(9, OBJECT_DESIGNATOR, 0)
-        fun addRA(builder: FlatBufferBuilder, RA: Double) = builder.addDouble(10, RA, 0.0)
-        fun addDEC(builder: FlatBufferBuilder, DEC: Double) = builder.addDouble(11, DEC, 0.0)
-        fun addFOV(builder: FlatBufferBuilder, FOV: Double) = builder.addDouble(12, FOV, 0.0)
-        fun addVISUAL_MAG(builder: FlatBufferBuilder, VISUAL_MAG: Double) = builder.addDouble(13, VISUAL_MAG, 0.0)
-        fun addMAG_UNCERTAINTY(builder: FlatBufferBuilder, MAG_UNCERTAINTY: Double) = builder.addDouble(14, MAG_UNCERTAINTY, 0.0)
-        fun addOBJECT_COUNT(builder: FlatBufferBuilder, OBJECT_COUNT: UInt) = builder.addInt(15, OBJECT_COUNT.toInt(), 0)
-        fun addLABELS(builder: FlatBufferBuilder, LABELS: Int) = builder.addOffset(16, LABELS, 0)
+        fun addID(builder: FlatBufferBuilder, id: Int) = builder.addOffset(0, id, 0)
+        fun addSOURCEID(builder: FlatBufferBuilder, sourceId: Int) = builder.addOffset(1, sourceId, 0)
+        fun addSOURCETYPE(builder: FlatBufferBuilder, sourceType: Int) = builder.addOffset(2, sourceType, 0)
+        fun addANALYTICTYPE(builder: FlatBufferBuilder, analyticType: Byte) = builder.addByte(3, analyticType, 0)
+        fun addALGORITHM(builder: FlatBufferBuilder, algorithm: Int) = builder.addOffset(4, algorithm, 0)
+        fun addALGORITHMVERSION(builder: FlatBufferBuilder, algorithmVersion: Int) = builder.addOffset(5, algorithmVersion, 0)
+        fun addPROCESSINGTIME(builder: FlatBufferBuilder, processingTime: Int) = builder.addOffset(6, processingTime, 0)
+        fun addOBSTIME(builder: FlatBufferBuilder, obsTime: Int) = builder.addOffset(7, obsTime, 0)
+        fun addSATNO(builder: FlatBufferBuilder, satNo: UInt) = builder.addInt(8, satNo.toInt(), 0)
+        fun addOBJECTDESIGNATOR(builder: FlatBufferBuilder, objectDesignator: Int) = builder.addOffset(9, objectDesignator, 0)
+        fun addRA(builder: FlatBufferBuilder, ra: Double) = builder.addDouble(10, ra, 0.0)
+        fun addDEC(builder: FlatBufferBuilder, dec: Double) = builder.addDouble(11, dec, 0.0)
+        fun addFOV(builder: FlatBufferBuilder, fov: Double) = builder.addDouble(12, fov, 0.0)
+        fun addVISUALMAG(builder: FlatBufferBuilder, visualMag: Double) = builder.addDouble(13, visualMag, 0.0)
+        fun addMAGUNCERTAINTY(builder: FlatBufferBuilder, magUncertainty: Double) = builder.addDouble(14, magUncertainty, 0.0)
+        fun addOBJECTCOUNT(builder: FlatBufferBuilder, objectCount: UInt) = builder.addInt(15, objectCount.toInt(), 0)
+        fun addLABELS(builder: FlatBufferBuilder, labels: Int) = builder.addOffset(16, labels, 0)
         fun createLabelsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -335,7 +335,7 @@ class ANI : Table() {
             return builder.endVector()
         }
         fun startLabelsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addCONFIDENCE(builder: FlatBufferBuilder, CONFIDENCE: Int) = builder.addOffset(17, CONFIDENCE, 0)
+        fun addCONFIDENCE(builder: FlatBufferBuilder, confidence: Int) = builder.addOffset(17, confidence, 0)
         fun createConfidenceVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
             builder.startVector(8, data.size, 8)
             for (i in data.size - 1 downTo 0) {
@@ -344,7 +344,7 @@ class ANI : Table() {
             return builder.endVector()
         }
         fun startConfidenceVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
-        fun addFEATURES(builder: FlatBufferBuilder, FEATURES: Int) = builder.addOffset(18, FEATURES, 0)
+        fun addFEATURES(builder: FlatBufferBuilder, features: Int) = builder.addOffset(18, features, 0)
         fun createFeaturesVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
             builder.startVector(8, data.size, 8)
             for (i in data.size - 1 downTo 0) {
@@ -353,8 +353,8 @@ class ANI : Table() {
             return builder.endVector()
         }
         fun startFeaturesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
-        fun addQUALITY(builder: FlatBufferBuilder, QUALITY: Double) = builder.addDouble(19, QUALITY, 0.0)
-        fun addNOTES(builder: FlatBufferBuilder, NOTES: Int) = builder.addOffset(20, NOTES, 0)
+        fun addQUALITY(builder: FlatBufferBuilder, quality: Double) = builder.addDouble(19, quality, 0.0)
+        fun addNOTES(builder: FlatBufferBuilder, notes: Int) = builder.addOffset(20, notes, 0)
         fun endANI(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

@@ -51,6 +51,10 @@ func (rcv *KMLSchema) NAME() []byte {
 	return nil
 }
 
+func (rcv *KMLSchema) Name() []byte {
+	return rcv.NAME()
+}
+
 /// Schema name
 /// Schema ID
 func (rcv *KMLSchema) ID() []byte {
@@ -61,6 +65,10 @@ func (rcv *KMLSchema) ID() []byte {
 	return nil
 }
 
+func (rcv *KMLSchema) Id() []byte {
+	return rcv.ID()
+}
+
 /// Schema ID
 /// Simple field definitions
 func (rcv *KMLSchema) SIMPLE_FIELDS(obj *KMLSimpleField, j int) bool {
@@ -69,10 +77,17 @@ func (rcv *KMLSchema) SIMPLE_FIELDS(obj *KMLSimpleField, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(KMLSimpleField)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *KMLSchema) SimpleFields(obj *KMLSimpleField, j int) bool {
+	return rcv.SIMPLE_FIELDS(obj, j)
 }
 
 func (rcv *KMLSchema) SIMPLE_FIELDSLength() int {
@@ -83,6 +98,10 @@ func (rcv *KMLSchema) SIMPLE_FIELDSLength() int {
 	return 0
 }
 
+func (rcv *KMLSchema) SimpleFieldsLength() int {
+	return rcv.SIMPLE_FIELDSLength()
+}
+
 /// Simple field definitions
 func KMLSchemaStart(builder *flatbuffers.Builder) {
 	builder.StartObject(3)
@@ -90,14 +109,26 @@ func KMLSchemaStart(builder *flatbuffers.Builder) {
 func KMLSchemaAddNAME(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(NAME), 0)
 }
+func KMLSchemaAddName(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
+	KMLSchemaAddNAME(builder, NAME)
+}
 func KMLSchemaAddID(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(ID), 0)
+}
+func KMLSchemaAddId(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
+	KMLSchemaAddID(builder, ID)
 }
 func KMLSchemaAddSIMPLE_FIELDS(builder *flatbuffers.Builder, SIMPLE_FIELDS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(SIMPLE_FIELDS), 0)
 }
+func KMLSchemaAddSimpleFields(builder *flatbuffers.Builder, SIMPLE_FIELDS flatbuffers.UOffsetT) {
+	KMLSchemaAddSIMPLE_FIELDS(builder, SIMPLE_FIELDS)
+}
 func KMLSchemaStartSIMPLE_FIELDSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func KMLSchemaStartSimpleFieldsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return KMLSchemaStartSIMPLE_FIELDSVector(builder, numElems)
 }
 func KMLSchemaEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

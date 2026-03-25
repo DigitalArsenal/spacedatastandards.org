@@ -51,6 +51,10 @@ func (rcv *KMLData) NAME() []byte {
 	return nil
 }
 
+func (rcv *KMLData) Name() []byte {
+	return rcv.NAME()
+}
+
 /// Data name
 /// Display name
 func (rcv *KMLData) DISPLAY_NAME() []byte {
@@ -59,6 +63,10 @@ func (rcv *KMLData) DISPLAY_NAME() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *KMLData) DisplayName() []byte {
+	return rcv.DISPLAY_NAME()
 }
 
 /// Display name
@@ -71,6 +79,10 @@ func (rcv *KMLData) VALUE() []byte {
 	return nil
 }
 
+func (rcv *KMLData) Value() []byte {
+	return rcv.VALUE()
+}
+
 /// Data value
 func KMLDataStart(builder *flatbuffers.Builder) {
 	builder.StartObject(3)
@@ -78,11 +90,20 @@ func KMLDataStart(builder *flatbuffers.Builder) {
 func KMLDataAddNAME(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(NAME), 0)
 }
+func KMLDataAddName(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
+	KMLDataAddNAME(builder, NAME)
+}
 func KMLDataAddDISPLAY_NAME(builder *flatbuffers.Builder, DISPLAY_NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(DISPLAY_NAME), 0)
 }
+func KMLDataAddDisplayName(builder *flatbuffers.Builder, DISPLAY_NAME flatbuffers.UOffsetT) {
+	KMLDataAddDISPLAY_NAME(builder, DISPLAY_NAME)
+}
 func KMLDataAddVALUE(builder *flatbuffers.Builder, VALUE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(VALUE), 0)
+}
+func KMLDataAddValue(builder *flatbuffers.Builder, VALUE flatbuffers.UOffsetT) {
+	KMLDataAddVALUE(builder, VALUE)
 }
 func KMLDataEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

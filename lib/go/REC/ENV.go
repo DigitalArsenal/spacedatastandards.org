@@ -62,12 +62,20 @@ func (rcv *ENV) ATMOSPHERE() []byte {
 	return nil
 }
 
+func (rcv *ENV) Atmosphere() []byte {
+	return rcv.ATMOSPHERE()
+}
+
 func (rcv *ENV) WEATHER() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *ENV) Weather() []byte {
+	return rcv.WEATHER()
 }
 
 func (rcv *ENV) TIME_UTC() float64 {
@@ -78,8 +86,16 @@ func (rcv *ENV) TIME_UTC() float64 {
 	return 0.0
 }
 
+func (rcv *ENV) TimeUtc() float64 {
+	return rcv.TIME_UTC()
+}
+
 func (rcv *ENV) MutateTIME_UTC(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(8, n)
+}
+
+func (rcv *ENV) MutateTimeUtc(n float64) bool {
+	return rcv.MutateTIME_UTC(n)
 }
 
 func (rcv *ENV) LATITUDE() float64 {
@@ -90,8 +106,16 @@ func (rcv *ENV) LATITUDE() float64 {
 	return 0.0
 }
 
+func (rcv *ENV) Latitude() float64 {
+	return rcv.LATITUDE()
+}
+
 func (rcv *ENV) MutateLATITUDE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(10, n)
+}
+
+func (rcv *ENV) MutateLatitude(n float64) bool {
+	return rcv.MutateLATITUDE(n)
 }
 
 func (rcv *ENV) LONGITUDE() float64 {
@@ -102,8 +126,16 @@ func (rcv *ENV) LONGITUDE() float64 {
 	return 0.0
 }
 
+func (rcv *ENV) Longitude() float64 {
+	return rcv.LONGITUDE()
+}
+
 func (rcv *ENV) MutateLONGITUDE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(12, n)
+}
+
+func (rcv *ENV) MutateLongitude(n float64) bool {
+	return rcv.MutateLONGITUDE(n)
 }
 
 func (rcv *ENV) SUN_AZIMUTH() float32 {
@@ -114,8 +146,16 @@ func (rcv *ENV) SUN_AZIMUTH() float32 {
 	return 0.0
 }
 
+func (rcv *ENV) SunAzimuth() float32 {
+	return rcv.SUN_AZIMUTH()
+}
+
 func (rcv *ENV) MutateSUN_AZIMUTH(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(14, n)
+}
+
+func (rcv *ENV) MutateSunAzimuth(n float32) bool {
+	return rcv.MutateSUN_AZIMUTH(n)
 }
 
 func (rcv *ENV) SUN_ELEVATION() float32 {
@@ -126,8 +166,16 @@ func (rcv *ENV) SUN_ELEVATION() float32 {
 	return 0.0
 }
 
+func (rcv *ENV) SunElevation() float32 {
+	return rcv.SUN_ELEVATION()
+}
+
 func (rcv *ENV) MutateSUN_ELEVATION(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(16, n)
+}
+
+func (rcv *ENV) MutateSunElevation(n float32) bool {
+	return rcv.MutateSUN_ELEVATION(n)
 }
 
 func (rcv *ENV) MOON_PHASE() float32 {
@@ -138,8 +186,16 @@ func (rcv *ENV) MOON_PHASE() float32 {
 	return 0.0
 }
 
+func (rcv *ENV) MoonPhase() float32 {
+	return rcv.MOON_PHASE()
+}
+
 func (rcv *ENV) MutateMOON_PHASE(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(18, n)
+}
+
+func (rcv *ENV) MutateMoonPhase(n float32) bool {
+	return rcv.MutateMOON_PHASE(n)
 }
 
 func (rcv *ENV) ILLUMINATION() float32 {
@@ -150,8 +206,16 @@ func (rcv *ENV) ILLUMINATION() float32 {
 	return 0.0
 }
 
+func (rcv *ENV) Illumination() float32 {
+	return rcv.ILLUMINATION()
+}
+
 func (rcv *ENV) MutateILLUMINATION(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(20, n)
+}
+
+func (rcv *ENV) MutateIllumination(n float32) bool {
+	return rcv.MutateILLUMINATION(n)
 }
 
 func (rcv *ENV) MAGNETIC_DECLINATION() float32 {
@@ -162,8 +226,16 @@ func (rcv *ENV) MAGNETIC_DECLINATION() float32 {
 	return 0.0
 }
 
+func (rcv *ENV) MagneticDeclination() float32 {
+	return rcv.MAGNETIC_DECLINATION()
+}
+
 func (rcv *ENV) MutateMAGNETIC_DECLINATION(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(22, n)
+}
+
+func (rcv *ENV) MutateMagneticDeclination(n float32) bool {
+	return rcv.MutateMAGNETIC_DECLINATION(n)
 }
 
 func (rcv *ENV) MAGNETIC_INCLINATION() float32 {
@@ -174,8 +246,16 @@ func (rcv *ENV) MAGNETIC_INCLINATION() float32 {
 	return 0.0
 }
 
+func (rcv *ENV) MagneticInclination() float32 {
+	return rcv.MAGNETIC_INCLINATION()
+}
+
 func (rcv *ENV) MutateMAGNETIC_INCLINATION(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(24, n)
+}
+
+func (rcv *ENV) MutateMagneticInclination(n float32) bool {
+	return rcv.MutateMAGNETIC_INCLINATION(n)
 }
 
 func (rcv *ENV) RESERVED(j int) byte {
@@ -187,6 +267,10 @@ func (rcv *ENV) RESERVED(j int) byte {
 	return 0
 }
 
+func (rcv *ENV) Reserved(j int) byte {
+	return rcv.RESERVED(j)
+}
+
 func (rcv *ENV) RESERVEDLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
 	if o != 0 {
@@ -195,12 +279,20 @@ func (rcv *ENV) RESERVEDLength() int {
 	return 0
 }
 
+func (rcv *ENV) ReservedLength() int {
+	return rcv.RESERVEDLength()
+}
+
 func (rcv *ENV) RESERVEDBytes() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *ENV) ReservedBytes() []byte {
+	return rcv.RESERVEDBytes()
 }
 
 func (rcv *ENV) MutateRESERVED(j int, n byte) bool {
@@ -212,47 +304,90 @@ func (rcv *ENV) MutateRESERVED(j int, n byte) bool {
 	return false
 }
 
+func (rcv *ENV) MutateReserved(j int, n byte) bool {
+	return rcv.MutateRESERVED(j, n)
+}
+
 func ENVStart(builder *flatbuffers.Builder) {
 	builder.StartObject(12)
 }
 func ENVAddATMOSPHERE(builder *flatbuffers.Builder, ATMOSPHERE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ATMOSPHERE), 0)
 }
+func ENVAddAtmosphere(builder *flatbuffers.Builder, ATMOSPHERE flatbuffers.UOffsetT) {
+	ENVAddATMOSPHERE(builder, ATMOSPHERE)
+}
 func ENVAddWEATHER(builder *flatbuffers.Builder, WEATHER flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(WEATHER), 0)
+}
+func ENVAddWeather(builder *flatbuffers.Builder, WEATHER flatbuffers.UOffsetT) {
+	ENVAddWEATHER(builder, WEATHER)
 }
 func ENVAddTIME_UTC(builder *flatbuffers.Builder, TIME_UTC float64) {
 	builder.PrependFloat64Slot(2, TIME_UTC, 0.0)
 }
+func ENVAddTimeUtc(builder *flatbuffers.Builder, TIME_UTC float64) {
+	ENVAddTIME_UTC(builder, TIME_UTC)
+}
 func ENVAddLATITUDE(builder *flatbuffers.Builder, LATITUDE float64) {
 	builder.PrependFloat64Slot(3, LATITUDE, 0.0)
+}
+func ENVAddLatitude(builder *flatbuffers.Builder, LATITUDE float64) {
+	ENVAddLATITUDE(builder, LATITUDE)
 }
 func ENVAddLONGITUDE(builder *flatbuffers.Builder, LONGITUDE float64) {
 	builder.PrependFloat64Slot(4, LONGITUDE, 0.0)
 }
+func ENVAddLongitude(builder *flatbuffers.Builder, LONGITUDE float64) {
+	ENVAddLONGITUDE(builder, LONGITUDE)
+}
 func ENVAddSUN_AZIMUTH(builder *flatbuffers.Builder, SUN_AZIMUTH float32) {
 	builder.PrependFloat32Slot(5, SUN_AZIMUTH, 0.0)
+}
+func ENVAddSunAzimuth(builder *flatbuffers.Builder, SUN_AZIMUTH float32) {
+	ENVAddSUN_AZIMUTH(builder, SUN_AZIMUTH)
 }
 func ENVAddSUN_ELEVATION(builder *flatbuffers.Builder, SUN_ELEVATION float32) {
 	builder.PrependFloat32Slot(6, SUN_ELEVATION, 0.0)
 }
+func ENVAddSunElevation(builder *flatbuffers.Builder, SUN_ELEVATION float32) {
+	ENVAddSUN_ELEVATION(builder, SUN_ELEVATION)
+}
 func ENVAddMOON_PHASE(builder *flatbuffers.Builder, MOON_PHASE float32) {
 	builder.PrependFloat32Slot(7, MOON_PHASE, 0.0)
+}
+func ENVAddMoonPhase(builder *flatbuffers.Builder, MOON_PHASE float32) {
+	ENVAddMOON_PHASE(builder, MOON_PHASE)
 }
 func ENVAddILLUMINATION(builder *flatbuffers.Builder, ILLUMINATION float32) {
 	builder.PrependFloat32Slot(8, ILLUMINATION, 0.0)
 }
+func ENVAddIllumination(builder *flatbuffers.Builder, ILLUMINATION float32) {
+	ENVAddILLUMINATION(builder, ILLUMINATION)
+}
 func ENVAddMAGNETIC_DECLINATION(builder *flatbuffers.Builder, MAGNETIC_DECLINATION float32) {
 	builder.PrependFloat32Slot(9, MAGNETIC_DECLINATION, 0.0)
+}
+func ENVAddMagneticDeclination(builder *flatbuffers.Builder, MAGNETIC_DECLINATION float32) {
+	ENVAddMAGNETIC_DECLINATION(builder, MAGNETIC_DECLINATION)
 }
 func ENVAddMAGNETIC_INCLINATION(builder *flatbuffers.Builder, MAGNETIC_INCLINATION float32) {
 	builder.PrependFloat32Slot(10, MAGNETIC_INCLINATION, 0.0)
 }
+func ENVAddMagneticInclination(builder *flatbuffers.Builder, MAGNETIC_INCLINATION float32) {
+	ENVAddMAGNETIC_INCLINATION(builder, MAGNETIC_INCLINATION)
+}
 func ENVAddRESERVED(builder *flatbuffers.Builder, RESERVED flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(RESERVED), 0)
 }
+func ENVAddReserved(builder *flatbuffers.Builder, RESERVED flatbuffers.UOffsetT) {
+	ENVAddRESERVED(builder, RESERVED)
+}
 func ENVStartRESERVEDVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(1, numElems, 1)
+}
+func ENVStartReservedVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return ENVStartRESERVEDVector(builder, numElems)
 }
 func ENVEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

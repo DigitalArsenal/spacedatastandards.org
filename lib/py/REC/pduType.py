@@ -2,4 +2,6 @@
 
 # namespace: 
 
-# NOTE pduType.py does not declare any structs or enums
+class pduType(object):
+    FILE_DIRECTIVE = 0
+    FILE_DATA = 1

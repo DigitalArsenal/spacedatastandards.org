@@ -409,41 +409,71 @@ def End(builder):
 class OPMT(object):
 
     # OPMT
-    def __init__(self):
-        self.CCSDS_OPM_VERS = None  # type: str
-        self.CREATION_DATE = None  # type: str
-        self.ORIGINATOR = None  # type: str
-        self.OBJECT_NAME = None  # type: str
-        self.OBJECT_ID = None  # type: str
-        self.CENTER_NAME = None  # type: str
-        self.REF_FRAME = None  # type: str
-        self.TIME_SYSTEM = None  # type: str
-        self.EPOCH = None  # type: str
-        self.X = 0.0  # type: float
-        self.Y = 0.0  # type: float
-        self.Z = 0.0  # type: float
-        self.X_DOT = 0.0  # type: float
-        self.Y_DOT = 0.0  # type: float
-        self.Z_DOT = 0.0  # type: float
-        self.SEMI_MAJOR_AXIS = 0.0  # type: float
-        self.ECCENTRICITY = 0.0  # type: float
-        self.INCLINATION = 0.0  # type: float
-        self.RA_OF_ASC_NODE = 0.0  # type: float
-        self.ARG_OF_PERICENTER = 0.0  # type: float
-        self.TRUE_ANOMALY = 0.0  # type: float
-        self.MEAN_ANOMALY = 0.0  # type: float
-        self.GM = 0.0  # type: float
-        self.MASS = 0.0  # type: float
-        self.SOLAR_RAD_AREA = 0.0  # type: float
-        self.SOLAR_RAD_COEFF = 0.0  # type: float
-        self.DRAG_AREA = 0.0  # type: float
-        self.DRAG_COEFF = 0.0  # type: float
+    def __init__(
+        self,
+        CCSDS_OPM_VERS = None,
+        CREATION_DATE = None,
+        ORIGINATOR = None,
+        OBJECT_NAME = None,
+        OBJECT_ID = None,
+        CENTER_NAME = None,
+        REF_FRAME = None,
+        TIME_SYSTEM = None,
+        EPOCH = None,
+        X = 0.0,
+        Y = 0.0,
+        Z = 0.0,
+        X_DOT = 0.0,
+        Y_DOT = 0.0,
+        Z_DOT = 0.0,
+        SEMI_MAJOR_AXIS = 0.0,
+        ECCENTRICITY = 0.0,
+        INCLINATION = 0.0,
+        RA_OF_ASC_NODE = 0.0,
+        ARG_OF_PERICENTER = 0.0,
+        TRUE_ANOMALY = 0.0,
+        MEAN_ANOMALY = 0.0,
+        GM = 0.0,
+        MASS = 0.0,
+        SOLAR_RAD_AREA = 0.0,
+        SOLAR_RAD_COEFF = 0.0,
+        DRAG_AREA = 0.0,
+        DRAG_COEFF = 0.0,
+    ):
+        self.CCSDS_OPM_VERS = CCSDS_OPM_VERS  # type: Optional[str]
+        self.CREATION_DATE = CREATION_DATE  # type: Optional[str]
+        self.ORIGINATOR = ORIGINATOR  # type: Optional[str]
+        self.OBJECT_NAME = OBJECT_NAME  # type: Optional[str]
+        self.OBJECT_ID = OBJECT_ID  # type: Optional[str]
+        self.CENTER_NAME = CENTER_NAME  # type: Optional[str]
+        self.REF_FRAME = REF_FRAME  # type: Optional[str]
+        self.TIME_SYSTEM = TIME_SYSTEM  # type: Optional[str]
+        self.EPOCH = EPOCH  # type: Optional[str]
+        self.X = X  # type: float
+        self.Y = Y  # type: float
+        self.Z = Z  # type: float
+        self.X_DOT = X_DOT  # type: float
+        self.Y_DOT = Y_DOT  # type: float
+        self.Z_DOT = Z_DOT  # type: float
+        self.SEMI_MAJOR_AXIS = SEMI_MAJOR_AXIS  # type: float
+        self.ECCENTRICITY = ECCENTRICITY  # type: float
+        self.INCLINATION = INCLINATION  # type: float
+        self.RA_OF_ASC_NODE = RA_OF_ASC_NODE  # type: float
+        self.ARG_OF_PERICENTER = ARG_OF_PERICENTER  # type: float
+        self.TRUE_ANOMALY = TRUE_ANOMALY  # type: float
+        self.MEAN_ANOMALY = MEAN_ANOMALY  # type: float
+        self.GM = GM  # type: float
+        self.MASS = MASS  # type: float
+        self.SOLAR_RAD_AREA = SOLAR_RAD_AREA  # type: float
+        self.SOLAR_RAD_COEFF = SOLAR_RAD_COEFF  # type: float
+        self.DRAG_AREA = DRAG_AREA  # type: float
+        self.DRAG_COEFF = DRAG_COEFF  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        OPM = OPM()
-        OPM.Init(buf, pos)
-        return cls.InitFromObj(OPM)
+        tmpOpm = OPM()
+        tmpOpm.Init(buf, pos)
+        return cls.InitFromObj(tmpOpm)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -451,9 +481,9 @@ class OPMT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, OPM):
+    def InitFromObj(cls, tmpOpm):
         x = OPMT()
-        x._UnPack(OPM)
+        x._UnPack(tmpOpm)
         return x
 
     # OPMT

@@ -141,6 +141,12 @@ def ROCStartSTAGESVector(builder, numElems):
 def StartSTAGESVector(builder, numElems):
     return ROCStartSTAGESVector(builder, numElems)
 
+def ROCCreateSTAGESVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateSTAGESVector(builder, data):
+    ROCCreateSTAGESVector(builder, data)
+
 def ROCAddSUSTAINERS(builder, SUSTAINERS):
     builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(SUSTAINERS), 0)
 
@@ -152,6 +158,12 @@ def ROCStartSUSTAINERSVector(builder, numElems):
 
 def StartSUSTAINERSVector(builder, numElems):
     return ROCStartSUSTAINERSVector(builder, numElems)
+
+def ROCCreateSUSTAINERSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateSUSTAINERSVector(builder, data):
+    ROCCreateSUSTAINERSVector(builder, data)
 
 def ROCEnd(builder):
     return builder.EndObject()
@@ -169,18 +181,25 @@ except:
 class ROCT(object):
 
     # ROCT
-    def __init__(self):
-        self.NAME = None  # type: str
-        self.FAMILY = None  # type: str
-        self.VARIANT = None  # type: str
-        self.STAGES = None  # type: List[STAGE.STAGET]
-        self.SUSTAINERS = None  # type: List[SUSTAINER.SUSTAINERT]
+    def __init__(
+        self,
+        NAME = None,
+        FAMILY = None,
+        VARIANT = None,
+        STAGES = None,
+        SUSTAINERS = None,
+    ):
+        self.NAME = NAME  # type: Optional[str]
+        self.FAMILY = FAMILY  # type: Optional[str]
+        self.VARIANT = VARIANT  # type: Optional[str]
+        self.STAGES = STAGES  # type: Optional[List[STAGE.STAGET]]
+        self.SUSTAINERS = SUSTAINERS  # type: Optional[List[SUSTAINER.SUSTAINERT]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        ROC = ROC()
-        ROC.Init(buf, pos)
-        return cls.InitFromObj(ROC)
+        tmpRoc = ROC()
+        tmpRoc.Init(buf, pos)
+        return cls.InitFromObj(tmpRoc)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -188,9 +207,9 @@ class ROCT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, ROC):
+    def InitFromObj(cls, tmpRoc):
         x = ROCT()
-        x._UnPack(ROC)
+        x._UnPack(tmpRoc)
         return x
 
     # ROCT

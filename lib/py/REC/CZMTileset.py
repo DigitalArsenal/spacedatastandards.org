@@ -2,4 +2,134 @@
 
 # namespace: 
 
-# NOTE CZMTileset.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# 3D Tileset
+class CZMTileset(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = CZMTileset()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsCZMTileset(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def CZMTilesetBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x43\x5A\x4D", size_prefixed=size_prefixed)
+
+    # CZMTileset
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Whether the tileset is displayed
+    # CZMTileset
+    def SHOW(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # URI to the tileset
+    # CZMTileset
+    def URI(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Maximum screen space error
+    # CZMTileset
+    def MAXIMUM_SCREEN_SPACE_ERROR(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+def CZMTilesetStart(builder):
+    builder.StartObject(3)
+
+def Start(builder):
+    CZMTilesetStart(builder)
+
+def CZMTilesetAddSHOW(builder, SHOW):
+    builder.PrependBoolSlot(0, SHOW, 0)
+
+def AddSHOW(builder, SHOW):
+    CZMTilesetAddSHOW(builder, SHOW)
+
+def CZMTilesetAddURI(builder, URI):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(URI), 0)
+
+def AddURI(builder, URI):
+    CZMTilesetAddURI(builder, URI)
+
+def CZMTilesetAddMAXIMUM_SCREEN_SPACE_ERROR(builder, MAXIMUM_SCREEN_SPACE_ERROR):
+    builder.PrependFloat64Slot(2, MAXIMUM_SCREEN_SPACE_ERROR, 0.0)
+
+def AddMAXIMUM_SCREEN_SPACE_ERROR(builder, MAXIMUM_SCREEN_SPACE_ERROR):
+    CZMTilesetAddMAXIMUM_SCREEN_SPACE_ERROR(builder, MAXIMUM_SCREEN_SPACE_ERROR)
+
+def CZMTilesetEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return CZMTilesetEnd(builder)
+
+
+class CZMTilesetT(object):
+
+    # CZMTilesetT
+    def __init__(
+        self,
+        SHOW = False,
+        URI = None,
+        MAXIMUM_SCREEN_SPACE_ERROR = 0.0,
+    ):
+        self.SHOW = SHOW  # type: bool
+        self.URI = URI  # type: Optional[str]
+        self.MAXIMUM_SCREEN_SPACE_ERROR = MAXIMUM_SCREEN_SPACE_ERROR  # type: float
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpCzmtileset = CZMTileset()
+        tmpCzmtileset.Init(buf, pos)
+        return cls.InitFromObj(tmpCzmtileset)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpCzmtileset):
+        x = CZMTilesetT()
+        x._UnPack(tmpCzmtileset)
+        return x
+
+    # CZMTilesetT
+    def _UnPack(self, CZMTileset):
+        if CZMTileset is None:
+            return
+        self.SHOW = CZMTileset.SHOW()
+        self.URI = CZMTileset.URI()
+        self.MAXIMUM_SCREEN_SPACE_ERROR = CZMTileset.MAXIMUM_SCREEN_SPACE_ERROR()
+
+    # CZMTilesetT
+    def Pack(self, builder):
+        if self.URI is not None:
+            URI = builder.CreateString(self.URI)
+        CZMTilesetStart(builder)
+        CZMTilesetAddSHOW(builder, self.SHOW)
+        if self.URI is not None:
+            CZMTilesetAddURI(builder, URI)
+        CZMTilesetAddMAXIMUM_SCREEN_SPACE_ERROR(builder, self.MAXIMUM_SCREEN_SPACE_ERROR)
+        CZMTileset = CZMTilesetEnd(builder)
+        return CZMTileset

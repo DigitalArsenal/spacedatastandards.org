@@ -2,9 +2,13 @@
 // swiftlint:disable all
 // swiftformat:disable all
 
+#if canImport(Common)
+import Common
+#endif
+
 import FlatBuffers
 
-public enum cltuPduType: Int8, Enum, Verifiable {
+public enum cltuPduType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -26,9 +30,9 @@ public enum cltuPduType: Int8, Enum, Verifiable {
 
 
 ///  Command Link Transmission Unit Service (CCSDS 912.3-B-2)
-public struct CLT: FlatBufferObject, Verifiable {
+public struct CLT: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -64,10 +68,8 @@ public struct CLT: FlatBufferObject, Verifiable {
   ///  Invoke ID
   public var INVOKE_ID: UInt32 { let o = _accessor.offset(VTOFFSET.INVOKE_ID.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  CLTU data
-  public var hasData: Bool { let o = _accessor.offset(VTOFFSET.DATA.v); return o == 0 ? false : true }
-  public var DATACount: Int32 { let o = _accessor.offset(VTOFFSET.DATA.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func DATA(at index: Int32) -> UInt8 { let o = _accessor.offset(VTOFFSET.DATA.v); return o == 0 ? 0 : _accessor.directRead(of: UInt8.self, offset: _accessor.vector(at: o) + index * 1) }
-  public var DATA: [UInt8] { return _accessor.getVector(at: VTOFFSET.DATA.v) ?? [] }
+  public var DATA: FlatbufferVector<UInt8> { return _accessor.vector(at: VTOFFSET.DATA.v, byteSize: 1) }
+  public func withUnsafePointerToData<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.DATA.v, body: body) }
   public static func startCLT(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 7) }
   public static func add(PDU_TYPE: cltuPduType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PDU_TYPE.rawValue, def: 0, at: VTOFFSET.PDU_TYPE.p) }
   public static func add(INITIATOR_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INITIATOR_ID, at: VTOFFSET.INITIATOR_ID.p) }

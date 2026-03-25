@@ -2,4 +2,11 @@
 
 # namespace: 
 
-# NOTE rfPolarization.py does not declare any structs or enums
+class rfPolarization(object):
+    LHCP = 0
+    RHCP = 1
+    LINEAR_H = 2
+    LINEAR_V = 3
+    DUAL = 4
+    CROSS = 5
+    UNKNOWN = 6

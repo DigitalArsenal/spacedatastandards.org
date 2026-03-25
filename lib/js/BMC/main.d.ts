@@ -1,2 +1,2 @@
-export { BMC, BMCT } from './BMC.js';
+export * from './BMC.js';
 //# sourceMappingURL=main.d.ts.map

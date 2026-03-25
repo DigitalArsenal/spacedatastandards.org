@@ -2,4 +2,6 @@
 
 # namespace: 
 
-# NOTE KMLDisplayMode.py does not declare any structs or enums
+class KMLDisplayMode(object):
+    DEFAULT = 0
+    HIDE = 1

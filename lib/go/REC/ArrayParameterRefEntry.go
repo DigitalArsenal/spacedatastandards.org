@@ -51,6 +51,10 @@ func (rcv *ArrayParameterRefEntry) PARAMETER_REF() []byte {
 	return nil
 }
 
+func (rcv *ArrayParameterRefEntry) ParameterRef() []byte {
+	return rcv.PARAMETER_REF()
+}
+
 /// Parameter reference path
 /// Location in container
 func (rcv *ArrayParameterRefEntry) LOCATION(obj *LocationInContainer) *LocationInContainer {
@@ -66,6 +70,10 @@ func (rcv *ArrayParameterRefEntry) LOCATION(obj *LocationInContainer) *LocationI
 	return nil
 }
 
+func (rcv *ArrayParameterRefEntry) Location(obj *LocationInContainer) *LocationInContainer {
+	return rcv.LOCATION(obj)
+}
+
 /// Location in container
 /// First index to include
 func (rcv *ArrayParameterRefEntry) FIRST_INDEX() uint32 {
@@ -76,9 +84,17 @@ func (rcv *ArrayParameterRefEntry) FIRST_INDEX() uint32 {
 	return 0
 }
 
+func (rcv *ArrayParameterRefEntry) FirstIndex() uint32 {
+	return rcv.FIRST_INDEX()
+}
+
 /// First index to include
 func (rcv *ArrayParameterRefEntry) MutateFIRST_INDEX(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(8, n)
+}
+
+func (rcv *ArrayParameterRefEntry) MutateFirstIndex(n uint32) bool {
+	return rcv.MutateFIRST_INDEX(n)
 }
 
 /// Last index to include
@@ -90,9 +106,17 @@ func (rcv *ArrayParameterRefEntry) LAST_INDEX() uint32 {
 	return 0
 }
 
+func (rcv *ArrayParameterRefEntry) LastIndex() uint32 {
+	return rcv.LAST_INDEX()
+}
+
 /// Last index to include
 func (rcv *ArrayParameterRefEntry) MutateLAST_INDEX(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(10, n)
+}
+
+func (rcv *ArrayParameterRefEntry) MutateLastIndex(n uint32) bool {
+	return rcv.MutateLAST_INDEX(n)
 }
 
 func ArrayParameterRefEntryStart(builder *flatbuffers.Builder) {
@@ -101,14 +125,26 @@ func ArrayParameterRefEntryStart(builder *flatbuffers.Builder) {
 func ArrayParameterRefEntryAddPARAMETER_REF(builder *flatbuffers.Builder, PARAMETER_REF flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(PARAMETER_REF), 0)
 }
+func ArrayParameterRefEntryAddParameterRef(builder *flatbuffers.Builder, PARAMETER_REF flatbuffers.UOffsetT) {
+	ArrayParameterRefEntryAddPARAMETER_REF(builder, PARAMETER_REF)
+}
 func ArrayParameterRefEntryAddLOCATION(builder *flatbuffers.Builder, LOCATION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(LOCATION), 0)
+}
+func ArrayParameterRefEntryAddLocation(builder *flatbuffers.Builder, LOCATION flatbuffers.UOffsetT) {
+	ArrayParameterRefEntryAddLOCATION(builder, LOCATION)
 }
 func ArrayParameterRefEntryAddFIRST_INDEX(builder *flatbuffers.Builder, FIRST_INDEX uint32) {
 	builder.PrependUint32Slot(2, FIRST_INDEX, 0)
 }
+func ArrayParameterRefEntryAddFirstIndex(builder *flatbuffers.Builder, FIRST_INDEX uint32) {
+	ArrayParameterRefEntryAddFIRST_INDEX(builder, FIRST_INDEX)
+}
 func ArrayParameterRefEntryAddLAST_INDEX(builder *flatbuffers.Builder, LAST_INDEX uint32) {
 	builder.PrependUint32Slot(3, LAST_INDEX, 0)
+}
+func ArrayParameterRefEntryAddLastIndex(builder *flatbuffers.Builder, LAST_INDEX uint32) {
+	ArrayParameterRefEntryAddLAST_INDEX(builder, LAST_INDEX)
 }
 func ArrayParameterRefEntryEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

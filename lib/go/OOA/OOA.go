@@ -63,6 +63,10 @@ func (rcv *OOA) ID() []byte {
 	return nil
 }
 
+func (rcv *OOA) Id() []byte {
+	return rcv.ID()
+}
+
 /// Unique identifier
 /// Reference to parent on-orbit object
 func (rcv *OOA) ID_ON_ORBIT() []byte {
@@ -71,6 +75,10 @@ func (rcv *OOA) ID_ON_ORBIT() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *OOA) IdOnOrbit() []byte {
+	return rcv.ID_ON_ORBIT()
 }
 
 /// Reference to parent on-orbit object
@@ -83,6 +91,10 @@ func (rcv *OOA) ID_ANTENNA() []byte {
 	return nil
 }
 
+func (rcv *OOA) IdAntenna() []byte {
+	return rcv.ID_ANTENNA()
+}
+
 /// Reference to antenna specification
 /// Antenna name or designation
 func (rcv *OOA) NAME() []byte {
@@ -91,6 +103,10 @@ func (rcv *OOA) NAME() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *OOA) Name() []byte {
+	return rcv.NAME()
 }
 
 /// Antenna name or designation
@@ -103,6 +119,10 @@ func (rcv *OOA) ANTENNA_TYPE() []byte {
 	return nil
 }
 
+func (rcv *OOA) AntennaType() []byte {
+	return rcv.ANTENNA_TYPE()
+}
+
 /// Antenna type (e.g., PARABOLIC, PHASED_ARRAY, HORN, HELICAL, DIPOLE, PATCH, YAGI)
 /// Number of antennas of this type
 func (rcv *OOA) QUANTITY() uint32 {
@@ -113,9 +133,17 @@ func (rcv *OOA) QUANTITY() uint32 {
 	return 0
 }
 
+func (rcv *OOA) Quantity() uint32 {
+	return rcv.QUANTITY()
+}
+
 /// Number of antennas of this type
 func (rcv *OOA) MutateQUANTITY(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(14, n)
+}
+
+func (rcv *OOA) MutateQuantity(n uint32) bool {
+	return rcv.MutateQUANTITY(n)
 }
 
 /// Operating frequency band (e.g., UHF, L, S, C, X, Ku, Ka, V, W)
@@ -125,6 +153,10 @@ func (rcv *OOA) BAND() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *OOA) Band() []byte {
+	return rcv.BAND()
 }
 
 /// Operating frequency band (e.g., UHF, L, S, C, X, Ku, Ka, V, W)
@@ -137,9 +169,17 @@ func (rcv *OOA) FREQ_MIN() float64 {
 	return 0.0
 }
 
+func (rcv *OOA) FreqMin() float64 {
+	return rcv.FREQ_MIN()
+}
+
 /// Minimum operating frequency in MHz
 func (rcv *OOA) MutateFREQ_MIN(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(18, n)
+}
+
+func (rcv *OOA) MutateFreqMin(n float64) bool {
+	return rcv.MutateFREQ_MIN(n)
 }
 
 /// Maximum operating frequency in MHz
@@ -151,9 +191,17 @@ func (rcv *OOA) FREQ_MAX() float64 {
 	return 0.0
 }
 
+func (rcv *OOA) FreqMax() float64 {
+	return rcv.FREQ_MAX()
+}
+
 /// Maximum operating frequency in MHz
 func (rcv *OOA) MutateFREQ_MAX(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(20, n)
+}
+
+func (rcv *OOA) MutateFreqMax(n float64) bool {
+	return rcv.MutateFREQ_MAX(n)
 }
 
 /// Antenna gain in dBi
@@ -165,9 +213,17 @@ func (rcv *OOA) GAIN() float64 {
 	return 0.0
 }
 
+func (rcv *OOA) Gain() float64 {
+	return rcv.GAIN()
+}
+
 /// Antenna gain in dBi
 func (rcv *OOA) MutateGAIN(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(22, n)
+}
+
+func (rcv *OOA) MutateGain(n float64) bool {
+	return rcv.MutateGAIN(n)
 }
 
 /// Antenna diameter or aperture in meters
@@ -179,9 +235,17 @@ func (rcv *OOA) APERTURE() float64 {
 	return 0.0
 }
 
+func (rcv *OOA) Aperture() float64 {
+	return rcv.APERTURE()
+}
+
 /// Antenna diameter or aperture in meters
 func (rcv *OOA) MutateAPERTURE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(24, n)
+}
+
+func (rcv *OOA) MutateAperture(n float64) bool {
+	return rcv.MutateAPERTURE(n)
 }
 
 /// Beamwidth in degrees
@@ -193,9 +257,17 @@ func (rcv *OOA) BEAMWIDTH() float64 {
 	return 0.0
 }
 
+func (rcv *OOA) Beamwidth() float64 {
+	return rcv.BEAMWIDTH()
+}
+
 /// Beamwidth in degrees
 func (rcv *OOA) MutateBEAMWIDTH(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(26, n)
+}
+
+func (rcv *OOA) MutateBeamwidth(n float64) bool {
+	return rcv.MutateBEAMWIDTH(n)
 }
 
 /// Polarization type (e.g., LINEAR, CIRCULAR, DUAL, RHCP, LHCP)
@@ -205,6 +277,10 @@ func (rcv *OOA) POLARIZATION() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *OOA) Polarization() []byte {
+	return rcv.POLARIZATION()
 }
 
 /// Polarization type (e.g., LINEAR, CIRCULAR, DUAL, RHCP, LHCP)
@@ -217,9 +293,17 @@ func (rcv *OOA) STEERABLE() bool {
 	return false
 }
 
+func (rcv *OOA) Steerable() bool {
+	return rcv.STEERABLE()
+}
+
 /// Whether the antenna is steerable
 func (rcv *OOA) MutateSTEERABLE(n bool) bool {
 	return rcv._tab.MutateBoolSlot(30, n)
+}
+
+func (rcv *OOA) MutateSteerable(n bool) bool {
+	return rcv.MutateSTEERABLE(n)
 }
 
 /// Maximum slew rate in degrees per second
@@ -231,9 +315,17 @@ func (rcv *OOA) SLEW_RATE() float64 {
 	return 0.0
 }
 
+func (rcv *OOA) SlewRate() float64 {
+	return rcv.SLEW_RATE()
+}
+
 /// Maximum slew rate in degrees per second
 func (rcv *OOA) MutateSLEW_RATE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(32, n)
+}
+
+func (rcv *OOA) MutateSlewRate(n float64) bool {
+	return rcv.MutateSLEW_RATE(n)
 }
 
 /// Purpose or function (e.g., TT_C, PAYLOAD, CROSSLINK, GPS)
@@ -243,6 +335,10 @@ func (rcv *OOA) PURPOSE() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *OOA) Purpose() []byte {
+	return rcv.PURPOSE()
 }
 
 /// Purpose or function (e.g., TT_C, PAYLOAD, CROSSLINK, GPS)
@@ -255,6 +351,10 @@ func (rcv *OOA) NOTES() []byte {
 	return nil
 }
 
+func (rcv *OOA) Notes() []byte {
+	return rcv.NOTES()
+}
+
 /// Additional notes
 func OOAStart(builder *flatbuffers.Builder) {
 	builder.StartObject(17)
@@ -262,53 +362,104 @@ func OOAStart(builder *flatbuffers.Builder) {
 func OOAAddID(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ID), 0)
 }
+func OOAAddId(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
+	OOAAddID(builder, ID)
+}
 func OOAAddID_ON_ORBIT(builder *flatbuffers.Builder, ID_ON_ORBIT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(ID_ON_ORBIT), 0)
+}
+func OOAAddIdOnOrbit(builder *flatbuffers.Builder, ID_ON_ORBIT flatbuffers.UOffsetT) {
+	OOAAddID_ON_ORBIT(builder, ID_ON_ORBIT)
 }
 func OOAAddID_ANTENNA(builder *flatbuffers.Builder, ID_ANTENNA flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(ID_ANTENNA), 0)
 }
+func OOAAddIdAntenna(builder *flatbuffers.Builder, ID_ANTENNA flatbuffers.UOffsetT) {
+	OOAAddID_ANTENNA(builder, ID_ANTENNA)
+}
 func OOAAddNAME(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(NAME), 0)
+}
+func OOAAddName(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
+	OOAAddNAME(builder, NAME)
 }
 func OOAAddANTENNA_TYPE(builder *flatbuffers.Builder, ANTENNA_TYPE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(ANTENNA_TYPE), 0)
 }
+func OOAAddAntennaType(builder *flatbuffers.Builder, ANTENNA_TYPE flatbuffers.UOffsetT) {
+	OOAAddANTENNA_TYPE(builder, ANTENNA_TYPE)
+}
 func OOAAddQUANTITY(builder *flatbuffers.Builder, QUANTITY uint32) {
 	builder.PrependUint32Slot(5, QUANTITY, 0)
+}
+func OOAAddQuantity(builder *flatbuffers.Builder, QUANTITY uint32) {
+	OOAAddQUANTITY(builder, QUANTITY)
 }
 func OOAAddBAND(builder *flatbuffers.Builder, BAND flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(BAND), 0)
 }
+func OOAAddBand(builder *flatbuffers.Builder, BAND flatbuffers.UOffsetT) {
+	OOAAddBAND(builder, BAND)
+}
 func OOAAddFREQ_MIN(builder *flatbuffers.Builder, FREQ_MIN float64) {
 	builder.PrependFloat64Slot(7, FREQ_MIN, 0.0)
+}
+func OOAAddFreqMin(builder *flatbuffers.Builder, FREQ_MIN float64) {
+	OOAAddFREQ_MIN(builder, FREQ_MIN)
 }
 func OOAAddFREQ_MAX(builder *flatbuffers.Builder, FREQ_MAX float64) {
 	builder.PrependFloat64Slot(8, FREQ_MAX, 0.0)
 }
+func OOAAddFreqMax(builder *flatbuffers.Builder, FREQ_MAX float64) {
+	OOAAddFREQ_MAX(builder, FREQ_MAX)
+}
 func OOAAddGAIN(builder *flatbuffers.Builder, GAIN float64) {
 	builder.PrependFloat64Slot(9, GAIN, 0.0)
+}
+func OOAAddGain(builder *flatbuffers.Builder, GAIN float64) {
+	OOAAddGAIN(builder, GAIN)
 }
 func OOAAddAPERTURE(builder *flatbuffers.Builder, APERTURE float64) {
 	builder.PrependFloat64Slot(10, APERTURE, 0.0)
 }
+func OOAAddAperture(builder *flatbuffers.Builder, APERTURE float64) {
+	OOAAddAPERTURE(builder, APERTURE)
+}
 func OOAAddBEAMWIDTH(builder *flatbuffers.Builder, BEAMWIDTH float64) {
 	builder.PrependFloat64Slot(11, BEAMWIDTH, 0.0)
+}
+func OOAAddBeamwidth(builder *flatbuffers.Builder, BEAMWIDTH float64) {
+	OOAAddBEAMWIDTH(builder, BEAMWIDTH)
 }
 func OOAAddPOLARIZATION(builder *flatbuffers.Builder, POLARIZATION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(12, flatbuffers.UOffsetT(POLARIZATION), 0)
 }
+func OOAAddPolarization(builder *flatbuffers.Builder, POLARIZATION flatbuffers.UOffsetT) {
+	OOAAddPOLARIZATION(builder, POLARIZATION)
+}
 func OOAAddSTEERABLE(builder *flatbuffers.Builder, STEERABLE bool) {
 	builder.PrependBoolSlot(13, STEERABLE, false)
+}
+func OOAAddSteerable(builder *flatbuffers.Builder, STEERABLE bool) {
+	OOAAddSTEERABLE(builder, STEERABLE)
 }
 func OOAAddSLEW_RATE(builder *flatbuffers.Builder, SLEW_RATE float64) {
 	builder.PrependFloat64Slot(14, SLEW_RATE, 0.0)
 }
+func OOAAddSlewRate(builder *flatbuffers.Builder, SLEW_RATE float64) {
+	OOAAddSLEW_RATE(builder, SLEW_RATE)
+}
 func OOAAddPURPOSE(builder *flatbuffers.Builder, PURPOSE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(15, flatbuffers.UOffsetT(PURPOSE), 0)
 }
+func OOAAddPurpose(builder *flatbuffers.Builder, PURPOSE flatbuffers.UOffsetT) {
+	OOAAddPURPOSE(builder, PURPOSE)
+}
 func OOAAddNOTES(builder *flatbuffers.Builder, NOTES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(16, flatbuffers.UOffsetT(NOTES), 0)
+}
+func OOAAddNotes(builder *flatbuffers.Builder, NOTES flatbuffers.UOffsetT) {
+	OOAAddNOTES(builder, NOTES)
 }
 func OOAEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

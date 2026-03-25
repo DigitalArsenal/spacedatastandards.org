@@ -262,6 +262,12 @@ def OrbitDeterminationStartOD_OBSERVATIONS_TYPEVector(builder, numElems):
 def StartOD_OBSERVATIONS_TYPEVector(builder, numElems):
     return OrbitDeterminationStartOD_OBSERVATIONS_TYPEVector(builder, numElems)
 
+def OrbitDeterminationCreateOD_OBSERVATIONS_TYPEVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateOD_OBSERVATIONS_TYPEVector(builder, data):
+    OrbitDeterminationCreateOD_OBSERVATIONS_TYPEVector(builder, data)
+
 def OrbitDeterminationAddOD_OBSERVATIONS_USED(builder, OD_OBSERVATIONS_USED):
     builder.PrependInt32Slot(10, OD_OBSERVATIONS_USED, 0)
 
@@ -298,6 +304,12 @@ def OrbitDeterminationStartOD_EST_PARAMETERSVector(builder, numElems):
 def StartOD_EST_PARAMETERSVector(builder, numElems):
     return OrbitDeterminationStartOD_EST_PARAMETERSVector(builder, numElems)
 
+def OrbitDeterminationCreateOD_EST_PARAMETERSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateOD_EST_PARAMETERSVector(builder, data):
+    OrbitDeterminationCreateOD_EST_PARAMETERSVector(builder, data)
+
 def OrbitDeterminationAddOD_APRIORI_DATA(builder, OD_APRIORI_DATA):
     builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(OD_APRIORI_DATA), 0)
 
@@ -324,30 +336,49 @@ except:
 class OrbitDeterminationT(object):
 
     # OrbitDeterminationT
-    def __init__(self):
-        self.OD_ID = None  # type: str
-        self.OD_PREV_ID = None  # type: str
-        self.OD_ALGORITHM = None  # type: str
-        self.OD_METHOD = None  # type: str
-        self.OD_EPOCH = None  # type: str
-        self.OD_TIME_TAG = None  # type: str
-        self.OD_PROCESS_NOISE = None  # type: str
-        self.OD_COV_REDUCTION = None  # type: str
-        self.OD_NOISE_MODELS = None  # type: str
-        self.OD_OBSERVATIONS_TYPE = None  # type: List[str]
-        self.OD_OBSERVATIONS_USED = 0  # type: int
-        self.OD_TRACKS_USED = 0  # type: int
-        self.OD_DATA_WEIGHTING = None  # type: str
-        self.OD_CONVERGENCE_CRITERIA = None  # type: str
-        self.OD_EST_PARAMETERS = None  # type: List[str]
-        self.OD_APRIORI_DATA = None  # type: str
-        self.OD_RESIDUALS = None  # type: str
+    def __init__(
+        self,
+        OD_ID = None,
+        OD_PREV_ID = None,
+        OD_ALGORITHM = None,
+        OD_METHOD = None,
+        OD_EPOCH = None,
+        OD_TIME_TAG = None,
+        OD_PROCESS_NOISE = None,
+        OD_COV_REDUCTION = None,
+        OD_NOISE_MODELS = None,
+        OD_OBSERVATIONS_TYPE = None,
+        OD_OBSERVATIONS_USED = 0,
+        OD_TRACKS_USED = 0,
+        OD_DATA_WEIGHTING = None,
+        OD_CONVERGENCE_CRITERIA = None,
+        OD_EST_PARAMETERS = None,
+        OD_APRIORI_DATA = None,
+        OD_RESIDUALS = None,
+    ):
+        self.OD_ID = OD_ID  # type: Optional[str]
+        self.OD_PREV_ID = OD_PREV_ID  # type: Optional[str]
+        self.OD_ALGORITHM = OD_ALGORITHM  # type: Optional[str]
+        self.OD_METHOD = OD_METHOD  # type: Optional[str]
+        self.OD_EPOCH = OD_EPOCH  # type: Optional[str]
+        self.OD_TIME_TAG = OD_TIME_TAG  # type: Optional[str]
+        self.OD_PROCESS_NOISE = OD_PROCESS_NOISE  # type: Optional[str]
+        self.OD_COV_REDUCTION = OD_COV_REDUCTION  # type: Optional[str]
+        self.OD_NOISE_MODELS = OD_NOISE_MODELS  # type: Optional[str]
+        self.OD_OBSERVATIONS_TYPE = OD_OBSERVATIONS_TYPE  # type: Optional[List[Optional[str]]]
+        self.OD_OBSERVATIONS_USED = OD_OBSERVATIONS_USED  # type: int
+        self.OD_TRACKS_USED = OD_TRACKS_USED  # type: int
+        self.OD_DATA_WEIGHTING = OD_DATA_WEIGHTING  # type: Optional[str]
+        self.OD_CONVERGENCE_CRITERIA = OD_CONVERGENCE_CRITERIA  # type: Optional[str]
+        self.OD_EST_PARAMETERS = OD_EST_PARAMETERS  # type: Optional[List[Optional[str]]]
+        self.OD_APRIORI_DATA = OD_APRIORI_DATA  # type: Optional[str]
+        self.OD_RESIDUALS = OD_RESIDUALS  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        orbitDetermination = OrbitDetermination()
-        orbitDetermination.Init(buf, pos)
-        return cls.InitFromObj(orbitDetermination)
+        tmpOrbitDetermination = OrbitDetermination()
+        tmpOrbitDetermination.Init(buf, pos)
+        return cls.InitFromObj(tmpOrbitDetermination)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -355,38 +386,38 @@ class OrbitDeterminationT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, orbitDetermination):
+    def InitFromObj(cls, tmpOrbitDetermination):
         x = OrbitDeterminationT()
-        x._UnPack(orbitDetermination)
+        x._UnPack(tmpOrbitDetermination)
         return x
 
     # OrbitDeterminationT
-    def _UnPack(self, orbitDetermination):
-        if orbitDetermination is None:
+    def _UnPack(self, OrbitDetermination):
+        if OrbitDetermination is None:
             return
-        self.OD_ID = orbitDetermination.OD_ID()
-        self.OD_PREV_ID = orbitDetermination.OD_PREV_ID()
-        self.OD_ALGORITHM = orbitDetermination.OD_ALGORITHM()
-        self.OD_METHOD = orbitDetermination.OD_METHOD()
-        self.OD_EPOCH = orbitDetermination.OD_EPOCH()
-        self.OD_TIME_TAG = orbitDetermination.OD_TIME_TAG()
-        self.OD_PROCESS_NOISE = orbitDetermination.OD_PROCESS_NOISE()
-        self.OD_COV_REDUCTION = orbitDetermination.OD_COV_REDUCTION()
-        self.OD_NOISE_MODELS = orbitDetermination.OD_NOISE_MODELS()
-        if not orbitDetermination.OD_OBSERVATIONS_TYPEIsNone():
+        self.OD_ID = OrbitDetermination.OD_ID()
+        self.OD_PREV_ID = OrbitDetermination.OD_PREV_ID()
+        self.OD_ALGORITHM = OrbitDetermination.OD_ALGORITHM()
+        self.OD_METHOD = OrbitDetermination.OD_METHOD()
+        self.OD_EPOCH = OrbitDetermination.OD_EPOCH()
+        self.OD_TIME_TAG = OrbitDetermination.OD_TIME_TAG()
+        self.OD_PROCESS_NOISE = OrbitDetermination.OD_PROCESS_NOISE()
+        self.OD_COV_REDUCTION = OrbitDetermination.OD_COV_REDUCTION()
+        self.OD_NOISE_MODELS = OrbitDetermination.OD_NOISE_MODELS()
+        if not OrbitDetermination.OD_OBSERVATIONS_TYPEIsNone():
             self.OD_OBSERVATIONS_TYPE = []
-            for i in range(orbitDetermination.OD_OBSERVATIONS_TYPELength()):
-                self.OD_OBSERVATIONS_TYPE.append(orbitDetermination.OD_OBSERVATIONS_TYPE(i))
-        self.OD_OBSERVATIONS_USED = orbitDetermination.OD_OBSERVATIONS_USED()
-        self.OD_TRACKS_USED = orbitDetermination.OD_TRACKS_USED()
-        self.OD_DATA_WEIGHTING = orbitDetermination.OD_DATA_WEIGHTING()
-        self.OD_CONVERGENCE_CRITERIA = orbitDetermination.OD_CONVERGENCE_CRITERIA()
-        if not orbitDetermination.OD_EST_PARAMETERSIsNone():
+            for i in range(OrbitDetermination.OD_OBSERVATIONS_TYPELength()):
+                self.OD_OBSERVATIONS_TYPE.append(OrbitDetermination.OD_OBSERVATIONS_TYPE(i))
+        self.OD_OBSERVATIONS_USED = OrbitDetermination.OD_OBSERVATIONS_USED()
+        self.OD_TRACKS_USED = OrbitDetermination.OD_TRACKS_USED()
+        self.OD_DATA_WEIGHTING = OrbitDetermination.OD_DATA_WEIGHTING()
+        self.OD_CONVERGENCE_CRITERIA = OrbitDetermination.OD_CONVERGENCE_CRITERIA()
+        if not OrbitDetermination.OD_EST_PARAMETERSIsNone():
             self.OD_EST_PARAMETERS = []
-            for i in range(orbitDetermination.OD_EST_PARAMETERSLength()):
-                self.OD_EST_PARAMETERS.append(orbitDetermination.OD_EST_PARAMETERS(i))
-        self.OD_APRIORI_DATA = orbitDetermination.OD_APRIORI_DATA()
-        self.OD_RESIDUALS = orbitDetermination.OD_RESIDUALS()
+            for i in range(OrbitDetermination.OD_EST_PARAMETERSLength()):
+                self.OD_EST_PARAMETERS.append(OrbitDetermination.OD_EST_PARAMETERS(i))
+        self.OD_APRIORI_DATA = OrbitDetermination.OD_APRIORI_DATA()
+        self.OD_RESIDUALS = OrbitDetermination.OD_RESIDUALS()
 
     # OrbitDeterminationT
     def Pack(self, builder):
@@ -465,5 +496,5 @@ class OrbitDeterminationT(object):
             OrbitDeterminationAddOD_APRIORI_DATA(builder, OD_APRIORI_DATA)
         if self.OD_RESIDUALS is not None:
             OrbitDeterminationAddOD_RESIDUALS(builder, OD_RESIDUALS)
-        orbitDetermination = OrbitDeterminationEnd(builder)
-        return orbitDetermination
+        OrbitDetermination = OrbitDeterminationEnd(builder)
+        return OrbitDetermination

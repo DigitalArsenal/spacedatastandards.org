@@ -2,4 +2,7 @@
 
 # namespace: 
 
-# NOTE reentryDisposition.py does not declare any structs or enums
+class reentryDisposition(object):
+    CONTROLLED = 0
+    UNCONTROLLED = 1
+    SEMI_CONTROLLED = 2

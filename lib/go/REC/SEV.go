@@ -62,12 +62,20 @@ func (rcv *SEV) OB_TYPE() []byte {
 	return nil
 }
 
+func (rcv *SEV) ObType() []byte {
+	return rcv.OB_TYPE()
+}
+
 func (rcv *SEV) OB_UO_M() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *SEV) ObUoM() []byte {
+	return rcv.OB_UO_M()
 }
 
 func (rcv *SEV) OB_VALUE() float64 {
@@ -78,8 +86,16 @@ func (rcv *SEV) OB_VALUE() float64 {
 	return 0.0
 }
 
+func (rcv *SEV) ObValue() float64 {
+	return rcv.OB_VALUE()
+}
+
 func (rcv *SEV) MutateOB_VALUE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(8, n)
+}
+
+func (rcv *SEV) MutateObValue(n float64) bool {
+	return rcv.MutateOB_VALUE(n)
 }
 
 func (rcv *SEV) OB_STRING() []byte {
@@ -88,6 +104,10 @@ func (rcv *SEV) OB_STRING() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *SEV) ObString() []byte {
+	return rcv.OB_STRING()
 }
 
 func (rcv *SEV) OB_ARRAY(j int) []byte {
@@ -99,12 +119,20 @@ func (rcv *SEV) OB_ARRAY(j int) []byte {
 	return nil
 }
 
+func (rcv *SEV) ObArray(j int) []byte {
+	return rcv.OB_ARRAY(j)
+}
+
 func (rcv *SEV) OB_ARRAYLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *SEV) ObArrayLength() int {
+	return rcv.OB_ARRAYLength()
 }
 
 func (rcv *SEV) OB_BOOL() bool {
@@ -115,8 +143,16 @@ func (rcv *SEV) OB_BOOL() bool {
 	return false
 }
 
+func (rcv *SEV) ObBool() bool {
+	return rcv.OB_BOOL()
+}
+
 func (rcv *SEV) MutateOB_BOOL(n bool) bool {
 	return rcv._tab.MutateBoolSlot(14, n)
+}
+
+func (rcv *SEV) MutateObBool(n bool) bool {
+	return rcv.MutateOB_BOOL(n)
 }
 
 func (rcv *SEV) OB_QUALITY() []byte {
@@ -127,6 +163,10 @@ func (rcv *SEV) OB_QUALITY() []byte {
 	return nil
 }
 
+func (rcv *SEV) ObQuality() []byte {
+	return rcv.OB_QUALITY()
+}
+
 func (rcv *SEV) OB_DESCRIPTION() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
 	if o != 0 {
@@ -135,35 +175,66 @@ func (rcv *SEV) OB_DESCRIPTION() []byte {
 	return nil
 }
 
+func (rcv *SEV) ObDescription() []byte {
+	return rcv.OB_DESCRIPTION()
+}
+
 func SEVStart(builder *flatbuffers.Builder) {
 	builder.StartObject(8)
 }
 func SEVAddOB_TYPE(builder *flatbuffers.Builder, OB_TYPE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(OB_TYPE), 0)
 }
+func SEVAddObType(builder *flatbuffers.Builder, OB_TYPE flatbuffers.UOffsetT) {
+	SEVAddOB_TYPE(builder, OB_TYPE)
+}
 func SEVAddOB_UO_M(builder *flatbuffers.Builder, OB_UO_M flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(OB_UO_M), 0)
+}
+func SEVAddObUoM(builder *flatbuffers.Builder, OB_UO_M flatbuffers.UOffsetT) {
+	SEVAddOB_UO_M(builder, OB_UO_M)
 }
 func SEVAddOB_VALUE(builder *flatbuffers.Builder, OB_VALUE float64) {
 	builder.PrependFloat64Slot(2, OB_VALUE, 0.0)
 }
+func SEVAddObValue(builder *flatbuffers.Builder, OB_VALUE float64) {
+	SEVAddOB_VALUE(builder, OB_VALUE)
+}
 func SEVAddOB_STRING(builder *flatbuffers.Builder, OB_STRING flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(OB_STRING), 0)
+}
+func SEVAddObString(builder *flatbuffers.Builder, OB_STRING flatbuffers.UOffsetT) {
+	SEVAddOB_STRING(builder, OB_STRING)
 }
 func SEVAddOB_ARRAY(builder *flatbuffers.Builder, OB_ARRAY flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(OB_ARRAY), 0)
 }
+func SEVAddObArray(builder *flatbuffers.Builder, OB_ARRAY flatbuffers.UOffsetT) {
+	SEVAddOB_ARRAY(builder, OB_ARRAY)
+}
 func SEVStartOB_ARRAYVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func SEVStartObArrayVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return SEVStartOB_ARRAYVector(builder, numElems)
 }
 func SEVAddOB_BOOL(builder *flatbuffers.Builder, OB_BOOL bool) {
 	builder.PrependBoolSlot(5, OB_BOOL, false)
 }
+func SEVAddObBool(builder *flatbuffers.Builder, OB_BOOL bool) {
+	SEVAddOB_BOOL(builder, OB_BOOL)
+}
 func SEVAddOB_QUALITY(builder *flatbuffers.Builder, OB_QUALITY flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(OB_QUALITY), 0)
 }
+func SEVAddObQuality(builder *flatbuffers.Builder, OB_QUALITY flatbuffers.UOffsetT) {
+	SEVAddOB_QUALITY(builder, OB_QUALITY)
+}
 func SEVAddOB_DESCRIPTION(builder *flatbuffers.Builder, OB_DESCRIPTION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(OB_DESCRIPTION), 0)
+}
+func SEVAddObDescription(builder *flatbuffers.Builder, OB_DESCRIPTION flatbuffers.UOffsetT) {
+	SEVAddOB_DESCRIPTION(builder, OB_DESCRIPTION)
 }
 func SEVEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

@@ -32,7 +32,7 @@ class CZMPolyline : Table() {
     /**
      * Whether the polyline is displayed
      */
-    val SHOW : Boolean
+    val show : Boolean
         get() {
             val o = __offset(4)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -40,7 +40,7 @@ class CZMPolyline : Table() {
     /**
      * Positions as cartographic degrees [lon, lat, height, lon, lat, height, ...]
      */
-    fun POSITIONS_CARTOGRAPHIC_DEGREES(j: Int) : Double {
+    fun positionsCartographicDegrees(j: Int) : Double {
         val o = __offset(6)
         return if (o != 0) {
             bb.getDouble(__vector(o) + j * 8)
@@ -48,16 +48,16 @@ class CZMPolyline : Table() {
             0.0
         }
     }
-    val POSITIONS_CARTOGRAPHIC_DEGREESLength : Int
+    val positionsCartographicDegreesLength : Int
         get() {
             val o = __offset(6); return if (o != 0) __vector_len(o) else 0
         }
-    val POSITIONS_CARTOGRAPHIC_DEGREESAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 8)
-    fun POSITIONS_CARTOGRAPHIC_DEGREESInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 8)
+    val positionsCartographicDegreesAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 8)
+    fun positionsCartographicDegreesInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 8)
     /**
      * Positions as Cartesian [X, Y, Z, X, Y, Z, ...]
      */
-    fun POSITIONS_CARTESIAN(j: Int) : Double {
+    fun positionsCartesian(j: Int) : Double {
         val o = __offset(8)
         return if (o != 0) {
             bb.getDouble(__vector(o) + j * 8)
@@ -65,16 +65,16 @@ class CZMPolyline : Table() {
             0.0
         }
     }
-    val POSITIONS_CARTESIANLength : Int
+    val positionsCartesianLength : Int
         get() {
             val o = __offset(8); return if (o != 0) __vector_len(o) else 0
         }
-    val POSITIONS_CARTESIANAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 8)
-    fun POSITIONS_CARTESIANInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 8)
+    val positionsCartesianAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 8)
+    fun positionsCartesianInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 8)
     /**
      * Line width in pixels
      */
-    val WIDTH : Double
+    val width : Double
         get() {
             val o = __offset(10)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -82,8 +82,8 @@ class CZMPolyline : Table() {
     /**
      * Line color (solid color material, legacy)
      */
-    val COLOR : CZMColor? get() = COLOR(CZMColor())
-    fun COLOR(obj: CZMColor) : CZMColor? {
+    val color : CZMColor? get() = color(CZMColor())
+    fun color(obj: CZMColor) : CZMColor? {
         val o = __offset(12)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -94,7 +94,7 @@ class CZMPolyline : Table() {
     /**
      * Whether to clamp to ground
      */
-    val CLAMP_TO_GROUND : Boolean
+    val clampToGround : Boolean
         get() {
             val o = __offset(14)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -102,7 +102,7 @@ class CZMPolyline : Table() {
     /**
      * Arc type
      */
-    val ARC_TYPE : String?
+    val arcType : String?
         get() {
             val o = __offset(16)
             return if (o != 0) {
@@ -111,12 +111,12 @@ class CZMPolyline : Table() {
                 null
             }
         }
-    val ARC_TYPEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(16, 1)
-    fun ARC_TYPEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 16, 1)
+    val arcTypeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(16, 1)
+    fun arcTypeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 16, 1)
     /**
      * Granularity in radians
      */
-    val GRANULARITY : Double
+    val granularity : Double
         get() {
             val o = __offset(18)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -124,8 +124,8 @@ class CZMPolyline : Table() {
     /**
      * Full polyline material
      */
-    val MATERIAL : CZMPolylineMaterial? get() = MATERIAL(CZMPolylineMaterial())
-    fun MATERIAL(obj: CZMPolylineMaterial) : CZMPolylineMaterial? {
+    val material : CZMPolylineMaterial? get() = material(CZMPolylineMaterial())
+    fun material(obj: CZMPolylineMaterial) : CZMPolylineMaterial? {
         val o = __offset(20)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -136,7 +136,7 @@ class CZMPolyline : Table() {
     /**
      * Shadow mode
      */
-    val SHADOWS : String?
+    val shadows : String?
         get() {
             val o = __offset(22)
             return if (o != 0) {
@@ -145,13 +145,13 @@ class CZMPolyline : Table() {
                 null
             }
         }
-    val SHADOWSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(22, 1)
-    fun SHADOWSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 22, 1)
+    val shadowsAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(22, 1)
+    fun shadowsInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 22, 1)
     /**
      * Depth fail material
      */
-    val DEPTH_FAIL_MATERIAL : CZMPolylineMaterial? get() = DEPTH_FAIL_MATERIAL(CZMPolylineMaterial())
-    fun DEPTH_FAIL_MATERIAL(obj: CZMPolylineMaterial) : CZMPolylineMaterial? {
+    val depthFailMaterial : CZMPolylineMaterial? get() = depthFailMaterial(CZMPolylineMaterial())
+    fun depthFailMaterial(obj: CZMPolylineMaterial) : CZMPolylineMaterial? {
         val o = __offset(24)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -162,7 +162,7 @@ class CZMPolyline : Table() {
     /**
      * Classification type
      */
-    val CLASSIFICATION_TYPE : String?
+    val classificationType : String?
         get() {
             val o = __offset(26)
             return if (o != 0) {
@@ -171,43 +171,43 @@ class CZMPolyline : Table() {
                 null
             }
         }
-    val CLASSIFICATION_TYPEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(26, 1)
-    fun CLASSIFICATION_TYPEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 26, 1)
+    val classificationTypeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(26, 1)
+    fun classificationTypeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 26, 1)
     /**
      * Z-index for ordering
      */
-    val Z_INDEX : Int
+    val zIndex : Int
         get() {
             val o = __offset(28)
             return if(o != 0) bb.getInt(o + bb_pos) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsCZMPolyline(_bb: ByteBuffer): CZMPolyline = getRootAsCZMPolyline(_bb, CZMPolyline())
         fun getRootAsCZMPolyline(_bb: ByteBuffer, obj: CZMPolyline): CZMPolyline {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createCZMPolyline(builder: FlatBufferBuilder, SHOW: Boolean, POSITIONS_CARTOGRAPHIC_DEGREESOffset: Int, POSITIONS_CARTESIANOffset: Int, WIDTH: Double, COLOROffset: Int, CLAMP_TO_GROUND: Boolean, ARC_TYPEOffset: Int, GRANULARITY: Double, MATERIALOffset: Int, SHADOWSOffset: Int, DEPTH_FAIL_MATERIALOffset: Int, CLASSIFICATION_TYPEOffset: Int, Z_INDEX: Int) : Int {
+        fun createCZMPolyline(builder: FlatBufferBuilder, show: Boolean, positionsCartographicDegreesOffset: Int, positionsCartesianOffset: Int, width: Double, colorOffset: Int, clampToGround: Boolean, arcTypeOffset: Int, granularity: Double, materialOffset: Int, shadowsOffset: Int, depthFailMaterialOffset: Int, classificationTypeOffset: Int, zIndex: Int) : Int {
             builder.startTable(13)
-            addGRANULARITY(builder, GRANULARITY)
-            addWIDTH(builder, WIDTH)
-            addZ_INDEX(builder, Z_INDEX)
-            addCLASSIFICATION_TYPE(builder, CLASSIFICATION_TYPEOffset)
-            addDEPTH_FAIL_MATERIAL(builder, DEPTH_FAIL_MATERIALOffset)
-            addSHADOWS(builder, SHADOWSOffset)
-            addMATERIAL(builder, MATERIALOffset)
-            addARC_TYPE(builder, ARC_TYPEOffset)
-            addCOLOR(builder, COLOROffset)
-            addPOSITIONS_CARTESIAN(builder, POSITIONS_CARTESIANOffset)
-            addPOSITIONS_CARTOGRAPHIC_DEGREES(builder, POSITIONS_CARTOGRAPHIC_DEGREESOffset)
-            addCLAMP_TO_GROUND(builder, CLAMP_TO_GROUND)
-            addSHOW(builder, SHOW)
+            addGRANULARITY(builder, granularity)
+            addWIDTH(builder, width)
+            addZINDEX(builder, zIndex)
+            addCLASSIFICATIONTYPE(builder, classificationTypeOffset)
+            addDEPTHFAILMATERIAL(builder, depthFailMaterialOffset)
+            addSHADOWS(builder, shadowsOffset)
+            addMATERIAL(builder, materialOffset)
+            addARCTYPE(builder, arcTypeOffset)
+            addCOLOR(builder, colorOffset)
+            addPOSITIONSCARTESIAN(builder, positionsCartesianOffset)
+            addPOSITIONSCARTOGRAPHICDEGREES(builder, positionsCartographicDegreesOffset)
+            addCLAMPTOGROUND(builder, clampToGround)
+            addSHOW(builder, show)
             return endCZMPolyline(builder)
         }
         fun startCZMPolyline(builder: FlatBufferBuilder) = builder.startTable(13)
-        fun addSHOW(builder: FlatBufferBuilder, SHOW: Boolean) = builder.addBoolean(0, SHOW, false)
-        fun addPOSITIONS_CARTOGRAPHIC_DEGREES(builder: FlatBufferBuilder, POSITIONS_CARTOGRAPHIC_DEGREES: Int) = builder.addOffset(1, POSITIONS_CARTOGRAPHIC_DEGREES, 0)
+        fun addSHOW(builder: FlatBufferBuilder, show: Boolean) = builder.addBoolean(0, show, false)
+        fun addPOSITIONSCARTOGRAPHICDEGREES(builder: FlatBufferBuilder, positionsCartographicDegrees: Int) = builder.addOffset(1, positionsCartographicDegrees, 0)
         fun createPositionsCartographicDegreesVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
             builder.startVector(8, data.size, 8)
             for (i in data.size - 1 downTo 0) {
@@ -216,7 +216,7 @@ class CZMPolyline : Table() {
             return builder.endVector()
         }
         fun startPositionsCartographicDegreesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
-        fun addPOSITIONS_CARTESIAN(builder: FlatBufferBuilder, POSITIONS_CARTESIAN: Int) = builder.addOffset(2, POSITIONS_CARTESIAN, 0)
+        fun addPOSITIONSCARTESIAN(builder: FlatBufferBuilder, positionsCartesian: Int) = builder.addOffset(2, positionsCartesian, 0)
         fun createPositionsCartesianVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
             builder.startVector(8, data.size, 8)
             for (i in data.size - 1 downTo 0) {
@@ -225,16 +225,16 @@ class CZMPolyline : Table() {
             return builder.endVector()
         }
         fun startPositionsCartesianVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
-        fun addWIDTH(builder: FlatBufferBuilder, WIDTH: Double) = builder.addDouble(3, WIDTH, 0.0)
-        fun addCOLOR(builder: FlatBufferBuilder, COLOR: Int) = builder.addOffset(4, COLOR, 0)
-        fun addCLAMP_TO_GROUND(builder: FlatBufferBuilder, CLAMP_TO_GROUND: Boolean) = builder.addBoolean(5, CLAMP_TO_GROUND, false)
-        fun addARC_TYPE(builder: FlatBufferBuilder, ARC_TYPE: Int) = builder.addOffset(6, ARC_TYPE, 0)
-        fun addGRANULARITY(builder: FlatBufferBuilder, GRANULARITY: Double) = builder.addDouble(7, GRANULARITY, 0.0)
-        fun addMATERIAL(builder: FlatBufferBuilder, MATERIAL: Int) = builder.addOffset(8, MATERIAL, 0)
-        fun addSHADOWS(builder: FlatBufferBuilder, SHADOWS: Int) = builder.addOffset(9, SHADOWS, 0)
-        fun addDEPTH_FAIL_MATERIAL(builder: FlatBufferBuilder, DEPTH_FAIL_MATERIAL: Int) = builder.addOffset(10, DEPTH_FAIL_MATERIAL, 0)
-        fun addCLASSIFICATION_TYPE(builder: FlatBufferBuilder, CLASSIFICATION_TYPE: Int) = builder.addOffset(11, CLASSIFICATION_TYPE, 0)
-        fun addZ_INDEX(builder: FlatBufferBuilder, Z_INDEX: Int) = builder.addInt(12, Z_INDEX, 0)
+        fun addWIDTH(builder: FlatBufferBuilder, width: Double) = builder.addDouble(3, width, 0.0)
+        fun addCOLOR(builder: FlatBufferBuilder, color: Int) = builder.addOffset(4, color, 0)
+        fun addCLAMPTOGROUND(builder: FlatBufferBuilder, clampToGround: Boolean) = builder.addBoolean(5, clampToGround, false)
+        fun addARCTYPE(builder: FlatBufferBuilder, arcType: Int) = builder.addOffset(6, arcType, 0)
+        fun addGRANULARITY(builder: FlatBufferBuilder, granularity: Double) = builder.addDouble(7, granularity, 0.0)
+        fun addMATERIAL(builder: FlatBufferBuilder, material: Int) = builder.addOffset(8, material, 0)
+        fun addSHADOWS(builder: FlatBufferBuilder, shadows: Int) = builder.addOffset(9, shadows, 0)
+        fun addDEPTHFAILMATERIAL(builder: FlatBufferBuilder, depthFailMaterial: Int) = builder.addOffset(10, depthFailMaterial, 0)
+        fun addCLASSIFICATIONTYPE(builder: FlatBufferBuilder, classificationType: Int) = builder.addOffset(11, classificationType, 0)
+        fun addZINDEX(builder: FlatBufferBuilder, zIndex: Int) = builder.addInt(12, zIndex, 0)
         fun endCZMPolyline(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

@@ -1,5 +1,6 @@
 import * as flatbuffers from 'flatbuffers';
 import { CAT, CATT } from './CAT.js';
+import { PPEPositionRecord, PPEPositionRecordT } from './PPEPositionRecord.js';
 import { RFM, RFMT } from './RFM.js';
 import { covarianceMatrixLine, covarianceMatrixLineT } from './covarianceMatrixLine.js';
 import { ephemerisDataLine, ephemerisDataLineT } from './ephemerisDataLine.js';
@@ -65,7 +66,11 @@ export declare class ephemerisDataBlock implements flatbuffers.IUnpackableObject
     STOP_TIME(): string | null;
     STOP_TIME(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     /**
-     * Recommended interpolation method for ephemeris data (Hermite, Linear, Lagrange, etc.)
+     * Recommended interpolation method for ephemeris data.
+     * Supported methods: Hermite, Linear, Lagrange, Chebyshev.
+     * When set to "Chebyshev", parsers should use POLYNOMIAL_POSITION_RECORDS
+     * for high-fidelity polynomial interpolation instead of interpolating across
+     * discrete state vectors.
      */
     INTERPOLATION(): string | null;
     INTERPOLATION(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
@@ -109,6 +114,14 @@ export declare class ephemerisDataBlock implements flatbuffers.IUnpackableObject
      */
     COVARIANCE_MATRIX_LINES(index: number, obj?: covarianceMatrixLine): covarianceMatrixLine | null;
     covarianceMatrixLinesLength(): number;
+    /**
+     * Optional polynomial position records for high-fidelity interpolation.
+     * Used when INTERPOLATION is "Chebyshev". Each record covers a time segment with
+     * polynomial coefficients for continuous position (and optionally velocity) evaluation.
+     * See PPE schema for record structure and evaluation procedure.
+     */
+    POLYNOMIAL_POSITION_RECORDS(index: number, obj?: PPEPositionRecord): PPEPositionRecord | null;
+    polynomialPositionRecordsLength(): number;
     static startephemerisDataBlock(builder: flatbuffers.Builder): void;
     static addComment(builder: flatbuffers.Builder, COMMENTOffset: flatbuffers.Offset): void;
     static addObject(builder: flatbuffers.Builder, OBJECTOffset: flatbuffers.Offset): void;
@@ -138,6 +151,9 @@ export declare class ephemerisDataBlock implements flatbuffers.IUnpackableObject
     static addCovarianceMatrixLines(builder: flatbuffers.Builder, COVARIANCE_MATRIX_LINESOffset: flatbuffers.Offset): void;
     static createCovarianceMatrixLinesVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
     static startCovarianceMatrixLinesVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addPolynomialPositionRecords(builder: flatbuffers.Builder, POLYNOMIAL_POSITION_RECORDSOffset: flatbuffers.Offset): void;
+    static createPolynomialPositionRecordsVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
+    static startPolynomialPositionRecordsVector(builder: flatbuffers.Builder, numElems: number): void;
     static endephemerisDataBlock(builder: flatbuffers.Builder): flatbuffers.Offset;
     unpack(): ephemerisDataBlockT;
     unpackTo(_o: ephemerisDataBlockT): void;
@@ -161,7 +177,8 @@ export declare class ephemerisDataBlockT implements flatbuffers.IGeneratedObject
     EPHEMERIS_DATA: (number)[];
     EPHEMERIS_DATA_LINES: (ephemerisDataLineT)[];
     COVARIANCE_MATRIX_LINES: (covarianceMatrixLineT)[];
-    constructor(COMMENT?: string | Uint8Array | null, OBJECT?: CATT | null, CENTER_NAME?: string | Uint8Array | null, REFERENCE_FRAME?: RFMT | null, REFERENCE_FRAME_EPOCH?: string | Uint8Array | null, COV_REFERENCE_FRAME?: RFMT | null, TIME_SYSTEM?: timeSystem, START_TIME?: string | Uint8Array | null, USEABLE_START_TIME?: string | Uint8Array | null, USEABLE_STOP_TIME?: string | Uint8Array | null, STOP_TIME?: string | Uint8Array | null, INTERPOLATION?: string | Uint8Array | null, INTERPOLATION_DEGREE?: number, STEP_SIZE?: number, STATE_VECTOR_SIZE?: number, EPHEMERIS_DATA?: (number)[], EPHEMERIS_DATA_LINES?: (ephemerisDataLineT)[], COVARIANCE_MATRIX_LINES?: (covarianceMatrixLineT)[]);
+    POLYNOMIAL_POSITION_RECORDS: (PPEPositionRecordT)[];
+    constructor(COMMENT?: string | Uint8Array | null, OBJECT?: CATT | null, CENTER_NAME?: string | Uint8Array | null, REFERENCE_FRAME?: RFMT | null, REFERENCE_FRAME_EPOCH?: string | Uint8Array | null, COV_REFERENCE_FRAME?: RFMT | null, TIME_SYSTEM?: timeSystem, START_TIME?: string | Uint8Array | null, USEABLE_START_TIME?: string | Uint8Array | null, USEABLE_STOP_TIME?: string | Uint8Array | null, STOP_TIME?: string | Uint8Array | null, INTERPOLATION?: string | Uint8Array | null, INTERPOLATION_DEGREE?: number, STEP_SIZE?: number, STATE_VECTOR_SIZE?: number, EPHEMERIS_DATA?: (number)[], EPHEMERIS_DATA_LINES?: (ephemerisDataLineT)[], COVARIANCE_MATRIX_LINES?: (covarianceMatrixLineT)[], POLYNOMIAL_POSITION_RECORDS?: (PPEPositionRecordT)[]);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=ephemerisDataBlock.d.ts.map

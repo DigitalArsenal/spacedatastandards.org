@@ -2,4 +2,146 @@
 
 # namespace: 
 
-# NOTE MetaCommandSet.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Collection of metacommands
+class MetaCommandSet(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = MetaCommandSet()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsMetaCommandSet(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def MetaCommandSetBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x58\x54\x43", size_prefixed=size_prefixed)
+
+    # MetaCommandSet
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # MetaCommands
+    # MetaCommandSet
+    def META_COMMANDS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from MetaCommand import MetaCommand
+            obj = MetaCommand()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # MetaCommandSet
+    def META_COMMANDSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # MetaCommandSet
+    def META_COMMANDSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        return o == 0
+
+def MetaCommandSetStart(builder):
+    builder.StartObject(1)
+
+def Start(builder):
+    MetaCommandSetStart(builder)
+
+def MetaCommandSetAddMETA_COMMANDS(builder, META_COMMANDS):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(META_COMMANDS), 0)
+
+def AddMETA_COMMANDS(builder, META_COMMANDS):
+    MetaCommandSetAddMETA_COMMANDS(builder, META_COMMANDS)
+
+def MetaCommandSetStartMETA_COMMANDSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartMETA_COMMANDSVector(builder, numElems):
+    return MetaCommandSetStartMETA_COMMANDSVector(builder, numElems)
+
+def MetaCommandSetCreateMETA_COMMANDSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateMETA_COMMANDSVector(builder, data):
+    MetaCommandSetCreateMETA_COMMANDSVector(builder, data)
+
+def MetaCommandSetEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return MetaCommandSetEnd(builder)
+
+import MetaCommand
+try:
+    from typing import List
+except:
+    pass
+
+class MetaCommandSetT(object):
+
+    # MetaCommandSetT
+    def __init__(
+        self,
+        META_COMMANDS = None,
+    ):
+        self.META_COMMANDS = META_COMMANDS  # type: Optional[List[MetaCommand.MetaCommandT]]
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpMetaCommandSet = MetaCommandSet()
+        tmpMetaCommandSet.Init(buf, pos)
+        return cls.InitFromObj(tmpMetaCommandSet)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpMetaCommandSet):
+        x = MetaCommandSetT()
+        x._UnPack(tmpMetaCommandSet)
+        return x
+
+    # MetaCommandSetT
+    def _UnPack(self, MetaCommandSet):
+        if MetaCommandSet is None:
+            return
+        if not MetaCommandSet.META_COMMANDSIsNone():
+            self.META_COMMANDS = []
+            for i in range(MetaCommandSet.META_COMMANDSLength()):
+                if MetaCommandSet.META_COMMANDS(i) is None:
+                    self.META_COMMANDS.append(None)
+                else:
+                    metaCommand_ = MetaCommand.MetaCommandT.InitFromObj(MetaCommandSet.META_COMMANDS(i))
+                    self.META_COMMANDS.append(metaCommand_)
+
+    # MetaCommandSetT
+    def Pack(self, builder):
+        if self.META_COMMANDS is not None:
+            META_COMMANDSlist = []
+            for i in range(len(self.META_COMMANDS)):
+                META_COMMANDSlist.append(self.META_COMMANDS[i].Pack(builder))
+            MetaCommandSetStartMETA_COMMANDSVector(builder, len(self.META_COMMANDS))
+            for i in reversed(range(len(self.META_COMMANDS))):
+                builder.PrependUOffsetTRelative(META_COMMANDSlist[i])
+            META_COMMANDS = builder.EndVector()
+        MetaCommandSetStart(builder)
+        if self.META_COMMANDS is not None:
+            MetaCommandSetAddMETA_COMMANDS(builder, META_COMMANDS)
+        MetaCommandSet = MetaCommandSetEnd(builder)
+        return MetaCommandSet

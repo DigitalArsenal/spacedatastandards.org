@@ -259,6 +259,12 @@ def SENStartMAINTENANCEVector(builder, numElems):
 def StartMAINTENANCEVector(builder, numElems):
     return SENStartMAINTENANCEVector(builder, numElems)
 
+def SENCreateMAINTENANCEVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateMAINTENANCEVector(builder, data):
+    SENCreateMAINTENANCEVector(builder, data)
+
 def SENAddPLANS(builder, PLANS):
     builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(PLANS), 0)
 
@@ -271,6 +277,12 @@ def SENStartPLANSVector(builder, numElems):
 def StartPLANSVector(builder, numElems):
     return SENStartPLANSVector(builder, numElems)
 
+def SENCreatePLANSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreatePLANSVector(builder, data):
+    SENCreatePLANSVector(builder, data)
+
 def SENAddSTATISTICS(builder, STATISTICS):
     builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(STATISTICS), 0)
 
@@ -282,6 +294,12 @@ def SENStartSTATISTICSVector(builder, numElems):
 
 def StartSTATISTICSVector(builder, numElems):
     return SENStartSTATISTICSVector(builder, numElems)
+
+def SENCreateSTATISTICSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateSTATISTICSVector(builder, data):
+    SENCreateSTATISTICSVector(builder, data)
 
 def SENAddNOTES(builder, NOTES):
     builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(NOTES), 0)
@@ -306,26 +324,41 @@ except:
 class SENT(object):
 
     # SENT
-    def __init__(self):
-        self.ID = None  # type: str
-        self.NAME = None  # type: str
-        self.TYPE = None  # type: str
-        self.STATUS = 0  # type: int
-        self.SITE_ID = None  # type: str
-        self.LATITUDE = 0.0  # type: float
-        self.LONGITUDE = 0.0  # type: float
-        self.ALTITUDE = 0.0  # type: float
-        self.STATUS_TIME = None  # type: str
-        self.MAINTENANCE = None  # type: List[sensorMaintenanceEvent.sensorMaintenanceEventT]
-        self.PLANS = None  # type: List[sensorPlan.sensorPlanT]
-        self.STATISTICS = None  # type: List[sensorStats.sensorStatsT]
-        self.NOTES = None  # type: str
+    def __init__(
+        self,
+        ID = None,
+        NAME = None,
+        TYPE = None,
+        STATUS = 0,
+        SITE_ID = None,
+        LATITUDE = 0.0,
+        LONGITUDE = 0.0,
+        ALTITUDE = 0.0,
+        STATUS_TIME = None,
+        MAINTENANCE = None,
+        PLANS = None,
+        STATISTICS = None,
+        NOTES = None,
+    ):
+        self.ID = ID  # type: Optional[str]
+        self.NAME = NAME  # type: Optional[str]
+        self.TYPE = TYPE  # type: Optional[str]
+        self.STATUS = STATUS  # type: int
+        self.SITE_ID = SITE_ID  # type: Optional[str]
+        self.LATITUDE = LATITUDE  # type: float
+        self.LONGITUDE = LONGITUDE  # type: float
+        self.ALTITUDE = ALTITUDE  # type: float
+        self.STATUS_TIME = STATUS_TIME  # type: Optional[str]
+        self.MAINTENANCE = MAINTENANCE  # type: Optional[List[sensorMaintenanceEvent.sensorMaintenanceEventT]]
+        self.PLANS = PLANS  # type: Optional[List[sensorPlan.sensorPlanT]]
+        self.STATISTICS = STATISTICS  # type: Optional[List[sensorStats.sensorStatsT]]
+        self.NOTES = NOTES  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        SEN = SEN()
-        SEN.Init(buf, pos)
-        return cls.InitFromObj(SEN)
+        tmpSen = SEN()
+        tmpSen.Init(buf, pos)
+        return cls.InitFromObj(tmpSen)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -333,9 +366,9 @@ class SENT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, SEN):
+    def InitFromObj(cls, tmpSen):
         x = SENT()
-        x._UnPack(SEN)
+        x._UnPack(tmpSen)
         return x
 
     # SENT

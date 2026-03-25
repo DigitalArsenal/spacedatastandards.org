@@ -32,7 +32,7 @@ class StringDataEncoding : Table() {
     /**
      * Character encoding
      */
-    val ENCODING : Byte
+    val encoding : Byte
         get() {
             val o = __offset(4)
             return if(o != 0) bb.get(o + bb_pos) else 3
@@ -40,7 +40,7 @@ class StringDataEncoding : Table() {
     /**
      * Size type specification
      */
-    val SIZE_TYPE : Byte
+    val sizeType : Byte
         get() {
             val o = __offset(6)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -48,7 +48,7 @@ class StringDataEncoding : Table() {
     /**
      * Fixed size in bits (when SIZE_TYPE=FIXED)
      */
-    val SIZE_IN_BITS : UShort
+    val sizeInBits : UShort
         get() {
             val o = __offset(8)
             return if(o != 0) bb.getShort(o + bb_pos).toUShort() else 0u
@@ -56,7 +56,7 @@ class StringDataEncoding : Table() {
     /**
      * Termination character (when SIZE_TYPE=TERMINATION_CHAR)
      */
-    val TERMINATION_CHAR : UByte
+    val terminationChar : UByte
         get() {
             val o = __offset(10)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
@@ -64,7 +64,7 @@ class StringDataEncoding : Table() {
     /**
      * Maximum size in bits (for variable length)
      */
-    val MAX_SIZE_IN_BITS : UShort
+    val maxSizeInBits : UShort
         get() {
             val o = __offset(12)
             return if(o != 0) bb.getShort(o + bb_pos).toUShort() else 0u
@@ -72,35 +72,35 @@ class StringDataEncoding : Table() {
     /**
      * Leading size field bits (when SIZE_TYPE=LEADING_SIZE)
      */
-    val LEADING_SIZE_BITS : UByte
+    val leadingSizeBits : UByte
         get() {
             val o = __offset(14)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsStringDataEncoding(_bb: ByteBuffer): StringDataEncoding = getRootAsStringDataEncoding(_bb, StringDataEncoding())
         fun getRootAsStringDataEncoding(_bb: ByteBuffer, obj: StringDataEncoding): StringDataEncoding {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createStringDataEncoding(builder: FlatBufferBuilder, ENCODING: Byte, SIZE_TYPE: Byte, SIZE_IN_BITS: UShort, TERMINATION_CHAR: UByte, MAX_SIZE_IN_BITS: UShort, LEADING_SIZE_BITS: UByte) : Int {
+        fun createStringDataEncoding(builder: FlatBufferBuilder, encoding: Byte, sizeType: Byte, sizeInBits: UShort, terminationChar: UByte, maxSizeInBits: UShort, leadingSizeBits: UByte) : Int {
             builder.startTable(6)
-            addMAX_SIZE_IN_BITS(builder, MAX_SIZE_IN_BITS)
-            addSIZE_IN_BITS(builder, SIZE_IN_BITS)
-            addLEADING_SIZE_BITS(builder, LEADING_SIZE_BITS)
-            addTERMINATION_CHAR(builder, TERMINATION_CHAR)
-            addSIZE_TYPE(builder, SIZE_TYPE)
-            addENCODING(builder, ENCODING)
+            addMAXSIZEINBITS(builder, maxSizeInBits)
+            addSIZEINBITS(builder, sizeInBits)
+            addLEADINGSIZEBITS(builder, leadingSizeBits)
+            addTERMINATIONCHAR(builder, terminationChar)
+            addSIZETYPE(builder, sizeType)
+            addENCODING(builder, encoding)
             return endStringDataEncoding(builder)
         }
         fun startStringDataEncoding(builder: FlatBufferBuilder) = builder.startTable(6)
-        fun addENCODING(builder: FlatBufferBuilder, ENCODING: Byte) = builder.addByte(0, ENCODING, 3)
-        fun addSIZE_TYPE(builder: FlatBufferBuilder, SIZE_TYPE: Byte) = builder.addByte(1, SIZE_TYPE, 0)
-        fun addSIZE_IN_BITS(builder: FlatBufferBuilder, SIZE_IN_BITS: UShort) = builder.addShort(2, SIZE_IN_BITS.toShort(), 0)
-        fun addTERMINATION_CHAR(builder: FlatBufferBuilder, TERMINATION_CHAR: UByte) = builder.addByte(3, TERMINATION_CHAR.toByte(), 0)
-        fun addMAX_SIZE_IN_BITS(builder: FlatBufferBuilder, MAX_SIZE_IN_BITS: UShort) = builder.addShort(4, MAX_SIZE_IN_BITS.toShort(), 0)
-        fun addLEADING_SIZE_BITS(builder: FlatBufferBuilder, LEADING_SIZE_BITS: UByte) = builder.addByte(5, LEADING_SIZE_BITS.toByte(), 0)
+        fun addENCODING(builder: FlatBufferBuilder, encoding: Byte) = builder.addByte(0, encoding, 3)
+        fun addSIZETYPE(builder: FlatBufferBuilder, sizeType: Byte) = builder.addByte(1, sizeType, 0)
+        fun addSIZEINBITS(builder: FlatBufferBuilder, sizeInBits: UShort) = builder.addShort(2, sizeInBits.toShort(), 0)
+        fun addTERMINATIONCHAR(builder: FlatBufferBuilder, terminationChar: UByte) = builder.addByte(3, terminationChar.toByte(), 0)
+        fun addMAXSIZEINBITS(builder: FlatBufferBuilder, maxSizeInBits: UShort) = builder.addShort(4, maxSizeInBits.toShort(), 0)
+        fun addLEADINGSIZEBITS(builder: FlatBufferBuilder, leadingSizeBits: UByte) = builder.addByte(5, leadingSizeBits.toByte(), 0)
         fun endStringDataEncoding(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

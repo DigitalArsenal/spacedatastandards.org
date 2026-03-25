@@ -32,7 +32,7 @@ class CryptoKey : Table() {
     /**
      * Public part of the cryptographic key, in hexidecimal format
      */
-    val PUBLIC_KEY : String?
+    val publicKey : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class CryptoKey : Table() {
                 null
             }
         }
-    val PUBLIC_KEYAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun PUBLIC_KEYInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val publicKeyAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun publicKeyInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Extended public key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys
      */
-    val XPUB : String?
+    val xpub : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -55,12 +55,12 @@ class CryptoKey : Table() {
                 null
             }
         }
-    val XPUBAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun XPUBInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val xpubAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun xpubInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * Private part of the cryptographic key in hexidecimal format, should be kept secret
      */
-    val PRIVATE_KEY : String?
+    val privateKey : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -69,12 +69,12 @@ class CryptoKey : Table() {
                 null
             }
         }
-    val PRIVATE_KEYAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun PRIVATE_KEYInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val privateKeyAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun privateKeyInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
     /**
      * Extended private key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys
      */
-    val XPRIV : String?
+    val xpriv : String?
         get() {
             val o = __offset(10)
             return if (o != 0) {
@@ -83,12 +83,12 @@ class CryptoKey : Table() {
                 null
             }
         }
-    val XPRIVAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
-    fun XPRIVInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
+    val xprivAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(10, 1)
+    fun xprivInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 10, 1)
     /**
      * Address generated from the cryptographic key
      */
-    val KEY_ADDRESS : String?
+    val keyAddress : String?
         get() {
             val o = __offset(12)
             return if (o != 0) {
@@ -97,12 +97,12 @@ class CryptoKey : Table() {
                 null
             }
         }
-    val KEY_ADDRESSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
-    fun KEY_ADDRESSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
+    val keyAddressAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(12, 1)
+    fun keyAddressInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 12, 1)
     /**
      * Type of the address generated from the cryptographic key
      */
-    val ADDRESS_TYPE : String?
+    val addressType : String?
         get() {
             val o = __offset(14)
             return if (o != 0) {
@@ -111,42 +111,42 @@ class CryptoKey : Table() {
                 null
             }
         }
-    val ADDRESS_TYPEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(14, 1)
-    fun ADDRESS_TYPEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 14, 1)
+    val addressTypeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(14, 1)
+    fun addressTypeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 14, 1)
     /**
      * Type of the cryptographic key (signing or encryption)
      */
-    val KEY_TYPE : Byte
+    val keyType : Byte
         get() {
             val o = __offset(16)
             return if(o != 0) bb.get(o + bb_pos) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsCryptoKey(_bb: ByteBuffer): CryptoKey = getRootAsCryptoKey(_bb, CryptoKey())
         fun getRootAsCryptoKey(_bb: ByteBuffer, obj: CryptoKey): CryptoKey {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createCryptoKey(builder: FlatBufferBuilder, PUBLIC_KEYOffset: Int, XPUBOffset: Int, PRIVATE_KEYOffset: Int, XPRIVOffset: Int, KEY_ADDRESSOffset: Int, ADDRESS_TYPEOffset: Int, KEY_TYPE: Byte) : Int {
+        fun createCryptoKey(builder: FlatBufferBuilder, publicKeyOffset: Int, xpubOffset: Int, privateKeyOffset: Int, xprivOffset: Int, keyAddressOffset: Int, addressTypeOffset: Int, keyType: Byte) : Int {
             builder.startTable(7)
-            addADDRESS_TYPE(builder, ADDRESS_TYPEOffset)
-            addKEY_ADDRESS(builder, KEY_ADDRESSOffset)
-            addXPRIV(builder, XPRIVOffset)
-            addPRIVATE_KEY(builder, PRIVATE_KEYOffset)
-            addXPUB(builder, XPUBOffset)
-            addPUBLIC_KEY(builder, PUBLIC_KEYOffset)
-            addKEY_TYPE(builder, KEY_TYPE)
+            addADDRESSTYPE(builder, addressTypeOffset)
+            addKEYADDRESS(builder, keyAddressOffset)
+            addXPRIV(builder, xprivOffset)
+            addPRIVATEKEY(builder, privateKeyOffset)
+            addXPUB(builder, xpubOffset)
+            addPUBLICKEY(builder, publicKeyOffset)
+            addKEYTYPE(builder, keyType)
             return endCryptoKey(builder)
         }
         fun startCryptoKey(builder: FlatBufferBuilder) = builder.startTable(7)
-        fun addPUBLIC_KEY(builder: FlatBufferBuilder, PUBLIC_KEY: Int) = builder.addOffset(0, PUBLIC_KEY, 0)
-        fun addXPUB(builder: FlatBufferBuilder, XPUB: Int) = builder.addOffset(1, XPUB, 0)
-        fun addPRIVATE_KEY(builder: FlatBufferBuilder, PRIVATE_KEY: Int) = builder.addOffset(2, PRIVATE_KEY, 0)
-        fun addXPRIV(builder: FlatBufferBuilder, XPRIV: Int) = builder.addOffset(3, XPRIV, 0)
-        fun addKEY_ADDRESS(builder: FlatBufferBuilder, KEY_ADDRESS: Int) = builder.addOffset(4, KEY_ADDRESS, 0)
-        fun addADDRESS_TYPE(builder: FlatBufferBuilder, ADDRESS_TYPE: Int) = builder.addOffset(5, ADDRESS_TYPE, 0)
-        fun addKEY_TYPE(builder: FlatBufferBuilder, KEY_TYPE: Byte) = builder.addByte(6, KEY_TYPE, 0)
+        fun addPUBLICKEY(builder: FlatBufferBuilder, publicKey: Int) = builder.addOffset(0, publicKey, 0)
+        fun addXPUB(builder: FlatBufferBuilder, xpub: Int) = builder.addOffset(1, xpub, 0)
+        fun addPRIVATEKEY(builder: FlatBufferBuilder, privateKey: Int) = builder.addOffset(2, privateKey, 0)
+        fun addXPRIV(builder: FlatBufferBuilder, xpriv: Int) = builder.addOffset(3, xpriv, 0)
+        fun addKEYADDRESS(builder: FlatBufferBuilder, keyAddress: Int) = builder.addOffset(4, keyAddress, 0)
+        fun addADDRESSTYPE(builder: FlatBufferBuilder, addressType: Int) = builder.addOffset(5, addressType, 0)
+        fun addKEYTYPE(builder: FlatBufferBuilder, keyType: Byte) = builder.addByte(6, keyType, 0)
         fun endCryptoKey(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

@@ -51,9 +51,17 @@ func (rcv *CZMBillboard) SHOW() bool {
 	return false
 }
 
+func (rcv *CZMBillboard) Show() bool {
+	return rcv.SHOW()
+}
+
 /// Whether the billboard is displayed
 func (rcv *CZMBillboard) MutateSHOW(n bool) bool {
 	return rcv._tab.MutateBoolSlot(4, n)
+}
+
+func (rcv *CZMBillboard) MutateShow(n bool) bool {
+	return rcv.MutateSHOW(n)
 }
 
 /// URI of the billboard image
@@ -63,6 +71,10 @@ func (rcv *CZMBillboard) IMAGE() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *CZMBillboard) Image() []byte {
+	return rcv.IMAGE()
 }
 
 /// URI of the billboard image
@@ -75,9 +87,17 @@ func (rcv *CZMBillboard) SCALE() float64 {
 	return 0.0
 }
 
+func (rcv *CZMBillboard) Scale() float64 {
+	return rcv.SCALE()
+}
+
 /// Scale factor
 func (rcv *CZMBillboard) MutateSCALE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(8, n)
+}
+
+func (rcv *CZMBillboard) MutateScale(n float64) bool {
+	return rcv.MutateSCALE(n)
 }
 
 /// Billboard color tint
@@ -94,6 +114,10 @@ func (rcv *CZMBillboard) COLOR(obj *CZMColor) *CZMColor {
 	return nil
 }
 
+func (rcv *CZMBillboard) Color(obj *CZMColor) *CZMColor {
+	return rcv.COLOR(obj)
+}
+
 /// Billboard color tint
 /// Height reference
 func (rcv *CZMBillboard) HEIGHT_REFERENCE() CZMHeightReference {
@@ -104,9 +128,17 @@ func (rcv *CZMBillboard) HEIGHT_REFERENCE() CZMHeightReference {
 	return 0
 }
 
+func (rcv *CZMBillboard) HeightReference() CZMHeightReference {
+	return rcv.HEIGHT_REFERENCE()
+}
+
 /// Height reference
 func (rcv *CZMBillboard) MutateHEIGHT_REFERENCE(n CZMHeightReference) bool {
 	return rcv._tab.MutateInt8Slot(12, int8(n))
+}
+
+func (rcv *CZMBillboard) MutateHeightReference(n CZMHeightReference) bool {
+	return rcv.MutateHEIGHT_REFERENCE(n)
 }
 
 /// Pixel offset X
@@ -118,9 +150,17 @@ func (rcv *CZMBillboard) PIXEL_OFFSET_X() float64 {
 	return 0.0
 }
 
+func (rcv *CZMBillboard) PixelOffsetX() float64 {
+	return rcv.PIXEL_OFFSET_X()
+}
+
 /// Pixel offset X
 func (rcv *CZMBillboard) MutatePIXEL_OFFSET_X(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(14, n)
+}
+
+func (rcv *CZMBillboard) MutatePixelOffsetX(n float64) bool {
+	return rcv.MutatePIXEL_OFFSET_X(n)
 }
 
 /// Pixel offset Y
@@ -132,9 +172,17 @@ func (rcv *CZMBillboard) PIXEL_OFFSET_Y() float64 {
 	return 0.0
 }
 
+func (rcv *CZMBillboard) PixelOffsetY() float64 {
+	return rcv.PIXEL_OFFSET_Y()
+}
+
 /// Pixel offset Y
 func (rcv *CZMBillboard) MutatePIXEL_OFFSET_Y(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(16, n)
+}
+
+func (rcv *CZMBillboard) MutatePixelOffsetY(n float64) bool {
+	return rcv.MutatePIXEL_OFFSET_Y(n)
 }
 
 /// Horizontal origin
@@ -146,9 +194,17 @@ func (rcv *CZMBillboard) HORIZONTAL_ORIGIN() CZMHorizontalOrigin {
 	return 0
 }
 
+func (rcv *CZMBillboard) HorizontalOrigin() CZMHorizontalOrigin {
+	return rcv.HORIZONTAL_ORIGIN()
+}
+
 /// Horizontal origin
 func (rcv *CZMBillboard) MutateHORIZONTAL_ORIGIN(n CZMHorizontalOrigin) bool {
 	return rcv._tab.MutateInt8Slot(18, int8(n))
+}
+
+func (rcv *CZMBillboard) MutateHorizontalOrigin(n CZMHorizontalOrigin) bool {
+	return rcv.MutateHORIZONTAL_ORIGIN(n)
 }
 
 /// Vertical origin
@@ -160,9 +216,17 @@ func (rcv *CZMBillboard) VERTICAL_ORIGIN() CZMVerticalOrigin {
 	return 0
 }
 
+func (rcv *CZMBillboard) VerticalOrigin() CZMVerticalOrigin {
+	return rcv.VERTICAL_ORIGIN()
+}
+
 /// Vertical origin
 func (rcv *CZMBillboard) MutateVERTICAL_ORIGIN(n CZMVerticalOrigin) bool {
 	return rcv._tab.MutateInt8Slot(20, int8(n))
+}
+
+func (rcv *CZMBillboard) MutateVerticalOrigin(n CZMVerticalOrigin) bool {
+	return rcv.MutateVERTICAL_ORIGIN(n)
 }
 
 /// Translucency by distance
@@ -179,6 +243,10 @@ func (rcv *CZMBillboard) TRANSLUCENCY_BY_DISTANCE(obj *CZMNearFarScalar) *CZMNea
 	return nil
 }
 
+func (rcv *CZMBillboard) TranslucencyByDistance(obj *CZMNearFarScalar) *CZMNearFarScalar {
+	return rcv.TRANSLUCENCY_BY_DISTANCE(obj)
+}
+
 /// Translucency by distance
 /// Rotation in radians
 func (rcv *CZMBillboard) ROTATION() float64 {
@@ -189,9 +257,17 @@ func (rcv *CZMBillboard) ROTATION() float64 {
 	return 0.0
 }
 
+func (rcv *CZMBillboard) Rotation() float64 {
+	return rcv.ROTATION()
+}
+
 /// Rotation in radians
 func (rcv *CZMBillboard) MutateROTATION(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(24, n)
+}
+
+func (rcv *CZMBillboard) MutateRotation(n float64) bool {
+	return rcv.MutateROTATION(n)
 }
 
 /// Whether size is in meters
@@ -203,9 +279,17 @@ func (rcv *CZMBillboard) SIZE_IN_METERS() bool {
 	return false
 }
 
+func (rcv *CZMBillboard) SizeInMeters() bool {
+	return rcv.SIZE_IN_METERS()
+}
+
 /// Whether size is in meters
 func (rcv *CZMBillboard) MutateSIZE_IN_METERS(n bool) bool {
 	return rcv._tab.MutateBoolSlot(26, n)
+}
+
+func (rcv *CZMBillboard) MutateSizeInMeters(n bool) bool {
+	return rcv.MutateSIZE_IN_METERS(n)
 }
 
 /// Width in pixels
@@ -217,9 +301,17 @@ func (rcv *CZMBillboard) WIDTH() float64 {
 	return 0.0
 }
 
+func (rcv *CZMBillboard) Width() float64 {
+	return rcv.WIDTH()
+}
+
 /// Width in pixels
 func (rcv *CZMBillboard) MutateWIDTH(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(28, n)
+}
+
+func (rcv *CZMBillboard) MutateWidth(n float64) bool {
+	return rcv.MutateWIDTH(n)
 }
 
 /// Height in pixels
@@ -231,9 +323,17 @@ func (rcv *CZMBillboard) HEIGHT() float64 {
 	return 0.0
 }
 
+func (rcv *CZMBillboard) Height() float64 {
+	return rcv.HEIGHT()
+}
+
 /// Height in pixels
 func (rcv *CZMBillboard) MutateHEIGHT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(30, n)
+}
+
+func (rcv *CZMBillboard) MutateHeight(n float64) bool {
+	return rcv.MutateHEIGHT(n)
 }
 
 /// Eye offset X in meters
@@ -245,9 +345,17 @@ func (rcv *CZMBillboard) EYE_OFFSET_X() float64 {
 	return 0.0
 }
 
+func (rcv *CZMBillboard) EyeOffsetX() float64 {
+	return rcv.EYE_OFFSET_X()
+}
+
 /// Eye offset X in meters
 func (rcv *CZMBillboard) MutateEYE_OFFSET_X(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(32, n)
+}
+
+func (rcv *CZMBillboard) MutateEyeOffsetX(n float64) bool {
+	return rcv.MutateEYE_OFFSET_X(n)
 }
 
 /// Eye offset Y in meters
@@ -259,9 +367,17 @@ func (rcv *CZMBillboard) EYE_OFFSET_Y() float64 {
 	return 0.0
 }
 
+func (rcv *CZMBillboard) EyeOffsetY() float64 {
+	return rcv.EYE_OFFSET_Y()
+}
+
 /// Eye offset Y in meters
 func (rcv *CZMBillboard) MutateEYE_OFFSET_Y(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(34, n)
+}
+
+func (rcv *CZMBillboard) MutateEyeOffsetY(n float64) bool {
+	return rcv.MutateEYE_OFFSET_Y(n)
 }
 
 /// Eye offset Z in meters
@@ -273,9 +389,17 @@ func (rcv *CZMBillboard) EYE_OFFSET_Z() float64 {
 	return 0.0
 }
 
+func (rcv *CZMBillboard) EyeOffsetZ() float64 {
+	return rcv.EYE_OFFSET_Z()
+}
+
 /// Eye offset Z in meters
 func (rcv *CZMBillboard) MutateEYE_OFFSET_Z(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(36, n)
+}
+
+func (rcv *CZMBillboard) MutateEyeOffsetZ(n float64) bool {
+	return rcv.MutateEYE_OFFSET_Z(n)
 }
 
 /// Scale by distance
@@ -290,6 +414,10 @@ func (rcv *CZMBillboard) SCALE_BY_DISTANCE(obj *CZMNearFarScalar) *CZMNearFarSca
 		return obj
 	}
 	return nil
+}
+
+func (rcv *CZMBillboard) ScaleByDistance(obj *CZMNearFarScalar) *CZMNearFarScalar {
+	return rcv.SCALE_BY_DISTANCE(obj)
 }
 
 /// Scale by distance
@@ -307,6 +435,10 @@ func (rcv *CZMBillboard) PIXEL_OFFSET_SCALE_BY_DISTANCE(obj *CZMNearFarScalar) *
 	return nil
 }
 
+func (rcv *CZMBillboard) PixelOffsetScaleByDistance(obj *CZMNearFarScalar) *CZMNearFarScalar {
+	return rcv.PIXEL_OFFSET_SCALE_BY_DISTANCE(obj)
+}
+
 /// Pixel offset scale by distance
 /// Distance display condition near
 func (rcv *CZMBillboard) DISTANCE_DISPLAY_CONDITION_NEAR() float64 {
@@ -317,9 +449,17 @@ func (rcv *CZMBillboard) DISTANCE_DISPLAY_CONDITION_NEAR() float64 {
 	return 0.0
 }
 
+func (rcv *CZMBillboard) DistanceDisplayConditionNear() float64 {
+	return rcv.DISTANCE_DISPLAY_CONDITION_NEAR()
+}
+
 /// Distance display condition near
 func (rcv *CZMBillboard) MutateDISTANCE_DISPLAY_CONDITION_NEAR(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(42, n)
+}
+
+func (rcv *CZMBillboard) MutateDistanceDisplayConditionNear(n float64) bool {
+	return rcv.MutateDISTANCE_DISPLAY_CONDITION_NEAR(n)
 }
 
 /// Distance display condition far
@@ -331,9 +471,17 @@ func (rcv *CZMBillboard) DISTANCE_DISPLAY_CONDITION_FAR() float64 {
 	return 0.0
 }
 
+func (rcv *CZMBillboard) DistanceDisplayConditionFar() float64 {
+	return rcv.DISTANCE_DISPLAY_CONDITION_FAR()
+}
+
 /// Distance display condition far
 func (rcv *CZMBillboard) MutateDISTANCE_DISPLAY_CONDITION_FAR(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(44, n)
+}
+
+func (rcv *CZMBillboard) MutateDistanceDisplayConditionFar(n float64) bool {
+	return rcv.MutateDISTANCE_DISPLAY_CONDITION_FAR(n)
 }
 
 /// Disable depth test distance
@@ -345,9 +493,17 @@ func (rcv *CZMBillboard) DISABLE_DEPTH_TEST_DISTANCE() float64 {
 	return 0.0
 }
 
+func (rcv *CZMBillboard) DisableDepthTestDistance() float64 {
+	return rcv.DISABLE_DEPTH_TEST_DISTANCE()
+}
+
 /// Disable depth test distance
 func (rcv *CZMBillboard) MutateDISABLE_DEPTH_TEST_DISTANCE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(46, n)
+}
+
+func (rcv *CZMBillboard) MutateDisableDepthTestDistance(n float64) bool {
+	return rcv.MutateDISABLE_DEPTH_TEST_DISTANCE(n)
 }
 
 func CZMBillboardStart(builder *flatbuffers.Builder) {
@@ -356,68 +512,134 @@ func CZMBillboardStart(builder *flatbuffers.Builder) {
 func CZMBillboardAddSHOW(builder *flatbuffers.Builder, SHOW bool) {
 	builder.PrependBoolSlot(0, SHOW, false)
 }
+func CZMBillboardAddShow(builder *flatbuffers.Builder, SHOW bool) {
+	CZMBillboardAddSHOW(builder, SHOW)
+}
 func CZMBillboardAddIMAGE(builder *flatbuffers.Builder, IMAGE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(IMAGE), 0)
+}
+func CZMBillboardAddImage(builder *flatbuffers.Builder, IMAGE flatbuffers.UOffsetT) {
+	CZMBillboardAddIMAGE(builder, IMAGE)
 }
 func CZMBillboardAddSCALE(builder *flatbuffers.Builder, SCALE float64) {
 	builder.PrependFloat64Slot(2, SCALE, 0.0)
 }
+func CZMBillboardAddScale(builder *flatbuffers.Builder, SCALE float64) {
+	CZMBillboardAddSCALE(builder, SCALE)
+}
 func CZMBillboardAddCOLOR(builder *flatbuffers.Builder, COLOR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(COLOR), 0)
+}
+func CZMBillboardAddColor(builder *flatbuffers.Builder, COLOR flatbuffers.UOffsetT) {
+	CZMBillboardAddCOLOR(builder, COLOR)
 }
 func CZMBillboardAddHEIGHT_REFERENCE(builder *flatbuffers.Builder, HEIGHT_REFERENCE CZMHeightReference) {
 	builder.PrependInt8Slot(4, int8(HEIGHT_REFERENCE), 0)
 }
+func CZMBillboardAddHeightReference(builder *flatbuffers.Builder, HEIGHT_REFERENCE CZMHeightReference) {
+	CZMBillboardAddHEIGHT_REFERENCE(builder, HEIGHT_REFERENCE)
+}
 func CZMBillboardAddPIXEL_OFFSET_X(builder *flatbuffers.Builder, PIXEL_OFFSET_X float64) {
 	builder.PrependFloat64Slot(5, PIXEL_OFFSET_X, 0.0)
+}
+func CZMBillboardAddPixelOffsetX(builder *flatbuffers.Builder, PIXEL_OFFSET_X float64) {
+	CZMBillboardAddPIXEL_OFFSET_X(builder, PIXEL_OFFSET_X)
 }
 func CZMBillboardAddPIXEL_OFFSET_Y(builder *flatbuffers.Builder, PIXEL_OFFSET_Y float64) {
 	builder.PrependFloat64Slot(6, PIXEL_OFFSET_Y, 0.0)
 }
+func CZMBillboardAddPixelOffsetY(builder *flatbuffers.Builder, PIXEL_OFFSET_Y float64) {
+	CZMBillboardAddPIXEL_OFFSET_Y(builder, PIXEL_OFFSET_Y)
+}
 func CZMBillboardAddHORIZONTAL_ORIGIN(builder *flatbuffers.Builder, HORIZONTAL_ORIGIN CZMHorizontalOrigin) {
 	builder.PrependInt8Slot(7, int8(HORIZONTAL_ORIGIN), 0)
+}
+func CZMBillboardAddHorizontalOrigin(builder *flatbuffers.Builder, HORIZONTAL_ORIGIN CZMHorizontalOrigin) {
+	CZMBillboardAddHORIZONTAL_ORIGIN(builder, HORIZONTAL_ORIGIN)
 }
 func CZMBillboardAddVERTICAL_ORIGIN(builder *flatbuffers.Builder, VERTICAL_ORIGIN CZMVerticalOrigin) {
 	builder.PrependInt8Slot(8, int8(VERTICAL_ORIGIN), 0)
 }
+func CZMBillboardAddVerticalOrigin(builder *flatbuffers.Builder, VERTICAL_ORIGIN CZMVerticalOrigin) {
+	CZMBillboardAddVERTICAL_ORIGIN(builder, VERTICAL_ORIGIN)
+}
 func CZMBillboardAddTRANSLUCENCY_BY_DISTANCE(builder *flatbuffers.Builder, TRANSLUCENCY_BY_DISTANCE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(TRANSLUCENCY_BY_DISTANCE), 0)
+}
+func CZMBillboardAddTranslucencyByDistance(builder *flatbuffers.Builder, TRANSLUCENCY_BY_DISTANCE flatbuffers.UOffsetT) {
+	CZMBillboardAddTRANSLUCENCY_BY_DISTANCE(builder, TRANSLUCENCY_BY_DISTANCE)
 }
 func CZMBillboardAddROTATION(builder *flatbuffers.Builder, ROTATION float64) {
 	builder.PrependFloat64Slot(10, ROTATION, 0.0)
 }
+func CZMBillboardAddRotation(builder *flatbuffers.Builder, ROTATION float64) {
+	CZMBillboardAddROTATION(builder, ROTATION)
+}
 func CZMBillboardAddSIZE_IN_METERS(builder *flatbuffers.Builder, SIZE_IN_METERS bool) {
 	builder.PrependBoolSlot(11, SIZE_IN_METERS, false)
+}
+func CZMBillboardAddSizeInMeters(builder *flatbuffers.Builder, SIZE_IN_METERS bool) {
+	CZMBillboardAddSIZE_IN_METERS(builder, SIZE_IN_METERS)
 }
 func CZMBillboardAddWIDTH(builder *flatbuffers.Builder, WIDTH float64) {
 	builder.PrependFloat64Slot(12, WIDTH, 0.0)
 }
+func CZMBillboardAddWidth(builder *flatbuffers.Builder, WIDTH float64) {
+	CZMBillboardAddWIDTH(builder, WIDTH)
+}
 func CZMBillboardAddHEIGHT(builder *flatbuffers.Builder, HEIGHT float64) {
 	builder.PrependFloat64Slot(13, HEIGHT, 0.0)
+}
+func CZMBillboardAddHeight(builder *flatbuffers.Builder, HEIGHT float64) {
+	CZMBillboardAddHEIGHT(builder, HEIGHT)
 }
 func CZMBillboardAddEYE_OFFSET_X(builder *flatbuffers.Builder, EYE_OFFSET_X float64) {
 	builder.PrependFloat64Slot(14, EYE_OFFSET_X, 0.0)
 }
+func CZMBillboardAddEyeOffsetX(builder *flatbuffers.Builder, EYE_OFFSET_X float64) {
+	CZMBillboardAddEYE_OFFSET_X(builder, EYE_OFFSET_X)
+}
 func CZMBillboardAddEYE_OFFSET_Y(builder *flatbuffers.Builder, EYE_OFFSET_Y float64) {
 	builder.PrependFloat64Slot(15, EYE_OFFSET_Y, 0.0)
+}
+func CZMBillboardAddEyeOffsetY(builder *flatbuffers.Builder, EYE_OFFSET_Y float64) {
+	CZMBillboardAddEYE_OFFSET_Y(builder, EYE_OFFSET_Y)
 }
 func CZMBillboardAddEYE_OFFSET_Z(builder *flatbuffers.Builder, EYE_OFFSET_Z float64) {
 	builder.PrependFloat64Slot(16, EYE_OFFSET_Z, 0.0)
 }
+func CZMBillboardAddEyeOffsetZ(builder *flatbuffers.Builder, EYE_OFFSET_Z float64) {
+	CZMBillboardAddEYE_OFFSET_Z(builder, EYE_OFFSET_Z)
+}
 func CZMBillboardAddSCALE_BY_DISTANCE(builder *flatbuffers.Builder, SCALE_BY_DISTANCE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(17, flatbuffers.UOffsetT(SCALE_BY_DISTANCE), 0)
+}
+func CZMBillboardAddScaleByDistance(builder *flatbuffers.Builder, SCALE_BY_DISTANCE flatbuffers.UOffsetT) {
+	CZMBillboardAddSCALE_BY_DISTANCE(builder, SCALE_BY_DISTANCE)
 }
 func CZMBillboardAddPIXEL_OFFSET_SCALE_BY_DISTANCE(builder *flatbuffers.Builder, PIXEL_OFFSET_SCALE_BY_DISTANCE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(18, flatbuffers.UOffsetT(PIXEL_OFFSET_SCALE_BY_DISTANCE), 0)
 }
+func CZMBillboardAddPixelOffsetScaleByDistance(builder *flatbuffers.Builder, PIXEL_OFFSET_SCALE_BY_DISTANCE flatbuffers.UOffsetT) {
+	CZMBillboardAddPIXEL_OFFSET_SCALE_BY_DISTANCE(builder, PIXEL_OFFSET_SCALE_BY_DISTANCE)
+}
 func CZMBillboardAddDISTANCE_DISPLAY_CONDITION_NEAR(builder *flatbuffers.Builder, DISTANCE_DISPLAY_CONDITION_NEAR float64) {
 	builder.PrependFloat64Slot(19, DISTANCE_DISPLAY_CONDITION_NEAR, 0.0)
+}
+func CZMBillboardAddDistanceDisplayConditionNear(builder *flatbuffers.Builder, DISTANCE_DISPLAY_CONDITION_NEAR float64) {
+	CZMBillboardAddDISTANCE_DISPLAY_CONDITION_NEAR(builder, DISTANCE_DISPLAY_CONDITION_NEAR)
 }
 func CZMBillboardAddDISTANCE_DISPLAY_CONDITION_FAR(builder *flatbuffers.Builder, DISTANCE_DISPLAY_CONDITION_FAR float64) {
 	builder.PrependFloat64Slot(20, DISTANCE_DISPLAY_CONDITION_FAR, 0.0)
 }
+func CZMBillboardAddDistanceDisplayConditionFar(builder *flatbuffers.Builder, DISTANCE_DISPLAY_CONDITION_FAR float64) {
+	CZMBillboardAddDISTANCE_DISPLAY_CONDITION_FAR(builder, DISTANCE_DISPLAY_CONDITION_FAR)
+}
 func CZMBillboardAddDISABLE_DEPTH_TEST_DISTANCE(builder *flatbuffers.Builder, DISABLE_DEPTH_TEST_DISTANCE float64) {
 	builder.PrependFloat64Slot(21, DISABLE_DEPTH_TEST_DISTANCE, 0.0)
+}
+func CZMBillboardAddDisableDepthTestDistance(builder *flatbuffers.Builder, DISABLE_DEPTH_TEST_DISTANCE float64) {
+	CZMBillboardAddDISABLE_DEPTH_TEST_DISTANCE(builder, DISABLE_DEPTH_TEST_DISTANCE)
 }
 func CZMBillboardEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

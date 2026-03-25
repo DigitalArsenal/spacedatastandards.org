@@ -395,9 +395,9 @@ struct IntegerDataEncodingBuilder:
     def end():
         return b_.EndObject()
 
-def IntegerDataEncodingStartCONTEXT_CALIBRATOR_LISTVector(b_:flatbuffers.builder, n_:int):
+def IntegerDataEncodingStartCONTEXTCALIBRATORLISTVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def IntegerDataEncodingCreateCONTEXT_CALIBRATOR_LISTVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def IntegerDataEncodingCreateCONTEXTCALIBRATORLISTVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
@@ -447,9 +447,9 @@ struct FloatDataEncodingBuilder:
     def end():
         return b_.EndObject()
 
-def FloatDataEncodingStartCONTEXT_CALIBRATOR_LISTVector(b_:flatbuffers.builder, n_:int):
+def FloatDataEncodingStartCONTEXTCALIBRATORLISTVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def FloatDataEncodingCreateCONTEXT_CALIBRATOR_LISTVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def FloatDataEncodingCreateCONTEXTCALIBRATORLISTVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
@@ -831,9 +831,9 @@ struct DefaultAlarmBuilder:
     def end():
         return b_.EndObject()
 
-def DefaultAlarmStartENUMERATION_ALARMSVector(b_:flatbuffers.builder, n_:int):
+def DefaultAlarmStartENUMERATIONALARMSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def DefaultAlarmCreateENUMERATION_ALARMSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def DefaultAlarmCreateENUMERATIONALARMSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
@@ -992,9 +992,9 @@ struct MatchCriteriaBuilder:
     def end():
         return b_.EndObject()
 
-def MatchCriteriaStartCOMPARISON_LISTVector(b_:flatbuffers.builder, n_:int):
+def MatchCriteriaStartCOMPARISONLISTVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def MatchCriteriaCreateCOMPARISON_LISTVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def MatchCriteriaCreateCOMPARISONLISTVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
@@ -1171,9 +1171,9 @@ def IntegerParameterTypeCreateUNITSVector(b_:flatbuffers.builder, v_:[flatbuffer
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-def IntegerParameterTypeStartCONTEXT_ALARMSVector(b_:flatbuffers.builder, n_:int):
+def IntegerParameterTypeStartCONTEXTALARMSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def IntegerParameterTypeCreateCONTEXT_ALARMSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def IntegerParameterTypeCreateCONTEXTALARMSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
@@ -1270,9 +1270,9 @@ def FloatParameterTypeCreateUNITSVector(b_:flatbuffers.builder, v_:[flatbuffers.
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-def FloatParameterTypeStartCONTEXT_ALARMSVector(b_:flatbuffers.builder, n_:int):
+def FloatParameterTypeStartCONTEXTALARMSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def FloatParameterTypeCreateCONTEXT_ALARMSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def FloatParameterTypeCreateCONTEXTALARMSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
@@ -1342,9 +1342,9 @@ struct StringParameterTypeBuilder:
     def end():
         return b_.EndObject()
 
-def StringParameterTypeStartCONTEXT_ALARMSVector(b_:flatbuffers.builder, n_:int):
+def StringParameterTypeStartCONTEXTALARMSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def StringParameterTypeCreateCONTEXT_ALARMSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def StringParameterTypeCreateCONTEXTALARMSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
@@ -1472,16 +1472,16 @@ struct EnumeratedParameterTypeBuilder:
     def end():
         return b_.EndObject()
 
-def EnumeratedParameterTypeStartCONTEXT_ALARMSVector(b_:flatbuffers.builder, n_:int):
+def EnumeratedParameterTypeStartCONTEXTALARMSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def EnumeratedParameterTypeCreateCONTEXT_ALARMSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def EnumeratedParameterTypeCreateCONTEXTALARMSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-def EnumeratedParameterTypeStartENUMERATION_LISTVector(b_:flatbuffers.builder, n_:int):
+def EnumeratedParameterTypeStartENUMERATIONLISTVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def EnumeratedParameterTypeCreateENUMERATION_LISTVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def EnumeratedParameterTypeCreateENUMERATIONLISTVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
@@ -1607,9 +1607,9 @@ struct AbsoluteTimeParameterTypeBuilder:
     def end():
         return b_.EndObject()
 
-def AbsoluteTimeParameterTypeStartCONTEXT_ALARMSVector(b_:flatbuffers.builder, n_:int):
+def AbsoluteTimeParameterTypeStartCONTEXTALARMSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def AbsoluteTimeParameterTypeCreateCONTEXT_ALARMSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def AbsoluteTimeParameterTypeCreateCONTEXTALARMSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
@@ -1682,9 +1682,9 @@ def RelativeTimeParameterTypeCreateUNITSVector(b_:flatbuffers.builder, v_:[flatb
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-def RelativeTimeParameterTypeStartCONTEXT_ALARMSVector(b_:flatbuffers.builder, n_:int):
+def RelativeTimeParameterTypeStartCONTEXTALARMSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def RelativeTimeParameterTypeCreateCONTEXT_ALARMSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def RelativeTimeParameterTypeCreateCONTEXTALARMSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
@@ -1936,72 +1936,72 @@ struct ParameterTypeSetBuilder:
     def end():
         return b_.EndObject()
 
-def ParameterTypeSetStartINTEGER_TYPESVector(b_:flatbuffers.builder, n_:int):
+def ParameterTypeSetStartINTEGERTYPESVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def ParameterTypeSetCreateINTEGER_TYPESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def ParameterTypeSetCreateINTEGERTYPESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-def ParameterTypeSetStartFLOAT_TYPESVector(b_:flatbuffers.builder, n_:int):
+def ParameterTypeSetStartFLOATTYPESVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def ParameterTypeSetCreateFLOAT_TYPESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def ParameterTypeSetCreateFLOATTYPESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-def ParameterTypeSetStartSTRING_TYPESVector(b_:flatbuffers.builder, n_:int):
+def ParameterTypeSetStartSTRINGTYPESVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def ParameterTypeSetCreateSTRING_TYPESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def ParameterTypeSetCreateSTRINGTYPESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-def ParameterTypeSetStartBOOLEAN_TYPESVector(b_:flatbuffers.builder, n_:int):
+def ParameterTypeSetStartBOOLEANTYPESVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def ParameterTypeSetCreateBOOLEAN_TYPESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def ParameterTypeSetCreateBOOLEANTYPESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-def ParameterTypeSetStartENUMERATED_TYPESVector(b_:flatbuffers.builder, n_:int):
+def ParameterTypeSetStartENUMERATEDTYPESVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def ParameterTypeSetCreateENUMERATED_TYPESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def ParameterTypeSetCreateENUMERATEDTYPESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-def ParameterTypeSetStartBINARY_TYPESVector(b_:flatbuffers.builder, n_:int):
+def ParameterTypeSetStartBINARYTYPESVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def ParameterTypeSetCreateBINARY_TYPESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def ParameterTypeSetCreateBINARYTYPESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-def ParameterTypeSetStartABSOLUTE_TIME_TYPESVector(b_:flatbuffers.builder, n_:int):
+def ParameterTypeSetStartABSOLUTETIMETYPESVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def ParameterTypeSetCreateABSOLUTE_TIME_TYPESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def ParameterTypeSetCreateABSOLUTETIMETYPESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-def ParameterTypeSetStartRELATIVE_TIME_TYPESVector(b_:flatbuffers.builder, n_:int):
+def ParameterTypeSetStartRELATIVETIMETYPESVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def ParameterTypeSetCreateRELATIVE_TIME_TYPESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def ParameterTypeSetCreateRELATIVETIMETYPESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-def ParameterTypeSetStartARRAY_TYPESVector(b_:flatbuffers.builder, n_:int):
+def ParameterTypeSetStartARRAYTYPESVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def ParameterTypeSetCreateARRAY_TYPESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def ParameterTypeSetCreateARRAYTYPESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-def ParameterTypeSetStartAGGREGATE_TYPESVector(b_:flatbuffers.builder, n_:int):
+def ParameterTypeSetStartAGGREGATETYPESVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def ParameterTypeSetCreateAGGREGATE_TYPESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def ParameterTypeSetCreateAGGREGATETYPESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
@@ -2547,9 +2547,9 @@ struct SequenceContainerBuilder:
     def end():
         return b_.EndObject()
 
-def SequenceContainerStartENTRY_LISTVector(b_:flatbuffers.builder, n_:int):
+def SequenceContainerStartENTRYLISTVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def SequenceContainerCreateENTRY_LISTVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def SequenceContainerCreateENTRYLISTVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
@@ -2838,16 +2838,16 @@ struct AlgorithmSetBuilder:
     def end():
         return b_.EndObject()
 
-def AlgorithmSetStartCUSTOM_ALGORITHMSVector(b_:flatbuffers.builder, n_:int):
+def AlgorithmSetStartCUSTOMALGORITHMSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def AlgorithmSetCreateCUSTOM_ALGORITHMSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def AlgorithmSetCreateCUSTOMALGORITHMSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-def AlgorithmSetStartMATH_ALGORITHMSVector(b_:flatbuffers.builder, n_:int):
+def AlgorithmSetStartMATHALGORITHMSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def AlgorithmSetCreateMATH_ALGORITHMSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def AlgorithmSetCreateMATHALGORITHMSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
@@ -3170,9 +3170,9 @@ struct EnumeratedArgumentTypeBuilder:
     def end():
         return b_.EndObject()
 
-def EnumeratedArgumentTypeStartENUMERATION_LISTVector(b_:flatbuffers.builder, n_:int):
+def EnumeratedArgumentTypeStartENUMERATIONLISTVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def EnumeratedArgumentTypeCreateENUMERATION_LISTVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def EnumeratedArgumentTypeCreateENUMERATIONLISTVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
@@ -3336,51 +3336,51 @@ struct ArgumentTypeSetBuilder:
     def end():
         return b_.EndObject()
 
-def ArgumentTypeSetStartINTEGER_TYPESVector(b_:flatbuffers.builder, n_:int):
+def ArgumentTypeSetStartINTEGERTYPESVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def ArgumentTypeSetCreateINTEGER_TYPESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def ArgumentTypeSetCreateINTEGERTYPESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-def ArgumentTypeSetStartFLOAT_TYPESVector(b_:flatbuffers.builder, n_:int):
+def ArgumentTypeSetStartFLOATTYPESVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def ArgumentTypeSetCreateFLOAT_TYPESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def ArgumentTypeSetCreateFLOATTYPESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-def ArgumentTypeSetStartSTRING_TYPESVector(b_:flatbuffers.builder, n_:int):
+def ArgumentTypeSetStartSTRINGTYPESVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def ArgumentTypeSetCreateSTRING_TYPESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def ArgumentTypeSetCreateSTRINGTYPESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-def ArgumentTypeSetStartBOOLEAN_TYPESVector(b_:flatbuffers.builder, n_:int):
+def ArgumentTypeSetStartBOOLEANTYPESVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def ArgumentTypeSetCreateBOOLEAN_TYPESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def ArgumentTypeSetCreateBOOLEANTYPESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-def ArgumentTypeSetStartENUMERATED_TYPESVector(b_:flatbuffers.builder, n_:int):
+def ArgumentTypeSetStartENUMERATEDTYPESVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def ArgumentTypeSetCreateENUMERATED_TYPESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def ArgumentTypeSetCreateENUMERATEDTYPESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-def ArgumentTypeSetStartBINARY_TYPESVector(b_:flatbuffers.builder, n_:int):
+def ArgumentTypeSetStartBINARYTYPESVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def ArgumentTypeSetCreateBINARY_TYPESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def ArgumentTypeSetCreateBINARYTYPESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-def ArgumentTypeSetStartAGGREGATE_TYPESVector(b_:flatbuffers.builder, n_:int):
+def ArgumentTypeSetStartAGGREGATETYPESVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def ArgumentTypeSetCreateAGGREGATE_TYPESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def ArgumentTypeSetCreateAGGREGATETYPESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
@@ -3528,9 +3528,9 @@ struct CommandContainerBuilder:
     def end():
         return b_.EndObject()
 
-def CommandContainerStartENTRY_LISTVector(b_:flatbuffers.builder, n_:int):
+def CommandContainerStartENTRYLISTVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def CommandContainerCreateENTRY_LISTVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def CommandContainerCreateENTRYLISTVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
@@ -3643,9 +3643,9 @@ struct BaseMetaCommandBuilder:
     def end():
         return b_.EndObject()
 
-def BaseMetaCommandStartARGUMENT_ASSIGNMENTSVector(b_:flatbuffers.builder, n_:int):
+def BaseMetaCommandStartARGUMENTASSIGNMENTSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def BaseMetaCommandCreateARGUMENT_ASSIGNMENTSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def BaseMetaCommandCreateARGUMENTASSIGNMENTSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
@@ -3837,9 +3837,9 @@ struct MetaCommandSetBuilder:
     def end():
         return b_.EndObject()
 
-def MetaCommandSetStartMETA_COMMANDSVector(b_:flatbuffers.builder, n_:int):
+def MetaCommandSetStartMETACOMMANDSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def MetaCommandSetCreateMETA_COMMANDSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def MetaCommandSetCreateMETACOMMANDSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
@@ -3998,23 +3998,23 @@ struct StreamSetBuilder:
     def end():
         return b_.EndObject()
 
-def StreamSetStartFIXED_FRAME_STREAMSVector(b_:flatbuffers.builder, n_:int):
+def StreamSetStartFIXEDFRAMESTREAMSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def StreamSetCreateFIXED_FRAME_STREAMSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def StreamSetCreateFIXEDFRAMESTREAMSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-def StreamSetStartVARIABLE_FRAME_STREAMSVector(b_:flatbuffers.builder, n_:int):
+def StreamSetStartVARIABLEFRAMESTREAMSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def StreamSetCreateVARIABLE_FRAME_STREAMSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def StreamSetCreateVARIABLEFRAMESTREAMSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-def StreamSetStartCUSTOM_STREAMSVector(b_:flatbuffers.builder, n_:int):
+def StreamSetStartCUSTOMSTREAMSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def StreamSetCreateCUSTOM_STREAMSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def StreamSetCreateCUSTOMSTREAMSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
@@ -4066,16 +4066,16 @@ struct ServiceBuilder:
     def end():
         return b_.EndObject()
 
-def ServiceStartCONTAINER_REFSVector(b_:flatbuffers.builder, n_:int):
+def ServiceStartCONTAINERREFSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def ServiceCreateCONTAINER_REFSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def ServiceCreateCONTAINERREFSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-def ServiceStartCOMMAND_REFSVector(b_:flatbuffers.builder, n_:int):
+def ServiceStartCOMMANDREFSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def ServiceCreateCOMMAND_REFSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def ServiceCreateCOMMANDREFSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
@@ -4352,9 +4352,9 @@ struct XTCBuilder:
     def end():
         return b_.EndObject()
 
-def XTCStartCHILD_SYSTEMSVector(b_:flatbuffers.builder, n_:int):
+def XTCStartCHILDSYSTEMSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def XTCCreateCHILD_SYSTEMSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def XTCCreateCHILDSYSTEMSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)

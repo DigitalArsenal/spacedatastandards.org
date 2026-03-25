@@ -51,6 +51,10 @@ func (rcv *KMLPlacemark) NAME() []byte {
 	return nil
 }
 
+func (rcv *KMLPlacemark) Name() []byte {
+	return rcv.NAME()
+}
+
 /// Placemark name
 /// Description (may contain HTML)
 func (rcv *KMLPlacemark) DESCRIPTION() []byte {
@@ -59,6 +63,10 @@ func (rcv *KMLPlacemark) DESCRIPTION() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *KMLPlacemark) Description() []byte {
+	return rcv.DESCRIPTION()
 }
 
 /// Description (may contain HTML)
@@ -71,9 +79,17 @@ func (rcv *KMLPlacemark) VISIBILITY() bool {
 	return false
 }
 
+func (rcv *KMLPlacemark) Visibility() bool {
+	return rcv.VISIBILITY()
+}
+
 /// Visibility flag
 func (rcv *KMLPlacemark) MutateVISIBILITY(n bool) bool {
 	return rcv._tab.MutateBoolSlot(8, n)
+}
+
+func (rcv *KMLPlacemark) MutateVisibility(n bool) bool {
+	return rcv.MutateVISIBILITY(n)
 }
 
 /// Style URL reference
@@ -83,6 +99,10 @@ func (rcv *KMLPlacemark) STYLE_URL() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *KMLPlacemark) StyleUrl() []byte {
+	return rcv.STYLE_URL()
 }
 
 /// Style URL reference
@@ -100,6 +120,10 @@ func (rcv *KMLPlacemark) STYLE(obj *KMLStyle) *KMLStyle {
 	return nil
 }
 
+func (rcv *KMLPlacemark) Style(obj *KMLStyle) *KMLStyle {
+	return rcv.STYLE(obj)
+}
+
 /// Inline style
 /// Snippet (short description)
 func (rcv *KMLPlacemark) SNIPPET() []byte {
@@ -108,6 +132,10 @@ func (rcv *KMLPlacemark) SNIPPET() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *KMLPlacemark) Snippet() []byte {
+	return rcv.SNIPPET()
 }
 
 /// Snippet (short description)
@@ -120,9 +148,17 @@ func (rcv *KMLPlacemark) OPEN() bool {
 	return false
 }
 
+func (rcv *KMLPlacemark) Open() bool {
+	return rcv.OPEN()
+}
+
 /// Whether open in tree view
 func (rcv *KMLPlacemark) MutateOPEN(n bool) bool {
 	return rcv._tab.MutateBoolSlot(16, n)
+}
+
+func (rcv *KMLPlacemark) MutateOpen(n bool) bool {
+	return rcv.MutateOPEN(n)
 }
 
 /// Address
@@ -132,6 +168,10 @@ func (rcv *KMLPlacemark) ADDRESS() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *KMLPlacemark) Address() []byte {
+	return rcv.ADDRESS()
 }
 
 /// Address
@@ -149,6 +189,10 @@ func (rcv *KMLPlacemark) POINT(obj *KMLPoint) *KMLPoint {
 	return nil
 }
 
+func (rcv *KMLPlacemark) Point(obj *KMLPoint) *KMLPoint {
+	return rcv.POINT(obj)
+}
+
 /// Point geometry
 /// LineString geometry
 func (rcv *KMLPlacemark) LINE_STRING(obj *KMLLineString) *KMLLineString {
@@ -162,6 +206,10 @@ func (rcv *KMLPlacemark) LINE_STRING(obj *KMLLineString) *KMLLineString {
 		return obj
 	}
 	return nil
+}
+
+func (rcv *KMLPlacemark) LineString(obj *KMLLineString) *KMLLineString {
+	return rcv.LINE_STRING(obj)
 }
 
 /// LineString geometry
@@ -179,6 +227,10 @@ func (rcv *KMLPlacemark) POLYGON(obj *KMLPolygon) *KMLPolygon {
 	return nil
 }
 
+func (rcv *KMLPlacemark) Polygon(obj *KMLPolygon) *KMLPolygon {
+	return rcv.POLYGON(obj)
+}
+
 /// Polygon geometry
 /// LinearRing geometry (standalone)
 func (rcv *KMLPlacemark) LINEAR_RING(obj *KMLLinearRing) *KMLLinearRing {
@@ -192,6 +244,10 @@ func (rcv *KMLPlacemark) LINEAR_RING(obj *KMLLinearRing) *KMLLinearRing {
 		return obj
 	}
 	return nil
+}
+
+func (rcv *KMLPlacemark) LinearRing(obj *KMLLinearRing) *KMLLinearRing {
+	return rcv.LINEAR_RING(obj)
 }
 
 /// LinearRing geometry (standalone)
@@ -209,6 +265,10 @@ func (rcv *KMLPlacemark) MULTI_GEOMETRY(obj *KMLMultiGeometry) *KMLMultiGeometry
 	return nil
 }
 
+func (rcv *KMLPlacemark) MultiGeometry(obj *KMLMultiGeometry) *KMLMultiGeometry {
+	return rcv.MULTI_GEOMETRY(obj)
+}
+
 /// MultiGeometry
 /// 3D Model
 func (rcv *KMLPlacemark) MODEL(obj *KMLModel) *KMLModel {
@@ -222,6 +282,10 @@ func (rcv *KMLPlacemark) MODEL(obj *KMLModel) *KMLModel {
 		return obj
 	}
 	return nil
+}
+
+func (rcv *KMLPlacemark) Model(obj *KMLModel) *KMLModel {
+	return rcv.MODEL(obj)
 }
 
 /// 3D Model
@@ -239,6 +303,10 @@ func (rcv *KMLPlacemark) TRACK(obj *KMLTrack) *KMLTrack {
 	return nil
 }
 
+func (rcv *KMLPlacemark) Track(obj *KMLTrack) *KMLTrack {
+	return rcv.TRACK(obj)
+}
+
 /// gx:Track
 /// gx:MultiTrack
 func (rcv *KMLPlacemark) MULTI_TRACK(obj *KMLMultiTrack) *KMLMultiTrack {
@@ -252,6 +320,10 @@ func (rcv *KMLPlacemark) MULTI_TRACK(obj *KMLMultiTrack) *KMLMultiTrack {
 		return obj
 	}
 	return nil
+}
+
+func (rcv *KMLPlacemark) MultiTrack(obj *KMLMultiTrack) *KMLMultiTrack {
+	return rcv.MULTI_TRACK(obj)
 }
 
 /// gx:MultiTrack
@@ -269,6 +341,10 @@ func (rcv *KMLPlacemark) LOOK_AT(obj *KMLLookAt) *KMLLookAt {
 	return nil
 }
 
+func (rcv *KMLPlacemark) LookAt(obj *KMLLookAt) *KMLLookAt {
+	return rcv.LOOK_AT(obj)
+}
+
 /// LookAt viewpoint
 /// Camera viewpoint
 func (rcv *KMLPlacemark) CAMERA(obj *KMLCamera) *KMLCamera {
@@ -282,6 +358,10 @@ func (rcv *KMLPlacemark) CAMERA(obj *KMLCamera) *KMLCamera {
 		return obj
 	}
 	return nil
+}
+
+func (rcv *KMLPlacemark) Camera(obj *KMLCamera) *KMLCamera {
+	return rcv.CAMERA(obj)
 }
 
 /// Camera viewpoint
@@ -299,6 +379,10 @@ func (rcv *KMLPlacemark) TIME_SPAN(obj *KMLTimeSpan) *KMLTimeSpan {
 	return nil
 }
 
+func (rcv *KMLPlacemark) TimeSpan(obj *KMLTimeSpan) *KMLTimeSpan {
+	return rcv.TIME_SPAN(obj)
+}
+
 /// TimeSpan
 /// TimeStamp
 func (rcv *KMLPlacemark) TIME_STAMP(obj *KMLTimeStamp) *KMLTimeStamp {
@@ -314,6 +398,10 @@ func (rcv *KMLPlacemark) TIME_STAMP(obj *KMLTimeStamp) *KMLTimeStamp {
 	return nil
 }
 
+func (rcv *KMLPlacemark) TimeStamp(obj *KMLTimeStamp) *KMLTimeStamp {
+	return rcv.TIME_STAMP(obj)
+}
+
 /// TimeStamp
 /// Extended data
 func (rcv *KMLPlacemark) EXTENDED_DATA(obj *KMLData, j int) bool {
@@ -322,10 +410,17 @@ func (rcv *KMLPlacemark) EXTENDED_DATA(obj *KMLData, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(KMLData)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *KMLPlacemark) ExtendedData(obj *KMLData, j int) bool {
+	return rcv.EXTENDED_DATA(obj, j)
 }
 
 func (rcv *KMLPlacemark) EXTENDED_DATALength() int {
@@ -334,6 +429,10 @@ func (rcv *KMLPlacemark) EXTENDED_DATALength() int {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *KMLPlacemark) ExtendedDataLength() int {
+	return rcv.EXTENDED_DATALength()
 }
 
 /// Extended data
@@ -351,6 +450,10 @@ func (rcv *KMLPlacemark) SCHEMA_DATA(obj *KMLSchemaData) *KMLSchemaData {
 	return nil
 }
 
+func (rcv *KMLPlacemark) SchemaData(obj *KMLSchemaData) *KMLSchemaData {
+	return rcv.SCHEMA_DATA(obj)
+}
+
 /// Schema data
 /// Region
 func (rcv *KMLPlacemark) REGION(obj *KMLRegion) *KMLRegion {
@@ -364,6 +467,10 @@ func (rcv *KMLPlacemark) REGION(obj *KMLRegion) *KMLRegion {
 		return obj
 	}
 	return nil
+}
+
+func (rcv *KMLPlacemark) Region(obj *KMLRegion) *KMLRegion {
+	return rcv.REGION(obj)
 }
 
 /// Region
@@ -381,6 +488,10 @@ func (rcv *KMLPlacemark) STYLE_MAP(obj *KMLStyleMap) *KMLStyleMap {
 	return nil
 }
 
+func (rcv *KMLPlacemark) StyleMap(obj *KMLStyleMap) *KMLStyleMap {
+	return rcv.STYLE_MAP(obj)
+}
+
 /// StyleMap (inline)
 func KMLPlacemarkStart(builder *flatbuffers.Builder) {
 	builder.StartObject(24)
@@ -388,77 +499,152 @@ func KMLPlacemarkStart(builder *flatbuffers.Builder) {
 func KMLPlacemarkAddNAME(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(NAME), 0)
 }
+func KMLPlacemarkAddName(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
+	KMLPlacemarkAddNAME(builder, NAME)
+}
 func KMLPlacemarkAddDESCRIPTION(builder *flatbuffers.Builder, DESCRIPTION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(DESCRIPTION), 0)
+}
+func KMLPlacemarkAddDescription(builder *flatbuffers.Builder, DESCRIPTION flatbuffers.UOffsetT) {
+	KMLPlacemarkAddDESCRIPTION(builder, DESCRIPTION)
 }
 func KMLPlacemarkAddVISIBILITY(builder *flatbuffers.Builder, VISIBILITY bool) {
 	builder.PrependBoolSlot(2, VISIBILITY, false)
 }
+func KMLPlacemarkAddVisibility(builder *flatbuffers.Builder, VISIBILITY bool) {
+	KMLPlacemarkAddVISIBILITY(builder, VISIBILITY)
+}
 func KMLPlacemarkAddSTYLE_URL(builder *flatbuffers.Builder, STYLE_URL flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(STYLE_URL), 0)
+}
+func KMLPlacemarkAddStyleUrl(builder *flatbuffers.Builder, STYLE_URL flatbuffers.UOffsetT) {
+	KMLPlacemarkAddSTYLE_URL(builder, STYLE_URL)
 }
 func KMLPlacemarkAddSTYLE(builder *flatbuffers.Builder, STYLE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(STYLE), 0)
 }
+func KMLPlacemarkAddStyle(builder *flatbuffers.Builder, STYLE flatbuffers.UOffsetT) {
+	KMLPlacemarkAddSTYLE(builder, STYLE)
+}
 func KMLPlacemarkAddSNIPPET(builder *flatbuffers.Builder, SNIPPET flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(SNIPPET), 0)
+}
+func KMLPlacemarkAddSnippet(builder *flatbuffers.Builder, SNIPPET flatbuffers.UOffsetT) {
+	KMLPlacemarkAddSNIPPET(builder, SNIPPET)
 }
 func KMLPlacemarkAddOPEN(builder *flatbuffers.Builder, OPEN bool) {
 	builder.PrependBoolSlot(6, OPEN, false)
 }
+func KMLPlacemarkAddOpen(builder *flatbuffers.Builder, OPEN bool) {
+	KMLPlacemarkAddOPEN(builder, OPEN)
+}
 func KMLPlacemarkAddADDRESS(builder *flatbuffers.Builder, ADDRESS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(ADDRESS), 0)
+}
+func KMLPlacemarkAddAddress(builder *flatbuffers.Builder, ADDRESS flatbuffers.UOffsetT) {
+	KMLPlacemarkAddADDRESS(builder, ADDRESS)
 }
 func KMLPlacemarkAddPOINT(builder *flatbuffers.Builder, POINT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(POINT), 0)
 }
+func KMLPlacemarkAddPoint(builder *flatbuffers.Builder, POINT flatbuffers.UOffsetT) {
+	KMLPlacemarkAddPOINT(builder, POINT)
+}
 func KMLPlacemarkAddLINE_STRING(builder *flatbuffers.Builder, LINE_STRING flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(LINE_STRING), 0)
+}
+func KMLPlacemarkAddLineString(builder *flatbuffers.Builder, LINE_STRING flatbuffers.UOffsetT) {
+	KMLPlacemarkAddLINE_STRING(builder, LINE_STRING)
 }
 func KMLPlacemarkAddPOLYGON(builder *flatbuffers.Builder, POLYGON flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(POLYGON), 0)
 }
+func KMLPlacemarkAddPolygon(builder *flatbuffers.Builder, POLYGON flatbuffers.UOffsetT) {
+	KMLPlacemarkAddPOLYGON(builder, POLYGON)
+}
 func KMLPlacemarkAddLINEAR_RING(builder *flatbuffers.Builder, LINEAR_RING flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(LINEAR_RING), 0)
+}
+func KMLPlacemarkAddLinearRing(builder *flatbuffers.Builder, LINEAR_RING flatbuffers.UOffsetT) {
+	KMLPlacemarkAddLINEAR_RING(builder, LINEAR_RING)
 }
 func KMLPlacemarkAddMULTI_GEOMETRY(builder *flatbuffers.Builder, MULTI_GEOMETRY flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(12, flatbuffers.UOffsetT(MULTI_GEOMETRY), 0)
 }
+func KMLPlacemarkAddMultiGeometry(builder *flatbuffers.Builder, MULTI_GEOMETRY flatbuffers.UOffsetT) {
+	KMLPlacemarkAddMULTI_GEOMETRY(builder, MULTI_GEOMETRY)
+}
 func KMLPlacemarkAddMODEL(builder *flatbuffers.Builder, MODEL flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(13, flatbuffers.UOffsetT(MODEL), 0)
+}
+func KMLPlacemarkAddModel(builder *flatbuffers.Builder, MODEL flatbuffers.UOffsetT) {
+	KMLPlacemarkAddMODEL(builder, MODEL)
 }
 func KMLPlacemarkAddTRACK(builder *flatbuffers.Builder, TRACK flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(14, flatbuffers.UOffsetT(TRACK), 0)
 }
+func KMLPlacemarkAddTrack(builder *flatbuffers.Builder, TRACK flatbuffers.UOffsetT) {
+	KMLPlacemarkAddTRACK(builder, TRACK)
+}
 func KMLPlacemarkAddMULTI_TRACK(builder *flatbuffers.Builder, MULTI_TRACK flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(15, flatbuffers.UOffsetT(MULTI_TRACK), 0)
+}
+func KMLPlacemarkAddMultiTrack(builder *flatbuffers.Builder, MULTI_TRACK flatbuffers.UOffsetT) {
+	KMLPlacemarkAddMULTI_TRACK(builder, MULTI_TRACK)
 }
 func KMLPlacemarkAddLOOK_AT(builder *flatbuffers.Builder, LOOK_AT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(16, flatbuffers.UOffsetT(LOOK_AT), 0)
 }
+func KMLPlacemarkAddLookAt(builder *flatbuffers.Builder, LOOK_AT flatbuffers.UOffsetT) {
+	KMLPlacemarkAddLOOK_AT(builder, LOOK_AT)
+}
 func KMLPlacemarkAddCAMERA(builder *flatbuffers.Builder, CAMERA flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(17, flatbuffers.UOffsetT(CAMERA), 0)
+}
+func KMLPlacemarkAddCamera(builder *flatbuffers.Builder, CAMERA flatbuffers.UOffsetT) {
+	KMLPlacemarkAddCAMERA(builder, CAMERA)
 }
 func KMLPlacemarkAddTIME_SPAN(builder *flatbuffers.Builder, TIME_SPAN flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(18, flatbuffers.UOffsetT(TIME_SPAN), 0)
 }
+func KMLPlacemarkAddTimeSpan(builder *flatbuffers.Builder, TIME_SPAN flatbuffers.UOffsetT) {
+	KMLPlacemarkAddTIME_SPAN(builder, TIME_SPAN)
+}
 func KMLPlacemarkAddTIME_STAMP(builder *flatbuffers.Builder, TIME_STAMP flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(19, flatbuffers.UOffsetT(TIME_STAMP), 0)
+}
+func KMLPlacemarkAddTimeStamp(builder *flatbuffers.Builder, TIME_STAMP flatbuffers.UOffsetT) {
+	KMLPlacemarkAddTIME_STAMP(builder, TIME_STAMP)
 }
 func KMLPlacemarkAddEXTENDED_DATA(builder *flatbuffers.Builder, EXTENDED_DATA flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(20, flatbuffers.UOffsetT(EXTENDED_DATA), 0)
 }
+func KMLPlacemarkAddExtendedData(builder *flatbuffers.Builder, EXTENDED_DATA flatbuffers.UOffsetT) {
+	KMLPlacemarkAddEXTENDED_DATA(builder, EXTENDED_DATA)
+}
 func KMLPlacemarkStartEXTENDED_DATAVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func KMLPlacemarkStartExtendedDataVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return KMLPlacemarkStartEXTENDED_DATAVector(builder, numElems)
 }
 func KMLPlacemarkAddSCHEMA_DATA(builder *flatbuffers.Builder, SCHEMA_DATA flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(21, flatbuffers.UOffsetT(SCHEMA_DATA), 0)
 }
+func KMLPlacemarkAddSchemaData(builder *flatbuffers.Builder, SCHEMA_DATA flatbuffers.UOffsetT) {
+	KMLPlacemarkAddSCHEMA_DATA(builder, SCHEMA_DATA)
+}
 func KMLPlacemarkAddREGION(builder *flatbuffers.Builder, REGION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(22, flatbuffers.UOffsetT(REGION), 0)
 }
+func KMLPlacemarkAddRegion(builder *flatbuffers.Builder, REGION flatbuffers.UOffsetT) {
+	KMLPlacemarkAddREGION(builder, REGION)
+}
 func KMLPlacemarkAddSTYLE_MAP(builder *flatbuffers.Builder, STYLE_MAP flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(23, flatbuffers.UOffsetT(STYLE_MAP), 0)
+}
+func KMLPlacemarkAddStyleMap(builder *flatbuffers.Builder, STYLE_MAP flatbuffers.UOffsetT) {
+	KMLPlacemarkAddSTYLE_MAP(builder, STYLE_MAP)
 }
 func KMLPlacemarkEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

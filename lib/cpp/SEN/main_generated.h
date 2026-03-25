@@ -8,9 +8,9 @@
 
 // Ensure the included flatbuffers.h is the same version as when this file was
 // generated, otherwise it may not be compatible.
-static_assert(FLATBUFFERS_VERSION_MAJOR == 24 &&
-              FLATBUFFERS_VERSION_MINOR == 3 &&
-              FLATBUFFERS_VERSION_REVISION == 25,
+static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
+              FLATBUFFERS_VERSION_MINOR == 12 &&
+              FLATBUFFERS_VERSION_REVISION == 19,
              "Non-compatible flatbuffers version included");
 
 struct sensorMaintenanceEvent;
@@ -145,7 +145,8 @@ struct sensorMaintenanceEvent FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::T
   const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *COMPONENTS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_COMPONENTS);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_START_TIME) &&
            verifier.VerifyString(START_TIME()) &&
@@ -267,7 +268,8 @@ struct sensorPlan FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   double MAX_RANGE() const {
     return GetField<double>(VT_MAX_RANGE, 0.0);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_START_TIME) &&
            verifier.VerifyString(START_TIME()) &&
@@ -414,7 +416,8 @@ struct sensorStats FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   uint32_t UCT_COUNT() const {
     return GetField<uint32_t>(VT_UCT_COUNT, 0);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_PERIOD_START) &&
            verifier.VerifyString(PERIOD_START()) &&
@@ -593,7 +596,8 @@ struct SEN FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *NOTES() const {
     return GetPointer<const ::flatbuffers::String *>(VT_NOTES);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_ID) &&
            verifier.VerifyString(ID()) &&
@@ -773,14 +777,16 @@ inline bool SizePrefixedSENBufferHasIdentifier(const void *buf) {
       buf, SENIdentifier(), true);
 }
 
+template <bool B = false>
 inline bool VerifySENBuffer(
-    ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifyBuffer<SEN>(SENIdentifier());
+    ::flatbuffers::VerifierTemplate<B> &verifier) {
+  return verifier.template VerifyBuffer<SEN>(SENIdentifier());
 }
 
+template <bool B = false>
 inline bool VerifySizePrefixedSENBuffer(
-    ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifySizePrefixedBuffer<SEN>(SENIdentifier());
+    ::flatbuffers::VerifierTemplate<B> &verifier) {
+  return verifier.template VerifySizePrefixedBuffer<SEN>(SENIdentifier());
 }
 
 inline void FinishSENBuffer(

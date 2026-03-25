@@ -145,21 +145,31 @@ def End(builder):
 class VCMAtmosphericModelDataT(object):
 
     # VCMAtmosphericModelDataT
-    def __init__(self):
-        self.ATMOSPHERIC_MODEL = 0  # type: int
-        self.GEOPOTENTIAL_MODEL = 0  # type: int
-        self.LUNAR_SOLAR_PERTURBATION = 0  # type: int
-        self.LUNAR_PERTURBATION_MODEL = 0  # type: int
-        self.SOLAR_PERTURBATION_MODEL = 0  # type: int
-        self.SOLAR_RADIATION_PRESSURE = 0  # type: int
-        self.SRP_MODEL = 0  # type: int
-        self.RESONANCE_MODEL = 0  # type: int
+    def __init__(
+        self,
+        ATMOSPHERIC_MODEL = 0,
+        GEOPOTENTIAL_MODEL = 0,
+        LUNAR_SOLAR_PERTURBATION = 0,
+        LUNAR_PERTURBATION_MODEL = 0,
+        SOLAR_PERTURBATION_MODEL = 0,
+        SOLAR_RADIATION_PRESSURE = 0,
+        SRP_MODEL = 0,
+        RESONANCE_MODEL = 0,
+    ):
+        self.ATMOSPHERIC_MODEL = ATMOSPHERIC_MODEL  # type: int
+        self.GEOPOTENTIAL_MODEL = GEOPOTENTIAL_MODEL  # type: int
+        self.LUNAR_SOLAR_PERTURBATION = LUNAR_SOLAR_PERTURBATION  # type: int
+        self.LUNAR_PERTURBATION_MODEL = LUNAR_PERTURBATION_MODEL  # type: int
+        self.SOLAR_PERTURBATION_MODEL = SOLAR_PERTURBATION_MODEL  # type: int
+        self.SOLAR_RADIATION_PRESSURE = SOLAR_RADIATION_PRESSURE  # type: int
+        self.SRP_MODEL = SRP_MODEL  # type: int
+        self.RESONANCE_MODEL = RESONANCE_MODEL  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        vcmatmosphericModelData = VCMAtmosphericModelData()
-        vcmatmosphericModelData.Init(buf, pos)
-        return cls.InitFromObj(vcmatmosphericModelData)
+        tmpVcmatmosphericModelData = VCMAtmosphericModelData()
+        tmpVcmatmosphericModelData.Init(buf, pos)
+        return cls.InitFromObj(tmpVcmatmosphericModelData)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -167,23 +177,23 @@ class VCMAtmosphericModelDataT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, vcmatmosphericModelData):
+    def InitFromObj(cls, tmpVcmatmosphericModelData):
         x = VCMAtmosphericModelDataT()
-        x._UnPack(vcmatmosphericModelData)
+        x._UnPack(tmpVcmatmosphericModelData)
         return x
 
     # VCMAtmosphericModelDataT
-    def _UnPack(self, vcmatmosphericModelData):
-        if vcmatmosphericModelData is None:
+    def _UnPack(self, VCMAtmosphericModelData):
+        if VCMAtmosphericModelData is None:
             return
-        self.ATMOSPHERIC_MODEL = vcmatmosphericModelData.ATMOSPHERIC_MODEL()
-        self.GEOPOTENTIAL_MODEL = vcmatmosphericModelData.GEOPOTENTIAL_MODEL()
-        self.LUNAR_SOLAR_PERTURBATION = vcmatmosphericModelData.LUNAR_SOLAR_PERTURBATION()
-        self.LUNAR_PERTURBATION_MODEL = vcmatmosphericModelData.LUNAR_PERTURBATION_MODEL()
-        self.SOLAR_PERTURBATION_MODEL = vcmatmosphericModelData.SOLAR_PERTURBATION_MODEL()
-        self.SOLAR_RADIATION_PRESSURE = vcmatmosphericModelData.SOLAR_RADIATION_PRESSURE()
-        self.SRP_MODEL = vcmatmosphericModelData.SRP_MODEL()
-        self.RESONANCE_MODEL = vcmatmosphericModelData.RESONANCE_MODEL()
+        self.ATMOSPHERIC_MODEL = VCMAtmosphericModelData.ATMOSPHERIC_MODEL()
+        self.GEOPOTENTIAL_MODEL = VCMAtmosphericModelData.GEOPOTENTIAL_MODEL()
+        self.LUNAR_SOLAR_PERTURBATION = VCMAtmosphericModelData.LUNAR_SOLAR_PERTURBATION()
+        self.LUNAR_PERTURBATION_MODEL = VCMAtmosphericModelData.LUNAR_PERTURBATION_MODEL()
+        self.SOLAR_PERTURBATION_MODEL = VCMAtmosphericModelData.SOLAR_PERTURBATION_MODEL()
+        self.SOLAR_RADIATION_PRESSURE = VCMAtmosphericModelData.SOLAR_RADIATION_PRESSURE()
+        self.SRP_MODEL = VCMAtmosphericModelData.SRP_MODEL()
+        self.RESONANCE_MODEL = VCMAtmosphericModelData.RESONANCE_MODEL()
 
     # VCMAtmosphericModelDataT
     def Pack(self, builder):
@@ -196,5 +206,5 @@ class VCMAtmosphericModelDataT(object):
         VCMAtmosphericModelDataAddSOLAR_RADIATION_PRESSURE(builder, self.SOLAR_RADIATION_PRESSURE)
         VCMAtmosphericModelDataAddSRP_MODEL(builder, self.SRP_MODEL)
         VCMAtmosphericModelDataAddRESONANCE_MODEL(builder, self.RESONANCE_MODEL)
-        vcmatmosphericModelData = VCMAtmosphericModelDataEnd(builder)
-        return vcmatmosphericModelData
+        VCMAtmosphericModelData = VCMAtmosphericModelDataEnd(builder)
+        return VCMAtmosphericModelData

@@ -2,4 +2,211 @@
 
 # namespace: 
 
-# NOTE AlgorithmSet.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Collection of algorithms
+class AlgorithmSet(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = AlgorithmSet()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsAlgorithmSet(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def AlgorithmSetBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x58\x54\x43", size_prefixed=size_prefixed)
+
+    # AlgorithmSet
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Custom algorithms
+    # AlgorithmSet
+    def CUSTOM_ALGORITHMS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from CustomAlgorithm import CustomAlgorithm
+            obj = CustomAlgorithm()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # AlgorithmSet
+    def CUSTOM_ALGORITHMSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # AlgorithmSet
+    def CUSTOM_ALGORITHMSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        return o == 0
+
+    # Math algorithms
+    # AlgorithmSet
+    def MATH_ALGORITHMS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from MathAlgorithm import MathAlgorithm
+            obj = MathAlgorithm()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # AlgorithmSet
+    def MATH_ALGORITHMSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # AlgorithmSet
+    def MATH_ALGORITHMSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        return o == 0
+
+def AlgorithmSetStart(builder):
+    builder.StartObject(2)
+
+def Start(builder):
+    AlgorithmSetStart(builder)
+
+def AlgorithmSetAddCUSTOM_ALGORITHMS(builder, CUSTOM_ALGORITHMS):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(CUSTOM_ALGORITHMS), 0)
+
+def AddCUSTOM_ALGORITHMS(builder, CUSTOM_ALGORITHMS):
+    AlgorithmSetAddCUSTOM_ALGORITHMS(builder, CUSTOM_ALGORITHMS)
+
+def AlgorithmSetStartCUSTOM_ALGORITHMSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartCUSTOM_ALGORITHMSVector(builder, numElems):
+    return AlgorithmSetStartCUSTOM_ALGORITHMSVector(builder, numElems)
+
+def AlgorithmSetCreateCUSTOM_ALGORITHMSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateCUSTOM_ALGORITHMSVector(builder, data):
+    AlgorithmSetCreateCUSTOM_ALGORITHMSVector(builder, data)
+
+def AlgorithmSetAddMATH_ALGORITHMS(builder, MATH_ALGORITHMS):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(MATH_ALGORITHMS), 0)
+
+def AddMATH_ALGORITHMS(builder, MATH_ALGORITHMS):
+    AlgorithmSetAddMATH_ALGORITHMS(builder, MATH_ALGORITHMS)
+
+def AlgorithmSetStartMATH_ALGORITHMSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartMATH_ALGORITHMSVector(builder, numElems):
+    return AlgorithmSetStartMATH_ALGORITHMSVector(builder, numElems)
+
+def AlgorithmSetCreateMATH_ALGORITHMSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateMATH_ALGORITHMSVector(builder, data):
+    AlgorithmSetCreateMATH_ALGORITHMSVector(builder, data)
+
+def AlgorithmSetEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return AlgorithmSetEnd(builder)
+
+import CustomAlgorithm
+import MathAlgorithm
+try:
+    from typing import List
+except:
+    pass
+
+class AlgorithmSetT(object):
+
+    # AlgorithmSetT
+    def __init__(
+        self,
+        CUSTOM_ALGORITHMS = None,
+        MATH_ALGORITHMS = None,
+    ):
+        self.CUSTOM_ALGORITHMS = CUSTOM_ALGORITHMS  # type: Optional[List[CustomAlgorithm.CustomAlgorithmT]]
+        self.MATH_ALGORITHMS = MATH_ALGORITHMS  # type: Optional[List[MathAlgorithm.MathAlgorithmT]]
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpAlgorithmSet = AlgorithmSet()
+        tmpAlgorithmSet.Init(buf, pos)
+        return cls.InitFromObj(tmpAlgorithmSet)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpAlgorithmSet):
+        x = AlgorithmSetT()
+        x._UnPack(tmpAlgorithmSet)
+        return x
+
+    # AlgorithmSetT
+    def _UnPack(self, AlgorithmSet):
+        if AlgorithmSet is None:
+            return
+        if not AlgorithmSet.CUSTOM_ALGORITHMSIsNone():
+            self.CUSTOM_ALGORITHMS = []
+            for i in range(AlgorithmSet.CUSTOM_ALGORITHMSLength()):
+                if AlgorithmSet.CUSTOM_ALGORITHMS(i) is None:
+                    self.CUSTOM_ALGORITHMS.append(None)
+                else:
+                    customAlgorithm_ = CustomAlgorithm.CustomAlgorithmT.InitFromObj(AlgorithmSet.CUSTOM_ALGORITHMS(i))
+                    self.CUSTOM_ALGORITHMS.append(customAlgorithm_)
+        if not AlgorithmSet.MATH_ALGORITHMSIsNone():
+            self.MATH_ALGORITHMS = []
+            for i in range(AlgorithmSet.MATH_ALGORITHMSLength()):
+                if AlgorithmSet.MATH_ALGORITHMS(i) is None:
+                    self.MATH_ALGORITHMS.append(None)
+                else:
+                    mathAlgorithm_ = MathAlgorithm.MathAlgorithmT.InitFromObj(AlgorithmSet.MATH_ALGORITHMS(i))
+                    self.MATH_ALGORITHMS.append(mathAlgorithm_)
+
+    # AlgorithmSetT
+    def Pack(self, builder):
+        if self.CUSTOM_ALGORITHMS is not None:
+            CUSTOM_ALGORITHMSlist = []
+            for i in range(len(self.CUSTOM_ALGORITHMS)):
+                CUSTOM_ALGORITHMSlist.append(self.CUSTOM_ALGORITHMS[i].Pack(builder))
+            AlgorithmSetStartCUSTOM_ALGORITHMSVector(builder, len(self.CUSTOM_ALGORITHMS))
+            for i in reversed(range(len(self.CUSTOM_ALGORITHMS))):
+                builder.PrependUOffsetTRelative(CUSTOM_ALGORITHMSlist[i])
+            CUSTOM_ALGORITHMS = builder.EndVector()
+        if self.MATH_ALGORITHMS is not None:
+            MATH_ALGORITHMSlist = []
+            for i in range(len(self.MATH_ALGORITHMS)):
+                MATH_ALGORITHMSlist.append(self.MATH_ALGORITHMS[i].Pack(builder))
+            AlgorithmSetStartMATH_ALGORITHMSVector(builder, len(self.MATH_ALGORITHMS))
+            for i in reversed(range(len(self.MATH_ALGORITHMS))):
+                builder.PrependUOffsetTRelative(MATH_ALGORITHMSlist[i])
+            MATH_ALGORITHMS = builder.EndVector()
+        AlgorithmSetStart(builder)
+        if self.CUSTOM_ALGORITHMS is not None:
+            AlgorithmSetAddCUSTOM_ALGORITHMS(builder, CUSTOM_ALGORITHMS)
+        if self.MATH_ALGORITHMS is not None:
+            AlgorithmSetAddMATH_ALGORITHMS(builder, MATH_ALGORITHMS)
+        AlgorithmSet = AlgorithmSetEnd(builder)
+        return AlgorithmSet

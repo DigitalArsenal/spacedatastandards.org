@@ -2,4 +2,8 @@
 
 # namespace: 
 
-# NOTE TerrainInterpolation.py does not declare any structs or enums
+class TerrainInterpolation(object):
+    NEAREST = 0
+    BILINEAR = 1
+    BICUBIC = 2
+    KRIGING = 3

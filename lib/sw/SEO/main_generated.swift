@@ -2,9 +2,13 @@
 // swiftlint:disable all
 // swiftformat:disable all
 
+#if canImport(Common)
+import Common
+#endif
+
 import FlatBuffers
 
-public enum seoDataType: Int8, Enum, Verifiable {
+public enum seoDataType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -22,7 +26,7 @@ public enum seoDataType: Int8, Enum, Verifiable {
 }
 
 
-public enum seoParticleType: Int8, Enum, Verifiable {
+public enum seoParticleType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -39,7 +43,7 @@ public enum seoParticleType: Int8, Enum, Verifiable {
 }
 
 
-public enum seoObservatoryType: Int8, Enum, Verifiable {
+public enum seoObservatoryType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -57,9 +61,9 @@ public enum seoObservatoryType: Int8, Enum, Verifiable {
 
 
 ///  Space Environment Observation
-public struct SEO: FlatBufferObject, Verifiable {
+public struct SEO: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -161,15 +165,11 @@ public struct SEO: FlatBufferObject, Verifiable {
   public var SEN_REFERENCE_FRAME: String? { let o = _accessor.offset(VTOFFSET.SEN_REFERENCE_FRAME.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var SEN_REFERENCE_FRAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SEN_REFERENCE_FRAME.v) }
   ///  Sensor position (km, 3 components)
-  public var hasSenPos: Bool { let o = _accessor.offset(VTOFFSET.SEN_POS.v); return o == 0 ? false : true }
-  public var SEN_POSCount: Int32 { let o = _accessor.offset(VTOFFSET.SEN_POS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func SEN_POS(at index: Int32) -> Double { let o = _accessor.offset(VTOFFSET.SEN_POS.v); return o == 0 ? 0 : _accessor.directRead(of: Double.self, offset: _accessor.vector(at: o) + index * 8) }
-  public var SEN_POS: [Double] { return _accessor.getVector(at: VTOFFSET.SEN_POS.v) ?? [] }
+  public var SEN_POS: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.SEN_POS.v, byteSize: 8) }
+  public func withUnsafePointerToSenPos<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.SEN_POS.v, body: body) }
   ///  Sensor velocity (km/s, 3 components)
-  public var hasSenVel: Bool { let o = _accessor.offset(VTOFFSET.SEN_VEL.v); return o == 0 ? false : true }
-  public var SEN_VELCount: Int32 { let o = _accessor.offset(VTOFFSET.SEN_VEL.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func SEN_VEL(at index: Int32) -> Double { let o = _accessor.offset(VTOFFSET.SEN_VEL.v); return o == 0 ? 0 : _accessor.directRead(of: Double.self, offset: _accessor.vector(at: o) + index * 8) }
-  public var SEN_VEL: [Double] { return _accessor.getVector(at: VTOFFSET.SEN_VEL.v) ?? [] }
+  public var SEN_VEL: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.SEN_VEL.v, byteSize: 8) }
+  public func withUnsafePointerToSenVel<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.SEN_VEL.v, body: body) }
   ///  Measurement type description
   public var MEAS_TYPE: String? { let o = _accessor.offset(VTOFFSET.MEAS_TYPE.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var MEAS_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.MEAS_TYPE.v) }
@@ -185,15 +185,11 @@ public struct SEO: FlatBufferObject, Verifiable {
   public var OB_TIME: String? { let o = _accessor.offset(VTOFFSET.OB_TIME.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var OB_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OB_TIME.v) }
   ///  Measurement values
-  public var hasValues: Bool { let o = _accessor.offset(VTOFFSET.VALUES.v); return o == 0 ? false : true }
-  public var VALUESCount: Int32 { let o = _accessor.offset(VTOFFSET.VALUES.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func VALUES(at index: Int32) -> Double { let o = _accessor.offset(VTOFFSET.VALUES.v); return o == 0 ? 0 : _accessor.directRead(of: Double.self, offset: _accessor.vector(at: o) + index * 8) }
-  public var VALUES: [Double] { return _accessor.getVector(at: VTOFFSET.VALUES.v) ?? [] }
+  public var VALUES: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.VALUES.v, byteSize: 8) }
+  public func withUnsafePointerToValues<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.VALUES.v, body: body) }
   ///  Measurement uncertainties
-  public var hasUncertainties: Bool { let o = _accessor.offset(VTOFFSET.UNCERTAINTIES.v); return o == 0 ? false : true }
-  public var UNCERTAINTIESCount: Int32 { let o = _accessor.offset(VTOFFSET.UNCERTAINTIES.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func UNCERTAINTIES(at index: Int32) -> Double { let o = _accessor.offset(VTOFFSET.UNCERTAINTIES.v); return o == 0 ? 0 : _accessor.directRead(of: Double.self, offset: _accessor.vector(at: o) + index * 8) }
-  public var UNCERTAINTIES: [Double] { return _accessor.getVector(at: VTOFFSET.UNCERTAINTIES.v) ?? [] }
+  public var UNCERTAINTIES: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.UNCERTAINTIES.v, byteSize: 8) }
+  public func withUnsafePointerToUncertainties<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.UNCERTAINTIES.v, body: body) }
   ///  Units for measurement values
   public var UNITS: String? { let o = _accessor.offset(VTOFFSET.UNITS.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var UNITSSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.UNITS.v) }
@@ -207,13 +203,9 @@ public struct SEO: FlatBufferObject, Verifiable {
   public var DESCRIPTOR: String? { let o = _accessor.offset(VTOFFSET.DESCRIPTOR.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var DESCRIPTORSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.DESCRIPTOR.v) }
   ///  Source types
-  public var hasSrcTyps: Bool { let o = _accessor.offset(VTOFFSET.SRC_TYPS.v); return o == 0 ? false : true }
-  public var SRC_TYPSCount: Int32 { let o = _accessor.offset(VTOFFSET.SRC_TYPS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func SRC_TYPS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.SRC_TYPS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  public var SRC_TYPS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.SRC_TYPS.v, byteSize: 4) }
   ///  Source identifiers
-  public var hasSrcIds: Bool { let o = _accessor.offset(VTOFFSET.SRC_IDS.v); return o == 0 ? false : true }
-  public var SRC_IDSCount: Int32 { let o = _accessor.offset(VTOFFSET.SRC_IDS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func SRC_IDS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.SRC_IDS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  public var SRC_IDS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.SRC_IDS.v, byteSize: 4) }
   public static func startSEO(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 35) }
   public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VTOFFSET.ID.p) }
   public static func add(MSG_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MSG_TYPE, at: VTOFFSET.MSG_TYPE.p) }

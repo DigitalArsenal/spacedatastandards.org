@@ -167,6 +167,12 @@ def IntegerArgumentTypeStartUNITSVector(builder, numElems):
 def StartUNITSVector(builder, numElems):
     return IntegerArgumentTypeStartUNITSVector(builder, numElems)
 
+def IntegerArgumentTypeCreateUNITSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateUNITSVector(builder, data):
+    IntegerArgumentTypeCreateUNITSVector(builder, data)
+
 def IntegerArgumentTypeAddDATA_ENCODING(builder, DATA_ENCODING):
     builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(DATA_ENCODING), 0)
 
@@ -219,23 +225,35 @@ except:
 class IntegerArgumentTypeT(object):
 
     # IntegerArgumentTypeT
-    def __init__(self):
-        self.NAME = None  # type: str
-        self.SHORT_DESCRIPTION = None  # type: str
-        self.LONG_DESCRIPTION = None  # type: str
-        self.UNITS = None  # type: List[Unit.UnitT]
-        self.DATA_ENCODING = None  # type: Optional[IntegerDataEncoding.IntegerDataEncodingT]
-        self.VALID_MIN = 0  # type: int
-        self.VALID_MAX = 0  # type: int
-        self.SIGNED = False  # type: bool
-        self.SIZE_IN_BITS = 0  # type: int
-        self.INITIAL_VALUE = 0  # type: int
+    def __init__(
+        self,
+        NAME = None,
+        SHORT_DESCRIPTION = None,
+        LONG_DESCRIPTION = None,
+        UNITS = None,
+        DATA_ENCODING = None,
+        VALID_MIN = 0,
+        VALID_MAX = 0,
+        SIGNED = False,
+        SIZE_IN_BITS = 0,
+        INITIAL_VALUE = 0,
+    ):
+        self.NAME = NAME  # type: Optional[str]
+        self.SHORT_DESCRIPTION = SHORT_DESCRIPTION  # type: Optional[str]
+        self.LONG_DESCRIPTION = LONG_DESCRIPTION  # type: Optional[str]
+        self.UNITS = UNITS  # type: Optional[List[Unit.UnitT]]
+        self.DATA_ENCODING = DATA_ENCODING  # type: Optional[IntegerDataEncoding.IntegerDataEncodingT]
+        self.VALID_MIN = VALID_MIN  # type: int
+        self.VALID_MAX = VALID_MAX  # type: int
+        self.SIGNED = SIGNED  # type: bool
+        self.SIZE_IN_BITS = SIZE_IN_BITS  # type: int
+        self.INITIAL_VALUE = INITIAL_VALUE  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        integerArgumentType = IntegerArgumentType()
-        integerArgumentType.Init(buf, pos)
-        return cls.InitFromObj(integerArgumentType)
+        tmpIntegerArgumentType = IntegerArgumentType()
+        tmpIntegerArgumentType.Init(buf, pos)
+        return cls.InitFromObj(tmpIntegerArgumentType)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -243,33 +261,33 @@ class IntegerArgumentTypeT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, integerArgumentType):
+    def InitFromObj(cls, tmpIntegerArgumentType):
         x = IntegerArgumentTypeT()
-        x._UnPack(integerArgumentType)
+        x._UnPack(tmpIntegerArgumentType)
         return x
 
     # IntegerArgumentTypeT
-    def _UnPack(self, integerArgumentType):
-        if integerArgumentType is None:
+    def _UnPack(self, IntegerArgumentType):
+        if IntegerArgumentType is None:
             return
-        self.NAME = integerArgumentType.NAME()
-        self.SHORT_DESCRIPTION = integerArgumentType.SHORT_DESCRIPTION()
-        self.LONG_DESCRIPTION = integerArgumentType.LONG_DESCRIPTION()
-        if not integerArgumentType.UNITSIsNone():
+        self.NAME = IntegerArgumentType.NAME()
+        self.SHORT_DESCRIPTION = IntegerArgumentType.SHORT_DESCRIPTION()
+        self.LONG_DESCRIPTION = IntegerArgumentType.LONG_DESCRIPTION()
+        if not IntegerArgumentType.UNITSIsNone():
             self.UNITS = []
-            for i in range(integerArgumentType.UNITSLength()):
-                if integerArgumentType.UNITS(i) is None:
+            for i in range(IntegerArgumentType.UNITSLength()):
+                if IntegerArgumentType.UNITS(i) is None:
                     self.UNITS.append(None)
                 else:
-                    unit_ = Unit.UnitT.InitFromObj(integerArgumentType.UNITS(i))
+                    unit_ = Unit.UnitT.InitFromObj(IntegerArgumentType.UNITS(i))
                     self.UNITS.append(unit_)
-        if integerArgumentType.DATA_ENCODING() is not None:
-            self.DATA_ENCODING = IntegerDataEncoding.IntegerDataEncodingT.InitFromObj(integerArgumentType.DATA_ENCODING())
-        self.VALID_MIN = integerArgumentType.VALID_MIN()
-        self.VALID_MAX = integerArgumentType.VALID_MAX()
-        self.SIGNED = integerArgumentType.SIGNED()
-        self.SIZE_IN_BITS = integerArgumentType.SIZE_IN_BITS()
-        self.INITIAL_VALUE = integerArgumentType.INITIAL_VALUE()
+        if IntegerArgumentType.DATA_ENCODING() is not None:
+            self.DATA_ENCODING = IntegerDataEncoding.IntegerDataEncodingT.InitFromObj(IntegerArgumentType.DATA_ENCODING())
+        self.VALID_MIN = IntegerArgumentType.VALID_MIN()
+        self.VALID_MAX = IntegerArgumentType.VALID_MAX()
+        self.SIGNED = IntegerArgumentType.SIGNED()
+        self.SIZE_IN_BITS = IntegerArgumentType.SIZE_IN_BITS()
+        self.INITIAL_VALUE = IntegerArgumentType.INITIAL_VALUE()
 
     # IntegerArgumentTypeT
     def Pack(self, builder):
@@ -305,5 +323,5 @@ class IntegerArgumentTypeT(object):
         IntegerArgumentTypeAddSIGNED(builder, self.SIGNED)
         IntegerArgumentTypeAddSIZE_IN_BITS(builder, self.SIZE_IN_BITS)
         IntegerArgumentTypeAddINITIAL_VALUE(builder, self.INITIAL_VALUE)
-        integerArgumentType = IntegerArgumentTypeEnd(builder)
-        return integerArgumentType
+        IntegerArgumentType = IntegerArgumentTypeEnd(builder)
+        return IntegerArgumentType

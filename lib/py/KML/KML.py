@@ -375,6 +375,12 @@ def KMLStartSTYLESVector(builder, numElems):
 def StartSTYLESVector(builder, numElems):
     return KMLStartSTYLESVector(builder, numElems)
 
+def KMLCreateSTYLESVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateSTYLESVector(builder, data):
+    KMLCreateSTYLESVector(builder, data)
+
 def KMLAddSTYLE_MAPS(builder, STYLE_MAPS):
     builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(STYLE_MAPS), 0)
 
@@ -386,6 +392,12 @@ def KMLStartSTYLE_MAPSVector(builder, numElems):
 
 def StartSTYLE_MAPSVector(builder, numElems):
     return KMLStartSTYLE_MAPSVector(builder, numElems)
+
+def KMLCreateSTYLE_MAPSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateSTYLE_MAPSVector(builder, data):
+    KMLCreateSTYLE_MAPSVector(builder, data)
 
 def KMLAddPLACEMARKS(builder, PLACEMARKS):
     builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(PLACEMARKS), 0)
@@ -399,6 +411,12 @@ def KMLStartPLACEMARKSVector(builder, numElems):
 def StartPLACEMARKSVector(builder, numElems):
     return KMLStartPLACEMARKSVector(builder, numElems)
 
+def KMLCreatePLACEMARKSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreatePLACEMARKSVector(builder, data):
+    KMLCreatePLACEMARKSVector(builder, data)
+
 def KMLAddFOLDERS(builder, FOLDERS):
     builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(FOLDERS), 0)
 
@@ -410,6 +428,12 @@ def KMLStartFOLDERSVector(builder, numElems):
 
 def StartFOLDERSVector(builder, numElems):
     return KMLStartFOLDERSVector(builder, numElems)
+
+def KMLCreateFOLDERSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateFOLDERSVector(builder, data):
+    KMLCreateFOLDERSVector(builder, data)
 
 def KMLAddNETWORK_LINKS(builder, NETWORK_LINKS):
     builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(NETWORK_LINKS), 0)
@@ -423,6 +447,12 @@ def KMLStartNETWORK_LINKSVector(builder, numElems):
 def StartNETWORK_LINKSVector(builder, numElems):
     return KMLStartNETWORK_LINKSVector(builder, numElems)
 
+def KMLCreateNETWORK_LINKSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateNETWORK_LINKSVector(builder, data):
+    KMLCreateNETWORK_LINKSVector(builder, data)
+
 def KMLAddGROUND_OVERLAYS(builder, GROUND_OVERLAYS):
     builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(GROUND_OVERLAYS), 0)
 
@@ -434,6 +464,12 @@ def KMLStartGROUND_OVERLAYSVector(builder, numElems):
 
 def StartGROUND_OVERLAYSVector(builder, numElems):
     return KMLStartGROUND_OVERLAYSVector(builder, numElems)
+
+def KMLCreateGROUND_OVERLAYSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateGROUND_OVERLAYSVector(builder, data):
+    KMLCreateGROUND_OVERLAYSVector(builder, data)
 
 def KMLAddSCHEMAS(builder, SCHEMAS):
     builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(SCHEMAS), 0)
@@ -447,6 +483,12 @@ def KMLStartSCHEMASVector(builder, numElems):
 def StartSCHEMASVector(builder, numElems):
     return KMLStartSCHEMASVector(builder, numElems)
 
+def KMLCreateSCHEMASVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateSCHEMASVector(builder, data):
+    KMLCreateSCHEMASVector(builder, data)
+
 def KMLAddSCREEN_OVERLAYS(builder, SCREEN_OVERLAYS):
     builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(SCREEN_OVERLAYS), 0)
 
@@ -458,6 +500,12 @@ def KMLStartSCREEN_OVERLAYSVector(builder, numElems):
 
 def StartSCREEN_OVERLAYSVector(builder, numElems):
     return KMLStartSCREEN_OVERLAYSVector(builder, numElems)
+
+def KMLCreateSCREEN_OVERLAYSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateSCREEN_OVERLAYSVector(builder, data):
+    KMLCreateSCREEN_OVERLAYSVector(builder, data)
 
 def KMLAddPHOTO_OVERLAYS(builder, PHOTO_OVERLAYS):
     builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(PHOTO_OVERLAYS), 0)
@@ -471,6 +519,12 @@ def KMLStartPHOTO_OVERLAYSVector(builder, numElems):
 def StartPHOTO_OVERLAYSVector(builder, numElems):
     return KMLStartPHOTO_OVERLAYSVector(builder, numElems)
 
+def KMLCreatePHOTO_OVERLAYSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreatePHOTO_OVERLAYSVector(builder, data):
+    KMLCreatePHOTO_OVERLAYSVector(builder, data)
+
 def KMLAddTOURS(builder, TOURS):
     builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(TOURS), 0)
 
@@ -482,6 +536,12 @@ def KMLStartTOURSVector(builder, numElems):
 
 def StartTOURSVector(builder, numElems):
     return KMLStartTOURSVector(builder, numElems)
+
+def KMLCreateTOURSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateTOURSVector(builder, data):
+    KMLCreateTOURSVector(builder, data)
 
 def KMLAddNETWORK_LINK_CONTROL(builder, NETWORK_LINK_CONTROL):
     builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(NETWORK_LINK_CONTROL), 0)
@@ -514,28 +574,45 @@ except:
 class KMLT(object):
 
     # KMLT
-    def __init__(self):
-        self.NAME = None  # type: str
-        self.DESCRIPTION = None  # type: str
-        self.VISIBILITY = False  # type: bool
-        self.OPEN = False  # type: bool
-        self.STYLES = None  # type: List[KMLStyle.KMLStyleT]
-        self.STYLE_MAPS = None  # type: List[KMLStyleMap.KMLStyleMapT]
-        self.PLACEMARKS = None  # type: List[KMLPlacemark.KMLPlacemarkT]
-        self.FOLDERS = None  # type: List[KMLFolder.KMLFolderT]
-        self.NETWORK_LINKS = None  # type: List[KMLNetworkLink.KMLNetworkLinkT]
-        self.GROUND_OVERLAYS = None  # type: List[KMLGroundOverlay.KMLGroundOverlayT]
-        self.SCHEMAS = None  # type: List[KMLSchema.KMLSchemaT]
-        self.SCREEN_OVERLAYS = None  # type: List[KMLScreenOverlay.KMLScreenOverlayT]
-        self.PHOTO_OVERLAYS = None  # type: List[KMLPhotoOverlay.KMLPhotoOverlayT]
-        self.TOURS = None  # type: List[KMLTour.KMLTourT]
-        self.NETWORK_LINK_CONTROL = None  # type: Optional[KMLNetworkLinkControl.KMLNetworkLinkControlT]
+    def __init__(
+        self,
+        NAME = None,
+        DESCRIPTION = None,
+        VISIBILITY = False,
+        OPEN = False,
+        STYLES = None,
+        STYLE_MAPS = None,
+        PLACEMARKS = None,
+        FOLDERS = None,
+        NETWORK_LINKS = None,
+        GROUND_OVERLAYS = None,
+        SCHEMAS = None,
+        SCREEN_OVERLAYS = None,
+        PHOTO_OVERLAYS = None,
+        TOURS = None,
+        NETWORK_LINK_CONTROL = None,
+    ):
+        self.NAME = NAME  # type: Optional[str]
+        self.DESCRIPTION = DESCRIPTION  # type: Optional[str]
+        self.VISIBILITY = VISIBILITY  # type: bool
+        self.OPEN = OPEN  # type: bool
+        self.STYLES = STYLES  # type: Optional[List[KMLStyle.KMLStyleT]]
+        self.STYLE_MAPS = STYLE_MAPS  # type: Optional[List[KMLStyleMap.KMLStyleMapT]]
+        self.PLACEMARKS = PLACEMARKS  # type: Optional[List[KMLPlacemark.KMLPlacemarkT]]
+        self.FOLDERS = FOLDERS  # type: Optional[List[KMLFolder.KMLFolderT]]
+        self.NETWORK_LINKS = NETWORK_LINKS  # type: Optional[List[KMLNetworkLink.KMLNetworkLinkT]]
+        self.GROUND_OVERLAYS = GROUND_OVERLAYS  # type: Optional[List[KMLGroundOverlay.KMLGroundOverlayT]]
+        self.SCHEMAS = SCHEMAS  # type: Optional[List[KMLSchema.KMLSchemaT]]
+        self.SCREEN_OVERLAYS = SCREEN_OVERLAYS  # type: Optional[List[KMLScreenOverlay.KMLScreenOverlayT]]
+        self.PHOTO_OVERLAYS = PHOTO_OVERLAYS  # type: Optional[List[KMLPhotoOverlay.KMLPhotoOverlayT]]
+        self.TOURS = TOURS  # type: Optional[List[KMLTour.KMLTourT]]
+        self.NETWORK_LINK_CONTROL = NETWORK_LINK_CONTROL  # type: Optional[KMLNetworkLinkControl.KMLNetworkLinkControlT]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        KML = KML()
-        KML.Init(buf, pos)
-        return cls.InitFromObj(KML)
+        tmpKml = KML()
+        tmpKml.Init(buf, pos)
+        return cls.InitFromObj(tmpKml)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -543,9 +620,9 @@ class KMLT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, KML):
+    def InitFromObj(cls, tmpKml):
         x = KMLT()
-        x._UnPack(KML)
+        x._UnPack(tmpKml)
         return x
 
     # KMLT

@@ -51,9 +51,17 @@ func (rcv *KMLWait) DURATION() float64 {
 	return 0.0
 }
 
+func (rcv *KMLWait) Duration() float64 {
+	return rcv.DURATION()
+}
+
 /// Duration in seconds
 func (rcv *KMLWait) MutateDURATION(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(4, n)
+}
+
+func (rcv *KMLWait) MutateDuration(n float64) bool {
+	return rcv.MutateDURATION(n)
 }
 
 func KMLWaitStart(builder *flatbuffers.Builder) {
@@ -61,6 +69,9 @@ func KMLWaitStart(builder *flatbuffers.Builder) {
 }
 func KMLWaitAddDURATION(builder *flatbuffers.Builder, DURATION float64) {
 	builder.PrependFloat64Slot(0, DURATION, 0.0)
+}
+func KMLWaitAddDuration(builder *flatbuffers.Builder, DURATION float64) {
+	KMLWaitAddDURATION(builder, DURATION)
 }
 func KMLWaitEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

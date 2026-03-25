@@ -2,4 +2,10 @@
 
 # namespace: 
 
-# NOTE rfObsType.py does not declare any structs or enums
+class rfObsType(object):
+    EMISSION = 0
+    TRANSPONDER = 1
+    INTERFERENCE = 2
+    BEACON = 3
+    TELEMETRY = 4
+    UNKNOWN = 5

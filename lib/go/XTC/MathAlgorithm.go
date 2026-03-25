@@ -51,6 +51,10 @@ func (rcv *MathAlgorithm) NAME() []byte {
 	return nil
 }
 
+func (rcv *MathAlgorithm) Name() []byte {
+	return rcv.NAME()
+}
+
 /// Algorithm name
 /// Short description
 func (rcv *MathAlgorithm) SHORT_DESCRIPTION() []byte {
@@ -59,6 +63,10 @@ func (rcv *MathAlgorithm) SHORT_DESCRIPTION() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *MathAlgorithm) ShortDescription() []byte {
+	return rcv.SHORT_DESCRIPTION()
 }
 
 /// Short description
@@ -71,6 +79,10 @@ func (rcv *MathAlgorithm) MATH_OPERATION() []byte {
 	return nil
 }
 
+func (rcv *MathAlgorithm) MathOperation() []byte {
+	return rcv.MATH_OPERATION()
+}
+
 /// Math operation in RPN
 /// Output parameter reference
 func (rcv *MathAlgorithm) OUTPUT_PARAMETER_REF() []byte {
@@ -81,6 +93,10 @@ func (rcv *MathAlgorithm) OUTPUT_PARAMETER_REF() []byte {
 	return nil
 }
 
+func (rcv *MathAlgorithm) OutputParameterRef() []byte {
+	return rcv.OUTPUT_PARAMETER_REF()
+}
+
 /// Output parameter reference
 /// Trigger conditions
 func (rcv *MathAlgorithm) TRIGGERS(obj *AlgorithmTrigger, j int) bool {
@@ -89,10 +105,17 @@ func (rcv *MathAlgorithm) TRIGGERS(obj *AlgorithmTrigger, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(AlgorithmTrigger)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *MathAlgorithm) Triggers(obj *AlgorithmTrigger, j int) bool {
+	return rcv.TRIGGERS(obj, j)
 }
 
 func (rcv *MathAlgorithm) TRIGGERSLength() int {
@@ -103,6 +126,10 @@ func (rcv *MathAlgorithm) TRIGGERSLength() int {
 	return 0
 }
 
+func (rcv *MathAlgorithm) TriggersLength() int {
+	return rcv.TRIGGERSLength()
+}
+
 /// Trigger conditions
 func MathAlgorithmStart(builder *flatbuffers.Builder) {
 	builder.StartObject(5)
@@ -110,20 +137,38 @@ func MathAlgorithmStart(builder *flatbuffers.Builder) {
 func MathAlgorithmAddNAME(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(NAME), 0)
 }
+func MathAlgorithmAddName(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
+	MathAlgorithmAddNAME(builder, NAME)
+}
 func MathAlgorithmAddSHORT_DESCRIPTION(builder *flatbuffers.Builder, SHORT_DESCRIPTION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(SHORT_DESCRIPTION), 0)
+}
+func MathAlgorithmAddShortDescription(builder *flatbuffers.Builder, SHORT_DESCRIPTION flatbuffers.UOffsetT) {
+	MathAlgorithmAddSHORT_DESCRIPTION(builder, SHORT_DESCRIPTION)
 }
 func MathAlgorithmAddMATH_OPERATION(builder *flatbuffers.Builder, MATH_OPERATION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(MATH_OPERATION), 0)
 }
+func MathAlgorithmAddMathOperation(builder *flatbuffers.Builder, MATH_OPERATION flatbuffers.UOffsetT) {
+	MathAlgorithmAddMATH_OPERATION(builder, MATH_OPERATION)
+}
 func MathAlgorithmAddOUTPUT_PARAMETER_REF(builder *flatbuffers.Builder, OUTPUT_PARAMETER_REF flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(OUTPUT_PARAMETER_REF), 0)
+}
+func MathAlgorithmAddOutputParameterRef(builder *flatbuffers.Builder, OUTPUT_PARAMETER_REF flatbuffers.UOffsetT) {
+	MathAlgorithmAddOUTPUT_PARAMETER_REF(builder, OUTPUT_PARAMETER_REF)
 }
 func MathAlgorithmAddTRIGGERS(builder *flatbuffers.Builder, TRIGGERS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(TRIGGERS), 0)
 }
+func MathAlgorithmAddTriggers(builder *flatbuffers.Builder, TRIGGERS flatbuffers.UOffsetT) {
+	MathAlgorithmAddTRIGGERS(builder, TRIGGERS)
+}
 func MathAlgorithmStartTRIGGERSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func MathAlgorithmStartTriggersVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return MathAlgorithmStartTRIGGERSVector(builder, numElems)
 }
 func MathAlgorithmEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

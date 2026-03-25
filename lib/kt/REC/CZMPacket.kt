@@ -32,7 +32,7 @@ class CZMPacket : Table() {
     /**
      * Unique identifier for this object
      */
-    val ID : String?
+    val id : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class CZMPacket : Table() {
                 null
             }
         }
-    val IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val idAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun idInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Human-readable name
      */
-    val NAME : String?
+    val name : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -55,12 +55,12 @@ class CZMPacket : Table() {
                 null
             }
         }
-    val NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val nameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun nameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * Parent packet ID
      */
-    val PARENT : String?
+    val parent : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -69,12 +69,12 @@ class CZMPacket : Table() {
                 null
             }
         }
-    val PARENTAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun PARENTInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val parentAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun parentInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
     /**
      * Description (HTML allowed)
      */
-    val DESCRIPTION : String?
+    val description : String?
         get() {
             val o = __offset(10)
             return if (o != 0) {
@@ -83,12 +83,12 @@ class CZMPacket : Table() {
                 null
             }
         }
-    val DESCRIPTIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
-    fun DESCRIPTIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
+    val descriptionAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(10, 1)
+    fun descriptionInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 10, 1)
     /**
      * Availability interval (ISO 8601 interval)
      */
-    val AVAILABILITY : String?
+    val availability : String?
         get() {
             val o = __offset(12)
             return if (o != 0) {
@@ -97,13 +97,13 @@ class CZMPacket : Table() {
                 null
             }
         }
-    val AVAILABILITYAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
-    fun AVAILABILITYInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
+    val availabilityAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(12, 1)
+    fun availabilityInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 12, 1)
     /**
      * Position as cartographic degrees
      */
-    val POSITION_CARTOGRAPHIC_DEGREES : CZMCartographicDegrees? get() = POSITION_CARTOGRAPHIC_DEGREES(CZMCartographicDegrees())
-    fun POSITION_CARTOGRAPHIC_DEGREES(obj: CZMCartographicDegrees) : CZMCartographicDegrees? {
+    val positionCartographicDegrees : CZMCartographicDegrees? get() = positionCartographicDegrees(CZMCartographicDegrees())
+    fun positionCartographicDegrees(obj: CZMCartographicDegrees) : CZMCartographicDegrees? {
         val o = __offset(14)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -114,8 +114,8 @@ class CZMPacket : Table() {
     /**
      * Position as Cartesian
      */
-    val POSITION_CARTESIAN : CZMCartesian? get() = POSITION_CARTESIAN(CZMCartesian())
-    fun POSITION_CARTESIAN(obj: CZMCartesian) : CZMCartesian? {
+    val positionCartesian : CZMCartesian? get() = positionCartesian(CZMCartesian())
+    fun positionCartesian(obj: CZMCartesian) : CZMCartesian? {
         val o = __offset(16)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -126,7 +126,7 @@ class CZMPacket : Table() {
     /**
      * Time-tagged positions [time, lon, lat, height, time, lon, lat, height, ...]
      */
-    val POSITION_EPOCH : String?
+    val positionEpoch : String?
         get() {
             val o = __offset(18)
             return if (o != 0) {
@@ -135,12 +135,12 @@ class CZMPacket : Table() {
                 null
             }
         }
-    val POSITION_EPOCHAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(18, 1)
-    fun POSITION_EPOCHInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 18, 1)
+    val positionEpochAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(18, 1)
+    fun positionEpochInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 18, 1)
     /**
      * Time-tagged cartographic degree values
      */
-    fun POSITION_CARTOGRAPHIC_DEGREES_ARRAY(j: Int) : Double {
+    fun positionCartographicDegreesArray(j: Int) : Double {
         val o = __offset(20)
         return if (o != 0) {
             bb.getDouble(__vector(o) + j * 8)
@@ -148,16 +148,16 @@ class CZMPacket : Table() {
             0.0
         }
     }
-    val POSITION_CARTOGRAPHIC_DEGREES_ARRAYLength : Int
+    val positionCartographicDegreesArrayLength : Int
         get() {
             val o = __offset(20); return if (o != 0) __vector_len(o) else 0
         }
-    val POSITION_CARTOGRAPHIC_DEGREES_ARRAYAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(20, 8)
-    fun POSITION_CARTOGRAPHIC_DEGREES_ARRAYInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 20, 8)
+    val positionCartographicDegreesArrayAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(20, 8)
+    fun positionCartographicDegreesArrayInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 20, 8)
     /**
      * Time-tagged Cartesian values
      */
-    fun POSITION_CARTESIAN_ARRAY(j: Int) : Double {
+    fun positionCartesianArray(j: Int) : Double {
         val o = __offset(22)
         return if (o != 0) {
             bb.getDouble(__vector(o) + j * 8)
@@ -165,17 +165,17 @@ class CZMPacket : Table() {
             0.0
         }
     }
-    val POSITION_CARTESIAN_ARRAYLength : Int
+    val positionCartesianArrayLength : Int
         get() {
             val o = __offset(22); return if (o != 0) __vector_len(o) else 0
         }
-    val POSITION_CARTESIAN_ARRAYAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(22, 8)
-    fun POSITION_CARTESIAN_ARRAYInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 22, 8)
+    val positionCartesianArrayAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(22, 8)
+    fun positionCartesianArrayInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 22, 8)
     /**
      * Billboard properties
      */
-    val BILLBOARD : CZMBillboard? get() = BILLBOARD(CZMBillboard())
-    fun BILLBOARD(obj: CZMBillboard) : CZMBillboard? {
+    val billboard : CZMBillboard? get() = billboard(CZMBillboard())
+    fun billboard(obj: CZMBillboard) : CZMBillboard? {
         val o = __offset(24)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -186,8 +186,8 @@ class CZMPacket : Table() {
     /**
      * Label properties
      */
-    val LABEL : CZMLabel? get() = LABEL(CZMLabel())
-    fun LABEL(obj: CZMLabel) : CZMLabel? {
+    val label : CZMLabel? get() = label(CZMLabel())
+    fun label(obj: CZMLabel) : CZMLabel? {
         val o = __offset(26)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -198,8 +198,8 @@ class CZMPacket : Table() {
     /**
      * Point properties
      */
-    val POINT : CZMPoint? get() = POINT(CZMPoint())
-    fun POINT(obj: CZMPoint) : CZMPoint? {
+    val point : CZMPoint? get() = point(CZMPoint())
+    fun point(obj: CZMPoint) : CZMPoint? {
         val o = __offset(28)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -210,8 +210,8 @@ class CZMPacket : Table() {
     /**
      * Polyline properties
      */
-    val POLYLINE : CZMPolyline? get() = POLYLINE(CZMPolyline())
-    fun POLYLINE(obj: CZMPolyline) : CZMPolyline? {
+    val polyline : CZMPolyline? get() = polyline(CZMPolyline())
+    fun polyline(obj: CZMPolyline) : CZMPolyline? {
         val o = __offset(30)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -222,8 +222,8 @@ class CZMPacket : Table() {
     /**
      * Polygon properties
      */
-    val POLYGON : CZMPolygon? get() = POLYGON(CZMPolygon())
-    fun POLYGON(obj: CZMPolygon) : CZMPolygon? {
+    val polygon : CZMPolygon? get() = polygon(CZMPolygon())
+    fun polygon(obj: CZMPolygon) : CZMPolygon? {
         val o = __offset(32)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -234,8 +234,8 @@ class CZMPacket : Table() {
     /**
      * Model properties
      */
-    val MODEL : CZMModel? get() = MODEL(CZMModel())
-    fun MODEL(obj: CZMModel) : CZMModel? {
+    val model : CZMModel? get() = model(CZMModel())
+    fun model(obj: CZMModel) : CZMModel? {
         val o = __offset(34)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -246,8 +246,8 @@ class CZMPacket : Table() {
     /**
      * Path properties
      */
-    val PATH : CZMPath? get() = PATH(CZMPath())
-    fun PATH(obj: CZMPath) : CZMPath? {
+    val path : CZMPath? get() = path(CZMPath())
+    fun path(obj: CZMPath) : CZMPath? {
         val o = __offset(36)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -258,8 +258,8 @@ class CZMPacket : Table() {
     /**
      * Ellipse properties
      */
-    val ELLIPSE : CZMEllipse? get() = ELLIPSE(CZMEllipse())
-    fun ELLIPSE(obj: CZMEllipse) : CZMEllipse? {
+    val ellipse : CZMEllipse? get() = ellipse(CZMEllipse())
+    fun ellipse(obj: CZMEllipse) : CZMEllipse? {
         val o = __offset(38)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -270,8 +270,8 @@ class CZMPacket : Table() {
     /**
      * Orientation (quaternion)
      */
-    val ORIENTATION : CZMOrientation? get() = ORIENTATION(CZMOrientation())
-    fun ORIENTATION(obj: CZMOrientation) : CZMOrientation? {
+    val orientation : CZMOrientation? get() = orientation(CZMOrientation())
+    fun orientation(obj: CZMOrientation) : CZMOrientation? {
         val o = __offset(40)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -282,8 +282,8 @@ class CZMPacket : Table() {
     /**
      * Suggested camera offset
      */
-    val VIEW_FROM : CZMViewFrom? get() = VIEW_FROM(CZMViewFrom())
-    fun VIEW_FROM(obj: CZMViewFrom) : CZMViewFrom? {
+    val viewFrom : CZMViewFrom? get() = viewFrom(CZMViewFrom())
+    fun viewFrom(obj: CZMViewFrom) : CZMViewFrom? {
         val o = __offset(42)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -294,7 +294,7 @@ class CZMPacket : Table() {
     /**
      * Whether to delete this object
      */
-    val DELETE : Boolean
+    val delete : Boolean
         get() {
             val o = __offset(44)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -302,8 +302,8 @@ class CZMPacket : Table() {
     /**
      * Box properties
      */
-    val BOX : CZMBox? get() = BOX(CZMBox())
-    fun BOX(obj: CZMBox) : CZMBox? {
+    val box : CZMBox? get() = box(CZMBox())
+    fun box(obj: CZMBox) : CZMBox? {
         val o = __offset(46)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -314,8 +314,8 @@ class CZMPacket : Table() {
     /**
      * Corridor properties
      */
-    val CORRIDOR : CZMCorridor? get() = CORRIDOR(CZMCorridor())
-    fun CORRIDOR(obj: CZMCorridor) : CZMCorridor? {
+    val corridor : CZMCorridor? get() = corridor(CZMCorridor())
+    fun corridor(obj: CZMCorridor) : CZMCorridor? {
         val o = __offset(48)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -326,8 +326,8 @@ class CZMPacket : Table() {
     /**
      * Cylinder properties
      */
-    val CYLINDER : CZMCylinder? get() = CYLINDER(CZMCylinder())
-    fun CYLINDER(obj: CZMCylinder) : CZMCylinder? {
+    val cylinder : CZMCylinder? get() = cylinder(CZMCylinder())
+    fun cylinder(obj: CZMCylinder) : CZMCylinder? {
         val o = __offset(50)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -338,8 +338,8 @@ class CZMPacket : Table() {
     /**
      * Ellipsoid properties
      */
-    val ELLIPSOID : CZMEllipsoid? get() = ELLIPSOID(CZMEllipsoid())
-    fun ELLIPSOID(obj: CZMEllipsoid) : CZMEllipsoid? {
+    val ellipsoid : CZMEllipsoid? get() = ellipsoid(CZMEllipsoid())
+    fun ellipsoid(obj: CZMEllipsoid) : CZMEllipsoid? {
         val o = __offset(52)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -350,8 +350,8 @@ class CZMPacket : Table() {
     /**
      * Polyline volume properties
      */
-    val POLYLINE_VOLUME : CZMPolylineVolume? get() = POLYLINE_VOLUME(CZMPolylineVolume())
-    fun POLYLINE_VOLUME(obj: CZMPolylineVolume) : CZMPolylineVolume? {
+    val polylineVolume : CZMPolylineVolume? get() = polylineVolume(CZMPolylineVolume())
+    fun polylineVolume(obj: CZMPolylineVolume) : CZMPolylineVolume? {
         val o = __offset(54)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -362,8 +362,8 @@ class CZMPacket : Table() {
     /**
      * Rectangle properties
      */
-    val RECTANGLE : CZMRectangle? get() = RECTANGLE(CZMRectangle())
-    fun RECTANGLE(obj: CZMRectangle) : CZMRectangle? {
+    val rectangle : CZMRectangle? get() = rectangle(CZMRectangle())
+    fun rectangle(obj: CZMRectangle) : CZMRectangle? {
         val o = __offset(56)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -374,8 +374,8 @@ class CZMPacket : Table() {
     /**
      * 3D Tileset properties
      */
-    val TILESET : CZMTileset? get() = TILESET(CZMTileset())
-    fun TILESET(obj: CZMTileset) : CZMTileset? {
+    val tileset : CZMTileset? get() = tileset(CZMTileset())
+    fun tileset(obj: CZMTileset) : CZMTileset? {
         val o = __offset(58)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -386,8 +386,8 @@ class CZMPacket : Table() {
     /**
      * Wall properties
      */
-    val WALL : CZMWall? get() = WALL(CZMWall())
-    fun WALL(obj: CZMWall) : CZMWall? {
+    val wall : CZMWall? get() = wall(CZMWall())
+    fun wall(obj: CZMWall) : CZMWall? {
         val o = __offset(60)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -398,8 +398,8 @@ class CZMPacket : Table() {
     /**
      * Position interpolation settings
      */
-    val POSITION_INTERPOLATION : CZMInterpolation? get() = POSITION_INTERPOLATION(CZMInterpolation())
-    fun POSITION_INTERPOLATION(obj: CZMInterpolation) : CZMInterpolation? {
+    val positionInterpolation : CZMInterpolation? get() = positionInterpolation(CZMInterpolation())
+    fun positionInterpolation(obj: CZMInterpolation) : CZMInterpolation? {
         val o = __offset(62)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -410,7 +410,7 @@ class CZMPacket : Table() {
     /**
      * Position reference frame (FIXED or INERTIAL)
      */
-    val POSITION_REFERENCE_FRAME : String?
+    val positionReferenceFrame : String?
         get() {
             val o = __offset(64)
             return if (o != 0) {
@@ -419,12 +419,12 @@ class CZMPacket : Table() {
                 null
             }
         }
-    val POSITION_REFERENCE_FRAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(64, 1)
-    fun POSITION_REFERENCE_FRAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 64, 1)
+    val positionReferenceFrameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(64, 1)
+    fun positionReferenceFrameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 64, 1)
     /**
      * Position reference to another entity
      */
-    val POSITION_REFERENCE : String?
+    val positionReference : String?
         get() {
             val o = __offset(66)
             return if (o != 0) {
@@ -433,12 +433,12 @@ class CZMPacket : Table() {
                 null
             }
         }
-    val POSITION_REFERENCEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(66, 1)
-    fun POSITION_REFERENCEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 66, 1)
+    val positionReferenceAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(66, 1)
+    fun positionReferenceInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 66, 1)
     /**
      * Orientation epoch (ISO 8601)
      */
-    val ORIENTATION_EPOCH : String?
+    val orientationEpoch : String?
         get() {
             val o = __offset(68)
             return if (o != 0) {
@@ -447,12 +447,12 @@ class CZMPacket : Table() {
                 null
             }
         }
-    val ORIENTATION_EPOCHAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(68, 1)
-    fun ORIENTATION_EPOCHInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 68, 1)
+    val orientationEpochAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(68, 1)
+    fun orientationEpochInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 68, 1)
     /**
      * Orientation sampled data [t, x, y, z, w, t, x, y, z, w, ...]
      */
-    fun ORIENTATION_ARRAY(j: Int) : Double {
+    fun orientationArray(j: Int) : Double {
         val o = __offset(70)
         return if (o != 0) {
             bb.getDouble(__vector(o) + j * 8)
@@ -460,17 +460,17 @@ class CZMPacket : Table() {
             0.0
         }
     }
-    val ORIENTATION_ARRAYLength : Int
+    val orientationArrayLength : Int
         get() {
             val o = __offset(70); return if (o != 0) __vector_len(o) else 0
         }
-    val ORIENTATION_ARRAYAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(70, 8)
-    fun ORIENTATION_ARRAYInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 70, 8)
+    val orientationArrayAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(70, 8)
+    fun orientationArrayInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 70, 8)
     /**
      * Orientation interpolation settings
      */
-    val ORIENTATION_INTERPOLATION : CZMInterpolation? get() = ORIENTATION_INTERPOLATION(CZMInterpolation())
-    fun ORIENTATION_INTERPOLATION(obj: CZMInterpolation) : CZMInterpolation? {
+    val orientationInterpolation : CZMInterpolation? get() = orientationInterpolation(CZMInterpolation())
+    fun orientationInterpolation(obj: CZMInterpolation) : CZMInterpolation? {
         val o = __offset(72)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -481,7 +481,7 @@ class CZMPacket : Table() {
     /**
      * Orientation reference to another entity
      */
-    val ORIENTATION_REFERENCE : String?
+    val orientationReference : String?
         get() {
             val o = __offset(74)
             return if (o != 0) {
@@ -490,13 +490,13 @@ class CZMPacket : Table() {
                 null
             }
         }
-    val ORIENTATION_REFERENCEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(74, 1)
-    fun ORIENTATION_REFERENCEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 74, 1)
+    val orientationReferenceAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(74, 1)
+    fun orientationReferenceInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 74, 1)
     /**
      * Generic bag for all time-dynamic (non-static) properties
      */
-    fun DYNAMIC_PROPERTIES(j: Int) : CZMDynamicProperty? = DYNAMIC_PROPERTIES(CZMDynamicProperty(), j)
-    fun DYNAMIC_PROPERTIES(obj: CZMDynamicProperty, j: Int) : CZMDynamicProperty? {
+    fun dynamicProperties(j: Int) : CZMDynamicProperty? = dynamicProperties(CZMDynamicProperty(), j)
+    fun dynamicProperties(obj: CZMDynamicProperty, j: Int) : CZMDynamicProperty? {
         val o = __offset(76)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -504,68 +504,68 @@ class CZMPacket : Table() {
             null
         }
     }
-    val DYNAMIC_PROPERTIESLength : Int
+    val dynamicPropertiesLength : Int
         get() {
             val o = __offset(76); return if (o != 0) __vector_len(o) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsCZMPacket(_bb: ByteBuffer): CZMPacket = getRootAsCZMPacket(_bb, CZMPacket())
         fun getRootAsCZMPacket(_bb: ByteBuffer, obj: CZMPacket): CZMPacket {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createCZMPacket(builder: FlatBufferBuilder, IDOffset: Int, NAMEOffset: Int, PARENTOffset: Int, DESCRIPTIONOffset: Int, AVAILABILITYOffset: Int, POSITION_CARTOGRAPHIC_DEGREESOffset: Int, POSITION_CARTESIANOffset: Int, POSITION_EPOCHOffset: Int, POSITION_CARTOGRAPHIC_DEGREES_ARRAYOffset: Int, POSITION_CARTESIAN_ARRAYOffset: Int, BILLBOARDOffset: Int, LABELOffset: Int, POINTOffset: Int, POLYLINEOffset: Int, POLYGONOffset: Int, MODELOffset: Int, PATHOffset: Int, ELLIPSEOffset: Int, ORIENTATIONOffset: Int, VIEW_FROMOffset: Int, DELETE: Boolean, BOXOffset: Int, CORRIDOROffset: Int, CYLINDEROffset: Int, ELLIPSOIDOffset: Int, POLYLINE_VOLUMEOffset: Int, RECTANGLEOffset: Int, TILESETOffset: Int, WALLOffset: Int, POSITION_INTERPOLATIONOffset: Int, POSITION_REFERENCE_FRAMEOffset: Int, POSITION_REFERENCEOffset: Int, ORIENTATION_EPOCHOffset: Int, ORIENTATION_ARRAYOffset: Int, ORIENTATION_INTERPOLATIONOffset: Int, ORIENTATION_REFERENCEOffset: Int, DYNAMIC_PROPERTIESOffset: Int) : Int {
+        fun createCZMPacket(builder: FlatBufferBuilder, idOffset: Int, nameOffset: Int, parentOffset: Int, descriptionOffset: Int, availabilityOffset: Int, positionCartographicDegreesOffset: Int, positionCartesianOffset: Int, positionEpochOffset: Int, positionCartographicDegreesArrayOffset: Int, positionCartesianArrayOffset: Int, billboardOffset: Int, labelOffset: Int, pointOffset: Int, polylineOffset: Int, polygonOffset: Int, modelOffset: Int, pathOffset: Int, ellipseOffset: Int, orientationOffset: Int, viewFromOffset: Int, delete: Boolean, boxOffset: Int, corridorOffset: Int, cylinderOffset: Int, ellipsoidOffset: Int, polylineVolumeOffset: Int, rectangleOffset: Int, tilesetOffset: Int, wallOffset: Int, positionInterpolationOffset: Int, positionReferenceFrameOffset: Int, positionReferenceOffset: Int, orientationEpochOffset: Int, orientationArrayOffset: Int, orientationInterpolationOffset: Int, orientationReferenceOffset: Int, dynamicPropertiesOffset: Int) : Int {
             builder.startTable(37)
-            addDYNAMIC_PROPERTIES(builder, DYNAMIC_PROPERTIESOffset)
-            addORIENTATION_REFERENCE(builder, ORIENTATION_REFERENCEOffset)
-            addORIENTATION_INTERPOLATION(builder, ORIENTATION_INTERPOLATIONOffset)
-            addORIENTATION_ARRAY(builder, ORIENTATION_ARRAYOffset)
-            addORIENTATION_EPOCH(builder, ORIENTATION_EPOCHOffset)
-            addPOSITION_REFERENCE(builder, POSITION_REFERENCEOffset)
-            addPOSITION_REFERENCE_FRAME(builder, POSITION_REFERENCE_FRAMEOffset)
-            addPOSITION_INTERPOLATION(builder, POSITION_INTERPOLATIONOffset)
-            addWALL(builder, WALLOffset)
-            addTILESET(builder, TILESETOffset)
-            addRECTANGLE(builder, RECTANGLEOffset)
-            addPOLYLINE_VOLUME(builder, POLYLINE_VOLUMEOffset)
-            addELLIPSOID(builder, ELLIPSOIDOffset)
-            addCYLINDER(builder, CYLINDEROffset)
-            addCORRIDOR(builder, CORRIDOROffset)
-            addBOX(builder, BOXOffset)
-            addVIEW_FROM(builder, VIEW_FROMOffset)
-            addORIENTATION(builder, ORIENTATIONOffset)
-            addELLIPSE(builder, ELLIPSEOffset)
-            addPATH(builder, PATHOffset)
-            addMODEL(builder, MODELOffset)
-            addPOLYGON(builder, POLYGONOffset)
-            addPOLYLINE(builder, POLYLINEOffset)
-            addPOINT(builder, POINTOffset)
-            addLABEL(builder, LABELOffset)
-            addBILLBOARD(builder, BILLBOARDOffset)
-            addPOSITION_CARTESIAN_ARRAY(builder, POSITION_CARTESIAN_ARRAYOffset)
-            addPOSITION_CARTOGRAPHIC_DEGREES_ARRAY(builder, POSITION_CARTOGRAPHIC_DEGREES_ARRAYOffset)
-            addPOSITION_EPOCH(builder, POSITION_EPOCHOffset)
-            addPOSITION_CARTESIAN(builder, POSITION_CARTESIANOffset)
-            addPOSITION_CARTOGRAPHIC_DEGREES(builder, POSITION_CARTOGRAPHIC_DEGREESOffset)
-            addAVAILABILITY(builder, AVAILABILITYOffset)
-            addDESCRIPTION(builder, DESCRIPTIONOffset)
-            addPARENT(builder, PARENTOffset)
-            addNAME(builder, NAMEOffset)
-            addID(builder, IDOffset)
-            addDELETE(builder, DELETE)
+            addDYNAMICPROPERTIES(builder, dynamicPropertiesOffset)
+            addORIENTATIONREFERENCE(builder, orientationReferenceOffset)
+            addORIENTATIONINTERPOLATION(builder, orientationInterpolationOffset)
+            addORIENTATIONARRAY(builder, orientationArrayOffset)
+            addORIENTATIONEPOCH(builder, orientationEpochOffset)
+            addPOSITIONREFERENCE(builder, positionReferenceOffset)
+            addPOSITIONREFERENCEFRAME(builder, positionReferenceFrameOffset)
+            addPOSITIONINTERPOLATION(builder, positionInterpolationOffset)
+            addWALL(builder, wallOffset)
+            addTILESET(builder, tilesetOffset)
+            addRECTANGLE(builder, rectangleOffset)
+            addPOLYLINEVOLUME(builder, polylineVolumeOffset)
+            addELLIPSOID(builder, ellipsoidOffset)
+            addCYLINDER(builder, cylinderOffset)
+            addCORRIDOR(builder, corridorOffset)
+            addBOX(builder, boxOffset)
+            addVIEWFROM(builder, viewFromOffset)
+            addORIENTATION(builder, orientationOffset)
+            addELLIPSE(builder, ellipseOffset)
+            addPATH(builder, pathOffset)
+            addMODEL(builder, modelOffset)
+            addPOLYGON(builder, polygonOffset)
+            addPOLYLINE(builder, polylineOffset)
+            addPOINT(builder, pointOffset)
+            addLABEL(builder, labelOffset)
+            addBILLBOARD(builder, billboardOffset)
+            addPOSITIONCARTESIANARRAY(builder, positionCartesianArrayOffset)
+            addPOSITIONCARTOGRAPHICDEGREESARRAY(builder, positionCartographicDegreesArrayOffset)
+            addPOSITIONEPOCH(builder, positionEpochOffset)
+            addPOSITIONCARTESIAN(builder, positionCartesianOffset)
+            addPOSITIONCARTOGRAPHICDEGREES(builder, positionCartographicDegreesOffset)
+            addAVAILABILITY(builder, availabilityOffset)
+            addDESCRIPTION(builder, descriptionOffset)
+            addPARENT(builder, parentOffset)
+            addNAME(builder, nameOffset)
+            addID(builder, idOffset)
+            addDELETE(builder, delete)
             return endCZMPacket(builder)
         }
         fun startCZMPacket(builder: FlatBufferBuilder) = builder.startTable(37)
-        fun addID(builder: FlatBufferBuilder, ID: Int) = builder.addOffset(0, ID, 0)
-        fun addNAME(builder: FlatBufferBuilder, NAME: Int) = builder.addOffset(1, NAME, 0)
-        fun addPARENT(builder: FlatBufferBuilder, PARENT: Int) = builder.addOffset(2, PARENT, 0)
-        fun addDESCRIPTION(builder: FlatBufferBuilder, DESCRIPTION: Int) = builder.addOffset(3, DESCRIPTION, 0)
-        fun addAVAILABILITY(builder: FlatBufferBuilder, AVAILABILITY: Int) = builder.addOffset(4, AVAILABILITY, 0)
-        fun addPOSITION_CARTOGRAPHIC_DEGREES(builder: FlatBufferBuilder, POSITION_CARTOGRAPHIC_DEGREES: Int) = builder.addOffset(5, POSITION_CARTOGRAPHIC_DEGREES, 0)
-        fun addPOSITION_CARTESIAN(builder: FlatBufferBuilder, POSITION_CARTESIAN: Int) = builder.addOffset(6, POSITION_CARTESIAN, 0)
-        fun addPOSITION_EPOCH(builder: FlatBufferBuilder, POSITION_EPOCH: Int) = builder.addOffset(7, POSITION_EPOCH, 0)
-        fun addPOSITION_CARTOGRAPHIC_DEGREES_ARRAY(builder: FlatBufferBuilder, POSITION_CARTOGRAPHIC_DEGREES_ARRAY: Int) = builder.addOffset(8, POSITION_CARTOGRAPHIC_DEGREES_ARRAY, 0)
+        fun addID(builder: FlatBufferBuilder, id: Int) = builder.addOffset(0, id, 0)
+        fun addNAME(builder: FlatBufferBuilder, name: Int) = builder.addOffset(1, name, 0)
+        fun addPARENT(builder: FlatBufferBuilder, parent: Int) = builder.addOffset(2, parent, 0)
+        fun addDESCRIPTION(builder: FlatBufferBuilder, description: Int) = builder.addOffset(3, description, 0)
+        fun addAVAILABILITY(builder: FlatBufferBuilder, availability: Int) = builder.addOffset(4, availability, 0)
+        fun addPOSITIONCARTOGRAPHICDEGREES(builder: FlatBufferBuilder, positionCartographicDegrees: Int) = builder.addOffset(5, positionCartographicDegrees, 0)
+        fun addPOSITIONCARTESIAN(builder: FlatBufferBuilder, positionCartesian: Int) = builder.addOffset(6, positionCartesian, 0)
+        fun addPOSITIONEPOCH(builder: FlatBufferBuilder, positionEpoch: Int) = builder.addOffset(7, positionEpoch, 0)
+        fun addPOSITIONCARTOGRAPHICDEGREESARRAY(builder: FlatBufferBuilder, positionCartographicDegreesArray: Int) = builder.addOffset(8, positionCartographicDegreesArray, 0)
         fun createPositionCartographicDegreesArrayVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
             builder.startVector(8, data.size, 8)
             for (i in data.size - 1 downTo 0) {
@@ -574,7 +574,7 @@ class CZMPacket : Table() {
             return builder.endVector()
         }
         fun startPositionCartographicDegreesArrayVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
-        fun addPOSITION_CARTESIAN_ARRAY(builder: FlatBufferBuilder, POSITION_CARTESIAN_ARRAY: Int) = builder.addOffset(9, POSITION_CARTESIAN_ARRAY, 0)
+        fun addPOSITIONCARTESIANARRAY(builder: FlatBufferBuilder, positionCartesianArray: Int) = builder.addOffset(9, positionCartesianArray, 0)
         fun createPositionCartesianArrayVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
             builder.startVector(8, data.size, 8)
             for (i in data.size - 1 downTo 0) {
@@ -583,30 +583,30 @@ class CZMPacket : Table() {
             return builder.endVector()
         }
         fun startPositionCartesianArrayVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
-        fun addBILLBOARD(builder: FlatBufferBuilder, BILLBOARD: Int) = builder.addOffset(10, BILLBOARD, 0)
-        fun addLABEL(builder: FlatBufferBuilder, LABEL: Int) = builder.addOffset(11, LABEL, 0)
-        fun addPOINT(builder: FlatBufferBuilder, POINT: Int) = builder.addOffset(12, POINT, 0)
-        fun addPOLYLINE(builder: FlatBufferBuilder, POLYLINE: Int) = builder.addOffset(13, POLYLINE, 0)
-        fun addPOLYGON(builder: FlatBufferBuilder, POLYGON: Int) = builder.addOffset(14, POLYGON, 0)
-        fun addMODEL(builder: FlatBufferBuilder, MODEL: Int) = builder.addOffset(15, MODEL, 0)
-        fun addPATH(builder: FlatBufferBuilder, PATH: Int) = builder.addOffset(16, PATH, 0)
-        fun addELLIPSE(builder: FlatBufferBuilder, ELLIPSE: Int) = builder.addOffset(17, ELLIPSE, 0)
-        fun addORIENTATION(builder: FlatBufferBuilder, ORIENTATION: Int) = builder.addOffset(18, ORIENTATION, 0)
-        fun addVIEW_FROM(builder: FlatBufferBuilder, VIEW_FROM: Int) = builder.addOffset(19, VIEW_FROM, 0)
-        fun addDELETE(builder: FlatBufferBuilder, DELETE: Boolean) = builder.addBoolean(20, DELETE, false)
-        fun addBOX(builder: FlatBufferBuilder, BOX: Int) = builder.addOffset(21, BOX, 0)
-        fun addCORRIDOR(builder: FlatBufferBuilder, CORRIDOR: Int) = builder.addOffset(22, CORRIDOR, 0)
-        fun addCYLINDER(builder: FlatBufferBuilder, CYLINDER: Int) = builder.addOffset(23, CYLINDER, 0)
-        fun addELLIPSOID(builder: FlatBufferBuilder, ELLIPSOID: Int) = builder.addOffset(24, ELLIPSOID, 0)
-        fun addPOLYLINE_VOLUME(builder: FlatBufferBuilder, POLYLINE_VOLUME: Int) = builder.addOffset(25, POLYLINE_VOLUME, 0)
-        fun addRECTANGLE(builder: FlatBufferBuilder, RECTANGLE: Int) = builder.addOffset(26, RECTANGLE, 0)
-        fun addTILESET(builder: FlatBufferBuilder, TILESET: Int) = builder.addOffset(27, TILESET, 0)
-        fun addWALL(builder: FlatBufferBuilder, WALL: Int) = builder.addOffset(28, WALL, 0)
-        fun addPOSITION_INTERPOLATION(builder: FlatBufferBuilder, POSITION_INTERPOLATION: Int) = builder.addOffset(29, POSITION_INTERPOLATION, 0)
-        fun addPOSITION_REFERENCE_FRAME(builder: FlatBufferBuilder, POSITION_REFERENCE_FRAME: Int) = builder.addOffset(30, POSITION_REFERENCE_FRAME, 0)
-        fun addPOSITION_REFERENCE(builder: FlatBufferBuilder, POSITION_REFERENCE: Int) = builder.addOffset(31, POSITION_REFERENCE, 0)
-        fun addORIENTATION_EPOCH(builder: FlatBufferBuilder, ORIENTATION_EPOCH: Int) = builder.addOffset(32, ORIENTATION_EPOCH, 0)
-        fun addORIENTATION_ARRAY(builder: FlatBufferBuilder, ORIENTATION_ARRAY: Int) = builder.addOffset(33, ORIENTATION_ARRAY, 0)
+        fun addBILLBOARD(builder: FlatBufferBuilder, billboard: Int) = builder.addOffset(10, billboard, 0)
+        fun addLABEL(builder: FlatBufferBuilder, label: Int) = builder.addOffset(11, label, 0)
+        fun addPOINT(builder: FlatBufferBuilder, point: Int) = builder.addOffset(12, point, 0)
+        fun addPOLYLINE(builder: FlatBufferBuilder, polyline: Int) = builder.addOffset(13, polyline, 0)
+        fun addPOLYGON(builder: FlatBufferBuilder, polygon: Int) = builder.addOffset(14, polygon, 0)
+        fun addMODEL(builder: FlatBufferBuilder, model: Int) = builder.addOffset(15, model, 0)
+        fun addPATH(builder: FlatBufferBuilder, path: Int) = builder.addOffset(16, path, 0)
+        fun addELLIPSE(builder: FlatBufferBuilder, ellipse: Int) = builder.addOffset(17, ellipse, 0)
+        fun addORIENTATION(builder: FlatBufferBuilder, orientation: Int) = builder.addOffset(18, orientation, 0)
+        fun addVIEWFROM(builder: FlatBufferBuilder, viewFrom: Int) = builder.addOffset(19, viewFrom, 0)
+        fun addDELETE(builder: FlatBufferBuilder, delete: Boolean) = builder.addBoolean(20, delete, false)
+        fun addBOX(builder: FlatBufferBuilder, box: Int) = builder.addOffset(21, box, 0)
+        fun addCORRIDOR(builder: FlatBufferBuilder, corridor: Int) = builder.addOffset(22, corridor, 0)
+        fun addCYLINDER(builder: FlatBufferBuilder, cylinder: Int) = builder.addOffset(23, cylinder, 0)
+        fun addELLIPSOID(builder: FlatBufferBuilder, ellipsoid: Int) = builder.addOffset(24, ellipsoid, 0)
+        fun addPOLYLINEVOLUME(builder: FlatBufferBuilder, polylineVolume: Int) = builder.addOffset(25, polylineVolume, 0)
+        fun addRECTANGLE(builder: FlatBufferBuilder, rectangle: Int) = builder.addOffset(26, rectangle, 0)
+        fun addTILESET(builder: FlatBufferBuilder, tileset: Int) = builder.addOffset(27, tileset, 0)
+        fun addWALL(builder: FlatBufferBuilder, wall: Int) = builder.addOffset(28, wall, 0)
+        fun addPOSITIONINTERPOLATION(builder: FlatBufferBuilder, positionInterpolation: Int) = builder.addOffset(29, positionInterpolation, 0)
+        fun addPOSITIONREFERENCEFRAME(builder: FlatBufferBuilder, positionReferenceFrame: Int) = builder.addOffset(30, positionReferenceFrame, 0)
+        fun addPOSITIONREFERENCE(builder: FlatBufferBuilder, positionReference: Int) = builder.addOffset(31, positionReference, 0)
+        fun addORIENTATIONEPOCH(builder: FlatBufferBuilder, orientationEpoch: Int) = builder.addOffset(32, orientationEpoch, 0)
+        fun addORIENTATIONARRAY(builder: FlatBufferBuilder, orientationArray: Int) = builder.addOffset(33, orientationArray, 0)
         fun createOrientationArrayVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
             builder.startVector(8, data.size, 8)
             for (i in data.size - 1 downTo 0) {
@@ -615,9 +615,9 @@ class CZMPacket : Table() {
             return builder.endVector()
         }
         fun startOrientationArrayVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
-        fun addORIENTATION_INTERPOLATION(builder: FlatBufferBuilder, ORIENTATION_INTERPOLATION: Int) = builder.addOffset(34, ORIENTATION_INTERPOLATION, 0)
-        fun addORIENTATION_REFERENCE(builder: FlatBufferBuilder, ORIENTATION_REFERENCE: Int) = builder.addOffset(35, ORIENTATION_REFERENCE, 0)
-        fun addDYNAMIC_PROPERTIES(builder: FlatBufferBuilder, DYNAMIC_PROPERTIES: Int) = builder.addOffset(36, DYNAMIC_PROPERTIES, 0)
+        fun addORIENTATIONINTERPOLATION(builder: FlatBufferBuilder, orientationInterpolation: Int) = builder.addOffset(34, orientationInterpolation, 0)
+        fun addORIENTATIONREFERENCE(builder: FlatBufferBuilder, orientationReference: Int) = builder.addOffset(35, orientationReference, 0)
+        fun addDYNAMICPROPERTIES(builder: FlatBufferBuilder, dynamicProperties: Int) = builder.addOffset(36, dynamicProperties, 0)
         fun createDynamicPropertiesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {

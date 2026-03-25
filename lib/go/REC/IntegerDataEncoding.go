@@ -51,9 +51,17 @@ func (rcv *IntegerDataEncoding) SIZE_IN_BITS() uint16 {
 	return 0
 }
 
+func (rcv *IntegerDataEncoding) SizeInBits() uint16 {
+	return rcv.SIZE_IN_BITS()
+}
+
 /// Number of bits for this integer
 func (rcv *IntegerDataEncoding) MutateSIZE_IN_BITS(n uint16) bool {
 	return rcv._tab.MutateUint16Slot(4, n)
+}
+
+func (rcv *IntegerDataEncoding) MutateSizeInBits(n uint16) bool {
+	return rcv.MutateSIZE_IN_BITS(n)
 }
 
 /// Byte ordering
@@ -65,9 +73,17 @@ func (rcv *IntegerDataEncoding) BYTE_ORDER() ByteOrderType {
 	return 0
 }
 
+func (rcv *IntegerDataEncoding) ByteOrder() ByteOrderType {
+	return rcv.BYTE_ORDER()
+}
+
 /// Byte ordering
 func (rcv *IntegerDataEncoding) MutateBYTE_ORDER(n ByteOrderType) bool {
 	return rcv._tab.MutateInt8Slot(6, int8(n))
+}
+
+func (rcv *IntegerDataEncoding) MutateByteOrder(n ByteOrderType) bool {
+	return rcv.MutateBYTE_ORDER(n)
 }
 
 /// Integer encoding type
@@ -79,9 +95,17 @@ func (rcv *IntegerDataEncoding) ENCODING() IntegerEncodingType {
 	return 0
 }
 
+func (rcv *IntegerDataEncoding) Encoding() IntegerEncodingType {
+	return rcv.ENCODING()
+}
+
 /// Integer encoding type
 func (rcv *IntegerDataEncoding) MutateENCODING(n IntegerEncodingType) bool {
 	return rcv._tab.MutateInt8Slot(8, int8(n))
+}
+
+func (rcv *IntegerDataEncoding) MutateEncoding(n IntegerEncodingType) bool {
+	return rcv.MutateENCODING(n)
 }
 
 /// Default calibrator reference
@@ -93,6 +117,10 @@ func (rcv *IntegerDataEncoding) DEFAULT_CALIBRATOR() []byte {
 	return nil
 }
 
+func (rcv *IntegerDataEncoding) DefaultCalibrator() []byte {
+	return rcv.DEFAULT_CALIBRATOR()
+}
+
 /// Default calibrator reference
 /// Context-dependent calibrators
 func (rcv *IntegerDataEncoding) CONTEXT_CALIBRATOR_LIST(obj *ContextCalibrator, j int) bool {
@@ -101,10 +129,17 @@ func (rcv *IntegerDataEncoding) CONTEXT_CALIBRATOR_LIST(obj *ContextCalibrator, 
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(ContextCalibrator)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *IntegerDataEncoding) ContextCalibratorList(obj *ContextCalibrator, j int) bool {
+	return rcv.CONTEXT_CALIBRATOR_LIST(obj, j)
 }
 
 func (rcv *IntegerDataEncoding) CONTEXT_CALIBRATOR_LISTLength() int {
@@ -115,6 +150,10 @@ func (rcv *IntegerDataEncoding) CONTEXT_CALIBRATOR_LISTLength() int {
 	return 0
 }
 
+func (rcv *IntegerDataEncoding) ContextCalibratorListLength() int {
+	return rcv.CONTEXT_CALIBRATOR_LISTLength()
+}
+
 /// Context-dependent calibrators
 func IntegerDataEncodingStart(builder *flatbuffers.Builder) {
 	builder.StartObject(5)
@@ -122,20 +161,38 @@ func IntegerDataEncodingStart(builder *flatbuffers.Builder) {
 func IntegerDataEncodingAddSIZE_IN_BITS(builder *flatbuffers.Builder, SIZE_IN_BITS uint16) {
 	builder.PrependUint16Slot(0, SIZE_IN_BITS, 0)
 }
+func IntegerDataEncodingAddSizeInBits(builder *flatbuffers.Builder, SIZE_IN_BITS uint16) {
+	IntegerDataEncodingAddSIZE_IN_BITS(builder, SIZE_IN_BITS)
+}
 func IntegerDataEncodingAddBYTE_ORDER(builder *flatbuffers.Builder, BYTE_ORDER ByteOrderType) {
 	builder.PrependInt8Slot(1, int8(BYTE_ORDER), 0)
+}
+func IntegerDataEncodingAddByteOrder(builder *flatbuffers.Builder, BYTE_ORDER ByteOrderType) {
+	IntegerDataEncodingAddBYTE_ORDER(builder, BYTE_ORDER)
 }
 func IntegerDataEncodingAddENCODING(builder *flatbuffers.Builder, ENCODING IntegerEncodingType) {
 	builder.PrependInt8Slot(2, int8(ENCODING), 0)
 }
+func IntegerDataEncodingAddEncoding(builder *flatbuffers.Builder, ENCODING IntegerEncodingType) {
+	IntegerDataEncodingAddENCODING(builder, ENCODING)
+}
 func IntegerDataEncodingAddDEFAULT_CALIBRATOR(builder *flatbuffers.Builder, DEFAULT_CALIBRATOR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(DEFAULT_CALIBRATOR), 0)
+}
+func IntegerDataEncodingAddDefaultCalibrator(builder *flatbuffers.Builder, DEFAULT_CALIBRATOR flatbuffers.UOffsetT) {
+	IntegerDataEncodingAddDEFAULT_CALIBRATOR(builder, DEFAULT_CALIBRATOR)
 }
 func IntegerDataEncodingAddCONTEXT_CALIBRATOR_LIST(builder *flatbuffers.Builder, CONTEXT_CALIBRATOR_LIST flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(CONTEXT_CALIBRATOR_LIST), 0)
 }
+func IntegerDataEncodingAddContextCalibratorList(builder *flatbuffers.Builder, CONTEXT_CALIBRATOR_LIST flatbuffers.UOffsetT) {
+	IntegerDataEncodingAddCONTEXT_CALIBRATOR_LIST(builder, CONTEXT_CALIBRATOR_LIST)
+}
 func IntegerDataEncodingStartCONTEXT_CALIBRATOR_LISTVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func IntegerDataEncodingStartContextCalibratorListVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return IntegerDataEncodingStartCONTEXT_CALIBRATOR_LISTVector(builder, numElems)
 }
 func IntegerDataEncodingEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

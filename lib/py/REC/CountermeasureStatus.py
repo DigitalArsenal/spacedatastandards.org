@@ -2,4 +2,10 @@
 
 # namespace: 
 
-# NOTE CountermeasureStatus.py does not declare any structs or enums
+class CountermeasureStatus(object):
+    READY = 0
+    DEPLOYING = 1
+    ACTIVE = 2
+    EXPENDED = 3
+    RELOADING = 4
+    FAILED = 5

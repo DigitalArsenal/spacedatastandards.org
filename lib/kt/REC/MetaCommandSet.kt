@@ -32,8 +32,8 @@ class MetaCommandSet : Table() {
     /**
      * MetaCommands
      */
-    fun META_COMMANDS(j: Int) : MetaCommand? = META_COMMANDS(MetaCommand(), j)
-    fun META_COMMANDS(obj: MetaCommand, j: Int) : MetaCommand? {
+    fun metaCommands(j: Int) : MetaCommand? = metaCommands(MetaCommand(), j)
+    fun metaCommands(obj: MetaCommand, j: Int) : MetaCommand? {
         val o = __offset(4)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -41,24 +41,24 @@ class MetaCommandSet : Table() {
             null
         }
     }
-    val META_COMMANDSLength : Int
+    val metaCommandsLength : Int
         get() {
             val o = __offset(4); return if (o != 0) __vector_len(o) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsMetaCommandSet(_bb: ByteBuffer): MetaCommandSet = getRootAsMetaCommandSet(_bb, MetaCommandSet())
         fun getRootAsMetaCommandSet(_bb: ByteBuffer, obj: MetaCommandSet): MetaCommandSet {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createMetaCommandSet(builder: FlatBufferBuilder, META_COMMANDSOffset: Int) : Int {
+        fun createMetaCommandSet(builder: FlatBufferBuilder, metaCommandsOffset: Int) : Int {
             builder.startTable(1)
-            addMETA_COMMANDS(builder, META_COMMANDSOffset)
+            addMETACOMMANDS(builder, metaCommandsOffset)
             return endMetaCommandSet(builder)
         }
         fun startMetaCommandSet(builder: FlatBufferBuilder) = builder.startTable(1)
-        fun addMETA_COMMANDS(builder: FlatBufferBuilder, META_COMMANDS: Int) = builder.addOffset(0, META_COMMANDS, 0)
+        fun addMETACOMMANDS(builder: FlatBufferBuilder, metaCommands: Int) = builder.addOffset(0, metaCommands, 0)
         fun createMetaCommandsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {

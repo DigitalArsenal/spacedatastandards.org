@@ -2,9 +2,13 @@
 // swiftlint:disable all
 // swiftformat:disable all
 
+#if canImport(Common)
+import Common
+#endif
+
 import FlatBuffers
 
-public enum KeyType: Int8, Enum, Verifiable {
+public enum KeyType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -17,9 +21,9 @@ public enum KeyType: Int8, Enum, Verifiable {
 
 
 ///  Represents cryptographic key information
-public struct CryptoKey: FlatBufferObject, Verifiable {
+public struct CryptoKey: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -104,9 +108,9 @@ public struct CryptoKey: FlatBufferObject, Verifiable {
 }
 
 ///  Represents a geographic address
-public struct Address: FlatBufferObject, Verifiable {
+public struct Address: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -184,9 +188,9 @@ public struct Address: FlatBufferObject, Verifiable {
 }
 
 ///  Proves a blockchain key derives from the same HD wallet as the signing key
-public struct ChainProof: FlatBufferObject, Verifiable {
+public struct ChainProof: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -280,9 +284,9 @@ public struct ChainProof: FlatBufferObject, Verifiable {
 }
 
 ///  Entity Profile Message
-public struct EPM: FlatBufferObject, Verifiable {
+public struct EPM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -342,11 +346,9 @@ public struct EPM: FlatBufferObject, Verifiable {
   public var OCCUPATION: String? { let o = _accessor.offset(VTOFFSET.OCCUPATION.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var OCCUPATIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OCCUPATION.v) }
   ///  Physical Address
-  public var ADDRESS: Address? { let o = _accessor.offset(VTOFFSET.ADDRESS.v); return o == 0 ? nil : Address(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var ADDRESS: Address? { let o = _accessor.offset(VTOFFSET.ADDRESS.v); return o == 0 ? nil : Address(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Alternate names for the entity
-  public var hasAlternateNames: Bool { let o = _accessor.offset(VTOFFSET.ALTERNATE_NAMES.v); return o == 0 ? false : true }
-  public var ALTERNATE_NAMESCount: Int32 { let o = _accessor.offset(VTOFFSET.ALTERNATE_NAMES.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func ALTERNATE_NAMES(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.ALTERNATE_NAMES.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  public var ALTERNATE_NAMES: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.ALTERNATE_NAMES.v, byteSize: 4) }
   ///  Email address of the entity
   public var EMAIL: String? { let o = _accessor.offset(VTOFFSET.EMAIL.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var EMAILSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.EMAIL.v) }
@@ -354,22 +356,16 @@ public struct EPM: FlatBufferObject, Verifiable {
   public var TELEPHONE: String? { let o = _accessor.offset(VTOFFSET.TELEPHONE.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var TELEPHONESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TELEPHONE.v) }
   ///  Cryptographic keys associated with the entity
-  public var hasKeys: Bool { let o = _accessor.offset(VTOFFSET.KEYS.v); return o == 0 ? false : true }
-  public var KEYSCount: Int32 { let o = _accessor.offset(VTOFFSET.KEYS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func KEYS(at index: Int32) -> CryptoKey? { let o = _accessor.offset(VTOFFSET.KEYS.v); return o == 0 ? nil : CryptoKey(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var KEYS: FlatbufferVector<CryptoKey> { return _accessor.vector(at: VTOFFSET.KEYS.v, byteSize: 4) }
   ///  Multiformat addresses associated with the entity
-  public var hasMultiformatAddress: Bool { let o = _accessor.offset(VTOFFSET.MULTIFORMAT_ADDRESS.v); return o == 0 ? false : true }
-  public var MULTIFORMAT_ADDRESSCount: Int32 { let o = _accessor.offset(VTOFFSET.MULTIFORMAT_ADDRESS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func MULTIFORMAT_ADDRESS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.MULTIFORMAT_ADDRESS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  public var MULTIFORMAT_ADDRESS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.MULTIFORMAT_ADDRESS.v, byteSize: 4) }
   ///  Ed25519 signature over canonical EPM content (hex), signed by the first signing key in KEYS
   public var SIGNATURE: String? { let o = _accessor.offset(VTOFFSET.SIGNATURE.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var SIGNATURESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SIGNATURE.v) }
   ///  Unix timestamp (seconds) when the EPM was signed
   public var SIGNATURE_TIMESTAMP: Int64 { let o = _accessor.offset(VTOFFSET.SIGNATURE_TIMESTAMP.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int64.self, at: o) }
   ///  Chain binding proofs linking blockchain keys to the same HD wallet
-  public var hasChainProofs: Bool { let o = _accessor.offset(VTOFFSET.CHAIN_PROOFS.v); return o == 0 ? false : true }
-  public var CHAIN_PROOFSCount: Int32 { let o = _accessor.offset(VTOFFSET.CHAIN_PROOFS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func CHAIN_PROOFS(at index: Int32) -> ChainProof? { let o = _accessor.offset(VTOFFSET.CHAIN_PROOFS.v); return o == 0 ? nil : ChainProof(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var CHAIN_PROOFS: FlatbufferVector<ChainProof> { return _accessor.vector(at: VTOFFSET.CHAIN_PROOFS.v, byteSize: 4) }
   public static func startEPM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 18) }
   public static func add(DN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DN, at: VTOFFSET.DN.p) }
   public static func add(LEGAL_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LEGAL_NAME, at: VTOFFSET.LEGAL_NAME.p) }

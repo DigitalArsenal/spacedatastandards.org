@@ -292,32 +292,53 @@ def End(builder):
 class MFET(object):
 
     # MFET
-    def __init__(self):
-        self.ID = None  # type: str
-        self.TMP_SAT_NO = 0  # type: int
-        self.EPOCH = None  # type: str
-        self.MEAN_MOTION = 0.0  # type: float
-        self.ECCENTRICITY = 0.0  # type: float
-        self.INCLINATION = 0.0  # type: float
-        self.RAAN = 0.0  # type: float
-        self.ARG_OF_PERIGEE = 0.0  # type: float
-        self.MEAN_ANOMALY = 0.0  # type: float
-        self.REV_NO = 0  # type: int
-        self.B_STAR = 0.0  # type: float
-        self.MEAN_MOTION_DOT = 0.0  # type: float
-        self.MEAN_MOTION_DDOT = 0.0  # type: float
-        self.SEMI_MAJOR_AXIS = 0.0  # type: float
-        self.PERIOD = 0.0  # type: float
-        self.APOGEE = 0.0  # type: float
-        self.PERIGEE = 0.0  # type: float
-        self.LINE1 = None  # type: str
-        self.LINE2 = None  # type: str
+    def __init__(
+        self,
+        ID = None,
+        TMP_SAT_NO = 0,
+        EPOCH = None,
+        MEAN_MOTION = 0.0,
+        ECCENTRICITY = 0.0,
+        INCLINATION = 0.0,
+        RAAN = 0.0,
+        ARG_OF_PERIGEE = 0.0,
+        MEAN_ANOMALY = 0.0,
+        REV_NO = 0,
+        B_STAR = 0.0,
+        MEAN_MOTION_DOT = 0.0,
+        MEAN_MOTION_DDOT = 0.0,
+        SEMI_MAJOR_AXIS = 0.0,
+        PERIOD = 0.0,
+        APOGEE = 0.0,
+        PERIGEE = 0.0,
+        LINE1 = None,
+        LINE2 = None,
+    ):
+        self.ID = ID  # type: Optional[str]
+        self.TMP_SAT_NO = TMP_SAT_NO  # type: int
+        self.EPOCH = EPOCH  # type: Optional[str]
+        self.MEAN_MOTION = MEAN_MOTION  # type: float
+        self.ECCENTRICITY = ECCENTRICITY  # type: float
+        self.INCLINATION = INCLINATION  # type: float
+        self.RAAN = RAAN  # type: float
+        self.ARG_OF_PERIGEE = ARG_OF_PERIGEE  # type: float
+        self.MEAN_ANOMALY = MEAN_ANOMALY  # type: float
+        self.REV_NO = REV_NO  # type: int
+        self.B_STAR = B_STAR  # type: float
+        self.MEAN_MOTION_DOT = MEAN_MOTION_DOT  # type: float
+        self.MEAN_MOTION_DDOT = MEAN_MOTION_DDOT  # type: float
+        self.SEMI_MAJOR_AXIS = SEMI_MAJOR_AXIS  # type: float
+        self.PERIOD = PERIOD  # type: float
+        self.APOGEE = APOGEE  # type: float
+        self.PERIGEE = PERIGEE  # type: float
+        self.LINE1 = LINE1  # type: Optional[str]
+        self.LINE2 = LINE2  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        MFE = MFE()
-        MFE.Init(buf, pos)
-        return cls.InitFromObj(MFE)
+        tmpMfe = MFE()
+        tmpMfe.Init(buf, pos)
+        return cls.InitFromObj(tmpMfe)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -325,9 +346,9 @@ class MFET(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, MFE):
+    def InitFromObj(cls, tmpMfe):
         x = MFET()
-        x._UnPack(MFE)
+        x._UnPack(tmpMfe)
         return x
 
     # MFET

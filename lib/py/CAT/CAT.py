@@ -381,6 +381,12 @@ def CATStartPAYLOADSVector(builder, numElems):
 def StartPAYLOADSVector(builder, numElems):
     return CATStartPAYLOADSVector(builder, numElems)
 
+def CATCreatePAYLOADSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreatePAYLOADSVector(builder, data):
+    CATCreatePAYLOADSVector(builder, data)
+
 def CATEnd(builder):
     return builder.EndObject()
 
@@ -396,36 +402,61 @@ except:
 class CATT(object):
 
     # CATT
-    def __init__(self):
-        self.OBJECT_NAME = None  # type: str
-        self.OBJECT_ID = None  # type: str
-        self.NORAD_CAT_ID = 0  # type: int
-        self.OBJECT_TYPE = 3  # type: int
-        self.OPS_STATUS_CODE = 7  # type: int
-        self.OWNER = 0  # type: int
-        self.LAUNCH_DATE = None  # type: str
-        self.LAUNCH_SITE = None  # type: str
-        self.DECAY_DATE = None  # type: str
-        self.PERIOD = 0.0  # type: float
-        self.INCLINATION = 0.0  # type: float
-        self.APOGEE = 0.0  # type: float
-        self.PERIGEE = 0.0  # type: float
-        self.RCS = 0.0  # type: float
-        self.DATA_STATUS_CODE = 0  # type: int
-        self.ORBIT_CENTER = None  # type: str
-        self.ORBIT_TYPE = 0  # type: int
-        self.DEPLOYMENT_DATE = None  # type: str
-        self.MANEUVERABLE = False  # type: bool
-        self.SIZE = 0.0  # type: float
-        self.MASS = 0.0  # type: float
-        self.MASS_TYPE = 0  # type: int
-        self.PAYLOADS = None  # type: List[PLD.PLDT]
+    def __init__(
+        self,
+        OBJECT_NAME = None,
+        OBJECT_ID = None,
+        NORAD_CAT_ID = 0,
+        OBJECT_TYPE = 3,
+        OPS_STATUS_CODE = 7,
+        OWNER = 0,
+        LAUNCH_DATE = None,
+        LAUNCH_SITE = None,
+        DECAY_DATE = None,
+        PERIOD = 0.0,
+        INCLINATION = 0.0,
+        APOGEE = 0.0,
+        PERIGEE = 0.0,
+        RCS = 0.0,
+        DATA_STATUS_CODE = 0,
+        ORBIT_CENTER = None,
+        ORBIT_TYPE = 0,
+        DEPLOYMENT_DATE = None,
+        MANEUVERABLE = False,
+        SIZE = 0.0,
+        MASS = 0.0,
+        MASS_TYPE = 0,
+        PAYLOADS = None,
+    ):
+        self.OBJECT_NAME = OBJECT_NAME  # type: Optional[str]
+        self.OBJECT_ID = OBJECT_ID  # type: Optional[str]
+        self.NORAD_CAT_ID = NORAD_CAT_ID  # type: int
+        self.OBJECT_TYPE = OBJECT_TYPE  # type: int
+        self.OPS_STATUS_CODE = OPS_STATUS_CODE  # type: int
+        self.OWNER = OWNER  # type: int
+        self.LAUNCH_DATE = LAUNCH_DATE  # type: Optional[str]
+        self.LAUNCH_SITE = LAUNCH_SITE  # type: Optional[str]
+        self.DECAY_DATE = DECAY_DATE  # type: Optional[str]
+        self.PERIOD = PERIOD  # type: float
+        self.INCLINATION = INCLINATION  # type: float
+        self.APOGEE = APOGEE  # type: float
+        self.PERIGEE = PERIGEE  # type: float
+        self.RCS = RCS  # type: float
+        self.DATA_STATUS_CODE = DATA_STATUS_CODE  # type: int
+        self.ORBIT_CENTER = ORBIT_CENTER  # type: Optional[str]
+        self.ORBIT_TYPE = ORBIT_TYPE  # type: int
+        self.DEPLOYMENT_DATE = DEPLOYMENT_DATE  # type: Optional[str]
+        self.MANEUVERABLE = MANEUVERABLE  # type: bool
+        self.SIZE = SIZE  # type: float
+        self.MASS = MASS  # type: float
+        self.MASS_TYPE = MASS_TYPE  # type: int
+        self.PAYLOADS = PAYLOADS  # type: Optional[List[PLD.PLDT]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        CAT = CAT()
-        CAT.Init(buf, pos)
-        return cls.InitFromObj(CAT)
+        tmpCat = CAT()
+        tmpCat.Init(buf, pos)
+        return cls.InitFromObj(tmpCat)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -433,9 +464,9 @@ class CATT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, CAT):
+    def InitFromObj(cls, tmpCat):
         x = CATT()
-        x._UnPack(CAT)
+        x._UnPack(tmpCat)
         return x
 
     # CATT

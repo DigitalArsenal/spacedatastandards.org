@@ -63,9 +63,17 @@ func (rcv *CDM) CCSDS_CDM_VERS() float64 {
 	return 0.0
 }
 
+func (rcv *CDM) CcsdsCdmVers() float64 {
+	return rcv.CCSDS_CDM_VERS()
+}
+
 /// The version of the CCSDS CDM standard used
 func (rcv *CDM) MutateCCSDS_CDM_VERS(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(4, n)
+}
+
+func (rcv *CDM) MutateCcsdsCdmVers(n float64) bool {
+	return rcv.MutateCCSDS_CDM_VERS(n)
 }
 
 /// The date the CDM message was created
@@ -75,6 +83,10 @@ func (rcv *CDM) CREATION_DATE() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *CDM) CreationDate() []byte {
+	return rcv.CREATION_DATE()
 }
 
 /// The date the CDM message was created
@@ -87,6 +99,10 @@ func (rcv *CDM) ORIGINATOR() []byte {
 	return nil
 }
 
+func (rcv *CDM) Originator() []byte {
+	return rcv.ORIGINATOR()
+}
+
 /// The originator of the CDM message
 /// The intended recipient of the CDM message
 func (rcv *CDM) MESSAGE_FOR() []byte {
@@ -95,6 +111,10 @@ func (rcv *CDM) MESSAGE_FOR() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *CDM) MessageFor() []byte {
+	return rcv.MESSAGE_FOR()
 }
 
 /// The intended recipient of the CDM message
@@ -107,6 +127,10 @@ func (rcv *CDM) MESSAGE_ID() []byte {
 	return nil
 }
 
+func (rcv *CDM) MessageId() []byte {
+	return rcv.MESSAGE_ID()
+}
+
 /// A unique identifier for the CDM message
 /// Time of closest approach
 func (rcv *CDM) TCA() []byte {
@@ -115,6 +139,10 @@ func (rcv *CDM) TCA() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *CDM) Tca() []byte {
+	return rcv.TCA()
 }
 
 /// Time of closest approach
@@ -127,9 +155,17 @@ func (rcv *CDM) MISS_DISTANCE() float64 {
 	return 0.0
 }
 
+func (rcv *CDM) MissDistance() float64 {
+	return rcv.MISS_DISTANCE()
+}
+
 /// The miss distance between the two objects
 func (rcv *CDM) MutateMISS_DISTANCE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(16, n)
+}
+
+func (rcv *CDM) MutateMissDistance(n float64) bool {
+	return rcv.MutateMISS_DISTANCE(n)
 }
 
 /// The relative speed between the two objects
@@ -141,9 +177,17 @@ func (rcv *CDM) RELATIVE_SPEED() float64 {
 	return 0.0
 }
 
+func (rcv *CDM) RelativeSpeed() float64 {
+	return rcv.RELATIVE_SPEED()
+}
+
 /// The relative speed between the two objects
 func (rcv *CDM) MutateRELATIVE_SPEED(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(18, n)
+}
+
+func (rcv *CDM) MutateRelativeSpeed(n float64) bool {
+	return rcv.MutateRELATIVE_SPEED(n)
 }
 
 /// The relative position R component
@@ -155,9 +199,17 @@ func (rcv *CDM) RELATIVE_POSITION_R() float64 {
 	return 0.0
 }
 
+func (rcv *CDM) RelativePositionR() float64 {
+	return rcv.RELATIVE_POSITION_R()
+}
+
 /// The relative position R component
 func (rcv *CDM) MutateRELATIVE_POSITION_R(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(20, n)
+}
+
+func (rcv *CDM) MutateRelativePositionR(n float64) bool {
+	return rcv.MutateRELATIVE_POSITION_R(n)
 }
 
 /// The relative position T component
@@ -169,9 +221,17 @@ func (rcv *CDM) RELATIVE_POSITION_T() float64 {
 	return 0.0
 }
 
+func (rcv *CDM) RelativePositionT() float64 {
+	return rcv.RELATIVE_POSITION_T()
+}
+
 /// The relative position T component
 func (rcv *CDM) MutateRELATIVE_POSITION_T(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(22, n)
+}
+
+func (rcv *CDM) MutateRelativePositionT(n float64) bool {
+	return rcv.MutateRELATIVE_POSITION_T(n)
 }
 
 /// The relative position N component
@@ -183,9 +243,17 @@ func (rcv *CDM) RELATIVE_POSITION_N() float64 {
 	return 0.0
 }
 
+func (rcv *CDM) RelativePositionN() float64 {
+	return rcv.RELATIVE_POSITION_N()
+}
+
 /// The relative position N component
 func (rcv *CDM) MutateRELATIVE_POSITION_N(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(24, n)
+}
+
+func (rcv *CDM) MutateRelativePositionN(n float64) bool {
+	return rcv.MutateRELATIVE_POSITION_N(n)
 }
 
 /// The relative velocity R component
@@ -197,9 +265,17 @@ func (rcv *CDM) RELATIVE_VELOCITY_R() float64 {
 	return 0.0
 }
 
+func (rcv *CDM) RelativeVelocityR() float64 {
+	return rcv.RELATIVE_VELOCITY_R()
+}
+
 /// The relative velocity R component
 func (rcv *CDM) MutateRELATIVE_VELOCITY_R(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(26, n)
+}
+
+func (rcv *CDM) MutateRelativeVelocityR(n float64) bool {
+	return rcv.MutateRELATIVE_VELOCITY_R(n)
 }
 
 /// The relative velocity T component
@@ -211,9 +287,17 @@ func (rcv *CDM) RELATIVE_VELOCITY_T() float64 {
 	return 0.0
 }
 
+func (rcv *CDM) RelativeVelocityT() float64 {
+	return rcv.RELATIVE_VELOCITY_T()
+}
+
 /// The relative velocity T component
 func (rcv *CDM) MutateRELATIVE_VELOCITY_T(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(28, n)
+}
+
+func (rcv *CDM) MutateRelativeVelocityT(n float64) bool {
+	return rcv.MutateRELATIVE_VELOCITY_T(n)
 }
 
 /// The relative velocity N component
@@ -225,9 +309,17 @@ func (rcv *CDM) RELATIVE_VELOCITY_N() float64 {
 	return 0.0
 }
 
+func (rcv *CDM) RelativeVelocityN() float64 {
+	return rcv.RELATIVE_VELOCITY_N()
+}
+
 /// The relative velocity N component
 func (rcv *CDM) MutateRELATIVE_VELOCITY_N(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(30, n)
+}
+
+func (rcv *CDM) MutateRelativeVelocityN(n float64) bool {
+	return rcv.MutateRELATIVE_VELOCITY_N(n)
 }
 
 /// The start time of the screening period
@@ -239,6 +331,10 @@ func (rcv *CDM) START_SCREEN_PERIOD() []byte {
 	return nil
 }
 
+func (rcv *CDM) StartScreenPeriod() []byte {
+	return rcv.START_SCREEN_PERIOD()
+}
+
 /// The start time of the screening period
 /// The end time of the screening period
 func (rcv *CDM) STOP_SCREEN_PERIOD() []byte {
@@ -247,6 +343,10 @@ func (rcv *CDM) STOP_SCREEN_PERIOD() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *CDM) StopScreenPeriod() []byte {
+	return rcv.STOP_SCREEN_PERIOD()
 }
 
 /// The end time of the screening period
@@ -264,6 +364,10 @@ func (rcv *CDM) SCREEN_VOLUME_FRAME(obj *RFM) *RFM {
 	return nil
 }
 
+func (rcv *CDM) ScreenVolumeFrame(obj *RFM) *RFM {
+	return rcv.SCREEN_VOLUME_FRAME(obj)
+}
+
 /// The reference frame for the screening volume
 /// The shape of the screening volume
 func (rcv *CDM) SCREEN_VOLUME_SHAPE() screeningVolumeShape {
@@ -274,9 +378,17 @@ func (rcv *CDM) SCREEN_VOLUME_SHAPE() screeningVolumeShape {
 	return 0
 }
 
+func (rcv *CDM) ScreenVolumeShape() screeningVolumeShape {
+	return rcv.SCREEN_VOLUME_SHAPE()
+}
+
 /// The shape of the screening volume
 func (rcv *CDM) MutateSCREEN_VOLUME_SHAPE(n screeningVolumeShape) bool {
 	return rcv._tab.MutateInt8Slot(38, int8(n))
+}
+
+func (rcv *CDM) MutateScreenVolumeShape(n screeningVolumeShape) bool {
+	return rcv.MutateSCREEN_VOLUME_SHAPE(n)
 }
 
 /// The X dimension of the screening volume
@@ -288,9 +400,17 @@ func (rcv *CDM) SCREEN_VOLUME_X() float64 {
 	return 0.0
 }
 
+func (rcv *CDM) ScreenVolumeX() float64 {
+	return rcv.SCREEN_VOLUME_X()
+}
+
 /// The X dimension of the screening volume
 func (rcv *CDM) MutateSCREEN_VOLUME_X(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(40, n)
+}
+
+func (rcv *CDM) MutateScreenVolumeX(n float64) bool {
+	return rcv.MutateSCREEN_VOLUME_X(n)
 }
 
 /// The Y dimension of the screening volume
@@ -302,9 +422,17 @@ func (rcv *CDM) SCREEN_VOLUME_Y() float64 {
 	return 0.0
 }
 
+func (rcv *CDM) ScreenVolumeY() float64 {
+	return rcv.SCREEN_VOLUME_Y()
+}
+
 /// The Y dimension of the screening volume
 func (rcv *CDM) MutateSCREEN_VOLUME_Y(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(42, n)
+}
+
+func (rcv *CDM) MutateScreenVolumeY(n float64) bool {
+	return rcv.MutateSCREEN_VOLUME_Y(n)
 }
 
 /// The Z dimension of the screening volume
@@ -316,9 +444,17 @@ func (rcv *CDM) SCREEN_VOLUME_Z() float64 {
 	return 0.0
 }
 
+func (rcv *CDM) ScreenVolumeZ() float64 {
+	return rcv.SCREEN_VOLUME_Z()
+}
+
 /// The Z dimension of the screening volume
 func (rcv *CDM) MutateSCREEN_VOLUME_Z(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(44, n)
+}
+
+func (rcv *CDM) MutateScreenVolumeZ(n float64) bool {
+	return rcv.MutateSCREEN_VOLUME_Z(n)
 }
 
 /// The time the objects entered the screening volume
@@ -328,6 +464,10 @@ func (rcv *CDM) SCREEN_ENTRY_TIME() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *CDM) ScreenEntryTime() []byte {
+	return rcv.SCREEN_ENTRY_TIME()
 }
 
 /// The time the objects entered the screening volume
@@ -340,6 +480,10 @@ func (rcv *CDM) SCREEN_EXIT_TIME() []byte {
 	return nil
 }
 
+func (rcv *CDM) ScreenExitTime() []byte {
+	return rcv.SCREEN_EXIT_TIME()
+}
+
 /// The time the objects exited the screening volume
 /// The probability of collision between the two objects
 func (rcv *CDM) COLLISION_PROBABILITY() float64 {
@@ -350,9 +494,17 @@ func (rcv *CDM) COLLISION_PROBABILITY() float64 {
 	return 0.0
 }
 
+func (rcv *CDM) CollisionProbability() float64 {
+	return rcv.COLLISION_PROBABILITY()
+}
+
 /// The probability of collision between the two objects
 func (rcv *CDM) MutateCOLLISION_PROBABILITY(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(50, n)
+}
+
+func (rcv *CDM) MutateCollisionProbability(n float64) bool {
+	return rcv.MutateCOLLISION_PROBABILITY(n)
 }
 
 /// The method used to calculate the collision probability
@@ -362,6 +514,10 @@ func (rcv *CDM) COLLISION_PROBABILITY_METHOD() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *CDM) CollisionProbabilityMethod() []byte {
+	return rcv.COLLISION_PROBABILITY_METHOD()
 }
 
 /// The method used to calculate the collision probability
@@ -379,6 +535,10 @@ func (rcv *CDM) OBJECT1(obj *CDMObject) *CDMObject {
 	return nil
 }
 
+func (rcv *CDM) Object1(obj *CDMObject) *CDMObject {
+	return rcv.OBJECT1(obj)
+}
+
 /// The first object in the CDM message
 /// The second object in the CDM message
 func (rcv *CDM) OBJECT2(obj *CDMObject) *CDMObject {
@@ -392,6 +552,10 @@ func (rcv *CDM) OBJECT2(obj *CDMObject) *CDMObject {
 		return obj
 	}
 	return nil
+}
+
+func (rcv *CDM) Object2(obj *CDMObject) *CDMObject {
+	return rcv.OBJECT2(obj)
 }
 
 /// The second object in the CDM message
@@ -409,6 +573,10 @@ func (rcv *CDM) OBJECT1_DATASOURCE(obj *PNM) *PNM {
 	return nil
 }
 
+func (rcv *CDM) Object1Datasource(obj *PNM) *PNM {
+	return rcv.OBJECT1_DATASOURCE(obj)
+}
+
 /// Data Source for the positional information for Object 1
 /// Data Source for the positional information for Object 2
 func (rcv *CDM) OBJECT2_DATASOURCE(obj *PNM) *PNM {
@@ -424,6 +592,10 @@ func (rcv *CDM) OBJECT2_DATASOURCE(obj *PNM) *PNM {
 	return nil
 }
 
+func (rcv *CDM) Object2Datasource(obj *PNM) *PNM {
+	return rcv.OBJECT2_DATASOURCE(obj)
+}
+
 /// Data Source for the positional information for Object 2
 func CDMStart(builder *flatbuffers.Builder) {
 	builder.StartObject(29)
@@ -431,89 +603,176 @@ func CDMStart(builder *flatbuffers.Builder) {
 func CDMAddCCSDS_CDM_VERS(builder *flatbuffers.Builder, CCSDS_CDM_VERS float64) {
 	builder.PrependFloat64Slot(0, CCSDS_CDM_VERS, 0.0)
 }
+func CDMAddCcsdsCdmVers(builder *flatbuffers.Builder, CCSDS_CDM_VERS float64) {
+	CDMAddCCSDS_CDM_VERS(builder, CCSDS_CDM_VERS)
+}
 func CDMAddCREATION_DATE(builder *flatbuffers.Builder, CREATION_DATE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(CREATION_DATE), 0)
+}
+func CDMAddCreationDate(builder *flatbuffers.Builder, CREATION_DATE flatbuffers.UOffsetT) {
+	CDMAddCREATION_DATE(builder, CREATION_DATE)
 }
 func CDMAddORIGINATOR(builder *flatbuffers.Builder, ORIGINATOR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(ORIGINATOR), 0)
 }
+func CDMAddOriginator(builder *flatbuffers.Builder, ORIGINATOR flatbuffers.UOffsetT) {
+	CDMAddORIGINATOR(builder, ORIGINATOR)
+}
 func CDMAddMESSAGE_FOR(builder *flatbuffers.Builder, MESSAGE_FOR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(MESSAGE_FOR), 0)
+}
+func CDMAddMessageFor(builder *flatbuffers.Builder, MESSAGE_FOR flatbuffers.UOffsetT) {
+	CDMAddMESSAGE_FOR(builder, MESSAGE_FOR)
 }
 func CDMAddMESSAGE_ID(builder *flatbuffers.Builder, MESSAGE_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(MESSAGE_ID), 0)
 }
+func CDMAddMessageId(builder *flatbuffers.Builder, MESSAGE_ID flatbuffers.UOffsetT) {
+	CDMAddMESSAGE_ID(builder, MESSAGE_ID)
+}
 func CDMAddTCA(builder *flatbuffers.Builder, TCA flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(TCA), 0)
+}
+func CDMAddTca(builder *flatbuffers.Builder, TCA flatbuffers.UOffsetT) {
+	CDMAddTCA(builder, TCA)
 }
 func CDMAddMISS_DISTANCE(builder *flatbuffers.Builder, MISS_DISTANCE float64) {
 	builder.PrependFloat64Slot(6, MISS_DISTANCE, 0.0)
 }
+func CDMAddMissDistance(builder *flatbuffers.Builder, MISS_DISTANCE float64) {
+	CDMAddMISS_DISTANCE(builder, MISS_DISTANCE)
+}
 func CDMAddRELATIVE_SPEED(builder *flatbuffers.Builder, RELATIVE_SPEED float64) {
 	builder.PrependFloat64Slot(7, RELATIVE_SPEED, 0.0)
+}
+func CDMAddRelativeSpeed(builder *flatbuffers.Builder, RELATIVE_SPEED float64) {
+	CDMAddRELATIVE_SPEED(builder, RELATIVE_SPEED)
 }
 func CDMAddRELATIVE_POSITION_R(builder *flatbuffers.Builder, RELATIVE_POSITION_R float64) {
 	builder.PrependFloat64Slot(8, RELATIVE_POSITION_R, 0.0)
 }
+func CDMAddRelativePositionR(builder *flatbuffers.Builder, RELATIVE_POSITION_R float64) {
+	CDMAddRELATIVE_POSITION_R(builder, RELATIVE_POSITION_R)
+}
 func CDMAddRELATIVE_POSITION_T(builder *flatbuffers.Builder, RELATIVE_POSITION_T float64) {
 	builder.PrependFloat64Slot(9, RELATIVE_POSITION_T, 0.0)
+}
+func CDMAddRelativePositionT(builder *flatbuffers.Builder, RELATIVE_POSITION_T float64) {
+	CDMAddRELATIVE_POSITION_T(builder, RELATIVE_POSITION_T)
 }
 func CDMAddRELATIVE_POSITION_N(builder *flatbuffers.Builder, RELATIVE_POSITION_N float64) {
 	builder.PrependFloat64Slot(10, RELATIVE_POSITION_N, 0.0)
 }
+func CDMAddRelativePositionN(builder *flatbuffers.Builder, RELATIVE_POSITION_N float64) {
+	CDMAddRELATIVE_POSITION_N(builder, RELATIVE_POSITION_N)
+}
 func CDMAddRELATIVE_VELOCITY_R(builder *flatbuffers.Builder, RELATIVE_VELOCITY_R float64) {
 	builder.PrependFloat64Slot(11, RELATIVE_VELOCITY_R, 0.0)
+}
+func CDMAddRelativeVelocityR(builder *flatbuffers.Builder, RELATIVE_VELOCITY_R float64) {
+	CDMAddRELATIVE_VELOCITY_R(builder, RELATIVE_VELOCITY_R)
 }
 func CDMAddRELATIVE_VELOCITY_T(builder *flatbuffers.Builder, RELATIVE_VELOCITY_T float64) {
 	builder.PrependFloat64Slot(12, RELATIVE_VELOCITY_T, 0.0)
 }
+func CDMAddRelativeVelocityT(builder *flatbuffers.Builder, RELATIVE_VELOCITY_T float64) {
+	CDMAddRELATIVE_VELOCITY_T(builder, RELATIVE_VELOCITY_T)
+}
 func CDMAddRELATIVE_VELOCITY_N(builder *flatbuffers.Builder, RELATIVE_VELOCITY_N float64) {
 	builder.PrependFloat64Slot(13, RELATIVE_VELOCITY_N, 0.0)
+}
+func CDMAddRelativeVelocityN(builder *flatbuffers.Builder, RELATIVE_VELOCITY_N float64) {
+	CDMAddRELATIVE_VELOCITY_N(builder, RELATIVE_VELOCITY_N)
 }
 func CDMAddSTART_SCREEN_PERIOD(builder *flatbuffers.Builder, START_SCREEN_PERIOD flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(14, flatbuffers.UOffsetT(START_SCREEN_PERIOD), 0)
 }
+func CDMAddStartScreenPeriod(builder *flatbuffers.Builder, START_SCREEN_PERIOD flatbuffers.UOffsetT) {
+	CDMAddSTART_SCREEN_PERIOD(builder, START_SCREEN_PERIOD)
+}
 func CDMAddSTOP_SCREEN_PERIOD(builder *flatbuffers.Builder, STOP_SCREEN_PERIOD flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(15, flatbuffers.UOffsetT(STOP_SCREEN_PERIOD), 0)
+}
+func CDMAddStopScreenPeriod(builder *flatbuffers.Builder, STOP_SCREEN_PERIOD flatbuffers.UOffsetT) {
+	CDMAddSTOP_SCREEN_PERIOD(builder, STOP_SCREEN_PERIOD)
 }
 func CDMAddSCREEN_VOLUME_FRAME(builder *flatbuffers.Builder, SCREEN_VOLUME_FRAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(16, flatbuffers.UOffsetT(SCREEN_VOLUME_FRAME), 0)
 }
+func CDMAddScreenVolumeFrame(builder *flatbuffers.Builder, SCREEN_VOLUME_FRAME flatbuffers.UOffsetT) {
+	CDMAddSCREEN_VOLUME_FRAME(builder, SCREEN_VOLUME_FRAME)
+}
 func CDMAddSCREEN_VOLUME_SHAPE(builder *flatbuffers.Builder, SCREEN_VOLUME_SHAPE screeningVolumeShape) {
 	builder.PrependInt8Slot(17, int8(SCREEN_VOLUME_SHAPE), 0)
+}
+func CDMAddScreenVolumeShape(builder *flatbuffers.Builder, SCREEN_VOLUME_SHAPE screeningVolumeShape) {
+	CDMAddSCREEN_VOLUME_SHAPE(builder, SCREEN_VOLUME_SHAPE)
 }
 func CDMAddSCREEN_VOLUME_X(builder *flatbuffers.Builder, SCREEN_VOLUME_X float64) {
 	builder.PrependFloat64Slot(18, SCREEN_VOLUME_X, 0.0)
 }
+func CDMAddScreenVolumeX(builder *flatbuffers.Builder, SCREEN_VOLUME_X float64) {
+	CDMAddSCREEN_VOLUME_X(builder, SCREEN_VOLUME_X)
+}
 func CDMAddSCREEN_VOLUME_Y(builder *flatbuffers.Builder, SCREEN_VOLUME_Y float64) {
 	builder.PrependFloat64Slot(19, SCREEN_VOLUME_Y, 0.0)
+}
+func CDMAddScreenVolumeY(builder *flatbuffers.Builder, SCREEN_VOLUME_Y float64) {
+	CDMAddSCREEN_VOLUME_Y(builder, SCREEN_VOLUME_Y)
 }
 func CDMAddSCREEN_VOLUME_Z(builder *flatbuffers.Builder, SCREEN_VOLUME_Z float64) {
 	builder.PrependFloat64Slot(20, SCREEN_VOLUME_Z, 0.0)
 }
+func CDMAddScreenVolumeZ(builder *flatbuffers.Builder, SCREEN_VOLUME_Z float64) {
+	CDMAddSCREEN_VOLUME_Z(builder, SCREEN_VOLUME_Z)
+}
 func CDMAddSCREEN_ENTRY_TIME(builder *flatbuffers.Builder, SCREEN_ENTRY_TIME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(21, flatbuffers.UOffsetT(SCREEN_ENTRY_TIME), 0)
+}
+func CDMAddScreenEntryTime(builder *flatbuffers.Builder, SCREEN_ENTRY_TIME flatbuffers.UOffsetT) {
+	CDMAddSCREEN_ENTRY_TIME(builder, SCREEN_ENTRY_TIME)
 }
 func CDMAddSCREEN_EXIT_TIME(builder *flatbuffers.Builder, SCREEN_EXIT_TIME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(22, flatbuffers.UOffsetT(SCREEN_EXIT_TIME), 0)
 }
+func CDMAddScreenExitTime(builder *flatbuffers.Builder, SCREEN_EXIT_TIME flatbuffers.UOffsetT) {
+	CDMAddSCREEN_EXIT_TIME(builder, SCREEN_EXIT_TIME)
+}
 func CDMAddCOLLISION_PROBABILITY(builder *flatbuffers.Builder, COLLISION_PROBABILITY float64) {
 	builder.PrependFloat64Slot(23, COLLISION_PROBABILITY, 0.0)
+}
+func CDMAddCollisionProbability(builder *flatbuffers.Builder, COLLISION_PROBABILITY float64) {
+	CDMAddCOLLISION_PROBABILITY(builder, COLLISION_PROBABILITY)
 }
 func CDMAddCOLLISION_PROBABILITY_METHOD(builder *flatbuffers.Builder, COLLISION_PROBABILITY_METHOD flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(24, flatbuffers.UOffsetT(COLLISION_PROBABILITY_METHOD), 0)
 }
+func CDMAddCollisionProbabilityMethod(builder *flatbuffers.Builder, COLLISION_PROBABILITY_METHOD flatbuffers.UOffsetT) {
+	CDMAddCOLLISION_PROBABILITY_METHOD(builder, COLLISION_PROBABILITY_METHOD)
+}
 func CDMAddOBJECT1(builder *flatbuffers.Builder, OBJECT1 flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(25, flatbuffers.UOffsetT(OBJECT1), 0)
+}
+func CDMAddObject1(builder *flatbuffers.Builder, OBJECT1 flatbuffers.UOffsetT) {
+	CDMAddOBJECT1(builder, OBJECT1)
 }
 func CDMAddOBJECT2(builder *flatbuffers.Builder, OBJECT2 flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(26, flatbuffers.UOffsetT(OBJECT2), 0)
 }
+func CDMAddObject2(builder *flatbuffers.Builder, OBJECT2 flatbuffers.UOffsetT) {
+	CDMAddOBJECT2(builder, OBJECT2)
+}
 func CDMAddOBJECT1_DATASOURCE(builder *flatbuffers.Builder, OBJECT1_DATASOURCE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(27, flatbuffers.UOffsetT(OBJECT1_DATASOURCE), 0)
 }
+func CDMAddObject1Datasource(builder *flatbuffers.Builder, OBJECT1_DATASOURCE flatbuffers.UOffsetT) {
+	CDMAddOBJECT1_DATASOURCE(builder, OBJECT1_DATASOURCE)
+}
 func CDMAddOBJECT2_DATASOURCE(builder *flatbuffers.Builder, OBJECT2_DATASOURCE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(28, flatbuffers.UOffsetT(OBJECT2_DATASOURCE), 0)
+}
+func CDMAddObject2Datasource(builder *flatbuffers.Builder, OBJECT2_DATASOURCE flatbuffers.UOffsetT) {
+	CDMAddOBJECT2_DATASOURCE(builder, OBJECT2_DATASOURCE)
 }
 func CDMEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

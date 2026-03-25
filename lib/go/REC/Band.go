@@ -51,6 +51,10 @@ func (rcv *Band) NAME() []byte {
 	return nil
 }
 
+func (rcv *Band) Name() []byte {
+	return rcv.NAME()
+}
+
 /// Name of the band
 /// Frequency range of the band
 func (rcv *Band) FREQUENCY_RANGE(obj *FrequencyRange) *FrequencyRange {
@@ -66,6 +70,10 @@ func (rcv *Band) FREQUENCY_RANGE(obj *FrequencyRange) *FrequencyRange {
 	return nil
 }
 
+func (rcv *Band) FrequencyRange(obj *FrequencyRange) *FrequencyRange {
+	return rcv.FREQUENCY_RANGE(obj)
+}
+
 /// Frequency range of the band
 func BandStart(builder *flatbuffers.Builder) {
 	builder.StartObject(2)
@@ -73,8 +81,14 @@ func BandStart(builder *flatbuffers.Builder) {
 func BandAddNAME(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(NAME), 0)
 }
+func BandAddName(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
+	BandAddNAME(builder, NAME)
+}
 func BandAddFREQUENCY_RANGE(builder *flatbuffers.Builder, FREQUENCY_RANGE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(FREQUENCY_RANGE), 0)
+}
+func BandAddFrequencyRange(builder *flatbuffers.Builder, FREQUENCY_RANGE flatbuffers.UOffsetT) {
+	BandAddFREQUENCY_RANGE(builder, FREQUENCY_RANGE)
 }
 func BandEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

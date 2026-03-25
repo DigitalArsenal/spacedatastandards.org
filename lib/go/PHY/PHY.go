@@ -62,12 +62,20 @@ func (rcv *PHY) COMMAND() []byte {
 	return nil
 }
 
+func (rcv *PHY) Command() []byte {
+	return rcv.COMMAND()
+}
+
 func (rcv *PHY) SIMULATION_STEP() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *PHY) SimulationStep() []byte {
+	return rcv.SIMULATION_STEP()
 }
 
 func (rcv *PHY) RIGID_BODY() []byte {
@@ -78,12 +86,20 @@ func (rcv *PHY) RIGID_BODY() []byte {
 	return nil
 }
 
+func (rcv *PHY) RigidBody() []byte {
+	return rcv.RIGID_BODY()
+}
+
 func (rcv *PHY) INTEGRATION_CONFIG() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *PHY) IntegrationConfig() []byte {
+	return rcv.INTEGRATION_CONFIG()
 }
 
 func (rcv *PHY) COLLISION_QUERY_A() []byte {
@@ -94,12 +110,20 @@ func (rcv *PHY) COLLISION_QUERY_A() []byte {
 	return nil
 }
 
+func (rcv *PHY) CollisionQueryA() []byte {
+	return rcv.COLLISION_QUERY_A()
+}
+
 func (rcv *PHY) COLLISION_QUERY_B() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *PHY) CollisionQueryB() []byte {
+	return rcv.COLLISION_QUERY_B()
 }
 
 func (rcv *PHY) TRANSFORM_A() []byte {
@@ -110,12 +134,20 @@ func (rcv *PHY) TRANSFORM_A() []byte {
 	return nil
 }
 
+func (rcv *PHY) TransformA() []byte {
+	return rcv.TRANSFORM_A()
+}
+
 func (rcv *PHY) TRANSFORM_B() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *PHY) TransformB() []byte {
+	return rcv.TRANSFORM_B()
 }
 
 func (rcv *PHY) POSITION_A() []byte {
@@ -126,12 +158,20 @@ func (rcv *PHY) POSITION_A() []byte {
 	return nil
 }
 
+func (rcv *PHY) PositionA() []byte {
+	return rcv.POSITION_A()
+}
+
 func (rcv *PHY) POSITION_B() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *PHY) PositionB() []byte {
+	return rcv.POSITION_B()
 }
 
 func (rcv *PHY) FLUID() []byte {
@@ -142,12 +182,20 @@ func (rcv *PHY) FLUID() []byte {
 	return nil
 }
 
+func (rcv *PHY) Fluid() []byte {
+	return rcv.FLUID()
+}
+
 func (rcv *PHY) AERO_QUERY() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *PHY) AeroQuery() []byte {
+	return rcv.AERO_QUERY()
 }
 
 func (rcv *PHY) DRAG_MODEL() []byte {
@@ -158,6 +206,10 @@ func (rcv *PHY) DRAG_MODEL() []byte {
 	return nil
 }
 
+func (rcv *PHY) DragModel() []byte {
+	return rcv.DRAG_MODEL()
+}
+
 func (rcv *PHY) THERMAL_STATE() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
 	if o != 0 {
@@ -166,50 +218,96 @@ func (rcv *PHY) THERMAL_STATE() []byte {
 	return nil
 }
 
+func (rcv *PHY) ThermalState() []byte {
+	return rcv.THERMAL_STATE()
+}
+
 func PHYStart(builder *flatbuffers.Builder) {
 	builder.StartObject(14)
 }
 func PHYAddCOMMAND(builder *flatbuffers.Builder, COMMAND flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(COMMAND), 0)
 }
+func PHYAddCommand(builder *flatbuffers.Builder, COMMAND flatbuffers.UOffsetT) {
+	PHYAddCOMMAND(builder, COMMAND)
+}
 func PHYAddSIMULATION_STEP(builder *flatbuffers.Builder, SIMULATION_STEP flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(SIMULATION_STEP), 0)
+}
+func PHYAddSimulationStep(builder *flatbuffers.Builder, SIMULATION_STEP flatbuffers.UOffsetT) {
+	PHYAddSIMULATION_STEP(builder, SIMULATION_STEP)
 }
 func PHYAddRIGID_BODY(builder *flatbuffers.Builder, RIGID_BODY flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(RIGID_BODY), 0)
 }
+func PHYAddRigidBody(builder *flatbuffers.Builder, RIGID_BODY flatbuffers.UOffsetT) {
+	PHYAddRIGID_BODY(builder, RIGID_BODY)
+}
 func PHYAddINTEGRATION_CONFIG(builder *flatbuffers.Builder, INTEGRATION_CONFIG flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(INTEGRATION_CONFIG), 0)
+}
+func PHYAddIntegrationConfig(builder *flatbuffers.Builder, INTEGRATION_CONFIG flatbuffers.UOffsetT) {
+	PHYAddINTEGRATION_CONFIG(builder, INTEGRATION_CONFIG)
 }
 func PHYAddCOLLISION_QUERY_A(builder *flatbuffers.Builder, COLLISION_QUERY_A flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(COLLISION_QUERY_A), 0)
 }
+func PHYAddCollisionQueryA(builder *flatbuffers.Builder, COLLISION_QUERY_A flatbuffers.UOffsetT) {
+	PHYAddCOLLISION_QUERY_A(builder, COLLISION_QUERY_A)
+}
 func PHYAddCOLLISION_QUERY_B(builder *flatbuffers.Builder, COLLISION_QUERY_B flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(COLLISION_QUERY_B), 0)
+}
+func PHYAddCollisionQueryB(builder *flatbuffers.Builder, COLLISION_QUERY_B flatbuffers.UOffsetT) {
+	PHYAddCOLLISION_QUERY_B(builder, COLLISION_QUERY_B)
 }
 func PHYAddTRANSFORM_A(builder *flatbuffers.Builder, TRANSFORM_A flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(TRANSFORM_A), 0)
 }
+func PHYAddTransformA(builder *flatbuffers.Builder, TRANSFORM_A flatbuffers.UOffsetT) {
+	PHYAddTRANSFORM_A(builder, TRANSFORM_A)
+}
 func PHYAddTRANSFORM_B(builder *flatbuffers.Builder, TRANSFORM_B flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(TRANSFORM_B), 0)
+}
+func PHYAddTransformB(builder *flatbuffers.Builder, TRANSFORM_B flatbuffers.UOffsetT) {
+	PHYAddTRANSFORM_B(builder, TRANSFORM_B)
 }
 func PHYAddPOSITION_A(builder *flatbuffers.Builder, POSITION_A flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(POSITION_A), 0)
 }
+func PHYAddPositionA(builder *flatbuffers.Builder, POSITION_A flatbuffers.UOffsetT) {
+	PHYAddPOSITION_A(builder, POSITION_A)
+}
 func PHYAddPOSITION_B(builder *flatbuffers.Builder, POSITION_B flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(POSITION_B), 0)
+}
+func PHYAddPositionB(builder *flatbuffers.Builder, POSITION_B flatbuffers.UOffsetT) {
+	PHYAddPOSITION_B(builder, POSITION_B)
 }
 func PHYAddFLUID(builder *flatbuffers.Builder, FLUID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(FLUID), 0)
 }
+func PHYAddFluid(builder *flatbuffers.Builder, FLUID flatbuffers.UOffsetT) {
+	PHYAddFLUID(builder, FLUID)
+}
 func PHYAddAERO_QUERY(builder *flatbuffers.Builder, AERO_QUERY flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(AERO_QUERY), 0)
+}
+func PHYAddAeroQuery(builder *flatbuffers.Builder, AERO_QUERY flatbuffers.UOffsetT) {
+	PHYAddAERO_QUERY(builder, AERO_QUERY)
 }
 func PHYAddDRAG_MODEL(builder *flatbuffers.Builder, DRAG_MODEL flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(12, flatbuffers.UOffsetT(DRAG_MODEL), 0)
 }
+func PHYAddDragModel(builder *flatbuffers.Builder, DRAG_MODEL flatbuffers.UOffsetT) {
+	PHYAddDRAG_MODEL(builder, DRAG_MODEL)
+}
 func PHYAddTHERMAL_STATE(builder *flatbuffers.Builder, THERMAL_STATE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(13, flatbuffers.UOffsetT(THERMAL_STATE), 0)
+}
+func PHYAddThermalState(builder *flatbuffers.Builder, THERMAL_STATE flatbuffers.UOffsetT) {
+	PHYAddTHERMAL_STATE(builder, THERMAL_STATE)
 }
 func PHYEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

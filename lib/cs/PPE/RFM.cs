@@ -11,7 +11,7 @@ public struct RFM : IFlatbufferObject
 {
   private Table __p;
   public ByteBuffer ByteBuffer { get { return __p.bb; } }
-  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_24_3_25(); }
+  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_25_12_19(); }
   public static RFM GetRootAsRFM(ByteBuffer _bb) { return GetRootAsRFM(_bb, new RFM()); }
   public static RFM GetRootAsRFM(ByteBuffer _bb, RFM obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
   public static bool RFMBufferHasIdentifier(ByteBuffer _bb) { return Table.__has_identifier(_bb, "$RFM"); }
@@ -19,7 +19,7 @@ public struct RFM : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public RFM __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
-  public RFMUnion REFERENCEFRAMEType { get { int o = __p.__offset(4); return o != 0 ? (RFMUnion)__p.bb.Get(o + __p.bb_pos) : RFMUnion.NONE; } }
+  public RFMUnion REFERENCE_FRAME_type { get { int o = __p.__offset(4); return o != 0 ? (RFMUnion)__p.bb.Get(o + __p.bb_pos) : RFMUnion.NONE; } }
   public TTable? REFERENCE_FRAME<TTable>() where TTable : struct, IFlatbufferObject { int o = __p.__offset(6); return o != 0 ? (TTable?)__p.__union<TTable>(o + __p.bb_pos) : null; }
   public CelestialFrameWrapper REFERENCE_FRAMEAsCelestialFrameWrapper() { return REFERENCE_FRAME<CelestialFrameWrapper>().Value; }
   public SpacecraftFrameWrapper REFERENCE_FRAMEAsSpacecraftFrameWrapper() { return REFERENCE_FRAME<SpacecraftFrameWrapper>().Value; }
@@ -43,12 +43,12 @@ public struct RFM : IFlatbufferObject
     RFM.AddNAME(builder, NAMEOffset);
     RFM.AddINDEX(builder, INDEX);
     RFM.AddREFERENCE_FRAME(builder, REFERENCE_FRAMEOffset);
-    RFM.AddREFERENCEFRAMEType(builder, REFERENCE_FRAME_type);
+    RFM.AddREFERENCE_FRAME_type(builder, REFERENCE_FRAME_type);
     return RFM.EndRFM(builder);
   }
 
   public static void StartRFM(FlatBufferBuilder builder) { builder.StartTable(4); }
-  public static void AddREFERENCEFRAMEType(FlatBufferBuilder builder, RFMUnion rEFERENCEFRAMEType) { builder.AddByte(0, (byte)rEFERENCEFRAMEType, 0); }
+  public static void AddREFERENCE_FRAME_type(FlatBufferBuilder builder, RFMUnion REFERENCE_FRAME_type) { builder.AddByte(0, (byte)REFERENCE_FRAME_type, 0); }
   public static void AddREFERENCE_FRAME(FlatBufferBuilder builder, int REFERENCE_FRAMEOffset) { builder.AddOffset(1, REFERENCE_FRAMEOffset, 0); }
   public static void AddINDEX(FlatBufferBuilder builder, int INDEX) { builder.AddInt(2, INDEX, 0); }
   public static void AddNAME(FlatBufferBuilder builder, StringOffset NAMEOffset) { builder.AddOffset(3, NAMEOffset.Value, 0); }
@@ -125,7 +125,7 @@ static public class RFMVerify
   static public bool Verify(Google.FlatBuffers.Verifier verifier, uint tablePos)
   {
     return verifier.VerifyTableStart(tablePos)
-      && verifier.VerifyField(tablePos, 4 /*REFERENCEFRAMEType*/, 1 /*RFMUnion*/, 1, false)
+      && verifier.VerifyField(tablePos, 4 /*REFERENCE_FRAME_type*/, 1 /*RFMUnion*/, 1, false)
       && verifier.VerifyUnion(tablePos, 4, 6 /*REFERENCE_FRAME*/, RFMUnionVerify.Verify, false)
       && verifier.VerifyField(tablePos, 8 /*INDEX*/, 4 /*int*/, 4, false)
       && verifier.VerifyString(tablePos, 10 /*NAME*/, false)

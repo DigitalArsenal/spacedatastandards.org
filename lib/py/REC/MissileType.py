@@ -2,4 +2,19 @@
 
 # namespace: 
 
-# NOTE MissileType.py does not declare any structs or enums
+class MissileType(object):
+    AAM_IR = 0
+    AAM_SARH = 1
+    AAM_ARH = 2
+    SAM_IR = 3
+    SAM_SARH = 4
+    SAM_COMMAND = 5
+    ASM_AR = 6
+    ASM_TV = 7
+    ASM_LASER = 8
+    ATGM_SACLOS = 9
+    ATGM_BEAM = 10
+    ATGM_TOP = 11
+    CRUISE = 12
+    BALLISTIC = 13
+    TORPEDO = 14

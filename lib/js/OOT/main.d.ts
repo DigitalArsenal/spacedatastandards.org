@@ -1,3 +1,3 @@
-export { OOT, OOTT } from './OOT.js';
-export { thrusterType } from './thrusterType.js';
+export * from './OOT.js';
+export * from './thrusterType.js';
 //# sourceMappingURL=main.d.ts.map

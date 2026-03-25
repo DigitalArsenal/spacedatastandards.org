@@ -63,6 +63,10 @@ func (rcv *OBD) ID() []byte {
 	return nil
 }
 
+func (rcv *OBD) Id() []byte {
+	return rcv.ID()
+}
+
 /// Unique identifier
 /// Satellite catalog number
 func (rcv *OBD) SAT_NO() uint32 {
@@ -73,9 +77,17 @@ func (rcv *OBD) SAT_NO() uint32 {
 	return 0
 }
 
+func (rcv *OBD) SatNo() uint32 {
+	return rcv.SAT_NO()
+}
+
 /// Satellite catalog number
 func (rcv *OBD) MutateSAT_NO(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(6, n)
+}
+
+func (rcv *OBD) MutateSatNo(n uint32) bool {
+	return rcv.MutateSAT_NO(n)
 }
 
 /// International designator
@@ -85,6 +97,10 @@ func (rcv *OBD) ORIG_OBJECT_ID() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *OBD) OrigObjectId() []byte {
+	return rcv.ORIG_OBJECT_ID()
 }
 
 /// International designator
@@ -97,6 +113,10 @@ func (rcv *OBD) ON_ORBIT() []byte {
 	return nil
 }
 
+func (rcv *OBD) OnOrbit() []byte {
+	return rcv.ON_ORBIT()
+}
+
 /// On-orbit reference
 /// OD fit start time (ISO 8601)
 func (rcv *OBD) START_TIME() []byte {
@@ -105,6 +125,10 @@ func (rcv *OBD) START_TIME() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *OBD) StartTime() []byte {
+	return rcv.START_TIME()
 }
 
 /// OD fit start time (ISO 8601)
@@ -117,6 +141,10 @@ func (rcv *OBD) END_TIME() []byte {
 	return nil
 }
 
+func (rcv *OBD) EndTime() []byte {
+	return rcv.END_TIME()
+}
+
 /// OD fit end time (ISO 8601)
 /// OD method used
 func (rcv *OBD) METHOD() odMethod {
@@ -127,9 +155,17 @@ func (rcv *OBD) METHOD() odMethod {
 	return 0
 }
 
+func (rcv *OBD) Method() odMethod {
+	return rcv.METHOD()
+}
+
 /// OD method used
 func (rcv *OBD) MutateMETHOD(n odMethod) bool {
 	return rcv._tab.MutateInt8Slot(16, int8(n))
+}
+
+func (rcv *OBD) MutateMethod(n odMethod) bool {
+	return rcv.MutateMETHOD(n)
 }
 
 /// Method source or software
@@ -139,6 +175,10 @@ func (rcv *OBD) METHOD_SOURCE() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *OBD) MethodSource() []byte {
+	return rcv.METHOD_SOURCE()
 }
 
 /// Method source or software
@@ -151,9 +191,17 @@ func (rcv *OBD) INITIAL_OD() bool {
 	return false
 }
 
+func (rcv *OBD) InitialOd() bool {
+	return rcv.INITIAL_OD()
+}
+
 /// True if this is an initial orbit determination
 func (rcv *OBD) MutateINITIAL_OD(n bool) bool {
 	return rcv._tab.MutateBoolSlot(20, n)
+}
+
+func (rcv *OBD) MutateInitialOd(n bool) bool {
+	return rcv.MutateINITIAL_OD(n)
 }
 
 /// A priori element set identifier
@@ -163,6 +211,10 @@ func (rcv *OBD) APRIORI_ID_ELSET() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *OBD) AprioriIdElset() []byte {
+	return rcv.APRIORI_ID_ELSET()
 }
 
 /// A priori element set identifier
@@ -175,6 +227,10 @@ func (rcv *OBD) APRIORI_ELSET() []byte {
 	return nil
 }
 
+func (rcv *OBD) AprioriElset() []byte {
+	return rcv.APRIORI_ELSET()
+}
+
 /// A priori element set data reference
 /// A priori state vector identifier
 func (rcv *OBD) APRIORI_ID_STATE_VECTOR() []byte {
@@ -183,6 +239,10 @@ func (rcv *OBD) APRIORI_ID_STATE_VECTOR() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *OBD) AprioriIdStateVector() []byte {
+	return rcv.APRIORI_ID_STATE_VECTOR()
 }
 
 /// A priori state vector identifier
@@ -195,6 +255,10 @@ func (rcv *OBD) APRIORI_STATE_VECTOR() []byte {
 	return nil
 }
 
+func (rcv *OBD) AprioriStateVector() []byte {
+	return rcv.APRIORI_STATE_VECTOR()
+}
+
 /// A priori state vector data reference
 /// Start of last observation arc (ISO 8601)
 func (rcv *OBD) LAST_OB_START() []byte {
@@ -203,6 +267,10 @@ func (rcv *OBD) LAST_OB_START() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *OBD) LastObStart() []byte {
+	return rcv.LAST_OB_START()
 }
 
 /// Start of last observation arc (ISO 8601)
@@ -215,6 +283,10 @@ func (rcv *OBD) LAST_OB_END() []byte {
 	return nil
 }
 
+func (rcv *OBD) LastObEnd() []byte {
+	return rcv.LAST_OB_END()
+}
+
 /// End of last observation arc (ISO 8601)
 /// Observation time span (days)
 func (rcv *OBD) TIME_SPAN() float64 {
@@ -225,9 +297,17 @@ func (rcv *OBD) TIME_SPAN() float64 {
 	return 0.0
 }
 
+func (rcv *OBD) TimeSpan() float64 {
+	return rcv.TIME_SPAN()
+}
+
 /// Observation time span (days)
 func (rcv *OBD) MutateTIME_SPAN(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(34, n)
+}
+
+func (rcv *OBD) MutateTimeSpan(n float64) bool {
+	return rcv.MutateTIME_SPAN(n)
 }
 
 /// Fit span in days
@@ -239,9 +319,17 @@ func (rcv *OBD) FIT_SPAN() float64 {
 	return 0.0
 }
 
+func (rcv *OBD) FitSpan() float64 {
+	return rcv.FIT_SPAN()
+}
+
 /// Fit span in days
 func (rcv *OBD) MutateFIT_SPAN(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(36, n)
+}
+
+func (rcv *OBD) MutateFitSpan(n float64) bool {
+	return rcv.MutateFIT_SPAN(n)
 }
 
 /// Solution effective from (ISO 8601)
@@ -251,6 +339,10 @@ func (rcv *OBD) EFFECTIVE_FROM() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *OBD) EffectiveFrom() []byte {
+	return rcv.EFFECTIVE_FROM()
 }
 
 /// Solution effective from (ISO 8601)
@@ -263,6 +355,10 @@ func (rcv *OBD) EFFECTIVE_UNTIL() []byte {
 	return nil
 }
 
+func (rcv *OBD) EffectiveUntil() []byte {
+	return rcv.EFFECTIVE_UNTIL()
+}
+
 /// Solution effective until (ISO 8601)
 /// Weighted RMS of residuals
 func (rcv *OBD) WRMS() float64 {
@@ -273,9 +369,17 @@ func (rcv *OBD) WRMS() float64 {
 	return 0.0
 }
 
+func (rcv *OBD) Wrms() float64 {
+	return rcv.WRMS()
+}
+
 /// Weighted RMS of residuals
 func (rcv *OBD) MutateWRMS(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(42, n)
+}
+
+func (rcv *OBD) MutateWrms(n float64) bool {
+	return rcv.MutateWRMS(n)
 }
 
 /// Previous solution WRMS
@@ -287,9 +391,17 @@ func (rcv *OBD) PREVIOUS_WRMS() float64 {
 	return 0.0
 }
 
+func (rcv *OBD) PreviousWrms() float64 {
+	return rcv.PREVIOUS_WRMS()
+}
+
 /// Previous solution WRMS
 func (rcv *OBD) MutatePREVIOUS_WRMS(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(44, n)
+}
+
+func (rcv *OBD) MutatePreviousWrms(n float64) bool {
+	return rcv.MutatePREVIOUS_WRMS(n)
 }
 
 /// First pass WRMS
@@ -301,9 +413,17 @@ func (rcv *OBD) FIRST_PASS_WRMS() float64 {
 	return 0.0
 }
 
+func (rcv *OBD) FirstPassWrms() float64 {
+	return rcv.FIRST_PASS_WRMS()
+}
+
 /// First pass WRMS
 func (rcv *OBD) MutateFIRST_PASS_WRMS(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(46, n)
+}
+
+func (rcv *OBD) MutateFirstPassWrms(n float64) bool {
+	return rcv.MutateFIRST_PASS_WRMS(n)
 }
 
 /// Best pass WRMS
@@ -315,9 +435,17 @@ func (rcv *OBD) BEST_PASS_WRMS() float64 {
 	return 0.0
 }
 
+func (rcv *OBD) BestPassWrms() float64 {
+	return rcv.BEST_PASS_WRMS()
+}
+
 /// Best pass WRMS
 func (rcv *OBD) MutateBEST_PASS_WRMS(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(48, n)
+}
+
+func (rcv *OBD) MutateBestPassWrms(n float64) bool {
+	return rcv.MutateBEST_PASS_WRMS(n)
 }
 
 /// Error growth rate (km/day)
@@ -329,9 +457,17 @@ func (rcv *OBD) ERROR_GROWTH_RATE() float64 {
 	return 0.0
 }
 
+func (rcv *OBD) ErrorGrowthRate() float64 {
+	return rcv.ERROR_GROWTH_RATE()
+}
+
 /// Error growth rate (km/day)
 func (rcv *OBD) MutateERROR_GROWTH_RATE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(50, n)
+}
+
+func (rcv *OBD) MutateErrorGrowthRate(n float64) bool {
+	return rcv.MutateERROR_GROWTH_RATE(n)
 }
 
 /// Energy dissipation rate
@@ -343,9 +479,17 @@ func (rcv *OBD) EDR() float64 {
 	return 0.0
 }
 
+func (rcv *OBD) Edr() float64 {
+	return rcv.EDR()
+}
+
 /// Energy dissipation rate
 func (rcv *OBD) MutateEDR(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(52, n)
+}
+
+func (rcv *OBD) MutateEdr(n float64) bool {
+	return rcv.MutateEDR(n)
 }
 
 /// True if ballistic coefficient was estimated
@@ -357,9 +501,17 @@ func (rcv *OBD) BALLISTIC_COEFF_EST() bool {
 	return false
 }
 
+func (rcv *OBD) BallisticCoeffEst() bool {
+	return rcv.BALLISTIC_COEFF_EST()
+}
+
 /// True if ballistic coefficient was estimated
 func (rcv *OBD) MutateBALLISTIC_COEFF_EST(n bool) bool {
 	return rcv._tab.MutateBoolSlot(54, n)
+}
+
+func (rcv *OBD) MutateBallisticCoeffEst(n bool) bool {
+	return rcv.MutateBALLISTIC_COEFF_EST(n)
 }
 
 /// Ballistic coefficient model
@@ -369,6 +521,10 @@ func (rcv *OBD) BALLISTIC_COEFF_MODEL() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *OBD) BallisticCoeffModel() []byte {
+	return rcv.BALLISTIC_COEFF_MODEL()
 }
 
 /// Ballistic coefficient model
@@ -381,9 +537,17 @@ func (rcv *OBD) AGOM_EST() bool {
 	return false
 }
 
+func (rcv *OBD) AgomEst() bool {
+	return rcv.AGOM_EST()
+}
+
 /// True if area-to-mass ratio was estimated
 func (rcv *OBD) MutateAGOM_EST(n bool) bool {
 	return rcv._tab.MutateBoolSlot(58, n)
+}
+
+func (rcv *OBD) MutateAgomEst(n bool) bool {
+	return rcv.MutateAGOM_EST(n)
 }
 
 /// Area-to-mass ratio model
@@ -393,6 +557,10 @@ func (rcv *OBD) AGOM_MODEL() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *OBD) AgomModel() []byte {
+	return rcv.AGOM_MODEL()
 }
 
 /// Area-to-mass ratio model
@@ -405,9 +573,17 @@ func (rcv *OBD) RMS_CONVERGENCE_CRITERIA() float64 {
 	return 0.0
 }
 
+func (rcv *OBD) RmsConvergenceCriteria() float64 {
+	return rcv.RMS_CONVERGENCE_CRITERIA()
+}
+
 /// RMS convergence criteria
 func (rcv *OBD) MutateRMS_CONVERGENCE_CRITERIA(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(62, n)
+}
+
+func (rcv *OBD) MutateRmsConvergenceCriteria(n float64) bool {
+	return rcv.MutateRMS_CONVERGENCE_CRITERIA(n)
 }
 
 /// Number of iterations to converge
@@ -419,9 +595,17 @@ func (rcv *OBD) NUM_ITERATIONS() uint16 {
 	return 0
 }
 
+func (rcv *OBD) NumIterations() uint16 {
+	return rcv.NUM_ITERATIONS()
+}
+
 /// Number of iterations to converge
 func (rcv *OBD) MutateNUM_ITERATIONS(n uint16) bool {
 	return rcv._tab.MutateUint16Slot(64, n)
+}
+
+func (rcv *OBD) MutateNumIterations(n uint16) bool {
+	return rcv.MutateNUM_ITERATIONS(n)
 }
 
 /// Total accepted observations
@@ -433,9 +617,17 @@ func (rcv *OBD) NUM_ACCEPTED_OBS() uint32 {
 	return 0
 }
 
+func (rcv *OBD) NumAcceptedObs() uint32 {
+	return rcv.NUM_ACCEPTED_OBS()
+}
+
 /// Total accepted observations
 func (rcv *OBD) MutateNUM_ACCEPTED_OBS(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(66, n)
+}
+
+func (rcv *OBD) MutateNumAcceptedObs(n uint32) bool {
+	return rcv.MutateNUM_ACCEPTED_OBS(n)
 }
 
 /// Total rejected observations
@@ -447,9 +639,17 @@ func (rcv *OBD) NUM_REJECTED_OBS() uint32 {
 	return 0
 }
 
+func (rcv *OBD) NumRejectedObs() uint32 {
+	return rcv.NUM_REJECTED_OBS()
+}
+
 /// Total rejected observations
 func (rcv *OBD) MutateNUM_REJECTED_OBS(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(68, n)
+}
+
+func (rcv *OBD) MutateNumRejectedObs(n uint32) bool {
+	return rcv.MutateNUM_REJECTED_OBS(n)
 }
 
 /// Sensor contributions to this solution
@@ -459,10 +659,17 @@ func (rcv *OBD) SENSORS(obj *odSensorContribution, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(odSensorContribution)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *OBD) Sensors(obj *odSensorContribution, j int) bool {
+	return rcv.SENSORS(obj, j)
 }
 
 func (rcv *OBD) SENSORSLength() int {
@@ -471,6 +678,10 @@ func (rcv *OBD) SENSORSLength() int {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *OBD) SensorsLength() int {
+	return rcv.SENSORSLength()
 }
 
 /// Sensor contributions to this solution
@@ -484,12 +695,20 @@ func (rcv *OBD) ACCEPTED_OB_TYPS(j int) []byte {
 	return nil
 }
 
+func (rcv *OBD) AcceptedObTyps(j int) []byte {
+	return rcv.ACCEPTED_OB_TYPS(j)
+}
+
 func (rcv *OBD) ACCEPTED_OB_TYPSLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(72))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *OBD) AcceptedObTypsLength() int {
+	return rcv.ACCEPTED_OB_TYPSLength()
 }
 
 /// Accepted observation types
@@ -503,12 +722,20 @@ func (rcv *OBD) ACCEPTED_OB_IDS(j int) []byte {
 	return nil
 }
 
+func (rcv *OBD) AcceptedObIds(j int) []byte {
+	return rcv.ACCEPTED_OB_IDS(j)
+}
+
 func (rcv *OBD) ACCEPTED_OB_IDSLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(74))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *OBD) AcceptedObIdsLength() int {
+	return rcv.ACCEPTED_OB_IDSLength()
 }
 
 /// Accepted observation identifiers
@@ -522,12 +749,20 @@ func (rcv *OBD) REJECTED_OB_TYPS(j int) []byte {
 	return nil
 }
 
+func (rcv *OBD) RejectedObTyps(j int) []byte {
+	return rcv.REJECTED_OB_TYPS(j)
+}
+
 func (rcv *OBD) REJECTED_OB_TYPSLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(76))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *OBD) RejectedObTypsLength() int {
+	return rcv.REJECTED_OB_TYPSLength()
 }
 
 /// Rejected observation types
@@ -541,12 +776,20 @@ func (rcv *OBD) REJECTED_OB_IDS(j int) []byte {
 	return nil
 }
 
+func (rcv *OBD) RejectedObIds(j int) []byte {
+	return rcv.REJECTED_OB_IDS(j)
+}
+
 func (rcv *OBD) REJECTED_OB_IDSLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(78))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *OBD) RejectedObIdsLength() int {
+	return rcv.REJECTED_OB_IDSLength()
 }
 
 /// Rejected observation identifiers
@@ -556,131 +799,260 @@ func OBDStart(builder *flatbuffers.Builder) {
 func OBDAddID(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ID), 0)
 }
+func OBDAddId(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
+	OBDAddID(builder, ID)
+}
 func OBDAddSAT_NO(builder *flatbuffers.Builder, SAT_NO uint32) {
 	builder.PrependUint32Slot(1, SAT_NO, 0)
+}
+func OBDAddSatNo(builder *flatbuffers.Builder, SAT_NO uint32) {
+	OBDAddSAT_NO(builder, SAT_NO)
 }
 func OBDAddORIG_OBJECT_ID(builder *flatbuffers.Builder, ORIG_OBJECT_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(ORIG_OBJECT_ID), 0)
 }
+func OBDAddOrigObjectId(builder *flatbuffers.Builder, ORIG_OBJECT_ID flatbuffers.UOffsetT) {
+	OBDAddORIG_OBJECT_ID(builder, ORIG_OBJECT_ID)
+}
 func OBDAddON_ORBIT(builder *flatbuffers.Builder, ON_ORBIT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(ON_ORBIT), 0)
+}
+func OBDAddOnOrbit(builder *flatbuffers.Builder, ON_ORBIT flatbuffers.UOffsetT) {
+	OBDAddON_ORBIT(builder, ON_ORBIT)
 }
 func OBDAddSTART_TIME(builder *flatbuffers.Builder, START_TIME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(START_TIME), 0)
 }
+func OBDAddStartTime(builder *flatbuffers.Builder, START_TIME flatbuffers.UOffsetT) {
+	OBDAddSTART_TIME(builder, START_TIME)
+}
 func OBDAddEND_TIME(builder *flatbuffers.Builder, END_TIME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(END_TIME), 0)
+}
+func OBDAddEndTime(builder *flatbuffers.Builder, END_TIME flatbuffers.UOffsetT) {
+	OBDAddEND_TIME(builder, END_TIME)
 }
 func OBDAddMETHOD(builder *flatbuffers.Builder, METHOD odMethod) {
 	builder.PrependInt8Slot(6, int8(METHOD), 0)
 }
+func OBDAddMethod(builder *flatbuffers.Builder, METHOD odMethod) {
+	OBDAddMETHOD(builder, METHOD)
+}
 func OBDAddMETHOD_SOURCE(builder *flatbuffers.Builder, METHOD_SOURCE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(METHOD_SOURCE), 0)
+}
+func OBDAddMethodSource(builder *flatbuffers.Builder, METHOD_SOURCE flatbuffers.UOffsetT) {
+	OBDAddMETHOD_SOURCE(builder, METHOD_SOURCE)
 }
 func OBDAddINITIAL_OD(builder *flatbuffers.Builder, INITIAL_OD bool) {
 	builder.PrependBoolSlot(8, INITIAL_OD, false)
 }
+func OBDAddInitialOd(builder *flatbuffers.Builder, INITIAL_OD bool) {
+	OBDAddINITIAL_OD(builder, INITIAL_OD)
+}
 func OBDAddAPRIORI_ID_ELSET(builder *flatbuffers.Builder, APRIORI_ID_ELSET flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(APRIORI_ID_ELSET), 0)
+}
+func OBDAddAprioriIdElset(builder *flatbuffers.Builder, APRIORI_ID_ELSET flatbuffers.UOffsetT) {
+	OBDAddAPRIORI_ID_ELSET(builder, APRIORI_ID_ELSET)
 }
 func OBDAddAPRIORI_ELSET(builder *flatbuffers.Builder, APRIORI_ELSET flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(APRIORI_ELSET), 0)
 }
+func OBDAddAprioriElset(builder *flatbuffers.Builder, APRIORI_ELSET flatbuffers.UOffsetT) {
+	OBDAddAPRIORI_ELSET(builder, APRIORI_ELSET)
+}
 func OBDAddAPRIORI_ID_STATE_VECTOR(builder *flatbuffers.Builder, APRIORI_ID_STATE_VECTOR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(APRIORI_ID_STATE_VECTOR), 0)
+}
+func OBDAddAprioriIdStateVector(builder *flatbuffers.Builder, APRIORI_ID_STATE_VECTOR flatbuffers.UOffsetT) {
+	OBDAddAPRIORI_ID_STATE_VECTOR(builder, APRIORI_ID_STATE_VECTOR)
 }
 func OBDAddAPRIORI_STATE_VECTOR(builder *flatbuffers.Builder, APRIORI_STATE_VECTOR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(12, flatbuffers.UOffsetT(APRIORI_STATE_VECTOR), 0)
 }
+func OBDAddAprioriStateVector(builder *flatbuffers.Builder, APRIORI_STATE_VECTOR flatbuffers.UOffsetT) {
+	OBDAddAPRIORI_STATE_VECTOR(builder, APRIORI_STATE_VECTOR)
+}
 func OBDAddLAST_OB_START(builder *flatbuffers.Builder, LAST_OB_START flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(13, flatbuffers.UOffsetT(LAST_OB_START), 0)
+}
+func OBDAddLastObStart(builder *flatbuffers.Builder, LAST_OB_START flatbuffers.UOffsetT) {
+	OBDAddLAST_OB_START(builder, LAST_OB_START)
 }
 func OBDAddLAST_OB_END(builder *flatbuffers.Builder, LAST_OB_END flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(14, flatbuffers.UOffsetT(LAST_OB_END), 0)
 }
+func OBDAddLastObEnd(builder *flatbuffers.Builder, LAST_OB_END flatbuffers.UOffsetT) {
+	OBDAddLAST_OB_END(builder, LAST_OB_END)
+}
 func OBDAddTIME_SPAN(builder *flatbuffers.Builder, TIME_SPAN float64) {
 	builder.PrependFloat64Slot(15, TIME_SPAN, 0.0)
+}
+func OBDAddTimeSpan(builder *flatbuffers.Builder, TIME_SPAN float64) {
+	OBDAddTIME_SPAN(builder, TIME_SPAN)
 }
 func OBDAddFIT_SPAN(builder *flatbuffers.Builder, FIT_SPAN float64) {
 	builder.PrependFloat64Slot(16, FIT_SPAN, 0.0)
 }
+func OBDAddFitSpan(builder *flatbuffers.Builder, FIT_SPAN float64) {
+	OBDAddFIT_SPAN(builder, FIT_SPAN)
+}
 func OBDAddEFFECTIVE_FROM(builder *flatbuffers.Builder, EFFECTIVE_FROM flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(17, flatbuffers.UOffsetT(EFFECTIVE_FROM), 0)
+}
+func OBDAddEffectiveFrom(builder *flatbuffers.Builder, EFFECTIVE_FROM flatbuffers.UOffsetT) {
+	OBDAddEFFECTIVE_FROM(builder, EFFECTIVE_FROM)
 }
 func OBDAddEFFECTIVE_UNTIL(builder *flatbuffers.Builder, EFFECTIVE_UNTIL flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(18, flatbuffers.UOffsetT(EFFECTIVE_UNTIL), 0)
 }
+func OBDAddEffectiveUntil(builder *flatbuffers.Builder, EFFECTIVE_UNTIL flatbuffers.UOffsetT) {
+	OBDAddEFFECTIVE_UNTIL(builder, EFFECTIVE_UNTIL)
+}
 func OBDAddWRMS(builder *flatbuffers.Builder, WRMS float64) {
 	builder.PrependFloat64Slot(19, WRMS, 0.0)
+}
+func OBDAddWrms(builder *flatbuffers.Builder, WRMS float64) {
+	OBDAddWRMS(builder, WRMS)
 }
 func OBDAddPREVIOUS_WRMS(builder *flatbuffers.Builder, PREVIOUS_WRMS float64) {
 	builder.PrependFloat64Slot(20, PREVIOUS_WRMS, 0.0)
 }
+func OBDAddPreviousWrms(builder *flatbuffers.Builder, PREVIOUS_WRMS float64) {
+	OBDAddPREVIOUS_WRMS(builder, PREVIOUS_WRMS)
+}
 func OBDAddFIRST_PASS_WRMS(builder *flatbuffers.Builder, FIRST_PASS_WRMS float64) {
 	builder.PrependFloat64Slot(21, FIRST_PASS_WRMS, 0.0)
+}
+func OBDAddFirstPassWrms(builder *flatbuffers.Builder, FIRST_PASS_WRMS float64) {
+	OBDAddFIRST_PASS_WRMS(builder, FIRST_PASS_WRMS)
 }
 func OBDAddBEST_PASS_WRMS(builder *flatbuffers.Builder, BEST_PASS_WRMS float64) {
 	builder.PrependFloat64Slot(22, BEST_PASS_WRMS, 0.0)
 }
+func OBDAddBestPassWrms(builder *flatbuffers.Builder, BEST_PASS_WRMS float64) {
+	OBDAddBEST_PASS_WRMS(builder, BEST_PASS_WRMS)
+}
 func OBDAddERROR_GROWTH_RATE(builder *flatbuffers.Builder, ERROR_GROWTH_RATE float64) {
 	builder.PrependFloat64Slot(23, ERROR_GROWTH_RATE, 0.0)
+}
+func OBDAddErrorGrowthRate(builder *flatbuffers.Builder, ERROR_GROWTH_RATE float64) {
+	OBDAddERROR_GROWTH_RATE(builder, ERROR_GROWTH_RATE)
 }
 func OBDAddEDR(builder *flatbuffers.Builder, EDR float64) {
 	builder.PrependFloat64Slot(24, EDR, 0.0)
 }
+func OBDAddEdr(builder *flatbuffers.Builder, EDR float64) {
+	OBDAddEDR(builder, EDR)
+}
 func OBDAddBALLISTIC_COEFF_EST(builder *flatbuffers.Builder, BALLISTIC_COEFF_EST bool) {
 	builder.PrependBoolSlot(25, BALLISTIC_COEFF_EST, false)
+}
+func OBDAddBallisticCoeffEst(builder *flatbuffers.Builder, BALLISTIC_COEFF_EST bool) {
+	OBDAddBALLISTIC_COEFF_EST(builder, BALLISTIC_COEFF_EST)
 }
 func OBDAddBALLISTIC_COEFF_MODEL(builder *flatbuffers.Builder, BALLISTIC_COEFF_MODEL flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(26, flatbuffers.UOffsetT(BALLISTIC_COEFF_MODEL), 0)
 }
+func OBDAddBallisticCoeffModel(builder *flatbuffers.Builder, BALLISTIC_COEFF_MODEL flatbuffers.UOffsetT) {
+	OBDAddBALLISTIC_COEFF_MODEL(builder, BALLISTIC_COEFF_MODEL)
+}
 func OBDAddAGOM_EST(builder *flatbuffers.Builder, AGOM_EST bool) {
 	builder.PrependBoolSlot(27, AGOM_EST, false)
+}
+func OBDAddAgomEst(builder *flatbuffers.Builder, AGOM_EST bool) {
+	OBDAddAGOM_EST(builder, AGOM_EST)
 }
 func OBDAddAGOM_MODEL(builder *flatbuffers.Builder, AGOM_MODEL flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(28, flatbuffers.UOffsetT(AGOM_MODEL), 0)
 }
+func OBDAddAgomModel(builder *flatbuffers.Builder, AGOM_MODEL flatbuffers.UOffsetT) {
+	OBDAddAGOM_MODEL(builder, AGOM_MODEL)
+}
 func OBDAddRMS_CONVERGENCE_CRITERIA(builder *flatbuffers.Builder, RMS_CONVERGENCE_CRITERIA float64) {
 	builder.PrependFloat64Slot(29, RMS_CONVERGENCE_CRITERIA, 0.0)
+}
+func OBDAddRmsConvergenceCriteria(builder *flatbuffers.Builder, RMS_CONVERGENCE_CRITERIA float64) {
+	OBDAddRMS_CONVERGENCE_CRITERIA(builder, RMS_CONVERGENCE_CRITERIA)
 }
 func OBDAddNUM_ITERATIONS(builder *flatbuffers.Builder, NUM_ITERATIONS uint16) {
 	builder.PrependUint16Slot(30, NUM_ITERATIONS, 0)
 }
+func OBDAddNumIterations(builder *flatbuffers.Builder, NUM_ITERATIONS uint16) {
+	OBDAddNUM_ITERATIONS(builder, NUM_ITERATIONS)
+}
 func OBDAddNUM_ACCEPTED_OBS(builder *flatbuffers.Builder, NUM_ACCEPTED_OBS uint32) {
 	builder.PrependUint32Slot(31, NUM_ACCEPTED_OBS, 0)
+}
+func OBDAddNumAcceptedObs(builder *flatbuffers.Builder, NUM_ACCEPTED_OBS uint32) {
+	OBDAddNUM_ACCEPTED_OBS(builder, NUM_ACCEPTED_OBS)
 }
 func OBDAddNUM_REJECTED_OBS(builder *flatbuffers.Builder, NUM_REJECTED_OBS uint32) {
 	builder.PrependUint32Slot(32, NUM_REJECTED_OBS, 0)
 }
+func OBDAddNumRejectedObs(builder *flatbuffers.Builder, NUM_REJECTED_OBS uint32) {
+	OBDAddNUM_REJECTED_OBS(builder, NUM_REJECTED_OBS)
+}
 func OBDAddSENSORS(builder *flatbuffers.Builder, SENSORS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(33, flatbuffers.UOffsetT(SENSORS), 0)
+}
+func OBDAddSensors(builder *flatbuffers.Builder, SENSORS flatbuffers.UOffsetT) {
+	OBDAddSENSORS(builder, SENSORS)
 }
 func OBDStartSENSORSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
+func OBDStartSensorsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return OBDStartSENSORSVector(builder, numElems)
+}
 func OBDAddACCEPTED_OB_TYPS(builder *flatbuffers.Builder, ACCEPTED_OB_TYPS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(34, flatbuffers.UOffsetT(ACCEPTED_OB_TYPS), 0)
+}
+func OBDAddAcceptedObTyps(builder *flatbuffers.Builder, ACCEPTED_OB_TYPS flatbuffers.UOffsetT) {
+	OBDAddACCEPTED_OB_TYPS(builder, ACCEPTED_OB_TYPS)
 }
 func OBDStartACCEPTED_OB_TYPSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
+func OBDStartAcceptedObTypsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return OBDStartACCEPTED_OB_TYPSVector(builder, numElems)
+}
 func OBDAddACCEPTED_OB_IDS(builder *flatbuffers.Builder, ACCEPTED_OB_IDS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(35, flatbuffers.UOffsetT(ACCEPTED_OB_IDS), 0)
+}
+func OBDAddAcceptedObIds(builder *flatbuffers.Builder, ACCEPTED_OB_IDS flatbuffers.UOffsetT) {
+	OBDAddACCEPTED_OB_IDS(builder, ACCEPTED_OB_IDS)
 }
 func OBDStartACCEPTED_OB_IDSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
+func OBDStartAcceptedObIdsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return OBDStartACCEPTED_OB_IDSVector(builder, numElems)
+}
 func OBDAddREJECTED_OB_TYPS(builder *flatbuffers.Builder, REJECTED_OB_TYPS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(36, flatbuffers.UOffsetT(REJECTED_OB_TYPS), 0)
+}
+func OBDAddRejectedObTyps(builder *flatbuffers.Builder, REJECTED_OB_TYPS flatbuffers.UOffsetT) {
+	OBDAddREJECTED_OB_TYPS(builder, REJECTED_OB_TYPS)
 }
 func OBDStartREJECTED_OB_TYPSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
+func OBDStartRejectedObTypsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return OBDStartREJECTED_OB_TYPSVector(builder, numElems)
+}
 func OBDAddREJECTED_OB_IDS(builder *flatbuffers.Builder, REJECTED_OB_IDS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(37, flatbuffers.UOffsetT(REJECTED_OB_IDS), 0)
 }
+func OBDAddRejectedObIds(builder *flatbuffers.Builder, REJECTED_OB_IDS flatbuffers.UOffsetT) {
+	OBDAddREJECTED_OB_IDS(builder, REJECTED_OB_IDS)
+}
 func OBDStartREJECTED_OB_IDSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func OBDStartRejectedObIdsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return OBDStartREJECTED_OB_IDSVector(builder, numElems)
 }
 func OBDEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

@@ -32,7 +32,7 @@ class mnvOrbitalState : Table() {
     /**
      * Element set identifier
      */
-    val ID_ELSET : String?
+    val idElset : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class mnvOrbitalState : Table() {
                 null
             }
         }
-    val ID_ELSETAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun ID_ELSETInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val idElsetAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun idElsetInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Element set data reference
      */
-    val ELSET : String?
+    val elset : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -55,12 +55,12 @@ class mnvOrbitalState : Table() {
                 null
             }
         }
-    val ELSETAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun ELSETInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val elsetAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun elsetInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * State vector identifier
      */
-    val ID_STATE_VECTOR : String?
+    val idStateVector : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -69,12 +69,12 @@ class mnvOrbitalState : Table() {
                 null
             }
         }
-    val ID_STATE_VECTORAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun ID_STATE_VECTORInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val idStateVectorAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun idStateVectorInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
     /**
      * State vector data reference
      */
-    val STATE_VECTOR : String?
+    val stateVector : String?
         get() {
             val o = __offset(10)
             return if (o != 0) {
@@ -83,12 +83,12 @@ class mnvOrbitalState : Table() {
                 null
             }
         }
-    val STATE_VECTORAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
-    fun STATE_VECTORInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
+    val stateVectorAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(10, 1)
+    fun stateVectorInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 10, 1)
     /**
      * Position X (km)
      */
-    val POS_X : Double
+    val posX : Double
         get() {
             val o = __offset(12)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -96,7 +96,7 @@ class mnvOrbitalState : Table() {
     /**
      * Position Y (km)
      */
-    val POS_Y : Double
+    val posY : Double
         get() {
             val o = __offset(14)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -104,7 +104,7 @@ class mnvOrbitalState : Table() {
     /**
      * Position Z (km)
      */
-    val POS_Z : Double
+    val posZ : Double
         get() {
             val o = __offset(16)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -112,7 +112,7 @@ class mnvOrbitalState : Table() {
     /**
      * Velocity X (km/s)
      */
-    val VEL_X : Double
+    val velX : Double
         get() {
             val o = __offset(18)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -120,7 +120,7 @@ class mnvOrbitalState : Table() {
     /**
      * Velocity Y (km/s)
      */
-    val VEL_Y : Double
+    val velY : Double
         get() {
             val o = __offset(20)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -128,7 +128,7 @@ class mnvOrbitalState : Table() {
     /**
      * Velocity Z (km/s)
      */
-    val VEL_Z : Double
+    val velZ : Double
         get() {
             val o = __offset(22)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -136,7 +136,7 @@ class mnvOrbitalState : Table() {
     /**
      * Radiation pressure coefficient (Cr)
      */
-    val RADIATION_PRESS_COEFF : Double
+    val radiationPressCoeff : Double
         get() {
             val o = __offset(24)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -144,7 +144,7 @@ class mnvOrbitalState : Table() {
     /**
      * Ballistic coefficient (m^2/kg)
      */
-    val BALLISTIC_COEFF : Double
+    val ballisticCoeff : Double
         get() {
             val o = __offset(26)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -152,7 +152,7 @@ class mnvOrbitalState : Table() {
     /**
      * Apogee altitude (km)
      */
-    val APOGEE : Double
+    val apogee : Double
         get() {
             val o = __offset(28)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -160,7 +160,7 @@ class mnvOrbitalState : Table() {
     /**
      * Perigee altitude (km)
      */
-    val PERIGEE : Double
+    val perigee : Double
         get() {
             val o = __offset(30)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -168,7 +168,7 @@ class mnvOrbitalState : Table() {
     /**
      * Inclination (degrees)
      */
-    val INCLINATION : Double
+    val inclination : Double
         get() {
             val o = __offset(32)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -176,7 +176,7 @@ class mnvOrbitalState : Table() {
     /**
      * Eccentricity
      */
-    val ECCENTRICITY : Double
+    val eccentricity : Double
         get() {
             val o = __offset(34)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -184,7 +184,7 @@ class mnvOrbitalState : Table() {
     /**
      * Orbital period (minutes)
      */
-    val PERIOD : Double
+    val period : Double
         get() {
             val o = __offset(36)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -192,7 +192,7 @@ class mnvOrbitalState : Table() {
     /**
      * Right ascension of ascending node (degrees)
      */
-    val RAAN : Double
+    val raan : Double
         get() {
             val o = __offset(38)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -200,7 +200,7 @@ class mnvOrbitalState : Table() {
     /**
      * Semi-major axis (km)
      */
-    val SMA : Double
+    val sma : Double
         get() {
             val o = __offset(40)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -208,7 +208,7 @@ class mnvOrbitalState : Table() {
     /**
      * GEO longitude (degrees east)
      */
-    val GEO_LONGITUDE : Double
+    val geoLongitude : Double
         get() {
             val o = __offset(42)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -216,7 +216,7 @@ class mnvOrbitalState : Table() {
     /**
      * Longitude drift rate (degrees/day)
      */
-    val DRIFT_RATE : Double
+    val driftRate : Double
         get() {
             val o = __offset(44)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -224,7 +224,7 @@ class mnvOrbitalState : Table() {
     /**
      * Position uncertainty U (km, 1-sigma)
      */
-    val SIGMA_U : Double
+    val sigmaU : Double
         get() {
             val o = __offset(46)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -232,7 +232,7 @@ class mnvOrbitalState : Table() {
     /**
      * Position uncertainty V (km, 1-sigma)
      */
-    val SIGMA_V : Double
+    val sigmaV : Double
         get() {
             val o = __offset(48)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -240,71 +240,71 @@ class mnvOrbitalState : Table() {
     /**
      * Position uncertainty W (km, 1-sigma)
      */
-    val SIGMA_W : Double
+    val sigmaW : Double
         get() {
             val o = __offset(50)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsmnvOrbitalState(_bb: ByteBuffer): mnvOrbitalState = getRootAsmnvOrbitalState(_bb, mnvOrbitalState())
         fun getRootAsmnvOrbitalState(_bb: ByteBuffer, obj: mnvOrbitalState): mnvOrbitalState {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createmnvOrbitalState(builder: FlatBufferBuilder, ID_ELSETOffset: Int, ELSETOffset: Int, ID_STATE_VECTOROffset: Int, STATE_VECTOROffset: Int, POS_X: Double, POS_Y: Double, POS_Z: Double, VEL_X: Double, VEL_Y: Double, VEL_Z: Double, RADIATION_PRESS_COEFF: Double, BALLISTIC_COEFF: Double, APOGEE: Double, PERIGEE: Double, INCLINATION: Double, ECCENTRICITY: Double, PERIOD: Double, RAAN: Double, SMA: Double, GEO_LONGITUDE: Double, DRIFT_RATE: Double, SIGMA_U: Double, SIGMA_V: Double, SIGMA_W: Double) : Int {
+        fun createmnvOrbitalState(builder: FlatBufferBuilder, idElsetOffset: Int, elsetOffset: Int, idStateVectorOffset: Int, stateVectorOffset: Int, posX: Double, posY: Double, posZ: Double, velX: Double, velY: Double, velZ: Double, radiationPressCoeff: Double, ballisticCoeff: Double, apogee: Double, perigee: Double, inclination: Double, eccentricity: Double, period: Double, raan: Double, sma: Double, geoLongitude: Double, driftRate: Double, sigmaU: Double, sigmaV: Double, sigmaW: Double) : Int {
             builder.startTable(24)
-            addSIGMA_W(builder, SIGMA_W)
-            addSIGMA_V(builder, SIGMA_V)
-            addSIGMA_U(builder, SIGMA_U)
-            addDRIFT_RATE(builder, DRIFT_RATE)
-            addGEO_LONGITUDE(builder, GEO_LONGITUDE)
-            addSMA(builder, SMA)
-            addRAAN(builder, RAAN)
-            addPERIOD(builder, PERIOD)
-            addECCENTRICITY(builder, ECCENTRICITY)
-            addINCLINATION(builder, INCLINATION)
-            addPERIGEE(builder, PERIGEE)
-            addAPOGEE(builder, APOGEE)
-            addBALLISTIC_COEFF(builder, BALLISTIC_COEFF)
-            addRADIATION_PRESS_COEFF(builder, RADIATION_PRESS_COEFF)
-            addVEL_Z(builder, VEL_Z)
-            addVEL_Y(builder, VEL_Y)
-            addVEL_X(builder, VEL_X)
-            addPOS_Z(builder, POS_Z)
-            addPOS_Y(builder, POS_Y)
-            addPOS_X(builder, POS_X)
-            addSTATE_VECTOR(builder, STATE_VECTOROffset)
-            addID_STATE_VECTOR(builder, ID_STATE_VECTOROffset)
-            addELSET(builder, ELSETOffset)
-            addID_ELSET(builder, ID_ELSETOffset)
+            addSIGMAW(builder, sigmaW)
+            addSIGMAV(builder, sigmaV)
+            addSIGMAU(builder, sigmaU)
+            addDRIFTRATE(builder, driftRate)
+            addGEOLONGITUDE(builder, geoLongitude)
+            addSMA(builder, sma)
+            addRAAN(builder, raan)
+            addPERIOD(builder, period)
+            addECCENTRICITY(builder, eccentricity)
+            addINCLINATION(builder, inclination)
+            addPERIGEE(builder, perigee)
+            addAPOGEE(builder, apogee)
+            addBALLISTICCOEFF(builder, ballisticCoeff)
+            addRADIATIONPRESSCOEFF(builder, radiationPressCoeff)
+            addVELZ(builder, velZ)
+            addVELY(builder, velY)
+            addVELX(builder, velX)
+            addPOSZ(builder, posZ)
+            addPOSY(builder, posY)
+            addPOSX(builder, posX)
+            addSTATEVECTOR(builder, stateVectorOffset)
+            addIDSTATEVECTOR(builder, idStateVectorOffset)
+            addELSET(builder, elsetOffset)
+            addIDELSET(builder, idElsetOffset)
             return endmnvOrbitalState(builder)
         }
         fun startmnvOrbitalState(builder: FlatBufferBuilder) = builder.startTable(24)
-        fun addID_ELSET(builder: FlatBufferBuilder, ID_ELSET: Int) = builder.addOffset(0, ID_ELSET, 0)
-        fun addELSET(builder: FlatBufferBuilder, ELSET: Int) = builder.addOffset(1, ELSET, 0)
-        fun addID_STATE_VECTOR(builder: FlatBufferBuilder, ID_STATE_VECTOR: Int) = builder.addOffset(2, ID_STATE_VECTOR, 0)
-        fun addSTATE_VECTOR(builder: FlatBufferBuilder, STATE_VECTOR: Int) = builder.addOffset(3, STATE_VECTOR, 0)
-        fun addPOS_X(builder: FlatBufferBuilder, POS_X: Double) = builder.addDouble(4, POS_X, 0.0)
-        fun addPOS_Y(builder: FlatBufferBuilder, POS_Y: Double) = builder.addDouble(5, POS_Y, 0.0)
-        fun addPOS_Z(builder: FlatBufferBuilder, POS_Z: Double) = builder.addDouble(6, POS_Z, 0.0)
-        fun addVEL_X(builder: FlatBufferBuilder, VEL_X: Double) = builder.addDouble(7, VEL_X, 0.0)
-        fun addVEL_Y(builder: FlatBufferBuilder, VEL_Y: Double) = builder.addDouble(8, VEL_Y, 0.0)
-        fun addVEL_Z(builder: FlatBufferBuilder, VEL_Z: Double) = builder.addDouble(9, VEL_Z, 0.0)
-        fun addRADIATION_PRESS_COEFF(builder: FlatBufferBuilder, RADIATION_PRESS_COEFF: Double) = builder.addDouble(10, RADIATION_PRESS_COEFF, 0.0)
-        fun addBALLISTIC_COEFF(builder: FlatBufferBuilder, BALLISTIC_COEFF: Double) = builder.addDouble(11, BALLISTIC_COEFF, 0.0)
-        fun addAPOGEE(builder: FlatBufferBuilder, APOGEE: Double) = builder.addDouble(12, APOGEE, 0.0)
-        fun addPERIGEE(builder: FlatBufferBuilder, PERIGEE: Double) = builder.addDouble(13, PERIGEE, 0.0)
-        fun addINCLINATION(builder: FlatBufferBuilder, INCLINATION: Double) = builder.addDouble(14, INCLINATION, 0.0)
-        fun addECCENTRICITY(builder: FlatBufferBuilder, ECCENTRICITY: Double) = builder.addDouble(15, ECCENTRICITY, 0.0)
-        fun addPERIOD(builder: FlatBufferBuilder, PERIOD: Double) = builder.addDouble(16, PERIOD, 0.0)
-        fun addRAAN(builder: FlatBufferBuilder, RAAN: Double) = builder.addDouble(17, RAAN, 0.0)
-        fun addSMA(builder: FlatBufferBuilder, SMA: Double) = builder.addDouble(18, SMA, 0.0)
-        fun addGEO_LONGITUDE(builder: FlatBufferBuilder, GEO_LONGITUDE: Double) = builder.addDouble(19, GEO_LONGITUDE, 0.0)
-        fun addDRIFT_RATE(builder: FlatBufferBuilder, DRIFT_RATE: Double) = builder.addDouble(20, DRIFT_RATE, 0.0)
-        fun addSIGMA_U(builder: FlatBufferBuilder, SIGMA_U: Double) = builder.addDouble(21, SIGMA_U, 0.0)
-        fun addSIGMA_V(builder: FlatBufferBuilder, SIGMA_V: Double) = builder.addDouble(22, SIGMA_V, 0.0)
-        fun addSIGMA_W(builder: FlatBufferBuilder, SIGMA_W: Double) = builder.addDouble(23, SIGMA_W, 0.0)
+        fun addIDELSET(builder: FlatBufferBuilder, idElset: Int) = builder.addOffset(0, idElset, 0)
+        fun addELSET(builder: FlatBufferBuilder, elset: Int) = builder.addOffset(1, elset, 0)
+        fun addIDSTATEVECTOR(builder: FlatBufferBuilder, idStateVector: Int) = builder.addOffset(2, idStateVector, 0)
+        fun addSTATEVECTOR(builder: FlatBufferBuilder, stateVector: Int) = builder.addOffset(3, stateVector, 0)
+        fun addPOSX(builder: FlatBufferBuilder, posX: Double) = builder.addDouble(4, posX, 0.0)
+        fun addPOSY(builder: FlatBufferBuilder, posY: Double) = builder.addDouble(5, posY, 0.0)
+        fun addPOSZ(builder: FlatBufferBuilder, posZ: Double) = builder.addDouble(6, posZ, 0.0)
+        fun addVELX(builder: FlatBufferBuilder, velX: Double) = builder.addDouble(7, velX, 0.0)
+        fun addVELY(builder: FlatBufferBuilder, velY: Double) = builder.addDouble(8, velY, 0.0)
+        fun addVELZ(builder: FlatBufferBuilder, velZ: Double) = builder.addDouble(9, velZ, 0.0)
+        fun addRADIATIONPRESSCOEFF(builder: FlatBufferBuilder, radiationPressCoeff: Double) = builder.addDouble(10, radiationPressCoeff, 0.0)
+        fun addBALLISTICCOEFF(builder: FlatBufferBuilder, ballisticCoeff: Double) = builder.addDouble(11, ballisticCoeff, 0.0)
+        fun addAPOGEE(builder: FlatBufferBuilder, apogee: Double) = builder.addDouble(12, apogee, 0.0)
+        fun addPERIGEE(builder: FlatBufferBuilder, perigee: Double) = builder.addDouble(13, perigee, 0.0)
+        fun addINCLINATION(builder: FlatBufferBuilder, inclination: Double) = builder.addDouble(14, inclination, 0.0)
+        fun addECCENTRICITY(builder: FlatBufferBuilder, eccentricity: Double) = builder.addDouble(15, eccentricity, 0.0)
+        fun addPERIOD(builder: FlatBufferBuilder, period: Double) = builder.addDouble(16, period, 0.0)
+        fun addRAAN(builder: FlatBufferBuilder, raan: Double) = builder.addDouble(17, raan, 0.0)
+        fun addSMA(builder: FlatBufferBuilder, sma: Double) = builder.addDouble(18, sma, 0.0)
+        fun addGEOLONGITUDE(builder: FlatBufferBuilder, geoLongitude: Double) = builder.addDouble(19, geoLongitude, 0.0)
+        fun addDRIFTRATE(builder: FlatBufferBuilder, driftRate: Double) = builder.addDouble(20, driftRate, 0.0)
+        fun addSIGMAU(builder: FlatBufferBuilder, sigmaU: Double) = builder.addDouble(21, sigmaU, 0.0)
+        fun addSIGMAV(builder: FlatBufferBuilder, sigmaV: Double) = builder.addDouble(22, sigmaV, 0.0)
+        fun addSIGMAW(builder: FlatBufferBuilder, sigmaW: Double) = builder.addDouble(23, sigmaW, 0.0)
         fun endmnvOrbitalState(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

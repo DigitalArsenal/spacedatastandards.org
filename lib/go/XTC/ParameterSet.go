@@ -49,10 +49,17 @@ func (rcv *ParameterSet) PARAMETERS(obj *Parameter, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(Parameter)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *ParameterSet) Parameters(obj *Parameter, j int) bool {
+	return rcv.PARAMETERS(obj, j)
 }
 
 func (rcv *ParameterSet) PARAMETERSLength() int {
@@ -63,6 +70,10 @@ func (rcv *ParameterSet) PARAMETERSLength() int {
 	return 0
 }
 
+func (rcv *ParameterSet) ParametersLength() int {
+	return rcv.PARAMETERSLength()
+}
+
 /// Parameters
 func ParameterSetStart(builder *flatbuffers.Builder) {
 	builder.StartObject(1)
@@ -70,8 +81,14 @@ func ParameterSetStart(builder *flatbuffers.Builder) {
 func ParameterSetAddPARAMETERS(builder *flatbuffers.Builder, PARAMETERS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(PARAMETERS), 0)
 }
+func ParameterSetAddParameters(builder *flatbuffers.Builder, PARAMETERS flatbuffers.UOffsetT) {
+	ParameterSetAddPARAMETERS(builder, PARAMETERS)
+}
 func ParameterSetStartPARAMETERSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func ParameterSetStartParametersVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return ParameterSetStartPARAMETERSVector(builder, numElems)
 }
 func ParameterSetEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

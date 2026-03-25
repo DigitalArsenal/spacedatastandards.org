@@ -217,6 +217,16 @@ def ENVStartRESERVEDVector(builder, numElems):
 def StartRESERVEDVector(builder, numElems):
     return ENVStartRESERVEDVector(builder, numElems)
 
+def ENVCreateRESERVEDVector(builder, data):
+    data = list(data)
+    builder.StartVector(1, len(data), 1)
+    for item in reversed(data):
+        builder.PrependUint8(item)
+    return builder.EndVector()
+
+def CreateRESERVEDVector(builder, data):
+    ENVCreateRESERVEDVector(builder, data)
+
 def ENVEnd(builder):
     return builder.EndObject()
 
@@ -231,25 +241,39 @@ except:
 class ENVT(object):
 
     # ENVT
-    def __init__(self):
-        self.ATMOSPHERE = None  # type: str
-        self.WEATHER = None  # type: str
-        self.TIME_UTC = 0.0  # type: float
-        self.LATITUDE = 0.0  # type: float
-        self.LONGITUDE = 0.0  # type: float
-        self.SUN_AZIMUTH = 0.0  # type: float
-        self.SUN_ELEVATION = 0.0  # type: float
-        self.MOON_PHASE = 0.0  # type: float
-        self.ILLUMINATION = 0.0  # type: float
-        self.MAGNETIC_DECLINATION = 0.0  # type: float
-        self.MAGNETIC_INCLINATION = 0.0  # type: float
-        self.RESERVED = None  # type: List[int]
+    def __init__(
+        self,
+        ATMOSPHERE = None,
+        WEATHER = None,
+        TIME_UTC = 0.0,
+        LATITUDE = 0.0,
+        LONGITUDE = 0.0,
+        SUN_AZIMUTH = 0.0,
+        SUN_ELEVATION = 0.0,
+        MOON_PHASE = 0.0,
+        ILLUMINATION = 0.0,
+        MAGNETIC_DECLINATION = 0.0,
+        MAGNETIC_INCLINATION = 0.0,
+        RESERVED = None,
+    ):
+        self.ATMOSPHERE = ATMOSPHERE  # type: Optional[str]
+        self.WEATHER = WEATHER  # type: Optional[str]
+        self.TIME_UTC = TIME_UTC  # type: float
+        self.LATITUDE = LATITUDE  # type: float
+        self.LONGITUDE = LONGITUDE  # type: float
+        self.SUN_AZIMUTH = SUN_AZIMUTH  # type: float
+        self.SUN_ELEVATION = SUN_ELEVATION  # type: float
+        self.MOON_PHASE = MOON_PHASE  # type: float
+        self.ILLUMINATION = ILLUMINATION  # type: float
+        self.MAGNETIC_DECLINATION = MAGNETIC_DECLINATION  # type: float
+        self.MAGNETIC_INCLINATION = MAGNETIC_INCLINATION  # type: float
+        self.RESERVED = RESERVED  # type: Optional[List[int]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        ENV = ENV()
-        ENV.Init(buf, pos)
-        return cls.InitFromObj(ENV)
+        tmpEnv = ENV()
+        tmpEnv.Init(buf, pos)
+        return cls.InitFromObj(tmpEnv)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -257,9 +281,9 @@ class ENVT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, ENV):
+    def InitFromObj(cls, tmpEnv):
         x = ENVT()
-        x._UnPack(ENV)
+        x._UnPack(tmpEnv)
         return x
 
     # ENVT

@@ -32,8 +32,8 @@ class ContextCalibrator : Table() {
     /**
      * Match criteria for selecting this calibrator
      */
-    val MATCH_CRITERIA : MatchCriteria? get() = MATCH_CRITERIA(MatchCriteria())
-    fun MATCH_CRITERIA(obj: MatchCriteria) : MatchCriteria? {
+    val matchCriteria : MatchCriteria? get() = matchCriteria(MatchCriteria())
+    fun matchCriteria(obj: MatchCriteria) : MatchCriteria? {
         val o = __offset(4)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -44,8 +44,8 @@ class ContextCalibrator : Table() {
     /**
      * Polynomial calibrator (if used)
      */
-    val POLYNOMIAL : PolynomialCalibrator? get() = POLYNOMIAL(PolynomialCalibrator())
-    fun POLYNOMIAL(obj: PolynomialCalibrator) : PolynomialCalibrator? {
+    val polynomial : PolynomialCalibrator? get() = polynomial(PolynomialCalibrator())
+    fun polynomial(obj: PolynomialCalibrator) : PolynomialCalibrator? {
         val o = __offset(6)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -56,8 +56,8 @@ class ContextCalibrator : Table() {
     /**
      * Spline calibrator (if used)
      */
-    val SPLINE : SplineCalibrator? get() = SPLINE(SplineCalibrator())
-    fun SPLINE(obj: SplineCalibrator) : SplineCalibrator? {
+    val spline : SplineCalibrator? get() = spline(SplineCalibrator())
+    fun spline(obj: SplineCalibrator) : SplineCalibrator? {
         val o = __offset(8)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -68,8 +68,8 @@ class ContextCalibrator : Table() {
     /**
      * Math operation calibrator (if used)
      */
-    val MATH_OPERATION : MathOperation? get() = MATH_OPERATION(MathOperation())
-    fun MATH_OPERATION(obj: MathOperation) : MathOperation? {
+    val mathOperation : MathOperation? get() = mathOperation(MathOperation())
+    fun mathOperation(obj: MathOperation) : MathOperation? {
         val o = __offset(10)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -78,25 +78,25 @@ class ContextCalibrator : Table() {
         }
     }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsContextCalibrator(_bb: ByteBuffer): ContextCalibrator = getRootAsContextCalibrator(_bb, ContextCalibrator())
         fun getRootAsContextCalibrator(_bb: ByteBuffer, obj: ContextCalibrator): ContextCalibrator {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createContextCalibrator(builder: FlatBufferBuilder, MATCH_CRITERIAOffset: Int, POLYNOMIALOffset: Int, SPLINEOffset: Int, MATH_OPERATIONOffset: Int) : Int {
+        fun createContextCalibrator(builder: FlatBufferBuilder, matchCriteriaOffset: Int, polynomialOffset: Int, splineOffset: Int, mathOperationOffset: Int) : Int {
             builder.startTable(4)
-            addMATH_OPERATION(builder, MATH_OPERATIONOffset)
-            addSPLINE(builder, SPLINEOffset)
-            addPOLYNOMIAL(builder, POLYNOMIALOffset)
-            addMATCH_CRITERIA(builder, MATCH_CRITERIAOffset)
+            addMATHOPERATION(builder, mathOperationOffset)
+            addSPLINE(builder, splineOffset)
+            addPOLYNOMIAL(builder, polynomialOffset)
+            addMATCHCRITERIA(builder, matchCriteriaOffset)
             return endContextCalibrator(builder)
         }
         fun startContextCalibrator(builder: FlatBufferBuilder) = builder.startTable(4)
-        fun addMATCH_CRITERIA(builder: FlatBufferBuilder, MATCH_CRITERIA: Int) = builder.addOffset(0, MATCH_CRITERIA, 0)
-        fun addPOLYNOMIAL(builder: FlatBufferBuilder, POLYNOMIAL: Int) = builder.addOffset(1, POLYNOMIAL, 0)
-        fun addSPLINE(builder: FlatBufferBuilder, SPLINE: Int) = builder.addOffset(2, SPLINE, 0)
-        fun addMATH_OPERATION(builder: FlatBufferBuilder, MATH_OPERATION: Int) = builder.addOffset(3, MATH_OPERATION, 0)
+        fun addMATCHCRITERIA(builder: FlatBufferBuilder, matchCriteria: Int) = builder.addOffset(0, matchCriteria, 0)
+        fun addPOLYNOMIAL(builder: FlatBufferBuilder, polynomial: Int) = builder.addOffset(1, polynomial, 0)
+        fun addSPLINE(builder: FlatBufferBuilder, spline: Int) = builder.addOffset(2, spline, 0)
+        fun addMATHOPERATION(builder: FlatBufferBuilder, mathOperation: Int) = builder.addOffset(3, mathOperation, 0)
         fun endContextCalibrator(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

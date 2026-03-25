@@ -51,9 +51,17 @@ func (rcv *ArrayDimension) SIZE() uint32 {
 	return 0
 }
 
+func (rcv *ArrayDimension) Size() uint32 {
+	return rcv.SIZE()
+}
+
 /// Fixed size of this dimension
 func (rcv *ArrayDimension) MutateSIZE(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(4, n)
+}
+
+func (rcv *ArrayDimension) MutateSize(n uint32) bool {
+	return rcv.MutateSIZE(n)
 }
 
 /// Dynamic size from parameter reference
@@ -65,6 +73,10 @@ func (rcv *ArrayDimension) SIZE_PARAMETER_REF() []byte {
 	return nil
 }
 
+func (rcv *ArrayDimension) SizeParameterRef() []byte {
+	return rcv.SIZE_PARAMETER_REF()
+}
+
 /// Dynamic size from parameter reference
 func ArrayDimensionStart(builder *flatbuffers.Builder) {
 	builder.StartObject(2)
@@ -72,8 +84,14 @@ func ArrayDimensionStart(builder *flatbuffers.Builder) {
 func ArrayDimensionAddSIZE(builder *flatbuffers.Builder, SIZE uint32) {
 	builder.PrependUint32Slot(0, SIZE, 0)
 }
+func ArrayDimensionAddSize(builder *flatbuffers.Builder, SIZE uint32) {
+	ArrayDimensionAddSIZE(builder, SIZE)
+}
 func ArrayDimensionAddSIZE_PARAMETER_REF(builder *flatbuffers.Builder, SIZE_PARAMETER_REF flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(SIZE_PARAMETER_REF), 0)
+}
+func ArrayDimensionAddSizeParameterRef(builder *flatbuffers.Builder, SIZE_PARAMETER_REF flatbuffers.UOffsetT) {
+	ArrayDimensionAddSIZE_PARAMETER_REF(builder, SIZE_PARAMETER_REF)
 }
 func ArrayDimensionEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

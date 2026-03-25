@@ -2,9 +2,13 @@
 // swiftlint:disable all
 // swiftformat:disable all
 
+#if canImport(Common)
+import Common
+#endif
+
 import FlatBuffers
 
-public enum ooiStatus: Int8, Enum, Verifiable {
+public enum ooiStatus: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -20,7 +24,7 @@ public enum ooiStatus: Int8, Enum, Verifiable {
 }
 
 
-public enum ooiPriority: Int8, Enum, Verifiable {
+public enum ooiPriority: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -36,9 +40,9 @@ public enum ooiPriority: Int8, Enum, Verifiable {
 
 
 ///  Object of Interest
-public struct OOI: FlatBufferObject, Verifiable {
+public struct OOI: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -170,23 +174,15 @@ public struct OOI: FlatBufferObject, Verifiable {
   ///  Perigee altitude (km)
   public var PERIGEE: Double { let o = _accessor.offset(VTOFFSET.PERIGEE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Delta-V estimates for maneuver hypotheses (m/s)
-  public var hasDeltaVs: Bool { let o = _accessor.offset(VTOFFSET.DELTA_VS.v); return o == 0 ? false : true }
-  public var DELTA_VSCount: Int32 { let o = _accessor.offset(VTOFFSET.DELTA_VS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func DELTA_VS(at index: Int32) -> Double { let o = _accessor.offset(VTOFFSET.DELTA_VS.v); return o == 0 ? 0 : _accessor.directRead(of: Double.self, offset: _accessor.vector(at: o) + index * 8) }
-  public var DELTA_VS: [Double] { return _accessor.getVector(at: VTOFFSET.DELTA_VS.v) ?? [] }
+  public var DELTA_VS: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.DELTA_VS.v, byteSize: 8) }
+  public func withUnsafePointerToDeltaVs<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.DELTA_VS.v, body: body) }
   ///  Delta-T estimates for maneuver timing (seconds)
-  public var hasDeltaTs: Bool { let o = _accessor.offset(VTOFFSET.DELTA_TS.v); return o == 0 ? false : true }
-  public var DELTA_TSCount: Int32 { let o = _accessor.offset(VTOFFSET.DELTA_TS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func DELTA_TS(at index: Int32) -> Double { let o = _accessor.offset(VTOFFSET.DELTA_TS.v); return o == 0 ? 0 : _accessor.directRead(of: Double.self, offset: _accessor.vector(at: o) + index * 8) }
-  public var DELTA_TS: [Double] { return _accessor.getVector(at: VTOFFSET.DELTA_TS.v) ?? [] }
+  public var DELTA_TS: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.DELTA_TS.v, byteSize: 8) }
+  public func withUnsafePointerToDeltaTs<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.DELTA_TS.v, body: body) }
   ///  Other affected satellite catalog numbers
-  public var hasAffectedObjects: Bool { let o = _accessor.offset(VTOFFSET.AFFECTED_OBJECTS.v); return o == 0 ? false : true }
-  public var AFFECTED_OBJECTSCount: Int32 { let o = _accessor.offset(VTOFFSET.AFFECTED_OBJECTS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func AFFECTED_OBJECTS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.AFFECTED_OBJECTS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  public var AFFECTED_OBJECTS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.AFFECTED_OBJECTS.v, byteSize: 4) }
   ///  Associated orbit manifold identifiers
-  public var hasManifolds: Bool { let o = _accessor.offset(VTOFFSET.MANIFOLDS.v); return o == 0 ? false : true }
-  public var MANIFOLDSCount: Int32 { let o = _accessor.offset(VTOFFSET.MANIFOLDS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func MANIFOLDS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.MANIFOLDS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  public var MANIFOLDS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.MANIFOLDS.v, byteSize: 4) }
   public static func startOOI(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 38) }
   public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VTOFFSET.ID.p) }
   public static func add(SAT_NO: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SAT_NO, def: 0, at: VTOFFSET.SAT_NO.p) }

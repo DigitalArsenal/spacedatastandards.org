@@ -10,23 +10,23 @@ public struct CustomFrameWrapper : IFlatbufferObject
 {
   private Table __p;
   public ByteBuffer ByteBuffer { get { return __p.bb; } }
-  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_24_3_25(); }
+  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_25_12_19(); }
   public static CustomFrameWrapper GetRootAsCustomFrameWrapper(ByteBuffer _bb) { return GetRootAsCustomFrameWrapper(_bb, new CustomFrameWrapper()); }
   public static CustomFrameWrapper GetRootAsCustomFrameWrapper(ByteBuffer _bb, CustomFrameWrapper obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public CustomFrameWrapper __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
-  public CustomFrame Frame { get { int o = __p.__offset(4); return o != 0 ? (CustomFrame)__p.bb.GetSbyte(o + __p.bb_pos) : CustomFrame.ECEF; } }
+  public CustomFrame frame { get { int o = __p.__offset(4); return o != 0 ? (CustomFrame)__p.bb.GetSbyte(o + __p.bb_pos) : CustomFrame.ECEF; } }
 
   public static Offset<CustomFrameWrapper> CreateCustomFrameWrapper(FlatBufferBuilder builder,
       CustomFrame frame = CustomFrame.ECEF) {
     builder.StartTable(1);
-    CustomFrameWrapper.AddFrame(builder, frame);
+    CustomFrameWrapper.Addframe(builder, frame);
     return CustomFrameWrapper.EndCustomFrameWrapper(builder);
   }
 
   public static void StartCustomFrameWrapper(FlatBufferBuilder builder) { builder.StartTable(1); }
-  public static void AddFrame(FlatBufferBuilder builder, CustomFrame frame) { builder.AddSbyte(0, (sbyte)frame, 0); }
+  public static void Addframe(FlatBufferBuilder builder, CustomFrame frame) { builder.AddSbyte(0, (sbyte)frame, 0); }
   public static Offset<CustomFrameWrapper> EndCustomFrameWrapper(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<CustomFrameWrapper>(o);
@@ -37,22 +37,22 @@ public struct CustomFrameWrapper : IFlatbufferObject
     return _o;
   }
   public void UnPackTo(CustomFrameWrapperT _o) {
-    _o.Frame = this.Frame;
+    _o.frame = this.frame;
   }
   public static Offset<CustomFrameWrapper> Pack(FlatBufferBuilder builder, CustomFrameWrapperT _o) {
     if (_o == null) return default(Offset<CustomFrameWrapper>);
     return CreateCustomFrameWrapper(
       builder,
-      _o.Frame);
+      _o.frame);
   }
 }
 
 public class CustomFrameWrapperT
 {
-  public CustomFrame Frame { get; set; }
+  public CustomFrame frame { get; set; }
 
   public CustomFrameWrapperT() {
-    this.Frame = CustomFrame.ECEF;
+    this.frame = CustomFrame.ECEF;
   }
 }
 
@@ -62,7 +62,7 @@ static public class CustomFrameWrapperVerify
   static public bool Verify(Google.FlatBuffers.Verifier verifier, uint tablePos)
   {
     return verifier.VerifyTableStart(tablePos)
-      && verifier.VerifyField(tablePos, 4 /*Frame*/, 1 /*CustomFrame*/, 1, false)
+      && verifier.VerifyField(tablePos, 4 /*frame*/, 1 /*CustomFrame*/, 1, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

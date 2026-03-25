@@ -32,8 +32,8 @@ class DataCoverage : Table() {
     /**
      * Spatial coverage definition
      */
-    val SPATIAL : SpatialCoverage? get() = SPATIAL(SpatialCoverage())
-    fun SPATIAL(obj: SpatialCoverage) : SpatialCoverage? {
+    val spatial : SpatialCoverage? get() = spatial(SpatialCoverage())
+    fun spatial(obj: SpatialCoverage) : SpatialCoverage? {
         val o = __offset(4)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -44,8 +44,8 @@ class DataCoverage : Table() {
     /**
      * Temporal coverage definition
      */
-    val TEMPORAL : TemporalCoverage? get() = TEMPORAL(TemporalCoverage())
-    fun TEMPORAL(obj: TemporalCoverage) : TemporalCoverage? {
+    val temporal : TemporalCoverage? get() = temporal(TemporalCoverage())
+    fun temporal(obj: TemporalCoverage) : TemporalCoverage? {
         val o = __offset(6)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -54,21 +54,21 @@ class DataCoverage : Table() {
         }
     }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsDataCoverage(_bb: ByteBuffer): DataCoverage = getRootAsDataCoverage(_bb, DataCoverage())
         fun getRootAsDataCoverage(_bb: ByteBuffer, obj: DataCoverage): DataCoverage {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createDataCoverage(builder: FlatBufferBuilder, SPATIALOffset: Int, TEMPORALOffset: Int) : Int {
+        fun createDataCoverage(builder: FlatBufferBuilder, spatialOffset: Int, temporalOffset: Int) : Int {
             builder.startTable(2)
-            addTEMPORAL(builder, TEMPORALOffset)
-            addSPATIAL(builder, SPATIALOffset)
+            addTEMPORAL(builder, temporalOffset)
+            addSPATIAL(builder, spatialOffset)
             return endDataCoverage(builder)
         }
         fun startDataCoverage(builder: FlatBufferBuilder) = builder.startTable(2)
-        fun addSPATIAL(builder: FlatBufferBuilder, SPATIAL: Int) = builder.addOffset(0, SPATIAL, 0)
-        fun addTEMPORAL(builder: FlatBufferBuilder, TEMPORAL: Int) = builder.addOffset(1, TEMPORAL, 0)
+        fun addSPATIAL(builder: FlatBufferBuilder, spatial: Int) = builder.addOffset(0, spatial, 0)
+        fun addTEMPORAL(builder: FlatBufferBuilder, temporal: Int) = builder.addOffset(1, temporal, 0)
         fun endDataCoverage(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

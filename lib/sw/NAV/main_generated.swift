@@ -2,9 +2,13 @@
 // swiftlint:disable all
 // swiftformat:disable all
 
+#if canImport(Common)
+import Common
+#endif
+
 import FlatBuffers
 
-public enum VesselType: Int8, Enum, Verifiable {
+public enum VesselType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -30,7 +34,7 @@ public enum VesselType: Int8, Enum, Verifiable {
 }
 
 
-public enum PropulsionType: Int8, Enum, Verifiable {
+public enum PropulsionType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -49,7 +53,7 @@ public enum PropulsionType: Int8, Enum, Verifiable {
 }
 
 
-public enum DCState: Int8, Enum, Verifiable {
+public enum DCState: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -67,9 +71,9 @@ public enum DCState: Int8, Enum, Verifiable {
 
 
 ///  Naval Vessels
-public struct NAV: FlatBufferObject, Verifiable {
+public struct NAV: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -154,10 +158,8 @@ public struct NAV: FlatBufferObject, Verifiable {
   public var TORPEDOES_REMAINING: UInt8 { let o = _accessor.offset(VTOFFSET.TORPEDOES_REMAINING.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
   public var VESSEL_TYPE: UInt8 { let o = _accessor.offset(VTOFFSET.VESSEL_TYPE.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
   public var PROPULSION_TYPE: UInt8 { let o = _accessor.offset(VTOFFSET.PROPULSION_TYPE.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
-  public var hasReserved: Bool { let o = _accessor.offset(VTOFFSET.RESERVED.v); return o == 0 ? false : true }
-  public var RESERVEDCount: Int32 { let o = _accessor.offset(VTOFFSET.RESERVED.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func RESERVED(at index: Int32) -> UInt8 { let o = _accessor.offset(VTOFFSET.RESERVED.v); return o == 0 ? 0 : _accessor.directRead(of: UInt8.self, offset: _accessor.vector(at: o) + index * 1) }
-  public var RESERVED: [UInt8] { return _accessor.getVector(at: VTOFFSET.RESERVED.v) ?? [] }
+  public var RESERVED: FlatbufferVector<UInt8> { return _accessor.vector(at: VTOFFSET.RESERVED.v, byteSize: 1) }
+  public func withUnsafePointerToReserved<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.RESERVED.v, body: body) }
   public static func startNAV(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 35) }
   public static func add(POSITION_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POSITION_X, def: 0.0, at: VTOFFSET.POSITION_X.p) }
   public static func add(POSITION_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POSITION_Y, def: 0.0, at: VTOFFSET.POSITION_Y.p) }

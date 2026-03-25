@@ -63,6 +63,10 @@ func (rcv *EOO) ID() []byte {
 	return nil
 }
 
+func (rcv *EOO) Id() []byte {
+	return rcv.ID()
+}
+
 /// Unique identifier of the record.
 /// Classification marking of the data in IC/CAPCO Portion-marked format.
 func (rcv *EOO) CLASSIFICATION() []byte {
@@ -71,6 +75,10 @@ func (rcv *EOO) CLASSIFICATION() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *EOO) Classification() []byte {
+	return rcv.CLASSIFICATION()
 }
 
 /// Classification marking of the data in IC/CAPCO Portion-marked format.
@@ -83,6 +91,10 @@ func (rcv *EOO) OB_TIME() []byte {
 	return nil
 }
 
+func (rcv *EOO) ObTime() []byte {
+	return rcv.OB_TIME()
+}
+
 /// Ob detection time in ISO 8601 UTC (YYYY-MM-DDTHH:MM:SS.ssssssZ), up to microsecond precision.
 /// Correlation score of the observation when compared to a known orbit state.
 func (rcv *EOO) CORR_QUALITY() float32 {
@@ -93,9 +105,17 @@ func (rcv *EOO) CORR_QUALITY() float32 {
 	return 0.0
 }
 
+func (rcv *EOO) CorrQuality() float32 {
+	return rcv.CORR_QUALITY()
+}
+
 /// Correlation score of the observation when compared to a known orbit state.
 func (rcv *EOO) MutateCORR_QUALITY(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(10, n)
+}
+
+func (rcv *EOO) MutateCorrQuality(n float32) bool {
+	return rcv.MutateCORR_QUALITY(n)
 }
 
 /// Server will auto-populate with SAT_NO if available.
@@ -105,6 +125,10 @@ func (rcv *EOO) ID_ON_ORBIT() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *EOO) IdOnOrbit() []byte {
+	return rcv.ID_ON_ORBIT()
 }
 
 /// Server will auto-populate with SAT_NO if available.
@@ -117,6 +141,10 @@ func (rcv *EOO) SENSOR_ID() []byte {
 	return nil
 }
 
+func (rcv *EOO) SensorId() []byte {
+	return rcv.SENSOR_ID()
+}
+
 /// Unique ID of the sensor. Must have a corresponding sensor record on the server.
 /// Accepted Collection Method
 func (rcv *EOO) COLLECT_METHOD() CollectMethod {
@@ -127,9 +155,17 @@ func (rcv *EOO) COLLECT_METHOD() CollectMethod {
 	return 0
 }
 
+func (rcv *EOO) CollectMethod() CollectMethod {
+	return rcv.COLLECT_METHOD()
+}
+
 /// Accepted Collection Method
 func (rcv *EOO) MutateCOLLECT_METHOD(n CollectMethod) bool {
 	return rcv._tab.MutateInt8Slot(16, int8(n))
+}
+
+func (rcv *EOO) MutateCollectMethod(n CollectMethod) bool {
+	return rcv.MutateCOLLECT_METHOD(n)
 }
 
 /// 18SDS satellite number. Only list if correlated against the 18SDS catalog.
@@ -141,9 +177,17 @@ func (rcv *EOO) NORAD_CAT_ID() int32 {
 	return 0
 }
 
+func (rcv *EOO) NoradCatId() int32 {
+	return rcv.NORAD_CAT_ID()
+}
+
 /// 18SDS satellite number. Only list if correlated against the 18SDS catalog.
 func (rcv *EOO) MutateNORAD_CAT_ID(n int32) bool {
 	return rcv._tab.MutateInt32Slot(18, n)
+}
+
+func (rcv *EOO) MutateNoradCatId(n int32) bool {
+	return rcv.MutateNORAD_CAT_ID(n)
 }
 
 /// Identifier for the collectRequest message if the collection was in response to tasking.
@@ -153,6 +197,10 @@ func (rcv *EOO) TASK_ID() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *EOO) TaskId() []byte {
+	return rcv.TASK_ID()
 }
 
 /// Identifier for the collectRequest message if the collection was in response to tasking.
@@ -165,6 +213,10 @@ func (rcv *EOO) TRANSACTION_ID() []byte {
 	return nil
 }
 
+func (rcv *EOO) TransactionId() []byte {
+	return rcv.TRANSACTION_ID()
+}
+
 /// Optional identifier to track a transaction.
 /// The user-defined set ID of a sequence of images.
 func (rcv *EOO) IMAGE_SET_ID() []byte {
@@ -173,6 +225,10 @@ func (rcv *EOO) IMAGE_SET_ID() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *EOO) ImageSetId() []byte {
+	return rcv.IMAGE_SET_ID()
 }
 
 /// The user-defined set ID of a sequence of images.
@@ -185,9 +241,17 @@ func (rcv *EOO) IMAGE_SET_LENGTH() int32 {
 	return 0
 }
 
+func (rcv *EOO) ImageSetLength() int32 {
+	return rcv.IMAGE_SET_LENGTH()
+}
+
 /// The number of images in an image set.
 func (rcv *EOO) MutateIMAGE_SET_LENGTH(n int32) bool {
 	return rcv._tab.MutateInt32Slot(26, n)
+}
+
+func (rcv *EOO) MutateImageSetLength(n int32) bool {
+	return rcv.MutateIMAGE_SET_LENGTH(n)
 }
 
 /// The sequence ID of an image within an image set.
@@ -199,9 +263,17 @@ func (rcv *EOO) SEQUENCE_ID() int32 {
 	return 0
 }
 
+func (rcv *EOO) SequenceId() int32 {
+	return rcv.SEQUENCE_ID()
+}
+
 /// The sequence ID of an image within an image set.
 func (rcv *EOO) MutateSEQUENCE_ID(n int32) bool {
 	return rcv._tab.MutateInt32Slot(28, n)
+}
+
+func (rcv *EOO) MutateSequenceId(n int32) bool {
+	return rcv.MutateSEQUENCE_ID(n)
 }
 
 /// The position of this observation within a track (FENCE, FIRST, IN, LAST, SINGLE).
@@ -213,9 +285,17 @@ func (rcv *EOO) OB_POSITION() ObservationPosition {
 	return 0
 }
 
+func (rcv *EOO) ObPosition() ObservationPosition {
+	return rcv.OB_POSITION()
+}
+
 /// The position of this observation within a track (FENCE, FIRST, IN, LAST, SINGLE).
 func (rcv *EOO) MutateOB_POSITION(n ObservationPosition) bool {
 	return rcv._tab.MutateInt8Slot(30, int8(n))
+}
+
+func (rcv *EOO) MutateObPosition(n ObservationPosition) bool {
+	return rcv.MutateOB_POSITION(n)
 }
 
 /// Provider maintained ID. May not be consistent with 18SDS SAT_NO.
@@ -225,6 +305,10 @@ func (rcv *EOO) ORIG_OBJECT_ID() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *EOO) OrigObjectId() []byte {
+	return rcv.ORIG_OBJECT_ID()
 }
 
 /// Provider maintained ID. May not be consistent with 18SDS SAT_NO.
@@ -237,6 +321,10 @@ func (rcv *EOO) ORIG_SENSOR_ID() []byte {
 	return nil
 }
 
+func (rcv *EOO) OrigSensorId() []byte {
+	return rcv.ORIG_SENSOR_ID()
+}
+
 /// Sensor ID.
 /// Required if correlation is attempted. Indicates whether correlation succeeded.
 func (rcv *EOO) UCT() bool {
@@ -247,9 +335,17 @@ func (rcv *EOO) UCT() bool {
 	return false
 }
 
+func (rcv *EOO) Uct() bool {
+	return rcv.UCT()
+}
+
 /// Required if correlation is attempted. Indicates whether correlation succeeded.
 func (rcv *EOO) MutateUCT(n bool) bool {
 	return rcv._tab.MutateBoolSlot(36, n)
+}
+
+func (rcv *EOO) MutateUct(n bool) bool {
+	return rcv.MutateUCT(n)
 }
 
 /// Line of sight azimuth angle in degrees and topocentric frame.
@@ -261,9 +357,17 @@ func (rcv *EOO) AZIMUTH() float32 {
 	return 0.0
 }
 
+func (rcv *EOO) Azimuth() float32 {
+	return rcv.AZIMUTH()
+}
+
 /// Line of sight azimuth angle in degrees and topocentric frame.
 func (rcv *EOO) MutateAZIMUTH(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(38, n)
+}
+
+func (rcv *EOO) MutateAzimuth(n float32) bool {
+	return rcv.MutateAZIMUTH(n)
 }
 
 /// One sigma uncertainty in the line of sight azimuth angle, in degrees.
@@ -275,9 +379,17 @@ func (rcv *EOO) AZIMUTH_UNC() float32 {
 	return 0.0
 }
 
+func (rcv *EOO) AzimuthUnc() float32 {
+	return rcv.AZIMUTH_UNC()
+}
+
 /// One sigma uncertainty in the line of sight azimuth angle, in degrees.
 func (rcv *EOO) MutateAZIMUTH_UNC(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(40, n)
+}
+
+func (rcv *EOO) MutateAzimuthUnc(n float32) bool {
+	return rcv.MutateAZIMUTH_UNC(n)
 }
 
 /// Sensor line of sight azimuth angle bias in degrees.
@@ -289,9 +401,17 @@ func (rcv *EOO) AZIMUTH_BIAS() float32 {
 	return 0.0
 }
 
+func (rcv *EOO) AzimuthBias() float32 {
+	return rcv.AZIMUTH_BIAS()
+}
+
 /// Sensor line of sight azimuth angle bias in degrees.
 func (rcv *EOO) MutateAZIMUTH_BIAS(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(42, n)
+}
+
+func (rcv *EOO) MutateAzimuthBias(n float32) bool {
+	return rcv.MutateAZIMUTH_BIAS(n)
 }
 
 /// Rate of change of the line of sight azimuth in degrees per second.
@@ -303,9 +423,17 @@ func (rcv *EOO) AZIMUTH_RATE() float32 {
 	return 0.0
 }
 
+func (rcv *EOO) AzimuthRate() float32 {
+	return rcv.AZIMUTH_RATE()
+}
+
 /// Rate of change of the line of sight azimuth in degrees per second.
 func (rcv *EOO) MutateAZIMUTH_RATE(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(44, n)
+}
+
+func (rcv *EOO) MutateAzimuthRate(n float32) bool {
+	return rcv.MutateAZIMUTH_RATE(n)
 }
 
 /// Line of sight elevation in degrees and topocentric frame.
@@ -317,9 +445,17 @@ func (rcv *EOO) ELEVATION() float32 {
 	return 0.0
 }
 
+func (rcv *EOO) Elevation() float32 {
+	return rcv.ELEVATION()
+}
+
 /// Line of sight elevation in degrees and topocentric frame.
 func (rcv *EOO) MutateELEVATION(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(46, n)
+}
+
+func (rcv *EOO) MutateElevation(n float32) bool {
+	return rcv.MutateELEVATION(n)
 }
 
 /// One sigma uncertainty in the line of sight elevation angle, in degrees.
@@ -331,9 +467,17 @@ func (rcv *EOO) ELEVATION_UNC() float32 {
 	return 0.0
 }
 
+func (rcv *EOO) ElevationUnc() float32 {
+	return rcv.ELEVATION_UNC()
+}
+
 /// One sigma uncertainty in the line of sight elevation angle, in degrees.
 func (rcv *EOO) MutateELEVATION_UNC(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(48, n)
+}
+
+func (rcv *EOO) MutateElevationUnc(n float32) bool {
+	return rcv.MutateELEVATION_UNC(n)
 }
 
 /// Sensor line of sight elevation bias in degrees.
@@ -345,9 +489,17 @@ func (rcv *EOO) ELEVATION_BIAS() float32 {
 	return 0.0
 }
 
+func (rcv *EOO) ElevationBias() float32 {
+	return rcv.ELEVATION_BIAS()
+}
+
 /// Sensor line of sight elevation bias in degrees.
 func (rcv *EOO) MutateELEVATION_BIAS(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(50, n)
+}
+
+func (rcv *EOO) MutateElevationBias(n float32) bool {
+	return rcv.MutateELEVATION_BIAS(n)
 }
 
 /// Rate of change of the line of sight elevation in degrees per second.
@@ -359,9 +511,17 @@ func (rcv *EOO) ELEVATION_RATE() float32 {
 	return 0.0
 }
 
+func (rcv *EOO) ElevationRate() float32 {
+	return rcv.ELEVATION_RATE()
+}
+
 /// Rate of change of the line of sight elevation in degrees per second.
 func (rcv *EOO) MutateELEVATION_RATE(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(52, n)
+}
+
+func (rcv *EOO) MutateElevationRate(n float32) bool {
+	return rcv.MutateELEVATION_RATE(n)
 }
 
 /// Line of sight range in km. Reported value should include all applicable corrections.
@@ -373,9 +533,17 @@ func (rcv *EOO) RANGE() float32 {
 	return 0.0
 }
 
+func (rcv *EOO) Range() float32 {
+	return rcv.RANGE()
+}
+
 /// Line of sight range in km. Reported value should include all applicable corrections.
 func (rcv *EOO) MutateRANGE(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(54, n)
+}
+
+func (rcv *EOO) MutateRange(n float32) bool {
+	return rcv.MutateRANGE(n)
 }
 
 /// One sigma uncertainty in the line of sight range, in km.
@@ -387,9 +555,17 @@ func (rcv *EOO) RANGE_UNC() float32 {
 	return 0.0
 }
 
+func (rcv *EOO) RangeUnc() float32 {
+	return rcv.RANGE_UNC()
+}
+
 /// One sigma uncertainty in the line of sight range, in km.
 func (rcv *EOO) MutateRANGE_UNC(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(56, n)
+}
+
+func (rcv *EOO) MutateRangeUnc(n float32) bool {
+	return rcv.MutateRANGE_UNC(n)
 }
 
 /// Sensor line of sight range bias in km.
@@ -401,9 +577,17 @@ func (rcv *EOO) RANGE_BIAS() float32 {
 	return 0.0
 }
 
+func (rcv *EOO) RangeBias() float32 {
+	return rcv.RANGE_BIAS()
+}
+
 /// Sensor line of sight range bias in km.
 func (rcv *EOO) MutateRANGE_BIAS(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(58, n)
+}
+
+func (rcv *EOO) MutateRangeBias(n float32) bool {
+	return rcv.MutateRANGE_BIAS(n)
 }
 
 /// Range rate in km/s. Reported value should include all applicable corrections.
@@ -415,9 +599,17 @@ func (rcv *EOO) RANGE_RATE() float32 {
 	return 0.0
 }
 
+func (rcv *EOO) RangeRate() float32 {
+	return rcv.RANGE_RATE()
+}
+
 /// Range rate in km/s. Reported value should include all applicable corrections.
 func (rcv *EOO) MutateRANGE_RATE(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(60, n)
+}
+
+func (rcv *EOO) MutateRangeRate(n float32) bool {
+	return rcv.MutateRANGE_RATE(n)
 }
 
 /// One sigma uncertainty in the line of sight range rate, in km/sec.
@@ -429,9 +621,17 @@ func (rcv *EOO) RANGE_RATE_UNC() float32 {
 	return 0.0
 }
 
+func (rcv *EOO) RangeRateUnc() float32 {
+	return rcv.RANGE_RATE_UNC()
+}
+
 /// One sigma uncertainty in the line of sight range rate, in km/sec.
 func (rcv *EOO) MutateRANGE_RATE_UNC(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(62, n)
+}
+
+func (rcv *EOO) MutateRangeRateUnc(n float32) bool {
+	return rcv.MutateRANGE_RATE_UNC(n)
 }
 
 /// Right ascension in degrees. Required metric reporting field for EO observations.
@@ -443,9 +643,17 @@ func (rcv *EOO) RA() float32 {
 	return 0.0
 }
 
+func (rcv *EOO) Ra() float32 {
+	return rcv.RA()
+}
+
 /// Right ascension in degrees. Required metric reporting field for EO observations.
 func (rcv *EOO) MutateRA(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(64, n)
+}
+
+func (rcv *EOO) MutateRa(n float32) bool {
+	return rcv.MutateRA(n)
 }
 
 /// Line of sight right ascension rate of change, in degrees/sec.
@@ -457,9 +665,17 @@ func (rcv *EOO) RA_RATE() float32 {
 	return 0.0
 }
 
+func (rcv *EOO) RaRate() float32 {
+	return rcv.RA_RATE()
+}
+
 /// Line of sight right ascension rate of change, in degrees/sec.
 func (rcv *EOO) MutateRA_RATE(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(66, n)
+}
+
+func (rcv *EOO) MutateRaRate(n float32) bool {
+	return rcv.MutateRA_RATE(n)
 }
 
 /// One sigma uncertainty in the line of sight right ascension angle, in degrees.
@@ -471,9 +687,17 @@ func (rcv *EOO) RA_UNC() float32 {
 	return 0.0
 }
 
+func (rcv *EOO) RaUnc() float32 {
+	return rcv.RA_UNC()
+}
+
 /// One sigma uncertainty in the line of sight right ascension angle, in degrees.
 func (rcv *EOO) MutateRA_UNC(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(68, n)
+}
+
+func (rcv *EOO) MutateRaUnc(n float32) bool {
+	return rcv.MutateRA_UNC(n)
 }
 
 /// Sensor line of sight right ascension bias in degrees.
@@ -485,9 +709,17 @@ func (rcv *EOO) RA_BIAS() float32 {
 	return 0.0
 }
 
+func (rcv *EOO) RaBias() float32 {
+	return rcv.RA_BIAS()
+}
+
 /// Sensor line of sight right ascension bias in degrees.
 func (rcv *EOO) MutateRA_BIAS(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(70, n)
+}
+
+func (rcv *EOO) MutateRaBias(n float32) bool {
+	return rcv.MutateRA_BIAS(n)
 }
 
 /// Declination in degrees. Required metric reporting field for EO observations.
@@ -499,9 +731,17 @@ func (rcv *EOO) DECLINATION() float32 {
 	return 0.0
 }
 
+func (rcv *EOO) Declination() float32 {
+	return rcv.DECLINATION()
+}
+
 /// Declination in degrees. Required metric reporting field for EO observations.
 func (rcv *EOO) MutateDECLINATION(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(72, n)
+}
+
+func (rcv *EOO) MutateDeclination(n float32) bool {
+	return rcv.MutateDECLINATION(n)
 }
 
 /// Line of sight declination rate of change, in degrees/sec.
@@ -513,9 +753,17 @@ func (rcv *EOO) DECLINATION_RATE() float32 {
 	return 0.0
 }
 
+func (rcv *EOO) DeclinationRate() float32 {
+	return rcv.DECLINATION_RATE()
+}
+
 /// Line of sight declination rate of change, in degrees/sec.
 func (rcv *EOO) MutateDECLINATION_RATE(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(74, n)
+}
+
+func (rcv *EOO) MutateDeclinationRate(n float32) bool {
+	return rcv.MutateDECLINATION_RATE(n)
 }
 
 /// One sigma uncertainty in the line of sight declination angle, in degrees.
@@ -527,9 +775,17 @@ func (rcv *EOO) DECLINATION_UNC() float32 {
 	return 0.0
 }
 
+func (rcv *EOO) DeclinationUnc() float32 {
+	return rcv.DECLINATION_UNC()
+}
+
 /// One sigma uncertainty in the line of sight declination angle, in degrees.
 func (rcv *EOO) MutateDECLINATION_UNC(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(76, n)
+}
+
+func (rcv *EOO) MutateDeclinationUnc(n float32) bool {
+	return rcv.MutateDECLINATION_UNC(n)
 }
 
 /// Sensor line of sight declination angle bias in degrees.
@@ -541,9 +797,17 @@ func (rcv *EOO) DECLINATION_BIAS() float32 {
 	return 0.0
 }
 
+func (rcv *EOO) DeclinationBias() float32 {
+	return rcv.DECLINATION_BIAS()
+}
+
 /// Sensor line of sight declination angle bias in degrees.
 func (rcv *EOO) MutateDECLINATION_BIAS(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(78, n)
+}
+
+func (rcv *EOO) MutateDeclinationBias(n float32) bool {
+	return rcv.MutateDECLINATION_BIAS(n)
 }
 
 /// X-component of the unit vector representing the line-of-sight direction in the observer's reference frame.
@@ -555,9 +819,17 @@ func (rcv *EOO) LOSX() float32 {
 	return 0.0
 }
 
+func (rcv *EOO) Losx() float32 {
+	return rcv.LOSX()
+}
+
 /// X-component of the unit vector representing the line-of-sight direction in the observer's reference frame.
 func (rcv *EOO) MutateLOSX(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(80, n)
+}
+
+func (rcv *EOO) MutateLosx(n float32) bool {
+	return rcv.MutateLOSX(n)
 }
 
 /// Y-component of the unit vector representing the line-of-sight direction in the observer's reference frame.
@@ -569,9 +841,17 @@ func (rcv *EOO) LOSY() float32 {
 	return 0.0
 }
 
+func (rcv *EOO) Losy() float32 {
+	return rcv.LOSY()
+}
+
 /// Y-component of the unit vector representing the line-of-sight direction in the observer's reference frame.
 func (rcv *EOO) MutateLOSY(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(82, n)
+}
+
+func (rcv *EOO) MutateLosy(n float32) bool {
+	return rcv.MutateLOSY(n)
 }
 
 /// Z-component of the unit vector representing the line-of-sight direction in the observer's reference frame.
@@ -583,9 +863,17 @@ func (rcv *EOO) LOSZ() float32 {
 	return 0.0
 }
 
+func (rcv *EOO) Losz() float32 {
+	return rcv.LOSZ()
+}
+
 /// Z-component of the unit vector representing the line-of-sight direction in the observer's reference frame.
 func (rcv *EOO) MutateLOSZ(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(84, n)
+}
+
+func (rcv *EOO) MutateLosz(n float32) bool {
+	return rcv.MutateLOSZ(n)
 }
 
 /// One sigma uncertainty in the line-of-sight direction vector components.
@@ -597,9 +885,17 @@ func (rcv *EOO) LOS_UNC() float32 {
 	return 0.0
 }
 
+func (rcv *EOO) LosUnc() float32 {
+	return rcv.LOS_UNC()
+}
+
 /// One sigma uncertainty in the line-of-sight direction vector components.
 func (rcv *EOO) MutateLOS_UNC(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(86, n)
+}
+
+func (rcv *EOO) MutateLosUnc(n float32) bool {
+	return rcv.MutateLOS_UNC(n)
 }
 
 /// X-component of the velocity vector along the line of sight, in km/s.
@@ -611,9 +907,17 @@ func (rcv *EOO) LOSXVEL() float32 {
 	return 0.0
 }
 
+func (rcv *EOO) Losxvel() float32 {
+	return rcv.LOSXVEL()
+}
+
 /// X-component of the velocity vector along the line of sight, in km/s.
 func (rcv *EOO) MutateLOSXVEL(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(88, n)
+}
+
+func (rcv *EOO) MutateLosxvel(n float32) bool {
+	return rcv.MutateLOSXVEL(n)
 }
 
 /// Y-component of the velocity vector along the line of sight, in km/s.
@@ -625,9 +929,17 @@ func (rcv *EOO) LOSYVEL() float32 {
 	return 0.0
 }
 
+func (rcv *EOO) Losyvel() float32 {
+	return rcv.LOSYVEL()
+}
+
 /// Y-component of the velocity vector along the line of sight, in km/s.
 func (rcv *EOO) MutateLOSYVEL(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(90, n)
+}
+
+func (rcv *EOO) MutateLosyvel(n float32) bool {
+	return rcv.MutateLOSYVEL(n)
 }
 
 /// Z-component of the velocity vector along the line of sight, in km/s.
@@ -639,9 +951,17 @@ func (rcv *EOO) LOSZVEL() float32 {
 	return 0.0
 }
 
+func (rcv *EOO) Loszvel() float32 {
+	return rcv.LOSZVEL()
+}
+
 /// Z-component of the velocity vector along the line of sight, in km/s.
 func (rcv *EOO) MutateLOSZVEL(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(92, n)
+}
+
+func (rcv *EOO) MutateLoszvel(n float32) bool {
+	return rcv.MutateLOSZVEL(n)
 }
 
 /// WGS-84 latitude in decimal degrees at the time of the observation.
@@ -653,9 +973,17 @@ func (rcv *EOO) SENLAT() float32 {
 	return 0.0
 }
 
+func (rcv *EOO) Senlat() float32 {
+	return rcv.SENLAT()
+}
+
 /// WGS-84 latitude in decimal degrees at the time of the observation.
 func (rcv *EOO) MutateSENLAT(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(94, n)
+}
+
+func (rcv *EOO) MutateSenlat(n float32) bool {
+	return rcv.MutateSENLAT(n)
 }
 
 /// WGS-84 longitude in decimal degrees at the time of the observation.
@@ -667,9 +995,17 @@ func (rcv *EOO) SENLON() float32 {
 	return 0.0
 }
 
+func (rcv *EOO) Senlon() float32 {
+	return rcv.SENLON()
+}
+
 /// WGS-84 longitude in decimal degrees at the time of the observation.
 func (rcv *EOO) MutateSENLON(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(96, n)
+}
+
+func (rcv *EOO) MutateSenlon(n float32) bool {
+	return rcv.MutateSENLON(n)
 }
 
 /// Sensor height in km relative to the WGS-84 ellipsoid at the time of the observation.
@@ -681,9 +1017,17 @@ func (rcv *EOO) SENALT() float32 {
 	return 0.0
 }
 
+func (rcv *EOO) Senalt() float32 {
+	return rcv.SENALT()
+}
+
 /// Sensor height in km relative to the WGS-84 ellipsoid at the time of the observation.
 func (rcv *EOO) MutateSENALT(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(98, n)
+}
+
+func (rcv *EOO) MutateSenalt(n float32) bool {
+	return rcv.MutateSENALT(n)
 }
 
 /// Cartesian X position in km at the time of the observation.
@@ -695,9 +1039,17 @@ func (rcv *EOO) SENX() float32 {
 	return 0.0
 }
 
+func (rcv *EOO) Senx() float32 {
+	return rcv.SENX()
+}
+
 /// Cartesian X position in km at the time of the observation.
 func (rcv *EOO) MutateSENX(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(100, n)
+}
+
+func (rcv *EOO) MutateSenx(n float32) bool {
+	return rcv.MutateSENX(n)
 }
 
 /// Cartesian Y position in km at the time of the observation.
@@ -709,9 +1061,17 @@ func (rcv *EOO) SENY() float32 {
 	return 0.0
 }
 
+func (rcv *EOO) Seny() float32 {
+	return rcv.SENY()
+}
+
 /// Cartesian Y position in km at the time of the observation.
 func (rcv *EOO) MutateSENY(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(102, n)
+}
+
+func (rcv *EOO) MutateSeny(n float32) bool {
+	return rcv.MutateSENY(n)
 }
 
 /// Cartesian Z position in km at the time of the observation.
@@ -723,9 +1083,17 @@ func (rcv *EOO) SENZ() float32 {
 	return 0.0
 }
 
+func (rcv *EOO) Senz() float32 {
+	return rcv.SENZ()
+}
+
 /// Cartesian Z position in km at the time of the observation.
 func (rcv *EOO) MutateSENZ(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(104, n)
+}
+
+func (rcv *EOO) MutateSenz(n float32) bool {
+	return rcv.MutateSENZ(n)
 }
 
 /// Total number of satellites in the field of view.
@@ -737,9 +1105,17 @@ func (rcv *EOO) FOV_COUNT() int32 {
 	return 0
 }
 
+func (rcv *EOO) FovCount() int32 {
+	return rcv.FOV_COUNT()
+}
+
 /// Total number of satellites in the field of view.
 func (rcv *EOO) MutateFOV_COUNT(n int32) bool {
 	return rcv._tab.MutateInt32Slot(106, n)
+}
+
+func (rcv *EOO) MutateFovCount(n int32) bool {
+	return rcv.MutateFOV_COUNT(n)
 }
 
 /// Number of uncorrelated satellites in the field of view (JCO).
@@ -751,9 +1127,17 @@ func (rcv *EOO) FOV_COUNT_UCTS() int32 {
 	return 0
 }
 
+func (rcv *EOO) FovCountUcts() int32 {
+	return rcv.FOV_COUNT_UCTS()
+}
+
 /// Number of uncorrelated satellites in the field of view (JCO).
 func (rcv *EOO) MutateFOV_COUNT_UCTS(n int32) bool {
 	return rcv._tab.MutateInt32Slot(108, n)
+}
+
+func (rcv *EOO) MutateFovCountUcts(n int32) bool {
+	return rcv.MutateFOV_COUNT_UCTS(n)
 }
 
 /// Image exposure duration in seconds. For observations performed using frame stacking or synthetic tracking methods, 
@@ -767,11 +1151,19 @@ func (rcv *EOO) EXP_DURATION() float32 {
 	return 0.0
 }
 
+func (rcv *EOO) ExpDuration() float32 {
+	return rcv.EXP_DURATION()
+}
+
 /// Image exposure duration in seconds. For observations performed using frame stacking or synthetic tracking methods, 
 /// the exposure duration should be the total integration time. This field is highly recommended / required if the 
 /// observations are going to be used for photometric processing.
 func (rcv *EOO) MutateEXP_DURATION(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(110, n)
+}
+
+func (rcv *EOO) MutateExpDuration(n float32) bool {
+	return rcv.MutateEXP_DURATION(n)
 }
 
 /// Formula: 2.5 * log_10 (zero_mag_counts / EXP_DURATION).
@@ -783,9 +1175,17 @@ func (rcv *EOO) ZEROPTD() float32 {
 	return 0.0
 }
 
+func (rcv *EOO) Zeroptd() float32 {
+	return rcv.ZEROPTD()
+}
+
 /// Formula: 2.5 * log_10 (zero_mag_counts / EXP_DURATION).
 func (rcv *EOO) MutateZEROPTD(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(112, n)
+}
+
+func (rcv *EOO) MutateZeroptd(n float32) bool {
+	return rcv.MutateZEROPTD(n)
 }
 
 /// Net object signature = counts / EXP_DURATION.
@@ -797,9 +1197,17 @@ func (rcv *EOO) NET_OBJ_SIG() float32 {
 	return 0.0
 }
 
+func (rcv *EOO) NetObjSig() float32 {
+	return rcv.NET_OBJ_SIG()
+}
+
 /// Net object signature = counts / EXP_DURATION.
 func (rcv *EOO) MutateNET_OBJ_SIG(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(114, n)
+}
+
+func (rcv *EOO) MutateNetObjSig(n float32) bool {
+	return rcv.MutateNET_OBJ_SIG(n)
 }
 
 /// Net object signature uncertainty = counts uncertainty / EXP_DURATION.
@@ -811,9 +1219,17 @@ func (rcv *EOO) NET_OBJ_SIG_UNC() float32 {
 	return 0.0
 }
 
+func (rcv *EOO) NetObjSigUnc() float32 {
+	return rcv.NET_OBJ_SIG_UNC()
+}
+
 /// Net object signature uncertainty = counts uncertainty / EXP_DURATION.
 func (rcv *EOO) MutateNET_OBJ_SIG_UNC(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(116, n)
+}
+
+func (rcv *EOO) MutateNetObjSigUnc(n float32) bool {
+	return rcv.MutateNET_OBJ_SIG_UNC(n)
 }
 
 /// Measure of observed brightness calibrated against the Gaia G-band.
@@ -825,9 +1241,17 @@ func (rcv *EOO) MAG() float32 {
 	return 0.0
 }
 
+func (rcv *EOO) Mag() float32 {
+	return rcv.MAG()
+}
+
 /// Measure of observed brightness calibrated against the Gaia G-band.
 func (rcv *EOO) MutateMAG(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(118, n)
+}
+
+func (rcv *EOO) MutateMag(n float32) bool {
+	return rcv.MutateMAG(n)
 }
 
 /// Uncertainty of the observed brightness.
@@ -839,9 +1263,17 @@ func (rcv *EOO) MAG_UNC() float32 {
 	return 0.0
 }
 
+func (rcv *EOO) MagUnc() float32 {
+	return rcv.MAG_UNC()
+}
+
 /// Uncertainty of the observed brightness.
 func (rcv *EOO) MutateMAG_UNC(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(120, n)
+}
+
+func (rcv *EOO) MutateMagUnc(n float32) bool {
+	return rcv.MutateMAG_UNC(n)
 }
 
 /// [Definition needed].
@@ -853,9 +1285,17 @@ func (rcv *EOO) MAG_NORM_RANGE() float32 {
 	return 0.0
 }
 
+func (rcv *EOO) MagNormRange() float32 {
+	return rcv.MAG_NORM_RANGE()
+}
+
 /// [Definition needed].
 func (rcv *EOO) MutateMAG_NORM_RANGE(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(122, n)
+}
+
+func (rcv *EOO) MutateMagNormRange(n float32) bool {
+	return rcv.MutateMAG_NORM_RANGE(n)
 }
 
 /// Computed estimate of the latitude, positive degrees north. It should be computed based on the assumed slant range 
@@ -868,10 +1308,18 @@ func (rcv *EOO) GEOLAT() float32 {
 	return 0.0
 }
 
+func (rcv *EOO) Geolat() float32 {
+	return rcv.GEOLAT()
+}
+
 /// Computed estimate of the latitude, positive degrees north. It should be computed based on the assumed slant range 
 /// and corresponding viewing geometry. It must NOT be computed from the orbit state.
 func (rcv *EOO) MutateGEOLAT(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(124, n)
+}
+
+func (rcv *EOO) MutateGeolat(n float32) bool {
+	return rcv.MutateGEOLAT(n)
 }
 
 /// Computed estimate of the longitude as +/- 180 degrees east. It should be computed based on the assumed slant range 
@@ -884,10 +1332,18 @@ func (rcv *EOO) GEOLON() float32 {
 	return 0.0
 }
 
+func (rcv *EOO) Geolon() float32 {
+	return rcv.GEOLON()
+}
+
 /// Computed estimate of the longitude as +/- 180 degrees east. It should be computed based on the assumed slant range 
 /// and viewing geometry. It must NOT be computed from the orbit state.
 func (rcv *EOO) MutateGEOLON(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(126, n)
+}
+
+func (rcv *EOO) MutateGeolon(n float32) bool {
+	return rcv.MutateGEOLON(n)
 }
 
 /// Computed estimate of satellite altitude in km at the reported location. It must NOT be computed from the orbit state.
@@ -899,9 +1355,17 @@ func (rcv *EOO) GEOALT() float32 {
 	return 0.0
 }
 
+func (rcv *EOO) Geoalt() float32 {
+	return rcv.GEOALT()
+}
+
 /// Computed estimate of satellite altitude in km at the reported location. It must NOT be computed from the orbit state.
 func (rcv *EOO) MutateGEOALT(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(128, n)
+}
+
+func (rcv *EOO) MutateGeoalt(n float32) bool {
+	return rcv.MutateGEOALT(n)
 }
 
 /// Computed estimate of the slant range in km. It must NOT be computed from the orbit state.
@@ -913,9 +1377,17 @@ func (rcv *EOO) GEORANGE() float32 {
 	return 0.0
 }
 
+func (rcv *EOO) Georange() float32 {
+	return rcv.GEORANGE()
+}
+
 /// Computed estimate of the slant range in km. It must NOT be computed from the orbit state.
 func (rcv *EOO) MutateGEORANGE(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(130, n)
+}
+
+func (rcv *EOO) MutateGeorange(n float32) bool {
+	return rcv.MutateGEORANGE(n)
 }
 
 /// Average Sky Background signal, in Magnitudes. Sky Background refers to the incoming light from an apparently 
@@ -928,10 +1400,18 @@ func (rcv *EOO) SKY_BKGRND() float32 {
 	return 0.0
 }
 
+func (rcv *EOO) SkyBkgrnd() float32 {
+	return rcv.SKY_BKGRND()
+}
+
 /// Average Sky Background signal, in Magnitudes. Sky Background refers to the incoming light from an apparently 
 /// empty part of the night sky.
 func (rcv *EOO) MutateSKY_BKGRND(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(132, n)
+}
+
+func (rcv *EOO) MutateSkyBkgrnd(n float32) bool {
+	return rcv.MutateSKY_BKGRND(n)
 }
 
 /// Primary Extinction Coefficient, in Magnitudes. Primary Extinction is the coefficient applied to the airmass 
@@ -946,12 +1426,20 @@ func (rcv *EOO) PRIMARY_EXTINCTION() float32 {
 	return 0.0
 }
 
+func (rcv *EOO) PrimaryExtinction() float32 {
+	return rcv.PRIMARY_EXTINCTION()
+}
+
 /// Primary Extinction Coefficient, in Magnitudes. Primary Extinction is the coefficient applied to the airmass 
 /// to determine how much the observed visual magnitude has been attenuated by the atmosphere. Extinction, in general, 
 /// describes the absorption and scattering of electromagnetic radiation by dust and gas between an emitting astronomical 
 /// object and the observer.
 func (rcv *EOO) MutatePRIMARY_EXTINCTION(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(134, n)
+}
+
+func (rcv *EOO) MutatePrimaryExtinction(n float32) bool {
+	return rcv.MutatePRIMARY_EXTINCTION(n)
 }
 
 /// Primary Extinction Coefficient Uncertainty, in Magnitudes.
@@ -963,9 +1451,17 @@ func (rcv *EOO) PRIMARY_EXTINCTION_UNC() float32 {
 	return 0.0
 }
 
+func (rcv *EOO) PrimaryExtinctionUnc() float32 {
+	return rcv.PRIMARY_EXTINCTION_UNC()
+}
+
 /// Primary Extinction Coefficient Uncertainty, in Magnitudes.
 func (rcv *EOO) MutatePRIMARY_EXTINCTION_UNC(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(136, n)
+}
+
+func (rcv *EOO) MutatePrimaryExtinctionUnc(n float32) bool {
+	return rcv.MutatePRIMARY_EXTINCTION_UNC(n)
 }
 
 /// The angle, in degrees, between the target-to-observer vector and the target-to-sun vector. Recommend using the 
@@ -978,10 +1474,18 @@ func (rcv *EOO) SOLAR_PHASE_ANGLE() float32 {
 	return 0.0
 }
 
+func (rcv *EOO) SolarPhaseAngle() float32 {
+	return rcv.SOLAR_PHASE_ANGLE()
+}
+
 /// The angle, in degrees, between the target-to-observer vector and the target-to-sun vector. Recommend using the 
 /// calculation listed in the EOSSA documentation, pg 106 of the EOSSA spec.
 func (rcv *EOO) MutateSOLAR_PHASE_ANGLE(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(138, n)
+}
+
+func (rcv *EOO) MutateSolarPhaseAngle(n float32) bool {
+	return rcv.MutateSOLAR_PHASE_ANGLE(n)
 }
 
 /// The angle, in degrees, between the projections of the target-to-observer vector and the target-to-sun vector 
@@ -995,11 +1499,19 @@ func (rcv *EOO) SOLAR_EQ_PHASE_ANGLE() float32 {
 	return 0.0
 }
 
+func (rcv *EOO) SolarEqPhaseAngle() float32 {
+	return rcv.SOLAR_EQ_PHASE_ANGLE()
+}
+
 /// The angle, in degrees, between the projections of the target-to-observer vector and the target-to-sun vector 
 /// onto the equatorial plane. The convention used is negative when closing (i.e., before the opposition) 
 /// and positive when opening (after the opposition).
 func (rcv *EOO) MutateSOLAR_EQ_PHASE_ANGLE(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(140, n)
+}
+
+func (rcv *EOO) MutateSolarEqPhaseAngle(n float32) bool {
+	return rcv.MutateSOLAR_EQ_PHASE_ANGLE(n)
 }
 
 /// Angle from the sun to the equatorial plane.
@@ -1011,9 +1523,17 @@ func (rcv *EOO) SOLAR_DEC_ANGLE() float32 {
 	return 0.0
 }
 
+func (rcv *EOO) SolarDecAngle() float32 {
+	return rcv.SOLAR_DEC_ANGLE()
+}
+
 /// Angle from the sun to the equatorial plane.
 func (rcv *EOO) MutateSOLAR_DEC_ANGLE(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(142, n)
+}
+
+func (rcv *EOO) MutateSolarDecAngle(n float32) bool {
+	return rcv.MutateSOLAR_DEC_ANGLE(n)
 }
 
 /// Shutter delay in seconds.
@@ -1025,9 +1545,17 @@ func (rcv *EOO) SHUTTER_DELAY() float32 {
 	return 0.0
 }
 
+func (rcv *EOO) ShutterDelay() float32 {
+	return rcv.SHUTTER_DELAY()
+}
+
 /// Shutter delay in seconds.
 func (rcv *EOO) MutateSHUTTER_DELAY(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(144, n)
+}
+
+func (rcv *EOO) MutateShutterDelay(n float32) bool {
+	return rcv.MutateSHUTTER_DELAY(n)
 }
 
 /// Sensor timing bias in seconds.
@@ -1039,9 +1567,17 @@ func (rcv *EOO) TIMING_BIAS() float32 {
 	return 0.0
 }
 
+func (rcv *EOO) TimingBias() float32 {
+	return rcv.TIMING_BIAS()
+}
+
 /// Sensor timing bias in seconds.
 func (rcv *EOO) MutateTIMING_BIAS(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(146, n)
+}
+
+func (rcv *EOO) MutateTimingBias(n float32) bool {
+	return rcv.MutateTIMING_BIAS(n)
 }
 
 /// Optional URI location in the document repository of the raw file parsed by the system to produce this record. 
@@ -1051,6 +1587,10 @@ func (rcv *EOO) RAW_FILE_URI() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *EOO) RawFileUri() []byte {
+	return rcv.RAW_FILE_URI()
 }
 
 /// Optional URI location in the document repository of the raw file parsed by the system to produce this record. 
@@ -1063,9 +1603,17 @@ func (rcv *EOO) INTENSITY() float32 {
 	return 0.0
 }
 
+func (rcv *EOO) Intensity() float32 {
+	return rcv.INTENSITY()
+}
+
 /// Intensity of the target for IR observations, in kw/sr/em.
 func (rcv *EOO) MutateINTENSITY(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(150, n)
+}
+
+func (rcv *EOO) MutateIntensity(n float32) bool {
+	return rcv.MutateINTENSITY(n)
 }
 
 /// Background intensity for IR observations, in kw/sr/um.
@@ -1077,9 +1625,17 @@ func (rcv *EOO) BG_INTENSITY() float32 {
 	return 0.0
 }
 
+func (rcv *EOO) BgIntensity() float32 {
+	return rcv.BG_INTENSITY()
+}
+
 /// Background intensity for IR observations, in kw/sr/um.
 func (rcv *EOO) MutateBG_INTENSITY(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(152, n)
+}
+
+func (rcv *EOO) MutateBgIntensity(n float32) bool {
+	return rcv.MutateBG_INTENSITY(n)
 }
 
 /// Optional source-provided and searchable metadata or descriptor of the data.
@@ -1091,6 +1647,10 @@ func (rcv *EOO) DESCRIPTOR() []byte {
 	return nil
 }
 
+func (rcv *EOO) Descriptor() []byte {
+	return rcv.DESCRIPTOR()
+}
+
 /// Optional source-provided and searchable metadata or descriptor of the data.
 /// Source of the data.
 func (rcv *EOO) SOURCE() []byte {
@@ -1099,6 +1659,10 @@ func (rcv *EOO) SOURCE() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *EOO) Source() []byte {
+	return rcv.SOURCE()
 }
 
 /// Source of the data.
@@ -1113,6 +1677,10 @@ func (rcv *EOO) ORIGIN() []byte {
 	return nil
 }
 
+func (rcv *EOO) Origin() []byte {
+	return rcv.ORIGIN()
+}
+
 /// Originating system or organization which produced the data, if different from the source.
 /// The origin may be different than the source if the source was a mediating system which forwarded 
 /// the data on behalf of the origin system. If null, the source may be assumed to be the origin.
@@ -1125,9 +1693,17 @@ func (rcv *EOO) DATA_MODE() DataMode {
 	return 0
 }
 
+func (rcv *EOO) DataMode() DataMode {
+	return rcv.DATA_MODE()
+}
+
 /// Indicator of whether the data is EXERCISE, REAL, SIMULATED, or TEST.
 func (rcv *EOO) MutateDATA_MODE(n DataMode) bool {
 	return rcv._tab.MutateInt8Slot(160, int8(n))
+}
+
+func (rcv *EOO) MutateDataMode(n DataMode) bool {
+	return rcv.MutateDATA_MODE(n)
 }
 
 /// Time the row was created in the database, auto-populated by the system.
@@ -1139,6 +1715,10 @@ func (rcv *EOO) CREATED_AT() []byte {
 	return nil
 }
 
+func (rcv *EOO) CreatedAt() []byte {
+	return rcv.CREATED_AT()
+}
+
 /// Time the row was created in the database, auto-populated by the system.
 /// Application user who created the row in the database, auto-populated by the system.
 func (rcv *EOO) CREATED_BY() []byte {
@@ -1147,6 +1727,10 @@ func (rcv *EOO) CREATED_BY() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *EOO) CreatedBy() []byte {
+	return rcv.CREATED_BY()
 }
 
 /// Application user who created the row in the database, auto-populated by the system.
@@ -1162,6 +1746,10 @@ func (rcv *EOO) REFERENCE_FRAME(obj *RFM) *RFM {
 		return obj
 	}
 	return nil
+}
+
+func (rcv *EOO) ReferenceFrame(obj *RFM) *RFM {
+	return rcv.REFERENCE_FRAME(obj)
 }
 
 /// EO observations are assumed to be topocentric J2000 coordinates ('J2000') as defined by the IAU, unless otherwise specified.
@@ -1181,6 +1769,10 @@ func (rcv *EOO) SEN_REFERENCE_FRAME(obj *RFM) *RFM {
 	return nil
 }
 
+func (rcv *EOO) SenReferenceFrame(obj *RFM) *RFM {
+	return rcv.SEN_REFERENCE_FRAME(obj)
+}
+
 /// The sensor reference frame is assumed to be the International Terrestrial Reference Frame (ITRF), 
 /// unless otherwise specified. (ITRF is equivalent to Earth-Centered Earth-Fixed (ECEF) for this purpose). 
 /// Lat / long / height values should be reported using the WGS-84 ellipsoid, where applicable.
@@ -1193,9 +1785,17 @@ func (rcv *EOO) UMBRA() bool {
 	return false
 }
 
+func (rcv *EOO) Umbra() bool {
+	return rcv.UMBRA()
+}
+
 /// Boolean indicating that the target object was in umbral eclipse at the time of this observation.
 func (rcv *EOO) MutateUMBRA(n bool) bool {
 	return rcv._tab.MutateBoolSlot(170, n)
+}
+
+func (rcv *EOO) MutateUmbra(n bool) bool {
+	return rcv.MutateUMBRA(n)
 }
 
 /// Boolean indicating that the target object was in a penumbral eclipse at the time of this observation.
@@ -1208,10 +1808,18 @@ func (rcv *EOO) PENUMBRA() bool {
 	return false
 }
 
+func (rcv *EOO) Penumbra() bool {
+	return rcv.PENUMBRA()
+}
+
 /// Boolean indicating that the target object was in a penumbral eclipse at the time of this observation.
 /// This field is highly recommended if the observations will be used for photometric processing.
 func (rcv *EOO) MutatePENUMBRA(n bool) bool {
 	return rcv._tab.MutateBoolSlot(172, n)
+}
+
+func (rcv *EOO) MutatePenumbra(n bool) bool {
+	return rcv.MutatePENUMBRA(n)
 }
 
 /// The originating source network on which this record was created, auto-populated by the system.
@@ -1221,6 +1829,10 @@ func (rcv *EOO) ORIG_NETWORK() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *EOO) OrigNetwork() []byte {
+	return rcv.ORIG_NETWORK()
 }
 
 /// The originating source network on which this record was created, auto-populated by the system.
@@ -1233,6 +1845,10 @@ func (rcv *EOO) SOURCE_DL() []byte {
 	return nil
 }
 
+func (rcv *EOO) SourceDl() []byte {
+	return rcv.SOURCE_DL()
+}
+
 /// The source from which this record was received.
 /// Device Type
 func (rcv *EOO) TYPE() DeviceType {
@@ -1243,9 +1859,17 @@ func (rcv *EOO) TYPE() DeviceType {
 	return 0
 }
 
+func (rcv *EOO) Type() DeviceType {
+	return rcv.TYPE()
+}
+
 /// Device Type
 func (rcv *EOO) MutateTYPE(n DeviceType) bool {
 	return rcv._tab.MutateInt8Slot(178, int8(n))
+}
+
+func (rcv *EOO) MutateType(n DeviceType) bool {
+	return rcv.MutateTYPE(n)
 }
 
 /// True if measured, false if computed. Required if azimuth is reported.
@@ -1257,9 +1881,17 @@ func (rcv *EOO) AZIMUTH_MEASURED() bool {
 	return false
 }
 
+func (rcv *EOO) AzimuthMeasured() bool {
+	return rcv.AZIMUTH_MEASURED()
+}
+
 /// True if measured, false if computed. Required if azimuth is reported.
 func (rcv *EOO) MutateAZIMUTH_MEASURED(n bool) bool {
 	return rcv._tab.MutateBoolSlot(180, n)
+}
+
+func (rcv *EOO) MutateAzimuthMeasured(n bool) bool {
+	return rcv.MutateAZIMUTH_MEASURED(n)
 }
 
 /// True if measured, false if computed. Required if elevation is reported.
@@ -1271,9 +1903,17 @@ func (rcv *EOO) ELEVATION_MEASURED() bool {
 	return false
 }
 
+func (rcv *EOO) ElevationMeasured() bool {
+	return rcv.ELEVATION_MEASURED()
+}
+
 /// True if measured, false if computed. Required if elevation is reported.
 func (rcv *EOO) MutateELEVATION_MEASURED(n bool) bool {
 	return rcv._tab.MutateBoolSlot(182, n)
+}
+
+func (rcv *EOO) MutateElevationMeasured(n bool) bool {
+	return rcv.MutateELEVATION_MEASURED(n)
 }
 
 /// True if measured, false if computed. Required if range is reported.
@@ -1285,9 +1925,17 @@ func (rcv *EOO) RANGE_MEASURED() bool {
 	return false
 }
 
+func (rcv *EOO) RangeMeasured() bool {
+	return rcv.RANGE_MEASURED()
+}
+
 /// True if measured, false if computed. Required if range is reported.
 func (rcv *EOO) MutateRANGE_MEASURED(n bool) bool {
 	return rcv._tab.MutateBoolSlot(184, n)
+}
+
+func (rcv *EOO) MutateRangeMeasured(n bool) bool {
+	return rcv.MutateRANGE_MEASURED(n)
 }
 
 /// True if measured, false if computed. Required if range-rate is reported.
@@ -1299,9 +1947,17 @@ func (rcv *EOO) RANGERATE_MEASURED() bool {
 	return false
 }
 
+func (rcv *EOO) RangerateMeasured() bool {
+	return rcv.RANGERATE_MEASURED()
+}
+
 /// True if measured, false if computed. Required if range-rate is reported.
 func (rcv *EOO) MutateRANGERATE_MEASURED(n bool) bool {
 	return rcv._tab.MutateBoolSlot(186, n)
+}
+
+func (rcv *EOO) MutateRangerateMeasured(n bool) bool {
+	return rcv.MutateRANGERATE_MEASURED(n)
 }
 
 /// True if measured, false if computed. Required if right ascension is reported.
@@ -1313,9 +1969,17 @@ func (rcv *EOO) RA_MEASURED() bool {
 	return false
 }
 
+func (rcv *EOO) RaMeasured() bool {
+	return rcv.RA_MEASURED()
+}
+
 /// True if measured, false if computed. Required if right ascension is reported.
 func (rcv *EOO) MutateRA_MEASURED(n bool) bool {
 	return rcv._tab.MutateBoolSlot(188, n)
+}
+
+func (rcv *EOO) MutateRaMeasured(n bool) bool {
+	return rcv.MutateRA_MEASURED(n)
 }
 
 /// True if measured, false if computed. Required if declination is reported.
@@ -1327,9 +1991,17 @@ func (rcv *EOO) DECLINATION_MEASURED() bool {
 	return false
 }
 
+func (rcv *EOO) DeclinationMeasured() bool {
+	return rcv.DECLINATION_MEASURED()
+}
+
 /// True if measured, false if computed. Required if declination is reported.
 func (rcv *EOO) MutateDECLINATION_MEASURED(n bool) bool {
 	return rcv._tab.MutateBoolSlot(190, n)
+}
+
+func (rcv *EOO) MutateDeclinationMeasured(n bool) bool {
+	return rcv.MutateDECLINATION_MEASURED(n)
 }
 
 /// National Imagery Interpretability Rating Scale (NIIRS). Ranging from 0 (lowest) to 9 (highest).
@@ -1341,9 +2013,17 @@ func (rcv *EOO) NIIRS() float32 {
 	return 0.0
 }
 
+func (rcv *EOO) Niirs() float32 {
+	return rcv.NIIRS()
+}
+
 /// National Imagery Interpretability Rating Scale (NIIRS). Ranging from 0 (lowest) to 9 (highest).
 func (rcv *EOO) MutateNIIRS(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(192, n)
+}
+
+func (rcv *EOO) MutateNiirs(n float32) bool {
+	return rcv.MutateNIIRS(n)
 }
 
 /// Ground sample distance in meters per pixel.
@@ -1355,9 +2035,17 @@ func (rcv *EOO) METERS_PER_PIXEL() float32 {
 	return 0.0
 }
 
+func (rcv *EOO) MetersPerPixel() float32 {
+	return rcv.METERS_PER_PIXEL()
+}
+
 /// Ground sample distance in meters per pixel.
 func (rcv *EOO) MutateMETERS_PER_PIXEL(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(194, n)
+}
+
+func (rcv *EOO) MutateMetersPerPixel(n float32) bool {
+	return rcv.MutateMETERS_PER_PIXEL(n)
 }
 
 /// Signal-to-noise ratio of the image. Higher values indicate cleaner imagery.
@@ -1369,9 +2057,17 @@ func (rcv *EOO) IMAGE_SNR() float32 {
 	return 0.0
 }
 
+func (rcv *EOO) ImageSnr() float32 {
+	return rcv.IMAGE_SNR()
+}
+
 /// Signal-to-noise ratio of the image. Higher values indicate cleaner imagery.
 func (rcv *EOO) MutateIMAGE_SNR(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(196, n)
+}
+
+func (rcv *EOO) MutateImageSnr(n float32) bool {
+	return rcv.MutateIMAGE_SNR(n)
 }
 
 /// Bit depth of the image (e.g., 8, 12, 16).
@@ -1383,9 +2079,17 @@ func (rcv *EOO) IMAGE_BIT_DEPTH() int32 {
 	return 0
 }
 
+func (rcv *EOO) ImageBitDepth() int32 {
+	return rcv.IMAGE_BIT_DEPTH()
+}
+
 /// Bit depth of the image (e.g., 8, 12, 16).
 func (rcv *EOO) MutateIMAGE_BIT_DEPTH(n int32) bool {
 	return rcv._tab.MutateInt32Slot(198, n)
+}
+
+func (rcv *EOO) MutateImageBitDepth(n int32) bool {
+	return rcv.MutateIMAGE_BIT_DEPTH(n)
 }
 
 /// Width of the image in pixels.
@@ -1397,9 +2101,17 @@ func (rcv *EOO) IMAGE_WIDTH() int32 {
 	return 0
 }
 
+func (rcv *EOO) ImageWidth() int32 {
+	return rcv.IMAGE_WIDTH()
+}
+
 /// Width of the image in pixels.
 func (rcv *EOO) MutateIMAGE_WIDTH(n int32) bool {
 	return rcv._tab.MutateInt32Slot(200, n)
+}
+
+func (rcv *EOO) MutateImageWidth(n int32) bool {
+	return rcv.MutateIMAGE_WIDTH(n)
 }
 
 /// Height of the image in pixels.
@@ -1411,9 +2123,17 @@ func (rcv *EOO) IMAGE_HEIGHT() int32 {
 	return 0
 }
 
+func (rcv *EOO) ImageHeight() int32 {
+	return rcv.IMAGE_HEIGHT()
+}
+
 /// Height of the image in pixels.
 func (rcv *EOO) MutateIMAGE_HEIGHT(n int32) bool {
 	return rcv._tab.MutateInt32Slot(202, n)
+}
+
+func (rcv *EOO) MutateImageHeight(n int32) bool {
+	return rcv.MutateIMAGE_HEIGHT(n)
 }
 
 /// Compression type used for the image, e.g., "JPEG", "PNG", "RAW", etc.
@@ -1423,6 +2143,10 @@ func (rcv *EOO) IMAGE_COMPRESSION() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *EOO) ImageCompression() []byte {
+	return rcv.IMAGE_COMPRESSION()
 }
 
 /// Compression type used for the image, e.g., "JPEG", "PNG", "RAW", etc.
@@ -1435,9 +2159,17 @@ func (rcv *EOO) IMAGE_COMPRESSION_RATIO() float32 {
 	return 0.0
 }
 
+func (rcv *EOO) ImageCompressionRatio() float32 {
+	return rcv.IMAGE_COMPRESSION_RATIO()
+}
+
 /// Compression ratio used (original size / compressed size), if applicable.
 func (rcv *EOO) MutateIMAGE_COMPRESSION_RATIO(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(206, n)
+}
+
+func (rcv *EOO) MutateImageCompressionRatio(n float32) bool {
+	return rcv.MutateIMAGE_COMPRESSION_RATIO(n)
 }
 
 /// URI to the processed image used for this observation.
@@ -1447,6 +2179,10 @@ func (rcv *EOO) PROCESSED_IMAGE_URI() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *EOO) ProcessedImageUri() []byte {
+	return rcv.PROCESSED_IMAGE_URI()
 }
 
 /// URI to the processed image used for this observation.
@@ -1459,9 +2195,17 @@ func (rcv *EOO) IMAGE_AUTO_ENHANCED() bool {
 	return false
 }
 
+func (rcv *EOO) ImageAutoEnhanced() bool {
+	return rcv.IMAGE_AUTO_ENHANCED()
+}
+
 /// Flag indicating whether the image was auto-enhanced (e.g., contrast stretch, denoise).
 func (rcv *EOO) MutateIMAGE_AUTO_ENHANCED(n bool) bool {
 	return rcv._tab.MutateBoolSlot(210, n)
+}
+
+func (rcv *EOO) MutateImageAutoEnhanced(n bool) bool {
+	return rcv.MutateIMAGE_AUTO_ENHANCED(n)
 }
 
 /// True if the observation was taken with multiple frames stacked into one image.
@@ -1473,9 +2217,17 @@ func (rcv *EOO) MULTI_FRAME_STACKED() bool {
 	return false
 }
 
+func (rcv *EOO) MultiFrameStacked() bool {
+	return rcv.MULTI_FRAME_STACKED()
+}
+
 /// True if the observation was taken with multiple frames stacked into one image.
 func (rcv *EOO) MutateMULTI_FRAME_STACKED(n bool) bool {
 	return rcv._tab.MutateBoolSlot(212, n)
+}
+
+func (rcv *EOO) MutateMultiFrameStacked(n bool) bool {
+	return rcv.MutateMULTI_FRAME_STACKED(n)
 }
 
 /// True if synthetic tracking was used to create the image.
@@ -1487,9 +2239,17 @@ func (rcv *EOO) SYNTHETIC_TRACKING_USED() bool {
 	return false
 }
 
+func (rcv *EOO) SyntheticTrackingUsed() bool {
+	return rcv.SYNTHETIC_TRACKING_USED()
+}
+
 /// True if synthetic tracking was used to create the image.
 func (rcv *EOO) MutateSYNTHETIC_TRACKING_USED(n bool) bool {
 	return rcv._tab.MutateBoolSlot(214, n)
+}
+
+func (rcv *EOO) MutateSyntheticTrackingUsed(n bool) bool {
+	return rcv.MutateSYNTHETIC_TRACKING_USED(n)
 }
 
 /// Sharpness metric of the image based on the Tenengrad method or variance of Laplacian. Higher values indicate sharper images.
@@ -1501,9 +2261,17 @@ func (rcv *EOO) IMAGE_SHARPNESS() float32 {
 	return 0.0
 }
 
+func (rcv *EOO) ImageSharpness() float32 {
+	return rcv.IMAGE_SHARPNESS()
+}
+
 /// Sharpness metric of the image based on the Tenengrad method or variance of Laplacian. Higher values indicate sharper images.
 func (rcv *EOO) MutateIMAGE_SHARPNESS(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(216, n)
+}
+
+func (rcv *EOO) MutateImageSharpness(n float32) bool {
+	return rcv.MutateIMAGE_SHARPNESS(n)
 }
 
 /// Noise level of the image, estimated via pixel intensity variance in background regions.
@@ -1515,9 +2283,17 @@ func (rcv *EOO) IMAGE_NOISE_STDDEV() float32 {
 	return 0.0
 }
 
+func (rcv *EOO) ImageNoiseStddev() float32 {
+	return rcv.IMAGE_NOISE_STDDEV()
+}
+
 /// Noise level of the image, estimated via pixel intensity variance in background regions.
 func (rcv *EOO) MutateIMAGE_NOISE_STDDEV(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(218, n)
+}
+
+func (rcv *EOO) MutateImageNoiseStddev(n float32) bool {
+	return rcv.MutateIMAGE_NOISE_STDDEV(n)
 }
 
 /// Contrast metric of the image, such as Michelson contrast or RMS contrast.
@@ -1529,9 +2305,17 @@ func (rcv *EOO) IMAGE_CONTRAST() float32 {
 	return 0.0
 }
 
+func (rcv *EOO) ImageContrast() float32 {
+	return rcv.IMAGE_CONTRAST()
+}
+
 /// Contrast metric of the image, such as Michelson contrast or RMS contrast.
 func (rcv *EOO) MutateIMAGE_CONTRAST(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(220, n)
+}
+
+func (rcv *EOO) MutateImageContrast(n float32) bool {
+	return rcv.MutateIMAGE_CONTRAST(n)
 }
 
 /// Dynamic range of the image (max pixel value / min pixel value), indicating tonal spread.
@@ -1543,9 +2327,17 @@ func (rcv *EOO) IMAGE_DYNAMIC_RANGE() float32 {
 	return 0.0
 }
 
+func (rcv *EOO) ImageDynamicRange() float32 {
+	return rcv.IMAGE_DYNAMIC_RANGE()
+}
+
 /// Dynamic range of the image (max pixel value / min pixel value), indicating tonal spread.
 func (rcv *EOO) MutateIMAGE_DYNAMIC_RANGE(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(222, n)
+}
+
+func (rcv *EOO) MutateImageDynamicRange(n float32) bool {
+	return rcv.MutateIMAGE_DYNAMIC_RANGE(n)
 }
 
 /// Entropy of the image, representing the richness of information content. Higher entropy suggests higher texture detail.
@@ -1557,9 +2349,17 @@ func (rcv *EOO) IMAGE_ENTROPY() float32 {
 	return 0.0
 }
 
+func (rcv *EOO) ImageEntropy() float32 {
+	return rcv.IMAGE_ENTROPY()
+}
+
 /// Entropy of the image, representing the richness of information content. Higher entropy suggests higher texture detail.
 func (rcv *EOO) MutateIMAGE_ENTROPY(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(224, n)
+}
+
+func (rcv *EOO) MutateImageEntropy(n float32) bool {
+	return rcv.MutateIMAGE_ENTROPY(n)
 }
 
 /// Background uniformity metric (e.g., mean gradient in background areas). Lower values indicate more uniform background.
@@ -1571,9 +2371,17 @@ func (rcv *EOO) BACKGROUND_UNIFORMITY() float32 {
 	return 0.0
 }
 
+func (rcv *EOO) BackgroundUniformity() float32 {
+	return rcv.BACKGROUND_UNIFORMITY()
+}
+
 /// Background uniformity metric (e.g., mean gradient in background areas). Lower values indicate more uniform background.
 func (rcv *EOO) MutateBACKGROUND_UNIFORMITY(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(226, n)
+}
+
+func (rcv *EOO) MutateBackgroundUniformity(n float32) bool {
+	return rcv.MutateBACKGROUND_UNIFORMITY(n)
 }
 
 /// Mean background level, computed from non-object regions in pixel units.
@@ -1585,9 +2393,17 @@ func (rcv *EOO) BACKGROUND_MEAN_LEVEL() float32 {
 	return 0.0
 }
 
+func (rcv *EOO) BackgroundMeanLevel() float32 {
+	return rcv.BACKGROUND_MEAN_LEVEL()
+}
+
 /// Mean background level, computed from non-object regions in pixel units.
 func (rcv *EOO) MutateBACKGROUND_MEAN_LEVEL(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(228, n)
+}
+
+func (rcv *EOO) MutateBackgroundMeanLevel(n float32) bool {
+	return rcv.MutateBACKGROUND_MEAN_LEVEL(n)
 }
 
 /// Percentage of saturated pixels in the image. Indicates overexposure when high.
@@ -1599,9 +2415,17 @@ func (rcv *EOO) SATURATED_PIXEL_PERCENT() float32 {
 	return 0.0
 }
 
+func (rcv *EOO) SaturatedPixelPercent() float32 {
+	return rcv.SATURATED_PIXEL_PERCENT()
+}
+
 /// Percentage of saturated pixels in the image. Indicates overexposure when high.
 func (rcv *EOO) MutateSATURATED_PIXEL_PERCENT(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(230, n)
+}
+
+func (rcv *EOO) MutateSaturatedPixelPercent(n float32) bool {
+	return rcv.MutateSATURATED_PIXEL_PERCENT(n)
 }
 
 /// Percentage of dead or zero-value pixels in the image. Indicates sensor defects or underexposure.
@@ -1613,9 +2437,17 @@ func (rcv *EOO) DEAD_PIXEL_PERCENT() float32 {
 	return 0.0
 }
 
+func (rcv *EOO) DeadPixelPercent() float32 {
+	return rcv.DEAD_PIXEL_PERCENT()
+}
+
 /// Percentage of dead or zero-value pixels in the image. Indicates sensor defects or underexposure.
 func (rcv *EOO) MutateDEAD_PIXEL_PERCENT(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(232, n)
+}
+
+func (rcv *EOO) MutateDeadPixelPercent(n float32) bool {
+	return rcv.MutateDEAD_PIXEL_PERCENT(n)
 }
 
 /// Estimated Point Spread Function (PSF) Full Width at Half Maximum (FWHM) in pixels. Indicates image blur or focus.
@@ -1627,9 +2459,17 @@ func (rcv *EOO) PSF_FWHM() float32 {
 	return 0.0
 }
 
+func (rcv *EOO) PsfFwhm() float32 {
+	return rcv.PSF_FWHM()
+}
+
 /// Estimated Point Spread Function (PSF) Full Width at Half Maximum (FWHM) in pixels. Indicates image blur or focus.
 func (rcv *EOO) MutatePSF_FWHM(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(234, n)
+}
+
+func (rcv *EOO) MutatePsfFwhm(n float32) bool {
+	return rcv.MutatePSF_FWHM(n)
 }
 
 /// Estimated percentage of cloud cover in the image. Derived using cloud detection algorithms such as Fmask or machine learning classifiers.
@@ -1641,9 +2481,17 @@ func (rcv *EOO) CLOUD_COVER_PERCENT() float32 {
 	return 0.0
 }
 
+func (rcv *EOO) CloudCoverPercent() float32 {
+	return rcv.CLOUD_COVER_PERCENT()
+}
+
 /// Estimated percentage of cloud cover in the image. Derived using cloud detection algorithms such as Fmask or machine learning classifiers.
 func (rcv *EOO) MutateCLOUD_COVER_PERCENT(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(236, n)
+}
+
+func (rcv *EOO) MutateCloudCoverPercent(n float32) bool {
+	return rcv.MutateCLOUD_COVER_PERCENT(n)
 }
 
 /// Confidence score of the cloud detection result, from 0 (low confidence) to 1 (high confidence).
@@ -1655,9 +2503,17 @@ func (rcv *EOO) CLOUD_DETECTION_CONFIDENCE() float32 {
 	return 0.0
 }
 
+func (rcv *EOO) CloudDetectionConfidence() float32 {
+	return rcv.CLOUD_DETECTION_CONFIDENCE()
+}
+
 /// Confidence score of the cloud detection result, from 0 (low confidence) to 1 (high confidence).
 func (rcv *EOO) MutateCLOUD_DETECTION_CONFIDENCE(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(238, n)
+}
+
+func (rcv *EOO) MutateCloudDetectionConfidence(n float32) bool {
+	return rcv.MutateCLOUD_DETECTION_CONFIDENCE(n)
 }
 
 /// Estimated percentage of the image obscured by haze or atmospheric scattering effects.
@@ -1669,9 +2525,17 @@ func (rcv *EOO) HAZE_PERCENT() float32 {
 	return 0.0
 }
 
+func (rcv *EOO) HazePercent() float32 {
+	return rcv.HAZE_PERCENT()
+}
+
 /// Estimated percentage of the image obscured by haze or atmospheric scattering effects.
 func (rcv *EOO) MutateHAZE_PERCENT(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(240, n)
+}
+
+func (rcv *EOO) MutateHazePercent(n float32) bool {
+	return rcv.MutateHAZE_PERCENT(n)
 }
 
 /// Estimated aerosol optical thickness (AOT) at 550 nm, indicating particulate matter in the atmosphere affecting image clarity.
@@ -1683,9 +2547,17 @@ func (rcv *EOO) AEROSOL_OPTICAL_THICKNESS() float32 {
 	return 0.0
 }
 
+func (rcv *EOO) AerosolOpticalThickness() float32 {
+	return rcv.AEROSOL_OPTICAL_THICKNESS()
+}
+
 /// Estimated aerosol optical thickness (AOT) at 550 nm, indicating particulate matter in the atmosphere affecting image clarity.
 func (rcv *EOO) MutateAEROSOL_OPTICAL_THICKNESS(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(242, n)
+}
+
+func (rcv *EOO) MutateAerosolOpticalThickness(n float32) bool {
+	return rcv.MutateAEROSOL_OPTICAL_THICKNESS(n)
 }
 
 /// Estimated water vapor content (e.g., total column precipitable water) at the time of imaging, in mm.
@@ -1697,9 +2569,17 @@ func (rcv *EOO) WATER_VAPOR_CONTENT() float32 {
 	return 0.0
 }
 
+func (rcv *EOO) WaterVaporContent() float32 {
+	return rcv.WATER_VAPOR_CONTENT()
+}
+
 /// Estimated water vapor content (e.g., total column precipitable water) at the time of imaging, in mm.
 func (rcv *EOO) MutateWATER_VAPOR_CONTENT(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(244, n)
+}
+
+func (rcv *EOO) MutateWaterVaporContent(n float32) bool {
+	return rcv.MutateWATER_VAPOR_CONTENT(n)
 }
 
 /// Sun elevation angle at the time of image capture, in degrees above the horizon.
@@ -1711,9 +2591,17 @@ func (rcv *EOO) SUN_ELEVATION() float32 {
 	return 0.0
 }
 
+func (rcv *EOO) SunElevation() float32 {
+	return rcv.SUN_ELEVATION()
+}
+
 /// Sun elevation angle at the time of image capture, in degrees above the horizon.
 func (rcv *EOO) MutateSUN_ELEVATION(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(246, n)
+}
+
+func (rcv *EOO) MutateSunElevation(n float32) bool {
+	return rcv.MutateSUN_ELEVATION(n)
 }
 
 /// Sun azimuth angle at the time of image capture, in degrees from true north.
@@ -1725,9 +2613,17 @@ func (rcv *EOO) SUN_AZIMUTH() float32 {
 	return 0.0
 }
 
+func (rcv *EOO) SunAzimuth() float32 {
+	return rcv.SUN_AZIMUTH()
+}
+
 /// Sun azimuth angle at the time of image capture, in degrees from true north.
 func (rcv *EOO) MutateSUN_AZIMUTH(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(248, n)
+}
+
+func (rcv *EOO) MutateSunAzimuth(n float32) bool {
+	return rcv.MutateSUN_AZIMUTH(n)
 }
 
 /// View zenith angle (sensor line-of-sight angle from nadir), in degrees.
@@ -1739,9 +2635,17 @@ func (rcv *EOO) VIEW_ZENITH_ANGLE() float32 {
 	return 0.0
 }
 
+func (rcv *EOO) ViewZenithAngle() float32 {
+	return rcv.VIEW_ZENITH_ANGLE()
+}
+
 /// View zenith angle (sensor line-of-sight angle from nadir), in degrees.
 func (rcv *EOO) MutateVIEW_ZENITH_ANGLE(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(250, n)
+}
+
+func (rcv *EOO) MutateViewZenithAngle(n float32) bool {
+	return rcv.MutateVIEW_ZENITH_ANGLE(n)
 }
 
 /// View azimuth angle (direction of sensor relative to north), in degrees.
@@ -1753,9 +2657,17 @@ func (rcv *EOO) VIEW_AZIMUTH_ANGLE() float32 {
 	return 0.0
 }
 
+func (rcv *EOO) ViewAzimuthAngle() float32 {
+	return rcv.VIEW_AZIMUTH_ANGLE()
+}
+
 /// View azimuth angle (direction of sensor relative to north), in degrees.
 func (rcv *EOO) MutateVIEW_AZIMUTH_ANGLE(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(252, n)
+}
+
+func (rcv *EOO) MutateViewAzimuthAngle(n float32) bool {
+	return rcv.MutateVIEW_AZIMUTH_ANGLE(n)
 }
 
 /// Off-nadir angle of the sensor at the time of image capture, in degrees.
@@ -1767,9 +2679,17 @@ func (rcv *EOO) OFF_NADIR_ANGLE() float32 {
 	return 0.0
 }
 
+func (rcv *EOO) OffNadirAngle() float32 {
+	return rcv.OFF_NADIR_ANGLE()
+}
+
 /// Off-nadir angle of the sensor at the time of image capture, in degrees.
 func (rcv *EOO) MutateOFF_NADIR_ANGLE(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(254, n)
+}
+
+func (rcv *EOO) MutateOffNadirAngle(n float32) bool {
+	return rcv.MutateOFF_NADIR_ANGLE(n)
 }
 
 /// Ground coverage width of the image swath in kilometers.
@@ -1781,9 +2701,17 @@ func (rcv *EOO) SWATH_WIDTH_KM() float32 {
 	return 0.0
 }
 
+func (rcv *EOO) SwathWidthKm() float32 {
+	return rcv.SWATH_WIDTH_KM()
+}
+
 /// Ground coverage width of the image swath in kilometers.
 func (rcv *EOO) MutateSWATH_WIDTH_KM(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(256, n)
+}
+
+func (rcv *EOO) MutateSwathWidthKm(n float32) bool {
+	return rcv.MutateSWATH_WIDTH_KM(n)
 }
 
 /// Mean terrain elevation in the image footprint, in meters above sea level.
@@ -1795,9 +2723,17 @@ func (rcv *EOO) MEAN_TERRAIN_ELEVATION() float32 {
 	return 0.0
 }
 
+func (rcv *EOO) MeanTerrainElevation() float32 {
+	return rcv.MEAN_TERRAIN_ELEVATION()
+}
+
 /// Mean terrain elevation in the image footprint, in meters above sea level.
 func (rcv *EOO) MutateMEAN_TERRAIN_ELEVATION(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(258, n)
+}
+
+func (rcv *EOO) MutateMeanTerrainElevation(n float32) bool {
+	return rcv.MutateMEAN_TERRAIN_ELEVATION(n)
 }
 
 /// Standard deviation of terrain elevation in the image footprint, in meters.
@@ -1809,9 +2745,17 @@ func (rcv *EOO) TERRAIN_ELEVATION_STDDEV() float32 {
 	return 0.0
 }
 
+func (rcv *EOO) TerrainElevationStddev() float32 {
+	return rcv.TERRAIN_ELEVATION_STDDEV()
+}
+
 /// Standard deviation of terrain elevation in the image footprint, in meters.
 func (rcv *EOO) MutateTERRAIN_ELEVATION_STDDEV(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(260, n)
+}
+
+func (rcv *EOO) MutateTerrainElevationStddev(n float32) bool {
+	return rcv.MutateTERRAIN_ELEVATION_STDDEV(n)
 }
 
 /// Percentage of the image affected by shadows, derived via topographic or object shadow detection.
@@ -1823,9 +2767,17 @@ func (rcv *EOO) SHADOW_COVER_PERCENT() float32 {
 	return 0.0
 }
 
+func (rcv *EOO) ShadowCoverPercent() float32 {
+	return rcv.SHADOW_COVER_PERCENT()
+}
+
 /// Percentage of the image affected by shadows, derived via topographic or object shadow detection.
 func (rcv *EOO) MutateSHADOW_COVER_PERCENT(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(262, n)
+}
+
+func (rcv *EOO) MutateShadowCoverPercent(n float32) bool {
+	return rcv.MutateSHADOW_COVER_PERCENT(n)
 }
 
 /// Flag indicating whether sunglint is present in the image (true if high reflectance from water surface due to sun geometry).
@@ -1837,9 +2789,17 @@ func (rcv *EOO) SUNGLINT_PRESENT() bool {
 	return false
 }
 
+func (rcv *EOO) SunglintPresent() bool {
+	return rcv.SUNGLINT_PRESENT()
+}
+
 /// Flag indicating whether sunglint is present in the image (true if high reflectance from water surface due to sun geometry).
 func (rcv *EOO) MutateSUNGLINT_PRESENT(n bool) bool {
 	return rcv._tab.MutateBoolSlot(264, n)
+}
+
+func (rcv *EOO) MutateSunglintPresent(n bool) bool {
+	return rcv.MutateSUNGLINT_PRESENT(n)
 }
 
 /// Percentage of image affected by sunglint.
@@ -1851,9 +2811,17 @@ func (rcv *EOO) SUNGLINT_PERCENT() float32 {
 	return 0.0
 }
 
+func (rcv *EOO) SunglintPercent() float32 {
+	return rcv.SUNGLINT_PERCENT()
+}
+
 /// Percentage of image affected by sunglint.
 func (rcv *EOO) MutateSUNGLINT_PERCENT(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(266, n)
+}
+
+func (rcv *EOO) MutateSunglintPercent(n float32) bool {
+	return rcv.MutateSUNGLINT_PERCENT(n)
 }
 
 /// Estimated percentage of snow or ice coverage in the image footprint.
@@ -1865,9 +2833,17 @@ func (rcv *EOO) SNOW_ICE_COVER_PERCENT() float32 {
 	return 0.0
 }
 
+func (rcv *EOO) SnowIceCoverPercent() float32 {
+	return rcv.SNOW_ICE_COVER_PERCENT()
+}
+
 /// Estimated percentage of snow or ice coverage in the image footprint.
 func (rcv *EOO) MutateSNOW_ICE_COVER_PERCENT(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(268, n)
+}
+
+func (rcv *EOO) MutateSnowIceCoverPercent(n float32) bool {
+	return rcv.MutateSNOW_ICE_COVER_PERCENT(n)
 }
 
 /// Total area covered by valid data (non-masked, usable imagery) in square kilometers.
@@ -1879,9 +2855,17 @@ func (rcv *EOO) VALID_DATA_AREA_KM2() float32 {
 	return 0.0
 }
 
+func (rcv *EOO) ValidDataAreaKm2() float32 {
+	return rcv.VALID_DATA_AREA_KM2()
+}
+
 /// Total area covered by valid data (non-masked, usable imagery) in square kilometers.
 func (rcv *EOO) MutateVALID_DATA_AREA_KM2(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(270, n)
+}
+
+func (rcv *EOO) MutateValidDataAreaKm2(n float32) bool {
+	return rcv.MutateVALID_DATA_AREA_KM2(n)
 }
 
 func EOOStart(builder *flatbuffers.Builder) {
@@ -1890,404 +2874,806 @@ func EOOStart(builder *flatbuffers.Builder) {
 func EOOAddID(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ID), 0)
 }
+func EOOAddId(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
+	EOOAddID(builder, ID)
+}
 func EOOAddCLASSIFICATION(builder *flatbuffers.Builder, CLASSIFICATION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(CLASSIFICATION), 0)
+}
+func EOOAddClassification(builder *flatbuffers.Builder, CLASSIFICATION flatbuffers.UOffsetT) {
+	EOOAddCLASSIFICATION(builder, CLASSIFICATION)
 }
 func EOOAddOB_TIME(builder *flatbuffers.Builder, OB_TIME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(OB_TIME), 0)
 }
+func EOOAddObTime(builder *flatbuffers.Builder, OB_TIME flatbuffers.UOffsetT) {
+	EOOAddOB_TIME(builder, OB_TIME)
+}
 func EOOAddCORR_QUALITY(builder *flatbuffers.Builder, CORR_QUALITY float32) {
 	builder.PrependFloat32Slot(3, CORR_QUALITY, 0.0)
+}
+func EOOAddCorrQuality(builder *flatbuffers.Builder, CORR_QUALITY float32) {
+	EOOAddCORR_QUALITY(builder, CORR_QUALITY)
 }
 func EOOAddID_ON_ORBIT(builder *flatbuffers.Builder, ID_ON_ORBIT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(ID_ON_ORBIT), 0)
 }
+func EOOAddIdOnOrbit(builder *flatbuffers.Builder, ID_ON_ORBIT flatbuffers.UOffsetT) {
+	EOOAddID_ON_ORBIT(builder, ID_ON_ORBIT)
+}
 func EOOAddSENSOR_ID(builder *flatbuffers.Builder, SENSOR_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(SENSOR_ID), 0)
+}
+func EOOAddSensorId(builder *flatbuffers.Builder, SENSOR_ID flatbuffers.UOffsetT) {
+	EOOAddSENSOR_ID(builder, SENSOR_ID)
 }
 func EOOAddCOLLECT_METHOD(builder *flatbuffers.Builder, COLLECT_METHOD CollectMethod) {
 	builder.PrependInt8Slot(6, int8(COLLECT_METHOD), 0)
 }
+func EOOAddCollectMethod(builder *flatbuffers.Builder, COLLECT_METHOD CollectMethod) {
+	EOOAddCOLLECT_METHOD(builder, COLLECT_METHOD)
+}
 func EOOAddNORAD_CAT_ID(builder *flatbuffers.Builder, NORAD_CAT_ID int32) {
 	builder.PrependInt32Slot(7, NORAD_CAT_ID, 0)
+}
+func EOOAddNoradCatId(builder *flatbuffers.Builder, NORAD_CAT_ID int32) {
+	EOOAddNORAD_CAT_ID(builder, NORAD_CAT_ID)
 }
 func EOOAddTASK_ID(builder *flatbuffers.Builder, TASK_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(TASK_ID), 0)
 }
+func EOOAddTaskId(builder *flatbuffers.Builder, TASK_ID flatbuffers.UOffsetT) {
+	EOOAddTASK_ID(builder, TASK_ID)
+}
 func EOOAddTRANSACTION_ID(builder *flatbuffers.Builder, TRANSACTION_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(TRANSACTION_ID), 0)
+}
+func EOOAddTransactionId(builder *flatbuffers.Builder, TRANSACTION_ID flatbuffers.UOffsetT) {
+	EOOAddTRANSACTION_ID(builder, TRANSACTION_ID)
 }
 func EOOAddIMAGE_SET_ID(builder *flatbuffers.Builder, IMAGE_SET_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(IMAGE_SET_ID), 0)
 }
+func EOOAddImageSetId(builder *flatbuffers.Builder, IMAGE_SET_ID flatbuffers.UOffsetT) {
+	EOOAddIMAGE_SET_ID(builder, IMAGE_SET_ID)
+}
 func EOOAddIMAGE_SET_LENGTH(builder *flatbuffers.Builder, IMAGE_SET_LENGTH int32) {
 	builder.PrependInt32Slot(11, IMAGE_SET_LENGTH, 0)
+}
+func EOOAddImageSetLength(builder *flatbuffers.Builder, IMAGE_SET_LENGTH int32) {
+	EOOAddIMAGE_SET_LENGTH(builder, IMAGE_SET_LENGTH)
 }
 func EOOAddSEQUENCE_ID(builder *flatbuffers.Builder, SEQUENCE_ID int32) {
 	builder.PrependInt32Slot(12, SEQUENCE_ID, 0)
 }
+func EOOAddSequenceId(builder *flatbuffers.Builder, SEQUENCE_ID int32) {
+	EOOAddSEQUENCE_ID(builder, SEQUENCE_ID)
+}
 func EOOAddOB_POSITION(builder *flatbuffers.Builder, OB_POSITION ObservationPosition) {
 	builder.PrependInt8Slot(13, int8(OB_POSITION), 0)
+}
+func EOOAddObPosition(builder *flatbuffers.Builder, OB_POSITION ObservationPosition) {
+	EOOAddOB_POSITION(builder, OB_POSITION)
 }
 func EOOAddORIG_OBJECT_ID(builder *flatbuffers.Builder, ORIG_OBJECT_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(14, flatbuffers.UOffsetT(ORIG_OBJECT_ID), 0)
 }
+func EOOAddOrigObjectId(builder *flatbuffers.Builder, ORIG_OBJECT_ID flatbuffers.UOffsetT) {
+	EOOAddORIG_OBJECT_ID(builder, ORIG_OBJECT_ID)
+}
 func EOOAddORIG_SENSOR_ID(builder *flatbuffers.Builder, ORIG_SENSOR_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(15, flatbuffers.UOffsetT(ORIG_SENSOR_ID), 0)
+}
+func EOOAddOrigSensorId(builder *flatbuffers.Builder, ORIG_SENSOR_ID flatbuffers.UOffsetT) {
+	EOOAddORIG_SENSOR_ID(builder, ORIG_SENSOR_ID)
 }
 func EOOAddUCT(builder *flatbuffers.Builder, UCT bool) {
 	builder.PrependBoolSlot(16, UCT, false)
 }
+func EOOAddUct(builder *flatbuffers.Builder, UCT bool) {
+	EOOAddUCT(builder, UCT)
+}
 func EOOAddAZIMUTH(builder *flatbuffers.Builder, AZIMUTH float32) {
 	builder.PrependFloat32Slot(17, AZIMUTH, 0.0)
+}
+func EOOAddAzimuth(builder *flatbuffers.Builder, AZIMUTH float32) {
+	EOOAddAZIMUTH(builder, AZIMUTH)
 }
 func EOOAddAZIMUTH_UNC(builder *flatbuffers.Builder, AZIMUTH_UNC float32) {
 	builder.PrependFloat32Slot(18, AZIMUTH_UNC, 0.0)
 }
+func EOOAddAzimuthUnc(builder *flatbuffers.Builder, AZIMUTH_UNC float32) {
+	EOOAddAZIMUTH_UNC(builder, AZIMUTH_UNC)
+}
 func EOOAddAZIMUTH_BIAS(builder *flatbuffers.Builder, AZIMUTH_BIAS float32) {
 	builder.PrependFloat32Slot(19, AZIMUTH_BIAS, 0.0)
+}
+func EOOAddAzimuthBias(builder *flatbuffers.Builder, AZIMUTH_BIAS float32) {
+	EOOAddAZIMUTH_BIAS(builder, AZIMUTH_BIAS)
 }
 func EOOAddAZIMUTH_RATE(builder *flatbuffers.Builder, AZIMUTH_RATE float32) {
 	builder.PrependFloat32Slot(20, AZIMUTH_RATE, 0.0)
 }
+func EOOAddAzimuthRate(builder *flatbuffers.Builder, AZIMUTH_RATE float32) {
+	EOOAddAZIMUTH_RATE(builder, AZIMUTH_RATE)
+}
 func EOOAddELEVATION(builder *flatbuffers.Builder, ELEVATION float32) {
 	builder.PrependFloat32Slot(21, ELEVATION, 0.0)
+}
+func EOOAddElevation(builder *flatbuffers.Builder, ELEVATION float32) {
+	EOOAddELEVATION(builder, ELEVATION)
 }
 func EOOAddELEVATION_UNC(builder *flatbuffers.Builder, ELEVATION_UNC float32) {
 	builder.PrependFloat32Slot(22, ELEVATION_UNC, 0.0)
 }
+func EOOAddElevationUnc(builder *flatbuffers.Builder, ELEVATION_UNC float32) {
+	EOOAddELEVATION_UNC(builder, ELEVATION_UNC)
+}
 func EOOAddELEVATION_BIAS(builder *flatbuffers.Builder, ELEVATION_BIAS float32) {
 	builder.PrependFloat32Slot(23, ELEVATION_BIAS, 0.0)
+}
+func EOOAddElevationBias(builder *flatbuffers.Builder, ELEVATION_BIAS float32) {
+	EOOAddELEVATION_BIAS(builder, ELEVATION_BIAS)
 }
 func EOOAddELEVATION_RATE(builder *flatbuffers.Builder, ELEVATION_RATE float32) {
 	builder.PrependFloat32Slot(24, ELEVATION_RATE, 0.0)
 }
+func EOOAddElevationRate(builder *flatbuffers.Builder, ELEVATION_RATE float32) {
+	EOOAddELEVATION_RATE(builder, ELEVATION_RATE)
+}
 func EOOAddRANGE(builder *flatbuffers.Builder, RANGE float32) {
 	builder.PrependFloat32Slot(25, RANGE, 0.0)
+}
+func EOOAddRange(builder *flatbuffers.Builder, RANGE float32) {
+	EOOAddRANGE(builder, RANGE)
 }
 func EOOAddRANGE_UNC(builder *flatbuffers.Builder, RANGE_UNC float32) {
 	builder.PrependFloat32Slot(26, RANGE_UNC, 0.0)
 }
+func EOOAddRangeUnc(builder *flatbuffers.Builder, RANGE_UNC float32) {
+	EOOAddRANGE_UNC(builder, RANGE_UNC)
+}
 func EOOAddRANGE_BIAS(builder *flatbuffers.Builder, RANGE_BIAS float32) {
 	builder.PrependFloat32Slot(27, RANGE_BIAS, 0.0)
+}
+func EOOAddRangeBias(builder *flatbuffers.Builder, RANGE_BIAS float32) {
+	EOOAddRANGE_BIAS(builder, RANGE_BIAS)
 }
 func EOOAddRANGE_RATE(builder *flatbuffers.Builder, RANGE_RATE float32) {
 	builder.PrependFloat32Slot(28, RANGE_RATE, 0.0)
 }
+func EOOAddRangeRate(builder *flatbuffers.Builder, RANGE_RATE float32) {
+	EOOAddRANGE_RATE(builder, RANGE_RATE)
+}
 func EOOAddRANGE_RATE_UNC(builder *flatbuffers.Builder, RANGE_RATE_UNC float32) {
 	builder.PrependFloat32Slot(29, RANGE_RATE_UNC, 0.0)
+}
+func EOOAddRangeRateUnc(builder *flatbuffers.Builder, RANGE_RATE_UNC float32) {
+	EOOAddRANGE_RATE_UNC(builder, RANGE_RATE_UNC)
 }
 func EOOAddRA(builder *flatbuffers.Builder, RA float32) {
 	builder.PrependFloat32Slot(30, RA, 0.0)
 }
+func EOOAddRa(builder *flatbuffers.Builder, RA float32) {
+	EOOAddRA(builder, RA)
+}
 func EOOAddRA_RATE(builder *flatbuffers.Builder, RA_RATE float32) {
 	builder.PrependFloat32Slot(31, RA_RATE, 0.0)
+}
+func EOOAddRaRate(builder *flatbuffers.Builder, RA_RATE float32) {
+	EOOAddRA_RATE(builder, RA_RATE)
 }
 func EOOAddRA_UNC(builder *flatbuffers.Builder, RA_UNC float32) {
 	builder.PrependFloat32Slot(32, RA_UNC, 0.0)
 }
+func EOOAddRaUnc(builder *flatbuffers.Builder, RA_UNC float32) {
+	EOOAddRA_UNC(builder, RA_UNC)
+}
 func EOOAddRA_BIAS(builder *flatbuffers.Builder, RA_BIAS float32) {
 	builder.PrependFloat32Slot(33, RA_BIAS, 0.0)
+}
+func EOOAddRaBias(builder *flatbuffers.Builder, RA_BIAS float32) {
+	EOOAddRA_BIAS(builder, RA_BIAS)
 }
 func EOOAddDECLINATION(builder *flatbuffers.Builder, DECLINATION float32) {
 	builder.PrependFloat32Slot(34, DECLINATION, 0.0)
 }
+func EOOAddDeclination(builder *flatbuffers.Builder, DECLINATION float32) {
+	EOOAddDECLINATION(builder, DECLINATION)
+}
 func EOOAddDECLINATION_RATE(builder *flatbuffers.Builder, DECLINATION_RATE float32) {
 	builder.PrependFloat32Slot(35, DECLINATION_RATE, 0.0)
+}
+func EOOAddDeclinationRate(builder *flatbuffers.Builder, DECLINATION_RATE float32) {
+	EOOAddDECLINATION_RATE(builder, DECLINATION_RATE)
 }
 func EOOAddDECLINATION_UNC(builder *flatbuffers.Builder, DECLINATION_UNC float32) {
 	builder.PrependFloat32Slot(36, DECLINATION_UNC, 0.0)
 }
+func EOOAddDeclinationUnc(builder *flatbuffers.Builder, DECLINATION_UNC float32) {
+	EOOAddDECLINATION_UNC(builder, DECLINATION_UNC)
+}
 func EOOAddDECLINATION_BIAS(builder *flatbuffers.Builder, DECLINATION_BIAS float32) {
 	builder.PrependFloat32Slot(37, DECLINATION_BIAS, 0.0)
+}
+func EOOAddDeclinationBias(builder *flatbuffers.Builder, DECLINATION_BIAS float32) {
+	EOOAddDECLINATION_BIAS(builder, DECLINATION_BIAS)
 }
 func EOOAddLOSX(builder *flatbuffers.Builder, LOSX float32) {
 	builder.PrependFloat32Slot(38, LOSX, 0.0)
 }
+func EOOAddLosx(builder *flatbuffers.Builder, LOSX float32) {
+	EOOAddLOSX(builder, LOSX)
+}
 func EOOAddLOSY(builder *flatbuffers.Builder, LOSY float32) {
 	builder.PrependFloat32Slot(39, LOSY, 0.0)
+}
+func EOOAddLosy(builder *flatbuffers.Builder, LOSY float32) {
+	EOOAddLOSY(builder, LOSY)
 }
 func EOOAddLOSZ(builder *flatbuffers.Builder, LOSZ float32) {
 	builder.PrependFloat32Slot(40, LOSZ, 0.0)
 }
+func EOOAddLosz(builder *flatbuffers.Builder, LOSZ float32) {
+	EOOAddLOSZ(builder, LOSZ)
+}
 func EOOAddLOS_UNC(builder *flatbuffers.Builder, LOS_UNC float32) {
 	builder.PrependFloat32Slot(41, LOS_UNC, 0.0)
+}
+func EOOAddLosUnc(builder *flatbuffers.Builder, LOS_UNC float32) {
+	EOOAddLOS_UNC(builder, LOS_UNC)
 }
 func EOOAddLOSXVEL(builder *flatbuffers.Builder, LOSXVEL float32) {
 	builder.PrependFloat32Slot(42, LOSXVEL, 0.0)
 }
+func EOOAddLosxvel(builder *flatbuffers.Builder, LOSXVEL float32) {
+	EOOAddLOSXVEL(builder, LOSXVEL)
+}
 func EOOAddLOSYVEL(builder *flatbuffers.Builder, LOSYVEL float32) {
 	builder.PrependFloat32Slot(43, LOSYVEL, 0.0)
+}
+func EOOAddLosyvel(builder *flatbuffers.Builder, LOSYVEL float32) {
+	EOOAddLOSYVEL(builder, LOSYVEL)
 }
 func EOOAddLOSZVEL(builder *flatbuffers.Builder, LOSZVEL float32) {
 	builder.PrependFloat32Slot(44, LOSZVEL, 0.0)
 }
+func EOOAddLoszvel(builder *flatbuffers.Builder, LOSZVEL float32) {
+	EOOAddLOSZVEL(builder, LOSZVEL)
+}
 func EOOAddSENLAT(builder *flatbuffers.Builder, SENLAT float32) {
 	builder.PrependFloat32Slot(45, SENLAT, 0.0)
+}
+func EOOAddSenlat(builder *flatbuffers.Builder, SENLAT float32) {
+	EOOAddSENLAT(builder, SENLAT)
 }
 func EOOAddSENLON(builder *flatbuffers.Builder, SENLON float32) {
 	builder.PrependFloat32Slot(46, SENLON, 0.0)
 }
+func EOOAddSenlon(builder *flatbuffers.Builder, SENLON float32) {
+	EOOAddSENLON(builder, SENLON)
+}
 func EOOAddSENALT(builder *flatbuffers.Builder, SENALT float32) {
 	builder.PrependFloat32Slot(47, SENALT, 0.0)
+}
+func EOOAddSenalt(builder *flatbuffers.Builder, SENALT float32) {
+	EOOAddSENALT(builder, SENALT)
 }
 func EOOAddSENX(builder *flatbuffers.Builder, SENX float32) {
 	builder.PrependFloat32Slot(48, SENX, 0.0)
 }
+func EOOAddSenx(builder *flatbuffers.Builder, SENX float32) {
+	EOOAddSENX(builder, SENX)
+}
 func EOOAddSENY(builder *flatbuffers.Builder, SENY float32) {
 	builder.PrependFloat32Slot(49, SENY, 0.0)
+}
+func EOOAddSeny(builder *flatbuffers.Builder, SENY float32) {
+	EOOAddSENY(builder, SENY)
 }
 func EOOAddSENZ(builder *flatbuffers.Builder, SENZ float32) {
 	builder.PrependFloat32Slot(50, SENZ, 0.0)
 }
+func EOOAddSenz(builder *flatbuffers.Builder, SENZ float32) {
+	EOOAddSENZ(builder, SENZ)
+}
 func EOOAddFOV_COUNT(builder *flatbuffers.Builder, FOV_COUNT int32) {
 	builder.PrependInt32Slot(51, FOV_COUNT, 0)
+}
+func EOOAddFovCount(builder *flatbuffers.Builder, FOV_COUNT int32) {
+	EOOAddFOV_COUNT(builder, FOV_COUNT)
 }
 func EOOAddFOV_COUNT_UCTS(builder *flatbuffers.Builder, FOV_COUNT_UCTS int32) {
 	builder.PrependInt32Slot(52, FOV_COUNT_UCTS, 0)
 }
+func EOOAddFovCountUcts(builder *flatbuffers.Builder, FOV_COUNT_UCTS int32) {
+	EOOAddFOV_COUNT_UCTS(builder, FOV_COUNT_UCTS)
+}
 func EOOAddEXP_DURATION(builder *flatbuffers.Builder, EXP_DURATION float32) {
 	builder.PrependFloat32Slot(53, EXP_DURATION, 0.0)
+}
+func EOOAddExpDuration(builder *flatbuffers.Builder, EXP_DURATION float32) {
+	EOOAddEXP_DURATION(builder, EXP_DURATION)
 }
 func EOOAddZEROPTD(builder *flatbuffers.Builder, ZEROPTD float32) {
 	builder.PrependFloat32Slot(54, ZEROPTD, 0.0)
 }
+func EOOAddZeroptd(builder *flatbuffers.Builder, ZEROPTD float32) {
+	EOOAddZEROPTD(builder, ZEROPTD)
+}
 func EOOAddNET_OBJ_SIG(builder *flatbuffers.Builder, NET_OBJ_SIG float32) {
 	builder.PrependFloat32Slot(55, NET_OBJ_SIG, 0.0)
+}
+func EOOAddNetObjSig(builder *flatbuffers.Builder, NET_OBJ_SIG float32) {
+	EOOAddNET_OBJ_SIG(builder, NET_OBJ_SIG)
 }
 func EOOAddNET_OBJ_SIG_UNC(builder *flatbuffers.Builder, NET_OBJ_SIG_UNC float32) {
 	builder.PrependFloat32Slot(56, NET_OBJ_SIG_UNC, 0.0)
 }
+func EOOAddNetObjSigUnc(builder *flatbuffers.Builder, NET_OBJ_SIG_UNC float32) {
+	EOOAddNET_OBJ_SIG_UNC(builder, NET_OBJ_SIG_UNC)
+}
 func EOOAddMAG(builder *flatbuffers.Builder, MAG float32) {
 	builder.PrependFloat32Slot(57, MAG, 0.0)
+}
+func EOOAddMag(builder *flatbuffers.Builder, MAG float32) {
+	EOOAddMAG(builder, MAG)
 }
 func EOOAddMAG_UNC(builder *flatbuffers.Builder, MAG_UNC float32) {
 	builder.PrependFloat32Slot(58, MAG_UNC, 0.0)
 }
+func EOOAddMagUnc(builder *flatbuffers.Builder, MAG_UNC float32) {
+	EOOAddMAG_UNC(builder, MAG_UNC)
+}
 func EOOAddMAG_NORM_RANGE(builder *flatbuffers.Builder, MAG_NORM_RANGE float32) {
 	builder.PrependFloat32Slot(59, MAG_NORM_RANGE, 0.0)
+}
+func EOOAddMagNormRange(builder *flatbuffers.Builder, MAG_NORM_RANGE float32) {
+	EOOAddMAG_NORM_RANGE(builder, MAG_NORM_RANGE)
 }
 func EOOAddGEOLAT(builder *flatbuffers.Builder, GEOLAT float32) {
 	builder.PrependFloat32Slot(60, GEOLAT, 0.0)
 }
+func EOOAddGeolat(builder *flatbuffers.Builder, GEOLAT float32) {
+	EOOAddGEOLAT(builder, GEOLAT)
+}
 func EOOAddGEOLON(builder *flatbuffers.Builder, GEOLON float32) {
 	builder.PrependFloat32Slot(61, GEOLON, 0.0)
+}
+func EOOAddGeolon(builder *flatbuffers.Builder, GEOLON float32) {
+	EOOAddGEOLON(builder, GEOLON)
 }
 func EOOAddGEOALT(builder *flatbuffers.Builder, GEOALT float32) {
 	builder.PrependFloat32Slot(62, GEOALT, 0.0)
 }
+func EOOAddGeoalt(builder *flatbuffers.Builder, GEOALT float32) {
+	EOOAddGEOALT(builder, GEOALT)
+}
 func EOOAddGEORANGE(builder *flatbuffers.Builder, GEORANGE float32) {
 	builder.PrependFloat32Slot(63, GEORANGE, 0.0)
+}
+func EOOAddGeorange(builder *flatbuffers.Builder, GEORANGE float32) {
+	EOOAddGEORANGE(builder, GEORANGE)
 }
 func EOOAddSKY_BKGRND(builder *flatbuffers.Builder, SKY_BKGRND float32) {
 	builder.PrependFloat32Slot(64, SKY_BKGRND, 0.0)
 }
+func EOOAddSkyBkgrnd(builder *flatbuffers.Builder, SKY_BKGRND float32) {
+	EOOAddSKY_BKGRND(builder, SKY_BKGRND)
+}
 func EOOAddPRIMARY_EXTINCTION(builder *flatbuffers.Builder, PRIMARY_EXTINCTION float32) {
 	builder.PrependFloat32Slot(65, PRIMARY_EXTINCTION, 0.0)
+}
+func EOOAddPrimaryExtinction(builder *flatbuffers.Builder, PRIMARY_EXTINCTION float32) {
+	EOOAddPRIMARY_EXTINCTION(builder, PRIMARY_EXTINCTION)
 }
 func EOOAddPRIMARY_EXTINCTION_UNC(builder *flatbuffers.Builder, PRIMARY_EXTINCTION_UNC float32) {
 	builder.PrependFloat32Slot(66, PRIMARY_EXTINCTION_UNC, 0.0)
 }
+func EOOAddPrimaryExtinctionUnc(builder *flatbuffers.Builder, PRIMARY_EXTINCTION_UNC float32) {
+	EOOAddPRIMARY_EXTINCTION_UNC(builder, PRIMARY_EXTINCTION_UNC)
+}
 func EOOAddSOLAR_PHASE_ANGLE(builder *flatbuffers.Builder, SOLAR_PHASE_ANGLE float32) {
 	builder.PrependFloat32Slot(67, SOLAR_PHASE_ANGLE, 0.0)
+}
+func EOOAddSolarPhaseAngle(builder *flatbuffers.Builder, SOLAR_PHASE_ANGLE float32) {
+	EOOAddSOLAR_PHASE_ANGLE(builder, SOLAR_PHASE_ANGLE)
 }
 func EOOAddSOLAR_EQ_PHASE_ANGLE(builder *flatbuffers.Builder, SOLAR_EQ_PHASE_ANGLE float32) {
 	builder.PrependFloat32Slot(68, SOLAR_EQ_PHASE_ANGLE, 0.0)
 }
+func EOOAddSolarEqPhaseAngle(builder *flatbuffers.Builder, SOLAR_EQ_PHASE_ANGLE float32) {
+	EOOAddSOLAR_EQ_PHASE_ANGLE(builder, SOLAR_EQ_PHASE_ANGLE)
+}
 func EOOAddSOLAR_DEC_ANGLE(builder *flatbuffers.Builder, SOLAR_DEC_ANGLE float32) {
 	builder.PrependFloat32Slot(69, SOLAR_DEC_ANGLE, 0.0)
+}
+func EOOAddSolarDecAngle(builder *flatbuffers.Builder, SOLAR_DEC_ANGLE float32) {
+	EOOAddSOLAR_DEC_ANGLE(builder, SOLAR_DEC_ANGLE)
 }
 func EOOAddSHUTTER_DELAY(builder *flatbuffers.Builder, SHUTTER_DELAY float32) {
 	builder.PrependFloat32Slot(70, SHUTTER_DELAY, 0.0)
 }
+func EOOAddShutterDelay(builder *flatbuffers.Builder, SHUTTER_DELAY float32) {
+	EOOAddSHUTTER_DELAY(builder, SHUTTER_DELAY)
+}
 func EOOAddTIMING_BIAS(builder *flatbuffers.Builder, TIMING_BIAS float32) {
 	builder.PrependFloat32Slot(71, TIMING_BIAS, 0.0)
+}
+func EOOAddTimingBias(builder *flatbuffers.Builder, TIMING_BIAS float32) {
+	EOOAddTIMING_BIAS(builder, TIMING_BIAS)
 }
 func EOOAddRAW_FILE_URI(builder *flatbuffers.Builder, RAW_FILE_URI flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(72, flatbuffers.UOffsetT(RAW_FILE_URI), 0)
 }
+func EOOAddRawFileUri(builder *flatbuffers.Builder, RAW_FILE_URI flatbuffers.UOffsetT) {
+	EOOAddRAW_FILE_URI(builder, RAW_FILE_URI)
+}
 func EOOAddINTENSITY(builder *flatbuffers.Builder, INTENSITY float32) {
 	builder.PrependFloat32Slot(73, INTENSITY, 0.0)
+}
+func EOOAddIntensity(builder *flatbuffers.Builder, INTENSITY float32) {
+	EOOAddINTENSITY(builder, INTENSITY)
 }
 func EOOAddBG_INTENSITY(builder *flatbuffers.Builder, BG_INTENSITY float32) {
 	builder.PrependFloat32Slot(74, BG_INTENSITY, 0.0)
 }
+func EOOAddBgIntensity(builder *flatbuffers.Builder, BG_INTENSITY float32) {
+	EOOAddBG_INTENSITY(builder, BG_INTENSITY)
+}
 func EOOAddDESCRIPTOR(builder *flatbuffers.Builder, DESCRIPTOR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(75, flatbuffers.UOffsetT(DESCRIPTOR), 0)
+}
+func EOOAddDescriptor(builder *flatbuffers.Builder, DESCRIPTOR flatbuffers.UOffsetT) {
+	EOOAddDESCRIPTOR(builder, DESCRIPTOR)
 }
 func EOOAddSOURCE(builder *flatbuffers.Builder, SOURCE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(76, flatbuffers.UOffsetT(SOURCE), 0)
 }
+func EOOAddSource(builder *flatbuffers.Builder, SOURCE flatbuffers.UOffsetT) {
+	EOOAddSOURCE(builder, SOURCE)
+}
 func EOOAddORIGIN(builder *flatbuffers.Builder, ORIGIN flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(77, flatbuffers.UOffsetT(ORIGIN), 0)
+}
+func EOOAddOrigin(builder *flatbuffers.Builder, ORIGIN flatbuffers.UOffsetT) {
+	EOOAddORIGIN(builder, ORIGIN)
 }
 func EOOAddDATA_MODE(builder *flatbuffers.Builder, DATA_MODE DataMode) {
 	builder.PrependInt8Slot(78, int8(DATA_MODE), 0)
 }
+func EOOAddDataMode(builder *flatbuffers.Builder, DATA_MODE DataMode) {
+	EOOAddDATA_MODE(builder, DATA_MODE)
+}
 func EOOAddCREATED_AT(builder *flatbuffers.Builder, CREATED_AT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(79, flatbuffers.UOffsetT(CREATED_AT), 0)
+}
+func EOOAddCreatedAt(builder *flatbuffers.Builder, CREATED_AT flatbuffers.UOffsetT) {
+	EOOAddCREATED_AT(builder, CREATED_AT)
 }
 func EOOAddCREATED_BY(builder *flatbuffers.Builder, CREATED_BY flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(80, flatbuffers.UOffsetT(CREATED_BY), 0)
 }
+func EOOAddCreatedBy(builder *flatbuffers.Builder, CREATED_BY flatbuffers.UOffsetT) {
+	EOOAddCREATED_BY(builder, CREATED_BY)
+}
 func EOOAddREFERENCE_FRAME(builder *flatbuffers.Builder, REFERENCE_FRAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(81, flatbuffers.UOffsetT(REFERENCE_FRAME), 0)
+}
+func EOOAddReferenceFrame(builder *flatbuffers.Builder, REFERENCE_FRAME flatbuffers.UOffsetT) {
+	EOOAddREFERENCE_FRAME(builder, REFERENCE_FRAME)
 }
 func EOOAddSEN_REFERENCE_FRAME(builder *flatbuffers.Builder, SEN_REFERENCE_FRAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(82, flatbuffers.UOffsetT(SEN_REFERENCE_FRAME), 0)
 }
+func EOOAddSenReferenceFrame(builder *flatbuffers.Builder, SEN_REFERENCE_FRAME flatbuffers.UOffsetT) {
+	EOOAddSEN_REFERENCE_FRAME(builder, SEN_REFERENCE_FRAME)
+}
 func EOOAddUMBRA(builder *flatbuffers.Builder, UMBRA bool) {
 	builder.PrependBoolSlot(83, UMBRA, false)
+}
+func EOOAddUmbra(builder *flatbuffers.Builder, UMBRA bool) {
+	EOOAddUMBRA(builder, UMBRA)
 }
 func EOOAddPENUMBRA(builder *flatbuffers.Builder, PENUMBRA bool) {
 	builder.PrependBoolSlot(84, PENUMBRA, false)
 }
+func EOOAddPenumbra(builder *flatbuffers.Builder, PENUMBRA bool) {
+	EOOAddPENUMBRA(builder, PENUMBRA)
+}
 func EOOAddORIG_NETWORK(builder *flatbuffers.Builder, ORIG_NETWORK flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(85, flatbuffers.UOffsetT(ORIG_NETWORK), 0)
+}
+func EOOAddOrigNetwork(builder *flatbuffers.Builder, ORIG_NETWORK flatbuffers.UOffsetT) {
+	EOOAddORIG_NETWORK(builder, ORIG_NETWORK)
 }
 func EOOAddSOURCE_DL(builder *flatbuffers.Builder, SOURCE_DL flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(86, flatbuffers.UOffsetT(SOURCE_DL), 0)
 }
+func EOOAddSourceDl(builder *flatbuffers.Builder, SOURCE_DL flatbuffers.UOffsetT) {
+	EOOAddSOURCE_DL(builder, SOURCE_DL)
+}
 func EOOAddTYPE(builder *flatbuffers.Builder, TYPE DeviceType) {
 	builder.PrependInt8Slot(87, int8(TYPE), 0)
+}
+func EOOAddType(builder *flatbuffers.Builder, TYPE DeviceType) {
+	EOOAddTYPE(builder, TYPE)
 }
 func EOOAddAZIMUTH_MEASURED(builder *flatbuffers.Builder, AZIMUTH_MEASURED bool) {
 	builder.PrependBoolSlot(88, AZIMUTH_MEASURED, false)
 }
+func EOOAddAzimuthMeasured(builder *flatbuffers.Builder, AZIMUTH_MEASURED bool) {
+	EOOAddAZIMUTH_MEASURED(builder, AZIMUTH_MEASURED)
+}
 func EOOAddELEVATION_MEASURED(builder *flatbuffers.Builder, ELEVATION_MEASURED bool) {
 	builder.PrependBoolSlot(89, ELEVATION_MEASURED, false)
+}
+func EOOAddElevationMeasured(builder *flatbuffers.Builder, ELEVATION_MEASURED bool) {
+	EOOAddELEVATION_MEASURED(builder, ELEVATION_MEASURED)
 }
 func EOOAddRANGE_MEASURED(builder *flatbuffers.Builder, RANGE_MEASURED bool) {
 	builder.PrependBoolSlot(90, RANGE_MEASURED, false)
 }
+func EOOAddRangeMeasured(builder *flatbuffers.Builder, RANGE_MEASURED bool) {
+	EOOAddRANGE_MEASURED(builder, RANGE_MEASURED)
+}
 func EOOAddRANGERATE_MEASURED(builder *flatbuffers.Builder, RANGERATE_MEASURED bool) {
 	builder.PrependBoolSlot(91, RANGERATE_MEASURED, false)
+}
+func EOOAddRangerateMeasured(builder *flatbuffers.Builder, RANGERATE_MEASURED bool) {
+	EOOAddRANGERATE_MEASURED(builder, RANGERATE_MEASURED)
 }
 func EOOAddRA_MEASURED(builder *flatbuffers.Builder, RA_MEASURED bool) {
 	builder.PrependBoolSlot(92, RA_MEASURED, false)
 }
+func EOOAddRaMeasured(builder *flatbuffers.Builder, RA_MEASURED bool) {
+	EOOAddRA_MEASURED(builder, RA_MEASURED)
+}
 func EOOAddDECLINATION_MEASURED(builder *flatbuffers.Builder, DECLINATION_MEASURED bool) {
 	builder.PrependBoolSlot(93, DECLINATION_MEASURED, false)
+}
+func EOOAddDeclinationMeasured(builder *flatbuffers.Builder, DECLINATION_MEASURED bool) {
+	EOOAddDECLINATION_MEASURED(builder, DECLINATION_MEASURED)
 }
 func EOOAddNIIRS(builder *flatbuffers.Builder, NIIRS float32) {
 	builder.PrependFloat32Slot(94, NIIRS, 0.0)
 }
+func EOOAddNiirs(builder *flatbuffers.Builder, NIIRS float32) {
+	EOOAddNIIRS(builder, NIIRS)
+}
 func EOOAddMETERS_PER_PIXEL(builder *flatbuffers.Builder, METERS_PER_PIXEL float32) {
 	builder.PrependFloat32Slot(95, METERS_PER_PIXEL, 0.0)
+}
+func EOOAddMetersPerPixel(builder *flatbuffers.Builder, METERS_PER_PIXEL float32) {
+	EOOAddMETERS_PER_PIXEL(builder, METERS_PER_PIXEL)
 }
 func EOOAddIMAGE_SNR(builder *flatbuffers.Builder, IMAGE_SNR float32) {
 	builder.PrependFloat32Slot(96, IMAGE_SNR, 0.0)
 }
+func EOOAddImageSnr(builder *flatbuffers.Builder, IMAGE_SNR float32) {
+	EOOAddIMAGE_SNR(builder, IMAGE_SNR)
+}
 func EOOAddIMAGE_BIT_DEPTH(builder *flatbuffers.Builder, IMAGE_BIT_DEPTH int32) {
 	builder.PrependInt32Slot(97, IMAGE_BIT_DEPTH, 0)
+}
+func EOOAddImageBitDepth(builder *flatbuffers.Builder, IMAGE_BIT_DEPTH int32) {
+	EOOAddIMAGE_BIT_DEPTH(builder, IMAGE_BIT_DEPTH)
 }
 func EOOAddIMAGE_WIDTH(builder *flatbuffers.Builder, IMAGE_WIDTH int32) {
 	builder.PrependInt32Slot(98, IMAGE_WIDTH, 0)
 }
+func EOOAddImageWidth(builder *flatbuffers.Builder, IMAGE_WIDTH int32) {
+	EOOAddIMAGE_WIDTH(builder, IMAGE_WIDTH)
+}
 func EOOAddIMAGE_HEIGHT(builder *flatbuffers.Builder, IMAGE_HEIGHT int32) {
 	builder.PrependInt32Slot(99, IMAGE_HEIGHT, 0)
+}
+func EOOAddImageHeight(builder *flatbuffers.Builder, IMAGE_HEIGHT int32) {
+	EOOAddIMAGE_HEIGHT(builder, IMAGE_HEIGHT)
 }
 func EOOAddIMAGE_COMPRESSION(builder *flatbuffers.Builder, IMAGE_COMPRESSION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(100, flatbuffers.UOffsetT(IMAGE_COMPRESSION), 0)
 }
+func EOOAddImageCompression(builder *flatbuffers.Builder, IMAGE_COMPRESSION flatbuffers.UOffsetT) {
+	EOOAddIMAGE_COMPRESSION(builder, IMAGE_COMPRESSION)
+}
 func EOOAddIMAGE_COMPRESSION_RATIO(builder *flatbuffers.Builder, IMAGE_COMPRESSION_RATIO float32) {
 	builder.PrependFloat32Slot(101, IMAGE_COMPRESSION_RATIO, 0.0)
+}
+func EOOAddImageCompressionRatio(builder *flatbuffers.Builder, IMAGE_COMPRESSION_RATIO float32) {
+	EOOAddIMAGE_COMPRESSION_RATIO(builder, IMAGE_COMPRESSION_RATIO)
 }
 func EOOAddPROCESSED_IMAGE_URI(builder *flatbuffers.Builder, PROCESSED_IMAGE_URI flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(102, flatbuffers.UOffsetT(PROCESSED_IMAGE_URI), 0)
 }
+func EOOAddProcessedImageUri(builder *flatbuffers.Builder, PROCESSED_IMAGE_URI flatbuffers.UOffsetT) {
+	EOOAddPROCESSED_IMAGE_URI(builder, PROCESSED_IMAGE_URI)
+}
 func EOOAddIMAGE_AUTO_ENHANCED(builder *flatbuffers.Builder, IMAGE_AUTO_ENHANCED bool) {
 	builder.PrependBoolSlot(103, IMAGE_AUTO_ENHANCED, false)
+}
+func EOOAddImageAutoEnhanced(builder *flatbuffers.Builder, IMAGE_AUTO_ENHANCED bool) {
+	EOOAddIMAGE_AUTO_ENHANCED(builder, IMAGE_AUTO_ENHANCED)
 }
 func EOOAddMULTI_FRAME_STACKED(builder *flatbuffers.Builder, MULTI_FRAME_STACKED bool) {
 	builder.PrependBoolSlot(104, MULTI_FRAME_STACKED, false)
 }
+func EOOAddMultiFrameStacked(builder *flatbuffers.Builder, MULTI_FRAME_STACKED bool) {
+	EOOAddMULTI_FRAME_STACKED(builder, MULTI_FRAME_STACKED)
+}
 func EOOAddSYNTHETIC_TRACKING_USED(builder *flatbuffers.Builder, SYNTHETIC_TRACKING_USED bool) {
 	builder.PrependBoolSlot(105, SYNTHETIC_TRACKING_USED, false)
+}
+func EOOAddSyntheticTrackingUsed(builder *flatbuffers.Builder, SYNTHETIC_TRACKING_USED bool) {
+	EOOAddSYNTHETIC_TRACKING_USED(builder, SYNTHETIC_TRACKING_USED)
 }
 func EOOAddIMAGE_SHARPNESS(builder *flatbuffers.Builder, IMAGE_SHARPNESS float32) {
 	builder.PrependFloat32Slot(106, IMAGE_SHARPNESS, 0.0)
 }
+func EOOAddImageSharpness(builder *flatbuffers.Builder, IMAGE_SHARPNESS float32) {
+	EOOAddIMAGE_SHARPNESS(builder, IMAGE_SHARPNESS)
+}
 func EOOAddIMAGE_NOISE_STDDEV(builder *flatbuffers.Builder, IMAGE_NOISE_STDDEV float32) {
 	builder.PrependFloat32Slot(107, IMAGE_NOISE_STDDEV, 0.0)
+}
+func EOOAddImageNoiseStddev(builder *flatbuffers.Builder, IMAGE_NOISE_STDDEV float32) {
+	EOOAddIMAGE_NOISE_STDDEV(builder, IMAGE_NOISE_STDDEV)
 }
 func EOOAddIMAGE_CONTRAST(builder *flatbuffers.Builder, IMAGE_CONTRAST float32) {
 	builder.PrependFloat32Slot(108, IMAGE_CONTRAST, 0.0)
 }
+func EOOAddImageContrast(builder *flatbuffers.Builder, IMAGE_CONTRAST float32) {
+	EOOAddIMAGE_CONTRAST(builder, IMAGE_CONTRAST)
+}
 func EOOAddIMAGE_DYNAMIC_RANGE(builder *flatbuffers.Builder, IMAGE_DYNAMIC_RANGE float32) {
 	builder.PrependFloat32Slot(109, IMAGE_DYNAMIC_RANGE, 0.0)
+}
+func EOOAddImageDynamicRange(builder *flatbuffers.Builder, IMAGE_DYNAMIC_RANGE float32) {
+	EOOAddIMAGE_DYNAMIC_RANGE(builder, IMAGE_DYNAMIC_RANGE)
 }
 func EOOAddIMAGE_ENTROPY(builder *flatbuffers.Builder, IMAGE_ENTROPY float32) {
 	builder.PrependFloat32Slot(110, IMAGE_ENTROPY, 0.0)
 }
+func EOOAddImageEntropy(builder *flatbuffers.Builder, IMAGE_ENTROPY float32) {
+	EOOAddIMAGE_ENTROPY(builder, IMAGE_ENTROPY)
+}
 func EOOAddBACKGROUND_UNIFORMITY(builder *flatbuffers.Builder, BACKGROUND_UNIFORMITY float32) {
 	builder.PrependFloat32Slot(111, BACKGROUND_UNIFORMITY, 0.0)
+}
+func EOOAddBackgroundUniformity(builder *flatbuffers.Builder, BACKGROUND_UNIFORMITY float32) {
+	EOOAddBACKGROUND_UNIFORMITY(builder, BACKGROUND_UNIFORMITY)
 }
 func EOOAddBACKGROUND_MEAN_LEVEL(builder *flatbuffers.Builder, BACKGROUND_MEAN_LEVEL float32) {
 	builder.PrependFloat32Slot(112, BACKGROUND_MEAN_LEVEL, 0.0)
 }
+func EOOAddBackgroundMeanLevel(builder *flatbuffers.Builder, BACKGROUND_MEAN_LEVEL float32) {
+	EOOAddBACKGROUND_MEAN_LEVEL(builder, BACKGROUND_MEAN_LEVEL)
+}
 func EOOAddSATURATED_PIXEL_PERCENT(builder *flatbuffers.Builder, SATURATED_PIXEL_PERCENT float32) {
 	builder.PrependFloat32Slot(113, SATURATED_PIXEL_PERCENT, 0.0)
+}
+func EOOAddSaturatedPixelPercent(builder *flatbuffers.Builder, SATURATED_PIXEL_PERCENT float32) {
+	EOOAddSATURATED_PIXEL_PERCENT(builder, SATURATED_PIXEL_PERCENT)
 }
 func EOOAddDEAD_PIXEL_PERCENT(builder *flatbuffers.Builder, DEAD_PIXEL_PERCENT float32) {
 	builder.PrependFloat32Slot(114, DEAD_PIXEL_PERCENT, 0.0)
 }
+func EOOAddDeadPixelPercent(builder *flatbuffers.Builder, DEAD_PIXEL_PERCENT float32) {
+	EOOAddDEAD_PIXEL_PERCENT(builder, DEAD_PIXEL_PERCENT)
+}
 func EOOAddPSF_FWHM(builder *flatbuffers.Builder, PSF_FWHM float32) {
 	builder.PrependFloat32Slot(115, PSF_FWHM, 0.0)
+}
+func EOOAddPsfFwhm(builder *flatbuffers.Builder, PSF_FWHM float32) {
+	EOOAddPSF_FWHM(builder, PSF_FWHM)
 }
 func EOOAddCLOUD_COVER_PERCENT(builder *flatbuffers.Builder, CLOUD_COVER_PERCENT float32) {
 	builder.PrependFloat32Slot(116, CLOUD_COVER_PERCENT, 0.0)
 }
+func EOOAddCloudCoverPercent(builder *flatbuffers.Builder, CLOUD_COVER_PERCENT float32) {
+	EOOAddCLOUD_COVER_PERCENT(builder, CLOUD_COVER_PERCENT)
+}
 func EOOAddCLOUD_DETECTION_CONFIDENCE(builder *flatbuffers.Builder, CLOUD_DETECTION_CONFIDENCE float32) {
 	builder.PrependFloat32Slot(117, CLOUD_DETECTION_CONFIDENCE, 0.0)
+}
+func EOOAddCloudDetectionConfidence(builder *flatbuffers.Builder, CLOUD_DETECTION_CONFIDENCE float32) {
+	EOOAddCLOUD_DETECTION_CONFIDENCE(builder, CLOUD_DETECTION_CONFIDENCE)
 }
 func EOOAddHAZE_PERCENT(builder *flatbuffers.Builder, HAZE_PERCENT float32) {
 	builder.PrependFloat32Slot(118, HAZE_PERCENT, 0.0)
 }
+func EOOAddHazePercent(builder *flatbuffers.Builder, HAZE_PERCENT float32) {
+	EOOAddHAZE_PERCENT(builder, HAZE_PERCENT)
+}
 func EOOAddAEROSOL_OPTICAL_THICKNESS(builder *flatbuffers.Builder, AEROSOL_OPTICAL_THICKNESS float32) {
 	builder.PrependFloat32Slot(119, AEROSOL_OPTICAL_THICKNESS, 0.0)
+}
+func EOOAddAerosolOpticalThickness(builder *flatbuffers.Builder, AEROSOL_OPTICAL_THICKNESS float32) {
+	EOOAddAEROSOL_OPTICAL_THICKNESS(builder, AEROSOL_OPTICAL_THICKNESS)
 }
 func EOOAddWATER_VAPOR_CONTENT(builder *flatbuffers.Builder, WATER_VAPOR_CONTENT float32) {
 	builder.PrependFloat32Slot(120, WATER_VAPOR_CONTENT, 0.0)
 }
+func EOOAddWaterVaporContent(builder *flatbuffers.Builder, WATER_VAPOR_CONTENT float32) {
+	EOOAddWATER_VAPOR_CONTENT(builder, WATER_VAPOR_CONTENT)
+}
 func EOOAddSUN_ELEVATION(builder *flatbuffers.Builder, SUN_ELEVATION float32) {
 	builder.PrependFloat32Slot(121, SUN_ELEVATION, 0.0)
+}
+func EOOAddSunElevation(builder *flatbuffers.Builder, SUN_ELEVATION float32) {
+	EOOAddSUN_ELEVATION(builder, SUN_ELEVATION)
 }
 func EOOAddSUN_AZIMUTH(builder *flatbuffers.Builder, SUN_AZIMUTH float32) {
 	builder.PrependFloat32Slot(122, SUN_AZIMUTH, 0.0)
 }
+func EOOAddSunAzimuth(builder *flatbuffers.Builder, SUN_AZIMUTH float32) {
+	EOOAddSUN_AZIMUTH(builder, SUN_AZIMUTH)
+}
 func EOOAddVIEW_ZENITH_ANGLE(builder *flatbuffers.Builder, VIEW_ZENITH_ANGLE float32) {
 	builder.PrependFloat32Slot(123, VIEW_ZENITH_ANGLE, 0.0)
+}
+func EOOAddViewZenithAngle(builder *flatbuffers.Builder, VIEW_ZENITH_ANGLE float32) {
+	EOOAddVIEW_ZENITH_ANGLE(builder, VIEW_ZENITH_ANGLE)
 }
 func EOOAddVIEW_AZIMUTH_ANGLE(builder *flatbuffers.Builder, VIEW_AZIMUTH_ANGLE float32) {
 	builder.PrependFloat32Slot(124, VIEW_AZIMUTH_ANGLE, 0.0)
 }
+func EOOAddViewAzimuthAngle(builder *flatbuffers.Builder, VIEW_AZIMUTH_ANGLE float32) {
+	EOOAddVIEW_AZIMUTH_ANGLE(builder, VIEW_AZIMUTH_ANGLE)
+}
 func EOOAddOFF_NADIR_ANGLE(builder *flatbuffers.Builder, OFF_NADIR_ANGLE float32) {
 	builder.PrependFloat32Slot(125, OFF_NADIR_ANGLE, 0.0)
+}
+func EOOAddOffNadirAngle(builder *flatbuffers.Builder, OFF_NADIR_ANGLE float32) {
+	EOOAddOFF_NADIR_ANGLE(builder, OFF_NADIR_ANGLE)
 }
 func EOOAddSWATH_WIDTH_KM(builder *flatbuffers.Builder, SWATH_WIDTH_KM float32) {
 	builder.PrependFloat32Slot(126, SWATH_WIDTH_KM, 0.0)
 }
+func EOOAddSwathWidthKm(builder *flatbuffers.Builder, SWATH_WIDTH_KM float32) {
+	EOOAddSWATH_WIDTH_KM(builder, SWATH_WIDTH_KM)
+}
 func EOOAddMEAN_TERRAIN_ELEVATION(builder *flatbuffers.Builder, MEAN_TERRAIN_ELEVATION float32) {
 	builder.PrependFloat32Slot(127, MEAN_TERRAIN_ELEVATION, 0.0)
+}
+func EOOAddMeanTerrainElevation(builder *flatbuffers.Builder, MEAN_TERRAIN_ELEVATION float32) {
+	EOOAddMEAN_TERRAIN_ELEVATION(builder, MEAN_TERRAIN_ELEVATION)
 }
 func EOOAddTERRAIN_ELEVATION_STDDEV(builder *flatbuffers.Builder, TERRAIN_ELEVATION_STDDEV float32) {
 	builder.PrependFloat32Slot(128, TERRAIN_ELEVATION_STDDEV, 0.0)
 }
+func EOOAddTerrainElevationStddev(builder *flatbuffers.Builder, TERRAIN_ELEVATION_STDDEV float32) {
+	EOOAddTERRAIN_ELEVATION_STDDEV(builder, TERRAIN_ELEVATION_STDDEV)
+}
 func EOOAddSHADOW_COVER_PERCENT(builder *flatbuffers.Builder, SHADOW_COVER_PERCENT float32) {
 	builder.PrependFloat32Slot(129, SHADOW_COVER_PERCENT, 0.0)
+}
+func EOOAddShadowCoverPercent(builder *flatbuffers.Builder, SHADOW_COVER_PERCENT float32) {
+	EOOAddSHADOW_COVER_PERCENT(builder, SHADOW_COVER_PERCENT)
 }
 func EOOAddSUNGLINT_PRESENT(builder *flatbuffers.Builder, SUNGLINT_PRESENT bool) {
 	builder.PrependBoolSlot(130, SUNGLINT_PRESENT, false)
 }
+func EOOAddSunglintPresent(builder *flatbuffers.Builder, SUNGLINT_PRESENT bool) {
+	EOOAddSUNGLINT_PRESENT(builder, SUNGLINT_PRESENT)
+}
 func EOOAddSUNGLINT_PERCENT(builder *flatbuffers.Builder, SUNGLINT_PERCENT float32) {
 	builder.PrependFloat32Slot(131, SUNGLINT_PERCENT, 0.0)
+}
+func EOOAddSunglintPercent(builder *flatbuffers.Builder, SUNGLINT_PERCENT float32) {
+	EOOAddSUNGLINT_PERCENT(builder, SUNGLINT_PERCENT)
 }
 func EOOAddSNOW_ICE_COVER_PERCENT(builder *flatbuffers.Builder, SNOW_ICE_COVER_PERCENT float32) {
 	builder.PrependFloat32Slot(132, SNOW_ICE_COVER_PERCENT, 0.0)
 }
+func EOOAddSnowIceCoverPercent(builder *flatbuffers.Builder, SNOW_ICE_COVER_PERCENT float32) {
+	EOOAddSNOW_ICE_COVER_PERCENT(builder, SNOW_ICE_COVER_PERCENT)
+}
 func EOOAddVALID_DATA_AREA_KM2(builder *flatbuffers.Builder, VALID_DATA_AREA_KM2 float32) {
 	builder.PrependFloat32Slot(133, VALID_DATA_AREA_KM2, 0.0)
+}
+func EOOAddValidDataAreaKm2(builder *flatbuffers.Builder, VALID_DATA_AREA_KM2 float32) {
+	EOOAddVALID_DATA_AREA_KM2(builder, VALID_DATA_AREA_KM2)
 }
 func EOOEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

@@ -2,4 +2,146 @@
 
 # namespace: 
 
-# NOTE GJNPolygonRings.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# A polygon represented as an array of rings (outer boundary + holes)
+class GJNPolygonRings(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = GJNPolygonRings()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsGJNPolygonRings(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def GJNPolygonRingsBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x47\x4A\x4E", size_prefixed=size_prefixed)
+
+    # GJNPolygonRings
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Rings: first is outer boundary, rest are holes
+    # GJNPolygonRings
+    def RINGS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from GJNLinearRing import GJNLinearRing
+            obj = GJNLinearRing()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # GJNPolygonRings
+    def RINGSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # GJNPolygonRings
+    def RINGSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        return o == 0
+
+def GJNPolygonRingsStart(builder):
+    builder.StartObject(1)
+
+def Start(builder):
+    GJNPolygonRingsStart(builder)
+
+def GJNPolygonRingsAddRINGS(builder, RINGS):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(RINGS), 0)
+
+def AddRINGS(builder, RINGS):
+    GJNPolygonRingsAddRINGS(builder, RINGS)
+
+def GJNPolygonRingsStartRINGSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartRINGSVector(builder, numElems):
+    return GJNPolygonRingsStartRINGSVector(builder, numElems)
+
+def GJNPolygonRingsCreateRINGSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateRINGSVector(builder, data):
+    GJNPolygonRingsCreateRINGSVector(builder, data)
+
+def GJNPolygonRingsEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return GJNPolygonRingsEnd(builder)
+
+import GJNLinearRing
+try:
+    from typing import List
+except:
+    pass
+
+class GJNPolygonRingsT(object):
+
+    # GJNPolygonRingsT
+    def __init__(
+        self,
+        RINGS = None,
+    ):
+        self.RINGS = RINGS  # type: Optional[List[GJNLinearRing.GJNLinearRingT]]
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpGjnpolygonRings = GJNPolygonRings()
+        tmpGjnpolygonRings.Init(buf, pos)
+        return cls.InitFromObj(tmpGjnpolygonRings)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpGjnpolygonRings):
+        x = GJNPolygonRingsT()
+        x._UnPack(tmpGjnpolygonRings)
+        return x
+
+    # GJNPolygonRingsT
+    def _UnPack(self, GJNPolygonRings):
+        if GJNPolygonRings is None:
+            return
+        if not GJNPolygonRings.RINGSIsNone():
+            self.RINGS = []
+            for i in range(GJNPolygonRings.RINGSLength()):
+                if GJNPolygonRings.RINGS(i) is None:
+                    self.RINGS.append(None)
+                else:
+                    gJNLinearRing_ = GJNLinearRing.GJNLinearRingT.InitFromObj(GJNPolygonRings.RINGS(i))
+                    self.RINGS.append(gJNLinearRing_)
+
+    # GJNPolygonRingsT
+    def Pack(self, builder):
+        if self.RINGS is not None:
+            RINGSlist = []
+            for i in range(len(self.RINGS)):
+                RINGSlist.append(self.RINGS[i].Pack(builder))
+            GJNPolygonRingsStartRINGSVector(builder, len(self.RINGS))
+            for i in reversed(range(len(self.RINGS))):
+                builder.PrependUOffsetTRelative(RINGSlist[i])
+            RINGS = builder.EndVector()
+        GJNPolygonRingsStart(builder)
+        if self.RINGS is not None:
+            GJNPolygonRingsAddRINGS(builder, RINGS)
+        GJNPolygonRings = GJNPolygonRingsEnd(builder)
+        return GJNPolygonRings

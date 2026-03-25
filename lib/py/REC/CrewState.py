@@ -2,4 +2,9 @@
 
 # namespace: 
 
-# NOTE CrewState.py does not declare any structs or enums
+class CrewState(object):
+    ALIVE = 0
+    WOUNDED = 1
+    UNCONSCIOUS = 2
+    DEAD = 3
+    BAILED = 4

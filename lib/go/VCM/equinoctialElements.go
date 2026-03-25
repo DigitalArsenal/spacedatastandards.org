@@ -50,8 +50,16 @@ func (rcv *equinoctialElements) AF() float64 {
 	return 0.0
 }
 
+func (rcv *equinoctialElements) Af() float64 {
+	return rcv.AF()
+}
+
 func (rcv *equinoctialElements) MutateAF(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(4, n)
+}
+
+func (rcv *equinoctialElements) MutateAf(n float64) bool {
+	return rcv.MutateAF(n)
 }
 
 func (rcv *equinoctialElements) AG() float64 {
@@ -62,8 +70,16 @@ func (rcv *equinoctialElements) AG() float64 {
 	return 0.0
 }
 
+func (rcv *equinoctialElements) Ag() float64 {
+	return rcv.AG()
+}
+
 func (rcv *equinoctialElements) MutateAG(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(6, n)
+}
+
+func (rcv *equinoctialElements) MutateAg(n float64) bool {
+	return rcv.MutateAG(n)
 }
 
 func (rcv *equinoctialElements) L() float64 {
@@ -98,8 +114,16 @@ func (rcv *equinoctialElements) CHI() float64 {
 	return 0.0
 }
 
+func (rcv *equinoctialElements) Chi() float64 {
+	return rcv.CHI()
+}
+
 func (rcv *equinoctialElements) MutateCHI(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(12, n)
+}
+
+func (rcv *equinoctialElements) MutateChi(n float64) bool {
+	return rcv.MutateCHI(n)
 }
 
 func (rcv *equinoctialElements) PSI() float64 {
@@ -110,8 +134,16 @@ func (rcv *equinoctialElements) PSI() float64 {
 	return 0.0
 }
 
+func (rcv *equinoctialElements) Psi() float64 {
+	return rcv.PSI()
+}
+
 func (rcv *equinoctialElements) MutatePSI(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(14, n)
+}
+
+func (rcv *equinoctialElements) MutatePsi(n float64) bool {
+	return rcv.MutatePSI(n)
 }
 
 func equinoctialElementsStart(builder *flatbuffers.Builder) {
@@ -120,8 +152,14 @@ func equinoctialElementsStart(builder *flatbuffers.Builder) {
 func equinoctialElementsAddAF(builder *flatbuffers.Builder, AF float64) {
 	builder.PrependFloat64Slot(0, AF, 0.0)
 }
+func equinoctialElementsAddAf(builder *flatbuffers.Builder, AF float64) {
+	equinoctialElementsAddAF(builder, AF)
+}
 func equinoctialElementsAddAG(builder *flatbuffers.Builder, AG float64) {
 	builder.PrependFloat64Slot(1, AG, 0.0)
+}
+func equinoctialElementsAddAg(builder *flatbuffers.Builder, AG float64) {
+	equinoctialElementsAddAG(builder, AG)
 }
 func equinoctialElementsAddL(builder *flatbuffers.Builder, L float64) {
 	builder.PrependFloat64Slot(2, L, 0.0)
@@ -132,8 +170,14 @@ func equinoctialElementsAddN(builder *flatbuffers.Builder, N float64) {
 func equinoctialElementsAddCHI(builder *flatbuffers.Builder, CHI float64) {
 	builder.PrependFloat64Slot(4, CHI, 0.0)
 }
+func equinoctialElementsAddChi(builder *flatbuffers.Builder, CHI float64) {
+	equinoctialElementsAddCHI(builder, CHI)
+}
 func equinoctialElementsAddPSI(builder *flatbuffers.Builder, PSI float64) {
 	builder.PrependFloat64Slot(5, PSI, 0.0)
+}
+func equinoctialElementsAddPsi(builder *flatbuffers.Builder, PSI float64) {
+	equinoctialElementsAddPSI(builder, PSI)
 }
 func equinoctialElementsEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

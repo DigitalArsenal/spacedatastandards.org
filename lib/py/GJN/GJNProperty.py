@@ -157,21 +157,31 @@ def End(builder):
 class GJNPropertyT(object):
 
     # GJNPropertyT
-    def __init__(self):
-        self.KEY = None  # type: str
-        self.VALUE = None  # type: str
-        self.NUM_VALUE = 0.0  # type: float
-        self.IS_NUMERIC = False  # type: bool
-        self.IS_BOOL = False  # type: bool
-        self.BOOL_VALUE = False  # type: bool
-        self.IS_NULL = False  # type: bool
-        self.JSON_VALUE = None  # type: str
+    def __init__(
+        self,
+        KEY = None,
+        VALUE = None,
+        NUM_VALUE = 0.0,
+        IS_NUMERIC = False,
+        IS_BOOL = False,
+        BOOL_VALUE = False,
+        IS_NULL = False,
+        JSON_VALUE = None,
+    ):
+        self.KEY = KEY  # type: Optional[str]
+        self.VALUE = VALUE  # type: Optional[str]
+        self.NUM_VALUE = NUM_VALUE  # type: float
+        self.IS_NUMERIC = IS_NUMERIC  # type: bool
+        self.IS_BOOL = IS_BOOL  # type: bool
+        self.BOOL_VALUE = BOOL_VALUE  # type: bool
+        self.IS_NULL = IS_NULL  # type: bool
+        self.JSON_VALUE = JSON_VALUE  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        gjnproperty = GJNProperty()
-        gjnproperty.Init(buf, pos)
-        return cls.InitFromObj(gjnproperty)
+        tmpGjnproperty = GJNProperty()
+        tmpGjnproperty.Init(buf, pos)
+        return cls.InitFromObj(tmpGjnproperty)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -179,23 +189,23 @@ class GJNPropertyT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, gjnproperty):
+    def InitFromObj(cls, tmpGjnproperty):
         x = GJNPropertyT()
-        x._UnPack(gjnproperty)
+        x._UnPack(tmpGjnproperty)
         return x
 
     # GJNPropertyT
-    def _UnPack(self, gjnproperty):
-        if gjnproperty is None:
+    def _UnPack(self, GJNProperty):
+        if GJNProperty is None:
             return
-        self.KEY = gjnproperty.KEY()
-        self.VALUE = gjnproperty.VALUE()
-        self.NUM_VALUE = gjnproperty.NUM_VALUE()
-        self.IS_NUMERIC = gjnproperty.IS_NUMERIC()
-        self.IS_BOOL = gjnproperty.IS_BOOL()
-        self.BOOL_VALUE = gjnproperty.BOOL_VALUE()
-        self.IS_NULL = gjnproperty.IS_NULL()
-        self.JSON_VALUE = gjnproperty.JSON_VALUE()
+        self.KEY = GJNProperty.KEY()
+        self.VALUE = GJNProperty.VALUE()
+        self.NUM_VALUE = GJNProperty.NUM_VALUE()
+        self.IS_NUMERIC = GJNProperty.IS_NUMERIC()
+        self.IS_BOOL = GJNProperty.IS_BOOL()
+        self.BOOL_VALUE = GJNProperty.BOOL_VALUE()
+        self.IS_NULL = GJNProperty.IS_NULL()
+        self.JSON_VALUE = GJNProperty.JSON_VALUE()
 
     # GJNPropertyT
     def Pack(self, builder):
@@ -217,5 +227,5 @@ class GJNPropertyT(object):
         GJNPropertyAddIS_NULL(builder, self.IS_NULL)
         if self.JSON_VALUE is not None:
             GJNPropertyAddJSON_VALUE(builder, JSON_VALUE)
-        gjnproperty = GJNPropertyEnd(builder)
-        return gjnproperty
+        GJNProperty = GJNPropertyEnd(builder)
+        return GJNProperty

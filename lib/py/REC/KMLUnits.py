@@ -2,4 +2,7 @@
 
 # namespace: 
 
-# NOTE KMLUnits.py does not declare any structs or enums
+class KMLUnits(object):
+    PIXELS = 0
+    FRACTION = 1
+    INSET_PIXELS = 2

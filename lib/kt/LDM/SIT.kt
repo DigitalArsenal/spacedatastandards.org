@@ -32,7 +32,7 @@ class SIT : Table() {
     /**
      * Unique identifier for the site, BE_NUMBER
      */
-    val ID : String?
+    val id : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class SIT : Table() {
                 null
             }
         }
-    val IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val idAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun idInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Name of the site
      */
-    val NAME : String?
+    val name : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -55,12 +55,12 @@ class SIT : Table() {
                 null
             }
         }
-    val NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val nameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun nameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * Abbreviation
      */
-    val ABBREVIATION : String?
+    val abbreviation : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -69,12 +69,12 @@ class SIT : Table() {
                 null
             }
         }
-    val ABBREVIATIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun ABBREVIATIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val abbreviationAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun abbreviationInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
     /**
      * Site type as defined in SiteType enum
      */
-    val SITE_TYPE : Byte
+    val siteType : Byte
         get() {
             val o = __offset(10)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -82,7 +82,7 @@ class SIT : Table() {
     /**
      * Site type CATCODE
      */
-    val CATCODE : String?
+    val catcode : String?
         get() {
             val o = __offset(12)
             return if (o != 0) {
@@ -91,12 +91,12 @@ class SIT : Table() {
                 null
             }
         }
-    val CATCODEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
-    fun CATCODEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
+    val catcodeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(12, 1)
+    fun catcodeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 12, 1)
     /**
      * Network identifier
      */
-    val NETWORK : String?
+    val network : String?
         get() {
             val o = __offset(14)
             return if (o != 0) {
@@ -105,12 +105,12 @@ class SIT : Table() {
                 null
             }
         }
-    val NETWORKAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(14, 1)
-    fun NETWORKInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 14, 1)
+    val networkAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(14, 1)
+    fun networkInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 14, 1)
     /**
      * Latitude of the site
      */
-    val LATITUDE : Float
+    val latitude : Float
         get() {
             val o = __offset(16)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -118,7 +118,7 @@ class SIT : Table() {
     /**
      * Longitude of the site
      */
-    val LONGITUDE : Float
+    val longitude : Float
         get() {
             val o = __offset(18)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -126,7 +126,7 @@ class SIT : Table() {
     /**
      * Altitude of the site
      */
-    val ALTITUDE : Float
+    val altitude : Float
         get() {
             val o = __offset(20)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -134,8 +134,8 @@ class SIT : Table() {
     /**
      * Geometry of the site
      */
-    val GEOMETRY : Geometry? get() = GEOMETRY(Geometry())
-    fun GEOMETRY(obj: Geometry) : Geometry? {
+    val geometry : Geometry? get() = geometry(Geometry())
+    fun geometry(obj: Geometry) : Geometry? {
         val o = __offset(22)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -146,7 +146,7 @@ class SIT : Table() {
     /**
      * Center point geometry coordinates
      */
-    fun CENTER_POINT_GEOMETRY(j: Int) : Float {
+    fun centerPointGeometry(j: Int) : Float {
         val o = __offset(24)
         return if (o != 0) {
             bb.getFloat(__vector(o) + j * 4)
@@ -154,16 +154,16 @@ class SIT : Table() {
             0.0f
         }
     }
-    val CENTER_POINT_GEOMETRYLength : Int
+    val centerPointGeometryLength : Int
         get() {
             val o = __offset(24); return if (o != 0) __vector_len(o) else 0
         }
-    val CENTER_POINT_GEOMETRYAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(24, 4)
-    fun CENTER_POINT_GEOMETRYInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 24, 4)
+    val centerPointGeometryAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(24, 4)
+    fun centerPointGeometryInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 24, 4)
     /**
      * Classification marking of the site
      */
-    val CLASSIFICATION : String?
+    val classification : String?
         get() {
             val o = __offset(26)
             return if (o != 0) {
@@ -172,12 +172,12 @@ class SIT : Table() {
                 null
             }
         }
-    val CLASSIFICATIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(26, 1)
-    fun CLASSIFICATIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 26, 1)
+    val classificationAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(26, 1)
+    fun classificationInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 26, 1)
     /**
      * CTR ISO 3166 Numeric code as string
      */
-    val CTR_ID : String?
+    val ctrId : String?
         get() {
             val o = __offset(28)
             return if (o != 0) {
@@ -186,12 +186,12 @@ class SIT : Table() {
                 null
             }
         }
-    val CTR_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(28, 1)
-    fun CTR_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 28, 1)
+    val ctrIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(28, 1)
+    fun ctrIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 28, 1)
     /**
      * Identifier of the user who created the site data
      */
-    val CREATED_BY : String?
+    val createdBy : String?
         get() {
             val o = __offset(30)
             return if (o != 0) {
@@ -200,12 +200,12 @@ class SIT : Table() {
                 null
             }
         }
-    val CREATED_BYAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(30, 1)
-    fun CREATED_BYInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 30, 1)
+    val createdByAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(30, 1)
+    fun createdByInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 30, 1)
     /**
      * Description of the site
      */
-    val DESCRIPTION : String?
+    val description : String?
         get() {
             val o = __offset(32)
             return if (o != 0) {
@@ -214,12 +214,12 @@ class SIT : Table() {
                 null
             }
         }
-    val DESCRIPTIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(32, 1)
-    fun DESCRIPTIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 32, 1)
+    val descriptionAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(32, 1)
+    fun descriptionInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 32, 1)
     /**
      * URL for the 3D model of the site
      */
-    val MODEL_URL : String?
+    val modelUrl : String?
         get() {
             val o = __offset(34)
             return if (o != 0) {
@@ -228,12 +228,12 @@ class SIT : Table() {
                 null
             }
         }
-    val MODEL_URLAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(34, 1)
-    fun MODEL_URLInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 34, 1)
+    val modelUrlAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(34, 1)
+    fun modelUrlInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 34, 1)
     /**
      * Source of the site data
      */
-    val SOURCE : String?
+    val source : String?
         get() {
             val o = __offset(36)
             return if (o != 0) {
@@ -242,12 +242,12 @@ class SIT : Table() {
                 null
             }
         }
-    val SOURCEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(36, 1)
-    fun SOURCEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 36, 1)
+    val sourceAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(36, 1)
+    fun sourceInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 36, 1)
     /**
      * Indicates if the site is taskable
      */
-    val TASKABLE : Boolean
+    val taskable : Boolean
         get() {
             val o = __offset(38)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -255,7 +255,7 @@ class SIT : Table() {
     /**
      * Operational status of the site (e.g., active, inactive, under construction)
      */
-    val OPERATIONAL_STATUS : String?
+    val operationalStatus : String?
         get() {
             val o = __offset(40)
             return if (o != 0) {
@@ -264,12 +264,12 @@ class SIT : Table() {
                 null
             }
         }
-    val OPERATIONAL_STATUSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(40, 1)
-    fun OPERATIONAL_STATUSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 40, 1)
+    val operationalStatusAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(40, 1)
+    fun operationalStatusInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 40, 1)
     /**
      * Date of establishment
      */
-    val ESTABLISHMENT_DATE : String?
+    val establishmentDate : String?
         get() {
             val o = __offset(42)
             return if (o != 0) {
@@ -278,12 +278,12 @@ class SIT : Table() {
                 null
             }
         }
-    val ESTABLISHMENT_DATEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(42, 1)
-    fun ESTABLISHMENT_DATEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 42, 1)
+    val establishmentDateAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(42, 1)
+    fun establishmentDateInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 42, 1)
     /**
      * Contact information for the site
      */
-    val CONTACT_INFO : String?
+    val contactInfo : String?
         get() {
             val o = __offset(44)
             return if (o != 0) {
@@ -292,12 +292,12 @@ class SIT : Table() {
                 null
             }
         }
-    val CONTACT_INFOAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(44, 1)
-    fun CONTACT_INFOInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 44, 1)
+    val contactInfoAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(44, 1)
+    fun contactInfoInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 44, 1)
     /**
      * Environmental impact or considerations
      */
-    val ENVIRONMENTAL_IMPACT : String?
+    val environmentalImpact : String?
         get() {
             val o = __offset(46)
             return if (o != 0) {
@@ -306,12 +306,12 @@ class SIT : Table() {
                 null
             }
         }
-    val ENVIRONMENTAL_IMPACTAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(46, 1)
-    fun ENVIRONMENTAL_IMPACTInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 46, 1)
+    val environmentalImpactAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(46, 1)
+    fun environmentalImpactInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 46, 1)
     /**
      * Accessibility and infrastructure details
      */
-    val ACCESSIBILITY_INFRA : String?
+    val accessibilityInfra : String?
         get() {
             val o = __offset(48)
             return if (o != 0) {
@@ -320,13 +320,13 @@ class SIT : Table() {
                 null
             }
         }
-    val ACCESSIBILITY_INFRAAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(48, 1)
-    fun ACCESSIBILITY_INFRAInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 48, 1)
+    val accessibilityInfraAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(48, 1)
+    fun accessibilityInfraInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 48, 1)
     /**
      * Vector of Integrated Devices (IDM)
      */
-    fun INTEGRATED_DEVICES(j: Int) : IDM? = INTEGRATED_DEVICES(IDM(), j)
-    fun INTEGRATED_DEVICES(obj: IDM, j: Int) : IDM? {
+    fun integratedDevices(j: Int) : IDM? = integratedDevices(IDM(), j)
+    fun integratedDevices(obj: IDM, j: Int) : IDM? {
         val o = __offset(50)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -334,58 +334,58 @@ class SIT : Table() {
             null
         }
     }
-    val INTEGRATED_DEVICESLength : Int
+    val integratedDevicesLength : Int
         get() {
             val o = __offset(50); return if (o != 0) __vector_len(o) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsSIT(_bb: ByteBuffer): SIT = getRootAsSIT(_bb, SIT())
         fun getRootAsSIT(_bb: ByteBuffer, obj: SIT): SIT {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun SITBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$SIT")
-        fun createSIT(builder: FlatBufferBuilder, IDOffset: Int, NAMEOffset: Int, ABBREVIATIONOffset: Int, SITE_TYPE: Byte, CATCODEOffset: Int, NETWORKOffset: Int, LATITUDE: Float, LONGITUDE: Float, ALTITUDE: Float, GEOMETRYOffset: Int, CENTER_POINT_GEOMETRYOffset: Int, CLASSIFICATIONOffset: Int, CTR_IDOffset: Int, CREATED_BYOffset: Int, DESCRIPTIONOffset: Int, MODEL_URLOffset: Int, SOURCEOffset: Int, TASKABLE: Boolean, OPERATIONAL_STATUSOffset: Int, ESTABLISHMENT_DATEOffset: Int, CONTACT_INFOOffset: Int, ENVIRONMENTAL_IMPACTOffset: Int, ACCESSIBILITY_INFRAOffset: Int, INTEGRATED_DEVICESOffset: Int) : Int {
+        fun createSIT(builder: FlatBufferBuilder, idOffset: Int, nameOffset: Int, abbreviationOffset: Int, siteType: Byte, catcodeOffset: Int, networkOffset: Int, latitude: Float, longitude: Float, altitude: Float, geometryOffset: Int, centerPointGeometryOffset: Int, classificationOffset: Int, ctrIdOffset: Int, createdByOffset: Int, descriptionOffset: Int, modelUrlOffset: Int, sourceOffset: Int, taskable: Boolean, operationalStatusOffset: Int, establishmentDateOffset: Int, contactInfoOffset: Int, environmentalImpactOffset: Int, accessibilityInfraOffset: Int, integratedDevicesOffset: Int) : Int {
             builder.startTable(24)
-            addINTEGRATED_DEVICES(builder, INTEGRATED_DEVICESOffset)
-            addACCESSIBILITY_INFRA(builder, ACCESSIBILITY_INFRAOffset)
-            addENVIRONMENTAL_IMPACT(builder, ENVIRONMENTAL_IMPACTOffset)
-            addCONTACT_INFO(builder, CONTACT_INFOOffset)
-            addESTABLISHMENT_DATE(builder, ESTABLISHMENT_DATEOffset)
-            addOPERATIONAL_STATUS(builder, OPERATIONAL_STATUSOffset)
-            addSOURCE(builder, SOURCEOffset)
-            addMODEL_URL(builder, MODEL_URLOffset)
-            addDESCRIPTION(builder, DESCRIPTIONOffset)
-            addCREATED_BY(builder, CREATED_BYOffset)
-            addCTR_ID(builder, CTR_IDOffset)
-            addCLASSIFICATION(builder, CLASSIFICATIONOffset)
-            addCENTER_POINT_GEOMETRY(builder, CENTER_POINT_GEOMETRYOffset)
-            addGEOMETRY(builder, GEOMETRYOffset)
-            addALTITUDE(builder, ALTITUDE)
-            addLONGITUDE(builder, LONGITUDE)
-            addLATITUDE(builder, LATITUDE)
-            addNETWORK(builder, NETWORKOffset)
-            addCATCODE(builder, CATCODEOffset)
-            addABBREVIATION(builder, ABBREVIATIONOffset)
-            addNAME(builder, NAMEOffset)
-            addID(builder, IDOffset)
-            addTASKABLE(builder, TASKABLE)
-            addSITE_TYPE(builder, SITE_TYPE)
+            addINTEGRATEDDEVICES(builder, integratedDevicesOffset)
+            addACCESSIBILITYINFRA(builder, accessibilityInfraOffset)
+            addENVIRONMENTALIMPACT(builder, environmentalImpactOffset)
+            addCONTACTINFO(builder, contactInfoOffset)
+            addESTABLISHMENTDATE(builder, establishmentDateOffset)
+            addOPERATIONALSTATUS(builder, operationalStatusOffset)
+            addSOURCE(builder, sourceOffset)
+            addMODELURL(builder, modelUrlOffset)
+            addDESCRIPTION(builder, descriptionOffset)
+            addCREATEDBY(builder, createdByOffset)
+            addCTRID(builder, ctrIdOffset)
+            addCLASSIFICATION(builder, classificationOffset)
+            addCENTERPOINTGEOMETRY(builder, centerPointGeometryOffset)
+            addGEOMETRY(builder, geometryOffset)
+            addALTITUDE(builder, altitude)
+            addLONGITUDE(builder, longitude)
+            addLATITUDE(builder, latitude)
+            addNETWORK(builder, networkOffset)
+            addCATCODE(builder, catcodeOffset)
+            addABBREVIATION(builder, abbreviationOffset)
+            addNAME(builder, nameOffset)
+            addID(builder, idOffset)
+            addTASKABLE(builder, taskable)
+            addSITETYPE(builder, siteType)
             return endSIT(builder)
         }
         fun startSIT(builder: FlatBufferBuilder) = builder.startTable(24)
-        fun addID(builder: FlatBufferBuilder, ID: Int) = builder.addOffset(0, ID, 0)
-        fun addNAME(builder: FlatBufferBuilder, NAME: Int) = builder.addOffset(1, NAME, 0)
-        fun addABBREVIATION(builder: FlatBufferBuilder, ABBREVIATION: Int) = builder.addOffset(2, ABBREVIATION, 0)
-        fun addSITE_TYPE(builder: FlatBufferBuilder, SITE_TYPE: Byte) = builder.addByte(3, SITE_TYPE, 0)
-        fun addCATCODE(builder: FlatBufferBuilder, CATCODE: Int) = builder.addOffset(4, CATCODE, 0)
-        fun addNETWORK(builder: FlatBufferBuilder, NETWORK: Int) = builder.addOffset(5, NETWORK, 0)
-        fun addLATITUDE(builder: FlatBufferBuilder, LATITUDE: Float) = builder.addFloat(6, LATITUDE, 0.0)
-        fun addLONGITUDE(builder: FlatBufferBuilder, LONGITUDE: Float) = builder.addFloat(7, LONGITUDE, 0.0)
-        fun addALTITUDE(builder: FlatBufferBuilder, ALTITUDE: Float) = builder.addFloat(8, ALTITUDE, 0.0)
-        fun addGEOMETRY(builder: FlatBufferBuilder, GEOMETRY: Int) = builder.addOffset(9, GEOMETRY, 0)
-        fun addCENTER_POINT_GEOMETRY(builder: FlatBufferBuilder, CENTER_POINT_GEOMETRY: Int) = builder.addOffset(10, CENTER_POINT_GEOMETRY, 0)
+        fun addID(builder: FlatBufferBuilder, id: Int) = builder.addOffset(0, id, 0)
+        fun addNAME(builder: FlatBufferBuilder, name: Int) = builder.addOffset(1, name, 0)
+        fun addABBREVIATION(builder: FlatBufferBuilder, abbreviation: Int) = builder.addOffset(2, abbreviation, 0)
+        fun addSITETYPE(builder: FlatBufferBuilder, siteType: Byte) = builder.addByte(3, siteType, 0)
+        fun addCATCODE(builder: FlatBufferBuilder, catcode: Int) = builder.addOffset(4, catcode, 0)
+        fun addNETWORK(builder: FlatBufferBuilder, network: Int) = builder.addOffset(5, network, 0)
+        fun addLATITUDE(builder: FlatBufferBuilder, latitude: Float) = builder.addFloat(6, latitude, 0.0)
+        fun addLONGITUDE(builder: FlatBufferBuilder, longitude: Float) = builder.addFloat(7, longitude, 0.0)
+        fun addALTITUDE(builder: FlatBufferBuilder, altitude: Float) = builder.addFloat(8, altitude, 0.0)
+        fun addGEOMETRY(builder: FlatBufferBuilder, geometry: Int) = builder.addOffset(9, geometry, 0)
+        fun addCENTERPOINTGEOMETRY(builder: FlatBufferBuilder, centerPointGeometry: Int) = builder.addOffset(10, centerPointGeometry, 0)
         fun createCenterPointGeometryVector(builder: FlatBufferBuilder, data: FloatArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -394,19 +394,19 @@ class SIT : Table() {
             return builder.endVector()
         }
         fun startCenterPointGeometryVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addCLASSIFICATION(builder: FlatBufferBuilder, CLASSIFICATION: Int) = builder.addOffset(11, CLASSIFICATION, 0)
-        fun addCTR_ID(builder: FlatBufferBuilder, CTR_ID: Int) = builder.addOffset(12, CTR_ID, 0)
-        fun addCREATED_BY(builder: FlatBufferBuilder, CREATED_BY: Int) = builder.addOffset(13, CREATED_BY, 0)
-        fun addDESCRIPTION(builder: FlatBufferBuilder, DESCRIPTION: Int) = builder.addOffset(14, DESCRIPTION, 0)
-        fun addMODEL_URL(builder: FlatBufferBuilder, MODEL_URL: Int) = builder.addOffset(15, MODEL_URL, 0)
-        fun addSOURCE(builder: FlatBufferBuilder, SOURCE: Int) = builder.addOffset(16, SOURCE, 0)
-        fun addTASKABLE(builder: FlatBufferBuilder, TASKABLE: Boolean) = builder.addBoolean(17, TASKABLE, false)
-        fun addOPERATIONAL_STATUS(builder: FlatBufferBuilder, OPERATIONAL_STATUS: Int) = builder.addOffset(18, OPERATIONAL_STATUS, 0)
-        fun addESTABLISHMENT_DATE(builder: FlatBufferBuilder, ESTABLISHMENT_DATE: Int) = builder.addOffset(19, ESTABLISHMENT_DATE, 0)
-        fun addCONTACT_INFO(builder: FlatBufferBuilder, CONTACT_INFO: Int) = builder.addOffset(20, CONTACT_INFO, 0)
-        fun addENVIRONMENTAL_IMPACT(builder: FlatBufferBuilder, ENVIRONMENTAL_IMPACT: Int) = builder.addOffset(21, ENVIRONMENTAL_IMPACT, 0)
-        fun addACCESSIBILITY_INFRA(builder: FlatBufferBuilder, ACCESSIBILITY_INFRA: Int) = builder.addOffset(22, ACCESSIBILITY_INFRA, 0)
-        fun addINTEGRATED_DEVICES(builder: FlatBufferBuilder, INTEGRATED_DEVICES: Int) = builder.addOffset(23, INTEGRATED_DEVICES, 0)
+        fun addCLASSIFICATION(builder: FlatBufferBuilder, classification: Int) = builder.addOffset(11, classification, 0)
+        fun addCTRID(builder: FlatBufferBuilder, ctrId: Int) = builder.addOffset(12, ctrId, 0)
+        fun addCREATEDBY(builder: FlatBufferBuilder, createdBy: Int) = builder.addOffset(13, createdBy, 0)
+        fun addDESCRIPTION(builder: FlatBufferBuilder, description: Int) = builder.addOffset(14, description, 0)
+        fun addMODELURL(builder: FlatBufferBuilder, modelUrl: Int) = builder.addOffset(15, modelUrl, 0)
+        fun addSOURCE(builder: FlatBufferBuilder, source: Int) = builder.addOffset(16, source, 0)
+        fun addTASKABLE(builder: FlatBufferBuilder, taskable: Boolean) = builder.addBoolean(17, taskable, false)
+        fun addOPERATIONALSTATUS(builder: FlatBufferBuilder, operationalStatus: Int) = builder.addOffset(18, operationalStatus, 0)
+        fun addESTABLISHMENTDATE(builder: FlatBufferBuilder, establishmentDate: Int) = builder.addOffset(19, establishmentDate, 0)
+        fun addCONTACTINFO(builder: FlatBufferBuilder, contactInfo: Int) = builder.addOffset(20, contactInfo, 0)
+        fun addENVIRONMENTALIMPACT(builder: FlatBufferBuilder, environmentalImpact: Int) = builder.addOffset(21, environmentalImpact, 0)
+        fun addACCESSIBILITYINFRA(builder: FlatBufferBuilder, accessibilityInfra: Int) = builder.addOffset(22, accessibilityInfra, 0)
+        fun addINTEGRATEDDEVICES(builder: FlatBufferBuilder, integratedDevices: Int) = builder.addOffset(23, integratedDevices, 0)
         fun createIntegratedDevicesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {

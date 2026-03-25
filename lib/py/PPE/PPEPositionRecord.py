@@ -316,6 +316,16 @@ def PPEPositionRecordStartPOS_COEFF_XVector(builder, numElems):
 def StartPOS_COEFF_XVector(builder, numElems):
     return PPEPositionRecordStartPOS_COEFF_XVector(builder, numElems)
 
+def PPEPositionRecordCreatePOS_COEFF_XVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreatePOS_COEFF_XVector(builder, data):
+    PPEPositionRecordCreatePOS_COEFF_XVector(builder, data)
+
 def PPEPositionRecordAddPOS_COEFF_Y(builder, POS_COEFF_Y):
     builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(POS_COEFF_Y), 0)
 
@@ -328,6 +338,16 @@ def PPEPositionRecordStartPOS_COEFF_YVector(builder, numElems):
 def StartPOS_COEFF_YVector(builder, numElems):
     return PPEPositionRecordStartPOS_COEFF_YVector(builder, numElems)
 
+def PPEPositionRecordCreatePOS_COEFF_YVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreatePOS_COEFF_YVector(builder, data):
+    PPEPositionRecordCreatePOS_COEFF_YVector(builder, data)
+
 def PPEPositionRecordAddPOS_COEFF_Z(builder, POS_COEFF_Z):
     builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(POS_COEFF_Z), 0)
 
@@ -339,6 +359,16 @@ def PPEPositionRecordStartPOS_COEFF_ZVector(builder, numElems):
 
 def StartPOS_COEFF_ZVector(builder, numElems):
     return PPEPositionRecordStartPOS_COEFF_ZVector(builder, numElems)
+
+def PPEPositionRecordCreatePOS_COEFF_ZVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreatePOS_COEFF_ZVector(builder, data):
+    PPEPositionRecordCreatePOS_COEFF_ZVector(builder, data)
 
 def PPEPositionRecordAddHAS_VELOCITY_COEFFICIENTS(builder, HAS_VELOCITY_COEFFICIENTS):
     builder.PrependBoolSlot(7, HAS_VELOCITY_COEFFICIENTS, 0)
@@ -358,6 +388,16 @@ def PPEPositionRecordStartVEL_COEFF_XVector(builder, numElems):
 def StartVEL_COEFF_XVector(builder, numElems):
     return PPEPositionRecordStartVEL_COEFF_XVector(builder, numElems)
 
+def PPEPositionRecordCreateVEL_COEFF_XVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateVEL_COEFF_XVector(builder, data):
+    PPEPositionRecordCreateVEL_COEFF_XVector(builder, data)
+
 def PPEPositionRecordAddVEL_COEFF_Y(builder, VEL_COEFF_Y):
     builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(VEL_COEFF_Y), 0)
 
@@ -370,6 +410,16 @@ def PPEPositionRecordStartVEL_COEFF_YVector(builder, numElems):
 def StartVEL_COEFF_YVector(builder, numElems):
     return PPEPositionRecordStartVEL_COEFF_YVector(builder, numElems)
 
+def PPEPositionRecordCreateVEL_COEFF_YVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateVEL_COEFF_YVector(builder, data):
+    PPEPositionRecordCreateVEL_COEFF_YVector(builder, data)
+
 def PPEPositionRecordAddVEL_COEFF_Z(builder, VEL_COEFF_Z):
     builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(VEL_COEFF_Z), 0)
 
@@ -381,6 +431,16 @@ def PPEPositionRecordStartVEL_COEFF_ZVector(builder, numElems):
 
 def StartVEL_COEFF_ZVector(builder, numElems):
     return PPEPositionRecordStartVEL_COEFF_ZVector(builder, numElems)
+
+def PPEPositionRecordCreateVEL_COEFF_ZVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateVEL_COEFF_ZVector(builder, data):
+    PPEPositionRecordCreateVEL_COEFF_ZVector(builder, data)
 
 def PPEPositionRecordAddMAX_POSITION_RESIDUAL(builder, MAX_POSITION_RESIDUAL):
     builder.PrependFloat64Slot(11, MAX_POSITION_RESIDUAL, 0.0)
@@ -408,26 +468,41 @@ except:
 class PPEPositionRecordT(object):
 
     # PPEPositionRecordT
-    def __init__(self):
-        self.EPOCH_MID = None  # type: str
-        self.EPOCH_HALF_SPAN = 0.0  # type: float
-        self.NUM_COEFFICIENTS = 0  # type: int
-        self.BASIS_TYPE = 0  # type: int
-        self.POS_COEFF_X = None  # type: List[float]
-        self.POS_COEFF_Y = None  # type: List[float]
-        self.POS_COEFF_Z = None  # type: List[float]
-        self.HAS_VELOCITY_COEFFICIENTS = False  # type: bool
-        self.VEL_COEFF_X = None  # type: List[float]
-        self.VEL_COEFF_Y = None  # type: List[float]
-        self.VEL_COEFF_Z = None  # type: List[float]
-        self.MAX_POSITION_RESIDUAL = 0.0  # type: float
-        self.RMS_POSITION_RESIDUAL = 0.0  # type: float
+    def __init__(
+        self,
+        EPOCH_MID = None,
+        EPOCH_HALF_SPAN = 0.0,
+        NUM_COEFFICIENTS = 0,
+        BASIS_TYPE = 0,
+        POS_COEFF_X = None,
+        POS_COEFF_Y = None,
+        POS_COEFF_Z = None,
+        HAS_VELOCITY_COEFFICIENTS = False,
+        VEL_COEFF_X = None,
+        VEL_COEFF_Y = None,
+        VEL_COEFF_Z = None,
+        MAX_POSITION_RESIDUAL = 0.0,
+        RMS_POSITION_RESIDUAL = 0.0,
+    ):
+        self.EPOCH_MID = EPOCH_MID  # type: Optional[str]
+        self.EPOCH_HALF_SPAN = EPOCH_HALF_SPAN  # type: float
+        self.NUM_COEFFICIENTS = NUM_COEFFICIENTS  # type: int
+        self.BASIS_TYPE = BASIS_TYPE  # type: int
+        self.POS_COEFF_X = POS_COEFF_X  # type: Optional[List[float]]
+        self.POS_COEFF_Y = POS_COEFF_Y  # type: Optional[List[float]]
+        self.POS_COEFF_Z = POS_COEFF_Z  # type: Optional[List[float]]
+        self.HAS_VELOCITY_COEFFICIENTS = HAS_VELOCITY_COEFFICIENTS  # type: bool
+        self.VEL_COEFF_X = VEL_COEFF_X  # type: Optional[List[float]]
+        self.VEL_COEFF_Y = VEL_COEFF_Y  # type: Optional[List[float]]
+        self.VEL_COEFF_Z = VEL_COEFF_Z  # type: Optional[List[float]]
+        self.MAX_POSITION_RESIDUAL = MAX_POSITION_RESIDUAL  # type: float
+        self.RMS_POSITION_RESIDUAL = RMS_POSITION_RESIDUAL  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        ppepositionRecord = PPEPositionRecord()
-        ppepositionRecord.Init(buf, pos)
-        return cls.InitFromObj(ppepositionRecord)
+        tmpPpepositionRecord = PPEPositionRecord()
+        tmpPpepositionRecord.Init(buf, pos)
+        return cls.InitFromObj(tmpPpepositionRecord)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -435,64 +510,64 @@ class PPEPositionRecordT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, ppepositionRecord):
+    def InitFromObj(cls, tmpPpepositionRecord):
         x = PPEPositionRecordT()
-        x._UnPack(ppepositionRecord)
+        x._UnPack(tmpPpepositionRecord)
         return x
 
     # PPEPositionRecordT
-    def _UnPack(self, ppepositionRecord):
-        if ppepositionRecord is None:
+    def _UnPack(self, PPEPositionRecord):
+        if PPEPositionRecord is None:
             return
-        self.EPOCH_MID = ppepositionRecord.EPOCH_MID()
-        self.EPOCH_HALF_SPAN = ppepositionRecord.EPOCH_HALF_SPAN()
-        self.NUM_COEFFICIENTS = ppepositionRecord.NUM_COEFFICIENTS()
-        self.BASIS_TYPE = ppepositionRecord.BASIS_TYPE()
-        if not ppepositionRecord.POS_COEFF_XIsNone():
+        self.EPOCH_MID = PPEPositionRecord.EPOCH_MID()
+        self.EPOCH_HALF_SPAN = PPEPositionRecord.EPOCH_HALF_SPAN()
+        self.NUM_COEFFICIENTS = PPEPositionRecord.NUM_COEFFICIENTS()
+        self.BASIS_TYPE = PPEPositionRecord.BASIS_TYPE()
+        if not PPEPositionRecord.POS_COEFF_XIsNone():
             if np is None:
                 self.POS_COEFF_X = []
-                for i in range(ppepositionRecord.POS_COEFF_XLength()):
-                    self.POS_COEFF_X.append(ppepositionRecord.POS_COEFF_X(i))
+                for i in range(PPEPositionRecord.POS_COEFF_XLength()):
+                    self.POS_COEFF_X.append(PPEPositionRecord.POS_COEFF_X(i))
             else:
-                self.POS_COEFF_X = ppepositionRecord.POS_COEFF_XAsNumpy()
-        if not ppepositionRecord.POS_COEFF_YIsNone():
+                self.POS_COEFF_X = PPEPositionRecord.POS_COEFF_XAsNumpy()
+        if not PPEPositionRecord.POS_COEFF_YIsNone():
             if np is None:
                 self.POS_COEFF_Y = []
-                for i in range(ppepositionRecord.POS_COEFF_YLength()):
-                    self.POS_COEFF_Y.append(ppepositionRecord.POS_COEFF_Y(i))
+                for i in range(PPEPositionRecord.POS_COEFF_YLength()):
+                    self.POS_COEFF_Y.append(PPEPositionRecord.POS_COEFF_Y(i))
             else:
-                self.POS_COEFF_Y = ppepositionRecord.POS_COEFF_YAsNumpy()
-        if not ppepositionRecord.POS_COEFF_ZIsNone():
+                self.POS_COEFF_Y = PPEPositionRecord.POS_COEFF_YAsNumpy()
+        if not PPEPositionRecord.POS_COEFF_ZIsNone():
             if np is None:
                 self.POS_COEFF_Z = []
-                for i in range(ppepositionRecord.POS_COEFF_ZLength()):
-                    self.POS_COEFF_Z.append(ppepositionRecord.POS_COEFF_Z(i))
+                for i in range(PPEPositionRecord.POS_COEFF_ZLength()):
+                    self.POS_COEFF_Z.append(PPEPositionRecord.POS_COEFF_Z(i))
             else:
-                self.POS_COEFF_Z = ppepositionRecord.POS_COEFF_ZAsNumpy()
-        self.HAS_VELOCITY_COEFFICIENTS = ppepositionRecord.HAS_VELOCITY_COEFFICIENTS()
-        if not ppepositionRecord.VEL_COEFF_XIsNone():
+                self.POS_COEFF_Z = PPEPositionRecord.POS_COEFF_ZAsNumpy()
+        self.HAS_VELOCITY_COEFFICIENTS = PPEPositionRecord.HAS_VELOCITY_COEFFICIENTS()
+        if not PPEPositionRecord.VEL_COEFF_XIsNone():
             if np is None:
                 self.VEL_COEFF_X = []
-                for i in range(ppepositionRecord.VEL_COEFF_XLength()):
-                    self.VEL_COEFF_X.append(ppepositionRecord.VEL_COEFF_X(i))
+                for i in range(PPEPositionRecord.VEL_COEFF_XLength()):
+                    self.VEL_COEFF_X.append(PPEPositionRecord.VEL_COEFF_X(i))
             else:
-                self.VEL_COEFF_X = ppepositionRecord.VEL_COEFF_XAsNumpy()
-        if not ppepositionRecord.VEL_COEFF_YIsNone():
+                self.VEL_COEFF_X = PPEPositionRecord.VEL_COEFF_XAsNumpy()
+        if not PPEPositionRecord.VEL_COEFF_YIsNone():
             if np is None:
                 self.VEL_COEFF_Y = []
-                for i in range(ppepositionRecord.VEL_COEFF_YLength()):
-                    self.VEL_COEFF_Y.append(ppepositionRecord.VEL_COEFF_Y(i))
+                for i in range(PPEPositionRecord.VEL_COEFF_YLength()):
+                    self.VEL_COEFF_Y.append(PPEPositionRecord.VEL_COEFF_Y(i))
             else:
-                self.VEL_COEFF_Y = ppepositionRecord.VEL_COEFF_YAsNumpy()
-        if not ppepositionRecord.VEL_COEFF_ZIsNone():
+                self.VEL_COEFF_Y = PPEPositionRecord.VEL_COEFF_YAsNumpy()
+        if not PPEPositionRecord.VEL_COEFF_ZIsNone():
             if np is None:
                 self.VEL_COEFF_Z = []
-                for i in range(ppepositionRecord.VEL_COEFF_ZLength()):
-                    self.VEL_COEFF_Z.append(ppepositionRecord.VEL_COEFF_Z(i))
+                for i in range(PPEPositionRecord.VEL_COEFF_ZLength()):
+                    self.VEL_COEFF_Z.append(PPEPositionRecord.VEL_COEFF_Z(i))
             else:
-                self.VEL_COEFF_Z = ppepositionRecord.VEL_COEFF_ZAsNumpy()
-        self.MAX_POSITION_RESIDUAL = ppepositionRecord.MAX_POSITION_RESIDUAL()
-        self.RMS_POSITION_RESIDUAL = ppepositionRecord.RMS_POSITION_RESIDUAL()
+                self.VEL_COEFF_Z = PPEPositionRecord.VEL_COEFF_ZAsNumpy()
+        self.MAX_POSITION_RESIDUAL = PPEPositionRecord.MAX_POSITION_RESIDUAL()
+        self.RMS_POSITION_RESIDUAL = PPEPositionRecord.RMS_POSITION_RESIDUAL()
 
     # PPEPositionRecordT
     def Pack(self, builder):
@@ -567,5 +642,5 @@ class PPEPositionRecordT(object):
             PPEPositionRecordAddVEL_COEFF_Z(builder, VEL_COEFF_Z)
         PPEPositionRecordAddMAX_POSITION_RESIDUAL(builder, self.MAX_POSITION_RESIDUAL)
         PPEPositionRecordAddRMS_POSITION_RESIDUAL(builder, self.RMS_POSITION_RESIDUAL)
-        ppepositionRecord = PPEPositionRecordEnd(builder)
-        return ppepositionRecord
+        PPEPositionRecord = PPEPositionRecordEnd(builder)
+        return PPEPositionRecord

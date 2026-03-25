@@ -2,4 +2,137 @@
 
 # namespace: 
 
-# NOTE Interlock.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Interlock constraint
+class Interlock(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = Interlock()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsInterlock(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def InterlockBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x58\x54\x43", size_prefixed=size_prefixed)
+
+    # Interlock
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Parameter reference
+    # Interlock
+    def PARAMETER_REF(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Required value
+    # Interlock
+    def VALUE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Operator for comparison
+    # Interlock
+    def OPERATOR(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+def InterlockStart(builder):
+    builder.StartObject(3)
+
+def Start(builder):
+    InterlockStart(builder)
+
+def InterlockAddPARAMETER_REF(builder, PARAMETER_REF):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(PARAMETER_REF), 0)
+
+def AddPARAMETER_REF(builder, PARAMETER_REF):
+    InterlockAddPARAMETER_REF(builder, PARAMETER_REF)
+
+def InterlockAddVALUE(builder, VALUE):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(VALUE), 0)
+
+def AddVALUE(builder, VALUE):
+    InterlockAddVALUE(builder, VALUE)
+
+def InterlockAddOPERATOR(builder, OPERATOR):
+    builder.PrependInt8Slot(2, OPERATOR, 0)
+
+def AddOPERATOR(builder, OPERATOR):
+    InterlockAddOPERATOR(builder, OPERATOR)
+
+def InterlockEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return InterlockEnd(builder)
+
+
+class InterlockT(object):
+
+    # InterlockT
+    def __init__(
+        self,
+        PARAMETER_REF = None,
+        VALUE = None,
+        OPERATOR = 0,
+    ):
+        self.PARAMETER_REF = PARAMETER_REF  # type: Optional[str]
+        self.VALUE = VALUE  # type: Optional[str]
+        self.OPERATOR = OPERATOR  # type: int
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpInterlock = Interlock()
+        tmpInterlock.Init(buf, pos)
+        return cls.InitFromObj(tmpInterlock)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpInterlock):
+        x = InterlockT()
+        x._UnPack(tmpInterlock)
+        return x
+
+    # InterlockT
+    def _UnPack(self, Interlock):
+        if Interlock is None:
+            return
+        self.PARAMETER_REF = Interlock.PARAMETER_REF()
+        self.VALUE = Interlock.VALUE()
+        self.OPERATOR = Interlock.OPERATOR()
+
+    # InterlockT
+    def Pack(self, builder):
+        if self.PARAMETER_REF is not None:
+            PARAMETER_REF = builder.CreateString(self.PARAMETER_REF)
+        if self.VALUE is not None:
+            VALUE = builder.CreateString(self.VALUE)
+        InterlockStart(builder)
+        if self.PARAMETER_REF is not None:
+            InterlockAddPARAMETER_REF(builder, PARAMETER_REF)
+        if self.VALUE is not None:
+            InterlockAddVALUE(builder, VALUE)
+        InterlockAddOPERATOR(builder, self.OPERATOR)
+        Interlock = InterlockEnd(builder)
+        return Interlock

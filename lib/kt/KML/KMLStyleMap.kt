@@ -32,7 +32,7 @@ class KMLStyleMap : Table() {
     /**
      * Style map identifier
      */
-    val ID : String?
+    val id : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,13 +41,13 @@ class KMLStyleMap : Table() {
                 null
             }
         }
-    val IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val idAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun idInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Pairs
      */
-    fun PAIRS(j: Int) : KMLStyleMapPair? = PAIRS(KMLStyleMapPair(), j)
-    fun PAIRS(obj: KMLStyleMapPair, j: Int) : KMLStyleMapPair? {
+    fun pairs(j: Int) : KMLStyleMapPair? = pairs(KMLStyleMapPair(), j)
+    fun pairs(obj: KMLStyleMapPair, j: Int) : KMLStyleMapPair? {
         val o = __offset(6)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -55,26 +55,26 @@ class KMLStyleMap : Table() {
             null
         }
     }
-    val PAIRSLength : Int
+    val pairsLength : Int
         get() {
             val o = __offset(6); return if (o != 0) __vector_len(o) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsKMLStyleMap(_bb: ByteBuffer): KMLStyleMap = getRootAsKMLStyleMap(_bb, KMLStyleMap())
         fun getRootAsKMLStyleMap(_bb: ByteBuffer, obj: KMLStyleMap): KMLStyleMap {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createKMLStyleMap(builder: FlatBufferBuilder, IDOffset: Int, PAIRSOffset: Int) : Int {
+        fun createKMLStyleMap(builder: FlatBufferBuilder, idOffset: Int, pairsOffset: Int) : Int {
             builder.startTable(2)
-            addPAIRS(builder, PAIRSOffset)
-            addID(builder, IDOffset)
+            addPAIRS(builder, pairsOffset)
+            addID(builder, idOffset)
             return endKMLStyleMap(builder)
         }
         fun startKMLStyleMap(builder: FlatBufferBuilder) = builder.startTable(2)
-        fun addID(builder: FlatBufferBuilder, ID: Int) = builder.addOffset(0, ID, 0)
-        fun addPAIRS(builder: FlatBufferBuilder, PAIRS: Int) = builder.addOffset(1, PAIRS, 0)
+        fun addID(builder: FlatBufferBuilder, id: Int) = builder.addOffset(0, id, 0)
+        fun addPAIRS(builder: FlatBufferBuilder, pairs: Int) = builder.addOffset(1, pairs, 0)
         fun createPairsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {

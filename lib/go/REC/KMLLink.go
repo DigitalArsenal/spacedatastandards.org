@@ -51,6 +51,10 @@ func (rcv *KMLLink) HREF() []byte {
 	return nil
 }
 
+func (rcv *KMLLink) Href() []byte {
+	return rcv.HREF()
+}
+
 /// URL
 /// Refresh mode
 func (rcv *KMLLink) REFRESH_MODE() KMLRefreshMode {
@@ -61,9 +65,17 @@ func (rcv *KMLLink) REFRESH_MODE() KMLRefreshMode {
 	return 0
 }
 
+func (rcv *KMLLink) RefreshMode() KMLRefreshMode {
+	return rcv.REFRESH_MODE()
+}
+
 /// Refresh mode
 func (rcv *KMLLink) MutateREFRESH_MODE(n KMLRefreshMode) bool {
 	return rcv._tab.MutateInt8Slot(6, int8(n))
+}
+
+func (rcv *KMLLink) MutateRefreshMode(n KMLRefreshMode) bool {
+	return rcv.MutateREFRESH_MODE(n)
 }
 
 /// Refresh interval in seconds
@@ -75,9 +87,17 @@ func (rcv *KMLLink) REFRESH_INTERVAL() float64 {
 	return 0.0
 }
 
+func (rcv *KMLLink) RefreshInterval() float64 {
+	return rcv.REFRESH_INTERVAL()
+}
+
 /// Refresh interval in seconds
 func (rcv *KMLLink) MutateREFRESH_INTERVAL(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(8, n)
+}
+
+func (rcv *KMLLink) MutateRefreshInterval(n float64) bool {
+	return rcv.MutateREFRESH_INTERVAL(n)
 }
 
 /// View refresh mode
@@ -89,9 +109,17 @@ func (rcv *KMLLink) VIEW_REFRESH_MODE() KMLViewRefreshMode {
 	return 0
 }
 
+func (rcv *KMLLink) ViewRefreshMode() KMLViewRefreshMode {
+	return rcv.VIEW_REFRESH_MODE()
+}
+
 /// View refresh mode
 func (rcv *KMLLink) MutateVIEW_REFRESH_MODE(n KMLViewRefreshMode) bool {
 	return rcv._tab.MutateInt8Slot(10, int8(n))
+}
+
+func (rcv *KMLLink) MutateViewRefreshMode(n KMLViewRefreshMode) bool {
+	return rcv.MutateVIEW_REFRESH_MODE(n)
 }
 
 /// View refresh time in seconds
@@ -103,9 +131,17 @@ func (rcv *KMLLink) VIEW_REFRESH_TIME() float64 {
 	return 0.0
 }
 
+func (rcv *KMLLink) ViewRefreshTime() float64 {
+	return rcv.VIEW_REFRESH_TIME()
+}
+
 /// View refresh time in seconds
 func (rcv *KMLLink) MutateVIEW_REFRESH_TIME(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(12, n)
+}
+
+func (rcv *KMLLink) MutateViewRefreshTime(n float64) bool {
+	return rcv.MutateVIEW_REFRESH_TIME(n)
 }
 
 /// View bound scale
@@ -117,9 +153,17 @@ func (rcv *KMLLink) VIEW_BOUND_SCALE() float64 {
 	return 0.0
 }
 
+func (rcv *KMLLink) ViewBoundScale() float64 {
+	return rcv.VIEW_BOUND_SCALE()
+}
+
 /// View bound scale
 func (rcv *KMLLink) MutateVIEW_BOUND_SCALE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(14, n)
+}
+
+func (rcv *KMLLink) MutateViewBoundScale(n float64) bool {
+	return rcv.MutateVIEW_BOUND_SCALE(n)
 }
 
 /// View format string
@@ -129,6 +173,10 @@ func (rcv *KMLLink) VIEW_FORMAT() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *KMLLink) ViewFormat() []byte {
+	return rcv.VIEW_FORMAT()
 }
 
 /// View format string
@@ -141,6 +189,10 @@ func (rcv *KMLLink) HTTP_QUERY() []byte {
 	return nil
 }
 
+func (rcv *KMLLink) HttpQuery() []byte {
+	return rcv.HTTP_QUERY()
+}
+
 /// HTTP query string
 func KMLLinkStart(builder *flatbuffers.Builder) {
 	builder.StartObject(8)
@@ -148,26 +200,50 @@ func KMLLinkStart(builder *flatbuffers.Builder) {
 func KMLLinkAddHREF(builder *flatbuffers.Builder, HREF flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(HREF), 0)
 }
+func KMLLinkAddHref(builder *flatbuffers.Builder, HREF flatbuffers.UOffsetT) {
+	KMLLinkAddHREF(builder, HREF)
+}
 func KMLLinkAddREFRESH_MODE(builder *flatbuffers.Builder, REFRESH_MODE KMLRefreshMode) {
 	builder.PrependInt8Slot(1, int8(REFRESH_MODE), 0)
+}
+func KMLLinkAddRefreshMode(builder *flatbuffers.Builder, REFRESH_MODE KMLRefreshMode) {
+	KMLLinkAddREFRESH_MODE(builder, REFRESH_MODE)
 }
 func KMLLinkAddREFRESH_INTERVAL(builder *flatbuffers.Builder, REFRESH_INTERVAL float64) {
 	builder.PrependFloat64Slot(2, REFRESH_INTERVAL, 0.0)
 }
+func KMLLinkAddRefreshInterval(builder *flatbuffers.Builder, REFRESH_INTERVAL float64) {
+	KMLLinkAddREFRESH_INTERVAL(builder, REFRESH_INTERVAL)
+}
 func KMLLinkAddVIEW_REFRESH_MODE(builder *flatbuffers.Builder, VIEW_REFRESH_MODE KMLViewRefreshMode) {
 	builder.PrependInt8Slot(3, int8(VIEW_REFRESH_MODE), 0)
+}
+func KMLLinkAddViewRefreshMode(builder *flatbuffers.Builder, VIEW_REFRESH_MODE KMLViewRefreshMode) {
+	KMLLinkAddVIEW_REFRESH_MODE(builder, VIEW_REFRESH_MODE)
 }
 func KMLLinkAddVIEW_REFRESH_TIME(builder *flatbuffers.Builder, VIEW_REFRESH_TIME float64) {
 	builder.PrependFloat64Slot(4, VIEW_REFRESH_TIME, 0.0)
 }
+func KMLLinkAddViewRefreshTime(builder *flatbuffers.Builder, VIEW_REFRESH_TIME float64) {
+	KMLLinkAddVIEW_REFRESH_TIME(builder, VIEW_REFRESH_TIME)
+}
 func KMLLinkAddVIEW_BOUND_SCALE(builder *flatbuffers.Builder, VIEW_BOUND_SCALE float64) {
 	builder.PrependFloat64Slot(5, VIEW_BOUND_SCALE, 0.0)
+}
+func KMLLinkAddViewBoundScale(builder *flatbuffers.Builder, VIEW_BOUND_SCALE float64) {
+	KMLLinkAddVIEW_BOUND_SCALE(builder, VIEW_BOUND_SCALE)
 }
 func KMLLinkAddVIEW_FORMAT(builder *flatbuffers.Builder, VIEW_FORMAT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(VIEW_FORMAT), 0)
 }
+func KMLLinkAddViewFormat(builder *flatbuffers.Builder, VIEW_FORMAT flatbuffers.UOffsetT) {
+	KMLLinkAddVIEW_FORMAT(builder, VIEW_FORMAT)
+}
 func KMLLinkAddHTTP_QUERY(builder *flatbuffers.Builder, HTTP_QUERY flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(HTTP_QUERY), 0)
+}
+func KMLLinkAddHttpQuery(builder *flatbuffers.Builder, HTTP_QUERY flatbuffers.UOffsetT) {
+	KMLLinkAddHTTP_QUERY(builder, HTTP_QUERY)
 }
 func KMLLinkEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

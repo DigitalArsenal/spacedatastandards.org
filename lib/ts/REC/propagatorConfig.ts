@@ -67,7 +67,7 @@ TIME_STEP():number {
 
 ZONAL_HARMONIC_TERMS(index: number):zonalHarmonic|null {
   const offset = this.bb!.__offset(this.bb_pos, 14);
-  return offset ? this.bb!.readInt8(this.bb!.__vector(this.bb_pos + offset) + index) : 0;
+  return offset ? this.bb!.readInt8(this.bb!.__vector(this.bb_pos + offset) + index) : null;
 }
 
 zonalHarmonicTermsLength():number {

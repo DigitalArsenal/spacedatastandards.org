@@ -2,4 +2,183 @@
 
 # namespace: 
 
-# NOTE ContainerRefEntry.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Container reference entry (nested container)
+class ContainerRefEntry(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = ContainerRefEntry()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsContainerRefEntry(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def ContainerRefEntryBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x58\x54\x43", size_prefixed=size_prefixed)
+
+    # ContainerRefEntry
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Container reference path
+    # ContainerRefEntry
+    def CONTAINER_REF(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Location in container
+    # ContainerRefEntry
+    def LOCATION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from LocationInContainer import LocationInContainer
+            obj = LocationInContainer()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Repeat specification
+    # ContainerRefEntry
+    def REPEAT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from RepeatEntry import RepeatEntry
+            obj = RepeatEntry()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Include condition
+    # ContainerRefEntry
+    def INCLUDE_CONDITION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from MatchCriteria import MatchCriteria
+            obj = MatchCriteria()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+def ContainerRefEntryStart(builder):
+    builder.StartObject(4)
+
+def Start(builder):
+    ContainerRefEntryStart(builder)
+
+def ContainerRefEntryAddCONTAINER_REF(builder, CONTAINER_REF):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(CONTAINER_REF), 0)
+
+def AddCONTAINER_REF(builder, CONTAINER_REF):
+    ContainerRefEntryAddCONTAINER_REF(builder, CONTAINER_REF)
+
+def ContainerRefEntryAddLOCATION(builder, LOCATION):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(LOCATION), 0)
+
+def AddLOCATION(builder, LOCATION):
+    ContainerRefEntryAddLOCATION(builder, LOCATION)
+
+def ContainerRefEntryAddREPEAT(builder, REPEAT):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(REPEAT), 0)
+
+def AddREPEAT(builder, REPEAT):
+    ContainerRefEntryAddREPEAT(builder, REPEAT)
+
+def ContainerRefEntryAddINCLUDE_CONDITION(builder, INCLUDE_CONDITION):
+    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(INCLUDE_CONDITION), 0)
+
+def AddINCLUDE_CONDITION(builder, INCLUDE_CONDITION):
+    ContainerRefEntryAddINCLUDE_CONDITION(builder, INCLUDE_CONDITION)
+
+def ContainerRefEntryEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return ContainerRefEntryEnd(builder)
+
+import LocationInContainer
+import MatchCriteria
+import RepeatEntry
+try:
+    from typing import Optional
+except:
+    pass
+
+class ContainerRefEntryT(object):
+
+    # ContainerRefEntryT
+    def __init__(
+        self,
+        CONTAINER_REF = None,
+        LOCATION = None,
+        REPEAT = None,
+        INCLUDE_CONDITION = None,
+    ):
+        self.CONTAINER_REF = CONTAINER_REF  # type: Optional[str]
+        self.LOCATION = LOCATION  # type: Optional[LocationInContainer.LocationInContainerT]
+        self.REPEAT = REPEAT  # type: Optional[RepeatEntry.RepeatEntryT]
+        self.INCLUDE_CONDITION = INCLUDE_CONDITION  # type: Optional[MatchCriteria.MatchCriteriaT]
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpContainerRefEntry = ContainerRefEntry()
+        tmpContainerRefEntry.Init(buf, pos)
+        return cls.InitFromObj(tmpContainerRefEntry)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpContainerRefEntry):
+        x = ContainerRefEntryT()
+        x._UnPack(tmpContainerRefEntry)
+        return x
+
+    # ContainerRefEntryT
+    def _UnPack(self, ContainerRefEntry):
+        if ContainerRefEntry is None:
+            return
+        self.CONTAINER_REF = ContainerRefEntry.CONTAINER_REF()
+        if ContainerRefEntry.LOCATION() is not None:
+            self.LOCATION = LocationInContainer.LocationInContainerT.InitFromObj(ContainerRefEntry.LOCATION())
+        if ContainerRefEntry.REPEAT() is not None:
+            self.REPEAT = RepeatEntry.RepeatEntryT.InitFromObj(ContainerRefEntry.REPEAT())
+        if ContainerRefEntry.INCLUDE_CONDITION() is not None:
+            self.INCLUDE_CONDITION = MatchCriteria.MatchCriteriaT.InitFromObj(ContainerRefEntry.INCLUDE_CONDITION())
+
+    # ContainerRefEntryT
+    def Pack(self, builder):
+        if self.CONTAINER_REF is not None:
+            CONTAINER_REF = builder.CreateString(self.CONTAINER_REF)
+        if self.LOCATION is not None:
+            LOCATION = self.LOCATION.Pack(builder)
+        if self.REPEAT is not None:
+            REPEAT = self.REPEAT.Pack(builder)
+        if self.INCLUDE_CONDITION is not None:
+            INCLUDE_CONDITION = self.INCLUDE_CONDITION.Pack(builder)
+        ContainerRefEntryStart(builder)
+        if self.CONTAINER_REF is not None:
+            ContainerRefEntryAddCONTAINER_REF(builder, CONTAINER_REF)
+        if self.LOCATION is not None:
+            ContainerRefEntryAddLOCATION(builder, LOCATION)
+        if self.REPEAT is not None:
+            ContainerRefEntryAddREPEAT(builder, REPEAT)
+        if self.INCLUDE_CONDITION is not None:
+            ContainerRefEntryAddINCLUDE_CONDITION(builder, INCLUDE_CONDITION)
+        ContainerRefEntry = ContainerRefEntryEnd(builder)
+        return ContainerRefEntry

@@ -68,14 +68,17 @@ except:
 class CZMPolylineArrowMaterialT(object):
 
     # CZMPolylineArrowMaterialT
-    def __init__(self):
-        self.COLOR = None  # type: Optional[CZMColor.CZMColorT]
+    def __init__(
+        self,
+        COLOR = None,
+    ):
+        self.COLOR = COLOR  # type: Optional[CZMColor.CZMColorT]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        czmpolylineArrowMaterial = CZMPolylineArrowMaterial()
-        czmpolylineArrowMaterial.Init(buf, pos)
-        return cls.InitFromObj(czmpolylineArrowMaterial)
+        tmpCzmpolylineArrowMaterial = CZMPolylineArrowMaterial()
+        tmpCzmpolylineArrowMaterial.Init(buf, pos)
+        return cls.InitFromObj(tmpCzmpolylineArrowMaterial)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -83,17 +86,17 @@ class CZMPolylineArrowMaterialT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, czmpolylineArrowMaterial):
+    def InitFromObj(cls, tmpCzmpolylineArrowMaterial):
         x = CZMPolylineArrowMaterialT()
-        x._UnPack(czmpolylineArrowMaterial)
+        x._UnPack(tmpCzmpolylineArrowMaterial)
         return x
 
     # CZMPolylineArrowMaterialT
-    def _UnPack(self, czmpolylineArrowMaterial):
-        if czmpolylineArrowMaterial is None:
+    def _UnPack(self, CZMPolylineArrowMaterial):
+        if CZMPolylineArrowMaterial is None:
             return
-        if czmpolylineArrowMaterial.COLOR() is not None:
-            self.COLOR = CZMColor.CZMColorT.InitFromObj(czmpolylineArrowMaterial.COLOR())
+        if CZMPolylineArrowMaterial.COLOR() is not None:
+            self.COLOR = CZMColor.CZMColorT.InitFromObj(CZMPolylineArrowMaterial.COLOR())
 
     # CZMPolylineArrowMaterialT
     def Pack(self, builder):
@@ -102,5 +105,5 @@ class CZMPolylineArrowMaterialT(object):
         CZMPolylineArrowMaterialStart(builder)
         if self.COLOR is not None:
             CZMPolylineArrowMaterialAddCOLOR(builder, COLOR)
-        czmpolylineArrowMaterial = CZMPolylineArrowMaterialEnd(builder)
-        return czmpolylineArrowMaterial
+        CZMPolylineArrowMaterial = CZMPolylineArrowMaterialEnd(builder)
+        return CZMPolylineArrowMaterial

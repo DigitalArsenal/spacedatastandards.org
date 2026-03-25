@@ -63,6 +63,10 @@ func (rcv *MNV) ID() []byte {
 	return nil
 }
 
+func (rcv *MNV) Id() []byte {
+	return rcv.ID()
+}
+
 /// Unique identifier
 /// Satellite catalog number
 func (rcv *MNV) SAT_NO() uint32 {
@@ -73,9 +77,17 @@ func (rcv *MNV) SAT_NO() uint32 {
 	return 0
 }
 
+func (rcv *MNV) SatNo() uint32 {
+	return rcv.SAT_NO()
+}
+
 /// Satellite catalog number
 func (rcv *MNV) MutateSAT_NO(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(6, n)
+}
+
+func (rcv *MNV) MutateSatNo(n uint32) bool {
+	return rcv.MutateSAT_NO(n)
 }
 
 /// International designator
@@ -85,6 +97,10 @@ func (rcv *MNV) ORIG_OBJECT_ID() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *MNV) OrigObjectId() []byte {
+	return rcv.ORIG_OBJECT_ID()
 }
 
 /// International designator
@@ -97,6 +113,10 @@ func (rcv *MNV) ON_ORBIT() []byte {
 	return nil
 }
 
+func (rcv *MNV) OnOrbit() []byte {
+	return rcv.ON_ORBIT()
+}
+
 /// On-orbit reference
 /// Maneuver status
 func (rcv *MNV) STATUS() maneuverStatus {
@@ -107,9 +127,17 @@ func (rcv *MNV) STATUS() maneuverStatus {
 	return 0
 }
 
+func (rcv *MNV) Status() maneuverStatus {
+	return rcv.STATUS()
+}
+
 /// Maneuver status
 func (rcv *MNV) MutateSTATUS(n maneuverStatus) bool {
 	return rcv._tab.MutateInt8Slot(12, int8(n))
+}
+
+func (rcv *MNV) MutateStatus(n maneuverStatus) bool {
+	return rcv.MutateSTATUS(n)
 }
 
 /// Maneuver characterization
@@ -121,9 +149,17 @@ func (rcv *MNV) CHARACTERIZATION() maneuverCharacterization {
 	return 0
 }
 
+func (rcv *MNV) Characterization() maneuverCharacterization {
+	return rcv.CHARACTERIZATION()
+}
+
 /// Maneuver characterization
 func (rcv *MNV) MutateCHARACTERIZATION(n maneuverCharacterization) bool {
 	return rcv._tab.MutateInt8Slot(14, int8(n))
+}
+
+func (rcv *MNV) MutateCharacterization(n maneuverCharacterization) bool {
+	return rcv.MutateCHARACTERIZATION(n)
 }
 
 /// Characterization uncertainty (0-1)
@@ -135,9 +171,17 @@ func (rcv *MNV) CHARACTERIZATION_UNC() float64 {
 	return 0.0
 }
 
+func (rcv *MNV) CharacterizationUnc() float64 {
+	return rcv.CHARACTERIZATION_UNC()
+}
+
 /// Characterization uncertainty (0-1)
 func (rcv *MNV) MutateCHARACTERIZATION_UNC(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(16, n)
+}
+
+func (rcv *MNV) MutateCharacterizationUnc(n float64) bool {
+	return rcv.MutateCHARACTERIZATION_UNC(n)
 }
 
 /// Detection report time (ISO 8601)
@@ -147,6 +191,10 @@ func (rcv *MNV) REPORT_TIME() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *MNV) ReportTime() []byte {
+	return rcv.REPORT_TIME()
 }
 
 /// Detection report time (ISO 8601)
@@ -159,6 +207,10 @@ func (rcv *MNV) EVENT_START_TIME() []byte {
 	return nil
 }
 
+func (rcv *MNV) EventStartTime() []byte {
+	return rcv.EVENT_START_TIME()
+}
+
 /// Maneuver start time (ISO 8601)
 /// Maneuver end time (ISO 8601)
 func (rcv *MNV) EVENT_END_TIME() []byte {
@@ -167,6 +219,10 @@ func (rcv *MNV) EVENT_END_TIME() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *MNV) EventEndTime() []byte {
+	return rcv.EVENT_END_TIME()
 }
 
 /// Maneuver end time (ISO 8601)
@@ -179,9 +235,17 @@ func (rcv *MNV) TOTAL_BURN_TIME() float64 {
 	return 0.0
 }
 
+func (rcv *MNV) TotalBurnTime() float64 {
+	return rcv.TOTAL_BURN_TIME()
+}
+
 /// Total burn time (seconds)
 func (rcv *MNV) MutateTOTAL_BURN_TIME(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(24, n)
+}
+
+func (rcv *MNV) MutateTotalBurnTime(n float64) bool {
+	return rcv.MutateTOTAL_BURN_TIME(n)
 }
 
 /// OD fit end time (ISO 8601)
@@ -191,6 +255,10 @@ func (rcv *MNV) OD_FIT_END_TIME() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *MNV) OdFitEndTime() []byte {
+	return rcv.OD_FIT_END_TIME()
 }
 
 /// OD fit end time (ISO 8601)
@@ -203,6 +271,10 @@ func (rcv *MNV) ID_SENSOR() []byte {
 	return nil
 }
 
+func (rcv *MNV) IdSensor() []byte {
+	return rcv.ID_SENSOR()
+}
+
 /// Detecting sensor identifier
 /// Original sensor identifier
 func (rcv *MNV) ORIG_SENSOR_ID() []byte {
@@ -211,6 +283,10 @@ func (rcv *MNV) ORIG_SENSOR_ID() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *MNV) OrigSensorId() []byte {
+	return rcv.ORIG_SENSOR_ID()
 }
 
 /// Original sensor identifier
@@ -223,6 +299,10 @@ func (rcv *MNV) EVENT_ID() []byte {
 	return nil
 }
 
+func (rcv *MNV) EventId() []byte {
+	return rcv.EVENT_ID()
+}
+
 /// Maneuver event identifier
 /// True if object is uncorrelated
 func (rcv *MNV) UCT() bool {
@@ -233,9 +313,17 @@ func (rcv *MNV) UCT() bool {
 	return false
 }
 
+func (rcv *MNV) Uct() bool {
+	return rcv.UCT()
+}
+
 /// True if object is uncorrelated
 func (rcv *MNV) MutateUCT(n bool) bool {
 	return rcv._tab.MutateBoolSlot(34, n)
+}
+
+func (rcv *MNV) MutateUct(n bool) bool {
+	return rcv.MutateUCT(n)
 }
 
 /// Maneuver detection uncertainty (km)
@@ -247,9 +335,17 @@ func (rcv *MNV) MANEUVER_UNC() float64 {
 	return 0.0
 }
 
+func (rcv *MNV) ManeuverUnc() float64 {
+	return rcv.MANEUVER_UNC()
+}
+
 /// Maneuver detection uncertainty (km)
 func (rcv *MNV) MutateMANEUVER_UNC(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(36, n)
+}
+
+func (rcv *MNV) MutateManeuverUnc(n float64) bool {
+	return rcv.MutateMANEUVER_UNC(n)
 }
 
 /// Total delta-V magnitude (km/s)
@@ -261,9 +357,17 @@ func (rcv *MNV) DELTA_VEL() float64 {
 	return 0.0
 }
 
+func (rcv *MNV) DeltaVel() float64 {
+	return rcv.DELTA_VEL()
+}
+
 /// Total delta-V magnitude (km/s)
 func (rcv *MNV) MutateDELTA_VEL(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(38, n)
+}
+
+func (rcv *MNV) MutateDeltaVel(n float64) bool {
+	return rcv.MutateDELTA_VEL(n)
 }
 
 /// Delta-V along-track/U component (km/s)
@@ -275,9 +379,17 @@ func (rcv *MNV) DELTA_VEL_U() float64 {
 	return 0.0
 }
 
+func (rcv *MNV) DeltaVelU() float64 {
+	return rcv.DELTA_VEL_U()
+}
+
 /// Delta-V along-track/U component (km/s)
 func (rcv *MNV) MutateDELTA_VEL_U(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(40, n)
+}
+
+func (rcv *MNV) MutateDeltaVelU(n float64) bool {
+	return rcv.MutateDELTA_VEL_U(n)
 }
 
 /// Delta-V cross-track/V component (km/s)
@@ -289,9 +401,17 @@ func (rcv *MNV) DELTA_VEL_V() float64 {
 	return 0.0
 }
 
+func (rcv *MNV) DeltaVelV() float64 {
+	return rcv.DELTA_VEL_V()
+}
+
 /// Delta-V cross-track/V component (km/s)
 func (rcv *MNV) MutateDELTA_VEL_V(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(42, n)
+}
+
+func (rcv *MNV) MutateDeltaVelV(n float64) bool {
+	return rcv.MutateDELTA_VEL_V(n)
 }
 
 /// Delta-V radial/W component (km/s)
@@ -303,9 +423,17 @@ func (rcv *MNV) DELTA_VEL_W() float64 {
 	return 0.0
 }
 
+func (rcv *MNV) DeltaVelW() float64 {
+	return rcv.DELTA_VEL_W()
+}
+
 /// Delta-V radial/W component (km/s)
 func (rcv *MNV) MutateDELTA_VEL_W(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(44, n)
+}
+
+func (rcv *MNV) MutateDeltaVelW(n float64) bool {
+	return rcv.MutateDELTA_VEL_W(n)
 }
 
 /// Total delta position (km)
@@ -317,9 +445,17 @@ func (rcv *MNV) DELTA_POS() float64 {
 	return 0.0
 }
 
+func (rcv *MNV) DeltaPos() float64 {
+	return rcv.DELTA_POS()
+}
+
 /// Total delta position (km)
 func (rcv *MNV) MutateDELTA_POS(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(46, n)
+}
+
+func (rcv *MNV) MutateDeltaPos(n float64) bool {
+	return rcv.MutateDELTA_POS(n)
 }
 
 /// Delta position U component (km)
@@ -331,9 +467,17 @@ func (rcv *MNV) DELTA_POS_U() float64 {
 	return 0.0
 }
 
+func (rcv *MNV) DeltaPosU() float64 {
+	return rcv.DELTA_POS_U()
+}
+
 /// Delta position U component (km)
 func (rcv *MNV) MutateDELTA_POS_U(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(48, n)
+}
+
+func (rcv *MNV) MutateDeltaPosU(n float64) bool {
+	return rcv.MutateDELTA_POS_U(n)
 }
 
 /// Delta position V component (km)
@@ -345,9 +489,17 @@ func (rcv *MNV) DELTA_POS_V() float64 {
 	return 0.0
 }
 
+func (rcv *MNV) DeltaPosV() float64 {
+	return rcv.DELTA_POS_V()
+}
+
 /// Delta position V component (km)
 func (rcv *MNV) MutateDELTA_POS_V(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(50, n)
+}
+
+func (rcv *MNV) MutateDeltaPosV(n float64) bool {
+	return rcv.MutateDELTA_POS_V(n)
 }
 
 /// Delta position W component (km)
@@ -359,9 +511,17 @@ func (rcv *MNV) DELTA_POS_W() float64 {
 	return 0.0
 }
 
+func (rcv *MNV) DeltaPosW() float64 {
+	return rcv.DELTA_POS_W()
+}
+
 /// Delta position W component (km)
 func (rcv *MNV) MutateDELTA_POS_W(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(52, n)
+}
+
+func (rcv *MNV) MutateDeltaPosW(n float64) bool {
+	return rcv.MutateDELTA_POS_W(n)
 }
 
 /// Propellant mass consumed (kg)
@@ -373,9 +533,17 @@ func (rcv *MNV) DELTA_MASS() float64 {
 	return 0.0
 }
 
+func (rcv *MNV) DeltaMass() float64 {
+	return rcv.DELTA_MASS()
+}
+
 /// Propellant mass consumed (kg)
 func (rcv *MNV) MutateDELTA_MASS(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(54, n)
+}
+
+func (rcv *MNV) MutateDeltaMass(n float64) bool {
+	return rcv.MutateDELTA_MASS(n)
 }
 
 /// Pre-maneuver orbital state
@@ -390,6 +558,10 @@ func (rcv *MNV) PRE_EVENT(obj *mnvOrbitalState) *mnvOrbitalState {
 		return obj
 	}
 	return nil
+}
+
+func (rcv *MNV) PreEvent(obj *mnvOrbitalState) *mnvOrbitalState {
+	return rcv.PRE_EVENT(obj)
 }
 
 /// Pre-maneuver orbital state
@@ -407,6 +579,10 @@ func (rcv *MNV) POST_EVENT(obj *mnvOrbitalState) *mnvOrbitalState {
 	return nil
 }
 
+func (rcv *MNV) PostEvent(obj *mnvOrbitalState) *mnvOrbitalState {
+	return rcv.POST_EVENT(obj)
+}
+
 /// Post-maneuver orbital state
 /// Post-maneuver mass (kg)
 func (rcv *MNV) POST_MASS() float64 {
@@ -417,9 +593,17 @@ func (rcv *MNV) POST_MASS() float64 {
 	return 0.0
 }
 
+func (rcv *MNV) PostMass() float64 {
+	return rcv.POST_MASS()
+}
+
 /// Post-maneuver mass (kg)
 func (rcv *MNV) MutatePOST_MASS(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(60, n)
+}
+
+func (rcv *MNV) MutatePostMass(n float64) bool {
+	return rcv.MutatePOST_MASS(n)
 }
 
 /// Post-maneuver cross-sectional area (m^2)
@@ -431,9 +615,17 @@ func (rcv *MNV) POST_AREA() float64 {
 	return 0.0
 }
 
+func (rcv *MNV) PostArea() float64 {
+	return rcv.POST_AREA()
+}
+
 /// Post-maneuver cross-sectional area (m^2)
 func (rcv *MNV) MutatePOST_AREA(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(62, n)
+}
+
+func (rcv *MNV) MutatePostArea(n float64) bool {
+	return rcv.MutatePOST_AREA(n)
 }
 
 /// 6x6 covariance matrix (upper triangle, row-major)
@@ -446,12 +638,20 @@ func (rcv *MNV) COV(j int) float64 {
 	return 0
 }
 
+func (rcv *MNV) Cov(j int) float64 {
+	return rcv.COV(j)
+}
+
 func (rcv *MNV) COVLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(64))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *MNV) CovLength() int {
+	return rcv.COVLength()
 }
 
 /// 6x6 covariance matrix (upper triangle, row-major)
@@ -464,6 +664,10 @@ func (rcv *MNV) MutateCOV(j int, n float64) bool {
 	return false
 }
 
+func (rcv *MNV) MutateCov(j int, n float64) bool {
+	return rcv.MutateCOV(j, n)
+}
+
 /// Number of observations used
 func (rcv *MNV) NUM_OBS() uint32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(66))
@@ -473,9 +677,17 @@ func (rcv *MNV) NUM_OBS() uint32 {
 	return 0
 }
 
+func (rcv *MNV) NumObs() uint32 {
+	return rcv.NUM_OBS()
+}
+
 /// Number of observations used
 func (rcv *MNV) MutateNUM_OBS(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(66, n)
+}
+
+func (rcv *MNV) MutateNumObs(n uint32) bool {
+	return rcv.MutateNUM_OBS(n)
 }
 
 /// State model used
@@ -485,6 +697,10 @@ func (rcv *MNV) STATE_MODEL() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *MNV) StateModel() []byte {
+	return rcv.STATE_MODEL()
 }
 
 /// State model used
@@ -497,9 +713,17 @@ func (rcv *MNV) STATE_MODEL_VERSION() float64 {
 	return 0.0
 }
 
+func (rcv *MNV) StateModelVersion() float64 {
+	return rcv.STATE_MODEL_VERSION()
+}
+
 /// State model version
 func (rcv *MNV) MutateSTATE_MODEL_VERSION(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(70, n)
+}
+
+func (rcv *MNV) MutateStateModelVersion(n float64) bool {
+	return rcv.MutateSTATE_MODEL_VERSION(n)
 }
 
 /// Number of acceleration profile points
@@ -511,9 +735,17 @@ func (rcv *MNV) NUM_ACCEL_POINTS() uint16 {
 	return 0
 }
 
+func (rcv *MNV) NumAccelPoints() uint16 {
+	return rcv.NUM_ACCEL_POINTS()
+}
+
 /// Number of acceleration profile points
 func (rcv *MNV) MutateNUM_ACCEL_POINTS(n uint16) bool {
 	return rcv._tab.MutateUint16Slot(72, n)
+}
+
+func (rcv *MNV) MutateNumAccelPoints(n uint16) bool {
+	return rcv.MutateNUM_ACCEL_POINTS(n)
 }
 
 /// Acceleration profile times (ISO 8601)
@@ -526,12 +758,20 @@ func (rcv *MNV) MNVR_ACCEL_TIMES(j int) []byte {
 	return nil
 }
 
+func (rcv *MNV) MnvrAccelTimes(j int) []byte {
+	return rcv.MNVR_ACCEL_TIMES(j)
+}
+
 func (rcv *MNV) MNVR_ACCEL_TIMESLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(74))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *MNV) MnvrAccelTimesLength() int {
+	return rcv.MNVR_ACCEL_TIMESLength()
 }
 
 /// Acceleration profile times (ISO 8601)
@@ -545,12 +785,20 @@ func (rcv *MNV) MNVR_ACCELS(j int) float64 {
 	return 0
 }
 
+func (rcv *MNV) MnvrAccels(j int) float64 {
+	return rcv.MNVR_ACCELS(j)
+}
+
 func (rcv *MNV) MNVR_ACCELSLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(76))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *MNV) MnvrAccelsLength() int {
+	return rcv.MNVR_ACCELSLength()
 }
 
 /// Acceleration values (km/s^2, 3 components per point)
@@ -563,6 +811,10 @@ func (rcv *MNV) MutateMNVR_ACCELS(j int, n float64) bool {
 	return false
 }
 
+func (rcv *MNV) MutateMnvrAccels(j int, n float64) bool {
+	return rcv.MutateMNVR_ACCELS(j, n)
+}
+
 /// Acceleration uncertainties (km/s^2)
 func (rcv *MNV) MNVR_ACCEL_UNCS(j int) float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(78))
@@ -573,12 +825,20 @@ func (rcv *MNV) MNVR_ACCEL_UNCS(j int) float64 {
 	return 0
 }
 
+func (rcv *MNV) MnvrAccelUncs(j int) float64 {
+	return rcv.MNVR_ACCEL_UNCS(j)
+}
+
 func (rcv *MNV) MNVR_ACCEL_UNCSLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(78))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *MNV) MnvrAccelUncsLength() int {
+	return rcv.MNVR_ACCEL_UNCSLength()
 }
 
 /// Acceleration uncertainties (km/s^2)
@@ -591,6 +851,10 @@ func (rcv *MNV) MutateMNVR_ACCEL_UNCS(j int, n float64) bool {
 	return false
 }
 
+func (rcv *MNV) MutateMnvrAccelUncs(j int, n float64) bool {
+	return rcv.MutateMNVR_ACCEL_UNCS(j, n)
+}
+
 /// Description
 func (rcv *MNV) DESCRIPTION() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(80))
@@ -598,6 +862,10 @@ func (rcv *MNV) DESCRIPTION() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *MNV) Description() []byte {
+	return rcv.DESCRIPTION()
 }
 
 /// Description
@@ -610,6 +878,10 @@ func (rcv *MNV) DESCRIPTOR() []byte {
 	return nil
 }
 
+func (rcv *MNV) Descriptor() []byte {
+	return rcv.DESCRIPTOR()
+}
+
 /// Event descriptor
 /// Algorithm used for detection
 func (rcv *MNV) ALGORITHM() []byte {
@@ -618,6 +890,10 @@ func (rcv *MNV) ALGORITHM() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *MNV) Algorithm() []byte {
+	return rcv.ALGORITHM()
 }
 
 /// Algorithm used for detection
@@ -631,12 +907,20 @@ func (rcv *MNV) TAGS(j int) []byte {
 	return nil
 }
 
+func (rcv *MNV) Tags(j int) []byte {
+	return rcv.TAGS(j)
+}
+
 func (rcv *MNV) TAGSLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(86))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *MNV) TagsLength() int {
+	return rcv.TAGSLength()
 }
 
 /// Associated tags
@@ -650,12 +934,20 @@ func (rcv *MNV) SOURCED_DATA(j int) []byte {
 	return nil
 }
 
+func (rcv *MNV) SourcedData(j int) []byte {
+	return rcv.SOURCED_DATA(j)
+}
+
 func (rcv *MNV) SOURCED_DATALength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(88))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *MNV) SourcedDataLength() int {
+	return rcv.SOURCED_DATALength()
 }
 
 /// Sourced data references
@@ -668,6 +960,10 @@ func (rcv *MNV) SOURCED_DATA_TYPES() []byte {
 	return nil
 }
 
+func (rcv *MNV) SourcedDataTypes() []byte {
+	return rcv.SOURCED_DATA_TYPES()
+}
+
 /// Sourced data types
 /// Transaction identifier
 func (rcv *MNV) TRANSACTION_ID() []byte {
@@ -678,6 +974,10 @@ func (rcv *MNV) TRANSACTION_ID() []byte {
 	return nil
 }
 
+func (rcv *MNV) TransactionId() []byte {
+	return rcv.TRANSACTION_ID()
+}
+
 /// Transaction identifier
 func MNVStart(builder *flatbuffers.Builder) {
 	builder.StartObject(45)
@@ -685,155 +985,308 @@ func MNVStart(builder *flatbuffers.Builder) {
 func MNVAddID(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ID), 0)
 }
+func MNVAddId(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
+	MNVAddID(builder, ID)
+}
 func MNVAddSAT_NO(builder *flatbuffers.Builder, SAT_NO uint32) {
 	builder.PrependUint32Slot(1, SAT_NO, 0)
+}
+func MNVAddSatNo(builder *flatbuffers.Builder, SAT_NO uint32) {
+	MNVAddSAT_NO(builder, SAT_NO)
 }
 func MNVAddORIG_OBJECT_ID(builder *flatbuffers.Builder, ORIG_OBJECT_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(ORIG_OBJECT_ID), 0)
 }
+func MNVAddOrigObjectId(builder *flatbuffers.Builder, ORIG_OBJECT_ID flatbuffers.UOffsetT) {
+	MNVAddORIG_OBJECT_ID(builder, ORIG_OBJECT_ID)
+}
 func MNVAddON_ORBIT(builder *flatbuffers.Builder, ON_ORBIT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(ON_ORBIT), 0)
+}
+func MNVAddOnOrbit(builder *flatbuffers.Builder, ON_ORBIT flatbuffers.UOffsetT) {
+	MNVAddON_ORBIT(builder, ON_ORBIT)
 }
 func MNVAddSTATUS(builder *flatbuffers.Builder, STATUS maneuverStatus) {
 	builder.PrependInt8Slot(4, int8(STATUS), 0)
 }
+func MNVAddStatus(builder *flatbuffers.Builder, STATUS maneuverStatus) {
+	MNVAddSTATUS(builder, STATUS)
+}
 func MNVAddCHARACTERIZATION(builder *flatbuffers.Builder, CHARACTERIZATION maneuverCharacterization) {
 	builder.PrependInt8Slot(5, int8(CHARACTERIZATION), 0)
+}
+func MNVAddCharacterization(builder *flatbuffers.Builder, CHARACTERIZATION maneuverCharacterization) {
+	MNVAddCHARACTERIZATION(builder, CHARACTERIZATION)
 }
 func MNVAddCHARACTERIZATION_UNC(builder *flatbuffers.Builder, CHARACTERIZATION_UNC float64) {
 	builder.PrependFloat64Slot(6, CHARACTERIZATION_UNC, 0.0)
 }
+func MNVAddCharacterizationUnc(builder *flatbuffers.Builder, CHARACTERIZATION_UNC float64) {
+	MNVAddCHARACTERIZATION_UNC(builder, CHARACTERIZATION_UNC)
+}
 func MNVAddREPORT_TIME(builder *flatbuffers.Builder, REPORT_TIME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(REPORT_TIME), 0)
+}
+func MNVAddReportTime(builder *flatbuffers.Builder, REPORT_TIME flatbuffers.UOffsetT) {
+	MNVAddREPORT_TIME(builder, REPORT_TIME)
 }
 func MNVAddEVENT_START_TIME(builder *flatbuffers.Builder, EVENT_START_TIME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(EVENT_START_TIME), 0)
 }
+func MNVAddEventStartTime(builder *flatbuffers.Builder, EVENT_START_TIME flatbuffers.UOffsetT) {
+	MNVAddEVENT_START_TIME(builder, EVENT_START_TIME)
+}
 func MNVAddEVENT_END_TIME(builder *flatbuffers.Builder, EVENT_END_TIME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(EVENT_END_TIME), 0)
+}
+func MNVAddEventEndTime(builder *flatbuffers.Builder, EVENT_END_TIME flatbuffers.UOffsetT) {
+	MNVAddEVENT_END_TIME(builder, EVENT_END_TIME)
 }
 func MNVAddTOTAL_BURN_TIME(builder *flatbuffers.Builder, TOTAL_BURN_TIME float64) {
 	builder.PrependFloat64Slot(10, TOTAL_BURN_TIME, 0.0)
 }
+func MNVAddTotalBurnTime(builder *flatbuffers.Builder, TOTAL_BURN_TIME float64) {
+	MNVAddTOTAL_BURN_TIME(builder, TOTAL_BURN_TIME)
+}
 func MNVAddOD_FIT_END_TIME(builder *flatbuffers.Builder, OD_FIT_END_TIME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(OD_FIT_END_TIME), 0)
+}
+func MNVAddOdFitEndTime(builder *flatbuffers.Builder, OD_FIT_END_TIME flatbuffers.UOffsetT) {
+	MNVAddOD_FIT_END_TIME(builder, OD_FIT_END_TIME)
 }
 func MNVAddID_SENSOR(builder *flatbuffers.Builder, ID_SENSOR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(12, flatbuffers.UOffsetT(ID_SENSOR), 0)
 }
+func MNVAddIdSensor(builder *flatbuffers.Builder, ID_SENSOR flatbuffers.UOffsetT) {
+	MNVAddID_SENSOR(builder, ID_SENSOR)
+}
 func MNVAddORIG_SENSOR_ID(builder *flatbuffers.Builder, ORIG_SENSOR_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(13, flatbuffers.UOffsetT(ORIG_SENSOR_ID), 0)
+}
+func MNVAddOrigSensorId(builder *flatbuffers.Builder, ORIG_SENSOR_ID flatbuffers.UOffsetT) {
+	MNVAddORIG_SENSOR_ID(builder, ORIG_SENSOR_ID)
 }
 func MNVAddEVENT_ID(builder *flatbuffers.Builder, EVENT_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(14, flatbuffers.UOffsetT(EVENT_ID), 0)
 }
+func MNVAddEventId(builder *flatbuffers.Builder, EVENT_ID flatbuffers.UOffsetT) {
+	MNVAddEVENT_ID(builder, EVENT_ID)
+}
 func MNVAddUCT(builder *flatbuffers.Builder, UCT bool) {
 	builder.PrependBoolSlot(15, UCT, false)
+}
+func MNVAddUct(builder *flatbuffers.Builder, UCT bool) {
+	MNVAddUCT(builder, UCT)
 }
 func MNVAddMANEUVER_UNC(builder *flatbuffers.Builder, MANEUVER_UNC float64) {
 	builder.PrependFloat64Slot(16, MANEUVER_UNC, 0.0)
 }
+func MNVAddManeuverUnc(builder *flatbuffers.Builder, MANEUVER_UNC float64) {
+	MNVAddMANEUVER_UNC(builder, MANEUVER_UNC)
+}
 func MNVAddDELTA_VEL(builder *flatbuffers.Builder, DELTA_VEL float64) {
 	builder.PrependFloat64Slot(17, DELTA_VEL, 0.0)
+}
+func MNVAddDeltaVel(builder *flatbuffers.Builder, DELTA_VEL float64) {
+	MNVAddDELTA_VEL(builder, DELTA_VEL)
 }
 func MNVAddDELTA_VEL_U(builder *flatbuffers.Builder, DELTA_VEL_U float64) {
 	builder.PrependFloat64Slot(18, DELTA_VEL_U, 0.0)
 }
+func MNVAddDeltaVelU(builder *flatbuffers.Builder, DELTA_VEL_U float64) {
+	MNVAddDELTA_VEL_U(builder, DELTA_VEL_U)
+}
 func MNVAddDELTA_VEL_V(builder *flatbuffers.Builder, DELTA_VEL_V float64) {
 	builder.PrependFloat64Slot(19, DELTA_VEL_V, 0.0)
+}
+func MNVAddDeltaVelV(builder *flatbuffers.Builder, DELTA_VEL_V float64) {
+	MNVAddDELTA_VEL_V(builder, DELTA_VEL_V)
 }
 func MNVAddDELTA_VEL_W(builder *flatbuffers.Builder, DELTA_VEL_W float64) {
 	builder.PrependFloat64Slot(20, DELTA_VEL_W, 0.0)
 }
+func MNVAddDeltaVelW(builder *flatbuffers.Builder, DELTA_VEL_W float64) {
+	MNVAddDELTA_VEL_W(builder, DELTA_VEL_W)
+}
 func MNVAddDELTA_POS(builder *flatbuffers.Builder, DELTA_POS float64) {
 	builder.PrependFloat64Slot(21, DELTA_POS, 0.0)
+}
+func MNVAddDeltaPos(builder *flatbuffers.Builder, DELTA_POS float64) {
+	MNVAddDELTA_POS(builder, DELTA_POS)
 }
 func MNVAddDELTA_POS_U(builder *flatbuffers.Builder, DELTA_POS_U float64) {
 	builder.PrependFloat64Slot(22, DELTA_POS_U, 0.0)
 }
+func MNVAddDeltaPosU(builder *flatbuffers.Builder, DELTA_POS_U float64) {
+	MNVAddDELTA_POS_U(builder, DELTA_POS_U)
+}
 func MNVAddDELTA_POS_V(builder *flatbuffers.Builder, DELTA_POS_V float64) {
 	builder.PrependFloat64Slot(23, DELTA_POS_V, 0.0)
+}
+func MNVAddDeltaPosV(builder *flatbuffers.Builder, DELTA_POS_V float64) {
+	MNVAddDELTA_POS_V(builder, DELTA_POS_V)
 }
 func MNVAddDELTA_POS_W(builder *flatbuffers.Builder, DELTA_POS_W float64) {
 	builder.PrependFloat64Slot(24, DELTA_POS_W, 0.0)
 }
+func MNVAddDeltaPosW(builder *flatbuffers.Builder, DELTA_POS_W float64) {
+	MNVAddDELTA_POS_W(builder, DELTA_POS_W)
+}
 func MNVAddDELTA_MASS(builder *flatbuffers.Builder, DELTA_MASS float64) {
 	builder.PrependFloat64Slot(25, DELTA_MASS, 0.0)
+}
+func MNVAddDeltaMass(builder *flatbuffers.Builder, DELTA_MASS float64) {
+	MNVAddDELTA_MASS(builder, DELTA_MASS)
 }
 func MNVAddPRE_EVENT(builder *flatbuffers.Builder, PRE_EVENT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(26, flatbuffers.UOffsetT(PRE_EVENT), 0)
 }
+func MNVAddPreEvent(builder *flatbuffers.Builder, PRE_EVENT flatbuffers.UOffsetT) {
+	MNVAddPRE_EVENT(builder, PRE_EVENT)
+}
 func MNVAddPOST_EVENT(builder *flatbuffers.Builder, POST_EVENT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(27, flatbuffers.UOffsetT(POST_EVENT), 0)
+}
+func MNVAddPostEvent(builder *flatbuffers.Builder, POST_EVENT flatbuffers.UOffsetT) {
+	MNVAddPOST_EVENT(builder, POST_EVENT)
 }
 func MNVAddPOST_MASS(builder *flatbuffers.Builder, POST_MASS float64) {
 	builder.PrependFloat64Slot(28, POST_MASS, 0.0)
 }
+func MNVAddPostMass(builder *flatbuffers.Builder, POST_MASS float64) {
+	MNVAddPOST_MASS(builder, POST_MASS)
+}
 func MNVAddPOST_AREA(builder *flatbuffers.Builder, POST_AREA float64) {
 	builder.PrependFloat64Slot(29, POST_AREA, 0.0)
+}
+func MNVAddPostArea(builder *flatbuffers.Builder, POST_AREA float64) {
+	MNVAddPOST_AREA(builder, POST_AREA)
 }
 func MNVAddCOV(builder *flatbuffers.Builder, COV flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(30, flatbuffers.UOffsetT(COV), 0)
 }
+func MNVAddCov(builder *flatbuffers.Builder, COV flatbuffers.UOffsetT) {
+	MNVAddCOV(builder, COV)
+}
 func MNVStartCOVVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(8, numElems, 8)
+}
+func MNVStartCovVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return MNVStartCOVVector(builder, numElems)
 }
 func MNVAddNUM_OBS(builder *flatbuffers.Builder, NUM_OBS uint32) {
 	builder.PrependUint32Slot(31, NUM_OBS, 0)
 }
+func MNVAddNumObs(builder *flatbuffers.Builder, NUM_OBS uint32) {
+	MNVAddNUM_OBS(builder, NUM_OBS)
+}
 func MNVAddSTATE_MODEL(builder *flatbuffers.Builder, STATE_MODEL flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(32, flatbuffers.UOffsetT(STATE_MODEL), 0)
+}
+func MNVAddStateModel(builder *flatbuffers.Builder, STATE_MODEL flatbuffers.UOffsetT) {
+	MNVAddSTATE_MODEL(builder, STATE_MODEL)
 }
 func MNVAddSTATE_MODEL_VERSION(builder *flatbuffers.Builder, STATE_MODEL_VERSION float64) {
 	builder.PrependFloat64Slot(33, STATE_MODEL_VERSION, 0.0)
 }
+func MNVAddStateModelVersion(builder *flatbuffers.Builder, STATE_MODEL_VERSION float64) {
+	MNVAddSTATE_MODEL_VERSION(builder, STATE_MODEL_VERSION)
+}
 func MNVAddNUM_ACCEL_POINTS(builder *flatbuffers.Builder, NUM_ACCEL_POINTS uint16) {
 	builder.PrependUint16Slot(34, NUM_ACCEL_POINTS, 0)
+}
+func MNVAddNumAccelPoints(builder *flatbuffers.Builder, NUM_ACCEL_POINTS uint16) {
+	MNVAddNUM_ACCEL_POINTS(builder, NUM_ACCEL_POINTS)
 }
 func MNVAddMNVR_ACCEL_TIMES(builder *flatbuffers.Builder, MNVR_ACCEL_TIMES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(35, flatbuffers.UOffsetT(MNVR_ACCEL_TIMES), 0)
 }
+func MNVAddMnvrAccelTimes(builder *flatbuffers.Builder, MNVR_ACCEL_TIMES flatbuffers.UOffsetT) {
+	MNVAddMNVR_ACCEL_TIMES(builder, MNVR_ACCEL_TIMES)
+}
 func MNVStartMNVR_ACCEL_TIMESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func MNVStartMnvrAccelTimesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return MNVStartMNVR_ACCEL_TIMESVector(builder, numElems)
 }
 func MNVAddMNVR_ACCELS(builder *flatbuffers.Builder, MNVR_ACCELS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(36, flatbuffers.UOffsetT(MNVR_ACCELS), 0)
 }
+func MNVAddMnvrAccels(builder *flatbuffers.Builder, MNVR_ACCELS flatbuffers.UOffsetT) {
+	MNVAddMNVR_ACCELS(builder, MNVR_ACCELS)
+}
 func MNVStartMNVR_ACCELSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(8, numElems, 8)
+}
+func MNVStartMnvrAccelsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return MNVStartMNVR_ACCELSVector(builder, numElems)
 }
 func MNVAddMNVR_ACCEL_UNCS(builder *flatbuffers.Builder, MNVR_ACCEL_UNCS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(37, flatbuffers.UOffsetT(MNVR_ACCEL_UNCS), 0)
 }
+func MNVAddMnvrAccelUncs(builder *flatbuffers.Builder, MNVR_ACCEL_UNCS flatbuffers.UOffsetT) {
+	MNVAddMNVR_ACCEL_UNCS(builder, MNVR_ACCEL_UNCS)
+}
 func MNVStartMNVR_ACCEL_UNCSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(8, numElems, 8)
+}
+func MNVStartMnvrAccelUncsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return MNVStartMNVR_ACCEL_UNCSVector(builder, numElems)
 }
 func MNVAddDESCRIPTION(builder *flatbuffers.Builder, DESCRIPTION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(38, flatbuffers.UOffsetT(DESCRIPTION), 0)
 }
+func MNVAddDescription(builder *flatbuffers.Builder, DESCRIPTION flatbuffers.UOffsetT) {
+	MNVAddDESCRIPTION(builder, DESCRIPTION)
+}
 func MNVAddDESCRIPTOR(builder *flatbuffers.Builder, DESCRIPTOR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(39, flatbuffers.UOffsetT(DESCRIPTOR), 0)
+}
+func MNVAddDescriptor(builder *flatbuffers.Builder, DESCRIPTOR flatbuffers.UOffsetT) {
+	MNVAddDESCRIPTOR(builder, DESCRIPTOR)
 }
 func MNVAddALGORITHM(builder *flatbuffers.Builder, ALGORITHM flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(40, flatbuffers.UOffsetT(ALGORITHM), 0)
 }
+func MNVAddAlgorithm(builder *flatbuffers.Builder, ALGORITHM flatbuffers.UOffsetT) {
+	MNVAddALGORITHM(builder, ALGORITHM)
+}
 func MNVAddTAGS(builder *flatbuffers.Builder, TAGS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(41, flatbuffers.UOffsetT(TAGS), 0)
+}
+func MNVAddTags(builder *flatbuffers.Builder, TAGS flatbuffers.UOffsetT) {
+	MNVAddTAGS(builder, TAGS)
 }
 func MNVStartTAGSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
+func MNVStartTagsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return MNVStartTAGSVector(builder, numElems)
+}
 func MNVAddSOURCED_DATA(builder *flatbuffers.Builder, SOURCED_DATA flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(42, flatbuffers.UOffsetT(SOURCED_DATA), 0)
+}
+func MNVAddSourcedData(builder *flatbuffers.Builder, SOURCED_DATA flatbuffers.UOffsetT) {
+	MNVAddSOURCED_DATA(builder, SOURCED_DATA)
 }
 func MNVStartSOURCED_DATAVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
+func MNVStartSourcedDataVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return MNVStartSOURCED_DATAVector(builder, numElems)
+}
 func MNVAddSOURCED_DATA_TYPES(builder *flatbuffers.Builder, SOURCED_DATA_TYPES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(43, flatbuffers.UOffsetT(SOURCED_DATA_TYPES), 0)
 }
+func MNVAddSourcedDataTypes(builder *flatbuffers.Builder, SOURCED_DATA_TYPES flatbuffers.UOffsetT) {
+	MNVAddSOURCED_DATA_TYPES(builder, SOURCED_DATA_TYPES)
+}
 func MNVAddTRANSACTION_ID(builder *flatbuffers.Builder, TRANSACTION_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(44, flatbuffers.UOffsetT(TRANSACTION_ID), 0)
+}
+func MNVAddTransactionId(builder *flatbuffers.Builder, TRANSACTION_ID flatbuffers.UOffsetT) {
+	MNVAddTRANSACTION_ID(builder, TRANSACTION_ID)
 }
 func MNVEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

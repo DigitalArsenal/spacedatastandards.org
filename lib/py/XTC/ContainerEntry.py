@@ -125,17 +125,23 @@ except:
 class ContainerEntryT(object):
 
     # ContainerEntryT
-    def __init__(self):
-        self.PARAMETER_REF_ENTRY = None  # type: Optional[ParameterRefEntry.ParameterRefEntryT]
-        self.CONTAINER_REF_ENTRY = None  # type: Optional[ContainerRefEntry.ContainerRefEntryT]
-        self.FIXED_VALUE_ENTRY = None  # type: Optional[FixedValueEntry.FixedValueEntryT]
-        self.ARRAY_PARAMETER_REF_ENTRY = None  # type: Optional[ArrayParameterRefEntry.ArrayParameterRefEntryT]
+    def __init__(
+        self,
+        PARAMETER_REF_ENTRY = None,
+        CONTAINER_REF_ENTRY = None,
+        FIXED_VALUE_ENTRY = None,
+        ARRAY_PARAMETER_REF_ENTRY = None,
+    ):
+        self.PARAMETER_REF_ENTRY = PARAMETER_REF_ENTRY  # type: Optional[ParameterRefEntry.ParameterRefEntryT]
+        self.CONTAINER_REF_ENTRY = CONTAINER_REF_ENTRY  # type: Optional[ContainerRefEntry.ContainerRefEntryT]
+        self.FIXED_VALUE_ENTRY = FIXED_VALUE_ENTRY  # type: Optional[FixedValueEntry.FixedValueEntryT]
+        self.ARRAY_PARAMETER_REF_ENTRY = ARRAY_PARAMETER_REF_ENTRY  # type: Optional[ArrayParameterRefEntry.ArrayParameterRefEntryT]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        containerEntry = ContainerEntry()
-        containerEntry.Init(buf, pos)
-        return cls.InitFromObj(containerEntry)
+        tmpContainerEntry = ContainerEntry()
+        tmpContainerEntry.Init(buf, pos)
+        return cls.InitFromObj(tmpContainerEntry)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -143,23 +149,23 @@ class ContainerEntryT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, containerEntry):
+    def InitFromObj(cls, tmpContainerEntry):
         x = ContainerEntryT()
-        x._UnPack(containerEntry)
+        x._UnPack(tmpContainerEntry)
         return x
 
     # ContainerEntryT
-    def _UnPack(self, containerEntry):
-        if containerEntry is None:
+    def _UnPack(self, ContainerEntry):
+        if ContainerEntry is None:
             return
-        if containerEntry.PARAMETER_REF_ENTRY() is not None:
-            self.PARAMETER_REF_ENTRY = ParameterRefEntry.ParameterRefEntryT.InitFromObj(containerEntry.PARAMETER_REF_ENTRY())
-        if containerEntry.CONTAINER_REF_ENTRY() is not None:
-            self.CONTAINER_REF_ENTRY = ContainerRefEntry.ContainerRefEntryT.InitFromObj(containerEntry.CONTAINER_REF_ENTRY())
-        if containerEntry.FIXED_VALUE_ENTRY() is not None:
-            self.FIXED_VALUE_ENTRY = FixedValueEntry.FixedValueEntryT.InitFromObj(containerEntry.FIXED_VALUE_ENTRY())
-        if containerEntry.ARRAY_PARAMETER_REF_ENTRY() is not None:
-            self.ARRAY_PARAMETER_REF_ENTRY = ArrayParameterRefEntry.ArrayParameterRefEntryT.InitFromObj(containerEntry.ARRAY_PARAMETER_REF_ENTRY())
+        if ContainerEntry.PARAMETER_REF_ENTRY() is not None:
+            self.PARAMETER_REF_ENTRY = ParameterRefEntry.ParameterRefEntryT.InitFromObj(ContainerEntry.PARAMETER_REF_ENTRY())
+        if ContainerEntry.CONTAINER_REF_ENTRY() is not None:
+            self.CONTAINER_REF_ENTRY = ContainerRefEntry.ContainerRefEntryT.InitFromObj(ContainerEntry.CONTAINER_REF_ENTRY())
+        if ContainerEntry.FIXED_VALUE_ENTRY() is not None:
+            self.FIXED_VALUE_ENTRY = FixedValueEntry.FixedValueEntryT.InitFromObj(ContainerEntry.FIXED_VALUE_ENTRY())
+        if ContainerEntry.ARRAY_PARAMETER_REF_ENTRY() is not None:
+            self.ARRAY_PARAMETER_REF_ENTRY = ArrayParameterRefEntry.ArrayParameterRefEntryT.InitFromObj(ContainerEntry.ARRAY_PARAMETER_REF_ENTRY())
 
     # ContainerEntryT
     def Pack(self, builder):
@@ -180,5 +186,5 @@ class ContainerEntryT(object):
             ContainerEntryAddFIXED_VALUE_ENTRY(builder, FIXED_VALUE_ENTRY)
         if self.ARRAY_PARAMETER_REF_ENTRY is not None:
             ContainerEntryAddARRAY_PARAMETER_REF_ENTRY(builder, ARRAY_PARAMETER_REF_ENTRY)
-        containerEntry = ContainerEntryEnd(builder)
-        return containerEntry
+        ContainerEntry = ContainerEntryEnd(builder)
+        return ContainerEntry

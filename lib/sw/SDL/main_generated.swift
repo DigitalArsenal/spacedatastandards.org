@@ -2,12 +2,16 @@
 // swiftlint:disable all
 // swiftformat:disable all
 
+#if canImport(Common)
+import Common
+#endif
+
 import FlatBuffers
 
 ///  Space Data Link Security (CCSDS 355.0-B-1)
-public struct SDL: FlatBufferObject, Verifiable {
+public struct SDL: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -33,24 +37,18 @@ public struct SDL: FlatBufferObject, Verifiable {
   ///  Initialization vector length in bytes
   public var IV_LENGTH: UInt8 { let o = _accessor.offset(VTOFFSET.IV_LENGTH.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
   ///  Initialization vector
-  public var hasIv: Bool { let o = _accessor.offset(VTOFFSET.IV.v); return o == 0 ? false : true }
-  public var IVCount: Int32 { let o = _accessor.offset(VTOFFSET.IV.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func IV(at index: Int32) -> UInt8 { let o = _accessor.offset(VTOFFSET.IV.v); return o == 0 ? 0 : _accessor.directRead(of: UInt8.self, offset: _accessor.vector(at: o) + index * 1) }
-  public var IV: [UInt8] { return _accessor.getVector(at: VTOFFSET.IV.v) ?? [] }
+  public var IV: FlatbufferVector<UInt8> { return _accessor.vector(at: VTOFFSET.IV.v, byteSize: 1) }
+  public func withUnsafePointerToIv<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.IV.v, body: body) }
   ///  MAC length in bytes
   public var MAC_LENGTH: UInt8 { let o = _accessor.offset(VTOFFSET.MAC_LENGTH.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
   ///  Message authentication code
-  public var hasMac: Bool { let o = _accessor.offset(VTOFFSET.MAC.v); return o == 0 ? false : true }
-  public var MACCount: Int32 { let o = _accessor.offset(VTOFFSET.MAC.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func MAC(at index: Int32) -> UInt8 { let o = _accessor.offset(VTOFFSET.MAC.v); return o == 0 ? 0 : _accessor.directRead(of: UInt8.self, offset: _accessor.vector(at: o) + index * 1) }
-  public var MAC: [UInt8] { return _accessor.getVector(at: VTOFFSET.MAC.v) ?? [] }
+  public var MAC: FlatbufferVector<UInt8> { return _accessor.vector(at: VTOFFSET.MAC.v, byteSize: 1) }
+  public func withUnsafePointerToMac<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.MAC.v, body: body) }
   ///  Pad length
   public var PAD_LENGTH: UInt8 { let o = _accessor.offset(VTOFFSET.PAD_LENGTH.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
   ///  Security payload
-  public var hasPayload: Bool { let o = _accessor.offset(VTOFFSET.PAYLOAD.v); return o == 0 ? false : true }
-  public var PAYLOADCount: Int32 { let o = _accessor.offset(VTOFFSET.PAYLOAD.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func PAYLOAD(at index: Int32) -> UInt8 { let o = _accessor.offset(VTOFFSET.PAYLOAD.v); return o == 0 ? 0 : _accessor.directRead(of: UInt8.self, offset: _accessor.vector(at: o) + index * 1) }
-  public var PAYLOAD: [UInt8] { return _accessor.getVector(at: VTOFFSET.PAYLOAD.v) ?? [] }
+  public var PAYLOAD: FlatbufferVector<UInt8> { return _accessor.vector(at: VTOFFSET.PAYLOAD.v, byteSize: 1) }
+  public func withUnsafePointerToPayload<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.PAYLOAD.v, body: body) }
   public static func startSDL(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 7) }
   public static func add(SPI: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SPI, def: 0, at: VTOFFSET.SPI.p) }
   public static func add(IV_LENGTH: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IV_LENGTH, def: 0, at: VTOFFSET.IV_LENGTH.p) }

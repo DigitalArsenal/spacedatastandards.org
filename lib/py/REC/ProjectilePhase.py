@@ -2,4 +2,9 @@
 
 # namespace: 
 
-# NOTE ProjectilePhase.py does not declare any structs or enums
+class ProjectilePhase(object):
+    LOADED = 0
+    IN_FLIGHT = 1
+    DETONATED = 2
+    DUD = 3
+    IMPACT = 4

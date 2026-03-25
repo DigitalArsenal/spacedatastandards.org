@@ -29,26 +29,26 @@ class TIM : Table() {
         __init(_i, _bb)
         return this
     }
-    val TIME_SYSTEM : Byte
+    val timeSystem : Byte
         get() {
             val o = __offset(4)
             return if(o != 0) bb.get(o + bb_pos) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsTIM(_bb: ByteBuffer): TIM = getRootAsTIM(_bb, TIM())
         fun getRootAsTIM(_bb: ByteBuffer, obj: TIM): TIM {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun TIMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$TIM")
-        fun createTIM(builder: FlatBufferBuilder, TIME_SYSTEM: Byte) : Int {
+        fun createTIM(builder: FlatBufferBuilder, timeSystem: Byte) : Int {
             builder.startTable(1)
-            addTIME_SYSTEM(builder, TIME_SYSTEM)
+            addTIMESYSTEM(builder, timeSystem)
             return endTIM(builder)
         }
         fun startTIM(builder: FlatBufferBuilder) = builder.startTable(1)
-        fun addTIME_SYSTEM(builder: FlatBufferBuilder, TIME_SYSTEM: Byte) = builder.addByte(0, TIME_SYSTEM, 0)
+        fun addTIMESYSTEM(builder: FlatBufferBuilder, timeSystem: Byte) = builder.addByte(0, timeSystem, 0)
         fun endTIM(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

@@ -101,17 +101,23 @@ def End(builder):
 class UnitT(object):
 
     # UnitT
-    def __init__(self):
-        self.DESCRIPTION = None  # type: str
-        self.SYMBOL = None  # type: str
-        self.POWER = 0.0  # type: float
-        self.FACTOR = 0.0  # type: float
+    def __init__(
+        self,
+        DESCRIPTION = None,
+        SYMBOL = None,
+        POWER = 0.0,
+        FACTOR = 0.0,
+    ):
+        self.DESCRIPTION = DESCRIPTION  # type: Optional[str]
+        self.SYMBOL = SYMBOL  # type: Optional[str]
+        self.POWER = POWER  # type: float
+        self.FACTOR = FACTOR  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        unit = Unit()
-        unit.Init(buf, pos)
-        return cls.InitFromObj(unit)
+        tmpUnit = Unit()
+        tmpUnit.Init(buf, pos)
+        return cls.InitFromObj(tmpUnit)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -119,19 +125,19 @@ class UnitT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, unit):
+    def InitFromObj(cls, tmpUnit):
         x = UnitT()
-        x._UnPack(unit)
+        x._UnPack(tmpUnit)
         return x
 
     # UnitT
-    def _UnPack(self, unit):
-        if unit is None:
+    def _UnPack(self, Unit):
+        if Unit is None:
             return
-        self.DESCRIPTION = unit.DESCRIPTION()
-        self.SYMBOL = unit.SYMBOL()
-        self.POWER = unit.POWER()
-        self.FACTOR = unit.FACTOR()
+        self.DESCRIPTION = Unit.DESCRIPTION()
+        self.SYMBOL = Unit.SYMBOL()
+        self.POWER = Unit.POWER()
+        self.FACTOR = Unit.FACTOR()
 
     # UnitT
     def Pack(self, builder):
@@ -146,5 +152,5 @@ class UnitT(object):
             UnitAddSYMBOL(builder, SYMBOL)
         UnitAddPOWER(builder, self.POWER)
         UnitAddFACTOR(builder, self.FACTOR)
-        unit = UnitEnd(builder)
-        return unit
+        Unit = UnitEnd(builder)
+        return Unit

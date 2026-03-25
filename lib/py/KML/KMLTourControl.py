@@ -59,14 +59,17 @@ def End(builder):
 class KMLTourControlT(object):
 
     # KMLTourControlT
-    def __init__(self):
-        self.PLAY_MODE = None  # type: str
+    def __init__(
+        self,
+        PLAY_MODE = None,
+    ):
+        self.PLAY_MODE = PLAY_MODE  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        kmltourControl = KMLTourControl()
-        kmltourControl.Init(buf, pos)
-        return cls.InitFromObj(kmltourControl)
+        tmpKmltourControl = KMLTourControl()
+        tmpKmltourControl.Init(buf, pos)
+        return cls.InitFromObj(tmpKmltourControl)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -74,16 +77,16 @@ class KMLTourControlT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, kmltourControl):
+    def InitFromObj(cls, tmpKmltourControl):
         x = KMLTourControlT()
-        x._UnPack(kmltourControl)
+        x._UnPack(tmpKmltourControl)
         return x
 
     # KMLTourControlT
-    def _UnPack(self, kmltourControl):
-        if kmltourControl is None:
+    def _UnPack(self, KMLTourControl):
+        if KMLTourControl is None:
             return
-        self.PLAY_MODE = kmltourControl.PLAY_MODE()
+        self.PLAY_MODE = KMLTourControl.PLAY_MODE()
 
     # KMLTourControlT
     def Pack(self, builder):
@@ -92,5 +95,5 @@ class KMLTourControlT(object):
         KMLTourControlStart(builder)
         if self.PLAY_MODE is not None:
             KMLTourControlAddPLAY_MODE(builder, PLAY_MODE)
-        kmltourControl = KMLTourControlEnd(builder)
-        return kmltourControl
+        KMLTourControl = KMLTourControlEnd(builder)
+        return KMLTourControl

@@ -2,9 +2,13 @@
 // swiftlint:disable all
 // swiftformat:disable all
 
+#if canImport(Common)
+import Common
+#endif
+
 import FlatBuffers
 
-public enum TrkTrackStatus: Int8, Enum, Verifiable {
+public enum TrkTrackStatus: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -20,7 +24,7 @@ public enum TrkTrackStatus: Int8, Enum, Verifiable {
 }
 
 
-public enum trackEnvironment: Int8, Enum, Verifiable {
+public enum trackEnvironment: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -37,9 +41,9 @@ public enum trackEnvironment: Int8, Enum, Verifiable {
 
 
 ///  Track
-public struct TRK: FlatBufferObject, Verifiable {
+public struct TRK: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -205,13 +209,9 @@ public struct TRK: FlatBufferObject, Verifiable {
   ///  Course (degrees from north)
   public var COURSE: Double { let o = _accessor.offset(VTOFFSET.COURSE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Source types
-  public var hasSrcTyps: Bool { let o = _accessor.offset(VTOFFSET.SRC_TYPS.v); return o == 0 ? false : true }
-  public var SRC_TYPSCount: Int32 { let o = _accessor.offset(VTOFFSET.SRC_TYPS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func SRC_TYPS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.SRC_TYPS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  public var SRC_TYPS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.SRC_TYPS.v, byteSize: 4) }
   ///  Source identifiers
-  public var hasSrcIds: Bool { let o = _accessor.offset(VTOFFSET.SRC_IDS.v); return o == 0 ? false : true }
-  public var SRC_IDSCount: Int32 { let o = _accessor.offset(VTOFFSET.SRC_IDS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func SRC_IDS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.SRC_IDS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  public var SRC_IDS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.SRC_IDS.v, byteSize: 4) }
   ///  Call sign
   public var CALL_SIGN: String? { let o = _accessor.offset(VTOFFSET.CALL_SIGN.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var CALL_SIGNSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CALL_SIGN.v) }
@@ -235,9 +235,7 @@ public struct TRK: FlatBufferObject, Verifiable {
   ///  Mode 3A validity
   public var M3AV: UInt8 { let o = _accessor.offset(VTOFFSET.M3AV.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
   ///  Associated tags
-  public var hasTags: Bool { let o = _accessor.offset(VTOFFSET.TAGS.v); return o == 0 ? false : true }
-  public var TAGSCount: Int32 { let o = _accessor.offset(VTOFFSET.TAGS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func TAGS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.TAGS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  public var TAGS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.TAGS.v, byteSize: 4) }
   ///  Start time for track data (ISO 8601)
   public var TRACK_START_TIME: String? { let o = _accessor.offset(VTOFFSET.TRACK_START_TIME.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var TRACK_START_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TRACK_START_TIME.v) }
@@ -246,45 +244,29 @@ public struct TRK: FlatBufferObject, Verifiable {
   ///  Number of components per point (default 3 for X, Y, Z)
   public var TRACK_COMPONENTS: UInt8 { let o = _accessor.offset(VTOFFSET.TRACK_COMPONENTS.v); return o == 0 ? 3 : _accessor.readBuffer(of: UInt8.self, at: o) }
   ///  ECEF position as flat array [X0, Y0, Z0, X1, Y1, Z1, ...]
-  public var hasEcefPos: Bool { let o = _accessor.offset(VTOFFSET.ECEF_POS.v); return o == 0 ? false : true }
-  public var ECEF_POSCount: Int32 { let o = _accessor.offset(VTOFFSET.ECEF_POS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func ECEF_POS(at index: Int32) -> Double { let o = _accessor.offset(VTOFFSET.ECEF_POS.v); return o == 0 ? 0 : _accessor.directRead(of: Double.self, offset: _accessor.vector(at: o) + index * 8) }
-  public var ECEF_POS: [Double] { return _accessor.getVector(at: VTOFFSET.ECEF_POS.v) ?? [] }
+  public var ECEF_POS: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.ECEF_POS.v, byteSize: 8) }
+  public func withUnsafePointerToEcefPos<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.ECEF_POS.v, body: body) }
   ///  ECEF velocity as flat array [VX0, VY0, VZ0, VX1, VY1, VZ1, ...]
-  public var hasEcefVel: Bool { let o = _accessor.offset(VTOFFSET.ECEF_VEL.v); return o == 0 ? false : true }
-  public var ECEF_VELCount: Int32 { let o = _accessor.offset(VTOFFSET.ECEF_VEL.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func ECEF_VEL(at index: Int32) -> Double { let o = _accessor.offset(VTOFFSET.ECEF_VEL.v); return o == 0 ? 0 : _accessor.directRead(of: Double.self, offset: _accessor.vector(at: o) + index * 8) }
-  public var ECEF_VEL: [Double] { return _accessor.getVector(at: VTOFFSET.ECEF_VEL.v) ?? [] }
+  public var ECEF_VEL: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.ECEF_VEL.v, byteSize: 8) }
+  public func withUnsafePointerToEcefVel<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.ECEF_VEL.v, body: body) }
   ///  ECEF acceleration as flat array [AX0, AY0, AZ0, AX1, AY1, AZ1, ...]
-  public var hasEcefAcc: Bool { let o = _accessor.offset(VTOFFSET.ECEF_ACC.v); return o == 0 ? false : true }
-  public var ECEF_ACCCount: Int32 { let o = _accessor.offset(VTOFFSET.ECEF_ACC.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func ECEF_ACC(at index: Int32) -> Double { let o = _accessor.offset(VTOFFSET.ECEF_ACC.v); return o == 0 ? 0 : _accessor.directRead(of: Double.self, offset: _accessor.vector(at: o) + index * 8) }
-  public var ECEF_ACC: [Double] { return _accessor.getVector(at: VTOFFSET.ECEF_ACC.v) ?? [] }
+  public var ECEF_ACC: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.ECEF_ACC.v, byteSize: 8) }
+  public func withUnsafePointerToEcefAcc<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.ECEF_ACC.v, body: body) }
   ///  Local coordinate position as flat array
-  public var hasLcPos: Bool { let o = _accessor.offset(VTOFFSET.LC_POS.v); return o == 0 ? false : true }
-  public var LC_POSCount: Int32 { let o = _accessor.offset(VTOFFSET.LC_POS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func LC_POS(at index: Int32) -> Double { let o = _accessor.offset(VTOFFSET.LC_POS.v); return o == 0 ? 0 : _accessor.directRead(of: Double.self, offset: _accessor.vector(at: o) + index * 8) }
-  public var LC_POS: [Double] { return _accessor.getVector(at: VTOFFSET.LC_POS.v) ?? [] }
+  public var LC_POS: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.LC_POS.v, byteSize: 8) }
+  public func withUnsafePointerToLcPos<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.LC_POS.v, body: body) }
   ///  Local coordinate velocity as flat array
-  public var hasLcVel: Bool { let o = _accessor.offset(VTOFFSET.LC_VEL.v); return o == 0 ? false : true }
-  public var LC_VELCount: Int32 { let o = _accessor.offset(VTOFFSET.LC_VEL.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func LC_VEL(at index: Int32) -> Double { let o = _accessor.offset(VTOFFSET.LC_VEL.v); return o == 0 ? 0 : _accessor.directRead(of: Double.self, offset: _accessor.vector(at: o) + index * 8) }
-  public var LC_VEL: [Double] { return _accessor.getVector(at: VTOFFSET.LC_VEL.v) ?? [] }
+  public var LC_VEL: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.LC_VEL.v, byteSize: 8) }
+  public func withUnsafePointerToLcVel<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.LC_VEL.v, body: body) }
   ///  Local coordinate acceleration as flat array
-  public var hasLcAcc: Bool { let o = _accessor.offset(VTOFFSET.LC_ACC.v); return o == 0 ? false : true }
-  public var LC_ACCCount: Int32 { let o = _accessor.offset(VTOFFSET.LC_ACC.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func LC_ACC(at index: Int32) -> Double { let o = _accessor.offset(VTOFFSET.LC_ACC.v); return o == 0 ? 0 : _accessor.directRead(of: Double.self, offset: _accessor.vector(at: o) + index * 8) }
-  public var LC_ACC: [Double] { return _accessor.getVector(at: VTOFFSET.LC_ACC.v) ?? [] }
+  public var LC_ACC: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.LC_ACC.v, byteSize: 8) }
+  public func withUnsafePointerToLcAcc<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.LC_ACC.v, body: body) }
   ///  Covariance data (21 elements per point for 6x6 lower triangular)
-  public var hasCov: Bool { let o = _accessor.offset(VTOFFSET.COV.v); return o == 0 ? false : true }
-  public var COVCount: Int32 { let o = _accessor.offset(VTOFFSET.COV.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func COV(at index: Int32) -> Double { let o = _accessor.offset(VTOFFSET.COV.v); return o == 0 ? 0 : _accessor.directRead(of: Double.self, offset: _accessor.vector(at: o) + index * 8) }
-  public var COV: [Double] { return _accessor.getVector(at: VTOFFSET.COV.v) ?? [] }
+  public var COV: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.COV.v, byteSize: 8) }
+  public func withUnsafePointerToCov<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.COV.v, body: body) }
   ///  Error ellipse data (6 elements per point)
-  public var hasErrEllp: Bool { let o = _accessor.offset(VTOFFSET.ERR_ELLP.v); return o == 0 ? false : true }
-  public var ERR_ELLPCount: Int32 { let o = _accessor.offset(VTOFFSET.ERR_ELLP.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func ERR_ELLP(at index: Int32) -> Double { let o = _accessor.offset(VTOFFSET.ERR_ELLP.v); return o == 0 ? 0 : _accessor.directRead(of: Double.self, offset: _accessor.vector(at: o) + index * 8) }
-  public var ERR_ELLP: [Double] { return _accessor.getVector(at: VTOFFSET.ERR_ELLP.v) ?? [] }
+  public var ERR_ELLP: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.ERR_ELLP.v, byteSize: 8) }
+  public func withUnsafePointerToErrEllp<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.ERR_ELLP.v, body: body) }
   public static func startTRK(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 59) }
   public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VTOFFSET.ID.p) }
   public static func add(CNTCT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CNTCT, at: VTOFFSET.CNTCT.p) }

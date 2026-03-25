@@ -395,6 +395,12 @@ def IONStartDATA_POINTSVector(builder, numElems):
 def StartDATA_POINTSVector(builder, numElems):
     return IONStartDATA_POINTSVector(builder, numElems)
 
+def IONCreateDATA_POINTSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateDATA_POINTSVector(builder, data):
+    IONCreateDATA_POINTSVector(builder, data)
+
 def IONAddDENSITY_PROFILES(builder, DENSITY_PROFILES):
     builder.PrependUOffsetTRelativeSlot(21, flatbuffers.number_types.UOffsetTFlags.py_type(DENSITY_PROFILES), 0)
 
@@ -406,6 +412,12 @@ def IONStartDENSITY_PROFILESVector(builder, numElems):
 
 def StartDENSITY_PROFILESVector(builder, numElems):
     return IONStartDENSITY_PROFILESVector(builder, numElems)
+
+def IONCreateDENSITY_PROFILESVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateDENSITY_PROFILESVector(builder, data):
+    IONCreateDENSITY_PROFILESVector(builder, data)
 
 def IONAddQUALITY(builder, QUALITY):
     builder.PrependUint8Slot(22, QUALITY, 0)
@@ -435,37 +447,63 @@ except:
 class IONT(object):
 
     # IONT
-    def __init__(self):
-        self.ID = None  # type: str
-        self.SOURCE = 0  # type: int
-        self.STATION_ID = None  # type: str
-        self.STATION_NAME = None  # type: str
-        self.LATITUDE = 0.0  # type: float
-        self.LONGITUDE = 0.0  # type: float
-        self.ALTITUDE = 0.0  # type: float
-        self.START_TIME = None  # type: str
-        self.STOP_TIME = None  # type: str
-        self.FOF2 = 0.0  # type: float
-        self.FOF1 = 0.0  # type: float
-        self.FOE = 0.0  # type: float
-        self.FOES = 0.0  # type: float
-        self.HMF2 = 0.0  # type: float
-        self.HMF1 = 0.0  # type: float
-        self.HME = 0.0  # type: float
-        self.NMF2 = 0.0  # type: float
-        self.VTEC = 0.0  # type: float
-        self.STEC = 0.0  # type: float
-        self.S4 = 0.0  # type: float
-        self.DATA_POINTS = None  # type: List[ionoDataPoint.ionoDataPointT]
-        self.DENSITY_PROFILES = None  # type: List[ionoDensityProfile.ionoDensityProfileT]
-        self.QUALITY = 0  # type: int
-        self.NOTES = None  # type: str
+    def __init__(
+        self,
+        ID = None,
+        SOURCE = 0,
+        STATION_ID = None,
+        STATION_NAME = None,
+        LATITUDE = 0.0,
+        LONGITUDE = 0.0,
+        ALTITUDE = 0.0,
+        START_TIME = None,
+        STOP_TIME = None,
+        FOF2 = 0.0,
+        FOF1 = 0.0,
+        FOE = 0.0,
+        FOES = 0.0,
+        HMF2 = 0.0,
+        HMF1 = 0.0,
+        HME = 0.0,
+        NMF2 = 0.0,
+        VTEC = 0.0,
+        STEC = 0.0,
+        S4 = 0.0,
+        DATA_POINTS = None,
+        DENSITY_PROFILES = None,
+        QUALITY = 0,
+        NOTES = None,
+    ):
+        self.ID = ID  # type: Optional[str]
+        self.SOURCE = SOURCE  # type: int
+        self.STATION_ID = STATION_ID  # type: Optional[str]
+        self.STATION_NAME = STATION_NAME  # type: Optional[str]
+        self.LATITUDE = LATITUDE  # type: float
+        self.LONGITUDE = LONGITUDE  # type: float
+        self.ALTITUDE = ALTITUDE  # type: float
+        self.START_TIME = START_TIME  # type: Optional[str]
+        self.STOP_TIME = STOP_TIME  # type: Optional[str]
+        self.FOF2 = FOF2  # type: float
+        self.FOF1 = FOF1  # type: float
+        self.FOE = FOE  # type: float
+        self.FOES = FOES  # type: float
+        self.HMF2 = HMF2  # type: float
+        self.HMF1 = HMF1  # type: float
+        self.HME = HME  # type: float
+        self.NMF2 = NMF2  # type: float
+        self.VTEC = VTEC  # type: float
+        self.STEC = STEC  # type: float
+        self.S4 = S4  # type: float
+        self.DATA_POINTS = DATA_POINTS  # type: Optional[List[ionoDataPoint.ionoDataPointT]]
+        self.DENSITY_PROFILES = DENSITY_PROFILES  # type: Optional[List[ionoDensityProfile.ionoDensityProfileT]]
+        self.QUALITY = QUALITY  # type: int
+        self.NOTES = NOTES  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        ION = ION()
-        ION.Init(buf, pos)
-        return cls.InitFromObj(ION)
+        tmpIon = ION()
+        tmpIon.Init(buf, pos)
+        return cls.InitFromObj(tmpIon)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -473,9 +511,9 @@ class IONT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, ION):
+    def InitFromObj(cls, tmpIon):
         x = IONT()
-        x._UnPack(ION)
+        x._UnPack(tmpIon)
         return x
 
     # IONT

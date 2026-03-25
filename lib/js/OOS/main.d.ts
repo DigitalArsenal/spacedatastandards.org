@@ -1,2 +1,2 @@
-export { OOS, OOST } from './OOS.js';
+export * from './OOS.js';
 //# sourceMappingURL=main.d.ts.map

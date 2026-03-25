@@ -51,6 +51,10 @@ func (rcv *BaseMetaCommand) META_COMMAND_REF() []byte {
 	return nil
 }
 
+func (rcv *BaseMetaCommand) MetaCommandRef() []byte {
+	return rcv.META_COMMAND_REF()
+}
+
 /// MetaCommand reference
 /// Argument assignments for inherited arguments
 func (rcv *BaseMetaCommand) ARGUMENT_ASSIGNMENTS(obj *ArgumentAssignment, j int) bool {
@@ -59,10 +63,17 @@ func (rcv *BaseMetaCommand) ARGUMENT_ASSIGNMENTS(obj *ArgumentAssignment, j int)
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(ArgumentAssignment)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *BaseMetaCommand) ArgumentAssignments(obj *ArgumentAssignment, j int) bool {
+	return rcv.ARGUMENT_ASSIGNMENTS(obj, j)
 }
 
 func (rcv *BaseMetaCommand) ARGUMENT_ASSIGNMENTSLength() int {
@@ -73,6 +84,10 @@ func (rcv *BaseMetaCommand) ARGUMENT_ASSIGNMENTSLength() int {
 	return 0
 }
 
+func (rcv *BaseMetaCommand) ArgumentAssignmentsLength() int {
+	return rcv.ARGUMENT_ASSIGNMENTSLength()
+}
+
 /// Argument assignments for inherited arguments
 func BaseMetaCommandStart(builder *flatbuffers.Builder) {
 	builder.StartObject(2)
@@ -80,11 +95,20 @@ func BaseMetaCommandStart(builder *flatbuffers.Builder) {
 func BaseMetaCommandAddMETA_COMMAND_REF(builder *flatbuffers.Builder, META_COMMAND_REF flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(META_COMMAND_REF), 0)
 }
+func BaseMetaCommandAddMetaCommandRef(builder *flatbuffers.Builder, META_COMMAND_REF flatbuffers.UOffsetT) {
+	BaseMetaCommandAddMETA_COMMAND_REF(builder, META_COMMAND_REF)
+}
 func BaseMetaCommandAddARGUMENT_ASSIGNMENTS(builder *flatbuffers.Builder, ARGUMENT_ASSIGNMENTS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(ARGUMENT_ASSIGNMENTS), 0)
 }
+func BaseMetaCommandAddArgumentAssignments(builder *flatbuffers.Builder, ARGUMENT_ASSIGNMENTS flatbuffers.UOffsetT) {
+	BaseMetaCommandAddARGUMENT_ASSIGNMENTS(builder, ARGUMENT_ASSIGNMENTS)
+}
 func BaseMetaCommandStartARGUMENT_ASSIGNMENTSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func BaseMetaCommandStartArgumentAssignmentsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return BaseMetaCommandStartARGUMENT_ASSIGNMENTSVector(builder, numElems)
 }
 func BaseMetaCommandEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

@@ -29,7 +29,7 @@ class UserDefinedParameters : Table() {
     /**
      * Name of the user-defined parameter.
      */
-    val PARAM_NAME : String?
+    val paramName : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -38,12 +38,12 @@ class UserDefinedParameters : Table() {
                 null
             }
         }
-    val PARAM_NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun PARAM_NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val paramNameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun paramNameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Value of the user-defined parameter.
      */
-    val PARAM_VALUE : String?
+    val paramValue : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -52,24 +52,24 @@ class UserDefinedParameters : Table() {
                 null
             }
         }
-    val PARAM_VALUEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun PARAM_VALUEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val paramValueAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun paramValueInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsUserDefinedParameters(_bb: ByteBuffer): UserDefinedParameters = getRootAsUserDefinedParameters(_bb, UserDefinedParameters())
         fun getRootAsUserDefinedParameters(_bb: ByteBuffer, obj: UserDefinedParameters): UserDefinedParameters {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createUserDefinedParameters(builder: FlatBufferBuilder, PARAM_NAMEOffset: Int, PARAM_VALUEOffset: Int) : Int {
+        fun createUserDefinedParameters(builder: FlatBufferBuilder, paramNameOffset: Int, paramValueOffset: Int) : Int {
             builder.startTable(2)
-            addPARAM_VALUE(builder, PARAM_VALUEOffset)
-            addPARAM_NAME(builder, PARAM_NAMEOffset)
+            addPARAMVALUE(builder, paramValueOffset)
+            addPARAMNAME(builder, paramNameOffset)
             return endUserDefinedParameters(builder)
         }
         fun startUserDefinedParameters(builder: FlatBufferBuilder) = builder.startTable(2)
-        fun addPARAM_NAME(builder: FlatBufferBuilder, PARAM_NAME: Int) = builder.addOffset(0, PARAM_NAME, 0)
-        fun addPARAM_VALUE(builder: FlatBufferBuilder, PARAM_VALUE: Int) = builder.addOffset(1, PARAM_VALUE, 0)
+        fun addPARAMNAME(builder: FlatBufferBuilder, paramName: Int) = builder.addOffset(0, paramName, 0)
+        fun addPARAMVALUE(builder: FlatBufferBuilder, paramValue: Int) = builder.addOffset(1, paramValue, 0)
         fun endUserDefinedParameters(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

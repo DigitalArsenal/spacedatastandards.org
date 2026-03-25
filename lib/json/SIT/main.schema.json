@@ -17,10 +17,6 @@
       "type" : "string",
       "enum": ["UNKNOWN", "OPTICAL", "INFRARED_SENSOR", "ULTRAVIOLET_SENSOR", "X_RAY_SENSOR", "GAMMA_RAY_SENSOR", "RADAR", "PHASED_ARRAY_RADAR", "SYNTHETIC_APERTURE_RADAR", "BISTATIC_RADIO_TELESCOPE", "RADIO_TELESCOPE", "ATMOSPHERIC_SENSOR", "SPACE_WEATHER_SENSOR", "ENVIRONMENTAL_SENSOR", "SEISMIC_SENSOR", "GRAVIMETRIC_SENSOR", "MAGNETIC_SENSOR", "ELECTROMAGNETIC_SENSOR", "THERMAL_SENSOR", "CHEMICAL_SENSOR", "BIOLOGICAL_SENSOR", "RADIATION_SENSOR", "PARTICLE_DETECTOR", "LIDAR", "SONAR", "TELESCOPE", "SPECTROSCOPIC_SENSOR", "PHOTOMETRIC_SENSOR", "POLARIMETRIC_SENSOR", "INTERFEROMETRIC_SENSOR", "MULTISPECTRAL_SENSOR", "HYPERSPECTRAL_SENSOR", "GPS_RECEIVER", "RADIO_COMMUNICATIONS", "LASER_COMMUNICATIONS", "SATELLITE_COMMUNICATIONS", "LASER_INSTRUMENT", "RF_ANALYZER", "IONOSPHERIC_SENSOR", "LASER_IMAGING", "OPTICAL_TELESCOPE", "HIGH_RESOLUTION_OPTICAL", "RADIO", "MICROWAVE_TRANSMITTER", "RF_MONITOR", "HF_RADIO_COMMUNICATIONS"]
     },
-    "SiteType" : {
-      "type" : "string",
-      "enum": ["LAUNCH_SITE", "OBSERVATION_STATION", "HOBBYIST_OBSERVER", "RESEARCH_FACILITY", "SATELLITE_GROUND_STATION", "SPACEPORT", "MILITARY_BASE", "WEATHER_STATION", "ASTRONOMICAL_OBSERVATORY", "EDUCATIONAL_INSTITUTE", "COMMUNICATION_HUB", "POWER_PLANT", "INDUSTRIAL_COMPLEX", "TRANSPORTATION_HUB", "URBAN_AREA", "NATIONAL_PARK", "HISTORICAL_SITE", "OTHER"]
-    },
     "FrequencyRange" : {
       "type" : "object",
       "description" : "Frequency range with lower and upper limits",
@@ -196,125 +192,7 @@
               }
       },
       "additionalProperties" : false
-    },
-    "Geometry" : {
-      "type" : "object",
-      "description" : "Geometry table with information about geometric properties",
-      "properties" : {
-        "GEOMETRY_TYPE" : {
-                "type" : "string",
-                "description" : "Type of geometry"
-              },
-        "COORDINATES" : {
-                "type" : "array", "items" : {"type" : "number"},
-                "description" : "Coordinates of the geometry"
-              }
-      },
-      "additionalProperties" : false
-    },
-    "SIT" : {
-      "type" : "object",
-      "description" : "Site Information Message",
-      "properties" : {
-        "ID" : {
-                "type" : "string",
-                "description" : "Unique identifier for the site, BE_NUMBER"
-              },
-        "NAME" : {
-                "type" : "string",
-                "description" : "Name of the site"
-              },
-        "ABBREVIATION" : {
-                "type" : "string",
-                "description" : "Abbreviation"
-              },
-        "SITE_TYPE" : {
-                "$ref" : "#/definitions/SiteType",
-                "description" : "Site type as defined in SiteType enum"
-              },
-        "CATCODE" : {
-                "type" : "string",
-                "description" : "Site type CATCODE"
-              },
-        "NETWORK" : {
-                "type" : "string",
-                "description" : "Network identifier"
-              },
-        "LATITUDE" : {
-                "type" : "number",
-                "description" : "Latitude of the site"
-              },
-        "LONGITUDE" : {
-                "type" : "number",
-                "description" : "Longitude of the site"
-              },
-        "ALTITUDE" : {
-                "type" : "number",
-                "description" : "Altitude of the site"
-              },
-        "GEOMETRY" : {
-                "$ref" : "#/definitions/Geometry",
-                "description" : "Geometry of the site"
-              },
-        "CENTER_POINT_GEOMETRY" : {
-                "type" : "array", "items" : {"type" : "number"},
-                "description" : "Center point geometry coordinates"
-              },
-        "CLASSIFICATION" : {
-                "type" : "string",
-                "description" : "Classification marking of the site"
-              },
-        "CTR_ID" : {
-                "type" : "string",
-                "description" : "CTR ISO 3166 Numeric code as string"
-              },
-        "CREATED_BY" : {
-                "type" : "string",
-                "description" : "Identifier of the user who created the site data"
-              },
-        "DESCRIPTION" : {
-                "type" : "string",
-                "description" : "Description of the site"
-              },
-        "MODEL_URL" : {
-                "type" : "string",
-                "description" : "URL for the 3D model of the site"
-              },
-        "SOURCE" : {
-                "type" : "string",
-                "description" : "Source of the site data"
-              },
-        "TASKABLE" : {
-                "type" : "boolean",
-                "description" : "Indicates if the site is taskable"
-              },
-        "OPERATIONAL_STATUS" : {
-                "type" : "string",
-                "description" : "Operational status of the site (e.g., active, inactive, under construction)"
-              },
-        "ESTABLISHMENT_DATE" : {
-                "type" : "string",
-                "description" : "Date of establishment"
-              },
-        "CONTACT_INFO" : {
-                "type" : "string",
-                "description" : "Contact information for the site"
-              },
-        "ENVIRONMENTAL_IMPACT" : {
-                "type" : "string",
-                "description" : "Environmental impact or considerations"
-              },
-        "ACCESSIBILITY_INFRA" : {
-                "type" : "string",
-                "description" : "Accessibility and infrastructure details"
-              },
-        "INTEGRATED_DEVICES" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/IDM"},
-                "description" : "Vector of Integrated Devices (IDM)"
-              }
-      },
-      "additionalProperties" : false
     }
   },
-  "$ref" : "#/definitions/SIT"
+  "$ref" : "#/definitions/IDM"
 }

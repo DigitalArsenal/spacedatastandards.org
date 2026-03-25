@@ -2,535 +2,308 @@
 // swiftlint:disable all
 // swiftformat:disable all
 
+#if canImport(Common)
+import Common
+#endif
+
 import FlatBuffers
 
-///  Polynomial basis type for coefficient interpretation.
-///  Determines how the coefficient arrays are evaluated.
-public enum polynomialBasisType: Int8, Enum, Verifiable {
+public enum legacyCountryCode: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
-  ///  Chebyshev polynomials of the first kind T_n(x).
-  ///  Most common for ephemeris fitting due to minimax approximation properties.
-  case chebyshev = 0
-  ///  Legendre polynomials P_n(x).
-  ///  Orthogonal on [-1, 1] with unit weight function.
-  case legendre = 1
-  ///  Hermite interpolating polynomials.
-  ///  Matches both function values and derivatives at nodes.
-  case hermite = 2
-  ///  Lagrange interpolating polynomials.
-  ///  Exact interpolation through specified nodes.
-  case lagrange = 3
-  ///  Standard power series (monomial basis): c0 + c1*x + c2*x^2 + ...
-  case powerSeries = 4
+  ///  Arab Satellite Communications Organization
+  case ab = 0
+  ///  Asia Broadcast Satellite
+  case abs = 1
+  ///  Asia Satellite Telecommunications Company (ASIASAT)
+  case ac = 2
+  ///  Algeria
+  case alg = 3
+  ///  Angola
+  case ang = 4
+  ///  Argentina
+  case argn = 5
+  ///  Republic of Armenia
+  case arm = 6
+  ///  Austria
+  case asra = 7
+  ///  Australia
+  case aus = 8
+  ///  Azerbaijan
+  case azer = 9
+  ///  Belgium
+  case bel = 10
+  ///  Belarus
+  case bela = 11
+  ///  Bermuda
+  case berm = 12
+  ///  People's Republic of Bangladesh
+  case bgd = 13
+  ///  Kingdom of Bhutan
+  case bhut = 14
+  ///  Bolivia
+  case bol = 15
+  ///  Brazil
+  case braz = 16
+  ///  Bulgaria
+  case bul = 17
+  ///  Canada
+  case ca = 18
+  ///  China/Brazil
+  case chbz = 19
+  ///  China/Turkey
+  case chtu = 20
+  ///  Chile
+  case chle = 21
+  ///  Commonwealth of Independent States (former USSR)
+  case cis = 22
+  ///  Colombia
+  case col = 23
+  ///  Republic of Costa Rica
+  case cri = 24
+  ///  Czech Republic (former Czechoslovakia)
+  case czch = 25
+  ///  Denmark
+  case den = 26
+  ///  Republic of Djibouti
+  case dji = 27
+  ///  Ecuador
+  case ecu = 28
+  ///  Egypt
+  case egyp = 29
+  ///  European Space Agency
+  case esa = 30
+  ///  European Space Research Organization
+  case esro = 31
+  ///  Estonia
+  case est = 32
+  ///  Ethiopia
+  case eth = 33
+  ///  European Organization for the Exploitation of Meteorological Satellites (EUMETSAT)
+  case eume = 34
+  ///  European Telecommunications Satellite Organization (EUTELSAT)
+  case eute = 35
+  ///  France/Germany
+  case fger = 36
+  ///  Finland
+  case fin = 37
+  ///  France
+  case fr = 38
+  ///  France/Italy
+  case frit = 39
+  ///  Germany
+  case ger = 40
+  ///  Republic of Ghana
+  case gha = 41
+  ///  Globalstar
+  case glob = 42
+  ///  Greece
+  case grec = 43
+  ///  Greece/Saudi Arabia
+  case grsa = 44
+  ///  Guatemala
+  case guat = 45
+  ///  Hungary
+  case hun = 46
+  ///  International Mobile Satellite Organization (INMARSAT)
+  case im = 47
+  ///  India
+  case ind = 48
+  ///  Indonesia
+  case indo = 49
+  ///  Iran
+  case iran = 50
+  ///  Iraq
+  case iraq = 51
+  ///  Iridium
+  case irid = 52
+  ///  Ireland
+  case irl = 53
+  ///  Israel
+  case isra = 54
+  ///  Indian Space Research Organisation
+  case isro = 55
+  ///  International Space Station
+  case iss = 56
+  ///  Italy
+  case it = 57
+  ///  International Telecommunications Satellite Organization (INTELSAT)
+  case itso = 58
+  ///  Japan
+  case jpn = 59
+  ///  Kazakhstan
+  case kaz = 60
+  ///  Republic of Kenya
+  case ken = 61
+  ///  Laos
+  case laos = 62
+  ///  Democratic Socialist Republic of Sri Lanka
+  case lka = 63
+  ///  Lithuania
+  case ltu = 64
+  ///  Luxembourg
+  case luxe = 65
+  ///  Morocco
+  case ma = 66
+  ///  Malaysia
+  case mala = 67
+  ///  Principality of Monaco
+  case mco = 68
+  ///  Republic of Moldova
+  case mda = 69
+  ///  Mexico
+  case mex = 70
+  ///  Republic of the Union of Myanmar
+  case mmr = 71
+  ///  Mongolia
+  case mng = 72
+  ///  Mauritius
+  case mus = 73
+  ///  North Atlantic Treaty Organization
+  case nato = 74
+  ///  Netherlands
+  case neth = 75
+  ///  New ICO
+  case nico = 76
+  ///  Nigeria
+  case nig = 77
+  ///  Democratic People's Republic of Korea
+  case nkor = 78
+  ///  Norway
+  case nor = 79
+  ///  Federal Democratic Republic of Nepal
+  case npl = 80
+  ///  New Zealand
+  case nz = 81
+  ///  O3b Networks
+  case o3b = 82
+  ///  ORBCOMM
+  case orb = 83
+  ///  Pakistan
+  case paki = 84
+  ///  Peru
+  case peru = 85
+  ///  Poland
+  case pol = 86
+  ///  Portugal
+  case por = 87
+  ///  People's Republic of China
+  case prc = 88
+  ///  Republic of Paraguay
+  case pry = 89
+  ///  People's Republic of China/European Space Agency
+  case pres = 90
+  ///  State of Qatar
+  case qat = 91
+  ///  RascomStar-QAF
+  case rasc = 92
+  ///  Taiwan (Republic of China)
+  case roc = 93
+  ///  Romania
+  case rom = 94
+  ///  Philippines (Republic of the Philippines)
+  case rp = 95
+  ///  Republic of Rwanda
+  case rwa = 96
+  ///  South Africa
+  case safr = 97
+  ///  Saudi Arabia
+  case saud = 98
+  ///  Republic of Sudan
+  case sdn = 99
+  ///  Sea Launch
+  case seal = 100
+  ///  SES
+  case ses = 101
+  ///  Singapore/Japan
+  case sgjp = 102
+  ///  Singapore
+  case sing = 103
+  ///  Republic of Korea
+  case skor = 104
+  ///  Spain
+  case spn = 105
+  ///  Singapore/Taiwan
+  case stct = 106
+  ///  Slovenia
+  case svn = 107
+  ///  Sweden
+  case swed = 108
+  ///  Switzerland
+  case swtz = 109
+  ///  To Be Determined
+  case tbd = 110
+  ///  Thailand
+  case thai = 111
+  ///  Turkmenistan/Monaco
+  case tmmc = 112
+  ///  Republic of Tunisia
+  case tun = 113
+  ///  Turkey
+  case turk = 114
+  ///  United Arab Emirates
+  case uae = 115
+  ///  United Kingdom
+  case uk = 116
+  ///  Ukraine
+  case ukr = 117
+  ///  Unknown
+  case unk = 118
+  ///  Uruguay
+  case ury = 119
+  ///  United States
+  case us = 120
+  ///  United States/Brazil
+  case usbz = 121
+  ///  Vatican City State
+  case vat = 122
+  ///  Venezuela
+  case venz = 123
+  ///  Vietnam
+  case vtnm = 124
+  ///  Republic of Zimbabwe
+  case zwe = 125
 
-  public static var max: polynomialBasisType { return .powerSeries }
-  public static var min: polynomialBasisType { return .chebyshev }
+  public static var max: legacyCountryCode { return .zwe }
+  public static var min: legacyCountryCode { return .ab }
 }
 
 
-///  Anomaly type flag for orbital element records.
-public enum anomalyType: Int8, Enum, Verifiable {
-  public typealias T = Int8
-  public static var byteSize: Int { return MemoryLayout<Int8>.size }
-  public var value: Int8 { return self.rawValue }
-  ///  True anomaly (geometric angle from periapsis).
-  case trueAnomaly = 0
-  ///  Mean anomaly (linear in time for Keplerian motion).
-  case meanAnomaly = 1
-  ///  Eccentric anomaly (auxiliary angle in the Kepler equation).
-  case eccentricAnomaly = 2
+///  Legacy Country Code
+public struct LCC: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  public static var max: anomalyType { return .eccentricAnomaly }
-  public static var min: anomalyType { return .trueAnomaly }
-}
-
-
-///  Orbital element parameterization for the first element (size/shape).
-public enum sizeShapeType: Int8, Enum, Verifiable {
-  public typealias T = Int8
-  public static var byteSize: Int { return MemoryLayout<Int8>.size }
-  public var value: Int8 { return self.rawValue }
-  ///  Semi-major axis (km). Standard for elliptical orbits.
-  case sma = 0
-  ///  Radius of periapsis (km). Preferred for hyperbolic orbits.
-  case rPeriapsis = 1
-
-  public static var max: sizeShapeType { return .rPeriapsis }
-  public static var min: sizeShapeType { return .sma }
-}
-
-
-///  A single time-segment record of polynomial coefficients for Cartesian position
-///  (and optionally velocity). Coefficients are stored per axis.
-/// 
-///  To evaluate position at time t within this record's validity window:
-///    1. Compute normalized time: tau = (t - EPOCH_MID) / EPOCH_HALF_SPAN
-///       where tau is in [-1, +1].
-///    2. Evaluate the polynomial basis of degree (NUM_COEFFICIENTS - 1) using
-///       the coefficients for each axis.
-/// 
-///  Velocity coefficients, if present, follow the same evaluation procedure.
-///  If HAS_VELOCITY_COEFFICIENTS is false, velocity can be obtained by
-///  analytically differentiating the position polynomial.
-public struct PPEPositionRecord: FlatBufferObject, Verifiable {
-
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$PPE" } 
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PPEPositionRecord.id, addPrefix: prefix) }
+  public static var id: String { "$LCC" } 
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: LCC.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private enum VTOFFSET: VOffset {
-    case EPOCH_MID = 4
-    case EPOCH_HALF_SPAN = 6
-    case NUM_COEFFICIENTS = 8
-    case BASIS_TYPE = 10
-    case POS_COEFF_X = 12
-    case POS_COEFF_Y = 14
-    case POS_COEFF_Z = 16
-    case HAS_VELOCITY_COEFFICIENTS = 18
-    case VEL_COEFF_X = 20
-    case VEL_COEFF_Y = 22
-    case VEL_COEFF_Z = 24
-    case MAX_POSITION_RESIDUAL = 26
-    case RMS_POSITION_RESIDUAL = 28
+    case OWNER = 4
     var v: Int32 { Int32(self.rawValue) }
     var p: VOffset { self.rawValue }
   }
 
-  ///  Midpoint epoch of this record's validity window (ISO 8601 UTC or TDB).
-  ///  Together with EPOCH_HALF_SPAN, defines the time interval:
-  ///    [EPOCH_MID - EPOCH_HALF_SPAN, EPOCH_MID + EPOCH_HALF_SPAN]
-  public var EPOCH_MID: String! { let o = _accessor.offset(VTOFFSET.EPOCH_MID.v); return _accessor.string(at: o) }
-  public var EPOCH_MIDSegmentArray: [UInt8]! { return _accessor.getVector(at: VTOFFSET.EPOCH_MID.v) }
-  ///  Half-span of the validity window in seconds.
-  ///  The full span is 2 * EPOCH_HALF_SPAN seconds centered on EPOCH_MID.
-  public var EPOCH_HALF_SPAN: Double { let o = _accessor.offset(VTOFFSET.EPOCH_HALF_SPAN.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Number of polynomial coefficients per axis.
-  ///  The polynomial degree is (NUM_COEFFICIENTS - 1).
-  ///  Typical values: 8-32 for high-fidelity ephemeris fits.
-  public var NUM_COEFFICIENTS: UInt16 { let o = _accessor.offset(VTOFFSET.NUM_COEFFICIENTS.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
-  ///  Polynomial basis type for interpreting the coefficient arrays.
-  public var BASIS_TYPE: polynomialBasisType { let o = _accessor.offset(VTOFFSET.BASIS_TYPE.v); return o == 0 ? .chebyshev : polynomialBasisType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .chebyshev }
-  ///  Position coefficients for X-axis (km).
-  ///  Length must equal NUM_COEFFICIENTS. Ordered c0, c1, ..., c_{N-1}.
-  public var hasPosCoeffX: Bool { let o = _accessor.offset(VTOFFSET.POS_COEFF_X.v); return o == 0 ? false : true }
-  public var POS_COEFF_XCount: Int32 { let o = _accessor.offset(VTOFFSET.POS_COEFF_X.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func POS_COEFF_X(at index: Int32) -> Double { let o = _accessor.offset(VTOFFSET.POS_COEFF_X.v); return o == 0 ? 0 : _accessor.directRead(of: Double.self, offset: _accessor.vector(at: o) + index * 8) }
-  public var POS_COEFF_X: [Double] { return _accessor.getVector(at: VTOFFSET.POS_COEFF_X.v) ?? [] }
-  ///  Position coefficients for Y-axis (km).
-  ///  Length must equal NUM_COEFFICIENTS.
-  public var hasPosCoeffY: Bool { let o = _accessor.offset(VTOFFSET.POS_COEFF_Y.v); return o == 0 ? false : true }
-  public var POS_COEFF_YCount: Int32 { let o = _accessor.offset(VTOFFSET.POS_COEFF_Y.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func POS_COEFF_Y(at index: Int32) -> Double { let o = _accessor.offset(VTOFFSET.POS_COEFF_Y.v); return o == 0 ? 0 : _accessor.directRead(of: Double.self, offset: _accessor.vector(at: o) + index * 8) }
-  public var POS_COEFF_Y: [Double] { return _accessor.getVector(at: VTOFFSET.POS_COEFF_Y.v) ?? [] }
-  ///  Position coefficients for Z-axis (km).
-  ///  Length must equal NUM_COEFFICIENTS.
-  public var hasPosCoeffZ: Bool { let o = _accessor.offset(VTOFFSET.POS_COEFF_Z.v); return o == 0 ? false : true }
-  public var POS_COEFF_ZCount: Int32 { let o = _accessor.offset(VTOFFSET.POS_COEFF_Z.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func POS_COEFF_Z(at index: Int32) -> Double { let o = _accessor.offset(VTOFFSET.POS_COEFF_Z.v); return o == 0 ? 0 : _accessor.directRead(of: Double.self, offset: _accessor.vector(at: o) + index * 8) }
-  public var POS_COEFF_Z: [Double] { return _accessor.getVector(at: VTOFFSET.POS_COEFF_Z.v) ?? [] }
-  ///  Whether explicit velocity coefficients are provided.
-  ///  If false, velocity should be derived by differentiating the position polynomial.
-  public var HAS_VELOCITY_COEFFICIENTS: Bool { let o = _accessor.offset(VTOFFSET.HAS_VELOCITY_COEFFICIENTS.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
-  ///  Velocity coefficients for X-axis (km/s). Optional.
-  ///  Length must equal NUM_COEFFICIENTS if present.
-  public var hasVelCoeffX: Bool { let o = _accessor.offset(VTOFFSET.VEL_COEFF_X.v); return o == 0 ? false : true }
-  public var VEL_COEFF_XCount: Int32 { let o = _accessor.offset(VTOFFSET.VEL_COEFF_X.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func VEL_COEFF_X(at index: Int32) -> Double { let o = _accessor.offset(VTOFFSET.VEL_COEFF_X.v); return o == 0 ? 0 : _accessor.directRead(of: Double.self, offset: _accessor.vector(at: o) + index * 8) }
-  public var VEL_COEFF_X: [Double] { return _accessor.getVector(at: VTOFFSET.VEL_COEFF_X.v) ?? [] }
-  ///  Velocity coefficients for Y-axis (km/s). Optional.
-  public var hasVelCoeffY: Bool { let o = _accessor.offset(VTOFFSET.VEL_COEFF_Y.v); return o == 0 ? false : true }
-  public var VEL_COEFF_YCount: Int32 { let o = _accessor.offset(VTOFFSET.VEL_COEFF_Y.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func VEL_COEFF_Y(at index: Int32) -> Double { let o = _accessor.offset(VTOFFSET.VEL_COEFF_Y.v); return o == 0 ? 0 : _accessor.directRead(of: Double.self, offset: _accessor.vector(at: o) + index * 8) }
-  public var VEL_COEFF_Y: [Double] { return _accessor.getVector(at: VTOFFSET.VEL_COEFF_Y.v) ?? [] }
-  ///  Velocity coefficients for Z-axis (km/s). Optional.
-  public var hasVelCoeffZ: Bool { let o = _accessor.offset(VTOFFSET.VEL_COEFF_Z.v); return o == 0 ? false : true }
-  public var VEL_COEFF_ZCount: Int32 { let o = _accessor.offset(VTOFFSET.VEL_COEFF_Z.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func VEL_COEFF_Z(at index: Int32) -> Double { let o = _accessor.offset(VTOFFSET.VEL_COEFF_Z.v); return o == 0 ? 0 : _accessor.directRead(of: Double.self, offset: _accessor.vector(at: o) + index * 8) }
-  public var VEL_COEFF_Z: [Double] { return _accessor.getVector(at: VTOFFSET.VEL_COEFF_Z.v) ?? [] }
-  ///  Maximum position fit residual over this segment (km). Optional quality metric.
-  public var MAX_POSITION_RESIDUAL: Double { let o = _accessor.offset(VTOFFSET.MAX_POSITION_RESIDUAL.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  RMS position fit residual over this segment (km). Optional quality metric.
-  public var RMS_POSITION_RESIDUAL: Double { let o = _accessor.offset(VTOFFSET.RMS_POSITION_RESIDUAL.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public static func startPPEPositionRecord(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 13) }
-  public static func add(EPOCH_MID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPOCH_MID, at: VTOFFSET.EPOCH_MID.p) }
-  public static func add(EPOCH_HALF_SPAN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EPOCH_HALF_SPAN, def: 0.0, at: VTOFFSET.EPOCH_HALF_SPAN.p) }
-  public static func add(NUM_COEFFICIENTS: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NUM_COEFFICIENTS, def: 0, at: VTOFFSET.NUM_COEFFICIENTS.p) }
-  public static func add(BASIS_TYPE: polynomialBasisType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BASIS_TYPE.rawValue, def: 0, at: VTOFFSET.BASIS_TYPE.p) }
-  public static func addVectorOf(POS_COEFF_X: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POS_COEFF_X, at: VTOFFSET.POS_COEFF_X.p) }
-  public static func addVectorOf(POS_COEFF_Y: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POS_COEFF_Y, at: VTOFFSET.POS_COEFF_Y.p) }
-  public static func addVectorOf(POS_COEFF_Z: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POS_COEFF_Z, at: VTOFFSET.POS_COEFF_Z.p) }
-  public static func add(HAS_VELOCITY_COEFFICIENTS: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_VELOCITY_COEFFICIENTS, def: false,
-   at: VTOFFSET.HAS_VELOCITY_COEFFICIENTS.p) }
-  public static func addVectorOf(VEL_COEFF_X: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VEL_COEFF_X, at: VTOFFSET.VEL_COEFF_X.p) }
-  public static func addVectorOf(VEL_COEFF_Y: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VEL_COEFF_Y, at: VTOFFSET.VEL_COEFF_Y.p) }
-  public static func addVectorOf(VEL_COEFF_Z: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VEL_COEFF_Z, at: VTOFFSET.VEL_COEFF_Z.p) }
-  public static func add(MAX_POSITION_RESIDUAL: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_POSITION_RESIDUAL, def: 0.0, at: VTOFFSET.MAX_POSITION_RESIDUAL.p) }
-  public static func add(RMS_POSITION_RESIDUAL: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RMS_POSITION_RESIDUAL, def: 0.0, at: VTOFFSET.RMS_POSITION_RESIDUAL.p) }
-  public static func endPPEPositionRecord(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4, 12, 14, 16]); return end }
-  public static func createPPEPositionRecord(
+  public var OWNER: legacyCountryCode { let o = _accessor.offset(VTOFFSET.OWNER.v); return o == 0 ? .ab : legacyCountryCode(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .ab }
+  public static func startLCC(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 1) }
+  public static func add(OWNER: legacyCountryCode, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OWNER.rawValue, def: 0, at: VTOFFSET.OWNER.p) }
+  public static func endLCC(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createLCC(
     _ fbb: inout FlatBufferBuilder,
-    EPOCH_MIDOffset EPOCH_MID: Offset,
-    EPOCH_HALF_SPAN: Double = 0.0,
-    NUM_COEFFICIENTS: UInt16 = 0,
-    BASIS_TYPE: polynomialBasisType = .chebyshev,
-    POS_COEFF_XVectorOffset POS_COEFF_X: Offset,
-    POS_COEFF_YVectorOffset POS_COEFF_Y: Offset,
-    POS_COEFF_ZVectorOffset POS_COEFF_Z: Offset,
-    HAS_VELOCITY_COEFFICIENTS: Bool = false,
-    VEL_COEFF_XVectorOffset VEL_COEFF_X: Offset = Offset(),
-    VEL_COEFF_YVectorOffset VEL_COEFF_Y: Offset = Offset(),
-    VEL_COEFF_ZVectorOffset VEL_COEFF_Z: Offset = Offset(),
-    MAX_POSITION_RESIDUAL: Double = 0.0,
-    RMS_POSITION_RESIDUAL: Double = 0.0
+    OWNER: legacyCountryCode = .ab
   ) -> Offset {
-    let __start = PPEPositionRecord.startPPEPositionRecord(&fbb)
-    PPEPositionRecord.add(EPOCH_MID: EPOCH_MID, &fbb)
-    PPEPositionRecord.add(EPOCH_HALF_SPAN: EPOCH_HALF_SPAN, &fbb)
-    PPEPositionRecord.add(NUM_COEFFICIENTS: NUM_COEFFICIENTS, &fbb)
-    PPEPositionRecord.add(BASIS_TYPE: BASIS_TYPE, &fbb)
-    PPEPositionRecord.addVectorOf(POS_COEFF_X: POS_COEFF_X, &fbb)
-    PPEPositionRecord.addVectorOf(POS_COEFF_Y: POS_COEFF_Y, &fbb)
-    PPEPositionRecord.addVectorOf(POS_COEFF_Z: POS_COEFF_Z, &fbb)
-    PPEPositionRecord.add(HAS_VELOCITY_COEFFICIENTS: HAS_VELOCITY_COEFFICIENTS, &fbb)
-    PPEPositionRecord.addVectorOf(VEL_COEFF_X: VEL_COEFF_X, &fbb)
-    PPEPositionRecord.addVectorOf(VEL_COEFF_Y: VEL_COEFF_Y, &fbb)
-    PPEPositionRecord.addVectorOf(VEL_COEFF_Z: VEL_COEFF_Z, &fbb)
-    PPEPositionRecord.add(MAX_POSITION_RESIDUAL: MAX_POSITION_RESIDUAL, &fbb)
-    PPEPositionRecord.add(RMS_POSITION_RESIDUAL: RMS_POSITION_RESIDUAL, &fbb)
-    return PPEPositionRecord.endPPEPositionRecord(&fbb, start: __start)
+    let __start = LCC.startLCC(&fbb)
+    LCC.add(OWNER: OWNER, &fbb)
+    return LCC.endLCC(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.EPOCH_MID.p, fieldName: "EPOCH_MID", required: true, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.EPOCH_HALF_SPAN.p, fieldName: "EPOCH_HALF_SPAN", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.NUM_COEFFICIENTS.p, fieldName: "NUM_COEFFICIENTS", required: false, type: UInt16.self)
-    try _v.visit(field: VTOFFSET.BASIS_TYPE.p, fieldName: "BASIS_TYPE", required: false, type: polynomialBasisType.self)
-    try _v.visit(field: VTOFFSET.POS_COEFF_X.p, fieldName: "POS_COEFF_X", required: true, type: ForwardOffset<Vector<Double, Double>>.self)
-    try _v.visit(field: VTOFFSET.POS_COEFF_Y.p, fieldName: "POS_COEFF_Y", required: true, type: ForwardOffset<Vector<Double, Double>>.self)
-    try _v.visit(field: VTOFFSET.POS_COEFF_Z.p, fieldName: "POS_COEFF_Z", required: true, type: ForwardOffset<Vector<Double, Double>>.self)
-    try _v.visit(field: VTOFFSET.HAS_VELOCITY_COEFFICIENTS.p, fieldName: "HAS_VELOCITY_COEFFICIENTS", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.VEL_COEFF_X.p, fieldName: "VEL_COEFF_X", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
-    try _v.visit(field: VTOFFSET.VEL_COEFF_Y.p, fieldName: "VEL_COEFF_Y", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
-    try _v.visit(field: VTOFFSET.VEL_COEFF_Z.p, fieldName: "VEL_COEFF_Z", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
-    try _v.visit(field: VTOFFSET.MAX_POSITION_RESIDUAL.p, fieldName: "MAX_POSITION_RESIDUAL", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.RMS_POSITION_RESIDUAL.p, fieldName: "RMS_POSITION_RESIDUAL", required: false, type: Double.self)
-    _v.finish()
-  }
-}
-
-///  A single time-segment record of polynomial coefficients for classical orbital elements.
-/// 
-///  The six classical elements are:
-///    1. SMA or R_PERIAPSIS (size/shape) — see SIZE_SHAPE_TYPE
-///    2. Eccentricity (dimensionless)
-///    3. Inclination (degrees)
-///    4. Right Ascension of Ascending Node / RAAN (degrees)
-///    5. Argument of Periapsis (degrees)
-///    6. Anomaly (degrees) — see ANOMALY_TYPE
-/// 
-///  Evaluation follows the same normalized-time procedure as PPEPositionRecord.
-public struct PPEOrbitalElementRecord: FlatBufferObject, Verifiable {
-
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
-  public var __buffer: ByteBuffer! { return _accessor.bb }
-  private var _accessor: Table
-
-  public static var id: String { "$PPE" } 
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PPEOrbitalElementRecord.id, addPrefix: prefix) }
-  private init(_ t: Table) { _accessor = t }
-  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
-
-  private enum VTOFFSET: VOffset {
-    case EPOCH_MID = 4
-    case EPOCH_HALF_SPAN = 6
-    case NUM_COEFFICIENTS = 8
-    case BASIS_TYPE = 10
-    case SIZE_SHAPE_TYPE = 12
-    case ANOMALY_TYPE = 14
-    case COEFF_SIZE_SHAPE = 16
-    case COEFF_ECCENTRICITY = 18
-    case COEFF_INCLINATION = 20
-    case COEFF_RAAN = 22
-    case COEFF_ARG_PERIAPSIS = 24
-    case COEFF_ANOMALY = 26
-    case MAX_ELEMENT_RESIDUAL = 28
-    case RMS_ELEMENT_RESIDUAL = 30
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
-  }
-
-  ///  Midpoint epoch of this record's validity window (ISO 8601 UTC or TDB).
-  public var EPOCH_MID: String! { let o = _accessor.offset(VTOFFSET.EPOCH_MID.v); return _accessor.string(at: o) }
-  public var EPOCH_MIDSegmentArray: [UInt8]! { return _accessor.getVector(at: VTOFFSET.EPOCH_MID.v) }
-  ///  Half-span of the validity window in seconds.
-  public var EPOCH_HALF_SPAN: Double { let o = _accessor.offset(VTOFFSET.EPOCH_HALF_SPAN.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Number of polynomial coefficients per element.
-  public var NUM_COEFFICIENTS: UInt16 { let o = _accessor.offset(VTOFFSET.NUM_COEFFICIENTS.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
-  ///  Polynomial basis type for interpreting the coefficient arrays.
-  public var BASIS_TYPE: polynomialBasisType { let o = _accessor.offset(VTOFFSET.BASIS_TYPE.v); return o == 0 ? .chebyshev : polynomialBasisType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .chebyshev }
-  ///  Parameterization of the first orbital element (SMA vs R_PERIAPSIS).
-  public var SIZE_SHAPE_TYPE: sizeShapeType { let o = _accessor.offset(VTOFFSET.SIZE_SHAPE_TYPE.v); return o == 0 ? .sma : sizeShapeType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .sma }
-  ///  Anomaly type for the sixth orbital element.
-  public var ANOMALY_TYPE: anomalyType { let o = _accessor.offset(VTOFFSET.ANOMALY_TYPE.v); return o == 0 ? .trueAnomaly : anomalyType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .trueAnomaly }
-  ///  Coefficients for SMA or radius of periapsis (km).
-  ///  Length must equal NUM_COEFFICIENTS.
-  public var hasCoeffSizeShape: Bool { let o = _accessor.offset(VTOFFSET.COEFF_SIZE_SHAPE.v); return o == 0 ? false : true }
-  public var COEFF_SIZE_SHAPECount: Int32 { let o = _accessor.offset(VTOFFSET.COEFF_SIZE_SHAPE.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func COEFF_SIZE_SHAPE(at index: Int32) -> Double { let o = _accessor.offset(VTOFFSET.COEFF_SIZE_SHAPE.v); return o == 0 ? 0 : _accessor.directRead(of: Double.self, offset: _accessor.vector(at: o) + index * 8) }
-  public var COEFF_SIZE_SHAPE: [Double] { return _accessor.getVector(at: VTOFFSET.COEFF_SIZE_SHAPE.v) ?? [] }
-  ///  Coefficients for eccentricity (dimensionless).
-  ///  Length must equal NUM_COEFFICIENTS.
-  public var hasCoeffEccentricity: Bool { let o = _accessor.offset(VTOFFSET.COEFF_ECCENTRICITY.v); return o == 0 ? false : true }
-  public var COEFF_ECCENTRICITYCount: Int32 { let o = _accessor.offset(VTOFFSET.COEFF_ECCENTRICITY.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func COEFF_ECCENTRICITY(at index: Int32) -> Double { let o = _accessor.offset(VTOFFSET.COEFF_ECCENTRICITY.v); return o == 0 ? 0 : _accessor.directRead(of: Double.self, offset: _accessor.vector(at: o) + index * 8) }
-  public var COEFF_ECCENTRICITY: [Double] { return _accessor.getVector(at: VTOFFSET.COEFF_ECCENTRICITY.v) ?? [] }
-  ///  Coefficients for inclination (degrees).
-  ///  Length must equal NUM_COEFFICIENTS.
-  public var hasCoeffInclination: Bool { let o = _accessor.offset(VTOFFSET.COEFF_INCLINATION.v); return o == 0 ? false : true }
-  public var COEFF_INCLINATIONCount: Int32 { let o = _accessor.offset(VTOFFSET.COEFF_INCLINATION.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func COEFF_INCLINATION(at index: Int32) -> Double { let o = _accessor.offset(VTOFFSET.COEFF_INCLINATION.v); return o == 0 ? 0 : _accessor.directRead(of: Double.self, offset: _accessor.vector(at: o) + index * 8) }
-  public var COEFF_INCLINATION: [Double] { return _accessor.getVector(at: VTOFFSET.COEFF_INCLINATION.v) ?? [] }
-  ///  Coefficients for RAAN (degrees).
-  ///  Length must equal NUM_COEFFICIENTS.
-  public var hasCoeffRaan: Bool { let o = _accessor.offset(VTOFFSET.COEFF_RAAN.v); return o == 0 ? false : true }
-  public var COEFF_RAANCount: Int32 { let o = _accessor.offset(VTOFFSET.COEFF_RAAN.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func COEFF_RAAN(at index: Int32) -> Double { let o = _accessor.offset(VTOFFSET.COEFF_RAAN.v); return o == 0 ? 0 : _accessor.directRead(of: Double.self, offset: _accessor.vector(at: o) + index * 8) }
-  public var COEFF_RAAN: [Double] { return _accessor.getVector(at: VTOFFSET.COEFF_RAAN.v) ?? [] }
-  ///  Coefficients for argument of periapsis (degrees).
-  ///  Length must equal NUM_COEFFICIENTS.
-  public var hasCoeffArgPeriapsis: Bool { let o = _accessor.offset(VTOFFSET.COEFF_ARG_PERIAPSIS.v); return o == 0 ? false : true }
-  public var COEFF_ARG_PERIAPSISCount: Int32 { let o = _accessor.offset(VTOFFSET.COEFF_ARG_PERIAPSIS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func COEFF_ARG_PERIAPSIS(at index: Int32) -> Double { let o = _accessor.offset(VTOFFSET.COEFF_ARG_PERIAPSIS.v); return o == 0 ? 0 : _accessor.directRead(of: Double.self, offset: _accessor.vector(at: o) + index * 8) }
-  public var COEFF_ARG_PERIAPSIS: [Double] { return _accessor.getVector(at: VTOFFSET.COEFF_ARG_PERIAPSIS.v) ?? [] }
-  ///  Coefficients for anomaly (degrees). See ANOMALY_TYPE for interpretation.
-  ///  Length must equal NUM_COEFFICIENTS.
-  public var hasCoeffAnomaly: Bool { let o = _accessor.offset(VTOFFSET.COEFF_ANOMALY.v); return o == 0 ? false : true }
-  public var COEFF_ANOMALYCount: Int32 { let o = _accessor.offset(VTOFFSET.COEFF_ANOMALY.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func COEFF_ANOMALY(at index: Int32) -> Double { let o = _accessor.offset(VTOFFSET.COEFF_ANOMALY.v); return o == 0 ? 0 : _accessor.directRead(of: Double.self, offset: _accessor.vector(at: o) + index * 8) }
-  public var COEFF_ANOMALY: [Double] { return _accessor.getVector(at: VTOFFSET.COEFF_ANOMALY.v) ?? [] }
-  ///  Maximum element fit residual over this segment. Optional quality metric.
-  ///  Units depend on the element (km for SMA, degrees for angles, dimensionless for ecc).
-  public var MAX_ELEMENT_RESIDUAL: Double { let o = _accessor.offset(VTOFFSET.MAX_ELEMENT_RESIDUAL.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  RMS element fit residual over this segment. Optional quality metric.
-  public var RMS_ELEMENT_RESIDUAL: Double { let o = _accessor.offset(VTOFFSET.RMS_ELEMENT_RESIDUAL.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public static func startPPEOrbitalElementRecord(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 14) }
-  public static func add(EPOCH_MID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPOCH_MID, at: VTOFFSET.EPOCH_MID.p) }
-  public static func add(EPOCH_HALF_SPAN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EPOCH_HALF_SPAN, def: 0.0, at: VTOFFSET.EPOCH_HALF_SPAN.p) }
-  public static func add(NUM_COEFFICIENTS: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NUM_COEFFICIENTS, def: 0, at: VTOFFSET.NUM_COEFFICIENTS.p) }
-  public static func add(BASIS_TYPE: polynomialBasisType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BASIS_TYPE.rawValue, def: 0, at: VTOFFSET.BASIS_TYPE.p) }
-  public static func add(SIZE_SHAPE_TYPE: sizeShapeType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SIZE_SHAPE_TYPE.rawValue, def: 0, at: VTOFFSET.SIZE_SHAPE_TYPE.p) }
-  public static func add(ANOMALY_TYPE: anomalyType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ANOMALY_TYPE.rawValue, def: 0, at: VTOFFSET.ANOMALY_TYPE.p) }
-  public static func addVectorOf(COEFF_SIZE_SHAPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COEFF_SIZE_SHAPE, at: VTOFFSET.COEFF_SIZE_SHAPE.p) }
-  public static func addVectorOf(COEFF_ECCENTRICITY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COEFF_ECCENTRICITY, at: VTOFFSET.COEFF_ECCENTRICITY.p) }
-  public static func addVectorOf(COEFF_INCLINATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COEFF_INCLINATION, at: VTOFFSET.COEFF_INCLINATION.p) }
-  public static func addVectorOf(COEFF_RAAN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COEFF_RAAN, at: VTOFFSET.COEFF_RAAN.p) }
-  public static func addVectorOf(COEFF_ARG_PERIAPSIS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COEFF_ARG_PERIAPSIS, at: VTOFFSET.COEFF_ARG_PERIAPSIS.p) }
-  public static func addVectorOf(COEFF_ANOMALY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COEFF_ANOMALY, at: VTOFFSET.COEFF_ANOMALY.p) }
-  public static func add(MAX_ELEMENT_RESIDUAL: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_ELEMENT_RESIDUAL, def: 0.0, at: VTOFFSET.MAX_ELEMENT_RESIDUAL.p) }
-  public static func add(RMS_ELEMENT_RESIDUAL: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RMS_ELEMENT_RESIDUAL, def: 0.0, at: VTOFFSET.RMS_ELEMENT_RESIDUAL.p) }
-  public static func endPPEOrbitalElementRecord(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4, 16, 18, 20, 22, 24, 26]); return end }
-  public static func createPPEOrbitalElementRecord(
-    _ fbb: inout FlatBufferBuilder,
-    EPOCH_MIDOffset EPOCH_MID: Offset,
-    EPOCH_HALF_SPAN: Double = 0.0,
-    NUM_COEFFICIENTS: UInt16 = 0,
-    BASIS_TYPE: polynomialBasisType = .chebyshev,
-    SIZE_SHAPE_TYPE: sizeShapeType = .sma,
-    ANOMALY_TYPE: anomalyType = .trueAnomaly,
-    COEFF_SIZE_SHAPEVectorOffset COEFF_SIZE_SHAPE: Offset,
-    COEFF_ECCENTRICITYVectorOffset COEFF_ECCENTRICITY: Offset,
-    COEFF_INCLINATIONVectorOffset COEFF_INCLINATION: Offset,
-    COEFF_RAANVectorOffset COEFF_RAAN: Offset,
-    COEFF_ARG_PERIAPSISVectorOffset COEFF_ARG_PERIAPSIS: Offset,
-    COEFF_ANOMALYVectorOffset COEFF_ANOMALY: Offset,
-    MAX_ELEMENT_RESIDUAL: Double = 0.0,
-    RMS_ELEMENT_RESIDUAL: Double = 0.0
-  ) -> Offset {
-    let __start = PPEOrbitalElementRecord.startPPEOrbitalElementRecord(&fbb)
-    PPEOrbitalElementRecord.add(EPOCH_MID: EPOCH_MID, &fbb)
-    PPEOrbitalElementRecord.add(EPOCH_HALF_SPAN: EPOCH_HALF_SPAN, &fbb)
-    PPEOrbitalElementRecord.add(NUM_COEFFICIENTS: NUM_COEFFICIENTS, &fbb)
-    PPEOrbitalElementRecord.add(BASIS_TYPE: BASIS_TYPE, &fbb)
-    PPEOrbitalElementRecord.add(SIZE_SHAPE_TYPE: SIZE_SHAPE_TYPE, &fbb)
-    PPEOrbitalElementRecord.add(ANOMALY_TYPE: ANOMALY_TYPE, &fbb)
-    PPEOrbitalElementRecord.addVectorOf(COEFF_SIZE_SHAPE: COEFF_SIZE_SHAPE, &fbb)
-    PPEOrbitalElementRecord.addVectorOf(COEFF_ECCENTRICITY: COEFF_ECCENTRICITY, &fbb)
-    PPEOrbitalElementRecord.addVectorOf(COEFF_INCLINATION: COEFF_INCLINATION, &fbb)
-    PPEOrbitalElementRecord.addVectorOf(COEFF_RAAN: COEFF_RAAN, &fbb)
-    PPEOrbitalElementRecord.addVectorOf(COEFF_ARG_PERIAPSIS: COEFF_ARG_PERIAPSIS, &fbb)
-    PPEOrbitalElementRecord.addVectorOf(COEFF_ANOMALY: COEFF_ANOMALY, &fbb)
-    PPEOrbitalElementRecord.add(MAX_ELEMENT_RESIDUAL: MAX_ELEMENT_RESIDUAL, &fbb)
-    PPEOrbitalElementRecord.add(RMS_ELEMENT_RESIDUAL: RMS_ELEMENT_RESIDUAL, &fbb)
-    return PPEOrbitalElementRecord.endPPEOrbitalElementRecord(&fbb, start: __start)
-  }
-
-  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
-    var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.EPOCH_MID.p, fieldName: "EPOCH_MID", required: true, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.EPOCH_HALF_SPAN.p, fieldName: "EPOCH_HALF_SPAN", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.NUM_COEFFICIENTS.p, fieldName: "NUM_COEFFICIENTS", required: false, type: UInt16.self)
-    try _v.visit(field: VTOFFSET.BASIS_TYPE.p, fieldName: "BASIS_TYPE", required: false, type: polynomialBasisType.self)
-    try _v.visit(field: VTOFFSET.SIZE_SHAPE_TYPE.p, fieldName: "SIZE_SHAPE_TYPE", required: false, type: sizeShapeType.self)
-    try _v.visit(field: VTOFFSET.ANOMALY_TYPE.p, fieldName: "ANOMALY_TYPE", required: false, type: anomalyType.self)
-    try _v.visit(field: VTOFFSET.COEFF_SIZE_SHAPE.p, fieldName: "COEFF_SIZE_SHAPE", required: true, type: ForwardOffset<Vector<Double, Double>>.self)
-    try _v.visit(field: VTOFFSET.COEFF_ECCENTRICITY.p, fieldName: "COEFF_ECCENTRICITY", required: true, type: ForwardOffset<Vector<Double, Double>>.self)
-    try _v.visit(field: VTOFFSET.COEFF_INCLINATION.p, fieldName: "COEFF_INCLINATION", required: true, type: ForwardOffset<Vector<Double, Double>>.self)
-    try _v.visit(field: VTOFFSET.COEFF_RAAN.p, fieldName: "COEFF_RAAN", required: true, type: ForwardOffset<Vector<Double, Double>>.self)
-    try _v.visit(field: VTOFFSET.COEFF_ARG_PERIAPSIS.p, fieldName: "COEFF_ARG_PERIAPSIS", required: true, type: ForwardOffset<Vector<Double, Double>>.self)
-    try _v.visit(field: VTOFFSET.COEFF_ANOMALY.p, fieldName: "COEFF_ANOMALY", required: true, type: ForwardOffset<Vector<Double, Double>>.self)
-    try _v.visit(field: VTOFFSET.MAX_ELEMENT_RESIDUAL.p, fieldName: "MAX_ELEMENT_RESIDUAL", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.RMS_ELEMENT_RESIDUAL.p, fieldName: "RMS_ELEMENT_RESIDUAL", required: false, type: Double.self)
-    _v.finish()
-  }
-}
-
-///  Polynomial Ephemeris — top-level message containing metadata and
-///  one or more polynomial coefficient records for a single space object.
-/// 
-///  A PPE message may contain position records, orbital element records, or both.
-///  Records should be ordered chronologically by EPOCH_MID and should collectively
-///  cover the time span [START_TIME, STOP_TIME] without gaps.
-public struct PPE: FlatBufferObject, Verifiable {
-
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
-  public var __buffer: ByteBuffer! { return _accessor.bb }
-  private var _accessor: Table
-
-  public static var id: String { "$PPE" } 
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PPE.id, addPrefix: prefix) }
-  private init(_ t: Table) { _accessor = t }
-  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
-
-  private enum VTOFFSET: VOffset {
-    case COMMENT = 4
-    case OBJECT = 6
-    case CENTER_NAME = 8
-    case REFERENCE_FRAME = 10
-    case TIME_SYSTEM = 12
-    case START_TIME = 14
-    case STOP_TIME = 16
-    case DEFAULT_BASIS_TYPE = 18
-    case POSITION_RECORDS = 20
-    case ORBITAL_ELEMENT_RECORDS = 22
-    case EPHEMERIS_SOURCE = 24
-    case NOMINAL_SEGMENT_SPAN = 26
-    case NOMINAL_NUM_COEFFICIENTS = 28
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
-  }
-
-  ///  Plain-text comments.
-  public var hasComment: Bool { let o = _accessor.offset(VTOFFSET.COMMENT.v); return o == 0 ? false : true }
-  public var COMMENTCount: Int32 { let o = _accessor.offset(VTOFFSET.COMMENT.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func COMMENT(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.COMMENT.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
-  ///  Space object identification.
-  public var OBJECT: CAT? { let o = _accessor.offset(VTOFFSET.OBJECT.v); return o == 0 ? nil : CAT(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
-  ///  Origin of the reference frame (e.g., EARTH, MOON, MARS).
-  public var CENTER_NAME: String? { let o = _accessor.offset(VTOFFSET.CENTER_NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var CENTER_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CENTER_NAME.v) }
-  ///  Reference frame for position/velocity coefficients.
-  public var REFERENCE_FRAME: RFM? { let o = _accessor.offset(VTOFFSET.REFERENCE_FRAME.v); return o == 0 ? nil : RFM(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
-  ///  Time system used for all epochs in this message.
-  public var TIME_SYSTEM: timeSystem { let o = _accessor.offset(VTOFFSET.TIME_SYSTEM.v); return o == 0 ? .gmst : timeSystem(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .gmst }
-  ///  Start of the total time span covered by this ephemeris (ISO 8601).
-  public var START_TIME: String? { let o = _accessor.offset(VTOFFSET.START_TIME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var START_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.START_TIME.v) }
-  ///  End of the total time span covered by this ephemeris (ISO 8601).
-  public var STOP_TIME: String? { let o = _accessor.offset(VTOFFSET.STOP_TIME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var STOP_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.STOP_TIME.v) }
-  ///  Default polynomial basis type for all records in this message.
-  ///  Individual records may override this with their own BASIS_TYPE field.
-  public var DEFAULT_BASIS_TYPE: polynomialBasisType { let o = _accessor.offset(VTOFFSET.DEFAULT_BASIS_TYPE.v); return o == 0 ? .chebyshev : polynomialBasisType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .chebyshev }
-  ///  Array of position polynomial records.
-  ///  Each record covers a time segment; together they span [START_TIME, STOP_TIME].
-  public var hasPositionRecords: Bool { let o = _accessor.offset(VTOFFSET.POSITION_RECORDS.v); return o == 0 ? false : true }
-  public var POSITION_RECORDSCount: Int32 { let o = _accessor.offset(VTOFFSET.POSITION_RECORDS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func POSITION_RECORDS(at index: Int32) -> PPEPositionRecord? { let o = _accessor.offset(VTOFFSET.POSITION_RECORDS.v); return o == 0 ? nil : PPEPositionRecord(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
-  ///  Array of orbital element polynomial records.
-  ///  Each record covers a time segment; together they span [START_TIME, STOP_TIME].
-  public var hasOrbitalElementRecords: Bool { let o = _accessor.offset(VTOFFSET.ORBITAL_ELEMENT_RECORDS.v); return o == 0 ? false : true }
-  public var ORBITAL_ELEMENT_RECORDSCount: Int32 { let o = _accessor.offset(VTOFFSET.ORBITAL_ELEMENT_RECORDS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func ORBITAL_ELEMENT_RECORDS(at index: Int32) -> PPEOrbitalElementRecord? { let o = _accessor.offset(VTOFFSET.ORBITAL_ELEMENT_RECORDS.v); return o == 0 ? nil : PPEOrbitalElementRecord(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
-  ///  Generating ephemeris source (e.g., "JPL DE440", "HPOP v2.1", "Basilisk chebyPosEphem").
-  public var EPHEMERIS_SOURCE: String? { let o = _accessor.offset(VTOFFSET.EPHEMERIS_SOURCE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var EPHEMERIS_SOURCESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.EPHEMERIS_SOURCE.v) }
-  ///  Fit span in seconds used to generate each polynomial segment.
-  ///  Informational; actual spans are in individual records.
-  public var NOMINAL_SEGMENT_SPAN: Double { let o = _accessor.offset(VTOFFSET.NOMINAL_SEGMENT_SPAN.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Nominal number of coefficients per segment.
-  ///  Informational; actual counts are in individual records.
-  public var NOMINAL_NUM_COEFFICIENTS: UInt16 { let o = _accessor.offset(VTOFFSET.NOMINAL_NUM_COEFFICIENTS.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
-  public static func startPPE(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 13) }
-  public static func addVectorOf(COMMENT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMMENT, at: VTOFFSET.COMMENT.p) }
-  public static func add(OBJECT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT, at: VTOFFSET.OBJECT.p) }
-  public static func add(CENTER_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CENTER_NAME, at: VTOFFSET.CENTER_NAME.p) }
-  public static func add(REFERENCE_FRAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REFERENCE_FRAME, at: VTOFFSET.REFERENCE_FRAME.p) }
-  public static func add(TIME_SYSTEM: timeSystem, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TIME_SYSTEM.rawValue, def: 0, at: VTOFFSET.TIME_SYSTEM.p) }
-  public static func add(START_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: START_TIME, at: VTOFFSET.START_TIME.p) }
-  public static func add(STOP_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STOP_TIME, at: VTOFFSET.STOP_TIME.p) }
-  public static func add(DEFAULT_BASIS_TYPE: polynomialBasisType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DEFAULT_BASIS_TYPE.rawValue, def: 0, at: VTOFFSET.DEFAULT_BASIS_TYPE.p) }
-  public static func addVectorOf(POSITION_RECORDS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POSITION_RECORDS, at: VTOFFSET.POSITION_RECORDS.p) }
-  public static func addVectorOf(ORBITAL_ELEMENT_RECORDS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORBITAL_ELEMENT_RECORDS, at: VTOFFSET.ORBITAL_ELEMENT_RECORDS.p) }
-  public static func add(EPHEMERIS_SOURCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPHEMERIS_SOURCE, at: VTOFFSET.EPHEMERIS_SOURCE.p) }
-  public static func add(NOMINAL_SEGMENT_SPAN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NOMINAL_SEGMENT_SPAN, def: 0.0, at: VTOFFSET.NOMINAL_SEGMENT_SPAN.p) }
-  public static func add(NOMINAL_NUM_COEFFICIENTS: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NOMINAL_NUM_COEFFICIENTS, def: 0, at: VTOFFSET.NOMINAL_NUM_COEFFICIENTS.p) }
-  public static func endPPE(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createPPE(
-    _ fbb: inout FlatBufferBuilder,
-    COMMENTVectorOffset COMMENT: Offset = Offset(),
-    OBJECTOffset OBJECT: Offset = Offset(),
-    CENTER_NAMEOffset CENTER_NAME: Offset = Offset(),
-    REFERENCE_FRAMEOffset REFERENCE_FRAME: Offset = Offset(),
-    TIME_SYSTEM: timeSystem = .gmst,
-    START_TIMEOffset START_TIME: Offset = Offset(),
-    STOP_TIMEOffset STOP_TIME: Offset = Offset(),
-    DEFAULT_BASIS_TYPE: polynomialBasisType = .chebyshev,
-    POSITION_RECORDSVectorOffset POSITION_RECORDS: Offset = Offset(),
-    ORBITAL_ELEMENT_RECORDSVectorOffset ORBITAL_ELEMENT_RECORDS: Offset = Offset(),
-    EPHEMERIS_SOURCEOffset EPHEMERIS_SOURCE: Offset = Offset(),
-    NOMINAL_SEGMENT_SPAN: Double = 0.0,
-    NOMINAL_NUM_COEFFICIENTS: UInt16 = 0
-  ) -> Offset {
-    let __start = PPE.startPPE(&fbb)
-    PPE.addVectorOf(COMMENT: COMMENT, &fbb)
-    PPE.add(OBJECT: OBJECT, &fbb)
-    PPE.add(CENTER_NAME: CENTER_NAME, &fbb)
-    PPE.add(REFERENCE_FRAME: REFERENCE_FRAME, &fbb)
-    PPE.add(TIME_SYSTEM: TIME_SYSTEM, &fbb)
-    PPE.add(START_TIME: START_TIME, &fbb)
-    PPE.add(STOP_TIME: STOP_TIME, &fbb)
-    PPE.add(DEFAULT_BASIS_TYPE: DEFAULT_BASIS_TYPE, &fbb)
-    PPE.addVectorOf(POSITION_RECORDS: POSITION_RECORDS, &fbb)
-    PPE.addVectorOf(ORBITAL_ELEMENT_RECORDS: ORBITAL_ELEMENT_RECORDS, &fbb)
-    PPE.add(EPHEMERIS_SOURCE: EPHEMERIS_SOURCE, &fbb)
-    PPE.add(NOMINAL_SEGMENT_SPAN: NOMINAL_SEGMENT_SPAN, &fbb)
-    PPE.add(NOMINAL_NUM_COEFFICIENTS: NOMINAL_NUM_COEFFICIENTS, &fbb)
-    return PPE.endPPE(&fbb, start: __start)
-  }
-
-  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
-    var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.COMMENT.p, fieldName: "COMMENT", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
-    try _v.visit(field: VTOFFSET.OBJECT.p, fieldName: "OBJECT", required: false, type: ForwardOffset<CAT>.self)
-    try _v.visit(field: VTOFFSET.CENTER_NAME.p, fieldName: "CENTER_NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.REFERENCE_FRAME.p, fieldName: "REFERENCE_FRAME", required: false, type: ForwardOffset<RFM>.self)
-    try _v.visit(field: VTOFFSET.TIME_SYSTEM.p, fieldName: "TIME_SYSTEM", required: false, type: timeSystem.self)
-    try _v.visit(field: VTOFFSET.START_TIME.p, fieldName: "START_TIME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.STOP_TIME.p, fieldName: "STOP_TIME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.DEFAULT_BASIS_TYPE.p, fieldName: "DEFAULT_BASIS_TYPE", required: false, type: polynomialBasisType.self)
-    try _v.visit(field: VTOFFSET.POSITION_RECORDS.p, fieldName: "POSITION_RECORDS", required: false, type: ForwardOffset<Vector<ForwardOffset<PPEPositionRecord>, PPEPositionRecord>>.self)
-    try _v.visit(field: VTOFFSET.ORBITAL_ELEMENT_RECORDS.p, fieldName: "ORBITAL_ELEMENT_RECORDS", required: false, type: ForwardOffset<Vector<ForwardOffset<PPEOrbitalElementRecord>, PPEOrbitalElementRecord>>.self)
-    try _v.visit(field: VTOFFSET.EPHEMERIS_SOURCE.p, fieldName: "EPHEMERIS_SOURCE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.NOMINAL_SEGMENT_SPAN.p, fieldName: "NOMINAL_SEGMENT_SPAN", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.NOMINAL_NUM_COEFFICIENTS.p, fieldName: "NOMINAL_NUM_COEFFICIENTS", required: false, type: UInt16.self)
+    try _v.visit(field: VTOFFSET.OWNER.p, fieldName: "OWNER", required: false, type: legacyCountryCode.self)
     _v.finish()
   }
 }

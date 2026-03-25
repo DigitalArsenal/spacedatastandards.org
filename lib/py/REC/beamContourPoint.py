@@ -2,4 +2,131 @@
 
 # namespace: 
 
-# NOTE beamContourPoint.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Beam Contour Point (gain pattern boundary)
+class beamContourPoint(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = beamContourPoint()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsbeamContourPoint(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def beamContourPointBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x42\x45\x4D", size_prefixed=size_prefixed)
+
+    # beamContourPoint
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Latitude in degrees
+    # beamContourPoint
+    def LATITUDE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Longitude in degrees
+    # beamContourPoint
+    def LONGITUDE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Gain level in dBi at this contour
+    # beamContourPoint
+    def GAIN(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+def beamContourPointStart(builder):
+    builder.StartObject(3)
+
+def Start(builder):
+    beamContourPointStart(builder)
+
+def beamContourPointAddLATITUDE(builder, LATITUDE):
+    builder.PrependFloat64Slot(0, LATITUDE, 0.0)
+
+def AddLATITUDE(builder, LATITUDE):
+    beamContourPointAddLATITUDE(builder, LATITUDE)
+
+def beamContourPointAddLONGITUDE(builder, LONGITUDE):
+    builder.PrependFloat64Slot(1, LONGITUDE, 0.0)
+
+def AddLONGITUDE(builder, LONGITUDE):
+    beamContourPointAddLONGITUDE(builder, LONGITUDE)
+
+def beamContourPointAddGAIN(builder, GAIN):
+    builder.PrependFloat64Slot(2, GAIN, 0.0)
+
+def AddGAIN(builder, GAIN):
+    beamContourPointAddGAIN(builder, GAIN)
+
+def beamContourPointEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return beamContourPointEnd(builder)
+
+
+class beamContourPointT(object):
+
+    # beamContourPointT
+    def __init__(
+        self,
+        LATITUDE = 0.0,
+        LONGITUDE = 0.0,
+        GAIN = 0.0,
+    ):
+        self.LATITUDE = LATITUDE  # type: float
+        self.LONGITUDE = LONGITUDE  # type: float
+        self.GAIN = GAIN  # type: float
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpBeamContourPoint = beamContourPoint()
+        tmpBeamContourPoint.Init(buf, pos)
+        return cls.InitFromObj(tmpBeamContourPoint)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpBeamContourPoint):
+        x = beamContourPointT()
+        x._UnPack(tmpBeamContourPoint)
+        return x
+
+    # beamContourPointT
+    def _UnPack(self, beamContourPoint):
+        if beamContourPoint is None:
+            return
+        self.LATITUDE = beamContourPoint.LATITUDE()
+        self.LONGITUDE = beamContourPoint.LONGITUDE()
+        self.GAIN = beamContourPoint.GAIN()
+
+    # beamContourPointT
+    def Pack(self, builder):
+        beamContourPointStart(builder)
+        beamContourPointAddLATITUDE(builder, self.LATITUDE)
+        beamContourPointAddLONGITUDE(builder, self.LONGITUDE)
+        beamContourPointAddGAIN(builder, self.GAIN)
+        beamContourPoint = beamContourPointEnd(builder)
+        return beamContourPoint

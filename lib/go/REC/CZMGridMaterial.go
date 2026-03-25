@@ -56,6 +56,10 @@ func (rcv *CZMGridMaterial) COLOR(obj *CZMColor) *CZMColor {
 	return nil
 }
 
+func (rcv *CZMGridMaterial) Color(obj *CZMColor) *CZMColor {
+	return rcv.COLOR(obj)
+}
+
 /// Grid line color
 /// Cell alpha
 func (rcv *CZMGridMaterial) CELL_ALPHA() float64 {
@@ -66,9 +70,17 @@ func (rcv *CZMGridMaterial) CELL_ALPHA() float64 {
 	return 0.0
 }
 
+func (rcv *CZMGridMaterial) CellAlpha() float64 {
+	return rcv.CELL_ALPHA()
+}
+
 /// Cell alpha
 func (rcv *CZMGridMaterial) MutateCELL_ALPHA(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(6, n)
+}
+
+func (rcv *CZMGridMaterial) MutateCellAlpha(n float64) bool {
+	return rcv.MutateCELL_ALPHA(n)
 }
 
 /// Number of grid lines along X
@@ -80,9 +92,17 @@ func (rcv *CZMGridMaterial) LINE_COUNT_X() float64 {
 	return 0.0
 }
 
+func (rcv *CZMGridMaterial) LineCountX() float64 {
+	return rcv.LINE_COUNT_X()
+}
+
 /// Number of grid lines along X
 func (rcv *CZMGridMaterial) MutateLINE_COUNT_X(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(8, n)
+}
+
+func (rcv *CZMGridMaterial) MutateLineCountX(n float64) bool {
+	return rcv.MutateLINE_COUNT_X(n)
 }
 
 /// Number of grid lines along Y
@@ -94,9 +114,17 @@ func (rcv *CZMGridMaterial) LINE_COUNT_Y() float64 {
 	return 0.0
 }
 
+func (rcv *CZMGridMaterial) LineCountY() float64 {
+	return rcv.LINE_COUNT_Y()
+}
+
 /// Number of grid lines along Y
 func (rcv *CZMGridMaterial) MutateLINE_COUNT_Y(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(10, n)
+}
+
+func (rcv *CZMGridMaterial) MutateLineCountY(n float64) bool {
+	return rcv.MutateLINE_COUNT_Y(n)
 }
 
 /// Thickness of grid lines along X
@@ -108,9 +136,17 @@ func (rcv *CZMGridMaterial) LINE_THICKNESS_X() float64 {
 	return 0.0
 }
 
+func (rcv *CZMGridMaterial) LineThicknessX() float64 {
+	return rcv.LINE_THICKNESS_X()
+}
+
 /// Thickness of grid lines along X
 func (rcv *CZMGridMaterial) MutateLINE_THICKNESS_X(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(12, n)
+}
+
+func (rcv *CZMGridMaterial) MutateLineThicknessX(n float64) bool {
+	return rcv.MutateLINE_THICKNESS_X(n)
 }
 
 /// Thickness of grid lines along Y
@@ -122,9 +158,17 @@ func (rcv *CZMGridMaterial) LINE_THICKNESS_Y() float64 {
 	return 0.0
 }
 
+func (rcv *CZMGridMaterial) LineThicknessY() float64 {
+	return rcv.LINE_THICKNESS_Y()
+}
+
 /// Thickness of grid lines along Y
 func (rcv *CZMGridMaterial) MutateLINE_THICKNESS_Y(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(14, n)
+}
+
+func (rcv *CZMGridMaterial) MutateLineThicknessY(n float64) bool {
+	return rcv.MutateLINE_THICKNESS_Y(n)
 }
 
 /// Offset of grid lines along X
@@ -136,9 +180,17 @@ func (rcv *CZMGridMaterial) LINE_OFFSET_X() float64 {
 	return 0.0
 }
 
+func (rcv *CZMGridMaterial) LineOffsetX() float64 {
+	return rcv.LINE_OFFSET_X()
+}
+
 /// Offset of grid lines along X
 func (rcv *CZMGridMaterial) MutateLINE_OFFSET_X(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(16, n)
+}
+
+func (rcv *CZMGridMaterial) MutateLineOffsetX(n float64) bool {
+	return rcv.MutateLINE_OFFSET_X(n)
 }
 
 /// Offset of grid lines along Y
@@ -150,9 +202,17 @@ func (rcv *CZMGridMaterial) LINE_OFFSET_Y() float64 {
 	return 0.0
 }
 
+func (rcv *CZMGridMaterial) LineOffsetY() float64 {
+	return rcv.LINE_OFFSET_Y()
+}
+
 /// Offset of grid lines along Y
 func (rcv *CZMGridMaterial) MutateLINE_OFFSET_Y(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(18, n)
+}
+
+func (rcv *CZMGridMaterial) MutateLineOffsetY(n float64) bool {
+	return rcv.MutateLINE_OFFSET_Y(n)
 }
 
 func CZMGridMaterialStart(builder *flatbuffers.Builder) {
@@ -161,26 +221,50 @@ func CZMGridMaterialStart(builder *flatbuffers.Builder) {
 func CZMGridMaterialAddCOLOR(builder *flatbuffers.Builder, COLOR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(COLOR), 0)
 }
+func CZMGridMaterialAddColor(builder *flatbuffers.Builder, COLOR flatbuffers.UOffsetT) {
+	CZMGridMaterialAddCOLOR(builder, COLOR)
+}
 func CZMGridMaterialAddCELL_ALPHA(builder *flatbuffers.Builder, CELL_ALPHA float64) {
 	builder.PrependFloat64Slot(1, CELL_ALPHA, 0.0)
+}
+func CZMGridMaterialAddCellAlpha(builder *flatbuffers.Builder, CELL_ALPHA float64) {
+	CZMGridMaterialAddCELL_ALPHA(builder, CELL_ALPHA)
 }
 func CZMGridMaterialAddLINE_COUNT_X(builder *flatbuffers.Builder, LINE_COUNT_X float64) {
 	builder.PrependFloat64Slot(2, LINE_COUNT_X, 0.0)
 }
+func CZMGridMaterialAddLineCountX(builder *flatbuffers.Builder, LINE_COUNT_X float64) {
+	CZMGridMaterialAddLINE_COUNT_X(builder, LINE_COUNT_X)
+}
 func CZMGridMaterialAddLINE_COUNT_Y(builder *flatbuffers.Builder, LINE_COUNT_Y float64) {
 	builder.PrependFloat64Slot(3, LINE_COUNT_Y, 0.0)
+}
+func CZMGridMaterialAddLineCountY(builder *flatbuffers.Builder, LINE_COUNT_Y float64) {
+	CZMGridMaterialAddLINE_COUNT_Y(builder, LINE_COUNT_Y)
 }
 func CZMGridMaterialAddLINE_THICKNESS_X(builder *flatbuffers.Builder, LINE_THICKNESS_X float64) {
 	builder.PrependFloat64Slot(4, LINE_THICKNESS_X, 0.0)
 }
+func CZMGridMaterialAddLineThicknessX(builder *flatbuffers.Builder, LINE_THICKNESS_X float64) {
+	CZMGridMaterialAddLINE_THICKNESS_X(builder, LINE_THICKNESS_X)
+}
 func CZMGridMaterialAddLINE_THICKNESS_Y(builder *flatbuffers.Builder, LINE_THICKNESS_Y float64) {
 	builder.PrependFloat64Slot(5, LINE_THICKNESS_Y, 0.0)
+}
+func CZMGridMaterialAddLineThicknessY(builder *flatbuffers.Builder, LINE_THICKNESS_Y float64) {
+	CZMGridMaterialAddLINE_THICKNESS_Y(builder, LINE_THICKNESS_Y)
 }
 func CZMGridMaterialAddLINE_OFFSET_X(builder *flatbuffers.Builder, LINE_OFFSET_X float64) {
 	builder.PrependFloat64Slot(6, LINE_OFFSET_X, 0.0)
 }
+func CZMGridMaterialAddLineOffsetX(builder *flatbuffers.Builder, LINE_OFFSET_X float64) {
+	CZMGridMaterialAddLINE_OFFSET_X(builder, LINE_OFFSET_X)
+}
 func CZMGridMaterialAddLINE_OFFSET_Y(builder *flatbuffers.Builder, LINE_OFFSET_Y float64) {
 	builder.PrependFloat64Slot(7, LINE_OFFSET_Y, 0.0)
+}
+func CZMGridMaterialAddLineOffsetY(builder *flatbuffers.Builder, LINE_OFFSET_Y float64) {
+	CZMGridMaterialAddLINE_OFFSET_Y(builder, LINE_OFFSET_Y)
 }
 func CZMGridMaterialEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

@@ -2,4 +2,13 @@
 
 # namespace: 
 
-# NOTE accessType.py does not declare any structs or enums
+# Access type for data listings
+class accessType(object):
+    # One-time purchase
+    OneTime = 0
+    # Recurring subscription
+    Subscription = 1
+    # Real-time streaming access
+    Streaming = 2
+    # Query-based access
+    Query = 3

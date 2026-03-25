@@ -63,6 +63,10 @@ func (rcv *ION) ID() []byte {
 	return nil
 }
 
+func (rcv *ION) Id() []byte {
+	return rcv.ID()
+}
+
 /// Unique identifier
 /// Data source type
 func (rcv *ION) SOURCE() ionoSource {
@@ -73,9 +77,17 @@ func (rcv *ION) SOURCE() ionoSource {
 	return 0
 }
 
+func (rcv *ION) Source() ionoSource {
+	return rcv.SOURCE()
+}
+
 /// Data source type
 func (rcv *ION) MutateSOURCE(n ionoSource) bool {
 	return rcv._tab.MutateInt8Slot(6, int8(n))
+}
+
+func (rcv *ION) MutateSource(n ionoSource) bool {
+	return rcv.MutateSOURCE(n)
 }
 
 /// Station or sensor identifier
@@ -85,6 +97,10 @@ func (rcv *ION) STATION_ID() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *ION) StationId() []byte {
+	return rcv.STATION_ID()
 }
 
 /// Station or sensor identifier
@@ -97,6 +113,10 @@ func (rcv *ION) STATION_NAME() []byte {
 	return nil
 }
 
+func (rcv *ION) StationName() []byte {
+	return rcv.STATION_NAME()
+}
+
 /// Station name
 /// Station geodetic latitude in degrees
 func (rcv *ION) LATITUDE() float64 {
@@ -107,9 +127,17 @@ func (rcv *ION) LATITUDE() float64 {
 	return 0.0
 }
 
+func (rcv *ION) Latitude() float64 {
+	return rcv.LATITUDE()
+}
+
 /// Station geodetic latitude in degrees
 func (rcv *ION) MutateLATITUDE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(12, n)
+}
+
+func (rcv *ION) MutateLatitude(n float64) bool {
+	return rcv.MutateLATITUDE(n)
 }
 
 /// Station geodetic longitude in degrees
@@ -121,9 +149,17 @@ func (rcv *ION) LONGITUDE() float64 {
 	return 0.0
 }
 
+func (rcv *ION) Longitude() float64 {
+	return rcv.LONGITUDE()
+}
+
 /// Station geodetic longitude in degrees
 func (rcv *ION) MutateLONGITUDE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(14, n)
+}
+
+func (rcv *ION) MutateLongitude(n float64) bool {
+	return rcv.MutateLONGITUDE(n)
 }
 
 /// Station altitude in meters
@@ -135,9 +171,17 @@ func (rcv *ION) ALTITUDE() float64 {
 	return 0.0
 }
 
+func (rcv *ION) Altitude() float64 {
+	return rcv.ALTITUDE()
+}
+
 /// Station altitude in meters
 func (rcv *ION) MutateALTITUDE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(16, n)
+}
+
+func (rcv *ION) MutateAltitude(n float64) bool {
+	return rcv.MutateALTITUDE(n)
 }
 
 /// Observation start time (ISO 8601)
@@ -147,6 +191,10 @@ func (rcv *ION) START_TIME() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *ION) StartTime() []byte {
+	return rcv.START_TIME()
 }
 
 /// Observation start time (ISO 8601)
@@ -159,6 +207,10 @@ func (rcv *ION) STOP_TIME() []byte {
 	return nil
 }
 
+func (rcv *ION) StopTime() []byte {
+	return rcv.STOP_TIME()
+}
+
 /// Observation stop time (ISO 8601)
 /// foF2 critical frequency in MHz
 func (rcv *ION) FOF2() float64 {
@@ -169,9 +221,17 @@ func (rcv *ION) FOF2() float64 {
 	return 0.0
 }
 
+func (rcv *ION) Fof2() float64 {
+	return rcv.FOF2()
+}
+
 /// foF2 critical frequency in MHz
 func (rcv *ION) MutateFOF2(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(22, n)
+}
+
+func (rcv *ION) MutateFof2(n float64) bool {
+	return rcv.MutateFOF2(n)
 }
 
 /// foF1 critical frequency in MHz
@@ -183,9 +243,17 @@ func (rcv *ION) FOF1() float64 {
 	return 0.0
 }
 
+func (rcv *ION) Fof1() float64 {
+	return rcv.FOF1()
+}
+
 /// foF1 critical frequency in MHz
 func (rcv *ION) MutateFOF1(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(24, n)
+}
+
+func (rcv *ION) MutateFof1(n float64) bool {
+	return rcv.MutateFOF1(n)
 }
 
 /// foE critical frequency in MHz
@@ -197,9 +265,17 @@ func (rcv *ION) FOE() float64 {
 	return 0.0
 }
 
+func (rcv *ION) Foe() float64 {
+	return rcv.FOE()
+}
+
 /// foE critical frequency in MHz
 func (rcv *ION) MutateFOE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(26, n)
+}
+
+func (rcv *ION) MutateFoe(n float64) bool {
+	return rcv.MutateFOE(n)
 }
 
 /// foEs sporadic E critical frequency in MHz
@@ -211,9 +287,17 @@ func (rcv *ION) FOES() float64 {
 	return 0.0
 }
 
+func (rcv *ION) Foes() float64 {
+	return rcv.FOES()
+}
+
 /// foEs sporadic E critical frequency in MHz
 func (rcv *ION) MutateFOES(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(28, n)
+}
+
+func (rcv *ION) MutateFoes(n float64) bool {
+	return rcv.MutateFOES(n)
 }
 
 /// hmF2 peak height of F2 layer in km
@@ -225,9 +309,17 @@ func (rcv *ION) HMF2() float64 {
 	return 0.0
 }
 
+func (rcv *ION) Hmf2() float64 {
+	return rcv.HMF2()
+}
+
 /// hmF2 peak height of F2 layer in km
 func (rcv *ION) MutateHMF2(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(30, n)
+}
+
+func (rcv *ION) MutateHmf2(n float64) bool {
+	return rcv.MutateHMF2(n)
 }
 
 /// hmF1 peak height of F1 layer in km
@@ -239,9 +331,17 @@ func (rcv *ION) HMF1() float64 {
 	return 0.0
 }
 
+func (rcv *ION) Hmf1() float64 {
+	return rcv.HMF1()
+}
+
 /// hmF1 peak height of F1 layer in km
 func (rcv *ION) MutateHMF1(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(32, n)
+}
+
+func (rcv *ION) MutateHmf1(n float64) bool {
+	return rcv.MutateHMF1(n)
 }
 
 /// hmE peak height of E layer in km
@@ -253,9 +353,17 @@ func (rcv *ION) HME() float64 {
 	return 0.0
 }
 
+func (rcv *ION) Hme() float64 {
+	return rcv.HME()
+}
+
 /// hmE peak height of E layer in km
 func (rcv *ION) MutateHME(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(34, n)
+}
+
+func (rcv *ION) MutateHme(n float64) bool {
+	return rcv.MutateHME(n)
 }
 
 /// NmF2 peak density of F2 layer in electrons/m^3
@@ -267,9 +375,17 @@ func (rcv *ION) NMF2() float64 {
 	return 0.0
 }
 
+func (rcv *ION) Nmf2() float64 {
+	return rcv.NMF2()
+}
+
 /// NmF2 peak density of F2 layer in electrons/m^3
 func (rcv *ION) MutateNMF2(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(36, n)
+}
+
+func (rcv *ION) MutateNmf2(n float64) bool {
+	return rcv.MutateNMF2(n)
 }
 
 /// Vertical TEC in TECU
@@ -281,9 +397,17 @@ func (rcv *ION) VTEC() float64 {
 	return 0.0
 }
 
+func (rcv *ION) Vtec() float64 {
+	return rcv.VTEC()
+}
+
 /// Vertical TEC in TECU
 func (rcv *ION) MutateVTEC(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(38, n)
+}
+
+func (rcv *ION) MutateVtec(n float64) bool {
+	return rcv.MutateVTEC(n)
 }
 
 /// Slant TEC in TECU
@@ -295,9 +419,17 @@ func (rcv *ION) STEC() float64 {
 	return 0.0
 }
 
+func (rcv *ION) Stec() float64 {
+	return rcv.STEC()
+}
+
 /// Slant TEC in TECU
 func (rcv *ION) MutateSTEC(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(40, n)
+}
+
+func (rcv *ION) MutateStec(n float64) bool {
+	return rcv.MutateSTEC(n)
 }
 
 /// Scintillation index S4
@@ -321,10 +453,17 @@ func (rcv *ION) DATA_POINTS(obj *ionoDataPoint, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(ionoDataPoint)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *ION) DataPoints(obj *ionoDataPoint, j int) bool {
+	return rcv.DATA_POINTS(obj, j)
 }
 
 func (rcv *ION) DATA_POINTSLength() int {
@@ -335,6 +474,10 @@ func (rcv *ION) DATA_POINTSLength() int {
 	return 0
 }
 
+func (rcv *ION) DataPointsLength() int {
+	return rcv.DATA_POINTSLength()
+}
+
 /// Observation data points
 /// Electron density profiles
 func (rcv *ION) DENSITY_PROFILES(obj *ionoDensityProfile, j int) bool {
@@ -343,10 +486,17 @@ func (rcv *ION) DENSITY_PROFILES(obj *ionoDensityProfile, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(ionoDensityProfile)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *ION) DensityProfiles(obj *ionoDensityProfile, j int) bool {
+	return rcv.DENSITY_PROFILES(obj, j)
 }
 
 func (rcv *ION) DENSITY_PROFILESLength() int {
@@ -355,6 +505,10 @@ func (rcv *ION) DENSITY_PROFILESLength() int {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *ION) DensityProfilesLength() int {
+	return rcv.DENSITY_PROFILESLength()
 }
 
 /// Electron density profiles
@@ -367,9 +521,17 @@ func (rcv *ION) QUALITY() byte {
 	return 0
 }
 
+func (rcv *ION) Quality() byte {
+	return rcv.QUALITY()
+}
+
 /// Data quality indicator (0-9, 9=best)
 func (rcv *ION) MutateQUALITY(n byte) bool {
 	return rcv._tab.MutateByteSlot(48, n)
+}
+
+func (rcv *ION) MutateQuality(n byte) bool {
+	return rcv.MutateQUALITY(n)
 }
 
 /// Additional notes
@@ -381,6 +543,10 @@ func (rcv *ION) NOTES() []byte {
 	return nil
 }
 
+func (rcv *ION) Notes() []byte {
+	return rcv.NOTES()
+}
+
 /// Additional notes
 func IONStart(builder *flatbuffers.Builder) {
 	builder.StartObject(24)
@@ -388,59 +554,116 @@ func IONStart(builder *flatbuffers.Builder) {
 func IONAddID(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ID), 0)
 }
+func IONAddId(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
+	IONAddID(builder, ID)
+}
 func IONAddSOURCE(builder *flatbuffers.Builder, SOURCE ionoSource) {
 	builder.PrependInt8Slot(1, int8(SOURCE), 0)
+}
+func IONAddSource(builder *flatbuffers.Builder, SOURCE ionoSource) {
+	IONAddSOURCE(builder, SOURCE)
 }
 func IONAddSTATION_ID(builder *flatbuffers.Builder, STATION_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(STATION_ID), 0)
 }
+func IONAddStationId(builder *flatbuffers.Builder, STATION_ID flatbuffers.UOffsetT) {
+	IONAddSTATION_ID(builder, STATION_ID)
+}
 func IONAddSTATION_NAME(builder *flatbuffers.Builder, STATION_NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(STATION_NAME), 0)
+}
+func IONAddStationName(builder *flatbuffers.Builder, STATION_NAME flatbuffers.UOffsetT) {
+	IONAddSTATION_NAME(builder, STATION_NAME)
 }
 func IONAddLATITUDE(builder *flatbuffers.Builder, LATITUDE float64) {
 	builder.PrependFloat64Slot(4, LATITUDE, 0.0)
 }
+func IONAddLatitude(builder *flatbuffers.Builder, LATITUDE float64) {
+	IONAddLATITUDE(builder, LATITUDE)
+}
 func IONAddLONGITUDE(builder *flatbuffers.Builder, LONGITUDE float64) {
 	builder.PrependFloat64Slot(5, LONGITUDE, 0.0)
+}
+func IONAddLongitude(builder *flatbuffers.Builder, LONGITUDE float64) {
+	IONAddLONGITUDE(builder, LONGITUDE)
 }
 func IONAddALTITUDE(builder *flatbuffers.Builder, ALTITUDE float64) {
 	builder.PrependFloat64Slot(6, ALTITUDE, 0.0)
 }
+func IONAddAltitude(builder *flatbuffers.Builder, ALTITUDE float64) {
+	IONAddALTITUDE(builder, ALTITUDE)
+}
 func IONAddSTART_TIME(builder *flatbuffers.Builder, START_TIME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(START_TIME), 0)
+}
+func IONAddStartTime(builder *flatbuffers.Builder, START_TIME flatbuffers.UOffsetT) {
+	IONAddSTART_TIME(builder, START_TIME)
 }
 func IONAddSTOP_TIME(builder *flatbuffers.Builder, STOP_TIME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(STOP_TIME), 0)
 }
+func IONAddStopTime(builder *flatbuffers.Builder, STOP_TIME flatbuffers.UOffsetT) {
+	IONAddSTOP_TIME(builder, STOP_TIME)
+}
 func IONAddFOF2(builder *flatbuffers.Builder, FOF2 float64) {
 	builder.PrependFloat64Slot(9, FOF2, 0.0)
+}
+func IONAddFof2(builder *flatbuffers.Builder, FOF2 float64) {
+	IONAddFOF2(builder, FOF2)
 }
 func IONAddFOF1(builder *flatbuffers.Builder, FOF1 float64) {
 	builder.PrependFloat64Slot(10, FOF1, 0.0)
 }
+func IONAddFof1(builder *flatbuffers.Builder, FOF1 float64) {
+	IONAddFOF1(builder, FOF1)
+}
 func IONAddFOE(builder *flatbuffers.Builder, FOE float64) {
 	builder.PrependFloat64Slot(11, FOE, 0.0)
+}
+func IONAddFoe(builder *flatbuffers.Builder, FOE float64) {
+	IONAddFOE(builder, FOE)
 }
 func IONAddFOES(builder *flatbuffers.Builder, FOES float64) {
 	builder.PrependFloat64Slot(12, FOES, 0.0)
 }
+func IONAddFoes(builder *flatbuffers.Builder, FOES float64) {
+	IONAddFOES(builder, FOES)
+}
 func IONAddHMF2(builder *flatbuffers.Builder, HMF2 float64) {
 	builder.PrependFloat64Slot(13, HMF2, 0.0)
+}
+func IONAddHmf2(builder *flatbuffers.Builder, HMF2 float64) {
+	IONAddHMF2(builder, HMF2)
 }
 func IONAddHMF1(builder *flatbuffers.Builder, HMF1 float64) {
 	builder.PrependFloat64Slot(14, HMF1, 0.0)
 }
+func IONAddHmf1(builder *flatbuffers.Builder, HMF1 float64) {
+	IONAddHMF1(builder, HMF1)
+}
 func IONAddHME(builder *flatbuffers.Builder, HME float64) {
 	builder.PrependFloat64Slot(15, HME, 0.0)
+}
+func IONAddHme(builder *flatbuffers.Builder, HME float64) {
+	IONAddHME(builder, HME)
 }
 func IONAddNMF2(builder *flatbuffers.Builder, NMF2 float64) {
 	builder.PrependFloat64Slot(16, NMF2, 0.0)
 }
+func IONAddNmf2(builder *flatbuffers.Builder, NMF2 float64) {
+	IONAddNMF2(builder, NMF2)
+}
 func IONAddVTEC(builder *flatbuffers.Builder, VTEC float64) {
 	builder.PrependFloat64Slot(17, VTEC, 0.0)
 }
+func IONAddVtec(builder *flatbuffers.Builder, VTEC float64) {
+	IONAddVTEC(builder, VTEC)
+}
 func IONAddSTEC(builder *flatbuffers.Builder, STEC float64) {
 	builder.PrependFloat64Slot(18, STEC, 0.0)
+}
+func IONAddStec(builder *flatbuffers.Builder, STEC float64) {
+	IONAddSTEC(builder, STEC)
 }
 func IONAddS4(builder *flatbuffers.Builder, S4 float64) {
 	builder.PrependFloat64Slot(19, S4, 0.0)
@@ -448,20 +671,38 @@ func IONAddS4(builder *flatbuffers.Builder, S4 float64) {
 func IONAddDATA_POINTS(builder *flatbuffers.Builder, DATA_POINTS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(20, flatbuffers.UOffsetT(DATA_POINTS), 0)
 }
+func IONAddDataPoints(builder *flatbuffers.Builder, DATA_POINTS flatbuffers.UOffsetT) {
+	IONAddDATA_POINTS(builder, DATA_POINTS)
+}
 func IONStartDATA_POINTSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func IONStartDataPointsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return IONStartDATA_POINTSVector(builder, numElems)
 }
 func IONAddDENSITY_PROFILES(builder *flatbuffers.Builder, DENSITY_PROFILES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(21, flatbuffers.UOffsetT(DENSITY_PROFILES), 0)
 }
+func IONAddDensityProfiles(builder *flatbuffers.Builder, DENSITY_PROFILES flatbuffers.UOffsetT) {
+	IONAddDENSITY_PROFILES(builder, DENSITY_PROFILES)
+}
 func IONStartDENSITY_PROFILESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func IONStartDensityProfilesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return IONStartDENSITY_PROFILESVector(builder, numElems)
 }
 func IONAddQUALITY(builder *flatbuffers.Builder, QUALITY byte) {
 	builder.PrependByteSlot(22, QUALITY, 0)
 }
+func IONAddQuality(builder *flatbuffers.Builder, QUALITY byte) {
+	IONAddQUALITY(builder, QUALITY)
+}
 func IONAddNOTES(builder *flatbuffers.Builder, NOTES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(23, flatbuffers.UOffsetT(NOTES), 0)
+}
+func IONAddNotes(builder *flatbuffers.Builder, NOTES flatbuffers.UOffsetT) {
+	IONAddNOTES(builder, NOTES)
 }
 func IONEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

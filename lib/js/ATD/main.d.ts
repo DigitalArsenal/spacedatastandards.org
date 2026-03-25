@@ -1,4 +1,4 @@
-export { ATD, ATDT } from './ATD.js';
-export { attMotionType } from './attMotionType.js';
-export { attRepresentation } from './attRepresentation.js';
+export * from './ATD.js';
+export * from './attMotionType.js';
+export * from './attRepresentation.js';
 //# sourceMappingURL=main.d.ts.map

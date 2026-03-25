@@ -553,6 +553,16 @@ def SEOStartSEN_POSVector(builder, numElems):
 def StartSEN_POSVector(builder, numElems):
     return SEOStartSEN_POSVector(builder, numElems)
 
+def SEOCreateSEN_POSVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateSEN_POSVector(builder, data):
+    SEOCreateSEN_POSVector(builder, data)
+
 def SEOAddSEN_VEL(builder, SEN_VEL):
     builder.PrependUOffsetTRelativeSlot(21, flatbuffers.number_types.UOffsetTFlags.py_type(SEN_VEL), 0)
 
@@ -564,6 +574,16 @@ def SEOStartSEN_VELVector(builder, numElems):
 
 def StartSEN_VELVector(builder, numElems):
     return SEOStartSEN_VELVector(builder, numElems)
+
+def SEOCreateSEN_VELVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateSEN_VELVector(builder, data):
+    SEOCreateSEN_VELVector(builder, data)
 
 def SEOAddMEAS_TYPE(builder, MEAS_TYPE):
     builder.PrependUOffsetTRelativeSlot(22, flatbuffers.number_types.UOffsetTFlags.py_type(MEAS_TYPE), 0)
@@ -607,6 +627,16 @@ def SEOStartVALUESVector(builder, numElems):
 def StartVALUESVector(builder, numElems):
     return SEOStartVALUESVector(builder, numElems)
 
+def SEOCreateVALUESVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateVALUESVector(builder, data):
+    SEOCreateVALUESVector(builder, data)
+
 def SEOAddUNCERTAINTIES(builder, UNCERTAINTIES):
     builder.PrependUOffsetTRelativeSlot(28, flatbuffers.number_types.UOffsetTFlags.py_type(UNCERTAINTIES), 0)
 
@@ -618,6 +648,16 @@ def SEOStartUNCERTAINTIESVector(builder, numElems):
 
 def StartUNCERTAINTIESVector(builder, numElems):
     return SEOStartUNCERTAINTIESVector(builder, numElems)
+
+def SEOCreateUNCERTAINTIESVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateUNCERTAINTIESVector(builder, data):
+    SEOCreateUNCERTAINTIESVector(builder, data)
 
 def SEOAddUNITS(builder, UNITS):
     builder.PrependUOffsetTRelativeSlot(29, flatbuffers.number_types.UOffsetTFlags.py_type(UNITS), 0)
@@ -655,6 +695,12 @@ def SEOStartSRC_TYPSVector(builder, numElems):
 def StartSRC_TYPSVector(builder, numElems):
     return SEOStartSRC_TYPSVector(builder, numElems)
 
+def SEOCreateSRC_TYPSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateSRC_TYPSVector(builder, data):
+    SEOCreateSRC_TYPSVector(builder, data)
+
 def SEOAddSRC_IDS(builder, SRC_IDS):
     builder.PrependUOffsetTRelativeSlot(34, flatbuffers.number_types.UOffsetTFlags.py_type(SRC_IDS), 0)
 
@@ -666,6 +712,12 @@ def SEOStartSRC_IDSVector(builder, numElems):
 
 def StartSRC_IDSVector(builder, numElems):
     return SEOStartSRC_IDSVector(builder, numElems)
+
+def SEOCreateSRC_IDSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateSRC_IDSVector(builder, data):
+    SEOCreateSRC_IDSVector(builder, data)
 
 def SEOEnd(builder):
     return builder.EndObject()
@@ -681,48 +733,85 @@ except:
 class SEOT(object):
 
     # SEOT
-    def __init__(self):
-        self.ID = None  # type: str
-        self.MSG_TYPE = None  # type: str
-        self.GEN_SYSTEM = None  # type: str
-        self.EXTERNAL_ID = None  # type: str
-        self.DATA_TYPE = 0  # type: int
-        self.GEN_TIME = None  # type: str
-        self.FORECAST = False  # type: bool
-        self.DERIVED = False  # type: bool
-        self.SAT_NO = 0  # type: int
-        self.ORIG_OBJECT_ID = None  # type: str
-        self.ID_SENSOR = None  # type: str
-        self.ORIG_SENSOR_ID = None  # type: str
-        self.OBSERVATORY_TYPE = 0  # type: int
-        self.OBSERVATORY_NAME = None  # type: str
-        self.OBSERVATORY_NOTES = None  # type: str
-        self.INSTRUMENT_TYPE = None  # type: str
-        self.LAT = 0.0  # type: float
-        self.LON = 0.0  # type: float
-        self.ALT = 0.0  # type: float
-        self.SEN_REFERENCE_FRAME = None  # type: str
-        self.SEN_POS = None  # type: List[float]
-        self.SEN_VEL = None  # type: List[float]
-        self.MEAS_TYPE = None  # type: str
-        self.PARTICLE_TYPE = 0  # type: int
-        self.SEN_ENERGY_LEVEL = None  # type: str
-        self.OB_SET_ID = None  # type: str
-        self.OB_TIME = None  # type: str
-        self.VALUES = None  # type: List[float]
-        self.UNCERTAINTIES = None  # type: List[float]
-        self.UNITS = None  # type: str
-        self.QUALITY = None  # type: str
-        self.DESCRIPTION = None  # type: str
-        self.DESCRIPTOR = None  # type: str
-        self.SRC_TYPS = None  # type: List[str]
-        self.SRC_IDS = None  # type: List[str]
+    def __init__(
+        self,
+        ID = None,
+        MSG_TYPE = None,
+        GEN_SYSTEM = None,
+        EXTERNAL_ID = None,
+        DATA_TYPE = 0,
+        GEN_TIME = None,
+        FORECAST = False,
+        DERIVED = False,
+        SAT_NO = 0,
+        ORIG_OBJECT_ID = None,
+        ID_SENSOR = None,
+        ORIG_SENSOR_ID = None,
+        OBSERVATORY_TYPE = 0,
+        OBSERVATORY_NAME = None,
+        OBSERVATORY_NOTES = None,
+        INSTRUMENT_TYPE = None,
+        LAT = 0.0,
+        LON = 0.0,
+        ALT = 0.0,
+        SEN_REFERENCE_FRAME = None,
+        SEN_POS = None,
+        SEN_VEL = None,
+        MEAS_TYPE = None,
+        PARTICLE_TYPE = 0,
+        SEN_ENERGY_LEVEL = None,
+        OB_SET_ID = None,
+        OB_TIME = None,
+        VALUES = None,
+        UNCERTAINTIES = None,
+        UNITS = None,
+        QUALITY = None,
+        DESCRIPTION = None,
+        DESCRIPTOR = None,
+        SRC_TYPS = None,
+        SRC_IDS = None,
+    ):
+        self.ID = ID  # type: Optional[str]
+        self.MSG_TYPE = MSG_TYPE  # type: Optional[str]
+        self.GEN_SYSTEM = GEN_SYSTEM  # type: Optional[str]
+        self.EXTERNAL_ID = EXTERNAL_ID  # type: Optional[str]
+        self.DATA_TYPE = DATA_TYPE  # type: int
+        self.GEN_TIME = GEN_TIME  # type: Optional[str]
+        self.FORECAST = FORECAST  # type: bool
+        self.DERIVED = DERIVED  # type: bool
+        self.SAT_NO = SAT_NO  # type: int
+        self.ORIG_OBJECT_ID = ORIG_OBJECT_ID  # type: Optional[str]
+        self.ID_SENSOR = ID_SENSOR  # type: Optional[str]
+        self.ORIG_SENSOR_ID = ORIG_SENSOR_ID  # type: Optional[str]
+        self.OBSERVATORY_TYPE = OBSERVATORY_TYPE  # type: int
+        self.OBSERVATORY_NAME = OBSERVATORY_NAME  # type: Optional[str]
+        self.OBSERVATORY_NOTES = OBSERVATORY_NOTES  # type: Optional[str]
+        self.INSTRUMENT_TYPE = INSTRUMENT_TYPE  # type: Optional[str]
+        self.LAT = LAT  # type: float
+        self.LON = LON  # type: float
+        self.ALT = ALT  # type: float
+        self.SEN_REFERENCE_FRAME = SEN_REFERENCE_FRAME  # type: Optional[str]
+        self.SEN_POS = SEN_POS  # type: Optional[List[float]]
+        self.SEN_VEL = SEN_VEL  # type: Optional[List[float]]
+        self.MEAS_TYPE = MEAS_TYPE  # type: Optional[str]
+        self.PARTICLE_TYPE = PARTICLE_TYPE  # type: int
+        self.SEN_ENERGY_LEVEL = SEN_ENERGY_LEVEL  # type: Optional[str]
+        self.OB_SET_ID = OB_SET_ID  # type: Optional[str]
+        self.OB_TIME = OB_TIME  # type: Optional[str]
+        self.VALUES = VALUES  # type: Optional[List[float]]
+        self.UNCERTAINTIES = UNCERTAINTIES  # type: Optional[List[float]]
+        self.UNITS = UNITS  # type: Optional[str]
+        self.QUALITY = QUALITY  # type: Optional[str]
+        self.DESCRIPTION = DESCRIPTION  # type: Optional[str]
+        self.DESCRIPTOR = DESCRIPTOR  # type: Optional[str]
+        self.SRC_TYPS = SRC_TYPS  # type: Optional[List[Optional[str]]]
+        self.SRC_IDS = SRC_IDS  # type: Optional[List[Optional[str]]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        SEO = SEO()
-        SEO.Init(buf, pos)
-        return cls.InitFromObj(SEO)
+        tmpSeo = SEO()
+        tmpSeo.Init(buf, pos)
+        return cls.InitFromObj(tmpSeo)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -730,9 +819,9 @@ class SEOT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, SEO):
+    def InitFromObj(cls, tmpSeo):
         x = SEOT()
-        x._UnPack(SEO)
+        x._UnPack(tmpSeo)
         return x
 
     # SEOT

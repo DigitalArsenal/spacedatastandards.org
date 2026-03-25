@@ -50,6 +50,10 @@ func (rcv *UserDefinedParameters) PARAM_NAME() []byte {
 	return nil
 }
 
+func (rcv *UserDefinedParameters) ParamName() []byte {
+	return rcv.PARAM_NAME()
+}
+
 /// Name of the user-defined parameter.
 /// Value of the user-defined parameter.
 func (rcv *UserDefinedParameters) PARAM_VALUE() []byte {
@@ -60,6 +64,10 @@ func (rcv *UserDefinedParameters) PARAM_VALUE() []byte {
 	return nil
 }
 
+func (rcv *UserDefinedParameters) ParamValue() []byte {
+	return rcv.PARAM_VALUE()
+}
+
 /// Value of the user-defined parameter.
 func UserDefinedParametersStart(builder *flatbuffers.Builder) {
 	builder.StartObject(2)
@@ -67,8 +75,14 @@ func UserDefinedParametersStart(builder *flatbuffers.Builder) {
 func UserDefinedParametersAddPARAM_NAME(builder *flatbuffers.Builder, PARAM_NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(PARAM_NAME), 0)
 }
+func UserDefinedParametersAddParamName(builder *flatbuffers.Builder, PARAM_NAME flatbuffers.UOffsetT) {
+	UserDefinedParametersAddPARAM_NAME(builder, PARAM_NAME)
+}
 func UserDefinedParametersAddPARAM_VALUE(builder *flatbuffers.Builder, PARAM_VALUE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(PARAM_VALUE), 0)
+}
+func UserDefinedParametersAddParamValue(builder *flatbuffers.Builder, PARAM_VALUE flatbuffers.UOffsetT) {
+	UserDefinedParametersAddPARAM_VALUE(builder, PARAM_VALUE)
 }
 func UserDefinedParametersEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

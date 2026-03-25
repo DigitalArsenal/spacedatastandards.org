@@ -12,7 +12,6 @@ import com.google.flatbuffers.LongVector;
 import com.google.flatbuffers.ShortVector;
 import com.google.flatbuffers.StringVector;
 import com.google.flatbuffers.Struct;
-import com.google.flatbuffers.Table;
 import com.google.flatbuffers.UnionVector;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -21,18 +20,18 @@ import java.nio.ByteOrder;
  * Individual record wrapper for any standard type
  */
 @SuppressWarnings("unused")
-public final class Record extends Table {
-  public static void ValidateVersion() { Constants.FLATBUFFERS_24_3_25(); }
+public final class Record extends com.google.flatbuffers.Table {
+  public static void ValidateVersion() { Constants.FLATBUFFERS_25_12_19(); }
   public static Record getRootAsRecord(ByteBuffer _bb) { return getRootAsRecord(_bb, new Record()); }
   public static Record getRootAsRecord(ByteBuffer _bb, Record obj) { _bb.order(ByteOrder.LITTLE_ENDIAN); return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb)); }
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public Record __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
-  public byte valueType() { int o = __offset(4); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  public byte value_type() { int o = __offset(4); return o != 0 ? bb.get(o + bb_pos) : 0; }
   /**
    * The record data (union of all supported standards)
    */
-  public Table value(Table obj) { int o = __offset(6); return o != 0 ? __union(obj, o + bb_pos) : null; }
+  public com.google.flatbuffers.Table value(com.google.flatbuffers.Table obj) { int o = __offset(6); return o != 0 ? __union(obj, o + bb_pos) : null; }
   /**
    * Standard identifier (e.g., "OMM", "CDM", "CAT")
    */
@@ -41,18 +40,18 @@ public final class Record extends Table {
   public ByteBuffer standardInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 8, 1); }
 
   public static int createRecord(FlatBufferBuilder builder,
-      byte valueType,
+      byte value_type,
       int valueOffset,
       int standardOffset) {
     builder.startTable(3);
     Record.addStandard(builder, standardOffset);
     Record.addValue(builder, valueOffset);
-    Record.addValueType(builder, valueType);
+    Record.addValueType(builder, value_type);
     return Record.endRecord(builder);
   }
 
   public static void startRecord(FlatBufferBuilder builder) { builder.startTable(3); }
-  public static void addValueType(FlatBufferBuilder builder, byte valueType) { builder.addByte(0, valueType, 0); }
+  public static void addValueType(FlatBufferBuilder builder, byte value_type) { builder.addByte(0, value_type, 0); }
   public static void addValue(FlatBufferBuilder builder, int valueOffset) { builder.addOffset(1, valueOffset, 0); }
   public static void addStandard(FlatBufferBuilder builder, int standardOffset) { builder.addOffset(2, standardOffset, 0); }
   public static int endRecord(FlatBufferBuilder builder) {

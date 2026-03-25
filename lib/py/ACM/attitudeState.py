@@ -367,36 +367,61 @@ def End(builder):
 class attitudeStateT(object):
 
     # attitudeStateT
-    def __init__(self):
-        self.ATT_TYPE = 0  # type: int
-        self.REF_FRAME_A = None  # type: str
-        self.REF_FRAME_B = None  # type: str
-        self.ATT_DIR = None  # type: str
-        self.EPOCH = None  # type: str
-        self.Q1 = 0.0  # type: float
-        self.Q2 = 0.0  # type: float
-        self.Q3 = 0.0  # type: float
-        self.QC = 0.0  # type: float
-        self.ANGLE_1 = 0.0  # type: float
-        self.ANGLE_2 = 0.0  # type: float
-        self.ANGLE_3 = 0.0  # type: float
-        self.EULER_ROT_SEQ = None  # type: str
-        self.ANGVEL_X = 0.0  # type: float
-        self.ANGVEL_Y = 0.0  # type: float
-        self.ANGVEL_Z = 0.0  # type: float
-        self.SPIN_ALPHA = 0.0  # type: float
-        self.SPIN_DELTA = 0.0  # type: float
-        self.SPIN_ANGLE = 0.0  # type: float
-        self.SPIN_ANGLE_VEL = 0.0  # type: float
-        self.NUTATION = 0.0  # type: float
-        self.NUTATION_PERIOD = 0.0  # type: float
-        self.NUTATION_PHASE = 0.0  # type: float
+    def __init__(
+        self,
+        ATT_TYPE = 0,
+        REF_FRAME_A = None,
+        REF_FRAME_B = None,
+        ATT_DIR = None,
+        EPOCH = None,
+        Q1 = 0.0,
+        Q2 = 0.0,
+        Q3 = 0.0,
+        QC = 0.0,
+        ANGLE_1 = 0.0,
+        ANGLE_2 = 0.0,
+        ANGLE_3 = 0.0,
+        EULER_ROT_SEQ = None,
+        ANGVEL_X = 0.0,
+        ANGVEL_Y = 0.0,
+        ANGVEL_Z = 0.0,
+        SPIN_ALPHA = 0.0,
+        SPIN_DELTA = 0.0,
+        SPIN_ANGLE = 0.0,
+        SPIN_ANGLE_VEL = 0.0,
+        NUTATION = 0.0,
+        NUTATION_PERIOD = 0.0,
+        NUTATION_PHASE = 0.0,
+    ):
+        self.ATT_TYPE = ATT_TYPE  # type: int
+        self.REF_FRAME_A = REF_FRAME_A  # type: Optional[str]
+        self.REF_FRAME_B = REF_FRAME_B  # type: Optional[str]
+        self.ATT_DIR = ATT_DIR  # type: Optional[str]
+        self.EPOCH = EPOCH  # type: Optional[str]
+        self.Q1 = Q1  # type: float
+        self.Q2 = Q2  # type: float
+        self.Q3 = Q3  # type: float
+        self.QC = QC  # type: float
+        self.ANGLE_1 = ANGLE_1  # type: float
+        self.ANGLE_2 = ANGLE_2  # type: float
+        self.ANGLE_3 = ANGLE_3  # type: float
+        self.EULER_ROT_SEQ = EULER_ROT_SEQ  # type: Optional[str]
+        self.ANGVEL_X = ANGVEL_X  # type: float
+        self.ANGVEL_Y = ANGVEL_Y  # type: float
+        self.ANGVEL_Z = ANGVEL_Z  # type: float
+        self.SPIN_ALPHA = SPIN_ALPHA  # type: float
+        self.SPIN_DELTA = SPIN_DELTA  # type: float
+        self.SPIN_ANGLE = SPIN_ANGLE  # type: float
+        self.SPIN_ANGLE_VEL = SPIN_ANGLE_VEL  # type: float
+        self.NUTATION = NUTATION  # type: float
+        self.NUTATION_PERIOD = NUTATION_PERIOD  # type: float
+        self.NUTATION_PHASE = NUTATION_PHASE  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        attitudeState = attitudeState()
-        attitudeState.Init(buf, pos)
-        return cls.InitFromObj(attitudeState)
+        tmpAttitudeState = attitudeState()
+        tmpAttitudeState.Init(buf, pos)
+        return cls.InitFromObj(tmpAttitudeState)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -404,9 +429,9 @@ class attitudeStateT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, attitudeState):
+    def InitFromObj(cls, tmpAttitudeState):
         x = attitudeStateT()
-        x._UnPack(attitudeState)
+        x._UnPack(tmpAttitudeState)
         return x
 
     # attitudeStateT

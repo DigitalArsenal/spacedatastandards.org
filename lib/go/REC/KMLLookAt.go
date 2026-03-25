@@ -51,9 +51,17 @@ func (rcv *KMLLookAt) LONGITUDE() float64 {
 	return 0.0
 }
 
+func (rcv *KMLLookAt) Longitude() float64 {
+	return rcv.LONGITUDE()
+}
+
 /// Longitude of the point being looked at
 func (rcv *KMLLookAt) MutateLONGITUDE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(4, n)
+}
+
+func (rcv *KMLLookAt) MutateLongitude(n float64) bool {
+	return rcv.MutateLONGITUDE(n)
 }
 
 /// Latitude of the point being looked at
@@ -65,9 +73,17 @@ func (rcv *KMLLookAt) LATITUDE() float64 {
 	return 0.0
 }
 
+func (rcv *KMLLookAt) Latitude() float64 {
+	return rcv.LATITUDE()
+}
+
 /// Latitude of the point being looked at
 func (rcv *KMLLookAt) MutateLATITUDE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(6, n)
+}
+
+func (rcv *KMLLookAt) MutateLatitude(n float64) bool {
+	return rcv.MutateLATITUDE(n)
 }
 
 /// Altitude of the point being looked at
@@ -79,9 +95,17 @@ func (rcv *KMLLookAt) ALTITUDE() float64 {
 	return 0.0
 }
 
+func (rcv *KMLLookAt) Altitude() float64 {
+	return rcv.ALTITUDE()
+}
+
 /// Altitude of the point being looked at
 func (rcv *KMLLookAt) MutateALTITUDE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(8, n)
+}
+
+func (rcv *KMLLookAt) MutateAltitude(n float64) bool {
+	return rcv.MutateALTITUDE(n)
 }
 
 /// Heading in degrees (0=North)
@@ -93,9 +117,17 @@ func (rcv *KMLLookAt) HEADING() float64 {
 	return 0.0
 }
 
+func (rcv *KMLLookAt) Heading() float64 {
+	return rcv.HEADING()
+}
+
 /// Heading in degrees (0=North)
 func (rcv *KMLLookAt) MutateHEADING(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(10, n)
+}
+
+func (rcv *KMLLookAt) MutateHeading(n float64) bool {
+	return rcv.MutateHEADING(n)
 }
 
 /// Tilt in degrees from vertical (0=straight down)
@@ -107,9 +139,17 @@ func (rcv *KMLLookAt) TILT() float64 {
 	return 0.0
 }
 
+func (rcv *KMLLookAt) Tilt() float64 {
+	return rcv.TILT()
+}
+
 /// Tilt in degrees from vertical (0=straight down)
 func (rcv *KMLLookAt) MutateTILT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(12, n)
+}
+
+func (rcv *KMLLookAt) MutateTilt(n float64) bool {
+	return rcv.MutateTILT(n)
 }
 
 /// Range in meters from the point
@@ -121,9 +161,17 @@ func (rcv *KMLLookAt) RANGE() float64 {
 	return 0.0
 }
 
+func (rcv *KMLLookAt) Range() float64 {
+	return rcv.RANGE()
+}
+
 /// Range in meters from the point
 func (rcv *KMLLookAt) MutateRANGE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(14, n)
+}
+
+func (rcv *KMLLookAt) MutateRange(n float64) bool {
+	return rcv.MutateRANGE(n)
 }
 
 /// Altitude mode
@@ -135,9 +183,17 @@ func (rcv *KMLLookAt) ALTITUDE_MODE() KMLAltitudeMode {
 	return 0
 }
 
+func (rcv *KMLLookAt) AltitudeMode() KMLAltitudeMode {
+	return rcv.ALTITUDE_MODE()
+}
+
 /// Altitude mode
 func (rcv *KMLLookAt) MutateALTITUDE_MODE(n KMLAltitudeMode) bool {
 	return rcv._tab.MutateInt8Slot(16, int8(n))
+}
+
+func (rcv *KMLLookAt) MutateAltitudeMode(n KMLAltitudeMode) bool {
+	return rcv.MutateALTITUDE_MODE(n)
 }
 
 func KMLLookAtStart(builder *flatbuffers.Builder) {
@@ -146,23 +202,44 @@ func KMLLookAtStart(builder *flatbuffers.Builder) {
 func KMLLookAtAddLONGITUDE(builder *flatbuffers.Builder, LONGITUDE float64) {
 	builder.PrependFloat64Slot(0, LONGITUDE, 0.0)
 }
+func KMLLookAtAddLongitude(builder *flatbuffers.Builder, LONGITUDE float64) {
+	KMLLookAtAddLONGITUDE(builder, LONGITUDE)
+}
 func KMLLookAtAddLATITUDE(builder *flatbuffers.Builder, LATITUDE float64) {
 	builder.PrependFloat64Slot(1, LATITUDE, 0.0)
+}
+func KMLLookAtAddLatitude(builder *flatbuffers.Builder, LATITUDE float64) {
+	KMLLookAtAddLATITUDE(builder, LATITUDE)
 }
 func KMLLookAtAddALTITUDE(builder *flatbuffers.Builder, ALTITUDE float64) {
 	builder.PrependFloat64Slot(2, ALTITUDE, 0.0)
 }
+func KMLLookAtAddAltitude(builder *flatbuffers.Builder, ALTITUDE float64) {
+	KMLLookAtAddALTITUDE(builder, ALTITUDE)
+}
 func KMLLookAtAddHEADING(builder *flatbuffers.Builder, HEADING float64) {
 	builder.PrependFloat64Slot(3, HEADING, 0.0)
+}
+func KMLLookAtAddHeading(builder *flatbuffers.Builder, HEADING float64) {
+	KMLLookAtAddHEADING(builder, HEADING)
 }
 func KMLLookAtAddTILT(builder *flatbuffers.Builder, TILT float64) {
 	builder.PrependFloat64Slot(4, TILT, 0.0)
 }
+func KMLLookAtAddTilt(builder *flatbuffers.Builder, TILT float64) {
+	KMLLookAtAddTILT(builder, TILT)
+}
 func KMLLookAtAddRANGE(builder *flatbuffers.Builder, RANGE float64) {
 	builder.PrependFloat64Slot(5, RANGE, 0.0)
 }
+func KMLLookAtAddRange(builder *flatbuffers.Builder, RANGE float64) {
+	KMLLookAtAddRANGE(builder, RANGE)
+}
 func KMLLookAtAddALTITUDE_MODE(builder *flatbuffers.Builder, ALTITUDE_MODE KMLAltitudeMode) {
 	builder.PrependInt8Slot(6, int8(ALTITUDE_MODE), 0)
+}
+func KMLLookAtAddAltitudeMode(builder *flatbuffers.Builder, ALTITUDE_MODE KMLAltitudeMode) {
+	KMLLookAtAddALTITUDE_MODE(builder, ALTITUDE_MODE)
 }
 func KMLLookAtEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

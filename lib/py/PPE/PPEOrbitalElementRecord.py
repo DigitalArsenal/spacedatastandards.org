@@ -332,6 +332,16 @@ def PPEOrbitalElementRecordStartCOEFF_SIZE_SHAPEVector(builder, numElems):
 def StartCOEFF_SIZE_SHAPEVector(builder, numElems):
     return PPEOrbitalElementRecordStartCOEFF_SIZE_SHAPEVector(builder, numElems)
 
+def PPEOrbitalElementRecordCreateCOEFF_SIZE_SHAPEVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateCOEFF_SIZE_SHAPEVector(builder, data):
+    PPEOrbitalElementRecordCreateCOEFF_SIZE_SHAPEVector(builder, data)
+
 def PPEOrbitalElementRecordAddCOEFF_ECCENTRICITY(builder, COEFF_ECCENTRICITY):
     builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(COEFF_ECCENTRICITY), 0)
 
@@ -343,6 +353,16 @@ def PPEOrbitalElementRecordStartCOEFF_ECCENTRICITYVector(builder, numElems):
 
 def StartCOEFF_ECCENTRICITYVector(builder, numElems):
     return PPEOrbitalElementRecordStartCOEFF_ECCENTRICITYVector(builder, numElems)
+
+def PPEOrbitalElementRecordCreateCOEFF_ECCENTRICITYVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateCOEFF_ECCENTRICITYVector(builder, data):
+    PPEOrbitalElementRecordCreateCOEFF_ECCENTRICITYVector(builder, data)
 
 def PPEOrbitalElementRecordAddCOEFF_INCLINATION(builder, COEFF_INCLINATION):
     builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(COEFF_INCLINATION), 0)
@@ -356,6 +376,16 @@ def PPEOrbitalElementRecordStartCOEFF_INCLINATIONVector(builder, numElems):
 def StartCOEFF_INCLINATIONVector(builder, numElems):
     return PPEOrbitalElementRecordStartCOEFF_INCLINATIONVector(builder, numElems)
 
+def PPEOrbitalElementRecordCreateCOEFF_INCLINATIONVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateCOEFF_INCLINATIONVector(builder, data):
+    PPEOrbitalElementRecordCreateCOEFF_INCLINATIONVector(builder, data)
+
 def PPEOrbitalElementRecordAddCOEFF_RAAN(builder, COEFF_RAAN):
     builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(COEFF_RAAN), 0)
 
@@ -367,6 +397,16 @@ def PPEOrbitalElementRecordStartCOEFF_RAANVector(builder, numElems):
 
 def StartCOEFF_RAANVector(builder, numElems):
     return PPEOrbitalElementRecordStartCOEFF_RAANVector(builder, numElems)
+
+def PPEOrbitalElementRecordCreateCOEFF_RAANVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateCOEFF_RAANVector(builder, data):
+    PPEOrbitalElementRecordCreateCOEFF_RAANVector(builder, data)
 
 def PPEOrbitalElementRecordAddCOEFF_ARG_PERIAPSIS(builder, COEFF_ARG_PERIAPSIS):
     builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(COEFF_ARG_PERIAPSIS), 0)
@@ -380,6 +420,16 @@ def PPEOrbitalElementRecordStartCOEFF_ARG_PERIAPSISVector(builder, numElems):
 def StartCOEFF_ARG_PERIAPSISVector(builder, numElems):
     return PPEOrbitalElementRecordStartCOEFF_ARG_PERIAPSISVector(builder, numElems)
 
+def PPEOrbitalElementRecordCreateCOEFF_ARG_PERIAPSISVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateCOEFF_ARG_PERIAPSISVector(builder, data):
+    PPEOrbitalElementRecordCreateCOEFF_ARG_PERIAPSISVector(builder, data)
+
 def PPEOrbitalElementRecordAddCOEFF_ANOMALY(builder, COEFF_ANOMALY):
     builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(COEFF_ANOMALY), 0)
 
@@ -391,6 +441,16 @@ def PPEOrbitalElementRecordStartCOEFF_ANOMALYVector(builder, numElems):
 
 def StartCOEFF_ANOMALYVector(builder, numElems):
     return PPEOrbitalElementRecordStartCOEFF_ANOMALYVector(builder, numElems)
+
+def PPEOrbitalElementRecordCreateCOEFF_ANOMALYVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateCOEFF_ANOMALYVector(builder, data):
+    PPEOrbitalElementRecordCreateCOEFF_ANOMALYVector(builder, data)
 
 def PPEOrbitalElementRecordAddMAX_ELEMENT_RESIDUAL(builder, MAX_ELEMENT_RESIDUAL):
     builder.PrependFloat64Slot(12, MAX_ELEMENT_RESIDUAL, 0.0)
@@ -418,27 +478,43 @@ except:
 class PPEOrbitalElementRecordT(object):
 
     # PPEOrbitalElementRecordT
-    def __init__(self):
-        self.EPOCH_MID = None  # type: str
-        self.EPOCH_HALF_SPAN = 0.0  # type: float
-        self.NUM_COEFFICIENTS = 0  # type: int
-        self.BASIS_TYPE = 0  # type: int
-        self.SIZE_SHAPE_TYPE = 0  # type: int
-        self.ANOMALY_TYPE = 0  # type: int
-        self.COEFF_SIZE_SHAPE = None  # type: List[float]
-        self.COEFF_ECCENTRICITY = None  # type: List[float]
-        self.COEFF_INCLINATION = None  # type: List[float]
-        self.COEFF_RAAN = None  # type: List[float]
-        self.COEFF_ARG_PERIAPSIS = None  # type: List[float]
-        self.COEFF_ANOMALY = None  # type: List[float]
-        self.MAX_ELEMENT_RESIDUAL = 0.0  # type: float
-        self.RMS_ELEMENT_RESIDUAL = 0.0  # type: float
+    def __init__(
+        self,
+        EPOCH_MID = None,
+        EPOCH_HALF_SPAN = 0.0,
+        NUM_COEFFICIENTS = 0,
+        BASIS_TYPE = 0,
+        SIZE_SHAPE_TYPE = 0,
+        ANOMALY_TYPE = 0,
+        COEFF_SIZE_SHAPE = None,
+        COEFF_ECCENTRICITY = None,
+        COEFF_INCLINATION = None,
+        COEFF_RAAN = None,
+        COEFF_ARG_PERIAPSIS = None,
+        COEFF_ANOMALY = None,
+        MAX_ELEMENT_RESIDUAL = 0.0,
+        RMS_ELEMENT_RESIDUAL = 0.0,
+    ):
+        self.EPOCH_MID = EPOCH_MID  # type: Optional[str]
+        self.EPOCH_HALF_SPAN = EPOCH_HALF_SPAN  # type: float
+        self.NUM_COEFFICIENTS = NUM_COEFFICIENTS  # type: int
+        self.BASIS_TYPE = BASIS_TYPE  # type: int
+        self.SIZE_SHAPE_TYPE = SIZE_SHAPE_TYPE  # type: int
+        self.ANOMALY_TYPE = ANOMALY_TYPE  # type: int
+        self.COEFF_SIZE_SHAPE = COEFF_SIZE_SHAPE  # type: Optional[List[float]]
+        self.COEFF_ECCENTRICITY = COEFF_ECCENTRICITY  # type: Optional[List[float]]
+        self.COEFF_INCLINATION = COEFF_INCLINATION  # type: Optional[List[float]]
+        self.COEFF_RAAN = COEFF_RAAN  # type: Optional[List[float]]
+        self.COEFF_ARG_PERIAPSIS = COEFF_ARG_PERIAPSIS  # type: Optional[List[float]]
+        self.COEFF_ANOMALY = COEFF_ANOMALY  # type: Optional[List[float]]
+        self.MAX_ELEMENT_RESIDUAL = MAX_ELEMENT_RESIDUAL  # type: float
+        self.RMS_ELEMENT_RESIDUAL = RMS_ELEMENT_RESIDUAL  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        ppeorbitalElementRecord = PPEOrbitalElementRecord()
-        ppeorbitalElementRecord.Init(buf, pos)
-        return cls.InitFromObj(ppeorbitalElementRecord)
+        tmpPpeorbitalElementRecord = PPEOrbitalElementRecord()
+        tmpPpeorbitalElementRecord.Init(buf, pos)
+        return cls.InitFromObj(tmpPpeorbitalElementRecord)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -446,65 +522,65 @@ class PPEOrbitalElementRecordT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, ppeorbitalElementRecord):
+    def InitFromObj(cls, tmpPpeorbitalElementRecord):
         x = PPEOrbitalElementRecordT()
-        x._UnPack(ppeorbitalElementRecord)
+        x._UnPack(tmpPpeorbitalElementRecord)
         return x
 
     # PPEOrbitalElementRecordT
-    def _UnPack(self, ppeorbitalElementRecord):
-        if ppeorbitalElementRecord is None:
+    def _UnPack(self, PPEOrbitalElementRecord):
+        if PPEOrbitalElementRecord is None:
             return
-        self.EPOCH_MID = ppeorbitalElementRecord.EPOCH_MID()
-        self.EPOCH_HALF_SPAN = ppeorbitalElementRecord.EPOCH_HALF_SPAN()
-        self.NUM_COEFFICIENTS = ppeorbitalElementRecord.NUM_COEFFICIENTS()
-        self.BASIS_TYPE = ppeorbitalElementRecord.BASIS_TYPE()
-        self.SIZE_SHAPE_TYPE = ppeorbitalElementRecord.SIZE_SHAPE_TYPE()
-        self.ANOMALY_TYPE = ppeorbitalElementRecord.ANOMALY_TYPE()
-        if not ppeorbitalElementRecord.COEFF_SIZE_SHAPEIsNone():
+        self.EPOCH_MID = PPEOrbitalElementRecord.EPOCH_MID()
+        self.EPOCH_HALF_SPAN = PPEOrbitalElementRecord.EPOCH_HALF_SPAN()
+        self.NUM_COEFFICIENTS = PPEOrbitalElementRecord.NUM_COEFFICIENTS()
+        self.BASIS_TYPE = PPEOrbitalElementRecord.BASIS_TYPE()
+        self.SIZE_SHAPE_TYPE = PPEOrbitalElementRecord.SIZE_SHAPE_TYPE()
+        self.ANOMALY_TYPE = PPEOrbitalElementRecord.ANOMALY_TYPE()
+        if not PPEOrbitalElementRecord.COEFF_SIZE_SHAPEIsNone():
             if np is None:
                 self.COEFF_SIZE_SHAPE = []
-                for i in range(ppeorbitalElementRecord.COEFF_SIZE_SHAPELength()):
-                    self.COEFF_SIZE_SHAPE.append(ppeorbitalElementRecord.COEFF_SIZE_SHAPE(i))
+                for i in range(PPEOrbitalElementRecord.COEFF_SIZE_SHAPELength()):
+                    self.COEFF_SIZE_SHAPE.append(PPEOrbitalElementRecord.COEFF_SIZE_SHAPE(i))
             else:
-                self.COEFF_SIZE_SHAPE = ppeorbitalElementRecord.COEFF_SIZE_SHAPEAsNumpy()
-        if not ppeorbitalElementRecord.COEFF_ECCENTRICITYIsNone():
+                self.COEFF_SIZE_SHAPE = PPEOrbitalElementRecord.COEFF_SIZE_SHAPEAsNumpy()
+        if not PPEOrbitalElementRecord.COEFF_ECCENTRICITYIsNone():
             if np is None:
                 self.COEFF_ECCENTRICITY = []
-                for i in range(ppeorbitalElementRecord.COEFF_ECCENTRICITYLength()):
-                    self.COEFF_ECCENTRICITY.append(ppeorbitalElementRecord.COEFF_ECCENTRICITY(i))
+                for i in range(PPEOrbitalElementRecord.COEFF_ECCENTRICITYLength()):
+                    self.COEFF_ECCENTRICITY.append(PPEOrbitalElementRecord.COEFF_ECCENTRICITY(i))
             else:
-                self.COEFF_ECCENTRICITY = ppeorbitalElementRecord.COEFF_ECCENTRICITYAsNumpy()
-        if not ppeorbitalElementRecord.COEFF_INCLINATIONIsNone():
+                self.COEFF_ECCENTRICITY = PPEOrbitalElementRecord.COEFF_ECCENTRICITYAsNumpy()
+        if not PPEOrbitalElementRecord.COEFF_INCLINATIONIsNone():
             if np is None:
                 self.COEFF_INCLINATION = []
-                for i in range(ppeorbitalElementRecord.COEFF_INCLINATIONLength()):
-                    self.COEFF_INCLINATION.append(ppeorbitalElementRecord.COEFF_INCLINATION(i))
+                for i in range(PPEOrbitalElementRecord.COEFF_INCLINATIONLength()):
+                    self.COEFF_INCLINATION.append(PPEOrbitalElementRecord.COEFF_INCLINATION(i))
             else:
-                self.COEFF_INCLINATION = ppeorbitalElementRecord.COEFF_INCLINATIONAsNumpy()
-        if not ppeorbitalElementRecord.COEFF_RAANIsNone():
+                self.COEFF_INCLINATION = PPEOrbitalElementRecord.COEFF_INCLINATIONAsNumpy()
+        if not PPEOrbitalElementRecord.COEFF_RAANIsNone():
             if np is None:
                 self.COEFF_RAAN = []
-                for i in range(ppeorbitalElementRecord.COEFF_RAANLength()):
-                    self.COEFF_RAAN.append(ppeorbitalElementRecord.COEFF_RAAN(i))
+                for i in range(PPEOrbitalElementRecord.COEFF_RAANLength()):
+                    self.COEFF_RAAN.append(PPEOrbitalElementRecord.COEFF_RAAN(i))
             else:
-                self.COEFF_RAAN = ppeorbitalElementRecord.COEFF_RAANAsNumpy()
-        if not ppeorbitalElementRecord.COEFF_ARG_PERIAPSISIsNone():
+                self.COEFF_RAAN = PPEOrbitalElementRecord.COEFF_RAANAsNumpy()
+        if not PPEOrbitalElementRecord.COEFF_ARG_PERIAPSISIsNone():
             if np is None:
                 self.COEFF_ARG_PERIAPSIS = []
-                for i in range(ppeorbitalElementRecord.COEFF_ARG_PERIAPSISLength()):
-                    self.COEFF_ARG_PERIAPSIS.append(ppeorbitalElementRecord.COEFF_ARG_PERIAPSIS(i))
+                for i in range(PPEOrbitalElementRecord.COEFF_ARG_PERIAPSISLength()):
+                    self.COEFF_ARG_PERIAPSIS.append(PPEOrbitalElementRecord.COEFF_ARG_PERIAPSIS(i))
             else:
-                self.COEFF_ARG_PERIAPSIS = ppeorbitalElementRecord.COEFF_ARG_PERIAPSISAsNumpy()
-        if not ppeorbitalElementRecord.COEFF_ANOMALYIsNone():
+                self.COEFF_ARG_PERIAPSIS = PPEOrbitalElementRecord.COEFF_ARG_PERIAPSISAsNumpy()
+        if not PPEOrbitalElementRecord.COEFF_ANOMALYIsNone():
             if np is None:
                 self.COEFF_ANOMALY = []
-                for i in range(ppeorbitalElementRecord.COEFF_ANOMALYLength()):
-                    self.COEFF_ANOMALY.append(ppeorbitalElementRecord.COEFF_ANOMALY(i))
+                for i in range(PPEOrbitalElementRecord.COEFF_ANOMALYLength()):
+                    self.COEFF_ANOMALY.append(PPEOrbitalElementRecord.COEFF_ANOMALY(i))
             else:
-                self.COEFF_ANOMALY = ppeorbitalElementRecord.COEFF_ANOMALYAsNumpy()
-        self.MAX_ELEMENT_RESIDUAL = ppeorbitalElementRecord.MAX_ELEMENT_RESIDUAL()
-        self.RMS_ELEMENT_RESIDUAL = ppeorbitalElementRecord.RMS_ELEMENT_RESIDUAL()
+                self.COEFF_ANOMALY = PPEOrbitalElementRecord.COEFF_ANOMALYAsNumpy()
+        self.MAX_ELEMENT_RESIDUAL = PPEOrbitalElementRecord.MAX_ELEMENT_RESIDUAL()
+        self.RMS_ELEMENT_RESIDUAL = PPEOrbitalElementRecord.RMS_ELEMENT_RESIDUAL()
 
     # PPEOrbitalElementRecordT
     def Pack(self, builder):
@@ -580,5 +656,5 @@ class PPEOrbitalElementRecordT(object):
             PPEOrbitalElementRecordAddCOEFF_ANOMALY(builder, COEFF_ANOMALY)
         PPEOrbitalElementRecordAddMAX_ELEMENT_RESIDUAL(builder, self.MAX_ELEMENT_RESIDUAL)
         PPEOrbitalElementRecordAddRMS_ELEMENT_RESIDUAL(builder, self.RMS_ELEMENT_RESIDUAL)
-        ppeorbitalElementRecord = PPEOrbitalElementRecordEnd(builder)
-        return ppeorbitalElementRecord
+        PPEOrbitalElementRecord = PPEOrbitalElementRecordEnd(builder)
+        return PPEOrbitalElementRecord

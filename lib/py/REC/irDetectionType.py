@@ -2,4 +2,9 @@
 
 # namespace: 
 
-# NOTE irDetectionType.py does not declare any structs or enums
+class irDetectionType(object):
+    POINT_SOURCE = 0
+    RESOLVED = 1
+    STREAK = 2
+    UNRESOLVED = 3
+    EXTENDED = 4

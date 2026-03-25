@@ -2,4 +2,9 @@
 
 # namespace: 
 
-# NOTE GearState.py does not declare any structs or enums
+class GearState(object):
+    UP = 0
+    TRANSIT_DOWN = 1
+    DOWN = 2
+    TRANSIT_UP = 3
+    DAMAGED = 4

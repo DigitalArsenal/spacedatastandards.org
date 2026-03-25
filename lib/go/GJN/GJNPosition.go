@@ -51,9 +51,17 @@ func (rcv *GJNPosition) LONGITUDE() float64 {
 	return 0.0
 }
 
+func (rcv *GJNPosition) Longitude() float64 {
+	return rcv.LONGITUDE()
+}
+
 /// Longitude in decimal degrees (WGS84)
 func (rcv *GJNPosition) MutateLONGITUDE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(4, n)
+}
+
+func (rcv *GJNPosition) MutateLongitude(n float64) bool {
+	return rcv.MutateLONGITUDE(n)
 }
 
 /// Latitude in decimal degrees (WGS84)
@@ -65,9 +73,17 @@ func (rcv *GJNPosition) LATITUDE() float64 {
 	return 0.0
 }
 
+func (rcv *GJNPosition) Latitude() float64 {
+	return rcv.LATITUDE()
+}
+
 /// Latitude in decimal degrees (WGS84)
 func (rcv *GJNPosition) MutateLATITUDE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(6, n)
+}
+
+func (rcv *GJNPosition) MutateLatitude(n float64) bool {
+	return rcv.MutateLATITUDE(n)
 }
 
 /// Altitude in meters above WGS84 ellipsoid (optional)
@@ -79,9 +95,17 @@ func (rcv *GJNPosition) ALTITUDE() float64 {
 	return 0.0
 }
 
+func (rcv *GJNPosition) Altitude() float64 {
+	return rcv.ALTITUDE()
+}
+
 /// Altitude in meters above WGS84 ellipsoid (optional)
 func (rcv *GJNPosition) MutateALTITUDE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(8, n)
+}
+
+func (rcv *GJNPosition) MutateAltitude(n float64) bool {
+	return rcv.MutateALTITUDE(n)
 }
 
 /// True if altitude was explicitly provided (distinguishes 0 from absent)
@@ -93,9 +117,17 @@ func (rcv *GJNPosition) HAS_ALTITUDE() bool {
 	return false
 }
 
+func (rcv *GJNPosition) HasAltitude() bool {
+	return rcv.HAS_ALTITUDE()
+}
+
 /// True if altitude was explicitly provided (distinguishes 0 from absent)
 func (rcv *GJNPosition) MutateHAS_ALTITUDE(n bool) bool {
 	return rcv._tab.MutateBoolSlot(10, n)
+}
+
+func (rcv *GJNPosition) MutateHasAltitude(n bool) bool {
+	return rcv.MutateHAS_ALTITUDE(n)
 }
 
 func GJNPositionStart(builder *flatbuffers.Builder) {
@@ -104,14 +136,26 @@ func GJNPositionStart(builder *flatbuffers.Builder) {
 func GJNPositionAddLONGITUDE(builder *flatbuffers.Builder, LONGITUDE float64) {
 	builder.PrependFloat64Slot(0, LONGITUDE, 0.0)
 }
+func GJNPositionAddLongitude(builder *flatbuffers.Builder, LONGITUDE float64) {
+	GJNPositionAddLONGITUDE(builder, LONGITUDE)
+}
 func GJNPositionAddLATITUDE(builder *flatbuffers.Builder, LATITUDE float64) {
 	builder.PrependFloat64Slot(1, LATITUDE, 0.0)
+}
+func GJNPositionAddLatitude(builder *flatbuffers.Builder, LATITUDE float64) {
+	GJNPositionAddLATITUDE(builder, LATITUDE)
 }
 func GJNPositionAddALTITUDE(builder *flatbuffers.Builder, ALTITUDE float64) {
 	builder.PrependFloat64Slot(2, ALTITUDE, 0.0)
 }
+func GJNPositionAddAltitude(builder *flatbuffers.Builder, ALTITUDE float64) {
+	GJNPositionAddALTITUDE(builder, ALTITUDE)
+}
 func GJNPositionAddHAS_ALTITUDE(builder *flatbuffers.Builder, HAS_ALTITUDE bool) {
 	builder.PrependBoolSlot(3, HAS_ALTITUDE, false)
+}
+func GJNPositionAddHasAltitude(builder *flatbuffers.Builder, HAS_ALTITUDE bool) {
+	GJNPositionAddHAS_ALTITUDE(builder, HAS_ALTITUDE)
 }
 func GJNPositionEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

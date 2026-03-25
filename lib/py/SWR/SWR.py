@@ -331,6 +331,16 @@ def SWRStartWAVELENGTHSVector(builder, numElems):
 def StartWAVELENGTHSVector(builder, numElems):
     return SWRStartWAVELENGTHSVector(builder, numElems)
 
+def SWRCreateWAVELENGTHSVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateWAVELENGTHSVector(builder, data):
+    SWRCreateWAVELENGTHSVector(builder, data)
+
 def SWRAddABS_FLUXES(builder, ABS_FLUXES):
     builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(ABS_FLUXES), 0)
 
@@ -342,6 +352,16 @@ def SWRStartABS_FLUXESVector(builder, numElems):
 
 def StartABS_FLUXESVector(builder, numElems):
     return SWRStartABS_FLUXESVector(builder, numElems)
+
+def SWRCreateABS_FLUXESVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateABS_FLUXESVector(builder, data):
+    SWRCreateABS_FLUXESVector(builder, data)
 
 def SWRAddRATIO_WAVELENGTHS(builder, RATIO_WAVELENGTHS):
     builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(RATIO_WAVELENGTHS), 0)
@@ -355,6 +375,16 @@ def SWRStartRATIO_WAVELENGTHSVector(builder, numElems):
 def StartRATIO_WAVELENGTHSVector(builder, numElems):
     return SWRStartRATIO_WAVELENGTHSVector(builder, numElems)
 
+def SWRCreateRATIO_WAVELENGTHSVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateRATIO_WAVELENGTHSVector(builder, data):
+    SWRCreateRATIO_WAVELENGTHSVector(builder, data)
+
 def SWRAddFLUX_RATIOS(builder, FLUX_RATIOS):
     builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(FLUX_RATIOS), 0)
 
@@ -366,6 +396,16 @@ def SWRStartFLUX_RATIOSVector(builder, numElems):
 
 def StartFLUX_RATIOSVector(builder, numElems):
     return SWRStartFLUX_RATIOSVector(builder, numElems)
+
+def SWRCreateFLUX_RATIOSVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateFLUX_RATIOSVector(builder, data):
+    SWRCreateFLUX_RATIOSVector(builder, data)
 
 def SWRAddTEMPERATURE(builder, TEMPERATURE):
     builder.PrependFloat64Slot(14, TEMPERATURE, 0.0)
@@ -405,31 +445,51 @@ except:
 class SWRT(object):
 
     # SWRT
-    def __init__(self):
-        self.ID = None  # type: str
-        self.ON_ORBIT = None  # type: str
-        self.ORIG_OBJECT_ID = None  # type: str
-        self.SAT_NO = 0  # type: int
-        self.TS = None  # type: str
-        self.SOLAR_PHASE_ANGLE = 0.0  # type: float
-        self.LAT = 0.0  # type: float
-        self.LON = 0.0  # type: float
-        self.LOCATION_NAME = None  # type: str
-        self.BAD_WAVE = None  # type: str
-        self.WAVELENGTHS = None  # type: List[float]
-        self.ABS_FLUXES = None  # type: List[float]
-        self.RATIO_WAVELENGTHS = None  # type: List[float]
-        self.FLUX_RATIOS = None  # type: List[float]
-        self.TEMPERATURE = 0.0  # type: float
-        self.SIGNAL_NOISE_RATIO = 0.0  # type: float
-        self.INTEGRATION_TIME = 0.0  # type: float
-        self.QUALITY = 0  # type: int
+    def __init__(
+        self,
+        ID = None,
+        ON_ORBIT = None,
+        ORIG_OBJECT_ID = None,
+        SAT_NO = 0,
+        TS = None,
+        SOLAR_PHASE_ANGLE = 0.0,
+        LAT = 0.0,
+        LON = 0.0,
+        LOCATION_NAME = None,
+        BAD_WAVE = None,
+        WAVELENGTHS = None,
+        ABS_FLUXES = None,
+        RATIO_WAVELENGTHS = None,
+        FLUX_RATIOS = None,
+        TEMPERATURE = 0.0,
+        SIGNAL_NOISE_RATIO = 0.0,
+        INTEGRATION_TIME = 0.0,
+        QUALITY = 0,
+    ):
+        self.ID = ID  # type: Optional[str]
+        self.ON_ORBIT = ON_ORBIT  # type: Optional[str]
+        self.ORIG_OBJECT_ID = ORIG_OBJECT_ID  # type: Optional[str]
+        self.SAT_NO = SAT_NO  # type: int
+        self.TS = TS  # type: Optional[str]
+        self.SOLAR_PHASE_ANGLE = SOLAR_PHASE_ANGLE  # type: float
+        self.LAT = LAT  # type: float
+        self.LON = LON  # type: float
+        self.LOCATION_NAME = LOCATION_NAME  # type: Optional[str]
+        self.BAD_WAVE = BAD_WAVE  # type: Optional[str]
+        self.WAVELENGTHS = WAVELENGTHS  # type: Optional[List[float]]
+        self.ABS_FLUXES = ABS_FLUXES  # type: Optional[List[float]]
+        self.RATIO_WAVELENGTHS = RATIO_WAVELENGTHS  # type: Optional[List[float]]
+        self.FLUX_RATIOS = FLUX_RATIOS  # type: Optional[List[float]]
+        self.TEMPERATURE = TEMPERATURE  # type: float
+        self.SIGNAL_NOISE_RATIO = SIGNAL_NOISE_RATIO  # type: float
+        self.INTEGRATION_TIME = INTEGRATION_TIME  # type: float
+        self.QUALITY = QUALITY  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        SWR = SWR()
-        SWR.Init(buf, pos)
-        return cls.InitFromObj(SWR)
+        tmpSwr = SWR()
+        tmpSwr.Init(buf, pos)
+        return cls.InitFromObj(tmpSwr)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -437,9 +497,9 @@ class SWRT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, SWR):
+    def InitFromObj(cls, tmpSwr):
         x = SWRT()
-        x._UnPack(SWR)
+        x._UnPack(tmpSwr)
         return x
 
     # SWRT

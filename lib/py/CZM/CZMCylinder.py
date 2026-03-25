@@ -241,26 +241,41 @@ except:
 class CZMCylinderT(object):
 
     # CZMCylinderT
-    def __init__(self):
-        self.SHOW = False  # type: bool
-        self.LENGTH = 0.0  # type: float
-        self.TOP_RADIUS = 0.0  # type: float
-        self.BOTTOM_RADIUS = 0.0  # type: float
-        self.HEIGHT_REFERENCE = None  # type: str
-        self.FILL = False  # type: bool
-        self.MATERIAL = None  # type: Optional[CZMMaterial.CZMMaterialT]
-        self.OUTLINE = False  # type: bool
-        self.OUTLINE_COLOR = None  # type: Optional[CZMColor.CZMColorT]
-        self.OUTLINE_WIDTH = 0.0  # type: float
-        self.NUMBER_OF_VERTICAL_LINES = 0  # type: int
-        self.SLICES = 0  # type: int
-        self.SHADOWS = None  # type: str
+    def __init__(
+        self,
+        SHOW = False,
+        LENGTH = 0.0,
+        TOP_RADIUS = 0.0,
+        BOTTOM_RADIUS = 0.0,
+        HEIGHT_REFERENCE = None,
+        FILL = False,
+        MATERIAL = None,
+        OUTLINE = False,
+        OUTLINE_COLOR = None,
+        OUTLINE_WIDTH = 0.0,
+        NUMBER_OF_VERTICAL_LINES = 0,
+        SLICES = 0,
+        SHADOWS = None,
+    ):
+        self.SHOW = SHOW  # type: bool
+        self.LENGTH = LENGTH  # type: float
+        self.TOP_RADIUS = TOP_RADIUS  # type: float
+        self.BOTTOM_RADIUS = BOTTOM_RADIUS  # type: float
+        self.HEIGHT_REFERENCE = HEIGHT_REFERENCE  # type: Optional[str]
+        self.FILL = FILL  # type: bool
+        self.MATERIAL = MATERIAL  # type: Optional[CZMMaterial.CZMMaterialT]
+        self.OUTLINE = OUTLINE  # type: bool
+        self.OUTLINE_COLOR = OUTLINE_COLOR  # type: Optional[CZMColor.CZMColorT]
+        self.OUTLINE_WIDTH = OUTLINE_WIDTH  # type: float
+        self.NUMBER_OF_VERTICAL_LINES = NUMBER_OF_VERTICAL_LINES  # type: int
+        self.SLICES = SLICES  # type: int
+        self.SHADOWS = SHADOWS  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        czmcylinder = CZMCylinder()
-        czmcylinder.Init(buf, pos)
-        return cls.InitFromObj(czmcylinder)
+        tmpCzmcylinder = CZMCylinder()
+        tmpCzmcylinder.Init(buf, pos)
+        return cls.InitFromObj(tmpCzmcylinder)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -268,30 +283,30 @@ class CZMCylinderT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, czmcylinder):
+    def InitFromObj(cls, tmpCzmcylinder):
         x = CZMCylinderT()
-        x._UnPack(czmcylinder)
+        x._UnPack(tmpCzmcylinder)
         return x
 
     # CZMCylinderT
-    def _UnPack(self, czmcylinder):
-        if czmcylinder is None:
+    def _UnPack(self, CZMCylinder):
+        if CZMCylinder is None:
             return
-        self.SHOW = czmcylinder.SHOW()
-        self.LENGTH = czmcylinder.LENGTH()
-        self.TOP_RADIUS = czmcylinder.TOP_RADIUS()
-        self.BOTTOM_RADIUS = czmcylinder.BOTTOM_RADIUS()
-        self.HEIGHT_REFERENCE = czmcylinder.HEIGHT_REFERENCE()
-        self.FILL = czmcylinder.FILL()
-        if czmcylinder.MATERIAL() is not None:
-            self.MATERIAL = CZMMaterial.CZMMaterialT.InitFromObj(czmcylinder.MATERIAL())
-        self.OUTLINE = czmcylinder.OUTLINE()
-        if czmcylinder.OUTLINE_COLOR() is not None:
-            self.OUTLINE_COLOR = CZMColor.CZMColorT.InitFromObj(czmcylinder.OUTLINE_COLOR())
-        self.OUTLINE_WIDTH = czmcylinder.OUTLINE_WIDTH()
-        self.NUMBER_OF_VERTICAL_LINES = czmcylinder.NUMBER_OF_VERTICAL_LINES()
-        self.SLICES = czmcylinder.SLICES()
-        self.SHADOWS = czmcylinder.SHADOWS()
+        self.SHOW = CZMCylinder.SHOW()
+        self.LENGTH = CZMCylinder.LENGTH()
+        self.TOP_RADIUS = CZMCylinder.TOP_RADIUS()
+        self.BOTTOM_RADIUS = CZMCylinder.BOTTOM_RADIUS()
+        self.HEIGHT_REFERENCE = CZMCylinder.HEIGHT_REFERENCE()
+        self.FILL = CZMCylinder.FILL()
+        if CZMCylinder.MATERIAL() is not None:
+            self.MATERIAL = CZMMaterial.CZMMaterialT.InitFromObj(CZMCylinder.MATERIAL())
+        self.OUTLINE = CZMCylinder.OUTLINE()
+        if CZMCylinder.OUTLINE_COLOR() is not None:
+            self.OUTLINE_COLOR = CZMColor.CZMColorT.InitFromObj(CZMCylinder.OUTLINE_COLOR())
+        self.OUTLINE_WIDTH = CZMCylinder.OUTLINE_WIDTH()
+        self.NUMBER_OF_VERTICAL_LINES = CZMCylinder.NUMBER_OF_VERTICAL_LINES()
+        self.SLICES = CZMCylinder.SLICES()
+        self.SHADOWS = CZMCylinder.SHADOWS()
 
     # CZMCylinderT
     def Pack(self, builder):
@@ -321,5 +336,5 @@ class CZMCylinderT(object):
         CZMCylinderAddSLICES(builder, self.SLICES)
         if self.SHADOWS is not None:
             CZMCylinderAddSHADOWS(builder, SHADOWS)
-        czmcylinder = CZMCylinderEnd(builder)
-        return czmcylinder
+        CZMCylinder = CZMCylinderEnd(builder)
+        return CZMCylinder

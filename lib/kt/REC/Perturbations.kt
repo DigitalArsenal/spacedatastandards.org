@@ -29,7 +29,7 @@ class Perturbations : Table() {
     /**
      * Comments in the Perturbations section.
      */
-    fun COMMENT(j: Int) : String? {
+    fun comment(j: Int) : String? {
         val o = __offset(4)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
@@ -37,15 +37,15 @@ class Perturbations : Table() {
             null
         }
     }
-    val COMMENTLength : Int
+    val commentLength : Int
         get() {
             val o = __offset(4); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Atmospheric model used.
      */
-    val ATMOSPHERIC_MODEL : ATM? get() = ATMOSPHERIC_MODEL(ATM())
-    fun ATMOSPHERIC_MODEL(obj: ATM) : ATM? {
+    val atmosphericModel : ATM? get() = atmosphericModel(ATM())
+    fun atmosphericModel(obj: ATM) : ATM? {
         val o = __offset(6)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -56,7 +56,7 @@ class Perturbations : Table() {
     /**
      * Gravity model used.
      */
-    val GRAVITY_MODEL : String?
+    val gravityModel : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -65,12 +65,12 @@ class Perturbations : Table() {
                 null
             }
         }
-    val GRAVITY_MODELAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun GRAVITY_MODELInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val gravityModelAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun gravityModelInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
     /**
      * Degree of the gravity model.
      */
-    val GRAVITY_DEGREE : Int
+    val gravityDegree : Int
         get() {
             val o = __offset(10)
             return if(o != 0) bb.getInt(o + bb_pos) else 0
@@ -78,7 +78,7 @@ class Perturbations : Table() {
     /**
      * Order of the gravity model.
      */
-    val GRAVITY_ORDER : Int
+    val gravityOrder : Int
         get() {
             val o = __offset(12)
             return if(o != 0) bb.getInt(o + bb_pos) else 0
@@ -86,7 +86,7 @@ class Perturbations : Table() {
     /**
      * Gravitational constant times the mass of the central body.
      */
-    val GM : Double
+    val gm : Double
         get() {
             val o = __offset(14)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -94,7 +94,7 @@ class Perturbations : Table() {
     /**
      * List of celestial bodies included in n-body perturbations.
      */
-    fun N_BODY_PERTURBATIONS(j: Int) : String? {
+    fun nBodyPerturbations(j: Int) : String? {
         val o = __offset(16)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
@@ -102,14 +102,14 @@ class Perturbations : Table() {
             null
         }
     }
-    val N_BODY_PERTURBATIONSLength : Int
+    val nBodyPerturbationsLength : Int
         get() {
             val o = __offset(16); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Ocean tides model used.
      */
-    val OCEAN_TIDES_MODEL : String?
+    val oceanTidesModel : String?
         get() {
             val o = __offset(18)
             return if (o != 0) {
@@ -118,12 +118,12 @@ class Perturbations : Table() {
                 null
             }
         }
-    val OCEAN_TIDES_MODELAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(18, 1)
-    fun OCEAN_TIDES_MODELInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 18, 1)
+    val oceanTidesModelAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(18, 1)
+    fun oceanTidesModelInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 18, 1)
     /**
      * Solid tides model used.
      */
-    val SOLID_TIDES_MODEL : String?
+    val solidTidesModel : String?
         get() {
             val o = __offset(20)
             return if (o != 0) {
@@ -132,12 +132,12 @@ class Perturbations : Table() {
                 null
             }
         }
-    val SOLID_TIDES_MODELAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(20, 1)
-    fun SOLID_TIDES_MODELInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 20, 1)
+    val solidTidesModelAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(20, 1)
+    fun solidTidesModelInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 20, 1)
     /**
      * Atmospheric tides model used.
      */
-    val ATMOSPHERIC_TIDES_MODEL : String?
+    val atmosphericTidesModel : String?
         get() {
             val o = __offset(22)
             return if (o != 0) {
@@ -146,12 +146,12 @@ class Perturbations : Table() {
                 null
             }
         }
-    val ATMOSPHERIC_TIDES_MODELAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(22, 1)
-    fun ATMOSPHERIC_TIDES_MODELInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 22, 1)
+    val atmosphericTidesModelAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(22, 1)
+    fun atmosphericTidesModelInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 22, 1)
     /**
      * Geopotential model used.
      */
-    val GEOPOTENTIAL_MODEL : String?
+    val geopotentialModel : String?
         get() {
             val o = __offset(24)
             return if (o != 0) {
@@ -160,12 +160,12 @@ class Perturbations : Table() {
                 null
             }
         }
-    val GEOPOTENTIAL_MODELAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(24, 1)
-    fun GEOPOTENTIAL_MODELInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 24, 1)
+    val geopotentialModelAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(24, 1)
+    fun geopotentialModelInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 24, 1)
     /**
      * Solar radiation pressure model used.
      */
-    val SOLAR_RAD_PRESSURE : String?
+    val solarRadPressure : String?
         get() {
             val o = __offset(26)
             return if (o != 0) {
@@ -174,12 +174,12 @@ class Perturbations : Table() {
                 null
             }
         }
-    val SOLAR_RAD_PRESSUREAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(26, 1)
-    fun SOLAR_RAD_PRESSUREInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 26, 1)
+    val solarRadPressureAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(26, 1)
+    fun solarRadPressureInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 26, 1)
     /**
      * Albedo model used.
      */
-    val ALBEDO : String?
+    val albedo : String?
         get() {
             val o = __offset(28)
             return if (o != 0) {
@@ -188,12 +188,12 @@ class Perturbations : Table() {
                 null
             }
         }
-    val ALBEDOAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(28, 1)
-    fun ALBEDOInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 28, 1)
+    val albedoAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(28, 1)
+    fun albedoInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 28, 1)
     /**
      * Thermal model used.
      */
-    val THERMAL : String?
+    val thermal : String?
         get() {
             val o = __offset(30)
             return if (o != 0) {
@@ -202,12 +202,12 @@ class Perturbations : Table() {
                 null
             }
         }
-    val THERMALAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(30, 1)
-    fun THERMALInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 30, 1)
+    val thermalAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(30, 1)
+    fun thermalInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 30, 1)
     /**
      * Relativity model used.
      */
-    val RELATIVITY : String?
+    val relativity : String?
         get() {
             val o = __offset(32)
             return if (o != 0) {
@@ -216,12 +216,12 @@ class Perturbations : Table() {
                 null
             }
         }
-    val RELATIVITYAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(32, 1)
-    fun RELATIVITYInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 32, 1)
+    val relativityAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(32, 1)
+    fun relativityInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 32, 1)
     /**
      * Atmospheric drag model used.
      */
-    val ATMOSPHERIC_DRAG : String?
+    val atmosphericDrag : String?
         get() {
             val o = __offset(34)
             return if (o != 0) {
@@ -230,12 +230,12 @@ class Perturbations : Table() {
                 null
             }
         }
-    val ATMOSPHERIC_DRAGAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(34, 1)
-    fun ATMOSPHERIC_DRAGInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 34, 1)
+    val atmosphericDragAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(34, 1)
+    fun atmosphericDragInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 34, 1)
     /**
      * Fixed geomagnetic Kp index used.
      */
-    val FIXED_GEOMAG_KP : Double
+    val fixedGeomagKp : Double
         get() {
             val o = __offset(36)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -243,7 +243,7 @@ class Perturbations : Table() {
     /**
      * Fixed F10.7 solar flux value used.
      */
-    val FIXED_F10P7 : Double
+    val fixedF10P7 : Double
         get() {
             val o = __offset(38)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -251,43 +251,43 @@ class Perturbations : Table() {
     /**
      * Fixed mean F10.7 solar flux value used.
      */
-    val FIXED_F10P7_MEAN : Double
+    val fixedF10P7Mean : Double
         get() {
             val o = __offset(40)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsPerturbations(_bb: ByteBuffer): Perturbations = getRootAsPerturbations(_bb, Perturbations())
         fun getRootAsPerturbations(_bb: ByteBuffer, obj: Perturbations): Perturbations {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createPerturbations(builder: FlatBufferBuilder, COMMENTOffset: Int, ATMOSPHERIC_MODELOffset: Int, GRAVITY_MODELOffset: Int, GRAVITY_DEGREE: Int, GRAVITY_ORDER: Int, GM: Double, N_BODY_PERTURBATIONSOffset: Int, OCEAN_TIDES_MODELOffset: Int, SOLID_TIDES_MODELOffset: Int, ATMOSPHERIC_TIDES_MODELOffset: Int, GEOPOTENTIAL_MODELOffset: Int, SOLAR_RAD_PRESSUREOffset: Int, ALBEDOOffset: Int, THERMALOffset: Int, RELATIVITYOffset: Int, ATMOSPHERIC_DRAGOffset: Int, FIXED_GEOMAG_KP: Double, FIXED_F10P7: Double, FIXED_F10P7_MEAN: Double) : Int {
+        fun createPerturbations(builder: FlatBufferBuilder, commentOffset: Int, atmosphericModelOffset: Int, gravityModelOffset: Int, gravityDegree: Int, gravityOrder: Int, gm: Double, nBodyPerturbationsOffset: Int, oceanTidesModelOffset: Int, solidTidesModelOffset: Int, atmosphericTidesModelOffset: Int, geopotentialModelOffset: Int, solarRadPressureOffset: Int, albedoOffset: Int, thermalOffset: Int, relativityOffset: Int, atmosphericDragOffset: Int, fixedGeomagKp: Double, fixedF10P7: Double, fixedF10P7Mean: Double) : Int {
             builder.startTable(19)
-            addFIXED_F10P7_MEAN(builder, FIXED_F10P7_MEAN)
-            addFIXED_F10P7(builder, FIXED_F10P7)
-            addFIXED_GEOMAG_KP(builder, FIXED_GEOMAG_KP)
-            addGM(builder, GM)
-            addATMOSPHERIC_DRAG(builder, ATMOSPHERIC_DRAGOffset)
-            addRELATIVITY(builder, RELATIVITYOffset)
-            addTHERMAL(builder, THERMALOffset)
-            addALBEDO(builder, ALBEDOOffset)
-            addSOLAR_RAD_PRESSURE(builder, SOLAR_RAD_PRESSUREOffset)
-            addGEOPOTENTIAL_MODEL(builder, GEOPOTENTIAL_MODELOffset)
-            addATMOSPHERIC_TIDES_MODEL(builder, ATMOSPHERIC_TIDES_MODELOffset)
-            addSOLID_TIDES_MODEL(builder, SOLID_TIDES_MODELOffset)
-            addOCEAN_TIDES_MODEL(builder, OCEAN_TIDES_MODELOffset)
-            addN_BODY_PERTURBATIONS(builder, N_BODY_PERTURBATIONSOffset)
-            addGRAVITY_ORDER(builder, GRAVITY_ORDER)
-            addGRAVITY_DEGREE(builder, GRAVITY_DEGREE)
-            addGRAVITY_MODEL(builder, GRAVITY_MODELOffset)
-            addATMOSPHERIC_MODEL(builder, ATMOSPHERIC_MODELOffset)
-            addCOMMENT(builder, COMMENTOffset)
+            addFIXEDF10P7MEAN(builder, fixedF10P7Mean)
+            addFIXEDF10P7(builder, fixedF10P7)
+            addFIXEDGEOMAGKP(builder, fixedGeomagKp)
+            addGM(builder, gm)
+            addATMOSPHERICDRAG(builder, atmosphericDragOffset)
+            addRELATIVITY(builder, relativityOffset)
+            addTHERMAL(builder, thermalOffset)
+            addALBEDO(builder, albedoOffset)
+            addSOLARRADPRESSURE(builder, solarRadPressureOffset)
+            addGEOPOTENTIALMODEL(builder, geopotentialModelOffset)
+            addATMOSPHERICTIDESMODEL(builder, atmosphericTidesModelOffset)
+            addSOLIDTIDESMODEL(builder, solidTidesModelOffset)
+            addOCEANTIDESMODEL(builder, oceanTidesModelOffset)
+            addNBODYPERTURBATIONS(builder, nBodyPerturbationsOffset)
+            addGRAVITYORDER(builder, gravityOrder)
+            addGRAVITYDEGREE(builder, gravityDegree)
+            addGRAVITYMODEL(builder, gravityModelOffset)
+            addATMOSPHERICMODEL(builder, atmosphericModelOffset)
+            addCOMMENT(builder, commentOffset)
             return endPerturbations(builder)
         }
         fun startPerturbations(builder: FlatBufferBuilder) = builder.startTable(19)
-        fun addCOMMENT(builder: FlatBufferBuilder, COMMENT: Int) = builder.addOffset(0, COMMENT, 0)
+        fun addCOMMENT(builder: FlatBufferBuilder, comment: Int) = builder.addOffset(0, comment, 0)
         fun createCommentVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -296,12 +296,12 @@ class Perturbations : Table() {
             return builder.endVector()
         }
         fun startCommentVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addATMOSPHERIC_MODEL(builder: FlatBufferBuilder, ATMOSPHERIC_MODEL: Int) = builder.addOffset(1, ATMOSPHERIC_MODEL, 0)
-        fun addGRAVITY_MODEL(builder: FlatBufferBuilder, GRAVITY_MODEL: Int) = builder.addOffset(2, GRAVITY_MODEL, 0)
-        fun addGRAVITY_DEGREE(builder: FlatBufferBuilder, GRAVITY_DEGREE: Int) = builder.addInt(3, GRAVITY_DEGREE, 0)
-        fun addGRAVITY_ORDER(builder: FlatBufferBuilder, GRAVITY_ORDER: Int) = builder.addInt(4, GRAVITY_ORDER, 0)
-        fun addGM(builder: FlatBufferBuilder, GM: Double) = builder.addDouble(5, GM, 0.0)
-        fun addN_BODY_PERTURBATIONS(builder: FlatBufferBuilder, N_BODY_PERTURBATIONS: Int) = builder.addOffset(6, N_BODY_PERTURBATIONS, 0)
+        fun addATMOSPHERICMODEL(builder: FlatBufferBuilder, atmosphericModel: Int) = builder.addOffset(1, atmosphericModel, 0)
+        fun addGRAVITYMODEL(builder: FlatBufferBuilder, gravityModel: Int) = builder.addOffset(2, gravityModel, 0)
+        fun addGRAVITYDEGREE(builder: FlatBufferBuilder, gravityDegree: Int) = builder.addInt(3, gravityDegree, 0)
+        fun addGRAVITYORDER(builder: FlatBufferBuilder, gravityOrder: Int) = builder.addInt(4, gravityOrder, 0)
+        fun addGM(builder: FlatBufferBuilder, gm: Double) = builder.addDouble(5, gm, 0.0)
+        fun addNBODYPERTURBATIONS(builder: FlatBufferBuilder, nBodyPerturbations: Int) = builder.addOffset(6, nBodyPerturbations, 0)
         fun createNBodyPerturbationsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -310,18 +310,18 @@ class Perturbations : Table() {
             return builder.endVector()
         }
         fun startNBodyPerturbationsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addOCEAN_TIDES_MODEL(builder: FlatBufferBuilder, OCEAN_TIDES_MODEL: Int) = builder.addOffset(7, OCEAN_TIDES_MODEL, 0)
-        fun addSOLID_TIDES_MODEL(builder: FlatBufferBuilder, SOLID_TIDES_MODEL: Int) = builder.addOffset(8, SOLID_TIDES_MODEL, 0)
-        fun addATMOSPHERIC_TIDES_MODEL(builder: FlatBufferBuilder, ATMOSPHERIC_TIDES_MODEL: Int) = builder.addOffset(9, ATMOSPHERIC_TIDES_MODEL, 0)
-        fun addGEOPOTENTIAL_MODEL(builder: FlatBufferBuilder, GEOPOTENTIAL_MODEL: Int) = builder.addOffset(10, GEOPOTENTIAL_MODEL, 0)
-        fun addSOLAR_RAD_PRESSURE(builder: FlatBufferBuilder, SOLAR_RAD_PRESSURE: Int) = builder.addOffset(11, SOLAR_RAD_PRESSURE, 0)
-        fun addALBEDO(builder: FlatBufferBuilder, ALBEDO: Int) = builder.addOffset(12, ALBEDO, 0)
-        fun addTHERMAL(builder: FlatBufferBuilder, THERMAL: Int) = builder.addOffset(13, THERMAL, 0)
-        fun addRELATIVITY(builder: FlatBufferBuilder, RELATIVITY: Int) = builder.addOffset(14, RELATIVITY, 0)
-        fun addATMOSPHERIC_DRAG(builder: FlatBufferBuilder, ATMOSPHERIC_DRAG: Int) = builder.addOffset(15, ATMOSPHERIC_DRAG, 0)
-        fun addFIXED_GEOMAG_KP(builder: FlatBufferBuilder, FIXED_GEOMAG_KP: Double) = builder.addDouble(16, FIXED_GEOMAG_KP, 0.0)
-        fun addFIXED_F10P7(builder: FlatBufferBuilder, FIXED_F10P7: Double) = builder.addDouble(17, FIXED_F10P7, 0.0)
-        fun addFIXED_F10P7_MEAN(builder: FlatBufferBuilder, FIXED_F10P7_MEAN: Double) = builder.addDouble(18, FIXED_F10P7_MEAN, 0.0)
+        fun addOCEANTIDESMODEL(builder: FlatBufferBuilder, oceanTidesModel: Int) = builder.addOffset(7, oceanTidesModel, 0)
+        fun addSOLIDTIDESMODEL(builder: FlatBufferBuilder, solidTidesModel: Int) = builder.addOffset(8, solidTidesModel, 0)
+        fun addATMOSPHERICTIDESMODEL(builder: FlatBufferBuilder, atmosphericTidesModel: Int) = builder.addOffset(9, atmosphericTidesModel, 0)
+        fun addGEOPOTENTIALMODEL(builder: FlatBufferBuilder, geopotentialModel: Int) = builder.addOffset(10, geopotentialModel, 0)
+        fun addSOLARRADPRESSURE(builder: FlatBufferBuilder, solarRadPressure: Int) = builder.addOffset(11, solarRadPressure, 0)
+        fun addALBEDO(builder: FlatBufferBuilder, albedo: Int) = builder.addOffset(12, albedo, 0)
+        fun addTHERMAL(builder: FlatBufferBuilder, thermal: Int) = builder.addOffset(13, thermal, 0)
+        fun addRELATIVITY(builder: FlatBufferBuilder, relativity: Int) = builder.addOffset(14, relativity, 0)
+        fun addATMOSPHERICDRAG(builder: FlatBufferBuilder, atmosphericDrag: Int) = builder.addOffset(15, atmosphericDrag, 0)
+        fun addFIXEDGEOMAGKP(builder: FlatBufferBuilder, fixedGeomagKp: Double) = builder.addDouble(16, fixedGeomagKp, 0.0)
+        fun addFIXEDF10P7(builder: FlatBufferBuilder, fixedF10P7: Double) = builder.addDouble(17, fixedF10P7, 0.0)
+        fun addFIXEDF10P7MEAN(builder: FlatBufferBuilder, fixedF10P7Mean: Double) = builder.addDouble(18, fixedF10P7Mean, 0.0)
         fun endPerturbations(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

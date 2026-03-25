@@ -2,4 +2,6 @@
 
 # namespace: 
 
-# NOTE KMLGridOrigin.py does not declare any structs or enums
+class KMLGridOrigin(object):
+    LOWER_LEFT = 0
+    UPPER_LEFT = 1

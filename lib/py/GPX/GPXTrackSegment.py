@@ -73,6 +73,12 @@ def GPXTrackSegmentStartPOINTSVector(builder, numElems):
 def StartPOINTSVector(builder, numElems):
     return GPXTrackSegmentStartPOINTSVector(builder, numElems)
 
+def GPXTrackSegmentCreatePOINTSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreatePOINTSVector(builder, data):
+    GPXTrackSegmentCreatePOINTSVector(builder, data)
+
 def GPXTrackSegmentEnd(builder):
     return builder.EndObject()
 
@@ -88,14 +94,17 @@ except:
 class GPXTrackSegmentT(object):
 
     # GPXTrackSegmentT
-    def __init__(self):
-        self.POINTS = None  # type: List[GPXWaypoint.GPXWaypointT]
+    def __init__(
+        self,
+        POINTS = None,
+    ):
+        self.POINTS = POINTS  # type: Optional[List[GPXWaypoint.GPXWaypointT]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        gpxtrackSegment = GPXTrackSegment()
-        gpxtrackSegment.Init(buf, pos)
-        return cls.InitFromObj(gpxtrackSegment)
+        tmpGpxtrackSegment = GPXTrackSegment()
+        tmpGpxtrackSegment.Init(buf, pos)
+        return cls.InitFromObj(tmpGpxtrackSegment)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -103,22 +112,22 @@ class GPXTrackSegmentT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, gpxtrackSegment):
+    def InitFromObj(cls, tmpGpxtrackSegment):
         x = GPXTrackSegmentT()
-        x._UnPack(gpxtrackSegment)
+        x._UnPack(tmpGpxtrackSegment)
         return x
 
     # GPXTrackSegmentT
-    def _UnPack(self, gpxtrackSegment):
-        if gpxtrackSegment is None:
+    def _UnPack(self, GPXTrackSegment):
+        if GPXTrackSegment is None:
             return
-        if not gpxtrackSegment.POINTSIsNone():
+        if not GPXTrackSegment.POINTSIsNone():
             self.POINTS = []
-            for i in range(gpxtrackSegment.POINTSLength()):
-                if gpxtrackSegment.POINTS(i) is None:
+            for i in range(GPXTrackSegment.POINTSLength()):
+                if GPXTrackSegment.POINTS(i) is None:
                     self.POINTS.append(None)
                 else:
-                    gPXWaypoint_ = GPXWaypoint.GPXWaypointT.InitFromObj(gpxtrackSegment.POINTS(i))
+                    gPXWaypoint_ = GPXWaypoint.GPXWaypointT.InitFromObj(GPXTrackSegment.POINTS(i))
                     self.POINTS.append(gPXWaypoint_)
 
     # GPXTrackSegmentT
@@ -134,5 +143,5 @@ class GPXTrackSegmentT(object):
         GPXTrackSegmentStart(builder)
         if self.POINTS is not None:
             GPXTrackSegmentAddPOINTS(builder, POINTS)
-        gpxtrackSegment = GPXTrackSegmentEnd(builder)
-        return gpxtrackSegment
+        GPXTrackSegment = GPXTrackSegmentEnd(builder)
+        return GPXTrackSegment

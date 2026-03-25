@@ -327,6 +327,12 @@ def RFEStartRF_EMITTER_DETAILSVector(builder, numElems):
 def StartRF_EMITTER_DETAILSVector(builder, numElems):
     return RFEStartRF_EMITTER_DETAILSVector(builder, numElems)
 
+def RFECreateRF_EMITTER_DETAILSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateRF_EMITTER_DETAILSVector(builder, data):
+    RFECreateRF_EMITTER_DETAILSVector(builder, data)
+
 def RFEAddTHREAT_LEVEL(builder, THREAT_LEVEL):
     builder.PrependUOffsetTRelativeSlot(18, flatbuffers.number_types.UOffsetTFlags.py_type(THREAT_LEVEL), 0)
 
@@ -354,33 +360,55 @@ except:
 class RFET(object):
 
     # RFET
-    def __init__(self):
-        self.ID = None  # type: str
-        self.ID_ENTITY = None  # type: str
-        self.NAME = None  # type: str
-        self.TYPE = 0  # type: int
-        self.ENTITY = None  # type: str
-        self.ELNOT = None  # type: str
-        self.NATO_NAME = None  # type: str
-        self.PLATFORM_TYPE = None  # type: str
-        self.COUNTRY = None  # type: str
-        self.FUNCTION = None  # type: str
-        self.BAND = None  # type: str
-        self.FREQ_MIN = 0.0  # type: float
-        self.FREQ_MAX = 0.0  # type: float
-        self.PEAK_POWER = 0.0  # type: float
-        self.AVG_POWER = 0.0  # type: float
-        self.ANTENNA_GAIN = 0.0  # type: float
-        self.NUM_MODES = 0  # type: int
-        self.RF_EMITTER_DETAILS = None  # type: List[rfEmitterDetail.rfEmitterDetailT]
-        self.THREAT_LEVEL = None  # type: str
-        self.NOTES = None  # type: str
+    def __init__(
+        self,
+        ID = None,
+        ID_ENTITY = None,
+        NAME = None,
+        TYPE = 0,
+        ENTITY = None,
+        ELNOT = None,
+        NATO_NAME = None,
+        PLATFORM_TYPE = None,
+        COUNTRY = None,
+        FUNCTION = None,
+        BAND = None,
+        FREQ_MIN = 0.0,
+        FREQ_MAX = 0.0,
+        PEAK_POWER = 0.0,
+        AVG_POWER = 0.0,
+        ANTENNA_GAIN = 0.0,
+        NUM_MODES = 0,
+        RF_EMITTER_DETAILS = None,
+        THREAT_LEVEL = None,
+        NOTES = None,
+    ):
+        self.ID = ID  # type: Optional[str]
+        self.ID_ENTITY = ID_ENTITY  # type: Optional[str]
+        self.NAME = NAME  # type: Optional[str]
+        self.TYPE = TYPE  # type: int
+        self.ENTITY = ENTITY  # type: Optional[str]
+        self.ELNOT = ELNOT  # type: Optional[str]
+        self.NATO_NAME = NATO_NAME  # type: Optional[str]
+        self.PLATFORM_TYPE = PLATFORM_TYPE  # type: Optional[str]
+        self.COUNTRY = COUNTRY  # type: Optional[str]
+        self.FUNCTION = FUNCTION  # type: Optional[str]
+        self.BAND = BAND  # type: Optional[str]
+        self.FREQ_MIN = FREQ_MIN  # type: float
+        self.FREQ_MAX = FREQ_MAX  # type: float
+        self.PEAK_POWER = PEAK_POWER  # type: float
+        self.AVG_POWER = AVG_POWER  # type: float
+        self.ANTENNA_GAIN = ANTENNA_GAIN  # type: float
+        self.NUM_MODES = NUM_MODES  # type: int
+        self.RF_EMITTER_DETAILS = RF_EMITTER_DETAILS  # type: Optional[List[rfEmitterDetail.rfEmitterDetailT]]
+        self.THREAT_LEVEL = THREAT_LEVEL  # type: Optional[str]
+        self.NOTES = NOTES  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        RFE = RFE()
-        RFE.Init(buf, pos)
-        return cls.InitFromObj(RFE)
+        tmpRfe = RFE()
+        tmpRfe.Init(buf, pos)
+        return cls.InitFromObj(tmpRfe)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -388,9 +416,9 @@ class RFET(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, RFE):
+    def InitFromObj(cls, tmpRfe):
         x = RFET()
-        x._UnPack(RFE)
+        x._UnPack(tmpRfe)
         return x
 
     # RFET

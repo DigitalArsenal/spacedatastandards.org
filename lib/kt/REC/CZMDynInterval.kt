@@ -32,7 +32,7 @@ class CZMDynInterval : Table() {
     /**
      * ISO 8601 interval string
      */
-    val INTERVAL : String?
+    val interval : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class CZMDynInterval : Table() {
                 null
             }
         }
-    val INTERVALAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun INTERVALInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val intervalAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun intervalInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Value type
      */
-    val VALUE_TYPE : Byte
+    val valueType : Byte
         get() {
             val o = __offset(6)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -54,7 +54,7 @@ class CZMDynInterval : Table() {
     /**
      * Numeric value (when VALUE_TYPE is NUMBER)
      */
-    val NUMBER_VALUE : Double
+    val numberValue : Double
         get() {
             val o = __offset(8)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -62,7 +62,7 @@ class CZMDynInterval : Table() {
     /**
      * Boolean value (when VALUE_TYPE is BOOLEAN)
      */
-    val BOOLEAN_VALUE : Boolean
+    val booleanValue : Boolean
         get() {
             val o = __offset(10)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -70,7 +70,7 @@ class CZMDynInterval : Table() {
     /**
      * String value (when VALUE_TYPE is STRING)
      */
-    val STRING_VALUE : String?
+    val stringValue : String?
         get() {
             val o = __offset(12)
             return if (o != 0) {
@@ -79,13 +79,13 @@ class CZMDynInterval : Table() {
                 null
             }
         }
-    val STRING_VALUEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
-    fun STRING_VALUEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
+    val stringValueAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(12, 1)
+    fun stringValueInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 12, 1)
     /**
      * Color value (when VALUE_TYPE is COLOR)
      */
-    val COLOR_VALUE : CZMColor? get() = COLOR_VALUE(CZMColor())
-    fun COLOR_VALUE(obj: CZMColor) : CZMColor? {
+    val colorValue : CZMColor? get() = colorValue(CZMColor())
+    fun colorValue(obj: CZMColor) : CZMColor? {
         val o = __offset(14)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -96,7 +96,7 @@ class CZMDynInterval : Table() {
     /**
      * Array value for cartesian/nearFarScalar types
      */
-    fun ARRAY_VALUE(j: Int) : Double {
+    fun arrayValue(j: Int) : Double {
         val o = __offset(16)
         return if (o != 0) {
             bb.getDouble(__vector(o) + j * 8)
@@ -104,38 +104,38 @@ class CZMDynInterval : Table() {
             0.0
         }
     }
-    val ARRAY_VALUELength : Int
+    val arrayValueLength : Int
         get() {
             val o = __offset(16); return if (o != 0) __vector_len(o) else 0
         }
-    val ARRAY_VALUEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(16, 8)
-    fun ARRAY_VALUEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 16, 8)
+    val arrayValueAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(16, 8)
+    fun arrayValueInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 16, 8)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsCZMDynInterval(_bb: ByteBuffer): CZMDynInterval = getRootAsCZMDynInterval(_bb, CZMDynInterval())
         fun getRootAsCZMDynInterval(_bb: ByteBuffer, obj: CZMDynInterval): CZMDynInterval {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createCZMDynInterval(builder: FlatBufferBuilder, INTERVALOffset: Int, VALUE_TYPE: Byte, NUMBER_VALUE: Double, BOOLEAN_VALUE: Boolean, STRING_VALUEOffset: Int, COLOR_VALUEOffset: Int, ARRAY_VALUEOffset: Int) : Int {
+        fun createCZMDynInterval(builder: FlatBufferBuilder, intervalOffset: Int, valueType: Byte, numberValue: Double, booleanValue: Boolean, stringValueOffset: Int, colorValueOffset: Int, arrayValueOffset: Int) : Int {
             builder.startTable(7)
-            addNUMBER_VALUE(builder, NUMBER_VALUE)
-            addARRAY_VALUE(builder, ARRAY_VALUEOffset)
-            addCOLOR_VALUE(builder, COLOR_VALUEOffset)
-            addSTRING_VALUE(builder, STRING_VALUEOffset)
-            addINTERVAL(builder, INTERVALOffset)
-            addBOOLEAN_VALUE(builder, BOOLEAN_VALUE)
-            addVALUE_TYPE(builder, VALUE_TYPE)
+            addNUMBERVALUE(builder, numberValue)
+            addARRAYVALUE(builder, arrayValueOffset)
+            addCOLORVALUE(builder, colorValueOffset)
+            addSTRINGVALUE(builder, stringValueOffset)
+            addINTERVAL(builder, intervalOffset)
+            addBOOLEANVALUE(builder, booleanValue)
+            addVALUETYPE(builder, valueType)
             return endCZMDynInterval(builder)
         }
         fun startCZMDynInterval(builder: FlatBufferBuilder) = builder.startTable(7)
-        fun addINTERVAL(builder: FlatBufferBuilder, INTERVAL: Int) = builder.addOffset(0, INTERVAL, 0)
-        fun addVALUE_TYPE(builder: FlatBufferBuilder, VALUE_TYPE: Byte) = builder.addByte(1, VALUE_TYPE, 0)
-        fun addNUMBER_VALUE(builder: FlatBufferBuilder, NUMBER_VALUE: Double) = builder.addDouble(2, NUMBER_VALUE, 0.0)
-        fun addBOOLEAN_VALUE(builder: FlatBufferBuilder, BOOLEAN_VALUE: Boolean) = builder.addBoolean(3, BOOLEAN_VALUE, false)
-        fun addSTRING_VALUE(builder: FlatBufferBuilder, STRING_VALUE: Int) = builder.addOffset(4, STRING_VALUE, 0)
-        fun addCOLOR_VALUE(builder: FlatBufferBuilder, COLOR_VALUE: Int) = builder.addOffset(5, COLOR_VALUE, 0)
-        fun addARRAY_VALUE(builder: FlatBufferBuilder, ARRAY_VALUE: Int) = builder.addOffset(6, ARRAY_VALUE, 0)
+        fun addINTERVAL(builder: FlatBufferBuilder, interval: Int) = builder.addOffset(0, interval, 0)
+        fun addVALUETYPE(builder: FlatBufferBuilder, valueType: Byte) = builder.addByte(1, valueType, 0)
+        fun addNUMBERVALUE(builder: FlatBufferBuilder, numberValue: Double) = builder.addDouble(2, numberValue, 0.0)
+        fun addBOOLEANVALUE(builder: FlatBufferBuilder, booleanValue: Boolean) = builder.addBoolean(3, booleanValue, false)
+        fun addSTRINGVALUE(builder: FlatBufferBuilder, stringValue: Int) = builder.addOffset(4, stringValue, 0)
+        fun addCOLORVALUE(builder: FlatBufferBuilder, colorValue: Int) = builder.addOffset(5, colorValue, 0)
+        fun addARRAYVALUE(builder: FlatBufferBuilder, arrayValue: Int) = builder.addOffset(6, arrayValue, 0)
         fun createArrayValueVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
             builder.startVector(8, data.size, 8)
             for (i in data.size - 1 downTo 0) {

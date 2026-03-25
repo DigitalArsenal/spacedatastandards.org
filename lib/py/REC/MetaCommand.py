@@ -2,4 +2,464 @@
 
 # namespace: 
 
-# NOTE MetaCommand.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# MetaCommand definition
+class MetaCommand(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = MetaCommand()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsMetaCommand(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def MetaCommandBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x58\x54\x43", size_prefixed=size_prefixed)
+
+    # MetaCommand
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Command name
+    # MetaCommand
+    def NAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Short description
+    # MetaCommand
+    def SHORT_DESCRIPTION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Long description
+    # MetaCommand
+    def LONG_DESCRIPTION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Abstract command (base only)
+    # MetaCommand
+    def ABSTRACT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # Argument list
+    # MetaCommand
+    def ARGUMENTS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from Argument import Argument
+            obj = Argument()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # MetaCommand
+    def ARGUMENTSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # MetaCommand
+    def ARGUMENTSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        return o == 0
+
+    # Command container
+    # MetaCommand
+    def COMMAND_CONTAINER(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from CommandContainer import CommandContainer
+            obj = CommandContainer()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Base metacommand (inheritance)
+    # MetaCommand
+    def BASE_META_COMMAND(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from BaseMetaCommand import BaseMetaCommand
+            obj = BaseMetaCommand()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Command verifiers
+    # MetaCommand
+    def VERIFIERS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from CommandVerifier import CommandVerifier
+            obj = CommandVerifier()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # MetaCommand
+    def VERIFIERSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # MetaCommand
+    def VERIFIERSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        return o == 0
+
+    # Command significance
+    # MetaCommand
+    def SIGNIFICANCE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from CommandSignificance import CommandSignificance
+            obj = CommandSignificance()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Interlock constraints
+    # MetaCommand
+    def INTERLOCKS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from Interlock import Interlock
+            obj = Interlock()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # MetaCommand
+    def INTERLOCKSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # MetaCommand
+    def INTERLOCKSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        return o == 0
+
+    # Default significance
+    # MetaCommand
+    def DEFAULT_SIGNIFICANCE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from CommandSignificance import CommandSignificance
+            obj = CommandSignificance()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+def MetaCommandStart(builder):
+    builder.StartObject(11)
+
+def Start(builder):
+    MetaCommandStart(builder)
+
+def MetaCommandAddNAME(builder, NAME):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(NAME), 0)
+
+def AddNAME(builder, NAME):
+    MetaCommandAddNAME(builder, NAME)
+
+def MetaCommandAddSHORT_DESCRIPTION(builder, SHORT_DESCRIPTION):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(SHORT_DESCRIPTION), 0)
+
+def AddSHORT_DESCRIPTION(builder, SHORT_DESCRIPTION):
+    MetaCommandAddSHORT_DESCRIPTION(builder, SHORT_DESCRIPTION)
+
+def MetaCommandAddLONG_DESCRIPTION(builder, LONG_DESCRIPTION):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(LONG_DESCRIPTION), 0)
+
+def AddLONG_DESCRIPTION(builder, LONG_DESCRIPTION):
+    MetaCommandAddLONG_DESCRIPTION(builder, LONG_DESCRIPTION)
+
+def MetaCommandAddABSTRACT(builder, ABSTRACT):
+    builder.PrependBoolSlot(3, ABSTRACT, 0)
+
+def AddABSTRACT(builder, ABSTRACT):
+    MetaCommandAddABSTRACT(builder, ABSTRACT)
+
+def MetaCommandAddARGUMENTS(builder, ARGUMENTS):
+    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(ARGUMENTS), 0)
+
+def AddARGUMENTS(builder, ARGUMENTS):
+    MetaCommandAddARGUMENTS(builder, ARGUMENTS)
+
+def MetaCommandStartARGUMENTSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartARGUMENTSVector(builder, numElems):
+    return MetaCommandStartARGUMENTSVector(builder, numElems)
+
+def MetaCommandCreateARGUMENTSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateARGUMENTSVector(builder, data):
+    MetaCommandCreateARGUMENTSVector(builder, data)
+
+def MetaCommandAddCOMMAND_CONTAINER(builder, COMMAND_CONTAINER):
+    builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(COMMAND_CONTAINER), 0)
+
+def AddCOMMAND_CONTAINER(builder, COMMAND_CONTAINER):
+    MetaCommandAddCOMMAND_CONTAINER(builder, COMMAND_CONTAINER)
+
+def MetaCommandAddBASE_META_COMMAND(builder, BASE_META_COMMAND):
+    builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(BASE_META_COMMAND), 0)
+
+def AddBASE_META_COMMAND(builder, BASE_META_COMMAND):
+    MetaCommandAddBASE_META_COMMAND(builder, BASE_META_COMMAND)
+
+def MetaCommandAddVERIFIERS(builder, VERIFIERS):
+    builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(VERIFIERS), 0)
+
+def AddVERIFIERS(builder, VERIFIERS):
+    MetaCommandAddVERIFIERS(builder, VERIFIERS)
+
+def MetaCommandStartVERIFIERSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartVERIFIERSVector(builder, numElems):
+    return MetaCommandStartVERIFIERSVector(builder, numElems)
+
+def MetaCommandCreateVERIFIERSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateVERIFIERSVector(builder, data):
+    MetaCommandCreateVERIFIERSVector(builder, data)
+
+def MetaCommandAddSIGNIFICANCE(builder, SIGNIFICANCE):
+    builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(SIGNIFICANCE), 0)
+
+def AddSIGNIFICANCE(builder, SIGNIFICANCE):
+    MetaCommandAddSIGNIFICANCE(builder, SIGNIFICANCE)
+
+def MetaCommandAddINTERLOCKS(builder, INTERLOCKS):
+    builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(INTERLOCKS), 0)
+
+def AddINTERLOCKS(builder, INTERLOCKS):
+    MetaCommandAddINTERLOCKS(builder, INTERLOCKS)
+
+def MetaCommandStartINTERLOCKSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartINTERLOCKSVector(builder, numElems):
+    return MetaCommandStartINTERLOCKSVector(builder, numElems)
+
+def MetaCommandCreateINTERLOCKSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateINTERLOCKSVector(builder, data):
+    MetaCommandCreateINTERLOCKSVector(builder, data)
+
+def MetaCommandAddDEFAULT_SIGNIFICANCE(builder, DEFAULT_SIGNIFICANCE):
+    builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(DEFAULT_SIGNIFICANCE), 0)
+
+def AddDEFAULT_SIGNIFICANCE(builder, DEFAULT_SIGNIFICANCE):
+    MetaCommandAddDEFAULT_SIGNIFICANCE(builder, DEFAULT_SIGNIFICANCE)
+
+def MetaCommandEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return MetaCommandEnd(builder)
+
+import Argument
+import BaseMetaCommand
+import CommandContainer
+import CommandSignificance
+import CommandVerifier
+import Interlock
+try:
+    from typing import List, Optional
+except:
+    pass
+
+class MetaCommandT(object):
+
+    # MetaCommandT
+    def __init__(
+        self,
+        NAME = None,
+        SHORT_DESCRIPTION = None,
+        LONG_DESCRIPTION = None,
+        ABSTRACT = False,
+        ARGUMENTS = None,
+        COMMAND_CONTAINER = None,
+        BASE_META_COMMAND = None,
+        VERIFIERS = None,
+        SIGNIFICANCE = None,
+        INTERLOCKS = None,
+        DEFAULT_SIGNIFICANCE = None,
+    ):
+        self.NAME = NAME  # type: Optional[str]
+        self.SHORT_DESCRIPTION = SHORT_DESCRIPTION  # type: Optional[str]
+        self.LONG_DESCRIPTION = LONG_DESCRIPTION  # type: Optional[str]
+        self.ABSTRACT = ABSTRACT  # type: bool
+        self.ARGUMENTS = ARGUMENTS  # type: Optional[List[Argument.ArgumentT]]
+        self.COMMAND_CONTAINER = COMMAND_CONTAINER  # type: Optional[CommandContainer.CommandContainerT]
+        self.BASE_META_COMMAND = BASE_META_COMMAND  # type: Optional[BaseMetaCommand.BaseMetaCommandT]
+        self.VERIFIERS = VERIFIERS  # type: Optional[List[CommandVerifier.CommandVerifierT]]
+        self.SIGNIFICANCE = SIGNIFICANCE  # type: Optional[CommandSignificance.CommandSignificanceT]
+        self.INTERLOCKS = INTERLOCKS  # type: Optional[List[Interlock.InterlockT]]
+        self.DEFAULT_SIGNIFICANCE = DEFAULT_SIGNIFICANCE  # type: Optional[CommandSignificance.CommandSignificanceT]
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpMetaCommand = MetaCommand()
+        tmpMetaCommand.Init(buf, pos)
+        return cls.InitFromObj(tmpMetaCommand)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpMetaCommand):
+        x = MetaCommandT()
+        x._UnPack(tmpMetaCommand)
+        return x
+
+    # MetaCommandT
+    def _UnPack(self, MetaCommand):
+        if MetaCommand is None:
+            return
+        self.NAME = MetaCommand.NAME()
+        self.SHORT_DESCRIPTION = MetaCommand.SHORT_DESCRIPTION()
+        self.LONG_DESCRIPTION = MetaCommand.LONG_DESCRIPTION()
+        self.ABSTRACT = MetaCommand.ABSTRACT()
+        if not MetaCommand.ARGUMENTSIsNone():
+            self.ARGUMENTS = []
+            for i in range(MetaCommand.ARGUMENTSLength()):
+                if MetaCommand.ARGUMENTS(i) is None:
+                    self.ARGUMENTS.append(None)
+                else:
+                    argument_ = Argument.ArgumentT.InitFromObj(MetaCommand.ARGUMENTS(i))
+                    self.ARGUMENTS.append(argument_)
+        if MetaCommand.COMMAND_CONTAINER() is not None:
+            self.COMMAND_CONTAINER = CommandContainer.CommandContainerT.InitFromObj(MetaCommand.COMMAND_CONTAINER())
+        if MetaCommand.BASE_META_COMMAND() is not None:
+            self.BASE_META_COMMAND = BaseMetaCommand.BaseMetaCommandT.InitFromObj(MetaCommand.BASE_META_COMMAND())
+        if not MetaCommand.VERIFIERSIsNone():
+            self.VERIFIERS = []
+            for i in range(MetaCommand.VERIFIERSLength()):
+                if MetaCommand.VERIFIERS(i) is None:
+                    self.VERIFIERS.append(None)
+                else:
+                    commandVerifier_ = CommandVerifier.CommandVerifierT.InitFromObj(MetaCommand.VERIFIERS(i))
+                    self.VERIFIERS.append(commandVerifier_)
+        if MetaCommand.SIGNIFICANCE() is not None:
+            self.SIGNIFICANCE = CommandSignificance.CommandSignificanceT.InitFromObj(MetaCommand.SIGNIFICANCE())
+        if not MetaCommand.INTERLOCKSIsNone():
+            self.INTERLOCKS = []
+            for i in range(MetaCommand.INTERLOCKSLength()):
+                if MetaCommand.INTERLOCKS(i) is None:
+                    self.INTERLOCKS.append(None)
+                else:
+                    interlock_ = Interlock.InterlockT.InitFromObj(MetaCommand.INTERLOCKS(i))
+                    self.INTERLOCKS.append(interlock_)
+        if MetaCommand.DEFAULT_SIGNIFICANCE() is not None:
+            self.DEFAULT_SIGNIFICANCE = CommandSignificance.CommandSignificanceT.InitFromObj(MetaCommand.DEFAULT_SIGNIFICANCE())
+
+    # MetaCommandT
+    def Pack(self, builder):
+        if self.NAME is not None:
+            NAME = builder.CreateString(self.NAME)
+        if self.SHORT_DESCRIPTION is not None:
+            SHORT_DESCRIPTION = builder.CreateString(self.SHORT_DESCRIPTION)
+        if self.LONG_DESCRIPTION is not None:
+            LONG_DESCRIPTION = builder.CreateString(self.LONG_DESCRIPTION)
+        if self.ARGUMENTS is not None:
+            ARGUMENTSlist = []
+            for i in range(len(self.ARGUMENTS)):
+                ARGUMENTSlist.append(self.ARGUMENTS[i].Pack(builder))
+            MetaCommandStartARGUMENTSVector(builder, len(self.ARGUMENTS))
+            for i in reversed(range(len(self.ARGUMENTS))):
+                builder.PrependUOffsetTRelative(ARGUMENTSlist[i])
+            ARGUMENTS = builder.EndVector()
+        if self.COMMAND_CONTAINER is not None:
+            COMMAND_CONTAINER = self.COMMAND_CONTAINER.Pack(builder)
+        if self.BASE_META_COMMAND is not None:
+            BASE_META_COMMAND = self.BASE_META_COMMAND.Pack(builder)
+        if self.VERIFIERS is not None:
+            VERIFIERSlist = []
+            for i in range(len(self.VERIFIERS)):
+                VERIFIERSlist.append(self.VERIFIERS[i].Pack(builder))
+            MetaCommandStartVERIFIERSVector(builder, len(self.VERIFIERS))
+            for i in reversed(range(len(self.VERIFIERS))):
+                builder.PrependUOffsetTRelative(VERIFIERSlist[i])
+            VERIFIERS = builder.EndVector()
+        if self.SIGNIFICANCE is not None:
+            SIGNIFICANCE = self.SIGNIFICANCE.Pack(builder)
+        if self.INTERLOCKS is not None:
+            INTERLOCKSlist = []
+            for i in range(len(self.INTERLOCKS)):
+                INTERLOCKSlist.append(self.INTERLOCKS[i].Pack(builder))
+            MetaCommandStartINTERLOCKSVector(builder, len(self.INTERLOCKS))
+            for i in reversed(range(len(self.INTERLOCKS))):
+                builder.PrependUOffsetTRelative(INTERLOCKSlist[i])
+            INTERLOCKS = builder.EndVector()
+        if self.DEFAULT_SIGNIFICANCE is not None:
+            DEFAULT_SIGNIFICANCE = self.DEFAULT_SIGNIFICANCE.Pack(builder)
+        MetaCommandStart(builder)
+        if self.NAME is not None:
+            MetaCommandAddNAME(builder, NAME)
+        if self.SHORT_DESCRIPTION is not None:
+            MetaCommandAddSHORT_DESCRIPTION(builder, SHORT_DESCRIPTION)
+        if self.LONG_DESCRIPTION is not None:
+            MetaCommandAddLONG_DESCRIPTION(builder, LONG_DESCRIPTION)
+        MetaCommandAddABSTRACT(builder, self.ABSTRACT)
+        if self.ARGUMENTS is not None:
+            MetaCommandAddARGUMENTS(builder, ARGUMENTS)
+        if self.COMMAND_CONTAINER is not None:
+            MetaCommandAddCOMMAND_CONTAINER(builder, COMMAND_CONTAINER)
+        if self.BASE_META_COMMAND is not None:
+            MetaCommandAddBASE_META_COMMAND(builder, BASE_META_COMMAND)
+        if self.VERIFIERS is not None:
+            MetaCommandAddVERIFIERS(builder, VERIFIERS)
+        if self.SIGNIFICANCE is not None:
+            MetaCommandAddSIGNIFICANCE(builder, SIGNIFICANCE)
+        if self.INTERLOCKS is not None:
+            MetaCommandAddINTERLOCKS(builder, INTERLOCKS)
+        if self.DEFAULT_SIGNIFICANCE is not None:
+            MetaCommandAddDEFAULT_SIGNIFICANCE(builder, DEFAULT_SIGNIFICANCE)
+        MetaCommand = MetaCommandEnd(builder)
+        return MetaCommand

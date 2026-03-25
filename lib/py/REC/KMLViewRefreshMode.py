@@ -2,4 +2,8 @@
 
 # namespace: 
 
-# NOTE KMLViewRefreshMode.py does not declare any structs or enums
+class KMLViewRefreshMode(object):
+    NEVER = 0
+    ON_STOP = 1
+    ON_REQUEST = 2
+    ON_REGION = 3

@@ -152,20 +152,29 @@ except:
 class BooleanParameterTypeT(object):
 
     # BooleanParameterTypeT
-    def __init__(self):
-        self.NAME = None  # type: str
-        self.SHORT_DESCRIPTION = None  # type: str
-        self.LONG_DESCRIPTION = None  # type: str
-        self.DATA_ENCODING = None  # type: Optional[IntegerDataEncoding.IntegerDataEncodingT]
-        self.ONE_STRING_VALUE = None  # type: str
-        self.ZERO_STRING_VALUE = None  # type: str
-        self.INITIAL_VALUE = False  # type: bool
+    def __init__(
+        self,
+        NAME = None,
+        SHORT_DESCRIPTION = None,
+        LONG_DESCRIPTION = None,
+        DATA_ENCODING = None,
+        ONE_STRING_VALUE = None,
+        ZERO_STRING_VALUE = None,
+        INITIAL_VALUE = False,
+    ):
+        self.NAME = NAME  # type: Optional[str]
+        self.SHORT_DESCRIPTION = SHORT_DESCRIPTION  # type: Optional[str]
+        self.LONG_DESCRIPTION = LONG_DESCRIPTION  # type: Optional[str]
+        self.DATA_ENCODING = DATA_ENCODING  # type: Optional[IntegerDataEncoding.IntegerDataEncodingT]
+        self.ONE_STRING_VALUE = ONE_STRING_VALUE  # type: Optional[str]
+        self.ZERO_STRING_VALUE = ZERO_STRING_VALUE  # type: Optional[str]
+        self.INITIAL_VALUE = INITIAL_VALUE  # type: bool
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        booleanParameterType = BooleanParameterType()
-        booleanParameterType.Init(buf, pos)
-        return cls.InitFromObj(booleanParameterType)
+        tmpBooleanParameterType = BooleanParameterType()
+        tmpBooleanParameterType.Init(buf, pos)
+        return cls.InitFromObj(tmpBooleanParameterType)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -173,23 +182,23 @@ class BooleanParameterTypeT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, booleanParameterType):
+    def InitFromObj(cls, tmpBooleanParameterType):
         x = BooleanParameterTypeT()
-        x._UnPack(booleanParameterType)
+        x._UnPack(tmpBooleanParameterType)
         return x
 
     # BooleanParameterTypeT
-    def _UnPack(self, booleanParameterType):
-        if booleanParameterType is None:
+    def _UnPack(self, BooleanParameterType):
+        if BooleanParameterType is None:
             return
-        self.NAME = booleanParameterType.NAME()
-        self.SHORT_DESCRIPTION = booleanParameterType.SHORT_DESCRIPTION()
-        self.LONG_DESCRIPTION = booleanParameterType.LONG_DESCRIPTION()
-        if booleanParameterType.DATA_ENCODING() is not None:
-            self.DATA_ENCODING = IntegerDataEncoding.IntegerDataEncodingT.InitFromObj(booleanParameterType.DATA_ENCODING())
-        self.ONE_STRING_VALUE = booleanParameterType.ONE_STRING_VALUE()
-        self.ZERO_STRING_VALUE = booleanParameterType.ZERO_STRING_VALUE()
-        self.INITIAL_VALUE = booleanParameterType.INITIAL_VALUE()
+        self.NAME = BooleanParameterType.NAME()
+        self.SHORT_DESCRIPTION = BooleanParameterType.SHORT_DESCRIPTION()
+        self.LONG_DESCRIPTION = BooleanParameterType.LONG_DESCRIPTION()
+        if BooleanParameterType.DATA_ENCODING() is not None:
+            self.DATA_ENCODING = IntegerDataEncoding.IntegerDataEncodingT.InitFromObj(BooleanParameterType.DATA_ENCODING())
+        self.ONE_STRING_VALUE = BooleanParameterType.ONE_STRING_VALUE()
+        self.ZERO_STRING_VALUE = BooleanParameterType.ZERO_STRING_VALUE()
+        self.INITIAL_VALUE = BooleanParameterType.INITIAL_VALUE()
 
     # BooleanParameterTypeT
     def Pack(self, builder):
@@ -219,5 +228,5 @@ class BooleanParameterTypeT(object):
         if self.ZERO_STRING_VALUE is not None:
             BooleanParameterTypeAddZERO_STRING_VALUE(builder, ZERO_STRING_VALUE)
         BooleanParameterTypeAddINITIAL_VALUE(builder, self.INITIAL_VALUE)
-        booleanParameterType = BooleanParameterTypeEnd(builder)
-        return booleanParameterType
+        BooleanParameterType = BooleanParameterTypeEnd(builder)
+        return BooleanParameterType

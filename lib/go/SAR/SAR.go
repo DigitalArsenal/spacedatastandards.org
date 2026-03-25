@@ -63,6 +63,10 @@ func (rcv *SAR) ID() []byte {
 	return nil
 }
 
+func (rcv *SAR) Id() []byte {
+	return rcv.ID()
+}
+
 /// Unique identifier
 /// Satellite catalog number (of SAR platform)
 func (rcv *SAR) SAT_NO() uint32 {
@@ -73,9 +77,17 @@ func (rcv *SAR) SAT_NO() uint32 {
 	return 0
 }
 
+func (rcv *SAR) SatNo() uint32 {
+	return rcv.SAT_NO()
+}
+
 /// Satellite catalog number (of SAR platform)
 func (rcv *SAR) MutateSAT_NO(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(6, n)
+}
+
+func (rcv *SAR) MutateSatNo(n uint32) bool {
+	return rcv.MutateSAT_NO(n)
 }
 
 /// International designator
@@ -85,6 +97,10 @@ func (rcv *SAR) ORIG_OBJECT_ID() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *SAR) OrigObjectId() []byte {
+	return rcv.ORIG_OBJECT_ID()
 }
 
 /// International designator
@@ -97,6 +113,10 @@ func (rcv *SAR) ON_ORBIT() []byte {
 	return nil
 }
 
+func (rcv *SAR) OnOrbit() []byte {
+	return rcv.ON_ORBIT()
+}
+
 /// On-orbit reference
 /// Sensor identifier
 func (rcv *SAR) ID_SENSOR() []byte {
@@ -105,6 +125,10 @@ func (rcv *SAR) ID_SENSOR() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *SAR) IdSensor() []byte {
+	return rcv.ID_SENSOR()
 }
 
 /// Sensor identifier
@@ -117,6 +141,10 @@ func (rcv *SAR) ORIG_SENSOR_ID() []byte {
 	return nil
 }
 
+func (rcv *SAR) OrigSensorId() []byte {
+	return rcv.ORIG_SENSOR_ID()
+}
+
 /// Original sensor identifier
 /// External reference identifier
 func (rcv *SAR) EXTERNAL_ID() []byte {
@@ -125,6 +153,10 @@ func (rcv *SAR) EXTERNAL_ID() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *SAR) ExternalId() []byte {
+	return rcv.EXTERNAL_ID()
 }
 
 /// External reference identifier
@@ -137,6 +169,10 @@ func (rcv *SAR) COLLECTION_ID() []byte {
 	return nil
 }
 
+func (rcv *SAR) CollectionId() []byte {
+	return rcv.COLLECTION_ID()
+}
+
 /// Collection identifier
 /// Detection identifier
 func (rcv *SAR) DETECTION_ID() []byte {
@@ -145,6 +181,10 @@ func (rcv *SAR) DETECTION_ID() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *SAR) DetectionId() []byte {
+	return rcv.DETECTION_ID()
 }
 
 /// Detection identifier
@@ -157,6 +197,10 @@ func (rcv *SAR) COLLECTION_START() []byte {
 	return nil
 }
 
+func (rcv *SAR) CollectionStart() []byte {
+	return rcv.COLLECTION_START()
+}
+
 /// Collection start time (ISO 8601)
 /// Collection end time (ISO 8601)
 func (rcv *SAR) COLLECTION_END() []byte {
@@ -165,6 +209,10 @@ func (rcv *SAR) COLLECTION_END() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *SAR) CollectionEnd() []byte {
+	return rcv.COLLECTION_END()
 }
 
 /// Collection end time (ISO 8601)
@@ -177,6 +225,10 @@ func (rcv *SAR) CENTER_TIME() []byte {
 	return nil
 }
 
+func (rcv *SAR) CenterTime() []byte {
+	return rcv.CENTER_TIME()
+}
+
 /// Center time of observation (ISO 8601)
 /// Detection start time (ISO 8601)
 func (rcv *SAR) DETECTION_START() []byte {
@@ -185,6 +237,10 @@ func (rcv *SAR) DETECTION_START() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *SAR) DetectionStart() []byte {
+	return rcv.DETECTION_START()
 }
 
 /// Detection start time (ISO 8601)
@@ -197,6 +253,10 @@ func (rcv *SAR) DETECTION_END() []byte {
 	return nil
 }
 
+func (rcv *SAR) DetectionEnd() []byte {
+	return rcv.DETECTION_END()
+}
+
 /// Detection end time (ISO 8601)
 /// Integration/dwell time (seconds)
 func (rcv *SAR) DWELL_TIME() float64 {
@@ -207,9 +267,17 @@ func (rcv *SAR) DWELL_TIME() float64 {
 	return 0.0
 }
 
+func (rcv *SAR) DwellTime() float64 {
+	return rcv.DWELL_TIME()
+}
+
 /// Integration/dwell time (seconds)
 func (rcv *SAR) MutateDWELL_TIME(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(32, n)
+}
+
+func (rcv *SAR) MutateDwellTime(n float64) bool {
+	return rcv.MutateDWELL_TIME(n)
 }
 
 /// Orbit state description
@@ -219,6 +287,10 @@ func (rcv *SAR) ORBIT_STATE() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *SAR) OrbitState() []byte {
+	return rcv.ORBIT_STATE()
 }
 
 /// Orbit state description
@@ -231,9 +303,17 @@ func (rcv *SAR) SAR_MODE() sarMode {
 	return 0
 }
 
+func (rcv *SAR) SarMode() sarMode {
+	return rcv.SAR_MODE()
+}
+
 /// SAR imaging mode
 func (rcv *SAR) MutateSAR_MODE(n sarMode) bool {
 	return rcv._tab.MutateInt8Slot(36, int8(n))
+}
+
+func (rcv *SAR) MutateSarMode(n sarMode) bool {
+	return rcv.MutateSAR_MODE(n)
 }
 
 /// Operating RF band (e.g., X, C, L, S, P)
@@ -243,6 +323,10 @@ func (rcv *SAR) OPERATING_BAND() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *SAR) OperatingBand() []byte {
+	return rcv.OPERATING_BAND()
 }
 
 /// Operating RF band (e.g., X, C, L, S, P)
@@ -255,9 +339,17 @@ func (rcv *SAR) OPERATING_FREQ() float64 {
 	return 0.0
 }
 
+func (rcv *SAR) OperatingFreq() float64 {
+	return rcv.OPERATING_FREQ()
+}
+
 /// Operating frequency (GHz)
 func (rcv *SAR) MutateOPERATING_FREQ(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(40, n)
+}
+
+func (rcv *SAR) MutateOperatingFreq(n float64) bool {
+	return rcv.MutateOPERATING_FREQ(n)
 }
 
 /// Signal-to-noise ratio (dB)
@@ -269,9 +361,17 @@ func (rcv *SAR) SNR() float64 {
 	return 0.0
 }
 
+func (rcv *SAR) Snr() float64 {
+	return rcv.SNR()
+}
+
 /// Signal-to-noise ratio (dB)
 func (rcv *SAR) MutateSNR(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(42, n)
+}
+
+func (rcv *SAR) MutateSnr(n float64) bool {
+	return rcv.MutateSNR(n)
 }
 
 /// Transmit polarization
@@ -283,9 +383,17 @@ func (rcv *SAR) TX_POLARIZATION() sarPolarization {
 	return 0
 }
 
+func (rcv *SAR) TxPolarization() sarPolarization {
+	return rcv.TX_POLARIZATION()
+}
+
 /// Transmit polarization
 func (rcv *SAR) MutateTX_POLARIZATION(n sarPolarization) bool {
 	return rcv._tab.MutateInt8Slot(44, int8(n))
+}
+
+func (rcv *SAR) MutateTxPolarization(n sarPolarization) bool {
+	return rcv.MutateTX_POLARIZATION(n)
 }
 
 /// Receive polarization
@@ -297,9 +405,17 @@ func (rcv *SAR) RX_POLARIZATION() sarPolarization {
 	return 0
 }
 
+func (rcv *SAR) RxPolarization() sarPolarization {
+	return rcv.RX_POLARIZATION()
+}
+
 /// Receive polarization
 func (rcv *SAR) MutateRX_POLARIZATION(n sarPolarization) bool {
 	return rcv._tab.MutateInt8Slot(46, int8(n))
+}
+
+func (rcv *SAR) MutateRxPolarization(n sarPolarization) bool {
+	return rcv.MutateRX_POLARIZATION(n)
 }
 
 /// Grazing angle (degrees)
@@ -311,9 +427,17 @@ func (rcv *SAR) GRAZE_ANGLE() float64 {
 	return 0.0
 }
 
+func (rcv *SAR) GrazeAngle() float64 {
+	return rcv.GRAZE_ANGLE()
+}
+
 /// Grazing angle (degrees)
 func (rcv *SAR) MutateGRAZE_ANGLE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(48, n)
+}
+
+func (rcv *SAR) MutateGrazeAngle(n float64) bool {
+	return rcv.MutateGRAZE_ANGLE(n)
 }
 
 /// Incidence angle (degrees)
@@ -325,9 +449,17 @@ func (rcv *SAR) INCIDENCE_ANGLE() float64 {
 	return 0.0
 }
 
+func (rcv *SAR) IncidenceAngle() float64 {
+	return rcv.INCIDENCE_ANGLE()
+}
+
 /// Incidence angle (degrees)
 func (rcv *SAR) MutateINCIDENCE_ANGLE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(50, n)
+}
+
+func (rcv *SAR) MutateIncidenceAngle(n float64) bool {
+	return rcv.MutateINCIDENCE_ANGLE(n)
 }
 
 /// Squint angle (degrees)
@@ -339,9 +471,17 @@ func (rcv *SAR) SQUINT_ANGLE() float64 {
 	return 0.0
 }
 
+func (rcv *SAR) SquintAngle() float64 {
+	return rcv.SQUINT_ANGLE()
+}
+
 /// Squint angle (degrees)
 func (rcv *SAR) MutateSQUINT_ANGLE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(52, n)
+}
+
+func (rcv *SAR) MutateSquintAngle(n float64) bool {
+	return rcv.MutateSQUINT_ANGLE(n)
 }
 
 /// Pulse bandwidth (MHz)
@@ -353,9 +493,17 @@ func (rcv *SAR) PULSE_BANDWIDTH() float64 {
 	return 0.0
 }
 
+func (rcv *SAR) PulseBandwidth() float64 {
+	return rcv.PULSE_BANDWIDTH()
+}
+
 /// Pulse bandwidth (MHz)
 func (rcv *SAR) MutatePULSE_BANDWIDTH(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(54, n)
+}
+
+func (rcv *SAR) MutatePulseBandwidth(n float64) bool {
+	return rcv.MutatePULSE_BANDWIDTH(n)
 }
 
 /// Pulse duration (microseconds)
@@ -367,9 +515,17 @@ func (rcv *SAR) PULSE_DURATION() float64 {
 	return 0.0
 }
 
+func (rcv *SAR) PulseDuration() float64 {
+	return rcv.PULSE_DURATION()
+}
+
 /// Pulse duration (microseconds)
 func (rcv *SAR) MutatePULSE_DURATION(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(56, n)
+}
+
+func (rcv *SAR) MutatePulseDuration(n float64) bool {
+	return rcv.MutatePULSE_DURATION(n)
 }
 
 /// Continuous spot angle (degrees)
@@ -381,9 +537,17 @@ func (rcv *SAR) CONTINUOUS_SPOT_ANGLE() float64 {
 	return 0.0
 }
 
+func (rcv *SAR) ContinuousSpotAngle() float64 {
+	return rcv.CONTINUOUS_SPOT_ANGLE()
+}
+
 /// Continuous spot angle (degrees)
 func (rcv *SAR) MutateCONTINUOUS_SPOT_ANGLE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(58, n)
+}
+
+func (rcv *SAR) MutateContinuousSpotAngle(n float64) bool {
+	return rcv.MutateCONTINUOUS_SPOT_ANGLE(n)
 }
 
 /// Slant range to target (km)
@@ -395,9 +559,17 @@ func (rcv *SAR) SLANT_RANGE() float64 {
 	return 0.0
 }
 
+func (rcv *SAR) SlantRange() float64 {
+	return rcv.SLANT_RANGE()
+}
+
 /// Slant range to target (km)
 func (rcv *SAR) MutateSLANT_RANGE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(60, n)
+}
+
+func (rcv *SAR) MutateSlantRange(n float64) bool {
+	return rcv.MutateSLANT_RANGE(n)
 }
 
 /// Near range (km)
@@ -409,9 +581,17 @@ func (rcv *SAR) NEAR_RANGE() float64 {
 	return 0.0
 }
 
+func (rcv *SAR) NearRange() float64 {
+	return rcv.NEAR_RANGE()
+}
+
 /// Near range (km)
 func (rcv *SAR) MutateNEAR_RANGE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(62, n)
+}
+
+func (rcv *SAR) MutateNearRange(n float64) bool {
+	return rcv.MutateNEAR_RANGE(n)
 }
 
 /// Far range (km)
@@ -423,9 +603,17 @@ func (rcv *SAR) FAR_RANGE() float64 {
 	return 0.0
 }
 
+func (rcv *SAR) FarRange() float64 {
+	return rcv.FAR_RANGE()
+}
+
 /// Far range (km)
 func (rcv *SAR) MutateFAR_RANGE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(64, n)
+}
+
+func (rcv *SAR) MutateFarRange(n float64) bool {
+	return rcv.MutateFAR_RANGE(n)
 }
 
 /// Swath length (km)
@@ -437,9 +625,17 @@ func (rcv *SAR) SWATH_LENGTH() float64 {
 	return 0.0
 }
 
+func (rcv *SAR) SwathLength() float64 {
+	return rcv.SWATH_LENGTH()
+}
+
 /// Swath length (km)
 func (rcv *SAR) MutateSWATH_LENGTH(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(66, n)
+}
+
+func (rcv *SAR) MutateSwathLength(n float64) bool {
+	return rcv.MutateSWATH_LENGTH(n)
 }
 
 /// Image area GeoJSON
@@ -449,6 +645,10 @@ func (rcv *SAR) AGJSON() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *SAR) Agjson() []byte {
+	return rcv.AGJSON()
 }
 
 /// Image area GeoJSON
@@ -461,6 +661,10 @@ func (rcv *SAR) ATEXT() []byte {
 	return nil
 }
 
+func (rcv *SAR) Atext() []byte {
+	return rcv.ATEXT()
+}
+
 /// Image area text description
 /// Area type
 func (rcv *SAR) ATYPE() []byte {
@@ -469,6 +673,10 @@ func (rcv *SAR) ATYPE() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *SAR) Atype() []byte {
+	return rcv.ATYPE()
 }
 
 /// Area type
@@ -481,6 +689,10 @@ func (rcv *SAR) COORD_SYS() []byte {
 	return nil
 }
 
+func (rcv *SAR) CoordSys() []byte {
+	return rcv.COORD_SYS()
+}
+
 /// Coordinate system
 /// Range pixel spacing (meters)
 func (rcv *SAR) SPACING_RANGE() float64 {
@@ -491,9 +703,17 @@ func (rcv *SAR) SPACING_RANGE() float64 {
 	return 0.0
 }
 
+func (rcv *SAR) SpacingRange() float64 {
+	return rcv.SPACING_RANGE()
+}
+
 /// Range pixel spacing (meters)
 func (rcv *SAR) MutateSPACING_RANGE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(76, n)
+}
+
+func (rcv *SAR) MutateSpacingRange(n float64) bool {
+	return rcv.MutateSPACING_RANGE(n)
 }
 
 /// Azimuth pixel spacing (meters)
@@ -505,9 +725,17 @@ func (rcv *SAR) SPACING_AZIMUTH() float64 {
 	return 0.0
 }
 
+func (rcv *SAR) SpacingAzimuth() float64 {
+	return rcv.SPACING_AZIMUTH()
+}
+
 /// Azimuth pixel spacing (meters)
 func (rcv *SAR) MutateSPACING_AZIMUTH(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(78, n)
+}
+
+func (rcv *SAR) MutateSpacingAzimuth(n float64) bool {
+	return rcv.MutateSPACING_AZIMUTH(n)
 }
 
 /// Number of azimuth looks
@@ -519,9 +747,17 @@ func (rcv *SAR) LOOKS_AZIMUTH() byte {
 	return 0
 }
 
+func (rcv *SAR) LooksAzimuth() byte {
+	return rcv.LOOKS_AZIMUTH()
+}
+
 /// Number of azimuth looks
 func (rcv *SAR) MutateLOOKS_AZIMUTH(n byte) bool {
 	return rcv._tab.MutateByteSlot(80, n)
+}
+
+func (rcv *SAR) MutateLooksAzimuth(n byte) bool {
+	return rcv.MutateLOOKS_AZIMUTH(n)
 }
 
 /// Number of range looks
@@ -533,9 +769,17 @@ func (rcv *SAR) LOOKS_RANGE() byte {
 	return 0
 }
 
+func (rcv *SAR) LooksRange() byte {
+	return rcv.LOOKS_RANGE()
+}
+
 /// Number of range looks
 func (rcv *SAR) MutateLOOKS_RANGE(n byte) bool {
 	return rcv._tab.MutateByteSlot(82, n)
+}
+
+func (rcv *SAR) MutateLooksRange(n byte) bool {
+	return rcv.MutateLOOKS_RANGE(n)
 }
 
 /// Range resolution (meters)
@@ -547,9 +791,17 @@ func (rcv *SAR) RESOLUTION_RANGE() float64 {
 	return 0.0
 }
 
+func (rcv *SAR) ResolutionRange() float64 {
+	return rcv.RESOLUTION_RANGE()
+}
+
 /// Range resolution (meters)
 func (rcv *SAR) MutateRESOLUTION_RANGE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(84, n)
+}
+
+func (rcv *SAR) MutateResolutionRange(n float64) bool {
+	return rcv.MutateRESOLUTION_RANGE(n)
 }
 
 /// Azimuth resolution (meters)
@@ -561,9 +813,17 @@ func (rcv *SAR) RESOLUTION_AZIMUTH() float64 {
 	return 0.0
 }
 
+func (rcv *SAR) ResolutionAzimuth() float64 {
+	return rcv.RESOLUTION_AZIMUTH()
+}
+
 /// Azimuth resolution (meters)
 func (rcv *SAR) MutateRESOLUTION_AZIMUTH(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(86, n)
+}
+
+func (rcv *SAR) MutateResolutionAzimuth(n float64) bool {
+	return rcv.MutateRESOLUTION_AZIMUTH(n)
 }
 
 /// Observation direction (ASCENDING/DESCENDING)
@@ -573,6 +833,10 @@ func (rcv *SAR) OB_DIRECTION() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *SAR) ObDirection() []byte {
+	return rcv.OB_DIRECTION()
 }
 
 /// Observation direction (ASCENDING/DESCENDING)
@@ -585,9 +849,17 @@ func (rcv *SAR) TARGETPOSX() float64 {
 	return 0.0
 }
 
+func (rcv *SAR) Targetposx() float64 {
+	return rcv.TARGETPOSX()
+}
+
 /// Target position X (km)
 func (rcv *SAR) MutateTARGETPOSX(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(90, n)
+}
+
+func (rcv *SAR) MutateTargetposx(n float64) bool {
+	return rcv.MutateTARGETPOSX(n)
 }
 
 /// Target position Y (km)
@@ -599,9 +871,17 @@ func (rcv *SAR) TARGETPOSY() float64 {
 	return 0.0
 }
 
+func (rcv *SAR) Targetposy() float64 {
+	return rcv.TARGETPOSY()
+}
+
 /// Target position Y (km)
 func (rcv *SAR) MutateTARGETPOSY(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(92, n)
+}
+
+func (rcv *SAR) MutateTargetposy(n float64) bool {
+	return rcv.MutateTARGETPOSY(n)
 }
 
 /// Target position Z (km)
@@ -613,9 +893,17 @@ func (rcv *SAR) TARGETPOSZ() float64 {
 	return 0.0
 }
 
+func (rcv *SAR) Targetposz() float64 {
+	return rcv.TARGETPOSZ()
+}
+
 /// Target position Z (km)
 func (rcv *SAR) MutateTARGETPOSZ(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(94, n)
+}
+
+func (rcv *SAR) MutateTargetposz(n float64) bool {
+	return rcv.MutateTARGETPOSZ(n)
 }
 
 /// Sensor altitude (km)
@@ -627,9 +915,17 @@ func (rcv *SAR) SENALT() float64 {
 	return 0.0
 }
 
+func (rcv *SAR) Senalt() float64 {
+	return rcv.SENALT()
+}
+
 /// Sensor altitude (km)
 func (rcv *SAR) MutateSENALT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(96, n)
+}
+
+func (rcv *SAR) MutateSenalt(n float64) bool {
+	return rcv.MutateSENALT(n)
 }
 
 /// Sensor velocity X (km/s)
@@ -641,9 +937,17 @@ func (rcv *SAR) SENVELX() float64 {
 	return 0.0
 }
 
+func (rcv *SAR) Senvelx() float64 {
+	return rcv.SENVELX()
+}
+
 /// Sensor velocity X (km/s)
 func (rcv *SAR) MutateSENVELX(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(98, n)
+}
+
+func (rcv *SAR) MutateSenvelx(n float64) bool {
+	return rcv.MutateSENVELX(n)
 }
 
 /// Sensor velocity Y (km/s)
@@ -655,9 +959,17 @@ func (rcv *SAR) SENVELY() float64 {
 	return 0.0
 }
 
+func (rcv *SAR) Senvely() float64 {
+	return rcv.SENVELY()
+}
+
 /// Sensor velocity Y (km/s)
 func (rcv *SAR) MutateSENVELY(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(100, n)
+}
+
+func (rcv *SAR) MutateSenvely(n float64) bool {
+	return rcv.MutateSENVELY(n)
 }
 
 /// Sensor velocity Z (km/s)
@@ -669,9 +981,17 @@ func (rcv *SAR) SENVELZ() float64 {
 	return 0.0
 }
 
+func (rcv *SAR) Senvelz() float64 {
+	return rcv.SENVELZ()
+}
+
 /// Sensor velocity Z (km/s)
 func (rcv *SAR) MutateSENVELZ(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(102, n)
+}
+
+func (rcv *SAR) MutateSenvelz(n float64) bool {
+	return rcv.MutateSENVELZ(n)
 }
 
 /// Sensor latitude at start (degrees)
@@ -683,9 +1003,17 @@ func (rcv *SAR) SENLAT_START() float64 {
 	return 0.0
 }
 
+func (rcv *SAR) SenlatStart() float64 {
+	return rcv.SENLAT_START()
+}
+
 /// Sensor latitude at start (degrees)
 func (rcv *SAR) MutateSENLAT_START(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(104, n)
+}
+
+func (rcv *SAR) MutateSenlatStart(n float64) bool {
+	return rcv.MutateSENLAT_START(n)
 }
 
 /// Sensor longitude at start (degrees)
@@ -697,9 +1025,17 @@ func (rcv *SAR) SENLON_START() float64 {
 	return 0.0
 }
 
+func (rcv *SAR) SenlonStart() float64 {
+	return rcv.SENLON_START()
+}
+
 /// Sensor longitude at start (degrees)
 func (rcv *SAR) MutateSENLON_START(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(106, n)
+}
+
+func (rcv *SAR) MutateSenlonStart(n float64) bool {
+	return rcv.MutateSENLON_START(n)
 }
 
 /// Sensor latitude at end (degrees)
@@ -711,9 +1047,17 @@ func (rcv *SAR) SENLAT_END() float64 {
 	return 0.0
 }
 
+func (rcv *SAR) SenlatEnd() float64 {
+	return rcv.SENLAT_END()
+}
+
 /// Sensor latitude at end (degrees)
 func (rcv *SAR) MutateSENLAT_END(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(108, n)
+}
+
+func (rcv *SAR) MutateSenlatEnd(n float64) bool {
+	return rcv.MutateSENLAT_END(n)
 }
 
 /// Sensor longitude at end (degrees)
@@ -725,9 +1069,17 @@ func (rcv *SAR) SENLON_END() float64 {
 	return 0.0
 }
 
+func (rcv *SAR) SenlonEnd() float64 {
+	return rcv.SENLON_END()
+}
+
 /// Sensor longitude at end (degrees)
 func (rcv *SAR) MutateSENLON_END(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(110, n)
+}
+
+func (rcv *SAR) MutateSenlonEnd(n float64) bool {
+	return rcv.MutateSENLON_END(n)
 }
 
 /// Transaction identifier
@@ -737,6 +1089,10 @@ func (rcv *SAR) TRANSACTION_ID() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *SAR) TransactionId() []byte {
+	return rcv.TRANSACTION_ID()
 }
 
 /// Transaction identifier
@@ -750,12 +1106,20 @@ func (rcv *SAR) TAGS(j int) []byte {
 	return nil
 }
 
+func (rcv *SAR) Tags(j int) []byte {
+	return rcv.TAGS(j)
+}
+
 func (rcv *SAR) TAGSLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(114))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *SAR) TagsLength() int {
+	return rcv.TAGSLength()
 }
 
 /// Associated tags
@@ -769,12 +1133,20 @@ func (rcv *SAR) SRC_TYPS(j int) []byte {
 	return nil
 }
 
+func (rcv *SAR) SrcTyps(j int) []byte {
+	return rcv.SRC_TYPS(j)
+}
+
 func (rcv *SAR) SRC_TYPSLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(116))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *SAR) SrcTypsLength() int {
+	return rcv.SRC_TYPSLength()
 }
 
 /// Source types
@@ -788,12 +1160,20 @@ func (rcv *SAR) SRC_IDS(j int) []byte {
 	return nil
 }
 
+func (rcv *SAR) SrcIds(j int) []byte {
+	return rcv.SRC_IDS(j)
+}
+
 func (rcv *SAR) SRC_IDSLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(118))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *SAR) SrcIdsLength() int {
+	return rcv.SRC_IDSLength()
 }
 
 /// Source identifiers
@@ -803,185 +1183,368 @@ func SARStart(builder *flatbuffers.Builder) {
 func SARAddID(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ID), 0)
 }
+func SARAddId(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
+	SARAddID(builder, ID)
+}
 func SARAddSAT_NO(builder *flatbuffers.Builder, SAT_NO uint32) {
 	builder.PrependUint32Slot(1, SAT_NO, 0)
+}
+func SARAddSatNo(builder *flatbuffers.Builder, SAT_NO uint32) {
+	SARAddSAT_NO(builder, SAT_NO)
 }
 func SARAddORIG_OBJECT_ID(builder *flatbuffers.Builder, ORIG_OBJECT_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(ORIG_OBJECT_ID), 0)
 }
+func SARAddOrigObjectId(builder *flatbuffers.Builder, ORIG_OBJECT_ID flatbuffers.UOffsetT) {
+	SARAddORIG_OBJECT_ID(builder, ORIG_OBJECT_ID)
+}
 func SARAddON_ORBIT(builder *flatbuffers.Builder, ON_ORBIT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(ON_ORBIT), 0)
+}
+func SARAddOnOrbit(builder *flatbuffers.Builder, ON_ORBIT flatbuffers.UOffsetT) {
+	SARAddON_ORBIT(builder, ON_ORBIT)
 }
 func SARAddID_SENSOR(builder *flatbuffers.Builder, ID_SENSOR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(ID_SENSOR), 0)
 }
+func SARAddIdSensor(builder *flatbuffers.Builder, ID_SENSOR flatbuffers.UOffsetT) {
+	SARAddID_SENSOR(builder, ID_SENSOR)
+}
 func SARAddORIG_SENSOR_ID(builder *flatbuffers.Builder, ORIG_SENSOR_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(ORIG_SENSOR_ID), 0)
+}
+func SARAddOrigSensorId(builder *flatbuffers.Builder, ORIG_SENSOR_ID flatbuffers.UOffsetT) {
+	SARAddORIG_SENSOR_ID(builder, ORIG_SENSOR_ID)
 }
 func SARAddEXTERNAL_ID(builder *flatbuffers.Builder, EXTERNAL_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(EXTERNAL_ID), 0)
 }
+func SARAddExternalId(builder *flatbuffers.Builder, EXTERNAL_ID flatbuffers.UOffsetT) {
+	SARAddEXTERNAL_ID(builder, EXTERNAL_ID)
+}
 func SARAddCOLLECTION_ID(builder *flatbuffers.Builder, COLLECTION_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(COLLECTION_ID), 0)
+}
+func SARAddCollectionId(builder *flatbuffers.Builder, COLLECTION_ID flatbuffers.UOffsetT) {
+	SARAddCOLLECTION_ID(builder, COLLECTION_ID)
 }
 func SARAddDETECTION_ID(builder *flatbuffers.Builder, DETECTION_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(DETECTION_ID), 0)
 }
+func SARAddDetectionId(builder *flatbuffers.Builder, DETECTION_ID flatbuffers.UOffsetT) {
+	SARAddDETECTION_ID(builder, DETECTION_ID)
+}
 func SARAddCOLLECTION_START(builder *flatbuffers.Builder, COLLECTION_START flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(COLLECTION_START), 0)
+}
+func SARAddCollectionStart(builder *flatbuffers.Builder, COLLECTION_START flatbuffers.UOffsetT) {
+	SARAddCOLLECTION_START(builder, COLLECTION_START)
 }
 func SARAddCOLLECTION_END(builder *flatbuffers.Builder, COLLECTION_END flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(COLLECTION_END), 0)
 }
+func SARAddCollectionEnd(builder *flatbuffers.Builder, COLLECTION_END flatbuffers.UOffsetT) {
+	SARAddCOLLECTION_END(builder, COLLECTION_END)
+}
 func SARAddCENTER_TIME(builder *flatbuffers.Builder, CENTER_TIME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(CENTER_TIME), 0)
+}
+func SARAddCenterTime(builder *flatbuffers.Builder, CENTER_TIME flatbuffers.UOffsetT) {
+	SARAddCENTER_TIME(builder, CENTER_TIME)
 }
 func SARAddDETECTION_START(builder *flatbuffers.Builder, DETECTION_START flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(12, flatbuffers.UOffsetT(DETECTION_START), 0)
 }
+func SARAddDetectionStart(builder *flatbuffers.Builder, DETECTION_START flatbuffers.UOffsetT) {
+	SARAddDETECTION_START(builder, DETECTION_START)
+}
 func SARAddDETECTION_END(builder *flatbuffers.Builder, DETECTION_END flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(13, flatbuffers.UOffsetT(DETECTION_END), 0)
+}
+func SARAddDetectionEnd(builder *flatbuffers.Builder, DETECTION_END flatbuffers.UOffsetT) {
+	SARAddDETECTION_END(builder, DETECTION_END)
 }
 func SARAddDWELL_TIME(builder *flatbuffers.Builder, DWELL_TIME float64) {
 	builder.PrependFloat64Slot(14, DWELL_TIME, 0.0)
 }
+func SARAddDwellTime(builder *flatbuffers.Builder, DWELL_TIME float64) {
+	SARAddDWELL_TIME(builder, DWELL_TIME)
+}
 func SARAddORBIT_STATE(builder *flatbuffers.Builder, ORBIT_STATE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(15, flatbuffers.UOffsetT(ORBIT_STATE), 0)
+}
+func SARAddOrbitState(builder *flatbuffers.Builder, ORBIT_STATE flatbuffers.UOffsetT) {
+	SARAddORBIT_STATE(builder, ORBIT_STATE)
 }
 func SARAddSAR_MODE(builder *flatbuffers.Builder, SAR_MODE sarMode) {
 	builder.PrependInt8Slot(16, int8(SAR_MODE), 0)
 }
+func SARAddSarMode(builder *flatbuffers.Builder, SAR_MODE sarMode) {
+	SARAddSAR_MODE(builder, SAR_MODE)
+}
 func SARAddOPERATING_BAND(builder *flatbuffers.Builder, OPERATING_BAND flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(17, flatbuffers.UOffsetT(OPERATING_BAND), 0)
+}
+func SARAddOperatingBand(builder *flatbuffers.Builder, OPERATING_BAND flatbuffers.UOffsetT) {
+	SARAddOPERATING_BAND(builder, OPERATING_BAND)
 }
 func SARAddOPERATING_FREQ(builder *flatbuffers.Builder, OPERATING_FREQ float64) {
 	builder.PrependFloat64Slot(18, OPERATING_FREQ, 0.0)
 }
+func SARAddOperatingFreq(builder *flatbuffers.Builder, OPERATING_FREQ float64) {
+	SARAddOPERATING_FREQ(builder, OPERATING_FREQ)
+}
 func SARAddSNR(builder *flatbuffers.Builder, SNR float64) {
 	builder.PrependFloat64Slot(19, SNR, 0.0)
+}
+func SARAddSnr(builder *flatbuffers.Builder, SNR float64) {
+	SARAddSNR(builder, SNR)
 }
 func SARAddTX_POLARIZATION(builder *flatbuffers.Builder, TX_POLARIZATION sarPolarization) {
 	builder.PrependInt8Slot(20, int8(TX_POLARIZATION), 0)
 }
+func SARAddTxPolarization(builder *flatbuffers.Builder, TX_POLARIZATION sarPolarization) {
+	SARAddTX_POLARIZATION(builder, TX_POLARIZATION)
+}
 func SARAddRX_POLARIZATION(builder *flatbuffers.Builder, RX_POLARIZATION sarPolarization) {
 	builder.PrependInt8Slot(21, int8(RX_POLARIZATION), 0)
+}
+func SARAddRxPolarization(builder *flatbuffers.Builder, RX_POLARIZATION sarPolarization) {
+	SARAddRX_POLARIZATION(builder, RX_POLARIZATION)
 }
 func SARAddGRAZE_ANGLE(builder *flatbuffers.Builder, GRAZE_ANGLE float64) {
 	builder.PrependFloat64Slot(22, GRAZE_ANGLE, 0.0)
 }
+func SARAddGrazeAngle(builder *flatbuffers.Builder, GRAZE_ANGLE float64) {
+	SARAddGRAZE_ANGLE(builder, GRAZE_ANGLE)
+}
 func SARAddINCIDENCE_ANGLE(builder *flatbuffers.Builder, INCIDENCE_ANGLE float64) {
 	builder.PrependFloat64Slot(23, INCIDENCE_ANGLE, 0.0)
+}
+func SARAddIncidenceAngle(builder *flatbuffers.Builder, INCIDENCE_ANGLE float64) {
+	SARAddINCIDENCE_ANGLE(builder, INCIDENCE_ANGLE)
 }
 func SARAddSQUINT_ANGLE(builder *flatbuffers.Builder, SQUINT_ANGLE float64) {
 	builder.PrependFloat64Slot(24, SQUINT_ANGLE, 0.0)
 }
+func SARAddSquintAngle(builder *flatbuffers.Builder, SQUINT_ANGLE float64) {
+	SARAddSQUINT_ANGLE(builder, SQUINT_ANGLE)
+}
 func SARAddPULSE_BANDWIDTH(builder *flatbuffers.Builder, PULSE_BANDWIDTH float64) {
 	builder.PrependFloat64Slot(25, PULSE_BANDWIDTH, 0.0)
+}
+func SARAddPulseBandwidth(builder *flatbuffers.Builder, PULSE_BANDWIDTH float64) {
+	SARAddPULSE_BANDWIDTH(builder, PULSE_BANDWIDTH)
 }
 func SARAddPULSE_DURATION(builder *flatbuffers.Builder, PULSE_DURATION float64) {
 	builder.PrependFloat64Slot(26, PULSE_DURATION, 0.0)
 }
+func SARAddPulseDuration(builder *flatbuffers.Builder, PULSE_DURATION float64) {
+	SARAddPULSE_DURATION(builder, PULSE_DURATION)
+}
 func SARAddCONTINUOUS_SPOT_ANGLE(builder *flatbuffers.Builder, CONTINUOUS_SPOT_ANGLE float64) {
 	builder.PrependFloat64Slot(27, CONTINUOUS_SPOT_ANGLE, 0.0)
+}
+func SARAddContinuousSpotAngle(builder *flatbuffers.Builder, CONTINUOUS_SPOT_ANGLE float64) {
+	SARAddCONTINUOUS_SPOT_ANGLE(builder, CONTINUOUS_SPOT_ANGLE)
 }
 func SARAddSLANT_RANGE(builder *flatbuffers.Builder, SLANT_RANGE float64) {
 	builder.PrependFloat64Slot(28, SLANT_RANGE, 0.0)
 }
+func SARAddSlantRange(builder *flatbuffers.Builder, SLANT_RANGE float64) {
+	SARAddSLANT_RANGE(builder, SLANT_RANGE)
+}
 func SARAddNEAR_RANGE(builder *flatbuffers.Builder, NEAR_RANGE float64) {
 	builder.PrependFloat64Slot(29, NEAR_RANGE, 0.0)
+}
+func SARAddNearRange(builder *flatbuffers.Builder, NEAR_RANGE float64) {
+	SARAddNEAR_RANGE(builder, NEAR_RANGE)
 }
 func SARAddFAR_RANGE(builder *flatbuffers.Builder, FAR_RANGE float64) {
 	builder.PrependFloat64Slot(30, FAR_RANGE, 0.0)
 }
+func SARAddFarRange(builder *flatbuffers.Builder, FAR_RANGE float64) {
+	SARAddFAR_RANGE(builder, FAR_RANGE)
+}
 func SARAddSWATH_LENGTH(builder *flatbuffers.Builder, SWATH_LENGTH float64) {
 	builder.PrependFloat64Slot(31, SWATH_LENGTH, 0.0)
+}
+func SARAddSwathLength(builder *flatbuffers.Builder, SWATH_LENGTH float64) {
+	SARAddSWATH_LENGTH(builder, SWATH_LENGTH)
 }
 func SARAddAGJSON(builder *flatbuffers.Builder, AGJSON flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(32, flatbuffers.UOffsetT(AGJSON), 0)
 }
+func SARAddAgjson(builder *flatbuffers.Builder, AGJSON flatbuffers.UOffsetT) {
+	SARAddAGJSON(builder, AGJSON)
+}
 func SARAddATEXT(builder *flatbuffers.Builder, ATEXT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(33, flatbuffers.UOffsetT(ATEXT), 0)
+}
+func SARAddAtext(builder *flatbuffers.Builder, ATEXT flatbuffers.UOffsetT) {
+	SARAddATEXT(builder, ATEXT)
 }
 func SARAddATYPE(builder *flatbuffers.Builder, ATYPE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(34, flatbuffers.UOffsetT(ATYPE), 0)
 }
+func SARAddAtype(builder *flatbuffers.Builder, ATYPE flatbuffers.UOffsetT) {
+	SARAddATYPE(builder, ATYPE)
+}
 func SARAddCOORD_SYS(builder *flatbuffers.Builder, COORD_SYS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(35, flatbuffers.UOffsetT(COORD_SYS), 0)
+}
+func SARAddCoordSys(builder *flatbuffers.Builder, COORD_SYS flatbuffers.UOffsetT) {
+	SARAddCOORD_SYS(builder, COORD_SYS)
 }
 func SARAddSPACING_RANGE(builder *flatbuffers.Builder, SPACING_RANGE float64) {
 	builder.PrependFloat64Slot(36, SPACING_RANGE, 0.0)
 }
+func SARAddSpacingRange(builder *flatbuffers.Builder, SPACING_RANGE float64) {
+	SARAddSPACING_RANGE(builder, SPACING_RANGE)
+}
 func SARAddSPACING_AZIMUTH(builder *flatbuffers.Builder, SPACING_AZIMUTH float64) {
 	builder.PrependFloat64Slot(37, SPACING_AZIMUTH, 0.0)
+}
+func SARAddSpacingAzimuth(builder *flatbuffers.Builder, SPACING_AZIMUTH float64) {
+	SARAddSPACING_AZIMUTH(builder, SPACING_AZIMUTH)
 }
 func SARAddLOOKS_AZIMUTH(builder *flatbuffers.Builder, LOOKS_AZIMUTH byte) {
 	builder.PrependByteSlot(38, LOOKS_AZIMUTH, 0)
 }
+func SARAddLooksAzimuth(builder *flatbuffers.Builder, LOOKS_AZIMUTH byte) {
+	SARAddLOOKS_AZIMUTH(builder, LOOKS_AZIMUTH)
+}
 func SARAddLOOKS_RANGE(builder *flatbuffers.Builder, LOOKS_RANGE byte) {
 	builder.PrependByteSlot(39, LOOKS_RANGE, 0)
+}
+func SARAddLooksRange(builder *flatbuffers.Builder, LOOKS_RANGE byte) {
+	SARAddLOOKS_RANGE(builder, LOOKS_RANGE)
 }
 func SARAddRESOLUTION_RANGE(builder *flatbuffers.Builder, RESOLUTION_RANGE float64) {
 	builder.PrependFloat64Slot(40, RESOLUTION_RANGE, 0.0)
 }
+func SARAddResolutionRange(builder *flatbuffers.Builder, RESOLUTION_RANGE float64) {
+	SARAddRESOLUTION_RANGE(builder, RESOLUTION_RANGE)
+}
 func SARAddRESOLUTION_AZIMUTH(builder *flatbuffers.Builder, RESOLUTION_AZIMUTH float64) {
 	builder.PrependFloat64Slot(41, RESOLUTION_AZIMUTH, 0.0)
+}
+func SARAddResolutionAzimuth(builder *flatbuffers.Builder, RESOLUTION_AZIMUTH float64) {
+	SARAddRESOLUTION_AZIMUTH(builder, RESOLUTION_AZIMUTH)
 }
 func SARAddOB_DIRECTION(builder *flatbuffers.Builder, OB_DIRECTION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(42, flatbuffers.UOffsetT(OB_DIRECTION), 0)
 }
+func SARAddObDirection(builder *flatbuffers.Builder, OB_DIRECTION flatbuffers.UOffsetT) {
+	SARAddOB_DIRECTION(builder, OB_DIRECTION)
+}
 func SARAddTARGETPOSX(builder *flatbuffers.Builder, TARGETPOSX float64) {
 	builder.PrependFloat64Slot(43, TARGETPOSX, 0.0)
+}
+func SARAddTargetposx(builder *flatbuffers.Builder, TARGETPOSX float64) {
+	SARAddTARGETPOSX(builder, TARGETPOSX)
 }
 func SARAddTARGETPOSY(builder *flatbuffers.Builder, TARGETPOSY float64) {
 	builder.PrependFloat64Slot(44, TARGETPOSY, 0.0)
 }
+func SARAddTargetposy(builder *flatbuffers.Builder, TARGETPOSY float64) {
+	SARAddTARGETPOSY(builder, TARGETPOSY)
+}
 func SARAddTARGETPOSZ(builder *flatbuffers.Builder, TARGETPOSZ float64) {
 	builder.PrependFloat64Slot(45, TARGETPOSZ, 0.0)
+}
+func SARAddTargetposz(builder *flatbuffers.Builder, TARGETPOSZ float64) {
+	SARAddTARGETPOSZ(builder, TARGETPOSZ)
 }
 func SARAddSENALT(builder *flatbuffers.Builder, SENALT float64) {
 	builder.PrependFloat64Slot(46, SENALT, 0.0)
 }
+func SARAddSenalt(builder *flatbuffers.Builder, SENALT float64) {
+	SARAddSENALT(builder, SENALT)
+}
 func SARAddSENVELX(builder *flatbuffers.Builder, SENVELX float64) {
 	builder.PrependFloat64Slot(47, SENVELX, 0.0)
+}
+func SARAddSenvelx(builder *flatbuffers.Builder, SENVELX float64) {
+	SARAddSENVELX(builder, SENVELX)
 }
 func SARAddSENVELY(builder *flatbuffers.Builder, SENVELY float64) {
 	builder.PrependFloat64Slot(48, SENVELY, 0.0)
 }
+func SARAddSenvely(builder *flatbuffers.Builder, SENVELY float64) {
+	SARAddSENVELY(builder, SENVELY)
+}
 func SARAddSENVELZ(builder *flatbuffers.Builder, SENVELZ float64) {
 	builder.PrependFloat64Slot(49, SENVELZ, 0.0)
+}
+func SARAddSenvelz(builder *flatbuffers.Builder, SENVELZ float64) {
+	SARAddSENVELZ(builder, SENVELZ)
 }
 func SARAddSENLAT_START(builder *flatbuffers.Builder, SENLAT_START float64) {
 	builder.PrependFloat64Slot(50, SENLAT_START, 0.0)
 }
+func SARAddSenlatStart(builder *flatbuffers.Builder, SENLAT_START float64) {
+	SARAddSENLAT_START(builder, SENLAT_START)
+}
 func SARAddSENLON_START(builder *flatbuffers.Builder, SENLON_START float64) {
 	builder.PrependFloat64Slot(51, SENLON_START, 0.0)
+}
+func SARAddSenlonStart(builder *flatbuffers.Builder, SENLON_START float64) {
+	SARAddSENLON_START(builder, SENLON_START)
 }
 func SARAddSENLAT_END(builder *flatbuffers.Builder, SENLAT_END float64) {
 	builder.PrependFloat64Slot(52, SENLAT_END, 0.0)
 }
+func SARAddSenlatEnd(builder *flatbuffers.Builder, SENLAT_END float64) {
+	SARAddSENLAT_END(builder, SENLAT_END)
+}
 func SARAddSENLON_END(builder *flatbuffers.Builder, SENLON_END float64) {
 	builder.PrependFloat64Slot(53, SENLON_END, 0.0)
+}
+func SARAddSenlonEnd(builder *flatbuffers.Builder, SENLON_END float64) {
+	SARAddSENLON_END(builder, SENLON_END)
 }
 func SARAddTRANSACTION_ID(builder *flatbuffers.Builder, TRANSACTION_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(54, flatbuffers.UOffsetT(TRANSACTION_ID), 0)
 }
+func SARAddTransactionId(builder *flatbuffers.Builder, TRANSACTION_ID flatbuffers.UOffsetT) {
+	SARAddTRANSACTION_ID(builder, TRANSACTION_ID)
+}
 func SARAddTAGS(builder *flatbuffers.Builder, TAGS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(55, flatbuffers.UOffsetT(TAGS), 0)
+}
+func SARAddTags(builder *flatbuffers.Builder, TAGS flatbuffers.UOffsetT) {
+	SARAddTAGS(builder, TAGS)
 }
 func SARStartTAGSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
+func SARStartTagsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return SARStartTAGSVector(builder, numElems)
+}
 func SARAddSRC_TYPS(builder *flatbuffers.Builder, SRC_TYPS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(56, flatbuffers.UOffsetT(SRC_TYPS), 0)
+}
+func SARAddSrcTyps(builder *flatbuffers.Builder, SRC_TYPS flatbuffers.UOffsetT) {
+	SARAddSRC_TYPS(builder, SRC_TYPS)
 }
 func SARStartSRC_TYPSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
+func SARStartSrcTypsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return SARStartSRC_TYPSVector(builder, numElems)
+}
 func SARAddSRC_IDS(builder *flatbuffers.Builder, SRC_IDS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(57, flatbuffers.UOffsetT(SRC_IDS), 0)
 }
+func SARAddSrcIds(builder *flatbuffers.Builder, SRC_IDS flatbuffers.UOffsetT) {
+	SARAddSRC_IDS(builder, SRC_IDS)
+}
 func SARStartSRC_IDSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func SARStartSrcIdsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return SARStartSRC_IDSVector(builder, numElems)
 }
 func SAREnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

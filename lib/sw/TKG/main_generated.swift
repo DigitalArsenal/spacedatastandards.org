@@ -2,9 +2,13 @@
 // swiftlint:disable all
 // swiftformat:disable all
 
+#if canImport(Common)
+import Common
+#endif
+
 import FlatBuffers
 
-public enum FilterType: Int8, Enum, Verifiable {
+public enum FilterType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -25,7 +29,7 @@ public enum FilterType: Int8, Enum, Verifiable {
 }
 
 
-public enum MotionModel: Int8, Enum, Verifiable {
+public enum MotionModel: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -44,7 +48,7 @@ public enum MotionModel: Int8, Enum, Verifiable {
 }
 
 
-public enum MeasurementType: Int8, Enum, Verifiable {
+public enum MeasurementType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -67,7 +71,7 @@ public enum MeasurementType: Int8, Enum, Verifiable {
 }
 
 
-public enum TkgTrackStatus: Int8, Enum, Verifiable {
+public enum TkgTrackStatus: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -82,7 +86,7 @@ public enum TkgTrackStatus: Int8, Enum, Verifiable {
 }
 
 
-public enum AssociationMethod: Int8, Enum, Verifiable {
+public enum AssociationMethod: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -99,7 +103,7 @@ public enum AssociationMethod: Int8, Enum, Verifiable {
 }
 
 
-public enum FusionMethod: Int8, Enum, Verifiable {
+public enum FusionMethod: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -116,9 +120,9 @@ public enum FusionMethod: Int8, Enum, Verifiable {
 
 
 ///  Tracking and Data Fusion
-public struct TKG: FlatBufferObject, Verifiable {
+public struct TKG: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -160,9 +164,7 @@ public struct TKG: FlatBufferObject, Verifiable {
   public var INITIAL_STATESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.INITIAL_STATE.v) }
   public var TRACK_TO_UPDATE: String? { let o = _accessor.offset(VTOFFSET.TRACK_TO_UPDATE.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var TRACK_TO_UPDATESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TRACK_TO_UPDATE.v) }
-  public var hasTracksToCorrelate: Bool { let o = _accessor.offset(VTOFFSET.TRACKS_TO_CORRELATE.v); return o == 0 ? false : true }
-  public var TRACKS_TO_CORRELATECount: Int32 { let o = _accessor.offset(VTOFFSET.TRACKS_TO_CORRELATE.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func TRACKS_TO_CORRELATE(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.TRACKS_TO_CORRELATE.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  public var TRACKS_TO_CORRELATE: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.TRACKS_TO_CORRELATE.v, byteSize: 4) }
   public static func startTKG(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 10) }
   public static func add(COMMAND: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMMAND, at: VTOFFSET.COMMAND.p) }
   public static func add(FILTER_CONFIG: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FILTER_CONFIG, at: VTOFFSET.FILTER_CONFIG.p) }

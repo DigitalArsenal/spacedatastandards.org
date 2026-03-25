@@ -32,7 +32,7 @@ class PluginDependency : Table() {
     /**
      * Plugin ID of the dependency
      */
-    val PLUGIN_ID : String?
+    val pluginId : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class PluginDependency : Table() {
                 null
             }
         }
-    val PLUGIN_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun PLUGIN_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val pluginIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun pluginIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Minimum version required (semver)
      */
-    val MIN_VERSION : String?
+    val minVersion : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -55,12 +55,12 @@ class PluginDependency : Table() {
                 null
             }
         }
-    val MIN_VERSIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun MIN_VERSIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val minVersionAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun minVersionInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * Maximum version allowed (optional)
      */
-    val MAX_VERSION : String?
+    val maxVersion : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -69,26 +69,26 @@ class PluginDependency : Table() {
                 null
             }
         }
-    val MAX_VERSIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun MAX_VERSIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val maxVersionAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun maxVersionInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsPluginDependency(_bb: ByteBuffer): PluginDependency = getRootAsPluginDependency(_bb, PluginDependency())
         fun getRootAsPluginDependency(_bb: ByteBuffer, obj: PluginDependency): PluginDependency {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createPluginDependency(builder: FlatBufferBuilder, PLUGIN_IDOffset: Int, MIN_VERSIONOffset: Int, MAX_VERSIONOffset: Int) : Int {
+        fun createPluginDependency(builder: FlatBufferBuilder, pluginIdOffset: Int, minVersionOffset: Int, maxVersionOffset: Int) : Int {
             builder.startTable(3)
-            addMAX_VERSION(builder, MAX_VERSIONOffset)
-            addMIN_VERSION(builder, MIN_VERSIONOffset)
-            addPLUGIN_ID(builder, PLUGIN_IDOffset)
+            addMAXVERSION(builder, maxVersionOffset)
+            addMINVERSION(builder, minVersionOffset)
+            addPLUGINID(builder, pluginIdOffset)
             return endPluginDependency(builder)
         }
         fun startPluginDependency(builder: FlatBufferBuilder) = builder.startTable(3)
-        fun addPLUGIN_ID(builder: FlatBufferBuilder, PLUGIN_ID: Int) = builder.addOffset(0, PLUGIN_ID, 0)
-        fun addMIN_VERSION(builder: FlatBufferBuilder, MIN_VERSION: Int) = builder.addOffset(1, MIN_VERSION, 0)
-        fun addMAX_VERSION(builder: FlatBufferBuilder, MAX_VERSION: Int) = builder.addOffset(2, MAX_VERSION, 0)
+        fun addPLUGINID(builder: FlatBufferBuilder, pluginId: Int) = builder.addOffset(0, pluginId, 0)
+        fun addMINVERSION(builder: FlatBufferBuilder, minVersion: Int) = builder.addOffset(1, minVersion, 0)
+        fun addMAXVERSION(builder: FlatBufferBuilder, maxVersion: Int) = builder.addOffset(2, maxVersion, 0)
         fun endPluginDependency(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

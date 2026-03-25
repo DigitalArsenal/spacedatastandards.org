@@ -2,4 +2,195 @@
 
 # namespace: 
 
-# NOTE VCMStateVector.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# VCM State Vector (position and velocity)
+class VCMStateVector(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = VCMStateVector()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsVCMStateVector(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    # VCMStateVector
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # VCMStateVector
+    def EPOCH(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # VCMStateVector
+    def X(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # VCMStateVector
+    def Y(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # VCMStateVector
+    def Z(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # VCMStateVector
+    def X_DOT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # VCMStateVector
+    def Y_DOT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # VCMStateVector
+    def Z_DOT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+def VCMStateVectorStart(builder):
+    builder.StartObject(7)
+
+def Start(builder):
+    VCMStateVectorStart(builder)
+
+def VCMStateVectorAddEPOCH(builder, EPOCH):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(EPOCH), 0)
+
+def AddEPOCH(builder, EPOCH):
+    VCMStateVectorAddEPOCH(builder, EPOCH)
+
+def VCMStateVectorAddX(builder, X):
+    builder.PrependFloat64Slot(1, X, 0.0)
+
+def AddX(builder, X):
+    VCMStateVectorAddX(builder, X)
+
+def VCMStateVectorAddY(builder, Y):
+    builder.PrependFloat64Slot(2, Y, 0.0)
+
+def AddY(builder, Y):
+    VCMStateVectorAddY(builder, Y)
+
+def VCMStateVectorAddZ(builder, Z):
+    builder.PrependFloat64Slot(3, Z, 0.0)
+
+def AddZ(builder, Z):
+    VCMStateVectorAddZ(builder, Z)
+
+def VCMStateVectorAddX_DOT(builder, X_DOT):
+    builder.PrependFloat64Slot(4, X_DOT, 0.0)
+
+def AddX_DOT(builder, X_DOT):
+    VCMStateVectorAddX_DOT(builder, X_DOT)
+
+def VCMStateVectorAddY_DOT(builder, Y_DOT):
+    builder.PrependFloat64Slot(5, Y_DOT, 0.0)
+
+def AddY_DOT(builder, Y_DOT):
+    VCMStateVectorAddY_DOT(builder, Y_DOT)
+
+def VCMStateVectorAddZ_DOT(builder, Z_DOT):
+    builder.PrependFloat64Slot(6, Z_DOT, 0.0)
+
+def AddZ_DOT(builder, Z_DOT):
+    VCMStateVectorAddZ_DOT(builder, Z_DOT)
+
+def VCMStateVectorEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return VCMStateVectorEnd(builder)
+
+
+class VCMStateVectorT(object):
+
+    # VCMStateVectorT
+    def __init__(
+        self,
+        EPOCH = None,
+        X = 0.0,
+        Y = 0.0,
+        Z = 0.0,
+        X_DOT = 0.0,
+        Y_DOT = 0.0,
+        Z_DOT = 0.0,
+    ):
+        self.EPOCH = EPOCH  # type: Optional[str]
+        self.X = X  # type: float
+        self.Y = Y  # type: float
+        self.Z = Z  # type: float
+        self.X_DOT = X_DOT  # type: float
+        self.Y_DOT = Y_DOT  # type: float
+        self.Z_DOT = Z_DOT  # type: float
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpVcmstateVector = VCMStateVector()
+        tmpVcmstateVector.Init(buf, pos)
+        return cls.InitFromObj(tmpVcmstateVector)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpVcmstateVector):
+        x = VCMStateVectorT()
+        x._UnPack(tmpVcmstateVector)
+        return x
+
+    # VCMStateVectorT
+    def _UnPack(self, VCMStateVector):
+        if VCMStateVector is None:
+            return
+        self.EPOCH = VCMStateVector.EPOCH()
+        self.X = VCMStateVector.X()
+        self.Y = VCMStateVector.Y()
+        self.Z = VCMStateVector.Z()
+        self.X_DOT = VCMStateVector.X_DOT()
+        self.Y_DOT = VCMStateVector.Y_DOT()
+        self.Z_DOT = VCMStateVector.Z_DOT()
+
+    # VCMStateVectorT
+    def Pack(self, builder):
+        if self.EPOCH is not None:
+            EPOCH = builder.CreateString(self.EPOCH)
+        VCMStateVectorStart(builder)
+        if self.EPOCH is not None:
+            VCMStateVectorAddEPOCH(builder, EPOCH)
+        VCMStateVectorAddX(builder, self.X)
+        VCMStateVectorAddY(builder, self.Y)
+        VCMStateVectorAddZ(builder, self.Z)
+        VCMStateVectorAddX_DOT(builder, self.X_DOT)
+        VCMStateVectorAddY_DOT(builder, self.Y_DOT)
+        VCMStateVectorAddZ_DOT(builder, self.Z_DOT)
+        VCMStateVector = VCMStateVectorEnd(builder)
+        return VCMStateVector

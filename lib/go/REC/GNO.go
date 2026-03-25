@@ -63,6 +63,10 @@ func (rcv *GNO) ID() []byte {
 	return nil
 }
 
+func (rcv *GNO) Id() []byte {
+	return rcv.ID()
+}
+
 /// Unique identifier
 /// Receiver identifier
 func (rcv *GNO) RECEIVER_ID() []byte {
@@ -71,6 +75,10 @@ func (rcv *GNO) RECEIVER_ID() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *GNO) ReceiverId() []byte {
+	return rcv.RECEIVER_ID()
 }
 
 /// Receiver identifier
@@ -83,6 +91,10 @@ func (rcv *GNO) RECEIVER_TYPE() []byte {
 	return nil
 }
 
+func (rcv *GNO) ReceiverType() []byte {
+	return rcv.RECEIVER_TYPE()
+}
+
 /// Receiver type/model
 /// Antenna identifier
 func (rcv *GNO) ANTENNA_ID() []byte {
@@ -91,6 +103,10 @@ func (rcv *GNO) ANTENNA_ID() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *GNO) AntennaId() []byte {
+	return rcv.ANTENNA_ID()
 }
 
 /// Antenna identifier
@@ -103,6 +119,10 @@ func (rcv *GNO) ANTENNA_TYPE() []byte {
 	return nil
 }
 
+func (rcv *GNO) AntennaType() []byte {
+	return rcv.ANTENNA_TYPE()
+}
+
 /// Antenna type/model
 /// Receiver firmware version
 func (rcv *GNO) FIRMWARE_VERSION() []byte {
@@ -111,6 +131,10 @@ func (rcv *GNO) FIRMWARE_VERSION() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *GNO) FirmwareVersion() []byte {
+	return rcv.FIRMWARE_VERSION()
 }
 
 /// Receiver firmware version
@@ -123,6 +147,10 @@ func (rcv *GNO) EPOCH() []byte {
 	return nil
 }
 
+func (rcv *GNO) Epoch() []byte {
+	return rcv.EPOCH()
+}
+
 /// Observation epoch (ISO 8601)
 /// Receiver clock offset in seconds
 func (rcv *GNO) CLOCK_OFFSET() float64 {
@@ -133,9 +161,17 @@ func (rcv *GNO) CLOCK_OFFSET() float64 {
 	return 0.0
 }
 
+func (rcv *GNO) ClockOffset() float64 {
+	return rcv.CLOCK_OFFSET()
+}
+
 /// Receiver clock offset in seconds
 func (rcv *GNO) MutateCLOCK_OFFSET(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(18, n)
+}
+
+func (rcv *GNO) MutateClockOffset(n float64) bool {
+	return rcv.MutateCLOCK_OFFSET(n)
 }
 
 /// Receiver clock drift in seconds/second
@@ -147,9 +183,17 @@ func (rcv *GNO) CLOCK_DRIFT() float64 {
 	return 0.0
 }
 
+func (rcv *GNO) ClockDrift() float64 {
+	return rcv.CLOCK_DRIFT()
+}
+
 /// Receiver clock drift in seconds/second
 func (rcv *GNO) MutateCLOCK_DRIFT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(20, n)
+}
+
+func (rcv *GNO) MutateClockDrift(n float64) bool {
+	return rcv.MutateCLOCK_DRIFT(n)
 }
 
 /// Receiver geodetic latitude in degrees
@@ -161,9 +205,17 @@ func (rcv *GNO) LATITUDE() float64 {
 	return 0.0
 }
 
+func (rcv *GNO) Latitude() float64 {
+	return rcv.LATITUDE()
+}
+
 /// Receiver geodetic latitude in degrees
 func (rcv *GNO) MutateLATITUDE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(22, n)
+}
+
+func (rcv *GNO) MutateLatitude(n float64) bool {
+	return rcv.MutateLATITUDE(n)
 }
 
 /// Receiver geodetic longitude in degrees
@@ -175,9 +227,17 @@ func (rcv *GNO) LONGITUDE() float64 {
 	return 0.0
 }
 
+func (rcv *GNO) Longitude() float64 {
+	return rcv.LONGITUDE()
+}
+
 /// Receiver geodetic longitude in degrees
 func (rcv *GNO) MutateLONGITUDE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(24, n)
+}
+
+func (rcv *GNO) MutateLongitude(n float64) bool {
+	return rcv.MutateLONGITUDE(n)
 }
 
 /// Receiver altitude in meters above WGS-84
@@ -189,9 +249,17 @@ func (rcv *GNO) ALTITUDE() float64 {
 	return 0.0
 }
 
+func (rcv *GNO) Altitude() float64 {
+	return rcv.ALTITUDE()
+}
+
 /// Receiver altitude in meters above WGS-84
 func (rcv *GNO) MutateALTITUDE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(26, n)
+}
+
+func (rcv *GNO) MutateAltitude(n float64) bool {
+	return rcv.MutateALTITUDE(n)
 }
 
 /// Approximate position X in meters (ECEF)
@@ -203,9 +271,17 @@ func (rcv *GNO) APPROX_X() float64 {
 	return 0.0
 }
 
+func (rcv *GNO) ApproxX() float64 {
+	return rcv.APPROX_X()
+}
+
 /// Approximate position X in meters (ECEF)
 func (rcv *GNO) MutateAPPROX_X(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(28, n)
+}
+
+func (rcv *GNO) MutateApproxX(n float64) bool {
+	return rcv.MutateAPPROX_X(n)
 }
 
 /// Approximate position Y in meters (ECEF)
@@ -217,9 +293,17 @@ func (rcv *GNO) APPROX_Y() float64 {
 	return 0.0
 }
 
+func (rcv *GNO) ApproxY() float64 {
+	return rcv.APPROX_Y()
+}
+
 /// Approximate position Y in meters (ECEF)
 func (rcv *GNO) MutateAPPROX_Y(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(30, n)
+}
+
+func (rcv *GNO) MutateApproxY(n float64) bool {
+	return rcv.MutateAPPROX_Y(n)
 }
 
 /// Approximate position Z in meters (ECEF)
@@ -231,9 +315,17 @@ func (rcv *GNO) APPROX_Z() float64 {
 	return 0.0
 }
 
+func (rcv *GNO) ApproxZ() float64 {
+	return rcv.APPROX_Z()
+}
+
 /// Approximate position Z in meters (ECEF)
 func (rcv *GNO) MutateAPPROX_Z(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(32, n)
+}
+
+func (rcv *GNO) MutateApproxZ(n float64) bool {
+	return rcv.MutateAPPROX_Z(n)
 }
 
 /// Observation interval in seconds
@@ -245,9 +337,17 @@ func (rcv *GNO) INTERVAL() float64 {
 	return 0.0
 }
 
+func (rcv *GNO) Interval() float64 {
+	return rcv.INTERVAL()
+}
+
 /// Observation interval in seconds
 func (rcv *GNO) MutateINTERVAL(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(34, n)
+}
+
+func (rcv *GNO) MutateInterval(n float64) bool {
+	return rcv.MutateINTERVAL(n)
 }
 
 /// Number of satellites observed
@@ -259,9 +359,17 @@ func (rcv *GNO) NUM_SATS() uint32 {
 	return 0
 }
 
+func (rcv *GNO) NumSats() uint32 {
+	return rcv.NUM_SATS()
+}
+
 /// Number of satellites observed
 func (rcv *GNO) MutateNUM_SATS(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(36, n)
+}
+
+func (rcv *GNO) MutateNumSats(n uint32) bool {
+	return rcv.MutateNUM_SATS(n)
 }
 
 /// PDOP
@@ -273,9 +381,17 @@ func (rcv *GNO) PDOP() float64 {
 	return 0.0
 }
 
+func (rcv *GNO) Pdop() float64 {
+	return rcv.PDOP()
+}
+
 /// PDOP
 func (rcv *GNO) MutatePDOP(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(38, n)
+}
+
+func (rcv *GNO) MutatePdop(n float64) bool {
+	return rcv.MutatePDOP(n)
 }
 
 /// HDOP
@@ -287,9 +403,17 @@ func (rcv *GNO) HDOP() float64 {
 	return 0.0
 }
 
+func (rcv *GNO) Hdop() float64 {
+	return rcv.HDOP()
+}
+
 /// HDOP
 func (rcv *GNO) MutateHDOP(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(40, n)
+}
+
+func (rcv *GNO) MutateHdop(n float64) bool {
+	return rcv.MutateHDOP(n)
 }
 
 /// VDOP
@@ -301,9 +425,17 @@ func (rcv *GNO) VDOP() float64 {
 	return 0.0
 }
 
+func (rcv *GNO) Vdop() float64 {
+	return rcv.VDOP()
+}
+
 /// VDOP
 func (rcv *GNO) MutateVDOP(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(42, n)
+}
+
+func (rcv *GNO) MutateVdop(n float64) bool {
+	return rcv.MutateVDOP(n)
 }
 
 /// Satellite observations
@@ -313,10 +445,17 @@ func (rcv *GNO) SAT_OBS(obj *gnssSatObs, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(gnssSatObs)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *GNO) SatObs(obj *gnssSatObs, j int) bool {
+	return rcv.SAT_OBS(obj, j)
 }
 
 func (rcv *GNO) SAT_OBSLength() int {
@@ -325,6 +464,10 @@ func (rcv *GNO) SAT_OBSLength() int {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *GNO) SatObsLength() int {
+	return rcv.SAT_OBSLength()
 }
 
 /// Satellite observations
@@ -338,12 +481,20 @@ func (rcv *GNO) OBS_CODE_SET(j int) []byte {
 	return nil
 }
 
+func (rcv *GNO) ObsCodeSet(j int) []byte {
+	return rcv.OBS_CODE_SET(j)
+}
+
 func (rcv *GNO) OBS_CODE_SETLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(46))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *GNO) ObsCodeSetLength() int {
+	return rcv.OBS_CODE_SETLength()
 }
 
 /// Observation code set identifiers
@@ -356,6 +507,10 @@ func (rcv *GNO) NOTES() []byte {
 	return nil
 }
 
+func (rcv *GNO) Notes() []byte {
+	return rcv.NOTES()
+}
+
 /// Additional notes
 func GNOStart(builder *flatbuffers.Builder) {
 	builder.StartObject(23)
@@ -363,77 +518,152 @@ func GNOStart(builder *flatbuffers.Builder) {
 func GNOAddID(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ID), 0)
 }
+func GNOAddId(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
+	GNOAddID(builder, ID)
+}
 func GNOAddRECEIVER_ID(builder *flatbuffers.Builder, RECEIVER_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(RECEIVER_ID), 0)
+}
+func GNOAddReceiverId(builder *flatbuffers.Builder, RECEIVER_ID flatbuffers.UOffsetT) {
+	GNOAddRECEIVER_ID(builder, RECEIVER_ID)
 }
 func GNOAddRECEIVER_TYPE(builder *flatbuffers.Builder, RECEIVER_TYPE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(RECEIVER_TYPE), 0)
 }
+func GNOAddReceiverType(builder *flatbuffers.Builder, RECEIVER_TYPE flatbuffers.UOffsetT) {
+	GNOAddRECEIVER_TYPE(builder, RECEIVER_TYPE)
+}
 func GNOAddANTENNA_ID(builder *flatbuffers.Builder, ANTENNA_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(ANTENNA_ID), 0)
+}
+func GNOAddAntennaId(builder *flatbuffers.Builder, ANTENNA_ID flatbuffers.UOffsetT) {
+	GNOAddANTENNA_ID(builder, ANTENNA_ID)
 }
 func GNOAddANTENNA_TYPE(builder *flatbuffers.Builder, ANTENNA_TYPE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(ANTENNA_TYPE), 0)
 }
+func GNOAddAntennaType(builder *flatbuffers.Builder, ANTENNA_TYPE flatbuffers.UOffsetT) {
+	GNOAddANTENNA_TYPE(builder, ANTENNA_TYPE)
+}
 func GNOAddFIRMWARE_VERSION(builder *flatbuffers.Builder, FIRMWARE_VERSION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(FIRMWARE_VERSION), 0)
+}
+func GNOAddFirmwareVersion(builder *flatbuffers.Builder, FIRMWARE_VERSION flatbuffers.UOffsetT) {
+	GNOAddFIRMWARE_VERSION(builder, FIRMWARE_VERSION)
 }
 func GNOAddEPOCH(builder *flatbuffers.Builder, EPOCH flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(EPOCH), 0)
 }
+func GNOAddEpoch(builder *flatbuffers.Builder, EPOCH flatbuffers.UOffsetT) {
+	GNOAddEPOCH(builder, EPOCH)
+}
 func GNOAddCLOCK_OFFSET(builder *flatbuffers.Builder, CLOCK_OFFSET float64) {
 	builder.PrependFloat64Slot(7, CLOCK_OFFSET, 0.0)
+}
+func GNOAddClockOffset(builder *flatbuffers.Builder, CLOCK_OFFSET float64) {
+	GNOAddCLOCK_OFFSET(builder, CLOCK_OFFSET)
 }
 func GNOAddCLOCK_DRIFT(builder *flatbuffers.Builder, CLOCK_DRIFT float64) {
 	builder.PrependFloat64Slot(8, CLOCK_DRIFT, 0.0)
 }
+func GNOAddClockDrift(builder *flatbuffers.Builder, CLOCK_DRIFT float64) {
+	GNOAddCLOCK_DRIFT(builder, CLOCK_DRIFT)
+}
 func GNOAddLATITUDE(builder *flatbuffers.Builder, LATITUDE float64) {
 	builder.PrependFloat64Slot(9, LATITUDE, 0.0)
+}
+func GNOAddLatitude(builder *flatbuffers.Builder, LATITUDE float64) {
+	GNOAddLATITUDE(builder, LATITUDE)
 }
 func GNOAddLONGITUDE(builder *flatbuffers.Builder, LONGITUDE float64) {
 	builder.PrependFloat64Slot(10, LONGITUDE, 0.0)
 }
+func GNOAddLongitude(builder *flatbuffers.Builder, LONGITUDE float64) {
+	GNOAddLONGITUDE(builder, LONGITUDE)
+}
 func GNOAddALTITUDE(builder *flatbuffers.Builder, ALTITUDE float64) {
 	builder.PrependFloat64Slot(11, ALTITUDE, 0.0)
+}
+func GNOAddAltitude(builder *flatbuffers.Builder, ALTITUDE float64) {
+	GNOAddALTITUDE(builder, ALTITUDE)
 }
 func GNOAddAPPROX_X(builder *flatbuffers.Builder, APPROX_X float64) {
 	builder.PrependFloat64Slot(12, APPROX_X, 0.0)
 }
+func GNOAddApproxX(builder *flatbuffers.Builder, APPROX_X float64) {
+	GNOAddAPPROX_X(builder, APPROX_X)
+}
 func GNOAddAPPROX_Y(builder *flatbuffers.Builder, APPROX_Y float64) {
 	builder.PrependFloat64Slot(13, APPROX_Y, 0.0)
+}
+func GNOAddApproxY(builder *flatbuffers.Builder, APPROX_Y float64) {
+	GNOAddAPPROX_Y(builder, APPROX_Y)
 }
 func GNOAddAPPROX_Z(builder *flatbuffers.Builder, APPROX_Z float64) {
 	builder.PrependFloat64Slot(14, APPROX_Z, 0.0)
 }
+func GNOAddApproxZ(builder *flatbuffers.Builder, APPROX_Z float64) {
+	GNOAddAPPROX_Z(builder, APPROX_Z)
+}
 func GNOAddINTERVAL(builder *flatbuffers.Builder, INTERVAL float64) {
 	builder.PrependFloat64Slot(15, INTERVAL, 0.0)
+}
+func GNOAddInterval(builder *flatbuffers.Builder, INTERVAL float64) {
+	GNOAddINTERVAL(builder, INTERVAL)
 }
 func GNOAddNUM_SATS(builder *flatbuffers.Builder, NUM_SATS uint32) {
 	builder.PrependUint32Slot(16, NUM_SATS, 0)
 }
+func GNOAddNumSats(builder *flatbuffers.Builder, NUM_SATS uint32) {
+	GNOAddNUM_SATS(builder, NUM_SATS)
+}
 func GNOAddPDOP(builder *flatbuffers.Builder, PDOP float64) {
 	builder.PrependFloat64Slot(17, PDOP, 0.0)
+}
+func GNOAddPdop(builder *flatbuffers.Builder, PDOP float64) {
+	GNOAddPDOP(builder, PDOP)
 }
 func GNOAddHDOP(builder *flatbuffers.Builder, HDOP float64) {
 	builder.PrependFloat64Slot(18, HDOP, 0.0)
 }
+func GNOAddHdop(builder *flatbuffers.Builder, HDOP float64) {
+	GNOAddHDOP(builder, HDOP)
+}
 func GNOAddVDOP(builder *flatbuffers.Builder, VDOP float64) {
 	builder.PrependFloat64Slot(19, VDOP, 0.0)
+}
+func GNOAddVdop(builder *flatbuffers.Builder, VDOP float64) {
+	GNOAddVDOP(builder, VDOP)
 }
 func GNOAddSAT_OBS(builder *flatbuffers.Builder, SAT_OBS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(20, flatbuffers.UOffsetT(SAT_OBS), 0)
 }
+func GNOAddSatObs(builder *flatbuffers.Builder, SAT_OBS flatbuffers.UOffsetT) {
+	GNOAddSAT_OBS(builder, SAT_OBS)
+}
 func GNOStartSAT_OBSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func GNOStartSatObsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return GNOStartSAT_OBSVector(builder, numElems)
 }
 func GNOAddOBS_CODE_SET(builder *flatbuffers.Builder, OBS_CODE_SET flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(21, flatbuffers.UOffsetT(OBS_CODE_SET), 0)
 }
+func GNOAddObsCodeSet(builder *flatbuffers.Builder, OBS_CODE_SET flatbuffers.UOffsetT) {
+	GNOAddOBS_CODE_SET(builder, OBS_CODE_SET)
+}
 func GNOStartOBS_CODE_SETVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
+func GNOStartObsCodeSetVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return GNOStartOBS_CODE_SETVector(builder, numElems)
+}
 func GNOAddNOTES(builder *flatbuffers.Builder, NOTES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(22, flatbuffers.UOffsetT(NOTES), 0)
+}
+func GNOAddNotes(builder *flatbuffers.Builder, NOTES flatbuffers.UOffsetT) {
+	GNOAddNOTES(builder, NOTES)
 }
 func GNOEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

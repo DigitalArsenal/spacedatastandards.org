@@ -62,8 +62,16 @@ func (rcv *HEL) POSITION_X() float64 {
 	return 0.0
 }
 
+func (rcv *HEL) PositionX() float64 {
+	return rcv.POSITION_X()
+}
+
 func (rcv *HEL) MutatePOSITION_X(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(4, n)
+}
+
+func (rcv *HEL) MutatePositionX(n float64) bool {
+	return rcv.MutatePOSITION_X(n)
 }
 
 func (rcv *HEL) POSITION_Y() float64 {
@@ -74,8 +82,16 @@ func (rcv *HEL) POSITION_Y() float64 {
 	return 0.0
 }
 
+func (rcv *HEL) PositionY() float64 {
+	return rcv.POSITION_Y()
+}
+
 func (rcv *HEL) MutatePOSITION_Y(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(6, n)
+}
+
+func (rcv *HEL) MutatePositionY(n float64) bool {
+	return rcv.MutatePOSITION_Y(n)
 }
 
 func (rcv *HEL) POSITION_Z() float64 {
@@ -86,8 +102,16 @@ func (rcv *HEL) POSITION_Z() float64 {
 	return 0.0
 }
 
+func (rcv *HEL) PositionZ() float64 {
+	return rcv.POSITION_Z()
+}
+
 func (rcv *HEL) MutatePOSITION_Z(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(8, n)
+}
+
+func (rcv *HEL) MutatePositionZ(n float64) bool {
+	return rcv.MutatePOSITION_Z(n)
 }
 
 func (rcv *HEL) VELOCITY_X() float64 {
@@ -98,8 +122,16 @@ func (rcv *HEL) VELOCITY_X() float64 {
 	return 0.0
 }
 
+func (rcv *HEL) VelocityX() float64 {
+	return rcv.VELOCITY_X()
+}
+
 func (rcv *HEL) MutateVELOCITY_X(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(10, n)
+}
+
+func (rcv *HEL) MutateVelocityX(n float64) bool {
+	return rcv.MutateVELOCITY_X(n)
 }
 
 func (rcv *HEL) VELOCITY_Y() float64 {
@@ -110,8 +142,16 @@ func (rcv *HEL) VELOCITY_Y() float64 {
 	return 0.0
 }
 
+func (rcv *HEL) VelocityY() float64 {
+	return rcv.VELOCITY_Y()
+}
+
 func (rcv *HEL) MutateVELOCITY_Y(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(12, n)
+}
+
+func (rcv *HEL) MutateVelocityY(n float64) bool {
+	return rcv.MutateVELOCITY_Y(n)
 }
 
 func (rcv *HEL) VELOCITY_Z() float64 {
@@ -122,8 +162,16 @@ func (rcv *HEL) VELOCITY_Z() float64 {
 	return 0.0
 }
 
+func (rcv *HEL) VelocityZ() float64 {
+	return rcv.VELOCITY_Z()
+}
+
 func (rcv *HEL) MutateVELOCITY_Z(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(14, n)
+}
+
+func (rcv *HEL) MutateVelocityZ(n float64) bool {
+	return rcv.MutateVELOCITY_Z(n)
 }
 
 func (rcv *HEL) QUAT_W() float64 {
@@ -134,8 +182,16 @@ func (rcv *HEL) QUAT_W() float64 {
 	return 0.0
 }
 
+func (rcv *HEL) QuatW() float64 {
+	return rcv.QUAT_W()
+}
+
 func (rcv *HEL) MutateQUAT_W(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(16, n)
+}
+
+func (rcv *HEL) MutateQuatW(n float64) bool {
+	return rcv.MutateQUAT_W(n)
 }
 
 func (rcv *HEL) QUAT_X() float64 {
@@ -146,8 +202,16 @@ func (rcv *HEL) QUAT_X() float64 {
 	return 0.0
 }
 
+func (rcv *HEL) QuatX() float64 {
+	return rcv.QUAT_X()
+}
+
 func (rcv *HEL) MutateQUAT_X(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(18, n)
+}
+
+func (rcv *HEL) MutateQuatX(n float64) bool {
+	return rcv.MutateQUAT_X(n)
 }
 
 func (rcv *HEL) QUAT_Y() float64 {
@@ -158,8 +222,16 @@ func (rcv *HEL) QUAT_Y() float64 {
 	return 0.0
 }
 
+func (rcv *HEL) QuatY() float64 {
+	return rcv.QUAT_Y()
+}
+
 func (rcv *HEL) MutateQUAT_Y(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(20, n)
+}
+
+func (rcv *HEL) MutateQuatY(n float64) bool {
+	return rcv.MutateQUAT_Y(n)
 }
 
 func (rcv *HEL) QUAT_Z() float64 {
@@ -170,8 +242,16 @@ func (rcv *HEL) QUAT_Z() float64 {
 	return 0.0
 }
 
+func (rcv *HEL) QuatZ() float64 {
+	return rcv.QUAT_Z()
+}
+
 func (rcv *HEL) MutateQUAT_Z(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(22, n)
+}
+
+func (rcv *HEL) MutateQuatZ(n float64) bool {
+	return rcv.MutateQUAT_Z(n)
 }
 
 func (rcv *HEL) OMEGA_BODY_X() float64 {
@@ -182,8 +262,16 @@ func (rcv *HEL) OMEGA_BODY_X() float64 {
 	return 0.0
 }
 
+func (rcv *HEL) OmegaBodyX() float64 {
+	return rcv.OMEGA_BODY_X()
+}
+
 func (rcv *HEL) MutateOMEGA_BODY_X(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(24, n)
+}
+
+func (rcv *HEL) MutateOmegaBodyX(n float64) bool {
+	return rcv.MutateOMEGA_BODY_X(n)
 }
 
 func (rcv *HEL) OMEGA_BODY_Y() float64 {
@@ -194,8 +282,16 @@ func (rcv *HEL) OMEGA_BODY_Y() float64 {
 	return 0.0
 }
 
+func (rcv *HEL) OmegaBodyY() float64 {
+	return rcv.OMEGA_BODY_Y()
+}
+
 func (rcv *HEL) MutateOMEGA_BODY_Y(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(26, n)
+}
+
+func (rcv *HEL) MutateOmegaBodyY(n float64) bool {
+	return rcv.MutateOMEGA_BODY_Y(n)
 }
 
 func (rcv *HEL) OMEGA_BODY_Z() float64 {
@@ -206,8 +302,16 @@ func (rcv *HEL) OMEGA_BODY_Z() float64 {
 	return 0.0
 }
 
+func (rcv *HEL) OmegaBodyZ() float64 {
+	return rcv.OMEGA_BODY_Z()
+}
+
 func (rcv *HEL) MutateOMEGA_BODY_Z(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(28, n)
+}
+
+func (rcv *HEL) MutateOmegaBodyZ(n float64) bool {
+	return rcv.MutateOMEGA_BODY_Z(n)
 }
 
 func (rcv *HEL) MAIN_ROTOR() []byte {
@@ -218,12 +322,20 @@ func (rcv *HEL) MAIN_ROTOR() []byte {
 	return nil
 }
 
+func (rcv *HEL) MainRotor() []byte {
+	return rcv.MAIN_ROTOR()
+}
+
 func (rcv *HEL) TAIL_ROTOR() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *HEL) TailRotor() []byte {
+	return rcv.TAIL_ROTOR()
 }
 
 func (rcv *HEL) ENGINE_N1() float64 {
@@ -234,8 +346,16 @@ func (rcv *HEL) ENGINE_N1() float64 {
 	return 0.0
 }
 
+func (rcv *HEL) EngineN1() float64 {
+	return rcv.ENGINE_N1()
+}
+
 func (rcv *HEL) MutateENGINE_N1(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(34, n)
+}
+
+func (rcv *HEL) MutateEngineN1(n float64) bool {
+	return rcv.MutateENGINE_N1(n)
 }
 
 func (rcv *HEL) ENGINE_TORQUE() float64 {
@@ -246,8 +366,16 @@ func (rcv *HEL) ENGINE_TORQUE() float64 {
 	return 0.0
 }
 
+func (rcv *HEL) EngineTorque() float64 {
+	return rcv.ENGINE_TORQUE()
+}
+
 func (rcv *HEL) MutateENGINE_TORQUE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(36, n)
+}
+
+func (rcv *HEL) MutateEngineTorque(n float64) bool {
+	return rcv.MutateENGINE_TORQUE(n)
 }
 
 func (rcv *HEL) FLAGS() uint32 {
@@ -258,8 +386,16 @@ func (rcv *HEL) FLAGS() uint32 {
 	return 0
 }
 
+func (rcv *HEL) Flags() uint32 {
+	return rcv.FLAGS()
+}
+
 func (rcv *HEL) MutateFLAGS(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(38, n)
+}
+
+func (rcv *HEL) MutateFlags(n uint32) bool {
+	return rcv.MutateFLAGS(n)
 }
 
 func (rcv *HEL) FUEL_REMAINING() float32 {
@@ -270,8 +406,16 @@ func (rcv *HEL) FUEL_REMAINING() float32 {
 	return 0.0
 }
 
+func (rcv *HEL) FuelRemaining() float32 {
+	return rcv.FUEL_REMAINING()
+}
+
 func (rcv *HEL) MutateFUEL_REMAINING(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(40, n)
+}
+
+func (rcv *HEL) MutateFuelRemaining(n float32) bool {
+	return rcv.MutateFUEL_REMAINING(n)
 }
 
 func HELStart(builder *flatbuffers.Builder) {
@@ -280,59 +424,116 @@ func HELStart(builder *flatbuffers.Builder) {
 func HELAddPOSITION_X(builder *flatbuffers.Builder, POSITION_X float64) {
 	builder.PrependFloat64Slot(0, POSITION_X, 0.0)
 }
+func HELAddPositionX(builder *flatbuffers.Builder, POSITION_X float64) {
+	HELAddPOSITION_X(builder, POSITION_X)
+}
 func HELAddPOSITION_Y(builder *flatbuffers.Builder, POSITION_Y float64) {
 	builder.PrependFloat64Slot(1, POSITION_Y, 0.0)
+}
+func HELAddPositionY(builder *flatbuffers.Builder, POSITION_Y float64) {
+	HELAddPOSITION_Y(builder, POSITION_Y)
 }
 func HELAddPOSITION_Z(builder *flatbuffers.Builder, POSITION_Z float64) {
 	builder.PrependFloat64Slot(2, POSITION_Z, 0.0)
 }
+func HELAddPositionZ(builder *flatbuffers.Builder, POSITION_Z float64) {
+	HELAddPOSITION_Z(builder, POSITION_Z)
+}
 func HELAddVELOCITY_X(builder *flatbuffers.Builder, VELOCITY_X float64) {
 	builder.PrependFloat64Slot(3, VELOCITY_X, 0.0)
+}
+func HELAddVelocityX(builder *flatbuffers.Builder, VELOCITY_X float64) {
+	HELAddVELOCITY_X(builder, VELOCITY_X)
 }
 func HELAddVELOCITY_Y(builder *flatbuffers.Builder, VELOCITY_Y float64) {
 	builder.PrependFloat64Slot(4, VELOCITY_Y, 0.0)
 }
+func HELAddVelocityY(builder *flatbuffers.Builder, VELOCITY_Y float64) {
+	HELAddVELOCITY_Y(builder, VELOCITY_Y)
+}
 func HELAddVELOCITY_Z(builder *flatbuffers.Builder, VELOCITY_Z float64) {
 	builder.PrependFloat64Slot(5, VELOCITY_Z, 0.0)
+}
+func HELAddVelocityZ(builder *flatbuffers.Builder, VELOCITY_Z float64) {
+	HELAddVELOCITY_Z(builder, VELOCITY_Z)
 }
 func HELAddQUAT_W(builder *flatbuffers.Builder, QUAT_W float64) {
 	builder.PrependFloat64Slot(6, QUAT_W, 0.0)
 }
+func HELAddQuatW(builder *flatbuffers.Builder, QUAT_W float64) {
+	HELAddQUAT_W(builder, QUAT_W)
+}
 func HELAddQUAT_X(builder *flatbuffers.Builder, QUAT_X float64) {
 	builder.PrependFloat64Slot(7, QUAT_X, 0.0)
+}
+func HELAddQuatX(builder *flatbuffers.Builder, QUAT_X float64) {
+	HELAddQUAT_X(builder, QUAT_X)
 }
 func HELAddQUAT_Y(builder *flatbuffers.Builder, QUAT_Y float64) {
 	builder.PrependFloat64Slot(8, QUAT_Y, 0.0)
 }
+func HELAddQuatY(builder *flatbuffers.Builder, QUAT_Y float64) {
+	HELAddQUAT_Y(builder, QUAT_Y)
+}
 func HELAddQUAT_Z(builder *flatbuffers.Builder, QUAT_Z float64) {
 	builder.PrependFloat64Slot(9, QUAT_Z, 0.0)
+}
+func HELAddQuatZ(builder *flatbuffers.Builder, QUAT_Z float64) {
+	HELAddQUAT_Z(builder, QUAT_Z)
 }
 func HELAddOMEGA_BODY_X(builder *flatbuffers.Builder, OMEGA_BODY_X float64) {
 	builder.PrependFloat64Slot(10, OMEGA_BODY_X, 0.0)
 }
+func HELAddOmegaBodyX(builder *flatbuffers.Builder, OMEGA_BODY_X float64) {
+	HELAddOMEGA_BODY_X(builder, OMEGA_BODY_X)
+}
 func HELAddOMEGA_BODY_Y(builder *flatbuffers.Builder, OMEGA_BODY_Y float64) {
 	builder.PrependFloat64Slot(11, OMEGA_BODY_Y, 0.0)
+}
+func HELAddOmegaBodyY(builder *flatbuffers.Builder, OMEGA_BODY_Y float64) {
+	HELAddOMEGA_BODY_Y(builder, OMEGA_BODY_Y)
 }
 func HELAddOMEGA_BODY_Z(builder *flatbuffers.Builder, OMEGA_BODY_Z float64) {
 	builder.PrependFloat64Slot(12, OMEGA_BODY_Z, 0.0)
 }
+func HELAddOmegaBodyZ(builder *flatbuffers.Builder, OMEGA_BODY_Z float64) {
+	HELAddOMEGA_BODY_Z(builder, OMEGA_BODY_Z)
+}
 func HELAddMAIN_ROTOR(builder *flatbuffers.Builder, MAIN_ROTOR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(13, flatbuffers.UOffsetT(MAIN_ROTOR), 0)
+}
+func HELAddMainRotor(builder *flatbuffers.Builder, MAIN_ROTOR flatbuffers.UOffsetT) {
+	HELAddMAIN_ROTOR(builder, MAIN_ROTOR)
 }
 func HELAddTAIL_ROTOR(builder *flatbuffers.Builder, TAIL_ROTOR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(14, flatbuffers.UOffsetT(TAIL_ROTOR), 0)
 }
+func HELAddTailRotor(builder *flatbuffers.Builder, TAIL_ROTOR flatbuffers.UOffsetT) {
+	HELAddTAIL_ROTOR(builder, TAIL_ROTOR)
+}
 func HELAddENGINE_N1(builder *flatbuffers.Builder, ENGINE_N1 float64) {
 	builder.PrependFloat64Slot(15, ENGINE_N1, 0.0)
+}
+func HELAddEngineN1(builder *flatbuffers.Builder, ENGINE_N1 float64) {
+	HELAddENGINE_N1(builder, ENGINE_N1)
 }
 func HELAddENGINE_TORQUE(builder *flatbuffers.Builder, ENGINE_TORQUE float64) {
 	builder.PrependFloat64Slot(16, ENGINE_TORQUE, 0.0)
 }
+func HELAddEngineTorque(builder *flatbuffers.Builder, ENGINE_TORQUE float64) {
+	HELAddENGINE_TORQUE(builder, ENGINE_TORQUE)
+}
 func HELAddFLAGS(builder *flatbuffers.Builder, FLAGS uint32) {
 	builder.PrependUint32Slot(17, FLAGS, 0)
 }
+func HELAddFlags(builder *flatbuffers.Builder, FLAGS uint32) {
+	HELAddFLAGS(builder, FLAGS)
+}
 func HELAddFUEL_REMAINING(builder *flatbuffers.Builder, FUEL_REMAINING float32) {
 	builder.PrependFloat32Slot(18, FUEL_REMAINING, 0.0)
+}
+func HELAddFuelRemaining(builder *flatbuffers.Builder, FUEL_REMAINING float32) {
+	HELAddFUEL_REMAINING(builder, FUEL_REMAINING)
 }
 func HELEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

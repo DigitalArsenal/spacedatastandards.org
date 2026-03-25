@@ -2,4 +2,700 @@
 
 # namespace: 
 
-# NOTE RDM.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Reentry Data Message
+class RDM(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = RDM()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsRDM(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def RDMBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x52\x44\x4D", size_prefixed=size_prefixed)
+
+    # RDM
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # CCSDS RDM version
+    # RDM
+    def CCSDS_RDM_VERS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Message creation date (ISO 8601)
+    # RDM
+    def CREATION_DATE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Creating organization
+    # RDM
+    def ORIGINATOR(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Object name
+    # RDM
+    def OBJECT_NAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # International designator
+    # RDM
+    def OBJECT_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # NORAD catalog number
+    # RDM
+    def NORAD_CAT_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+        return 0
+
+    # Object type (PAYLOAD, ROCKET_BODY, DEBRIS, UNKNOWN)
+    # RDM
+    def OBJECT_TYPE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Reentry disposition
+    # RDM
+    def DISPOSITION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # Reentry reason
+    # RDM
+    def REASON(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # Predicted reentry epoch (ISO 8601)
+    # RDM
+    def REENTRY_EPOCH(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Reentry epoch uncertainty window in hours
+    # RDM
+    def REENTRY_EPOCH_UNC(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Reentry latitude in degrees
+    # RDM
+    def REENTRY_LATITUDE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Reentry longitude in degrees
+    # RDM
+    def REENTRY_LONGITUDE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Reentry altitude in km
+    # RDM
+    def REENTRY_ALTITUDE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Time system
+    # RDM
+    def TIME_SYSTEM(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Previous predicted reentry epoch for comparison (ISO 8601)
+    # RDM
+    def PREV_PREDICTION_EPOCH(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Ballistic coefficient in kg/m^2
+    # RDM
+    def BALLISTIC_COEFF(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Object mass in kg
+    # RDM
+    def MASS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Solar radiation pressure area in m^2
+    # RDM
+    def SOLAR_RAD_AREA(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Drag area in m^2
+    # RDM
+    def DRAG_AREA(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Initial state vector
+    # RDM
+    def INITIAL_STATE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from reentryStateVector import reentryStateVector
+            obj = reentryStateVector()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Ground impact predictions
+    # RDM
+    def IMPACT_PREDICTIONS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from reentryImpact import reentryImpact
+            obj = reentryImpact()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # RDM
+    def IMPACT_PREDICTIONSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # RDM
+    def IMPACT_PREDICTIONSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+        return o == 0
+
+    # Predicted surviving debris
+    # RDM
+    def SURVIVING_DEBRIS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from survivingDebris import survivingDebris
+            obj = survivingDebris()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # RDM
+    def SURVIVING_DEBRISLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # RDM
+    def SURVIVING_DEBRISIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
+        return o == 0
+
+    # Casualty expectation
+    # RDM
+    def CASUALTY_EXPECTATION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Number of breakup fragments predicted
+    # RDM
+    def NUM_FRAGMENTS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(52))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+        return 0
+
+    # Total surviving mass in kg
+    # RDM
+    def SURVIVING_MASS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(54))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Additional comments
+    # RDM
+    def COMMENT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(56))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+def RDMStart(builder):
+    builder.StartObject(27)
+
+def Start(builder):
+    RDMStart(builder)
+
+def RDMAddCCSDS_RDM_VERS(builder, CCSDS_RDM_VERS):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(CCSDS_RDM_VERS), 0)
+
+def AddCCSDS_RDM_VERS(builder, CCSDS_RDM_VERS):
+    RDMAddCCSDS_RDM_VERS(builder, CCSDS_RDM_VERS)
+
+def RDMAddCREATION_DATE(builder, CREATION_DATE):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(CREATION_DATE), 0)
+
+def AddCREATION_DATE(builder, CREATION_DATE):
+    RDMAddCREATION_DATE(builder, CREATION_DATE)
+
+def RDMAddORIGINATOR(builder, ORIGINATOR):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(ORIGINATOR), 0)
+
+def AddORIGINATOR(builder, ORIGINATOR):
+    RDMAddORIGINATOR(builder, ORIGINATOR)
+
+def RDMAddOBJECT_NAME(builder, OBJECT_NAME):
+    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(OBJECT_NAME), 0)
+
+def AddOBJECT_NAME(builder, OBJECT_NAME):
+    RDMAddOBJECT_NAME(builder, OBJECT_NAME)
+
+def RDMAddOBJECT_ID(builder, OBJECT_ID):
+    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(OBJECT_ID), 0)
+
+def AddOBJECT_ID(builder, OBJECT_ID):
+    RDMAddOBJECT_ID(builder, OBJECT_ID)
+
+def RDMAddNORAD_CAT_ID(builder, NORAD_CAT_ID):
+    builder.PrependUint32Slot(5, NORAD_CAT_ID, 0)
+
+def AddNORAD_CAT_ID(builder, NORAD_CAT_ID):
+    RDMAddNORAD_CAT_ID(builder, NORAD_CAT_ID)
+
+def RDMAddOBJECT_TYPE(builder, OBJECT_TYPE):
+    builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(OBJECT_TYPE), 0)
+
+def AddOBJECT_TYPE(builder, OBJECT_TYPE):
+    RDMAddOBJECT_TYPE(builder, OBJECT_TYPE)
+
+def RDMAddDISPOSITION(builder, DISPOSITION):
+    builder.PrependInt8Slot(7, DISPOSITION, 0)
+
+def AddDISPOSITION(builder, DISPOSITION):
+    RDMAddDISPOSITION(builder, DISPOSITION)
+
+def RDMAddREASON(builder, REASON):
+    builder.PrependInt8Slot(8, REASON, 0)
+
+def AddREASON(builder, REASON):
+    RDMAddREASON(builder, REASON)
+
+def RDMAddREENTRY_EPOCH(builder, REENTRY_EPOCH):
+    builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(REENTRY_EPOCH), 0)
+
+def AddREENTRY_EPOCH(builder, REENTRY_EPOCH):
+    RDMAddREENTRY_EPOCH(builder, REENTRY_EPOCH)
+
+def RDMAddREENTRY_EPOCH_UNC(builder, REENTRY_EPOCH_UNC):
+    builder.PrependFloat64Slot(10, REENTRY_EPOCH_UNC, 0.0)
+
+def AddREENTRY_EPOCH_UNC(builder, REENTRY_EPOCH_UNC):
+    RDMAddREENTRY_EPOCH_UNC(builder, REENTRY_EPOCH_UNC)
+
+def RDMAddREENTRY_LATITUDE(builder, REENTRY_LATITUDE):
+    builder.PrependFloat64Slot(11, REENTRY_LATITUDE, 0.0)
+
+def AddREENTRY_LATITUDE(builder, REENTRY_LATITUDE):
+    RDMAddREENTRY_LATITUDE(builder, REENTRY_LATITUDE)
+
+def RDMAddREENTRY_LONGITUDE(builder, REENTRY_LONGITUDE):
+    builder.PrependFloat64Slot(12, REENTRY_LONGITUDE, 0.0)
+
+def AddREENTRY_LONGITUDE(builder, REENTRY_LONGITUDE):
+    RDMAddREENTRY_LONGITUDE(builder, REENTRY_LONGITUDE)
+
+def RDMAddREENTRY_ALTITUDE(builder, REENTRY_ALTITUDE):
+    builder.PrependFloat64Slot(13, REENTRY_ALTITUDE, 0.0)
+
+def AddREENTRY_ALTITUDE(builder, REENTRY_ALTITUDE):
+    RDMAddREENTRY_ALTITUDE(builder, REENTRY_ALTITUDE)
+
+def RDMAddTIME_SYSTEM(builder, TIME_SYSTEM):
+    builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(TIME_SYSTEM), 0)
+
+def AddTIME_SYSTEM(builder, TIME_SYSTEM):
+    RDMAddTIME_SYSTEM(builder, TIME_SYSTEM)
+
+def RDMAddPREV_PREDICTION_EPOCH(builder, PREV_PREDICTION_EPOCH):
+    builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(PREV_PREDICTION_EPOCH), 0)
+
+def AddPREV_PREDICTION_EPOCH(builder, PREV_PREDICTION_EPOCH):
+    RDMAddPREV_PREDICTION_EPOCH(builder, PREV_PREDICTION_EPOCH)
+
+def RDMAddBALLISTIC_COEFF(builder, BALLISTIC_COEFF):
+    builder.PrependFloat64Slot(16, BALLISTIC_COEFF, 0.0)
+
+def AddBALLISTIC_COEFF(builder, BALLISTIC_COEFF):
+    RDMAddBALLISTIC_COEFF(builder, BALLISTIC_COEFF)
+
+def RDMAddMASS(builder, MASS):
+    builder.PrependFloat64Slot(17, MASS, 0.0)
+
+def AddMASS(builder, MASS):
+    RDMAddMASS(builder, MASS)
+
+def RDMAddSOLAR_RAD_AREA(builder, SOLAR_RAD_AREA):
+    builder.PrependFloat64Slot(18, SOLAR_RAD_AREA, 0.0)
+
+def AddSOLAR_RAD_AREA(builder, SOLAR_RAD_AREA):
+    RDMAddSOLAR_RAD_AREA(builder, SOLAR_RAD_AREA)
+
+def RDMAddDRAG_AREA(builder, DRAG_AREA):
+    builder.PrependFloat64Slot(19, DRAG_AREA, 0.0)
+
+def AddDRAG_AREA(builder, DRAG_AREA):
+    RDMAddDRAG_AREA(builder, DRAG_AREA)
+
+def RDMAddINITIAL_STATE(builder, INITIAL_STATE):
+    builder.PrependUOffsetTRelativeSlot(20, flatbuffers.number_types.UOffsetTFlags.py_type(INITIAL_STATE), 0)
+
+def AddINITIAL_STATE(builder, INITIAL_STATE):
+    RDMAddINITIAL_STATE(builder, INITIAL_STATE)
+
+def RDMAddIMPACT_PREDICTIONS(builder, IMPACT_PREDICTIONS):
+    builder.PrependUOffsetTRelativeSlot(21, flatbuffers.number_types.UOffsetTFlags.py_type(IMPACT_PREDICTIONS), 0)
+
+def AddIMPACT_PREDICTIONS(builder, IMPACT_PREDICTIONS):
+    RDMAddIMPACT_PREDICTIONS(builder, IMPACT_PREDICTIONS)
+
+def RDMStartIMPACT_PREDICTIONSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartIMPACT_PREDICTIONSVector(builder, numElems):
+    return RDMStartIMPACT_PREDICTIONSVector(builder, numElems)
+
+def RDMCreateIMPACT_PREDICTIONSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateIMPACT_PREDICTIONSVector(builder, data):
+    RDMCreateIMPACT_PREDICTIONSVector(builder, data)
+
+def RDMAddSURVIVING_DEBRIS(builder, SURVIVING_DEBRIS):
+    builder.PrependUOffsetTRelativeSlot(22, flatbuffers.number_types.UOffsetTFlags.py_type(SURVIVING_DEBRIS), 0)
+
+def AddSURVIVING_DEBRIS(builder, SURVIVING_DEBRIS):
+    RDMAddSURVIVING_DEBRIS(builder, SURVIVING_DEBRIS)
+
+def RDMStartSURVIVING_DEBRISVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartSURVIVING_DEBRISVector(builder, numElems):
+    return RDMStartSURVIVING_DEBRISVector(builder, numElems)
+
+def RDMCreateSURVIVING_DEBRISVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateSURVIVING_DEBRISVector(builder, data):
+    RDMCreateSURVIVING_DEBRISVector(builder, data)
+
+def RDMAddCASUALTY_EXPECTATION(builder, CASUALTY_EXPECTATION):
+    builder.PrependFloat64Slot(23, CASUALTY_EXPECTATION, 0.0)
+
+def AddCASUALTY_EXPECTATION(builder, CASUALTY_EXPECTATION):
+    RDMAddCASUALTY_EXPECTATION(builder, CASUALTY_EXPECTATION)
+
+def RDMAddNUM_FRAGMENTS(builder, NUM_FRAGMENTS):
+    builder.PrependUint32Slot(24, NUM_FRAGMENTS, 0)
+
+def AddNUM_FRAGMENTS(builder, NUM_FRAGMENTS):
+    RDMAddNUM_FRAGMENTS(builder, NUM_FRAGMENTS)
+
+def RDMAddSURVIVING_MASS(builder, SURVIVING_MASS):
+    builder.PrependFloat64Slot(25, SURVIVING_MASS, 0.0)
+
+def AddSURVIVING_MASS(builder, SURVIVING_MASS):
+    RDMAddSURVIVING_MASS(builder, SURVIVING_MASS)
+
+def RDMAddCOMMENT(builder, COMMENT):
+    builder.PrependUOffsetTRelativeSlot(26, flatbuffers.number_types.UOffsetTFlags.py_type(COMMENT), 0)
+
+def AddCOMMENT(builder, COMMENT):
+    RDMAddCOMMENT(builder, COMMENT)
+
+def RDMEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return RDMEnd(builder)
+
+import reentryImpact
+import reentryStateVector
+import survivingDebris
+try:
+    from typing import List, Optional
+except:
+    pass
+
+class RDMT(object):
+
+    # RDMT
+    def __init__(
+        self,
+        CCSDS_RDM_VERS = None,
+        CREATION_DATE = None,
+        ORIGINATOR = None,
+        OBJECT_NAME = None,
+        OBJECT_ID = None,
+        NORAD_CAT_ID = 0,
+        OBJECT_TYPE = None,
+        DISPOSITION = 0,
+        REASON = 0,
+        REENTRY_EPOCH = None,
+        REENTRY_EPOCH_UNC = 0.0,
+        REENTRY_LATITUDE = 0.0,
+        REENTRY_LONGITUDE = 0.0,
+        REENTRY_ALTITUDE = 0.0,
+        TIME_SYSTEM = None,
+        PREV_PREDICTION_EPOCH = None,
+        BALLISTIC_COEFF = 0.0,
+        MASS = 0.0,
+        SOLAR_RAD_AREA = 0.0,
+        DRAG_AREA = 0.0,
+        INITIAL_STATE = None,
+        IMPACT_PREDICTIONS = None,
+        SURVIVING_DEBRIS = None,
+        CASUALTY_EXPECTATION = 0.0,
+        NUM_FRAGMENTS = 0,
+        SURVIVING_MASS = 0.0,
+        COMMENT = None,
+    ):
+        self.CCSDS_RDM_VERS = CCSDS_RDM_VERS  # type: Optional[str]
+        self.CREATION_DATE = CREATION_DATE  # type: Optional[str]
+        self.ORIGINATOR = ORIGINATOR  # type: Optional[str]
+        self.OBJECT_NAME = OBJECT_NAME  # type: Optional[str]
+        self.OBJECT_ID = OBJECT_ID  # type: Optional[str]
+        self.NORAD_CAT_ID = NORAD_CAT_ID  # type: int
+        self.OBJECT_TYPE = OBJECT_TYPE  # type: Optional[str]
+        self.DISPOSITION = DISPOSITION  # type: int
+        self.REASON = REASON  # type: int
+        self.REENTRY_EPOCH = REENTRY_EPOCH  # type: Optional[str]
+        self.REENTRY_EPOCH_UNC = REENTRY_EPOCH_UNC  # type: float
+        self.REENTRY_LATITUDE = REENTRY_LATITUDE  # type: float
+        self.REENTRY_LONGITUDE = REENTRY_LONGITUDE  # type: float
+        self.REENTRY_ALTITUDE = REENTRY_ALTITUDE  # type: float
+        self.TIME_SYSTEM = TIME_SYSTEM  # type: Optional[str]
+        self.PREV_PREDICTION_EPOCH = PREV_PREDICTION_EPOCH  # type: Optional[str]
+        self.BALLISTIC_COEFF = BALLISTIC_COEFF  # type: float
+        self.MASS = MASS  # type: float
+        self.SOLAR_RAD_AREA = SOLAR_RAD_AREA  # type: float
+        self.DRAG_AREA = DRAG_AREA  # type: float
+        self.INITIAL_STATE = INITIAL_STATE  # type: Optional[reentryStateVector.reentryStateVectorT]
+        self.IMPACT_PREDICTIONS = IMPACT_PREDICTIONS  # type: Optional[List[reentryImpact.reentryImpactT]]
+        self.SURVIVING_DEBRIS = SURVIVING_DEBRIS  # type: Optional[List[survivingDebris.survivingDebrisT]]
+        self.CASUALTY_EXPECTATION = CASUALTY_EXPECTATION  # type: float
+        self.NUM_FRAGMENTS = NUM_FRAGMENTS  # type: int
+        self.SURVIVING_MASS = SURVIVING_MASS  # type: float
+        self.COMMENT = COMMENT  # type: Optional[str]
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpRdm = RDM()
+        tmpRdm.Init(buf, pos)
+        return cls.InitFromObj(tmpRdm)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpRdm):
+        x = RDMT()
+        x._UnPack(tmpRdm)
+        return x
+
+    # RDMT
+    def _UnPack(self, RDM):
+        if RDM is None:
+            return
+        self.CCSDS_RDM_VERS = RDM.CCSDS_RDM_VERS()
+        self.CREATION_DATE = RDM.CREATION_DATE()
+        self.ORIGINATOR = RDM.ORIGINATOR()
+        self.OBJECT_NAME = RDM.OBJECT_NAME()
+        self.OBJECT_ID = RDM.OBJECT_ID()
+        self.NORAD_CAT_ID = RDM.NORAD_CAT_ID()
+        self.OBJECT_TYPE = RDM.OBJECT_TYPE()
+        self.DISPOSITION = RDM.DISPOSITION()
+        self.REASON = RDM.REASON()
+        self.REENTRY_EPOCH = RDM.REENTRY_EPOCH()
+        self.REENTRY_EPOCH_UNC = RDM.REENTRY_EPOCH_UNC()
+        self.REENTRY_LATITUDE = RDM.REENTRY_LATITUDE()
+        self.REENTRY_LONGITUDE = RDM.REENTRY_LONGITUDE()
+        self.REENTRY_ALTITUDE = RDM.REENTRY_ALTITUDE()
+        self.TIME_SYSTEM = RDM.TIME_SYSTEM()
+        self.PREV_PREDICTION_EPOCH = RDM.PREV_PREDICTION_EPOCH()
+        self.BALLISTIC_COEFF = RDM.BALLISTIC_COEFF()
+        self.MASS = RDM.MASS()
+        self.SOLAR_RAD_AREA = RDM.SOLAR_RAD_AREA()
+        self.DRAG_AREA = RDM.DRAG_AREA()
+        if RDM.INITIAL_STATE() is not None:
+            self.INITIAL_STATE = reentryStateVector.reentryStateVectorT.InitFromObj(RDM.INITIAL_STATE())
+        if not RDM.IMPACT_PREDICTIONSIsNone():
+            self.IMPACT_PREDICTIONS = []
+            for i in range(RDM.IMPACT_PREDICTIONSLength()):
+                if RDM.IMPACT_PREDICTIONS(i) is None:
+                    self.IMPACT_PREDICTIONS.append(None)
+                else:
+                    reentryImpact_ = reentryImpact.reentryImpactT.InitFromObj(RDM.IMPACT_PREDICTIONS(i))
+                    self.IMPACT_PREDICTIONS.append(reentryImpact_)
+        if not RDM.SURVIVING_DEBRISIsNone():
+            self.SURVIVING_DEBRIS = []
+            for i in range(RDM.SURVIVING_DEBRISLength()):
+                if RDM.SURVIVING_DEBRIS(i) is None:
+                    self.SURVIVING_DEBRIS.append(None)
+                else:
+                    survivingDebris_ = survivingDebris.survivingDebrisT.InitFromObj(RDM.SURVIVING_DEBRIS(i))
+                    self.SURVIVING_DEBRIS.append(survivingDebris_)
+        self.CASUALTY_EXPECTATION = RDM.CASUALTY_EXPECTATION()
+        self.NUM_FRAGMENTS = RDM.NUM_FRAGMENTS()
+        self.SURVIVING_MASS = RDM.SURVIVING_MASS()
+        self.COMMENT = RDM.COMMENT()
+
+    # RDMT
+    def Pack(self, builder):
+        if self.CCSDS_RDM_VERS is not None:
+            CCSDS_RDM_VERS = builder.CreateString(self.CCSDS_RDM_VERS)
+        if self.CREATION_DATE is not None:
+            CREATION_DATE = builder.CreateString(self.CREATION_DATE)
+        if self.ORIGINATOR is not None:
+            ORIGINATOR = builder.CreateString(self.ORIGINATOR)
+        if self.OBJECT_NAME is not None:
+            OBJECT_NAME = builder.CreateString(self.OBJECT_NAME)
+        if self.OBJECT_ID is not None:
+            OBJECT_ID = builder.CreateString(self.OBJECT_ID)
+        if self.OBJECT_TYPE is not None:
+            OBJECT_TYPE = builder.CreateString(self.OBJECT_TYPE)
+        if self.REENTRY_EPOCH is not None:
+            REENTRY_EPOCH = builder.CreateString(self.REENTRY_EPOCH)
+        if self.TIME_SYSTEM is not None:
+            TIME_SYSTEM = builder.CreateString(self.TIME_SYSTEM)
+        if self.PREV_PREDICTION_EPOCH is not None:
+            PREV_PREDICTION_EPOCH = builder.CreateString(self.PREV_PREDICTION_EPOCH)
+        if self.INITIAL_STATE is not None:
+            INITIAL_STATE = self.INITIAL_STATE.Pack(builder)
+        if self.IMPACT_PREDICTIONS is not None:
+            IMPACT_PREDICTIONSlist = []
+            for i in range(len(self.IMPACT_PREDICTIONS)):
+                IMPACT_PREDICTIONSlist.append(self.IMPACT_PREDICTIONS[i].Pack(builder))
+            RDMStartIMPACT_PREDICTIONSVector(builder, len(self.IMPACT_PREDICTIONS))
+            for i in reversed(range(len(self.IMPACT_PREDICTIONS))):
+                builder.PrependUOffsetTRelative(IMPACT_PREDICTIONSlist[i])
+            IMPACT_PREDICTIONS = builder.EndVector()
+        if self.SURVIVING_DEBRIS is not None:
+            SURVIVING_DEBRISlist = []
+            for i in range(len(self.SURVIVING_DEBRIS)):
+                SURVIVING_DEBRISlist.append(self.SURVIVING_DEBRIS[i].Pack(builder))
+            RDMStartSURVIVING_DEBRISVector(builder, len(self.SURVIVING_DEBRIS))
+            for i in reversed(range(len(self.SURVIVING_DEBRIS))):
+                builder.PrependUOffsetTRelative(SURVIVING_DEBRISlist[i])
+            SURVIVING_DEBRIS = builder.EndVector()
+        if self.COMMENT is not None:
+            COMMENT = builder.CreateString(self.COMMENT)
+        RDMStart(builder)
+        if self.CCSDS_RDM_VERS is not None:
+            RDMAddCCSDS_RDM_VERS(builder, CCSDS_RDM_VERS)
+        if self.CREATION_DATE is not None:
+            RDMAddCREATION_DATE(builder, CREATION_DATE)
+        if self.ORIGINATOR is not None:
+            RDMAddORIGINATOR(builder, ORIGINATOR)
+        if self.OBJECT_NAME is not None:
+            RDMAddOBJECT_NAME(builder, OBJECT_NAME)
+        if self.OBJECT_ID is not None:
+            RDMAddOBJECT_ID(builder, OBJECT_ID)
+        RDMAddNORAD_CAT_ID(builder, self.NORAD_CAT_ID)
+        if self.OBJECT_TYPE is not None:
+            RDMAddOBJECT_TYPE(builder, OBJECT_TYPE)
+        RDMAddDISPOSITION(builder, self.DISPOSITION)
+        RDMAddREASON(builder, self.REASON)
+        if self.REENTRY_EPOCH is not None:
+            RDMAddREENTRY_EPOCH(builder, REENTRY_EPOCH)
+        RDMAddREENTRY_EPOCH_UNC(builder, self.REENTRY_EPOCH_UNC)
+        RDMAddREENTRY_LATITUDE(builder, self.REENTRY_LATITUDE)
+        RDMAddREENTRY_LONGITUDE(builder, self.REENTRY_LONGITUDE)
+        RDMAddREENTRY_ALTITUDE(builder, self.REENTRY_ALTITUDE)
+        if self.TIME_SYSTEM is not None:
+            RDMAddTIME_SYSTEM(builder, TIME_SYSTEM)
+        if self.PREV_PREDICTION_EPOCH is not None:
+            RDMAddPREV_PREDICTION_EPOCH(builder, PREV_PREDICTION_EPOCH)
+        RDMAddBALLISTIC_COEFF(builder, self.BALLISTIC_COEFF)
+        RDMAddMASS(builder, self.MASS)
+        RDMAddSOLAR_RAD_AREA(builder, self.SOLAR_RAD_AREA)
+        RDMAddDRAG_AREA(builder, self.DRAG_AREA)
+        if self.INITIAL_STATE is not None:
+            RDMAddINITIAL_STATE(builder, INITIAL_STATE)
+        if self.IMPACT_PREDICTIONS is not None:
+            RDMAddIMPACT_PREDICTIONS(builder, IMPACT_PREDICTIONS)
+        if self.SURVIVING_DEBRIS is not None:
+            RDMAddSURVIVING_DEBRIS(builder, SURVIVING_DEBRIS)
+        RDMAddCASUALTY_EXPECTATION(builder, self.CASUALTY_EXPECTATION)
+        RDMAddNUM_FRAGMENTS(builder, self.NUM_FRAGMENTS)
+        RDMAddSURVIVING_MASS(builder, self.SURVIVING_MASS)
+        if self.COMMENT is not None:
+            RDMAddCOMMENT(builder, COMMENT)
+        RDM = RDMEnd(builder)
+        return RDM

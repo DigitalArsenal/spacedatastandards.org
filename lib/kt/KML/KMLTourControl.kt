@@ -32,7 +32,7 @@ class KMLTourControl : Table() {
     /**
      * Play mode (pause)
      */
-    val PLAY_MODE : String?
+    val playMode : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,22 +41,22 @@ class KMLTourControl : Table() {
                 null
             }
         }
-    val PLAY_MODEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun PLAY_MODEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val playModeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun playModeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsKMLTourControl(_bb: ByteBuffer): KMLTourControl = getRootAsKMLTourControl(_bb, KMLTourControl())
         fun getRootAsKMLTourControl(_bb: ByteBuffer, obj: KMLTourControl): KMLTourControl {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createKMLTourControl(builder: FlatBufferBuilder, PLAY_MODEOffset: Int) : Int {
+        fun createKMLTourControl(builder: FlatBufferBuilder, playModeOffset: Int) : Int {
             builder.startTable(1)
-            addPLAY_MODE(builder, PLAY_MODEOffset)
+            addPLAYMODE(builder, playModeOffset)
             return endKMLTourControl(builder)
         }
         fun startKMLTourControl(builder: FlatBufferBuilder) = builder.startTable(1)
-        fun addPLAY_MODE(builder: FlatBufferBuilder, PLAY_MODE: Int) = builder.addOffset(0, PLAY_MODE, 0)
+        fun addPLAYMODE(builder: FlatBufferBuilder, playMode: Int) = builder.addOffset(0, playMode, 0)
         fun endKMLTourControl(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

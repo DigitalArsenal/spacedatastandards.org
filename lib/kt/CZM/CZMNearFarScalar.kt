@@ -32,7 +32,7 @@ class CZMNearFarScalar : Table() {
     /**
      * Near distance in meters
      */
-    val NEAR_DISTANCE : Double
+    val nearDistance : Double
         get() {
             val o = __offset(4)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -40,7 +40,7 @@ class CZMNearFarScalar : Table() {
     /**
      * Value at near distance
      */
-    val NEAR_VALUE : Double
+    val nearValue : Double
         get() {
             val o = __offset(6)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -48,7 +48,7 @@ class CZMNearFarScalar : Table() {
     /**
      * Far distance in meters
      */
-    val FAR_DISTANCE : Double
+    val farDistance : Double
         get() {
             val o = __offset(8)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -56,31 +56,31 @@ class CZMNearFarScalar : Table() {
     /**
      * Value at far distance
      */
-    val FAR_VALUE : Double
+    val farValue : Double
         get() {
             val o = __offset(10)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsCZMNearFarScalar(_bb: ByteBuffer): CZMNearFarScalar = getRootAsCZMNearFarScalar(_bb, CZMNearFarScalar())
         fun getRootAsCZMNearFarScalar(_bb: ByteBuffer, obj: CZMNearFarScalar): CZMNearFarScalar {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createCZMNearFarScalar(builder: FlatBufferBuilder, NEAR_DISTANCE: Double, NEAR_VALUE: Double, FAR_DISTANCE: Double, FAR_VALUE: Double) : Int {
+        fun createCZMNearFarScalar(builder: FlatBufferBuilder, nearDistance: Double, nearValue: Double, farDistance: Double, farValue: Double) : Int {
             builder.startTable(4)
-            addFAR_VALUE(builder, FAR_VALUE)
-            addFAR_DISTANCE(builder, FAR_DISTANCE)
-            addNEAR_VALUE(builder, NEAR_VALUE)
-            addNEAR_DISTANCE(builder, NEAR_DISTANCE)
+            addFARVALUE(builder, farValue)
+            addFARDISTANCE(builder, farDistance)
+            addNEARVALUE(builder, nearValue)
+            addNEARDISTANCE(builder, nearDistance)
             return endCZMNearFarScalar(builder)
         }
         fun startCZMNearFarScalar(builder: FlatBufferBuilder) = builder.startTable(4)
-        fun addNEAR_DISTANCE(builder: FlatBufferBuilder, NEAR_DISTANCE: Double) = builder.addDouble(0, NEAR_DISTANCE, 0.0)
-        fun addNEAR_VALUE(builder: FlatBufferBuilder, NEAR_VALUE: Double) = builder.addDouble(1, NEAR_VALUE, 0.0)
-        fun addFAR_DISTANCE(builder: FlatBufferBuilder, FAR_DISTANCE: Double) = builder.addDouble(2, FAR_DISTANCE, 0.0)
-        fun addFAR_VALUE(builder: FlatBufferBuilder, FAR_VALUE: Double) = builder.addDouble(3, FAR_VALUE, 0.0)
+        fun addNEARDISTANCE(builder: FlatBufferBuilder, nearDistance: Double) = builder.addDouble(0, nearDistance, 0.0)
+        fun addNEARVALUE(builder: FlatBufferBuilder, nearValue: Double) = builder.addDouble(1, nearValue, 0.0)
+        fun addFARDISTANCE(builder: FlatBufferBuilder, farDistance: Double) = builder.addDouble(2, farDistance, 0.0)
+        fun addFARVALUE(builder: FlatBufferBuilder, farValue: Double) = builder.addDouble(3, farValue, 0.0)
         fun endCZMNearFarScalar(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

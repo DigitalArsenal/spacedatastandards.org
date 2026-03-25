@@ -73,15 +73,19 @@ def End(builder):
 class AlgorithmOutputT(object):
 
     # AlgorithmOutputT
-    def __init__(self):
-        self.PARAMETER_REF = None  # type: str
-        self.OUTPUT_NAME = None  # type: str
+    def __init__(
+        self,
+        PARAMETER_REF = None,
+        OUTPUT_NAME = None,
+    ):
+        self.PARAMETER_REF = PARAMETER_REF  # type: Optional[str]
+        self.OUTPUT_NAME = OUTPUT_NAME  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        algorithmOutput = AlgorithmOutput()
-        algorithmOutput.Init(buf, pos)
-        return cls.InitFromObj(algorithmOutput)
+        tmpAlgorithmOutput = AlgorithmOutput()
+        tmpAlgorithmOutput.Init(buf, pos)
+        return cls.InitFromObj(tmpAlgorithmOutput)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -89,17 +93,17 @@ class AlgorithmOutputT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, algorithmOutput):
+    def InitFromObj(cls, tmpAlgorithmOutput):
         x = AlgorithmOutputT()
-        x._UnPack(algorithmOutput)
+        x._UnPack(tmpAlgorithmOutput)
         return x
 
     # AlgorithmOutputT
-    def _UnPack(self, algorithmOutput):
-        if algorithmOutput is None:
+    def _UnPack(self, AlgorithmOutput):
+        if AlgorithmOutput is None:
             return
-        self.PARAMETER_REF = algorithmOutput.PARAMETER_REF()
-        self.OUTPUT_NAME = algorithmOutput.OUTPUT_NAME()
+        self.PARAMETER_REF = AlgorithmOutput.PARAMETER_REF()
+        self.OUTPUT_NAME = AlgorithmOutput.OUTPUT_NAME()
 
     # AlgorithmOutputT
     def Pack(self, builder):
@@ -112,5 +116,5 @@ class AlgorithmOutputT(object):
             AlgorithmOutputAddPARAMETER_REF(builder, PARAMETER_REF)
         if self.OUTPUT_NAME is not None:
             AlgorithmOutputAddOUTPUT_NAME(builder, OUTPUT_NAME)
-        algorithmOutput = AlgorithmOutputEnd(builder)
-        return algorithmOutput
+        AlgorithmOutput = AlgorithmOutputEnd(builder)
+        return AlgorithmOutput

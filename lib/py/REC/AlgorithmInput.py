@@ -2,4 +2,119 @@
 
 # namespace: 
 
-# NOTE AlgorithmInput.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Algorithm input binding
+class AlgorithmInput(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = AlgorithmInput()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsAlgorithmInput(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def AlgorithmInputBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x58\x54\x43", size_prefixed=size_prefixed)
+
+    # AlgorithmInput
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Parameter reference
+    # AlgorithmInput
+    def PARAMETER_REF(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Input name in algorithm
+    # AlgorithmInput
+    def INPUT_NAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+def AlgorithmInputStart(builder):
+    builder.StartObject(2)
+
+def Start(builder):
+    AlgorithmInputStart(builder)
+
+def AlgorithmInputAddPARAMETER_REF(builder, PARAMETER_REF):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(PARAMETER_REF), 0)
+
+def AddPARAMETER_REF(builder, PARAMETER_REF):
+    AlgorithmInputAddPARAMETER_REF(builder, PARAMETER_REF)
+
+def AlgorithmInputAddINPUT_NAME(builder, INPUT_NAME):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(INPUT_NAME), 0)
+
+def AddINPUT_NAME(builder, INPUT_NAME):
+    AlgorithmInputAddINPUT_NAME(builder, INPUT_NAME)
+
+def AlgorithmInputEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return AlgorithmInputEnd(builder)
+
+
+class AlgorithmInputT(object):
+
+    # AlgorithmInputT
+    def __init__(
+        self,
+        PARAMETER_REF = None,
+        INPUT_NAME = None,
+    ):
+        self.PARAMETER_REF = PARAMETER_REF  # type: Optional[str]
+        self.INPUT_NAME = INPUT_NAME  # type: Optional[str]
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpAlgorithmInput = AlgorithmInput()
+        tmpAlgorithmInput.Init(buf, pos)
+        return cls.InitFromObj(tmpAlgorithmInput)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpAlgorithmInput):
+        x = AlgorithmInputT()
+        x._UnPack(tmpAlgorithmInput)
+        return x
+
+    # AlgorithmInputT
+    def _UnPack(self, AlgorithmInput):
+        if AlgorithmInput is None:
+            return
+        self.PARAMETER_REF = AlgorithmInput.PARAMETER_REF()
+        self.INPUT_NAME = AlgorithmInput.INPUT_NAME()
+
+    # AlgorithmInputT
+    def Pack(self, builder):
+        if self.PARAMETER_REF is not None:
+            PARAMETER_REF = builder.CreateString(self.PARAMETER_REF)
+        if self.INPUT_NAME is not None:
+            INPUT_NAME = builder.CreateString(self.INPUT_NAME)
+        AlgorithmInputStart(builder)
+        if self.PARAMETER_REF is not None:
+            AlgorithmInputAddPARAMETER_REF(builder, PARAMETER_REF)
+        if self.INPUT_NAME is not None:
+            AlgorithmInputAddINPUT_NAME(builder, INPUT_NAME)
+        AlgorithmInput = AlgorithmInputEnd(builder)
+        return AlgorithmInput

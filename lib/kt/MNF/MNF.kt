@@ -32,7 +32,7 @@ class MNF : Table() {
     /**
      * Unique manifold identifier
      */
-    val ID : String?
+    val id : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class MNF : Table() {
                 null
             }
         }
-    val IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val idAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun idInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Parent object satellite number
      */
-    val SAT_NO : UInt
+    val satNo : UInt
         get() {
             val o = __offset(6)
             return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
@@ -54,7 +54,7 @@ class MNF : Table() {
     /**
      * Object designator
      */
-    val OBJECT_DESIGNATOR : String?
+    val objectDesignator : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -63,12 +63,12 @@ class MNF : Table() {
                 null
             }
         }
-    val OBJECT_DESIGNATORAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun OBJECT_DESIGNATORInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val objectDesignatorAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun objectDesignatorInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
     /**
      * Manifold status
      */
-    val STATUS : Byte
+    val status : Byte
         get() {
             val o = __offset(10)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -76,7 +76,7 @@ class MNF : Table() {
     /**
      * Event epoch that spawned the manifold (ISO 8601)
      */
-    val EVENT_EPOCH : String?
+    val eventEpoch : String?
         get() {
             val o = __offset(12)
             return if (o != 0) {
@@ -85,12 +85,12 @@ class MNF : Table() {
                 null
             }
         }
-    val EVENT_EPOCHAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
-    fun EVENT_EPOCHInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
+    val eventEpochAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(12, 1)
+    fun eventEpochInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 12, 1)
     /**
      * Source of detection (sensor ID or method)
      */
-    val SOURCE : String?
+    val source : String?
         get() {
             val o = __offset(14)
             return if (o != 0) {
@@ -99,12 +99,12 @@ class MNF : Table() {
                 null
             }
         }
-    val SOURCEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(14, 1)
-    fun SOURCEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 14, 1)
+    val sourceAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(14, 1)
+    fun sourceInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 14, 1)
     /**
      * Reference frame
      */
-    val REF_FRAME : String?
+    val refFrame : String?
         get() {
             val o = __offset(16)
             return if (o != 0) {
@@ -113,12 +113,12 @@ class MNF : Table() {
                 null
             }
         }
-    val REF_FRAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(16, 1)
-    fun REF_FRAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 16, 1)
+    val refFrameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(16, 1)
+    fun refFrameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 16, 1)
     /**
      * Original pre-event semi-major axis in km
      */
-    val ORIG_SEMI_MAJOR_AXIS : Double
+    val origSemiMajorAxis : Double
         get() {
             val o = __offset(18)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -126,7 +126,7 @@ class MNF : Table() {
     /**
      * Original pre-event eccentricity
      */
-    val ORIG_ECCENTRICITY : Double
+    val origEccentricity : Double
         get() {
             val o = __offset(20)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -134,7 +134,7 @@ class MNF : Table() {
     /**
      * Original pre-event inclination in degrees
      */
-    val ORIG_INCLINATION : Double
+    val origInclination : Double
         get() {
             val o = __offset(22)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -142,7 +142,7 @@ class MNF : Table() {
     /**
      * Minimum delta-V sampled in m/s
      */
-    val DELTA_V_MIN : Double
+    val deltaVMin : Double
         get() {
             val o = __offset(24)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -150,7 +150,7 @@ class MNF : Table() {
     /**
      * Maximum delta-V sampled in m/s
      */
-    val DELTA_V_MAX : Double
+    val deltaVMax : Double
         get() {
             val o = __offset(26)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -158,7 +158,7 @@ class MNF : Table() {
     /**
      * Delta-V step size in m/s
      */
-    val DELTA_V_STEP : Double
+    val deltaVStep : Double
         get() {
             val o = __offset(28)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -166,7 +166,7 @@ class MNF : Table() {
     /**
      * Minimum delta-T sampled in seconds
      */
-    val DELTA_T_MIN : Double
+    val deltaTMin : Double
         get() {
             val o = __offset(30)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -174,7 +174,7 @@ class MNF : Table() {
     /**
      * Maximum delta-T sampled in seconds
      */
-    val DELTA_T_MAX : Double
+    val deltaTMax : Double
         get() {
             val o = __offset(32)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -182,7 +182,7 @@ class MNF : Table() {
     /**
      * Delta-T step size in seconds
      */
-    val DELTA_T_STEP : Double
+    val deltaTStep : Double
         get() {
             val o = __offset(34)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -190,7 +190,7 @@ class MNF : Table() {
     /**
      * Total number of manifold elements
      */
-    val NUM_ELEMENTS : UInt
+    val numElements : UInt
         get() {
             val o = __offset(36)
             return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
@@ -198,8 +198,8 @@ class MNF : Table() {
     /**
      * Theoretical element sets
      */
-    fun ELEMENTS(j: Int) : manifoldElset? = ELEMENTS(manifoldElset(), j)
-    fun ELEMENTS(obj: manifoldElset, j: Int) : manifoldElset? {
+    fun elements(j: Int) : manifoldElset? = elements(manifoldElset(), j)
+    fun elements(obj: manifoldElset, j: Int) : manifoldElset? {
         val o = __offset(38)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -207,14 +207,14 @@ class MNF : Table() {
             null
         }
     }
-    val ELEMENTSLength : Int
+    val elementsLength : Int
         get() {
             val o = __offset(38); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Correlated catalog object ID (if matched)
      */
-    val CORRELATED_ID : String?
+    val correlatedId : String?
         get() {
             val o = __offset(40)
             return if (o != 0) {
@@ -223,12 +223,12 @@ class MNF : Table() {
                 null
             }
         }
-    val CORRELATED_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(40, 1)
-    fun CORRELATED_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 40, 1)
+    val correlatedIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(40, 1)
+    fun correlatedIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 40, 1)
     /**
      * Additional notes
      */
-    val NOTES : String?
+    val notes : String?
         get() {
             val o = __offset(42)
             return if (o != 0) {
@@ -237,59 +237,59 @@ class MNF : Table() {
                 null
             }
         }
-    val NOTESAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(42, 1)
-    fun NOTESInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 42, 1)
+    val notesAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(42, 1)
+    fun notesInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 42, 1)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsMNF(_bb: ByteBuffer): MNF = getRootAsMNF(_bb, MNF())
         fun getRootAsMNF(_bb: ByteBuffer, obj: MNF): MNF {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun MNFBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$MNF")
-        fun createMNF(builder: FlatBufferBuilder, IDOffset: Int, SAT_NO: UInt, OBJECT_DESIGNATOROffset: Int, STATUS: Byte, EVENT_EPOCHOffset: Int, SOURCEOffset: Int, REF_FRAMEOffset: Int, ORIG_SEMI_MAJOR_AXIS: Double, ORIG_ECCENTRICITY: Double, ORIG_INCLINATION: Double, DELTA_V_MIN: Double, DELTA_V_MAX: Double, DELTA_V_STEP: Double, DELTA_T_MIN: Double, DELTA_T_MAX: Double, DELTA_T_STEP: Double, NUM_ELEMENTS: UInt, ELEMENTSOffset: Int, CORRELATED_IDOffset: Int, NOTESOffset: Int) : Int {
+        fun createMNF(builder: FlatBufferBuilder, idOffset: Int, satNo: UInt, objectDesignatorOffset: Int, status: Byte, eventEpochOffset: Int, sourceOffset: Int, refFrameOffset: Int, origSemiMajorAxis: Double, origEccentricity: Double, origInclination: Double, deltaVMin: Double, deltaVMax: Double, deltaVStep: Double, deltaTMin: Double, deltaTMax: Double, deltaTStep: Double, numElements: UInt, elementsOffset: Int, correlatedIdOffset: Int, notesOffset: Int) : Int {
             builder.startTable(20)
-            addDELTA_T_STEP(builder, DELTA_T_STEP)
-            addDELTA_T_MAX(builder, DELTA_T_MAX)
-            addDELTA_T_MIN(builder, DELTA_T_MIN)
-            addDELTA_V_STEP(builder, DELTA_V_STEP)
-            addDELTA_V_MAX(builder, DELTA_V_MAX)
-            addDELTA_V_MIN(builder, DELTA_V_MIN)
-            addORIG_INCLINATION(builder, ORIG_INCLINATION)
-            addORIG_ECCENTRICITY(builder, ORIG_ECCENTRICITY)
-            addORIG_SEMI_MAJOR_AXIS(builder, ORIG_SEMI_MAJOR_AXIS)
-            addNOTES(builder, NOTESOffset)
-            addCORRELATED_ID(builder, CORRELATED_IDOffset)
-            addELEMENTS(builder, ELEMENTSOffset)
-            addNUM_ELEMENTS(builder, NUM_ELEMENTS)
-            addREF_FRAME(builder, REF_FRAMEOffset)
-            addSOURCE(builder, SOURCEOffset)
-            addEVENT_EPOCH(builder, EVENT_EPOCHOffset)
-            addOBJECT_DESIGNATOR(builder, OBJECT_DESIGNATOROffset)
-            addSAT_NO(builder, SAT_NO)
-            addID(builder, IDOffset)
-            addSTATUS(builder, STATUS)
+            addDELTATSTEP(builder, deltaTStep)
+            addDELTATMAX(builder, deltaTMax)
+            addDELTATMIN(builder, deltaTMin)
+            addDELTAVSTEP(builder, deltaVStep)
+            addDELTAVMAX(builder, deltaVMax)
+            addDELTAVMIN(builder, deltaVMin)
+            addORIGINCLINATION(builder, origInclination)
+            addORIGECCENTRICITY(builder, origEccentricity)
+            addORIGSEMIMAJORAXIS(builder, origSemiMajorAxis)
+            addNOTES(builder, notesOffset)
+            addCORRELATEDID(builder, correlatedIdOffset)
+            addELEMENTS(builder, elementsOffset)
+            addNUMELEMENTS(builder, numElements)
+            addREFFRAME(builder, refFrameOffset)
+            addSOURCE(builder, sourceOffset)
+            addEVENTEPOCH(builder, eventEpochOffset)
+            addOBJECTDESIGNATOR(builder, objectDesignatorOffset)
+            addSATNO(builder, satNo)
+            addID(builder, idOffset)
+            addSTATUS(builder, status)
             return endMNF(builder)
         }
         fun startMNF(builder: FlatBufferBuilder) = builder.startTable(20)
-        fun addID(builder: FlatBufferBuilder, ID: Int) = builder.addOffset(0, ID, 0)
-        fun addSAT_NO(builder: FlatBufferBuilder, SAT_NO: UInt) = builder.addInt(1, SAT_NO.toInt(), 0)
-        fun addOBJECT_DESIGNATOR(builder: FlatBufferBuilder, OBJECT_DESIGNATOR: Int) = builder.addOffset(2, OBJECT_DESIGNATOR, 0)
-        fun addSTATUS(builder: FlatBufferBuilder, STATUS: Byte) = builder.addByte(3, STATUS, 0)
-        fun addEVENT_EPOCH(builder: FlatBufferBuilder, EVENT_EPOCH: Int) = builder.addOffset(4, EVENT_EPOCH, 0)
-        fun addSOURCE(builder: FlatBufferBuilder, SOURCE: Int) = builder.addOffset(5, SOURCE, 0)
-        fun addREF_FRAME(builder: FlatBufferBuilder, REF_FRAME: Int) = builder.addOffset(6, REF_FRAME, 0)
-        fun addORIG_SEMI_MAJOR_AXIS(builder: FlatBufferBuilder, ORIG_SEMI_MAJOR_AXIS: Double) = builder.addDouble(7, ORIG_SEMI_MAJOR_AXIS, 0.0)
-        fun addORIG_ECCENTRICITY(builder: FlatBufferBuilder, ORIG_ECCENTRICITY: Double) = builder.addDouble(8, ORIG_ECCENTRICITY, 0.0)
-        fun addORIG_INCLINATION(builder: FlatBufferBuilder, ORIG_INCLINATION: Double) = builder.addDouble(9, ORIG_INCLINATION, 0.0)
-        fun addDELTA_V_MIN(builder: FlatBufferBuilder, DELTA_V_MIN: Double) = builder.addDouble(10, DELTA_V_MIN, 0.0)
-        fun addDELTA_V_MAX(builder: FlatBufferBuilder, DELTA_V_MAX: Double) = builder.addDouble(11, DELTA_V_MAX, 0.0)
-        fun addDELTA_V_STEP(builder: FlatBufferBuilder, DELTA_V_STEP: Double) = builder.addDouble(12, DELTA_V_STEP, 0.0)
-        fun addDELTA_T_MIN(builder: FlatBufferBuilder, DELTA_T_MIN: Double) = builder.addDouble(13, DELTA_T_MIN, 0.0)
-        fun addDELTA_T_MAX(builder: FlatBufferBuilder, DELTA_T_MAX: Double) = builder.addDouble(14, DELTA_T_MAX, 0.0)
-        fun addDELTA_T_STEP(builder: FlatBufferBuilder, DELTA_T_STEP: Double) = builder.addDouble(15, DELTA_T_STEP, 0.0)
-        fun addNUM_ELEMENTS(builder: FlatBufferBuilder, NUM_ELEMENTS: UInt) = builder.addInt(16, NUM_ELEMENTS.toInt(), 0)
-        fun addELEMENTS(builder: FlatBufferBuilder, ELEMENTS: Int) = builder.addOffset(17, ELEMENTS, 0)
+        fun addID(builder: FlatBufferBuilder, id: Int) = builder.addOffset(0, id, 0)
+        fun addSATNO(builder: FlatBufferBuilder, satNo: UInt) = builder.addInt(1, satNo.toInt(), 0)
+        fun addOBJECTDESIGNATOR(builder: FlatBufferBuilder, objectDesignator: Int) = builder.addOffset(2, objectDesignator, 0)
+        fun addSTATUS(builder: FlatBufferBuilder, status: Byte) = builder.addByte(3, status, 0)
+        fun addEVENTEPOCH(builder: FlatBufferBuilder, eventEpoch: Int) = builder.addOffset(4, eventEpoch, 0)
+        fun addSOURCE(builder: FlatBufferBuilder, source: Int) = builder.addOffset(5, source, 0)
+        fun addREFFRAME(builder: FlatBufferBuilder, refFrame: Int) = builder.addOffset(6, refFrame, 0)
+        fun addORIGSEMIMAJORAXIS(builder: FlatBufferBuilder, origSemiMajorAxis: Double) = builder.addDouble(7, origSemiMajorAxis, 0.0)
+        fun addORIGECCENTRICITY(builder: FlatBufferBuilder, origEccentricity: Double) = builder.addDouble(8, origEccentricity, 0.0)
+        fun addORIGINCLINATION(builder: FlatBufferBuilder, origInclination: Double) = builder.addDouble(9, origInclination, 0.0)
+        fun addDELTAVMIN(builder: FlatBufferBuilder, deltaVMin: Double) = builder.addDouble(10, deltaVMin, 0.0)
+        fun addDELTAVMAX(builder: FlatBufferBuilder, deltaVMax: Double) = builder.addDouble(11, deltaVMax, 0.0)
+        fun addDELTAVSTEP(builder: FlatBufferBuilder, deltaVStep: Double) = builder.addDouble(12, deltaVStep, 0.0)
+        fun addDELTATMIN(builder: FlatBufferBuilder, deltaTMin: Double) = builder.addDouble(13, deltaTMin, 0.0)
+        fun addDELTATMAX(builder: FlatBufferBuilder, deltaTMax: Double) = builder.addDouble(14, deltaTMax, 0.0)
+        fun addDELTATSTEP(builder: FlatBufferBuilder, deltaTStep: Double) = builder.addDouble(15, deltaTStep, 0.0)
+        fun addNUMELEMENTS(builder: FlatBufferBuilder, numElements: UInt) = builder.addInt(16, numElements.toInt(), 0)
+        fun addELEMENTS(builder: FlatBufferBuilder, elements: Int) = builder.addOffset(17, elements, 0)
         fun createElementsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -298,8 +298,8 @@ class MNF : Table() {
             return builder.endVector()
         }
         fun startElementsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addCORRELATED_ID(builder: FlatBufferBuilder, CORRELATED_ID: Int) = builder.addOffset(18, CORRELATED_ID, 0)
-        fun addNOTES(builder: FlatBufferBuilder, NOTES: Int) = builder.addOffset(19, NOTES, 0)
+        fun addCORRELATEDID(builder: FlatBufferBuilder, correlatedId: Int) = builder.addOffset(18, correlatedId, 0)
+        fun addNOTES(builder: FlatBufferBuilder, notes: Int) = builder.addOffset(19, notes, 0)
         fun endMNF(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

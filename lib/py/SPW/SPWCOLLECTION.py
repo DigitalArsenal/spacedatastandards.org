@@ -71,6 +71,12 @@ def SPWCOLLECTIONStartRECORDSVector(builder, numElems):
 def StartRECORDSVector(builder, numElems):
     return SPWCOLLECTIONStartRECORDSVector(builder, numElems)
 
+def SPWCOLLECTIONCreateRECORDSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateRECORDSVector(builder, data):
+    SPWCOLLECTIONCreateRECORDSVector(builder, data)
+
 def SPWCOLLECTIONEnd(builder):
     return builder.EndObject()
 
@@ -86,14 +92,17 @@ except:
 class SPWCOLLECTIONT(object):
 
     # SPWCOLLECTIONT
-    def __init__(self):
-        self.RECORDS = None  # type: List[SPW.SPWT]
+    def __init__(
+        self,
+        RECORDS = None,
+    ):
+        self.RECORDS = RECORDS  # type: Optional[List[SPW.SPWT]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        SPWCOLLECTION = SPWCOLLECTION()
-        SPWCOLLECTION.Init(buf, pos)
-        return cls.InitFromObj(SPWCOLLECTION)
+        tmpSpwcollection = SPWCOLLECTION()
+        tmpSpwcollection.Init(buf, pos)
+        return cls.InitFromObj(tmpSpwcollection)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -101,9 +110,9 @@ class SPWCOLLECTIONT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, SPWCOLLECTION):
+    def InitFromObj(cls, tmpSpwcollection):
         x = SPWCOLLECTIONT()
-        x._UnPack(SPWCOLLECTION)
+        x._UnPack(tmpSpwcollection)
         return x
 
     # SPWCOLLECTIONT

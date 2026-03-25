@@ -2,4 +2,9 @@
 
 # namespace: 
 
-# NOTE KeyExchange.py does not declare any structs or enums
+# Encryption Header for FlatBuffers field-level encryption
+# Key exchange algorithm used to derive the shared secret
+class KeyExchange(object):
+    X25519 = 0
+    Secp256k1 = 1
+    P256 = 2

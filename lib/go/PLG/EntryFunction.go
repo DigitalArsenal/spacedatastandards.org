@@ -51,6 +51,10 @@ func (rcv *EntryFunction) NAME() []byte {
 	return nil
 }
 
+func (rcv *EntryFunction) Name() []byte {
+	return rcv.NAME()
+}
+
 /// Function name as exported from WASM
 /// Human-readable description
 func (rcv *EntryFunction) DESCRIPTION() []byte {
@@ -59,6 +63,10 @@ func (rcv *EntryFunction) DESCRIPTION() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *EntryFunction) Description() []byte {
+	return rcv.DESCRIPTION()
 }
 
 /// Human-readable description
@@ -72,12 +80,20 @@ func (rcv *EntryFunction) INPUT_SCHEMAS(j int) []byte {
 	return nil
 }
 
+func (rcv *EntryFunction) InputSchemas(j int) []byte {
+	return rcv.INPUT_SCHEMAS(j)
+}
+
 func (rcv *EntryFunction) INPUT_SCHEMASLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *EntryFunction) InputSchemasLength() int {
+	return rcv.INPUT_SCHEMASLength()
 }
 
 /// Input parameter types (FlatBuffer schema names)
@@ -90,6 +106,10 @@ func (rcv *EntryFunction) OUTPUT_SCHEMA() []byte {
 	return nil
 }
 
+func (rcv *EntryFunction) OutputSchema() []byte {
+	return rcv.OUTPUT_SCHEMA()
+}
+
 /// Output type (FlatBuffer schema name)
 func EntryFunctionStart(builder *flatbuffers.Builder) {
 	builder.StartObject(4)
@@ -97,17 +117,32 @@ func EntryFunctionStart(builder *flatbuffers.Builder) {
 func EntryFunctionAddNAME(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(NAME), 0)
 }
+func EntryFunctionAddName(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
+	EntryFunctionAddNAME(builder, NAME)
+}
 func EntryFunctionAddDESCRIPTION(builder *flatbuffers.Builder, DESCRIPTION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(DESCRIPTION), 0)
+}
+func EntryFunctionAddDescription(builder *flatbuffers.Builder, DESCRIPTION flatbuffers.UOffsetT) {
+	EntryFunctionAddDESCRIPTION(builder, DESCRIPTION)
 }
 func EntryFunctionAddINPUT_SCHEMAS(builder *flatbuffers.Builder, INPUT_SCHEMAS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(INPUT_SCHEMAS), 0)
 }
+func EntryFunctionAddInputSchemas(builder *flatbuffers.Builder, INPUT_SCHEMAS flatbuffers.UOffsetT) {
+	EntryFunctionAddINPUT_SCHEMAS(builder, INPUT_SCHEMAS)
+}
 func EntryFunctionStartINPUT_SCHEMASVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
+func EntryFunctionStartInputSchemasVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return EntryFunctionStartINPUT_SCHEMASVector(builder, numElems)
+}
 func EntryFunctionAddOUTPUT_SCHEMA(builder *flatbuffers.Builder, OUTPUT_SCHEMA flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(OUTPUT_SCHEMA), 0)
+}
+func EntryFunctionAddOutputSchema(builder *flatbuffers.Builder, OUTPUT_SCHEMA flatbuffers.UOffsetT) {
+	EntryFunctionAddOUTPUT_SCHEMA(builder, OUTPUT_SCHEMA)
 }
 func EntryFunctionEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

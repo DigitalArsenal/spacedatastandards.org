@@ -2,9 +2,13 @@
 // swiftlint:disable all
 // swiftformat:disable all
 
+#if canImport(Common)
+import Common
+#endif
+
 import FlatBuffers
 
-public enum odMethod: Int8, Enum, Verifiable {
+public enum odMethod: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -23,9 +27,9 @@ public enum odMethod: Int8, Enum, Verifiable {
 
 
 ///  Sensor contribution to an orbit determination solution
-public struct odSensorContribution: FlatBufferObject, Verifiable {
+public struct odSensorContribution: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -58,9 +62,7 @@ public struct odSensorContribution: FlatBufferObject, Verifiable {
   ///  Weighted RMS for this sensor's observations
   public var WRMS: Double { let o = _accessor.offset(VTOFFSET.WRMS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Observation types from this sensor
-  public var hasObTypes: Bool { let o = _accessor.offset(VTOFFSET.OB_TYPES.v); return o == 0 ? false : true }
-  public var OB_TYPESCount: Int32 { let o = _accessor.offset(VTOFFSET.OB_TYPES.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func OB_TYPES(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.OB_TYPES.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  public var OB_TYPES: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.OB_TYPES.v, byteSize: 4) }
   public static func startodSensorContribution(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 6) }
   public static func add(SENSOR_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SENSOR_ID, at: VTOFFSET.SENSOR_ID.p) }
   public static func add(ORIG_SENSOR_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIG_SENSOR_ID, at: VTOFFSET.ORIG_SENSOR_ID.p) }
@@ -101,9 +103,9 @@ public struct odSensorContribution: FlatBufferObject, Verifiable {
 }
 
 ///  Orbit Determination Results
-public struct OBD: FlatBufferObject, Verifiable {
+public struct OBD: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -238,25 +240,15 @@ public struct OBD: FlatBufferObject, Verifiable {
   ///  Total rejected observations
   public var NUM_REJECTED_OBS: UInt32 { let o = _accessor.offset(VTOFFSET.NUM_REJECTED_OBS.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  Sensor contributions to this solution
-  public var hasSensors: Bool { let o = _accessor.offset(VTOFFSET.SENSORS.v); return o == 0 ? false : true }
-  public var SENSORSCount: Int32 { let o = _accessor.offset(VTOFFSET.SENSORS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func SENSORS(at index: Int32) -> odSensorContribution? { let o = _accessor.offset(VTOFFSET.SENSORS.v); return o == 0 ? nil : odSensorContribution(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var SENSORS: FlatbufferVector<odSensorContribution> { return _accessor.vector(at: VTOFFSET.SENSORS.v, byteSize: 4) }
   ///  Accepted observation types
-  public var hasAcceptedObTyps: Bool { let o = _accessor.offset(VTOFFSET.ACCEPTED_OB_TYPS.v); return o == 0 ? false : true }
-  public var ACCEPTED_OB_TYPSCount: Int32 { let o = _accessor.offset(VTOFFSET.ACCEPTED_OB_TYPS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func ACCEPTED_OB_TYPS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.ACCEPTED_OB_TYPS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  public var ACCEPTED_OB_TYPS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.ACCEPTED_OB_TYPS.v, byteSize: 4) }
   ///  Accepted observation identifiers
-  public var hasAcceptedObIds: Bool { let o = _accessor.offset(VTOFFSET.ACCEPTED_OB_IDS.v); return o == 0 ? false : true }
-  public var ACCEPTED_OB_IDSCount: Int32 { let o = _accessor.offset(VTOFFSET.ACCEPTED_OB_IDS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func ACCEPTED_OB_IDS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.ACCEPTED_OB_IDS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  public var ACCEPTED_OB_IDS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.ACCEPTED_OB_IDS.v, byteSize: 4) }
   ///  Rejected observation types
-  public var hasRejectedObTyps: Bool { let o = _accessor.offset(VTOFFSET.REJECTED_OB_TYPS.v); return o == 0 ? false : true }
-  public var REJECTED_OB_TYPSCount: Int32 { let o = _accessor.offset(VTOFFSET.REJECTED_OB_TYPS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func REJECTED_OB_TYPS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.REJECTED_OB_TYPS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  public var REJECTED_OB_TYPS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.REJECTED_OB_TYPS.v, byteSize: 4) }
   ///  Rejected observation identifiers
-  public var hasRejectedObIds: Bool { let o = _accessor.offset(VTOFFSET.REJECTED_OB_IDS.v); return o == 0 ? false : true }
-  public var REJECTED_OB_IDSCount: Int32 { let o = _accessor.offset(VTOFFSET.REJECTED_OB_IDS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func REJECTED_OB_IDS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.REJECTED_OB_IDS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  public var REJECTED_OB_IDS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.REJECTED_OB_IDS.v, byteSize: 4) }
   public static func startOBD(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 38) }
   public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VTOFFSET.ID.p) }
   public static func add(SAT_NO: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SAT_NO, def: 0, at: VTOFFSET.SAT_NO.p) }

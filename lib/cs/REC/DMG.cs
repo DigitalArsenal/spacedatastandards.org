@@ -11,7 +11,7 @@ public struct DMG : IFlatbufferObject
 {
   private Table __p;
   public ByteBuffer ByteBuffer { get { return __p.bb; } }
-  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_24_3_25(); }
+  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_25_12_19(); }
   public static DMG GetRootAsDMG(ByteBuffer _bb) { return GetRootAsDMG(_bb, new DMG()); }
   public static DMG GetRootAsDMG(ByteBuffer _bb, DMG obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
   public static bool DMGBufferHasIdentifier(ByteBuffer _bb) { return Table.__has_identifier(_bb, "$DMG"); }

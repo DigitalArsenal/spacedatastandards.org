@@ -129,19 +129,27 @@ def End(builder):
 class OSMT(object):
 
     # OSMT
-    def __init__(self):
-        self.IS_STABLE = False  # type: bool
-        self.NUM_OBS = 0  # type: int
-        self.OBJECT_ID = None  # type: str
-        self.ID_SENSOR = None  # type: str
-        self.PASS_START = None  # type: str
-        self.PASS_DURATION = 0  # type: int
+    def __init__(
+        self,
+        IS_STABLE = False,
+        NUM_OBS = 0,
+        OBJECT_ID = None,
+        ID_SENSOR = None,
+        PASS_START = None,
+        PASS_DURATION = 0,
+    ):
+        self.IS_STABLE = IS_STABLE  # type: bool
+        self.NUM_OBS = NUM_OBS  # type: int
+        self.OBJECT_ID = OBJECT_ID  # type: Optional[str]
+        self.ID_SENSOR = ID_SENSOR  # type: Optional[str]
+        self.PASS_START = PASS_START  # type: Optional[str]
+        self.PASS_DURATION = PASS_DURATION  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        OSM = OSM()
-        OSM.Init(buf, pos)
-        return cls.InitFromObj(OSM)
+        tmpOsm = OSM()
+        tmpOsm.Init(buf, pos)
+        return cls.InitFromObj(tmpOsm)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -149,9 +157,9 @@ class OSMT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, OSM):
+    def InitFromObj(cls, tmpOsm):
         x = OSMT()
-        x._UnPack(OSM)
+        x._UnPack(tmpOsm)
         return x
 
     # OSMT

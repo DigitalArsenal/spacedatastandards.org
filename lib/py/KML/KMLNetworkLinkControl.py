@@ -218,24 +218,37 @@ except:
 class KMLNetworkLinkControlT(object):
 
     # KMLNetworkLinkControlT
-    def __init__(self):
-        self.MIN_REFRESH_PERIOD = 0.0  # type: float
-        self.MAX_SESSION_LENGTH = 0.0  # type: float
-        self.COOKIE = None  # type: str
-        self.MESSAGE = None  # type: str
-        self.LINK_NAME = None  # type: str
-        self.LINK_DESCRIPTION = None  # type: str
-        self.LINK_SNIPPET = None  # type: str
-        self.EXPIRES = None  # type: str
-        self.UPDATE = None  # type: Optional[KMLUpdate.KMLUpdateT]
-        self.LOOK_AT = None  # type: Optional[KMLLookAt.KMLLookAtT]
-        self.CAMERA = None  # type: Optional[KMLCamera.KMLCameraT]
+    def __init__(
+        self,
+        MIN_REFRESH_PERIOD = 0.0,
+        MAX_SESSION_LENGTH = 0.0,
+        COOKIE = None,
+        MESSAGE = None,
+        LINK_NAME = None,
+        LINK_DESCRIPTION = None,
+        LINK_SNIPPET = None,
+        EXPIRES = None,
+        UPDATE = None,
+        LOOK_AT = None,
+        CAMERA = None,
+    ):
+        self.MIN_REFRESH_PERIOD = MIN_REFRESH_PERIOD  # type: float
+        self.MAX_SESSION_LENGTH = MAX_SESSION_LENGTH  # type: float
+        self.COOKIE = COOKIE  # type: Optional[str]
+        self.MESSAGE = MESSAGE  # type: Optional[str]
+        self.LINK_NAME = LINK_NAME  # type: Optional[str]
+        self.LINK_DESCRIPTION = LINK_DESCRIPTION  # type: Optional[str]
+        self.LINK_SNIPPET = LINK_SNIPPET  # type: Optional[str]
+        self.EXPIRES = EXPIRES  # type: Optional[str]
+        self.UPDATE = UPDATE  # type: Optional[KMLUpdate.KMLUpdateT]
+        self.LOOK_AT = LOOK_AT  # type: Optional[KMLLookAt.KMLLookAtT]
+        self.CAMERA = CAMERA  # type: Optional[KMLCamera.KMLCameraT]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        kmlnetworkLinkControl = KMLNetworkLinkControl()
-        kmlnetworkLinkControl.Init(buf, pos)
-        return cls.InitFromObj(kmlnetworkLinkControl)
+        tmpKmlnetworkLinkControl = KMLNetworkLinkControl()
+        tmpKmlnetworkLinkControl.Init(buf, pos)
+        return cls.InitFromObj(tmpKmlnetworkLinkControl)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -243,29 +256,29 @@ class KMLNetworkLinkControlT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, kmlnetworkLinkControl):
+    def InitFromObj(cls, tmpKmlnetworkLinkControl):
         x = KMLNetworkLinkControlT()
-        x._UnPack(kmlnetworkLinkControl)
+        x._UnPack(tmpKmlnetworkLinkControl)
         return x
 
     # KMLNetworkLinkControlT
-    def _UnPack(self, kmlnetworkLinkControl):
-        if kmlnetworkLinkControl is None:
+    def _UnPack(self, KMLNetworkLinkControl):
+        if KMLNetworkLinkControl is None:
             return
-        self.MIN_REFRESH_PERIOD = kmlnetworkLinkControl.MIN_REFRESH_PERIOD()
-        self.MAX_SESSION_LENGTH = kmlnetworkLinkControl.MAX_SESSION_LENGTH()
-        self.COOKIE = kmlnetworkLinkControl.COOKIE()
-        self.MESSAGE = kmlnetworkLinkControl.MESSAGE()
-        self.LINK_NAME = kmlnetworkLinkControl.LINK_NAME()
-        self.LINK_DESCRIPTION = kmlnetworkLinkControl.LINK_DESCRIPTION()
-        self.LINK_SNIPPET = kmlnetworkLinkControl.LINK_SNIPPET()
-        self.EXPIRES = kmlnetworkLinkControl.EXPIRES()
-        if kmlnetworkLinkControl.UPDATE() is not None:
-            self.UPDATE = KMLUpdate.KMLUpdateT.InitFromObj(kmlnetworkLinkControl.UPDATE())
-        if kmlnetworkLinkControl.LOOK_AT() is not None:
-            self.LOOK_AT = KMLLookAt.KMLLookAtT.InitFromObj(kmlnetworkLinkControl.LOOK_AT())
-        if kmlnetworkLinkControl.CAMERA() is not None:
-            self.CAMERA = KMLCamera.KMLCameraT.InitFromObj(kmlnetworkLinkControl.CAMERA())
+        self.MIN_REFRESH_PERIOD = KMLNetworkLinkControl.MIN_REFRESH_PERIOD()
+        self.MAX_SESSION_LENGTH = KMLNetworkLinkControl.MAX_SESSION_LENGTH()
+        self.COOKIE = KMLNetworkLinkControl.COOKIE()
+        self.MESSAGE = KMLNetworkLinkControl.MESSAGE()
+        self.LINK_NAME = KMLNetworkLinkControl.LINK_NAME()
+        self.LINK_DESCRIPTION = KMLNetworkLinkControl.LINK_DESCRIPTION()
+        self.LINK_SNIPPET = KMLNetworkLinkControl.LINK_SNIPPET()
+        self.EXPIRES = KMLNetworkLinkControl.EXPIRES()
+        if KMLNetworkLinkControl.UPDATE() is not None:
+            self.UPDATE = KMLUpdate.KMLUpdateT.InitFromObj(KMLNetworkLinkControl.UPDATE())
+        if KMLNetworkLinkControl.LOOK_AT() is not None:
+            self.LOOK_AT = KMLLookAt.KMLLookAtT.InitFromObj(KMLNetworkLinkControl.LOOK_AT())
+        if KMLNetworkLinkControl.CAMERA() is not None:
+            self.CAMERA = KMLCamera.KMLCameraT.InitFromObj(KMLNetworkLinkControl.CAMERA())
 
     # KMLNetworkLinkControlT
     def Pack(self, builder):
@@ -308,5 +321,5 @@ class KMLNetworkLinkControlT(object):
             KMLNetworkLinkControlAddLOOK_AT(builder, LOOK_AT)
         if self.CAMERA is not None:
             KMLNetworkLinkControlAddCAMERA(builder, CAMERA)
-        kmlnetworkLinkControl = KMLNetworkLinkControlEnd(builder)
-        return kmlnetworkLinkControl
+        KMLNetworkLinkControl = KMLNetworkLinkControlEnd(builder)
+        return KMLNetworkLinkControl

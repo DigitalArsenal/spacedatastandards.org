@@ -51,6 +51,10 @@ func (rcv *KMLSimpleData) NAME() []byte {
 	return nil
 }
 
+func (rcv *KMLSimpleData) Name() []byte {
+	return rcv.NAME()
+}
+
 /// Field name
 /// Field value
 func (rcv *KMLSimpleData) VALUE() []byte {
@@ -61,6 +65,10 @@ func (rcv *KMLSimpleData) VALUE() []byte {
 	return nil
 }
 
+func (rcv *KMLSimpleData) Value() []byte {
+	return rcv.VALUE()
+}
+
 /// Field value
 func KMLSimpleDataStart(builder *flatbuffers.Builder) {
 	builder.StartObject(2)
@@ -68,8 +76,14 @@ func KMLSimpleDataStart(builder *flatbuffers.Builder) {
 func KMLSimpleDataAddNAME(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(NAME), 0)
 }
+func KMLSimpleDataAddName(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
+	KMLSimpleDataAddNAME(builder, NAME)
+}
 func KMLSimpleDataAddVALUE(builder *flatbuffers.Builder, VALUE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(VALUE), 0)
+}
+func KMLSimpleDataAddValue(builder *flatbuffers.Builder, VALUE flatbuffers.UOffsetT) {
+	KMLSimpleDataAddVALUE(builder, VALUE)
 }
 func KMLSimpleDataEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

@@ -2,4 +2,522 @@
 
 # namespace: 
 
-# NOTE CZMWall.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Wall (vertical curtain)
+class CZMWall(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = CZMWall()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsCZMWall(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def CZMWallBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x43\x5A\x4D", size_prefixed=size_prefixed)
+
+    # CZMWall
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Whether the wall is displayed
+    # CZMWall
+    def SHOW(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # Positions as cartographic degrees
+    # CZMWall
+    def POSITIONS_CARTOGRAPHIC_DEGREES(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # CZMWall
+    def POSITIONS_CARTOGRAPHIC_DEGREESAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
+
+    # CZMWall
+    def POSITIONS_CARTOGRAPHIC_DEGREESLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # CZMWall
+    def POSITIONS_CARTOGRAPHIC_DEGREESIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        return o == 0
+
+    # Positions as Cartesian
+    # CZMWall
+    def POSITIONS_CARTESIAN(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # CZMWall
+    def POSITIONS_CARTESIANAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
+
+    # CZMWall
+    def POSITIONS_CARTESIANLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # CZMWall
+    def POSITIONS_CARTESIANIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        return o == 0
+
+    # Minimum heights per position
+    # CZMWall
+    def MINIMUM_HEIGHTS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # CZMWall
+    def MINIMUM_HEIGHTSAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
+
+    # CZMWall
+    def MINIMUM_HEIGHTSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # CZMWall
+    def MINIMUM_HEIGHTSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        return o == 0
+
+    # Maximum heights per position
+    # CZMWall
+    def MAXIMUM_HEIGHTS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # CZMWall
+    def MAXIMUM_HEIGHTSAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
+
+    # CZMWall
+    def MAXIMUM_HEIGHTSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # CZMWall
+    def MAXIMUM_HEIGHTSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        return o == 0
+
+    # Granularity in radians
+    # CZMWall
+    def GRANULARITY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Fill flag
+    # CZMWall
+    def FILL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # Surface material
+    # CZMWall
+    def MATERIAL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from CZMMaterial import CZMMaterial
+            obj = CZMMaterial()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Outline flag
+    # CZMWall
+    def OUTLINE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # Outline color
+    # CZMWall
+    def OUTLINE_COLOR(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from CZMColor import CZMColor
+            obj = CZMColor()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Outline width
+    # CZMWall
+    def OUTLINE_WIDTH(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Shadow mode
+    # CZMWall
+    def SHADOWS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+def CZMWallStart(builder):
+    builder.StartObject(12)
+
+def Start(builder):
+    CZMWallStart(builder)
+
+def CZMWallAddSHOW(builder, SHOW):
+    builder.PrependBoolSlot(0, SHOW, 0)
+
+def AddSHOW(builder, SHOW):
+    CZMWallAddSHOW(builder, SHOW)
+
+def CZMWallAddPOSITIONS_CARTOGRAPHIC_DEGREES(builder, POSITIONS_CARTOGRAPHIC_DEGREES):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(POSITIONS_CARTOGRAPHIC_DEGREES), 0)
+
+def AddPOSITIONS_CARTOGRAPHIC_DEGREES(builder, POSITIONS_CARTOGRAPHIC_DEGREES):
+    CZMWallAddPOSITIONS_CARTOGRAPHIC_DEGREES(builder, POSITIONS_CARTOGRAPHIC_DEGREES)
+
+def CZMWallStartPOSITIONS_CARTOGRAPHIC_DEGREESVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
+def StartPOSITIONS_CARTOGRAPHIC_DEGREESVector(builder, numElems):
+    return CZMWallStartPOSITIONS_CARTOGRAPHIC_DEGREESVector(builder, numElems)
+
+def CZMWallCreatePOSITIONS_CARTOGRAPHIC_DEGREESVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreatePOSITIONS_CARTOGRAPHIC_DEGREESVector(builder, data):
+    CZMWallCreatePOSITIONS_CARTOGRAPHIC_DEGREESVector(builder, data)
+
+def CZMWallAddPOSITIONS_CARTESIAN(builder, POSITIONS_CARTESIAN):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(POSITIONS_CARTESIAN), 0)
+
+def AddPOSITIONS_CARTESIAN(builder, POSITIONS_CARTESIAN):
+    CZMWallAddPOSITIONS_CARTESIAN(builder, POSITIONS_CARTESIAN)
+
+def CZMWallStartPOSITIONS_CARTESIANVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
+def StartPOSITIONS_CARTESIANVector(builder, numElems):
+    return CZMWallStartPOSITIONS_CARTESIANVector(builder, numElems)
+
+def CZMWallCreatePOSITIONS_CARTESIANVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreatePOSITIONS_CARTESIANVector(builder, data):
+    CZMWallCreatePOSITIONS_CARTESIANVector(builder, data)
+
+def CZMWallAddMINIMUM_HEIGHTS(builder, MINIMUM_HEIGHTS):
+    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(MINIMUM_HEIGHTS), 0)
+
+def AddMINIMUM_HEIGHTS(builder, MINIMUM_HEIGHTS):
+    CZMWallAddMINIMUM_HEIGHTS(builder, MINIMUM_HEIGHTS)
+
+def CZMWallStartMINIMUM_HEIGHTSVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
+def StartMINIMUM_HEIGHTSVector(builder, numElems):
+    return CZMWallStartMINIMUM_HEIGHTSVector(builder, numElems)
+
+def CZMWallCreateMINIMUM_HEIGHTSVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateMINIMUM_HEIGHTSVector(builder, data):
+    CZMWallCreateMINIMUM_HEIGHTSVector(builder, data)
+
+def CZMWallAddMAXIMUM_HEIGHTS(builder, MAXIMUM_HEIGHTS):
+    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(MAXIMUM_HEIGHTS), 0)
+
+def AddMAXIMUM_HEIGHTS(builder, MAXIMUM_HEIGHTS):
+    CZMWallAddMAXIMUM_HEIGHTS(builder, MAXIMUM_HEIGHTS)
+
+def CZMWallStartMAXIMUM_HEIGHTSVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
+def StartMAXIMUM_HEIGHTSVector(builder, numElems):
+    return CZMWallStartMAXIMUM_HEIGHTSVector(builder, numElems)
+
+def CZMWallCreateMAXIMUM_HEIGHTSVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateMAXIMUM_HEIGHTSVector(builder, data):
+    CZMWallCreateMAXIMUM_HEIGHTSVector(builder, data)
+
+def CZMWallAddGRANULARITY(builder, GRANULARITY):
+    builder.PrependFloat64Slot(5, GRANULARITY, 0.0)
+
+def AddGRANULARITY(builder, GRANULARITY):
+    CZMWallAddGRANULARITY(builder, GRANULARITY)
+
+def CZMWallAddFILL(builder, FILL):
+    builder.PrependBoolSlot(6, FILL, 0)
+
+def AddFILL(builder, FILL):
+    CZMWallAddFILL(builder, FILL)
+
+def CZMWallAddMATERIAL(builder, MATERIAL):
+    builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(MATERIAL), 0)
+
+def AddMATERIAL(builder, MATERIAL):
+    CZMWallAddMATERIAL(builder, MATERIAL)
+
+def CZMWallAddOUTLINE(builder, OUTLINE):
+    builder.PrependBoolSlot(8, OUTLINE, 0)
+
+def AddOUTLINE(builder, OUTLINE):
+    CZMWallAddOUTLINE(builder, OUTLINE)
+
+def CZMWallAddOUTLINE_COLOR(builder, OUTLINE_COLOR):
+    builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(OUTLINE_COLOR), 0)
+
+def AddOUTLINE_COLOR(builder, OUTLINE_COLOR):
+    CZMWallAddOUTLINE_COLOR(builder, OUTLINE_COLOR)
+
+def CZMWallAddOUTLINE_WIDTH(builder, OUTLINE_WIDTH):
+    builder.PrependFloat64Slot(10, OUTLINE_WIDTH, 0.0)
+
+def AddOUTLINE_WIDTH(builder, OUTLINE_WIDTH):
+    CZMWallAddOUTLINE_WIDTH(builder, OUTLINE_WIDTH)
+
+def CZMWallAddSHADOWS(builder, SHADOWS):
+    builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(SHADOWS), 0)
+
+def AddSHADOWS(builder, SHADOWS):
+    CZMWallAddSHADOWS(builder, SHADOWS)
+
+def CZMWallEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return CZMWallEnd(builder)
+
+import CZMColor
+import CZMMaterial
+try:
+    from typing import List, Optional
+except:
+    pass
+
+class CZMWallT(object):
+
+    # CZMWallT
+    def __init__(
+        self,
+        SHOW = False,
+        POSITIONS_CARTOGRAPHIC_DEGREES = None,
+        POSITIONS_CARTESIAN = None,
+        MINIMUM_HEIGHTS = None,
+        MAXIMUM_HEIGHTS = None,
+        GRANULARITY = 0.0,
+        FILL = False,
+        MATERIAL = None,
+        OUTLINE = False,
+        OUTLINE_COLOR = None,
+        OUTLINE_WIDTH = 0.0,
+        SHADOWS = None,
+    ):
+        self.SHOW = SHOW  # type: bool
+        self.POSITIONS_CARTOGRAPHIC_DEGREES = POSITIONS_CARTOGRAPHIC_DEGREES  # type: Optional[List[float]]
+        self.POSITIONS_CARTESIAN = POSITIONS_CARTESIAN  # type: Optional[List[float]]
+        self.MINIMUM_HEIGHTS = MINIMUM_HEIGHTS  # type: Optional[List[float]]
+        self.MAXIMUM_HEIGHTS = MAXIMUM_HEIGHTS  # type: Optional[List[float]]
+        self.GRANULARITY = GRANULARITY  # type: float
+        self.FILL = FILL  # type: bool
+        self.MATERIAL = MATERIAL  # type: Optional[CZMMaterial.CZMMaterialT]
+        self.OUTLINE = OUTLINE  # type: bool
+        self.OUTLINE_COLOR = OUTLINE_COLOR  # type: Optional[CZMColor.CZMColorT]
+        self.OUTLINE_WIDTH = OUTLINE_WIDTH  # type: float
+        self.SHADOWS = SHADOWS  # type: Optional[str]
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpCzmwall = CZMWall()
+        tmpCzmwall.Init(buf, pos)
+        return cls.InitFromObj(tmpCzmwall)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpCzmwall):
+        x = CZMWallT()
+        x._UnPack(tmpCzmwall)
+        return x
+
+    # CZMWallT
+    def _UnPack(self, CZMWall):
+        if CZMWall is None:
+            return
+        self.SHOW = CZMWall.SHOW()
+        if not CZMWall.POSITIONS_CARTOGRAPHIC_DEGREESIsNone():
+            if np is None:
+                self.POSITIONS_CARTOGRAPHIC_DEGREES = []
+                for i in range(CZMWall.POSITIONS_CARTOGRAPHIC_DEGREESLength()):
+                    self.POSITIONS_CARTOGRAPHIC_DEGREES.append(CZMWall.POSITIONS_CARTOGRAPHIC_DEGREES(i))
+            else:
+                self.POSITIONS_CARTOGRAPHIC_DEGREES = CZMWall.POSITIONS_CARTOGRAPHIC_DEGREESAsNumpy()
+        if not CZMWall.POSITIONS_CARTESIANIsNone():
+            if np is None:
+                self.POSITIONS_CARTESIAN = []
+                for i in range(CZMWall.POSITIONS_CARTESIANLength()):
+                    self.POSITIONS_CARTESIAN.append(CZMWall.POSITIONS_CARTESIAN(i))
+            else:
+                self.POSITIONS_CARTESIAN = CZMWall.POSITIONS_CARTESIANAsNumpy()
+        if not CZMWall.MINIMUM_HEIGHTSIsNone():
+            if np is None:
+                self.MINIMUM_HEIGHTS = []
+                for i in range(CZMWall.MINIMUM_HEIGHTSLength()):
+                    self.MINIMUM_HEIGHTS.append(CZMWall.MINIMUM_HEIGHTS(i))
+            else:
+                self.MINIMUM_HEIGHTS = CZMWall.MINIMUM_HEIGHTSAsNumpy()
+        if not CZMWall.MAXIMUM_HEIGHTSIsNone():
+            if np is None:
+                self.MAXIMUM_HEIGHTS = []
+                for i in range(CZMWall.MAXIMUM_HEIGHTSLength()):
+                    self.MAXIMUM_HEIGHTS.append(CZMWall.MAXIMUM_HEIGHTS(i))
+            else:
+                self.MAXIMUM_HEIGHTS = CZMWall.MAXIMUM_HEIGHTSAsNumpy()
+        self.GRANULARITY = CZMWall.GRANULARITY()
+        self.FILL = CZMWall.FILL()
+        if CZMWall.MATERIAL() is not None:
+            self.MATERIAL = CZMMaterial.CZMMaterialT.InitFromObj(CZMWall.MATERIAL())
+        self.OUTLINE = CZMWall.OUTLINE()
+        if CZMWall.OUTLINE_COLOR() is not None:
+            self.OUTLINE_COLOR = CZMColor.CZMColorT.InitFromObj(CZMWall.OUTLINE_COLOR())
+        self.OUTLINE_WIDTH = CZMWall.OUTLINE_WIDTH()
+        self.SHADOWS = CZMWall.SHADOWS()
+
+    # CZMWallT
+    def Pack(self, builder):
+        if self.POSITIONS_CARTOGRAPHIC_DEGREES is not None:
+            if np is not None and type(self.POSITIONS_CARTOGRAPHIC_DEGREES) is np.ndarray:
+                POSITIONS_CARTOGRAPHIC_DEGREES = builder.CreateNumpyVector(self.POSITIONS_CARTOGRAPHIC_DEGREES)
+            else:
+                CZMWallStartPOSITIONS_CARTOGRAPHIC_DEGREESVector(builder, len(self.POSITIONS_CARTOGRAPHIC_DEGREES))
+                for i in reversed(range(len(self.POSITIONS_CARTOGRAPHIC_DEGREES))):
+                    builder.PrependFloat64(self.POSITIONS_CARTOGRAPHIC_DEGREES[i])
+                POSITIONS_CARTOGRAPHIC_DEGREES = builder.EndVector()
+        if self.POSITIONS_CARTESIAN is not None:
+            if np is not None and type(self.POSITIONS_CARTESIAN) is np.ndarray:
+                POSITIONS_CARTESIAN = builder.CreateNumpyVector(self.POSITIONS_CARTESIAN)
+            else:
+                CZMWallStartPOSITIONS_CARTESIANVector(builder, len(self.POSITIONS_CARTESIAN))
+                for i in reversed(range(len(self.POSITIONS_CARTESIAN))):
+                    builder.PrependFloat64(self.POSITIONS_CARTESIAN[i])
+                POSITIONS_CARTESIAN = builder.EndVector()
+        if self.MINIMUM_HEIGHTS is not None:
+            if np is not None and type(self.MINIMUM_HEIGHTS) is np.ndarray:
+                MINIMUM_HEIGHTS = builder.CreateNumpyVector(self.MINIMUM_HEIGHTS)
+            else:
+                CZMWallStartMINIMUM_HEIGHTSVector(builder, len(self.MINIMUM_HEIGHTS))
+                for i in reversed(range(len(self.MINIMUM_HEIGHTS))):
+                    builder.PrependFloat64(self.MINIMUM_HEIGHTS[i])
+                MINIMUM_HEIGHTS = builder.EndVector()
+        if self.MAXIMUM_HEIGHTS is not None:
+            if np is not None and type(self.MAXIMUM_HEIGHTS) is np.ndarray:
+                MAXIMUM_HEIGHTS = builder.CreateNumpyVector(self.MAXIMUM_HEIGHTS)
+            else:
+                CZMWallStartMAXIMUM_HEIGHTSVector(builder, len(self.MAXIMUM_HEIGHTS))
+                for i in reversed(range(len(self.MAXIMUM_HEIGHTS))):
+                    builder.PrependFloat64(self.MAXIMUM_HEIGHTS[i])
+                MAXIMUM_HEIGHTS = builder.EndVector()
+        if self.MATERIAL is not None:
+            MATERIAL = self.MATERIAL.Pack(builder)
+        if self.OUTLINE_COLOR is not None:
+            OUTLINE_COLOR = self.OUTLINE_COLOR.Pack(builder)
+        if self.SHADOWS is not None:
+            SHADOWS = builder.CreateString(self.SHADOWS)
+        CZMWallStart(builder)
+        CZMWallAddSHOW(builder, self.SHOW)
+        if self.POSITIONS_CARTOGRAPHIC_DEGREES is not None:
+            CZMWallAddPOSITIONS_CARTOGRAPHIC_DEGREES(builder, POSITIONS_CARTOGRAPHIC_DEGREES)
+        if self.POSITIONS_CARTESIAN is not None:
+            CZMWallAddPOSITIONS_CARTESIAN(builder, POSITIONS_CARTESIAN)
+        if self.MINIMUM_HEIGHTS is not None:
+            CZMWallAddMINIMUM_HEIGHTS(builder, MINIMUM_HEIGHTS)
+        if self.MAXIMUM_HEIGHTS is not None:
+            CZMWallAddMAXIMUM_HEIGHTS(builder, MAXIMUM_HEIGHTS)
+        CZMWallAddGRANULARITY(builder, self.GRANULARITY)
+        CZMWallAddFILL(builder, self.FILL)
+        if self.MATERIAL is not None:
+            CZMWallAddMATERIAL(builder, MATERIAL)
+        CZMWallAddOUTLINE(builder, self.OUTLINE)
+        if self.OUTLINE_COLOR is not None:
+            CZMWallAddOUTLINE_COLOR(builder, OUTLINE_COLOR)
+        CZMWallAddOUTLINE_WIDTH(builder, self.OUTLINE_WIDTH)
+        if self.SHADOWS is not None:
+            CZMWallAddSHADOWS(builder, SHADOWS)
+        CZMWall = CZMWallEnd(builder)
+        return CZMWall

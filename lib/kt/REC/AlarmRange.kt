@@ -32,7 +32,7 @@ class AlarmRange : Table() {
     /**
      * Minimum value (inclusive)
      */
-    val MIN_INCLUSIVE : Double
+    val minInclusive : Double
         get() {
             val o = __offset(4)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -40,7 +40,7 @@ class AlarmRange : Table() {
     /**
      * Maximum value (inclusive)
      */
-    val MAX_INCLUSIVE : Double
+    val maxInclusive : Double
         get() {
             val o = __offset(6)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -48,7 +48,7 @@ class AlarmRange : Table() {
     /**
      * Minimum value (exclusive)
      */
-    val MIN_EXCLUSIVE : Double
+    val minExclusive : Double
         get() {
             val o = __offset(8)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -56,31 +56,31 @@ class AlarmRange : Table() {
     /**
      * Maximum value (exclusive)
      */
-    val MAX_EXCLUSIVE : Double
+    val maxExclusive : Double
         get() {
             val o = __offset(10)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsAlarmRange(_bb: ByteBuffer): AlarmRange = getRootAsAlarmRange(_bb, AlarmRange())
         fun getRootAsAlarmRange(_bb: ByteBuffer, obj: AlarmRange): AlarmRange {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createAlarmRange(builder: FlatBufferBuilder, MIN_INCLUSIVE: Double, MAX_INCLUSIVE: Double, MIN_EXCLUSIVE: Double, MAX_EXCLUSIVE: Double) : Int {
+        fun createAlarmRange(builder: FlatBufferBuilder, minInclusive: Double, maxInclusive: Double, minExclusive: Double, maxExclusive: Double) : Int {
             builder.startTable(4)
-            addMAX_EXCLUSIVE(builder, MAX_EXCLUSIVE)
-            addMIN_EXCLUSIVE(builder, MIN_EXCLUSIVE)
-            addMAX_INCLUSIVE(builder, MAX_INCLUSIVE)
-            addMIN_INCLUSIVE(builder, MIN_INCLUSIVE)
+            addMAXEXCLUSIVE(builder, maxExclusive)
+            addMINEXCLUSIVE(builder, minExclusive)
+            addMAXINCLUSIVE(builder, maxInclusive)
+            addMININCLUSIVE(builder, minInclusive)
             return endAlarmRange(builder)
         }
         fun startAlarmRange(builder: FlatBufferBuilder) = builder.startTable(4)
-        fun addMIN_INCLUSIVE(builder: FlatBufferBuilder, MIN_INCLUSIVE: Double) = builder.addDouble(0, MIN_INCLUSIVE, 0.0)
-        fun addMAX_INCLUSIVE(builder: FlatBufferBuilder, MAX_INCLUSIVE: Double) = builder.addDouble(1, MAX_INCLUSIVE, 0.0)
-        fun addMIN_EXCLUSIVE(builder: FlatBufferBuilder, MIN_EXCLUSIVE: Double) = builder.addDouble(2, MIN_EXCLUSIVE, 0.0)
-        fun addMAX_EXCLUSIVE(builder: FlatBufferBuilder, MAX_EXCLUSIVE: Double) = builder.addDouble(3, MAX_EXCLUSIVE, 0.0)
+        fun addMININCLUSIVE(builder: FlatBufferBuilder, minInclusive: Double) = builder.addDouble(0, minInclusive, 0.0)
+        fun addMAXINCLUSIVE(builder: FlatBufferBuilder, maxInclusive: Double) = builder.addDouble(1, maxInclusive, 0.0)
+        fun addMINEXCLUSIVE(builder: FlatBufferBuilder, minExclusive: Double) = builder.addDouble(2, minExclusive, 0.0)
+        fun addMAXEXCLUSIVE(builder: FlatBufferBuilder, maxExclusive: Double) = builder.addDouble(3, maxExclusive, 0.0)
         fun endAlarmRange(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

@@ -56,6 +56,10 @@ func (rcv *KMLTourPrimitive) FLY_TO(obj *KMLFlyTo) *KMLFlyTo {
 	return nil
 }
 
+func (rcv *KMLTourPrimitive) FlyTo(obj *KMLFlyTo) *KMLFlyTo {
+	return rcv.FLY_TO(obj)
+}
+
 /// FlyTo
 /// Wait
 func (rcv *KMLTourPrimitive) WAIT(obj *KMLWait) *KMLWait {
@@ -69,6 +73,10 @@ func (rcv *KMLTourPrimitive) WAIT(obj *KMLWait) *KMLWait {
 		return obj
 	}
 	return nil
+}
+
+func (rcv *KMLTourPrimitive) Wait(obj *KMLWait) *KMLWait {
+	return rcv.WAIT(obj)
 }
 
 /// Wait
@@ -86,6 +94,10 @@ func (rcv *KMLTourPrimitive) ANIMATED_UPDATE(obj *KMLAnimatedUpdate) *KMLAnimate
 	return nil
 }
 
+func (rcv *KMLTourPrimitive) AnimatedUpdate(obj *KMLAnimatedUpdate) *KMLAnimatedUpdate {
+	return rcv.ANIMATED_UPDATE(obj)
+}
+
 /// AnimatedUpdate
 /// TourControl
 func (rcv *KMLTourPrimitive) TOUR_CONTROL(obj *KMLTourControl) *KMLTourControl {
@@ -99,6 +111,10 @@ func (rcv *KMLTourPrimitive) TOUR_CONTROL(obj *KMLTourControl) *KMLTourControl {
 		return obj
 	}
 	return nil
+}
+
+func (rcv *KMLTourPrimitive) TourControl(obj *KMLTourControl) *KMLTourControl {
+	return rcv.TOUR_CONTROL(obj)
 }
 
 /// TourControl
@@ -116,6 +132,10 @@ func (rcv *KMLTourPrimitive) SOUND_CUE(obj *KMLSoundCue) *KMLSoundCue {
 	return nil
 }
 
+func (rcv *KMLTourPrimitive) SoundCue(obj *KMLSoundCue) *KMLSoundCue {
+	return rcv.SOUND_CUE(obj)
+}
+
 /// SoundCue
 func KMLTourPrimitiveStart(builder *flatbuffers.Builder) {
 	builder.StartObject(5)
@@ -123,17 +143,32 @@ func KMLTourPrimitiveStart(builder *flatbuffers.Builder) {
 func KMLTourPrimitiveAddFLY_TO(builder *flatbuffers.Builder, FLY_TO flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(FLY_TO), 0)
 }
+func KMLTourPrimitiveAddFlyTo(builder *flatbuffers.Builder, FLY_TO flatbuffers.UOffsetT) {
+	KMLTourPrimitiveAddFLY_TO(builder, FLY_TO)
+}
 func KMLTourPrimitiveAddWAIT(builder *flatbuffers.Builder, WAIT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(WAIT), 0)
+}
+func KMLTourPrimitiveAddWait(builder *flatbuffers.Builder, WAIT flatbuffers.UOffsetT) {
+	KMLTourPrimitiveAddWAIT(builder, WAIT)
 }
 func KMLTourPrimitiveAddANIMATED_UPDATE(builder *flatbuffers.Builder, ANIMATED_UPDATE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(ANIMATED_UPDATE), 0)
 }
+func KMLTourPrimitiveAddAnimatedUpdate(builder *flatbuffers.Builder, ANIMATED_UPDATE flatbuffers.UOffsetT) {
+	KMLTourPrimitiveAddANIMATED_UPDATE(builder, ANIMATED_UPDATE)
+}
 func KMLTourPrimitiveAddTOUR_CONTROL(builder *flatbuffers.Builder, TOUR_CONTROL flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(TOUR_CONTROL), 0)
 }
+func KMLTourPrimitiveAddTourControl(builder *flatbuffers.Builder, TOUR_CONTROL flatbuffers.UOffsetT) {
+	KMLTourPrimitiveAddTOUR_CONTROL(builder, TOUR_CONTROL)
+}
 func KMLTourPrimitiveAddSOUND_CUE(builder *flatbuffers.Builder, SOUND_CUE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(SOUND_CUE), 0)
+}
+func KMLTourPrimitiveAddSoundCue(builder *flatbuffers.Builder, SOUND_CUE flatbuffers.UOffsetT) {
+	KMLTourPrimitiveAddSOUND_CUE(builder, SOUND_CUE)
 }
 func KMLTourPrimitiveEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

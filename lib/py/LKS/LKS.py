@@ -381,37 +381,63 @@ def End(builder):
 class LKST(object):
 
     # LKST
-    def __init__(self):
-        self.ID = None  # type: str
-        self.ID_ON_ORBIT1 = None  # type: str
-        self.SAT_NO1 = 0  # type: int
-        self.ID_ON_ORBIT2 = None  # type: str
-        self.SAT_NO2 = 0  # type: int
-        self.CONSTELLATION = None  # type: str
-        self.LINK_NAME = None  # type: str
-        self.LINK_TYPE = 0  # type: int
-        self.LINK_STATE = 0  # type: int
-        self.BAND = None  # type: str
-        self.LINK_START_TIME = None  # type: str
-        self.LINK_STOP_TIME = None  # type: str
-        self.ID_BEAM1 = None  # type: str
-        self.END_POINT1_NAME = None  # type: str
-        self.END_POINT1_LAT = 0.0  # type: float
-        self.END_POINT1_LON = 0.0  # type: float
-        self.ID_BEAM2 = None  # type: str
-        self.END_POINT2_NAME = None  # type: str
-        self.END_POINT2_LAT = 0.0  # type: float
-        self.END_POINT2_LON = 0.0  # type: float
-        self.DATA_RATE1_TO2 = 0.0  # type: float
-        self.DATA_RATE2_TO1 = 0.0  # type: float
-        self.SYS_CAP = None  # type: str
-        self.OPS_CAP = None  # type: str
+    def __init__(
+        self,
+        ID = None,
+        ID_ON_ORBIT1 = None,
+        SAT_NO1 = 0,
+        ID_ON_ORBIT2 = None,
+        SAT_NO2 = 0,
+        CONSTELLATION = None,
+        LINK_NAME = None,
+        LINK_TYPE = 0,
+        LINK_STATE = 0,
+        BAND = None,
+        LINK_START_TIME = None,
+        LINK_STOP_TIME = None,
+        ID_BEAM1 = None,
+        END_POINT1_NAME = None,
+        END_POINT1_LAT = 0.0,
+        END_POINT1_LON = 0.0,
+        ID_BEAM2 = None,
+        END_POINT2_NAME = None,
+        END_POINT2_LAT = 0.0,
+        END_POINT2_LON = 0.0,
+        DATA_RATE1_TO2 = 0.0,
+        DATA_RATE2_TO1 = 0.0,
+        SYS_CAP = None,
+        OPS_CAP = None,
+    ):
+        self.ID = ID  # type: Optional[str]
+        self.ID_ON_ORBIT1 = ID_ON_ORBIT1  # type: Optional[str]
+        self.SAT_NO1 = SAT_NO1  # type: int
+        self.ID_ON_ORBIT2 = ID_ON_ORBIT2  # type: Optional[str]
+        self.SAT_NO2 = SAT_NO2  # type: int
+        self.CONSTELLATION = CONSTELLATION  # type: Optional[str]
+        self.LINK_NAME = LINK_NAME  # type: Optional[str]
+        self.LINK_TYPE = LINK_TYPE  # type: int
+        self.LINK_STATE = LINK_STATE  # type: int
+        self.BAND = BAND  # type: Optional[str]
+        self.LINK_START_TIME = LINK_START_TIME  # type: Optional[str]
+        self.LINK_STOP_TIME = LINK_STOP_TIME  # type: Optional[str]
+        self.ID_BEAM1 = ID_BEAM1  # type: Optional[str]
+        self.END_POINT1_NAME = END_POINT1_NAME  # type: Optional[str]
+        self.END_POINT1_LAT = END_POINT1_LAT  # type: float
+        self.END_POINT1_LON = END_POINT1_LON  # type: float
+        self.ID_BEAM2 = ID_BEAM2  # type: Optional[str]
+        self.END_POINT2_NAME = END_POINT2_NAME  # type: Optional[str]
+        self.END_POINT2_LAT = END_POINT2_LAT  # type: float
+        self.END_POINT2_LON = END_POINT2_LON  # type: float
+        self.DATA_RATE1_TO2 = DATA_RATE1_TO2  # type: float
+        self.DATA_RATE2_TO1 = DATA_RATE2_TO1  # type: float
+        self.SYS_CAP = SYS_CAP  # type: Optional[str]
+        self.OPS_CAP = OPS_CAP  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        LKS = LKS()
-        LKS.Init(buf, pos)
-        return cls.InitFromObj(LKS)
+        tmpLks = LKS()
+        tmpLks.Init(buf, pos)
+        return cls.InitFromObj(tmpLks)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -419,9 +445,9 @@ class LKST(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, LKS):
+    def InitFromObj(cls, tmpLks):
         x = LKST()
-        x._UnPack(LKS)
+        x._UnPack(tmpLks)
         return x
 
     # LKST

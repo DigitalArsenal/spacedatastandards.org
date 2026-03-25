@@ -2,4 +2,1344 @@
 
 # namespace: 
 
-# NOTE WTH.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Weather Data
+class WTH(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = WTH()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsWTH(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def WTHBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x57\x54\x48", size_prefixed=size_prefixed)
+
+    # WTH
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Unique identifier
+    # WTH
+    def ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Sensor identifier
+    # WTH
+    def ID_SENSOR(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Original sensor identifier
+    # WTH
+    def ORIG_SENSOR_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Observation time (ISO 8601)
+    # WTH
+    def OB_TIME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # File creation time (ISO 8601)
+    # WTH
+    def FILE_CREATION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Quality control value
+    # WTH
+    def QC_VALUE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
+        return 0
+
+    # Terminal altitude (km)
+    # WTH
+    def TERM_ALT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Average transmit power (dBm)
+    # WTH
+    def AVG_TX_PWR(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Average reflected power (dBm)
+    # WTH
+    def AVG_REF_PWR(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Sector number
+    # WTH
+    def SECTOR_NUM(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint16Flags, o + self._tab.Pos)
+        return 0
+
+    # Number of data elements
+    # WTH
+    def NUM_ELEMENTS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint16Flags, o + self._tab.Pos)
+        return 0
+
+    # Checksum
+    # WTH
+    def CHECKSUM(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+        return 0
+
+    # Signal power values (dBm)
+    # WTH
+    def SIG_PWRS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # WTH
+    def SIG_PWRSAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
+
+    # WTH
+    def SIG_PWRSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # WTH
+    def SIG_PWRSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        return o == 0
+
+    # Noise level values (dBm)
+    # WTH
+    def NOISE_LVLS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # WTH
+    def NOISE_LVLSAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
+
+    # WTH
+    def NOISE_LVLSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # WTH
+    def NOISE_LVLSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        return o == 0
+
+    # Spectral width values (m/s)
+    # WTH
+    def SPEC_WIDTHS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # WTH
+    def SPEC_WIDTHSAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
+
+    # WTH
+    def SPEC_WIDTHSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # WTH
+    def SPEC_WIDTHSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        return o == 0
+
+    # First guess average values
+    # WTH
+    def FIRST_GUESS_AVGS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # WTH
+    def FIRST_GUESS_AVGSAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
+
+    # WTH
+    def FIRST_GUESS_AVGSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # WTH
+    def FIRST_GUESS_AVGSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        return o == 0
+
+    # Time domain average sample numbers
+    # WTH
+    def TD_AVG_SAMPLE_NUMS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # WTH
+    def TD_AVG_SAMPLE_NUMSAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
+
+    # WTH
+    def TD_AVG_SAMPLE_NUMSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # WTH
+    def TD_AVG_SAMPLE_NUMSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        return o == 0
+
+    # Co-integration values
+    # WTH
+    def CO_INTEGS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # WTH
+    def CO_INTEGSAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
+
+    # WTH
+    def CO_INTEGSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # WTH
+    def CO_INTEGSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        return o == 0
+
+    # Spectral average values
+    # WTH
+    def SPEC_AVGS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # WTH
+    def SPEC_AVGSAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
+
+    # WTH
+    def SPEC_AVGSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # WTH
+    def SPEC_AVGSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        return o == 0
+
+    # Interpulse periods (microseconds)
+    # WTH
+    def INTERPULSE_PERIODS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # WTH
+    def INTERPULSE_PERIODSAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
+
+    # WTH
+    def INTERPULSE_PERIODSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # WTH
+    def INTERPULSE_PERIODSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        return o == 0
+
+    # Doppler velocities (m/s)
+    # WTH
+    def DOPP_VELS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # WTH
+    def DOPP_VELSAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
+
+    # WTH
+    def DOPP_VELSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # WTH
+    def DOPP_VELSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        return o == 0
+
+    # Consecutive records count
+    # WTH
+    def CONS_RECS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # WTH
+    def CONS_RECSAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
+
+    # WTH
+    def CONS_RECSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # WTH
+    def CONS_RECSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+        return o == 0
+
+    # Signal-to-noise ratios (dB)
+    # WTH
+    def SNRS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # WTH
+    def SNRSAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
+
+    # WTH
+    def SNRSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # WTH
+    def SNRSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
+        return o == 0
+
+    # Signal strength (dBm)
+    # WTH
+    def SIG_STRENGTH(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Error ellipse semi-major axis (km)
+    # WTH
+    def SEMI_MAJOR_AXIS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(52))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Error ellipse semi-minor axis (km)
+    # WTH
+    def SEMI_MINOR_AXIS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(54))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Error ellipse orientation angle (degrees)
+    # WTH
+    def ANGLE_ORIENTATION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(56))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Lightning event number
+    # WTH
+    def LIGHT_EVENT_NUM(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+        return 0
+
+    # Lightning detection sensor identifiers
+    # WTH
+    def LIGHT_DET_SENSORS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
+        return ""
+
+    # WTH
+    def LIGHT_DET_SENSORSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # WTH
+    def LIGHT_DET_SENSORSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
+        return o == 0
+
+    # Position confidence (0-1)
+    # WTH
+    def POS_CONFIDENCE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(62))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Source types
+    # WTH
+    def SRC_TYPS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(64))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
+        return ""
+
+    # WTH
+    def SRC_TYPSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(64))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # WTH
+    def SRC_TYPSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(64))
+        return o == 0
+
+    # Source identifiers
+    # WTH
+    def SRC_IDS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(66))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
+        return ""
+
+    # WTH
+    def SRC_IDSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(66))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # WTH
+    def SRC_IDSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(66))
+        return o == 0
+
+def WTHStart(builder):
+    builder.StartObject(32)
+
+def Start(builder):
+    WTHStart(builder)
+
+def WTHAddID(builder, ID):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(ID), 0)
+
+def AddID(builder, ID):
+    WTHAddID(builder, ID)
+
+def WTHAddID_SENSOR(builder, ID_SENSOR):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(ID_SENSOR), 0)
+
+def AddID_SENSOR(builder, ID_SENSOR):
+    WTHAddID_SENSOR(builder, ID_SENSOR)
+
+def WTHAddORIG_SENSOR_ID(builder, ORIG_SENSOR_ID):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(ORIG_SENSOR_ID), 0)
+
+def AddORIG_SENSOR_ID(builder, ORIG_SENSOR_ID):
+    WTHAddORIG_SENSOR_ID(builder, ORIG_SENSOR_ID)
+
+def WTHAddOB_TIME(builder, OB_TIME):
+    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(OB_TIME), 0)
+
+def AddOB_TIME(builder, OB_TIME):
+    WTHAddOB_TIME(builder, OB_TIME)
+
+def WTHAddFILE_CREATION(builder, FILE_CREATION):
+    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(FILE_CREATION), 0)
+
+def AddFILE_CREATION(builder, FILE_CREATION):
+    WTHAddFILE_CREATION(builder, FILE_CREATION)
+
+def WTHAddQC_VALUE(builder, QC_VALUE):
+    builder.PrependUint8Slot(5, QC_VALUE, 0)
+
+def AddQC_VALUE(builder, QC_VALUE):
+    WTHAddQC_VALUE(builder, QC_VALUE)
+
+def WTHAddTERM_ALT(builder, TERM_ALT):
+    builder.PrependFloat64Slot(6, TERM_ALT, 0.0)
+
+def AddTERM_ALT(builder, TERM_ALT):
+    WTHAddTERM_ALT(builder, TERM_ALT)
+
+def WTHAddAVG_TX_PWR(builder, AVG_TX_PWR):
+    builder.PrependFloat64Slot(7, AVG_TX_PWR, 0.0)
+
+def AddAVG_TX_PWR(builder, AVG_TX_PWR):
+    WTHAddAVG_TX_PWR(builder, AVG_TX_PWR)
+
+def WTHAddAVG_REF_PWR(builder, AVG_REF_PWR):
+    builder.PrependFloat64Slot(8, AVG_REF_PWR, 0.0)
+
+def AddAVG_REF_PWR(builder, AVG_REF_PWR):
+    WTHAddAVG_REF_PWR(builder, AVG_REF_PWR)
+
+def WTHAddSECTOR_NUM(builder, SECTOR_NUM):
+    builder.PrependUint16Slot(9, SECTOR_NUM, 0)
+
+def AddSECTOR_NUM(builder, SECTOR_NUM):
+    WTHAddSECTOR_NUM(builder, SECTOR_NUM)
+
+def WTHAddNUM_ELEMENTS(builder, NUM_ELEMENTS):
+    builder.PrependUint16Slot(10, NUM_ELEMENTS, 0)
+
+def AddNUM_ELEMENTS(builder, NUM_ELEMENTS):
+    WTHAddNUM_ELEMENTS(builder, NUM_ELEMENTS)
+
+def WTHAddCHECKSUM(builder, CHECKSUM):
+    builder.PrependUint32Slot(11, CHECKSUM, 0)
+
+def AddCHECKSUM(builder, CHECKSUM):
+    WTHAddCHECKSUM(builder, CHECKSUM)
+
+def WTHAddSIG_PWRS(builder, SIG_PWRS):
+    builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(SIG_PWRS), 0)
+
+def AddSIG_PWRS(builder, SIG_PWRS):
+    WTHAddSIG_PWRS(builder, SIG_PWRS)
+
+def WTHStartSIG_PWRSVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
+def StartSIG_PWRSVector(builder, numElems):
+    return WTHStartSIG_PWRSVector(builder, numElems)
+
+def WTHCreateSIG_PWRSVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateSIG_PWRSVector(builder, data):
+    WTHCreateSIG_PWRSVector(builder, data)
+
+def WTHAddNOISE_LVLS(builder, NOISE_LVLS):
+    builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(NOISE_LVLS), 0)
+
+def AddNOISE_LVLS(builder, NOISE_LVLS):
+    WTHAddNOISE_LVLS(builder, NOISE_LVLS)
+
+def WTHStartNOISE_LVLSVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
+def StartNOISE_LVLSVector(builder, numElems):
+    return WTHStartNOISE_LVLSVector(builder, numElems)
+
+def WTHCreateNOISE_LVLSVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateNOISE_LVLSVector(builder, data):
+    WTHCreateNOISE_LVLSVector(builder, data)
+
+def WTHAddSPEC_WIDTHS(builder, SPEC_WIDTHS):
+    builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(SPEC_WIDTHS), 0)
+
+def AddSPEC_WIDTHS(builder, SPEC_WIDTHS):
+    WTHAddSPEC_WIDTHS(builder, SPEC_WIDTHS)
+
+def WTHStartSPEC_WIDTHSVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
+def StartSPEC_WIDTHSVector(builder, numElems):
+    return WTHStartSPEC_WIDTHSVector(builder, numElems)
+
+def WTHCreateSPEC_WIDTHSVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateSPEC_WIDTHSVector(builder, data):
+    WTHCreateSPEC_WIDTHSVector(builder, data)
+
+def WTHAddFIRST_GUESS_AVGS(builder, FIRST_GUESS_AVGS):
+    builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(FIRST_GUESS_AVGS), 0)
+
+def AddFIRST_GUESS_AVGS(builder, FIRST_GUESS_AVGS):
+    WTHAddFIRST_GUESS_AVGS(builder, FIRST_GUESS_AVGS)
+
+def WTHStartFIRST_GUESS_AVGSVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
+def StartFIRST_GUESS_AVGSVector(builder, numElems):
+    return WTHStartFIRST_GUESS_AVGSVector(builder, numElems)
+
+def WTHCreateFIRST_GUESS_AVGSVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateFIRST_GUESS_AVGSVector(builder, data):
+    WTHCreateFIRST_GUESS_AVGSVector(builder, data)
+
+def WTHAddTD_AVG_SAMPLE_NUMS(builder, TD_AVG_SAMPLE_NUMS):
+    builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(TD_AVG_SAMPLE_NUMS), 0)
+
+def AddTD_AVG_SAMPLE_NUMS(builder, TD_AVG_SAMPLE_NUMS):
+    WTHAddTD_AVG_SAMPLE_NUMS(builder, TD_AVG_SAMPLE_NUMS)
+
+def WTHStartTD_AVG_SAMPLE_NUMSVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
+def StartTD_AVG_SAMPLE_NUMSVector(builder, numElems):
+    return WTHStartTD_AVG_SAMPLE_NUMSVector(builder, numElems)
+
+def WTHCreateTD_AVG_SAMPLE_NUMSVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateTD_AVG_SAMPLE_NUMSVector(builder, data):
+    WTHCreateTD_AVG_SAMPLE_NUMSVector(builder, data)
+
+def WTHAddCO_INTEGS(builder, CO_INTEGS):
+    builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(CO_INTEGS), 0)
+
+def AddCO_INTEGS(builder, CO_INTEGS):
+    WTHAddCO_INTEGS(builder, CO_INTEGS)
+
+def WTHStartCO_INTEGSVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
+def StartCO_INTEGSVector(builder, numElems):
+    return WTHStartCO_INTEGSVector(builder, numElems)
+
+def WTHCreateCO_INTEGSVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateCO_INTEGSVector(builder, data):
+    WTHCreateCO_INTEGSVector(builder, data)
+
+def WTHAddSPEC_AVGS(builder, SPEC_AVGS):
+    builder.PrependUOffsetTRelativeSlot(18, flatbuffers.number_types.UOffsetTFlags.py_type(SPEC_AVGS), 0)
+
+def AddSPEC_AVGS(builder, SPEC_AVGS):
+    WTHAddSPEC_AVGS(builder, SPEC_AVGS)
+
+def WTHStartSPEC_AVGSVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
+def StartSPEC_AVGSVector(builder, numElems):
+    return WTHStartSPEC_AVGSVector(builder, numElems)
+
+def WTHCreateSPEC_AVGSVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateSPEC_AVGSVector(builder, data):
+    WTHCreateSPEC_AVGSVector(builder, data)
+
+def WTHAddINTERPULSE_PERIODS(builder, INTERPULSE_PERIODS):
+    builder.PrependUOffsetTRelativeSlot(19, flatbuffers.number_types.UOffsetTFlags.py_type(INTERPULSE_PERIODS), 0)
+
+def AddINTERPULSE_PERIODS(builder, INTERPULSE_PERIODS):
+    WTHAddINTERPULSE_PERIODS(builder, INTERPULSE_PERIODS)
+
+def WTHStartINTERPULSE_PERIODSVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
+def StartINTERPULSE_PERIODSVector(builder, numElems):
+    return WTHStartINTERPULSE_PERIODSVector(builder, numElems)
+
+def WTHCreateINTERPULSE_PERIODSVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateINTERPULSE_PERIODSVector(builder, data):
+    WTHCreateINTERPULSE_PERIODSVector(builder, data)
+
+def WTHAddDOPP_VELS(builder, DOPP_VELS):
+    builder.PrependUOffsetTRelativeSlot(20, flatbuffers.number_types.UOffsetTFlags.py_type(DOPP_VELS), 0)
+
+def AddDOPP_VELS(builder, DOPP_VELS):
+    WTHAddDOPP_VELS(builder, DOPP_VELS)
+
+def WTHStartDOPP_VELSVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
+def StartDOPP_VELSVector(builder, numElems):
+    return WTHStartDOPP_VELSVector(builder, numElems)
+
+def WTHCreateDOPP_VELSVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateDOPP_VELSVector(builder, data):
+    WTHCreateDOPP_VELSVector(builder, data)
+
+def WTHAddCONS_RECS(builder, CONS_RECS):
+    builder.PrependUOffsetTRelativeSlot(21, flatbuffers.number_types.UOffsetTFlags.py_type(CONS_RECS), 0)
+
+def AddCONS_RECS(builder, CONS_RECS):
+    WTHAddCONS_RECS(builder, CONS_RECS)
+
+def WTHStartCONS_RECSVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
+def StartCONS_RECSVector(builder, numElems):
+    return WTHStartCONS_RECSVector(builder, numElems)
+
+def WTHCreateCONS_RECSVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateCONS_RECSVector(builder, data):
+    WTHCreateCONS_RECSVector(builder, data)
+
+def WTHAddSNRS(builder, SNRS):
+    builder.PrependUOffsetTRelativeSlot(22, flatbuffers.number_types.UOffsetTFlags.py_type(SNRS), 0)
+
+def AddSNRS(builder, SNRS):
+    WTHAddSNRS(builder, SNRS)
+
+def WTHStartSNRSVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
+def StartSNRSVector(builder, numElems):
+    return WTHStartSNRSVector(builder, numElems)
+
+def WTHCreateSNRSVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateSNRSVector(builder, data):
+    WTHCreateSNRSVector(builder, data)
+
+def WTHAddSIG_STRENGTH(builder, SIG_STRENGTH):
+    builder.PrependFloat64Slot(23, SIG_STRENGTH, 0.0)
+
+def AddSIG_STRENGTH(builder, SIG_STRENGTH):
+    WTHAddSIG_STRENGTH(builder, SIG_STRENGTH)
+
+def WTHAddSEMI_MAJOR_AXIS(builder, SEMI_MAJOR_AXIS):
+    builder.PrependFloat64Slot(24, SEMI_MAJOR_AXIS, 0.0)
+
+def AddSEMI_MAJOR_AXIS(builder, SEMI_MAJOR_AXIS):
+    WTHAddSEMI_MAJOR_AXIS(builder, SEMI_MAJOR_AXIS)
+
+def WTHAddSEMI_MINOR_AXIS(builder, SEMI_MINOR_AXIS):
+    builder.PrependFloat64Slot(25, SEMI_MINOR_AXIS, 0.0)
+
+def AddSEMI_MINOR_AXIS(builder, SEMI_MINOR_AXIS):
+    WTHAddSEMI_MINOR_AXIS(builder, SEMI_MINOR_AXIS)
+
+def WTHAddANGLE_ORIENTATION(builder, ANGLE_ORIENTATION):
+    builder.PrependFloat64Slot(26, ANGLE_ORIENTATION, 0.0)
+
+def AddANGLE_ORIENTATION(builder, ANGLE_ORIENTATION):
+    WTHAddANGLE_ORIENTATION(builder, ANGLE_ORIENTATION)
+
+def WTHAddLIGHT_EVENT_NUM(builder, LIGHT_EVENT_NUM):
+    builder.PrependUint32Slot(27, LIGHT_EVENT_NUM, 0)
+
+def AddLIGHT_EVENT_NUM(builder, LIGHT_EVENT_NUM):
+    WTHAddLIGHT_EVENT_NUM(builder, LIGHT_EVENT_NUM)
+
+def WTHAddLIGHT_DET_SENSORS(builder, LIGHT_DET_SENSORS):
+    builder.PrependUOffsetTRelativeSlot(28, flatbuffers.number_types.UOffsetTFlags.py_type(LIGHT_DET_SENSORS), 0)
+
+def AddLIGHT_DET_SENSORS(builder, LIGHT_DET_SENSORS):
+    WTHAddLIGHT_DET_SENSORS(builder, LIGHT_DET_SENSORS)
+
+def WTHStartLIGHT_DET_SENSORSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartLIGHT_DET_SENSORSVector(builder, numElems):
+    return WTHStartLIGHT_DET_SENSORSVector(builder, numElems)
+
+def WTHCreateLIGHT_DET_SENSORSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateLIGHT_DET_SENSORSVector(builder, data):
+    WTHCreateLIGHT_DET_SENSORSVector(builder, data)
+
+def WTHAddPOS_CONFIDENCE(builder, POS_CONFIDENCE):
+    builder.PrependFloat64Slot(29, POS_CONFIDENCE, 0.0)
+
+def AddPOS_CONFIDENCE(builder, POS_CONFIDENCE):
+    WTHAddPOS_CONFIDENCE(builder, POS_CONFIDENCE)
+
+def WTHAddSRC_TYPS(builder, SRC_TYPS):
+    builder.PrependUOffsetTRelativeSlot(30, flatbuffers.number_types.UOffsetTFlags.py_type(SRC_TYPS), 0)
+
+def AddSRC_TYPS(builder, SRC_TYPS):
+    WTHAddSRC_TYPS(builder, SRC_TYPS)
+
+def WTHStartSRC_TYPSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartSRC_TYPSVector(builder, numElems):
+    return WTHStartSRC_TYPSVector(builder, numElems)
+
+def WTHCreateSRC_TYPSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateSRC_TYPSVector(builder, data):
+    WTHCreateSRC_TYPSVector(builder, data)
+
+def WTHAddSRC_IDS(builder, SRC_IDS):
+    builder.PrependUOffsetTRelativeSlot(31, flatbuffers.number_types.UOffsetTFlags.py_type(SRC_IDS), 0)
+
+def AddSRC_IDS(builder, SRC_IDS):
+    WTHAddSRC_IDS(builder, SRC_IDS)
+
+def WTHStartSRC_IDSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartSRC_IDSVector(builder, numElems):
+    return WTHStartSRC_IDSVector(builder, numElems)
+
+def WTHCreateSRC_IDSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateSRC_IDSVector(builder, data):
+    WTHCreateSRC_IDSVector(builder, data)
+
+def WTHEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return WTHEnd(builder)
+
+try:
+    from typing import List
+except:
+    pass
+
+class WTHT(object):
+
+    # WTHT
+    def __init__(
+        self,
+        ID = None,
+        ID_SENSOR = None,
+        ORIG_SENSOR_ID = None,
+        OB_TIME = None,
+        FILE_CREATION = None,
+        QC_VALUE = 0,
+        TERM_ALT = 0.0,
+        AVG_TX_PWR = 0.0,
+        AVG_REF_PWR = 0.0,
+        SECTOR_NUM = 0,
+        NUM_ELEMENTS = 0,
+        CHECKSUM = 0,
+        SIG_PWRS = None,
+        NOISE_LVLS = None,
+        SPEC_WIDTHS = None,
+        FIRST_GUESS_AVGS = None,
+        TD_AVG_SAMPLE_NUMS = None,
+        CO_INTEGS = None,
+        SPEC_AVGS = None,
+        INTERPULSE_PERIODS = None,
+        DOPP_VELS = None,
+        CONS_RECS = None,
+        SNRS = None,
+        SIG_STRENGTH = 0.0,
+        SEMI_MAJOR_AXIS = 0.0,
+        SEMI_MINOR_AXIS = 0.0,
+        ANGLE_ORIENTATION = 0.0,
+        LIGHT_EVENT_NUM = 0,
+        LIGHT_DET_SENSORS = None,
+        POS_CONFIDENCE = 0.0,
+        SRC_TYPS = None,
+        SRC_IDS = None,
+    ):
+        self.ID = ID  # type: Optional[str]
+        self.ID_SENSOR = ID_SENSOR  # type: Optional[str]
+        self.ORIG_SENSOR_ID = ORIG_SENSOR_ID  # type: Optional[str]
+        self.OB_TIME = OB_TIME  # type: Optional[str]
+        self.FILE_CREATION = FILE_CREATION  # type: Optional[str]
+        self.QC_VALUE = QC_VALUE  # type: int
+        self.TERM_ALT = TERM_ALT  # type: float
+        self.AVG_TX_PWR = AVG_TX_PWR  # type: float
+        self.AVG_REF_PWR = AVG_REF_PWR  # type: float
+        self.SECTOR_NUM = SECTOR_NUM  # type: int
+        self.NUM_ELEMENTS = NUM_ELEMENTS  # type: int
+        self.CHECKSUM = CHECKSUM  # type: int
+        self.SIG_PWRS = SIG_PWRS  # type: Optional[List[float]]
+        self.NOISE_LVLS = NOISE_LVLS  # type: Optional[List[float]]
+        self.SPEC_WIDTHS = SPEC_WIDTHS  # type: Optional[List[float]]
+        self.FIRST_GUESS_AVGS = FIRST_GUESS_AVGS  # type: Optional[List[float]]
+        self.TD_AVG_SAMPLE_NUMS = TD_AVG_SAMPLE_NUMS  # type: Optional[List[float]]
+        self.CO_INTEGS = CO_INTEGS  # type: Optional[List[float]]
+        self.SPEC_AVGS = SPEC_AVGS  # type: Optional[List[float]]
+        self.INTERPULSE_PERIODS = INTERPULSE_PERIODS  # type: Optional[List[float]]
+        self.DOPP_VELS = DOPP_VELS  # type: Optional[List[float]]
+        self.CONS_RECS = CONS_RECS  # type: Optional[List[float]]
+        self.SNRS = SNRS  # type: Optional[List[float]]
+        self.SIG_STRENGTH = SIG_STRENGTH  # type: float
+        self.SEMI_MAJOR_AXIS = SEMI_MAJOR_AXIS  # type: float
+        self.SEMI_MINOR_AXIS = SEMI_MINOR_AXIS  # type: float
+        self.ANGLE_ORIENTATION = ANGLE_ORIENTATION  # type: float
+        self.LIGHT_EVENT_NUM = LIGHT_EVENT_NUM  # type: int
+        self.LIGHT_DET_SENSORS = LIGHT_DET_SENSORS  # type: Optional[List[Optional[str]]]
+        self.POS_CONFIDENCE = POS_CONFIDENCE  # type: float
+        self.SRC_TYPS = SRC_TYPS  # type: Optional[List[Optional[str]]]
+        self.SRC_IDS = SRC_IDS  # type: Optional[List[Optional[str]]]
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpWth = WTH()
+        tmpWth.Init(buf, pos)
+        return cls.InitFromObj(tmpWth)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpWth):
+        x = WTHT()
+        x._UnPack(tmpWth)
+        return x
+
+    # WTHT
+    def _UnPack(self, WTH):
+        if WTH is None:
+            return
+        self.ID = WTH.ID()
+        self.ID_SENSOR = WTH.ID_SENSOR()
+        self.ORIG_SENSOR_ID = WTH.ORIG_SENSOR_ID()
+        self.OB_TIME = WTH.OB_TIME()
+        self.FILE_CREATION = WTH.FILE_CREATION()
+        self.QC_VALUE = WTH.QC_VALUE()
+        self.TERM_ALT = WTH.TERM_ALT()
+        self.AVG_TX_PWR = WTH.AVG_TX_PWR()
+        self.AVG_REF_PWR = WTH.AVG_REF_PWR()
+        self.SECTOR_NUM = WTH.SECTOR_NUM()
+        self.NUM_ELEMENTS = WTH.NUM_ELEMENTS()
+        self.CHECKSUM = WTH.CHECKSUM()
+        if not WTH.SIG_PWRSIsNone():
+            if np is None:
+                self.SIG_PWRS = []
+                for i in range(WTH.SIG_PWRSLength()):
+                    self.SIG_PWRS.append(WTH.SIG_PWRS(i))
+            else:
+                self.SIG_PWRS = WTH.SIG_PWRSAsNumpy()
+        if not WTH.NOISE_LVLSIsNone():
+            if np is None:
+                self.NOISE_LVLS = []
+                for i in range(WTH.NOISE_LVLSLength()):
+                    self.NOISE_LVLS.append(WTH.NOISE_LVLS(i))
+            else:
+                self.NOISE_LVLS = WTH.NOISE_LVLSAsNumpy()
+        if not WTH.SPEC_WIDTHSIsNone():
+            if np is None:
+                self.SPEC_WIDTHS = []
+                for i in range(WTH.SPEC_WIDTHSLength()):
+                    self.SPEC_WIDTHS.append(WTH.SPEC_WIDTHS(i))
+            else:
+                self.SPEC_WIDTHS = WTH.SPEC_WIDTHSAsNumpy()
+        if not WTH.FIRST_GUESS_AVGSIsNone():
+            if np is None:
+                self.FIRST_GUESS_AVGS = []
+                for i in range(WTH.FIRST_GUESS_AVGSLength()):
+                    self.FIRST_GUESS_AVGS.append(WTH.FIRST_GUESS_AVGS(i))
+            else:
+                self.FIRST_GUESS_AVGS = WTH.FIRST_GUESS_AVGSAsNumpy()
+        if not WTH.TD_AVG_SAMPLE_NUMSIsNone():
+            if np is None:
+                self.TD_AVG_SAMPLE_NUMS = []
+                for i in range(WTH.TD_AVG_SAMPLE_NUMSLength()):
+                    self.TD_AVG_SAMPLE_NUMS.append(WTH.TD_AVG_SAMPLE_NUMS(i))
+            else:
+                self.TD_AVG_SAMPLE_NUMS = WTH.TD_AVG_SAMPLE_NUMSAsNumpy()
+        if not WTH.CO_INTEGSIsNone():
+            if np is None:
+                self.CO_INTEGS = []
+                for i in range(WTH.CO_INTEGSLength()):
+                    self.CO_INTEGS.append(WTH.CO_INTEGS(i))
+            else:
+                self.CO_INTEGS = WTH.CO_INTEGSAsNumpy()
+        if not WTH.SPEC_AVGSIsNone():
+            if np is None:
+                self.SPEC_AVGS = []
+                for i in range(WTH.SPEC_AVGSLength()):
+                    self.SPEC_AVGS.append(WTH.SPEC_AVGS(i))
+            else:
+                self.SPEC_AVGS = WTH.SPEC_AVGSAsNumpy()
+        if not WTH.INTERPULSE_PERIODSIsNone():
+            if np is None:
+                self.INTERPULSE_PERIODS = []
+                for i in range(WTH.INTERPULSE_PERIODSLength()):
+                    self.INTERPULSE_PERIODS.append(WTH.INTERPULSE_PERIODS(i))
+            else:
+                self.INTERPULSE_PERIODS = WTH.INTERPULSE_PERIODSAsNumpy()
+        if not WTH.DOPP_VELSIsNone():
+            if np is None:
+                self.DOPP_VELS = []
+                for i in range(WTH.DOPP_VELSLength()):
+                    self.DOPP_VELS.append(WTH.DOPP_VELS(i))
+            else:
+                self.DOPP_VELS = WTH.DOPP_VELSAsNumpy()
+        if not WTH.CONS_RECSIsNone():
+            if np is None:
+                self.CONS_RECS = []
+                for i in range(WTH.CONS_RECSLength()):
+                    self.CONS_RECS.append(WTH.CONS_RECS(i))
+            else:
+                self.CONS_RECS = WTH.CONS_RECSAsNumpy()
+        if not WTH.SNRSIsNone():
+            if np is None:
+                self.SNRS = []
+                for i in range(WTH.SNRSLength()):
+                    self.SNRS.append(WTH.SNRS(i))
+            else:
+                self.SNRS = WTH.SNRSAsNumpy()
+        self.SIG_STRENGTH = WTH.SIG_STRENGTH()
+        self.SEMI_MAJOR_AXIS = WTH.SEMI_MAJOR_AXIS()
+        self.SEMI_MINOR_AXIS = WTH.SEMI_MINOR_AXIS()
+        self.ANGLE_ORIENTATION = WTH.ANGLE_ORIENTATION()
+        self.LIGHT_EVENT_NUM = WTH.LIGHT_EVENT_NUM()
+        if not WTH.LIGHT_DET_SENSORSIsNone():
+            self.LIGHT_DET_SENSORS = []
+            for i in range(WTH.LIGHT_DET_SENSORSLength()):
+                self.LIGHT_DET_SENSORS.append(WTH.LIGHT_DET_SENSORS(i))
+        self.POS_CONFIDENCE = WTH.POS_CONFIDENCE()
+        if not WTH.SRC_TYPSIsNone():
+            self.SRC_TYPS = []
+            for i in range(WTH.SRC_TYPSLength()):
+                self.SRC_TYPS.append(WTH.SRC_TYPS(i))
+        if not WTH.SRC_IDSIsNone():
+            self.SRC_IDS = []
+            for i in range(WTH.SRC_IDSLength()):
+                self.SRC_IDS.append(WTH.SRC_IDS(i))
+
+    # WTHT
+    def Pack(self, builder):
+        if self.ID is not None:
+            ID = builder.CreateString(self.ID)
+        if self.ID_SENSOR is not None:
+            ID_SENSOR = builder.CreateString(self.ID_SENSOR)
+        if self.ORIG_SENSOR_ID is not None:
+            ORIG_SENSOR_ID = builder.CreateString(self.ORIG_SENSOR_ID)
+        if self.OB_TIME is not None:
+            OB_TIME = builder.CreateString(self.OB_TIME)
+        if self.FILE_CREATION is not None:
+            FILE_CREATION = builder.CreateString(self.FILE_CREATION)
+        if self.SIG_PWRS is not None:
+            if np is not None and type(self.SIG_PWRS) is np.ndarray:
+                SIG_PWRS = builder.CreateNumpyVector(self.SIG_PWRS)
+            else:
+                WTHStartSIG_PWRSVector(builder, len(self.SIG_PWRS))
+                for i in reversed(range(len(self.SIG_PWRS))):
+                    builder.PrependFloat64(self.SIG_PWRS[i])
+                SIG_PWRS = builder.EndVector()
+        if self.NOISE_LVLS is not None:
+            if np is not None and type(self.NOISE_LVLS) is np.ndarray:
+                NOISE_LVLS = builder.CreateNumpyVector(self.NOISE_LVLS)
+            else:
+                WTHStartNOISE_LVLSVector(builder, len(self.NOISE_LVLS))
+                for i in reversed(range(len(self.NOISE_LVLS))):
+                    builder.PrependFloat64(self.NOISE_LVLS[i])
+                NOISE_LVLS = builder.EndVector()
+        if self.SPEC_WIDTHS is not None:
+            if np is not None and type(self.SPEC_WIDTHS) is np.ndarray:
+                SPEC_WIDTHS = builder.CreateNumpyVector(self.SPEC_WIDTHS)
+            else:
+                WTHStartSPEC_WIDTHSVector(builder, len(self.SPEC_WIDTHS))
+                for i in reversed(range(len(self.SPEC_WIDTHS))):
+                    builder.PrependFloat64(self.SPEC_WIDTHS[i])
+                SPEC_WIDTHS = builder.EndVector()
+        if self.FIRST_GUESS_AVGS is not None:
+            if np is not None and type(self.FIRST_GUESS_AVGS) is np.ndarray:
+                FIRST_GUESS_AVGS = builder.CreateNumpyVector(self.FIRST_GUESS_AVGS)
+            else:
+                WTHStartFIRST_GUESS_AVGSVector(builder, len(self.FIRST_GUESS_AVGS))
+                for i in reversed(range(len(self.FIRST_GUESS_AVGS))):
+                    builder.PrependFloat64(self.FIRST_GUESS_AVGS[i])
+                FIRST_GUESS_AVGS = builder.EndVector()
+        if self.TD_AVG_SAMPLE_NUMS is not None:
+            if np is not None and type(self.TD_AVG_SAMPLE_NUMS) is np.ndarray:
+                TD_AVG_SAMPLE_NUMS = builder.CreateNumpyVector(self.TD_AVG_SAMPLE_NUMS)
+            else:
+                WTHStartTD_AVG_SAMPLE_NUMSVector(builder, len(self.TD_AVG_SAMPLE_NUMS))
+                for i in reversed(range(len(self.TD_AVG_SAMPLE_NUMS))):
+                    builder.PrependFloat64(self.TD_AVG_SAMPLE_NUMS[i])
+                TD_AVG_SAMPLE_NUMS = builder.EndVector()
+        if self.CO_INTEGS is not None:
+            if np is not None and type(self.CO_INTEGS) is np.ndarray:
+                CO_INTEGS = builder.CreateNumpyVector(self.CO_INTEGS)
+            else:
+                WTHStartCO_INTEGSVector(builder, len(self.CO_INTEGS))
+                for i in reversed(range(len(self.CO_INTEGS))):
+                    builder.PrependFloat64(self.CO_INTEGS[i])
+                CO_INTEGS = builder.EndVector()
+        if self.SPEC_AVGS is not None:
+            if np is not None and type(self.SPEC_AVGS) is np.ndarray:
+                SPEC_AVGS = builder.CreateNumpyVector(self.SPEC_AVGS)
+            else:
+                WTHStartSPEC_AVGSVector(builder, len(self.SPEC_AVGS))
+                for i in reversed(range(len(self.SPEC_AVGS))):
+                    builder.PrependFloat64(self.SPEC_AVGS[i])
+                SPEC_AVGS = builder.EndVector()
+        if self.INTERPULSE_PERIODS is not None:
+            if np is not None and type(self.INTERPULSE_PERIODS) is np.ndarray:
+                INTERPULSE_PERIODS = builder.CreateNumpyVector(self.INTERPULSE_PERIODS)
+            else:
+                WTHStartINTERPULSE_PERIODSVector(builder, len(self.INTERPULSE_PERIODS))
+                for i in reversed(range(len(self.INTERPULSE_PERIODS))):
+                    builder.PrependFloat64(self.INTERPULSE_PERIODS[i])
+                INTERPULSE_PERIODS = builder.EndVector()
+        if self.DOPP_VELS is not None:
+            if np is not None and type(self.DOPP_VELS) is np.ndarray:
+                DOPP_VELS = builder.CreateNumpyVector(self.DOPP_VELS)
+            else:
+                WTHStartDOPP_VELSVector(builder, len(self.DOPP_VELS))
+                for i in reversed(range(len(self.DOPP_VELS))):
+                    builder.PrependFloat64(self.DOPP_VELS[i])
+                DOPP_VELS = builder.EndVector()
+        if self.CONS_RECS is not None:
+            if np is not None and type(self.CONS_RECS) is np.ndarray:
+                CONS_RECS = builder.CreateNumpyVector(self.CONS_RECS)
+            else:
+                WTHStartCONS_RECSVector(builder, len(self.CONS_RECS))
+                for i in reversed(range(len(self.CONS_RECS))):
+                    builder.PrependFloat64(self.CONS_RECS[i])
+                CONS_RECS = builder.EndVector()
+        if self.SNRS is not None:
+            if np is not None and type(self.SNRS) is np.ndarray:
+                SNRS = builder.CreateNumpyVector(self.SNRS)
+            else:
+                WTHStartSNRSVector(builder, len(self.SNRS))
+                for i in reversed(range(len(self.SNRS))):
+                    builder.PrependFloat64(self.SNRS[i])
+                SNRS = builder.EndVector()
+        if self.LIGHT_DET_SENSORS is not None:
+            LIGHT_DET_SENSORSlist = []
+            for i in range(len(self.LIGHT_DET_SENSORS)):
+                LIGHT_DET_SENSORSlist.append(builder.CreateString(self.LIGHT_DET_SENSORS[i]))
+            WTHStartLIGHT_DET_SENSORSVector(builder, len(self.LIGHT_DET_SENSORS))
+            for i in reversed(range(len(self.LIGHT_DET_SENSORS))):
+                builder.PrependUOffsetTRelative(LIGHT_DET_SENSORSlist[i])
+            LIGHT_DET_SENSORS = builder.EndVector()
+        if self.SRC_TYPS is not None:
+            SRC_TYPSlist = []
+            for i in range(len(self.SRC_TYPS)):
+                SRC_TYPSlist.append(builder.CreateString(self.SRC_TYPS[i]))
+            WTHStartSRC_TYPSVector(builder, len(self.SRC_TYPS))
+            for i in reversed(range(len(self.SRC_TYPS))):
+                builder.PrependUOffsetTRelative(SRC_TYPSlist[i])
+            SRC_TYPS = builder.EndVector()
+        if self.SRC_IDS is not None:
+            SRC_IDSlist = []
+            for i in range(len(self.SRC_IDS)):
+                SRC_IDSlist.append(builder.CreateString(self.SRC_IDS[i]))
+            WTHStartSRC_IDSVector(builder, len(self.SRC_IDS))
+            for i in reversed(range(len(self.SRC_IDS))):
+                builder.PrependUOffsetTRelative(SRC_IDSlist[i])
+            SRC_IDS = builder.EndVector()
+        WTHStart(builder)
+        if self.ID is not None:
+            WTHAddID(builder, ID)
+        if self.ID_SENSOR is not None:
+            WTHAddID_SENSOR(builder, ID_SENSOR)
+        if self.ORIG_SENSOR_ID is not None:
+            WTHAddORIG_SENSOR_ID(builder, ORIG_SENSOR_ID)
+        if self.OB_TIME is not None:
+            WTHAddOB_TIME(builder, OB_TIME)
+        if self.FILE_CREATION is not None:
+            WTHAddFILE_CREATION(builder, FILE_CREATION)
+        WTHAddQC_VALUE(builder, self.QC_VALUE)
+        WTHAddTERM_ALT(builder, self.TERM_ALT)
+        WTHAddAVG_TX_PWR(builder, self.AVG_TX_PWR)
+        WTHAddAVG_REF_PWR(builder, self.AVG_REF_PWR)
+        WTHAddSECTOR_NUM(builder, self.SECTOR_NUM)
+        WTHAddNUM_ELEMENTS(builder, self.NUM_ELEMENTS)
+        WTHAddCHECKSUM(builder, self.CHECKSUM)
+        if self.SIG_PWRS is not None:
+            WTHAddSIG_PWRS(builder, SIG_PWRS)
+        if self.NOISE_LVLS is not None:
+            WTHAddNOISE_LVLS(builder, NOISE_LVLS)
+        if self.SPEC_WIDTHS is not None:
+            WTHAddSPEC_WIDTHS(builder, SPEC_WIDTHS)
+        if self.FIRST_GUESS_AVGS is not None:
+            WTHAddFIRST_GUESS_AVGS(builder, FIRST_GUESS_AVGS)
+        if self.TD_AVG_SAMPLE_NUMS is not None:
+            WTHAddTD_AVG_SAMPLE_NUMS(builder, TD_AVG_SAMPLE_NUMS)
+        if self.CO_INTEGS is not None:
+            WTHAddCO_INTEGS(builder, CO_INTEGS)
+        if self.SPEC_AVGS is not None:
+            WTHAddSPEC_AVGS(builder, SPEC_AVGS)
+        if self.INTERPULSE_PERIODS is not None:
+            WTHAddINTERPULSE_PERIODS(builder, INTERPULSE_PERIODS)
+        if self.DOPP_VELS is not None:
+            WTHAddDOPP_VELS(builder, DOPP_VELS)
+        if self.CONS_RECS is not None:
+            WTHAddCONS_RECS(builder, CONS_RECS)
+        if self.SNRS is not None:
+            WTHAddSNRS(builder, SNRS)
+        WTHAddSIG_STRENGTH(builder, self.SIG_STRENGTH)
+        WTHAddSEMI_MAJOR_AXIS(builder, self.SEMI_MAJOR_AXIS)
+        WTHAddSEMI_MINOR_AXIS(builder, self.SEMI_MINOR_AXIS)
+        WTHAddANGLE_ORIENTATION(builder, self.ANGLE_ORIENTATION)
+        WTHAddLIGHT_EVENT_NUM(builder, self.LIGHT_EVENT_NUM)
+        if self.LIGHT_DET_SENSORS is not None:
+            WTHAddLIGHT_DET_SENSORS(builder, LIGHT_DET_SENSORS)
+        WTHAddPOS_CONFIDENCE(builder, self.POS_CONFIDENCE)
+        if self.SRC_TYPS is not None:
+            WTHAddSRC_TYPS(builder, SRC_TYPS)
+        if self.SRC_IDS is not None:
+            WTHAddSRC_IDS(builder, SRC_IDS)
+        WTH = WTHEnd(builder)
+        return WTH

@@ -2,4 +2,9 @@
 
 # namespace: 
 
-# NOTE rfDetectionStatus.py does not declare any structs or enums
+class rfDetectionStatus(object):
+    DETECTED = 0
+    CONFIRMED = 1
+    TENTATIVE = 2
+    LOST = 3
+    INTERFERENCE_ONLY = 4

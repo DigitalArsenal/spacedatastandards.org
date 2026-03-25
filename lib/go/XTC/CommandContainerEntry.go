@@ -56,6 +56,10 @@ func (rcv *CommandContainerEntry) ARGUMENT_REF_ENTRY(obj *ArgumentRefEntry) *Arg
 	return nil
 }
 
+func (rcv *CommandContainerEntry) ArgumentRefEntry(obj *ArgumentRefEntry) *ArgumentRefEntry {
+	return rcv.ARGUMENT_REF_ENTRY(obj)
+}
+
 /// Argument reference entry
 /// Parameter reference entry
 func (rcv *CommandContainerEntry) PARAMETER_REF_ENTRY(obj *ParameterRefEntry) *ParameterRefEntry {
@@ -69,6 +73,10 @@ func (rcv *CommandContainerEntry) PARAMETER_REF_ENTRY(obj *ParameterRefEntry) *P
 		return obj
 	}
 	return nil
+}
+
+func (rcv *CommandContainerEntry) ParameterRefEntry(obj *ParameterRefEntry) *ParameterRefEntry {
+	return rcv.PARAMETER_REF_ENTRY(obj)
 }
 
 /// Parameter reference entry
@@ -86,6 +94,10 @@ func (rcv *CommandContainerEntry) FIXED_VALUE_ENTRY(obj *FixedValueEntry) *Fixed
 	return nil
 }
 
+func (rcv *CommandContainerEntry) FixedValueEntry(obj *FixedValueEntry) *FixedValueEntry {
+	return rcv.FIXED_VALUE_ENTRY(obj)
+}
+
 /// Fixed value entry
 func CommandContainerEntryStart(builder *flatbuffers.Builder) {
 	builder.StartObject(3)
@@ -93,11 +105,20 @@ func CommandContainerEntryStart(builder *flatbuffers.Builder) {
 func CommandContainerEntryAddARGUMENT_REF_ENTRY(builder *flatbuffers.Builder, ARGUMENT_REF_ENTRY flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ARGUMENT_REF_ENTRY), 0)
 }
+func CommandContainerEntryAddArgumentRefEntry(builder *flatbuffers.Builder, ARGUMENT_REF_ENTRY flatbuffers.UOffsetT) {
+	CommandContainerEntryAddARGUMENT_REF_ENTRY(builder, ARGUMENT_REF_ENTRY)
+}
 func CommandContainerEntryAddPARAMETER_REF_ENTRY(builder *flatbuffers.Builder, PARAMETER_REF_ENTRY flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(PARAMETER_REF_ENTRY), 0)
 }
+func CommandContainerEntryAddParameterRefEntry(builder *flatbuffers.Builder, PARAMETER_REF_ENTRY flatbuffers.UOffsetT) {
+	CommandContainerEntryAddPARAMETER_REF_ENTRY(builder, PARAMETER_REF_ENTRY)
+}
 func CommandContainerEntryAddFIXED_VALUE_ENTRY(builder *flatbuffers.Builder, FIXED_VALUE_ENTRY flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(FIXED_VALUE_ENTRY), 0)
+}
+func CommandContainerEntryAddFixedValueEntry(builder *flatbuffers.Builder, FIXED_VALUE_ENTRY flatbuffers.UOffsetT) {
+	CommandContainerEntryAddFIXED_VALUE_ENTRY(builder, FIXED_VALUE_ENTRY)
 }
 func CommandContainerEntryEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

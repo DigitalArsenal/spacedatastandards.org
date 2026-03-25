@@ -159,6 +159,16 @@ def CLTStartDATAVector(builder, numElems):
 def StartDATAVector(builder, numElems):
     return CLTStartDATAVector(builder, numElems)
 
+def CLTCreateDATAVector(builder, data):
+    data = list(data)
+    builder.StartVector(1, len(data), 1)
+    for item in reversed(data):
+        builder.PrependUint8(item)
+    return builder.EndVector()
+
+def CreateDATAVector(builder, data):
+    CLTCreateDATAVector(builder, data)
+
 def CLTEnd(builder):
     return builder.EndObject()
 
@@ -173,20 +183,29 @@ except:
 class CLTT(object):
 
     # CLTT
-    def __init__(self):
-        self.PDU_TYPE = 0  # type: int
-        self.INITIATOR_ID = None  # type: str
-        self.RESPONDER_PORT_ID = None  # type: str
-        self.SERVICE_TYPE = 0  # type: int
-        self.VERSION = 0  # type: int
-        self.INVOKE_ID = 0  # type: int
-        self.DATA = None  # type: List[int]
+    def __init__(
+        self,
+        PDU_TYPE = 0,
+        INITIATOR_ID = None,
+        RESPONDER_PORT_ID = None,
+        SERVICE_TYPE = 0,
+        VERSION = 0,
+        INVOKE_ID = 0,
+        DATA = None,
+    ):
+        self.PDU_TYPE = PDU_TYPE  # type: int
+        self.INITIATOR_ID = INITIATOR_ID  # type: Optional[str]
+        self.RESPONDER_PORT_ID = RESPONDER_PORT_ID  # type: Optional[str]
+        self.SERVICE_TYPE = SERVICE_TYPE  # type: int
+        self.VERSION = VERSION  # type: int
+        self.INVOKE_ID = INVOKE_ID  # type: int
+        self.DATA = DATA  # type: Optional[List[int]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        CLT = CLT()
-        CLT.Init(buf, pos)
-        return cls.InitFromObj(CLT)
+        tmpClt = CLT()
+        tmpClt.Init(buf, pos)
+        return cls.InitFromObj(tmpClt)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -194,9 +213,9 @@ class CLTT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, CLT):
+    def InitFromObj(cls, tmpClt):
         x = CLTT()
-        x._UnPack(CLT)
+        x._UnPack(tmpClt)
         return x
 
     # CLTT

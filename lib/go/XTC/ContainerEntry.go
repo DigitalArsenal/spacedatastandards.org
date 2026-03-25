@@ -56,6 +56,10 @@ func (rcv *ContainerEntry) PARAMETER_REF_ENTRY(obj *ParameterRefEntry) *Paramete
 	return nil
 }
 
+func (rcv *ContainerEntry) ParameterRefEntry(obj *ParameterRefEntry) *ParameterRefEntry {
+	return rcv.PARAMETER_REF_ENTRY(obj)
+}
+
 /// Parameter reference entry
 /// Container reference entry
 func (rcv *ContainerEntry) CONTAINER_REF_ENTRY(obj *ContainerRefEntry) *ContainerRefEntry {
@@ -69,6 +73,10 @@ func (rcv *ContainerEntry) CONTAINER_REF_ENTRY(obj *ContainerRefEntry) *Containe
 		return obj
 	}
 	return nil
+}
+
+func (rcv *ContainerEntry) ContainerRefEntry(obj *ContainerRefEntry) *ContainerRefEntry {
+	return rcv.CONTAINER_REF_ENTRY(obj)
 }
 
 /// Container reference entry
@@ -86,6 +94,10 @@ func (rcv *ContainerEntry) FIXED_VALUE_ENTRY(obj *FixedValueEntry) *FixedValueEn
 	return nil
 }
 
+func (rcv *ContainerEntry) FixedValueEntry(obj *FixedValueEntry) *FixedValueEntry {
+	return rcv.FIXED_VALUE_ENTRY(obj)
+}
+
 /// Fixed value entry
 /// Array parameter reference entry
 func (rcv *ContainerEntry) ARRAY_PARAMETER_REF_ENTRY(obj *ArrayParameterRefEntry) *ArrayParameterRefEntry {
@@ -101,6 +113,10 @@ func (rcv *ContainerEntry) ARRAY_PARAMETER_REF_ENTRY(obj *ArrayParameterRefEntry
 	return nil
 }
 
+func (rcv *ContainerEntry) ArrayParameterRefEntry(obj *ArrayParameterRefEntry) *ArrayParameterRefEntry {
+	return rcv.ARRAY_PARAMETER_REF_ENTRY(obj)
+}
+
 /// Array parameter reference entry
 func ContainerEntryStart(builder *flatbuffers.Builder) {
 	builder.StartObject(4)
@@ -108,14 +124,26 @@ func ContainerEntryStart(builder *flatbuffers.Builder) {
 func ContainerEntryAddPARAMETER_REF_ENTRY(builder *flatbuffers.Builder, PARAMETER_REF_ENTRY flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(PARAMETER_REF_ENTRY), 0)
 }
+func ContainerEntryAddParameterRefEntry(builder *flatbuffers.Builder, PARAMETER_REF_ENTRY flatbuffers.UOffsetT) {
+	ContainerEntryAddPARAMETER_REF_ENTRY(builder, PARAMETER_REF_ENTRY)
+}
 func ContainerEntryAddCONTAINER_REF_ENTRY(builder *flatbuffers.Builder, CONTAINER_REF_ENTRY flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(CONTAINER_REF_ENTRY), 0)
+}
+func ContainerEntryAddContainerRefEntry(builder *flatbuffers.Builder, CONTAINER_REF_ENTRY flatbuffers.UOffsetT) {
+	ContainerEntryAddCONTAINER_REF_ENTRY(builder, CONTAINER_REF_ENTRY)
 }
 func ContainerEntryAddFIXED_VALUE_ENTRY(builder *flatbuffers.Builder, FIXED_VALUE_ENTRY flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(FIXED_VALUE_ENTRY), 0)
 }
+func ContainerEntryAddFixedValueEntry(builder *flatbuffers.Builder, FIXED_VALUE_ENTRY flatbuffers.UOffsetT) {
+	ContainerEntryAddFIXED_VALUE_ENTRY(builder, FIXED_VALUE_ENTRY)
+}
 func ContainerEntryAddARRAY_PARAMETER_REF_ENTRY(builder *flatbuffers.Builder, ARRAY_PARAMETER_REF_ENTRY flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(ARRAY_PARAMETER_REF_ENTRY), 0)
+}
+func ContainerEntryAddArrayParameterRefEntry(builder *flatbuffers.Builder, ARRAY_PARAMETER_REF_ENTRY flatbuffers.UOffsetT) {
+	ContainerEntryAddARRAY_PARAMETER_REF_ENTRY(builder, ARRAY_PARAMETER_REF_ENTRY)
 }
 func ContainerEntryEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

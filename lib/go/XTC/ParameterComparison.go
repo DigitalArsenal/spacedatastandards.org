@@ -51,6 +51,10 @@ func (rcv *ParameterComparison) PARAMETER_REF() []byte {
 	return nil
 }
 
+func (rcv *ParameterComparison) ParameterRef() []byte {
+	return rcv.PARAMETER_REF()
+}
+
 /// Parameter reference path
 /// Comparison operator
 func (rcv *ParameterComparison) OPERATOR() ComparisonOperator {
@@ -61,9 +65,17 @@ func (rcv *ParameterComparison) OPERATOR() ComparisonOperator {
 	return 0
 }
 
+func (rcv *ParameterComparison) Operator() ComparisonOperator {
+	return rcv.OPERATOR()
+}
+
 /// Comparison operator
 func (rcv *ParameterComparison) MutateOPERATOR(n ComparisonOperator) bool {
 	return rcv._tab.MutateInt8Slot(6, int8(n))
+}
+
+func (rcv *ParameterComparison) MutateOperator(n ComparisonOperator) bool {
+	return rcv.MutateOPERATOR(n)
 }
 
 /// Value to compare against
@@ -73,6 +85,10 @@ func (rcv *ParameterComparison) VALUE() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *ParameterComparison) Value() []byte {
+	return rcv.VALUE()
 }
 
 /// Value to compare against
@@ -85,9 +101,17 @@ func (rcv *ParameterComparison) USE_CALIBRATED_VALUE() bool {
 	return true
 }
 
+func (rcv *ParameterComparison) UseCalibratedValue() bool {
+	return rcv.USE_CALIBRATED_VALUE()
+}
+
 /// Use calibrated value (true) or raw value (false)
 func (rcv *ParameterComparison) MutateUSE_CALIBRATED_VALUE(n bool) bool {
 	return rcv._tab.MutateBoolSlot(10, n)
+}
+
+func (rcv *ParameterComparison) MutateUseCalibratedValue(n bool) bool {
+	return rcv.MutateUSE_CALIBRATED_VALUE(n)
 }
 
 func ParameterComparisonStart(builder *flatbuffers.Builder) {
@@ -96,14 +120,26 @@ func ParameterComparisonStart(builder *flatbuffers.Builder) {
 func ParameterComparisonAddPARAMETER_REF(builder *flatbuffers.Builder, PARAMETER_REF flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(PARAMETER_REF), 0)
 }
+func ParameterComparisonAddParameterRef(builder *flatbuffers.Builder, PARAMETER_REF flatbuffers.UOffsetT) {
+	ParameterComparisonAddPARAMETER_REF(builder, PARAMETER_REF)
+}
 func ParameterComparisonAddOPERATOR(builder *flatbuffers.Builder, OPERATOR ComparisonOperator) {
 	builder.PrependInt8Slot(1, int8(OPERATOR), 0)
+}
+func ParameterComparisonAddOperator(builder *flatbuffers.Builder, OPERATOR ComparisonOperator) {
+	ParameterComparisonAddOPERATOR(builder, OPERATOR)
 }
 func ParameterComparisonAddVALUE(builder *flatbuffers.Builder, VALUE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(VALUE), 0)
 }
+func ParameterComparisonAddValue(builder *flatbuffers.Builder, VALUE flatbuffers.UOffsetT) {
+	ParameterComparisonAddVALUE(builder, VALUE)
+}
 func ParameterComparisonAddUSE_CALIBRATED_VALUE(builder *flatbuffers.Builder, USE_CALIBRATED_VALUE bool) {
 	builder.PrependBoolSlot(3, USE_CALIBRATED_VALUE, true)
+}
+func ParameterComparisonAddUseCalibratedValue(builder *flatbuffers.Builder, USE_CALIBRATED_VALUE bool) {
+	ParameterComparisonAddUSE_CALIBRATED_VALUE(builder, USE_CALIBRATED_VALUE)
 }
 func ParameterComparisonEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

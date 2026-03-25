@@ -51,6 +51,10 @@ func (rcv *PluginCapability) NAME() []byte {
 	return nil
 }
 
+func (rcv *PluginCapability) Name() []byte {
+	return rcv.NAME()
+}
+
 /// Capability name, e.g., "gpu_compute", "wasm_simd"
 /// Capability version
 func (rcv *PluginCapability) VERSION() []byte {
@@ -59,6 +63,10 @@ func (rcv *PluginCapability) VERSION() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *PluginCapability) Version() []byte {
+	return rcv.VERSION()
 }
 
 /// Capability version
@@ -71,9 +79,17 @@ func (rcv *PluginCapability) REQUIRED() bool {
 	return false
 }
 
+func (rcv *PluginCapability) Required() bool {
+	return rcv.REQUIRED()
+}
+
 /// Whether this capability is required
 func (rcv *PluginCapability) MutateREQUIRED(n bool) bool {
 	return rcv._tab.MutateBoolSlot(8, n)
+}
+
+func (rcv *PluginCapability) MutateRequired(n bool) bool {
+	return rcv.MutateREQUIRED(n)
 }
 
 func PluginCapabilityStart(builder *flatbuffers.Builder) {
@@ -82,11 +98,20 @@ func PluginCapabilityStart(builder *flatbuffers.Builder) {
 func PluginCapabilityAddNAME(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(NAME), 0)
 }
+func PluginCapabilityAddName(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
+	PluginCapabilityAddNAME(builder, NAME)
+}
 func PluginCapabilityAddVERSION(builder *flatbuffers.Builder, VERSION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(VERSION), 0)
 }
+func PluginCapabilityAddVersion(builder *flatbuffers.Builder, VERSION flatbuffers.UOffsetT) {
+	PluginCapabilityAddVERSION(builder, VERSION)
+}
 func PluginCapabilityAddREQUIRED(builder *flatbuffers.Builder, REQUIRED bool) {
 	builder.PrependBoolSlot(2, REQUIRED, false)
+}
+func PluginCapabilityAddRequired(builder *flatbuffers.Builder, REQUIRED bool) {
+	PluginCapabilityAddREQUIRED(builder, REQUIRED)
 }
 func PluginCapabilityEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

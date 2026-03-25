@@ -51,6 +51,10 @@ func (rcv *KMLScreenOverlay) NAME() []byte {
 	return nil
 }
 
+func (rcv *KMLScreenOverlay) Name() []byte {
+	return rcv.NAME()
+}
+
 /// Name
 /// Description
 func (rcv *KMLScreenOverlay) DESCRIPTION() []byte {
@@ -59,6 +63,10 @@ func (rcv *KMLScreenOverlay) DESCRIPTION() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *KMLScreenOverlay) Description() []byte {
+	return rcv.DESCRIPTION()
 }
 
 /// Description
@@ -71,9 +79,17 @@ func (rcv *KMLScreenOverlay) VISIBILITY() bool {
 	return false
 }
 
+func (rcv *KMLScreenOverlay) Visibility() bool {
+	return rcv.VISIBILITY()
+}
+
 /// Visibility
 func (rcv *KMLScreenOverlay) MutateVISIBILITY(n bool) bool {
 	return rcv._tab.MutateBoolSlot(8, n)
+}
+
+func (rcv *KMLScreenOverlay) MutateVisibility(n bool) bool {
+	return rcv.MutateVISIBILITY(n)
 }
 
 /// Icon/image URL
@@ -83,6 +99,10 @@ func (rcv *KMLScreenOverlay) ICON_HREF() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *KMLScreenOverlay) IconHref() []byte {
+	return rcv.ICON_HREF()
 }
 
 /// Icon/image URL
@@ -95,6 +115,10 @@ func (rcv *KMLScreenOverlay) COLOR() []byte {
 	return nil
 }
 
+func (rcv *KMLScreenOverlay) Color() []byte {
+	return rcv.COLOR()
+}
+
 /// Color
 /// Draw order
 func (rcv *KMLScreenOverlay) DRAW_ORDER() int32 {
@@ -105,9 +129,17 @@ func (rcv *KMLScreenOverlay) DRAW_ORDER() int32 {
 	return 0
 }
 
+func (rcv *KMLScreenOverlay) DrawOrder() int32 {
+	return rcv.DRAW_ORDER()
+}
+
 /// Draw order
 func (rcv *KMLScreenOverlay) MutateDRAW_ORDER(n int32) bool {
 	return rcv._tab.MutateInt32Slot(14, n)
+}
+
+func (rcv *KMLScreenOverlay) MutateDrawOrder(n int32) bool {
+	return rcv.MutateDRAW_ORDER(n)
 }
 
 /// Overlay X position
@@ -119,9 +151,17 @@ func (rcv *KMLScreenOverlay) OVERLAY_XY_X() float64 {
 	return 0.0
 }
 
+func (rcv *KMLScreenOverlay) OverlayXyX() float64 {
+	return rcv.OVERLAY_XY_X()
+}
+
 /// Overlay X position
 func (rcv *KMLScreenOverlay) MutateOVERLAY_XY_X(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(16, n)
+}
+
+func (rcv *KMLScreenOverlay) MutateOverlayXyX(n float64) bool {
+	return rcv.MutateOVERLAY_XY_X(n)
 }
 
 /// Overlay Y position
@@ -133,9 +173,17 @@ func (rcv *KMLScreenOverlay) OVERLAY_XY_Y() float64 {
 	return 0.0
 }
 
+func (rcv *KMLScreenOverlay) OverlayXyY() float64 {
+	return rcv.OVERLAY_XY_Y()
+}
+
 /// Overlay Y position
 func (rcv *KMLScreenOverlay) MutateOVERLAY_XY_Y(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(18, n)
+}
+
+func (rcv *KMLScreenOverlay) MutateOverlayXyY(n float64) bool {
+	return rcv.MutateOVERLAY_XY_Y(n)
 }
 
 /// Overlay X units
@@ -147,9 +195,17 @@ func (rcv *KMLScreenOverlay) OVERLAY_XY_XUNITS() KMLUnits {
 	return 0
 }
 
+func (rcv *KMLScreenOverlay) OverlayXyXunits() KMLUnits {
+	return rcv.OVERLAY_XY_XUNITS()
+}
+
 /// Overlay X units
 func (rcv *KMLScreenOverlay) MutateOVERLAY_XY_XUNITS(n KMLUnits) bool {
 	return rcv._tab.MutateInt8Slot(20, int8(n))
+}
+
+func (rcv *KMLScreenOverlay) MutateOverlayXyXunits(n KMLUnits) bool {
+	return rcv.MutateOVERLAY_XY_XUNITS(n)
 }
 
 /// Overlay Y units
@@ -161,9 +217,17 @@ func (rcv *KMLScreenOverlay) OVERLAY_XY_YUNITS() KMLUnits {
 	return 0
 }
 
+func (rcv *KMLScreenOverlay) OverlayXyYunits() KMLUnits {
+	return rcv.OVERLAY_XY_YUNITS()
+}
+
 /// Overlay Y units
 func (rcv *KMLScreenOverlay) MutateOVERLAY_XY_YUNITS(n KMLUnits) bool {
 	return rcv._tab.MutateInt8Slot(22, int8(n))
+}
+
+func (rcv *KMLScreenOverlay) MutateOverlayXyYunits(n KMLUnits) bool {
+	return rcv.MutateOVERLAY_XY_YUNITS(n)
 }
 
 /// Screen X position
@@ -175,9 +239,17 @@ func (rcv *KMLScreenOverlay) SCREEN_XY_X() float64 {
 	return 0.0
 }
 
+func (rcv *KMLScreenOverlay) ScreenXyX() float64 {
+	return rcv.SCREEN_XY_X()
+}
+
 /// Screen X position
 func (rcv *KMLScreenOverlay) MutateSCREEN_XY_X(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(24, n)
+}
+
+func (rcv *KMLScreenOverlay) MutateScreenXyX(n float64) bool {
+	return rcv.MutateSCREEN_XY_X(n)
 }
 
 /// Screen Y position
@@ -189,9 +261,17 @@ func (rcv *KMLScreenOverlay) SCREEN_XY_Y() float64 {
 	return 0.0
 }
 
+func (rcv *KMLScreenOverlay) ScreenXyY() float64 {
+	return rcv.SCREEN_XY_Y()
+}
+
 /// Screen Y position
 func (rcv *KMLScreenOverlay) MutateSCREEN_XY_Y(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(26, n)
+}
+
+func (rcv *KMLScreenOverlay) MutateScreenXyY(n float64) bool {
+	return rcv.MutateSCREEN_XY_Y(n)
 }
 
 /// Screen X units
@@ -203,9 +283,17 @@ func (rcv *KMLScreenOverlay) SCREEN_XY_XUNITS() KMLUnits {
 	return 0
 }
 
+func (rcv *KMLScreenOverlay) ScreenXyXunits() KMLUnits {
+	return rcv.SCREEN_XY_XUNITS()
+}
+
 /// Screen X units
 func (rcv *KMLScreenOverlay) MutateSCREEN_XY_XUNITS(n KMLUnits) bool {
 	return rcv._tab.MutateInt8Slot(28, int8(n))
+}
+
+func (rcv *KMLScreenOverlay) MutateScreenXyXunits(n KMLUnits) bool {
+	return rcv.MutateSCREEN_XY_XUNITS(n)
 }
 
 /// Screen Y units
@@ -217,9 +305,17 @@ func (rcv *KMLScreenOverlay) SCREEN_XY_YUNITS() KMLUnits {
 	return 0
 }
 
+func (rcv *KMLScreenOverlay) ScreenXyYunits() KMLUnits {
+	return rcv.SCREEN_XY_YUNITS()
+}
+
 /// Screen Y units
 func (rcv *KMLScreenOverlay) MutateSCREEN_XY_YUNITS(n KMLUnits) bool {
 	return rcv._tab.MutateInt8Slot(30, int8(n))
+}
+
+func (rcv *KMLScreenOverlay) MutateScreenXyYunits(n KMLUnits) bool {
+	return rcv.MutateSCREEN_XY_YUNITS(n)
 }
 
 /// Rotation X
@@ -231,9 +327,17 @@ func (rcv *KMLScreenOverlay) ROTATION_XY_X() float64 {
 	return 0.0
 }
 
+func (rcv *KMLScreenOverlay) RotationXyX() float64 {
+	return rcv.ROTATION_XY_X()
+}
+
 /// Rotation X
 func (rcv *KMLScreenOverlay) MutateROTATION_XY_X(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(32, n)
+}
+
+func (rcv *KMLScreenOverlay) MutateRotationXyX(n float64) bool {
+	return rcv.MutateROTATION_XY_X(n)
 }
 
 /// Rotation Y
@@ -245,9 +349,17 @@ func (rcv *KMLScreenOverlay) ROTATION_XY_Y() float64 {
 	return 0.0
 }
 
+func (rcv *KMLScreenOverlay) RotationXyY() float64 {
+	return rcv.ROTATION_XY_Y()
+}
+
 /// Rotation Y
 func (rcv *KMLScreenOverlay) MutateROTATION_XY_Y(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(34, n)
+}
+
+func (rcv *KMLScreenOverlay) MutateRotationXyY(n float64) bool {
+	return rcv.MutateROTATION_XY_Y(n)
 }
 
 /// Rotation X units
@@ -259,9 +371,17 @@ func (rcv *KMLScreenOverlay) ROTATION_XY_XUNITS() KMLUnits {
 	return 0
 }
 
+func (rcv *KMLScreenOverlay) RotationXyXunits() KMLUnits {
+	return rcv.ROTATION_XY_XUNITS()
+}
+
 /// Rotation X units
 func (rcv *KMLScreenOverlay) MutateROTATION_XY_XUNITS(n KMLUnits) bool {
 	return rcv._tab.MutateInt8Slot(36, int8(n))
+}
+
+func (rcv *KMLScreenOverlay) MutateRotationXyXunits(n KMLUnits) bool {
+	return rcv.MutateROTATION_XY_XUNITS(n)
 }
 
 /// Rotation Y units
@@ -273,9 +393,17 @@ func (rcv *KMLScreenOverlay) ROTATION_XY_YUNITS() KMLUnits {
 	return 0
 }
 
+func (rcv *KMLScreenOverlay) RotationXyYunits() KMLUnits {
+	return rcv.ROTATION_XY_YUNITS()
+}
+
 /// Rotation Y units
 func (rcv *KMLScreenOverlay) MutateROTATION_XY_YUNITS(n KMLUnits) bool {
 	return rcv._tab.MutateInt8Slot(38, int8(n))
+}
+
+func (rcv *KMLScreenOverlay) MutateRotationXyYunits(n KMLUnits) bool {
+	return rcv.MutateROTATION_XY_YUNITS(n)
 }
 
 /// Size X
@@ -287,9 +415,17 @@ func (rcv *KMLScreenOverlay) SIZE_X() float64 {
 	return 0.0
 }
 
+func (rcv *KMLScreenOverlay) SizeX() float64 {
+	return rcv.SIZE_X()
+}
+
 /// Size X
 func (rcv *KMLScreenOverlay) MutateSIZE_X(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(40, n)
+}
+
+func (rcv *KMLScreenOverlay) MutateSizeX(n float64) bool {
+	return rcv.MutateSIZE_X(n)
 }
 
 /// Size Y
@@ -301,9 +437,17 @@ func (rcv *KMLScreenOverlay) SIZE_Y() float64 {
 	return 0.0
 }
 
+func (rcv *KMLScreenOverlay) SizeY() float64 {
+	return rcv.SIZE_Y()
+}
+
 /// Size Y
 func (rcv *KMLScreenOverlay) MutateSIZE_Y(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(42, n)
+}
+
+func (rcv *KMLScreenOverlay) MutateSizeY(n float64) bool {
+	return rcv.MutateSIZE_Y(n)
 }
 
 /// Size X units
@@ -315,9 +459,17 @@ func (rcv *KMLScreenOverlay) SIZE_XUNITS() KMLUnits {
 	return 0
 }
 
+func (rcv *KMLScreenOverlay) SizeXunits() KMLUnits {
+	return rcv.SIZE_XUNITS()
+}
+
 /// Size X units
 func (rcv *KMLScreenOverlay) MutateSIZE_XUNITS(n KMLUnits) bool {
 	return rcv._tab.MutateInt8Slot(44, int8(n))
+}
+
+func (rcv *KMLScreenOverlay) MutateSizeXunits(n KMLUnits) bool {
+	return rcv.MutateSIZE_XUNITS(n)
 }
 
 /// Size Y units
@@ -329,9 +481,17 @@ func (rcv *KMLScreenOverlay) SIZE_YUNITS() KMLUnits {
 	return 0
 }
 
+func (rcv *KMLScreenOverlay) SizeYunits() KMLUnits {
+	return rcv.SIZE_YUNITS()
+}
+
 /// Size Y units
 func (rcv *KMLScreenOverlay) MutateSIZE_YUNITS(n KMLUnits) bool {
 	return rcv._tab.MutateInt8Slot(46, int8(n))
+}
+
+func (rcv *KMLScreenOverlay) MutateSizeYunits(n KMLUnits) bool {
+	return rcv.MutateSIZE_YUNITS(n)
 }
 
 /// Rotation in degrees
@@ -343,9 +503,17 @@ func (rcv *KMLScreenOverlay) ROTATION() float64 {
 	return 0.0
 }
 
+func (rcv *KMLScreenOverlay) Rotation() float64 {
+	return rcv.ROTATION()
+}
+
 /// Rotation in degrees
 func (rcv *KMLScreenOverlay) MutateROTATION(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(48, n)
+}
+
+func (rcv *KMLScreenOverlay) MutateRotation(n float64) bool {
+	return rcv.MutateROTATION(n)
 }
 
 func KMLScreenOverlayStart(builder *flatbuffers.Builder) {
@@ -354,71 +522,140 @@ func KMLScreenOverlayStart(builder *flatbuffers.Builder) {
 func KMLScreenOverlayAddNAME(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(NAME), 0)
 }
+func KMLScreenOverlayAddName(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
+	KMLScreenOverlayAddNAME(builder, NAME)
+}
 func KMLScreenOverlayAddDESCRIPTION(builder *flatbuffers.Builder, DESCRIPTION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(DESCRIPTION), 0)
+}
+func KMLScreenOverlayAddDescription(builder *flatbuffers.Builder, DESCRIPTION flatbuffers.UOffsetT) {
+	KMLScreenOverlayAddDESCRIPTION(builder, DESCRIPTION)
 }
 func KMLScreenOverlayAddVISIBILITY(builder *flatbuffers.Builder, VISIBILITY bool) {
 	builder.PrependBoolSlot(2, VISIBILITY, false)
 }
+func KMLScreenOverlayAddVisibility(builder *flatbuffers.Builder, VISIBILITY bool) {
+	KMLScreenOverlayAddVISIBILITY(builder, VISIBILITY)
+}
 func KMLScreenOverlayAddICON_HREF(builder *flatbuffers.Builder, ICON_HREF flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(ICON_HREF), 0)
+}
+func KMLScreenOverlayAddIconHref(builder *flatbuffers.Builder, ICON_HREF flatbuffers.UOffsetT) {
+	KMLScreenOverlayAddICON_HREF(builder, ICON_HREF)
 }
 func KMLScreenOverlayAddCOLOR(builder *flatbuffers.Builder, COLOR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(COLOR), 0)
 }
+func KMLScreenOverlayAddColor(builder *flatbuffers.Builder, COLOR flatbuffers.UOffsetT) {
+	KMLScreenOverlayAddCOLOR(builder, COLOR)
+}
 func KMLScreenOverlayAddDRAW_ORDER(builder *flatbuffers.Builder, DRAW_ORDER int32) {
 	builder.PrependInt32Slot(5, DRAW_ORDER, 0)
+}
+func KMLScreenOverlayAddDrawOrder(builder *flatbuffers.Builder, DRAW_ORDER int32) {
+	KMLScreenOverlayAddDRAW_ORDER(builder, DRAW_ORDER)
 }
 func KMLScreenOverlayAddOVERLAY_XY_X(builder *flatbuffers.Builder, OVERLAY_XY_X float64) {
 	builder.PrependFloat64Slot(6, OVERLAY_XY_X, 0.0)
 }
+func KMLScreenOverlayAddOverlayXyX(builder *flatbuffers.Builder, OVERLAY_XY_X float64) {
+	KMLScreenOverlayAddOVERLAY_XY_X(builder, OVERLAY_XY_X)
+}
 func KMLScreenOverlayAddOVERLAY_XY_Y(builder *flatbuffers.Builder, OVERLAY_XY_Y float64) {
 	builder.PrependFloat64Slot(7, OVERLAY_XY_Y, 0.0)
+}
+func KMLScreenOverlayAddOverlayXyY(builder *flatbuffers.Builder, OVERLAY_XY_Y float64) {
+	KMLScreenOverlayAddOVERLAY_XY_Y(builder, OVERLAY_XY_Y)
 }
 func KMLScreenOverlayAddOVERLAY_XY_XUNITS(builder *flatbuffers.Builder, OVERLAY_XY_XUNITS KMLUnits) {
 	builder.PrependInt8Slot(8, int8(OVERLAY_XY_XUNITS), 0)
 }
+func KMLScreenOverlayAddOverlayXyXunits(builder *flatbuffers.Builder, OVERLAY_XY_XUNITS KMLUnits) {
+	KMLScreenOverlayAddOVERLAY_XY_XUNITS(builder, OVERLAY_XY_XUNITS)
+}
 func KMLScreenOverlayAddOVERLAY_XY_YUNITS(builder *flatbuffers.Builder, OVERLAY_XY_YUNITS KMLUnits) {
 	builder.PrependInt8Slot(9, int8(OVERLAY_XY_YUNITS), 0)
+}
+func KMLScreenOverlayAddOverlayXyYunits(builder *flatbuffers.Builder, OVERLAY_XY_YUNITS KMLUnits) {
+	KMLScreenOverlayAddOVERLAY_XY_YUNITS(builder, OVERLAY_XY_YUNITS)
 }
 func KMLScreenOverlayAddSCREEN_XY_X(builder *flatbuffers.Builder, SCREEN_XY_X float64) {
 	builder.PrependFloat64Slot(10, SCREEN_XY_X, 0.0)
 }
+func KMLScreenOverlayAddScreenXyX(builder *flatbuffers.Builder, SCREEN_XY_X float64) {
+	KMLScreenOverlayAddSCREEN_XY_X(builder, SCREEN_XY_X)
+}
 func KMLScreenOverlayAddSCREEN_XY_Y(builder *flatbuffers.Builder, SCREEN_XY_Y float64) {
 	builder.PrependFloat64Slot(11, SCREEN_XY_Y, 0.0)
+}
+func KMLScreenOverlayAddScreenXyY(builder *flatbuffers.Builder, SCREEN_XY_Y float64) {
+	KMLScreenOverlayAddSCREEN_XY_Y(builder, SCREEN_XY_Y)
 }
 func KMLScreenOverlayAddSCREEN_XY_XUNITS(builder *flatbuffers.Builder, SCREEN_XY_XUNITS KMLUnits) {
 	builder.PrependInt8Slot(12, int8(SCREEN_XY_XUNITS), 0)
 }
+func KMLScreenOverlayAddScreenXyXunits(builder *flatbuffers.Builder, SCREEN_XY_XUNITS KMLUnits) {
+	KMLScreenOverlayAddSCREEN_XY_XUNITS(builder, SCREEN_XY_XUNITS)
+}
 func KMLScreenOverlayAddSCREEN_XY_YUNITS(builder *flatbuffers.Builder, SCREEN_XY_YUNITS KMLUnits) {
 	builder.PrependInt8Slot(13, int8(SCREEN_XY_YUNITS), 0)
+}
+func KMLScreenOverlayAddScreenXyYunits(builder *flatbuffers.Builder, SCREEN_XY_YUNITS KMLUnits) {
+	KMLScreenOverlayAddSCREEN_XY_YUNITS(builder, SCREEN_XY_YUNITS)
 }
 func KMLScreenOverlayAddROTATION_XY_X(builder *flatbuffers.Builder, ROTATION_XY_X float64) {
 	builder.PrependFloat64Slot(14, ROTATION_XY_X, 0.0)
 }
+func KMLScreenOverlayAddRotationXyX(builder *flatbuffers.Builder, ROTATION_XY_X float64) {
+	KMLScreenOverlayAddROTATION_XY_X(builder, ROTATION_XY_X)
+}
 func KMLScreenOverlayAddROTATION_XY_Y(builder *flatbuffers.Builder, ROTATION_XY_Y float64) {
 	builder.PrependFloat64Slot(15, ROTATION_XY_Y, 0.0)
+}
+func KMLScreenOverlayAddRotationXyY(builder *flatbuffers.Builder, ROTATION_XY_Y float64) {
+	KMLScreenOverlayAddROTATION_XY_Y(builder, ROTATION_XY_Y)
 }
 func KMLScreenOverlayAddROTATION_XY_XUNITS(builder *flatbuffers.Builder, ROTATION_XY_XUNITS KMLUnits) {
 	builder.PrependInt8Slot(16, int8(ROTATION_XY_XUNITS), 0)
 }
+func KMLScreenOverlayAddRotationXyXunits(builder *flatbuffers.Builder, ROTATION_XY_XUNITS KMLUnits) {
+	KMLScreenOverlayAddROTATION_XY_XUNITS(builder, ROTATION_XY_XUNITS)
+}
 func KMLScreenOverlayAddROTATION_XY_YUNITS(builder *flatbuffers.Builder, ROTATION_XY_YUNITS KMLUnits) {
 	builder.PrependInt8Slot(17, int8(ROTATION_XY_YUNITS), 0)
+}
+func KMLScreenOverlayAddRotationXyYunits(builder *flatbuffers.Builder, ROTATION_XY_YUNITS KMLUnits) {
+	KMLScreenOverlayAddROTATION_XY_YUNITS(builder, ROTATION_XY_YUNITS)
 }
 func KMLScreenOverlayAddSIZE_X(builder *flatbuffers.Builder, SIZE_X float64) {
 	builder.PrependFloat64Slot(18, SIZE_X, 0.0)
 }
+func KMLScreenOverlayAddSizeX(builder *flatbuffers.Builder, SIZE_X float64) {
+	KMLScreenOverlayAddSIZE_X(builder, SIZE_X)
+}
 func KMLScreenOverlayAddSIZE_Y(builder *flatbuffers.Builder, SIZE_Y float64) {
 	builder.PrependFloat64Slot(19, SIZE_Y, 0.0)
+}
+func KMLScreenOverlayAddSizeY(builder *flatbuffers.Builder, SIZE_Y float64) {
+	KMLScreenOverlayAddSIZE_Y(builder, SIZE_Y)
 }
 func KMLScreenOverlayAddSIZE_XUNITS(builder *flatbuffers.Builder, SIZE_XUNITS KMLUnits) {
 	builder.PrependInt8Slot(20, int8(SIZE_XUNITS), 0)
 }
+func KMLScreenOverlayAddSizeXunits(builder *flatbuffers.Builder, SIZE_XUNITS KMLUnits) {
+	KMLScreenOverlayAddSIZE_XUNITS(builder, SIZE_XUNITS)
+}
 func KMLScreenOverlayAddSIZE_YUNITS(builder *flatbuffers.Builder, SIZE_YUNITS KMLUnits) {
 	builder.PrependInt8Slot(21, int8(SIZE_YUNITS), 0)
 }
+func KMLScreenOverlayAddSizeYunits(builder *flatbuffers.Builder, SIZE_YUNITS KMLUnits) {
+	KMLScreenOverlayAddSIZE_YUNITS(builder, SIZE_YUNITS)
+}
 func KMLScreenOverlayAddROTATION(builder *flatbuffers.Builder, ROTATION float64) {
 	builder.PrependFloat64Slot(22, ROTATION, 0.0)
+}
+func KMLScreenOverlayAddRotation(builder *flatbuffers.Builder, ROTATION float64) {
+	KMLScreenOverlayAddROTATION(builder, ROTATION)
 }
 func KMLScreenOverlayEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

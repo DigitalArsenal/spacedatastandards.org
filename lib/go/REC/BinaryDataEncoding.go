@@ -51,9 +51,17 @@ func (rcv *BinaryDataEncoding) SIZE_IN_BITS() uint16 {
 	return 0
 }
 
+func (rcv *BinaryDataEncoding) SizeInBits() uint16 {
+	return rcv.SIZE_IN_BITS()
+}
+
 /// Fixed size in bits
 func (rcv *BinaryDataEncoding) MutateSIZE_IN_BITS(n uint16) bool {
 	return rcv._tab.MutateUint16Slot(4, n)
+}
+
+func (rcv *BinaryDataEncoding) MutateSizeInBits(n uint16) bool {
+	return rcv.MutateSIZE_IN_BITS(n)
 }
 
 /// Maximum size in bits (for variable length)
@@ -65,9 +73,17 @@ func (rcv *BinaryDataEncoding) MAX_SIZE_IN_BITS() uint16 {
 	return 0
 }
 
+func (rcv *BinaryDataEncoding) MaxSizeInBits() uint16 {
+	return rcv.MAX_SIZE_IN_BITS()
+}
+
 /// Maximum size in bits (for variable length)
 func (rcv *BinaryDataEncoding) MutateMAX_SIZE_IN_BITS(n uint16) bool {
 	return rcv._tab.MutateUint16Slot(6, n)
+}
+
+func (rcv *BinaryDataEncoding) MutateMaxSizeInBits(n uint16) bool {
+	return rcv.MutateMAX_SIZE_IN_BITS(n)
 }
 
 /// Leading size field bits (for variable length)
@@ -79,9 +95,17 @@ func (rcv *BinaryDataEncoding) LEADING_SIZE_BITS() byte {
 	return 0
 }
 
+func (rcv *BinaryDataEncoding) LeadingSizeBits() byte {
+	return rcv.LEADING_SIZE_BITS()
+}
+
 /// Leading size field bits (for variable length)
 func (rcv *BinaryDataEncoding) MutateLEADING_SIZE_BITS(n byte) bool {
 	return rcv._tab.MutateByteSlot(8, n)
+}
+
+func (rcv *BinaryDataEncoding) MutateLeadingSizeBits(n byte) bool {
+	return rcv.MutateLEADING_SIZE_BITS(n)
 }
 
 func BinaryDataEncodingStart(builder *flatbuffers.Builder) {
@@ -90,11 +114,20 @@ func BinaryDataEncodingStart(builder *flatbuffers.Builder) {
 func BinaryDataEncodingAddSIZE_IN_BITS(builder *flatbuffers.Builder, SIZE_IN_BITS uint16) {
 	builder.PrependUint16Slot(0, SIZE_IN_BITS, 0)
 }
+func BinaryDataEncodingAddSizeInBits(builder *flatbuffers.Builder, SIZE_IN_BITS uint16) {
+	BinaryDataEncodingAddSIZE_IN_BITS(builder, SIZE_IN_BITS)
+}
 func BinaryDataEncodingAddMAX_SIZE_IN_BITS(builder *flatbuffers.Builder, MAX_SIZE_IN_BITS uint16) {
 	builder.PrependUint16Slot(1, MAX_SIZE_IN_BITS, 0)
 }
+func BinaryDataEncodingAddMaxSizeInBits(builder *flatbuffers.Builder, MAX_SIZE_IN_BITS uint16) {
+	BinaryDataEncodingAddMAX_SIZE_IN_BITS(builder, MAX_SIZE_IN_BITS)
+}
 func BinaryDataEncodingAddLEADING_SIZE_BITS(builder *flatbuffers.Builder, LEADING_SIZE_BITS byte) {
 	builder.PrependByteSlot(2, LEADING_SIZE_BITS, 0)
+}
+func BinaryDataEncodingAddLeadingSizeBits(builder *flatbuffers.Builder, LEADING_SIZE_BITS byte) {
+	BinaryDataEncodingAddLEADING_SIZE_BITS(builder, LEADING_SIZE_BITS)
 }
 func BinaryDataEncodingEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

@@ -2,4 +2,1510 @@
 
 # namespace: 
 
-# NOTE RFO.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# RF Observation
+class RFO(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = RFO()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsRFO(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def RFOBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x52\x46\x4F", size_prefixed=size_prefixed)
+
+    # RFO
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Unique identifier
+    # RFO
+    def ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Observation time (ISO 8601)
+    # RFO
+    def OB_TIME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Sensor identifier
+    # RFO
+    def ID_SENSOR(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Original sensor identifier
+    # RFO
+    def ORIG_SENSOR_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Observation type
+    # RFO
+    def OBS_TYPE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # Satellite catalog number
+    # RFO
+    def SAT_NO(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+        return 0
+
+    # International designator
+    # RFO
+    def ORIG_OBJECT_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # On-orbit reference
+    # RFO
+    def ON_ORBIT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # True if uncorrelated target
+    # RFO
+    def UCT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # Task identifier
+    # RFO
+    def TASK_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Transaction identifier
+    # RFO
+    def TRANSACTION_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Track identifier
+    # RFO
+    def TRACK_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Transponder identifier
+    # RFO
+    def TRANSPONDER(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Detection status
+    # RFO
+    def DETECTION_STATUS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # Azimuth angle (degrees)
+    # RFO
+    def AZIMUTH(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Azimuth uncertainty (degrees, 1-sigma)
+    # RFO
+    def AZIMUTH_UNC(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Azimuth rate (degrees/s)
+    # RFO
+    def AZIMUTH_RATE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Elevation angle (degrees)
+    # RFO
+    def ELEVATION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Elevation uncertainty (degrees, 1-sigma)
+    # RFO
+    def ELEVATION_UNC(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Elevation rate (degrees/s)
+    # RFO
+    def ELEVATION_RATE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Slant range (km)
+    # RFO
+    def RANGE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Range uncertainty (km, 1-sigma)
+    # RFO
+    def RANGE_UNC(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Range rate (km/s)
+    # RFO
+    def RANGE_RATE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Range rate uncertainty (km/s, 1-sigma)
+    # RFO
+    def RANGE_RATE_UNC(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Track range (km)
+    # RFO
+    def TRACK_RANGE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(52))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Sensor latitude (degrees)
+    # RFO
+    def SENLAT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(54))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Sensor longitude (degrees)
+    # RFO
+    def SENLON(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(56))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Sensor altitude (km)
+    # RFO
+    def SENALT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # ELNOT (Electronic Intelligence Notation)
+    # RFO
+    def ELNOT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Antenna name
+    # RFO
+    def ANTENNA_NAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(62))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Collection mode
+    # RFO
+    def COLLECTION_MODE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(64))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Measured center frequency (MHz)
+    # RFO
+    def FREQUENCY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(66))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Nominal center frequency (MHz)
+    # RFO
+    def NOMINAL_FREQUENCY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(68))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Start frequency of emission (MHz)
+    # RFO
+    def START_FREQUENCY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(70))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # End frequency of emission (MHz)
+    # RFO
+    def END_FREQUENCY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(72))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Frequency shift from nominal (MHz)
+    # RFO
+    def FREQUENCY_SHIFT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(74))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Measured bandwidth (MHz)
+    # RFO
+    def BANDWIDTH(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(76))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Nominal bandwidth (MHz)
+    # RFO
+    def NOMINAL_BANDWIDTH(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(78))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Resolution bandwidth (MHz)
+    # RFO
+    def RESOLUTION_BANDWIDTH(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(80))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Video bandwidth (MHz)
+    # RFO
+    def VIDEO_BANDWIDTH(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(82))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Relative carrier power (dBm)
+    # RFO
+    def RELATIVE_CARRIER_POWER(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(84))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Spectrum analyzer power (dBm)
+    # RFO
+    def SPECTRUM_ANALYZER_POWER(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(86))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Relative noise floor (dBm)
+    # RFO
+    def RELATIVE_NOISE_FLOOR(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(88))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Reference level (dBm)
+    # RFO
+    def REFERENCE_LEVEL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(90))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Noise power density (dBm/Hz)
+    # RFO
+    def NOISE_PWR_DENSITY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(92))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # PGRI (Pulse Group Repetition Interval, microseconds)
+    # RFO
+    def PGRI(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(94))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Effective isotropic radiated power (dBW)
+    # RFO
+    def EIRP(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(96))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Nominal EIRP (dBW)
+    # RFO
+    def NOMINAL_EIRP(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(98))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Minimum power spectral density (dBm/Hz)
+    # RFO
+    def MIN_PSD(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(100))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Maximum power spectral density (dBm/Hz)
+    # RFO
+    def MAX_PSD(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(102))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Signal-to-noise ratio (dB)
+    # RFO
+    def SNR(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(104))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Nominal SNR (dB)
+    # RFO
+    def NOMINAL_SNR(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(106))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Power over noise (dB)
+    # RFO
+    def POWER_OVER_NOISE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(108))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Nominal power over noise (dB)
+    # RFO
+    def NOMINAL_POWER_OVER_NOISE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(110))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Polarity angle (degrees)
+    # RFO
+    def POLARITY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(112))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Polarization type (e.g., LHCP, RHCP, LINEAR)
+    # RFO
+    def POLARITY_TYPE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(114))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Channel number
+    # RFO
+    def CHANNEL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(116))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint16Flags, o + self._tab.Pos)
+        return 0
+
+    # Baud rate (symbols/s)
+    # RFO
+    def BAUD_RATE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(118))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Symbol-to-noise ratio (dB)
+    # RFO
+    def SYMBOL_TO_NOISE_RATIO(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(120))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Bit error rate
+    # RFO
+    def BIT_ERROR_RATE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(122))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # True if peak measurement
+    # RFO
+    def PEAK(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(124))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # True if incoming signal
+    # RFO
+    def INCOMING(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(126))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # Switch point number
+    # RFO
+    def SWITCH_POINT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(128))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint16Flags, o + self._tab.Pos)
+        return 0
+
+    # Confidence score (0-1)
+    # RFO
+    def CONFIDENCE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(130))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Carrier standard (e.g., DVB-S, DVB-S2)
+    # RFO
+    def CARRIER_STANDARD(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(132))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Modulation type
+    # RFO
+    def MODULATION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(134))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Inner FEC coding rate denominator
+    # RFO
+    def INNER_CODING_RATE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(136))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
+        return 0
+
+    # Outer FEC coding rate denominator
+    # RFO
+    def OUTER_CODING_RATE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(138))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
+        return 0
+
+    # Transmit filter type
+    # RFO
+    def TRANSMIT_FILTER_TYPE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(140))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Transmit filter roll-off factor
+    # RFO
+    def TRANSMIT_FILTER_ROLL_OFF(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(142))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Reference to raw data file
+    # RFO
+    def RAW_FILE_URI(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(144))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Event descriptor
+    # RFO
+    def DESCRIPTOR(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(146))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Reference URL
+    # RFO
+    def URL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(148))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Associated tags
+    # RFO
+    def TAGS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(150))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
+        return ""
+
+    # RFO
+    def TAGSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(150))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # RFO
+    def TAGSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(150))
+        return o == 0
+
+def RFOStart(builder):
+    builder.StartObject(74)
+
+def Start(builder):
+    RFOStart(builder)
+
+def RFOAddID(builder, ID):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(ID), 0)
+
+def AddID(builder, ID):
+    RFOAddID(builder, ID)
+
+def RFOAddOB_TIME(builder, OB_TIME):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(OB_TIME), 0)
+
+def AddOB_TIME(builder, OB_TIME):
+    RFOAddOB_TIME(builder, OB_TIME)
+
+def RFOAddID_SENSOR(builder, ID_SENSOR):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(ID_SENSOR), 0)
+
+def AddID_SENSOR(builder, ID_SENSOR):
+    RFOAddID_SENSOR(builder, ID_SENSOR)
+
+def RFOAddORIG_SENSOR_ID(builder, ORIG_SENSOR_ID):
+    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(ORIG_SENSOR_ID), 0)
+
+def AddORIG_SENSOR_ID(builder, ORIG_SENSOR_ID):
+    RFOAddORIG_SENSOR_ID(builder, ORIG_SENSOR_ID)
+
+def RFOAddOBS_TYPE(builder, OBS_TYPE):
+    builder.PrependInt8Slot(4, OBS_TYPE, 0)
+
+def AddOBS_TYPE(builder, OBS_TYPE):
+    RFOAddOBS_TYPE(builder, OBS_TYPE)
+
+def RFOAddSAT_NO(builder, SAT_NO):
+    builder.PrependUint32Slot(5, SAT_NO, 0)
+
+def AddSAT_NO(builder, SAT_NO):
+    RFOAddSAT_NO(builder, SAT_NO)
+
+def RFOAddORIG_OBJECT_ID(builder, ORIG_OBJECT_ID):
+    builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(ORIG_OBJECT_ID), 0)
+
+def AddORIG_OBJECT_ID(builder, ORIG_OBJECT_ID):
+    RFOAddORIG_OBJECT_ID(builder, ORIG_OBJECT_ID)
+
+def RFOAddON_ORBIT(builder, ON_ORBIT):
+    builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(ON_ORBIT), 0)
+
+def AddON_ORBIT(builder, ON_ORBIT):
+    RFOAddON_ORBIT(builder, ON_ORBIT)
+
+def RFOAddUCT(builder, UCT):
+    builder.PrependBoolSlot(8, UCT, 0)
+
+def AddUCT(builder, UCT):
+    RFOAddUCT(builder, UCT)
+
+def RFOAddTASK_ID(builder, TASK_ID):
+    builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(TASK_ID), 0)
+
+def AddTASK_ID(builder, TASK_ID):
+    RFOAddTASK_ID(builder, TASK_ID)
+
+def RFOAddTRANSACTION_ID(builder, TRANSACTION_ID):
+    builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(TRANSACTION_ID), 0)
+
+def AddTRANSACTION_ID(builder, TRANSACTION_ID):
+    RFOAddTRANSACTION_ID(builder, TRANSACTION_ID)
+
+def RFOAddTRACK_ID(builder, TRACK_ID):
+    builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(TRACK_ID), 0)
+
+def AddTRACK_ID(builder, TRACK_ID):
+    RFOAddTRACK_ID(builder, TRACK_ID)
+
+def RFOAddTRANSPONDER(builder, TRANSPONDER):
+    builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(TRANSPONDER), 0)
+
+def AddTRANSPONDER(builder, TRANSPONDER):
+    RFOAddTRANSPONDER(builder, TRANSPONDER)
+
+def RFOAddDETECTION_STATUS(builder, DETECTION_STATUS):
+    builder.PrependInt8Slot(13, DETECTION_STATUS, 0)
+
+def AddDETECTION_STATUS(builder, DETECTION_STATUS):
+    RFOAddDETECTION_STATUS(builder, DETECTION_STATUS)
+
+def RFOAddAZIMUTH(builder, AZIMUTH):
+    builder.PrependFloat64Slot(14, AZIMUTH, 0.0)
+
+def AddAZIMUTH(builder, AZIMUTH):
+    RFOAddAZIMUTH(builder, AZIMUTH)
+
+def RFOAddAZIMUTH_UNC(builder, AZIMUTH_UNC):
+    builder.PrependFloat64Slot(15, AZIMUTH_UNC, 0.0)
+
+def AddAZIMUTH_UNC(builder, AZIMUTH_UNC):
+    RFOAddAZIMUTH_UNC(builder, AZIMUTH_UNC)
+
+def RFOAddAZIMUTH_RATE(builder, AZIMUTH_RATE):
+    builder.PrependFloat64Slot(16, AZIMUTH_RATE, 0.0)
+
+def AddAZIMUTH_RATE(builder, AZIMUTH_RATE):
+    RFOAddAZIMUTH_RATE(builder, AZIMUTH_RATE)
+
+def RFOAddELEVATION(builder, ELEVATION):
+    builder.PrependFloat64Slot(17, ELEVATION, 0.0)
+
+def AddELEVATION(builder, ELEVATION):
+    RFOAddELEVATION(builder, ELEVATION)
+
+def RFOAddELEVATION_UNC(builder, ELEVATION_UNC):
+    builder.PrependFloat64Slot(18, ELEVATION_UNC, 0.0)
+
+def AddELEVATION_UNC(builder, ELEVATION_UNC):
+    RFOAddELEVATION_UNC(builder, ELEVATION_UNC)
+
+def RFOAddELEVATION_RATE(builder, ELEVATION_RATE):
+    builder.PrependFloat64Slot(19, ELEVATION_RATE, 0.0)
+
+def AddELEVATION_RATE(builder, ELEVATION_RATE):
+    RFOAddELEVATION_RATE(builder, ELEVATION_RATE)
+
+def RFOAddRANGE(builder, RANGE):
+    builder.PrependFloat64Slot(20, RANGE, 0.0)
+
+def AddRANGE(builder, RANGE):
+    RFOAddRANGE(builder, RANGE)
+
+def RFOAddRANGE_UNC(builder, RANGE_UNC):
+    builder.PrependFloat64Slot(21, RANGE_UNC, 0.0)
+
+def AddRANGE_UNC(builder, RANGE_UNC):
+    RFOAddRANGE_UNC(builder, RANGE_UNC)
+
+def RFOAddRANGE_RATE(builder, RANGE_RATE):
+    builder.PrependFloat64Slot(22, RANGE_RATE, 0.0)
+
+def AddRANGE_RATE(builder, RANGE_RATE):
+    RFOAddRANGE_RATE(builder, RANGE_RATE)
+
+def RFOAddRANGE_RATE_UNC(builder, RANGE_RATE_UNC):
+    builder.PrependFloat64Slot(23, RANGE_RATE_UNC, 0.0)
+
+def AddRANGE_RATE_UNC(builder, RANGE_RATE_UNC):
+    RFOAddRANGE_RATE_UNC(builder, RANGE_RATE_UNC)
+
+def RFOAddTRACK_RANGE(builder, TRACK_RANGE):
+    builder.PrependFloat64Slot(24, TRACK_RANGE, 0.0)
+
+def AddTRACK_RANGE(builder, TRACK_RANGE):
+    RFOAddTRACK_RANGE(builder, TRACK_RANGE)
+
+def RFOAddSENLAT(builder, SENLAT):
+    builder.PrependFloat64Slot(25, SENLAT, 0.0)
+
+def AddSENLAT(builder, SENLAT):
+    RFOAddSENLAT(builder, SENLAT)
+
+def RFOAddSENLON(builder, SENLON):
+    builder.PrependFloat64Slot(26, SENLON, 0.0)
+
+def AddSENLON(builder, SENLON):
+    RFOAddSENLON(builder, SENLON)
+
+def RFOAddSENALT(builder, SENALT):
+    builder.PrependFloat64Slot(27, SENALT, 0.0)
+
+def AddSENALT(builder, SENALT):
+    RFOAddSENALT(builder, SENALT)
+
+def RFOAddELNOT(builder, ELNOT):
+    builder.PrependUOffsetTRelativeSlot(28, flatbuffers.number_types.UOffsetTFlags.py_type(ELNOT), 0)
+
+def AddELNOT(builder, ELNOT):
+    RFOAddELNOT(builder, ELNOT)
+
+def RFOAddANTENNA_NAME(builder, ANTENNA_NAME):
+    builder.PrependUOffsetTRelativeSlot(29, flatbuffers.number_types.UOffsetTFlags.py_type(ANTENNA_NAME), 0)
+
+def AddANTENNA_NAME(builder, ANTENNA_NAME):
+    RFOAddANTENNA_NAME(builder, ANTENNA_NAME)
+
+def RFOAddCOLLECTION_MODE(builder, COLLECTION_MODE):
+    builder.PrependUOffsetTRelativeSlot(30, flatbuffers.number_types.UOffsetTFlags.py_type(COLLECTION_MODE), 0)
+
+def AddCOLLECTION_MODE(builder, COLLECTION_MODE):
+    RFOAddCOLLECTION_MODE(builder, COLLECTION_MODE)
+
+def RFOAddFREQUENCY(builder, FREQUENCY):
+    builder.PrependFloat64Slot(31, FREQUENCY, 0.0)
+
+def AddFREQUENCY(builder, FREQUENCY):
+    RFOAddFREQUENCY(builder, FREQUENCY)
+
+def RFOAddNOMINAL_FREQUENCY(builder, NOMINAL_FREQUENCY):
+    builder.PrependFloat64Slot(32, NOMINAL_FREQUENCY, 0.0)
+
+def AddNOMINAL_FREQUENCY(builder, NOMINAL_FREQUENCY):
+    RFOAddNOMINAL_FREQUENCY(builder, NOMINAL_FREQUENCY)
+
+def RFOAddSTART_FREQUENCY(builder, START_FREQUENCY):
+    builder.PrependFloat64Slot(33, START_FREQUENCY, 0.0)
+
+def AddSTART_FREQUENCY(builder, START_FREQUENCY):
+    RFOAddSTART_FREQUENCY(builder, START_FREQUENCY)
+
+def RFOAddEND_FREQUENCY(builder, END_FREQUENCY):
+    builder.PrependFloat64Slot(34, END_FREQUENCY, 0.0)
+
+def AddEND_FREQUENCY(builder, END_FREQUENCY):
+    RFOAddEND_FREQUENCY(builder, END_FREQUENCY)
+
+def RFOAddFREQUENCY_SHIFT(builder, FREQUENCY_SHIFT):
+    builder.PrependFloat64Slot(35, FREQUENCY_SHIFT, 0.0)
+
+def AddFREQUENCY_SHIFT(builder, FREQUENCY_SHIFT):
+    RFOAddFREQUENCY_SHIFT(builder, FREQUENCY_SHIFT)
+
+def RFOAddBANDWIDTH(builder, BANDWIDTH):
+    builder.PrependFloat64Slot(36, BANDWIDTH, 0.0)
+
+def AddBANDWIDTH(builder, BANDWIDTH):
+    RFOAddBANDWIDTH(builder, BANDWIDTH)
+
+def RFOAddNOMINAL_BANDWIDTH(builder, NOMINAL_BANDWIDTH):
+    builder.PrependFloat64Slot(37, NOMINAL_BANDWIDTH, 0.0)
+
+def AddNOMINAL_BANDWIDTH(builder, NOMINAL_BANDWIDTH):
+    RFOAddNOMINAL_BANDWIDTH(builder, NOMINAL_BANDWIDTH)
+
+def RFOAddRESOLUTION_BANDWIDTH(builder, RESOLUTION_BANDWIDTH):
+    builder.PrependFloat64Slot(38, RESOLUTION_BANDWIDTH, 0.0)
+
+def AddRESOLUTION_BANDWIDTH(builder, RESOLUTION_BANDWIDTH):
+    RFOAddRESOLUTION_BANDWIDTH(builder, RESOLUTION_BANDWIDTH)
+
+def RFOAddVIDEO_BANDWIDTH(builder, VIDEO_BANDWIDTH):
+    builder.PrependFloat64Slot(39, VIDEO_BANDWIDTH, 0.0)
+
+def AddVIDEO_BANDWIDTH(builder, VIDEO_BANDWIDTH):
+    RFOAddVIDEO_BANDWIDTH(builder, VIDEO_BANDWIDTH)
+
+def RFOAddRELATIVE_CARRIER_POWER(builder, RELATIVE_CARRIER_POWER):
+    builder.PrependFloat64Slot(40, RELATIVE_CARRIER_POWER, 0.0)
+
+def AddRELATIVE_CARRIER_POWER(builder, RELATIVE_CARRIER_POWER):
+    RFOAddRELATIVE_CARRIER_POWER(builder, RELATIVE_CARRIER_POWER)
+
+def RFOAddSPECTRUM_ANALYZER_POWER(builder, SPECTRUM_ANALYZER_POWER):
+    builder.PrependFloat64Slot(41, SPECTRUM_ANALYZER_POWER, 0.0)
+
+def AddSPECTRUM_ANALYZER_POWER(builder, SPECTRUM_ANALYZER_POWER):
+    RFOAddSPECTRUM_ANALYZER_POWER(builder, SPECTRUM_ANALYZER_POWER)
+
+def RFOAddRELATIVE_NOISE_FLOOR(builder, RELATIVE_NOISE_FLOOR):
+    builder.PrependFloat64Slot(42, RELATIVE_NOISE_FLOOR, 0.0)
+
+def AddRELATIVE_NOISE_FLOOR(builder, RELATIVE_NOISE_FLOOR):
+    RFOAddRELATIVE_NOISE_FLOOR(builder, RELATIVE_NOISE_FLOOR)
+
+def RFOAddREFERENCE_LEVEL(builder, REFERENCE_LEVEL):
+    builder.PrependFloat64Slot(43, REFERENCE_LEVEL, 0.0)
+
+def AddREFERENCE_LEVEL(builder, REFERENCE_LEVEL):
+    RFOAddREFERENCE_LEVEL(builder, REFERENCE_LEVEL)
+
+def RFOAddNOISE_PWR_DENSITY(builder, NOISE_PWR_DENSITY):
+    builder.PrependFloat64Slot(44, NOISE_PWR_DENSITY, 0.0)
+
+def AddNOISE_PWR_DENSITY(builder, NOISE_PWR_DENSITY):
+    RFOAddNOISE_PWR_DENSITY(builder, NOISE_PWR_DENSITY)
+
+def RFOAddPGRI(builder, PGRI):
+    builder.PrependFloat64Slot(45, PGRI, 0.0)
+
+def AddPGRI(builder, PGRI):
+    RFOAddPGRI(builder, PGRI)
+
+def RFOAddEIRP(builder, EIRP):
+    builder.PrependFloat64Slot(46, EIRP, 0.0)
+
+def AddEIRP(builder, EIRP):
+    RFOAddEIRP(builder, EIRP)
+
+def RFOAddNOMINAL_EIRP(builder, NOMINAL_EIRP):
+    builder.PrependFloat64Slot(47, NOMINAL_EIRP, 0.0)
+
+def AddNOMINAL_EIRP(builder, NOMINAL_EIRP):
+    RFOAddNOMINAL_EIRP(builder, NOMINAL_EIRP)
+
+def RFOAddMIN_PSD(builder, MIN_PSD):
+    builder.PrependFloat64Slot(48, MIN_PSD, 0.0)
+
+def AddMIN_PSD(builder, MIN_PSD):
+    RFOAddMIN_PSD(builder, MIN_PSD)
+
+def RFOAddMAX_PSD(builder, MAX_PSD):
+    builder.PrependFloat64Slot(49, MAX_PSD, 0.0)
+
+def AddMAX_PSD(builder, MAX_PSD):
+    RFOAddMAX_PSD(builder, MAX_PSD)
+
+def RFOAddSNR(builder, SNR):
+    builder.PrependFloat64Slot(50, SNR, 0.0)
+
+def AddSNR(builder, SNR):
+    RFOAddSNR(builder, SNR)
+
+def RFOAddNOMINAL_SNR(builder, NOMINAL_SNR):
+    builder.PrependFloat64Slot(51, NOMINAL_SNR, 0.0)
+
+def AddNOMINAL_SNR(builder, NOMINAL_SNR):
+    RFOAddNOMINAL_SNR(builder, NOMINAL_SNR)
+
+def RFOAddPOWER_OVER_NOISE(builder, POWER_OVER_NOISE):
+    builder.PrependFloat64Slot(52, POWER_OVER_NOISE, 0.0)
+
+def AddPOWER_OVER_NOISE(builder, POWER_OVER_NOISE):
+    RFOAddPOWER_OVER_NOISE(builder, POWER_OVER_NOISE)
+
+def RFOAddNOMINAL_POWER_OVER_NOISE(builder, NOMINAL_POWER_OVER_NOISE):
+    builder.PrependFloat64Slot(53, NOMINAL_POWER_OVER_NOISE, 0.0)
+
+def AddNOMINAL_POWER_OVER_NOISE(builder, NOMINAL_POWER_OVER_NOISE):
+    RFOAddNOMINAL_POWER_OVER_NOISE(builder, NOMINAL_POWER_OVER_NOISE)
+
+def RFOAddPOLARITY(builder, POLARITY):
+    builder.PrependFloat64Slot(54, POLARITY, 0.0)
+
+def AddPOLARITY(builder, POLARITY):
+    RFOAddPOLARITY(builder, POLARITY)
+
+def RFOAddPOLARITY_TYPE(builder, POLARITY_TYPE):
+    builder.PrependUOffsetTRelativeSlot(55, flatbuffers.number_types.UOffsetTFlags.py_type(POLARITY_TYPE), 0)
+
+def AddPOLARITY_TYPE(builder, POLARITY_TYPE):
+    RFOAddPOLARITY_TYPE(builder, POLARITY_TYPE)
+
+def RFOAddCHANNEL(builder, CHANNEL):
+    builder.PrependUint16Slot(56, CHANNEL, 0)
+
+def AddCHANNEL(builder, CHANNEL):
+    RFOAddCHANNEL(builder, CHANNEL)
+
+def RFOAddBAUD_RATE(builder, BAUD_RATE):
+    builder.PrependFloat64Slot(57, BAUD_RATE, 0.0)
+
+def AddBAUD_RATE(builder, BAUD_RATE):
+    RFOAddBAUD_RATE(builder, BAUD_RATE)
+
+def RFOAddSYMBOL_TO_NOISE_RATIO(builder, SYMBOL_TO_NOISE_RATIO):
+    builder.PrependFloat64Slot(58, SYMBOL_TO_NOISE_RATIO, 0.0)
+
+def AddSYMBOL_TO_NOISE_RATIO(builder, SYMBOL_TO_NOISE_RATIO):
+    RFOAddSYMBOL_TO_NOISE_RATIO(builder, SYMBOL_TO_NOISE_RATIO)
+
+def RFOAddBIT_ERROR_RATE(builder, BIT_ERROR_RATE):
+    builder.PrependFloat64Slot(59, BIT_ERROR_RATE, 0.0)
+
+def AddBIT_ERROR_RATE(builder, BIT_ERROR_RATE):
+    RFOAddBIT_ERROR_RATE(builder, BIT_ERROR_RATE)
+
+def RFOAddPEAK(builder, PEAK):
+    builder.PrependBoolSlot(60, PEAK, 0)
+
+def AddPEAK(builder, PEAK):
+    RFOAddPEAK(builder, PEAK)
+
+def RFOAddINCOMING(builder, INCOMING):
+    builder.PrependBoolSlot(61, INCOMING, 0)
+
+def AddINCOMING(builder, INCOMING):
+    RFOAddINCOMING(builder, INCOMING)
+
+def RFOAddSWITCH_POINT(builder, SWITCH_POINT):
+    builder.PrependUint16Slot(62, SWITCH_POINT, 0)
+
+def AddSWITCH_POINT(builder, SWITCH_POINT):
+    RFOAddSWITCH_POINT(builder, SWITCH_POINT)
+
+def RFOAddCONFIDENCE(builder, CONFIDENCE):
+    builder.PrependFloat64Slot(63, CONFIDENCE, 0.0)
+
+def AddCONFIDENCE(builder, CONFIDENCE):
+    RFOAddCONFIDENCE(builder, CONFIDENCE)
+
+def RFOAddCARRIER_STANDARD(builder, CARRIER_STANDARD):
+    builder.PrependUOffsetTRelativeSlot(64, flatbuffers.number_types.UOffsetTFlags.py_type(CARRIER_STANDARD), 0)
+
+def AddCARRIER_STANDARD(builder, CARRIER_STANDARD):
+    RFOAddCARRIER_STANDARD(builder, CARRIER_STANDARD)
+
+def RFOAddMODULATION(builder, MODULATION):
+    builder.PrependUOffsetTRelativeSlot(65, flatbuffers.number_types.UOffsetTFlags.py_type(MODULATION), 0)
+
+def AddMODULATION(builder, MODULATION):
+    RFOAddMODULATION(builder, MODULATION)
+
+def RFOAddINNER_CODING_RATE(builder, INNER_CODING_RATE):
+    builder.PrependUint8Slot(66, INNER_CODING_RATE, 0)
+
+def AddINNER_CODING_RATE(builder, INNER_CODING_RATE):
+    RFOAddINNER_CODING_RATE(builder, INNER_CODING_RATE)
+
+def RFOAddOUTER_CODING_RATE(builder, OUTER_CODING_RATE):
+    builder.PrependUint8Slot(67, OUTER_CODING_RATE, 0)
+
+def AddOUTER_CODING_RATE(builder, OUTER_CODING_RATE):
+    RFOAddOUTER_CODING_RATE(builder, OUTER_CODING_RATE)
+
+def RFOAddTRANSMIT_FILTER_TYPE(builder, TRANSMIT_FILTER_TYPE):
+    builder.PrependUOffsetTRelativeSlot(68, flatbuffers.number_types.UOffsetTFlags.py_type(TRANSMIT_FILTER_TYPE), 0)
+
+def AddTRANSMIT_FILTER_TYPE(builder, TRANSMIT_FILTER_TYPE):
+    RFOAddTRANSMIT_FILTER_TYPE(builder, TRANSMIT_FILTER_TYPE)
+
+def RFOAddTRANSMIT_FILTER_ROLL_OFF(builder, TRANSMIT_FILTER_ROLL_OFF):
+    builder.PrependFloat64Slot(69, TRANSMIT_FILTER_ROLL_OFF, 0.0)
+
+def AddTRANSMIT_FILTER_ROLL_OFF(builder, TRANSMIT_FILTER_ROLL_OFF):
+    RFOAddTRANSMIT_FILTER_ROLL_OFF(builder, TRANSMIT_FILTER_ROLL_OFF)
+
+def RFOAddRAW_FILE_URI(builder, RAW_FILE_URI):
+    builder.PrependUOffsetTRelativeSlot(70, flatbuffers.number_types.UOffsetTFlags.py_type(RAW_FILE_URI), 0)
+
+def AddRAW_FILE_URI(builder, RAW_FILE_URI):
+    RFOAddRAW_FILE_URI(builder, RAW_FILE_URI)
+
+def RFOAddDESCRIPTOR(builder, DESCRIPTOR):
+    builder.PrependUOffsetTRelativeSlot(71, flatbuffers.number_types.UOffsetTFlags.py_type(DESCRIPTOR), 0)
+
+def AddDESCRIPTOR(builder, DESCRIPTOR):
+    RFOAddDESCRIPTOR(builder, DESCRIPTOR)
+
+def RFOAddURL(builder, URL):
+    builder.PrependUOffsetTRelativeSlot(72, flatbuffers.number_types.UOffsetTFlags.py_type(URL), 0)
+
+def AddURL(builder, URL):
+    RFOAddURL(builder, URL)
+
+def RFOAddTAGS(builder, TAGS):
+    builder.PrependUOffsetTRelativeSlot(73, flatbuffers.number_types.UOffsetTFlags.py_type(TAGS), 0)
+
+def AddTAGS(builder, TAGS):
+    RFOAddTAGS(builder, TAGS)
+
+def RFOStartTAGSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartTAGSVector(builder, numElems):
+    return RFOStartTAGSVector(builder, numElems)
+
+def RFOCreateTAGSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateTAGSVector(builder, data):
+    RFOCreateTAGSVector(builder, data)
+
+def RFOEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return RFOEnd(builder)
+
+try:
+    from typing import List
+except:
+    pass
+
+class RFOT(object):
+
+    # RFOT
+    def __init__(
+        self,
+        ID = None,
+        OB_TIME = None,
+        ID_SENSOR = None,
+        ORIG_SENSOR_ID = None,
+        OBS_TYPE = 0,
+        SAT_NO = 0,
+        ORIG_OBJECT_ID = None,
+        ON_ORBIT = None,
+        UCT = False,
+        TASK_ID = None,
+        TRANSACTION_ID = None,
+        TRACK_ID = None,
+        TRANSPONDER = None,
+        DETECTION_STATUS = 0,
+        AZIMUTH = 0.0,
+        AZIMUTH_UNC = 0.0,
+        AZIMUTH_RATE = 0.0,
+        ELEVATION = 0.0,
+        ELEVATION_UNC = 0.0,
+        ELEVATION_RATE = 0.0,
+        RANGE = 0.0,
+        RANGE_UNC = 0.0,
+        RANGE_RATE = 0.0,
+        RANGE_RATE_UNC = 0.0,
+        TRACK_RANGE = 0.0,
+        SENLAT = 0.0,
+        SENLON = 0.0,
+        SENALT = 0.0,
+        ELNOT = None,
+        ANTENNA_NAME = None,
+        COLLECTION_MODE = None,
+        FREQUENCY = 0.0,
+        NOMINAL_FREQUENCY = 0.0,
+        START_FREQUENCY = 0.0,
+        END_FREQUENCY = 0.0,
+        FREQUENCY_SHIFT = 0.0,
+        BANDWIDTH = 0.0,
+        NOMINAL_BANDWIDTH = 0.0,
+        RESOLUTION_BANDWIDTH = 0.0,
+        VIDEO_BANDWIDTH = 0.0,
+        RELATIVE_CARRIER_POWER = 0.0,
+        SPECTRUM_ANALYZER_POWER = 0.0,
+        RELATIVE_NOISE_FLOOR = 0.0,
+        REFERENCE_LEVEL = 0.0,
+        NOISE_PWR_DENSITY = 0.0,
+        PGRI = 0.0,
+        EIRP = 0.0,
+        NOMINAL_EIRP = 0.0,
+        MIN_PSD = 0.0,
+        MAX_PSD = 0.0,
+        SNR = 0.0,
+        NOMINAL_SNR = 0.0,
+        POWER_OVER_NOISE = 0.0,
+        NOMINAL_POWER_OVER_NOISE = 0.0,
+        POLARITY = 0.0,
+        POLARITY_TYPE = None,
+        CHANNEL = 0,
+        BAUD_RATE = 0.0,
+        SYMBOL_TO_NOISE_RATIO = 0.0,
+        BIT_ERROR_RATE = 0.0,
+        PEAK = False,
+        INCOMING = False,
+        SWITCH_POINT = 0,
+        CONFIDENCE = 0.0,
+        CARRIER_STANDARD = None,
+        MODULATION = None,
+        INNER_CODING_RATE = 0,
+        OUTER_CODING_RATE = 0,
+        TRANSMIT_FILTER_TYPE = None,
+        TRANSMIT_FILTER_ROLL_OFF = 0.0,
+        RAW_FILE_URI = None,
+        DESCRIPTOR = None,
+        URL = None,
+        TAGS = None,
+    ):
+        self.ID = ID  # type: Optional[str]
+        self.OB_TIME = OB_TIME  # type: Optional[str]
+        self.ID_SENSOR = ID_SENSOR  # type: Optional[str]
+        self.ORIG_SENSOR_ID = ORIG_SENSOR_ID  # type: Optional[str]
+        self.OBS_TYPE = OBS_TYPE  # type: int
+        self.SAT_NO = SAT_NO  # type: int
+        self.ORIG_OBJECT_ID = ORIG_OBJECT_ID  # type: Optional[str]
+        self.ON_ORBIT = ON_ORBIT  # type: Optional[str]
+        self.UCT = UCT  # type: bool
+        self.TASK_ID = TASK_ID  # type: Optional[str]
+        self.TRANSACTION_ID = TRANSACTION_ID  # type: Optional[str]
+        self.TRACK_ID = TRACK_ID  # type: Optional[str]
+        self.TRANSPONDER = TRANSPONDER  # type: Optional[str]
+        self.DETECTION_STATUS = DETECTION_STATUS  # type: int
+        self.AZIMUTH = AZIMUTH  # type: float
+        self.AZIMUTH_UNC = AZIMUTH_UNC  # type: float
+        self.AZIMUTH_RATE = AZIMUTH_RATE  # type: float
+        self.ELEVATION = ELEVATION  # type: float
+        self.ELEVATION_UNC = ELEVATION_UNC  # type: float
+        self.ELEVATION_RATE = ELEVATION_RATE  # type: float
+        self.RANGE = RANGE  # type: float
+        self.RANGE_UNC = RANGE_UNC  # type: float
+        self.RANGE_RATE = RANGE_RATE  # type: float
+        self.RANGE_RATE_UNC = RANGE_RATE_UNC  # type: float
+        self.TRACK_RANGE = TRACK_RANGE  # type: float
+        self.SENLAT = SENLAT  # type: float
+        self.SENLON = SENLON  # type: float
+        self.SENALT = SENALT  # type: float
+        self.ELNOT = ELNOT  # type: Optional[str]
+        self.ANTENNA_NAME = ANTENNA_NAME  # type: Optional[str]
+        self.COLLECTION_MODE = COLLECTION_MODE  # type: Optional[str]
+        self.FREQUENCY = FREQUENCY  # type: float
+        self.NOMINAL_FREQUENCY = NOMINAL_FREQUENCY  # type: float
+        self.START_FREQUENCY = START_FREQUENCY  # type: float
+        self.END_FREQUENCY = END_FREQUENCY  # type: float
+        self.FREQUENCY_SHIFT = FREQUENCY_SHIFT  # type: float
+        self.BANDWIDTH = BANDWIDTH  # type: float
+        self.NOMINAL_BANDWIDTH = NOMINAL_BANDWIDTH  # type: float
+        self.RESOLUTION_BANDWIDTH = RESOLUTION_BANDWIDTH  # type: float
+        self.VIDEO_BANDWIDTH = VIDEO_BANDWIDTH  # type: float
+        self.RELATIVE_CARRIER_POWER = RELATIVE_CARRIER_POWER  # type: float
+        self.SPECTRUM_ANALYZER_POWER = SPECTRUM_ANALYZER_POWER  # type: float
+        self.RELATIVE_NOISE_FLOOR = RELATIVE_NOISE_FLOOR  # type: float
+        self.REFERENCE_LEVEL = REFERENCE_LEVEL  # type: float
+        self.NOISE_PWR_DENSITY = NOISE_PWR_DENSITY  # type: float
+        self.PGRI = PGRI  # type: float
+        self.EIRP = EIRP  # type: float
+        self.NOMINAL_EIRP = NOMINAL_EIRP  # type: float
+        self.MIN_PSD = MIN_PSD  # type: float
+        self.MAX_PSD = MAX_PSD  # type: float
+        self.SNR = SNR  # type: float
+        self.NOMINAL_SNR = NOMINAL_SNR  # type: float
+        self.POWER_OVER_NOISE = POWER_OVER_NOISE  # type: float
+        self.NOMINAL_POWER_OVER_NOISE = NOMINAL_POWER_OVER_NOISE  # type: float
+        self.POLARITY = POLARITY  # type: float
+        self.POLARITY_TYPE = POLARITY_TYPE  # type: Optional[str]
+        self.CHANNEL = CHANNEL  # type: int
+        self.BAUD_RATE = BAUD_RATE  # type: float
+        self.SYMBOL_TO_NOISE_RATIO = SYMBOL_TO_NOISE_RATIO  # type: float
+        self.BIT_ERROR_RATE = BIT_ERROR_RATE  # type: float
+        self.PEAK = PEAK  # type: bool
+        self.INCOMING = INCOMING  # type: bool
+        self.SWITCH_POINT = SWITCH_POINT  # type: int
+        self.CONFIDENCE = CONFIDENCE  # type: float
+        self.CARRIER_STANDARD = CARRIER_STANDARD  # type: Optional[str]
+        self.MODULATION = MODULATION  # type: Optional[str]
+        self.INNER_CODING_RATE = INNER_CODING_RATE  # type: int
+        self.OUTER_CODING_RATE = OUTER_CODING_RATE  # type: int
+        self.TRANSMIT_FILTER_TYPE = TRANSMIT_FILTER_TYPE  # type: Optional[str]
+        self.TRANSMIT_FILTER_ROLL_OFF = TRANSMIT_FILTER_ROLL_OFF  # type: float
+        self.RAW_FILE_URI = RAW_FILE_URI  # type: Optional[str]
+        self.DESCRIPTOR = DESCRIPTOR  # type: Optional[str]
+        self.URL = URL  # type: Optional[str]
+        self.TAGS = TAGS  # type: Optional[List[Optional[str]]]
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpRfo = RFO()
+        tmpRfo.Init(buf, pos)
+        return cls.InitFromObj(tmpRfo)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpRfo):
+        x = RFOT()
+        x._UnPack(tmpRfo)
+        return x
+
+    # RFOT
+    def _UnPack(self, RFO):
+        if RFO is None:
+            return
+        self.ID = RFO.ID()
+        self.OB_TIME = RFO.OB_TIME()
+        self.ID_SENSOR = RFO.ID_SENSOR()
+        self.ORIG_SENSOR_ID = RFO.ORIG_SENSOR_ID()
+        self.OBS_TYPE = RFO.OBS_TYPE()
+        self.SAT_NO = RFO.SAT_NO()
+        self.ORIG_OBJECT_ID = RFO.ORIG_OBJECT_ID()
+        self.ON_ORBIT = RFO.ON_ORBIT()
+        self.UCT = RFO.UCT()
+        self.TASK_ID = RFO.TASK_ID()
+        self.TRANSACTION_ID = RFO.TRANSACTION_ID()
+        self.TRACK_ID = RFO.TRACK_ID()
+        self.TRANSPONDER = RFO.TRANSPONDER()
+        self.DETECTION_STATUS = RFO.DETECTION_STATUS()
+        self.AZIMUTH = RFO.AZIMUTH()
+        self.AZIMUTH_UNC = RFO.AZIMUTH_UNC()
+        self.AZIMUTH_RATE = RFO.AZIMUTH_RATE()
+        self.ELEVATION = RFO.ELEVATION()
+        self.ELEVATION_UNC = RFO.ELEVATION_UNC()
+        self.ELEVATION_RATE = RFO.ELEVATION_RATE()
+        self.RANGE = RFO.RANGE()
+        self.RANGE_UNC = RFO.RANGE_UNC()
+        self.RANGE_RATE = RFO.RANGE_RATE()
+        self.RANGE_RATE_UNC = RFO.RANGE_RATE_UNC()
+        self.TRACK_RANGE = RFO.TRACK_RANGE()
+        self.SENLAT = RFO.SENLAT()
+        self.SENLON = RFO.SENLON()
+        self.SENALT = RFO.SENALT()
+        self.ELNOT = RFO.ELNOT()
+        self.ANTENNA_NAME = RFO.ANTENNA_NAME()
+        self.COLLECTION_MODE = RFO.COLLECTION_MODE()
+        self.FREQUENCY = RFO.FREQUENCY()
+        self.NOMINAL_FREQUENCY = RFO.NOMINAL_FREQUENCY()
+        self.START_FREQUENCY = RFO.START_FREQUENCY()
+        self.END_FREQUENCY = RFO.END_FREQUENCY()
+        self.FREQUENCY_SHIFT = RFO.FREQUENCY_SHIFT()
+        self.BANDWIDTH = RFO.BANDWIDTH()
+        self.NOMINAL_BANDWIDTH = RFO.NOMINAL_BANDWIDTH()
+        self.RESOLUTION_BANDWIDTH = RFO.RESOLUTION_BANDWIDTH()
+        self.VIDEO_BANDWIDTH = RFO.VIDEO_BANDWIDTH()
+        self.RELATIVE_CARRIER_POWER = RFO.RELATIVE_CARRIER_POWER()
+        self.SPECTRUM_ANALYZER_POWER = RFO.SPECTRUM_ANALYZER_POWER()
+        self.RELATIVE_NOISE_FLOOR = RFO.RELATIVE_NOISE_FLOOR()
+        self.REFERENCE_LEVEL = RFO.REFERENCE_LEVEL()
+        self.NOISE_PWR_DENSITY = RFO.NOISE_PWR_DENSITY()
+        self.PGRI = RFO.PGRI()
+        self.EIRP = RFO.EIRP()
+        self.NOMINAL_EIRP = RFO.NOMINAL_EIRP()
+        self.MIN_PSD = RFO.MIN_PSD()
+        self.MAX_PSD = RFO.MAX_PSD()
+        self.SNR = RFO.SNR()
+        self.NOMINAL_SNR = RFO.NOMINAL_SNR()
+        self.POWER_OVER_NOISE = RFO.POWER_OVER_NOISE()
+        self.NOMINAL_POWER_OVER_NOISE = RFO.NOMINAL_POWER_OVER_NOISE()
+        self.POLARITY = RFO.POLARITY()
+        self.POLARITY_TYPE = RFO.POLARITY_TYPE()
+        self.CHANNEL = RFO.CHANNEL()
+        self.BAUD_RATE = RFO.BAUD_RATE()
+        self.SYMBOL_TO_NOISE_RATIO = RFO.SYMBOL_TO_NOISE_RATIO()
+        self.BIT_ERROR_RATE = RFO.BIT_ERROR_RATE()
+        self.PEAK = RFO.PEAK()
+        self.INCOMING = RFO.INCOMING()
+        self.SWITCH_POINT = RFO.SWITCH_POINT()
+        self.CONFIDENCE = RFO.CONFIDENCE()
+        self.CARRIER_STANDARD = RFO.CARRIER_STANDARD()
+        self.MODULATION = RFO.MODULATION()
+        self.INNER_CODING_RATE = RFO.INNER_CODING_RATE()
+        self.OUTER_CODING_RATE = RFO.OUTER_CODING_RATE()
+        self.TRANSMIT_FILTER_TYPE = RFO.TRANSMIT_FILTER_TYPE()
+        self.TRANSMIT_FILTER_ROLL_OFF = RFO.TRANSMIT_FILTER_ROLL_OFF()
+        self.RAW_FILE_URI = RFO.RAW_FILE_URI()
+        self.DESCRIPTOR = RFO.DESCRIPTOR()
+        self.URL = RFO.URL()
+        if not RFO.TAGSIsNone():
+            self.TAGS = []
+            for i in range(RFO.TAGSLength()):
+                self.TAGS.append(RFO.TAGS(i))
+
+    # RFOT
+    def Pack(self, builder):
+        if self.ID is not None:
+            ID = builder.CreateString(self.ID)
+        if self.OB_TIME is not None:
+            OB_TIME = builder.CreateString(self.OB_TIME)
+        if self.ID_SENSOR is not None:
+            ID_SENSOR = builder.CreateString(self.ID_SENSOR)
+        if self.ORIG_SENSOR_ID is not None:
+            ORIG_SENSOR_ID = builder.CreateString(self.ORIG_SENSOR_ID)
+        if self.ORIG_OBJECT_ID is not None:
+            ORIG_OBJECT_ID = builder.CreateString(self.ORIG_OBJECT_ID)
+        if self.ON_ORBIT is not None:
+            ON_ORBIT = builder.CreateString(self.ON_ORBIT)
+        if self.TASK_ID is not None:
+            TASK_ID = builder.CreateString(self.TASK_ID)
+        if self.TRANSACTION_ID is not None:
+            TRANSACTION_ID = builder.CreateString(self.TRANSACTION_ID)
+        if self.TRACK_ID is not None:
+            TRACK_ID = builder.CreateString(self.TRACK_ID)
+        if self.TRANSPONDER is not None:
+            TRANSPONDER = builder.CreateString(self.TRANSPONDER)
+        if self.ELNOT is not None:
+            ELNOT = builder.CreateString(self.ELNOT)
+        if self.ANTENNA_NAME is not None:
+            ANTENNA_NAME = builder.CreateString(self.ANTENNA_NAME)
+        if self.COLLECTION_MODE is not None:
+            COLLECTION_MODE = builder.CreateString(self.COLLECTION_MODE)
+        if self.POLARITY_TYPE is not None:
+            POLARITY_TYPE = builder.CreateString(self.POLARITY_TYPE)
+        if self.CARRIER_STANDARD is not None:
+            CARRIER_STANDARD = builder.CreateString(self.CARRIER_STANDARD)
+        if self.MODULATION is not None:
+            MODULATION = builder.CreateString(self.MODULATION)
+        if self.TRANSMIT_FILTER_TYPE is not None:
+            TRANSMIT_FILTER_TYPE = builder.CreateString(self.TRANSMIT_FILTER_TYPE)
+        if self.RAW_FILE_URI is not None:
+            RAW_FILE_URI = builder.CreateString(self.RAW_FILE_URI)
+        if self.DESCRIPTOR is not None:
+            DESCRIPTOR = builder.CreateString(self.DESCRIPTOR)
+        if self.URL is not None:
+            URL = builder.CreateString(self.URL)
+        if self.TAGS is not None:
+            TAGSlist = []
+            for i in range(len(self.TAGS)):
+                TAGSlist.append(builder.CreateString(self.TAGS[i]))
+            RFOStartTAGSVector(builder, len(self.TAGS))
+            for i in reversed(range(len(self.TAGS))):
+                builder.PrependUOffsetTRelative(TAGSlist[i])
+            TAGS = builder.EndVector()
+        RFOStart(builder)
+        if self.ID is not None:
+            RFOAddID(builder, ID)
+        if self.OB_TIME is not None:
+            RFOAddOB_TIME(builder, OB_TIME)
+        if self.ID_SENSOR is not None:
+            RFOAddID_SENSOR(builder, ID_SENSOR)
+        if self.ORIG_SENSOR_ID is not None:
+            RFOAddORIG_SENSOR_ID(builder, ORIG_SENSOR_ID)
+        RFOAddOBS_TYPE(builder, self.OBS_TYPE)
+        RFOAddSAT_NO(builder, self.SAT_NO)
+        if self.ORIG_OBJECT_ID is not None:
+            RFOAddORIG_OBJECT_ID(builder, ORIG_OBJECT_ID)
+        if self.ON_ORBIT is not None:
+            RFOAddON_ORBIT(builder, ON_ORBIT)
+        RFOAddUCT(builder, self.UCT)
+        if self.TASK_ID is not None:
+            RFOAddTASK_ID(builder, TASK_ID)
+        if self.TRANSACTION_ID is not None:
+            RFOAddTRANSACTION_ID(builder, TRANSACTION_ID)
+        if self.TRACK_ID is not None:
+            RFOAddTRACK_ID(builder, TRACK_ID)
+        if self.TRANSPONDER is not None:
+            RFOAddTRANSPONDER(builder, TRANSPONDER)
+        RFOAddDETECTION_STATUS(builder, self.DETECTION_STATUS)
+        RFOAddAZIMUTH(builder, self.AZIMUTH)
+        RFOAddAZIMUTH_UNC(builder, self.AZIMUTH_UNC)
+        RFOAddAZIMUTH_RATE(builder, self.AZIMUTH_RATE)
+        RFOAddELEVATION(builder, self.ELEVATION)
+        RFOAddELEVATION_UNC(builder, self.ELEVATION_UNC)
+        RFOAddELEVATION_RATE(builder, self.ELEVATION_RATE)
+        RFOAddRANGE(builder, self.RANGE)
+        RFOAddRANGE_UNC(builder, self.RANGE_UNC)
+        RFOAddRANGE_RATE(builder, self.RANGE_RATE)
+        RFOAddRANGE_RATE_UNC(builder, self.RANGE_RATE_UNC)
+        RFOAddTRACK_RANGE(builder, self.TRACK_RANGE)
+        RFOAddSENLAT(builder, self.SENLAT)
+        RFOAddSENLON(builder, self.SENLON)
+        RFOAddSENALT(builder, self.SENALT)
+        if self.ELNOT is not None:
+            RFOAddELNOT(builder, ELNOT)
+        if self.ANTENNA_NAME is not None:
+            RFOAddANTENNA_NAME(builder, ANTENNA_NAME)
+        if self.COLLECTION_MODE is not None:
+            RFOAddCOLLECTION_MODE(builder, COLLECTION_MODE)
+        RFOAddFREQUENCY(builder, self.FREQUENCY)
+        RFOAddNOMINAL_FREQUENCY(builder, self.NOMINAL_FREQUENCY)
+        RFOAddSTART_FREQUENCY(builder, self.START_FREQUENCY)
+        RFOAddEND_FREQUENCY(builder, self.END_FREQUENCY)
+        RFOAddFREQUENCY_SHIFT(builder, self.FREQUENCY_SHIFT)
+        RFOAddBANDWIDTH(builder, self.BANDWIDTH)
+        RFOAddNOMINAL_BANDWIDTH(builder, self.NOMINAL_BANDWIDTH)
+        RFOAddRESOLUTION_BANDWIDTH(builder, self.RESOLUTION_BANDWIDTH)
+        RFOAddVIDEO_BANDWIDTH(builder, self.VIDEO_BANDWIDTH)
+        RFOAddRELATIVE_CARRIER_POWER(builder, self.RELATIVE_CARRIER_POWER)
+        RFOAddSPECTRUM_ANALYZER_POWER(builder, self.SPECTRUM_ANALYZER_POWER)
+        RFOAddRELATIVE_NOISE_FLOOR(builder, self.RELATIVE_NOISE_FLOOR)
+        RFOAddREFERENCE_LEVEL(builder, self.REFERENCE_LEVEL)
+        RFOAddNOISE_PWR_DENSITY(builder, self.NOISE_PWR_DENSITY)
+        RFOAddPGRI(builder, self.PGRI)
+        RFOAddEIRP(builder, self.EIRP)
+        RFOAddNOMINAL_EIRP(builder, self.NOMINAL_EIRP)
+        RFOAddMIN_PSD(builder, self.MIN_PSD)
+        RFOAddMAX_PSD(builder, self.MAX_PSD)
+        RFOAddSNR(builder, self.SNR)
+        RFOAddNOMINAL_SNR(builder, self.NOMINAL_SNR)
+        RFOAddPOWER_OVER_NOISE(builder, self.POWER_OVER_NOISE)
+        RFOAddNOMINAL_POWER_OVER_NOISE(builder, self.NOMINAL_POWER_OVER_NOISE)
+        RFOAddPOLARITY(builder, self.POLARITY)
+        if self.POLARITY_TYPE is not None:
+            RFOAddPOLARITY_TYPE(builder, POLARITY_TYPE)
+        RFOAddCHANNEL(builder, self.CHANNEL)
+        RFOAddBAUD_RATE(builder, self.BAUD_RATE)
+        RFOAddSYMBOL_TO_NOISE_RATIO(builder, self.SYMBOL_TO_NOISE_RATIO)
+        RFOAddBIT_ERROR_RATE(builder, self.BIT_ERROR_RATE)
+        RFOAddPEAK(builder, self.PEAK)
+        RFOAddINCOMING(builder, self.INCOMING)
+        RFOAddSWITCH_POINT(builder, self.SWITCH_POINT)
+        RFOAddCONFIDENCE(builder, self.CONFIDENCE)
+        if self.CARRIER_STANDARD is not None:
+            RFOAddCARRIER_STANDARD(builder, CARRIER_STANDARD)
+        if self.MODULATION is not None:
+            RFOAddMODULATION(builder, MODULATION)
+        RFOAddINNER_CODING_RATE(builder, self.INNER_CODING_RATE)
+        RFOAddOUTER_CODING_RATE(builder, self.OUTER_CODING_RATE)
+        if self.TRANSMIT_FILTER_TYPE is not None:
+            RFOAddTRANSMIT_FILTER_TYPE(builder, TRANSMIT_FILTER_TYPE)
+        RFOAddTRANSMIT_FILTER_ROLL_OFF(builder, self.TRANSMIT_FILTER_ROLL_OFF)
+        if self.RAW_FILE_URI is not None:
+            RFOAddRAW_FILE_URI(builder, RAW_FILE_URI)
+        if self.DESCRIPTOR is not None:
+            RFOAddDESCRIPTOR(builder, DESCRIPTOR)
+        if self.URL is not None:
+            RFOAddURL(builder, URL)
+        if self.TAGS is not None:
+            RFOAddTAGS(builder, TAGS)
+        RFO = RFOEnd(builder)
+        return RFO

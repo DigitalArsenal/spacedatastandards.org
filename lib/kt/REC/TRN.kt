@@ -29,7 +29,7 @@ class TRN : Table() {
         __init(_i, _bb)
         return this
     }
-    fun SOURCES(j: Int) : Byte {
+    fun sources(j: Int) : Byte {
         val o = __offset(4)
         return if (o != 0) {
             bb.get(__vector(o) + j * 1)
@@ -37,51 +37,51 @@ class TRN : Table() {
             0
         }
     }
-    val SOURCESLength : Int
+    val sourcesLength : Int
         get() {
             val o = __offset(4); return if (o != 0) __vector_len(o) else 0
         }
-    val SOURCESAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun SOURCESInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
-    val INTERPOLATION : Byte
+    val sourcesAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun sourcesInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
+    val interpolation : Byte
         get() {
             val o = __offset(6)
             return if(o != 0) bb.get(o + bb_pos) else 1
         }
-    val CACHE_ENABLED : Boolean
+    val cacheEnabled : Boolean
         get() {
             val o = __offset(8)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else true
         }
-    val MAX_CACHE_TILES : UShort
+    val maxCacheTiles : UShort
         get() {
             val o = __offset(10)
             return if(o != 0) bb.getShort(o + bb_pos).toUShort() else 100u
         }
-    val VERTICAL_EXAGGERATION : Double
+    val verticalExaggeration : Double
         get() {
             val o = __offset(12)
             return if(o != 0) bb.getDouble(o + bb_pos) else 1.0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsTRN(_bb: ByteBuffer): TRN = getRootAsTRN(_bb, TRN())
         fun getRootAsTRN(_bb: ByteBuffer, obj: TRN): TRN {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun TRNBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$TRN")
-        fun createTRN(builder: FlatBufferBuilder, SOURCESOffset: Int, INTERPOLATION: Byte, CACHE_ENABLED: Boolean, MAX_CACHE_TILES: UShort, VERTICAL_EXAGGERATION: Double) : Int {
+        fun createTRN(builder: FlatBufferBuilder, sourcesOffset: Int, interpolation: Byte, cacheEnabled: Boolean, maxCacheTiles: UShort, verticalExaggeration: Double) : Int {
             builder.startTable(5)
-            addVERTICAL_EXAGGERATION(builder, VERTICAL_EXAGGERATION)
-            addSOURCES(builder, SOURCESOffset)
-            addMAX_CACHE_TILES(builder, MAX_CACHE_TILES)
-            addCACHE_ENABLED(builder, CACHE_ENABLED)
-            addINTERPOLATION(builder, INTERPOLATION)
+            addVERTICALEXAGGERATION(builder, verticalExaggeration)
+            addSOURCES(builder, sourcesOffset)
+            addMAXCACHETILES(builder, maxCacheTiles)
+            addCACHEENABLED(builder, cacheEnabled)
+            addINTERPOLATION(builder, interpolation)
             return endTRN(builder)
         }
         fun startTRN(builder: FlatBufferBuilder) = builder.startTable(5)
-        fun addSOURCES(builder: FlatBufferBuilder, SOURCES: Int) = builder.addOffset(0, SOURCES, 0)
+        fun addSOURCES(builder: FlatBufferBuilder, sources: Int) = builder.addOffset(0, sources, 0)
         fun createSourcesVector(builder: FlatBufferBuilder, data: ByteArray) : Int {
             builder.startVector(1, data.size, 1)
             for (i in data.size - 1 downTo 0) {
@@ -90,10 +90,10 @@ class TRN : Table() {
             return builder.endVector()
         }
         fun startSourcesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(1, numElems, 1)
-        fun addINTERPOLATION(builder: FlatBufferBuilder, INTERPOLATION: Byte) = builder.addByte(1, INTERPOLATION, 1)
-        fun addCACHE_ENABLED(builder: FlatBufferBuilder, CACHE_ENABLED: Boolean) = builder.addBoolean(2, CACHE_ENABLED, true)
-        fun addMAX_CACHE_TILES(builder: FlatBufferBuilder, MAX_CACHE_TILES: UShort) = builder.addShort(3, MAX_CACHE_TILES.toShort(), 100)
-        fun addVERTICAL_EXAGGERATION(builder: FlatBufferBuilder, VERTICAL_EXAGGERATION: Double) = builder.addDouble(4, VERTICAL_EXAGGERATION, 1.0)
+        fun addINTERPOLATION(builder: FlatBufferBuilder, interpolation: Byte) = builder.addByte(1, interpolation, 1)
+        fun addCACHEENABLED(builder: FlatBufferBuilder, cacheEnabled: Boolean) = builder.addBoolean(2, cacheEnabled, true)
+        fun addMAXCACHETILES(builder: FlatBufferBuilder, maxCacheTiles: UShort) = builder.addShort(3, maxCacheTiles.toShort(), 100)
+        fun addVERTICALEXAGGERATION(builder: FlatBufferBuilder, verticalExaggeration: Double) = builder.addDouble(4, verticalExaggeration, 1.0)
         fun endTRN(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

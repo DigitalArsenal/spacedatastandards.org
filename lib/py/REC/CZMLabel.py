@@ -2,4 +2,605 @@
 
 # namespace: 
 
-# NOTE CZMLabel.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Label properties
+class CZMLabel(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = CZMLabel()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsCZMLabel(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def CZMLabelBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x43\x5A\x4D", size_prefixed=size_prefixed)
+
+    # CZMLabel
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Whether the label is displayed
+    # CZMLabel
+    def SHOW(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # Label text
+    # CZMLabel
+    def TEXT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Font CSS string (e.g. "12pt Lucida Console")
+    # CZMLabel
+    def FONT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Label style
+    # CZMLabel
+    def STYLE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # Fill color
+    # CZMLabel
+    def FILL_COLOR(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from CZMColor import CZMColor
+            obj = CZMColor()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Outline color
+    # CZMLabel
+    def OUTLINE_COLOR(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from CZMColor import CZMColor
+            obj = CZMColor()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Outline width in pixels
+    # CZMLabel
+    def OUTLINE_WIDTH(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Pixel offset X
+    # CZMLabel
+    def PIXEL_OFFSET_X(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Pixel offset Y
+    # CZMLabel
+    def PIXEL_OFFSET_Y(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Scale factor
+    # CZMLabel
+    def SCALE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Horizontal origin
+    # CZMLabel
+    def HORIZONTAL_ORIGIN(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # Vertical origin
+    # CZMLabel
+    def VERTICAL_ORIGIN(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # Height reference
+    # CZMLabel
+    def HEIGHT_REFERENCE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # Whether to show background
+    # CZMLabel
+    def SHOW_BACKGROUND(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # Background color
+    # CZMLabel
+    def BACKGROUND_COLOR(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from CZMColor import CZMColor
+            obj = CZMColor()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Background padding X
+    # CZMLabel
+    def BACKGROUND_PADDING_X(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Background padding Y
+    # CZMLabel
+    def BACKGROUND_PADDING_Y(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Eye offset X in meters
+    # CZMLabel
+    def EYE_OFFSET_X(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Eye offset Y in meters
+    # CZMLabel
+    def EYE_OFFSET_Y(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Eye offset Z in meters
+    # CZMLabel
+    def EYE_OFFSET_Z(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Translucency by distance
+    # CZMLabel
+    def TRANSLUCENCY_BY_DISTANCE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from CZMNearFarScalar import CZMNearFarScalar
+            obj = CZMNearFarScalar()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Pixel offset scale by distance
+    # CZMLabel
+    def PIXEL_OFFSET_SCALE_BY_DISTANCE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from CZMNearFarScalar import CZMNearFarScalar
+            obj = CZMNearFarScalar()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Scale by distance
+    # CZMLabel
+    def SCALE_BY_DISTANCE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from CZMNearFarScalar import CZMNearFarScalar
+            obj = CZMNearFarScalar()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Distance display condition near
+    # CZMLabel
+    def DISTANCE_DISPLAY_CONDITION_NEAR(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Distance display condition far
+    # CZMLabel
+    def DISTANCE_DISPLAY_CONDITION_FAR(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(52))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Disable depth test distance
+    # CZMLabel
+    def DISABLE_DEPTH_TEST_DISTANCE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(54))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+def CZMLabelStart(builder):
+    builder.StartObject(26)
+
+def Start(builder):
+    CZMLabelStart(builder)
+
+def CZMLabelAddSHOW(builder, SHOW):
+    builder.PrependBoolSlot(0, SHOW, 0)
+
+def AddSHOW(builder, SHOW):
+    CZMLabelAddSHOW(builder, SHOW)
+
+def CZMLabelAddTEXT(builder, TEXT):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(TEXT), 0)
+
+def AddTEXT(builder, TEXT):
+    CZMLabelAddTEXT(builder, TEXT)
+
+def CZMLabelAddFONT(builder, FONT):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(FONT), 0)
+
+def AddFONT(builder, FONT):
+    CZMLabelAddFONT(builder, FONT)
+
+def CZMLabelAddSTYLE(builder, STYLE):
+    builder.PrependInt8Slot(3, STYLE, 0)
+
+def AddSTYLE(builder, STYLE):
+    CZMLabelAddSTYLE(builder, STYLE)
+
+def CZMLabelAddFILL_COLOR(builder, FILL_COLOR):
+    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(FILL_COLOR), 0)
+
+def AddFILL_COLOR(builder, FILL_COLOR):
+    CZMLabelAddFILL_COLOR(builder, FILL_COLOR)
+
+def CZMLabelAddOUTLINE_COLOR(builder, OUTLINE_COLOR):
+    builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(OUTLINE_COLOR), 0)
+
+def AddOUTLINE_COLOR(builder, OUTLINE_COLOR):
+    CZMLabelAddOUTLINE_COLOR(builder, OUTLINE_COLOR)
+
+def CZMLabelAddOUTLINE_WIDTH(builder, OUTLINE_WIDTH):
+    builder.PrependFloat64Slot(6, OUTLINE_WIDTH, 0.0)
+
+def AddOUTLINE_WIDTH(builder, OUTLINE_WIDTH):
+    CZMLabelAddOUTLINE_WIDTH(builder, OUTLINE_WIDTH)
+
+def CZMLabelAddPIXEL_OFFSET_X(builder, PIXEL_OFFSET_X):
+    builder.PrependFloat64Slot(7, PIXEL_OFFSET_X, 0.0)
+
+def AddPIXEL_OFFSET_X(builder, PIXEL_OFFSET_X):
+    CZMLabelAddPIXEL_OFFSET_X(builder, PIXEL_OFFSET_X)
+
+def CZMLabelAddPIXEL_OFFSET_Y(builder, PIXEL_OFFSET_Y):
+    builder.PrependFloat64Slot(8, PIXEL_OFFSET_Y, 0.0)
+
+def AddPIXEL_OFFSET_Y(builder, PIXEL_OFFSET_Y):
+    CZMLabelAddPIXEL_OFFSET_Y(builder, PIXEL_OFFSET_Y)
+
+def CZMLabelAddSCALE(builder, SCALE):
+    builder.PrependFloat64Slot(9, SCALE, 0.0)
+
+def AddSCALE(builder, SCALE):
+    CZMLabelAddSCALE(builder, SCALE)
+
+def CZMLabelAddHORIZONTAL_ORIGIN(builder, HORIZONTAL_ORIGIN):
+    builder.PrependInt8Slot(10, HORIZONTAL_ORIGIN, 0)
+
+def AddHORIZONTAL_ORIGIN(builder, HORIZONTAL_ORIGIN):
+    CZMLabelAddHORIZONTAL_ORIGIN(builder, HORIZONTAL_ORIGIN)
+
+def CZMLabelAddVERTICAL_ORIGIN(builder, VERTICAL_ORIGIN):
+    builder.PrependInt8Slot(11, VERTICAL_ORIGIN, 0)
+
+def AddVERTICAL_ORIGIN(builder, VERTICAL_ORIGIN):
+    CZMLabelAddVERTICAL_ORIGIN(builder, VERTICAL_ORIGIN)
+
+def CZMLabelAddHEIGHT_REFERENCE(builder, HEIGHT_REFERENCE):
+    builder.PrependInt8Slot(12, HEIGHT_REFERENCE, 0)
+
+def AddHEIGHT_REFERENCE(builder, HEIGHT_REFERENCE):
+    CZMLabelAddHEIGHT_REFERENCE(builder, HEIGHT_REFERENCE)
+
+def CZMLabelAddSHOW_BACKGROUND(builder, SHOW_BACKGROUND):
+    builder.PrependBoolSlot(13, SHOW_BACKGROUND, 0)
+
+def AddSHOW_BACKGROUND(builder, SHOW_BACKGROUND):
+    CZMLabelAddSHOW_BACKGROUND(builder, SHOW_BACKGROUND)
+
+def CZMLabelAddBACKGROUND_COLOR(builder, BACKGROUND_COLOR):
+    builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(BACKGROUND_COLOR), 0)
+
+def AddBACKGROUND_COLOR(builder, BACKGROUND_COLOR):
+    CZMLabelAddBACKGROUND_COLOR(builder, BACKGROUND_COLOR)
+
+def CZMLabelAddBACKGROUND_PADDING_X(builder, BACKGROUND_PADDING_X):
+    builder.PrependFloat64Slot(15, BACKGROUND_PADDING_X, 0.0)
+
+def AddBACKGROUND_PADDING_X(builder, BACKGROUND_PADDING_X):
+    CZMLabelAddBACKGROUND_PADDING_X(builder, BACKGROUND_PADDING_X)
+
+def CZMLabelAddBACKGROUND_PADDING_Y(builder, BACKGROUND_PADDING_Y):
+    builder.PrependFloat64Slot(16, BACKGROUND_PADDING_Y, 0.0)
+
+def AddBACKGROUND_PADDING_Y(builder, BACKGROUND_PADDING_Y):
+    CZMLabelAddBACKGROUND_PADDING_Y(builder, BACKGROUND_PADDING_Y)
+
+def CZMLabelAddEYE_OFFSET_X(builder, EYE_OFFSET_X):
+    builder.PrependFloat64Slot(17, EYE_OFFSET_X, 0.0)
+
+def AddEYE_OFFSET_X(builder, EYE_OFFSET_X):
+    CZMLabelAddEYE_OFFSET_X(builder, EYE_OFFSET_X)
+
+def CZMLabelAddEYE_OFFSET_Y(builder, EYE_OFFSET_Y):
+    builder.PrependFloat64Slot(18, EYE_OFFSET_Y, 0.0)
+
+def AddEYE_OFFSET_Y(builder, EYE_OFFSET_Y):
+    CZMLabelAddEYE_OFFSET_Y(builder, EYE_OFFSET_Y)
+
+def CZMLabelAddEYE_OFFSET_Z(builder, EYE_OFFSET_Z):
+    builder.PrependFloat64Slot(19, EYE_OFFSET_Z, 0.0)
+
+def AddEYE_OFFSET_Z(builder, EYE_OFFSET_Z):
+    CZMLabelAddEYE_OFFSET_Z(builder, EYE_OFFSET_Z)
+
+def CZMLabelAddTRANSLUCENCY_BY_DISTANCE(builder, TRANSLUCENCY_BY_DISTANCE):
+    builder.PrependUOffsetTRelativeSlot(20, flatbuffers.number_types.UOffsetTFlags.py_type(TRANSLUCENCY_BY_DISTANCE), 0)
+
+def AddTRANSLUCENCY_BY_DISTANCE(builder, TRANSLUCENCY_BY_DISTANCE):
+    CZMLabelAddTRANSLUCENCY_BY_DISTANCE(builder, TRANSLUCENCY_BY_DISTANCE)
+
+def CZMLabelAddPIXEL_OFFSET_SCALE_BY_DISTANCE(builder, PIXEL_OFFSET_SCALE_BY_DISTANCE):
+    builder.PrependUOffsetTRelativeSlot(21, flatbuffers.number_types.UOffsetTFlags.py_type(PIXEL_OFFSET_SCALE_BY_DISTANCE), 0)
+
+def AddPIXEL_OFFSET_SCALE_BY_DISTANCE(builder, PIXEL_OFFSET_SCALE_BY_DISTANCE):
+    CZMLabelAddPIXEL_OFFSET_SCALE_BY_DISTANCE(builder, PIXEL_OFFSET_SCALE_BY_DISTANCE)
+
+def CZMLabelAddSCALE_BY_DISTANCE(builder, SCALE_BY_DISTANCE):
+    builder.PrependUOffsetTRelativeSlot(22, flatbuffers.number_types.UOffsetTFlags.py_type(SCALE_BY_DISTANCE), 0)
+
+def AddSCALE_BY_DISTANCE(builder, SCALE_BY_DISTANCE):
+    CZMLabelAddSCALE_BY_DISTANCE(builder, SCALE_BY_DISTANCE)
+
+def CZMLabelAddDISTANCE_DISPLAY_CONDITION_NEAR(builder, DISTANCE_DISPLAY_CONDITION_NEAR):
+    builder.PrependFloat64Slot(23, DISTANCE_DISPLAY_CONDITION_NEAR, 0.0)
+
+def AddDISTANCE_DISPLAY_CONDITION_NEAR(builder, DISTANCE_DISPLAY_CONDITION_NEAR):
+    CZMLabelAddDISTANCE_DISPLAY_CONDITION_NEAR(builder, DISTANCE_DISPLAY_CONDITION_NEAR)
+
+def CZMLabelAddDISTANCE_DISPLAY_CONDITION_FAR(builder, DISTANCE_DISPLAY_CONDITION_FAR):
+    builder.PrependFloat64Slot(24, DISTANCE_DISPLAY_CONDITION_FAR, 0.0)
+
+def AddDISTANCE_DISPLAY_CONDITION_FAR(builder, DISTANCE_DISPLAY_CONDITION_FAR):
+    CZMLabelAddDISTANCE_DISPLAY_CONDITION_FAR(builder, DISTANCE_DISPLAY_CONDITION_FAR)
+
+def CZMLabelAddDISABLE_DEPTH_TEST_DISTANCE(builder, DISABLE_DEPTH_TEST_DISTANCE):
+    builder.PrependFloat64Slot(25, DISABLE_DEPTH_TEST_DISTANCE, 0.0)
+
+def AddDISABLE_DEPTH_TEST_DISTANCE(builder, DISABLE_DEPTH_TEST_DISTANCE):
+    CZMLabelAddDISABLE_DEPTH_TEST_DISTANCE(builder, DISABLE_DEPTH_TEST_DISTANCE)
+
+def CZMLabelEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return CZMLabelEnd(builder)
+
+import CZMColor
+import CZMNearFarScalar
+try:
+    from typing import Optional
+except:
+    pass
+
+class CZMLabelT(object):
+
+    # CZMLabelT
+    def __init__(
+        self,
+        SHOW = False,
+        TEXT = None,
+        FONT = None,
+        STYLE = 0,
+        FILL_COLOR = None,
+        OUTLINE_COLOR = None,
+        OUTLINE_WIDTH = 0.0,
+        PIXEL_OFFSET_X = 0.0,
+        PIXEL_OFFSET_Y = 0.0,
+        SCALE = 0.0,
+        HORIZONTAL_ORIGIN = 0,
+        VERTICAL_ORIGIN = 0,
+        HEIGHT_REFERENCE = 0,
+        SHOW_BACKGROUND = False,
+        BACKGROUND_COLOR = None,
+        BACKGROUND_PADDING_X = 0.0,
+        BACKGROUND_PADDING_Y = 0.0,
+        EYE_OFFSET_X = 0.0,
+        EYE_OFFSET_Y = 0.0,
+        EYE_OFFSET_Z = 0.0,
+        TRANSLUCENCY_BY_DISTANCE = None,
+        PIXEL_OFFSET_SCALE_BY_DISTANCE = None,
+        SCALE_BY_DISTANCE = None,
+        DISTANCE_DISPLAY_CONDITION_NEAR = 0.0,
+        DISTANCE_DISPLAY_CONDITION_FAR = 0.0,
+        DISABLE_DEPTH_TEST_DISTANCE = 0.0,
+    ):
+        self.SHOW = SHOW  # type: bool
+        self.TEXT = TEXT  # type: Optional[str]
+        self.FONT = FONT  # type: Optional[str]
+        self.STYLE = STYLE  # type: int
+        self.FILL_COLOR = FILL_COLOR  # type: Optional[CZMColor.CZMColorT]
+        self.OUTLINE_COLOR = OUTLINE_COLOR  # type: Optional[CZMColor.CZMColorT]
+        self.OUTLINE_WIDTH = OUTLINE_WIDTH  # type: float
+        self.PIXEL_OFFSET_X = PIXEL_OFFSET_X  # type: float
+        self.PIXEL_OFFSET_Y = PIXEL_OFFSET_Y  # type: float
+        self.SCALE = SCALE  # type: float
+        self.HORIZONTAL_ORIGIN = HORIZONTAL_ORIGIN  # type: int
+        self.VERTICAL_ORIGIN = VERTICAL_ORIGIN  # type: int
+        self.HEIGHT_REFERENCE = HEIGHT_REFERENCE  # type: int
+        self.SHOW_BACKGROUND = SHOW_BACKGROUND  # type: bool
+        self.BACKGROUND_COLOR = BACKGROUND_COLOR  # type: Optional[CZMColor.CZMColorT]
+        self.BACKGROUND_PADDING_X = BACKGROUND_PADDING_X  # type: float
+        self.BACKGROUND_PADDING_Y = BACKGROUND_PADDING_Y  # type: float
+        self.EYE_OFFSET_X = EYE_OFFSET_X  # type: float
+        self.EYE_OFFSET_Y = EYE_OFFSET_Y  # type: float
+        self.EYE_OFFSET_Z = EYE_OFFSET_Z  # type: float
+        self.TRANSLUCENCY_BY_DISTANCE = TRANSLUCENCY_BY_DISTANCE  # type: Optional[CZMNearFarScalar.CZMNearFarScalarT]
+        self.PIXEL_OFFSET_SCALE_BY_DISTANCE = PIXEL_OFFSET_SCALE_BY_DISTANCE  # type: Optional[CZMNearFarScalar.CZMNearFarScalarT]
+        self.SCALE_BY_DISTANCE = SCALE_BY_DISTANCE  # type: Optional[CZMNearFarScalar.CZMNearFarScalarT]
+        self.DISTANCE_DISPLAY_CONDITION_NEAR = DISTANCE_DISPLAY_CONDITION_NEAR  # type: float
+        self.DISTANCE_DISPLAY_CONDITION_FAR = DISTANCE_DISPLAY_CONDITION_FAR  # type: float
+        self.DISABLE_DEPTH_TEST_DISTANCE = DISABLE_DEPTH_TEST_DISTANCE  # type: float
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpCzmlabel = CZMLabel()
+        tmpCzmlabel.Init(buf, pos)
+        return cls.InitFromObj(tmpCzmlabel)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpCzmlabel):
+        x = CZMLabelT()
+        x._UnPack(tmpCzmlabel)
+        return x
+
+    # CZMLabelT
+    def _UnPack(self, CZMLabel):
+        if CZMLabel is None:
+            return
+        self.SHOW = CZMLabel.SHOW()
+        self.TEXT = CZMLabel.TEXT()
+        self.FONT = CZMLabel.FONT()
+        self.STYLE = CZMLabel.STYLE()
+        if CZMLabel.FILL_COLOR() is not None:
+            self.FILL_COLOR = CZMColor.CZMColorT.InitFromObj(CZMLabel.FILL_COLOR())
+        if CZMLabel.OUTLINE_COLOR() is not None:
+            self.OUTLINE_COLOR = CZMColor.CZMColorT.InitFromObj(CZMLabel.OUTLINE_COLOR())
+        self.OUTLINE_WIDTH = CZMLabel.OUTLINE_WIDTH()
+        self.PIXEL_OFFSET_X = CZMLabel.PIXEL_OFFSET_X()
+        self.PIXEL_OFFSET_Y = CZMLabel.PIXEL_OFFSET_Y()
+        self.SCALE = CZMLabel.SCALE()
+        self.HORIZONTAL_ORIGIN = CZMLabel.HORIZONTAL_ORIGIN()
+        self.VERTICAL_ORIGIN = CZMLabel.VERTICAL_ORIGIN()
+        self.HEIGHT_REFERENCE = CZMLabel.HEIGHT_REFERENCE()
+        self.SHOW_BACKGROUND = CZMLabel.SHOW_BACKGROUND()
+        if CZMLabel.BACKGROUND_COLOR() is not None:
+            self.BACKGROUND_COLOR = CZMColor.CZMColorT.InitFromObj(CZMLabel.BACKGROUND_COLOR())
+        self.BACKGROUND_PADDING_X = CZMLabel.BACKGROUND_PADDING_X()
+        self.BACKGROUND_PADDING_Y = CZMLabel.BACKGROUND_PADDING_Y()
+        self.EYE_OFFSET_X = CZMLabel.EYE_OFFSET_X()
+        self.EYE_OFFSET_Y = CZMLabel.EYE_OFFSET_Y()
+        self.EYE_OFFSET_Z = CZMLabel.EYE_OFFSET_Z()
+        if CZMLabel.TRANSLUCENCY_BY_DISTANCE() is not None:
+            self.TRANSLUCENCY_BY_DISTANCE = CZMNearFarScalar.CZMNearFarScalarT.InitFromObj(CZMLabel.TRANSLUCENCY_BY_DISTANCE())
+        if CZMLabel.PIXEL_OFFSET_SCALE_BY_DISTANCE() is not None:
+            self.PIXEL_OFFSET_SCALE_BY_DISTANCE = CZMNearFarScalar.CZMNearFarScalarT.InitFromObj(CZMLabel.PIXEL_OFFSET_SCALE_BY_DISTANCE())
+        if CZMLabel.SCALE_BY_DISTANCE() is not None:
+            self.SCALE_BY_DISTANCE = CZMNearFarScalar.CZMNearFarScalarT.InitFromObj(CZMLabel.SCALE_BY_DISTANCE())
+        self.DISTANCE_DISPLAY_CONDITION_NEAR = CZMLabel.DISTANCE_DISPLAY_CONDITION_NEAR()
+        self.DISTANCE_DISPLAY_CONDITION_FAR = CZMLabel.DISTANCE_DISPLAY_CONDITION_FAR()
+        self.DISABLE_DEPTH_TEST_DISTANCE = CZMLabel.DISABLE_DEPTH_TEST_DISTANCE()
+
+    # CZMLabelT
+    def Pack(self, builder):
+        if self.TEXT is not None:
+            TEXT = builder.CreateString(self.TEXT)
+        if self.FONT is not None:
+            FONT = builder.CreateString(self.FONT)
+        if self.FILL_COLOR is not None:
+            FILL_COLOR = self.FILL_COLOR.Pack(builder)
+        if self.OUTLINE_COLOR is not None:
+            OUTLINE_COLOR = self.OUTLINE_COLOR.Pack(builder)
+        if self.BACKGROUND_COLOR is not None:
+            BACKGROUND_COLOR = self.BACKGROUND_COLOR.Pack(builder)
+        if self.TRANSLUCENCY_BY_DISTANCE is not None:
+            TRANSLUCENCY_BY_DISTANCE = self.TRANSLUCENCY_BY_DISTANCE.Pack(builder)
+        if self.PIXEL_OFFSET_SCALE_BY_DISTANCE is not None:
+            PIXEL_OFFSET_SCALE_BY_DISTANCE = self.PIXEL_OFFSET_SCALE_BY_DISTANCE.Pack(builder)
+        if self.SCALE_BY_DISTANCE is not None:
+            SCALE_BY_DISTANCE = self.SCALE_BY_DISTANCE.Pack(builder)
+        CZMLabelStart(builder)
+        CZMLabelAddSHOW(builder, self.SHOW)
+        if self.TEXT is not None:
+            CZMLabelAddTEXT(builder, TEXT)
+        if self.FONT is not None:
+            CZMLabelAddFONT(builder, FONT)
+        CZMLabelAddSTYLE(builder, self.STYLE)
+        if self.FILL_COLOR is not None:
+            CZMLabelAddFILL_COLOR(builder, FILL_COLOR)
+        if self.OUTLINE_COLOR is not None:
+            CZMLabelAddOUTLINE_COLOR(builder, OUTLINE_COLOR)
+        CZMLabelAddOUTLINE_WIDTH(builder, self.OUTLINE_WIDTH)
+        CZMLabelAddPIXEL_OFFSET_X(builder, self.PIXEL_OFFSET_X)
+        CZMLabelAddPIXEL_OFFSET_Y(builder, self.PIXEL_OFFSET_Y)
+        CZMLabelAddSCALE(builder, self.SCALE)
+        CZMLabelAddHORIZONTAL_ORIGIN(builder, self.HORIZONTAL_ORIGIN)
+        CZMLabelAddVERTICAL_ORIGIN(builder, self.VERTICAL_ORIGIN)
+        CZMLabelAddHEIGHT_REFERENCE(builder, self.HEIGHT_REFERENCE)
+        CZMLabelAddSHOW_BACKGROUND(builder, self.SHOW_BACKGROUND)
+        if self.BACKGROUND_COLOR is not None:
+            CZMLabelAddBACKGROUND_COLOR(builder, BACKGROUND_COLOR)
+        CZMLabelAddBACKGROUND_PADDING_X(builder, self.BACKGROUND_PADDING_X)
+        CZMLabelAddBACKGROUND_PADDING_Y(builder, self.BACKGROUND_PADDING_Y)
+        CZMLabelAddEYE_OFFSET_X(builder, self.EYE_OFFSET_X)
+        CZMLabelAddEYE_OFFSET_Y(builder, self.EYE_OFFSET_Y)
+        CZMLabelAddEYE_OFFSET_Z(builder, self.EYE_OFFSET_Z)
+        if self.TRANSLUCENCY_BY_DISTANCE is not None:
+            CZMLabelAddTRANSLUCENCY_BY_DISTANCE(builder, TRANSLUCENCY_BY_DISTANCE)
+        if self.PIXEL_OFFSET_SCALE_BY_DISTANCE is not None:
+            CZMLabelAddPIXEL_OFFSET_SCALE_BY_DISTANCE(builder, PIXEL_OFFSET_SCALE_BY_DISTANCE)
+        if self.SCALE_BY_DISTANCE is not None:
+            CZMLabelAddSCALE_BY_DISTANCE(builder, SCALE_BY_DISTANCE)
+        CZMLabelAddDISTANCE_DISPLAY_CONDITION_NEAR(builder, self.DISTANCE_DISPLAY_CONDITION_NEAR)
+        CZMLabelAddDISTANCE_DISPLAY_CONDITION_FAR(builder, self.DISTANCE_DISPLAY_CONDITION_FAR)
+        CZMLabelAddDISABLE_DEPTH_TEST_DISTANCE(builder, self.DISABLE_DEPTH_TEST_DISTANCE)
+        CZMLabel = CZMLabelEnd(builder)
+        return CZMLabel

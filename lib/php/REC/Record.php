@@ -44,7 +44,7 @@ class Record extends Table
     /**
      * @return byte
      */
-    public function getValueType()
+    public function getvalue_type()
     {
         $o = $this->__offset(4);
         return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : \RecordType::NONE;
@@ -54,14 +54,14 @@ class Record extends Table
     /**
      * @returnint
      */
-    public function getValue($obj)
+    public function getvalue($obj)
     {
         $o = $this->__offset(6);
         return $o != 0 ? $this->__union($obj, $o) : null;
     }
 
     /// Standard identifier (e.g., "OMM", "CDM", "CAT")
-    public function getStandard()
+    public function getstandard()
     {
         $o = $this->__offset(8);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
@@ -83,9 +83,9 @@ class Record extends Table
     public static function createRecord(FlatBufferBuilder $builder, $value_type, $value, $standard)
     {
         $builder->startObject(3);
-        self::addValueType($builder, $value_type);
-        self::addValue($builder, $value);
-        self::addStandard($builder, $standard);
+        self::addvalue_type($builder, $value_type);
+        self::addvalue($builder, $value);
+        self::addstandard($builder, $standard);
         $o = $builder->endObject();
         return $o;
     }
@@ -95,12 +95,12 @@ class Record extends Table
      * @param byte
      * @return void
      */
-    public static function addValueType(FlatBufferBuilder $builder, $valueType)
+    public static function addvalue_type(FlatBufferBuilder $builder, $value_type)
     {
-        $builder->addByteX(0, $valueType, 0);
+        $builder->addByteX(0, $value_type, 0);
     }
 
-    public static function addValue(FlatBufferBuilder $builder, $offset)
+    public static function addvalue(FlatBufferBuilder $builder, $offset)
     {
         $builder->addOffsetX(1, $offset, 0);
     }
@@ -110,7 +110,7 @@ class Record extends Table
      * @param StringOffset
      * @return void
      */
-    public static function addStandard(FlatBufferBuilder $builder, $standard)
+    public static function addstandard(FlatBufferBuilder $builder, $standard)
     {
         $builder->addOffsetX(2, $standard, 0);
     }

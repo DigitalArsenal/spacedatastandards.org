@@ -595,6 +595,16 @@ def CDMObjectStartCOVARIANCEVector(builder, numElems):
 def StartCOVARIANCEVector(builder, numElems):
     return CDMObjectStartCOVARIANCEVector(builder, numElems)
 
+def CDMObjectCreateCOVARIANCEVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateCOVARIANCEVector(builder, data):
+    CDMObjectCreateCOVARIANCEVector(builder, data)
+
 def CDMObjectEnd(builder):
     return builder.EndObject()
 
@@ -612,50 +622,89 @@ except:
 class CDMObjectT(object):
 
     # CDMObjectT
-    def __init__(self):
-        self.COMMENT = None  # type: str
-        self.OBJECT = None  # type: Optional[CAT.CATT]
-        self.POC = None  # type: Optional[EPM.EPMT]
-        self.OPERATOR_CONTACT_POSITION = None  # type: str
-        self.OPERATOR_ORGANIZATION = None  # type: str
-        self.EPHEMERIS_NAME = None  # type: str
-        self.COVARIANCE_METHOD = 0  # type: int
-        self.REFERENCE_FRAME = None  # type: Optional[RFM.RFMT]
-        self.GRAVITY_MODEL = None  # type: str
-        self.ATMOSPHERIC_MODEL = None  # type: str
-        self.N_BODY_PERTURBATIONS = None  # type: str
-        self.SOLAR_RAD_PRESSURE = False  # type: bool
-        self.EARTH_TIDES = False  # type: bool
-        self.INTRACK_THRUST = False  # type: bool
-        self.TIME_LASTOB_START = None  # type: str
-        self.TIME_LASTOB_END = None  # type: str
-        self.RECOMMENDED_OD_SPAN = 0.0  # type: float
-        self.ACTUAL_OD_SPAN = 0.0  # type: float
-        self.OBS_AVAILABLE = 0  # type: int
-        self.OBS_USED = 0  # type: int
-        self.TRACKS_AVAILABLE = 0  # type: int
-        self.TRACKS_USED = 0  # type: int
-        self.RESIDUALS_ACCEPTED = 0.0  # type: float
-        self.WEIGHTED_RMS = 0.0  # type: float
-        self.AREA_PC = 0.0  # type: float
-        self.AREA_DRG = 0.0  # type: float
-        self.AREA_SRP = 0.0  # type: float
-        self.CR_AREA_OVER_MASS = 0.0  # type: float
-        self.THRUST_ACCELERATION = 0.0  # type: float
-        self.SEDR = 0.0  # type: float
-        self.X = 0.0  # type: float
-        self.Y = 0.0  # type: float
-        self.Z = 0.0  # type: float
-        self.X_DOT = 0.0  # type: float
-        self.Y_DOT = 0.0  # type: float
-        self.Z_DOT = 0.0  # type: float
-        self.COVARIANCE = None  # type: List[float]
+    def __init__(
+        self,
+        COMMENT = None,
+        OBJECT = None,
+        POC = None,
+        OPERATOR_CONTACT_POSITION = None,
+        OPERATOR_ORGANIZATION = None,
+        EPHEMERIS_NAME = None,
+        COVARIANCE_METHOD = 0,
+        REFERENCE_FRAME = None,
+        GRAVITY_MODEL = None,
+        ATMOSPHERIC_MODEL = None,
+        N_BODY_PERTURBATIONS = None,
+        SOLAR_RAD_PRESSURE = False,
+        EARTH_TIDES = False,
+        INTRACK_THRUST = False,
+        TIME_LASTOB_START = None,
+        TIME_LASTOB_END = None,
+        RECOMMENDED_OD_SPAN = 0.0,
+        ACTUAL_OD_SPAN = 0.0,
+        OBS_AVAILABLE = 0,
+        OBS_USED = 0,
+        TRACKS_AVAILABLE = 0,
+        TRACKS_USED = 0,
+        RESIDUALS_ACCEPTED = 0.0,
+        WEIGHTED_RMS = 0.0,
+        AREA_PC = 0.0,
+        AREA_DRG = 0.0,
+        AREA_SRP = 0.0,
+        CR_AREA_OVER_MASS = 0.0,
+        THRUST_ACCELERATION = 0.0,
+        SEDR = 0.0,
+        X = 0.0,
+        Y = 0.0,
+        Z = 0.0,
+        X_DOT = 0.0,
+        Y_DOT = 0.0,
+        Z_DOT = 0.0,
+        COVARIANCE = None,
+    ):
+        self.COMMENT = COMMENT  # type: Optional[str]
+        self.OBJECT = OBJECT  # type: Optional[CAT.CATT]
+        self.POC = POC  # type: Optional[EPM.EPMT]
+        self.OPERATOR_CONTACT_POSITION = OPERATOR_CONTACT_POSITION  # type: Optional[str]
+        self.OPERATOR_ORGANIZATION = OPERATOR_ORGANIZATION  # type: Optional[str]
+        self.EPHEMERIS_NAME = EPHEMERIS_NAME  # type: Optional[str]
+        self.COVARIANCE_METHOD = COVARIANCE_METHOD  # type: int
+        self.REFERENCE_FRAME = REFERENCE_FRAME  # type: Optional[RFM.RFMT]
+        self.GRAVITY_MODEL = GRAVITY_MODEL  # type: Optional[str]
+        self.ATMOSPHERIC_MODEL = ATMOSPHERIC_MODEL  # type: Optional[str]
+        self.N_BODY_PERTURBATIONS = N_BODY_PERTURBATIONS  # type: Optional[str]
+        self.SOLAR_RAD_PRESSURE = SOLAR_RAD_PRESSURE  # type: bool
+        self.EARTH_TIDES = EARTH_TIDES  # type: bool
+        self.INTRACK_THRUST = INTRACK_THRUST  # type: bool
+        self.TIME_LASTOB_START = TIME_LASTOB_START  # type: Optional[str]
+        self.TIME_LASTOB_END = TIME_LASTOB_END  # type: Optional[str]
+        self.RECOMMENDED_OD_SPAN = RECOMMENDED_OD_SPAN  # type: float
+        self.ACTUAL_OD_SPAN = ACTUAL_OD_SPAN  # type: float
+        self.OBS_AVAILABLE = OBS_AVAILABLE  # type: int
+        self.OBS_USED = OBS_USED  # type: int
+        self.TRACKS_AVAILABLE = TRACKS_AVAILABLE  # type: int
+        self.TRACKS_USED = TRACKS_USED  # type: int
+        self.RESIDUALS_ACCEPTED = RESIDUALS_ACCEPTED  # type: float
+        self.WEIGHTED_RMS = WEIGHTED_RMS  # type: float
+        self.AREA_PC = AREA_PC  # type: float
+        self.AREA_DRG = AREA_DRG  # type: float
+        self.AREA_SRP = AREA_SRP  # type: float
+        self.CR_AREA_OVER_MASS = CR_AREA_OVER_MASS  # type: float
+        self.THRUST_ACCELERATION = THRUST_ACCELERATION  # type: float
+        self.SEDR = SEDR  # type: float
+        self.X = X  # type: float
+        self.Y = Y  # type: float
+        self.Z = Z  # type: float
+        self.X_DOT = X_DOT  # type: float
+        self.Y_DOT = Y_DOT  # type: float
+        self.Z_DOT = Z_DOT  # type: float
+        self.COVARIANCE = COVARIANCE  # type: Optional[List[float]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        cdmobject = CDMObject()
-        cdmobject.Init(buf, pos)
-        return cls.InitFromObj(cdmobject)
+        tmpCdmobject = CDMObject()
+        tmpCdmobject.Init(buf, pos)
+        return cls.InitFromObj(tmpCdmobject)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -663,61 +712,61 @@ class CDMObjectT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, cdmobject):
+    def InitFromObj(cls, tmpCdmobject):
         x = CDMObjectT()
-        x._UnPack(cdmobject)
+        x._UnPack(tmpCdmobject)
         return x
 
     # CDMObjectT
-    def _UnPack(self, cdmobject):
-        if cdmobject is None:
+    def _UnPack(self, CDMObject):
+        if CDMObject is None:
             return
-        self.COMMENT = cdmobject.COMMENT()
-        if cdmobject.OBJECT() is not None:
-            self.OBJECT = CAT.CATT.InitFromObj(cdmobject.OBJECT())
-        if cdmobject.POC() is not None:
-            self.POC = EPM.EPMT.InitFromObj(cdmobject.POC())
-        self.OPERATOR_CONTACT_POSITION = cdmobject.OPERATOR_CONTACT_POSITION()
-        self.OPERATOR_ORGANIZATION = cdmobject.OPERATOR_ORGANIZATION()
-        self.EPHEMERIS_NAME = cdmobject.EPHEMERIS_NAME()
-        self.COVARIANCE_METHOD = cdmobject.COVARIANCE_METHOD()
-        if cdmobject.REFERENCE_FRAME() is not None:
-            self.REFERENCE_FRAME = RFM.RFMT.InitFromObj(cdmobject.REFERENCE_FRAME())
-        self.GRAVITY_MODEL = cdmobject.GRAVITY_MODEL()
-        self.ATMOSPHERIC_MODEL = cdmobject.ATMOSPHERIC_MODEL()
-        self.N_BODY_PERTURBATIONS = cdmobject.N_BODY_PERTURBATIONS()
-        self.SOLAR_RAD_PRESSURE = cdmobject.SOLAR_RAD_PRESSURE()
-        self.EARTH_TIDES = cdmobject.EARTH_TIDES()
-        self.INTRACK_THRUST = cdmobject.INTRACK_THRUST()
-        self.TIME_LASTOB_START = cdmobject.TIME_LASTOB_START()
-        self.TIME_LASTOB_END = cdmobject.TIME_LASTOB_END()
-        self.RECOMMENDED_OD_SPAN = cdmobject.RECOMMENDED_OD_SPAN()
-        self.ACTUAL_OD_SPAN = cdmobject.ACTUAL_OD_SPAN()
-        self.OBS_AVAILABLE = cdmobject.OBS_AVAILABLE()
-        self.OBS_USED = cdmobject.OBS_USED()
-        self.TRACKS_AVAILABLE = cdmobject.TRACKS_AVAILABLE()
-        self.TRACKS_USED = cdmobject.TRACKS_USED()
-        self.RESIDUALS_ACCEPTED = cdmobject.RESIDUALS_ACCEPTED()
-        self.WEIGHTED_RMS = cdmobject.WEIGHTED_RMS()
-        self.AREA_PC = cdmobject.AREA_PC()
-        self.AREA_DRG = cdmobject.AREA_DRG()
-        self.AREA_SRP = cdmobject.AREA_SRP()
-        self.CR_AREA_OVER_MASS = cdmobject.CR_AREA_OVER_MASS()
-        self.THRUST_ACCELERATION = cdmobject.THRUST_ACCELERATION()
-        self.SEDR = cdmobject.SEDR()
-        self.X = cdmobject.X()
-        self.Y = cdmobject.Y()
-        self.Z = cdmobject.Z()
-        self.X_DOT = cdmobject.X_DOT()
-        self.Y_DOT = cdmobject.Y_DOT()
-        self.Z_DOT = cdmobject.Z_DOT()
-        if not cdmobject.COVARIANCEIsNone():
+        self.COMMENT = CDMObject.COMMENT()
+        if CDMObject.OBJECT() is not None:
+            self.OBJECT = CAT.CATT.InitFromObj(CDMObject.OBJECT())
+        if CDMObject.POC() is not None:
+            self.POC = EPM.EPMT.InitFromObj(CDMObject.POC())
+        self.OPERATOR_CONTACT_POSITION = CDMObject.OPERATOR_CONTACT_POSITION()
+        self.OPERATOR_ORGANIZATION = CDMObject.OPERATOR_ORGANIZATION()
+        self.EPHEMERIS_NAME = CDMObject.EPHEMERIS_NAME()
+        self.COVARIANCE_METHOD = CDMObject.COVARIANCE_METHOD()
+        if CDMObject.REFERENCE_FRAME() is not None:
+            self.REFERENCE_FRAME = RFM.RFMT.InitFromObj(CDMObject.REFERENCE_FRAME())
+        self.GRAVITY_MODEL = CDMObject.GRAVITY_MODEL()
+        self.ATMOSPHERIC_MODEL = CDMObject.ATMOSPHERIC_MODEL()
+        self.N_BODY_PERTURBATIONS = CDMObject.N_BODY_PERTURBATIONS()
+        self.SOLAR_RAD_PRESSURE = CDMObject.SOLAR_RAD_PRESSURE()
+        self.EARTH_TIDES = CDMObject.EARTH_TIDES()
+        self.INTRACK_THRUST = CDMObject.INTRACK_THRUST()
+        self.TIME_LASTOB_START = CDMObject.TIME_LASTOB_START()
+        self.TIME_LASTOB_END = CDMObject.TIME_LASTOB_END()
+        self.RECOMMENDED_OD_SPAN = CDMObject.RECOMMENDED_OD_SPAN()
+        self.ACTUAL_OD_SPAN = CDMObject.ACTUAL_OD_SPAN()
+        self.OBS_AVAILABLE = CDMObject.OBS_AVAILABLE()
+        self.OBS_USED = CDMObject.OBS_USED()
+        self.TRACKS_AVAILABLE = CDMObject.TRACKS_AVAILABLE()
+        self.TRACKS_USED = CDMObject.TRACKS_USED()
+        self.RESIDUALS_ACCEPTED = CDMObject.RESIDUALS_ACCEPTED()
+        self.WEIGHTED_RMS = CDMObject.WEIGHTED_RMS()
+        self.AREA_PC = CDMObject.AREA_PC()
+        self.AREA_DRG = CDMObject.AREA_DRG()
+        self.AREA_SRP = CDMObject.AREA_SRP()
+        self.CR_AREA_OVER_MASS = CDMObject.CR_AREA_OVER_MASS()
+        self.THRUST_ACCELERATION = CDMObject.THRUST_ACCELERATION()
+        self.SEDR = CDMObject.SEDR()
+        self.X = CDMObject.X()
+        self.Y = CDMObject.Y()
+        self.Z = CDMObject.Z()
+        self.X_DOT = CDMObject.X_DOT()
+        self.Y_DOT = CDMObject.Y_DOT()
+        self.Z_DOT = CDMObject.Z_DOT()
+        if not CDMObject.COVARIANCEIsNone():
             if np is None:
                 self.COVARIANCE = []
-                for i in range(cdmobject.COVARIANCELength()):
-                    self.COVARIANCE.append(cdmobject.COVARIANCE(i))
+                for i in range(CDMObject.COVARIANCELength()):
+                    self.COVARIANCE.append(CDMObject.COVARIANCE(i))
             else:
-                self.COVARIANCE = cdmobject.COVARIANCEAsNumpy()
+                self.COVARIANCE = CDMObject.COVARIANCEAsNumpy()
 
     # CDMObjectT
     def Pack(self, builder):
@@ -804,5 +853,5 @@ class CDMObjectT(object):
         CDMObjectAddZ_DOT(builder, self.Z_DOT)
         if self.COVARIANCE is not None:
             CDMObjectAddCOVARIANCE(builder, COVARIANCE)
-        cdmobject = CDMObjectEnd(builder)
-        return cdmobject
+        CDMObject = CDMObjectEnd(builder)
+        return CDMObject

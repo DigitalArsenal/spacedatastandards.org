@@ -1,3 +1,3 @@
-export { SCHEMA_STANDARD, SCHEMA_STANDARDT } from './SCHEMA_STANDARD.js';
-export { SCM, SCMT } from './SCM.js';
+export * from './SCHEMA_STANDARD.js';
+export * from './SCM.js';
 //# sourceMappingURL=main.d.ts.map

@@ -51,6 +51,10 @@ func (rcv *KMLPhotoOverlay) NAME() []byte {
 	return nil
 }
 
+func (rcv *KMLPhotoOverlay) Name() []byte {
+	return rcv.NAME()
+}
+
 /// Name
 /// Description
 func (rcv *KMLPhotoOverlay) DESCRIPTION() []byte {
@@ -59,6 +63,10 @@ func (rcv *KMLPhotoOverlay) DESCRIPTION() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *KMLPhotoOverlay) Description() []byte {
+	return rcv.DESCRIPTION()
 }
 
 /// Description
@@ -71,9 +79,17 @@ func (rcv *KMLPhotoOverlay) VISIBILITY() bool {
 	return false
 }
 
+func (rcv *KMLPhotoOverlay) Visibility() bool {
+	return rcv.VISIBILITY()
+}
+
 /// Visibility
 func (rcv *KMLPhotoOverlay) MutateVISIBILITY(n bool) bool {
 	return rcv._tab.MutateBoolSlot(8, n)
+}
+
+func (rcv *KMLPhotoOverlay) MutateVisibility(n bool) bool {
+	return rcv.MutateVISIBILITY(n)
 }
 
 /// Icon/image URL
@@ -83,6 +99,10 @@ func (rcv *KMLPhotoOverlay) ICON_HREF() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *KMLPhotoOverlay) IconHref() []byte {
+	return rcv.ICON_HREF()
 }
 
 /// Icon/image URL
@@ -95,6 +115,10 @@ func (rcv *KMLPhotoOverlay) COLOR() []byte {
 	return nil
 }
 
+func (rcv *KMLPhotoOverlay) Color() []byte {
+	return rcv.COLOR()
+}
+
 /// Color
 /// Draw order
 func (rcv *KMLPhotoOverlay) DRAW_ORDER() int32 {
@@ -105,9 +129,17 @@ func (rcv *KMLPhotoOverlay) DRAW_ORDER() int32 {
 	return 0
 }
 
+func (rcv *KMLPhotoOverlay) DrawOrder() int32 {
+	return rcv.DRAW_ORDER()
+}
+
 /// Draw order
 func (rcv *KMLPhotoOverlay) MutateDRAW_ORDER(n int32) bool {
 	return rcv._tab.MutateInt32Slot(14, n)
+}
+
+func (rcv *KMLPhotoOverlay) MutateDrawOrder(n int32) bool {
+	return rcv.MutateDRAW_ORDER(n)
 }
 
 /// Rotation
@@ -119,9 +151,17 @@ func (rcv *KMLPhotoOverlay) ROTATION() float64 {
 	return 0.0
 }
 
+func (rcv *KMLPhotoOverlay) Rotation() float64 {
+	return rcv.ROTATION()
+}
+
 /// Rotation
 func (rcv *KMLPhotoOverlay) MutateROTATION(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(16, n)
+}
+
+func (rcv *KMLPhotoOverlay) MutateRotation(n float64) bool {
+	return rcv.MutateROTATION(n)
 }
 
 /// View volume
@@ -136,6 +176,10 @@ func (rcv *KMLPhotoOverlay) VIEW_VOLUME(obj *KMLViewVolume) *KMLViewVolume {
 		return obj
 	}
 	return nil
+}
+
+func (rcv *KMLPhotoOverlay) ViewVolume(obj *KMLViewVolume) *KMLViewVolume {
+	return rcv.VIEW_VOLUME(obj)
 }
 
 /// View volume
@@ -153,6 +197,10 @@ func (rcv *KMLPhotoOverlay) IMAGE_PYRAMID(obj *KMLImagePyramid) *KMLImagePyramid
 	return nil
 }
 
+func (rcv *KMLPhotoOverlay) ImagePyramid(obj *KMLImagePyramid) *KMLImagePyramid {
+	return rcv.IMAGE_PYRAMID(obj)
+}
+
 /// Image pyramid
 /// Point for position
 func (rcv *KMLPhotoOverlay) POINT(obj *KMLPoint) *KMLPoint {
@@ -168,6 +216,10 @@ func (rcv *KMLPhotoOverlay) POINT(obj *KMLPoint) *KMLPoint {
 	return nil
 }
 
+func (rcv *KMLPhotoOverlay) Point(obj *KMLPoint) *KMLPoint {
+	return rcv.POINT(obj)
+}
+
 /// Point for position
 /// Shape
 func (rcv *KMLPhotoOverlay) SHAPE() KMLShape {
@@ -178,9 +230,17 @@ func (rcv *KMLPhotoOverlay) SHAPE() KMLShape {
 	return 0
 }
 
+func (rcv *KMLPhotoOverlay) Shape() KMLShape {
+	return rcv.SHAPE()
+}
+
 /// Shape
 func (rcv *KMLPhotoOverlay) MutateSHAPE(n KMLShape) bool {
 	return rcv._tab.MutateInt8Slot(24, int8(n))
+}
+
+func (rcv *KMLPhotoOverlay) MutateShape(n KMLShape) bool {
+	return rcv.MutateSHAPE(n)
 }
 
 func KMLPhotoOverlayStart(builder *flatbuffers.Builder) {
@@ -189,35 +249,68 @@ func KMLPhotoOverlayStart(builder *flatbuffers.Builder) {
 func KMLPhotoOverlayAddNAME(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(NAME), 0)
 }
+func KMLPhotoOverlayAddName(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
+	KMLPhotoOverlayAddNAME(builder, NAME)
+}
 func KMLPhotoOverlayAddDESCRIPTION(builder *flatbuffers.Builder, DESCRIPTION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(DESCRIPTION), 0)
+}
+func KMLPhotoOverlayAddDescription(builder *flatbuffers.Builder, DESCRIPTION flatbuffers.UOffsetT) {
+	KMLPhotoOverlayAddDESCRIPTION(builder, DESCRIPTION)
 }
 func KMLPhotoOverlayAddVISIBILITY(builder *flatbuffers.Builder, VISIBILITY bool) {
 	builder.PrependBoolSlot(2, VISIBILITY, false)
 }
+func KMLPhotoOverlayAddVisibility(builder *flatbuffers.Builder, VISIBILITY bool) {
+	KMLPhotoOverlayAddVISIBILITY(builder, VISIBILITY)
+}
 func KMLPhotoOverlayAddICON_HREF(builder *flatbuffers.Builder, ICON_HREF flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(ICON_HREF), 0)
+}
+func KMLPhotoOverlayAddIconHref(builder *flatbuffers.Builder, ICON_HREF flatbuffers.UOffsetT) {
+	KMLPhotoOverlayAddICON_HREF(builder, ICON_HREF)
 }
 func KMLPhotoOverlayAddCOLOR(builder *flatbuffers.Builder, COLOR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(COLOR), 0)
 }
+func KMLPhotoOverlayAddColor(builder *flatbuffers.Builder, COLOR flatbuffers.UOffsetT) {
+	KMLPhotoOverlayAddCOLOR(builder, COLOR)
+}
 func KMLPhotoOverlayAddDRAW_ORDER(builder *flatbuffers.Builder, DRAW_ORDER int32) {
 	builder.PrependInt32Slot(5, DRAW_ORDER, 0)
+}
+func KMLPhotoOverlayAddDrawOrder(builder *flatbuffers.Builder, DRAW_ORDER int32) {
+	KMLPhotoOverlayAddDRAW_ORDER(builder, DRAW_ORDER)
 }
 func KMLPhotoOverlayAddROTATION(builder *flatbuffers.Builder, ROTATION float64) {
 	builder.PrependFloat64Slot(6, ROTATION, 0.0)
 }
+func KMLPhotoOverlayAddRotation(builder *flatbuffers.Builder, ROTATION float64) {
+	KMLPhotoOverlayAddROTATION(builder, ROTATION)
+}
 func KMLPhotoOverlayAddVIEW_VOLUME(builder *flatbuffers.Builder, VIEW_VOLUME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(VIEW_VOLUME), 0)
+}
+func KMLPhotoOverlayAddViewVolume(builder *flatbuffers.Builder, VIEW_VOLUME flatbuffers.UOffsetT) {
+	KMLPhotoOverlayAddVIEW_VOLUME(builder, VIEW_VOLUME)
 }
 func KMLPhotoOverlayAddIMAGE_PYRAMID(builder *flatbuffers.Builder, IMAGE_PYRAMID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(IMAGE_PYRAMID), 0)
 }
+func KMLPhotoOverlayAddImagePyramid(builder *flatbuffers.Builder, IMAGE_PYRAMID flatbuffers.UOffsetT) {
+	KMLPhotoOverlayAddIMAGE_PYRAMID(builder, IMAGE_PYRAMID)
+}
 func KMLPhotoOverlayAddPOINT(builder *flatbuffers.Builder, POINT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(POINT), 0)
 }
+func KMLPhotoOverlayAddPoint(builder *flatbuffers.Builder, POINT flatbuffers.UOffsetT) {
+	KMLPhotoOverlayAddPOINT(builder, POINT)
+}
 func KMLPhotoOverlayAddSHAPE(builder *flatbuffers.Builder, SHAPE KMLShape) {
 	builder.PrependInt8Slot(10, int8(SHAPE), 0)
+}
+func KMLPhotoOverlayAddShape(builder *flatbuffers.Builder, SHAPE KMLShape) {
+	KMLPhotoOverlayAddSHAPE(builder, SHAPE)
 }
 func KMLPhotoOverlayEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

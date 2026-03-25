@@ -51,9 +51,17 @@ func (rcv *KMLListStyle) LIST_ITEM_TYPE() KMLListItemType {
 	return 0
 }
 
+func (rcv *KMLListStyle) ListItemType() KMLListItemType {
+	return rcv.LIST_ITEM_TYPE()
+}
+
 /// List item type
 func (rcv *KMLListStyle) MutateLIST_ITEM_TYPE(n KMLListItemType) bool {
 	return rcv._tab.MutateInt8Slot(4, int8(n))
+}
+
+func (rcv *KMLListStyle) MutateListItemType(n KMLListItemType) bool {
+	return rcv.MutateLIST_ITEM_TYPE(n)
 }
 
 /// Background color
@@ -65,6 +73,10 @@ func (rcv *KMLListStyle) BG_COLOR() []byte {
 	return nil
 }
 
+func (rcv *KMLListStyle) BgColor() []byte {
+	return rcv.BG_COLOR()
+}
+
 /// Background color
 /// Item icons
 func (rcv *KMLListStyle) ITEM_ICONS(obj *KMLItemIcon, j int) bool {
@@ -73,10 +85,17 @@ func (rcv *KMLListStyle) ITEM_ICONS(obj *KMLItemIcon, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(KMLItemIcon)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *KMLListStyle) ItemIcons(obj *KMLItemIcon, j int) bool {
+	return rcv.ITEM_ICONS(obj, j)
 }
 
 func (rcv *KMLListStyle) ITEM_ICONSLength() int {
@@ -85,6 +104,10 @@ func (rcv *KMLListStyle) ITEM_ICONSLength() int {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *KMLListStyle) ItemIconsLength() int {
+	return rcv.ITEM_ICONSLength()
 }
 
 /// Item icons
@@ -97,9 +120,17 @@ func (rcv *KMLListStyle) MAX_SNIPPET_LINES() int32 {
 	return 0
 }
 
+func (rcv *KMLListStyle) MaxSnippetLines() int32 {
+	return rcv.MAX_SNIPPET_LINES()
+}
+
 /// Maximum snippet lines
 func (rcv *KMLListStyle) MutateMAX_SNIPPET_LINES(n int32) bool {
 	return rcv._tab.MutateInt32Slot(10, n)
+}
+
+func (rcv *KMLListStyle) MutateMaxSnippetLines(n int32) bool {
+	return rcv.MutateMAX_SNIPPET_LINES(n)
 }
 
 func KMLListStyleStart(builder *flatbuffers.Builder) {
@@ -108,17 +139,32 @@ func KMLListStyleStart(builder *flatbuffers.Builder) {
 func KMLListStyleAddLIST_ITEM_TYPE(builder *flatbuffers.Builder, LIST_ITEM_TYPE KMLListItemType) {
 	builder.PrependInt8Slot(0, int8(LIST_ITEM_TYPE), 0)
 }
+func KMLListStyleAddListItemType(builder *flatbuffers.Builder, LIST_ITEM_TYPE KMLListItemType) {
+	KMLListStyleAddLIST_ITEM_TYPE(builder, LIST_ITEM_TYPE)
+}
 func KMLListStyleAddBG_COLOR(builder *flatbuffers.Builder, BG_COLOR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(BG_COLOR), 0)
+}
+func KMLListStyleAddBgColor(builder *flatbuffers.Builder, BG_COLOR flatbuffers.UOffsetT) {
+	KMLListStyleAddBG_COLOR(builder, BG_COLOR)
 }
 func KMLListStyleAddITEM_ICONS(builder *flatbuffers.Builder, ITEM_ICONS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(ITEM_ICONS), 0)
 }
+func KMLListStyleAddItemIcons(builder *flatbuffers.Builder, ITEM_ICONS flatbuffers.UOffsetT) {
+	KMLListStyleAddITEM_ICONS(builder, ITEM_ICONS)
+}
 func KMLListStyleStartITEM_ICONSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
+func KMLListStyleStartItemIconsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return KMLListStyleStartITEM_ICONSVector(builder, numElems)
+}
 func KMLListStyleAddMAX_SNIPPET_LINES(builder *flatbuffers.Builder, MAX_SNIPPET_LINES int32) {
 	builder.PrependInt32Slot(3, MAX_SNIPPET_LINES, 0)
+}
+func KMLListStyleAddMaxSnippetLines(builder *flatbuffers.Builder, MAX_SNIPPET_LINES int32) {
+	KMLListStyleAddMAX_SNIPPET_LINES(builder, MAX_SNIPPET_LINES)
 }
 func KMLListStyleEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

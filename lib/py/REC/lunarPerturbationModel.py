@@ -2,4 +2,9 @@
 
 # namespace: 
 
-# NOTE lunarPerturbationModel.py does not declare any structs or enums
+# Enum to represent common lunar perturbation models
+class lunarPerturbationModel(object):
+    NONE = 0
+    DE430 = 1
+    DE431 = 2
+    LP150Q = 3

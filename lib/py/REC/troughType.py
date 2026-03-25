@@ -2,4 +2,7 @@
 
 # namespace: 
 
-# NOTE troughType.py does not declare any structs or enums
+class troughType(object):
+    EAST = 0
+    WEST = 1
+    NEITHER = 2

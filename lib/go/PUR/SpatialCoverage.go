@@ -51,6 +51,10 @@ func (rcv *SpatialCoverage) TYPE() []byte {
 	return nil
 }
 
+func (rcv *SpatialCoverage) Type() []byte {
+	return rcv.TYPE()
+}
+
 /// Type of coverage: "global", "region", "object_list"
 /// Regions covered, e.g., ["LEO", "GEO", "MEO"]
 func (rcv *SpatialCoverage) REGIONS(j int) []byte {
@@ -62,12 +66,20 @@ func (rcv *SpatialCoverage) REGIONS(j int) []byte {
 	return nil
 }
 
+func (rcv *SpatialCoverage) Regions(j int) []byte {
+	return rcv.REGIONS(j)
+}
+
 func (rcv *SpatialCoverage) REGIONSLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *SpatialCoverage) RegionsLength() int {
+	return rcv.REGIONSLength()
 }
 
 /// Regions covered, e.g., ["LEO", "GEO", "MEO"]
@@ -81,12 +93,20 @@ func (rcv *SpatialCoverage) OBJECT_IDS(j int) []byte {
 	return nil
 }
 
+func (rcv *SpatialCoverage) ObjectIds(j int) []byte {
+	return rcv.OBJECT_IDS(j)
+}
+
 func (rcv *SpatialCoverage) OBJECT_IDSLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *SpatialCoverage) ObjectIdsLength() int {
+	return rcv.OBJECT_IDSLength()
 }
 
 /// Specific NORAD IDs or catalog numbers
@@ -96,17 +116,32 @@ func SpatialCoverageStart(builder *flatbuffers.Builder) {
 func SpatialCoverageAddTYPE(builder *flatbuffers.Builder, TYPE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(TYPE), 0)
 }
+func SpatialCoverageAddType(builder *flatbuffers.Builder, TYPE flatbuffers.UOffsetT) {
+	SpatialCoverageAddTYPE(builder, TYPE)
+}
 func SpatialCoverageAddREGIONS(builder *flatbuffers.Builder, REGIONS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(REGIONS), 0)
+}
+func SpatialCoverageAddRegions(builder *flatbuffers.Builder, REGIONS flatbuffers.UOffsetT) {
+	SpatialCoverageAddREGIONS(builder, REGIONS)
 }
 func SpatialCoverageStartREGIONSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
+func SpatialCoverageStartRegionsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return SpatialCoverageStartREGIONSVector(builder, numElems)
+}
 func SpatialCoverageAddOBJECT_IDS(builder *flatbuffers.Builder, OBJECT_IDS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(OBJECT_IDS), 0)
 }
+func SpatialCoverageAddObjectIds(builder *flatbuffers.Builder, OBJECT_IDS flatbuffers.UOffsetT) {
+	SpatialCoverageAddOBJECT_IDS(builder, OBJECT_IDS)
+}
 func SpatialCoverageStartOBJECT_IDSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func SpatialCoverageStartObjectIdsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return SpatialCoverageStartOBJECT_IDSVector(builder, numElems)
 }
 func SpatialCoverageEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

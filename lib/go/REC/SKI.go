@@ -63,6 +63,10 @@ func (rcv *SKI) ID() []byte {
 	return nil
 }
 
+func (rcv *SKI) Id() []byte {
+	return rcv.ID()
+}
+
 /// Unique identifier
 /// On-orbit reference
 func (rcv *SKI) ON_ORBIT() []byte {
@@ -71,6 +75,10 @@ func (rcv *SKI) ON_ORBIT() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *SKI) OnOrbit() []byte {
+	return rcv.ON_ORBIT()
 }
 
 /// On-orbit reference
@@ -83,6 +91,10 @@ func (rcv *SKI) ORIG_OBJECT_ID() []byte {
 	return nil
 }
 
+func (rcv *SKI) OrigObjectId() []byte {
+	return rcv.ORIG_OBJECT_ID()
+}
+
 /// International designator
 /// Satellite catalog number
 func (rcv *SKI) SAT_NO() uint32 {
@@ -93,9 +105,17 @@ func (rcv *SKI) SAT_NO() uint32 {
 	return 0
 }
 
+func (rcv *SKI) SatNo() uint32 {
+	return rcv.SAT_NO()
+}
+
 /// Satellite catalog number
 func (rcv *SKI) MutateSAT_NO(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(10, n)
+}
+
+func (rcv *SKI) MutateSatNo(n uint32) bool {
+	return rcv.MutateSAT_NO(n)
 }
 
 /// Sensor identifier
@@ -105,6 +125,10 @@ func (rcv *SKI) ID_SENSOR() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *SKI) IdSensor() []byte {
+	return rcv.ID_SENSOR()
 }
 
 /// Sensor identifier
@@ -117,6 +141,10 @@ func (rcv *SKI) ORIG_SENSOR_ID() []byte {
 	return nil
 }
 
+func (rcv *SKI) OrigSensorId() []byte {
+	return rcv.ORIG_SENSOR_ID()
+}
+
 /// Original sensor identifier
 /// Sensor geodetic latitude (degrees)
 func (rcv *SKI) SENLAT() float64 {
@@ -127,9 +155,17 @@ func (rcv *SKI) SENLAT() float64 {
 	return 0.0
 }
 
+func (rcv *SKI) Senlat() float64 {
+	return rcv.SENLAT()
+}
+
 /// Sensor geodetic latitude (degrees)
 func (rcv *SKI) MutateSENLAT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(16, n)
+}
+
+func (rcv *SKI) MutateSenlat(n float64) bool {
+	return rcv.MutateSENLAT(n)
 }
 
 /// Sensor geodetic longitude (degrees)
@@ -141,9 +177,17 @@ func (rcv *SKI) SENLON() float64 {
 	return 0.0
 }
 
+func (rcv *SKI) Senlon() float64 {
+	return rcv.SENLON()
+}
+
 /// Sensor geodetic longitude (degrees)
 func (rcv *SKI) MutateSENLON(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(18, n)
+}
+
+func (rcv *SKI) MutateSenlon(n float64) bool {
+	return rcv.MutateSENLON(n)
 }
 
 /// Sensor altitude (km)
@@ -155,9 +199,17 @@ func (rcv *SKI) SENALT() float64 {
 	return 0.0
 }
 
+func (rcv *SKI) Senalt() float64 {
+	return rcv.SENALT()
+}
+
 /// Sensor altitude (km)
 func (rcv *SKI) MutateSENALT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(20, n)
+}
+
+func (rcv *SKI) MutateSenalt(n float64) bool {
+	return rcv.MutateSENALT(n)
 }
 
 /// Sensor ECEF X position (km)
@@ -169,9 +221,17 @@ func (rcv *SKI) SENX() float64 {
 	return 0.0
 }
 
+func (rcv *SKI) Senx() float64 {
+	return rcv.SENX()
+}
+
 /// Sensor ECEF X position (km)
 func (rcv *SKI) MutateSENX(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(22, n)
+}
+
+func (rcv *SKI) MutateSenx(n float64) bool {
+	return rcv.MutateSENX(n)
 }
 
 /// Sensor ECEF Y position (km)
@@ -183,9 +243,17 @@ func (rcv *SKI) SENY() float64 {
 	return 0.0
 }
 
+func (rcv *SKI) Seny() float64 {
+	return rcv.SENY()
+}
+
 /// Sensor ECEF Y position (km)
 func (rcv *SKI) MutateSENY(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(24, n)
+}
+
+func (rcv *SKI) MutateSeny(n float64) bool {
+	return rcv.MutateSENY(n)
 }
 
 /// Sensor ECEF Z position (km)
@@ -197,9 +265,17 @@ func (rcv *SKI) SENZ() float64 {
 	return 0.0
 }
 
+func (rcv *SKI) Senz() float64 {
+	return rcv.SENZ()
+}
+
 /// Sensor ECEF Z position (km)
 func (rcv *SKI) MutateSENZ(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(26, n)
+}
+
+func (rcv *SKI) MutateSenz(n float64) bool {
+	return rcv.MutateSENZ(n)
 }
 
 /// Sensor quaternion (scalar-last: q1, q2, q3, q0)
@@ -212,12 +288,20 @@ func (rcv *SKI) SEN_QUAT(j int) float64 {
 	return 0
 }
 
+func (rcv *SKI) SenQuat(j int) float64 {
+	return rcv.SEN_QUAT(j)
+}
+
 func (rcv *SKI) SEN_QUATLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *SKI) SenQuatLength() int {
+	return rcv.SEN_QUATLength()
 }
 
 /// Sensor quaternion (scalar-last: q1, q2, q3, q0)
@@ -230,6 +314,10 @@ func (rcv *SKI) MutateSEN_QUAT(j int, n float64) bool {
 	return false
 }
 
+func (rcv *SKI) MutateSenQuat(j int, n float64) bool {
+	return rcv.MutateSEN_QUAT(j, n)
+}
+
 /// Sensor quaternion rate
 func (rcv *SKI) SEN_QUAT_DOT(j int) float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
@@ -240,12 +328,20 @@ func (rcv *SKI) SEN_QUAT_DOT(j int) float64 {
 	return 0
 }
 
+func (rcv *SKI) SenQuatDot(j int) float64 {
+	return rcv.SEN_QUAT_DOT(j)
+}
+
 func (rcv *SKI) SEN_QUAT_DOTLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *SKI) SenQuatDotLength() int {
+	return rcv.SEN_QUAT_DOTLength()
 }
 
 /// Sensor quaternion rate
@@ -258,6 +354,10 @@ func (rcv *SKI) MutateSEN_QUAT_DOT(j int, n float64) bool {
 	return false
 }
 
+func (rcv *SKI) MutateSenQuatDot(j int, n float64) bool {
+	return rcv.MutateSEN_QUAT_DOT(j, n)
+}
+
 /// Image type
 func (rcv *SKI) IMAGE_TYPE() imageType {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
@@ -267,9 +367,17 @@ func (rcv *SKI) IMAGE_TYPE() imageType {
 	return 0
 }
 
+func (rcv *SKI) ImageType() imageType {
+	return rcv.IMAGE_TYPE()
+}
+
 /// Image type
 func (rcv *SKI) MutateIMAGE_TYPE(n imageType) bool {
 	return rcv._tab.MutateInt8Slot(32, int8(n))
+}
+
+func (rcv *SKI) MutateImageType(n imageType) bool {
+	return rcv.MutateIMAGE_TYPE(n)
 }
 
 /// Exposure start time (ISO 8601)
@@ -279,6 +387,10 @@ func (rcv *SKI) EXP_START_TIME() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *SKI) ExpStartTime() []byte {
+	return rcv.EXP_START_TIME()
 }
 
 /// Exposure start time (ISO 8601)
@@ -291,6 +403,10 @@ func (rcv *SKI) EXP_END_TIME() []byte {
 	return nil
 }
 
+func (rcv *SKI) ExpEndTime() []byte {
+	return rcv.EXP_END_TIME()
+}
+
 /// Exposure end time (ISO 8601)
 /// Image source information
 func (rcv *SKI) IMAGE_SOURCE_INFO() []byte {
@@ -299,6 +415,10 @@ func (rcv *SKI) IMAGE_SOURCE_INFO() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *SKI) ImageSourceInfo() []byte {
+	return rcv.IMAGE_SOURCE_INFO()
 }
 
 /// Image source information
@@ -311,9 +431,17 @@ func (rcv *SKI) TOP_LEFT_START_AZ() float64 {
 	return 0.0
 }
 
+func (rcv *SKI) TopLeftStartAz() float64 {
+	return rcv.TOP_LEFT_START_AZ()
+}
+
 /// Top-left corner start azimuth (degrees)
 func (rcv *SKI) MutateTOP_LEFT_START_AZ(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(40, n)
+}
+
+func (rcv *SKI) MutateTopLeftStartAz(n float64) bool {
+	return rcv.MutateTOP_LEFT_START_AZ(n)
 }
 
 /// Top-left corner start elevation (degrees)
@@ -325,9 +453,17 @@ func (rcv *SKI) TOP_LEFT_START_EL() float64 {
 	return 0.0
 }
 
+func (rcv *SKI) TopLeftStartEl() float64 {
+	return rcv.TOP_LEFT_START_EL()
+}
+
 /// Top-left corner start elevation (degrees)
 func (rcv *SKI) MutateTOP_LEFT_START_EL(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(42, n)
+}
+
+func (rcv *SKI) MutateTopLeftStartEl(n float64) bool {
+	return rcv.MutateTOP_LEFT_START_EL(n)
 }
 
 /// Top-left corner stop azimuth (degrees)
@@ -339,9 +475,17 @@ func (rcv *SKI) TOP_LEFT_STOP_AZ() float64 {
 	return 0.0
 }
 
+func (rcv *SKI) TopLeftStopAz() float64 {
+	return rcv.TOP_LEFT_STOP_AZ()
+}
+
 /// Top-left corner stop azimuth (degrees)
 func (rcv *SKI) MutateTOP_LEFT_STOP_AZ(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(44, n)
+}
+
+func (rcv *SKI) MutateTopLeftStopAz(n float64) bool {
+	return rcv.MutateTOP_LEFT_STOP_AZ(n)
 }
 
 /// Top-left corner stop elevation (degrees)
@@ -353,9 +497,17 @@ func (rcv *SKI) TOP_LEFT_STOP_EL() float64 {
 	return 0.0
 }
 
+func (rcv *SKI) TopLeftStopEl() float64 {
+	return rcv.TOP_LEFT_STOP_EL()
+}
+
 /// Top-left corner stop elevation (degrees)
 func (rcv *SKI) MutateTOP_LEFT_STOP_EL(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(46, n)
+}
+
+func (rcv *SKI) MutateTopLeftStopEl(n float64) bool {
+	return rcv.MutateTOP_LEFT_STOP_EL(n)
 }
 
 /// Image set identifier
@@ -365,6 +517,10 @@ func (rcv *SKI) IMAGE_SET_ID() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *SKI) ImageSetId() []byte {
+	return rcv.IMAGE_SET_ID()
 }
 
 /// Image set identifier
@@ -377,9 +533,17 @@ func (rcv *SKI) IMAGE_SET_LENGTH() uint16 {
 	return 0
 }
 
+func (rcv *SKI) ImageSetLength() uint16 {
+	return rcv.IMAGE_SET_LENGTH()
+}
+
 /// Number of images in set
 func (rcv *SKI) MutateIMAGE_SET_LENGTH(n uint16) bool {
 	return rcv._tab.MutateUint16Slot(50, n)
+}
+
+func (rcv *SKI) MutateImageSetLength(n uint16) bool {
+	return rcv.MutateIMAGE_SET_LENGTH(n)
 }
 
 /// Sequence number within set
@@ -391,9 +555,17 @@ func (rcv *SKI) SEQUENCE_ID() uint16 {
 	return 0
 }
 
+func (rcv *SKI) SequenceId() uint16 {
+	return rcv.SEQUENCE_ID()
+}
+
 /// Sequence number within set
 func (rcv *SKI) MutateSEQUENCE_ID(n uint16) bool {
 	return rcv._tab.MutateUint16Slot(52, n)
+}
+
+func (rcv *SKI) MutateSequenceId(n uint16) bool {
+	return rcv.MutateSEQUENCE_ID(n)
 }
 
 /// Frame field-of-view width (degrees)
@@ -405,9 +577,17 @@ func (rcv *SKI) FRAME_FOVWIDTH() float64 {
 	return 0.0
 }
 
+func (rcv *SKI) FrameFovwidth() float64 {
+	return rcv.FRAME_FOVWIDTH()
+}
+
 /// Frame field-of-view width (degrees)
 func (rcv *SKI) MutateFRAME_FOVWIDTH(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(54, n)
+}
+
+func (rcv *SKI) MutateFrameFovwidth(n float64) bool {
+	return rcv.MutateFRAME_FOVWIDTH(n)
 }
 
 /// Frame field-of-view height (degrees)
@@ -419,9 +599,17 @@ func (rcv *SKI) FRAME_FOVHEIGHT() float64 {
 	return 0.0
 }
 
+func (rcv *SKI) FrameFovheight() float64 {
+	return rcv.FRAME_FOVHEIGHT()
+}
+
 /// Frame field-of-view height (degrees)
 func (rcv *SKI) MutateFRAME_FOVHEIGHT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(56, n)
+}
+
+func (rcv *SKI) MutateFrameFovheight(n float64) bool {
+	return rcv.MutateFRAME_FOVHEIGHT(n)
 }
 
 /// Pixel field-of-view width (arcseconds)
@@ -433,9 +621,17 @@ func (rcv *SKI) PIXEL_FOVWIDTH() float64 {
 	return 0.0
 }
 
+func (rcv *SKI) PixelFovwidth() float64 {
+	return rcv.PIXEL_FOVWIDTH()
+}
+
 /// Pixel field-of-view width (arcseconds)
 func (rcv *SKI) MutatePIXEL_FOVWIDTH(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(58, n)
+}
+
+func (rcv *SKI) MutatePixelFovwidth(n float64) bool {
+	return rcv.MutatePIXEL_FOVWIDTH(n)
 }
 
 /// Pixel field-of-view height (arcseconds)
@@ -447,9 +643,17 @@ func (rcv *SKI) PIXEL_FOVHEIGHT() float64 {
 	return 0.0
 }
 
+func (rcv *SKI) PixelFovheight() float64 {
+	return rcv.PIXEL_FOVHEIGHT()
+}
+
 /// Pixel field-of-view height (arcseconds)
 func (rcv *SKI) MutatePIXEL_FOVHEIGHT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(60, n)
+}
+
+func (rcv *SKI) MutatePixelFovheight(n float64) bool {
+	return rcv.MutatePIXEL_FOVHEIGHT(n)
 }
 
 /// Frame width (pixels)
@@ -461,9 +665,17 @@ func (rcv *SKI) FRAME_WIDTH_PIXELS() uint16 {
 	return 0
 }
 
+func (rcv *SKI) FrameWidthPixels() uint16 {
+	return rcv.FRAME_WIDTH_PIXELS()
+}
+
 /// Frame width (pixels)
 func (rcv *SKI) MutateFRAME_WIDTH_PIXELS(n uint16) bool {
 	return rcv._tab.MutateUint16Slot(62, n)
+}
+
+func (rcv *SKI) MutateFrameWidthPixels(n uint16) bool {
+	return rcv.MutateFRAME_WIDTH_PIXELS(n)
 }
 
 /// Frame height (pixels)
@@ -475,9 +687,17 @@ func (rcv *SKI) FRAME_HEIGHT_PIXELS() uint16 {
 	return 0
 }
 
+func (rcv *SKI) FrameHeightPixels() uint16 {
+	return rcv.FRAME_HEIGHT_PIXELS()
+}
+
 /// Frame height (pixels)
 func (rcv *SKI) MutateFRAME_HEIGHT_PIXELS(n uint16) bool {
 	return rcv._tab.MutateUint16Slot(64, n)
+}
+
+func (rcv *SKI) MutateFrameHeightPixels(n uint16) bool {
+	return rcv.MutateFRAME_HEIGHT_PIXELS(n)
 }
 
 /// Pixel bit depth
@@ -489,9 +709,17 @@ func (rcv *SKI) PIXEL_BIT_DEPTH() byte {
 	return 0
 }
 
+func (rcv *SKI) PixelBitDepth() byte {
+	return rcv.PIXEL_BIT_DEPTH()
+}
+
 /// Pixel bit depth
 func (rcv *SKI) MutatePIXEL_BIT_DEPTH(n byte) bool {
 	return rcv._tab.MutateByteSlot(66, n)
+}
+
+func (rcv *SKI) MutatePixelBitDepth(n byte) bool {
+	return rcv.MutatePIXEL_BIT_DEPTH(n)
 }
 
 /// Annotation key reference
@@ -501,6 +729,10 @@ func (rcv *SKI) ANNOTATION_KEY() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *SKI) AnnotationKey() []byte {
+	return rcv.ANNOTATION_KEY()
 }
 
 /// Annotation key reference
@@ -513,6 +745,10 @@ func (rcv *SKI) CALIBRATION_KEY() []byte {
 	return nil
 }
 
+func (rcv *SKI) CalibrationKey() []byte {
+	return rcv.CALIBRATION_KEY()
+}
+
 /// Calibration key reference
 /// Image filename
 func (rcv *SKI) FILENAME() []byte {
@@ -521,6 +757,10 @@ func (rcv *SKI) FILENAME() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *SKI) Filename() []byte {
+	return rcv.FILENAME()
 }
 
 /// Image filename
@@ -533,9 +773,17 @@ func (rcv *SKI) FILESIZE() int64 {
 	return 0
 }
 
+func (rcv *SKI) Filesize() int64 {
+	return rcv.FILESIZE()
+}
+
 /// File size (bytes)
 func (rcv *SKI) MutateFILESIZE(n int64) bool {
 	return rcv._tab.MutateInt64Slot(74, n)
+}
+
+func (rcv *SKI) MutateFilesize(n int64) bool {
+	return rcv.MutateFILESIZE(n)
 }
 
 /// File checksum value
@@ -547,6 +795,10 @@ func (rcv *SKI) CHECKSUM_VALUE() []byte {
 	return nil
 }
 
+func (rcv *SKI) ChecksumValue() []byte {
+	return rcv.CHECKSUM_VALUE()
+}
+
 /// File checksum value
 /// Transaction identifier
 func (rcv *SKI) TRANSACTION_ID() []byte {
@@ -555,6 +807,10 @@ func (rcv *SKI) TRANSACTION_ID() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *SKI) TransactionId() []byte {
+	return rcv.TRANSACTION_ID()
 }
 
 /// Transaction identifier
@@ -568,12 +824,20 @@ func (rcv *SKI) TAGS(j int) []byte {
 	return nil
 }
 
+func (rcv *SKI) Tags(j int) []byte {
+	return rcv.TAGS(j)
+}
+
 func (rcv *SKI) TAGSLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(80))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *SKI) TagsLength() int {
+	return rcv.TAGSLength()
 }
 
 /// Associated tags
@@ -584,6 +848,10 @@ func (rcv *SKI) DESCRIPTION() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *SKI) Description() []byte {
+	return rcv.DESCRIPTION()
 }
 
 /// Description
@@ -597,12 +865,20 @@ func (rcv *SKI) EO_OBSERVATIONS(j int) []byte {
 	return nil
 }
 
+func (rcv *SKI) EoObservations(j int) []byte {
+	return rcv.EO_OBSERVATIONS(j)
+}
+
 func (rcv *SKI) EO_OBSERVATIONSLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(84))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *SKI) EoObservationsLength() int {
+	return rcv.EO_OBSERVATIONSLength()
 }
 
 /// Associated EO observation references
@@ -612,137 +888,272 @@ func SKIStart(builder *flatbuffers.Builder) {
 func SKIAddID(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ID), 0)
 }
+func SKIAddId(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
+	SKIAddID(builder, ID)
+}
 func SKIAddON_ORBIT(builder *flatbuffers.Builder, ON_ORBIT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(ON_ORBIT), 0)
+}
+func SKIAddOnOrbit(builder *flatbuffers.Builder, ON_ORBIT flatbuffers.UOffsetT) {
+	SKIAddON_ORBIT(builder, ON_ORBIT)
 }
 func SKIAddORIG_OBJECT_ID(builder *flatbuffers.Builder, ORIG_OBJECT_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(ORIG_OBJECT_ID), 0)
 }
+func SKIAddOrigObjectId(builder *flatbuffers.Builder, ORIG_OBJECT_ID flatbuffers.UOffsetT) {
+	SKIAddORIG_OBJECT_ID(builder, ORIG_OBJECT_ID)
+}
 func SKIAddSAT_NO(builder *flatbuffers.Builder, SAT_NO uint32) {
 	builder.PrependUint32Slot(3, SAT_NO, 0)
+}
+func SKIAddSatNo(builder *flatbuffers.Builder, SAT_NO uint32) {
+	SKIAddSAT_NO(builder, SAT_NO)
 }
 func SKIAddID_SENSOR(builder *flatbuffers.Builder, ID_SENSOR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(ID_SENSOR), 0)
 }
+func SKIAddIdSensor(builder *flatbuffers.Builder, ID_SENSOR flatbuffers.UOffsetT) {
+	SKIAddID_SENSOR(builder, ID_SENSOR)
+}
 func SKIAddORIG_SENSOR_ID(builder *flatbuffers.Builder, ORIG_SENSOR_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(ORIG_SENSOR_ID), 0)
+}
+func SKIAddOrigSensorId(builder *flatbuffers.Builder, ORIG_SENSOR_ID flatbuffers.UOffsetT) {
+	SKIAddORIG_SENSOR_ID(builder, ORIG_SENSOR_ID)
 }
 func SKIAddSENLAT(builder *flatbuffers.Builder, SENLAT float64) {
 	builder.PrependFloat64Slot(6, SENLAT, 0.0)
 }
+func SKIAddSenlat(builder *flatbuffers.Builder, SENLAT float64) {
+	SKIAddSENLAT(builder, SENLAT)
+}
 func SKIAddSENLON(builder *flatbuffers.Builder, SENLON float64) {
 	builder.PrependFloat64Slot(7, SENLON, 0.0)
+}
+func SKIAddSenlon(builder *flatbuffers.Builder, SENLON float64) {
+	SKIAddSENLON(builder, SENLON)
 }
 func SKIAddSENALT(builder *flatbuffers.Builder, SENALT float64) {
 	builder.PrependFloat64Slot(8, SENALT, 0.0)
 }
+func SKIAddSenalt(builder *flatbuffers.Builder, SENALT float64) {
+	SKIAddSENALT(builder, SENALT)
+}
 func SKIAddSENX(builder *flatbuffers.Builder, SENX float64) {
 	builder.PrependFloat64Slot(9, SENX, 0.0)
+}
+func SKIAddSenx(builder *flatbuffers.Builder, SENX float64) {
+	SKIAddSENX(builder, SENX)
 }
 func SKIAddSENY(builder *flatbuffers.Builder, SENY float64) {
 	builder.PrependFloat64Slot(10, SENY, 0.0)
 }
+func SKIAddSeny(builder *flatbuffers.Builder, SENY float64) {
+	SKIAddSENY(builder, SENY)
+}
 func SKIAddSENZ(builder *flatbuffers.Builder, SENZ float64) {
 	builder.PrependFloat64Slot(11, SENZ, 0.0)
+}
+func SKIAddSenz(builder *flatbuffers.Builder, SENZ float64) {
+	SKIAddSENZ(builder, SENZ)
 }
 func SKIAddSEN_QUAT(builder *flatbuffers.Builder, SEN_QUAT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(12, flatbuffers.UOffsetT(SEN_QUAT), 0)
 }
+func SKIAddSenQuat(builder *flatbuffers.Builder, SEN_QUAT flatbuffers.UOffsetT) {
+	SKIAddSEN_QUAT(builder, SEN_QUAT)
+}
 func SKIStartSEN_QUATVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(8, numElems, 8)
+}
+func SKIStartSenQuatVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return SKIStartSEN_QUATVector(builder, numElems)
 }
 func SKIAddSEN_QUAT_DOT(builder *flatbuffers.Builder, SEN_QUAT_DOT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(13, flatbuffers.UOffsetT(SEN_QUAT_DOT), 0)
 }
+func SKIAddSenQuatDot(builder *flatbuffers.Builder, SEN_QUAT_DOT flatbuffers.UOffsetT) {
+	SKIAddSEN_QUAT_DOT(builder, SEN_QUAT_DOT)
+}
 func SKIStartSEN_QUAT_DOTVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(8, numElems, 8)
+}
+func SKIStartSenQuatDotVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return SKIStartSEN_QUAT_DOTVector(builder, numElems)
 }
 func SKIAddIMAGE_TYPE(builder *flatbuffers.Builder, IMAGE_TYPE imageType) {
 	builder.PrependInt8Slot(14, int8(IMAGE_TYPE), 0)
 }
+func SKIAddImageType(builder *flatbuffers.Builder, IMAGE_TYPE imageType) {
+	SKIAddIMAGE_TYPE(builder, IMAGE_TYPE)
+}
 func SKIAddEXP_START_TIME(builder *flatbuffers.Builder, EXP_START_TIME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(15, flatbuffers.UOffsetT(EXP_START_TIME), 0)
+}
+func SKIAddExpStartTime(builder *flatbuffers.Builder, EXP_START_TIME flatbuffers.UOffsetT) {
+	SKIAddEXP_START_TIME(builder, EXP_START_TIME)
 }
 func SKIAddEXP_END_TIME(builder *flatbuffers.Builder, EXP_END_TIME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(16, flatbuffers.UOffsetT(EXP_END_TIME), 0)
 }
+func SKIAddExpEndTime(builder *flatbuffers.Builder, EXP_END_TIME flatbuffers.UOffsetT) {
+	SKIAddEXP_END_TIME(builder, EXP_END_TIME)
+}
 func SKIAddIMAGE_SOURCE_INFO(builder *flatbuffers.Builder, IMAGE_SOURCE_INFO flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(17, flatbuffers.UOffsetT(IMAGE_SOURCE_INFO), 0)
+}
+func SKIAddImageSourceInfo(builder *flatbuffers.Builder, IMAGE_SOURCE_INFO flatbuffers.UOffsetT) {
+	SKIAddIMAGE_SOURCE_INFO(builder, IMAGE_SOURCE_INFO)
 }
 func SKIAddTOP_LEFT_START_AZ(builder *flatbuffers.Builder, TOP_LEFT_START_AZ float64) {
 	builder.PrependFloat64Slot(18, TOP_LEFT_START_AZ, 0.0)
 }
+func SKIAddTopLeftStartAz(builder *flatbuffers.Builder, TOP_LEFT_START_AZ float64) {
+	SKIAddTOP_LEFT_START_AZ(builder, TOP_LEFT_START_AZ)
+}
 func SKIAddTOP_LEFT_START_EL(builder *flatbuffers.Builder, TOP_LEFT_START_EL float64) {
 	builder.PrependFloat64Slot(19, TOP_LEFT_START_EL, 0.0)
+}
+func SKIAddTopLeftStartEl(builder *flatbuffers.Builder, TOP_LEFT_START_EL float64) {
+	SKIAddTOP_LEFT_START_EL(builder, TOP_LEFT_START_EL)
 }
 func SKIAddTOP_LEFT_STOP_AZ(builder *flatbuffers.Builder, TOP_LEFT_STOP_AZ float64) {
 	builder.PrependFloat64Slot(20, TOP_LEFT_STOP_AZ, 0.0)
 }
+func SKIAddTopLeftStopAz(builder *flatbuffers.Builder, TOP_LEFT_STOP_AZ float64) {
+	SKIAddTOP_LEFT_STOP_AZ(builder, TOP_LEFT_STOP_AZ)
+}
 func SKIAddTOP_LEFT_STOP_EL(builder *flatbuffers.Builder, TOP_LEFT_STOP_EL float64) {
 	builder.PrependFloat64Slot(21, TOP_LEFT_STOP_EL, 0.0)
+}
+func SKIAddTopLeftStopEl(builder *flatbuffers.Builder, TOP_LEFT_STOP_EL float64) {
+	SKIAddTOP_LEFT_STOP_EL(builder, TOP_LEFT_STOP_EL)
 }
 func SKIAddIMAGE_SET_ID(builder *flatbuffers.Builder, IMAGE_SET_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(22, flatbuffers.UOffsetT(IMAGE_SET_ID), 0)
 }
+func SKIAddImageSetId(builder *flatbuffers.Builder, IMAGE_SET_ID flatbuffers.UOffsetT) {
+	SKIAddIMAGE_SET_ID(builder, IMAGE_SET_ID)
+}
 func SKIAddIMAGE_SET_LENGTH(builder *flatbuffers.Builder, IMAGE_SET_LENGTH uint16) {
 	builder.PrependUint16Slot(23, IMAGE_SET_LENGTH, 0)
+}
+func SKIAddImageSetLength(builder *flatbuffers.Builder, IMAGE_SET_LENGTH uint16) {
+	SKIAddIMAGE_SET_LENGTH(builder, IMAGE_SET_LENGTH)
 }
 func SKIAddSEQUENCE_ID(builder *flatbuffers.Builder, SEQUENCE_ID uint16) {
 	builder.PrependUint16Slot(24, SEQUENCE_ID, 0)
 }
+func SKIAddSequenceId(builder *flatbuffers.Builder, SEQUENCE_ID uint16) {
+	SKIAddSEQUENCE_ID(builder, SEQUENCE_ID)
+}
 func SKIAddFRAME_FOVWIDTH(builder *flatbuffers.Builder, FRAME_FOVWIDTH float64) {
 	builder.PrependFloat64Slot(25, FRAME_FOVWIDTH, 0.0)
+}
+func SKIAddFrameFovwidth(builder *flatbuffers.Builder, FRAME_FOVWIDTH float64) {
+	SKIAddFRAME_FOVWIDTH(builder, FRAME_FOVWIDTH)
 }
 func SKIAddFRAME_FOVHEIGHT(builder *flatbuffers.Builder, FRAME_FOVHEIGHT float64) {
 	builder.PrependFloat64Slot(26, FRAME_FOVHEIGHT, 0.0)
 }
+func SKIAddFrameFovheight(builder *flatbuffers.Builder, FRAME_FOVHEIGHT float64) {
+	SKIAddFRAME_FOVHEIGHT(builder, FRAME_FOVHEIGHT)
+}
 func SKIAddPIXEL_FOVWIDTH(builder *flatbuffers.Builder, PIXEL_FOVWIDTH float64) {
 	builder.PrependFloat64Slot(27, PIXEL_FOVWIDTH, 0.0)
+}
+func SKIAddPixelFovwidth(builder *flatbuffers.Builder, PIXEL_FOVWIDTH float64) {
+	SKIAddPIXEL_FOVWIDTH(builder, PIXEL_FOVWIDTH)
 }
 func SKIAddPIXEL_FOVHEIGHT(builder *flatbuffers.Builder, PIXEL_FOVHEIGHT float64) {
 	builder.PrependFloat64Slot(28, PIXEL_FOVHEIGHT, 0.0)
 }
+func SKIAddPixelFovheight(builder *flatbuffers.Builder, PIXEL_FOVHEIGHT float64) {
+	SKIAddPIXEL_FOVHEIGHT(builder, PIXEL_FOVHEIGHT)
+}
 func SKIAddFRAME_WIDTH_PIXELS(builder *flatbuffers.Builder, FRAME_WIDTH_PIXELS uint16) {
 	builder.PrependUint16Slot(29, FRAME_WIDTH_PIXELS, 0)
+}
+func SKIAddFrameWidthPixels(builder *flatbuffers.Builder, FRAME_WIDTH_PIXELS uint16) {
+	SKIAddFRAME_WIDTH_PIXELS(builder, FRAME_WIDTH_PIXELS)
 }
 func SKIAddFRAME_HEIGHT_PIXELS(builder *flatbuffers.Builder, FRAME_HEIGHT_PIXELS uint16) {
 	builder.PrependUint16Slot(30, FRAME_HEIGHT_PIXELS, 0)
 }
+func SKIAddFrameHeightPixels(builder *flatbuffers.Builder, FRAME_HEIGHT_PIXELS uint16) {
+	SKIAddFRAME_HEIGHT_PIXELS(builder, FRAME_HEIGHT_PIXELS)
+}
 func SKIAddPIXEL_BIT_DEPTH(builder *flatbuffers.Builder, PIXEL_BIT_DEPTH byte) {
 	builder.PrependByteSlot(31, PIXEL_BIT_DEPTH, 0)
+}
+func SKIAddPixelBitDepth(builder *flatbuffers.Builder, PIXEL_BIT_DEPTH byte) {
+	SKIAddPIXEL_BIT_DEPTH(builder, PIXEL_BIT_DEPTH)
 }
 func SKIAddANNOTATION_KEY(builder *flatbuffers.Builder, ANNOTATION_KEY flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(32, flatbuffers.UOffsetT(ANNOTATION_KEY), 0)
 }
+func SKIAddAnnotationKey(builder *flatbuffers.Builder, ANNOTATION_KEY flatbuffers.UOffsetT) {
+	SKIAddANNOTATION_KEY(builder, ANNOTATION_KEY)
+}
 func SKIAddCALIBRATION_KEY(builder *flatbuffers.Builder, CALIBRATION_KEY flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(33, flatbuffers.UOffsetT(CALIBRATION_KEY), 0)
+}
+func SKIAddCalibrationKey(builder *flatbuffers.Builder, CALIBRATION_KEY flatbuffers.UOffsetT) {
+	SKIAddCALIBRATION_KEY(builder, CALIBRATION_KEY)
 }
 func SKIAddFILENAME(builder *flatbuffers.Builder, FILENAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(34, flatbuffers.UOffsetT(FILENAME), 0)
 }
+func SKIAddFilename(builder *flatbuffers.Builder, FILENAME flatbuffers.UOffsetT) {
+	SKIAddFILENAME(builder, FILENAME)
+}
 func SKIAddFILESIZE(builder *flatbuffers.Builder, FILESIZE int64) {
 	builder.PrependInt64Slot(35, FILESIZE, 0)
+}
+func SKIAddFilesize(builder *flatbuffers.Builder, FILESIZE int64) {
+	SKIAddFILESIZE(builder, FILESIZE)
 }
 func SKIAddCHECKSUM_VALUE(builder *flatbuffers.Builder, CHECKSUM_VALUE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(36, flatbuffers.UOffsetT(CHECKSUM_VALUE), 0)
 }
+func SKIAddChecksumValue(builder *flatbuffers.Builder, CHECKSUM_VALUE flatbuffers.UOffsetT) {
+	SKIAddCHECKSUM_VALUE(builder, CHECKSUM_VALUE)
+}
 func SKIAddTRANSACTION_ID(builder *flatbuffers.Builder, TRANSACTION_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(37, flatbuffers.UOffsetT(TRANSACTION_ID), 0)
+}
+func SKIAddTransactionId(builder *flatbuffers.Builder, TRANSACTION_ID flatbuffers.UOffsetT) {
+	SKIAddTRANSACTION_ID(builder, TRANSACTION_ID)
 }
 func SKIAddTAGS(builder *flatbuffers.Builder, TAGS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(38, flatbuffers.UOffsetT(TAGS), 0)
 }
+func SKIAddTags(builder *flatbuffers.Builder, TAGS flatbuffers.UOffsetT) {
+	SKIAddTAGS(builder, TAGS)
+}
 func SKIStartTAGSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func SKIStartTagsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return SKIStartTAGSVector(builder, numElems)
 }
 func SKIAddDESCRIPTION(builder *flatbuffers.Builder, DESCRIPTION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(39, flatbuffers.UOffsetT(DESCRIPTION), 0)
 }
+func SKIAddDescription(builder *flatbuffers.Builder, DESCRIPTION flatbuffers.UOffsetT) {
+	SKIAddDESCRIPTION(builder, DESCRIPTION)
+}
 func SKIAddEO_OBSERVATIONS(builder *flatbuffers.Builder, EO_OBSERVATIONS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(40, flatbuffers.UOffsetT(EO_OBSERVATIONS), 0)
 }
+func SKIAddEoObservations(builder *flatbuffers.Builder, EO_OBSERVATIONS flatbuffers.UOffsetT) {
+	SKIAddEO_OBSERVATIONS(builder, EO_OBSERVATIONS)
+}
 func SKIStartEO_OBSERVATIONSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func SKIStartEoObservationsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return SKIStartEO_OBSERVATIONSVector(builder, numElems)
 }
 func SKIEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

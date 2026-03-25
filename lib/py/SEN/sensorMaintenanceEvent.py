@@ -124,6 +124,12 @@ def sensorMaintenanceEventStartCOMPONENTSVector(builder, numElems):
 def StartCOMPONENTSVector(builder, numElems):
     return sensorMaintenanceEventStartCOMPONENTSVector(builder, numElems)
 
+def sensorMaintenanceEventCreateCOMPONENTSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateCOMPONENTSVector(builder, data):
+    sensorMaintenanceEventCreateCOMPONENTSVector(builder, data)
+
 def sensorMaintenanceEventEnd(builder):
     return builder.EndObject()
 
@@ -138,18 +144,25 @@ except:
 class sensorMaintenanceEventT(object):
 
     # sensorMaintenanceEventT
-    def __init__(self):
-        self.START_TIME = None  # type: str
-        self.END_TIME = None  # type: str
-        self.TYPE = 0  # type: int
-        self.DESCRIPTION = None  # type: str
-        self.COMPONENTS = None  # type: List[str]
+    def __init__(
+        self,
+        START_TIME = None,
+        END_TIME = None,
+        TYPE = 0,
+        DESCRIPTION = None,
+        COMPONENTS = None,
+    ):
+        self.START_TIME = START_TIME  # type: Optional[str]
+        self.END_TIME = END_TIME  # type: Optional[str]
+        self.TYPE = TYPE  # type: int
+        self.DESCRIPTION = DESCRIPTION  # type: Optional[str]
+        self.COMPONENTS = COMPONENTS  # type: Optional[List[Optional[str]]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        sensorMaintenanceEvent = sensorMaintenanceEvent()
-        sensorMaintenanceEvent.Init(buf, pos)
-        return cls.InitFromObj(sensorMaintenanceEvent)
+        tmpSensorMaintenanceEvent = sensorMaintenanceEvent()
+        tmpSensorMaintenanceEvent.Init(buf, pos)
+        return cls.InitFromObj(tmpSensorMaintenanceEvent)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -157,9 +170,9 @@ class sensorMaintenanceEventT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, sensorMaintenanceEvent):
+    def InitFromObj(cls, tmpSensorMaintenanceEvent):
         x = sensorMaintenanceEventT()
-        x._UnPack(sensorMaintenanceEvent)
+        x._UnPack(tmpSensorMaintenanceEvent)
         return x
 
     # sensorMaintenanceEventT

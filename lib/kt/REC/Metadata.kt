@@ -29,7 +29,7 @@ class Metadata : Table() {
     /**
      * Comments in the Metadata section.
      */
-    fun COMMENT(j: Int) : String? {
+    fun comment(j: Int) : String? {
         val o = __offset(4)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
@@ -37,14 +37,14 @@ class Metadata : Table() {
             null
         }
     }
-    val COMMENTLength : Int
+    val commentLength : Int
         get() {
             val o = __offset(4); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Free-text field containing the name of the object.
      */
-    val OBJECT_NAME : String?
+    val objectName : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -53,12 +53,12 @@ class Metadata : Table() {
                 null
             }
         }
-    val OBJECT_NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun OBJECT_NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val objectNameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun objectNameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * International designator for the object as assigned by COSPAR.
      */
-    val INTERNATIONAL_DESIGNATOR : String?
+    val internationalDesignator : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -67,12 +67,12 @@ class Metadata : Table() {
                 null
             }
         }
-    val INTERNATIONAL_DESIGNATORAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun INTERNATIONAL_DESIGNATORInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val internationalDesignatorAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun internationalDesignatorInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
     /**
      * Satellite catalog source from which 'OBJECT_DESIGNATOR' was obtained.
      */
-    val CATALOG_NAME : String?
+    val catalogName : String?
         get() {
             val o = __offset(10)
             return if (o != 0) {
@@ -81,12 +81,12 @@ class Metadata : Table() {
                 null
             }
         }
-    val CATALOG_NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
-    fun CATALOG_NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
+    val catalogNameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(10, 1)
+    fun catalogNameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 10, 1)
     /**
      * Unique satellite identification designator from the catalog.
      */
-    val OBJECT_DESIGNATOR : String?
+    val objectDesignator : String?
         get() {
             val o = __offset(12)
             return if (o != 0) {
@@ -95,12 +95,12 @@ class Metadata : Table() {
                 null
             }
         }
-    val OBJECT_DESIGNATORAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
-    fun OBJECT_DESIGNATORInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
+    val objectDesignatorAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(12, 1)
+    fun objectDesignatorInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 12, 1)
     /**
      * Alternate names of this space object.
      */
-    fun ALTERNATE_NAMES(j: Int) : String? {
+    fun alternateNames(j: Int) : String? {
         val o = __offset(14)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
@@ -108,14 +108,14 @@ class Metadata : Table() {
             null
         }
     }
-    val ALTERNATE_NAMESLength : Int
+    val alternateNamesLength : Int
         get() {
             val o = __offset(14); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Originator or programmatic Point-of-Contact (PoC) for OCM.
      */
-    val ORIGINATOR_POC : String?
+    val originatorPoc : String?
         get() {
             val o = __offset(16)
             return if (o != 0) {
@@ -124,12 +124,12 @@ class Metadata : Table() {
                 null
             }
         }
-    val ORIGINATOR_POCAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(16, 1)
-    fun ORIGINATOR_POCInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 16, 1)
+    val originatorPocAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(16, 1)
+    fun originatorPocInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 16, 1)
     /**
      * Contact position of the originator PoC.
      */
-    val ORIGINATOR_POSITION : String?
+    val originatorPosition : String?
         get() {
             val o = __offset(18)
             return if (o != 0) {
@@ -138,12 +138,12 @@ class Metadata : Table() {
                 null
             }
         }
-    val ORIGINATOR_POSITIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(18, 1)
-    fun ORIGINATOR_POSITIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 18, 1)
+    val originatorPositionAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(18, 1)
+    fun originatorPositionInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 18, 1)
     /**
      * Originator PoC phone number.
      */
-    val ORIGINATOR_PHONE : String?
+    val originatorPhone : String?
         get() {
             val o = __offset(20)
             return if (o != 0) {
@@ -152,12 +152,12 @@ class Metadata : Table() {
                 null
             }
         }
-    val ORIGINATOR_PHONEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(20, 1)
-    fun ORIGINATOR_PHONEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 20, 1)
+    val originatorPhoneAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(20, 1)
+    fun originatorPhoneInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 20, 1)
     /**
      * Originator PoC email address.
      */
-    val ORIGINATOR_EMAIL : String?
+    val originatorEmail : String?
         get() {
             val o = __offset(22)
             return if (o != 0) {
@@ -166,12 +166,12 @@ class Metadata : Table() {
                 null
             }
         }
-    val ORIGINATOR_EMAILAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(22, 1)
-    fun ORIGINATOR_EMAILInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 22, 1)
+    val originatorEmailAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(22, 1)
+    fun originatorEmailInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 22, 1)
     /**
      * Originator's physical address information.
      */
-    val ORIGINATOR_ADDRESS : String?
+    val originatorAddress : String?
         get() {
             val o = __offset(24)
             return if (o != 0) {
@@ -180,12 +180,12 @@ class Metadata : Table() {
                 null
             }
         }
-    val ORIGINATOR_ADDRESSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(24, 1)
-    fun ORIGINATOR_ADDRESSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 24, 1)
+    val originatorAddressAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(24, 1)
+    fun originatorAddressInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 24, 1)
     /**
      * Creating agency or operator for technical contact.
      */
-    val TECH_ORG : String?
+    val techOrg : String?
         get() {
             val o = __offset(26)
             return if (o != 0) {
@@ -194,12 +194,12 @@ class Metadata : Table() {
                 null
             }
         }
-    val TECH_ORGAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(26, 1)
-    fun TECH_ORGInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 26, 1)
+    val techOrgAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(26, 1)
+    fun techOrgInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 26, 1)
     /**
      * Technical Point-of-Contact (PoC) for OCM.
      */
-    val TECH_POC : String?
+    val techPoc : String?
         get() {
             val o = __offset(28)
             return if (o != 0) {
@@ -208,12 +208,12 @@ class Metadata : Table() {
                 null
             }
         }
-    val TECH_POCAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(28, 1)
-    fun TECH_POCInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 28, 1)
+    val techPocAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(28, 1)
+    fun techPocInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 28, 1)
     /**
      * Contact position of the technical PoC.
      */
-    val TECH_POSITION : String?
+    val techPosition : String?
         get() {
             val o = __offset(30)
             return if (o != 0) {
@@ -222,12 +222,12 @@ class Metadata : Table() {
                 null
             }
         }
-    val TECH_POSITIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(30, 1)
-    fun TECH_POSITIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 30, 1)
+    val techPositionAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(30, 1)
+    fun techPositionInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 30, 1)
     /**
      * Technical PoC phone number.
      */
-    val TECH_PHONE : String?
+    val techPhone : String?
         get() {
             val o = __offset(32)
             return if (o != 0) {
@@ -236,12 +236,12 @@ class Metadata : Table() {
                 null
             }
         }
-    val TECH_PHONEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(32, 1)
-    fun TECH_PHONEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 32, 1)
+    val techPhoneAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(32, 1)
+    fun techPhoneInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 32, 1)
     /**
      * Technical PoC email address.
      */
-    val TECH_EMAIL : String?
+    val techEmail : String?
         get() {
             val o = __offset(34)
             return if (o != 0) {
@@ -250,12 +250,12 @@ class Metadata : Table() {
                 null
             }
         }
-    val TECH_EMAILAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(34, 1)
-    fun TECH_EMAILInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 34, 1)
+    val techEmailAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(34, 1)
+    fun techEmailInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 34, 1)
     /**
      * Technical PoC physical address information.
      */
-    val TECH_ADDRESS : String?
+    val techAddress : String?
         get() {
             val o = __offset(36)
             return if (o != 0) {
@@ -264,12 +264,12 @@ class Metadata : Table() {
                 null
             }
         }
-    val TECH_ADDRESSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(36, 1)
-    fun TECH_ADDRESSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 36, 1)
+    val techAddressAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(36, 1)
+    fun techAddressInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 36, 1)
     /**
      * ID that uniquely identifies the previous message from this originator.
      */
-    val PREVIOUS_MESSAGE_ID : String?
+    val previousMessageId : String?
         get() {
             val o = __offset(38)
             return if (o != 0) {
@@ -278,12 +278,12 @@ class Metadata : Table() {
                 null
             }
         }
-    val PREVIOUS_MESSAGE_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(38, 1)
-    fun PREVIOUS_MESSAGE_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 38, 1)
+    val previousMessageIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(38, 1)
+    fun previousMessageIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 38, 1)
     /**
      * ID that uniquely identifies the next message from this originator.
      */
-    val NEXT_MESSAGE_ID : String?
+    val nextMessageId : String?
         get() {
             val o = __offset(40)
             return if (o != 0) {
@@ -292,12 +292,12 @@ class Metadata : Table() {
                 null
             }
         }
-    val NEXT_MESSAGE_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(40, 1)
-    fun NEXT_MESSAGE_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 40, 1)
+    val nextMessageIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(40, 1)
+    fun nextMessageIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 40, 1)
     /**
      * Unique identifier of Attitude Data Messages linked to this OCM.
      */
-    val ADM_MSG_LINK : String?
+    val admMsgLink : String?
         get() {
             val o = __offset(42)
             return if (o != 0) {
@@ -306,12 +306,12 @@ class Metadata : Table() {
                 null
             }
         }
-    val ADM_MSG_LINKAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(42, 1)
-    fun ADM_MSG_LINKInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 42, 1)
+    val admMsgLinkAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(42, 1)
+    fun admMsgLinkInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 42, 1)
     /**
      * Unique identifier of Conjunction Data Messages linked to this OCM.
      */
-    val CDM_MSG_LINK : String?
+    val cdmMsgLink : String?
         get() {
             val o = __offset(44)
             return if (o != 0) {
@@ -320,12 +320,12 @@ class Metadata : Table() {
                 null
             }
         }
-    val CDM_MSG_LINKAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(44, 1)
-    fun CDM_MSG_LINKInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 44, 1)
+    val cdmMsgLinkAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(44, 1)
+    fun cdmMsgLinkInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 44, 1)
     /**
      * Unique identifier of Pointing Request Messages linked to this OCM.
      */
-    val PRM_MSG_LINK : String?
+    val prmMsgLink : String?
         get() {
             val o = __offset(46)
             return if (o != 0) {
@@ -334,12 +334,12 @@ class Metadata : Table() {
                 null
             }
         }
-    val PRM_MSG_LINKAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(46, 1)
-    fun PRM_MSG_LINKInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 46, 1)
+    val prmMsgLinkAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(46, 1)
+    fun prmMsgLinkInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 46, 1)
     /**
      * Unique identifier of Reentry Data Messages linked to this OCM.
      */
-    val RDM_MSG_LINK : String?
+    val rdmMsgLink : String?
         get() {
             val o = __offset(48)
             return if (o != 0) {
@@ -348,12 +348,12 @@ class Metadata : Table() {
                 null
             }
         }
-    val RDM_MSG_LINKAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(48, 1)
-    fun RDM_MSG_LINKInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 48, 1)
+    val rdmMsgLinkAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(48, 1)
+    fun rdmMsgLinkInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 48, 1)
     /**
      * List of Tracking Data Messages upon which this orbit determination is based.
      */
-    fun TDM_MSG_LINK(j: Int) : String? {
+    fun tdmMsgLink(j: Int) : String? {
         val o = __offset(50)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
@@ -361,14 +361,14 @@ class Metadata : Table() {
             null
         }
     }
-    val TDM_MSG_LINKLength : Int
+    val tdmMsgLinkLength : Int
         get() {
             val o = __offset(50); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Operator of the space object.
      */
-    val OPERATOR : String?
+    val operator : String?
         get() {
             val o = __offset(52)
             return if (o != 0) {
@@ -377,12 +377,12 @@ class Metadata : Table() {
                 null
             }
         }
-    val OPERATORAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(52, 1)
-    fun OPERATORInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 52, 1)
+    val operatorAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(52, 1)
+    fun operatorInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 52, 1)
     /**
      * Owner of the space object.
      */
-    val OWNER : String?
+    val owner : String?
         get() {
             val o = __offset(54)
             return if (o != 0) {
@@ -391,12 +391,12 @@ class Metadata : Table() {
                 null
             }
         }
-    val OWNERAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(54, 1)
-    fun OWNERInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 54, 1)
+    val ownerAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(54, 1)
+    fun ownerInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 54, 1)
     /**
      * Country where the space object owner is based.
      */
-    val COUNTRY : String?
+    val country : String?
         get() {
             val o = __offset(56)
             return if (o != 0) {
@@ -405,12 +405,12 @@ class Metadata : Table() {
                 null
             }
         }
-    val COUNTRYAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(56, 1)
-    fun COUNTRYInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 56, 1)
+    val countryAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(56, 1)
+    fun countryInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 56, 1)
     /**
      * Name of the constellation to which this space object belongs.
      */
-    val CONSTELLATION : String?
+    val constellation : String?
         get() {
             val o = __offset(58)
             return if (o != 0) {
@@ -419,12 +419,12 @@ class Metadata : Table() {
                 null
             }
         }
-    val CONSTELLATIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(58, 1)
-    fun CONSTELLATIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 58, 1)
+    val constellationAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(58, 1)
+    fun constellationInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 58, 1)
     /**
      * Specification of the type of object (e.g., PAYLOAD, ROCKET BODY, DEBRIS).
      */
-    val OBJECT_TYPE : String?
+    val objectType : String?
         get() {
             val o = __offset(60)
             return if (o != 0) {
@@ -433,12 +433,12 @@ class Metadata : Table() {
                 null
             }
         }
-    val OBJECT_TYPEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(60, 1)
-    fun OBJECT_TYPEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 60, 1)
+    val objectTypeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(60, 1)
+    fun objectTypeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 60, 1)
     /**
      * Time system for all absolute time stamps in this OCM, including EPOCH_TZERO.
      */
-    val TIME_SYSTEM : String?
+    val timeSystem : String?
         get() {
             val o = __offset(62)
             return if (o != 0) {
@@ -447,12 +447,12 @@ class Metadata : Table() {
                 null
             }
         }
-    val TIME_SYSTEMAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(62, 1)
-    fun TIME_SYSTEMInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 62, 1)
+    val timeSystemAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(62, 1)
+    fun timeSystemInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 62, 1)
     /**
      * Default epoch to which all relative times are referenced in data blocks.
      */
-    val EPOCH_TZERO : String?
+    val epochTzero : String?
         get() {
             val o = __offset(64)
             return if (o != 0) {
@@ -461,12 +461,12 @@ class Metadata : Table() {
                 null
             }
         }
-    val EPOCH_TZEROAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(64, 1)
-    fun EPOCH_TZEROInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 64, 1)
+    val epochTzeroAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(64, 1)
+    fun epochTzeroInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 64, 1)
     /**
      * Specification of the operational status of the space object.
      */
-    val OPS_STATUS : String?
+    val opsStatus : String?
         get() {
             val o = __offset(66)
             return if (o != 0) {
@@ -475,12 +475,12 @@ class Metadata : Table() {
                 null
             }
         }
-    val OPS_STATUSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(66, 1)
-    fun OPS_STATUSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 66, 1)
+    val opsStatusAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(66, 1)
+    fun opsStatusInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 66, 1)
     /**
      * Specification of the type of orbit (e.g., GEO, LEO).
      */
-    val ORBIT_CATEGORY : String?
+    val orbitCategory : String?
         get() {
             val o = __offset(68)
             return if (o != 0) {
@@ -489,12 +489,12 @@ class Metadata : Table() {
                 null
             }
         }
-    val ORBIT_CATEGORYAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(68, 1)
-    fun ORBIT_CATEGORYInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 68, 1)
+    val orbitCategoryAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(68, 1)
+    fun orbitCategoryInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 68, 1)
     /**
      * List of elements of information data blocks included in this message.
      */
-    fun OCM_DATA_ELEMENTS(j: Int) : String? {
+    fun ocmDataElements(j: Int) : String? {
         val o = __offset(70)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
@@ -502,14 +502,14 @@ class Metadata : Table() {
             null
         }
     }
-    val OCM_DATA_ELEMENTSLength : Int
+    val ocmDataElementsLength : Int
         get() {
             val o = __offset(70); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Number of spacecraft clock counts at EPOCH_TZERO (used if TIME_SYSTEM is SCLK).
      */
-    val SCLK_OFFSET_AT_EPOCH : Double
+    val sclkOffsetAtEpoch : Double
         get() {
             val o = __offset(72)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -517,7 +517,7 @@ class Metadata : Table() {
     /**
      * Number of clock seconds occurring during one SI second (used if TIME_SYSTEM is SCLK).
      */
-    val SCLK_SEC_PER_SI_SEC : Double
+    val sclkSecPerSiSec : Double
         get() {
             val o = __offset(74)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -525,7 +525,7 @@ class Metadata : Table() {
     /**
      * Creation epoch of the previous message from this originator.
      */
-    val PREVIOUS_MESSAGE_EPOCH : String?
+    val previousMessageEpoch : String?
         get() {
             val o = __offset(76)
             return if (o != 0) {
@@ -534,12 +534,12 @@ class Metadata : Table() {
                 null
             }
         }
-    val PREVIOUS_MESSAGE_EPOCHAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(76, 1)
-    fun PREVIOUS_MESSAGE_EPOCHInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 76, 1)
+    val previousMessageEpochAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(76, 1)
+    fun previousMessageEpochInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 76, 1)
     /**
      * Anticipated (or actual) epoch of the next message from this originator.
      */
-    val NEXT_MESSAGE_EPOCH : String?
+    val nextMessageEpoch : String?
         get() {
             val o = __offset(78)
             return if (o != 0) {
@@ -548,12 +548,12 @@ class Metadata : Table() {
                 null
             }
         }
-    val NEXT_MESSAGE_EPOCHAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(78, 1)
-    fun NEXT_MESSAGE_EPOCHInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 78, 1)
+    val nextMessageEpochAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(78, 1)
+    fun nextMessageEpochInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 78, 1)
     /**
      * Time of the earliest data contained in the OCM.
      */
-    val START_TIME : String?
+    val startTime : String?
         get() {
             val o = __offset(80)
             return if (o != 0) {
@@ -562,12 +562,12 @@ class Metadata : Table() {
                 null
             }
         }
-    val START_TIMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(80, 1)
-    fun START_TIMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 80, 1)
+    val startTimeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(80, 1)
+    fun startTimeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 80, 1)
     /**
      * Time of the latest data contained in the OCM.
      */
-    val STOP_TIME : String?
+    val stopTime : String?
         get() {
             val o = __offset(82)
             return if (o != 0) {
@@ -576,12 +576,12 @@ class Metadata : Table() {
                 null
             }
         }
-    val STOP_TIMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(82, 1)
-    fun STOP_TIMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 82, 1)
+    val stopTimeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(82, 1)
+    fun stopTimeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 82, 1)
     /**
      * Span of time that the OCM covers, measured in days.
      */
-    val TIME_SPAN : Double
+    val timeSpan : Double
         get() {
             val o = __offset(84)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -589,7 +589,7 @@ class Metadata : Table() {
     /**
      * Difference (TAI - UTC) in seconds at EPOCH_TZERO.
      */
-    val TAIMUTC_AT_TZERO : Double
+    val taimutcAtTzero : Double
         get() {
             val o = __offset(86)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -597,7 +597,7 @@ class Metadata : Table() {
     /**
      * Epoch of next leap second.
      */
-    val NEXT_LEAP_EPOCH : String?
+    val nextLeapEpoch : String?
         get() {
             val o = __offset(88)
             return if (o != 0) {
@@ -606,12 +606,12 @@ class Metadata : Table() {
                 null
             }
         }
-    val NEXT_LEAP_EPOCHAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(88, 1)
-    fun NEXT_LEAP_EPOCHInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 88, 1)
+    val nextLeapEpochAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(88, 1)
+    fun nextLeapEpochInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 88, 1)
     /**
      * Difference (TAI - UTC) in seconds at NEXT_LEAP_EPOCH.
      */
-    val NEXT_LEAP_TAIMUTC : Double
+    val nextLeapTaimutc : Double
         get() {
             val o = __offset(90)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -619,7 +619,7 @@ class Metadata : Table() {
     /**
      * Difference (UT1 - UTC) in seconds at EPOCH_TZERO.
      */
-    val UT1MUTC_AT_TZERO : Double
+    val ut1MutcAtTzero : Double
         get() {
             val o = __offset(92)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -627,7 +627,7 @@ class Metadata : Table() {
     /**
      * Source and version of Earth Orientation Parameters used.
      */
-    val EOP_SOURCE : String?
+    val eopSource : String?
         get() {
             val o = __offset(94)
             return if (o != 0) {
@@ -636,12 +636,12 @@ class Metadata : Table() {
                 null
             }
         }
-    val EOP_SOURCEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(94, 1)
-    fun EOP_SOURCEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 94, 1)
+    val eopSourceAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(94, 1)
+    fun eopSourceInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 94, 1)
     /**
      * Method used to select or interpolate sequential EOP data.
      */
-    val INTERP_METHOD_EOP : String?
+    val interpMethodEop : String?
         get() {
             val o = __offset(96)
             return if (o != 0) {
@@ -650,12 +650,12 @@ class Metadata : Table() {
                 null
             }
         }
-    val INTERP_METHOD_EOPAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(96, 1)
-    fun INTERP_METHOD_EOPInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 96, 1)
+    val interpMethodEopAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(96, 1)
+    fun interpMethodEopInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 96, 1)
     /**
      * Source and version of celestial body ephemeris data used.
      */
-    val CELESTIAL_SOURCE : String?
+    val celestialSource : String?
         get() {
             val o = __offset(98)
             return if (o != 0) {
@@ -664,69 +664,69 @@ class Metadata : Table() {
                 null
             }
         }
-    val CELESTIAL_SOURCEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(98, 1)
-    fun CELESTIAL_SOURCEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 98, 1)
+    val celestialSourceAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(98, 1)
+    fun celestialSourceInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 98, 1)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsMetadata(_bb: ByteBuffer): Metadata = getRootAsMetadata(_bb, Metadata())
         fun getRootAsMetadata(_bb: ByteBuffer, obj: Metadata): Metadata {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createMetadata(builder: FlatBufferBuilder, COMMENTOffset: Int, OBJECT_NAMEOffset: Int, INTERNATIONAL_DESIGNATOROffset: Int, CATALOG_NAMEOffset: Int, OBJECT_DESIGNATOROffset: Int, ALTERNATE_NAMESOffset: Int, ORIGINATOR_POCOffset: Int, ORIGINATOR_POSITIONOffset: Int, ORIGINATOR_PHONEOffset: Int, ORIGINATOR_EMAILOffset: Int, ORIGINATOR_ADDRESSOffset: Int, TECH_ORGOffset: Int, TECH_POCOffset: Int, TECH_POSITIONOffset: Int, TECH_PHONEOffset: Int, TECH_EMAILOffset: Int, TECH_ADDRESSOffset: Int, PREVIOUS_MESSAGE_IDOffset: Int, NEXT_MESSAGE_IDOffset: Int, ADM_MSG_LINKOffset: Int, CDM_MSG_LINKOffset: Int, PRM_MSG_LINKOffset: Int, RDM_MSG_LINKOffset: Int, TDM_MSG_LINKOffset: Int, OPERATOROffset: Int, OWNEROffset: Int, COUNTRYOffset: Int, CONSTELLATIONOffset: Int, OBJECT_TYPEOffset: Int, TIME_SYSTEMOffset: Int, EPOCH_TZEROOffset: Int, OPS_STATUSOffset: Int, ORBIT_CATEGORYOffset: Int, OCM_DATA_ELEMENTSOffset: Int, SCLK_OFFSET_AT_EPOCH: Double, SCLK_SEC_PER_SI_SEC: Double, PREVIOUS_MESSAGE_EPOCHOffset: Int, NEXT_MESSAGE_EPOCHOffset: Int, START_TIMEOffset: Int, STOP_TIMEOffset: Int, TIME_SPAN: Double, TAIMUTC_AT_TZERO: Double, NEXT_LEAP_EPOCHOffset: Int, NEXT_LEAP_TAIMUTC: Double, UT1MUTC_AT_TZERO: Double, EOP_SOURCEOffset: Int, INTERP_METHOD_EOPOffset: Int, CELESTIAL_SOURCEOffset: Int) : Int {
+        fun createMetadata(builder: FlatBufferBuilder, commentOffset: Int, objectNameOffset: Int, internationalDesignatorOffset: Int, catalogNameOffset: Int, objectDesignatorOffset: Int, alternateNamesOffset: Int, originatorPocOffset: Int, originatorPositionOffset: Int, originatorPhoneOffset: Int, originatorEmailOffset: Int, originatorAddressOffset: Int, techOrgOffset: Int, techPocOffset: Int, techPositionOffset: Int, techPhoneOffset: Int, techEmailOffset: Int, techAddressOffset: Int, previousMessageIdOffset: Int, nextMessageIdOffset: Int, admMsgLinkOffset: Int, cdmMsgLinkOffset: Int, prmMsgLinkOffset: Int, rdmMsgLinkOffset: Int, tdmMsgLinkOffset: Int, operatorOffset: Int, ownerOffset: Int, countryOffset: Int, constellationOffset: Int, objectTypeOffset: Int, timeSystemOffset: Int, epochTzeroOffset: Int, opsStatusOffset: Int, orbitCategoryOffset: Int, ocmDataElementsOffset: Int, sclkOffsetAtEpoch: Double, sclkSecPerSiSec: Double, previousMessageEpochOffset: Int, nextMessageEpochOffset: Int, startTimeOffset: Int, stopTimeOffset: Int, timeSpan: Double, taimutcAtTzero: Double, nextLeapEpochOffset: Int, nextLeapTaimutc: Double, ut1MutcAtTzero: Double, eopSourceOffset: Int, interpMethodEopOffset: Int, celestialSourceOffset: Int) : Int {
             builder.startTable(48)
-            addUT1MUTC_AT_TZERO(builder, UT1MUTC_AT_TZERO)
-            addNEXT_LEAP_TAIMUTC(builder, NEXT_LEAP_TAIMUTC)
-            addTAIMUTC_AT_TZERO(builder, TAIMUTC_AT_TZERO)
-            addTIME_SPAN(builder, TIME_SPAN)
-            addSCLK_SEC_PER_SI_SEC(builder, SCLK_SEC_PER_SI_SEC)
-            addSCLK_OFFSET_AT_EPOCH(builder, SCLK_OFFSET_AT_EPOCH)
-            addCELESTIAL_SOURCE(builder, CELESTIAL_SOURCEOffset)
-            addINTERP_METHOD_EOP(builder, INTERP_METHOD_EOPOffset)
-            addEOP_SOURCE(builder, EOP_SOURCEOffset)
-            addNEXT_LEAP_EPOCH(builder, NEXT_LEAP_EPOCHOffset)
-            addSTOP_TIME(builder, STOP_TIMEOffset)
-            addSTART_TIME(builder, START_TIMEOffset)
-            addNEXT_MESSAGE_EPOCH(builder, NEXT_MESSAGE_EPOCHOffset)
-            addPREVIOUS_MESSAGE_EPOCH(builder, PREVIOUS_MESSAGE_EPOCHOffset)
-            addOCM_DATA_ELEMENTS(builder, OCM_DATA_ELEMENTSOffset)
-            addORBIT_CATEGORY(builder, ORBIT_CATEGORYOffset)
-            addOPS_STATUS(builder, OPS_STATUSOffset)
-            addEPOCH_TZERO(builder, EPOCH_TZEROOffset)
-            addTIME_SYSTEM(builder, TIME_SYSTEMOffset)
-            addOBJECT_TYPE(builder, OBJECT_TYPEOffset)
-            addCONSTELLATION(builder, CONSTELLATIONOffset)
-            addCOUNTRY(builder, COUNTRYOffset)
-            addOWNER(builder, OWNEROffset)
-            addOPERATOR(builder, OPERATOROffset)
-            addTDM_MSG_LINK(builder, TDM_MSG_LINKOffset)
-            addRDM_MSG_LINK(builder, RDM_MSG_LINKOffset)
-            addPRM_MSG_LINK(builder, PRM_MSG_LINKOffset)
-            addCDM_MSG_LINK(builder, CDM_MSG_LINKOffset)
-            addADM_MSG_LINK(builder, ADM_MSG_LINKOffset)
-            addNEXT_MESSAGE_ID(builder, NEXT_MESSAGE_IDOffset)
-            addPREVIOUS_MESSAGE_ID(builder, PREVIOUS_MESSAGE_IDOffset)
-            addTECH_ADDRESS(builder, TECH_ADDRESSOffset)
-            addTECH_EMAIL(builder, TECH_EMAILOffset)
-            addTECH_PHONE(builder, TECH_PHONEOffset)
-            addTECH_POSITION(builder, TECH_POSITIONOffset)
-            addTECH_POC(builder, TECH_POCOffset)
-            addTECH_ORG(builder, TECH_ORGOffset)
-            addORIGINATOR_ADDRESS(builder, ORIGINATOR_ADDRESSOffset)
-            addORIGINATOR_EMAIL(builder, ORIGINATOR_EMAILOffset)
-            addORIGINATOR_PHONE(builder, ORIGINATOR_PHONEOffset)
-            addORIGINATOR_POSITION(builder, ORIGINATOR_POSITIONOffset)
-            addORIGINATOR_POC(builder, ORIGINATOR_POCOffset)
-            addALTERNATE_NAMES(builder, ALTERNATE_NAMESOffset)
-            addOBJECT_DESIGNATOR(builder, OBJECT_DESIGNATOROffset)
-            addCATALOG_NAME(builder, CATALOG_NAMEOffset)
-            addINTERNATIONAL_DESIGNATOR(builder, INTERNATIONAL_DESIGNATOROffset)
-            addOBJECT_NAME(builder, OBJECT_NAMEOffset)
-            addCOMMENT(builder, COMMENTOffset)
+            addUT1MUTCATTZERO(builder, ut1MutcAtTzero)
+            addNEXTLEAPTAIMUTC(builder, nextLeapTaimutc)
+            addTAIMUTCATTZERO(builder, taimutcAtTzero)
+            addTIMESPAN(builder, timeSpan)
+            addSCLKSECPERSISEC(builder, sclkSecPerSiSec)
+            addSCLKOFFSETATEPOCH(builder, sclkOffsetAtEpoch)
+            addCELESTIALSOURCE(builder, celestialSourceOffset)
+            addINTERPMETHODEOP(builder, interpMethodEopOffset)
+            addEOPSOURCE(builder, eopSourceOffset)
+            addNEXTLEAPEPOCH(builder, nextLeapEpochOffset)
+            addSTOPTIME(builder, stopTimeOffset)
+            addSTARTTIME(builder, startTimeOffset)
+            addNEXTMESSAGEEPOCH(builder, nextMessageEpochOffset)
+            addPREVIOUSMESSAGEEPOCH(builder, previousMessageEpochOffset)
+            addOCMDATAELEMENTS(builder, ocmDataElementsOffset)
+            addORBITCATEGORY(builder, orbitCategoryOffset)
+            addOPSSTATUS(builder, opsStatusOffset)
+            addEPOCHTZERO(builder, epochTzeroOffset)
+            addTIMESYSTEM(builder, timeSystemOffset)
+            addOBJECTTYPE(builder, objectTypeOffset)
+            addCONSTELLATION(builder, constellationOffset)
+            addCOUNTRY(builder, countryOffset)
+            addOWNER(builder, ownerOffset)
+            addOPERATOR(builder, operatorOffset)
+            addTDMMSGLINK(builder, tdmMsgLinkOffset)
+            addRDMMSGLINK(builder, rdmMsgLinkOffset)
+            addPRMMSGLINK(builder, prmMsgLinkOffset)
+            addCDMMSGLINK(builder, cdmMsgLinkOffset)
+            addADMMSGLINK(builder, admMsgLinkOffset)
+            addNEXTMESSAGEID(builder, nextMessageIdOffset)
+            addPREVIOUSMESSAGEID(builder, previousMessageIdOffset)
+            addTECHADDRESS(builder, techAddressOffset)
+            addTECHEMAIL(builder, techEmailOffset)
+            addTECHPHONE(builder, techPhoneOffset)
+            addTECHPOSITION(builder, techPositionOffset)
+            addTECHPOC(builder, techPocOffset)
+            addTECHORG(builder, techOrgOffset)
+            addORIGINATORADDRESS(builder, originatorAddressOffset)
+            addORIGINATOREMAIL(builder, originatorEmailOffset)
+            addORIGINATORPHONE(builder, originatorPhoneOffset)
+            addORIGINATORPOSITION(builder, originatorPositionOffset)
+            addORIGINATORPOC(builder, originatorPocOffset)
+            addALTERNATENAMES(builder, alternateNamesOffset)
+            addOBJECTDESIGNATOR(builder, objectDesignatorOffset)
+            addCATALOGNAME(builder, catalogNameOffset)
+            addINTERNATIONALDESIGNATOR(builder, internationalDesignatorOffset)
+            addOBJECTNAME(builder, objectNameOffset)
+            addCOMMENT(builder, commentOffset)
             return endMetadata(builder)
         }
         fun startMetadata(builder: FlatBufferBuilder) = builder.startTable(48)
-        fun addCOMMENT(builder: FlatBufferBuilder, COMMENT: Int) = builder.addOffset(0, COMMENT, 0)
+        fun addCOMMENT(builder: FlatBufferBuilder, comment: Int) = builder.addOffset(0, comment, 0)
         fun createCommentVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -735,11 +735,11 @@ class Metadata : Table() {
             return builder.endVector()
         }
         fun startCommentVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addOBJECT_NAME(builder: FlatBufferBuilder, OBJECT_NAME: Int) = builder.addOffset(1, OBJECT_NAME, 0)
-        fun addINTERNATIONAL_DESIGNATOR(builder: FlatBufferBuilder, INTERNATIONAL_DESIGNATOR: Int) = builder.addOffset(2, INTERNATIONAL_DESIGNATOR, 0)
-        fun addCATALOG_NAME(builder: FlatBufferBuilder, CATALOG_NAME: Int) = builder.addOffset(3, CATALOG_NAME, 0)
-        fun addOBJECT_DESIGNATOR(builder: FlatBufferBuilder, OBJECT_DESIGNATOR: Int) = builder.addOffset(4, OBJECT_DESIGNATOR, 0)
-        fun addALTERNATE_NAMES(builder: FlatBufferBuilder, ALTERNATE_NAMES: Int) = builder.addOffset(5, ALTERNATE_NAMES, 0)
+        fun addOBJECTNAME(builder: FlatBufferBuilder, objectName: Int) = builder.addOffset(1, objectName, 0)
+        fun addINTERNATIONALDESIGNATOR(builder: FlatBufferBuilder, internationalDesignator: Int) = builder.addOffset(2, internationalDesignator, 0)
+        fun addCATALOGNAME(builder: FlatBufferBuilder, catalogName: Int) = builder.addOffset(3, catalogName, 0)
+        fun addOBJECTDESIGNATOR(builder: FlatBufferBuilder, objectDesignator: Int) = builder.addOffset(4, objectDesignator, 0)
+        fun addALTERNATENAMES(builder: FlatBufferBuilder, alternateNames: Int) = builder.addOffset(5, alternateNames, 0)
         fun createAlternateNamesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -748,24 +748,24 @@ class Metadata : Table() {
             return builder.endVector()
         }
         fun startAlternateNamesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addORIGINATOR_POC(builder: FlatBufferBuilder, ORIGINATOR_POC: Int) = builder.addOffset(6, ORIGINATOR_POC, 0)
-        fun addORIGINATOR_POSITION(builder: FlatBufferBuilder, ORIGINATOR_POSITION: Int) = builder.addOffset(7, ORIGINATOR_POSITION, 0)
-        fun addORIGINATOR_PHONE(builder: FlatBufferBuilder, ORIGINATOR_PHONE: Int) = builder.addOffset(8, ORIGINATOR_PHONE, 0)
-        fun addORIGINATOR_EMAIL(builder: FlatBufferBuilder, ORIGINATOR_EMAIL: Int) = builder.addOffset(9, ORIGINATOR_EMAIL, 0)
-        fun addORIGINATOR_ADDRESS(builder: FlatBufferBuilder, ORIGINATOR_ADDRESS: Int) = builder.addOffset(10, ORIGINATOR_ADDRESS, 0)
-        fun addTECH_ORG(builder: FlatBufferBuilder, TECH_ORG: Int) = builder.addOffset(11, TECH_ORG, 0)
-        fun addTECH_POC(builder: FlatBufferBuilder, TECH_POC: Int) = builder.addOffset(12, TECH_POC, 0)
-        fun addTECH_POSITION(builder: FlatBufferBuilder, TECH_POSITION: Int) = builder.addOffset(13, TECH_POSITION, 0)
-        fun addTECH_PHONE(builder: FlatBufferBuilder, TECH_PHONE: Int) = builder.addOffset(14, TECH_PHONE, 0)
-        fun addTECH_EMAIL(builder: FlatBufferBuilder, TECH_EMAIL: Int) = builder.addOffset(15, TECH_EMAIL, 0)
-        fun addTECH_ADDRESS(builder: FlatBufferBuilder, TECH_ADDRESS: Int) = builder.addOffset(16, TECH_ADDRESS, 0)
-        fun addPREVIOUS_MESSAGE_ID(builder: FlatBufferBuilder, PREVIOUS_MESSAGE_ID: Int) = builder.addOffset(17, PREVIOUS_MESSAGE_ID, 0)
-        fun addNEXT_MESSAGE_ID(builder: FlatBufferBuilder, NEXT_MESSAGE_ID: Int) = builder.addOffset(18, NEXT_MESSAGE_ID, 0)
-        fun addADM_MSG_LINK(builder: FlatBufferBuilder, ADM_MSG_LINK: Int) = builder.addOffset(19, ADM_MSG_LINK, 0)
-        fun addCDM_MSG_LINK(builder: FlatBufferBuilder, CDM_MSG_LINK: Int) = builder.addOffset(20, CDM_MSG_LINK, 0)
-        fun addPRM_MSG_LINK(builder: FlatBufferBuilder, PRM_MSG_LINK: Int) = builder.addOffset(21, PRM_MSG_LINK, 0)
-        fun addRDM_MSG_LINK(builder: FlatBufferBuilder, RDM_MSG_LINK: Int) = builder.addOffset(22, RDM_MSG_LINK, 0)
-        fun addTDM_MSG_LINK(builder: FlatBufferBuilder, TDM_MSG_LINK: Int) = builder.addOffset(23, TDM_MSG_LINK, 0)
+        fun addORIGINATORPOC(builder: FlatBufferBuilder, originatorPoc: Int) = builder.addOffset(6, originatorPoc, 0)
+        fun addORIGINATORPOSITION(builder: FlatBufferBuilder, originatorPosition: Int) = builder.addOffset(7, originatorPosition, 0)
+        fun addORIGINATORPHONE(builder: FlatBufferBuilder, originatorPhone: Int) = builder.addOffset(8, originatorPhone, 0)
+        fun addORIGINATOREMAIL(builder: FlatBufferBuilder, originatorEmail: Int) = builder.addOffset(9, originatorEmail, 0)
+        fun addORIGINATORADDRESS(builder: FlatBufferBuilder, originatorAddress: Int) = builder.addOffset(10, originatorAddress, 0)
+        fun addTECHORG(builder: FlatBufferBuilder, techOrg: Int) = builder.addOffset(11, techOrg, 0)
+        fun addTECHPOC(builder: FlatBufferBuilder, techPoc: Int) = builder.addOffset(12, techPoc, 0)
+        fun addTECHPOSITION(builder: FlatBufferBuilder, techPosition: Int) = builder.addOffset(13, techPosition, 0)
+        fun addTECHPHONE(builder: FlatBufferBuilder, techPhone: Int) = builder.addOffset(14, techPhone, 0)
+        fun addTECHEMAIL(builder: FlatBufferBuilder, techEmail: Int) = builder.addOffset(15, techEmail, 0)
+        fun addTECHADDRESS(builder: FlatBufferBuilder, techAddress: Int) = builder.addOffset(16, techAddress, 0)
+        fun addPREVIOUSMESSAGEID(builder: FlatBufferBuilder, previousMessageId: Int) = builder.addOffset(17, previousMessageId, 0)
+        fun addNEXTMESSAGEID(builder: FlatBufferBuilder, nextMessageId: Int) = builder.addOffset(18, nextMessageId, 0)
+        fun addADMMSGLINK(builder: FlatBufferBuilder, admMsgLink: Int) = builder.addOffset(19, admMsgLink, 0)
+        fun addCDMMSGLINK(builder: FlatBufferBuilder, cdmMsgLink: Int) = builder.addOffset(20, cdmMsgLink, 0)
+        fun addPRMMSGLINK(builder: FlatBufferBuilder, prmMsgLink: Int) = builder.addOffset(21, prmMsgLink, 0)
+        fun addRDMMSGLINK(builder: FlatBufferBuilder, rdmMsgLink: Int) = builder.addOffset(22, rdmMsgLink, 0)
+        fun addTDMMSGLINK(builder: FlatBufferBuilder, tdmMsgLink: Int) = builder.addOffset(23, tdmMsgLink, 0)
         fun createTdmMsgLinkVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -774,16 +774,16 @@ class Metadata : Table() {
             return builder.endVector()
         }
         fun startTdmMsgLinkVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addOPERATOR(builder: FlatBufferBuilder, OPERATOR: Int) = builder.addOffset(24, OPERATOR, 0)
-        fun addOWNER(builder: FlatBufferBuilder, OWNER: Int) = builder.addOffset(25, OWNER, 0)
-        fun addCOUNTRY(builder: FlatBufferBuilder, COUNTRY: Int) = builder.addOffset(26, COUNTRY, 0)
-        fun addCONSTELLATION(builder: FlatBufferBuilder, CONSTELLATION: Int) = builder.addOffset(27, CONSTELLATION, 0)
-        fun addOBJECT_TYPE(builder: FlatBufferBuilder, OBJECT_TYPE: Int) = builder.addOffset(28, OBJECT_TYPE, 0)
-        fun addTIME_SYSTEM(builder: FlatBufferBuilder, TIME_SYSTEM: Int) = builder.addOffset(29, TIME_SYSTEM, 0)
-        fun addEPOCH_TZERO(builder: FlatBufferBuilder, EPOCH_TZERO: Int) = builder.addOffset(30, EPOCH_TZERO, 0)
-        fun addOPS_STATUS(builder: FlatBufferBuilder, OPS_STATUS: Int) = builder.addOffset(31, OPS_STATUS, 0)
-        fun addORBIT_CATEGORY(builder: FlatBufferBuilder, ORBIT_CATEGORY: Int) = builder.addOffset(32, ORBIT_CATEGORY, 0)
-        fun addOCM_DATA_ELEMENTS(builder: FlatBufferBuilder, OCM_DATA_ELEMENTS: Int) = builder.addOffset(33, OCM_DATA_ELEMENTS, 0)
+        fun addOPERATOR(builder: FlatBufferBuilder, operator: Int) = builder.addOffset(24, operator, 0)
+        fun addOWNER(builder: FlatBufferBuilder, owner: Int) = builder.addOffset(25, owner, 0)
+        fun addCOUNTRY(builder: FlatBufferBuilder, country: Int) = builder.addOffset(26, country, 0)
+        fun addCONSTELLATION(builder: FlatBufferBuilder, constellation: Int) = builder.addOffset(27, constellation, 0)
+        fun addOBJECTTYPE(builder: FlatBufferBuilder, objectType: Int) = builder.addOffset(28, objectType, 0)
+        fun addTIMESYSTEM(builder: FlatBufferBuilder, timeSystem: Int) = builder.addOffset(29, timeSystem, 0)
+        fun addEPOCHTZERO(builder: FlatBufferBuilder, epochTzero: Int) = builder.addOffset(30, epochTzero, 0)
+        fun addOPSSTATUS(builder: FlatBufferBuilder, opsStatus: Int) = builder.addOffset(31, opsStatus, 0)
+        fun addORBITCATEGORY(builder: FlatBufferBuilder, orbitCategory: Int) = builder.addOffset(32, orbitCategory, 0)
+        fun addOCMDATAELEMENTS(builder: FlatBufferBuilder, ocmDataElements: Int) = builder.addOffset(33, ocmDataElements, 0)
         fun createOcmDataElementsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -792,20 +792,20 @@ class Metadata : Table() {
             return builder.endVector()
         }
         fun startOcmDataElementsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addSCLK_OFFSET_AT_EPOCH(builder: FlatBufferBuilder, SCLK_OFFSET_AT_EPOCH: Double) = builder.addDouble(34, SCLK_OFFSET_AT_EPOCH, 0.0)
-        fun addSCLK_SEC_PER_SI_SEC(builder: FlatBufferBuilder, SCLK_SEC_PER_SI_SEC: Double) = builder.addDouble(35, SCLK_SEC_PER_SI_SEC, 0.0)
-        fun addPREVIOUS_MESSAGE_EPOCH(builder: FlatBufferBuilder, PREVIOUS_MESSAGE_EPOCH: Int) = builder.addOffset(36, PREVIOUS_MESSAGE_EPOCH, 0)
-        fun addNEXT_MESSAGE_EPOCH(builder: FlatBufferBuilder, NEXT_MESSAGE_EPOCH: Int) = builder.addOffset(37, NEXT_MESSAGE_EPOCH, 0)
-        fun addSTART_TIME(builder: FlatBufferBuilder, START_TIME: Int) = builder.addOffset(38, START_TIME, 0)
-        fun addSTOP_TIME(builder: FlatBufferBuilder, STOP_TIME: Int) = builder.addOffset(39, STOP_TIME, 0)
-        fun addTIME_SPAN(builder: FlatBufferBuilder, TIME_SPAN: Double) = builder.addDouble(40, TIME_SPAN, 0.0)
-        fun addTAIMUTC_AT_TZERO(builder: FlatBufferBuilder, TAIMUTC_AT_TZERO: Double) = builder.addDouble(41, TAIMUTC_AT_TZERO, 0.0)
-        fun addNEXT_LEAP_EPOCH(builder: FlatBufferBuilder, NEXT_LEAP_EPOCH: Int) = builder.addOffset(42, NEXT_LEAP_EPOCH, 0)
-        fun addNEXT_LEAP_TAIMUTC(builder: FlatBufferBuilder, NEXT_LEAP_TAIMUTC: Double) = builder.addDouble(43, NEXT_LEAP_TAIMUTC, 0.0)
-        fun addUT1MUTC_AT_TZERO(builder: FlatBufferBuilder, UT1MUTC_AT_TZERO: Double) = builder.addDouble(44, UT1MUTC_AT_TZERO, 0.0)
-        fun addEOP_SOURCE(builder: FlatBufferBuilder, EOP_SOURCE: Int) = builder.addOffset(45, EOP_SOURCE, 0)
-        fun addINTERP_METHOD_EOP(builder: FlatBufferBuilder, INTERP_METHOD_EOP: Int) = builder.addOffset(46, INTERP_METHOD_EOP, 0)
-        fun addCELESTIAL_SOURCE(builder: FlatBufferBuilder, CELESTIAL_SOURCE: Int) = builder.addOffset(47, CELESTIAL_SOURCE, 0)
+        fun addSCLKOFFSETATEPOCH(builder: FlatBufferBuilder, sclkOffsetAtEpoch: Double) = builder.addDouble(34, sclkOffsetAtEpoch, 0.0)
+        fun addSCLKSECPERSISEC(builder: FlatBufferBuilder, sclkSecPerSiSec: Double) = builder.addDouble(35, sclkSecPerSiSec, 0.0)
+        fun addPREVIOUSMESSAGEEPOCH(builder: FlatBufferBuilder, previousMessageEpoch: Int) = builder.addOffset(36, previousMessageEpoch, 0)
+        fun addNEXTMESSAGEEPOCH(builder: FlatBufferBuilder, nextMessageEpoch: Int) = builder.addOffset(37, nextMessageEpoch, 0)
+        fun addSTARTTIME(builder: FlatBufferBuilder, startTime: Int) = builder.addOffset(38, startTime, 0)
+        fun addSTOPTIME(builder: FlatBufferBuilder, stopTime: Int) = builder.addOffset(39, stopTime, 0)
+        fun addTIMESPAN(builder: FlatBufferBuilder, timeSpan: Double) = builder.addDouble(40, timeSpan, 0.0)
+        fun addTAIMUTCATTZERO(builder: FlatBufferBuilder, taimutcAtTzero: Double) = builder.addDouble(41, taimutcAtTzero, 0.0)
+        fun addNEXTLEAPEPOCH(builder: FlatBufferBuilder, nextLeapEpoch: Int) = builder.addOffset(42, nextLeapEpoch, 0)
+        fun addNEXTLEAPTAIMUTC(builder: FlatBufferBuilder, nextLeapTaimutc: Double) = builder.addDouble(43, nextLeapTaimutc, 0.0)
+        fun addUT1MUTCATTZERO(builder: FlatBufferBuilder, ut1MutcAtTzero: Double) = builder.addDouble(44, ut1MutcAtTzero, 0.0)
+        fun addEOPSOURCE(builder: FlatBufferBuilder, eopSource: Int) = builder.addOffset(45, eopSource, 0)
+        fun addINTERPMETHODEOP(builder: FlatBufferBuilder, interpMethodEop: Int) = builder.addOffset(46, interpMethodEop, 0)
+        fun addCELESTIALSOURCE(builder: FlatBufferBuilder, celestialSource: Int) = builder.addOffset(47, celestialSource, 0)
         fun endMetadata(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

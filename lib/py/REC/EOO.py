@@ -2,4 +2,2586 @@
 
 # namespace: 
 
-# NOTE EOO.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Electro-Optical Observation
+class EOO(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = EOO()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsEOO(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def EOOBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x45\x4F\x4F", size_prefixed=size_prefixed)
+
+    # EOO
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Unique identifier of the record.
+    # EOO
+    def ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Classification marking of the data in IC/CAPCO Portion-marked format.
+    # EOO
+    def CLASSIFICATION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Ob detection time in ISO 8601 UTC (YYYY-MM-DDTHH:MM:SS.ssssssZ), up to microsecond precision.
+    # EOO
+    def OB_TIME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Correlation score of the observation when compared to a known orbit state.
+    # EOO
+    def CORR_QUALITY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Server will auto-populate with SAT_NO if available.
+    # EOO
+    def ID_ON_ORBIT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Unique ID of the sensor. Must have a corresponding sensor record on the server.
+    # EOO
+    def SENSOR_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Accepted Collection Method
+    # EOO
+    def COLLECT_METHOD(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # 18SDS satellite number. Only list if correlated against the 18SDS catalog.
+    # EOO
+    def NORAD_CAT_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # Identifier for the collectRequest message if the collection was in response to tasking.
+    # EOO
+    def TASK_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Optional identifier to track a transaction.
+    # EOO
+    def TRANSACTION_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # The user-defined set ID of a sequence of images.
+    # EOO
+    def IMAGE_SET_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # The number of images in an image set.
+    # EOO
+    def IMAGE_SET_LENGTH(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # The sequence ID of an image within an image set.
+    # EOO
+    def SEQUENCE_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # The position of this observation within a track (FENCE, FIRST, IN, LAST, SINGLE).
+    # EOO
+    def OB_POSITION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # Provider maintained ID. May not be consistent with 18SDS SAT_NO.
+    # EOO
+    def ORIG_OBJECT_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Sensor ID.
+    # EOO
+    def ORIG_SENSOR_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Required if correlation is attempted. Indicates whether correlation succeeded.
+    # EOO
+    def UCT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # Line of sight azimuth angle in degrees and topocentric frame.
+    # EOO
+    def AZIMUTH(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # One sigma uncertainty in the line of sight azimuth angle, in degrees.
+    # EOO
+    def AZIMUTH_UNC(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Sensor line of sight azimuth angle bias in degrees.
+    # EOO
+    def AZIMUTH_BIAS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Rate of change of the line of sight azimuth in degrees per second.
+    # EOO
+    def AZIMUTH_RATE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Line of sight elevation in degrees and topocentric frame.
+    # EOO
+    def ELEVATION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # One sigma uncertainty in the line of sight elevation angle, in degrees.
+    # EOO
+    def ELEVATION_UNC(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Sensor line of sight elevation bias in degrees.
+    # EOO
+    def ELEVATION_BIAS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Rate of change of the line of sight elevation in degrees per second.
+    # EOO
+    def ELEVATION_RATE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(52))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Line of sight range in km. Reported value should include all applicable corrections.
+    # EOO
+    def RANGE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(54))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # One sigma uncertainty in the line of sight range, in km.
+    # EOO
+    def RANGE_UNC(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(56))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Sensor line of sight range bias in km.
+    # EOO
+    def RANGE_BIAS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Range rate in km/s. Reported value should include all applicable corrections.
+    # EOO
+    def RANGE_RATE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # One sigma uncertainty in the line of sight range rate, in km/sec.
+    # EOO
+    def RANGE_RATE_UNC(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(62))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Right ascension in degrees. Required metric reporting field for EO observations.
+    # EOO
+    def RA(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(64))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Line of sight right ascension rate of change, in degrees/sec.
+    # EOO
+    def RA_RATE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(66))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # One sigma uncertainty in the line of sight right ascension angle, in degrees.
+    # EOO
+    def RA_UNC(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(68))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Sensor line of sight right ascension bias in degrees.
+    # EOO
+    def RA_BIAS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(70))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Declination in degrees. Required metric reporting field for EO observations.
+    # EOO
+    def DECLINATION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(72))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Line of sight declination rate of change, in degrees/sec.
+    # EOO
+    def DECLINATION_RATE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(74))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # One sigma uncertainty in the line of sight declination angle, in degrees.
+    # EOO
+    def DECLINATION_UNC(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(76))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Sensor line of sight declination angle bias in degrees.
+    # EOO
+    def DECLINATION_BIAS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(78))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # X-component of the unit vector representing the line-of-sight direction in the observer's reference frame.
+    # EOO
+    def LOSX(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(80))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Y-component of the unit vector representing the line-of-sight direction in the observer's reference frame.
+    # EOO
+    def LOSY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(82))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Z-component of the unit vector representing the line-of-sight direction in the observer's reference frame.
+    # EOO
+    def LOSZ(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(84))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # One sigma uncertainty in the line-of-sight direction vector components.
+    # EOO
+    def LOS_UNC(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(86))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # X-component of the velocity vector along the line of sight, in km/s.
+    # EOO
+    def LOSXVEL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(88))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Y-component of the velocity vector along the line of sight, in km/s.
+    # EOO
+    def LOSYVEL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(90))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Z-component of the velocity vector along the line of sight, in km/s.
+    # EOO
+    def LOSZVEL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(92))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # WGS-84 latitude in decimal degrees at the time of the observation.
+    # EOO
+    def SENLAT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(94))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # WGS-84 longitude in decimal degrees at the time of the observation.
+    # EOO
+    def SENLON(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(96))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Sensor height in km relative to the WGS-84 ellipsoid at the time of the observation.
+    # EOO
+    def SENALT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(98))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Cartesian X position in km at the time of the observation.
+    # EOO
+    def SENX(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(100))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Cartesian Y position in km at the time of the observation.
+    # EOO
+    def SENY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(102))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Cartesian Z position in km at the time of the observation.
+    # EOO
+    def SENZ(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(104))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Total number of satellites in the field of view.
+    # EOO
+    def FOV_COUNT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(106))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # Number of uncorrelated satellites in the field of view (JCO).
+    # EOO
+    def FOV_COUNT_UCTS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(108))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # Image exposure duration in seconds. For observations performed using frame stacking or synthetic tracking methods, 
+    # the exposure duration should be the total integration time. This field is highly recommended / required if the 
+    # observations are going to be used for photometric processing.
+    # EOO
+    def EXP_DURATION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(110))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Formula: 2.5 * log_10 (zero_mag_counts / EXP_DURATION).
+    # EOO
+    def ZEROPTD(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(112))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Net object signature = counts / EXP_DURATION.
+    # EOO
+    def NET_OBJ_SIG(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(114))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Net object signature uncertainty = counts uncertainty / EXP_DURATION.
+    # EOO
+    def NET_OBJ_SIG_UNC(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(116))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Measure of observed brightness calibrated against the Gaia G-band.
+    # EOO
+    def MAG(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(118))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Uncertainty of the observed brightness.
+    # EOO
+    def MAG_UNC(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(120))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # [Definition needed].
+    # EOO
+    def MAG_NORM_RANGE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(122))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Computed estimate of the latitude, positive degrees north. It should be computed based on the assumed slant range 
+    # and corresponding viewing geometry. It must NOT be computed from the orbit state.
+    # EOO
+    def GEOLAT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(124))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Computed estimate of the longitude as +/- 180 degrees east. It should be computed based on the assumed slant range 
+    # and viewing geometry. It must NOT be computed from the orbit state.
+    # EOO
+    def GEOLON(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(126))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Computed estimate of satellite altitude in km at the reported location. It must NOT be computed from the orbit state.
+    # EOO
+    def GEOALT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(128))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Computed estimate of the slant range in km. It must NOT be computed from the orbit state.
+    # EOO
+    def GEORANGE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(130))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Average Sky Background signal, in Magnitudes. Sky Background refers to the incoming light from an apparently 
+    # empty part of the night sky.
+    # EOO
+    def SKY_BKGRND(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(132))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Primary Extinction Coefficient, in Magnitudes. Primary Extinction is the coefficient applied to the airmass 
+    # to determine how much the observed visual magnitude has been attenuated by the atmosphere. Extinction, in general, 
+    # describes the absorption and scattering of electromagnetic radiation by dust and gas between an emitting astronomical 
+    # object and the observer.
+    # EOO
+    def PRIMARY_EXTINCTION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(134))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Primary Extinction Coefficient Uncertainty, in Magnitudes.
+    # EOO
+    def PRIMARY_EXTINCTION_UNC(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(136))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # The angle, in degrees, between the target-to-observer vector and the target-to-sun vector. Recommend using the 
+    # calculation listed in the EOSSA documentation, pg 106 of the EOSSA spec.
+    # EOO
+    def SOLAR_PHASE_ANGLE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(138))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # The angle, in degrees, between the projections of the target-to-observer vector and the target-to-sun vector 
+    # onto the equatorial plane. The convention used is negative when closing (i.e., before the opposition) 
+    # and positive when opening (after the opposition).
+    # EOO
+    def SOLAR_EQ_PHASE_ANGLE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(140))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Angle from the sun to the equatorial plane.
+    # EOO
+    def SOLAR_DEC_ANGLE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(142))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Shutter delay in seconds.
+    # EOO
+    def SHUTTER_DELAY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(144))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Sensor timing bias in seconds.
+    # EOO
+    def TIMING_BIAS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(146))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Optional URI location in the document repository of the raw file parsed by the system to produce this record. 
+    # EOO
+    def RAW_FILE_URI(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(148))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Intensity of the target for IR observations, in kw/sr/em.
+    # EOO
+    def INTENSITY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(150))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Background intensity for IR observations, in kw/sr/um.
+    # EOO
+    def BG_INTENSITY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(152))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Optional source-provided and searchable metadata or descriptor of the data.
+    # EOO
+    def DESCRIPTOR(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(154))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Source of the data.
+    # EOO
+    def SOURCE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(156))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Originating system or organization which produced the data, if different from the source.
+    # The origin may be different than the source if the source was a mediating system which forwarded 
+    # the data on behalf of the origin system. If null, the source may be assumed to be the origin.
+    # EOO
+    def ORIGIN(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(158))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Indicator of whether the data is EXERCISE, REAL, SIMULATED, or TEST.
+    # EOO
+    def DATA_MODE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(160))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # Time the row was created in the database, auto-populated by the system.
+    # EOO
+    def CREATED_AT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(162))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Application user who created the row in the database, auto-populated by the system.
+    # EOO
+    def CREATED_BY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(164))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # EO observations are assumed to be topocentric J2000 coordinates ('J2000') as defined by the IAU, unless otherwise specified.
+    # EOO
+    def REFERENCE_FRAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(166))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from RFM import RFM
+            obj = RFM()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # The sensor reference frame is assumed to be the International Terrestrial Reference Frame (ITRF), 
+    # unless otherwise specified. (ITRF is equivalent to Earth-Centered Earth-Fixed (ECEF) for this purpose). 
+    # Lat / long / height values should be reported using the WGS-84 ellipsoid, where applicable.
+    # EOO
+    def SEN_REFERENCE_FRAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(168))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from RFM import RFM
+            obj = RFM()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Boolean indicating that the target object was in umbral eclipse at the time of this observation.
+    # EOO
+    def UMBRA(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(170))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # Boolean indicating that the target object was in a penumbral eclipse at the time of this observation.
+    # This field is highly recommended if the observations will be used for photometric processing.
+    # EOO
+    def PENUMBRA(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(172))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # The originating source network on which this record was created, auto-populated by the system.
+    # EOO
+    def ORIG_NETWORK(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(174))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # The source from which this record was received.
+    # EOO
+    def SOURCE_DL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(176))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Device Type
+    # EOO
+    def TYPE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(178))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # True if measured, false if computed. Required if azimuth is reported.
+    # EOO
+    def AZIMUTH_MEASURED(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(180))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # True if measured, false if computed. Required if elevation is reported.
+    # EOO
+    def ELEVATION_MEASURED(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(182))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # True if measured, false if computed. Required if range is reported.
+    # EOO
+    def RANGE_MEASURED(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(184))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # True if measured, false if computed. Required if range-rate is reported.
+    # EOO
+    def RANGERATE_MEASURED(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(186))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # True if measured, false if computed. Required if right ascension is reported.
+    # EOO
+    def RA_MEASURED(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(188))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # True if measured, false if computed. Required if declination is reported.
+    # EOO
+    def DECLINATION_MEASURED(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(190))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # National Imagery Interpretability Rating Scale (NIIRS). Ranging from 0 (lowest) to 9 (highest).
+    # EOO
+    def NIIRS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(192))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Ground sample distance in meters per pixel.
+    # EOO
+    def METERS_PER_PIXEL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(194))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Signal-to-noise ratio of the image. Higher values indicate cleaner imagery.
+    # EOO
+    def IMAGE_SNR(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(196))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Bit depth of the image (e.g., 8, 12, 16).
+    # EOO
+    def IMAGE_BIT_DEPTH(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(198))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # Width of the image in pixels.
+    # EOO
+    def IMAGE_WIDTH(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(200))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # Height of the image in pixels.
+    # EOO
+    def IMAGE_HEIGHT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(202))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # Compression type used for the image, e.g., "JPEG", "PNG", "RAW", etc.
+    # EOO
+    def IMAGE_COMPRESSION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(204))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Compression ratio used (original size / compressed size), if applicable.
+    # EOO
+    def IMAGE_COMPRESSION_RATIO(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(206))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # URI to the processed image used for this observation.
+    # EOO
+    def PROCESSED_IMAGE_URI(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(208))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Flag indicating whether the image was auto-enhanced (e.g., contrast stretch, denoise).
+    # EOO
+    def IMAGE_AUTO_ENHANCED(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(210))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # True if the observation was taken with multiple frames stacked into one image.
+    # EOO
+    def MULTI_FRAME_STACKED(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(212))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # True if synthetic tracking was used to create the image.
+    # EOO
+    def SYNTHETIC_TRACKING_USED(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(214))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # Sharpness metric of the image based on the Tenengrad method or variance of Laplacian. Higher values indicate sharper images.
+    # EOO
+    def IMAGE_SHARPNESS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(216))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Noise level of the image, estimated via pixel intensity variance in background regions.
+    # EOO
+    def IMAGE_NOISE_STDDEV(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(218))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Contrast metric of the image, such as Michelson contrast or RMS contrast.
+    # EOO
+    def IMAGE_CONTRAST(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(220))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Dynamic range of the image (max pixel value / min pixel value), indicating tonal spread.
+    # EOO
+    def IMAGE_DYNAMIC_RANGE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(222))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Entropy of the image, representing the richness of information content. Higher entropy suggests higher texture detail.
+    # EOO
+    def IMAGE_ENTROPY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(224))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Background uniformity metric (e.g., mean gradient in background areas). Lower values indicate more uniform background.
+    # EOO
+    def BACKGROUND_UNIFORMITY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(226))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Mean background level, computed from non-object regions in pixel units.
+    # EOO
+    def BACKGROUND_MEAN_LEVEL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(228))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Percentage of saturated pixels in the image. Indicates overexposure when high.
+    # EOO
+    def SATURATED_PIXEL_PERCENT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(230))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Percentage of dead or zero-value pixels in the image. Indicates sensor defects or underexposure.
+    # EOO
+    def DEAD_PIXEL_PERCENT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(232))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Estimated Point Spread Function (PSF) Full Width at Half Maximum (FWHM) in pixels. Indicates image blur or focus.
+    # EOO
+    def PSF_FWHM(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(234))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Estimated percentage of cloud cover in the image. Derived using cloud detection algorithms such as Fmask or machine learning classifiers.
+    # EOO
+    def CLOUD_COVER_PERCENT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(236))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Confidence score of the cloud detection result, from 0 (low confidence) to 1 (high confidence).
+    # EOO
+    def CLOUD_DETECTION_CONFIDENCE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(238))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Estimated percentage of the image obscured by haze or atmospheric scattering effects.
+    # EOO
+    def HAZE_PERCENT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(240))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Estimated aerosol optical thickness (AOT) at 550 nm, indicating particulate matter in the atmosphere affecting image clarity.
+    # EOO
+    def AEROSOL_OPTICAL_THICKNESS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(242))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Estimated water vapor content (e.g., total column precipitable water) at the time of imaging, in mm.
+    # EOO
+    def WATER_VAPOR_CONTENT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(244))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Sun elevation angle at the time of image capture, in degrees above the horizon.
+    # EOO
+    def SUN_ELEVATION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(246))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Sun azimuth angle at the time of image capture, in degrees from true north.
+    # EOO
+    def SUN_AZIMUTH(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(248))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # View zenith angle (sensor line-of-sight angle from nadir), in degrees.
+    # EOO
+    def VIEW_ZENITH_ANGLE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(250))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # View azimuth angle (direction of sensor relative to north), in degrees.
+    # EOO
+    def VIEW_AZIMUTH_ANGLE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(252))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Off-nadir angle of the sensor at the time of image capture, in degrees.
+    # EOO
+    def OFF_NADIR_ANGLE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(254))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Ground coverage width of the image swath in kilometers.
+    # EOO
+    def SWATH_WIDTH_KM(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(256))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Mean terrain elevation in the image footprint, in meters above sea level.
+    # EOO
+    def MEAN_TERRAIN_ELEVATION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(258))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Standard deviation of terrain elevation in the image footprint, in meters.
+    # EOO
+    def TERRAIN_ELEVATION_STDDEV(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(260))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Percentage of the image affected by shadows, derived via topographic or object shadow detection.
+    # EOO
+    def SHADOW_COVER_PERCENT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(262))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Flag indicating whether sunglint is present in the image (true if high reflectance from water surface due to sun geometry).
+    # EOO
+    def SUNGLINT_PRESENT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(264))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # Percentage of image affected by sunglint.
+    # EOO
+    def SUNGLINT_PERCENT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(266))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Estimated percentage of snow or ice coverage in the image footprint.
+    # EOO
+    def SNOW_ICE_COVER_PERCENT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(268))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Total area covered by valid data (non-masked, usable imagery) in square kilometers.
+    # EOO
+    def VALID_DATA_AREA_KM2(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(270))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+def EOOStart(builder):
+    builder.StartObject(134)
+
+def Start(builder):
+    EOOStart(builder)
+
+def EOOAddID(builder, ID):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(ID), 0)
+
+def AddID(builder, ID):
+    EOOAddID(builder, ID)
+
+def EOOAddCLASSIFICATION(builder, CLASSIFICATION):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(CLASSIFICATION), 0)
+
+def AddCLASSIFICATION(builder, CLASSIFICATION):
+    EOOAddCLASSIFICATION(builder, CLASSIFICATION)
+
+def EOOAddOB_TIME(builder, OB_TIME):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(OB_TIME), 0)
+
+def AddOB_TIME(builder, OB_TIME):
+    EOOAddOB_TIME(builder, OB_TIME)
+
+def EOOAddCORR_QUALITY(builder, CORR_QUALITY):
+    builder.PrependFloat32Slot(3, CORR_QUALITY, 0.0)
+
+def AddCORR_QUALITY(builder, CORR_QUALITY):
+    EOOAddCORR_QUALITY(builder, CORR_QUALITY)
+
+def EOOAddID_ON_ORBIT(builder, ID_ON_ORBIT):
+    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(ID_ON_ORBIT), 0)
+
+def AddID_ON_ORBIT(builder, ID_ON_ORBIT):
+    EOOAddID_ON_ORBIT(builder, ID_ON_ORBIT)
+
+def EOOAddSENSOR_ID(builder, SENSOR_ID):
+    builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(SENSOR_ID), 0)
+
+def AddSENSOR_ID(builder, SENSOR_ID):
+    EOOAddSENSOR_ID(builder, SENSOR_ID)
+
+def EOOAddCOLLECT_METHOD(builder, COLLECT_METHOD):
+    builder.PrependInt8Slot(6, COLLECT_METHOD, 0)
+
+def AddCOLLECT_METHOD(builder, COLLECT_METHOD):
+    EOOAddCOLLECT_METHOD(builder, COLLECT_METHOD)
+
+def EOOAddNORAD_CAT_ID(builder, NORAD_CAT_ID):
+    builder.PrependInt32Slot(7, NORAD_CAT_ID, 0)
+
+def AddNORAD_CAT_ID(builder, NORAD_CAT_ID):
+    EOOAddNORAD_CAT_ID(builder, NORAD_CAT_ID)
+
+def EOOAddTASK_ID(builder, TASK_ID):
+    builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(TASK_ID), 0)
+
+def AddTASK_ID(builder, TASK_ID):
+    EOOAddTASK_ID(builder, TASK_ID)
+
+def EOOAddTRANSACTION_ID(builder, TRANSACTION_ID):
+    builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(TRANSACTION_ID), 0)
+
+def AddTRANSACTION_ID(builder, TRANSACTION_ID):
+    EOOAddTRANSACTION_ID(builder, TRANSACTION_ID)
+
+def EOOAddIMAGE_SET_ID(builder, IMAGE_SET_ID):
+    builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(IMAGE_SET_ID), 0)
+
+def AddIMAGE_SET_ID(builder, IMAGE_SET_ID):
+    EOOAddIMAGE_SET_ID(builder, IMAGE_SET_ID)
+
+def EOOAddIMAGE_SET_LENGTH(builder, IMAGE_SET_LENGTH):
+    builder.PrependInt32Slot(11, IMAGE_SET_LENGTH, 0)
+
+def AddIMAGE_SET_LENGTH(builder, IMAGE_SET_LENGTH):
+    EOOAddIMAGE_SET_LENGTH(builder, IMAGE_SET_LENGTH)
+
+def EOOAddSEQUENCE_ID(builder, SEQUENCE_ID):
+    builder.PrependInt32Slot(12, SEQUENCE_ID, 0)
+
+def AddSEQUENCE_ID(builder, SEQUENCE_ID):
+    EOOAddSEQUENCE_ID(builder, SEQUENCE_ID)
+
+def EOOAddOB_POSITION(builder, OB_POSITION):
+    builder.PrependInt8Slot(13, OB_POSITION, 0)
+
+def AddOB_POSITION(builder, OB_POSITION):
+    EOOAddOB_POSITION(builder, OB_POSITION)
+
+def EOOAddORIG_OBJECT_ID(builder, ORIG_OBJECT_ID):
+    builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(ORIG_OBJECT_ID), 0)
+
+def AddORIG_OBJECT_ID(builder, ORIG_OBJECT_ID):
+    EOOAddORIG_OBJECT_ID(builder, ORIG_OBJECT_ID)
+
+def EOOAddORIG_SENSOR_ID(builder, ORIG_SENSOR_ID):
+    builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(ORIG_SENSOR_ID), 0)
+
+def AddORIG_SENSOR_ID(builder, ORIG_SENSOR_ID):
+    EOOAddORIG_SENSOR_ID(builder, ORIG_SENSOR_ID)
+
+def EOOAddUCT(builder, UCT):
+    builder.PrependBoolSlot(16, UCT, 0)
+
+def AddUCT(builder, UCT):
+    EOOAddUCT(builder, UCT)
+
+def EOOAddAZIMUTH(builder, AZIMUTH):
+    builder.PrependFloat32Slot(17, AZIMUTH, 0.0)
+
+def AddAZIMUTH(builder, AZIMUTH):
+    EOOAddAZIMUTH(builder, AZIMUTH)
+
+def EOOAddAZIMUTH_UNC(builder, AZIMUTH_UNC):
+    builder.PrependFloat32Slot(18, AZIMUTH_UNC, 0.0)
+
+def AddAZIMUTH_UNC(builder, AZIMUTH_UNC):
+    EOOAddAZIMUTH_UNC(builder, AZIMUTH_UNC)
+
+def EOOAddAZIMUTH_BIAS(builder, AZIMUTH_BIAS):
+    builder.PrependFloat32Slot(19, AZIMUTH_BIAS, 0.0)
+
+def AddAZIMUTH_BIAS(builder, AZIMUTH_BIAS):
+    EOOAddAZIMUTH_BIAS(builder, AZIMUTH_BIAS)
+
+def EOOAddAZIMUTH_RATE(builder, AZIMUTH_RATE):
+    builder.PrependFloat32Slot(20, AZIMUTH_RATE, 0.0)
+
+def AddAZIMUTH_RATE(builder, AZIMUTH_RATE):
+    EOOAddAZIMUTH_RATE(builder, AZIMUTH_RATE)
+
+def EOOAddELEVATION(builder, ELEVATION):
+    builder.PrependFloat32Slot(21, ELEVATION, 0.0)
+
+def AddELEVATION(builder, ELEVATION):
+    EOOAddELEVATION(builder, ELEVATION)
+
+def EOOAddELEVATION_UNC(builder, ELEVATION_UNC):
+    builder.PrependFloat32Slot(22, ELEVATION_UNC, 0.0)
+
+def AddELEVATION_UNC(builder, ELEVATION_UNC):
+    EOOAddELEVATION_UNC(builder, ELEVATION_UNC)
+
+def EOOAddELEVATION_BIAS(builder, ELEVATION_BIAS):
+    builder.PrependFloat32Slot(23, ELEVATION_BIAS, 0.0)
+
+def AddELEVATION_BIAS(builder, ELEVATION_BIAS):
+    EOOAddELEVATION_BIAS(builder, ELEVATION_BIAS)
+
+def EOOAddELEVATION_RATE(builder, ELEVATION_RATE):
+    builder.PrependFloat32Slot(24, ELEVATION_RATE, 0.0)
+
+def AddELEVATION_RATE(builder, ELEVATION_RATE):
+    EOOAddELEVATION_RATE(builder, ELEVATION_RATE)
+
+def EOOAddRANGE(builder, RANGE):
+    builder.PrependFloat32Slot(25, RANGE, 0.0)
+
+def AddRANGE(builder, RANGE):
+    EOOAddRANGE(builder, RANGE)
+
+def EOOAddRANGE_UNC(builder, RANGE_UNC):
+    builder.PrependFloat32Slot(26, RANGE_UNC, 0.0)
+
+def AddRANGE_UNC(builder, RANGE_UNC):
+    EOOAddRANGE_UNC(builder, RANGE_UNC)
+
+def EOOAddRANGE_BIAS(builder, RANGE_BIAS):
+    builder.PrependFloat32Slot(27, RANGE_BIAS, 0.0)
+
+def AddRANGE_BIAS(builder, RANGE_BIAS):
+    EOOAddRANGE_BIAS(builder, RANGE_BIAS)
+
+def EOOAddRANGE_RATE(builder, RANGE_RATE):
+    builder.PrependFloat32Slot(28, RANGE_RATE, 0.0)
+
+def AddRANGE_RATE(builder, RANGE_RATE):
+    EOOAddRANGE_RATE(builder, RANGE_RATE)
+
+def EOOAddRANGE_RATE_UNC(builder, RANGE_RATE_UNC):
+    builder.PrependFloat32Slot(29, RANGE_RATE_UNC, 0.0)
+
+def AddRANGE_RATE_UNC(builder, RANGE_RATE_UNC):
+    EOOAddRANGE_RATE_UNC(builder, RANGE_RATE_UNC)
+
+def EOOAddRA(builder, RA):
+    builder.PrependFloat32Slot(30, RA, 0.0)
+
+def AddRA(builder, RA):
+    EOOAddRA(builder, RA)
+
+def EOOAddRA_RATE(builder, RA_RATE):
+    builder.PrependFloat32Slot(31, RA_RATE, 0.0)
+
+def AddRA_RATE(builder, RA_RATE):
+    EOOAddRA_RATE(builder, RA_RATE)
+
+def EOOAddRA_UNC(builder, RA_UNC):
+    builder.PrependFloat32Slot(32, RA_UNC, 0.0)
+
+def AddRA_UNC(builder, RA_UNC):
+    EOOAddRA_UNC(builder, RA_UNC)
+
+def EOOAddRA_BIAS(builder, RA_BIAS):
+    builder.PrependFloat32Slot(33, RA_BIAS, 0.0)
+
+def AddRA_BIAS(builder, RA_BIAS):
+    EOOAddRA_BIAS(builder, RA_BIAS)
+
+def EOOAddDECLINATION(builder, DECLINATION):
+    builder.PrependFloat32Slot(34, DECLINATION, 0.0)
+
+def AddDECLINATION(builder, DECLINATION):
+    EOOAddDECLINATION(builder, DECLINATION)
+
+def EOOAddDECLINATION_RATE(builder, DECLINATION_RATE):
+    builder.PrependFloat32Slot(35, DECLINATION_RATE, 0.0)
+
+def AddDECLINATION_RATE(builder, DECLINATION_RATE):
+    EOOAddDECLINATION_RATE(builder, DECLINATION_RATE)
+
+def EOOAddDECLINATION_UNC(builder, DECLINATION_UNC):
+    builder.PrependFloat32Slot(36, DECLINATION_UNC, 0.0)
+
+def AddDECLINATION_UNC(builder, DECLINATION_UNC):
+    EOOAddDECLINATION_UNC(builder, DECLINATION_UNC)
+
+def EOOAddDECLINATION_BIAS(builder, DECLINATION_BIAS):
+    builder.PrependFloat32Slot(37, DECLINATION_BIAS, 0.0)
+
+def AddDECLINATION_BIAS(builder, DECLINATION_BIAS):
+    EOOAddDECLINATION_BIAS(builder, DECLINATION_BIAS)
+
+def EOOAddLOSX(builder, LOSX):
+    builder.PrependFloat32Slot(38, LOSX, 0.0)
+
+def AddLOSX(builder, LOSX):
+    EOOAddLOSX(builder, LOSX)
+
+def EOOAddLOSY(builder, LOSY):
+    builder.PrependFloat32Slot(39, LOSY, 0.0)
+
+def AddLOSY(builder, LOSY):
+    EOOAddLOSY(builder, LOSY)
+
+def EOOAddLOSZ(builder, LOSZ):
+    builder.PrependFloat32Slot(40, LOSZ, 0.0)
+
+def AddLOSZ(builder, LOSZ):
+    EOOAddLOSZ(builder, LOSZ)
+
+def EOOAddLOS_UNC(builder, LOS_UNC):
+    builder.PrependFloat32Slot(41, LOS_UNC, 0.0)
+
+def AddLOS_UNC(builder, LOS_UNC):
+    EOOAddLOS_UNC(builder, LOS_UNC)
+
+def EOOAddLOSXVEL(builder, LOSXVEL):
+    builder.PrependFloat32Slot(42, LOSXVEL, 0.0)
+
+def AddLOSXVEL(builder, LOSXVEL):
+    EOOAddLOSXVEL(builder, LOSXVEL)
+
+def EOOAddLOSYVEL(builder, LOSYVEL):
+    builder.PrependFloat32Slot(43, LOSYVEL, 0.0)
+
+def AddLOSYVEL(builder, LOSYVEL):
+    EOOAddLOSYVEL(builder, LOSYVEL)
+
+def EOOAddLOSZVEL(builder, LOSZVEL):
+    builder.PrependFloat32Slot(44, LOSZVEL, 0.0)
+
+def AddLOSZVEL(builder, LOSZVEL):
+    EOOAddLOSZVEL(builder, LOSZVEL)
+
+def EOOAddSENLAT(builder, SENLAT):
+    builder.PrependFloat32Slot(45, SENLAT, 0.0)
+
+def AddSENLAT(builder, SENLAT):
+    EOOAddSENLAT(builder, SENLAT)
+
+def EOOAddSENLON(builder, SENLON):
+    builder.PrependFloat32Slot(46, SENLON, 0.0)
+
+def AddSENLON(builder, SENLON):
+    EOOAddSENLON(builder, SENLON)
+
+def EOOAddSENALT(builder, SENALT):
+    builder.PrependFloat32Slot(47, SENALT, 0.0)
+
+def AddSENALT(builder, SENALT):
+    EOOAddSENALT(builder, SENALT)
+
+def EOOAddSENX(builder, SENX):
+    builder.PrependFloat32Slot(48, SENX, 0.0)
+
+def AddSENX(builder, SENX):
+    EOOAddSENX(builder, SENX)
+
+def EOOAddSENY(builder, SENY):
+    builder.PrependFloat32Slot(49, SENY, 0.0)
+
+def AddSENY(builder, SENY):
+    EOOAddSENY(builder, SENY)
+
+def EOOAddSENZ(builder, SENZ):
+    builder.PrependFloat32Slot(50, SENZ, 0.0)
+
+def AddSENZ(builder, SENZ):
+    EOOAddSENZ(builder, SENZ)
+
+def EOOAddFOV_COUNT(builder, FOV_COUNT):
+    builder.PrependInt32Slot(51, FOV_COUNT, 0)
+
+def AddFOV_COUNT(builder, FOV_COUNT):
+    EOOAddFOV_COUNT(builder, FOV_COUNT)
+
+def EOOAddFOV_COUNT_UCTS(builder, FOV_COUNT_UCTS):
+    builder.PrependInt32Slot(52, FOV_COUNT_UCTS, 0)
+
+def AddFOV_COUNT_UCTS(builder, FOV_COUNT_UCTS):
+    EOOAddFOV_COUNT_UCTS(builder, FOV_COUNT_UCTS)
+
+def EOOAddEXP_DURATION(builder, EXP_DURATION):
+    builder.PrependFloat32Slot(53, EXP_DURATION, 0.0)
+
+def AddEXP_DURATION(builder, EXP_DURATION):
+    EOOAddEXP_DURATION(builder, EXP_DURATION)
+
+def EOOAddZEROPTD(builder, ZEROPTD):
+    builder.PrependFloat32Slot(54, ZEROPTD, 0.0)
+
+def AddZEROPTD(builder, ZEROPTD):
+    EOOAddZEROPTD(builder, ZEROPTD)
+
+def EOOAddNET_OBJ_SIG(builder, NET_OBJ_SIG):
+    builder.PrependFloat32Slot(55, NET_OBJ_SIG, 0.0)
+
+def AddNET_OBJ_SIG(builder, NET_OBJ_SIG):
+    EOOAddNET_OBJ_SIG(builder, NET_OBJ_SIG)
+
+def EOOAddNET_OBJ_SIG_UNC(builder, NET_OBJ_SIG_UNC):
+    builder.PrependFloat32Slot(56, NET_OBJ_SIG_UNC, 0.0)
+
+def AddNET_OBJ_SIG_UNC(builder, NET_OBJ_SIG_UNC):
+    EOOAddNET_OBJ_SIG_UNC(builder, NET_OBJ_SIG_UNC)
+
+def EOOAddMAG(builder, MAG):
+    builder.PrependFloat32Slot(57, MAG, 0.0)
+
+def AddMAG(builder, MAG):
+    EOOAddMAG(builder, MAG)
+
+def EOOAddMAG_UNC(builder, MAG_UNC):
+    builder.PrependFloat32Slot(58, MAG_UNC, 0.0)
+
+def AddMAG_UNC(builder, MAG_UNC):
+    EOOAddMAG_UNC(builder, MAG_UNC)
+
+def EOOAddMAG_NORM_RANGE(builder, MAG_NORM_RANGE):
+    builder.PrependFloat32Slot(59, MAG_NORM_RANGE, 0.0)
+
+def AddMAG_NORM_RANGE(builder, MAG_NORM_RANGE):
+    EOOAddMAG_NORM_RANGE(builder, MAG_NORM_RANGE)
+
+def EOOAddGEOLAT(builder, GEOLAT):
+    builder.PrependFloat32Slot(60, GEOLAT, 0.0)
+
+def AddGEOLAT(builder, GEOLAT):
+    EOOAddGEOLAT(builder, GEOLAT)
+
+def EOOAddGEOLON(builder, GEOLON):
+    builder.PrependFloat32Slot(61, GEOLON, 0.0)
+
+def AddGEOLON(builder, GEOLON):
+    EOOAddGEOLON(builder, GEOLON)
+
+def EOOAddGEOALT(builder, GEOALT):
+    builder.PrependFloat32Slot(62, GEOALT, 0.0)
+
+def AddGEOALT(builder, GEOALT):
+    EOOAddGEOALT(builder, GEOALT)
+
+def EOOAddGEORANGE(builder, GEORANGE):
+    builder.PrependFloat32Slot(63, GEORANGE, 0.0)
+
+def AddGEORANGE(builder, GEORANGE):
+    EOOAddGEORANGE(builder, GEORANGE)
+
+def EOOAddSKY_BKGRND(builder, SKY_BKGRND):
+    builder.PrependFloat32Slot(64, SKY_BKGRND, 0.0)
+
+def AddSKY_BKGRND(builder, SKY_BKGRND):
+    EOOAddSKY_BKGRND(builder, SKY_BKGRND)
+
+def EOOAddPRIMARY_EXTINCTION(builder, PRIMARY_EXTINCTION):
+    builder.PrependFloat32Slot(65, PRIMARY_EXTINCTION, 0.0)
+
+def AddPRIMARY_EXTINCTION(builder, PRIMARY_EXTINCTION):
+    EOOAddPRIMARY_EXTINCTION(builder, PRIMARY_EXTINCTION)
+
+def EOOAddPRIMARY_EXTINCTION_UNC(builder, PRIMARY_EXTINCTION_UNC):
+    builder.PrependFloat32Slot(66, PRIMARY_EXTINCTION_UNC, 0.0)
+
+def AddPRIMARY_EXTINCTION_UNC(builder, PRIMARY_EXTINCTION_UNC):
+    EOOAddPRIMARY_EXTINCTION_UNC(builder, PRIMARY_EXTINCTION_UNC)
+
+def EOOAddSOLAR_PHASE_ANGLE(builder, SOLAR_PHASE_ANGLE):
+    builder.PrependFloat32Slot(67, SOLAR_PHASE_ANGLE, 0.0)
+
+def AddSOLAR_PHASE_ANGLE(builder, SOLAR_PHASE_ANGLE):
+    EOOAddSOLAR_PHASE_ANGLE(builder, SOLAR_PHASE_ANGLE)
+
+def EOOAddSOLAR_EQ_PHASE_ANGLE(builder, SOLAR_EQ_PHASE_ANGLE):
+    builder.PrependFloat32Slot(68, SOLAR_EQ_PHASE_ANGLE, 0.0)
+
+def AddSOLAR_EQ_PHASE_ANGLE(builder, SOLAR_EQ_PHASE_ANGLE):
+    EOOAddSOLAR_EQ_PHASE_ANGLE(builder, SOLAR_EQ_PHASE_ANGLE)
+
+def EOOAddSOLAR_DEC_ANGLE(builder, SOLAR_DEC_ANGLE):
+    builder.PrependFloat32Slot(69, SOLAR_DEC_ANGLE, 0.0)
+
+def AddSOLAR_DEC_ANGLE(builder, SOLAR_DEC_ANGLE):
+    EOOAddSOLAR_DEC_ANGLE(builder, SOLAR_DEC_ANGLE)
+
+def EOOAddSHUTTER_DELAY(builder, SHUTTER_DELAY):
+    builder.PrependFloat32Slot(70, SHUTTER_DELAY, 0.0)
+
+def AddSHUTTER_DELAY(builder, SHUTTER_DELAY):
+    EOOAddSHUTTER_DELAY(builder, SHUTTER_DELAY)
+
+def EOOAddTIMING_BIAS(builder, TIMING_BIAS):
+    builder.PrependFloat32Slot(71, TIMING_BIAS, 0.0)
+
+def AddTIMING_BIAS(builder, TIMING_BIAS):
+    EOOAddTIMING_BIAS(builder, TIMING_BIAS)
+
+def EOOAddRAW_FILE_URI(builder, RAW_FILE_URI):
+    builder.PrependUOffsetTRelativeSlot(72, flatbuffers.number_types.UOffsetTFlags.py_type(RAW_FILE_URI), 0)
+
+def AddRAW_FILE_URI(builder, RAW_FILE_URI):
+    EOOAddRAW_FILE_URI(builder, RAW_FILE_URI)
+
+def EOOAddINTENSITY(builder, INTENSITY):
+    builder.PrependFloat32Slot(73, INTENSITY, 0.0)
+
+def AddINTENSITY(builder, INTENSITY):
+    EOOAddINTENSITY(builder, INTENSITY)
+
+def EOOAddBG_INTENSITY(builder, BG_INTENSITY):
+    builder.PrependFloat32Slot(74, BG_INTENSITY, 0.0)
+
+def AddBG_INTENSITY(builder, BG_INTENSITY):
+    EOOAddBG_INTENSITY(builder, BG_INTENSITY)
+
+def EOOAddDESCRIPTOR(builder, DESCRIPTOR):
+    builder.PrependUOffsetTRelativeSlot(75, flatbuffers.number_types.UOffsetTFlags.py_type(DESCRIPTOR), 0)
+
+def AddDESCRIPTOR(builder, DESCRIPTOR):
+    EOOAddDESCRIPTOR(builder, DESCRIPTOR)
+
+def EOOAddSOURCE(builder, SOURCE):
+    builder.PrependUOffsetTRelativeSlot(76, flatbuffers.number_types.UOffsetTFlags.py_type(SOURCE), 0)
+
+def AddSOURCE(builder, SOURCE):
+    EOOAddSOURCE(builder, SOURCE)
+
+def EOOAddORIGIN(builder, ORIGIN):
+    builder.PrependUOffsetTRelativeSlot(77, flatbuffers.number_types.UOffsetTFlags.py_type(ORIGIN), 0)
+
+def AddORIGIN(builder, ORIGIN):
+    EOOAddORIGIN(builder, ORIGIN)
+
+def EOOAddDATA_MODE(builder, DATA_MODE):
+    builder.PrependInt8Slot(78, DATA_MODE, 0)
+
+def AddDATA_MODE(builder, DATA_MODE):
+    EOOAddDATA_MODE(builder, DATA_MODE)
+
+def EOOAddCREATED_AT(builder, CREATED_AT):
+    builder.PrependUOffsetTRelativeSlot(79, flatbuffers.number_types.UOffsetTFlags.py_type(CREATED_AT), 0)
+
+def AddCREATED_AT(builder, CREATED_AT):
+    EOOAddCREATED_AT(builder, CREATED_AT)
+
+def EOOAddCREATED_BY(builder, CREATED_BY):
+    builder.PrependUOffsetTRelativeSlot(80, flatbuffers.number_types.UOffsetTFlags.py_type(CREATED_BY), 0)
+
+def AddCREATED_BY(builder, CREATED_BY):
+    EOOAddCREATED_BY(builder, CREATED_BY)
+
+def EOOAddREFERENCE_FRAME(builder, REFERENCE_FRAME):
+    builder.PrependUOffsetTRelativeSlot(81, flatbuffers.number_types.UOffsetTFlags.py_type(REFERENCE_FRAME), 0)
+
+def AddREFERENCE_FRAME(builder, REFERENCE_FRAME):
+    EOOAddREFERENCE_FRAME(builder, REFERENCE_FRAME)
+
+def EOOAddSEN_REFERENCE_FRAME(builder, SEN_REFERENCE_FRAME):
+    builder.PrependUOffsetTRelativeSlot(82, flatbuffers.number_types.UOffsetTFlags.py_type(SEN_REFERENCE_FRAME), 0)
+
+def AddSEN_REFERENCE_FRAME(builder, SEN_REFERENCE_FRAME):
+    EOOAddSEN_REFERENCE_FRAME(builder, SEN_REFERENCE_FRAME)
+
+def EOOAddUMBRA(builder, UMBRA):
+    builder.PrependBoolSlot(83, UMBRA, 0)
+
+def AddUMBRA(builder, UMBRA):
+    EOOAddUMBRA(builder, UMBRA)
+
+def EOOAddPENUMBRA(builder, PENUMBRA):
+    builder.PrependBoolSlot(84, PENUMBRA, 0)
+
+def AddPENUMBRA(builder, PENUMBRA):
+    EOOAddPENUMBRA(builder, PENUMBRA)
+
+def EOOAddORIG_NETWORK(builder, ORIG_NETWORK):
+    builder.PrependUOffsetTRelativeSlot(85, flatbuffers.number_types.UOffsetTFlags.py_type(ORIG_NETWORK), 0)
+
+def AddORIG_NETWORK(builder, ORIG_NETWORK):
+    EOOAddORIG_NETWORK(builder, ORIG_NETWORK)
+
+def EOOAddSOURCE_DL(builder, SOURCE_DL):
+    builder.PrependUOffsetTRelativeSlot(86, flatbuffers.number_types.UOffsetTFlags.py_type(SOURCE_DL), 0)
+
+def AddSOURCE_DL(builder, SOURCE_DL):
+    EOOAddSOURCE_DL(builder, SOURCE_DL)
+
+def EOOAddTYPE(builder, TYPE):
+    builder.PrependInt8Slot(87, TYPE, 0)
+
+def AddTYPE(builder, TYPE):
+    EOOAddTYPE(builder, TYPE)
+
+def EOOAddAZIMUTH_MEASURED(builder, AZIMUTH_MEASURED):
+    builder.PrependBoolSlot(88, AZIMUTH_MEASURED, 0)
+
+def AddAZIMUTH_MEASURED(builder, AZIMUTH_MEASURED):
+    EOOAddAZIMUTH_MEASURED(builder, AZIMUTH_MEASURED)
+
+def EOOAddELEVATION_MEASURED(builder, ELEVATION_MEASURED):
+    builder.PrependBoolSlot(89, ELEVATION_MEASURED, 0)
+
+def AddELEVATION_MEASURED(builder, ELEVATION_MEASURED):
+    EOOAddELEVATION_MEASURED(builder, ELEVATION_MEASURED)
+
+def EOOAddRANGE_MEASURED(builder, RANGE_MEASURED):
+    builder.PrependBoolSlot(90, RANGE_MEASURED, 0)
+
+def AddRANGE_MEASURED(builder, RANGE_MEASURED):
+    EOOAddRANGE_MEASURED(builder, RANGE_MEASURED)
+
+def EOOAddRANGERATE_MEASURED(builder, RANGERATE_MEASURED):
+    builder.PrependBoolSlot(91, RANGERATE_MEASURED, 0)
+
+def AddRANGERATE_MEASURED(builder, RANGERATE_MEASURED):
+    EOOAddRANGERATE_MEASURED(builder, RANGERATE_MEASURED)
+
+def EOOAddRA_MEASURED(builder, RA_MEASURED):
+    builder.PrependBoolSlot(92, RA_MEASURED, 0)
+
+def AddRA_MEASURED(builder, RA_MEASURED):
+    EOOAddRA_MEASURED(builder, RA_MEASURED)
+
+def EOOAddDECLINATION_MEASURED(builder, DECLINATION_MEASURED):
+    builder.PrependBoolSlot(93, DECLINATION_MEASURED, 0)
+
+def AddDECLINATION_MEASURED(builder, DECLINATION_MEASURED):
+    EOOAddDECLINATION_MEASURED(builder, DECLINATION_MEASURED)
+
+def EOOAddNIIRS(builder, NIIRS):
+    builder.PrependFloat32Slot(94, NIIRS, 0.0)
+
+def AddNIIRS(builder, NIIRS):
+    EOOAddNIIRS(builder, NIIRS)
+
+def EOOAddMETERS_PER_PIXEL(builder, METERS_PER_PIXEL):
+    builder.PrependFloat32Slot(95, METERS_PER_PIXEL, 0.0)
+
+def AddMETERS_PER_PIXEL(builder, METERS_PER_PIXEL):
+    EOOAddMETERS_PER_PIXEL(builder, METERS_PER_PIXEL)
+
+def EOOAddIMAGE_SNR(builder, IMAGE_SNR):
+    builder.PrependFloat32Slot(96, IMAGE_SNR, 0.0)
+
+def AddIMAGE_SNR(builder, IMAGE_SNR):
+    EOOAddIMAGE_SNR(builder, IMAGE_SNR)
+
+def EOOAddIMAGE_BIT_DEPTH(builder, IMAGE_BIT_DEPTH):
+    builder.PrependInt32Slot(97, IMAGE_BIT_DEPTH, 0)
+
+def AddIMAGE_BIT_DEPTH(builder, IMAGE_BIT_DEPTH):
+    EOOAddIMAGE_BIT_DEPTH(builder, IMAGE_BIT_DEPTH)
+
+def EOOAddIMAGE_WIDTH(builder, IMAGE_WIDTH):
+    builder.PrependInt32Slot(98, IMAGE_WIDTH, 0)
+
+def AddIMAGE_WIDTH(builder, IMAGE_WIDTH):
+    EOOAddIMAGE_WIDTH(builder, IMAGE_WIDTH)
+
+def EOOAddIMAGE_HEIGHT(builder, IMAGE_HEIGHT):
+    builder.PrependInt32Slot(99, IMAGE_HEIGHT, 0)
+
+def AddIMAGE_HEIGHT(builder, IMAGE_HEIGHT):
+    EOOAddIMAGE_HEIGHT(builder, IMAGE_HEIGHT)
+
+def EOOAddIMAGE_COMPRESSION(builder, IMAGE_COMPRESSION):
+    builder.PrependUOffsetTRelativeSlot(100, flatbuffers.number_types.UOffsetTFlags.py_type(IMAGE_COMPRESSION), 0)
+
+def AddIMAGE_COMPRESSION(builder, IMAGE_COMPRESSION):
+    EOOAddIMAGE_COMPRESSION(builder, IMAGE_COMPRESSION)
+
+def EOOAddIMAGE_COMPRESSION_RATIO(builder, IMAGE_COMPRESSION_RATIO):
+    builder.PrependFloat32Slot(101, IMAGE_COMPRESSION_RATIO, 0.0)
+
+def AddIMAGE_COMPRESSION_RATIO(builder, IMAGE_COMPRESSION_RATIO):
+    EOOAddIMAGE_COMPRESSION_RATIO(builder, IMAGE_COMPRESSION_RATIO)
+
+def EOOAddPROCESSED_IMAGE_URI(builder, PROCESSED_IMAGE_URI):
+    builder.PrependUOffsetTRelativeSlot(102, flatbuffers.number_types.UOffsetTFlags.py_type(PROCESSED_IMAGE_URI), 0)
+
+def AddPROCESSED_IMAGE_URI(builder, PROCESSED_IMAGE_URI):
+    EOOAddPROCESSED_IMAGE_URI(builder, PROCESSED_IMAGE_URI)
+
+def EOOAddIMAGE_AUTO_ENHANCED(builder, IMAGE_AUTO_ENHANCED):
+    builder.PrependBoolSlot(103, IMAGE_AUTO_ENHANCED, 0)
+
+def AddIMAGE_AUTO_ENHANCED(builder, IMAGE_AUTO_ENHANCED):
+    EOOAddIMAGE_AUTO_ENHANCED(builder, IMAGE_AUTO_ENHANCED)
+
+def EOOAddMULTI_FRAME_STACKED(builder, MULTI_FRAME_STACKED):
+    builder.PrependBoolSlot(104, MULTI_FRAME_STACKED, 0)
+
+def AddMULTI_FRAME_STACKED(builder, MULTI_FRAME_STACKED):
+    EOOAddMULTI_FRAME_STACKED(builder, MULTI_FRAME_STACKED)
+
+def EOOAddSYNTHETIC_TRACKING_USED(builder, SYNTHETIC_TRACKING_USED):
+    builder.PrependBoolSlot(105, SYNTHETIC_TRACKING_USED, 0)
+
+def AddSYNTHETIC_TRACKING_USED(builder, SYNTHETIC_TRACKING_USED):
+    EOOAddSYNTHETIC_TRACKING_USED(builder, SYNTHETIC_TRACKING_USED)
+
+def EOOAddIMAGE_SHARPNESS(builder, IMAGE_SHARPNESS):
+    builder.PrependFloat32Slot(106, IMAGE_SHARPNESS, 0.0)
+
+def AddIMAGE_SHARPNESS(builder, IMAGE_SHARPNESS):
+    EOOAddIMAGE_SHARPNESS(builder, IMAGE_SHARPNESS)
+
+def EOOAddIMAGE_NOISE_STDDEV(builder, IMAGE_NOISE_STDDEV):
+    builder.PrependFloat32Slot(107, IMAGE_NOISE_STDDEV, 0.0)
+
+def AddIMAGE_NOISE_STDDEV(builder, IMAGE_NOISE_STDDEV):
+    EOOAddIMAGE_NOISE_STDDEV(builder, IMAGE_NOISE_STDDEV)
+
+def EOOAddIMAGE_CONTRAST(builder, IMAGE_CONTRAST):
+    builder.PrependFloat32Slot(108, IMAGE_CONTRAST, 0.0)
+
+def AddIMAGE_CONTRAST(builder, IMAGE_CONTRAST):
+    EOOAddIMAGE_CONTRAST(builder, IMAGE_CONTRAST)
+
+def EOOAddIMAGE_DYNAMIC_RANGE(builder, IMAGE_DYNAMIC_RANGE):
+    builder.PrependFloat32Slot(109, IMAGE_DYNAMIC_RANGE, 0.0)
+
+def AddIMAGE_DYNAMIC_RANGE(builder, IMAGE_DYNAMIC_RANGE):
+    EOOAddIMAGE_DYNAMIC_RANGE(builder, IMAGE_DYNAMIC_RANGE)
+
+def EOOAddIMAGE_ENTROPY(builder, IMAGE_ENTROPY):
+    builder.PrependFloat32Slot(110, IMAGE_ENTROPY, 0.0)
+
+def AddIMAGE_ENTROPY(builder, IMAGE_ENTROPY):
+    EOOAddIMAGE_ENTROPY(builder, IMAGE_ENTROPY)
+
+def EOOAddBACKGROUND_UNIFORMITY(builder, BACKGROUND_UNIFORMITY):
+    builder.PrependFloat32Slot(111, BACKGROUND_UNIFORMITY, 0.0)
+
+def AddBACKGROUND_UNIFORMITY(builder, BACKGROUND_UNIFORMITY):
+    EOOAddBACKGROUND_UNIFORMITY(builder, BACKGROUND_UNIFORMITY)
+
+def EOOAddBACKGROUND_MEAN_LEVEL(builder, BACKGROUND_MEAN_LEVEL):
+    builder.PrependFloat32Slot(112, BACKGROUND_MEAN_LEVEL, 0.0)
+
+def AddBACKGROUND_MEAN_LEVEL(builder, BACKGROUND_MEAN_LEVEL):
+    EOOAddBACKGROUND_MEAN_LEVEL(builder, BACKGROUND_MEAN_LEVEL)
+
+def EOOAddSATURATED_PIXEL_PERCENT(builder, SATURATED_PIXEL_PERCENT):
+    builder.PrependFloat32Slot(113, SATURATED_PIXEL_PERCENT, 0.0)
+
+def AddSATURATED_PIXEL_PERCENT(builder, SATURATED_PIXEL_PERCENT):
+    EOOAddSATURATED_PIXEL_PERCENT(builder, SATURATED_PIXEL_PERCENT)
+
+def EOOAddDEAD_PIXEL_PERCENT(builder, DEAD_PIXEL_PERCENT):
+    builder.PrependFloat32Slot(114, DEAD_PIXEL_PERCENT, 0.0)
+
+def AddDEAD_PIXEL_PERCENT(builder, DEAD_PIXEL_PERCENT):
+    EOOAddDEAD_PIXEL_PERCENT(builder, DEAD_PIXEL_PERCENT)
+
+def EOOAddPSF_FWHM(builder, PSF_FWHM):
+    builder.PrependFloat32Slot(115, PSF_FWHM, 0.0)
+
+def AddPSF_FWHM(builder, PSF_FWHM):
+    EOOAddPSF_FWHM(builder, PSF_FWHM)
+
+def EOOAddCLOUD_COVER_PERCENT(builder, CLOUD_COVER_PERCENT):
+    builder.PrependFloat32Slot(116, CLOUD_COVER_PERCENT, 0.0)
+
+def AddCLOUD_COVER_PERCENT(builder, CLOUD_COVER_PERCENT):
+    EOOAddCLOUD_COVER_PERCENT(builder, CLOUD_COVER_PERCENT)
+
+def EOOAddCLOUD_DETECTION_CONFIDENCE(builder, CLOUD_DETECTION_CONFIDENCE):
+    builder.PrependFloat32Slot(117, CLOUD_DETECTION_CONFIDENCE, 0.0)
+
+def AddCLOUD_DETECTION_CONFIDENCE(builder, CLOUD_DETECTION_CONFIDENCE):
+    EOOAddCLOUD_DETECTION_CONFIDENCE(builder, CLOUD_DETECTION_CONFIDENCE)
+
+def EOOAddHAZE_PERCENT(builder, HAZE_PERCENT):
+    builder.PrependFloat32Slot(118, HAZE_PERCENT, 0.0)
+
+def AddHAZE_PERCENT(builder, HAZE_PERCENT):
+    EOOAddHAZE_PERCENT(builder, HAZE_PERCENT)
+
+def EOOAddAEROSOL_OPTICAL_THICKNESS(builder, AEROSOL_OPTICAL_THICKNESS):
+    builder.PrependFloat32Slot(119, AEROSOL_OPTICAL_THICKNESS, 0.0)
+
+def AddAEROSOL_OPTICAL_THICKNESS(builder, AEROSOL_OPTICAL_THICKNESS):
+    EOOAddAEROSOL_OPTICAL_THICKNESS(builder, AEROSOL_OPTICAL_THICKNESS)
+
+def EOOAddWATER_VAPOR_CONTENT(builder, WATER_VAPOR_CONTENT):
+    builder.PrependFloat32Slot(120, WATER_VAPOR_CONTENT, 0.0)
+
+def AddWATER_VAPOR_CONTENT(builder, WATER_VAPOR_CONTENT):
+    EOOAddWATER_VAPOR_CONTENT(builder, WATER_VAPOR_CONTENT)
+
+def EOOAddSUN_ELEVATION(builder, SUN_ELEVATION):
+    builder.PrependFloat32Slot(121, SUN_ELEVATION, 0.0)
+
+def AddSUN_ELEVATION(builder, SUN_ELEVATION):
+    EOOAddSUN_ELEVATION(builder, SUN_ELEVATION)
+
+def EOOAddSUN_AZIMUTH(builder, SUN_AZIMUTH):
+    builder.PrependFloat32Slot(122, SUN_AZIMUTH, 0.0)
+
+def AddSUN_AZIMUTH(builder, SUN_AZIMUTH):
+    EOOAddSUN_AZIMUTH(builder, SUN_AZIMUTH)
+
+def EOOAddVIEW_ZENITH_ANGLE(builder, VIEW_ZENITH_ANGLE):
+    builder.PrependFloat32Slot(123, VIEW_ZENITH_ANGLE, 0.0)
+
+def AddVIEW_ZENITH_ANGLE(builder, VIEW_ZENITH_ANGLE):
+    EOOAddVIEW_ZENITH_ANGLE(builder, VIEW_ZENITH_ANGLE)
+
+def EOOAddVIEW_AZIMUTH_ANGLE(builder, VIEW_AZIMUTH_ANGLE):
+    builder.PrependFloat32Slot(124, VIEW_AZIMUTH_ANGLE, 0.0)
+
+def AddVIEW_AZIMUTH_ANGLE(builder, VIEW_AZIMUTH_ANGLE):
+    EOOAddVIEW_AZIMUTH_ANGLE(builder, VIEW_AZIMUTH_ANGLE)
+
+def EOOAddOFF_NADIR_ANGLE(builder, OFF_NADIR_ANGLE):
+    builder.PrependFloat32Slot(125, OFF_NADIR_ANGLE, 0.0)
+
+def AddOFF_NADIR_ANGLE(builder, OFF_NADIR_ANGLE):
+    EOOAddOFF_NADIR_ANGLE(builder, OFF_NADIR_ANGLE)
+
+def EOOAddSWATH_WIDTH_KM(builder, SWATH_WIDTH_KM):
+    builder.PrependFloat32Slot(126, SWATH_WIDTH_KM, 0.0)
+
+def AddSWATH_WIDTH_KM(builder, SWATH_WIDTH_KM):
+    EOOAddSWATH_WIDTH_KM(builder, SWATH_WIDTH_KM)
+
+def EOOAddMEAN_TERRAIN_ELEVATION(builder, MEAN_TERRAIN_ELEVATION):
+    builder.PrependFloat32Slot(127, MEAN_TERRAIN_ELEVATION, 0.0)
+
+def AddMEAN_TERRAIN_ELEVATION(builder, MEAN_TERRAIN_ELEVATION):
+    EOOAddMEAN_TERRAIN_ELEVATION(builder, MEAN_TERRAIN_ELEVATION)
+
+def EOOAddTERRAIN_ELEVATION_STDDEV(builder, TERRAIN_ELEVATION_STDDEV):
+    builder.PrependFloat32Slot(128, TERRAIN_ELEVATION_STDDEV, 0.0)
+
+def AddTERRAIN_ELEVATION_STDDEV(builder, TERRAIN_ELEVATION_STDDEV):
+    EOOAddTERRAIN_ELEVATION_STDDEV(builder, TERRAIN_ELEVATION_STDDEV)
+
+def EOOAddSHADOW_COVER_PERCENT(builder, SHADOW_COVER_PERCENT):
+    builder.PrependFloat32Slot(129, SHADOW_COVER_PERCENT, 0.0)
+
+def AddSHADOW_COVER_PERCENT(builder, SHADOW_COVER_PERCENT):
+    EOOAddSHADOW_COVER_PERCENT(builder, SHADOW_COVER_PERCENT)
+
+def EOOAddSUNGLINT_PRESENT(builder, SUNGLINT_PRESENT):
+    builder.PrependBoolSlot(130, SUNGLINT_PRESENT, 0)
+
+def AddSUNGLINT_PRESENT(builder, SUNGLINT_PRESENT):
+    EOOAddSUNGLINT_PRESENT(builder, SUNGLINT_PRESENT)
+
+def EOOAddSUNGLINT_PERCENT(builder, SUNGLINT_PERCENT):
+    builder.PrependFloat32Slot(131, SUNGLINT_PERCENT, 0.0)
+
+def AddSUNGLINT_PERCENT(builder, SUNGLINT_PERCENT):
+    EOOAddSUNGLINT_PERCENT(builder, SUNGLINT_PERCENT)
+
+def EOOAddSNOW_ICE_COVER_PERCENT(builder, SNOW_ICE_COVER_PERCENT):
+    builder.PrependFloat32Slot(132, SNOW_ICE_COVER_PERCENT, 0.0)
+
+def AddSNOW_ICE_COVER_PERCENT(builder, SNOW_ICE_COVER_PERCENT):
+    EOOAddSNOW_ICE_COVER_PERCENT(builder, SNOW_ICE_COVER_PERCENT)
+
+def EOOAddVALID_DATA_AREA_KM2(builder, VALID_DATA_AREA_KM2):
+    builder.PrependFloat32Slot(133, VALID_DATA_AREA_KM2, 0.0)
+
+def AddVALID_DATA_AREA_KM2(builder, VALID_DATA_AREA_KM2):
+    EOOAddVALID_DATA_AREA_KM2(builder, VALID_DATA_AREA_KM2)
+
+def EOOEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return EOOEnd(builder)
+
+import RFM
+try:
+    from typing import Optional
+except:
+    pass
+
+class EOOT(object):
+
+    # EOOT
+    def __init__(
+        self,
+        ID = None,
+        CLASSIFICATION = None,
+        OB_TIME = None,
+        CORR_QUALITY = 0.0,
+        ID_ON_ORBIT = None,
+        SENSOR_ID = None,
+        COLLECT_METHOD = 0,
+        NORAD_CAT_ID = 0,
+        TASK_ID = None,
+        TRANSACTION_ID = None,
+        IMAGE_SET_ID = None,
+        IMAGE_SET_LENGTH = 0,
+        SEQUENCE_ID = 0,
+        OB_POSITION = 0,
+        ORIG_OBJECT_ID = None,
+        ORIG_SENSOR_ID = None,
+        UCT = False,
+        AZIMUTH = 0.0,
+        AZIMUTH_UNC = 0.0,
+        AZIMUTH_BIAS = 0.0,
+        AZIMUTH_RATE = 0.0,
+        ELEVATION = 0.0,
+        ELEVATION_UNC = 0.0,
+        ELEVATION_BIAS = 0.0,
+        ELEVATION_RATE = 0.0,
+        RANGE = 0.0,
+        RANGE_UNC = 0.0,
+        RANGE_BIAS = 0.0,
+        RANGE_RATE = 0.0,
+        RANGE_RATE_UNC = 0.0,
+        RA = 0.0,
+        RA_RATE = 0.0,
+        RA_UNC = 0.0,
+        RA_BIAS = 0.0,
+        DECLINATION = 0.0,
+        DECLINATION_RATE = 0.0,
+        DECLINATION_UNC = 0.0,
+        DECLINATION_BIAS = 0.0,
+        LOSX = 0.0,
+        LOSY = 0.0,
+        LOSZ = 0.0,
+        LOS_UNC = 0.0,
+        LOSXVEL = 0.0,
+        LOSYVEL = 0.0,
+        LOSZVEL = 0.0,
+        SENLAT = 0.0,
+        SENLON = 0.0,
+        SENALT = 0.0,
+        SENX = 0.0,
+        SENY = 0.0,
+        SENZ = 0.0,
+        FOV_COUNT = 0,
+        FOV_COUNT_UCTS = 0,
+        EXP_DURATION = 0.0,
+        ZEROPTD = 0.0,
+        NET_OBJ_SIG = 0.0,
+        NET_OBJ_SIG_UNC = 0.0,
+        MAG = 0.0,
+        MAG_UNC = 0.0,
+        MAG_NORM_RANGE = 0.0,
+        GEOLAT = 0.0,
+        GEOLON = 0.0,
+        GEOALT = 0.0,
+        GEORANGE = 0.0,
+        SKY_BKGRND = 0.0,
+        PRIMARY_EXTINCTION = 0.0,
+        PRIMARY_EXTINCTION_UNC = 0.0,
+        SOLAR_PHASE_ANGLE = 0.0,
+        SOLAR_EQ_PHASE_ANGLE = 0.0,
+        SOLAR_DEC_ANGLE = 0.0,
+        SHUTTER_DELAY = 0.0,
+        TIMING_BIAS = 0.0,
+        RAW_FILE_URI = None,
+        INTENSITY = 0.0,
+        BG_INTENSITY = 0.0,
+        DESCRIPTOR = None,
+        SOURCE = None,
+        ORIGIN = None,
+        DATA_MODE = 0,
+        CREATED_AT = None,
+        CREATED_BY = None,
+        REFERENCE_FRAME = None,
+        SEN_REFERENCE_FRAME = None,
+        UMBRA = False,
+        PENUMBRA = False,
+        ORIG_NETWORK = None,
+        SOURCE_DL = None,
+        TYPE = 0,
+        AZIMUTH_MEASURED = False,
+        ELEVATION_MEASURED = False,
+        RANGE_MEASURED = False,
+        RANGERATE_MEASURED = False,
+        RA_MEASURED = False,
+        DECLINATION_MEASURED = False,
+        NIIRS = 0.0,
+        METERS_PER_PIXEL = 0.0,
+        IMAGE_SNR = 0.0,
+        IMAGE_BIT_DEPTH = 0,
+        IMAGE_WIDTH = 0,
+        IMAGE_HEIGHT = 0,
+        IMAGE_COMPRESSION = None,
+        IMAGE_COMPRESSION_RATIO = 0.0,
+        PROCESSED_IMAGE_URI = None,
+        IMAGE_AUTO_ENHANCED = False,
+        MULTI_FRAME_STACKED = False,
+        SYNTHETIC_TRACKING_USED = False,
+        IMAGE_SHARPNESS = 0.0,
+        IMAGE_NOISE_STDDEV = 0.0,
+        IMAGE_CONTRAST = 0.0,
+        IMAGE_DYNAMIC_RANGE = 0.0,
+        IMAGE_ENTROPY = 0.0,
+        BACKGROUND_UNIFORMITY = 0.0,
+        BACKGROUND_MEAN_LEVEL = 0.0,
+        SATURATED_PIXEL_PERCENT = 0.0,
+        DEAD_PIXEL_PERCENT = 0.0,
+        PSF_FWHM = 0.0,
+        CLOUD_COVER_PERCENT = 0.0,
+        CLOUD_DETECTION_CONFIDENCE = 0.0,
+        HAZE_PERCENT = 0.0,
+        AEROSOL_OPTICAL_THICKNESS = 0.0,
+        WATER_VAPOR_CONTENT = 0.0,
+        SUN_ELEVATION = 0.0,
+        SUN_AZIMUTH = 0.0,
+        VIEW_ZENITH_ANGLE = 0.0,
+        VIEW_AZIMUTH_ANGLE = 0.0,
+        OFF_NADIR_ANGLE = 0.0,
+        SWATH_WIDTH_KM = 0.0,
+        MEAN_TERRAIN_ELEVATION = 0.0,
+        TERRAIN_ELEVATION_STDDEV = 0.0,
+        SHADOW_COVER_PERCENT = 0.0,
+        SUNGLINT_PRESENT = False,
+        SUNGLINT_PERCENT = 0.0,
+        SNOW_ICE_COVER_PERCENT = 0.0,
+        VALID_DATA_AREA_KM2 = 0.0,
+    ):
+        self.ID = ID  # type: Optional[str]
+        self.CLASSIFICATION = CLASSIFICATION  # type: Optional[str]
+        self.OB_TIME = OB_TIME  # type: Optional[str]
+        self.CORR_QUALITY = CORR_QUALITY  # type: float
+        self.ID_ON_ORBIT = ID_ON_ORBIT  # type: Optional[str]
+        self.SENSOR_ID = SENSOR_ID  # type: Optional[str]
+        self.COLLECT_METHOD = COLLECT_METHOD  # type: int
+        self.NORAD_CAT_ID = NORAD_CAT_ID  # type: int
+        self.TASK_ID = TASK_ID  # type: Optional[str]
+        self.TRANSACTION_ID = TRANSACTION_ID  # type: Optional[str]
+        self.IMAGE_SET_ID = IMAGE_SET_ID  # type: Optional[str]
+        self.IMAGE_SET_LENGTH = IMAGE_SET_LENGTH  # type: int
+        self.SEQUENCE_ID = SEQUENCE_ID  # type: int
+        self.OB_POSITION = OB_POSITION  # type: int
+        self.ORIG_OBJECT_ID = ORIG_OBJECT_ID  # type: Optional[str]
+        self.ORIG_SENSOR_ID = ORIG_SENSOR_ID  # type: Optional[str]
+        self.UCT = UCT  # type: bool
+        self.AZIMUTH = AZIMUTH  # type: float
+        self.AZIMUTH_UNC = AZIMUTH_UNC  # type: float
+        self.AZIMUTH_BIAS = AZIMUTH_BIAS  # type: float
+        self.AZIMUTH_RATE = AZIMUTH_RATE  # type: float
+        self.ELEVATION = ELEVATION  # type: float
+        self.ELEVATION_UNC = ELEVATION_UNC  # type: float
+        self.ELEVATION_BIAS = ELEVATION_BIAS  # type: float
+        self.ELEVATION_RATE = ELEVATION_RATE  # type: float
+        self.RANGE = RANGE  # type: float
+        self.RANGE_UNC = RANGE_UNC  # type: float
+        self.RANGE_BIAS = RANGE_BIAS  # type: float
+        self.RANGE_RATE = RANGE_RATE  # type: float
+        self.RANGE_RATE_UNC = RANGE_RATE_UNC  # type: float
+        self.RA = RA  # type: float
+        self.RA_RATE = RA_RATE  # type: float
+        self.RA_UNC = RA_UNC  # type: float
+        self.RA_BIAS = RA_BIAS  # type: float
+        self.DECLINATION = DECLINATION  # type: float
+        self.DECLINATION_RATE = DECLINATION_RATE  # type: float
+        self.DECLINATION_UNC = DECLINATION_UNC  # type: float
+        self.DECLINATION_BIAS = DECLINATION_BIAS  # type: float
+        self.LOSX = LOSX  # type: float
+        self.LOSY = LOSY  # type: float
+        self.LOSZ = LOSZ  # type: float
+        self.LOS_UNC = LOS_UNC  # type: float
+        self.LOSXVEL = LOSXVEL  # type: float
+        self.LOSYVEL = LOSYVEL  # type: float
+        self.LOSZVEL = LOSZVEL  # type: float
+        self.SENLAT = SENLAT  # type: float
+        self.SENLON = SENLON  # type: float
+        self.SENALT = SENALT  # type: float
+        self.SENX = SENX  # type: float
+        self.SENY = SENY  # type: float
+        self.SENZ = SENZ  # type: float
+        self.FOV_COUNT = FOV_COUNT  # type: int
+        self.FOV_COUNT_UCTS = FOV_COUNT_UCTS  # type: int
+        self.EXP_DURATION = EXP_DURATION  # type: float
+        self.ZEROPTD = ZEROPTD  # type: float
+        self.NET_OBJ_SIG = NET_OBJ_SIG  # type: float
+        self.NET_OBJ_SIG_UNC = NET_OBJ_SIG_UNC  # type: float
+        self.MAG = MAG  # type: float
+        self.MAG_UNC = MAG_UNC  # type: float
+        self.MAG_NORM_RANGE = MAG_NORM_RANGE  # type: float
+        self.GEOLAT = GEOLAT  # type: float
+        self.GEOLON = GEOLON  # type: float
+        self.GEOALT = GEOALT  # type: float
+        self.GEORANGE = GEORANGE  # type: float
+        self.SKY_BKGRND = SKY_BKGRND  # type: float
+        self.PRIMARY_EXTINCTION = PRIMARY_EXTINCTION  # type: float
+        self.PRIMARY_EXTINCTION_UNC = PRIMARY_EXTINCTION_UNC  # type: float
+        self.SOLAR_PHASE_ANGLE = SOLAR_PHASE_ANGLE  # type: float
+        self.SOLAR_EQ_PHASE_ANGLE = SOLAR_EQ_PHASE_ANGLE  # type: float
+        self.SOLAR_DEC_ANGLE = SOLAR_DEC_ANGLE  # type: float
+        self.SHUTTER_DELAY = SHUTTER_DELAY  # type: float
+        self.TIMING_BIAS = TIMING_BIAS  # type: float
+        self.RAW_FILE_URI = RAW_FILE_URI  # type: Optional[str]
+        self.INTENSITY = INTENSITY  # type: float
+        self.BG_INTENSITY = BG_INTENSITY  # type: float
+        self.DESCRIPTOR = DESCRIPTOR  # type: Optional[str]
+        self.SOURCE = SOURCE  # type: Optional[str]
+        self.ORIGIN = ORIGIN  # type: Optional[str]
+        self.DATA_MODE = DATA_MODE  # type: int
+        self.CREATED_AT = CREATED_AT  # type: Optional[str]
+        self.CREATED_BY = CREATED_BY  # type: Optional[str]
+        self.REFERENCE_FRAME = REFERENCE_FRAME  # type: Optional[RFM.RFMT]
+        self.SEN_REFERENCE_FRAME = SEN_REFERENCE_FRAME  # type: Optional[RFM.RFMT]
+        self.UMBRA = UMBRA  # type: bool
+        self.PENUMBRA = PENUMBRA  # type: bool
+        self.ORIG_NETWORK = ORIG_NETWORK  # type: Optional[str]
+        self.SOURCE_DL = SOURCE_DL  # type: Optional[str]
+        self.TYPE = TYPE  # type: int
+        self.AZIMUTH_MEASURED = AZIMUTH_MEASURED  # type: bool
+        self.ELEVATION_MEASURED = ELEVATION_MEASURED  # type: bool
+        self.RANGE_MEASURED = RANGE_MEASURED  # type: bool
+        self.RANGERATE_MEASURED = RANGERATE_MEASURED  # type: bool
+        self.RA_MEASURED = RA_MEASURED  # type: bool
+        self.DECLINATION_MEASURED = DECLINATION_MEASURED  # type: bool
+        self.NIIRS = NIIRS  # type: float
+        self.METERS_PER_PIXEL = METERS_PER_PIXEL  # type: float
+        self.IMAGE_SNR = IMAGE_SNR  # type: float
+        self.IMAGE_BIT_DEPTH = IMAGE_BIT_DEPTH  # type: int
+        self.IMAGE_WIDTH = IMAGE_WIDTH  # type: int
+        self.IMAGE_HEIGHT = IMAGE_HEIGHT  # type: int
+        self.IMAGE_COMPRESSION = IMAGE_COMPRESSION  # type: Optional[str]
+        self.IMAGE_COMPRESSION_RATIO = IMAGE_COMPRESSION_RATIO  # type: float
+        self.PROCESSED_IMAGE_URI = PROCESSED_IMAGE_URI  # type: Optional[str]
+        self.IMAGE_AUTO_ENHANCED = IMAGE_AUTO_ENHANCED  # type: bool
+        self.MULTI_FRAME_STACKED = MULTI_FRAME_STACKED  # type: bool
+        self.SYNTHETIC_TRACKING_USED = SYNTHETIC_TRACKING_USED  # type: bool
+        self.IMAGE_SHARPNESS = IMAGE_SHARPNESS  # type: float
+        self.IMAGE_NOISE_STDDEV = IMAGE_NOISE_STDDEV  # type: float
+        self.IMAGE_CONTRAST = IMAGE_CONTRAST  # type: float
+        self.IMAGE_DYNAMIC_RANGE = IMAGE_DYNAMIC_RANGE  # type: float
+        self.IMAGE_ENTROPY = IMAGE_ENTROPY  # type: float
+        self.BACKGROUND_UNIFORMITY = BACKGROUND_UNIFORMITY  # type: float
+        self.BACKGROUND_MEAN_LEVEL = BACKGROUND_MEAN_LEVEL  # type: float
+        self.SATURATED_PIXEL_PERCENT = SATURATED_PIXEL_PERCENT  # type: float
+        self.DEAD_PIXEL_PERCENT = DEAD_PIXEL_PERCENT  # type: float
+        self.PSF_FWHM = PSF_FWHM  # type: float
+        self.CLOUD_COVER_PERCENT = CLOUD_COVER_PERCENT  # type: float
+        self.CLOUD_DETECTION_CONFIDENCE = CLOUD_DETECTION_CONFIDENCE  # type: float
+        self.HAZE_PERCENT = HAZE_PERCENT  # type: float
+        self.AEROSOL_OPTICAL_THICKNESS = AEROSOL_OPTICAL_THICKNESS  # type: float
+        self.WATER_VAPOR_CONTENT = WATER_VAPOR_CONTENT  # type: float
+        self.SUN_ELEVATION = SUN_ELEVATION  # type: float
+        self.SUN_AZIMUTH = SUN_AZIMUTH  # type: float
+        self.VIEW_ZENITH_ANGLE = VIEW_ZENITH_ANGLE  # type: float
+        self.VIEW_AZIMUTH_ANGLE = VIEW_AZIMUTH_ANGLE  # type: float
+        self.OFF_NADIR_ANGLE = OFF_NADIR_ANGLE  # type: float
+        self.SWATH_WIDTH_KM = SWATH_WIDTH_KM  # type: float
+        self.MEAN_TERRAIN_ELEVATION = MEAN_TERRAIN_ELEVATION  # type: float
+        self.TERRAIN_ELEVATION_STDDEV = TERRAIN_ELEVATION_STDDEV  # type: float
+        self.SHADOW_COVER_PERCENT = SHADOW_COVER_PERCENT  # type: float
+        self.SUNGLINT_PRESENT = SUNGLINT_PRESENT  # type: bool
+        self.SUNGLINT_PERCENT = SUNGLINT_PERCENT  # type: float
+        self.SNOW_ICE_COVER_PERCENT = SNOW_ICE_COVER_PERCENT  # type: float
+        self.VALID_DATA_AREA_KM2 = VALID_DATA_AREA_KM2  # type: float
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpEoo = EOO()
+        tmpEoo.Init(buf, pos)
+        return cls.InitFromObj(tmpEoo)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpEoo):
+        x = EOOT()
+        x._UnPack(tmpEoo)
+        return x
+
+    # EOOT
+    def _UnPack(self, EOO):
+        if EOO is None:
+            return
+        self.ID = EOO.ID()
+        self.CLASSIFICATION = EOO.CLASSIFICATION()
+        self.OB_TIME = EOO.OB_TIME()
+        self.CORR_QUALITY = EOO.CORR_QUALITY()
+        self.ID_ON_ORBIT = EOO.ID_ON_ORBIT()
+        self.SENSOR_ID = EOO.SENSOR_ID()
+        self.COLLECT_METHOD = EOO.COLLECT_METHOD()
+        self.NORAD_CAT_ID = EOO.NORAD_CAT_ID()
+        self.TASK_ID = EOO.TASK_ID()
+        self.TRANSACTION_ID = EOO.TRANSACTION_ID()
+        self.IMAGE_SET_ID = EOO.IMAGE_SET_ID()
+        self.IMAGE_SET_LENGTH = EOO.IMAGE_SET_LENGTH()
+        self.SEQUENCE_ID = EOO.SEQUENCE_ID()
+        self.OB_POSITION = EOO.OB_POSITION()
+        self.ORIG_OBJECT_ID = EOO.ORIG_OBJECT_ID()
+        self.ORIG_SENSOR_ID = EOO.ORIG_SENSOR_ID()
+        self.UCT = EOO.UCT()
+        self.AZIMUTH = EOO.AZIMUTH()
+        self.AZIMUTH_UNC = EOO.AZIMUTH_UNC()
+        self.AZIMUTH_BIAS = EOO.AZIMUTH_BIAS()
+        self.AZIMUTH_RATE = EOO.AZIMUTH_RATE()
+        self.ELEVATION = EOO.ELEVATION()
+        self.ELEVATION_UNC = EOO.ELEVATION_UNC()
+        self.ELEVATION_BIAS = EOO.ELEVATION_BIAS()
+        self.ELEVATION_RATE = EOO.ELEVATION_RATE()
+        self.RANGE = EOO.RANGE()
+        self.RANGE_UNC = EOO.RANGE_UNC()
+        self.RANGE_BIAS = EOO.RANGE_BIAS()
+        self.RANGE_RATE = EOO.RANGE_RATE()
+        self.RANGE_RATE_UNC = EOO.RANGE_RATE_UNC()
+        self.RA = EOO.RA()
+        self.RA_RATE = EOO.RA_RATE()
+        self.RA_UNC = EOO.RA_UNC()
+        self.RA_BIAS = EOO.RA_BIAS()
+        self.DECLINATION = EOO.DECLINATION()
+        self.DECLINATION_RATE = EOO.DECLINATION_RATE()
+        self.DECLINATION_UNC = EOO.DECLINATION_UNC()
+        self.DECLINATION_BIAS = EOO.DECLINATION_BIAS()
+        self.LOSX = EOO.LOSX()
+        self.LOSY = EOO.LOSY()
+        self.LOSZ = EOO.LOSZ()
+        self.LOS_UNC = EOO.LOS_UNC()
+        self.LOSXVEL = EOO.LOSXVEL()
+        self.LOSYVEL = EOO.LOSYVEL()
+        self.LOSZVEL = EOO.LOSZVEL()
+        self.SENLAT = EOO.SENLAT()
+        self.SENLON = EOO.SENLON()
+        self.SENALT = EOO.SENALT()
+        self.SENX = EOO.SENX()
+        self.SENY = EOO.SENY()
+        self.SENZ = EOO.SENZ()
+        self.FOV_COUNT = EOO.FOV_COUNT()
+        self.FOV_COUNT_UCTS = EOO.FOV_COUNT_UCTS()
+        self.EXP_DURATION = EOO.EXP_DURATION()
+        self.ZEROPTD = EOO.ZEROPTD()
+        self.NET_OBJ_SIG = EOO.NET_OBJ_SIG()
+        self.NET_OBJ_SIG_UNC = EOO.NET_OBJ_SIG_UNC()
+        self.MAG = EOO.MAG()
+        self.MAG_UNC = EOO.MAG_UNC()
+        self.MAG_NORM_RANGE = EOO.MAG_NORM_RANGE()
+        self.GEOLAT = EOO.GEOLAT()
+        self.GEOLON = EOO.GEOLON()
+        self.GEOALT = EOO.GEOALT()
+        self.GEORANGE = EOO.GEORANGE()
+        self.SKY_BKGRND = EOO.SKY_BKGRND()
+        self.PRIMARY_EXTINCTION = EOO.PRIMARY_EXTINCTION()
+        self.PRIMARY_EXTINCTION_UNC = EOO.PRIMARY_EXTINCTION_UNC()
+        self.SOLAR_PHASE_ANGLE = EOO.SOLAR_PHASE_ANGLE()
+        self.SOLAR_EQ_PHASE_ANGLE = EOO.SOLAR_EQ_PHASE_ANGLE()
+        self.SOLAR_DEC_ANGLE = EOO.SOLAR_DEC_ANGLE()
+        self.SHUTTER_DELAY = EOO.SHUTTER_DELAY()
+        self.TIMING_BIAS = EOO.TIMING_BIAS()
+        self.RAW_FILE_URI = EOO.RAW_FILE_URI()
+        self.INTENSITY = EOO.INTENSITY()
+        self.BG_INTENSITY = EOO.BG_INTENSITY()
+        self.DESCRIPTOR = EOO.DESCRIPTOR()
+        self.SOURCE = EOO.SOURCE()
+        self.ORIGIN = EOO.ORIGIN()
+        self.DATA_MODE = EOO.DATA_MODE()
+        self.CREATED_AT = EOO.CREATED_AT()
+        self.CREATED_BY = EOO.CREATED_BY()
+        if EOO.REFERENCE_FRAME() is not None:
+            self.REFERENCE_FRAME = RFM.RFMT.InitFromObj(EOO.REFERENCE_FRAME())
+        if EOO.SEN_REFERENCE_FRAME() is not None:
+            self.SEN_REFERENCE_FRAME = RFM.RFMT.InitFromObj(EOO.SEN_REFERENCE_FRAME())
+        self.UMBRA = EOO.UMBRA()
+        self.PENUMBRA = EOO.PENUMBRA()
+        self.ORIG_NETWORK = EOO.ORIG_NETWORK()
+        self.SOURCE_DL = EOO.SOURCE_DL()
+        self.TYPE = EOO.TYPE()
+        self.AZIMUTH_MEASURED = EOO.AZIMUTH_MEASURED()
+        self.ELEVATION_MEASURED = EOO.ELEVATION_MEASURED()
+        self.RANGE_MEASURED = EOO.RANGE_MEASURED()
+        self.RANGERATE_MEASURED = EOO.RANGERATE_MEASURED()
+        self.RA_MEASURED = EOO.RA_MEASURED()
+        self.DECLINATION_MEASURED = EOO.DECLINATION_MEASURED()
+        self.NIIRS = EOO.NIIRS()
+        self.METERS_PER_PIXEL = EOO.METERS_PER_PIXEL()
+        self.IMAGE_SNR = EOO.IMAGE_SNR()
+        self.IMAGE_BIT_DEPTH = EOO.IMAGE_BIT_DEPTH()
+        self.IMAGE_WIDTH = EOO.IMAGE_WIDTH()
+        self.IMAGE_HEIGHT = EOO.IMAGE_HEIGHT()
+        self.IMAGE_COMPRESSION = EOO.IMAGE_COMPRESSION()
+        self.IMAGE_COMPRESSION_RATIO = EOO.IMAGE_COMPRESSION_RATIO()
+        self.PROCESSED_IMAGE_URI = EOO.PROCESSED_IMAGE_URI()
+        self.IMAGE_AUTO_ENHANCED = EOO.IMAGE_AUTO_ENHANCED()
+        self.MULTI_FRAME_STACKED = EOO.MULTI_FRAME_STACKED()
+        self.SYNTHETIC_TRACKING_USED = EOO.SYNTHETIC_TRACKING_USED()
+        self.IMAGE_SHARPNESS = EOO.IMAGE_SHARPNESS()
+        self.IMAGE_NOISE_STDDEV = EOO.IMAGE_NOISE_STDDEV()
+        self.IMAGE_CONTRAST = EOO.IMAGE_CONTRAST()
+        self.IMAGE_DYNAMIC_RANGE = EOO.IMAGE_DYNAMIC_RANGE()
+        self.IMAGE_ENTROPY = EOO.IMAGE_ENTROPY()
+        self.BACKGROUND_UNIFORMITY = EOO.BACKGROUND_UNIFORMITY()
+        self.BACKGROUND_MEAN_LEVEL = EOO.BACKGROUND_MEAN_LEVEL()
+        self.SATURATED_PIXEL_PERCENT = EOO.SATURATED_PIXEL_PERCENT()
+        self.DEAD_PIXEL_PERCENT = EOO.DEAD_PIXEL_PERCENT()
+        self.PSF_FWHM = EOO.PSF_FWHM()
+        self.CLOUD_COVER_PERCENT = EOO.CLOUD_COVER_PERCENT()
+        self.CLOUD_DETECTION_CONFIDENCE = EOO.CLOUD_DETECTION_CONFIDENCE()
+        self.HAZE_PERCENT = EOO.HAZE_PERCENT()
+        self.AEROSOL_OPTICAL_THICKNESS = EOO.AEROSOL_OPTICAL_THICKNESS()
+        self.WATER_VAPOR_CONTENT = EOO.WATER_VAPOR_CONTENT()
+        self.SUN_ELEVATION = EOO.SUN_ELEVATION()
+        self.SUN_AZIMUTH = EOO.SUN_AZIMUTH()
+        self.VIEW_ZENITH_ANGLE = EOO.VIEW_ZENITH_ANGLE()
+        self.VIEW_AZIMUTH_ANGLE = EOO.VIEW_AZIMUTH_ANGLE()
+        self.OFF_NADIR_ANGLE = EOO.OFF_NADIR_ANGLE()
+        self.SWATH_WIDTH_KM = EOO.SWATH_WIDTH_KM()
+        self.MEAN_TERRAIN_ELEVATION = EOO.MEAN_TERRAIN_ELEVATION()
+        self.TERRAIN_ELEVATION_STDDEV = EOO.TERRAIN_ELEVATION_STDDEV()
+        self.SHADOW_COVER_PERCENT = EOO.SHADOW_COVER_PERCENT()
+        self.SUNGLINT_PRESENT = EOO.SUNGLINT_PRESENT()
+        self.SUNGLINT_PERCENT = EOO.SUNGLINT_PERCENT()
+        self.SNOW_ICE_COVER_PERCENT = EOO.SNOW_ICE_COVER_PERCENT()
+        self.VALID_DATA_AREA_KM2 = EOO.VALID_DATA_AREA_KM2()
+
+    # EOOT
+    def Pack(self, builder):
+        if self.ID is not None:
+            ID = builder.CreateString(self.ID)
+        if self.CLASSIFICATION is not None:
+            CLASSIFICATION = builder.CreateString(self.CLASSIFICATION)
+        if self.OB_TIME is not None:
+            OB_TIME = builder.CreateString(self.OB_TIME)
+        if self.ID_ON_ORBIT is not None:
+            ID_ON_ORBIT = builder.CreateString(self.ID_ON_ORBIT)
+        if self.SENSOR_ID is not None:
+            SENSOR_ID = builder.CreateString(self.SENSOR_ID)
+        if self.TASK_ID is not None:
+            TASK_ID = builder.CreateString(self.TASK_ID)
+        if self.TRANSACTION_ID is not None:
+            TRANSACTION_ID = builder.CreateString(self.TRANSACTION_ID)
+        if self.IMAGE_SET_ID is not None:
+            IMAGE_SET_ID = builder.CreateString(self.IMAGE_SET_ID)
+        if self.ORIG_OBJECT_ID is not None:
+            ORIG_OBJECT_ID = builder.CreateString(self.ORIG_OBJECT_ID)
+        if self.ORIG_SENSOR_ID is not None:
+            ORIG_SENSOR_ID = builder.CreateString(self.ORIG_SENSOR_ID)
+        if self.RAW_FILE_URI is not None:
+            RAW_FILE_URI = builder.CreateString(self.RAW_FILE_URI)
+        if self.DESCRIPTOR is not None:
+            DESCRIPTOR = builder.CreateString(self.DESCRIPTOR)
+        if self.SOURCE is not None:
+            SOURCE = builder.CreateString(self.SOURCE)
+        if self.ORIGIN is not None:
+            ORIGIN = builder.CreateString(self.ORIGIN)
+        if self.CREATED_AT is not None:
+            CREATED_AT = builder.CreateString(self.CREATED_AT)
+        if self.CREATED_BY is not None:
+            CREATED_BY = builder.CreateString(self.CREATED_BY)
+        if self.REFERENCE_FRAME is not None:
+            REFERENCE_FRAME = self.REFERENCE_FRAME.Pack(builder)
+        if self.SEN_REFERENCE_FRAME is not None:
+            SEN_REFERENCE_FRAME = self.SEN_REFERENCE_FRAME.Pack(builder)
+        if self.ORIG_NETWORK is not None:
+            ORIG_NETWORK = builder.CreateString(self.ORIG_NETWORK)
+        if self.SOURCE_DL is not None:
+            SOURCE_DL = builder.CreateString(self.SOURCE_DL)
+        if self.IMAGE_COMPRESSION is not None:
+            IMAGE_COMPRESSION = builder.CreateString(self.IMAGE_COMPRESSION)
+        if self.PROCESSED_IMAGE_URI is not None:
+            PROCESSED_IMAGE_URI = builder.CreateString(self.PROCESSED_IMAGE_URI)
+        EOOStart(builder)
+        if self.ID is not None:
+            EOOAddID(builder, ID)
+        if self.CLASSIFICATION is not None:
+            EOOAddCLASSIFICATION(builder, CLASSIFICATION)
+        if self.OB_TIME is not None:
+            EOOAddOB_TIME(builder, OB_TIME)
+        EOOAddCORR_QUALITY(builder, self.CORR_QUALITY)
+        if self.ID_ON_ORBIT is not None:
+            EOOAddID_ON_ORBIT(builder, ID_ON_ORBIT)
+        if self.SENSOR_ID is not None:
+            EOOAddSENSOR_ID(builder, SENSOR_ID)
+        EOOAddCOLLECT_METHOD(builder, self.COLLECT_METHOD)
+        EOOAddNORAD_CAT_ID(builder, self.NORAD_CAT_ID)
+        if self.TASK_ID is not None:
+            EOOAddTASK_ID(builder, TASK_ID)
+        if self.TRANSACTION_ID is not None:
+            EOOAddTRANSACTION_ID(builder, TRANSACTION_ID)
+        if self.IMAGE_SET_ID is not None:
+            EOOAddIMAGE_SET_ID(builder, IMAGE_SET_ID)
+        EOOAddIMAGE_SET_LENGTH(builder, self.IMAGE_SET_LENGTH)
+        EOOAddSEQUENCE_ID(builder, self.SEQUENCE_ID)
+        EOOAddOB_POSITION(builder, self.OB_POSITION)
+        if self.ORIG_OBJECT_ID is not None:
+            EOOAddORIG_OBJECT_ID(builder, ORIG_OBJECT_ID)
+        if self.ORIG_SENSOR_ID is not None:
+            EOOAddORIG_SENSOR_ID(builder, ORIG_SENSOR_ID)
+        EOOAddUCT(builder, self.UCT)
+        EOOAddAZIMUTH(builder, self.AZIMUTH)
+        EOOAddAZIMUTH_UNC(builder, self.AZIMUTH_UNC)
+        EOOAddAZIMUTH_BIAS(builder, self.AZIMUTH_BIAS)
+        EOOAddAZIMUTH_RATE(builder, self.AZIMUTH_RATE)
+        EOOAddELEVATION(builder, self.ELEVATION)
+        EOOAddELEVATION_UNC(builder, self.ELEVATION_UNC)
+        EOOAddELEVATION_BIAS(builder, self.ELEVATION_BIAS)
+        EOOAddELEVATION_RATE(builder, self.ELEVATION_RATE)
+        EOOAddRANGE(builder, self.RANGE)
+        EOOAddRANGE_UNC(builder, self.RANGE_UNC)
+        EOOAddRANGE_BIAS(builder, self.RANGE_BIAS)
+        EOOAddRANGE_RATE(builder, self.RANGE_RATE)
+        EOOAddRANGE_RATE_UNC(builder, self.RANGE_RATE_UNC)
+        EOOAddRA(builder, self.RA)
+        EOOAddRA_RATE(builder, self.RA_RATE)
+        EOOAddRA_UNC(builder, self.RA_UNC)
+        EOOAddRA_BIAS(builder, self.RA_BIAS)
+        EOOAddDECLINATION(builder, self.DECLINATION)
+        EOOAddDECLINATION_RATE(builder, self.DECLINATION_RATE)
+        EOOAddDECLINATION_UNC(builder, self.DECLINATION_UNC)
+        EOOAddDECLINATION_BIAS(builder, self.DECLINATION_BIAS)
+        EOOAddLOSX(builder, self.LOSX)
+        EOOAddLOSY(builder, self.LOSY)
+        EOOAddLOSZ(builder, self.LOSZ)
+        EOOAddLOS_UNC(builder, self.LOS_UNC)
+        EOOAddLOSXVEL(builder, self.LOSXVEL)
+        EOOAddLOSYVEL(builder, self.LOSYVEL)
+        EOOAddLOSZVEL(builder, self.LOSZVEL)
+        EOOAddSENLAT(builder, self.SENLAT)
+        EOOAddSENLON(builder, self.SENLON)
+        EOOAddSENALT(builder, self.SENALT)
+        EOOAddSENX(builder, self.SENX)
+        EOOAddSENY(builder, self.SENY)
+        EOOAddSENZ(builder, self.SENZ)
+        EOOAddFOV_COUNT(builder, self.FOV_COUNT)
+        EOOAddFOV_COUNT_UCTS(builder, self.FOV_COUNT_UCTS)
+        EOOAddEXP_DURATION(builder, self.EXP_DURATION)
+        EOOAddZEROPTD(builder, self.ZEROPTD)
+        EOOAddNET_OBJ_SIG(builder, self.NET_OBJ_SIG)
+        EOOAddNET_OBJ_SIG_UNC(builder, self.NET_OBJ_SIG_UNC)
+        EOOAddMAG(builder, self.MAG)
+        EOOAddMAG_UNC(builder, self.MAG_UNC)
+        EOOAddMAG_NORM_RANGE(builder, self.MAG_NORM_RANGE)
+        EOOAddGEOLAT(builder, self.GEOLAT)
+        EOOAddGEOLON(builder, self.GEOLON)
+        EOOAddGEOALT(builder, self.GEOALT)
+        EOOAddGEORANGE(builder, self.GEORANGE)
+        EOOAddSKY_BKGRND(builder, self.SKY_BKGRND)
+        EOOAddPRIMARY_EXTINCTION(builder, self.PRIMARY_EXTINCTION)
+        EOOAddPRIMARY_EXTINCTION_UNC(builder, self.PRIMARY_EXTINCTION_UNC)
+        EOOAddSOLAR_PHASE_ANGLE(builder, self.SOLAR_PHASE_ANGLE)
+        EOOAddSOLAR_EQ_PHASE_ANGLE(builder, self.SOLAR_EQ_PHASE_ANGLE)
+        EOOAddSOLAR_DEC_ANGLE(builder, self.SOLAR_DEC_ANGLE)
+        EOOAddSHUTTER_DELAY(builder, self.SHUTTER_DELAY)
+        EOOAddTIMING_BIAS(builder, self.TIMING_BIAS)
+        if self.RAW_FILE_URI is not None:
+            EOOAddRAW_FILE_URI(builder, RAW_FILE_URI)
+        EOOAddINTENSITY(builder, self.INTENSITY)
+        EOOAddBG_INTENSITY(builder, self.BG_INTENSITY)
+        if self.DESCRIPTOR is not None:
+            EOOAddDESCRIPTOR(builder, DESCRIPTOR)
+        if self.SOURCE is not None:
+            EOOAddSOURCE(builder, SOURCE)
+        if self.ORIGIN is not None:
+            EOOAddORIGIN(builder, ORIGIN)
+        EOOAddDATA_MODE(builder, self.DATA_MODE)
+        if self.CREATED_AT is not None:
+            EOOAddCREATED_AT(builder, CREATED_AT)
+        if self.CREATED_BY is not None:
+            EOOAddCREATED_BY(builder, CREATED_BY)
+        if self.REFERENCE_FRAME is not None:
+            EOOAddREFERENCE_FRAME(builder, REFERENCE_FRAME)
+        if self.SEN_REFERENCE_FRAME is not None:
+            EOOAddSEN_REFERENCE_FRAME(builder, SEN_REFERENCE_FRAME)
+        EOOAddUMBRA(builder, self.UMBRA)
+        EOOAddPENUMBRA(builder, self.PENUMBRA)
+        if self.ORIG_NETWORK is not None:
+            EOOAddORIG_NETWORK(builder, ORIG_NETWORK)
+        if self.SOURCE_DL is not None:
+            EOOAddSOURCE_DL(builder, SOURCE_DL)
+        EOOAddTYPE(builder, self.TYPE)
+        EOOAddAZIMUTH_MEASURED(builder, self.AZIMUTH_MEASURED)
+        EOOAddELEVATION_MEASURED(builder, self.ELEVATION_MEASURED)
+        EOOAddRANGE_MEASURED(builder, self.RANGE_MEASURED)
+        EOOAddRANGERATE_MEASURED(builder, self.RANGERATE_MEASURED)
+        EOOAddRA_MEASURED(builder, self.RA_MEASURED)
+        EOOAddDECLINATION_MEASURED(builder, self.DECLINATION_MEASURED)
+        EOOAddNIIRS(builder, self.NIIRS)
+        EOOAddMETERS_PER_PIXEL(builder, self.METERS_PER_PIXEL)
+        EOOAddIMAGE_SNR(builder, self.IMAGE_SNR)
+        EOOAddIMAGE_BIT_DEPTH(builder, self.IMAGE_BIT_DEPTH)
+        EOOAddIMAGE_WIDTH(builder, self.IMAGE_WIDTH)
+        EOOAddIMAGE_HEIGHT(builder, self.IMAGE_HEIGHT)
+        if self.IMAGE_COMPRESSION is not None:
+            EOOAddIMAGE_COMPRESSION(builder, IMAGE_COMPRESSION)
+        EOOAddIMAGE_COMPRESSION_RATIO(builder, self.IMAGE_COMPRESSION_RATIO)
+        if self.PROCESSED_IMAGE_URI is not None:
+            EOOAddPROCESSED_IMAGE_URI(builder, PROCESSED_IMAGE_URI)
+        EOOAddIMAGE_AUTO_ENHANCED(builder, self.IMAGE_AUTO_ENHANCED)
+        EOOAddMULTI_FRAME_STACKED(builder, self.MULTI_FRAME_STACKED)
+        EOOAddSYNTHETIC_TRACKING_USED(builder, self.SYNTHETIC_TRACKING_USED)
+        EOOAddIMAGE_SHARPNESS(builder, self.IMAGE_SHARPNESS)
+        EOOAddIMAGE_NOISE_STDDEV(builder, self.IMAGE_NOISE_STDDEV)
+        EOOAddIMAGE_CONTRAST(builder, self.IMAGE_CONTRAST)
+        EOOAddIMAGE_DYNAMIC_RANGE(builder, self.IMAGE_DYNAMIC_RANGE)
+        EOOAddIMAGE_ENTROPY(builder, self.IMAGE_ENTROPY)
+        EOOAddBACKGROUND_UNIFORMITY(builder, self.BACKGROUND_UNIFORMITY)
+        EOOAddBACKGROUND_MEAN_LEVEL(builder, self.BACKGROUND_MEAN_LEVEL)
+        EOOAddSATURATED_PIXEL_PERCENT(builder, self.SATURATED_PIXEL_PERCENT)
+        EOOAddDEAD_PIXEL_PERCENT(builder, self.DEAD_PIXEL_PERCENT)
+        EOOAddPSF_FWHM(builder, self.PSF_FWHM)
+        EOOAddCLOUD_COVER_PERCENT(builder, self.CLOUD_COVER_PERCENT)
+        EOOAddCLOUD_DETECTION_CONFIDENCE(builder, self.CLOUD_DETECTION_CONFIDENCE)
+        EOOAddHAZE_PERCENT(builder, self.HAZE_PERCENT)
+        EOOAddAEROSOL_OPTICAL_THICKNESS(builder, self.AEROSOL_OPTICAL_THICKNESS)
+        EOOAddWATER_VAPOR_CONTENT(builder, self.WATER_VAPOR_CONTENT)
+        EOOAddSUN_ELEVATION(builder, self.SUN_ELEVATION)
+        EOOAddSUN_AZIMUTH(builder, self.SUN_AZIMUTH)
+        EOOAddVIEW_ZENITH_ANGLE(builder, self.VIEW_ZENITH_ANGLE)
+        EOOAddVIEW_AZIMUTH_ANGLE(builder, self.VIEW_AZIMUTH_ANGLE)
+        EOOAddOFF_NADIR_ANGLE(builder, self.OFF_NADIR_ANGLE)
+        EOOAddSWATH_WIDTH_KM(builder, self.SWATH_WIDTH_KM)
+        EOOAddMEAN_TERRAIN_ELEVATION(builder, self.MEAN_TERRAIN_ELEVATION)
+        EOOAddTERRAIN_ELEVATION_STDDEV(builder, self.TERRAIN_ELEVATION_STDDEV)
+        EOOAddSHADOW_COVER_PERCENT(builder, self.SHADOW_COVER_PERCENT)
+        EOOAddSUNGLINT_PRESENT(builder, self.SUNGLINT_PRESENT)
+        EOOAddSUNGLINT_PERCENT(builder, self.SUNGLINT_PERCENT)
+        EOOAddSNOW_ICE_COVER_PERCENT(builder, self.SNOW_ICE_COVER_PERCENT)
+        EOOAddVALID_DATA_AREA_KM2(builder, self.VALID_DATA_AREA_KM2)
+        EOO = EOOEnd(builder)
+        return EOO

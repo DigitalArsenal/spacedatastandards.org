@@ -8,9 +8,9 @@
 
 // Ensure the included flatbuffers.h is the same version as when this file was
 // generated, otherwise it may not be compatible.
-static_assert(FLATBUFFERS_VERSION_MAJOR == 24 &&
-              FLATBUFFERS_VERSION_MINOR == 3 &&
-              FLATBUFFERS_VERSION_REVISION == 25,
+static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
+              FLATBUFFERS_VERSION_MINOR == 12 &&
+              FLATBUFFERS_VERSION_REVISION == 19,
              "Non-compatible flatbuffers version included");
 
 struct AOF;
@@ -76,7 +76,8 @@ struct AOF FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   uint16_t FECF() const {
     return GetField<uint16_t>(VT_FECF, 0);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<uint8_t>(verifier, VT_VERSION, 1) &&
            VerifyField<uint16_t>(verifier, VT_SPACECRAFT_ID, 2) &&
@@ -225,14 +226,16 @@ inline bool SizePrefixedAOFBufferHasIdentifier(const void *buf) {
       buf, AOFIdentifier(), true);
 }
 
+template <bool B = false>
 inline bool VerifyAOFBuffer(
-    ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifyBuffer<AOF>(AOFIdentifier());
+    ::flatbuffers::VerifierTemplate<B> &verifier) {
+  return verifier.template VerifyBuffer<AOF>(AOFIdentifier());
 }
 
+template <bool B = false>
 inline bool VerifySizePrefixedAOFBuffer(
-    ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifySizePrefixedBuffer<AOF>(AOFIdentifier());
+    ::flatbuffers::VerifierTemplate<B> &verifier) {
+  return verifier.template VerifySizePrefixedBuffer<AOF>(AOFIdentifier());
 }
 
 inline void FinishAOFBuffer(

@@ -62,8 +62,16 @@ func (rcv *BOV) E_COORDINATE() float64 {
 	return 0.0
 }
 
+func (rcv *BOV) ECoordinate() float64 {
+	return rcv.E_COORDINATE()
+}
+
 func (rcv *BOV) MutateE_COORDINATE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(4, n)
+}
+
+func (rcv *BOV) MutateECoordinate(n float64) bool {
+	return rcv.MutateE_COORDINATE(n)
 }
 
 func (rcv *BOV) F_COORDINATE() float64 {
@@ -74,8 +82,16 @@ func (rcv *BOV) F_COORDINATE() float64 {
 	return 0.0
 }
 
+func (rcv *BOV) FCoordinate() float64 {
+	return rcv.F_COORDINATE()
+}
+
 func (rcv *BOV) MutateF_COORDINATE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(6, n)
+}
+
+func (rcv *BOV) MutateFCoordinate(n float64) bool {
+	return rcv.MutateF_COORDINATE(n)
 }
 
 func (rcv *BOV) G_COORDINATE() float64 {
@@ -86,8 +102,16 @@ func (rcv *BOV) G_COORDINATE() float64 {
 	return 0.0
 }
 
+func (rcv *BOV) GCoordinate() float64 {
+	return rcv.G_COORDINATE()
+}
+
 func (rcv *BOV) MutateG_COORDINATE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(8, n)
+}
+
+func (rcv *BOV) MutateGCoordinate(n float64) bool {
+	return rcv.MutateG_COORDINATE(n)
 }
 
 func (rcv *BOV) E_DOT() float64 {
@@ -98,8 +122,16 @@ func (rcv *BOV) E_DOT() float64 {
 	return 0.0
 }
 
+func (rcv *BOV) EDot() float64 {
+	return rcv.E_DOT()
+}
+
 func (rcv *BOV) MutateE_DOT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(10, n)
+}
+
+func (rcv *BOV) MutateEDot(n float64) bool {
+	return rcv.MutateE_DOT(n)
 }
 
 func (rcv *BOV) F_DOT() float64 {
@@ -110,8 +142,16 @@ func (rcv *BOV) F_DOT() float64 {
 	return 0.0
 }
 
+func (rcv *BOV) FDot() float64 {
+	return rcv.F_DOT()
+}
+
 func (rcv *BOV) MutateF_DOT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(12, n)
+}
+
+func (rcv *BOV) MutateFDot(n float64) bool {
+	return rcv.MutateF_DOT(n)
 }
 
 func (rcv *BOV) G_DOT() float64 {
@@ -122,8 +162,16 @@ func (rcv *BOV) G_DOT() float64 {
 	return 0.0
 }
 
+func (rcv *BOV) GDot() float64 {
+	return rcv.G_DOT()
+}
+
 func (rcv *BOV) MutateG_DOT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(14, n)
+}
+
+func (rcv *BOV) MutateGDot(n float64) bool {
+	return rcv.MutateG_DOT(n)
 }
 
 func (rcv *BOV) EPOCH() []byte {
@@ -134,6 +182,10 @@ func (rcv *BOV) EPOCH() []byte {
 	return nil
 }
 
+func (rcv *BOV) Epoch() []byte {
+	return rcv.EPOCH()
+}
+
 func (rcv *BOV) TIME_FROM_LAUNCH() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
 	if o != 0 {
@@ -142,8 +194,16 @@ func (rcv *BOV) TIME_FROM_LAUNCH() float64 {
 	return 0.0
 }
 
+func (rcv *BOV) TimeFromLaunch() float64 {
+	return rcv.TIME_FROM_LAUNCH()
+}
+
 func (rcv *BOV) MutateTIME_FROM_LAUNCH(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(18, n)
+}
+
+func (rcv *BOV) MutateTimeFromLaunch(n float64) bool {
+	return rcv.MutateTIME_FROM_LAUNCH(n)
 }
 
 func BOVStart(builder *flatbuffers.Builder) {
@@ -152,26 +212,50 @@ func BOVStart(builder *flatbuffers.Builder) {
 func BOVAddE_COORDINATE(builder *flatbuffers.Builder, E_COORDINATE float64) {
 	builder.PrependFloat64Slot(0, E_COORDINATE, 0.0)
 }
+func BOVAddECoordinate(builder *flatbuffers.Builder, E_COORDINATE float64) {
+	BOVAddE_COORDINATE(builder, E_COORDINATE)
+}
 func BOVAddF_COORDINATE(builder *flatbuffers.Builder, F_COORDINATE float64) {
 	builder.PrependFloat64Slot(1, F_COORDINATE, 0.0)
+}
+func BOVAddFCoordinate(builder *flatbuffers.Builder, F_COORDINATE float64) {
+	BOVAddF_COORDINATE(builder, F_COORDINATE)
 }
 func BOVAddG_COORDINATE(builder *flatbuffers.Builder, G_COORDINATE float64) {
 	builder.PrependFloat64Slot(2, G_COORDINATE, 0.0)
 }
+func BOVAddGCoordinate(builder *flatbuffers.Builder, G_COORDINATE float64) {
+	BOVAddG_COORDINATE(builder, G_COORDINATE)
+}
 func BOVAddE_DOT(builder *flatbuffers.Builder, E_DOT float64) {
 	builder.PrependFloat64Slot(3, E_DOT, 0.0)
+}
+func BOVAddEDot(builder *flatbuffers.Builder, E_DOT float64) {
+	BOVAddE_DOT(builder, E_DOT)
 }
 func BOVAddF_DOT(builder *flatbuffers.Builder, F_DOT float64) {
 	builder.PrependFloat64Slot(4, F_DOT, 0.0)
 }
+func BOVAddFDot(builder *flatbuffers.Builder, F_DOT float64) {
+	BOVAddF_DOT(builder, F_DOT)
+}
 func BOVAddG_DOT(builder *flatbuffers.Builder, G_DOT float64) {
 	builder.PrependFloat64Slot(5, G_DOT, 0.0)
+}
+func BOVAddGDot(builder *flatbuffers.Builder, G_DOT float64) {
+	BOVAddG_DOT(builder, G_DOT)
 }
 func BOVAddEPOCH(builder *flatbuffers.Builder, EPOCH flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(EPOCH), 0)
 }
+func BOVAddEpoch(builder *flatbuffers.Builder, EPOCH flatbuffers.UOffsetT) {
+	BOVAddEPOCH(builder, EPOCH)
+}
 func BOVAddTIME_FROM_LAUNCH(builder *flatbuffers.Builder, TIME_FROM_LAUNCH float64) {
 	builder.PrependFloat64Slot(7, TIME_FROM_LAUNCH, 0.0)
+}
+func BOVAddTimeFromLaunch(builder *flatbuffers.Builder, TIME_FROM_LAUNCH float64) {
+	BOVAddTIME_FROM_LAUNCH(builder, TIME_FROM_LAUNCH)
 }
 func BOVEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

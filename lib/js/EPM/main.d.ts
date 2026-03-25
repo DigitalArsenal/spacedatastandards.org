@@ -1,6 +1,6 @@
-export { Address, AddressT } from './Address.js';
-export { ChainProof, ChainProofT } from './ChainProof.js';
-export { CryptoKey, CryptoKeyT } from './CryptoKey.js';
-export { EPM, EPMT } from './EPM.js';
-export { KeyType } from './KeyType.js';
+export * from './Address.js';
+export * from './ChainProof.js';
+export * from './CryptoKey.js';
+export * from './EPM.js';
+export * from './KeyType.js';
 //# sourceMappingURL=main.d.ts.map

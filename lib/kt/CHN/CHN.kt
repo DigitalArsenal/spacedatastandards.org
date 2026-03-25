@@ -29,7 +29,7 @@ class CHN : Table() {
         __init(_i, _bb)
         return this
     }
-    val ID : String?
+    val id : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -38,9 +38,9 @@ class CHN : Table() {
                 null
             }
         }
-    val IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
-    val NAME : String?
+    val idAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun idInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
+    val name : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -49,9 +49,9 @@ class CHN : Table() {
                 null
             }
         }
-    val NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
-    val TYPE : String?
+    val nameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun nameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
+    val type : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -60,9 +60,9 @@ class CHN : Table() {
                 null
             }
         }
-    val TYPEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun TYPEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
-    val BEAM_NAME : String?
+    val typeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun typeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
+    val beamName : String?
         get() {
             val o = __offset(10)
             return if (o != 0) {
@@ -71,9 +71,9 @@ class CHN : Table() {
                 null
             }
         }
-    val BEAM_NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
-    fun BEAM_NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
-    val ID_RFBAND : String?
+    val beamNameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(10, 1)
+    fun beamNameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 10, 1)
+    val idRfband : String?
         get() {
             val o = __offset(12)
             return if (o != 0) {
@@ -82,9 +82,9 @@ class CHN : Table() {
                 null
             }
         }
-    val ID_RFBANDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
-    fun ID_RFBANDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
-    val ENCRYPTION : String?
+    val idRfbandAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(12, 1)
+    fun idRfbandInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 12, 1)
+    val encryption : String?
         get() {
             val o = __offset(14)
             return if (o != 0) {
@@ -93,9 +93,9 @@ class CHN : Table() {
                 null
             }
         }
-    val ENCRYPTIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(14, 1)
-    fun ENCRYPTIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 14, 1)
-    val PKG : String?
+    val encryptionAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(14, 1)
+    fun encryptionInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 14, 1)
+    val pkg : String?
         get() {
             val o = __offset(16)
             return if (o != 0) {
@@ -104,9 +104,9 @@ class CHN : Table() {
                 null
             }
         }
-    val PKGAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(16, 1)
-    fun PKGInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 16, 1)
-    val RES : String?
+    val pkgAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(16, 1)
+    fun pkgInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 16, 1)
+    val res : String?
         get() {
             val o = __offset(18)
             return if (o != 0) {
@@ -115,9 +115,9 @@ class CHN : Table() {
                 null
             }
         }
-    val RESAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(18, 1)
-    fun RESInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 18, 1)
-    val COMPRESSION : String?
+    val resAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(18, 1)
+    fun resInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 18, 1)
+    val compression : String?
         get() {
             val o = __offset(20)
             return if (o != 0) {
@@ -126,9 +126,9 @@ class CHN : Table() {
                 null
             }
         }
-    val COMPRESSIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(20, 1)
-    fun COMPRESSIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 20, 1)
-    val VPID : String?
+    val compressionAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(20, 1)
+    fun compressionInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 20, 1)
+    val vpid : String?
         get() {
             val o = __offset(22)
             return if (o != 0) {
@@ -137,9 +137,9 @@ class CHN : Table() {
                 null
             }
         }
-    val VPIDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(22, 1)
-    fun VPIDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 22, 1)
-    val APID : String?
+    val vpidAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(22, 1)
+    fun vpidInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 22, 1)
+    val apid : String?
         get() {
             val o = __offset(24)
             return if (o != 0) {
@@ -148,9 +148,9 @@ class CHN : Table() {
                 null
             }
         }
-    val APIDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(24, 1)
-    fun APIDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 24, 1)
-    val SID : String?
+    val apidAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(24, 1)
+    fun apidInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 24, 1)
+    val sid : String?
         get() {
             val o = __offset(26)
             return if (o != 0) {
@@ -159,9 +159,9 @@ class CHN : Table() {
                 null
             }
         }
-    val SIDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(26, 1)
-    fun SIDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 26, 1)
-    val OWNER : String?
+    val sidAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(26, 1)
+    fun sidInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 26, 1)
+    val owner : String?
         get() {
             val o = __offset(28)
             return if (o != 0) {
@@ -170,47 +170,47 @@ class CHN : Table() {
                 null
             }
         }
-    val OWNERAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(28, 1)
-    fun OWNERInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 28, 1)
+    val ownerAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(28, 1)
+    fun ownerInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 28, 1)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsCHN(_bb: ByteBuffer): CHN = getRootAsCHN(_bb, CHN())
         fun getRootAsCHN(_bb: ByteBuffer, obj: CHN): CHN {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun CHNBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$CHN")
-        fun createCHN(builder: FlatBufferBuilder, IDOffset: Int, NAMEOffset: Int, TYPEOffset: Int, BEAM_NAMEOffset: Int, ID_RFBANDOffset: Int, ENCRYPTIONOffset: Int, PKGOffset: Int, RESOffset: Int, COMPRESSIONOffset: Int, VPIDOffset: Int, APIDOffset: Int, SIDOffset: Int, OWNEROffset: Int) : Int {
+        fun createCHN(builder: FlatBufferBuilder, idOffset: Int, nameOffset: Int, typeOffset: Int, beamNameOffset: Int, idRfbandOffset: Int, encryptionOffset: Int, pkgOffset: Int, resOffset: Int, compressionOffset: Int, vpidOffset: Int, apidOffset: Int, sidOffset: Int, ownerOffset: Int) : Int {
             builder.startTable(13)
-            addOWNER(builder, OWNEROffset)
-            addSID(builder, SIDOffset)
-            addAPID(builder, APIDOffset)
-            addVPID(builder, VPIDOffset)
-            addCOMPRESSION(builder, COMPRESSIONOffset)
-            addRES(builder, RESOffset)
-            addPKG(builder, PKGOffset)
-            addENCRYPTION(builder, ENCRYPTIONOffset)
-            addID_RFBAND(builder, ID_RFBANDOffset)
-            addBEAM_NAME(builder, BEAM_NAMEOffset)
-            addTYPE(builder, TYPEOffset)
-            addNAME(builder, NAMEOffset)
-            addID(builder, IDOffset)
+            addOWNER(builder, ownerOffset)
+            addSID(builder, sidOffset)
+            addAPID(builder, apidOffset)
+            addVPID(builder, vpidOffset)
+            addCOMPRESSION(builder, compressionOffset)
+            addRES(builder, resOffset)
+            addPKG(builder, pkgOffset)
+            addENCRYPTION(builder, encryptionOffset)
+            addIDRFBAND(builder, idRfbandOffset)
+            addBEAMNAME(builder, beamNameOffset)
+            addTYPE(builder, typeOffset)
+            addNAME(builder, nameOffset)
+            addID(builder, idOffset)
             return endCHN(builder)
         }
         fun startCHN(builder: FlatBufferBuilder) = builder.startTable(13)
-        fun addID(builder: FlatBufferBuilder, ID: Int) = builder.addOffset(0, ID, 0)
-        fun addNAME(builder: FlatBufferBuilder, NAME: Int) = builder.addOffset(1, NAME, 0)
-        fun addTYPE(builder: FlatBufferBuilder, TYPE: Int) = builder.addOffset(2, TYPE, 0)
-        fun addBEAM_NAME(builder: FlatBufferBuilder, BEAM_NAME: Int) = builder.addOffset(3, BEAM_NAME, 0)
-        fun addID_RFBAND(builder: FlatBufferBuilder, ID_RFBAND: Int) = builder.addOffset(4, ID_RFBAND, 0)
-        fun addENCRYPTION(builder: FlatBufferBuilder, ENCRYPTION: Int) = builder.addOffset(5, ENCRYPTION, 0)
-        fun addPKG(builder: FlatBufferBuilder, PKG: Int) = builder.addOffset(6, PKG, 0)
-        fun addRES(builder: FlatBufferBuilder, RES: Int) = builder.addOffset(7, RES, 0)
-        fun addCOMPRESSION(builder: FlatBufferBuilder, COMPRESSION: Int) = builder.addOffset(8, COMPRESSION, 0)
-        fun addVPID(builder: FlatBufferBuilder, VPID: Int) = builder.addOffset(9, VPID, 0)
-        fun addAPID(builder: FlatBufferBuilder, APID: Int) = builder.addOffset(10, APID, 0)
-        fun addSID(builder: FlatBufferBuilder, SID: Int) = builder.addOffset(11, SID, 0)
-        fun addOWNER(builder: FlatBufferBuilder, OWNER: Int) = builder.addOffset(12, OWNER, 0)
+        fun addID(builder: FlatBufferBuilder, id: Int) = builder.addOffset(0, id, 0)
+        fun addNAME(builder: FlatBufferBuilder, name: Int) = builder.addOffset(1, name, 0)
+        fun addTYPE(builder: FlatBufferBuilder, type: Int) = builder.addOffset(2, type, 0)
+        fun addBEAMNAME(builder: FlatBufferBuilder, beamName: Int) = builder.addOffset(3, beamName, 0)
+        fun addIDRFBAND(builder: FlatBufferBuilder, idRfband: Int) = builder.addOffset(4, idRfband, 0)
+        fun addENCRYPTION(builder: FlatBufferBuilder, encryption: Int) = builder.addOffset(5, encryption, 0)
+        fun addPKG(builder: FlatBufferBuilder, pkg: Int) = builder.addOffset(6, pkg, 0)
+        fun addRES(builder: FlatBufferBuilder, res: Int) = builder.addOffset(7, res, 0)
+        fun addCOMPRESSION(builder: FlatBufferBuilder, compression: Int) = builder.addOffset(8, compression, 0)
+        fun addVPID(builder: FlatBufferBuilder, vpid: Int) = builder.addOffset(9, vpid, 0)
+        fun addAPID(builder: FlatBufferBuilder, apid: Int) = builder.addOffset(10, apid, 0)
+        fun addSID(builder: FlatBufferBuilder, sid: Int) = builder.addOffset(11, sid, 0)
+        fun addOWNER(builder: FlatBufferBuilder, owner: Int) = builder.addOffset(12, owner, 0)
         fun endCHN(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

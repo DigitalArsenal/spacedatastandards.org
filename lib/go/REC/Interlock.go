@@ -51,6 +51,10 @@ func (rcv *Interlock) PARAMETER_REF() []byte {
 	return nil
 }
 
+func (rcv *Interlock) ParameterRef() []byte {
+	return rcv.PARAMETER_REF()
+}
+
 /// Parameter reference
 /// Required value
 func (rcv *Interlock) VALUE() []byte {
@@ -59,6 +63,10 @@ func (rcv *Interlock) VALUE() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *Interlock) Value() []byte {
+	return rcv.VALUE()
 }
 
 /// Required value
@@ -71,9 +79,17 @@ func (rcv *Interlock) OPERATOR() ComparisonOperator {
 	return 0
 }
 
+func (rcv *Interlock) Operator() ComparisonOperator {
+	return rcv.OPERATOR()
+}
+
 /// Operator for comparison
 func (rcv *Interlock) MutateOPERATOR(n ComparisonOperator) bool {
 	return rcv._tab.MutateInt8Slot(8, int8(n))
+}
+
+func (rcv *Interlock) MutateOperator(n ComparisonOperator) bool {
+	return rcv.MutateOPERATOR(n)
 }
 
 func InterlockStart(builder *flatbuffers.Builder) {
@@ -82,11 +98,20 @@ func InterlockStart(builder *flatbuffers.Builder) {
 func InterlockAddPARAMETER_REF(builder *flatbuffers.Builder, PARAMETER_REF flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(PARAMETER_REF), 0)
 }
+func InterlockAddParameterRef(builder *flatbuffers.Builder, PARAMETER_REF flatbuffers.UOffsetT) {
+	InterlockAddPARAMETER_REF(builder, PARAMETER_REF)
+}
 func InterlockAddVALUE(builder *flatbuffers.Builder, VALUE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(VALUE), 0)
 }
+func InterlockAddValue(builder *flatbuffers.Builder, VALUE flatbuffers.UOffsetT) {
+	InterlockAddVALUE(builder, VALUE)
+}
 func InterlockAddOPERATOR(builder *flatbuffers.Builder, OPERATOR ComparisonOperator) {
 	builder.PrependInt8Slot(2, int8(OPERATOR), 0)
+}
+func InterlockAddOperator(builder *flatbuffers.Builder, OPERATOR ComparisonOperator) {
+	InterlockAddOPERATOR(builder, OPERATOR)
 }
 func InterlockEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

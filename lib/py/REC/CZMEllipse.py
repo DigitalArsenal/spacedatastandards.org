@@ -2,4 +2,476 @@
 
 # namespace: 
 
-# NOTE CZMEllipse.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Ellipse properties (for ground circles/ellipses)
+class CZMEllipse(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = CZMEllipse()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsCZMEllipse(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def CZMEllipseBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x43\x5A\x4D", size_prefixed=size_prefixed)
+
+    # CZMEllipse
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Whether the ellipse is displayed
+    # CZMEllipse
+    def SHOW(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # Semi-major axis in meters
+    # CZMEllipse
+    def SEMI_MAJOR_AXIS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Semi-minor axis in meters
+    # CZMEllipse
+    def SEMI_MINOR_AXIS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Rotation from north in radians
+    # CZMEllipse
+    def ROTATION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Fill flag
+    # CZMEllipse
+    def FILL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # Fill color (legacy solid color)
+    # CZMEllipse
+    def COLOR(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from CZMColor import CZMColor
+            obj = CZMColor()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Outline flag
+    # CZMEllipse
+    def OUTLINE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # Outline color
+    # CZMEllipse
+    def OUTLINE_COLOR(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from CZMColor import CZMColor
+            obj = CZMColor()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Height in meters
+    # CZMEllipse
+    def HEIGHT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Height reference
+    # CZMEllipse
+    def HEIGHT_REFERENCE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # Extruded height in meters
+    # CZMEllipse
+    def EXTRUDED_HEIGHT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Extruded height reference
+    # CZMEllipse
+    def EXTRUDED_HEIGHT_REFERENCE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Texture rotation in radians
+    # CZMEllipse
+    def ST_ROTATION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Granularity in radians
+    # CZMEllipse
+    def GRANULARITY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Full surface material
+    # CZMEllipse
+    def MATERIAL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from CZMMaterial import CZMMaterial
+            obj = CZMMaterial()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Outline width in pixels
+    # CZMEllipse
+    def OUTLINE_WIDTH(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Number of vertical lines
+    # CZMEllipse
+    def NUMBER_OF_VERTICAL_LINES(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # Shadow mode
+    # CZMEllipse
+    def SHADOWS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Classification type
+    # CZMEllipse
+    def CLASSIFICATION_TYPE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Z-index for ordering
+    # CZMEllipse
+    def Z_INDEX(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+def CZMEllipseStart(builder):
+    builder.StartObject(20)
+
+def Start(builder):
+    CZMEllipseStart(builder)
+
+def CZMEllipseAddSHOW(builder, SHOW):
+    builder.PrependBoolSlot(0, SHOW, 0)
+
+def AddSHOW(builder, SHOW):
+    CZMEllipseAddSHOW(builder, SHOW)
+
+def CZMEllipseAddSEMI_MAJOR_AXIS(builder, SEMI_MAJOR_AXIS):
+    builder.PrependFloat64Slot(1, SEMI_MAJOR_AXIS, 0.0)
+
+def AddSEMI_MAJOR_AXIS(builder, SEMI_MAJOR_AXIS):
+    CZMEllipseAddSEMI_MAJOR_AXIS(builder, SEMI_MAJOR_AXIS)
+
+def CZMEllipseAddSEMI_MINOR_AXIS(builder, SEMI_MINOR_AXIS):
+    builder.PrependFloat64Slot(2, SEMI_MINOR_AXIS, 0.0)
+
+def AddSEMI_MINOR_AXIS(builder, SEMI_MINOR_AXIS):
+    CZMEllipseAddSEMI_MINOR_AXIS(builder, SEMI_MINOR_AXIS)
+
+def CZMEllipseAddROTATION(builder, ROTATION):
+    builder.PrependFloat64Slot(3, ROTATION, 0.0)
+
+def AddROTATION(builder, ROTATION):
+    CZMEllipseAddROTATION(builder, ROTATION)
+
+def CZMEllipseAddFILL(builder, FILL):
+    builder.PrependBoolSlot(4, FILL, 0)
+
+def AddFILL(builder, FILL):
+    CZMEllipseAddFILL(builder, FILL)
+
+def CZMEllipseAddCOLOR(builder, COLOR):
+    builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(COLOR), 0)
+
+def AddCOLOR(builder, COLOR):
+    CZMEllipseAddCOLOR(builder, COLOR)
+
+def CZMEllipseAddOUTLINE(builder, OUTLINE):
+    builder.PrependBoolSlot(6, OUTLINE, 0)
+
+def AddOUTLINE(builder, OUTLINE):
+    CZMEllipseAddOUTLINE(builder, OUTLINE)
+
+def CZMEllipseAddOUTLINE_COLOR(builder, OUTLINE_COLOR):
+    builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(OUTLINE_COLOR), 0)
+
+def AddOUTLINE_COLOR(builder, OUTLINE_COLOR):
+    CZMEllipseAddOUTLINE_COLOR(builder, OUTLINE_COLOR)
+
+def CZMEllipseAddHEIGHT(builder, HEIGHT):
+    builder.PrependFloat64Slot(8, HEIGHT, 0.0)
+
+def AddHEIGHT(builder, HEIGHT):
+    CZMEllipseAddHEIGHT(builder, HEIGHT)
+
+def CZMEllipseAddHEIGHT_REFERENCE(builder, HEIGHT_REFERENCE):
+    builder.PrependInt8Slot(9, HEIGHT_REFERENCE, 0)
+
+def AddHEIGHT_REFERENCE(builder, HEIGHT_REFERENCE):
+    CZMEllipseAddHEIGHT_REFERENCE(builder, HEIGHT_REFERENCE)
+
+def CZMEllipseAddEXTRUDED_HEIGHT(builder, EXTRUDED_HEIGHT):
+    builder.PrependFloat64Slot(10, EXTRUDED_HEIGHT, 0.0)
+
+def AddEXTRUDED_HEIGHT(builder, EXTRUDED_HEIGHT):
+    CZMEllipseAddEXTRUDED_HEIGHT(builder, EXTRUDED_HEIGHT)
+
+def CZMEllipseAddEXTRUDED_HEIGHT_REFERENCE(builder, EXTRUDED_HEIGHT_REFERENCE):
+    builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(EXTRUDED_HEIGHT_REFERENCE), 0)
+
+def AddEXTRUDED_HEIGHT_REFERENCE(builder, EXTRUDED_HEIGHT_REFERENCE):
+    CZMEllipseAddEXTRUDED_HEIGHT_REFERENCE(builder, EXTRUDED_HEIGHT_REFERENCE)
+
+def CZMEllipseAddST_ROTATION(builder, ST_ROTATION):
+    builder.PrependFloat64Slot(12, ST_ROTATION, 0.0)
+
+def AddST_ROTATION(builder, ST_ROTATION):
+    CZMEllipseAddST_ROTATION(builder, ST_ROTATION)
+
+def CZMEllipseAddGRANULARITY(builder, GRANULARITY):
+    builder.PrependFloat64Slot(13, GRANULARITY, 0.0)
+
+def AddGRANULARITY(builder, GRANULARITY):
+    CZMEllipseAddGRANULARITY(builder, GRANULARITY)
+
+def CZMEllipseAddMATERIAL(builder, MATERIAL):
+    builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(MATERIAL), 0)
+
+def AddMATERIAL(builder, MATERIAL):
+    CZMEllipseAddMATERIAL(builder, MATERIAL)
+
+def CZMEllipseAddOUTLINE_WIDTH(builder, OUTLINE_WIDTH):
+    builder.PrependFloat64Slot(15, OUTLINE_WIDTH, 0.0)
+
+def AddOUTLINE_WIDTH(builder, OUTLINE_WIDTH):
+    CZMEllipseAddOUTLINE_WIDTH(builder, OUTLINE_WIDTH)
+
+def CZMEllipseAddNUMBER_OF_VERTICAL_LINES(builder, NUMBER_OF_VERTICAL_LINES):
+    builder.PrependInt32Slot(16, NUMBER_OF_VERTICAL_LINES, 0)
+
+def AddNUMBER_OF_VERTICAL_LINES(builder, NUMBER_OF_VERTICAL_LINES):
+    CZMEllipseAddNUMBER_OF_VERTICAL_LINES(builder, NUMBER_OF_VERTICAL_LINES)
+
+def CZMEllipseAddSHADOWS(builder, SHADOWS):
+    builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(SHADOWS), 0)
+
+def AddSHADOWS(builder, SHADOWS):
+    CZMEllipseAddSHADOWS(builder, SHADOWS)
+
+def CZMEllipseAddCLASSIFICATION_TYPE(builder, CLASSIFICATION_TYPE):
+    builder.PrependUOffsetTRelativeSlot(18, flatbuffers.number_types.UOffsetTFlags.py_type(CLASSIFICATION_TYPE), 0)
+
+def AddCLASSIFICATION_TYPE(builder, CLASSIFICATION_TYPE):
+    CZMEllipseAddCLASSIFICATION_TYPE(builder, CLASSIFICATION_TYPE)
+
+def CZMEllipseAddZ_INDEX(builder, Z_INDEX):
+    builder.PrependInt32Slot(19, Z_INDEX, 0)
+
+def AddZ_INDEX(builder, Z_INDEX):
+    CZMEllipseAddZ_INDEX(builder, Z_INDEX)
+
+def CZMEllipseEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return CZMEllipseEnd(builder)
+
+import CZMColor
+import CZMMaterial
+try:
+    from typing import Optional
+except:
+    pass
+
+class CZMEllipseT(object):
+
+    # CZMEllipseT
+    def __init__(
+        self,
+        SHOW = False,
+        SEMI_MAJOR_AXIS = 0.0,
+        SEMI_MINOR_AXIS = 0.0,
+        ROTATION = 0.0,
+        FILL = False,
+        COLOR = None,
+        OUTLINE = False,
+        OUTLINE_COLOR = None,
+        HEIGHT = 0.0,
+        HEIGHT_REFERENCE = 0,
+        EXTRUDED_HEIGHT = 0.0,
+        EXTRUDED_HEIGHT_REFERENCE = None,
+        ST_ROTATION = 0.0,
+        GRANULARITY = 0.0,
+        MATERIAL = None,
+        OUTLINE_WIDTH = 0.0,
+        NUMBER_OF_VERTICAL_LINES = 0,
+        SHADOWS = None,
+        CLASSIFICATION_TYPE = None,
+        Z_INDEX = 0,
+    ):
+        self.SHOW = SHOW  # type: bool
+        self.SEMI_MAJOR_AXIS = SEMI_MAJOR_AXIS  # type: float
+        self.SEMI_MINOR_AXIS = SEMI_MINOR_AXIS  # type: float
+        self.ROTATION = ROTATION  # type: float
+        self.FILL = FILL  # type: bool
+        self.COLOR = COLOR  # type: Optional[CZMColor.CZMColorT]
+        self.OUTLINE = OUTLINE  # type: bool
+        self.OUTLINE_COLOR = OUTLINE_COLOR  # type: Optional[CZMColor.CZMColorT]
+        self.HEIGHT = HEIGHT  # type: float
+        self.HEIGHT_REFERENCE = HEIGHT_REFERENCE  # type: int
+        self.EXTRUDED_HEIGHT = EXTRUDED_HEIGHT  # type: float
+        self.EXTRUDED_HEIGHT_REFERENCE = EXTRUDED_HEIGHT_REFERENCE  # type: Optional[str]
+        self.ST_ROTATION = ST_ROTATION  # type: float
+        self.GRANULARITY = GRANULARITY  # type: float
+        self.MATERIAL = MATERIAL  # type: Optional[CZMMaterial.CZMMaterialT]
+        self.OUTLINE_WIDTH = OUTLINE_WIDTH  # type: float
+        self.NUMBER_OF_VERTICAL_LINES = NUMBER_OF_VERTICAL_LINES  # type: int
+        self.SHADOWS = SHADOWS  # type: Optional[str]
+        self.CLASSIFICATION_TYPE = CLASSIFICATION_TYPE  # type: Optional[str]
+        self.Z_INDEX = Z_INDEX  # type: int
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpCzmellipse = CZMEllipse()
+        tmpCzmellipse.Init(buf, pos)
+        return cls.InitFromObj(tmpCzmellipse)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpCzmellipse):
+        x = CZMEllipseT()
+        x._UnPack(tmpCzmellipse)
+        return x
+
+    # CZMEllipseT
+    def _UnPack(self, CZMEllipse):
+        if CZMEllipse is None:
+            return
+        self.SHOW = CZMEllipse.SHOW()
+        self.SEMI_MAJOR_AXIS = CZMEllipse.SEMI_MAJOR_AXIS()
+        self.SEMI_MINOR_AXIS = CZMEllipse.SEMI_MINOR_AXIS()
+        self.ROTATION = CZMEllipse.ROTATION()
+        self.FILL = CZMEllipse.FILL()
+        if CZMEllipse.COLOR() is not None:
+            self.COLOR = CZMColor.CZMColorT.InitFromObj(CZMEllipse.COLOR())
+        self.OUTLINE = CZMEllipse.OUTLINE()
+        if CZMEllipse.OUTLINE_COLOR() is not None:
+            self.OUTLINE_COLOR = CZMColor.CZMColorT.InitFromObj(CZMEllipse.OUTLINE_COLOR())
+        self.HEIGHT = CZMEllipse.HEIGHT()
+        self.HEIGHT_REFERENCE = CZMEllipse.HEIGHT_REFERENCE()
+        self.EXTRUDED_HEIGHT = CZMEllipse.EXTRUDED_HEIGHT()
+        self.EXTRUDED_HEIGHT_REFERENCE = CZMEllipse.EXTRUDED_HEIGHT_REFERENCE()
+        self.ST_ROTATION = CZMEllipse.ST_ROTATION()
+        self.GRANULARITY = CZMEllipse.GRANULARITY()
+        if CZMEllipse.MATERIAL() is not None:
+            self.MATERIAL = CZMMaterial.CZMMaterialT.InitFromObj(CZMEllipse.MATERIAL())
+        self.OUTLINE_WIDTH = CZMEllipse.OUTLINE_WIDTH()
+        self.NUMBER_OF_VERTICAL_LINES = CZMEllipse.NUMBER_OF_VERTICAL_LINES()
+        self.SHADOWS = CZMEllipse.SHADOWS()
+        self.CLASSIFICATION_TYPE = CZMEllipse.CLASSIFICATION_TYPE()
+        self.Z_INDEX = CZMEllipse.Z_INDEX()
+
+    # CZMEllipseT
+    def Pack(self, builder):
+        if self.COLOR is not None:
+            COLOR = self.COLOR.Pack(builder)
+        if self.OUTLINE_COLOR is not None:
+            OUTLINE_COLOR = self.OUTLINE_COLOR.Pack(builder)
+        if self.EXTRUDED_HEIGHT_REFERENCE is not None:
+            EXTRUDED_HEIGHT_REFERENCE = builder.CreateString(self.EXTRUDED_HEIGHT_REFERENCE)
+        if self.MATERIAL is not None:
+            MATERIAL = self.MATERIAL.Pack(builder)
+        if self.SHADOWS is not None:
+            SHADOWS = builder.CreateString(self.SHADOWS)
+        if self.CLASSIFICATION_TYPE is not None:
+            CLASSIFICATION_TYPE = builder.CreateString(self.CLASSIFICATION_TYPE)
+        CZMEllipseStart(builder)
+        CZMEllipseAddSHOW(builder, self.SHOW)
+        CZMEllipseAddSEMI_MAJOR_AXIS(builder, self.SEMI_MAJOR_AXIS)
+        CZMEllipseAddSEMI_MINOR_AXIS(builder, self.SEMI_MINOR_AXIS)
+        CZMEllipseAddROTATION(builder, self.ROTATION)
+        CZMEllipseAddFILL(builder, self.FILL)
+        if self.COLOR is not None:
+            CZMEllipseAddCOLOR(builder, COLOR)
+        CZMEllipseAddOUTLINE(builder, self.OUTLINE)
+        if self.OUTLINE_COLOR is not None:
+            CZMEllipseAddOUTLINE_COLOR(builder, OUTLINE_COLOR)
+        CZMEllipseAddHEIGHT(builder, self.HEIGHT)
+        CZMEllipseAddHEIGHT_REFERENCE(builder, self.HEIGHT_REFERENCE)
+        CZMEllipseAddEXTRUDED_HEIGHT(builder, self.EXTRUDED_HEIGHT)
+        if self.EXTRUDED_HEIGHT_REFERENCE is not None:
+            CZMEllipseAddEXTRUDED_HEIGHT_REFERENCE(builder, EXTRUDED_HEIGHT_REFERENCE)
+        CZMEllipseAddST_ROTATION(builder, self.ST_ROTATION)
+        CZMEllipseAddGRANULARITY(builder, self.GRANULARITY)
+        if self.MATERIAL is not None:
+            CZMEllipseAddMATERIAL(builder, MATERIAL)
+        CZMEllipseAddOUTLINE_WIDTH(builder, self.OUTLINE_WIDTH)
+        CZMEllipseAddNUMBER_OF_VERTICAL_LINES(builder, self.NUMBER_OF_VERTICAL_LINES)
+        if self.SHADOWS is not None:
+            CZMEllipseAddSHADOWS(builder, SHADOWS)
+        if self.CLASSIFICATION_TYPE is not None:
+            CZMEllipseAddCLASSIFICATION_TYPE(builder, CLASSIFICATION_TYPE)
+        CZMEllipseAddZ_INDEX(builder, self.Z_INDEX)
+        CZMEllipse = CZMEllipseEnd(builder)
+        return CZMEllipse

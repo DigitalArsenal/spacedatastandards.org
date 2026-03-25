@@ -32,7 +32,7 @@ class GDI : Table() {
     /**
      * Unique identifier
      */
-    val ID : String?
+    val id : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class GDI : Table() {
                 null
             }
         }
-    val IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val idAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun idInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Sensor identifier
      */
-    val ID_SENSOR : String?
+    val idSensor : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -55,12 +55,12 @@ class GDI : Table() {
                 null
             }
         }
-    val ID_SENSORAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun ID_SENSORInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val idSensorAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun idSensorInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * Original sensor identifier
      */
-    val ORIG_SENSOR_ID : String?
+    val origSensorId : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -69,12 +69,12 @@ class GDI : Table() {
                 null
             }
         }
-    val ORIG_SENSOR_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun ORIG_SENSOR_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val origSensorIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun origSensorIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
     /**
      * Image capture time (ISO 8601)
      */
-    val IMAGE_TIME : String?
+    val imageTime : String?
         get() {
             val o = __offset(10)
             return if (o != 0) {
@@ -83,12 +83,12 @@ class GDI : Table() {
                 null
             }
         }
-    val IMAGE_TIMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
-    fun IMAGE_TIMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
+    val imageTimeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(10, 1)
+    fun imageTimeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 10, 1)
     /**
      * Image filename
      */
-    val FILENAME : String?
+    val filename : String?
         get() {
             val o = __offset(12)
             return if (o != 0) {
@@ -97,12 +97,12 @@ class GDI : Table() {
                 null
             }
         }
-    val FILENAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
-    fun FILENAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
+    val filenameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(12, 1)
+    fun filenameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 12, 1)
     /**
      * Image format
      */
-    val FORMAT : Byte
+    val format : Byte
         get() {
             val o = __offset(14)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -110,7 +110,7 @@ class GDI : Table() {
     /**
      * File size (bytes)
      */
-    val FILESIZE : Long
+    val filesize : Long
         get() {
             val o = __offset(16)
             return if(o != 0) bb.getLong(o + bb_pos) else 0L
@@ -118,7 +118,7 @@ class GDI : Table() {
     /**
      * File checksum value
      */
-    val CHECKSUM_VALUE : String?
+    val checksumValue : String?
         get() {
             val o = __offset(18)
             return if (o != 0) {
@@ -127,12 +127,12 @@ class GDI : Table() {
                 null
             }
         }
-    val CHECKSUM_VALUEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(18, 1)
-    fun CHECKSUM_VALUEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 18, 1)
+    val checksumValueAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(18, 1)
+    fun checksumValueInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 18, 1)
     /**
      * Region GeoJSON boundary
      */
-    val REGION_GEO_JSON : String?
+    val regionGeoJson : String?
         get() {
             val o = __offset(20)
             return if (o != 0) {
@@ -141,12 +141,12 @@ class GDI : Table() {
                 null
             }
         }
-    val REGION_GEO_JSONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(20, 1)
-    fun REGION_GEO_JSONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 20, 1)
+    val regionGeoJsonAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(20, 1)
+    fun regionGeoJsonInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 20, 1)
     /**
      * Region text description
      */
-    val REGION_TEXT : String?
+    val regionText : String?
         get() {
             val o = __offset(22)
             return if (o != 0) {
@@ -155,12 +155,12 @@ class GDI : Table() {
                 null
             }
         }
-    val REGION_TEXTAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(22, 1)
-    fun REGION_TEXTInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 22, 1)
+    val regionTextAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(22, 1)
+    fun regionTextInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 22, 1)
     /**
      * Region name
      */
-    val REGION : String?
+    val region : String?
         get() {
             val o = __offset(24)
             return if (o != 0) {
@@ -169,12 +169,12 @@ class GDI : Table() {
                 null
             }
         }
-    val REGIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(24, 1)
-    fun REGIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 24, 1)
+    val regionAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(24, 1)
+    fun regionInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 24, 1)
     /**
      * Region type
      */
-    val REGION_TYPE : String?
+    val regionType : String?
         get() {
             val o = __offset(26)
             return if (o != 0) {
@@ -183,12 +183,12 @@ class GDI : Table() {
                 null
             }
         }
-    val REGION_TYPEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(26, 1)
-    fun REGION_TYPEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 26, 1)
+    val regionTypeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(26, 1)
+    fun regionTypeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 26, 1)
     /**
      * Region geometry dimensions
      */
-    val REGION_NDIMS : UByte
+    val regionNdims : UByte
         get() {
             val o = __offset(28)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
@@ -196,7 +196,7 @@ class GDI : Table() {
     /**
      * Region spatial reference ID
      */
-    val REGION_SRID : UShort
+    val regionSrid : UShort
         get() {
             val o = __offset(30)
             return if(o != 0) bb.getShort(o + bb_pos).toUShort() else 0u
@@ -204,7 +204,7 @@ class GDI : Table() {
     /**
      * Subject object identifier
      */
-    val SUBJECT_ID : String?
+    val subjectId : String?
         get() {
             val o = __offset(32)
             return if (o != 0) {
@@ -213,12 +213,12 @@ class GDI : Table() {
                 null
             }
         }
-    val SUBJECT_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(32, 1)
-    fun SUBJECT_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 32, 1)
+    val subjectIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(32, 1)
+    fun subjectIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 32, 1)
     /**
      * Image name or title
      */
-    val NAME : String?
+    val name : String?
         get() {
             val o = __offset(34)
             return if (o != 0) {
@@ -227,12 +227,12 @@ class GDI : Table() {
                 null
             }
         }
-    val NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(34, 1)
-    fun NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 34, 1)
+    val nameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(34, 1)
+    fun nameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 34, 1)
     /**
      * Transaction identifier
      */
-    val TRANSACTION_ID : String?
+    val transactionId : String?
         get() {
             val o = __offset(36)
             return if (o != 0) {
@@ -241,12 +241,12 @@ class GDI : Table() {
                 null
             }
         }
-    val TRANSACTION_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(36, 1)
-    fun TRANSACTION_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 36, 1)
+    val transactionIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(36, 1)
+    fun transactionIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 36, 1)
     /**
      * Associated tags
      */
-    fun TAGS(j: Int) : String? {
+    fun tags(j: Int) : String? {
         val o = __offset(38)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
@@ -254,14 +254,14 @@ class GDI : Table() {
             null
         }
     }
-    val TAGSLength : Int
+    val tagsLength : Int
         get() {
             val o = __offset(38); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Keywords for search/classification
      */
-    fun KEYWORDS(j: Int) : String? {
+    fun keywords(j: Int) : String? {
         val o = __offset(40)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
@@ -269,14 +269,14 @@ class GDI : Table() {
             null
         }
     }
-    val KEYWORDSLength : Int
+    val keywordsLength : Int
         get() {
             val o = __offset(40); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Notes
      */
-    val NOTES : String?
+    val notes : String?
         get() {
             val o = __offset(42)
             return if (o != 0) {
@@ -285,59 +285,59 @@ class GDI : Table() {
                 null
             }
         }
-    val NOTESAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(42, 1)
-    fun NOTESInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 42, 1)
+    val notesAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(42, 1)
+    fun notesInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 42, 1)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsGDI(_bb: ByteBuffer): GDI = getRootAsGDI(_bb, GDI())
         fun getRootAsGDI(_bb: ByteBuffer, obj: GDI): GDI {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun GDIBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$GDI")
-        fun createGDI(builder: FlatBufferBuilder, IDOffset: Int, ID_SENSOROffset: Int, ORIG_SENSOR_IDOffset: Int, IMAGE_TIMEOffset: Int, FILENAMEOffset: Int, FORMAT: Byte, FILESIZE: Long, CHECKSUM_VALUEOffset: Int, REGION_GEO_JSONOffset: Int, REGION_TEXTOffset: Int, REGIONOffset: Int, REGION_TYPEOffset: Int, REGION_NDIMS: UByte, REGION_SRID: UShort, SUBJECT_IDOffset: Int, NAMEOffset: Int, TRANSACTION_IDOffset: Int, TAGSOffset: Int, KEYWORDSOffset: Int, NOTESOffset: Int) : Int {
+        fun createGDI(builder: FlatBufferBuilder, idOffset: Int, idSensorOffset: Int, origSensorIdOffset: Int, imageTimeOffset: Int, filenameOffset: Int, format: Byte, filesize: Long, checksumValueOffset: Int, regionGeoJsonOffset: Int, regionTextOffset: Int, regionOffset: Int, regionTypeOffset: Int, regionNdims: UByte, regionSrid: UShort, subjectIdOffset: Int, nameOffset: Int, transactionIdOffset: Int, tagsOffset: Int, keywordsOffset: Int, notesOffset: Int) : Int {
             builder.startTable(20)
-            addFILESIZE(builder, FILESIZE)
-            addNOTES(builder, NOTESOffset)
-            addKEYWORDS(builder, KEYWORDSOffset)
-            addTAGS(builder, TAGSOffset)
-            addTRANSACTION_ID(builder, TRANSACTION_IDOffset)
-            addNAME(builder, NAMEOffset)
-            addSUBJECT_ID(builder, SUBJECT_IDOffset)
-            addREGION_TYPE(builder, REGION_TYPEOffset)
-            addREGION(builder, REGIONOffset)
-            addREGION_TEXT(builder, REGION_TEXTOffset)
-            addREGION_GEO_JSON(builder, REGION_GEO_JSONOffset)
-            addCHECKSUM_VALUE(builder, CHECKSUM_VALUEOffset)
-            addFILENAME(builder, FILENAMEOffset)
-            addIMAGE_TIME(builder, IMAGE_TIMEOffset)
-            addORIG_SENSOR_ID(builder, ORIG_SENSOR_IDOffset)
-            addID_SENSOR(builder, ID_SENSOROffset)
-            addID(builder, IDOffset)
-            addREGION_SRID(builder, REGION_SRID)
-            addREGION_NDIMS(builder, REGION_NDIMS)
-            addFORMAT(builder, FORMAT)
+            addFILESIZE(builder, filesize)
+            addNOTES(builder, notesOffset)
+            addKEYWORDS(builder, keywordsOffset)
+            addTAGS(builder, tagsOffset)
+            addTRANSACTIONID(builder, transactionIdOffset)
+            addNAME(builder, nameOffset)
+            addSUBJECTID(builder, subjectIdOffset)
+            addREGIONTYPE(builder, regionTypeOffset)
+            addREGION(builder, regionOffset)
+            addREGIONTEXT(builder, regionTextOffset)
+            addREGIONGEOJSON(builder, regionGeoJsonOffset)
+            addCHECKSUMVALUE(builder, checksumValueOffset)
+            addFILENAME(builder, filenameOffset)
+            addIMAGETIME(builder, imageTimeOffset)
+            addORIGSENSORID(builder, origSensorIdOffset)
+            addIDSENSOR(builder, idSensorOffset)
+            addID(builder, idOffset)
+            addREGIONSRID(builder, regionSrid)
+            addREGIONNDIMS(builder, regionNdims)
+            addFORMAT(builder, format)
             return endGDI(builder)
         }
         fun startGDI(builder: FlatBufferBuilder) = builder.startTable(20)
-        fun addID(builder: FlatBufferBuilder, ID: Int) = builder.addOffset(0, ID, 0)
-        fun addID_SENSOR(builder: FlatBufferBuilder, ID_SENSOR: Int) = builder.addOffset(1, ID_SENSOR, 0)
-        fun addORIG_SENSOR_ID(builder: FlatBufferBuilder, ORIG_SENSOR_ID: Int) = builder.addOffset(2, ORIG_SENSOR_ID, 0)
-        fun addIMAGE_TIME(builder: FlatBufferBuilder, IMAGE_TIME: Int) = builder.addOffset(3, IMAGE_TIME, 0)
-        fun addFILENAME(builder: FlatBufferBuilder, FILENAME: Int) = builder.addOffset(4, FILENAME, 0)
-        fun addFORMAT(builder: FlatBufferBuilder, FORMAT: Byte) = builder.addByte(5, FORMAT, 0)
-        fun addFILESIZE(builder: FlatBufferBuilder, FILESIZE: Long) = builder.addLong(6, FILESIZE, 0L)
-        fun addCHECKSUM_VALUE(builder: FlatBufferBuilder, CHECKSUM_VALUE: Int) = builder.addOffset(7, CHECKSUM_VALUE, 0)
-        fun addREGION_GEO_JSON(builder: FlatBufferBuilder, REGION_GEO_JSON: Int) = builder.addOffset(8, REGION_GEO_JSON, 0)
-        fun addREGION_TEXT(builder: FlatBufferBuilder, REGION_TEXT: Int) = builder.addOffset(9, REGION_TEXT, 0)
-        fun addREGION(builder: FlatBufferBuilder, REGION: Int) = builder.addOffset(10, REGION, 0)
-        fun addREGION_TYPE(builder: FlatBufferBuilder, REGION_TYPE: Int) = builder.addOffset(11, REGION_TYPE, 0)
-        fun addREGION_NDIMS(builder: FlatBufferBuilder, REGION_NDIMS: UByte) = builder.addByte(12, REGION_NDIMS.toByte(), 0)
-        fun addREGION_SRID(builder: FlatBufferBuilder, REGION_SRID: UShort) = builder.addShort(13, REGION_SRID.toShort(), 0)
-        fun addSUBJECT_ID(builder: FlatBufferBuilder, SUBJECT_ID: Int) = builder.addOffset(14, SUBJECT_ID, 0)
-        fun addNAME(builder: FlatBufferBuilder, NAME: Int) = builder.addOffset(15, NAME, 0)
-        fun addTRANSACTION_ID(builder: FlatBufferBuilder, TRANSACTION_ID: Int) = builder.addOffset(16, TRANSACTION_ID, 0)
-        fun addTAGS(builder: FlatBufferBuilder, TAGS: Int) = builder.addOffset(17, TAGS, 0)
+        fun addID(builder: FlatBufferBuilder, id: Int) = builder.addOffset(0, id, 0)
+        fun addIDSENSOR(builder: FlatBufferBuilder, idSensor: Int) = builder.addOffset(1, idSensor, 0)
+        fun addORIGSENSORID(builder: FlatBufferBuilder, origSensorId: Int) = builder.addOffset(2, origSensorId, 0)
+        fun addIMAGETIME(builder: FlatBufferBuilder, imageTime: Int) = builder.addOffset(3, imageTime, 0)
+        fun addFILENAME(builder: FlatBufferBuilder, filename: Int) = builder.addOffset(4, filename, 0)
+        fun addFORMAT(builder: FlatBufferBuilder, format: Byte) = builder.addByte(5, format, 0)
+        fun addFILESIZE(builder: FlatBufferBuilder, filesize: Long) = builder.addLong(6, filesize, 0L)
+        fun addCHECKSUMVALUE(builder: FlatBufferBuilder, checksumValue: Int) = builder.addOffset(7, checksumValue, 0)
+        fun addREGIONGEOJSON(builder: FlatBufferBuilder, regionGeoJson: Int) = builder.addOffset(8, regionGeoJson, 0)
+        fun addREGIONTEXT(builder: FlatBufferBuilder, regionText: Int) = builder.addOffset(9, regionText, 0)
+        fun addREGION(builder: FlatBufferBuilder, region: Int) = builder.addOffset(10, region, 0)
+        fun addREGIONTYPE(builder: FlatBufferBuilder, regionType: Int) = builder.addOffset(11, regionType, 0)
+        fun addREGIONNDIMS(builder: FlatBufferBuilder, regionNdims: UByte) = builder.addByte(12, regionNdims.toByte(), 0)
+        fun addREGIONSRID(builder: FlatBufferBuilder, regionSrid: UShort) = builder.addShort(13, regionSrid.toShort(), 0)
+        fun addSUBJECTID(builder: FlatBufferBuilder, subjectId: Int) = builder.addOffset(14, subjectId, 0)
+        fun addNAME(builder: FlatBufferBuilder, name: Int) = builder.addOffset(15, name, 0)
+        fun addTRANSACTIONID(builder: FlatBufferBuilder, transactionId: Int) = builder.addOffset(16, transactionId, 0)
+        fun addTAGS(builder: FlatBufferBuilder, tags: Int) = builder.addOffset(17, tags, 0)
         fun createTagsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -346,7 +346,7 @@ class GDI : Table() {
             return builder.endVector()
         }
         fun startTagsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addKEYWORDS(builder: FlatBufferBuilder, KEYWORDS: Int) = builder.addOffset(18, KEYWORDS, 0)
+        fun addKEYWORDS(builder: FlatBufferBuilder, keywords: Int) = builder.addOffset(18, keywords, 0)
         fun createKeywordsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -355,7 +355,7 @@ class GDI : Table() {
             return builder.endVector()
         }
         fun startKeywordsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addNOTES(builder: FlatBufferBuilder, NOTES: Int) = builder.addOffset(19, NOTES, 0)
+        fun addNOTES(builder: FlatBufferBuilder, notes: Int) = builder.addOffset(19, notes, 0)
         fun endGDI(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

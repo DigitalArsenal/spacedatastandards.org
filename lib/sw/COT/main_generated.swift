@@ -2,9 +2,13 @@
 // swiftlint:disable all
 // swiftformat:disable all
 
+#if canImport(Common)
+import Common
+#endif
+
 import FlatBuffers
 
-public enum COTHowType: Int8, Enum, Verifiable {
+public enum COTHowType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -29,9 +33,9 @@ public enum COTHowType: Int8, Enum, Verifiable {
 
 
 ///  CoT Point - geographical point with error estimates
-public struct COTPoint: FlatBufferObject, Verifiable {
+public struct COTPoint: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -96,9 +100,9 @@ public struct COTPoint: FlatBufferObject, Verifiable {
 }
 
 ///  CoT Detail - extensible detail element
-public struct COTDetail: FlatBufferObject, Verifiable {
+public struct COTDetail: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -314,9 +318,9 @@ public struct COTDetail: FlatBufferObject, Verifiable {
 }
 
 ///  Cursor on Target Event
-public struct COT: FlatBufferObject, Verifiable {
+public struct COT: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -373,9 +377,9 @@ public struct COT: FlatBufferObject, Verifiable {
   public var OPEX: String? { let o = _accessor.offset(VTOFFSET.OPEX.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var OPEXSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OPEX.v) }
   ///  Point location
-  public var POINT: COTPoint? { let o = _accessor.offset(VTOFFSET.POINT.v); return o == 0 ? nil : COTPoint(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var POINT: COTPoint? { let o = _accessor.offset(VTOFFSET.POINT.v); return o == 0 ? nil : COTPoint(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Detailed event information
-  public var DETAIL: COTDetail? { let o = _accessor.offset(VTOFFSET.DETAIL.v); return o == 0 ? nil : COTDetail(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var DETAIL: COTDetail? { let o = _accessor.offset(VTOFFSET.DETAIL.v); return o == 0 ? nil : COTDetail(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public static func startCOT(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 12) }
   public static func add(VERSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VERSION, at: VTOFFSET.VERSION.p) }
   public static func add(UID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: UID, at: VTOFFSET.UID.p) }

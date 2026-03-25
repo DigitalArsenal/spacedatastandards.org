@@ -32,7 +32,7 @@ class SpatialCoverage : Table() {
     /**
      * Type of coverage: "global", "region", "object_list"
      */
-    val TYPE : String?
+    val type : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class SpatialCoverage : Table() {
                 null
             }
         }
-    val TYPEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun TYPEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val typeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun typeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Regions covered, e.g., ["LEO", "GEO", "MEO"]
      */
-    fun REGIONS(j: Int) : String? {
+    fun regions(j: Int) : String? {
         val o = __offset(6)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
@@ -54,14 +54,14 @@ class SpatialCoverage : Table() {
             null
         }
     }
-    val REGIONSLength : Int
+    val regionsLength : Int
         get() {
             val o = __offset(6); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Specific NORAD IDs or catalog numbers
      */
-    fun OBJECT_IDS(j: Int) : String? {
+    fun objectIds(j: Int) : String? {
         val o = __offset(8)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
@@ -69,27 +69,27 @@ class SpatialCoverage : Table() {
             null
         }
     }
-    val OBJECT_IDSLength : Int
+    val objectIdsLength : Int
         get() {
             val o = __offset(8); return if (o != 0) __vector_len(o) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsSpatialCoverage(_bb: ByteBuffer): SpatialCoverage = getRootAsSpatialCoverage(_bb, SpatialCoverage())
         fun getRootAsSpatialCoverage(_bb: ByteBuffer, obj: SpatialCoverage): SpatialCoverage {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createSpatialCoverage(builder: FlatBufferBuilder, TYPEOffset: Int, REGIONSOffset: Int, OBJECT_IDSOffset: Int) : Int {
+        fun createSpatialCoverage(builder: FlatBufferBuilder, typeOffset: Int, regionsOffset: Int, objectIdsOffset: Int) : Int {
             builder.startTable(3)
-            addOBJECT_IDS(builder, OBJECT_IDSOffset)
-            addREGIONS(builder, REGIONSOffset)
-            addTYPE(builder, TYPEOffset)
+            addOBJECTIDS(builder, objectIdsOffset)
+            addREGIONS(builder, regionsOffset)
+            addTYPE(builder, typeOffset)
             return endSpatialCoverage(builder)
         }
         fun startSpatialCoverage(builder: FlatBufferBuilder) = builder.startTable(3)
-        fun addTYPE(builder: FlatBufferBuilder, TYPE: Int) = builder.addOffset(0, TYPE, 0)
-        fun addREGIONS(builder: FlatBufferBuilder, REGIONS: Int) = builder.addOffset(1, REGIONS, 0)
+        fun addTYPE(builder: FlatBufferBuilder, type: Int) = builder.addOffset(0, type, 0)
+        fun addREGIONS(builder: FlatBufferBuilder, regions: Int) = builder.addOffset(1, regions, 0)
         fun createRegionsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -98,7 +98,7 @@ class SpatialCoverage : Table() {
             return builder.endVector()
         }
         fun startRegionsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addOBJECT_IDS(builder: FlatBufferBuilder, OBJECT_IDS: Int) = builder.addOffset(2, OBJECT_IDS, 0)
+        fun addOBJECTIDS(builder: FlatBufferBuilder, objectIds: Int) = builder.addOffset(2, objectIds, 0)
         fun createObjectIdsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {

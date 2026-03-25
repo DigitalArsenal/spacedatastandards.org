@@ -65,6 +65,10 @@ func (rcv *PLK) LICENSE_ID() []byte {
 	return nil
 }
 
+func (rcv *PLK) LicenseId() []byte {
+	return rcv.LICENSE_ID()
+}
+
 /// Unique license key identifier
 /// Plugin ID this license is for
 func (rcv *PLK) PLUGIN_ID() []byte {
@@ -73,6 +77,10 @@ func (rcv *PLK) PLUGIN_ID() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *PLK) PluginId() []byte {
+	return rcv.PLUGIN_ID()
 }
 
 /// Plugin ID this license is for
@@ -85,6 +93,10 @@ func (rcv *PLK) PLUGIN_VERSION() []byte {
 	return nil
 }
 
+func (rcv *PLK) PluginVersion() []byte {
+	return rcv.PLUGIN_VERSION()
+}
+
 /// Plugin version or version range (semver)
 /// Licensee organization name
 func (rcv *PLK) LICENSEE_ORG() []byte {
@@ -93,6 +105,10 @@ func (rcv *PLK) LICENSEE_ORG() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *PLK) LicenseeOrg() []byte {
+	return rcv.LICENSEE_ORG()
 }
 
 /// Licensee organization name
@@ -105,6 +121,10 @@ func (rcv *PLK) LICENSEE_EMAIL() []byte {
 	return nil
 }
 
+func (rcv *PLK) LicenseeEmail() []byte {
+	return rcv.LICENSEE_EMAIL()
+}
+
 /// Licensee contact email
 /// Licensee's SDN Peer ID
 func (rcv *PLK) LICENSEE_PEER_ID() []byte {
@@ -113,6 +133,10 @@ func (rcv *PLK) LICENSEE_PEER_ID() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *PLK) LicenseePeerId() []byte {
+	return rcv.LICENSEE_PEER_ID()
 }
 
 /// Licensee's SDN Peer ID
@@ -126,12 +150,20 @@ func (rcv *PLK) LICENSEE_PUBKEY(j int) byte {
 	return 0
 }
 
+func (rcv *PLK) LicenseePubkey(j int) byte {
+	return rcv.LICENSEE_PUBKEY(j)
+}
+
 func (rcv *PLK) LICENSEE_PUBKEYLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *PLK) LicenseePubkeyLength() int {
+	return rcv.LICENSEE_PUBKEYLength()
 }
 
 func (rcv *PLK) LICENSEE_PUBKEYBytes() []byte {
@@ -142,6 +174,10 @@ func (rcv *PLK) LICENSEE_PUBKEYBytes() []byte {
 	return nil
 }
 
+func (rcv *PLK) LicenseePubkeyBytes() []byte {
+	return rcv.LICENSEE_PUBKEYBytes()
+}
+
 /// Licensee's X25519 public key (32 bytes)
 func (rcv *PLK) MutateLICENSEE_PUBKEY(j int, n byte) bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
@@ -150,6 +186,10 @@ func (rcv *PLK) MutateLICENSEE_PUBKEY(j int, n byte) bool {
 		return rcv._tab.MutateByte(a+flatbuffers.UOffsetT(j*1), n)
 	}
 	return false
+}
+
+func (rcv *PLK) MutateLicenseePubkey(j int, n byte) bool {
+	return rcv.MutateLICENSEE_PUBKEY(j, n)
 }
 
 /// Issuer's X25519 public key (32 bytes)
@@ -163,6 +203,10 @@ func (rcv *PLK) ISSUER_PUBKEY(j int) byte {
 	return 0
 }
 
+func (rcv *PLK) IssuerPubkey(j int) byte {
+	return rcv.ISSUER_PUBKEY(j)
+}
+
 func (rcv *PLK) ISSUER_PUBKEYLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
 	if o != 0 {
@@ -171,12 +215,20 @@ func (rcv *PLK) ISSUER_PUBKEYLength() int {
 	return 0
 }
 
+func (rcv *PLK) IssuerPubkeyLength() int {
+	return rcv.ISSUER_PUBKEYLength()
+}
+
 func (rcv *PLK) ISSUER_PUBKEYBytes() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *PLK) IssuerPubkeyBytes() []byte {
+	return rcv.ISSUER_PUBKEYBytes()
 }
 
 /// Issuer's X25519 public key (32 bytes)
@@ -190,6 +242,10 @@ func (rcv *PLK) MutateISSUER_PUBKEY(j int, n byte) bool {
 	return false
 }
 
+func (rcv *PLK) MutateIssuerPubkey(j int, n byte) bool {
+	return rcv.MutateISSUER_PUBKEY(j, n)
+}
+
 /// Domain restrictions (empty = any domain allowed)
 func (rcv *PLK) ALLOWED_DOMAINS(j int) []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
@@ -200,12 +256,20 @@ func (rcv *PLK) ALLOWED_DOMAINS(j int) []byte {
 	return nil
 }
 
+func (rcv *PLK) AllowedDomains(j int) []byte {
+	return rcv.ALLOWED_DOMAINS(j)
+}
+
 func (rcv *PLK) ALLOWED_DOMAINSLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *PLK) AllowedDomainsLength() int {
+	return rcv.ALLOWED_DOMAINSLength()
 }
 
 /// Domain restrictions (empty = any domain allowed)
@@ -219,12 +283,20 @@ func (rcv *PLK) ALLOWED_TLDS(j int) []byte {
 	return nil
 }
 
+func (rcv *PLK) AllowedTlds(j int) []byte {
+	return rcv.ALLOWED_TLDS(j)
+}
+
 func (rcv *PLK) ALLOWED_TLDSLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *PLK) AllowedTldsLength() int {
+	return rcv.ALLOWED_TLDSLength()
 }
 
 /// TLD restrictions (e.g., ".gov", ".mil", ".edu")
@@ -237,9 +309,17 @@ func (rcv *PLK) LICENSE_TYPE() licenseType {
 	return 0
 }
 
+func (rcv *PLK) LicenseType() licenseType {
+	return rcv.LICENSE_TYPE()
+}
+
 /// Type of license
 func (rcv *PLK) MutateLICENSE_TYPE(n licenseType) bool {
 	return rcv._tab.MutateInt8Slot(24, int8(n))
+}
+
+func (rcv *PLK) MutateLicenseType(n licenseType) bool {
+	return rcv.MutateLICENSE_TYPE(n)
 }
 
 /// Maximum concurrent activations (0 = unlimited)
@@ -251,9 +331,17 @@ func (rcv *PLK) MAX_ACTIVATIONS() uint32 {
 	return 0
 }
 
+func (rcv *PLK) MaxActivations() uint32 {
+	return rcv.MAX_ACTIVATIONS()
+}
+
 /// Maximum concurrent activations (0 = unlimited)
 func (rcv *PLK) MutateMAX_ACTIVATIONS(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(26, n)
+}
+
+func (rcv *PLK) MutateMaxActivations(n uint32) bool {
+	return rcv.MutateMAX_ACTIVATIONS(n)
 }
 
 /// Unix timestamp when license was issued
@@ -265,9 +353,17 @@ func (rcv *PLK) ISSUED_AT() uint64 {
 	return 0
 }
 
+func (rcv *PLK) IssuedAt() uint64 {
+	return rcv.ISSUED_AT()
+}
+
 /// Unix timestamp when license was issued
 func (rcv *PLK) MutateISSUED_AT(n uint64) bool {
 	return rcv._tab.MutateUint64Slot(28, n)
+}
+
+func (rcv *PLK) MutateIssuedAt(n uint64) bool {
+	return rcv.MutateISSUED_AT(n)
 }
 
 /// Unix timestamp when license becomes valid
@@ -279,9 +375,17 @@ func (rcv *PLK) VALID_FROM() uint64 {
 	return 0
 }
 
+func (rcv *PLK) ValidFrom() uint64 {
+	return rcv.VALID_FROM()
+}
+
 /// Unix timestamp when license becomes valid
 func (rcv *PLK) MutateVALID_FROM(n uint64) bool {
 	return rcv._tab.MutateUint64Slot(30, n)
+}
+
+func (rcv *PLK) MutateValidFrom(n uint64) bool {
+	return rcv.MutateVALID_FROM(n)
 }
 
 /// Unix timestamp when license expires (0 = never expires)
@@ -293,9 +397,17 @@ func (rcv *PLK) EXPIRES_AT() uint64 {
 	return 0
 }
 
+func (rcv *PLK) ExpiresAt() uint64 {
+	return rcv.EXPIRES_AT()
+}
+
 /// Unix timestamp when license expires (0 = never expires)
 func (rcv *PLK) MutateEXPIRES_AT(n uint64) bool {
 	return rcv._tab.MutateUint64Slot(32, n)
+}
+
+func (rcv *PLK) MutateExpiresAt(n uint64) bool {
+	return rcv.MutateEXPIRES_AT(n)
 }
 
 /// Peer ID of the license issuer (OrbPro)
@@ -305,6 +417,10 @@ func (rcv *PLK) ISSUER_PEER_ID() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *PLK) IssuerPeerId() []byte {
+	return rcv.ISSUER_PEER_ID()
 }
 
 /// Peer ID of the license issuer (OrbPro)
@@ -318,6 +434,10 @@ func (rcv *PLK) SIGNATURE(j int) byte {
 	return 0
 }
 
+func (rcv *PLK) Signature(j int) byte {
+	return rcv.SIGNATURE(j)
+}
+
 func (rcv *PLK) SIGNATURELength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
 	if o != 0 {
@@ -326,12 +446,20 @@ func (rcv *PLK) SIGNATURELength() int {
 	return 0
 }
 
+func (rcv *PLK) SignatureLength() int {
+	return rcv.SIGNATURELength()
+}
+
 func (rcv *PLK) SIGNATUREBytes() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *PLK) SignatureBytes() []byte {
+	return rcv.SIGNATUREBytes()
 }
 
 /// Ed25519 signature from issuer over all fields (except SIGNATURE)
@@ -344,74 +472,144 @@ func (rcv *PLK) MutateSIGNATURE(j int, n byte) bool {
 	return false
 }
 
+func (rcv *PLK) MutateSignature(j int, n byte) bool {
+	return rcv.MutateSIGNATURE(j, n)
+}
+
 func PLKStart(builder *flatbuffers.Builder) {
 	builder.StartObject(17)
 }
 func PLKAddLICENSE_ID(builder *flatbuffers.Builder, LICENSE_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(LICENSE_ID), 0)
 }
+func PLKAddLicenseId(builder *flatbuffers.Builder, LICENSE_ID flatbuffers.UOffsetT) {
+	PLKAddLICENSE_ID(builder, LICENSE_ID)
+}
 func PLKAddPLUGIN_ID(builder *flatbuffers.Builder, PLUGIN_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(PLUGIN_ID), 0)
+}
+func PLKAddPluginId(builder *flatbuffers.Builder, PLUGIN_ID flatbuffers.UOffsetT) {
+	PLKAddPLUGIN_ID(builder, PLUGIN_ID)
 }
 func PLKAddPLUGIN_VERSION(builder *flatbuffers.Builder, PLUGIN_VERSION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(PLUGIN_VERSION), 0)
 }
+func PLKAddPluginVersion(builder *flatbuffers.Builder, PLUGIN_VERSION flatbuffers.UOffsetT) {
+	PLKAddPLUGIN_VERSION(builder, PLUGIN_VERSION)
+}
 func PLKAddLICENSEE_ORG(builder *flatbuffers.Builder, LICENSEE_ORG flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(LICENSEE_ORG), 0)
+}
+func PLKAddLicenseeOrg(builder *flatbuffers.Builder, LICENSEE_ORG flatbuffers.UOffsetT) {
+	PLKAddLICENSEE_ORG(builder, LICENSEE_ORG)
 }
 func PLKAddLICENSEE_EMAIL(builder *flatbuffers.Builder, LICENSEE_EMAIL flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(LICENSEE_EMAIL), 0)
 }
+func PLKAddLicenseeEmail(builder *flatbuffers.Builder, LICENSEE_EMAIL flatbuffers.UOffsetT) {
+	PLKAddLICENSEE_EMAIL(builder, LICENSEE_EMAIL)
+}
 func PLKAddLICENSEE_PEER_ID(builder *flatbuffers.Builder, LICENSEE_PEER_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(LICENSEE_PEER_ID), 0)
+}
+func PLKAddLicenseePeerId(builder *flatbuffers.Builder, LICENSEE_PEER_ID flatbuffers.UOffsetT) {
+	PLKAddLICENSEE_PEER_ID(builder, LICENSEE_PEER_ID)
 }
 func PLKAddLICENSEE_PUBKEY(builder *flatbuffers.Builder, LICENSEE_PUBKEY flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(LICENSEE_PUBKEY), 0)
 }
+func PLKAddLicenseePubkey(builder *flatbuffers.Builder, LICENSEE_PUBKEY flatbuffers.UOffsetT) {
+	PLKAddLICENSEE_PUBKEY(builder, LICENSEE_PUBKEY)
+}
 func PLKStartLICENSEE_PUBKEYVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(1, numElems, 1)
+}
+func PLKStartLicenseePubkeyVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return PLKStartLICENSEE_PUBKEYVector(builder, numElems)
 }
 func PLKAddISSUER_PUBKEY(builder *flatbuffers.Builder, ISSUER_PUBKEY flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(ISSUER_PUBKEY), 0)
 }
+func PLKAddIssuerPubkey(builder *flatbuffers.Builder, ISSUER_PUBKEY flatbuffers.UOffsetT) {
+	PLKAddISSUER_PUBKEY(builder, ISSUER_PUBKEY)
+}
 func PLKStartISSUER_PUBKEYVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(1, numElems, 1)
+}
+func PLKStartIssuerPubkeyVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return PLKStartISSUER_PUBKEYVector(builder, numElems)
 }
 func PLKAddALLOWED_DOMAINS(builder *flatbuffers.Builder, ALLOWED_DOMAINS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(ALLOWED_DOMAINS), 0)
 }
+func PLKAddAllowedDomains(builder *flatbuffers.Builder, ALLOWED_DOMAINS flatbuffers.UOffsetT) {
+	PLKAddALLOWED_DOMAINS(builder, ALLOWED_DOMAINS)
+}
 func PLKStartALLOWED_DOMAINSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func PLKStartAllowedDomainsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return PLKStartALLOWED_DOMAINSVector(builder, numElems)
 }
 func PLKAddALLOWED_TLDS(builder *flatbuffers.Builder, ALLOWED_TLDS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(ALLOWED_TLDS), 0)
 }
+func PLKAddAllowedTlds(builder *flatbuffers.Builder, ALLOWED_TLDS flatbuffers.UOffsetT) {
+	PLKAddALLOWED_TLDS(builder, ALLOWED_TLDS)
+}
 func PLKStartALLOWED_TLDSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func PLKStartAllowedTldsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return PLKStartALLOWED_TLDSVector(builder, numElems)
 }
 func PLKAddLICENSE_TYPE(builder *flatbuffers.Builder, LICENSE_TYPE licenseType) {
 	builder.PrependInt8Slot(10, int8(LICENSE_TYPE), 0)
 }
+func PLKAddLicenseType(builder *flatbuffers.Builder, LICENSE_TYPE licenseType) {
+	PLKAddLICENSE_TYPE(builder, LICENSE_TYPE)
+}
 func PLKAddMAX_ACTIVATIONS(builder *flatbuffers.Builder, MAX_ACTIVATIONS uint32) {
 	builder.PrependUint32Slot(11, MAX_ACTIVATIONS, 0)
+}
+func PLKAddMaxActivations(builder *flatbuffers.Builder, MAX_ACTIVATIONS uint32) {
+	PLKAddMAX_ACTIVATIONS(builder, MAX_ACTIVATIONS)
 }
 func PLKAddISSUED_AT(builder *flatbuffers.Builder, ISSUED_AT uint64) {
 	builder.PrependUint64Slot(12, ISSUED_AT, 0)
 }
+func PLKAddIssuedAt(builder *flatbuffers.Builder, ISSUED_AT uint64) {
+	PLKAddISSUED_AT(builder, ISSUED_AT)
+}
 func PLKAddVALID_FROM(builder *flatbuffers.Builder, VALID_FROM uint64) {
 	builder.PrependUint64Slot(13, VALID_FROM, 0)
+}
+func PLKAddValidFrom(builder *flatbuffers.Builder, VALID_FROM uint64) {
+	PLKAddVALID_FROM(builder, VALID_FROM)
 }
 func PLKAddEXPIRES_AT(builder *flatbuffers.Builder, EXPIRES_AT uint64) {
 	builder.PrependUint64Slot(14, EXPIRES_AT, 0)
 }
+func PLKAddExpiresAt(builder *flatbuffers.Builder, EXPIRES_AT uint64) {
+	PLKAddEXPIRES_AT(builder, EXPIRES_AT)
+}
 func PLKAddISSUER_PEER_ID(builder *flatbuffers.Builder, ISSUER_PEER_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(15, flatbuffers.UOffsetT(ISSUER_PEER_ID), 0)
+}
+func PLKAddIssuerPeerId(builder *flatbuffers.Builder, ISSUER_PEER_ID flatbuffers.UOffsetT) {
+	PLKAddISSUER_PEER_ID(builder, ISSUER_PEER_ID)
 }
 func PLKAddSIGNATURE(builder *flatbuffers.Builder, SIGNATURE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(16, flatbuffers.UOffsetT(SIGNATURE), 0)
 }
+func PLKAddSignature(builder *flatbuffers.Builder, SIGNATURE flatbuffers.UOffsetT) {
+	PLKAddSIGNATURE(builder, SIGNATURE)
+}
 func PLKStartSIGNATUREVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(1, numElems, 1)
+}
+func PLKStartSignatureVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return PLKStartSIGNATUREVector(builder, numElems)
 }
 func PLKEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

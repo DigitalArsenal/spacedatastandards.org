@@ -149,21 +149,31 @@ def End(builder):
 class SONT(object):
 
     # SONT
-    def __init__(self):
-        self.COMMAND = None  # type: str
-        self.ACTIVE_CONFIG = None  # type: str
-        self.PASSIVE_CONFIG = None  # type: str
-        self.TL_REQUEST = None  # type: str
-        self.ENVIRONMENT = None  # type: str
-        self.TARGET_SIGNATURE = None  # type: str
-        self.TMA_INPUT = None  # type: str
-        self.TORPEDO_SEEKER = None  # type: str
+    def __init__(
+        self,
+        COMMAND = None,
+        ACTIVE_CONFIG = None,
+        PASSIVE_CONFIG = None,
+        TL_REQUEST = None,
+        ENVIRONMENT = None,
+        TARGET_SIGNATURE = None,
+        TMA_INPUT = None,
+        TORPEDO_SEEKER = None,
+    ):
+        self.COMMAND = COMMAND  # type: Optional[str]
+        self.ACTIVE_CONFIG = ACTIVE_CONFIG  # type: Optional[str]
+        self.PASSIVE_CONFIG = PASSIVE_CONFIG  # type: Optional[str]
+        self.TL_REQUEST = TL_REQUEST  # type: Optional[str]
+        self.ENVIRONMENT = ENVIRONMENT  # type: Optional[str]
+        self.TARGET_SIGNATURE = TARGET_SIGNATURE  # type: Optional[str]
+        self.TMA_INPUT = TMA_INPUT  # type: Optional[str]
+        self.TORPEDO_SEEKER = TORPEDO_SEEKER  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        SON = SON()
-        SON.Init(buf, pos)
-        return cls.InitFromObj(SON)
+        tmpSon = SON()
+        tmpSon.Init(buf, pos)
+        return cls.InitFromObj(tmpSon)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -171,9 +181,9 @@ class SONT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, SON):
+    def InitFromObj(cls, tmpSon):
         x = SONT()
-        x._UnPack(SON)
+        x._UnPack(tmpSon)
         return x
 
     # SONT

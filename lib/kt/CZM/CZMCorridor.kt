@@ -32,7 +32,7 @@ class CZMCorridor : Table() {
     /**
      * Whether the corridor is displayed
      */
-    val SHOW : Boolean
+    val show : Boolean
         get() {
             val o = __offset(4)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -40,7 +40,7 @@ class CZMCorridor : Table() {
     /**
      * Positions as cartographic degrees
      */
-    fun POSITIONS_CARTOGRAPHIC_DEGREES(j: Int) : Double {
+    fun positionsCartographicDegrees(j: Int) : Double {
         val o = __offset(6)
         return if (o != 0) {
             bb.getDouble(__vector(o) + j * 8)
@@ -48,16 +48,16 @@ class CZMCorridor : Table() {
             0.0
         }
     }
-    val POSITIONS_CARTOGRAPHIC_DEGREESLength : Int
+    val positionsCartographicDegreesLength : Int
         get() {
             val o = __offset(6); return if (o != 0) __vector_len(o) else 0
         }
-    val POSITIONS_CARTOGRAPHIC_DEGREESAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 8)
-    fun POSITIONS_CARTOGRAPHIC_DEGREESInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 8)
+    val positionsCartographicDegreesAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 8)
+    fun positionsCartographicDegreesInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 8)
     /**
      * Positions as Cartesian
      */
-    fun POSITIONS_CARTESIAN(j: Int) : Double {
+    fun positionsCartesian(j: Int) : Double {
         val o = __offset(8)
         return if (o != 0) {
             bb.getDouble(__vector(o) + j * 8)
@@ -65,16 +65,16 @@ class CZMCorridor : Table() {
             0.0
         }
     }
-    val POSITIONS_CARTESIANLength : Int
+    val positionsCartesianLength : Int
         get() {
             val o = __offset(8); return if (o != 0) __vector_len(o) else 0
         }
-    val POSITIONS_CARTESIANAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 8)
-    fun POSITIONS_CARTESIANInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 8)
+    val positionsCartesianAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 8)
+    fun positionsCartesianInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 8)
     /**
      * Width in meters
      */
-    val WIDTH : Double
+    val width : Double
         get() {
             val o = __offset(10)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -82,7 +82,7 @@ class CZMCorridor : Table() {
     /**
      * Height in meters
      */
-    val HEIGHT : Double
+    val height : Double
         get() {
             val o = __offset(12)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -90,7 +90,7 @@ class CZMCorridor : Table() {
     /**
      * Height reference
      */
-    val HEIGHT_REFERENCE : String?
+    val heightReference : String?
         get() {
             val o = __offset(14)
             return if (o != 0) {
@@ -99,12 +99,12 @@ class CZMCorridor : Table() {
                 null
             }
         }
-    val HEIGHT_REFERENCEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(14, 1)
-    fun HEIGHT_REFERENCEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 14, 1)
+    val heightReferenceAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(14, 1)
+    fun heightReferenceInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 14, 1)
     /**
      * Extruded height
      */
-    val EXTRUDED_HEIGHT : Double
+    val extrudedHeight : Double
         get() {
             val o = __offset(16)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -112,7 +112,7 @@ class CZMCorridor : Table() {
     /**
      * Extruded height reference
      */
-    val EXTRUDED_HEIGHT_REFERENCE : String?
+    val extrudedHeightReference : String?
         get() {
             val o = __offset(18)
             return if (o != 0) {
@@ -121,12 +121,12 @@ class CZMCorridor : Table() {
                 null
             }
         }
-    val EXTRUDED_HEIGHT_REFERENCEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(18, 1)
-    fun EXTRUDED_HEIGHT_REFERENCEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 18, 1)
+    val extrudedHeightReferenceAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(18, 1)
+    fun extrudedHeightReferenceInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 18, 1)
     /**
      * Corner type
      */
-    val CORNER_TYPE : String?
+    val cornerType : String?
         get() {
             val o = __offset(20)
             return if (o != 0) {
@@ -135,12 +135,12 @@ class CZMCorridor : Table() {
                 null
             }
         }
-    val CORNER_TYPEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(20, 1)
-    fun CORNER_TYPEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 20, 1)
+    val cornerTypeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(20, 1)
+    fun cornerTypeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 20, 1)
     /**
      * Granularity in radians
      */
-    val GRANULARITY : Double
+    val granularity : Double
         get() {
             val o = __offset(22)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -148,7 +148,7 @@ class CZMCorridor : Table() {
     /**
      * Fill flag
      */
-    val FILL : Boolean
+    val fill : Boolean
         get() {
             val o = __offset(24)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -156,8 +156,8 @@ class CZMCorridor : Table() {
     /**
      * Surface material
      */
-    val MATERIAL : CZMMaterial? get() = MATERIAL(CZMMaterial())
-    fun MATERIAL(obj: CZMMaterial) : CZMMaterial? {
+    val material : CZMMaterial? get() = material(CZMMaterial())
+    fun material(obj: CZMMaterial) : CZMMaterial? {
         val o = __offset(26)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -168,7 +168,7 @@ class CZMCorridor : Table() {
     /**
      * Outline flag
      */
-    val OUTLINE : Boolean
+    val outline : Boolean
         get() {
             val o = __offset(28)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -176,8 +176,8 @@ class CZMCorridor : Table() {
     /**
      * Outline color
      */
-    val OUTLINE_COLOR : CZMColor? get() = OUTLINE_COLOR(CZMColor())
-    fun OUTLINE_COLOR(obj: CZMColor) : CZMColor? {
+    val outlineColor : CZMColor? get() = outlineColor(CZMColor())
+    fun outlineColor(obj: CZMColor) : CZMColor? {
         val o = __offset(30)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -188,7 +188,7 @@ class CZMCorridor : Table() {
     /**
      * Outline width
      */
-    val OUTLINE_WIDTH : Double
+    val outlineWidth : Double
         get() {
             val o = __offset(32)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -196,7 +196,7 @@ class CZMCorridor : Table() {
     /**
      * Shadow mode
      */
-    val SHADOWS : String?
+    val shadows : String?
         get() {
             val o = __offset(34)
             return if (o != 0) {
@@ -205,12 +205,12 @@ class CZMCorridor : Table() {
                 null
             }
         }
-    val SHADOWSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(34, 1)
-    fun SHADOWSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 34, 1)
+    val shadowsAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(34, 1)
+    fun shadowsInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 34, 1)
     /**
      * Classification type
      */
-    val CLASSIFICATION_TYPE : String?
+    val classificationType : String?
         get() {
             val o = __offset(36)
             return if (o != 0) {
@@ -219,48 +219,48 @@ class CZMCorridor : Table() {
                 null
             }
         }
-    val CLASSIFICATION_TYPEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(36, 1)
-    fun CLASSIFICATION_TYPEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 36, 1)
+    val classificationTypeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(36, 1)
+    fun classificationTypeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 36, 1)
     /**
      * Z-index for ordering
      */
-    val Z_INDEX : Int
+    val zIndex : Int
         get() {
             val o = __offset(38)
             return if(o != 0) bb.getInt(o + bb_pos) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsCZMCorridor(_bb: ByteBuffer): CZMCorridor = getRootAsCZMCorridor(_bb, CZMCorridor())
         fun getRootAsCZMCorridor(_bb: ByteBuffer, obj: CZMCorridor): CZMCorridor {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createCZMCorridor(builder: FlatBufferBuilder, SHOW: Boolean, POSITIONS_CARTOGRAPHIC_DEGREESOffset: Int, POSITIONS_CARTESIANOffset: Int, WIDTH: Double, HEIGHT: Double, HEIGHT_REFERENCEOffset: Int, EXTRUDED_HEIGHT: Double, EXTRUDED_HEIGHT_REFERENCEOffset: Int, CORNER_TYPEOffset: Int, GRANULARITY: Double, FILL: Boolean, MATERIALOffset: Int, OUTLINE: Boolean, OUTLINE_COLOROffset: Int, OUTLINE_WIDTH: Double, SHADOWSOffset: Int, CLASSIFICATION_TYPEOffset: Int, Z_INDEX: Int) : Int {
+        fun createCZMCorridor(builder: FlatBufferBuilder, show: Boolean, positionsCartographicDegreesOffset: Int, positionsCartesianOffset: Int, width: Double, height: Double, heightReferenceOffset: Int, extrudedHeight: Double, extrudedHeightReferenceOffset: Int, cornerTypeOffset: Int, granularity: Double, fill: Boolean, materialOffset: Int, outline: Boolean, outlineColorOffset: Int, outlineWidth: Double, shadowsOffset: Int, classificationTypeOffset: Int, zIndex: Int) : Int {
             builder.startTable(18)
-            addOUTLINE_WIDTH(builder, OUTLINE_WIDTH)
-            addGRANULARITY(builder, GRANULARITY)
-            addEXTRUDED_HEIGHT(builder, EXTRUDED_HEIGHT)
-            addHEIGHT(builder, HEIGHT)
-            addWIDTH(builder, WIDTH)
-            addZ_INDEX(builder, Z_INDEX)
-            addCLASSIFICATION_TYPE(builder, CLASSIFICATION_TYPEOffset)
-            addSHADOWS(builder, SHADOWSOffset)
-            addOUTLINE_COLOR(builder, OUTLINE_COLOROffset)
-            addMATERIAL(builder, MATERIALOffset)
-            addCORNER_TYPE(builder, CORNER_TYPEOffset)
-            addEXTRUDED_HEIGHT_REFERENCE(builder, EXTRUDED_HEIGHT_REFERENCEOffset)
-            addHEIGHT_REFERENCE(builder, HEIGHT_REFERENCEOffset)
-            addPOSITIONS_CARTESIAN(builder, POSITIONS_CARTESIANOffset)
-            addPOSITIONS_CARTOGRAPHIC_DEGREES(builder, POSITIONS_CARTOGRAPHIC_DEGREESOffset)
-            addOUTLINE(builder, OUTLINE)
-            addFILL(builder, FILL)
-            addSHOW(builder, SHOW)
+            addOUTLINEWIDTH(builder, outlineWidth)
+            addGRANULARITY(builder, granularity)
+            addEXTRUDEDHEIGHT(builder, extrudedHeight)
+            addHEIGHT(builder, height)
+            addWIDTH(builder, width)
+            addZINDEX(builder, zIndex)
+            addCLASSIFICATIONTYPE(builder, classificationTypeOffset)
+            addSHADOWS(builder, shadowsOffset)
+            addOUTLINECOLOR(builder, outlineColorOffset)
+            addMATERIAL(builder, materialOffset)
+            addCORNERTYPE(builder, cornerTypeOffset)
+            addEXTRUDEDHEIGHTREFERENCE(builder, extrudedHeightReferenceOffset)
+            addHEIGHTREFERENCE(builder, heightReferenceOffset)
+            addPOSITIONSCARTESIAN(builder, positionsCartesianOffset)
+            addPOSITIONSCARTOGRAPHICDEGREES(builder, positionsCartographicDegreesOffset)
+            addOUTLINE(builder, outline)
+            addFILL(builder, fill)
+            addSHOW(builder, show)
             return endCZMCorridor(builder)
         }
         fun startCZMCorridor(builder: FlatBufferBuilder) = builder.startTable(18)
-        fun addSHOW(builder: FlatBufferBuilder, SHOW: Boolean) = builder.addBoolean(0, SHOW, false)
-        fun addPOSITIONS_CARTOGRAPHIC_DEGREES(builder: FlatBufferBuilder, POSITIONS_CARTOGRAPHIC_DEGREES: Int) = builder.addOffset(1, POSITIONS_CARTOGRAPHIC_DEGREES, 0)
+        fun addSHOW(builder: FlatBufferBuilder, show: Boolean) = builder.addBoolean(0, show, false)
+        fun addPOSITIONSCARTOGRAPHICDEGREES(builder: FlatBufferBuilder, positionsCartographicDegrees: Int) = builder.addOffset(1, positionsCartographicDegrees, 0)
         fun createPositionsCartographicDegreesVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
             builder.startVector(8, data.size, 8)
             for (i in data.size - 1 downTo 0) {
@@ -269,7 +269,7 @@ class CZMCorridor : Table() {
             return builder.endVector()
         }
         fun startPositionsCartographicDegreesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
-        fun addPOSITIONS_CARTESIAN(builder: FlatBufferBuilder, POSITIONS_CARTESIAN: Int) = builder.addOffset(2, POSITIONS_CARTESIAN, 0)
+        fun addPOSITIONSCARTESIAN(builder: FlatBufferBuilder, positionsCartesian: Int) = builder.addOffset(2, positionsCartesian, 0)
         fun createPositionsCartesianVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
             builder.startVector(8, data.size, 8)
             for (i in data.size - 1 downTo 0) {
@@ -278,21 +278,21 @@ class CZMCorridor : Table() {
             return builder.endVector()
         }
         fun startPositionsCartesianVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
-        fun addWIDTH(builder: FlatBufferBuilder, WIDTH: Double) = builder.addDouble(3, WIDTH, 0.0)
-        fun addHEIGHT(builder: FlatBufferBuilder, HEIGHT: Double) = builder.addDouble(4, HEIGHT, 0.0)
-        fun addHEIGHT_REFERENCE(builder: FlatBufferBuilder, HEIGHT_REFERENCE: Int) = builder.addOffset(5, HEIGHT_REFERENCE, 0)
-        fun addEXTRUDED_HEIGHT(builder: FlatBufferBuilder, EXTRUDED_HEIGHT: Double) = builder.addDouble(6, EXTRUDED_HEIGHT, 0.0)
-        fun addEXTRUDED_HEIGHT_REFERENCE(builder: FlatBufferBuilder, EXTRUDED_HEIGHT_REFERENCE: Int) = builder.addOffset(7, EXTRUDED_HEIGHT_REFERENCE, 0)
-        fun addCORNER_TYPE(builder: FlatBufferBuilder, CORNER_TYPE: Int) = builder.addOffset(8, CORNER_TYPE, 0)
-        fun addGRANULARITY(builder: FlatBufferBuilder, GRANULARITY: Double) = builder.addDouble(9, GRANULARITY, 0.0)
-        fun addFILL(builder: FlatBufferBuilder, FILL: Boolean) = builder.addBoolean(10, FILL, false)
-        fun addMATERIAL(builder: FlatBufferBuilder, MATERIAL: Int) = builder.addOffset(11, MATERIAL, 0)
-        fun addOUTLINE(builder: FlatBufferBuilder, OUTLINE: Boolean) = builder.addBoolean(12, OUTLINE, false)
-        fun addOUTLINE_COLOR(builder: FlatBufferBuilder, OUTLINE_COLOR: Int) = builder.addOffset(13, OUTLINE_COLOR, 0)
-        fun addOUTLINE_WIDTH(builder: FlatBufferBuilder, OUTLINE_WIDTH: Double) = builder.addDouble(14, OUTLINE_WIDTH, 0.0)
-        fun addSHADOWS(builder: FlatBufferBuilder, SHADOWS: Int) = builder.addOffset(15, SHADOWS, 0)
-        fun addCLASSIFICATION_TYPE(builder: FlatBufferBuilder, CLASSIFICATION_TYPE: Int) = builder.addOffset(16, CLASSIFICATION_TYPE, 0)
-        fun addZ_INDEX(builder: FlatBufferBuilder, Z_INDEX: Int) = builder.addInt(17, Z_INDEX, 0)
+        fun addWIDTH(builder: FlatBufferBuilder, width: Double) = builder.addDouble(3, width, 0.0)
+        fun addHEIGHT(builder: FlatBufferBuilder, height: Double) = builder.addDouble(4, height, 0.0)
+        fun addHEIGHTREFERENCE(builder: FlatBufferBuilder, heightReference: Int) = builder.addOffset(5, heightReference, 0)
+        fun addEXTRUDEDHEIGHT(builder: FlatBufferBuilder, extrudedHeight: Double) = builder.addDouble(6, extrudedHeight, 0.0)
+        fun addEXTRUDEDHEIGHTREFERENCE(builder: FlatBufferBuilder, extrudedHeightReference: Int) = builder.addOffset(7, extrudedHeightReference, 0)
+        fun addCORNERTYPE(builder: FlatBufferBuilder, cornerType: Int) = builder.addOffset(8, cornerType, 0)
+        fun addGRANULARITY(builder: FlatBufferBuilder, granularity: Double) = builder.addDouble(9, granularity, 0.0)
+        fun addFILL(builder: FlatBufferBuilder, fill: Boolean) = builder.addBoolean(10, fill, false)
+        fun addMATERIAL(builder: FlatBufferBuilder, material: Int) = builder.addOffset(11, material, 0)
+        fun addOUTLINE(builder: FlatBufferBuilder, outline: Boolean) = builder.addBoolean(12, outline, false)
+        fun addOUTLINECOLOR(builder: FlatBufferBuilder, outlineColor: Int) = builder.addOffset(13, outlineColor, 0)
+        fun addOUTLINEWIDTH(builder: FlatBufferBuilder, outlineWidth: Double) = builder.addDouble(14, outlineWidth, 0.0)
+        fun addSHADOWS(builder: FlatBufferBuilder, shadows: Int) = builder.addOffset(15, shadows, 0)
+        fun addCLASSIFICATIONTYPE(builder: FlatBufferBuilder, classificationType: Int) = builder.addOffset(16, classificationType, 0)
+        fun addZINDEX(builder: FlatBufferBuilder, zIndex: Int) = builder.addInt(17, zIndex, 0)
         fun endCZMCorridor(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

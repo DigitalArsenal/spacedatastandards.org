@@ -51,6 +51,10 @@ func (rcv *CZMInterpolation) ALGORITHM() []byte {
 	return nil
 }
 
+func (rcv *CZMInterpolation) Algorithm() []byte {
+	return rcv.ALGORITHM()
+}
+
 /// Algorithm: LINEAR, LAGRANGE, HERMITE
 /// Polynomial degree (1=linear, 5=typical Lagrange)
 func (rcv *CZMInterpolation) DEGREE() int32 {
@@ -61,9 +65,17 @@ func (rcv *CZMInterpolation) DEGREE() int32 {
 	return 0
 }
 
+func (rcv *CZMInterpolation) Degree() int32 {
+	return rcv.DEGREE()
+}
+
 /// Polynomial degree (1=linear, 5=typical Lagrange)
 func (rcv *CZMInterpolation) MutateDEGREE(n int32) bool {
 	return rcv._tab.MutateInt32Slot(6, n)
+}
+
+func (rcv *CZMInterpolation) MutateDegree(n int32) bool {
+	return rcv.MutateDEGREE(n)
 }
 
 func CZMInterpolationStart(builder *flatbuffers.Builder) {
@@ -72,8 +84,14 @@ func CZMInterpolationStart(builder *flatbuffers.Builder) {
 func CZMInterpolationAddALGORITHM(builder *flatbuffers.Builder, ALGORITHM flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ALGORITHM), 0)
 }
+func CZMInterpolationAddAlgorithm(builder *flatbuffers.Builder, ALGORITHM flatbuffers.UOffsetT) {
+	CZMInterpolationAddALGORITHM(builder, ALGORITHM)
+}
 func CZMInterpolationAddDEGREE(builder *flatbuffers.Builder, DEGREE int32) {
 	builder.PrependInt32Slot(1, DEGREE, 0)
+}
+func CZMInterpolationAddDegree(builder *flatbuffers.Builder, DEGREE int32) {
+	CZMInterpolationAddDEGREE(builder, DEGREE)
 }
 func CZMInterpolationEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

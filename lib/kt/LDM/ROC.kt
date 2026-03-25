@@ -32,7 +32,7 @@ class ROC : Table() {
     /**
      * Rocket Name
      */
-    val NAME : String?
+    val name : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class ROC : Table() {
                 null
             }
         }
-    val NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val nameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun nameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Rocket Family
      */
-    val FAMILY : String?
+    val family : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -55,12 +55,12 @@ class ROC : Table() {
                 null
             }
         }
-    val FAMILYAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun FAMILYInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val familyAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun familyInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * Rocket Variant
      */
-    val VARIANT : String?
+    val variant : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -69,13 +69,13 @@ class ROC : Table() {
                 null
             }
         }
-    val VARIANTAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun VARIANTInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val variantAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun variantInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
     /**
      * Stages in the Rocket
      */
-    fun STAGES(j: Int) : STAGE? = STAGES(STAGE(), j)
-    fun STAGES(obj: STAGE, j: Int) : STAGE? {
+    fun stages(j: Int) : STAGE? = stages(STAGE(), j)
+    fun stages(obj: STAGE, j: Int) : STAGE? {
         val o = __offset(10)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -83,15 +83,15 @@ class ROC : Table() {
             null
         }
     }
-    val STAGESLength : Int
+    val stagesLength : Int
         get() {
             val o = __offset(10); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Sustainers in the Rocket
      */
-    fun SUSTAINERS(j: Int) : SUSTAINER? = SUSTAINERS(SUSTAINER(), j)
-    fun SUSTAINERS(obj: SUSTAINER, j: Int) : SUSTAINER? {
+    fun sustainers(j: Int) : SUSTAINER? = sustainers(SUSTAINER(), j)
+    fun sustainers(obj: SUSTAINER, j: Int) : SUSTAINER? {
         val o = __offset(12)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -99,32 +99,32 @@ class ROC : Table() {
             null
         }
     }
-    val SUSTAINERSLength : Int
+    val sustainersLength : Int
         get() {
             val o = __offset(12); return if (o != 0) __vector_len(o) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsROC(_bb: ByteBuffer): ROC = getRootAsROC(_bb, ROC())
         fun getRootAsROC(_bb: ByteBuffer, obj: ROC): ROC {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun ROCBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$ROC")
-        fun createROC(builder: FlatBufferBuilder, NAMEOffset: Int, FAMILYOffset: Int, VARIANTOffset: Int, STAGESOffset: Int, SUSTAINERSOffset: Int) : Int {
+        fun createROC(builder: FlatBufferBuilder, nameOffset: Int, familyOffset: Int, variantOffset: Int, stagesOffset: Int, sustainersOffset: Int) : Int {
             builder.startTable(5)
-            addSUSTAINERS(builder, SUSTAINERSOffset)
-            addSTAGES(builder, STAGESOffset)
-            addVARIANT(builder, VARIANTOffset)
-            addFAMILY(builder, FAMILYOffset)
-            addNAME(builder, NAMEOffset)
+            addSUSTAINERS(builder, sustainersOffset)
+            addSTAGES(builder, stagesOffset)
+            addVARIANT(builder, variantOffset)
+            addFAMILY(builder, familyOffset)
+            addNAME(builder, nameOffset)
             return endROC(builder)
         }
         fun startROC(builder: FlatBufferBuilder) = builder.startTable(5)
-        fun addNAME(builder: FlatBufferBuilder, NAME: Int) = builder.addOffset(0, NAME, 0)
-        fun addFAMILY(builder: FlatBufferBuilder, FAMILY: Int) = builder.addOffset(1, FAMILY, 0)
-        fun addVARIANT(builder: FlatBufferBuilder, VARIANT: Int) = builder.addOffset(2, VARIANT, 0)
-        fun addSTAGES(builder: FlatBufferBuilder, STAGES: Int) = builder.addOffset(3, STAGES, 0)
+        fun addNAME(builder: FlatBufferBuilder, name: Int) = builder.addOffset(0, name, 0)
+        fun addFAMILY(builder: FlatBufferBuilder, family: Int) = builder.addOffset(1, family, 0)
+        fun addVARIANT(builder: FlatBufferBuilder, variant: Int) = builder.addOffset(2, variant, 0)
+        fun addSTAGES(builder: FlatBufferBuilder, stages: Int) = builder.addOffset(3, stages, 0)
         fun createStagesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -133,7 +133,7 @@ class ROC : Table() {
             return builder.endVector()
         }
         fun startStagesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addSUSTAINERS(builder: FlatBufferBuilder, SUSTAINERS: Int) = builder.addOffset(4, SUSTAINERS, 0)
+        fun addSUSTAINERS(builder: FlatBufferBuilder, sustainers: Int) = builder.addOffset(4, sustainers, 0)
         fun createSustainersVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {

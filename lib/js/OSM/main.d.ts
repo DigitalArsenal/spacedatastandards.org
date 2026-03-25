@@ -1,2 +1,2 @@
-export { OSM, OSMT } from './OSM.js';
+export * from './OSM.js';
 //# sourceMappingURL=main.d.ts.map

@@ -96,16 +96,21 @@ except:
 class CZMPolylineGlowMaterialT(object):
 
     # CZMPolylineGlowMaterialT
-    def __init__(self):
-        self.COLOR = None  # type: Optional[CZMColor.CZMColorT]
-        self.GLOW_POWER = 0.0  # type: float
-        self.TAPER_POWER = 0.0  # type: float
+    def __init__(
+        self,
+        COLOR = None,
+        GLOW_POWER = 0.0,
+        TAPER_POWER = 0.0,
+    ):
+        self.COLOR = COLOR  # type: Optional[CZMColor.CZMColorT]
+        self.GLOW_POWER = GLOW_POWER  # type: float
+        self.TAPER_POWER = TAPER_POWER  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        czmpolylineGlowMaterial = CZMPolylineGlowMaterial()
-        czmpolylineGlowMaterial.Init(buf, pos)
-        return cls.InitFromObj(czmpolylineGlowMaterial)
+        tmpCzmpolylineGlowMaterial = CZMPolylineGlowMaterial()
+        tmpCzmpolylineGlowMaterial.Init(buf, pos)
+        return cls.InitFromObj(tmpCzmpolylineGlowMaterial)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -113,19 +118,19 @@ class CZMPolylineGlowMaterialT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, czmpolylineGlowMaterial):
+    def InitFromObj(cls, tmpCzmpolylineGlowMaterial):
         x = CZMPolylineGlowMaterialT()
-        x._UnPack(czmpolylineGlowMaterial)
+        x._UnPack(tmpCzmpolylineGlowMaterial)
         return x
 
     # CZMPolylineGlowMaterialT
-    def _UnPack(self, czmpolylineGlowMaterial):
-        if czmpolylineGlowMaterial is None:
+    def _UnPack(self, CZMPolylineGlowMaterial):
+        if CZMPolylineGlowMaterial is None:
             return
-        if czmpolylineGlowMaterial.COLOR() is not None:
-            self.COLOR = CZMColor.CZMColorT.InitFromObj(czmpolylineGlowMaterial.COLOR())
-        self.GLOW_POWER = czmpolylineGlowMaterial.GLOW_POWER()
-        self.TAPER_POWER = czmpolylineGlowMaterial.TAPER_POWER()
+        if CZMPolylineGlowMaterial.COLOR() is not None:
+            self.COLOR = CZMColor.CZMColorT.InitFromObj(CZMPolylineGlowMaterial.COLOR())
+        self.GLOW_POWER = CZMPolylineGlowMaterial.GLOW_POWER()
+        self.TAPER_POWER = CZMPolylineGlowMaterial.TAPER_POWER()
 
     # CZMPolylineGlowMaterialT
     def Pack(self, builder):
@@ -136,5 +141,5 @@ class CZMPolylineGlowMaterialT(object):
             CZMPolylineGlowMaterialAddCOLOR(builder, COLOR)
         CZMPolylineGlowMaterialAddGLOW_POWER(builder, self.GLOW_POWER)
         CZMPolylineGlowMaterialAddTAPER_POWER(builder, self.TAPER_POWER)
-        czmpolylineGlowMaterial = CZMPolylineGlowMaterialEnd(builder)
-        return czmpolylineGlowMaterial
+        CZMPolylineGlowMaterial = CZMPolylineGlowMaterialEnd(builder)
+        return CZMPolylineGlowMaterial

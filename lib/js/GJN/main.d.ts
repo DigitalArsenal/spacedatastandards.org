@@ -1,10 +1,10 @@
-export { GJN, GJNT } from './GJN.js';
-export { GJNBoundingBox, GJNBoundingBoxT } from './GJNBoundingBox.js';
-export { GJNFeature, GJNFeatureT } from './GJNFeature.js';
-export { GJNGeometry, GJNGeometryT } from './GJNGeometry.js';
-export { GJNGeometryType } from './GJNGeometryType.js';
-export { GJNLinearRing, GJNLinearRingT } from './GJNLinearRing.js';
-export { GJNPolygonRings, GJNPolygonRingsT } from './GJNPolygonRings.js';
-export { GJNPosition, GJNPositionT } from './GJNPosition.js';
-export { GJNProperty, GJNPropertyT } from './GJNProperty.js';
+export * from './GJN.js';
+export * from './GJNBoundingBox.js';
+export * from './GJNFeature.js';
+export * from './GJNGeometry.js';
+export * from './GJNGeometryType.js';
+export * from './GJNLinearRing.js';
+export * from './GJNPolygonRings.js';
+export * from './GJNPosition.js';
+export * from './GJNProperty.js';
 //# sourceMappingURL=main.d.ts.map

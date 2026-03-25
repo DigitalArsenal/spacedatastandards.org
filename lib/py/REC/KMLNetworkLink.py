@@ -2,4 +2,315 @@
 
 # namespace: 
 
-# NOTE KMLNetworkLink.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Network link
+class KMLNetworkLink(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = KMLNetworkLink()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsKMLNetworkLink(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def KMLNetworkLinkBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x4B\x4D\x4C", size_prefixed=size_prefixed)
+
+    # KMLNetworkLink
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Name of the network link
+    # KMLNetworkLink
+    def NAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Description
+    # KMLNetworkLink
+    def DESCRIPTION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Whether the link is visible
+    # KMLNetworkLink
+    def VISIBILITY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # Whether open in tree view
+    # KMLNetworkLink
+    def OPEN(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # Link URL
+    # KMLNetworkLink
+    def HREF(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Refresh mode
+    # KMLNetworkLink
+    def REFRESH_MODE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # Refresh interval in seconds
+    # KMLNetworkLink
+    def REFRESH_INTERVAL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # View refresh mode
+    # KMLNetworkLink
+    def VIEW_REFRESH_MODE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # View refresh time in seconds
+    # KMLNetworkLink
+    def VIEW_REFRESH_TIME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Whether to refresh on visibility change
+    # KMLNetworkLink
+    def REFRESH_VISIBILITY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # Whether to fly to view on refresh
+    # KMLNetworkLink
+    def FLY_TO_VIEW(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # Full link element
+    # KMLNetworkLink
+    def LINK(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from KMLLink import KMLLink
+            obj = KMLLink()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+def KMLNetworkLinkStart(builder):
+    builder.StartObject(12)
+
+def Start(builder):
+    KMLNetworkLinkStart(builder)
+
+def KMLNetworkLinkAddNAME(builder, NAME):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(NAME), 0)
+
+def AddNAME(builder, NAME):
+    KMLNetworkLinkAddNAME(builder, NAME)
+
+def KMLNetworkLinkAddDESCRIPTION(builder, DESCRIPTION):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(DESCRIPTION), 0)
+
+def AddDESCRIPTION(builder, DESCRIPTION):
+    KMLNetworkLinkAddDESCRIPTION(builder, DESCRIPTION)
+
+def KMLNetworkLinkAddVISIBILITY(builder, VISIBILITY):
+    builder.PrependBoolSlot(2, VISIBILITY, 0)
+
+def AddVISIBILITY(builder, VISIBILITY):
+    KMLNetworkLinkAddVISIBILITY(builder, VISIBILITY)
+
+def KMLNetworkLinkAddOPEN(builder, OPEN):
+    builder.PrependBoolSlot(3, OPEN, 0)
+
+def AddOPEN(builder, OPEN):
+    KMLNetworkLinkAddOPEN(builder, OPEN)
+
+def KMLNetworkLinkAddHREF(builder, HREF):
+    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(HREF), 0)
+
+def AddHREF(builder, HREF):
+    KMLNetworkLinkAddHREF(builder, HREF)
+
+def KMLNetworkLinkAddREFRESH_MODE(builder, REFRESH_MODE):
+    builder.PrependInt8Slot(5, REFRESH_MODE, 0)
+
+def AddREFRESH_MODE(builder, REFRESH_MODE):
+    KMLNetworkLinkAddREFRESH_MODE(builder, REFRESH_MODE)
+
+def KMLNetworkLinkAddREFRESH_INTERVAL(builder, REFRESH_INTERVAL):
+    builder.PrependFloat64Slot(6, REFRESH_INTERVAL, 0.0)
+
+def AddREFRESH_INTERVAL(builder, REFRESH_INTERVAL):
+    KMLNetworkLinkAddREFRESH_INTERVAL(builder, REFRESH_INTERVAL)
+
+def KMLNetworkLinkAddVIEW_REFRESH_MODE(builder, VIEW_REFRESH_MODE):
+    builder.PrependInt8Slot(7, VIEW_REFRESH_MODE, 0)
+
+def AddVIEW_REFRESH_MODE(builder, VIEW_REFRESH_MODE):
+    KMLNetworkLinkAddVIEW_REFRESH_MODE(builder, VIEW_REFRESH_MODE)
+
+def KMLNetworkLinkAddVIEW_REFRESH_TIME(builder, VIEW_REFRESH_TIME):
+    builder.PrependFloat64Slot(8, VIEW_REFRESH_TIME, 0.0)
+
+def AddVIEW_REFRESH_TIME(builder, VIEW_REFRESH_TIME):
+    KMLNetworkLinkAddVIEW_REFRESH_TIME(builder, VIEW_REFRESH_TIME)
+
+def KMLNetworkLinkAddREFRESH_VISIBILITY(builder, REFRESH_VISIBILITY):
+    builder.PrependBoolSlot(9, REFRESH_VISIBILITY, 0)
+
+def AddREFRESH_VISIBILITY(builder, REFRESH_VISIBILITY):
+    KMLNetworkLinkAddREFRESH_VISIBILITY(builder, REFRESH_VISIBILITY)
+
+def KMLNetworkLinkAddFLY_TO_VIEW(builder, FLY_TO_VIEW):
+    builder.PrependBoolSlot(10, FLY_TO_VIEW, 0)
+
+def AddFLY_TO_VIEW(builder, FLY_TO_VIEW):
+    KMLNetworkLinkAddFLY_TO_VIEW(builder, FLY_TO_VIEW)
+
+def KMLNetworkLinkAddLINK(builder, LINK):
+    builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(LINK), 0)
+
+def AddLINK(builder, LINK):
+    KMLNetworkLinkAddLINK(builder, LINK)
+
+def KMLNetworkLinkEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return KMLNetworkLinkEnd(builder)
+
+import KMLLink
+try:
+    from typing import Optional
+except:
+    pass
+
+class KMLNetworkLinkT(object):
+
+    # KMLNetworkLinkT
+    def __init__(
+        self,
+        NAME = None,
+        DESCRIPTION = None,
+        VISIBILITY = False,
+        OPEN = False,
+        HREF = None,
+        REFRESH_MODE = 0,
+        REFRESH_INTERVAL = 0.0,
+        VIEW_REFRESH_MODE = 0,
+        VIEW_REFRESH_TIME = 0.0,
+        REFRESH_VISIBILITY = False,
+        FLY_TO_VIEW = False,
+        LINK = None,
+    ):
+        self.NAME = NAME  # type: Optional[str]
+        self.DESCRIPTION = DESCRIPTION  # type: Optional[str]
+        self.VISIBILITY = VISIBILITY  # type: bool
+        self.OPEN = OPEN  # type: bool
+        self.HREF = HREF  # type: Optional[str]
+        self.REFRESH_MODE = REFRESH_MODE  # type: int
+        self.REFRESH_INTERVAL = REFRESH_INTERVAL  # type: float
+        self.VIEW_REFRESH_MODE = VIEW_REFRESH_MODE  # type: int
+        self.VIEW_REFRESH_TIME = VIEW_REFRESH_TIME  # type: float
+        self.REFRESH_VISIBILITY = REFRESH_VISIBILITY  # type: bool
+        self.FLY_TO_VIEW = FLY_TO_VIEW  # type: bool
+        self.LINK = LINK  # type: Optional[KMLLink.KMLLinkT]
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpKmlnetworkLink = KMLNetworkLink()
+        tmpKmlnetworkLink.Init(buf, pos)
+        return cls.InitFromObj(tmpKmlnetworkLink)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpKmlnetworkLink):
+        x = KMLNetworkLinkT()
+        x._UnPack(tmpKmlnetworkLink)
+        return x
+
+    # KMLNetworkLinkT
+    def _UnPack(self, KMLNetworkLink):
+        if KMLNetworkLink is None:
+            return
+        self.NAME = KMLNetworkLink.NAME()
+        self.DESCRIPTION = KMLNetworkLink.DESCRIPTION()
+        self.VISIBILITY = KMLNetworkLink.VISIBILITY()
+        self.OPEN = KMLNetworkLink.OPEN()
+        self.HREF = KMLNetworkLink.HREF()
+        self.REFRESH_MODE = KMLNetworkLink.REFRESH_MODE()
+        self.REFRESH_INTERVAL = KMLNetworkLink.REFRESH_INTERVAL()
+        self.VIEW_REFRESH_MODE = KMLNetworkLink.VIEW_REFRESH_MODE()
+        self.VIEW_REFRESH_TIME = KMLNetworkLink.VIEW_REFRESH_TIME()
+        self.REFRESH_VISIBILITY = KMLNetworkLink.REFRESH_VISIBILITY()
+        self.FLY_TO_VIEW = KMLNetworkLink.FLY_TO_VIEW()
+        if KMLNetworkLink.LINK() is not None:
+            self.LINK = KMLLink.KMLLinkT.InitFromObj(KMLNetworkLink.LINK())
+
+    # KMLNetworkLinkT
+    def Pack(self, builder):
+        if self.NAME is not None:
+            NAME = builder.CreateString(self.NAME)
+        if self.DESCRIPTION is not None:
+            DESCRIPTION = builder.CreateString(self.DESCRIPTION)
+        if self.HREF is not None:
+            HREF = builder.CreateString(self.HREF)
+        if self.LINK is not None:
+            LINK = self.LINK.Pack(builder)
+        KMLNetworkLinkStart(builder)
+        if self.NAME is not None:
+            KMLNetworkLinkAddNAME(builder, NAME)
+        if self.DESCRIPTION is not None:
+            KMLNetworkLinkAddDESCRIPTION(builder, DESCRIPTION)
+        KMLNetworkLinkAddVISIBILITY(builder, self.VISIBILITY)
+        KMLNetworkLinkAddOPEN(builder, self.OPEN)
+        if self.HREF is not None:
+            KMLNetworkLinkAddHREF(builder, HREF)
+        KMLNetworkLinkAddREFRESH_MODE(builder, self.REFRESH_MODE)
+        KMLNetworkLinkAddREFRESH_INTERVAL(builder, self.REFRESH_INTERVAL)
+        KMLNetworkLinkAddVIEW_REFRESH_MODE(builder, self.VIEW_REFRESH_MODE)
+        KMLNetworkLinkAddVIEW_REFRESH_TIME(builder, self.VIEW_REFRESH_TIME)
+        KMLNetworkLinkAddREFRESH_VISIBILITY(builder, self.REFRESH_VISIBILITY)
+        KMLNetworkLinkAddFLY_TO_VIEW(builder, self.FLY_TO_VIEW)
+        if self.LINK is not None:
+            KMLNetworkLinkAddLINK(builder, LINK)
+        KMLNetworkLink = KMLNetworkLinkEnd(builder)
+        return KMLNetworkLink

@@ -227,27 +227,43 @@ def End(builder):
 class PHYT(object):
 
     # PHYT
-    def __init__(self):
-        self.COMMAND = None  # type: str
-        self.SIMULATION_STEP = None  # type: str
-        self.RIGID_BODY = None  # type: str
-        self.INTEGRATION_CONFIG = None  # type: str
-        self.COLLISION_QUERY_A = None  # type: str
-        self.COLLISION_QUERY_B = None  # type: str
-        self.TRANSFORM_A = None  # type: str
-        self.TRANSFORM_B = None  # type: str
-        self.POSITION_A = None  # type: str
-        self.POSITION_B = None  # type: str
-        self.FLUID = None  # type: str
-        self.AERO_QUERY = None  # type: str
-        self.DRAG_MODEL = None  # type: str
-        self.THERMAL_STATE = None  # type: str
+    def __init__(
+        self,
+        COMMAND = None,
+        SIMULATION_STEP = None,
+        RIGID_BODY = None,
+        INTEGRATION_CONFIG = None,
+        COLLISION_QUERY_A = None,
+        COLLISION_QUERY_B = None,
+        TRANSFORM_A = None,
+        TRANSFORM_B = None,
+        POSITION_A = None,
+        POSITION_B = None,
+        FLUID = None,
+        AERO_QUERY = None,
+        DRAG_MODEL = None,
+        THERMAL_STATE = None,
+    ):
+        self.COMMAND = COMMAND  # type: Optional[str]
+        self.SIMULATION_STEP = SIMULATION_STEP  # type: Optional[str]
+        self.RIGID_BODY = RIGID_BODY  # type: Optional[str]
+        self.INTEGRATION_CONFIG = INTEGRATION_CONFIG  # type: Optional[str]
+        self.COLLISION_QUERY_A = COLLISION_QUERY_A  # type: Optional[str]
+        self.COLLISION_QUERY_B = COLLISION_QUERY_B  # type: Optional[str]
+        self.TRANSFORM_A = TRANSFORM_A  # type: Optional[str]
+        self.TRANSFORM_B = TRANSFORM_B  # type: Optional[str]
+        self.POSITION_A = POSITION_A  # type: Optional[str]
+        self.POSITION_B = POSITION_B  # type: Optional[str]
+        self.FLUID = FLUID  # type: Optional[str]
+        self.AERO_QUERY = AERO_QUERY  # type: Optional[str]
+        self.DRAG_MODEL = DRAG_MODEL  # type: Optional[str]
+        self.THERMAL_STATE = THERMAL_STATE  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        PHY = PHY()
-        PHY.Init(buf, pos)
-        return cls.InitFromObj(PHY)
+        tmpPhy = PHY()
+        tmpPhy.Init(buf, pos)
+        return cls.InitFromObj(tmpPhy)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -255,9 +271,9 @@ class PHYT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, PHY):
+    def InitFromObj(cls, tmpPhy):
         x = PHYT()
-        x._UnPack(PHY)
+        x._UnPack(tmpPhy)
         return x
 
     # PHYT

@@ -129,19 +129,27 @@ def End(builder):
 class driftRecordT(object):
 
     # driftRecordT
-    def __init__(self):
-        self.EPOCH = None  # type: str
-        self.DRIFT_RATE = 0.0  # type: float
-        self.MEAN_LONGITUDE = 0.0  # type: float
-        self.LONGITUDE_AMPLITUDE = 0.0  # type: float
-        self.ECCENTRICITY = 0.0  # type: float
-        self.INCLINATION = 0.0  # type: float
+    def __init__(
+        self,
+        EPOCH = None,
+        DRIFT_RATE = 0.0,
+        MEAN_LONGITUDE = 0.0,
+        LONGITUDE_AMPLITUDE = 0.0,
+        ECCENTRICITY = 0.0,
+        INCLINATION = 0.0,
+    ):
+        self.EPOCH = EPOCH  # type: Optional[str]
+        self.DRIFT_RATE = DRIFT_RATE  # type: float
+        self.MEAN_LONGITUDE = MEAN_LONGITUDE  # type: float
+        self.LONGITUDE_AMPLITUDE = LONGITUDE_AMPLITUDE  # type: float
+        self.ECCENTRICITY = ECCENTRICITY  # type: float
+        self.INCLINATION = INCLINATION  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        driftRecord = driftRecord()
-        driftRecord.Init(buf, pos)
-        return cls.InitFromObj(driftRecord)
+        tmpDriftRecord = driftRecord()
+        tmpDriftRecord.Init(buf, pos)
+        return cls.InitFromObj(tmpDriftRecord)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -149,9 +157,9 @@ class driftRecordT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, driftRecord):
+    def InitFromObj(cls, tmpDriftRecord):
         x = driftRecordT()
-        x._UnPack(driftRecord)
+        x._UnPack(tmpDriftRecord)
         return x
 
     # driftRecordT

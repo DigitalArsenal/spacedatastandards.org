@@ -2,4 +2,146 @@
 
 # namespace: 
 
-# NOTE GJNLinearRing.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# A linear ring is a closed LineString with 4+ positions (first = last)
+class GJNLinearRing(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = GJNLinearRing()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsGJNLinearRing(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def GJNLinearRingBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x47\x4A\x4E", size_prefixed=size_prefixed)
+
+    # GJNLinearRing
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Ordered positions forming the ring
+    # GJNLinearRing
+    def POSITIONS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from GJNPosition import GJNPosition
+            obj = GJNPosition()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # GJNLinearRing
+    def POSITIONSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # GJNLinearRing
+    def POSITIONSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        return o == 0
+
+def GJNLinearRingStart(builder):
+    builder.StartObject(1)
+
+def Start(builder):
+    GJNLinearRingStart(builder)
+
+def GJNLinearRingAddPOSITIONS(builder, POSITIONS):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(POSITIONS), 0)
+
+def AddPOSITIONS(builder, POSITIONS):
+    GJNLinearRingAddPOSITIONS(builder, POSITIONS)
+
+def GJNLinearRingStartPOSITIONSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartPOSITIONSVector(builder, numElems):
+    return GJNLinearRingStartPOSITIONSVector(builder, numElems)
+
+def GJNLinearRingCreatePOSITIONSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreatePOSITIONSVector(builder, data):
+    GJNLinearRingCreatePOSITIONSVector(builder, data)
+
+def GJNLinearRingEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return GJNLinearRingEnd(builder)
+
+import GJNPosition
+try:
+    from typing import List
+except:
+    pass
+
+class GJNLinearRingT(object):
+
+    # GJNLinearRingT
+    def __init__(
+        self,
+        POSITIONS = None,
+    ):
+        self.POSITIONS = POSITIONS  # type: Optional[List[GJNPosition.GJNPositionT]]
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpGjnlinearRing = GJNLinearRing()
+        tmpGjnlinearRing.Init(buf, pos)
+        return cls.InitFromObj(tmpGjnlinearRing)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpGjnlinearRing):
+        x = GJNLinearRingT()
+        x._UnPack(tmpGjnlinearRing)
+        return x
+
+    # GJNLinearRingT
+    def _UnPack(self, GJNLinearRing):
+        if GJNLinearRing is None:
+            return
+        if not GJNLinearRing.POSITIONSIsNone():
+            self.POSITIONS = []
+            for i in range(GJNLinearRing.POSITIONSLength()):
+                if GJNLinearRing.POSITIONS(i) is None:
+                    self.POSITIONS.append(None)
+                else:
+                    gJNPosition_ = GJNPosition.GJNPositionT.InitFromObj(GJNLinearRing.POSITIONS(i))
+                    self.POSITIONS.append(gJNPosition_)
+
+    # GJNLinearRingT
+    def Pack(self, builder):
+        if self.POSITIONS is not None:
+            POSITIONSlist = []
+            for i in range(len(self.POSITIONS)):
+                POSITIONSlist.append(self.POSITIONS[i].Pack(builder))
+            GJNLinearRingStartPOSITIONSVector(builder, len(self.POSITIONS))
+            for i in reversed(range(len(self.POSITIONS))):
+                builder.PrependUOffsetTRelative(POSITIONSlist[i])
+            POSITIONS = builder.EndVector()
+        GJNLinearRingStart(builder)
+        if self.POSITIONS is not None:
+            GJNLinearRingAddPOSITIONS(builder, POSITIONS)
+        GJNLinearRing = GJNLinearRingEnd(builder)
+        return GJNLinearRing

@@ -12,7 +12,6 @@ import com.google.flatbuffers.LongVector;
 import com.google.flatbuffers.ShortVector;
 import com.google.flatbuffers.StringVector;
 import com.google.flatbuffers.Struct;
-import com.google.flatbuffers.Table;
 import com.google.flatbuffers.UnionVector;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -21,8 +20,8 @@ import java.nio.ByteOrder;
  * Object of Interest
  */
 @SuppressWarnings("unused")
-public final class OOI extends Table {
-  public static void ValidateVersion() { Constants.FLATBUFFERS_24_3_25(); }
+public final class OOI extends com.google.flatbuffers.Table {
+  public static void ValidateVersion() { Constants.FLATBUFFERS_25_12_19(); }
   public static OOI getRootAsOOI(ByteBuffer _bb) { return getRootAsOOI(_bb, new OOI()); }
   public static OOI getRootAsOOI(ByteBuffer _bb, OOI obj) { _bb.order(ByteOrder.LITTLE_ENDIAN); return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb)); }
   public static boolean OOIBufferHasIdentifier(ByteBuffer _bb) { return __has_identifier(_bb, "$OOI"); }

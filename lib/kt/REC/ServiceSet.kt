@@ -32,8 +32,8 @@ class ServiceSet : Table() {
     /**
      * Services
      */
-    fun SERVICES(j: Int) : Service? = SERVICES(Service(), j)
-    fun SERVICES(obj: Service, j: Int) : Service? {
+    fun services(j: Int) : Service? = services(Service(), j)
+    fun services(obj: Service, j: Int) : Service? {
         val o = __offset(4)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -41,24 +41,24 @@ class ServiceSet : Table() {
             null
         }
     }
-    val SERVICESLength : Int
+    val servicesLength : Int
         get() {
             val o = __offset(4); return if (o != 0) __vector_len(o) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsServiceSet(_bb: ByteBuffer): ServiceSet = getRootAsServiceSet(_bb, ServiceSet())
         fun getRootAsServiceSet(_bb: ByteBuffer, obj: ServiceSet): ServiceSet {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createServiceSet(builder: FlatBufferBuilder, SERVICESOffset: Int) : Int {
+        fun createServiceSet(builder: FlatBufferBuilder, servicesOffset: Int) : Int {
             builder.startTable(1)
-            addSERVICES(builder, SERVICESOffset)
+            addSERVICES(builder, servicesOffset)
             return endServiceSet(builder)
         }
         fun startServiceSet(builder: FlatBufferBuilder) = builder.startTable(1)
-        fun addSERVICES(builder: FlatBufferBuilder, SERVICES: Int) = builder.addOffset(0, SERVICES, 0)
+        fun addSERVICES(builder: FlatBufferBuilder, services: Int) = builder.addOffset(0, services, 0)
         fun createServicesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {

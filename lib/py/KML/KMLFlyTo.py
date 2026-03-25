@@ -115,17 +115,23 @@ except:
 class KMLFlyToT(object):
 
     # KMLFlyToT
-    def __init__(self):
-        self.DURATION = 0.0  # type: float
-        self.FLY_TO_MODE = 0  # type: int
-        self.LOOK_AT = None  # type: Optional[KMLLookAt.KMLLookAtT]
-        self.CAMERA = None  # type: Optional[KMLCamera.KMLCameraT]
+    def __init__(
+        self,
+        DURATION = 0.0,
+        FLY_TO_MODE = 0,
+        LOOK_AT = None,
+        CAMERA = None,
+    ):
+        self.DURATION = DURATION  # type: float
+        self.FLY_TO_MODE = FLY_TO_MODE  # type: int
+        self.LOOK_AT = LOOK_AT  # type: Optional[KMLLookAt.KMLLookAtT]
+        self.CAMERA = CAMERA  # type: Optional[KMLCamera.KMLCameraT]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        kmlflyTo = KMLFlyTo()
-        kmlflyTo.Init(buf, pos)
-        return cls.InitFromObj(kmlflyTo)
+        tmpKmlflyTo = KMLFlyTo()
+        tmpKmlflyTo.Init(buf, pos)
+        return cls.InitFromObj(tmpKmlflyTo)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -133,21 +139,21 @@ class KMLFlyToT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, kmlflyTo):
+    def InitFromObj(cls, tmpKmlflyTo):
         x = KMLFlyToT()
-        x._UnPack(kmlflyTo)
+        x._UnPack(tmpKmlflyTo)
         return x
 
     # KMLFlyToT
-    def _UnPack(self, kmlflyTo):
-        if kmlflyTo is None:
+    def _UnPack(self, KMLFlyTo):
+        if KMLFlyTo is None:
             return
-        self.DURATION = kmlflyTo.DURATION()
-        self.FLY_TO_MODE = kmlflyTo.FLY_TO_MODE()
-        if kmlflyTo.LOOK_AT() is not None:
-            self.LOOK_AT = KMLLookAt.KMLLookAtT.InitFromObj(kmlflyTo.LOOK_AT())
-        if kmlflyTo.CAMERA() is not None:
-            self.CAMERA = KMLCamera.KMLCameraT.InitFromObj(kmlflyTo.CAMERA())
+        self.DURATION = KMLFlyTo.DURATION()
+        self.FLY_TO_MODE = KMLFlyTo.FLY_TO_MODE()
+        if KMLFlyTo.LOOK_AT() is not None:
+            self.LOOK_AT = KMLLookAt.KMLLookAtT.InitFromObj(KMLFlyTo.LOOK_AT())
+        if KMLFlyTo.CAMERA() is not None:
+            self.CAMERA = KMLCamera.KMLCameraT.InitFromObj(KMLFlyTo.CAMERA())
 
     # KMLFlyToT
     def Pack(self, builder):
@@ -162,5 +168,5 @@ class KMLFlyToT(object):
             KMLFlyToAddLOOK_AT(builder, LOOK_AT)
         if self.CAMERA is not None:
             KMLFlyToAddCAMERA(builder, CAMERA)
-        kmlflyTo = KMLFlyToEnd(builder)
-        return kmlflyTo
+        KMLFlyTo = KMLFlyToEnd(builder)
+        return KMLFlyTo

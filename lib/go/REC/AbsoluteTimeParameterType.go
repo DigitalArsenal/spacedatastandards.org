@@ -51,6 +51,10 @@ func (rcv *AbsoluteTimeParameterType) NAME() []byte {
 	return nil
 }
 
+func (rcv *AbsoluteTimeParameterType) Name() []byte {
+	return rcv.NAME()
+}
+
 /// Type name
 /// Short description
 func (rcv *AbsoluteTimeParameterType) SHORT_DESCRIPTION() []byte {
@@ -59,6 +63,10 @@ func (rcv *AbsoluteTimeParameterType) SHORT_DESCRIPTION() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *AbsoluteTimeParameterType) ShortDescription() []byte {
+	return rcv.SHORT_DESCRIPTION()
 }
 
 /// Short description
@@ -71,6 +79,10 @@ func (rcv *AbsoluteTimeParameterType) LONG_DESCRIPTION() []byte {
 	return nil
 }
 
+func (rcv *AbsoluteTimeParameterType) LongDescription() []byte {
+	return rcv.LONG_DESCRIPTION()
+}
+
 /// Long description
 /// Reference epoch
 func (rcv *AbsoluteTimeParameterType) EPOCH() EpochType {
@@ -81,9 +93,17 @@ func (rcv *AbsoluteTimeParameterType) EPOCH() EpochType {
 	return 2
 }
 
+func (rcv *AbsoluteTimeParameterType) Epoch() EpochType {
+	return rcv.EPOCH()
+}
+
 /// Reference epoch
 func (rcv *AbsoluteTimeParameterType) MutateEPOCH(n EpochType) bool {
 	return rcv._tab.MutateInt8Slot(10, int8(n))
+}
+
+func (rcv *AbsoluteTimeParameterType) MutateEpoch(n EpochType) bool {
+	return rcv.MutateEPOCH(n)
 }
 
 /// Custom epoch date (ISO 8601) when EPOCH=CUSTOM
@@ -93,6 +113,10 @@ func (rcv *AbsoluteTimeParameterType) EPOCH_DATE() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *AbsoluteTimeParameterType) EpochDate() []byte {
+	return rcv.EPOCH_DATE()
 }
 
 /// Custom epoch date (ISO 8601) when EPOCH=CUSTOM
@@ -110,6 +134,10 @@ func (rcv *AbsoluteTimeParameterType) DATA_ENCODING(obj *IntegerDataEncoding) *I
 	return nil
 }
 
+func (rcv *AbsoluteTimeParameterType) DataEncoding(obj *IntegerDataEncoding) *IntegerDataEncoding {
+	return rcv.DATA_ENCODING(obj)
+}
+
 /// Data encoding
 /// Time unit scale factor
 func (rcv *AbsoluteTimeParameterType) SCALE() float64 {
@@ -120,9 +148,17 @@ func (rcv *AbsoluteTimeParameterType) SCALE() float64 {
 	return 0.0
 }
 
+func (rcv *AbsoluteTimeParameterType) Scale() float64 {
+	return rcv.SCALE()
+}
+
 /// Time unit scale factor
 func (rcv *AbsoluteTimeParameterType) MutateSCALE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(16, n)
+}
+
+func (rcv *AbsoluteTimeParameterType) MutateScale(n float64) bool {
+	return rcv.MutateSCALE(n)
 }
 
 /// Time unit offset
@@ -134,9 +170,17 @@ func (rcv *AbsoluteTimeParameterType) OFFSET() float64 {
 	return 0.0
 }
 
+func (rcv *AbsoluteTimeParameterType) Offset() float64 {
+	return rcv.OFFSET()
+}
+
 /// Time unit offset
 func (rcv *AbsoluteTimeParameterType) MutateOFFSET(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(18, n)
+}
+
+func (rcv *AbsoluteTimeParameterType) MutateOffset(n float64) bool {
+	return rcv.MutateOFFSET(n)
 }
 
 /// Default alarm
@@ -153,6 +197,10 @@ func (rcv *AbsoluteTimeParameterType) DEFAULT_ALARM(obj *DefaultAlarm) *DefaultA
 	return nil
 }
 
+func (rcv *AbsoluteTimeParameterType) DefaultAlarm(obj *DefaultAlarm) *DefaultAlarm {
+	return rcv.DEFAULT_ALARM(obj)
+}
+
 /// Default alarm
 /// Context alarms
 func (rcv *AbsoluteTimeParameterType) CONTEXT_ALARMS(obj *ContextAlarm, j int) bool {
@@ -161,10 +209,17 @@ func (rcv *AbsoluteTimeParameterType) CONTEXT_ALARMS(obj *ContextAlarm, j int) b
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(ContextAlarm)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *AbsoluteTimeParameterType) ContextAlarms(obj *ContextAlarm, j int) bool {
+	return rcv.CONTEXT_ALARMS(obj, j)
 }
 
 func (rcv *AbsoluteTimeParameterType) CONTEXT_ALARMSLength() int {
@@ -175,6 +230,10 @@ func (rcv *AbsoluteTimeParameterType) CONTEXT_ALARMSLength() int {
 	return 0
 }
 
+func (rcv *AbsoluteTimeParameterType) ContextAlarmsLength() int {
+	return rcv.CONTEXT_ALARMSLength()
+}
+
 /// Context alarms
 func AbsoluteTimeParameterTypeStart(builder *flatbuffers.Builder) {
 	builder.StartObject(10)
@@ -182,35 +241,68 @@ func AbsoluteTimeParameterTypeStart(builder *flatbuffers.Builder) {
 func AbsoluteTimeParameterTypeAddNAME(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(NAME), 0)
 }
+func AbsoluteTimeParameterTypeAddName(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
+	AbsoluteTimeParameterTypeAddNAME(builder, NAME)
+}
 func AbsoluteTimeParameterTypeAddSHORT_DESCRIPTION(builder *flatbuffers.Builder, SHORT_DESCRIPTION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(SHORT_DESCRIPTION), 0)
+}
+func AbsoluteTimeParameterTypeAddShortDescription(builder *flatbuffers.Builder, SHORT_DESCRIPTION flatbuffers.UOffsetT) {
+	AbsoluteTimeParameterTypeAddSHORT_DESCRIPTION(builder, SHORT_DESCRIPTION)
 }
 func AbsoluteTimeParameterTypeAddLONG_DESCRIPTION(builder *flatbuffers.Builder, LONG_DESCRIPTION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(LONG_DESCRIPTION), 0)
 }
+func AbsoluteTimeParameterTypeAddLongDescription(builder *flatbuffers.Builder, LONG_DESCRIPTION flatbuffers.UOffsetT) {
+	AbsoluteTimeParameterTypeAddLONG_DESCRIPTION(builder, LONG_DESCRIPTION)
+}
 func AbsoluteTimeParameterTypeAddEPOCH(builder *flatbuffers.Builder, EPOCH EpochType) {
 	builder.PrependInt8Slot(3, int8(EPOCH), 2)
+}
+func AbsoluteTimeParameterTypeAddEpoch(builder *flatbuffers.Builder, EPOCH EpochType) {
+	AbsoluteTimeParameterTypeAddEPOCH(builder, EPOCH)
 }
 func AbsoluteTimeParameterTypeAddEPOCH_DATE(builder *flatbuffers.Builder, EPOCH_DATE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(EPOCH_DATE), 0)
 }
+func AbsoluteTimeParameterTypeAddEpochDate(builder *flatbuffers.Builder, EPOCH_DATE flatbuffers.UOffsetT) {
+	AbsoluteTimeParameterTypeAddEPOCH_DATE(builder, EPOCH_DATE)
+}
 func AbsoluteTimeParameterTypeAddDATA_ENCODING(builder *flatbuffers.Builder, DATA_ENCODING flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(DATA_ENCODING), 0)
+}
+func AbsoluteTimeParameterTypeAddDataEncoding(builder *flatbuffers.Builder, DATA_ENCODING flatbuffers.UOffsetT) {
+	AbsoluteTimeParameterTypeAddDATA_ENCODING(builder, DATA_ENCODING)
 }
 func AbsoluteTimeParameterTypeAddSCALE(builder *flatbuffers.Builder, SCALE float64) {
 	builder.PrependFloat64Slot(6, SCALE, 0.0)
 }
+func AbsoluteTimeParameterTypeAddScale(builder *flatbuffers.Builder, SCALE float64) {
+	AbsoluteTimeParameterTypeAddSCALE(builder, SCALE)
+}
 func AbsoluteTimeParameterTypeAddOFFSET(builder *flatbuffers.Builder, OFFSET float64) {
 	builder.PrependFloat64Slot(7, OFFSET, 0.0)
+}
+func AbsoluteTimeParameterTypeAddOffset(builder *flatbuffers.Builder, OFFSET float64) {
+	AbsoluteTimeParameterTypeAddOFFSET(builder, OFFSET)
 }
 func AbsoluteTimeParameterTypeAddDEFAULT_ALARM(builder *flatbuffers.Builder, DEFAULT_ALARM flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(DEFAULT_ALARM), 0)
 }
+func AbsoluteTimeParameterTypeAddDefaultAlarm(builder *flatbuffers.Builder, DEFAULT_ALARM flatbuffers.UOffsetT) {
+	AbsoluteTimeParameterTypeAddDEFAULT_ALARM(builder, DEFAULT_ALARM)
+}
 func AbsoluteTimeParameterTypeAddCONTEXT_ALARMS(builder *flatbuffers.Builder, CONTEXT_ALARMS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(CONTEXT_ALARMS), 0)
 }
+func AbsoluteTimeParameterTypeAddContextAlarms(builder *flatbuffers.Builder, CONTEXT_ALARMS flatbuffers.UOffsetT) {
+	AbsoluteTimeParameterTypeAddCONTEXT_ALARMS(builder, CONTEXT_ALARMS)
+}
 func AbsoluteTimeParameterTypeStartCONTEXT_ALARMSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func AbsoluteTimeParameterTypeStartContextAlarmsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return AbsoluteTimeParameterTypeStartCONTEXT_ALARMSVector(builder, numElems)
 }
 func AbsoluteTimeParameterTypeEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

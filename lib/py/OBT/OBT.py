@@ -508,6 +508,16 @@ def OBTStartAOU_DATAVector(builder, numElems):
 def StartAOU_DATAVector(builder, numElems):
     return OBTStartAOU_DATAVector(builder, numElems)
 
+def OBTCreateAOU_DATAVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateAOU_DATAVector(builder, data):
+    OBTCreateAOU_DATAVector(builder, data)
+
 def OBTAddCNTNMNT(builder, CNTNMNT):
     builder.PrependFloat64Slot(23, CNTNMNT, 0.0)
 
@@ -598,6 +608,12 @@ def OBTStartTRACK_SENSORSVector(builder, numElems):
 def StartTRACK_SENSORSVector(builder, numElems):
     return OBTStartTRACK_SENSORSVector(builder, numElems)
 
+def OBTCreateTRACK_SENSORSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateTRACK_SENSORSVector(builder, data):
+    OBTCreateTRACK_SENSORSVector(builder, data)
+
 def OBTEnd(builder):
     return builder.EndObject()
 
@@ -612,50 +628,89 @@ except:
 class OBTT(object):
 
     # OBTT
-    def __init__(self):
-        self.ID = None  # type: str
-        self.SAT_NO = 0  # type: int
-        self.ORIG_OBJECT_ID = None  # type: str
-        self.ON_ORBIT = None  # type: str
-        self.TS = None  # type: str
-        self.LAT = 0.0  # type: float
-        self.LON = 0.0  # type: float
-        self.ALT = 0.0  # type: float
-        self.SPD = 0.0  # type: float
-        self.ANG_ELEV = 0.0  # type: float
-        self.RDF_RF = 0.0  # type: float
-        self.CALL_SIGN = None  # type: str
-        self.RPT_NUM = None  # type: str
-        self.TRK_ID = None  # type: str
-        self.OBJ_IDENT = None  # type: str
-        self.IDENT_AMP = None  # type: str
-        self.SAT_STATUS = None  # type: str
-        self.OBJ_TYPE = 0  # type: int
-        self.COUNTRY_CODE = None  # type: str
-        self.DECAY = 0.0  # type: float
-        self.CHARLIE_LINE = None  # type: str
-        self.AOU_TYPE = 0  # type: int
-        self.AOU_DATA = None  # type: List[float]
-        self.CNTNMNT = 0.0  # type: float
-        self.XREF = None  # type: str
-        self.CH_XREF = None  # type: str
-        self.AMPLIFICATION = None  # type: str
-        self.IFF = None  # type: str
-        self.VEH_TYPE = None  # type: str
-        self.REINFORCED = False  # type: bool
-        self.REDUCED = False  # type: bool
-        self.HQ = False  # type: bool
-        self.DUMMY = False  # type: bool
-        self.TASK_FORCE = False  # type: bool
-        self.FEINT = False  # type: bool
-        self.INSTALLATION = False  # type: bool
-        self.TRACK_SENSORS = None  # type: List[str]
+    def __init__(
+        self,
+        ID = None,
+        SAT_NO = 0,
+        ORIG_OBJECT_ID = None,
+        ON_ORBIT = None,
+        TS = None,
+        LAT = 0.0,
+        LON = 0.0,
+        ALT = 0.0,
+        SPD = 0.0,
+        ANG_ELEV = 0.0,
+        RDF_RF = 0.0,
+        CALL_SIGN = None,
+        RPT_NUM = None,
+        TRK_ID = None,
+        OBJ_IDENT = None,
+        IDENT_AMP = None,
+        SAT_STATUS = None,
+        OBJ_TYPE = 0,
+        COUNTRY_CODE = None,
+        DECAY = 0.0,
+        CHARLIE_LINE = None,
+        AOU_TYPE = 0,
+        AOU_DATA = None,
+        CNTNMNT = 0.0,
+        XREF = None,
+        CH_XREF = None,
+        AMPLIFICATION = None,
+        IFF = None,
+        VEH_TYPE = None,
+        REINFORCED = False,
+        REDUCED = False,
+        HQ = False,
+        DUMMY = False,
+        TASK_FORCE = False,
+        FEINT = False,
+        INSTALLATION = False,
+        TRACK_SENSORS = None,
+    ):
+        self.ID = ID  # type: Optional[str]
+        self.SAT_NO = SAT_NO  # type: int
+        self.ORIG_OBJECT_ID = ORIG_OBJECT_ID  # type: Optional[str]
+        self.ON_ORBIT = ON_ORBIT  # type: Optional[str]
+        self.TS = TS  # type: Optional[str]
+        self.LAT = LAT  # type: float
+        self.LON = LON  # type: float
+        self.ALT = ALT  # type: float
+        self.SPD = SPD  # type: float
+        self.ANG_ELEV = ANG_ELEV  # type: float
+        self.RDF_RF = RDF_RF  # type: float
+        self.CALL_SIGN = CALL_SIGN  # type: Optional[str]
+        self.RPT_NUM = RPT_NUM  # type: Optional[str]
+        self.TRK_ID = TRK_ID  # type: Optional[str]
+        self.OBJ_IDENT = OBJ_IDENT  # type: Optional[str]
+        self.IDENT_AMP = IDENT_AMP  # type: Optional[str]
+        self.SAT_STATUS = SAT_STATUS  # type: Optional[str]
+        self.OBJ_TYPE = OBJ_TYPE  # type: int
+        self.COUNTRY_CODE = COUNTRY_CODE  # type: Optional[str]
+        self.DECAY = DECAY  # type: float
+        self.CHARLIE_LINE = CHARLIE_LINE  # type: Optional[str]
+        self.AOU_TYPE = AOU_TYPE  # type: int
+        self.AOU_DATA = AOU_DATA  # type: Optional[List[float]]
+        self.CNTNMNT = CNTNMNT  # type: float
+        self.XREF = XREF  # type: Optional[str]
+        self.CH_XREF = CH_XREF  # type: Optional[str]
+        self.AMPLIFICATION = AMPLIFICATION  # type: Optional[str]
+        self.IFF = IFF  # type: Optional[str]
+        self.VEH_TYPE = VEH_TYPE  # type: Optional[str]
+        self.REINFORCED = REINFORCED  # type: bool
+        self.REDUCED = REDUCED  # type: bool
+        self.HQ = HQ  # type: bool
+        self.DUMMY = DUMMY  # type: bool
+        self.TASK_FORCE = TASK_FORCE  # type: bool
+        self.FEINT = FEINT  # type: bool
+        self.INSTALLATION = INSTALLATION  # type: bool
+        self.TRACK_SENSORS = TRACK_SENSORS  # type: Optional[List[Optional[str]]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        OBT = OBT()
-        OBT.Init(buf, pos)
-        return cls.InitFromObj(OBT)
+        tmpObt = OBT()
+        tmpObt.Init(buf, pos)
+        return cls.InitFromObj(tmpObt)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -663,9 +718,9 @@ class OBTT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, OBT):
+    def InitFromObj(cls, tmpObt):
         x = OBTT()
-        x._UnPack(OBT)
+        x._UnPack(tmpObt)
         return x
 
     # OBTT

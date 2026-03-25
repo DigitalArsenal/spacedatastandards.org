@@ -8,9 +8,9 @@
 
 // Ensure the included flatbuffers.h is the same version as when this file was
 // generated, otherwise it may not be compatible.
-static_assert(FLATBUFFERS_VERSION_MAJOR == 24 &&
-              FLATBUFFERS_VERSION_MINOR == 3 &&
-              FLATBUFFERS_VERSION_REVISION == 25,
+static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
+              FLATBUFFERS_VERSION_MINOR == 12 &&
+              FLATBUFFERS_VERSION_REVISION == 19,
              "Non-compatible flatbuffers version included");
 
 struct EWR;
@@ -341,7 +341,8 @@ struct EWR FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   int64_t LAST_UPDATE_MS() const {
     return GetField<int64_t>(VT_LAST_UPDATE_MS, 0);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<uint32_t>(verifier, VT_SYSTEM_ID, 4) &&
            VerifyField<uint32_t>(verifier, VT_ENTITY_ID, 4) &&
@@ -495,14 +496,16 @@ inline bool SizePrefixedEWRBufferHasIdentifier(const void *buf) {
       buf, EWRIdentifier(), true);
 }
 
+template <bool B = false>
 inline bool VerifyEWRBuffer(
-    ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifyBuffer<EWR>(EWRIdentifier());
+    ::flatbuffers::VerifierTemplate<B> &verifier) {
+  return verifier.template VerifyBuffer<EWR>(EWRIdentifier());
 }
 
+template <bool B = false>
 inline bool VerifySizePrefixedEWRBuffer(
-    ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifySizePrefixedBuffer<EWR>(EWRIdentifier());
+    ::flatbuffers::VerifierTemplate<B> &verifier) {
+  return verifier.template VerifySizePrefixedBuffer<EWR>(EWRIdentifier());
 }
 
 inline void FinishEWRBuffer(

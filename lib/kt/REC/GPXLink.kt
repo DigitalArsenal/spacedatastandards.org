@@ -32,7 +32,7 @@ class GPXLink : Table() {
     /**
      * URL
      */
-    val HREF : String?
+    val href : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class GPXLink : Table() {
                 null
             }
         }
-    val HREFAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun HREFInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val hrefAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun hrefInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Link text
      */
-    val TEXT : String?
+    val text : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -55,12 +55,12 @@ class GPXLink : Table() {
                 null
             }
         }
-    val TEXTAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun TEXTInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val textAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun textInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * MIME type
      */
-    val TYPE : String?
+    val type : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -69,26 +69,26 @@ class GPXLink : Table() {
                 null
             }
         }
-    val TYPEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun TYPEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val typeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun typeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsGPXLink(_bb: ByteBuffer): GPXLink = getRootAsGPXLink(_bb, GPXLink())
         fun getRootAsGPXLink(_bb: ByteBuffer, obj: GPXLink): GPXLink {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createGPXLink(builder: FlatBufferBuilder, HREFOffset: Int, TEXTOffset: Int, TYPEOffset: Int) : Int {
+        fun createGPXLink(builder: FlatBufferBuilder, hrefOffset: Int, textOffset: Int, typeOffset: Int) : Int {
             builder.startTable(3)
-            addTYPE(builder, TYPEOffset)
-            addTEXT(builder, TEXTOffset)
-            addHREF(builder, HREFOffset)
+            addTYPE(builder, typeOffset)
+            addTEXT(builder, textOffset)
+            addHREF(builder, hrefOffset)
             return endGPXLink(builder)
         }
         fun startGPXLink(builder: FlatBufferBuilder) = builder.startTable(3)
-        fun addHREF(builder: FlatBufferBuilder, HREF: Int) = builder.addOffset(0, HREF, 0)
-        fun addTEXT(builder: FlatBufferBuilder, TEXT: Int) = builder.addOffset(1, TEXT, 0)
-        fun addTYPE(builder: FlatBufferBuilder, TYPE: Int) = builder.addOffset(2, TYPE, 0)
+        fun addHREF(builder: FlatBufferBuilder, href: Int) = builder.addOffset(0, href, 0)
+        fun addTEXT(builder: FlatBufferBuilder, text: Int) = builder.addOffset(1, text, 0)
+        fun addTYPE(builder: FlatBufferBuilder, type: Int) = builder.addOffset(2, type, 0)
         fun endGPXLink(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

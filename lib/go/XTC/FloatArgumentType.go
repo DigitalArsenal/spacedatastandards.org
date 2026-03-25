@@ -51,6 +51,10 @@ func (rcv *FloatArgumentType) NAME() []byte {
 	return nil
 }
 
+func (rcv *FloatArgumentType) Name() []byte {
+	return rcv.NAME()
+}
+
 /// Type name
 /// Short description
 func (rcv *FloatArgumentType) SHORT_DESCRIPTION() []byte {
@@ -59,6 +63,10 @@ func (rcv *FloatArgumentType) SHORT_DESCRIPTION() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *FloatArgumentType) ShortDescription() []byte {
+	return rcv.SHORT_DESCRIPTION()
 }
 
 /// Short description
@@ -71,6 +79,10 @@ func (rcv *FloatArgumentType) LONG_DESCRIPTION() []byte {
 	return nil
 }
 
+func (rcv *FloatArgumentType) LongDescription() []byte {
+	return rcv.LONG_DESCRIPTION()
+}
+
 /// Long description
 /// Units
 func (rcv *FloatArgumentType) UNITS(obj *Unit, j int) bool {
@@ -79,10 +91,17 @@ func (rcv *FloatArgumentType) UNITS(obj *Unit, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(Unit)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *FloatArgumentType) Units(obj *Unit, j int) bool {
+	return rcv.UNITS(obj, j)
 }
 
 func (rcv *FloatArgumentType) UNITSLength() int {
@@ -91,6 +110,10 @@ func (rcv *FloatArgumentType) UNITSLength() int {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *FloatArgumentType) UnitsLength() int {
+	return rcv.UNITSLength()
 }
 
 /// Units
@@ -108,6 +131,10 @@ func (rcv *FloatArgumentType) DATA_ENCODING(obj *FloatDataEncoding) *FloatDataEn
 	return nil
 }
 
+func (rcv *FloatArgumentType) DataEncoding(obj *FloatDataEncoding) *FloatDataEncoding {
+	return rcv.DATA_ENCODING(obj)
+}
+
 /// Data encoding
 /// Minimum valid value
 func (rcv *FloatArgumentType) VALID_MIN() float64 {
@@ -118,9 +145,17 @@ func (rcv *FloatArgumentType) VALID_MIN() float64 {
 	return 0.0
 }
 
+func (rcv *FloatArgumentType) ValidMin() float64 {
+	return rcv.VALID_MIN()
+}
+
 /// Minimum valid value
 func (rcv *FloatArgumentType) MutateVALID_MIN(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(14, n)
+}
+
+func (rcv *FloatArgumentType) MutateValidMin(n float64) bool {
+	return rcv.MutateVALID_MIN(n)
 }
 
 /// Maximum valid value
@@ -132,9 +167,17 @@ func (rcv *FloatArgumentType) VALID_MAX() float64 {
 	return 0.0
 }
 
+func (rcv *FloatArgumentType) ValidMax() float64 {
+	return rcv.VALID_MAX()
+}
+
 /// Maximum valid value
 func (rcv *FloatArgumentType) MutateVALID_MAX(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(16, n)
+}
+
+func (rcv *FloatArgumentType) MutateValidMax(n float64) bool {
+	return rcv.MutateVALID_MAX(n)
 }
 
 /// Size in bits
@@ -146,9 +189,17 @@ func (rcv *FloatArgumentType) SIZE_IN_BITS() uint16 {
 	return 0
 }
 
+func (rcv *FloatArgumentType) SizeInBits() uint16 {
+	return rcv.SIZE_IN_BITS()
+}
+
 /// Size in bits
 func (rcv *FloatArgumentType) MutateSIZE_IN_BITS(n uint16) bool {
 	return rcv._tab.MutateUint16Slot(18, n)
+}
+
+func (rcv *FloatArgumentType) MutateSizeInBits(n uint16) bool {
+	return rcv.MutateSIZE_IN_BITS(n)
 }
 
 /// Initial/default value
@@ -160,9 +211,17 @@ func (rcv *FloatArgumentType) INITIAL_VALUE() float64 {
 	return 0.0
 }
 
+func (rcv *FloatArgumentType) InitialValue() float64 {
+	return rcv.INITIAL_VALUE()
+}
+
 /// Initial/default value
 func (rcv *FloatArgumentType) MutateINITIAL_VALUE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(20, n)
+}
+
+func (rcv *FloatArgumentType) MutateInitialValue(n float64) bool {
+	return rcv.MutateINITIAL_VALUE(n)
 }
 
 func FloatArgumentTypeStart(builder *flatbuffers.Builder) {
@@ -171,32 +230,62 @@ func FloatArgumentTypeStart(builder *flatbuffers.Builder) {
 func FloatArgumentTypeAddNAME(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(NAME), 0)
 }
+func FloatArgumentTypeAddName(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
+	FloatArgumentTypeAddNAME(builder, NAME)
+}
 func FloatArgumentTypeAddSHORT_DESCRIPTION(builder *flatbuffers.Builder, SHORT_DESCRIPTION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(SHORT_DESCRIPTION), 0)
+}
+func FloatArgumentTypeAddShortDescription(builder *flatbuffers.Builder, SHORT_DESCRIPTION flatbuffers.UOffsetT) {
+	FloatArgumentTypeAddSHORT_DESCRIPTION(builder, SHORT_DESCRIPTION)
 }
 func FloatArgumentTypeAddLONG_DESCRIPTION(builder *flatbuffers.Builder, LONG_DESCRIPTION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(LONG_DESCRIPTION), 0)
 }
+func FloatArgumentTypeAddLongDescription(builder *flatbuffers.Builder, LONG_DESCRIPTION flatbuffers.UOffsetT) {
+	FloatArgumentTypeAddLONG_DESCRIPTION(builder, LONG_DESCRIPTION)
+}
 func FloatArgumentTypeAddUNITS(builder *flatbuffers.Builder, UNITS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(UNITS), 0)
+}
+func FloatArgumentTypeAddUnits(builder *flatbuffers.Builder, UNITS flatbuffers.UOffsetT) {
+	FloatArgumentTypeAddUNITS(builder, UNITS)
 }
 func FloatArgumentTypeStartUNITSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
+func FloatArgumentTypeStartUnitsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return FloatArgumentTypeStartUNITSVector(builder, numElems)
+}
 func FloatArgumentTypeAddDATA_ENCODING(builder *flatbuffers.Builder, DATA_ENCODING flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(DATA_ENCODING), 0)
+}
+func FloatArgumentTypeAddDataEncoding(builder *flatbuffers.Builder, DATA_ENCODING flatbuffers.UOffsetT) {
+	FloatArgumentTypeAddDATA_ENCODING(builder, DATA_ENCODING)
 }
 func FloatArgumentTypeAddVALID_MIN(builder *flatbuffers.Builder, VALID_MIN float64) {
 	builder.PrependFloat64Slot(5, VALID_MIN, 0.0)
 }
+func FloatArgumentTypeAddValidMin(builder *flatbuffers.Builder, VALID_MIN float64) {
+	FloatArgumentTypeAddVALID_MIN(builder, VALID_MIN)
+}
 func FloatArgumentTypeAddVALID_MAX(builder *flatbuffers.Builder, VALID_MAX float64) {
 	builder.PrependFloat64Slot(6, VALID_MAX, 0.0)
+}
+func FloatArgumentTypeAddValidMax(builder *flatbuffers.Builder, VALID_MAX float64) {
+	FloatArgumentTypeAddVALID_MAX(builder, VALID_MAX)
 }
 func FloatArgumentTypeAddSIZE_IN_BITS(builder *flatbuffers.Builder, SIZE_IN_BITS uint16) {
 	builder.PrependUint16Slot(7, SIZE_IN_BITS, 0)
 }
+func FloatArgumentTypeAddSizeInBits(builder *flatbuffers.Builder, SIZE_IN_BITS uint16) {
+	FloatArgumentTypeAddSIZE_IN_BITS(builder, SIZE_IN_BITS)
+}
 func FloatArgumentTypeAddINITIAL_VALUE(builder *flatbuffers.Builder, INITIAL_VALUE float64) {
 	builder.PrependFloat64Slot(8, INITIAL_VALUE, 0.0)
+}
+func FloatArgumentTypeAddInitialValue(builder *flatbuffers.Builder, INITIAL_VALUE float64) {
+	FloatArgumentTypeAddINITIAL_VALUE(builder, INITIAL_VALUE)
 }
 func FloatArgumentTypeEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

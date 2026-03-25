@@ -598,9 +598,9 @@ struct KMLListStyleBuilder:
     def end():
         return b_.EndObject()
 
-def KMLListStyleStartITEM_ICONSVector(b_:flatbuffers.builder, n_:int):
+def KMLListStyleStartITEMICONSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def KMLListStyleCreateITEM_ICONSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def KMLListStyleCreateITEMICONSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
@@ -901,9 +901,9 @@ struct KMLPolygonBuilder:
     def end():
         return b_.EndObject()
 
-def KMLPolygonStartINNER_BOUNDARIESVector(b_:flatbuffers.builder, n_:int):
+def KMLPolygonStartINNERBOUNDARIESVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def KMLPolygonCreateINNER_BOUNDARIESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def KMLPolygonCreateINNERBOUNDARIESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
@@ -1020,9 +1020,9 @@ struct KMLModelBuilder:
     def end():
         return b_.EndObject()
 
-def KMLModelStartRESOURCE_MAPVector(b_:flatbuffers.builder, n_:int):
+def KMLModelStartRESOURCEMAPVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def KMLModelCreateRESOURCE_MAPVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def KMLModelCreateRESOURCEMAPVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
@@ -1234,9 +1234,9 @@ def KMLMultiGeometryCreatePOINTSVector(b_:flatbuffers.builder, v_:[flatbuffers.o
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-def KMLMultiGeometryStartLINE_STRINGSVector(b_:flatbuffers.builder, n_:int):
+def KMLMultiGeometryStartLINESTRINGSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def KMLMultiGeometryCreateLINE_STRINGSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def KMLMultiGeometryCreateLINESTRINGSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
@@ -1248,16 +1248,16 @@ def KMLMultiGeometryCreatePOLYGONSVector(b_:flatbuffers.builder, v_:[flatbuffers
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-def KMLMultiGeometryStartMULTI_GEOMETRIESVector(b_:flatbuffers.builder, n_:int):
+def KMLMultiGeometryStartMULTIGEOMETRIESVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def KMLMultiGeometryCreateMULTI_GEOMETRIESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def KMLMultiGeometryCreateMULTIGEOMETRIESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-def KMLMultiGeometryStartLINEAR_RINGSVector(b_:flatbuffers.builder, n_:int):
+def KMLMultiGeometryStartLINEARRINGSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def KMLMultiGeometryCreateLINEAR_RINGSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def KMLMultiGeometryCreateLINEARRINGSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
@@ -1276,9 +1276,9 @@ def KMLMultiGeometryCreateTRACKSVector(b_:flatbuffers.builder, v_:[flatbuffers.o
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-def KMLMultiGeometryStartMULTI_TRACKSVector(b_:flatbuffers.builder, n_:int):
+def KMLMultiGeometryStartMULTITRACKSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def KMLMultiGeometryCreateMULTI_TRACKSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def KMLMultiGeometryCreateMULTITRACKSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
@@ -1422,9 +1422,9 @@ struct KMLSchemaBuilder:
     def end():
         return b_.EndObject()
 
-def KMLSchemaStartSIMPLE_FIELDSVector(b_:flatbuffers.builder, n_:int):
+def KMLSchemaStartSIMPLEFIELDSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def KMLSchemaCreateSIMPLE_FIELDSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def KMLSchemaCreateSIMPLEFIELDSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
@@ -1481,9 +1481,9 @@ struct KMLSchemaDataBuilder:
     def end():
         return b_.EndObject()
 
-def KMLSchemaDataStartSIMPLE_DATAVector(b_:flatbuffers.builder, n_:int):
+def KMLSchemaDataStartSIMPLEDATAVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def KMLSchemaDataCreateSIMPLE_DATAVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def KMLSchemaDataCreateSIMPLEDATAVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
@@ -2754,9 +2754,9 @@ struct KMLPlacemarkBuilder:
     def end():
         return b_.EndObject()
 
-def KMLPlacemarkStartEXTENDED_DATAVector(b_:flatbuffers.builder, n_:int):
+def KMLPlacemarkStartEXTENDEDDATAVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def KMLPlacemarkCreateEXTENDED_DATAVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def KMLPlacemarkCreateEXTENDEDDATAVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
@@ -2933,16 +2933,16 @@ def KMLFolderCreateFOLDERSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-def KMLFolderStartNETWORK_LINKSVector(b_:flatbuffers.builder, n_:int):
+def KMLFolderStartNETWORKLINKSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def KMLFolderCreateNETWORK_LINKSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def KMLFolderCreateNETWORKLINKSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-def KMLFolderStartGROUND_OVERLAYSVector(b_:flatbuffers.builder, n_:int):
+def KMLFolderStartGROUNDOVERLAYSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def KMLFolderCreateGROUND_OVERLAYSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def KMLFolderCreateGROUNDOVERLAYSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
@@ -2954,23 +2954,23 @@ def KMLFolderCreateSTYLESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset])
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-def KMLFolderStartSTYLE_MAPSVector(b_:flatbuffers.builder, n_:int):
+def KMLFolderStartSTYLEMAPSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def KMLFolderCreateSTYLE_MAPSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def KMLFolderCreateSTYLEMAPSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-def KMLFolderStartSCREEN_OVERLAYSVector(b_:flatbuffers.builder, n_:int):
+def KMLFolderStartSCREENOVERLAYSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def KMLFolderCreateSCREEN_OVERLAYSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def KMLFolderCreateSCREENOVERLAYSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-def KMLFolderStartPHOTO_OVERLAYSVector(b_:flatbuffers.builder, n_:int):
+def KMLFolderStartPHOTOOVERLAYSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def KMLFolderCreatePHOTO_OVERLAYSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def KMLFolderCreatePHOTOOVERLAYSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
@@ -2982,9 +2982,9 @@ def KMLFolderCreateTOURSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-def KMLFolderStartEXTENDED_DATAVector(b_:flatbuffers.builder, n_:int):
+def KMLFolderStartEXTENDEDDATAVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def KMLFolderCreateEXTENDED_DATAVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def KMLFolderCreateEXTENDEDDATAVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
@@ -3120,9 +3120,9 @@ def KMLCreateSTYLESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-def KMLStartSTYLE_MAPSVector(b_:flatbuffers.builder, n_:int):
+def KMLStartSTYLEMAPSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def KMLCreateSTYLE_MAPSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def KMLCreateSTYLEMAPSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
@@ -3141,16 +3141,16 @@ def KMLCreateFOLDERSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-def KMLStartNETWORK_LINKSVector(b_:flatbuffers.builder, n_:int):
+def KMLStartNETWORKLINKSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def KMLCreateNETWORK_LINKSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def KMLCreateNETWORKLINKSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-def KMLStartGROUND_OVERLAYSVector(b_:flatbuffers.builder, n_:int):
+def KMLStartGROUNDOVERLAYSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def KMLCreateGROUND_OVERLAYSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def KMLCreateGROUNDOVERLAYSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
@@ -3162,16 +3162,16 @@ def KMLCreateSCHEMASVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-def KMLStartSCREEN_OVERLAYSVector(b_:flatbuffers.builder, n_:int):
+def KMLStartSCREENOVERLAYSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def KMLCreateSCREEN_OVERLAYSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def KMLCreateSCREENOVERLAYSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-def KMLStartPHOTO_OVERLAYSVector(b_:flatbuffers.builder, n_:int):
+def KMLStartPHOTOOVERLAYSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def KMLCreatePHOTO_OVERLAYSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def KMLCreatePHOTOOVERLAYSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)

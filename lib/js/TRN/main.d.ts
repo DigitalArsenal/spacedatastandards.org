@@ -1,5 +1,5 @@
-export { LandCoverType } from './LandCoverType.js';
-export { TRN, TRNT } from './TRN.js';
-export { TerrainDataSource } from './TerrainDataSource.js';
-export { TerrainInterpolation } from './TerrainInterpolation.js';
+export * from './LandCoverType.js';
+export * from './TerrainDataSource.js';
+export * from './TerrainInterpolation.js';
+export * from './TRN.js';
 //# sourceMappingURL=main.d.ts.map

@@ -845,6 +845,16 @@ def MSTStartVECTORSVector(builder, numElems):
 def StartVECTORSVector(builder, numElems):
     return MSTStartVECTORSVector(builder, numElems)
 
+def MSTCreateVECTORSVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateVECTORSVector(builder, data):
+    MSTCreateVECTORSVector(builder, data)
+
 def MSTAddAOU_RPT(builder, AOU_RPT):
     builder.PrependUOffsetTRelativeSlot(50, flatbuffers.number_types.UOffsetTFlags.py_type(AOU_RPT), 0)
 
@@ -856,6 +866,16 @@ def MSTStartAOU_RPTVector(builder, numElems):
 
 def StartAOU_RPTVector(builder, numElems):
     return MSTStartAOU_RPTVector(builder, numElems)
+
+def MSTCreateAOU_RPTVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateAOU_RPTVector(builder, data):
+    MSTCreateAOU_RPTVector(builder, data)
 
 def MSTAddLAUNCH_AOU(builder, LAUNCH_AOU):
     builder.PrependUOffsetTRelativeSlot(51, flatbuffers.number_types.UOffsetTFlags.py_type(LAUNCH_AOU), 0)
@@ -869,6 +889,16 @@ def MSTStartLAUNCH_AOUVector(builder, numElems):
 def StartLAUNCH_AOUVector(builder, numElems):
     return MSTStartLAUNCH_AOUVector(builder, numElems)
 
+def MSTCreateLAUNCH_AOUVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateLAUNCH_AOUVector(builder, data):
+    MSTCreateLAUNCH_AOUVector(builder, data)
+
 def MSTAddIMPACT_AOU(builder, IMPACT_AOU):
     builder.PrependUOffsetTRelativeSlot(52, flatbuffers.number_types.UOffsetTFlags.py_type(IMPACT_AOU), 0)
 
@@ -880,6 +910,16 @@ def MSTStartIMPACT_AOUVector(builder, numElems):
 
 def StartIMPACT_AOUVector(builder, numElems):
     return MSTStartIMPACT_AOUVector(builder, numElems)
+
+def MSTCreateIMPACT_AOUVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateIMPACT_AOUVector(builder, data):
+    MSTCreateIMPACT_AOUVector(builder, data)
 
 def MSTEnd(builder):
     return builder.EndObject()
@@ -895,66 +935,121 @@ except:
 class MSTT(object):
 
     # MSTT
-    def __init__(self):
-        self.ID = None  # type: str
-        self.MSG_TYPE = None  # type: str
-        self.MSG_SUB_TYPE = None  # type: str
-        self.MSG_CREATE_DATE = None  # type: str
-        self.ENVIRONMENT = 0  # type: int
-        self.OBJ_TYPE = None  # type: str
-        self.OBJ_TYPE_CONF = 0  # type: int
-        self.OBJ_PLAT = None  # type: str
-        self.OBJ_IDENT = None  # type: str
-        self.SPACE_AMP = None  # type: str
-        self.SPACE_AMP_CONF = 0  # type: int
-        self.OBJ_ACT = None  # type: str
-        self.SPACE_SPEC_TYPE = None  # type: str
-        self.ACFT_SUB_TYPE = None  # type: str
-        self.NAME = None  # type: str
-        self.CALL_SIGN = None  # type: str
-        self.LOST_TRK_IND = False  # type: bool
-        self.TRACK_ID = None  # type: str
-        self.PARENT_TRACK_ID = None  # type: str
-        self.MUID_SRC_TRK = None  # type: str
-        self.MUID_SRC = None  # type: str
-        self.ALERT = None  # type: str
-        self.MSL_STATUS = 0  # type: int
-        self.TS = None  # type: str
-        self.AOU_RPT_TYPE = 0  # type: int
-        self.CONTAINMENT = 0.0  # type: float
-        self.TRK_CONF = 0.0  # type: float
-        self.TRK_QUAL = 0  # type: int
-        self.ANG_ELEV = 0.0  # type: float
-        self.SEN_MODE = None  # type: str
-        self.INFO_SOURCE = None  # type: str
-        self.BOOSTING = False  # type: bool
-        self.POLAR_SING_LOC_LAT = 0.0  # type: float
-        self.POLAR_SING_LOC_LON = 0.0  # type: float
-        self.EMG_IND = False  # type: bool
-        self.DROP_PT_IND = False  # type: bool
-        self.LAUNCH_TIME = None  # type: str
-        self.LAUNCH_LAT = 0.0  # type: float
-        self.LAUNCH_LON = 0.0  # type: float
-        self.AZ_CORR = 0.0  # type: float
-        self.BURNOUT_ALT = 0.0  # type: float
-        self.LAUNCH_AOU_TYPE = 0  # type: int
-        self.IMPACT_TIME = None  # type: str
-        self.IMPACT_LAT = 0.0  # type: float
-        self.IMPACT_LON = 0.0  # type: float
-        self.IMPACT_AOU_TYPE = 0  # type: int
-        self.VECTOR_START_TIME = None  # type: str
-        self.VECTOR_STEP_SIZE = 0.0  # type: float
-        self.VECTOR_COMPONENTS = 6  # type: int
-        self.VECTORS = None  # type: List[float]
-        self.AOU_RPT = None  # type: List[float]
-        self.LAUNCH_AOU = None  # type: List[float]
-        self.IMPACT_AOU = None  # type: List[float]
+    def __init__(
+        self,
+        ID = None,
+        MSG_TYPE = None,
+        MSG_SUB_TYPE = None,
+        MSG_CREATE_DATE = None,
+        ENVIRONMENT = 0,
+        OBJ_TYPE = None,
+        OBJ_TYPE_CONF = 0,
+        OBJ_PLAT = None,
+        OBJ_IDENT = None,
+        SPACE_AMP = None,
+        SPACE_AMP_CONF = 0,
+        OBJ_ACT = None,
+        SPACE_SPEC_TYPE = None,
+        ACFT_SUB_TYPE = None,
+        NAME = None,
+        CALL_SIGN = None,
+        LOST_TRK_IND = False,
+        TRACK_ID = None,
+        PARENT_TRACK_ID = None,
+        MUID_SRC_TRK = None,
+        MUID_SRC = None,
+        ALERT = None,
+        MSL_STATUS = 0,
+        TS = None,
+        AOU_RPT_TYPE = 0,
+        CONTAINMENT = 0.0,
+        TRK_CONF = 0.0,
+        TRK_QUAL = 0,
+        ANG_ELEV = 0.0,
+        SEN_MODE = None,
+        INFO_SOURCE = None,
+        BOOSTING = False,
+        POLAR_SING_LOC_LAT = 0.0,
+        POLAR_SING_LOC_LON = 0.0,
+        EMG_IND = False,
+        DROP_PT_IND = False,
+        LAUNCH_TIME = None,
+        LAUNCH_LAT = 0.0,
+        LAUNCH_LON = 0.0,
+        AZ_CORR = 0.0,
+        BURNOUT_ALT = 0.0,
+        LAUNCH_AOU_TYPE = 0,
+        IMPACT_TIME = None,
+        IMPACT_LAT = 0.0,
+        IMPACT_LON = 0.0,
+        IMPACT_AOU_TYPE = 0,
+        VECTOR_START_TIME = None,
+        VECTOR_STEP_SIZE = 0.0,
+        VECTOR_COMPONENTS = 6,
+        VECTORS = None,
+        AOU_RPT = None,
+        LAUNCH_AOU = None,
+        IMPACT_AOU = None,
+    ):
+        self.ID = ID  # type: Optional[str]
+        self.MSG_TYPE = MSG_TYPE  # type: Optional[str]
+        self.MSG_SUB_TYPE = MSG_SUB_TYPE  # type: Optional[str]
+        self.MSG_CREATE_DATE = MSG_CREATE_DATE  # type: Optional[str]
+        self.ENVIRONMENT = ENVIRONMENT  # type: int
+        self.OBJ_TYPE = OBJ_TYPE  # type: Optional[str]
+        self.OBJ_TYPE_CONF = OBJ_TYPE_CONF  # type: int
+        self.OBJ_PLAT = OBJ_PLAT  # type: Optional[str]
+        self.OBJ_IDENT = OBJ_IDENT  # type: Optional[str]
+        self.SPACE_AMP = SPACE_AMP  # type: Optional[str]
+        self.SPACE_AMP_CONF = SPACE_AMP_CONF  # type: int
+        self.OBJ_ACT = OBJ_ACT  # type: Optional[str]
+        self.SPACE_SPEC_TYPE = SPACE_SPEC_TYPE  # type: Optional[str]
+        self.ACFT_SUB_TYPE = ACFT_SUB_TYPE  # type: Optional[str]
+        self.NAME = NAME  # type: Optional[str]
+        self.CALL_SIGN = CALL_SIGN  # type: Optional[str]
+        self.LOST_TRK_IND = LOST_TRK_IND  # type: bool
+        self.TRACK_ID = TRACK_ID  # type: Optional[str]
+        self.PARENT_TRACK_ID = PARENT_TRACK_ID  # type: Optional[str]
+        self.MUID_SRC_TRK = MUID_SRC_TRK  # type: Optional[str]
+        self.MUID_SRC = MUID_SRC  # type: Optional[str]
+        self.ALERT = ALERT  # type: Optional[str]
+        self.MSL_STATUS = MSL_STATUS  # type: int
+        self.TS = TS  # type: Optional[str]
+        self.AOU_RPT_TYPE = AOU_RPT_TYPE  # type: int
+        self.CONTAINMENT = CONTAINMENT  # type: float
+        self.TRK_CONF = TRK_CONF  # type: float
+        self.TRK_QUAL = TRK_QUAL  # type: int
+        self.ANG_ELEV = ANG_ELEV  # type: float
+        self.SEN_MODE = SEN_MODE  # type: Optional[str]
+        self.INFO_SOURCE = INFO_SOURCE  # type: Optional[str]
+        self.BOOSTING = BOOSTING  # type: bool
+        self.POLAR_SING_LOC_LAT = POLAR_SING_LOC_LAT  # type: float
+        self.POLAR_SING_LOC_LON = POLAR_SING_LOC_LON  # type: float
+        self.EMG_IND = EMG_IND  # type: bool
+        self.DROP_PT_IND = DROP_PT_IND  # type: bool
+        self.LAUNCH_TIME = LAUNCH_TIME  # type: Optional[str]
+        self.LAUNCH_LAT = LAUNCH_LAT  # type: float
+        self.LAUNCH_LON = LAUNCH_LON  # type: float
+        self.AZ_CORR = AZ_CORR  # type: float
+        self.BURNOUT_ALT = BURNOUT_ALT  # type: float
+        self.LAUNCH_AOU_TYPE = LAUNCH_AOU_TYPE  # type: int
+        self.IMPACT_TIME = IMPACT_TIME  # type: Optional[str]
+        self.IMPACT_LAT = IMPACT_LAT  # type: float
+        self.IMPACT_LON = IMPACT_LON  # type: float
+        self.IMPACT_AOU_TYPE = IMPACT_AOU_TYPE  # type: int
+        self.VECTOR_START_TIME = VECTOR_START_TIME  # type: Optional[str]
+        self.VECTOR_STEP_SIZE = VECTOR_STEP_SIZE  # type: float
+        self.VECTOR_COMPONENTS = VECTOR_COMPONENTS  # type: int
+        self.VECTORS = VECTORS  # type: Optional[List[float]]
+        self.AOU_RPT = AOU_RPT  # type: Optional[List[float]]
+        self.LAUNCH_AOU = LAUNCH_AOU  # type: Optional[List[float]]
+        self.IMPACT_AOU = IMPACT_AOU  # type: Optional[List[float]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        MST = MST()
-        MST.Init(buf, pos)
-        return cls.InitFromObj(MST)
+        tmpMst = MST()
+        tmpMst.Init(buf, pos)
+        return cls.InitFromObj(tmpMst)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -962,9 +1057,9 @@ class MSTT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, MST):
+    def InitFromObj(cls, tmpMst):
         x = MSTT()
-        x._UnPack(MST)
+        x._UnPack(tmpMst)
         return x
 
     # MSTT

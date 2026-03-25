@@ -29,62 +29,62 @@ class COM : Table() {
         __init(_i, _bb)
         return this
     }
-    val SYSTEM_ID : UInt
+    val systemId : UInt
         get() {
             val o = __offset(4)
             return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
         }
-    val ENTITY_ID : UInt
+    val entityId : UInt
         get() {
             val o = __offset(6)
             return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
         }
-    val IS_TRANSMITTING : Boolean
+    val isTransmitting : Boolean
         get() {
             val o = __offset(8)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
-    val IS_RECEIVING : Boolean
+    val isReceiving : Boolean
         get() {
             val o = __offset(10)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
-    val CURRENT_FREQUENCY_HZ : Double
+    val currentFrequencyHz : Double
         get() {
             val o = __offset(12)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val CURRENT_POWER_WATTS : Double
+    val currentPowerWatts : Double
         get() {
             val o = __offset(14)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val CURRENT_DATA_RATE_BPS : Double
+    val currentDataRateBps : Double
         get() {
             val o = __offset(16)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val MESSAGES_SENT : ULong
+    val messagesSent : ULong
         get() {
             val o = __offset(18)
             return if(o != 0) bb.getLong(o + bb_pos).toULong() else 0UL
         }
-    val MESSAGES_RECEIVED : ULong
+    val messagesReceived : ULong
         get() {
             val o = __offset(20)
             return if(o != 0) bb.getLong(o + bb_pos).toULong() else 0UL
         }
-    val BYTES_SENT : ULong
+    val bytesSent : ULong
         get() {
             val o = __offset(22)
             return if(o != 0) bb.getLong(o + bb_pos).toULong() else 0UL
         }
-    val BYTES_RECEIVED : ULong
+    val bytesReceived : ULong
         get() {
             val o = __offset(24)
             return if(o != 0) bb.getLong(o + bb_pos).toULong() else 0UL
         }
-    fun CONNECTED_NODES(j: Int) : UInt {
+    fun connectedNodes(j: Int) : UInt {
         val o = __offset(26)
         return if (o != 0) {
             bb.getInt(__vector(o) + j * 4).toUInt()
@@ -92,13 +92,13 @@ class COM : Table() {
             0u
         }
     }
-    val CONNECTED_NODESLength : Int
+    val connectedNodesLength : Int
         get() {
             val o = __offset(26); return if (o != 0) __vector_len(o) else 0
         }
-    val CONNECTED_NODESAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(26, 4)
-    fun CONNECTED_NODESInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 26, 4)
-    fun ACTIVE_LINKS(j: Int) : Byte {
+    val connectedNodesAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(26, 4)
+    fun connectedNodesInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 26, 4)
+    fun activeLinks(j: Int) : Byte {
         val o = __offset(28)
         return if (o != 0) {
             bb.get(__vector(o) + j * 1)
@@ -106,56 +106,56 @@ class COM : Table() {
             0
         }
     }
-    val ACTIVE_LINKSLength : Int
+    val activeLinksLength : Int
         get() {
             val o = __offset(28); return if (o != 0) __vector_len(o) else 0
         }
-    val ACTIVE_LINKSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(28, 1)
-    fun ACTIVE_LINKSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 28, 1)
-    val LAST_UPDATE_MS : Long
+    val activeLinksAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(28, 1)
+    fun activeLinksInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 28, 1)
+    val lastUpdateMs : Long
         get() {
             val o = __offset(30)
             return if(o != 0) bb.getLong(o + bb_pos) else 0L
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsCOM(_bb: ByteBuffer): COM = getRootAsCOM(_bb, COM())
         fun getRootAsCOM(_bb: ByteBuffer, obj: COM): COM {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun COMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$COM")
-        fun createCOM(builder: FlatBufferBuilder, SYSTEM_ID: UInt, ENTITY_ID: UInt, IS_TRANSMITTING: Boolean, IS_RECEIVING: Boolean, CURRENT_FREQUENCY_HZ: Double, CURRENT_POWER_WATTS: Double, CURRENT_DATA_RATE_BPS: Double, MESSAGES_SENT: ULong, MESSAGES_RECEIVED: ULong, BYTES_SENT: ULong, BYTES_RECEIVED: ULong, CONNECTED_NODESOffset: Int, ACTIVE_LINKSOffset: Int, LAST_UPDATE_MS: Long) : Int {
+        fun createCOM(builder: FlatBufferBuilder, systemId: UInt, entityId: UInt, isTransmitting: Boolean, isReceiving: Boolean, currentFrequencyHz: Double, currentPowerWatts: Double, currentDataRateBps: Double, messagesSent: ULong, messagesReceived: ULong, bytesSent: ULong, bytesReceived: ULong, connectedNodesOffset: Int, activeLinksOffset: Int, lastUpdateMs: Long) : Int {
             builder.startTable(14)
-            addLAST_UPDATE_MS(builder, LAST_UPDATE_MS)
-            addBYTES_RECEIVED(builder, BYTES_RECEIVED)
-            addBYTES_SENT(builder, BYTES_SENT)
-            addMESSAGES_RECEIVED(builder, MESSAGES_RECEIVED)
-            addMESSAGES_SENT(builder, MESSAGES_SENT)
-            addCURRENT_DATA_RATE_BPS(builder, CURRENT_DATA_RATE_BPS)
-            addCURRENT_POWER_WATTS(builder, CURRENT_POWER_WATTS)
-            addCURRENT_FREQUENCY_HZ(builder, CURRENT_FREQUENCY_HZ)
-            addACTIVE_LINKS(builder, ACTIVE_LINKSOffset)
-            addCONNECTED_NODES(builder, CONNECTED_NODESOffset)
-            addENTITY_ID(builder, ENTITY_ID)
-            addSYSTEM_ID(builder, SYSTEM_ID)
-            addIS_RECEIVING(builder, IS_RECEIVING)
-            addIS_TRANSMITTING(builder, IS_TRANSMITTING)
+            addLASTUPDATEMS(builder, lastUpdateMs)
+            addBYTESRECEIVED(builder, bytesReceived)
+            addBYTESSENT(builder, bytesSent)
+            addMESSAGESRECEIVED(builder, messagesReceived)
+            addMESSAGESSENT(builder, messagesSent)
+            addCURRENTDATARATEBPS(builder, currentDataRateBps)
+            addCURRENTPOWERWATTS(builder, currentPowerWatts)
+            addCURRENTFREQUENCYHZ(builder, currentFrequencyHz)
+            addACTIVELINKS(builder, activeLinksOffset)
+            addCONNECTEDNODES(builder, connectedNodesOffset)
+            addENTITYID(builder, entityId)
+            addSYSTEMID(builder, systemId)
+            addISRECEIVING(builder, isReceiving)
+            addISTRANSMITTING(builder, isTransmitting)
             return endCOM(builder)
         }
         fun startCOM(builder: FlatBufferBuilder) = builder.startTable(14)
-        fun addSYSTEM_ID(builder: FlatBufferBuilder, SYSTEM_ID: UInt) = builder.addInt(0, SYSTEM_ID.toInt(), 0)
-        fun addENTITY_ID(builder: FlatBufferBuilder, ENTITY_ID: UInt) = builder.addInt(1, ENTITY_ID.toInt(), 0)
-        fun addIS_TRANSMITTING(builder: FlatBufferBuilder, IS_TRANSMITTING: Boolean) = builder.addBoolean(2, IS_TRANSMITTING, false)
-        fun addIS_RECEIVING(builder: FlatBufferBuilder, IS_RECEIVING: Boolean) = builder.addBoolean(3, IS_RECEIVING, false)
-        fun addCURRENT_FREQUENCY_HZ(builder: FlatBufferBuilder, CURRENT_FREQUENCY_HZ: Double) = builder.addDouble(4, CURRENT_FREQUENCY_HZ, 0.0)
-        fun addCURRENT_POWER_WATTS(builder: FlatBufferBuilder, CURRENT_POWER_WATTS: Double) = builder.addDouble(5, CURRENT_POWER_WATTS, 0.0)
-        fun addCURRENT_DATA_RATE_BPS(builder: FlatBufferBuilder, CURRENT_DATA_RATE_BPS: Double) = builder.addDouble(6, CURRENT_DATA_RATE_BPS, 0.0)
-        fun addMESSAGES_SENT(builder: FlatBufferBuilder, MESSAGES_SENT: ULong) = builder.addLong(7, MESSAGES_SENT.toLong(), 0)
-        fun addMESSAGES_RECEIVED(builder: FlatBufferBuilder, MESSAGES_RECEIVED: ULong) = builder.addLong(8, MESSAGES_RECEIVED.toLong(), 0)
-        fun addBYTES_SENT(builder: FlatBufferBuilder, BYTES_SENT: ULong) = builder.addLong(9, BYTES_SENT.toLong(), 0)
-        fun addBYTES_RECEIVED(builder: FlatBufferBuilder, BYTES_RECEIVED: ULong) = builder.addLong(10, BYTES_RECEIVED.toLong(), 0)
-        fun addCONNECTED_NODES(builder: FlatBufferBuilder, CONNECTED_NODES: Int) = builder.addOffset(11, CONNECTED_NODES, 0)
+        fun addSYSTEMID(builder: FlatBufferBuilder, systemId: UInt) = builder.addInt(0, systemId.toInt(), 0)
+        fun addENTITYID(builder: FlatBufferBuilder, entityId: UInt) = builder.addInt(1, entityId.toInt(), 0)
+        fun addISTRANSMITTING(builder: FlatBufferBuilder, isTransmitting: Boolean) = builder.addBoolean(2, isTransmitting, false)
+        fun addISRECEIVING(builder: FlatBufferBuilder, isReceiving: Boolean) = builder.addBoolean(3, isReceiving, false)
+        fun addCURRENTFREQUENCYHZ(builder: FlatBufferBuilder, currentFrequencyHz: Double) = builder.addDouble(4, currentFrequencyHz, 0.0)
+        fun addCURRENTPOWERWATTS(builder: FlatBufferBuilder, currentPowerWatts: Double) = builder.addDouble(5, currentPowerWatts, 0.0)
+        fun addCURRENTDATARATEBPS(builder: FlatBufferBuilder, currentDataRateBps: Double) = builder.addDouble(6, currentDataRateBps, 0.0)
+        fun addMESSAGESSENT(builder: FlatBufferBuilder, messagesSent: ULong) = builder.addLong(7, messagesSent.toLong(), 0)
+        fun addMESSAGESRECEIVED(builder: FlatBufferBuilder, messagesReceived: ULong) = builder.addLong(8, messagesReceived.toLong(), 0)
+        fun addBYTESSENT(builder: FlatBufferBuilder, bytesSent: ULong) = builder.addLong(9, bytesSent.toLong(), 0)
+        fun addBYTESRECEIVED(builder: FlatBufferBuilder, bytesReceived: ULong) = builder.addLong(10, bytesReceived.toLong(), 0)
+        fun addCONNECTEDNODES(builder: FlatBufferBuilder, connectedNodes: Int) = builder.addOffset(11, connectedNodes, 0)
         @kotlin.ExperimentalUnsignedTypes
         fun createConnectedNodesVector(builder: FlatBufferBuilder, data: UIntArray) : Int {
             builder.startVector(4, data.size, 4)
@@ -165,7 +165,7 @@ class COM : Table() {
             return builder.endVector()
         }
         fun startConnectedNodesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addACTIVE_LINKS(builder: FlatBufferBuilder, ACTIVE_LINKS: Int) = builder.addOffset(12, ACTIVE_LINKS, 0)
+        fun addACTIVELINKS(builder: FlatBufferBuilder, activeLinks: Int) = builder.addOffset(12, activeLinks, 0)
         fun createActiveLinksVector(builder: FlatBufferBuilder, data: ByteArray) : Int {
             builder.startVector(1, data.size, 1)
             for (i in data.size - 1 downTo 0) {
@@ -174,7 +174,7 @@ class COM : Table() {
             return builder.endVector()
         }
         fun startActiveLinksVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(1, numElems, 1)
-        fun addLAST_UPDATE_MS(builder: FlatBufferBuilder, LAST_UPDATE_MS: Long) = builder.addLong(13, LAST_UPDATE_MS, 0L)
+        fun addLASTUPDATEMS(builder: FlatBufferBuilder, lastUpdateMs: Long) = builder.addLong(13, lastUpdateMs, 0L)
         fun endCOM(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

@@ -11,7 +11,7 @@ public struct TRN : IFlatbufferObject
 {
   private Table __p;
   public ByteBuffer ByteBuffer { get { return __p.bb; } }
-  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_24_3_25(); }
+  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_25_12_19(); }
   public static TRN GetRootAsTRN(ByteBuffer _bb) { return GetRootAsTRN(_bb, new TRN()); }
   public static TRN GetRootAsTRN(ByteBuffer _bb, TRN obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
   public static bool TRNBufferHasIdentifier(ByteBuffer _bb) { return Table.__has_identifier(_bb, "$TRN"); }

@@ -63,9 +63,17 @@ func (rcv *OSM) IS_STABLE() bool {
 	return false
 }
 
+func (rcv *OSM) IsStable() bool {
+	return rcv.IS_STABLE()
+}
+
 /// Indicates whether the observation is stable or not
 func (rcv *OSM) MutateIS_STABLE(n bool) bool {
 	return rcv._tab.MutateBoolSlot(4, n)
+}
+
+func (rcv *OSM) MutateIsStable(n bool) bool {
+	return rcv.MutateIS_STABLE(n)
 }
 
 /// The number of observations
@@ -77,9 +85,17 @@ func (rcv *OSM) NUM_OBS() int32 {
 	return 0
 }
 
+func (rcv *OSM) NumObs() int32 {
+	return rcv.NUM_OBS()
+}
+
 /// The number of observations
 func (rcv *OSM) MutateNUM_OBS(n int32) bool {
 	return rcv._tab.MutateInt32Slot(6, n)
+}
+
+func (rcv *OSM) MutateNumObs(n int32) bool {
+	return rcv.MutateNUM_OBS(n)
 }
 
 /// Unique identifier for the object being observed
@@ -89,6 +105,10 @@ func (rcv *OSM) OBJECT_ID() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *OSM) ObjectId() []byte {
+	return rcv.OBJECT_ID()
 }
 
 /// Unique identifier for the object being observed
@@ -101,6 +121,10 @@ func (rcv *OSM) ID_SENSOR() []byte {
 	return nil
 }
 
+func (rcv *OSM) IdSensor() []byte {
+	return rcv.ID_SENSOR()
+}
+
 /// Identifier of the sensor
 /// Timestamp of data creation
 func (rcv *OSM) PASS_START() []byte {
@@ -109,6 +133,10 @@ func (rcv *OSM) PASS_START() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *OSM) PassStart() []byte {
+	return rcv.PASS_START()
 }
 
 /// Timestamp of data creation
@@ -121,9 +149,17 @@ func (rcv *OSM) PASS_DURATION() int32 {
 	return 0
 }
 
+func (rcv *OSM) PassDuration() int32 {
+	return rcv.PASS_DURATION()
+}
+
 /// Duration of the observation pass in seconds
 func (rcv *OSM) MutatePASS_DURATION(n int32) bool {
 	return rcv._tab.MutateInt32Slot(14, n)
+}
+
+func (rcv *OSM) MutatePassDuration(n int32) bool {
+	return rcv.MutatePASS_DURATION(n)
 }
 
 func OSMStart(builder *flatbuffers.Builder) {
@@ -132,20 +168,38 @@ func OSMStart(builder *flatbuffers.Builder) {
 func OSMAddIS_STABLE(builder *flatbuffers.Builder, IS_STABLE bool) {
 	builder.PrependBoolSlot(0, IS_STABLE, false)
 }
+func OSMAddIsStable(builder *flatbuffers.Builder, IS_STABLE bool) {
+	OSMAddIS_STABLE(builder, IS_STABLE)
+}
 func OSMAddNUM_OBS(builder *flatbuffers.Builder, NUM_OBS int32) {
 	builder.PrependInt32Slot(1, NUM_OBS, 0)
+}
+func OSMAddNumObs(builder *flatbuffers.Builder, NUM_OBS int32) {
+	OSMAddNUM_OBS(builder, NUM_OBS)
 }
 func OSMAddOBJECT_ID(builder *flatbuffers.Builder, OBJECT_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(OBJECT_ID), 0)
 }
+func OSMAddObjectId(builder *flatbuffers.Builder, OBJECT_ID flatbuffers.UOffsetT) {
+	OSMAddOBJECT_ID(builder, OBJECT_ID)
+}
 func OSMAddID_SENSOR(builder *flatbuffers.Builder, ID_SENSOR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(ID_SENSOR), 0)
+}
+func OSMAddIdSensor(builder *flatbuffers.Builder, ID_SENSOR flatbuffers.UOffsetT) {
+	OSMAddID_SENSOR(builder, ID_SENSOR)
 }
 func OSMAddPASS_START(builder *flatbuffers.Builder, PASS_START flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(PASS_START), 0)
 }
+func OSMAddPassStart(builder *flatbuffers.Builder, PASS_START flatbuffers.UOffsetT) {
+	OSMAddPASS_START(builder, PASS_START)
+}
 func OSMAddPASS_DURATION(builder *flatbuffers.Builder, PASS_DURATION int32) {
 	builder.PrependInt32Slot(5, PASS_DURATION, 0)
+}
+func OSMAddPassDuration(builder *flatbuffers.Builder, PASS_DURATION int32) {
+	OSMAddPASS_DURATION(builder, PASS_DURATION)
 }
 func OSMEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

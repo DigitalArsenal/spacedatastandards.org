@@ -2,4 +2,192 @@
 
 # namespace: 
 
-# NOTE BinaryParameterType.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Binary parameter type
+class BinaryParameterType(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = BinaryParameterType()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsBinaryParameterType(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def BinaryParameterTypeBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x58\x54\x43", size_prefixed=size_prefixed)
+
+    # BinaryParameterType
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Type name
+    # BinaryParameterType
+    def NAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Short description
+    # BinaryParameterType
+    def SHORT_DESCRIPTION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Long description
+    # BinaryParameterType
+    def LONG_DESCRIPTION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Data encoding
+    # BinaryParameterType
+    def DATA_ENCODING(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from BinaryDataEncoding import BinaryDataEncoding
+            obj = BinaryDataEncoding()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Initial/default value (hex string)
+    # BinaryParameterType
+    def INITIAL_VALUE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+def BinaryParameterTypeStart(builder):
+    builder.StartObject(5)
+
+def Start(builder):
+    BinaryParameterTypeStart(builder)
+
+def BinaryParameterTypeAddNAME(builder, NAME):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(NAME), 0)
+
+def AddNAME(builder, NAME):
+    BinaryParameterTypeAddNAME(builder, NAME)
+
+def BinaryParameterTypeAddSHORT_DESCRIPTION(builder, SHORT_DESCRIPTION):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(SHORT_DESCRIPTION), 0)
+
+def AddSHORT_DESCRIPTION(builder, SHORT_DESCRIPTION):
+    BinaryParameterTypeAddSHORT_DESCRIPTION(builder, SHORT_DESCRIPTION)
+
+def BinaryParameterTypeAddLONG_DESCRIPTION(builder, LONG_DESCRIPTION):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(LONG_DESCRIPTION), 0)
+
+def AddLONG_DESCRIPTION(builder, LONG_DESCRIPTION):
+    BinaryParameterTypeAddLONG_DESCRIPTION(builder, LONG_DESCRIPTION)
+
+def BinaryParameterTypeAddDATA_ENCODING(builder, DATA_ENCODING):
+    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(DATA_ENCODING), 0)
+
+def AddDATA_ENCODING(builder, DATA_ENCODING):
+    BinaryParameterTypeAddDATA_ENCODING(builder, DATA_ENCODING)
+
+def BinaryParameterTypeAddINITIAL_VALUE(builder, INITIAL_VALUE):
+    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(INITIAL_VALUE), 0)
+
+def AddINITIAL_VALUE(builder, INITIAL_VALUE):
+    BinaryParameterTypeAddINITIAL_VALUE(builder, INITIAL_VALUE)
+
+def BinaryParameterTypeEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return BinaryParameterTypeEnd(builder)
+
+import BinaryDataEncoding
+try:
+    from typing import Optional
+except:
+    pass
+
+class BinaryParameterTypeT(object):
+
+    # BinaryParameterTypeT
+    def __init__(
+        self,
+        NAME = None,
+        SHORT_DESCRIPTION = None,
+        LONG_DESCRIPTION = None,
+        DATA_ENCODING = None,
+        INITIAL_VALUE = None,
+    ):
+        self.NAME = NAME  # type: Optional[str]
+        self.SHORT_DESCRIPTION = SHORT_DESCRIPTION  # type: Optional[str]
+        self.LONG_DESCRIPTION = LONG_DESCRIPTION  # type: Optional[str]
+        self.DATA_ENCODING = DATA_ENCODING  # type: Optional[BinaryDataEncoding.BinaryDataEncodingT]
+        self.INITIAL_VALUE = INITIAL_VALUE  # type: Optional[str]
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpBinaryParameterType = BinaryParameterType()
+        tmpBinaryParameterType.Init(buf, pos)
+        return cls.InitFromObj(tmpBinaryParameterType)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpBinaryParameterType):
+        x = BinaryParameterTypeT()
+        x._UnPack(tmpBinaryParameterType)
+        return x
+
+    # BinaryParameterTypeT
+    def _UnPack(self, BinaryParameterType):
+        if BinaryParameterType is None:
+            return
+        self.NAME = BinaryParameterType.NAME()
+        self.SHORT_DESCRIPTION = BinaryParameterType.SHORT_DESCRIPTION()
+        self.LONG_DESCRIPTION = BinaryParameterType.LONG_DESCRIPTION()
+        if BinaryParameterType.DATA_ENCODING() is not None:
+            self.DATA_ENCODING = BinaryDataEncoding.BinaryDataEncodingT.InitFromObj(BinaryParameterType.DATA_ENCODING())
+        self.INITIAL_VALUE = BinaryParameterType.INITIAL_VALUE()
+
+    # BinaryParameterTypeT
+    def Pack(self, builder):
+        if self.NAME is not None:
+            NAME = builder.CreateString(self.NAME)
+        if self.SHORT_DESCRIPTION is not None:
+            SHORT_DESCRIPTION = builder.CreateString(self.SHORT_DESCRIPTION)
+        if self.LONG_DESCRIPTION is not None:
+            LONG_DESCRIPTION = builder.CreateString(self.LONG_DESCRIPTION)
+        if self.DATA_ENCODING is not None:
+            DATA_ENCODING = self.DATA_ENCODING.Pack(builder)
+        if self.INITIAL_VALUE is not None:
+            INITIAL_VALUE = builder.CreateString(self.INITIAL_VALUE)
+        BinaryParameterTypeStart(builder)
+        if self.NAME is not None:
+            BinaryParameterTypeAddNAME(builder, NAME)
+        if self.SHORT_DESCRIPTION is not None:
+            BinaryParameterTypeAddSHORT_DESCRIPTION(builder, SHORT_DESCRIPTION)
+        if self.LONG_DESCRIPTION is not None:
+            BinaryParameterTypeAddLONG_DESCRIPTION(builder, LONG_DESCRIPTION)
+        if self.DATA_ENCODING is not None:
+            BinaryParameterTypeAddDATA_ENCODING(builder, DATA_ENCODING)
+        if self.INITIAL_VALUE is not None:
+            BinaryParameterTypeAddINITIAL_VALUE(builder, INITIAL_VALUE)
+        BinaryParameterType = BinaryParameterTypeEnd(builder)
+        return BinaryParameterType

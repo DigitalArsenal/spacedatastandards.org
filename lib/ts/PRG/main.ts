@@ -2,5 +2,5 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export { PRG, PRGT } from './PRG.js';
-export { USR, USRT } from './USR.js';
+export * from './PRG.js';
+export * from './USR.js';

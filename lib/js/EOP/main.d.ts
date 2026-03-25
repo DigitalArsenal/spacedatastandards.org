@@ -1,3 +1,3 @@
-export { DataType } from './DataType.js';
-export { EOP, EOPT } from './EOP.js';
+export * from './DataType.js';
+export * from './EOP.js';
 //# sourceMappingURL=main.d.ts.map

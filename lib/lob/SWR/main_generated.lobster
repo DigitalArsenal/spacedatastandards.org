@@ -139,23 +139,23 @@ def SWRCreateWAVELENGTHSVector(b_:flatbuffers.builder, v_:[float]):
     reverse(v_) e_: b_.PrependFloat64(e_)
     return b_.EndVector(v_.length)
 
-def SWRStartABS_FLUXESVector(b_:flatbuffers.builder, n_:int):
+def SWRStartABSFLUXESVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(8, n_, 8)
-def SWRCreateABS_FLUXESVector(b_:flatbuffers.builder, v_:[float]):
+def SWRCreateABSFLUXESVector(b_:flatbuffers.builder, v_:[float]):
     b_.StartVector(8, v_.length, 8)
     reverse(v_) e_: b_.PrependFloat64(e_)
     return b_.EndVector(v_.length)
 
-def SWRStartRATIO_WAVELENGTHSVector(b_:flatbuffers.builder, n_:int):
+def SWRStartRATIOWAVELENGTHSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(8, n_, 8)
-def SWRCreateRATIO_WAVELENGTHSVector(b_:flatbuffers.builder, v_:[float]):
+def SWRCreateRATIOWAVELENGTHSVector(b_:flatbuffers.builder, v_:[float]):
     b_.StartVector(8, v_.length, 8)
     reverse(v_) e_: b_.PrependFloat64(e_)
     return b_.EndVector(v_.length)
 
-def SWRStartFLUX_RATIOSVector(b_:flatbuffers.builder, n_:int):
+def SWRStartFLUXRATIOSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(8, n_, 8)
-def SWRCreateFLUX_RATIOSVector(b_:flatbuffers.builder, v_:[float]):
+def SWRCreateFLUXRATIOSVector(b_:flatbuffers.builder, v_:[float]):
     b_.StartVector(8, v_.length, 8)
     reverse(v_) e_: b_.PrependFloat64(e_)
     return b_.EndVector(v_.length)

@@ -130,6 +130,12 @@ def OEMStartEPHEMERIS_DATA_BLOCKVector(builder, numElems):
 def StartEPHEMERIS_DATA_BLOCKVector(builder, numElems):
     return OEMStartEPHEMERIS_DATA_BLOCKVector(builder, numElems)
 
+def OEMCreateEPHEMERIS_DATA_BLOCKVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateEPHEMERIS_DATA_BLOCKVector(builder, data):
+    OEMCreateEPHEMERIS_DATA_BLOCKVector(builder, data)
+
 def OEMEnd(builder):
     return builder.EndObject()
 
@@ -145,18 +151,25 @@ except:
 class OEMT(object):
 
     # OEMT
-    def __init__(self):
-        self.CLASSIFICATION = None  # type: str
-        self.CCSDS_OEM_VERS = 0.0  # type: float
-        self.CREATION_DATE = None  # type: str
-        self.ORIGINATOR = None  # type: str
-        self.EPHEMERIS_DATA_BLOCK = None  # type: List[ephemerisDataBlock.ephemerisDataBlockT]
+    def __init__(
+        self,
+        CLASSIFICATION = None,
+        CCSDS_OEM_VERS = 0.0,
+        CREATION_DATE = None,
+        ORIGINATOR = None,
+        EPHEMERIS_DATA_BLOCK = None,
+    ):
+        self.CLASSIFICATION = CLASSIFICATION  # type: Optional[str]
+        self.CCSDS_OEM_VERS = CCSDS_OEM_VERS  # type: float
+        self.CREATION_DATE = CREATION_DATE  # type: Optional[str]
+        self.ORIGINATOR = ORIGINATOR  # type: Optional[str]
+        self.EPHEMERIS_DATA_BLOCK = EPHEMERIS_DATA_BLOCK  # type: Optional[List[ephemerisDataBlock.ephemerisDataBlockT]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        OEM = OEM()
-        OEM.Init(buf, pos)
-        return cls.InitFromObj(OEM)
+        tmpOem = OEM()
+        tmpOem.Init(buf, pos)
+        return cls.InitFromObj(tmpOem)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -164,9 +177,9 @@ class OEMT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, OEM):
+    def InitFromObj(cls, tmpOem):
         x = OEMT()
-        x._UnPack(OEM)
+        x._UnPack(tmpOem)
         return x
 
     # OEMT

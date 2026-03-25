@@ -2,9 +2,13 @@
 // swiftlint:disable all
 // swiftformat:disable all
 
+#if canImport(Common)
+import Common
+#endif
+
 import FlatBuffers
 
-public enum KMLAltitudeMode: Int8, Enum, Verifiable {
+public enum KMLAltitudeMode: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -24,7 +28,7 @@ public enum KMLAltitudeMode: Int8, Enum, Verifiable {
 }
 
 
-public enum KMLColorMode: Int8, Enum, Verifiable {
+public enum KMLColorMode: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -36,7 +40,7 @@ public enum KMLColorMode: Int8, Enum, Verifiable {
 }
 
 
-public enum KMLStyleState: Int8, Enum, Verifiable {
+public enum KMLStyleState: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -48,7 +52,7 @@ public enum KMLStyleState: Int8, Enum, Verifiable {
 }
 
 
-public enum KMLUnits: Int8, Enum, Verifiable {
+public enum KMLUnits: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -61,7 +65,7 @@ public enum KMLUnits: Int8, Enum, Verifiable {
 }
 
 
-public enum KMLRefreshMode: Int8, Enum, Verifiable {
+public enum KMLRefreshMode: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -74,7 +78,7 @@ public enum KMLRefreshMode: Int8, Enum, Verifiable {
 }
 
 
-public enum KMLViewRefreshMode: Int8, Enum, Verifiable {
+public enum KMLViewRefreshMode: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -88,7 +92,7 @@ public enum KMLViewRefreshMode: Int8, Enum, Verifiable {
 }
 
 
-public enum KMLListItemType: Int8, Enum, Verifiable {
+public enum KMLListItemType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -102,7 +106,7 @@ public enum KMLListItemType: Int8, Enum, Verifiable {
 }
 
 
-public enum KMLDisplayMode: Int8, Enum, Verifiable {
+public enum KMLDisplayMode: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -114,7 +118,7 @@ public enum KMLDisplayMode: Int8, Enum, Verifiable {
 }
 
 
-public enum KMLGridOrigin: Int8, Enum, Verifiable {
+public enum KMLGridOrigin: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -126,7 +130,7 @@ public enum KMLGridOrigin: Int8, Enum, Verifiable {
 }
 
 
-public enum KMLShape: Int8, Enum, Verifiable {
+public enum KMLShape: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -139,7 +143,7 @@ public enum KMLShape: Int8, Enum, Verifiable {
 }
 
 
-public enum KMLFlyToMode: Int8, Enum, Verifiable {
+public enum KMLFlyToMode: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -152,9 +156,9 @@ public enum KMLFlyToMode: Int8, Enum, Verifiable {
 
 
 ///  KML coordinate (longitude, latitude, optional altitude)
-public struct KMLCoordinate: FlatBufferObject, Verifiable {
+public struct KMLCoordinate: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -205,9 +209,9 @@ public struct KMLCoordinate: FlatBufferObject, Verifiable {
 }
 
 ///  LookAt viewpoint
-public struct KMLLookAt: FlatBufferObject, Verifiable {
+public struct KMLLookAt: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -286,9 +290,9 @@ public struct KMLLookAt: FlatBufferObject, Verifiable {
 }
 
 ///  Camera viewpoint
-public struct KMLCamera: FlatBufferObject, Verifiable {
+public struct KMLCamera: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -367,9 +371,9 @@ public struct KMLCamera: FlatBufferObject, Verifiable {
 }
 
 ///  Icon style
-public struct KMLIconStyle: FlatBufferObject, Verifiable {
+public struct KMLIconStyle: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -464,9 +468,9 @@ public struct KMLIconStyle: FlatBufferObject, Verifiable {
 }
 
 ///  Line style
-public struct KMLLineStyle: FlatBufferObject, Verifiable {
+public struct KMLLineStyle: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -548,9 +552,9 @@ public struct KMLLineStyle: FlatBufferObject, Verifiable {
 }
 
 ///  Polygon style
-public struct KMLPolyStyle: FlatBufferObject, Verifiable {
+public struct KMLPolyStyle: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -611,9 +615,9 @@ public struct KMLPolyStyle: FlatBufferObject, Verifiable {
 }
 
 ///  Label style
-public struct KMLLabelStyle: FlatBufferObject, Verifiable {
+public struct KMLLabelStyle: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -665,9 +669,9 @@ public struct KMLLabelStyle: FlatBufferObject, Verifiable {
 }
 
 ///  Balloon style
-public struct KMLBalloonStyle: FlatBufferObject, Verifiable {
+public struct KMLBalloonStyle: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -728,9 +732,9 @@ public struct KMLBalloonStyle: FlatBufferObject, Verifiable {
 }
 
 ///  Item icon for ListStyle
-public struct KMLItemIcon: FlatBufferObject, Verifiable {
+public struct KMLItemIcon: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -776,9 +780,9 @@ public struct KMLItemIcon: FlatBufferObject, Verifiable {
 }
 
 ///  List style
-public struct KMLListStyle: FlatBufferObject, Verifiable {
+public struct KMLListStyle: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -802,9 +806,7 @@ public struct KMLListStyle: FlatBufferObject, Verifiable {
   public var BG_COLOR: String? { let o = _accessor.offset(VTOFFSET.BG_COLOR.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var BG_COLORSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.BG_COLOR.v) }
   ///  Item icons
-  public var hasItemIcons: Bool { let o = _accessor.offset(VTOFFSET.ITEM_ICONS.v); return o == 0 ? false : true }
-  public var ITEM_ICONSCount: Int32 { let o = _accessor.offset(VTOFFSET.ITEM_ICONS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func ITEM_ICONS(at index: Int32) -> KMLItemIcon? { let o = _accessor.offset(VTOFFSET.ITEM_ICONS.v); return o == 0 ? nil : KMLItemIcon(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var ITEM_ICONS: FlatbufferVector<KMLItemIcon> { return _accessor.vector(at: VTOFFSET.ITEM_ICONS.v, byteSize: 4) }
   ///  Maximum snippet lines
   public var MAX_SNIPPET_LINES: Int32 { let o = _accessor.offset(VTOFFSET.MAX_SNIPPET_LINES.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
   public static func startKMLListStyle(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
@@ -839,9 +841,9 @@ public struct KMLListStyle: FlatBufferObject, Verifiable {
 }
 
 ///  Style definition
-public struct KMLStyle: FlatBufferObject, Verifiable {
+public struct KMLStyle: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -866,17 +868,17 @@ public struct KMLStyle: FlatBufferObject, Verifiable {
   public var ID: String? { let o = _accessor.offset(VTOFFSET.ID.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ID.v) }
   ///  Icon style
-  public var ICON_STYLE: KMLIconStyle? { let o = _accessor.offset(VTOFFSET.ICON_STYLE.v); return o == 0 ? nil : KMLIconStyle(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var ICON_STYLE: KMLIconStyle? { let o = _accessor.offset(VTOFFSET.ICON_STYLE.v); return o == 0 ? nil : KMLIconStyle(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Label style
-  public var LABEL_STYLE: KMLLabelStyle? { let o = _accessor.offset(VTOFFSET.LABEL_STYLE.v); return o == 0 ? nil : KMLLabelStyle(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var LABEL_STYLE: KMLLabelStyle? { let o = _accessor.offset(VTOFFSET.LABEL_STYLE.v); return o == 0 ? nil : KMLLabelStyle(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Line style
-  public var LINE_STYLE: KMLLineStyle? { let o = _accessor.offset(VTOFFSET.LINE_STYLE.v); return o == 0 ? nil : KMLLineStyle(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var LINE_STYLE: KMLLineStyle? { let o = _accessor.offset(VTOFFSET.LINE_STYLE.v); return o == 0 ? nil : KMLLineStyle(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Polygon style
-  public var POLY_STYLE: KMLPolyStyle? { let o = _accessor.offset(VTOFFSET.POLY_STYLE.v); return o == 0 ? nil : KMLPolyStyle(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var POLY_STYLE: KMLPolyStyle? { let o = _accessor.offset(VTOFFSET.POLY_STYLE.v); return o == 0 ? nil : KMLPolyStyle(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Balloon style
-  public var BALLOON_STYLE: KMLBalloonStyle? { let o = _accessor.offset(VTOFFSET.BALLOON_STYLE.v); return o == 0 ? nil : KMLBalloonStyle(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var BALLOON_STYLE: KMLBalloonStyle? { let o = _accessor.offset(VTOFFSET.BALLOON_STYLE.v); return o == 0 ? nil : KMLBalloonStyle(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  List style
-  public var LIST_STYLE: KMLListStyle? { let o = _accessor.offset(VTOFFSET.LIST_STYLE.v); return o == 0 ? nil : KMLListStyle(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var LIST_STYLE: KMLListStyle? { let o = _accessor.offset(VTOFFSET.LIST_STYLE.v); return o == 0 ? nil : KMLListStyle(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public static func startKMLStyle(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 7) }
   public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VTOFFSET.ID.p) }
   public static func add(ICON_STYLE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ICON_STYLE, at: VTOFFSET.ICON_STYLE.p) }
@@ -921,9 +923,9 @@ public struct KMLStyle: FlatBufferObject, Verifiable {
 }
 
 ///  Style map pair
-public struct KMLStyleMapPair: FlatBufferObject, Verifiable {
+public struct KMLStyleMapPair: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -968,9 +970,9 @@ public struct KMLStyleMapPair: FlatBufferObject, Verifiable {
 }
 
 ///  Style map (normal/highlight pair)
-public struct KMLStyleMap: FlatBufferObject, Verifiable {
+public struct KMLStyleMap: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -990,9 +992,7 @@ public struct KMLStyleMap: FlatBufferObject, Verifiable {
   public var ID: String? { let o = _accessor.offset(VTOFFSET.ID.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ID.v) }
   ///  Pairs
-  public var hasPairs: Bool { let o = _accessor.offset(VTOFFSET.PAIRS.v); return o == 0 ? false : true }
-  public var PAIRSCount: Int32 { let o = _accessor.offset(VTOFFSET.PAIRS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func PAIRS(at index: Int32) -> KMLStyleMapPair? { let o = _accessor.offset(VTOFFSET.PAIRS.v); return o == 0 ? nil : KMLStyleMapPair(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var PAIRS: FlatbufferVector<KMLStyleMapPair> { return _accessor.vector(at: VTOFFSET.PAIRS.v, byteSize: 4) }
   public static func startKMLStyleMap(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 2) }
   public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VTOFFSET.ID.p) }
   public static func addVectorOf(PAIRS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PAIRS, at: VTOFFSET.PAIRS.p) }
@@ -1017,9 +1017,9 @@ public struct KMLStyleMap: FlatBufferObject, Verifiable {
 }
 
 ///  Point geometry
-public struct KMLPoint: FlatBufferObject, Verifiable {
+public struct KMLPoint: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -1037,7 +1037,7 @@ public struct KMLPoint: FlatBufferObject, Verifiable {
   }
 
   ///  Coordinate
-  public var COORDINATES: KMLCoordinate? { let o = _accessor.offset(VTOFFSET.COORDINATES.v); return o == 0 ? nil : KMLCoordinate(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var COORDINATES: KMLCoordinate? { let o = _accessor.offset(VTOFFSET.COORDINATES.v); return o == 0 ? nil : KMLCoordinate(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Altitude mode
   public var ALTITUDE_MODE: KMLAltitudeMode { let o = _accessor.offset(VTOFFSET.ALTITUDE_MODE.v); return o == 0 ? .clampToGround : KMLAltitudeMode(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .clampToGround }
   ///  Whether to extrude to ground
@@ -1071,9 +1071,9 @@ public struct KMLPoint: FlatBufferObject, Verifiable {
 }
 
 ///  LineString geometry
-public struct KMLLineString: FlatBufferObject, Verifiable {
+public struct KMLLineString: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -1093,9 +1093,7 @@ public struct KMLLineString: FlatBufferObject, Verifiable {
   }
 
   ///  Coordinates
-  public var hasCoordinates: Bool { let o = _accessor.offset(VTOFFSET.COORDINATES.v); return o == 0 ? false : true }
-  public var COORDINATESCount: Int32 { let o = _accessor.offset(VTOFFSET.COORDINATES.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func COORDINATES(at index: Int32) -> KMLCoordinate? { let o = _accessor.offset(VTOFFSET.COORDINATES.v); return o == 0 ? nil : KMLCoordinate(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var COORDINATES: FlatbufferVector<KMLCoordinate> { return _accessor.vector(at: VTOFFSET.COORDINATES.v, byteSize: 4) }
   ///  Altitude mode
   public var ALTITUDE_MODE: KMLAltitudeMode { let o = _accessor.offset(VTOFFSET.ALTITUDE_MODE.v); return o == 0 ? .clampToGround : KMLAltitudeMode(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .clampToGround }
   ///  Whether to extrude to ground
@@ -1142,9 +1140,9 @@ public struct KMLLineString: FlatBufferObject, Verifiable {
 }
 
 ///  LinearRing geometry
-public struct KMLLinearRing: FlatBufferObject, Verifiable {
+public struct KMLLinearRing: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -1163,9 +1161,7 @@ public struct KMLLinearRing: FlatBufferObject, Verifiable {
   }
 
   ///  Coordinates (first = last to close the ring)
-  public var hasCoordinates: Bool { let o = _accessor.offset(VTOFFSET.COORDINATES.v); return o == 0 ? false : true }
-  public var COORDINATESCount: Int32 { let o = _accessor.offset(VTOFFSET.COORDINATES.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func COORDINATES(at index: Int32) -> KMLCoordinate? { let o = _accessor.offset(VTOFFSET.COORDINATES.v); return o == 0 ? nil : KMLCoordinate(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var COORDINATES: FlatbufferVector<KMLCoordinate> { return _accessor.vector(at: VTOFFSET.COORDINATES.v, byteSize: 4) }
   ///  Whether to extrude to ground
   public var EXTRUDE: Bool { let o = _accessor.offset(VTOFFSET.EXTRUDE.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Whether to tessellate
@@ -1206,9 +1202,9 @@ public struct KMLLinearRing: FlatBufferObject, Verifiable {
 }
 
 ///  Polygon geometry
-public struct KMLPolygon: FlatBufferObject, Verifiable {
+public struct KMLPolygon: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -1228,11 +1224,9 @@ public struct KMLPolygon: FlatBufferObject, Verifiable {
   }
 
   ///  Outer boundary
-  public var OUTER_BOUNDARY: KMLLinearRing? { let o = _accessor.offset(VTOFFSET.OUTER_BOUNDARY.v); return o == 0 ? nil : KMLLinearRing(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var OUTER_BOUNDARY: KMLLinearRing? { let o = _accessor.offset(VTOFFSET.OUTER_BOUNDARY.v); return o == 0 ? nil : KMLLinearRing(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Inner boundaries (holes)
-  public var hasInnerBoundaries: Bool { let o = _accessor.offset(VTOFFSET.INNER_BOUNDARIES.v); return o == 0 ? false : true }
-  public var INNER_BOUNDARIESCount: Int32 { let o = _accessor.offset(VTOFFSET.INNER_BOUNDARIES.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func INNER_BOUNDARIES(at index: Int32) -> KMLLinearRing? { let o = _accessor.offset(VTOFFSET.INNER_BOUNDARIES.v); return o == 0 ? nil : KMLLinearRing(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var INNER_BOUNDARIES: FlatbufferVector<KMLLinearRing> { return _accessor.vector(at: VTOFFSET.INNER_BOUNDARIES.v, byteSize: 4) }
   ///  Altitude mode
   public var ALTITUDE_MODE: KMLAltitudeMode { let o = _accessor.offset(VTOFFSET.ALTITUDE_MODE.v); return o == 0 ? .clampToGround : KMLAltitudeMode(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .clampToGround }
   ///  Whether to extrude to ground
@@ -1277,9 +1271,9 @@ public struct KMLPolygon: FlatBufferObject, Verifiable {
 }
 
 ///  Resource map alias for Model
-public struct KMLResourceMapAlias: FlatBufferObject, Verifiable {
+public struct KMLResourceMapAlias: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -1325,9 +1319,9 @@ public struct KMLResourceMapAlias: FlatBufferObject, Verifiable {
 }
 
 ///  3D Model geometry
-public struct KMLModel: FlatBufferObject, Verifiable {
+public struct KMLModel: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -1377,9 +1371,7 @@ public struct KMLModel: FlatBufferObject, Verifiable {
   public var LINK_HREF: String? { let o = _accessor.offset(VTOFFSET.LINK_HREF.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var LINK_HREFSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LINK_HREF.v) }
   ///  Resource map aliases
-  public var hasResourceMap: Bool { let o = _accessor.offset(VTOFFSET.RESOURCE_MAP.v); return o == 0 ? false : true }
-  public var RESOURCE_MAPCount: Int32 { let o = _accessor.offset(VTOFFSET.RESOURCE_MAP.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func RESOURCE_MAP(at index: Int32) -> KMLResourceMapAlias? { let o = _accessor.offset(VTOFFSET.RESOURCE_MAP.v); return o == 0 ? nil : KMLResourceMapAlias(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var RESOURCE_MAP: FlatbufferVector<KMLResourceMapAlias> { return _accessor.vector(at: VTOFFSET.RESOURCE_MAP.v, byteSize: 4) }
   public static func startKMLModel(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 12) }
   public static func add(ALTITUDE_MODE: KMLAltitudeMode, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ALTITUDE_MODE.rawValue, def: 0, at: VTOFFSET.ALTITUDE_MODE.p) }
   public static func add(LOCATION_LON: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LOCATION_LON, def: 0.0, at: VTOFFSET.LOCATION_LON.p) }
@@ -1444,9 +1436,9 @@ public struct KMLModel: FlatBufferObject, Verifiable {
 }
 
 ///  gx:Track — time-stamped position track
-public struct KMLTrack: FlatBufferObject, Verifiable {
+public struct KMLTrack: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -1474,19 +1466,13 @@ public struct KMLTrack: FlatBufferObject, Verifiable {
   ///  Altitude mode
   public var ALTITUDE_MODE: KMLAltitudeMode { let o = _accessor.offset(VTOFFSET.ALTITUDE_MODE.v); return o == 0 ? .clampToGround : KMLAltitudeMode(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .clampToGround }
   ///  Time stamps (ISO 8601)
-  public var hasWhen: Bool { let o = _accessor.offset(VTOFFSET.WHEN.v); return o == 0 ? false : true }
-  public var WHENCount: Int32 { let o = _accessor.offset(VTOFFSET.WHEN.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func WHEN(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.WHEN.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  public var WHEN: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.WHEN.v, byteSize: 4) }
   ///  Coordinates (lon lat alt per entry)
-  public var hasCoords: Bool { let o = _accessor.offset(VTOFFSET.COORDS.v); return o == 0 ? false : true }
-  public var COORDSCount: Int32 { let o = _accessor.offset(VTOFFSET.COORDS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func COORDS(at index: Int32) -> KMLCoordinate? { let o = _accessor.offset(VTOFFSET.COORDS.v); return o == 0 ? nil : KMLCoordinate(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var COORDS: FlatbufferVector<KMLCoordinate> { return _accessor.vector(at: VTOFFSET.COORDS.v, byteSize: 4) }
   ///  Angles (heading tilt roll per entry)
-  public var hasAngles: Bool { let o = _accessor.offset(VTOFFSET.ANGLES.v); return o == 0 ? false : true }
-  public var ANGLESCount: Int32 { let o = _accessor.offset(VTOFFSET.ANGLES.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func ANGLES(at index: Int32) -> KMLCoordinate? { let o = _accessor.offset(VTOFFSET.ANGLES.v); return o == 0 ? nil : KMLCoordinate(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var ANGLES: FlatbufferVector<KMLCoordinate> { return _accessor.vector(at: VTOFFSET.ANGLES.v, byteSize: 4) }
   ///  Model for track visualization
-  public var MODEL: KMLModel? { let o = _accessor.offset(VTOFFSET.MODEL.v); return o == 0 ? nil : KMLModel(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var MODEL: KMLModel? { let o = _accessor.offset(VTOFFSET.MODEL.v); return o == 0 ? nil : KMLModel(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public static func startKMLTrack(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 7) }
   public static func add(EXTRUDE: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EXTRUDE, def: false,
    at: VTOFFSET.EXTRUDE.p) }
@@ -1533,9 +1519,9 @@ public struct KMLTrack: FlatBufferObject, Verifiable {
 }
 
 ///  gx:MultiTrack
-public struct KMLMultiTrack: FlatBufferObject, Verifiable {
+public struct KMLMultiTrack: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -1557,9 +1543,7 @@ public struct KMLMultiTrack: FlatBufferObject, Verifiable {
   ///  Whether to interpolate between tracks
   public var INTERPOLATE: Bool { let o = _accessor.offset(VTOFFSET.INTERPOLATE.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Child tracks
-  public var hasTracks: Bool { let o = _accessor.offset(VTOFFSET.TRACKS.v); return o == 0 ? false : true }
-  public var TRACKSCount: Int32 { let o = _accessor.offset(VTOFFSET.TRACKS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func TRACKS(at index: Int32) -> KMLTrack? { let o = _accessor.offset(VTOFFSET.TRACKS.v); return o == 0 ? nil : KMLTrack(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var TRACKS: FlatbufferVector<KMLTrack> { return _accessor.vector(at: VTOFFSET.TRACKS.v, byteSize: 4) }
   public static func startKMLMultiTrack(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 3) }
   public static func add(ALTITUDE_MODE: KMLAltitudeMode, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ALTITUDE_MODE.rawValue, def: 0, at: VTOFFSET.ALTITUDE_MODE.p) }
   public static func add(INTERPOLATE: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INTERPOLATE, def: false,
@@ -1589,9 +1573,9 @@ public struct KMLMultiTrack: FlatBufferObject, Verifiable {
 }
 
 ///  MultiGeometry
-public struct KMLMultiGeometry: FlatBufferObject, Verifiable {
+public struct KMLMultiGeometry: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -1614,37 +1598,21 @@ public struct KMLMultiGeometry: FlatBufferObject, Verifiable {
   }
 
   ///  Child points
-  public var hasPoints: Bool { let o = _accessor.offset(VTOFFSET.POINTS.v); return o == 0 ? false : true }
-  public var POINTSCount: Int32 { let o = _accessor.offset(VTOFFSET.POINTS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func POINTS(at index: Int32) -> KMLPoint? { let o = _accessor.offset(VTOFFSET.POINTS.v); return o == 0 ? nil : KMLPoint(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var POINTS: FlatbufferVector<KMLPoint> { return _accessor.vector(at: VTOFFSET.POINTS.v, byteSize: 4) }
   ///  Child line strings
-  public var hasLineStrings: Bool { let o = _accessor.offset(VTOFFSET.LINE_STRINGS.v); return o == 0 ? false : true }
-  public var LINE_STRINGSCount: Int32 { let o = _accessor.offset(VTOFFSET.LINE_STRINGS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func LINE_STRINGS(at index: Int32) -> KMLLineString? { let o = _accessor.offset(VTOFFSET.LINE_STRINGS.v); return o == 0 ? nil : KMLLineString(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var LINE_STRINGS: FlatbufferVector<KMLLineString> { return _accessor.vector(at: VTOFFSET.LINE_STRINGS.v, byteSize: 4) }
   ///  Child polygons
-  public var hasPolygons: Bool { let o = _accessor.offset(VTOFFSET.POLYGONS.v); return o == 0 ? false : true }
-  public var POLYGONSCount: Int32 { let o = _accessor.offset(VTOFFSET.POLYGONS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func POLYGONS(at index: Int32) -> KMLPolygon? { let o = _accessor.offset(VTOFFSET.POLYGONS.v); return o == 0 ? nil : KMLPolygon(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var POLYGONS: FlatbufferVector<KMLPolygon> { return _accessor.vector(at: VTOFFSET.POLYGONS.v, byteSize: 4) }
   ///  Nested multi-geometries
-  public var hasMultiGeometries: Bool { let o = _accessor.offset(VTOFFSET.MULTI_GEOMETRIES.v); return o == 0 ? false : true }
-  public var MULTI_GEOMETRIESCount: Int32 { let o = _accessor.offset(VTOFFSET.MULTI_GEOMETRIES.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func MULTI_GEOMETRIES(at index: Int32) -> KMLMultiGeometry? { let o = _accessor.offset(VTOFFSET.MULTI_GEOMETRIES.v); return o == 0 ? nil : KMLMultiGeometry(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var MULTI_GEOMETRIES: FlatbufferVector<KMLMultiGeometry> { return _accessor.vector(at: VTOFFSET.MULTI_GEOMETRIES.v, byteSize: 4) }
   ///  Child linear rings (standalone)
-  public var hasLinearRings: Bool { let o = _accessor.offset(VTOFFSET.LINEAR_RINGS.v); return o == 0 ? false : true }
-  public var LINEAR_RINGSCount: Int32 { let o = _accessor.offset(VTOFFSET.LINEAR_RINGS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func LINEAR_RINGS(at index: Int32) -> KMLLinearRing? { let o = _accessor.offset(VTOFFSET.LINEAR_RINGS.v); return o == 0 ? nil : KMLLinearRing(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var LINEAR_RINGS: FlatbufferVector<KMLLinearRing> { return _accessor.vector(at: VTOFFSET.LINEAR_RINGS.v, byteSize: 4) }
   ///  Child 3D models
-  public var hasModels: Bool { let o = _accessor.offset(VTOFFSET.MODELS.v); return o == 0 ? false : true }
-  public var MODELSCount: Int32 { let o = _accessor.offset(VTOFFSET.MODELS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func MODELS(at index: Int32) -> KMLModel? { let o = _accessor.offset(VTOFFSET.MODELS.v); return o == 0 ? nil : KMLModel(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var MODELS: FlatbufferVector<KMLModel> { return _accessor.vector(at: VTOFFSET.MODELS.v, byteSize: 4) }
   ///  Child tracks
-  public var hasTracks: Bool { let o = _accessor.offset(VTOFFSET.TRACKS.v); return o == 0 ? false : true }
-  public var TRACKSCount: Int32 { let o = _accessor.offset(VTOFFSET.TRACKS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func TRACKS(at index: Int32) -> KMLTrack? { let o = _accessor.offset(VTOFFSET.TRACKS.v); return o == 0 ? nil : KMLTrack(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var TRACKS: FlatbufferVector<KMLTrack> { return _accessor.vector(at: VTOFFSET.TRACKS.v, byteSize: 4) }
   ///  Child multi-tracks
-  public var hasMultiTracks: Bool { let o = _accessor.offset(VTOFFSET.MULTI_TRACKS.v); return o == 0 ? false : true }
-  public var MULTI_TRACKSCount: Int32 { let o = _accessor.offset(VTOFFSET.MULTI_TRACKS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func MULTI_TRACKS(at index: Int32) -> KMLMultiTrack? { let o = _accessor.offset(VTOFFSET.MULTI_TRACKS.v); return o == 0 ? nil : KMLMultiTrack(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var MULTI_TRACKS: FlatbufferVector<KMLMultiTrack> { return _accessor.vector(at: VTOFFSET.MULTI_TRACKS.v, byteSize: 4) }
   public static func startKMLMultiGeometry(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 8) }
   public static func addVectorOf(POINTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POINTS, at: VTOFFSET.POINTS.p) }
   public static func addVectorOf(LINE_STRINGS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LINE_STRINGS, at: VTOFFSET.LINE_STRINGS.p) }
@@ -1693,9 +1661,9 @@ public struct KMLMultiGeometry: FlatBufferObject, Verifiable {
 }
 
 ///  TimeSpan
-public struct KMLTimeSpan: FlatBufferObject, Verifiable {
+public struct KMLTimeSpan: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -1741,9 +1709,9 @@ public struct KMLTimeSpan: FlatBufferObject, Verifiable {
 }
 
 ///  TimeStamp
-public struct KMLTimeStamp: FlatBufferObject, Verifiable {
+public struct KMLTimeStamp: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -1781,9 +1749,9 @@ public struct KMLTimeStamp: FlatBufferObject, Verifiable {
 }
 
 ///  Extended data key-value pair
-public struct KMLData: FlatBufferObject, Verifiable {
+public struct KMLData: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -1837,9 +1805,9 @@ public struct KMLData: FlatBufferObject, Verifiable {
 }
 
 ///  Schema simple field definition
-public struct KMLSimpleField: FlatBufferObject, Verifiable {
+public struct KMLSimpleField: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -1893,9 +1861,9 @@ public struct KMLSimpleField: FlatBufferObject, Verifiable {
 }
 
 ///  Schema definition
-public struct KMLSchema: FlatBufferObject, Verifiable {
+public struct KMLSchema: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -1919,9 +1887,7 @@ public struct KMLSchema: FlatBufferObject, Verifiable {
   public var ID: String? { let o = _accessor.offset(VTOFFSET.ID.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ID.v) }
   ///  Simple field definitions
-  public var hasSimpleFields: Bool { let o = _accessor.offset(VTOFFSET.SIMPLE_FIELDS.v); return o == 0 ? false : true }
-  public var SIMPLE_FIELDSCount: Int32 { let o = _accessor.offset(VTOFFSET.SIMPLE_FIELDS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func SIMPLE_FIELDS(at index: Int32) -> KMLSimpleField? { let o = _accessor.offset(VTOFFSET.SIMPLE_FIELDS.v); return o == 0 ? nil : KMLSimpleField(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var SIMPLE_FIELDS: FlatbufferVector<KMLSimpleField> { return _accessor.vector(at: VTOFFSET.SIMPLE_FIELDS.v, byteSize: 4) }
   public static func startKMLSchema(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 3) }
   public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
   public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VTOFFSET.ID.p) }
@@ -1950,9 +1916,9 @@ public struct KMLSchema: FlatBufferObject, Verifiable {
 }
 
 ///  Simple data value for SchemaData
-public struct KMLSimpleData: FlatBufferObject, Verifiable {
+public struct KMLSimpleData: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -1998,9 +1964,9 @@ public struct KMLSimpleData: FlatBufferObject, Verifiable {
 }
 
 ///  Schema data reference
-public struct KMLSchemaData: FlatBufferObject, Verifiable {
+public struct KMLSchemaData: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -2020,9 +1986,7 @@ public struct KMLSchemaData: FlatBufferObject, Verifiable {
   public var SCHEMA_URL: String? { let o = _accessor.offset(VTOFFSET.SCHEMA_URL.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var SCHEMA_URLSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SCHEMA_URL.v) }
   ///  Simple data values
-  public var hasSimpleData: Bool { let o = _accessor.offset(VTOFFSET.SIMPLE_DATA.v); return o == 0 ? false : true }
-  public var SIMPLE_DATACount: Int32 { let o = _accessor.offset(VTOFFSET.SIMPLE_DATA.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func SIMPLE_DATA(at index: Int32) -> KMLSimpleData? { let o = _accessor.offset(VTOFFSET.SIMPLE_DATA.v); return o == 0 ? nil : KMLSimpleData(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var SIMPLE_DATA: FlatbufferVector<KMLSimpleData> { return _accessor.vector(at: VTOFFSET.SIMPLE_DATA.v, byteSize: 4) }
   public static func startKMLSchemaData(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 2) }
   public static func add(SCHEMA_URL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SCHEMA_URL, at: VTOFFSET.SCHEMA_URL.p) }
   public static func addVectorOf(SIMPLE_DATA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIMPLE_DATA, at: VTOFFSET.SIMPLE_DATA.p) }
@@ -2047,9 +2011,9 @@ public struct KMLSchemaData: FlatBufferObject, Verifiable {
 }
 
 ///  LatLonQuad — four corner coordinates for ground overlay
-public struct KMLLatLonQuad: FlatBufferObject, Verifiable {
+public struct KMLLatLonQuad: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -2065,9 +2029,7 @@ public struct KMLLatLonQuad: FlatBufferObject, Verifiable {
   }
 
   ///  Four corner coordinates
-  public var hasCoordinates: Bool { let o = _accessor.offset(VTOFFSET.COORDINATES.v); return o == 0 ? false : true }
-  public var COORDINATESCount: Int32 { let o = _accessor.offset(VTOFFSET.COORDINATES.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func COORDINATES(at index: Int32) -> KMLCoordinate? { let o = _accessor.offset(VTOFFSET.COORDINATES.v); return o == 0 ? nil : KMLCoordinate(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var COORDINATES: FlatbufferVector<KMLCoordinate> { return _accessor.vector(at: VTOFFSET.COORDINATES.v, byteSize: 4) }
   public static func startKMLLatLonQuad(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 1) }
   public static func addVectorOf(COORDINATES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COORDINATES, at: VTOFFSET.COORDINATES.p) }
   public static func endKMLLatLonQuad(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
@@ -2088,9 +2050,9 @@ public struct KMLLatLonQuad: FlatBufferObject, Verifiable {
 }
 
 ///  Region — Level of Detail bounding region
-public struct KMLRegion: FlatBufferObject, Verifiable {
+public struct KMLRegion: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -2107,9 +2069,9 @@ public struct KMLRegion: FlatBufferObject, Verifiable {
   }
 
   ///  LatLonAltBox
-  public var LAT_LON_ALT_BOX: KMLLatLonAltBox? { let o = _accessor.offset(VTOFFSET.LAT_LON_ALT_BOX.v); return o == 0 ? nil : KMLLatLonAltBox(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var LAT_LON_ALT_BOX: KMLLatLonAltBox? { let o = _accessor.offset(VTOFFSET.LAT_LON_ALT_BOX.v); return o == 0 ? nil : KMLLatLonAltBox(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Level of detail
-  public var LOD: KMLLod? { let o = _accessor.offset(VTOFFSET.LOD.v); return o == 0 ? nil : KMLLod(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var LOD: KMLLod? { let o = _accessor.offset(VTOFFSET.LOD.v); return o == 0 ? nil : KMLLod(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public static func startKMLRegion(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 2) }
   public static func add(LAT_LON_ALT_BOX: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LAT_LON_ALT_BOX, at: VTOFFSET.LAT_LON_ALT_BOX.p) }
   public static func add(LOD: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LOD, at: VTOFFSET.LOD.p) }
@@ -2134,9 +2096,9 @@ public struct KMLRegion: FlatBufferObject, Verifiable {
 }
 
 ///  LatLonAltBox for Region
-public struct KMLLatLonAltBox: FlatBufferObject, Verifiable {
+public struct KMLLatLonAltBox: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -2215,9 +2177,9 @@ public struct KMLLatLonAltBox: FlatBufferObject, Verifiable {
 }
 
 ///  Level of Detail parameters
-public struct KMLLod: FlatBufferObject, Verifiable {
+public struct KMLLod: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -2275,9 +2237,9 @@ public struct KMLLod: FlatBufferObject, Verifiable {
 }
 
 ///  Full Link element
-public struct KMLLink: FlatBufferObject, Verifiable {
+public struct KMLLink: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -2366,9 +2328,9 @@ public struct KMLLink: FlatBufferObject, Verifiable {
 }
 
 ///  ViewVolume for PhotoOverlay
-public struct KMLViewVolume: FlatBufferObject, Verifiable {
+public struct KMLViewVolume: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -2433,9 +2395,9 @@ public struct KMLViewVolume: FlatBufferObject, Verifiable {
 }
 
 ///  ImagePyramid for PhotoOverlay
-public struct KMLImagePyramid: FlatBufferObject, Verifiable {
+public struct KMLImagePyramid: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -2493,9 +2455,9 @@ public struct KMLImagePyramid: FlatBufferObject, Verifiable {
 }
 
 ///  Network link
-public struct KMLNetworkLink: FlatBufferObject, Verifiable {
+public struct KMLNetworkLink: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -2547,7 +2509,7 @@ public struct KMLNetworkLink: FlatBufferObject, Verifiable {
   ///  Whether to fly to view on refresh
   public var FLY_TO_VIEW: Bool { let o = _accessor.offset(VTOFFSET.FLY_TO_VIEW.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Full link element
-  public var LINK: KMLLink? { let o = _accessor.offset(VTOFFSET.LINK.v); return o == 0 ? nil : KMLLink(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var LINK: KMLLink? { let o = _accessor.offset(VTOFFSET.LINK.v); return o == 0 ? nil : KMLLink(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public static func startKMLNetworkLink(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 12) }
   public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
   public static func add(DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTION, at: VTOFFSET.DESCRIPTION.p) }
@@ -2616,9 +2578,9 @@ public struct KMLNetworkLink: FlatBufferObject, Verifiable {
 }
 
 ///  Screen overlay
-public struct KMLScreenOverlay: FlatBufferObject, Verifiable {
+public struct KMLScreenOverlay: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -2814,9 +2776,9 @@ public struct KMLScreenOverlay: FlatBufferObject, Verifiable {
 }
 
 ///  Photo overlay
-public struct KMLPhotoOverlay: FlatBufferObject, Verifiable {
+public struct KMLPhotoOverlay: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -2860,11 +2822,11 @@ public struct KMLPhotoOverlay: FlatBufferObject, Verifiable {
   ///  Rotation
   public var ROTATION: Double { let o = _accessor.offset(VTOFFSET.ROTATION.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  View volume
-  public var VIEW_VOLUME: KMLViewVolume? { let o = _accessor.offset(VTOFFSET.VIEW_VOLUME.v); return o == 0 ? nil : KMLViewVolume(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var VIEW_VOLUME: KMLViewVolume? { let o = _accessor.offset(VTOFFSET.VIEW_VOLUME.v); return o == 0 ? nil : KMLViewVolume(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Image pyramid
-  public var IMAGE_PYRAMID: KMLImagePyramid? { let o = _accessor.offset(VTOFFSET.IMAGE_PYRAMID.v); return o == 0 ? nil : KMLImagePyramid(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var IMAGE_PYRAMID: KMLImagePyramid? { let o = _accessor.offset(VTOFFSET.IMAGE_PYRAMID.v); return o == 0 ? nil : KMLImagePyramid(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Point for position
-  public var POINT: KMLPoint? { let o = _accessor.offset(VTOFFSET.POINT.v); return o == 0 ? nil : KMLPoint(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var POINT: KMLPoint? { let o = _accessor.offset(VTOFFSET.POINT.v); return o == 0 ? nil : KMLPoint(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Shape
   public var SHAPE: KMLShape { let o = _accessor.offset(VTOFFSET.SHAPE.v); return o == 0 ? .rectangle : KMLShape(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .rectangle }
   public static func startKMLPhotoOverlay(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 11) }
@@ -2928,9 +2890,9 @@ public struct KMLPhotoOverlay: FlatBufferObject, Verifiable {
 }
 
 ///  Ground overlay
-public struct KMLGroundOverlay: FlatBufferObject, Verifiable {
+public struct KMLGroundOverlay: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -2994,12 +2956,12 @@ public struct KMLGroundOverlay: FlatBufferObject, Verifiable {
   ///  Draw order
   public var DRAW_ORDER: Int32 { let o = _accessor.offset(VTOFFSET.DRAW_ORDER.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
   ///  LatLonQuad (non-rectangular overlay)
-  public var LAT_LON_QUAD: KMLLatLonQuad? { let o = _accessor.offset(VTOFFSET.LAT_LON_QUAD.v); return o == 0 ? nil : KMLLatLonQuad(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var LAT_LON_QUAD: KMLLatLonQuad? { let o = _accessor.offset(VTOFFSET.LAT_LON_QUAD.v); return o == 0 ? nil : KMLLatLonQuad(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Style URL reference
   public var STYLE_URL: String? { let o = _accessor.offset(VTOFFSET.STYLE_URL.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var STYLE_URLSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.STYLE_URL.v) }
   ///  Region
-  public var REGION: KMLRegion? { let o = _accessor.offset(VTOFFSET.REGION.v); return o == 0 ? nil : KMLRegion(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var REGION: KMLRegion? { let o = _accessor.offset(VTOFFSET.REGION.v); return o == 0 ? nil : KMLRegion(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public static func startKMLGroundOverlay(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 17) }
   public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
   public static func add(DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTION, at: VTOFFSET.DESCRIPTION.p) }
@@ -3086,9 +3048,9 @@ public struct KMLGroundOverlay: FlatBufferObject, Verifiable {
 }
 
 ///  Update element for NetworkLinkControl
-public struct KMLUpdate: FlatBufferObject, Verifiable {
+public struct KMLUpdate: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -3150,9 +3112,9 @@ public struct KMLUpdate: FlatBufferObject, Verifiable {
 }
 
 ///  NetworkLinkControl
-public struct KMLNetworkLinkControl: FlatBufferObject, Verifiable {
+public struct KMLNetworkLinkControl: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -3200,11 +3162,11 @@ public struct KMLNetworkLinkControl: FlatBufferObject, Verifiable {
   public var EXPIRES: String? { let o = _accessor.offset(VTOFFSET.EXPIRES.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var EXPIRESSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.EXPIRES.v) }
   ///  Update
-  public var UPDATE: KMLUpdate? { let o = _accessor.offset(VTOFFSET.UPDATE.v); return o == 0 ? nil : KMLUpdate(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var UPDATE: KMLUpdate? { let o = _accessor.offset(VTOFFSET.UPDATE.v); return o == 0 ? nil : KMLUpdate(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  LookAt
-  public var LOOK_AT: KMLLookAt? { let o = _accessor.offset(VTOFFSET.LOOK_AT.v); return o == 0 ? nil : KMLLookAt(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var LOOK_AT: KMLLookAt? { let o = _accessor.offset(VTOFFSET.LOOK_AT.v); return o == 0 ? nil : KMLLookAt(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Camera
-  public var CAMERA: KMLCamera? { let o = _accessor.offset(VTOFFSET.CAMERA.v); return o == 0 ? nil : KMLCamera(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var CAMERA: KMLCamera? { let o = _accessor.offset(VTOFFSET.CAMERA.v); return o == 0 ? nil : KMLCamera(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public static func startKMLNetworkLinkControl(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 11) }
   public static func add(MIN_REFRESH_PERIOD: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MIN_REFRESH_PERIOD, def: 0.0, at: VTOFFSET.MIN_REFRESH_PERIOD.p) }
   public static func add(MAX_SESSION_LENGTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_SESSION_LENGTH, def: 0.0, at: VTOFFSET.MAX_SESSION_LENGTH.p) }
@@ -3265,9 +3227,9 @@ public struct KMLNetworkLinkControl: FlatBufferObject, Verifiable {
 }
 
 ///  gx:FlyTo tour primitive
-public struct KMLFlyTo: FlatBufferObject, Verifiable {
+public struct KMLFlyTo: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -3290,9 +3252,9 @@ public struct KMLFlyTo: FlatBufferObject, Verifiable {
   ///  Fly-to mode
   public var FLY_TO_MODE: KMLFlyToMode { let o = _accessor.offset(VTOFFSET.FLY_TO_MODE.v); return o == 0 ? .bounce : KMLFlyToMode(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .bounce }
   ///  LookAt viewpoint
-  public var LOOK_AT: KMLLookAt? { let o = _accessor.offset(VTOFFSET.LOOK_AT.v); return o == 0 ? nil : KMLLookAt(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var LOOK_AT: KMLLookAt? { let o = _accessor.offset(VTOFFSET.LOOK_AT.v); return o == 0 ? nil : KMLLookAt(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Camera viewpoint
-  public var CAMERA: KMLCamera? { let o = _accessor.offset(VTOFFSET.CAMERA.v); return o == 0 ? nil : KMLCamera(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var CAMERA: KMLCamera? { let o = _accessor.offset(VTOFFSET.CAMERA.v); return o == 0 ? nil : KMLCamera(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public static func startKMLFlyTo(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
   public static func add(DURATION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DURATION, def: 0.0, at: VTOFFSET.DURATION.p) }
   public static func add(FLY_TO_MODE: KMLFlyToMode, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FLY_TO_MODE.rawValue, def: 0, at: VTOFFSET.FLY_TO_MODE.p) }
@@ -3325,9 +3287,9 @@ public struct KMLFlyTo: FlatBufferObject, Verifiable {
 }
 
 ///  gx:Wait tour primitive
-public struct KMLWait: FlatBufferObject, Verifiable {
+public struct KMLWait: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -3364,9 +3326,9 @@ public struct KMLWait: FlatBufferObject, Verifiable {
 }
 
 ///  gx:AnimatedUpdate tour primitive
-public struct KMLAnimatedUpdate: FlatBufferObject, Verifiable {
+public struct KMLAnimatedUpdate: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -3388,7 +3350,7 @@ public struct KMLAnimatedUpdate: FlatBufferObject, Verifiable {
   ///  Delayed start in seconds
   public var DELAYED_START: Double { let o = _accessor.offset(VTOFFSET.DELAYED_START.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Update
-  public var UPDATE: KMLUpdate? { let o = _accessor.offset(VTOFFSET.UPDATE.v); return o == 0 ? nil : KMLUpdate(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var UPDATE: KMLUpdate? { let o = _accessor.offset(VTOFFSET.UPDATE.v); return o == 0 ? nil : KMLUpdate(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public static func startKMLAnimatedUpdate(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 3) }
   public static func add(DURATION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DURATION, def: 0.0, at: VTOFFSET.DURATION.p) }
   public static func add(DELAYED_START: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DELAYED_START, def: 0.0, at: VTOFFSET.DELAYED_START.p) }
@@ -3417,9 +3379,9 @@ public struct KMLAnimatedUpdate: FlatBufferObject, Verifiable {
 }
 
 ///  gx:TourControl tour primitive
-public struct KMLTourControl: FlatBufferObject, Verifiable {
+public struct KMLTourControl: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -3457,9 +3419,9 @@ public struct KMLTourControl: FlatBufferObject, Verifiable {
 }
 
 ///  gx:SoundCue tour primitive
-public struct KMLSoundCue: FlatBufferObject, Verifiable {
+public struct KMLSoundCue: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -3504,9 +3466,9 @@ public struct KMLSoundCue: FlatBufferObject, Verifiable {
 }
 
 ///  Tour primitive (union-like)
-public struct KMLTourPrimitive: FlatBufferObject, Verifiable {
+public struct KMLTourPrimitive: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -3526,15 +3488,15 @@ public struct KMLTourPrimitive: FlatBufferObject, Verifiable {
   }
 
   ///  FlyTo
-  public var FLY_TO: KMLFlyTo? { let o = _accessor.offset(VTOFFSET.FLY_TO.v); return o == 0 ? nil : KMLFlyTo(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var FLY_TO: KMLFlyTo? { let o = _accessor.offset(VTOFFSET.FLY_TO.v); return o == 0 ? nil : KMLFlyTo(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Wait
-  public var WAIT: KMLWait? { let o = _accessor.offset(VTOFFSET.WAIT.v); return o == 0 ? nil : KMLWait(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var WAIT: KMLWait? { let o = _accessor.offset(VTOFFSET.WAIT.v); return o == 0 ? nil : KMLWait(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  AnimatedUpdate
-  public var ANIMATED_UPDATE: KMLAnimatedUpdate? { let o = _accessor.offset(VTOFFSET.ANIMATED_UPDATE.v); return o == 0 ? nil : KMLAnimatedUpdate(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var ANIMATED_UPDATE: KMLAnimatedUpdate? { let o = _accessor.offset(VTOFFSET.ANIMATED_UPDATE.v); return o == 0 ? nil : KMLAnimatedUpdate(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  TourControl
-  public var TOUR_CONTROL: KMLTourControl? { let o = _accessor.offset(VTOFFSET.TOUR_CONTROL.v); return o == 0 ? nil : KMLTourControl(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var TOUR_CONTROL: KMLTourControl? { let o = _accessor.offset(VTOFFSET.TOUR_CONTROL.v); return o == 0 ? nil : KMLTourControl(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  SoundCue
-  public var SOUND_CUE: KMLSoundCue? { let o = _accessor.offset(VTOFFSET.SOUND_CUE.v); return o == 0 ? nil : KMLSoundCue(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var SOUND_CUE: KMLSoundCue? { let o = _accessor.offset(VTOFFSET.SOUND_CUE.v); return o == 0 ? nil : KMLSoundCue(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public static func startKMLTourPrimitive(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
   public static func add(FLY_TO: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FLY_TO, at: VTOFFSET.FLY_TO.p) }
   public static func add(WAIT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: WAIT, at: VTOFFSET.WAIT.p) }
@@ -3571,9 +3533,9 @@ public struct KMLTourPrimitive: FlatBufferObject, Verifiable {
 }
 
 ///  gx:Playlist
-public struct KMLPlaylist: FlatBufferObject, Verifiable {
+public struct KMLPlaylist: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -3589,9 +3551,7 @@ public struct KMLPlaylist: FlatBufferObject, Verifiable {
   }
 
   ///  Tour primitives
-  public var hasPrimitives: Bool { let o = _accessor.offset(VTOFFSET.PRIMITIVES.v); return o == 0 ? false : true }
-  public var PRIMITIVESCount: Int32 { let o = _accessor.offset(VTOFFSET.PRIMITIVES.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func PRIMITIVES(at index: Int32) -> KMLTourPrimitive? { let o = _accessor.offset(VTOFFSET.PRIMITIVES.v); return o == 0 ? nil : KMLTourPrimitive(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var PRIMITIVES: FlatbufferVector<KMLTourPrimitive> { return _accessor.vector(at: VTOFFSET.PRIMITIVES.v, byteSize: 4) }
   public static func startKMLPlaylist(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 1) }
   public static func addVectorOf(PRIMITIVES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PRIMITIVES, at: VTOFFSET.PRIMITIVES.p) }
   public static func endKMLPlaylist(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
@@ -3612,9 +3572,9 @@ public struct KMLPlaylist: FlatBufferObject, Verifiable {
 }
 
 ///  gx:Tour
-public struct KMLTour: FlatBufferObject, Verifiable {
+public struct KMLTour: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -3641,7 +3601,7 @@ public struct KMLTour: FlatBufferObject, Verifiable {
   ///  Visibility
   public var VISIBILITY: Bool { let o = _accessor.offset(VTOFFSET.VISIBILITY.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Playlist
-  public var PLAYLIST: KMLPlaylist? { let o = _accessor.offset(VTOFFSET.PLAYLIST.v); return o == 0 ? nil : KMLPlaylist(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var PLAYLIST: KMLPlaylist? { let o = _accessor.offset(VTOFFSET.PLAYLIST.v); return o == 0 ? nil : KMLPlaylist(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public static func startKMLTour(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
   public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
   public static func add(DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTION, at: VTOFFSET.DESCRIPTION.p) }
@@ -3675,9 +3635,9 @@ public struct KMLTour: FlatBufferObject, Verifiable {
 }
 
 ///  Placemark feature
-public struct KMLPlacemark: FlatBufferObject, Verifiable {
+public struct KMLPlacemark: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -3727,7 +3687,7 @@ public struct KMLPlacemark: FlatBufferObject, Verifiable {
   public var STYLE_URL: String? { let o = _accessor.offset(VTOFFSET.STYLE_URL.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var STYLE_URLSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.STYLE_URL.v) }
   ///  Inline style
-  public var STYLE: KMLStyle? { let o = _accessor.offset(VTOFFSET.STYLE.v); return o == 0 ? nil : KMLStyle(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var STYLE: KMLStyle? { let o = _accessor.offset(VTOFFSET.STYLE.v); return o == 0 ? nil : KMLStyle(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Snippet (short description)
   public var SNIPPET: String? { let o = _accessor.offset(VTOFFSET.SNIPPET.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var SNIPPETSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SNIPPET.v) }
@@ -3737,39 +3697,37 @@ public struct KMLPlacemark: FlatBufferObject, Verifiable {
   public var ADDRESS: String? { let o = _accessor.offset(VTOFFSET.ADDRESS.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var ADDRESSSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ADDRESS.v) }
   ///  Point geometry
-  public var POINT: KMLPoint? { let o = _accessor.offset(VTOFFSET.POINT.v); return o == 0 ? nil : KMLPoint(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var POINT: KMLPoint? { let o = _accessor.offset(VTOFFSET.POINT.v); return o == 0 ? nil : KMLPoint(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  LineString geometry
-  public var LINE_STRING: KMLLineString? { let o = _accessor.offset(VTOFFSET.LINE_STRING.v); return o == 0 ? nil : KMLLineString(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var LINE_STRING: KMLLineString? { let o = _accessor.offset(VTOFFSET.LINE_STRING.v); return o == 0 ? nil : KMLLineString(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Polygon geometry
-  public var POLYGON: KMLPolygon? { let o = _accessor.offset(VTOFFSET.POLYGON.v); return o == 0 ? nil : KMLPolygon(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var POLYGON: KMLPolygon? { let o = _accessor.offset(VTOFFSET.POLYGON.v); return o == 0 ? nil : KMLPolygon(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  LinearRing geometry (standalone)
-  public var LINEAR_RING: KMLLinearRing? { let o = _accessor.offset(VTOFFSET.LINEAR_RING.v); return o == 0 ? nil : KMLLinearRing(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var LINEAR_RING: KMLLinearRing? { let o = _accessor.offset(VTOFFSET.LINEAR_RING.v); return o == 0 ? nil : KMLLinearRing(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  MultiGeometry
-  public var MULTI_GEOMETRY: KMLMultiGeometry? { let o = _accessor.offset(VTOFFSET.MULTI_GEOMETRY.v); return o == 0 ? nil : KMLMultiGeometry(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var MULTI_GEOMETRY: KMLMultiGeometry? { let o = _accessor.offset(VTOFFSET.MULTI_GEOMETRY.v); return o == 0 ? nil : KMLMultiGeometry(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  3D Model
-  public var MODEL: KMLModel? { let o = _accessor.offset(VTOFFSET.MODEL.v); return o == 0 ? nil : KMLModel(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var MODEL: KMLModel? { let o = _accessor.offset(VTOFFSET.MODEL.v); return o == 0 ? nil : KMLModel(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  gx:Track
-  public var TRACK: KMLTrack? { let o = _accessor.offset(VTOFFSET.TRACK.v); return o == 0 ? nil : KMLTrack(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var TRACK: KMLTrack? { let o = _accessor.offset(VTOFFSET.TRACK.v); return o == 0 ? nil : KMLTrack(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  gx:MultiTrack
-  public var MULTI_TRACK: KMLMultiTrack? { let o = _accessor.offset(VTOFFSET.MULTI_TRACK.v); return o == 0 ? nil : KMLMultiTrack(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var MULTI_TRACK: KMLMultiTrack? { let o = _accessor.offset(VTOFFSET.MULTI_TRACK.v); return o == 0 ? nil : KMLMultiTrack(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  LookAt viewpoint
-  public var LOOK_AT: KMLLookAt? { let o = _accessor.offset(VTOFFSET.LOOK_AT.v); return o == 0 ? nil : KMLLookAt(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var LOOK_AT: KMLLookAt? { let o = _accessor.offset(VTOFFSET.LOOK_AT.v); return o == 0 ? nil : KMLLookAt(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Camera viewpoint
-  public var CAMERA: KMLCamera? { let o = _accessor.offset(VTOFFSET.CAMERA.v); return o == 0 ? nil : KMLCamera(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var CAMERA: KMLCamera? { let o = _accessor.offset(VTOFFSET.CAMERA.v); return o == 0 ? nil : KMLCamera(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  TimeSpan
-  public var TIME_SPAN: KMLTimeSpan? { let o = _accessor.offset(VTOFFSET.TIME_SPAN.v); return o == 0 ? nil : KMLTimeSpan(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var TIME_SPAN: KMLTimeSpan? { let o = _accessor.offset(VTOFFSET.TIME_SPAN.v); return o == 0 ? nil : KMLTimeSpan(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  TimeStamp
-  public var TIME_STAMP: KMLTimeStamp? { let o = _accessor.offset(VTOFFSET.TIME_STAMP.v); return o == 0 ? nil : KMLTimeStamp(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var TIME_STAMP: KMLTimeStamp? { let o = _accessor.offset(VTOFFSET.TIME_STAMP.v); return o == 0 ? nil : KMLTimeStamp(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Extended data
-  public var hasExtendedData: Bool { let o = _accessor.offset(VTOFFSET.EXTENDED_DATA.v); return o == 0 ? false : true }
-  public var EXTENDED_DATACount: Int32 { let o = _accessor.offset(VTOFFSET.EXTENDED_DATA.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func EXTENDED_DATA(at index: Int32) -> KMLData? { let o = _accessor.offset(VTOFFSET.EXTENDED_DATA.v); return o == 0 ? nil : KMLData(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var EXTENDED_DATA: FlatbufferVector<KMLData> { return _accessor.vector(at: VTOFFSET.EXTENDED_DATA.v, byteSize: 4) }
   ///  Schema data
-  public var SCHEMA_DATA: KMLSchemaData? { let o = _accessor.offset(VTOFFSET.SCHEMA_DATA.v); return o == 0 ? nil : KMLSchemaData(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var SCHEMA_DATA: KMLSchemaData? { let o = _accessor.offset(VTOFFSET.SCHEMA_DATA.v); return o == 0 ? nil : KMLSchemaData(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Region
-  public var REGION: KMLRegion? { let o = _accessor.offset(VTOFFSET.REGION.v); return o == 0 ? nil : KMLRegion(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var REGION: KMLRegion? { let o = _accessor.offset(VTOFFSET.REGION.v); return o == 0 ? nil : KMLRegion(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  StyleMap (inline)
-  public var STYLE_MAP: KMLStyleMap? { let o = _accessor.offset(VTOFFSET.STYLE_MAP.v); return o == 0 ? nil : KMLStyleMap(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var STYLE_MAP: KMLStyleMap? { let o = _accessor.offset(VTOFFSET.STYLE_MAP.v); return o == 0 ? nil : KMLStyleMap(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public static func startKMLPlacemark(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 24) }
   public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
   public static func add(DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTION, at: VTOFFSET.DESCRIPTION.p) }
@@ -3884,9 +3842,9 @@ public struct KMLPlacemark: FlatBufferObject, Verifiable {
 }
 
 ///  Folder container
-public struct KMLFolder: FlatBufferObject, Verifiable {
+public struct KMLFolder: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -3931,58 +3889,38 @@ public struct KMLFolder: FlatBufferObject, Verifiable {
   ///  Whether folder is open in tree view
   public var OPEN: Bool { let o = _accessor.offset(VTOFFSET.OPEN.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Placemarks in this folder
-  public var hasPlacemarks: Bool { let o = _accessor.offset(VTOFFSET.PLACEMARKS.v); return o == 0 ? false : true }
-  public var PLACEMARKSCount: Int32 { let o = _accessor.offset(VTOFFSET.PLACEMARKS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func PLACEMARKS(at index: Int32) -> KMLPlacemark? { let o = _accessor.offset(VTOFFSET.PLACEMARKS.v); return o == 0 ? nil : KMLPlacemark(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var PLACEMARKS: FlatbufferVector<KMLPlacemark> { return _accessor.vector(at: VTOFFSET.PLACEMARKS.v, byteSize: 4) }
   ///  Sub-folders
-  public var hasFolders: Bool { let o = _accessor.offset(VTOFFSET.FOLDERS.v); return o == 0 ? false : true }
-  public var FOLDERSCount: Int32 { let o = _accessor.offset(VTOFFSET.FOLDERS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func FOLDERS(at index: Int32) -> KMLFolder? { let o = _accessor.offset(VTOFFSET.FOLDERS.v); return o == 0 ? nil : KMLFolder(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var FOLDERS: FlatbufferVector<KMLFolder> { return _accessor.vector(at: VTOFFSET.FOLDERS.v, byteSize: 4) }
   ///  Network links
-  public var hasNetworkLinks: Bool { let o = _accessor.offset(VTOFFSET.NETWORK_LINKS.v); return o == 0 ? false : true }
-  public var NETWORK_LINKSCount: Int32 { let o = _accessor.offset(VTOFFSET.NETWORK_LINKS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func NETWORK_LINKS(at index: Int32) -> KMLNetworkLink? { let o = _accessor.offset(VTOFFSET.NETWORK_LINKS.v); return o == 0 ? nil : KMLNetworkLink(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var NETWORK_LINKS: FlatbufferVector<KMLNetworkLink> { return _accessor.vector(at: VTOFFSET.NETWORK_LINKS.v, byteSize: 4) }
   ///  Ground overlays
-  public var hasGroundOverlays: Bool { let o = _accessor.offset(VTOFFSET.GROUND_OVERLAYS.v); return o == 0 ? false : true }
-  public var GROUND_OVERLAYSCount: Int32 { let o = _accessor.offset(VTOFFSET.GROUND_OVERLAYS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func GROUND_OVERLAYS(at index: Int32) -> KMLGroundOverlay? { let o = _accessor.offset(VTOFFSET.GROUND_OVERLAYS.v); return o == 0 ? nil : KMLGroundOverlay(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var GROUND_OVERLAYS: FlatbufferVector<KMLGroundOverlay> { return _accessor.vector(at: VTOFFSET.GROUND_OVERLAYS.v, byteSize: 4) }
   ///  Shared styles
-  public var hasStyles: Bool { let o = _accessor.offset(VTOFFSET.STYLES.v); return o == 0 ? false : true }
-  public var STYLESCount: Int32 { let o = _accessor.offset(VTOFFSET.STYLES.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func STYLES(at index: Int32) -> KMLStyle? { let o = _accessor.offset(VTOFFSET.STYLES.v); return o == 0 ? nil : KMLStyle(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var STYLES: FlatbufferVector<KMLStyle> { return _accessor.vector(at: VTOFFSET.STYLES.v, byteSize: 4) }
   ///  Style maps
-  public var hasStyleMaps: Bool { let o = _accessor.offset(VTOFFSET.STYLE_MAPS.v); return o == 0 ? false : true }
-  public var STYLE_MAPSCount: Int32 { let o = _accessor.offset(VTOFFSET.STYLE_MAPS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func STYLE_MAPS(at index: Int32) -> KMLStyleMap? { let o = _accessor.offset(VTOFFSET.STYLE_MAPS.v); return o == 0 ? nil : KMLStyleMap(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var STYLE_MAPS: FlatbufferVector<KMLStyleMap> { return _accessor.vector(at: VTOFFSET.STYLE_MAPS.v, byteSize: 4) }
   ///  Screen overlays
-  public var hasScreenOverlays: Bool { let o = _accessor.offset(VTOFFSET.SCREEN_OVERLAYS.v); return o == 0 ? false : true }
-  public var SCREEN_OVERLAYSCount: Int32 { let o = _accessor.offset(VTOFFSET.SCREEN_OVERLAYS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func SCREEN_OVERLAYS(at index: Int32) -> KMLScreenOverlay? { let o = _accessor.offset(VTOFFSET.SCREEN_OVERLAYS.v); return o == 0 ? nil : KMLScreenOverlay(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var SCREEN_OVERLAYS: FlatbufferVector<KMLScreenOverlay> { return _accessor.vector(at: VTOFFSET.SCREEN_OVERLAYS.v, byteSize: 4) }
   ///  Photo overlays
-  public var hasPhotoOverlays: Bool { let o = _accessor.offset(VTOFFSET.PHOTO_OVERLAYS.v); return o == 0 ? false : true }
-  public var PHOTO_OVERLAYSCount: Int32 { let o = _accessor.offset(VTOFFSET.PHOTO_OVERLAYS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func PHOTO_OVERLAYS(at index: Int32) -> KMLPhotoOverlay? { let o = _accessor.offset(VTOFFSET.PHOTO_OVERLAYS.v); return o == 0 ? nil : KMLPhotoOverlay(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var PHOTO_OVERLAYS: FlatbufferVector<KMLPhotoOverlay> { return _accessor.vector(at: VTOFFSET.PHOTO_OVERLAYS.v, byteSize: 4) }
   ///  Tours
-  public var hasTours: Bool { let o = _accessor.offset(VTOFFSET.TOURS.v); return o == 0 ? false : true }
-  public var TOURSCount: Int32 { let o = _accessor.offset(VTOFFSET.TOURS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func TOURS(at index: Int32) -> KMLTour? { let o = _accessor.offset(VTOFFSET.TOURS.v); return o == 0 ? nil : KMLTour(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var TOURS: FlatbufferVector<KMLTour> { return _accessor.vector(at: VTOFFSET.TOURS.v, byteSize: 4) }
   ///  Style URL reference
   public var STYLE_URL: String? { let o = _accessor.offset(VTOFFSET.STYLE_URL.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var STYLE_URLSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.STYLE_URL.v) }
   ///  Region
-  public var REGION: KMLRegion? { let o = _accessor.offset(VTOFFSET.REGION.v); return o == 0 ? nil : KMLRegion(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var REGION: KMLRegion? { let o = _accessor.offset(VTOFFSET.REGION.v); return o == 0 ? nil : KMLRegion(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Extended data
-  public var hasExtendedData: Bool { let o = _accessor.offset(VTOFFSET.EXTENDED_DATA.v); return o == 0 ? false : true }
-  public var EXTENDED_DATACount: Int32 { let o = _accessor.offset(VTOFFSET.EXTENDED_DATA.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func EXTENDED_DATA(at index: Int32) -> KMLData? { let o = _accessor.offset(VTOFFSET.EXTENDED_DATA.v); return o == 0 ? nil : KMLData(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var EXTENDED_DATA: FlatbufferVector<KMLData> { return _accessor.vector(at: VTOFFSET.EXTENDED_DATA.v, byteSize: 4) }
   ///  LookAt viewpoint
-  public var LOOK_AT: KMLLookAt? { let o = _accessor.offset(VTOFFSET.LOOK_AT.v); return o == 0 ? nil : KMLLookAt(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var LOOK_AT: KMLLookAt? { let o = _accessor.offset(VTOFFSET.LOOK_AT.v); return o == 0 ? nil : KMLLookAt(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Camera viewpoint
-  public var CAMERA: KMLCamera? { let o = _accessor.offset(VTOFFSET.CAMERA.v); return o == 0 ? nil : KMLCamera(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var CAMERA: KMLCamera? { let o = _accessor.offset(VTOFFSET.CAMERA.v); return o == 0 ? nil : KMLCamera(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  TimeSpan
-  public var TIME_SPAN: KMLTimeSpan? { let o = _accessor.offset(VTOFFSET.TIME_SPAN.v); return o == 0 ? nil : KMLTimeSpan(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var TIME_SPAN: KMLTimeSpan? { let o = _accessor.offset(VTOFFSET.TIME_SPAN.v); return o == 0 ? nil : KMLTimeSpan(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  TimeStamp
-  public var TIME_STAMP: KMLTimeStamp? { let o = _accessor.offset(VTOFFSET.TIME_STAMP.v); return o == 0 ? nil : KMLTimeStamp(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var TIME_STAMP: KMLTimeStamp? { let o = _accessor.offset(VTOFFSET.TIME_STAMP.v); return o == 0 ? nil : KMLTimeStamp(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public static func startKMLFolder(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 20) }
   public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
   public static func add(DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTION, at: VTOFFSET.DESCRIPTION.p) }
@@ -4081,9 +4019,9 @@ public struct KMLFolder: FlatBufferObject, Verifiable {
 }
 
 ///  KML Document
-public struct KML: FlatBufferObject, Verifiable {
+public struct KML: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -4123,47 +4061,27 @@ public struct KML: FlatBufferObject, Verifiable {
   ///  Whether document is open in tree view
   public var OPEN: Bool { let o = _accessor.offset(VTOFFSET.OPEN.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Shared styles
-  public var hasStyles: Bool { let o = _accessor.offset(VTOFFSET.STYLES.v); return o == 0 ? false : true }
-  public var STYLESCount: Int32 { let o = _accessor.offset(VTOFFSET.STYLES.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func STYLES(at index: Int32) -> KMLStyle? { let o = _accessor.offset(VTOFFSET.STYLES.v); return o == 0 ? nil : KMLStyle(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var STYLES: FlatbufferVector<KMLStyle> { return _accessor.vector(at: VTOFFSET.STYLES.v, byteSize: 4) }
   ///  Style maps
-  public var hasStyleMaps: Bool { let o = _accessor.offset(VTOFFSET.STYLE_MAPS.v); return o == 0 ? false : true }
-  public var STYLE_MAPSCount: Int32 { let o = _accessor.offset(VTOFFSET.STYLE_MAPS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func STYLE_MAPS(at index: Int32) -> KMLStyleMap? { let o = _accessor.offset(VTOFFSET.STYLE_MAPS.v); return o == 0 ? nil : KMLStyleMap(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var STYLE_MAPS: FlatbufferVector<KMLStyleMap> { return _accessor.vector(at: VTOFFSET.STYLE_MAPS.v, byteSize: 4) }
   ///  Top-level placemarks
-  public var hasPlacemarks: Bool { let o = _accessor.offset(VTOFFSET.PLACEMARKS.v); return o == 0 ? false : true }
-  public var PLACEMARKSCount: Int32 { let o = _accessor.offset(VTOFFSET.PLACEMARKS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func PLACEMARKS(at index: Int32) -> KMLPlacemark? { let o = _accessor.offset(VTOFFSET.PLACEMARKS.v); return o == 0 ? nil : KMLPlacemark(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var PLACEMARKS: FlatbufferVector<KMLPlacemark> { return _accessor.vector(at: VTOFFSET.PLACEMARKS.v, byteSize: 4) }
   ///  Top-level folders
-  public var hasFolders: Bool { let o = _accessor.offset(VTOFFSET.FOLDERS.v); return o == 0 ? false : true }
-  public var FOLDERSCount: Int32 { let o = _accessor.offset(VTOFFSET.FOLDERS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func FOLDERS(at index: Int32) -> KMLFolder? { let o = _accessor.offset(VTOFFSET.FOLDERS.v); return o == 0 ? nil : KMLFolder(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var FOLDERS: FlatbufferVector<KMLFolder> { return _accessor.vector(at: VTOFFSET.FOLDERS.v, byteSize: 4) }
   ///  Network links
-  public var hasNetworkLinks: Bool { let o = _accessor.offset(VTOFFSET.NETWORK_LINKS.v); return o == 0 ? false : true }
-  public var NETWORK_LINKSCount: Int32 { let o = _accessor.offset(VTOFFSET.NETWORK_LINKS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func NETWORK_LINKS(at index: Int32) -> KMLNetworkLink? { let o = _accessor.offset(VTOFFSET.NETWORK_LINKS.v); return o == 0 ? nil : KMLNetworkLink(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var NETWORK_LINKS: FlatbufferVector<KMLNetworkLink> { return _accessor.vector(at: VTOFFSET.NETWORK_LINKS.v, byteSize: 4) }
   ///  Ground overlays
-  public var hasGroundOverlays: Bool { let o = _accessor.offset(VTOFFSET.GROUND_OVERLAYS.v); return o == 0 ? false : true }
-  public var GROUND_OVERLAYSCount: Int32 { let o = _accessor.offset(VTOFFSET.GROUND_OVERLAYS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func GROUND_OVERLAYS(at index: Int32) -> KMLGroundOverlay? { let o = _accessor.offset(VTOFFSET.GROUND_OVERLAYS.v); return o == 0 ? nil : KMLGroundOverlay(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var GROUND_OVERLAYS: FlatbufferVector<KMLGroundOverlay> { return _accessor.vector(at: VTOFFSET.GROUND_OVERLAYS.v, byteSize: 4) }
   ///  Schemas
-  public var hasSchemas: Bool { let o = _accessor.offset(VTOFFSET.SCHEMAS.v); return o == 0 ? false : true }
-  public var SCHEMASCount: Int32 { let o = _accessor.offset(VTOFFSET.SCHEMAS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func SCHEMAS(at index: Int32) -> KMLSchema? { let o = _accessor.offset(VTOFFSET.SCHEMAS.v); return o == 0 ? nil : KMLSchema(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var SCHEMAS: FlatbufferVector<KMLSchema> { return _accessor.vector(at: VTOFFSET.SCHEMAS.v, byteSize: 4) }
   ///  Screen overlays
-  public var hasScreenOverlays: Bool { let o = _accessor.offset(VTOFFSET.SCREEN_OVERLAYS.v); return o == 0 ? false : true }
-  public var SCREEN_OVERLAYSCount: Int32 { let o = _accessor.offset(VTOFFSET.SCREEN_OVERLAYS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func SCREEN_OVERLAYS(at index: Int32) -> KMLScreenOverlay? { let o = _accessor.offset(VTOFFSET.SCREEN_OVERLAYS.v); return o == 0 ? nil : KMLScreenOverlay(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var SCREEN_OVERLAYS: FlatbufferVector<KMLScreenOverlay> { return _accessor.vector(at: VTOFFSET.SCREEN_OVERLAYS.v, byteSize: 4) }
   ///  Photo overlays
-  public var hasPhotoOverlays: Bool { let o = _accessor.offset(VTOFFSET.PHOTO_OVERLAYS.v); return o == 0 ? false : true }
-  public var PHOTO_OVERLAYSCount: Int32 { let o = _accessor.offset(VTOFFSET.PHOTO_OVERLAYS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func PHOTO_OVERLAYS(at index: Int32) -> KMLPhotoOverlay? { let o = _accessor.offset(VTOFFSET.PHOTO_OVERLAYS.v); return o == 0 ? nil : KMLPhotoOverlay(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var PHOTO_OVERLAYS: FlatbufferVector<KMLPhotoOverlay> { return _accessor.vector(at: VTOFFSET.PHOTO_OVERLAYS.v, byteSize: 4) }
   ///  Tours
-  public var hasTours: Bool { let o = _accessor.offset(VTOFFSET.TOURS.v); return o == 0 ? false : true }
-  public var TOURSCount: Int32 { let o = _accessor.offset(VTOFFSET.TOURS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func TOURS(at index: Int32) -> KMLTour? { let o = _accessor.offset(VTOFFSET.TOURS.v); return o == 0 ? nil : KMLTour(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var TOURS: FlatbufferVector<KMLTour> { return _accessor.vector(at: VTOFFSET.TOURS.v, byteSize: 4) }
   ///  NetworkLinkControl
-  public var NETWORK_LINK_CONTROL: KMLNetworkLinkControl? { let o = _accessor.offset(VTOFFSET.NETWORK_LINK_CONTROL.v); return o == 0 ? nil : KMLNetworkLinkControl(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var NETWORK_LINK_CONTROL: KMLNetworkLinkControl? { let o = _accessor.offset(VTOFFSET.NETWORK_LINK_CONTROL.v); return o == 0 ? nil : KMLNetworkLinkControl(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public static func startKML(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 15) }
   public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
   public static func add(DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTION, at: VTOFFSET.DESCRIPTION.p) }

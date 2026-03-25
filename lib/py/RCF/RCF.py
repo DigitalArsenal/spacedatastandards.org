@@ -187,6 +187,16 @@ def RCFStartDATAVector(builder, numElems):
 def StartDATAVector(builder, numElems):
     return RCFStartDATAVector(builder, numElems)
 
+def RCFCreateDATAVector(builder, data):
+    data = list(data)
+    builder.StartVector(1, len(data), 1)
+    for item in reversed(data):
+        builder.PrependUint8(item)
+    return builder.EndVector()
+
+def CreateDATAVector(builder, data):
+    RCFCreateDATAVector(builder, data)
+
 def RCFEnd(builder):
     return builder.EndObject()
 
@@ -201,22 +211,33 @@ except:
 class RCFT(object):
 
     # RCFT
-    def __init__(self):
-        self.PDU_TYPE = 0  # type: int
-        self.INITIATOR_ID = None  # type: str
-        self.RESPONDER_PORT_ID = None  # type: str
-        self.SERVICE_TYPE = 0  # type: int
-        self.VERSION = 0  # type: int
-        self.INVOKE_ID = 0  # type: int
-        self.SPACECRAFT_ID = 0  # type: int
-        self.VIRTUAL_CHANNEL_ID = 0  # type: int
-        self.DATA = None  # type: List[int]
+    def __init__(
+        self,
+        PDU_TYPE = 0,
+        INITIATOR_ID = None,
+        RESPONDER_PORT_ID = None,
+        SERVICE_TYPE = 0,
+        VERSION = 0,
+        INVOKE_ID = 0,
+        SPACECRAFT_ID = 0,
+        VIRTUAL_CHANNEL_ID = 0,
+        DATA = None,
+    ):
+        self.PDU_TYPE = PDU_TYPE  # type: int
+        self.INITIATOR_ID = INITIATOR_ID  # type: Optional[str]
+        self.RESPONDER_PORT_ID = RESPONDER_PORT_ID  # type: Optional[str]
+        self.SERVICE_TYPE = SERVICE_TYPE  # type: int
+        self.VERSION = VERSION  # type: int
+        self.INVOKE_ID = INVOKE_ID  # type: int
+        self.SPACECRAFT_ID = SPACECRAFT_ID  # type: int
+        self.VIRTUAL_CHANNEL_ID = VIRTUAL_CHANNEL_ID  # type: int
+        self.DATA = DATA  # type: Optional[List[int]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        RCF = RCF()
-        RCF.Init(buf, pos)
-        return cls.InitFromObj(RCF)
+        tmpRcf = RCF()
+        tmpRcf.Init(buf, pos)
+        return cls.InitFromObj(tmpRcf)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -224,9 +245,9 @@ class RCFT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, RCF):
+    def InitFromObj(cls, tmpRcf):
         x = RCFT()
-        x._UnPack(RCF)
+        x._UnPack(tmpRcf)
         return x
 
     # RCFT

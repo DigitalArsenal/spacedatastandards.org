@@ -32,7 +32,7 @@ class ATD : Table() {
     /**
      * Unique identifier
      */
-    val ID : String?
+    val id : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class ATD : Table() {
                 null
             }
         }
-    val IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val idAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun idInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Attitude set identifier (groups time-series points)
      */
-    val AS_ID : String?
+    val asId : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -55,12 +55,12 @@ class ATD : Table() {
                 null
             }
         }
-    val AS_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun AS_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val asIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun asIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * Satellite catalog number
      */
-    val SAT_NO : UInt
+    val satNo : UInt
         get() {
             val o = __offset(8)
             return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
@@ -68,7 +68,7 @@ class ATD : Table() {
     /**
      * International designator
      */
-    val ORIG_OBJECT_ID : String?
+    val origObjectId : String?
         get() {
             val o = __offset(10)
             return if (o != 0) {
@@ -77,12 +77,12 @@ class ATD : Table() {
                 null
             }
         }
-    val ORIG_OBJECT_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
-    fun ORIG_OBJECT_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
+    val origObjectIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(10, 1)
+    fun origObjectIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 10, 1)
     /**
      * Observation epoch (ISO 8601)
      */
-    val EPOCH : String?
+    val epoch : String?
         get() {
             val o = __offset(12)
             return if (o != 0) {
@@ -91,12 +91,12 @@ class ATD : Table() {
                 null
             }
         }
-    val EPOCHAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
-    fun EPOCHInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
+    val epochAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(12, 1)
+    fun epochInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 12, 1)
     /**
      * Attitude representation used
      */
-    val REPRESENTATION : Byte
+    val representation : Byte
         get() {
             val o = __offset(14)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -104,7 +104,7 @@ class ATD : Table() {
     /**
      * Motion characterization
      */
-    val MOTION_TYPE : Byte
+    val motionType : Byte
         get() {
             val o = __offset(16)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -112,7 +112,7 @@ class ATD : Table() {
     /**
      * Quaternion scalar component (q0 or qc)
      */
-    val QC : Double
+    val qc : Double
         get() {
             val o = __offset(18)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -120,7 +120,7 @@ class ATD : Table() {
     /**
      * Quaternion vector component 1
      */
-    val Q1 : Double
+    val q1 : Double
         get() {
             val o = __offset(20)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -128,7 +128,7 @@ class ATD : Table() {
     /**
      * Quaternion vector component 2
      */
-    val Q2 : Double
+    val q2 : Double
         get() {
             val o = __offset(22)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -136,7 +136,7 @@ class ATD : Table() {
     /**
      * Quaternion vector component 3
      */
-    val Q3 : Double
+    val q3 : Double
         get() {
             val o = __offset(24)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -144,7 +144,7 @@ class ATD : Table() {
     /**
      * Quaternion scalar rate (rad/s)
      */
-    val QC_DOT : Double
+    val qcDot : Double
         get() {
             val o = __offset(26)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -152,7 +152,7 @@ class ATD : Table() {
     /**
      * Quaternion vector rate 1 (rad/s)
      */
-    val Q1_DOT : Double
+    val q1Dot : Double
         get() {
             val o = __offset(28)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -160,7 +160,7 @@ class ATD : Table() {
     /**
      * Quaternion vector rate 2 (rad/s)
      */
-    val Q2_DOT : Double
+    val q2Dot : Double
         get() {
             val o = __offset(30)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -168,7 +168,7 @@ class ATD : Table() {
     /**
      * Quaternion vector rate 3 (rad/s)
      */
-    val Q3_DOT : Double
+    val q3Dot : Double
         get() {
             val o = __offset(32)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -176,7 +176,7 @@ class ATD : Table() {
     /**
      * Euler angle X (degrees)
      */
-    val X_ANGLE : Double
+    val xAngle : Double
         get() {
             val o = __offset(34)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -184,7 +184,7 @@ class ATD : Table() {
     /**
      * Euler angle Y (degrees)
      */
-    val Y_ANGLE : Double
+    val yAngle : Double
         get() {
             val o = __offset(36)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -192,7 +192,7 @@ class ATD : Table() {
     /**
      * Euler angle Z (degrees)
      */
-    val Z_ANGLE : Double
+    val zAngle : Double
         get() {
             val o = __offset(38)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -200,7 +200,7 @@ class ATD : Table() {
     /**
      * Angular rate about X (deg/s)
      */
-    val X_RATE : Double
+    val xRate : Double
         get() {
             val o = __offset(40)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -208,7 +208,7 @@ class ATD : Table() {
     /**
      * Angular rate about Y (deg/s)
      */
-    val Y_RATE : Double
+    val yRate : Double
         get() {
             val o = __offset(42)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -216,7 +216,7 @@ class ATD : Table() {
     /**
      * Angular rate about Z (deg/s)
      */
-    val Z_RATE : Double
+    val zRate : Double
         get() {
             val o = __offset(44)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -224,7 +224,7 @@ class ATD : Table() {
     /**
      * Right ascension of spin axis (degrees)
      */
-    val RA : Double
+    val ra : Double
         get() {
             val o = __offset(46)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -232,7 +232,7 @@ class ATD : Table() {
     /**
      * Declination of spin axis (degrees)
      */
-    val DECLINATION : Double
+    val declination : Double
         get() {
             val o = __offset(48)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -240,7 +240,7 @@ class ATD : Table() {
     /**
      * Coning half-angle (degrees)
      */
-    val CONING_ANGLE : Double
+    val coningAngle : Double
         get() {
             val o = __offset(50)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -248,7 +248,7 @@ class ATD : Table() {
     /**
      * Precession period (seconds)
      */
-    val PREC_PERIOD : Double
+    val precPeriod : Double
         get() {
             val o = __offset(52)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -256,7 +256,7 @@ class ATD : Table() {
     /**
      * Spin period (seconds)
      */
-    val SPIN_PERIOD : Double
+    val spinPeriod : Double
         get() {
             val o = __offset(54)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -264,7 +264,7 @@ class ATD : Table() {
     /**
      * Attitude uncertainty (degrees, 1-sigma)
      */
-    val ATTITUDE_UNC : Double
+    val attitudeUnc : Double
         get() {
             val o = __offset(56)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -272,7 +272,7 @@ class ATD : Table() {
     /**
      * Rate uncertainty (deg/s, 1-sigma)
      */
-    val RATE_UNC : Double
+    val rateUnc : Double
         get() {
             val o = __offset(58)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -280,7 +280,7 @@ class ATD : Table() {
     /**
      * Data quality (0-9, 9=best)
      */
-    val QUALITY : UByte
+    val quality : UByte
         get() {
             val o = __offset(60)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
@@ -288,7 +288,7 @@ class ATD : Table() {
     /**
      * Reference frame for attitude
      */
-    val REF_FRAME : String?
+    val refFrame : String?
         get() {
             val o = __offset(62)
             return if (o != 0) {
@@ -297,12 +297,12 @@ class ATD : Table() {
                 null
             }
         }
-    val REF_FRAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(62, 1)
-    fun REF_FRAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 62, 1)
+    val refFrameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(62, 1)
+    fun refFrameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 62, 1)
     /**
      * Sensor identifier providing the observation
      */
-    val SENSOR_ID : String?
+    val sensorId : String?
         get() {
             val o = __offset(64)
             return if (o != 0) {
@@ -311,83 +311,83 @@ class ATD : Table() {
                 null
             }
         }
-    val SENSOR_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(64, 1)
-    fun SENSOR_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 64, 1)
+    val sensorIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(64, 1)
+    fun sensorIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 64, 1)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsATD(_bb: ByteBuffer): ATD = getRootAsATD(_bb, ATD())
         fun getRootAsATD(_bb: ByteBuffer, obj: ATD): ATD {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun ATDBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$ATD")
-        fun createATD(builder: FlatBufferBuilder, IDOffset: Int, AS_IDOffset: Int, SAT_NO: UInt, ORIG_OBJECT_IDOffset: Int, EPOCHOffset: Int, REPRESENTATION: Byte, MOTION_TYPE: Byte, QC: Double, Q1: Double, Q2: Double, Q3: Double, QC_DOT: Double, Q1_DOT: Double, Q2_DOT: Double, Q3_DOT: Double, X_ANGLE: Double, Y_ANGLE: Double, Z_ANGLE: Double, X_RATE: Double, Y_RATE: Double, Z_RATE: Double, RA: Double, DECLINATION: Double, CONING_ANGLE: Double, PREC_PERIOD: Double, SPIN_PERIOD: Double, ATTITUDE_UNC: Double, RATE_UNC: Double, QUALITY: UByte, REF_FRAMEOffset: Int, SENSOR_IDOffset: Int) : Int {
+        fun createATD(builder: FlatBufferBuilder, idOffset: Int, asIdOffset: Int, satNo: UInt, origObjectIdOffset: Int, epochOffset: Int, representation: Byte, motionType: Byte, qc: Double, q1: Double, q2: Double, q3: Double, qcDot: Double, q1Dot: Double, q2Dot: Double, q3Dot: Double, xAngle: Double, yAngle: Double, zAngle: Double, xRate: Double, yRate: Double, zRate: Double, ra: Double, declination: Double, coningAngle: Double, precPeriod: Double, spinPeriod: Double, attitudeUnc: Double, rateUnc: Double, quality: UByte, refFrameOffset: Int, sensorIdOffset: Int) : Int {
             builder.startTable(31)
-            addRATE_UNC(builder, RATE_UNC)
-            addATTITUDE_UNC(builder, ATTITUDE_UNC)
-            addSPIN_PERIOD(builder, SPIN_PERIOD)
-            addPREC_PERIOD(builder, PREC_PERIOD)
-            addCONING_ANGLE(builder, CONING_ANGLE)
-            addDECLINATION(builder, DECLINATION)
-            addRA(builder, RA)
-            addZ_RATE(builder, Z_RATE)
-            addY_RATE(builder, Y_RATE)
-            addX_RATE(builder, X_RATE)
-            addZ_ANGLE(builder, Z_ANGLE)
-            addY_ANGLE(builder, Y_ANGLE)
-            addX_ANGLE(builder, X_ANGLE)
-            addQ3_DOT(builder, Q3_DOT)
-            addQ2_DOT(builder, Q2_DOT)
-            addQ1_DOT(builder, Q1_DOT)
-            addQC_DOT(builder, QC_DOT)
-            addQ3(builder, Q3)
-            addQ2(builder, Q2)
-            addQ1(builder, Q1)
-            addQC(builder, QC)
-            addSENSOR_ID(builder, SENSOR_IDOffset)
-            addREF_FRAME(builder, REF_FRAMEOffset)
-            addEPOCH(builder, EPOCHOffset)
-            addORIG_OBJECT_ID(builder, ORIG_OBJECT_IDOffset)
-            addSAT_NO(builder, SAT_NO)
-            addAS_ID(builder, AS_IDOffset)
-            addID(builder, IDOffset)
-            addQUALITY(builder, QUALITY)
-            addMOTION_TYPE(builder, MOTION_TYPE)
-            addREPRESENTATION(builder, REPRESENTATION)
+            addRATEUNC(builder, rateUnc)
+            addATTITUDEUNC(builder, attitudeUnc)
+            addSPINPERIOD(builder, spinPeriod)
+            addPRECPERIOD(builder, precPeriod)
+            addCONINGANGLE(builder, coningAngle)
+            addDECLINATION(builder, declination)
+            addRA(builder, ra)
+            addZRATE(builder, zRate)
+            addYRATE(builder, yRate)
+            addXRATE(builder, xRate)
+            addZANGLE(builder, zAngle)
+            addYANGLE(builder, yAngle)
+            addXANGLE(builder, xAngle)
+            addQ3DOT(builder, q3Dot)
+            addQ2DOT(builder, q2Dot)
+            addQ1DOT(builder, q1Dot)
+            addQCDOT(builder, qcDot)
+            addQ3(builder, q3)
+            addQ2(builder, q2)
+            addQ1(builder, q1)
+            addQC(builder, qc)
+            addSENSORID(builder, sensorIdOffset)
+            addREFFRAME(builder, refFrameOffset)
+            addEPOCH(builder, epochOffset)
+            addORIGOBJECTID(builder, origObjectIdOffset)
+            addSATNO(builder, satNo)
+            addASID(builder, asIdOffset)
+            addID(builder, idOffset)
+            addQUALITY(builder, quality)
+            addMOTIONTYPE(builder, motionType)
+            addREPRESENTATION(builder, representation)
             return endATD(builder)
         }
         fun startATD(builder: FlatBufferBuilder) = builder.startTable(31)
-        fun addID(builder: FlatBufferBuilder, ID: Int) = builder.addOffset(0, ID, 0)
-        fun addAS_ID(builder: FlatBufferBuilder, AS_ID: Int) = builder.addOffset(1, AS_ID, 0)
-        fun addSAT_NO(builder: FlatBufferBuilder, SAT_NO: UInt) = builder.addInt(2, SAT_NO.toInt(), 0)
-        fun addORIG_OBJECT_ID(builder: FlatBufferBuilder, ORIG_OBJECT_ID: Int) = builder.addOffset(3, ORIG_OBJECT_ID, 0)
-        fun addEPOCH(builder: FlatBufferBuilder, EPOCH: Int) = builder.addOffset(4, EPOCH, 0)
-        fun addREPRESENTATION(builder: FlatBufferBuilder, REPRESENTATION: Byte) = builder.addByte(5, REPRESENTATION, 0)
-        fun addMOTION_TYPE(builder: FlatBufferBuilder, MOTION_TYPE: Byte) = builder.addByte(6, MOTION_TYPE, 0)
-        fun addQC(builder: FlatBufferBuilder, QC: Double) = builder.addDouble(7, QC, 0.0)
-        fun addQ1(builder: FlatBufferBuilder, Q1: Double) = builder.addDouble(8, Q1, 0.0)
-        fun addQ2(builder: FlatBufferBuilder, Q2: Double) = builder.addDouble(9, Q2, 0.0)
-        fun addQ3(builder: FlatBufferBuilder, Q3: Double) = builder.addDouble(10, Q3, 0.0)
-        fun addQC_DOT(builder: FlatBufferBuilder, QC_DOT: Double) = builder.addDouble(11, QC_DOT, 0.0)
-        fun addQ1_DOT(builder: FlatBufferBuilder, Q1_DOT: Double) = builder.addDouble(12, Q1_DOT, 0.0)
-        fun addQ2_DOT(builder: FlatBufferBuilder, Q2_DOT: Double) = builder.addDouble(13, Q2_DOT, 0.0)
-        fun addQ3_DOT(builder: FlatBufferBuilder, Q3_DOT: Double) = builder.addDouble(14, Q3_DOT, 0.0)
-        fun addX_ANGLE(builder: FlatBufferBuilder, X_ANGLE: Double) = builder.addDouble(15, X_ANGLE, 0.0)
-        fun addY_ANGLE(builder: FlatBufferBuilder, Y_ANGLE: Double) = builder.addDouble(16, Y_ANGLE, 0.0)
-        fun addZ_ANGLE(builder: FlatBufferBuilder, Z_ANGLE: Double) = builder.addDouble(17, Z_ANGLE, 0.0)
-        fun addX_RATE(builder: FlatBufferBuilder, X_RATE: Double) = builder.addDouble(18, X_RATE, 0.0)
-        fun addY_RATE(builder: FlatBufferBuilder, Y_RATE: Double) = builder.addDouble(19, Y_RATE, 0.0)
-        fun addZ_RATE(builder: FlatBufferBuilder, Z_RATE: Double) = builder.addDouble(20, Z_RATE, 0.0)
-        fun addRA(builder: FlatBufferBuilder, RA: Double) = builder.addDouble(21, RA, 0.0)
-        fun addDECLINATION(builder: FlatBufferBuilder, DECLINATION: Double) = builder.addDouble(22, DECLINATION, 0.0)
-        fun addCONING_ANGLE(builder: FlatBufferBuilder, CONING_ANGLE: Double) = builder.addDouble(23, CONING_ANGLE, 0.0)
-        fun addPREC_PERIOD(builder: FlatBufferBuilder, PREC_PERIOD: Double) = builder.addDouble(24, PREC_PERIOD, 0.0)
-        fun addSPIN_PERIOD(builder: FlatBufferBuilder, SPIN_PERIOD: Double) = builder.addDouble(25, SPIN_PERIOD, 0.0)
-        fun addATTITUDE_UNC(builder: FlatBufferBuilder, ATTITUDE_UNC: Double) = builder.addDouble(26, ATTITUDE_UNC, 0.0)
-        fun addRATE_UNC(builder: FlatBufferBuilder, RATE_UNC: Double) = builder.addDouble(27, RATE_UNC, 0.0)
-        fun addQUALITY(builder: FlatBufferBuilder, QUALITY: UByte) = builder.addByte(28, QUALITY.toByte(), 0)
-        fun addREF_FRAME(builder: FlatBufferBuilder, REF_FRAME: Int) = builder.addOffset(29, REF_FRAME, 0)
-        fun addSENSOR_ID(builder: FlatBufferBuilder, SENSOR_ID: Int) = builder.addOffset(30, SENSOR_ID, 0)
+        fun addID(builder: FlatBufferBuilder, id: Int) = builder.addOffset(0, id, 0)
+        fun addASID(builder: FlatBufferBuilder, asId: Int) = builder.addOffset(1, asId, 0)
+        fun addSATNO(builder: FlatBufferBuilder, satNo: UInt) = builder.addInt(2, satNo.toInt(), 0)
+        fun addORIGOBJECTID(builder: FlatBufferBuilder, origObjectId: Int) = builder.addOffset(3, origObjectId, 0)
+        fun addEPOCH(builder: FlatBufferBuilder, epoch: Int) = builder.addOffset(4, epoch, 0)
+        fun addREPRESENTATION(builder: FlatBufferBuilder, representation: Byte) = builder.addByte(5, representation, 0)
+        fun addMOTIONTYPE(builder: FlatBufferBuilder, motionType: Byte) = builder.addByte(6, motionType, 0)
+        fun addQC(builder: FlatBufferBuilder, qc: Double) = builder.addDouble(7, qc, 0.0)
+        fun addQ1(builder: FlatBufferBuilder, q1: Double) = builder.addDouble(8, q1, 0.0)
+        fun addQ2(builder: FlatBufferBuilder, q2: Double) = builder.addDouble(9, q2, 0.0)
+        fun addQ3(builder: FlatBufferBuilder, q3: Double) = builder.addDouble(10, q3, 0.0)
+        fun addQCDOT(builder: FlatBufferBuilder, qcDot: Double) = builder.addDouble(11, qcDot, 0.0)
+        fun addQ1DOT(builder: FlatBufferBuilder, q1Dot: Double) = builder.addDouble(12, q1Dot, 0.0)
+        fun addQ2DOT(builder: FlatBufferBuilder, q2Dot: Double) = builder.addDouble(13, q2Dot, 0.0)
+        fun addQ3DOT(builder: FlatBufferBuilder, q3Dot: Double) = builder.addDouble(14, q3Dot, 0.0)
+        fun addXANGLE(builder: FlatBufferBuilder, xAngle: Double) = builder.addDouble(15, xAngle, 0.0)
+        fun addYANGLE(builder: FlatBufferBuilder, yAngle: Double) = builder.addDouble(16, yAngle, 0.0)
+        fun addZANGLE(builder: FlatBufferBuilder, zAngle: Double) = builder.addDouble(17, zAngle, 0.0)
+        fun addXRATE(builder: FlatBufferBuilder, xRate: Double) = builder.addDouble(18, xRate, 0.0)
+        fun addYRATE(builder: FlatBufferBuilder, yRate: Double) = builder.addDouble(19, yRate, 0.0)
+        fun addZRATE(builder: FlatBufferBuilder, zRate: Double) = builder.addDouble(20, zRate, 0.0)
+        fun addRA(builder: FlatBufferBuilder, ra: Double) = builder.addDouble(21, ra, 0.0)
+        fun addDECLINATION(builder: FlatBufferBuilder, declination: Double) = builder.addDouble(22, declination, 0.0)
+        fun addCONINGANGLE(builder: FlatBufferBuilder, coningAngle: Double) = builder.addDouble(23, coningAngle, 0.0)
+        fun addPRECPERIOD(builder: FlatBufferBuilder, precPeriod: Double) = builder.addDouble(24, precPeriod, 0.0)
+        fun addSPINPERIOD(builder: FlatBufferBuilder, spinPeriod: Double) = builder.addDouble(25, spinPeriod, 0.0)
+        fun addATTITUDEUNC(builder: FlatBufferBuilder, attitudeUnc: Double) = builder.addDouble(26, attitudeUnc, 0.0)
+        fun addRATEUNC(builder: FlatBufferBuilder, rateUnc: Double) = builder.addDouble(27, rateUnc, 0.0)
+        fun addQUALITY(builder: FlatBufferBuilder, quality: UByte) = builder.addByte(28, quality.toByte(), 0)
+        fun addREFFRAME(builder: FlatBufferBuilder, refFrame: Int) = builder.addOffset(29, refFrame, 0)
+        fun addSENSORID(builder: FlatBufferBuilder, sensorId: Int) = builder.addOffset(30, sensorId, 0)
         fun endATD(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

@@ -29,67 +29,67 @@ class ARM : Table() {
         __init(_i, _bb)
         return this
     }
-    val THICKNESS : Double
+    val thickness : Double
         get() {
             val o = __offset(4)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val ANGLE : Double
+    val angle : Double
         get() {
             val o = __offset(6)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val MATERIAL : UByte
+    val material : UByte
         get() {
             val o = __offset(8)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
         }
-    val HARDNESS : UByte
+    val hardness : UByte
         get() {
             val o = __offset(10)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
         }
-    val QUALITY : UByte
+    val quality : UByte
         get() {
             val o = __offset(12)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
         }
-    val ERA_TYPE : UByte
+    val eraType : UByte
         get() {
             val o = __offset(14)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
         }
-    val ERA_EFFECTIVENESS : Float
+    val eraEffectiveness : Float
         get() {
             val o = __offset(16)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
-    val ERA_VS_KE : Float
+    val eraVsKe : Float
         get() {
             val o = __offset(18)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
-    val RHA_EQUIVALENT : Float
+    val rhaEquivalent : Float
         get() {
             val o = __offset(20)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
-    val NORMAL_X : Double
+    val normalX : Double
         get() {
             val o = __offset(22)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val NORMAL_Y : Double
+    val normalY : Double
         get() {
             val o = __offset(24)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val NORMAL_Z : Double
+    val normalZ : Double
         get() {
             val o = __offset(26)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    fun RESERVED(j: Int) : UByte {
+    fun reserved(j: Int) : UByte {
         val o = __offset(28)
         return if (o != 0) {
             bb.get(__vector(o) + j * 1).toUByte()
@@ -97,51 +97,51 @@ class ARM : Table() {
             0u
         }
     }
-    val RESERVEDLength : Int
+    val reservedLength : Int
         get() {
             val o = __offset(28); return if (o != 0) __vector_len(o) else 0
         }
-    val RESERVEDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(28, 1)
-    fun RESERVEDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 28, 1)
+    val reservedAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(28, 1)
+    fun reservedInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 28, 1)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsARM(_bb: ByteBuffer): ARM = getRootAsARM(_bb, ARM())
         fun getRootAsARM(_bb: ByteBuffer, obj: ARM): ARM {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun ARMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$ARM")
-        fun createARM(builder: FlatBufferBuilder, THICKNESS: Double, ANGLE: Double, MATERIAL: UByte, HARDNESS: UByte, QUALITY: UByte, ERA_TYPE: UByte, ERA_EFFECTIVENESS: Float, ERA_VS_KE: Float, RHA_EQUIVALENT: Float, NORMAL_X: Double, NORMAL_Y: Double, NORMAL_Z: Double, RESERVEDOffset: Int) : Int {
+        fun createARM(builder: FlatBufferBuilder, thickness: Double, angle: Double, material: UByte, hardness: UByte, quality: UByte, eraType: UByte, eraEffectiveness: Float, eraVsKe: Float, rhaEquivalent: Float, normalX: Double, normalY: Double, normalZ: Double, reservedOffset: Int) : Int {
             builder.startTable(13)
-            addNORMAL_Z(builder, NORMAL_Z)
-            addNORMAL_Y(builder, NORMAL_Y)
-            addNORMAL_X(builder, NORMAL_X)
-            addANGLE(builder, ANGLE)
-            addTHICKNESS(builder, THICKNESS)
-            addRESERVED(builder, RESERVEDOffset)
-            addRHA_EQUIVALENT(builder, RHA_EQUIVALENT)
-            addERA_VS_KE(builder, ERA_VS_KE)
-            addERA_EFFECTIVENESS(builder, ERA_EFFECTIVENESS)
-            addERA_TYPE(builder, ERA_TYPE)
-            addQUALITY(builder, QUALITY)
-            addHARDNESS(builder, HARDNESS)
-            addMATERIAL(builder, MATERIAL)
+            addNORMALZ(builder, normalZ)
+            addNORMALY(builder, normalY)
+            addNORMALX(builder, normalX)
+            addANGLE(builder, angle)
+            addTHICKNESS(builder, thickness)
+            addRESERVED(builder, reservedOffset)
+            addRHAEQUIVALENT(builder, rhaEquivalent)
+            addERAVSKE(builder, eraVsKe)
+            addERAEFFECTIVENESS(builder, eraEffectiveness)
+            addERATYPE(builder, eraType)
+            addQUALITY(builder, quality)
+            addHARDNESS(builder, hardness)
+            addMATERIAL(builder, material)
             return endARM(builder)
         }
         fun startARM(builder: FlatBufferBuilder) = builder.startTable(13)
-        fun addTHICKNESS(builder: FlatBufferBuilder, THICKNESS: Double) = builder.addDouble(0, THICKNESS, 0.0)
-        fun addANGLE(builder: FlatBufferBuilder, ANGLE: Double) = builder.addDouble(1, ANGLE, 0.0)
-        fun addMATERIAL(builder: FlatBufferBuilder, MATERIAL: UByte) = builder.addByte(2, MATERIAL.toByte(), 0)
-        fun addHARDNESS(builder: FlatBufferBuilder, HARDNESS: UByte) = builder.addByte(3, HARDNESS.toByte(), 0)
-        fun addQUALITY(builder: FlatBufferBuilder, QUALITY: UByte) = builder.addByte(4, QUALITY.toByte(), 0)
-        fun addERA_TYPE(builder: FlatBufferBuilder, ERA_TYPE: UByte) = builder.addByte(5, ERA_TYPE.toByte(), 0)
-        fun addERA_EFFECTIVENESS(builder: FlatBufferBuilder, ERA_EFFECTIVENESS: Float) = builder.addFloat(6, ERA_EFFECTIVENESS, 0.0)
-        fun addERA_VS_KE(builder: FlatBufferBuilder, ERA_VS_KE: Float) = builder.addFloat(7, ERA_VS_KE, 0.0)
-        fun addRHA_EQUIVALENT(builder: FlatBufferBuilder, RHA_EQUIVALENT: Float) = builder.addFloat(8, RHA_EQUIVALENT, 0.0)
-        fun addNORMAL_X(builder: FlatBufferBuilder, NORMAL_X: Double) = builder.addDouble(9, NORMAL_X, 0.0)
-        fun addNORMAL_Y(builder: FlatBufferBuilder, NORMAL_Y: Double) = builder.addDouble(10, NORMAL_Y, 0.0)
-        fun addNORMAL_Z(builder: FlatBufferBuilder, NORMAL_Z: Double) = builder.addDouble(11, NORMAL_Z, 0.0)
-        fun addRESERVED(builder: FlatBufferBuilder, RESERVED: Int) = builder.addOffset(12, RESERVED, 0)
+        fun addTHICKNESS(builder: FlatBufferBuilder, thickness: Double) = builder.addDouble(0, thickness, 0.0)
+        fun addANGLE(builder: FlatBufferBuilder, angle: Double) = builder.addDouble(1, angle, 0.0)
+        fun addMATERIAL(builder: FlatBufferBuilder, material: UByte) = builder.addByte(2, material.toByte(), 0)
+        fun addHARDNESS(builder: FlatBufferBuilder, hardness: UByte) = builder.addByte(3, hardness.toByte(), 0)
+        fun addQUALITY(builder: FlatBufferBuilder, quality: UByte) = builder.addByte(4, quality.toByte(), 0)
+        fun addERATYPE(builder: FlatBufferBuilder, eraType: UByte) = builder.addByte(5, eraType.toByte(), 0)
+        fun addERAEFFECTIVENESS(builder: FlatBufferBuilder, eraEffectiveness: Float) = builder.addFloat(6, eraEffectiveness, 0.0)
+        fun addERAVSKE(builder: FlatBufferBuilder, eraVsKe: Float) = builder.addFloat(7, eraVsKe, 0.0)
+        fun addRHAEQUIVALENT(builder: FlatBufferBuilder, rhaEquivalent: Float) = builder.addFloat(8, rhaEquivalent, 0.0)
+        fun addNORMALX(builder: FlatBufferBuilder, normalX: Double) = builder.addDouble(9, normalX, 0.0)
+        fun addNORMALY(builder: FlatBufferBuilder, normalY: Double) = builder.addDouble(10, normalY, 0.0)
+        fun addNORMALZ(builder: FlatBufferBuilder, normalZ: Double) = builder.addDouble(11, normalZ, 0.0)
+        fun addRESERVED(builder: FlatBufferBuilder, reserved: Int) = builder.addOffset(12, reserved, 0)
         @kotlin.ExperimentalUnsignedTypes
         fun createReservedVector(builder: FlatBufferBuilder, data: UByteArray) : Int {
             builder.startVector(1, data.size, 1)

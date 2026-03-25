@@ -2,4 +2,318 @@
 
 # namespace: 
 
-# NOTE KMLPhotoOverlay.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Photo overlay
+class KMLPhotoOverlay(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = KMLPhotoOverlay()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsKMLPhotoOverlay(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def KMLPhotoOverlayBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x4B\x4D\x4C", size_prefixed=size_prefixed)
+
+    # KMLPhotoOverlay
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Name
+    # KMLPhotoOverlay
+    def NAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Description
+    # KMLPhotoOverlay
+    def DESCRIPTION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Visibility
+    # KMLPhotoOverlay
+    def VISIBILITY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # Icon/image URL
+    # KMLPhotoOverlay
+    def ICON_HREF(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Color
+    # KMLPhotoOverlay
+    def COLOR(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Draw order
+    # KMLPhotoOverlay
+    def DRAW_ORDER(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # Rotation
+    # KMLPhotoOverlay
+    def ROTATION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # View volume
+    # KMLPhotoOverlay
+    def VIEW_VOLUME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from KMLViewVolume import KMLViewVolume
+            obj = KMLViewVolume()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Image pyramid
+    # KMLPhotoOverlay
+    def IMAGE_PYRAMID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from KMLImagePyramid import KMLImagePyramid
+            obj = KMLImagePyramid()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Point for position
+    # KMLPhotoOverlay
+    def POINT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from KMLPoint import KMLPoint
+            obj = KMLPoint()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Shape
+    # KMLPhotoOverlay
+    def SHAPE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+def KMLPhotoOverlayStart(builder):
+    builder.StartObject(11)
+
+def Start(builder):
+    KMLPhotoOverlayStart(builder)
+
+def KMLPhotoOverlayAddNAME(builder, NAME):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(NAME), 0)
+
+def AddNAME(builder, NAME):
+    KMLPhotoOverlayAddNAME(builder, NAME)
+
+def KMLPhotoOverlayAddDESCRIPTION(builder, DESCRIPTION):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(DESCRIPTION), 0)
+
+def AddDESCRIPTION(builder, DESCRIPTION):
+    KMLPhotoOverlayAddDESCRIPTION(builder, DESCRIPTION)
+
+def KMLPhotoOverlayAddVISIBILITY(builder, VISIBILITY):
+    builder.PrependBoolSlot(2, VISIBILITY, 0)
+
+def AddVISIBILITY(builder, VISIBILITY):
+    KMLPhotoOverlayAddVISIBILITY(builder, VISIBILITY)
+
+def KMLPhotoOverlayAddICON_HREF(builder, ICON_HREF):
+    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(ICON_HREF), 0)
+
+def AddICON_HREF(builder, ICON_HREF):
+    KMLPhotoOverlayAddICON_HREF(builder, ICON_HREF)
+
+def KMLPhotoOverlayAddCOLOR(builder, COLOR):
+    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(COLOR), 0)
+
+def AddCOLOR(builder, COLOR):
+    KMLPhotoOverlayAddCOLOR(builder, COLOR)
+
+def KMLPhotoOverlayAddDRAW_ORDER(builder, DRAW_ORDER):
+    builder.PrependInt32Slot(5, DRAW_ORDER, 0)
+
+def AddDRAW_ORDER(builder, DRAW_ORDER):
+    KMLPhotoOverlayAddDRAW_ORDER(builder, DRAW_ORDER)
+
+def KMLPhotoOverlayAddROTATION(builder, ROTATION):
+    builder.PrependFloat64Slot(6, ROTATION, 0.0)
+
+def AddROTATION(builder, ROTATION):
+    KMLPhotoOverlayAddROTATION(builder, ROTATION)
+
+def KMLPhotoOverlayAddVIEW_VOLUME(builder, VIEW_VOLUME):
+    builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(VIEW_VOLUME), 0)
+
+def AddVIEW_VOLUME(builder, VIEW_VOLUME):
+    KMLPhotoOverlayAddVIEW_VOLUME(builder, VIEW_VOLUME)
+
+def KMLPhotoOverlayAddIMAGE_PYRAMID(builder, IMAGE_PYRAMID):
+    builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(IMAGE_PYRAMID), 0)
+
+def AddIMAGE_PYRAMID(builder, IMAGE_PYRAMID):
+    KMLPhotoOverlayAddIMAGE_PYRAMID(builder, IMAGE_PYRAMID)
+
+def KMLPhotoOverlayAddPOINT(builder, POINT):
+    builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(POINT), 0)
+
+def AddPOINT(builder, POINT):
+    KMLPhotoOverlayAddPOINT(builder, POINT)
+
+def KMLPhotoOverlayAddSHAPE(builder, SHAPE):
+    builder.PrependInt8Slot(10, SHAPE, 0)
+
+def AddSHAPE(builder, SHAPE):
+    KMLPhotoOverlayAddSHAPE(builder, SHAPE)
+
+def KMLPhotoOverlayEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return KMLPhotoOverlayEnd(builder)
+
+import KMLImagePyramid
+import KMLPoint
+import KMLViewVolume
+try:
+    from typing import Optional
+except:
+    pass
+
+class KMLPhotoOverlayT(object):
+
+    # KMLPhotoOverlayT
+    def __init__(
+        self,
+        NAME = None,
+        DESCRIPTION = None,
+        VISIBILITY = False,
+        ICON_HREF = None,
+        COLOR = None,
+        DRAW_ORDER = 0,
+        ROTATION = 0.0,
+        VIEW_VOLUME = None,
+        IMAGE_PYRAMID = None,
+        POINT = None,
+        SHAPE = 0,
+    ):
+        self.NAME = NAME  # type: Optional[str]
+        self.DESCRIPTION = DESCRIPTION  # type: Optional[str]
+        self.VISIBILITY = VISIBILITY  # type: bool
+        self.ICON_HREF = ICON_HREF  # type: Optional[str]
+        self.COLOR = COLOR  # type: Optional[str]
+        self.DRAW_ORDER = DRAW_ORDER  # type: int
+        self.ROTATION = ROTATION  # type: float
+        self.VIEW_VOLUME = VIEW_VOLUME  # type: Optional[KMLViewVolume.KMLViewVolumeT]
+        self.IMAGE_PYRAMID = IMAGE_PYRAMID  # type: Optional[KMLImagePyramid.KMLImagePyramidT]
+        self.POINT = POINT  # type: Optional[KMLPoint.KMLPointT]
+        self.SHAPE = SHAPE  # type: int
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpKmlphotoOverlay = KMLPhotoOverlay()
+        tmpKmlphotoOverlay.Init(buf, pos)
+        return cls.InitFromObj(tmpKmlphotoOverlay)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpKmlphotoOverlay):
+        x = KMLPhotoOverlayT()
+        x._UnPack(tmpKmlphotoOverlay)
+        return x
+
+    # KMLPhotoOverlayT
+    def _UnPack(self, KMLPhotoOverlay):
+        if KMLPhotoOverlay is None:
+            return
+        self.NAME = KMLPhotoOverlay.NAME()
+        self.DESCRIPTION = KMLPhotoOverlay.DESCRIPTION()
+        self.VISIBILITY = KMLPhotoOverlay.VISIBILITY()
+        self.ICON_HREF = KMLPhotoOverlay.ICON_HREF()
+        self.COLOR = KMLPhotoOverlay.COLOR()
+        self.DRAW_ORDER = KMLPhotoOverlay.DRAW_ORDER()
+        self.ROTATION = KMLPhotoOverlay.ROTATION()
+        if KMLPhotoOverlay.VIEW_VOLUME() is not None:
+            self.VIEW_VOLUME = KMLViewVolume.KMLViewVolumeT.InitFromObj(KMLPhotoOverlay.VIEW_VOLUME())
+        if KMLPhotoOverlay.IMAGE_PYRAMID() is not None:
+            self.IMAGE_PYRAMID = KMLImagePyramid.KMLImagePyramidT.InitFromObj(KMLPhotoOverlay.IMAGE_PYRAMID())
+        if KMLPhotoOverlay.POINT() is not None:
+            self.POINT = KMLPoint.KMLPointT.InitFromObj(KMLPhotoOverlay.POINT())
+        self.SHAPE = KMLPhotoOverlay.SHAPE()
+
+    # KMLPhotoOverlayT
+    def Pack(self, builder):
+        if self.NAME is not None:
+            NAME = builder.CreateString(self.NAME)
+        if self.DESCRIPTION is not None:
+            DESCRIPTION = builder.CreateString(self.DESCRIPTION)
+        if self.ICON_HREF is not None:
+            ICON_HREF = builder.CreateString(self.ICON_HREF)
+        if self.COLOR is not None:
+            COLOR = builder.CreateString(self.COLOR)
+        if self.VIEW_VOLUME is not None:
+            VIEW_VOLUME = self.VIEW_VOLUME.Pack(builder)
+        if self.IMAGE_PYRAMID is not None:
+            IMAGE_PYRAMID = self.IMAGE_PYRAMID.Pack(builder)
+        if self.POINT is not None:
+            POINT = self.POINT.Pack(builder)
+        KMLPhotoOverlayStart(builder)
+        if self.NAME is not None:
+            KMLPhotoOverlayAddNAME(builder, NAME)
+        if self.DESCRIPTION is not None:
+            KMLPhotoOverlayAddDESCRIPTION(builder, DESCRIPTION)
+        KMLPhotoOverlayAddVISIBILITY(builder, self.VISIBILITY)
+        if self.ICON_HREF is not None:
+            KMLPhotoOverlayAddICON_HREF(builder, ICON_HREF)
+        if self.COLOR is not None:
+            KMLPhotoOverlayAddCOLOR(builder, COLOR)
+        KMLPhotoOverlayAddDRAW_ORDER(builder, self.DRAW_ORDER)
+        KMLPhotoOverlayAddROTATION(builder, self.ROTATION)
+        if self.VIEW_VOLUME is not None:
+            KMLPhotoOverlayAddVIEW_VOLUME(builder, VIEW_VOLUME)
+        if self.IMAGE_PYRAMID is not None:
+            KMLPhotoOverlayAddIMAGE_PYRAMID(builder, IMAGE_PYRAMID)
+        if self.POINT is not None:
+            KMLPhotoOverlayAddPOINT(builder, POINT)
+        KMLPhotoOverlayAddSHAPE(builder, self.SHAPE)
+        KMLPhotoOverlay = KMLPhotoOverlayEnd(builder)
+        return KMLPhotoOverlay

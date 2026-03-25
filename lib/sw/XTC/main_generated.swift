@@ -2,10 +2,14 @@
 // swiftlint:disable all
 // swiftformat:disable all
 
+#if canImport(Common)
+import Common
+#endif
+
 import FlatBuffers
 
 ///  Comparison operators for match criteria and conditions
-public enum ComparisonOperator: Int8, Enum, Verifiable {
+public enum ComparisonOperator: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -40,7 +44,7 @@ public enum ComparisonOperator: Int8, Enum, Verifiable {
 
 
 ///  Data source types for telemetry parameters
-public enum DataSourceType: Int8, Enum, Verifiable {
+public enum DataSourceType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -61,7 +65,7 @@ public enum DataSourceType: Int8, Enum, Verifiable {
 
 
 ///  Boolean operators for combining conditions
-public enum BooleanOperatorType: Int8, Enum, Verifiable {
+public enum BooleanOperatorType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -78,7 +82,7 @@ public enum BooleanOperatorType: Int8, Enum, Verifiable {
 
 
 ///  Reference location for positioning within containers
-public enum ReferenceLocationType: Int8, Enum, Verifiable {
+public enum ReferenceLocationType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -97,7 +101,7 @@ public enum ReferenceLocationType: Int8, Enum, Verifiable {
 
 
 ///  Rate basis for stream rate specifications
-public enum RateBasisType: Int8, Enum, Verifiable {
+public enum RateBasisType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -112,7 +116,7 @@ public enum RateBasisType: Int8, Enum, Verifiable {
 
 
 ///  Byte ordering for data encoding
-public enum ByteOrderType: Int8, Enum, Verifiable {
+public enum ByteOrderType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -127,7 +131,7 @@ public enum ByteOrderType: Int8, Enum, Verifiable {
 
 
 ///  Integer encoding types
-public enum IntegerEncodingType: Int8, Enum, Verifiable {
+public enum IntegerEncodingType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -150,7 +154,7 @@ public enum IntegerEncodingType: Int8, Enum, Verifiable {
 
 
 ///  Float encoding formats
-public enum FloatEncodingType: Int8, Enum, Verifiable {
+public enum FloatEncodingType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -171,7 +175,7 @@ public enum FloatEncodingType: Int8, Enum, Verifiable {
 
 
 ///  String encoding character sets
-public enum StringEncodingType: Int8, Enum, Verifiable {
+public enum StringEncodingType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -196,7 +200,7 @@ public enum StringEncodingType: Int8, Enum, Verifiable {
 
 
 ///  String size specification type
-public enum StringSizeType: Int8, Enum, Verifiable {
+public enum StringSizeType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -213,7 +217,7 @@ public enum StringSizeType: Int8, Enum, Verifiable {
 
 
 ///  Alarm severity levels
-public enum AlarmSeverityType: Int8, Enum, Verifiable {
+public enum AlarmSeverityType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -236,7 +240,7 @@ public enum AlarmSeverityType: Int8, Enum, Verifiable {
 
 
 ///  Verifier type for command verification
-public enum VerifierType: Int8, Enum, Verifiable {
+public enum VerifierType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -255,7 +259,7 @@ public enum VerifierType: Int8, Enum, Verifiable {
 
 
 ///  Time window reference for command verification
-public enum TimeWindowRefType: Int8, Enum, Verifiable {
+public enum TimeWindowRefType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -270,7 +274,7 @@ public enum TimeWindowRefType: Int8, Enum, Verifiable {
 
 
 ///  Epoch reference for absolute time
-public enum EpochType: Int8, Enum, Verifiable {
+public enum EpochType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -291,7 +295,7 @@ public enum EpochType: Int8, Enum, Verifiable {
 
 
 ///  Error detection/correction algorithms
-public enum ErrorDetectionType: Int8, Enum, Verifiable {
+public enum ErrorDetectionType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -310,9 +314,9 @@ public enum ErrorDetectionType: Int8, Enum, Verifiable {
 
 
 ///  Integer data encoding specification
-public struct IntegerDataEncoding: FlatBufferObject, Verifiable {
+public struct IntegerDataEncoding: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -341,9 +345,7 @@ public struct IntegerDataEncoding: FlatBufferObject, Verifiable {
   public var DEFAULT_CALIBRATOR: String? { let o = _accessor.offset(VTOFFSET.DEFAULT_CALIBRATOR.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var DEFAULT_CALIBRATORSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.DEFAULT_CALIBRATOR.v) }
   ///  Context-dependent calibrators
-  public var hasContextCalibratorList: Bool { let o = _accessor.offset(VTOFFSET.CONTEXT_CALIBRATOR_LIST.v); return o == 0 ? false : true }
-  public var CONTEXT_CALIBRATOR_LISTCount: Int32 { let o = _accessor.offset(VTOFFSET.CONTEXT_CALIBRATOR_LIST.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func CONTEXT_CALIBRATOR_LIST(at index: Int32) -> ContextCalibrator? { let o = _accessor.offset(VTOFFSET.CONTEXT_CALIBRATOR_LIST.v); return o == 0 ? nil : ContextCalibrator(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var CONTEXT_CALIBRATOR_LIST: FlatbufferVector<ContextCalibrator> { return _accessor.vector(at: VTOFFSET.CONTEXT_CALIBRATOR_LIST.v, byteSize: 4) }
   public static func startIntegerDataEncoding(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
   public static func add(SIZE_IN_BITS: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SIZE_IN_BITS, def: 0, at: VTOFFSET.SIZE_IN_BITS.p) }
   public static func add(BYTE_ORDER: ByteOrderType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BYTE_ORDER.rawValue, def: 0, at: VTOFFSET.BYTE_ORDER.p) }
@@ -380,9 +382,9 @@ public struct IntegerDataEncoding: FlatBufferObject, Verifiable {
 }
 
 ///  Float data encoding specification
-public struct FloatDataEncoding: FlatBufferObject, Verifiable {
+public struct FloatDataEncoding: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -411,9 +413,7 @@ public struct FloatDataEncoding: FlatBufferObject, Verifiable {
   public var DEFAULT_CALIBRATOR: String? { let o = _accessor.offset(VTOFFSET.DEFAULT_CALIBRATOR.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var DEFAULT_CALIBRATORSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.DEFAULT_CALIBRATOR.v) }
   ///  Context-dependent calibrators
-  public var hasContextCalibratorList: Bool { let o = _accessor.offset(VTOFFSET.CONTEXT_CALIBRATOR_LIST.v); return o == 0 ? false : true }
-  public var CONTEXT_CALIBRATOR_LISTCount: Int32 { let o = _accessor.offset(VTOFFSET.CONTEXT_CALIBRATOR_LIST.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func CONTEXT_CALIBRATOR_LIST(at index: Int32) -> ContextCalibrator? { let o = _accessor.offset(VTOFFSET.CONTEXT_CALIBRATOR_LIST.v); return o == 0 ? nil : ContextCalibrator(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var CONTEXT_CALIBRATOR_LIST: FlatbufferVector<ContextCalibrator> { return _accessor.vector(at: VTOFFSET.CONTEXT_CALIBRATOR_LIST.v, byteSize: 4) }
   public static func startFloatDataEncoding(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
   public static func add(SIZE_IN_BITS: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SIZE_IN_BITS, def: 0, at: VTOFFSET.SIZE_IN_BITS.p) }
   public static func add(BYTE_ORDER: ByteOrderType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BYTE_ORDER.rawValue, def: 0, at: VTOFFSET.BYTE_ORDER.p) }
@@ -450,9 +450,9 @@ public struct FloatDataEncoding: FlatBufferObject, Verifiable {
 }
 
 ///  String data encoding specification
-public struct StringDataEncoding: FlatBufferObject, Verifiable {
+public struct StringDataEncoding: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -524,9 +524,9 @@ public struct StringDataEncoding: FlatBufferObject, Verifiable {
 }
 
 ///  Binary data encoding specification
-public struct BinaryDataEncoding: FlatBufferObject, Verifiable {
+public struct BinaryDataEncoding: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -577,9 +577,9 @@ public struct BinaryDataEncoding: FlatBufferObject, Verifiable {
 }
 
 ///  Polynomial calibrator - converts raw to engineering using polynomial
-public struct PolynomialCalibrator: FlatBufferObject, Verifiable {
+public struct PolynomialCalibrator: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -595,10 +595,8 @@ public struct PolynomialCalibrator: FlatBufferObject, Verifiable {
   }
 
   ///  Polynomial terms (index is power, value is coefficient)
-  public var hasCoefficients: Bool { let o = _accessor.offset(VTOFFSET.COEFFICIENTS.v); return o == 0 ? false : true }
-  public var COEFFICIENTSCount: Int32 { let o = _accessor.offset(VTOFFSET.COEFFICIENTS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func COEFFICIENTS(at index: Int32) -> Double { let o = _accessor.offset(VTOFFSET.COEFFICIENTS.v); return o == 0 ? 0 : _accessor.directRead(of: Double.self, offset: _accessor.vector(at: o) + index * 8) }
-  public var COEFFICIENTS: [Double] { return _accessor.getVector(at: VTOFFSET.COEFFICIENTS.v) ?? [] }
+  public var COEFFICIENTS: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.COEFFICIENTS.v, byteSize: 8) }
+  public func withUnsafePointerToCoefficients<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.COEFFICIENTS.v, body: body) }
   public static func startPolynomialCalibrator(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 1) }
   public static func addVectorOf(COEFFICIENTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COEFFICIENTS, at: VTOFFSET.COEFFICIENTS.p) }
   public static func endPolynomialCalibrator(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
@@ -619,9 +617,9 @@ public struct PolynomialCalibrator: FlatBufferObject, Verifiable {
 }
 
 ///  Spline point for spline calibration
-public struct SplinePoint: FlatBufferObject, Verifiable {
+public struct SplinePoint: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -665,9 +663,9 @@ public struct SplinePoint: FlatBufferObject, Verifiable {
 }
 
 ///  Spline calibrator - piecewise linear interpolation
-public struct SplineCalibrator: FlatBufferObject, Verifiable {
+public struct SplineCalibrator: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -685,9 +683,7 @@ public struct SplineCalibrator: FlatBufferObject, Verifiable {
   }
 
   ///  Spline points ordered by raw value
-  public var hasPoints: Bool { let o = _accessor.offset(VTOFFSET.POINTS.v); return o == 0 ? false : true }
-  public var POINTSCount: Int32 { let o = _accessor.offset(VTOFFSET.POINTS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func POINTS(at index: Int32) -> SplinePoint? { let o = _accessor.offset(VTOFFSET.POINTS.v); return o == 0 ? nil : SplinePoint(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var POINTS: FlatbufferVector<SplinePoint> { return _accessor.vector(at: VTOFFSET.POINTS.v, byteSize: 4) }
   ///  Extrapolate below minimum point
   public var EXTRAPOLATE_LOW: Bool { let o = _accessor.offset(VTOFFSET.EXTRAPOLATE_LOW.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Extrapolate above maximum point
@@ -722,9 +718,9 @@ public struct SplineCalibrator: FlatBufferObject, Verifiable {
 }
 
 ///  Mathematical operation for math operation calibrator
-public struct MathOperation: FlatBufferObject, Verifiable {
+public struct MathOperation: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -762,9 +758,9 @@ public struct MathOperation: FlatBufferObject, Verifiable {
 }
 
 ///  Context-dependent calibrator selection
-public struct ContextCalibrator: FlatBufferObject, Verifiable {
+public struct ContextCalibrator: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -783,13 +779,13 @@ public struct ContextCalibrator: FlatBufferObject, Verifiable {
   }
 
   ///  Match criteria for selecting this calibrator
-  public var MATCH_CRITERIA: MatchCriteria? { let o = _accessor.offset(VTOFFSET.MATCH_CRITERIA.v); return o == 0 ? nil : MatchCriteria(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var MATCH_CRITERIA: MatchCriteria? { let o = _accessor.offset(VTOFFSET.MATCH_CRITERIA.v); return o == 0 ? nil : MatchCriteria(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Polynomial calibrator (if used)
-  public var POLYNOMIAL: PolynomialCalibrator? { let o = _accessor.offset(VTOFFSET.POLYNOMIAL.v); return o == 0 ? nil : PolynomialCalibrator(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var POLYNOMIAL: PolynomialCalibrator? { let o = _accessor.offset(VTOFFSET.POLYNOMIAL.v); return o == 0 ? nil : PolynomialCalibrator(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Spline calibrator (if used)
-  public var SPLINE: SplineCalibrator? { let o = _accessor.offset(VTOFFSET.SPLINE.v); return o == 0 ? nil : SplineCalibrator(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var SPLINE: SplineCalibrator? { let o = _accessor.offset(VTOFFSET.SPLINE.v); return o == 0 ? nil : SplineCalibrator(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Math operation calibrator (if used)
-  public var MATH_OPERATION: MathOperation? { let o = _accessor.offset(VTOFFSET.MATH_OPERATION.v); return o == 0 ? nil : MathOperation(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var MATH_OPERATION: MathOperation? { let o = _accessor.offset(VTOFFSET.MATH_OPERATION.v); return o == 0 ? nil : MathOperation(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public static func startContextCalibrator(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
   public static func add(MATCH_CRITERIA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MATCH_CRITERIA, at: VTOFFSET.MATCH_CRITERIA.p) }
   public static func add(POLYNOMIAL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POLYNOMIAL, at: VTOFFSET.POLYNOMIAL.p) }
@@ -822,9 +818,9 @@ public struct ContextCalibrator: FlatBufferObject, Verifiable {
 }
 
 ///  Numeric alarm range
-public struct AlarmRange: FlatBufferObject, Verifiable {
+public struct AlarmRange: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -882,9 +878,9 @@ public struct AlarmRange: FlatBufferObject, Verifiable {
 }
 
 ///  Static numeric alarm levels
-public struct StaticAlarmRanges: FlatBufferObject, Verifiable {
+public struct StaticAlarmRanges: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -904,15 +900,15 @@ public struct StaticAlarmRanges: FlatBufferObject, Verifiable {
   }
 
   ///  Watch range
-  public var WATCH_RANGE: AlarmRange? { let o = _accessor.offset(VTOFFSET.WATCH_RANGE.v); return o == 0 ? nil : AlarmRange(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var WATCH_RANGE: AlarmRange? { let o = _accessor.offset(VTOFFSET.WATCH_RANGE.v); return o == 0 ? nil : AlarmRange(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Warning range
-  public var WARNING_RANGE: AlarmRange? { let o = _accessor.offset(VTOFFSET.WARNING_RANGE.v); return o == 0 ? nil : AlarmRange(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var WARNING_RANGE: AlarmRange? { let o = _accessor.offset(VTOFFSET.WARNING_RANGE.v); return o == 0 ? nil : AlarmRange(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Distress range
-  public var DISTRESS_RANGE: AlarmRange? { let o = _accessor.offset(VTOFFSET.DISTRESS_RANGE.v); return o == 0 ? nil : AlarmRange(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var DISTRESS_RANGE: AlarmRange? { let o = _accessor.offset(VTOFFSET.DISTRESS_RANGE.v); return o == 0 ? nil : AlarmRange(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Critical range
-  public var CRITICAL_RANGE: AlarmRange? { let o = _accessor.offset(VTOFFSET.CRITICAL_RANGE.v); return o == 0 ? nil : AlarmRange(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var CRITICAL_RANGE: AlarmRange? { let o = _accessor.offset(VTOFFSET.CRITICAL_RANGE.v); return o == 0 ? nil : AlarmRange(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Severe range
-  public var SEVERE_RANGE: AlarmRange? { let o = _accessor.offset(VTOFFSET.SEVERE_RANGE.v); return o == 0 ? nil : AlarmRange(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var SEVERE_RANGE: AlarmRange? { let o = _accessor.offset(VTOFFSET.SEVERE_RANGE.v); return o == 0 ? nil : AlarmRange(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public static func startStaticAlarmRanges(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
   public static func add(WATCH_RANGE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: WATCH_RANGE, at: VTOFFSET.WATCH_RANGE.p) }
   public static func add(WARNING_RANGE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: WARNING_RANGE, at: VTOFFSET.WARNING_RANGE.p) }
@@ -949,9 +945,9 @@ public struct StaticAlarmRanges: FlatBufferObject, Verifiable {
 }
 
 ///  Enumerated alarm
-public struct EnumerationAlarm: FlatBufferObject, Verifiable {
+public struct EnumerationAlarm: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -996,9 +992,9 @@ public struct EnumerationAlarm: FlatBufferObject, Verifiable {
 }
 
 ///  Default alarm definition
-public struct DefaultAlarm: FlatBufferObject, Verifiable {
+public struct DefaultAlarm: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -1018,11 +1014,9 @@ public struct DefaultAlarm: FlatBufferObject, Verifiable {
   ///  Minimum violations before alarm triggers
   public var MIN_VIOLATIONS: UInt16 { let o = _accessor.offset(VTOFFSET.MIN_VIOLATIONS.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
   ///  Static numeric alarm ranges
-  public var STATIC_ALARM_RANGES: StaticAlarmRanges? { let o = _accessor.offset(VTOFFSET.STATIC_ALARM_RANGES.v); return o == 0 ? nil : StaticAlarmRanges(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var STATIC_ALARM_RANGES: StaticAlarmRanges? { let o = _accessor.offset(VTOFFSET.STATIC_ALARM_RANGES.v); return o == 0 ? nil : StaticAlarmRanges(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Enumeration alarms for enumerated types
-  public var hasEnumerationAlarms: Bool { let o = _accessor.offset(VTOFFSET.ENUMERATION_ALARMS.v); return o == 0 ? false : true }
-  public var ENUMERATION_ALARMSCount: Int32 { let o = _accessor.offset(VTOFFSET.ENUMERATION_ALARMS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func ENUMERATION_ALARMS(at index: Int32) -> EnumerationAlarm? { let o = _accessor.offset(VTOFFSET.ENUMERATION_ALARMS.v); return o == 0 ? nil : EnumerationAlarm(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var ENUMERATION_ALARMS: FlatbufferVector<EnumerationAlarm> { return _accessor.vector(at: VTOFFSET.ENUMERATION_ALARMS.v, byteSize: 4) }
   public static func startDefaultAlarm(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 3) }
   public static func add(MIN_VIOLATIONS: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MIN_VIOLATIONS, def: 0, at: VTOFFSET.MIN_VIOLATIONS.p) }
   public static func add(STATIC_ALARM_RANGES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STATIC_ALARM_RANGES, at: VTOFFSET.STATIC_ALARM_RANGES.p) }
@@ -1051,9 +1045,9 @@ public struct DefaultAlarm: FlatBufferObject, Verifiable {
 }
 
 ///  Context-dependent alarm
-public struct ContextAlarm: FlatBufferObject, Verifiable {
+public struct ContextAlarm: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -1070,9 +1064,9 @@ public struct ContextAlarm: FlatBufferObject, Verifiable {
   }
 
   ///  Match criteria for this alarm context
-  public var MATCH_CRITERIA: MatchCriteria? { let o = _accessor.offset(VTOFFSET.MATCH_CRITERIA.v); return o == 0 ? nil : MatchCriteria(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var MATCH_CRITERIA: MatchCriteria? { let o = _accessor.offset(VTOFFSET.MATCH_CRITERIA.v); return o == 0 ? nil : MatchCriteria(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Alarm definition for this context
-  public var ALARM: DefaultAlarm? { let o = _accessor.offset(VTOFFSET.ALARM.v); return o == 0 ? nil : DefaultAlarm(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var ALARM: DefaultAlarm? { let o = _accessor.offset(VTOFFSET.ALARM.v); return o == 0 ? nil : DefaultAlarm(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public static func startContextAlarm(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 2) }
   public static func add(MATCH_CRITERIA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MATCH_CRITERIA, at: VTOFFSET.MATCH_CRITERIA.p) }
   public static func add(ALARM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ALARM, at: VTOFFSET.ALARM.p) }
@@ -1097,9 +1091,9 @@ public struct ContextAlarm: FlatBufferObject, Verifiable {
 }
 
 ///  Parameter comparison for match criteria
-public struct ParameterComparison: FlatBufferObject, Verifiable {
+public struct ParameterComparison: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -1160,9 +1154,9 @@ public struct ParameterComparison: FlatBufferObject, Verifiable {
 }
 
 ///  Boolean expression combining comparisons
-public struct BooleanExpression: FlatBufferObject, Verifiable {
+public struct BooleanExpression: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -1182,13 +1176,9 @@ public struct BooleanExpression: FlatBufferObject, Verifiable {
   ///  Boolean operator
   public var OPERATOR: BooleanOperatorType { let o = _accessor.offset(VTOFFSET.OPERATOR.v); return o == 0 ? .and : BooleanOperatorType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .and }
   ///  Comparison conditions
-  public var hasConditions: Bool { let o = _accessor.offset(VTOFFSET.CONDITIONS.v); return o == 0 ? false : true }
-  public var CONDITIONSCount: Int32 { let o = _accessor.offset(VTOFFSET.CONDITIONS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func CONDITIONS(at index: Int32) -> ParameterComparison? { let o = _accessor.offset(VTOFFSET.CONDITIONS.v); return o == 0 ? nil : ParameterComparison(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var CONDITIONS: FlatbufferVector<ParameterComparison> { return _accessor.vector(at: VTOFFSET.CONDITIONS.v, byteSize: 4) }
   ///  Nested expressions
-  public var hasExpressions: Bool { let o = _accessor.offset(VTOFFSET.EXPRESSIONS.v); return o == 0 ? false : true }
-  public var EXPRESSIONSCount: Int32 { let o = _accessor.offset(VTOFFSET.EXPRESSIONS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func EXPRESSIONS(at index: Int32) -> BooleanExpression? { let o = _accessor.offset(VTOFFSET.EXPRESSIONS.v); return o == 0 ? nil : BooleanExpression(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var EXPRESSIONS: FlatbufferVector<BooleanExpression> { return _accessor.vector(at: VTOFFSET.EXPRESSIONS.v, byteSize: 4) }
   public static func startBooleanExpression(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 3) }
   public static func add(OPERATOR: BooleanOperatorType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OPERATOR.rawValue, def: 0, at: VTOFFSET.OPERATOR.p) }
   public static func addVectorOf(CONDITIONS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONDITIONS, at: VTOFFSET.CONDITIONS.p) }
@@ -1217,9 +1207,9 @@ public struct BooleanExpression: FlatBufferObject, Verifiable {
 }
 
 ///  Match criteria for conditional logic
-public struct MatchCriteria: FlatBufferObject, Verifiable {
+public struct MatchCriteria: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -1238,13 +1228,11 @@ public struct MatchCriteria: FlatBufferObject, Verifiable {
   }
 
   ///  Single comparison
-  public var COMPARISON: ParameterComparison? { let o = _accessor.offset(VTOFFSET.COMPARISON.v); return o == 0 ? nil : ParameterComparison(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var COMPARISON: ParameterComparison? { let o = _accessor.offset(VTOFFSET.COMPARISON.v); return o == 0 ? nil : ParameterComparison(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  List of comparisons (implicit AND)
-  public var hasComparisonList: Bool { let o = _accessor.offset(VTOFFSET.COMPARISON_LIST.v); return o == 0 ? false : true }
-  public var COMPARISON_LISTCount: Int32 { let o = _accessor.offset(VTOFFSET.COMPARISON_LIST.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func COMPARISON_LIST(at index: Int32) -> ParameterComparison? { let o = _accessor.offset(VTOFFSET.COMPARISON_LIST.v); return o == 0 ? nil : ParameterComparison(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var COMPARISON_LIST: FlatbufferVector<ParameterComparison> { return _accessor.vector(at: VTOFFSET.COMPARISON_LIST.v, byteSize: 4) }
   ///  Boolean expression
-  public var BOOLEAN_EXPRESSION: BooleanExpression? { let o = _accessor.offset(VTOFFSET.BOOLEAN_EXPRESSION.v); return o == 0 ? nil : BooleanExpression(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var BOOLEAN_EXPRESSION: BooleanExpression? { let o = _accessor.offset(VTOFFSET.BOOLEAN_EXPRESSION.v); return o == 0 ? nil : BooleanExpression(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Custom algorithm reference
   public var CUSTOM_ALGORITHM: String? { let o = _accessor.offset(VTOFFSET.CUSTOM_ALGORITHM.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var CUSTOM_ALGORITHMSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CUSTOM_ALGORITHM.v) }
@@ -1280,9 +1268,9 @@ public struct MatchCriteria: FlatBufferObject, Verifiable {
 }
 
 ///  Unit specification
-public struct Unit: FlatBufferObject, Verifiable {
+public struct Unit: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -1342,9 +1330,9 @@ public struct Unit: FlatBufferObject, Verifiable {
 }
 
 ///  Enumeration value mapping
-public struct EnumerationValue: FlatBufferObject, Verifiable {
+public struct EnumerationValue: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -1404,9 +1392,9 @@ public struct EnumerationValue: FlatBufferObject, Verifiable {
 }
 
 ///  Integer parameter type
-public struct IntegerParameterType: FlatBufferObject, Verifiable {
+public struct IntegerParameterType: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -1442,17 +1430,13 @@ public struct IntegerParameterType: FlatBufferObject, Verifiable {
   public var LONG_DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.LONG_DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var LONG_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LONG_DESCRIPTION.v) }
   ///  Units
-  public var hasUnits: Bool { let o = _accessor.offset(VTOFFSET.UNITS.v); return o == 0 ? false : true }
-  public var UNITSCount: Int32 { let o = _accessor.offset(VTOFFSET.UNITS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func UNITS(at index: Int32) -> Unit? { let o = _accessor.offset(VTOFFSET.UNITS.v); return o == 0 ? nil : Unit(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var UNITS: FlatbufferVector<Unit> { return _accessor.vector(at: VTOFFSET.UNITS.v, byteSize: 4) }
   ///  Data encoding
-  public var DATA_ENCODING: IntegerDataEncoding? { let o = _accessor.offset(VTOFFSET.DATA_ENCODING.v); return o == 0 ? nil : IntegerDataEncoding(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var DATA_ENCODING: IntegerDataEncoding? { let o = _accessor.offset(VTOFFSET.DATA_ENCODING.v); return o == 0 ? nil : IntegerDataEncoding(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Default alarm
-  public var DEFAULT_ALARM: DefaultAlarm? { let o = _accessor.offset(VTOFFSET.DEFAULT_ALARM.v); return o == 0 ? nil : DefaultAlarm(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var DEFAULT_ALARM: DefaultAlarm? { let o = _accessor.offset(VTOFFSET.DEFAULT_ALARM.v); return o == 0 ? nil : DefaultAlarm(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Context alarms
-  public var hasContextAlarms: Bool { let o = _accessor.offset(VTOFFSET.CONTEXT_ALARMS.v); return o == 0 ? false : true }
-  public var CONTEXT_ALARMSCount: Int32 { let o = _accessor.offset(VTOFFSET.CONTEXT_ALARMS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func CONTEXT_ALARMS(at index: Int32) -> ContextAlarm? { let o = _accessor.offset(VTOFFSET.CONTEXT_ALARMS.v); return o == 0 ? nil : ContextAlarm(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var CONTEXT_ALARMS: FlatbufferVector<ContextAlarm> { return _accessor.vector(at: VTOFFSET.CONTEXT_ALARMS.v, byteSize: 4) }
   ///  Minimum valid value
   public var VALID_MIN: Int64 { let o = _accessor.offset(VTOFFSET.VALID_MIN.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int64.self, at: o) }
   ///  Maximum valid value
@@ -1528,9 +1512,9 @@ public struct IntegerParameterType: FlatBufferObject, Verifiable {
 }
 
 ///  Float parameter type
-public struct FloatParameterType: FlatBufferObject, Verifiable {
+public struct FloatParameterType: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -1565,17 +1549,13 @@ public struct FloatParameterType: FlatBufferObject, Verifiable {
   public var LONG_DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.LONG_DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var LONG_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LONG_DESCRIPTION.v) }
   ///  Units
-  public var hasUnits: Bool { let o = _accessor.offset(VTOFFSET.UNITS.v); return o == 0 ? false : true }
-  public var UNITSCount: Int32 { let o = _accessor.offset(VTOFFSET.UNITS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func UNITS(at index: Int32) -> Unit? { let o = _accessor.offset(VTOFFSET.UNITS.v); return o == 0 ? nil : Unit(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var UNITS: FlatbufferVector<Unit> { return _accessor.vector(at: VTOFFSET.UNITS.v, byteSize: 4) }
   ///  Data encoding
-  public var DATA_ENCODING: FloatDataEncoding? { let o = _accessor.offset(VTOFFSET.DATA_ENCODING.v); return o == 0 ? nil : FloatDataEncoding(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var DATA_ENCODING: FloatDataEncoding? { let o = _accessor.offset(VTOFFSET.DATA_ENCODING.v); return o == 0 ? nil : FloatDataEncoding(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Default alarm
-  public var DEFAULT_ALARM: DefaultAlarm? { let o = _accessor.offset(VTOFFSET.DEFAULT_ALARM.v); return o == 0 ? nil : DefaultAlarm(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var DEFAULT_ALARM: DefaultAlarm? { let o = _accessor.offset(VTOFFSET.DEFAULT_ALARM.v); return o == 0 ? nil : DefaultAlarm(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Context alarms
-  public var hasContextAlarms: Bool { let o = _accessor.offset(VTOFFSET.CONTEXT_ALARMS.v); return o == 0 ? false : true }
-  public var CONTEXT_ALARMSCount: Int32 { let o = _accessor.offset(VTOFFSET.CONTEXT_ALARMS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func CONTEXT_ALARMS(at index: Int32) -> ContextAlarm? { let o = _accessor.offset(VTOFFSET.CONTEXT_ALARMS.v); return o == 0 ? nil : ContextAlarm(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var CONTEXT_ALARMS: FlatbufferVector<ContextAlarm> { return _accessor.vector(at: VTOFFSET.CONTEXT_ALARMS.v, byteSize: 4) }
   ///  Minimum valid value
   public var VALID_MIN: Double { let o = _accessor.offset(VTOFFSET.VALID_MIN.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Maximum valid value
@@ -1644,9 +1624,9 @@ public struct FloatParameterType: FlatBufferObject, Verifiable {
 }
 
 ///  String parameter type
-public struct StringParameterType: FlatBufferObject, Verifiable {
+public struct StringParameterType: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -1678,13 +1658,11 @@ public struct StringParameterType: FlatBufferObject, Verifiable {
   public var LONG_DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.LONG_DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var LONG_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LONG_DESCRIPTION.v) }
   ///  Data encoding
-  public var DATA_ENCODING: StringDataEncoding? { let o = _accessor.offset(VTOFFSET.DATA_ENCODING.v); return o == 0 ? nil : StringDataEncoding(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var DATA_ENCODING: StringDataEncoding? { let o = _accessor.offset(VTOFFSET.DATA_ENCODING.v); return o == 0 ? nil : StringDataEncoding(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Default alarm
-  public var DEFAULT_ALARM: DefaultAlarm? { let o = _accessor.offset(VTOFFSET.DEFAULT_ALARM.v); return o == 0 ? nil : DefaultAlarm(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var DEFAULT_ALARM: DefaultAlarm? { let o = _accessor.offset(VTOFFSET.DEFAULT_ALARM.v); return o == 0 ? nil : DefaultAlarm(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Context alarms
-  public var hasContextAlarms: Bool { let o = _accessor.offset(VTOFFSET.CONTEXT_ALARMS.v); return o == 0 ? false : true }
-  public var CONTEXT_ALARMSCount: Int32 { let o = _accessor.offset(VTOFFSET.CONTEXT_ALARMS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func CONTEXT_ALARMS(at index: Int32) -> ContextAlarm? { let o = _accessor.offset(VTOFFSET.CONTEXT_ALARMS.v); return o == 0 ? nil : ContextAlarm(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var CONTEXT_ALARMS: FlatbufferVector<ContextAlarm> { return _accessor.vector(at: VTOFFSET.CONTEXT_ALARMS.v, byteSize: 4) }
   ///  Initial/default value
   public var INITIAL_VALUE: String? { let o = _accessor.offset(VTOFFSET.INITIAL_VALUE.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var INITIAL_VALUESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.INITIAL_VALUE.v) }
@@ -1739,9 +1717,9 @@ public struct StringParameterType: FlatBufferObject, Verifiable {
 }
 
 ///  Boolean parameter type
-public struct BooleanParameterType: FlatBufferObject, Verifiable {
+public struct BooleanParameterType: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -1772,7 +1750,7 @@ public struct BooleanParameterType: FlatBufferObject, Verifiable {
   public var LONG_DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.LONG_DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var LONG_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LONG_DESCRIPTION.v) }
   ///  Data encoding (typically IntegerDataEncoding with 1 bit)
-  public var DATA_ENCODING: IntegerDataEncoding? { let o = _accessor.offset(VTOFFSET.DATA_ENCODING.v); return o == 0 ? nil : IntegerDataEncoding(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var DATA_ENCODING: IntegerDataEncoding? { let o = _accessor.offset(VTOFFSET.DATA_ENCODING.v); return o == 0 ? nil : IntegerDataEncoding(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  String representation of true value
   public var ONE_STRING_VALUE: String? { let o = _accessor.offset(VTOFFSET.ONE_STRING_VALUE.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var ONE_STRING_VALUESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ONE_STRING_VALUE.v) }
@@ -1826,9 +1804,9 @@ public struct BooleanParameterType: FlatBufferObject, Verifiable {
 }
 
 ///  Enumerated parameter type
-public struct EnumeratedParameterType: FlatBufferObject, Verifiable {
+public struct EnumeratedParameterType: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -1860,17 +1838,13 @@ public struct EnumeratedParameterType: FlatBufferObject, Verifiable {
   public var LONG_DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.LONG_DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var LONG_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LONG_DESCRIPTION.v) }
   ///  Data encoding
-  public var DATA_ENCODING: IntegerDataEncoding? { let o = _accessor.offset(VTOFFSET.DATA_ENCODING.v); return o == 0 ? nil : IntegerDataEncoding(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var DATA_ENCODING: IntegerDataEncoding? { let o = _accessor.offset(VTOFFSET.DATA_ENCODING.v); return o == 0 ? nil : IntegerDataEncoding(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Default alarm
-  public var DEFAULT_ALARM: DefaultAlarm? { let o = _accessor.offset(VTOFFSET.DEFAULT_ALARM.v); return o == 0 ? nil : DefaultAlarm(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var DEFAULT_ALARM: DefaultAlarm? { let o = _accessor.offset(VTOFFSET.DEFAULT_ALARM.v); return o == 0 ? nil : DefaultAlarm(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Context alarms
-  public var hasContextAlarms: Bool { let o = _accessor.offset(VTOFFSET.CONTEXT_ALARMS.v); return o == 0 ? false : true }
-  public var CONTEXT_ALARMSCount: Int32 { let o = _accessor.offset(VTOFFSET.CONTEXT_ALARMS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func CONTEXT_ALARMS(at index: Int32) -> ContextAlarm? { let o = _accessor.offset(VTOFFSET.CONTEXT_ALARMS.v); return o == 0 ? nil : ContextAlarm(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var CONTEXT_ALARMS: FlatbufferVector<ContextAlarm> { return _accessor.vector(at: VTOFFSET.CONTEXT_ALARMS.v, byteSize: 4) }
   ///  Enumeration values list
-  public var hasEnumerationList: Bool { let o = _accessor.offset(VTOFFSET.ENUMERATION_LIST.v); return o == 0 ? false : true }
-  public var ENUMERATION_LISTCount: Int32 { let o = _accessor.offset(VTOFFSET.ENUMERATION_LIST.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func ENUMERATION_LIST(at index: Int32) -> EnumerationValue? { let o = _accessor.offset(VTOFFSET.ENUMERATION_LIST.v); return o == 0 ? nil : EnumerationValue(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var ENUMERATION_LIST: FlatbufferVector<EnumerationValue> { return _accessor.vector(at: VTOFFSET.ENUMERATION_LIST.v, byteSize: 4) }
   ///  Initial/default value label
   public var INITIAL_VALUE: String? { let o = _accessor.offset(VTOFFSET.INITIAL_VALUE.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var INITIAL_VALUESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.INITIAL_VALUE.v) }
@@ -1922,9 +1896,9 @@ public struct EnumeratedParameterType: FlatBufferObject, Verifiable {
 }
 
 ///  Binary parameter type
-public struct BinaryParameterType: FlatBufferObject, Verifiable {
+public struct BinaryParameterType: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -1953,7 +1927,7 @@ public struct BinaryParameterType: FlatBufferObject, Verifiable {
   public var LONG_DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.LONG_DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var LONG_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LONG_DESCRIPTION.v) }
   ///  Data encoding
-  public var DATA_ENCODING: BinaryDataEncoding? { let o = _accessor.offset(VTOFFSET.DATA_ENCODING.v); return o == 0 ? nil : BinaryDataEncoding(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var DATA_ENCODING: BinaryDataEncoding? { let o = _accessor.offset(VTOFFSET.DATA_ENCODING.v); return o == 0 ? nil : BinaryDataEncoding(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Initial/default value (hex string)
   public var INITIAL_VALUE: String? { let o = _accessor.offset(VTOFFSET.INITIAL_VALUE.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var INITIAL_VALUESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.INITIAL_VALUE.v) }
@@ -1993,9 +1967,9 @@ public struct BinaryParameterType: FlatBufferObject, Verifiable {
 }
 
 ///  Absolute time parameter type
-public struct AbsoluteTimeParameterType: FlatBufferObject, Verifiable {
+public struct AbsoluteTimeParameterType: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -2034,17 +2008,15 @@ public struct AbsoluteTimeParameterType: FlatBufferObject, Verifiable {
   public var EPOCH_DATE: String? { let o = _accessor.offset(VTOFFSET.EPOCH_DATE.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var EPOCH_DATESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.EPOCH_DATE.v) }
   ///  Data encoding
-  public var DATA_ENCODING: IntegerDataEncoding? { let o = _accessor.offset(VTOFFSET.DATA_ENCODING.v); return o == 0 ? nil : IntegerDataEncoding(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var DATA_ENCODING: IntegerDataEncoding? { let o = _accessor.offset(VTOFFSET.DATA_ENCODING.v); return o == 0 ? nil : IntegerDataEncoding(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Time unit scale factor
   public var SCALE: Double { let o = _accessor.offset(VTOFFSET.SCALE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Time unit offset
   public var OFFSET: Double { let o = _accessor.offset(VTOFFSET.OFFSET.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Default alarm
-  public var DEFAULT_ALARM: DefaultAlarm? { let o = _accessor.offset(VTOFFSET.DEFAULT_ALARM.v); return o == 0 ? nil : DefaultAlarm(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var DEFAULT_ALARM: DefaultAlarm? { let o = _accessor.offset(VTOFFSET.DEFAULT_ALARM.v); return o == 0 ? nil : DefaultAlarm(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Context alarms
-  public var hasContextAlarms: Bool { let o = _accessor.offset(VTOFFSET.CONTEXT_ALARMS.v); return o == 0 ? false : true }
-  public var CONTEXT_ALARMSCount: Int32 { let o = _accessor.offset(VTOFFSET.CONTEXT_ALARMS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func CONTEXT_ALARMS(at index: Int32) -> ContextAlarm? { let o = _accessor.offset(VTOFFSET.CONTEXT_ALARMS.v); return o == 0 ? nil : ContextAlarm(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var CONTEXT_ALARMS: FlatbufferVector<ContextAlarm> { return _accessor.vector(at: VTOFFSET.CONTEXT_ALARMS.v, byteSize: 4) }
   public static func startAbsoluteTimeParameterType(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 10) }
   public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
   public static func add(SHORT_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHORT_DESCRIPTION, at: VTOFFSET.SHORT_DESCRIPTION.p) }
@@ -2101,9 +2073,9 @@ public struct AbsoluteTimeParameterType: FlatBufferObject, Verifiable {
 }
 
 ///  Relative time parameter type
-public struct RelativeTimeParameterType: FlatBufferObject, Verifiable {
+public struct RelativeTimeParameterType: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -2134,17 +2106,13 @@ public struct RelativeTimeParameterType: FlatBufferObject, Verifiable {
   public var LONG_DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.LONG_DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var LONG_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LONG_DESCRIPTION.v) }
   ///  Units
-  public var hasUnits: Bool { let o = _accessor.offset(VTOFFSET.UNITS.v); return o == 0 ? false : true }
-  public var UNITSCount: Int32 { let o = _accessor.offset(VTOFFSET.UNITS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func UNITS(at index: Int32) -> Unit? { let o = _accessor.offset(VTOFFSET.UNITS.v); return o == 0 ? nil : Unit(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var UNITS: FlatbufferVector<Unit> { return _accessor.vector(at: VTOFFSET.UNITS.v, byteSize: 4) }
   ///  Data encoding
-  public var DATA_ENCODING: IntegerDataEncoding? { let o = _accessor.offset(VTOFFSET.DATA_ENCODING.v); return o == 0 ? nil : IntegerDataEncoding(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var DATA_ENCODING: IntegerDataEncoding? { let o = _accessor.offset(VTOFFSET.DATA_ENCODING.v); return o == 0 ? nil : IntegerDataEncoding(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Default alarm
-  public var DEFAULT_ALARM: DefaultAlarm? { let o = _accessor.offset(VTOFFSET.DEFAULT_ALARM.v); return o == 0 ? nil : DefaultAlarm(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var DEFAULT_ALARM: DefaultAlarm? { let o = _accessor.offset(VTOFFSET.DEFAULT_ALARM.v); return o == 0 ? nil : DefaultAlarm(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Context alarms
-  public var hasContextAlarms: Bool { let o = _accessor.offset(VTOFFSET.CONTEXT_ALARMS.v); return o == 0 ? false : true }
-  public var CONTEXT_ALARMSCount: Int32 { let o = _accessor.offset(VTOFFSET.CONTEXT_ALARMS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func CONTEXT_ALARMS(at index: Int32) -> ContextAlarm? { let o = _accessor.offset(VTOFFSET.CONTEXT_ALARMS.v); return o == 0 ? nil : ContextAlarm(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var CONTEXT_ALARMS: FlatbufferVector<ContextAlarm> { return _accessor.vector(at: VTOFFSET.CONTEXT_ALARMS.v, byteSize: 4) }
   public static func startRelativeTimeParameterType(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 7) }
   public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
   public static func add(SHORT_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHORT_DESCRIPTION, at: VTOFFSET.SHORT_DESCRIPTION.p) }
@@ -2189,9 +2157,9 @@ public struct RelativeTimeParameterType: FlatBufferObject, Verifiable {
 }
 
 ///  Array dimension specification
-public struct ArrayDimension: FlatBufferObject, Verifiable {
+public struct ArrayDimension: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -2236,9 +2204,9 @@ public struct ArrayDimension: FlatBufferObject, Verifiable {
 }
 
 ///  Array parameter type
-public struct ArrayParameterType: FlatBufferObject, Verifiable {
+public struct ArrayParameterType: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -2270,9 +2238,7 @@ public struct ArrayParameterType: FlatBufferObject, Verifiable {
   public var ARRAY_TYPE_REF: String? { let o = _accessor.offset(VTOFFSET.ARRAY_TYPE_REF.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var ARRAY_TYPE_REFSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ARRAY_TYPE_REF.v) }
   ///  Dimension list
-  public var hasDimensions: Bool { let o = _accessor.offset(VTOFFSET.DIMENSIONS.v); return o == 0 ? false : true }
-  public var DIMENSIONSCount: Int32 { let o = _accessor.offset(VTOFFSET.DIMENSIONS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func DIMENSIONS(at index: Int32) -> ArrayDimension? { let o = _accessor.offset(VTOFFSET.DIMENSIONS.v); return o == 0 ? nil : ArrayDimension(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var DIMENSIONS: FlatbufferVector<ArrayDimension> { return _accessor.vector(at: VTOFFSET.DIMENSIONS.v, byteSize: 4) }
   public static func startArrayParameterType(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
   public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
   public static func add(SHORT_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHORT_DESCRIPTION, at: VTOFFSET.SHORT_DESCRIPTION.p) }
@@ -2309,9 +2275,9 @@ public struct ArrayParameterType: FlatBufferObject, Verifiable {
 }
 
 ///  Aggregate member definition
-public struct AggregateMember: FlatBufferObject, Verifiable {
+public struct AggregateMember: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -2365,9 +2331,9 @@ public struct AggregateMember: FlatBufferObject, Verifiable {
 }
 
 ///  Aggregate parameter type (structure)
-public struct AggregateParameterType: FlatBufferObject, Verifiable {
+public struct AggregateParameterType: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -2395,9 +2361,7 @@ public struct AggregateParameterType: FlatBufferObject, Verifiable {
   public var LONG_DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.LONG_DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var LONG_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LONG_DESCRIPTION.v) }
   ///  Member list
-  public var hasMembers: Bool { let o = _accessor.offset(VTOFFSET.MEMBERS.v); return o == 0 ? false : true }
-  public var MEMBERSCount: Int32 { let o = _accessor.offset(VTOFFSET.MEMBERS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func MEMBERS(at index: Int32) -> AggregateMember? { let o = _accessor.offset(VTOFFSET.MEMBERS.v); return o == 0 ? nil : AggregateMember(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var MEMBERS: FlatbufferVector<AggregateMember> { return _accessor.vector(at: VTOFFSET.MEMBERS.v, byteSize: 4) }
   public static func startAggregateParameterType(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
   public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
   public static func add(SHORT_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHORT_DESCRIPTION, at: VTOFFSET.SHORT_DESCRIPTION.p) }
@@ -2430,9 +2394,9 @@ public struct AggregateParameterType: FlatBufferObject, Verifiable {
 }
 
 ///  Collection of all parameter types
-public struct ParameterTypeSet: FlatBufferObject, Verifiable {
+public struct ParameterTypeSet: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -2457,45 +2421,25 @@ public struct ParameterTypeSet: FlatBufferObject, Verifiable {
   }
 
   ///  Integer parameter types
-  public var hasIntegerTypes: Bool { let o = _accessor.offset(VTOFFSET.INTEGER_TYPES.v); return o == 0 ? false : true }
-  public var INTEGER_TYPESCount: Int32 { let o = _accessor.offset(VTOFFSET.INTEGER_TYPES.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func INTEGER_TYPES(at index: Int32) -> IntegerParameterType? { let o = _accessor.offset(VTOFFSET.INTEGER_TYPES.v); return o == 0 ? nil : IntegerParameterType(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var INTEGER_TYPES: FlatbufferVector<IntegerParameterType> { return _accessor.vector(at: VTOFFSET.INTEGER_TYPES.v, byteSize: 4) }
   ///  Float parameter types
-  public var hasFloatTypes: Bool { let o = _accessor.offset(VTOFFSET.FLOAT_TYPES.v); return o == 0 ? false : true }
-  public var FLOAT_TYPESCount: Int32 { let o = _accessor.offset(VTOFFSET.FLOAT_TYPES.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func FLOAT_TYPES(at index: Int32) -> FloatParameterType? { let o = _accessor.offset(VTOFFSET.FLOAT_TYPES.v); return o == 0 ? nil : FloatParameterType(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var FLOAT_TYPES: FlatbufferVector<FloatParameterType> { return _accessor.vector(at: VTOFFSET.FLOAT_TYPES.v, byteSize: 4) }
   ///  String parameter types
-  public var hasStringTypes: Bool { let o = _accessor.offset(VTOFFSET.STRING_TYPES.v); return o == 0 ? false : true }
-  public var STRING_TYPESCount: Int32 { let o = _accessor.offset(VTOFFSET.STRING_TYPES.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func STRING_TYPES(at index: Int32) -> StringParameterType? { let o = _accessor.offset(VTOFFSET.STRING_TYPES.v); return o == 0 ? nil : StringParameterType(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var STRING_TYPES: FlatbufferVector<StringParameterType> { return _accessor.vector(at: VTOFFSET.STRING_TYPES.v, byteSize: 4) }
   ///  Boolean parameter types
-  public var hasBooleanTypes: Bool { let o = _accessor.offset(VTOFFSET.BOOLEAN_TYPES.v); return o == 0 ? false : true }
-  public var BOOLEAN_TYPESCount: Int32 { let o = _accessor.offset(VTOFFSET.BOOLEAN_TYPES.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func BOOLEAN_TYPES(at index: Int32) -> BooleanParameterType? { let o = _accessor.offset(VTOFFSET.BOOLEAN_TYPES.v); return o == 0 ? nil : BooleanParameterType(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var BOOLEAN_TYPES: FlatbufferVector<BooleanParameterType> { return _accessor.vector(at: VTOFFSET.BOOLEAN_TYPES.v, byteSize: 4) }
   ///  Enumerated parameter types
-  public var hasEnumeratedTypes: Bool { let o = _accessor.offset(VTOFFSET.ENUMERATED_TYPES.v); return o == 0 ? false : true }
-  public var ENUMERATED_TYPESCount: Int32 { let o = _accessor.offset(VTOFFSET.ENUMERATED_TYPES.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func ENUMERATED_TYPES(at index: Int32) -> EnumeratedParameterType? { let o = _accessor.offset(VTOFFSET.ENUMERATED_TYPES.v); return o == 0 ? nil : EnumeratedParameterType(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var ENUMERATED_TYPES: FlatbufferVector<EnumeratedParameterType> { return _accessor.vector(at: VTOFFSET.ENUMERATED_TYPES.v, byteSize: 4) }
   ///  Binary parameter types
-  public var hasBinaryTypes: Bool { let o = _accessor.offset(VTOFFSET.BINARY_TYPES.v); return o == 0 ? false : true }
-  public var BINARY_TYPESCount: Int32 { let o = _accessor.offset(VTOFFSET.BINARY_TYPES.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func BINARY_TYPES(at index: Int32) -> BinaryParameterType? { let o = _accessor.offset(VTOFFSET.BINARY_TYPES.v); return o == 0 ? nil : BinaryParameterType(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var BINARY_TYPES: FlatbufferVector<BinaryParameterType> { return _accessor.vector(at: VTOFFSET.BINARY_TYPES.v, byteSize: 4) }
   ///  Absolute time parameter types
-  public var hasAbsoluteTimeTypes: Bool { let o = _accessor.offset(VTOFFSET.ABSOLUTE_TIME_TYPES.v); return o == 0 ? false : true }
-  public var ABSOLUTE_TIME_TYPESCount: Int32 { let o = _accessor.offset(VTOFFSET.ABSOLUTE_TIME_TYPES.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func ABSOLUTE_TIME_TYPES(at index: Int32) -> AbsoluteTimeParameterType? { let o = _accessor.offset(VTOFFSET.ABSOLUTE_TIME_TYPES.v); return o == 0 ? nil : AbsoluteTimeParameterType(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var ABSOLUTE_TIME_TYPES: FlatbufferVector<AbsoluteTimeParameterType> { return _accessor.vector(at: VTOFFSET.ABSOLUTE_TIME_TYPES.v, byteSize: 4) }
   ///  Relative time parameter types
-  public var hasRelativeTimeTypes: Bool { let o = _accessor.offset(VTOFFSET.RELATIVE_TIME_TYPES.v); return o == 0 ? false : true }
-  public var RELATIVE_TIME_TYPESCount: Int32 { let o = _accessor.offset(VTOFFSET.RELATIVE_TIME_TYPES.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func RELATIVE_TIME_TYPES(at index: Int32) -> RelativeTimeParameterType? { let o = _accessor.offset(VTOFFSET.RELATIVE_TIME_TYPES.v); return o == 0 ? nil : RelativeTimeParameterType(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var RELATIVE_TIME_TYPES: FlatbufferVector<RelativeTimeParameterType> { return _accessor.vector(at: VTOFFSET.RELATIVE_TIME_TYPES.v, byteSize: 4) }
   ///  Array parameter types
-  public var hasArrayTypes: Bool { let o = _accessor.offset(VTOFFSET.ARRAY_TYPES.v); return o == 0 ? false : true }
-  public var ARRAY_TYPESCount: Int32 { let o = _accessor.offset(VTOFFSET.ARRAY_TYPES.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func ARRAY_TYPES(at index: Int32) -> ArrayParameterType? { let o = _accessor.offset(VTOFFSET.ARRAY_TYPES.v); return o == 0 ? nil : ArrayParameterType(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var ARRAY_TYPES: FlatbufferVector<ArrayParameterType> { return _accessor.vector(at: VTOFFSET.ARRAY_TYPES.v, byteSize: 4) }
   ///  Aggregate parameter types
-  public var hasAggregateTypes: Bool { let o = _accessor.offset(VTOFFSET.AGGREGATE_TYPES.v); return o == 0 ? false : true }
-  public var AGGREGATE_TYPESCount: Int32 { let o = _accessor.offset(VTOFFSET.AGGREGATE_TYPES.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func AGGREGATE_TYPES(at index: Int32) -> AggregateParameterType? { let o = _accessor.offset(VTOFFSET.AGGREGATE_TYPES.v); return o == 0 ? nil : AggregateParameterType(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var AGGREGATE_TYPES: FlatbufferVector<AggregateParameterType> { return _accessor.vector(at: VTOFFSET.AGGREGATE_TYPES.v, byteSize: 4) }
   public static func startParameterTypeSet(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 10) }
   public static func addVectorOf(INTEGER_TYPES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INTEGER_TYPES, at: VTOFFSET.INTEGER_TYPES.p) }
   public static func addVectorOf(FLOAT_TYPES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FLOAT_TYPES, at: VTOFFSET.FLOAT_TYPES.p) }
@@ -2552,9 +2496,9 @@ public struct ParameterTypeSet: FlatBufferObject, Verifiable {
 }
 
 ///  Parameter properties
-public struct ParameterProperties: FlatBufferObject, Verifiable {
+public struct ParameterProperties: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -2580,7 +2524,7 @@ public struct ParameterProperties: FlatBufferObject, Verifiable {
   public var SYSTEM_NAME: String? { let o = _accessor.offset(VTOFFSET.SYSTEM_NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var SYSTEM_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SYSTEM_NAME.v) }
   ///  Validity condition
-  public var VALIDITY_CONDITION: MatchCriteria? { let o = _accessor.offset(VTOFFSET.VALIDITY_CONDITION.v); return o == 0 ? nil : MatchCriteria(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var VALIDITY_CONDITION: MatchCriteria? { let o = _accessor.offset(VTOFFSET.VALIDITY_CONDITION.v); return o == 0 ? nil : MatchCriteria(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public static func startParameterProperties(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
   public static func add(DATA_SOURCE: DataSourceType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DATA_SOURCE.rawValue, def: 0, at: VTOFFSET.DATA_SOURCE.p) }
   public static func add(READ_ONLY: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: READ_ONLY, def: true,
@@ -2614,9 +2558,9 @@ public struct ParameterProperties: FlatBufferObject, Verifiable {
 }
 
 ///  Parameter definition
-public struct Parameter: FlatBufferObject, Verifiable {
+public struct Parameter: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -2650,7 +2594,7 @@ public struct Parameter: FlatBufferObject, Verifiable {
   public var LONG_DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.LONG_DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var LONG_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LONG_DESCRIPTION.v) }
   ///  Parameter properties
-  public var PROPERTIES: ParameterProperties? { let o = _accessor.offset(VTOFFSET.PROPERTIES.v); return o == 0 ? nil : ParameterProperties(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var PROPERTIES: ParameterProperties? { let o = _accessor.offset(VTOFFSET.PROPERTIES.v); return o == 0 ? nil : ParameterProperties(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Physical address mapping
   public var PHYSICAL_ADDRESS: String? { let o = _accessor.offset(VTOFFSET.PHYSICAL_ADDRESS.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var PHYSICAL_ADDRESSSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.PHYSICAL_ADDRESS.v) }
@@ -2701,9 +2645,9 @@ public struct Parameter: FlatBufferObject, Verifiable {
 }
 
 ///  Collection of parameters
-public struct ParameterSet: FlatBufferObject, Verifiable {
+public struct ParameterSet: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -2719,9 +2663,7 @@ public struct ParameterSet: FlatBufferObject, Verifiable {
   }
 
   ///  Parameters
-  public var hasParameters: Bool { let o = _accessor.offset(VTOFFSET.PARAMETERS.v); return o == 0 ? false : true }
-  public var PARAMETERSCount: Int32 { let o = _accessor.offset(VTOFFSET.PARAMETERS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func PARAMETERS(at index: Int32) -> Parameter? { let o = _accessor.offset(VTOFFSET.PARAMETERS.v); return o == 0 ? nil : Parameter(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var PARAMETERS: FlatbufferVector<Parameter> { return _accessor.vector(at: VTOFFSET.PARAMETERS.v, byteSize: 4) }
   public static func startParameterSet(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 1) }
   public static func addVectorOf(PARAMETERS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PARAMETERS, at: VTOFFSET.PARAMETERS.p) }
   public static func endParameterSet(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
@@ -2742,9 +2684,9 @@ public struct ParameterSet: FlatBufferObject, Verifiable {
 }
 
 ///  Location specification within a container
-public struct LocationInContainer: FlatBufferObject, Verifiable {
+public struct LocationInContainer: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -2788,9 +2730,9 @@ public struct LocationInContainer: FlatBufferObject, Verifiable {
 }
 
 ///  Repeat entry specification
-public struct RepeatEntry: FlatBufferObject, Verifiable {
+public struct RepeatEntry: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -2842,9 +2784,9 @@ public struct RepeatEntry: FlatBufferObject, Verifiable {
 }
 
 ///  Parameter reference entry in container
-public struct ParameterRefEntry: FlatBufferObject, Verifiable {
+public struct ParameterRefEntry: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -2867,11 +2809,11 @@ public struct ParameterRefEntry: FlatBufferObject, Verifiable {
   public var PARAMETER_REF: String? { let o = _accessor.offset(VTOFFSET.PARAMETER_REF.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var PARAMETER_REFSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.PARAMETER_REF.v) }
   ///  Location in container
-  public var LOCATION: LocationInContainer? { let o = _accessor.offset(VTOFFSET.LOCATION.v); return o == 0 ? nil : LocationInContainer(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var LOCATION: LocationInContainer? { let o = _accessor.offset(VTOFFSET.LOCATION.v); return o == 0 ? nil : LocationInContainer(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Repeat specification
-  public var REPEAT: RepeatEntry? { let o = _accessor.offset(VTOFFSET.REPEAT.v); return o == 0 ? nil : RepeatEntry(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var REPEAT: RepeatEntry? { let o = _accessor.offset(VTOFFSET.REPEAT.v); return o == 0 ? nil : RepeatEntry(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Include condition
-  public var INCLUDE_CONDITION: MatchCriteria? { let o = _accessor.offset(VTOFFSET.INCLUDE_CONDITION.v); return o == 0 ? nil : MatchCriteria(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var INCLUDE_CONDITION: MatchCriteria? { let o = _accessor.offset(VTOFFSET.INCLUDE_CONDITION.v); return o == 0 ? nil : MatchCriteria(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Short description
   public var SHORT_DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.SHORT_DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var SHORT_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SHORT_DESCRIPTION.v) }
@@ -2911,9 +2853,9 @@ public struct ParameterRefEntry: FlatBufferObject, Verifiable {
 }
 
 ///  Container reference entry (nested container)
-public struct ContainerRefEntry: FlatBufferObject, Verifiable {
+public struct ContainerRefEntry: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -2935,11 +2877,11 @@ public struct ContainerRefEntry: FlatBufferObject, Verifiable {
   public var CONTAINER_REF: String? { let o = _accessor.offset(VTOFFSET.CONTAINER_REF.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var CONTAINER_REFSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CONTAINER_REF.v) }
   ///  Location in container
-  public var LOCATION: LocationInContainer? { let o = _accessor.offset(VTOFFSET.LOCATION.v); return o == 0 ? nil : LocationInContainer(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var LOCATION: LocationInContainer? { let o = _accessor.offset(VTOFFSET.LOCATION.v); return o == 0 ? nil : LocationInContainer(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Repeat specification
-  public var REPEAT: RepeatEntry? { let o = _accessor.offset(VTOFFSET.REPEAT.v); return o == 0 ? nil : RepeatEntry(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var REPEAT: RepeatEntry? { let o = _accessor.offset(VTOFFSET.REPEAT.v); return o == 0 ? nil : RepeatEntry(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Include condition
-  public var INCLUDE_CONDITION: MatchCriteria? { let o = _accessor.offset(VTOFFSET.INCLUDE_CONDITION.v); return o == 0 ? nil : MatchCriteria(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var INCLUDE_CONDITION: MatchCriteria? { let o = _accessor.offset(VTOFFSET.INCLUDE_CONDITION.v); return o == 0 ? nil : MatchCriteria(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public static func startContainerRefEntry(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
   public static func add(CONTAINER_REF: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONTAINER_REF, at: VTOFFSET.CONTAINER_REF.p) }
   public static func add(LOCATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LOCATION, at: VTOFFSET.LOCATION.p) }
@@ -2972,9 +2914,9 @@ public struct ContainerRefEntry: FlatBufferObject, Verifiable {
 }
 
 ///  Fixed value entry (static padding/header)
-public struct FixedValueEntry: FlatBufferObject, Verifiable {
+public struct FixedValueEntry: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -3001,7 +2943,7 @@ public struct FixedValueEntry: FlatBufferObject, Verifiable {
   public var NAME: String? { let o = _accessor.offset(VTOFFSET.NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NAME.v) }
   ///  Location in container
-  public var LOCATION: LocationInContainer? { let o = _accessor.offset(VTOFFSET.LOCATION.v); return o == 0 ? nil : LocationInContainer(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var LOCATION: LocationInContainer? { let o = _accessor.offset(VTOFFSET.LOCATION.v); return o == 0 ? nil : LocationInContainer(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public static func startFixedValueEntry(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
   public static func add(BINARY_VALUE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BINARY_VALUE, at: VTOFFSET.BINARY_VALUE.p) }
   public static func add(SIZE_IN_BITS: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SIZE_IN_BITS, def: 0, at: VTOFFSET.SIZE_IN_BITS.p) }
@@ -3034,9 +2976,9 @@ public struct FixedValueEntry: FlatBufferObject, Verifiable {
 }
 
 ///  Array parameter reference entry
-public struct ArrayParameterRefEntry: FlatBufferObject, Verifiable {
+public struct ArrayParameterRefEntry: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -3058,7 +3000,7 @@ public struct ArrayParameterRefEntry: FlatBufferObject, Verifiable {
   public var PARAMETER_REF: String? { let o = _accessor.offset(VTOFFSET.PARAMETER_REF.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var PARAMETER_REFSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.PARAMETER_REF.v) }
   ///  Location in container
-  public var LOCATION: LocationInContainer? { let o = _accessor.offset(VTOFFSET.LOCATION.v); return o == 0 ? nil : LocationInContainer(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var LOCATION: LocationInContainer? { let o = _accessor.offset(VTOFFSET.LOCATION.v); return o == 0 ? nil : LocationInContainer(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  First index to include
   public var FIRST_INDEX: UInt32 { let o = _accessor.offset(VTOFFSET.FIRST_INDEX.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  Last index to include
@@ -3095,9 +3037,9 @@ public struct ArrayParameterRefEntry: FlatBufferObject, Verifiable {
 }
 
 ///  Container entry list item (union of entry types)
-public struct ContainerEntry: FlatBufferObject, Verifiable {
+public struct ContainerEntry: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -3116,13 +3058,13 @@ public struct ContainerEntry: FlatBufferObject, Verifiable {
   }
 
   ///  Parameter reference entry
-  public var PARAMETER_REF_ENTRY: ParameterRefEntry? { let o = _accessor.offset(VTOFFSET.PARAMETER_REF_ENTRY.v); return o == 0 ? nil : ParameterRefEntry(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var PARAMETER_REF_ENTRY: ParameterRefEntry? { let o = _accessor.offset(VTOFFSET.PARAMETER_REF_ENTRY.v); return o == 0 ? nil : ParameterRefEntry(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Container reference entry
-  public var CONTAINER_REF_ENTRY: ContainerRefEntry? { let o = _accessor.offset(VTOFFSET.CONTAINER_REF_ENTRY.v); return o == 0 ? nil : ContainerRefEntry(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var CONTAINER_REF_ENTRY: ContainerRefEntry? { let o = _accessor.offset(VTOFFSET.CONTAINER_REF_ENTRY.v); return o == 0 ? nil : ContainerRefEntry(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Fixed value entry
-  public var FIXED_VALUE_ENTRY: FixedValueEntry? { let o = _accessor.offset(VTOFFSET.FIXED_VALUE_ENTRY.v); return o == 0 ? nil : FixedValueEntry(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var FIXED_VALUE_ENTRY: FixedValueEntry? { let o = _accessor.offset(VTOFFSET.FIXED_VALUE_ENTRY.v); return o == 0 ? nil : FixedValueEntry(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Array parameter reference entry
-  public var ARRAY_PARAMETER_REF_ENTRY: ArrayParameterRefEntry? { let o = _accessor.offset(VTOFFSET.ARRAY_PARAMETER_REF_ENTRY.v); return o == 0 ? nil : ArrayParameterRefEntry(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var ARRAY_PARAMETER_REF_ENTRY: ArrayParameterRefEntry? { let o = _accessor.offset(VTOFFSET.ARRAY_PARAMETER_REF_ENTRY.v); return o == 0 ? nil : ArrayParameterRefEntry(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public static func startContainerEntry(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
   public static func add(PARAMETER_REF_ENTRY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PARAMETER_REF_ENTRY, at: VTOFFSET.PARAMETER_REF_ENTRY.p) }
   public static func add(CONTAINER_REF_ENTRY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONTAINER_REF_ENTRY, at: VTOFFSET.CONTAINER_REF_ENTRY.p) }
@@ -3155,9 +3097,9 @@ public struct ContainerEntry: FlatBufferObject, Verifiable {
 }
 
 ///  Base container reference with restriction
-public struct BaseContainer: FlatBufferObject, Verifiable {
+public struct BaseContainer: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -3177,7 +3119,7 @@ public struct BaseContainer: FlatBufferObject, Verifiable {
   public var CONTAINER_REF: String? { let o = _accessor.offset(VTOFFSET.CONTAINER_REF.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var CONTAINER_REFSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CONTAINER_REF.v) }
   ///  Restriction criteria
-  public var RESTRICTION_CRITERIA: MatchCriteria? { let o = _accessor.offset(VTOFFSET.RESTRICTION_CRITERIA.v); return o == 0 ? nil : MatchCriteria(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var RESTRICTION_CRITERIA: MatchCriteria? { let o = _accessor.offset(VTOFFSET.RESTRICTION_CRITERIA.v); return o == 0 ? nil : MatchCriteria(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public static func startBaseContainer(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 2) }
   public static func add(CONTAINER_REF: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONTAINER_REF, at: VTOFFSET.CONTAINER_REF.p) }
   public static func add(RESTRICTION_CRITERIA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RESTRICTION_CRITERIA, at: VTOFFSET.RESTRICTION_CRITERIA.p) }
@@ -3202,9 +3144,9 @@ public struct BaseContainer: FlatBufferObject, Verifiable {
 }
 
 ///  Rate specification for container in stream
-public struct RateInStream: FlatBufferObject, Verifiable {
+public struct RateInStream: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -3256,9 +3198,9 @@ public struct RateInStream: FlatBufferObject, Verifiable {
 }
 
 ///  Binary encoding specification for container
-public struct ContainerBinaryEncoding: FlatBufferObject, Verifiable {
+public struct ContainerBinaryEncoding: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -3310,9 +3252,9 @@ public struct ContainerBinaryEncoding: FlatBufferObject, Verifiable {
 }
 
 ///  Sequence container (packet definition)
-public struct SequenceContainer: FlatBufferObject, Verifiable {
+public struct SequenceContainer: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -3347,15 +3289,13 @@ public struct SequenceContainer: FlatBufferObject, Verifiable {
   ///  Abstract container (used as base only)
   public var ABSTRACT: Bool { let o = _accessor.offset(VTOFFSET.ABSTRACT.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Container entry list
-  public var hasEntryList: Bool { let o = _accessor.offset(VTOFFSET.ENTRY_LIST.v); return o == 0 ? false : true }
-  public var ENTRY_LISTCount: Int32 { let o = _accessor.offset(VTOFFSET.ENTRY_LIST.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func ENTRY_LIST(at index: Int32) -> ContainerEntry? { let o = _accessor.offset(VTOFFSET.ENTRY_LIST.v); return o == 0 ? nil : ContainerEntry(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var ENTRY_LIST: FlatbufferVector<ContainerEntry> { return _accessor.vector(at: VTOFFSET.ENTRY_LIST.v, byteSize: 4) }
   ///  Base container (inheritance)
-  public var BASE_CONTAINER: BaseContainer? { let o = _accessor.offset(VTOFFSET.BASE_CONTAINER.v); return o == 0 ? nil : BaseContainer(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var BASE_CONTAINER: BaseContainer? { let o = _accessor.offset(VTOFFSET.BASE_CONTAINER.v); return o == 0 ? nil : BaseContainer(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Binary encoding
-  public var BINARY_ENCODING: ContainerBinaryEncoding? { let o = _accessor.offset(VTOFFSET.BINARY_ENCODING.v); return o == 0 ? nil : ContainerBinaryEncoding(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var BINARY_ENCODING: ContainerBinaryEncoding? { let o = _accessor.offset(VTOFFSET.BINARY_ENCODING.v); return o == 0 ? nil : ContainerBinaryEncoding(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Rate in stream
-  public var RATE_IN_STREAM: RateInStream? { let o = _accessor.offset(VTOFFSET.RATE_IN_STREAM.v); return o == 0 ? nil : RateInStream(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var RATE_IN_STREAM: RateInStream? { let o = _accessor.offset(VTOFFSET.RATE_IN_STREAM.v); return o == 0 ? nil : RateInStream(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Idle pattern (hex string for padding)
   public var IDLE_PATTERN: String? { let o = _accessor.offset(VTOFFSET.IDLE_PATTERN.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var IDLE_PATTERNSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.IDLE_PATTERN.v) }
@@ -3412,9 +3352,9 @@ public struct SequenceContainer: FlatBufferObject, Verifiable {
 }
 
 ///  Collection of sequence containers
-public struct ContainerSet: FlatBufferObject, Verifiable {
+public struct ContainerSet: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -3430,9 +3370,7 @@ public struct ContainerSet: FlatBufferObject, Verifiable {
   }
 
   ///  Sequence containers
-  public var hasContainers: Bool { let o = _accessor.offset(VTOFFSET.CONTAINERS.v); return o == 0 ? false : true }
-  public var CONTAINERSCount: Int32 { let o = _accessor.offset(VTOFFSET.CONTAINERS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func CONTAINERS(at index: Int32) -> SequenceContainer? { let o = _accessor.offset(VTOFFSET.CONTAINERS.v); return o == 0 ? nil : SequenceContainer(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var CONTAINERS: FlatbufferVector<SequenceContainer> { return _accessor.vector(at: VTOFFSET.CONTAINERS.v, byteSize: 4) }
   public static func startContainerSet(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 1) }
   public static func addVectorOf(CONTAINERS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONTAINERS, at: VTOFFSET.CONTAINERS.p) }
   public static func endContainerSet(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
@@ -3453,9 +3391,9 @@ public struct ContainerSet: FlatBufferObject, Verifiable {
 }
 
 ///  Algorithm input binding
-public struct AlgorithmInput: FlatBufferObject, Verifiable {
+public struct AlgorithmInput: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -3501,9 +3439,9 @@ public struct AlgorithmInput: FlatBufferObject, Verifiable {
 }
 
 ///  Algorithm output binding
-public struct AlgorithmOutput: FlatBufferObject, Verifiable {
+public struct AlgorithmOutput: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -3549,9 +3487,9 @@ public struct AlgorithmOutput: FlatBufferObject, Verifiable {
 }
 
 ///  Trigger condition for algorithm execution
-public struct AlgorithmTrigger: FlatBufferObject, Verifiable {
+public struct AlgorithmTrigger: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -3604,9 +3542,9 @@ public struct AlgorithmTrigger: FlatBufferObject, Verifiable {
 }
 
 ///  Custom algorithm definition
-public struct CustomAlgorithm: FlatBufferObject, Verifiable {
+public struct CustomAlgorithm: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -3648,17 +3586,11 @@ public struct CustomAlgorithm: FlatBufferObject, Verifiable {
   public var EXTERNAL_ALGORITHM_REF: String? { let o = _accessor.offset(VTOFFSET.EXTERNAL_ALGORITHM_REF.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var EXTERNAL_ALGORITHM_REFSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.EXTERNAL_ALGORITHM_REF.v) }
   ///  Input bindings
-  public var hasInputs: Bool { let o = _accessor.offset(VTOFFSET.INPUTS.v); return o == 0 ? false : true }
-  public var INPUTSCount: Int32 { let o = _accessor.offset(VTOFFSET.INPUTS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func INPUTS(at index: Int32) -> AlgorithmInput? { let o = _accessor.offset(VTOFFSET.INPUTS.v); return o == 0 ? nil : AlgorithmInput(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var INPUTS: FlatbufferVector<AlgorithmInput> { return _accessor.vector(at: VTOFFSET.INPUTS.v, byteSize: 4) }
   ///  Output bindings
-  public var hasOutputs: Bool { let o = _accessor.offset(VTOFFSET.OUTPUTS.v); return o == 0 ? false : true }
-  public var OUTPUTSCount: Int32 { let o = _accessor.offset(VTOFFSET.OUTPUTS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func OUTPUTS(at index: Int32) -> AlgorithmOutput? { let o = _accessor.offset(VTOFFSET.OUTPUTS.v); return o == 0 ? nil : AlgorithmOutput(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var OUTPUTS: FlatbufferVector<AlgorithmOutput> { return _accessor.vector(at: VTOFFSET.OUTPUTS.v, byteSize: 4) }
   ///  Trigger conditions
-  public var hasTriggers: Bool { let o = _accessor.offset(VTOFFSET.TRIGGERS.v); return o == 0 ? false : true }
-  public var TRIGGERSCount: Int32 { let o = _accessor.offset(VTOFFSET.TRIGGERS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func TRIGGERS(at index: Int32) -> AlgorithmTrigger? { let o = _accessor.offset(VTOFFSET.TRIGGERS.v); return o == 0 ? nil : AlgorithmTrigger(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var TRIGGERS: FlatbufferVector<AlgorithmTrigger> { return _accessor.vector(at: VTOFFSET.TRIGGERS.v, byteSize: 4) }
   public static func startCustomAlgorithm(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 9) }
   public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
   public static func add(SHORT_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHORT_DESCRIPTION, at: VTOFFSET.SHORT_DESCRIPTION.p) }
@@ -3711,9 +3643,9 @@ public struct CustomAlgorithm: FlatBufferObject, Verifiable {
 }
 
 ///  Math algorithm (inline calculation)
-public struct MathAlgorithm: FlatBufferObject, Verifiable {
+public struct MathAlgorithm: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -3745,9 +3677,7 @@ public struct MathAlgorithm: FlatBufferObject, Verifiable {
   public var OUTPUT_PARAMETER_REF: String? { let o = _accessor.offset(VTOFFSET.OUTPUT_PARAMETER_REF.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var OUTPUT_PARAMETER_REFSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OUTPUT_PARAMETER_REF.v) }
   ///  Trigger conditions
-  public var hasTriggers: Bool { let o = _accessor.offset(VTOFFSET.TRIGGERS.v); return o == 0 ? false : true }
-  public var TRIGGERSCount: Int32 { let o = _accessor.offset(VTOFFSET.TRIGGERS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func TRIGGERS(at index: Int32) -> AlgorithmTrigger? { let o = _accessor.offset(VTOFFSET.TRIGGERS.v); return o == 0 ? nil : AlgorithmTrigger(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var TRIGGERS: FlatbufferVector<AlgorithmTrigger> { return _accessor.vector(at: VTOFFSET.TRIGGERS.v, byteSize: 4) }
   public static func startMathAlgorithm(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
   public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
   public static func add(SHORT_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHORT_DESCRIPTION, at: VTOFFSET.SHORT_DESCRIPTION.p) }
@@ -3784,9 +3714,9 @@ public struct MathAlgorithm: FlatBufferObject, Verifiable {
 }
 
 ///  Collection of algorithms
-public struct AlgorithmSet: FlatBufferObject, Verifiable {
+public struct AlgorithmSet: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -3803,13 +3733,9 @@ public struct AlgorithmSet: FlatBufferObject, Verifiable {
   }
 
   ///  Custom algorithms
-  public var hasCustomAlgorithms: Bool { let o = _accessor.offset(VTOFFSET.CUSTOM_ALGORITHMS.v); return o == 0 ? false : true }
-  public var CUSTOM_ALGORITHMSCount: Int32 { let o = _accessor.offset(VTOFFSET.CUSTOM_ALGORITHMS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func CUSTOM_ALGORITHMS(at index: Int32) -> CustomAlgorithm? { let o = _accessor.offset(VTOFFSET.CUSTOM_ALGORITHMS.v); return o == 0 ? nil : CustomAlgorithm(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var CUSTOM_ALGORITHMS: FlatbufferVector<CustomAlgorithm> { return _accessor.vector(at: VTOFFSET.CUSTOM_ALGORITHMS.v, byteSize: 4) }
   ///  Math algorithms
-  public var hasMathAlgorithms: Bool { let o = _accessor.offset(VTOFFSET.MATH_ALGORITHMS.v); return o == 0 ? false : true }
-  public var MATH_ALGORITHMSCount: Int32 { let o = _accessor.offset(VTOFFSET.MATH_ALGORITHMS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func MATH_ALGORITHMS(at index: Int32) -> MathAlgorithm? { let o = _accessor.offset(VTOFFSET.MATH_ALGORITHMS.v); return o == 0 ? nil : MathAlgorithm(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var MATH_ALGORITHMS: FlatbufferVector<MathAlgorithm> { return _accessor.vector(at: VTOFFSET.MATH_ALGORITHMS.v, byteSize: 4) }
   public static func startAlgorithmSet(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 2) }
   public static func addVectorOf(CUSTOM_ALGORITHMS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CUSTOM_ALGORITHMS, at: VTOFFSET.CUSTOM_ALGORITHMS.p) }
   public static func addVectorOf(MATH_ALGORITHMS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MATH_ALGORITHMS, at: VTOFFSET.MATH_ALGORITHMS.p) }
@@ -3834,9 +3760,9 @@ public struct AlgorithmSet: FlatBufferObject, Verifiable {
 }
 
 ///  Integer argument type
-public struct IntegerArgumentType: FlatBufferObject, Verifiable {
+public struct IntegerArgumentType: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -3870,11 +3796,9 @@ public struct IntegerArgumentType: FlatBufferObject, Verifiable {
   public var LONG_DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.LONG_DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var LONG_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LONG_DESCRIPTION.v) }
   ///  Units
-  public var hasUnits: Bool { let o = _accessor.offset(VTOFFSET.UNITS.v); return o == 0 ? false : true }
-  public var UNITSCount: Int32 { let o = _accessor.offset(VTOFFSET.UNITS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func UNITS(at index: Int32) -> Unit? { let o = _accessor.offset(VTOFFSET.UNITS.v); return o == 0 ? nil : Unit(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var UNITS: FlatbufferVector<Unit> { return _accessor.vector(at: VTOFFSET.UNITS.v, byteSize: 4) }
   ///  Data encoding
-  public var DATA_ENCODING: IntegerDataEncoding? { let o = _accessor.offset(VTOFFSET.DATA_ENCODING.v); return o == 0 ? nil : IntegerDataEncoding(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var DATA_ENCODING: IntegerDataEncoding? { let o = _accessor.offset(VTOFFSET.DATA_ENCODING.v); return o == 0 ? nil : IntegerDataEncoding(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Minimum valid value
   public var VALID_MIN: Int64 { let o = _accessor.offset(VTOFFSET.VALID_MIN.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int64.self, at: o) }
   ///  Maximum valid value
@@ -3942,9 +3866,9 @@ public struct IntegerArgumentType: FlatBufferObject, Verifiable {
 }
 
 ///  Float argument type
-public struct FloatArgumentType: FlatBufferObject, Verifiable {
+public struct FloatArgumentType: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -3977,11 +3901,9 @@ public struct FloatArgumentType: FlatBufferObject, Verifiable {
   public var LONG_DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.LONG_DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var LONG_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LONG_DESCRIPTION.v) }
   ///  Units
-  public var hasUnits: Bool { let o = _accessor.offset(VTOFFSET.UNITS.v); return o == 0 ? false : true }
-  public var UNITSCount: Int32 { let o = _accessor.offset(VTOFFSET.UNITS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func UNITS(at index: Int32) -> Unit? { let o = _accessor.offset(VTOFFSET.UNITS.v); return o == 0 ? nil : Unit(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var UNITS: FlatbufferVector<Unit> { return _accessor.vector(at: VTOFFSET.UNITS.v, byteSize: 4) }
   ///  Data encoding
-  public var DATA_ENCODING: FloatDataEncoding? { let o = _accessor.offset(VTOFFSET.DATA_ENCODING.v); return o == 0 ? nil : FloatDataEncoding(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var DATA_ENCODING: FloatDataEncoding? { let o = _accessor.offset(VTOFFSET.DATA_ENCODING.v); return o == 0 ? nil : FloatDataEncoding(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Minimum valid value
   public var VALID_MIN: Double { let o = _accessor.offset(VTOFFSET.VALID_MIN.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Maximum valid value
@@ -4042,9 +3964,9 @@ public struct FloatArgumentType: FlatBufferObject, Verifiable {
 }
 
 ///  String argument type
-public struct StringArgumentType: FlatBufferObject, Verifiable {
+public struct StringArgumentType: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -4074,7 +3996,7 @@ public struct StringArgumentType: FlatBufferObject, Verifiable {
   public var LONG_DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.LONG_DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var LONG_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LONG_DESCRIPTION.v) }
   ///  Data encoding
-  public var DATA_ENCODING: StringDataEncoding? { let o = _accessor.offset(VTOFFSET.DATA_ENCODING.v); return o == 0 ? nil : StringDataEncoding(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var DATA_ENCODING: StringDataEncoding? { let o = _accessor.offset(VTOFFSET.DATA_ENCODING.v); return o == 0 ? nil : StringDataEncoding(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Initial/default value
   public var INITIAL_VALUE: String? { let o = _accessor.offset(VTOFFSET.INITIAL_VALUE.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var INITIAL_VALUESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.INITIAL_VALUE.v) }
@@ -4121,9 +4043,9 @@ public struct StringArgumentType: FlatBufferObject, Verifiable {
 }
 
 ///  Boolean argument type
-public struct BooleanArgumentType: FlatBufferObject, Verifiable {
+public struct BooleanArgumentType: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -4154,7 +4076,7 @@ public struct BooleanArgumentType: FlatBufferObject, Verifiable {
   public var LONG_DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.LONG_DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var LONG_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LONG_DESCRIPTION.v) }
   ///  Data encoding
-  public var DATA_ENCODING: IntegerDataEncoding? { let o = _accessor.offset(VTOFFSET.DATA_ENCODING.v); return o == 0 ? nil : IntegerDataEncoding(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var DATA_ENCODING: IntegerDataEncoding? { let o = _accessor.offset(VTOFFSET.DATA_ENCODING.v); return o == 0 ? nil : IntegerDataEncoding(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  String representation of true value
   public var ONE_STRING_VALUE: String? { let o = _accessor.offset(VTOFFSET.ONE_STRING_VALUE.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var ONE_STRING_VALUESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ONE_STRING_VALUE.v) }
@@ -4208,9 +4130,9 @@ public struct BooleanArgumentType: FlatBufferObject, Verifiable {
 }
 
 ///  Enumerated argument type
-public struct EnumeratedArgumentType: FlatBufferObject, Verifiable {
+public struct EnumeratedArgumentType: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -4240,11 +4162,9 @@ public struct EnumeratedArgumentType: FlatBufferObject, Verifiable {
   public var LONG_DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.LONG_DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var LONG_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LONG_DESCRIPTION.v) }
   ///  Data encoding
-  public var DATA_ENCODING: IntegerDataEncoding? { let o = _accessor.offset(VTOFFSET.DATA_ENCODING.v); return o == 0 ? nil : IntegerDataEncoding(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var DATA_ENCODING: IntegerDataEncoding? { let o = _accessor.offset(VTOFFSET.DATA_ENCODING.v); return o == 0 ? nil : IntegerDataEncoding(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Enumeration values list
-  public var hasEnumerationList: Bool { let o = _accessor.offset(VTOFFSET.ENUMERATION_LIST.v); return o == 0 ? false : true }
-  public var ENUMERATION_LISTCount: Int32 { let o = _accessor.offset(VTOFFSET.ENUMERATION_LIST.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func ENUMERATION_LIST(at index: Int32) -> EnumerationValue? { let o = _accessor.offset(VTOFFSET.ENUMERATION_LIST.v); return o == 0 ? nil : EnumerationValue(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var ENUMERATION_LIST: FlatbufferVector<EnumerationValue> { return _accessor.vector(at: VTOFFSET.ENUMERATION_LIST.v, byteSize: 4) }
   ///  Initial/default value label
   public var INITIAL_VALUE: String? { let o = _accessor.offset(VTOFFSET.INITIAL_VALUE.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var INITIAL_VALUESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.INITIAL_VALUE.v) }
@@ -4288,9 +4208,9 @@ public struct EnumeratedArgumentType: FlatBufferObject, Verifiable {
 }
 
 ///  Binary argument type
-public struct BinaryArgumentType: FlatBufferObject, Verifiable {
+public struct BinaryArgumentType: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -4319,7 +4239,7 @@ public struct BinaryArgumentType: FlatBufferObject, Verifiable {
   public var LONG_DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.LONG_DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var LONG_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LONG_DESCRIPTION.v) }
   ///  Data encoding
-  public var DATA_ENCODING: BinaryDataEncoding? { let o = _accessor.offset(VTOFFSET.DATA_ENCODING.v); return o == 0 ? nil : BinaryDataEncoding(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var DATA_ENCODING: BinaryDataEncoding? { let o = _accessor.offset(VTOFFSET.DATA_ENCODING.v); return o == 0 ? nil : BinaryDataEncoding(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Initial/default value (hex string)
   public var INITIAL_VALUE: String? { let o = _accessor.offset(VTOFFSET.INITIAL_VALUE.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var INITIAL_VALUESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.INITIAL_VALUE.v) }
@@ -4359,9 +4279,9 @@ public struct BinaryArgumentType: FlatBufferObject, Verifiable {
 }
 
 ///  Aggregate argument type
-public struct AggregateArgumentType: FlatBufferObject, Verifiable {
+public struct AggregateArgumentType: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -4389,9 +4309,7 @@ public struct AggregateArgumentType: FlatBufferObject, Verifiable {
   public var LONG_DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.LONG_DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var LONG_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LONG_DESCRIPTION.v) }
   ///  Member list
-  public var hasMembers: Bool { let o = _accessor.offset(VTOFFSET.MEMBERS.v); return o == 0 ? false : true }
-  public var MEMBERSCount: Int32 { let o = _accessor.offset(VTOFFSET.MEMBERS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func MEMBERS(at index: Int32) -> AggregateMember? { let o = _accessor.offset(VTOFFSET.MEMBERS.v); return o == 0 ? nil : AggregateMember(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var MEMBERS: FlatbufferVector<AggregateMember> { return _accessor.vector(at: VTOFFSET.MEMBERS.v, byteSize: 4) }
   public static func startAggregateArgumentType(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
   public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
   public static func add(SHORT_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHORT_DESCRIPTION, at: VTOFFSET.SHORT_DESCRIPTION.p) }
@@ -4424,9 +4342,9 @@ public struct AggregateArgumentType: FlatBufferObject, Verifiable {
 }
 
 ///  Collection of argument types
-public struct ArgumentTypeSet: FlatBufferObject, Verifiable {
+public struct ArgumentTypeSet: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -4448,33 +4366,19 @@ public struct ArgumentTypeSet: FlatBufferObject, Verifiable {
   }
 
   ///  Integer argument types
-  public var hasIntegerTypes: Bool { let o = _accessor.offset(VTOFFSET.INTEGER_TYPES.v); return o == 0 ? false : true }
-  public var INTEGER_TYPESCount: Int32 { let o = _accessor.offset(VTOFFSET.INTEGER_TYPES.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func INTEGER_TYPES(at index: Int32) -> IntegerArgumentType? { let o = _accessor.offset(VTOFFSET.INTEGER_TYPES.v); return o == 0 ? nil : IntegerArgumentType(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var INTEGER_TYPES: FlatbufferVector<IntegerArgumentType> { return _accessor.vector(at: VTOFFSET.INTEGER_TYPES.v, byteSize: 4) }
   ///  Float argument types
-  public var hasFloatTypes: Bool { let o = _accessor.offset(VTOFFSET.FLOAT_TYPES.v); return o == 0 ? false : true }
-  public var FLOAT_TYPESCount: Int32 { let o = _accessor.offset(VTOFFSET.FLOAT_TYPES.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func FLOAT_TYPES(at index: Int32) -> FloatArgumentType? { let o = _accessor.offset(VTOFFSET.FLOAT_TYPES.v); return o == 0 ? nil : FloatArgumentType(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var FLOAT_TYPES: FlatbufferVector<FloatArgumentType> { return _accessor.vector(at: VTOFFSET.FLOAT_TYPES.v, byteSize: 4) }
   ///  String argument types
-  public var hasStringTypes: Bool { let o = _accessor.offset(VTOFFSET.STRING_TYPES.v); return o == 0 ? false : true }
-  public var STRING_TYPESCount: Int32 { let o = _accessor.offset(VTOFFSET.STRING_TYPES.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func STRING_TYPES(at index: Int32) -> StringArgumentType? { let o = _accessor.offset(VTOFFSET.STRING_TYPES.v); return o == 0 ? nil : StringArgumentType(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var STRING_TYPES: FlatbufferVector<StringArgumentType> { return _accessor.vector(at: VTOFFSET.STRING_TYPES.v, byteSize: 4) }
   ///  Boolean argument types
-  public var hasBooleanTypes: Bool { let o = _accessor.offset(VTOFFSET.BOOLEAN_TYPES.v); return o == 0 ? false : true }
-  public var BOOLEAN_TYPESCount: Int32 { let o = _accessor.offset(VTOFFSET.BOOLEAN_TYPES.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func BOOLEAN_TYPES(at index: Int32) -> BooleanArgumentType? { let o = _accessor.offset(VTOFFSET.BOOLEAN_TYPES.v); return o == 0 ? nil : BooleanArgumentType(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var BOOLEAN_TYPES: FlatbufferVector<BooleanArgumentType> { return _accessor.vector(at: VTOFFSET.BOOLEAN_TYPES.v, byteSize: 4) }
   ///  Enumerated argument types
-  public var hasEnumeratedTypes: Bool { let o = _accessor.offset(VTOFFSET.ENUMERATED_TYPES.v); return o == 0 ? false : true }
-  public var ENUMERATED_TYPESCount: Int32 { let o = _accessor.offset(VTOFFSET.ENUMERATED_TYPES.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func ENUMERATED_TYPES(at index: Int32) -> EnumeratedArgumentType? { let o = _accessor.offset(VTOFFSET.ENUMERATED_TYPES.v); return o == 0 ? nil : EnumeratedArgumentType(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var ENUMERATED_TYPES: FlatbufferVector<EnumeratedArgumentType> { return _accessor.vector(at: VTOFFSET.ENUMERATED_TYPES.v, byteSize: 4) }
   ///  Binary argument types
-  public var hasBinaryTypes: Bool { let o = _accessor.offset(VTOFFSET.BINARY_TYPES.v); return o == 0 ? false : true }
-  public var BINARY_TYPESCount: Int32 { let o = _accessor.offset(VTOFFSET.BINARY_TYPES.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func BINARY_TYPES(at index: Int32) -> BinaryArgumentType? { let o = _accessor.offset(VTOFFSET.BINARY_TYPES.v); return o == 0 ? nil : BinaryArgumentType(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var BINARY_TYPES: FlatbufferVector<BinaryArgumentType> { return _accessor.vector(at: VTOFFSET.BINARY_TYPES.v, byteSize: 4) }
   ///  Aggregate argument types
-  public var hasAggregateTypes: Bool { let o = _accessor.offset(VTOFFSET.AGGREGATE_TYPES.v); return o == 0 ? false : true }
-  public var AGGREGATE_TYPESCount: Int32 { let o = _accessor.offset(VTOFFSET.AGGREGATE_TYPES.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func AGGREGATE_TYPES(at index: Int32) -> AggregateArgumentType? { let o = _accessor.offset(VTOFFSET.AGGREGATE_TYPES.v); return o == 0 ? nil : AggregateArgumentType(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var AGGREGATE_TYPES: FlatbufferVector<AggregateArgumentType> { return _accessor.vector(at: VTOFFSET.AGGREGATE_TYPES.v, byteSize: 4) }
   public static func startArgumentTypeSet(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 7) }
   public static func addVectorOf(INTEGER_TYPES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INTEGER_TYPES, at: VTOFFSET.INTEGER_TYPES.p) }
   public static func addVectorOf(FLOAT_TYPES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FLOAT_TYPES, at: VTOFFSET.FLOAT_TYPES.p) }
@@ -4519,9 +4423,9 @@ public struct ArgumentTypeSet: FlatBufferObject, Verifiable {
 }
 
 ///  Command argument definition
-public struct Argument: FlatBufferObject, Verifiable {
+public struct Argument: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -4591,9 +4495,9 @@ public struct Argument: FlatBufferObject, Verifiable {
 }
 
 ///  Argument reference entry in command container
-public struct ArgumentRefEntry: FlatBufferObject, Verifiable {
+public struct ArgumentRefEntry: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -4614,7 +4518,7 @@ public struct ArgumentRefEntry: FlatBufferObject, Verifiable {
   public var ARGUMENT_REF: String? { let o = _accessor.offset(VTOFFSET.ARGUMENT_REF.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var ARGUMENT_REFSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ARGUMENT_REF.v) }
   ///  Location in container
-  public var LOCATION: LocationInContainer? { let o = _accessor.offset(VTOFFSET.LOCATION.v); return o == 0 ? nil : LocationInContainer(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var LOCATION: LocationInContainer? { let o = _accessor.offset(VTOFFSET.LOCATION.v); return o == 0 ? nil : LocationInContainer(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Short description
   public var SHORT_DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.SHORT_DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var SHORT_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SHORT_DESCRIPTION.v) }
@@ -4646,9 +4550,9 @@ public struct ArgumentRefEntry: FlatBufferObject, Verifiable {
 }
 
 ///  Command container entry
-public struct CommandContainerEntry: FlatBufferObject, Verifiable {
+public struct CommandContainerEntry: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -4666,11 +4570,11 @@ public struct CommandContainerEntry: FlatBufferObject, Verifiable {
   }
 
   ///  Argument reference entry
-  public var ARGUMENT_REF_ENTRY: ArgumentRefEntry? { let o = _accessor.offset(VTOFFSET.ARGUMENT_REF_ENTRY.v); return o == 0 ? nil : ArgumentRefEntry(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var ARGUMENT_REF_ENTRY: ArgumentRefEntry? { let o = _accessor.offset(VTOFFSET.ARGUMENT_REF_ENTRY.v); return o == 0 ? nil : ArgumentRefEntry(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Parameter reference entry
-  public var PARAMETER_REF_ENTRY: ParameterRefEntry? { let o = _accessor.offset(VTOFFSET.PARAMETER_REF_ENTRY.v); return o == 0 ? nil : ParameterRefEntry(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var PARAMETER_REF_ENTRY: ParameterRefEntry? { let o = _accessor.offset(VTOFFSET.PARAMETER_REF_ENTRY.v); return o == 0 ? nil : ParameterRefEntry(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Fixed value entry
-  public var FIXED_VALUE_ENTRY: FixedValueEntry? { let o = _accessor.offset(VTOFFSET.FIXED_VALUE_ENTRY.v); return o == 0 ? nil : FixedValueEntry(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var FIXED_VALUE_ENTRY: FixedValueEntry? { let o = _accessor.offset(VTOFFSET.FIXED_VALUE_ENTRY.v); return o == 0 ? nil : FixedValueEntry(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public static func startCommandContainerEntry(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 3) }
   public static func add(ARGUMENT_REF_ENTRY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ARGUMENT_REF_ENTRY, at: VTOFFSET.ARGUMENT_REF_ENTRY.p) }
   public static func add(PARAMETER_REF_ENTRY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PARAMETER_REF_ENTRY, at: VTOFFSET.PARAMETER_REF_ENTRY.p) }
@@ -4699,9 +4603,9 @@ public struct CommandContainerEntry: FlatBufferObject, Verifiable {
 }
 
 ///  Command container definition
-public struct CommandContainer: FlatBufferObject, Verifiable {
+public struct CommandContainer: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -4722,11 +4626,9 @@ public struct CommandContainer: FlatBufferObject, Verifiable {
   public var NAME: String? { let o = _accessor.offset(VTOFFSET.NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NAME.v) }
   ///  Entry list
-  public var hasEntryList: Bool { let o = _accessor.offset(VTOFFSET.ENTRY_LIST.v); return o == 0 ? false : true }
-  public var ENTRY_LISTCount: Int32 { let o = _accessor.offset(VTOFFSET.ENTRY_LIST.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func ENTRY_LIST(at index: Int32) -> CommandContainerEntry? { let o = _accessor.offset(VTOFFSET.ENTRY_LIST.v); return o == 0 ? nil : CommandContainerEntry(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var ENTRY_LIST: FlatbufferVector<CommandContainerEntry> { return _accessor.vector(at: VTOFFSET.ENTRY_LIST.v, byteSize: 4) }
   ///  Base container reference
-  public var BASE_CONTAINER: BaseContainer? { let o = _accessor.offset(VTOFFSET.BASE_CONTAINER.v); return o == 0 ? nil : BaseContainer(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var BASE_CONTAINER: BaseContainer? { let o = _accessor.offset(VTOFFSET.BASE_CONTAINER.v); return o == 0 ? nil : BaseContainer(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public static func startCommandContainer(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 3) }
   public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
   public static func addVectorOf(ENTRY_LIST: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ENTRY_LIST, at: VTOFFSET.ENTRY_LIST.p) }
@@ -4755,9 +4657,9 @@ public struct CommandContainer: FlatBufferObject, Verifiable {
 }
 
 ///  Command verifier definition
-public struct CommandVerifier: FlatBufferObject, Verifiable {
+public struct CommandVerifier: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -4784,7 +4686,7 @@ public struct CommandVerifier: FlatBufferObject, Verifiable {
   ///  Verifier type
   public var VERIFIER_TYPE: VerifierType { let o = _accessor.offset(VTOFFSET.VERIFIER_TYPE.v); return o == 0 ? .start : VerifierType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .start }
   ///  Verification condition
-  public var CONDITION: MatchCriteria? { let o = _accessor.offset(VTOFFSET.CONDITION.v); return o == 0 ? nil : MatchCriteria(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var CONDITION: MatchCriteria? { let o = _accessor.offset(VTOFFSET.CONDITION.v); return o == 0 ? nil : MatchCriteria(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Container reference for verification
   public var CONTAINER_REF: String? { let o = _accessor.offset(VTOFFSET.CONTAINER_REF.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var CONTAINER_REFSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CONTAINER_REF.v) }
@@ -4838,9 +4740,9 @@ public struct CommandVerifier: FlatBufferObject, Verifiable {
 }
 
 ///  Significance of command execution
-public struct CommandSignificance: FlatBufferObject, Verifiable {
+public struct CommandSignificance: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -4885,9 +4787,9 @@ public struct CommandSignificance: FlatBufferObject, Verifiable {
 }
 
 ///  Base metacommand reference
-public struct BaseMetaCommand: FlatBufferObject, Verifiable {
+public struct BaseMetaCommand: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -4907,9 +4809,7 @@ public struct BaseMetaCommand: FlatBufferObject, Verifiable {
   public var META_COMMAND_REF: String? { let o = _accessor.offset(VTOFFSET.META_COMMAND_REF.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var META_COMMAND_REFSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.META_COMMAND_REF.v) }
   ///  Argument assignments for inherited arguments
-  public var hasArgumentAssignments: Bool { let o = _accessor.offset(VTOFFSET.ARGUMENT_ASSIGNMENTS.v); return o == 0 ? false : true }
-  public var ARGUMENT_ASSIGNMENTSCount: Int32 { let o = _accessor.offset(VTOFFSET.ARGUMENT_ASSIGNMENTS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func ARGUMENT_ASSIGNMENTS(at index: Int32) -> ArgumentAssignment? { let o = _accessor.offset(VTOFFSET.ARGUMENT_ASSIGNMENTS.v); return o == 0 ? nil : ArgumentAssignment(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var ARGUMENT_ASSIGNMENTS: FlatbufferVector<ArgumentAssignment> { return _accessor.vector(at: VTOFFSET.ARGUMENT_ASSIGNMENTS.v, byteSize: 4) }
   public static func startBaseMetaCommand(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 2) }
   public static func add(META_COMMAND_REF: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: META_COMMAND_REF, at: VTOFFSET.META_COMMAND_REF.p) }
   public static func addVectorOf(ARGUMENT_ASSIGNMENTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ARGUMENT_ASSIGNMENTS, at: VTOFFSET.ARGUMENT_ASSIGNMENTS.p) }
@@ -4934,9 +4834,9 @@ public struct BaseMetaCommand: FlatBufferObject, Verifiable {
 }
 
 ///  Argument assignment (value binding)
-public struct ArgumentAssignment: FlatBufferObject, Verifiable {
+public struct ArgumentAssignment: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -4982,9 +4882,9 @@ public struct ArgumentAssignment: FlatBufferObject, Verifiable {
 }
 
 ///  Interlock constraint
-public struct Interlock: FlatBufferObject, Verifiable {
+public struct Interlock: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -5037,9 +4937,9 @@ public struct Interlock: FlatBufferObject, Verifiable {
 }
 
 ///  MetaCommand definition
-public struct MetaCommand: FlatBufferObject, Verifiable {
+public struct MetaCommand: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -5076,25 +4976,19 @@ public struct MetaCommand: FlatBufferObject, Verifiable {
   ///  Abstract command (base only)
   public var ABSTRACT: Bool { let o = _accessor.offset(VTOFFSET.ABSTRACT.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Argument list
-  public var hasArguments: Bool { let o = _accessor.offset(VTOFFSET.ARGUMENTS.v); return o == 0 ? false : true }
-  public var ARGUMENTSCount: Int32 { let o = _accessor.offset(VTOFFSET.ARGUMENTS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func ARGUMENTS(at index: Int32) -> Argument? { let o = _accessor.offset(VTOFFSET.ARGUMENTS.v); return o == 0 ? nil : Argument(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var ARGUMENTS: FlatbufferVector<Argument> { return _accessor.vector(at: VTOFFSET.ARGUMENTS.v, byteSize: 4) }
   ///  Command container
-  public var COMMAND_CONTAINER: CommandContainer? { let o = _accessor.offset(VTOFFSET.COMMAND_CONTAINER.v); return o == 0 ? nil : CommandContainer(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var COMMAND_CONTAINER: CommandContainer? { let o = _accessor.offset(VTOFFSET.COMMAND_CONTAINER.v); return o == 0 ? nil : CommandContainer(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Base metacommand (inheritance)
-  public var BASE_META_COMMAND: BaseMetaCommand? { let o = _accessor.offset(VTOFFSET.BASE_META_COMMAND.v); return o == 0 ? nil : BaseMetaCommand(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var BASE_META_COMMAND: BaseMetaCommand? { let o = _accessor.offset(VTOFFSET.BASE_META_COMMAND.v); return o == 0 ? nil : BaseMetaCommand(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Command verifiers
-  public var hasVerifiers: Bool { let o = _accessor.offset(VTOFFSET.VERIFIERS.v); return o == 0 ? false : true }
-  public var VERIFIERSCount: Int32 { let o = _accessor.offset(VTOFFSET.VERIFIERS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func VERIFIERS(at index: Int32) -> CommandVerifier? { let o = _accessor.offset(VTOFFSET.VERIFIERS.v); return o == 0 ? nil : CommandVerifier(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var VERIFIERS: FlatbufferVector<CommandVerifier> { return _accessor.vector(at: VTOFFSET.VERIFIERS.v, byteSize: 4) }
   ///  Command significance
-  public var SIGNIFICANCE: CommandSignificance? { let o = _accessor.offset(VTOFFSET.SIGNIFICANCE.v); return o == 0 ? nil : CommandSignificance(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var SIGNIFICANCE: CommandSignificance? { let o = _accessor.offset(VTOFFSET.SIGNIFICANCE.v); return o == 0 ? nil : CommandSignificance(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Interlock constraints
-  public var hasInterlocks: Bool { let o = _accessor.offset(VTOFFSET.INTERLOCKS.v); return o == 0 ? false : true }
-  public var INTERLOCKSCount: Int32 { let o = _accessor.offset(VTOFFSET.INTERLOCKS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func INTERLOCKS(at index: Int32) -> Interlock? { let o = _accessor.offset(VTOFFSET.INTERLOCKS.v); return o == 0 ? nil : Interlock(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var INTERLOCKS: FlatbufferVector<Interlock> { return _accessor.vector(at: VTOFFSET.INTERLOCKS.v, byteSize: 4) }
   ///  Default significance
-  public var DEFAULT_SIGNIFICANCE: CommandSignificance? { let o = _accessor.offset(VTOFFSET.DEFAULT_SIGNIFICANCE.v); return o == 0 ? nil : CommandSignificance(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var DEFAULT_SIGNIFICANCE: CommandSignificance? { let o = _accessor.offset(VTOFFSET.DEFAULT_SIGNIFICANCE.v); return o == 0 ? nil : CommandSignificance(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public static func startMetaCommand(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 11) }
   public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
   public static func add(SHORT_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHORT_DESCRIPTION, at: VTOFFSET.SHORT_DESCRIPTION.p) }
@@ -5156,9 +5050,9 @@ public struct MetaCommand: FlatBufferObject, Verifiable {
 }
 
 ///  Collection of metacommands
-public struct MetaCommandSet: FlatBufferObject, Verifiable {
+public struct MetaCommandSet: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -5174,9 +5068,7 @@ public struct MetaCommandSet: FlatBufferObject, Verifiable {
   }
 
   ///  MetaCommands
-  public var hasMetaCommands: Bool { let o = _accessor.offset(VTOFFSET.META_COMMANDS.v); return o == 0 ? false : true }
-  public var META_COMMANDSCount: Int32 { let o = _accessor.offset(VTOFFSET.META_COMMANDS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func META_COMMANDS(at index: Int32) -> MetaCommand? { let o = _accessor.offset(VTOFFSET.META_COMMANDS.v); return o == 0 ? nil : MetaCommand(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var META_COMMANDS: FlatbufferVector<MetaCommand> { return _accessor.vector(at: VTOFFSET.META_COMMANDS.v, byteSize: 4) }
   public static func startMetaCommandSet(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 1) }
   public static func addVectorOf(META_COMMANDS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: META_COMMANDS, at: VTOFFSET.META_COMMANDS.p) }
   public static func endMetaCommandSet(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
@@ -5197,9 +5089,9 @@ public struct MetaCommandSet: FlatBufferObject, Verifiable {
 }
 
 ///  Fixed frame stream
-public struct FixedFrameStream: FlatBufferObject, Verifiable {
+public struct FixedFrameStream: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -5260,9 +5152,9 @@ public struct FixedFrameStream: FlatBufferObject, Verifiable {
 }
 
 ///  Variable frame stream
-public struct VariableFrameStream: FlatBufferObject, Verifiable {
+public struct VariableFrameStream: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -5336,9 +5228,9 @@ public struct VariableFrameStream: FlatBufferObject, Verifiable {
 }
 
 ///  Custom stream
-public struct CustomStream: FlatBufferObject, Verifiable {
+public struct CustomStream: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -5392,9 +5284,9 @@ public struct CustomStream: FlatBufferObject, Verifiable {
 }
 
 ///  Collection of streams
-public struct StreamSet: FlatBufferObject, Verifiable {
+public struct StreamSet: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -5412,17 +5304,11 @@ public struct StreamSet: FlatBufferObject, Verifiable {
   }
 
   ///  Fixed frame streams
-  public var hasFixedFrameStreams: Bool { let o = _accessor.offset(VTOFFSET.FIXED_FRAME_STREAMS.v); return o == 0 ? false : true }
-  public var FIXED_FRAME_STREAMSCount: Int32 { let o = _accessor.offset(VTOFFSET.FIXED_FRAME_STREAMS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func FIXED_FRAME_STREAMS(at index: Int32) -> FixedFrameStream? { let o = _accessor.offset(VTOFFSET.FIXED_FRAME_STREAMS.v); return o == 0 ? nil : FixedFrameStream(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var FIXED_FRAME_STREAMS: FlatbufferVector<FixedFrameStream> { return _accessor.vector(at: VTOFFSET.FIXED_FRAME_STREAMS.v, byteSize: 4) }
   ///  Variable frame streams
-  public var hasVariableFrameStreams: Bool { let o = _accessor.offset(VTOFFSET.VARIABLE_FRAME_STREAMS.v); return o == 0 ? false : true }
-  public var VARIABLE_FRAME_STREAMSCount: Int32 { let o = _accessor.offset(VTOFFSET.VARIABLE_FRAME_STREAMS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func VARIABLE_FRAME_STREAMS(at index: Int32) -> VariableFrameStream? { let o = _accessor.offset(VTOFFSET.VARIABLE_FRAME_STREAMS.v); return o == 0 ? nil : VariableFrameStream(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var VARIABLE_FRAME_STREAMS: FlatbufferVector<VariableFrameStream> { return _accessor.vector(at: VTOFFSET.VARIABLE_FRAME_STREAMS.v, byteSize: 4) }
   ///  Custom streams
-  public var hasCustomStreams: Bool { let o = _accessor.offset(VTOFFSET.CUSTOM_STREAMS.v); return o == 0 ? false : true }
-  public var CUSTOM_STREAMSCount: Int32 { let o = _accessor.offset(VTOFFSET.CUSTOM_STREAMS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func CUSTOM_STREAMS(at index: Int32) -> CustomStream? { let o = _accessor.offset(VTOFFSET.CUSTOM_STREAMS.v); return o == 0 ? nil : CustomStream(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var CUSTOM_STREAMS: FlatbufferVector<CustomStream> { return _accessor.vector(at: VTOFFSET.CUSTOM_STREAMS.v, byteSize: 4) }
   public static func startStreamSet(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 3) }
   public static func addVectorOf(FIXED_FRAME_STREAMS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FIXED_FRAME_STREAMS, at: VTOFFSET.FIXED_FRAME_STREAMS.p) }
   public static func addVectorOf(VARIABLE_FRAME_STREAMS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VARIABLE_FRAME_STREAMS, at: VTOFFSET.VARIABLE_FRAME_STREAMS.p) }
@@ -5451,9 +5337,9 @@ public struct StreamSet: FlatBufferObject, Verifiable {
 }
 
 ///  Service definition
-public struct Service: FlatBufferObject, Verifiable {
+public struct Service: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -5482,13 +5368,9 @@ public struct Service: FlatBufferObject, Verifiable {
   public var LONG_DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.LONG_DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var LONG_DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LONG_DESCRIPTION.v) }
   ///  Container references provided by this service
-  public var hasContainerRefs: Bool { let o = _accessor.offset(VTOFFSET.CONTAINER_REFS.v); return o == 0 ? false : true }
-  public var CONTAINER_REFSCount: Int32 { let o = _accessor.offset(VTOFFSET.CONTAINER_REFS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func CONTAINER_REFS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.CONTAINER_REFS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  public var CONTAINER_REFS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.CONTAINER_REFS.v, byteSize: 4) }
   ///  Command references accepted by this service
-  public var hasCommandRefs: Bool { let o = _accessor.offset(VTOFFSET.COMMAND_REFS.v); return o == 0 ? false : true }
-  public var COMMAND_REFSCount: Int32 { let o = _accessor.offset(VTOFFSET.COMMAND_REFS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func COMMAND_REFS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.COMMAND_REFS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  public var COMMAND_REFS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.COMMAND_REFS.v, byteSize: 4) }
   public static func startService(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
   public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
   public static func add(SHORT_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHORT_DESCRIPTION, at: VTOFFSET.SHORT_DESCRIPTION.p) }
@@ -5525,9 +5407,9 @@ public struct Service: FlatBufferObject, Verifiable {
 }
 
 ///  Collection of services
-public struct ServiceSet: FlatBufferObject, Verifiable {
+public struct ServiceSet: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -5543,9 +5425,7 @@ public struct ServiceSet: FlatBufferObject, Verifiable {
   }
 
   ///  Services
-  public var hasServices: Bool { let o = _accessor.offset(VTOFFSET.SERVICES.v); return o == 0 ? false : true }
-  public var SERVICESCount: Int32 { let o = _accessor.offset(VTOFFSET.SERVICES.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func SERVICES(at index: Int32) -> Service? { let o = _accessor.offset(VTOFFSET.SERVICES.v); return o == 0 ? nil : Service(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var SERVICES: FlatbufferVector<Service> { return _accessor.vector(at: VTOFFSET.SERVICES.v, byteSize: 4) }
   public static func startServiceSet(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 1) }
   public static func addVectorOf(SERVICES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SERVICES, at: VTOFFSET.SERVICES.p) }
   public static func endServiceSet(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
@@ -5566,9 +5446,9 @@ public struct ServiceSet: FlatBufferObject, Verifiable {
 }
 
 ///  Document header information
-public struct XTCHeader: FlatBufferObject, Verifiable {
+public struct XTCHeader: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -5604,9 +5484,7 @@ public struct XTCHeader: FlatBufferObject, Verifiable {
   public var AUTHOR: String? { let o = _accessor.offset(VTOFFSET.AUTHOR.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var AUTHORSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.AUTHOR.v) }
   ///  Notes/comments
-  public var hasNotes: Bool { let o = _accessor.offset(VTOFFSET.NOTES.v); return o == 0 ? false : true }
-  public var NOTESCount: Int32 { let o = _accessor.offset(VTOFFSET.NOTES.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func NOTES(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.NOTES.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  public var NOTES: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.NOTES.v, byteSize: 4) }
   public static func startXTCHeader(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 6) }
   public static func add(VERSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VERSION, at: VTOFFSET.VERSION.p) }
   public static func add(DATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DATE, at: VTOFFSET.DATE.p) }
@@ -5647,9 +5525,9 @@ public struct XTCHeader: FlatBufferObject, Verifiable {
 }
 
 ///  Telemetry metadata collection
-public struct TelemetryMetaData: FlatBufferObject, Verifiable {
+public struct TelemetryMetaData: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -5669,15 +5547,15 @@ public struct TelemetryMetaData: FlatBufferObject, Verifiable {
   }
 
   ///  Parameter type definitions
-  public var PARAMETER_TYPE_SET: ParameterTypeSet? { let o = _accessor.offset(VTOFFSET.PARAMETER_TYPE_SET.v); return o == 0 ? nil : ParameterTypeSet(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var PARAMETER_TYPE_SET: ParameterTypeSet? { let o = _accessor.offset(VTOFFSET.PARAMETER_TYPE_SET.v); return o == 0 ? nil : ParameterTypeSet(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Parameter definitions
-  public var PARAMETER_SET: ParameterSet? { let o = _accessor.offset(VTOFFSET.PARAMETER_SET.v); return o == 0 ? nil : ParameterSet(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var PARAMETER_SET: ParameterSet? { let o = _accessor.offset(VTOFFSET.PARAMETER_SET.v); return o == 0 ? nil : ParameterSet(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Container definitions
-  public var CONTAINER_SET: ContainerSet? { let o = _accessor.offset(VTOFFSET.CONTAINER_SET.v); return o == 0 ? nil : ContainerSet(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var CONTAINER_SET: ContainerSet? { let o = _accessor.offset(VTOFFSET.CONTAINER_SET.v); return o == 0 ? nil : ContainerSet(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Algorithm definitions
-  public var ALGORITHM_SET: AlgorithmSet? { let o = _accessor.offset(VTOFFSET.ALGORITHM_SET.v); return o == 0 ? nil : AlgorithmSet(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var ALGORITHM_SET: AlgorithmSet? { let o = _accessor.offset(VTOFFSET.ALGORITHM_SET.v); return o == 0 ? nil : AlgorithmSet(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Stream definitions
-  public var STREAM_SET: StreamSet? { let o = _accessor.offset(VTOFFSET.STREAM_SET.v); return o == 0 ? nil : StreamSet(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var STREAM_SET: StreamSet? { let o = _accessor.offset(VTOFFSET.STREAM_SET.v); return o == 0 ? nil : StreamSet(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public static func startTelemetryMetaData(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
   public static func add(PARAMETER_TYPE_SET: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PARAMETER_TYPE_SET, at: VTOFFSET.PARAMETER_TYPE_SET.p) }
   public static func add(PARAMETER_SET: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PARAMETER_SET, at: VTOFFSET.PARAMETER_SET.p) }
@@ -5714,9 +5592,9 @@ public struct TelemetryMetaData: FlatBufferObject, Verifiable {
 }
 
 ///  Command metadata collection
-public struct CommandMetaData: FlatBufferObject, Verifiable {
+public struct CommandMetaData: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -5738,19 +5616,19 @@ public struct CommandMetaData: FlatBufferObject, Verifiable {
   }
 
   ///  Argument type definitions
-  public var ARGUMENT_TYPE_SET: ArgumentTypeSet? { let o = _accessor.offset(VTOFFSET.ARGUMENT_TYPE_SET.v); return o == 0 ? nil : ArgumentTypeSet(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var ARGUMENT_TYPE_SET: ArgumentTypeSet? { let o = _accessor.offset(VTOFFSET.ARGUMENT_TYPE_SET.v); return o == 0 ? nil : ArgumentTypeSet(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Parameter types used by commands
-  public var PARAMETER_TYPE_SET: ParameterTypeSet? { let o = _accessor.offset(VTOFFSET.PARAMETER_TYPE_SET.v); return o == 0 ? nil : ParameterTypeSet(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var PARAMETER_TYPE_SET: ParameterTypeSet? { let o = _accessor.offset(VTOFFSET.PARAMETER_TYPE_SET.v); return o == 0 ? nil : ParameterTypeSet(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Parameters used by commands
-  public var PARAMETER_SET: ParameterSet? { let o = _accessor.offset(VTOFFSET.PARAMETER_SET.v); return o == 0 ? nil : ParameterSet(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var PARAMETER_SET: ParameterSet? { let o = _accessor.offset(VTOFFSET.PARAMETER_SET.v); return o == 0 ? nil : ParameterSet(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  MetaCommand definitions
-  public var META_COMMAND_SET: MetaCommandSet? { let o = _accessor.offset(VTOFFSET.META_COMMAND_SET.v); return o == 0 ? nil : MetaCommandSet(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var META_COMMAND_SET: MetaCommandSet? { let o = _accessor.offset(VTOFFSET.META_COMMAND_SET.v); return o == 0 ? nil : MetaCommandSet(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Command container set
-  public var COMMAND_CONTAINER_SET: ContainerSet? { let o = _accessor.offset(VTOFFSET.COMMAND_CONTAINER_SET.v); return o == 0 ? nil : ContainerSet(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var COMMAND_CONTAINER_SET: ContainerSet? { let o = _accessor.offset(VTOFFSET.COMMAND_CONTAINER_SET.v); return o == 0 ? nil : ContainerSet(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Algorithm definitions
-  public var ALGORITHM_SET: AlgorithmSet? { let o = _accessor.offset(VTOFFSET.ALGORITHM_SET.v); return o == 0 ? nil : AlgorithmSet(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var ALGORITHM_SET: AlgorithmSet? { let o = _accessor.offset(VTOFFSET.ALGORITHM_SET.v); return o == 0 ? nil : AlgorithmSet(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Stream definitions
-  public var STREAM_SET: StreamSet? { let o = _accessor.offset(VTOFFSET.STREAM_SET.v); return o == 0 ? nil : StreamSet(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var STREAM_SET: StreamSet? { let o = _accessor.offset(VTOFFSET.STREAM_SET.v); return o == 0 ? nil : StreamSet(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public static func startCommandMetaData(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 7) }
   public static func add(ARGUMENT_TYPE_SET: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ARGUMENT_TYPE_SET, at: VTOFFSET.ARGUMENT_TYPE_SET.p) }
   public static func add(PARAMETER_TYPE_SET: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PARAMETER_TYPE_SET, at: VTOFFSET.PARAMETER_TYPE_SET.p) }
@@ -5798,9 +5676,9 @@ public struct CommandMetaData: FlatBufferObject, Verifiable {
 ///  A SpaceSystem defines the telemetry and command configuration for a space
 ///  vehicle or subsystem. SpaceSystems can be nested hierarchically to represent
 ///  the structure of a spacecraft (e.g., spacecraft -> subsystem -> payload).
-public struct XTC: FlatBufferObject, Verifiable {
+public struct XTC: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -5836,17 +5714,15 @@ public struct XTC: FlatBufferObject, Verifiable {
   public var OPERATIONAL_STATUS: String? { let o = _accessor.offset(VTOFFSET.OPERATIONAL_STATUS.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var OPERATIONAL_STATUSSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OPERATIONAL_STATUS.v) }
   ///  Document header
-  public var HEADER: XTCHeader? { let o = _accessor.offset(VTOFFSET.HEADER.v); return o == 0 ? nil : XTCHeader(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var HEADER: XTCHeader? { let o = _accessor.offset(VTOFFSET.HEADER.v); return o == 0 ? nil : XTCHeader(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Telemetry metadata
-  public var TELEMETRY_META_DATA: TelemetryMetaData? { let o = _accessor.offset(VTOFFSET.TELEMETRY_META_DATA.v); return o == 0 ? nil : TelemetryMetaData(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var TELEMETRY_META_DATA: TelemetryMetaData? { let o = _accessor.offset(VTOFFSET.TELEMETRY_META_DATA.v); return o == 0 ? nil : TelemetryMetaData(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Command metadata
-  public var COMMAND_META_DATA: CommandMetaData? { let o = _accessor.offset(VTOFFSET.COMMAND_META_DATA.v); return o == 0 ? nil : CommandMetaData(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var COMMAND_META_DATA: CommandMetaData? { let o = _accessor.offset(VTOFFSET.COMMAND_META_DATA.v); return o == 0 ? nil : CommandMetaData(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Service definitions
-  public var SERVICE_SET: ServiceSet? { let o = _accessor.offset(VTOFFSET.SERVICE_SET.v); return o == 0 ? nil : ServiceSet(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var SERVICE_SET: ServiceSet? { let o = _accessor.offset(VTOFFSET.SERVICE_SET.v); return o == 0 ? nil : ServiceSet(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Child space systems (hierarchical structure)
-  public var hasChildSystems: Bool { let o = _accessor.offset(VTOFFSET.CHILD_SYSTEMS.v); return o == 0 ? false : true }
-  public var CHILD_SYSTEMSCount: Int32 { let o = _accessor.offset(VTOFFSET.CHILD_SYSTEMS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func CHILD_SYSTEMS(at index: Int32) -> XTC? { let o = _accessor.offset(VTOFFSET.CHILD_SYSTEMS.v); return o == 0 ? nil : XTC(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var CHILD_SYSTEMS: FlatbufferVector<XTC> { return _accessor.vector(at: VTOFFSET.CHILD_SYSTEMS.v, byteSize: 4) }
   public static func startXTC(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 9) }
   public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
   public static func add(SHORT_DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHORT_DESCRIPTION, at: VTOFFSET.SHORT_DESCRIPTION.p) }

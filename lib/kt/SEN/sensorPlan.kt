@@ -32,7 +32,7 @@ class sensorPlan : Table() {
     /**
      * Plan start time (ISO 8601)
      */
-    val START_TIME : String?
+    val startTime : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class sensorPlan : Table() {
                 null
             }
         }
-    val START_TIMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun START_TIMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val startTimeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun startTimeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Plan end time (ISO 8601)
      */
-    val END_TIME : String?
+    val endTime : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -55,12 +55,12 @@ class sensorPlan : Table() {
                 null
             }
         }
-    val END_TIMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun END_TIMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val endTimeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun endTimeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * Target satellite number or designator
      */
-    val TARGET_ID : String?
+    val targetId : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -69,12 +69,12 @@ class sensorPlan : Table() {
                 null
             }
         }
-    val TARGET_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun TARGET_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val targetIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun targetIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
     /**
      * Priority level (1=highest)
      */
-    val PRIORITY : UByte
+    val priority : UByte
         get() {
             val o = __offset(10)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
@@ -82,7 +82,7 @@ class sensorPlan : Table() {
     /**
      * Requested observation mode
      */
-    val MODE : String?
+    val mode : String?
         get() {
             val o = __offset(12)
             return if (o != 0) {
@@ -91,12 +91,12 @@ class sensorPlan : Table() {
                 null
             }
         }
-    val MODEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
-    fun MODEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
+    val modeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(12, 1)
+    fun modeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 12, 1)
     /**
      * Minimum elevation in degrees
      */
-    val MIN_ELEVATION : Double
+    val minElevation : Double
         get() {
             val o = __offset(14)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -104,37 +104,37 @@ class sensorPlan : Table() {
     /**
      * Maximum range in km
      */
-    val MAX_RANGE : Double
+    val maxRange : Double
         get() {
             val o = __offset(16)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAssensorPlan(_bb: ByteBuffer): sensorPlan = getRootAssensorPlan(_bb, sensorPlan())
         fun getRootAssensorPlan(_bb: ByteBuffer, obj: sensorPlan): sensorPlan {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createsensorPlan(builder: FlatBufferBuilder, START_TIMEOffset: Int, END_TIMEOffset: Int, TARGET_IDOffset: Int, PRIORITY: UByte, MODEOffset: Int, MIN_ELEVATION: Double, MAX_RANGE: Double) : Int {
+        fun createsensorPlan(builder: FlatBufferBuilder, startTimeOffset: Int, endTimeOffset: Int, targetIdOffset: Int, priority: UByte, modeOffset: Int, minElevation: Double, maxRange: Double) : Int {
             builder.startTable(7)
-            addMAX_RANGE(builder, MAX_RANGE)
-            addMIN_ELEVATION(builder, MIN_ELEVATION)
-            addMODE(builder, MODEOffset)
-            addTARGET_ID(builder, TARGET_IDOffset)
-            addEND_TIME(builder, END_TIMEOffset)
-            addSTART_TIME(builder, START_TIMEOffset)
-            addPRIORITY(builder, PRIORITY)
+            addMAXRANGE(builder, maxRange)
+            addMINELEVATION(builder, minElevation)
+            addMODE(builder, modeOffset)
+            addTARGETID(builder, targetIdOffset)
+            addENDTIME(builder, endTimeOffset)
+            addSTARTTIME(builder, startTimeOffset)
+            addPRIORITY(builder, priority)
             return endsensorPlan(builder)
         }
         fun startsensorPlan(builder: FlatBufferBuilder) = builder.startTable(7)
-        fun addSTART_TIME(builder: FlatBufferBuilder, START_TIME: Int) = builder.addOffset(0, START_TIME, 0)
-        fun addEND_TIME(builder: FlatBufferBuilder, END_TIME: Int) = builder.addOffset(1, END_TIME, 0)
-        fun addTARGET_ID(builder: FlatBufferBuilder, TARGET_ID: Int) = builder.addOffset(2, TARGET_ID, 0)
-        fun addPRIORITY(builder: FlatBufferBuilder, PRIORITY: UByte) = builder.addByte(3, PRIORITY.toByte(), 0)
-        fun addMODE(builder: FlatBufferBuilder, MODE: Int) = builder.addOffset(4, MODE, 0)
-        fun addMIN_ELEVATION(builder: FlatBufferBuilder, MIN_ELEVATION: Double) = builder.addDouble(5, MIN_ELEVATION, 0.0)
-        fun addMAX_RANGE(builder: FlatBufferBuilder, MAX_RANGE: Double) = builder.addDouble(6, MAX_RANGE, 0.0)
+        fun addSTARTTIME(builder: FlatBufferBuilder, startTime: Int) = builder.addOffset(0, startTime, 0)
+        fun addENDTIME(builder: FlatBufferBuilder, endTime: Int) = builder.addOffset(1, endTime, 0)
+        fun addTARGETID(builder: FlatBufferBuilder, targetId: Int) = builder.addOffset(2, targetId, 0)
+        fun addPRIORITY(builder: FlatBufferBuilder, priority: UByte) = builder.addByte(3, priority.toByte(), 0)
+        fun addMODE(builder: FlatBufferBuilder, mode: Int) = builder.addOffset(4, mode, 0)
+        fun addMINELEVATION(builder: FlatBufferBuilder, minElevation: Double) = builder.addDouble(5, minElevation, 0.0)
+        fun addMAXRANGE(builder: FlatBufferBuilder, maxRange: Double) = builder.addDouble(6, maxRange, 0.0)
         fun endsensorPlan(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

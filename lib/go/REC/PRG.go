@@ -63,6 +63,10 @@ func (rcv *PRG) NAME() []byte {
 	return nil
 }
 
+func (rcv *PRG) Name() []byte {
+	return rcv.NAME()
+}
+
 /// The name of the program
 /// Hierarchical Deterministic (HD) derivation path for the program's key, used in cryptocurrency wallets
 func (rcv *PRG) HD_KEY_PATH() []byte {
@@ -71,6 +75,10 @@ func (rcv *PRG) HD_KEY_PATH() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *PRG) HdKeyPath() []byte {
+	return rcv.HD_KEY_PATH()
 }
 
 /// Hierarchical Deterministic (HD) derivation path for the program's key, used in cryptocurrency wallets
@@ -84,12 +92,20 @@ func (rcv *PRG) MESSAGE_TYPES(j int) []byte {
 	return nil
 }
 
+func (rcv *PRG) MessageTypes(j int) []byte {
+	return rcv.MESSAGE_TYPES(j)
+}
+
 func (rcv *PRG) MESSAGE_TYPESLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *PRG) MessageTypesLength() int {
+	return rcv.MESSAGE_TYPESLength()
 }
 
 /// Vector of standard message types used by the program
@@ -100,10 +116,17 @@ func (rcv *PRG) USERS(obj *USR, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(USR)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *PRG) Users(obj *USR, j int) bool {
+	return rcv.USERS(obj, j)
 }
 
 func (rcv *PRG) USERSLength() int {
@@ -114,6 +137,10 @@ func (rcv *PRG) USERSLength() int {
 	return 0
 }
 
+func (rcv *PRG) UsersLength() int {
+	return rcv.USERSLength()
+}
+
 /// Vector of users associated with the program, each user can have assigned message types
 func PRGStart(builder *flatbuffers.Builder) {
 	builder.StartObject(4)
@@ -121,20 +148,38 @@ func PRGStart(builder *flatbuffers.Builder) {
 func PRGAddNAME(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(NAME), 0)
 }
+func PRGAddName(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
+	PRGAddNAME(builder, NAME)
+}
 func PRGAddHD_KEY_PATH(builder *flatbuffers.Builder, HD_KEY_PATH flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(HD_KEY_PATH), 0)
+}
+func PRGAddHdKeyPath(builder *flatbuffers.Builder, HD_KEY_PATH flatbuffers.UOffsetT) {
+	PRGAddHD_KEY_PATH(builder, HD_KEY_PATH)
 }
 func PRGAddMESSAGE_TYPES(builder *flatbuffers.Builder, MESSAGE_TYPES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(MESSAGE_TYPES), 0)
 }
+func PRGAddMessageTypes(builder *flatbuffers.Builder, MESSAGE_TYPES flatbuffers.UOffsetT) {
+	PRGAddMESSAGE_TYPES(builder, MESSAGE_TYPES)
+}
 func PRGStartMESSAGE_TYPESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func PRGStartMessageTypesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return PRGStartMESSAGE_TYPESVector(builder, numElems)
 }
 func PRGAddUSERS(builder *flatbuffers.Builder, USERS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(USERS), 0)
 }
+func PRGAddUsers(builder *flatbuffers.Builder, USERS flatbuffers.UOffsetT) {
+	PRGAddUSERS(builder, USERS)
+}
 func PRGStartUSERSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func PRGStartUsersVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return PRGStartUSERSVector(builder, numElems)
 }
 func PRGEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

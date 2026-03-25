@@ -29,47 +29,47 @@ class CRD : Table() {
         __init(_i, _bb)
         return this
     }
-    val X : Double
+    val x : Double
         get() {
             val o = __offset(4)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val Y : Double
+    val y : Double
         get() {
             val o = __offset(6)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val Z : Double
+    val z : Double
         get() {
             val o = __offset(8)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val VX : Double
+    val vx : Double
         get() {
             val o = __offset(10)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val VY : Double
+    val vy : Double
         get() {
             val o = __offset(12)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val VZ : Double
+    val vz : Double
         get() {
             val o = __offset(14)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val FRAME : UByte
+    val frame : UByte
         get() {
             val o = __offset(16)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
         }
-    val ELLIPSOID : UByte
+    val ellipsoid : UByte
         get() {
             val o = __offset(18)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
         }
-    fun RESERVED(j: Int) : UByte {
+    fun reserved(j: Int) : UByte {
         val o = __offset(20)
         return if (o != 0) {
             bb.get(__vector(o) + j * 1).toUByte()
@@ -77,43 +77,43 @@ class CRD : Table() {
             0u
         }
     }
-    val RESERVEDLength : Int
+    val reservedLength : Int
         get() {
             val o = __offset(20); return if (o != 0) __vector_len(o) else 0
         }
-    val RESERVEDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(20, 1)
-    fun RESERVEDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 20, 1)
+    val reservedAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(20, 1)
+    fun reservedInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 20, 1)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsCRD(_bb: ByteBuffer): CRD = getRootAsCRD(_bb, CRD())
         fun getRootAsCRD(_bb: ByteBuffer, obj: CRD): CRD {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun CRDBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$CRD")
-        fun createCRD(builder: FlatBufferBuilder, X: Double, Y: Double, Z: Double, VX: Double, VY: Double, VZ: Double, FRAME: UByte, ELLIPSOID: UByte, RESERVEDOffset: Int) : Int {
+        fun createCRD(builder: FlatBufferBuilder, x: Double, y: Double, z: Double, vx: Double, vy: Double, vz: Double, frame: UByte, ellipsoid: UByte, reservedOffset: Int) : Int {
             builder.startTable(9)
-            addVZ(builder, VZ)
-            addVY(builder, VY)
-            addVX(builder, VX)
-            addZ(builder, Z)
-            addY(builder, Y)
-            addX(builder, X)
-            addRESERVED(builder, RESERVEDOffset)
-            addELLIPSOID(builder, ELLIPSOID)
-            addFRAME(builder, FRAME)
+            addVZ(builder, vz)
+            addVY(builder, vy)
+            addVX(builder, vx)
+            addZ(builder, z)
+            addY(builder, y)
+            addX(builder, x)
+            addRESERVED(builder, reservedOffset)
+            addELLIPSOID(builder, ellipsoid)
+            addFRAME(builder, frame)
             return endCRD(builder)
         }
         fun startCRD(builder: FlatBufferBuilder) = builder.startTable(9)
-        fun addX(builder: FlatBufferBuilder, X: Double) = builder.addDouble(0, X, 0.0)
-        fun addY(builder: FlatBufferBuilder, Y: Double) = builder.addDouble(1, Y, 0.0)
-        fun addZ(builder: FlatBufferBuilder, Z: Double) = builder.addDouble(2, Z, 0.0)
-        fun addVX(builder: FlatBufferBuilder, VX: Double) = builder.addDouble(3, VX, 0.0)
-        fun addVY(builder: FlatBufferBuilder, VY: Double) = builder.addDouble(4, VY, 0.0)
-        fun addVZ(builder: FlatBufferBuilder, VZ: Double) = builder.addDouble(5, VZ, 0.0)
-        fun addFRAME(builder: FlatBufferBuilder, FRAME: UByte) = builder.addByte(6, FRAME.toByte(), 0)
-        fun addELLIPSOID(builder: FlatBufferBuilder, ELLIPSOID: UByte) = builder.addByte(7, ELLIPSOID.toByte(), 0)
-        fun addRESERVED(builder: FlatBufferBuilder, RESERVED: Int) = builder.addOffset(8, RESERVED, 0)
+        fun addX(builder: FlatBufferBuilder, x: Double) = builder.addDouble(0, x, 0.0)
+        fun addY(builder: FlatBufferBuilder, y: Double) = builder.addDouble(1, y, 0.0)
+        fun addZ(builder: FlatBufferBuilder, z: Double) = builder.addDouble(2, z, 0.0)
+        fun addVX(builder: FlatBufferBuilder, vx: Double) = builder.addDouble(3, vx, 0.0)
+        fun addVY(builder: FlatBufferBuilder, vy: Double) = builder.addDouble(4, vy, 0.0)
+        fun addVZ(builder: FlatBufferBuilder, vz: Double) = builder.addDouble(5, vz, 0.0)
+        fun addFRAME(builder: FlatBufferBuilder, frame: UByte) = builder.addByte(6, frame.toByte(), 0)
+        fun addELLIPSOID(builder: FlatBufferBuilder, ellipsoid: UByte) = builder.addByte(7, ellipsoid.toByte(), 0)
+        fun addRESERVED(builder: FlatBufferBuilder, reserved: Int) = builder.addOffset(8, reserved, 0)
         @kotlin.ExperimentalUnsignedTypes
         fun createReservedVector(builder: FlatBufferBuilder, data: UByteArray) : Int {
             builder.startVector(1, data.size, 1)

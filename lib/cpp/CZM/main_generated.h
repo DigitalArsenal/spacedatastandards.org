@@ -8,9 +8,9 @@
 
 // Ensure the included flatbuffers.h is the same version as when this file was
 // generated, otherwise it may not be compatible.
-static_assert(FLATBUFFERS_VERSION_MAJOR == 24 &&
-              FLATBUFFERS_VERSION_MINOR == 3 &&
-              FLATBUFFERS_VERSION_REVISION == 25,
+static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
+              FLATBUFFERS_VERSION_MINOR == 12 &&
+              FLATBUFFERS_VERSION_REVISION == 19,
              "Non-compatible flatbuffers version included");
 
 struct CZMInterval;
@@ -597,7 +597,8 @@ struct CZMInterval FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *INTERVAL() const {
     return GetPointer<const ::flatbuffers::String *>(VT_INTERVAL);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_INTERVAL) &&
            verifier.VerifyString(INTERVAL()) &&
@@ -655,7 +656,8 @@ struct CZMInterpolation FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   int32_t DEGREE() const {
     return GetField<int32_t>(VT_DEGREE, 0);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_ALGORITHM) &&
            verifier.VerifyString(ALGORITHM()) &&
@@ -746,7 +748,8 @@ struct CZMDynInterval FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::Vector<double> *ARRAY_VALUE() const {
     return GetPointer<const ::flatbuffers::Vector<double> *>(VT_ARRAY_VALUE);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_INTERVAL) &&
            verifier.VerifyString(INTERVAL()) &&
@@ -867,7 +870,8 @@ struct CZMDynSampled FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const CZMInterpolation *INTERPOLATION() const {
     return GetPointer<const CZMInterpolation *>(VT_INTERPOLATION);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_EPOCH) &&
            verifier.VerifyString(EPOCH()) &&
@@ -962,7 +966,8 @@ struct CZMDynamicProperty FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table
   const ::flatbuffers::String *REFERENCE() const {
     return GetPointer<const ::flatbuffers::String *>(VT_REFERENCE);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_NAME) &&
            verifier.VerifyString(NAME()) &&
@@ -1055,7 +1060,8 @@ struct CZMCartographicDegrees FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::T
   double HEIGHT() const {
     return GetField<double>(VT_HEIGHT, 0.0);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<double>(verifier, VT_LONGITUDE, 8) &&
            VerifyField<double>(verifier, VT_LATITUDE, 8) &&
@@ -1120,7 +1126,8 @@ struct CZMCartesian FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   double Z() const {
     return GetField<double>(VT_Z, 0.0);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<double>(verifier, VT_X, 8) &&
            VerifyField<double>(verifier, VT_Y, 8) &&
@@ -1190,7 +1197,8 @@ struct CZMColor FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   uint8_t ALPHA() const {
     return GetField<uint8_t>(VT_ALPHA, 0);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<uint8_t>(verifier, VT_RED, 1) &&
            VerifyField<uint8_t>(verifier, VT_GREEN, 1) &&
@@ -1266,7 +1274,8 @@ struct CZMNearFarScalar FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   double FAR_VALUE() const {
     return GetField<double>(VT_FAR_VALUE, 0.0);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<double>(verifier, VT_NEAR_DISTANCE, 8) &&
            VerifyField<double>(verifier, VT_NEAR_VALUE, 8) &&
@@ -1332,7 +1341,8 @@ struct CZMDistanceDisplayCondition FLATBUFFERS_FINAL_CLASS : private ::flatbuffe
   double FAR_DISTANCE() const {
     return GetField<double>(VT_FAR_DISTANCE, 0.0);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<double>(verifier, VT_NEAR_DISTANCE, 8) &&
            VerifyField<double>(verifier, VT_FAR_DISTANCE, 8) &&
@@ -1396,7 +1406,8 @@ struct CZMOrientation FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   double UNIT_QUATERNION_W() const {
     return GetField<double>(VT_UNIT_QUATERNION_W, 0.0);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<double>(verifier, VT_UNIT_QUATERNION_X, 8) &&
            VerifyField<double>(verifier, VT_UNIT_QUATERNION_Y, 8) &&
@@ -1467,7 +1478,8 @@ struct CZMViewFrom FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   double Z() const {
     return GetField<double>(VT_Z, 0.0);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<double>(verifier, VT_X, 8) &&
            VerifyField<double>(verifier, VT_Y, 8) &&
@@ -1522,7 +1534,8 @@ struct CZMSolidColorMaterial FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Ta
   const CZMColor *COLOR() const {
     return GetPointer<const CZMColor *>(VT_COLOR);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_COLOR) &&
            verifier.VerifyTable(COLOR()) &&
@@ -1586,7 +1599,8 @@ struct CZMImageMaterial FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   bool TRANSPARENT() const {
     return GetField<uint8_t>(VT_TRANSPARENT, 0) != 0;
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_IMAGE) &&
            verifier.VerifyString(IMAGE()) &&
@@ -1707,7 +1721,8 @@ struct CZMGridMaterial FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   double LINE_OFFSET_Y() const {
     return GetField<double>(VT_LINE_OFFSET_Y, 0.0);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_COLOR) &&
            verifier.VerifyTable(COLOR()) &&
@@ -1813,7 +1828,8 @@ struct CZMStripeMaterial FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table 
   double REPEAT_COUNT() const {
     return GetField<double>(VT_REPEAT_COUNT, 0.0);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_ORIENTATION) &&
            verifier.VerifyString(ORIENTATION()) &&
@@ -1915,7 +1931,8 @@ struct CZMCheckerboardMaterial FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::
   double REPEAT_Y() const {
     return GetField<double>(VT_REPEAT_Y, 0.0);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_EVEN_COLOR) &&
            verifier.VerifyTable(EVEN_COLOR()) &&
@@ -1998,7 +2015,8 @@ struct CZMMaterial FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const CZMCheckerboardMaterial *CHECKERBOARD() const {
     return GetPointer<const CZMCheckerboardMaterial *>(VT_CHECKERBOARD);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_SOLID_COLOR) &&
            verifier.VerifyTable(SOLID_COLOR()) &&
@@ -2080,7 +2098,8 @@ struct CZMPolylineOutlineMaterial FLATBUFFERS_FINAL_CLASS : private ::flatbuffer
   double OUTLINE_WIDTH() const {
     return GetField<double>(VT_OUTLINE_WIDTH, 0.0);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_COLOR) &&
            verifier.VerifyTable(COLOR()) &&
@@ -2137,7 +2156,8 @@ struct CZMPolylineArrowMaterial FLATBUFFERS_FINAL_CLASS : private ::flatbuffers:
   const CZMColor *COLOR() const {
     return GetPointer<const CZMColor *>(VT_COLOR);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_COLOR) &&
            verifier.VerifyTable(COLOR()) &&
@@ -2196,7 +2216,8 @@ struct CZMPolylineDashMaterial FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::
   int32_t DASH_PATTERN() const {
     return GetField<int32_t>(VT_DASH_PATTERN, 0);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_COLOR) &&
            verifier.VerifyTable(COLOR()) &&
@@ -2269,7 +2290,8 @@ struct CZMPolylineGlowMaterial FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::
   double TAPER_POWER() const {
     return GetField<double>(VT_TAPER_POWER, 0.0);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_COLOR) &&
            verifier.VerifyTable(COLOR()) &&
@@ -2345,7 +2367,8 @@ struct CZMPolylineMaterial FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Tabl
   const CZMPolylineGlowMaterial *POLYLINE_GLOW() const {
     return GetPointer<const CZMPolylineGlowMaterial *>(VT_POLYLINE_GLOW);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_SOLID_COLOR) &&
            verifier.VerifyTable(SOLID_COLOR()) &&
@@ -2522,7 +2545,8 @@ struct CZMBillboard FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   double DISABLE_DEPTH_TEST_DISTANCE() const {
     return GetField<double>(VT_DISABLE_DEPTH_TEST_DISTANCE, 0.0);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<uint8_t>(verifier, VT_SHOW, 1) &&
            VerifyOffset(verifier, VT_IMAGE) &&
@@ -2872,7 +2896,8 @@ struct CZMLabel FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   double DISABLE_DEPTH_TEST_DISTANCE() const {
     return GetField<double>(VT_DISABLE_DEPTH_TEST_DISTANCE, 0.0);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<uint8_t>(verifier, VT_SHOW, 1) &&
            VerifyOffset(verifier, VT_TEXT) &&
@@ -3183,7 +3208,8 @@ struct CZMPoint FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   double DISABLE_DEPTH_TEST_DISTANCE() const {
     return GetField<double>(VT_DISABLE_DEPTH_TEST_DISTANCE, 0.0);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<uint8_t>(verifier, VT_SHOW, 1) &&
            VerifyOffset(verifier, VT_COLOR) &&
@@ -3350,7 +3376,8 @@ struct CZMPolyline FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   int32_t Z_INDEX() const {
     return GetField<int32_t>(VT_Z_INDEX, 0);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<uint8_t>(verifier, VT_SHOW, 1) &&
            VerifyOffset(verifier, VT_POSITIONS_CARTOGRAPHIC_DEGREES) &&
@@ -3620,7 +3647,8 @@ struct CZMPolygon FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   int32_t Z_INDEX() const {
     return GetField<int32_t>(VT_Z_INDEX, 0);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<uint8_t>(verifier, VT_SHOW, 1) &&
            VerifyOffset(verifier, VT_POSITIONS_CARTOGRAPHIC_DEGREES) &&
@@ -3868,7 +3896,8 @@ struct CZMPolygonHole FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::Vector<double> *POSITIONS_CARTESIAN() const {
     return GetPointer<const ::flatbuffers::Vector<double> *>(VT_POSITIONS_CARTESIAN);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_POSITIONS_CARTOGRAPHIC_DEGREES) &&
            verifier.VerifyVector(POSITIONS_CARTOGRAPHIC_DEGREES()) &&
@@ -3996,7 +4025,8 @@ struct CZMModel FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   double COLOR_BLEND_AMOUNT() const {
     return GetField<double>(VT_COLOR_BLEND_AMOUNT, 0.0);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<uint8_t>(verifier, VT_SHOW, 1) &&
            VerifyOffset(verifier, VT_GLTF) &&
@@ -4189,7 +4219,8 @@ struct CZMPath FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const CZMPolylineMaterial *MATERIAL() const {
     return GetPointer<const CZMPolylineMaterial *>(VT_MATERIAL);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<uint8_t>(verifier, VT_SHOW, 1) &&
            VerifyField<double>(verifier, VT_LEAD_TIME, 8) &&
@@ -4365,7 +4396,8 @@ struct CZMEllipse FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   int32_t Z_INDEX() const {
     return GetField<int32_t>(VT_Z_INDEX, 0);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<uint8_t>(verifier, VT_SHOW, 1) &&
            VerifyField<double>(verifier, VT_SEMI_MAJOR_AXIS, 8) &&
@@ -4637,7 +4669,8 @@ struct CZMBox FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   double DISTANCE_DISPLAY_CONDITION_FAR() const {
     return GetField<double>(VT_DISTANCE_DISPLAY_CONDITION_FAR, 0.0);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<uint8_t>(verifier, VT_SHOW, 1) &&
            VerifyField<double>(verifier, VT_DIMENSIONS_X, 8) &&
@@ -4875,7 +4908,8 @@ struct CZMCorridor FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   int32_t Z_INDEX() const {
     return GetField<int32_t>(VT_Z_INDEX, 0);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<uint8_t>(verifier, VT_SHOW, 1) &&
            VerifyOffset(verifier, VT_POSITIONS_CARTOGRAPHIC_DEGREES) &&
@@ -5138,7 +5172,8 @@ struct CZMCylinder FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *SHADOWS() const {
     return GetPointer<const ::flatbuffers::String *>(VT_SHADOWS);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<uint8_t>(verifier, VT_SHOW, 1) &&
            VerifyField<double>(verifier, VT_LENGTH, 8) &&
@@ -5391,7 +5426,8 @@ struct CZMEllipsoid FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *SHADOWS() const {
     return GetPointer<const ::flatbuffers::String *>(VT_SHADOWS);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<uint8_t>(verifier, VT_SHOW, 1) &&
            VerifyField<double>(verifier, VT_RADII_X, 8) &&
@@ -5663,7 +5699,8 @@ struct CZMPolylineVolume FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table 
   const ::flatbuffers::String *SHADOWS() const {
     return GetPointer<const ::flatbuffers::String *>(VT_SHADOWS);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<uint8_t>(verifier, VT_SHOW, 1) &&
            VerifyOffset(verifier, VT_POSITIONS_CARTOGRAPHIC_DEGREES) &&
@@ -5894,7 +5931,8 @@ struct CZMRectangle FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   int32_t Z_INDEX() const {
     return GetField<int32_t>(VT_Z_INDEX, 0);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<uint8_t>(verifier, VT_SHOW, 1) &&
            VerifyOffset(verifier, VT_COORDINATES_WSEN_DEGREES) &&
@@ -6095,7 +6133,8 @@ struct CZMTileset FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   double MAXIMUM_SCREEN_SPACE_ERROR() const {
     return GetField<double>(VT_MAXIMUM_SCREEN_SPACE_ERROR, 0.0);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<uint8_t>(verifier, VT_SHOW, 1) &&
            VerifyOffset(verifier, VT_URI) &&
@@ -6219,7 +6258,8 @@ struct CZMWall FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *SHADOWS() const {
     return GetPointer<const ::flatbuffers::String *>(VT_SHADOWS);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<uint8_t>(verifier, VT_SHOW, 1) &&
            VerifyOffset(verifier, VT_POSITIONS_CARTOGRAPHIC_DEGREES) &&
@@ -6550,7 +6590,8 @@ struct CZMPacket FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::Vector<::flatbuffers::Offset<CZMDynamicProperty>> *DYNAMIC_PROPERTIES() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<CZMDynamicProperty>> *>(VT_DYNAMIC_PROPERTIES);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_ID) &&
            verifier.VerifyString(ID()) &&
@@ -6975,7 +7016,8 @@ struct CZM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::Vector<::flatbuffers::Offset<CZMPacket>> *PACKETS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<CZMPacket>> *>(VT_PACKETS);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_NAME) &&
            verifier.VerifyString(NAME()) &&
@@ -7109,14 +7151,16 @@ inline bool SizePrefixedCZMBufferHasIdentifier(const void *buf) {
       buf, CZMIdentifier(), true);
 }
 
+template <bool B = false>
 inline bool VerifyCZMBuffer(
-    ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifyBuffer<CZM>(CZMIdentifier());
+    ::flatbuffers::VerifierTemplate<B> &verifier) {
+  return verifier.template VerifyBuffer<CZM>(CZMIdentifier());
 }
 
+template <bool B = false>
 inline bool VerifySizePrefixedCZMBuffer(
-    ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifySizePrefixedBuffer<CZM>(CZMIdentifier());
+    ::flatbuffers::VerifierTemplate<B> &verifier) {
+  return verifier.template VerifySizePrefixedBuffer<CZM>(CZMIdentifier());
 }
 
 inline void FinishCZMBuffer(

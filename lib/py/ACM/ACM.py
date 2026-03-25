@@ -265,6 +265,12 @@ def ACMStartATT_STATESVector(builder, numElems):
 def StartATT_STATESVector(builder, numElems):
     return ACMStartATT_STATESVector(builder, numElems)
 
+def ACMCreateATT_STATESVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateATT_STATESVector(builder, data):
+    ACMCreateATT_STATESVector(builder, data)
+
 def ACMAddPHYS_PROPERTIES(builder, PHYS_PROPERTIES):
     builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(PHYS_PROPERTIES), 0)
 
@@ -283,6 +289,12 @@ def ACMStartCOV_DATAVector(builder, numElems):
 def StartCOV_DATAVector(builder, numElems):
     return ACMStartCOV_DATAVector(builder, numElems)
 
+def ACMCreateCOV_DATAVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateCOV_DATAVector(builder, data):
+    ACMCreateCOV_DATAVector(builder, data)
+
 def ACMAddMANEUVERS(builder, MANEUVERS):
     builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(MANEUVERS), 0)
 
@@ -294,6 +306,12 @@ def ACMStartMANEUVERSVector(builder, numElems):
 
 def StartMANEUVERSVector(builder, numElems):
     return ACMStartMANEUVERSVector(builder, numElems)
+
+def ACMCreateMANEUVERSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateMANEUVERSVector(builder, data):
+    ACMCreateMANEUVERSVector(builder, data)
 
 def ACMAddMANEUVERABLE(builder, MANEUVERABLE):
     builder.PrependInt8Slot(12, MANEUVERABLE, 0)
@@ -325,27 +343,43 @@ except:
 class ACMT(object):
 
     # ACMT
-    def __init__(self):
-        self.CCSDS_ACM_VERS = None  # type: str
-        self.CREATION_DATE = None  # type: str
-        self.ORIGINATOR = None  # type: str
-        self.OBJECT_NAME = None  # type: str
-        self.OBJECT_ID = None  # type: str
-        self.CATALOG_NAME = None  # type: str
-        self.EPOCH = None  # type: str
-        self.TIME_SYSTEM = None  # type: str
-        self.ATT_STATES = None  # type: List[attitudeState.attitudeStateT]
-        self.PHYS_PROPERTIES = None  # type: Optional[attPhysicalProperties.attPhysicalPropertiesT]
-        self.COV_DATA = None  # type: List[attCovariance.attCovarianceT]
-        self.MANEUVERS = None  # type: List[attManeuver.attManeuverT]
-        self.MANEUVERABLE = 0  # type: int
-        self.COMMENT = None  # type: str
+    def __init__(
+        self,
+        CCSDS_ACM_VERS = None,
+        CREATION_DATE = None,
+        ORIGINATOR = None,
+        OBJECT_NAME = None,
+        OBJECT_ID = None,
+        CATALOG_NAME = None,
+        EPOCH = None,
+        TIME_SYSTEM = None,
+        ATT_STATES = None,
+        PHYS_PROPERTIES = None,
+        COV_DATA = None,
+        MANEUVERS = None,
+        MANEUVERABLE = 0,
+        COMMENT = None,
+    ):
+        self.CCSDS_ACM_VERS = CCSDS_ACM_VERS  # type: Optional[str]
+        self.CREATION_DATE = CREATION_DATE  # type: Optional[str]
+        self.ORIGINATOR = ORIGINATOR  # type: Optional[str]
+        self.OBJECT_NAME = OBJECT_NAME  # type: Optional[str]
+        self.OBJECT_ID = OBJECT_ID  # type: Optional[str]
+        self.CATALOG_NAME = CATALOG_NAME  # type: Optional[str]
+        self.EPOCH = EPOCH  # type: Optional[str]
+        self.TIME_SYSTEM = TIME_SYSTEM  # type: Optional[str]
+        self.ATT_STATES = ATT_STATES  # type: Optional[List[attitudeState.attitudeStateT]]
+        self.PHYS_PROPERTIES = PHYS_PROPERTIES  # type: Optional[attPhysicalProperties.attPhysicalPropertiesT]
+        self.COV_DATA = COV_DATA  # type: Optional[List[attCovariance.attCovarianceT]]
+        self.MANEUVERS = MANEUVERS  # type: Optional[List[attManeuver.attManeuverT]]
+        self.MANEUVERABLE = MANEUVERABLE  # type: int
+        self.COMMENT = COMMENT  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        ACM = ACM()
-        ACM.Init(buf, pos)
-        return cls.InitFromObj(ACM)
+        tmpAcm = ACM()
+        tmpAcm.Init(buf, pos)
+        return cls.InitFromObj(tmpAcm)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -353,9 +387,9 @@ class ACMT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, ACM):
+    def InitFromObj(cls, tmpAcm):
         x = ACMT()
-        x._UnPack(ACM)
+        x._UnPack(tmpAcm)
         return x
 
     # ACMT

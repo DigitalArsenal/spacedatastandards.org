@@ -62,8 +62,16 @@ func (rcv *EWR) SYSTEM_ID() uint32 {
 	return 0
 }
 
+func (rcv *EWR) SystemId() uint32 {
+	return rcv.SYSTEM_ID()
+}
+
 func (rcv *EWR) MutateSYSTEM_ID(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(4, n)
+}
+
+func (rcv *EWR) MutateSystemId(n uint32) bool {
+	return rcv.MutateSYSTEM_ID(n)
 }
 
 func (rcv *EWR) ENTITY_ID() uint32 {
@@ -74,8 +82,16 @@ func (rcv *EWR) ENTITY_ID() uint32 {
 	return 0
 }
 
+func (rcv *EWR) EntityId() uint32 {
+	return rcv.ENTITY_ID()
+}
+
 func (rcv *EWR) MutateENTITY_ID(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(6, n)
+}
+
+func (rcv *EWR) MutateEntityId(n uint32) bool {
+	return rcv.MutateENTITY_ID(n)
 }
 
 func (rcv *EWR) ESM_ACTIVE() bool {
@@ -86,8 +102,16 @@ func (rcv *EWR) ESM_ACTIVE() bool {
 	return false
 }
 
+func (rcv *EWR) EsmActive() bool {
+	return rcv.ESM_ACTIVE()
+}
+
 func (rcv *EWR) MutateESM_ACTIVE(n bool) bool {
 	return rcv._tab.MutateBoolSlot(8, n)
+}
+
+func (rcv *EWR) MutateEsmActive(n bool) bool {
+	return rcv.MutateESM_ACTIVE(n)
 }
 
 func (rcv *EWR) ECM_ACTIVE() bool {
@@ -98,8 +122,16 @@ func (rcv *EWR) ECM_ACTIVE() bool {
 	return false
 }
 
+func (rcv *EWR) EcmActive() bool {
+	return rcv.ECM_ACTIVE()
+}
+
 func (rcv *EWR) MutateECM_ACTIVE(n bool) bool {
 	return rcv._tab.MutateBoolSlot(10, n)
+}
+
+func (rcv *EWR) MutateEcmActive(n bool) bool {
+	return rcv.MutateECM_ACTIVE(n)
 }
 
 func (rcv *EWR) RWR_ACTIVE() bool {
@@ -110,8 +142,16 @@ func (rcv *EWR) RWR_ACTIVE() bool {
 	return false
 }
 
+func (rcv *EWR) RwrActive() bool {
+	return rcv.RWR_ACTIVE()
+}
+
 func (rcv *EWR) MutateRWR_ACTIVE(n bool) bool {
 	return rcv._tab.MutateBoolSlot(12, n)
+}
+
+func (rcv *EWR) MutateRwrActive(n bool) bool {
+	return rcv.MutateRWR_ACTIVE(n)
 }
 
 func (rcv *EWR) ESM_CONTACTS(j int) []byte {
@@ -123,12 +163,20 @@ func (rcv *EWR) ESM_CONTACTS(j int) []byte {
 	return nil
 }
 
+func (rcv *EWR) EsmContacts(j int) []byte {
+	return rcv.ESM_CONTACTS(j)
+}
+
 func (rcv *EWR) ESM_CONTACTSLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *EWR) EsmContactsLength() int {
+	return rcv.ESM_CONTACTSLength()
 }
 
 func (rcv *EWR) ACTIVE_JAMMING(j int) []byte {
@@ -140,6 +188,10 @@ func (rcv *EWR) ACTIVE_JAMMING(j int) []byte {
 	return nil
 }
 
+func (rcv *EWR) ActiveJamming(j int) []byte {
+	return rcv.ACTIVE_JAMMING(j)
+}
+
 func (rcv *EWR) ACTIVE_JAMMINGLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
 	if o != 0 {
@@ -148,12 +200,20 @@ func (rcv *EWR) ACTIVE_JAMMINGLength() int {
 	return 0
 }
 
+func (rcv *EWR) ActiveJammingLength() int {
+	return rcv.ACTIVE_JAMMINGLength()
+}
+
 func (rcv *EWR) COUNTERMEASURES() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *EWR) Countermeasures() []byte {
+	return rcv.COUNTERMEASURES()
 }
 
 func (rcv *EWR) THREAT_WARNINGS(j int) []byte {
@@ -165,12 +225,20 @@ func (rcv *EWR) THREAT_WARNINGS(j int) []byte {
 	return nil
 }
 
+func (rcv *EWR) ThreatWarnings(j int) []byte {
+	return rcv.THREAT_WARNINGS(j)
+}
+
 func (rcv *EWR) THREAT_WARNINGSLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *EWR) ThreatWarningsLength() int {
+	return rcv.THREAT_WARNINGSLength()
 }
 
 func (rcv *EWR) EMCON_LEVEL() byte {
@@ -181,8 +249,16 @@ func (rcv *EWR) EMCON_LEVEL() byte {
 	return 0
 }
 
+func (rcv *EWR) EmconLevel() byte {
+	return rcv.EMCON_LEVEL()
+}
+
 func (rcv *EWR) MutateEMCON_LEVEL(n byte) bool {
 	return rcv._tab.MutateByteSlot(22, n)
+}
+
+func (rcv *EWR) MutateEmconLevel(n byte) bool {
+	return rcv.MutateEMCON_LEVEL(n)
 }
 
 func (rcv *EWR) LAST_UPDATE_MS() int64 {
@@ -193,8 +269,16 @@ func (rcv *EWR) LAST_UPDATE_MS() int64 {
 	return 0
 }
 
+func (rcv *EWR) LastUpdateMs() int64 {
+	return rcv.LAST_UPDATE_MS()
+}
+
 func (rcv *EWR) MutateLAST_UPDATE_MS(n int64) bool {
 	return rcv._tab.MutateInt64Slot(24, n)
+}
+
+func (rcv *EWR) MutateLastUpdateMs(n int64) bool {
+	return rcv.MutateLAST_UPDATE_MS(n)
 }
 
 func EWRStart(builder *flatbuffers.Builder) {
@@ -203,44 +287,86 @@ func EWRStart(builder *flatbuffers.Builder) {
 func EWRAddSYSTEM_ID(builder *flatbuffers.Builder, SYSTEM_ID uint32) {
 	builder.PrependUint32Slot(0, SYSTEM_ID, 0)
 }
+func EWRAddSystemId(builder *flatbuffers.Builder, SYSTEM_ID uint32) {
+	EWRAddSYSTEM_ID(builder, SYSTEM_ID)
+}
 func EWRAddENTITY_ID(builder *flatbuffers.Builder, ENTITY_ID uint32) {
 	builder.PrependUint32Slot(1, ENTITY_ID, 0)
+}
+func EWRAddEntityId(builder *flatbuffers.Builder, ENTITY_ID uint32) {
+	EWRAddENTITY_ID(builder, ENTITY_ID)
 }
 func EWRAddESM_ACTIVE(builder *flatbuffers.Builder, ESM_ACTIVE bool) {
 	builder.PrependBoolSlot(2, ESM_ACTIVE, false)
 }
+func EWRAddEsmActive(builder *flatbuffers.Builder, ESM_ACTIVE bool) {
+	EWRAddESM_ACTIVE(builder, ESM_ACTIVE)
+}
 func EWRAddECM_ACTIVE(builder *flatbuffers.Builder, ECM_ACTIVE bool) {
 	builder.PrependBoolSlot(3, ECM_ACTIVE, false)
+}
+func EWRAddEcmActive(builder *flatbuffers.Builder, ECM_ACTIVE bool) {
+	EWRAddECM_ACTIVE(builder, ECM_ACTIVE)
 }
 func EWRAddRWR_ACTIVE(builder *flatbuffers.Builder, RWR_ACTIVE bool) {
 	builder.PrependBoolSlot(4, RWR_ACTIVE, false)
 }
+func EWRAddRwrActive(builder *flatbuffers.Builder, RWR_ACTIVE bool) {
+	EWRAddRWR_ACTIVE(builder, RWR_ACTIVE)
+}
 func EWRAddESM_CONTACTS(builder *flatbuffers.Builder, ESM_CONTACTS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(ESM_CONTACTS), 0)
+}
+func EWRAddEsmContacts(builder *flatbuffers.Builder, ESM_CONTACTS flatbuffers.UOffsetT) {
+	EWRAddESM_CONTACTS(builder, ESM_CONTACTS)
 }
 func EWRStartESM_CONTACTSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
+func EWRStartEsmContactsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return EWRStartESM_CONTACTSVector(builder, numElems)
+}
 func EWRAddACTIVE_JAMMING(builder *flatbuffers.Builder, ACTIVE_JAMMING flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(ACTIVE_JAMMING), 0)
+}
+func EWRAddActiveJamming(builder *flatbuffers.Builder, ACTIVE_JAMMING flatbuffers.UOffsetT) {
+	EWRAddACTIVE_JAMMING(builder, ACTIVE_JAMMING)
 }
 func EWRStartACTIVE_JAMMINGVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
+func EWRStartActiveJammingVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return EWRStartACTIVE_JAMMINGVector(builder, numElems)
+}
 func EWRAddCOUNTERMEASURES(builder *flatbuffers.Builder, COUNTERMEASURES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(COUNTERMEASURES), 0)
+}
+func EWRAddCountermeasures(builder *flatbuffers.Builder, COUNTERMEASURES flatbuffers.UOffsetT) {
+	EWRAddCOUNTERMEASURES(builder, COUNTERMEASURES)
 }
 func EWRAddTHREAT_WARNINGS(builder *flatbuffers.Builder, THREAT_WARNINGS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(THREAT_WARNINGS), 0)
 }
+func EWRAddThreatWarnings(builder *flatbuffers.Builder, THREAT_WARNINGS flatbuffers.UOffsetT) {
+	EWRAddTHREAT_WARNINGS(builder, THREAT_WARNINGS)
+}
 func EWRStartTHREAT_WARNINGSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func EWRStartThreatWarningsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return EWRStartTHREAT_WARNINGSVector(builder, numElems)
 }
 func EWRAddEMCON_LEVEL(builder *flatbuffers.Builder, EMCON_LEVEL byte) {
 	builder.PrependByteSlot(9, EMCON_LEVEL, 0)
 }
+func EWRAddEmconLevel(builder *flatbuffers.Builder, EMCON_LEVEL byte) {
+	EWRAddEMCON_LEVEL(builder, EMCON_LEVEL)
+}
 func EWRAddLAST_UPDATE_MS(builder *flatbuffers.Builder, LAST_UPDATE_MS int64) {
 	builder.PrependInt64Slot(10, LAST_UPDATE_MS, 0)
+}
+func EWRAddLastUpdateMs(builder *flatbuffers.Builder, LAST_UPDATE_MS int64) {
+	EWRAddLAST_UPDATE_MS(builder, LAST_UPDATE_MS)
 }
 func EWREnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

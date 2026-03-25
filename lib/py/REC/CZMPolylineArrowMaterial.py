@@ -2,4 +2,108 @@
 
 # namespace: 
 
-# NOTE CZMPolylineArrowMaterial.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Polyline arrow material
+class CZMPolylineArrowMaterial(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = CZMPolylineArrowMaterial()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsCZMPolylineArrowMaterial(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def CZMPolylineArrowMaterialBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x43\x5A\x4D", size_prefixed=size_prefixed)
+
+    # CZMPolylineArrowMaterial
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Arrow color
+    # CZMPolylineArrowMaterial
+    def COLOR(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from CZMColor import CZMColor
+            obj = CZMColor()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+def CZMPolylineArrowMaterialStart(builder):
+    builder.StartObject(1)
+
+def Start(builder):
+    CZMPolylineArrowMaterialStart(builder)
+
+def CZMPolylineArrowMaterialAddCOLOR(builder, COLOR):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(COLOR), 0)
+
+def AddCOLOR(builder, COLOR):
+    CZMPolylineArrowMaterialAddCOLOR(builder, COLOR)
+
+def CZMPolylineArrowMaterialEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return CZMPolylineArrowMaterialEnd(builder)
+
+import CZMColor
+try:
+    from typing import Optional
+except:
+    pass
+
+class CZMPolylineArrowMaterialT(object):
+
+    # CZMPolylineArrowMaterialT
+    def __init__(
+        self,
+        COLOR = None,
+    ):
+        self.COLOR = COLOR  # type: Optional[CZMColor.CZMColorT]
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpCzmpolylineArrowMaterial = CZMPolylineArrowMaterial()
+        tmpCzmpolylineArrowMaterial.Init(buf, pos)
+        return cls.InitFromObj(tmpCzmpolylineArrowMaterial)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpCzmpolylineArrowMaterial):
+        x = CZMPolylineArrowMaterialT()
+        x._UnPack(tmpCzmpolylineArrowMaterial)
+        return x
+
+    # CZMPolylineArrowMaterialT
+    def _UnPack(self, CZMPolylineArrowMaterial):
+        if CZMPolylineArrowMaterial is None:
+            return
+        if CZMPolylineArrowMaterial.COLOR() is not None:
+            self.COLOR = CZMColor.CZMColorT.InitFromObj(CZMPolylineArrowMaterial.COLOR())
+
+    # CZMPolylineArrowMaterialT
+    def Pack(self, builder):
+        if self.COLOR is not None:
+            COLOR = self.COLOR.Pack(builder)
+        CZMPolylineArrowMaterialStart(builder)
+        if self.COLOR is not None:
+            CZMPolylineArrowMaterialAddCOLOR(builder, COLOR)
+        CZMPolylineArrowMaterial = CZMPolylineArrowMaterialEnd(builder)
+        return CZMPolylineArrowMaterial

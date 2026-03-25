@@ -157,21 +157,31 @@ def End(builder):
 class reentryStateVectorT(object):
 
     # reentryStateVectorT
-    def __init__(self):
-        self.EPOCH = None  # type: str
-        self.REF_FRAME = None  # type: str
-        self.X = 0.0  # type: float
-        self.Y = 0.0  # type: float
-        self.Z = 0.0  # type: float
-        self.X_DOT = 0.0  # type: float
-        self.Y_DOT = 0.0  # type: float
-        self.Z_DOT = 0.0  # type: float
+    def __init__(
+        self,
+        EPOCH = None,
+        REF_FRAME = None,
+        X = 0.0,
+        Y = 0.0,
+        Z = 0.0,
+        X_DOT = 0.0,
+        Y_DOT = 0.0,
+        Z_DOT = 0.0,
+    ):
+        self.EPOCH = EPOCH  # type: Optional[str]
+        self.REF_FRAME = REF_FRAME  # type: Optional[str]
+        self.X = X  # type: float
+        self.Y = Y  # type: float
+        self.Z = Z  # type: float
+        self.X_DOT = X_DOT  # type: float
+        self.Y_DOT = Y_DOT  # type: float
+        self.Z_DOT = Z_DOT  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        reentryStateVector = reentryStateVector()
-        reentryStateVector.Init(buf, pos)
-        return cls.InitFromObj(reentryStateVector)
+        tmpReentryStateVector = reentryStateVector()
+        tmpReentryStateVector.Init(buf, pos)
+        return cls.InitFromObj(tmpReentryStateVector)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -179,9 +189,9 @@ class reentryStateVectorT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, reentryStateVector):
+    def InitFromObj(cls, tmpReentryStateVector):
         x = reentryStateVectorT()
-        x._UnPack(reentryStateVector)
+        x._UnPack(tmpReentryStateVector)
         return x
 
     # reentryStateVectorT

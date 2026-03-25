@@ -32,7 +32,7 @@ class FloatDataEncoding : Table() {
     /**
      * Number of bits (typically 32 or 64)
      */
-    val SIZE_IN_BITS : UShort
+    val sizeInBits : UShort
         get() {
             val o = __offset(4)
             return if(o != 0) bb.getShort(o + bb_pos).toUShort() else 0u
@@ -40,7 +40,7 @@ class FloatDataEncoding : Table() {
     /**
      * Byte ordering
      */
-    val BYTE_ORDER : Byte
+    val byteOrder : Byte
         get() {
             val o = __offset(6)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -48,7 +48,7 @@ class FloatDataEncoding : Table() {
     /**
      * Float encoding format
      */
-    val ENCODING : Byte
+    val encoding : Byte
         get() {
             val o = __offset(8)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -56,7 +56,7 @@ class FloatDataEncoding : Table() {
     /**
      * Default calibrator reference
      */
-    val DEFAULT_CALIBRATOR : String?
+    val defaultCalibrator : String?
         get() {
             val o = __offset(10)
             return if (o != 0) {
@@ -65,13 +65,13 @@ class FloatDataEncoding : Table() {
                 null
             }
         }
-    val DEFAULT_CALIBRATORAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
-    fun DEFAULT_CALIBRATORInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
+    val defaultCalibratorAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(10, 1)
+    fun defaultCalibratorInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 10, 1)
     /**
      * Context-dependent calibrators
      */
-    fun CONTEXT_CALIBRATOR_LIST(j: Int) : ContextCalibrator? = CONTEXT_CALIBRATOR_LIST(ContextCalibrator(), j)
-    fun CONTEXT_CALIBRATOR_LIST(obj: ContextCalibrator, j: Int) : ContextCalibrator? {
+    fun contextCalibratorList(j: Int) : ContextCalibrator? = contextCalibratorList(ContextCalibrator(), j)
+    fun contextCalibratorList(obj: ContextCalibrator, j: Int) : ContextCalibrator? {
         val o = __offset(12)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -79,32 +79,32 @@ class FloatDataEncoding : Table() {
             null
         }
     }
-    val CONTEXT_CALIBRATOR_LISTLength : Int
+    val contextCalibratorListLength : Int
         get() {
             val o = __offset(12); return if (o != 0) __vector_len(o) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsFloatDataEncoding(_bb: ByteBuffer): FloatDataEncoding = getRootAsFloatDataEncoding(_bb, FloatDataEncoding())
         fun getRootAsFloatDataEncoding(_bb: ByteBuffer, obj: FloatDataEncoding): FloatDataEncoding {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createFloatDataEncoding(builder: FlatBufferBuilder, SIZE_IN_BITS: UShort, BYTE_ORDER: Byte, ENCODING: Byte, DEFAULT_CALIBRATOROffset: Int, CONTEXT_CALIBRATOR_LISTOffset: Int) : Int {
+        fun createFloatDataEncoding(builder: FlatBufferBuilder, sizeInBits: UShort, byteOrder: Byte, encoding: Byte, defaultCalibratorOffset: Int, contextCalibratorListOffset: Int) : Int {
             builder.startTable(5)
-            addCONTEXT_CALIBRATOR_LIST(builder, CONTEXT_CALIBRATOR_LISTOffset)
-            addDEFAULT_CALIBRATOR(builder, DEFAULT_CALIBRATOROffset)
-            addSIZE_IN_BITS(builder, SIZE_IN_BITS)
-            addENCODING(builder, ENCODING)
-            addBYTE_ORDER(builder, BYTE_ORDER)
+            addCONTEXTCALIBRATORLIST(builder, contextCalibratorListOffset)
+            addDEFAULTCALIBRATOR(builder, defaultCalibratorOffset)
+            addSIZEINBITS(builder, sizeInBits)
+            addENCODING(builder, encoding)
+            addBYTEORDER(builder, byteOrder)
             return endFloatDataEncoding(builder)
         }
         fun startFloatDataEncoding(builder: FlatBufferBuilder) = builder.startTable(5)
-        fun addSIZE_IN_BITS(builder: FlatBufferBuilder, SIZE_IN_BITS: UShort) = builder.addShort(0, SIZE_IN_BITS.toShort(), 0)
-        fun addBYTE_ORDER(builder: FlatBufferBuilder, BYTE_ORDER: Byte) = builder.addByte(1, BYTE_ORDER, 0)
-        fun addENCODING(builder: FlatBufferBuilder, ENCODING: Byte) = builder.addByte(2, ENCODING, 0)
-        fun addDEFAULT_CALIBRATOR(builder: FlatBufferBuilder, DEFAULT_CALIBRATOR: Int) = builder.addOffset(3, DEFAULT_CALIBRATOR, 0)
-        fun addCONTEXT_CALIBRATOR_LIST(builder: FlatBufferBuilder, CONTEXT_CALIBRATOR_LIST: Int) = builder.addOffset(4, CONTEXT_CALIBRATOR_LIST, 0)
+        fun addSIZEINBITS(builder: FlatBufferBuilder, sizeInBits: UShort) = builder.addShort(0, sizeInBits.toShort(), 0)
+        fun addBYTEORDER(builder: FlatBufferBuilder, byteOrder: Byte) = builder.addByte(1, byteOrder, 0)
+        fun addENCODING(builder: FlatBufferBuilder, encoding: Byte) = builder.addByte(2, encoding, 0)
+        fun addDEFAULTCALIBRATOR(builder: FlatBufferBuilder, defaultCalibrator: Int) = builder.addOffset(3, defaultCalibrator, 0)
+        fun addCONTEXTCALIBRATORLIST(builder: FlatBufferBuilder, contextCalibratorList: Int) = builder.addOffset(4, contextCalibratorList, 0)
         fun createContextCalibratorListVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {

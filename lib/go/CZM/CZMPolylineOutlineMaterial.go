@@ -56,6 +56,10 @@ func (rcv *CZMPolylineOutlineMaterial) COLOR(obj *CZMColor) *CZMColor {
 	return nil
 }
 
+func (rcv *CZMPolylineOutlineMaterial) Color(obj *CZMColor) *CZMColor {
+	return rcv.COLOR(obj)
+}
+
 /// Line color
 /// Outline color
 func (rcv *CZMPolylineOutlineMaterial) OUTLINE_COLOR(obj *CZMColor) *CZMColor {
@@ -71,6 +75,10 @@ func (rcv *CZMPolylineOutlineMaterial) OUTLINE_COLOR(obj *CZMColor) *CZMColor {
 	return nil
 }
 
+func (rcv *CZMPolylineOutlineMaterial) OutlineColor(obj *CZMColor) *CZMColor {
+	return rcv.OUTLINE_COLOR(obj)
+}
+
 /// Outline color
 /// Outline width
 func (rcv *CZMPolylineOutlineMaterial) OUTLINE_WIDTH() float64 {
@@ -81,9 +89,17 @@ func (rcv *CZMPolylineOutlineMaterial) OUTLINE_WIDTH() float64 {
 	return 0.0
 }
 
+func (rcv *CZMPolylineOutlineMaterial) OutlineWidth() float64 {
+	return rcv.OUTLINE_WIDTH()
+}
+
 /// Outline width
 func (rcv *CZMPolylineOutlineMaterial) MutateOUTLINE_WIDTH(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(8, n)
+}
+
+func (rcv *CZMPolylineOutlineMaterial) MutateOutlineWidth(n float64) bool {
+	return rcv.MutateOUTLINE_WIDTH(n)
 }
 
 func CZMPolylineOutlineMaterialStart(builder *flatbuffers.Builder) {
@@ -92,11 +108,20 @@ func CZMPolylineOutlineMaterialStart(builder *flatbuffers.Builder) {
 func CZMPolylineOutlineMaterialAddCOLOR(builder *flatbuffers.Builder, COLOR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(COLOR), 0)
 }
+func CZMPolylineOutlineMaterialAddColor(builder *flatbuffers.Builder, COLOR flatbuffers.UOffsetT) {
+	CZMPolylineOutlineMaterialAddCOLOR(builder, COLOR)
+}
 func CZMPolylineOutlineMaterialAddOUTLINE_COLOR(builder *flatbuffers.Builder, OUTLINE_COLOR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(OUTLINE_COLOR), 0)
 }
+func CZMPolylineOutlineMaterialAddOutlineColor(builder *flatbuffers.Builder, OUTLINE_COLOR flatbuffers.UOffsetT) {
+	CZMPolylineOutlineMaterialAddOUTLINE_COLOR(builder, OUTLINE_COLOR)
+}
 func CZMPolylineOutlineMaterialAddOUTLINE_WIDTH(builder *flatbuffers.Builder, OUTLINE_WIDTH float64) {
 	builder.PrependFloat64Slot(2, OUTLINE_WIDTH, 0.0)
+}
+func CZMPolylineOutlineMaterialAddOutlineWidth(builder *flatbuffers.Builder, OUTLINE_WIDTH float64) {
+	CZMPolylineOutlineMaterialAddOUTLINE_WIDTH(builder, OUTLINE_WIDTH)
 }
 func CZMPolylineOutlineMaterialEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

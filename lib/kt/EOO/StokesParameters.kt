@@ -32,7 +32,7 @@ class StokesParameters : Table() {
     /**
      * Intensity
      */
-    val I : Double
+    val i : Double
         get() {
             val o = __offset(4)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -40,7 +40,7 @@ class StokesParameters : Table() {
     /**
      * Linear polarization
      */
-    val Q : Double
+    val q : Double
         get() {
             val o = __offset(6)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -48,7 +48,7 @@ class StokesParameters : Table() {
     /**
      * Another linear polarization, orthogonal to Q
      */
-    val U : Double
+    val u : Double
         get() {
             val o = __offset(8)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -56,31 +56,31 @@ class StokesParameters : Table() {
     /**
      * Circular polarization
      */
-    val V : Double
+    val v : Double
         get() {
             val o = __offset(10)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsStokesParameters(_bb: ByteBuffer): StokesParameters = getRootAsStokesParameters(_bb, StokesParameters())
         fun getRootAsStokesParameters(_bb: ByteBuffer, obj: StokesParameters): StokesParameters {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createStokesParameters(builder: FlatBufferBuilder, I: Double, Q: Double, U: Double, V: Double) : Int {
+        fun createStokesParameters(builder: FlatBufferBuilder, i: Double, q: Double, u: Double, v: Double) : Int {
             builder.startTable(4)
-            addV(builder, V)
-            addU(builder, U)
-            addQ(builder, Q)
-            addI(builder, I)
+            addV(builder, v)
+            addU(builder, u)
+            addQ(builder, q)
+            addI(builder, i)
             return endStokesParameters(builder)
         }
         fun startStokesParameters(builder: FlatBufferBuilder) = builder.startTable(4)
-        fun addI(builder: FlatBufferBuilder, I: Double) = builder.addDouble(0, I, 0.0)
-        fun addQ(builder: FlatBufferBuilder, Q: Double) = builder.addDouble(1, Q, 0.0)
-        fun addU(builder: FlatBufferBuilder, U: Double) = builder.addDouble(2, U, 0.0)
-        fun addV(builder: FlatBufferBuilder, V: Double) = builder.addDouble(3, V, 0.0)
+        fun addI(builder: FlatBufferBuilder, i: Double) = builder.addDouble(0, i, 0.0)
+        fun addQ(builder: FlatBufferBuilder, q: Double) = builder.addDouble(1, q, 0.0)
+        fun addU(builder: FlatBufferBuilder, u: Double) = builder.addDouble(2, u, 0.0)
+        fun addV(builder: FlatBufferBuilder, v: Double) = builder.addDouble(3, v, 0.0)
         fun endStokesParameters(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

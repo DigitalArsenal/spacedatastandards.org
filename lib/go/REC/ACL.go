@@ -63,6 +63,10 @@ func (rcv *ACL) GRANT_ID() []byte {
 	return nil
 }
 
+func (rcv *ACL) GrantId() []byte {
+	return rcv.GRANT_ID()
+}
+
 /// Unique identifier for this grant
 /// ID of the listing this grant applies to
 func (rcv *ACL) LISTING_ID() []byte {
@@ -73,6 +77,10 @@ func (rcv *ACL) LISTING_ID() []byte {
 	return nil
 }
 
+func (rcv *ACL) ListingId() []byte {
+	return rcv.LISTING_ID()
+}
+
 /// ID of the listing this grant applies to
 /// Peer ID of the buyer/grantee
 func (rcv *ACL) BUYER_PEER_ID() []byte {
@@ -81,6 +89,10 @@ func (rcv *ACL) BUYER_PEER_ID() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *ACL) BuyerPeerId() []byte {
+	return rcv.BUYER_PEER_ID()
 }
 
 /// Peer ID of the buyer/grantee
@@ -94,6 +106,10 @@ func (rcv *ACL) BUYER_ENCRYPTION_PUBKEY(j int) byte {
 	return 0
 }
 
+func (rcv *ACL) BuyerEncryptionPubkey(j int) byte {
+	return rcv.BUYER_ENCRYPTION_PUBKEY(j)
+}
+
 func (rcv *ACL) BUYER_ENCRYPTION_PUBKEYLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
@@ -102,12 +118,20 @@ func (rcv *ACL) BUYER_ENCRYPTION_PUBKEYLength() int {
 	return 0
 }
 
+func (rcv *ACL) BuyerEncryptionPubkeyLength() int {
+	return rcv.BUYER_ENCRYPTION_PUBKEYLength()
+}
+
 func (rcv *ACL) BUYER_ENCRYPTION_PUBKEYBytes() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *ACL) BuyerEncryptionPubkeyBytes() []byte {
+	return rcv.BUYER_ENCRYPTION_PUBKEYBytes()
 }
 
 /// Buyer's encryption public key for encrypted delivery
@@ -120,6 +144,10 @@ func (rcv *ACL) MutateBUYER_ENCRYPTION_PUBKEY(j int, n byte) bool {
 	return false
 }
 
+func (rcv *ACL) MutateBuyerEncryptionPubkey(j int, n byte) bool {
+	return rcv.MutateBUYER_ENCRYPTION_PUBKEY(j, n)
+}
+
 /// Type of access granted
 func (rcv *ACL) ACCESS_TYPE() accessType {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
@@ -129,9 +157,17 @@ func (rcv *ACL) ACCESS_TYPE() accessType {
 	return 0
 }
 
+func (rcv *ACL) AccessType() accessType {
+	return rcv.ACCESS_TYPE()
+}
+
 /// Type of access granted
 func (rcv *ACL) MutateACCESS_TYPE(n accessType) bool {
 	return rcv._tab.MutateInt8Slot(12, int8(n))
+}
+
+func (rcv *ACL) MutateAccessType(n accessType) bool {
+	return rcv.MutateACCESS_TYPE(n)
 }
 
 /// Name of the pricing tier purchased
@@ -141,6 +177,10 @@ func (rcv *ACL) TIER_NAME() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *ACL) TierName() []byte {
+	return rcv.TIER_NAME()
 }
 
 /// Name of the pricing tier purchased
@@ -153,9 +193,17 @@ func (rcv *ACL) GRANTED_AT() uint64 {
 	return 0
 }
 
+func (rcv *ACL) GrantedAt() uint64 {
+	return rcv.GRANTED_AT()
+}
+
 /// Unix timestamp when access was granted
 func (rcv *ACL) MutateGRANTED_AT(n uint64) bool {
 	return rcv._tab.MutateUint64Slot(16, n)
+}
+
+func (rcv *ACL) MutateGrantedAt(n uint64) bool {
+	return rcv.MutateGRANTED_AT(n)
 }
 
 /// Unix timestamp when access expires (0 = never expires)
@@ -167,9 +215,17 @@ func (rcv *ACL) EXPIRES_AT() uint64 {
 	return 0
 }
 
+func (rcv *ACL) ExpiresAt() uint64 {
+	return rcv.EXPIRES_AT()
+}
+
 /// Unix timestamp when access expires (0 = never expires)
 func (rcv *ACL) MutateEXPIRES_AT(n uint64) bool {
 	return rcv._tab.MutateUint64Slot(18, n)
+}
+
+func (rcv *ACL) MutateExpiresAt(n uint64) bool {
+	return rcv.MutateEXPIRES_AT(n)
 }
 
 /// Transaction hash or reference proving payment
@@ -179,6 +235,10 @@ func (rcv *ACL) PAYMENT_TX_HASH() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *ACL) PaymentTxHash() []byte {
+	return rcv.PAYMENT_TX_HASH()
 }
 
 /// Transaction hash or reference proving payment
@@ -191,9 +251,17 @@ func (rcv *ACL) PAYMENT_METHOD() paymentMethod {
 	return 0
 }
 
+func (rcv *ACL) PaymentMethod() paymentMethod {
+	return rcv.PAYMENT_METHOD()
+}
+
 /// Payment method used
 func (rcv *ACL) MutatePAYMENT_METHOD(n paymentMethod) bool {
 	return rcv._tab.MutateInt8Slot(22, int8(n))
+}
+
+func (rcv *ACL) MutatePaymentMethod(n paymentMethod) bool {
+	return rcv.MutatePAYMENT_METHOD(n)
 }
 
 /// Ed25519 signature from provider
@@ -206,6 +274,10 @@ func (rcv *ACL) PROVIDER_SIGNATURE(j int) byte {
 	return 0
 }
 
+func (rcv *ACL) ProviderSignature(j int) byte {
+	return rcv.PROVIDER_SIGNATURE(j)
+}
+
 func (rcv *ACL) PROVIDER_SIGNATURELength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
 	if o != 0 {
@@ -214,12 +286,20 @@ func (rcv *ACL) PROVIDER_SIGNATURELength() int {
 	return 0
 }
 
+func (rcv *ACL) ProviderSignatureLength() int {
+	return rcv.PROVIDER_SIGNATURELength()
+}
+
 func (rcv *ACL) PROVIDER_SIGNATUREBytes() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *ACL) ProviderSignatureBytes() []byte {
+	return rcv.PROVIDER_SIGNATUREBytes()
 }
 
 /// Ed25519 signature from provider
@@ -232,47 +312,90 @@ func (rcv *ACL) MutatePROVIDER_SIGNATURE(j int, n byte) bool {
 	return false
 }
 
+func (rcv *ACL) MutateProviderSignature(j int, n byte) bool {
+	return rcv.MutatePROVIDER_SIGNATURE(j, n)
+}
+
 func ACLStart(builder *flatbuffers.Builder) {
 	builder.StartObject(11)
 }
 func ACLAddGRANT_ID(builder *flatbuffers.Builder, GRANT_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(GRANT_ID), 0)
 }
+func ACLAddGrantId(builder *flatbuffers.Builder, GRANT_ID flatbuffers.UOffsetT) {
+	ACLAddGRANT_ID(builder, GRANT_ID)
+}
 func ACLAddLISTING_ID(builder *flatbuffers.Builder, LISTING_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(LISTING_ID), 0)
+}
+func ACLAddListingId(builder *flatbuffers.Builder, LISTING_ID flatbuffers.UOffsetT) {
+	ACLAddLISTING_ID(builder, LISTING_ID)
 }
 func ACLAddBUYER_PEER_ID(builder *flatbuffers.Builder, BUYER_PEER_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(BUYER_PEER_ID), 0)
 }
+func ACLAddBuyerPeerId(builder *flatbuffers.Builder, BUYER_PEER_ID flatbuffers.UOffsetT) {
+	ACLAddBUYER_PEER_ID(builder, BUYER_PEER_ID)
+}
 func ACLAddBUYER_ENCRYPTION_PUBKEY(builder *flatbuffers.Builder, BUYER_ENCRYPTION_PUBKEY flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(BUYER_ENCRYPTION_PUBKEY), 0)
+}
+func ACLAddBuyerEncryptionPubkey(builder *flatbuffers.Builder, BUYER_ENCRYPTION_PUBKEY flatbuffers.UOffsetT) {
+	ACLAddBUYER_ENCRYPTION_PUBKEY(builder, BUYER_ENCRYPTION_PUBKEY)
 }
 func ACLStartBUYER_ENCRYPTION_PUBKEYVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(1, numElems, 1)
 }
+func ACLStartBuyerEncryptionPubkeyVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return ACLStartBUYER_ENCRYPTION_PUBKEYVector(builder, numElems)
+}
 func ACLAddACCESS_TYPE(builder *flatbuffers.Builder, ACCESS_TYPE accessType) {
 	builder.PrependInt8Slot(4, int8(ACCESS_TYPE), 0)
+}
+func ACLAddAccessType(builder *flatbuffers.Builder, ACCESS_TYPE accessType) {
+	ACLAddACCESS_TYPE(builder, ACCESS_TYPE)
 }
 func ACLAddTIER_NAME(builder *flatbuffers.Builder, TIER_NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(TIER_NAME), 0)
 }
+func ACLAddTierName(builder *flatbuffers.Builder, TIER_NAME flatbuffers.UOffsetT) {
+	ACLAddTIER_NAME(builder, TIER_NAME)
+}
 func ACLAddGRANTED_AT(builder *flatbuffers.Builder, GRANTED_AT uint64) {
 	builder.PrependUint64Slot(6, GRANTED_AT, 0)
+}
+func ACLAddGrantedAt(builder *flatbuffers.Builder, GRANTED_AT uint64) {
+	ACLAddGRANTED_AT(builder, GRANTED_AT)
 }
 func ACLAddEXPIRES_AT(builder *flatbuffers.Builder, EXPIRES_AT uint64) {
 	builder.PrependUint64Slot(7, EXPIRES_AT, 0)
 }
+func ACLAddExpiresAt(builder *flatbuffers.Builder, EXPIRES_AT uint64) {
+	ACLAddEXPIRES_AT(builder, EXPIRES_AT)
+}
 func ACLAddPAYMENT_TX_HASH(builder *flatbuffers.Builder, PAYMENT_TX_HASH flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(PAYMENT_TX_HASH), 0)
+}
+func ACLAddPaymentTxHash(builder *flatbuffers.Builder, PAYMENT_TX_HASH flatbuffers.UOffsetT) {
+	ACLAddPAYMENT_TX_HASH(builder, PAYMENT_TX_HASH)
 }
 func ACLAddPAYMENT_METHOD(builder *flatbuffers.Builder, PAYMENT_METHOD paymentMethod) {
 	builder.PrependInt8Slot(9, int8(PAYMENT_METHOD), 0)
 }
+func ACLAddPaymentMethod(builder *flatbuffers.Builder, PAYMENT_METHOD paymentMethod) {
+	ACLAddPAYMENT_METHOD(builder, PAYMENT_METHOD)
+}
 func ACLAddPROVIDER_SIGNATURE(builder *flatbuffers.Builder, PROVIDER_SIGNATURE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(PROVIDER_SIGNATURE), 0)
 }
+func ACLAddProviderSignature(builder *flatbuffers.Builder, PROVIDER_SIGNATURE flatbuffers.UOffsetT) {
+	ACLAddPROVIDER_SIGNATURE(builder, PROVIDER_SIGNATURE)
+}
 func ACLStartPROVIDER_SIGNATUREVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(1, numElems, 1)
+}
+func ACLStartProviderSignatureVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return ACLStartPROVIDER_SIGNATUREVector(builder, numElems)
 }
 func ACLEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

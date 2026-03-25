@@ -29,26 +29,26 @@ class MET : Table() {
         __init(_i, _bb)
         return this
     }
-    val MEAN_ELEMENT_THEORY : Byte
+    val meanElementTheory : Byte
         get() {
             val o = __offset(4)
             return if(o != 0) bb.get(o + bb_pos) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsMET(_bb: ByteBuffer): MET = getRootAsMET(_bb, MET())
         fun getRootAsMET(_bb: ByteBuffer, obj: MET): MET {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun METBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$MET")
-        fun createMET(builder: FlatBufferBuilder, MEAN_ELEMENT_THEORY: Byte) : Int {
+        fun createMET(builder: FlatBufferBuilder, meanElementTheory: Byte) : Int {
             builder.startTable(1)
-            addMEAN_ELEMENT_THEORY(builder, MEAN_ELEMENT_THEORY)
+            addMEANELEMENTTHEORY(builder, meanElementTheory)
             return endMET(builder)
         }
         fun startMET(builder: FlatBufferBuilder) = builder.startTable(1)
-        fun addMEAN_ELEMENT_THEORY(builder: FlatBufferBuilder, MEAN_ELEMENT_THEORY: Byte) = builder.addByte(0, MEAN_ELEMENT_THEORY, 0)
+        fun addMEANELEMENTTHEORY(builder: FlatBufferBuilder, meanElementTheory: Byte) = builder.addByte(0, meanElementTheory, 0)
         fun endMET(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

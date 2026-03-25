@@ -173,6 +173,16 @@ def SPPStartDATAVector(builder, numElems):
 def StartDATAVector(builder, numElems):
     return SPPStartDATAVector(builder, numElems)
 
+def SPPCreateDATAVector(builder, data):
+    data = list(data)
+    builder.StartVector(1, len(data), 1)
+    for item in reversed(data):
+        builder.PrependUint8(item)
+    return builder.EndVector()
+
+def CreateDATAVector(builder, data):
+    SPPCreateDATAVector(builder, data)
+
 def SPPEnd(builder):
     return builder.EndObject()
 
@@ -187,21 +197,31 @@ except:
 class SPPT(object):
 
     # SPPT
-    def __init__(self):
-        self.VERSION = 0  # type: int
-        self.PACKET_TYPE = 0  # type: int
-        self.SEC_HDR_FLAG = False  # type: bool
-        self.APID = 0  # type: int
-        self.SEQUENCE_FLAGS = 0  # type: int
-        self.SEQUENCE_COUNT = 0  # type: int
-        self.DATA_LENGTH = 0  # type: int
-        self.DATA = None  # type: List[int]
+    def __init__(
+        self,
+        VERSION = 0,
+        PACKET_TYPE = 0,
+        SEC_HDR_FLAG = False,
+        APID = 0,
+        SEQUENCE_FLAGS = 0,
+        SEQUENCE_COUNT = 0,
+        DATA_LENGTH = 0,
+        DATA = None,
+    ):
+        self.VERSION = VERSION  # type: int
+        self.PACKET_TYPE = PACKET_TYPE  # type: int
+        self.SEC_HDR_FLAG = SEC_HDR_FLAG  # type: bool
+        self.APID = APID  # type: int
+        self.SEQUENCE_FLAGS = SEQUENCE_FLAGS  # type: int
+        self.SEQUENCE_COUNT = SEQUENCE_COUNT  # type: int
+        self.DATA_LENGTH = DATA_LENGTH  # type: int
+        self.DATA = DATA  # type: Optional[List[int]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        SPP = SPP()
-        SPP.Init(buf, pos)
-        return cls.InitFromObj(SPP)
+        tmpSpp = SPP()
+        tmpSpp.Init(buf, pos)
+        return cls.InitFromObj(tmpSpp)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -209,9 +229,9 @@ class SPPT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, SPP):
+    def InitFromObj(cls, tmpSpp):
         x = SPPT()
-        x._UnPack(SPP)
+        x._UnPack(tmpSpp)
         return x
 
     # SPPT

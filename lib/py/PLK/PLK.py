@@ -308,6 +308,16 @@ def PLKStartLICENSEE_PUBKEYVector(builder, numElems):
 def StartLICENSEE_PUBKEYVector(builder, numElems):
     return PLKStartLICENSEE_PUBKEYVector(builder, numElems)
 
+def PLKCreateLICENSEE_PUBKEYVector(builder, data):
+    data = list(data)
+    builder.StartVector(1, len(data), 1)
+    for item in reversed(data):
+        builder.PrependUint8(item)
+    return builder.EndVector()
+
+def CreateLICENSEE_PUBKEYVector(builder, data):
+    PLKCreateLICENSEE_PUBKEYVector(builder, data)
+
 def PLKAddISSUER_PUBKEY(builder, ISSUER_PUBKEY):
     builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(ISSUER_PUBKEY), 0)
 
@@ -319,6 +329,16 @@ def PLKStartISSUER_PUBKEYVector(builder, numElems):
 
 def StartISSUER_PUBKEYVector(builder, numElems):
     return PLKStartISSUER_PUBKEYVector(builder, numElems)
+
+def PLKCreateISSUER_PUBKEYVector(builder, data):
+    data = list(data)
+    builder.StartVector(1, len(data), 1)
+    for item in reversed(data):
+        builder.PrependUint8(item)
+    return builder.EndVector()
+
+def CreateISSUER_PUBKEYVector(builder, data):
+    PLKCreateISSUER_PUBKEYVector(builder, data)
 
 def PLKAddALLOWED_DOMAINS(builder, ALLOWED_DOMAINS):
     builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(ALLOWED_DOMAINS), 0)
@@ -332,6 +352,12 @@ def PLKStartALLOWED_DOMAINSVector(builder, numElems):
 def StartALLOWED_DOMAINSVector(builder, numElems):
     return PLKStartALLOWED_DOMAINSVector(builder, numElems)
 
+def PLKCreateALLOWED_DOMAINSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateALLOWED_DOMAINSVector(builder, data):
+    PLKCreateALLOWED_DOMAINSVector(builder, data)
+
 def PLKAddALLOWED_TLDS(builder, ALLOWED_TLDS):
     builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(ALLOWED_TLDS), 0)
 
@@ -343,6 +369,12 @@ def PLKStartALLOWED_TLDSVector(builder, numElems):
 
 def StartALLOWED_TLDSVector(builder, numElems):
     return PLKStartALLOWED_TLDSVector(builder, numElems)
+
+def PLKCreateALLOWED_TLDSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateALLOWED_TLDSVector(builder, data):
+    PLKCreateALLOWED_TLDSVector(builder, data)
 
 def PLKAddLICENSE_TYPE(builder, LICENSE_TYPE):
     builder.PrependInt8Slot(10, LICENSE_TYPE, 0)
@@ -392,6 +424,16 @@ def PLKStartSIGNATUREVector(builder, numElems):
 def StartSIGNATUREVector(builder, numElems):
     return PLKStartSIGNATUREVector(builder, numElems)
 
+def PLKCreateSIGNATUREVector(builder, data):
+    data = list(data)
+    builder.StartVector(1, len(data), 1)
+    for item in reversed(data):
+        builder.PrependUint8(item)
+    return builder.EndVector()
+
+def CreateSIGNATUREVector(builder, data):
+    PLKCreateSIGNATUREVector(builder, data)
+
 def PLKEnd(builder):
     return builder.EndObject()
 
@@ -406,30 +448,49 @@ except:
 class PLKT(object):
 
     # PLKT
-    def __init__(self):
-        self.LICENSE_ID = None  # type: str
-        self.PLUGIN_ID = None  # type: str
-        self.PLUGIN_VERSION = None  # type: str
-        self.LICENSEE_ORG = None  # type: str
-        self.LICENSEE_EMAIL = None  # type: str
-        self.LICENSEE_PEER_ID = None  # type: str
-        self.LICENSEE_PUBKEY = None  # type: List[int]
-        self.ISSUER_PUBKEY = None  # type: List[int]
-        self.ALLOWED_DOMAINS = None  # type: List[str]
-        self.ALLOWED_TLDS = None  # type: List[str]
-        self.LICENSE_TYPE = 0  # type: int
-        self.MAX_ACTIVATIONS = 0  # type: int
-        self.ISSUED_AT = 0  # type: int
-        self.VALID_FROM = 0  # type: int
-        self.EXPIRES_AT = 0  # type: int
-        self.ISSUER_PEER_ID = None  # type: str
-        self.SIGNATURE = None  # type: List[int]
+    def __init__(
+        self,
+        LICENSE_ID = None,
+        PLUGIN_ID = None,
+        PLUGIN_VERSION = None,
+        LICENSEE_ORG = None,
+        LICENSEE_EMAIL = None,
+        LICENSEE_PEER_ID = None,
+        LICENSEE_PUBKEY = None,
+        ISSUER_PUBKEY = None,
+        ALLOWED_DOMAINS = None,
+        ALLOWED_TLDS = None,
+        LICENSE_TYPE = 0,
+        MAX_ACTIVATIONS = 0,
+        ISSUED_AT = 0,
+        VALID_FROM = 0,
+        EXPIRES_AT = 0,
+        ISSUER_PEER_ID = None,
+        SIGNATURE = None,
+    ):
+        self.LICENSE_ID = LICENSE_ID  # type: Optional[str]
+        self.PLUGIN_ID = PLUGIN_ID  # type: Optional[str]
+        self.PLUGIN_VERSION = PLUGIN_VERSION  # type: Optional[str]
+        self.LICENSEE_ORG = LICENSEE_ORG  # type: Optional[str]
+        self.LICENSEE_EMAIL = LICENSEE_EMAIL  # type: Optional[str]
+        self.LICENSEE_PEER_ID = LICENSEE_PEER_ID  # type: Optional[str]
+        self.LICENSEE_PUBKEY = LICENSEE_PUBKEY  # type: Optional[List[int]]
+        self.ISSUER_PUBKEY = ISSUER_PUBKEY  # type: Optional[List[int]]
+        self.ALLOWED_DOMAINS = ALLOWED_DOMAINS  # type: Optional[List[Optional[str]]]
+        self.ALLOWED_TLDS = ALLOWED_TLDS  # type: Optional[List[Optional[str]]]
+        self.LICENSE_TYPE = LICENSE_TYPE  # type: int
+        self.MAX_ACTIVATIONS = MAX_ACTIVATIONS  # type: int
+        self.ISSUED_AT = ISSUED_AT  # type: int
+        self.VALID_FROM = VALID_FROM  # type: int
+        self.EXPIRES_AT = EXPIRES_AT  # type: int
+        self.ISSUER_PEER_ID = ISSUER_PEER_ID  # type: Optional[str]
+        self.SIGNATURE = SIGNATURE  # type: Optional[List[int]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        PLK = PLK()
-        PLK.Init(buf, pos)
-        return cls.InitFromObj(PLK)
+        tmpPlk = PLK()
+        tmpPlk.Init(buf, pos)
+        return cls.InitFromObj(tmpPlk)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -437,9 +498,9 @@ class PLKT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, PLK):
+    def InitFromObj(cls, tmpPlk):
         x = PLKT()
-        x._UnPack(PLK)
+        x._UnPack(tmpPlk)
         return x
 
     # PLKT

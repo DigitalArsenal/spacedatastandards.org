@@ -87,16 +87,21 @@ def End(builder):
 class AggregateMemberT(object):
 
     # AggregateMemberT
-    def __init__(self):
-        self.NAME = None  # type: str
-        self.TYPE_REF = None  # type: str
-        self.SHORT_DESCRIPTION = None  # type: str
+    def __init__(
+        self,
+        NAME = None,
+        TYPE_REF = None,
+        SHORT_DESCRIPTION = None,
+    ):
+        self.NAME = NAME  # type: Optional[str]
+        self.TYPE_REF = TYPE_REF  # type: Optional[str]
+        self.SHORT_DESCRIPTION = SHORT_DESCRIPTION  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        aggregateMember = AggregateMember()
-        aggregateMember.Init(buf, pos)
-        return cls.InitFromObj(aggregateMember)
+        tmpAggregateMember = AggregateMember()
+        tmpAggregateMember.Init(buf, pos)
+        return cls.InitFromObj(tmpAggregateMember)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -104,18 +109,18 @@ class AggregateMemberT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, aggregateMember):
+    def InitFromObj(cls, tmpAggregateMember):
         x = AggregateMemberT()
-        x._UnPack(aggregateMember)
+        x._UnPack(tmpAggregateMember)
         return x
 
     # AggregateMemberT
-    def _UnPack(self, aggregateMember):
-        if aggregateMember is None:
+    def _UnPack(self, AggregateMember):
+        if AggregateMember is None:
             return
-        self.NAME = aggregateMember.NAME()
-        self.TYPE_REF = aggregateMember.TYPE_REF()
-        self.SHORT_DESCRIPTION = aggregateMember.SHORT_DESCRIPTION()
+        self.NAME = AggregateMember.NAME()
+        self.TYPE_REF = AggregateMember.TYPE_REF()
+        self.SHORT_DESCRIPTION = AggregateMember.SHORT_DESCRIPTION()
 
     # AggregateMemberT
     def Pack(self, builder):
@@ -132,5 +137,5 @@ class AggregateMemberT(object):
             AggregateMemberAddTYPE_REF(builder, TYPE_REF)
         if self.SHORT_DESCRIPTION is not None:
             AggregateMemberAddSHORT_DESCRIPTION(builder, SHORT_DESCRIPTION)
-        aggregateMember = AggregateMemberEnd(builder)
-        return aggregateMember
+        AggregateMember = AggregateMemberEnd(builder)
+        return AggregateMember

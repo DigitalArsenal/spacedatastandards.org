@@ -2,4 +2,194 @@
 
 # namespace: 
 
-# NOTE CommandContainer.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Command container definition
+class CommandContainer(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = CommandContainer()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsCommandContainer(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def CommandContainerBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x58\x54\x43", size_prefixed=size_prefixed)
+
+    # CommandContainer
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Container name
+    # CommandContainer
+    def NAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Entry list
+    # CommandContainer
+    def ENTRY_LIST(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from CommandContainerEntry import CommandContainerEntry
+            obj = CommandContainerEntry()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # CommandContainer
+    def ENTRY_LISTLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # CommandContainer
+    def ENTRY_LISTIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        return o == 0
+
+    # Base container reference
+    # CommandContainer
+    def BASE_CONTAINER(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from BaseContainer import BaseContainer
+            obj = BaseContainer()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+def CommandContainerStart(builder):
+    builder.StartObject(3)
+
+def Start(builder):
+    CommandContainerStart(builder)
+
+def CommandContainerAddNAME(builder, NAME):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(NAME), 0)
+
+def AddNAME(builder, NAME):
+    CommandContainerAddNAME(builder, NAME)
+
+def CommandContainerAddENTRY_LIST(builder, ENTRY_LIST):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(ENTRY_LIST), 0)
+
+def AddENTRY_LIST(builder, ENTRY_LIST):
+    CommandContainerAddENTRY_LIST(builder, ENTRY_LIST)
+
+def CommandContainerStartENTRY_LISTVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartENTRY_LISTVector(builder, numElems):
+    return CommandContainerStartENTRY_LISTVector(builder, numElems)
+
+def CommandContainerCreateENTRY_LISTVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateENTRY_LISTVector(builder, data):
+    CommandContainerCreateENTRY_LISTVector(builder, data)
+
+def CommandContainerAddBASE_CONTAINER(builder, BASE_CONTAINER):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(BASE_CONTAINER), 0)
+
+def AddBASE_CONTAINER(builder, BASE_CONTAINER):
+    CommandContainerAddBASE_CONTAINER(builder, BASE_CONTAINER)
+
+def CommandContainerEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return CommandContainerEnd(builder)
+
+import BaseContainer
+import CommandContainerEntry
+try:
+    from typing import List, Optional
+except:
+    pass
+
+class CommandContainerT(object):
+
+    # CommandContainerT
+    def __init__(
+        self,
+        NAME = None,
+        ENTRY_LIST = None,
+        BASE_CONTAINER = None,
+    ):
+        self.NAME = NAME  # type: Optional[str]
+        self.ENTRY_LIST = ENTRY_LIST  # type: Optional[List[CommandContainerEntry.CommandContainerEntryT]]
+        self.BASE_CONTAINER = BASE_CONTAINER  # type: Optional[BaseContainer.BaseContainerT]
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpCommandContainer = CommandContainer()
+        tmpCommandContainer.Init(buf, pos)
+        return cls.InitFromObj(tmpCommandContainer)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpCommandContainer):
+        x = CommandContainerT()
+        x._UnPack(tmpCommandContainer)
+        return x
+
+    # CommandContainerT
+    def _UnPack(self, CommandContainer):
+        if CommandContainer is None:
+            return
+        self.NAME = CommandContainer.NAME()
+        if not CommandContainer.ENTRY_LISTIsNone():
+            self.ENTRY_LIST = []
+            for i in range(CommandContainer.ENTRY_LISTLength()):
+                if CommandContainer.ENTRY_LIST(i) is None:
+                    self.ENTRY_LIST.append(None)
+                else:
+                    commandContainerEntry_ = CommandContainerEntry.CommandContainerEntryT.InitFromObj(CommandContainer.ENTRY_LIST(i))
+                    self.ENTRY_LIST.append(commandContainerEntry_)
+        if CommandContainer.BASE_CONTAINER() is not None:
+            self.BASE_CONTAINER = BaseContainer.BaseContainerT.InitFromObj(CommandContainer.BASE_CONTAINER())
+
+    # CommandContainerT
+    def Pack(self, builder):
+        if self.NAME is not None:
+            NAME = builder.CreateString(self.NAME)
+        if self.ENTRY_LIST is not None:
+            ENTRY_LISTlist = []
+            for i in range(len(self.ENTRY_LIST)):
+                ENTRY_LISTlist.append(self.ENTRY_LIST[i].Pack(builder))
+            CommandContainerStartENTRY_LISTVector(builder, len(self.ENTRY_LIST))
+            for i in reversed(range(len(self.ENTRY_LIST))):
+                builder.PrependUOffsetTRelative(ENTRY_LISTlist[i])
+            ENTRY_LIST = builder.EndVector()
+        if self.BASE_CONTAINER is not None:
+            BASE_CONTAINER = self.BASE_CONTAINER.Pack(builder)
+        CommandContainerStart(builder)
+        if self.NAME is not None:
+            CommandContainerAddNAME(builder, NAME)
+        if self.ENTRY_LIST is not None:
+            CommandContainerAddENTRY_LIST(builder, ENTRY_LIST)
+        if self.BASE_CONTAINER is not None:
+            CommandContainerAddBASE_CONTAINER(builder, BASE_CONTAINER)
+        CommandContainer = CommandContainerEnd(builder)
+        return CommandContainer

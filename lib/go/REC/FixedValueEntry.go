@@ -51,6 +51,10 @@ func (rcv *FixedValueEntry) BINARY_VALUE() []byte {
 	return nil
 }
 
+func (rcv *FixedValueEntry) BinaryValue() []byte {
+	return rcv.BINARY_VALUE()
+}
+
 /// Binary value (hex string)
 /// Size in bits
 func (rcv *FixedValueEntry) SIZE_IN_BITS() uint16 {
@@ -61,9 +65,17 @@ func (rcv *FixedValueEntry) SIZE_IN_BITS() uint16 {
 	return 0
 }
 
+func (rcv *FixedValueEntry) SizeInBits() uint16 {
+	return rcv.SIZE_IN_BITS()
+}
+
 /// Size in bits
 func (rcv *FixedValueEntry) MutateSIZE_IN_BITS(n uint16) bool {
 	return rcv._tab.MutateUint16Slot(6, n)
+}
+
+func (rcv *FixedValueEntry) MutateSizeInBits(n uint16) bool {
+	return rcv.MutateSIZE_IN_BITS(n)
 }
 
 /// Name/description
@@ -73,6 +85,10 @@ func (rcv *FixedValueEntry) NAME() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *FixedValueEntry) Name() []byte {
+	return rcv.NAME()
 }
 
 /// Name/description
@@ -90,6 +106,10 @@ func (rcv *FixedValueEntry) LOCATION(obj *LocationInContainer) *LocationInContai
 	return nil
 }
 
+func (rcv *FixedValueEntry) Location(obj *LocationInContainer) *LocationInContainer {
+	return rcv.LOCATION(obj)
+}
+
 /// Location in container
 func FixedValueEntryStart(builder *flatbuffers.Builder) {
 	builder.StartObject(4)
@@ -97,14 +117,26 @@ func FixedValueEntryStart(builder *flatbuffers.Builder) {
 func FixedValueEntryAddBINARY_VALUE(builder *flatbuffers.Builder, BINARY_VALUE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(BINARY_VALUE), 0)
 }
+func FixedValueEntryAddBinaryValue(builder *flatbuffers.Builder, BINARY_VALUE flatbuffers.UOffsetT) {
+	FixedValueEntryAddBINARY_VALUE(builder, BINARY_VALUE)
+}
 func FixedValueEntryAddSIZE_IN_BITS(builder *flatbuffers.Builder, SIZE_IN_BITS uint16) {
 	builder.PrependUint16Slot(1, SIZE_IN_BITS, 0)
+}
+func FixedValueEntryAddSizeInBits(builder *flatbuffers.Builder, SIZE_IN_BITS uint16) {
+	FixedValueEntryAddSIZE_IN_BITS(builder, SIZE_IN_BITS)
 }
 func FixedValueEntryAddNAME(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(NAME), 0)
 }
+func FixedValueEntryAddName(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
+	FixedValueEntryAddNAME(builder, NAME)
+}
 func FixedValueEntryAddLOCATION(builder *flatbuffers.Builder, LOCATION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(LOCATION), 0)
+}
+func FixedValueEntryAddLocation(builder *flatbuffers.Builder, LOCATION flatbuffers.UOffsetT) {
+	FixedValueEntryAddLOCATION(builder, LOCATION)
 }
 func FixedValueEntryEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

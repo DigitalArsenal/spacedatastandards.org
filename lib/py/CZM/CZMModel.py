@@ -254,27 +254,43 @@ except:
 class CZMModelT(object):
 
     # CZMModelT
-    def __init__(self):
-        self.SHOW = False  # type: bool
-        self.GLTF = None  # type: str
-        self.SCALE = 0.0  # type: float
-        self.MINIMUM_PIXEL_SIZE = 0.0  # type: float
-        self.MAXIMUM_SCALE = 0.0  # type: float
-        self.HEIGHT_REFERENCE = 0  # type: int
-        self.COLOR = None  # type: Optional[CZMColor.CZMColorT]
-        self.INCREMENTALLY_LOAD_TEXTURES = False  # type: bool
-        self.RUN_ANIMATIONS = False  # type: bool
-        self.SHADOWS = None  # type: str
-        self.SILHOUETTE_COLOR = None  # type: Optional[CZMColor.CZMColorT]
-        self.SILHOUETTE_SIZE = 0.0  # type: float
-        self.COLOR_BLEND_MODE = None  # type: str
-        self.COLOR_BLEND_AMOUNT = 0.0  # type: float
+    def __init__(
+        self,
+        SHOW = False,
+        GLTF = None,
+        SCALE = 0.0,
+        MINIMUM_PIXEL_SIZE = 0.0,
+        MAXIMUM_SCALE = 0.0,
+        HEIGHT_REFERENCE = 0,
+        COLOR = None,
+        INCREMENTALLY_LOAD_TEXTURES = False,
+        RUN_ANIMATIONS = False,
+        SHADOWS = None,
+        SILHOUETTE_COLOR = None,
+        SILHOUETTE_SIZE = 0.0,
+        COLOR_BLEND_MODE = None,
+        COLOR_BLEND_AMOUNT = 0.0,
+    ):
+        self.SHOW = SHOW  # type: bool
+        self.GLTF = GLTF  # type: Optional[str]
+        self.SCALE = SCALE  # type: float
+        self.MINIMUM_PIXEL_SIZE = MINIMUM_PIXEL_SIZE  # type: float
+        self.MAXIMUM_SCALE = MAXIMUM_SCALE  # type: float
+        self.HEIGHT_REFERENCE = HEIGHT_REFERENCE  # type: int
+        self.COLOR = COLOR  # type: Optional[CZMColor.CZMColorT]
+        self.INCREMENTALLY_LOAD_TEXTURES = INCREMENTALLY_LOAD_TEXTURES  # type: bool
+        self.RUN_ANIMATIONS = RUN_ANIMATIONS  # type: bool
+        self.SHADOWS = SHADOWS  # type: Optional[str]
+        self.SILHOUETTE_COLOR = SILHOUETTE_COLOR  # type: Optional[CZMColor.CZMColorT]
+        self.SILHOUETTE_SIZE = SILHOUETTE_SIZE  # type: float
+        self.COLOR_BLEND_MODE = COLOR_BLEND_MODE  # type: Optional[str]
+        self.COLOR_BLEND_AMOUNT = COLOR_BLEND_AMOUNT  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        czmmodel = CZMModel()
-        czmmodel.Init(buf, pos)
-        return cls.InitFromObj(czmmodel)
+        tmpCzmmodel = CZMModel()
+        tmpCzmmodel.Init(buf, pos)
+        return cls.InitFromObj(tmpCzmmodel)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -282,31 +298,31 @@ class CZMModelT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, czmmodel):
+    def InitFromObj(cls, tmpCzmmodel):
         x = CZMModelT()
-        x._UnPack(czmmodel)
+        x._UnPack(tmpCzmmodel)
         return x
 
     # CZMModelT
-    def _UnPack(self, czmmodel):
-        if czmmodel is None:
+    def _UnPack(self, CZMModel):
+        if CZMModel is None:
             return
-        self.SHOW = czmmodel.SHOW()
-        self.GLTF = czmmodel.GLTF()
-        self.SCALE = czmmodel.SCALE()
-        self.MINIMUM_PIXEL_SIZE = czmmodel.MINIMUM_PIXEL_SIZE()
-        self.MAXIMUM_SCALE = czmmodel.MAXIMUM_SCALE()
-        self.HEIGHT_REFERENCE = czmmodel.HEIGHT_REFERENCE()
-        if czmmodel.COLOR() is not None:
-            self.COLOR = CZMColor.CZMColorT.InitFromObj(czmmodel.COLOR())
-        self.INCREMENTALLY_LOAD_TEXTURES = czmmodel.INCREMENTALLY_LOAD_TEXTURES()
-        self.RUN_ANIMATIONS = czmmodel.RUN_ANIMATIONS()
-        self.SHADOWS = czmmodel.SHADOWS()
-        if czmmodel.SILHOUETTE_COLOR() is not None:
-            self.SILHOUETTE_COLOR = CZMColor.CZMColorT.InitFromObj(czmmodel.SILHOUETTE_COLOR())
-        self.SILHOUETTE_SIZE = czmmodel.SILHOUETTE_SIZE()
-        self.COLOR_BLEND_MODE = czmmodel.COLOR_BLEND_MODE()
-        self.COLOR_BLEND_AMOUNT = czmmodel.COLOR_BLEND_AMOUNT()
+        self.SHOW = CZMModel.SHOW()
+        self.GLTF = CZMModel.GLTF()
+        self.SCALE = CZMModel.SCALE()
+        self.MINIMUM_PIXEL_SIZE = CZMModel.MINIMUM_PIXEL_SIZE()
+        self.MAXIMUM_SCALE = CZMModel.MAXIMUM_SCALE()
+        self.HEIGHT_REFERENCE = CZMModel.HEIGHT_REFERENCE()
+        if CZMModel.COLOR() is not None:
+            self.COLOR = CZMColor.CZMColorT.InitFromObj(CZMModel.COLOR())
+        self.INCREMENTALLY_LOAD_TEXTURES = CZMModel.INCREMENTALLY_LOAD_TEXTURES()
+        self.RUN_ANIMATIONS = CZMModel.RUN_ANIMATIONS()
+        self.SHADOWS = CZMModel.SHADOWS()
+        if CZMModel.SILHOUETTE_COLOR() is not None:
+            self.SILHOUETTE_COLOR = CZMColor.CZMColorT.InitFromObj(CZMModel.SILHOUETTE_COLOR())
+        self.SILHOUETTE_SIZE = CZMModel.SILHOUETTE_SIZE()
+        self.COLOR_BLEND_MODE = CZMModel.COLOR_BLEND_MODE()
+        self.COLOR_BLEND_AMOUNT = CZMModel.COLOR_BLEND_AMOUNT()
 
     # CZMModelT
     def Pack(self, builder):
@@ -340,5 +356,5 @@ class CZMModelT(object):
         if self.COLOR_BLEND_MODE is not None:
             CZMModelAddCOLOR_BLEND_MODE(builder, COLOR_BLEND_MODE)
         CZMModelAddCOLOR_BLEND_AMOUNT(builder, self.COLOR_BLEND_AMOUNT)
-        czmmodel = CZMModelEnd(builder)
-        return czmmodel
+        CZMModel = CZMModelEnd(builder)
+        return CZMModel

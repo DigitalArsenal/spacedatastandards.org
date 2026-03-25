@@ -184,23 +184,35 @@ def End(builder):
 class StateVectorT(object):
 
     # StateVectorT
-    def __init__(self):
-        self.EPOCH = None  # type: str
-        self.X = 0.0  # type: float
-        self.Y = 0.0  # type: float
-        self.Z = 0.0  # type: float
-        self.X_DOT = 0.0  # type: float
-        self.Y_DOT = 0.0  # type: float
-        self.Z_DOT = 0.0  # type: float
-        self.X_DDOT = 0.0  # type: float
-        self.Y_DDOT = 0.0  # type: float
-        self.Z_DDOT = 0.0  # type: float
+    def __init__(
+        self,
+        EPOCH = None,
+        X = 0.0,
+        Y = 0.0,
+        Z = 0.0,
+        X_DOT = 0.0,
+        Y_DOT = 0.0,
+        Z_DOT = 0.0,
+        X_DDOT = 0.0,
+        Y_DDOT = 0.0,
+        Z_DDOT = 0.0,
+    ):
+        self.EPOCH = EPOCH  # type: Optional[str]
+        self.X = X  # type: float
+        self.Y = Y  # type: float
+        self.Z = Z  # type: float
+        self.X_DOT = X_DOT  # type: float
+        self.Y_DOT = Y_DOT  # type: float
+        self.Z_DOT = Z_DOT  # type: float
+        self.X_DDOT = X_DDOT  # type: float
+        self.Y_DDOT = Y_DDOT  # type: float
+        self.Z_DDOT = Z_DDOT  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        stateVector = StateVector()
-        stateVector.Init(buf, pos)
-        return cls.InitFromObj(stateVector)
+        tmpStateVector = StateVector()
+        tmpStateVector.Init(buf, pos)
+        return cls.InitFromObj(tmpStateVector)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -208,25 +220,25 @@ class StateVectorT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, stateVector):
+    def InitFromObj(cls, tmpStateVector):
         x = StateVectorT()
-        x._UnPack(stateVector)
+        x._UnPack(tmpStateVector)
         return x
 
     # StateVectorT
-    def _UnPack(self, stateVector):
-        if stateVector is None:
+    def _UnPack(self, StateVector):
+        if StateVector is None:
             return
-        self.EPOCH = stateVector.EPOCH()
-        self.X = stateVector.X()
-        self.Y = stateVector.Y()
-        self.Z = stateVector.Z()
-        self.X_DOT = stateVector.X_DOT()
-        self.Y_DOT = stateVector.Y_DOT()
-        self.Z_DOT = stateVector.Z_DOT()
-        self.X_DDOT = stateVector.X_DDOT()
-        self.Y_DDOT = stateVector.Y_DDOT()
-        self.Z_DDOT = stateVector.Z_DDOT()
+        self.EPOCH = StateVector.EPOCH()
+        self.X = StateVector.X()
+        self.Y = StateVector.Y()
+        self.Z = StateVector.Z()
+        self.X_DOT = StateVector.X_DOT()
+        self.Y_DOT = StateVector.Y_DOT()
+        self.Z_DOT = StateVector.Z_DOT()
+        self.X_DDOT = StateVector.X_DDOT()
+        self.Y_DDOT = StateVector.Y_DDOT()
+        self.Z_DDOT = StateVector.Z_DDOT()
 
     # StateVectorT
     def Pack(self, builder):
@@ -244,5 +256,5 @@ class StateVectorT(object):
         StateVectorAddX_DDOT(builder, self.X_DDOT)
         StateVectorAddY_DDOT(builder, self.Y_DDOT)
         StateVectorAddZ_DDOT(builder, self.Z_DDOT)
-        stateVector = StateVectorEnd(builder)
-        return stateVector
+        StateVector = StateVectorEnd(builder)
+        return StateVector

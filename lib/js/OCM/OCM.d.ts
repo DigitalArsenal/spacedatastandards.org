@@ -3,9 +3,12 @@ import { Header, HeaderT } from './Header.js';
 import { Maneuver, ManeuverT } from './Maneuver.js';
 import { Metadata, MetadataT } from './Metadata.js';
 import { OrbitDetermination, OrbitDeterminationT } from './OrbitDetermination.js';
+import { PPEOrbitalElementRecord, PPEOrbitalElementRecordT } from './PPEOrbitalElementRecord.js';
+import { PPEPositionRecord, PPEPositionRecordT } from './PPEPositionRecord.js';
 import { Perturbations, PerturbationsT } from './Perturbations.js';
 import { PhysicalProperties, PhysicalPropertiesT } from './PhysicalProperties.js';
 import { UserDefinedParameters, UserDefinedParametersT } from './UserDefinedParameters.js';
+import { trajectoryType } from './trajectoryType.js';
 /**
  * Orbit Comprehensive Message
  */
@@ -25,10 +28,18 @@ export declare class OCM implements flatbuffers.IUnpackableObject<OCMT> {
      */
     METADATA(obj?: Metadata): Metadata | null;
     /**
-     * Trajectory type (e.g., PROPAGATED, ESTIMATED).
+     * Trajectory state representation type.
+     * Determines how orbit state data is parameterized in this message.
+     * For CARTESIAN_PV/CARTESIAN_PVA, use STATE_DATA array.
+     * For POLYNOMIAL_POS/POLYNOMIAL_OE, use the corresponding polynomial record arrays.
      */
-    TRAJ_TYPE(): string | null;
-    TRAJ_TYPE(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    TRAJ_TYPE(): trajectoryType;
+    /**
+     * Legacy trajectory type string for backward compatibility and extended types
+     * (e.g., "PROPAGATED", "ESTIMATED", "FILTERED").
+     */
+    TRAJ_TYPE_DESCRIPTION(): string | null;
+    TRAJ_TYPE_DESCRIPTION(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     /**
      * Time interval between state vectors in seconds (required for time-series data).
      */
@@ -56,6 +67,22 @@ export declare class OCM implements flatbuffers.IUnpackableObject<OCMT> {
     covarianceDataLength(): number;
     covarianceDataArray(): Float64Array | null;
     /**
+     * Polynomial position records.
+     * Used when TRAJ_TYPE is POLYNOMIAL_POS. Each record covers a time segment
+     * with polynomial coefficients for X, Y, Z position (and optionally velocity).
+     * See PPE schema for record structure and evaluation procedure.
+     */
+    POLYNOMIAL_POSITION_RECORDS(index: number, obj?: PPEPositionRecord): PPEPositionRecord | null;
+    polynomialPositionRecordsLength(): number;
+    /**
+     * Polynomial orbital element records.
+     * Used when TRAJ_TYPE is POLYNOMIAL_OE. Each record covers a time segment
+     * with polynomial coefficients for classical orbital elements.
+     * See PPE schema for record structure and evaluation procedure.
+     */
+    POLYNOMIAL_OE_RECORDS(index: number, obj?: PPEOrbitalElementRecord): PPEOrbitalElementRecord | null;
+    polynomialOeRecordsLength(): number;
+    /**
      * Physical properties of the space object.
      */
     PHYSICAL_PROPERTIES(obj?: PhysicalProperties): PhysicalProperties | null;
@@ -80,7 +107,8 @@ export declare class OCM implements flatbuffers.IUnpackableObject<OCMT> {
     static startOCM(builder: flatbuffers.Builder): void;
     static addHeader(builder: flatbuffers.Builder, HEADEROffset: flatbuffers.Offset): void;
     static addMetadata(builder: flatbuffers.Builder, METADATAOffset: flatbuffers.Offset): void;
-    static addTrajType(builder: flatbuffers.Builder, TRAJ_TYPEOffset: flatbuffers.Offset): void;
+    static addTrajType(builder: flatbuffers.Builder, TRAJ_TYPE: trajectoryType): void;
+    static addTrajTypeDescription(builder: flatbuffers.Builder, TRAJ_TYPE_DESCRIPTIONOffset: flatbuffers.Offset): void;
     static addStateStepSize(builder: flatbuffers.Builder, STATE_STEP_SIZE: number): void;
     static addStateVectorSize(builder: flatbuffers.Builder, STATE_VECTOR_SIZE: number): void;
     static addStateData(builder: flatbuffers.Builder, STATE_DATAOffset: flatbuffers.Offset): void;
@@ -97,6 +125,12 @@ export declare class OCM implements flatbuffers.IUnpackableObject<OCMT> {
      */
     static createCovarianceDataVector(builder: flatbuffers.Builder, data: number[] | Uint8Array): flatbuffers.Offset;
     static startCovarianceDataVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addPolynomialPositionRecords(builder: flatbuffers.Builder, POLYNOMIAL_POSITION_RECORDSOffset: flatbuffers.Offset): void;
+    static createPolynomialPositionRecordsVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
+    static startPolynomialPositionRecordsVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addPolynomialOeRecords(builder: flatbuffers.Builder, POLYNOMIAL_OE_RECORDSOffset: flatbuffers.Offset): void;
+    static createPolynomialOeRecordsVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
+    static startPolynomialOeRecordsVector(builder: flatbuffers.Builder, numElems: number): void;
     static addPhysicalProperties(builder: flatbuffers.Builder, PHYSICAL_PROPERTIESOffset: flatbuffers.Offset): void;
     static addManeuverData(builder: flatbuffers.Builder, MANEUVER_DATAOffset: flatbuffers.Offset): void;
     static createManeuverDataVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
@@ -115,17 +149,20 @@ export declare class OCM implements flatbuffers.IUnpackableObject<OCMT> {
 export declare class OCMT implements flatbuffers.IGeneratedObject {
     HEADER: HeaderT | null;
     METADATA: MetadataT | null;
-    TRAJ_TYPE: string | Uint8Array | null;
+    TRAJ_TYPE: trajectoryType;
+    TRAJ_TYPE_DESCRIPTION: string | Uint8Array | null;
     STATE_STEP_SIZE: number;
     STATE_VECTOR_SIZE: number;
     STATE_DATA: (number)[];
     COVARIANCE_DATA: (number)[];
+    POLYNOMIAL_POSITION_RECORDS: (PPEPositionRecordT)[];
+    POLYNOMIAL_OE_RECORDS: (PPEOrbitalElementRecordT)[];
     PHYSICAL_PROPERTIES: PhysicalPropertiesT | null;
     MANEUVER_DATA: (ManeuverT)[];
     PERTURBATIONS: PerturbationsT | null;
     ORBIT_DETERMINATION: OrbitDeterminationT | null;
     USER_DEFINED_PARAMETERS: (UserDefinedParametersT)[];
-    constructor(HEADER?: HeaderT | null, METADATA?: MetadataT | null, TRAJ_TYPE?: string | Uint8Array | null, STATE_STEP_SIZE?: number, STATE_VECTOR_SIZE?: number, STATE_DATA?: (number)[], COVARIANCE_DATA?: (number)[], PHYSICAL_PROPERTIES?: PhysicalPropertiesT | null, MANEUVER_DATA?: (ManeuverT)[], PERTURBATIONS?: PerturbationsT | null, ORBIT_DETERMINATION?: OrbitDeterminationT | null, USER_DEFINED_PARAMETERS?: (UserDefinedParametersT)[]);
+    constructor(HEADER?: HeaderT | null, METADATA?: MetadataT | null, TRAJ_TYPE?: trajectoryType, TRAJ_TYPE_DESCRIPTION?: string | Uint8Array | null, STATE_STEP_SIZE?: number, STATE_VECTOR_SIZE?: number, STATE_DATA?: (number)[], COVARIANCE_DATA?: (number)[], POLYNOMIAL_POSITION_RECORDS?: (PPEPositionRecordT)[], POLYNOMIAL_OE_RECORDS?: (PPEOrbitalElementRecordT)[], PHYSICAL_PROPERTIES?: PhysicalPropertiesT | null, MANEUVER_DATA?: (ManeuverT)[], PERTURBATIONS?: PerturbationsT | null, ORBIT_DETERMINATION?: OrbitDeterminationT | null, USER_DEFINED_PARAMETERS?: (UserDefinedParametersT)[]);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=OCM.d.ts.map

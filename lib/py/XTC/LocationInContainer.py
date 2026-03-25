@@ -73,15 +73,19 @@ def End(builder):
 class LocationInContainerT(object):
 
     # LocationInContainerT
-    def __init__(self):
-        self.REFERENCE_LOCATION = 2  # type: int
-        self.OFFSET_IN_BITS = 0  # type: int
+    def __init__(
+        self,
+        REFERENCE_LOCATION = 2,
+        OFFSET_IN_BITS = 0,
+    ):
+        self.REFERENCE_LOCATION = REFERENCE_LOCATION  # type: int
+        self.OFFSET_IN_BITS = OFFSET_IN_BITS  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        locationInContainer = LocationInContainer()
-        locationInContainer.Init(buf, pos)
-        return cls.InitFromObj(locationInContainer)
+        tmpLocationInContainer = LocationInContainer()
+        tmpLocationInContainer.Init(buf, pos)
+        return cls.InitFromObj(tmpLocationInContainer)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -89,22 +93,22 @@ class LocationInContainerT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, locationInContainer):
+    def InitFromObj(cls, tmpLocationInContainer):
         x = LocationInContainerT()
-        x._UnPack(locationInContainer)
+        x._UnPack(tmpLocationInContainer)
         return x
 
     # LocationInContainerT
-    def _UnPack(self, locationInContainer):
-        if locationInContainer is None:
+    def _UnPack(self, LocationInContainer):
+        if LocationInContainer is None:
             return
-        self.REFERENCE_LOCATION = locationInContainer.REFERENCE_LOCATION()
-        self.OFFSET_IN_BITS = locationInContainer.OFFSET_IN_BITS()
+        self.REFERENCE_LOCATION = LocationInContainer.REFERENCE_LOCATION()
+        self.OFFSET_IN_BITS = LocationInContainer.OFFSET_IN_BITS()
 
     # LocationInContainerT
     def Pack(self, builder):
         LocationInContainerStart(builder)
         LocationInContainerAddREFERENCE_LOCATION(builder, self.REFERENCE_LOCATION)
         LocationInContainerAddOFFSET_IN_BITS(builder, self.OFFSET_IN_BITS)
-        locationInContainer = LocationInContainerEnd(builder)
-        return locationInContainer
+        LocationInContainer = LocationInContainerEnd(builder)
+        return LocationInContainer

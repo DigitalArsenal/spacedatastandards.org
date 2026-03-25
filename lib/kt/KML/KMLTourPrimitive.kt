@@ -32,8 +32,8 @@ class KMLTourPrimitive : Table() {
     /**
      * FlyTo
      */
-    val FLY_TO : KMLFlyTo? get() = FLY_TO(KMLFlyTo())
-    fun FLY_TO(obj: KMLFlyTo) : KMLFlyTo? {
+    val flyTo : KMLFlyTo? get() = flyTo(KMLFlyTo())
+    fun flyTo(obj: KMLFlyTo) : KMLFlyTo? {
         val o = __offset(4)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -44,8 +44,8 @@ class KMLTourPrimitive : Table() {
     /**
      * Wait
      */
-    val WAIT : KMLWait? get() = WAIT(KMLWait())
-    fun WAIT(obj: KMLWait) : KMLWait? {
+    val wait : KMLWait? get() = wait(KMLWait())
+    fun wait(obj: KMLWait) : KMLWait? {
         val o = __offset(6)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -56,8 +56,8 @@ class KMLTourPrimitive : Table() {
     /**
      * AnimatedUpdate
      */
-    val ANIMATED_UPDATE : KMLAnimatedUpdate? get() = ANIMATED_UPDATE(KMLAnimatedUpdate())
-    fun ANIMATED_UPDATE(obj: KMLAnimatedUpdate) : KMLAnimatedUpdate? {
+    val animatedUpdate : KMLAnimatedUpdate? get() = animatedUpdate(KMLAnimatedUpdate())
+    fun animatedUpdate(obj: KMLAnimatedUpdate) : KMLAnimatedUpdate? {
         val o = __offset(8)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -68,8 +68,8 @@ class KMLTourPrimitive : Table() {
     /**
      * TourControl
      */
-    val TOUR_CONTROL : KMLTourControl? get() = TOUR_CONTROL(KMLTourControl())
-    fun TOUR_CONTROL(obj: KMLTourControl) : KMLTourControl? {
+    val tourControl : KMLTourControl? get() = tourControl(KMLTourControl())
+    fun tourControl(obj: KMLTourControl) : KMLTourControl? {
         val o = __offset(10)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -80,8 +80,8 @@ class KMLTourPrimitive : Table() {
     /**
      * SoundCue
      */
-    val SOUND_CUE : KMLSoundCue? get() = SOUND_CUE(KMLSoundCue())
-    fun SOUND_CUE(obj: KMLSoundCue) : KMLSoundCue? {
+    val soundCue : KMLSoundCue? get() = soundCue(KMLSoundCue())
+    fun soundCue(obj: KMLSoundCue) : KMLSoundCue? {
         val o = __offset(12)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -90,27 +90,27 @@ class KMLTourPrimitive : Table() {
         }
     }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsKMLTourPrimitive(_bb: ByteBuffer): KMLTourPrimitive = getRootAsKMLTourPrimitive(_bb, KMLTourPrimitive())
         fun getRootAsKMLTourPrimitive(_bb: ByteBuffer, obj: KMLTourPrimitive): KMLTourPrimitive {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createKMLTourPrimitive(builder: FlatBufferBuilder, FLY_TOOffset: Int, WAITOffset: Int, ANIMATED_UPDATEOffset: Int, TOUR_CONTROLOffset: Int, SOUND_CUEOffset: Int) : Int {
+        fun createKMLTourPrimitive(builder: FlatBufferBuilder, flyToOffset: Int, waitOffset: Int, animatedUpdateOffset: Int, tourControlOffset: Int, soundCueOffset: Int) : Int {
             builder.startTable(5)
-            addSOUND_CUE(builder, SOUND_CUEOffset)
-            addTOUR_CONTROL(builder, TOUR_CONTROLOffset)
-            addANIMATED_UPDATE(builder, ANIMATED_UPDATEOffset)
-            addWAIT(builder, WAITOffset)
-            addFLY_TO(builder, FLY_TOOffset)
+            addSOUNDCUE(builder, soundCueOffset)
+            addTOURCONTROL(builder, tourControlOffset)
+            addANIMATEDUPDATE(builder, animatedUpdateOffset)
+            addWAIT(builder, waitOffset)
+            addFLYTO(builder, flyToOffset)
             return endKMLTourPrimitive(builder)
         }
         fun startKMLTourPrimitive(builder: FlatBufferBuilder) = builder.startTable(5)
-        fun addFLY_TO(builder: FlatBufferBuilder, FLY_TO: Int) = builder.addOffset(0, FLY_TO, 0)
-        fun addWAIT(builder: FlatBufferBuilder, WAIT: Int) = builder.addOffset(1, WAIT, 0)
-        fun addANIMATED_UPDATE(builder: FlatBufferBuilder, ANIMATED_UPDATE: Int) = builder.addOffset(2, ANIMATED_UPDATE, 0)
-        fun addTOUR_CONTROL(builder: FlatBufferBuilder, TOUR_CONTROL: Int) = builder.addOffset(3, TOUR_CONTROL, 0)
-        fun addSOUND_CUE(builder: FlatBufferBuilder, SOUND_CUE: Int) = builder.addOffset(4, SOUND_CUE, 0)
+        fun addFLYTO(builder: FlatBufferBuilder, flyTo: Int) = builder.addOffset(0, flyTo, 0)
+        fun addWAIT(builder: FlatBufferBuilder, wait: Int) = builder.addOffset(1, wait, 0)
+        fun addANIMATEDUPDATE(builder: FlatBufferBuilder, animatedUpdate: Int) = builder.addOffset(2, animatedUpdate, 0)
+        fun addTOURCONTROL(builder: FlatBufferBuilder, tourControl: Int) = builder.addOffset(3, tourControl, 0)
+        fun addSOUNDCUE(builder: FlatBufferBuilder, soundCue: Int) = builder.addOffset(4, soundCue, 0)
         fun endKMLTourPrimitive(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

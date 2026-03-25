@@ -51,6 +51,10 @@ func (rcv *KMLStyle) ID() []byte {
 	return nil
 }
 
+func (rcv *KMLStyle) Id() []byte {
+	return rcv.ID()
+}
+
 /// Style identifier
 /// Icon style
 func (rcv *KMLStyle) ICON_STYLE(obj *KMLIconStyle) *KMLIconStyle {
@@ -64,6 +68,10 @@ func (rcv *KMLStyle) ICON_STYLE(obj *KMLIconStyle) *KMLIconStyle {
 		return obj
 	}
 	return nil
+}
+
+func (rcv *KMLStyle) IconStyle(obj *KMLIconStyle) *KMLIconStyle {
+	return rcv.ICON_STYLE(obj)
 }
 
 /// Icon style
@@ -81,6 +89,10 @@ func (rcv *KMLStyle) LABEL_STYLE(obj *KMLLabelStyle) *KMLLabelStyle {
 	return nil
 }
 
+func (rcv *KMLStyle) LabelStyle(obj *KMLLabelStyle) *KMLLabelStyle {
+	return rcv.LABEL_STYLE(obj)
+}
+
 /// Label style
 /// Line style
 func (rcv *KMLStyle) LINE_STYLE(obj *KMLLineStyle) *KMLLineStyle {
@@ -94,6 +106,10 @@ func (rcv *KMLStyle) LINE_STYLE(obj *KMLLineStyle) *KMLLineStyle {
 		return obj
 	}
 	return nil
+}
+
+func (rcv *KMLStyle) LineStyle(obj *KMLLineStyle) *KMLLineStyle {
+	return rcv.LINE_STYLE(obj)
 }
 
 /// Line style
@@ -111,6 +127,10 @@ func (rcv *KMLStyle) POLY_STYLE(obj *KMLPolyStyle) *KMLPolyStyle {
 	return nil
 }
 
+func (rcv *KMLStyle) PolyStyle(obj *KMLPolyStyle) *KMLPolyStyle {
+	return rcv.POLY_STYLE(obj)
+}
+
 /// Polygon style
 /// Balloon style
 func (rcv *KMLStyle) BALLOON_STYLE(obj *KMLBalloonStyle) *KMLBalloonStyle {
@@ -124,6 +144,10 @@ func (rcv *KMLStyle) BALLOON_STYLE(obj *KMLBalloonStyle) *KMLBalloonStyle {
 		return obj
 	}
 	return nil
+}
+
+func (rcv *KMLStyle) BalloonStyle(obj *KMLBalloonStyle) *KMLBalloonStyle {
+	return rcv.BALLOON_STYLE(obj)
 }
 
 /// Balloon style
@@ -141,6 +165,10 @@ func (rcv *KMLStyle) LIST_STYLE(obj *KMLListStyle) *KMLListStyle {
 	return nil
 }
 
+func (rcv *KMLStyle) ListStyle(obj *KMLListStyle) *KMLListStyle {
+	return rcv.LIST_STYLE(obj)
+}
+
 /// List style
 func KMLStyleStart(builder *flatbuffers.Builder) {
 	builder.StartObject(7)
@@ -148,23 +176,44 @@ func KMLStyleStart(builder *flatbuffers.Builder) {
 func KMLStyleAddID(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ID), 0)
 }
+func KMLStyleAddId(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
+	KMLStyleAddID(builder, ID)
+}
 func KMLStyleAddICON_STYLE(builder *flatbuffers.Builder, ICON_STYLE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(ICON_STYLE), 0)
+}
+func KMLStyleAddIconStyle(builder *flatbuffers.Builder, ICON_STYLE flatbuffers.UOffsetT) {
+	KMLStyleAddICON_STYLE(builder, ICON_STYLE)
 }
 func KMLStyleAddLABEL_STYLE(builder *flatbuffers.Builder, LABEL_STYLE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(LABEL_STYLE), 0)
 }
+func KMLStyleAddLabelStyle(builder *flatbuffers.Builder, LABEL_STYLE flatbuffers.UOffsetT) {
+	KMLStyleAddLABEL_STYLE(builder, LABEL_STYLE)
+}
 func KMLStyleAddLINE_STYLE(builder *flatbuffers.Builder, LINE_STYLE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(LINE_STYLE), 0)
+}
+func KMLStyleAddLineStyle(builder *flatbuffers.Builder, LINE_STYLE flatbuffers.UOffsetT) {
+	KMLStyleAddLINE_STYLE(builder, LINE_STYLE)
 }
 func KMLStyleAddPOLY_STYLE(builder *flatbuffers.Builder, POLY_STYLE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(POLY_STYLE), 0)
 }
+func KMLStyleAddPolyStyle(builder *flatbuffers.Builder, POLY_STYLE flatbuffers.UOffsetT) {
+	KMLStyleAddPOLY_STYLE(builder, POLY_STYLE)
+}
 func KMLStyleAddBALLOON_STYLE(builder *flatbuffers.Builder, BALLOON_STYLE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(BALLOON_STYLE), 0)
 }
+func KMLStyleAddBalloonStyle(builder *flatbuffers.Builder, BALLOON_STYLE flatbuffers.UOffsetT) {
+	KMLStyleAddBALLOON_STYLE(builder, BALLOON_STYLE)
+}
 func KMLStyleAddLIST_STYLE(builder *flatbuffers.Builder, LIST_STYLE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(LIST_STYLE), 0)
+}
+func KMLStyleAddListStyle(builder *flatbuffers.Builder, LIST_STYLE flatbuffers.UOffsetT) {
+	KMLStyleAddLIST_STYLE(builder, LIST_STYLE)
 }
 func KMLStyleEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

@@ -51,6 +51,10 @@ func (rcv *PricingTier) NAME() []byte {
 	return nil
 }
 
+func (rcv *PricingTier) Name() []byte {
+	return rcv.NAME()
+}
+
 /// Tier name, e.g., "Basic", "Pro", "Enterprise"
 /// Price in smallest unit (cents, satoshis, etc.)
 func (rcv *PricingTier) PRICE_AMOUNT() uint64 {
@@ -61,9 +65,17 @@ func (rcv *PricingTier) PRICE_AMOUNT() uint64 {
 	return 0
 }
 
+func (rcv *PricingTier) PriceAmount() uint64 {
+	return rcv.PRICE_AMOUNT()
+}
+
 /// Price in smallest unit (cents, satoshis, etc.)
 func (rcv *PricingTier) MutatePRICE_AMOUNT(n uint64) bool {
 	return rcv._tab.MutateUint64Slot(6, n)
+}
+
+func (rcv *PricingTier) MutatePriceAmount(n uint64) bool {
+	return rcv.MutatePRICE_AMOUNT(n)
 }
 
 /// Currency code: "USD", "ETH", "SOL", "SDN_CREDITS"
@@ -73,6 +85,10 @@ func (rcv *PricingTier) PRICE_CURRENCY() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *PricingTier) PriceCurrency() []byte {
+	return rcv.PRICE_CURRENCY()
 }
 
 /// Currency code: "USD", "ETH", "SOL", "SDN_CREDITS"
@@ -85,9 +101,17 @@ func (rcv *PricingTier) DURATION_DAYS() uint32 {
 	return 0
 }
 
+func (rcv *PricingTier) DurationDays() uint32 {
+	return rcv.DURATION_DAYS()
+}
+
 /// Duration in days (0 = one-time purchase)
 func (rcv *PricingTier) MutateDURATION_DAYS(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(10, n)
+}
+
+func (rcv *PricingTier) MutateDurationDays(n uint32) bool {
+	return rcv.MutateDURATION_DAYS(n)
 }
 
 /// Rate limit in requests per hour
@@ -99,9 +123,17 @@ func (rcv *PricingTier) RATE_LIMIT() uint32 {
 	return 0
 }
 
+func (rcv *PricingTier) RateLimit() uint32 {
+	return rcv.RATE_LIMIT()
+}
+
 /// Rate limit in requests per hour
 func (rcv *PricingTier) MutateRATE_LIMIT(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(12, n)
+}
+
+func (rcv *PricingTier) MutateRateLimit(n uint32) bool {
+	return rcv.MutateRATE_LIMIT(n)
 }
 
 /// List of features included in this tier
@@ -114,12 +146,20 @@ func (rcv *PricingTier) FEATURES(j int) []byte {
 	return nil
 }
 
+func (rcv *PricingTier) Features(j int) []byte {
+	return rcv.FEATURES(j)
+}
+
 func (rcv *PricingTier) FEATURESLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *PricingTier) FeaturesLength() int {
+	return rcv.FEATURESLength()
 }
 
 /// List of features included in this tier
@@ -129,23 +169,44 @@ func PricingTierStart(builder *flatbuffers.Builder) {
 func PricingTierAddNAME(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(NAME), 0)
 }
+func PricingTierAddName(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
+	PricingTierAddNAME(builder, NAME)
+}
 func PricingTierAddPRICE_AMOUNT(builder *flatbuffers.Builder, PRICE_AMOUNT uint64) {
 	builder.PrependUint64Slot(1, PRICE_AMOUNT, 0)
+}
+func PricingTierAddPriceAmount(builder *flatbuffers.Builder, PRICE_AMOUNT uint64) {
+	PricingTierAddPRICE_AMOUNT(builder, PRICE_AMOUNT)
 }
 func PricingTierAddPRICE_CURRENCY(builder *flatbuffers.Builder, PRICE_CURRENCY flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(PRICE_CURRENCY), 0)
 }
+func PricingTierAddPriceCurrency(builder *flatbuffers.Builder, PRICE_CURRENCY flatbuffers.UOffsetT) {
+	PricingTierAddPRICE_CURRENCY(builder, PRICE_CURRENCY)
+}
 func PricingTierAddDURATION_DAYS(builder *flatbuffers.Builder, DURATION_DAYS uint32) {
 	builder.PrependUint32Slot(3, DURATION_DAYS, 0)
+}
+func PricingTierAddDurationDays(builder *flatbuffers.Builder, DURATION_DAYS uint32) {
+	PricingTierAddDURATION_DAYS(builder, DURATION_DAYS)
 }
 func PricingTierAddRATE_LIMIT(builder *flatbuffers.Builder, RATE_LIMIT uint32) {
 	builder.PrependUint32Slot(4, RATE_LIMIT, 0)
 }
+func PricingTierAddRateLimit(builder *flatbuffers.Builder, RATE_LIMIT uint32) {
+	PricingTierAddRATE_LIMIT(builder, RATE_LIMIT)
+}
 func PricingTierAddFEATURES(builder *flatbuffers.Builder, FEATURES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(FEATURES), 0)
 }
+func PricingTierAddFeatures(builder *flatbuffers.Builder, FEATURES flatbuffers.UOffsetT) {
+	PricingTierAddFEATURES(builder, FEATURES)
+}
 func PricingTierStartFEATURESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func PricingTierStartFeaturesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return PricingTierStartFEATURESVector(builder, numElems)
 }
 func PricingTierEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

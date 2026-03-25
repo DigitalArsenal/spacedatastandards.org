@@ -49,10 +49,17 @@ func (rcv *ParameterTypeSet) INTEGER_TYPES(obj *IntegerParameterType, j int) boo
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(IntegerParameterType)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *ParameterTypeSet) IntegerTypes(obj *IntegerParameterType, j int) bool {
+	return rcv.INTEGER_TYPES(obj, j)
 }
 
 func (rcv *ParameterTypeSet) INTEGER_TYPESLength() int {
@@ -63,6 +70,10 @@ func (rcv *ParameterTypeSet) INTEGER_TYPESLength() int {
 	return 0
 }
 
+func (rcv *ParameterTypeSet) IntegerTypesLength() int {
+	return rcv.INTEGER_TYPESLength()
+}
+
 /// Integer parameter types
 /// Float parameter types
 func (rcv *ParameterTypeSet) FLOAT_TYPES(obj *FloatParameterType, j int) bool {
@@ -71,10 +82,17 @@ func (rcv *ParameterTypeSet) FLOAT_TYPES(obj *FloatParameterType, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(FloatParameterType)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *ParameterTypeSet) FloatTypes(obj *FloatParameterType, j int) bool {
+	return rcv.FLOAT_TYPES(obj, j)
 }
 
 func (rcv *ParameterTypeSet) FLOAT_TYPESLength() int {
@@ -85,6 +103,10 @@ func (rcv *ParameterTypeSet) FLOAT_TYPESLength() int {
 	return 0
 }
 
+func (rcv *ParameterTypeSet) FloatTypesLength() int {
+	return rcv.FLOAT_TYPESLength()
+}
+
 /// Float parameter types
 /// String parameter types
 func (rcv *ParameterTypeSet) STRING_TYPES(obj *StringParameterType, j int) bool {
@@ -93,10 +115,17 @@ func (rcv *ParameterTypeSet) STRING_TYPES(obj *StringParameterType, j int) bool 
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(StringParameterType)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *ParameterTypeSet) StringTypes(obj *StringParameterType, j int) bool {
+	return rcv.STRING_TYPES(obj, j)
 }
 
 func (rcv *ParameterTypeSet) STRING_TYPESLength() int {
@@ -107,6 +136,10 @@ func (rcv *ParameterTypeSet) STRING_TYPESLength() int {
 	return 0
 }
 
+func (rcv *ParameterTypeSet) StringTypesLength() int {
+	return rcv.STRING_TYPESLength()
+}
+
 /// String parameter types
 /// Boolean parameter types
 func (rcv *ParameterTypeSet) BOOLEAN_TYPES(obj *BooleanParameterType, j int) bool {
@@ -115,10 +148,17 @@ func (rcv *ParameterTypeSet) BOOLEAN_TYPES(obj *BooleanParameterType, j int) boo
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(BooleanParameterType)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *ParameterTypeSet) BooleanTypes(obj *BooleanParameterType, j int) bool {
+	return rcv.BOOLEAN_TYPES(obj, j)
 }
 
 func (rcv *ParameterTypeSet) BOOLEAN_TYPESLength() int {
@@ -129,6 +169,10 @@ func (rcv *ParameterTypeSet) BOOLEAN_TYPESLength() int {
 	return 0
 }
 
+func (rcv *ParameterTypeSet) BooleanTypesLength() int {
+	return rcv.BOOLEAN_TYPESLength()
+}
+
 /// Boolean parameter types
 /// Enumerated parameter types
 func (rcv *ParameterTypeSet) ENUMERATED_TYPES(obj *EnumeratedParameterType, j int) bool {
@@ -137,10 +181,17 @@ func (rcv *ParameterTypeSet) ENUMERATED_TYPES(obj *EnumeratedParameterType, j in
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(EnumeratedParameterType)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *ParameterTypeSet) EnumeratedTypes(obj *EnumeratedParameterType, j int) bool {
+	return rcv.ENUMERATED_TYPES(obj, j)
 }
 
 func (rcv *ParameterTypeSet) ENUMERATED_TYPESLength() int {
@@ -151,6 +202,10 @@ func (rcv *ParameterTypeSet) ENUMERATED_TYPESLength() int {
 	return 0
 }
 
+func (rcv *ParameterTypeSet) EnumeratedTypesLength() int {
+	return rcv.ENUMERATED_TYPESLength()
+}
+
 /// Enumerated parameter types
 /// Binary parameter types
 func (rcv *ParameterTypeSet) BINARY_TYPES(obj *BinaryParameterType, j int) bool {
@@ -159,10 +214,17 @@ func (rcv *ParameterTypeSet) BINARY_TYPES(obj *BinaryParameterType, j int) bool 
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(BinaryParameterType)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *ParameterTypeSet) BinaryTypes(obj *BinaryParameterType, j int) bool {
+	return rcv.BINARY_TYPES(obj, j)
 }
 
 func (rcv *ParameterTypeSet) BINARY_TYPESLength() int {
@@ -173,6 +235,10 @@ func (rcv *ParameterTypeSet) BINARY_TYPESLength() int {
 	return 0
 }
 
+func (rcv *ParameterTypeSet) BinaryTypesLength() int {
+	return rcv.BINARY_TYPESLength()
+}
+
 /// Binary parameter types
 /// Absolute time parameter types
 func (rcv *ParameterTypeSet) ABSOLUTE_TIME_TYPES(obj *AbsoluteTimeParameterType, j int) bool {
@@ -181,10 +247,17 @@ func (rcv *ParameterTypeSet) ABSOLUTE_TIME_TYPES(obj *AbsoluteTimeParameterType,
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(AbsoluteTimeParameterType)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *ParameterTypeSet) AbsoluteTimeTypes(obj *AbsoluteTimeParameterType, j int) bool {
+	return rcv.ABSOLUTE_TIME_TYPES(obj, j)
 }
 
 func (rcv *ParameterTypeSet) ABSOLUTE_TIME_TYPESLength() int {
@@ -195,6 +268,10 @@ func (rcv *ParameterTypeSet) ABSOLUTE_TIME_TYPESLength() int {
 	return 0
 }
 
+func (rcv *ParameterTypeSet) AbsoluteTimeTypesLength() int {
+	return rcv.ABSOLUTE_TIME_TYPESLength()
+}
+
 /// Absolute time parameter types
 /// Relative time parameter types
 func (rcv *ParameterTypeSet) RELATIVE_TIME_TYPES(obj *RelativeTimeParameterType, j int) bool {
@@ -203,10 +280,17 @@ func (rcv *ParameterTypeSet) RELATIVE_TIME_TYPES(obj *RelativeTimeParameterType,
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(RelativeTimeParameterType)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *ParameterTypeSet) RelativeTimeTypes(obj *RelativeTimeParameterType, j int) bool {
+	return rcv.RELATIVE_TIME_TYPES(obj, j)
 }
 
 func (rcv *ParameterTypeSet) RELATIVE_TIME_TYPESLength() int {
@@ -217,6 +301,10 @@ func (rcv *ParameterTypeSet) RELATIVE_TIME_TYPESLength() int {
 	return 0
 }
 
+func (rcv *ParameterTypeSet) RelativeTimeTypesLength() int {
+	return rcv.RELATIVE_TIME_TYPESLength()
+}
+
 /// Relative time parameter types
 /// Array parameter types
 func (rcv *ParameterTypeSet) ARRAY_TYPES(obj *ArrayParameterType, j int) bool {
@@ -225,10 +313,17 @@ func (rcv *ParameterTypeSet) ARRAY_TYPES(obj *ArrayParameterType, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(ArrayParameterType)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *ParameterTypeSet) ArrayTypes(obj *ArrayParameterType, j int) bool {
+	return rcv.ARRAY_TYPES(obj, j)
 }
 
 func (rcv *ParameterTypeSet) ARRAY_TYPESLength() int {
@@ -239,6 +334,10 @@ func (rcv *ParameterTypeSet) ARRAY_TYPESLength() int {
 	return 0
 }
 
+func (rcv *ParameterTypeSet) ArrayTypesLength() int {
+	return rcv.ARRAY_TYPESLength()
+}
+
 /// Array parameter types
 /// Aggregate parameter types
 func (rcv *ParameterTypeSet) AGGREGATE_TYPES(obj *AggregateParameterType, j int) bool {
@@ -247,10 +346,17 @@ func (rcv *ParameterTypeSet) AGGREGATE_TYPES(obj *AggregateParameterType, j int)
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(AggregateParameterType)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *ParameterTypeSet) AggregateTypes(obj *AggregateParameterType, j int) bool {
+	return rcv.AGGREGATE_TYPES(obj, j)
 }
 
 func (rcv *ParameterTypeSet) AGGREGATE_TYPESLength() int {
@@ -261,6 +367,10 @@ func (rcv *ParameterTypeSet) AGGREGATE_TYPESLength() int {
 	return 0
 }
 
+func (rcv *ParameterTypeSet) AggregateTypesLength() int {
+	return rcv.AGGREGATE_TYPESLength()
+}
+
 /// Aggregate parameter types
 func ParameterTypeSetStart(builder *flatbuffers.Builder) {
 	builder.StartObject(10)
@@ -268,62 +378,122 @@ func ParameterTypeSetStart(builder *flatbuffers.Builder) {
 func ParameterTypeSetAddINTEGER_TYPES(builder *flatbuffers.Builder, INTEGER_TYPES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(INTEGER_TYPES), 0)
 }
+func ParameterTypeSetAddIntegerTypes(builder *flatbuffers.Builder, INTEGER_TYPES flatbuffers.UOffsetT) {
+	ParameterTypeSetAddINTEGER_TYPES(builder, INTEGER_TYPES)
+}
 func ParameterTypeSetStartINTEGER_TYPESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func ParameterTypeSetStartIntegerTypesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return ParameterTypeSetStartINTEGER_TYPESVector(builder, numElems)
 }
 func ParameterTypeSetAddFLOAT_TYPES(builder *flatbuffers.Builder, FLOAT_TYPES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(FLOAT_TYPES), 0)
 }
+func ParameterTypeSetAddFloatTypes(builder *flatbuffers.Builder, FLOAT_TYPES flatbuffers.UOffsetT) {
+	ParameterTypeSetAddFLOAT_TYPES(builder, FLOAT_TYPES)
+}
 func ParameterTypeSetStartFLOAT_TYPESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func ParameterTypeSetStartFloatTypesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return ParameterTypeSetStartFLOAT_TYPESVector(builder, numElems)
 }
 func ParameterTypeSetAddSTRING_TYPES(builder *flatbuffers.Builder, STRING_TYPES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(STRING_TYPES), 0)
 }
+func ParameterTypeSetAddStringTypes(builder *flatbuffers.Builder, STRING_TYPES flatbuffers.UOffsetT) {
+	ParameterTypeSetAddSTRING_TYPES(builder, STRING_TYPES)
+}
 func ParameterTypeSetStartSTRING_TYPESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func ParameterTypeSetStartStringTypesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return ParameterTypeSetStartSTRING_TYPESVector(builder, numElems)
 }
 func ParameterTypeSetAddBOOLEAN_TYPES(builder *flatbuffers.Builder, BOOLEAN_TYPES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(BOOLEAN_TYPES), 0)
 }
+func ParameterTypeSetAddBooleanTypes(builder *flatbuffers.Builder, BOOLEAN_TYPES flatbuffers.UOffsetT) {
+	ParameterTypeSetAddBOOLEAN_TYPES(builder, BOOLEAN_TYPES)
+}
 func ParameterTypeSetStartBOOLEAN_TYPESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func ParameterTypeSetStartBooleanTypesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return ParameterTypeSetStartBOOLEAN_TYPESVector(builder, numElems)
 }
 func ParameterTypeSetAddENUMERATED_TYPES(builder *flatbuffers.Builder, ENUMERATED_TYPES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(ENUMERATED_TYPES), 0)
 }
+func ParameterTypeSetAddEnumeratedTypes(builder *flatbuffers.Builder, ENUMERATED_TYPES flatbuffers.UOffsetT) {
+	ParameterTypeSetAddENUMERATED_TYPES(builder, ENUMERATED_TYPES)
+}
 func ParameterTypeSetStartENUMERATED_TYPESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func ParameterTypeSetStartEnumeratedTypesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return ParameterTypeSetStartENUMERATED_TYPESVector(builder, numElems)
 }
 func ParameterTypeSetAddBINARY_TYPES(builder *flatbuffers.Builder, BINARY_TYPES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(BINARY_TYPES), 0)
 }
+func ParameterTypeSetAddBinaryTypes(builder *flatbuffers.Builder, BINARY_TYPES flatbuffers.UOffsetT) {
+	ParameterTypeSetAddBINARY_TYPES(builder, BINARY_TYPES)
+}
 func ParameterTypeSetStartBINARY_TYPESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func ParameterTypeSetStartBinaryTypesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return ParameterTypeSetStartBINARY_TYPESVector(builder, numElems)
 }
 func ParameterTypeSetAddABSOLUTE_TIME_TYPES(builder *flatbuffers.Builder, ABSOLUTE_TIME_TYPES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(ABSOLUTE_TIME_TYPES), 0)
 }
+func ParameterTypeSetAddAbsoluteTimeTypes(builder *flatbuffers.Builder, ABSOLUTE_TIME_TYPES flatbuffers.UOffsetT) {
+	ParameterTypeSetAddABSOLUTE_TIME_TYPES(builder, ABSOLUTE_TIME_TYPES)
+}
 func ParameterTypeSetStartABSOLUTE_TIME_TYPESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func ParameterTypeSetStartAbsoluteTimeTypesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return ParameterTypeSetStartABSOLUTE_TIME_TYPESVector(builder, numElems)
 }
 func ParameterTypeSetAddRELATIVE_TIME_TYPES(builder *flatbuffers.Builder, RELATIVE_TIME_TYPES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(RELATIVE_TIME_TYPES), 0)
 }
+func ParameterTypeSetAddRelativeTimeTypes(builder *flatbuffers.Builder, RELATIVE_TIME_TYPES flatbuffers.UOffsetT) {
+	ParameterTypeSetAddRELATIVE_TIME_TYPES(builder, RELATIVE_TIME_TYPES)
+}
 func ParameterTypeSetStartRELATIVE_TIME_TYPESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func ParameterTypeSetStartRelativeTimeTypesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return ParameterTypeSetStartRELATIVE_TIME_TYPESVector(builder, numElems)
 }
 func ParameterTypeSetAddARRAY_TYPES(builder *flatbuffers.Builder, ARRAY_TYPES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(ARRAY_TYPES), 0)
 }
+func ParameterTypeSetAddArrayTypes(builder *flatbuffers.Builder, ARRAY_TYPES flatbuffers.UOffsetT) {
+	ParameterTypeSetAddARRAY_TYPES(builder, ARRAY_TYPES)
+}
 func ParameterTypeSetStartARRAY_TYPESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func ParameterTypeSetStartArrayTypesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return ParameterTypeSetStartARRAY_TYPESVector(builder, numElems)
 }
 func ParameterTypeSetAddAGGREGATE_TYPES(builder *flatbuffers.Builder, AGGREGATE_TYPES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(AGGREGATE_TYPES), 0)
 }
+func ParameterTypeSetAddAggregateTypes(builder *flatbuffers.Builder, AGGREGATE_TYPES flatbuffers.UOffsetT) {
+	ParameterTypeSetAddAGGREGATE_TYPES(builder, AGGREGATE_TYPES)
+}
 func ParameterTypeSetStartAGGREGATE_TYPESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func ParameterTypeSetStartAggregateTypesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return ParameterTypeSetStartAGGREGATE_TYPESVector(builder, numElems)
 }
 func ParameterTypeSetEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

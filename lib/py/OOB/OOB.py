@@ -241,27 +241,43 @@ def End(builder):
 class OOBT(object):
 
     # OOBT
-    def __init__(self):
-        self.ID = None  # type: str
-        self.ID_ON_ORBIT = None  # type: str
-        self.ID_BATTERY = None  # type: str
-        self.NAME = None  # type: str
-        self.CHEMISTRY = None  # type: str
-        self.QUANTITY = 0  # type: int
-        self.VOLTAGE = 0.0  # type: float
-        self.CAPACITY_AH = 0.0  # type: float
-        self.ENERGY_WH = 0.0  # type: float
-        self.MAX_DOD = 0.0  # type: float
-        self.CYCLE_LIFE = 0  # type: int
-        self.MASS = 0.0  # type: float
-        self.STATE_OF_HEALTH = 0.0  # type: float
-        self.NOTES = None  # type: str
+    def __init__(
+        self,
+        ID = None,
+        ID_ON_ORBIT = None,
+        ID_BATTERY = None,
+        NAME = None,
+        CHEMISTRY = None,
+        QUANTITY = 0,
+        VOLTAGE = 0.0,
+        CAPACITY_AH = 0.0,
+        ENERGY_WH = 0.0,
+        MAX_DOD = 0.0,
+        CYCLE_LIFE = 0,
+        MASS = 0.0,
+        STATE_OF_HEALTH = 0.0,
+        NOTES = None,
+    ):
+        self.ID = ID  # type: Optional[str]
+        self.ID_ON_ORBIT = ID_ON_ORBIT  # type: Optional[str]
+        self.ID_BATTERY = ID_BATTERY  # type: Optional[str]
+        self.NAME = NAME  # type: Optional[str]
+        self.CHEMISTRY = CHEMISTRY  # type: Optional[str]
+        self.QUANTITY = QUANTITY  # type: int
+        self.VOLTAGE = VOLTAGE  # type: float
+        self.CAPACITY_AH = CAPACITY_AH  # type: float
+        self.ENERGY_WH = ENERGY_WH  # type: float
+        self.MAX_DOD = MAX_DOD  # type: float
+        self.CYCLE_LIFE = CYCLE_LIFE  # type: int
+        self.MASS = MASS  # type: float
+        self.STATE_OF_HEALTH = STATE_OF_HEALTH  # type: float
+        self.NOTES = NOTES  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        OOB = OOB()
-        OOB.Init(buf, pos)
-        return cls.InitFromObj(OOB)
+        tmpOob = OOB()
+        tmpOob.Init(buf, pos)
+        return cls.InitFromObj(tmpOob)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -269,9 +285,9 @@ class OOBT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, OOB):
+    def InitFromObj(cls, tmpOob):
         x = OOBT()
-        x._UnPack(OOB)
+        x._UnPack(tmpOob)
         return x
 
     # OOBT

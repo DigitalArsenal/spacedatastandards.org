@@ -51,6 +51,10 @@ func (rcv *CryptoKey) PUBLIC_KEY() []byte {
 	return nil
 }
 
+func (rcv *CryptoKey) PublicKey() []byte {
+	return rcv.PUBLIC_KEY()
+}
+
 /// Public part of the cryptographic key, in hexidecimal format
 /// Extended public key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys
 func (rcv *CryptoKey) XPUB() []byte {
@@ -59,6 +63,10 @@ func (rcv *CryptoKey) XPUB() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *CryptoKey) Xpub() []byte {
+	return rcv.XPUB()
 }
 
 /// Extended public key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys
@@ -71,6 +79,10 @@ func (rcv *CryptoKey) PRIVATE_KEY() []byte {
 	return nil
 }
 
+func (rcv *CryptoKey) PrivateKey() []byte {
+	return rcv.PRIVATE_KEY()
+}
+
 /// Private part of the cryptographic key in hexidecimal format, should be kept secret
 /// Extended private key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys
 func (rcv *CryptoKey) XPRIV() []byte {
@@ -79,6 +91,10 @@ func (rcv *CryptoKey) XPRIV() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *CryptoKey) Xpriv() []byte {
+	return rcv.XPRIV()
 }
 
 /// Extended private key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys
@@ -91,6 +107,10 @@ func (rcv *CryptoKey) KEY_ADDRESS() []byte {
 	return nil
 }
 
+func (rcv *CryptoKey) KeyAddress() []byte {
+	return rcv.KEY_ADDRESS()
+}
+
 /// Address generated from the cryptographic key
 /// Type of the address generated from the cryptographic key
 func (rcv *CryptoKey) ADDRESS_TYPE() []byte {
@@ -99,6 +119,10 @@ func (rcv *CryptoKey) ADDRESS_TYPE() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *CryptoKey) AddressType() []byte {
+	return rcv.ADDRESS_TYPE()
 }
 
 /// Type of the address generated from the cryptographic key
@@ -111,9 +135,17 @@ func (rcv *CryptoKey) KEY_TYPE() KeyType {
 	return 0
 }
 
+func (rcv *CryptoKey) KeyType() KeyType {
+	return rcv.KEY_TYPE()
+}
+
 /// Type of the cryptographic key (signing or encryption)
 func (rcv *CryptoKey) MutateKEY_TYPE(n KeyType) bool {
 	return rcv._tab.MutateInt8Slot(16, int8(n))
+}
+
+func (rcv *CryptoKey) MutateKeyType(n KeyType) bool {
+	return rcv.MutateKEY_TYPE(n)
 }
 
 func CryptoKeyStart(builder *flatbuffers.Builder) {
@@ -122,23 +154,44 @@ func CryptoKeyStart(builder *flatbuffers.Builder) {
 func CryptoKeyAddPUBLIC_KEY(builder *flatbuffers.Builder, PUBLIC_KEY flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(PUBLIC_KEY), 0)
 }
+func CryptoKeyAddPublicKey(builder *flatbuffers.Builder, PUBLIC_KEY flatbuffers.UOffsetT) {
+	CryptoKeyAddPUBLIC_KEY(builder, PUBLIC_KEY)
+}
 func CryptoKeyAddXPUB(builder *flatbuffers.Builder, XPUB flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(XPUB), 0)
+}
+func CryptoKeyAddXpub(builder *flatbuffers.Builder, XPUB flatbuffers.UOffsetT) {
+	CryptoKeyAddXPUB(builder, XPUB)
 }
 func CryptoKeyAddPRIVATE_KEY(builder *flatbuffers.Builder, PRIVATE_KEY flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(PRIVATE_KEY), 0)
 }
+func CryptoKeyAddPrivateKey(builder *flatbuffers.Builder, PRIVATE_KEY flatbuffers.UOffsetT) {
+	CryptoKeyAddPRIVATE_KEY(builder, PRIVATE_KEY)
+}
 func CryptoKeyAddXPRIV(builder *flatbuffers.Builder, XPRIV flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(XPRIV), 0)
+}
+func CryptoKeyAddXpriv(builder *flatbuffers.Builder, XPRIV flatbuffers.UOffsetT) {
+	CryptoKeyAddXPRIV(builder, XPRIV)
 }
 func CryptoKeyAddKEY_ADDRESS(builder *flatbuffers.Builder, KEY_ADDRESS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(KEY_ADDRESS), 0)
 }
+func CryptoKeyAddKeyAddress(builder *flatbuffers.Builder, KEY_ADDRESS flatbuffers.UOffsetT) {
+	CryptoKeyAddKEY_ADDRESS(builder, KEY_ADDRESS)
+}
 func CryptoKeyAddADDRESS_TYPE(builder *flatbuffers.Builder, ADDRESS_TYPE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(ADDRESS_TYPE), 0)
 }
+func CryptoKeyAddAddressType(builder *flatbuffers.Builder, ADDRESS_TYPE flatbuffers.UOffsetT) {
+	CryptoKeyAddADDRESS_TYPE(builder, ADDRESS_TYPE)
+}
 func CryptoKeyAddKEY_TYPE(builder *flatbuffers.Builder, KEY_TYPE KeyType) {
 	builder.PrependInt8Slot(6, int8(KEY_TYPE), 0)
+}
+func CryptoKeyAddKeyType(builder *flatbuffers.Builder, KEY_TYPE KeyType) {
+	CryptoKeyAddKEY_TYPE(builder, KEY_TYPE)
 }
 func CryptoKeyEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

@@ -2,4 +2,119 @@
 
 # namespace: 
 
-# NOTE KMLSimpleData.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Simple data value for SchemaData
+class KMLSimpleData(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = KMLSimpleData()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsKMLSimpleData(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def KMLSimpleDataBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x4B\x4D\x4C", size_prefixed=size_prefixed)
+
+    # KMLSimpleData
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Field name
+    # KMLSimpleData
+    def NAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Field value
+    # KMLSimpleData
+    def VALUE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+def KMLSimpleDataStart(builder):
+    builder.StartObject(2)
+
+def Start(builder):
+    KMLSimpleDataStart(builder)
+
+def KMLSimpleDataAddNAME(builder, NAME):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(NAME), 0)
+
+def AddNAME(builder, NAME):
+    KMLSimpleDataAddNAME(builder, NAME)
+
+def KMLSimpleDataAddVALUE(builder, VALUE):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(VALUE), 0)
+
+def AddVALUE(builder, VALUE):
+    KMLSimpleDataAddVALUE(builder, VALUE)
+
+def KMLSimpleDataEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return KMLSimpleDataEnd(builder)
+
+
+class KMLSimpleDataT(object):
+
+    # KMLSimpleDataT
+    def __init__(
+        self,
+        NAME = None,
+        VALUE = None,
+    ):
+        self.NAME = NAME  # type: Optional[str]
+        self.VALUE = VALUE  # type: Optional[str]
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpKmlsimpleData = KMLSimpleData()
+        tmpKmlsimpleData.Init(buf, pos)
+        return cls.InitFromObj(tmpKmlsimpleData)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpKmlsimpleData):
+        x = KMLSimpleDataT()
+        x._UnPack(tmpKmlsimpleData)
+        return x
+
+    # KMLSimpleDataT
+    def _UnPack(self, KMLSimpleData):
+        if KMLSimpleData is None:
+            return
+        self.NAME = KMLSimpleData.NAME()
+        self.VALUE = KMLSimpleData.VALUE()
+
+    # KMLSimpleDataT
+    def Pack(self, builder):
+        if self.NAME is not None:
+            NAME = builder.CreateString(self.NAME)
+        if self.VALUE is not None:
+            VALUE = builder.CreateString(self.VALUE)
+        KMLSimpleDataStart(builder)
+        if self.NAME is not None:
+            KMLSimpleDataAddNAME(builder, NAME)
+        if self.VALUE is not None:
+            KMLSimpleDataAddVALUE(builder, VALUE)
+        KMLSimpleData = KMLSimpleDataEnd(builder)
+        return KMLSimpleData

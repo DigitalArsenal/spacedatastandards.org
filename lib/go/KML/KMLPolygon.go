@@ -56,6 +56,10 @@ func (rcv *KMLPolygon) OUTER_BOUNDARY(obj *KMLLinearRing) *KMLLinearRing {
 	return nil
 }
 
+func (rcv *KMLPolygon) OuterBoundary(obj *KMLLinearRing) *KMLLinearRing {
+	return rcv.OUTER_BOUNDARY(obj)
+}
+
 /// Outer boundary
 /// Inner boundaries (holes)
 func (rcv *KMLPolygon) INNER_BOUNDARIES(obj *KMLLinearRing, j int) bool {
@@ -64,10 +68,17 @@ func (rcv *KMLPolygon) INNER_BOUNDARIES(obj *KMLLinearRing, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(KMLLinearRing)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *KMLPolygon) InnerBoundaries(obj *KMLLinearRing, j int) bool {
+	return rcv.INNER_BOUNDARIES(obj, j)
 }
 
 func (rcv *KMLPolygon) INNER_BOUNDARIESLength() int {
@@ -76,6 +87,10 @@ func (rcv *KMLPolygon) INNER_BOUNDARIESLength() int {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *KMLPolygon) InnerBoundariesLength() int {
+	return rcv.INNER_BOUNDARIESLength()
 }
 
 /// Inner boundaries (holes)
@@ -88,9 +103,17 @@ func (rcv *KMLPolygon) ALTITUDE_MODE() KMLAltitudeMode {
 	return 0
 }
 
+func (rcv *KMLPolygon) AltitudeMode() KMLAltitudeMode {
+	return rcv.ALTITUDE_MODE()
+}
+
 /// Altitude mode
 func (rcv *KMLPolygon) MutateALTITUDE_MODE(n KMLAltitudeMode) bool {
 	return rcv._tab.MutateInt8Slot(8, int8(n))
+}
+
+func (rcv *KMLPolygon) MutateAltitudeMode(n KMLAltitudeMode) bool {
+	return rcv.MutateALTITUDE_MODE(n)
 }
 
 /// Whether to extrude to ground
@@ -102,9 +125,17 @@ func (rcv *KMLPolygon) EXTRUDE() bool {
 	return false
 }
 
+func (rcv *KMLPolygon) Extrude() bool {
+	return rcv.EXTRUDE()
+}
+
 /// Whether to extrude to ground
 func (rcv *KMLPolygon) MutateEXTRUDE(n bool) bool {
 	return rcv._tab.MutateBoolSlot(10, n)
+}
+
+func (rcv *KMLPolygon) MutateExtrude(n bool) bool {
+	return rcv.MutateEXTRUDE(n)
 }
 
 /// Whether to tessellate
@@ -116,9 +147,17 @@ func (rcv *KMLPolygon) TESSELLATE() bool {
 	return false
 }
 
+func (rcv *KMLPolygon) Tessellate() bool {
+	return rcv.TESSELLATE()
+}
+
 /// Whether to tessellate
 func (rcv *KMLPolygon) MutateTESSELLATE(n bool) bool {
 	return rcv._tab.MutateBoolSlot(12, n)
+}
+
+func (rcv *KMLPolygon) MutateTessellate(n bool) bool {
+	return rcv.MutateTESSELLATE(n)
 }
 
 func KMLPolygonStart(builder *flatbuffers.Builder) {
@@ -127,20 +166,38 @@ func KMLPolygonStart(builder *flatbuffers.Builder) {
 func KMLPolygonAddOUTER_BOUNDARY(builder *flatbuffers.Builder, OUTER_BOUNDARY flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(OUTER_BOUNDARY), 0)
 }
+func KMLPolygonAddOuterBoundary(builder *flatbuffers.Builder, OUTER_BOUNDARY flatbuffers.UOffsetT) {
+	KMLPolygonAddOUTER_BOUNDARY(builder, OUTER_BOUNDARY)
+}
 func KMLPolygonAddINNER_BOUNDARIES(builder *flatbuffers.Builder, INNER_BOUNDARIES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(INNER_BOUNDARIES), 0)
+}
+func KMLPolygonAddInnerBoundaries(builder *flatbuffers.Builder, INNER_BOUNDARIES flatbuffers.UOffsetT) {
+	KMLPolygonAddINNER_BOUNDARIES(builder, INNER_BOUNDARIES)
 }
 func KMLPolygonStartINNER_BOUNDARIESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
+func KMLPolygonStartInnerBoundariesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return KMLPolygonStartINNER_BOUNDARIESVector(builder, numElems)
+}
 func KMLPolygonAddALTITUDE_MODE(builder *flatbuffers.Builder, ALTITUDE_MODE KMLAltitudeMode) {
 	builder.PrependInt8Slot(2, int8(ALTITUDE_MODE), 0)
+}
+func KMLPolygonAddAltitudeMode(builder *flatbuffers.Builder, ALTITUDE_MODE KMLAltitudeMode) {
+	KMLPolygonAddALTITUDE_MODE(builder, ALTITUDE_MODE)
 }
 func KMLPolygonAddEXTRUDE(builder *flatbuffers.Builder, EXTRUDE bool) {
 	builder.PrependBoolSlot(3, EXTRUDE, false)
 }
+func KMLPolygonAddExtrude(builder *flatbuffers.Builder, EXTRUDE bool) {
+	KMLPolygonAddEXTRUDE(builder, EXTRUDE)
+}
 func KMLPolygonAddTESSELLATE(builder *flatbuffers.Builder, TESSELLATE bool) {
 	builder.PrependBoolSlot(4, TESSELLATE, false)
+}
+func KMLPolygonAddTessellate(builder *flatbuffers.Builder, TESSELLATE bool) {
+	KMLPolygonAddTESSELLATE(builder, TESSELLATE)
 }
 func KMLPolygonEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

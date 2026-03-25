@@ -2,4 +2,6 @@
 
 # namespace: 
 
-# NOTE elementType.py does not declare any structs or enums
+class elementType(object):
+    OSCULATING = 0
+    MEAN = 1

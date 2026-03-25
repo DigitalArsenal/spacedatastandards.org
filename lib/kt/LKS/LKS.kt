@@ -32,7 +32,7 @@ class LKS : Table() {
     /**
      * Unique identifier
      */
-    val ID : String?
+    val id : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class LKS : Table() {
                 null
             }
         }
-    val IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val idAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun idInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * First endpoint on-orbit identifier
      */
-    val ID_ON_ORBIT1 : String?
+    val idOnOrbit1 : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -55,12 +55,12 @@ class LKS : Table() {
                 null
             }
         }
-    val ID_ON_ORBIT1AsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun ID_ON_ORBIT1InByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val idOnOrbit1AsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun idOnOrbit1InByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * First endpoint satellite catalog number
      */
-    val SAT_NO1 : UInt
+    val satNo1 : UInt
         get() {
             val o = __offset(8)
             return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
@@ -68,7 +68,7 @@ class LKS : Table() {
     /**
      * Second endpoint on-orbit identifier
      */
-    val ID_ON_ORBIT2 : String?
+    val idOnOrbit2 : String?
         get() {
             val o = __offset(10)
             return if (o != 0) {
@@ -77,12 +77,12 @@ class LKS : Table() {
                 null
             }
         }
-    val ID_ON_ORBIT2AsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
-    fun ID_ON_ORBIT2InByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
+    val idOnOrbit2AsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(10, 1)
+    fun idOnOrbit2InByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 10, 1)
     /**
      * Second endpoint satellite catalog number
      */
-    val SAT_NO2 : UInt
+    val satNo2 : UInt
         get() {
             val o = __offset(12)
             return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
@@ -90,7 +90,7 @@ class LKS : Table() {
     /**
      * Constellation name
      */
-    val CONSTELLATION : String?
+    val constellation : String?
         get() {
             val o = __offset(14)
             return if (o != 0) {
@@ -99,12 +99,12 @@ class LKS : Table() {
                 null
             }
         }
-    val CONSTELLATIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(14, 1)
-    fun CONSTELLATIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 14, 1)
+    val constellationAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(14, 1)
+    fun constellationInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 14, 1)
     /**
      * Link name or identifier
      */
-    val LINK_NAME : String?
+    val linkName : String?
         get() {
             val o = __offset(16)
             return if (o != 0) {
@@ -113,12 +113,12 @@ class LKS : Table() {
                 null
             }
         }
-    val LINK_NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(16, 1)
-    fun LINK_NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 16, 1)
+    val linkNameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(16, 1)
+    fun linkNameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 16, 1)
     /**
      * Link type
      */
-    val LINK_TYPE : Byte
+    val linkType : Byte
         get() {
             val o = __offset(18)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -126,7 +126,7 @@ class LKS : Table() {
     /**
      * Link state
      */
-    val LINK_STATE : Byte
+    val linkState : Byte
         get() {
             val o = __offset(20)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -134,7 +134,7 @@ class LKS : Table() {
     /**
      * RF band
      */
-    val BAND : String?
+    val band : String?
         get() {
             val o = __offset(22)
             return if (o != 0) {
@@ -143,12 +143,12 @@ class LKS : Table() {
                 null
             }
         }
-    val BANDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(22, 1)
-    fun BANDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 22, 1)
+    val bandAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(22, 1)
+    fun bandInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 22, 1)
     /**
      * Link start time (ISO 8601)
      */
-    val LINK_START_TIME : String?
+    val linkStartTime : String?
         get() {
             val o = __offset(24)
             return if (o != 0) {
@@ -157,12 +157,12 @@ class LKS : Table() {
                 null
             }
         }
-    val LINK_START_TIMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(24, 1)
-    fun LINK_START_TIMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 24, 1)
+    val linkStartTimeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(24, 1)
+    fun linkStartTimeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 24, 1)
     /**
      * Link stop time (ISO 8601)
      */
-    val LINK_STOP_TIME : String?
+    val linkStopTime : String?
         get() {
             val o = __offset(26)
             return if (o != 0) {
@@ -171,12 +171,12 @@ class LKS : Table() {
                 null
             }
         }
-    val LINK_STOP_TIMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(26, 1)
-    fun LINK_STOP_TIMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 26, 1)
+    val linkStopTimeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(26, 1)
+    fun linkStopTimeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 26, 1)
     /**
      * First endpoint beam identifier
      */
-    val ID_BEAM1 : String?
+    val idBeam1 : String?
         get() {
             val o = __offset(28)
             return if (o != 0) {
@@ -185,12 +185,12 @@ class LKS : Table() {
                 null
             }
         }
-    val ID_BEAM1AsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(28, 1)
-    fun ID_BEAM1InByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 28, 1)
+    val idBeam1AsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(28, 1)
+    fun idBeam1InByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 28, 1)
     /**
      * First endpoint name
      */
-    val END_POINT1_NAME : String?
+    val endPoint1Name : String?
         get() {
             val o = __offset(30)
             return if (o != 0) {
@@ -199,12 +199,12 @@ class LKS : Table() {
                 null
             }
         }
-    val END_POINT1_NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(30, 1)
-    fun END_POINT1_NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 30, 1)
+    val endPoint1NameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(30, 1)
+    fun endPoint1NameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 30, 1)
     /**
      * First endpoint latitude (degrees)
      */
-    val END_POINT1_LAT : Double
+    val endPoint1Lat : Double
         get() {
             val o = __offset(32)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -212,7 +212,7 @@ class LKS : Table() {
     /**
      * First endpoint longitude (degrees)
      */
-    val END_POINT1_LON : Double
+    val endPoint1Lon : Double
         get() {
             val o = __offset(34)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -220,7 +220,7 @@ class LKS : Table() {
     /**
      * Second endpoint beam identifier
      */
-    val ID_BEAM2 : String?
+    val idBeam2 : String?
         get() {
             val o = __offset(36)
             return if (o != 0) {
@@ -229,12 +229,12 @@ class LKS : Table() {
                 null
             }
         }
-    val ID_BEAM2AsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(36, 1)
-    fun ID_BEAM2InByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 36, 1)
+    val idBeam2AsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(36, 1)
+    fun idBeam2InByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 36, 1)
     /**
      * Second endpoint name
      */
-    val END_POINT2_NAME : String?
+    val endPoint2Name : String?
         get() {
             val o = __offset(38)
             return if (o != 0) {
@@ -243,12 +243,12 @@ class LKS : Table() {
                 null
             }
         }
-    val END_POINT2_NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(38, 1)
-    fun END_POINT2_NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 38, 1)
+    val endPoint2NameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(38, 1)
+    fun endPoint2NameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 38, 1)
     /**
      * Second endpoint latitude (degrees)
      */
-    val END_POINT2_LAT : Double
+    val endPoint2Lat : Double
         get() {
             val o = __offset(40)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -256,7 +256,7 @@ class LKS : Table() {
     /**
      * Second endpoint longitude (degrees)
      */
-    val END_POINT2_LON : Double
+    val endPoint2Lon : Double
         get() {
             val o = __offset(42)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -264,7 +264,7 @@ class LKS : Table() {
     /**
      * Data rate from endpoint 1 to 2 (Mbps)
      */
-    val DATA_RATE1_TO2 : Double
+    val dataRate1To2 : Double
         get() {
             val o = __offset(44)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -272,7 +272,7 @@ class LKS : Table() {
     /**
      * Data rate from endpoint 2 to 1 (Mbps)
      */
-    val DATA_RATE2_TO1 : Double
+    val dataRate2To1 : Double
         get() {
             val o = __offset(46)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -280,7 +280,7 @@ class LKS : Table() {
     /**
      * System capability status
      */
-    val SYS_CAP : String?
+    val sysCap : String?
         get() {
             val o = __offset(48)
             return if (o != 0) {
@@ -289,12 +289,12 @@ class LKS : Table() {
                 null
             }
         }
-    val SYS_CAPAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(48, 1)
-    fun SYS_CAPInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 48, 1)
+    val sysCapAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(48, 1)
+    fun sysCapInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 48, 1)
     /**
      * Operational capability status
      */
-    val OPS_CAP : String?
+    val opsCap : String?
         get() {
             val o = __offset(50)
             return if (o != 0) {
@@ -303,69 +303,69 @@ class LKS : Table() {
                 null
             }
         }
-    val OPS_CAPAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(50, 1)
-    fun OPS_CAPInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 50, 1)
+    val opsCapAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(50, 1)
+    fun opsCapInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 50, 1)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsLKS(_bb: ByteBuffer): LKS = getRootAsLKS(_bb, LKS())
         fun getRootAsLKS(_bb: ByteBuffer, obj: LKS): LKS {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun LKSBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$LKS")
-        fun createLKS(builder: FlatBufferBuilder, IDOffset: Int, ID_ON_ORBIT1Offset: Int, SAT_NO1: UInt, ID_ON_ORBIT2Offset: Int, SAT_NO2: UInt, CONSTELLATIONOffset: Int, LINK_NAMEOffset: Int, LINK_TYPE: Byte, LINK_STATE: Byte, BANDOffset: Int, LINK_START_TIMEOffset: Int, LINK_STOP_TIMEOffset: Int, ID_BEAM1Offset: Int, END_POINT1_NAMEOffset: Int, END_POINT1_LAT: Double, END_POINT1_LON: Double, ID_BEAM2Offset: Int, END_POINT2_NAMEOffset: Int, END_POINT2_LAT: Double, END_POINT2_LON: Double, DATA_RATE1_TO2: Double, DATA_RATE2_TO1: Double, SYS_CAPOffset: Int, OPS_CAPOffset: Int) : Int {
+        fun createLKS(builder: FlatBufferBuilder, idOffset: Int, idOnOrbit1Offset: Int, satNo1: UInt, idOnOrbit2Offset: Int, satNo2: UInt, constellationOffset: Int, linkNameOffset: Int, linkType: Byte, linkState: Byte, bandOffset: Int, linkStartTimeOffset: Int, linkStopTimeOffset: Int, idBeam1Offset: Int, endPoint1NameOffset: Int, endPoint1Lat: Double, endPoint1Lon: Double, idBeam2Offset: Int, endPoint2NameOffset: Int, endPoint2Lat: Double, endPoint2Lon: Double, dataRate1To2: Double, dataRate2To1: Double, sysCapOffset: Int, opsCapOffset: Int) : Int {
             builder.startTable(24)
-            addDATA_RATE2_TO1(builder, DATA_RATE2_TO1)
-            addDATA_RATE1_TO2(builder, DATA_RATE1_TO2)
-            addEND_POINT2_LON(builder, END_POINT2_LON)
-            addEND_POINT2_LAT(builder, END_POINT2_LAT)
-            addEND_POINT1_LON(builder, END_POINT1_LON)
-            addEND_POINT1_LAT(builder, END_POINT1_LAT)
-            addOPS_CAP(builder, OPS_CAPOffset)
-            addSYS_CAP(builder, SYS_CAPOffset)
-            addEND_POINT2_NAME(builder, END_POINT2_NAMEOffset)
-            addID_BEAM2(builder, ID_BEAM2Offset)
-            addEND_POINT1_NAME(builder, END_POINT1_NAMEOffset)
-            addID_BEAM1(builder, ID_BEAM1Offset)
-            addLINK_STOP_TIME(builder, LINK_STOP_TIMEOffset)
-            addLINK_START_TIME(builder, LINK_START_TIMEOffset)
-            addBAND(builder, BANDOffset)
-            addLINK_NAME(builder, LINK_NAMEOffset)
-            addCONSTELLATION(builder, CONSTELLATIONOffset)
-            addSAT_NO2(builder, SAT_NO2)
-            addID_ON_ORBIT2(builder, ID_ON_ORBIT2Offset)
-            addSAT_NO1(builder, SAT_NO1)
-            addID_ON_ORBIT1(builder, ID_ON_ORBIT1Offset)
-            addID(builder, IDOffset)
-            addLINK_STATE(builder, LINK_STATE)
-            addLINK_TYPE(builder, LINK_TYPE)
+            addDATARATE2TO1(builder, dataRate2To1)
+            addDATARATE1TO2(builder, dataRate1To2)
+            addENDPOINT2LON(builder, endPoint2Lon)
+            addENDPOINT2LAT(builder, endPoint2Lat)
+            addENDPOINT1LON(builder, endPoint1Lon)
+            addENDPOINT1LAT(builder, endPoint1Lat)
+            addOPSCAP(builder, opsCapOffset)
+            addSYSCAP(builder, sysCapOffset)
+            addENDPOINT2NAME(builder, endPoint2NameOffset)
+            addIDBEAM2(builder, idBeam2Offset)
+            addENDPOINT1NAME(builder, endPoint1NameOffset)
+            addIDBEAM1(builder, idBeam1Offset)
+            addLINKSTOPTIME(builder, linkStopTimeOffset)
+            addLINKSTARTTIME(builder, linkStartTimeOffset)
+            addBAND(builder, bandOffset)
+            addLINKNAME(builder, linkNameOffset)
+            addCONSTELLATION(builder, constellationOffset)
+            addSATNO2(builder, satNo2)
+            addIDONORBIT2(builder, idOnOrbit2Offset)
+            addSATNO1(builder, satNo1)
+            addIDONORBIT1(builder, idOnOrbit1Offset)
+            addID(builder, idOffset)
+            addLINKSTATE(builder, linkState)
+            addLINKTYPE(builder, linkType)
             return endLKS(builder)
         }
         fun startLKS(builder: FlatBufferBuilder) = builder.startTable(24)
-        fun addID(builder: FlatBufferBuilder, ID: Int) = builder.addOffset(0, ID, 0)
-        fun addID_ON_ORBIT1(builder: FlatBufferBuilder, ID_ON_ORBIT1: Int) = builder.addOffset(1, ID_ON_ORBIT1, 0)
-        fun addSAT_NO1(builder: FlatBufferBuilder, SAT_NO1: UInt) = builder.addInt(2, SAT_NO1.toInt(), 0)
-        fun addID_ON_ORBIT2(builder: FlatBufferBuilder, ID_ON_ORBIT2: Int) = builder.addOffset(3, ID_ON_ORBIT2, 0)
-        fun addSAT_NO2(builder: FlatBufferBuilder, SAT_NO2: UInt) = builder.addInt(4, SAT_NO2.toInt(), 0)
-        fun addCONSTELLATION(builder: FlatBufferBuilder, CONSTELLATION: Int) = builder.addOffset(5, CONSTELLATION, 0)
-        fun addLINK_NAME(builder: FlatBufferBuilder, LINK_NAME: Int) = builder.addOffset(6, LINK_NAME, 0)
-        fun addLINK_TYPE(builder: FlatBufferBuilder, LINK_TYPE: Byte) = builder.addByte(7, LINK_TYPE, 0)
-        fun addLINK_STATE(builder: FlatBufferBuilder, LINK_STATE: Byte) = builder.addByte(8, LINK_STATE, 0)
-        fun addBAND(builder: FlatBufferBuilder, BAND: Int) = builder.addOffset(9, BAND, 0)
-        fun addLINK_START_TIME(builder: FlatBufferBuilder, LINK_START_TIME: Int) = builder.addOffset(10, LINK_START_TIME, 0)
-        fun addLINK_STOP_TIME(builder: FlatBufferBuilder, LINK_STOP_TIME: Int) = builder.addOffset(11, LINK_STOP_TIME, 0)
-        fun addID_BEAM1(builder: FlatBufferBuilder, ID_BEAM1: Int) = builder.addOffset(12, ID_BEAM1, 0)
-        fun addEND_POINT1_NAME(builder: FlatBufferBuilder, END_POINT1_NAME: Int) = builder.addOffset(13, END_POINT1_NAME, 0)
-        fun addEND_POINT1_LAT(builder: FlatBufferBuilder, END_POINT1_LAT: Double) = builder.addDouble(14, END_POINT1_LAT, 0.0)
-        fun addEND_POINT1_LON(builder: FlatBufferBuilder, END_POINT1_LON: Double) = builder.addDouble(15, END_POINT1_LON, 0.0)
-        fun addID_BEAM2(builder: FlatBufferBuilder, ID_BEAM2: Int) = builder.addOffset(16, ID_BEAM2, 0)
-        fun addEND_POINT2_NAME(builder: FlatBufferBuilder, END_POINT2_NAME: Int) = builder.addOffset(17, END_POINT2_NAME, 0)
-        fun addEND_POINT2_LAT(builder: FlatBufferBuilder, END_POINT2_LAT: Double) = builder.addDouble(18, END_POINT2_LAT, 0.0)
-        fun addEND_POINT2_LON(builder: FlatBufferBuilder, END_POINT2_LON: Double) = builder.addDouble(19, END_POINT2_LON, 0.0)
-        fun addDATA_RATE1_TO2(builder: FlatBufferBuilder, DATA_RATE1_TO2: Double) = builder.addDouble(20, DATA_RATE1_TO2, 0.0)
-        fun addDATA_RATE2_TO1(builder: FlatBufferBuilder, DATA_RATE2_TO1: Double) = builder.addDouble(21, DATA_RATE2_TO1, 0.0)
-        fun addSYS_CAP(builder: FlatBufferBuilder, SYS_CAP: Int) = builder.addOffset(22, SYS_CAP, 0)
-        fun addOPS_CAP(builder: FlatBufferBuilder, OPS_CAP: Int) = builder.addOffset(23, OPS_CAP, 0)
+        fun addID(builder: FlatBufferBuilder, id: Int) = builder.addOffset(0, id, 0)
+        fun addIDONORBIT1(builder: FlatBufferBuilder, idOnOrbit1: Int) = builder.addOffset(1, idOnOrbit1, 0)
+        fun addSATNO1(builder: FlatBufferBuilder, satNo1: UInt) = builder.addInt(2, satNo1.toInt(), 0)
+        fun addIDONORBIT2(builder: FlatBufferBuilder, idOnOrbit2: Int) = builder.addOffset(3, idOnOrbit2, 0)
+        fun addSATNO2(builder: FlatBufferBuilder, satNo2: UInt) = builder.addInt(4, satNo2.toInt(), 0)
+        fun addCONSTELLATION(builder: FlatBufferBuilder, constellation: Int) = builder.addOffset(5, constellation, 0)
+        fun addLINKNAME(builder: FlatBufferBuilder, linkName: Int) = builder.addOffset(6, linkName, 0)
+        fun addLINKTYPE(builder: FlatBufferBuilder, linkType: Byte) = builder.addByte(7, linkType, 0)
+        fun addLINKSTATE(builder: FlatBufferBuilder, linkState: Byte) = builder.addByte(8, linkState, 0)
+        fun addBAND(builder: FlatBufferBuilder, band: Int) = builder.addOffset(9, band, 0)
+        fun addLINKSTARTTIME(builder: FlatBufferBuilder, linkStartTime: Int) = builder.addOffset(10, linkStartTime, 0)
+        fun addLINKSTOPTIME(builder: FlatBufferBuilder, linkStopTime: Int) = builder.addOffset(11, linkStopTime, 0)
+        fun addIDBEAM1(builder: FlatBufferBuilder, idBeam1: Int) = builder.addOffset(12, idBeam1, 0)
+        fun addENDPOINT1NAME(builder: FlatBufferBuilder, endPoint1Name: Int) = builder.addOffset(13, endPoint1Name, 0)
+        fun addENDPOINT1LAT(builder: FlatBufferBuilder, endPoint1Lat: Double) = builder.addDouble(14, endPoint1Lat, 0.0)
+        fun addENDPOINT1LON(builder: FlatBufferBuilder, endPoint1Lon: Double) = builder.addDouble(15, endPoint1Lon, 0.0)
+        fun addIDBEAM2(builder: FlatBufferBuilder, idBeam2: Int) = builder.addOffset(16, idBeam2, 0)
+        fun addENDPOINT2NAME(builder: FlatBufferBuilder, endPoint2Name: Int) = builder.addOffset(17, endPoint2Name, 0)
+        fun addENDPOINT2LAT(builder: FlatBufferBuilder, endPoint2Lat: Double) = builder.addDouble(18, endPoint2Lat, 0.0)
+        fun addENDPOINT2LON(builder: FlatBufferBuilder, endPoint2Lon: Double) = builder.addDouble(19, endPoint2Lon, 0.0)
+        fun addDATARATE1TO2(builder: FlatBufferBuilder, dataRate1To2: Double) = builder.addDouble(20, dataRate1To2, 0.0)
+        fun addDATARATE2TO1(builder: FlatBufferBuilder, dataRate2To1: Double) = builder.addDouble(21, dataRate2To1, 0.0)
+        fun addSYSCAP(builder: FlatBufferBuilder, sysCap: Int) = builder.addOffset(22, sysCap, 0)
+        fun addOPSCAP(builder: FlatBufferBuilder, opsCap: Int) = builder.addOffset(23, opsCap, 0)
         fun endLKS(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

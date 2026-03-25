@@ -2,4 +2,93 @@
 
 # namespace: 
 
-# NOTE CelestialFrameWrapper.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+class CelestialFrameWrapper(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = CelestialFrameWrapper()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsCelestialFrameWrapper(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def CelestialFrameWrapperBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x52\x46\x4D", size_prefixed=size_prefixed)
+
+    # CelestialFrameWrapper
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # CelestialFrameWrapper
+    def frame(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+def CelestialFrameWrapperStart(builder):
+    builder.StartObject(1)
+
+def Start(builder):
+    CelestialFrameWrapperStart(builder)
+
+def CelestialFrameWrapperAddframe(builder, frame):
+    builder.PrependInt8Slot(0, frame, 0)
+
+def Addframe(builder, frame):
+    CelestialFrameWrapperAddframe(builder, frame)
+
+def CelestialFrameWrapperEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return CelestialFrameWrapperEnd(builder)
+
+
+class CelestialFrameWrapperT(object):
+
+    # CelestialFrameWrapperT
+    def __init__(
+        self,
+        frame = 0,
+    ):
+        self.frame = frame  # type: int
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpCelestialFrameWrapper = CelestialFrameWrapper()
+        tmpCelestialFrameWrapper.Init(buf, pos)
+        return cls.InitFromObj(tmpCelestialFrameWrapper)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpCelestialFrameWrapper):
+        x = CelestialFrameWrapperT()
+        x._UnPack(tmpCelestialFrameWrapper)
+        return x
+
+    # CelestialFrameWrapperT
+    def _UnPack(self, CelestialFrameWrapper):
+        if CelestialFrameWrapper is None:
+            return
+        self.frame = CelestialFrameWrapper.frame()
+
+    # CelestialFrameWrapperT
+    def Pack(self, builder):
+        CelestialFrameWrapperStart(builder)
+        CelestialFrameWrapperAddframe(builder, self.frame)
+        CelestialFrameWrapper = CelestialFrameWrapperEnd(builder)
+        return CelestialFrameWrapper

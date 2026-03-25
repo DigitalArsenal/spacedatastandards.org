@@ -2,4 +2,347 @@
 
 # namespace: 
 
-# NOTE KMLModel.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# 3D Model geometry
+class KMLModel(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = KMLModel()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsKMLModel(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def KMLModelBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x4B\x4D\x4C", size_prefixed=size_prefixed)
+
+    # KMLModel
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Altitude mode
+    # KMLModel
+    def ALTITUDE_MODE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # Location longitude
+    # KMLModel
+    def LOCATION_LON(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Location latitude
+    # KMLModel
+    def LOCATION_LAT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Location altitude
+    # KMLModel
+    def LOCATION_ALT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Orientation heading
+    # KMLModel
+    def ORIENTATION_HEADING(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Orientation tilt
+    # KMLModel
+    def ORIENTATION_TILT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Orientation roll
+    # KMLModel
+    def ORIENTATION_ROLL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Scale X
+    # KMLModel
+    def SCALE_X(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Scale Y
+    # KMLModel
+    def SCALE_Y(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Scale Z
+    # KMLModel
+    def SCALE_Z(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Link to 3D model file
+    # KMLModel
+    def LINK_HREF(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Resource map aliases
+    # KMLModel
+    def RESOURCE_MAP(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from KMLResourceMapAlias import KMLResourceMapAlias
+            obj = KMLResourceMapAlias()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # KMLModel
+    def RESOURCE_MAPLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # KMLModel
+    def RESOURCE_MAPIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        return o == 0
+
+def KMLModelStart(builder):
+    builder.StartObject(12)
+
+def Start(builder):
+    KMLModelStart(builder)
+
+def KMLModelAddALTITUDE_MODE(builder, ALTITUDE_MODE):
+    builder.PrependInt8Slot(0, ALTITUDE_MODE, 0)
+
+def AddALTITUDE_MODE(builder, ALTITUDE_MODE):
+    KMLModelAddALTITUDE_MODE(builder, ALTITUDE_MODE)
+
+def KMLModelAddLOCATION_LON(builder, LOCATION_LON):
+    builder.PrependFloat64Slot(1, LOCATION_LON, 0.0)
+
+def AddLOCATION_LON(builder, LOCATION_LON):
+    KMLModelAddLOCATION_LON(builder, LOCATION_LON)
+
+def KMLModelAddLOCATION_LAT(builder, LOCATION_LAT):
+    builder.PrependFloat64Slot(2, LOCATION_LAT, 0.0)
+
+def AddLOCATION_LAT(builder, LOCATION_LAT):
+    KMLModelAddLOCATION_LAT(builder, LOCATION_LAT)
+
+def KMLModelAddLOCATION_ALT(builder, LOCATION_ALT):
+    builder.PrependFloat64Slot(3, LOCATION_ALT, 0.0)
+
+def AddLOCATION_ALT(builder, LOCATION_ALT):
+    KMLModelAddLOCATION_ALT(builder, LOCATION_ALT)
+
+def KMLModelAddORIENTATION_HEADING(builder, ORIENTATION_HEADING):
+    builder.PrependFloat64Slot(4, ORIENTATION_HEADING, 0.0)
+
+def AddORIENTATION_HEADING(builder, ORIENTATION_HEADING):
+    KMLModelAddORIENTATION_HEADING(builder, ORIENTATION_HEADING)
+
+def KMLModelAddORIENTATION_TILT(builder, ORIENTATION_TILT):
+    builder.PrependFloat64Slot(5, ORIENTATION_TILT, 0.0)
+
+def AddORIENTATION_TILT(builder, ORIENTATION_TILT):
+    KMLModelAddORIENTATION_TILT(builder, ORIENTATION_TILT)
+
+def KMLModelAddORIENTATION_ROLL(builder, ORIENTATION_ROLL):
+    builder.PrependFloat64Slot(6, ORIENTATION_ROLL, 0.0)
+
+def AddORIENTATION_ROLL(builder, ORIENTATION_ROLL):
+    KMLModelAddORIENTATION_ROLL(builder, ORIENTATION_ROLL)
+
+def KMLModelAddSCALE_X(builder, SCALE_X):
+    builder.PrependFloat64Slot(7, SCALE_X, 0.0)
+
+def AddSCALE_X(builder, SCALE_X):
+    KMLModelAddSCALE_X(builder, SCALE_X)
+
+def KMLModelAddSCALE_Y(builder, SCALE_Y):
+    builder.PrependFloat64Slot(8, SCALE_Y, 0.0)
+
+def AddSCALE_Y(builder, SCALE_Y):
+    KMLModelAddSCALE_Y(builder, SCALE_Y)
+
+def KMLModelAddSCALE_Z(builder, SCALE_Z):
+    builder.PrependFloat64Slot(9, SCALE_Z, 0.0)
+
+def AddSCALE_Z(builder, SCALE_Z):
+    KMLModelAddSCALE_Z(builder, SCALE_Z)
+
+def KMLModelAddLINK_HREF(builder, LINK_HREF):
+    builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(LINK_HREF), 0)
+
+def AddLINK_HREF(builder, LINK_HREF):
+    KMLModelAddLINK_HREF(builder, LINK_HREF)
+
+def KMLModelAddRESOURCE_MAP(builder, RESOURCE_MAP):
+    builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(RESOURCE_MAP), 0)
+
+def AddRESOURCE_MAP(builder, RESOURCE_MAP):
+    KMLModelAddRESOURCE_MAP(builder, RESOURCE_MAP)
+
+def KMLModelStartRESOURCE_MAPVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartRESOURCE_MAPVector(builder, numElems):
+    return KMLModelStartRESOURCE_MAPVector(builder, numElems)
+
+def KMLModelCreateRESOURCE_MAPVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateRESOURCE_MAPVector(builder, data):
+    KMLModelCreateRESOURCE_MAPVector(builder, data)
+
+def KMLModelEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return KMLModelEnd(builder)
+
+import KMLResourceMapAlias
+try:
+    from typing import List
+except:
+    pass
+
+class KMLModelT(object):
+
+    # KMLModelT
+    def __init__(
+        self,
+        ALTITUDE_MODE = 0,
+        LOCATION_LON = 0.0,
+        LOCATION_LAT = 0.0,
+        LOCATION_ALT = 0.0,
+        ORIENTATION_HEADING = 0.0,
+        ORIENTATION_TILT = 0.0,
+        ORIENTATION_ROLL = 0.0,
+        SCALE_X = 0.0,
+        SCALE_Y = 0.0,
+        SCALE_Z = 0.0,
+        LINK_HREF = None,
+        RESOURCE_MAP = None,
+    ):
+        self.ALTITUDE_MODE = ALTITUDE_MODE  # type: int
+        self.LOCATION_LON = LOCATION_LON  # type: float
+        self.LOCATION_LAT = LOCATION_LAT  # type: float
+        self.LOCATION_ALT = LOCATION_ALT  # type: float
+        self.ORIENTATION_HEADING = ORIENTATION_HEADING  # type: float
+        self.ORIENTATION_TILT = ORIENTATION_TILT  # type: float
+        self.ORIENTATION_ROLL = ORIENTATION_ROLL  # type: float
+        self.SCALE_X = SCALE_X  # type: float
+        self.SCALE_Y = SCALE_Y  # type: float
+        self.SCALE_Z = SCALE_Z  # type: float
+        self.LINK_HREF = LINK_HREF  # type: Optional[str]
+        self.RESOURCE_MAP = RESOURCE_MAP  # type: Optional[List[KMLResourceMapAlias.KMLResourceMapAliasT]]
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpKmlmodel = KMLModel()
+        tmpKmlmodel.Init(buf, pos)
+        return cls.InitFromObj(tmpKmlmodel)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpKmlmodel):
+        x = KMLModelT()
+        x._UnPack(tmpKmlmodel)
+        return x
+
+    # KMLModelT
+    def _UnPack(self, KMLModel):
+        if KMLModel is None:
+            return
+        self.ALTITUDE_MODE = KMLModel.ALTITUDE_MODE()
+        self.LOCATION_LON = KMLModel.LOCATION_LON()
+        self.LOCATION_LAT = KMLModel.LOCATION_LAT()
+        self.LOCATION_ALT = KMLModel.LOCATION_ALT()
+        self.ORIENTATION_HEADING = KMLModel.ORIENTATION_HEADING()
+        self.ORIENTATION_TILT = KMLModel.ORIENTATION_TILT()
+        self.ORIENTATION_ROLL = KMLModel.ORIENTATION_ROLL()
+        self.SCALE_X = KMLModel.SCALE_X()
+        self.SCALE_Y = KMLModel.SCALE_Y()
+        self.SCALE_Z = KMLModel.SCALE_Z()
+        self.LINK_HREF = KMLModel.LINK_HREF()
+        if not KMLModel.RESOURCE_MAPIsNone():
+            self.RESOURCE_MAP = []
+            for i in range(KMLModel.RESOURCE_MAPLength()):
+                if KMLModel.RESOURCE_MAP(i) is None:
+                    self.RESOURCE_MAP.append(None)
+                else:
+                    kMLResourceMapAlias_ = KMLResourceMapAlias.KMLResourceMapAliasT.InitFromObj(KMLModel.RESOURCE_MAP(i))
+                    self.RESOURCE_MAP.append(kMLResourceMapAlias_)
+
+    # KMLModelT
+    def Pack(self, builder):
+        if self.LINK_HREF is not None:
+            LINK_HREF = builder.CreateString(self.LINK_HREF)
+        if self.RESOURCE_MAP is not None:
+            RESOURCE_MAPlist = []
+            for i in range(len(self.RESOURCE_MAP)):
+                RESOURCE_MAPlist.append(self.RESOURCE_MAP[i].Pack(builder))
+            KMLModelStartRESOURCE_MAPVector(builder, len(self.RESOURCE_MAP))
+            for i in reversed(range(len(self.RESOURCE_MAP))):
+                builder.PrependUOffsetTRelative(RESOURCE_MAPlist[i])
+            RESOURCE_MAP = builder.EndVector()
+        KMLModelStart(builder)
+        KMLModelAddALTITUDE_MODE(builder, self.ALTITUDE_MODE)
+        KMLModelAddLOCATION_LON(builder, self.LOCATION_LON)
+        KMLModelAddLOCATION_LAT(builder, self.LOCATION_LAT)
+        KMLModelAddLOCATION_ALT(builder, self.LOCATION_ALT)
+        KMLModelAddORIENTATION_HEADING(builder, self.ORIENTATION_HEADING)
+        KMLModelAddORIENTATION_TILT(builder, self.ORIENTATION_TILT)
+        KMLModelAddORIENTATION_ROLL(builder, self.ORIENTATION_ROLL)
+        KMLModelAddSCALE_X(builder, self.SCALE_X)
+        KMLModelAddSCALE_Y(builder, self.SCALE_Y)
+        KMLModelAddSCALE_Z(builder, self.SCALE_Z)
+        if self.LINK_HREF is not None:
+            KMLModelAddLINK_HREF(builder, LINK_HREF)
+        if self.RESOURCE_MAP is not None:
+            KMLModelAddRESOURCE_MAP(builder, RESOURCE_MAP)
+        KMLModel = KMLModelEnd(builder)
+        return KMLModel

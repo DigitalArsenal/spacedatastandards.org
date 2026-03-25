@@ -32,7 +32,7 @@ class AlgorithmInput : Table() {
     /**
      * Parameter reference
      */
-    val PARAMETER_REF : String?
+    val parameterRef : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class AlgorithmInput : Table() {
                 null
             }
         }
-    val PARAMETER_REFAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun PARAMETER_REFInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val parameterRefAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun parameterRefInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Input name in algorithm
      */
-    val INPUT_NAME : String?
+    val inputName : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -55,24 +55,24 @@ class AlgorithmInput : Table() {
                 null
             }
         }
-    val INPUT_NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun INPUT_NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val inputNameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun inputNameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsAlgorithmInput(_bb: ByteBuffer): AlgorithmInput = getRootAsAlgorithmInput(_bb, AlgorithmInput())
         fun getRootAsAlgorithmInput(_bb: ByteBuffer, obj: AlgorithmInput): AlgorithmInput {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createAlgorithmInput(builder: FlatBufferBuilder, PARAMETER_REFOffset: Int, INPUT_NAMEOffset: Int) : Int {
+        fun createAlgorithmInput(builder: FlatBufferBuilder, parameterRefOffset: Int, inputNameOffset: Int) : Int {
             builder.startTable(2)
-            addINPUT_NAME(builder, INPUT_NAMEOffset)
-            addPARAMETER_REF(builder, PARAMETER_REFOffset)
+            addINPUTNAME(builder, inputNameOffset)
+            addPARAMETERREF(builder, parameterRefOffset)
             return endAlgorithmInput(builder)
         }
         fun startAlgorithmInput(builder: FlatBufferBuilder) = builder.startTable(2)
-        fun addPARAMETER_REF(builder: FlatBufferBuilder, PARAMETER_REF: Int) = builder.addOffset(0, PARAMETER_REF, 0)
-        fun addINPUT_NAME(builder: FlatBufferBuilder, INPUT_NAME: Int) = builder.addOffset(1, INPUT_NAME, 0)
+        fun addPARAMETERREF(builder: FlatBufferBuilder, parameterRef: Int) = builder.addOffset(0, parameterRef, 0)
+        fun addINPUTNAME(builder: FlatBufferBuilder, inputName: Int) = builder.addOffset(1, inputName, 0)
         fun endAlgorithmInput(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

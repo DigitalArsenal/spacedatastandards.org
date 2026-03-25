@@ -94,48 +94,49 @@ public enum RecordType : byte
   PLG = 87,
   PLK = 88,
   PNM = 89,
-  PRG = 90,
-  PUR = 91,
-  RAF = 92,
-  RCF = 93,
-  RDM = 94,
-  RDO = 95,
-  REV = 96,
-  RFB = 97,
-  RFE = 98,
-  RFM = 99,
-  RFO = 100,
-  ROC = 101,
-  SAR = 102,
-  SCM = 103,
-  SDL = 104,
-  SEN = 105,
-  SEO = 106,
-  SEV = 107,
-  SIT = 108,
-  SKI = 109,
-  SNR = 110,
-  SOI = 111,
-  SON = 112,
-  SPP = 113,
-  SPW = 114,
-  STF = 115,
-  STR = 116,
-  STV = 117,
-  SWR = 118,
-  TCF = 119,
-  TDM = 120,
-  TIM = 121,
-  TKG = 122,
-  TME = 123,
-  TMF = 124,
-  TPN = 125,
-  TRK = 126,
-  TRN = 127,
-  VCM = 128,
-  WPN = 129,
-  WTH = 130,
-  XTC = 131,
+  PPE = 90,
+  PRG = 91,
+  PUR = 92,
+  RAF = 93,
+  RCF = 94,
+  RDM = 95,
+  RDO = 96,
+  REV = 97,
+  RFB = 98,
+  RFE = 99,
+  RFM = 100,
+  RFO = 101,
+  ROC = 102,
+  SAR = 103,
+  SCM = 104,
+  SDL = 105,
+  SEN = 106,
+  SEO = 107,
+  SEV = 108,
+  SIT = 109,
+  SKI = 110,
+  SNR = 111,
+  SOI = 112,
+  SON = 113,
+  SPP = 114,
+  SPW = 115,
+  STF = 116,
+  STR = 117,
+  STV = 118,
+  SWR = 119,
+  TCF = 120,
+  TDM = 121,
+  TIM = 122,
+  TKG = 123,
+  TME = 124,
+  TMF = 125,
+  TPN = 126,
+  TRK = 127,
+  TRN = 128,
+  VCM = 129,
+  WPN = 130,
+  WTH = 131,
+  XTC = 132,
 };
 
 public class RecordTypeUnion {
@@ -326,6 +327,8 @@ public class RecordTypeUnion {
   public static RecordTypeUnion FromPLK(PLKT _plk) { return new RecordTypeUnion{ Type = RecordType.PLK, Value = _plk }; }
   public PNMT AsPNM() { return this.As<PNMT>(); }
   public static RecordTypeUnion FromPNM(PNMT _pnm) { return new RecordTypeUnion{ Type = RecordType.PNM, Value = _pnm }; }
+  public PPET AsPPE() { return this.As<PPET>(); }
+  public static RecordTypeUnion FromPPE(PPET _ppe) { return new RecordTypeUnion{ Type = RecordType.PPE, Value = _ppe }; }
   public PRGT AsPRG() { return this.As<PRGT>(); }
   public static RecordTypeUnion FromPRG(PRGT _prg) { return new RecordTypeUnion{ Type = RecordType.PRG, Value = _prg }; }
   public PURT AsPUR() { return this.As<PURT>(); }
@@ -503,6 +506,7 @@ public class RecordTypeUnion {
       case RecordType.PLG: return PLG.Pack(builder, _o.AsPLG()).Value;
       case RecordType.PLK: return PLK.Pack(builder, _o.AsPLK()).Value;
       case RecordType.PNM: return PNM.Pack(builder, _o.AsPNM()).Value;
+      case RecordType.PPE: return PPE.Pack(builder, _o.AsPPE()).Value;
       case RecordType.PRG: return PRG.Pack(builder, _o.AsPRG()).Value;
       case RecordType.PUR: return PUR.Pack(builder, _o.AsPUR()).Value;
       case RecordType.RAF: return RAF.Pack(builder, _o.AsRAF()).Value;
@@ -824,6 +828,9 @@ static public class RecordTypeVerify
         break;
       case RecordType.PNM:
         result = PNMVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.PPE:
+        result = PPEVerify.Verify(verifier, tablePos);
         break;
       case RecordType.PRG:
         result = PRGVerify.Verify(verifier, tablePos);

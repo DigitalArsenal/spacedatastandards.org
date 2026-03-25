@@ -87,16 +87,21 @@ def End(builder):
 class GPXLinkT(object):
 
     # GPXLinkT
-    def __init__(self):
-        self.HREF = None  # type: str
-        self.TEXT = None  # type: str
-        self.TYPE = None  # type: str
+    def __init__(
+        self,
+        HREF = None,
+        TEXT = None,
+        TYPE = None,
+    ):
+        self.HREF = HREF  # type: Optional[str]
+        self.TEXT = TEXT  # type: Optional[str]
+        self.TYPE = TYPE  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        gpxlink = GPXLink()
-        gpxlink.Init(buf, pos)
-        return cls.InitFromObj(gpxlink)
+        tmpGpxlink = GPXLink()
+        tmpGpxlink.Init(buf, pos)
+        return cls.InitFromObj(tmpGpxlink)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -104,18 +109,18 @@ class GPXLinkT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, gpxlink):
+    def InitFromObj(cls, tmpGpxlink):
         x = GPXLinkT()
-        x._UnPack(gpxlink)
+        x._UnPack(tmpGpxlink)
         return x
 
     # GPXLinkT
-    def _UnPack(self, gpxlink):
-        if gpxlink is None:
+    def _UnPack(self, GPXLink):
+        if GPXLink is None:
             return
-        self.HREF = gpxlink.HREF()
-        self.TEXT = gpxlink.TEXT()
-        self.TYPE = gpxlink.TYPE()
+        self.HREF = GPXLink.HREF()
+        self.TEXT = GPXLink.TEXT()
+        self.TYPE = GPXLink.TYPE()
 
     # GPXLinkT
     def Pack(self, builder):
@@ -132,5 +137,5 @@ class GPXLinkT(object):
             GPXLinkAddTEXT(builder, TEXT)
         if self.TYPE is not None:
             GPXLinkAddTYPE(builder, TYPE)
-        gpxlink = GPXLinkEnd(builder)
-        return gpxlink
+        GPXLink = GPXLinkEnd(builder)
+        return GPXLink

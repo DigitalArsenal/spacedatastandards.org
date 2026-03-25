@@ -62,12 +62,20 @@ func (rcv *CHN) ID() []byte {
 	return nil
 }
 
+func (rcv *CHN) Id() []byte {
+	return rcv.ID()
+}
+
 func (rcv *CHN) NAME() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *CHN) Name() []byte {
+	return rcv.NAME()
 }
 
 func (rcv *CHN) TYPE() []byte {
@@ -78,12 +86,20 @@ func (rcv *CHN) TYPE() []byte {
 	return nil
 }
 
+func (rcv *CHN) Type() []byte {
+	return rcv.TYPE()
+}
+
 func (rcv *CHN) BEAM_NAME() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *CHN) BeamName() []byte {
+	return rcv.BEAM_NAME()
 }
 
 func (rcv *CHN) ID_RFBAND() []byte {
@@ -94,12 +110,20 @@ func (rcv *CHN) ID_RFBAND() []byte {
 	return nil
 }
 
+func (rcv *CHN) IdRfband() []byte {
+	return rcv.ID_RFBAND()
+}
+
 func (rcv *CHN) ENCRYPTION() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *CHN) Encryption() []byte {
+	return rcv.ENCRYPTION()
 }
 
 func (rcv *CHN) PKG() []byte {
@@ -110,12 +134,20 @@ func (rcv *CHN) PKG() []byte {
 	return nil
 }
 
+func (rcv *CHN) Pkg() []byte {
+	return rcv.PKG()
+}
+
 func (rcv *CHN) RES() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *CHN) Res() []byte {
+	return rcv.RES()
 }
 
 func (rcv *CHN) COMPRESSION() []byte {
@@ -126,12 +158,20 @@ func (rcv *CHN) COMPRESSION() []byte {
 	return nil
 }
 
+func (rcv *CHN) Compression() []byte {
+	return rcv.COMPRESSION()
+}
+
 func (rcv *CHN) VPID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *CHN) Vpid() []byte {
+	return rcv.VPID()
 }
 
 func (rcv *CHN) APID() []byte {
@@ -142,12 +182,20 @@ func (rcv *CHN) APID() []byte {
 	return nil
 }
 
+func (rcv *CHN) Apid() []byte {
+	return rcv.APID()
+}
+
 func (rcv *CHN) SID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *CHN) Sid() []byte {
+	return rcv.SID()
 }
 
 func (rcv *CHN) OWNER() []byte {
@@ -158,47 +206,90 @@ func (rcv *CHN) OWNER() []byte {
 	return nil
 }
 
+func (rcv *CHN) Owner() []byte {
+	return rcv.OWNER()
+}
+
 func CHNStart(builder *flatbuffers.Builder) {
 	builder.StartObject(13)
 }
 func CHNAddID(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ID), 0)
 }
+func CHNAddId(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
+	CHNAddID(builder, ID)
+}
 func CHNAddNAME(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(NAME), 0)
+}
+func CHNAddName(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
+	CHNAddNAME(builder, NAME)
 }
 func CHNAddTYPE(builder *flatbuffers.Builder, TYPE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(TYPE), 0)
 }
+func CHNAddType(builder *flatbuffers.Builder, TYPE flatbuffers.UOffsetT) {
+	CHNAddTYPE(builder, TYPE)
+}
 func CHNAddBEAM_NAME(builder *flatbuffers.Builder, BEAM_NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(BEAM_NAME), 0)
+}
+func CHNAddBeamName(builder *flatbuffers.Builder, BEAM_NAME flatbuffers.UOffsetT) {
+	CHNAddBEAM_NAME(builder, BEAM_NAME)
 }
 func CHNAddID_RFBAND(builder *flatbuffers.Builder, ID_RFBAND flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(ID_RFBAND), 0)
 }
+func CHNAddIdRfband(builder *flatbuffers.Builder, ID_RFBAND flatbuffers.UOffsetT) {
+	CHNAddID_RFBAND(builder, ID_RFBAND)
+}
 func CHNAddENCRYPTION(builder *flatbuffers.Builder, ENCRYPTION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(ENCRYPTION), 0)
+}
+func CHNAddEncryption(builder *flatbuffers.Builder, ENCRYPTION flatbuffers.UOffsetT) {
+	CHNAddENCRYPTION(builder, ENCRYPTION)
 }
 func CHNAddPKG(builder *flatbuffers.Builder, PKG flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(PKG), 0)
 }
+func CHNAddPkg(builder *flatbuffers.Builder, PKG flatbuffers.UOffsetT) {
+	CHNAddPKG(builder, PKG)
+}
 func CHNAddRES(builder *flatbuffers.Builder, RES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(RES), 0)
+}
+func CHNAddRes(builder *flatbuffers.Builder, RES flatbuffers.UOffsetT) {
+	CHNAddRES(builder, RES)
 }
 func CHNAddCOMPRESSION(builder *flatbuffers.Builder, COMPRESSION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(COMPRESSION), 0)
 }
+func CHNAddCompression(builder *flatbuffers.Builder, COMPRESSION flatbuffers.UOffsetT) {
+	CHNAddCOMPRESSION(builder, COMPRESSION)
+}
 func CHNAddVPID(builder *flatbuffers.Builder, VPID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(VPID), 0)
+}
+func CHNAddVpid(builder *flatbuffers.Builder, VPID flatbuffers.UOffsetT) {
+	CHNAddVPID(builder, VPID)
 }
 func CHNAddAPID(builder *flatbuffers.Builder, APID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(APID), 0)
 }
+func CHNAddApid(builder *flatbuffers.Builder, APID flatbuffers.UOffsetT) {
+	CHNAddAPID(builder, APID)
+}
 func CHNAddSID(builder *flatbuffers.Builder, SID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(SID), 0)
 }
+func CHNAddSid(builder *flatbuffers.Builder, SID flatbuffers.UOffsetT) {
+	CHNAddSID(builder, SID)
+}
 func CHNAddOWNER(builder *flatbuffers.Builder, OWNER flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(12, flatbuffers.UOffsetT(OWNER), 0)
+}
+func CHNAddOwner(builder *flatbuffers.Builder, OWNER flatbuffers.UOffsetT) {
+	CHNAddOWNER(builder, OWNER)
 }
 func CHNEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

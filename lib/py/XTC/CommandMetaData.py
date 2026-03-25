@@ -182,20 +182,29 @@ except:
 class CommandMetaDataT(object):
 
     # CommandMetaDataT
-    def __init__(self):
-        self.ARGUMENT_TYPE_SET = None  # type: Optional[ArgumentTypeSet.ArgumentTypeSetT]
-        self.PARAMETER_TYPE_SET = None  # type: Optional[ParameterTypeSet.ParameterTypeSetT]
-        self.PARAMETER_SET = None  # type: Optional[ParameterSet.ParameterSetT]
-        self.META_COMMAND_SET = None  # type: Optional[MetaCommandSet.MetaCommandSetT]
-        self.COMMAND_CONTAINER_SET = None  # type: Optional[ContainerSet.ContainerSetT]
-        self.ALGORITHM_SET = None  # type: Optional[AlgorithmSet.AlgorithmSetT]
-        self.STREAM_SET = None  # type: Optional[StreamSet.StreamSetT]
+    def __init__(
+        self,
+        ARGUMENT_TYPE_SET = None,
+        PARAMETER_TYPE_SET = None,
+        PARAMETER_SET = None,
+        META_COMMAND_SET = None,
+        COMMAND_CONTAINER_SET = None,
+        ALGORITHM_SET = None,
+        STREAM_SET = None,
+    ):
+        self.ARGUMENT_TYPE_SET = ARGUMENT_TYPE_SET  # type: Optional[ArgumentTypeSet.ArgumentTypeSetT]
+        self.PARAMETER_TYPE_SET = PARAMETER_TYPE_SET  # type: Optional[ParameterTypeSet.ParameterTypeSetT]
+        self.PARAMETER_SET = PARAMETER_SET  # type: Optional[ParameterSet.ParameterSetT]
+        self.META_COMMAND_SET = META_COMMAND_SET  # type: Optional[MetaCommandSet.MetaCommandSetT]
+        self.COMMAND_CONTAINER_SET = COMMAND_CONTAINER_SET  # type: Optional[ContainerSet.ContainerSetT]
+        self.ALGORITHM_SET = ALGORITHM_SET  # type: Optional[AlgorithmSet.AlgorithmSetT]
+        self.STREAM_SET = STREAM_SET  # type: Optional[StreamSet.StreamSetT]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        commandMetaData = CommandMetaData()
-        commandMetaData.Init(buf, pos)
-        return cls.InitFromObj(commandMetaData)
+        tmpCommandMetaData = CommandMetaData()
+        tmpCommandMetaData.Init(buf, pos)
+        return cls.InitFromObj(tmpCommandMetaData)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -203,29 +212,29 @@ class CommandMetaDataT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, commandMetaData):
+    def InitFromObj(cls, tmpCommandMetaData):
         x = CommandMetaDataT()
-        x._UnPack(commandMetaData)
+        x._UnPack(tmpCommandMetaData)
         return x
 
     # CommandMetaDataT
-    def _UnPack(self, commandMetaData):
-        if commandMetaData is None:
+    def _UnPack(self, CommandMetaData):
+        if CommandMetaData is None:
             return
-        if commandMetaData.ARGUMENT_TYPE_SET() is not None:
-            self.ARGUMENT_TYPE_SET = ArgumentTypeSet.ArgumentTypeSetT.InitFromObj(commandMetaData.ARGUMENT_TYPE_SET())
-        if commandMetaData.PARAMETER_TYPE_SET() is not None:
-            self.PARAMETER_TYPE_SET = ParameterTypeSet.ParameterTypeSetT.InitFromObj(commandMetaData.PARAMETER_TYPE_SET())
-        if commandMetaData.PARAMETER_SET() is not None:
-            self.PARAMETER_SET = ParameterSet.ParameterSetT.InitFromObj(commandMetaData.PARAMETER_SET())
-        if commandMetaData.META_COMMAND_SET() is not None:
-            self.META_COMMAND_SET = MetaCommandSet.MetaCommandSetT.InitFromObj(commandMetaData.META_COMMAND_SET())
-        if commandMetaData.COMMAND_CONTAINER_SET() is not None:
-            self.COMMAND_CONTAINER_SET = ContainerSet.ContainerSetT.InitFromObj(commandMetaData.COMMAND_CONTAINER_SET())
-        if commandMetaData.ALGORITHM_SET() is not None:
-            self.ALGORITHM_SET = AlgorithmSet.AlgorithmSetT.InitFromObj(commandMetaData.ALGORITHM_SET())
-        if commandMetaData.STREAM_SET() is not None:
-            self.STREAM_SET = StreamSet.StreamSetT.InitFromObj(commandMetaData.STREAM_SET())
+        if CommandMetaData.ARGUMENT_TYPE_SET() is not None:
+            self.ARGUMENT_TYPE_SET = ArgumentTypeSet.ArgumentTypeSetT.InitFromObj(CommandMetaData.ARGUMENT_TYPE_SET())
+        if CommandMetaData.PARAMETER_TYPE_SET() is not None:
+            self.PARAMETER_TYPE_SET = ParameterTypeSet.ParameterTypeSetT.InitFromObj(CommandMetaData.PARAMETER_TYPE_SET())
+        if CommandMetaData.PARAMETER_SET() is not None:
+            self.PARAMETER_SET = ParameterSet.ParameterSetT.InitFromObj(CommandMetaData.PARAMETER_SET())
+        if CommandMetaData.META_COMMAND_SET() is not None:
+            self.META_COMMAND_SET = MetaCommandSet.MetaCommandSetT.InitFromObj(CommandMetaData.META_COMMAND_SET())
+        if CommandMetaData.COMMAND_CONTAINER_SET() is not None:
+            self.COMMAND_CONTAINER_SET = ContainerSet.ContainerSetT.InitFromObj(CommandMetaData.COMMAND_CONTAINER_SET())
+        if CommandMetaData.ALGORITHM_SET() is not None:
+            self.ALGORITHM_SET = AlgorithmSet.AlgorithmSetT.InitFromObj(CommandMetaData.ALGORITHM_SET())
+        if CommandMetaData.STREAM_SET() is not None:
+            self.STREAM_SET = StreamSet.StreamSetT.InitFromObj(CommandMetaData.STREAM_SET())
 
     # CommandMetaDataT
     def Pack(self, builder):
@@ -258,5 +267,5 @@ class CommandMetaDataT(object):
             CommandMetaDataAddALGORITHM_SET(builder, ALGORITHM_SET)
         if self.STREAM_SET is not None:
             CommandMetaDataAddSTREAM_SET(builder, STREAM_SET)
-        commandMetaData = CommandMetaDataEnd(builder)
-        return commandMetaData
+        CommandMetaData = CommandMetaDataEnd(builder)
+        return CommandMetaData

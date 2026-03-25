@@ -51,6 +51,10 @@ func (rcv *KMLPolyStyle) COLOR() []byte {
 	return nil
 }
 
+func (rcv *KMLPolyStyle) Color() []byte {
+	return rcv.COLOR()
+}
+
 /// KML color in aabbggrr hex format
 /// Color mode
 func (rcv *KMLPolyStyle) COLOR_MODE() KMLColorMode {
@@ -61,9 +65,17 @@ func (rcv *KMLPolyStyle) COLOR_MODE() KMLColorMode {
 	return 0
 }
 
+func (rcv *KMLPolyStyle) ColorMode() KMLColorMode {
+	return rcv.COLOR_MODE()
+}
+
 /// Color mode
 func (rcv *KMLPolyStyle) MutateCOLOR_MODE(n KMLColorMode) bool {
 	return rcv._tab.MutateInt8Slot(6, int8(n))
+}
+
+func (rcv *KMLPolyStyle) MutateColorMode(n KMLColorMode) bool {
+	return rcv.MutateCOLOR_MODE(n)
 }
 
 /// Whether to fill
@@ -75,9 +87,17 @@ func (rcv *KMLPolyStyle) FILL() bool {
 	return false
 }
 
+func (rcv *KMLPolyStyle) Fill() bool {
+	return rcv.FILL()
+}
+
 /// Whether to fill
 func (rcv *KMLPolyStyle) MutateFILL(n bool) bool {
 	return rcv._tab.MutateBoolSlot(8, n)
+}
+
+func (rcv *KMLPolyStyle) MutateFill(n bool) bool {
+	return rcv.MutateFILL(n)
 }
 
 /// Whether to outline
@@ -89,9 +109,17 @@ func (rcv *KMLPolyStyle) OUTLINE() bool {
 	return false
 }
 
+func (rcv *KMLPolyStyle) Outline() bool {
+	return rcv.OUTLINE()
+}
+
 /// Whether to outline
 func (rcv *KMLPolyStyle) MutateOUTLINE(n bool) bool {
 	return rcv._tab.MutateBoolSlot(10, n)
+}
+
+func (rcv *KMLPolyStyle) MutateOutline(n bool) bool {
+	return rcv.MutateOUTLINE(n)
 }
 
 func KMLPolyStyleStart(builder *flatbuffers.Builder) {
@@ -100,14 +128,26 @@ func KMLPolyStyleStart(builder *flatbuffers.Builder) {
 func KMLPolyStyleAddCOLOR(builder *flatbuffers.Builder, COLOR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(COLOR), 0)
 }
+func KMLPolyStyleAddColor(builder *flatbuffers.Builder, COLOR flatbuffers.UOffsetT) {
+	KMLPolyStyleAddCOLOR(builder, COLOR)
+}
 func KMLPolyStyleAddCOLOR_MODE(builder *flatbuffers.Builder, COLOR_MODE KMLColorMode) {
 	builder.PrependInt8Slot(1, int8(COLOR_MODE), 0)
+}
+func KMLPolyStyleAddColorMode(builder *flatbuffers.Builder, COLOR_MODE KMLColorMode) {
+	KMLPolyStyleAddCOLOR_MODE(builder, COLOR_MODE)
 }
 func KMLPolyStyleAddFILL(builder *flatbuffers.Builder, FILL bool) {
 	builder.PrependBoolSlot(2, FILL, false)
 }
+func KMLPolyStyleAddFill(builder *flatbuffers.Builder, FILL bool) {
+	KMLPolyStyleAddFILL(builder, FILL)
+}
 func KMLPolyStyleAddOUTLINE(builder *flatbuffers.Builder, OUTLINE bool) {
 	builder.PrependBoolSlot(3, OUTLINE, false)
+}
+func KMLPolyStyleAddOutline(builder *flatbuffers.Builder, OUTLINE bool) {
+	KMLPolyStyleAddOUTLINE(builder, OUTLINE)
 }
 func KMLPolyStyleEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

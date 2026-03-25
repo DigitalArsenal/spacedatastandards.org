@@ -102,6 +102,16 @@ def TRNStartSOURCESVector(builder, numElems):
 def StartSOURCESVector(builder, numElems):
     return TRNStartSOURCESVector(builder, numElems)
 
+def TRNCreateSOURCESVector(builder, data):
+    data = list(data)
+    builder.StartVector(1, len(data), 1)
+    for item in reversed(data):
+        builder.PrependInt8(item)
+    return builder.EndVector()
+
+def CreateSOURCESVector(builder, data):
+    TRNCreateSOURCESVector(builder, data)
+
 def TRNAddINTERPOLATION(builder, INTERPOLATION):
     builder.PrependInt8Slot(1, INTERPOLATION, 1)
 
@@ -140,18 +150,25 @@ except:
 class TRNT(object):
 
     # TRNT
-    def __init__(self):
-        self.SOURCES = None  # type: List[int]
-        self.INTERPOLATION = 1  # type: int
-        self.CACHE_ENABLED = True  # type: bool
-        self.MAX_CACHE_TILES = 100  # type: int
-        self.VERTICAL_EXAGGERATION = 1.0  # type: float
+    def __init__(
+        self,
+        SOURCES = None,
+        INTERPOLATION = 1,
+        CACHE_ENABLED = True,
+        MAX_CACHE_TILES = 100,
+        VERTICAL_EXAGGERATION = 1.0,
+    ):
+        self.SOURCES = SOURCES  # type: Optional[List[int]]
+        self.INTERPOLATION = INTERPOLATION  # type: int
+        self.CACHE_ENABLED = CACHE_ENABLED  # type: bool
+        self.MAX_CACHE_TILES = MAX_CACHE_TILES  # type: int
+        self.VERTICAL_EXAGGERATION = VERTICAL_EXAGGERATION  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        TRN = TRN()
-        TRN.Init(buf, pos)
-        return cls.InitFromObj(TRN)
+        tmpTrn = TRN()
+        tmpTrn.Init(buf, pos)
+        return cls.InitFromObj(tmpTrn)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -159,9 +176,9 @@ class TRNT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, TRN):
+    def InitFromObj(cls, tmpTrn):
         x = TRNT()
-        x._UnPack(TRN)
+        x._UnPack(tmpTrn)
         return x
 
     # TRNT

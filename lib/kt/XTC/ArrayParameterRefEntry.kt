@@ -32,7 +32,7 @@ class ArrayParameterRefEntry : Table() {
     /**
      * Parameter reference path
      */
-    val PARAMETER_REF : String?
+    val parameterRef : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,13 +41,13 @@ class ArrayParameterRefEntry : Table() {
                 null
             }
         }
-    val PARAMETER_REFAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun PARAMETER_REFInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val parameterRefAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun parameterRefInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Location in container
      */
-    val LOCATION : LocationInContainer? get() = LOCATION(LocationInContainer())
-    fun LOCATION(obj: LocationInContainer) : LocationInContainer? {
+    val location : LocationInContainer? get() = location(LocationInContainer())
+    fun location(obj: LocationInContainer) : LocationInContainer? {
         val o = __offset(6)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -58,7 +58,7 @@ class ArrayParameterRefEntry : Table() {
     /**
      * First index to include
      */
-    val FIRST_INDEX : UInt
+    val firstIndex : UInt
         get() {
             val o = __offset(8)
             return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
@@ -66,31 +66,31 @@ class ArrayParameterRefEntry : Table() {
     /**
      * Last index to include
      */
-    val LAST_INDEX : UInt
+    val lastIndex : UInt
         get() {
             val o = __offset(10)
             return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsArrayParameterRefEntry(_bb: ByteBuffer): ArrayParameterRefEntry = getRootAsArrayParameterRefEntry(_bb, ArrayParameterRefEntry())
         fun getRootAsArrayParameterRefEntry(_bb: ByteBuffer, obj: ArrayParameterRefEntry): ArrayParameterRefEntry {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createArrayParameterRefEntry(builder: FlatBufferBuilder, PARAMETER_REFOffset: Int, LOCATIONOffset: Int, FIRST_INDEX: UInt, LAST_INDEX: UInt) : Int {
+        fun createArrayParameterRefEntry(builder: FlatBufferBuilder, parameterRefOffset: Int, locationOffset: Int, firstIndex: UInt, lastIndex: UInt) : Int {
             builder.startTable(4)
-            addLAST_INDEX(builder, LAST_INDEX)
-            addFIRST_INDEX(builder, FIRST_INDEX)
-            addLOCATION(builder, LOCATIONOffset)
-            addPARAMETER_REF(builder, PARAMETER_REFOffset)
+            addLASTINDEX(builder, lastIndex)
+            addFIRSTINDEX(builder, firstIndex)
+            addLOCATION(builder, locationOffset)
+            addPARAMETERREF(builder, parameterRefOffset)
             return endArrayParameterRefEntry(builder)
         }
         fun startArrayParameterRefEntry(builder: FlatBufferBuilder) = builder.startTable(4)
-        fun addPARAMETER_REF(builder: FlatBufferBuilder, PARAMETER_REF: Int) = builder.addOffset(0, PARAMETER_REF, 0)
-        fun addLOCATION(builder: FlatBufferBuilder, LOCATION: Int) = builder.addOffset(1, LOCATION, 0)
-        fun addFIRST_INDEX(builder: FlatBufferBuilder, FIRST_INDEX: UInt) = builder.addInt(2, FIRST_INDEX.toInt(), 0)
-        fun addLAST_INDEX(builder: FlatBufferBuilder, LAST_INDEX: UInt) = builder.addInt(3, LAST_INDEX.toInt(), 0)
+        fun addPARAMETERREF(builder: FlatBufferBuilder, parameterRef: Int) = builder.addOffset(0, parameterRef, 0)
+        fun addLOCATION(builder: FlatBufferBuilder, location: Int) = builder.addOffset(1, location, 0)
+        fun addFIRSTINDEX(builder: FlatBufferBuilder, firstIndex: UInt) = builder.addInt(2, firstIndex.toInt(), 0)
+        fun addLASTINDEX(builder: FlatBufferBuilder, lastIndex: UInt) = builder.addInt(3, lastIndex.toInt(), 0)
         fun endArrayParameterRefEntry(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

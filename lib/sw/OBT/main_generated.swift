@@ -2,9 +2,13 @@
 // swiftlint:disable all
 // swiftformat:disable all
 
+#if canImport(Common)
+import Common
+#endif
+
 import FlatBuffers
 
-public enum orbitObjectType: Int8, Enum, Verifiable {
+public enum orbitObjectType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -19,7 +23,7 @@ public enum orbitObjectType: Int8, Enum, Verifiable {
 }
 
 
-public enum aouType: Int8, Enum, Verifiable {
+public enum aouType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -34,9 +38,9 @@ public enum aouType: Int8, Enum, Verifiable {
 
 
 ///  Orbit Track
-public struct OBT: FlatBufferObject, Verifiable {
+public struct OBT: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -144,10 +148,8 @@ public struct OBT: FlatBufferObject, Verifiable {
   ///  Area of uncertainty type
   public var AOU_TYPE: aouType { let o = _accessor.offset(VTOFFSET.AOU_TYPE.v); return o == 0 ? .circular : aouType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .circular }
   ///  Area of uncertainty data
-  public var hasAouData: Bool { let o = _accessor.offset(VTOFFSET.AOU_DATA.v); return o == 0 ? false : true }
-  public var AOU_DATACount: Int32 { let o = _accessor.offset(VTOFFSET.AOU_DATA.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func AOU_DATA(at index: Int32) -> Double { let o = _accessor.offset(VTOFFSET.AOU_DATA.v); return o == 0 ? 0 : _accessor.directRead(of: Double.self, offset: _accessor.vector(at: o) + index * 8) }
-  public var AOU_DATA: [Double] { return _accessor.getVector(at: VTOFFSET.AOU_DATA.v) ?? [] }
+  public var AOU_DATA: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.AOU_DATA.v, byteSize: 8) }
+  public func withUnsafePointerToAouData<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.AOU_DATA.v, body: body) }
   ///  Containment probability (0-1)
   public var CNTNMNT: Double { let o = _accessor.offset(VTOFFSET.CNTNMNT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Cross-reference identifier
@@ -180,9 +182,7 @@ public struct OBT: FlatBufferObject, Verifiable {
   ///  True if installation (not mobile)
   public var INSTALLATION: Bool { let o = _accessor.offset(VTOFFSET.INSTALLATION.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Contributing track sensors
-  public var hasTrackSensors: Bool { let o = _accessor.offset(VTOFFSET.TRACK_SENSORS.v); return o == 0 ? false : true }
-  public var TRACK_SENSORSCount: Int32 { let o = _accessor.offset(VTOFFSET.TRACK_SENSORS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func TRACK_SENSORS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.TRACK_SENSORS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  public var TRACK_SENSORS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.TRACK_SENSORS.v, byteSize: 4) }
   public static func startOBT(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 37) }
   public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VTOFFSET.ID.p) }
   public static func add(SAT_NO: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SAT_NO, def: 0, at: VTOFFSET.SAT_NO.p) }

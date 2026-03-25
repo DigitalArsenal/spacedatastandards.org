@@ -32,7 +32,7 @@ class KMLPolyStyle : Table() {
     /**
      * KML color in aabbggrr hex format
      */
-    val COLOR : String?
+    val color : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class KMLPolyStyle : Table() {
                 null
             }
         }
-    val COLORAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun COLORInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val colorAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun colorInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Color mode
      */
-    val COLOR_MODE : Byte
+    val colorMode : Byte
         get() {
             val o = __offset(6)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -54,7 +54,7 @@ class KMLPolyStyle : Table() {
     /**
      * Whether to fill
      */
-    val FILL : Boolean
+    val fill : Boolean
         get() {
             val o = __offset(8)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -62,31 +62,31 @@ class KMLPolyStyle : Table() {
     /**
      * Whether to outline
      */
-    val OUTLINE : Boolean
+    val outline : Boolean
         get() {
             val o = __offset(10)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsKMLPolyStyle(_bb: ByteBuffer): KMLPolyStyle = getRootAsKMLPolyStyle(_bb, KMLPolyStyle())
         fun getRootAsKMLPolyStyle(_bb: ByteBuffer, obj: KMLPolyStyle): KMLPolyStyle {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createKMLPolyStyle(builder: FlatBufferBuilder, COLOROffset: Int, COLOR_MODE: Byte, FILL: Boolean, OUTLINE: Boolean) : Int {
+        fun createKMLPolyStyle(builder: FlatBufferBuilder, colorOffset: Int, colorMode: Byte, fill: Boolean, outline: Boolean) : Int {
             builder.startTable(4)
-            addCOLOR(builder, COLOROffset)
-            addOUTLINE(builder, OUTLINE)
-            addFILL(builder, FILL)
-            addCOLOR_MODE(builder, COLOR_MODE)
+            addCOLOR(builder, colorOffset)
+            addOUTLINE(builder, outline)
+            addFILL(builder, fill)
+            addCOLORMODE(builder, colorMode)
             return endKMLPolyStyle(builder)
         }
         fun startKMLPolyStyle(builder: FlatBufferBuilder) = builder.startTable(4)
-        fun addCOLOR(builder: FlatBufferBuilder, COLOR: Int) = builder.addOffset(0, COLOR, 0)
-        fun addCOLOR_MODE(builder: FlatBufferBuilder, COLOR_MODE: Byte) = builder.addByte(1, COLOR_MODE, 0)
-        fun addFILL(builder: FlatBufferBuilder, FILL: Boolean) = builder.addBoolean(2, FILL, false)
-        fun addOUTLINE(builder: FlatBufferBuilder, OUTLINE: Boolean) = builder.addBoolean(3, OUTLINE, false)
+        fun addCOLOR(builder: FlatBufferBuilder, color: Int) = builder.addOffset(0, color, 0)
+        fun addCOLORMODE(builder: FlatBufferBuilder, colorMode: Byte) = builder.addByte(1, colorMode, 0)
+        fun addFILL(builder: FlatBufferBuilder, fill: Boolean) = builder.addBoolean(2, fill, false)
+        fun addOUTLINE(builder: FlatBufferBuilder, outline: Boolean) = builder.addBoolean(3, outline, false)
         fun endKMLPolyStyle(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

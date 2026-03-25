@@ -243,6 +243,16 @@ def PCFStartRESERVEDVector(builder, numElems):
 def StartRESERVEDVector(builder, numElems):
     return PCFStartRESERVEDVector(builder, numElems)
 
+def PCFCreateRESERVEDVector(builder, data):
+    data = list(data)
+    builder.StartVector(1, len(data), 1)
+    for item in reversed(data):
+        builder.PrependUint8(item)
+    return builder.EndVector()
+
+def CreateRESERVEDVector(builder, data):
+    PCFCreateRESERVEDVector(builder, data)
+
 def PCFEnd(builder):
     return builder.EndObject()
 
@@ -257,27 +267,43 @@ except:
 class PCFT(object):
 
     # PCFT
-    def __init__(self):
-        self.STEP_SIZE = 0.0  # type: float
-        self.TOLERANCE = 0.0  # type: float
-        self.MIN_STEP = 0.0  # type: float
-        self.MAX_STEP = 0.0  # type: float
-        self.MAX_ITERATIONS = 0  # type: int
-        self.GRAVITY_DEGREE = 0  # type: int
-        self.GRAVITY_ORDER = 0  # type: int
-        self.INTEGRATOR = 0  # type: int
-        self.OUTPUT_FRAME = 0  # type: int
-        self.FORCE_FLAGS = 0  # type: int
-        self.DRAG_COEFFICIENT = 0.0  # type: float
-        self.SRP_COEFFICIENT = 0.0  # type: float
-        self.AREA_MASS_RATIO = 0.0  # type: float
-        self.RESERVED = None  # type: List[int]
+    def __init__(
+        self,
+        STEP_SIZE = 0.0,
+        TOLERANCE = 0.0,
+        MIN_STEP = 0.0,
+        MAX_STEP = 0.0,
+        MAX_ITERATIONS = 0,
+        GRAVITY_DEGREE = 0,
+        GRAVITY_ORDER = 0,
+        INTEGRATOR = 0,
+        OUTPUT_FRAME = 0,
+        FORCE_FLAGS = 0,
+        DRAG_COEFFICIENT = 0.0,
+        SRP_COEFFICIENT = 0.0,
+        AREA_MASS_RATIO = 0.0,
+        RESERVED = None,
+    ):
+        self.STEP_SIZE = STEP_SIZE  # type: float
+        self.TOLERANCE = TOLERANCE  # type: float
+        self.MIN_STEP = MIN_STEP  # type: float
+        self.MAX_STEP = MAX_STEP  # type: float
+        self.MAX_ITERATIONS = MAX_ITERATIONS  # type: int
+        self.GRAVITY_DEGREE = GRAVITY_DEGREE  # type: int
+        self.GRAVITY_ORDER = GRAVITY_ORDER  # type: int
+        self.INTEGRATOR = INTEGRATOR  # type: int
+        self.OUTPUT_FRAME = OUTPUT_FRAME  # type: int
+        self.FORCE_FLAGS = FORCE_FLAGS  # type: int
+        self.DRAG_COEFFICIENT = DRAG_COEFFICIENT  # type: float
+        self.SRP_COEFFICIENT = SRP_COEFFICIENT  # type: float
+        self.AREA_MASS_RATIO = AREA_MASS_RATIO  # type: float
+        self.RESERVED = RESERVED  # type: Optional[List[int]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        PCF = PCF()
-        PCF.Init(buf, pos)
-        return cls.InitFromObj(PCF)
+        tmpPcf = PCF()
+        tmpPcf.Init(buf, pos)
+        return cls.InitFromObj(tmpPcf)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -285,9 +311,9 @@ class PCFT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, PCF):
+    def InitFromObj(cls, tmpPcf):
         x = PCFT()
-        x._UnPack(PCF)
+        x._UnPack(tmpPcf)
         return x
 
     # PCFT

@@ -51,6 +51,10 @@ func (rcv *ContainerRefEntry) CONTAINER_REF() []byte {
 	return nil
 }
 
+func (rcv *ContainerRefEntry) ContainerRef() []byte {
+	return rcv.CONTAINER_REF()
+}
+
 /// Container reference path
 /// Location in container
 func (rcv *ContainerRefEntry) LOCATION(obj *LocationInContainer) *LocationInContainer {
@@ -64,6 +68,10 @@ func (rcv *ContainerRefEntry) LOCATION(obj *LocationInContainer) *LocationInCont
 		return obj
 	}
 	return nil
+}
+
+func (rcv *ContainerRefEntry) Location(obj *LocationInContainer) *LocationInContainer {
+	return rcv.LOCATION(obj)
 }
 
 /// Location in container
@@ -81,6 +89,10 @@ func (rcv *ContainerRefEntry) REPEAT(obj *RepeatEntry) *RepeatEntry {
 	return nil
 }
 
+func (rcv *ContainerRefEntry) Repeat(obj *RepeatEntry) *RepeatEntry {
+	return rcv.REPEAT(obj)
+}
+
 /// Repeat specification
 /// Include condition
 func (rcv *ContainerRefEntry) INCLUDE_CONDITION(obj *MatchCriteria) *MatchCriteria {
@@ -96,6 +108,10 @@ func (rcv *ContainerRefEntry) INCLUDE_CONDITION(obj *MatchCriteria) *MatchCriter
 	return nil
 }
 
+func (rcv *ContainerRefEntry) IncludeCondition(obj *MatchCriteria) *MatchCriteria {
+	return rcv.INCLUDE_CONDITION(obj)
+}
+
 /// Include condition
 func ContainerRefEntryStart(builder *flatbuffers.Builder) {
 	builder.StartObject(4)
@@ -103,14 +119,26 @@ func ContainerRefEntryStart(builder *flatbuffers.Builder) {
 func ContainerRefEntryAddCONTAINER_REF(builder *flatbuffers.Builder, CONTAINER_REF flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(CONTAINER_REF), 0)
 }
+func ContainerRefEntryAddContainerRef(builder *flatbuffers.Builder, CONTAINER_REF flatbuffers.UOffsetT) {
+	ContainerRefEntryAddCONTAINER_REF(builder, CONTAINER_REF)
+}
 func ContainerRefEntryAddLOCATION(builder *flatbuffers.Builder, LOCATION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(LOCATION), 0)
+}
+func ContainerRefEntryAddLocation(builder *flatbuffers.Builder, LOCATION flatbuffers.UOffsetT) {
+	ContainerRefEntryAddLOCATION(builder, LOCATION)
 }
 func ContainerRefEntryAddREPEAT(builder *flatbuffers.Builder, REPEAT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(REPEAT), 0)
 }
+func ContainerRefEntryAddRepeat(builder *flatbuffers.Builder, REPEAT flatbuffers.UOffsetT) {
+	ContainerRefEntryAddREPEAT(builder, REPEAT)
+}
 func ContainerRefEntryAddINCLUDE_CONDITION(builder *flatbuffers.Builder, INCLUDE_CONDITION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(INCLUDE_CONDITION), 0)
+}
+func ContainerRefEntryAddIncludeCondition(builder *flatbuffers.Builder, INCLUDE_CONDITION flatbuffers.UOffsetT) {
+	ContainerRefEntryAddINCLUDE_CONDITION(builder, INCLUDE_CONDITION)
 }
 func ContainerRefEntryEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

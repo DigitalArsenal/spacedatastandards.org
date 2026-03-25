@@ -32,8 +32,8 @@ class AlgorithmSet : Table() {
     /**
      * Custom algorithms
      */
-    fun CUSTOM_ALGORITHMS(j: Int) : CustomAlgorithm? = CUSTOM_ALGORITHMS(CustomAlgorithm(), j)
-    fun CUSTOM_ALGORITHMS(obj: CustomAlgorithm, j: Int) : CustomAlgorithm? {
+    fun customAlgorithms(j: Int) : CustomAlgorithm? = customAlgorithms(CustomAlgorithm(), j)
+    fun customAlgorithms(obj: CustomAlgorithm, j: Int) : CustomAlgorithm? {
         val o = __offset(4)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -41,15 +41,15 @@ class AlgorithmSet : Table() {
             null
         }
     }
-    val CUSTOM_ALGORITHMSLength : Int
+    val customAlgorithmsLength : Int
         get() {
             val o = __offset(4); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Math algorithms
      */
-    fun MATH_ALGORITHMS(j: Int) : MathAlgorithm? = MATH_ALGORITHMS(MathAlgorithm(), j)
-    fun MATH_ALGORITHMS(obj: MathAlgorithm, j: Int) : MathAlgorithm? {
+    fun mathAlgorithms(j: Int) : MathAlgorithm? = mathAlgorithms(MathAlgorithm(), j)
+    fun mathAlgorithms(obj: MathAlgorithm, j: Int) : MathAlgorithm? {
         val o = __offset(6)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -57,25 +57,25 @@ class AlgorithmSet : Table() {
             null
         }
     }
-    val MATH_ALGORITHMSLength : Int
+    val mathAlgorithmsLength : Int
         get() {
             val o = __offset(6); return if (o != 0) __vector_len(o) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsAlgorithmSet(_bb: ByteBuffer): AlgorithmSet = getRootAsAlgorithmSet(_bb, AlgorithmSet())
         fun getRootAsAlgorithmSet(_bb: ByteBuffer, obj: AlgorithmSet): AlgorithmSet {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createAlgorithmSet(builder: FlatBufferBuilder, CUSTOM_ALGORITHMSOffset: Int, MATH_ALGORITHMSOffset: Int) : Int {
+        fun createAlgorithmSet(builder: FlatBufferBuilder, customAlgorithmsOffset: Int, mathAlgorithmsOffset: Int) : Int {
             builder.startTable(2)
-            addMATH_ALGORITHMS(builder, MATH_ALGORITHMSOffset)
-            addCUSTOM_ALGORITHMS(builder, CUSTOM_ALGORITHMSOffset)
+            addMATHALGORITHMS(builder, mathAlgorithmsOffset)
+            addCUSTOMALGORITHMS(builder, customAlgorithmsOffset)
             return endAlgorithmSet(builder)
         }
         fun startAlgorithmSet(builder: FlatBufferBuilder) = builder.startTable(2)
-        fun addCUSTOM_ALGORITHMS(builder: FlatBufferBuilder, CUSTOM_ALGORITHMS: Int) = builder.addOffset(0, CUSTOM_ALGORITHMS, 0)
+        fun addCUSTOMALGORITHMS(builder: FlatBufferBuilder, customAlgorithms: Int) = builder.addOffset(0, customAlgorithms, 0)
         fun createCustomAlgorithmsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -84,7 +84,7 @@ class AlgorithmSet : Table() {
             return builder.endVector()
         }
         fun startCustomAlgorithmsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addMATH_ALGORITHMS(builder: FlatBufferBuilder, MATH_ALGORITHMS: Int) = builder.addOffset(1, MATH_ALGORITHMS, 0)
+        fun addMATHALGORITHMS(builder: FlatBufferBuilder, mathAlgorithms: Int) = builder.addOffset(1, mathAlgorithms, 0)
         fun createMathAlgorithmsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {

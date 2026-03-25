@@ -230,6 +230,16 @@ def ARMStartRESERVEDVector(builder, numElems):
 def StartRESERVEDVector(builder, numElems):
     return ARMStartRESERVEDVector(builder, numElems)
 
+def ARMCreateRESERVEDVector(builder, data):
+    data = list(data)
+    builder.StartVector(1, len(data), 1)
+    for item in reversed(data):
+        builder.PrependUint8(item)
+    return builder.EndVector()
+
+def CreateRESERVEDVector(builder, data):
+    ARMCreateRESERVEDVector(builder, data)
+
 def ARMEnd(builder):
     return builder.EndObject()
 
@@ -244,26 +254,41 @@ except:
 class ARMT(object):
 
     # ARMT
-    def __init__(self):
-        self.THICKNESS = 0.0  # type: float
-        self.ANGLE = 0.0  # type: float
-        self.MATERIAL = 0  # type: int
-        self.HARDNESS = 0  # type: int
-        self.QUALITY = 0  # type: int
-        self.ERA_TYPE = 0  # type: int
-        self.ERA_EFFECTIVENESS = 0.0  # type: float
-        self.ERA_VS_KE = 0.0  # type: float
-        self.RHA_EQUIVALENT = 0.0  # type: float
-        self.NORMAL_X = 0.0  # type: float
-        self.NORMAL_Y = 0.0  # type: float
-        self.NORMAL_Z = 0.0  # type: float
-        self.RESERVED = None  # type: List[int]
+    def __init__(
+        self,
+        THICKNESS = 0.0,
+        ANGLE = 0.0,
+        MATERIAL = 0,
+        HARDNESS = 0,
+        QUALITY = 0,
+        ERA_TYPE = 0,
+        ERA_EFFECTIVENESS = 0.0,
+        ERA_VS_KE = 0.0,
+        RHA_EQUIVALENT = 0.0,
+        NORMAL_X = 0.0,
+        NORMAL_Y = 0.0,
+        NORMAL_Z = 0.0,
+        RESERVED = None,
+    ):
+        self.THICKNESS = THICKNESS  # type: float
+        self.ANGLE = ANGLE  # type: float
+        self.MATERIAL = MATERIAL  # type: int
+        self.HARDNESS = HARDNESS  # type: int
+        self.QUALITY = QUALITY  # type: int
+        self.ERA_TYPE = ERA_TYPE  # type: int
+        self.ERA_EFFECTIVENESS = ERA_EFFECTIVENESS  # type: float
+        self.ERA_VS_KE = ERA_VS_KE  # type: float
+        self.RHA_EQUIVALENT = RHA_EQUIVALENT  # type: float
+        self.NORMAL_X = NORMAL_X  # type: float
+        self.NORMAL_Y = NORMAL_Y  # type: float
+        self.NORMAL_Z = NORMAL_Z  # type: float
+        self.RESERVED = RESERVED  # type: Optional[List[int]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        ARM = ARM()
-        ARM.Init(buf, pos)
-        return cls.InitFromObj(ARM)
+        tmpArm = ARM()
+        tmpArm.Init(buf, pos)
+        return cls.InitFromObj(tmpArm)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -271,9 +296,9 @@ class ARMT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, ARM):
+    def InitFromObj(cls, tmpArm):
         x = ARMT()
-        x._UnPack(ARM)
+        x._UnPack(tmpArm)
         return x
 
     # ARMT

@@ -103,6 +103,12 @@ def SpatialCoverageStartREGIONSVector(builder, numElems):
 def StartREGIONSVector(builder, numElems):
     return SpatialCoverageStartREGIONSVector(builder, numElems)
 
+def SpatialCoverageCreateREGIONSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateREGIONSVector(builder, data):
+    SpatialCoverageCreateREGIONSVector(builder, data)
+
 def SpatialCoverageAddOBJECT_IDS(builder, OBJECT_IDS):
     builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(OBJECT_IDS), 0)
 
@@ -114,6 +120,12 @@ def SpatialCoverageStartOBJECT_IDSVector(builder, numElems):
 
 def StartOBJECT_IDSVector(builder, numElems):
     return SpatialCoverageStartOBJECT_IDSVector(builder, numElems)
+
+def SpatialCoverageCreateOBJECT_IDSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateOBJECT_IDSVector(builder, data):
+    SpatialCoverageCreateOBJECT_IDSVector(builder, data)
 
 def SpatialCoverageEnd(builder):
     return builder.EndObject()
@@ -129,16 +141,21 @@ except:
 class SpatialCoverageT(object):
 
     # SpatialCoverageT
-    def __init__(self):
-        self.TYPE = None  # type: str
-        self.REGIONS = None  # type: List[str]
-        self.OBJECT_IDS = None  # type: List[str]
+    def __init__(
+        self,
+        TYPE = None,
+        REGIONS = None,
+        OBJECT_IDS = None,
+    ):
+        self.TYPE = TYPE  # type: Optional[str]
+        self.REGIONS = REGIONS  # type: Optional[List[Optional[str]]]
+        self.OBJECT_IDS = OBJECT_IDS  # type: Optional[List[Optional[str]]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        spatialCoverage = SpatialCoverage()
-        spatialCoverage.Init(buf, pos)
-        return cls.InitFromObj(spatialCoverage)
+        tmpSpatialCoverage = SpatialCoverage()
+        tmpSpatialCoverage.Init(buf, pos)
+        return cls.InitFromObj(tmpSpatialCoverage)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -146,24 +163,24 @@ class SpatialCoverageT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, spatialCoverage):
+    def InitFromObj(cls, tmpSpatialCoverage):
         x = SpatialCoverageT()
-        x._UnPack(spatialCoverage)
+        x._UnPack(tmpSpatialCoverage)
         return x
 
     # SpatialCoverageT
-    def _UnPack(self, spatialCoverage):
-        if spatialCoverage is None:
+    def _UnPack(self, SpatialCoverage):
+        if SpatialCoverage is None:
             return
-        self.TYPE = spatialCoverage.TYPE()
-        if not spatialCoverage.REGIONSIsNone():
+        self.TYPE = SpatialCoverage.TYPE()
+        if not SpatialCoverage.REGIONSIsNone():
             self.REGIONS = []
-            for i in range(spatialCoverage.REGIONSLength()):
-                self.REGIONS.append(spatialCoverage.REGIONS(i))
-        if not spatialCoverage.OBJECT_IDSIsNone():
+            for i in range(SpatialCoverage.REGIONSLength()):
+                self.REGIONS.append(SpatialCoverage.REGIONS(i))
+        if not SpatialCoverage.OBJECT_IDSIsNone():
             self.OBJECT_IDS = []
-            for i in range(spatialCoverage.OBJECT_IDSLength()):
-                self.OBJECT_IDS.append(spatialCoverage.OBJECT_IDS(i))
+            for i in range(SpatialCoverage.OBJECT_IDSLength()):
+                self.OBJECT_IDS.append(SpatialCoverage.OBJECT_IDS(i))
 
     # SpatialCoverageT
     def Pack(self, builder):
@@ -192,5 +209,5 @@ class SpatialCoverageT(object):
             SpatialCoverageAddREGIONS(builder, REGIONS)
         if self.OBJECT_IDS is not None:
             SpatialCoverageAddOBJECT_IDS(builder, OBJECT_IDS)
-        spatialCoverage = SpatialCoverageEnd(builder)
-        return spatialCoverage
+        SpatialCoverage = SpatialCoverageEnd(builder)
+        return SpatialCoverage

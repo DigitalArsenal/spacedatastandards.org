@@ -2,4 +2,9 @@
 
 # namespace: 
 
-# NOTE RateBasisType.py does not declare any structs or enums
+# Rate basis for stream rate specifications
+class RateBasisType(object):
+    # Rate per second
+    PER_SECOND = 0
+    # Rate per container occurrence
+    PER_CONTAINER = 1

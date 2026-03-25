@@ -661,57 +661,103 @@ def End(builder):
 class OOET(object):
 
     # OOET
-    def __init__(self):
-        self.ID = None  # type: str
-        self.SAT_NO = 0  # type: int
-        self.ORIG_OBJECT_ID = None  # type: str
-        self.DERIVED_FROM = None  # type: str
-        self.DECLASSIFICATION_DATE = None  # type: str
-        self.DECLASSIFICATION_STRING = None  # type: str
-        self.EVENT_TIME = None  # type: str
-        self.EVENT_TIME_NOTES = None  # type: str
-        self.CATEGORY = 0  # type: int
-        self.RESULT = 0  # type: int
-        self.EVENT_TYPE = None  # type: str
-        self.OPERATOR_ORG_ID = None  # type: str
-        self.OWNER_ORG_ID = None  # type: str
-        self.LESSEE_ORG_ID = None  # type: str
-        self.OPERATED_ON_BEHALF_OF_ORG_ID = None  # type: str
-        self.GEO_POSITION = 0.0  # type: float
-        self.PLANE_SLOT = None  # type: str
-        self.PLANE_NUMBER = None  # type: str
-        self.POSITION_STATUS = None  # type: str
-        self.UNTIL_TIME = None  # type: str
-        self.OFFICIAL_LOSS_DATE = None  # type: str
-        self.NET_AMOUNT = 0.0  # type: float
-        self.UNDERLYING_CAUSE = None  # type: str
-        self.CAPABILITY_LOSS = 0.0  # type: float
-        self.CAPACITY_LOSS = 0.0  # type: float
-        self.INSURANCE_LOSS = 0.0  # type: float
-        self.THIRD_PARTY_INSURANCE_LOSS = 0.0  # type: float
-        self.INJURED = 0  # type: int
-        self.KILLED = 0  # type: int
-        self.AGE_AT_EVENT = 0.0  # type: float
-        self.LIFE_LOST = 0.0  # type: float
-        self.ACHIEVED_FLIGHT_PHASE = None  # type: str
-        self.OCCURRENCE_FLIGHT_PHASE = None  # type: str
-        self.STAGE_AT_FAULT = None  # type: str
-        self.EQUIPMENT_AT_FAULT = None  # type: str
-        self.EQUIPMENT_TYPE_AT_FAULT = None  # type: str
-        self.EQUIPMENT_PART_AT_FAULT = None  # type: str
-        self.CONSEQUENTIAL_EQUIPMENT_FAILURE = None  # type: str
-        self.INCLINED = False  # type: bool
-        self.DESCRIPTION = None  # type: str
-        self.REMARKS = None  # type: str
-        self.OBJECT_STATUS = None  # type: str
-        self.SATELLITE_POSITION = None  # type: str
-        self.ON_ORBIT = None  # type: str
+    def __init__(
+        self,
+        ID = None,
+        SAT_NO = 0,
+        ORIG_OBJECT_ID = None,
+        DERIVED_FROM = None,
+        DECLASSIFICATION_DATE = None,
+        DECLASSIFICATION_STRING = None,
+        EVENT_TIME = None,
+        EVENT_TIME_NOTES = None,
+        CATEGORY = 0,
+        RESULT = 0,
+        EVENT_TYPE = None,
+        OPERATOR_ORG_ID = None,
+        OWNER_ORG_ID = None,
+        LESSEE_ORG_ID = None,
+        OPERATED_ON_BEHALF_OF_ORG_ID = None,
+        GEO_POSITION = 0.0,
+        PLANE_SLOT = None,
+        PLANE_NUMBER = None,
+        POSITION_STATUS = None,
+        UNTIL_TIME = None,
+        OFFICIAL_LOSS_DATE = None,
+        NET_AMOUNT = 0.0,
+        UNDERLYING_CAUSE = None,
+        CAPABILITY_LOSS = 0.0,
+        CAPACITY_LOSS = 0.0,
+        INSURANCE_LOSS = 0.0,
+        THIRD_PARTY_INSURANCE_LOSS = 0.0,
+        INJURED = 0,
+        KILLED = 0,
+        AGE_AT_EVENT = 0.0,
+        LIFE_LOST = 0.0,
+        ACHIEVED_FLIGHT_PHASE = None,
+        OCCURRENCE_FLIGHT_PHASE = None,
+        STAGE_AT_FAULT = None,
+        EQUIPMENT_AT_FAULT = None,
+        EQUIPMENT_TYPE_AT_FAULT = None,
+        EQUIPMENT_PART_AT_FAULT = None,
+        CONSEQUENTIAL_EQUIPMENT_FAILURE = None,
+        INCLINED = False,
+        DESCRIPTION = None,
+        REMARKS = None,
+        OBJECT_STATUS = None,
+        SATELLITE_POSITION = None,
+        ON_ORBIT = None,
+    ):
+        self.ID = ID  # type: Optional[str]
+        self.SAT_NO = SAT_NO  # type: int
+        self.ORIG_OBJECT_ID = ORIG_OBJECT_ID  # type: Optional[str]
+        self.DERIVED_FROM = DERIVED_FROM  # type: Optional[str]
+        self.DECLASSIFICATION_DATE = DECLASSIFICATION_DATE  # type: Optional[str]
+        self.DECLASSIFICATION_STRING = DECLASSIFICATION_STRING  # type: Optional[str]
+        self.EVENT_TIME = EVENT_TIME  # type: Optional[str]
+        self.EVENT_TIME_NOTES = EVENT_TIME_NOTES  # type: Optional[str]
+        self.CATEGORY = CATEGORY  # type: int
+        self.RESULT = RESULT  # type: int
+        self.EVENT_TYPE = EVENT_TYPE  # type: Optional[str]
+        self.OPERATOR_ORG_ID = OPERATOR_ORG_ID  # type: Optional[str]
+        self.OWNER_ORG_ID = OWNER_ORG_ID  # type: Optional[str]
+        self.LESSEE_ORG_ID = LESSEE_ORG_ID  # type: Optional[str]
+        self.OPERATED_ON_BEHALF_OF_ORG_ID = OPERATED_ON_BEHALF_OF_ORG_ID  # type: Optional[str]
+        self.GEO_POSITION = GEO_POSITION  # type: float
+        self.PLANE_SLOT = PLANE_SLOT  # type: Optional[str]
+        self.PLANE_NUMBER = PLANE_NUMBER  # type: Optional[str]
+        self.POSITION_STATUS = POSITION_STATUS  # type: Optional[str]
+        self.UNTIL_TIME = UNTIL_TIME  # type: Optional[str]
+        self.OFFICIAL_LOSS_DATE = OFFICIAL_LOSS_DATE  # type: Optional[str]
+        self.NET_AMOUNT = NET_AMOUNT  # type: float
+        self.UNDERLYING_CAUSE = UNDERLYING_CAUSE  # type: Optional[str]
+        self.CAPABILITY_LOSS = CAPABILITY_LOSS  # type: float
+        self.CAPACITY_LOSS = CAPACITY_LOSS  # type: float
+        self.INSURANCE_LOSS = INSURANCE_LOSS  # type: float
+        self.THIRD_PARTY_INSURANCE_LOSS = THIRD_PARTY_INSURANCE_LOSS  # type: float
+        self.INJURED = INJURED  # type: int
+        self.KILLED = KILLED  # type: int
+        self.AGE_AT_EVENT = AGE_AT_EVENT  # type: float
+        self.LIFE_LOST = LIFE_LOST  # type: float
+        self.ACHIEVED_FLIGHT_PHASE = ACHIEVED_FLIGHT_PHASE  # type: Optional[str]
+        self.OCCURRENCE_FLIGHT_PHASE = OCCURRENCE_FLIGHT_PHASE  # type: Optional[str]
+        self.STAGE_AT_FAULT = STAGE_AT_FAULT  # type: Optional[str]
+        self.EQUIPMENT_AT_FAULT = EQUIPMENT_AT_FAULT  # type: Optional[str]
+        self.EQUIPMENT_TYPE_AT_FAULT = EQUIPMENT_TYPE_AT_FAULT  # type: Optional[str]
+        self.EQUIPMENT_PART_AT_FAULT = EQUIPMENT_PART_AT_FAULT  # type: Optional[str]
+        self.CONSEQUENTIAL_EQUIPMENT_FAILURE = CONSEQUENTIAL_EQUIPMENT_FAILURE  # type: Optional[str]
+        self.INCLINED = INCLINED  # type: bool
+        self.DESCRIPTION = DESCRIPTION  # type: Optional[str]
+        self.REMARKS = REMARKS  # type: Optional[str]
+        self.OBJECT_STATUS = OBJECT_STATUS  # type: Optional[str]
+        self.SATELLITE_POSITION = SATELLITE_POSITION  # type: Optional[str]
+        self.ON_ORBIT = ON_ORBIT  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        OOE = OOE()
-        OOE.Init(buf, pos)
-        return cls.InitFromObj(OOE)
+        tmpOoe = OOE()
+        tmpOoe.Init(buf, pos)
+        return cls.InitFromObj(tmpOoe)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -719,9 +765,9 @@ class OOET(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, OOE):
+    def InitFromObj(cls, tmpOoe):
         x = OOET()
-        x._UnPack(OOE)
+        x._UnPack(tmpOoe)
         return x
 
     # OOET

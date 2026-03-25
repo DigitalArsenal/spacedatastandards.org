@@ -2,4 +2,1737 @@
 
 # namespace: 
 
-# NOTE TRK.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Track
+class TRK(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = TRK()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsTRK(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def TRKBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x54\x52\x4B", size_prefixed=size_prefixed)
+
+    # TRK
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Unique identifier
+    # TRK
+    def ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Contact reference
+    # TRK
+    def CNTCT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Message timestamp (ISO 8601)
+    # TRK
+    def MSG_TS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Mission identifier
+    # TRK
+    def MSN_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Asset nationality
+    # TRK
+    def ASSET_NAT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Asset identifier
+    # TRK
+    def ASSET(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Sensor identifier
+    # TRK
+    def SENSOR_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Sensor quality assessment
+    # TRK
+    def SEN_QUAL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Track identifier
+    # TRK
+    def TRK_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Track number
+    # TRK
+    def TRK_NUM(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Track status
+    # TRK
+    def TRK_STAT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # Object nationality
+    # TRK
+    def OBJ_NAT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Object identifier
+    # TRK
+    def OBJ_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Object type classification
+    # TRK
+    def OBJ_TYPE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Object specific type
+    # TRK
+    def OBJ_SPEC(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Object platform type
+    # TRK
+    def OBJ_PLAT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Object activity
+    # TRK
+    def OBJ_ACT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Mode type
+    # TRK
+    def MOD_TYPE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Track item identifier
+    # TRK
+    def TRK_ITM_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Track point timestamp (ISO 8601)
+    # TRK
+    def TS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Track quality (0-15)
+    # TRK
+    def TRK_QUAL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
+        return 0
+
+    # Track point type
+    # TRK
+    def TRK_PT_TYPE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Object identity assessment
+    # TRK
+    def OBJ_IDENT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Identity credibility (1-6)
+    # TRK
+    def IDENT_CRED(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
+        return 0
+
+    # Identity reliability (A-F)
+    # TRK
+    def IDENT_REL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(52))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
+        return 0
+
+    # Identity amplification
+    # TRK
+    def IDENT_AMP(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(54))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Track environment
+    # TRK
+    def ENVIRONMENT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(56))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # Environment confidence (0-1)
+    # TRK
+    def ENVIRONMENT_CONF(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Track confidence (0-1)
+    # TRK
+    def TRK_CONF(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Latitude (degrees)
+    # TRK
+    def LAT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(62))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Longitude (degrees)
+    # TRK
+    def LON(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(64))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Altitude (km)
+    # TRK
+    def ALT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(66))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Speed (km/s)
+    # TRK
+    def SPD(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(68))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Heading (degrees from north)
+    # TRK
+    def HDNG(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(70))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Course (degrees from north)
+    # TRK
+    def COURSE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(72))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Source types
+    # TRK
+    def SRC_TYPS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(74))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
+        return ""
+
+    # TRK
+    def SRC_TYPSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(74))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # TRK
+    def SRC_TYPSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(74))
+        return o == 0
+
+    # Source identifiers
+    # TRK
+    def SRC_IDS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(76))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
+        return ""
+
+    # TRK
+    def SRC_IDSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(76))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # TRK
+    def SRC_IDSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(76))
+        return o == 0
+
+    # Call sign
+    # TRK
+    def CALL_SIGN(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(78))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # True if fused from multiple sources
+    # TRK
+    def MULTI_SOURCE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(80))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # J-series message type
+    # TRK
+    def J_SERIES(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(82))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Force strength indicator
+    # TRK
+    def STRENGTH(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(84))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint16Flags, o + self._tab.Pos)
+        return 0
+
+    # Mode 1 code
+    # TRK
+    def M1(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(86))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint16Flags, o + self._tab.Pos)
+        return 0
+
+    # Mode 1 validity
+    # TRK
+    def M1V(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(88))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
+        return 0
+
+    # Mode 2 code
+    # TRK
+    def M2(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(90))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint16Flags, o + self._tab.Pos)
+        return 0
+
+    # Mode 2 validity
+    # TRK
+    def M2V(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(92))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
+        return 0
+
+    # Mode 3A code
+    # TRK
+    def M3A(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(94))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint16Flags, o + self._tab.Pos)
+        return 0
+
+    # Mode 3A validity
+    # TRK
+    def M3AV(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(96))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
+        return 0
+
+    # Associated tags
+    # TRK
+    def TAGS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(98))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
+        return ""
+
+    # TRK
+    def TAGSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(98))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # TRK
+    def TAGSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(98))
+        return o == 0
+
+    # Start time for track data (ISO 8601)
+    # TRK
+    def TRACK_START_TIME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(100))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Time interval between track points (seconds)
+    # TRK
+    def TRACK_STEP_SIZE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(102))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Number of components per point (default 3 for X, Y, Z)
+    # TRK
+    def TRACK_COMPONENTS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(104))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
+        return 3
+
+    # ECEF position as flat array [X0, Y0, Z0, X1, Y1, Z1, ...]
+    # TRK
+    def ECEF_POS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(106))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # TRK
+    def ECEF_POSAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(106))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
+
+    # TRK
+    def ECEF_POSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(106))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # TRK
+    def ECEF_POSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(106))
+        return o == 0
+
+    # ECEF velocity as flat array [VX0, VY0, VZ0, VX1, VY1, VZ1, ...]
+    # TRK
+    def ECEF_VEL(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(108))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # TRK
+    def ECEF_VELAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(108))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
+
+    # TRK
+    def ECEF_VELLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(108))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # TRK
+    def ECEF_VELIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(108))
+        return o == 0
+
+    # ECEF acceleration as flat array [AX0, AY0, AZ0, AX1, AY1, AZ1, ...]
+    # TRK
+    def ECEF_ACC(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(110))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # TRK
+    def ECEF_ACCAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(110))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
+
+    # TRK
+    def ECEF_ACCLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(110))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # TRK
+    def ECEF_ACCIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(110))
+        return o == 0
+
+    # Local coordinate position as flat array
+    # TRK
+    def LC_POS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(112))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # TRK
+    def LC_POSAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(112))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
+
+    # TRK
+    def LC_POSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(112))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # TRK
+    def LC_POSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(112))
+        return o == 0
+
+    # Local coordinate velocity as flat array
+    # TRK
+    def LC_VEL(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(114))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # TRK
+    def LC_VELAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(114))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
+
+    # TRK
+    def LC_VELLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(114))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # TRK
+    def LC_VELIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(114))
+        return o == 0
+
+    # Local coordinate acceleration as flat array
+    # TRK
+    def LC_ACC(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(116))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # TRK
+    def LC_ACCAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(116))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
+
+    # TRK
+    def LC_ACCLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(116))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # TRK
+    def LC_ACCIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(116))
+        return o == 0
+
+    # Covariance data (21 elements per point for 6x6 lower triangular)
+    # TRK
+    def COV(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(118))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # TRK
+    def COVAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(118))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
+
+    # TRK
+    def COVLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(118))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # TRK
+    def COVIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(118))
+        return o == 0
+
+    # Error ellipse data (6 elements per point)
+    # TRK
+    def ERR_ELLP(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(120))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # TRK
+    def ERR_ELLPAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(120))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
+
+    # TRK
+    def ERR_ELLPLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(120))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # TRK
+    def ERR_ELLPIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(120))
+        return o == 0
+
+def TRKStart(builder):
+    builder.StartObject(59)
+
+def Start(builder):
+    TRKStart(builder)
+
+def TRKAddID(builder, ID):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(ID), 0)
+
+def AddID(builder, ID):
+    TRKAddID(builder, ID)
+
+def TRKAddCNTCT(builder, CNTCT):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(CNTCT), 0)
+
+def AddCNTCT(builder, CNTCT):
+    TRKAddCNTCT(builder, CNTCT)
+
+def TRKAddMSG_TS(builder, MSG_TS):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(MSG_TS), 0)
+
+def AddMSG_TS(builder, MSG_TS):
+    TRKAddMSG_TS(builder, MSG_TS)
+
+def TRKAddMSN_ID(builder, MSN_ID):
+    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(MSN_ID), 0)
+
+def AddMSN_ID(builder, MSN_ID):
+    TRKAddMSN_ID(builder, MSN_ID)
+
+def TRKAddASSET_NAT(builder, ASSET_NAT):
+    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(ASSET_NAT), 0)
+
+def AddASSET_NAT(builder, ASSET_NAT):
+    TRKAddASSET_NAT(builder, ASSET_NAT)
+
+def TRKAddASSET(builder, ASSET):
+    builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(ASSET), 0)
+
+def AddASSET(builder, ASSET):
+    TRKAddASSET(builder, ASSET)
+
+def TRKAddSENSOR_ID(builder, SENSOR_ID):
+    builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(SENSOR_ID), 0)
+
+def AddSENSOR_ID(builder, SENSOR_ID):
+    TRKAddSENSOR_ID(builder, SENSOR_ID)
+
+def TRKAddSEN_QUAL(builder, SEN_QUAL):
+    builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(SEN_QUAL), 0)
+
+def AddSEN_QUAL(builder, SEN_QUAL):
+    TRKAddSEN_QUAL(builder, SEN_QUAL)
+
+def TRKAddTRK_ID(builder, TRK_ID):
+    builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(TRK_ID), 0)
+
+def AddTRK_ID(builder, TRK_ID):
+    TRKAddTRK_ID(builder, TRK_ID)
+
+def TRKAddTRK_NUM(builder, TRK_NUM):
+    builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(TRK_NUM), 0)
+
+def AddTRK_NUM(builder, TRK_NUM):
+    TRKAddTRK_NUM(builder, TRK_NUM)
+
+def TRKAddTRK_STAT(builder, TRK_STAT):
+    builder.PrependInt8Slot(10, TRK_STAT, 0)
+
+def AddTRK_STAT(builder, TRK_STAT):
+    TRKAddTRK_STAT(builder, TRK_STAT)
+
+def TRKAddOBJ_NAT(builder, OBJ_NAT):
+    builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(OBJ_NAT), 0)
+
+def AddOBJ_NAT(builder, OBJ_NAT):
+    TRKAddOBJ_NAT(builder, OBJ_NAT)
+
+def TRKAddOBJ_ID(builder, OBJ_ID):
+    builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(OBJ_ID), 0)
+
+def AddOBJ_ID(builder, OBJ_ID):
+    TRKAddOBJ_ID(builder, OBJ_ID)
+
+def TRKAddOBJ_TYPE(builder, OBJ_TYPE):
+    builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(OBJ_TYPE), 0)
+
+def AddOBJ_TYPE(builder, OBJ_TYPE):
+    TRKAddOBJ_TYPE(builder, OBJ_TYPE)
+
+def TRKAddOBJ_SPEC(builder, OBJ_SPEC):
+    builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(OBJ_SPEC), 0)
+
+def AddOBJ_SPEC(builder, OBJ_SPEC):
+    TRKAddOBJ_SPEC(builder, OBJ_SPEC)
+
+def TRKAddOBJ_PLAT(builder, OBJ_PLAT):
+    builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(OBJ_PLAT), 0)
+
+def AddOBJ_PLAT(builder, OBJ_PLAT):
+    TRKAddOBJ_PLAT(builder, OBJ_PLAT)
+
+def TRKAddOBJ_ACT(builder, OBJ_ACT):
+    builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(OBJ_ACT), 0)
+
+def AddOBJ_ACT(builder, OBJ_ACT):
+    TRKAddOBJ_ACT(builder, OBJ_ACT)
+
+def TRKAddMOD_TYPE(builder, MOD_TYPE):
+    builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(MOD_TYPE), 0)
+
+def AddMOD_TYPE(builder, MOD_TYPE):
+    TRKAddMOD_TYPE(builder, MOD_TYPE)
+
+def TRKAddTRK_ITM_ID(builder, TRK_ITM_ID):
+    builder.PrependUOffsetTRelativeSlot(18, flatbuffers.number_types.UOffsetTFlags.py_type(TRK_ITM_ID), 0)
+
+def AddTRK_ITM_ID(builder, TRK_ITM_ID):
+    TRKAddTRK_ITM_ID(builder, TRK_ITM_ID)
+
+def TRKAddTS(builder, TS):
+    builder.PrependUOffsetTRelativeSlot(19, flatbuffers.number_types.UOffsetTFlags.py_type(TS), 0)
+
+def AddTS(builder, TS):
+    TRKAddTS(builder, TS)
+
+def TRKAddTRK_QUAL(builder, TRK_QUAL):
+    builder.PrependUint8Slot(20, TRK_QUAL, 0)
+
+def AddTRK_QUAL(builder, TRK_QUAL):
+    TRKAddTRK_QUAL(builder, TRK_QUAL)
+
+def TRKAddTRK_PT_TYPE(builder, TRK_PT_TYPE):
+    builder.PrependUOffsetTRelativeSlot(21, flatbuffers.number_types.UOffsetTFlags.py_type(TRK_PT_TYPE), 0)
+
+def AddTRK_PT_TYPE(builder, TRK_PT_TYPE):
+    TRKAddTRK_PT_TYPE(builder, TRK_PT_TYPE)
+
+def TRKAddOBJ_IDENT(builder, OBJ_IDENT):
+    builder.PrependUOffsetTRelativeSlot(22, flatbuffers.number_types.UOffsetTFlags.py_type(OBJ_IDENT), 0)
+
+def AddOBJ_IDENT(builder, OBJ_IDENT):
+    TRKAddOBJ_IDENT(builder, OBJ_IDENT)
+
+def TRKAddIDENT_CRED(builder, IDENT_CRED):
+    builder.PrependUint8Slot(23, IDENT_CRED, 0)
+
+def AddIDENT_CRED(builder, IDENT_CRED):
+    TRKAddIDENT_CRED(builder, IDENT_CRED)
+
+def TRKAddIDENT_REL(builder, IDENT_REL):
+    builder.PrependUint8Slot(24, IDENT_REL, 0)
+
+def AddIDENT_REL(builder, IDENT_REL):
+    TRKAddIDENT_REL(builder, IDENT_REL)
+
+def TRKAddIDENT_AMP(builder, IDENT_AMP):
+    builder.PrependUOffsetTRelativeSlot(25, flatbuffers.number_types.UOffsetTFlags.py_type(IDENT_AMP), 0)
+
+def AddIDENT_AMP(builder, IDENT_AMP):
+    TRKAddIDENT_AMP(builder, IDENT_AMP)
+
+def TRKAddENVIRONMENT(builder, ENVIRONMENT):
+    builder.PrependInt8Slot(26, ENVIRONMENT, 0)
+
+def AddENVIRONMENT(builder, ENVIRONMENT):
+    TRKAddENVIRONMENT(builder, ENVIRONMENT)
+
+def TRKAddENVIRONMENT_CONF(builder, ENVIRONMENT_CONF):
+    builder.PrependFloat64Slot(27, ENVIRONMENT_CONF, 0.0)
+
+def AddENVIRONMENT_CONF(builder, ENVIRONMENT_CONF):
+    TRKAddENVIRONMENT_CONF(builder, ENVIRONMENT_CONF)
+
+def TRKAddTRK_CONF(builder, TRK_CONF):
+    builder.PrependFloat64Slot(28, TRK_CONF, 0.0)
+
+def AddTRK_CONF(builder, TRK_CONF):
+    TRKAddTRK_CONF(builder, TRK_CONF)
+
+def TRKAddLAT(builder, LAT):
+    builder.PrependFloat64Slot(29, LAT, 0.0)
+
+def AddLAT(builder, LAT):
+    TRKAddLAT(builder, LAT)
+
+def TRKAddLON(builder, LON):
+    builder.PrependFloat64Slot(30, LON, 0.0)
+
+def AddLON(builder, LON):
+    TRKAddLON(builder, LON)
+
+def TRKAddALT(builder, ALT):
+    builder.PrependFloat64Slot(31, ALT, 0.0)
+
+def AddALT(builder, ALT):
+    TRKAddALT(builder, ALT)
+
+def TRKAddSPD(builder, SPD):
+    builder.PrependFloat64Slot(32, SPD, 0.0)
+
+def AddSPD(builder, SPD):
+    TRKAddSPD(builder, SPD)
+
+def TRKAddHDNG(builder, HDNG):
+    builder.PrependFloat64Slot(33, HDNG, 0.0)
+
+def AddHDNG(builder, HDNG):
+    TRKAddHDNG(builder, HDNG)
+
+def TRKAddCOURSE(builder, COURSE):
+    builder.PrependFloat64Slot(34, COURSE, 0.0)
+
+def AddCOURSE(builder, COURSE):
+    TRKAddCOURSE(builder, COURSE)
+
+def TRKAddSRC_TYPS(builder, SRC_TYPS):
+    builder.PrependUOffsetTRelativeSlot(35, flatbuffers.number_types.UOffsetTFlags.py_type(SRC_TYPS), 0)
+
+def AddSRC_TYPS(builder, SRC_TYPS):
+    TRKAddSRC_TYPS(builder, SRC_TYPS)
+
+def TRKStartSRC_TYPSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartSRC_TYPSVector(builder, numElems):
+    return TRKStartSRC_TYPSVector(builder, numElems)
+
+def TRKCreateSRC_TYPSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateSRC_TYPSVector(builder, data):
+    TRKCreateSRC_TYPSVector(builder, data)
+
+def TRKAddSRC_IDS(builder, SRC_IDS):
+    builder.PrependUOffsetTRelativeSlot(36, flatbuffers.number_types.UOffsetTFlags.py_type(SRC_IDS), 0)
+
+def AddSRC_IDS(builder, SRC_IDS):
+    TRKAddSRC_IDS(builder, SRC_IDS)
+
+def TRKStartSRC_IDSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartSRC_IDSVector(builder, numElems):
+    return TRKStartSRC_IDSVector(builder, numElems)
+
+def TRKCreateSRC_IDSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateSRC_IDSVector(builder, data):
+    TRKCreateSRC_IDSVector(builder, data)
+
+def TRKAddCALL_SIGN(builder, CALL_SIGN):
+    builder.PrependUOffsetTRelativeSlot(37, flatbuffers.number_types.UOffsetTFlags.py_type(CALL_SIGN), 0)
+
+def AddCALL_SIGN(builder, CALL_SIGN):
+    TRKAddCALL_SIGN(builder, CALL_SIGN)
+
+def TRKAddMULTI_SOURCE(builder, MULTI_SOURCE):
+    builder.PrependBoolSlot(38, MULTI_SOURCE, 0)
+
+def AddMULTI_SOURCE(builder, MULTI_SOURCE):
+    TRKAddMULTI_SOURCE(builder, MULTI_SOURCE)
+
+def TRKAddJ_SERIES(builder, J_SERIES):
+    builder.PrependUOffsetTRelativeSlot(39, flatbuffers.number_types.UOffsetTFlags.py_type(J_SERIES), 0)
+
+def AddJ_SERIES(builder, J_SERIES):
+    TRKAddJ_SERIES(builder, J_SERIES)
+
+def TRKAddSTRENGTH(builder, STRENGTH):
+    builder.PrependUint16Slot(40, STRENGTH, 0)
+
+def AddSTRENGTH(builder, STRENGTH):
+    TRKAddSTRENGTH(builder, STRENGTH)
+
+def TRKAddM1(builder, M1):
+    builder.PrependUint16Slot(41, M1, 0)
+
+def AddM1(builder, M1):
+    TRKAddM1(builder, M1)
+
+def TRKAddM1V(builder, M1V):
+    builder.PrependUint8Slot(42, M1V, 0)
+
+def AddM1V(builder, M1V):
+    TRKAddM1V(builder, M1V)
+
+def TRKAddM2(builder, M2):
+    builder.PrependUint16Slot(43, M2, 0)
+
+def AddM2(builder, M2):
+    TRKAddM2(builder, M2)
+
+def TRKAddM2V(builder, M2V):
+    builder.PrependUint8Slot(44, M2V, 0)
+
+def AddM2V(builder, M2V):
+    TRKAddM2V(builder, M2V)
+
+def TRKAddM3A(builder, M3A):
+    builder.PrependUint16Slot(45, M3A, 0)
+
+def AddM3A(builder, M3A):
+    TRKAddM3A(builder, M3A)
+
+def TRKAddM3AV(builder, M3AV):
+    builder.PrependUint8Slot(46, M3AV, 0)
+
+def AddM3AV(builder, M3AV):
+    TRKAddM3AV(builder, M3AV)
+
+def TRKAddTAGS(builder, TAGS):
+    builder.PrependUOffsetTRelativeSlot(47, flatbuffers.number_types.UOffsetTFlags.py_type(TAGS), 0)
+
+def AddTAGS(builder, TAGS):
+    TRKAddTAGS(builder, TAGS)
+
+def TRKStartTAGSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartTAGSVector(builder, numElems):
+    return TRKStartTAGSVector(builder, numElems)
+
+def TRKCreateTAGSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateTAGSVector(builder, data):
+    TRKCreateTAGSVector(builder, data)
+
+def TRKAddTRACK_START_TIME(builder, TRACK_START_TIME):
+    builder.PrependUOffsetTRelativeSlot(48, flatbuffers.number_types.UOffsetTFlags.py_type(TRACK_START_TIME), 0)
+
+def AddTRACK_START_TIME(builder, TRACK_START_TIME):
+    TRKAddTRACK_START_TIME(builder, TRACK_START_TIME)
+
+def TRKAddTRACK_STEP_SIZE(builder, TRACK_STEP_SIZE):
+    builder.PrependFloat64Slot(49, TRACK_STEP_SIZE, 0.0)
+
+def AddTRACK_STEP_SIZE(builder, TRACK_STEP_SIZE):
+    TRKAddTRACK_STEP_SIZE(builder, TRACK_STEP_SIZE)
+
+def TRKAddTRACK_COMPONENTS(builder, TRACK_COMPONENTS):
+    builder.PrependUint8Slot(50, TRACK_COMPONENTS, 3)
+
+def AddTRACK_COMPONENTS(builder, TRACK_COMPONENTS):
+    TRKAddTRACK_COMPONENTS(builder, TRACK_COMPONENTS)
+
+def TRKAddECEF_POS(builder, ECEF_POS):
+    builder.PrependUOffsetTRelativeSlot(51, flatbuffers.number_types.UOffsetTFlags.py_type(ECEF_POS), 0)
+
+def AddECEF_POS(builder, ECEF_POS):
+    TRKAddECEF_POS(builder, ECEF_POS)
+
+def TRKStartECEF_POSVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
+def StartECEF_POSVector(builder, numElems):
+    return TRKStartECEF_POSVector(builder, numElems)
+
+def TRKCreateECEF_POSVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateECEF_POSVector(builder, data):
+    TRKCreateECEF_POSVector(builder, data)
+
+def TRKAddECEF_VEL(builder, ECEF_VEL):
+    builder.PrependUOffsetTRelativeSlot(52, flatbuffers.number_types.UOffsetTFlags.py_type(ECEF_VEL), 0)
+
+def AddECEF_VEL(builder, ECEF_VEL):
+    TRKAddECEF_VEL(builder, ECEF_VEL)
+
+def TRKStartECEF_VELVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
+def StartECEF_VELVector(builder, numElems):
+    return TRKStartECEF_VELVector(builder, numElems)
+
+def TRKCreateECEF_VELVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateECEF_VELVector(builder, data):
+    TRKCreateECEF_VELVector(builder, data)
+
+def TRKAddECEF_ACC(builder, ECEF_ACC):
+    builder.PrependUOffsetTRelativeSlot(53, flatbuffers.number_types.UOffsetTFlags.py_type(ECEF_ACC), 0)
+
+def AddECEF_ACC(builder, ECEF_ACC):
+    TRKAddECEF_ACC(builder, ECEF_ACC)
+
+def TRKStartECEF_ACCVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
+def StartECEF_ACCVector(builder, numElems):
+    return TRKStartECEF_ACCVector(builder, numElems)
+
+def TRKCreateECEF_ACCVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateECEF_ACCVector(builder, data):
+    TRKCreateECEF_ACCVector(builder, data)
+
+def TRKAddLC_POS(builder, LC_POS):
+    builder.PrependUOffsetTRelativeSlot(54, flatbuffers.number_types.UOffsetTFlags.py_type(LC_POS), 0)
+
+def AddLC_POS(builder, LC_POS):
+    TRKAddLC_POS(builder, LC_POS)
+
+def TRKStartLC_POSVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
+def StartLC_POSVector(builder, numElems):
+    return TRKStartLC_POSVector(builder, numElems)
+
+def TRKCreateLC_POSVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateLC_POSVector(builder, data):
+    TRKCreateLC_POSVector(builder, data)
+
+def TRKAddLC_VEL(builder, LC_VEL):
+    builder.PrependUOffsetTRelativeSlot(55, flatbuffers.number_types.UOffsetTFlags.py_type(LC_VEL), 0)
+
+def AddLC_VEL(builder, LC_VEL):
+    TRKAddLC_VEL(builder, LC_VEL)
+
+def TRKStartLC_VELVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
+def StartLC_VELVector(builder, numElems):
+    return TRKStartLC_VELVector(builder, numElems)
+
+def TRKCreateLC_VELVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateLC_VELVector(builder, data):
+    TRKCreateLC_VELVector(builder, data)
+
+def TRKAddLC_ACC(builder, LC_ACC):
+    builder.PrependUOffsetTRelativeSlot(56, flatbuffers.number_types.UOffsetTFlags.py_type(LC_ACC), 0)
+
+def AddLC_ACC(builder, LC_ACC):
+    TRKAddLC_ACC(builder, LC_ACC)
+
+def TRKStartLC_ACCVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
+def StartLC_ACCVector(builder, numElems):
+    return TRKStartLC_ACCVector(builder, numElems)
+
+def TRKCreateLC_ACCVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateLC_ACCVector(builder, data):
+    TRKCreateLC_ACCVector(builder, data)
+
+def TRKAddCOV(builder, COV):
+    builder.PrependUOffsetTRelativeSlot(57, flatbuffers.number_types.UOffsetTFlags.py_type(COV), 0)
+
+def AddCOV(builder, COV):
+    TRKAddCOV(builder, COV)
+
+def TRKStartCOVVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
+def StartCOVVector(builder, numElems):
+    return TRKStartCOVVector(builder, numElems)
+
+def TRKCreateCOVVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateCOVVector(builder, data):
+    TRKCreateCOVVector(builder, data)
+
+def TRKAddERR_ELLP(builder, ERR_ELLP):
+    builder.PrependUOffsetTRelativeSlot(58, flatbuffers.number_types.UOffsetTFlags.py_type(ERR_ELLP), 0)
+
+def AddERR_ELLP(builder, ERR_ELLP):
+    TRKAddERR_ELLP(builder, ERR_ELLP)
+
+def TRKStartERR_ELLPVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
+def StartERR_ELLPVector(builder, numElems):
+    return TRKStartERR_ELLPVector(builder, numElems)
+
+def TRKCreateERR_ELLPVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateERR_ELLPVector(builder, data):
+    TRKCreateERR_ELLPVector(builder, data)
+
+def TRKEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return TRKEnd(builder)
+
+try:
+    from typing import List
+except:
+    pass
+
+class TRKT(object):
+
+    # TRKT
+    def __init__(
+        self,
+        ID = None,
+        CNTCT = None,
+        MSG_TS = None,
+        MSN_ID = None,
+        ASSET_NAT = None,
+        ASSET = None,
+        SENSOR_ID = None,
+        SEN_QUAL = None,
+        TRK_ID = None,
+        TRK_NUM = None,
+        TRK_STAT = 0,
+        OBJ_NAT = None,
+        OBJ_ID = None,
+        OBJ_TYPE = None,
+        OBJ_SPEC = None,
+        OBJ_PLAT = None,
+        OBJ_ACT = None,
+        MOD_TYPE = None,
+        TRK_ITM_ID = None,
+        TS = None,
+        TRK_QUAL = 0,
+        TRK_PT_TYPE = None,
+        OBJ_IDENT = None,
+        IDENT_CRED = 0,
+        IDENT_REL = 0,
+        IDENT_AMP = None,
+        ENVIRONMENT = 0,
+        ENVIRONMENT_CONF = 0.0,
+        TRK_CONF = 0.0,
+        LAT = 0.0,
+        LON = 0.0,
+        ALT = 0.0,
+        SPD = 0.0,
+        HDNG = 0.0,
+        COURSE = 0.0,
+        SRC_TYPS = None,
+        SRC_IDS = None,
+        CALL_SIGN = None,
+        MULTI_SOURCE = False,
+        J_SERIES = None,
+        STRENGTH = 0,
+        M1 = 0,
+        M1V = 0,
+        M2 = 0,
+        M2V = 0,
+        M3A = 0,
+        M3AV = 0,
+        TAGS = None,
+        TRACK_START_TIME = None,
+        TRACK_STEP_SIZE = 0.0,
+        TRACK_COMPONENTS = 3,
+        ECEF_POS = None,
+        ECEF_VEL = None,
+        ECEF_ACC = None,
+        LC_POS = None,
+        LC_VEL = None,
+        LC_ACC = None,
+        COV = None,
+        ERR_ELLP = None,
+    ):
+        self.ID = ID  # type: Optional[str]
+        self.CNTCT = CNTCT  # type: Optional[str]
+        self.MSG_TS = MSG_TS  # type: Optional[str]
+        self.MSN_ID = MSN_ID  # type: Optional[str]
+        self.ASSET_NAT = ASSET_NAT  # type: Optional[str]
+        self.ASSET = ASSET  # type: Optional[str]
+        self.SENSOR_ID = SENSOR_ID  # type: Optional[str]
+        self.SEN_QUAL = SEN_QUAL  # type: Optional[str]
+        self.TRK_ID = TRK_ID  # type: Optional[str]
+        self.TRK_NUM = TRK_NUM  # type: Optional[str]
+        self.TRK_STAT = TRK_STAT  # type: int
+        self.OBJ_NAT = OBJ_NAT  # type: Optional[str]
+        self.OBJ_ID = OBJ_ID  # type: Optional[str]
+        self.OBJ_TYPE = OBJ_TYPE  # type: Optional[str]
+        self.OBJ_SPEC = OBJ_SPEC  # type: Optional[str]
+        self.OBJ_PLAT = OBJ_PLAT  # type: Optional[str]
+        self.OBJ_ACT = OBJ_ACT  # type: Optional[str]
+        self.MOD_TYPE = MOD_TYPE  # type: Optional[str]
+        self.TRK_ITM_ID = TRK_ITM_ID  # type: Optional[str]
+        self.TS = TS  # type: Optional[str]
+        self.TRK_QUAL = TRK_QUAL  # type: int
+        self.TRK_PT_TYPE = TRK_PT_TYPE  # type: Optional[str]
+        self.OBJ_IDENT = OBJ_IDENT  # type: Optional[str]
+        self.IDENT_CRED = IDENT_CRED  # type: int
+        self.IDENT_REL = IDENT_REL  # type: int
+        self.IDENT_AMP = IDENT_AMP  # type: Optional[str]
+        self.ENVIRONMENT = ENVIRONMENT  # type: int
+        self.ENVIRONMENT_CONF = ENVIRONMENT_CONF  # type: float
+        self.TRK_CONF = TRK_CONF  # type: float
+        self.LAT = LAT  # type: float
+        self.LON = LON  # type: float
+        self.ALT = ALT  # type: float
+        self.SPD = SPD  # type: float
+        self.HDNG = HDNG  # type: float
+        self.COURSE = COURSE  # type: float
+        self.SRC_TYPS = SRC_TYPS  # type: Optional[List[Optional[str]]]
+        self.SRC_IDS = SRC_IDS  # type: Optional[List[Optional[str]]]
+        self.CALL_SIGN = CALL_SIGN  # type: Optional[str]
+        self.MULTI_SOURCE = MULTI_SOURCE  # type: bool
+        self.J_SERIES = J_SERIES  # type: Optional[str]
+        self.STRENGTH = STRENGTH  # type: int
+        self.M1 = M1  # type: int
+        self.M1V = M1V  # type: int
+        self.M2 = M2  # type: int
+        self.M2V = M2V  # type: int
+        self.M3A = M3A  # type: int
+        self.M3AV = M3AV  # type: int
+        self.TAGS = TAGS  # type: Optional[List[Optional[str]]]
+        self.TRACK_START_TIME = TRACK_START_TIME  # type: Optional[str]
+        self.TRACK_STEP_SIZE = TRACK_STEP_SIZE  # type: float
+        self.TRACK_COMPONENTS = TRACK_COMPONENTS  # type: int
+        self.ECEF_POS = ECEF_POS  # type: Optional[List[float]]
+        self.ECEF_VEL = ECEF_VEL  # type: Optional[List[float]]
+        self.ECEF_ACC = ECEF_ACC  # type: Optional[List[float]]
+        self.LC_POS = LC_POS  # type: Optional[List[float]]
+        self.LC_VEL = LC_VEL  # type: Optional[List[float]]
+        self.LC_ACC = LC_ACC  # type: Optional[List[float]]
+        self.COV = COV  # type: Optional[List[float]]
+        self.ERR_ELLP = ERR_ELLP  # type: Optional[List[float]]
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpTrk = TRK()
+        tmpTrk.Init(buf, pos)
+        return cls.InitFromObj(tmpTrk)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpTrk):
+        x = TRKT()
+        x._UnPack(tmpTrk)
+        return x
+
+    # TRKT
+    def _UnPack(self, TRK):
+        if TRK is None:
+            return
+        self.ID = TRK.ID()
+        self.CNTCT = TRK.CNTCT()
+        self.MSG_TS = TRK.MSG_TS()
+        self.MSN_ID = TRK.MSN_ID()
+        self.ASSET_NAT = TRK.ASSET_NAT()
+        self.ASSET = TRK.ASSET()
+        self.SENSOR_ID = TRK.SENSOR_ID()
+        self.SEN_QUAL = TRK.SEN_QUAL()
+        self.TRK_ID = TRK.TRK_ID()
+        self.TRK_NUM = TRK.TRK_NUM()
+        self.TRK_STAT = TRK.TRK_STAT()
+        self.OBJ_NAT = TRK.OBJ_NAT()
+        self.OBJ_ID = TRK.OBJ_ID()
+        self.OBJ_TYPE = TRK.OBJ_TYPE()
+        self.OBJ_SPEC = TRK.OBJ_SPEC()
+        self.OBJ_PLAT = TRK.OBJ_PLAT()
+        self.OBJ_ACT = TRK.OBJ_ACT()
+        self.MOD_TYPE = TRK.MOD_TYPE()
+        self.TRK_ITM_ID = TRK.TRK_ITM_ID()
+        self.TS = TRK.TS()
+        self.TRK_QUAL = TRK.TRK_QUAL()
+        self.TRK_PT_TYPE = TRK.TRK_PT_TYPE()
+        self.OBJ_IDENT = TRK.OBJ_IDENT()
+        self.IDENT_CRED = TRK.IDENT_CRED()
+        self.IDENT_REL = TRK.IDENT_REL()
+        self.IDENT_AMP = TRK.IDENT_AMP()
+        self.ENVIRONMENT = TRK.ENVIRONMENT()
+        self.ENVIRONMENT_CONF = TRK.ENVIRONMENT_CONF()
+        self.TRK_CONF = TRK.TRK_CONF()
+        self.LAT = TRK.LAT()
+        self.LON = TRK.LON()
+        self.ALT = TRK.ALT()
+        self.SPD = TRK.SPD()
+        self.HDNG = TRK.HDNG()
+        self.COURSE = TRK.COURSE()
+        if not TRK.SRC_TYPSIsNone():
+            self.SRC_TYPS = []
+            for i in range(TRK.SRC_TYPSLength()):
+                self.SRC_TYPS.append(TRK.SRC_TYPS(i))
+        if not TRK.SRC_IDSIsNone():
+            self.SRC_IDS = []
+            for i in range(TRK.SRC_IDSLength()):
+                self.SRC_IDS.append(TRK.SRC_IDS(i))
+        self.CALL_SIGN = TRK.CALL_SIGN()
+        self.MULTI_SOURCE = TRK.MULTI_SOURCE()
+        self.J_SERIES = TRK.J_SERIES()
+        self.STRENGTH = TRK.STRENGTH()
+        self.M1 = TRK.M1()
+        self.M1V = TRK.M1V()
+        self.M2 = TRK.M2()
+        self.M2V = TRK.M2V()
+        self.M3A = TRK.M3A()
+        self.M3AV = TRK.M3AV()
+        if not TRK.TAGSIsNone():
+            self.TAGS = []
+            for i in range(TRK.TAGSLength()):
+                self.TAGS.append(TRK.TAGS(i))
+        self.TRACK_START_TIME = TRK.TRACK_START_TIME()
+        self.TRACK_STEP_SIZE = TRK.TRACK_STEP_SIZE()
+        self.TRACK_COMPONENTS = TRK.TRACK_COMPONENTS()
+        if not TRK.ECEF_POSIsNone():
+            if np is None:
+                self.ECEF_POS = []
+                for i in range(TRK.ECEF_POSLength()):
+                    self.ECEF_POS.append(TRK.ECEF_POS(i))
+            else:
+                self.ECEF_POS = TRK.ECEF_POSAsNumpy()
+        if not TRK.ECEF_VELIsNone():
+            if np is None:
+                self.ECEF_VEL = []
+                for i in range(TRK.ECEF_VELLength()):
+                    self.ECEF_VEL.append(TRK.ECEF_VEL(i))
+            else:
+                self.ECEF_VEL = TRK.ECEF_VELAsNumpy()
+        if not TRK.ECEF_ACCIsNone():
+            if np is None:
+                self.ECEF_ACC = []
+                for i in range(TRK.ECEF_ACCLength()):
+                    self.ECEF_ACC.append(TRK.ECEF_ACC(i))
+            else:
+                self.ECEF_ACC = TRK.ECEF_ACCAsNumpy()
+        if not TRK.LC_POSIsNone():
+            if np is None:
+                self.LC_POS = []
+                for i in range(TRK.LC_POSLength()):
+                    self.LC_POS.append(TRK.LC_POS(i))
+            else:
+                self.LC_POS = TRK.LC_POSAsNumpy()
+        if not TRK.LC_VELIsNone():
+            if np is None:
+                self.LC_VEL = []
+                for i in range(TRK.LC_VELLength()):
+                    self.LC_VEL.append(TRK.LC_VEL(i))
+            else:
+                self.LC_VEL = TRK.LC_VELAsNumpy()
+        if not TRK.LC_ACCIsNone():
+            if np is None:
+                self.LC_ACC = []
+                for i in range(TRK.LC_ACCLength()):
+                    self.LC_ACC.append(TRK.LC_ACC(i))
+            else:
+                self.LC_ACC = TRK.LC_ACCAsNumpy()
+        if not TRK.COVIsNone():
+            if np is None:
+                self.COV = []
+                for i in range(TRK.COVLength()):
+                    self.COV.append(TRK.COV(i))
+            else:
+                self.COV = TRK.COVAsNumpy()
+        if not TRK.ERR_ELLPIsNone():
+            if np is None:
+                self.ERR_ELLP = []
+                for i in range(TRK.ERR_ELLPLength()):
+                    self.ERR_ELLP.append(TRK.ERR_ELLP(i))
+            else:
+                self.ERR_ELLP = TRK.ERR_ELLPAsNumpy()
+
+    # TRKT
+    def Pack(self, builder):
+        if self.ID is not None:
+            ID = builder.CreateString(self.ID)
+        if self.CNTCT is not None:
+            CNTCT = builder.CreateString(self.CNTCT)
+        if self.MSG_TS is not None:
+            MSG_TS = builder.CreateString(self.MSG_TS)
+        if self.MSN_ID is not None:
+            MSN_ID = builder.CreateString(self.MSN_ID)
+        if self.ASSET_NAT is not None:
+            ASSET_NAT = builder.CreateString(self.ASSET_NAT)
+        if self.ASSET is not None:
+            ASSET = builder.CreateString(self.ASSET)
+        if self.SENSOR_ID is not None:
+            SENSOR_ID = builder.CreateString(self.SENSOR_ID)
+        if self.SEN_QUAL is not None:
+            SEN_QUAL = builder.CreateString(self.SEN_QUAL)
+        if self.TRK_ID is not None:
+            TRK_ID = builder.CreateString(self.TRK_ID)
+        if self.TRK_NUM is not None:
+            TRK_NUM = builder.CreateString(self.TRK_NUM)
+        if self.OBJ_NAT is not None:
+            OBJ_NAT = builder.CreateString(self.OBJ_NAT)
+        if self.OBJ_ID is not None:
+            OBJ_ID = builder.CreateString(self.OBJ_ID)
+        if self.OBJ_TYPE is not None:
+            OBJ_TYPE = builder.CreateString(self.OBJ_TYPE)
+        if self.OBJ_SPEC is not None:
+            OBJ_SPEC = builder.CreateString(self.OBJ_SPEC)
+        if self.OBJ_PLAT is not None:
+            OBJ_PLAT = builder.CreateString(self.OBJ_PLAT)
+        if self.OBJ_ACT is not None:
+            OBJ_ACT = builder.CreateString(self.OBJ_ACT)
+        if self.MOD_TYPE is not None:
+            MOD_TYPE = builder.CreateString(self.MOD_TYPE)
+        if self.TRK_ITM_ID is not None:
+            TRK_ITM_ID = builder.CreateString(self.TRK_ITM_ID)
+        if self.TS is not None:
+            TS = builder.CreateString(self.TS)
+        if self.TRK_PT_TYPE is not None:
+            TRK_PT_TYPE = builder.CreateString(self.TRK_PT_TYPE)
+        if self.OBJ_IDENT is not None:
+            OBJ_IDENT = builder.CreateString(self.OBJ_IDENT)
+        if self.IDENT_AMP is not None:
+            IDENT_AMP = builder.CreateString(self.IDENT_AMP)
+        if self.SRC_TYPS is not None:
+            SRC_TYPSlist = []
+            for i in range(len(self.SRC_TYPS)):
+                SRC_TYPSlist.append(builder.CreateString(self.SRC_TYPS[i]))
+            TRKStartSRC_TYPSVector(builder, len(self.SRC_TYPS))
+            for i in reversed(range(len(self.SRC_TYPS))):
+                builder.PrependUOffsetTRelative(SRC_TYPSlist[i])
+            SRC_TYPS = builder.EndVector()
+        if self.SRC_IDS is not None:
+            SRC_IDSlist = []
+            for i in range(len(self.SRC_IDS)):
+                SRC_IDSlist.append(builder.CreateString(self.SRC_IDS[i]))
+            TRKStartSRC_IDSVector(builder, len(self.SRC_IDS))
+            for i in reversed(range(len(self.SRC_IDS))):
+                builder.PrependUOffsetTRelative(SRC_IDSlist[i])
+            SRC_IDS = builder.EndVector()
+        if self.CALL_SIGN is not None:
+            CALL_SIGN = builder.CreateString(self.CALL_SIGN)
+        if self.J_SERIES is not None:
+            J_SERIES = builder.CreateString(self.J_SERIES)
+        if self.TAGS is not None:
+            TAGSlist = []
+            for i in range(len(self.TAGS)):
+                TAGSlist.append(builder.CreateString(self.TAGS[i]))
+            TRKStartTAGSVector(builder, len(self.TAGS))
+            for i in reversed(range(len(self.TAGS))):
+                builder.PrependUOffsetTRelative(TAGSlist[i])
+            TAGS = builder.EndVector()
+        if self.TRACK_START_TIME is not None:
+            TRACK_START_TIME = builder.CreateString(self.TRACK_START_TIME)
+        if self.ECEF_POS is not None:
+            if np is not None and type(self.ECEF_POS) is np.ndarray:
+                ECEF_POS = builder.CreateNumpyVector(self.ECEF_POS)
+            else:
+                TRKStartECEF_POSVector(builder, len(self.ECEF_POS))
+                for i in reversed(range(len(self.ECEF_POS))):
+                    builder.PrependFloat64(self.ECEF_POS[i])
+                ECEF_POS = builder.EndVector()
+        if self.ECEF_VEL is not None:
+            if np is not None and type(self.ECEF_VEL) is np.ndarray:
+                ECEF_VEL = builder.CreateNumpyVector(self.ECEF_VEL)
+            else:
+                TRKStartECEF_VELVector(builder, len(self.ECEF_VEL))
+                for i in reversed(range(len(self.ECEF_VEL))):
+                    builder.PrependFloat64(self.ECEF_VEL[i])
+                ECEF_VEL = builder.EndVector()
+        if self.ECEF_ACC is not None:
+            if np is not None and type(self.ECEF_ACC) is np.ndarray:
+                ECEF_ACC = builder.CreateNumpyVector(self.ECEF_ACC)
+            else:
+                TRKStartECEF_ACCVector(builder, len(self.ECEF_ACC))
+                for i in reversed(range(len(self.ECEF_ACC))):
+                    builder.PrependFloat64(self.ECEF_ACC[i])
+                ECEF_ACC = builder.EndVector()
+        if self.LC_POS is not None:
+            if np is not None and type(self.LC_POS) is np.ndarray:
+                LC_POS = builder.CreateNumpyVector(self.LC_POS)
+            else:
+                TRKStartLC_POSVector(builder, len(self.LC_POS))
+                for i in reversed(range(len(self.LC_POS))):
+                    builder.PrependFloat64(self.LC_POS[i])
+                LC_POS = builder.EndVector()
+        if self.LC_VEL is not None:
+            if np is not None and type(self.LC_VEL) is np.ndarray:
+                LC_VEL = builder.CreateNumpyVector(self.LC_VEL)
+            else:
+                TRKStartLC_VELVector(builder, len(self.LC_VEL))
+                for i in reversed(range(len(self.LC_VEL))):
+                    builder.PrependFloat64(self.LC_VEL[i])
+                LC_VEL = builder.EndVector()
+        if self.LC_ACC is not None:
+            if np is not None and type(self.LC_ACC) is np.ndarray:
+                LC_ACC = builder.CreateNumpyVector(self.LC_ACC)
+            else:
+                TRKStartLC_ACCVector(builder, len(self.LC_ACC))
+                for i in reversed(range(len(self.LC_ACC))):
+                    builder.PrependFloat64(self.LC_ACC[i])
+                LC_ACC = builder.EndVector()
+        if self.COV is not None:
+            if np is not None and type(self.COV) is np.ndarray:
+                COV = builder.CreateNumpyVector(self.COV)
+            else:
+                TRKStartCOVVector(builder, len(self.COV))
+                for i in reversed(range(len(self.COV))):
+                    builder.PrependFloat64(self.COV[i])
+                COV = builder.EndVector()
+        if self.ERR_ELLP is not None:
+            if np is not None and type(self.ERR_ELLP) is np.ndarray:
+                ERR_ELLP = builder.CreateNumpyVector(self.ERR_ELLP)
+            else:
+                TRKStartERR_ELLPVector(builder, len(self.ERR_ELLP))
+                for i in reversed(range(len(self.ERR_ELLP))):
+                    builder.PrependFloat64(self.ERR_ELLP[i])
+                ERR_ELLP = builder.EndVector()
+        TRKStart(builder)
+        if self.ID is not None:
+            TRKAddID(builder, ID)
+        if self.CNTCT is not None:
+            TRKAddCNTCT(builder, CNTCT)
+        if self.MSG_TS is not None:
+            TRKAddMSG_TS(builder, MSG_TS)
+        if self.MSN_ID is not None:
+            TRKAddMSN_ID(builder, MSN_ID)
+        if self.ASSET_NAT is not None:
+            TRKAddASSET_NAT(builder, ASSET_NAT)
+        if self.ASSET is not None:
+            TRKAddASSET(builder, ASSET)
+        if self.SENSOR_ID is not None:
+            TRKAddSENSOR_ID(builder, SENSOR_ID)
+        if self.SEN_QUAL is not None:
+            TRKAddSEN_QUAL(builder, SEN_QUAL)
+        if self.TRK_ID is not None:
+            TRKAddTRK_ID(builder, TRK_ID)
+        if self.TRK_NUM is not None:
+            TRKAddTRK_NUM(builder, TRK_NUM)
+        TRKAddTRK_STAT(builder, self.TRK_STAT)
+        if self.OBJ_NAT is not None:
+            TRKAddOBJ_NAT(builder, OBJ_NAT)
+        if self.OBJ_ID is not None:
+            TRKAddOBJ_ID(builder, OBJ_ID)
+        if self.OBJ_TYPE is not None:
+            TRKAddOBJ_TYPE(builder, OBJ_TYPE)
+        if self.OBJ_SPEC is not None:
+            TRKAddOBJ_SPEC(builder, OBJ_SPEC)
+        if self.OBJ_PLAT is not None:
+            TRKAddOBJ_PLAT(builder, OBJ_PLAT)
+        if self.OBJ_ACT is not None:
+            TRKAddOBJ_ACT(builder, OBJ_ACT)
+        if self.MOD_TYPE is not None:
+            TRKAddMOD_TYPE(builder, MOD_TYPE)
+        if self.TRK_ITM_ID is not None:
+            TRKAddTRK_ITM_ID(builder, TRK_ITM_ID)
+        if self.TS is not None:
+            TRKAddTS(builder, TS)
+        TRKAddTRK_QUAL(builder, self.TRK_QUAL)
+        if self.TRK_PT_TYPE is not None:
+            TRKAddTRK_PT_TYPE(builder, TRK_PT_TYPE)
+        if self.OBJ_IDENT is not None:
+            TRKAddOBJ_IDENT(builder, OBJ_IDENT)
+        TRKAddIDENT_CRED(builder, self.IDENT_CRED)
+        TRKAddIDENT_REL(builder, self.IDENT_REL)
+        if self.IDENT_AMP is not None:
+            TRKAddIDENT_AMP(builder, IDENT_AMP)
+        TRKAddENVIRONMENT(builder, self.ENVIRONMENT)
+        TRKAddENVIRONMENT_CONF(builder, self.ENVIRONMENT_CONF)
+        TRKAddTRK_CONF(builder, self.TRK_CONF)
+        TRKAddLAT(builder, self.LAT)
+        TRKAddLON(builder, self.LON)
+        TRKAddALT(builder, self.ALT)
+        TRKAddSPD(builder, self.SPD)
+        TRKAddHDNG(builder, self.HDNG)
+        TRKAddCOURSE(builder, self.COURSE)
+        if self.SRC_TYPS is not None:
+            TRKAddSRC_TYPS(builder, SRC_TYPS)
+        if self.SRC_IDS is not None:
+            TRKAddSRC_IDS(builder, SRC_IDS)
+        if self.CALL_SIGN is not None:
+            TRKAddCALL_SIGN(builder, CALL_SIGN)
+        TRKAddMULTI_SOURCE(builder, self.MULTI_SOURCE)
+        if self.J_SERIES is not None:
+            TRKAddJ_SERIES(builder, J_SERIES)
+        TRKAddSTRENGTH(builder, self.STRENGTH)
+        TRKAddM1(builder, self.M1)
+        TRKAddM1V(builder, self.M1V)
+        TRKAddM2(builder, self.M2)
+        TRKAddM2V(builder, self.M2V)
+        TRKAddM3A(builder, self.M3A)
+        TRKAddM3AV(builder, self.M3AV)
+        if self.TAGS is not None:
+            TRKAddTAGS(builder, TAGS)
+        if self.TRACK_START_TIME is not None:
+            TRKAddTRACK_START_TIME(builder, TRACK_START_TIME)
+        TRKAddTRACK_STEP_SIZE(builder, self.TRACK_STEP_SIZE)
+        TRKAddTRACK_COMPONENTS(builder, self.TRACK_COMPONENTS)
+        if self.ECEF_POS is not None:
+            TRKAddECEF_POS(builder, ECEF_POS)
+        if self.ECEF_VEL is not None:
+            TRKAddECEF_VEL(builder, ECEF_VEL)
+        if self.ECEF_ACC is not None:
+            TRKAddECEF_ACC(builder, ECEF_ACC)
+        if self.LC_POS is not None:
+            TRKAddLC_POS(builder, LC_POS)
+        if self.LC_VEL is not None:
+            TRKAddLC_VEL(builder, LC_VEL)
+        if self.LC_ACC is not None:
+            TRKAddLC_ACC(builder, LC_ACC)
+        if self.COV is not None:
+            TRKAddCOV(builder, COV)
+        if self.ERR_ELLP is not None:
+            TRKAddERR_ELLP(builder, ERR_ELLP)
+        TRK = TRKEnd(builder)
+        return TRK

@@ -32,7 +32,7 @@ class BEM : Table() {
     /**
      * Unique beam identifier
      */
-    val ID : String?
+    val id : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class BEM : Table() {
                 null
             }
         }
-    val IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val idAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun idInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Beam name or designation
      */
-    val BEAM_NAME : String?
+    val beamName : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -55,12 +55,12 @@ class BEM : Table() {
                 null
             }
         }
-    val BEAM_NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun BEAM_NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val beamNameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun beamNameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * Reference to parent entity (satellite/transponder)
      */
-    val ID_ENTITY : String?
+    val idEntity : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -69,12 +69,12 @@ class BEM : Table() {
                 null
             }
         }
-    val ID_ENTITYAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun ID_ENTITYInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val idEntityAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun idEntityInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
     /**
      * Reference to parent antenna
      */
-    val ID_ANTENNA : String?
+    val idAntenna : String?
         get() {
             val o = __offset(10)
             return if (o != 0) {
@@ -83,12 +83,12 @@ class BEM : Table() {
                 null
             }
         }
-    val ID_ANTENNAAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
-    fun ID_ANTENNAInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
+    val idAntennaAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(10, 1)
+    fun idAntennaInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 10, 1)
     /**
      * Beam type
      */
-    val TYPE : Byte
+    val type : Byte
         get() {
             val o = __offset(12)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -96,7 +96,7 @@ class BEM : Table() {
     /**
      * Beam polarization
      */
-    val POLARIZATION : Byte
+    val polarization : Byte
         get() {
             val o = __offset(14)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -104,7 +104,7 @@ class BEM : Table() {
     /**
      * Peak gain in dBi
      */
-    val PEAK_GAIN : Double
+    val peakGain : Double
         get() {
             val o = __offset(16)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -112,7 +112,7 @@ class BEM : Table() {
     /**
      * Edge-of-coverage gain in dBi
      */
-    val EOC_GAIN : Double
+    val eocGain : Double
         get() {
             val o = __offset(18)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -120,7 +120,7 @@ class BEM : Table() {
     /**
      * Beam center latitude in degrees
      */
-    val CENTER_LATITUDE : Double
+    val centerLatitude : Double
         get() {
             val o = __offset(20)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -128,7 +128,7 @@ class BEM : Table() {
     /**
      * Beam center longitude in degrees
      */
-    val CENTER_LONGITUDE : Double
+    val centerLongitude : Double
         get() {
             val o = __offset(22)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -136,7 +136,7 @@ class BEM : Table() {
     /**
      * Beamwidth (3dB) in degrees
      */
-    val BEAMWIDTH : Double
+    val beamwidth : Double
         get() {
             val o = __offset(24)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -144,7 +144,7 @@ class BEM : Table() {
     /**
      * Operating frequency in MHz
      */
-    val FREQUENCY : Double
+    val frequency : Double
         get() {
             val o = __offset(26)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -152,7 +152,7 @@ class BEM : Table() {
     /**
      * EIRP at beam center in dBW
      */
-    val EIRP : Double
+    val eirp : Double
         get() {
             val o = __offset(28)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -160,7 +160,7 @@ class BEM : Table() {
     /**
      * G/T at beam center in dB/K
      */
-    val G_OVER_T : Double
+    val gOverT : Double
         get() {
             val o = __offset(30)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -168,7 +168,7 @@ class BEM : Table() {
     /**
      * Beam footprint area in km^2
      */
-    val FOOTPRINT_AREA : Double
+    val footprintArea : Double
         get() {
             val o = __offset(32)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -176,8 +176,8 @@ class BEM : Table() {
     /**
      * Beam contour definitions
      */
-    fun BEAM_CONTOURS(j: Int) : beamContour? = BEAM_CONTOURS(beamContour(), j)
-    fun BEAM_CONTOURS(obj: beamContour, j: Int) : beamContour? {
+    fun beamContours(j: Int) : beamContour? = beamContours(beamContour(), j)
+    fun beamContours(obj: beamContour, j: Int) : beamContour? {
         val o = __offset(34)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -185,14 +185,14 @@ class BEM : Table() {
             null
         }
     }
-    val BEAM_CONTOURSLength : Int
+    val beamContoursLength : Int
         get() {
             val o = __offset(34); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Additional notes
      */
-    val NOTES : String?
+    val notes : String?
         get() {
             val o = __offset(36)
             return if (o != 0) {
@@ -201,54 +201,54 @@ class BEM : Table() {
                 null
             }
         }
-    val NOTESAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(36, 1)
-    fun NOTESInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 36, 1)
+    val notesAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(36, 1)
+    fun notesInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 36, 1)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsBEM(_bb: ByteBuffer): BEM = getRootAsBEM(_bb, BEM())
         fun getRootAsBEM(_bb: ByteBuffer, obj: BEM): BEM {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun BEMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$BEM")
-        fun createBEM(builder: FlatBufferBuilder, IDOffset: Int, BEAM_NAMEOffset: Int, ID_ENTITYOffset: Int, ID_ANTENNAOffset: Int, TYPE: Byte, POLARIZATION: Byte, PEAK_GAIN: Double, EOC_GAIN: Double, CENTER_LATITUDE: Double, CENTER_LONGITUDE: Double, BEAMWIDTH: Double, FREQUENCY: Double, EIRP: Double, G_OVER_T: Double, FOOTPRINT_AREA: Double, BEAM_CONTOURSOffset: Int, NOTESOffset: Int) : Int {
+        fun createBEM(builder: FlatBufferBuilder, idOffset: Int, beamNameOffset: Int, idEntityOffset: Int, idAntennaOffset: Int, type: Byte, polarization: Byte, peakGain: Double, eocGain: Double, centerLatitude: Double, centerLongitude: Double, beamwidth: Double, frequency: Double, eirp: Double, gOverT: Double, footprintArea: Double, beamContoursOffset: Int, notesOffset: Int) : Int {
             builder.startTable(17)
-            addFOOTPRINT_AREA(builder, FOOTPRINT_AREA)
-            addG_OVER_T(builder, G_OVER_T)
-            addEIRP(builder, EIRP)
-            addFREQUENCY(builder, FREQUENCY)
-            addBEAMWIDTH(builder, BEAMWIDTH)
-            addCENTER_LONGITUDE(builder, CENTER_LONGITUDE)
-            addCENTER_LATITUDE(builder, CENTER_LATITUDE)
-            addEOC_GAIN(builder, EOC_GAIN)
-            addPEAK_GAIN(builder, PEAK_GAIN)
-            addNOTES(builder, NOTESOffset)
-            addBEAM_CONTOURS(builder, BEAM_CONTOURSOffset)
-            addID_ANTENNA(builder, ID_ANTENNAOffset)
-            addID_ENTITY(builder, ID_ENTITYOffset)
-            addBEAM_NAME(builder, BEAM_NAMEOffset)
-            addID(builder, IDOffset)
-            addPOLARIZATION(builder, POLARIZATION)
-            addTYPE(builder, TYPE)
+            addFOOTPRINTAREA(builder, footprintArea)
+            addGOVERT(builder, gOverT)
+            addEIRP(builder, eirp)
+            addFREQUENCY(builder, frequency)
+            addBEAMWIDTH(builder, beamwidth)
+            addCENTERLONGITUDE(builder, centerLongitude)
+            addCENTERLATITUDE(builder, centerLatitude)
+            addEOCGAIN(builder, eocGain)
+            addPEAKGAIN(builder, peakGain)
+            addNOTES(builder, notesOffset)
+            addBEAMCONTOURS(builder, beamContoursOffset)
+            addIDANTENNA(builder, idAntennaOffset)
+            addIDENTITY(builder, idEntityOffset)
+            addBEAMNAME(builder, beamNameOffset)
+            addID(builder, idOffset)
+            addPOLARIZATION(builder, polarization)
+            addTYPE(builder, type)
             return endBEM(builder)
         }
         fun startBEM(builder: FlatBufferBuilder) = builder.startTable(17)
-        fun addID(builder: FlatBufferBuilder, ID: Int) = builder.addOffset(0, ID, 0)
-        fun addBEAM_NAME(builder: FlatBufferBuilder, BEAM_NAME: Int) = builder.addOffset(1, BEAM_NAME, 0)
-        fun addID_ENTITY(builder: FlatBufferBuilder, ID_ENTITY: Int) = builder.addOffset(2, ID_ENTITY, 0)
-        fun addID_ANTENNA(builder: FlatBufferBuilder, ID_ANTENNA: Int) = builder.addOffset(3, ID_ANTENNA, 0)
-        fun addTYPE(builder: FlatBufferBuilder, TYPE: Byte) = builder.addByte(4, TYPE, 0)
-        fun addPOLARIZATION(builder: FlatBufferBuilder, POLARIZATION: Byte) = builder.addByte(5, POLARIZATION, 0)
-        fun addPEAK_GAIN(builder: FlatBufferBuilder, PEAK_GAIN: Double) = builder.addDouble(6, PEAK_GAIN, 0.0)
-        fun addEOC_GAIN(builder: FlatBufferBuilder, EOC_GAIN: Double) = builder.addDouble(7, EOC_GAIN, 0.0)
-        fun addCENTER_LATITUDE(builder: FlatBufferBuilder, CENTER_LATITUDE: Double) = builder.addDouble(8, CENTER_LATITUDE, 0.0)
-        fun addCENTER_LONGITUDE(builder: FlatBufferBuilder, CENTER_LONGITUDE: Double) = builder.addDouble(9, CENTER_LONGITUDE, 0.0)
-        fun addBEAMWIDTH(builder: FlatBufferBuilder, BEAMWIDTH: Double) = builder.addDouble(10, BEAMWIDTH, 0.0)
-        fun addFREQUENCY(builder: FlatBufferBuilder, FREQUENCY: Double) = builder.addDouble(11, FREQUENCY, 0.0)
-        fun addEIRP(builder: FlatBufferBuilder, EIRP: Double) = builder.addDouble(12, EIRP, 0.0)
-        fun addG_OVER_T(builder: FlatBufferBuilder, G_OVER_T: Double) = builder.addDouble(13, G_OVER_T, 0.0)
-        fun addFOOTPRINT_AREA(builder: FlatBufferBuilder, FOOTPRINT_AREA: Double) = builder.addDouble(14, FOOTPRINT_AREA, 0.0)
-        fun addBEAM_CONTOURS(builder: FlatBufferBuilder, BEAM_CONTOURS: Int) = builder.addOffset(15, BEAM_CONTOURS, 0)
+        fun addID(builder: FlatBufferBuilder, id: Int) = builder.addOffset(0, id, 0)
+        fun addBEAMNAME(builder: FlatBufferBuilder, beamName: Int) = builder.addOffset(1, beamName, 0)
+        fun addIDENTITY(builder: FlatBufferBuilder, idEntity: Int) = builder.addOffset(2, idEntity, 0)
+        fun addIDANTENNA(builder: FlatBufferBuilder, idAntenna: Int) = builder.addOffset(3, idAntenna, 0)
+        fun addTYPE(builder: FlatBufferBuilder, type: Byte) = builder.addByte(4, type, 0)
+        fun addPOLARIZATION(builder: FlatBufferBuilder, polarization: Byte) = builder.addByte(5, polarization, 0)
+        fun addPEAKGAIN(builder: FlatBufferBuilder, peakGain: Double) = builder.addDouble(6, peakGain, 0.0)
+        fun addEOCGAIN(builder: FlatBufferBuilder, eocGain: Double) = builder.addDouble(7, eocGain, 0.0)
+        fun addCENTERLATITUDE(builder: FlatBufferBuilder, centerLatitude: Double) = builder.addDouble(8, centerLatitude, 0.0)
+        fun addCENTERLONGITUDE(builder: FlatBufferBuilder, centerLongitude: Double) = builder.addDouble(9, centerLongitude, 0.0)
+        fun addBEAMWIDTH(builder: FlatBufferBuilder, beamwidth: Double) = builder.addDouble(10, beamwidth, 0.0)
+        fun addFREQUENCY(builder: FlatBufferBuilder, frequency: Double) = builder.addDouble(11, frequency, 0.0)
+        fun addEIRP(builder: FlatBufferBuilder, eirp: Double) = builder.addDouble(12, eirp, 0.0)
+        fun addGOVERT(builder: FlatBufferBuilder, gOverT: Double) = builder.addDouble(13, gOverT, 0.0)
+        fun addFOOTPRINTAREA(builder: FlatBufferBuilder, footprintArea: Double) = builder.addDouble(14, footprintArea, 0.0)
+        fun addBEAMCONTOURS(builder: FlatBufferBuilder, beamContours: Int) = builder.addOffset(15, beamContours, 0)
         fun createBeamContoursVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -257,7 +257,7 @@ class BEM : Table() {
             return builder.endVector()
         }
         fun startBeamContoursVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addNOTES(builder: FlatBufferBuilder, NOTES: Int) = builder.addOffset(16, NOTES, 0)
+        fun addNOTES(builder: FlatBufferBuilder, notes: Int) = builder.addOffset(16, notes, 0)
         fun endBEM(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

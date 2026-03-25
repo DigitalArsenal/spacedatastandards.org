@@ -8,9 +8,9 @@
 
 // Ensure the included flatbuffers.h is the same version as when this file was
 // generated, otherwise it may not be compatible.
-static_assert(FLATBUFFERS_VERSION_MAJOR == 24 &&
-              FLATBUFFERS_VERSION_MINOR == 3 &&
-              FLATBUFFERS_VERSION_REVISION == 25,
+static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
+              FLATBUFFERS_VERSION_MINOR == 12 &&
+              FLATBUFFERS_VERSION_REVISION == 19,
              "Non-compatible flatbuffers version included");
 
 struct RAF;
@@ -118,7 +118,8 @@ struct RAF FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::Vector<uint8_t> *DATA() const {
     return GetPointer<const ::flatbuffers::Vector<uint8_t> *>(VT_DATA);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<int8_t>(verifier, VT_PDU_TYPE, 1) &&
            VerifyOffset(verifier, VT_INITIATOR_ID) &&
@@ -243,14 +244,16 @@ inline bool SizePrefixedRAFBufferHasIdentifier(const void *buf) {
       buf, RAFIdentifier(), true);
 }
 
+template <bool B = false>
 inline bool VerifyRAFBuffer(
-    ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifyBuffer<RAF>(RAFIdentifier());
+    ::flatbuffers::VerifierTemplate<B> &verifier) {
+  return verifier.template VerifyBuffer<RAF>(RAFIdentifier());
 }
 
+template <bool B = false>
 inline bool VerifySizePrefixedRAFBuffer(
-    ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifySizePrefixedBuffer<RAF>(RAFIdentifier());
+    ::flatbuffers::VerifierTemplate<B> &verifier) {
+  return verifier.template VerifySizePrefixedBuffer<RAF>(RAFIdentifier());
 }
 
 inline void FinishRAFBuffer(

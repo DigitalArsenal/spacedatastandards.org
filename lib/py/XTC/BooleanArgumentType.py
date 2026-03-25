@@ -152,20 +152,29 @@ except:
 class BooleanArgumentTypeT(object):
 
     # BooleanArgumentTypeT
-    def __init__(self):
-        self.NAME = None  # type: str
-        self.SHORT_DESCRIPTION = None  # type: str
-        self.LONG_DESCRIPTION = None  # type: str
-        self.DATA_ENCODING = None  # type: Optional[IntegerDataEncoding.IntegerDataEncodingT]
-        self.ONE_STRING_VALUE = None  # type: str
-        self.ZERO_STRING_VALUE = None  # type: str
-        self.INITIAL_VALUE = False  # type: bool
+    def __init__(
+        self,
+        NAME = None,
+        SHORT_DESCRIPTION = None,
+        LONG_DESCRIPTION = None,
+        DATA_ENCODING = None,
+        ONE_STRING_VALUE = None,
+        ZERO_STRING_VALUE = None,
+        INITIAL_VALUE = False,
+    ):
+        self.NAME = NAME  # type: Optional[str]
+        self.SHORT_DESCRIPTION = SHORT_DESCRIPTION  # type: Optional[str]
+        self.LONG_DESCRIPTION = LONG_DESCRIPTION  # type: Optional[str]
+        self.DATA_ENCODING = DATA_ENCODING  # type: Optional[IntegerDataEncoding.IntegerDataEncodingT]
+        self.ONE_STRING_VALUE = ONE_STRING_VALUE  # type: Optional[str]
+        self.ZERO_STRING_VALUE = ZERO_STRING_VALUE  # type: Optional[str]
+        self.INITIAL_VALUE = INITIAL_VALUE  # type: bool
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        booleanArgumentType = BooleanArgumentType()
-        booleanArgumentType.Init(buf, pos)
-        return cls.InitFromObj(booleanArgumentType)
+        tmpBooleanArgumentType = BooleanArgumentType()
+        tmpBooleanArgumentType.Init(buf, pos)
+        return cls.InitFromObj(tmpBooleanArgumentType)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -173,23 +182,23 @@ class BooleanArgumentTypeT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, booleanArgumentType):
+    def InitFromObj(cls, tmpBooleanArgumentType):
         x = BooleanArgumentTypeT()
-        x._UnPack(booleanArgumentType)
+        x._UnPack(tmpBooleanArgumentType)
         return x
 
     # BooleanArgumentTypeT
-    def _UnPack(self, booleanArgumentType):
-        if booleanArgumentType is None:
+    def _UnPack(self, BooleanArgumentType):
+        if BooleanArgumentType is None:
             return
-        self.NAME = booleanArgumentType.NAME()
-        self.SHORT_DESCRIPTION = booleanArgumentType.SHORT_DESCRIPTION()
-        self.LONG_DESCRIPTION = booleanArgumentType.LONG_DESCRIPTION()
-        if booleanArgumentType.DATA_ENCODING() is not None:
-            self.DATA_ENCODING = IntegerDataEncoding.IntegerDataEncodingT.InitFromObj(booleanArgumentType.DATA_ENCODING())
-        self.ONE_STRING_VALUE = booleanArgumentType.ONE_STRING_VALUE()
-        self.ZERO_STRING_VALUE = booleanArgumentType.ZERO_STRING_VALUE()
-        self.INITIAL_VALUE = booleanArgumentType.INITIAL_VALUE()
+        self.NAME = BooleanArgumentType.NAME()
+        self.SHORT_DESCRIPTION = BooleanArgumentType.SHORT_DESCRIPTION()
+        self.LONG_DESCRIPTION = BooleanArgumentType.LONG_DESCRIPTION()
+        if BooleanArgumentType.DATA_ENCODING() is not None:
+            self.DATA_ENCODING = IntegerDataEncoding.IntegerDataEncodingT.InitFromObj(BooleanArgumentType.DATA_ENCODING())
+        self.ONE_STRING_VALUE = BooleanArgumentType.ONE_STRING_VALUE()
+        self.ZERO_STRING_VALUE = BooleanArgumentType.ZERO_STRING_VALUE()
+        self.INITIAL_VALUE = BooleanArgumentType.INITIAL_VALUE()
 
     # BooleanArgumentTypeT
     def Pack(self, builder):
@@ -219,5 +228,5 @@ class BooleanArgumentTypeT(object):
         if self.ZERO_STRING_VALUE is not None:
             BooleanArgumentTypeAddZERO_STRING_VALUE(builder, ZERO_STRING_VALUE)
         BooleanArgumentTypeAddINITIAL_VALUE(builder, self.INITIAL_VALUE)
-        booleanArgumentType = BooleanArgumentTypeEnd(builder)
-        return booleanArgumentType
+        BooleanArgumentType = BooleanArgumentTypeEnd(builder)
+        return BooleanArgumentType

@@ -32,7 +32,7 @@ class CustomAlgorithm : Table() {
     /**
      * Algorithm name
      */
-    val NAME : String?
+    val name : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class CustomAlgorithm : Table() {
                 null
             }
         }
-    val NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val nameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun nameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Short description
      */
-    val SHORT_DESCRIPTION : String?
+    val shortDescription : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -55,12 +55,12 @@ class CustomAlgorithm : Table() {
                 null
             }
         }
-    val SHORT_DESCRIPTIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun SHORT_DESCRIPTIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val shortDescriptionAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun shortDescriptionInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * Long description
      */
-    val LONG_DESCRIPTION : String?
+    val longDescription : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -69,12 +69,12 @@ class CustomAlgorithm : Table() {
                 null
             }
         }
-    val LONG_DESCRIPTIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun LONG_DESCRIPTIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val longDescriptionAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun longDescriptionInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
     /**
      * Programming language
      */
-    val LANGUAGE : String?
+    val language : String?
         get() {
             val o = __offset(10)
             return if (o != 0) {
@@ -83,12 +83,12 @@ class CustomAlgorithm : Table() {
                 null
             }
         }
-    val LANGUAGEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
-    fun LANGUAGEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
+    val languageAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(10, 1)
+    fun languageInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 10, 1)
     /**
      * Algorithm text/code
      */
-    val ALGORITHM_TEXT : String?
+    val algorithmText : String?
         get() {
             val o = __offset(12)
             return if (o != 0) {
@@ -97,12 +97,12 @@ class CustomAlgorithm : Table() {
                 null
             }
         }
-    val ALGORITHM_TEXTAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
-    fun ALGORITHM_TEXTInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
+    val algorithmTextAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(12, 1)
+    fun algorithmTextInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 12, 1)
     /**
      * External algorithm reference
      */
-    val EXTERNAL_ALGORITHM_REF : String?
+    val externalAlgorithmRef : String?
         get() {
             val o = __offset(14)
             return if (o != 0) {
@@ -111,13 +111,13 @@ class CustomAlgorithm : Table() {
                 null
             }
         }
-    val EXTERNAL_ALGORITHM_REFAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(14, 1)
-    fun EXTERNAL_ALGORITHM_REFInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 14, 1)
+    val externalAlgorithmRefAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(14, 1)
+    fun externalAlgorithmRefInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 14, 1)
     /**
      * Input bindings
      */
-    fun INPUTS(j: Int) : AlgorithmInput? = INPUTS(AlgorithmInput(), j)
-    fun INPUTS(obj: AlgorithmInput, j: Int) : AlgorithmInput? {
+    fun inputs(j: Int) : AlgorithmInput? = inputs(AlgorithmInput(), j)
+    fun inputs(obj: AlgorithmInput, j: Int) : AlgorithmInput? {
         val o = __offset(16)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -125,15 +125,15 @@ class CustomAlgorithm : Table() {
             null
         }
     }
-    val INPUTSLength : Int
+    val inputsLength : Int
         get() {
             val o = __offset(16); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Output bindings
      */
-    fun OUTPUTS(j: Int) : AlgorithmOutput? = OUTPUTS(AlgorithmOutput(), j)
-    fun OUTPUTS(obj: AlgorithmOutput, j: Int) : AlgorithmOutput? {
+    fun outputs(j: Int) : AlgorithmOutput? = outputs(AlgorithmOutput(), j)
+    fun outputs(obj: AlgorithmOutput, j: Int) : AlgorithmOutput? {
         val o = __offset(18)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -141,15 +141,15 @@ class CustomAlgorithm : Table() {
             null
         }
     }
-    val OUTPUTSLength : Int
+    val outputsLength : Int
         get() {
             val o = __offset(18); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Trigger conditions
      */
-    fun TRIGGERS(j: Int) : AlgorithmTrigger? = TRIGGERS(AlgorithmTrigger(), j)
-    fun TRIGGERS(obj: AlgorithmTrigger, j: Int) : AlgorithmTrigger? {
+    fun triggers(j: Int) : AlgorithmTrigger? = triggers(AlgorithmTrigger(), j)
+    fun triggers(obj: AlgorithmTrigger, j: Int) : AlgorithmTrigger? {
         val o = __offset(20)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -157,38 +157,38 @@ class CustomAlgorithm : Table() {
             null
         }
     }
-    val TRIGGERSLength : Int
+    val triggersLength : Int
         get() {
             val o = __offset(20); return if (o != 0) __vector_len(o) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsCustomAlgorithm(_bb: ByteBuffer): CustomAlgorithm = getRootAsCustomAlgorithm(_bb, CustomAlgorithm())
         fun getRootAsCustomAlgorithm(_bb: ByteBuffer, obj: CustomAlgorithm): CustomAlgorithm {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createCustomAlgorithm(builder: FlatBufferBuilder, NAMEOffset: Int, SHORT_DESCRIPTIONOffset: Int, LONG_DESCRIPTIONOffset: Int, LANGUAGEOffset: Int, ALGORITHM_TEXTOffset: Int, EXTERNAL_ALGORITHM_REFOffset: Int, INPUTSOffset: Int, OUTPUTSOffset: Int, TRIGGERSOffset: Int) : Int {
+        fun createCustomAlgorithm(builder: FlatBufferBuilder, nameOffset: Int, shortDescriptionOffset: Int, longDescriptionOffset: Int, languageOffset: Int, algorithmTextOffset: Int, externalAlgorithmRefOffset: Int, inputsOffset: Int, outputsOffset: Int, triggersOffset: Int) : Int {
             builder.startTable(9)
-            addTRIGGERS(builder, TRIGGERSOffset)
-            addOUTPUTS(builder, OUTPUTSOffset)
-            addINPUTS(builder, INPUTSOffset)
-            addEXTERNAL_ALGORITHM_REF(builder, EXTERNAL_ALGORITHM_REFOffset)
-            addALGORITHM_TEXT(builder, ALGORITHM_TEXTOffset)
-            addLANGUAGE(builder, LANGUAGEOffset)
-            addLONG_DESCRIPTION(builder, LONG_DESCRIPTIONOffset)
-            addSHORT_DESCRIPTION(builder, SHORT_DESCRIPTIONOffset)
-            addNAME(builder, NAMEOffset)
+            addTRIGGERS(builder, triggersOffset)
+            addOUTPUTS(builder, outputsOffset)
+            addINPUTS(builder, inputsOffset)
+            addEXTERNALALGORITHMREF(builder, externalAlgorithmRefOffset)
+            addALGORITHMTEXT(builder, algorithmTextOffset)
+            addLANGUAGE(builder, languageOffset)
+            addLONGDESCRIPTION(builder, longDescriptionOffset)
+            addSHORTDESCRIPTION(builder, shortDescriptionOffset)
+            addNAME(builder, nameOffset)
             return endCustomAlgorithm(builder)
         }
         fun startCustomAlgorithm(builder: FlatBufferBuilder) = builder.startTable(9)
-        fun addNAME(builder: FlatBufferBuilder, NAME: Int) = builder.addOffset(0, NAME, 0)
-        fun addSHORT_DESCRIPTION(builder: FlatBufferBuilder, SHORT_DESCRIPTION: Int) = builder.addOffset(1, SHORT_DESCRIPTION, 0)
-        fun addLONG_DESCRIPTION(builder: FlatBufferBuilder, LONG_DESCRIPTION: Int) = builder.addOffset(2, LONG_DESCRIPTION, 0)
-        fun addLANGUAGE(builder: FlatBufferBuilder, LANGUAGE: Int) = builder.addOffset(3, LANGUAGE, 0)
-        fun addALGORITHM_TEXT(builder: FlatBufferBuilder, ALGORITHM_TEXT: Int) = builder.addOffset(4, ALGORITHM_TEXT, 0)
-        fun addEXTERNAL_ALGORITHM_REF(builder: FlatBufferBuilder, EXTERNAL_ALGORITHM_REF: Int) = builder.addOffset(5, EXTERNAL_ALGORITHM_REF, 0)
-        fun addINPUTS(builder: FlatBufferBuilder, INPUTS: Int) = builder.addOffset(6, INPUTS, 0)
+        fun addNAME(builder: FlatBufferBuilder, name: Int) = builder.addOffset(0, name, 0)
+        fun addSHORTDESCRIPTION(builder: FlatBufferBuilder, shortDescription: Int) = builder.addOffset(1, shortDescription, 0)
+        fun addLONGDESCRIPTION(builder: FlatBufferBuilder, longDescription: Int) = builder.addOffset(2, longDescription, 0)
+        fun addLANGUAGE(builder: FlatBufferBuilder, language: Int) = builder.addOffset(3, language, 0)
+        fun addALGORITHMTEXT(builder: FlatBufferBuilder, algorithmText: Int) = builder.addOffset(4, algorithmText, 0)
+        fun addEXTERNALALGORITHMREF(builder: FlatBufferBuilder, externalAlgorithmRef: Int) = builder.addOffset(5, externalAlgorithmRef, 0)
+        fun addINPUTS(builder: FlatBufferBuilder, inputs: Int) = builder.addOffset(6, inputs, 0)
         fun createInputsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -197,7 +197,7 @@ class CustomAlgorithm : Table() {
             return builder.endVector()
         }
         fun startInputsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addOUTPUTS(builder: FlatBufferBuilder, OUTPUTS: Int) = builder.addOffset(7, OUTPUTS, 0)
+        fun addOUTPUTS(builder: FlatBufferBuilder, outputs: Int) = builder.addOffset(7, outputs, 0)
         fun createOutputsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -206,7 +206,7 @@ class CustomAlgorithm : Table() {
             return builder.endVector()
         }
         fun startOutputsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addTRIGGERS(builder: FlatBufferBuilder, TRIGGERS: Int) = builder.addOffset(8, TRIGGERS, 0)
+        fun addTRIGGERS(builder: FlatBufferBuilder, triggers: Int) = builder.addOffset(8, triggers, 0)
         fun createTriggersVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {

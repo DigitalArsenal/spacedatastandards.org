@@ -32,7 +32,7 @@ class CZM : Table() {
     /**
      * Document-level name
      */
-    val NAME : String?
+    val name : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class CZM : Table() {
                 null
             }
         }
-    val NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val nameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun nameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Document-level version
      */
-    val VERSION : String?
+    val version : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -55,12 +55,12 @@ class CZM : Table() {
                 null
             }
         }
-    val VERSIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun VERSIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val versionAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun versionInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * Clock settings - current time (ISO 8601)
      */
-    val CLOCK_CURRENT_TIME : String?
+    val clockCurrentTime : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -69,12 +69,12 @@ class CZM : Table() {
                 null
             }
         }
-    val CLOCK_CURRENT_TIMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun CLOCK_CURRENT_TIMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val clockCurrentTimeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun clockCurrentTimeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
     /**
      * Clock settings - interval (ISO 8601 interval)
      */
-    val CLOCK_INTERVAL : String?
+    val clockInterval : String?
         get() {
             val o = __offset(10)
             return if (o != 0) {
@@ -83,12 +83,12 @@ class CZM : Table() {
                 null
             }
         }
-    val CLOCK_INTERVALAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
-    fun CLOCK_INTERVALInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
+    val clockIntervalAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(10, 1)
+    fun clockIntervalInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 10, 1)
     /**
      * Clock settings - multiplier
      */
-    val CLOCK_MULTIPLIER : Double
+    val clockMultiplier : Double
         get() {
             val o = __offset(12)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -96,7 +96,7 @@ class CZM : Table() {
     /**
      * Clock range
      */
-    val CLOCK_RANGE : String?
+    val clockRange : String?
         get() {
             val o = __offset(14)
             return if (o != 0) {
@@ -105,12 +105,12 @@ class CZM : Table() {
                 null
             }
         }
-    val CLOCK_RANGEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(14, 1)
-    fun CLOCK_RANGEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 14, 1)
+    val clockRangeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(14, 1)
+    fun clockRangeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 14, 1)
     /**
      * Clock step
      */
-    val CLOCK_STEP : String?
+    val clockStep : String?
         get() {
             val o = __offset(16)
             return if (o != 0) {
@@ -119,13 +119,13 @@ class CZM : Table() {
                 null
             }
         }
-    val CLOCK_STEPAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(16, 1)
-    fun CLOCK_STEPInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 16, 1)
+    val clockStepAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(16, 1)
+    fun clockStepInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 16, 1)
     /**
      * All packets in the document
      */
-    fun PACKETS(j: Int) : CZMPacket? = PACKETS(CZMPacket(), j)
-    fun PACKETS(obj: CZMPacket, j: Int) : CZMPacket? {
+    fun packets(j: Int) : CZMPacket? = packets(CZMPacket(), j)
+    fun packets(obj: CZMPacket, j: Int) : CZMPacket? {
         val o = __offset(18)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -133,39 +133,39 @@ class CZM : Table() {
             null
         }
     }
-    val PACKETSLength : Int
+    val packetsLength : Int
         get() {
             val o = __offset(18); return if (o != 0) __vector_len(o) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsCZM(_bb: ByteBuffer): CZM = getRootAsCZM(_bb, CZM())
         fun getRootAsCZM(_bb: ByteBuffer, obj: CZM): CZM {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun CZMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$CZM")
-        fun createCZM(builder: FlatBufferBuilder, NAMEOffset: Int, VERSIONOffset: Int, CLOCK_CURRENT_TIMEOffset: Int, CLOCK_INTERVALOffset: Int, CLOCK_MULTIPLIER: Double, CLOCK_RANGEOffset: Int, CLOCK_STEPOffset: Int, PACKETSOffset: Int) : Int {
+        fun createCZM(builder: FlatBufferBuilder, nameOffset: Int, versionOffset: Int, clockCurrentTimeOffset: Int, clockIntervalOffset: Int, clockMultiplier: Double, clockRangeOffset: Int, clockStepOffset: Int, packetsOffset: Int) : Int {
             builder.startTable(8)
-            addCLOCK_MULTIPLIER(builder, CLOCK_MULTIPLIER)
-            addPACKETS(builder, PACKETSOffset)
-            addCLOCK_STEP(builder, CLOCK_STEPOffset)
-            addCLOCK_RANGE(builder, CLOCK_RANGEOffset)
-            addCLOCK_INTERVAL(builder, CLOCK_INTERVALOffset)
-            addCLOCK_CURRENT_TIME(builder, CLOCK_CURRENT_TIMEOffset)
-            addVERSION(builder, VERSIONOffset)
-            addNAME(builder, NAMEOffset)
+            addCLOCKMULTIPLIER(builder, clockMultiplier)
+            addPACKETS(builder, packetsOffset)
+            addCLOCKSTEP(builder, clockStepOffset)
+            addCLOCKRANGE(builder, clockRangeOffset)
+            addCLOCKINTERVAL(builder, clockIntervalOffset)
+            addCLOCKCURRENTTIME(builder, clockCurrentTimeOffset)
+            addVERSION(builder, versionOffset)
+            addNAME(builder, nameOffset)
             return endCZM(builder)
         }
         fun startCZM(builder: FlatBufferBuilder) = builder.startTable(8)
-        fun addNAME(builder: FlatBufferBuilder, NAME: Int) = builder.addOffset(0, NAME, 0)
-        fun addVERSION(builder: FlatBufferBuilder, VERSION: Int) = builder.addOffset(1, VERSION, 0)
-        fun addCLOCK_CURRENT_TIME(builder: FlatBufferBuilder, CLOCK_CURRENT_TIME: Int) = builder.addOffset(2, CLOCK_CURRENT_TIME, 0)
-        fun addCLOCK_INTERVAL(builder: FlatBufferBuilder, CLOCK_INTERVAL: Int) = builder.addOffset(3, CLOCK_INTERVAL, 0)
-        fun addCLOCK_MULTIPLIER(builder: FlatBufferBuilder, CLOCK_MULTIPLIER: Double) = builder.addDouble(4, CLOCK_MULTIPLIER, 0.0)
-        fun addCLOCK_RANGE(builder: FlatBufferBuilder, CLOCK_RANGE: Int) = builder.addOffset(5, CLOCK_RANGE, 0)
-        fun addCLOCK_STEP(builder: FlatBufferBuilder, CLOCK_STEP: Int) = builder.addOffset(6, CLOCK_STEP, 0)
-        fun addPACKETS(builder: FlatBufferBuilder, PACKETS: Int) = builder.addOffset(7, PACKETS, 0)
+        fun addNAME(builder: FlatBufferBuilder, name: Int) = builder.addOffset(0, name, 0)
+        fun addVERSION(builder: FlatBufferBuilder, version: Int) = builder.addOffset(1, version, 0)
+        fun addCLOCKCURRENTTIME(builder: FlatBufferBuilder, clockCurrentTime: Int) = builder.addOffset(2, clockCurrentTime, 0)
+        fun addCLOCKINTERVAL(builder: FlatBufferBuilder, clockInterval: Int) = builder.addOffset(3, clockInterval, 0)
+        fun addCLOCKMULTIPLIER(builder: FlatBufferBuilder, clockMultiplier: Double) = builder.addDouble(4, clockMultiplier, 0.0)
+        fun addCLOCKRANGE(builder: FlatBufferBuilder, clockRange: Int) = builder.addOffset(5, clockRange, 0)
+        fun addCLOCKSTEP(builder: FlatBufferBuilder, clockStep: Int) = builder.addOffset(6, clockStep, 0)
+        fun addPACKETS(builder: FlatBufferBuilder, packets: Int) = builder.addOffset(7, packets, 0)
         fun createPacketsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {

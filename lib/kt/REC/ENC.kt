@@ -32,7 +32,7 @@ class ENC : Table() {
     /**
      * Schema version for forward compatibility
      */
-    val VERSION : UByte
+    val version : UByte
         get() {
             val o = __offset(4)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 1u
@@ -40,7 +40,7 @@ class ENC : Table() {
     /**
      * Key exchange algorithm used
      */
-    val KEY_EXCHANGE : Byte
+    val keyExchange : Byte
         get() {
             val o = __offset(6)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -48,7 +48,7 @@ class ENC : Table() {
     /**
      * Symmetric encryption algorithm used
      */
-    val SYMMETRIC : Byte
+    val symmetric : Byte
         get() {
             val o = __offset(8)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -56,7 +56,7 @@ class ENC : Table() {
     /**
      * Key derivation function used
      */
-    val KEY_DERIVATION : Byte
+    val keyDerivation : Byte
         get() {
             val o = __offset(10)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -64,41 +64,41 @@ class ENC : Table() {
     /**
      * Ephemeral public key for ECDH key agreement (32-65 bytes depending on algorithm)
      */
-    fun EPHEMERAL_PUBLIC_KEY(j: Int) : UByte {
+    fun ephemeralPublicKey(j: Int) : UByte {
         val o = __offset(12)
         return if (o != 0) {
             bb.get(__vector(o) + j * 1).toUByte()
         } else {
-            throw IndexOutOfBoundsException("Index out of range: $j, vector EPHEMERAL_PUBLIC_KEY is empty")
+            throw IndexOutOfBoundsException("Index out of range: $j, vector ephemeralPublicKey is empty")
         }
     }
-    val EPHEMERAL_PUBLIC_KEYLength : Int
+    val ephemeralPublicKeyLength : Int
         get() {
             val o = __offset(12); return if (o != 0) __vector_len(o) else 0
         }
-    val EPHEMERAL_PUBLIC_KEYAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
-    fun EPHEMERAL_PUBLIC_KEYInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
+    val ephemeralPublicKeyAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
+    fun ephemeralPublicKeyInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
     /**
      * Random 12-byte nonce starting value. Incremented for each record in the stream to ensure unique nonces.
      */
-    fun NONCE_START(j: Int) : UByte {
+    fun nonceStart(j: Int) : UByte {
         val o = __offset(14)
         return if (o != 0) {
             bb.get(__vector(o) + j * 1).toUByte()
         } else {
-            throw IndexOutOfBoundsException("Index out of range: $j, vector NONCE_START is empty")
+            throw IndexOutOfBoundsException("Index out of range: $j, vector nonceStart is empty")
         }
     }
-    val NONCE_STARTLength : Int
+    val nonceStartLength : Int
         get() {
             val o = __offset(14); return if (o != 0) __vector_len(o) else 0
         }
-    val NONCE_STARTAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(14, 1)
-    fun NONCE_STARTInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 14, 1)
+    val nonceStartAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(14, 1)
+    fun nonceStartInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 14, 1)
     /**
      * Optional identifier for the recipient's public key (up to 32 bytes)
      */
-    fun RECIPIENT_KEY_ID(j: Int) : UByte {
+    fun recipientKeyId(j: Int) : UByte {
         val o = __offset(16)
         return if (o != 0) {
             bb.get(__vector(o) + j * 1).toUByte()
@@ -106,16 +106,16 @@ class ENC : Table() {
             0u
         }
     }
-    val RECIPIENT_KEY_IDLength : Int
+    val recipientKeyIdLength : Int
         get() {
             val o = __offset(16); return if (o != 0) __vector_len(o) else 0
         }
-    val RECIPIENT_KEY_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(16, 1)
-    fun RECIPIENT_KEY_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 16, 1)
+    val recipientKeyIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(16, 1)
+    fun recipientKeyIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 16, 1)
     /**
      * Optional domain separation context string
      */
-    val CONTEXT : String?
+    val context : String?
         get() {
             val o = __offset(18)
             return if (o != 0) {
@@ -124,12 +124,12 @@ class ENC : Table() {
                 null
             }
         }
-    val CONTEXTAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(18, 1)
-    fun CONTEXTInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 18, 1)
+    val contextAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(18, 1)
+    fun contextInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 18, 1)
     /**
      * Optional SHA-256 hash of the FlatBuffers schema (32 bytes)
      */
-    fun SCHEMA_HASH(j: Int) : UByte {
+    fun schemaHash(j: Int) : UByte {
         val o = __offset(20)
         return if (o != 0) {
             bb.get(__vector(o) + j * 1).toUByte()
@@ -137,16 +137,16 @@ class ENC : Table() {
             0u
         }
     }
-    val SCHEMA_HASHLength : Int
+    val schemaHashLength : Int
         get() {
             val o = __offset(20); return if (o != 0) __vector_len(o) else 0
         }
-    val SCHEMA_HASHAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(20, 1)
-    fun SCHEMA_HASHInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 20, 1)
+    val schemaHashAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(20, 1)
+    fun schemaHashInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 20, 1)
     /**
      * Optional root type name from the schema
      */
-    val ROOT_TYPE : String?
+    val rootType : String?
         get() {
             val o = __offset(22)
             return if (o != 0) {
@@ -155,45 +155,45 @@ class ENC : Table() {
                 null
             }
         }
-    val ROOT_TYPEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(22, 1)
-    fun ROOT_TYPEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 22, 1)
+    val rootTypeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(22, 1)
+    fun rootTypeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 22, 1)
     /**
      * Optional Unix timestamp (milliseconds) when encryption was performed
      */
-    val TIMESTAMP : ULong
+    val timestamp : ULong
         get() {
             val o = __offset(24)
             return if(o != 0) bb.getLong(o + bb_pos).toULong() else 0UL
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsENC(_bb: ByteBuffer): ENC = getRootAsENC(_bb, ENC())
         fun getRootAsENC(_bb: ByteBuffer, obj: ENC): ENC {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun ENCBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$ENC")
-        fun createENC(builder: FlatBufferBuilder, VERSION: UByte, KEY_EXCHANGE: Byte, SYMMETRIC: Byte, KEY_DERIVATION: Byte, EPHEMERAL_PUBLIC_KEYOffset: Int, NONCE_STARTOffset: Int, RECIPIENT_KEY_IDOffset: Int, CONTEXTOffset: Int, SCHEMA_HASHOffset: Int, ROOT_TYPEOffset: Int, TIMESTAMP: ULong) : Int {
+        fun createENC(builder: FlatBufferBuilder, version: UByte, keyExchange: Byte, symmetric: Byte, keyDerivation: Byte, ephemeralPublicKeyOffset: Int, nonceStartOffset: Int, recipientKeyIdOffset: Int, contextOffset: Int, schemaHashOffset: Int, rootTypeOffset: Int, timestamp: ULong) : Int {
             builder.startTable(11)
-            addTIMESTAMP(builder, TIMESTAMP)
-            addROOT_TYPE(builder, ROOT_TYPEOffset)
-            addSCHEMA_HASH(builder, SCHEMA_HASHOffset)
-            addCONTEXT(builder, CONTEXTOffset)
-            addRECIPIENT_KEY_ID(builder, RECIPIENT_KEY_IDOffset)
-            addNONCE_START(builder, NONCE_STARTOffset)
-            addEPHEMERAL_PUBLIC_KEY(builder, EPHEMERAL_PUBLIC_KEYOffset)
-            addKEY_DERIVATION(builder, KEY_DERIVATION)
-            addSYMMETRIC(builder, SYMMETRIC)
-            addKEY_EXCHANGE(builder, KEY_EXCHANGE)
-            addVERSION(builder, VERSION)
+            addTIMESTAMP(builder, timestamp)
+            addROOTTYPE(builder, rootTypeOffset)
+            addSCHEMAHASH(builder, schemaHashOffset)
+            addCONTEXT(builder, contextOffset)
+            addRECIPIENTKEYID(builder, recipientKeyIdOffset)
+            addNONCESTART(builder, nonceStartOffset)
+            addEPHEMERALPUBLICKEY(builder, ephemeralPublicKeyOffset)
+            addKEYDERIVATION(builder, keyDerivation)
+            addSYMMETRIC(builder, symmetric)
+            addKEYEXCHANGE(builder, keyExchange)
+            addVERSION(builder, version)
             return endENC(builder)
         }
         fun startENC(builder: FlatBufferBuilder) = builder.startTable(11)
-        fun addVERSION(builder: FlatBufferBuilder, VERSION: UByte) = builder.addByte(0, VERSION.toByte(), 1)
-        fun addKEY_EXCHANGE(builder: FlatBufferBuilder, KEY_EXCHANGE: Byte) = builder.addByte(1, KEY_EXCHANGE, 0)
-        fun addSYMMETRIC(builder: FlatBufferBuilder, SYMMETRIC: Byte) = builder.addByte(2, SYMMETRIC, 0)
-        fun addKEY_DERIVATION(builder: FlatBufferBuilder, KEY_DERIVATION: Byte) = builder.addByte(3, KEY_DERIVATION, 0)
-        fun addEPHEMERAL_PUBLIC_KEY(builder: FlatBufferBuilder, EPHEMERAL_PUBLIC_KEY: Int) = builder.addOffset(4, EPHEMERAL_PUBLIC_KEY, 0)
+        fun addVERSION(builder: FlatBufferBuilder, version: UByte) = builder.addByte(0, version.toByte(), 1)
+        fun addKEYEXCHANGE(builder: FlatBufferBuilder, keyExchange: Byte) = builder.addByte(1, keyExchange, 0)
+        fun addSYMMETRIC(builder: FlatBufferBuilder, symmetric: Byte) = builder.addByte(2, symmetric, 0)
+        fun addKEYDERIVATION(builder: FlatBufferBuilder, keyDerivation: Byte) = builder.addByte(3, keyDerivation, 0)
+        fun addEPHEMERALPUBLICKEY(builder: FlatBufferBuilder, ephemeralPublicKey: Int) = builder.addOffset(4, ephemeralPublicKey, 0)
         @kotlin.ExperimentalUnsignedTypes
         fun createEphemeralPublicKeyVector(builder: FlatBufferBuilder, data: UByteArray) : Int {
             builder.startVector(1, data.size, 1)
@@ -203,7 +203,7 @@ class ENC : Table() {
             return builder.endVector()
         }
         fun startEphemeralPublicKeyVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(1, numElems, 1)
-        fun addNONCE_START(builder: FlatBufferBuilder, NONCE_START: Int) = builder.addOffset(5, NONCE_START, 0)
+        fun addNONCESTART(builder: FlatBufferBuilder, nonceStart: Int) = builder.addOffset(5, nonceStart, 0)
         @kotlin.ExperimentalUnsignedTypes
         fun createNonceStartVector(builder: FlatBufferBuilder, data: UByteArray) : Int {
             builder.startVector(1, data.size, 1)
@@ -213,7 +213,7 @@ class ENC : Table() {
             return builder.endVector()
         }
         fun startNonceStartVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(1, numElems, 1)
-        fun addRECIPIENT_KEY_ID(builder: FlatBufferBuilder, RECIPIENT_KEY_ID: Int) = builder.addOffset(6, RECIPIENT_KEY_ID, 0)
+        fun addRECIPIENTKEYID(builder: FlatBufferBuilder, recipientKeyId: Int) = builder.addOffset(6, recipientKeyId, 0)
         @kotlin.ExperimentalUnsignedTypes
         fun createRecipientKeyIdVector(builder: FlatBufferBuilder, data: UByteArray) : Int {
             builder.startVector(1, data.size, 1)
@@ -223,8 +223,8 @@ class ENC : Table() {
             return builder.endVector()
         }
         fun startRecipientKeyIdVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(1, numElems, 1)
-        fun addCONTEXT(builder: FlatBufferBuilder, CONTEXT: Int) = builder.addOffset(7, CONTEXT, 0)
-        fun addSCHEMA_HASH(builder: FlatBufferBuilder, SCHEMA_HASH: Int) = builder.addOffset(8, SCHEMA_HASH, 0)
+        fun addCONTEXT(builder: FlatBufferBuilder, context: Int) = builder.addOffset(7, context, 0)
+        fun addSCHEMAHASH(builder: FlatBufferBuilder, schemaHash: Int) = builder.addOffset(8, schemaHash, 0)
         @kotlin.ExperimentalUnsignedTypes
         fun createSchemaHashVector(builder: FlatBufferBuilder, data: UByteArray) : Int {
             builder.startVector(1, data.size, 1)
@@ -234,8 +234,8 @@ class ENC : Table() {
             return builder.endVector()
         }
         fun startSchemaHashVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(1, numElems, 1)
-        fun addROOT_TYPE(builder: FlatBufferBuilder, ROOT_TYPE: Int) = builder.addOffset(9, ROOT_TYPE, 0)
-        fun addTIMESTAMP(builder: FlatBufferBuilder, TIMESTAMP: ULong) = builder.addLong(10, TIMESTAMP.toLong(), 0)
+        fun addROOTTYPE(builder: FlatBufferBuilder, rootType: Int) = builder.addOffset(9, rootType, 0)
+        fun addTIMESTAMP(builder: FlatBufferBuilder, timestamp: ULong) = builder.addLong(10, timestamp.toLong(), 0)
         fun endENC(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
                 builder.required(o, 12)

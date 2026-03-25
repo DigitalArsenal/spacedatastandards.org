@@ -2,4 +2,499 @@
 
 # namespace: 
 
-# NOTE OrbitDetermination.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+class OrbitDetermination(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = OrbitDetermination()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsOrbitDetermination(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def OrbitDeterminationBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x4F\x43\x4D", size_prefixed=size_prefixed)
+
+    # OrbitDetermination
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Unique identifier for the orbit determination.
+    # OrbitDetermination
+    def OD_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Identifier of the previous orbit determination.
+    # OrbitDetermination
+    def OD_PREV_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Algorithm used for orbit determination.
+    # OrbitDetermination
+    def OD_ALGORITHM(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Method used for orbit determination.
+    # OrbitDetermination
+    def OD_METHOD(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Epoch of the orbit determination.
+    # OrbitDetermination
+    def OD_EPOCH(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Time tag of the orbit determination.
+    # OrbitDetermination
+    def OD_TIME_TAG(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Process noise model used.
+    # OrbitDetermination
+    def OD_PROCESS_NOISE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Covariance reduction techniques used.
+    # OrbitDetermination
+    def OD_COV_REDUCTION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Noise models used.
+    # OrbitDetermination
+    def OD_NOISE_MODELS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Types of observations used (e.g., RANGE, DOPPLER).
+    # OrbitDetermination
+    def OD_OBSERVATIONS_TYPE(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
+        return ""
+
+    # OrbitDetermination
+    def OD_OBSERVATIONS_TYPELength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # OrbitDetermination
+    def OD_OBSERVATIONS_TYPEIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        return o == 0
+
+    # Number of observations used.
+    # OrbitDetermination
+    def OD_OBSERVATIONS_USED(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # Number of tracks used.
+    # OrbitDetermination
+    def OD_TRACKS_USED(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # Data weighting scheme used.
+    # OrbitDetermination
+    def OD_DATA_WEIGHTING(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Convergence criteria used.
+    # OrbitDetermination
+    def OD_CONVERGENCE_CRITERIA(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Parameters estimated during orbit determination.
+    # OrbitDetermination
+    def OD_EST_PARAMETERS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
+        return ""
+
+    # OrbitDetermination
+    def OD_EST_PARAMETERSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # OrbitDetermination
+    def OD_EST_PARAMETERSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        return o == 0
+
+    # A priori data used for orbit determination.
+    # OrbitDetermination
+    def OD_APRIORI_DATA(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Residuals from the orbit determination.
+    # OrbitDetermination
+    def OD_RESIDUALS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+def OrbitDeterminationStart(builder):
+    builder.StartObject(17)
+
+def Start(builder):
+    OrbitDeterminationStart(builder)
+
+def OrbitDeterminationAddOD_ID(builder, OD_ID):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(OD_ID), 0)
+
+def AddOD_ID(builder, OD_ID):
+    OrbitDeterminationAddOD_ID(builder, OD_ID)
+
+def OrbitDeterminationAddOD_PREV_ID(builder, OD_PREV_ID):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(OD_PREV_ID), 0)
+
+def AddOD_PREV_ID(builder, OD_PREV_ID):
+    OrbitDeterminationAddOD_PREV_ID(builder, OD_PREV_ID)
+
+def OrbitDeterminationAddOD_ALGORITHM(builder, OD_ALGORITHM):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(OD_ALGORITHM), 0)
+
+def AddOD_ALGORITHM(builder, OD_ALGORITHM):
+    OrbitDeterminationAddOD_ALGORITHM(builder, OD_ALGORITHM)
+
+def OrbitDeterminationAddOD_METHOD(builder, OD_METHOD):
+    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(OD_METHOD), 0)
+
+def AddOD_METHOD(builder, OD_METHOD):
+    OrbitDeterminationAddOD_METHOD(builder, OD_METHOD)
+
+def OrbitDeterminationAddOD_EPOCH(builder, OD_EPOCH):
+    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(OD_EPOCH), 0)
+
+def AddOD_EPOCH(builder, OD_EPOCH):
+    OrbitDeterminationAddOD_EPOCH(builder, OD_EPOCH)
+
+def OrbitDeterminationAddOD_TIME_TAG(builder, OD_TIME_TAG):
+    builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(OD_TIME_TAG), 0)
+
+def AddOD_TIME_TAG(builder, OD_TIME_TAG):
+    OrbitDeterminationAddOD_TIME_TAG(builder, OD_TIME_TAG)
+
+def OrbitDeterminationAddOD_PROCESS_NOISE(builder, OD_PROCESS_NOISE):
+    builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(OD_PROCESS_NOISE), 0)
+
+def AddOD_PROCESS_NOISE(builder, OD_PROCESS_NOISE):
+    OrbitDeterminationAddOD_PROCESS_NOISE(builder, OD_PROCESS_NOISE)
+
+def OrbitDeterminationAddOD_COV_REDUCTION(builder, OD_COV_REDUCTION):
+    builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(OD_COV_REDUCTION), 0)
+
+def AddOD_COV_REDUCTION(builder, OD_COV_REDUCTION):
+    OrbitDeterminationAddOD_COV_REDUCTION(builder, OD_COV_REDUCTION)
+
+def OrbitDeterminationAddOD_NOISE_MODELS(builder, OD_NOISE_MODELS):
+    builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(OD_NOISE_MODELS), 0)
+
+def AddOD_NOISE_MODELS(builder, OD_NOISE_MODELS):
+    OrbitDeterminationAddOD_NOISE_MODELS(builder, OD_NOISE_MODELS)
+
+def OrbitDeterminationAddOD_OBSERVATIONS_TYPE(builder, OD_OBSERVATIONS_TYPE):
+    builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(OD_OBSERVATIONS_TYPE), 0)
+
+def AddOD_OBSERVATIONS_TYPE(builder, OD_OBSERVATIONS_TYPE):
+    OrbitDeterminationAddOD_OBSERVATIONS_TYPE(builder, OD_OBSERVATIONS_TYPE)
+
+def OrbitDeterminationStartOD_OBSERVATIONS_TYPEVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartOD_OBSERVATIONS_TYPEVector(builder, numElems):
+    return OrbitDeterminationStartOD_OBSERVATIONS_TYPEVector(builder, numElems)
+
+def OrbitDeterminationCreateOD_OBSERVATIONS_TYPEVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateOD_OBSERVATIONS_TYPEVector(builder, data):
+    OrbitDeterminationCreateOD_OBSERVATIONS_TYPEVector(builder, data)
+
+def OrbitDeterminationAddOD_OBSERVATIONS_USED(builder, OD_OBSERVATIONS_USED):
+    builder.PrependInt32Slot(10, OD_OBSERVATIONS_USED, 0)
+
+def AddOD_OBSERVATIONS_USED(builder, OD_OBSERVATIONS_USED):
+    OrbitDeterminationAddOD_OBSERVATIONS_USED(builder, OD_OBSERVATIONS_USED)
+
+def OrbitDeterminationAddOD_TRACKS_USED(builder, OD_TRACKS_USED):
+    builder.PrependInt32Slot(11, OD_TRACKS_USED, 0)
+
+def AddOD_TRACKS_USED(builder, OD_TRACKS_USED):
+    OrbitDeterminationAddOD_TRACKS_USED(builder, OD_TRACKS_USED)
+
+def OrbitDeterminationAddOD_DATA_WEIGHTING(builder, OD_DATA_WEIGHTING):
+    builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(OD_DATA_WEIGHTING), 0)
+
+def AddOD_DATA_WEIGHTING(builder, OD_DATA_WEIGHTING):
+    OrbitDeterminationAddOD_DATA_WEIGHTING(builder, OD_DATA_WEIGHTING)
+
+def OrbitDeterminationAddOD_CONVERGENCE_CRITERIA(builder, OD_CONVERGENCE_CRITERIA):
+    builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(OD_CONVERGENCE_CRITERIA), 0)
+
+def AddOD_CONVERGENCE_CRITERIA(builder, OD_CONVERGENCE_CRITERIA):
+    OrbitDeterminationAddOD_CONVERGENCE_CRITERIA(builder, OD_CONVERGENCE_CRITERIA)
+
+def OrbitDeterminationAddOD_EST_PARAMETERS(builder, OD_EST_PARAMETERS):
+    builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(OD_EST_PARAMETERS), 0)
+
+def AddOD_EST_PARAMETERS(builder, OD_EST_PARAMETERS):
+    OrbitDeterminationAddOD_EST_PARAMETERS(builder, OD_EST_PARAMETERS)
+
+def OrbitDeterminationStartOD_EST_PARAMETERSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartOD_EST_PARAMETERSVector(builder, numElems):
+    return OrbitDeterminationStartOD_EST_PARAMETERSVector(builder, numElems)
+
+def OrbitDeterminationCreateOD_EST_PARAMETERSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateOD_EST_PARAMETERSVector(builder, data):
+    OrbitDeterminationCreateOD_EST_PARAMETERSVector(builder, data)
+
+def OrbitDeterminationAddOD_APRIORI_DATA(builder, OD_APRIORI_DATA):
+    builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(OD_APRIORI_DATA), 0)
+
+def AddOD_APRIORI_DATA(builder, OD_APRIORI_DATA):
+    OrbitDeterminationAddOD_APRIORI_DATA(builder, OD_APRIORI_DATA)
+
+def OrbitDeterminationAddOD_RESIDUALS(builder, OD_RESIDUALS):
+    builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(OD_RESIDUALS), 0)
+
+def AddOD_RESIDUALS(builder, OD_RESIDUALS):
+    OrbitDeterminationAddOD_RESIDUALS(builder, OD_RESIDUALS)
+
+def OrbitDeterminationEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return OrbitDeterminationEnd(builder)
+
+try:
+    from typing import List
+except:
+    pass
+
+class OrbitDeterminationT(object):
+
+    # OrbitDeterminationT
+    def __init__(
+        self,
+        OD_ID = None,
+        OD_PREV_ID = None,
+        OD_ALGORITHM = None,
+        OD_METHOD = None,
+        OD_EPOCH = None,
+        OD_TIME_TAG = None,
+        OD_PROCESS_NOISE = None,
+        OD_COV_REDUCTION = None,
+        OD_NOISE_MODELS = None,
+        OD_OBSERVATIONS_TYPE = None,
+        OD_OBSERVATIONS_USED = 0,
+        OD_TRACKS_USED = 0,
+        OD_DATA_WEIGHTING = None,
+        OD_CONVERGENCE_CRITERIA = None,
+        OD_EST_PARAMETERS = None,
+        OD_APRIORI_DATA = None,
+        OD_RESIDUALS = None,
+    ):
+        self.OD_ID = OD_ID  # type: Optional[str]
+        self.OD_PREV_ID = OD_PREV_ID  # type: Optional[str]
+        self.OD_ALGORITHM = OD_ALGORITHM  # type: Optional[str]
+        self.OD_METHOD = OD_METHOD  # type: Optional[str]
+        self.OD_EPOCH = OD_EPOCH  # type: Optional[str]
+        self.OD_TIME_TAG = OD_TIME_TAG  # type: Optional[str]
+        self.OD_PROCESS_NOISE = OD_PROCESS_NOISE  # type: Optional[str]
+        self.OD_COV_REDUCTION = OD_COV_REDUCTION  # type: Optional[str]
+        self.OD_NOISE_MODELS = OD_NOISE_MODELS  # type: Optional[str]
+        self.OD_OBSERVATIONS_TYPE = OD_OBSERVATIONS_TYPE  # type: Optional[List[Optional[str]]]
+        self.OD_OBSERVATIONS_USED = OD_OBSERVATIONS_USED  # type: int
+        self.OD_TRACKS_USED = OD_TRACKS_USED  # type: int
+        self.OD_DATA_WEIGHTING = OD_DATA_WEIGHTING  # type: Optional[str]
+        self.OD_CONVERGENCE_CRITERIA = OD_CONVERGENCE_CRITERIA  # type: Optional[str]
+        self.OD_EST_PARAMETERS = OD_EST_PARAMETERS  # type: Optional[List[Optional[str]]]
+        self.OD_APRIORI_DATA = OD_APRIORI_DATA  # type: Optional[str]
+        self.OD_RESIDUALS = OD_RESIDUALS  # type: Optional[str]
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpOrbitDetermination = OrbitDetermination()
+        tmpOrbitDetermination.Init(buf, pos)
+        return cls.InitFromObj(tmpOrbitDetermination)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpOrbitDetermination):
+        x = OrbitDeterminationT()
+        x._UnPack(tmpOrbitDetermination)
+        return x
+
+    # OrbitDeterminationT
+    def _UnPack(self, OrbitDetermination):
+        if OrbitDetermination is None:
+            return
+        self.OD_ID = OrbitDetermination.OD_ID()
+        self.OD_PREV_ID = OrbitDetermination.OD_PREV_ID()
+        self.OD_ALGORITHM = OrbitDetermination.OD_ALGORITHM()
+        self.OD_METHOD = OrbitDetermination.OD_METHOD()
+        self.OD_EPOCH = OrbitDetermination.OD_EPOCH()
+        self.OD_TIME_TAG = OrbitDetermination.OD_TIME_TAG()
+        self.OD_PROCESS_NOISE = OrbitDetermination.OD_PROCESS_NOISE()
+        self.OD_COV_REDUCTION = OrbitDetermination.OD_COV_REDUCTION()
+        self.OD_NOISE_MODELS = OrbitDetermination.OD_NOISE_MODELS()
+        if not OrbitDetermination.OD_OBSERVATIONS_TYPEIsNone():
+            self.OD_OBSERVATIONS_TYPE = []
+            for i in range(OrbitDetermination.OD_OBSERVATIONS_TYPELength()):
+                self.OD_OBSERVATIONS_TYPE.append(OrbitDetermination.OD_OBSERVATIONS_TYPE(i))
+        self.OD_OBSERVATIONS_USED = OrbitDetermination.OD_OBSERVATIONS_USED()
+        self.OD_TRACKS_USED = OrbitDetermination.OD_TRACKS_USED()
+        self.OD_DATA_WEIGHTING = OrbitDetermination.OD_DATA_WEIGHTING()
+        self.OD_CONVERGENCE_CRITERIA = OrbitDetermination.OD_CONVERGENCE_CRITERIA()
+        if not OrbitDetermination.OD_EST_PARAMETERSIsNone():
+            self.OD_EST_PARAMETERS = []
+            for i in range(OrbitDetermination.OD_EST_PARAMETERSLength()):
+                self.OD_EST_PARAMETERS.append(OrbitDetermination.OD_EST_PARAMETERS(i))
+        self.OD_APRIORI_DATA = OrbitDetermination.OD_APRIORI_DATA()
+        self.OD_RESIDUALS = OrbitDetermination.OD_RESIDUALS()
+
+    # OrbitDeterminationT
+    def Pack(self, builder):
+        if self.OD_ID is not None:
+            OD_ID = builder.CreateString(self.OD_ID)
+        if self.OD_PREV_ID is not None:
+            OD_PREV_ID = builder.CreateString(self.OD_PREV_ID)
+        if self.OD_ALGORITHM is not None:
+            OD_ALGORITHM = builder.CreateString(self.OD_ALGORITHM)
+        if self.OD_METHOD is not None:
+            OD_METHOD = builder.CreateString(self.OD_METHOD)
+        if self.OD_EPOCH is not None:
+            OD_EPOCH = builder.CreateString(self.OD_EPOCH)
+        if self.OD_TIME_TAG is not None:
+            OD_TIME_TAG = builder.CreateString(self.OD_TIME_TAG)
+        if self.OD_PROCESS_NOISE is not None:
+            OD_PROCESS_NOISE = builder.CreateString(self.OD_PROCESS_NOISE)
+        if self.OD_COV_REDUCTION is not None:
+            OD_COV_REDUCTION = builder.CreateString(self.OD_COV_REDUCTION)
+        if self.OD_NOISE_MODELS is not None:
+            OD_NOISE_MODELS = builder.CreateString(self.OD_NOISE_MODELS)
+        if self.OD_OBSERVATIONS_TYPE is not None:
+            OD_OBSERVATIONS_TYPElist = []
+            for i in range(len(self.OD_OBSERVATIONS_TYPE)):
+                OD_OBSERVATIONS_TYPElist.append(builder.CreateString(self.OD_OBSERVATIONS_TYPE[i]))
+            OrbitDeterminationStartOD_OBSERVATIONS_TYPEVector(builder, len(self.OD_OBSERVATIONS_TYPE))
+            for i in reversed(range(len(self.OD_OBSERVATIONS_TYPE))):
+                builder.PrependUOffsetTRelative(OD_OBSERVATIONS_TYPElist[i])
+            OD_OBSERVATIONS_TYPE = builder.EndVector()
+        if self.OD_DATA_WEIGHTING is not None:
+            OD_DATA_WEIGHTING = builder.CreateString(self.OD_DATA_WEIGHTING)
+        if self.OD_CONVERGENCE_CRITERIA is not None:
+            OD_CONVERGENCE_CRITERIA = builder.CreateString(self.OD_CONVERGENCE_CRITERIA)
+        if self.OD_EST_PARAMETERS is not None:
+            OD_EST_PARAMETERSlist = []
+            for i in range(len(self.OD_EST_PARAMETERS)):
+                OD_EST_PARAMETERSlist.append(builder.CreateString(self.OD_EST_PARAMETERS[i]))
+            OrbitDeterminationStartOD_EST_PARAMETERSVector(builder, len(self.OD_EST_PARAMETERS))
+            for i in reversed(range(len(self.OD_EST_PARAMETERS))):
+                builder.PrependUOffsetTRelative(OD_EST_PARAMETERSlist[i])
+            OD_EST_PARAMETERS = builder.EndVector()
+        if self.OD_APRIORI_DATA is not None:
+            OD_APRIORI_DATA = builder.CreateString(self.OD_APRIORI_DATA)
+        if self.OD_RESIDUALS is not None:
+            OD_RESIDUALS = builder.CreateString(self.OD_RESIDUALS)
+        OrbitDeterminationStart(builder)
+        if self.OD_ID is not None:
+            OrbitDeterminationAddOD_ID(builder, OD_ID)
+        if self.OD_PREV_ID is not None:
+            OrbitDeterminationAddOD_PREV_ID(builder, OD_PREV_ID)
+        if self.OD_ALGORITHM is not None:
+            OrbitDeterminationAddOD_ALGORITHM(builder, OD_ALGORITHM)
+        if self.OD_METHOD is not None:
+            OrbitDeterminationAddOD_METHOD(builder, OD_METHOD)
+        if self.OD_EPOCH is not None:
+            OrbitDeterminationAddOD_EPOCH(builder, OD_EPOCH)
+        if self.OD_TIME_TAG is not None:
+            OrbitDeterminationAddOD_TIME_TAG(builder, OD_TIME_TAG)
+        if self.OD_PROCESS_NOISE is not None:
+            OrbitDeterminationAddOD_PROCESS_NOISE(builder, OD_PROCESS_NOISE)
+        if self.OD_COV_REDUCTION is not None:
+            OrbitDeterminationAddOD_COV_REDUCTION(builder, OD_COV_REDUCTION)
+        if self.OD_NOISE_MODELS is not None:
+            OrbitDeterminationAddOD_NOISE_MODELS(builder, OD_NOISE_MODELS)
+        if self.OD_OBSERVATIONS_TYPE is not None:
+            OrbitDeterminationAddOD_OBSERVATIONS_TYPE(builder, OD_OBSERVATIONS_TYPE)
+        OrbitDeterminationAddOD_OBSERVATIONS_USED(builder, self.OD_OBSERVATIONS_USED)
+        OrbitDeterminationAddOD_TRACKS_USED(builder, self.OD_TRACKS_USED)
+        if self.OD_DATA_WEIGHTING is not None:
+            OrbitDeterminationAddOD_DATA_WEIGHTING(builder, OD_DATA_WEIGHTING)
+        if self.OD_CONVERGENCE_CRITERIA is not None:
+            OrbitDeterminationAddOD_CONVERGENCE_CRITERIA(builder, OD_CONVERGENCE_CRITERIA)
+        if self.OD_EST_PARAMETERS is not None:
+            OrbitDeterminationAddOD_EST_PARAMETERS(builder, OD_EST_PARAMETERS)
+        if self.OD_APRIORI_DATA is not None:
+            OrbitDeterminationAddOD_APRIORI_DATA(builder, OD_APRIORI_DATA)
+        if self.OD_RESIDUALS is not None:
+            OrbitDeterminationAddOD_RESIDUALS(builder, OD_RESIDUALS)
+        OrbitDetermination = OrbitDeterminationEnd(builder)
+        return OrbitDetermination

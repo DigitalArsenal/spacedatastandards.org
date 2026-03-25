@@ -56,6 +56,10 @@ func (rcv *CZMCheckerboardMaterial) EVEN_COLOR(obj *CZMColor) *CZMColor {
 	return nil
 }
 
+func (rcv *CZMCheckerboardMaterial) EvenColor(obj *CZMColor) *CZMColor {
+	return rcv.EVEN_COLOR(obj)
+}
+
 /// Even color
 /// Odd color
 func (rcv *CZMCheckerboardMaterial) ODD_COLOR(obj *CZMColor) *CZMColor {
@@ -71,6 +75,10 @@ func (rcv *CZMCheckerboardMaterial) ODD_COLOR(obj *CZMColor) *CZMColor {
 	return nil
 }
 
+func (rcv *CZMCheckerboardMaterial) OddColor(obj *CZMColor) *CZMColor {
+	return rcv.ODD_COLOR(obj)
+}
+
 /// Odd color
 /// Repeat X
 func (rcv *CZMCheckerboardMaterial) REPEAT_X() float64 {
@@ -81,9 +89,17 @@ func (rcv *CZMCheckerboardMaterial) REPEAT_X() float64 {
 	return 0.0
 }
 
+func (rcv *CZMCheckerboardMaterial) RepeatX() float64 {
+	return rcv.REPEAT_X()
+}
+
 /// Repeat X
 func (rcv *CZMCheckerboardMaterial) MutateREPEAT_X(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(8, n)
+}
+
+func (rcv *CZMCheckerboardMaterial) MutateRepeatX(n float64) bool {
+	return rcv.MutateREPEAT_X(n)
 }
 
 /// Repeat Y
@@ -95,9 +111,17 @@ func (rcv *CZMCheckerboardMaterial) REPEAT_Y() float64 {
 	return 0.0
 }
 
+func (rcv *CZMCheckerboardMaterial) RepeatY() float64 {
+	return rcv.REPEAT_Y()
+}
+
 /// Repeat Y
 func (rcv *CZMCheckerboardMaterial) MutateREPEAT_Y(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(10, n)
+}
+
+func (rcv *CZMCheckerboardMaterial) MutateRepeatY(n float64) bool {
+	return rcv.MutateREPEAT_Y(n)
 }
 
 func CZMCheckerboardMaterialStart(builder *flatbuffers.Builder) {
@@ -106,14 +130,26 @@ func CZMCheckerboardMaterialStart(builder *flatbuffers.Builder) {
 func CZMCheckerboardMaterialAddEVEN_COLOR(builder *flatbuffers.Builder, EVEN_COLOR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(EVEN_COLOR), 0)
 }
+func CZMCheckerboardMaterialAddEvenColor(builder *flatbuffers.Builder, EVEN_COLOR flatbuffers.UOffsetT) {
+	CZMCheckerboardMaterialAddEVEN_COLOR(builder, EVEN_COLOR)
+}
 func CZMCheckerboardMaterialAddODD_COLOR(builder *flatbuffers.Builder, ODD_COLOR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(ODD_COLOR), 0)
+}
+func CZMCheckerboardMaterialAddOddColor(builder *flatbuffers.Builder, ODD_COLOR flatbuffers.UOffsetT) {
+	CZMCheckerboardMaterialAddODD_COLOR(builder, ODD_COLOR)
 }
 func CZMCheckerboardMaterialAddREPEAT_X(builder *flatbuffers.Builder, REPEAT_X float64) {
 	builder.PrependFloat64Slot(2, REPEAT_X, 0.0)
 }
+func CZMCheckerboardMaterialAddRepeatX(builder *flatbuffers.Builder, REPEAT_X float64) {
+	CZMCheckerboardMaterialAddREPEAT_X(builder, REPEAT_X)
+}
 func CZMCheckerboardMaterialAddREPEAT_Y(builder *flatbuffers.Builder, REPEAT_Y float64) {
 	builder.PrependFloat64Slot(3, REPEAT_Y, 0.0)
+}
+func CZMCheckerboardMaterialAddRepeatY(builder *flatbuffers.Builder, REPEAT_Y float64) {
+	CZMCheckerboardMaterialAddREPEAT_Y(builder, REPEAT_Y)
 }
 func CZMCheckerboardMaterialEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

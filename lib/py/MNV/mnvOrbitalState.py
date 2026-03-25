@@ -381,37 +381,63 @@ def End(builder):
 class mnvOrbitalStateT(object):
 
     # mnvOrbitalStateT
-    def __init__(self):
-        self.ID_ELSET = None  # type: str
-        self.ELSET = None  # type: str
-        self.ID_STATE_VECTOR = None  # type: str
-        self.STATE_VECTOR = None  # type: str
-        self.POS_X = 0.0  # type: float
-        self.POS_Y = 0.0  # type: float
-        self.POS_Z = 0.0  # type: float
-        self.VEL_X = 0.0  # type: float
-        self.VEL_Y = 0.0  # type: float
-        self.VEL_Z = 0.0  # type: float
-        self.RADIATION_PRESS_COEFF = 0.0  # type: float
-        self.BALLISTIC_COEFF = 0.0  # type: float
-        self.APOGEE = 0.0  # type: float
-        self.PERIGEE = 0.0  # type: float
-        self.INCLINATION = 0.0  # type: float
-        self.ECCENTRICITY = 0.0  # type: float
-        self.PERIOD = 0.0  # type: float
-        self.RAAN = 0.0  # type: float
-        self.SMA = 0.0  # type: float
-        self.GEO_LONGITUDE = 0.0  # type: float
-        self.DRIFT_RATE = 0.0  # type: float
-        self.SIGMA_U = 0.0  # type: float
-        self.SIGMA_V = 0.0  # type: float
-        self.SIGMA_W = 0.0  # type: float
+    def __init__(
+        self,
+        ID_ELSET = None,
+        ELSET = None,
+        ID_STATE_VECTOR = None,
+        STATE_VECTOR = None,
+        POS_X = 0.0,
+        POS_Y = 0.0,
+        POS_Z = 0.0,
+        VEL_X = 0.0,
+        VEL_Y = 0.0,
+        VEL_Z = 0.0,
+        RADIATION_PRESS_COEFF = 0.0,
+        BALLISTIC_COEFF = 0.0,
+        APOGEE = 0.0,
+        PERIGEE = 0.0,
+        INCLINATION = 0.0,
+        ECCENTRICITY = 0.0,
+        PERIOD = 0.0,
+        RAAN = 0.0,
+        SMA = 0.0,
+        GEO_LONGITUDE = 0.0,
+        DRIFT_RATE = 0.0,
+        SIGMA_U = 0.0,
+        SIGMA_V = 0.0,
+        SIGMA_W = 0.0,
+    ):
+        self.ID_ELSET = ID_ELSET  # type: Optional[str]
+        self.ELSET = ELSET  # type: Optional[str]
+        self.ID_STATE_VECTOR = ID_STATE_VECTOR  # type: Optional[str]
+        self.STATE_VECTOR = STATE_VECTOR  # type: Optional[str]
+        self.POS_X = POS_X  # type: float
+        self.POS_Y = POS_Y  # type: float
+        self.POS_Z = POS_Z  # type: float
+        self.VEL_X = VEL_X  # type: float
+        self.VEL_Y = VEL_Y  # type: float
+        self.VEL_Z = VEL_Z  # type: float
+        self.RADIATION_PRESS_COEFF = RADIATION_PRESS_COEFF  # type: float
+        self.BALLISTIC_COEFF = BALLISTIC_COEFF  # type: float
+        self.APOGEE = APOGEE  # type: float
+        self.PERIGEE = PERIGEE  # type: float
+        self.INCLINATION = INCLINATION  # type: float
+        self.ECCENTRICITY = ECCENTRICITY  # type: float
+        self.PERIOD = PERIOD  # type: float
+        self.RAAN = RAAN  # type: float
+        self.SMA = SMA  # type: float
+        self.GEO_LONGITUDE = GEO_LONGITUDE  # type: float
+        self.DRIFT_RATE = DRIFT_RATE  # type: float
+        self.SIGMA_U = SIGMA_U  # type: float
+        self.SIGMA_V = SIGMA_V  # type: float
+        self.SIGMA_W = SIGMA_W  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        mnvOrbitalState = mnvOrbitalState()
-        mnvOrbitalState.Init(buf, pos)
-        return cls.InitFromObj(mnvOrbitalState)
+        tmpMnvOrbitalState = mnvOrbitalState()
+        tmpMnvOrbitalState.Init(buf, pos)
+        return cls.InitFromObj(tmpMnvOrbitalState)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -419,9 +445,9 @@ class mnvOrbitalStateT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, mnvOrbitalState):
+    def InitFromObj(cls, tmpMnvOrbitalState):
         x = mnvOrbitalStateT()
-        x._UnPack(mnvOrbitalState)
+        x._UnPack(tmpMnvOrbitalState)
         return x
 
     # mnvOrbitalStateT

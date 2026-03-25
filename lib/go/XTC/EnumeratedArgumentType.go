@@ -51,6 +51,10 @@ func (rcv *EnumeratedArgumentType) NAME() []byte {
 	return nil
 }
 
+func (rcv *EnumeratedArgumentType) Name() []byte {
+	return rcv.NAME()
+}
+
 /// Type name
 /// Short description
 func (rcv *EnumeratedArgumentType) SHORT_DESCRIPTION() []byte {
@@ -61,6 +65,10 @@ func (rcv *EnumeratedArgumentType) SHORT_DESCRIPTION() []byte {
 	return nil
 }
 
+func (rcv *EnumeratedArgumentType) ShortDescription() []byte {
+	return rcv.SHORT_DESCRIPTION()
+}
+
 /// Short description
 /// Long description
 func (rcv *EnumeratedArgumentType) LONG_DESCRIPTION() []byte {
@@ -69,6 +77,10 @@ func (rcv *EnumeratedArgumentType) LONG_DESCRIPTION() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *EnumeratedArgumentType) LongDescription() []byte {
+	return rcv.LONG_DESCRIPTION()
 }
 
 /// Long description
@@ -86,6 +98,10 @@ func (rcv *EnumeratedArgumentType) DATA_ENCODING(obj *IntegerDataEncoding) *Inte
 	return nil
 }
 
+func (rcv *EnumeratedArgumentType) DataEncoding(obj *IntegerDataEncoding) *IntegerDataEncoding {
+	return rcv.DATA_ENCODING(obj)
+}
+
 /// Data encoding
 /// Enumeration values list
 func (rcv *EnumeratedArgumentType) ENUMERATION_LIST(obj *EnumerationValue, j int) bool {
@@ -94,10 +110,17 @@ func (rcv *EnumeratedArgumentType) ENUMERATION_LIST(obj *EnumerationValue, j int
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(EnumerationValue)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *EnumeratedArgumentType) EnumerationList(obj *EnumerationValue, j int) bool {
+	return rcv.ENUMERATION_LIST(obj, j)
 }
 
 func (rcv *EnumeratedArgumentType) ENUMERATION_LISTLength() int {
@@ -106,6 +129,10 @@ func (rcv *EnumeratedArgumentType) ENUMERATION_LISTLength() int {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *EnumeratedArgumentType) EnumerationListLength() int {
+	return rcv.ENUMERATION_LISTLength()
 }
 
 /// Enumeration values list
@@ -118,6 +145,10 @@ func (rcv *EnumeratedArgumentType) INITIAL_VALUE() []byte {
 	return nil
 }
 
+func (rcv *EnumeratedArgumentType) InitialValue() []byte {
+	return rcv.INITIAL_VALUE()
+}
+
 /// Initial/default value label
 func EnumeratedArgumentTypeStart(builder *flatbuffers.Builder) {
 	builder.StartObject(6)
@@ -125,23 +156,44 @@ func EnumeratedArgumentTypeStart(builder *flatbuffers.Builder) {
 func EnumeratedArgumentTypeAddNAME(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(NAME), 0)
 }
+func EnumeratedArgumentTypeAddName(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
+	EnumeratedArgumentTypeAddNAME(builder, NAME)
+}
 func EnumeratedArgumentTypeAddSHORT_DESCRIPTION(builder *flatbuffers.Builder, SHORT_DESCRIPTION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(SHORT_DESCRIPTION), 0)
+}
+func EnumeratedArgumentTypeAddShortDescription(builder *flatbuffers.Builder, SHORT_DESCRIPTION flatbuffers.UOffsetT) {
+	EnumeratedArgumentTypeAddSHORT_DESCRIPTION(builder, SHORT_DESCRIPTION)
 }
 func EnumeratedArgumentTypeAddLONG_DESCRIPTION(builder *flatbuffers.Builder, LONG_DESCRIPTION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(LONG_DESCRIPTION), 0)
 }
+func EnumeratedArgumentTypeAddLongDescription(builder *flatbuffers.Builder, LONG_DESCRIPTION flatbuffers.UOffsetT) {
+	EnumeratedArgumentTypeAddLONG_DESCRIPTION(builder, LONG_DESCRIPTION)
+}
 func EnumeratedArgumentTypeAddDATA_ENCODING(builder *flatbuffers.Builder, DATA_ENCODING flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(DATA_ENCODING), 0)
+}
+func EnumeratedArgumentTypeAddDataEncoding(builder *flatbuffers.Builder, DATA_ENCODING flatbuffers.UOffsetT) {
+	EnumeratedArgumentTypeAddDATA_ENCODING(builder, DATA_ENCODING)
 }
 func EnumeratedArgumentTypeAddENUMERATION_LIST(builder *flatbuffers.Builder, ENUMERATION_LIST flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(ENUMERATION_LIST), 0)
 }
+func EnumeratedArgumentTypeAddEnumerationList(builder *flatbuffers.Builder, ENUMERATION_LIST flatbuffers.UOffsetT) {
+	EnumeratedArgumentTypeAddENUMERATION_LIST(builder, ENUMERATION_LIST)
+}
 func EnumeratedArgumentTypeStartENUMERATION_LISTVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
+func EnumeratedArgumentTypeStartEnumerationListVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return EnumeratedArgumentTypeStartENUMERATION_LISTVector(builder, numElems)
+}
 func EnumeratedArgumentTypeAddINITIAL_VALUE(builder *flatbuffers.Builder, INITIAL_VALUE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(INITIAL_VALUE), 0)
+}
+func EnumeratedArgumentTypeAddInitialValue(builder *flatbuffers.Builder, INITIAL_VALUE flatbuffers.UOffsetT) {
+	EnumeratedArgumentTypeAddINITIAL_VALUE(builder, INITIAL_VALUE)
 }
 func EnumeratedArgumentTypeEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

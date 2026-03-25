@@ -12,7 +12,6 @@ import com.google.flatbuffers.LongVector;
 import com.google.flatbuffers.ShortVector;
 import com.google.flatbuffers.StringVector;
 import com.google.flatbuffers.Struct;
-import com.google.flatbuffers.Table;
 import com.google.flatbuffers.UnionVector;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -21,8 +20,8 @@ import java.nio.ByteOrder;
  * A CZML Packet describing an entity and its properties
  */
 @SuppressWarnings("unused")
-public final class CZMPacket extends Table {
-  public static void ValidateVersion() { Constants.FLATBUFFERS_24_3_25(); }
+public final class CZMPacket extends com.google.flatbuffers.Table {
+  public static void ValidateVersion() { Constants.FLATBUFFERS_25_12_19(); }
   public static CZMPacket getRootAsCZMPacket(ByteBuffer _bb) { return getRootAsCZMPacket(_bb, new CZMPacket()); }
   public static CZMPacket getRootAsCZMPacket(ByteBuffer _bb, CZMPacket obj) { _bb.order(ByteOrder.LITTLE_ENDIAN); return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb)); }
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }

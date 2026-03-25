@@ -32,8 +32,8 @@ class ArgumentTypeSet : Table() {
     /**
      * Integer argument types
      */
-    fun INTEGER_TYPES(j: Int) : IntegerArgumentType? = INTEGER_TYPES(IntegerArgumentType(), j)
-    fun INTEGER_TYPES(obj: IntegerArgumentType, j: Int) : IntegerArgumentType? {
+    fun integerTypes(j: Int) : IntegerArgumentType? = integerTypes(IntegerArgumentType(), j)
+    fun integerTypes(obj: IntegerArgumentType, j: Int) : IntegerArgumentType? {
         val o = __offset(4)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -41,15 +41,15 @@ class ArgumentTypeSet : Table() {
             null
         }
     }
-    val INTEGER_TYPESLength : Int
+    val integerTypesLength : Int
         get() {
             val o = __offset(4); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Float argument types
      */
-    fun FLOAT_TYPES(j: Int) : FloatArgumentType? = FLOAT_TYPES(FloatArgumentType(), j)
-    fun FLOAT_TYPES(obj: FloatArgumentType, j: Int) : FloatArgumentType? {
+    fun floatTypes(j: Int) : FloatArgumentType? = floatTypes(FloatArgumentType(), j)
+    fun floatTypes(obj: FloatArgumentType, j: Int) : FloatArgumentType? {
         val o = __offset(6)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -57,15 +57,15 @@ class ArgumentTypeSet : Table() {
             null
         }
     }
-    val FLOAT_TYPESLength : Int
+    val floatTypesLength : Int
         get() {
             val o = __offset(6); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * String argument types
      */
-    fun STRING_TYPES(j: Int) : StringArgumentType? = STRING_TYPES(StringArgumentType(), j)
-    fun STRING_TYPES(obj: StringArgumentType, j: Int) : StringArgumentType? {
+    fun stringTypes(j: Int) : StringArgumentType? = stringTypes(StringArgumentType(), j)
+    fun stringTypes(obj: StringArgumentType, j: Int) : StringArgumentType? {
         val o = __offset(8)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -73,15 +73,15 @@ class ArgumentTypeSet : Table() {
             null
         }
     }
-    val STRING_TYPESLength : Int
+    val stringTypesLength : Int
         get() {
             val o = __offset(8); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Boolean argument types
      */
-    fun BOOLEAN_TYPES(j: Int) : BooleanArgumentType? = BOOLEAN_TYPES(BooleanArgumentType(), j)
-    fun BOOLEAN_TYPES(obj: BooleanArgumentType, j: Int) : BooleanArgumentType? {
+    fun booleanTypes(j: Int) : BooleanArgumentType? = booleanTypes(BooleanArgumentType(), j)
+    fun booleanTypes(obj: BooleanArgumentType, j: Int) : BooleanArgumentType? {
         val o = __offset(10)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -89,15 +89,15 @@ class ArgumentTypeSet : Table() {
             null
         }
     }
-    val BOOLEAN_TYPESLength : Int
+    val booleanTypesLength : Int
         get() {
             val o = __offset(10); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Enumerated argument types
      */
-    fun ENUMERATED_TYPES(j: Int) : EnumeratedArgumentType? = ENUMERATED_TYPES(EnumeratedArgumentType(), j)
-    fun ENUMERATED_TYPES(obj: EnumeratedArgumentType, j: Int) : EnumeratedArgumentType? {
+    fun enumeratedTypes(j: Int) : EnumeratedArgumentType? = enumeratedTypes(EnumeratedArgumentType(), j)
+    fun enumeratedTypes(obj: EnumeratedArgumentType, j: Int) : EnumeratedArgumentType? {
         val o = __offset(12)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -105,15 +105,15 @@ class ArgumentTypeSet : Table() {
             null
         }
     }
-    val ENUMERATED_TYPESLength : Int
+    val enumeratedTypesLength : Int
         get() {
             val o = __offset(12); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Binary argument types
      */
-    fun BINARY_TYPES(j: Int) : BinaryArgumentType? = BINARY_TYPES(BinaryArgumentType(), j)
-    fun BINARY_TYPES(obj: BinaryArgumentType, j: Int) : BinaryArgumentType? {
+    fun binaryTypes(j: Int) : BinaryArgumentType? = binaryTypes(BinaryArgumentType(), j)
+    fun binaryTypes(obj: BinaryArgumentType, j: Int) : BinaryArgumentType? {
         val o = __offset(14)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -121,15 +121,15 @@ class ArgumentTypeSet : Table() {
             null
         }
     }
-    val BINARY_TYPESLength : Int
+    val binaryTypesLength : Int
         get() {
             val o = __offset(14); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Aggregate argument types
      */
-    fun AGGREGATE_TYPES(j: Int) : AggregateArgumentType? = AGGREGATE_TYPES(AggregateArgumentType(), j)
-    fun AGGREGATE_TYPES(obj: AggregateArgumentType, j: Int) : AggregateArgumentType? {
+    fun aggregateTypes(j: Int) : AggregateArgumentType? = aggregateTypes(AggregateArgumentType(), j)
+    fun aggregateTypes(obj: AggregateArgumentType, j: Int) : AggregateArgumentType? {
         val o = __offset(16)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -137,30 +137,30 @@ class ArgumentTypeSet : Table() {
             null
         }
     }
-    val AGGREGATE_TYPESLength : Int
+    val aggregateTypesLength : Int
         get() {
             val o = __offset(16); return if (o != 0) __vector_len(o) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsArgumentTypeSet(_bb: ByteBuffer): ArgumentTypeSet = getRootAsArgumentTypeSet(_bb, ArgumentTypeSet())
         fun getRootAsArgumentTypeSet(_bb: ByteBuffer, obj: ArgumentTypeSet): ArgumentTypeSet {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createArgumentTypeSet(builder: FlatBufferBuilder, INTEGER_TYPESOffset: Int, FLOAT_TYPESOffset: Int, STRING_TYPESOffset: Int, BOOLEAN_TYPESOffset: Int, ENUMERATED_TYPESOffset: Int, BINARY_TYPESOffset: Int, AGGREGATE_TYPESOffset: Int) : Int {
+        fun createArgumentTypeSet(builder: FlatBufferBuilder, integerTypesOffset: Int, floatTypesOffset: Int, stringTypesOffset: Int, booleanTypesOffset: Int, enumeratedTypesOffset: Int, binaryTypesOffset: Int, aggregateTypesOffset: Int) : Int {
             builder.startTable(7)
-            addAGGREGATE_TYPES(builder, AGGREGATE_TYPESOffset)
-            addBINARY_TYPES(builder, BINARY_TYPESOffset)
-            addENUMERATED_TYPES(builder, ENUMERATED_TYPESOffset)
-            addBOOLEAN_TYPES(builder, BOOLEAN_TYPESOffset)
-            addSTRING_TYPES(builder, STRING_TYPESOffset)
-            addFLOAT_TYPES(builder, FLOAT_TYPESOffset)
-            addINTEGER_TYPES(builder, INTEGER_TYPESOffset)
+            addAGGREGATETYPES(builder, aggregateTypesOffset)
+            addBINARYTYPES(builder, binaryTypesOffset)
+            addENUMERATEDTYPES(builder, enumeratedTypesOffset)
+            addBOOLEANTYPES(builder, booleanTypesOffset)
+            addSTRINGTYPES(builder, stringTypesOffset)
+            addFLOATTYPES(builder, floatTypesOffset)
+            addINTEGERTYPES(builder, integerTypesOffset)
             return endArgumentTypeSet(builder)
         }
         fun startArgumentTypeSet(builder: FlatBufferBuilder) = builder.startTable(7)
-        fun addINTEGER_TYPES(builder: FlatBufferBuilder, INTEGER_TYPES: Int) = builder.addOffset(0, INTEGER_TYPES, 0)
+        fun addINTEGERTYPES(builder: FlatBufferBuilder, integerTypes: Int) = builder.addOffset(0, integerTypes, 0)
         fun createIntegerTypesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -169,7 +169,7 @@ class ArgumentTypeSet : Table() {
             return builder.endVector()
         }
         fun startIntegerTypesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addFLOAT_TYPES(builder: FlatBufferBuilder, FLOAT_TYPES: Int) = builder.addOffset(1, FLOAT_TYPES, 0)
+        fun addFLOATTYPES(builder: FlatBufferBuilder, floatTypes: Int) = builder.addOffset(1, floatTypes, 0)
         fun createFloatTypesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -178,7 +178,7 @@ class ArgumentTypeSet : Table() {
             return builder.endVector()
         }
         fun startFloatTypesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addSTRING_TYPES(builder: FlatBufferBuilder, STRING_TYPES: Int) = builder.addOffset(2, STRING_TYPES, 0)
+        fun addSTRINGTYPES(builder: FlatBufferBuilder, stringTypes: Int) = builder.addOffset(2, stringTypes, 0)
         fun createStringTypesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -187,7 +187,7 @@ class ArgumentTypeSet : Table() {
             return builder.endVector()
         }
         fun startStringTypesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addBOOLEAN_TYPES(builder: FlatBufferBuilder, BOOLEAN_TYPES: Int) = builder.addOffset(3, BOOLEAN_TYPES, 0)
+        fun addBOOLEANTYPES(builder: FlatBufferBuilder, booleanTypes: Int) = builder.addOffset(3, booleanTypes, 0)
         fun createBooleanTypesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -196,7 +196,7 @@ class ArgumentTypeSet : Table() {
             return builder.endVector()
         }
         fun startBooleanTypesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addENUMERATED_TYPES(builder: FlatBufferBuilder, ENUMERATED_TYPES: Int) = builder.addOffset(4, ENUMERATED_TYPES, 0)
+        fun addENUMERATEDTYPES(builder: FlatBufferBuilder, enumeratedTypes: Int) = builder.addOffset(4, enumeratedTypes, 0)
         fun createEnumeratedTypesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -205,7 +205,7 @@ class ArgumentTypeSet : Table() {
             return builder.endVector()
         }
         fun startEnumeratedTypesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addBINARY_TYPES(builder: FlatBufferBuilder, BINARY_TYPES: Int) = builder.addOffset(5, BINARY_TYPES, 0)
+        fun addBINARYTYPES(builder: FlatBufferBuilder, binaryTypes: Int) = builder.addOffset(5, binaryTypes, 0)
         fun createBinaryTypesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -214,7 +214,7 @@ class ArgumentTypeSet : Table() {
             return builder.endVector()
         }
         fun startBinaryTypesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addAGGREGATE_TYPES(builder: FlatBufferBuilder, AGGREGATE_TYPES: Int) = builder.addOffset(6, AGGREGATE_TYPES, 0)
+        fun addAGGREGATETYPES(builder: FlatBufferBuilder, aggregateTypes: Int) = builder.addOffset(6, aggregateTypes, 0)
         fun createAggregateTypesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {

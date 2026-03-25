@@ -51,6 +51,10 @@ func (rcv *survivingDebris) FRAGMENT_ID() []byte {
 	return nil
 }
 
+func (rcv *survivingDebris) FragmentId() []byte {
+	return rcv.FRAGMENT_ID()
+}
+
 /// Fragment identifier
 /// Material type
 func (rcv *survivingDebris) MATERIAL() []byte {
@@ -59,6 +63,10 @@ func (rcv *survivingDebris) MATERIAL() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *survivingDebris) Material() []byte {
+	return rcv.MATERIAL()
 }
 
 /// Material type
@@ -71,9 +79,17 @@ func (rcv *survivingDebris) MASS() float64 {
 	return 0.0
 }
 
+func (rcv *survivingDebris) Mass() float64 {
+	return rcv.MASS()
+}
+
 /// Fragment mass in kg
 func (rcv *survivingDebris) MutateMASS(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(8, n)
+}
+
+func (rcv *survivingDebris) MutateMass(n float64) bool {
+	return rcv.MutateMASS(n)
 }
 
 /// Casualty area in m^2
@@ -85,9 +101,17 @@ func (rcv *survivingDebris) CASUALTY_AREA() float64 {
 	return 0.0
 }
 
+func (rcv *survivingDebris) CasualtyArea() float64 {
+	return rcv.CASUALTY_AREA()
+}
+
 /// Casualty area in m^2
 func (rcv *survivingDebris) MutateCASUALTY_AREA(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(10, n)
+}
+
+func (rcv *survivingDebris) MutateCasualtyArea(n float64) bool {
+	return rcv.MutateCASUALTY_AREA(n)
 }
 
 /// Survival probability (0.0-1.0)
@@ -99,9 +123,17 @@ func (rcv *survivingDebris) SURVIVAL_PROBABILITY() float64 {
 	return 0.0
 }
 
+func (rcv *survivingDebris) SurvivalProbability() float64 {
+	return rcv.SURVIVAL_PROBABILITY()
+}
+
 /// Survival probability (0.0-1.0)
 func (rcv *survivingDebris) MutateSURVIVAL_PROBABILITY(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(12, n)
+}
+
+func (rcv *survivingDebris) MutateSurvivalProbability(n float64) bool {
+	return rcv.MutateSURVIVAL_PROBABILITY(n)
 }
 
 func survivingDebrisStart(builder *flatbuffers.Builder) {
@@ -110,17 +142,32 @@ func survivingDebrisStart(builder *flatbuffers.Builder) {
 func survivingDebrisAddFRAGMENT_ID(builder *flatbuffers.Builder, FRAGMENT_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(FRAGMENT_ID), 0)
 }
+func survivingDebrisAddFragmentId(builder *flatbuffers.Builder, FRAGMENT_ID flatbuffers.UOffsetT) {
+	survivingDebrisAddFRAGMENT_ID(builder, FRAGMENT_ID)
+}
 func survivingDebrisAddMATERIAL(builder *flatbuffers.Builder, MATERIAL flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(MATERIAL), 0)
+}
+func survivingDebrisAddMaterial(builder *flatbuffers.Builder, MATERIAL flatbuffers.UOffsetT) {
+	survivingDebrisAddMATERIAL(builder, MATERIAL)
 }
 func survivingDebrisAddMASS(builder *flatbuffers.Builder, MASS float64) {
 	builder.PrependFloat64Slot(2, MASS, 0.0)
 }
+func survivingDebrisAddMass(builder *flatbuffers.Builder, MASS float64) {
+	survivingDebrisAddMASS(builder, MASS)
+}
 func survivingDebrisAddCASUALTY_AREA(builder *flatbuffers.Builder, CASUALTY_AREA float64) {
 	builder.PrependFloat64Slot(3, CASUALTY_AREA, 0.0)
 }
+func survivingDebrisAddCasualtyArea(builder *flatbuffers.Builder, CASUALTY_AREA float64) {
+	survivingDebrisAddCASUALTY_AREA(builder, CASUALTY_AREA)
+}
 func survivingDebrisAddSURVIVAL_PROBABILITY(builder *flatbuffers.Builder, SURVIVAL_PROBABILITY float64) {
 	builder.PrependFloat64Slot(4, SURVIVAL_PROBABILITY, 0.0)
+}
+func survivingDebrisAddSurvivalProbability(builder *flatbuffers.Builder, SURVIVAL_PROBABILITY float64) {
+	survivingDebrisAddSURVIVAL_PROBABILITY(builder, SURVIVAL_PROBABILITY)
 }
 func survivingDebrisEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

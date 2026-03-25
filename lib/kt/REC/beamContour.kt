@@ -32,7 +32,7 @@ class beamContour : Table() {
     /**
      * Contour level identifier
      */
-    val CONTOUR_ID : String?
+    val contourId : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class beamContour : Table() {
                 null
             }
         }
-    val CONTOUR_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun CONTOUR_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val contourIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun contourIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Gain level in dBi
      */
-    val GAIN_LEVEL : Double
+    val gainLevel : Double
         get() {
             val o = __offset(6)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -54,8 +54,8 @@ class beamContour : Table() {
     /**
      * Contour boundary points
      */
-    fun POINTS(j: Int) : beamContourPoint? = POINTS(beamContourPoint(), j)
-    fun POINTS(obj: beamContourPoint, j: Int) : beamContourPoint? {
+    fun points(j: Int) : beamContourPoint? = points(beamContourPoint(), j)
+    fun points(obj: beamContourPoint, j: Int) : beamContourPoint? {
         val o = __offset(8)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -63,28 +63,28 @@ class beamContour : Table() {
             null
         }
     }
-    val POINTSLength : Int
+    val pointsLength : Int
         get() {
             val o = __offset(8); return if (o != 0) __vector_len(o) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsbeamContour(_bb: ByteBuffer): beamContour = getRootAsbeamContour(_bb, beamContour())
         fun getRootAsbeamContour(_bb: ByteBuffer, obj: beamContour): beamContour {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createbeamContour(builder: FlatBufferBuilder, CONTOUR_IDOffset: Int, GAIN_LEVEL: Double, POINTSOffset: Int) : Int {
+        fun createbeamContour(builder: FlatBufferBuilder, contourIdOffset: Int, gainLevel: Double, pointsOffset: Int) : Int {
             builder.startTable(3)
-            addGAIN_LEVEL(builder, GAIN_LEVEL)
-            addPOINTS(builder, POINTSOffset)
-            addCONTOUR_ID(builder, CONTOUR_IDOffset)
+            addGAINLEVEL(builder, gainLevel)
+            addPOINTS(builder, pointsOffset)
+            addCONTOURID(builder, contourIdOffset)
             return endbeamContour(builder)
         }
         fun startbeamContour(builder: FlatBufferBuilder) = builder.startTable(3)
-        fun addCONTOUR_ID(builder: FlatBufferBuilder, CONTOUR_ID: Int) = builder.addOffset(0, CONTOUR_ID, 0)
-        fun addGAIN_LEVEL(builder: FlatBufferBuilder, GAIN_LEVEL: Double) = builder.addDouble(1, GAIN_LEVEL, 0.0)
-        fun addPOINTS(builder: FlatBufferBuilder, POINTS: Int) = builder.addOffset(2, POINTS, 0)
+        fun addCONTOURID(builder: FlatBufferBuilder, contourId: Int) = builder.addOffset(0, contourId, 0)
+        fun addGAINLEVEL(builder: FlatBufferBuilder, gainLevel: Double) = builder.addDouble(1, gainLevel, 0.0)
+        fun addPOINTS(builder: FlatBufferBuilder, points: Int) = builder.addOffset(2, points, 0)
         fun createPointsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {

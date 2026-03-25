@@ -2,4 +2,230 @@
 
 # namespace: 
 
-# NOTE KMLLink.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Full Link element
+class KMLLink(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = KMLLink()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsKMLLink(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def KMLLinkBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x4B\x4D\x4C", size_prefixed=size_prefixed)
+
+    # KMLLink
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # URL
+    # KMLLink
+    def HREF(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Refresh mode
+    # KMLLink
+    def REFRESH_MODE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # Refresh interval in seconds
+    # KMLLink
+    def REFRESH_INTERVAL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # View refresh mode
+    # KMLLink
+    def VIEW_REFRESH_MODE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # View refresh time in seconds
+    # KMLLink
+    def VIEW_REFRESH_TIME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # View bound scale
+    # KMLLink
+    def VIEW_BOUND_SCALE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # View format string
+    # KMLLink
+    def VIEW_FORMAT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # HTTP query string
+    # KMLLink
+    def HTTP_QUERY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+def KMLLinkStart(builder):
+    builder.StartObject(8)
+
+def Start(builder):
+    KMLLinkStart(builder)
+
+def KMLLinkAddHREF(builder, HREF):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(HREF), 0)
+
+def AddHREF(builder, HREF):
+    KMLLinkAddHREF(builder, HREF)
+
+def KMLLinkAddREFRESH_MODE(builder, REFRESH_MODE):
+    builder.PrependInt8Slot(1, REFRESH_MODE, 0)
+
+def AddREFRESH_MODE(builder, REFRESH_MODE):
+    KMLLinkAddREFRESH_MODE(builder, REFRESH_MODE)
+
+def KMLLinkAddREFRESH_INTERVAL(builder, REFRESH_INTERVAL):
+    builder.PrependFloat64Slot(2, REFRESH_INTERVAL, 0.0)
+
+def AddREFRESH_INTERVAL(builder, REFRESH_INTERVAL):
+    KMLLinkAddREFRESH_INTERVAL(builder, REFRESH_INTERVAL)
+
+def KMLLinkAddVIEW_REFRESH_MODE(builder, VIEW_REFRESH_MODE):
+    builder.PrependInt8Slot(3, VIEW_REFRESH_MODE, 0)
+
+def AddVIEW_REFRESH_MODE(builder, VIEW_REFRESH_MODE):
+    KMLLinkAddVIEW_REFRESH_MODE(builder, VIEW_REFRESH_MODE)
+
+def KMLLinkAddVIEW_REFRESH_TIME(builder, VIEW_REFRESH_TIME):
+    builder.PrependFloat64Slot(4, VIEW_REFRESH_TIME, 0.0)
+
+def AddVIEW_REFRESH_TIME(builder, VIEW_REFRESH_TIME):
+    KMLLinkAddVIEW_REFRESH_TIME(builder, VIEW_REFRESH_TIME)
+
+def KMLLinkAddVIEW_BOUND_SCALE(builder, VIEW_BOUND_SCALE):
+    builder.PrependFloat64Slot(5, VIEW_BOUND_SCALE, 0.0)
+
+def AddVIEW_BOUND_SCALE(builder, VIEW_BOUND_SCALE):
+    KMLLinkAddVIEW_BOUND_SCALE(builder, VIEW_BOUND_SCALE)
+
+def KMLLinkAddVIEW_FORMAT(builder, VIEW_FORMAT):
+    builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(VIEW_FORMAT), 0)
+
+def AddVIEW_FORMAT(builder, VIEW_FORMAT):
+    KMLLinkAddVIEW_FORMAT(builder, VIEW_FORMAT)
+
+def KMLLinkAddHTTP_QUERY(builder, HTTP_QUERY):
+    builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(HTTP_QUERY), 0)
+
+def AddHTTP_QUERY(builder, HTTP_QUERY):
+    KMLLinkAddHTTP_QUERY(builder, HTTP_QUERY)
+
+def KMLLinkEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return KMLLinkEnd(builder)
+
+
+class KMLLinkT(object):
+
+    # KMLLinkT
+    def __init__(
+        self,
+        HREF = None,
+        REFRESH_MODE = 0,
+        REFRESH_INTERVAL = 0.0,
+        VIEW_REFRESH_MODE = 0,
+        VIEW_REFRESH_TIME = 0.0,
+        VIEW_BOUND_SCALE = 0.0,
+        VIEW_FORMAT = None,
+        HTTP_QUERY = None,
+    ):
+        self.HREF = HREF  # type: Optional[str]
+        self.REFRESH_MODE = REFRESH_MODE  # type: int
+        self.REFRESH_INTERVAL = REFRESH_INTERVAL  # type: float
+        self.VIEW_REFRESH_MODE = VIEW_REFRESH_MODE  # type: int
+        self.VIEW_REFRESH_TIME = VIEW_REFRESH_TIME  # type: float
+        self.VIEW_BOUND_SCALE = VIEW_BOUND_SCALE  # type: float
+        self.VIEW_FORMAT = VIEW_FORMAT  # type: Optional[str]
+        self.HTTP_QUERY = HTTP_QUERY  # type: Optional[str]
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpKmllink = KMLLink()
+        tmpKmllink.Init(buf, pos)
+        return cls.InitFromObj(tmpKmllink)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpKmllink):
+        x = KMLLinkT()
+        x._UnPack(tmpKmllink)
+        return x
+
+    # KMLLinkT
+    def _UnPack(self, KMLLink):
+        if KMLLink is None:
+            return
+        self.HREF = KMLLink.HREF()
+        self.REFRESH_MODE = KMLLink.REFRESH_MODE()
+        self.REFRESH_INTERVAL = KMLLink.REFRESH_INTERVAL()
+        self.VIEW_REFRESH_MODE = KMLLink.VIEW_REFRESH_MODE()
+        self.VIEW_REFRESH_TIME = KMLLink.VIEW_REFRESH_TIME()
+        self.VIEW_BOUND_SCALE = KMLLink.VIEW_BOUND_SCALE()
+        self.VIEW_FORMAT = KMLLink.VIEW_FORMAT()
+        self.HTTP_QUERY = KMLLink.HTTP_QUERY()
+
+    # KMLLinkT
+    def Pack(self, builder):
+        if self.HREF is not None:
+            HREF = builder.CreateString(self.HREF)
+        if self.VIEW_FORMAT is not None:
+            VIEW_FORMAT = builder.CreateString(self.VIEW_FORMAT)
+        if self.HTTP_QUERY is not None:
+            HTTP_QUERY = builder.CreateString(self.HTTP_QUERY)
+        KMLLinkStart(builder)
+        if self.HREF is not None:
+            KMLLinkAddHREF(builder, HREF)
+        KMLLinkAddREFRESH_MODE(builder, self.REFRESH_MODE)
+        KMLLinkAddREFRESH_INTERVAL(builder, self.REFRESH_INTERVAL)
+        KMLLinkAddVIEW_REFRESH_MODE(builder, self.VIEW_REFRESH_MODE)
+        KMLLinkAddVIEW_REFRESH_TIME(builder, self.VIEW_REFRESH_TIME)
+        KMLLinkAddVIEW_BOUND_SCALE(builder, self.VIEW_BOUND_SCALE)
+        if self.VIEW_FORMAT is not None:
+            KMLLinkAddVIEW_FORMAT(builder, VIEW_FORMAT)
+        if self.HTTP_QUERY is not None:
+            KMLLinkAddHTTP_QUERY(builder, HTTP_QUERY)
+        KMLLink = KMLLinkEnd(builder)
+        return KMLLink

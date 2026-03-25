@@ -2,4 +2,7 @@
 
 # namespace: 
 
-# NOTE CZMClockStep.py does not declare any structs or enums
+class CZMClockStep(object):
+    TICK_DEPENDENT = 0
+    SYSTEM_CLOCK_MULTIPLIER = 1
+    SYSTEM_CLOCK = 2

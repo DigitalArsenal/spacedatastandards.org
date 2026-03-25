@@ -62,6 +62,10 @@ func (rcv *PLD) PAYLOAD_DURATION() []byte {
 	return nil
 }
 
+func (rcv *PLD) PayloadDuration() []byte {
+	return rcv.PAYLOAD_DURATION()
+}
+
 func (rcv *PLD) MASS_AT_LAUNCH() float32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
@@ -70,8 +74,16 @@ func (rcv *PLD) MASS_AT_LAUNCH() float32 {
 	return 0.0
 }
 
+func (rcv *PLD) MassAtLaunch() float32 {
+	return rcv.MASS_AT_LAUNCH()
+}
+
 func (rcv *PLD) MutateMASS_AT_LAUNCH(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(6, n)
+}
+
+func (rcv *PLD) MutateMassAtLaunch(n float32) bool {
+	return rcv.MutateMASS_AT_LAUNCH(n)
 }
 
 func (rcv *PLD) DIMENSIONS() []byte {
@@ -82,6 +94,10 @@ func (rcv *PLD) DIMENSIONS() []byte {
 	return nil
 }
 
+func (rcv *PLD) Dimensions() []byte {
+	return rcv.DIMENSIONS()
+}
+
 func (rcv *PLD) SOLAR_ARRAY_AREA() float32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
@@ -90,8 +106,16 @@ func (rcv *PLD) SOLAR_ARRAY_AREA() float32 {
 	return 0.0
 }
 
+func (rcv *PLD) SolarArrayArea() float32 {
+	return rcv.SOLAR_ARRAY_AREA()
+}
+
 func (rcv *PLD) MutateSOLAR_ARRAY_AREA(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(10, n)
+}
+
+func (rcv *PLD) MutateSolarArrayArea(n float32) bool {
+	return rcv.MutateSOLAR_ARRAY_AREA(n)
 }
 
 func (rcv *PLD) SOLAR_ARRAY_DIMENSIONS() []byte {
@@ -102,6 +126,10 @@ func (rcv *PLD) SOLAR_ARRAY_DIMENSIONS() []byte {
 	return nil
 }
 
+func (rcv *PLD) SolarArrayDimensions() []byte {
+	return rcv.SOLAR_ARRAY_DIMENSIONS()
+}
+
 func (rcv *PLD) NOMINAL_OPERATIONAL_LIFETIME() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
@@ -110,16 +138,27 @@ func (rcv *PLD) NOMINAL_OPERATIONAL_LIFETIME() []byte {
 	return nil
 }
 
+func (rcv *PLD) NominalOperationalLifetime() []byte {
+	return rcv.NOMINAL_OPERATIONAL_LIFETIME()
+}
+
 func (rcv *PLD) INSTRUMENTS(obj *IDM, j int) bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
 	if o != 0 {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(IDM)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *PLD) Instruments(obj *IDM, j int) bool {
+	return rcv.INSTRUMENTS(obj, j)
 }
 
 func (rcv *PLD) INSTRUMENTSLength() int {
@@ -130,32 +169,60 @@ func (rcv *PLD) INSTRUMENTSLength() int {
 	return 0
 }
 
+func (rcv *PLD) InstrumentsLength() int {
+	return rcv.INSTRUMENTSLength()
+}
+
 func PLDStart(builder *flatbuffers.Builder) {
 	builder.StartObject(7)
 }
 func PLDAddPAYLOAD_DURATION(builder *flatbuffers.Builder, PAYLOAD_DURATION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(PAYLOAD_DURATION), 0)
 }
+func PLDAddPayloadDuration(builder *flatbuffers.Builder, PAYLOAD_DURATION flatbuffers.UOffsetT) {
+	PLDAddPAYLOAD_DURATION(builder, PAYLOAD_DURATION)
+}
 func PLDAddMASS_AT_LAUNCH(builder *flatbuffers.Builder, MASS_AT_LAUNCH float32) {
 	builder.PrependFloat32Slot(1, MASS_AT_LAUNCH, 0.0)
+}
+func PLDAddMassAtLaunch(builder *flatbuffers.Builder, MASS_AT_LAUNCH float32) {
+	PLDAddMASS_AT_LAUNCH(builder, MASS_AT_LAUNCH)
 }
 func PLDAddDIMENSIONS(builder *flatbuffers.Builder, DIMENSIONS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(DIMENSIONS), 0)
 }
+func PLDAddDimensions(builder *flatbuffers.Builder, DIMENSIONS flatbuffers.UOffsetT) {
+	PLDAddDIMENSIONS(builder, DIMENSIONS)
+}
 func PLDAddSOLAR_ARRAY_AREA(builder *flatbuffers.Builder, SOLAR_ARRAY_AREA float32) {
 	builder.PrependFloat32Slot(3, SOLAR_ARRAY_AREA, 0.0)
+}
+func PLDAddSolarArrayArea(builder *flatbuffers.Builder, SOLAR_ARRAY_AREA float32) {
+	PLDAddSOLAR_ARRAY_AREA(builder, SOLAR_ARRAY_AREA)
 }
 func PLDAddSOLAR_ARRAY_DIMENSIONS(builder *flatbuffers.Builder, SOLAR_ARRAY_DIMENSIONS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(SOLAR_ARRAY_DIMENSIONS), 0)
 }
+func PLDAddSolarArrayDimensions(builder *flatbuffers.Builder, SOLAR_ARRAY_DIMENSIONS flatbuffers.UOffsetT) {
+	PLDAddSOLAR_ARRAY_DIMENSIONS(builder, SOLAR_ARRAY_DIMENSIONS)
+}
 func PLDAddNOMINAL_OPERATIONAL_LIFETIME(builder *flatbuffers.Builder, NOMINAL_OPERATIONAL_LIFETIME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(NOMINAL_OPERATIONAL_LIFETIME), 0)
+}
+func PLDAddNominalOperationalLifetime(builder *flatbuffers.Builder, NOMINAL_OPERATIONAL_LIFETIME flatbuffers.UOffsetT) {
+	PLDAddNOMINAL_OPERATIONAL_LIFETIME(builder, NOMINAL_OPERATIONAL_LIFETIME)
 }
 func PLDAddINSTRUMENTS(builder *flatbuffers.Builder, INSTRUMENTS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(INSTRUMENTS), 0)
 }
+func PLDAddInstruments(builder *flatbuffers.Builder, INSTRUMENTS flatbuffers.UOffsetT) {
+	PLDAddINSTRUMENTS(builder, INSTRUMENTS)
+}
 func PLDStartINSTRUMENTSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func PLDStartInstrumentsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return PLDStartINSTRUMENTSVector(builder, numElems)
 }
 func PLDEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

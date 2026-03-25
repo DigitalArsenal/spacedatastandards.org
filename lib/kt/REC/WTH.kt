@@ -32,7 +32,7 @@ class WTH : Table() {
     /**
      * Unique identifier
      */
-    val ID : String?
+    val id : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class WTH : Table() {
                 null
             }
         }
-    val IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val idAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun idInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Sensor identifier
      */
-    val ID_SENSOR : String?
+    val idSensor : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -55,12 +55,12 @@ class WTH : Table() {
                 null
             }
         }
-    val ID_SENSORAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun ID_SENSORInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val idSensorAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun idSensorInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * Original sensor identifier
      */
-    val ORIG_SENSOR_ID : String?
+    val origSensorId : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -69,12 +69,12 @@ class WTH : Table() {
                 null
             }
         }
-    val ORIG_SENSOR_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun ORIG_SENSOR_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val origSensorIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun origSensorIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
     /**
      * Observation time (ISO 8601)
      */
-    val OB_TIME : String?
+    val obTime : String?
         get() {
             val o = __offset(10)
             return if (o != 0) {
@@ -83,12 +83,12 @@ class WTH : Table() {
                 null
             }
         }
-    val OB_TIMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
-    fun OB_TIMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
+    val obTimeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(10, 1)
+    fun obTimeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 10, 1)
     /**
      * File creation time (ISO 8601)
      */
-    val FILE_CREATION : String?
+    val fileCreation : String?
         get() {
             val o = __offset(12)
             return if (o != 0) {
@@ -97,12 +97,12 @@ class WTH : Table() {
                 null
             }
         }
-    val FILE_CREATIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
-    fun FILE_CREATIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
+    val fileCreationAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(12, 1)
+    fun fileCreationInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 12, 1)
     /**
      * Quality control value
      */
-    val QC_VALUE : UByte
+    val qcValue : UByte
         get() {
             val o = __offset(14)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
@@ -110,7 +110,7 @@ class WTH : Table() {
     /**
      * Terminal altitude (km)
      */
-    val TERM_ALT : Double
+    val termAlt : Double
         get() {
             val o = __offset(16)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -118,7 +118,7 @@ class WTH : Table() {
     /**
      * Average transmit power (dBm)
      */
-    val AVG_TX_PWR : Double
+    val avgTxPwr : Double
         get() {
             val o = __offset(18)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -126,7 +126,7 @@ class WTH : Table() {
     /**
      * Average reflected power (dBm)
      */
-    val AVG_REF_PWR : Double
+    val avgRefPwr : Double
         get() {
             val o = __offset(20)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -134,7 +134,7 @@ class WTH : Table() {
     /**
      * Sector number
      */
-    val SECTOR_NUM : UShort
+    val sectorNum : UShort
         get() {
             val o = __offset(22)
             return if(o != 0) bb.getShort(o + bb_pos).toUShort() else 0u
@@ -142,7 +142,7 @@ class WTH : Table() {
     /**
      * Number of data elements
      */
-    val NUM_ELEMENTS : UShort
+    val numElements : UShort
         get() {
             val o = __offset(24)
             return if(o != 0) bb.getShort(o + bb_pos).toUShort() else 0u
@@ -150,7 +150,7 @@ class WTH : Table() {
     /**
      * Checksum
      */
-    val CHECKSUM : UInt
+    val checksum : UInt
         get() {
             val o = __offset(26)
             return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
@@ -158,7 +158,7 @@ class WTH : Table() {
     /**
      * Signal power values (dBm)
      */
-    fun SIG_PWRS(j: Int) : Double {
+    fun sigPwrs(j: Int) : Double {
         val o = __offset(28)
         return if (o != 0) {
             bb.getDouble(__vector(o) + j * 8)
@@ -166,16 +166,16 @@ class WTH : Table() {
             0.0
         }
     }
-    val SIG_PWRSLength : Int
+    val sigPwrsLength : Int
         get() {
             val o = __offset(28); return if (o != 0) __vector_len(o) else 0
         }
-    val SIG_PWRSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(28, 8)
-    fun SIG_PWRSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 28, 8)
+    val sigPwrsAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(28, 8)
+    fun sigPwrsInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 28, 8)
     /**
      * Noise level values (dBm)
      */
-    fun NOISE_LVLS(j: Int) : Double {
+    fun noiseLvls(j: Int) : Double {
         val o = __offset(30)
         return if (o != 0) {
             bb.getDouble(__vector(o) + j * 8)
@@ -183,16 +183,16 @@ class WTH : Table() {
             0.0
         }
     }
-    val NOISE_LVLSLength : Int
+    val noiseLvlsLength : Int
         get() {
             val o = __offset(30); return if (o != 0) __vector_len(o) else 0
         }
-    val NOISE_LVLSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(30, 8)
-    fun NOISE_LVLSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 30, 8)
+    val noiseLvlsAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(30, 8)
+    fun noiseLvlsInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 30, 8)
     /**
      * Spectral width values (m/s)
      */
-    fun SPEC_WIDTHS(j: Int) : Double {
+    fun specWidths(j: Int) : Double {
         val o = __offset(32)
         return if (o != 0) {
             bb.getDouble(__vector(o) + j * 8)
@@ -200,16 +200,16 @@ class WTH : Table() {
             0.0
         }
     }
-    val SPEC_WIDTHSLength : Int
+    val specWidthsLength : Int
         get() {
             val o = __offset(32); return if (o != 0) __vector_len(o) else 0
         }
-    val SPEC_WIDTHSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(32, 8)
-    fun SPEC_WIDTHSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 32, 8)
+    val specWidthsAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(32, 8)
+    fun specWidthsInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 32, 8)
     /**
      * First guess average values
      */
-    fun FIRST_GUESS_AVGS(j: Int) : Double {
+    fun firstGuessAvgs(j: Int) : Double {
         val o = __offset(34)
         return if (o != 0) {
             bb.getDouble(__vector(o) + j * 8)
@@ -217,16 +217,16 @@ class WTH : Table() {
             0.0
         }
     }
-    val FIRST_GUESS_AVGSLength : Int
+    val firstGuessAvgsLength : Int
         get() {
             val o = __offset(34); return if (o != 0) __vector_len(o) else 0
         }
-    val FIRST_GUESS_AVGSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(34, 8)
-    fun FIRST_GUESS_AVGSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 34, 8)
+    val firstGuessAvgsAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(34, 8)
+    fun firstGuessAvgsInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 34, 8)
     /**
      * Time domain average sample numbers
      */
-    fun TD_AVG_SAMPLE_NUMS(j: Int) : Double {
+    fun tdAvgSampleNums(j: Int) : Double {
         val o = __offset(36)
         return if (o != 0) {
             bb.getDouble(__vector(o) + j * 8)
@@ -234,16 +234,16 @@ class WTH : Table() {
             0.0
         }
     }
-    val TD_AVG_SAMPLE_NUMSLength : Int
+    val tdAvgSampleNumsLength : Int
         get() {
             val o = __offset(36); return if (o != 0) __vector_len(o) else 0
         }
-    val TD_AVG_SAMPLE_NUMSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(36, 8)
-    fun TD_AVG_SAMPLE_NUMSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 36, 8)
+    val tdAvgSampleNumsAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(36, 8)
+    fun tdAvgSampleNumsInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 36, 8)
     /**
      * Co-integration values
      */
-    fun CO_INTEGS(j: Int) : Double {
+    fun coIntegs(j: Int) : Double {
         val o = __offset(38)
         return if (o != 0) {
             bb.getDouble(__vector(o) + j * 8)
@@ -251,16 +251,16 @@ class WTH : Table() {
             0.0
         }
     }
-    val CO_INTEGSLength : Int
+    val coIntegsLength : Int
         get() {
             val o = __offset(38); return if (o != 0) __vector_len(o) else 0
         }
-    val CO_INTEGSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(38, 8)
-    fun CO_INTEGSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 38, 8)
+    val coIntegsAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(38, 8)
+    fun coIntegsInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 38, 8)
     /**
      * Spectral average values
      */
-    fun SPEC_AVGS(j: Int) : Double {
+    fun specAvgs(j: Int) : Double {
         val o = __offset(40)
         return if (o != 0) {
             bb.getDouble(__vector(o) + j * 8)
@@ -268,16 +268,16 @@ class WTH : Table() {
             0.0
         }
     }
-    val SPEC_AVGSLength : Int
+    val specAvgsLength : Int
         get() {
             val o = __offset(40); return if (o != 0) __vector_len(o) else 0
         }
-    val SPEC_AVGSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(40, 8)
-    fun SPEC_AVGSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 40, 8)
+    val specAvgsAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(40, 8)
+    fun specAvgsInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 40, 8)
     /**
      * Interpulse periods (microseconds)
      */
-    fun INTERPULSE_PERIODS(j: Int) : Double {
+    fun interpulsePeriods(j: Int) : Double {
         val o = __offset(42)
         return if (o != 0) {
             bb.getDouble(__vector(o) + j * 8)
@@ -285,16 +285,16 @@ class WTH : Table() {
             0.0
         }
     }
-    val INTERPULSE_PERIODSLength : Int
+    val interpulsePeriodsLength : Int
         get() {
             val o = __offset(42); return if (o != 0) __vector_len(o) else 0
         }
-    val INTERPULSE_PERIODSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(42, 8)
-    fun INTERPULSE_PERIODSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 42, 8)
+    val interpulsePeriodsAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(42, 8)
+    fun interpulsePeriodsInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 42, 8)
     /**
      * Doppler velocities (m/s)
      */
-    fun DOPP_VELS(j: Int) : Double {
+    fun doppVels(j: Int) : Double {
         val o = __offset(44)
         return if (o != 0) {
             bb.getDouble(__vector(o) + j * 8)
@@ -302,16 +302,16 @@ class WTH : Table() {
             0.0
         }
     }
-    val DOPP_VELSLength : Int
+    val doppVelsLength : Int
         get() {
             val o = __offset(44); return if (o != 0) __vector_len(o) else 0
         }
-    val DOPP_VELSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(44, 8)
-    fun DOPP_VELSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 44, 8)
+    val doppVelsAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(44, 8)
+    fun doppVelsInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 44, 8)
     /**
      * Consecutive records count
      */
-    fun CONS_RECS(j: Int) : Double {
+    fun consRecs(j: Int) : Double {
         val o = __offset(46)
         return if (o != 0) {
             bb.getDouble(__vector(o) + j * 8)
@@ -319,16 +319,16 @@ class WTH : Table() {
             0.0
         }
     }
-    val CONS_RECSLength : Int
+    val consRecsLength : Int
         get() {
             val o = __offset(46); return if (o != 0) __vector_len(o) else 0
         }
-    val CONS_RECSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(46, 8)
-    fun CONS_RECSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 46, 8)
+    val consRecsAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(46, 8)
+    fun consRecsInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 46, 8)
     /**
      * Signal-to-noise ratios (dB)
      */
-    fun SNRS(j: Int) : Double {
+    fun snrs(j: Int) : Double {
         val o = __offset(48)
         return if (o != 0) {
             bb.getDouble(__vector(o) + j * 8)
@@ -336,16 +336,16 @@ class WTH : Table() {
             0.0
         }
     }
-    val SNRSLength : Int
+    val snrsLength : Int
         get() {
             val o = __offset(48); return if (o != 0) __vector_len(o) else 0
         }
-    val SNRSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(48, 8)
-    fun SNRSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 48, 8)
+    val snrsAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(48, 8)
+    fun snrsInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 48, 8)
     /**
      * Signal strength (dBm)
      */
-    val SIG_STRENGTH : Double
+    val sigStrength : Double
         get() {
             val o = __offset(50)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -353,7 +353,7 @@ class WTH : Table() {
     /**
      * Error ellipse semi-major axis (km)
      */
-    val SEMI_MAJOR_AXIS : Double
+    val semiMajorAxis : Double
         get() {
             val o = __offset(52)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -361,7 +361,7 @@ class WTH : Table() {
     /**
      * Error ellipse semi-minor axis (km)
      */
-    val SEMI_MINOR_AXIS : Double
+    val semiMinorAxis : Double
         get() {
             val o = __offset(54)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -369,7 +369,7 @@ class WTH : Table() {
     /**
      * Error ellipse orientation angle (degrees)
      */
-    val ANGLE_ORIENTATION : Double
+    val angleOrientation : Double
         get() {
             val o = __offset(56)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -377,7 +377,7 @@ class WTH : Table() {
     /**
      * Lightning event number
      */
-    val LIGHT_EVENT_NUM : UInt
+    val lightEventNum : UInt
         get() {
             val o = __offset(58)
             return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
@@ -385,7 +385,7 @@ class WTH : Table() {
     /**
      * Lightning detection sensor identifiers
      */
-    fun LIGHT_DET_SENSORS(j: Int) : String? {
+    fun lightDetSensors(j: Int) : String? {
         val o = __offset(60)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
@@ -393,14 +393,14 @@ class WTH : Table() {
             null
         }
     }
-    val LIGHT_DET_SENSORSLength : Int
+    val lightDetSensorsLength : Int
         get() {
             val o = __offset(60); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Position confidence (0-1)
      */
-    val POS_CONFIDENCE : Double
+    val posConfidence : Double
         get() {
             val o = __offset(62)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -408,7 +408,7 @@ class WTH : Table() {
     /**
      * Source types
      */
-    fun SRC_TYPS(j: Int) : String? {
+    fun srcTyps(j: Int) : String? {
         val o = __offset(64)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
@@ -416,14 +416,14 @@ class WTH : Table() {
             null
         }
     }
-    val SRC_TYPSLength : Int
+    val srcTypsLength : Int
         get() {
             val o = __offset(64); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Source identifiers
      */
-    fun SRC_IDS(j: Int) : String? {
+    fun srcIds(j: Int) : String? {
         val o = __offset(66)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
@@ -431,68 +431,68 @@ class WTH : Table() {
             null
         }
     }
-    val SRC_IDSLength : Int
+    val srcIdsLength : Int
         get() {
             val o = __offset(66); return if (o != 0) __vector_len(o) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsWTH(_bb: ByteBuffer): WTH = getRootAsWTH(_bb, WTH())
         fun getRootAsWTH(_bb: ByteBuffer, obj: WTH): WTH {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun WTHBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$WTH")
-        fun createWTH(builder: FlatBufferBuilder, IDOffset: Int, ID_SENSOROffset: Int, ORIG_SENSOR_IDOffset: Int, OB_TIMEOffset: Int, FILE_CREATIONOffset: Int, QC_VALUE: UByte, TERM_ALT: Double, AVG_TX_PWR: Double, AVG_REF_PWR: Double, SECTOR_NUM: UShort, NUM_ELEMENTS: UShort, CHECKSUM: UInt, SIG_PWRSOffset: Int, NOISE_LVLSOffset: Int, SPEC_WIDTHSOffset: Int, FIRST_GUESS_AVGSOffset: Int, TD_AVG_SAMPLE_NUMSOffset: Int, CO_INTEGSOffset: Int, SPEC_AVGSOffset: Int, INTERPULSE_PERIODSOffset: Int, DOPP_VELSOffset: Int, CONS_RECSOffset: Int, SNRSOffset: Int, SIG_STRENGTH: Double, SEMI_MAJOR_AXIS: Double, SEMI_MINOR_AXIS: Double, ANGLE_ORIENTATION: Double, LIGHT_EVENT_NUM: UInt, LIGHT_DET_SENSORSOffset: Int, POS_CONFIDENCE: Double, SRC_TYPSOffset: Int, SRC_IDSOffset: Int) : Int {
+        fun createWTH(builder: FlatBufferBuilder, idOffset: Int, idSensorOffset: Int, origSensorIdOffset: Int, obTimeOffset: Int, fileCreationOffset: Int, qcValue: UByte, termAlt: Double, avgTxPwr: Double, avgRefPwr: Double, sectorNum: UShort, numElements: UShort, checksum: UInt, sigPwrsOffset: Int, noiseLvlsOffset: Int, specWidthsOffset: Int, firstGuessAvgsOffset: Int, tdAvgSampleNumsOffset: Int, coIntegsOffset: Int, specAvgsOffset: Int, interpulsePeriodsOffset: Int, doppVelsOffset: Int, consRecsOffset: Int, snrsOffset: Int, sigStrength: Double, semiMajorAxis: Double, semiMinorAxis: Double, angleOrientation: Double, lightEventNum: UInt, lightDetSensorsOffset: Int, posConfidence: Double, srcTypsOffset: Int, srcIdsOffset: Int) : Int {
             builder.startTable(32)
-            addPOS_CONFIDENCE(builder, POS_CONFIDENCE)
-            addANGLE_ORIENTATION(builder, ANGLE_ORIENTATION)
-            addSEMI_MINOR_AXIS(builder, SEMI_MINOR_AXIS)
-            addSEMI_MAJOR_AXIS(builder, SEMI_MAJOR_AXIS)
-            addSIG_STRENGTH(builder, SIG_STRENGTH)
-            addAVG_REF_PWR(builder, AVG_REF_PWR)
-            addAVG_TX_PWR(builder, AVG_TX_PWR)
-            addTERM_ALT(builder, TERM_ALT)
-            addSRC_IDS(builder, SRC_IDSOffset)
-            addSRC_TYPS(builder, SRC_TYPSOffset)
-            addLIGHT_DET_SENSORS(builder, LIGHT_DET_SENSORSOffset)
-            addLIGHT_EVENT_NUM(builder, LIGHT_EVENT_NUM)
-            addSNRS(builder, SNRSOffset)
-            addCONS_RECS(builder, CONS_RECSOffset)
-            addDOPP_VELS(builder, DOPP_VELSOffset)
-            addINTERPULSE_PERIODS(builder, INTERPULSE_PERIODSOffset)
-            addSPEC_AVGS(builder, SPEC_AVGSOffset)
-            addCO_INTEGS(builder, CO_INTEGSOffset)
-            addTD_AVG_SAMPLE_NUMS(builder, TD_AVG_SAMPLE_NUMSOffset)
-            addFIRST_GUESS_AVGS(builder, FIRST_GUESS_AVGSOffset)
-            addSPEC_WIDTHS(builder, SPEC_WIDTHSOffset)
-            addNOISE_LVLS(builder, NOISE_LVLSOffset)
-            addSIG_PWRS(builder, SIG_PWRSOffset)
-            addCHECKSUM(builder, CHECKSUM)
-            addFILE_CREATION(builder, FILE_CREATIONOffset)
-            addOB_TIME(builder, OB_TIMEOffset)
-            addORIG_SENSOR_ID(builder, ORIG_SENSOR_IDOffset)
-            addID_SENSOR(builder, ID_SENSOROffset)
-            addID(builder, IDOffset)
-            addNUM_ELEMENTS(builder, NUM_ELEMENTS)
-            addSECTOR_NUM(builder, SECTOR_NUM)
-            addQC_VALUE(builder, QC_VALUE)
+            addPOSCONFIDENCE(builder, posConfidence)
+            addANGLEORIENTATION(builder, angleOrientation)
+            addSEMIMINORAXIS(builder, semiMinorAxis)
+            addSEMIMAJORAXIS(builder, semiMajorAxis)
+            addSIGSTRENGTH(builder, sigStrength)
+            addAVGREFPWR(builder, avgRefPwr)
+            addAVGTXPWR(builder, avgTxPwr)
+            addTERMALT(builder, termAlt)
+            addSRCIDS(builder, srcIdsOffset)
+            addSRCTYPS(builder, srcTypsOffset)
+            addLIGHTDETSENSORS(builder, lightDetSensorsOffset)
+            addLIGHTEVENTNUM(builder, lightEventNum)
+            addSNRS(builder, snrsOffset)
+            addCONSRECS(builder, consRecsOffset)
+            addDOPPVELS(builder, doppVelsOffset)
+            addINTERPULSEPERIODS(builder, interpulsePeriodsOffset)
+            addSPECAVGS(builder, specAvgsOffset)
+            addCOINTEGS(builder, coIntegsOffset)
+            addTDAVGSAMPLENUMS(builder, tdAvgSampleNumsOffset)
+            addFIRSTGUESSAVGS(builder, firstGuessAvgsOffset)
+            addSPECWIDTHS(builder, specWidthsOffset)
+            addNOISELVLS(builder, noiseLvlsOffset)
+            addSIGPWRS(builder, sigPwrsOffset)
+            addCHECKSUM(builder, checksum)
+            addFILECREATION(builder, fileCreationOffset)
+            addOBTIME(builder, obTimeOffset)
+            addORIGSENSORID(builder, origSensorIdOffset)
+            addIDSENSOR(builder, idSensorOffset)
+            addID(builder, idOffset)
+            addNUMELEMENTS(builder, numElements)
+            addSECTORNUM(builder, sectorNum)
+            addQCVALUE(builder, qcValue)
             return endWTH(builder)
         }
         fun startWTH(builder: FlatBufferBuilder) = builder.startTable(32)
-        fun addID(builder: FlatBufferBuilder, ID: Int) = builder.addOffset(0, ID, 0)
-        fun addID_SENSOR(builder: FlatBufferBuilder, ID_SENSOR: Int) = builder.addOffset(1, ID_SENSOR, 0)
-        fun addORIG_SENSOR_ID(builder: FlatBufferBuilder, ORIG_SENSOR_ID: Int) = builder.addOffset(2, ORIG_SENSOR_ID, 0)
-        fun addOB_TIME(builder: FlatBufferBuilder, OB_TIME: Int) = builder.addOffset(3, OB_TIME, 0)
-        fun addFILE_CREATION(builder: FlatBufferBuilder, FILE_CREATION: Int) = builder.addOffset(4, FILE_CREATION, 0)
-        fun addQC_VALUE(builder: FlatBufferBuilder, QC_VALUE: UByte) = builder.addByte(5, QC_VALUE.toByte(), 0)
-        fun addTERM_ALT(builder: FlatBufferBuilder, TERM_ALT: Double) = builder.addDouble(6, TERM_ALT, 0.0)
-        fun addAVG_TX_PWR(builder: FlatBufferBuilder, AVG_TX_PWR: Double) = builder.addDouble(7, AVG_TX_PWR, 0.0)
-        fun addAVG_REF_PWR(builder: FlatBufferBuilder, AVG_REF_PWR: Double) = builder.addDouble(8, AVG_REF_PWR, 0.0)
-        fun addSECTOR_NUM(builder: FlatBufferBuilder, SECTOR_NUM: UShort) = builder.addShort(9, SECTOR_NUM.toShort(), 0)
-        fun addNUM_ELEMENTS(builder: FlatBufferBuilder, NUM_ELEMENTS: UShort) = builder.addShort(10, NUM_ELEMENTS.toShort(), 0)
-        fun addCHECKSUM(builder: FlatBufferBuilder, CHECKSUM: UInt) = builder.addInt(11, CHECKSUM.toInt(), 0)
-        fun addSIG_PWRS(builder: FlatBufferBuilder, SIG_PWRS: Int) = builder.addOffset(12, SIG_PWRS, 0)
+        fun addID(builder: FlatBufferBuilder, id: Int) = builder.addOffset(0, id, 0)
+        fun addIDSENSOR(builder: FlatBufferBuilder, idSensor: Int) = builder.addOffset(1, idSensor, 0)
+        fun addORIGSENSORID(builder: FlatBufferBuilder, origSensorId: Int) = builder.addOffset(2, origSensorId, 0)
+        fun addOBTIME(builder: FlatBufferBuilder, obTime: Int) = builder.addOffset(3, obTime, 0)
+        fun addFILECREATION(builder: FlatBufferBuilder, fileCreation: Int) = builder.addOffset(4, fileCreation, 0)
+        fun addQCVALUE(builder: FlatBufferBuilder, qcValue: UByte) = builder.addByte(5, qcValue.toByte(), 0)
+        fun addTERMALT(builder: FlatBufferBuilder, termAlt: Double) = builder.addDouble(6, termAlt, 0.0)
+        fun addAVGTXPWR(builder: FlatBufferBuilder, avgTxPwr: Double) = builder.addDouble(7, avgTxPwr, 0.0)
+        fun addAVGREFPWR(builder: FlatBufferBuilder, avgRefPwr: Double) = builder.addDouble(8, avgRefPwr, 0.0)
+        fun addSECTORNUM(builder: FlatBufferBuilder, sectorNum: UShort) = builder.addShort(9, sectorNum.toShort(), 0)
+        fun addNUMELEMENTS(builder: FlatBufferBuilder, numElements: UShort) = builder.addShort(10, numElements.toShort(), 0)
+        fun addCHECKSUM(builder: FlatBufferBuilder, checksum: UInt) = builder.addInt(11, checksum.toInt(), 0)
+        fun addSIGPWRS(builder: FlatBufferBuilder, sigPwrs: Int) = builder.addOffset(12, sigPwrs, 0)
         fun createSigPwrsVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
             builder.startVector(8, data.size, 8)
             for (i in data.size - 1 downTo 0) {
@@ -501,7 +501,7 @@ class WTH : Table() {
             return builder.endVector()
         }
         fun startSigPwrsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
-        fun addNOISE_LVLS(builder: FlatBufferBuilder, NOISE_LVLS: Int) = builder.addOffset(13, NOISE_LVLS, 0)
+        fun addNOISELVLS(builder: FlatBufferBuilder, noiseLvls: Int) = builder.addOffset(13, noiseLvls, 0)
         fun createNoiseLvlsVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
             builder.startVector(8, data.size, 8)
             for (i in data.size - 1 downTo 0) {
@@ -510,7 +510,7 @@ class WTH : Table() {
             return builder.endVector()
         }
         fun startNoiseLvlsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
-        fun addSPEC_WIDTHS(builder: FlatBufferBuilder, SPEC_WIDTHS: Int) = builder.addOffset(14, SPEC_WIDTHS, 0)
+        fun addSPECWIDTHS(builder: FlatBufferBuilder, specWidths: Int) = builder.addOffset(14, specWidths, 0)
         fun createSpecWidthsVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
             builder.startVector(8, data.size, 8)
             for (i in data.size - 1 downTo 0) {
@@ -519,7 +519,7 @@ class WTH : Table() {
             return builder.endVector()
         }
         fun startSpecWidthsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
-        fun addFIRST_GUESS_AVGS(builder: FlatBufferBuilder, FIRST_GUESS_AVGS: Int) = builder.addOffset(15, FIRST_GUESS_AVGS, 0)
+        fun addFIRSTGUESSAVGS(builder: FlatBufferBuilder, firstGuessAvgs: Int) = builder.addOffset(15, firstGuessAvgs, 0)
         fun createFirstGuessAvgsVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
             builder.startVector(8, data.size, 8)
             for (i in data.size - 1 downTo 0) {
@@ -528,7 +528,7 @@ class WTH : Table() {
             return builder.endVector()
         }
         fun startFirstGuessAvgsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
-        fun addTD_AVG_SAMPLE_NUMS(builder: FlatBufferBuilder, TD_AVG_SAMPLE_NUMS: Int) = builder.addOffset(16, TD_AVG_SAMPLE_NUMS, 0)
+        fun addTDAVGSAMPLENUMS(builder: FlatBufferBuilder, tdAvgSampleNums: Int) = builder.addOffset(16, tdAvgSampleNums, 0)
         fun createTdAvgSampleNumsVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
             builder.startVector(8, data.size, 8)
             for (i in data.size - 1 downTo 0) {
@@ -537,7 +537,7 @@ class WTH : Table() {
             return builder.endVector()
         }
         fun startTdAvgSampleNumsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
-        fun addCO_INTEGS(builder: FlatBufferBuilder, CO_INTEGS: Int) = builder.addOffset(17, CO_INTEGS, 0)
+        fun addCOINTEGS(builder: FlatBufferBuilder, coIntegs: Int) = builder.addOffset(17, coIntegs, 0)
         fun createCoIntegsVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
             builder.startVector(8, data.size, 8)
             for (i in data.size - 1 downTo 0) {
@@ -546,7 +546,7 @@ class WTH : Table() {
             return builder.endVector()
         }
         fun startCoIntegsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
-        fun addSPEC_AVGS(builder: FlatBufferBuilder, SPEC_AVGS: Int) = builder.addOffset(18, SPEC_AVGS, 0)
+        fun addSPECAVGS(builder: FlatBufferBuilder, specAvgs: Int) = builder.addOffset(18, specAvgs, 0)
         fun createSpecAvgsVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
             builder.startVector(8, data.size, 8)
             for (i in data.size - 1 downTo 0) {
@@ -555,7 +555,7 @@ class WTH : Table() {
             return builder.endVector()
         }
         fun startSpecAvgsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
-        fun addINTERPULSE_PERIODS(builder: FlatBufferBuilder, INTERPULSE_PERIODS: Int) = builder.addOffset(19, INTERPULSE_PERIODS, 0)
+        fun addINTERPULSEPERIODS(builder: FlatBufferBuilder, interpulsePeriods: Int) = builder.addOffset(19, interpulsePeriods, 0)
         fun createInterpulsePeriodsVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
             builder.startVector(8, data.size, 8)
             for (i in data.size - 1 downTo 0) {
@@ -564,7 +564,7 @@ class WTH : Table() {
             return builder.endVector()
         }
         fun startInterpulsePeriodsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
-        fun addDOPP_VELS(builder: FlatBufferBuilder, DOPP_VELS: Int) = builder.addOffset(20, DOPP_VELS, 0)
+        fun addDOPPVELS(builder: FlatBufferBuilder, doppVels: Int) = builder.addOffset(20, doppVels, 0)
         fun createDoppVelsVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
             builder.startVector(8, data.size, 8)
             for (i in data.size - 1 downTo 0) {
@@ -573,7 +573,7 @@ class WTH : Table() {
             return builder.endVector()
         }
         fun startDoppVelsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
-        fun addCONS_RECS(builder: FlatBufferBuilder, CONS_RECS: Int) = builder.addOffset(21, CONS_RECS, 0)
+        fun addCONSRECS(builder: FlatBufferBuilder, consRecs: Int) = builder.addOffset(21, consRecs, 0)
         fun createConsRecsVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
             builder.startVector(8, data.size, 8)
             for (i in data.size - 1 downTo 0) {
@@ -582,7 +582,7 @@ class WTH : Table() {
             return builder.endVector()
         }
         fun startConsRecsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
-        fun addSNRS(builder: FlatBufferBuilder, SNRS: Int) = builder.addOffset(22, SNRS, 0)
+        fun addSNRS(builder: FlatBufferBuilder, snrs: Int) = builder.addOffset(22, snrs, 0)
         fun createSnrsVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
             builder.startVector(8, data.size, 8)
             for (i in data.size - 1 downTo 0) {
@@ -591,12 +591,12 @@ class WTH : Table() {
             return builder.endVector()
         }
         fun startSnrsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
-        fun addSIG_STRENGTH(builder: FlatBufferBuilder, SIG_STRENGTH: Double) = builder.addDouble(23, SIG_STRENGTH, 0.0)
-        fun addSEMI_MAJOR_AXIS(builder: FlatBufferBuilder, SEMI_MAJOR_AXIS: Double) = builder.addDouble(24, SEMI_MAJOR_AXIS, 0.0)
-        fun addSEMI_MINOR_AXIS(builder: FlatBufferBuilder, SEMI_MINOR_AXIS: Double) = builder.addDouble(25, SEMI_MINOR_AXIS, 0.0)
-        fun addANGLE_ORIENTATION(builder: FlatBufferBuilder, ANGLE_ORIENTATION: Double) = builder.addDouble(26, ANGLE_ORIENTATION, 0.0)
-        fun addLIGHT_EVENT_NUM(builder: FlatBufferBuilder, LIGHT_EVENT_NUM: UInt) = builder.addInt(27, LIGHT_EVENT_NUM.toInt(), 0)
-        fun addLIGHT_DET_SENSORS(builder: FlatBufferBuilder, LIGHT_DET_SENSORS: Int) = builder.addOffset(28, LIGHT_DET_SENSORS, 0)
+        fun addSIGSTRENGTH(builder: FlatBufferBuilder, sigStrength: Double) = builder.addDouble(23, sigStrength, 0.0)
+        fun addSEMIMAJORAXIS(builder: FlatBufferBuilder, semiMajorAxis: Double) = builder.addDouble(24, semiMajorAxis, 0.0)
+        fun addSEMIMINORAXIS(builder: FlatBufferBuilder, semiMinorAxis: Double) = builder.addDouble(25, semiMinorAxis, 0.0)
+        fun addANGLEORIENTATION(builder: FlatBufferBuilder, angleOrientation: Double) = builder.addDouble(26, angleOrientation, 0.0)
+        fun addLIGHTEVENTNUM(builder: FlatBufferBuilder, lightEventNum: UInt) = builder.addInt(27, lightEventNum.toInt(), 0)
+        fun addLIGHTDETSENSORS(builder: FlatBufferBuilder, lightDetSensors: Int) = builder.addOffset(28, lightDetSensors, 0)
         fun createLightDetSensorsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -605,8 +605,8 @@ class WTH : Table() {
             return builder.endVector()
         }
         fun startLightDetSensorsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addPOS_CONFIDENCE(builder: FlatBufferBuilder, POS_CONFIDENCE: Double) = builder.addDouble(29, POS_CONFIDENCE, 0.0)
-        fun addSRC_TYPS(builder: FlatBufferBuilder, SRC_TYPS: Int) = builder.addOffset(30, SRC_TYPS, 0)
+        fun addPOSCONFIDENCE(builder: FlatBufferBuilder, posConfidence: Double) = builder.addDouble(29, posConfidence, 0.0)
+        fun addSRCTYPS(builder: FlatBufferBuilder, srcTyps: Int) = builder.addOffset(30, srcTyps, 0)
         fun createSrcTypsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -615,7 +615,7 @@ class WTH : Table() {
             return builder.endVector()
         }
         fun startSrcTypsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addSRC_IDS(builder: FlatBufferBuilder, SRC_IDS: Int) = builder.addOffset(31, SRC_IDS, 0)
+        fun addSRCIDS(builder: FlatBufferBuilder, srcIds: Int) = builder.addOffset(31, srcIds, 0)
         fun createSrcIdsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {

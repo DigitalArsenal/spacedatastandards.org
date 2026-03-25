@@ -306,6 +306,12 @@ def MTIStartMISSIONSVector(builder, numElems):
 def StartMISSIONSVector(builder, numElems):
     return MTIStartMISSIONSVector(builder, numElems)
 
+def MTICreateMISSIONSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateMISSIONSVector(builder, data):
+    MTICreateMISSIONSVector(builder, data)
+
 def MTIAddDWELLS(builder, DWELLS):
     builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(DWELLS), 0)
 
@@ -317,6 +323,12 @@ def MTIStartDWELLSVector(builder, numElems):
 
 def StartDWELLSVector(builder, numElems):
     return MTIStartDWELLSVector(builder, numElems)
+
+def MTICreateDWELLSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateDWELLSVector(builder, data):
+    MTICreateDWELLSVector(builder, data)
 
 def MTIAddHRRS(builder, HRRS):
     builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(HRRS), 0)
@@ -330,6 +342,12 @@ def MTIStartHRRSVector(builder, numElems):
 def StartHRRSVector(builder, numElems):
     return MTIStartHRRSVector(builder, numElems)
 
+def MTICreateHRRSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateHRRSVector(builder, data):
+    MTICreateHRRSVector(builder, data)
+
 def MTIAddJOB_DEFS(builder, JOB_DEFS):
     builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(JOB_DEFS), 0)
 
@@ -341,6 +359,12 @@ def MTIStartJOB_DEFSVector(builder, numElems):
 
 def StartJOB_DEFSVector(builder, numElems):
     return MTIStartJOB_DEFSVector(builder, numElems)
+
+def MTICreateJOB_DEFSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateJOB_DEFSVector(builder, data):
+    MTICreateJOB_DEFSVector(builder, data)
 
 def MTIAddFREE_TEXTS(builder, FREE_TEXTS):
     builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(FREE_TEXTS), 0)
@@ -354,6 +378,12 @@ def MTIStartFREE_TEXTSVector(builder, numElems):
 def StartFREE_TEXTSVector(builder, numElems):
     return MTIStartFREE_TEXTSVector(builder, numElems)
 
+def MTICreateFREE_TEXTSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateFREE_TEXTSVector(builder, data):
+    MTICreateFREE_TEXTSVector(builder, data)
+
 def MTIAddPLATFORM_LOCS(builder, PLATFORM_LOCS):
     builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(PLATFORM_LOCS), 0)
 
@@ -366,6 +396,12 @@ def MTIStartPLATFORM_LOCSVector(builder, numElems):
 def StartPLATFORM_LOCSVector(builder, numElems):
     return MTIStartPLATFORM_LOCSVector(builder, numElems)
 
+def MTICreatePLATFORM_LOCSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreatePLATFORM_LOCSVector(builder, data):
+    MTICreatePLATFORM_LOCSVector(builder, data)
+
 def MTIAddJOB_REQUESTS(builder, JOB_REQUESTS):
     builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(JOB_REQUESTS), 0)
 
@@ -377,6 +413,12 @@ def MTIStartJOB_REQUESTSVector(builder, numElems):
 
 def StartJOB_REQUESTSVector(builder, numElems):
     return MTIStartJOB_REQUESTSVector(builder, numElems)
+
+def MTICreateJOB_REQUESTSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateJOB_REQUESTSVector(builder, data):
+    MTICreateJOB_REQUESTSVector(builder, data)
 
 def MTIEnd(builder):
     return builder.EndObject()
@@ -392,28 +434,45 @@ except:
 class MTIT(object):
 
     # MTIT
-    def __init__(self):
-        self.ID = None  # type: str
-        self.STANDARD = 0  # type: int
-        self.P3 = None  # type: str
-        self.P6 = None  # type: str
-        self.P7 = None  # type: str
-        self.P8 = None  # type: str
-        self.P9 = 0  # type: int
-        self.P10 = 0  # type: int
-        self.MISSIONS = None  # type: List[str]
-        self.DWELLS = None  # type: List[str]
-        self.HRRS = None  # type: List[str]
-        self.JOB_DEFS = None  # type: List[str]
-        self.FREE_TEXTS = None  # type: List[str]
-        self.PLATFORM_LOCS = None  # type: List[str]
-        self.JOB_REQUESTS = None  # type: List[str]
+    def __init__(
+        self,
+        ID = None,
+        STANDARD = 0,
+        P3 = None,
+        P6 = None,
+        P7 = None,
+        P8 = None,
+        P9 = 0,
+        P10 = 0,
+        MISSIONS = None,
+        DWELLS = None,
+        HRRS = None,
+        JOB_DEFS = None,
+        FREE_TEXTS = None,
+        PLATFORM_LOCS = None,
+        JOB_REQUESTS = None,
+    ):
+        self.ID = ID  # type: Optional[str]
+        self.STANDARD = STANDARD  # type: int
+        self.P3 = P3  # type: Optional[str]
+        self.P6 = P6  # type: Optional[str]
+        self.P7 = P7  # type: Optional[str]
+        self.P8 = P8  # type: Optional[str]
+        self.P9 = P9  # type: int
+        self.P10 = P10  # type: int
+        self.MISSIONS = MISSIONS  # type: Optional[List[Optional[str]]]
+        self.DWELLS = DWELLS  # type: Optional[List[Optional[str]]]
+        self.HRRS = HRRS  # type: Optional[List[Optional[str]]]
+        self.JOB_DEFS = JOB_DEFS  # type: Optional[List[Optional[str]]]
+        self.FREE_TEXTS = FREE_TEXTS  # type: Optional[List[Optional[str]]]
+        self.PLATFORM_LOCS = PLATFORM_LOCS  # type: Optional[List[Optional[str]]]
+        self.JOB_REQUESTS = JOB_REQUESTS  # type: Optional[List[Optional[str]]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        MTI = MTI()
-        MTI.Init(buf, pos)
-        return cls.InitFromObj(MTI)
+        tmpMti = MTI()
+        tmpMti.Init(buf, pos)
+        return cls.InitFromObj(tmpMti)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -421,9 +480,9 @@ class MTIT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, MTI):
+    def InitFromObj(cls, tmpMti):
         x = MTIT()
-        x._UnPack(MTI)
+        x._UnPack(tmpMti)
         return x
 
     # MTIT

@@ -51,6 +51,10 @@ func (rcv *ENGINE) ENGINE_NAME() []byte {
 	return nil
 }
 
+func (rcv *ENGINE) EngineName() []byte {
+	return rcv.ENGINE_NAME()
+}
+
 /// Engine Name
 /// Type of Engine
 func (rcv *ENGINE) TYPE() ENGINE_TYPE {
@@ -61,9 +65,17 @@ func (rcv *ENGINE) TYPE() ENGINE_TYPE {
 	return 0
 }
 
+func (rcv *ENGINE) Type() ENGINE_TYPE {
+	return rcv.TYPE()
+}
+
 /// Type of Engine
 func (rcv *ENGINE) MutateTYPE(n ENGINE_TYPE) bool {
 	return rcv._tab.MutateInt8Slot(6, int8(n))
+}
+
+func (rcv *ENGINE) MutateType(n ENGINE_TYPE) bool {
+	return rcv.MutateTYPE(n)
 }
 
 /// Thrust Produced by the Engine (in Newtons)
@@ -75,9 +87,17 @@ func (rcv *ENGINE) THRUST() float64 {
 	return 0.0
 }
 
+func (rcv *ENGINE) Thrust() float64 {
+	return rcv.THRUST()
+}
+
 /// Thrust Produced by the Engine (in Newtons)
 func (rcv *ENGINE) MutateTHRUST(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(8, n)
+}
+
+func (rcv *ENGINE) MutateThrust(n float64) bool {
+	return rcv.MutateTHRUST(n)
 }
 
 func ENGINEStart(builder *flatbuffers.Builder) {
@@ -86,11 +106,20 @@ func ENGINEStart(builder *flatbuffers.Builder) {
 func ENGINEAddENGINE_NAME(builder *flatbuffers.Builder, ENGINE_NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ENGINE_NAME), 0)
 }
+func ENGINEAddEngineName(builder *flatbuffers.Builder, ENGINE_NAME flatbuffers.UOffsetT) {
+	ENGINEAddENGINE_NAME(builder, ENGINE_NAME)
+}
 func ENGINEAddTYPE(builder *flatbuffers.Builder, TYPE ENGINE_TYPE) {
 	builder.PrependInt8Slot(1, int8(TYPE), 0)
 }
+func ENGINEAddType(builder *flatbuffers.Builder, TYPE ENGINE_TYPE) {
+	ENGINEAddTYPE(builder, TYPE)
+}
 func ENGINEAddTHRUST(builder *flatbuffers.Builder, THRUST float64) {
 	builder.PrependFloat64Slot(2, THRUST, 0.0)
+}
+func ENGINEAddThrust(builder *flatbuffers.Builder, THRUST float64) {
+	ENGINEAddTHRUST(builder, THRUST)
 }
 func ENGINEEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

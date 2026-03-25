@@ -187,23 +187,35 @@ def End(builder):
 class ephemerisDataLineT(object):
 
     # ephemerisDataLineT
-    def __init__(self):
-        self.EPOCH = None  # type: str
-        self.X = 0.0  # type: float
-        self.Y = 0.0  # type: float
-        self.Z = 0.0  # type: float
-        self.X_DOT = 0.0  # type: float
-        self.Y_DOT = 0.0  # type: float
-        self.Z_DOT = 0.0  # type: float
-        self.X_DDOT = 0.0  # type: float
-        self.Y_DDOT = 0.0  # type: float
-        self.Z_DDOT = 0.0  # type: float
+    def __init__(
+        self,
+        EPOCH = None,
+        X = 0.0,
+        Y = 0.0,
+        Z = 0.0,
+        X_DOT = 0.0,
+        Y_DOT = 0.0,
+        Z_DOT = 0.0,
+        X_DDOT = 0.0,
+        Y_DDOT = 0.0,
+        Z_DDOT = 0.0,
+    ):
+        self.EPOCH = EPOCH  # type: Optional[str]
+        self.X = X  # type: float
+        self.Y = Y  # type: float
+        self.Z = Z  # type: float
+        self.X_DOT = X_DOT  # type: float
+        self.Y_DOT = Y_DOT  # type: float
+        self.Z_DOT = Z_DOT  # type: float
+        self.X_DDOT = X_DDOT  # type: float
+        self.Y_DDOT = Y_DDOT  # type: float
+        self.Z_DDOT = Z_DDOT  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        ephemerisDataLine = ephemerisDataLine()
-        ephemerisDataLine.Init(buf, pos)
-        return cls.InitFromObj(ephemerisDataLine)
+        tmpEphemerisDataLine = ephemerisDataLine()
+        tmpEphemerisDataLine.Init(buf, pos)
+        return cls.InitFromObj(tmpEphemerisDataLine)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -211,9 +223,9 @@ class ephemerisDataLineT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, ephemerisDataLine):
+    def InitFromObj(cls, tmpEphemerisDataLine):
         x = ephemerisDataLineT()
-        x._UnPack(ephemerisDataLine)
+        x._UnPack(tmpEphemerisDataLine)
         return x
 
     # ephemerisDataLineT

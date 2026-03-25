@@ -63,6 +63,10 @@ func (rcv *MTI) ID() []byte {
 	return nil
 }
 
+func (rcv *MTI) Id() []byte {
+	return rcv.ID()
+}
+
 /// Unique identifier
 /// MTI standard (e.g., STANAG 4607)
 func (rcv *MTI) STANDARD() mtiStandard {
@@ -73,9 +77,17 @@ func (rcv *MTI) STANDARD() mtiStandard {
 	return 0
 }
 
+func (rcv *MTI) Standard() mtiStandard {
+	return rcv.STANDARD()
+}
+
 /// MTI standard (e.g., STANAG 4607)
 func (rcv *MTI) MutateSTANDARD(n mtiStandard) bool {
 	return rcv._tab.MutateInt8Slot(6, int8(n))
+}
+
+func (rcv *MTI) MutateStandard(n mtiStandard) bool {
+	return rcv.MutateSTANDARD(n)
 }
 
 /// Platform type (P3 field)
@@ -156,12 +168,20 @@ func (rcv *MTI) MISSIONS(j int) []byte {
 	return nil
 }
 
+func (rcv *MTI) Missions(j int) []byte {
+	return rcv.MISSIONS(j)
+}
+
 func (rcv *MTI) MISSIONSLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *MTI) MissionsLength() int {
+	return rcv.MISSIONSLength()
 }
 
 /// Mission segment identifiers
@@ -175,12 +195,20 @@ func (rcv *MTI) DWELLS(j int) []byte {
 	return nil
 }
 
+func (rcv *MTI) Dwells(j int) []byte {
+	return rcv.DWELLS(j)
+}
+
 func (rcv *MTI) DWELLSLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *MTI) DwellsLength() int {
+	return rcv.DWELLSLength()
 }
 
 /// Dwell segment data references
@@ -194,12 +222,20 @@ func (rcv *MTI) HRRS(j int) []byte {
 	return nil
 }
 
+func (rcv *MTI) Hrrs(j int) []byte {
+	return rcv.HRRS(j)
+}
+
 func (rcv *MTI) HRRSLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *MTI) HrrsLength() int {
+	return rcv.HRRSLength()
 }
 
 /// High range resolution profile references
@@ -213,12 +249,20 @@ func (rcv *MTI) JOB_DEFS(j int) []byte {
 	return nil
 }
 
+func (rcv *MTI) JobDefs(j int) []byte {
+	return rcv.JOB_DEFS(j)
+}
+
 func (rcv *MTI) JOB_DEFSLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *MTI) JobDefsLength() int {
+	return rcv.JOB_DEFSLength()
 }
 
 /// Job definition references
@@ -232,12 +276,20 @@ func (rcv *MTI) FREE_TEXTS(j int) []byte {
 	return nil
 }
 
+func (rcv *MTI) FreeTexts(j int) []byte {
+	return rcv.FREE_TEXTS(j)
+}
+
 func (rcv *MTI) FREE_TEXTSLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *MTI) FreeTextsLength() int {
+	return rcv.FREE_TEXTSLength()
 }
 
 /// Free text entries
@@ -251,12 +303,20 @@ func (rcv *MTI) PLATFORM_LOCS(j int) []byte {
 	return nil
 }
 
+func (rcv *MTI) PlatformLocs(j int) []byte {
+	return rcv.PLATFORM_LOCS(j)
+}
+
 func (rcv *MTI) PLATFORM_LOCSLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *MTI) PlatformLocsLength() int {
+	return rcv.PLATFORM_LOCSLength()
 }
 
 /// Platform location data references
@@ -270,12 +330,20 @@ func (rcv *MTI) JOB_REQUESTS(j int) []byte {
 	return nil
 }
 
+func (rcv *MTI) JobRequests(j int) []byte {
+	return rcv.JOB_REQUESTS(j)
+}
+
 func (rcv *MTI) JOB_REQUESTSLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *MTI) JobRequestsLength() int {
+	return rcv.JOB_REQUESTSLength()
 }
 
 /// Job request references
@@ -285,8 +353,14 @@ func MTIStart(builder *flatbuffers.Builder) {
 func MTIAddID(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ID), 0)
 }
+func MTIAddId(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
+	MTIAddID(builder, ID)
+}
 func MTIAddSTANDARD(builder *flatbuffers.Builder, STANDARD mtiStandard) {
 	builder.PrependInt8Slot(1, int8(STANDARD), 0)
+}
+func MTIAddStandard(builder *flatbuffers.Builder, STANDARD mtiStandard) {
+	MTIAddSTANDARD(builder, STANDARD)
 }
 func MTIAddP3(builder *flatbuffers.Builder, P3 flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(P3), 0)
@@ -309,44 +383,86 @@ func MTIAddP10(builder *flatbuffers.Builder, P10 uint16) {
 func MTIAddMISSIONS(builder *flatbuffers.Builder, MISSIONS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(MISSIONS), 0)
 }
+func MTIAddMissions(builder *flatbuffers.Builder, MISSIONS flatbuffers.UOffsetT) {
+	MTIAddMISSIONS(builder, MISSIONS)
+}
 func MTIStartMISSIONSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func MTIStartMissionsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return MTIStartMISSIONSVector(builder, numElems)
 }
 func MTIAddDWELLS(builder *flatbuffers.Builder, DWELLS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(DWELLS), 0)
 }
+func MTIAddDwells(builder *flatbuffers.Builder, DWELLS flatbuffers.UOffsetT) {
+	MTIAddDWELLS(builder, DWELLS)
+}
 func MTIStartDWELLSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func MTIStartDwellsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return MTIStartDWELLSVector(builder, numElems)
 }
 func MTIAddHRRS(builder *flatbuffers.Builder, HRRS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(HRRS), 0)
 }
+func MTIAddHrrs(builder *flatbuffers.Builder, HRRS flatbuffers.UOffsetT) {
+	MTIAddHRRS(builder, HRRS)
+}
 func MTIStartHRRSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func MTIStartHrrsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return MTIStartHRRSVector(builder, numElems)
 }
 func MTIAddJOB_DEFS(builder *flatbuffers.Builder, JOB_DEFS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(JOB_DEFS), 0)
 }
+func MTIAddJobDefs(builder *flatbuffers.Builder, JOB_DEFS flatbuffers.UOffsetT) {
+	MTIAddJOB_DEFS(builder, JOB_DEFS)
+}
 func MTIStartJOB_DEFSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func MTIStartJobDefsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return MTIStartJOB_DEFSVector(builder, numElems)
 }
 func MTIAddFREE_TEXTS(builder *flatbuffers.Builder, FREE_TEXTS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(12, flatbuffers.UOffsetT(FREE_TEXTS), 0)
 }
+func MTIAddFreeTexts(builder *flatbuffers.Builder, FREE_TEXTS flatbuffers.UOffsetT) {
+	MTIAddFREE_TEXTS(builder, FREE_TEXTS)
+}
 func MTIStartFREE_TEXTSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func MTIStartFreeTextsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return MTIStartFREE_TEXTSVector(builder, numElems)
 }
 func MTIAddPLATFORM_LOCS(builder *flatbuffers.Builder, PLATFORM_LOCS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(13, flatbuffers.UOffsetT(PLATFORM_LOCS), 0)
 }
+func MTIAddPlatformLocs(builder *flatbuffers.Builder, PLATFORM_LOCS flatbuffers.UOffsetT) {
+	MTIAddPLATFORM_LOCS(builder, PLATFORM_LOCS)
+}
 func MTIStartPLATFORM_LOCSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func MTIStartPlatformLocsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return MTIStartPLATFORM_LOCSVector(builder, numElems)
 }
 func MTIAddJOB_REQUESTS(builder *flatbuffers.Builder, JOB_REQUESTS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(14, flatbuffers.UOffsetT(JOB_REQUESTS), 0)
 }
+func MTIAddJobRequests(builder *flatbuffers.Builder, JOB_REQUESTS flatbuffers.UOffsetT) {
+	MTIAddJOB_REQUESTS(builder, JOB_REQUESTS)
+}
 func MTIStartJOB_REQUESTSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func MTIStartJobRequestsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return MTIStartJOB_REQUESTSVector(builder, numElems)
 }
 func MTIEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

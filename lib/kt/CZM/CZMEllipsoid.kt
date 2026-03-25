@@ -32,7 +32,7 @@ class CZMEllipsoid : Table() {
     /**
      * Whether the ellipsoid is displayed
      */
-    val SHOW : Boolean
+    val show : Boolean
         get() {
             val o = __offset(4)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -40,7 +40,7 @@ class CZMEllipsoid : Table() {
     /**
      * X radius in meters
      */
-    val RADII_X : Double
+    val radiiX : Double
         get() {
             val o = __offset(6)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -48,7 +48,7 @@ class CZMEllipsoid : Table() {
     /**
      * Y radius in meters
      */
-    val RADII_Y : Double
+    val radiiY : Double
         get() {
             val o = __offset(8)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -56,7 +56,7 @@ class CZMEllipsoid : Table() {
     /**
      * Z radius in meters
      */
-    val RADII_Z : Double
+    val radiiZ : Double
         get() {
             val o = __offset(10)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -64,7 +64,7 @@ class CZMEllipsoid : Table() {
     /**
      * Inner X radius
      */
-    val INNER_RADII_X : Double
+    val innerRadiiX : Double
         get() {
             val o = __offset(12)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -72,7 +72,7 @@ class CZMEllipsoid : Table() {
     /**
      * Inner Y radius
      */
-    val INNER_RADII_Y : Double
+    val innerRadiiY : Double
         get() {
             val o = __offset(14)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -80,7 +80,7 @@ class CZMEllipsoid : Table() {
     /**
      * Inner Z radius
      */
-    val INNER_RADII_Z : Double
+    val innerRadiiZ : Double
         get() {
             val o = __offset(16)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -88,7 +88,7 @@ class CZMEllipsoid : Table() {
     /**
      * Minimum clock angle in radians
      */
-    val MINIMUM_CLOCK : Double
+    val minimumClock : Double
         get() {
             val o = __offset(18)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -96,7 +96,7 @@ class CZMEllipsoid : Table() {
     /**
      * Maximum clock angle in radians
      */
-    val MAXIMUM_CLOCK : Double
+    val maximumClock : Double
         get() {
             val o = __offset(20)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -104,7 +104,7 @@ class CZMEllipsoid : Table() {
     /**
      * Minimum cone angle in radians
      */
-    val MINIMUM_CONE : Double
+    val minimumCone : Double
         get() {
             val o = __offset(22)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -112,7 +112,7 @@ class CZMEllipsoid : Table() {
     /**
      * Maximum cone angle in radians
      */
-    val MAXIMUM_CONE : Double
+    val maximumCone : Double
         get() {
             val o = __offset(24)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -120,7 +120,7 @@ class CZMEllipsoid : Table() {
     /**
      * Height reference
      */
-    val HEIGHT_REFERENCE : String?
+    val heightReference : String?
         get() {
             val o = __offset(26)
             return if (o != 0) {
@@ -129,12 +129,12 @@ class CZMEllipsoid : Table() {
                 null
             }
         }
-    val HEIGHT_REFERENCEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(26, 1)
-    fun HEIGHT_REFERENCEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 26, 1)
+    val heightReferenceAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(26, 1)
+    fun heightReferenceInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 26, 1)
     /**
      * Fill flag
      */
-    val FILL : Boolean
+    val fill : Boolean
         get() {
             val o = __offset(28)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -142,8 +142,8 @@ class CZMEllipsoid : Table() {
     /**
      * Surface material
      */
-    val MATERIAL : CZMMaterial? get() = MATERIAL(CZMMaterial())
-    fun MATERIAL(obj: CZMMaterial) : CZMMaterial? {
+    val material : CZMMaterial? get() = material(CZMMaterial())
+    fun material(obj: CZMMaterial) : CZMMaterial? {
         val o = __offset(30)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -154,7 +154,7 @@ class CZMEllipsoid : Table() {
     /**
      * Outline flag
      */
-    val OUTLINE : Boolean
+    val outline : Boolean
         get() {
             val o = __offset(32)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -162,8 +162,8 @@ class CZMEllipsoid : Table() {
     /**
      * Outline color
      */
-    val OUTLINE_COLOR : CZMColor? get() = OUTLINE_COLOR(CZMColor())
-    fun OUTLINE_COLOR(obj: CZMColor) : CZMColor? {
+    val outlineColor : CZMColor? get() = outlineColor(CZMColor())
+    fun outlineColor(obj: CZMColor) : CZMColor? {
         val o = __offset(34)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -174,7 +174,7 @@ class CZMEllipsoid : Table() {
     /**
      * Outline width
      */
-    val OUTLINE_WIDTH : Double
+    val outlineWidth : Double
         get() {
             val o = __offset(36)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -182,7 +182,7 @@ class CZMEllipsoid : Table() {
     /**
      * Stack partitions
      */
-    val STACK_PARTITIONS : Int
+    val stackPartitions : Int
         get() {
             val o = __offset(38)
             return if(o != 0) bb.getInt(o + bb_pos) else 0
@@ -190,7 +190,7 @@ class CZMEllipsoid : Table() {
     /**
      * Slice partitions
      */
-    val SLICE_PARTITIONS : Int
+    val slicePartitions : Int
         get() {
             val o = __offset(40)
             return if(o != 0) bb.getInt(o + bb_pos) else 0
@@ -198,7 +198,7 @@ class CZMEllipsoid : Table() {
     /**
      * Subdivisions
      */
-    val SUBDIVISIONS : Int
+    val subdivisions : Int
         get() {
             val o = __offset(42)
             return if(o != 0) bb.getInt(o + bb_pos) else 0
@@ -206,7 +206,7 @@ class CZMEllipsoid : Table() {
     /**
      * Shadow mode
      */
-    val SHADOWS : String?
+    val shadows : String?
         get() {
             val o = __offset(44)
             return if (o != 0) {
@@ -215,62 +215,62 @@ class CZMEllipsoid : Table() {
                 null
             }
         }
-    val SHADOWSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(44, 1)
-    fun SHADOWSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 44, 1)
+    val shadowsAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(44, 1)
+    fun shadowsInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 44, 1)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsCZMEllipsoid(_bb: ByteBuffer): CZMEllipsoid = getRootAsCZMEllipsoid(_bb, CZMEllipsoid())
         fun getRootAsCZMEllipsoid(_bb: ByteBuffer, obj: CZMEllipsoid): CZMEllipsoid {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createCZMEllipsoid(builder: FlatBufferBuilder, SHOW: Boolean, RADII_X: Double, RADII_Y: Double, RADII_Z: Double, INNER_RADII_X: Double, INNER_RADII_Y: Double, INNER_RADII_Z: Double, MINIMUM_CLOCK: Double, MAXIMUM_CLOCK: Double, MINIMUM_CONE: Double, MAXIMUM_CONE: Double, HEIGHT_REFERENCEOffset: Int, FILL: Boolean, MATERIALOffset: Int, OUTLINE: Boolean, OUTLINE_COLOROffset: Int, OUTLINE_WIDTH: Double, STACK_PARTITIONS: Int, SLICE_PARTITIONS: Int, SUBDIVISIONS: Int, SHADOWSOffset: Int) : Int {
+        fun createCZMEllipsoid(builder: FlatBufferBuilder, show: Boolean, radiiX: Double, radiiY: Double, radiiZ: Double, innerRadiiX: Double, innerRadiiY: Double, innerRadiiZ: Double, minimumClock: Double, maximumClock: Double, minimumCone: Double, maximumCone: Double, heightReferenceOffset: Int, fill: Boolean, materialOffset: Int, outline: Boolean, outlineColorOffset: Int, outlineWidth: Double, stackPartitions: Int, slicePartitions: Int, subdivisions: Int, shadowsOffset: Int) : Int {
             builder.startTable(21)
-            addOUTLINE_WIDTH(builder, OUTLINE_WIDTH)
-            addMAXIMUM_CONE(builder, MAXIMUM_CONE)
-            addMINIMUM_CONE(builder, MINIMUM_CONE)
-            addMAXIMUM_CLOCK(builder, MAXIMUM_CLOCK)
-            addMINIMUM_CLOCK(builder, MINIMUM_CLOCK)
-            addINNER_RADII_Z(builder, INNER_RADII_Z)
-            addINNER_RADII_Y(builder, INNER_RADII_Y)
-            addINNER_RADII_X(builder, INNER_RADII_X)
-            addRADII_Z(builder, RADII_Z)
-            addRADII_Y(builder, RADII_Y)
-            addRADII_X(builder, RADII_X)
-            addSHADOWS(builder, SHADOWSOffset)
-            addSUBDIVISIONS(builder, SUBDIVISIONS)
-            addSLICE_PARTITIONS(builder, SLICE_PARTITIONS)
-            addSTACK_PARTITIONS(builder, STACK_PARTITIONS)
-            addOUTLINE_COLOR(builder, OUTLINE_COLOROffset)
-            addMATERIAL(builder, MATERIALOffset)
-            addHEIGHT_REFERENCE(builder, HEIGHT_REFERENCEOffset)
-            addOUTLINE(builder, OUTLINE)
-            addFILL(builder, FILL)
-            addSHOW(builder, SHOW)
+            addOUTLINEWIDTH(builder, outlineWidth)
+            addMAXIMUMCONE(builder, maximumCone)
+            addMINIMUMCONE(builder, minimumCone)
+            addMAXIMUMCLOCK(builder, maximumClock)
+            addMINIMUMCLOCK(builder, minimumClock)
+            addINNERRADIIZ(builder, innerRadiiZ)
+            addINNERRADIIY(builder, innerRadiiY)
+            addINNERRADIIX(builder, innerRadiiX)
+            addRADIIZ(builder, radiiZ)
+            addRADIIY(builder, radiiY)
+            addRADIIX(builder, radiiX)
+            addSHADOWS(builder, shadowsOffset)
+            addSUBDIVISIONS(builder, subdivisions)
+            addSLICEPARTITIONS(builder, slicePartitions)
+            addSTACKPARTITIONS(builder, stackPartitions)
+            addOUTLINECOLOR(builder, outlineColorOffset)
+            addMATERIAL(builder, materialOffset)
+            addHEIGHTREFERENCE(builder, heightReferenceOffset)
+            addOUTLINE(builder, outline)
+            addFILL(builder, fill)
+            addSHOW(builder, show)
             return endCZMEllipsoid(builder)
         }
         fun startCZMEllipsoid(builder: FlatBufferBuilder) = builder.startTable(21)
-        fun addSHOW(builder: FlatBufferBuilder, SHOW: Boolean) = builder.addBoolean(0, SHOW, false)
-        fun addRADII_X(builder: FlatBufferBuilder, RADII_X: Double) = builder.addDouble(1, RADII_X, 0.0)
-        fun addRADII_Y(builder: FlatBufferBuilder, RADII_Y: Double) = builder.addDouble(2, RADII_Y, 0.0)
-        fun addRADII_Z(builder: FlatBufferBuilder, RADII_Z: Double) = builder.addDouble(3, RADII_Z, 0.0)
-        fun addINNER_RADII_X(builder: FlatBufferBuilder, INNER_RADII_X: Double) = builder.addDouble(4, INNER_RADII_X, 0.0)
-        fun addINNER_RADII_Y(builder: FlatBufferBuilder, INNER_RADII_Y: Double) = builder.addDouble(5, INNER_RADII_Y, 0.0)
-        fun addINNER_RADII_Z(builder: FlatBufferBuilder, INNER_RADII_Z: Double) = builder.addDouble(6, INNER_RADII_Z, 0.0)
-        fun addMINIMUM_CLOCK(builder: FlatBufferBuilder, MINIMUM_CLOCK: Double) = builder.addDouble(7, MINIMUM_CLOCK, 0.0)
-        fun addMAXIMUM_CLOCK(builder: FlatBufferBuilder, MAXIMUM_CLOCK: Double) = builder.addDouble(8, MAXIMUM_CLOCK, 0.0)
-        fun addMINIMUM_CONE(builder: FlatBufferBuilder, MINIMUM_CONE: Double) = builder.addDouble(9, MINIMUM_CONE, 0.0)
-        fun addMAXIMUM_CONE(builder: FlatBufferBuilder, MAXIMUM_CONE: Double) = builder.addDouble(10, MAXIMUM_CONE, 0.0)
-        fun addHEIGHT_REFERENCE(builder: FlatBufferBuilder, HEIGHT_REFERENCE: Int) = builder.addOffset(11, HEIGHT_REFERENCE, 0)
-        fun addFILL(builder: FlatBufferBuilder, FILL: Boolean) = builder.addBoolean(12, FILL, false)
-        fun addMATERIAL(builder: FlatBufferBuilder, MATERIAL: Int) = builder.addOffset(13, MATERIAL, 0)
-        fun addOUTLINE(builder: FlatBufferBuilder, OUTLINE: Boolean) = builder.addBoolean(14, OUTLINE, false)
-        fun addOUTLINE_COLOR(builder: FlatBufferBuilder, OUTLINE_COLOR: Int) = builder.addOffset(15, OUTLINE_COLOR, 0)
-        fun addOUTLINE_WIDTH(builder: FlatBufferBuilder, OUTLINE_WIDTH: Double) = builder.addDouble(16, OUTLINE_WIDTH, 0.0)
-        fun addSTACK_PARTITIONS(builder: FlatBufferBuilder, STACK_PARTITIONS: Int) = builder.addInt(17, STACK_PARTITIONS, 0)
-        fun addSLICE_PARTITIONS(builder: FlatBufferBuilder, SLICE_PARTITIONS: Int) = builder.addInt(18, SLICE_PARTITIONS, 0)
-        fun addSUBDIVISIONS(builder: FlatBufferBuilder, SUBDIVISIONS: Int) = builder.addInt(19, SUBDIVISIONS, 0)
-        fun addSHADOWS(builder: FlatBufferBuilder, SHADOWS: Int) = builder.addOffset(20, SHADOWS, 0)
+        fun addSHOW(builder: FlatBufferBuilder, show: Boolean) = builder.addBoolean(0, show, false)
+        fun addRADIIX(builder: FlatBufferBuilder, radiiX: Double) = builder.addDouble(1, radiiX, 0.0)
+        fun addRADIIY(builder: FlatBufferBuilder, radiiY: Double) = builder.addDouble(2, radiiY, 0.0)
+        fun addRADIIZ(builder: FlatBufferBuilder, radiiZ: Double) = builder.addDouble(3, radiiZ, 0.0)
+        fun addINNERRADIIX(builder: FlatBufferBuilder, innerRadiiX: Double) = builder.addDouble(4, innerRadiiX, 0.0)
+        fun addINNERRADIIY(builder: FlatBufferBuilder, innerRadiiY: Double) = builder.addDouble(5, innerRadiiY, 0.0)
+        fun addINNERRADIIZ(builder: FlatBufferBuilder, innerRadiiZ: Double) = builder.addDouble(6, innerRadiiZ, 0.0)
+        fun addMINIMUMCLOCK(builder: FlatBufferBuilder, minimumClock: Double) = builder.addDouble(7, minimumClock, 0.0)
+        fun addMAXIMUMCLOCK(builder: FlatBufferBuilder, maximumClock: Double) = builder.addDouble(8, maximumClock, 0.0)
+        fun addMINIMUMCONE(builder: FlatBufferBuilder, minimumCone: Double) = builder.addDouble(9, minimumCone, 0.0)
+        fun addMAXIMUMCONE(builder: FlatBufferBuilder, maximumCone: Double) = builder.addDouble(10, maximumCone, 0.0)
+        fun addHEIGHTREFERENCE(builder: FlatBufferBuilder, heightReference: Int) = builder.addOffset(11, heightReference, 0)
+        fun addFILL(builder: FlatBufferBuilder, fill: Boolean) = builder.addBoolean(12, fill, false)
+        fun addMATERIAL(builder: FlatBufferBuilder, material: Int) = builder.addOffset(13, material, 0)
+        fun addOUTLINE(builder: FlatBufferBuilder, outline: Boolean) = builder.addBoolean(14, outline, false)
+        fun addOUTLINECOLOR(builder: FlatBufferBuilder, outlineColor: Int) = builder.addOffset(15, outlineColor, 0)
+        fun addOUTLINEWIDTH(builder: FlatBufferBuilder, outlineWidth: Double) = builder.addDouble(16, outlineWidth, 0.0)
+        fun addSTACKPARTITIONS(builder: FlatBufferBuilder, stackPartitions: Int) = builder.addInt(17, stackPartitions, 0)
+        fun addSLICEPARTITIONS(builder: FlatBufferBuilder, slicePartitions: Int) = builder.addInt(18, slicePartitions, 0)
+        fun addSUBDIVISIONS(builder: FlatBufferBuilder, subdivisions: Int) = builder.addInt(19, subdivisions, 0)
+        fun addSHADOWS(builder: FlatBufferBuilder, shadows: Int) = builder.addOffset(20, shadows, 0)
         fun endCZMEllipsoid(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

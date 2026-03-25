@@ -2,4 +2,167 @@
 
 # namespace: 
 
-# NOTE COTPoint.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# CoT Point - geographical point with error estimates
+class COTPoint(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = COTPoint()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsCOTPoint(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def COTPointBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x43\x4F\x54", size_prefixed=size_prefixed)
+
+    # COTPoint
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Latitude in decimal degrees (WGS84)
+    # COTPoint
+    def LATITUDE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Longitude in decimal degrees (WGS84)
+    # COTPoint
+    def LONGITUDE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Height above WGS84 ellipsoid in meters
+    # COTPoint
+    def HAE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Circular error in meters (95% confidence)
+    # COTPoint
+    def CE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Linear error (vertical) in meters (95% confidence)
+    # COTPoint
+    def LE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+def COTPointStart(builder):
+    builder.StartObject(5)
+
+def Start(builder):
+    COTPointStart(builder)
+
+def COTPointAddLATITUDE(builder, LATITUDE):
+    builder.PrependFloat64Slot(0, LATITUDE, 0.0)
+
+def AddLATITUDE(builder, LATITUDE):
+    COTPointAddLATITUDE(builder, LATITUDE)
+
+def COTPointAddLONGITUDE(builder, LONGITUDE):
+    builder.PrependFloat64Slot(1, LONGITUDE, 0.0)
+
+def AddLONGITUDE(builder, LONGITUDE):
+    COTPointAddLONGITUDE(builder, LONGITUDE)
+
+def COTPointAddHAE(builder, HAE):
+    builder.PrependFloat64Slot(2, HAE, 0.0)
+
+def AddHAE(builder, HAE):
+    COTPointAddHAE(builder, HAE)
+
+def COTPointAddCE(builder, CE):
+    builder.PrependFloat64Slot(3, CE, 0.0)
+
+def AddCE(builder, CE):
+    COTPointAddCE(builder, CE)
+
+def COTPointAddLE(builder, LE):
+    builder.PrependFloat64Slot(4, LE, 0.0)
+
+def AddLE(builder, LE):
+    COTPointAddLE(builder, LE)
+
+def COTPointEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return COTPointEnd(builder)
+
+
+class COTPointT(object):
+
+    # COTPointT
+    def __init__(
+        self,
+        LATITUDE = 0.0,
+        LONGITUDE = 0.0,
+        HAE = 0.0,
+        CE = 0.0,
+        LE = 0.0,
+    ):
+        self.LATITUDE = LATITUDE  # type: float
+        self.LONGITUDE = LONGITUDE  # type: float
+        self.HAE = HAE  # type: float
+        self.CE = CE  # type: float
+        self.LE = LE  # type: float
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpCotpoint = COTPoint()
+        tmpCotpoint.Init(buf, pos)
+        return cls.InitFromObj(tmpCotpoint)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpCotpoint):
+        x = COTPointT()
+        x._UnPack(tmpCotpoint)
+        return x
+
+    # COTPointT
+    def _UnPack(self, COTPoint):
+        if COTPoint is None:
+            return
+        self.LATITUDE = COTPoint.LATITUDE()
+        self.LONGITUDE = COTPoint.LONGITUDE()
+        self.HAE = COTPoint.HAE()
+        self.CE = COTPoint.CE()
+        self.LE = COTPoint.LE()
+
+    # COTPointT
+    def Pack(self, builder):
+        COTPointStart(builder)
+        COTPointAddLATITUDE(builder, self.LATITUDE)
+        COTPointAddLONGITUDE(builder, self.LONGITUDE)
+        COTPointAddHAE(builder, self.HAE)
+        COTPointAddCE(builder, self.CE)
+        COTPointAddLE(builder, self.LE)
+        COTPoint = COTPointEnd(builder)
+        return COTPoint

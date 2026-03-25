@@ -87,16 +87,21 @@ def End(builder):
 class ENGINET(object):
 
     # ENGINET
-    def __init__(self):
-        self.ENGINE_NAME = None  # type: str
-        self.TYPE = 0  # type: int
-        self.THRUST = 0.0  # type: float
+    def __init__(
+        self,
+        ENGINE_NAME = None,
+        TYPE = 0,
+        THRUST = 0.0,
+    ):
+        self.ENGINE_NAME = ENGINE_NAME  # type: Optional[str]
+        self.TYPE = TYPE  # type: int
+        self.THRUST = THRUST  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        ENGINE = ENGINE()
-        ENGINE.Init(buf, pos)
-        return cls.InitFromObj(ENGINE)
+        tmpEngine = ENGINE()
+        tmpEngine.Init(buf, pos)
+        return cls.InitFromObj(tmpEngine)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -104,9 +109,9 @@ class ENGINET(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, ENGINE):
+    def InitFromObj(cls, tmpEngine):
         x = ENGINET()
-        x._UnPack(ENGINE)
+        x._UnPack(tmpEngine)
         return x
 
     # ENGINET

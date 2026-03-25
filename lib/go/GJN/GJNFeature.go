@@ -51,6 +51,10 @@ func (rcv *GJNFeature) ID() []byte {
 	return nil
 }
 
+func (rcv *GJNFeature) Id() []byte {
+	return rcv.ID()
+}
+
 /// Feature identifier (optional, string form)
 /// Geometry of the feature
 func (rcv *GJNFeature) GEOMETRY(obj *GJNGeometry) *GJNGeometry {
@@ -66,6 +70,10 @@ func (rcv *GJNFeature) GEOMETRY(obj *GJNGeometry) *GJNGeometry {
 	return nil
 }
 
+func (rcv *GJNFeature) Geometry(obj *GJNGeometry) *GJNGeometry {
+	return rcv.GEOMETRY(obj)
+}
+
 /// Geometry of the feature
 /// Properties as key-value pairs
 func (rcv *GJNFeature) PROPERTIES(obj *GJNProperty, j int) bool {
@@ -74,10 +82,17 @@ func (rcv *GJNFeature) PROPERTIES(obj *GJNProperty, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(GJNProperty)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *GJNFeature) Properties(obj *GJNProperty, j int) bool {
+	return rcv.PROPERTIES(obj, j)
 }
 
 func (rcv *GJNFeature) PROPERTIESLength() int {
@@ -86,6 +101,10 @@ func (rcv *GJNFeature) PROPERTIESLength() int {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *GJNFeature) PropertiesLength() int {
+	return rcv.PROPERTIESLength()
 }
 
 /// Properties as key-value pairs
@@ -98,9 +117,17 @@ func (rcv *GJNFeature) NUM_ID() float64 {
 	return 0.0
 }
 
+func (rcv *GJNFeature) NumId() float64 {
+	return rcv.NUM_ID()
+}
+
 /// Numeric feature identifier (use when ID_IS_NUMERIC is true)
 func (rcv *GJNFeature) MutateNUM_ID(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(10, n)
+}
+
+func (rcv *GJNFeature) MutateNumId(n float64) bool {
+	return rcv.MutateNUM_ID(n)
 }
 
 /// True if the feature id is numeric rather than string
@@ -112,9 +139,17 @@ func (rcv *GJNFeature) ID_IS_NUMERIC() bool {
 	return false
 }
 
+func (rcv *GJNFeature) IdIsNumeric() bool {
+	return rcv.ID_IS_NUMERIC()
+}
+
 /// True if the feature id is numeric rather than string
 func (rcv *GJNFeature) MutateID_IS_NUMERIC(n bool) bool {
 	return rcv._tab.MutateBoolSlot(12, n)
+}
+
+func (rcv *GJNFeature) MutateIdIsNumeric(n bool) bool {
+	return rcv.MutateID_IS_NUMERIC(n)
 }
 
 /// True if the feature has a geometry (false means geometry was JSON null)
@@ -126,9 +161,17 @@ func (rcv *GJNFeature) HAS_GEOMETRY() bool {
 	return false
 }
 
+func (rcv *GJNFeature) HasGeometry() bool {
+	return rcv.HAS_GEOMETRY()
+}
+
 /// True if the feature has a geometry (false means geometry was JSON null)
 func (rcv *GJNFeature) MutateHAS_GEOMETRY(n bool) bool {
 	return rcv._tab.MutateBoolSlot(14, n)
+}
+
+func (rcv *GJNFeature) MutateHasGeometry(n bool) bool {
+	return rcv.MutateHAS_GEOMETRY(n)
 }
 
 /// True if properties was JSON null (vs empty object)
@@ -140,9 +183,17 @@ func (rcv *GJNFeature) PROPERTIES_IS_NULL() bool {
 	return false
 }
 
+func (rcv *GJNFeature) PropertiesIsNull() bool {
+	return rcv.PROPERTIES_IS_NULL()
+}
+
 /// True if properties was JSON null (vs empty object)
 func (rcv *GJNFeature) MutatePROPERTIES_IS_NULL(n bool) bool {
 	return rcv._tab.MutateBoolSlot(16, n)
+}
+
+func (rcv *GJNFeature) MutatePropertiesIsNull(n bool) bool {
+	return rcv.MutatePROPERTIES_IS_NULL(n)
 }
 
 /// Bounding box (optional, per RFC 7946 Section 5)
@@ -159,6 +210,10 @@ func (rcv *GJNFeature) BBOX(obj *GJNBoundingBox) *GJNBoundingBox {
 	return nil
 }
 
+func (rcv *GJNFeature) Bbox(obj *GJNBoundingBox) *GJNBoundingBox {
+	return rcv.BBOX(obj)
+}
+
 /// Bounding box (optional, per RFC 7946 Section 5)
 func GJNFeatureStart(builder *flatbuffers.Builder) {
 	builder.StartObject(8)
@@ -166,29 +221,56 @@ func GJNFeatureStart(builder *flatbuffers.Builder) {
 func GJNFeatureAddID(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ID), 0)
 }
+func GJNFeatureAddId(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
+	GJNFeatureAddID(builder, ID)
+}
 func GJNFeatureAddGEOMETRY(builder *flatbuffers.Builder, GEOMETRY flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(GEOMETRY), 0)
+}
+func GJNFeatureAddGeometry(builder *flatbuffers.Builder, GEOMETRY flatbuffers.UOffsetT) {
+	GJNFeatureAddGEOMETRY(builder, GEOMETRY)
 }
 func GJNFeatureAddPROPERTIES(builder *flatbuffers.Builder, PROPERTIES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(PROPERTIES), 0)
 }
+func GJNFeatureAddProperties(builder *flatbuffers.Builder, PROPERTIES flatbuffers.UOffsetT) {
+	GJNFeatureAddPROPERTIES(builder, PROPERTIES)
+}
 func GJNFeatureStartPROPERTIESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func GJNFeatureStartPropertiesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return GJNFeatureStartPROPERTIESVector(builder, numElems)
 }
 func GJNFeatureAddNUM_ID(builder *flatbuffers.Builder, NUM_ID float64) {
 	builder.PrependFloat64Slot(3, NUM_ID, 0.0)
 }
+func GJNFeatureAddNumId(builder *flatbuffers.Builder, NUM_ID float64) {
+	GJNFeatureAddNUM_ID(builder, NUM_ID)
+}
 func GJNFeatureAddID_IS_NUMERIC(builder *flatbuffers.Builder, ID_IS_NUMERIC bool) {
 	builder.PrependBoolSlot(4, ID_IS_NUMERIC, false)
+}
+func GJNFeatureAddIdIsNumeric(builder *flatbuffers.Builder, ID_IS_NUMERIC bool) {
+	GJNFeatureAddID_IS_NUMERIC(builder, ID_IS_NUMERIC)
 }
 func GJNFeatureAddHAS_GEOMETRY(builder *flatbuffers.Builder, HAS_GEOMETRY bool) {
 	builder.PrependBoolSlot(5, HAS_GEOMETRY, false)
 }
+func GJNFeatureAddHasGeometry(builder *flatbuffers.Builder, HAS_GEOMETRY bool) {
+	GJNFeatureAddHAS_GEOMETRY(builder, HAS_GEOMETRY)
+}
 func GJNFeatureAddPROPERTIES_IS_NULL(builder *flatbuffers.Builder, PROPERTIES_IS_NULL bool) {
 	builder.PrependBoolSlot(6, PROPERTIES_IS_NULL, false)
 }
+func GJNFeatureAddPropertiesIsNull(builder *flatbuffers.Builder, PROPERTIES_IS_NULL bool) {
+	GJNFeatureAddPROPERTIES_IS_NULL(builder, PROPERTIES_IS_NULL)
+}
 func GJNFeatureAddBBOX(builder *flatbuffers.Builder, BBOX flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(BBOX), 0)
+}
+func GJNFeatureAddBbox(builder *flatbuffers.Builder, BBOX flatbuffers.UOffsetT) {
+	GJNFeatureAddBBOX(builder, BBOX)
 }
 func GJNFeatureEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

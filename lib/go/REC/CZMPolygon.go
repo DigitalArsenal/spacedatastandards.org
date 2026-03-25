@@ -51,9 +51,17 @@ func (rcv *CZMPolygon) SHOW() bool {
 	return false
 }
 
+func (rcv *CZMPolygon) Show() bool {
+	return rcv.SHOW()
+}
+
 /// Whether the polygon is displayed
 func (rcv *CZMPolygon) MutateSHOW(n bool) bool {
 	return rcv._tab.MutateBoolSlot(4, n)
+}
+
+func (rcv *CZMPolygon) MutateShow(n bool) bool {
+	return rcv.MutateSHOW(n)
 }
 
 /// Positions as cartographic degrees [lon, lat, height, ...]
@@ -66,12 +74,20 @@ func (rcv *CZMPolygon) POSITIONS_CARTOGRAPHIC_DEGREES(j int) float64 {
 	return 0
 }
 
+func (rcv *CZMPolygon) PositionsCartographicDegrees(j int) float64 {
+	return rcv.POSITIONS_CARTOGRAPHIC_DEGREES(j)
+}
+
 func (rcv *CZMPolygon) POSITIONS_CARTOGRAPHIC_DEGREESLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *CZMPolygon) PositionsCartographicDegreesLength() int {
+	return rcv.POSITIONS_CARTOGRAPHIC_DEGREESLength()
 }
 
 /// Positions as cartographic degrees [lon, lat, height, ...]
@@ -84,6 +100,10 @@ func (rcv *CZMPolygon) MutatePOSITIONS_CARTOGRAPHIC_DEGREES(j int, n float64) bo
 	return false
 }
 
+func (rcv *CZMPolygon) MutatePositionsCartographicDegrees(j int, n float64) bool {
+	return rcv.MutatePOSITIONS_CARTOGRAPHIC_DEGREES(j, n)
+}
+
 /// Positions as Cartesian [X, Y, Z, ...]
 func (rcv *CZMPolygon) POSITIONS_CARTESIAN(j int) float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
@@ -94,12 +114,20 @@ func (rcv *CZMPolygon) POSITIONS_CARTESIAN(j int) float64 {
 	return 0
 }
 
+func (rcv *CZMPolygon) PositionsCartesian(j int) float64 {
+	return rcv.POSITIONS_CARTESIAN(j)
+}
+
 func (rcv *CZMPolygon) POSITIONS_CARTESIANLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *CZMPolygon) PositionsCartesianLength() int {
+	return rcv.POSITIONS_CARTESIANLength()
 }
 
 /// Positions as Cartesian [X, Y, Z, ...]
@@ -112,6 +140,10 @@ func (rcv *CZMPolygon) MutatePOSITIONS_CARTESIAN(j int, n float64) bool {
 	return false
 }
 
+func (rcv *CZMPolygon) MutatePositionsCartesian(j int, n float64) bool {
+	return rcv.MutatePOSITIONS_CARTESIAN(j, n)
+}
+
 /// Fill flag
 func (rcv *CZMPolygon) FILL() bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
@@ -121,9 +153,17 @@ func (rcv *CZMPolygon) FILL() bool {
 	return false
 }
 
+func (rcv *CZMPolygon) Fill() bool {
+	return rcv.FILL()
+}
+
 /// Fill flag
 func (rcv *CZMPolygon) MutateFILL(n bool) bool {
 	return rcv._tab.MutateBoolSlot(10, n)
+}
+
+func (rcv *CZMPolygon) MutateFill(n bool) bool {
+	return rcv.MutateFILL(n)
 }
 
 /// Fill color (solid color material, legacy)
@@ -140,6 +180,10 @@ func (rcv *CZMPolygon) COLOR(obj *CZMColor) *CZMColor {
 	return nil
 }
 
+func (rcv *CZMPolygon) Color(obj *CZMColor) *CZMColor {
+	return rcv.COLOR(obj)
+}
+
 /// Fill color (solid color material, legacy)
 /// Outline flag
 func (rcv *CZMPolygon) OUTLINE() bool {
@@ -150,9 +194,17 @@ func (rcv *CZMPolygon) OUTLINE() bool {
 	return false
 }
 
+func (rcv *CZMPolygon) Outline() bool {
+	return rcv.OUTLINE()
+}
+
 /// Outline flag
 func (rcv *CZMPolygon) MutateOUTLINE(n bool) bool {
 	return rcv._tab.MutateBoolSlot(14, n)
+}
+
+func (rcv *CZMPolygon) MutateOutline(n bool) bool {
+	return rcv.MutateOUTLINE(n)
 }
 
 /// Outline color
@@ -169,6 +221,10 @@ func (rcv *CZMPolygon) OUTLINE_COLOR(obj *CZMColor) *CZMColor {
 	return nil
 }
 
+func (rcv *CZMPolygon) OutlineColor(obj *CZMColor) *CZMColor {
+	return rcv.OUTLINE_COLOR(obj)
+}
+
 /// Outline color
 /// Extruded height in meters
 func (rcv *CZMPolygon) EXTRUDED_HEIGHT() float64 {
@@ -179,9 +235,17 @@ func (rcv *CZMPolygon) EXTRUDED_HEIGHT() float64 {
 	return 0.0
 }
 
+func (rcv *CZMPolygon) ExtrudedHeight() float64 {
+	return rcv.EXTRUDED_HEIGHT()
+}
+
 /// Extruded height in meters
 func (rcv *CZMPolygon) MutateEXTRUDED_HEIGHT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(18, n)
+}
+
+func (rcv *CZMPolygon) MutateExtrudedHeight(n float64) bool {
+	return rcv.MutateEXTRUDED_HEIGHT(n)
 }
 
 /// Height reference
@@ -193,9 +257,17 @@ func (rcv *CZMPolygon) HEIGHT_REFERENCE() CZMHeightReference {
 	return 0
 }
 
+func (rcv *CZMPolygon) HeightReference() CZMHeightReference {
+	return rcv.HEIGHT_REFERENCE()
+}
+
 /// Height reference
 func (rcv *CZMPolygon) MutateHEIGHT_REFERENCE(n CZMHeightReference) bool {
 	return rcv._tab.MutateInt8Slot(20, int8(n))
+}
+
+func (rcv *CZMPolygon) MutateHeightReference(n CZMHeightReference) bool {
+	return rcv.MutateHEIGHT_REFERENCE(n)
 }
 
 /// Classification type
@@ -207,9 +279,17 @@ func (rcv *CZMPolygon) CLASSIFICATION_TYPE() CZMClassificationType {
 	return 0
 }
 
+func (rcv *CZMPolygon) ClassificationType() CZMClassificationType {
+	return rcv.CLASSIFICATION_TYPE()
+}
+
 /// Classification type
 func (rcv *CZMPolygon) MutateCLASSIFICATION_TYPE(n CZMClassificationType) bool {
 	return rcv._tab.MutateInt8Slot(22, int8(n))
+}
+
+func (rcv *CZMPolygon) MutateClassificationType(n CZMClassificationType) bool {
+	return rcv.MutateCLASSIFICATION_TYPE(n)
 }
 
 /// Holes (position lists: each hole is [lon,lat,h,...])
@@ -219,10 +299,17 @@ func (rcv *CZMPolygon) HOLES(obj *CZMPolygonHole, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(CZMPolygonHole)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *CZMPolygon) Holes(obj *CZMPolygonHole, j int) bool {
+	return rcv.HOLES(obj, j)
 }
 
 func (rcv *CZMPolygon) HOLESLength() int {
@@ -231,6 +318,10 @@ func (rcv *CZMPolygon) HOLESLength() int {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *CZMPolygon) HolesLength() int {
+	return rcv.HOLESLength()
 }
 
 /// Holes (position lists: each hole is [lon,lat,h,...])
@@ -243,6 +334,10 @@ func (rcv *CZMPolygon) ARC_TYPE() []byte {
 	return nil
 }
 
+func (rcv *CZMPolygon) ArcType() []byte {
+	return rcv.ARC_TYPE()
+}
+
 /// Arc type
 /// Height in meters
 func (rcv *CZMPolygon) HEIGHT() float64 {
@@ -253,9 +348,17 @@ func (rcv *CZMPolygon) HEIGHT() float64 {
 	return 0.0
 }
 
+func (rcv *CZMPolygon) Height() float64 {
+	return rcv.HEIGHT()
+}
+
 /// Height in meters
 func (rcv *CZMPolygon) MutateHEIGHT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(28, n)
+}
+
+func (rcv *CZMPolygon) MutateHeight(n float64) bool {
+	return rcv.MutateHEIGHT(n)
 }
 
 /// Extruded height reference
@@ -265,6 +368,10 @@ func (rcv *CZMPolygon) EXTRUDED_HEIGHT_REFERENCE() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *CZMPolygon) ExtrudedHeightReference() []byte {
+	return rcv.EXTRUDED_HEIGHT_REFERENCE()
 }
 
 /// Extruded height reference
@@ -277,9 +384,17 @@ func (rcv *CZMPolygon) ST_ROTATION() float64 {
 	return 0.0
 }
 
+func (rcv *CZMPolygon) StRotation() float64 {
+	return rcv.ST_ROTATION()
+}
+
 /// Texture rotation in radians
 func (rcv *CZMPolygon) MutateST_ROTATION(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(32, n)
+}
+
+func (rcv *CZMPolygon) MutateStRotation(n float64) bool {
+	return rcv.MutateST_ROTATION(n)
 }
 
 /// Granularity in radians
@@ -291,9 +406,17 @@ func (rcv *CZMPolygon) GRANULARITY() float64 {
 	return 0.0
 }
 
+func (rcv *CZMPolygon) Granularity() float64 {
+	return rcv.GRANULARITY()
+}
+
 /// Granularity in radians
 func (rcv *CZMPolygon) MutateGRANULARITY(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(34, n)
+}
+
+func (rcv *CZMPolygon) MutateGranularity(n float64) bool {
+	return rcv.MutateGRANULARITY(n)
 }
 
 /// Full surface material
@@ -310,6 +433,10 @@ func (rcv *CZMPolygon) MATERIAL(obj *CZMMaterial) *CZMMaterial {
 	return nil
 }
 
+func (rcv *CZMPolygon) Material(obj *CZMMaterial) *CZMMaterial {
+	return rcv.MATERIAL(obj)
+}
+
 /// Full surface material
 /// Outline width in pixels
 func (rcv *CZMPolygon) OUTLINE_WIDTH() float64 {
@@ -320,9 +447,17 @@ func (rcv *CZMPolygon) OUTLINE_WIDTH() float64 {
 	return 0.0
 }
 
+func (rcv *CZMPolygon) OutlineWidth() float64 {
+	return rcv.OUTLINE_WIDTH()
+}
+
 /// Outline width in pixels
 func (rcv *CZMPolygon) MutateOUTLINE_WIDTH(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(38, n)
+}
+
+func (rcv *CZMPolygon) MutateOutlineWidth(n float64) bool {
+	return rcv.MutateOUTLINE_WIDTH(n)
 }
 
 /// Whether to use per-position heights
@@ -334,9 +469,17 @@ func (rcv *CZMPolygon) PER_POSITION_HEIGHT() bool {
 	return false
 }
 
+func (rcv *CZMPolygon) PerPositionHeight() bool {
+	return rcv.PER_POSITION_HEIGHT()
+}
+
 /// Whether to use per-position heights
 func (rcv *CZMPolygon) MutatePER_POSITION_HEIGHT(n bool) bool {
 	return rcv._tab.MutateBoolSlot(40, n)
+}
+
+func (rcv *CZMPolygon) MutatePerPositionHeight(n bool) bool {
+	return rcv.MutatePER_POSITION_HEIGHT(n)
 }
 
 /// Whether to close the top of extruded polygon
@@ -348,9 +491,17 @@ func (rcv *CZMPolygon) CLOSE_TOP() bool {
 	return false
 }
 
+func (rcv *CZMPolygon) CloseTop() bool {
+	return rcv.CLOSE_TOP()
+}
+
 /// Whether to close the top of extruded polygon
 func (rcv *CZMPolygon) MutateCLOSE_TOP(n bool) bool {
 	return rcv._tab.MutateBoolSlot(42, n)
+}
+
+func (rcv *CZMPolygon) MutateCloseTop(n bool) bool {
+	return rcv.MutateCLOSE_TOP(n)
 }
 
 /// Whether to close the bottom of extruded polygon
@@ -362,9 +513,17 @@ func (rcv *CZMPolygon) CLOSE_BOTTOM() bool {
 	return false
 }
 
+func (rcv *CZMPolygon) CloseBottom() bool {
+	return rcv.CLOSE_BOTTOM()
+}
+
 /// Whether to close the bottom of extruded polygon
 func (rcv *CZMPolygon) MutateCLOSE_BOTTOM(n bool) bool {
 	return rcv._tab.MutateBoolSlot(44, n)
+}
+
+func (rcv *CZMPolygon) MutateCloseBottom(n bool) bool {
+	return rcv.MutateCLOSE_BOTTOM(n)
 }
 
 /// Shadow mode
@@ -374,6 +533,10 @@ func (rcv *CZMPolygon) SHADOWS() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *CZMPolygon) Shadows() []byte {
+	return rcv.SHADOWS()
 }
 
 /// Shadow mode
@@ -386,9 +549,17 @@ func (rcv *CZMPolygon) Z_INDEX() int32 {
 	return 0
 }
 
+func (rcv *CZMPolygon) ZIndex() int32 {
+	return rcv.Z_INDEX()
+}
+
 /// Z-index for ordering
 func (rcv *CZMPolygon) MutateZ_INDEX(n int32) bool {
 	return rcv._tab.MutateInt32Slot(48, n)
+}
+
+func (rcv *CZMPolygon) MutateZIndex(n int32) bool {
+	return rcv.MutateZ_INDEX(n)
 }
 
 func CZMPolygonStart(builder *flatbuffers.Builder) {
@@ -397,80 +568,158 @@ func CZMPolygonStart(builder *flatbuffers.Builder) {
 func CZMPolygonAddSHOW(builder *flatbuffers.Builder, SHOW bool) {
 	builder.PrependBoolSlot(0, SHOW, false)
 }
+func CZMPolygonAddShow(builder *flatbuffers.Builder, SHOW bool) {
+	CZMPolygonAddSHOW(builder, SHOW)
+}
 func CZMPolygonAddPOSITIONS_CARTOGRAPHIC_DEGREES(builder *flatbuffers.Builder, POSITIONS_CARTOGRAPHIC_DEGREES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(POSITIONS_CARTOGRAPHIC_DEGREES), 0)
+}
+func CZMPolygonAddPositionsCartographicDegrees(builder *flatbuffers.Builder, POSITIONS_CARTOGRAPHIC_DEGREES flatbuffers.UOffsetT) {
+	CZMPolygonAddPOSITIONS_CARTOGRAPHIC_DEGREES(builder, POSITIONS_CARTOGRAPHIC_DEGREES)
 }
 func CZMPolygonStartPOSITIONS_CARTOGRAPHIC_DEGREESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(8, numElems, 8)
 }
+func CZMPolygonStartPositionsCartographicDegreesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return CZMPolygonStartPOSITIONS_CARTOGRAPHIC_DEGREESVector(builder, numElems)
+}
 func CZMPolygonAddPOSITIONS_CARTESIAN(builder *flatbuffers.Builder, POSITIONS_CARTESIAN flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(POSITIONS_CARTESIAN), 0)
+}
+func CZMPolygonAddPositionsCartesian(builder *flatbuffers.Builder, POSITIONS_CARTESIAN flatbuffers.UOffsetT) {
+	CZMPolygonAddPOSITIONS_CARTESIAN(builder, POSITIONS_CARTESIAN)
 }
 func CZMPolygonStartPOSITIONS_CARTESIANVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(8, numElems, 8)
 }
+func CZMPolygonStartPositionsCartesianVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return CZMPolygonStartPOSITIONS_CARTESIANVector(builder, numElems)
+}
 func CZMPolygonAddFILL(builder *flatbuffers.Builder, FILL bool) {
 	builder.PrependBoolSlot(3, FILL, false)
+}
+func CZMPolygonAddFill(builder *flatbuffers.Builder, FILL bool) {
+	CZMPolygonAddFILL(builder, FILL)
 }
 func CZMPolygonAddCOLOR(builder *flatbuffers.Builder, COLOR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(COLOR), 0)
 }
+func CZMPolygonAddColor(builder *flatbuffers.Builder, COLOR flatbuffers.UOffsetT) {
+	CZMPolygonAddCOLOR(builder, COLOR)
+}
 func CZMPolygonAddOUTLINE(builder *flatbuffers.Builder, OUTLINE bool) {
 	builder.PrependBoolSlot(5, OUTLINE, false)
+}
+func CZMPolygonAddOutline(builder *flatbuffers.Builder, OUTLINE bool) {
+	CZMPolygonAddOUTLINE(builder, OUTLINE)
 }
 func CZMPolygonAddOUTLINE_COLOR(builder *flatbuffers.Builder, OUTLINE_COLOR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(OUTLINE_COLOR), 0)
 }
+func CZMPolygonAddOutlineColor(builder *flatbuffers.Builder, OUTLINE_COLOR flatbuffers.UOffsetT) {
+	CZMPolygonAddOUTLINE_COLOR(builder, OUTLINE_COLOR)
+}
 func CZMPolygonAddEXTRUDED_HEIGHT(builder *flatbuffers.Builder, EXTRUDED_HEIGHT float64) {
 	builder.PrependFloat64Slot(7, EXTRUDED_HEIGHT, 0.0)
+}
+func CZMPolygonAddExtrudedHeight(builder *flatbuffers.Builder, EXTRUDED_HEIGHT float64) {
+	CZMPolygonAddEXTRUDED_HEIGHT(builder, EXTRUDED_HEIGHT)
 }
 func CZMPolygonAddHEIGHT_REFERENCE(builder *flatbuffers.Builder, HEIGHT_REFERENCE CZMHeightReference) {
 	builder.PrependInt8Slot(8, int8(HEIGHT_REFERENCE), 0)
 }
+func CZMPolygonAddHeightReference(builder *flatbuffers.Builder, HEIGHT_REFERENCE CZMHeightReference) {
+	CZMPolygonAddHEIGHT_REFERENCE(builder, HEIGHT_REFERENCE)
+}
 func CZMPolygonAddCLASSIFICATION_TYPE(builder *flatbuffers.Builder, CLASSIFICATION_TYPE CZMClassificationType) {
 	builder.PrependInt8Slot(9, int8(CLASSIFICATION_TYPE), 0)
+}
+func CZMPolygonAddClassificationType(builder *flatbuffers.Builder, CLASSIFICATION_TYPE CZMClassificationType) {
+	CZMPolygonAddCLASSIFICATION_TYPE(builder, CLASSIFICATION_TYPE)
 }
 func CZMPolygonAddHOLES(builder *flatbuffers.Builder, HOLES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(HOLES), 0)
 }
+func CZMPolygonAddHoles(builder *flatbuffers.Builder, HOLES flatbuffers.UOffsetT) {
+	CZMPolygonAddHOLES(builder, HOLES)
+}
 func CZMPolygonStartHOLESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func CZMPolygonStartHolesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return CZMPolygonStartHOLESVector(builder, numElems)
 }
 func CZMPolygonAddARC_TYPE(builder *flatbuffers.Builder, ARC_TYPE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(ARC_TYPE), 0)
 }
+func CZMPolygonAddArcType(builder *flatbuffers.Builder, ARC_TYPE flatbuffers.UOffsetT) {
+	CZMPolygonAddARC_TYPE(builder, ARC_TYPE)
+}
 func CZMPolygonAddHEIGHT(builder *flatbuffers.Builder, HEIGHT float64) {
 	builder.PrependFloat64Slot(12, HEIGHT, 0.0)
+}
+func CZMPolygonAddHeight(builder *flatbuffers.Builder, HEIGHT float64) {
+	CZMPolygonAddHEIGHT(builder, HEIGHT)
 }
 func CZMPolygonAddEXTRUDED_HEIGHT_REFERENCE(builder *flatbuffers.Builder, EXTRUDED_HEIGHT_REFERENCE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(13, flatbuffers.UOffsetT(EXTRUDED_HEIGHT_REFERENCE), 0)
 }
+func CZMPolygonAddExtrudedHeightReference(builder *flatbuffers.Builder, EXTRUDED_HEIGHT_REFERENCE flatbuffers.UOffsetT) {
+	CZMPolygonAddEXTRUDED_HEIGHT_REFERENCE(builder, EXTRUDED_HEIGHT_REFERENCE)
+}
 func CZMPolygonAddST_ROTATION(builder *flatbuffers.Builder, ST_ROTATION float64) {
 	builder.PrependFloat64Slot(14, ST_ROTATION, 0.0)
+}
+func CZMPolygonAddStRotation(builder *flatbuffers.Builder, ST_ROTATION float64) {
+	CZMPolygonAddST_ROTATION(builder, ST_ROTATION)
 }
 func CZMPolygonAddGRANULARITY(builder *flatbuffers.Builder, GRANULARITY float64) {
 	builder.PrependFloat64Slot(15, GRANULARITY, 0.0)
 }
+func CZMPolygonAddGranularity(builder *flatbuffers.Builder, GRANULARITY float64) {
+	CZMPolygonAddGRANULARITY(builder, GRANULARITY)
+}
 func CZMPolygonAddMATERIAL(builder *flatbuffers.Builder, MATERIAL flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(16, flatbuffers.UOffsetT(MATERIAL), 0)
+}
+func CZMPolygonAddMaterial(builder *flatbuffers.Builder, MATERIAL flatbuffers.UOffsetT) {
+	CZMPolygonAddMATERIAL(builder, MATERIAL)
 }
 func CZMPolygonAddOUTLINE_WIDTH(builder *flatbuffers.Builder, OUTLINE_WIDTH float64) {
 	builder.PrependFloat64Slot(17, OUTLINE_WIDTH, 0.0)
 }
+func CZMPolygonAddOutlineWidth(builder *flatbuffers.Builder, OUTLINE_WIDTH float64) {
+	CZMPolygonAddOUTLINE_WIDTH(builder, OUTLINE_WIDTH)
+}
 func CZMPolygonAddPER_POSITION_HEIGHT(builder *flatbuffers.Builder, PER_POSITION_HEIGHT bool) {
 	builder.PrependBoolSlot(18, PER_POSITION_HEIGHT, false)
+}
+func CZMPolygonAddPerPositionHeight(builder *flatbuffers.Builder, PER_POSITION_HEIGHT bool) {
+	CZMPolygonAddPER_POSITION_HEIGHT(builder, PER_POSITION_HEIGHT)
 }
 func CZMPolygonAddCLOSE_TOP(builder *flatbuffers.Builder, CLOSE_TOP bool) {
 	builder.PrependBoolSlot(19, CLOSE_TOP, false)
 }
+func CZMPolygonAddCloseTop(builder *flatbuffers.Builder, CLOSE_TOP bool) {
+	CZMPolygonAddCLOSE_TOP(builder, CLOSE_TOP)
+}
 func CZMPolygonAddCLOSE_BOTTOM(builder *flatbuffers.Builder, CLOSE_BOTTOM bool) {
 	builder.PrependBoolSlot(20, CLOSE_BOTTOM, false)
+}
+func CZMPolygonAddCloseBottom(builder *flatbuffers.Builder, CLOSE_BOTTOM bool) {
+	CZMPolygonAddCLOSE_BOTTOM(builder, CLOSE_BOTTOM)
 }
 func CZMPolygonAddSHADOWS(builder *flatbuffers.Builder, SHADOWS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(21, flatbuffers.UOffsetT(SHADOWS), 0)
 }
+func CZMPolygonAddShadows(builder *flatbuffers.Builder, SHADOWS flatbuffers.UOffsetT) {
+	CZMPolygonAddSHADOWS(builder, SHADOWS)
+}
 func CZMPolygonAddZ_INDEX(builder *flatbuffers.Builder, Z_INDEX int32) {
 	builder.PrependInt32Slot(22, Z_INDEX, 0)
+}
+func CZMPolygonAddZIndex(builder *flatbuffers.Builder, Z_INDEX int32) {
+	CZMPolygonAddZ_INDEX(builder, Z_INDEX)
 }
 func CZMPolygonEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

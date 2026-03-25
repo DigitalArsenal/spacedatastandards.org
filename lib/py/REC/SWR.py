@@ -2,4 +2,627 @@
 
 # namespace: 
 
-# NOTE SWR.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Short-Wave Infrared Observation
+class SWR(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = SWR()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsSWR(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def SWRBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x53\x57\x52", size_prefixed=size_prefixed)
+
+    # SWR
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Unique identifier
+    # SWR
+    def ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # On-orbit reference
+    # SWR
+    def ON_ORBIT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # International designator
+    # SWR
+    def ORIG_OBJECT_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Satellite catalog number
+    # SWR
+    def SAT_NO(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+        return 0
+
+    # Observation timestamp (ISO 8601)
+    # SWR
+    def TS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Solar phase angle (degrees)
+    # SWR
+    def SOLAR_PHASE_ANGLE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Sub-observer latitude (degrees)
+    # SWR
+    def LAT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Sub-observer longitude (degrees)
+    # SWR
+    def LON(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Location name
+    # SWR
+    def LOCATION_NAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Bad wavelength flag or identifier
+    # SWR
+    def BAD_WAVE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Measured wavelengths (micrometers)
+    # SWR
+    def WAVELENGTHS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # SWR
+    def WAVELENGTHSAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
+
+    # SWR
+    def WAVELENGTHSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # SWR
+    def WAVELENGTHSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        return o == 0
+
+    # Absolute flux values (W/m^2/um)
+    # SWR
+    def ABS_FLUXES(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # SWR
+    def ABS_FLUXESAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
+
+    # SWR
+    def ABS_FLUXESLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # SWR
+    def ABS_FLUXESIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        return o == 0
+
+    # Ratio reference wavelengths (micrometers)
+    # SWR
+    def RATIO_WAVELENGTHS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # SWR
+    def RATIO_WAVELENGTHSAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
+
+    # SWR
+    def RATIO_WAVELENGTHSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # SWR
+    def RATIO_WAVELENGTHSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        return o == 0
+
+    # Flux ratios (normalized)
+    # SWR
+    def FLUX_RATIOS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # SWR
+    def FLUX_RATIOSAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
+
+    # SWR
+    def FLUX_RATIOSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # SWR
+    def FLUX_RATIOSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        return o == 0
+
+    # Effective temperature (Kelvin)
+    # SWR
+    def TEMPERATURE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Signal-to-noise ratio
+    # SWR
+    def SIGNAL_NOISE_RATIO(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Integration time (seconds)
+    # SWR
+    def INTEGRATION_TIME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Data quality (0-9, 9=best)
+    # SWR
+    def QUALITY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
+        return 0
+
+def SWRStart(builder):
+    builder.StartObject(18)
+
+def Start(builder):
+    SWRStart(builder)
+
+def SWRAddID(builder, ID):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(ID), 0)
+
+def AddID(builder, ID):
+    SWRAddID(builder, ID)
+
+def SWRAddON_ORBIT(builder, ON_ORBIT):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(ON_ORBIT), 0)
+
+def AddON_ORBIT(builder, ON_ORBIT):
+    SWRAddON_ORBIT(builder, ON_ORBIT)
+
+def SWRAddORIG_OBJECT_ID(builder, ORIG_OBJECT_ID):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(ORIG_OBJECT_ID), 0)
+
+def AddORIG_OBJECT_ID(builder, ORIG_OBJECT_ID):
+    SWRAddORIG_OBJECT_ID(builder, ORIG_OBJECT_ID)
+
+def SWRAddSAT_NO(builder, SAT_NO):
+    builder.PrependUint32Slot(3, SAT_NO, 0)
+
+def AddSAT_NO(builder, SAT_NO):
+    SWRAddSAT_NO(builder, SAT_NO)
+
+def SWRAddTS(builder, TS):
+    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(TS), 0)
+
+def AddTS(builder, TS):
+    SWRAddTS(builder, TS)
+
+def SWRAddSOLAR_PHASE_ANGLE(builder, SOLAR_PHASE_ANGLE):
+    builder.PrependFloat64Slot(5, SOLAR_PHASE_ANGLE, 0.0)
+
+def AddSOLAR_PHASE_ANGLE(builder, SOLAR_PHASE_ANGLE):
+    SWRAddSOLAR_PHASE_ANGLE(builder, SOLAR_PHASE_ANGLE)
+
+def SWRAddLAT(builder, LAT):
+    builder.PrependFloat64Slot(6, LAT, 0.0)
+
+def AddLAT(builder, LAT):
+    SWRAddLAT(builder, LAT)
+
+def SWRAddLON(builder, LON):
+    builder.PrependFloat64Slot(7, LON, 0.0)
+
+def AddLON(builder, LON):
+    SWRAddLON(builder, LON)
+
+def SWRAddLOCATION_NAME(builder, LOCATION_NAME):
+    builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(LOCATION_NAME), 0)
+
+def AddLOCATION_NAME(builder, LOCATION_NAME):
+    SWRAddLOCATION_NAME(builder, LOCATION_NAME)
+
+def SWRAddBAD_WAVE(builder, BAD_WAVE):
+    builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(BAD_WAVE), 0)
+
+def AddBAD_WAVE(builder, BAD_WAVE):
+    SWRAddBAD_WAVE(builder, BAD_WAVE)
+
+def SWRAddWAVELENGTHS(builder, WAVELENGTHS):
+    builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(WAVELENGTHS), 0)
+
+def AddWAVELENGTHS(builder, WAVELENGTHS):
+    SWRAddWAVELENGTHS(builder, WAVELENGTHS)
+
+def SWRStartWAVELENGTHSVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
+def StartWAVELENGTHSVector(builder, numElems):
+    return SWRStartWAVELENGTHSVector(builder, numElems)
+
+def SWRCreateWAVELENGTHSVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateWAVELENGTHSVector(builder, data):
+    SWRCreateWAVELENGTHSVector(builder, data)
+
+def SWRAddABS_FLUXES(builder, ABS_FLUXES):
+    builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(ABS_FLUXES), 0)
+
+def AddABS_FLUXES(builder, ABS_FLUXES):
+    SWRAddABS_FLUXES(builder, ABS_FLUXES)
+
+def SWRStartABS_FLUXESVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
+def StartABS_FLUXESVector(builder, numElems):
+    return SWRStartABS_FLUXESVector(builder, numElems)
+
+def SWRCreateABS_FLUXESVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateABS_FLUXESVector(builder, data):
+    SWRCreateABS_FLUXESVector(builder, data)
+
+def SWRAddRATIO_WAVELENGTHS(builder, RATIO_WAVELENGTHS):
+    builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(RATIO_WAVELENGTHS), 0)
+
+def AddRATIO_WAVELENGTHS(builder, RATIO_WAVELENGTHS):
+    SWRAddRATIO_WAVELENGTHS(builder, RATIO_WAVELENGTHS)
+
+def SWRStartRATIO_WAVELENGTHSVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
+def StartRATIO_WAVELENGTHSVector(builder, numElems):
+    return SWRStartRATIO_WAVELENGTHSVector(builder, numElems)
+
+def SWRCreateRATIO_WAVELENGTHSVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateRATIO_WAVELENGTHSVector(builder, data):
+    SWRCreateRATIO_WAVELENGTHSVector(builder, data)
+
+def SWRAddFLUX_RATIOS(builder, FLUX_RATIOS):
+    builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(FLUX_RATIOS), 0)
+
+def AddFLUX_RATIOS(builder, FLUX_RATIOS):
+    SWRAddFLUX_RATIOS(builder, FLUX_RATIOS)
+
+def SWRStartFLUX_RATIOSVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
+def StartFLUX_RATIOSVector(builder, numElems):
+    return SWRStartFLUX_RATIOSVector(builder, numElems)
+
+def SWRCreateFLUX_RATIOSVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateFLUX_RATIOSVector(builder, data):
+    SWRCreateFLUX_RATIOSVector(builder, data)
+
+def SWRAddTEMPERATURE(builder, TEMPERATURE):
+    builder.PrependFloat64Slot(14, TEMPERATURE, 0.0)
+
+def AddTEMPERATURE(builder, TEMPERATURE):
+    SWRAddTEMPERATURE(builder, TEMPERATURE)
+
+def SWRAddSIGNAL_NOISE_RATIO(builder, SIGNAL_NOISE_RATIO):
+    builder.PrependFloat64Slot(15, SIGNAL_NOISE_RATIO, 0.0)
+
+def AddSIGNAL_NOISE_RATIO(builder, SIGNAL_NOISE_RATIO):
+    SWRAddSIGNAL_NOISE_RATIO(builder, SIGNAL_NOISE_RATIO)
+
+def SWRAddINTEGRATION_TIME(builder, INTEGRATION_TIME):
+    builder.PrependFloat64Slot(16, INTEGRATION_TIME, 0.0)
+
+def AddINTEGRATION_TIME(builder, INTEGRATION_TIME):
+    SWRAddINTEGRATION_TIME(builder, INTEGRATION_TIME)
+
+def SWRAddQUALITY(builder, QUALITY):
+    builder.PrependUint8Slot(17, QUALITY, 0)
+
+def AddQUALITY(builder, QUALITY):
+    SWRAddQUALITY(builder, QUALITY)
+
+def SWREnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return SWREnd(builder)
+
+try:
+    from typing import List
+except:
+    pass
+
+class SWRT(object):
+
+    # SWRT
+    def __init__(
+        self,
+        ID = None,
+        ON_ORBIT = None,
+        ORIG_OBJECT_ID = None,
+        SAT_NO = 0,
+        TS = None,
+        SOLAR_PHASE_ANGLE = 0.0,
+        LAT = 0.0,
+        LON = 0.0,
+        LOCATION_NAME = None,
+        BAD_WAVE = None,
+        WAVELENGTHS = None,
+        ABS_FLUXES = None,
+        RATIO_WAVELENGTHS = None,
+        FLUX_RATIOS = None,
+        TEMPERATURE = 0.0,
+        SIGNAL_NOISE_RATIO = 0.0,
+        INTEGRATION_TIME = 0.0,
+        QUALITY = 0,
+    ):
+        self.ID = ID  # type: Optional[str]
+        self.ON_ORBIT = ON_ORBIT  # type: Optional[str]
+        self.ORIG_OBJECT_ID = ORIG_OBJECT_ID  # type: Optional[str]
+        self.SAT_NO = SAT_NO  # type: int
+        self.TS = TS  # type: Optional[str]
+        self.SOLAR_PHASE_ANGLE = SOLAR_PHASE_ANGLE  # type: float
+        self.LAT = LAT  # type: float
+        self.LON = LON  # type: float
+        self.LOCATION_NAME = LOCATION_NAME  # type: Optional[str]
+        self.BAD_WAVE = BAD_WAVE  # type: Optional[str]
+        self.WAVELENGTHS = WAVELENGTHS  # type: Optional[List[float]]
+        self.ABS_FLUXES = ABS_FLUXES  # type: Optional[List[float]]
+        self.RATIO_WAVELENGTHS = RATIO_WAVELENGTHS  # type: Optional[List[float]]
+        self.FLUX_RATIOS = FLUX_RATIOS  # type: Optional[List[float]]
+        self.TEMPERATURE = TEMPERATURE  # type: float
+        self.SIGNAL_NOISE_RATIO = SIGNAL_NOISE_RATIO  # type: float
+        self.INTEGRATION_TIME = INTEGRATION_TIME  # type: float
+        self.QUALITY = QUALITY  # type: int
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpSwr = SWR()
+        tmpSwr.Init(buf, pos)
+        return cls.InitFromObj(tmpSwr)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpSwr):
+        x = SWRT()
+        x._UnPack(tmpSwr)
+        return x
+
+    # SWRT
+    def _UnPack(self, SWR):
+        if SWR is None:
+            return
+        self.ID = SWR.ID()
+        self.ON_ORBIT = SWR.ON_ORBIT()
+        self.ORIG_OBJECT_ID = SWR.ORIG_OBJECT_ID()
+        self.SAT_NO = SWR.SAT_NO()
+        self.TS = SWR.TS()
+        self.SOLAR_PHASE_ANGLE = SWR.SOLAR_PHASE_ANGLE()
+        self.LAT = SWR.LAT()
+        self.LON = SWR.LON()
+        self.LOCATION_NAME = SWR.LOCATION_NAME()
+        self.BAD_WAVE = SWR.BAD_WAVE()
+        if not SWR.WAVELENGTHSIsNone():
+            if np is None:
+                self.WAVELENGTHS = []
+                for i in range(SWR.WAVELENGTHSLength()):
+                    self.WAVELENGTHS.append(SWR.WAVELENGTHS(i))
+            else:
+                self.WAVELENGTHS = SWR.WAVELENGTHSAsNumpy()
+        if not SWR.ABS_FLUXESIsNone():
+            if np is None:
+                self.ABS_FLUXES = []
+                for i in range(SWR.ABS_FLUXESLength()):
+                    self.ABS_FLUXES.append(SWR.ABS_FLUXES(i))
+            else:
+                self.ABS_FLUXES = SWR.ABS_FLUXESAsNumpy()
+        if not SWR.RATIO_WAVELENGTHSIsNone():
+            if np is None:
+                self.RATIO_WAVELENGTHS = []
+                for i in range(SWR.RATIO_WAVELENGTHSLength()):
+                    self.RATIO_WAVELENGTHS.append(SWR.RATIO_WAVELENGTHS(i))
+            else:
+                self.RATIO_WAVELENGTHS = SWR.RATIO_WAVELENGTHSAsNumpy()
+        if not SWR.FLUX_RATIOSIsNone():
+            if np is None:
+                self.FLUX_RATIOS = []
+                for i in range(SWR.FLUX_RATIOSLength()):
+                    self.FLUX_RATIOS.append(SWR.FLUX_RATIOS(i))
+            else:
+                self.FLUX_RATIOS = SWR.FLUX_RATIOSAsNumpy()
+        self.TEMPERATURE = SWR.TEMPERATURE()
+        self.SIGNAL_NOISE_RATIO = SWR.SIGNAL_NOISE_RATIO()
+        self.INTEGRATION_TIME = SWR.INTEGRATION_TIME()
+        self.QUALITY = SWR.QUALITY()
+
+    # SWRT
+    def Pack(self, builder):
+        if self.ID is not None:
+            ID = builder.CreateString(self.ID)
+        if self.ON_ORBIT is not None:
+            ON_ORBIT = builder.CreateString(self.ON_ORBIT)
+        if self.ORIG_OBJECT_ID is not None:
+            ORIG_OBJECT_ID = builder.CreateString(self.ORIG_OBJECT_ID)
+        if self.TS is not None:
+            TS = builder.CreateString(self.TS)
+        if self.LOCATION_NAME is not None:
+            LOCATION_NAME = builder.CreateString(self.LOCATION_NAME)
+        if self.BAD_WAVE is not None:
+            BAD_WAVE = builder.CreateString(self.BAD_WAVE)
+        if self.WAVELENGTHS is not None:
+            if np is not None and type(self.WAVELENGTHS) is np.ndarray:
+                WAVELENGTHS = builder.CreateNumpyVector(self.WAVELENGTHS)
+            else:
+                SWRStartWAVELENGTHSVector(builder, len(self.WAVELENGTHS))
+                for i in reversed(range(len(self.WAVELENGTHS))):
+                    builder.PrependFloat64(self.WAVELENGTHS[i])
+                WAVELENGTHS = builder.EndVector()
+        if self.ABS_FLUXES is not None:
+            if np is not None and type(self.ABS_FLUXES) is np.ndarray:
+                ABS_FLUXES = builder.CreateNumpyVector(self.ABS_FLUXES)
+            else:
+                SWRStartABS_FLUXESVector(builder, len(self.ABS_FLUXES))
+                for i in reversed(range(len(self.ABS_FLUXES))):
+                    builder.PrependFloat64(self.ABS_FLUXES[i])
+                ABS_FLUXES = builder.EndVector()
+        if self.RATIO_WAVELENGTHS is not None:
+            if np is not None and type(self.RATIO_WAVELENGTHS) is np.ndarray:
+                RATIO_WAVELENGTHS = builder.CreateNumpyVector(self.RATIO_WAVELENGTHS)
+            else:
+                SWRStartRATIO_WAVELENGTHSVector(builder, len(self.RATIO_WAVELENGTHS))
+                for i in reversed(range(len(self.RATIO_WAVELENGTHS))):
+                    builder.PrependFloat64(self.RATIO_WAVELENGTHS[i])
+                RATIO_WAVELENGTHS = builder.EndVector()
+        if self.FLUX_RATIOS is not None:
+            if np is not None and type(self.FLUX_RATIOS) is np.ndarray:
+                FLUX_RATIOS = builder.CreateNumpyVector(self.FLUX_RATIOS)
+            else:
+                SWRStartFLUX_RATIOSVector(builder, len(self.FLUX_RATIOS))
+                for i in reversed(range(len(self.FLUX_RATIOS))):
+                    builder.PrependFloat64(self.FLUX_RATIOS[i])
+                FLUX_RATIOS = builder.EndVector()
+        SWRStart(builder)
+        if self.ID is not None:
+            SWRAddID(builder, ID)
+        if self.ON_ORBIT is not None:
+            SWRAddON_ORBIT(builder, ON_ORBIT)
+        if self.ORIG_OBJECT_ID is not None:
+            SWRAddORIG_OBJECT_ID(builder, ORIG_OBJECT_ID)
+        SWRAddSAT_NO(builder, self.SAT_NO)
+        if self.TS is not None:
+            SWRAddTS(builder, TS)
+        SWRAddSOLAR_PHASE_ANGLE(builder, self.SOLAR_PHASE_ANGLE)
+        SWRAddLAT(builder, self.LAT)
+        SWRAddLON(builder, self.LON)
+        if self.LOCATION_NAME is not None:
+            SWRAddLOCATION_NAME(builder, LOCATION_NAME)
+        if self.BAD_WAVE is not None:
+            SWRAddBAD_WAVE(builder, BAD_WAVE)
+        if self.WAVELENGTHS is not None:
+            SWRAddWAVELENGTHS(builder, WAVELENGTHS)
+        if self.ABS_FLUXES is not None:
+            SWRAddABS_FLUXES(builder, ABS_FLUXES)
+        if self.RATIO_WAVELENGTHS is not None:
+            SWRAddRATIO_WAVELENGTHS(builder, RATIO_WAVELENGTHS)
+        if self.FLUX_RATIOS is not None:
+            SWRAddFLUX_RATIOS(builder, FLUX_RATIOS)
+        SWRAddTEMPERATURE(builder, self.TEMPERATURE)
+        SWRAddSIGNAL_NOISE_RATIO(builder, self.SIGNAL_NOISE_RATIO)
+        SWRAddINTEGRATION_TIME(builder, self.INTEGRATION_TIME)
+        SWRAddQUALITY(builder, self.QUALITY)
+        SWR = SWREnd(builder)
+        return SWR

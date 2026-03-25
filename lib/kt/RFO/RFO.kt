@@ -32,7 +32,7 @@ class RFO : Table() {
     /**
      * Unique identifier
      */
-    val ID : String?
+    val id : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class RFO : Table() {
                 null
             }
         }
-    val IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val idAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun idInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Observation time (ISO 8601)
      */
-    val OB_TIME : String?
+    val obTime : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -55,12 +55,12 @@ class RFO : Table() {
                 null
             }
         }
-    val OB_TIMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun OB_TIMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val obTimeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun obTimeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * Sensor identifier
      */
-    val ID_SENSOR : String?
+    val idSensor : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -69,12 +69,12 @@ class RFO : Table() {
                 null
             }
         }
-    val ID_SENSORAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun ID_SENSORInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val idSensorAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun idSensorInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
     /**
      * Original sensor identifier
      */
-    val ORIG_SENSOR_ID : String?
+    val origSensorId : String?
         get() {
             val o = __offset(10)
             return if (o != 0) {
@@ -83,12 +83,12 @@ class RFO : Table() {
                 null
             }
         }
-    val ORIG_SENSOR_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
-    fun ORIG_SENSOR_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
+    val origSensorIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(10, 1)
+    fun origSensorIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 10, 1)
     /**
      * Observation type
      */
-    val OBS_TYPE : Byte
+    val obsType : Byte
         get() {
             val o = __offset(12)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -96,7 +96,7 @@ class RFO : Table() {
     /**
      * Satellite catalog number
      */
-    val SAT_NO : UInt
+    val satNo : UInt
         get() {
             val o = __offset(14)
             return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
@@ -104,7 +104,7 @@ class RFO : Table() {
     /**
      * International designator
      */
-    val ORIG_OBJECT_ID : String?
+    val origObjectId : String?
         get() {
             val o = __offset(16)
             return if (o != 0) {
@@ -113,12 +113,12 @@ class RFO : Table() {
                 null
             }
         }
-    val ORIG_OBJECT_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(16, 1)
-    fun ORIG_OBJECT_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 16, 1)
+    val origObjectIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(16, 1)
+    fun origObjectIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 16, 1)
     /**
      * On-orbit reference
      */
-    val ON_ORBIT : String?
+    val onOrbit : String?
         get() {
             val o = __offset(18)
             return if (o != 0) {
@@ -127,12 +127,12 @@ class RFO : Table() {
                 null
             }
         }
-    val ON_ORBITAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(18, 1)
-    fun ON_ORBITInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 18, 1)
+    val onOrbitAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(18, 1)
+    fun onOrbitInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 18, 1)
     /**
      * True if uncorrelated target
      */
-    val UCT : Boolean
+    val uct : Boolean
         get() {
             val o = __offset(20)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -140,7 +140,7 @@ class RFO : Table() {
     /**
      * Task identifier
      */
-    val TASK_ID : String?
+    val taskId : String?
         get() {
             val o = __offset(22)
             return if (o != 0) {
@@ -149,12 +149,12 @@ class RFO : Table() {
                 null
             }
         }
-    val TASK_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(22, 1)
-    fun TASK_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 22, 1)
+    val taskIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(22, 1)
+    fun taskIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 22, 1)
     /**
      * Transaction identifier
      */
-    val TRANSACTION_ID : String?
+    val transactionId : String?
         get() {
             val o = __offset(24)
             return if (o != 0) {
@@ -163,12 +163,12 @@ class RFO : Table() {
                 null
             }
         }
-    val TRANSACTION_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(24, 1)
-    fun TRANSACTION_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 24, 1)
+    val transactionIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(24, 1)
+    fun transactionIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 24, 1)
     /**
      * Track identifier
      */
-    val TRACK_ID : String?
+    val trackId : String?
         get() {
             val o = __offset(26)
             return if (o != 0) {
@@ -177,12 +177,12 @@ class RFO : Table() {
                 null
             }
         }
-    val TRACK_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(26, 1)
-    fun TRACK_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 26, 1)
+    val trackIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(26, 1)
+    fun trackIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 26, 1)
     /**
      * Transponder identifier
      */
-    val TRANSPONDER : String?
+    val transponder : String?
         get() {
             val o = __offset(28)
             return if (o != 0) {
@@ -191,12 +191,12 @@ class RFO : Table() {
                 null
             }
         }
-    val TRANSPONDERAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(28, 1)
-    fun TRANSPONDERInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 28, 1)
+    val transponderAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(28, 1)
+    fun transponderInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 28, 1)
     /**
      * Detection status
      */
-    val DETECTION_STATUS : Byte
+    val detectionStatus : Byte
         get() {
             val o = __offset(30)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -204,7 +204,7 @@ class RFO : Table() {
     /**
      * Azimuth angle (degrees)
      */
-    val AZIMUTH : Double
+    val azimuth : Double
         get() {
             val o = __offset(32)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -212,7 +212,7 @@ class RFO : Table() {
     /**
      * Azimuth uncertainty (degrees, 1-sigma)
      */
-    val AZIMUTH_UNC : Double
+    val azimuthUnc : Double
         get() {
             val o = __offset(34)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -220,7 +220,7 @@ class RFO : Table() {
     /**
      * Azimuth rate (degrees/s)
      */
-    val AZIMUTH_RATE : Double
+    val azimuthRate : Double
         get() {
             val o = __offset(36)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -228,7 +228,7 @@ class RFO : Table() {
     /**
      * Elevation angle (degrees)
      */
-    val ELEVATION : Double
+    val elevation : Double
         get() {
             val o = __offset(38)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -236,7 +236,7 @@ class RFO : Table() {
     /**
      * Elevation uncertainty (degrees, 1-sigma)
      */
-    val ELEVATION_UNC : Double
+    val elevationUnc : Double
         get() {
             val o = __offset(40)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -244,7 +244,7 @@ class RFO : Table() {
     /**
      * Elevation rate (degrees/s)
      */
-    val ELEVATION_RATE : Double
+    val elevationRate : Double
         get() {
             val o = __offset(42)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -252,7 +252,7 @@ class RFO : Table() {
     /**
      * Slant range (km)
      */
-    val RANGE : Double
+    val range : Double
         get() {
             val o = __offset(44)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -260,7 +260,7 @@ class RFO : Table() {
     /**
      * Range uncertainty (km, 1-sigma)
      */
-    val RANGE_UNC : Double
+    val rangeUnc : Double
         get() {
             val o = __offset(46)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -268,7 +268,7 @@ class RFO : Table() {
     /**
      * Range rate (km/s)
      */
-    val RANGE_RATE : Double
+    val rangeRate : Double
         get() {
             val o = __offset(48)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -276,7 +276,7 @@ class RFO : Table() {
     /**
      * Range rate uncertainty (km/s, 1-sigma)
      */
-    val RANGE_RATE_UNC : Double
+    val rangeRateUnc : Double
         get() {
             val o = __offset(50)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -284,7 +284,7 @@ class RFO : Table() {
     /**
      * Track range (km)
      */
-    val TRACK_RANGE : Double
+    val trackRange : Double
         get() {
             val o = __offset(52)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -292,7 +292,7 @@ class RFO : Table() {
     /**
      * Sensor latitude (degrees)
      */
-    val SENLAT : Double
+    val senlat : Double
         get() {
             val o = __offset(54)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -300,7 +300,7 @@ class RFO : Table() {
     /**
      * Sensor longitude (degrees)
      */
-    val SENLON : Double
+    val senlon : Double
         get() {
             val o = __offset(56)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -308,7 +308,7 @@ class RFO : Table() {
     /**
      * Sensor altitude (km)
      */
-    val SENALT : Double
+    val senalt : Double
         get() {
             val o = __offset(58)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -316,7 +316,7 @@ class RFO : Table() {
     /**
      * ELNOT (Electronic Intelligence Notation)
      */
-    val ELNOT : String?
+    val elnot : String?
         get() {
             val o = __offset(60)
             return if (o != 0) {
@@ -325,12 +325,12 @@ class RFO : Table() {
                 null
             }
         }
-    val ELNOTAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(60, 1)
-    fun ELNOTInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 60, 1)
+    val elnotAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(60, 1)
+    fun elnotInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 60, 1)
     /**
      * Antenna name
      */
-    val ANTENNA_NAME : String?
+    val antennaName : String?
         get() {
             val o = __offset(62)
             return if (o != 0) {
@@ -339,12 +339,12 @@ class RFO : Table() {
                 null
             }
         }
-    val ANTENNA_NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(62, 1)
-    fun ANTENNA_NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 62, 1)
+    val antennaNameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(62, 1)
+    fun antennaNameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 62, 1)
     /**
      * Collection mode
      */
-    val COLLECTION_MODE : String?
+    val collectionMode : String?
         get() {
             val o = __offset(64)
             return if (o != 0) {
@@ -353,12 +353,12 @@ class RFO : Table() {
                 null
             }
         }
-    val COLLECTION_MODEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(64, 1)
-    fun COLLECTION_MODEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 64, 1)
+    val collectionModeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(64, 1)
+    fun collectionModeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 64, 1)
     /**
      * Measured center frequency (MHz)
      */
-    val FREQUENCY : Double
+    val frequency : Double
         get() {
             val o = __offset(66)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -366,7 +366,7 @@ class RFO : Table() {
     /**
      * Nominal center frequency (MHz)
      */
-    val NOMINAL_FREQUENCY : Double
+    val nominalFrequency : Double
         get() {
             val o = __offset(68)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -374,7 +374,7 @@ class RFO : Table() {
     /**
      * Start frequency of emission (MHz)
      */
-    val START_FREQUENCY : Double
+    val startFrequency : Double
         get() {
             val o = __offset(70)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -382,7 +382,7 @@ class RFO : Table() {
     /**
      * End frequency of emission (MHz)
      */
-    val END_FREQUENCY : Double
+    val endFrequency : Double
         get() {
             val o = __offset(72)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -390,7 +390,7 @@ class RFO : Table() {
     /**
      * Frequency shift from nominal (MHz)
      */
-    val FREQUENCY_SHIFT : Double
+    val frequencyShift : Double
         get() {
             val o = __offset(74)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -398,7 +398,7 @@ class RFO : Table() {
     /**
      * Measured bandwidth (MHz)
      */
-    val BANDWIDTH : Double
+    val bandwidth : Double
         get() {
             val o = __offset(76)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -406,7 +406,7 @@ class RFO : Table() {
     /**
      * Nominal bandwidth (MHz)
      */
-    val NOMINAL_BANDWIDTH : Double
+    val nominalBandwidth : Double
         get() {
             val o = __offset(78)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -414,7 +414,7 @@ class RFO : Table() {
     /**
      * Resolution bandwidth (MHz)
      */
-    val RESOLUTION_BANDWIDTH : Double
+    val resolutionBandwidth : Double
         get() {
             val o = __offset(80)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -422,7 +422,7 @@ class RFO : Table() {
     /**
      * Video bandwidth (MHz)
      */
-    val VIDEO_BANDWIDTH : Double
+    val videoBandwidth : Double
         get() {
             val o = __offset(82)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -430,7 +430,7 @@ class RFO : Table() {
     /**
      * Relative carrier power (dBm)
      */
-    val RELATIVE_CARRIER_POWER : Double
+    val relativeCarrierPower : Double
         get() {
             val o = __offset(84)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -438,7 +438,7 @@ class RFO : Table() {
     /**
      * Spectrum analyzer power (dBm)
      */
-    val SPECTRUM_ANALYZER_POWER : Double
+    val spectrumAnalyzerPower : Double
         get() {
             val o = __offset(86)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -446,7 +446,7 @@ class RFO : Table() {
     /**
      * Relative noise floor (dBm)
      */
-    val RELATIVE_NOISE_FLOOR : Double
+    val relativeNoiseFloor : Double
         get() {
             val o = __offset(88)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -454,7 +454,7 @@ class RFO : Table() {
     /**
      * Reference level (dBm)
      */
-    val REFERENCE_LEVEL : Double
+    val referenceLevel : Double
         get() {
             val o = __offset(90)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -462,7 +462,7 @@ class RFO : Table() {
     /**
      * Noise power density (dBm/Hz)
      */
-    val NOISE_PWR_DENSITY : Double
+    val noisePwrDensity : Double
         get() {
             val o = __offset(92)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -470,7 +470,7 @@ class RFO : Table() {
     /**
      * PGRI (Pulse Group Repetition Interval, microseconds)
      */
-    val PGRI : Double
+    val pgri : Double
         get() {
             val o = __offset(94)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -478,7 +478,7 @@ class RFO : Table() {
     /**
      * Effective isotropic radiated power (dBW)
      */
-    val EIRP : Double
+    val eirp : Double
         get() {
             val o = __offset(96)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -486,7 +486,7 @@ class RFO : Table() {
     /**
      * Nominal EIRP (dBW)
      */
-    val NOMINAL_EIRP : Double
+    val nominalEirp : Double
         get() {
             val o = __offset(98)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -494,7 +494,7 @@ class RFO : Table() {
     /**
      * Minimum power spectral density (dBm/Hz)
      */
-    val MIN_PSD : Double
+    val minPsd : Double
         get() {
             val o = __offset(100)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -502,7 +502,7 @@ class RFO : Table() {
     /**
      * Maximum power spectral density (dBm/Hz)
      */
-    val MAX_PSD : Double
+    val maxPsd : Double
         get() {
             val o = __offset(102)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -510,7 +510,7 @@ class RFO : Table() {
     /**
      * Signal-to-noise ratio (dB)
      */
-    val SNR : Double
+    val snr : Double
         get() {
             val o = __offset(104)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -518,7 +518,7 @@ class RFO : Table() {
     /**
      * Nominal SNR (dB)
      */
-    val NOMINAL_SNR : Double
+    val nominalSnr : Double
         get() {
             val o = __offset(106)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -526,7 +526,7 @@ class RFO : Table() {
     /**
      * Power over noise (dB)
      */
-    val POWER_OVER_NOISE : Double
+    val powerOverNoise : Double
         get() {
             val o = __offset(108)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -534,7 +534,7 @@ class RFO : Table() {
     /**
      * Nominal power over noise (dB)
      */
-    val NOMINAL_POWER_OVER_NOISE : Double
+    val nominalPowerOverNoise : Double
         get() {
             val o = __offset(110)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -542,7 +542,7 @@ class RFO : Table() {
     /**
      * Polarity angle (degrees)
      */
-    val POLARITY : Double
+    val polarity : Double
         get() {
             val o = __offset(112)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -550,7 +550,7 @@ class RFO : Table() {
     /**
      * Polarization type (e.g., LHCP, RHCP, LINEAR)
      */
-    val POLARITY_TYPE : String?
+    val polarityType : String?
         get() {
             val o = __offset(114)
             return if (o != 0) {
@@ -559,12 +559,12 @@ class RFO : Table() {
                 null
             }
         }
-    val POLARITY_TYPEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(114, 1)
-    fun POLARITY_TYPEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 114, 1)
+    val polarityTypeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(114, 1)
+    fun polarityTypeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 114, 1)
     /**
      * Channel number
      */
-    val CHANNEL : UShort
+    val channel : UShort
         get() {
             val o = __offset(116)
             return if(o != 0) bb.getShort(o + bb_pos).toUShort() else 0u
@@ -572,7 +572,7 @@ class RFO : Table() {
     /**
      * Baud rate (symbols/s)
      */
-    val BAUD_RATE : Double
+    val baudRate : Double
         get() {
             val o = __offset(118)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -580,7 +580,7 @@ class RFO : Table() {
     /**
      * Symbol-to-noise ratio (dB)
      */
-    val SYMBOL_TO_NOISE_RATIO : Double
+    val symbolToNoiseRatio : Double
         get() {
             val o = __offset(120)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -588,7 +588,7 @@ class RFO : Table() {
     /**
      * Bit error rate
      */
-    val BIT_ERROR_RATE : Double
+    val bitErrorRate : Double
         get() {
             val o = __offset(122)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -596,7 +596,7 @@ class RFO : Table() {
     /**
      * True if peak measurement
      */
-    val PEAK : Boolean
+    val peak : Boolean
         get() {
             val o = __offset(124)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -604,7 +604,7 @@ class RFO : Table() {
     /**
      * True if incoming signal
      */
-    val INCOMING : Boolean
+    val incoming : Boolean
         get() {
             val o = __offset(126)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -612,7 +612,7 @@ class RFO : Table() {
     /**
      * Switch point number
      */
-    val SWITCH_POINT : UShort
+    val switchPoint : UShort
         get() {
             val o = __offset(128)
             return if(o != 0) bb.getShort(o + bb_pos).toUShort() else 0u
@@ -620,7 +620,7 @@ class RFO : Table() {
     /**
      * Confidence score (0-1)
      */
-    val CONFIDENCE : Double
+    val confidence : Double
         get() {
             val o = __offset(130)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -628,7 +628,7 @@ class RFO : Table() {
     /**
      * Carrier standard (e.g., DVB-S, DVB-S2)
      */
-    val CARRIER_STANDARD : String?
+    val carrierStandard : String?
         get() {
             val o = __offset(132)
             return if (o != 0) {
@@ -637,12 +637,12 @@ class RFO : Table() {
                 null
             }
         }
-    val CARRIER_STANDARDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(132, 1)
-    fun CARRIER_STANDARDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 132, 1)
+    val carrierStandardAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(132, 1)
+    fun carrierStandardInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 132, 1)
     /**
      * Modulation type
      */
-    val MODULATION : String?
+    val modulation : String?
         get() {
             val o = __offset(134)
             return if (o != 0) {
@@ -651,12 +651,12 @@ class RFO : Table() {
                 null
             }
         }
-    val MODULATIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(134, 1)
-    fun MODULATIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 134, 1)
+    val modulationAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(134, 1)
+    fun modulationInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 134, 1)
     /**
      * Inner FEC coding rate denominator
      */
-    val INNER_CODING_RATE : UByte
+    val innerCodingRate : UByte
         get() {
             val o = __offset(136)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
@@ -664,7 +664,7 @@ class RFO : Table() {
     /**
      * Outer FEC coding rate denominator
      */
-    val OUTER_CODING_RATE : UByte
+    val outerCodingRate : UByte
         get() {
             val o = __offset(138)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
@@ -672,7 +672,7 @@ class RFO : Table() {
     /**
      * Transmit filter type
      */
-    val TRANSMIT_FILTER_TYPE : String?
+    val transmitFilterType : String?
         get() {
             val o = __offset(140)
             return if (o != 0) {
@@ -681,12 +681,12 @@ class RFO : Table() {
                 null
             }
         }
-    val TRANSMIT_FILTER_TYPEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(140, 1)
-    fun TRANSMIT_FILTER_TYPEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 140, 1)
+    val transmitFilterTypeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(140, 1)
+    fun transmitFilterTypeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 140, 1)
     /**
      * Transmit filter roll-off factor
      */
-    val TRANSMIT_FILTER_ROLL_OFF : Double
+    val transmitFilterRollOff : Double
         get() {
             val o = __offset(142)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -694,7 +694,7 @@ class RFO : Table() {
     /**
      * Reference to raw data file
      */
-    val RAW_FILE_URI : String?
+    val rawFileUri : String?
         get() {
             val o = __offset(144)
             return if (o != 0) {
@@ -703,12 +703,12 @@ class RFO : Table() {
                 null
             }
         }
-    val RAW_FILE_URIAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(144, 1)
-    fun RAW_FILE_URIInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 144, 1)
+    val rawFileUriAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(144, 1)
+    fun rawFileUriInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 144, 1)
     /**
      * Event descriptor
      */
-    val DESCRIPTOR : String?
+    val descriptor : String?
         get() {
             val o = __offset(146)
             return if (o != 0) {
@@ -717,12 +717,12 @@ class RFO : Table() {
                 null
             }
         }
-    val DESCRIPTORAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(146, 1)
-    fun DESCRIPTORInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 146, 1)
+    val descriptorAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(146, 1)
+    fun descriptorInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 146, 1)
     /**
      * Reference URL
      */
-    val URL : String?
+    val url : String?
         get() {
             val o = __offset(148)
             return if (o != 0) {
@@ -731,12 +731,12 @@ class RFO : Table() {
                 null
             }
         }
-    val URLAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(148, 1)
-    fun URLInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 148, 1)
+    val urlAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(148, 1)
+    fun urlInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 148, 1)
     /**
      * Associated tags
      */
-    fun TAGS(j: Int) : String? {
+    fun tags(j: Int) : String? {
         val o = __offset(150)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
@@ -744,171 +744,171 @@ class RFO : Table() {
             null
         }
     }
-    val TAGSLength : Int
+    val tagsLength : Int
         get() {
             val o = __offset(150); return if (o != 0) __vector_len(o) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsRFO(_bb: ByteBuffer): RFO = getRootAsRFO(_bb, RFO())
         fun getRootAsRFO(_bb: ByteBuffer, obj: RFO): RFO {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun RFOBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$RFO")
-        fun createRFO(builder: FlatBufferBuilder, IDOffset: Int, OB_TIMEOffset: Int, ID_SENSOROffset: Int, ORIG_SENSOR_IDOffset: Int, OBS_TYPE: Byte, SAT_NO: UInt, ORIG_OBJECT_IDOffset: Int, ON_ORBITOffset: Int, UCT: Boolean, TASK_IDOffset: Int, TRANSACTION_IDOffset: Int, TRACK_IDOffset: Int, TRANSPONDEROffset: Int, DETECTION_STATUS: Byte, AZIMUTH: Double, AZIMUTH_UNC: Double, AZIMUTH_RATE: Double, ELEVATION: Double, ELEVATION_UNC: Double, ELEVATION_RATE: Double, RANGE: Double, RANGE_UNC: Double, RANGE_RATE: Double, RANGE_RATE_UNC: Double, TRACK_RANGE: Double, SENLAT: Double, SENLON: Double, SENALT: Double, ELNOTOffset: Int, ANTENNA_NAMEOffset: Int, COLLECTION_MODEOffset: Int, FREQUENCY: Double, NOMINAL_FREQUENCY: Double, START_FREQUENCY: Double, END_FREQUENCY: Double, FREQUENCY_SHIFT: Double, BANDWIDTH: Double, NOMINAL_BANDWIDTH: Double, RESOLUTION_BANDWIDTH: Double, VIDEO_BANDWIDTH: Double, RELATIVE_CARRIER_POWER: Double, SPECTRUM_ANALYZER_POWER: Double, RELATIVE_NOISE_FLOOR: Double, REFERENCE_LEVEL: Double, NOISE_PWR_DENSITY: Double, PGRI: Double, EIRP: Double, NOMINAL_EIRP: Double, MIN_PSD: Double, MAX_PSD: Double, SNR: Double, NOMINAL_SNR: Double, POWER_OVER_NOISE: Double, NOMINAL_POWER_OVER_NOISE: Double, POLARITY: Double, POLARITY_TYPEOffset: Int, CHANNEL: UShort, BAUD_RATE: Double, SYMBOL_TO_NOISE_RATIO: Double, BIT_ERROR_RATE: Double, PEAK: Boolean, INCOMING: Boolean, SWITCH_POINT: UShort, CONFIDENCE: Double, CARRIER_STANDARDOffset: Int, MODULATIONOffset: Int, INNER_CODING_RATE: UByte, OUTER_CODING_RATE: UByte, TRANSMIT_FILTER_TYPEOffset: Int, TRANSMIT_FILTER_ROLL_OFF: Double, RAW_FILE_URIOffset: Int, DESCRIPTOROffset: Int, URLOffset: Int, TAGSOffset: Int) : Int {
+        fun createRFO(builder: FlatBufferBuilder, idOffset: Int, obTimeOffset: Int, idSensorOffset: Int, origSensorIdOffset: Int, obsType: Byte, satNo: UInt, origObjectIdOffset: Int, onOrbitOffset: Int, uct: Boolean, taskIdOffset: Int, transactionIdOffset: Int, trackIdOffset: Int, transponderOffset: Int, detectionStatus: Byte, azimuth: Double, azimuthUnc: Double, azimuthRate: Double, elevation: Double, elevationUnc: Double, elevationRate: Double, range: Double, rangeUnc: Double, rangeRate: Double, rangeRateUnc: Double, trackRange: Double, senlat: Double, senlon: Double, senalt: Double, elnotOffset: Int, antennaNameOffset: Int, collectionModeOffset: Int, frequency: Double, nominalFrequency: Double, startFrequency: Double, endFrequency: Double, frequencyShift: Double, bandwidth: Double, nominalBandwidth: Double, resolutionBandwidth: Double, videoBandwidth: Double, relativeCarrierPower: Double, spectrumAnalyzerPower: Double, relativeNoiseFloor: Double, referenceLevel: Double, noisePwrDensity: Double, pgri: Double, eirp: Double, nominalEirp: Double, minPsd: Double, maxPsd: Double, snr: Double, nominalSnr: Double, powerOverNoise: Double, nominalPowerOverNoise: Double, polarity: Double, polarityTypeOffset: Int, channel: UShort, baudRate: Double, symbolToNoiseRatio: Double, bitErrorRate: Double, peak: Boolean, incoming: Boolean, switchPoint: UShort, confidence: Double, carrierStandardOffset: Int, modulationOffset: Int, innerCodingRate: UByte, outerCodingRate: UByte, transmitFilterTypeOffset: Int, transmitFilterRollOff: Double, rawFileUriOffset: Int, descriptorOffset: Int, urlOffset: Int, tagsOffset: Int) : Int {
             builder.startTable(74)
-            addTRANSMIT_FILTER_ROLL_OFF(builder, TRANSMIT_FILTER_ROLL_OFF)
-            addCONFIDENCE(builder, CONFIDENCE)
-            addBIT_ERROR_RATE(builder, BIT_ERROR_RATE)
-            addSYMBOL_TO_NOISE_RATIO(builder, SYMBOL_TO_NOISE_RATIO)
-            addBAUD_RATE(builder, BAUD_RATE)
-            addPOLARITY(builder, POLARITY)
-            addNOMINAL_POWER_OVER_NOISE(builder, NOMINAL_POWER_OVER_NOISE)
-            addPOWER_OVER_NOISE(builder, POWER_OVER_NOISE)
-            addNOMINAL_SNR(builder, NOMINAL_SNR)
-            addSNR(builder, SNR)
-            addMAX_PSD(builder, MAX_PSD)
-            addMIN_PSD(builder, MIN_PSD)
-            addNOMINAL_EIRP(builder, NOMINAL_EIRP)
-            addEIRP(builder, EIRP)
-            addPGRI(builder, PGRI)
-            addNOISE_PWR_DENSITY(builder, NOISE_PWR_DENSITY)
-            addREFERENCE_LEVEL(builder, REFERENCE_LEVEL)
-            addRELATIVE_NOISE_FLOOR(builder, RELATIVE_NOISE_FLOOR)
-            addSPECTRUM_ANALYZER_POWER(builder, SPECTRUM_ANALYZER_POWER)
-            addRELATIVE_CARRIER_POWER(builder, RELATIVE_CARRIER_POWER)
-            addVIDEO_BANDWIDTH(builder, VIDEO_BANDWIDTH)
-            addRESOLUTION_BANDWIDTH(builder, RESOLUTION_BANDWIDTH)
-            addNOMINAL_BANDWIDTH(builder, NOMINAL_BANDWIDTH)
-            addBANDWIDTH(builder, BANDWIDTH)
-            addFREQUENCY_SHIFT(builder, FREQUENCY_SHIFT)
-            addEND_FREQUENCY(builder, END_FREQUENCY)
-            addSTART_FREQUENCY(builder, START_FREQUENCY)
-            addNOMINAL_FREQUENCY(builder, NOMINAL_FREQUENCY)
-            addFREQUENCY(builder, FREQUENCY)
-            addSENALT(builder, SENALT)
-            addSENLON(builder, SENLON)
-            addSENLAT(builder, SENLAT)
-            addTRACK_RANGE(builder, TRACK_RANGE)
-            addRANGE_RATE_UNC(builder, RANGE_RATE_UNC)
-            addRANGE_RATE(builder, RANGE_RATE)
-            addRANGE_UNC(builder, RANGE_UNC)
-            addRANGE(builder, RANGE)
-            addELEVATION_RATE(builder, ELEVATION_RATE)
-            addELEVATION_UNC(builder, ELEVATION_UNC)
-            addELEVATION(builder, ELEVATION)
-            addAZIMUTH_RATE(builder, AZIMUTH_RATE)
-            addAZIMUTH_UNC(builder, AZIMUTH_UNC)
-            addAZIMUTH(builder, AZIMUTH)
-            addTAGS(builder, TAGSOffset)
-            addURL(builder, URLOffset)
-            addDESCRIPTOR(builder, DESCRIPTOROffset)
-            addRAW_FILE_URI(builder, RAW_FILE_URIOffset)
-            addTRANSMIT_FILTER_TYPE(builder, TRANSMIT_FILTER_TYPEOffset)
-            addMODULATION(builder, MODULATIONOffset)
-            addCARRIER_STANDARD(builder, CARRIER_STANDARDOffset)
-            addPOLARITY_TYPE(builder, POLARITY_TYPEOffset)
-            addCOLLECTION_MODE(builder, COLLECTION_MODEOffset)
-            addANTENNA_NAME(builder, ANTENNA_NAMEOffset)
-            addELNOT(builder, ELNOTOffset)
-            addTRANSPONDER(builder, TRANSPONDEROffset)
-            addTRACK_ID(builder, TRACK_IDOffset)
-            addTRANSACTION_ID(builder, TRANSACTION_IDOffset)
-            addTASK_ID(builder, TASK_IDOffset)
-            addON_ORBIT(builder, ON_ORBITOffset)
-            addORIG_OBJECT_ID(builder, ORIG_OBJECT_IDOffset)
-            addSAT_NO(builder, SAT_NO)
-            addORIG_SENSOR_ID(builder, ORIG_SENSOR_IDOffset)
-            addID_SENSOR(builder, ID_SENSOROffset)
-            addOB_TIME(builder, OB_TIMEOffset)
-            addID(builder, IDOffset)
-            addSWITCH_POINT(builder, SWITCH_POINT)
-            addCHANNEL(builder, CHANNEL)
-            addOUTER_CODING_RATE(builder, OUTER_CODING_RATE)
-            addINNER_CODING_RATE(builder, INNER_CODING_RATE)
-            addINCOMING(builder, INCOMING)
-            addPEAK(builder, PEAK)
-            addDETECTION_STATUS(builder, DETECTION_STATUS)
-            addUCT(builder, UCT)
-            addOBS_TYPE(builder, OBS_TYPE)
+            addTRANSMITFILTERROLLOFF(builder, transmitFilterRollOff)
+            addCONFIDENCE(builder, confidence)
+            addBITERRORRATE(builder, bitErrorRate)
+            addSYMBOLTONOISERATIO(builder, symbolToNoiseRatio)
+            addBAUDRATE(builder, baudRate)
+            addPOLARITY(builder, polarity)
+            addNOMINALPOWEROVERNOISE(builder, nominalPowerOverNoise)
+            addPOWEROVERNOISE(builder, powerOverNoise)
+            addNOMINALSNR(builder, nominalSnr)
+            addSNR(builder, snr)
+            addMAXPSD(builder, maxPsd)
+            addMINPSD(builder, minPsd)
+            addNOMINALEIRP(builder, nominalEirp)
+            addEIRP(builder, eirp)
+            addPGRI(builder, pgri)
+            addNOISEPWRDENSITY(builder, noisePwrDensity)
+            addREFERENCELEVEL(builder, referenceLevel)
+            addRELATIVENOISEFLOOR(builder, relativeNoiseFloor)
+            addSPECTRUMANALYZERPOWER(builder, spectrumAnalyzerPower)
+            addRELATIVECARRIERPOWER(builder, relativeCarrierPower)
+            addVIDEOBANDWIDTH(builder, videoBandwidth)
+            addRESOLUTIONBANDWIDTH(builder, resolutionBandwidth)
+            addNOMINALBANDWIDTH(builder, nominalBandwidth)
+            addBANDWIDTH(builder, bandwidth)
+            addFREQUENCYSHIFT(builder, frequencyShift)
+            addENDFREQUENCY(builder, endFrequency)
+            addSTARTFREQUENCY(builder, startFrequency)
+            addNOMINALFREQUENCY(builder, nominalFrequency)
+            addFREQUENCY(builder, frequency)
+            addSENALT(builder, senalt)
+            addSENLON(builder, senlon)
+            addSENLAT(builder, senlat)
+            addTRACKRANGE(builder, trackRange)
+            addRANGERATEUNC(builder, rangeRateUnc)
+            addRANGERATE(builder, rangeRate)
+            addRANGEUNC(builder, rangeUnc)
+            addRANGE(builder, range)
+            addELEVATIONRATE(builder, elevationRate)
+            addELEVATIONUNC(builder, elevationUnc)
+            addELEVATION(builder, elevation)
+            addAZIMUTHRATE(builder, azimuthRate)
+            addAZIMUTHUNC(builder, azimuthUnc)
+            addAZIMUTH(builder, azimuth)
+            addTAGS(builder, tagsOffset)
+            addURL(builder, urlOffset)
+            addDESCRIPTOR(builder, descriptorOffset)
+            addRAWFILEURI(builder, rawFileUriOffset)
+            addTRANSMITFILTERTYPE(builder, transmitFilterTypeOffset)
+            addMODULATION(builder, modulationOffset)
+            addCARRIERSTANDARD(builder, carrierStandardOffset)
+            addPOLARITYTYPE(builder, polarityTypeOffset)
+            addCOLLECTIONMODE(builder, collectionModeOffset)
+            addANTENNANAME(builder, antennaNameOffset)
+            addELNOT(builder, elnotOffset)
+            addTRANSPONDER(builder, transponderOffset)
+            addTRACKID(builder, trackIdOffset)
+            addTRANSACTIONID(builder, transactionIdOffset)
+            addTASKID(builder, taskIdOffset)
+            addONORBIT(builder, onOrbitOffset)
+            addORIGOBJECTID(builder, origObjectIdOffset)
+            addSATNO(builder, satNo)
+            addORIGSENSORID(builder, origSensorIdOffset)
+            addIDSENSOR(builder, idSensorOffset)
+            addOBTIME(builder, obTimeOffset)
+            addID(builder, idOffset)
+            addSWITCHPOINT(builder, switchPoint)
+            addCHANNEL(builder, channel)
+            addOUTERCODINGRATE(builder, outerCodingRate)
+            addINNERCODINGRATE(builder, innerCodingRate)
+            addINCOMING(builder, incoming)
+            addPEAK(builder, peak)
+            addDETECTIONSTATUS(builder, detectionStatus)
+            addUCT(builder, uct)
+            addOBSTYPE(builder, obsType)
             return endRFO(builder)
         }
         fun startRFO(builder: FlatBufferBuilder) = builder.startTable(74)
-        fun addID(builder: FlatBufferBuilder, ID: Int) = builder.addOffset(0, ID, 0)
-        fun addOB_TIME(builder: FlatBufferBuilder, OB_TIME: Int) = builder.addOffset(1, OB_TIME, 0)
-        fun addID_SENSOR(builder: FlatBufferBuilder, ID_SENSOR: Int) = builder.addOffset(2, ID_SENSOR, 0)
-        fun addORIG_SENSOR_ID(builder: FlatBufferBuilder, ORIG_SENSOR_ID: Int) = builder.addOffset(3, ORIG_SENSOR_ID, 0)
-        fun addOBS_TYPE(builder: FlatBufferBuilder, OBS_TYPE: Byte) = builder.addByte(4, OBS_TYPE, 0)
-        fun addSAT_NO(builder: FlatBufferBuilder, SAT_NO: UInt) = builder.addInt(5, SAT_NO.toInt(), 0)
-        fun addORIG_OBJECT_ID(builder: FlatBufferBuilder, ORIG_OBJECT_ID: Int) = builder.addOffset(6, ORIG_OBJECT_ID, 0)
-        fun addON_ORBIT(builder: FlatBufferBuilder, ON_ORBIT: Int) = builder.addOffset(7, ON_ORBIT, 0)
-        fun addUCT(builder: FlatBufferBuilder, UCT: Boolean) = builder.addBoolean(8, UCT, false)
-        fun addTASK_ID(builder: FlatBufferBuilder, TASK_ID: Int) = builder.addOffset(9, TASK_ID, 0)
-        fun addTRANSACTION_ID(builder: FlatBufferBuilder, TRANSACTION_ID: Int) = builder.addOffset(10, TRANSACTION_ID, 0)
-        fun addTRACK_ID(builder: FlatBufferBuilder, TRACK_ID: Int) = builder.addOffset(11, TRACK_ID, 0)
-        fun addTRANSPONDER(builder: FlatBufferBuilder, TRANSPONDER: Int) = builder.addOffset(12, TRANSPONDER, 0)
-        fun addDETECTION_STATUS(builder: FlatBufferBuilder, DETECTION_STATUS: Byte) = builder.addByte(13, DETECTION_STATUS, 0)
-        fun addAZIMUTH(builder: FlatBufferBuilder, AZIMUTH: Double) = builder.addDouble(14, AZIMUTH, 0.0)
-        fun addAZIMUTH_UNC(builder: FlatBufferBuilder, AZIMUTH_UNC: Double) = builder.addDouble(15, AZIMUTH_UNC, 0.0)
-        fun addAZIMUTH_RATE(builder: FlatBufferBuilder, AZIMUTH_RATE: Double) = builder.addDouble(16, AZIMUTH_RATE, 0.0)
-        fun addELEVATION(builder: FlatBufferBuilder, ELEVATION: Double) = builder.addDouble(17, ELEVATION, 0.0)
-        fun addELEVATION_UNC(builder: FlatBufferBuilder, ELEVATION_UNC: Double) = builder.addDouble(18, ELEVATION_UNC, 0.0)
-        fun addELEVATION_RATE(builder: FlatBufferBuilder, ELEVATION_RATE: Double) = builder.addDouble(19, ELEVATION_RATE, 0.0)
-        fun addRANGE(builder: FlatBufferBuilder, RANGE: Double) = builder.addDouble(20, RANGE, 0.0)
-        fun addRANGE_UNC(builder: FlatBufferBuilder, RANGE_UNC: Double) = builder.addDouble(21, RANGE_UNC, 0.0)
-        fun addRANGE_RATE(builder: FlatBufferBuilder, RANGE_RATE: Double) = builder.addDouble(22, RANGE_RATE, 0.0)
-        fun addRANGE_RATE_UNC(builder: FlatBufferBuilder, RANGE_RATE_UNC: Double) = builder.addDouble(23, RANGE_RATE_UNC, 0.0)
-        fun addTRACK_RANGE(builder: FlatBufferBuilder, TRACK_RANGE: Double) = builder.addDouble(24, TRACK_RANGE, 0.0)
-        fun addSENLAT(builder: FlatBufferBuilder, SENLAT: Double) = builder.addDouble(25, SENLAT, 0.0)
-        fun addSENLON(builder: FlatBufferBuilder, SENLON: Double) = builder.addDouble(26, SENLON, 0.0)
-        fun addSENALT(builder: FlatBufferBuilder, SENALT: Double) = builder.addDouble(27, SENALT, 0.0)
-        fun addELNOT(builder: FlatBufferBuilder, ELNOT: Int) = builder.addOffset(28, ELNOT, 0)
-        fun addANTENNA_NAME(builder: FlatBufferBuilder, ANTENNA_NAME: Int) = builder.addOffset(29, ANTENNA_NAME, 0)
-        fun addCOLLECTION_MODE(builder: FlatBufferBuilder, COLLECTION_MODE: Int) = builder.addOffset(30, COLLECTION_MODE, 0)
-        fun addFREQUENCY(builder: FlatBufferBuilder, FREQUENCY: Double) = builder.addDouble(31, FREQUENCY, 0.0)
-        fun addNOMINAL_FREQUENCY(builder: FlatBufferBuilder, NOMINAL_FREQUENCY: Double) = builder.addDouble(32, NOMINAL_FREQUENCY, 0.0)
-        fun addSTART_FREQUENCY(builder: FlatBufferBuilder, START_FREQUENCY: Double) = builder.addDouble(33, START_FREQUENCY, 0.0)
-        fun addEND_FREQUENCY(builder: FlatBufferBuilder, END_FREQUENCY: Double) = builder.addDouble(34, END_FREQUENCY, 0.0)
-        fun addFREQUENCY_SHIFT(builder: FlatBufferBuilder, FREQUENCY_SHIFT: Double) = builder.addDouble(35, FREQUENCY_SHIFT, 0.0)
-        fun addBANDWIDTH(builder: FlatBufferBuilder, BANDWIDTH: Double) = builder.addDouble(36, BANDWIDTH, 0.0)
-        fun addNOMINAL_BANDWIDTH(builder: FlatBufferBuilder, NOMINAL_BANDWIDTH: Double) = builder.addDouble(37, NOMINAL_BANDWIDTH, 0.0)
-        fun addRESOLUTION_BANDWIDTH(builder: FlatBufferBuilder, RESOLUTION_BANDWIDTH: Double) = builder.addDouble(38, RESOLUTION_BANDWIDTH, 0.0)
-        fun addVIDEO_BANDWIDTH(builder: FlatBufferBuilder, VIDEO_BANDWIDTH: Double) = builder.addDouble(39, VIDEO_BANDWIDTH, 0.0)
-        fun addRELATIVE_CARRIER_POWER(builder: FlatBufferBuilder, RELATIVE_CARRIER_POWER: Double) = builder.addDouble(40, RELATIVE_CARRIER_POWER, 0.0)
-        fun addSPECTRUM_ANALYZER_POWER(builder: FlatBufferBuilder, SPECTRUM_ANALYZER_POWER: Double) = builder.addDouble(41, SPECTRUM_ANALYZER_POWER, 0.0)
-        fun addRELATIVE_NOISE_FLOOR(builder: FlatBufferBuilder, RELATIVE_NOISE_FLOOR: Double) = builder.addDouble(42, RELATIVE_NOISE_FLOOR, 0.0)
-        fun addREFERENCE_LEVEL(builder: FlatBufferBuilder, REFERENCE_LEVEL: Double) = builder.addDouble(43, REFERENCE_LEVEL, 0.0)
-        fun addNOISE_PWR_DENSITY(builder: FlatBufferBuilder, NOISE_PWR_DENSITY: Double) = builder.addDouble(44, NOISE_PWR_DENSITY, 0.0)
-        fun addPGRI(builder: FlatBufferBuilder, PGRI: Double) = builder.addDouble(45, PGRI, 0.0)
-        fun addEIRP(builder: FlatBufferBuilder, EIRP: Double) = builder.addDouble(46, EIRP, 0.0)
-        fun addNOMINAL_EIRP(builder: FlatBufferBuilder, NOMINAL_EIRP: Double) = builder.addDouble(47, NOMINAL_EIRP, 0.0)
-        fun addMIN_PSD(builder: FlatBufferBuilder, MIN_PSD: Double) = builder.addDouble(48, MIN_PSD, 0.0)
-        fun addMAX_PSD(builder: FlatBufferBuilder, MAX_PSD: Double) = builder.addDouble(49, MAX_PSD, 0.0)
-        fun addSNR(builder: FlatBufferBuilder, SNR: Double) = builder.addDouble(50, SNR, 0.0)
-        fun addNOMINAL_SNR(builder: FlatBufferBuilder, NOMINAL_SNR: Double) = builder.addDouble(51, NOMINAL_SNR, 0.0)
-        fun addPOWER_OVER_NOISE(builder: FlatBufferBuilder, POWER_OVER_NOISE: Double) = builder.addDouble(52, POWER_OVER_NOISE, 0.0)
-        fun addNOMINAL_POWER_OVER_NOISE(builder: FlatBufferBuilder, NOMINAL_POWER_OVER_NOISE: Double) = builder.addDouble(53, NOMINAL_POWER_OVER_NOISE, 0.0)
-        fun addPOLARITY(builder: FlatBufferBuilder, POLARITY: Double) = builder.addDouble(54, POLARITY, 0.0)
-        fun addPOLARITY_TYPE(builder: FlatBufferBuilder, POLARITY_TYPE: Int) = builder.addOffset(55, POLARITY_TYPE, 0)
-        fun addCHANNEL(builder: FlatBufferBuilder, CHANNEL: UShort) = builder.addShort(56, CHANNEL.toShort(), 0)
-        fun addBAUD_RATE(builder: FlatBufferBuilder, BAUD_RATE: Double) = builder.addDouble(57, BAUD_RATE, 0.0)
-        fun addSYMBOL_TO_NOISE_RATIO(builder: FlatBufferBuilder, SYMBOL_TO_NOISE_RATIO: Double) = builder.addDouble(58, SYMBOL_TO_NOISE_RATIO, 0.0)
-        fun addBIT_ERROR_RATE(builder: FlatBufferBuilder, BIT_ERROR_RATE: Double) = builder.addDouble(59, BIT_ERROR_RATE, 0.0)
-        fun addPEAK(builder: FlatBufferBuilder, PEAK: Boolean) = builder.addBoolean(60, PEAK, false)
-        fun addINCOMING(builder: FlatBufferBuilder, INCOMING: Boolean) = builder.addBoolean(61, INCOMING, false)
-        fun addSWITCH_POINT(builder: FlatBufferBuilder, SWITCH_POINT: UShort) = builder.addShort(62, SWITCH_POINT.toShort(), 0)
-        fun addCONFIDENCE(builder: FlatBufferBuilder, CONFIDENCE: Double) = builder.addDouble(63, CONFIDENCE, 0.0)
-        fun addCARRIER_STANDARD(builder: FlatBufferBuilder, CARRIER_STANDARD: Int) = builder.addOffset(64, CARRIER_STANDARD, 0)
-        fun addMODULATION(builder: FlatBufferBuilder, MODULATION: Int) = builder.addOffset(65, MODULATION, 0)
-        fun addINNER_CODING_RATE(builder: FlatBufferBuilder, INNER_CODING_RATE: UByte) = builder.addByte(66, INNER_CODING_RATE.toByte(), 0)
-        fun addOUTER_CODING_RATE(builder: FlatBufferBuilder, OUTER_CODING_RATE: UByte) = builder.addByte(67, OUTER_CODING_RATE.toByte(), 0)
-        fun addTRANSMIT_FILTER_TYPE(builder: FlatBufferBuilder, TRANSMIT_FILTER_TYPE: Int) = builder.addOffset(68, TRANSMIT_FILTER_TYPE, 0)
-        fun addTRANSMIT_FILTER_ROLL_OFF(builder: FlatBufferBuilder, TRANSMIT_FILTER_ROLL_OFF: Double) = builder.addDouble(69, TRANSMIT_FILTER_ROLL_OFF, 0.0)
-        fun addRAW_FILE_URI(builder: FlatBufferBuilder, RAW_FILE_URI: Int) = builder.addOffset(70, RAW_FILE_URI, 0)
-        fun addDESCRIPTOR(builder: FlatBufferBuilder, DESCRIPTOR: Int) = builder.addOffset(71, DESCRIPTOR, 0)
-        fun addURL(builder: FlatBufferBuilder, URL: Int) = builder.addOffset(72, URL, 0)
-        fun addTAGS(builder: FlatBufferBuilder, TAGS: Int) = builder.addOffset(73, TAGS, 0)
+        fun addID(builder: FlatBufferBuilder, id: Int) = builder.addOffset(0, id, 0)
+        fun addOBTIME(builder: FlatBufferBuilder, obTime: Int) = builder.addOffset(1, obTime, 0)
+        fun addIDSENSOR(builder: FlatBufferBuilder, idSensor: Int) = builder.addOffset(2, idSensor, 0)
+        fun addORIGSENSORID(builder: FlatBufferBuilder, origSensorId: Int) = builder.addOffset(3, origSensorId, 0)
+        fun addOBSTYPE(builder: FlatBufferBuilder, obsType: Byte) = builder.addByte(4, obsType, 0)
+        fun addSATNO(builder: FlatBufferBuilder, satNo: UInt) = builder.addInt(5, satNo.toInt(), 0)
+        fun addORIGOBJECTID(builder: FlatBufferBuilder, origObjectId: Int) = builder.addOffset(6, origObjectId, 0)
+        fun addONORBIT(builder: FlatBufferBuilder, onOrbit: Int) = builder.addOffset(7, onOrbit, 0)
+        fun addUCT(builder: FlatBufferBuilder, uct: Boolean) = builder.addBoolean(8, uct, false)
+        fun addTASKID(builder: FlatBufferBuilder, taskId: Int) = builder.addOffset(9, taskId, 0)
+        fun addTRANSACTIONID(builder: FlatBufferBuilder, transactionId: Int) = builder.addOffset(10, transactionId, 0)
+        fun addTRACKID(builder: FlatBufferBuilder, trackId: Int) = builder.addOffset(11, trackId, 0)
+        fun addTRANSPONDER(builder: FlatBufferBuilder, transponder: Int) = builder.addOffset(12, transponder, 0)
+        fun addDETECTIONSTATUS(builder: FlatBufferBuilder, detectionStatus: Byte) = builder.addByte(13, detectionStatus, 0)
+        fun addAZIMUTH(builder: FlatBufferBuilder, azimuth: Double) = builder.addDouble(14, azimuth, 0.0)
+        fun addAZIMUTHUNC(builder: FlatBufferBuilder, azimuthUnc: Double) = builder.addDouble(15, azimuthUnc, 0.0)
+        fun addAZIMUTHRATE(builder: FlatBufferBuilder, azimuthRate: Double) = builder.addDouble(16, azimuthRate, 0.0)
+        fun addELEVATION(builder: FlatBufferBuilder, elevation: Double) = builder.addDouble(17, elevation, 0.0)
+        fun addELEVATIONUNC(builder: FlatBufferBuilder, elevationUnc: Double) = builder.addDouble(18, elevationUnc, 0.0)
+        fun addELEVATIONRATE(builder: FlatBufferBuilder, elevationRate: Double) = builder.addDouble(19, elevationRate, 0.0)
+        fun addRANGE(builder: FlatBufferBuilder, range: Double) = builder.addDouble(20, range, 0.0)
+        fun addRANGEUNC(builder: FlatBufferBuilder, rangeUnc: Double) = builder.addDouble(21, rangeUnc, 0.0)
+        fun addRANGERATE(builder: FlatBufferBuilder, rangeRate: Double) = builder.addDouble(22, rangeRate, 0.0)
+        fun addRANGERATEUNC(builder: FlatBufferBuilder, rangeRateUnc: Double) = builder.addDouble(23, rangeRateUnc, 0.0)
+        fun addTRACKRANGE(builder: FlatBufferBuilder, trackRange: Double) = builder.addDouble(24, trackRange, 0.0)
+        fun addSENLAT(builder: FlatBufferBuilder, senlat: Double) = builder.addDouble(25, senlat, 0.0)
+        fun addSENLON(builder: FlatBufferBuilder, senlon: Double) = builder.addDouble(26, senlon, 0.0)
+        fun addSENALT(builder: FlatBufferBuilder, senalt: Double) = builder.addDouble(27, senalt, 0.0)
+        fun addELNOT(builder: FlatBufferBuilder, elnot: Int) = builder.addOffset(28, elnot, 0)
+        fun addANTENNANAME(builder: FlatBufferBuilder, antennaName: Int) = builder.addOffset(29, antennaName, 0)
+        fun addCOLLECTIONMODE(builder: FlatBufferBuilder, collectionMode: Int) = builder.addOffset(30, collectionMode, 0)
+        fun addFREQUENCY(builder: FlatBufferBuilder, frequency: Double) = builder.addDouble(31, frequency, 0.0)
+        fun addNOMINALFREQUENCY(builder: FlatBufferBuilder, nominalFrequency: Double) = builder.addDouble(32, nominalFrequency, 0.0)
+        fun addSTARTFREQUENCY(builder: FlatBufferBuilder, startFrequency: Double) = builder.addDouble(33, startFrequency, 0.0)
+        fun addENDFREQUENCY(builder: FlatBufferBuilder, endFrequency: Double) = builder.addDouble(34, endFrequency, 0.0)
+        fun addFREQUENCYSHIFT(builder: FlatBufferBuilder, frequencyShift: Double) = builder.addDouble(35, frequencyShift, 0.0)
+        fun addBANDWIDTH(builder: FlatBufferBuilder, bandwidth: Double) = builder.addDouble(36, bandwidth, 0.0)
+        fun addNOMINALBANDWIDTH(builder: FlatBufferBuilder, nominalBandwidth: Double) = builder.addDouble(37, nominalBandwidth, 0.0)
+        fun addRESOLUTIONBANDWIDTH(builder: FlatBufferBuilder, resolutionBandwidth: Double) = builder.addDouble(38, resolutionBandwidth, 0.0)
+        fun addVIDEOBANDWIDTH(builder: FlatBufferBuilder, videoBandwidth: Double) = builder.addDouble(39, videoBandwidth, 0.0)
+        fun addRELATIVECARRIERPOWER(builder: FlatBufferBuilder, relativeCarrierPower: Double) = builder.addDouble(40, relativeCarrierPower, 0.0)
+        fun addSPECTRUMANALYZERPOWER(builder: FlatBufferBuilder, spectrumAnalyzerPower: Double) = builder.addDouble(41, spectrumAnalyzerPower, 0.0)
+        fun addRELATIVENOISEFLOOR(builder: FlatBufferBuilder, relativeNoiseFloor: Double) = builder.addDouble(42, relativeNoiseFloor, 0.0)
+        fun addREFERENCELEVEL(builder: FlatBufferBuilder, referenceLevel: Double) = builder.addDouble(43, referenceLevel, 0.0)
+        fun addNOISEPWRDENSITY(builder: FlatBufferBuilder, noisePwrDensity: Double) = builder.addDouble(44, noisePwrDensity, 0.0)
+        fun addPGRI(builder: FlatBufferBuilder, pgri: Double) = builder.addDouble(45, pgri, 0.0)
+        fun addEIRP(builder: FlatBufferBuilder, eirp: Double) = builder.addDouble(46, eirp, 0.0)
+        fun addNOMINALEIRP(builder: FlatBufferBuilder, nominalEirp: Double) = builder.addDouble(47, nominalEirp, 0.0)
+        fun addMINPSD(builder: FlatBufferBuilder, minPsd: Double) = builder.addDouble(48, minPsd, 0.0)
+        fun addMAXPSD(builder: FlatBufferBuilder, maxPsd: Double) = builder.addDouble(49, maxPsd, 0.0)
+        fun addSNR(builder: FlatBufferBuilder, snr: Double) = builder.addDouble(50, snr, 0.0)
+        fun addNOMINALSNR(builder: FlatBufferBuilder, nominalSnr: Double) = builder.addDouble(51, nominalSnr, 0.0)
+        fun addPOWEROVERNOISE(builder: FlatBufferBuilder, powerOverNoise: Double) = builder.addDouble(52, powerOverNoise, 0.0)
+        fun addNOMINALPOWEROVERNOISE(builder: FlatBufferBuilder, nominalPowerOverNoise: Double) = builder.addDouble(53, nominalPowerOverNoise, 0.0)
+        fun addPOLARITY(builder: FlatBufferBuilder, polarity: Double) = builder.addDouble(54, polarity, 0.0)
+        fun addPOLARITYTYPE(builder: FlatBufferBuilder, polarityType: Int) = builder.addOffset(55, polarityType, 0)
+        fun addCHANNEL(builder: FlatBufferBuilder, channel: UShort) = builder.addShort(56, channel.toShort(), 0)
+        fun addBAUDRATE(builder: FlatBufferBuilder, baudRate: Double) = builder.addDouble(57, baudRate, 0.0)
+        fun addSYMBOLTONOISERATIO(builder: FlatBufferBuilder, symbolToNoiseRatio: Double) = builder.addDouble(58, symbolToNoiseRatio, 0.0)
+        fun addBITERRORRATE(builder: FlatBufferBuilder, bitErrorRate: Double) = builder.addDouble(59, bitErrorRate, 0.0)
+        fun addPEAK(builder: FlatBufferBuilder, peak: Boolean) = builder.addBoolean(60, peak, false)
+        fun addINCOMING(builder: FlatBufferBuilder, incoming: Boolean) = builder.addBoolean(61, incoming, false)
+        fun addSWITCHPOINT(builder: FlatBufferBuilder, switchPoint: UShort) = builder.addShort(62, switchPoint.toShort(), 0)
+        fun addCONFIDENCE(builder: FlatBufferBuilder, confidence: Double) = builder.addDouble(63, confidence, 0.0)
+        fun addCARRIERSTANDARD(builder: FlatBufferBuilder, carrierStandard: Int) = builder.addOffset(64, carrierStandard, 0)
+        fun addMODULATION(builder: FlatBufferBuilder, modulation: Int) = builder.addOffset(65, modulation, 0)
+        fun addINNERCODINGRATE(builder: FlatBufferBuilder, innerCodingRate: UByte) = builder.addByte(66, innerCodingRate.toByte(), 0)
+        fun addOUTERCODINGRATE(builder: FlatBufferBuilder, outerCodingRate: UByte) = builder.addByte(67, outerCodingRate.toByte(), 0)
+        fun addTRANSMITFILTERTYPE(builder: FlatBufferBuilder, transmitFilterType: Int) = builder.addOffset(68, transmitFilterType, 0)
+        fun addTRANSMITFILTERROLLOFF(builder: FlatBufferBuilder, transmitFilterRollOff: Double) = builder.addDouble(69, transmitFilterRollOff, 0.0)
+        fun addRAWFILEURI(builder: FlatBufferBuilder, rawFileUri: Int) = builder.addOffset(70, rawFileUri, 0)
+        fun addDESCRIPTOR(builder: FlatBufferBuilder, descriptor: Int) = builder.addOffset(71, descriptor, 0)
+        fun addURL(builder: FlatBufferBuilder, url: Int) = builder.addOffset(72, url, 0)
+        fun addTAGS(builder: FlatBufferBuilder, tags: Int) = builder.addOffset(73, tags, 0)
         fun createTagsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {

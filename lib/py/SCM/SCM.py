@@ -31,7 +31,7 @@ class SCM(object):
 
     # Version of Space Data Standards
     # SCM
-    def Version(self):
+    def version(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
@@ -69,11 +69,11 @@ def SCMStart(builder):
 def Start(builder):
     SCMStart(builder)
 
-def SCMAddVersion(builder, version):
+def SCMAddversion(builder, version):
     builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(version), 0)
 
-def AddVersion(builder, version):
-    SCMAddVersion(builder, version)
+def Addversion(builder, version):
+    SCMAddversion(builder, version)
 
 def SCMAddRECORDS(builder, RECORDS):
     builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(RECORDS), 0)
@@ -86,6 +86,12 @@ def SCMStartRECORDSVector(builder, numElems):
 
 def StartRECORDSVector(builder, numElems):
     return SCMStartRECORDSVector(builder, numElems)
+
+def SCMCreateRECORDSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateRECORDSVector(builder, data):
+    SCMCreateRECORDSVector(builder, data)
 
 def SCMEnd(builder):
     return builder.EndObject()
@@ -102,15 +108,19 @@ except:
 class SCMT(object):
 
     # SCMT
-    def __init__(self):
-        self.version = None  # type: str
-        self.RECORDS = None  # type: List[SCHEMA_STANDARD.SCHEMA_STANDARDT]
+    def __init__(
+        self,
+        version = None,
+        RECORDS = None,
+    ):
+        self.version = version  # type: Optional[str]
+        self.RECORDS = RECORDS  # type: Optional[List[SCHEMA_STANDARD.SCHEMA_STANDARDT]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        SCM = SCM()
-        SCM.Init(buf, pos)
-        return cls.InitFromObj(SCM)
+        tmpScm = SCM()
+        tmpScm.Init(buf, pos)
+        return cls.InitFromObj(tmpScm)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -118,16 +128,16 @@ class SCMT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, SCM):
+    def InitFromObj(cls, tmpScm):
         x = SCMT()
-        x._UnPack(SCM)
+        x._UnPack(tmpScm)
         return x
 
     # SCMT
     def _UnPack(self, SCM):
         if SCM is None:
             return
-        self.version = SCM.Version()
+        self.version = SCM.version()
         if not SCM.RECORDSIsNone():
             self.RECORDS = []
             for i in range(SCM.RECORDSLength()):
@@ -151,7 +161,7 @@ class SCMT(object):
             RECORDS = builder.EndVector()
         SCMStart(builder)
         if self.version is not None:
-            SCMAddVersion(builder, version)
+            SCMAddversion(builder, version)
         if self.RECORDS is not None:
             SCMAddRECORDS(builder, RECORDS)
         SCM = SCMEnd(builder)

@@ -62,12 +62,20 @@ func (rcv *TKG) COMMAND() []byte {
 	return nil
 }
 
+func (rcv *TKG) Command() []byte {
+	return rcv.COMMAND()
+}
+
 func (rcv *TKG) FILTER_CONFIG() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *TKG) FilterConfig() []byte {
+	return rcv.FILTER_CONFIG()
 }
 
 func (rcv *TKG) IMM_CONFIG() []byte {
@@ -78,12 +86,20 @@ func (rcv *TKG) IMM_CONFIG() []byte {
 	return nil
 }
 
+func (rcv *TKG) ImmConfig() []byte {
+	return rcv.IMM_CONFIG()
+}
+
 func (rcv *TKG) MHT_CONFIG() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *TKG) MhtConfig() []byte {
+	return rcv.MHT_CONFIG()
 }
 
 func (rcv *TKG) JPDA_CONFIG() []byte {
@@ -94,12 +110,20 @@ func (rcv *TKG) JPDA_CONFIG() []byte {
 	return nil
 }
 
+func (rcv *TKG) JpdaConfig() []byte {
+	return rcv.JPDA_CONFIG()
+}
+
 func (rcv *TKG) FUSION_CONFIG() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *TKG) FusionConfig() []byte {
+	return rcv.FUSION_CONFIG()
 }
 
 func (rcv *TKG) MEASUREMENTS() []byte {
@@ -110,6 +134,10 @@ func (rcv *TKG) MEASUREMENTS() []byte {
 	return nil
 }
 
+func (rcv *TKG) Measurements() []byte {
+	return rcv.MEASUREMENTS()
+}
+
 func (rcv *TKG) INITIAL_STATE() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
 	if o != 0 {
@@ -118,12 +146,20 @@ func (rcv *TKG) INITIAL_STATE() []byte {
 	return nil
 }
 
+func (rcv *TKG) InitialState() []byte {
+	return rcv.INITIAL_STATE()
+}
+
 func (rcv *TKG) TRACK_TO_UPDATE() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *TKG) TrackToUpdate() []byte {
+	return rcv.TRACK_TO_UPDATE()
 }
 
 func (rcv *TKG) TRACKS_TO_CORRELATE(j int) []byte {
@@ -135,6 +171,10 @@ func (rcv *TKG) TRACKS_TO_CORRELATE(j int) []byte {
 	return nil
 }
 
+func (rcv *TKG) TracksToCorrelate(j int) []byte {
+	return rcv.TRACKS_TO_CORRELATE(j)
+}
+
 func (rcv *TKG) TRACKS_TO_CORRELATELength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
 	if o != 0 {
@@ -143,41 +183,78 @@ func (rcv *TKG) TRACKS_TO_CORRELATELength() int {
 	return 0
 }
 
+func (rcv *TKG) TracksToCorrelateLength() int {
+	return rcv.TRACKS_TO_CORRELATELength()
+}
+
 func TKGStart(builder *flatbuffers.Builder) {
 	builder.StartObject(10)
 }
 func TKGAddCOMMAND(builder *flatbuffers.Builder, COMMAND flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(COMMAND), 0)
 }
+func TKGAddCommand(builder *flatbuffers.Builder, COMMAND flatbuffers.UOffsetT) {
+	TKGAddCOMMAND(builder, COMMAND)
+}
 func TKGAddFILTER_CONFIG(builder *flatbuffers.Builder, FILTER_CONFIG flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(FILTER_CONFIG), 0)
+}
+func TKGAddFilterConfig(builder *flatbuffers.Builder, FILTER_CONFIG flatbuffers.UOffsetT) {
+	TKGAddFILTER_CONFIG(builder, FILTER_CONFIG)
 }
 func TKGAddIMM_CONFIG(builder *flatbuffers.Builder, IMM_CONFIG flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(IMM_CONFIG), 0)
 }
+func TKGAddImmConfig(builder *flatbuffers.Builder, IMM_CONFIG flatbuffers.UOffsetT) {
+	TKGAddIMM_CONFIG(builder, IMM_CONFIG)
+}
 func TKGAddMHT_CONFIG(builder *flatbuffers.Builder, MHT_CONFIG flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(MHT_CONFIG), 0)
+}
+func TKGAddMhtConfig(builder *flatbuffers.Builder, MHT_CONFIG flatbuffers.UOffsetT) {
+	TKGAddMHT_CONFIG(builder, MHT_CONFIG)
 }
 func TKGAddJPDA_CONFIG(builder *flatbuffers.Builder, JPDA_CONFIG flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(JPDA_CONFIG), 0)
 }
+func TKGAddJpdaConfig(builder *flatbuffers.Builder, JPDA_CONFIG flatbuffers.UOffsetT) {
+	TKGAddJPDA_CONFIG(builder, JPDA_CONFIG)
+}
 func TKGAddFUSION_CONFIG(builder *flatbuffers.Builder, FUSION_CONFIG flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(FUSION_CONFIG), 0)
+}
+func TKGAddFusionConfig(builder *flatbuffers.Builder, FUSION_CONFIG flatbuffers.UOffsetT) {
+	TKGAddFUSION_CONFIG(builder, FUSION_CONFIG)
 }
 func TKGAddMEASUREMENTS(builder *flatbuffers.Builder, MEASUREMENTS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(MEASUREMENTS), 0)
 }
+func TKGAddMeasurements(builder *flatbuffers.Builder, MEASUREMENTS flatbuffers.UOffsetT) {
+	TKGAddMEASUREMENTS(builder, MEASUREMENTS)
+}
 func TKGAddINITIAL_STATE(builder *flatbuffers.Builder, INITIAL_STATE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(INITIAL_STATE), 0)
+}
+func TKGAddInitialState(builder *flatbuffers.Builder, INITIAL_STATE flatbuffers.UOffsetT) {
+	TKGAddINITIAL_STATE(builder, INITIAL_STATE)
 }
 func TKGAddTRACK_TO_UPDATE(builder *flatbuffers.Builder, TRACK_TO_UPDATE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(TRACK_TO_UPDATE), 0)
 }
+func TKGAddTrackToUpdate(builder *flatbuffers.Builder, TRACK_TO_UPDATE flatbuffers.UOffsetT) {
+	TKGAddTRACK_TO_UPDATE(builder, TRACK_TO_UPDATE)
+}
 func TKGAddTRACKS_TO_CORRELATE(builder *flatbuffers.Builder, TRACKS_TO_CORRELATE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(TRACKS_TO_CORRELATE), 0)
 }
+func TKGAddTracksToCorrelate(builder *flatbuffers.Builder, TRACKS_TO_CORRELATE flatbuffers.UOffsetT) {
+	TKGAddTRACKS_TO_CORRELATE(builder, TRACKS_TO_CORRELATE)
+}
 func TKGStartTRACKS_TO_CORRELATEVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func TKGStartTracksToCorrelateVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return TKGStartTRACKS_TO_CORRELATEVector(builder, numElems)
 }
 func TKGEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

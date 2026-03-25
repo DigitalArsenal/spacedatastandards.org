@@ -32,7 +32,7 @@ class XTCHeader : Table() {
     /**
      * Version of this XTCE document
      */
-    val VERSION : String?
+    val version : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class XTCHeader : Table() {
                 null
             }
         }
-    val VERSIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun VERSIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val versionAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun versionInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Date of document creation (ISO 8601)
      */
-    val DATE : String?
+    val date : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -55,12 +55,12 @@ class XTCHeader : Table() {
                 null
             }
         }
-    val DATEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun DATEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val dateAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun dateInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * Classification level
      */
-    val CLASSIFICATION : String?
+    val classification : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -69,12 +69,12 @@ class XTCHeader : Table() {
                 null
             }
         }
-    val CLASSIFICATIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun CLASSIFICATIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val classificationAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun classificationInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
     /**
      * Validation status
      */
-    val VALIDATION_STATUS : String?
+    val validationStatus : String?
         get() {
             val o = __offset(10)
             return if (o != 0) {
@@ -83,12 +83,12 @@ class XTCHeader : Table() {
                 null
             }
         }
-    val VALIDATION_STATUSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
-    fun VALIDATION_STATUSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
+    val validationStatusAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(10, 1)
+    fun validationStatusInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 10, 1)
     /**
      * Author information
      */
-    val AUTHOR : String?
+    val author : String?
         get() {
             val o = __offset(12)
             return if (o != 0) {
@@ -97,12 +97,12 @@ class XTCHeader : Table() {
                 null
             }
         }
-    val AUTHORAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
-    fun AUTHORInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
+    val authorAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(12, 1)
+    fun authorInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 12, 1)
     /**
      * Notes/comments
      */
-    fun NOTES(j: Int) : String? {
+    fun notes(j: Int) : String? {
         val o = __offset(14)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
@@ -110,34 +110,34 @@ class XTCHeader : Table() {
             null
         }
     }
-    val NOTESLength : Int
+    val notesLength : Int
         get() {
             val o = __offset(14); return if (o != 0) __vector_len(o) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsXTCHeader(_bb: ByteBuffer): XTCHeader = getRootAsXTCHeader(_bb, XTCHeader())
         fun getRootAsXTCHeader(_bb: ByteBuffer, obj: XTCHeader): XTCHeader {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createXTCHeader(builder: FlatBufferBuilder, VERSIONOffset: Int, DATEOffset: Int, CLASSIFICATIONOffset: Int, VALIDATION_STATUSOffset: Int, AUTHOROffset: Int, NOTESOffset: Int) : Int {
+        fun createXTCHeader(builder: FlatBufferBuilder, versionOffset: Int, dateOffset: Int, classificationOffset: Int, validationStatusOffset: Int, authorOffset: Int, notesOffset: Int) : Int {
             builder.startTable(6)
-            addNOTES(builder, NOTESOffset)
-            addAUTHOR(builder, AUTHOROffset)
-            addVALIDATION_STATUS(builder, VALIDATION_STATUSOffset)
-            addCLASSIFICATION(builder, CLASSIFICATIONOffset)
-            addDATE(builder, DATEOffset)
-            addVERSION(builder, VERSIONOffset)
+            addNOTES(builder, notesOffset)
+            addAUTHOR(builder, authorOffset)
+            addVALIDATIONSTATUS(builder, validationStatusOffset)
+            addCLASSIFICATION(builder, classificationOffset)
+            addDATE(builder, dateOffset)
+            addVERSION(builder, versionOffset)
             return endXTCHeader(builder)
         }
         fun startXTCHeader(builder: FlatBufferBuilder) = builder.startTable(6)
-        fun addVERSION(builder: FlatBufferBuilder, VERSION: Int) = builder.addOffset(0, VERSION, 0)
-        fun addDATE(builder: FlatBufferBuilder, DATE: Int) = builder.addOffset(1, DATE, 0)
-        fun addCLASSIFICATION(builder: FlatBufferBuilder, CLASSIFICATION: Int) = builder.addOffset(2, CLASSIFICATION, 0)
-        fun addVALIDATION_STATUS(builder: FlatBufferBuilder, VALIDATION_STATUS: Int) = builder.addOffset(3, VALIDATION_STATUS, 0)
-        fun addAUTHOR(builder: FlatBufferBuilder, AUTHOR: Int) = builder.addOffset(4, AUTHOR, 0)
-        fun addNOTES(builder: FlatBufferBuilder, NOTES: Int) = builder.addOffset(5, NOTES, 0)
+        fun addVERSION(builder: FlatBufferBuilder, version: Int) = builder.addOffset(0, version, 0)
+        fun addDATE(builder: FlatBufferBuilder, date: Int) = builder.addOffset(1, date, 0)
+        fun addCLASSIFICATION(builder: FlatBufferBuilder, classification: Int) = builder.addOffset(2, classification, 0)
+        fun addVALIDATIONSTATUS(builder: FlatBufferBuilder, validationStatus: Int) = builder.addOffset(3, validationStatus, 0)
+        fun addAUTHOR(builder: FlatBufferBuilder, author: Int) = builder.addOffset(4, author, 0)
+        fun addNOTES(builder: FlatBufferBuilder, notes: Int) = builder.addOffset(5, notes, 0)
         fun createNotesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {

@@ -51,9 +51,17 @@ func (rcv *KMLStyleMapPair) STATE() KMLStyleState {
 	return 0
 }
 
+func (rcv *KMLStyleMapPair) State() KMLStyleState {
+	return rcv.STATE()
+}
+
 /// State (normal or highlight)
 func (rcv *KMLStyleMapPair) MutateSTATE(n KMLStyleState) bool {
 	return rcv._tab.MutateInt8Slot(4, int8(n))
+}
+
+func (rcv *KMLStyleMapPair) MutateState(n KMLStyleState) bool {
+	return rcv.MutateSTATE(n)
 }
 
 /// Style URL or inline style ID
@@ -65,6 +73,10 @@ func (rcv *KMLStyleMapPair) STYLE_URL() []byte {
 	return nil
 }
 
+func (rcv *KMLStyleMapPair) StyleUrl() []byte {
+	return rcv.STYLE_URL()
+}
+
 /// Style URL or inline style ID
 func KMLStyleMapPairStart(builder *flatbuffers.Builder) {
 	builder.StartObject(2)
@@ -72,8 +84,14 @@ func KMLStyleMapPairStart(builder *flatbuffers.Builder) {
 func KMLStyleMapPairAddSTATE(builder *flatbuffers.Builder, STATE KMLStyleState) {
 	builder.PrependInt8Slot(0, int8(STATE), 0)
 }
+func KMLStyleMapPairAddState(builder *flatbuffers.Builder, STATE KMLStyleState) {
+	KMLStyleMapPairAddSTATE(builder, STATE)
+}
 func KMLStyleMapPairAddSTYLE_URL(builder *flatbuffers.Builder, STYLE_URL flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(STYLE_URL), 0)
+}
+func KMLStyleMapPairAddStyleUrl(builder *flatbuffers.Builder, STYLE_URL flatbuffers.UOffsetT) {
+	KMLStyleMapPairAddSTYLE_URL(builder, STYLE_URL)
 }
 func KMLStyleMapPairEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

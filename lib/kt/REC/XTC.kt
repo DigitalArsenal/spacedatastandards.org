@@ -35,7 +35,7 @@ class XTC : Table() {
     /**
      * Name of this space system
      */
-    val NAME : String?
+    val name : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -44,12 +44,12 @@ class XTC : Table() {
                 null
             }
         }
-    val NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val nameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun nameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Short description
      */
-    val SHORT_DESCRIPTION : String?
+    val shortDescription : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -58,12 +58,12 @@ class XTC : Table() {
                 null
             }
         }
-    val SHORT_DESCRIPTIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun SHORT_DESCRIPTIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val shortDescriptionAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun shortDescriptionInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * Long description
      */
-    val LONG_DESCRIPTION : String?
+    val longDescription : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -72,12 +72,12 @@ class XTC : Table() {
                 null
             }
         }
-    val LONG_DESCRIPTIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun LONG_DESCRIPTIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val longDescriptionAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun longDescriptionInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
     /**
      * Operational status
      */
-    val OPERATIONAL_STATUS : String?
+    val operationalStatus : String?
         get() {
             val o = __offset(10)
             return if (o != 0) {
@@ -86,13 +86,13 @@ class XTC : Table() {
                 null
             }
         }
-    val OPERATIONAL_STATUSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
-    fun OPERATIONAL_STATUSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
+    val operationalStatusAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(10, 1)
+    fun operationalStatusInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 10, 1)
     /**
      * Document header
      */
-    val HEADER : XTCHeader? get() = HEADER(XTCHeader())
-    fun HEADER(obj: XTCHeader) : XTCHeader? {
+    val header : XTCHeader? get() = header(XTCHeader())
+    fun header(obj: XTCHeader) : XTCHeader? {
         val o = __offset(12)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -103,8 +103,8 @@ class XTC : Table() {
     /**
      * Telemetry metadata
      */
-    val TELEMETRY_META_DATA : TelemetryMetaData? get() = TELEMETRY_META_DATA(TelemetryMetaData())
-    fun TELEMETRY_META_DATA(obj: TelemetryMetaData) : TelemetryMetaData? {
+    val telemetryMetaData : TelemetryMetaData? get() = telemetryMetaData(TelemetryMetaData())
+    fun telemetryMetaData(obj: TelemetryMetaData) : TelemetryMetaData? {
         val o = __offset(14)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -115,8 +115,8 @@ class XTC : Table() {
     /**
      * Command metadata
      */
-    val COMMAND_META_DATA : CommandMetaData? get() = COMMAND_META_DATA(CommandMetaData())
-    fun COMMAND_META_DATA(obj: CommandMetaData) : CommandMetaData? {
+    val commandMetaData : CommandMetaData? get() = commandMetaData(CommandMetaData())
+    fun commandMetaData(obj: CommandMetaData) : CommandMetaData? {
         val o = __offset(16)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -127,8 +127,8 @@ class XTC : Table() {
     /**
      * Service definitions
      */
-    val SERVICE_SET : ServiceSet? get() = SERVICE_SET(ServiceSet())
-    fun SERVICE_SET(obj: ServiceSet) : ServiceSet? {
+    val serviceSet : ServiceSet? get() = serviceSet(ServiceSet())
+    fun serviceSet(obj: ServiceSet) : ServiceSet? {
         val o = __offset(18)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -139,8 +139,8 @@ class XTC : Table() {
     /**
      * Child space systems (hierarchical structure)
      */
-    fun CHILD_SYSTEMS(j: Int) : XTC? = CHILD_SYSTEMS(XTC(), j)
-    fun CHILD_SYSTEMS(obj: XTC, j: Int) : XTC? {
+    fun childSystems(j: Int) : XTC? = childSystems(XTC(), j)
+    fun childSystems(obj: XTC, j: Int) : XTC? {
         val o = __offset(20)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -148,41 +148,41 @@ class XTC : Table() {
             null
         }
     }
-    val CHILD_SYSTEMSLength : Int
+    val childSystemsLength : Int
         get() {
             val o = __offset(20); return if (o != 0) __vector_len(o) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsXTC(_bb: ByteBuffer): XTC = getRootAsXTC(_bb, XTC())
         fun getRootAsXTC(_bb: ByteBuffer, obj: XTC): XTC {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun XTCBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$XTC")
-        fun createXTC(builder: FlatBufferBuilder, NAMEOffset: Int, SHORT_DESCRIPTIONOffset: Int, LONG_DESCRIPTIONOffset: Int, OPERATIONAL_STATUSOffset: Int, HEADEROffset: Int, TELEMETRY_META_DATAOffset: Int, COMMAND_META_DATAOffset: Int, SERVICE_SETOffset: Int, CHILD_SYSTEMSOffset: Int) : Int {
+        fun createXTC(builder: FlatBufferBuilder, nameOffset: Int, shortDescriptionOffset: Int, longDescriptionOffset: Int, operationalStatusOffset: Int, headerOffset: Int, telemetryMetaDataOffset: Int, commandMetaDataOffset: Int, serviceSetOffset: Int, childSystemsOffset: Int) : Int {
             builder.startTable(9)
-            addCHILD_SYSTEMS(builder, CHILD_SYSTEMSOffset)
-            addSERVICE_SET(builder, SERVICE_SETOffset)
-            addCOMMAND_META_DATA(builder, COMMAND_META_DATAOffset)
-            addTELEMETRY_META_DATA(builder, TELEMETRY_META_DATAOffset)
-            addHEADER(builder, HEADEROffset)
-            addOPERATIONAL_STATUS(builder, OPERATIONAL_STATUSOffset)
-            addLONG_DESCRIPTION(builder, LONG_DESCRIPTIONOffset)
-            addSHORT_DESCRIPTION(builder, SHORT_DESCRIPTIONOffset)
-            addNAME(builder, NAMEOffset)
+            addCHILDSYSTEMS(builder, childSystemsOffset)
+            addSERVICESET(builder, serviceSetOffset)
+            addCOMMANDMETADATA(builder, commandMetaDataOffset)
+            addTELEMETRYMETADATA(builder, telemetryMetaDataOffset)
+            addHEADER(builder, headerOffset)
+            addOPERATIONALSTATUS(builder, operationalStatusOffset)
+            addLONGDESCRIPTION(builder, longDescriptionOffset)
+            addSHORTDESCRIPTION(builder, shortDescriptionOffset)
+            addNAME(builder, nameOffset)
             return endXTC(builder)
         }
         fun startXTC(builder: FlatBufferBuilder) = builder.startTable(9)
-        fun addNAME(builder: FlatBufferBuilder, NAME: Int) = builder.addOffset(0, NAME, 0)
-        fun addSHORT_DESCRIPTION(builder: FlatBufferBuilder, SHORT_DESCRIPTION: Int) = builder.addOffset(1, SHORT_DESCRIPTION, 0)
-        fun addLONG_DESCRIPTION(builder: FlatBufferBuilder, LONG_DESCRIPTION: Int) = builder.addOffset(2, LONG_DESCRIPTION, 0)
-        fun addOPERATIONAL_STATUS(builder: FlatBufferBuilder, OPERATIONAL_STATUS: Int) = builder.addOffset(3, OPERATIONAL_STATUS, 0)
-        fun addHEADER(builder: FlatBufferBuilder, HEADER: Int) = builder.addOffset(4, HEADER, 0)
-        fun addTELEMETRY_META_DATA(builder: FlatBufferBuilder, TELEMETRY_META_DATA: Int) = builder.addOffset(5, TELEMETRY_META_DATA, 0)
-        fun addCOMMAND_META_DATA(builder: FlatBufferBuilder, COMMAND_META_DATA: Int) = builder.addOffset(6, COMMAND_META_DATA, 0)
-        fun addSERVICE_SET(builder: FlatBufferBuilder, SERVICE_SET: Int) = builder.addOffset(7, SERVICE_SET, 0)
-        fun addCHILD_SYSTEMS(builder: FlatBufferBuilder, CHILD_SYSTEMS: Int) = builder.addOffset(8, CHILD_SYSTEMS, 0)
+        fun addNAME(builder: FlatBufferBuilder, name: Int) = builder.addOffset(0, name, 0)
+        fun addSHORTDESCRIPTION(builder: FlatBufferBuilder, shortDescription: Int) = builder.addOffset(1, shortDescription, 0)
+        fun addLONGDESCRIPTION(builder: FlatBufferBuilder, longDescription: Int) = builder.addOffset(2, longDescription, 0)
+        fun addOPERATIONALSTATUS(builder: FlatBufferBuilder, operationalStatus: Int) = builder.addOffset(3, operationalStatus, 0)
+        fun addHEADER(builder: FlatBufferBuilder, header: Int) = builder.addOffset(4, header, 0)
+        fun addTELEMETRYMETADATA(builder: FlatBufferBuilder, telemetryMetaData: Int) = builder.addOffset(5, telemetryMetaData, 0)
+        fun addCOMMANDMETADATA(builder: FlatBufferBuilder, commandMetaData: Int) = builder.addOffset(6, commandMetaData, 0)
+        fun addSERVICESET(builder: FlatBufferBuilder, serviceSet: Int) = builder.addOffset(7, serviceSet, 0)
+        fun addCHILDSYSTEMS(builder: FlatBufferBuilder, childSystems: Int) = builder.addOffset(8, childSystems, 0)
         fun createChildSystemsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {

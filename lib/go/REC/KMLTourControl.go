@@ -51,12 +51,19 @@ func (rcv *KMLTourControl) PLAY_MODE() []byte {
 	return nil
 }
 
+func (rcv *KMLTourControl) PlayMode() []byte {
+	return rcv.PLAY_MODE()
+}
+
 /// Play mode (pause)
 func KMLTourControlStart(builder *flatbuffers.Builder) {
 	builder.StartObject(1)
 }
 func KMLTourControlAddPLAY_MODE(builder *flatbuffers.Builder, PLAY_MODE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(PLAY_MODE), 0)
+}
+func KMLTourControlAddPlayMode(builder *flatbuffers.Builder, PLAY_MODE flatbuffers.UOffsetT) {
+	KMLTourControlAddPLAY_MODE(builder, PLAY_MODE)
 }
 func KMLTourControlEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

@@ -2,4 +2,9 @@
 
 # namespace: 
 
-# NOTE ObservationPosition.py does not declare any structs or enums
+class ObservationPosition(object):
+    FENCE = 0
+    FIRST = 1
+    IN = 2
+    LAST = 3
+    SINGLE = 4

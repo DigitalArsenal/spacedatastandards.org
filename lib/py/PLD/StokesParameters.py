@@ -2,4 +2,149 @@
 
 # namespace: 
 
-# NOTE StokesParameters.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Stokes parameters, representing different aspects of polarization
+class StokesParameters(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = StokesParameters()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsStokesParameters(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def StokesParametersBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x49\x44\x4D", size_prefixed=size_prefixed)
+
+    # StokesParameters
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Intensity
+    # StokesParameters
+    def I(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Linear polarization
+    # StokesParameters
+    def Q(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Another linear polarization, orthogonal to Q
+    # StokesParameters
+    def U(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Circular polarization
+    # StokesParameters
+    def V(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+def StokesParametersStart(builder):
+    builder.StartObject(4)
+
+def Start(builder):
+    StokesParametersStart(builder)
+
+def StokesParametersAddI(builder, I):
+    builder.PrependFloat64Slot(0, I, 0.0)
+
+def AddI(builder, I):
+    StokesParametersAddI(builder, I)
+
+def StokesParametersAddQ(builder, Q):
+    builder.PrependFloat64Slot(1, Q, 0.0)
+
+def AddQ(builder, Q):
+    StokesParametersAddQ(builder, Q)
+
+def StokesParametersAddU(builder, U):
+    builder.PrependFloat64Slot(2, U, 0.0)
+
+def AddU(builder, U):
+    StokesParametersAddU(builder, U)
+
+def StokesParametersAddV(builder, V):
+    builder.PrependFloat64Slot(3, V, 0.0)
+
+def AddV(builder, V):
+    StokesParametersAddV(builder, V)
+
+def StokesParametersEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return StokesParametersEnd(builder)
+
+
+class StokesParametersT(object):
+
+    # StokesParametersT
+    def __init__(
+        self,
+        I = 0.0,
+        Q = 0.0,
+        U = 0.0,
+        V = 0.0,
+    ):
+        self.I = I  # type: float
+        self.Q = Q  # type: float
+        self.U = U  # type: float
+        self.V = V  # type: float
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpStokesParameters = StokesParameters()
+        tmpStokesParameters.Init(buf, pos)
+        return cls.InitFromObj(tmpStokesParameters)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpStokesParameters):
+        x = StokesParametersT()
+        x._UnPack(tmpStokesParameters)
+        return x
+
+    # StokesParametersT
+    def _UnPack(self, StokesParameters):
+        if StokesParameters is None:
+            return
+        self.I = StokesParameters.I()
+        self.Q = StokesParameters.Q()
+        self.U = StokesParameters.U()
+        self.V = StokesParameters.V()
+
+    # StokesParametersT
+    def Pack(self, builder):
+        StokesParametersStart(builder)
+        StokesParametersAddI(builder, self.I)
+        StokesParametersAddQ(builder, self.Q)
+        StokesParametersAddU(builder, self.U)
+        StokesParametersAddV(builder, self.V)
+        StokesParameters = StokesParametersEnd(builder)
+        return StokesParameters

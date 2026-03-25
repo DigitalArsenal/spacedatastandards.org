@@ -49,10 +49,17 @@ func (rcv *AlgorithmSet) CUSTOM_ALGORITHMS(obj *CustomAlgorithm, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(CustomAlgorithm)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *AlgorithmSet) CustomAlgorithms(obj *CustomAlgorithm, j int) bool {
+	return rcv.CUSTOM_ALGORITHMS(obj, j)
 }
 
 func (rcv *AlgorithmSet) CUSTOM_ALGORITHMSLength() int {
@@ -63,6 +70,10 @@ func (rcv *AlgorithmSet) CUSTOM_ALGORITHMSLength() int {
 	return 0
 }
 
+func (rcv *AlgorithmSet) CustomAlgorithmsLength() int {
+	return rcv.CUSTOM_ALGORITHMSLength()
+}
+
 /// Custom algorithms
 /// Math algorithms
 func (rcv *AlgorithmSet) MATH_ALGORITHMS(obj *MathAlgorithm, j int) bool {
@@ -71,10 +82,17 @@ func (rcv *AlgorithmSet) MATH_ALGORITHMS(obj *MathAlgorithm, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(MathAlgorithm)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *AlgorithmSet) MathAlgorithms(obj *MathAlgorithm, j int) bool {
+	return rcv.MATH_ALGORITHMS(obj, j)
 }
 
 func (rcv *AlgorithmSet) MATH_ALGORITHMSLength() int {
@@ -85,6 +103,10 @@ func (rcv *AlgorithmSet) MATH_ALGORITHMSLength() int {
 	return 0
 }
 
+func (rcv *AlgorithmSet) MathAlgorithmsLength() int {
+	return rcv.MATH_ALGORITHMSLength()
+}
+
 /// Math algorithms
 func AlgorithmSetStart(builder *flatbuffers.Builder) {
 	builder.StartObject(2)
@@ -92,14 +114,26 @@ func AlgorithmSetStart(builder *flatbuffers.Builder) {
 func AlgorithmSetAddCUSTOM_ALGORITHMS(builder *flatbuffers.Builder, CUSTOM_ALGORITHMS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(CUSTOM_ALGORITHMS), 0)
 }
+func AlgorithmSetAddCustomAlgorithms(builder *flatbuffers.Builder, CUSTOM_ALGORITHMS flatbuffers.UOffsetT) {
+	AlgorithmSetAddCUSTOM_ALGORITHMS(builder, CUSTOM_ALGORITHMS)
+}
 func AlgorithmSetStartCUSTOM_ALGORITHMSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func AlgorithmSetStartCustomAlgorithmsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return AlgorithmSetStartCUSTOM_ALGORITHMSVector(builder, numElems)
 }
 func AlgorithmSetAddMATH_ALGORITHMS(builder *flatbuffers.Builder, MATH_ALGORITHMS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(MATH_ALGORITHMS), 0)
 }
+func AlgorithmSetAddMathAlgorithms(builder *flatbuffers.Builder, MATH_ALGORITHMS flatbuffers.UOffsetT) {
+	AlgorithmSetAddMATH_ALGORITHMS(builder, MATH_ALGORITHMS)
+}
 func AlgorithmSetStartMATH_ALGORITHMSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func AlgorithmSetStartMathAlgorithmsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return AlgorithmSetStartMATH_ALGORITHMSVector(builder, numElems)
 }
 func AlgorithmSetEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

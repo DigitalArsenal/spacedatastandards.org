@@ -2,4 +2,6 @@
 
 # namespace: 
 
-# NOTE packetType.py does not declare any structs or enums
+class packetType(object):
+    TM = 0
+    TC = 1

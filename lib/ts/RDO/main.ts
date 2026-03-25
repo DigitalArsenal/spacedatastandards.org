@@ -2,5 +2,5 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export { RDO, RDOT } from './RDO.js';
-export { radarObsType } from './radarObsType.js';
+export * from './radarObsType.js';
+export * from './RDO.js';

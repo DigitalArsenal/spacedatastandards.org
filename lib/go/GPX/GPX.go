@@ -63,6 +63,10 @@ func (rcv *GPX) VERSION() []byte {
 	return nil
 }
 
+func (rcv *GPX) Version() []byte {
+	return rcv.VERSION()
+}
+
 /// GPX schema version
 /// Creator software/organization
 func (rcv *GPX) CREATOR() []byte {
@@ -71,6 +75,10 @@ func (rcv *GPX) CREATOR() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *GPX) Creator() []byte {
+	return rcv.CREATOR()
 }
 
 /// Creator software/organization
@@ -83,6 +91,10 @@ func (rcv *GPX) NAME() []byte {
 	return nil
 }
 
+func (rcv *GPX) Name() []byte {
+	return rcv.NAME()
+}
+
 /// File name
 /// File description
 func (rcv *GPX) DESCRIPTION() []byte {
@@ -91,6 +103,10 @@ func (rcv *GPX) DESCRIPTION() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *GPX) Description() []byte {
+	return rcv.DESCRIPTION()
 }
 
 /// File description
@@ -103,6 +119,10 @@ func (rcv *GPX) AUTHOR_NAME() []byte {
 	return nil
 }
 
+func (rcv *GPX) AuthorName() []byte {
+	return rcv.AUTHOR_NAME()
+}
+
 /// Person or organization who created the file
 /// Author email
 func (rcv *GPX) AUTHOR_EMAIL() []byte {
@@ -111,6 +131,10 @@ func (rcv *GPX) AUTHOR_EMAIL() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *GPX) AuthorEmail() []byte {
+	return rcv.AUTHOR_EMAIL()
 }
 
 /// Author email
@@ -128,6 +152,10 @@ func (rcv *GPX) AUTHOR_LINK(obj *GPXLink) *GPXLink {
 	return nil
 }
 
+func (rcv *GPX) AuthorLink(obj *GPXLink) *GPXLink {
+	return rcv.AUTHOR_LINK(obj)
+}
+
 /// Author link
 /// Copyright holder
 func (rcv *GPX) COPYRIGHT_AUTHOR() []byte {
@@ -136,6 +164,10 @@ func (rcv *GPX) COPYRIGHT_AUTHOR() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *GPX) CopyrightAuthor() []byte {
+	return rcv.COPYRIGHT_AUTHOR()
 }
 
 /// Copyright holder
@@ -148,6 +180,10 @@ func (rcv *GPX) COPYRIGHT_YEAR() []byte {
 	return nil
 }
 
+func (rcv *GPX) CopyrightYear() []byte {
+	return rcv.COPYRIGHT_YEAR()
+}
+
 /// Copyright year
 /// Copyright license URL
 func (rcv *GPX) COPYRIGHT_LICENSE() []byte {
@@ -158,6 +194,10 @@ func (rcv *GPX) COPYRIGHT_LICENSE() []byte {
 	return nil
 }
 
+func (rcv *GPX) CopyrightLicense() []byte {
+	return rcv.COPYRIGHT_LICENSE()
+}
+
 /// Copyright license URL
 /// Links to additional information
 func (rcv *GPX) LINKS(obj *GPXLink, j int) bool {
@@ -166,10 +206,17 @@ func (rcv *GPX) LINKS(obj *GPXLink, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(GPXLink)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *GPX) Links(obj *GPXLink, j int) bool {
+	return rcv.LINKS(obj, j)
 }
 
 func (rcv *GPX) LINKSLength() int {
@@ -178,6 +225,10 @@ func (rcv *GPX) LINKSLength() int {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *GPX) LinksLength() int {
+	return rcv.LINKSLength()
 }
 
 /// Links to additional information
@@ -190,6 +241,10 @@ func (rcv *GPX) TIME() []byte {
 	return nil
 }
 
+func (rcv *GPX) Time() []byte {
+	return rcv.TIME()
+}
+
 /// Creation timestamp (ISO 8601)
 /// Keywords
 func (rcv *GPX) KEYWORDS() []byte {
@@ -198,6 +253,10 @@ func (rcv *GPX) KEYWORDS() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *GPX) Keywords() []byte {
+	return rcv.KEYWORDS()
 }
 
 /// Keywords
@@ -210,9 +269,17 @@ func (rcv *GPX) BOUNDS_MIN_LAT() float64 {
 	return 0.0
 }
 
+func (rcv *GPX) BoundsMinLat() float64 {
+	return rcv.BOUNDS_MIN_LAT()
+}
+
 /// Minimum latitude of bounding box
 func (rcv *GPX) MutateBOUNDS_MIN_LAT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(30, n)
+}
+
+func (rcv *GPX) MutateBoundsMinLat(n float64) bool {
+	return rcv.MutateBOUNDS_MIN_LAT(n)
 }
 
 /// Minimum longitude of bounding box
@@ -224,9 +291,17 @@ func (rcv *GPX) BOUNDS_MIN_LON() float64 {
 	return 0.0
 }
 
+func (rcv *GPX) BoundsMinLon() float64 {
+	return rcv.BOUNDS_MIN_LON()
+}
+
 /// Minimum longitude of bounding box
 func (rcv *GPX) MutateBOUNDS_MIN_LON(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(32, n)
+}
+
+func (rcv *GPX) MutateBoundsMinLon(n float64) bool {
+	return rcv.MutateBOUNDS_MIN_LON(n)
 }
 
 /// Maximum latitude of bounding box
@@ -238,9 +313,17 @@ func (rcv *GPX) BOUNDS_MAX_LAT() float64 {
 	return 0.0
 }
 
+func (rcv *GPX) BoundsMaxLat() float64 {
+	return rcv.BOUNDS_MAX_LAT()
+}
+
 /// Maximum latitude of bounding box
 func (rcv *GPX) MutateBOUNDS_MAX_LAT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(34, n)
+}
+
+func (rcv *GPX) MutateBoundsMaxLat(n float64) bool {
+	return rcv.MutateBOUNDS_MAX_LAT(n)
 }
 
 /// Maximum longitude of bounding box
@@ -252,9 +335,17 @@ func (rcv *GPX) BOUNDS_MAX_LON() float64 {
 	return 0.0
 }
 
+func (rcv *GPX) BoundsMaxLon() float64 {
+	return rcv.BOUNDS_MAX_LON()
+}
+
 /// Maximum longitude of bounding box
 func (rcv *GPX) MutateBOUNDS_MAX_LON(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(36, n)
+}
+
+func (rcv *GPX) MutateBoundsMaxLon(n float64) bool {
+	return rcv.MutateBOUNDS_MAX_LON(n)
 }
 
 /// Waypoints
@@ -264,10 +355,17 @@ func (rcv *GPX) WAYPOINTS(obj *GPXWaypoint, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(GPXWaypoint)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *GPX) Waypoints(obj *GPXWaypoint, j int) bool {
+	return rcv.WAYPOINTS(obj, j)
 }
 
 func (rcv *GPX) WAYPOINTSLength() int {
@@ -278,6 +376,10 @@ func (rcv *GPX) WAYPOINTSLength() int {
 	return 0
 }
 
+func (rcv *GPX) WaypointsLength() int {
+	return rcv.WAYPOINTSLength()
+}
+
 /// Waypoints
 /// Routes
 func (rcv *GPX) ROUTES(obj *GPXRoute, j int) bool {
@@ -286,10 +388,17 @@ func (rcv *GPX) ROUTES(obj *GPXRoute, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(GPXRoute)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *GPX) Routes(obj *GPXRoute, j int) bool {
+	return rcv.ROUTES(obj, j)
 }
 
 func (rcv *GPX) ROUTESLength() int {
@@ -300,6 +409,10 @@ func (rcv *GPX) ROUTESLength() int {
 	return 0
 }
 
+func (rcv *GPX) RoutesLength() int {
+	return rcv.ROUTESLength()
+}
+
 /// Routes
 /// Tracks
 func (rcv *GPX) TRACKS(obj *GPXTrack, j int) bool {
@@ -308,10 +421,17 @@ func (rcv *GPX) TRACKS(obj *GPXTrack, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(GPXTrack)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *GPX) Tracks(obj *GPXTrack, j int) bool {
+	return rcv.TRACKS(obj, j)
 }
 
 func (rcv *GPX) TRACKSLength() int {
@@ -322,6 +442,10 @@ func (rcv *GPX) TRACKSLength() int {
 	return 0
 }
 
+func (rcv *GPX) TracksLength() int {
+	return rcv.TRACKSLength()
+}
+
 /// Tracks
 func GPXStart(builder *flatbuffers.Builder) {
 	builder.StartObject(20)
@@ -329,74 +453,146 @@ func GPXStart(builder *flatbuffers.Builder) {
 func GPXAddVERSION(builder *flatbuffers.Builder, VERSION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(VERSION), 0)
 }
+func GPXAddVersion(builder *flatbuffers.Builder, VERSION flatbuffers.UOffsetT) {
+	GPXAddVERSION(builder, VERSION)
+}
 func GPXAddCREATOR(builder *flatbuffers.Builder, CREATOR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(CREATOR), 0)
+}
+func GPXAddCreator(builder *flatbuffers.Builder, CREATOR flatbuffers.UOffsetT) {
+	GPXAddCREATOR(builder, CREATOR)
 }
 func GPXAddNAME(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(NAME), 0)
 }
+func GPXAddName(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
+	GPXAddNAME(builder, NAME)
+}
 func GPXAddDESCRIPTION(builder *flatbuffers.Builder, DESCRIPTION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(DESCRIPTION), 0)
+}
+func GPXAddDescription(builder *flatbuffers.Builder, DESCRIPTION flatbuffers.UOffsetT) {
+	GPXAddDESCRIPTION(builder, DESCRIPTION)
 }
 func GPXAddAUTHOR_NAME(builder *flatbuffers.Builder, AUTHOR_NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(AUTHOR_NAME), 0)
 }
+func GPXAddAuthorName(builder *flatbuffers.Builder, AUTHOR_NAME flatbuffers.UOffsetT) {
+	GPXAddAUTHOR_NAME(builder, AUTHOR_NAME)
+}
 func GPXAddAUTHOR_EMAIL(builder *flatbuffers.Builder, AUTHOR_EMAIL flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(AUTHOR_EMAIL), 0)
+}
+func GPXAddAuthorEmail(builder *flatbuffers.Builder, AUTHOR_EMAIL flatbuffers.UOffsetT) {
+	GPXAddAUTHOR_EMAIL(builder, AUTHOR_EMAIL)
 }
 func GPXAddAUTHOR_LINK(builder *flatbuffers.Builder, AUTHOR_LINK flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(AUTHOR_LINK), 0)
 }
+func GPXAddAuthorLink(builder *flatbuffers.Builder, AUTHOR_LINK flatbuffers.UOffsetT) {
+	GPXAddAUTHOR_LINK(builder, AUTHOR_LINK)
+}
 func GPXAddCOPYRIGHT_AUTHOR(builder *flatbuffers.Builder, COPYRIGHT_AUTHOR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(COPYRIGHT_AUTHOR), 0)
+}
+func GPXAddCopyrightAuthor(builder *flatbuffers.Builder, COPYRIGHT_AUTHOR flatbuffers.UOffsetT) {
+	GPXAddCOPYRIGHT_AUTHOR(builder, COPYRIGHT_AUTHOR)
 }
 func GPXAddCOPYRIGHT_YEAR(builder *flatbuffers.Builder, COPYRIGHT_YEAR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(COPYRIGHT_YEAR), 0)
 }
+func GPXAddCopyrightYear(builder *flatbuffers.Builder, COPYRIGHT_YEAR flatbuffers.UOffsetT) {
+	GPXAddCOPYRIGHT_YEAR(builder, COPYRIGHT_YEAR)
+}
 func GPXAddCOPYRIGHT_LICENSE(builder *flatbuffers.Builder, COPYRIGHT_LICENSE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(COPYRIGHT_LICENSE), 0)
+}
+func GPXAddCopyrightLicense(builder *flatbuffers.Builder, COPYRIGHT_LICENSE flatbuffers.UOffsetT) {
+	GPXAddCOPYRIGHT_LICENSE(builder, COPYRIGHT_LICENSE)
 }
 func GPXAddLINKS(builder *flatbuffers.Builder, LINKS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(LINKS), 0)
 }
+func GPXAddLinks(builder *flatbuffers.Builder, LINKS flatbuffers.UOffsetT) {
+	GPXAddLINKS(builder, LINKS)
+}
 func GPXStartLINKSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func GPXStartLinksVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return GPXStartLINKSVector(builder, numElems)
 }
 func GPXAddTIME(builder *flatbuffers.Builder, TIME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(TIME), 0)
 }
+func GPXAddTime(builder *flatbuffers.Builder, TIME flatbuffers.UOffsetT) {
+	GPXAddTIME(builder, TIME)
+}
 func GPXAddKEYWORDS(builder *flatbuffers.Builder, KEYWORDS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(12, flatbuffers.UOffsetT(KEYWORDS), 0)
+}
+func GPXAddKeywords(builder *flatbuffers.Builder, KEYWORDS flatbuffers.UOffsetT) {
+	GPXAddKEYWORDS(builder, KEYWORDS)
 }
 func GPXAddBOUNDS_MIN_LAT(builder *flatbuffers.Builder, BOUNDS_MIN_LAT float64) {
 	builder.PrependFloat64Slot(13, BOUNDS_MIN_LAT, 0.0)
 }
+func GPXAddBoundsMinLat(builder *flatbuffers.Builder, BOUNDS_MIN_LAT float64) {
+	GPXAddBOUNDS_MIN_LAT(builder, BOUNDS_MIN_LAT)
+}
 func GPXAddBOUNDS_MIN_LON(builder *flatbuffers.Builder, BOUNDS_MIN_LON float64) {
 	builder.PrependFloat64Slot(14, BOUNDS_MIN_LON, 0.0)
+}
+func GPXAddBoundsMinLon(builder *flatbuffers.Builder, BOUNDS_MIN_LON float64) {
+	GPXAddBOUNDS_MIN_LON(builder, BOUNDS_MIN_LON)
 }
 func GPXAddBOUNDS_MAX_LAT(builder *flatbuffers.Builder, BOUNDS_MAX_LAT float64) {
 	builder.PrependFloat64Slot(15, BOUNDS_MAX_LAT, 0.0)
 }
+func GPXAddBoundsMaxLat(builder *flatbuffers.Builder, BOUNDS_MAX_LAT float64) {
+	GPXAddBOUNDS_MAX_LAT(builder, BOUNDS_MAX_LAT)
+}
 func GPXAddBOUNDS_MAX_LON(builder *flatbuffers.Builder, BOUNDS_MAX_LON float64) {
 	builder.PrependFloat64Slot(16, BOUNDS_MAX_LON, 0.0)
+}
+func GPXAddBoundsMaxLon(builder *flatbuffers.Builder, BOUNDS_MAX_LON float64) {
+	GPXAddBOUNDS_MAX_LON(builder, BOUNDS_MAX_LON)
 }
 func GPXAddWAYPOINTS(builder *flatbuffers.Builder, WAYPOINTS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(17, flatbuffers.UOffsetT(WAYPOINTS), 0)
 }
+func GPXAddWaypoints(builder *flatbuffers.Builder, WAYPOINTS flatbuffers.UOffsetT) {
+	GPXAddWAYPOINTS(builder, WAYPOINTS)
+}
 func GPXStartWAYPOINTSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func GPXStartWaypointsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return GPXStartWAYPOINTSVector(builder, numElems)
 }
 func GPXAddROUTES(builder *flatbuffers.Builder, ROUTES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(18, flatbuffers.UOffsetT(ROUTES), 0)
 }
+func GPXAddRoutes(builder *flatbuffers.Builder, ROUTES flatbuffers.UOffsetT) {
+	GPXAddROUTES(builder, ROUTES)
+}
 func GPXStartROUTESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func GPXStartRoutesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return GPXStartROUTESVector(builder, numElems)
 }
 func GPXAddTRACKS(builder *flatbuffers.Builder, TRACKS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(19, flatbuffers.UOffsetT(TRACKS), 0)
 }
+func GPXAddTracks(builder *flatbuffers.Builder, TRACKS flatbuffers.UOffsetT) {
+	GPXAddTRACKS(builder, TRACKS)
+}
 func GPXStartTRACKSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func GPXStartTracksVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return GPXStartTRACKSVector(builder, numElems)
 }
 func GPXEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

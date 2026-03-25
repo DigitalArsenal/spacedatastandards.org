@@ -32,7 +32,7 @@ class gnssSatObs : Table() {
     /**
      * GNSS satellite identifier (e.g., G01, R24, E05, C03)
      */
-    val GNSS_SAT_ID : String?
+    val gnssSatId : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class gnssSatObs : Table() {
                 null
             }
         }
-    val GNSS_SAT_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun GNSS_SAT_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val gnssSatIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun gnssSatIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Constellation
      */
-    val CONSTELLATION : Byte
+    val constellation : Byte
         get() {
             val o = __offset(6)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -54,7 +54,7 @@ class gnssSatObs : Table() {
     /**
      * Elevation angle in degrees
      */
-    val ELEVATION : Double
+    val elevation : Double
         get() {
             val o = __offset(8)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -62,7 +62,7 @@ class gnssSatObs : Table() {
     /**
      * Azimuth angle in degrees
      */
-    val AZIMUTH : Double
+    val azimuth : Double
         get() {
             val o = __offset(10)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -70,7 +70,7 @@ class gnssSatObs : Table() {
     /**
      * Tracking status (0=not tracked, 1=tracking, 2=locked)
      */
-    val TRACKING_STATUS : Int
+    val trackingStatus : Int
         get() {
             val o = __offset(12)
             return if(o != 0) bb.getInt(o + bb_pos) else 0
@@ -78,7 +78,7 @@ class gnssSatObs : Table() {
     /**
      * AGC state
      */
-    val AGC_STATE : Int
+    val agcState : Int
         get() {
             val o = __offset(14)
             return if(o != 0) bb.getInt(o + bb_pos) else 0
@@ -86,8 +86,8 @@ class gnssSatObs : Table() {
     /**
      * Observations for this satellite
      */
-    fun OBSERVATIONS(j: Int) : gnssObsData? = OBSERVATIONS(gnssObsData(), j)
-    fun OBSERVATIONS(obj: gnssObsData, j: Int) : gnssObsData? {
+    fun observations(j: Int) : gnssObsData? = observations(gnssObsData(), j)
+    fun observations(obj: gnssObsData, j: Int) : gnssObsData? {
         val o = __offset(16)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -95,36 +95,36 @@ class gnssSatObs : Table() {
             null
         }
     }
-    val OBSERVATIONSLength : Int
+    val observationsLength : Int
         get() {
             val o = __offset(16); return if (o != 0) __vector_len(o) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsgnssSatObs(_bb: ByteBuffer): gnssSatObs = getRootAsgnssSatObs(_bb, gnssSatObs())
         fun getRootAsgnssSatObs(_bb: ByteBuffer, obj: gnssSatObs): gnssSatObs {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun creategnssSatObs(builder: FlatBufferBuilder, GNSS_SAT_IDOffset: Int, CONSTELLATION: Byte, ELEVATION: Double, AZIMUTH: Double, TRACKING_STATUS: Int, AGC_STATE: Int, OBSERVATIONSOffset: Int) : Int {
+        fun creategnssSatObs(builder: FlatBufferBuilder, gnssSatIdOffset: Int, constellation: Byte, elevation: Double, azimuth: Double, trackingStatus: Int, agcState: Int, observationsOffset: Int) : Int {
             builder.startTable(7)
-            addAZIMUTH(builder, AZIMUTH)
-            addELEVATION(builder, ELEVATION)
-            addOBSERVATIONS(builder, OBSERVATIONSOffset)
-            addAGC_STATE(builder, AGC_STATE)
-            addTRACKING_STATUS(builder, TRACKING_STATUS)
-            addGNSS_SAT_ID(builder, GNSS_SAT_IDOffset)
-            addCONSTELLATION(builder, CONSTELLATION)
+            addAZIMUTH(builder, azimuth)
+            addELEVATION(builder, elevation)
+            addOBSERVATIONS(builder, observationsOffset)
+            addAGCSTATE(builder, agcState)
+            addTRACKINGSTATUS(builder, trackingStatus)
+            addGNSSSATID(builder, gnssSatIdOffset)
+            addCONSTELLATION(builder, constellation)
             return endgnssSatObs(builder)
         }
         fun startgnssSatObs(builder: FlatBufferBuilder) = builder.startTable(7)
-        fun addGNSS_SAT_ID(builder: FlatBufferBuilder, GNSS_SAT_ID: Int) = builder.addOffset(0, GNSS_SAT_ID, 0)
-        fun addCONSTELLATION(builder: FlatBufferBuilder, CONSTELLATION: Byte) = builder.addByte(1, CONSTELLATION, 0)
-        fun addELEVATION(builder: FlatBufferBuilder, ELEVATION: Double) = builder.addDouble(2, ELEVATION, 0.0)
-        fun addAZIMUTH(builder: FlatBufferBuilder, AZIMUTH: Double) = builder.addDouble(3, AZIMUTH, 0.0)
-        fun addTRACKING_STATUS(builder: FlatBufferBuilder, TRACKING_STATUS: Int) = builder.addInt(4, TRACKING_STATUS, 0)
-        fun addAGC_STATE(builder: FlatBufferBuilder, AGC_STATE: Int) = builder.addInt(5, AGC_STATE, 0)
-        fun addOBSERVATIONS(builder: FlatBufferBuilder, OBSERVATIONS: Int) = builder.addOffset(6, OBSERVATIONS, 0)
+        fun addGNSSSATID(builder: FlatBufferBuilder, gnssSatId: Int) = builder.addOffset(0, gnssSatId, 0)
+        fun addCONSTELLATION(builder: FlatBufferBuilder, constellation: Byte) = builder.addByte(1, constellation, 0)
+        fun addELEVATION(builder: FlatBufferBuilder, elevation: Double) = builder.addDouble(2, elevation, 0.0)
+        fun addAZIMUTH(builder: FlatBufferBuilder, azimuth: Double) = builder.addDouble(3, azimuth, 0.0)
+        fun addTRACKINGSTATUS(builder: FlatBufferBuilder, trackingStatus: Int) = builder.addInt(4, trackingStatus, 0)
+        fun addAGCSTATE(builder: FlatBufferBuilder, agcState: Int) = builder.addInt(5, agcState, 0)
+        fun addOBSERVATIONS(builder: FlatBufferBuilder, observations: Int) = builder.addOffset(6, observations, 0)
         fun createObservationsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {

@@ -51,9 +51,17 @@ func (rcv *FrequencyRange) LOWER() float64 {
 	return 0.0
 }
 
+func (rcv *FrequencyRange) Lower() float64 {
+	return rcv.LOWER()
+}
+
 /// Lower frequency in MHz
 func (rcv *FrequencyRange) MutateLOWER(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(4, n)
+}
+
+func (rcv *FrequencyRange) MutateLower(n float64) bool {
+	return rcv.MutateLOWER(n)
 }
 
 /// Upper frequency in MHz
@@ -65,9 +73,17 @@ func (rcv *FrequencyRange) UPPER() float64 {
 	return 0.0
 }
 
+func (rcv *FrequencyRange) Upper() float64 {
+	return rcv.UPPER()
+}
+
 /// Upper frequency in MHz
 func (rcv *FrequencyRange) MutateUPPER(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(6, n)
+}
+
+func (rcv *FrequencyRange) MutateUpper(n float64) bool {
+	return rcv.MutateUPPER(n)
 }
 
 func FrequencyRangeStart(builder *flatbuffers.Builder) {
@@ -76,8 +92,14 @@ func FrequencyRangeStart(builder *flatbuffers.Builder) {
 func FrequencyRangeAddLOWER(builder *flatbuffers.Builder, LOWER float64) {
 	builder.PrependFloat64Slot(0, LOWER, 0.0)
 }
+func FrequencyRangeAddLower(builder *flatbuffers.Builder, LOWER float64) {
+	FrequencyRangeAddLOWER(builder, LOWER)
+}
 func FrequencyRangeAddUPPER(builder *flatbuffers.Builder, UPPER float64) {
 	builder.PrependFloat64Slot(1, UPPER, 0.0)
+}
+func FrequencyRangeAddUpper(builder *flatbuffers.Builder, UPPER float64) {
+	FrequencyRangeAddUPPER(builder, UPPER)
 }
 func FrequencyRangeEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

@@ -12,7 +12,6 @@ import com.google.flatbuffers.LongVector;
 import com.google.flatbuffers.ShortVector;
 import com.google.flatbuffers.StringVector;
 import com.google.flatbuffers.Struct;
-import com.google.flatbuffers.Table;
 import com.google.flatbuffers.UnionVector;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -21,8 +20,8 @@ import java.nio.ByteOrder;
  * Communications Payload
  */
 @SuppressWarnings("unused")
-public final class CMS extends Table {
-  public static void ValidateVersion() { Constants.FLATBUFFERS_24_3_25(); }
+public final class CMS extends com.google.flatbuffers.Table {
+  public static void ValidateVersion() { Constants.FLATBUFFERS_25_12_19(); }
   public static CMS getRootAsCMS(ByteBuffer _bb) { return getRootAsCMS(_bb, new CMS()); }
   public static CMS getRootAsCMS(ByteBuffer _bb, CMS obj) { _bb.order(ByteOrder.LITTLE_ENDIAN); return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb)); }
   public static boolean CMSBufferHasIdentifier(ByteBuffer _bb) { return __has_identifier(_bb, "$CMS"); }

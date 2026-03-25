@@ -283,30 +283,49 @@ def End(builder):
 class OOTT(object):
 
     # OOTT
-    def __init__(self):
-        self.ID = None  # type: str
-        self.ID_ON_ORBIT = None  # type: str
-        self.ID_THRUSTER = None  # type: str
-        self.NAME = None  # type: str
-        self.TYPE = 0  # type: int
-        self.QUANTITY = 0  # type: int
-        self.THRUST = 0.0  # type: float
-        self.ISP = 0.0  # type: float
-        self.PROPELLANT = None  # type: str
-        self.PROPELLANT_MASS = 0.0  # type: float
-        self.PROPELLANT_REMAINING = 0.0  # type: float
-        self.DELTA_V_TOTAL = 0.0  # type: float
-        self.DELTA_V_REMAINING = 0.0  # type: float
-        self.TOTAL_IMPULSE = 0.0  # type: float
-        self.MASS = 0.0  # type: float
-        self.PURPOSE = None  # type: str
-        self.NOTES = None  # type: str
+    def __init__(
+        self,
+        ID = None,
+        ID_ON_ORBIT = None,
+        ID_THRUSTER = None,
+        NAME = None,
+        TYPE = 0,
+        QUANTITY = 0,
+        THRUST = 0.0,
+        ISP = 0.0,
+        PROPELLANT = None,
+        PROPELLANT_MASS = 0.0,
+        PROPELLANT_REMAINING = 0.0,
+        DELTA_V_TOTAL = 0.0,
+        DELTA_V_REMAINING = 0.0,
+        TOTAL_IMPULSE = 0.0,
+        MASS = 0.0,
+        PURPOSE = None,
+        NOTES = None,
+    ):
+        self.ID = ID  # type: Optional[str]
+        self.ID_ON_ORBIT = ID_ON_ORBIT  # type: Optional[str]
+        self.ID_THRUSTER = ID_THRUSTER  # type: Optional[str]
+        self.NAME = NAME  # type: Optional[str]
+        self.TYPE = TYPE  # type: int
+        self.QUANTITY = QUANTITY  # type: int
+        self.THRUST = THRUST  # type: float
+        self.ISP = ISP  # type: float
+        self.PROPELLANT = PROPELLANT  # type: Optional[str]
+        self.PROPELLANT_MASS = PROPELLANT_MASS  # type: float
+        self.PROPELLANT_REMAINING = PROPELLANT_REMAINING  # type: float
+        self.DELTA_V_TOTAL = DELTA_V_TOTAL  # type: float
+        self.DELTA_V_REMAINING = DELTA_V_REMAINING  # type: float
+        self.TOTAL_IMPULSE = TOTAL_IMPULSE  # type: float
+        self.MASS = MASS  # type: float
+        self.PURPOSE = PURPOSE  # type: Optional[str]
+        self.NOTES = NOTES  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        OOT = OOT()
-        OOT.Init(buf, pos)
-        return cls.InitFromObj(OOT)
+        tmpOot = OOT()
+        tmpOot.Init(buf, pos)
+        return cls.InitFromObj(tmpOot)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -314,9 +333,9 @@ class OOTT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, OOT):
+    def InitFromObj(cls, tmpOot):
         x = OOTT()
-        x._UnPack(OOT)
+        x._UnPack(tmpOot)
         return x
 
     # OOTT

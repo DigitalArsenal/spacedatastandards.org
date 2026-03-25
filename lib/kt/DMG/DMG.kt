@@ -29,82 +29,82 @@ class DMG : Table() {
         __init(_i, _bb)
         return this
     }
-    val OVERALL_HEALTH : Float
+    val overallHealth : Float
         get() {
             val o = __offset(4)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
-    val MOBILITY : Float
+    val mobility : Float
         get() {
             val o = __offset(6)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
-    val FIREPOWER : Float
+    val firepower : Float
         get() {
             val o = __offset(8)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
-    val MODULE_COUNT : UByte
+    val moduleCount : UByte
         get() {
             val o = __offset(10)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
         }
-    val CREW_COUNT : UByte
+    val crewCount : UByte
         get() {
             val o = __offset(12)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
         }
-    val FIRE_COUNT : UByte
+    val fireCount : UByte
         get() {
             val o = __offset(14)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
         }
-    val FLOOD_COUNT : UByte
+    val floodCount : UByte
         get() {
             val o = __offset(16)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
         }
-    val IS_DESTROYED : UByte
+    val isDestroyed : UByte
         get() {
             val o = __offset(18)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
         }
-    val DESTRUCTION_CAUSE : UByte
+    val destructionCause : UByte
         get() {
             val o = __offset(20)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
         }
-    val EXTINGUISHERS : UByte
+    val extinguishers : UByte
         get() {
             val o = __offset(22)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
         }
-    val REPAIR_ACTIVE : UByte
+    val repairActive : UByte
         get() {
             val o = __offset(24)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
         }
-    val RELOAD_MULTIPLIER : Float
+    val reloadMultiplier : Float
         get() {
             val o = __offset(26)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
-    val ACCURACY_MULTIPLIER : Float
+    val accuracyMultiplier : Float
         get() {
             val o = __offset(28)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
-    val CREW_ALIVE : UByte
+    val crewAlive : UByte
         get() {
             val o = __offset(30)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
         }
-    val CREW_WOUNDED : UByte
+    val crewWounded : UByte
         get() {
             val o = __offset(32)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
         }
-    fun RESERVED(j: Int) : UByte {
+    fun reserved(j: Int) : UByte {
         val o = __offset(34)
         return if (o != 0) {
             bb.get(__vector(o) + j * 1).toUByte()
@@ -112,57 +112,57 @@ class DMG : Table() {
             0u
         }
     }
-    val RESERVEDLength : Int
+    val reservedLength : Int
         get() {
             val o = __offset(34); return if (o != 0) __vector_len(o) else 0
         }
-    val RESERVEDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(34, 1)
-    fun RESERVEDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 34, 1)
+    val reservedAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(34, 1)
+    fun reservedInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 34, 1)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsDMG(_bb: ByteBuffer): DMG = getRootAsDMG(_bb, DMG())
         fun getRootAsDMG(_bb: ByteBuffer, obj: DMG): DMG {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun DMGBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$DMG")
-        fun createDMG(builder: FlatBufferBuilder, OVERALL_HEALTH: Float, MOBILITY: Float, FIREPOWER: Float, MODULE_COUNT: UByte, CREW_COUNT: UByte, FIRE_COUNT: UByte, FLOOD_COUNT: UByte, IS_DESTROYED: UByte, DESTRUCTION_CAUSE: UByte, EXTINGUISHERS: UByte, REPAIR_ACTIVE: UByte, RELOAD_MULTIPLIER: Float, ACCURACY_MULTIPLIER: Float, CREW_ALIVE: UByte, CREW_WOUNDED: UByte, RESERVEDOffset: Int) : Int {
+        fun createDMG(builder: FlatBufferBuilder, overallHealth: Float, mobility: Float, firepower: Float, moduleCount: UByte, crewCount: UByte, fireCount: UByte, floodCount: UByte, isDestroyed: UByte, destructionCause: UByte, extinguishers: UByte, repairActive: UByte, reloadMultiplier: Float, accuracyMultiplier: Float, crewAlive: UByte, crewWounded: UByte, reservedOffset: Int) : Int {
             builder.startTable(16)
-            addRESERVED(builder, RESERVEDOffset)
-            addACCURACY_MULTIPLIER(builder, ACCURACY_MULTIPLIER)
-            addRELOAD_MULTIPLIER(builder, RELOAD_MULTIPLIER)
-            addFIREPOWER(builder, FIREPOWER)
-            addMOBILITY(builder, MOBILITY)
-            addOVERALL_HEALTH(builder, OVERALL_HEALTH)
-            addCREW_WOUNDED(builder, CREW_WOUNDED)
-            addCREW_ALIVE(builder, CREW_ALIVE)
-            addREPAIR_ACTIVE(builder, REPAIR_ACTIVE)
-            addEXTINGUISHERS(builder, EXTINGUISHERS)
-            addDESTRUCTION_CAUSE(builder, DESTRUCTION_CAUSE)
-            addIS_DESTROYED(builder, IS_DESTROYED)
-            addFLOOD_COUNT(builder, FLOOD_COUNT)
-            addFIRE_COUNT(builder, FIRE_COUNT)
-            addCREW_COUNT(builder, CREW_COUNT)
-            addMODULE_COUNT(builder, MODULE_COUNT)
+            addRESERVED(builder, reservedOffset)
+            addACCURACYMULTIPLIER(builder, accuracyMultiplier)
+            addRELOADMULTIPLIER(builder, reloadMultiplier)
+            addFIREPOWER(builder, firepower)
+            addMOBILITY(builder, mobility)
+            addOVERALLHEALTH(builder, overallHealth)
+            addCREWWOUNDED(builder, crewWounded)
+            addCREWALIVE(builder, crewAlive)
+            addREPAIRACTIVE(builder, repairActive)
+            addEXTINGUISHERS(builder, extinguishers)
+            addDESTRUCTIONCAUSE(builder, destructionCause)
+            addISDESTROYED(builder, isDestroyed)
+            addFLOODCOUNT(builder, floodCount)
+            addFIRECOUNT(builder, fireCount)
+            addCREWCOUNT(builder, crewCount)
+            addMODULECOUNT(builder, moduleCount)
             return endDMG(builder)
         }
         fun startDMG(builder: FlatBufferBuilder) = builder.startTable(16)
-        fun addOVERALL_HEALTH(builder: FlatBufferBuilder, OVERALL_HEALTH: Float) = builder.addFloat(0, OVERALL_HEALTH, 0.0)
-        fun addMOBILITY(builder: FlatBufferBuilder, MOBILITY: Float) = builder.addFloat(1, MOBILITY, 0.0)
-        fun addFIREPOWER(builder: FlatBufferBuilder, FIREPOWER: Float) = builder.addFloat(2, FIREPOWER, 0.0)
-        fun addMODULE_COUNT(builder: FlatBufferBuilder, MODULE_COUNT: UByte) = builder.addByte(3, MODULE_COUNT.toByte(), 0)
-        fun addCREW_COUNT(builder: FlatBufferBuilder, CREW_COUNT: UByte) = builder.addByte(4, CREW_COUNT.toByte(), 0)
-        fun addFIRE_COUNT(builder: FlatBufferBuilder, FIRE_COUNT: UByte) = builder.addByte(5, FIRE_COUNT.toByte(), 0)
-        fun addFLOOD_COUNT(builder: FlatBufferBuilder, FLOOD_COUNT: UByte) = builder.addByte(6, FLOOD_COUNT.toByte(), 0)
-        fun addIS_DESTROYED(builder: FlatBufferBuilder, IS_DESTROYED: UByte) = builder.addByte(7, IS_DESTROYED.toByte(), 0)
-        fun addDESTRUCTION_CAUSE(builder: FlatBufferBuilder, DESTRUCTION_CAUSE: UByte) = builder.addByte(8, DESTRUCTION_CAUSE.toByte(), 0)
-        fun addEXTINGUISHERS(builder: FlatBufferBuilder, EXTINGUISHERS: UByte) = builder.addByte(9, EXTINGUISHERS.toByte(), 0)
-        fun addREPAIR_ACTIVE(builder: FlatBufferBuilder, REPAIR_ACTIVE: UByte) = builder.addByte(10, REPAIR_ACTIVE.toByte(), 0)
-        fun addRELOAD_MULTIPLIER(builder: FlatBufferBuilder, RELOAD_MULTIPLIER: Float) = builder.addFloat(11, RELOAD_MULTIPLIER, 0.0)
-        fun addACCURACY_MULTIPLIER(builder: FlatBufferBuilder, ACCURACY_MULTIPLIER: Float) = builder.addFloat(12, ACCURACY_MULTIPLIER, 0.0)
-        fun addCREW_ALIVE(builder: FlatBufferBuilder, CREW_ALIVE: UByte) = builder.addByte(13, CREW_ALIVE.toByte(), 0)
-        fun addCREW_WOUNDED(builder: FlatBufferBuilder, CREW_WOUNDED: UByte) = builder.addByte(14, CREW_WOUNDED.toByte(), 0)
-        fun addRESERVED(builder: FlatBufferBuilder, RESERVED: Int) = builder.addOffset(15, RESERVED, 0)
+        fun addOVERALLHEALTH(builder: FlatBufferBuilder, overallHealth: Float) = builder.addFloat(0, overallHealth, 0.0)
+        fun addMOBILITY(builder: FlatBufferBuilder, mobility: Float) = builder.addFloat(1, mobility, 0.0)
+        fun addFIREPOWER(builder: FlatBufferBuilder, firepower: Float) = builder.addFloat(2, firepower, 0.0)
+        fun addMODULECOUNT(builder: FlatBufferBuilder, moduleCount: UByte) = builder.addByte(3, moduleCount.toByte(), 0)
+        fun addCREWCOUNT(builder: FlatBufferBuilder, crewCount: UByte) = builder.addByte(4, crewCount.toByte(), 0)
+        fun addFIRECOUNT(builder: FlatBufferBuilder, fireCount: UByte) = builder.addByte(5, fireCount.toByte(), 0)
+        fun addFLOODCOUNT(builder: FlatBufferBuilder, floodCount: UByte) = builder.addByte(6, floodCount.toByte(), 0)
+        fun addISDESTROYED(builder: FlatBufferBuilder, isDestroyed: UByte) = builder.addByte(7, isDestroyed.toByte(), 0)
+        fun addDESTRUCTIONCAUSE(builder: FlatBufferBuilder, destructionCause: UByte) = builder.addByte(8, destructionCause.toByte(), 0)
+        fun addEXTINGUISHERS(builder: FlatBufferBuilder, extinguishers: UByte) = builder.addByte(9, extinguishers.toByte(), 0)
+        fun addREPAIRACTIVE(builder: FlatBufferBuilder, repairActive: UByte) = builder.addByte(10, repairActive.toByte(), 0)
+        fun addRELOADMULTIPLIER(builder: FlatBufferBuilder, reloadMultiplier: Float) = builder.addFloat(11, reloadMultiplier, 0.0)
+        fun addACCURACYMULTIPLIER(builder: FlatBufferBuilder, accuracyMultiplier: Float) = builder.addFloat(12, accuracyMultiplier, 0.0)
+        fun addCREWALIVE(builder: FlatBufferBuilder, crewAlive: UByte) = builder.addByte(13, crewAlive.toByte(), 0)
+        fun addCREWWOUNDED(builder: FlatBufferBuilder, crewWounded: UByte) = builder.addByte(14, crewWounded.toByte(), 0)
+        fun addRESERVED(builder: FlatBufferBuilder, reserved: Int) = builder.addOffset(15, reserved, 0)
         @kotlin.ExperimentalUnsignedTypes
         fun createReservedVector(builder: FlatBufferBuilder, data: UByteArray) : Int {
             builder.startVector(1, data.size, 1)

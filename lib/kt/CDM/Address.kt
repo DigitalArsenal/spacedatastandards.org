@@ -32,7 +32,7 @@ class Address : Table() {
     /**
      * Country of the address
      */
-    val COUNTRY : String?
+    val country : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class Address : Table() {
                 null
             }
         }
-    val COUNTRYAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun COUNTRYInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val countryAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun countryInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Region of the address (e.g., state or province)
      */
-    val REGION : String?
+    val region : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -55,12 +55,12 @@ class Address : Table() {
                 null
             }
         }
-    val REGIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun REGIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val regionAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun regionInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * Locality of the address (e.g., city or town)
      */
-    val LOCALITY : String?
+    val locality : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -69,12 +69,12 @@ class Address : Table() {
                 null
             }
         }
-    val LOCALITYAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun LOCALITYInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val localityAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun localityInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
     /**
      * Postal code of the address
      */
-    val POSTAL_CODE : String?
+    val postalCode : String?
         get() {
             val o = __offset(10)
             return if (o != 0) {
@@ -83,12 +83,12 @@ class Address : Table() {
                 null
             }
         }
-    val POSTAL_CODEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
-    fun POSTAL_CODEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
+    val postalCodeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(10, 1)
+    fun postalCodeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 10, 1)
     /**
      * Street address
      */
-    val STREET : String?
+    val street : String?
         get() {
             val o = __offset(12)
             return if (o != 0) {
@@ -97,12 +97,12 @@ class Address : Table() {
                 null
             }
         }
-    val STREETAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
-    fun STREETInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
+    val streetAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(12, 1)
+    fun streetInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 12, 1)
     /**
      * Post office box number
      */
-    val POST_OFFICE_BOX_NUMBER : String?
+    val postOfficeBoxNumber : String?
         get() {
             val o = __offset(14)
             return if (o != 0) {
@@ -111,32 +111,32 @@ class Address : Table() {
                 null
             }
         }
-    val POST_OFFICE_BOX_NUMBERAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(14, 1)
-    fun POST_OFFICE_BOX_NUMBERInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 14, 1)
+    val postOfficeBoxNumberAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(14, 1)
+    fun postOfficeBoxNumberInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 14, 1)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsAddress(_bb: ByteBuffer): Address = getRootAsAddress(_bb, Address())
         fun getRootAsAddress(_bb: ByteBuffer, obj: Address): Address {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createAddress(builder: FlatBufferBuilder, COUNTRYOffset: Int, REGIONOffset: Int, LOCALITYOffset: Int, POSTAL_CODEOffset: Int, STREETOffset: Int, POST_OFFICE_BOX_NUMBEROffset: Int) : Int {
+        fun createAddress(builder: FlatBufferBuilder, countryOffset: Int, regionOffset: Int, localityOffset: Int, postalCodeOffset: Int, streetOffset: Int, postOfficeBoxNumberOffset: Int) : Int {
             builder.startTable(6)
-            addPOST_OFFICE_BOX_NUMBER(builder, POST_OFFICE_BOX_NUMBEROffset)
-            addSTREET(builder, STREETOffset)
-            addPOSTAL_CODE(builder, POSTAL_CODEOffset)
-            addLOCALITY(builder, LOCALITYOffset)
-            addREGION(builder, REGIONOffset)
-            addCOUNTRY(builder, COUNTRYOffset)
+            addPOSTOFFICEBOXNUMBER(builder, postOfficeBoxNumberOffset)
+            addSTREET(builder, streetOffset)
+            addPOSTALCODE(builder, postalCodeOffset)
+            addLOCALITY(builder, localityOffset)
+            addREGION(builder, regionOffset)
+            addCOUNTRY(builder, countryOffset)
             return endAddress(builder)
         }
         fun startAddress(builder: FlatBufferBuilder) = builder.startTable(6)
-        fun addCOUNTRY(builder: FlatBufferBuilder, COUNTRY: Int) = builder.addOffset(0, COUNTRY, 0)
-        fun addREGION(builder: FlatBufferBuilder, REGION: Int) = builder.addOffset(1, REGION, 0)
-        fun addLOCALITY(builder: FlatBufferBuilder, LOCALITY: Int) = builder.addOffset(2, LOCALITY, 0)
-        fun addPOSTAL_CODE(builder: FlatBufferBuilder, POSTAL_CODE: Int) = builder.addOffset(3, POSTAL_CODE, 0)
-        fun addSTREET(builder: FlatBufferBuilder, STREET: Int) = builder.addOffset(4, STREET, 0)
-        fun addPOST_OFFICE_BOX_NUMBER(builder: FlatBufferBuilder, POST_OFFICE_BOX_NUMBER: Int) = builder.addOffset(5, POST_OFFICE_BOX_NUMBER, 0)
+        fun addCOUNTRY(builder: FlatBufferBuilder, country: Int) = builder.addOffset(0, country, 0)
+        fun addREGION(builder: FlatBufferBuilder, region: Int) = builder.addOffset(1, region, 0)
+        fun addLOCALITY(builder: FlatBufferBuilder, locality: Int) = builder.addOffset(2, locality, 0)
+        fun addPOSTALCODE(builder: FlatBufferBuilder, postalCode: Int) = builder.addOffset(3, postalCode, 0)
+        fun addSTREET(builder: FlatBufferBuilder, street: Int) = builder.addOffset(4, street, 0)
+        fun addPOSTOFFICEBOXNUMBER(builder: FlatBufferBuilder, postOfficeBoxNumber: Int) = builder.addOffset(5, postOfficeBoxNumber, 0)
         fun endAddress(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

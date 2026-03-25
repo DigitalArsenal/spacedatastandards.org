@@ -2,4 +2,10 @@
 
 # namespace: 
 
-# NOTE DestructionCause.py does not declare any structs or enums
+class DestructionCause(object):
+    NONE = 0
+    AMMO_DETONATION = 1
+    FUEL_FIRE = 2
+    CREW_LOST = 3
+    STRUCTURAL_FAILURE = 4
+    FLOODING = 5

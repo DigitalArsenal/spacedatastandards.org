@@ -50,6 +50,10 @@ func (rcv *propagatorConfig) PROPAGATOR_NAME() []byte {
 	return nil
 }
 
+func (rcv *propagatorConfig) PropagatorName() []byte {
+	return rcv.PROPAGATOR_NAME()
+}
+
 func (rcv *propagatorConfig) PROPAGATOR_TYPE() propagatorType {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
@@ -58,8 +62,16 @@ func (rcv *propagatorConfig) PROPAGATOR_TYPE() propagatorType {
 	return 0
 }
 
+func (rcv *propagatorConfig) PropagatorType() propagatorType {
+	return rcv.PROPAGATOR_TYPE()
+}
+
 func (rcv *propagatorConfig) MutatePROPAGATOR_TYPE(n propagatorType) bool {
 	return rcv._tab.MutateInt8Slot(6, int8(n))
+}
+
+func (rcv *propagatorConfig) MutatePropagatorType(n propagatorType) bool {
+	return rcv.MutatePROPAGATOR_TYPE(n)
 }
 
 func (rcv *propagatorConfig) FORCE_MODELS(j int) []byte {
@@ -71,12 +83,20 @@ func (rcv *propagatorConfig) FORCE_MODELS(j int) []byte {
 	return nil
 }
 
+func (rcv *propagatorConfig) ForceModels(j int) []byte {
+	return rcv.FORCE_MODELS(j)
+}
+
 func (rcv *propagatorConfig) FORCE_MODELSLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *propagatorConfig) ForceModelsLength() int {
+	return rcv.FORCE_MODELSLength()
 }
 
 func (rcv *propagatorConfig) EPOCH() []byte {
@@ -87,6 +107,10 @@ func (rcv *propagatorConfig) EPOCH() []byte {
 	return nil
 }
 
+func (rcv *propagatorConfig) Epoch() []byte {
+	return rcv.EPOCH()
+}
+
 func (rcv *propagatorConfig) TIME_STEP() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
@@ -95,8 +119,16 @@ func (rcv *propagatorConfig) TIME_STEP() float64 {
 	return 0.0
 }
 
+func (rcv *propagatorConfig) TimeStep() float64 {
+	return rcv.TIME_STEP()
+}
+
 func (rcv *propagatorConfig) MutateTIME_STEP(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(12, n)
+}
+
+func (rcv *propagatorConfig) MutateTimeStep(n float64) bool {
+	return rcv.MutateTIME_STEP(n)
 }
 
 func (rcv *propagatorConfig) ZONAL_HARMONIC_TERMS(j int) zonalHarmonic {
@@ -108,12 +140,20 @@ func (rcv *propagatorConfig) ZONAL_HARMONIC_TERMS(j int) zonalHarmonic {
 	return 0
 }
 
+func (rcv *propagatorConfig) ZonalHarmonicTerms(j int) zonalHarmonic {
+	return rcv.ZONAL_HARMONIC_TERMS(j)
+}
+
 func (rcv *propagatorConfig) ZONAL_HARMONIC_TERMSLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *propagatorConfig) ZonalHarmonicTermsLength() int {
+	return rcv.ZONAL_HARMONIC_TERMSLength()
 }
 
 func (rcv *propagatorConfig) MutateZONAL_HARMONIC_TERMS(j int, n zonalHarmonic) bool {
@@ -125,32 +165,60 @@ func (rcv *propagatorConfig) MutateZONAL_HARMONIC_TERMS(j int, n zonalHarmonic) 
 	return false
 }
 
+func (rcv *propagatorConfig) MutateZonalHarmonicTerms(j int, n zonalHarmonic) bool {
+	return rcv.MutateZONAL_HARMONIC_TERMS(j, n)
+}
+
 func propagatorConfigStart(builder *flatbuffers.Builder) {
 	builder.StartObject(6)
 }
 func propagatorConfigAddPROPAGATOR_NAME(builder *flatbuffers.Builder, PROPAGATOR_NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(PROPAGATOR_NAME), 0)
 }
+func propagatorConfigAddPropagatorName(builder *flatbuffers.Builder, PROPAGATOR_NAME flatbuffers.UOffsetT) {
+	propagatorConfigAddPROPAGATOR_NAME(builder, PROPAGATOR_NAME)
+}
 func propagatorConfigAddPROPAGATOR_TYPE(builder *flatbuffers.Builder, PROPAGATOR_TYPE propagatorType) {
 	builder.PrependInt8Slot(1, int8(PROPAGATOR_TYPE), 0)
+}
+func propagatorConfigAddPropagatorType(builder *flatbuffers.Builder, PROPAGATOR_TYPE propagatorType) {
+	propagatorConfigAddPROPAGATOR_TYPE(builder, PROPAGATOR_TYPE)
 }
 func propagatorConfigAddFORCE_MODELS(builder *flatbuffers.Builder, FORCE_MODELS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(FORCE_MODELS), 0)
 }
+func propagatorConfigAddForceModels(builder *flatbuffers.Builder, FORCE_MODELS flatbuffers.UOffsetT) {
+	propagatorConfigAddFORCE_MODELS(builder, FORCE_MODELS)
+}
 func propagatorConfigStartFORCE_MODELSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func propagatorConfigStartForceModelsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return propagatorConfigStartFORCE_MODELSVector(builder, numElems)
 }
 func propagatorConfigAddEPOCH(builder *flatbuffers.Builder, EPOCH flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(EPOCH), 0)
 }
+func propagatorConfigAddEpoch(builder *flatbuffers.Builder, EPOCH flatbuffers.UOffsetT) {
+	propagatorConfigAddEPOCH(builder, EPOCH)
+}
 func propagatorConfigAddTIME_STEP(builder *flatbuffers.Builder, TIME_STEP float64) {
 	builder.PrependFloat64Slot(4, TIME_STEP, 0.0)
+}
+func propagatorConfigAddTimeStep(builder *flatbuffers.Builder, TIME_STEP float64) {
+	propagatorConfigAddTIME_STEP(builder, TIME_STEP)
 }
 func propagatorConfigAddZONAL_HARMONIC_TERMS(builder *flatbuffers.Builder, ZONAL_HARMONIC_TERMS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(ZONAL_HARMONIC_TERMS), 0)
 }
+func propagatorConfigAddZonalHarmonicTerms(builder *flatbuffers.Builder, ZONAL_HARMONIC_TERMS flatbuffers.UOffsetT) {
+	propagatorConfigAddZONAL_HARMONIC_TERMS(builder, ZONAL_HARMONIC_TERMS)
+}
 func propagatorConfigStartZONAL_HARMONIC_TERMSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(1, numElems, 1)
+}
+func propagatorConfigStartZonalHarmonicTermsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return propagatorConfigStartZONAL_HARMONIC_TERMSVector(builder, numElems)
 }
 func propagatorConfigEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

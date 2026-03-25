@@ -608,6 +608,16 @@ def OMMStartCOVARIANCEVector(builder, numElems):
 def StartCOVARIANCEVector(builder, numElems):
     return OMMStartCOVARIANCEVector(builder, numElems)
 
+def OMMCreateCOVARIANCEVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateCOVARIANCEVector(builder, data):
+    OMMCreateCOVARIANCEVector(builder, data)
+
 def OMMAddUSER_DEFINED_BIP_0044_TYPE(builder, USER_DEFINED_BIP_0044_TYPE):
     builder.PrependUint32Slot(35, USER_DEFINED_BIP_0044_TYPE, 0)
 
@@ -653,53 +663,95 @@ except:
 class OMMT(object):
 
     # OMMT
-    def __init__(self):
-        self.CCSDS_OMM_VERS = 0.0  # type: float
-        self.CREATION_DATE = None  # type: str
-        self.ORIGINATOR = None  # type: str
-        self.OBJECT_NAME = None  # type: str
-        self.OBJECT_ID = None  # type: str
-        self.CENTER_NAME = None  # type: str
-        self.REFERENCE_FRAME = None  # type: Optional[RFM.RFMT]
-        self.REFERENCE_FRAME_EPOCH = None  # type: str
-        self.TIME_SYSTEM = 11  # type: int
-        self.MEAN_ELEMENT_THEORY = 0  # type: int
-        self.COMMENT = None  # type: str
-        self.EPOCH = None  # type: str
-        self.SEMI_MAJOR_AXIS = 0.0  # type: float
-        self.MEAN_MOTION = 0.0  # type: float
-        self.ECCENTRICITY = 0.0  # type: float
-        self.INCLINATION = 0.0  # type: float
-        self.RA_OF_ASC_NODE = 0.0  # type: float
-        self.ARG_OF_PERICENTER = 0.0  # type: float
-        self.MEAN_ANOMALY = 0.0  # type: float
-        self.GM = 0.0  # type: float
-        self.MASS = 0.0  # type: float
-        self.SOLAR_RAD_AREA = 0.0  # type: float
-        self.SOLAR_RAD_COEFF = 0.0  # type: float
-        self.DRAG_AREA = 0.0  # type: float
-        self.DRAG_COEFF = 0.0  # type: float
-        self.EPHEMERIS_TYPE = 1  # type: int
-        self.CLASSIFICATION_TYPE = None  # type: str
-        self.NORAD_CAT_ID = 0  # type: int
-        self.ELEMENT_SET_NO = 0  # type: int
-        self.REV_AT_EPOCH = 0.0  # type: float
-        self.BSTAR = 0.0  # type: float
-        self.MEAN_MOTION_DOT = 0.0  # type: float
-        self.MEAN_MOTION_DDOT = 0.0  # type: float
-        self.COV_REFERENCE_FRAME = None  # type: Optional[RFM.RFMT]
-        self.COVARIANCE = None  # type: List[float]
-        self.USER_DEFINED_BIP_0044_TYPE = 0  # type: int
-        self.USER_DEFINED_OBJECT_DESIGNATOR = None  # type: str
-        self.USER_DEFINED_EARTH_MODEL = None  # type: str
-        self.USER_DEFINED_EPOCH_TIMESTAMP = 0.0  # type: float
-        self.USER_DEFINED_MICROSECONDS = 0.0  # type: float
+    def __init__(
+        self,
+        CCSDS_OMM_VERS = 0.0,
+        CREATION_DATE = None,
+        ORIGINATOR = None,
+        OBJECT_NAME = None,
+        OBJECT_ID = None,
+        CENTER_NAME = None,
+        REFERENCE_FRAME = None,
+        REFERENCE_FRAME_EPOCH = None,
+        TIME_SYSTEM = 11,
+        MEAN_ELEMENT_THEORY = 0,
+        COMMENT = None,
+        EPOCH = None,
+        SEMI_MAJOR_AXIS = 0.0,
+        MEAN_MOTION = 0.0,
+        ECCENTRICITY = 0.0,
+        INCLINATION = 0.0,
+        RA_OF_ASC_NODE = 0.0,
+        ARG_OF_PERICENTER = 0.0,
+        MEAN_ANOMALY = 0.0,
+        GM = 0.0,
+        MASS = 0.0,
+        SOLAR_RAD_AREA = 0.0,
+        SOLAR_RAD_COEFF = 0.0,
+        DRAG_AREA = 0.0,
+        DRAG_COEFF = 0.0,
+        EPHEMERIS_TYPE = 1,
+        CLASSIFICATION_TYPE = None,
+        NORAD_CAT_ID = 0,
+        ELEMENT_SET_NO = 0,
+        REV_AT_EPOCH = 0.0,
+        BSTAR = 0.0,
+        MEAN_MOTION_DOT = 0.0,
+        MEAN_MOTION_DDOT = 0.0,
+        COV_REFERENCE_FRAME = None,
+        COVARIANCE = None,
+        USER_DEFINED_BIP_0044_TYPE = 0,
+        USER_DEFINED_OBJECT_DESIGNATOR = None,
+        USER_DEFINED_EARTH_MODEL = None,
+        USER_DEFINED_EPOCH_TIMESTAMP = 0.0,
+        USER_DEFINED_MICROSECONDS = 0.0,
+    ):
+        self.CCSDS_OMM_VERS = CCSDS_OMM_VERS  # type: float
+        self.CREATION_DATE = CREATION_DATE  # type: Optional[str]
+        self.ORIGINATOR = ORIGINATOR  # type: Optional[str]
+        self.OBJECT_NAME = OBJECT_NAME  # type: Optional[str]
+        self.OBJECT_ID = OBJECT_ID  # type: Optional[str]
+        self.CENTER_NAME = CENTER_NAME  # type: Optional[str]
+        self.REFERENCE_FRAME = REFERENCE_FRAME  # type: Optional[RFM.RFMT]
+        self.REFERENCE_FRAME_EPOCH = REFERENCE_FRAME_EPOCH  # type: Optional[str]
+        self.TIME_SYSTEM = TIME_SYSTEM  # type: int
+        self.MEAN_ELEMENT_THEORY = MEAN_ELEMENT_THEORY  # type: int
+        self.COMMENT = COMMENT  # type: Optional[str]
+        self.EPOCH = EPOCH  # type: Optional[str]
+        self.SEMI_MAJOR_AXIS = SEMI_MAJOR_AXIS  # type: float
+        self.MEAN_MOTION = MEAN_MOTION  # type: float
+        self.ECCENTRICITY = ECCENTRICITY  # type: float
+        self.INCLINATION = INCLINATION  # type: float
+        self.RA_OF_ASC_NODE = RA_OF_ASC_NODE  # type: float
+        self.ARG_OF_PERICENTER = ARG_OF_PERICENTER  # type: float
+        self.MEAN_ANOMALY = MEAN_ANOMALY  # type: float
+        self.GM = GM  # type: float
+        self.MASS = MASS  # type: float
+        self.SOLAR_RAD_AREA = SOLAR_RAD_AREA  # type: float
+        self.SOLAR_RAD_COEFF = SOLAR_RAD_COEFF  # type: float
+        self.DRAG_AREA = DRAG_AREA  # type: float
+        self.DRAG_COEFF = DRAG_COEFF  # type: float
+        self.EPHEMERIS_TYPE = EPHEMERIS_TYPE  # type: int
+        self.CLASSIFICATION_TYPE = CLASSIFICATION_TYPE  # type: Optional[str]
+        self.NORAD_CAT_ID = NORAD_CAT_ID  # type: int
+        self.ELEMENT_SET_NO = ELEMENT_SET_NO  # type: int
+        self.REV_AT_EPOCH = REV_AT_EPOCH  # type: float
+        self.BSTAR = BSTAR  # type: float
+        self.MEAN_MOTION_DOT = MEAN_MOTION_DOT  # type: float
+        self.MEAN_MOTION_DDOT = MEAN_MOTION_DDOT  # type: float
+        self.COV_REFERENCE_FRAME = COV_REFERENCE_FRAME  # type: Optional[RFM.RFMT]
+        self.COVARIANCE = COVARIANCE  # type: Optional[List[float]]
+        self.USER_DEFINED_BIP_0044_TYPE = USER_DEFINED_BIP_0044_TYPE  # type: int
+        self.USER_DEFINED_OBJECT_DESIGNATOR = USER_DEFINED_OBJECT_DESIGNATOR  # type: Optional[str]
+        self.USER_DEFINED_EARTH_MODEL = USER_DEFINED_EARTH_MODEL  # type: Optional[str]
+        self.USER_DEFINED_EPOCH_TIMESTAMP = USER_DEFINED_EPOCH_TIMESTAMP  # type: float
+        self.USER_DEFINED_MICROSECONDS = USER_DEFINED_MICROSECONDS  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        OMM = OMM()
-        OMM.Init(buf, pos)
-        return cls.InitFromObj(OMM)
+        tmpOmm = OMM()
+        tmpOmm.Init(buf, pos)
+        return cls.InitFromObj(tmpOmm)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -707,9 +759,9 @@ class OMMT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, OMM):
+    def InitFromObj(cls, tmpOmm):
         x = OMMT()
-        x._UnPack(OMM)
+        x._UnPack(tmpOmm)
         return x
 
     # OMMT

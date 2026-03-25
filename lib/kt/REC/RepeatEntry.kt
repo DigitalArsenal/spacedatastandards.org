@@ -32,7 +32,7 @@ class RepeatEntry : Table() {
     /**
      * Fixed repeat count
      */
-    val COUNT : UInt
+    val count : UInt
         get() {
             val o = __offset(4)
             return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
@@ -40,7 +40,7 @@ class RepeatEntry : Table() {
     /**
      * Dynamic count from parameter reference
      */
-    val COUNT_PARAMETER_REF : String?
+    val countParameterRef : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -49,34 +49,34 @@ class RepeatEntry : Table() {
                 null
             }
         }
-    val COUNT_PARAMETER_REFAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun COUNT_PARAMETER_REFInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val countParameterRefAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun countParameterRefInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * Offset in bits between repetitions
      */
-    val OFFSET_IN_BITS : Int
+    val offsetInBits : Int
         get() {
             val o = __offset(8)
             return if(o != 0) bb.getInt(o + bb_pos) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsRepeatEntry(_bb: ByteBuffer): RepeatEntry = getRootAsRepeatEntry(_bb, RepeatEntry())
         fun getRootAsRepeatEntry(_bb: ByteBuffer, obj: RepeatEntry): RepeatEntry {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createRepeatEntry(builder: FlatBufferBuilder, COUNT: UInt, COUNT_PARAMETER_REFOffset: Int, OFFSET_IN_BITS: Int) : Int {
+        fun createRepeatEntry(builder: FlatBufferBuilder, count: UInt, countParameterRefOffset: Int, offsetInBits: Int) : Int {
             builder.startTable(3)
-            addOFFSET_IN_BITS(builder, OFFSET_IN_BITS)
-            addCOUNT_PARAMETER_REF(builder, COUNT_PARAMETER_REFOffset)
-            addCOUNT(builder, COUNT)
+            addOFFSETINBITS(builder, offsetInBits)
+            addCOUNTPARAMETERREF(builder, countParameterRefOffset)
+            addCOUNT(builder, count)
             return endRepeatEntry(builder)
         }
         fun startRepeatEntry(builder: FlatBufferBuilder) = builder.startTable(3)
-        fun addCOUNT(builder: FlatBufferBuilder, COUNT: UInt) = builder.addInt(0, COUNT.toInt(), 0)
-        fun addCOUNT_PARAMETER_REF(builder: FlatBufferBuilder, COUNT_PARAMETER_REF: Int) = builder.addOffset(1, COUNT_PARAMETER_REF, 0)
-        fun addOFFSET_IN_BITS(builder: FlatBufferBuilder, OFFSET_IN_BITS: Int) = builder.addInt(2, OFFSET_IN_BITS, 0)
+        fun addCOUNT(builder: FlatBufferBuilder, count: UInt) = builder.addInt(0, count.toInt(), 0)
+        fun addCOUNTPARAMETERREF(builder: FlatBufferBuilder, countParameterRef: Int) = builder.addOffset(1, countParameterRef, 0)
+        fun addOFFSETINBITS(builder: FlatBufferBuilder, offsetInBits: Int) = builder.addInt(2, offsetInBits, 0)
         fun endRepeatEntry(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

@@ -4,7 +4,7 @@ import { promises as fs } from 'fs';
 import path from 'path';
 import { readFB, readFBStream } from '../index.js';
 import standardsJSON from '../lib/json/index.json' with { type: 'json' };
-import { resolver } from '../src/js/resolver.js';
+import { refRootName, resolver } from '../src/js/resolver.js';
 import { createReadStream } from 'fs';
 
 const dataPath = path.resolve('./.temp');
@@ -80,6 +80,7 @@ describe('Data Generation and Verification', () => {
 
             const schemaName = file.split('.')[1].toUpperCase();
             const jsonSchema = standardsJSON.STANDARDS[schemaName];
+            const rootName = refRootName(jsonSchema?.$ref);
 
             if (!jsonSchema) {
                 throw new Error(`Schema not found for ${schemaName}`);
@@ -87,7 +88,7 @@ describe('Data Generation and Verification', () => {
 
             for (const record of flatbuffers) {
                 for (const [key, value] of Object.entries(record)) {
-                    const schemaProp = jsonSchema.definitions[schemaName].properties[key];
+                    const schemaProp = jsonSchema.definitions[rootName]?.properties?.[key];
                     if (schemaProp) {
                         checkPropertyType(value, schemaProp, jsonSchema);
                     }
@@ -108,6 +109,7 @@ describe('Data Generation and Verification', () => {
 
             const schemaName = file.split('.')[1].toUpperCase();
             const jsonSchema = standardsJSON.STANDARDS[schemaName];
+            const rootName = refRootName(jsonSchema?.$ref);
 
             if (!jsonSchema) {
                 throw new Error(`Schema not found for ${schemaName}`);
@@ -115,7 +117,7 @@ describe('Data Generation and Verification', () => {
 
             for (const record of flatbuffers) {
                 for (const [key, value] of Object.entries(record)) {
-                    const schemaProp = jsonSchema.definitions[schemaName].properties[key];
+                    const schemaProp = jsonSchema.definitions[rootName]?.properties?.[key];
                     if (schemaProp) {
                         checkPropertyType(value, schemaProp, jsonSchema);
                     }
@@ -138,6 +140,7 @@ describe('Data Generation and Verification', () => {
 
             const schemaName = file.split('.')[1].toUpperCase();
             const jsonSchema = standardsJSON.STANDARDS[schemaName];
+            const rootName = refRootName(jsonSchema?.$ref);
 
             if (!jsonSchema) {
                 throw new Error(`Schema not found for ${schemaName}`);
@@ -145,7 +148,7 @@ describe('Data Generation and Verification', () => {
 
             for (const record of flatbuffers) {
                 for (const [key, value] of Object.entries(record)) {
-                    const schemaProp = jsonSchema.definitions[schemaName].properties[key];
+                    const schemaProp = jsonSchema.definitions[rootName]?.properties?.[key];
                     if (schemaProp) {
                         checkPropertyType(value, schemaProp, jsonSchema);
                     }

@@ -49,10 +49,17 @@ func (rcv *ServiceSet) SERVICES(obj *Service, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(Service)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *ServiceSet) Services(obj *Service, j int) bool {
+	return rcv.SERVICES(obj, j)
 }
 
 func (rcv *ServiceSet) SERVICESLength() int {
@@ -63,6 +70,10 @@ func (rcv *ServiceSet) SERVICESLength() int {
 	return 0
 }
 
+func (rcv *ServiceSet) ServicesLength() int {
+	return rcv.SERVICESLength()
+}
+
 /// Services
 func ServiceSetStart(builder *flatbuffers.Builder) {
 	builder.StartObject(1)
@@ -70,8 +81,14 @@ func ServiceSetStart(builder *flatbuffers.Builder) {
 func ServiceSetAddSERVICES(builder *flatbuffers.Builder, SERVICES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(SERVICES), 0)
 }
+func ServiceSetAddServices(builder *flatbuffers.Builder, SERVICES flatbuffers.UOffsetT) {
+	ServiceSetAddSERVICES(builder, SERVICES)
+}
 func ServiceSetStartSERVICESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func ServiceSetStartServicesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return ServiceSetStartSERVICESVector(builder, numElems)
 }
 func ServiceSetEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

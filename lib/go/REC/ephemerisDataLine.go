@@ -53,6 +53,10 @@ func (rcv *ephemerisDataLine) EPOCH() []byte {
 	return nil
 }
 
+func (rcv *ephemerisDataLine) Epoch() []byte {
+	return rcv.EPOCH()
+}
+
 /// Epoch time, in ISO 8601 UTC format (required for non-uniform steps)
 /// Position vector X-component km
 func (rcv *ephemerisDataLine) X() float64 {
@@ -105,9 +109,17 @@ func (rcv *ephemerisDataLine) X_DOT() float64 {
 	return 0.0
 }
 
+func (rcv *ephemerisDataLine) XDot() float64 {
+	return rcv.X_DOT()
+}
+
 /// Velocity vector X-component km/s
 func (rcv *ephemerisDataLine) MutateX_DOT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(12, n)
+}
+
+func (rcv *ephemerisDataLine) MutateXDot(n float64) bool {
+	return rcv.MutateX_DOT(n)
 }
 
 /// Velocity vector Y-component km/s
@@ -119,9 +131,17 @@ func (rcv *ephemerisDataLine) Y_DOT() float64 {
 	return 0.0
 }
 
+func (rcv *ephemerisDataLine) YDot() float64 {
+	return rcv.Y_DOT()
+}
+
 /// Velocity vector Y-component km/s
 func (rcv *ephemerisDataLine) MutateY_DOT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(14, n)
+}
+
+func (rcv *ephemerisDataLine) MutateYDot(n float64) bool {
+	return rcv.MutateY_DOT(n)
 }
 
 /// Velocity vector Z-component km/s
@@ -133,9 +153,17 @@ func (rcv *ephemerisDataLine) Z_DOT() float64 {
 	return 0.0
 }
 
+func (rcv *ephemerisDataLine) ZDot() float64 {
+	return rcv.Z_DOT()
+}
+
 /// Velocity vector Z-component km/s
 func (rcv *ephemerisDataLine) MutateZ_DOT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(16, n)
+}
+
+func (rcv *ephemerisDataLine) MutateZDot(n float64) bool {
+	return rcv.MutateZ_DOT(n)
 }
 
 /// Optional: Acceleration vector X-component km/s²
@@ -147,9 +175,17 @@ func (rcv *ephemerisDataLine) X_DDOT() float64 {
 	return 0.0
 }
 
+func (rcv *ephemerisDataLine) XDdot() float64 {
+	return rcv.X_DDOT()
+}
+
 /// Optional: Acceleration vector X-component km/s²
 func (rcv *ephemerisDataLine) MutateX_DDOT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(18, n)
+}
+
+func (rcv *ephemerisDataLine) MutateXDdot(n float64) bool {
+	return rcv.MutateX_DDOT(n)
 }
 
 /// Optional: Acceleration vector Y-component km/s²
@@ -161,9 +197,17 @@ func (rcv *ephemerisDataLine) Y_DDOT() float64 {
 	return 0.0
 }
 
+func (rcv *ephemerisDataLine) YDdot() float64 {
+	return rcv.Y_DDOT()
+}
+
 /// Optional: Acceleration vector Y-component km/s²
 func (rcv *ephemerisDataLine) MutateY_DDOT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(20, n)
+}
+
+func (rcv *ephemerisDataLine) MutateYDdot(n float64) bool {
+	return rcv.MutateY_DDOT(n)
 }
 
 /// Optional: Acceleration vector Z-component km/s²
@@ -175,9 +219,17 @@ func (rcv *ephemerisDataLine) Z_DDOT() float64 {
 	return 0.0
 }
 
+func (rcv *ephemerisDataLine) ZDdot() float64 {
+	return rcv.Z_DDOT()
+}
+
 /// Optional: Acceleration vector Z-component km/s²
 func (rcv *ephemerisDataLine) MutateZ_DDOT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(22, n)
+}
+
+func (rcv *ephemerisDataLine) MutateZDdot(n float64) bool {
+	return rcv.MutateZ_DDOT(n)
 }
 
 func ephemerisDataLineStart(builder *flatbuffers.Builder) {
@@ -185,6 +237,9 @@ func ephemerisDataLineStart(builder *flatbuffers.Builder) {
 }
 func ephemerisDataLineAddEPOCH(builder *flatbuffers.Builder, EPOCH flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(EPOCH), 0)
+}
+func ephemerisDataLineAddEpoch(builder *flatbuffers.Builder, EPOCH flatbuffers.UOffsetT) {
+	ephemerisDataLineAddEPOCH(builder, EPOCH)
 }
 func ephemerisDataLineAddX(builder *flatbuffers.Builder, X float64) {
 	builder.PrependFloat64Slot(1, X, 0.0)
@@ -198,20 +253,38 @@ func ephemerisDataLineAddZ(builder *flatbuffers.Builder, Z float64) {
 func ephemerisDataLineAddX_DOT(builder *flatbuffers.Builder, X_DOT float64) {
 	builder.PrependFloat64Slot(4, X_DOT, 0.0)
 }
+func ephemerisDataLineAddXDot(builder *flatbuffers.Builder, X_DOT float64) {
+	ephemerisDataLineAddX_DOT(builder, X_DOT)
+}
 func ephemerisDataLineAddY_DOT(builder *flatbuffers.Builder, Y_DOT float64) {
 	builder.PrependFloat64Slot(5, Y_DOT, 0.0)
+}
+func ephemerisDataLineAddYDot(builder *flatbuffers.Builder, Y_DOT float64) {
+	ephemerisDataLineAddY_DOT(builder, Y_DOT)
 }
 func ephemerisDataLineAddZ_DOT(builder *flatbuffers.Builder, Z_DOT float64) {
 	builder.PrependFloat64Slot(6, Z_DOT, 0.0)
 }
+func ephemerisDataLineAddZDot(builder *flatbuffers.Builder, Z_DOT float64) {
+	ephemerisDataLineAddZ_DOT(builder, Z_DOT)
+}
 func ephemerisDataLineAddX_DDOT(builder *flatbuffers.Builder, X_DDOT float64) {
 	builder.PrependFloat64Slot(7, X_DDOT, 0.0)
+}
+func ephemerisDataLineAddXDdot(builder *flatbuffers.Builder, X_DDOT float64) {
+	ephemerisDataLineAddX_DDOT(builder, X_DDOT)
 }
 func ephemerisDataLineAddY_DDOT(builder *flatbuffers.Builder, Y_DDOT float64) {
 	builder.PrependFloat64Slot(8, Y_DDOT, 0.0)
 }
+func ephemerisDataLineAddYDdot(builder *flatbuffers.Builder, Y_DDOT float64) {
+	ephemerisDataLineAddY_DDOT(builder, Y_DDOT)
+}
 func ephemerisDataLineAddZ_DDOT(builder *flatbuffers.Builder, Z_DDOT float64) {
 	builder.PrependFloat64Slot(9, Z_DDOT, 0.0)
+}
+func ephemerisDataLineAddZDdot(builder *flatbuffers.Builder, Z_DDOT float64) {
+	ephemerisDataLineAddZ_DDOT(builder, Z_DDOT)
 }
 func ephemerisDataLineEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

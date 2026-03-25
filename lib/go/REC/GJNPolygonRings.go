@@ -49,10 +49,17 @@ func (rcv *GJNPolygonRings) RINGS(obj *GJNLinearRing, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(GJNLinearRing)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *GJNPolygonRings) Rings(obj *GJNLinearRing, j int) bool {
+	return rcv.RINGS(obj, j)
 }
 
 func (rcv *GJNPolygonRings) RINGSLength() int {
@@ -63,6 +70,10 @@ func (rcv *GJNPolygonRings) RINGSLength() int {
 	return 0
 }
 
+func (rcv *GJNPolygonRings) RingsLength() int {
+	return rcv.RINGSLength()
+}
+
 /// Rings: first is outer boundary, rest are holes
 func GJNPolygonRingsStart(builder *flatbuffers.Builder) {
 	builder.StartObject(1)
@@ -70,8 +81,14 @@ func GJNPolygonRingsStart(builder *flatbuffers.Builder) {
 func GJNPolygonRingsAddRINGS(builder *flatbuffers.Builder, RINGS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(RINGS), 0)
 }
+func GJNPolygonRingsAddRings(builder *flatbuffers.Builder, RINGS flatbuffers.UOffsetT) {
+	GJNPolygonRingsAddRINGS(builder, RINGS)
+}
 func GJNPolygonRingsStartRINGSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func GJNPolygonRingsStartRingsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return GJNPolygonRingsStartRINGSVector(builder, numElems)
 }
 func GJNPolygonRingsEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

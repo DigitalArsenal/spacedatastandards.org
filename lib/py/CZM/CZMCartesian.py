@@ -87,16 +87,21 @@ def End(builder):
 class CZMCartesianT(object):
 
     # CZMCartesianT
-    def __init__(self):
-        self.X = 0.0  # type: float
-        self.Y = 0.0  # type: float
-        self.Z = 0.0  # type: float
+    def __init__(
+        self,
+        X = 0.0,
+        Y = 0.0,
+        Z = 0.0,
+    ):
+        self.X = X  # type: float
+        self.Y = Y  # type: float
+        self.Z = Z  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        czmcartesian = CZMCartesian()
-        czmcartesian.Init(buf, pos)
-        return cls.InitFromObj(czmcartesian)
+        tmpCzmcartesian = CZMCartesian()
+        tmpCzmcartesian.Init(buf, pos)
+        return cls.InitFromObj(tmpCzmcartesian)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -104,18 +109,18 @@ class CZMCartesianT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, czmcartesian):
+    def InitFromObj(cls, tmpCzmcartesian):
         x = CZMCartesianT()
-        x._UnPack(czmcartesian)
+        x._UnPack(tmpCzmcartesian)
         return x
 
     # CZMCartesianT
-    def _UnPack(self, czmcartesian):
-        if czmcartesian is None:
+    def _UnPack(self, CZMCartesian):
+        if CZMCartesian is None:
             return
-        self.X = czmcartesian.X()
-        self.Y = czmcartesian.Y()
-        self.Z = czmcartesian.Z()
+        self.X = CZMCartesian.X()
+        self.Y = CZMCartesian.Y()
+        self.Z = CZMCartesian.Z()
 
     # CZMCartesianT
     def Pack(self, builder):
@@ -123,5 +128,5 @@ class CZMCartesianT(object):
         CZMCartesianAddX(builder, self.X)
         CZMCartesianAddY(builder, self.Y)
         CZMCartesianAddZ(builder, self.Z)
-        czmcartesian = CZMCartesianEnd(builder)
-        return czmcartesian
+        CZMCartesian = CZMCartesianEnd(builder)
+        return CZMCartesian

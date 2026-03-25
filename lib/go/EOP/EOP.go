@@ -63,6 +63,10 @@ func (rcv *EOP) DATE() []byte {
 	return nil
 }
 
+func (rcv *EOP) Date() []byte {
+	return rcv.DATE()
+}
+
 ///  Date in ISO 8601 format, e.g., "2018-01-01T00:00:00Z"
 ///  Modified Julian Date in UTC, e.g., 58119
 func (rcv *EOP) MJD() uint32 {
@@ -73,9 +77,17 @@ func (rcv *EOP) MJD() uint32 {
 	return 0
 }
 
+func (rcv *EOP) Mjd() uint32 {
+	return rcv.MJD()
+}
+
 ///  Modified Julian Date in UTC, e.g., 58119
 func (rcv *EOP) MutateMJD(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(6, n)
+}
+
+func (rcv *EOP) MutateMjd(n uint32) bool {
+	return rcv.MutateMJD(n)
 }
 
 ///  x component of Pole Wander in radians, e.g., 2.872908911518888E-7
@@ -87,9 +99,17 @@ func (rcv *EOP) X_POLE_WANDER_RADIANS() float32 {
 	return 0.0
 }
 
+func (rcv *EOP) XPoleWanderRadians() float32 {
+	return rcv.X_POLE_WANDER_RADIANS()
+}
+
 ///  x component of Pole Wander in radians, e.g., 2.872908911518888E-7
 func (rcv *EOP) MutateX_POLE_WANDER_RADIANS(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(8, n)
+}
+
+func (rcv *EOP) MutateXPoleWanderRadians(n float32) bool {
+	return rcv.MutateX_POLE_WANDER_RADIANS(n)
 }
 
 ///  y component of Pole Wander in radians, e.g., 1.2003259523750447E-6
@@ -101,9 +121,17 @@ func (rcv *EOP) Y_POLE_WANDER_RADIANS() float32 {
 	return 0.0
 }
 
+func (rcv *EOP) YPoleWanderRadians() float32 {
+	return rcv.Y_POLE_WANDER_RADIANS()
+}
+
 ///  y component of Pole Wander in radians, e.g., 1.2003259523750447E-6
 func (rcv *EOP) MutateY_POLE_WANDER_RADIANS(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(10, n)
+}
+
+func (rcv *EOP) MutateYPoleWanderRadians(n float32) bool {
+	return rcv.MutateY_POLE_WANDER_RADIANS(n)
 }
 
 ///  x component of Celestial Pole Offset in radians, e.g., 5.720801437092525E-10
@@ -115,9 +143,17 @@ func (rcv *EOP) X_CELESTIAL_POLE_OFFSET_RADIANS() float32 {
 	return 0.0
 }
 
+func (rcv *EOP) XCelestialPoleOffsetRadians() float32 {
+	return rcv.X_CELESTIAL_POLE_OFFSET_RADIANS()
+}
+
 ///  x component of Celestial Pole Offset in radians, e.g., 5.720801437092525E-10
 func (rcv *EOP) MutateX_CELESTIAL_POLE_OFFSET_RADIANS(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(12, n)
+}
+
+func (rcv *EOP) MutateXCelestialPoleOffsetRadians(n float32) bool {
+	return rcv.MutateX_CELESTIAL_POLE_OFFSET_RADIANS(n)
 }
 
 ///  y component of Celestial Pole Offset in radians, e.g., -8.484239419416879E-10
@@ -129,9 +165,17 @@ func (rcv *EOP) Y_CELESTIAL_POLE_OFFSET_RADIANS() float32 {
 	return 0.0
 }
 
+func (rcv *EOP) YCelestialPoleOffsetRadians() float32 {
+	return rcv.Y_CELESTIAL_POLE_OFFSET_RADIANS()
+}
+
 ///  y component of Celestial Pole Offset in radians, e.g., -8.484239419416879E-10
 func (rcv *EOP) MutateY_CELESTIAL_POLE_OFFSET_RADIANS(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(14, n)
+}
+
+func (rcv *EOP) MutateYCelestialPoleOffsetRadians(n float32) bool {
+	return rcv.MutateY_CELESTIAL_POLE_OFFSET_RADIANS(n)
 }
 
 ///  UT1 minus UTC in seconds, e.g., 0.2163567
@@ -143,9 +187,17 @@ func (rcv *EOP) UT1_MINUS_UTC_SECONDS() float32 {
 	return 0.0
 }
 
+func (rcv *EOP) Ut1MinusUtcSeconds() float32 {
+	return rcv.UT1_MINUS_UTC_SECONDS()
+}
+
 ///  UT1 minus UTC in seconds, e.g., 0.2163567
 func (rcv *EOP) MutateUT1_MINUS_UTC_SECONDS(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(16, n)
+}
+
+func (rcv *EOP) MutateUt1MinusUtcSeconds(n float32) bool {
+	return rcv.MutateUT1_MINUS_UTC_SECONDS(n)
 }
 
 ///  TAI minus UTC in seconds, e.g., 37
@@ -157,9 +209,17 @@ func (rcv *EOP) TAI_MINUS_UTC_SECONDS() uint16 {
 	return 0
 }
 
+func (rcv *EOP) TaiMinusUtcSeconds() uint16 {
+	return rcv.TAI_MINUS_UTC_SECONDS()
+}
+
 ///  TAI minus UTC in seconds, e.g., 37
 func (rcv *EOP) MutateTAI_MINUS_UTC_SECONDS(n uint16) bool {
 	return rcv._tab.MutateUint16Slot(18, n)
+}
+
+func (rcv *EOP) MutateTaiMinusUtcSeconds(n uint16) bool {
+	return rcv.MutateTAI_MINUS_UTC_SECONDS(n)
 }
 
 ///  Correction to Length of Day in seconds, e.g., 8.094E-4
@@ -171,9 +231,17 @@ func (rcv *EOP) LENGTH_OF_DAY_CORRECTION_SECONDS() float32 {
 	return 0.0
 }
 
+func (rcv *EOP) LengthOfDayCorrectionSeconds() float32 {
+	return rcv.LENGTH_OF_DAY_CORRECTION_SECONDS()
+}
+
 ///  Correction to Length of Day in seconds, e.g., 8.094E-4
 func (rcv *EOP) MutateLENGTH_OF_DAY_CORRECTION_SECONDS(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(20, n)
+}
+
+func (rcv *EOP) MutateLengthOfDayCorrectionSeconds(n float32) bool {
+	return rcv.MutateLENGTH_OF_DAY_CORRECTION_SECONDS(n)
 }
 
 ///  Data type (O = Observed, P = Predicted)
@@ -185,9 +253,17 @@ func (rcv *EOP) DATA_TYPE() DataType {
 	return 0
 }
 
+func (rcv *EOP) DataType() DataType {
+	return rcv.DATA_TYPE()
+}
+
 ///  Data type (O = Observed, P = Predicted)
 func (rcv *EOP) MutateDATA_TYPE(n DataType) bool {
 	return rcv._tab.MutateInt8Slot(22, int8(n))
+}
+
+func (rcv *EOP) MutateDataType(n DataType) bool {
+	return rcv.MutateDATA_TYPE(n)
 }
 
 func EOPStart(builder *flatbuffers.Builder) {
@@ -196,32 +272,62 @@ func EOPStart(builder *flatbuffers.Builder) {
 func EOPAddDATE(builder *flatbuffers.Builder, DATE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(DATE), 0)
 }
+func EOPAddDate(builder *flatbuffers.Builder, DATE flatbuffers.UOffsetT) {
+	EOPAddDATE(builder, DATE)
+}
 func EOPAddMJD(builder *flatbuffers.Builder, MJD uint32) {
 	builder.PrependUint32Slot(1, MJD, 0)
+}
+func EOPAddMjd(builder *flatbuffers.Builder, MJD uint32) {
+	EOPAddMJD(builder, MJD)
 }
 func EOPAddX_POLE_WANDER_RADIANS(builder *flatbuffers.Builder, X_POLE_WANDER_RADIANS float32) {
 	builder.PrependFloat32Slot(2, X_POLE_WANDER_RADIANS, 0.0)
 }
+func EOPAddXPoleWanderRadians(builder *flatbuffers.Builder, X_POLE_WANDER_RADIANS float32) {
+	EOPAddX_POLE_WANDER_RADIANS(builder, X_POLE_WANDER_RADIANS)
+}
 func EOPAddY_POLE_WANDER_RADIANS(builder *flatbuffers.Builder, Y_POLE_WANDER_RADIANS float32) {
 	builder.PrependFloat32Slot(3, Y_POLE_WANDER_RADIANS, 0.0)
+}
+func EOPAddYPoleWanderRadians(builder *flatbuffers.Builder, Y_POLE_WANDER_RADIANS float32) {
+	EOPAddY_POLE_WANDER_RADIANS(builder, Y_POLE_WANDER_RADIANS)
 }
 func EOPAddX_CELESTIAL_POLE_OFFSET_RADIANS(builder *flatbuffers.Builder, X_CELESTIAL_POLE_OFFSET_RADIANS float32) {
 	builder.PrependFloat32Slot(4, X_CELESTIAL_POLE_OFFSET_RADIANS, 0.0)
 }
+func EOPAddXCelestialPoleOffsetRadians(builder *flatbuffers.Builder, X_CELESTIAL_POLE_OFFSET_RADIANS float32) {
+	EOPAddX_CELESTIAL_POLE_OFFSET_RADIANS(builder, X_CELESTIAL_POLE_OFFSET_RADIANS)
+}
 func EOPAddY_CELESTIAL_POLE_OFFSET_RADIANS(builder *flatbuffers.Builder, Y_CELESTIAL_POLE_OFFSET_RADIANS float32) {
 	builder.PrependFloat32Slot(5, Y_CELESTIAL_POLE_OFFSET_RADIANS, 0.0)
+}
+func EOPAddYCelestialPoleOffsetRadians(builder *flatbuffers.Builder, Y_CELESTIAL_POLE_OFFSET_RADIANS float32) {
+	EOPAddY_CELESTIAL_POLE_OFFSET_RADIANS(builder, Y_CELESTIAL_POLE_OFFSET_RADIANS)
 }
 func EOPAddUT1_MINUS_UTC_SECONDS(builder *flatbuffers.Builder, UT1_MINUS_UTC_SECONDS float32) {
 	builder.PrependFloat32Slot(6, UT1_MINUS_UTC_SECONDS, 0.0)
 }
+func EOPAddUt1MinusUtcSeconds(builder *flatbuffers.Builder, UT1_MINUS_UTC_SECONDS float32) {
+	EOPAddUT1_MINUS_UTC_SECONDS(builder, UT1_MINUS_UTC_SECONDS)
+}
 func EOPAddTAI_MINUS_UTC_SECONDS(builder *flatbuffers.Builder, TAI_MINUS_UTC_SECONDS uint16) {
 	builder.PrependUint16Slot(7, TAI_MINUS_UTC_SECONDS, 0)
+}
+func EOPAddTaiMinusUtcSeconds(builder *flatbuffers.Builder, TAI_MINUS_UTC_SECONDS uint16) {
+	EOPAddTAI_MINUS_UTC_SECONDS(builder, TAI_MINUS_UTC_SECONDS)
 }
 func EOPAddLENGTH_OF_DAY_CORRECTION_SECONDS(builder *flatbuffers.Builder, LENGTH_OF_DAY_CORRECTION_SECONDS float32) {
 	builder.PrependFloat32Slot(8, LENGTH_OF_DAY_CORRECTION_SECONDS, 0.0)
 }
+func EOPAddLengthOfDayCorrectionSeconds(builder *flatbuffers.Builder, LENGTH_OF_DAY_CORRECTION_SECONDS float32) {
+	EOPAddLENGTH_OF_DAY_CORRECTION_SECONDS(builder, LENGTH_OF_DAY_CORRECTION_SECONDS)
+}
 func EOPAddDATA_TYPE(builder *flatbuffers.Builder, DATA_TYPE DataType) {
 	builder.PrependInt8Slot(9, int8(DATA_TYPE), 0)
+}
+func EOPAddDataType(builder *flatbuffers.Builder, DATA_TYPE DataType) {
+	EOPAddDATA_TYPE(builder, DATA_TYPE)
 }
 func EOPEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

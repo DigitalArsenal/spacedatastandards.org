@@ -372,23 +372,23 @@ def MSTCreateVECTORSVector(b_:flatbuffers.builder, v_:[float]):
     reverse(v_) e_: b_.PrependFloat64(e_)
     return b_.EndVector(v_.length)
 
-def MSTStartAOU_RPTVector(b_:flatbuffers.builder, n_:int):
+def MSTStartAOURPTVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(8, n_, 8)
-def MSTCreateAOU_RPTVector(b_:flatbuffers.builder, v_:[float]):
+def MSTCreateAOURPTVector(b_:flatbuffers.builder, v_:[float]):
     b_.StartVector(8, v_.length, 8)
     reverse(v_) e_: b_.PrependFloat64(e_)
     return b_.EndVector(v_.length)
 
-def MSTStartLAUNCH_AOUVector(b_:flatbuffers.builder, n_:int):
+def MSTStartLAUNCHAOUVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(8, n_, 8)
-def MSTCreateLAUNCH_AOUVector(b_:flatbuffers.builder, v_:[float]):
+def MSTCreateLAUNCHAOUVector(b_:flatbuffers.builder, v_:[float]):
     b_.StartVector(8, v_.length, 8)
     reverse(v_) e_: b_.PrependFloat64(e_)
     return b_.EndVector(v_.length)
 
-def MSTStartIMPACT_AOUVector(b_:flatbuffers.builder, n_:int):
+def MSTStartIMPACTAOUVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(8, n_, 8)
-def MSTCreateIMPACT_AOUVector(b_:flatbuffers.builder, v_:[float]):
+def MSTCreateIMPACTAOUVector(b_:flatbuffers.builder, v_:[float]):
     b_.StartVector(8, v_.length, 8)
     reverse(v_) e_: b_.PrependFloat64(e_)
     return b_.EndVector(v_.length)

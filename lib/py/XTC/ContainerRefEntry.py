@@ -120,17 +120,23 @@ except:
 class ContainerRefEntryT(object):
 
     # ContainerRefEntryT
-    def __init__(self):
-        self.CONTAINER_REF = None  # type: str
-        self.LOCATION = None  # type: Optional[LocationInContainer.LocationInContainerT]
-        self.REPEAT = None  # type: Optional[RepeatEntry.RepeatEntryT]
-        self.INCLUDE_CONDITION = None  # type: Optional[MatchCriteria.MatchCriteriaT]
+    def __init__(
+        self,
+        CONTAINER_REF = None,
+        LOCATION = None,
+        REPEAT = None,
+        INCLUDE_CONDITION = None,
+    ):
+        self.CONTAINER_REF = CONTAINER_REF  # type: Optional[str]
+        self.LOCATION = LOCATION  # type: Optional[LocationInContainer.LocationInContainerT]
+        self.REPEAT = REPEAT  # type: Optional[RepeatEntry.RepeatEntryT]
+        self.INCLUDE_CONDITION = INCLUDE_CONDITION  # type: Optional[MatchCriteria.MatchCriteriaT]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        containerRefEntry = ContainerRefEntry()
-        containerRefEntry.Init(buf, pos)
-        return cls.InitFromObj(containerRefEntry)
+        tmpContainerRefEntry = ContainerRefEntry()
+        tmpContainerRefEntry.Init(buf, pos)
+        return cls.InitFromObj(tmpContainerRefEntry)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -138,22 +144,22 @@ class ContainerRefEntryT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, containerRefEntry):
+    def InitFromObj(cls, tmpContainerRefEntry):
         x = ContainerRefEntryT()
-        x._UnPack(containerRefEntry)
+        x._UnPack(tmpContainerRefEntry)
         return x
 
     # ContainerRefEntryT
-    def _UnPack(self, containerRefEntry):
-        if containerRefEntry is None:
+    def _UnPack(self, ContainerRefEntry):
+        if ContainerRefEntry is None:
             return
-        self.CONTAINER_REF = containerRefEntry.CONTAINER_REF()
-        if containerRefEntry.LOCATION() is not None:
-            self.LOCATION = LocationInContainer.LocationInContainerT.InitFromObj(containerRefEntry.LOCATION())
-        if containerRefEntry.REPEAT() is not None:
-            self.REPEAT = RepeatEntry.RepeatEntryT.InitFromObj(containerRefEntry.REPEAT())
-        if containerRefEntry.INCLUDE_CONDITION() is not None:
-            self.INCLUDE_CONDITION = MatchCriteria.MatchCriteriaT.InitFromObj(containerRefEntry.INCLUDE_CONDITION())
+        self.CONTAINER_REF = ContainerRefEntry.CONTAINER_REF()
+        if ContainerRefEntry.LOCATION() is not None:
+            self.LOCATION = LocationInContainer.LocationInContainerT.InitFromObj(ContainerRefEntry.LOCATION())
+        if ContainerRefEntry.REPEAT() is not None:
+            self.REPEAT = RepeatEntry.RepeatEntryT.InitFromObj(ContainerRefEntry.REPEAT())
+        if ContainerRefEntry.INCLUDE_CONDITION() is not None:
+            self.INCLUDE_CONDITION = MatchCriteria.MatchCriteriaT.InitFromObj(ContainerRefEntry.INCLUDE_CONDITION())
 
     # ContainerRefEntryT
     def Pack(self, builder):
@@ -174,5 +180,5 @@ class ContainerRefEntryT(object):
             ContainerRefEntryAddREPEAT(builder, REPEAT)
         if self.INCLUDE_CONDITION is not None:
             ContainerRefEntryAddINCLUDE_CONDITION(builder, INCLUDE_CONDITION)
-        containerRefEntry = ContainerRefEntryEnd(builder)
-        return containerRefEntry
+        ContainerRefEntry = ContainerRefEntryEnd(builder)
+        return ContainerRefEntry

@@ -1,3 +1,3 @@
-export { RCF, RCFT } from './RCF.js';
-export { rcfPduType } from './rcfPduType.js';
+export * from './RCF.js';
+export * from './rcfPduType.js';
 //# sourceMappingURL=main.d.ts.map

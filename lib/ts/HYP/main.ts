@@ -2,6 +2,6 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export { HYP, HYPT } from './HYP.js';
-export { Score, ScoreT } from './Score.js';
-export { ScoreType } from './ScoreType.js';
+export * from './HYP.js';
+export * from './Score.js';
+export * from './ScoreType.js';

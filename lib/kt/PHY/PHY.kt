@@ -29,7 +29,7 @@ class PHY : Table() {
         __init(_i, _bb)
         return this
     }
-    val COMMAND : String?
+    val command : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -38,9 +38,9 @@ class PHY : Table() {
                 null
             }
         }
-    val COMMANDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun COMMANDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
-    val SIMULATION_STEP : String?
+    val commandAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun commandInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
+    val simulationStep : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -49,9 +49,9 @@ class PHY : Table() {
                 null
             }
         }
-    val SIMULATION_STEPAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun SIMULATION_STEPInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
-    val RIGID_BODY : String?
+    val simulationStepAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun simulationStepInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
+    val rigidBody : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -60,9 +60,9 @@ class PHY : Table() {
                 null
             }
         }
-    val RIGID_BODYAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun RIGID_BODYInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
-    val INTEGRATION_CONFIG : String?
+    val rigidBodyAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun rigidBodyInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
+    val integrationConfig : String?
         get() {
             val o = __offset(10)
             return if (o != 0) {
@@ -71,9 +71,9 @@ class PHY : Table() {
                 null
             }
         }
-    val INTEGRATION_CONFIGAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
-    fun INTEGRATION_CONFIGInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
-    val COLLISION_QUERY_A : String?
+    val integrationConfigAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(10, 1)
+    fun integrationConfigInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 10, 1)
+    val collisionQueryA : String?
         get() {
             val o = __offset(12)
             return if (o != 0) {
@@ -82,9 +82,9 @@ class PHY : Table() {
                 null
             }
         }
-    val COLLISION_QUERY_AAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
-    fun COLLISION_QUERY_AInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
-    val COLLISION_QUERY_B : String?
+    val collisionQueryAAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(12, 1)
+    fun collisionQueryAInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 12, 1)
+    val collisionQueryB : String?
         get() {
             val o = __offset(14)
             return if (o != 0) {
@@ -93,9 +93,9 @@ class PHY : Table() {
                 null
             }
         }
-    val COLLISION_QUERY_BAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(14, 1)
-    fun COLLISION_QUERY_BInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 14, 1)
-    val TRANSFORM_A : String?
+    val collisionQueryBAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(14, 1)
+    fun collisionQueryBInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 14, 1)
+    val transformA : String?
         get() {
             val o = __offset(16)
             return if (o != 0) {
@@ -104,9 +104,9 @@ class PHY : Table() {
                 null
             }
         }
-    val TRANSFORM_AAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(16, 1)
-    fun TRANSFORM_AInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 16, 1)
-    val TRANSFORM_B : String?
+    val transformAAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(16, 1)
+    fun transformAInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 16, 1)
+    val transformB : String?
         get() {
             val o = __offset(18)
             return if (o != 0) {
@@ -115,9 +115,9 @@ class PHY : Table() {
                 null
             }
         }
-    val TRANSFORM_BAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(18, 1)
-    fun TRANSFORM_BInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 18, 1)
-    val POSITION_A : String?
+    val transformBAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(18, 1)
+    fun transformBInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 18, 1)
+    val positionA : String?
         get() {
             val o = __offset(20)
             return if (o != 0) {
@@ -126,9 +126,9 @@ class PHY : Table() {
                 null
             }
         }
-    val POSITION_AAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(20, 1)
-    fun POSITION_AInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 20, 1)
-    val POSITION_B : String?
+    val positionAAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(20, 1)
+    fun positionAInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 20, 1)
+    val positionB : String?
         get() {
             val o = __offset(22)
             return if (o != 0) {
@@ -137,9 +137,9 @@ class PHY : Table() {
                 null
             }
         }
-    val POSITION_BAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(22, 1)
-    fun POSITION_BInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 22, 1)
-    val FLUID : String?
+    val positionBAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(22, 1)
+    fun positionBInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 22, 1)
+    val fluid : String?
         get() {
             val o = __offset(24)
             return if (o != 0) {
@@ -148,9 +148,9 @@ class PHY : Table() {
                 null
             }
         }
-    val FLUIDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(24, 1)
-    fun FLUIDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 24, 1)
-    val AERO_QUERY : String?
+    val fluidAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(24, 1)
+    fun fluidInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 24, 1)
+    val aeroQuery : String?
         get() {
             val o = __offset(26)
             return if (o != 0) {
@@ -159,9 +159,9 @@ class PHY : Table() {
                 null
             }
         }
-    val AERO_QUERYAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(26, 1)
-    fun AERO_QUERYInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 26, 1)
-    val DRAG_MODEL : String?
+    val aeroQueryAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(26, 1)
+    fun aeroQueryInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 26, 1)
+    val dragModel : String?
         get() {
             val o = __offset(28)
             return if (o != 0) {
@@ -170,9 +170,9 @@ class PHY : Table() {
                 null
             }
         }
-    val DRAG_MODELAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(28, 1)
-    fun DRAG_MODELInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 28, 1)
-    val THERMAL_STATE : String?
+    val dragModelAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(28, 1)
+    fun dragModelInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 28, 1)
+    val thermalState : String?
         get() {
             val o = __offset(30)
             return if (o != 0) {
@@ -181,49 +181,49 @@ class PHY : Table() {
                 null
             }
         }
-    val THERMAL_STATEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(30, 1)
-    fun THERMAL_STATEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 30, 1)
+    val thermalStateAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(30, 1)
+    fun thermalStateInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 30, 1)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsPHY(_bb: ByteBuffer): PHY = getRootAsPHY(_bb, PHY())
         fun getRootAsPHY(_bb: ByteBuffer, obj: PHY): PHY {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun PHYBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$PHY")
-        fun createPHY(builder: FlatBufferBuilder, COMMANDOffset: Int, SIMULATION_STEPOffset: Int, RIGID_BODYOffset: Int, INTEGRATION_CONFIGOffset: Int, COLLISION_QUERY_AOffset: Int, COLLISION_QUERY_BOffset: Int, TRANSFORM_AOffset: Int, TRANSFORM_BOffset: Int, POSITION_AOffset: Int, POSITION_BOffset: Int, FLUIDOffset: Int, AERO_QUERYOffset: Int, DRAG_MODELOffset: Int, THERMAL_STATEOffset: Int) : Int {
+        fun createPHY(builder: FlatBufferBuilder, commandOffset: Int, simulationStepOffset: Int, rigidBodyOffset: Int, integrationConfigOffset: Int, collisionQueryAOffset: Int, collisionQueryBOffset: Int, transformAOffset: Int, transformBOffset: Int, positionAOffset: Int, positionBOffset: Int, fluidOffset: Int, aeroQueryOffset: Int, dragModelOffset: Int, thermalStateOffset: Int) : Int {
             builder.startTable(14)
-            addTHERMAL_STATE(builder, THERMAL_STATEOffset)
-            addDRAG_MODEL(builder, DRAG_MODELOffset)
-            addAERO_QUERY(builder, AERO_QUERYOffset)
-            addFLUID(builder, FLUIDOffset)
-            addPOSITION_B(builder, POSITION_BOffset)
-            addPOSITION_A(builder, POSITION_AOffset)
-            addTRANSFORM_B(builder, TRANSFORM_BOffset)
-            addTRANSFORM_A(builder, TRANSFORM_AOffset)
-            addCOLLISION_QUERY_B(builder, COLLISION_QUERY_BOffset)
-            addCOLLISION_QUERY_A(builder, COLLISION_QUERY_AOffset)
-            addINTEGRATION_CONFIG(builder, INTEGRATION_CONFIGOffset)
-            addRIGID_BODY(builder, RIGID_BODYOffset)
-            addSIMULATION_STEP(builder, SIMULATION_STEPOffset)
-            addCOMMAND(builder, COMMANDOffset)
+            addTHERMALSTATE(builder, thermalStateOffset)
+            addDRAGMODEL(builder, dragModelOffset)
+            addAEROQUERY(builder, aeroQueryOffset)
+            addFLUID(builder, fluidOffset)
+            addPOSITIONB(builder, positionBOffset)
+            addPOSITIONA(builder, positionAOffset)
+            addTRANSFORMB(builder, transformBOffset)
+            addTRANSFORMA(builder, transformAOffset)
+            addCOLLISIONQUERYB(builder, collisionQueryBOffset)
+            addCOLLISIONQUERYA(builder, collisionQueryAOffset)
+            addINTEGRATIONCONFIG(builder, integrationConfigOffset)
+            addRIGIDBODY(builder, rigidBodyOffset)
+            addSIMULATIONSTEP(builder, simulationStepOffset)
+            addCOMMAND(builder, commandOffset)
             return endPHY(builder)
         }
         fun startPHY(builder: FlatBufferBuilder) = builder.startTable(14)
-        fun addCOMMAND(builder: FlatBufferBuilder, COMMAND: Int) = builder.addOffset(0, COMMAND, 0)
-        fun addSIMULATION_STEP(builder: FlatBufferBuilder, SIMULATION_STEP: Int) = builder.addOffset(1, SIMULATION_STEP, 0)
-        fun addRIGID_BODY(builder: FlatBufferBuilder, RIGID_BODY: Int) = builder.addOffset(2, RIGID_BODY, 0)
-        fun addINTEGRATION_CONFIG(builder: FlatBufferBuilder, INTEGRATION_CONFIG: Int) = builder.addOffset(3, INTEGRATION_CONFIG, 0)
-        fun addCOLLISION_QUERY_A(builder: FlatBufferBuilder, COLLISION_QUERY_A: Int) = builder.addOffset(4, COLLISION_QUERY_A, 0)
-        fun addCOLLISION_QUERY_B(builder: FlatBufferBuilder, COLLISION_QUERY_B: Int) = builder.addOffset(5, COLLISION_QUERY_B, 0)
-        fun addTRANSFORM_A(builder: FlatBufferBuilder, TRANSFORM_A: Int) = builder.addOffset(6, TRANSFORM_A, 0)
-        fun addTRANSFORM_B(builder: FlatBufferBuilder, TRANSFORM_B: Int) = builder.addOffset(7, TRANSFORM_B, 0)
-        fun addPOSITION_A(builder: FlatBufferBuilder, POSITION_A: Int) = builder.addOffset(8, POSITION_A, 0)
-        fun addPOSITION_B(builder: FlatBufferBuilder, POSITION_B: Int) = builder.addOffset(9, POSITION_B, 0)
-        fun addFLUID(builder: FlatBufferBuilder, FLUID: Int) = builder.addOffset(10, FLUID, 0)
-        fun addAERO_QUERY(builder: FlatBufferBuilder, AERO_QUERY: Int) = builder.addOffset(11, AERO_QUERY, 0)
-        fun addDRAG_MODEL(builder: FlatBufferBuilder, DRAG_MODEL: Int) = builder.addOffset(12, DRAG_MODEL, 0)
-        fun addTHERMAL_STATE(builder: FlatBufferBuilder, THERMAL_STATE: Int) = builder.addOffset(13, THERMAL_STATE, 0)
+        fun addCOMMAND(builder: FlatBufferBuilder, command: Int) = builder.addOffset(0, command, 0)
+        fun addSIMULATIONSTEP(builder: FlatBufferBuilder, simulationStep: Int) = builder.addOffset(1, simulationStep, 0)
+        fun addRIGIDBODY(builder: FlatBufferBuilder, rigidBody: Int) = builder.addOffset(2, rigidBody, 0)
+        fun addINTEGRATIONCONFIG(builder: FlatBufferBuilder, integrationConfig: Int) = builder.addOffset(3, integrationConfig, 0)
+        fun addCOLLISIONQUERYA(builder: FlatBufferBuilder, collisionQueryA: Int) = builder.addOffset(4, collisionQueryA, 0)
+        fun addCOLLISIONQUERYB(builder: FlatBufferBuilder, collisionQueryB: Int) = builder.addOffset(5, collisionQueryB, 0)
+        fun addTRANSFORMA(builder: FlatBufferBuilder, transformA: Int) = builder.addOffset(6, transformA, 0)
+        fun addTRANSFORMB(builder: FlatBufferBuilder, transformB: Int) = builder.addOffset(7, transformB, 0)
+        fun addPOSITIONA(builder: FlatBufferBuilder, positionA: Int) = builder.addOffset(8, positionA, 0)
+        fun addPOSITIONB(builder: FlatBufferBuilder, positionB: Int) = builder.addOffset(9, positionB, 0)
+        fun addFLUID(builder: FlatBufferBuilder, fluid: Int) = builder.addOffset(10, fluid, 0)
+        fun addAEROQUERY(builder: FlatBufferBuilder, aeroQuery: Int) = builder.addOffset(11, aeroQuery, 0)
+        fun addDRAGMODEL(builder: FlatBufferBuilder, dragModel: Int) = builder.addOffset(12, dragModel, 0)
+        fun addTHERMALSTATE(builder: FlatBufferBuilder, thermalState: Int) = builder.addOffset(13, thermalState, 0)
         fun endPHY(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

@@ -8,9 +8,9 @@
 
 // Ensure the included flatbuffers.h is the same version as when this file was
 // generated, otherwise it may not be compatible.
-static_assert(FLATBUFFERS_VERSION_MAJOR == 24 &&
-              FLATBUFFERS_VERSION_MINOR == 3 &&
-              FLATBUFFERS_VERSION_REVISION == 25,
+static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
+              FLATBUFFERS_VERSION_MINOR == 12 &&
+              FLATBUFFERS_VERSION_REVISION == 19,
              "Non-compatible flatbuffers version included");
 
 struct TRK;
@@ -400,7 +400,8 @@ struct TRK FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::Vector<double> *ERR_ELLP() const {
     return GetPointer<const ::flatbuffers::Vector<double> *>(VT_ERR_ELLP);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_ID) &&
            verifier.VerifyString(ID()) &&
@@ -1002,14 +1003,16 @@ inline bool SizePrefixedTRKBufferHasIdentifier(const void *buf) {
       buf, TRKIdentifier(), true);
 }
 
+template <bool B = false>
 inline bool VerifyTRKBuffer(
-    ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifyBuffer<TRK>(TRKIdentifier());
+    ::flatbuffers::VerifierTemplate<B> &verifier) {
+  return verifier.template VerifyBuffer<TRK>(TRKIdentifier());
 }
 
+template <bool B = false>
 inline bool VerifySizePrefixedTRKBuffer(
-    ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifySizePrefixedBuffer<TRK>(TRKIdentifier());
+    ::flatbuffers::VerifierTemplate<B> &verifier) {
+  return verifier.template VerifySizePrefixedBuffer<TRK>(TRKIdentifier());
 }
 
 inline void FinishTRKBuffer(

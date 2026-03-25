@@ -51,9 +51,17 @@ func (rcv *STAGE) STAGE_NUMBER() int32 {
 	return 0
 }
 
+func (rcv *STAGE) StageNumber() int32 {
+	return rcv.STAGE_NUMBER()
+}
+
 /// Stage Number
 func (rcv *STAGE) MutateSTAGE_NUMBER(n int32) bool {
 	return rcv._tab.MutateInt32Slot(4, n)
+}
+
+func (rcv *STAGE) MutateStageNumber(n int32) bool {
+	return rcv.MutateSTAGE_NUMBER(n)
 }
 
 /// Engines Used in This Stage
@@ -63,10 +71,17 @@ func (rcv *STAGE) ENGINES(obj *ENGINE, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(ENGINE)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *STAGE) Engines(obj *ENGINE, j int) bool {
+	return rcv.ENGINES(obj, j)
 }
 
 func (rcv *STAGE) ENGINESLength() int {
@@ -75,6 +90,10 @@ func (rcv *STAGE) ENGINESLength() int {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *STAGE) EnginesLength() int {
+	return rcv.ENGINESLength()
 }
 
 /// Engines Used in This Stage
@@ -87,6 +106,10 @@ func (rcv *STAGE) FUEL_TYPE() []byte {
 	return nil
 }
 
+func (rcv *STAGE) FuelType() []byte {
+	return rcv.FUEL_TYPE()
+}
+
 /// Fuel Type Used in This Stage
 /// Thrust Produced by This Stage (in Newtons)
 func (rcv *STAGE) THRUST() float64 {
@@ -97,9 +120,17 @@ func (rcv *STAGE) THRUST() float64 {
 	return 0.0
 }
 
+func (rcv *STAGE) Thrust() float64 {
+	return rcv.THRUST()
+}
+
 /// Thrust Produced by This Stage (in Newtons)
 func (rcv *STAGE) MutateTHRUST(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(10, n)
+}
+
+func (rcv *STAGE) MutateThrust(n float64) bool {
+	return rcv.MutateTHRUST(n)
 }
 
 /// Duration of the Burn (in Seconds)
@@ -111,9 +142,17 @@ func (rcv *STAGE) BURN_DURATION() float64 {
 	return 0.0
 }
 
+func (rcv *STAGE) BurnDuration() float64 {
+	return rcv.BURN_DURATION()
+}
+
 /// Duration of the Burn (in Seconds)
 func (rcv *STAGE) MutateBURN_DURATION(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(12, n)
+}
+
+func (rcv *STAGE) MutateBurnDuration(n float64) bool {
+	return rcv.MutateBURN_DURATION(n)
 }
 
 func STAGEStart(builder *flatbuffers.Builder) {
@@ -122,20 +161,38 @@ func STAGEStart(builder *flatbuffers.Builder) {
 func STAGEAddSTAGE_NUMBER(builder *flatbuffers.Builder, STAGE_NUMBER int32) {
 	builder.PrependInt32Slot(0, STAGE_NUMBER, 0)
 }
+func STAGEAddStageNumber(builder *flatbuffers.Builder, STAGE_NUMBER int32) {
+	STAGEAddSTAGE_NUMBER(builder, STAGE_NUMBER)
+}
 func STAGEAddENGINES(builder *flatbuffers.Builder, ENGINES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(ENGINES), 0)
+}
+func STAGEAddEngines(builder *flatbuffers.Builder, ENGINES flatbuffers.UOffsetT) {
+	STAGEAddENGINES(builder, ENGINES)
 }
 func STAGEStartENGINESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
+func STAGEStartEnginesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return STAGEStartENGINESVector(builder, numElems)
+}
 func STAGEAddFUEL_TYPE(builder *flatbuffers.Builder, FUEL_TYPE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(FUEL_TYPE), 0)
+}
+func STAGEAddFuelType(builder *flatbuffers.Builder, FUEL_TYPE flatbuffers.UOffsetT) {
+	STAGEAddFUEL_TYPE(builder, FUEL_TYPE)
 }
 func STAGEAddTHRUST(builder *flatbuffers.Builder, THRUST float64) {
 	builder.PrependFloat64Slot(3, THRUST, 0.0)
 }
+func STAGEAddThrust(builder *flatbuffers.Builder, THRUST float64) {
+	STAGEAddTHRUST(builder, THRUST)
+}
 func STAGEAddBURN_DURATION(builder *flatbuffers.Builder, BURN_DURATION float64) {
 	builder.PrependFloat64Slot(4, BURN_DURATION, 0.0)
+}
+func STAGEAddBurnDuration(builder *flatbuffers.Builder, BURN_DURATION float64) {
+	STAGEAddBURN_DURATION(builder, BURN_DURATION)
 }
 func STAGEEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

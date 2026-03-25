@@ -63,6 +63,10 @@ func (rcv *DOA) ID() []byte {
 	return nil
 }
 
+func (rcv *DOA) Id() []byte {
+	return rcv.ID()
+}
+
 /// Unique identifier
 /// Observation time (ISO 8601)
 func (rcv *DOA) OB_TIME() []byte {
@@ -71,6 +75,10 @@ func (rcv *DOA) OB_TIME() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *DOA) ObTime() []byte {
+	return rcv.OB_TIME()
 }
 
 /// Observation time (ISO 8601)
@@ -83,9 +91,17 @@ func (rcv *DOA) SAT_NO() uint32 {
 	return 0
 }
 
+func (rcv *DOA) SatNo() uint32 {
+	return rcv.SAT_NO()
+}
+
 /// Satellite catalog number
 func (rcv *DOA) MutateSAT_NO(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(8, n)
+}
+
+func (rcv *DOA) MutateSatNo(n uint32) bool {
+	return rcv.MutateSAT_NO(n)
 }
 
 /// International designator
@@ -95,6 +111,10 @@ func (rcv *DOA) ORIG_OBJECT_ID() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *DOA) OrigObjectId() []byte {
+	return rcv.ORIG_OBJECT_ID()
 }
 
 /// International designator
@@ -107,6 +127,10 @@ func (rcv *DOA) ON_ORBIT() []byte {
 	return nil
 }
 
+func (rcv *DOA) OnOrbit() []byte {
+	return rcv.ON_ORBIT()
+}
+
 /// On-orbit reference
 /// True if uncorrelated target
 func (rcv *DOA) UCT() bool {
@@ -117,9 +141,17 @@ func (rcv *DOA) UCT() bool {
 	return false
 }
 
+func (rcv *DOA) Uct() bool {
+	return rcv.UCT()
+}
+
 /// True if uncorrelated target
 func (rcv *DOA) MutateUCT(n bool) bool {
 	return rcv._tab.MutateBoolSlot(14, n)
+}
+
+func (rcv *DOA) MutateUct(n bool) bool {
+	return rcv.MutateUCT(n)
 }
 
 /// Task identifier
@@ -129,6 +161,10 @@ func (rcv *DOA) TASK_ID() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *DOA) TaskId() []byte {
+	return rcv.TASK_ID()
 }
 
 /// Task identifier
@@ -141,6 +177,10 @@ func (rcv *DOA) TRANSACTION_ID() []byte {
 	return nil
 }
 
+func (rcv *DOA) TransactionId() []byte {
+	return rcv.TRANSACTION_ID()
+}
+
 /// Transaction identifier
 /// Collection mode
 func (rcv *DOA) COLLECTION_MODE() doaCollectionMode {
@@ -151,9 +191,17 @@ func (rcv *DOA) COLLECTION_MODE() doaCollectionMode {
 	return 0
 }
 
+func (rcv *DOA) CollectionMode() doaCollectionMode {
+	return rcv.COLLECTION_MODE()
+}
+
 /// Collection mode
 func (rcv *DOA) MutateCOLLECTION_MODE(n doaCollectionMode) bool {
 	return rcv._tab.MutateInt8Slot(20, int8(n))
+}
+
+func (rcv *DOA) MutateCollectionMode(n doaCollectionMode) bool {
+	return rcv.MutateCOLLECTION_MODE(n)
 }
 
 /// Sensor 1 identifier
@@ -163,6 +211,10 @@ func (rcv *DOA) ID_SENSOR1() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *DOA) IdSensor1() []byte {
+	return rcv.ID_SENSOR1()
 }
 
 /// Sensor 1 identifier
@@ -175,6 +227,10 @@ func (rcv *DOA) ORIG_SENSOR_ID1() []byte {
 	return nil
 }
 
+func (rcv *DOA) OrigSensorId1() []byte {
+	return rcv.ORIG_SENSOR_ID1()
+}
+
 /// Sensor 1 original identifier
 /// Sensor 1 latitude (degrees)
 func (rcv *DOA) SENLAT() float64 {
@@ -185,9 +241,17 @@ func (rcv *DOA) SENLAT() float64 {
 	return 0.0
 }
 
+func (rcv *DOA) Senlat() float64 {
+	return rcv.SENLAT()
+}
+
 /// Sensor 1 latitude (degrees)
 func (rcv *DOA) MutateSENLAT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(26, n)
+}
+
+func (rcv *DOA) MutateSenlat(n float64) bool {
+	return rcv.MutateSENLAT(n)
 }
 
 /// Sensor 1 longitude (degrees)
@@ -199,9 +263,17 @@ func (rcv *DOA) SENLON() float64 {
 	return 0.0
 }
 
+func (rcv *DOA) Senlon() float64 {
+	return rcv.SENLON()
+}
+
 /// Sensor 1 longitude (degrees)
 func (rcv *DOA) MutateSENLON(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(28, n)
+}
+
+func (rcv *DOA) MutateSenlon(n float64) bool {
+	return rcv.MutateSENLON(n)
 }
 
 /// Sensor 1 altitude (km)
@@ -213,9 +285,17 @@ func (rcv *DOA) SENALT() float64 {
 	return 0.0
 }
 
+func (rcv *DOA) Senalt() float64 {
+	return rcv.SENALT()
+}
+
 /// Sensor 1 altitude (km)
 func (rcv *DOA) MutateSENALT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(30, n)
+}
+
+func (rcv *DOA) MutateSenalt(n float64) bool {
+	return rcv.MutateSENALT(n)
 }
 
 /// Sensor 1 processing delay (seconds)
@@ -227,9 +307,17 @@ func (rcv *DOA) SENSOR1_DELAY() float64 {
 	return 0.0
 }
 
+func (rcv *DOA) Sensor1Delay() float64 {
+	return rcv.SENSOR1_DELAY()
+}
+
 /// Sensor 1 processing delay (seconds)
 func (rcv *DOA) MutateSENSOR1_DELAY(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(32, n)
+}
+
+func (rcv *DOA) MutateSensor1Delay(n float64) bool {
+	return rcv.MutateSENSOR1_DELAY(n)
 }
 
 /// Sensor 2 identifier
@@ -239,6 +327,10 @@ func (rcv *DOA) ID_SENSOR2() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *DOA) IdSensor2() []byte {
+	return rcv.ID_SENSOR2()
 }
 
 /// Sensor 2 identifier
@@ -251,6 +343,10 @@ func (rcv *DOA) ORIG_SENSOR_ID2() []byte {
 	return nil
 }
 
+func (rcv *DOA) OrigSensorId2() []byte {
+	return rcv.ORIG_SENSOR_ID2()
+}
+
 /// Sensor 2 original identifier
 /// Sensor 2 latitude (degrees)
 func (rcv *DOA) SEN2LAT() float64 {
@@ -261,9 +357,17 @@ func (rcv *DOA) SEN2LAT() float64 {
 	return 0.0
 }
 
+func (rcv *DOA) Sen2lat() float64 {
+	return rcv.SEN2LAT()
+}
+
 /// Sensor 2 latitude (degrees)
 func (rcv *DOA) MutateSEN2LAT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(38, n)
+}
+
+func (rcv *DOA) MutateSen2lat(n float64) bool {
+	return rcv.MutateSEN2LAT(n)
 }
 
 /// Sensor 2 longitude (degrees)
@@ -275,9 +379,17 @@ func (rcv *DOA) SEN2LON() float64 {
 	return 0.0
 }
 
+func (rcv *DOA) Sen2lon() float64 {
+	return rcv.SEN2LON()
+}
+
 /// Sensor 2 longitude (degrees)
 func (rcv *DOA) MutateSEN2LON(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(40, n)
+}
+
+func (rcv *DOA) MutateSen2lon(n float64) bool {
+	return rcv.MutateSEN2LON(n)
 }
 
 /// Sensor 2 altitude (km)
@@ -289,9 +401,17 @@ func (rcv *DOA) SEN2ALT() float64 {
 	return 0.0
 }
 
+func (rcv *DOA) Sen2alt() float64 {
+	return rcv.SEN2ALT()
+}
+
 /// Sensor 2 altitude (km)
 func (rcv *DOA) MutateSEN2ALT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(42, n)
+}
+
+func (rcv *DOA) MutateSen2alt(n float64) bool {
+	return rcv.MutateSEN2ALT(n)
 }
 
 /// Sensor 2 processing delay (seconds)
@@ -303,9 +423,17 @@ func (rcv *DOA) SENSOR2_DELAY() float64 {
 	return 0.0
 }
 
+func (rcv *DOA) Sensor2Delay() float64 {
+	return rcv.SENSOR2_DELAY()
+}
+
 /// Sensor 2 processing delay (seconds)
 func (rcv *DOA) MutateSENSOR2_DELAY(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(44, n)
+}
+
+func (rcv *DOA) MutateSensor2Delay(n float64) bool {
+	return rcv.MutateSENSOR2_DELAY(n)
 }
 
 /// Measured frequency (MHz)
@@ -317,9 +445,17 @@ func (rcv *DOA) FREQUENCY() float64 {
 	return 0.0
 }
 
+func (rcv *DOA) Frequency() float64 {
+	return rcv.FREQUENCY()
+}
+
 /// Measured frequency (MHz)
 func (rcv *DOA) MutateFREQUENCY(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(46, n)
+}
+
+func (rcv *DOA) MutateFrequency(n float64) bool {
+	return rcv.MutateFREQUENCY(n)
 }
 
 /// Measurement bandwidth (MHz)
@@ -331,9 +467,17 @@ func (rcv *DOA) BANDWIDTH() float64 {
 	return 0.0
 }
 
+func (rcv *DOA) Bandwidth() float64 {
+	return rcv.BANDWIDTH()
+}
+
 /// Measurement bandwidth (MHz)
 func (rcv *DOA) MutateBANDWIDTH(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(48, n)
+}
+
+func (rcv *DOA) MutateBandwidth(n float64) bool {
+	return rcv.MutateBANDWIDTH(n)
 }
 
 /// Signal-to-noise ratio (dB)
@@ -345,9 +489,17 @@ func (rcv *DOA) SNR() float64 {
 	return 0.0
 }
 
+func (rcv *DOA) Snr() float64 {
+	return rcv.SNR()
+}
+
 /// Signal-to-noise ratio (dB)
 func (rcv *DOA) MutateSNR(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(50, n)
+}
+
+func (rcv *DOA) MutateSnr(n float64) bool {
+	return rcv.MutateSNR(n)
 }
 
 /// Differential range (km)
@@ -359,9 +511,17 @@ func (rcv *DOA) DELTA_RANGE() float64 {
 	return 0.0
 }
 
+func (rcv *DOA) DeltaRange() float64 {
+	return rcv.DELTA_RANGE()
+}
+
 /// Differential range (km)
 func (rcv *DOA) MutateDELTA_RANGE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(52, n)
+}
+
+func (rcv *DOA) MutateDeltaRange(n float64) bool {
+	return rcv.MutateDELTA_RANGE(n)
 }
 
 /// Differential range uncertainty (km, 1-sigma)
@@ -373,9 +533,17 @@ func (rcv *DOA) DELTA_RANGE_UNC() float64 {
 	return 0.0
 }
 
+func (rcv *DOA) DeltaRangeUnc() float64 {
+	return rcv.DELTA_RANGE_UNC()
+}
+
 /// Differential range uncertainty (km, 1-sigma)
 func (rcv *DOA) MutateDELTA_RANGE_UNC(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(54, n)
+}
+
+func (rcv *DOA) MutateDeltaRangeUnc(n float64) bool {
+	return rcv.MutateDELTA_RANGE_UNC(n)
 }
 
 /// Differential range rate (km/s)
@@ -387,9 +555,17 @@ func (rcv *DOA) DELTA_RANGE_RATE() float64 {
 	return 0.0
 }
 
+func (rcv *DOA) DeltaRangeRate() float64 {
+	return rcv.DELTA_RANGE_RATE()
+}
+
 /// Differential range rate (km/s)
 func (rcv *DOA) MutateDELTA_RANGE_RATE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(56, n)
+}
+
+func (rcv *DOA) MutateDeltaRangeRate(n float64) bool {
+	return rcv.MutateDELTA_RANGE_RATE(n)
 }
 
 /// Differential range rate uncertainty (km/s, 1-sigma)
@@ -401,9 +577,17 @@ func (rcv *DOA) DELTA_RANGE_RATE_UNC() float64 {
 	return 0.0
 }
 
+func (rcv *DOA) DeltaRangeRateUnc() float64 {
+	return rcv.DELTA_RANGE_RATE_UNC()
+}
+
 /// Differential range rate uncertainty (km/s, 1-sigma)
 func (rcv *DOA) MutateDELTA_RANGE_RATE_UNC(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(58, n)
+}
+
+func (rcv *DOA) MutateDeltaRangeRateUnc(n float64) bool {
+	return rcv.MutateDELTA_RANGE_RATE_UNC(n)
 }
 
 /// Time difference of arrival (seconds)
@@ -415,9 +599,17 @@ func (rcv *DOA) TDOA() float64 {
 	return 0.0
 }
 
+func (rcv *DOA) Tdoa() float64 {
+	return rcv.TDOA()
+}
+
 /// Time difference of arrival (seconds)
 func (rcv *DOA) MutateTDOA(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(60, n)
+}
+
+func (rcv *DOA) MutateTdoa(n float64) bool {
+	return rcv.MutateTDOA(n)
 }
 
 /// TDOA uncertainty (seconds, 1-sigma)
@@ -429,9 +621,17 @@ func (rcv *DOA) TDOA_UNC() float64 {
 	return 0.0
 }
 
+func (rcv *DOA) TdoaUnc() float64 {
+	return rcv.TDOA_UNC()
+}
+
 /// TDOA uncertainty (seconds, 1-sigma)
 func (rcv *DOA) MutateTDOA_UNC(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(62, n)
+}
+
+func (rcv *DOA) MutateTdoaUnc(n float64) bool {
+	return rcv.MutateTDOA_UNC(n)
 }
 
 /// Frequency difference of arrival (Hz)
@@ -443,9 +643,17 @@ func (rcv *DOA) FDOA() float64 {
 	return 0.0
 }
 
+func (rcv *DOA) Fdoa() float64 {
+	return rcv.FDOA()
+}
+
 /// Frequency difference of arrival (Hz)
 func (rcv *DOA) MutateFDOA(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(64, n)
+}
+
+func (rcv *DOA) MutateFdoa(n float64) bool {
+	return rcv.MutateFDOA(n)
 }
 
 /// FDOA uncertainty (Hz, 1-sigma)
@@ -457,9 +665,17 @@ func (rcv *DOA) FDOA_UNC() float64 {
 	return 0.0
 }
 
+func (rcv *DOA) FdoaUnc() float64 {
+	return rcv.FDOA_UNC()
+}
+
 /// FDOA uncertainty (Hz, 1-sigma)
 func (rcv *DOA) MutateFDOA_UNC(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(66, n)
+}
+
+func (rcv *DOA) MutateFdoaUnc(n float64) bool {
+	return rcv.MutateFDOA_UNC(n)
 }
 
 /// Reference to raw data file
@@ -471,6 +687,10 @@ func (rcv *DOA) RAW_FILE_URI() []byte {
 	return nil
 }
 
+func (rcv *DOA) RawFileUri() []byte {
+	return rcv.RAW_FILE_URI()
+}
+
 /// Reference to raw data file
 /// Event descriptor
 func (rcv *DOA) DESCRIPTOR() []byte {
@@ -479,6 +699,10 @@ func (rcv *DOA) DESCRIPTOR() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *DOA) Descriptor() []byte {
+	return rcv.DESCRIPTOR()
 }
 
 /// Event descriptor
@@ -492,12 +716,20 @@ func (rcv *DOA) TAGS(j int) []byte {
 	return nil
 }
 
+func (rcv *DOA) Tags(j int) []byte {
+	return rcv.TAGS(j)
+}
+
 func (rcv *DOA) TAGSLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(72))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *DOA) TagsLength() int {
+	return rcv.TAGSLength()
 }
 
 /// Associated tags
@@ -507,110 +739,218 @@ func DOAStart(builder *flatbuffers.Builder) {
 func DOAAddID(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ID), 0)
 }
+func DOAAddId(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
+	DOAAddID(builder, ID)
+}
 func DOAAddOB_TIME(builder *flatbuffers.Builder, OB_TIME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(OB_TIME), 0)
+}
+func DOAAddObTime(builder *flatbuffers.Builder, OB_TIME flatbuffers.UOffsetT) {
+	DOAAddOB_TIME(builder, OB_TIME)
 }
 func DOAAddSAT_NO(builder *flatbuffers.Builder, SAT_NO uint32) {
 	builder.PrependUint32Slot(2, SAT_NO, 0)
 }
+func DOAAddSatNo(builder *flatbuffers.Builder, SAT_NO uint32) {
+	DOAAddSAT_NO(builder, SAT_NO)
+}
 func DOAAddORIG_OBJECT_ID(builder *flatbuffers.Builder, ORIG_OBJECT_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(ORIG_OBJECT_ID), 0)
+}
+func DOAAddOrigObjectId(builder *flatbuffers.Builder, ORIG_OBJECT_ID flatbuffers.UOffsetT) {
+	DOAAddORIG_OBJECT_ID(builder, ORIG_OBJECT_ID)
 }
 func DOAAddON_ORBIT(builder *flatbuffers.Builder, ON_ORBIT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(ON_ORBIT), 0)
 }
+func DOAAddOnOrbit(builder *flatbuffers.Builder, ON_ORBIT flatbuffers.UOffsetT) {
+	DOAAddON_ORBIT(builder, ON_ORBIT)
+}
 func DOAAddUCT(builder *flatbuffers.Builder, UCT bool) {
 	builder.PrependBoolSlot(5, UCT, false)
+}
+func DOAAddUct(builder *flatbuffers.Builder, UCT bool) {
+	DOAAddUCT(builder, UCT)
 }
 func DOAAddTASK_ID(builder *flatbuffers.Builder, TASK_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(TASK_ID), 0)
 }
+func DOAAddTaskId(builder *flatbuffers.Builder, TASK_ID flatbuffers.UOffsetT) {
+	DOAAddTASK_ID(builder, TASK_ID)
+}
 func DOAAddTRANSACTION_ID(builder *flatbuffers.Builder, TRANSACTION_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(TRANSACTION_ID), 0)
+}
+func DOAAddTransactionId(builder *flatbuffers.Builder, TRANSACTION_ID flatbuffers.UOffsetT) {
+	DOAAddTRANSACTION_ID(builder, TRANSACTION_ID)
 }
 func DOAAddCOLLECTION_MODE(builder *flatbuffers.Builder, COLLECTION_MODE doaCollectionMode) {
 	builder.PrependInt8Slot(8, int8(COLLECTION_MODE), 0)
 }
+func DOAAddCollectionMode(builder *flatbuffers.Builder, COLLECTION_MODE doaCollectionMode) {
+	DOAAddCOLLECTION_MODE(builder, COLLECTION_MODE)
+}
 func DOAAddID_SENSOR1(builder *flatbuffers.Builder, ID_SENSOR1 flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(ID_SENSOR1), 0)
+}
+func DOAAddIdSensor1(builder *flatbuffers.Builder, ID_SENSOR1 flatbuffers.UOffsetT) {
+	DOAAddID_SENSOR1(builder, ID_SENSOR1)
 }
 func DOAAddORIG_SENSOR_ID1(builder *flatbuffers.Builder, ORIG_SENSOR_ID1 flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(ORIG_SENSOR_ID1), 0)
 }
+func DOAAddOrigSensorId1(builder *flatbuffers.Builder, ORIG_SENSOR_ID1 flatbuffers.UOffsetT) {
+	DOAAddORIG_SENSOR_ID1(builder, ORIG_SENSOR_ID1)
+}
 func DOAAddSENLAT(builder *flatbuffers.Builder, SENLAT float64) {
 	builder.PrependFloat64Slot(11, SENLAT, 0.0)
+}
+func DOAAddSenlat(builder *flatbuffers.Builder, SENLAT float64) {
+	DOAAddSENLAT(builder, SENLAT)
 }
 func DOAAddSENLON(builder *flatbuffers.Builder, SENLON float64) {
 	builder.PrependFloat64Slot(12, SENLON, 0.0)
 }
+func DOAAddSenlon(builder *flatbuffers.Builder, SENLON float64) {
+	DOAAddSENLON(builder, SENLON)
+}
 func DOAAddSENALT(builder *flatbuffers.Builder, SENALT float64) {
 	builder.PrependFloat64Slot(13, SENALT, 0.0)
+}
+func DOAAddSenalt(builder *flatbuffers.Builder, SENALT float64) {
+	DOAAddSENALT(builder, SENALT)
 }
 func DOAAddSENSOR1_DELAY(builder *flatbuffers.Builder, SENSOR1_DELAY float64) {
 	builder.PrependFloat64Slot(14, SENSOR1_DELAY, 0.0)
 }
+func DOAAddSensor1Delay(builder *flatbuffers.Builder, SENSOR1_DELAY float64) {
+	DOAAddSENSOR1_DELAY(builder, SENSOR1_DELAY)
+}
 func DOAAddID_SENSOR2(builder *flatbuffers.Builder, ID_SENSOR2 flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(15, flatbuffers.UOffsetT(ID_SENSOR2), 0)
+}
+func DOAAddIdSensor2(builder *flatbuffers.Builder, ID_SENSOR2 flatbuffers.UOffsetT) {
+	DOAAddID_SENSOR2(builder, ID_SENSOR2)
 }
 func DOAAddORIG_SENSOR_ID2(builder *flatbuffers.Builder, ORIG_SENSOR_ID2 flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(16, flatbuffers.UOffsetT(ORIG_SENSOR_ID2), 0)
 }
+func DOAAddOrigSensorId2(builder *flatbuffers.Builder, ORIG_SENSOR_ID2 flatbuffers.UOffsetT) {
+	DOAAddORIG_SENSOR_ID2(builder, ORIG_SENSOR_ID2)
+}
 func DOAAddSEN2LAT(builder *flatbuffers.Builder, SEN2LAT float64) {
 	builder.PrependFloat64Slot(17, SEN2LAT, 0.0)
+}
+func DOAAddSen2lat(builder *flatbuffers.Builder, SEN2LAT float64) {
+	DOAAddSEN2LAT(builder, SEN2LAT)
 }
 func DOAAddSEN2LON(builder *flatbuffers.Builder, SEN2LON float64) {
 	builder.PrependFloat64Slot(18, SEN2LON, 0.0)
 }
+func DOAAddSen2lon(builder *flatbuffers.Builder, SEN2LON float64) {
+	DOAAddSEN2LON(builder, SEN2LON)
+}
 func DOAAddSEN2ALT(builder *flatbuffers.Builder, SEN2ALT float64) {
 	builder.PrependFloat64Slot(19, SEN2ALT, 0.0)
+}
+func DOAAddSen2alt(builder *flatbuffers.Builder, SEN2ALT float64) {
+	DOAAddSEN2ALT(builder, SEN2ALT)
 }
 func DOAAddSENSOR2_DELAY(builder *flatbuffers.Builder, SENSOR2_DELAY float64) {
 	builder.PrependFloat64Slot(20, SENSOR2_DELAY, 0.0)
 }
+func DOAAddSensor2Delay(builder *flatbuffers.Builder, SENSOR2_DELAY float64) {
+	DOAAddSENSOR2_DELAY(builder, SENSOR2_DELAY)
+}
 func DOAAddFREQUENCY(builder *flatbuffers.Builder, FREQUENCY float64) {
 	builder.PrependFloat64Slot(21, FREQUENCY, 0.0)
+}
+func DOAAddFrequency(builder *flatbuffers.Builder, FREQUENCY float64) {
+	DOAAddFREQUENCY(builder, FREQUENCY)
 }
 func DOAAddBANDWIDTH(builder *flatbuffers.Builder, BANDWIDTH float64) {
 	builder.PrependFloat64Slot(22, BANDWIDTH, 0.0)
 }
+func DOAAddBandwidth(builder *flatbuffers.Builder, BANDWIDTH float64) {
+	DOAAddBANDWIDTH(builder, BANDWIDTH)
+}
 func DOAAddSNR(builder *flatbuffers.Builder, SNR float64) {
 	builder.PrependFloat64Slot(23, SNR, 0.0)
+}
+func DOAAddSnr(builder *flatbuffers.Builder, SNR float64) {
+	DOAAddSNR(builder, SNR)
 }
 func DOAAddDELTA_RANGE(builder *flatbuffers.Builder, DELTA_RANGE float64) {
 	builder.PrependFloat64Slot(24, DELTA_RANGE, 0.0)
 }
+func DOAAddDeltaRange(builder *flatbuffers.Builder, DELTA_RANGE float64) {
+	DOAAddDELTA_RANGE(builder, DELTA_RANGE)
+}
 func DOAAddDELTA_RANGE_UNC(builder *flatbuffers.Builder, DELTA_RANGE_UNC float64) {
 	builder.PrependFloat64Slot(25, DELTA_RANGE_UNC, 0.0)
+}
+func DOAAddDeltaRangeUnc(builder *flatbuffers.Builder, DELTA_RANGE_UNC float64) {
+	DOAAddDELTA_RANGE_UNC(builder, DELTA_RANGE_UNC)
 }
 func DOAAddDELTA_RANGE_RATE(builder *flatbuffers.Builder, DELTA_RANGE_RATE float64) {
 	builder.PrependFloat64Slot(26, DELTA_RANGE_RATE, 0.0)
 }
+func DOAAddDeltaRangeRate(builder *flatbuffers.Builder, DELTA_RANGE_RATE float64) {
+	DOAAddDELTA_RANGE_RATE(builder, DELTA_RANGE_RATE)
+}
 func DOAAddDELTA_RANGE_RATE_UNC(builder *flatbuffers.Builder, DELTA_RANGE_RATE_UNC float64) {
 	builder.PrependFloat64Slot(27, DELTA_RANGE_RATE_UNC, 0.0)
+}
+func DOAAddDeltaRangeRateUnc(builder *flatbuffers.Builder, DELTA_RANGE_RATE_UNC float64) {
+	DOAAddDELTA_RANGE_RATE_UNC(builder, DELTA_RANGE_RATE_UNC)
 }
 func DOAAddTDOA(builder *flatbuffers.Builder, TDOA float64) {
 	builder.PrependFloat64Slot(28, TDOA, 0.0)
 }
+func DOAAddTdoa(builder *flatbuffers.Builder, TDOA float64) {
+	DOAAddTDOA(builder, TDOA)
+}
 func DOAAddTDOA_UNC(builder *flatbuffers.Builder, TDOA_UNC float64) {
 	builder.PrependFloat64Slot(29, TDOA_UNC, 0.0)
+}
+func DOAAddTdoaUnc(builder *flatbuffers.Builder, TDOA_UNC float64) {
+	DOAAddTDOA_UNC(builder, TDOA_UNC)
 }
 func DOAAddFDOA(builder *flatbuffers.Builder, FDOA float64) {
 	builder.PrependFloat64Slot(30, FDOA, 0.0)
 }
+func DOAAddFdoa(builder *flatbuffers.Builder, FDOA float64) {
+	DOAAddFDOA(builder, FDOA)
+}
 func DOAAddFDOA_UNC(builder *flatbuffers.Builder, FDOA_UNC float64) {
 	builder.PrependFloat64Slot(31, FDOA_UNC, 0.0)
+}
+func DOAAddFdoaUnc(builder *flatbuffers.Builder, FDOA_UNC float64) {
+	DOAAddFDOA_UNC(builder, FDOA_UNC)
 }
 func DOAAddRAW_FILE_URI(builder *flatbuffers.Builder, RAW_FILE_URI flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(32, flatbuffers.UOffsetT(RAW_FILE_URI), 0)
 }
+func DOAAddRawFileUri(builder *flatbuffers.Builder, RAW_FILE_URI flatbuffers.UOffsetT) {
+	DOAAddRAW_FILE_URI(builder, RAW_FILE_URI)
+}
 func DOAAddDESCRIPTOR(builder *flatbuffers.Builder, DESCRIPTOR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(33, flatbuffers.UOffsetT(DESCRIPTOR), 0)
+}
+func DOAAddDescriptor(builder *flatbuffers.Builder, DESCRIPTOR flatbuffers.UOffsetT) {
+	DOAAddDESCRIPTOR(builder, DESCRIPTOR)
 }
 func DOAAddTAGS(builder *flatbuffers.Builder, TAGS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(34, flatbuffers.UOffsetT(TAGS), 0)
 }
+func DOAAddTags(builder *flatbuffers.Builder, TAGS flatbuffers.UOffsetT) {
+	DOAAddTAGS(builder, TAGS)
+}
 func DOAStartTAGSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func DOAStartTagsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return DOAStartTAGSVector(builder, numElems)
 }
 func DOAEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

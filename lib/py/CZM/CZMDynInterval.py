@@ -163,6 +163,16 @@ def CZMDynIntervalStartARRAY_VALUEVector(builder, numElems):
 def StartARRAY_VALUEVector(builder, numElems):
     return CZMDynIntervalStartARRAY_VALUEVector(builder, numElems)
 
+def CZMDynIntervalCreateARRAY_VALUEVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateARRAY_VALUEVector(builder, data):
+    CZMDynIntervalCreateARRAY_VALUEVector(builder, data)
+
 def CZMDynIntervalEnd(builder):
     return builder.EndObject()
 
@@ -178,20 +188,29 @@ except:
 class CZMDynIntervalT(object):
 
     # CZMDynIntervalT
-    def __init__(self):
-        self.INTERVAL = None  # type: str
-        self.VALUE_TYPE = 0  # type: int
-        self.NUMBER_VALUE = 0.0  # type: float
-        self.BOOLEAN_VALUE = False  # type: bool
-        self.STRING_VALUE = None  # type: str
-        self.COLOR_VALUE = None  # type: Optional[CZMColor.CZMColorT]
-        self.ARRAY_VALUE = None  # type: List[float]
+    def __init__(
+        self,
+        INTERVAL = None,
+        VALUE_TYPE = 0,
+        NUMBER_VALUE = 0.0,
+        BOOLEAN_VALUE = False,
+        STRING_VALUE = None,
+        COLOR_VALUE = None,
+        ARRAY_VALUE = None,
+    ):
+        self.INTERVAL = INTERVAL  # type: Optional[str]
+        self.VALUE_TYPE = VALUE_TYPE  # type: int
+        self.NUMBER_VALUE = NUMBER_VALUE  # type: float
+        self.BOOLEAN_VALUE = BOOLEAN_VALUE  # type: bool
+        self.STRING_VALUE = STRING_VALUE  # type: Optional[str]
+        self.COLOR_VALUE = COLOR_VALUE  # type: Optional[CZMColor.CZMColorT]
+        self.ARRAY_VALUE = ARRAY_VALUE  # type: Optional[List[float]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        czmdynInterval = CZMDynInterval()
-        czmdynInterval.Init(buf, pos)
-        return cls.InitFromObj(czmdynInterval)
+        tmpCzmdynInterval = CZMDynInterval()
+        tmpCzmdynInterval.Init(buf, pos)
+        return cls.InitFromObj(tmpCzmdynInterval)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -199,29 +218,29 @@ class CZMDynIntervalT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, czmdynInterval):
+    def InitFromObj(cls, tmpCzmdynInterval):
         x = CZMDynIntervalT()
-        x._UnPack(czmdynInterval)
+        x._UnPack(tmpCzmdynInterval)
         return x
 
     # CZMDynIntervalT
-    def _UnPack(self, czmdynInterval):
-        if czmdynInterval is None:
+    def _UnPack(self, CZMDynInterval):
+        if CZMDynInterval is None:
             return
-        self.INTERVAL = czmdynInterval.INTERVAL()
-        self.VALUE_TYPE = czmdynInterval.VALUE_TYPE()
-        self.NUMBER_VALUE = czmdynInterval.NUMBER_VALUE()
-        self.BOOLEAN_VALUE = czmdynInterval.BOOLEAN_VALUE()
-        self.STRING_VALUE = czmdynInterval.STRING_VALUE()
-        if czmdynInterval.COLOR_VALUE() is not None:
-            self.COLOR_VALUE = CZMColor.CZMColorT.InitFromObj(czmdynInterval.COLOR_VALUE())
-        if not czmdynInterval.ARRAY_VALUEIsNone():
+        self.INTERVAL = CZMDynInterval.INTERVAL()
+        self.VALUE_TYPE = CZMDynInterval.VALUE_TYPE()
+        self.NUMBER_VALUE = CZMDynInterval.NUMBER_VALUE()
+        self.BOOLEAN_VALUE = CZMDynInterval.BOOLEAN_VALUE()
+        self.STRING_VALUE = CZMDynInterval.STRING_VALUE()
+        if CZMDynInterval.COLOR_VALUE() is not None:
+            self.COLOR_VALUE = CZMColor.CZMColorT.InitFromObj(CZMDynInterval.COLOR_VALUE())
+        if not CZMDynInterval.ARRAY_VALUEIsNone():
             if np is None:
                 self.ARRAY_VALUE = []
-                for i in range(czmdynInterval.ARRAY_VALUELength()):
-                    self.ARRAY_VALUE.append(czmdynInterval.ARRAY_VALUE(i))
+                for i in range(CZMDynInterval.ARRAY_VALUELength()):
+                    self.ARRAY_VALUE.append(CZMDynInterval.ARRAY_VALUE(i))
             else:
-                self.ARRAY_VALUE = czmdynInterval.ARRAY_VALUEAsNumpy()
+                self.ARRAY_VALUE = CZMDynInterval.ARRAY_VALUEAsNumpy()
 
     # CZMDynIntervalT
     def Pack(self, builder):
@@ -251,5 +270,5 @@ class CZMDynIntervalT(object):
             CZMDynIntervalAddCOLOR_VALUE(builder, COLOR_VALUE)
         if self.ARRAY_VALUE is not None:
             CZMDynIntervalAddARRAY_VALUE(builder, ARRAY_VALUE)
-        czmdynInterval = CZMDynIntervalEnd(builder)
-        return czmdynInterval
+        CZMDynInterval = CZMDynIntervalEnd(builder)
+        return CZMDynInterval

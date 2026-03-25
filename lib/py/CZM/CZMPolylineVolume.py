@@ -217,6 +217,16 @@ def CZMPolylineVolumeStartPOSITIONS_CARTOGRAPHIC_DEGREESVector(builder, numElems
 def StartPOSITIONS_CARTOGRAPHIC_DEGREESVector(builder, numElems):
     return CZMPolylineVolumeStartPOSITIONS_CARTOGRAPHIC_DEGREESVector(builder, numElems)
 
+def CZMPolylineVolumeCreatePOSITIONS_CARTOGRAPHIC_DEGREESVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreatePOSITIONS_CARTOGRAPHIC_DEGREESVector(builder, data):
+    CZMPolylineVolumeCreatePOSITIONS_CARTOGRAPHIC_DEGREESVector(builder, data)
+
 def CZMPolylineVolumeAddPOSITIONS_CARTESIAN(builder, POSITIONS_CARTESIAN):
     builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(POSITIONS_CARTESIAN), 0)
 
@@ -229,6 +239,16 @@ def CZMPolylineVolumeStartPOSITIONS_CARTESIANVector(builder, numElems):
 def StartPOSITIONS_CARTESIANVector(builder, numElems):
     return CZMPolylineVolumeStartPOSITIONS_CARTESIANVector(builder, numElems)
 
+def CZMPolylineVolumeCreatePOSITIONS_CARTESIANVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreatePOSITIONS_CARTESIANVector(builder, data):
+    CZMPolylineVolumeCreatePOSITIONS_CARTESIANVector(builder, data)
+
 def CZMPolylineVolumeAddSHAPE(builder, SHAPE):
     builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(SHAPE), 0)
 
@@ -240,6 +260,16 @@ def CZMPolylineVolumeStartSHAPEVector(builder, numElems):
 
 def StartSHAPEVector(builder, numElems):
     return CZMPolylineVolumeStartSHAPEVector(builder, numElems)
+
+def CZMPolylineVolumeCreateSHAPEVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateSHAPEVector(builder, data):
+    CZMPolylineVolumeCreateSHAPEVector(builder, data)
 
 def CZMPolylineVolumeAddCORNER_TYPE(builder, CORNER_TYPE):
     builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(CORNER_TYPE), 0)
@@ -305,25 +335,39 @@ except:
 class CZMPolylineVolumeT(object):
 
     # CZMPolylineVolumeT
-    def __init__(self):
-        self.SHOW = False  # type: bool
-        self.POSITIONS_CARTOGRAPHIC_DEGREES = None  # type: List[float]
-        self.POSITIONS_CARTESIAN = None  # type: List[float]
-        self.SHAPE = None  # type: List[float]
-        self.CORNER_TYPE = None  # type: str
-        self.GRANULARITY = 0.0  # type: float
-        self.FILL = False  # type: bool
-        self.MATERIAL = None  # type: Optional[CZMMaterial.CZMMaterialT]
-        self.OUTLINE = False  # type: bool
-        self.OUTLINE_COLOR = None  # type: Optional[CZMColor.CZMColorT]
-        self.OUTLINE_WIDTH = 0.0  # type: float
-        self.SHADOWS = None  # type: str
+    def __init__(
+        self,
+        SHOW = False,
+        POSITIONS_CARTOGRAPHIC_DEGREES = None,
+        POSITIONS_CARTESIAN = None,
+        SHAPE = None,
+        CORNER_TYPE = None,
+        GRANULARITY = 0.0,
+        FILL = False,
+        MATERIAL = None,
+        OUTLINE = False,
+        OUTLINE_COLOR = None,
+        OUTLINE_WIDTH = 0.0,
+        SHADOWS = None,
+    ):
+        self.SHOW = SHOW  # type: bool
+        self.POSITIONS_CARTOGRAPHIC_DEGREES = POSITIONS_CARTOGRAPHIC_DEGREES  # type: Optional[List[float]]
+        self.POSITIONS_CARTESIAN = POSITIONS_CARTESIAN  # type: Optional[List[float]]
+        self.SHAPE = SHAPE  # type: Optional[List[float]]
+        self.CORNER_TYPE = CORNER_TYPE  # type: Optional[str]
+        self.GRANULARITY = GRANULARITY  # type: float
+        self.FILL = FILL  # type: bool
+        self.MATERIAL = MATERIAL  # type: Optional[CZMMaterial.CZMMaterialT]
+        self.OUTLINE = OUTLINE  # type: bool
+        self.OUTLINE_COLOR = OUTLINE_COLOR  # type: Optional[CZMColor.CZMColorT]
+        self.OUTLINE_WIDTH = OUTLINE_WIDTH  # type: float
+        self.SHADOWS = SHADOWS  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        czmpolylineVolume = CZMPolylineVolume()
-        czmpolylineVolume.Init(buf, pos)
-        return cls.InitFromObj(czmpolylineVolume)
+        tmpCzmpolylineVolume = CZMPolylineVolume()
+        tmpCzmpolylineVolume.Init(buf, pos)
+        return cls.InitFromObj(tmpCzmpolylineVolume)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -331,47 +375,47 @@ class CZMPolylineVolumeT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, czmpolylineVolume):
+    def InitFromObj(cls, tmpCzmpolylineVolume):
         x = CZMPolylineVolumeT()
-        x._UnPack(czmpolylineVolume)
+        x._UnPack(tmpCzmpolylineVolume)
         return x
 
     # CZMPolylineVolumeT
-    def _UnPack(self, czmpolylineVolume):
-        if czmpolylineVolume is None:
+    def _UnPack(self, CZMPolylineVolume):
+        if CZMPolylineVolume is None:
             return
-        self.SHOW = czmpolylineVolume.SHOW()
-        if not czmpolylineVolume.POSITIONS_CARTOGRAPHIC_DEGREESIsNone():
+        self.SHOW = CZMPolylineVolume.SHOW()
+        if not CZMPolylineVolume.POSITIONS_CARTOGRAPHIC_DEGREESIsNone():
             if np is None:
                 self.POSITIONS_CARTOGRAPHIC_DEGREES = []
-                for i in range(czmpolylineVolume.POSITIONS_CARTOGRAPHIC_DEGREESLength()):
-                    self.POSITIONS_CARTOGRAPHIC_DEGREES.append(czmpolylineVolume.POSITIONS_CARTOGRAPHIC_DEGREES(i))
+                for i in range(CZMPolylineVolume.POSITIONS_CARTOGRAPHIC_DEGREESLength()):
+                    self.POSITIONS_CARTOGRAPHIC_DEGREES.append(CZMPolylineVolume.POSITIONS_CARTOGRAPHIC_DEGREES(i))
             else:
-                self.POSITIONS_CARTOGRAPHIC_DEGREES = czmpolylineVolume.POSITIONS_CARTOGRAPHIC_DEGREESAsNumpy()
-        if not czmpolylineVolume.POSITIONS_CARTESIANIsNone():
+                self.POSITIONS_CARTOGRAPHIC_DEGREES = CZMPolylineVolume.POSITIONS_CARTOGRAPHIC_DEGREESAsNumpy()
+        if not CZMPolylineVolume.POSITIONS_CARTESIANIsNone():
             if np is None:
                 self.POSITIONS_CARTESIAN = []
-                for i in range(czmpolylineVolume.POSITIONS_CARTESIANLength()):
-                    self.POSITIONS_CARTESIAN.append(czmpolylineVolume.POSITIONS_CARTESIAN(i))
+                for i in range(CZMPolylineVolume.POSITIONS_CARTESIANLength()):
+                    self.POSITIONS_CARTESIAN.append(CZMPolylineVolume.POSITIONS_CARTESIAN(i))
             else:
-                self.POSITIONS_CARTESIAN = czmpolylineVolume.POSITIONS_CARTESIANAsNumpy()
-        if not czmpolylineVolume.SHAPEIsNone():
+                self.POSITIONS_CARTESIAN = CZMPolylineVolume.POSITIONS_CARTESIANAsNumpy()
+        if not CZMPolylineVolume.SHAPEIsNone():
             if np is None:
                 self.SHAPE = []
-                for i in range(czmpolylineVolume.SHAPELength()):
-                    self.SHAPE.append(czmpolylineVolume.SHAPE(i))
+                for i in range(CZMPolylineVolume.SHAPELength()):
+                    self.SHAPE.append(CZMPolylineVolume.SHAPE(i))
             else:
-                self.SHAPE = czmpolylineVolume.SHAPEAsNumpy()
-        self.CORNER_TYPE = czmpolylineVolume.CORNER_TYPE()
-        self.GRANULARITY = czmpolylineVolume.GRANULARITY()
-        self.FILL = czmpolylineVolume.FILL()
-        if czmpolylineVolume.MATERIAL() is not None:
-            self.MATERIAL = CZMMaterial.CZMMaterialT.InitFromObj(czmpolylineVolume.MATERIAL())
-        self.OUTLINE = czmpolylineVolume.OUTLINE()
-        if czmpolylineVolume.OUTLINE_COLOR() is not None:
-            self.OUTLINE_COLOR = CZMColor.CZMColorT.InitFromObj(czmpolylineVolume.OUTLINE_COLOR())
-        self.OUTLINE_WIDTH = czmpolylineVolume.OUTLINE_WIDTH()
-        self.SHADOWS = czmpolylineVolume.SHADOWS()
+                self.SHAPE = CZMPolylineVolume.SHAPEAsNumpy()
+        self.CORNER_TYPE = CZMPolylineVolume.CORNER_TYPE()
+        self.GRANULARITY = CZMPolylineVolume.GRANULARITY()
+        self.FILL = CZMPolylineVolume.FILL()
+        if CZMPolylineVolume.MATERIAL() is not None:
+            self.MATERIAL = CZMMaterial.CZMMaterialT.InitFromObj(CZMPolylineVolume.MATERIAL())
+        self.OUTLINE = CZMPolylineVolume.OUTLINE()
+        if CZMPolylineVolume.OUTLINE_COLOR() is not None:
+            self.OUTLINE_COLOR = CZMColor.CZMColorT.InitFromObj(CZMPolylineVolume.OUTLINE_COLOR())
+        self.OUTLINE_WIDTH = CZMPolylineVolume.OUTLINE_WIDTH()
+        self.SHADOWS = CZMPolylineVolume.SHADOWS()
 
     # CZMPolylineVolumeT
     def Pack(self, builder):
@@ -427,5 +471,5 @@ class CZMPolylineVolumeT(object):
         CZMPolylineVolumeAddOUTLINE_WIDTH(builder, self.OUTLINE_WIDTH)
         if self.SHADOWS is not None:
             CZMPolylineVolumeAddSHADOWS(builder, SHADOWS)
-        czmpolylineVolume = CZMPolylineVolumeEnd(builder)
-        return czmpolylineVolume
+        CZMPolylineVolume = CZMPolylineVolumeEnd(builder)
+        return CZMPolylineVolume

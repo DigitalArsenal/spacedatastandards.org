@@ -2,4 +2,1093 @@
 
 # namespace: 
 
-# NOTE RDO.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Radar Observation
+class RDO(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = RDO()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsRDO(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def RDOBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x52\x44\x4F", size_prefixed=size_prefixed)
+
+    # RDO
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Unique identifier
+    # RDO
+    def ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Observation time (ISO 8601)
+    # RDO
+    def OB_TIME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Sensor identifier
+    # RDO
+    def ID_SENSOR(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Original sensor identifier
+    # RDO
+    def ORIG_SENSOR_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Satellite catalog number
+    # RDO
+    def SAT_NO(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+        return 0
+
+    # International designator
+    # RDO
+    def ORIG_OBJECT_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # On-orbit reference
+    # RDO
+    def ON_ORBIT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # True if uncorrelated target
+    # RDO
+    def UCT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # Observation type
+    # RDO
+    def OBS_TYPE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # Task identifier
+    # RDO
+    def TASK_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Transaction identifier
+    # RDO
+    def TRANSACTION_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Track identifier
+    # RDO
+    def TRACK_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Observation position identifier
+    # RDO
+    def OB_POSITION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Sensor reference frame
+    # RDO
+    def SEN_REFERENCE_FRAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Azimuth angle (degrees)
+    # RDO
+    def AZIMUTH(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Azimuth uncertainty (degrees, 1-sigma)
+    # RDO
+    def AZIMUTH_UNC(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Azimuth bias (degrees)
+    # RDO
+    def AZIMUTH_BIAS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Azimuth rate (degrees/s)
+    # RDO
+    def AZIMUTH_RATE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Elevation angle (degrees)
+    # RDO
+    def ELEVATION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Elevation uncertainty (degrees, 1-sigma)
+    # RDO
+    def ELEVATION_UNC(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Elevation bias (degrees)
+    # RDO
+    def ELEVATION_BIAS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Elevation rate (degrees/s)
+    # RDO
+    def ELEVATION_RATE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Slant range (km)
+    # RDO
+    def RANGE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Range uncertainty (km, 1-sigma)
+    # RDO
+    def RANGE_UNC(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Range bias (km)
+    # RDO
+    def RANGE_BIAS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(52))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Range rate (km/s)
+    # RDO
+    def RANGE_RATE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(54))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Range rate uncertainty (km/s, 1-sigma)
+    # RDO
+    def RANGE_RATE_UNC(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(56))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Range acceleration (km/s^2)
+    # RDO
+    def RANGE_ACCEL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Range acceleration uncertainty (km/s^2, 1-sigma)
+    # RDO
+    def RANGE_ACCEL_UNC(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Doppler shift (Hz)
+    # RDO
+    def DOPPLER(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(62))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Doppler uncertainty (Hz, 1-sigma)
+    # RDO
+    def DOPPLER_UNC(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(64))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Right ascension (degrees)
+    # RDO
+    def RA(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(66))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Declination (degrees)
+    # RDO
+    def DECLINATION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(68))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Target position X (km, ECI)
+    # RDO
+    def X(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(70))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Target position Y (km, ECI)
+    # RDO
+    def Y(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(72))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Target position Z (km, ECI)
+    # RDO
+    def Z(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(74))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Target velocity X (km/s, ECI)
+    # RDO
+    def XVEL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(76))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Target velocity Y (km/s, ECI)
+    # RDO
+    def YVEL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(78))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Target velocity Z (km/s, ECI)
+    # RDO
+    def ZVEL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(80))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Sensor position X (km, ECEF)
+    # RDO
+    def SENX(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(82))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Sensor position Y (km, ECEF)
+    # RDO
+    def SENY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(84))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Sensor position Z (km, ECEF)
+    # RDO
+    def SENZ(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(86))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Radar cross-section (dBsm)
+    # RDO
+    def RCS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(88))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # RCS uncertainty (dBsm, 1-sigma)
+    # RDO
+    def RCS_UNC(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(90))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Orthogonal polarization RCS (dBsm)
+    # RDO
+    def ORTHOGONAL_RCS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(92))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Orthogonal RCS uncertainty (dBsm, 1-sigma)
+    # RDO
+    def ORTHOGONAL_RCS_UNC(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(94))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Signal-to-noise ratio (dB)
+    # RDO
+    def SNR(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(96))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Beam identifier
+    # RDO
+    def BEAM(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(98))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Timing bias (seconds)
+    # RDO
+    def TIMING_BIAS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(100))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Reference to raw data file
+    # RDO
+    def RAW_FILE_URI(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(102))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Event descriptor
+    # RDO
+    def DESCRIPTOR(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(104))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Associated tags
+    # RDO
+    def TAGS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(106))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
+        return ""
+
+    # RDO
+    def TAGSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(106))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # RDO
+    def TAGSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(106))
+        return o == 0
+
+def RDOStart(builder):
+    builder.StartObject(52)
+
+def Start(builder):
+    RDOStart(builder)
+
+def RDOAddID(builder, ID):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(ID), 0)
+
+def AddID(builder, ID):
+    RDOAddID(builder, ID)
+
+def RDOAddOB_TIME(builder, OB_TIME):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(OB_TIME), 0)
+
+def AddOB_TIME(builder, OB_TIME):
+    RDOAddOB_TIME(builder, OB_TIME)
+
+def RDOAddID_SENSOR(builder, ID_SENSOR):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(ID_SENSOR), 0)
+
+def AddID_SENSOR(builder, ID_SENSOR):
+    RDOAddID_SENSOR(builder, ID_SENSOR)
+
+def RDOAddORIG_SENSOR_ID(builder, ORIG_SENSOR_ID):
+    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(ORIG_SENSOR_ID), 0)
+
+def AddORIG_SENSOR_ID(builder, ORIG_SENSOR_ID):
+    RDOAddORIG_SENSOR_ID(builder, ORIG_SENSOR_ID)
+
+def RDOAddSAT_NO(builder, SAT_NO):
+    builder.PrependUint32Slot(4, SAT_NO, 0)
+
+def AddSAT_NO(builder, SAT_NO):
+    RDOAddSAT_NO(builder, SAT_NO)
+
+def RDOAddORIG_OBJECT_ID(builder, ORIG_OBJECT_ID):
+    builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(ORIG_OBJECT_ID), 0)
+
+def AddORIG_OBJECT_ID(builder, ORIG_OBJECT_ID):
+    RDOAddORIG_OBJECT_ID(builder, ORIG_OBJECT_ID)
+
+def RDOAddON_ORBIT(builder, ON_ORBIT):
+    builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(ON_ORBIT), 0)
+
+def AddON_ORBIT(builder, ON_ORBIT):
+    RDOAddON_ORBIT(builder, ON_ORBIT)
+
+def RDOAddUCT(builder, UCT):
+    builder.PrependBoolSlot(7, UCT, 0)
+
+def AddUCT(builder, UCT):
+    RDOAddUCT(builder, UCT)
+
+def RDOAddOBS_TYPE(builder, OBS_TYPE):
+    builder.PrependInt8Slot(8, OBS_TYPE, 0)
+
+def AddOBS_TYPE(builder, OBS_TYPE):
+    RDOAddOBS_TYPE(builder, OBS_TYPE)
+
+def RDOAddTASK_ID(builder, TASK_ID):
+    builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(TASK_ID), 0)
+
+def AddTASK_ID(builder, TASK_ID):
+    RDOAddTASK_ID(builder, TASK_ID)
+
+def RDOAddTRANSACTION_ID(builder, TRANSACTION_ID):
+    builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(TRANSACTION_ID), 0)
+
+def AddTRANSACTION_ID(builder, TRANSACTION_ID):
+    RDOAddTRANSACTION_ID(builder, TRANSACTION_ID)
+
+def RDOAddTRACK_ID(builder, TRACK_ID):
+    builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(TRACK_ID), 0)
+
+def AddTRACK_ID(builder, TRACK_ID):
+    RDOAddTRACK_ID(builder, TRACK_ID)
+
+def RDOAddOB_POSITION(builder, OB_POSITION):
+    builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(OB_POSITION), 0)
+
+def AddOB_POSITION(builder, OB_POSITION):
+    RDOAddOB_POSITION(builder, OB_POSITION)
+
+def RDOAddSEN_REFERENCE_FRAME(builder, SEN_REFERENCE_FRAME):
+    builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(SEN_REFERENCE_FRAME), 0)
+
+def AddSEN_REFERENCE_FRAME(builder, SEN_REFERENCE_FRAME):
+    RDOAddSEN_REFERENCE_FRAME(builder, SEN_REFERENCE_FRAME)
+
+def RDOAddAZIMUTH(builder, AZIMUTH):
+    builder.PrependFloat64Slot(14, AZIMUTH, 0.0)
+
+def AddAZIMUTH(builder, AZIMUTH):
+    RDOAddAZIMUTH(builder, AZIMUTH)
+
+def RDOAddAZIMUTH_UNC(builder, AZIMUTH_UNC):
+    builder.PrependFloat64Slot(15, AZIMUTH_UNC, 0.0)
+
+def AddAZIMUTH_UNC(builder, AZIMUTH_UNC):
+    RDOAddAZIMUTH_UNC(builder, AZIMUTH_UNC)
+
+def RDOAddAZIMUTH_BIAS(builder, AZIMUTH_BIAS):
+    builder.PrependFloat64Slot(16, AZIMUTH_BIAS, 0.0)
+
+def AddAZIMUTH_BIAS(builder, AZIMUTH_BIAS):
+    RDOAddAZIMUTH_BIAS(builder, AZIMUTH_BIAS)
+
+def RDOAddAZIMUTH_RATE(builder, AZIMUTH_RATE):
+    builder.PrependFloat64Slot(17, AZIMUTH_RATE, 0.0)
+
+def AddAZIMUTH_RATE(builder, AZIMUTH_RATE):
+    RDOAddAZIMUTH_RATE(builder, AZIMUTH_RATE)
+
+def RDOAddELEVATION(builder, ELEVATION):
+    builder.PrependFloat64Slot(18, ELEVATION, 0.0)
+
+def AddELEVATION(builder, ELEVATION):
+    RDOAddELEVATION(builder, ELEVATION)
+
+def RDOAddELEVATION_UNC(builder, ELEVATION_UNC):
+    builder.PrependFloat64Slot(19, ELEVATION_UNC, 0.0)
+
+def AddELEVATION_UNC(builder, ELEVATION_UNC):
+    RDOAddELEVATION_UNC(builder, ELEVATION_UNC)
+
+def RDOAddELEVATION_BIAS(builder, ELEVATION_BIAS):
+    builder.PrependFloat64Slot(20, ELEVATION_BIAS, 0.0)
+
+def AddELEVATION_BIAS(builder, ELEVATION_BIAS):
+    RDOAddELEVATION_BIAS(builder, ELEVATION_BIAS)
+
+def RDOAddELEVATION_RATE(builder, ELEVATION_RATE):
+    builder.PrependFloat64Slot(21, ELEVATION_RATE, 0.0)
+
+def AddELEVATION_RATE(builder, ELEVATION_RATE):
+    RDOAddELEVATION_RATE(builder, ELEVATION_RATE)
+
+def RDOAddRANGE(builder, RANGE):
+    builder.PrependFloat64Slot(22, RANGE, 0.0)
+
+def AddRANGE(builder, RANGE):
+    RDOAddRANGE(builder, RANGE)
+
+def RDOAddRANGE_UNC(builder, RANGE_UNC):
+    builder.PrependFloat64Slot(23, RANGE_UNC, 0.0)
+
+def AddRANGE_UNC(builder, RANGE_UNC):
+    RDOAddRANGE_UNC(builder, RANGE_UNC)
+
+def RDOAddRANGE_BIAS(builder, RANGE_BIAS):
+    builder.PrependFloat64Slot(24, RANGE_BIAS, 0.0)
+
+def AddRANGE_BIAS(builder, RANGE_BIAS):
+    RDOAddRANGE_BIAS(builder, RANGE_BIAS)
+
+def RDOAddRANGE_RATE(builder, RANGE_RATE):
+    builder.PrependFloat64Slot(25, RANGE_RATE, 0.0)
+
+def AddRANGE_RATE(builder, RANGE_RATE):
+    RDOAddRANGE_RATE(builder, RANGE_RATE)
+
+def RDOAddRANGE_RATE_UNC(builder, RANGE_RATE_UNC):
+    builder.PrependFloat64Slot(26, RANGE_RATE_UNC, 0.0)
+
+def AddRANGE_RATE_UNC(builder, RANGE_RATE_UNC):
+    RDOAddRANGE_RATE_UNC(builder, RANGE_RATE_UNC)
+
+def RDOAddRANGE_ACCEL(builder, RANGE_ACCEL):
+    builder.PrependFloat64Slot(27, RANGE_ACCEL, 0.0)
+
+def AddRANGE_ACCEL(builder, RANGE_ACCEL):
+    RDOAddRANGE_ACCEL(builder, RANGE_ACCEL)
+
+def RDOAddRANGE_ACCEL_UNC(builder, RANGE_ACCEL_UNC):
+    builder.PrependFloat64Slot(28, RANGE_ACCEL_UNC, 0.0)
+
+def AddRANGE_ACCEL_UNC(builder, RANGE_ACCEL_UNC):
+    RDOAddRANGE_ACCEL_UNC(builder, RANGE_ACCEL_UNC)
+
+def RDOAddDOPPLER(builder, DOPPLER):
+    builder.PrependFloat64Slot(29, DOPPLER, 0.0)
+
+def AddDOPPLER(builder, DOPPLER):
+    RDOAddDOPPLER(builder, DOPPLER)
+
+def RDOAddDOPPLER_UNC(builder, DOPPLER_UNC):
+    builder.PrependFloat64Slot(30, DOPPLER_UNC, 0.0)
+
+def AddDOPPLER_UNC(builder, DOPPLER_UNC):
+    RDOAddDOPPLER_UNC(builder, DOPPLER_UNC)
+
+def RDOAddRA(builder, RA):
+    builder.PrependFloat64Slot(31, RA, 0.0)
+
+def AddRA(builder, RA):
+    RDOAddRA(builder, RA)
+
+def RDOAddDECLINATION(builder, DECLINATION):
+    builder.PrependFloat64Slot(32, DECLINATION, 0.0)
+
+def AddDECLINATION(builder, DECLINATION):
+    RDOAddDECLINATION(builder, DECLINATION)
+
+def RDOAddX(builder, X):
+    builder.PrependFloat64Slot(33, X, 0.0)
+
+def AddX(builder, X):
+    RDOAddX(builder, X)
+
+def RDOAddY(builder, Y):
+    builder.PrependFloat64Slot(34, Y, 0.0)
+
+def AddY(builder, Y):
+    RDOAddY(builder, Y)
+
+def RDOAddZ(builder, Z):
+    builder.PrependFloat64Slot(35, Z, 0.0)
+
+def AddZ(builder, Z):
+    RDOAddZ(builder, Z)
+
+def RDOAddXVEL(builder, XVEL):
+    builder.PrependFloat64Slot(36, XVEL, 0.0)
+
+def AddXVEL(builder, XVEL):
+    RDOAddXVEL(builder, XVEL)
+
+def RDOAddYVEL(builder, YVEL):
+    builder.PrependFloat64Slot(37, YVEL, 0.0)
+
+def AddYVEL(builder, YVEL):
+    RDOAddYVEL(builder, YVEL)
+
+def RDOAddZVEL(builder, ZVEL):
+    builder.PrependFloat64Slot(38, ZVEL, 0.0)
+
+def AddZVEL(builder, ZVEL):
+    RDOAddZVEL(builder, ZVEL)
+
+def RDOAddSENX(builder, SENX):
+    builder.PrependFloat64Slot(39, SENX, 0.0)
+
+def AddSENX(builder, SENX):
+    RDOAddSENX(builder, SENX)
+
+def RDOAddSENY(builder, SENY):
+    builder.PrependFloat64Slot(40, SENY, 0.0)
+
+def AddSENY(builder, SENY):
+    RDOAddSENY(builder, SENY)
+
+def RDOAddSENZ(builder, SENZ):
+    builder.PrependFloat64Slot(41, SENZ, 0.0)
+
+def AddSENZ(builder, SENZ):
+    RDOAddSENZ(builder, SENZ)
+
+def RDOAddRCS(builder, RCS):
+    builder.PrependFloat64Slot(42, RCS, 0.0)
+
+def AddRCS(builder, RCS):
+    RDOAddRCS(builder, RCS)
+
+def RDOAddRCS_UNC(builder, RCS_UNC):
+    builder.PrependFloat64Slot(43, RCS_UNC, 0.0)
+
+def AddRCS_UNC(builder, RCS_UNC):
+    RDOAddRCS_UNC(builder, RCS_UNC)
+
+def RDOAddORTHOGONAL_RCS(builder, ORTHOGONAL_RCS):
+    builder.PrependFloat64Slot(44, ORTHOGONAL_RCS, 0.0)
+
+def AddORTHOGONAL_RCS(builder, ORTHOGONAL_RCS):
+    RDOAddORTHOGONAL_RCS(builder, ORTHOGONAL_RCS)
+
+def RDOAddORTHOGONAL_RCS_UNC(builder, ORTHOGONAL_RCS_UNC):
+    builder.PrependFloat64Slot(45, ORTHOGONAL_RCS_UNC, 0.0)
+
+def AddORTHOGONAL_RCS_UNC(builder, ORTHOGONAL_RCS_UNC):
+    RDOAddORTHOGONAL_RCS_UNC(builder, ORTHOGONAL_RCS_UNC)
+
+def RDOAddSNR(builder, SNR):
+    builder.PrependFloat64Slot(46, SNR, 0.0)
+
+def AddSNR(builder, SNR):
+    RDOAddSNR(builder, SNR)
+
+def RDOAddBEAM(builder, BEAM):
+    builder.PrependFloat64Slot(47, BEAM, 0.0)
+
+def AddBEAM(builder, BEAM):
+    RDOAddBEAM(builder, BEAM)
+
+def RDOAddTIMING_BIAS(builder, TIMING_BIAS):
+    builder.PrependFloat64Slot(48, TIMING_BIAS, 0.0)
+
+def AddTIMING_BIAS(builder, TIMING_BIAS):
+    RDOAddTIMING_BIAS(builder, TIMING_BIAS)
+
+def RDOAddRAW_FILE_URI(builder, RAW_FILE_URI):
+    builder.PrependUOffsetTRelativeSlot(49, flatbuffers.number_types.UOffsetTFlags.py_type(RAW_FILE_URI), 0)
+
+def AddRAW_FILE_URI(builder, RAW_FILE_URI):
+    RDOAddRAW_FILE_URI(builder, RAW_FILE_URI)
+
+def RDOAddDESCRIPTOR(builder, DESCRIPTOR):
+    builder.PrependUOffsetTRelativeSlot(50, flatbuffers.number_types.UOffsetTFlags.py_type(DESCRIPTOR), 0)
+
+def AddDESCRIPTOR(builder, DESCRIPTOR):
+    RDOAddDESCRIPTOR(builder, DESCRIPTOR)
+
+def RDOAddTAGS(builder, TAGS):
+    builder.PrependUOffsetTRelativeSlot(51, flatbuffers.number_types.UOffsetTFlags.py_type(TAGS), 0)
+
+def AddTAGS(builder, TAGS):
+    RDOAddTAGS(builder, TAGS)
+
+def RDOStartTAGSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartTAGSVector(builder, numElems):
+    return RDOStartTAGSVector(builder, numElems)
+
+def RDOCreateTAGSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateTAGSVector(builder, data):
+    RDOCreateTAGSVector(builder, data)
+
+def RDOEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return RDOEnd(builder)
+
+try:
+    from typing import List
+except:
+    pass
+
+class RDOT(object):
+
+    # RDOT
+    def __init__(
+        self,
+        ID = None,
+        OB_TIME = None,
+        ID_SENSOR = None,
+        ORIG_SENSOR_ID = None,
+        SAT_NO = 0,
+        ORIG_OBJECT_ID = None,
+        ON_ORBIT = None,
+        UCT = False,
+        OBS_TYPE = 0,
+        TASK_ID = None,
+        TRANSACTION_ID = None,
+        TRACK_ID = None,
+        OB_POSITION = None,
+        SEN_REFERENCE_FRAME = None,
+        AZIMUTH = 0.0,
+        AZIMUTH_UNC = 0.0,
+        AZIMUTH_BIAS = 0.0,
+        AZIMUTH_RATE = 0.0,
+        ELEVATION = 0.0,
+        ELEVATION_UNC = 0.0,
+        ELEVATION_BIAS = 0.0,
+        ELEVATION_RATE = 0.0,
+        RANGE = 0.0,
+        RANGE_UNC = 0.0,
+        RANGE_BIAS = 0.0,
+        RANGE_RATE = 0.0,
+        RANGE_RATE_UNC = 0.0,
+        RANGE_ACCEL = 0.0,
+        RANGE_ACCEL_UNC = 0.0,
+        DOPPLER = 0.0,
+        DOPPLER_UNC = 0.0,
+        RA = 0.0,
+        DECLINATION = 0.0,
+        X = 0.0,
+        Y = 0.0,
+        Z = 0.0,
+        XVEL = 0.0,
+        YVEL = 0.0,
+        ZVEL = 0.0,
+        SENX = 0.0,
+        SENY = 0.0,
+        SENZ = 0.0,
+        RCS = 0.0,
+        RCS_UNC = 0.0,
+        ORTHOGONAL_RCS = 0.0,
+        ORTHOGONAL_RCS_UNC = 0.0,
+        SNR = 0.0,
+        BEAM = 0.0,
+        TIMING_BIAS = 0.0,
+        RAW_FILE_URI = None,
+        DESCRIPTOR = None,
+        TAGS = None,
+    ):
+        self.ID = ID  # type: Optional[str]
+        self.OB_TIME = OB_TIME  # type: Optional[str]
+        self.ID_SENSOR = ID_SENSOR  # type: Optional[str]
+        self.ORIG_SENSOR_ID = ORIG_SENSOR_ID  # type: Optional[str]
+        self.SAT_NO = SAT_NO  # type: int
+        self.ORIG_OBJECT_ID = ORIG_OBJECT_ID  # type: Optional[str]
+        self.ON_ORBIT = ON_ORBIT  # type: Optional[str]
+        self.UCT = UCT  # type: bool
+        self.OBS_TYPE = OBS_TYPE  # type: int
+        self.TASK_ID = TASK_ID  # type: Optional[str]
+        self.TRANSACTION_ID = TRANSACTION_ID  # type: Optional[str]
+        self.TRACK_ID = TRACK_ID  # type: Optional[str]
+        self.OB_POSITION = OB_POSITION  # type: Optional[str]
+        self.SEN_REFERENCE_FRAME = SEN_REFERENCE_FRAME  # type: Optional[str]
+        self.AZIMUTH = AZIMUTH  # type: float
+        self.AZIMUTH_UNC = AZIMUTH_UNC  # type: float
+        self.AZIMUTH_BIAS = AZIMUTH_BIAS  # type: float
+        self.AZIMUTH_RATE = AZIMUTH_RATE  # type: float
+        self.ELEVATION = ELEVATION  # type: float
+        self.ELEVATION_UNC = ELEVATION_UNC  # type: float
+        self.ELEVATION_BIAS = ELEVATION_BIAS  # type: float
+        self.ELEVATION_RATE = ELEVATION_RATE  # type: float
+        self.RANGE = RANGE  # type: float
+        self.RANGE_UNC = RANGE_UNC  # type: float
+        self.RANGE_BIAS = RANGE_BIAS  # type: float
+        self.RANGE_RATE = RANGE_RATE  # type: float
+        self.RANGE_RATE_UNC = RANGE_RATE_UNC  # type: float
+        self.RANGE_ACCEL = RANGE_ACCEL  # type: float
+        self.RANGE_ACCEL_UNC = RANGE_ACCEL_UNC  # type: float
+        self.DOPPLER = DOPPLER  # type: float
+        self.DOPPLER_UNC = DOPPLER_UNC  # type: float
+        self.RA = RA  # type: float
+        self.DECLINATION = DECLINATION  # type: float
+        self.X = X  # type: float
+        self.Y = Y  # type: float
+        self.Z = Z  # type: float
+        self.XVEL = XVEL  # type: float
+        self.YVEL = YVEL  # type: float
+        self.ZVEL = ZVEL  # type: float
+        self.SENX = SENX  # type: float
+        self.SENY = SENY  # type: float
+        self.SENZ = SENZ  # type: float
+        self.RCS = RCS  # type: float
+        self.RCS_UNC = RCS_UNC  # type: float
+        self.ORTHOGONAL_RCS = ORTHOGONAL_RCS  # type: float
+        self.ORTHOGONAL_RCS_UNC = ORTHOGONAL_RCS_UNC  # type: float
+        self.SNR = SNR  # type: float
+        self.BEAM = BEAM  # type: float
+        self.TIMING_BIAS = TIMING_BIAS  # type: float
+        self.RAW_FILE_URI = RAW_FILE_URI  # type: Optional[str]
+        self.DESCRIPTOR = DESCRIPTOR  # type: Optional[str]
+        self.TAGS = TAGS  # type: Optional[List[Optional[str]]]
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpRdo = RDO()
+        tmpRdo.Init(buf, pos)
+        return cls.InitFromObj(tmpRdo)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpRdo):
+        x = RDOT()
+        x._UnPack(tmpRdo)
+        return x
+
+    # RDOT
+    def _UnPack(self, RDO):
+        if RDO is None:
+            return
+        self.ID = RDO.ID()
+        self.OB_TIME = RDO.OB_TIME()
+        self.ID_SENSOR = RDO.ID_SENSOR()
+        self.ORIG_SENSOR_ID = RDO.ORIG_SENSOR_ID()
+        self.SAT_NO = RDO.SAT_NO()
+        self.ORIG_OBJECT_ID = RDO.ORIG_OBJECT_ID()
+        self.ON_ORBIT = RDO.ON_ORBIT()
+        self.UCT = RDO.UCT()
+        self.OBS_TYPE = RDO.OBS_TYPE()
+        self.TASK_ID = RDO.TASK_ID()
+        self.TRANSACTION_ID = RDO.TRANSACTION_ID()
+        self.TRACK_ID = RDO.TRACK_ID()
+        self.OB_POSITION = RDO.OB_POSITION()
+        self.SEN_REFERENCE_FRAME = RDO.SEN_REFERENCE_FRAME()
+        self.AZIMUTH = RDO.AZIMUTH()
+        self.AZIMUTH_UNC = RDO.AZIMUTH_UNC()
+        self.AZIMUTH_BIAS = RDO.AZIMUTH_BIAS()
+        self.AZIMUTH_RATE = RDO.AZIMUTH_RATE()
+        self.ELEVATION = RDO.ELEVATION()
+        self.ELEVATION_UNC = RDO.ELEVATION_UNC()
+        self.ELEVATION_BIAS = RDO.ELEVATION_BIAS()
+        self.ELEVATION_RATE = RDO.ELEVATION_RATE()
+        self.RANGE = RDO.RANGE()
+        self.RANGE_UNC = RDO.RANGE_UNC()
+        self.RANGE_BIAS = RDO.RANGE_BIAS()
+        self.RANGE_RATE = RDO.RANGE_RATE()
+        self.RANGE_RATE_UNC = RDO.RANGE_RATE_UNC()
+        self.RANGE_ACCEL = RDO.RANGE_ACCEL()
+        self.RANGE_ACCEL_UNC = RDO.RANGE_ACCEL_UNC()
+        self.DOPPLER = RDO.DOPPLER()
+        self.DOPPLER_UNC = RDO.DOPPLER_UNC()
+        self.RA = RDO.RA()
+        self.DECLINATION = RDO.DECLINATION()
+        self.X = RDO.X()
+        self.Y = RDO.Y()
+        self.Z = RDO.Z()
+        self.XVEL = RDO.XVEL()
+        self.YVEL = RDO.YVEL()
+        self.ZVEL = RDO.ZVEL()
+        self.SENX = RDO.SENX()
+        self.SENY = RDO.SENY()
+        self.SENZ = RDO.SENZ()
+        self.RCS = RDO.RCS()
+        self.RCS_UNC = RDO.RCS_UNC()
+        self.ORTHOGONAL_RCS = RDO.ORTHOGONAL_RCS()
+        self.ORTHOGONAL_RCS_UNC = RDO.ORTHOGONAL_RCS_UNC()
+        self.SNR = RDO.SNR()
+        self.BEAM = RDO.BEAM()
+        self.TIMING_BIAS = RDO.TIMING_BIAS()
+        self.RAW_FILE_URI = RDO.RAW_FILE_URI()
+        self.DESCRIPTOR = RDO.DESCRIPTOR()
+        if not RDO.TAGSIsNone():
+            self.TAGS = []
+            for i in range(RDO.TAGSLength()):
+                self.TAGS.append(RDO.TAGS(i))
+
+    # RDOT
+    def Pack(self, builder):
+        if self.ID is not None:
+            ID = builder.CreateString(self.ID)
+        if self.OB_TIME is not None:
+            OB_TIME = builder.CreateString(self.OB_TIME)
+        if self.ID_SENSOR is not None:
+            ID_SENSOR = builder.CreateString(self.ID_SENSOR)
+        if self.ORIG_SENSOR_ID is not None:
+            ORIG_SENSOR_ID = builder.CreateString(self.ORIG_SENSOR_ID)
+        if self.ORIG_OBJECT_ID is not None:
+            ORIG_OBJECT_ID = builder.CreateString(self.ORIG_OBJECT_ID)
+        if self.ON_ORBIT is not None:
+            ON_ORBIT = builder.CreateString(self.ON_ORBIT)
+        if self.TASK_ID is not None:
+            TASK_ID = builder.CreateString(self.TASK_ID)
+        if self.TRANSACTION_ID is not None:
+            TRANSACTION_ID = builder.CreateString(self.TRANSACTION_ID)
+        if self.TRACK_ID is not None:
+            TRACK_ID = builder.CreateString(self.TRACK_ID)
+        if self.OB_POSITION is not None:
+            OB_POSITION = builder.CreateString(self.OB_POSITION)
+        if self.SEN_REFERENCE_FRAME is not None:
+            SEN_REFERENCE_FRAME = builder.CreateString(self.SEN_REFERENCE_FRAME)
+        if self.RAW_FILE_URI is not None:
+            RAW_FILE_URI = builder.CreateString(self.RAW_FILE_URI)
+        if self.DESCRIPTOR is not None:
+            DESCRIPTOR = builder.CreateString(self.DESCRIPTOR)
+        if self.TAGS is not None:
+            TAGSlist = []
+            for i in range(len(self.TAGS)):
+                TAGSlist.append(builder.CreateString(self.TAGS[i]))
+            RDOStartTAGSVector(builder, len(self.TAGS))
+            for i in reversed(range(len(self.TAGS))):
+                builder.PrependUOffsetTRelative(TAGSlist[i])
+            TAGS = builder.EndVector()
+        RDOStart(builder)
+        if self.ID is not None:
+            RDOAddID(builder, ID)
+        if self.OB_TIME is not None:
+            RDOAddOB_TIME(builder, OB_TIME)
+        if self.ID_SENSOR is not None:
+            RDOAddID_SENSOR(builder, ID_SENSOR)
+        if self.ORIG_SENSOR_ID is not None:
+            RDOAddORIG_SENSOR_ID(builder, ORIG_SENSOR_ID)
+        RDOAddSAT_NO(builder, self.SAT_NO)
+        if self.ORIG_OBJECT_ID is not None:
+            RDOAddORIG_OBJECT_ID(builder, ORIG_OBJECT_ID)
+        if self.ON_ORBIT is not None:
+            RDOAddON_ORBIT(builder, ON_ORBIT)
+        RDOAddUCT(builder, self.UCT)
+        RDOAddOBS_TYPE(builder, self.OBS_TYPE)
+        if self.TASK_ID is not None:
+            RDOAddTASK_ID(builder, TASK_ID)
+        if self.TRANSACTION_ID is not None:
+            RDOAddTRANSACTION_ID(builder, TRANSACTION_ID)
+        if self.TRACK_ID is not None:
+            RDOAddTRACK_ID(builder, TRACK_ID)
+        if self.OB_POSITION is not None:
+            RDOAddOB_POSITION(builder, OB_POSITION)
+        if self.SEN_REFERENCE_FRAME is not None:
+            RDOAddSEN_REFERENCE_FRAME(builder, SEN_REFERENCE_FRAME)
+        RDOAddAZIMUTH(builder, self.AZIMUTH)
+        RDOAddAZIMUTH_UNC(builder, self.AZIMUTH_UNC)
+        RDOAddAZIMUTH_BIAS(builder, self.AZIMUTH_BIAS)
+        RDOAddAZIMUTH_RATE(builder, self.AZIMUTH_RATE)
+        RDOAddELEVATION(builder, self.ELEVATION)
+        RDOAddELEVATION_UNC(builder, self.ELEVATION_UNC)
+        RDOAddELEVATION_BIAS(builder, self.ELEVATION_BIAS)
+        RDOAddELEVATION_RATE(builder, self.ELEVATION_RATE)
+        RDOAddRANGE(builder, self.RANGE)
+        RDOAddRANGE_UNC(builder, self.RANGE_UNC)
+        RDOAddRANGE_BIAS(builder, self.RANGE_BIAS)
+        RDOAddRANGE_RATE(builder, self.RANGE_RATE)
+        RDOAddRANGE_RATE_UNC(builder, self.RANGE_RATE_UNC)
+        RDOAddRANGE_ACCEL(builder, self.RANGE_ACCEL)
+        RDOAddRANGE_ACCEL_UNC(builder, self.RANGE_ACCEL_UNC)
+        RDOAddDOPPLER(builder, self.DOPPLER)
+        RDOAddDOPPLER_UNC(builder, self.DOPPLER_UNC)
+        RDOAddRA(builder, self.RA)
+        RDOAddDECLINATION(builder, self.DECLINATION)
+        RDOAddX(builder, self.X)
+        RDOAddY(builder, self.Y)
+        RDOAddZ(builder, self.Z)
+        RDOAddXVEL(builder, self.XVEL)
+        RDOAddYVEL(builder, self.YVEL)
+        RDOAddZVEL(builder, self.ZVEL)
+        RDOAddSENX(builder, self.SENX)
+        RDOAddSENY(builder, self.SENY)
+        RDOAddSENZ(builder, self.SENZ)
+        RDOAddRCS(builder, self.RCS)
+        RDOAddRCS_UNC(builder, self.RCS_UNC)
+        RDOAddORTHOGONAL_RCS(builder, self.ORTHOGONAL_RCS)
+        RDOAddORTHOGONAL_RCS_UNC(builder, self.ORTHOGONAL_RCS_UNC)
+        RDOAddSNR(builder, self.SNR)
+        RDOAddBEAM(builder, self.BEAM)
+        RDOAddTIMING_BIAS(builder, self.TIMING_BIAS)
+        if self.RAW_FILE_URI is not None:
+            RDOAddRAW_FILE_URI(builder, RAW_FILE_URI)
+        if self.DESCRIPTOR is not None:
+            RDOAddDESCRIPTOR(builder, DESCRIPTOR)
+        if self.TAGS is not None:
+            RDOAddTAGS(builder, TAGS)
+        RDO = RDOEnd(builder)
+        return RDO

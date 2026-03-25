@@ -32,7 +32,7 @@ class IntegerParameterType : Table() {
     /**
      * Type name
      */
-    val NAME : String?
+    val name : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class IntegerParameterType : Table() {
                 null
             }
         }
-    val NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val nameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun nameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Short description
      */
-    val SHORT_DESCRIPTION : String?
+    val shortDescription : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -55,12 +55,12 @@ class IntegerParameterType : Table() {
                 null
             }
         }
-    val SHORT_DESCRIPTIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun SHORT_DESCRIPTIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val shortDescriptionAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun shortDescriptionInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * Long description
      */
-    val LONG_DESCRIPTION : String?
+    val longDescription : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -69,13 +69,13 @@ class IntegerParameterType : Table() {
                 null
             }
         }
-    val LONG_DESCRIPTIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun LONG_DESCRIPTIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val longDescriptionAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun longDescriptionInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
     /**
      * Units
      */
-    fun UNITS(j: Int) : Unit? = UNITS(Unit(), j)
-    fun UNITS(obj: Unit, j: Int) : Unit? {
+    fun units(j: Int) : Unit? = units(Unit(), j)
+    fun units(obj: Unit, j: Int) : Unit? {
         val o = __offset(10)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -83,15 +83,15 @@ class IntegerParameterType : Table() {
             null
         }
     }
-    val UNITSLength : Int
+    val unitsLength : Int
         get() {
             val o = __offset(10); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Data encoding
      */
-    val DATA_ENCODING : IntegerDataEncoding? get() = DATA_ENCODING(IntegerDataEncoding())
-    fun DATA_ENCODING(obj: IntegerDataEncoding) : IntegerDataEncoding? {
+    val dataEncoding : IntegerDataEncoding? get() = dataEncoding(IntegerDataEncoding())
+    fun dataEncoding(obj: IntegerDataEncoding) : IntegerDataEncoding? {
         val o = __offset(12)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -102,8 +102,8 @@ class IntegerParameterType : Table() {
     /**
      * Default alarm
      */
-    val DEFAULT_ALARM : DefaultAlarm? get() = DEFAULT_ALARM(DefaultAlarm())
-    fun DEFAULT_ALARM(obj: DefaultAlarm) : DefaultAlarm? {
+    val defaultAlarm : DefaultAlarm? get() = defaultAlarm(DefaultAlarm())
+    fun defaultAlarm(obj: DefaultAlarm) : DefaultAlarm? {
         val o = __offset(14)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -114,8 +114,8 @@ class IntegerParameterType : Table() {
     /**
      * Context alarms
      */
-    fun CONTEXT_ALARMS(j: Int) : ContextAlarm? = CONTEXT_ALARMS(ContextAlarm(), j)
-    fun CONTEXT_ALARMS(obj: ContextAlarm, j: Int) : ContextAlarm? {
+    fun contextAlarms(j: Int) : ContextAlarm? = contextAlarms(ContextAlarm(), j)
+    fun contextAlarms(obj: ContextAlarm, j: Int) : ContextAlarm? {
         val o = __offset(16)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -123,14 +123,14 @@ class IntegerParameterType : Table() {
             null
         }
     }
-    val CONTEXT_ALARMSLength : Int
+    val contextAlarmsLength : Int
         get() {
             val o = __offset(16); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Minimum valid value
      */
-    val VALID_MIN : Long
+    val validMin : Long
         get() {
             val o = __offset(18)
             return if(o != 0) bb.getLong(o + bb_pos) else 0L
@@ -138,7 +138,7 @@ class IntegerParameterType : Table() {
     /**
      * Maximum valid value
      */
-    val VALID_MAX : Long
+    val validMax : Long
         get() {
             val o = __offset(20)
             return if(o != 0) bb.getLong(o + bb_pos) else 0L
@@ -146,7 +146,7 @@ class IntegerParameterType : Table() {
     /**
      * Signed integer (true) or unsigned (false)
      */
-    val SIGNED : Boolean
+    val signed : Boolean
         get() {
             val o = __offset(22)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -154,7 +154,7 @@ class IntegerParameterType : Table() {
     /**
      * Size in bits
      */
-    val SIZE_IN_BITS : UShort
+    val sizeInBits : UShort
         get() {
             val o = __offset(24)
             return if(o != 0) bb.getShort(o + bb_pos).toUShort() else 0u
@@ -162,39 +162,39 @@ class IntegerParameterType : Table() {
     /**
      * Initial/default value
      */
-    val INITIAL_VALUE : Long
+    val initialValue : Long
         get() {
             val o = __offset(26)
             return if(o != 0) bb.getLong(o + bb_pos) else 0L
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsIntegerParameterType(_bb: ByteBuffer): IntegerParameterType = getRootAsIntegerParameterType(_bb, IntegerParameterType())
         fun getRootAsIntegerParameterType(_bb: ByteBuffer, obj: IntegerParameterType): IntegerParameterType {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createIntegerParameterType(builder: FlatBufferBuilder, NAMEOffset: Int, SHORT_DESCRIPTIONOffset: Int, LONG_DESCRIPTIONOffset: Int, UNITSOffset: Int, DATA_ENCODINGOffset: Int, DEFAULT_ALARMOffset: Int, CONTEXT_ALARMSOffset: Int, VALID_MIN: Long, VALID_MAX: Long, SIGNED: Boolean, SIZE_IN_BITS: UShort, INITIAL_VALUE: Long) : Int {
+        fun createIntegerParameterType(builder: FlatBufferBuilder, nameOffset: Int, shortDescriptionOffset: Int, longDescriptionOffset: Int, unitsOffset: Int, dataEncodingOffset: Int, defaultAlarmOffset: Int, contextAlarmsOffset: Int, validMin: Long, validMax: Long, signed: Boolean, sizeInBits: UShort, initialValue: Long) : Int {
             builder.startTable(12)
-            addINITIAL_VALUE(builder, INITIAL_VALUE)
-            addVALID_MAX(builder, VALID_MAX)
-            addVALID_MIN(builder, VALID_MIN)
-            addCONTEXT_ALARMS(builder, CONTEXT_ALARMSOffset)
-            addDEFAULT_ALARM(builder, DEFAULT_ALARMOffset)
-            addDATA_ENCODING(builder, DATA_ENCODINGOffset)
-            addUNITS(builder, UNITSOffset)
-            addLONG_DESCRIPTION(builder, LONG_DESCRIPTIONOffset)
-            addSHORT_DESCRIPTION(builder, SHORT_DESCRIPTIONOffset)
-            addNAME(builder, NAMEOffset)
-            addSIZE_IN_BITS(builder, SIZE_IN_BITS)
-            addSIGNED(builder, SIGNED)
+            addINITIALVALUE(builder, initialValue)
+            addVALIDMAX(builder, validMax)
+            addVALIDMIN(builder, validMin)
+            addCONTEXTALARMS(builder, contextAlarmsOffset)
+            addDEFAULTALARM(builder, defaultAlarmOffset)
+            addDATAENCODING(builder, dataEncodingOffset)
+            addUNITS(builder, unitsOffset)
+            addLONGDESCRIPTION(builder, longDescriptionOffset)
+            addSHORTDESCRIPTION(builder, shortDescriptionOffset)
+            addNAME(builder, nameOffset)
+            addSIZEINBITS(builder, sizeInBits)
+            addSIGNED(builder, signed)
             return endIntegerParameterType(builder)
         }
         fun startIntegerParameterType(builder: FlatBufferBuilder) = builder.startTable(12)
-        fun addNAME(builder: FlatBufferBuilder, NAME: Int) = builder.addOffset(0, NAME, 0)
-        fun addSHORT_DESCRIPTION(builder: FlatBufferBuilder, SHORT_DESCRIPTION: Int) = builder.addOffset(1, SHORT_DESCRIPTION, 0)
-        fun addLONG_DESCRIPTION(builder: FlatBufferBuilder, LONG_DESCRIPTION: Int) = builder.addOffset(2, LONG_DESCRIPTION, 0)
-        fun addUNITS(builder: FlatBufferBuilder, UNITS: Int) = builder.addOffset(3, UNITS, 0)
+        fun addNAME(builder: FlatBufferBuilder, name: Int) = builder.addOffset(0, name, 0)
+        fun addSHORTDESCRIPTION(builder: FlatBufferBuilder, shortDescription: Int) = builder.addOffset(1, shortDescription, 0)
+        fun addLONGDESCRIPTION(builder: FlatBufferBuilder, longDescription: Int) = builder.addOffset(2, longDescription, 0)
+        fun addUNITS(builder: FlatBufferBuilder, units: Int) = builder.addOffset(3, units, 0)
         fun createUnitsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -203,9 +203,9 @@ class IntegerParameterType : Table() {
             return builder.endVector()
         }
         fun startUnitsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addDATA_ENCODING(builder: FlatBufferBuilder, DATA_ENCODING: Int) = builder.addOffset(4, DATA_ENCODING, 0)
-        fun addDEFAULT_ALARM(builder: FlatBufferBuilder, DEFAULT_ALARM: Int) = builder.addOffset(5, DEFAULT_ALARM, 0)
-        fun addCONTEXT_ALARMS(builder: FlatBufferBuilder, CONTEXT_ALARMS: Int) = builder.addOffset(6, CONTEXT_ALARMS, 0)
+        fun addDATAENCODING(builder: FlatBufferBuilder, dataEncoding: Int) = builder.addOffset(4, dataEncoding, 0)
+        fun addDEFAULTALARM(builder: FlatBufferBuilder, defaultAlarm: Int) = builder.addOffset(5, defaultAlarm, 0)
+        fun addCONTEXTALARMS(builder: FlatBufferBuilder, contextAlarms: Int) = builder.addOffset(6, contextAlarms, 0)
         fun createContextAlarmsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -214,11 +214,11 @@ class IntegerParameterType : Table() {
             return builder.endVector()
         }
         fun startContextAlarmsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addVALID_MIN(builder: FlatBufferBuilder, VALID_MIN: Long) = builder.addLong(7, VALID_MIN, 0L)
-        fun addVALID_MAX(builder: FlatBufferBuilder, VALID_MAX: Long) = builder.addLong(8, VALID_MAX, 0L)
-        fun addSIGNED(builder: FlatBufferBuilder, SIGNED: Boolean) = builder.addBoolean(9, SIGNED, false)
-        fun addSIZE_IN_BITS(builder: FlatBufferBuilder, SIZE_IN_BITS: UShort) = builder.addShort(10, SIZE_IN_BITS.toShort(), 0)
-        fun addINITIAL_VALUE(builder: FlatBufferBuilder, INITIAL_VALUE: Long) = builder.addLong(11, INITIAL_VALUE, 0L)
+        fun addVALIDMIN(builder: FlatBufferBuilder, validMin: Long) = builder.addLong(7, validMin, 0L)
+        fun addVALIDMAX(builder: FlatBufferBuilder, validMax: Long) = builder.addLong(8, validMax, 0L)
+        fun addSIGNED(builder: FlatBufferBuilder, signed: Boolean) = builder.addBoolean(9, signed, false)
+        fun addSIZEINBITS(builder: FlatBufferBuilder, sizeInBits: UShort) = builder.addShort(10, sizeInBits.toShort(), 0)
+        fun addINITIALVALUE(builder: FlatBufferBuilder, initialValue: Long) = builder.addLong(11, initialValue, 0L)
         fun endIntegerParameterType(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

@@ -129,19 +129,27 @@ def End(builder):
 class VariableFrameStreamT(object):
 
     # VariableFrameStreamT
-    def __init__(self):
-        self.NAME = None  # type: str
-        self.SHORT_DESCRIPTION = None  # type: str
-        self.MIN_FRAME_SIZE_IN_BITS = 0  # type: int
-        self.MAX_FRAME_SIZE_IN_BITS = 0  # type: int
-        self.SIZE_FIELD_OFFSET = 0  # type: int
-        self.SIZE_FIELD_SIZE = 0  # type: int
+    def __init__(
+        self,
+        NAME = None,
+        SHORT_DESCRIPTION = None,
+        MIN_FRAME_SIZE_IN_BITS = 0,
+        MAX_FRAME_SIZE_IN_BITS = 0,
+        SIZE_FIELD_OFFSET = 0,
+        SIZE_FIELD_SIZE = 0,
+    ):
+        self.NAME = NAME  # type: Optional[str]
+        self.SHORT_DESCRIPTION = SHORT_DESCRIPTION  # type: Optional[str]
+        self.MIN_FRAME_SIZE_IN_BITS = MIN_FRAME_SIZE_IN_BITS  # type: int
+        self.MAX_FRAME_SIZE_IN_BITS = MAX_FRAME_SIZE_IN_BITS  # type: int
+        self.SIZE_FIELD_OFFSET = SIZE_FIELD_OFFSET  # type: int
+        self.SIZE_FIELD_SIZE = SIZE_FIELD_SIZE  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        variableFrameStream = VariableFrameStream()
-        variableFrameStream.Init(buf, pos)
-        return cls.InitFromObj(variableFrameStream)
+        tmpVariableFrameStream = VariableFrameStream()
+        tmpVariableFrameStream.Init(buf, pos)
+        return cls.InitFromObj(tmpVariableFrameStream)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -149,21 +157,21 @@ class VariableFrameStreamT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, variableFrameStream):
+    def InitFromObj(cls, tmpVariableFrameStream):
         x = VariableFrameStreamT()
-        x._UnPack(variableFrameStream)
+        x._UnPack(tmpVariableFrameStream)
         return x
 
     # VariableFrameStreamT
-    def _UnPack(self, variableFrameStream):
-        if variableFrameStream is None:
+    def _UnPack(self, VariableFrameStream):
+        if VariableFrameStream is None:
             return
-        self.NAME = variableFrameStream.NAME()
-        self.SHORT_DESCRIPTION = variableFrameStream.SHORT_DESCRIPTION()
-        self.MIN_FRAME_SIZE_IN_BITS = variableFrameStream.MIN_FRAME_SIZE_IN_BITS()
-        self.MAX_FRAME_SIZE_IN_BITS = variableFrameStream.MAX_FRAME_SIZE_IN_BITS()
-        self.SIZE_FIELD_OFFSET = variableFrameStream.SIZE_FIELD_OFFSET()
-        self.SIZE_FIELD_SIZE = variableFrameStream.SIZE_FIELD_SIZE()
+        self.NAME = VariableFrameStream.NAME()
+        self.SHORT_DESCRIPTION = VariableFrameStream.SHORT_DESCRIPTION()
+        self.MIN_FRAME_SIZE_IN_BITS = VariableFrameStream.MIN_FRAME_SIZE_IN_BITS()
+        self.MAX_FRAME_SIZE_IN_BITS = VariableFrameStream.MAX_FRAME_SIZE_IN_BITS()
+        self.SIZE_FIELD_OFFSET = VariableFrameStream.SIZE_FIELD_OFFSET()
+        self.SIZE_FIELD_SIZE = VariableFrameStream.SIZE_FIELD_SIZE()
 
     # VariableFrameStreamT
     def Pack(self, builder):
@@ -180,5 +188,5 @@ class VariableFrameStreamT(object):
         VariableFrameStreamAddMAX_FRAME_SIZE_IN_BITS(builder, self.MAX_FRAME_SIZE_IN_BITS)
         VariableFrameStreamAddSIZE_FIELD_OFFSET(builder, self.SIZE_FIELD_OFFSET)
         VariableFrameStreamAddSIZE_FIELD_SIZE(builder, self.SIZE_FIELD_SIZE)
-        variableFrameStream = VariableFrameStreamEnd(builder)
-        return variableFrameStream
+        VariableFrameStream = VariableFrameStreamEnd(builder)
+        return VariableFrameStream

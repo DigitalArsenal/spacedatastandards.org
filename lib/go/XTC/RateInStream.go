@@ -51,6 +51,10 @@ func (rcv *RateInStream) STREAM_REF() []byte {
 	return nil
 }
 
+func (rcv *RateInStream) StreamRef() []byte {
+	return rcv.STREAM_REF()
+}
+
 /// Stream reference
 /// Rate value
 func (rcv *RateInStream) RATE() float64 {
@@ -61,9 +65,17 @@ func (rcv *RateInStream) RATE() float64 {
 	return 0.0
 }
 
+func (rcv *RateInStream) Rate() float64 {
+	return rcv.RATE()
+}
+
 /// Rate value
 func (rcv *RateInStream) MutateRATE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(6, n)
+}
+
+func (rcv *RateInStream) MutateRate(n float64) bool {
+	return rcv.MutateRATE(n)
 }
 
 /// Rate basis
@@ -75,9 +87,17 @@ func (rcv *RateInStream) BASIS() RateBasisType {
 	return 0
 }
 
+func (rcv *RateInStream) Basis() RateBasisType {
+	return rcv.BASIS()
+}
+
 /// Rate basis
 func (rcv *RateInStream) MutateBASIS(n RateBasisType) bool {
 	return rcv._tab.MutateInt8Slot(8, int8(n))
+}
+
+func (rcv *RateInStream) MutateBasis(n RateBasisType) bool {
+	return rcv.MutateBASIS(n)
 }
 
 func RateInStreamStart(builder *flatbuffers.Builder) {
@@ -86,11 +106,20 @@ func RateInStreamStart(builder *flatbuffers.Builder) {
 func RateInStreamAddSTREAM_REF(builder *flatbuffers.Builder, STREAM_REF flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(STREAM_REF), 0)
 }
+func RateInStreamAddStreamRef(builder *flatbuffers.Builder, STREAM_REF flatbuffers.UOffsetT) {
+	RateInStreamAddSTREAM_REF(builder, STREAM_REF)
+}
 func RateInStreamAddRATE(builder *flatbuffers.Builder, RATE float64) {
 	builder.PrependFloat64Slot(1, RATE, 0.0)
 }
+func RateInStreamAddRate(builder *flatbuffers.Builder, RATE float64) {
+	RateInStreamAddRATE(builder, RATE)
+}
 func RateInStreamAddBASIS(builder *flatbuffers.Builder, BASIS RateBasisType) {
 	builder.PrependInt8Slot(2, int8(BASIS), 0)
+}
+func RateInStreamAddBasis(builder *flatbuffers.Builder, BASIS RateBasisType) {
+	RateInStreamAddBASIS(builder, BASIS)
 }
 func RateInStreamEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

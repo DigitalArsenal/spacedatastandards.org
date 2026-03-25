@@ -32,7 +32,7 @@ class CFP : Table() {
     /**
      * PDU version
      */
-    val VERSION : UByte
+    val version : UByte
         get() {
             val o = __offset(4)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
@@ -40,7 +40,7 @@ class CFP : Table() {
     /**
      * PDU type
      */
-    val PDU_TYPE : Byte
+    val pduType : Byte
         get() {
             val o = __offset(6)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -48,7 +48,7 @@ class CFP : Table() {
     /**
      * Direction (toward receiver or sender)
      */
-    val DIRECTION : UByte
+    val direction : UByte
         get() {
             val o = __offset(8)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
@@ -56,7 +56,7 @@ class CFP : Table() {
     /**
      * Transmission mode
      */
-    val TRANSMISSION_MODE : Byte
+    val transmissionMode : Byte
         get() {
             val o = __offset(10)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -64,7 +64,7 @@ class CFP : Table() {
     /**
      * CRC present flag
      */
-    val CRC_FLAG : Boolean
+    val crcFlag : Boolean
         get() {
             val o = __offset(12)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -72,7 +72,7 @@ class CFP : Table() {
     /**
      * Large file flag
      */
-    val LARGE_FILE_FLAG : Boolean
+    val largeFileFlag : Boolean
         get() {
             val o = __offset(14)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -80,7 +80,7 @@ class CFP : Table() {
     /**
      * Data field length
      */
-    val DATA_FIELD_LENGTH : UShort
+    val dataFieldLength : UShort
         get() {
             val o = __offset(16)
             return if(o != 0) bb.getShort(o + bb_pos).toUShort() else 0u
@@ -88,7 +88,7 @@ class CFP : Table() {
     /**
      * Source entity ID
      */
-    val SOURCE_ENTITY_ID : ULong
+    val sourceEntityId : ULong
         get() {
             val o = __offset(18)
             return if(o != 0) bb.getLong(o + bb_pos).toULong() else 0UL
@@ -96,7 +96,7 @@ class CFP : Table() {
     /**
      * Transaction sequence number
      */
-    val TRANSACTION_SEQ_NUM : ULong
+    val transactionSeqNum : ULong
         get() {
             val o = __offset(20)
             return if(o != 0) bb.getLong(o + bb_pos).toULong() else 0UL
@@ -104,7 +104,7 @@ class CFP : Table() {
     /**
      * Destination entity ID
      */
-    val DESTINATION_ENTITY_ID : ULong
+    val destinationEntityId : ULong
         get() {
             val o = __offset(22)
             return if(o != 0) bb.getLong(o + bb_pos).toULong() else 0UL
@@ -112,7 +112,7 @@ class CFP : Table() {
     /**
      * File checksum type
      */
-    val CHECKSUM_TYPE : UByte
+    val checksumType : UByte
         get() {
             val o = __offset(24)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
@@ -120,7 +120,7 @@ class CFP : Table() {
     /**
      * File size
      */
-    val FILE_SIZE : ULong
+    val fileSize : ULong
         get() {
             val o = __offset(26)
             return if(o != 0) bb.getLong(o + bb_pos).toULong() else 0UL
@@ -128,7 +128,7 @@ class CFP : Table() {
     /**
      * Source filename
      */
-    val SOURCE_FILENAME : String?
+    val sourceFilename : String?
         get() {
             val o = __offset(28)
             return if (o != 0) {
@@ -137,12 +137,12 @@ class CFP : Table() {
                 null
             }
         }
-    val SOURCE_FILENAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(28, 1)
-    fun SOURCE_FILENAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 28, 1)
+    val sourceFilenameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(28, 1)
+    fun sourceFilenameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 28, 1)
     /**
      * Destination filename
      */
-    val DESTINATION_FILENAME : String?
+    val destinationFilename : String?
         get() {
             val o = __offset(30)
             return if (o != 0) {
@@ -151,12 +151,12 @@ class CFP : Table() {
                 null
             }
         }
-    val DESTINATION_FILENAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(30, 1)
-    fun DESTINATION_FILENAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 30, 1)
+    val destinationFilenameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(30, 1)
+    fun destinationFilenameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 30, 1)
     /**
      * PDU data
      */
-    fun DATA(j: Int) : UByte {
+    fun data(j: Int) : UByte {
         val o = __offset(32)
         return if (o != 0) {
             bb.get(__vector(o) + j * 1).toUByte()
@@ -164,55 +164,55 @@ class CFP : Table() {
             0u
         }
     }
-    val DATALength : Int
+    val dataLength : Int
         get() {
             val o = __offset(32); return if (o != 0) __vector_len(o) else 0
         }
-    val DATAAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(32, 1)
-    fun DATAInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 32, 1)
+    val dataAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(32, 1)
+    fun dataInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 32, 1)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsCFP(_bb: ByteBuffer): CFP = getRootAsCFP(_bb, CFP())
         fun getRootAsCFP(_bb: ByteBuffer, obj: CFP): CFP {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun CFPBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$CFP")
-        fun createCFP(builder: FlatBufferBuilder, VERSION: UByte, PDU_TYPE: Byte, DIRECTION: UByte, TRANSMISSION_MODE: Byte, CRC_FLAG: Boolean, LARGE_FILE_FLAG: Boolean, DATA_FIELD_LENGTH: UShort, SOURCE_ENTITY_ID: ULong, TRANSACTION_SEQ_NUM: ULong, DESTINATION_ENTITY_ID: ULong, CHECKSUM_TYPE: UByte, FILE_SIZE: ULong, SOURCE_FILENAMEOffset: Int, DESTINATION_FILENAMEOffset: Int, DATAOffset: Int) : Int {
+        fun createCFP(builder: FlatBufferBuilder, version: UByte, pduType: Byte, direction: UByte, transmissionMode: Byte, crcFlag: Boolean, largeFileFlag: Boolean, dataFieldLength: UShort, sourceEntityId: ULong, transactionSeqNum: ULong, destinationEntityId: ULong, checksumType: UByte, fileSize: ULong, sourceFilenameOffset: Int, destinationFilenameOffset: Int, dataOffset: Int) : Int {
             builder.startTable(15)
-            addFILE_SIZE(builder, FILE_SIZE)
-            addDESTINATION_ENTITY_ID(builder, DESTINATION_ENTITY_ID)
-            addTRANSACTION_SEQ_NUM(builder, TRANSACTION_SEQ_NUM)
-            addSOURCE_ENTITY_ID(builder, SOURCE_ENTITY_ID)
-            addDATA(builder, DATAOffset)
-            addDESTINATION_FILENAME(builder, DESTINATION_FILENAMEOffset)
-            addSOURCE_FILENAME(builder, SOURCE_FILENAMEOffset)
-            addDATA_FIELD_LENGTH(builder, DATA_FIELD_LENGTH)
-            addCHECKSUM_TYPE(builder, CHECKSUM_TYPE)
-            addLARGE_FILE_FLAG(builder, LARGE_FILE_FLAG)
-            addCRC_FLAG(builder, CRC_FLAG)
-            addTRANSMISSION_MODE(builder, TRANSMISSION_MODE)
-            addDIRECTION(builder, DIRECTION)
-            addPDU_TYPE(builder, PDU_TYPE)
-            addVERSION(builder, VERSION)
+            addFILESIZE(builder, fileSize)
+            addDESTINATIONENTITYID(builder, destinationEntityId)
+            addTRANSACTIONSEQNUM(builder, transactionSeqNum)
+            addSOURCEENTITYID(builder, sourceEntityId)
+            addDATA(builder, dataOffset)
+            addDESTINATIONFILENAME(builder, destinationFilenameOffset)
+            addSOURCEFILENAME(builder, sourceFilenameOffset)
+            addDATAFIELDLENGTH(builder, dataFieldLength)
+            addCHECKSUMTYPE(builder, checksumType)
+            addLARGEFILEFLAG(builder, largeFileFlag)
+            addCRCFLAG(builder, crcFlag)
+            addTRANSMISSIONMODE(builder, transmissionMode)
+            addDIRECTION(builder, direction)
+            addPDUTYPE(builder, pduType)
+            addVERSION(builder, version)
             return endCFP(builder)
         }
         fun startCFP(builder: FlatBufferBuilder) = builder.startTable(15)
-        fun addVERSION(builder: FlatBufferBuilder, VERSION: UByte) = builder.addByte(0, VERSION.toByte(), 0)
-        fun addPDU_TYPE(builder: FlatBufferBuilder, PDU_TYPE: Byte) = builder.addByte(1, PDU_TYPE, 0)
-        fun addDIRECTION(builder: FlatBufferBuilder, DIRECTION: UByte) = builder.addByte(2, DIRECTION.toByte(), 0)
-        fun addTRANSMISSION_MODE(builder: FlatBufferBuilder, TRANSMISSION_MODE: Byte) = builder.addByte(3, TRANSMISSION_MODE, 0)
-        fun addCRC_FLAG(builder: FlatBufferBuilder, CRC_FLAG: Boolean) = builder.addBoolean(4, CRC_FLAG, false)
-        fun addLARGE_FILE_FLAG(builder: FlatBufferBuilder, LARGE_FILE_FLAG: Boolean) = builder.addBoolean(5, LARGE_FILE_FLAG, false)
-        fun addDATA_FIELD_LENGTH(builder: FlatBufferBuilder, DATA_FIELD_LENGTH: UShort) = builder.addShort(6, DATA_FIELD_LENGTH.toShort(), 0)
-        fun addSOURCE_ENTITY_ID(builder: FlatBufferBuilder, SOURCE_ENTITY_ID: ULong) = builder.addLong(7, SOURCE_ENTITY_ID.toLong(), 0)
-        fun addTRANSACTION_SEQ_NUM(builder: FlatBufferBuilder, TRANSACTION_SEQ_NUM: ULong) = builder.addLong(8, TRANSACTION_SEQ_NUM.toLong(), 0)
-        fun addDESTINATION_ENTITY_ID(builder: FlatBufferBuilder, DESTINATION_ENTITY_ID: ULong) = builder.addLong(9, DESTINATION_ENTITY_ID.toLong(), 0)
-        fun addCHECKSUM_TYPE(builder: FlatBufferBuilder, CHECKSUM_TYPE: UByte) = builder.addByte(10, CHECKSUM_TYPE.toByte(), 0)
-        fun addFILE_SIZE(builder: FlatBufferBuilder, FILE_SIZE: ULong) = builder.addLong(11, FILE_SIZE.toLong(), 0)
-        fun addSOURCE_FILENAME(builder: FlatBufferBuilder, SOURCE_FILENAME: Int) = builder.addOffset(12, SOURCE_FILENAME, 0)
-        fun addDESTINATION_FILENAME(builder: FlatBufferBuilder, DESTINATION_FILENAME: Int) = builder.addOffset(13, DESTINATION_FILENAME, 0)
-        fun addDATA(builder: FlatBufferBuilder, DATA: Int) = builder.addOffset(14, DATA, 0)
+        fun addVERSION(builder: FlatBufferBuilder, version: UByte) = builder.addByte(0, version.toByte(), 0)
+        fun addPDUTYPE(builder: FlatBufferBuilder, pduType: Byte) = builder.addByte(1, pduType, 0)
+        fun addDIRECTION(builder: FlatBufferBuilder, direction: UByte) = builder.addByte(2, direction.toByte(), 0)
+        fun addTRANSMISSIONMODE(builder: FlatBufferBuilder, transmissionMode: Byte) = builder.addByte(3, transmissionMode, 0)
+        fun addCRCFLAG(builder: FlatBufferBuilder, crcFlag: Boolean) = builder.addBoolean(4, crcFlag, false)
+        fun addLARGEFILEFLAG(builder: FlatBufferBuilder, largeFileFlag: Boolean) = builder.addBoolean(5, largeFileFlag, false)
+        fun addDATAFIELDLENGTH(builder: FlatBufferBuilder, dataFieldLength: UShort) = builder.addShort(6, dataFieldLength.toShort(), 0)
+        fun addSOURCEENTITYID(builder: FlatBufferBuilder, sourceEntityId: ULong) = builder.addLong(7, sourceEntityId.toLong(), 0)
+        fun addTRANSACTIONSEQNUM(builder: FlatBufferBuilder, transactionSeqNum: ULong) = builder.addLong(8, transactionSeqNum.toLong(), 0)
+        fun addDESTINATIONENTITYID(builder: FlatBufferBuilder, destinationEntityId: ULong) = builder.addLong(9, destinationEntityId.toLong(), 0)
+        fun addCHECKSUMTYPE(builder: FlatBufferBuilder, checksumType: UByte) = builder.addByte(10, checksumType.toByte(), 0)
+        fun addFILESIZE(builder: FlatBufferBuilder, fileSize: ULong) = builder.addLong(11, fileSize.toLong(), 0)
+        fun addSOURCEFILENAME(builder: FlatBufferBuilder, sourceFilename: Int) = builder.addOffset(12, sourceFilename, 0)
+        fun addDESTINATIONFILENAME(builder: FlatBufferBuilder, destinationFilename: Int) = builder.addOffset(13, destinationFilename, 0)
+        fun addDATA(builder: FlatBufferBuilder, data: Int) = builder.addOffset(14, data, 0)
         @kotlin.ExperimentalUnsignedTypes
         fun createDataVector(builder: FlatBufferBuilder, data: UByteArray) : Int {
             builder.startVector(1, data.size, 1)

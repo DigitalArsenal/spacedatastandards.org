@@ -115,18 +115,25 @@ def End(builder):
 class ArgumentT(object):
 
     # ArgumentT
-    def __init__(self):
-        self.NAME = None  # type: str
-        self.ARGUMENT_TYPE_REF = None  # type: str
-        self.SHORT_DESCRIPTION = None  # type: str
-        self.LONG_DESCRIPTION = None  # type: str
-        self.INITIAL_VALUE = None  # type: str
+    def __init__(
+        self,
+        NAME = None,
+        ARGUMENT_TYPE_REF = None,
+        SHORT_DESCRIPTION = None,
+        LONG_DESCRIPTION = None,
+        INITIAL_VALUE = None,
+    ):
+        self.NAME = NAME  # type: Optional[str]
+        self.ARGUMENT_TYPE_REF = ARGUMENT_TYPE_REF  # type: Optional[str]
+        self.SHORT_DESCRIPTION = SHORT_DESCRIPTION  # type: Optional[str]
+        self.LONG_DESCRIPTION = LONG_DESCRIPTION  # type: Optional[str]
+        self.INITIAL_VALUE = INITIAL_VALUE  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        argument = Argument()
-        argument.Init(buf, pos)
-        return cls.InitFromObj(argument)
+        tmpArgument = Argument()
+        tmpArgument.Init(buf, pos)
+        return cls.InitFromObj(tmpArgument)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -134,20 +141,20 @@ class ArgumentT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, argument):
+    def InitFromObj(cls, tmpArgument):
         x = ArgumentT()
-        x._UnPack(argument)
+        x._UnPack(tmpArgument)
         return x
 
     # ArgumentT
-    def _UnPack(self, argument):
-        if argument is None:
+    def _UnPack(self, Argument):
+        if Argument is None:
             return
-        self.NAME = argument.NAME()
-        self.ARGUMENT_TYPE_REF = argument.ARGUMENT_TYPE_REF()
-        self.SHORT_DESCRIPTION = argument.SHORT_DESCRIPTION()
-        self.LONG_DESCRIPTION = argument.LONG_DESCRIPTION()
-        self.INITIAL_VALUE = argument.INITIAL_VALUE()
+        self.NAME = Argument.NAME()
+        self.ARGUMENT_TYPE_REF = Argument.ARGUMENT_TYPE_REF()
+        self.SHORT_DESCRIPTION = Argument.SHORT_DESCRIPTION()
+        self.LONG_DESCRIPTION = Argument.LONG_DESCRIPTION()
+        self.INITIAL_VALUE = Argument.INITIAL_VALUE()
 
     # ArgumentT
     def Pack(self, builder):
@@ -172,5 +179,5 @@ class ArgumentT(object):
             ArgumentAddLONG_DESCRIPTION(builder, LONG_DESCRIPTION)
         if self.INITIAL_VALUE is not None:
             ArgumentAddINITIAL_VALUE(builder, INITIAL_VALUE)
-        argument = ArgumentEnd(builder)
-        return argument
+        Argument = ArgumentEnd(builder)
+        return Argument

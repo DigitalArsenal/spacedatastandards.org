@@ -2,9 +2,13 @@
 // swiftlint:disable all
 // swiftformat:disable all
 
+#if canImport(Common)
+import Common
+#endif
+
 import FlatBuffers
 
-public enum ionoLayer: Int8, Enum, Verifiable {
+public enum ionoLayer: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -21,7 +25,7 @@ public enum ionoLayer: Int8, Enum, Verifiable {
 }
 
 
-public enum ionoSource: Int8, Enum, Verifiable {
+public enum ionoSource: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -39,9 +43,9 @@ public enum ionoSource: Int8, Enum, Verifiable {
 
 
 ///  Ionospheric Observation Data Point
-public struct ionoDataPoint: FlatBufferObject, Verifiable {
+public struct ionoDataPoint: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -128,9 +132,9 @@ public struct ionoDataPoint: FlatBufferObject, Verifiable {
 }
 
 ///  Ionospheric Electron Density Profile
-public struct ionoDensityProfile: FlatBufferObject, Verifiable {
+public struct ionoDensityProfile: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -151,15 +155,11 @@ public struct ionoDensityProfile: FlatBufferObject, Verifiable {
   public var EPOCH: String? { let o = _accessor.offset(VTOFFSET.EPOCH.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.EPOCH.v) }
   ///  Altitudes in km
-  public var hasAltitudes: Bool { let o = _accessor.offset(VTOFFSET.ALTITUDES.v); return o == 0 ? false : true }
-  public var ALTITUDESCount: Int32 { let o = _accessor.offset(VTOFFSET.ALTITUDES.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func ALTITUDES(at index: Int32) -> Double { let o = _accessor.offset(VTOFFSET.ALTITUDES.v); return o == 0 ? 0 : _accessor.directRead(of: Double.self, offset: _accessor.vector(at: o) + index * 8) }
-  public var ALTITUDES: [Double] { return _accessor.getVector(at: VTOFFSET.ALTITUDES.v) ?? [] }
+  public var ALTITUDES: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.ALTITUDES.v, byteSize: 8) }
+  public func withUnsafePointerToAltitudes<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.ALTITUDES.v, body: body) }
   ///  Electron densities at each altitude in electrons/m^3
-  public var hasDensities: Bool { let o = _accessor.offset(VTOFFSET.DENSITIES.v); return o == 0 ? false : true }
-  public var DENSITIESCount: Int32 { let o = _accessor.offset(VTOFFSET.DENSITIES.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func DENSITIES(at index: Int32) -> Double { let o = _accessor.offset(VTOFFSET.DENSITIES.v); return o == 0 ? 0 : _accessor.directRead(of: Double.self, offset: _accessor.vector(at: o) + index * 8) }
-  public var DENSITIES: [Double] { return _accessor.getVector(at: VTOFFSET.DENSITIES.v) ?? [] }
+  public var DENSITIES: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.DENSITIES.v, byteSize: 8) }
+  public func withUnsafePointerToDensities<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.DENSITIES.v, body: body) }
   public static func startionoDensityProfile(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 3) }
   public static func add(EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPOCH, at: VTOFFSET.EPOCH.p) }
   public static func addVectorOf(ALTITUDES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ALTITUDES, at: VTOFFSET.ALTITUDES.p) }
@@ -188,9 +188,9 @@ public struct ionoDensityProfile: FlatBufferObject, Verifiable {
 }
 
 ///  Ionospheric Observation
-public struct ION: FlatBufferObject, Verifiable {
+public struct ION: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -274,13 +274,9 @@ public struct ION: FlatBufferObject, Verifiable {
   ///  Scintillation index S4
   public var S4: Double { let o = _accessor.offset(VTOFFSET.S4.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Observation data points
-  public var hasDataPoints: Bool { let o = _accessor.offset(VTOFFSET.DATA_POINTS.v); return o == 0 ? false : true }
-  public var DATA_POINTSCount: Int32 { let o = _accessor.offset(VTOFFSET.DATA_POINTS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func DATA_POINTS(at index: Int32) -> ionoDataPoint? { let o = _accessor.offset(VTOFFSET.DATA_POINTS.v); return o == 0 ? nil : ionoDataPoint(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var DATA_POINTS: FlatbufferVector<ionoDataPoint> { return _accessor.vector(at: VTOFFSET.DATA_POINTS.v, byteSize: 4) }
   ///  Electron density profiles
-  public var hasDensityProfiles: Bool { let o = _accessor.offset(VTOFFSET.DENSITY_PROFILES.v); return o == 0 ? false : true }
-  public var DENSITY_PROFILESCount: Int32 { let o = _accessor.offset(VTOFFSET.DENSITY_PROFILES.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func DENSITY_PROFILES(at index: Int32) -> ionoDensityProfile? { let o = _accessor.offset(VTOFFSET.DENSITY_PROFILES.v); return o == 0 ? nil : ionoDensityProfile(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var DENSITY_PROFILES: FlatbufferVector<ionoDensityProfile> { return _accessor.vector(at: VTOFFSET.DENSITY_PROFILES.v, byteSize: 4) }
   ///  Data quality indicator (0-9, 9=best)
   public var QUALITY: UInt8 { let o = _accessor.offset(VTOFFSET.QUALITY.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
   ///  Additional notes

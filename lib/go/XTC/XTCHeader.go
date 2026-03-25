@@ -51,6 +51,10 @@ func (rcv *XTCHeader) VERSION() []byte {
 	return nil
 }
 
+func (rcv *XTCHeader) Version() []byte {
+	return rcv.VERSION()
+}
+
 /// Version of this XTCE document
 /// Date of document creation (ISO 8601)
 func (rcv *XTCHeader) DATE() []byte {
@@ -59,6 +63,10 @@ func (rcv *XTCHeader) DATE() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *XTCHeader) Date() []byte {
+	return rcv.DATE()
 }
 
 /// Date of document creation (ISO 8601)
@@ -71,6 +79,10 @@ func (rcv *XTCHeader) CLASSIFICATION() []byte {
 	return nil
 }
 
+func (rcv *XTCHeader) Classification() []byte {
+	return rcv.CLASSIFICATION()
+}
+
 /// Classification level
 /// Validation status
 func (rcv *XTCHeader) VALIDATION_STATUS() []byte {
@@ -81,6 +93,10 @@ func (rcv *XTCHeader) VALIDATION_STATUS() []byte {
 	return nil
 }
 
+func (rcv *XTCHeader) ValidationStatus() []byte {
+	return rcv.VALIDATION_STATUS()
+}
+
 /// Validation status
 /// Author information
 func (rcv *XTCHeader) AUTHOR() []byte {
@@ -89,6 +105,10 @@ func (rcv *XTCHeader) AUTHOR() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *XTCHeader) Author() []byte {
+	return rcv.AUTHOR()
 }
 
 /// Author information
@@ -102,12 +122,20 @@ func (rcv *XTCHeader) NOTES(j int) []byte {
 	return nil
 }
 
+func (rcv *XTCHeader) Notes(j int) []byte {
+	return rcv.NOTES(j)
+}
+
 func (rcv *XTCHeader) NOTESLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *XTCHeader) NotesLength() int {
+	return rcv.NOTESLength()
 }
 
 /// Notes/comments
@@ -117,23 +145,44 @@ func XTCHeaderStart(builder *flatbuffers.Builder) {
 func XTCHeaderAddVERSION(builder *flatbuffers.Builder, VERSION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(VERSION), 0)
 }
+func XTCHeaderAddVersion(builder *flatbuffers.Builder, VERSION flatbuffers.UOffsetT) {
+	XTCHeaderAddVERSION(builder, VERSION)
+}
 func XTCHeaderAddDATE(builder *flatbuffers.Builder, DATE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(DATE), 0)
+}
+func XTCHeaderAddDate(builder *flatbuffers.Builder, DATE flatbuffers.UOffsetT) {
+	XTCHeaderAddDATE(builder, DATE)
 }
 func XTCHeaderAddCLASSIFICATION(builder *flatbuffers.Builder, CLASSIFICATION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(CLASSIFICATION), 0)
 }
+func XTCHeaderAddClassification(builder *flatbuffers.Builder, CLASSIFICATION flatbuffers.UOffsetT) {
+	XTCHeaderAddCLASSIFICATION(builder, CLASSIFICATION)
+}
 func XTCHeaderAddVALIDATION_STATUS(builder *flatbuffers.Builder, VALIDATION_STATUS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(VALIDATION_STATUS), 0)
+}
+func XTCHeaderAddValidationStatus(builder *flatbuffers.Builder, VALIDATION_STATUS flatbuffers.UOffsetT) {
+	XTCHeaderAddVALIDATION_STATUS(builder, VALIDATION_STATUS)
 }
 func XTCHeaderAddAUTHOR(builder *flatbuffers.Builder, AUTHOR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(AUTHOR), 0)
 }
+func XTCHeaderAddAuthor(builder *flatbuffers.Builder, AUTHOR flatbuffers.UOffsetT) {
+	XTCHeaderAddAUTHOR(builder, AUTHOR)
+}
 func XTCHeaderAddNOTES(builder *flatbuffers.Builder, NOTES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(NOTES), 0)
 }
+func XTCHeaderAddNotes(builder *flatbuffers.Builder, NOTES flatbuffers.UOffsetT) {
+	XTCHeaderAddNOTES(builder, NOTES)
+}
 func XTCHeaderStartNOTESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func XTCHeaderStartNotesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return XTCHeaderStartNOTESVector(builder, numElems)
 }
 func XTCHeaderEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

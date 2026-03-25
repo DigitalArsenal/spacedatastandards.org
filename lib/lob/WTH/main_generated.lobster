@@ -236,72 +236,72 @@ struct WTHBuilder:
     def end():
         return b_.EndObject()
 
-def WTHStartSIG_PWRSVector(b_:flatbuffers.builder, n_:int):
+def WTHStartSIGPWRSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(8, n_, 8)
-def WTHCreateSIG_PWRSVector(b_:flatbuffers.builder, v_:[float]):
+def WTHCreateSIGPWRSVector(b_:flatbuffers.builder, v_:[float]):
     b_.StartVector(8, v_.length, 8)
     reverse(v_) e_: b_.PrependFloat64(e_)
     return b_.EndVector(v_.length)
 
-def WTHStartNOISE_LVLSVector(b_:flatbuffers.builder, n_:int):
+def WTHStartNOISELVLSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(8, n_, 8)
-def WTHCreateNOISE_LVLSVector(b_:flatbuffers.builder, v_:[float]):
+def WTHCreateNOISELVLSVector(b_:flatbuffers.builder, v_:[float]):
     b_.StartVector(8, v_.length, 8)
     reverse(v_) e_: b_.PrependFloat64(e_)
     return b_.EndVector(v_.length)
 
-def WTHStartSPEC_WIDTHSVector(b_:flatbuffers.builder, n_:int):
+def WTHStartSPECWIDTHSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(8, n_, 8)
-def WTHCreateSPEC_WIDTHSVector(b_:flatbuffers.builder, v_:[float]):
+def WTHCreateSPECWIDTHSVector(b_:flatbuffers.builder, v_:[float]):
     b_.StartVector(8, v_.length, 8)
     reverse(v_) e_: b_.PrependFloat64(e_)
     return b_.EndVector(v_.length)
 
-def WTHStartFIRST_GUESS_AVGSVector(b_:flatbuffers.builder, n_:int):
+def WTHStartFIRSTGUESSAVGSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(8, n_, 8)
-def WTHCreateFIRST_GUESS_AVGSVector(b_:flatbuffers.builder, v_:[float]):
+def WTHCreateFIRSTGUESSAVGSVector(b_:flatbuffers.builder, v_:[float]):
     b_.StartVector(8, v_.length, 8)
     reverse(v_) e_: b_.PrependFloat64(e_)
     return b_.EndVector(v_.length)
 
-def WTHStartTD_AVG_SAMPLE_NUMSVector(b_:flatbuffers.builder, n_:int):
+def WTHStartTDAVGSAMPLENUMSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(8, n_, 8)
-def WTHCreateTD_AVG_SAMPLE_NUMSVector(b_:flatbuffers.builder, v_:[float]):
+def WTHCreateTDAVGSAMPLENUMSVector(b_:flatbuffers.builder, v_:[float]):
     b_.StartVector(8, v_.length, 8)
     reverse(v_) e_: b_.PrependFloat64(e_)
     return b_.EndVector(v_.length)
 
-def WTHStartCO_INTEGSVector(b_:flatbuffers.builder, n_:int):
+def WTHStartCOINTEGSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(8, n_, 8)
-def WTHCreateCO_INTEGSVector(b_:flatbuffers.builder, v_:[float]):
+def WTHCreateCOINTEGSVector(b_:flatbuffers.builder, v_:[float]):
     b_.StartVector(8, v_.length, 8)
     reverse(v_) e_: b_.PrependFloat64(e_)
     return b_.EndVector(v_.length)
 
-def WTHStartSPEC_AVGSVector(b_:flatbuffers.builder, n_:int):
+def WTHStartSPECAVGSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(8, n_, 8)
-def WTHCreateSPEC_AVGSVector(b_:flatbuffers.builder, v_:[float]):
+def WTHCreateSPECAVGSVector(b_:flatbuffers.builder, v_:[float]):
     b_.StartVector(8, v_.length, 8)
     reverse(v_) e_: b_.PrependFloat64(e_)
     return b_.EndVector(v_.length)
 
-def WTHStartINTERPULSE_PERIODSVector(b_:flatbuffers.builder, n_:int):
+def WTHStartINTERPULSEPERIODSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(8, n_, 8)
-def WTHCreateINTERPULSE_PERIODSVector(b_:flatbuffers.builder, v_:[float]):
+def WTHCreateINTERPULSEPERIODSVector(b_:flatbuffers.builder, v_:[float]):
     b_.StartVector(8, v_.length, 8)
     reverse(v_) e_: b_.PrependFloat64(e_)
     return b_.EndVector(v_.length)
 
-def WTHStartDOPP_VELSVector(b_:flatbuffers.builder, n_:int):
+def WTHStartDOPPVELSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(8, n_, 8)
-def WTHCreateDOPP_VELSVector(b_:flatbuffers.builder, v_:[float]):
+def WTHCreateDOPPVELSVector(b_:flatbuffers.builder, v_:[float]):
     b_.StartVector(8, v_.length, 8)
     reverse(v_) e_: b_.PrependFloat64(e_)
     return b_.EndVector(v_.length)
 
-def WTHStartCONS_RECSVector(b_:flatbuffers.builder, n_:int):
+def WTHStartCONSRECSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(8, n_, 8)
-def WTHCreateCONS_RECSVector(b_:flatbuffers.builder, v_:[float]):
+def WTHCreateCONSRECSVector(b_:flatbuffers.builder, v_:[float]):
     b_.StartVector(8, v_.length, 8)
     reverse(v_) e_: b_.PrependFloat64(e_)
     return b_.EndVector(v_.length)
@@ -313,23 +313,23 @@ def WTHCreateSNRSVector(b_:flatbuffers.builder, v_:[float]):
     reverse(v_) e_: b_.PrependFloat64(e_)
     return b_.EndVector(v_.length)
 
-def WTHStartLIGHT_DET_SENSORSVector(b_:flatbuffers.builder, n_:int):
+def WTHStartLIGHTDETSENSORSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def WTHCreateLIGHT_DET_SENSORSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def WTHCreateLIGHTDETSENSORSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-def WTHStartSRC_TYPSVector(b_:flatbuffers.builder, n_:int):
+def WTHStartSRCTYPSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def WTHCreateSRC_TYPSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def WTHCreateSRCTYPSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-def WTHStartSRC_IDSVector(b_:flatbuffers.builder, n_:int):
+def WTHStartSRCIDSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def WTHCreateSRC_IDSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def WTHCreateSRCIDSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)

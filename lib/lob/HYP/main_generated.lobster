@@ -129,30 +129,30 @@ struct HYPBuilder:
     def end():
         return b_.EndObject()
 
-def HYPStartCAT_IDSVector(b_:flatbuffers.builder, n_:int):
+def HYPStartCATIDSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def HYPCreateCAT_IDSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def HYPCreateCATIDSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-def HYPStartSIT_IDSVector(b_:flatbuffers.builder, n_:int):
+def HYPStartSITIDSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def HYPCreateSIT_IDSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def HYPCreateSITIDSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-def HYPStartROW_INDICATORSVector(b_:flatbuffers.builder, n_:int):
+def HYPStartROWINDICATORSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def HYPCreateROW_INDICATORSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def HYPCreateROWINDICATORSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-def HYPStartCOL_INDICATORSVector(b_:flatbuffers.builder, n_:int):
+def HYPStartCOLINDICATORSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def HYPCreateCOL_INDICATORSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def HYPCreateCOLINDICATORSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)

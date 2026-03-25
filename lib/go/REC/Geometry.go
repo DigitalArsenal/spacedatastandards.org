@@ -51,6 +51,10 @@ func (rcv *Geometry) GEOMETRY_TYPE() []byte {
 	return nil
 }
 
+func (rcv *Geometry) GeometryType() []byte {
+	return rcv.GEOMETRY_TYPE()
+}
+
 /// Type of geometry
 /// Coordinates of the geometry
 func (rcv *Geometry) COORDINATES(j int) float32 {
@@ -62,12 +66,20 @@ func (rcv *Geometry) COORDINATES(j int) float32 {
 	return 0
 }
 
+func (rcv *Geometry) Coordinates(j int) float32 {
+	return rcv.COORDINATES(j)
+}
+
 func (rcv *Geometry) COORDINATESLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *Geometry) CoordinatesLength() int {
+	return rcv.COORDINATESLength()
 }
 
 /// Coordinates of the geometry
@@ -80,17 +92,30 @@ func (rcv *Geometry) MutateCOORDINATES(j int, n float32) bool {
 	return false
 }
 
+func (rcv *Geometry) MutateCoordinates(j int, n float32) bool {
+	return rcv.MutateCOORDINATES(j, n)
+}
+
 func GeometryStart(builder *flatbuffers.Builder) {
 	builder.StartObject(2)
 }
 func GeometryAddGEOMETRY_TYPE(builder *flatbuffers.Builder, GEOMETRY_TYPE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(GEOMETRY_TYPE), 0)
 }
+func GeometryAddGeometryType(builder *flatbuffers.Builder, GEOMETRY_TYPE flatbuffers.UOffsetT) {
+	GeometryAddGEOMETRY_TYPE(builder, GEOMETRY_TYPE)
+}
 func GeometryAddCOORDINATES(builder *flatbuffers.Builder, COORDINATES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(COORDINATES), 0)
 }
+func GeometryAddCoordinates(builder *flatbuffers.Builder, COORDINATES flatbuffers.UOffsetT) {
+	GeometryAddCOORDINATES(builder, COORDINATES)
+}
 func GeometryStartCOORDINATESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func GeometryStartCoordinatesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return GeometryStartCOORDINATESVector(builder, numElems)
 }
 func GeometryEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

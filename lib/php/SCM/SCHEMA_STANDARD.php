@@ -42,14 +42,14 @@ class SCHEMA_STANDARD extends Table
     }
 
     /// Unique identifier for the standard
-    public function getKey()
+    public function getkey()
     {
         $o = $this->__offset(4);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
     /// IDL
-    public function getIdl()
+    public function getidl()
     {
         $o = $this->__offset(6);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
@@ -60,7 +60,7 @@ class SCHEMA_STANDARD extends Table
      * @param int offset
      * @return string
      */
-    public function getFiles($j)
+    public function getfiles($j)
     {
         $o = $this->__offset(8);
         return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
@@ -69,7 +69,7 @@ class SCHEMA_STANDARD extends Table
     /**
      * @return int
      */
-    public function getFilesLength()
+    public function getfilesLength()
     {
         $o = $this->__offset(8);
         return $o != 0 ? $this->__vector_len($o) : 0;
@@ -91,9 +91,9 @@ class SCHEMA_STANDARD extends Table
     public static function createSCHEMA_STANDARD(FlatBufferBuilder $builder, $key, $idl, $files)
     {
         $builder->startObject(3);
-        self::addKey($builder, $key);
-        self::addIdl($builder, $idl);
-        self::addFiles($builder, $files);
+        self::addkey($builder, $key);
+        self::addidl($builder, $idl);
+        self::addfiles($builder, $files);
         $o = $builder->endObject();
         return $o;
     }
@@ -103,7 +103,7 @@ class SCHEMA_STANDARD extends Table
      * @param StringOffset
      * @return void
      */
-    public static function addKey(FlatBufferBuilder $builder, $key)
+    public static function addkey(FlatBufferBuilder $builder, $key)
     {
         $builder->addOffsetX(0, $key, 0);
     }
@@ -113,7 +113,7 @@ class SCHEMA_STANDARD extends Table
      * @param StringOffset
      * @return void
      */
-    public static function addIdl(FlatBufferBuilder $builder, $idl)
+    public static function addidl(FlatBufferBuilder $builder, $idl)
     {
         $builder->addOffsetX(1, $idl, 0);
     }
@@ -123,7 +123,7 @@ class SCHEMA_STANDARD extends Table
      * @param VectorOffset
      * @return void
      */
-    public static function addFiles(FlatBufferBuilder $builder, $files)
+    public static function addfiles(FlatBufferBuilder $builder, $files)
     {
         $builder->addOffsetX(2, $files, 0);
     }
@@ -133,7 +133,7 @@ class SCHEMA_STANDARD extends Table
      * @param array offset array
      * @return int vector offset
      */
-    public static function createFilesVector(FlatBufferBuilder $builder, array $data)
+    public static function createfilesVector(FlatBufferBuilder $builder, array $data)
     {
         $builder->startVector(4, count($data), 4);
         for ($i = count($data) - 1; $i >= 0; $i--) {
@@ -147,7 +147,7 @@ class SCHEMA_STANDARD extends Table
      * @param int $numElems
      * @return void
      */
-    public static function startFilesVector(FlatBufferBuilder $builder, $numElems)
+    public static function startfilesVector(FlatBufferBuilder $builder, $numElems)
     {
         $builder->startVector(4, $numElems, 4);
     }

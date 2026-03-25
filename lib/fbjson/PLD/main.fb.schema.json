@@ -770,47 +770,9 @@
         }
       },
       "additionalProperties": false
-    },
-    "PLD": {
-      "type": "object",
-      "description": "Payload Information",
-      "properties": {
-        "PAYLOAD_DURATION": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "MASS_AT_LAUNCH": {
-          "type": "number",
-          "x-flatbuffer-type": "float"
-        },
-        "DIMENSIONS": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "SOLAR_ARRAY_AREA": {
-          "type": "number",
-          "x-flatbuffer-type": "float"
-        },
-        "SOLAR_ARRAY_DIMENSIONS": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "NOMINAL_OPERATIONAL_LIFETIME": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "INSTRUMENTS": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/IDM"
-          },
-          "x-flatbuffer-type": "[IDM]"
-        }
-      },
-      "additionalProperties": false
     }
   },
-  "$ref": "#/definitions/PLD",
+  "$ref": "#/definitions/IDM",
   "x-flatbuffer-root-type": "PLD",
   "x-flatbuffer-file-identifier": "$PLD"
 }

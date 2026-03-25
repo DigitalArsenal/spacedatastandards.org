@@ -130,6 +130,12 @@ def propagatorConfigStartFORCE_MODELSVector(builder, numElems):
 def StartFORCE_MODELSVector(builder, numElems):
     return propagatorConfigStartFORCE_MODELSVector(builder, numElems)
 
+def propagatorConfigCreateFORCE_MODELSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateFORCE_MODELSVector(builder, data):
+    propagatorConfigCreateFORCE_MODELSVector(builder, data)
+
 def propagatorConfigAddEPOCH(builder, EPOCH):
     builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(EPOCH), 0)
 
@@ -154,6 +160,16 @@ def propagatorConfigStartZONAL_HARMONIC_TERMSVector(builder, numElems):
 def StartZONAL_HARMONIC_TERMSVector(builder, numElems):
     return propagatorConfigStartZONAL_HARMONIC_TERMSVector(builder, numElems)
 
+def propagatorConfigCreateZONAL_HARMONIC_TERMSVector(builder, data):
+    data = list(data)
+    builder.StartVector(1, len(data), 1)
+    for item in reversed(data):
+        builder.PrependInt8(item)
+    return builder.EndVector()
+
+def CreateZONAL_HARMONIC_TERMSVector(builder, data):
+    propagatorConfigCreateZONAL_HARMONIC_TERMSVector(builder, data)
+
 def propagatorConfigEnd(builder):
     return builder.EndObject()
 
@@ -168,19 +184,27 @@ except:
 class propagatorConfigT(object):
 
     # propagatorConfigT
-    def __init__(self):
-        self.PROPAGATOR_NAME = None  # type: str
-        self.PROPAGATOR_TYPE = 0  # type: int
-        self.FORCE_MODELS = None  # type: List[str]
-        self.EPOCH = None  # type: str
-        self.TIME_STEP = 0.0  # type: float
-        self.ZONAL_HARMONIC_TERMS = None  # type: List[int]
+    def __init__(
+        self,
+        PROPAGATOR_NAME = None,
+        PROPAGATOR_TYPE = 0,
+        FORCE_MODELS = None,
+        EPOCH = None,
+        TIME_STEP = 0.0,
+        ZONAL_HARMONIC_TERMS = None,
+    ):
+        self.PROPAGATOR_NAME = PROPAGATOR_NAME  # type: Optional[str]
+        self.PROPAGATOR_TYPE = PROPAGATOR_TYPE  # type: int
+        self.FORCE_MODELS = FORCE_MODELS  # type: Optional[List[Optional[str]]]
+        self.EPOCH = EPOCH  # type: Optional[str]
+        self.TIME_STEP = TIME_STEP  # type: float
+        self.ZONAL_HARMONIC_TERMS = ZONAL_HARMONIC_TERMS  # type: Optional[List[int]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        propagatorConfig = propagatorConfig()
-        propagatorConfig.Init(buf, pos)
-        return cls.InitFromObj(propagatorConfig)
+        tmpPropagatorConfig = propagatorConfig()
+        tmpPropagatorConfig.Init(buf, pos)
+        return cls.InitFromObj(tmpPropagatorConfig)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -188,9 +212,9 @@ class propagatorConfigT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, propagatorConfig):
+    def InitFromObj(cls, tmpPropagatorConfig):
         x = propagatorConfigT()
-        x._UnPack(propagatorConfig)
+        x._UnPack(tmpPropagatorConfig)
         return x
 
     # propagatorConfigT

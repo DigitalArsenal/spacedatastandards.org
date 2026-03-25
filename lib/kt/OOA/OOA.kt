@@ -32,7 +32,7 @@ class OOA : Table() {
     /**
      * Unique identifier
      */
-    val ID : String?
+    val id : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class OOA : Table() {
                 null
             }
         }
-    val IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val idAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun idInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Reference to parent on-orbit object
      */
-    val ID_ON_ORBIT : String?
+    val idOnOrbit : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -55,12 +55,12 @@ class OOA : Table() {
                 null
             }
         }
-    val ID_ON_ORBITAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun ID_ON_ORBITInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val idOnOrbitAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun idOnOrbitInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * Reference to antenna specification
      */
-    val ID_ANTENNA : String?
+    val idAntenna : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -69,12 +69,12 @@ class OOA : Table() {
                 null
             }
         }
-    val ID_ANTENNAAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun ID_ANTENNAInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val idAntennaAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun idAntennaInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
     /**
      * Antenna name or designation
      */
-    val NAME : String?
+    val name : String?
         get() {
             val o = __offset(10)
             return if (o != 0) {
@@ -83,12 +83,12 @@ class OOA : Table() {
                 null
             }
         }
-    val NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
-    fun NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
+    val nameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(10, 1)
+    fun nameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 10, 1)
     /**
      * Antenna type (e.g., PARABOLIC, PHASED_ARRAY, HORN, HELICAL, DIPOLE, PATCH, YAGI)
      */
-    val ANTENNA_TYPE : String?
+    val antennaType : String?
         get() {
             val o = __offset(12)
             return if (o != 0) {
@@ -97,12 +97,12 @@ class OOA : Table() {
                 null
             }
         }
-    val ANTENNA_TYPEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
-    fun ANTENNA_TYPEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
+    val antennaTypeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(12, 1)
+    fun antennaTypeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 12, 1)
     /**
      * Number of antennas of this type
      */
-    val QUANTITY : UInt
+    val quantity : UInt
         get() {
             val o = __offset(14)
             return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
@@ -110,7 +110,7 @@ class OOA : Table() {
     /**
      * Operating frequency band (e.g., UHF, L, S, C, X, Ku, Ka, V, W)
      */
-    val BAND : String?
+    val band : String?
         get() {
             val o = __offset(16)
             return if (o != 0) {
@@ -119,12 +119,12 @@ class OOA : Table() {
                 null
             }
         }
-    val BANDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(16, 1)
-    fun BANDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 16, 1)
+    val bandAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(16, 1)
+    fun bandInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 16, 1)
     /**
      * Minimum operating frequency in MHz
      */
-    val FREQ_MIN : Double
+    val freqMin : Double
         get() {
             val o = __offset(18)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -132,7 +132,7 @@ class OOA : Table() {
     /**
      * Maximum operating frequency in MHz
      */
-    val FREQ_MAX : Double
+    val freqMax : Double
         get() {
             val o = __offset(20)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -140,7 +140,7 @@ class OOA : Table() {
     /**
      * Antenna gain in dBi
      */
-    val GAIN : Double
+    val gain : Double
         get() {
             val o = __offset(22)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -148,7 +148,7 @@ class OOA : Table() {
     /**
      * Antenna diameter or aperture in meters
      */
-    val APERTURE : Double
+    val aperture : Double
         get() {
             val o = __offset(24)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -156,7 +156,7 @@ class OOA : Table() {
     /**
      * Beamwidth in degrees
      */
-    val BEAMWIDTH : Double
+    val beamwidth : Double
         get() {
             val o = __offset(26)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -164,7 +164,7 @@ class OOA : Table() {
     /**
      * Polarization type (e.g., LINEAR, CIRCULAR, DUAL, RHCP, LHCP)
      */
-    val POLARIZATION : String?
+    val polarization : String?
         get() {
             val o = __offset(28)
             return if (o != 0) {
@@ -173,12 +173,12 @@ class OOA : Table() {
                 null
             }
         }
-    val POLARIZATIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(28, 1)
-    fun POLARIZATIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 28, 1)
+    val polarizationAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(28, 1)
+    fun polarizationInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 28, 1)
     /**
      * Whether the antenna is steerable
      */
-    val STEERABLE : Boolean
+    val steerable : Boolean
         get() {
             val o = __offset(30)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -186,7 +186,7 @@ class OOA : Table() {
     /**
      * Maximum slew rate in degrees per second
      */
-    val SLEW_RATE : Double
+    val slewRate : Double
         get() {
             val o = __offset(32)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -194,7 +194,7 @@ class OOA : Table() {
     /**
      * Purpose or function (e.g., TT_C, PAYLOAD, CROSSLINK, GPS)
      */
-    val PURPOSE : String?
+    val purpose : String?
         get() {
             val o = __offset(34)
             return if (o != 0) {
@@ -203,12 +203,12 @@ class OOA : Table() {
                 null
             }
         }
-    val PURPOSEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(34, 1)
-    fun PURPOSEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 34, 1)
+    val purposeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(34, 1)
+    fun purposeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 34, 1)
     /**
      * Additional notes
      */
-    val NOTES : String?
+    val notes : String?
         get() {
             val o = __offset(36)
             return if (o != 0) {
@@ -217,55 +217,55 @@ class OOA : Table() {
                 null
             }
         }
-    val NOTESAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(36, 1)
-    fun NOTESInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 36, 1)
+    val notesAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(36, 1)
+    fun notesInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 36, 1)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsOOA(_bb: ByteBuffer): OOA = getRootAsOOA(_bb, OOA())
         fun getRootAsOOA(_bb: ByteBuffer, obj: OOA): OOA {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun OOABufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$OOA")
-        fun createOOA(builder: FlatBufferBuilder, IDOffset: Int, ID_ON_ORBITOffset: Int, ID_ANTENNAOffset: Int, NAMEOffset: Int, ANTENNA_TYPEOffset: Int, QUANTITY: UInt, BANDOffset: Int, FREQ_MIN: Double, FREQ_MAX: Double, GAIN: Double, APERTURE: Double, BEAMWIDTH: Double, POLARIZATIONOffset: Int, STEERABLE: Boolean, SLEW_RATE: Double, PURPOSEOffset: Int, NOTESOffset: Int) : Int {
+        fun createOOA(builder: FlatBufferBuilder, idOffset: Int, idOnOrbitOffset: Int, idAntennaOffset: Int, nameOffset: Int, antennaTypeOffset: Int, quantity: UInt, bandOffset: Int, freqMin: Double, freqMax: Double, gain: Double, aperture: Double, beamwidth: Double, polarizationOffset: Int, steerable: Boolean, slewRate: Double, purposeOffset: Int, notesOffset: Int) : Int {
             builder.startTable(17)
-            addSLEW_RATE(builder, SLEW_RATE)
-            addBEAMWIDTH(builder, BEAMWIDTH)
-            addAPERTURE(builder, APERTURE)
-            addGAIN(builder, GAIN)
-            addFREQ_MAX(builder, FREQ_MAX)
-            addFREQ_MIN(builder, FREQ_MIN)
-            addNOTES(builder, NOTESOffset)
-            addPURPOSE(builder, PURPOSEOffset)
-            addPOLARIZATION(builder, POLARIZATIONOffset)
-            addBAND(builder, BANDOffset)
-            addQUANTITY(builder, QUANTITY)
-            addANTENNA_TYPE(builder, ANTENNA_TYPEOffset)
-            addNAME(builder, NAMEOffset)
-            addID_ANTENNA(builder, ID_ANTENNAOffset)
-            addID_ON_ORBIT(builder, ID_ON_ORBITOffset)
-            addID(builder, IDOffset)
-            addSTEERABLE(builder, STEERABLE)
+            addSLEWRATE(builder, slewRate)
+            addBEAMWIDTH(builder, beamwidth)
+            addAPERTURE(builder, aperture)
+            addGAIN(builder, gain)
+            addFREQMAX(builder, freqMax)
+            addFREQMIN(builder, freqMin)
+            addNOTES(builder, notesOffset)
+            addPURPOSE(builder, purposeOffset)
+            addPOLARIZATION(builder, polarizationOffset)
+            addBAND(builder, bandOffset)
+            addQUANTITY(builder, quantity)
+            addANTENNATYPE(builder, antennaTypeOffset)
+            addNAME(builder, nameOffset)
+            addIDANTENNA(builder, idAntennaOffset)
+            addIDONORBIT(builder, idOnOrbitOffset)
+            addID(builder, idOffset)
+            addSTEERABLE(builder, steerable)
             return endOOA(builder)
         }
         fun startOOA(builder: FlatBufferBuilder) = builder.startTable(17)
-        fun addID(builder: FlatBufferBuilder, ID: Int) = builder.addOffset(0, ID, 0)
-        fun addID_ON_ORBIT(builder: FlatBufferBuilder, ID_ON_ORBIT: Int) = builder.addOffset(1, ID_ON_ORBIT, 0)
-        fun addID_ANTENNA(builder: FlatBufferBuilder, ID_ANTENNA: Int) = builder.addOffset(2, ID_ANTENNA, 0)
-        fun addNAME(builder: FlatBufferBuilder, NAME: Int) = builder.addOffset(3, NAME, 0)
-        fun addANTENNA_TYPE(builder: FlatBufferBuilder, ANTENNA_TYPE: Int) = builder.addOffset(4, ANTENNA_TYPE, 0)
-        fun addQUANTITY(builder: FlatBufferBuilder, QUANTITY: UInt) = builder.addInt(5, QUANTITY.toInt(), 0)
-        fun addBAND(builder: FlatBufferBuilder, BAND: Int) = builder.addOffset(6, BAND, 0)
-        fun addFREQ_MIN(builder: FlatBufferBuilder, FREQ_MIN: Double) = builder.addDouble(7, FREQ_MIN, 0.0)
-        fun addFREQ_MAX(builder: FlatBufferBuilder, FREQ_MAX: Double) = builder.addDouble(8, FREQ_MAX, 0.0)
-        fun addGAIN(builder: FlatBufferBuilder, GAIN: Double) = builder.addDouble(9, GAIN, 0.0)
-        fun addAPERTURE(builder: FlatBufferBuilder, APERTURE: Double) = builder.addDouble(10, APERTURE, 0.0)
-        fun addBEAMWIDTH(builder: FlatBufferBuilder, BEAMWIDTH: Double) = builder.addDouble(11, BEAMWIDTH, 0.0)
-        fun addPOLARIZATION(builder: FlatBufferBuilder, POLARIZATION: Int) = builder.addOffset(12, POLARIZATION, 0)
-        fun addSTEERABLE(builder: FlatBufferBuilder, STEERABLE: Boolean) = builder.addBoolean(13, STEERABLE, false)
-        fun addSLEW_RATE(builder: FlatBufferBuilder, SLEW_RATE: Double) = builder.addDouble(14, SLEW_RATE, 0.0)
-        fun addPURPOSE(builder: FlatBufferBuilder, PURPOSE: Int) = builder.addOffset(15, PURPOSE, 0)
-        fun addNOTES(builder: FlatBufferBuilder, NOTES: Int) = builder.addOffset(16, NOTES, 0)
+        fun addID(builder: FlatBufferBuilder, id: Int) = builder.addOffset(0, id, 0)
+        fun addIDONORBIT(builder: FlatBufferBuilder, idOnOrbit: Int) = builder.addOffset(1, idOnOrbit, 0)
+        fun addIDANTENNA(builder: FlatBufferBuilder, idAntenna: Int) = builder.addOffset(2, idAntenna, 0)
+        fun addNAME(builder: FlatBufferBuilder, name: Int) = builder.addOffset(3, name, 0)
+        fun addANTENNATYPE(builder: FlatBufferBuilder, antennaType: Int) = builder.addOffset(4, antennaType, 0)
+        fun addQUANTITY(builder: FlatBufferBuilder, quantity: UInt) = builder.addInt(5, quantity.toInt(), 0)
+        fun addBAND(builder: FlatBufferBuilder, band: Int) = builder.addOffset(6, band, 0)
+        fun addFREQMIN(builder: FlatBufferBuilder, freqMin: Double) = builder.addDouble(7, freqMin, 0.0)
+        fun addFREQMAX(builder: FlatBufferBuilder, freqMax: Double) = builder.addDouble(8, freqMax, 0.0)
+        fun addGAIN(builder: FlatBufferBuilder, gain: Double) = builder.addDouble(9, gain, 0.0)
+        fun addAPERTURE(builder: FlatBufferBuilder, aperture: Double) = builder.addDouble(10, aperture, 0.0)
+        fun addBEAMWIDTH(builder: FlatBufferBuilder, beamwidth: Double) = builder.addDouble(11, beamwidth, 0.0)
+        fun addPOLARIZATION(builder: FlatBufferBuilder, polarization: Int) = builder.addOffset(12, polarization, 0)
+        fun addSTEERABLE(builder: FlatBufferBuilder, steerable: Boolean) = builder.addBoolean(13, steerable, false)
+        fun addSLEWRATE(builder: FlatBufferBuilder, slewRate: Double) = builder.addDouble(14, slewRate, 0.0)
+        fun addPURPOSE(builder: FlatBufferBuilder, purpose: Int) = builder.addOffset(15, purpose, 0)
+        fun addNOTES(builder: FlatBufferBuilder, notes: Int) = builder.addOffset(16, notes, 0)
         fun endOOA(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

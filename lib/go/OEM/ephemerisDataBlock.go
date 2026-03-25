@@ -51,6 +51,10 @@ func (rcv *ephemerisDataBlock) COMMENT() []byte {
 	return nil
 }
 
+func (rcv *ephemerisDataBlock) Comment() []byte {
+	return rcv.COMMENT()
+}
+
 /// Plain-Text Comment
 /// Satellite name for the first object
 func (rcv *ephemerisDataBlock) OBJECT(obj *CAT) *CAT {
@@ -66,6 +70,10 @@ func (rcv *ephemerisDataBlock) OBJECT(obj *CAT) *CAT {
 	return nil
 }
 
+func (rcv *ephemerisDataBlock) Object(obj *CAT) *CAT {
+	return rcv.OBJECT(obj)
+}
+
 /// Satellite name for the first object
 /// Origin of reference frame (EARTH, MARS, MOON, etc.)
 func (rcv *ephemerisDataBlock) CENTER_NAME() []byte {
@@ -74,6 +82,10 @@ func (rcv *ephemerisDataBlock) CENTER_NAME() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *ephemerisDataBlock) CenterName() []byte {
+	return rcv.CENTER_NAME()
 }
 
 /// Origin of reference frame (EARTH, MARS, MOON, etc.)
@@ -91,6 +103,10 @@ func (rcv *ephemerisDataBlock) REFERENCE_FRAME(obj *RFM) *RFM {
 	return nil
 }
 
+func (rcv *ephemerisDataBlock) ReferenceFrame(obj *RFM) *RFM {
+	return rcv.REFERENCE_FRAME(obj)
+}
+
 /// Name of the reference frame (TEME, EME2000, etc.)
 /// Epoch of reference frame, if not intrinsic to the definition of the reference frame
 func (rcv *ephemerisDataBlock) REFERENCE_FRAME_EPOCH() []byte {
@@ -99,6 +115,10 @@ func (rcv *ephemerisDataBlock) REFERENCE_FRAME_EPOCH() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *ephemerisDataBlock) ReferenceFrameEpoch() []byte {
+	return rcv.REFERENCE_FRAME_EPOCH()
 }
 
 /// Epoch of reference frame, if not intrinsic to the definition of the reference frame
@@ -116,6 +136,10 @@ func (rcv *ephemerisDataBlock) COV_REFERENCE_FRAME(obj *RFM) *RFM {
 	return nil
 }
 
+func (rcv *ephemerisDataBlock) CovReferenceFrame(obj *RFM) *RFM {
+	return rcv.COV_REFERENCE_FRAME(obj)
+}
+
 /// Reference frame for the covariance matrix
 /// Time system used for the orbit state and covariance matrix. (UTC)
 func (rcv *ephemerisDataBlock) TIME_SYSTEM() timeSystem {
@@ -126,9 +150,17 @@ func (rcv *ephemerisDataBlock) TIME_SYSTEM() timeSystem {
 	return 0
 }
 
+func (rcv *ephemerisDataBlock) TimeSystem() timeSystem {
+	return rcv.TIME_SYSTEM()
+}
+
 /// Time system used for the orbit state and covariance matrix. (UTC)
 func (rcv *ephemerisDataBlock) MutateTIME_SYSTEM(n timeSystem) bool {
 	return rcv._tab.MutateInt8Slot(16, int8(n))
+}
+
+func (rcv *ephemerisDataBlock) MutateTimeSystem(n timeSystem) bool {
+	return rcv.MutateTIME_SYSTEM(n)
 }
 
 /// Start of TOTAL time span covered by ephemeris data and covariance data (ISO 8601)
@@ -138,6 +170,10 @@ func (rcv *ephemerisDataBlock) START_TIME() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *ephemerisDataBlock) StartTime() []byte {
+	return rcv.START_TIME()
 }
 
 /// Start of TOTAL time span covered by ephemeris data and covariance data (ISO 8601)
@@ -150,6 +186,10 @@ func (rcv *ephemerisDataBlock) USEABLE_START_TIME() []byte {
 	return nil
 }
 
+func (rcv *ephemerisDataBlock) UseableStartTime() []byte {
+	return rcv.USEABLE_START_TIME()
+}
+
 /// Optional start USEABLE time span covered by ephemeris data (ISO 8601)
 /// Optional end of USEABLE time span covered by ephemeris data (ISO 8601)
 func (rcv *ephemerisDataBlock) USEABLE_STOP_TIME() []byte {
@@ -160,6 +200,10 @@ func (rcv *ephemerisDataBlock) USEABLE_STOP_TIME() []byte {
 	return nil
 }
 
+func (rcv *ephemerisDataBlock) UseableStopTime() []byte {
+	return rcv.USEABLE_STOP_TIME()
+}
+
 /// Optional end of USEABLE time span covered by ephemeris data (ISO 8601)
 /// End of TOTAL time span covered by ephemeris data and covariance data (ISO 8601)
 func (rcv *ephemerisDataBlock) STOP_TIME() []byte {
@@ -168,6 +212,10 @@ func (rcv *ephemerisDataBlock) STOP_TIME() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *ephemerisDataBlock) StopTime() []byte {
+	return rcv.STOP_TIME()
 }
 
 /// End of TOTAL time span covered by ephemeris data and covariance data (ISO 8601)
@@ -184,6 +232,10 @@ func (rcv *ephemerisDataBlock) INTERPOLATION() []byte {
 	return nil
 }
 
+func (rcv *ephemerisDataBlock) Interpolation() []byte {
+	return rcv.INTERPOLATION()
+}
+
 /// Recommended interpolation method for ephemeris data.
 /// Supported methods: Hermite, Linear, Lagrange, Chebyshev.
 /// When set to "Chebyshev", parsers should use POLYNOMIAL_POSITION_RECORDS
@@ -198,9 +250,17 @@ func (rcv *ephemerisDataBlock) INTERPOLATION_DEGREE() uint32 {
 	return 0
 }
 
+func (rcv *ephemerisDataBlock) InterpolationDegree() uint32 {
+	return rcv.INTERPOLATION_DEGREE()
+}
+
 /// Recommended interpolation degree for ephemeris data
 func (rcv *ephemerisDataBlock) MutateINTERPOLATION_DEGREE(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(28, n)
+}
+
+func (rcv *ephemerisDataBlock) MutateInterpolationDegree(n uint32) bool {
+	return rcv.MutateINTERPOLATION_DEGREE(n)
 }
 
 /// Time interval between ephemeris states in seconds.
@@ -214,11 +274,19 @@ func (rcv *ephemerisDataBlock) STEP_SIZE() float64 {
 	return 0.0
 }
 
+func (rcv *ephemerisDataBlock) StepSize() float64 {
+	return rcv.STEP_SIZE()
+}
+
 /// Time interval between ephemeris states in seconds.
 /// If > 0: Use compact EPHEMERIS_DATA array (times are implicit).
 /// If 0 or omitted: Use EPHEMERIS_DATA_LINES with explicit epochs.
 func (rcv *ephemerisDataBlock) MutateSTEP_SIZE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(30, n)
+}
+
+func (rcv *ephemerisDataBlock) MutateStepSize(n float64) bool {
+	return rcv.MutateSTEP_SIZE(n)
 }
 
 /// Number of components per state vector in EPHEMERIS_DATA array.
@@ -233,12 +301,20 @@ func (rcv *ephemerisDataBlock) STATE_VECTOR_SIZE() byte {
 	return 6
 }
 
+func (rcv *ephemerisDataBlock) StateVectorSize() byte {
+	return rcv.STATE_VECTOR_SIZE()
+}
+
 /// Number of components per state vector in EPHEMERIS_DATA array.
 /// 6 = position + velocity (X, Y, Z, X_DOT, Y_DOT, Z_DOT)
 /// 9 = position + velocity + acceleration (adds X_DDOT, Y_DDOT, Z_DDOT)
 /// Only used when STEP_SIZE > 0. Default is 6.
 func (rcv *ephemerisDataBlock) MutateSTATE_VECTOR_SIZE(n byte) bool {
 	return rcv._tab.MutateByteSlot(32, n)
+}
+
+func (rcv *ephemerisDataBlock) MutateStateVectorSize(n byte) bool {
+	return rcv.MutateSTATE_VECTOR_SIZE(n)
 }
 
 /// Compact ephemeris data as row-major array of doubles.
@@ -256,12 +332,20 @@ func (rcv *ephemerisDataBlock) EPHEMERIS_DATA(j int) float64 {
 	return 0
 }
 
+func (rcv *ephemerisDataBlock) EphemerisData(j int) float64 {
+	return rcv.EPHEMERIS_DATA(j)
+}
+
 func (rcv *ephemerisDataBlock) EPHEMERIS_DATALength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *ephemerisDataBlock) EphemerisDataLength() int {
+	return rcv.EPHEMERIS_DATALength()
 }
 
 /// Compact ephemeris data as row-major array of doubles.
@@ -279,6 +363,10 @@ func (rcv *ephemerisDataBlock) MutateEPHEMERIS_DATA(j int, n float64) bool {
 	return false
 }
 
+func (rcv *ephemerisDataBlock) MutateEphemerisData(j int, n float64) bool {
+	return rcv.MutateEPHEMERIS_DATA(j, n)
+}
+
 /// Array of ephemeris data lines with explicit epochs.
 /// Only used when STEP_SIZE == 0 or omitted (non-uniform time steps).
 /// Each line contains its own EPOCH timestamp.
@@ -288,10 +376,17 @@ func (rcv *ephemerisDataBlock) EPHEMERIS_DATA_LINES(obj *ephemerisDataLine, j in
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(ephemerisDataLine)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *ephemerisDataBlock) EphemerisDataLines(obj *ephemerisDataLine, j int) bool {
+	return rcv.EPHEMERIS_DATA_LINES(obj, j)
 }
 
 func (rcv *ephemerisDataBlock) EPHEMERIS_DATA_LINESLength() int {
@@ -300,6 +395,10 @@ func (rcv *ephemerisDataBlock) EPHEMERIS_DATA_LINESLength() int {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *ephemerisDataBlock) EphemerisDataLinesLength() int {
+	return rcv.EPHEMERIS_DATA_LINESLength()
 }
 
 /// Array of ephemeris data lines with explicit epochs.
@@ -312,10 +411,17 @@ func (rcv *ephemerisDataBlock) COVARIANCE_MATRIX_LINES(obj *covarianceMatrixLine
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(covarianceMatrixLine)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *ephemerisDataBlock) CovarianceMatrixLines(obj *covarianceMatrixLine, j int) bool {
+	return rcv.COVARIANCE_MATRIX_LINES(obj, j)
 }
 
 func (rcv *ephemerisDataBlock) COVARIANCE_MATRIX_LINESLength() int {
@@ -324,6 +430,10 @@ func (rcv *ephemerisDataBlock) COVARIANCE_MATRIX_LINESLength() int {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *ephemerisDataBlock) CovarianceMatrixLinesLength() int {
+	return rcv.COVARIANCE_MATRIX_LINESLength()
 }
 
 /// Array of covariance matrix lines (optional)
@@ -337,10 +447,17 @@ func (rcv *ephemerisDataBlock) POLYNOMIAL_POSITION_RECORDS(obj *PPEPositionRecor
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(PPEPositionRecord)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *ephemerisDataBlock) PolynomialPositionRecords(obj *PPEPositionRecord, j int) bool {
+	return rcv.POLYNOMIAL_POSITION_RECORDS(obj, j)
 }
 
 func (rcv *ephemerisDataBlock) POLYNOMIAL_POSITION_RECORDSLength() int {
@@ -349,6 +466,10 @@ func (rcv *ephemerisDataBlock) POLYNOMIAL_POSITION_RECORDSLength() int {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *ephemerisDataBlock) PolynomialPositionRecordsLength() int {
+	return rcv.POLYNOMIAL_POSITION_RECORDSLength()
 }
 
 /// Optional polynomial position records for high-fidelity interpolation.
@@ -361,71 +482,140 @@ func ephemerisDataBlockStart(builder *flatbuffers.Builder) {
 func ephemerisDataBlockAddCOMMENT(builder *flatbuffers.Builder, COMMENT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(COMMENT), 0)
 }
+func ephemerisDataBlockAddComment(builder *flatbuffers.Builder, COMMENT flatbuffers.UOffsetT) {
+	ephemerisDataBlockAddCOMMENT(builder, COMMENT)
+}
 func ephemerisDataBlockAddOBJECT(builder *flatbuffers.Builder, OBJECT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(OBJECT), 0)
+}
+func ephemerisDataBlockAddObject(builder *flatbuffers.Builder, OBJECT flatbuffers.UOffsetT) {
+	ephemerisDataBlockAddOBJECT(builder, OBJECT)
 }
 func ephemerisDataBlockAddCENTER_NAME(builder *flatbuffers.Builder, CENTER_NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(CENTER_NAME), 0)
 }
+func ephemerisDataBlockAddCenterName(builder *flatbuffers.Builder, CENTER_NAME flatbuffers.UOffsetT) {
+	ephemerisDataBlockAddCENTER_NAME(builder, CENTER_NAME)
+}
 func ephemerisDataBlockAddREFERENCE_FRAME(builder *flatbuffers.Builder, REFERENCE_FRAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(REFERENCE_FRAME), 0)
+}
+func ephemerisDataBlockAddReferenceFrame(builder *flatbuffers.Builder, REFERENCE_FRAME flatbuffers.UOffsetT) {
+	ephemerisDataBlockAddREFERENCE_FRAME(builder, REFERENCE_FRAME)
 }
 func ephemerisDataBlockAddREFERENCE_FRAME_EPOCH(builder *flatbuffers.Builder, REFERENCE_FRAME_EPOCH flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(REFERENCE_FRAME_EPOCH), 0)
 }
+func ephemerisDataBlockAddReferenceFrameEpoch(builder *flatbuffers.Builder, REFERENCE_FRAME_EPOCH flatbuffers.UOffsetT) {
+	ephemerisDataBlockAddREFERENCE_FRAME_EPOCH(builder, REFERENCE_FRAME_EPOCH)
+}
 func ephemerisDataBlockAddCOV_REFERENCE_FRAME(builder *flatbuffers.Builder, COV_REFERENCE_FRAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(COV_REFERENCE_FRAME), 0)
+}
+func ephemerisDataBlockAddCovReferenceFrame(builder *flatbuffers.Builder, COV_REFERENCE_FRAME flatbuffers.UOffsetT) {
+	ephemerisDataBlockAddCOV_REFERENCE_FRAME(builder, COV_REFERENCE_FRAME)
 }
 func ephemerisDataBlockAddTIME_SYSTEM(builder *flatbuffers.Builder, TIME_SYSTEM timeSystem) {
 	builder.PrependInt8Slot(6, int8(TIME_SYSTEM), 0)
 }
+func ephemerisDataBlockAddTimeSystem(builder *flatbuffers.Builder, TIME_SYSTEM timeSystem) {
+	ephemerisDataBlockAddTIME_SYSTEM(builder, TIME_SYSTEM)
+}
 func ephemerisDataBlockAddSTART_TIME(builder *flatbuffers.Builder, START_TIME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(START_TIME), 0)
+}
+func ephemerisDataBlockAddStartTime(builder *flatbuffers.Builder, START_TIME flatbuffers.UOffsetT) {
+	ephemerisDataBlockAddSTART_TIME(builder, START_TIME)
 }
 func ephemerisDataBlockAddUSEABLE_START_TIME(builder *flatbuffers.Builder, USEABLE_START_TIME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(USEABLE_START_TIME), 0)
 }
+func ephemerisDataBlockAddUseableStartTime(builder *flatbuffers.Builder, USEABLE_START_TIME flatbuffers.UOffsetT) {
+	ephemerisDataBlockAddUSEABLE_START_TIME(builder, USEABLE_START_TIME)
+}
 func ephemerisDataBlockAddUSEABLE_STOP_TIME(builder *flatbuffers.Builder, USEABLE_STOP_TIME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(USEABLE_STOP_TIME), 0)
+}
+func ephemerisDataBlockAddUseableStopTime(builder *flatbuffers.Builder, USEABLE_STOP_TIME flatbuffers.UOffsetT) {
+	ephemerisDataBlockAddUSEABLE_STOP_TIME(builder, USEABLE_STOP_TIME)
 }
 func ephemerisDataBlockAddSTOP_TIME(builder *flatbuffers.Builder, STOP_TIME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(STOP_TIME), 0)
 }
+func ephemerisDataBlockAddStopTime(builder *flatbuffers.Builder, STOP_TIME flatbuffers.UOffsetT) {
+	ephemerisDataBlockAddSTOP_TIME(builder, STOP_TIME)
+}
 func ephemerisDataBlockAddINTERPOLATION(builder *flatbuffers.Builder, INTERPOLATION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(INTERPOLATION), 0)
+}
+func ephemerisDataBlockAddInterpolation(builder *flatbuffers.Builder, INTERPOLATION flatbuffers.UOffsetT) {
+	ephemerisDataBlockAddINTERPOLATION(builder, INTERPOLATION)
 }
 func ephemerisDataBlockAddINTERPOLATION_DEGREE(builder *flatbuffers.Builder, INTERPOLATION_DEGREE uint32) {
 	builder.PrependUint32Slot(12, INTERPOLATION_DEGREE, 0)
 }
+func ephemerisDataBlockAddInterpolationDegree(builder *flatbuffers.Builder, INTERPOLATION_DEGREE uint32) {
+	ephemerisDataBlockAddINTERPOLATION_DEGREE(builder, INTERPOLATION_DEGREE)
+}
 func ephemerisDataBlockAddSTEP_SIZE(builder *flatbuffers.Builder, STEP_SIZE float64) {
 	builder.PrependFloat64Slot(13, STEP_SIZE, 0.0)
+}
+func ephemerisDataBlockAddStepSize(builder *flatbuffers.Builder, STEP_SIZE float64) {
+	ephemerisDataBlockAddSTEP_SIZE(builder, STEP_SIZE)
 }
 func ephemerisDataBlockAddSTATE_VECTOR_SIZE(builder *flatbuffers.Builder, STATE_VECTOR_SIZE byte) {
 	builder.PrependByteSlot(14, STATE_VECTOR_SIZE, 6)
 }
+func ephemerisDataBlockAddStateVectorSize(builder *flatbuffers.Builder, STATE_VECTOR_SIZE byte) {
+	ephemerisDataBlockAddSTATE_VECTOR_SIZE(builder, STATE_VECTOR_SIZE)
+}
 func ephemerisDataBlockAddEPHEMERIS_DATA(builder *flatbuffers.Builder, EPHEMERIS_DATA flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(15, flatbuffers.UOffsetT(EPHEMERIS_DATA), 0)
+}
+func ephemerisDataBlockAddEphemerisData(builder *flatbuffers.Builder, EPHEMERIS_DATA flatbuffers.UOffsetT) {
+	ephemerisDataBlockAddEPHEMERIS_DATA(builder, EPHEMERIS_DATA)
 }
 func ephemerisDataBlockStartEPHEMERIS_DATAVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(8, numElems, 8)
 }
+func ephemerisDataBlockStartEphemerisDataVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return ephemerisDataBlockStartEPHEMERIS_DATAVector(builder, numElems)
+}
 func ephemerisDataBlockAddEPHEMERIS_DATA_LINES(builder *flatbuffers.Builder, EPHEMERIS_DATA_LINES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(16, flatbuffers.UOffsetT(EPHEMERIS_DATA_LINES), 0)
+}
+func ephemerisDataBlockAddEphemerisDataLines(builder *flatbuffers.Builder, EPHEMERIS_DATA_LINES flatbuffers.UOffsetT) {
+	ephemerisDataBlockAddEPHEMERIS_DATA_LINES(builder, EPHEMERIS_DATA_LINES)
 }
 func ephemerisDataBlockStartEPHEMERIS_DATA_LINESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
+func ephemerisDataBlockStartEphemerisDataLinesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return ephemerisDataBlockStartEPHEMERIS_DATA_LINESVector(builder, numElems)
+}
 func ephemerisDataBlockAddCOVARIANCE_MATRIX_LINES(builder *flatbuffers.Builder, COVARIANCE_MATRIX_LINES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(17, flatbuffers.UOffsetT(COVARIANCE_MATRIX_LINES), 0)
+}
+func ephemerisDataBlockAddCovarianceMatrixLines(builder *flatbuffers.Builder, COVARIANCE_MATRIX_LINES flatbuffers.UOffsetT) {
+	ephemerisDataBlockAddCOVARIANCE_MATRIX_LINES(builder, COVARIANCE_MATRIX_LINES)
 }
 func ephemerisDataBlockStartCOVARIANCE_MATRIX_LINESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
+func ephemerisDataBlockStartCovarianceMatrixLinesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return ephemerisDataBlockStartCOVARIANCE_MATRIX_LINESVector(builder, numElems)
+}
 func ephemerisDataBlockAddPOLYNOMIAL_POSITION_RECORDS(builder *flatbuffers.Builder, POLYNOMIAL_POSITION_RECORDS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(18, flatbuffers.UOffsetT(POLYNOMIAL_POSITION_RECORDS), 0)
 }
+func ephemerisDataBlockAddPolynomialPositionRecords(builder *flatbuffers.Builder, POLYNOMIAL_POSITION_RECORDS flatbuffers.UOffsetT) {
+	ephemerisDataBlockAddPOLYNOMIAL_POSITION_RECORDS(builder, POLYNOMIAL_POSITION_RECORDS)
+}
 func ephemerisDataBlockStartPOLYNOMIAL_POSITION_RECORDSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func ephemerisDataBlockStartPolynomialPositionRecordsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return ephemerisDataBlockStartPOLYNOMIAL_POSITION_RECORDSVector(builder, numElems)
 }
 func ephemerisDataBlockEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

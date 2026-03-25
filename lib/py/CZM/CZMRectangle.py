@@ -217,6 +217,16 @@ def CZMRectangleStartCOORDINATES_WSEN_DEGREESVector(builder, numElems):
 def StartCOORDINATES_WSEN_DEGREESVector(builder, numElems):
     return CZMRectangleStartCOORDINATES_WSEN_DEGREESVector(builder, numElems)
 
+def CZMRectangleCreateCOORDINATES_WSEN_DEGREESVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateCOORDINATES_WSEN_DEGREESVector(builder, data):
+    CZMRectangleCreateCOORDINATES_WSEN_DEGREESVector(builder, data)
+
 def CZMRectangleAddHEIGHT(builder, HEIGHT):
     builder.PrependFloat64Slot(2, HEIGHT, 0.0)
 
@@ -323,30 +333,49 @@ except:
 class CZMRectangleT(object):
 
     # CZMRectangleT
-    def __init__(self):
-        self.SHOW = False  # type: bool
-        self.COORDINATES_WSEN_DEGREES = None  # type: List[float]
-        self.HEIGHT = 0.0  # type: float
-        self.HEIGHT_REFERENCE = None  # type: str
-        self.EXTRUDED_HEIGHT = 0.0  # type: float
-        self.EXTRUDED_HEIGHT_REFERENCE = None  # type: str
-        self.ROTATION = 0.0  # type: float
-        self.ST_ROTATION = 0.0  # type: float
-        self.GRANULARITY = 0.0  # type: float
-        self.FILL = False  # type: bool
-        self.MATERIAL = None  # type: Optional[CZMMaterial.CZMMaterialT]
-        self.OUTLINE = False  # type: bool
-        self.OUTLINE_COLOR = None  # type: Optional[CZMColor.CZMColorT]
-        self.OUTLINE_WIDTH = 0.0  # type: float
-        self.SHADOWS = None  # type: str
-        self.CLASSIFICATION_TYPE = None  # type: str
-        self.Z_INDEX = 0  # type: int
+    def __init__(
+        self,
+        SHOW = False,
+        COORDINATES_WSEN_DEGREES = None,
+        HEIGHT = 0.0,
+        HEIGHT_REFERENCE = None,
+        EXTRUDED_HEIGHT = 0.0,
+        EXTRUDED_HEIGHT_REFERENCE = None,
+        ROTATION = 0.0,
+        ST_ROTATION = 0.0,
+        GRANULARITY = 0.0,
+        FILL = False,
+        MATERIAL = None,
+        OUTLINE = False,
+        OUTLINE_COLOR = None,
+        OUTLINE_WIDTH = 0.0,
+        SHADOWS = None,
+        CLASSIFICATION_TYPE = None,
+        Z_INDEX = 0,
+    ):
+        self.SHOW = SHOW  # type: bool
+        self.COORDINATES_WSEN_DEGREES = COORDINATES_WSEN_DEGREES  # type: Optional[List[float]]
+        self.HEIGHT = HEIGHT  # type: float
+        self.HEIGHT_REFERENCE = HEIGHT_REFERENCE  # type: Optional[str]
+        self.EXTRUDED_HEIGHT = EXTRUDED_HEIGHT  # type: float
+        self.EXTRUDED_HEIGHT_REFERENCE = EXTRUDED_HEIGHT_REFERENCE  # type: Optional[str]
+        self.ROTATION = ROTATION  # type: float
+        self.ST_ROTATION = ST_ROTATION  # type: float
+        self.GRANULARITY = GRANULARITY  # type: float
+        self.FILL = FILL  # type: bool
+        self.MATERIAL = MATERIAL  # type: Optional[CZMMaterial.CZMMaterialT]
+        self.OUTLINE = OUTLINE  # type: bool
+        self.OUTLINE_COLOR = OUTLINE_COLOR  # type: Optional[CZMColor.CZMColorT]
+        self.OUTLINE_WIDTH = OUTLINE_WIDTH  # type: float
+        self.SHADOWS = SHADOWS  # type: Optional[str]
+        self.CLASSIFICATION_TYPE = CLASSIFICATION_TYPE  # type: Optional[str]
+        self.Z_INDEX = Z_INDEX  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        czmrectangle = CZMRectangle()
-        czmrectangle.Init(buf, pos)
-        return cls.InitFromObj(czmrectangle)
+        tmpCzmrectangle = CZMRectangle()
+        tmpCzmrectangle.Init(buf, pos)
+        return cls.InitFromObj(tmpCzmrectangle)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -354,40 +383,40 @@ class CZMRectangleT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, czmrectangle):
+    def InitFromObj(cls, tmpCzmrectangle):
         x = CZMRectangleT()
-        x._UnPack(czmrectangle)
+        x._UnPack(tmpCzmrectangle)
         return x
 
     # CZMRectangleT
-    def _UnPack(self, czmrectangle):
-        if czmrectangle is None:
+    def _UnPack(self, CZMRectangle):
+        if CZMRectangle is None:
             return
-        self.SHOW = czmrectangle.SHOW()
-        if not czmrectangle.COORDINATES_WSEN_DEGREESIsNone():
+        self.SHOW = CZMRectangle.SHOW()
+        if not CZMRectangle.COORDINATES_WSEN_DEGREESIsNone():
             if np is None:
                 self.COORDINATES_WSEN_DEGREES = []
-                for i in range(czmrectangle.COORDINATES_WSEN_DEGREESLength()):
-                    self.COORDINATES_WSEN_DEGREES.append(czmrectangle.COORDINATES_WSEN_DEGREES(i))
+                for i in range(CZMRectangle.COORDINATES_WSEN_DEGREESLength()):
+                    self.COORDINATES_WSEN_DEGREES.append(CZMRectangle.COORDINATES_WSEN_DEGREES(i))
             else:
-                self.COORDINATES_WSEN_DEGREES = czmrectangle.COORDINATES_WSEN_DEGREESAsNumpy()
-        self.HEIGHT = czmrectangle.HEIGHT()
-        self.HEIGHT_REFERENCE = czmrectangle.HEIGHT_REFERENCE()
-        self.EXTRUDED_HEIGHT = czmrectangle.EXTRUDED_HEIGHT()
-        self.EXTRUDED_HEIGHT_REFERENCE = czmrectangle.EXTRUDED_HEIGHT_REFERENCE()
-        self.ROTATION = czmrectangle.ROTATION()
-        self.ST_ROTATION = czmrectangle.ST_ROTATION()
-        self.GRANULARITY = czmrectangle.GRANULARITY()
-        self.FILL = czmrectangle.FILL()
-        if czmrectangle.MATERIAL() is not None:
-            self.MATERIAL = CZMMaterial.CZMMaterialT.InitFromObj(czmrectangle.MATERIAL())
-        self.OUTLINE = czmrectangle.OUTLINE()
-        if czmrectangle.OUTLINE_COLOR() is not None:
-            self.OUTLINE_COLOR = CZMColor.CZMColorT.InitFromObj(czmrectangle.OUTLINE_COLOR())
-        self.OUTLINE_WIDTH = czmrectangle.OUTLINE_WIDTH()
-        self.SHADOWS = czmrectangle.SHADOWS()
-        self.CLASSIFICATION_TYPE = czmrectangle.CLASSIFICATION_TYPE()
-        self.Z_INDEX = czmrectangle.Z_INDEX()
+                self.COORDINATES_WSEN_DEGREES = CZMRectangle.COORDINATES_WSEN_DEGREESAsNumpy()
+        self.HEIGHT = CZMRectangle.HEIGHT()
+        self.HEIGHT_REFERENCE = CZMRectangle.HEIGHT_REFERENCE()
+        self.EXTRUDED_HEIGHT = CZMRectangle.EXTRUDED_HEIGHT()
+        self.EXTRUDED_HEIGHT_REFERENCE = CZMRectangle.EXTRUDED_HEIGHT_REFERENCE()
+        self.ROTATION = CZMRectangle.ROTATION()
+        self.ST_ROTATION = CZMRectangle.ST_ROTATION()
+        self.GRANULARITY = CZMRectangle.GRANULARITY()
+        self.FILL = CZMRectangle.FILL()
+        if CZMRectangle.MATERIAL() is not None:
+            self.MATERIAL = CZMMaterial.CZMMaterialT.InitFromObj(CZMRectangle.MATERIAL())
+        self.OUTLINE = CZMRectangle.OUTLINE()
+        if CZMRectangle.OUTLINE_COLOR() is not None:
+            self.OUTLINE_COLOR = CZMColor.CZMColorT.InitFromObj(CZMRectangle.OUTLINE_COLOR())
+        self.OUTLINE_WIDTH = CZMRectangle.OUTLINE_WIDTH()
+        self.SHADOWS = CZMRectangle.SHADOWS()
+        self.CLASSIFICATION_TYPE = CZMRectangle.CLASSIFICATION_TYPE()
+        self.Z_INDEX = CZMRectangle.Z_INDEX()
 
     # CZMRectangleT
     def Pack(self, builder):
@@ -436,5 +465,5 @@ class CZMRectangleT(object):
         if self.CLASSIFICATION_TYPE is not None:
             CZMRectangleAddCLASSIFICATION_TYPE(builder, CLASSIFICATION_TYPE)
         CZMRectangleAddZ_INDEX(builder, self.Z_INDEX)
-        czmrectangle = CZMRectangleEnd(builder)
-        return czmrectangle
+        CZMRectangle = CZMRectangleEnd(builder)
+        return CZMRectangle

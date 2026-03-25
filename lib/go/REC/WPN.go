@@ -62,8 +62,16 @@ func (rcv *WPN) CALIBER() float32 {
 	return 0.0
 }
 
+func (rcv *WPN) Caliber() float32 {
+	return rcv.CALIBER()
+}
+
 func (rcv *WPN) MutateCALIBER(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(4, n)
+}
+
+func (rcv *WPN) MutateCaliber(n float32) bool {
+	return rcv.MutateCALIBER(n)
 }
 
 func (rcv *WPN) MUZZLE_VELOCITY() float32 {
@@ -74,8 +82,16 @@ func (rcv *WPN) MUZZLE_VELOCITY() float32 {
 	return 0.0
 }
 
+func (rcv *WPN) MuzzleVelocity() float32 {
+	return rcv.MUZZLE_VELOCITY()
+}
+
 func (rcv *WPN) MutateMUZZLE_VELOCITY(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(6, n)
+}
+
+func (rcv *WPN) MutateMuzzleVelocity(n float32) bool {
+	return rcv.MutateMUZZLE_VELOCITY(n)
 }
 
 func (rcv *WPN) RATE_OF_FIRE() float32 {
@@ -86,8 +102,16 @@ func (rcv *WPN) RATE_OF_FIRE() float32 {
 	return 0.0
 }
 
+func (rcv *WPN) RateOfFire() float32 {
+	return rcv.RATE_OF_FIRE()
+}
+
 func (rcv *WPN) MutateRATE_OF_FIRE(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(8, n)
+}
+
+func (rcv *WPN) MutateRateOfFire(n float32) bool {
+	return rcv.MutateRATE_OF_FIRE(n)
 }
 
 func (rcv *WPN) DISPERSION() float32 {
@@ -98,8 +122,16 @@ func (rcv *WPN) DISPERSION() float32 {
 	return 0.0
 }
 
+func (rcv *WPN) Dispersion() float32 {
+	return rcv.DISPERSION()
+}
+
 func (rcv *WPN) MutateDISPERSION(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(10, n)
+}
+
+func (rcv *WPN) MutateDispersion(n float32) bool {
+	return rcv.MutateDISPERSION(n)
 }
 
 func (rcv *WPN) AMMO_CAPACITY() uint16 {
@@ -110,8 +142,16 @@ func (rcv *WPN) AMMO_CAPACITY() uint16 {
 	return 0
 }
 
+func (rcv *WPN) AmmoCapacity() uint16 {
+	return rcv.AMMO_CAPACITY()
+}
+
 func (rcv *WPN) MutateAMMO_CAPACITY(n uint16) bool {
 	return rcv._tab.MutateUint16Slot(12, n)
+}
+
+func (rcv *WPN) MutateAmmoCapacity(n uint16) bool {
+	return rcv.MutateAMMO_CAPACITY(n)
 }
 
 func (rcv *WPN) BURST_LENGTH() uint16 {
@@ -122,8 +162,16 @@ func (rcv *WPN) BURST_LENGTH() uint16 {
 	return 0
 }
 
+func (rcv *WPN) BurstLength() uint16 {
+	return rcv.BURST_LENGTH()
+}
+
 func (rcv *WPN) MutateBURST_LENGTH(n uint16) bool {
 	return rcv._tab.MutateUint16Slot(14, n)
+}
+
+func (rcv *WPN) MutateBurstLength(n uint16) bool {
+	return rcv.MutateBURST_LENGTH(n)
 }
 
 func (rcv *WPN) RELOAD_TIME() float32 {
@@ -134,8 +182,16 @@ func (rcv *WPN) RELOAD_TIME() float32 {
 	return 0.0
 }
 
+func (rcv *WPN) ReloadTime() float32 {
+	return rcv.RELOAD_TIME()
+}
+
 func (rcv *WPN) MutateRELOAD_TIME(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(16, n)
+}
+
+func (rcv *WPN) MutateReloadTime(n float32) bool {
+	return rcv.MutateRELOAD_TIME(n)
 }
 
 func (rcv *WPN) OVERHEAT_ROUNDS() uint16 {
@@ -146,8 +202,16 @@ func (rcv *WPN) OVERHEAT_ROUNDS() uint16 {
 	return 0
 }
 
+func (rcv *WPN) OverheatRounds() uint16 {
+	return rcv.OVERHEAT_ROUNDS()
+}
+
 func (rcv *WPN) MutateOVERHEAT_ROUNDS(n uint16) bool {
 	return rcv._tab.MutateUint16Slot(18, n)
+}
+
+func (rcv *WPN) MutateOverheatRounds(n uint16) bool {
+	return rcv.MutateOVERHEAT_ROUNDS(n)
 }
 
 func (rcv *WPN) COOLDOWN_RATE() float32 {
@@ -158,8 +222,16 @@ func (rcv *WPN) COOLDOWN_RATE() float32 {
 	return 0.0
 }
 
+func (rcv *WPN) CooldownRate() float32 {
+	return rcv.COOLDOWN_RATE()
+}
+
 func (rcv *WPN) MutateCOOLDOWN_RATE(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(20, n)
+}
+
+func (rcv *WPN) MutateCooldownRate(n float32) bool {
+	return rcv.MutateCOOLDOWN_RATE(n)
 }
 
 func (rcv *WPN) ELEVATION_MIN() float32 {
@@ -170,8 +242,16 @@ func (rcv *WPN) ELEVATION_MIN() float32 {
 	return 0.0
 }
 
+func (rcv *WPN) ElevationMin() float32 {
+	return rcv.ELEVATION_MIN()
+}
+
 func (rcv *WPN) MutateELEVATION_MIN(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(22, n)
+}
+
+func (rcv *WPN) MutateElevationMin(n float32) bool {
+	return rcv.MutateELEVATION_MIN(n)
 }
 
 func (rcv *WPN) ELEVATION_MAX() float32 {
@@ -182,8 +262,16 @@ func (rcv *WPN) ELEVATION_MAX() float32 {
 	return 0.0
 }
 
+func (rcv *WPN) ElevationMax() float32 {
+	return rcv.ELEVATION_MAX()
+}
+
 func (rcv *WPN) MutateELEVATION_MAX(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(24, n)
+}
+
+func (rcv *WPN) MutateElevationMax(n float32) bool {
+	return rcv.MutateELEVATION_MAX(n)
 }
 
 func (rcv *WPN) TRAVERSE_MIN() float32 {
@@ -194,8 +282,16 @@ func (rcv *WPN) TRAVERSE_MIN() float32 {
 	return 0.0
 }
 
+func (rcv *WPN) TraverseMin() float32 {
+	return rcv.TRAVERSE_MIN()
+}
+
 func (rcv *WPN) MutateTRAVERSE_MIN(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(26, n)
+}
+
+func (rcv *WPN) MutateTraverseMin(n float32) bool {
+	return rcv.MutateTRAVERSE_MIN(n)
 }
 
 func (rcv *WPN) TRAVERSE_MAX() float32 {
@@ -206,8 +302,16 @@ func (rcv *WPN) TRAVERSE_MAX() float32 {
 	return 0.0
 }
 
+func (rcv *WPN) TraverseMax() float32 {
+	return rcv.TRAVERSE_MAX()
+}
+
 func (rcv *WPN) MutateTRAVERSE_MAX(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(28, n)
+}
+
+func (rcv *WPN) MutateTraverseMax(n float32) bool {
+	return rcv.MutateTRAVERSE_MAX(n)
 }
 
 func (rcv *WPN) SLEW_RATE() float32 {
@@ -218,8 +322,16 @@ func (rcv *WPN) SLEW_RATE() float32 {
 	return 0.0
 }
 
+func (rcv *WPN) SlewRate() float32 {
+	return rcv.SLEW_RATE()
+}
+
 func (rcv *WPN) MutateSLEW_RATE(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(30, n)
+}
+
+func (rcv *WPN) MutateSlewRate(n float32) bool {
+	return rcv.MutateSLEW_RATE(n)
 }
 
 func (rcv *WPN) WEAPON_TYPE() byte {
@@ -230,8 +342,16 @@ func (rcv *WPN) WEAPON_TYPE() byte {
 	return 0
 }
 
+func (rcv *WPN) WeaponType() byte {
+	return rcv.WEAPON_TYPE()
+}
+
 func (rcv *WPN) MutateWEAPON_TYPE(n byte) bool {
 	return rcv._tab.MutateByteSlot(32, n)
+}
+
+func (rcv *WPN) MutateWeaponType(n byte) bool {
+	return rcv.MutateWEAPON_TYPE(n)
 }
 
 func (rcv *WPN) FUZE_TYPE() byte {
@@ -242,8 +362,16 @@ func (rcv *WPN) FUZE_TYPE() byte {
 	return 0
 }
 
+func (rcv *WPN) FuzeType() byte {
+	return rcv.FUZE_TYPE()
+}
+
 func (rcv *WPN) MutateFUZE_TYPE(n byte) bool {
 	return rcv._tab.MutateByteSlot(34, n)
+}
+
+func (rcv *WPN) MutateFuzeType(n byte) bool {
+	return rcv.MutateFUZE_TYPE(n)
 }
 
 func (rcv *WPN) RESERVED(j int) byte {
@@ -255,6 +383,10 @@ func (rcv *WPN) RESERVED(j int) byte {
 	return 0
 }
 
+func (rcv *WPN) Reserved(j int) byte {
+	return rcv.RESERVED(j)
+}
+
 func (rcv *WPN) RESERVEDLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
 	if o != 0 {
@@ -263,12 +395,20 @@ func (rcv *WPN) RESERVEDLength() int {
 	return 0
 }
 
+func (rcv *WPN) ReservedLength() int {
+	return rcv.RESERVEDLength()
+}
+
 func (rcv *WPN) RESERVEDBytes() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *WPN) ReservedBytes() []byte {
+	return rcv.RESERVEDBytes()
 }
 
 func (rcv *WPN) MutateRESERVED(j int, n byte) bool {
@@ -280,62 +420,120 @@ func (rcv *WPN) MutateRESERVED(j int, n byte) bool {
 	return false
 }
 
+func (rcv *WPN) MutateReserved(j int, n byte) bool {
+	return rcv.MutateRESERVED(j, n)
+}
+
 func WPNStart(builder *flatbuffers.Builder) {
 	builder.StartObject(17)
 }
 func WPNAddCALIBER(builder *flatbuffers.Builder, CALIBER float32) {
 	builder.PrependFloat32Slot(0, CALIBER, 0.0)
 }
+func WPNAddCaliber(builder *flatbuffers.Builder, CALIBER float32) {
+	WPNAddCALIBER(builder, CALIBER)
+}
 func WPNAddMUZZLE_VELOCITY(builder *flatbuffers.Builder, MUZZLE_VELOCITY float32) {
 	builder.PrependFloat32Slot(1, MUZZLE_VELOCITY, 0.0)
+}
+func WPNAddMuzzleVelocity(builder *flatbuffers.Builder, MUZZLE_VELOCITY float32) {
+	WPNAddMUZZLE_VELOCITY(builder, MUZZLE_VELOCITY)
 }
 func WPNAddRATE_OF_FIRE(builder *flatbuffers.Builder, RATE_OF_FIRE float32) {
 	builder.PrependFloat32Slot(2, RATE_OF_FIRE, 0.0)
 }
+func WPNAddRateOfFire(builder *flatbuffers.Builder, RATE_OF_FIRE float32) {
+	WPNAddRATE_OF_FIRE(builder, RATE_OF_FIRE)
+}
 func WPNAddDISPERSION(builder *flatbuffers.Builder, DISPERSION float32) {
 	builder.PrependFloat32Slot(3, DISPERSION, 0.0)
+}
+func WPNAddDispersion(builder *flatbuffers.Builder, DISPERSION float32) {
+	WPNAddDISPERSION(builder, DISPERSION)
 }
 func WPNAddAMMO_CAPACITY(builder *flatbuffers.Builder, AMMO_CAPACITY uint16) {
 	builder.PrependUint16Slot(4, AMMO_CAPACITY, 0)
 }
+func WPNAddAmmoCapacity(builder *flatbuffers.Builder, AMMO_CAPACITY uint16) {
+	WPNAddAMMO_CAPACITY(builder, AMMO_CAPACITY)
+}
 func WPNAddBURST_LENGTH(builder *flatbuffers.Builder, BURST_LENGTH uint16) {
 	builder.PrependUint16Slot(5, BURST_LENGTH, 0)
+}
+func WPNAddBurstLength(builder *flatbuffers.Builder, BURST_LENGTH uint16) {
+	WPNAddBURST_LENGTH(builder, BURST_LENGTH)
 }
 func WPNAddRELOAD_TIME(builder *flatbuffers.Builder, RELOAD_TIME float32) {
 	builder.PrependFloat32Slot(6, RELOAD_TIME, 0.0)
 }
+func WPNAddReloadTime(builder *flatbuffers.Builder, RELOAD_TIME float32) {
+	WPNAddRELOAD_TIME(builder, RELOAD_TIME)
+}
 func WPNAddOVERHEAT_ROUNDS(builder *flatbuffers.Builder, OVERHEAT_ROUNDS uint16) {
 	builder.PrependUint16Slot(7, OVERHEAT_ROUNDS, 0)
+}
+func WPNAddOverheatRounds(builder *flatbuffers.Builder, OVERHEAT_ROUNDS uint16) {
+	WPNAddOVERHEAT_ROUNDS(builder, OVERHEAT_ROUNDS)
 }
 func WPNAddCOOLDOWN_RATE(builder *flatbuffers.Builder, COOLDOWN_RATE float32) {
 	builder.PrependFloat32Slot(8, COOLDOWN_RATE, 0.0)
 }
+func WPNAddCooldownRate(builder *flatbuffers.Builder, COOLDOWN_RATE float32) {
+	WPNAddCOOLDOWN_RATE(builder, COOLDOWN_RATE)
+}
 func WPNAddELEVATION_MIN(builder *flatbuffers.Builder, ELEVATION_MIN float32) {
 	builder.PrependFloat32Slot(9, ELEVATION_MIN, 0.0)
+}
+func WPNAddElevationMin(builder *flatbuffers.Builder, ELEVATION_MIN float32) {
+	WPNAddELEVATION_MIN(builder, ELEVATION_MIN)
 }
 func WPNAddELEVATION_MAX(builder *flatbuffers.Builder, ELEVATION_MAX float32) {
 	builder.PrependFloat32Slot(10, ELEVATION_MAX, 0.0)
 }
+func WPNAddElevationMax(builder *flatbuffers.Builder, ELEVATION_MAX float32) {
+	WPNAddELEVATION_MAX(builder, ELEVATION_MAX)
+}
 func WPNAddTRAVERSE_MIN(builder *flatbuffers.Builder, TRAVERSE_MIN float32) {
 	builder.PrependFloat32Slot(11, TRAVERSE_MIN, 0.0)
+}
+func WPNAddTraverseMin(builder *flatbuffers.Builder, TRAVERSE_MIN float32) {
+	WPNAddTRAVERSE_MIN(builder, TRAVERSE_MIN)
 }
 func WPNAddTRAVERSE_MAX(builder *flatbuffers.Builder, TRAVERSE_MAX float32) {
 	builder.PrependFloat32Slot(12, TRAVERSE_MAX, 0.0)
 }
+func WPNAddTraverseMax(builder *flatbuffers.Builder, TRAVERSE_MAX float32) {
+	WPNAddTRAVERSE_MAX(builder, TRAVERSE_MAX)
+}
 func WPNAddSLEW_RATE(builder *flatbuffers.Builder, SLEW_RATE float32) {
 	builder.PrependFloat32Slot(13, SLEW_RATE, 0.0)
+}
+func WPNAddSlewRate(builder *flatbuffers.Builder, SLEW_RATE float32) {
+	WPNAddSLEW_RATE(builder, SLEW_RATE)
 }
 func WPNAddWEAPON_TYPE(builder *flatbuffers.Builder, WEAPON_TYPE byte) {
 	builder.PrependByteSlot(14, WEAPON_TYPE, 0)
 }
+func WPNAddWeaponType(builder *flatbuffers.Builder, WEAPON_TYPE byte) {
+	WPNAddWEAPON_TYPE(builder, WEAPON_TYPE)
+}
 func WPNAddFUZE_TYPE(builder *flatbuffers.Builder, FUZE_TYPE byte) {
 	builder.PrependByteSlot(15, FUZE_TYPE, 0)
+}
+func WPNAddFuzeType(builder *flatbuffers.Builder, FUZE_TYPE byte) {
+	WPNAddFUZE_TYPE(builder, FUZE_TYPE)
 }
 func WPNAddRESERVED(builder *flatbuffers.Builder, RESERVED flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(16, flatbuffers.UOffsetT(RESERVED), 0)
 }
+func WPNAddReserved(builder *flatbuffers.Builder, RESERVED flatbuffers.UOffsetT) {
+	WPNAddRESERVED(builder, RESERVED)
+}
 func WPNStartRESERVEDVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(1, numElems, 1)
+}
+func WPNStartReservedVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return WPNStartRESERVEDVector(builder, numElems)
 }
 func WPNEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

@@ -32,7 +32,7 @@ class CustomFrameWrapper : Table() {
             return if(o != 0) bb.get(o + bb_pos) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsCustomFrameWrapper(_bb: ByteBuffer): CustomFrameWrapper = getRootAsCustomFrameWrapper(_bb, CustomFrameWrapper())
         fun getRootAsCustomFrameWrapper(_bb: ByteBuffer, obj: CustomFrameWrapper): CustomFrameWrapper {
             _bb.order(ByteOrder.LITTLE_ENDIAN)

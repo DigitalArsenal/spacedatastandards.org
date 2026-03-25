@@ -63,6 +63,10 @@ func (rcv *STR) ID() []byte {
 	return nil
 }
 
+func (rcv *STR) Id() []byte {
+	return rcv.ID()
+}
+
 /// Unique internal identifier
 /// CelesTrak Star catalog identifier
 func (rcv *STR) CS_ID() int64 {
@@ -73,9 +77,17 @@ func (rcv *STR) CS_ID() int64 {
 	return 0
 }
 
+func (rcv *STR) CsId() int64 {
+	return rcv.CS_ID()
+}
+
 /// CelesTrak Star catalog identifier
 func (rcv *STR) MutateCS_ID(n int64) bool {
 	return rcv._tab.MutateInt64Slot(6, n)
+}
+
+func (rcv *STR) MutateCsId(n int64) bool {
+	return rcv.MutateCS_ID(n)
 }
 
 /// GNC star catalog identifier
@@ -87,9 +99,17 @@ func (rcv *STR) GNC_CAT_ID() uint32 {
 	return 0
 }
 
+func (rcv *STR) GncCatId() uint32 {
+	return rcv.GNC_CAT_ID()
+}
+
 /// GNC star catalog identifier
 func (rcv *STR) MutateGNC_CAT_ID(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(8, n)
+}
+
+func (rcv *STR) MutateGncCatId(n uint32) bool {
+	return rcv.MutateGNC_CAT_ID(n)
 }
 
 /// Gaia DR3 source identifier
@@ -101,9 +121,17 @@ func (rcv *STR) GAIADR3_CAT_ID() int64 {
 	return 0
 }
 
+func (rcv *STR) Gaiadr3CatId() int64 {
+	return rcv.GAIADR3_CAT_ID()
+}
+
 /// Gaia DR3 source identifier
 func (rcv *STR) MutateGAIADR3_CAT_ID(n int64) bool {
 	return rcv._tab.MutateInt64Slot(10, n)
+}
+
+func (rcv *STR) MutateGaiadr3CatId(n int64) bool {
+	return rcv.MutateGAIADR3_CAT_ID(n)
 }
 
 /// Hipparcos catalog identifier
@@ -115,9 +143,17 @@ func (rcv *STR) HIP_CAT_ID() uint32 {
 	return 0
 }
 
+func (rcv *STR) HipCatId() uint32 {
+	return rcv.HIP_CAT_ID()
+}
+
 /// Hipparcos catalog identifier
 func (rcv *STR) MutateHIP_CAT_ID(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(12, n)
+}
+
+func (rcv *STR) MutateHipCatId(n uint32) bool {
+	return rcv.MutateHIP_CAT_ID(n)
 }
 
 /// Catalog version string
@@ -127,6 +163,10 @@ func (rcv *STR) CAT_VERSION() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *STR) CatVersion() []byte {
+	return rcv.CAT_VERSION()
 }
 
 /// Catalog version string
@@ -139,6 +179,10 @@ func (rcv *STR) ASTROMETRY_ORIGIN() []byte {
 	return nil
 }
 
+func (rcv *STR) AstrometryOrigin() []byte {
+	return rcv.ASTROMETRY_ORIGIN()
+}
+
 /// Astrometry source description
 /// Epoch of stellar position (Julian years)
 func (rcv *STR) STAR_EPOCH() float64 {
@@ -149,9 +193,17 @@ func (rcv *STR) STAR_EPOCH() float64 {
 	return 0.0
 }
 
+func (rcv *STR) StarEpoch() float64 {
+	return rcv.STAR_EPOCH()
+}
+
 /// Epoch of stellar position (Julian years)
 func (rcv *STR) MutateSTAR_EPOCH(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(18, n)
+}
+
+func (rcv *STR) MutateStarEpoch(n float64) bool {
+	return rcv.MutateSTAR_EPOCH(n)
 }
 
 /// Right ascension (degrees, ICRS)
@@ -163,9 +215,17 @@ func (rcv *STR) RA() float64 {
 	return 0.0
 }
 
+func (rcv *STR) Ra() float64 {
+	return rcv.RA()
+}
+
 /// Right ascension (degrees, ICRS)
 func (rcv *STR) MutateRA(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(20, n)
+}
+
+func (rcv *STR) MutateRa(n float64) bool {
+	return rcv.MutateRA(n)
 }
 
 /// Right ascension uncertainty (arcseconds)
@@ -177,9 +237,17 @@ func (rcv *STR) RA_UNC() float64 {
 	return 0.0
 }
 
+func (rcv *STR) RaUnc() float64 {
+	return rcv.RA_UNC()
+}
+
 /// Right ascension uncertainty (arcseconds)
 func (rcv *STR) MutateRA_UNC(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(22, n)
+}
+
+func (rcv *STR) MutateRaUnc(n float64) bool {
+	return rcv.MutateRA_UNC(n)
 }
 
 /// Declination (degrees, ICRS)
@@ -191,9 +259,17 @@ func (rcv *STR) DEC() float64 {
 	return 0.0
 }
 
+func (rcv *STR) Dec() float64 {
+	return rcv.DEC()
+}
+
 /// Declination (degrees, ICRS)
 func (rcv *STR) MutateDEC(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(24, n)
+}
+
+func (rcv *STR) MutateDec(n float64) bool {
+	return rcv.MutateDEC(n)
 }
 
 /// Declination uncertainty (arcseconds)
@@ -205,9 +281,17 @@ func (rcv *STR) DEC_UNC() float64 {
 	return 0.0
 }
 
+func (rcv *STR) DecUnc() float64 {
+	return rcv.DEC_UNC()
+}
+
 /// Declination uncertainty (arcseconds)
 func (rcv *STR) MutateDEC_UNC(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(26, n)
+}
+
+func (rcv *STR) MutateDecUnc(n float64) bool {
+	return rcv.MutateDEC_UNC(n)
 }
 
 /// True if position uncertainty is flagged
@@ -219,9 +303,17 @@ func (rcv *STR) POS_UNC_FLAG() bool {
 	return false
 }
 
+func (rcv *STR) PosUncFlag() bool {
+	return rcv.POS_UNC_FLAG()
+}
+
 /// True if position uncertainty is flagged
 func (rcv *STR) MutatePOS_UNC_FLAG(n bool) bool {
 	return rcv._tab.MutateBoolSlot(28, n)
+}
+
+func (rcv *STR) MutatePosUncFlag(n bool) bool {
+	return rcv.MutatePOS_UNC_FLAG(n)
 }
 
 /// Parallax (milliarcseconds)
@@ -233,9 +325,17 @@ func (rcv *STR) PARALLAX() float64 {
 	return 0.0
 }
 
+func (rcv *STR) Parallax() float64 {
+	return rcv.PARALLAX()
+}
+
 /// Parallax (milliarcseconds)
 func (rcv *STR) MutatePARALLAX(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(30, n)
+}
+
+func (rcv *STR) MutateParallax(n float64) bool {
+	return rcv.MutatePARALLAX(n)
 }
 
 /// Parallax uncertainty (milliarcseconds)
@@ -247,9 +347,17 @@ func (rcv *STR) PARALLAX_UNC() float64 {
 	return 0.0
 }
 
+func (rcv *STR) ParallaxUnc() float64 {
+	return rcv.PARALLAX_UNC()
+}
+
 /// Parallax uncertainty (milliarcseconds)
 func (rcv *STR) MutatePARALLAX_UNC(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(32, n)
+}
+
+func (rcv *STR) MutateParallaxUnc(n float64) bool {
+	return rcv.MutatePARALLAX_UNC(n)
 }
 
 /// Proper motion in RA (milliarcseconds/year)
@@ -261,9 +369,17 @@ func (rcv *STR) PMRA() float64 {
 	return 0.0
 }
 
+func (rcv *STR) Pmra() float64 {
+	return rcv.PMRA()
+}
+
 /// Proper motion in RA (milliarcseconds/year)
 func (rcv *STR) MutatePMRA(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(34, n)
+}
+
+func (rcv *STR) MutatePmra(n float64) bool {
+	return rcv.MutatePMRA(n)
 }
 
 /// Proper motion in RA uncertainty (milliarcseconds/year)
@@ -275,9 +391,17 @@ func (rcv *STR) PMRA_UNC() float64 {
 	return 0.0
 }
 
+func (rcv *STR) PmraUnc() float64 {
+	return rcv.PMRA_UNC()
+}
+
 /// Proper motion in RA uncertainty (milliarcseconds/year)
 func (rcv *STR) MutatePMRA_UNC(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(36, n)
+}
+
+func (rcv *STR) MutatePmraUnc(n float64) bool {
+	return rcv.MutatePMRA_UNC(n)
 }
 
 /// Proper motion in DEC (milliarcseconds/year)
@@ -289,9 +413,17 @@ func (rcv *STR) PMDEC() float64 {
 	return 0.0
 }
 
+func (rcv *STR) Pmdec() float64 {
+	return rcv.PMDEC()
+}
+
 /// Proper motion in DEC (milliarcseconds/year)
 func (rcv *STR) MutatePMDEC(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(38, n)
+}
+
+func (rcv *STR) MutatePmdec(n float64) bool {
+	return rcv.MutatePMDEC(n)
 }
 
 /// Proper motion in DEC uncertainty (milliarcseconds/year)
@@ -303,9 +435,17 @@ func (rcv *STR) PMDEC_UNC() float64 {
 	return 0.0
 }
 
+func (rcv *STR) PmdecUnc() float64 {
+	return rcv.PMDEC_UNC()
+}
+
 /// Proper motion in DEC uncertainty (milliarcseconds/year)
 func (rcv *STR) MutatePMDEC_UNC(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(40, n)
+}
+
+func (rcv *STR) MutatePmdecUnc(n float64) bool {
+	return rcv.MutatePMDEC_UNC(n)
 }
 
 /// True if proper motion uncertainty is flagged
@@ -317,9 +457,17 @@ func (rcv *STR) PM_UNC_FLAG() bool {
 	return false
 }
 
+func (rcv *STR) PmUncFlag() bool {
+	return rcv.PM_UNC_FLAG()
+}
+
 /// True if proper motion uncertainty is flagged
 func (rcv *STR) MutatePM_UNC_FLAG(n bool) bool {
 	return rcv._tab.MutateBoolSlot(42, n)
+}
+
+func (rcv *STR) MutatePmUncFlag(n bool) bool {
+	return rcv.MutatePM_UNC_FLAG(n)
 }
 
 /// Gaia G-band magnitude
@@ -331,9 +479,17 @@ func (rcv *STR) GMAG() float64 {
 	return 0.0
 }
 
+func (rcv *STR) Gmag() float64 {
+	return rcv.GMAG()
+}
+
 /// Gaia G-band magnitude
 func (rcv *STR) MutateGMAG(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(44, n)
+}
+
+func (rcv *STR) MutateGmag(n float64) bool {
+	return rcv.MutateGMAG(n)
 }
 
 /// Gaia G-band magnitude uncertainty
@@ -345,9 +501,17 @@ func (rcv *STR) GMAG_UNC() float64 {
 	return 0.0
 }
 
+func (rcv *STR) GmagUnc() float64 {
+	return rcv.GMAG_UNC()
+}
+
 /// Gaia G-band magnitude uncertainty
 func (rcv *STR) MutateGMAG_UNC(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(46, n)
+}
+
+func (rcv *STR) MutateGmagUnc(n float64) bool {
+	return rcv.MutateGMAG_UNC(n)
 }
 
 /// Gaia BP-band magnitude (blue photometer)
@@ -359,9 +523,17 @@ func (rcv *STR) BPMAG() float64 {
 	return 0.0
 }
 
+func (rcv *STR) Bpmag() float64 {
+	return rcv.BPMAG()
+}
+
 /// Gaia BP-band magnitude (blue photometer)
 func (rcv *STR) MutateBPMAG(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(48, n)
+}
+
+func (rcv *STR) MutateBpmag(n float64) bool {
+	return rcv.MutateBPMAG(n)
 }
 
 /// Gaia BP-band magnitude uncertainty
@@ -373,9 +545,17 @@ func (rcv *STR) BPMAG_UNC() float64 {
 	return 0.0
 }
 
+func (rcv *STR) BpmagUnc() float64 {
+	return rcv.BPMAG_UNC()
+}
+
 /// Gaia BP-band magnitude uncertainty
 func (rcv *STR) MutateBPMAG_UNC(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(50, n)
+}
+
+func (rcv *STR) MutateBpmagUnc(n float64) bool {
+	return rcv.MutateBPMAG_UNC(n)
 }
 
 /// Gaia RP-band magnitude (red photometer)
@@ -387,9 +567,17 @@ func (rcv *STR) RPMAG() float64 {
 	return 0.0
 }
 
+func (rcv *STR) Rpmag() float64 {
+	return rcv.RPMAG()
+}
+
 /// Gaia RP-band magnitude (red photometer)
 func (rcv *STR) MutateRPMAG(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(52, n)
+}
+
+func (rcv *STR) MutateRpmag(n float64) bool {
+	return rcv.MutateRPMAG(n)
 }
 
 /// Gaia RP-band magnitude uncertainty
@@ -401,9 +589,17 @@ func (rcv *STR) RPMAG_UNC() float64 {
 	return 0.0
 }
 
+func (rcv *STR) RpmagUnc() float64 {
+	return rcv.RPMAG_UNC()
+}
+
 /// Gaia RP-band magnitude uncertainty
 func (rcv *STR) MutateRPMAG_UNC(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(54, n)
+}
+
+func (rcv *STR) MutateRpmagUnc(n float64) bool {
+	return rcv.MutateRPMAG_UNC(n)
 }
 
 /// 2MASS J-band magnitude (1.25 um)
@@ -415,9 +611,17 @@ func (rcv *STR) JMAG() float64 {
 	return 0.0
 }
 
+func (rcv *STR) Jmag() float64 {
+	return rcv.JMAG()
+}
+
 /// 2MASS J-band magnitude (1.25 um)
 func (rcv *STR) MutateJMAG(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(56, n)
+}
+
+func (rcv *STR) MutateJmag(n float64) bool {
+	return rcv.MutateJMAG(n)
 }
 
 /// J-band magnitude uncertainty
@@ -429,9 +633,17 @@ func (rcv *STR) JMAG_UNC() float64 {
 	return 0.0
 }
 
+func (rcv *STR) JmagUnc() float64 {
+	return rcv.JMAG_UNC()
+}
+
 /// J-band magnitude uncertainty
 func (rcv *STR) MutateJMAG_UNC(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(58, n)
+}
+
+func (rcv *STR) MutateJmagUnc(n float64) bool {
+	return rcv.MutateJMAG_UNC(n)
 }
 
 /// 2MASS K-band magnitude (2.17 um)
@@ -443,9 +655,17 @@ func (rcv *STR) KMAG() float64 {
 	return 0.0
 }
 
+func (rcv *STR) Kmag() float64 {
+	return rcv.KMAG()
+}
+
 /// 2MASS K-band magnitude (2.17 um)
 func (rcv *STR) MutateKMAG(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(60, n)
+}
+
+func (rcv *STR) MutateKmag(n float64) bool {
+	return rcv.MutateKMAG(n)
 }
 
 /// K-band magnitude uncertainty
@@ -457,9 +677,17 @@ func (rcv *STR) KMAG_UNC() float64 {
 	return 0.0
 }
 
+func (rcv *STR) KmagUnc() float64 {
+	return rcv.KMAG_UNC()
+}
+
 /// K-band magnitude uncertainty
 func (rcv *STR) MutateKMAG_UNC(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(62, n)
+}
+
+func (rcv *STR) MutateKmagUnc(n float64) bool {
+	return rcv.MutateKMAG_UNC(n)
 }
 
 /// 2MASS H-band magnitude (1.65 um)
@@ -471,9 +699,17 @@ func (rcv *STR) HMAG() float64 {
 	return 0.0
 }
 
+func (rcv *STR) Hmag() float64 {
+	return rcv.HMAG()
+}
+
 /// 2MASS H-band magnitude (1.65 um)
 func (rcv *STR) MutateHMAG(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(64, n)
+}
+
+func (rcv *STR) MutateHmag(n float64) bool {
+	return rcv.MutateHMAG(n)
 }
 
 /// H-band magnitude uncertainty
@@ -485,9 +721,17 @@ func (rcv *STR) HMAG_UNC() float64 {
 	return 0.0
 }
 
+func (rcv *STR) HmagUnc() float64 {
+	return rcv.HMAG_UNC()
+}
+
 /// H-band magnitude uncertainty
 func (rcv *STR) MutateHMAG_UNC(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(66, n)
+}
+
+func (rcv *STR) MutateHmagUnc(n float64) bool {
+	return rcv.MutateHMAG_UNC(n)
 }
 
 /// True if star is variable
@@ -499,9 +743,17 @@ func (rcv *STR) VAR_FLAG() bool {
 	return false
 }
 
+func (rcv *STR) VarFlag() bool {
+	return rcv.VAR_FLAG()
+}
+
 /// True if star is variable
 func (rcv *STR) MutateVAR_FLAG(n bool) bool {
 	return rcv._tab.MutateBoolSlot(68, n)
+}
+
+func (rcv *STR) MutateVarFlag(n bool) bool {
+	return rcv.MutateVAR_FLAG(n)
 }
 
 /// True if star is in a multiple system
@@ -513,9 +765,17 @@ func (rcv *STR) MULT_FLAG() bool {
 	return false
 }
 
+func (rcv *STR) MultFlag() bool {
+	return rcv.MULT_FLAG()
+}
+
 /// True if star is in a multiple system
 func (rcv *STR) MutateMULT_FLAG(n bool) bool {
 	return rcv._tab.MutateBoolSlot(70, n)
+}
+
+func (rcv *STR) MutateMultFlag(n bool) bool {
+	return rcv.MutateMULT_FLAG(n)
 }
 
 /// Nearest neighbor catalog identifier
@@ -527,9 +787,17 @@ func (rcv *STR) NEIGHBOR_ID() uint32 {
 	return 0
 }
 
+func (rcv *STR) NeighborId() uint32 {
+	return rcv.NEIGHBOR_ID()
+}
+
 /// Nearest neighbor catalog identifier
 func (rcv *STR) MutateNEIGHBOR_ID(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(72, n)
+}
+
+func (rcv *STR) MutateNeighborId(n uint32) bool {
+	return rcv.MutateNEIGHBOR_ID(n)
 }
 
 /// True if nearest neighbor is within confusion radius
@@ -541,9 +809,17 @@ func (rcv *STR) NEIGHBOR_FLAG() bool {
 	return false
 }
 
+func (rcv *STR) NeighborFlag() bool {
+	return rcv.NEIGHBOR_FLAG()
+}
+
 /// True if nearest neighbor is within confusion radius
 func (rcv *STR) MutateNEIGHBOR_FLAG(n bool) bool {
 	return rcv._tab.MutateBoolSlot(74, n)
+}
+
+func (rcv *STR) MutateNeighborFlag(n bool) bool {
+	return rcv.MutateNEIGHBOR_FLAG(n)
 }
 
 /// Distance to nearest neighbor (arcseconds)
@@ -555,9 +831,17 @@ func (rcv *STR) NEIGHBOR_DISTANCE() float64 {
 	return 0.0
 }
 
+func (rcv *STR) NeighborDistance() float64 {
+	return rcv.NEIGHBOR_DISTANCE()
+}
+
 /// Distance to nearest neighbor (arcseconds)
 func (rcv *STR) MutateNEIGHBOR_DISTANCE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(76, n)
+}
+
+func (rcv *STR) MutateNeighborDistance(n float64) bool {
+	return rcv.MutateNEIGHBOR_DISTANCE(n)
 }
 
 /// True if position shift detected between catalogs
@@ -569,9 +853,17 @@ func (rcv *STR) SHIFT_FLAG() bool {
 	return false
 }
 
+func (rcv *STR) ShiftFlag() bool {
+	return rcv.SHIFT_FLAG()
+}
+
 /// True if position shift detected between catalogs
 func (rcv *STR) MutateSHIFT_FLAG(n bool) bool {
 	return rcv._tab.MutateBoolSlot(78, n)
+}
+
+func (rcv *STR) MutateShiftFlag(n bool) bool {
+	return rcv.MutateSHIFT_FLAG(n)
 }
 
 /// Position shift magnitude (arcseconds)
@@ -583,9 +875,17 @@ func (rcv *STR) SHIFT() float64 {
 	return 0.0
 }
 
+func (rcv *STR) Shift() float64 {
+	return rcv.SHIFT()
+}
+
 /// Position shift magnitude (arcseconds)
 func (rcv *STR) MutateSHIFT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(80, n)
+}
+
+func (rcv *STR) MutateShift(n float64) bool {
+	return rcv.MutateSHIFT(n)
 }
 
 func STRStart(builder *flatbuffers.Builder) {
@@ -594,119 +894,236 @@ func STRStart(builder *flatbuffers.Builder) {
 func STRAddID(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ID), 0)
 }
+func STRAddId(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
+	STRAddID(builder, ID)
+}
 func STRAddCS_ID(builder *flatbuffers.Builder, CS_ID int64) {
 	builder.PrependInt64Slot(1, CS_ID, 0)
+}
+func STRAddCsId(builder *flatbuffers.Builder, CS_ID int64) {
+	STRAddCS_ID(builder, CS_ID)
 }
 func STRAddGNC_CAT_ID(builder *flatbuffers.Builder, GNC_CAT_ID uint32) {
 	builder.PrependUint32Slot(2, GNC_CAT_ID, 0)
 }
+func STRAddGncCatId(builder *flatbuffers.Builder, GNC_CAT_ID uint32) {
+	STRAddGNC_CAT_ID(builder, GNC_CAT_ID)
+}
 func STRAddGAIADR3_CAT_ID(builder *flatbuffers.Builder, GAIADR3_CAT_ID int64) {
 	builder.PrependInt64Slot(3, GAIADR3_CAT_ID, 0)
+}
+func STRAddGaiadr3CatId(builder *flatbuffers.Builder, GAIADR3_CAT_ID int64) {
+	STRAddGAIADR3_CAT_ID(builder, GAIADR3_CAT_ID)
 }
 func STRAddHIP_CAT_ID(builder *flatbuffers.Builder, HIP_CAT_ID uint32) {
 	builder.PrependUint32Slot(4, HIP_CAT_ID, 0)
 }
+func STRAddHipCatId(builder *flatbuffers.Builder, HIP_CAT_ID uint32) {
+	STRAddHIP_CAT_ID(builder, HIP_CAT_ID)
+}
 func STRAddCAT_VERSION(builder *flatbuffers.Builder, CAT_VERSION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(CAT_VERSION), 0)
+}
+func STRAddCatVersion(builder *flatbuffers.Builder, CAT_VERSION flatbuffers.UOffsetT) {
+	STRAddCAT_VERSION(builder, CAT_VERSION)
 }
 func STRAddASTROMETRY_ORIGIN(builder *flatbuffers.Builder, ASTROMETRY_ORIGIN flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(ASTROMETRY_ORIGIN), 0)
 }
+func STRAddAstrometryOrigin(builder *flatbuffers.Builder, ASTROMETRY_ORIGIN flatbuffers.UOffsetT) {
+	STRAddASTROMETRY_ORIGIN(builder, ASTROMETRY_ORIGIN)
+}
 func STRAddSTAR_EPOCH(builder *flatbuffers.Builder, STAR_EPOCH float64) {
 	builder.PrependFloat64Slot(7, STAR_EPOCH, 0.0)
+}
+func STRAddStarEpoch(builder *flatbuffers.Builder, STAR_EPOCH float64) {
+	STRAddSTAR_EPOCH(builder, STAR_EPOCH)
 }
 func STRAddRA(builder *flatbuffers.Builder, RA float64) {
 	builder.PrependFloat64Slot(8, RA, 0.0)
 }
+func STRAddRa(builder *flatbuffers.Builder, RA float64) {
+	STRAddRA(builder, RA)
+}
 func STRAddRA_UNC(builder *flatbuffers.Builder, RA_UNC float64) {
 	builder.PrependFloat64Slot(9, RA_UNC, 0.0)
+}
+func STRAddRaUnc(builder *flatbuffers.Builder, RA_UNC float64) {
+	STRAddRA_UNC(builder, RA_UNC)
 }
 func STRAddDEC(builder *flatbuffers.Builder, DEC float64) {
 	builder.PrependFloat64Slot(10, DEC, 0.0)
 }
+func STRAddDec(builder *flatbuffers.Builder, DEC float64) {
+	STRAddDEC(builder, DEC)
+}
 func STRAddDEC_UNC(builder *flatbuffers.Builder, DEC_UNC float64) {
 	builder.PrependFloat64Slot(11, DEC_UNC, 0.0)
+}
+func STRAddDecUnc(builder *flatbuffers.Builder, DEC_UNC float64) {
+	STRAddDEC_UNC(builder, DEC_UNC)
 }
 func STRAddPOS_UNC_FLAG(builder *flatbuffers.Builder, POS_UNC_FLAG bool) {
 	builder.PrependBoolSlot(12, POS_UNC_FLAG, false)
 }
+func STRAddPosUncFlag(builder *flatbuffers.Builder, POS_UNC_FLAG bool) {
+	STRAddPOS_UNC_FLAG(builder, POS_UNC_FLAG)
+}
 func STRAddPARALLAX(builder *flatbuffers.Builder, PARALLAX float64) {
 	builder.PrependFloat64Slot(13, PARALLAX, 0.0)
+}
+func STRAddParallax(builder *flatbuffers.Builder, PARALLAX float64) {
+	STRAddPARALLAX(builder, PARALLAX)
 }
 func STRAddPARALLAX_UNC(builder *flatbuffers.Builder, PARALLAX_UNC float64) {
 	builder.PrependFloat64Slot(14, PARALLAX_UNC, 0.0)
 }
+func STRAddParallaxUnc(builder *flatbuffers.Builder, PARALLAX_UNC float64) {
+	STRAddPARALLAX_UNC(builder, PARALLAX_UNC)
+}
 func STRAddPMRA(builder *flatbuffers.Builder, PMRA float64) {
 	builder.PrependFloat64Slot(15, PMRA, 0.0)
+}
+func STRAddPmra(builder *flatbuffers.Builder, PMRA float64) {
+	STRAddPMRA(builder, PMRA)
 }
 func STRAddPMRA_UNC(builder *flatbuffers.Builder, PMRA_UNC float64) {
 	builder.PrependFloat64Slot(16, PMRA_UNC, 0.0)
 }
+func STRAddPmraUnc(builder *flatbuffers.Builder, PMRA_UNC float64) {
+	STRAddPMRA_UNC(builder, PMRA_UNC)
+}
 func STRAddPMDEC(builder *flatbuffers.Builder, PMDEC float64) {
 	builder.PrependFloat64Slot(17, PMDEC, 0.0)
+}
+func STRAddPmdec(builder *flatbuffers.Builder, PMDEC float64) {
+	STRAddPMDEC(builder, PMDEC)
 }
 func STRAddPMDEC_UNC(builder *flatbuffers.Builder, PMDEC_UNC float64) {
 	builder.PrependFloat64Slot(18, PMDEC_UNC, 0.0)
 }
+func STRAddPmdecUnc(builder *flatbuffers.Builder, PMDEC_UNC float64) {
+	STRAddPMDEC_UNC(builder, PMDEC_UNC)
+}
 func STRAddPM_UNC_FLAG(builder *flatbuffers.Builder, PM_UNC_FLAG bool) {
 	builder.PrependBoolSlot(19, PM_UNC_FLAG, false)
+}
+func STRAddPmUncFlag(builder *flatbuffers.Builder, PM_UNC_FLAG bool) {
+	STRAddPM_UNC_FLAG(builder, PM_UNC_FLAG)
 }
 func STRAddGMAG(builder *flatbuffers.Builder, GMAG float64) {
 	builder.PrependFloat64Slot(20, GMAG, 0.0)
 }
+func STRAddGmag(builder *flatbuffers.Builder, GMAG float64) {
+	STRAddGMAG(builder, GMAG)
+}
 func STRAddGMAG_UNC(builder *flatbuffers.Builder, GMAG_UNC float64) {
 	builder.PrependFloat64Slot(21, GMAG_UNC, 0.0)
+}
+func STRAddGmagUnc(builder *flatbuffers.Builder, GMAG_UNC float64) {
+	STRAddGMAG_UNC(builder, GMAG_UNC)
 }
 func STRAddBPMAG(builder *flatbuffers.Builder, BPMAG float64) {
 	builder.PrependFloat64Slot(22, BPMAG, 0.0)
 }
+func STRAddBpmag(builder *flatbuffers.Builder, BPMAG float64) {
+	STRAddBPMAG(builder, BPMAG)
+}
 func STRAddBPMAG_UNC(builder *flatbuffers.Builder, BPMAG_UNC float64) {
 	builder.PrependFloat64Slot(23, BPMAG_UNC, 0.0)
+}
+func STRAddBpmagUnc(builder *flatbuffers.Builder, BPMAG_UNC float64) {
+	STRAddBPMAG_UNC(builder, BPMAG_UNC)
 }
 func STRAddRPMAG(builder *flatbuffers.Builder, RPMAG float64) {
 	builder.PrependFloat64Slot(24, RPMAG, 0.0)
 }
+func STRAddRpmag(builder *flatbuffers.Builder, RPMAG float64) {
+	STRAddRPMAG(builder, RPMAG)
+}
 func STRAddRPMAG_UNC(builder *flatbuffers.Builder, RPMAG_UNC float64) {
 	builder.PrependFloat64Slot(25, RPMAG_UNC, 0.0)
+}
+func STRAddRpmagUnc(builder *flatbuffers.Builder, RPMAG_UNC float64) {
+	STRAddRPMAG_UNC(builder, RPMAG_UNC)
 }
 func STRAddJMAG(builder *flatbuffers.Builder, JMAG float64) {
 	builder.PrependFloat64Slot(26, JMAG, 0.0)
 }
+func STRAddJmag(builder *flatbuffers.Builder, JMAG float64) {
+	STRAddJMAG(builder, JMAG)
+}
 func STRAddJMAG_UNC(builder *flatbuffers.Builder, JMAG_UNC float64) {
 	builder.PrependFloat64Slot(27, JMAG_UNC, 0.0)
+}
+func STRAddJmagUnc(builder *flatbuffers.Builder, JMAG_UNC float64) {
+	STRAddJMAG_UNC(builder, JMAG_UNC)
 }
 func STRAddKMAG(builder *flatbuffers.Builder, KMAG float64) {
 	builder.PrependFloat64Slot(28, KMAG, 0.0)
 }
+func STRAddKmag(builder *flatbuffers.Builder, KMAG float64) {
+	STRAddKMAG(builder, KMAG)
+}
 func STRAddKMAG_UNC(builder *flatbuffers.Builder, KMAG_UNC float64) {
 	builder.PrependFloat64Slot(29, KMAG_UNC, 0.0)
+}
+func STRAddKmagUnc(builder *flatbuffers.Builder, KMAG_UNC float64) {
+	STRAddKMAG_UNC(builder, KMAG_UNC)
 }
 func STRAddHMAG(builder *flatbuffers.Builder, HMAG float64) {
 	builder.PrependFloat64Slot(30, HMAG, 0.0)
 }
+func STRAddHmag(builder *flatbuffers.Builder, HMAG float64) {
+	STRAddHMAG(builder, HMAG)
+}
 func STRAddHMAG_UNC(builder *flatbuffers.Builder, HMAG_UNC float64) {
 	builder.PrependFloat64Slot(31, HMAG_UNC, 0.0)
+}
+func STRAddHmagUnc(builder *flatbuffers.Builder, HMAG_UNC float64) {
+	STRAddHMAG_UNC(builder, HMAG_UNC)
 }
 func STRAddVAR_FLAG(builder *flatbuffers.Builder, VAR_FLAG bool) {
 	builder.PrependBoolSlot(32, VAR_FLAG, false)
 }
+func STRAddVarFlag(builder *flatbuffers.Builder, VAR_FLAG bool) {
+	STRAddVAR_FLAG(builder, VAR_FLAG)
+}
 func STRAddMULT_FLAG(builder *flatbuffers.Builder, MULT_FLAG bool) {
 	builder.PrependBoolSlot(33, MULT_FLAG, false)
+}
+func STRAddMultFlag(builder *flatbuffers.Builder, MULT_FLAG bool) {
+	STRAddMULT_FLAG(builder, MULT_FLAG)
 }
 func STRAddNEIGHBOR_ID(builder *flatbuffers.Builder, NEIGHBOR_ID uint32) {
 	builder.PrependUint32Slot(34, NEIGHBOR_ID, 0)
 }
+func STRAddNeighborId(builder *flatbuffers.Builder, NEIGHBOR_ID uint32) {
+	STRAddNEIGHBOR_ID(builder, NEIGHBOR_ID)
+}
 func STRAddNEIGHBOR_FLAG(builder *flatbuffers.Builder, NEIGHBOR_FLAG bool) {
 	builder.PrependBoolSlot(35, NEIGHBOR_FLAG, false)
+}
+func STRAddNeighborFlag(builder *flatbuffers.Builder, NEIGHBOR_FLAG bool) {
+	STRAddNEIGHBOR_FLAG(builder, NEIGHBOR_FLAG)
 }
 func STRAddNEIGHBOR_DISTANCE(builder *flatbuffers.Builder, NEIGHBOR_DISTANCE float64) {
 	builder.PrependFloat64Slot(36, NEIGHBOR_DISTANCE, 0.0)
 }
+func STRAddNeighborDistance(builder *flatbuffers.Builder, NEIGHBOR_DISTANCE float64) {
+	STRAddNEIGHBOR_DISTANCE(builder, NEIGHBOR_DISTANCE)
+}
 func STRAddSHIFT_FLAG(builder *flatbuffers.Builder, SHIFT_FLAG bool) {
 	builder.PrependBoolSlot(37, SHIFT_FLAG, false)
 }
+func STRAddShiftFlag(builder *flatbuffers.Builder, SHIFT_FLAG bool) {
+	STRAddSHIFT_FLAG(builder, SHIFT_FLAG)
+}
 func STRAddSHIFT(builder *flatbuffers.Builder, SHIFT float64) {
 	builder.PrependFloat64Slot(38, SHIFT, 0.0)
+}
+func STRAddShift(builder *flatbuffers.Builder, SHIFT float64) {
+	STRAddSHIFT(builder, SHIFT)
 }
 func STREnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

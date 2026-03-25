@@ -51,6 +51,10 @@ func (rcv *Address) COUNTRY() []byte {
 	return nil
 }
 
+func (rcv *Address) Country() []byte {
+	return rcv.COUNTRY()
+}
+
 /// Country of the address
 /// Region of the address (e.g., state or province)
 func (rcv *Address) REGION() []byte {
@@ -59,6 +63,10 @@ func (rcv *Address) REGION() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *Address) Region() []byte {
+	return rcv.REGION()
 }
 
 /// Region of the address (e.g., state or province)
@@ -71,6 +79,10 @@ func (rcv *Address) LOCALITY() []byte {
 	return nil
 }
 
+func (rcv *Address) Locality() []byte {
+	return rcv.LOCALITY()
+}
+
 /// Locality of the address (e.g., city or town)
 /// Postal code of the address
 func (rcv *Address) POSTAL_CODE() []byte {
@@ -79,6 +91,10 @@ func (rcv *Address) POSTAL_CODE() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *Address) PostalCode() []byte {
+	return rcv.POSTAL_CODE()
 }
 
 /// Postal code of the address
@@ -91,6 +107,10 @@ func (rcv *Address) STREET() []byte {
 	return nil
 }
 
+func (rcv *Address) Street() []byte {
+	return rcv.STREET()
+}
+
 /// Street address
 /// Post office box number
 func (rcv *Address) POST_OFFICE_BOX_NUMBER() []byte {
@@ -101,6 +121,10 @@ func (rcv *Address) POST_OFFICE_BOX_NUMBER() []byte {
 	return nil
 }
 
+func (rcv *Address) PostOfficeBoxNumber() []byte {
+	return rcv.POST_OFFICE_BOX_NUMBER()
+}
+
 /// Post office box number
 func AddressStart(builder *flatbuffers.Builder) {
 	builder.StartObject(6)
@@ -108,20 +132,38 @@ func AddressStart(builder *flatbuffers.Builder) {
 func AddressAddCOUNTRY(builder *flatbuffers.Builder, COUNTRY flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(COUNTRY), 0)
 }
+func AddressAddCountry(builder *flatbuffers.Builder, COUNTRY flatbuffers.UOffsetT) {
+	AddressAddCOUNTRY(builder, COUNTRY)
+}
 func AddressAddREGION(builder *flatbuffers.Builder, REGION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(REGION), 0)
+}
+func AddressAddRegion(builder *flatbuffers.Builder, REGION flatbuffers.UOffsetT) {
+	AddressAddREGION(builder, REGION)
 }
 func AddressAddLOCALITY(builder *flatbuffers.Builder, LOCALITY flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(LOCALITY), 0)
 }
+func AddressAddLocality(builder *flatbuffers.Builder, LOCALITY flatbuffers.UOffsetT) {
+	AddressAddLOCALITY(builder, LOCALITY)
+}
 func AddressAddPOSTAL_CODE(builder *flatbuffers.Builder, POSTAL_CODE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(POSTAL_CODE), 0)
+}
+func AddressAddPostalCode(builder *flatbuffers.Builder, POSTAL_CODE flatbuffers.UOffsetT) {
+	AddressAddPOSTAL_CODE(builder, POSTAL_CODE)
 }
 func AddressAddSTREET(builder *flatbuffers.Builder, STREET flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(STREET), 0)
 }
+func AddressAddStreet(builder *flatbuffers.Builder, STREET flatbuffers.UOffsetT) {
+	AddressAddSTREET(builder, STREET)
+}
 func AddressAddPOST_OFFICE_BOX_NUMBER(builder *flatbuffers.Builder, POST_OFFICE_BOX_NUMBER flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(POST_OFFICE_BOX_NUMBER), 0)
+}
+func AddressAddPostOfficeBoxNumber(builder *flatbuffers.Builder, POST_OFFICE_BOX_NUMBER flatbuffers.UOffsetT) {
+	AddressAddPOST_OFFICE_BOX_NUMBER(builder, POST_OFFICE_BOX_NUMBER)
 }
 func AddressEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

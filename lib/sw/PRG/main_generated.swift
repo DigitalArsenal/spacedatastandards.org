@@ -2,12 +2,16 @@
 // swiftlint:disable all
 // swiftformat:disable all
 
+#if canImport(Common)
+import Common
+#endif
+
 import FlatBuffers
 
 ///  Program Description Message
-public struct PRG: FlatBufferObject, Verifiable {
+public struct PRG: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -32,13 +36,9 @@ public struct PRG: FlatBufferObject, Verifiable {
   public var HD_KEY_PATH: String? { let o = _accessor.offset(VTOFFSET.HD_KEY_PATH.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var HD_KEY_PATHSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.HD_KEY_PATH.v) }
   ///  Vector of standard message types used by the program
-  public var hasMessageTypes: Bool { let o = _accessor.offset(VTOFFSET.MESSAGE_TYPES.v); return o == 0 ? false : true }
-  public var MESSAGE_TYPESCount: Int32 { let o = _accessor.offset(VTOFFSET.MESSAGE_TYPES.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func MESSAGE_TYPES(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.MESSAGE_TYPES.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  public var MESSAGE_TYPES: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.MESSAGE_TYPES.v, byteSize: 4) }
   ///  Vector of users associated with the program, each user can have assigned message types
-  public var hasUsers: Bool { let o = _accessor.offset(VTOFFSET.USERS.v); return o == 0 ? false : true }
-  public var USERSCount: Int32 { let o = _accessor.offset(VTOFFSET.USERS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func USERS(at index: Int32) -> USR? { let o = _accessor.offset(VTOFFSET.USERS.v); return o == 0 ? nil : USR(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var USERS: FlatbufferVector<USR> { return _accessor.vector(at: VTOFFSET.USERS.v, byteSize: 4) }
   public static func startPRG(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
   public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
   public static func add(HD_KEY_PATH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: HD_KEY_PATH, at: VTOFFSET.HD_KEY_PATH.p) }
@@ -70,9 +70,9 @@ public struct PRG: FlatBufferObject, Verifiable {
   }
 }
 
-public struct USR: FlatBufferObject, Verifiable {
+public struct USR: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -90,9 +90,7 @@ public struct USR: FlatBufferObject, Verifiable {
 
   public var ID: String? { let o = _accessor.offset(VTOFFSET.ID.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ID.v) }
-  public var hasMessageTypes: Bool { let o = _accessor.offset(VTOFFSET.MESSAGE_TYPES.v); return o == 0 ? false : true }
-  public var MESSAGE_TYPESCount: Int32 { let o = _accessor.offset(VTOFFSET.MESSAGE_TYPES.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func MESSAGE_TYPES(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.MESSAGE_TYPES.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  public var MESSAGE_TYPES: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.MESSAGE_TYPES.v, byteSize: 4) }
   public static func startUSR(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 2) }
   public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VTOFFSET.ID.p) }
   public static func addVectorOf(MESSAGE_TYPES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MESSAGE_TYPES, at: VTOFFSET.MESSAGE_TYPES.p) }

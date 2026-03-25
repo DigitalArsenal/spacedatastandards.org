@@ -32,7 +32,7 @@ class CZMTileset : Table() {
     /**
      * Whether the tileset is displayed
      */
-    val SHOW : Boolean
+    val show : Boolean
         get() {
             val o = __offset(4)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -40,7 +40,7 @@ class CZMTileset : Table() {
     /**
      * URI to the tileset
      */
-    val URI : String?
+    val uri : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -49,34 +49,34 @@ class CZMTileset : Table() {
                 null
             }
         }
-    val URIAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun URIInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val uriAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun uriInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * Maximum screen space error
      */
-    val MAXIMUM_SCREEN_SPACE_ERROR : Double
+    val maximumScreenSpaceError : Double
         get() {
             val o = __offset(8)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsCZMTileset(_bb: ByteBuffer): CZMTileset = getRootAsCZMTileset(_bb, CZMTileset())
         fun getRootAsCZMTileset(_bb: ByteBuffer, obj: CZMTileset): CZMTileset {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createCZMTileset(builder: FlatBufferBuilder, SHOW: Boolean, URIOffset: Int, MAXIMUM_SCREEN_SPACE_ERROR: Double) : Int {
+        fun createCZMTileset(builder: FlatBufferBuilder, show: Boolean, uriOffset: Int, maximumScreenSpaceError: Double) : Int {
             builder.startTable(3)
-            addMAXIMUM_SCREEN_SPACE_ERROR(builder, MAXIMUM_SCREEN_SPACE_ERROR)
-            addURI(builder, URIOffset)
-            addSHOW(builder, SHOW)
+            addMAXIMUMSCREENSPACEERROR(builder, maximumScreenSpaceError)
+            addURI(builder, uriOffset)
+            addSHOW(builder, show)
             return endCZMTileset(builder)
         }
         fun startCZMTileset(builder: FlatBufferBuilder) = builder.startTable(3)
-        fun addSHOW(builder: FlatBufferBuilder, SHOW: Boolean) = builder.addBoolean(0, SHOW, false)
-        fun addURI(builder: FlatBufferBuilder, URI: Int) = builder.addOffset(1, URI, 0)
-        fun addMAXIMUM_SCREEN_SPACE_ERROR(builder: FlatBufferBuilder, MAXIMUM_SCREEN_SPACE_ERROR: Double) = builder.addDouble(2, MAXIMUM_SCREEN_SPACE_ERROR, 0.0)
+        fun addSHOW(builder: FlatBufferBuilder, show: Boolean) = builder.addBoolean(0, show, false)
+        fun addURI(builder: FlatBufferBuilder, uri: Int) = builder.addOffset(1, uri, 0)
+        fun addMAXIMUMSCREENSPACEERROR(builder: FlatBufferBuilder, maximumScreenSpaceError: Double) = builder.addDouble(2, maximumScreenSpaceError, 0.0)
         fun endCZMTileset(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

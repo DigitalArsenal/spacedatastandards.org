@@ -2,4 +2,14 @@
 
 # namespace: 
 
-# NOTE emitterType.py does not declare any structs or enums
+class emitterType(object):
+    RADAR = 0
+    COMMUNICATIONS = 1
+    NAVIGATION = 2
+    JAMMER = 3
+    BEACON = 4
+    TRANSPONDER = 5
+    DATA_LINK = 6
+    TELEMETRY = 7
+    EW = 8
+    UNKNOWN = 9

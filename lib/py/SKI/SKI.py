@@ -513,6 +513,16 @@ def SKIStartSEN_QUATVector(builder, numElems):
 def StartSEN_QUATVector(builder, numElems):
     return SKIStartSEN_QUATVector(builder, numElems)
 
+def SKICreateSEN_QUATVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateSEN_QUATVector(builder, data):
+    SKICreateSEN_QUATVector(builder, data)
+
 def SKIAddSEN_QUAT_DOT(builder, SEN_QUAT_DOT):
     builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(SEN_QUAT_DOT), 0)
 
@@ -524,6 +534,16 @@ def SKIStartSEN_QUAT_DOTVector(builder, numElems):
 
 def StartSEN_QUAT_DOTVector(builder, numElems):
     return SKIStartSEN_QUAT_DOTVector(builder, numElems)
+
+def SKICreateSEN_QUAT_DOTVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateSEN_QUAT_DOTVector(builder, data):
+    SKICreateSEN_QUAT_DOTVector(builder, data)
 
 def SKIAddIMAGE_TYPE(builder, IMAGE_TYPE):
     builder.PrependInt8Slot(14, IMAGE_TYPE, 0)
@@ -681,6 +701,12 @@ def SKIStartTAGSVector(builder, numElems):
 def StartTAGSVector(builder, numElems):
     return SKIStartTAGSVector(builder, numElems)
 
+def SKICreateTAGSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateTAGSVector(builder, data):
+    SKICreateTAGSVector(builder, data)
+
 def SKIAddDESCRIPTION(builder, DESCRIPTION):
     builder.PrependUOffsetTRelativeSlot(39, flatbuffers.number_types.UOffsetTFlags.py_type(DESCRIPTION), 0)
 
@@ -699,6 +725,12 @@ def SKIStartEO_OBSERVATIONSVector(builder, numElems):
 def StartEO_OBSERVATIONSVector(builder, numElems):
     return SKIStartEO_OBSERVATIONSVector(builder, numElems)
 
+def SKICreateEO_OBSERVATIONSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateEO_OBSERVATIONSVector(builder, data):
+    SKICreateEO_OBSERVATIONSVector(builder, data)
+
 def SKIEnd(builder):
     return builder.EndObject()
 
@@ -713,54 +745,97 @@ except:
 class SKIT(object):
 
     # SKIT
-    def __init__(self):
-        self.ID = None  # type: str
-        self.ON_ORBIT = None  # type: str
-        self.ORIG_OBJECT_ID = None  # type: str
-        self.SAT_NO = 0  # type: int
-        self.ID_SENSOR = None  # type: str
-        self.ORIG_SENSOR_ID = None  # type: str
-        self.SENLAT = 0.0  # type: float
-        self.SENLON = 0.0  # type: float
-        self.SENALT = 0.0  # type: float
-        self.SENX = 0.0  # type: float
-        self.SENY = 0.0  # type: float
-        self.SENZ = 0.0  # type: float
-        self.SEN_QUAT = None  # type: List[float]
-        self.SEN_QUAT_DOT = None  # type: List[float]
-        self.IMAGE_TYPE = 0  # type: int
-        self.EXP_START_TIME = None  # type: str
-        self.EXP_END_TIME = None  # type: str
-        self.IMAGE_SOURCE_INFO = None  # type: str
-        self.TOP_LEFT_START_AZ = 0.0  # type: float
-        self.TOP_LEFT_START_EL = 0.0  # type: float
-        self.TOP_LEFT_STOP_AZ = 0.0  # type: float
-        self.TOP_LEFT_STOP_EL = 0.0  # type: float
-        self.IMAGE_SET_ID = None  # type: str
-        self.IMAGE_SET_LENGTH = 0  # type: int
-        self.SEQUENCE_ID = 0  # type: int
-        self.FRAME_FOVWIDTH = 0.0  # type: float
-        self.FRAME_FOVHEIGHT = 0.0  # type: float
-        self.PIXEL_FOVWIDTH = 0.0  # type: float
-        self.PIXEL_FOVHEIGHT = 0.0  # type: float
-        self.FRAME_WIDTH_PIXELS = 0  # type: int
-        self.FRAME_HEIGHT_PIXELS = 0  # type: int
-        self.PIXEL_BIT_DEPTH = 0  # type: int
-        self.ANNOTATION_KEY = None  # type: str
-        self.CALIBRATION_KEY = None  # type: str
-        self.FILENAME = None  # type: str
-        self.FILESIZE = 0  # type: int
-        self.CHECKSUM_VALUE = None  # type: str
-        self.TRANSACTION_ID = None  # type: str
-        self.TAGS = None  # type: List[str]
-        self.DESCRIPTION = None  # type: str
-        self.EO_OBSERVATIONS = None  # type: List[str]
+    def __init__(
+        self,
+        ID = None,
+        ON_ORBIT = None,
+        ORIG_OBJECT_ID = None,
+        SAT_NO = 0,
+        ID_SENSOR = None,
+        ORIG_SENSOR_ID = None,
+        SENLAT = 0.0,
+        SENLON = 0.0,
+        SENALT = 0.0,
+        SENX = 0.0,
+        SENY = 0.0,
+        SENZ = 0.0,
+        SEN_QUAT = None,
+        SEN_QUAT_DOT = None,
+        IMAGE_TYPE = 0,
+        EXP_START_TIME = None,
+        EXP_END_TIME = None,
+        IMAGE_SOURCE_INFO = None,
+        TOP_LEFT_START_AZ = 0.0,
+        TOP_LEFT_START_EL = 0.0,
+        TOP_LEFT_STOP_AZ = 0.0,
+        TOP_LEFT_STOP_EL = 0.0,
+        IMAGE_SET_ID = None,
+        IMAGE_SET_LENGTH = 0,
+        SEQUENCE_ID = 0,
+        FRAME_FOVWIDTH = 0.0,
+        FRAME_FOVHEIGHT = 0.0,
+        PIXEL_FOVWIDTH = 0.0,
+        PIXEL_FOVHEIGHT = 0.0,
+        FRAME_WIDTH_PIXELS = 0,
+        FRAME_HEIGHT_PIXELS = 0,
+        PIXEL_BIT_DEPTH = 0,
+        ANNOTATION_KEY = None,
+        CALIBRATION_KEY = None,
+        FILENAME = None,
+        FILESIZE = 0,
+        CHECKSUM_VALUE = None,
+        TRANSACTION_ID = None,
+        TAGS = None,
+        DESCRIPTION = None,
+        EO_OBSERVATIONS = None,
+    ):
+        self.ID = ID  # type: Optional[str]
+        self.ON_ORBIT = ON_ORBIT  # type: Optional[str]
+        self.ORIG_OBJECT_ID = ORIG_OBJECT_ID  # type: Optional[str]
+        self.SAT_NO = SAT_NO  # type: int
+        self.ID_SENSOR = ID_SENSOR  # type: Optional[str]
+        self.ORIG_SENSOR_ID = ORIG_SENSOR_ID  # type: Optional[str]
+        self.SENLAT = SENLAT  # type: float
+        self.SENLON = SENLON  # type: float
+        self.SENALT = SENALT  # type: float
+        self.SENX = SENX  # type: float
+        self.SENY = SENY  # type: float
+        self.SENZ = SENZ  # type: float
+        self.SEN_QUAT = SEN_QUAT  # type: Optional[List[float]]
+        self.SEN_QUAT_DOT = SEN_QUAT_DOT  # type: Optional[List[float]]
+        self.IMAGE_TYPE = IMAGE_TYPE  # type: int
+        self.EXP_START_TIME = EXP_START_TIME  # type: Optional[str]
+        self.EXP_END_TIME = EXP_END_TIME  # type: Optional[str]
+        self.IMAGE_SOURCE_INFO = IMAGE_SOURCE_INFO  # type: Optional[str]
+        self.TOP_LEFT_START_AZ = TOP_LEFT_START_AZ  # type: float
+        self.TOP_LEFT_START_EL = TOP_LEFT_START_EL  # type: float
+        self.TOP_LEFT_STOP_AZ = TOP_LEFT_STOP_AZ  # type: float
+        self.TOP_LEFT_STOP_EL = TOP_LEFT_STOP_EL  # type: float
+        self.IMAGE_SET_ID = IMAGE_SET_ID  # type: Optional[str]
+        self.IMAGE_SET_LENGTH = IMAGE_SET_LENGTH  # type: int
+        self.SEQUENCE_ID = SEQUENCE_ID  # type: int
+        self.FRAME_FOVWIDTH = FRAME_FOVWIDTH  # type: float
+        self.FRAME_FOVHEIGHT = FRAME_FOVHEIGHT  # type: float
+        self.PIXEL_FOVWIDTH = PIXEL_FOVWIDTH  # type: float
+        self.PIXEL_FOVHEIGHT = PIXEL_FOVHEIGHT  # type: float
+        self.FRAME_WIDTH_PIXELS = FRAME_WIDTH_PIXELS  # type: int
+        self.FRAME_HEIGHT_PIXELS = FRAME_HEIGHT_PIXELS  # type: int
+        self.PIXEL_BIT_DEPTH = PIXEL_BIT_DEPTH  # type: int
+        self.ANNOTATION_KEY = ANNOTATION_KEY  # type: Optional[str]
+        self.CALIBRATION_KEY = CALIBRATION_KEY  # type: Optional[str]
+        self.FILENAME = FILENAME  # type: Optional[str]
+        self.FILESIZE = FILESIZE  # type: int
+        self.CHECKSUM_VALUE = CHECKSUM_VALUE  # type: Optional[str]
+        self.TRANSACTION_ID = TRANSACTION_ID  # type: Optional[str]
+        self.TAGS = TAGS  # type: Optional[List[Optional[str]]]
+        self.DESCRIPTION = DESCRIPTION  # type: Optional[str]
+        self.EO_OBSERVATIONS = EO_OBSERVATIONS  # type: Optional[List[Optional[str]]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        SKI = SKI()
-        SKI.Init(buf, pos)
-        return cls.InitFromObj(SKI)
+        tmpSki = SKI()
+        tmpSki.Init(buf, pos)
+        return cls.InitFromObj(tmpSki)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -768,9 +843,9 @@ class SKIT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, SKI):
+    def InitFromObj(cls, tmpSki):
         x = SKIT()
-        x._UnPack(SKI)
+        x._UnPack(tmpSki)
         return x
 
     # SKIT

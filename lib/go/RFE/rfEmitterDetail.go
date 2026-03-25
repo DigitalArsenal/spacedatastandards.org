@@ -51,6 +51,10 @@ func (rcv *rfEmitterDetail) MODE_NAME() []byte {
 	return nil
 }
 
+func (rcv *rfEmitterDetail) ModeName() []byte {
+	return rcv.MODE_NAME()
+}
+
 /// Mode name or identifier
 /// Center frequency in MHz
 func (rcv *rfEmitterDetail) FREQUENCY() float64 {
@@ -61,9 +65,17 @@ func (rcv *rfEmitterDetail) FREQUENCY() float64 {
 	return 0.0
 }
 
+func (rcv *rfEmitterDetail) Frequency() float64 {
+	return rcv.FREQUENCY()
+}
+
 /// Center frequency in MHz
 func (rcv *rfEmitterDetail) MutateFREQUENCY(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(6, n)
+}
+
+func (rcv *rfEmitterDetail) MutateFrequency(n float64) bool {
+	return rcv.MutateFREQUENCY(n)
 }
 
 /// Frequency minimum in MHz
@@ -75,9 +87,17 @@ func (rcv *rfEmitterDetail) FREQ_MIN() float64 {
 	return 0.0
 }
 
+func (rcv *rfEmitterDetail) FreqMin() float64 {
+	return rcv.FREQ_MIN()
+}
+
 /// Frequency minimum in MHz
 func (rcv *rfEmitterDetail) MutateFREQ_MIN(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(8, n)
+}
+
+func (rcv *rfEmitterDetail) MutateFreqMin(n float64) bool {
+	return rcv.MutateFREQ_MIN(n)
 }
 
 /// Frequency maximum in MHz
@@ -89,9 +109,17 @@ func (rcv *rfEmitterDetail) FREQ_MAX() float64 {
 	return 0.0
 }
 
+func (rcv *rfEmitterDetail) FreqMax() float64 {
+	return rcv.FREQ_MAX()
+}
+
 /// Frequency maximum in MHz
 func (rcv *rfEmitterDetail) MutateFREQ_MAX(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(10, n)
+}
+
+func (rcv *rfEmitterDetail) MutateFreqMax(n float64) bool {
+	return rcv.MutateFREQ_MAX(n)
 }
 
 /// Pulse repetition interval in microseconds
@@ -103,9 +131,17 @@ func (rcv *rfEmitterDetail) PRI() float64 {
 	return 0.0
 }
 
+func (rcv *rfEmitterDetail) Pri() float64 {
+	return rcv.PRI()
+}
+
 /// Pulse repetition interval in microseconds
 func (rcv *rfEmitterDetail) MutatePRI(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(12, n)
+}
+
+func (rcv *rfEmitterDetail) MutatePri(n float64) bool {
+	return rcv.MutatePRI(n)
 }
 
 /// PRI minimum in microseconds
@@ -117,9 +153,17 @@ func (rcv *rfEmitterDetail) PRI_MIN() float64 {
 	return 0.0
 }
 
+func (rcv *rfEmitterDetail) PriMin() float64 {
+	return rcv.PRI_MIN()
+}
+
 /// PRI minimum in microseconds
 func (rcv *rfEmitterDetail) MutatePRI_MIN(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(14, n)
+}
+
+func (rcv *rfEmitterDetail) MutatePriMin(n float64) bool {
+	return rcv.MutatePRI_MIN(n)
 }
 
 /// PRI maximum in microseconds
@@ -131,9 +175,17 @@ func (rcv *rfEmitterDetail) PRI_MAX() float64 {
 	return 0.0
 }
 
+func (rcv *rfEmitterDetail) PriMax() float64 {
+	return rcv.PRI_MAX()
+}
+
 /// PRI maximum in microseconds
 func (rcv *rfEmitterDetail) MutatePRI_MAX(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(16, n)
+}
+
+func (rcv *rfEmitterDetail) MutatePriMax(n float64) bool {
+	return rcv.MutatePRI_MAX(n)
 }
 
 /// Pulse width in microseconds
@@ -145,9 +197,17 @@ func (rcv *rfEmitterDetail) PULSE_WIDTH() float64 {
 	return 0.0
 }
 
+func (rcv *rfEmitterDetail) PulseWidth() float64 {
+	return rcv.PULSE_WIDTH()
+}
+
 /// Pulse width in microseconds
 func (rcv *rfEmitterDetail) MutatePULSE_WIDTH(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(18, n)
+}
+
+func (rcv *rfEmitterDetail) MutatePulseWidth(n float64) bool {
+	return rcv.MutatePULSE_WIDTH(n)
 }
 
 /// Pulse width minimum in microseconds
@@ -159,9 +219,17 @@ func (rcv *rfEmitterDetail) PW_MIN() float64 {
 	return 0.0
 }
 
+func (rcv *rfEmitterDetail) PwMin() float64 {
+	return rcv.PW_MIN()
+}
+
 /// Pulse width minimum in microseconds
 func (rcv *rfEmitterDetail) MutatePW_MIN(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(20, n)
+}
+
+func (rcv *rfEmitterDetail) MutatePwMin(n float64) bool {
+	return rcv.MutatePW_MIN(n)
 }
 
 /// Pulse width maximum in microseconds
@@ -173,9 +241,17 @@ func (rcv *rfEmitterDetail) PW_MAX() float64 {
 	return 0.0
 }
 
+func (rcv *rfEmitterDetail) PwMax() float64 {
+	return rcv.PW_MAX()
+}
+
 /// Pulse width maximum in microseconds
 func (rcv *rfEmitterDetail) MutatePW_MAX(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(22, n)
+}
+
+func (rcv *rfEmitterDetail) MutatePwMax(n float64) bool {
+	return rcv.MutatePW_MAX(n)
 }
 
 /// Scan period in seconds
@@ -187,9 +263,17 @@ func (rcv *rfEmitterDetail) SCAN_PERIOD() float64 {
 	return 0.0
 }
 
+func (rcv *rfEmitterDetail) ScanPeriod() float64 {
+	return rcv.SCAN_PERIOD()
+}
+
 /// Scan period in seconds
 func (rcv *rfEmitterDetail) MutateSCAN_PERIOD(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(24, n)
+}
+
+func (rcv *rfEmitterDetail) MutateScanPeriod(n float64) bool {
+	return rcv.MutateSCAN_PERIOD(n)
 }
 
 /// Effective radiated power in dBW
@@ -201,9 +285,17 @@ func (rcv *rfEmitterDetail) ERP() float64 {
 	return 0.0
 }
 
+func (rcv *rfEmitterDetail) Erp() float64 {
+	return rcv.ERP()
+}
+
 /// Effective radiated power in dBW
 func (rcv *rfEmitterDetail) MutateERP(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(26, n)
+}
+
+func (rcv *rfEmitterDetail) MutateErp(n float64) bool {
+	return rcv.MutateERP(n)
 }
 
 /// Signal modulation
@@ -215,9 +307,17 @@ func (rcv *rfEmitterDetail) MODULATION() signalModulation {
 	return 0
 }
 
+func (rcv *rfEmitterDetail) Modulation() signalModulation {
+	return rcv.MODULATION()
+}
+
 /// Signal modulation
 func (rcv *rfEmitterDetail) MutateMODULATION(n signalModulation) bool {
 	return rcv._tab.MutateInt8Slot(28, int8(n))
+}
+
+func (rcv *rfEmitterDetail) MutateModulation(n signalModulation) bool {
+	return rcv.MutateMODULATION(n)
 }
 
 /// Antenna pattern type
@@ -227,6 +327,10 @@ func (rcv *rfEmitterDetail) ANTENNA_PATTERN() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *rfEmitterDetail) AntennaPattern() []byte {
+	return rcv.ANTENNA_PATTERN()
 }
 
 /// Antenna pattern type
@@ -239,9 +343,17 @@ func (rcv *rfEmitterDetail) BEAMWIDTH() float64 {
 	return 0.0
 }
 
+func (rcv *rfEmitterDetail) Beamwidth() float64 {
+	return rcv.BEAMWIDTH()
+}
+
 /// 3dB beamwidth in degrees
 func (rcv *rfEmitterDetail) MutateBEAMWIDTH(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(32, n)
+}
+
+func (rcv *rfEmitterDetail) MutateBeamwidth(n float64) bool {
+	return rcv.MutateBEAMWIDTH(n)
 }
 
 func rfEmitterDetailStart(builder *flatbuffers.Builder) {
@@ -250,47 +362,92 @@ func rfEmitterDetailStart(builder *flatbuffers.Builder) {
 func rfEmitterDetailAddMODE_NAME(builder *flatbuffers.Builder, MODE_NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(MODE_NAME), 0)
 }
+func rfEmitterDetailAddModeName(builder *flatbuffers.Builder, MODE_NAME flatbuffers.UOffsetT) {
+	rfEmitterDetailAddMODE_NAME(builder, MODE_NAME)
+}
 func rfEmitterDetailAddFREQUENCY(builder *flatbuffers.Builder, FREQUENCY float64) {
 	builder.PrependFloat64Slot(1, FREQUENCY, 0.0)
+}
+func rfEmitterDetailAddFrequency(builder *flatbuffers.Builder, FREQUENCY float64) {
+	rfEmitterDetailAddFREQUENCY(builder, FREQUENCY)
 }
 func rfEmitterDetailAddFREQ_MIN(builder *flatbuffers.Builder, FREQ_MIN float64) {
 	builder.PrependFloat64Slot(2, FREQ_MIN, 0.0)
 }
+func rfEmitterDetailAddFreqMin(builder *flatbuffers.Builder, FREQ_MIN float64) {
+	rfEmitterDetailAddFREQ_MIN(builder, FREQ_MIN)
+}
 func rfEmitterDetailAddFREQ_MAX(builder *flatbuffers.Builder, FREQ_MAX float64) {
 	builder.PrependFloat64Slot(3, FREQ_MAX, 0.0)
+}
+func rfEmitterDetailAddFreqMax(builder *flatbuffers.Builder, FREQ_MAX float64) {
+	rfEmitterDetailAddFREQ_MAX(builder, FREQ_MAX)
 }
 func rfEmitterDetailAddPRI(builder *flatbuffers.Builder, PRI float64) {
 	builder.PrependFloat64Slot(4, PRI, 0.0)
 }
+func rfEmitterDetailAddPri(builder *flatbuffers.Builder, PRI float64) {
+	rfEmitterDetailAddPRI(builder, PRI)
+}
 func rfEmitterDetailAddPRI_MIN(builder *flatbuffers.Builder, PRI_MIN float64) {
 	builder.PrependFloat64Slot(5, PRI_MIN, 0.0)
+}
+func rfEmitterDetailAddPriMin(builder *flatbuffers.Builder, PRI_MIN float64) {
+	rfEmitterDetailAddPRI_MIN(builder, PRI_MIN)
 }
 func rfEmitterDetailAddPRI_MAX(builder *flatbuffers.Builder, PRI_MAX float64) {
 	builder.PrependFloat64Slot(6, PRI_MAX, 0.0)
 }
+func rfEmitterDetailAddPriMax(builder *flatbuffers.Builder, PRI_MAX float64) {
+	rfEmitterDetailAddPRI_MAX(builder, PRI_MAX)
+}
 func rfEmitterDetailAddPULSE_WIDTH(builder *flatbuffers.Builder, PULSE_WIDTH float64) {
 	builder.PrependFloat64Slot(7, PULSE_WIDTH, 0.0)
+}
+func rfEmitterDetailAddPulseWidth(builder *flatbuffers.Builder, PULSE_WIDTH float64) {
+	rfEmitterDetailAddPULSE_WIDTH(builder, PULSE_WIDTH)
 }
 func rfEmitterDetailAddPW_MIN(builder *flatbuffers.Builder, PW_MIN float64) {
 	builder.PrependFloat64Slot(8, PW_MIN, 0.0)
 }
+func rfEmitterDetailAddPwMin(builder *flatbuffers.Builder, PW_MIN float64) {
+	rfEmitterDetailAddPW_MIN(builder, PW_MIN)
+}
 func rfEmitterDetailAddPW_MAX(builder *flatbuffers.Builder, PW_MAX float64) {
 	builder.PrependFloat64Slot(9, PW_MAX, 0.0)
+}
+func rfEmitterDetailAddPwMax(builder *flatbuffers.Builder, PW_MAX float64) {
+	rfEmitterDetailAddPW_MAX(builder, PW_MAX)
 }
 func rfEmitterDetailAddSCAN_PERIOD(builder *flatbuffers.Builder, SCAN_PERIOD float64) {
 	builder.PrependFloat64Slot(10, SCAN_PERIOD, 0.0)
 }
+func rfEmitterDetailAddScanPeriod(builder *flatbuffers.Builder, SCAN_PERIOD float64) {
+	rfEmitterDetailAddSCAN_PERIOD(builder, SCAN_PERIOD)
+}
 func rfEmitterDetailAddERP(builder *flatbuffers.Builder, ERP float64) {
 	builder.PrependFloat64Slot(11, ERP, 0.0)
+}
+func rfEmitterDetailAddErp(builder *flatbuffers.Builder, ERP float64) {
+	rfEmitterDetailAddERP(builder, ERP)
 }
 func rfEmitterDetailAddMODULATION(builder *flatbuffers.Builder, MODULATION signalModulation) {
 	builder.PrependInt8Slot(12, int8(MODULATION), 0)
 }
+func rfEmitterDetailAddModulation(builder *flatbuffers.Builder, MODULATION signalModulation) {
+	rfEmitterDetailAddMODULATION(builder, MODULATION)
+}
 func rfEmitterDetailAddANTENNA_PATTERN(builder *flatbuffers.Builder, ANTENNA_PATTERN flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(13, flatbuffers.UOffsetT(ANTENNA_PATTERN), 0)
 }
+func rfEmitterDetailAddAntennaPattern(builder *flatbuffers.Builder, ANTENNA_PATTERN flatbuffers.UOffsetT) {
+	rfEmitterDetailAddANTENNA_PATTERN(builder, ANTENNA_PATTERN)
+}
 func rfEmitterDetailAddBEAMWIDTH(builder *flatbuffers.Builder, BEAMWIDTH float64) {
 	builder.PrependFloat64Slot(14, BEAMWIDTH, 0.0)
+}
+func rfEmitterDetailAddBeamwidth(builder *flatbuffers.Builder, BEAMWIDTH float64) {
+	rfEmitterDetailAddBEAMWIDTH(builder, BEAMWIDTH)
 }
 func rfEmitterDetailEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

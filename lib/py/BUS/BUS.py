@@ -395,38 +395,65 @@ def End(builder):
 class BUST(object):
 
     # BUST
-    def __init__(self):
-        self.ID = None  # type: str
-        self.NAME = None  # type: str
-        self.MANUFACTURER = None  # type: str
-        self.SIZE = 0  # type: int
-        self.DRY_MASS = 0.0  # type: float
-        self.WET_MASS = 0.0  # type: float
-        self.PAYLOAD_MASS = 0.0  # type: float
-        self.DIM_X = 0.0  # type: float
-        self.DIM_Y = 0.0  # type: float
-        self.DIM_Z = 0.0  # type: float
-        self.STOWED_X = 0.0  # type: float
-        self.STOWED_Y = 0.0  # type: float
-        self.STOWED_Z = 0.0  # type: float
-        self.POWER_GENERATION = 0.0  # type: float
-        self.PAYLOAD_POWER = 0.0  # type: float
-        self.BATTERY_CAPACITY = 0.0  # type: float
-        self.STABILIZATION = 0  # type: int
-        self.POINTING_ACCURACY = 0.0  # type: float
-        self.POINTING_KNOWLEDGE = 0.0  # type: float
-        self.DESIGN_LIFE = 0.0  # type: float
-        self.DATA_STORAGE = 0.0  # type: float
-        self.DOWNLINK_RATE = 0.0  # type: float
-        self.PAYLOAD_SLOTS = 0  # type: int
-        self.HERITAGE_COUNT = 0  # type: int
-        self.NOTES = None  # type: str
+    def __init__(
+        self,
+        ID = None,
+        NAME = None,
+        MANUFACTURER = None,
+        SIZE = 0,
+        DRY_MASS = 0.0,
+        WET_MASS = 0.0,
+        PAYLOAD_MASS = 0.0,
+        DIM_X = 0.0,
+        DIM_Y = 0.0,
+        DIM_Z = 0.0,
+        STOWED_X = 0.0,
+        STOWED_Y = 0.0,
+        STOWED_Z = 0.0,
+        POWER_GENERATION = 0.0,
+        PAYLOAD_POWER = 0.0,
+        BATTERY_CAPACITY = 0.0,
+        STABILIZATION = 0,
+        POINTING_ACCURACY = 0.0,
+        POINTING_KNOWLEDGE = 0.0,
+        DESIGN_LIFE = 0.0,
+        DATA_STORAGE = 0.0,
+        DOWNLINK_RATE = 0.0,
+        PAYLOAD_SLOTS = 0,
+        HERITAGE_COUNT = 0,
+        NOTES = None,
+    ):
+        self.ID = ID  # type: Optional[str]
+        self.NAME = NAME  # type: Optional[str]
+        self.MANUFACTURER = MANUFACTURER  # type: Optional[str]
+        self.SIZE = SIZE  # type: int
+        self.DRY_MASS = DRY_MASS  # type: float
+        self.WET_MASS = WET_MASS  # type: float
+        self.PAYLOAD_MASS = PAYLOAD_MASS  # type: float
+        self.DIM_X = DIM_X  # type: float
+        self.DIM_Y = DIM_Y  # type: float
+        self.DIM_Z = DIM_Z  # type: float
+        self.STOWED_X = STOWED_X  # type: float
+        self.STOWED_Y = STOWED_Y  # type: float
+        self.STOWED_Z = STOWED_Z  # type: float
+        self.POWER_GENERATION = POWER_GENERATION  # type: float
+        self.PAYLOAD_POWER = PAYLOAD_POWER  # type: float
+        self.BATTERY_CAPACITY = BATTERY_CAPACITY  # type: float
+        self.STABILIZATION = STABILIZATION  # type: int
+        self.POINTING_ACCURACY = POINTING_ACCURACY  # type: float
+        self.POINTING_KNOWLEDGE = POINTING_KNOWLEDGE  # type: float
+        self.DESIGN_LIFE = DESIGN_LIFE  # type: float
+        self.DATA_STORAGE = DATA_STORAGE  # type: float
+        self.DOWNLINK_RATE = DOWNLINK_RATE  # type: float
+        self.PAYLOAD_SLOTS = PAYLOAD_SLOTS  # type: int
+        self.HERITAGE_COUNT = HERITAGE_COUNT  # type: int
+        self.NOTES = NOTES  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        BUS = BUS()
-        BUS.Init(buf, pos)
-        return cls.InitFromObj(BUS)
+        tmpBus = BUS()
+        tmpBus.Init(buf, pos)
+        return cls.InitFromObj(tmpBus)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -434,9 +461,9 @@ class BUST(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, BUS):
+    def InitFromObj(cls, tmpBus):
         x = BUST()
-        x._UnPack(BUS)
+        x._UnPack(tmpBus)
         return x
 
     # BUST

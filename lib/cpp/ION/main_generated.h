@@ -8,9 +8,9 @@
 
 // Ensure the included flatbuffers.h is the same version as when this file was
 // generated, otherwise it may not be compatible.
-static_assert(FLATBUFFERS_VERSION_MAJOR == 24 &&
-              FLATBUFFERS_VERSION_MINOR == 3 &&
-              FLATBUFFERS_VERSION_REVISION == 25,
+static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
+              FLATBUFFERS_VERSION_MINOR == 12 &&
+              FLATBUFFERS_VERSION_REVISION == 19,
              "Non-compatible flatbuffers version included");
 
 struct ionoDataPoint;
@@ -157,7 +157,8 @@ struct ionoDataPoint FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   double TEC_UNCERTAINTY() const {
     return GetField<double>(VT_TEC_UNCERTAINTY, 0.0);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_EPOCH) &&
            verifier.VerifyString(EPOCH()) &&
@@ -276,7 +277,8 @@ struct ionoDensityProfile FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table
   const ::flatbuffers::Vector<double> *DENSITIES() const {
     return GetPointer<const ::flatbuffers::Vector<double> *>(VT_DENSITIES);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_EPOCH) &&
            verifier.VerifyString(EPOCH()) &&
@@ -464,7 +466,8 @@ struct ION FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *NOTES() const {
     return GetPointer<const ::flatbuffers::String *>(VT_NOTES);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_ID) &&
            verifier.VerifyString(ID()) &&
@@ -729,14 +732,16 @@ inline bool SizePrefixedIONBufferHasIdentifier(const void *buf) {
       buf, IONIdentifier(), true);
 }
 
+template <bool B = false>
 inline bool VerifyIONBuffer(
-    ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifyBuffer<ION>(IONIdentifier());
+    ::flatbuffers::VerifierTemplate<B> &verifier) {
+  return verifier.template VerifyBuffer<ION>(IONIdentifier());
 }
 
+template <bool B = false>
 inline bool VerifySizePrefixedIONBuffer(
-    ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifySizePrefixedBuffer<ION>(IONIdentifier());
+    ::flatbuffers::VerifierTemplate<B> &verifier) {
+  return verifier.template VerifySizePrefixedBuffer<ION>(IONIdentifier());
 }
 
 inline void FinishIONBuffer(

@@ -2,4 +2,15 @@
 
 # namespace: 
 
-# NOTE OrbitalRegime.py does not declare any structs or enums
+class OrbitalRegime(object):
+    LEO = 0
+    MEO = 1
+    GEO = 2
+    HEO = 3
+    SSO = 4
+    MOLNIYA = 5
+    TUNDRA = 6
+    POLAR = 7
+    EQUATORIAL = 8
+    HYPERBOLIC = 9
+    PARABOLIC = 10

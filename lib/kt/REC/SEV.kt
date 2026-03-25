@@ -29,7 +29,7 @@ class SEV : Table() {
         __init(_i, _bb)
         return this
     }
-    val OB_TYPE : String?
+    val obType : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -38,9 +38,9 @@ class SEV : Table() {
                 null
             }
         }
-    val OB_TYPEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun OB_TYPEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
-    val OB_UO_M : String?
+    val obTypeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun obTypeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
+    val obUoM : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -49,14 +49,14 @@ class SEV : Table() {
                 null
             }
         }
-    val OB_UO_MAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun OB_UO_MInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
-    val OB_VALUE : Double
+    val obUoMAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun obUoMInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
+    val obValue : Double
         get() {
             val o = __offset(8)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val OB_STRING : String?
+    val obString : String?
         get() {
             val o = __offset(10)
             return if (o != 0) {
@@ -65,9 +65,9 @@ class SEV : Table() {
                 null
             }
         }
-    val OB_STRINGAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
-    fun OB_STRINGInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
-    fun OB_ARRAY(j: Int) : String? {
+    val obStringAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(10, 1)
+    fun obStringInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 10, 1)
+    fun obArray(j: Int) : String? {
         val o = __offset(12)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
@@ -75,16 +75,16 @@ class SEV : Table() {
             null
         }
     }
-    val OB_ARRAYLength : Int
+    val obArrayLength : Int
         get() {
             val o = __offset(12); return if (o != 0) __vector_len(o) else 0
         }
-    val OB_BOOL : Boolean
+    val obBool : Boolean
         get() {
             val o = __offset(14)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
-    val OB_QUALITY : String?
+    val obQuality : String?
         get() {
             val o = __offset(16)
             return if (o != 0) {
@@ -93,9 +93,9 @@ class SEV : Table() {
                 null
             }
         }
-    val OB_QUALITYAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(16, 1)
-    fun OB_QUALITYInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 16, 1)
-    val OB_DESCRIPTION : String?
+    val obQualityAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(16, 1)
+    fun obQualityInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 16, 1)
+    val obDescription : String?
         get() {
             val o = __offset(18)
             return if (o != 0) {
@@ -104,34 +104,34 @@ class SEV : Table() {
                 null
             }
         }
-    val OB_DESCRIPTIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(18, 1)
-    fun OB_DESCRIPTIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 18, 1)
+    val obDescriptionAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(18, 1)
+    fun obDescriptionInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 18, 1)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsSEV(_bb: ByteBuffer): SEV = getRootAsSEV(_bb, SEV())
         fun getRootAsSEV(_bb: ByteBuffer, obj: SEV): SEV {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun SEVBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$SEV")
-        fun createSEV(builder: FlatBufferBuilder, OB_TYPEOffset: Int, OB_UO_MOffset: Int, OB_VALUE: Double, OB_STRINGOffset: Int, OB_ARRAYOffset: Int, OB_BOOL: Boolean, OB_QUALITYOffset: Int, OB_DESCRIPTIONOffset: Int) : Int {
+        fun createSEV(builder: FlatBufferBuilder, obTypeOffset: Int, obUoMOffset: Int, obValue: Double, obStringOffset: Int, obArrayOffset: Int, obBool: Boolean, obQualityOffset: Int, obDescriptionOffset: Int) : Int {
             builder.startTable(8)
-            addOB_VALUE(builder, OB_VALUE)
-            addOB_DESCRIPTION(builder, OB_DESCRIPTIONOffset)
-            addOB_QUALITY(builder, OB_QUALITYOffset)
-            addOB_ARRAY(builder, OB_ARRAYOffset)
-            addOB_STRING(builder, OB_STRINGOffset)
-            addOB_UO_M(builder, OB_UO_MOffset)
-            addOB_TYPE(builder, OB_TYPEOffset)
-            addOB_BOOL(builder, OB_BOOL)
+            addOBVALUE(builder, obValue)
+            addOBDESCRIPTION(builder, obDescriptionOffset)
+            addOBQUALITY(builder, obQualityOffset)
+            addOBARRAY(builder, obArrayOffset)
+            addOBSTRING(builder, obStringOffset)
+            addOBUOM(builder, obUoMOffset)
+            addOBTYPE(builder, obTypeOffset)
+            addOBBOOL(builder, obBool)
             return endSEV(builder)
         }
         fun startSEV(builder: FlatBufferBuilder) = builder.startTable(8)
-        fun addOB_TYPE(builder: FlatBufferBuilder, OB_TYPE: Int) = builder.addOffset(0, OB_TYPE, 0)
-        fun addOB_UO_M(builder: FlatBufferBuilder, OB_UO_M: Int) = builder.addOffset(1, OB_UO_M, 0)
-        fun addOB_VALUE(builder: FlatBufferBuilder, OB_VALUE: Double) = builder.addDouble(2, OB_VALUE, 0.0)
-        fun addOB_STRING(builder: FlatBufferBuilder, OB_STRING: Int) = builder.addOffset(3, OB_STRING, 0)
-        fun addOB_ARRAY(builder: FlatBufferBuilder, OB_ARRAY: Int) = builder.addOffset(4, OB_ARRAY, 0)
+        fun addOBTYPE(builder: FlatBufferBuilder, obType: Int) = builder.addOffset(0, obType, 0)
+        fun addOBUOM(builder: FlatBufferBuilder, obUoM: Int) = builder.addOffset(1, obUoM, 0)
+        fun addOBVALUE(builder: FlatBufferBuilder, obValue: Double) = builder.addDouble(2, obValue, 0.0)
+        fun addOBSTRING(builder: FlatBufferBuilder, obString: Int) = builder.addOffset(3, obString, 0)
+        fun addOBARRAY(builder: FlatBufferBuilder, obArray: Int) = builder.addOffset(4, obArray, 0)
         fun createObArrayVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -140,9 +140,9 @@ class SEV : Table() {
             return builder.endVector()
         }
         fun startObArrayVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addOB_BOOL(builder: FlatBufferBuilder, OB_BOOL: Boolean) = builder.addBoolean(5, OB_BOOL, false)
-        fun addOB_QUALITY(builder: FlatBufferBuilder, OB_QUALITY: Int) = builder.addOffset(6, OB_QUALITY, 0)
-        fun addOB_DESCRIPTION(builder: FlatBufferBuilder, OB_DESCRIPTION: Int) = builder.addOffset(7, OB_DESCRIPTION, 0)
+        fun addOBBOOL(builder: FlatBufferBuilder, obBool: Boolean) = builder.addBoolean(5, obBool, false)
+        fun addOBQUALITY(builder: FlatBufferBuilder, obQuality: Int) = builder.addOffset(6, obQuality, 0)
+        fun addOBDESCRIPTION(builder: FlatBufferBuilder, obDescription: Int) = builder.addOffset(7, obDescription, 0)
         fun endSEV(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

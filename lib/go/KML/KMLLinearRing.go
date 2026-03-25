@@ -49,10 +49,17 @@ func (rcv *KMLLinearRing) COORDINATES(obj *KMLCoordinate, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(KMLCoordinate)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *KMLLinearRing) Coordinates(obj *KMLCoordinate, j int) bool {
+	return rcv.COORDINATES(obj, j)
 }
 
 func (rcv *KMLLinearRing) COORDINATESLength() int {
@@ -61,6 +68,10 @@ func (rcv *KMLLinearRing) COORDINATESLength() int {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *KMLLinearRing) CoordinatesLength() int {
+	return rcv.COORDINATESLength()
 }
 
 /// Coordinates (first = last to close the ring)
@@ -73,9 +84,17 @@ func (rcv *KMLLinearRing) EXTRUDE() bool {
 	return false
 }
 
+func (rcv *KMLLinearRing) Extrude() bool {
+	return rcv.EXTRUDE()
+}
+
 /// Whether to extrude to ground
 func (rcv *KMLLinearRing) MutateEXTRUDE(n bool) bool {
 	return rcv._tab.MutateBoolSlot(6, n)
+}
+
+func (rcv *KMLLinearRing) MutateExtrude(n bool) bool {
+	return rcv.MutateEXTRUDE(n)
 }
 
 /// Whether to tessellate
@@ -87,9 +106,17 @@ func (rcv *KMLLinearRing) TESSELLATE() bool {
 	return false
 }
 
+func (rcv *KMLLinearRing) Tessellate() bool {
+	return rcv.TESSELLATE()
+}
+
 /// Whether to tessellate
 func (rcv *KMLLinearRing) MutateTESSELLATE(n bool) bool {
 	return rcv._tab.MutateBoolSlot(8, n)
+}
+
+func (rcv *KMLLinearRing) MutateTessellate(n bool) bool {
+	return rcv.MutateTESSELLATE(n)
 }
 
 /// Altitude mode
@@ -101,9 +128,17 @@ func (rcv *KMLLinearRing) ALTITUDE_MODE() KMLAltitudeMode {
 	return 0
 }
 
+func (rcv *KMLLinearRing) AltitudeMode() KMLAltitudeMode {
+	return rcv.ALTITUDE_MODE()
+}
+
 /// Altitude mode
 func (rcv *KMLLinearRing) MutateALTITUDE_MODE(n KMLAltitudeMode) bool {
 	return rcv._tab.MutateInt8Slot(10, int8(n))
+}
+
+func (rcv *KMLLinearRing) MutateAltitudeMode(n KMLAltitudeMode) bool {
+	return rcv.MutateALTITUDE_MODE(n)
 }
 
 func KMLLinearRingStart(builder *flatbuffers.Builder) {
@@ -112,17 +147,32 @@ func KMLLinearRingStart(builder *flatbuffers.Builder) {
 func KMLLinearRingAddCOORDINATES(builder *flatbuffers.Builder, COORDINATES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(COORDINATES), 0)
 }
+func KMLLinearRingAddCoordinates(builder *flatbuffers.Builder, COORDINATES flatbuffers.UOffsetT) {
+	KMLLinearRingAddCOORDINATES(builder, COORDINATES)
+}
 func KMLLinearRingStartCOORDINATESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func KMLLinearRingStartCoordinatesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return KMLLinearRingStartCOORDINATESVector(builder, numElems)
 }
 func KMLLinearRingAddEXTRUDE(builder *flatbuffers.Builder, EXTRUDE bool) {
 	builder.PrependBoolSlot(1, EXTRUDE, false)
 }
+func KMLLinearRingAddExtrude(builder *flatbuffers.Builder, EXTRUDE bool) {
+	KMLLinearRingAddEXTRUDE(builder, EXTRUDE)
+}
 func KMLLinearRingAddTESSELLATE(builder *flatbuffers.Builder, TESSELLATE bool) {
 	builder.PrependBoolSlot(2, TESSELLATE, false)
 }
+func KMLLinearRingAddTessellate(builder *flatbuffers.Builder, TESSELLATE bool) {
+	KMLLinearRingAddTESSELLATE(builder, TESSELLATE)
+}
 func KMLLinearRingAddALTITUDE_MODE(builder *flatbuffers.Builder, ALTITUDE_MODE KMLAltitudeMode) {
 	builder.PrependInt8Slot(3, int8(ALTITUDE_MODE), 0)
+}
+func KMLLinearRingAddAltitudeMode(builder *flatbuffers.Builder, ALTITUDE_MODE KMLAltitudeMode) {
+	KMLLinearRingAddALTITUDE_MODE(builder, ALTITUDE_MODE)
 }
 func KMLLinearRingEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

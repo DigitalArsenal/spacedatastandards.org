@@ -8,9 +8,9 @@
 
 // Ensure the included flatbuffers.h is the same version as when this file was
 // generated, otherwise it may not be compatible.
-static_assert(FLATBUFFERS_VERSION_MAJOR == 24 &&
-              FLATBUFFERS_VERSION_MINOR == 3 &&
-              FLATBUFFERS_VERSION_REVISION == 25,
+static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
+              FLATBUFFERS_VERSION_MINOR == 12 &&
+              FLATBUFFERS_VERSION_REVISION == 19,
              "Non-compatible flatbuffers version included");
 
 struct PluginCapability;
@@ -106,7 +106,8 @@ struct PluginCapability FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   bool REQUIRED() const {
     return GetField<uint8_t>(VT_REQUIRED, 0) != 0;
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_NAME) &&
            verifier.VerifyString(NAME()) &&
@@ -187,7 +188,8 @@ struct PluginDependency FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *MAX_VERSION() const {
     return GetPointer<const ::flatbuffers::String *>(VT_MAX_VERSION);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_PLUGIN_ID) &&
            verifier.VerifyString(PLUGIN_ID()) &&
@@ -275,7 +277,8 @@ struct EntryFunction FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *OUTPUT_SCHEMA() const {
     return GetPointer<const ::flatbuffers::String *>(VT_OUTPUT_SCHEMA);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffsetRequired(verifier, VT_NAME) &&
            verifier.VerifyString(NAME()) &&
@@ -470,7 +473,8 @@ struct PLG FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::Vector<uint8_t> *SIGNATURE() const {
     return GetPointer<const ::flatbuffers::Vector<uint8_t> *>(VT_SIGNATURE);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffsetRequired(verifier, VT_PLUGIN_ID) &&
            verifier.VerifyString(PLUGIN_ID()) &&
@@ -751,14 +755,16 @@ inline bool SizePrefixedPLGBufferHasIdentifier(const void *buf) {
       buf, PLGIdentifier(), true);
 }
 
+template <bool B = false>
 inline bool VerifyPLGBuffer(
-    ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifyBuffer<PLG>(PLGIdentifier());
+    ::flatbuffers::VerifierTemplate<B> &verifier) {
+  return verifier.template VerifyBuffer<PLG>(PLGIdentifier());
 }
 
+template <bool B = false>
 inline bool VerifySizePrefixedPLGBuffer(
-    ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifySizePrefixedBuffer<PLG>(PLGIdentifier());
+    ::flatbuffers::VerifierTemplate<B> &verifier) {
+  return verifier.template VerifySizePrefixedBuffer<PLG>(PLGIdentifier());
 }
 
 inline void FinishPLGBuffer(

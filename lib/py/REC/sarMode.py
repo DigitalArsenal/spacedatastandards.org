@@ -2,4 +2,12 @@
 
 # namespace: 
 
-# NOTE sarMode.py does not declare any structs or enums
+class sarMode(object):
+    STRIPMAP = 0
+    SPOTLIGHT = 1
+    SCANSAR = 2
+    TOPSAR = 3
+    ISAR = 4
+    GMTI = 5
+    MARITIME = 6
+    UNKNOWN = 7

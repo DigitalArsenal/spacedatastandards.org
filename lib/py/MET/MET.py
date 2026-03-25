@@ -58,14 +58,17 @@ def End(builder):
 class METT(object):
 
     # METT
-    def __init__(self):
-        self.MEAN_ELEMENT_THEORY = 0  # type: int
+    def __init__(
+        self,
+        MEAN_ELEMENT_THEORY = 0,
+    ):
+        self.MEAN_ELEMENT_THEORY = MEAN_ELEMENT_THEORY  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        MET = MET()
-        MET.Init(buf, pos)
-        return cls.InitFromObj(MET)
+        tmpMet = MET()
+        tmpMet.Init(buf, pos)
+        return cls.InitFromObj(tmpMet)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -73,9 +76,9 @@ class METT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, MET):
+    def InitFromObj(cls, tmpMet):
         x = METT()
-        x._UnPack(MET)
+        x._UnPack(tmpMet)
         return x
 
     # METT

@@ -165,6 +165,12 @@ def RelativeTimeParameterTypeStartUNITSVector(builder, numElems):
 def StartUNITSVector(builder, numElems):
     return RelativeTimeParameterTypeStartUNITSVector(builder, numElems)
 
+def RelativeTimeParameterTypeCreateUNITSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateUNITSVector(builder, data):
+    RelativeTimeParameterTypeCreateUNITSVector(builder, data)
+
 def RelativeTimeParameterTypeAddDATA_ENCODING(builder, DATA_ENCODING):
     builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(DATA_ENCODING), 0)
 
@@ -189,6 +195,12 @@ def RelativeTimeParameterTypeStartCONTEXT_ALARMSVector(builder, numElems):
 def StartCONTEXT_ALARMSVector(builder, numElems):
     return RelativeTimeParameterTypeStartCONTEXT_ALARMSVector(builder, numElems)
 
+def RelativeTimeParameterTypeCreateCONTEXT_ALARMSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateCONTEXT_ALARMSVector(builder, data):
+    RelativeTimeParameterTypeCreateCONTEXT_ALARMSVector(builder, data)
+
 def RelativeTimeParameterTypeEnd(builder):
     return builder.EndObject()
 
@@ -207,20 +219,29 @@ except:
 class RelativeTimeParameterTypeT(object):
 
     # RelativeTimeParameterTypeT
-    def __init__(self):
-        self.NAME = None  # type: str
-        self.SHORT_DESCRIPTION = None  # type: str
-        self.LONG_DESCRIPTION = None  # type: str
-        self.UNITS = None  # type: List[Unit.UnitT]
-        self.DATA_ENCODING = None  # type: Optional[IntegerDataEncoding.IntegerDataEncodingT]
-        self.DEFAULT_ALARM = None  # type: Optional[DefaultAlarm.DefaultAlarmT]
-        self.CONTEXT_ALARMS = None  # type: List[ContextAlarm.ContextAlarmT]
+    def __init__(
+        self,
+        NAME = None,
+        SHORT_DESCRIPTION = None,
+        LONG_DESCRIPTION = None,
+        UNITS = None,
+        DATA_ENCODING = None,
+        DEFAULT_ALARM = None,
+        CONTEXT_ALARMS = None,
+    ):
+        self.NAME = NAME  # type: Optional[str]
+        self.SHORT_DESCRIPTION = SHORT_DESCRIPTION  # type: Optional[str]
+        self.LONG_DESCRIPTION = LONG_DESCRIPTION  # type: Optional[str]
+        self.UNITS = UNITS  # type: Optional[List[Unit.UnitT]]
+        self.DATA_ENCODING = DATA_ENCODING  # type: Optional[IntegerDataEncoding.IntegerDataEncodingT]
+        self.DEFAULT_ALARM = DEFAULT_ALARM  # type: Optional[DefaultAlarm.DefaultAlarmT]
+        self.CONTEXT_ALARMS = CONTEXT_ALARMS  # type: Optional[List[ContextAlarm.ContextAlarmT]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        relativeTimeParameterType = RelativeTimeParameterType()
-        relativeTimeParameterType.Init(buf, pos)
-        return cls.InitFromObj(relativeTimeParameterType)
+        tmpRelativeTimeParameterType = RelativeTimeParameterType()
+        tmpRelativeTimeParameterType.Init(buf, pos)
+        return cls.InitFromObj(tmpRelativeTimeParameterType)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -228,37 +249,37 @@ class RelativeTimeParameterTypeT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, relativeTimeParameterType):
+    def InitFromObj(cls, tmpRelativeTimeParameterType):
         x = RelativeTimeParameterTypeT()
-        x._UnPack(relativeTimeParameterType)
+        x._UnPack(tmpRelativeTimeParameterType)
         return x
 
     # RelativeTimeParameterTypeT
-    def _UnPack(self, relativeTimeParameterType):
-        if relativeTimeParameterType is None:
+    def _UnPack(self, RelativeTimeParameterType):
+        if RelativeTimeParameterType is None:
             return
-        self.NAME = relativeTimeParameterType.NAME()
-        self.SHORT_DESCRIPTION = relativeTimeParameterType.SHORT_DESCRIPTION()
-        self.LONG_DESCRIPTION = relativeTimeParameterType.LONG_DESCRIPTION()
-        if not relativeTimeParameterType.UNITSIsNone():
+        self.NAME = RelativeTimeParameterType.NAME()
+        self.SHORT_DESCRIPTION = RelativeTimeParameterType.SHORT_DESCRIPTION()
+        self.LONG_DESCRIPTION = RelativeTimeParameterType.LONG_DESCRIPTION()
+        if not RelativeTimeParameterType.UNITSIsNone():
             self.UNITS = []
-            for i in range(relativeTimeParameterType.UNITSLength()):
-                if relativeTimeParameterType.UNITS(i) is None:
+            for i in range(RelativeTimeParameterType.UNITSLength()):
+                if RelativeTimeParameterType.UNITS(i) is None:
                     self.UNITS.append(None)
                 else:
-                    unit_ = Unit.UnitT.InitFromObj(relativeTimeParameterType.UNITS(i))
+                    unit_ = Unit.UnitT.InitFromObj(RelativeTimeParameterType.UNITS(i))
                     self.UNITS.append(unit_)
-        if relativeTimeParameterType.DATA_ENCODING() is not None:
-            self.DATA_ENCODING = IntegerDataEncoding.IntegerDataEncodingT.InitFromObj(relativeTimeParameterType.DATA_ENCODING())
-        if relativeTimeParameterType.DEFAULT_ALARM() is not None:
-            self.DEFAULT_ALARM = DefaultAlarm.DefaultAlarmT.InitFromObj(relativeTimeParameterType.DEFAULT_ALARM())
-        if not relativeTimeParameterType.CONTEXT_ALARMSIsNone():
+        if RelativeTimeParameterType.DATA_ENCODING() is not None:
+            self.DATA_ENCODING = IntegerDataEncoding.IntegerDataEncodingT.InitFromObj(RelativeTimeParameterType.DATA_ENCODING())
+        if RelativeTimeParameterType.DEFAULT_ALARM() is not None:
+            self.DEFAULT_ALARM = DefaultAlarm.DefaultAlarmT.InitFromObj(RelativeTimeParameterType.DEFAULT_ALARM())
+        if not RelativeTimeParameterType.CONTEXT_ALARMSIsNone():
             self.CONTEXT_ALARMS = []
-            for i in range(relativeTimeParameterType.CONTEXT_ALARMSLength()):
-                if relativeTimeParameterType.CONTEXT_ALARMS(i) is None:
+            for i in range(RelativeTimeParameterType.CONTEXT_ALARMSLength()):
+                if RelativeTimeParameterType.CONTEXT_ALARMS(i) is None:
                     self.CONTEXT_ALARMS.append(None)
                 else:
-                    contextAlarm_ = ContextAlarm.ContextAlarmT.InitFromObj(relativeTimeParameterType.CONTEXT_ALARMS(i))
+                    contextAlarm_ = ContextAlarm.ContextAlarmT.InitFromObj(RelativeTimeParameterType.CONTEXT_ALARMS(i))
                     self.CONTEXT_ALARMS.append(contextAlarm_)
 
     # RelativeTimeParameterTypeT
@@ -304,5 +325,5 @@ class RelativeTimeParameterTypeT(object):
             RelativeTimeParameterTypeAddDEFAULT_ALARM(builder, DEFAULT_ALARM)
         if self.CONTEXT_ALARMS is not None:
             RelativeTimeParameterTypeAddCONTEXT_ALARMS(builder, CONTEXT_ALARMS)
-        relativeTimeParameterType = RelativeTimeParameterTypeEnd(builder)
-        return relativeTimeParameterType
+        RelativeTimeParameterType = RelativeTimeParameterTypeEnd(builder)
+        return RelativeTimeParameterType

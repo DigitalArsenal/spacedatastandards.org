@@ -45,22 +45,22 @@ class PPEPositionRecord : Table() {
      * Together with EPOCH_HALF_SPAN, defines the time interval:
      *   [EPOCH_MID - EPOCH_HALF_SPAN, EPOCH_MID + EPOCH_HALF_SPAN]
      */
-    val EPOCH_MID : String
+    val epochMid : String
         get() {
             val o = __offset(4)
             return if (o != 0) {
                 __string(o + bb_pos)
             } else {
-                throw AssertionError("No value for (required) field EPOCH_MID")
+                throw AssertionError("No value for (required) field epochMid")
             }
         }
-    val EPOCH_MIDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun EPOCH_MIDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val epochMidAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
+    fun epochMidInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Half-span of the validity window in seconds.
      * The full span is 2 * EPOCH_HALF_SPAN seconds centered on EPOCH_MID.
      */
-    val EPOCH_HALF_SPAN : Double
+    val epochHalfSpan : Double
         get() {
             val o = __offset(6)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -70,7 +70,7 @@ class PPEPositionRecord : Table() {
      * The polynomial degree is (NUM_COEFFICIENTS - 1).
      * Typical values: 8-32 for high-fidelity ephemeris fits.
      */
-    val NUM_COEFFICIENTS : UShort
+    val numCoefficients : UShort
         get() {
             val o = __offset(8)
             return if(o != 0) bb.getShort(o + bb_pos).toUShort() else 0u
@@ -78,7 +78,7 @@ class PPEPositionRecord : Table() {
     /**
      * Polynomial basis type for interpreting the coefficient arrays.
      */
-    val BASIS_TYPE : Byte
+    val basisType : Byte
         get() {
             val o = __offset(10)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -87,61 +87,61 @@ class PPEPositionRecord : Table() {
      * Position coefficients for X-axis (km).
      * Length must equal NUM_COEFFICIENTS. Ordered c0, c1, ..., c_{N-1}.
      */
-    fun POS_COEFF_X(j: Int) : Double {
+    fun posCoeffX(j: Int) : Double {
         val o = __offset(12)
         return if (o != 0) {
             bb.getDouble(__vector(o) + j * 8)
         } else {
-            throw IndexOutOfBoundsException("Index out of range: $j, vector POS_COEFF_X is empty")
+            throw IndexOutOfBoundsException("Index out of range: $j, vector posCoeffX is empty")
         }
     }
-    val POS_COEFF_XLength : Int
+    val posCoeffXLength : Int
         get() {
             val o = __offset(12); return if (o != 0) __vector_len(o) else 0
         }
-    val POS_COEFF_XAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 8)
-    fun POS_COEFF_XInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 8)
+    val posCoeffXAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 8)
+    fun posCoeffXInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 8)
     /**
      * Position coefficients for Y-axis (km).
      * Length must equal NUM_COEFFICIENTS.
      */
-    fun POS_COEFF_Y(j: Int) : Double {
+    fun posCoeffY(j: Int) : Double {
         val o = __offset(14)
         return if (o != 0) {
             bb.getDouble(__vector(o) + j * 8)
         } else {
-            throw IndexOutOfBoundsException("Index out of range: $j, vector POS_COEFF_Y is empty")
+            throw IndexOutOfBoundsException("Index out of range: $j, vector posCoeffY is empty")
         }
     }
-    val POS_COEFF_YLength : Int
+    val posCoeffYLength : Int
         get() {
             val o = __offset(14); return if (o != 0) __vector_len(o) else 0
         }
-    val POS_COEFF_YAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(14, 8)
-    fun POS_COEFF_YInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 14, 8)
+    val posCoeffYAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(14, 8)
+    fun posCoeffYInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 14, 8)
     /**
      * Position coefficients for Z-axis (km).
      * Length must equal NUM_COEFFICIENTS.
      */
-    fun POS_COEFF_Z(j: Int) : Double {
+    fun posCoeffZ(j: Int) : Double {
         val o = __offset(16)
         return if (o != 0) {
             bb.getDouble(__vector(o) + j * 8)
         } else {
-            throw IndexOutOfBoundsException("Index out of range: $j, vector POS_COEFF_Z is empty")
+            throw IndexOutOfBoundsException("Index out of range: $j, vector posCoeffZ is empty")
         }
     }
-    val POS_COEFF_ZLength : Int
+    val posCoeffZLength : Int
         get() {
             val o = __offset(16); return if (o != 0) __vector_len(o) else 0
         }
-    val POS_COEFF_ZAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(16, 8)
-    fun POS_COEFF_ZInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 16, 8)
+    val posCoeffZAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(16, 8)
+    fun posCoeffZInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 16, 8)
     /**
      * Whether explicit velocity coefficients are provided.
      * If false, velocity should be derived by differentiating the position polynomial.
      */
-    val HAS_VELOCITY_COEFFICIENTS : Boolean
+    val hasVelocityCoefficients : Boolean
         get() {
             val o = __offset(18)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -150,7 +150,7 @@ class PPEPositionRecord : Table() {
      * Velocity coefficients for X-axis (km/s). Optional.
      * Length must equal NUM_COEFFICIENTS if present.
      */
-    fun VEL_COEFF_X(j: Int) : Double {
+    fun velCoeffX(j: Int) : Double {
         val o = __offset(20)
         return if (o != 0) {
             bb.getDouble(__vector(o) + j * 8)
@@ -158,16 +158,16 @@ class PPEPositionRecord : Table() {
             0.0
         }
     }
-    val VEL_COEFF_XLength : Int
+    val velCoeffXLength : Int
         get() {
             val o = __offset(20); return if (o != 0) __vector_len(o) else 0
         }
-    val VEL_COEFF_XAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(20, 8)
-    fun VEL_COEFF_XInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 20, 8)
+    val velCoeffXAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(20, 8)
+    fun velCoeffXInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 20, 8)
     /**
      * Velocity coefficients for Y-axis (km/s). Optional.
      */
-    fun VEL_COEFF_Y(j: Int) : Double {
+    fun velCoeffY(j: Int) : Double {
         val o = __offset(22)
         return if (o != 0) {
             bb.getDouble(__vector(o) + j * 8)
@@ -175,16 +175,16 @@ class PPEPositionRecord : Table() {
             0.0
         }
     }
-    val VEL_COEFF_YLength : Int
+    val velCoeffYLength : Int
         get() {
             val o = __offset(22); return if (o != 0) __vector_len(o) else 0
         }
-    val VEL_COEFF_YAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(22, 8)
-    fun VEL_COEFF_YInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 22, 8)
+    val velCoeffYAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(22, 8)
+    fun velCoeffYInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 22, 8)
     /**
      * Velocity coefficients for Z-axis (km/s). Optional.
      */
-    fun VEL_COEFF_Z(j: Int) : Double {
+    fun velCoeffZ(j: Int) : Double {
         val o = __offset(24)
         return if (o != 0) {
             bb.getDouble(__vector(o) + j * 8)
@@ -192,16 +192,16 @@ class PPEPositionRecord : Table() {
             0.0
         }
     }
-    val VEL_COEFF_ZLength : Int
+    val velCoeffZLength : Int
         get() {
             val o = __offset(24); return if (o != 0) __vector_len(o) else 0
         }
-    val VEL_COEFF_ZAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(24, 8)
-    fun VEL_COEFF_ZInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 24, 8)
+    val velCoeffZAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(24, 8)
+    fun velCoeffZInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 24, 8)
     /**
      * Maximum position fit residual over this segment (km). Optional quality metric.
      */
-    val MAX_POSITION_RESIDUAL : Double
+    val maxPositionResidual : Double
         get() {
             val o = __offset(26)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -209,41 +209,41 @@ class PPEPositionRecord : Table() {
     /**
      * RMS position fit residual over this segment (km). Optional quality metric.
      */
-    val RMS_POSITION_RESIDUAL : Double
+    val rmsPositionResidual : Double
         get() {
             val o = __offset(28)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsPPEPositionRecord(_bb: ByteBuffer): PPEPositionRecord = getRootAsPPEPositionRecord(_bb, PPEPositionRecord())
         fun getRootAsPPEPositionRecord(_bb: ByteBuffer, obj: PPEPositionRecord): PPEPositionRecord {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createPPEPositionRecord(builder: FlatBufferBuilder, EPOCH_MIDOffset: Int, EPOCH_HALF_SPAN: Double, NUM_COEFFICIENTS: UShort, BASIS_TYPE: Byte, POS_COEFF_XOffset: Int, POS_COEFF_YOffset: Int, POS_COEFF_ZOffset: Int, HAS_VELOCITY_COEFFICIENTS: Boolean, VEL_COEFF_XOffset: Int, VEL_COEFF_YOffset: Int, VEL_COEFF_ZOffset: Int, MAX_POSITION_RESIDUAL: Double, RMS_POSITION_RESIDUAL: Double) : Int {
+        fun createPPEPositionRecord(builder: FlatBufferBuilder, epochMidOffset: Int, epochHalfSpan: Double, numCoefficients: UShort, basisType: Byte, posCoeffXOffset: Int, posCoeffYOffset: Int, posCoeffZOffset: Int, hasVelocityCoefficients: Boolean, velCoeffXOffset: Int, velCoeffYOffset: Int, velCoeffZOffset: Int, maxPositionResidual: Double, rmsPositionResidual: Double) : Int {
             builder.startTable(13)
-            addRMS_POSITION_RESIDUAL(builder, RMS_POSITION_RESIDUAL)
-            addMAX_POSITION_RESIDUAL(builder, MAX_POSITION_RESIDUAL)
-            addEPOCH_HALF_SPAN(builder, EPOCH_HALF_SPAN)
-            addVEL_COEFF_Z(builder, VEL_COEFF_ZOffset)
-            addVEL_COEFF_Y(builder, VEL_COEFF_YOffset)
-            addVEL_COEFF_X(builder, VEL_COEFF_XOffset)
-            addPOS_COEFF_Z(builder, POS_COEFF_ZOffset)
-            addPOS_COEFF_Y(builder, POS_COEFF_YOffset)
-            addPOS_COEFF_X(builder, POS_COEFF_XOffset)
-            addEPOCH_MID(builder, EPOCH_MIDOffset)
-            addNUM_COEFFICIENTS(builder, NUM_COEFFICIENTS)
-            addHAS_VELOCITY_COEFFICIENTS(builder, HAS_VELOCITY_COEFFICIENTS)
-            addBASIS_TYPE(builder, BASIS_TYPE)
+            addRMSPOSITIONRESIDUAL(builder, rmsPositionResidual)
+            addMAXPOSITIONRESIDUAL(builder, maxPositionResidual)
+            addEPOCHHALFSPAN(builder, epochHalfSpan)
+            addVELCOEFFZ(builder, velCoeffZOffset)
+            addVELCOEFFY(builder, velCoeffYOffset)
+            addVELCOEFFX(builder, velCoeffXOffset)
+            addPOSCOEFFZ(builder, posCoeffZOffset)
+            addPOSCOEFFY(builder, posCoeffYOffset)
+            addPOSCOEFFX(builder, posCoeffXOffset)
+            addEPOCHMID(builder, epochMidOffset)
+            addNUMCOEFFICIENTS(builder, numCoefficients)
+            addHASVELOCITYCOEFFICIENTS(builder, hasVelocityCoefficients)
+            addBASISTYPE(builder, basisType)
             return endPPEPositionRecord(builder)
         }
         fun startPPEPositionRecord(builder: FlatBufferBuilder) = builder.startTable(13)
-        fun addEPOCH_MID(builder: FlatBufferBuilder, EPOCH_MID: Int) = builder.addOffset(0, EPOCH_MID, 0)
-        fun addEPOCH_HALF_SPAN(builder: FlatBufferBuilder, EPOCH_HALF_SPAN: Double) = builder.addDouble(1, EPOCH_HALF_SPAN, 0.0)
-        fun addNUM_COEFFICIENTS(builder: FlatBufferBuilder, NUM_COEFFICIENTS: UShort) = builder.addShort(2, NUM_COEFFICIENTS.toShort(), 0)
-        fun addBASIS_TYPE(builder: FlatBufferBuilder, BASIS_TYPE: Byte) = builder.addByte(3, BASIS_TYPE, 0)
-        fun addPOS_COEFF_X(builder: FlatBufferBuilder, POS_COEFF_X: Int) = builder.addOffset(4, POS_COEFF_X, 0)
+        fun addEPOCHMID(builder: FlatBufferBuilder, epochMid: Int) = builder.addOffset(0, epochMid, 0)
+        fun addEPOCHHALFSPAN(builder: FlatBufferBuilder, epochHalfSpan: Double) = builder.addDouble(1, epochHalfSpan, 0.0)
+        fun addNUMCOEFFICIENTS(builder: FlatBufferBuilder, numCoefficients: UShort) = builder.addShort(2, numCoefficients.toShort(), 0)
+        fun addBASISTYPE(builder: FlatBufferBuilder, basisType: Byte) = builder.addByte(3, basisType, 0)
+        fun addPOSCOEFFX(builder: FlatBufferBuilder, posCoeffX: Int) = builder.addOffset(4, posCoeffX, 0)
         fun createPosCoeffXVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
             builder.startVector(8, data.size, 8)
             for (i in data.size - 1 downTo 0) {
@@ -252,7 +252,7 @@ class PPEPositionRecord : Table() {
             return builder.endVector()
         }
         fun startPosCoeffXVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
-        fun addPOS_COEFF_Y(builder: FlatBufferBuilder, POS_COEFF_Y: Int) = builder.addOffset(5, POS_COEFF_Y, 0)
+        fun addPOSCOEFFY(builder: FlatBufferBuilder, posCoeffY: Int) = builder.addOffset(5, posCoeffY, 0)
         fun createPosCoeffYVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
             builder.startVector(8, data.size, 8)
             for (i in data.size - 1 downTo 0) {
@@ -261,7 +261,7 @@ class PPEPositionRecord : Table() {
             return builder.endVector()
         }
         fun startPosCoeffYVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
-        fun addPOS_COEFF_Z(builder: FlatBufferBuilder, POS_COEFF_Z: Int) = builder.addOffset(6, POS_COEFF_Z, 0)
+        fun addPOSCOEFFZ(builder: FlatBufferBuilder, posCoeffZ: Int) = builder.addOffset(6, posCoeffZ, 0)
         fun createPosCoeffZVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
             builder.startVector(8, data.size, 8)
             for (i in data.size - 1 downTo 0) {
@@ -270,8 +270,8 @@ class PPEPositionRecord : Table() {
             return builder.endVector()
         }
         fun startPosCoeffZVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
-        fun addHAS_VELOCITY_COEFFICIENTS(builder: FlatBufferBuilder, HAS_VELOCITY_COEFFICIENTS: Boolean) = builder.addBoolean(7, HAS_VELOCITY_COEFFICIENTS, false)
-        fun addVEL_COEFF_X(builder: FlatBufferBuilder, VEL_COEFF_X: Int) = builder.addOffset(8, VEL_COEFF_X, 0)
+        fun addHASVELOCITYCOEFFICIENTS(builder: FlatBufferBuilder, hasVelocityCoefficients: Boolean) = builder.addBoolean(7, hasVelocityCoefficients, false)
+        fun addVELCOEFFX(builder: FlatBufferBuilder, velCoeffX: Int) = builder.addOffset(8, velCoeffX, 0)
         fun createVelCoeffXVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
             builder.startVector(8, data.size, 8)
             for (i in data.size - 1 downTo 0) {
@@ -280,7 +280,7 @@ class PPEPositionRecord : Table() {
             return builder.endVector()
         }
         fun startVelCoeffXVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
-        fun addVEL_COEFF_Y(builder: FlatBufferBuilder, VEL_COEFF_Y: Int) = builder.addOffset(9, VEL_COEFF_Y, 0)
+        fun addVELCOEFFY(builder: FlatBufferBuilder, velCoeffY: Int) = builder.addOffset(9, velCoeffY, 0)
         fun createVelCoeffYVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
             builder.startVector(8, data.size, 8)
             for (i in data.size - 1 downTo 0) {
@@ -289,7 +289,7 @@ class PPEPositionRecord : Table() {
             return builder.endVector()
         }
         fun startVelCoeffYVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
-        fun addVEL_COEFF_Z(builder: FlatBufferBuilder, VEL_COEFF_Z: Int) = builder.addOffset(10, VEL_COEFF_Z, 0)
+        fun addVELCOEFFZ(builder: FlatBufferBuilder, velCoeffZ: Int) = builder.addOffset(10, velCoeffZ, 0)
         fun createVelCoeffZVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
             builder.startVector(8, data.size, 8)
             for (i in data.size - 1 downTo 0) {
@@ -298,8 +298,8 @@ class PPEPositionRecord : Table() {
             return builder.endVector()
         }
         fun startVelCoeffZVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
-        fun addMAX_POSITION_RESIDUAL(builder: FlatBufferBuilder, MAX_POSITION_RESIDUAL: Double) = builder.addDouble(11, MAX_POSITION_RESIDUAL, 0.0)
-        fun addRMS_POSITION_RESIDUAL(builder: FlatBufferBuilder, RMS_POSITION_RESIDUAL: Double) = builder.addDouble(12, RMS_POSITION_RESIDUAL, 0.0)
+        fun addMAXPOSITIONRESIDUAL(builder: FlatBufferBuilder, maxPositionResidual: Double) = builder.addDouble(11, maxPositionResidual, 0.0)
+        fun addRMSPOSITIONRESIDUAL(builder: FlatBufferBuilder, rmsPositionResidual: Double) = builder.addDouble(12, rmsPositionResidual, 0.0)
         fun endPPEPositionRecord(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
                 builder.required(o, 4)

@@ -63,12 +63,20 @@ func (rcv *TRN) SOURCES(j int) TerrainDataSource {
 	return 0
 }
 
+func (rcv *TRN) Sources(j int) TerrainDataSource {
+	return rcv.SOURCES(j)
+}
+
 func (rcv *TRN) SOURCESLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *TRN) SourcesLength() int {
+	return rcv.SOURCESLength()
 }
 
 func (rcv *TRN) MutateSOURCES(j int, n TerrainDataSource) bool {
@@ -80,6 +88,10 @@ func (rcv *TRN) MutateSOURCES(j int, n TerrainDataSource) bool {
 	return false
 }
 
+func (rcv *TRN) MutateSources(j int, n TerrainDataSource) bool {
+	return rcv.MutateSOURCES(j, n)
+}
+
 func (rcv *TRN) INTERPOLATION() TerrainInterpolation {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
@@ -88,8 +100,16 @@ func (rcv *TRN) INTERPOLATION() TerrainInterpolation {
 	return 1
 }
 
+func (rcv *TRN) Interpolation() TerrainInterpolation {
+	return rcv.INTERPOLATION()
+}
+
 func (rcv *TRN) MutateINTERPOLATION(n TerrainInterpolation) bool {
 	return rcv._tab.MutateInt8Slot(6, int8(n))
+}
+
+func (rcv *TRN) MutateInterpolation(n TerrainInterpolation) bool {
+	return rcv.MutateINTERPOLATION(n)
 }
 
 func (rcv *TRN) CACHE_ENABLED() bool {
@@ -100,8 +120,16 @@ func (rcv *TRN) CACHE_ENABLED() bool {
 	return true
 }
 
+func (rcv *TRN) CacheEnabled() bool {
+	return rcv.CACHE_ENABLED()
+}
+
 func (rcv *TRN) MutateCACHE_ENABLED(n bool) bool {
 	return rcv._tab.MutateBoolSlot(8, n)
+}
+
+func (rcv *TRN) MutateCacheEnabled(n bool) bool {
+	return rcv.MutateCACHE_ENABLED(n)
 }
 
 func (rcv *TRN) MAX_CACHE_TILES() uint16 {
@@ -112,8 +140,16 @@ func (rcv *TRN) MAX_CACHE_TILES() uint16 {
 	return 100
 }
 
+func (rcv *TRN) MaxCacheTiles() uint16 {
+	return rcv.MAX_CACHE_TILES()
+}
+
 func (rcv *TRN) MutateMAX_CACHE_TILES(n uint16) bool {
 	return rcv._tab.MutateUint16Slot(10, n)
+}
+
+func (rcv *TRN) MutateMaxCacheTiles(n uint16) bool {
+	return rcv.MutateMAX_CACHE_TILES(n)
 }
 
 func (rcv *TRN) VERTICAL_EXAGGERATION() float64 {
@@ -124,8 +160,16 @@ func (rcv *TRN) VERTICAL_EXAGGERATION() float64 {
 	return 1.0
 }
 
+func (rcv *TRN) VerticalExaggeration() float64 {
+	return rcv.VERTICAL_EXAGGERATION()
+}
+
 func (rcv *TRN) MutateVERTICAL_EXAGGERATION(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(12, n)
+}
+
+func (rcv *TRN) MutateVerticalExaggeration(n float64) bool {
+	return rcv.MutateVERTICAL_EXAGGERATION(n)
 }
 
 func TRNStart(builder *flatbuffers.Builder) {
@@ -134,20 +178,38 @@ func TRNStart(builder *flatbuffers.Builder) {
 func TRNAddSOURCES(builder *flatbuffers.Builder, SOURCES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(SOURCES), 0)
 }
+func TRNAddSources(builder *flatbuffers.Builder, SOURCES flatbuffers.UOffsetT) {
+	TRNAddSOURCES(builder, SOURCES)
+}
 func TRNStartSOURCESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(1, numElems, 1)
+}
+func TRNStartSourcesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return TRNStartSOURCESVector(builder, numElems)
 }
 func TRNAddINTERPOLATION(builder *flatbuffers.Builder, INTERPOLATION TerrainInterpolation) {
 	builder.PrependInt8Slot(1, int8(INTERPOLATION), 1)
 }
+func TRNAddInterpolation(builder *flatbuffers.Builder, INTERPOLATION TerrainInterpolation) {
+	TRNAddINTERPOLATION(builder, INTERPOLATION)
+}
 func TRNAddCACHE_ENABLED(builder *flatbuffers.Builder, CACHE_ENABLED bool) {
 	builder.PrependBoolSlot(2, CACHE_ENABLED, true)
+}
+func TRNAddCacheEnabled(builder *flatbuffers.Builder, CACHE_ENABLED bool) {
+	TRNAddCACHE_ENABLED(builder, CACHE_ENABLED)
 }
 func TRNAddMAX_CACHE_TILES(builder *flatbuffers.Builder, MAX_CACHE_TILES uint16) {
 	builder.PrependUint16Slot(3, MAX_CACHE_TILES, 100)
 }
+func TRNAddMaxCacheTiles(builder *flatbuffers.Builder, MAX_CACHE_TILES uint16) {
+	TRNAddMAX_CACHE_TILES(builder, MAX_CACHE_TILES)
+}
 func TRNAddVERTICAL_EXAGGERATION(builder *flatbuffers.Builder, VERTICAL_EXAGGERATION float64) {
 	builder.PrependFloat64Slot(4, VERTICAL_EXAGGERATION, 1.0)
+}
+func TRNAddVerticalExaggeration(builder *flatbuffers.Builder, VERTICAL_EXAGGERATION float64) {
+	TRNAddVERTICAL_EXAGGERATION(builder, VERTICAL_EXAGGERATION)
 }
 func TRNEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

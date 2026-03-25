@@ -51,6 +51,10 @@ func (rcv *GPXTrack) NAME() []byte {
 	return nil
 }
 
+func (rcv *GPXTrack) Name() []byte {
+	return rcv.NAME()
+}
+
 /// Track name
 /// Comment
 func (rcv *GPXTrack) COMMENT() []byte {
@@ -59,6 +63,10 @@ func (rcv *GPXTrack) COMMENT() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *GPXTrack) Comment() []byte {
+	return rcv.COMMENT()
 }
 
 /// Comment
@@ -71,6 +79,10 @@ func (rcv *GPXTrack) DESCRIPTION() []byte {
 	return nil
 }
 
+func (rcv *GPXTrack) Description() []byte {
+	return rcv.DESCRIPTION()
+}
+
 /// Description
 /// Source of data
 func (rcv *GPXTrack) SOURCE() []byte {
@@ -81,6 +93,10 @@ func (rcv *GPXTrack) SOURCE() []byte {
 	return nil
 }
 
+func (rcv *GPXTrack) Source() []byte {
+	return rcv.SOURCE()
+}
+
 /// Source of data
 /// Links to additional information
 func (rcv *GPXTrack) LINKS(obj *GPXLink, j int) bool {
@@ -89,10 +105,17 @@ func (rcv *GPXTrack) LINKS(obj *GPXLink, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(GPXLink)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *GPXTrack) Links(obj *GPXLink, j int) bool {
+	return rcv.LINKS(obj, j)
 }
 
 func (rcv *GPXTrack) LINKSLength() int {
@@ -101,6 +124,10 @@ func (rcv *GPXTrack) LINKSLength() int {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *GPXTrack) LinksLength() int {
+	return rcv.LINKSLength()
 }
 
 /// Links to additional information
@@ -113,9 +140,17 @@ func (rcv *GPXTrack) NUMBER() uint32 {
 	return 0
 }
 
+func (rcv *GPXTrack) Number() uint32 {
+	return rcv.NUMBER()
+}
+
 /// Track number
 func (rcv *GPXTrack) MutateNUMBER(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(14, n)
+}
+
+func (rcv *GPXTrack) MutateNumber(n uint32) bool {
+	return rcv.MutateNUMBER(n)
 }
 
 /// Type/category
@@ -127,6 +162,10 @@ func (rcv *GPXTrack) TYPE() []byte {
 	return nil
 }
 
+func (rcv *GPXTrack) Type() []byte {
+	return rcv.TYPE()
+}
+
 /// Type/category
 /// Track segments
 func (rcv *GPXTrack) SEGMENTS(obj *GPXTrackSegment, j int) bool {
@@ -135,10 +174,17 @@ func (rcv *GPXTrack) SEGMENTS(obj *GPXTrackSegment, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(GPXTrackSegment)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *GPXTrack) Segments(obj *GPXTrackSegment, j int) bool {
+	return rcv.SEGMENTS(obj, j)
 }
 
 func (rcv *GPXTrack) SEGMENTSLength() int {
@@ -149,6 +195,10 @@ func (rcv *GPXTrack) SEGMENTSLength() int {
 	return 0
 }
 
+func (rcv *GPXTrack) SegmentsLength() int {
+	return rcv.SEGMENTSLength()
+}
+
 /// Track segments
 func GPXTrackStart(builder *flatbuffers.Builder) {
 	builder.StartObject(8)
@@ -156,32 +206,62 @@ func GPXTrackStart(builder *flatbuffers.Builder) {
 func GPXTrackAddNAME(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(NAME), 0)
 }
+func GPXTrackAddName(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
+	GPXTrackAddNAME(builder, NAME)
+}
 func GPXTrackAddCOMMENT(builder *flatbuffers.Builder, COMMENT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(COMMENT), 0)
+}
+func GPXTrackAddComment(builder *flatbuffers.Builder, COMMENT flatbuffers.UOffsetT) {
+	GPXTrackAddCOMMENT(builder, COMMENT)
 }
 func GPXTrackAddDESCRIPTION(builder *flatbuffers.Builder, DESCRIPTION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(DESCRIPTION), 0)
 }
+func GPXTrackAddDescription(builder *flatbuffers.Builder, DESCRIPTION flatbuffers.UOffsetT) {
+	GPXTrackAddDESCRIPTION(builder, DESCRIPTION)
+}
 func GPXTrackAddSOURCE(builder *flatbuffers.Builder, SOURCE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(SOURCE), 0)
+}
+func GPXTrackAddSource(builder *flatbuffers.Builder, SOURCE flatbuffers.UOffsetT) {
+	GPXTrackAddSOURCE(builder, SOURCE)
 }
 func GPXTrackAddLINKS(builder *flatbuffers.Builder, LINKS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(LINKS), 0)
 }
+func GPXTrackAddLinks(builder *flatbuffers.Builder, LINKS flatbuffers.UOffsetT) {
+	GPXTrackAddLINKS(builder, LINKS)
+}
 func GPXTrackStartLINKSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func GPXTrackStartLinksVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return GPXTrackStartLINKSVector(builder, numElems)
 }
 func GPXTrackAddNUMBER(builder *flatbuffers.Builder, NUMBER uint32) {
 	builder.PrependUint32Slot(5, NUMBER, 0)
 }
+func GPXTrackAddNumber(builder *flatbuffers.Builder, NUMBER uint32) {
+	GPXTrackAddNUMBER(builder, NUMBER)
+}
 func GPXTrackAddTYPE(builder *flatbuffers.Builder, TYPE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(TYPE), 0)
+}
+func GPXTrackAddType(builder *flatbuffers.Builder, TYPE flatbuffers.UOffsetT) {
+	GPXTrackAddTYPE(builder, TYPE)
 }
 func GPXTrackAddSEGMENTS(builder *flatbuffers.Builder, SEGMENTS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(SEGMENTS), 0)
 }
+func GPXTrackAddSegments(builder *flatbuffers.Builder, SEGMENTS flatbuffers.UOffsetT) {
+	GPXTrackAddSEGMENTS(builder, SEGMENTS)
+}
 func GPXTrackStartSEGMENTSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func GPXTrackStartSegmentsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return GPXTrackStartSEGMENTSVector(builder, numElems)
 }
 func GPXTrackEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

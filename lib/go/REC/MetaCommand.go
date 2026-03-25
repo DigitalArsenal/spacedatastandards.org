@@ -51,6 +51,10 @@ func (rcv *MetaCommand) NAME() []byte {
 	return nil
 }
 
+func (rcv *MetaCommand) Name() []byte {
+	return rcv.NAME()
+}
+
 /// Command name
 /// Short description
 func (rcv *MetaCommand) SHORT_DESCRIPTION() []byte {
@@ -59,6 +63,10 @@ func (rcv *MetaCommand) SHORT_DESCRIPTION() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *MetaCommand) ShortDescription() []byte {
+	return rcv.SHORT_DESCRIPTION()
 }
 
 /// Short description
@@ -71,6 +79,10 @@ func (rcv *MetaCommand) LONG_DESCRIPTION() []byte {
 	return nil
 }
 
+func (rcv *MetaCommand) LongDescription() []byte {
+	return rcv.LONG_DESCRIPTION()
+}
+
 /// Long description
 /// Abstract command (base only)
 func (rcv *MetaCommand) ABSTRACT() bool {
@@ -81,9 +93,17 @@ func (rcv *MetaCommand) ABSTRACT() bool {
 	return false
 }
 
+func (rcv *MetaCommand) Abstract() bool {
+	return rcv.ABSTRACT()
+}
+
 /// Abstract command (base only)
 func (rcv *MetaCommand) MutateABSTRACT(n bool) bool {
 	return rcv._tab.MutateBoolSlot(10, n)
+}
+
+func (rcv *MetaCommand) MutateAbstract(n bool) bool {
+	return rcv.MutateABSTRACT(n)
 }
 
 /// Argument list
@@ -93,10 +113,17 @@ func (rcv *MetaCommand) ARGUMENTS(obj *Argument, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(Argument)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *MetaCommand) Arguments(obj *Argument, j int) bool {
+	return rcv.ARGUMENTS(obj, j)
 }
 
 func (rcv *MetaCommand) ARGUMENTSLength() int {
@@ -105,6 +132,10 @@ func (rcv *MetaCommand) ARGUMENTSLength() int {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *MetaCommand) ArgumentsLength() int {
+	return rcv.ARGUMENTSLength()
 }
 
 /// Argument list
@@ -122,6 +153,10 @@ func (rcv *MetaCommand) COMMAND_CONTAINER(obj *CommandContainer) *CommandContain
 	return nil
 }
 
+func (rcv *MetaCommand) CommandContainer(obj *CommandContainer) *CommandContainer {
+	return rcv.COMMAND_CONTAINER(obj)
+}
+
 /// Command container
 /// Base metacommand (inheritance)
 func (rcv *MetaCommand) BASE_META_COMMAND(obj *BaseMetaCommand) *BaseMetaCommand {
@@ -137,6 +172,10 @@ func (rcv *MetaCommand) BASE_META_COMMAND(obj *BaseMetaCommand) *BaseMetaCommand
 	return nil
 }
 
+func (rcv *MetaCommand) BaseMetaCommand(obj *BaseMetaCommand) *BaseMetaCommand {
+	return rcv.BASE_META_COMMAND(obj)
+}
+
 /// Base metacommand (inheritance)
 /// Command verifiers
 func (rcv *MetaCommand) VERIFIERS(obj *CommandVerifier, j int) bool {
@@ -145,10 +184,17 @@ func (rcv *MetaCommand) VERIFIERS(obj *CommandVerifier, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(CommandVerifier)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *MetaCommand) Verifiers(obj *CommandVerifier, j int) bool {
+	return rcv.VERIFIERS(obj, j)
 }
 
 func (rcv *MetaCommand) VERIFIERSLength() int {
@@ -157,6 +203,10 @@ func (rcv *MetaCommand) VERIFIERSLength() int {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *MetaCommand) VerifiersLength() int {
+	return rcv.VERIFIERSLength()
 }
 
 /// Command verifiers
@@ -174,6 +224,10 @@ func (rcv *MetaCommand) SIGNIFICANCE(obj *CommandSignificance) *CommandSignifica
 	return nil
 }
 
+func (rcv *MetaCommand) Significance(obj *CommandSignificance) *CommandSignificance {
+	return rcv.SIGNIFICANCE(obj)
+}
+
 /// Command significance
 /// Interlock constraints
 func (rcv *MetaCommand) INTERLOCKS(obj *Interlock, j int) bool {
@@ -182,10 +236,17 @@ func (rcv *MetaCommand) INTERLOCKS(obj *Interlock, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(Interlock)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *MetaCommand) Interlocks(obj *Interlock, j int) bool {
+	return rcv.INTERLOCKS(obj, j)
 }
 
 func (rcv *MetaCommand) INTERLOCKSLength() int {
@@ -194,6 +255,10 @@ func (rcv *MetaCommand) INTERLOCKSLength() int {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *MetaCommand) InterlocksLength() int {
+	return rcv.INTERLOCKSLength()
 }
 
 /// Interlock constraints
@@ -211,6 +276,10 @@ func (rcv *MetaCommand) DEFAULT_SIGNIFICANCE(obj *CommandSignificance) *CommandS
 	return nil
 }
 
+func (rcv *MetaCommand) DefaultSignificance(obj *CommandSignificance) *CommandSignificance {
+	return rcv.DEFAULT_SIGNIFICANCE(obj)
+}
+
 /// Default significance
 func MetaCommandStart(builder *flatbuffers.Builder) {
 	builder.StartObject(11)
@@ -218,44 +287,86 @@ func MetaCommandStart(builder *flatbuffers.Builder) {
 func MetaCommandAddNAME(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(NAME), 0)
 }
+func MetaCommandAddName(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
+	MetaCommandAddNAME(builder, NAME)
+}
 func MetaCommandAddSHORT_DESCRIPTION(builder *flatbuffers.Builder, SHORT_DESCRIPTION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(SHORT_DESCRIPTION), 0)
+}
+func MetaCommandAddShortDescription(builder *flatbuffers.Builder, SHORT_DESCRIPTION flatbuffers.UOffsetT) {
+	MetaCommandAddSHORT_DESCRIPTION(builder, SHORT_DESCRIPTION)
 }
 func MetaCommandAddLONG_DESCRIPTION(builder *flatbuffers.Builder, LONG_DESCRIPTION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(LONG_DESCRIPTION), 0)
 }
+func MetaCommandAddLongDescription(builder *flatbuffers.Builder, LONG_DESCRIPTION flatbuffers.UOffsetT) {
+	MetaCommandAddLONG_DESCRIPTION(builder, LONG_DESCRIPTION)
+}
 func MetaCommandAddABSTRACT(builder *flatbuffers.Builder, ABSTRACT bool) {
 	builder.PrependBoolSlot(3, ABSTRACT, false)
+}
+func MetaCommandAddAbstract(builder *flatbuffers.Builder, ABSTRACT bool) {
+	MetaCommandAddABSTRACT(builder, ABSTRACT)
 }
 func MetaCommandAddARGUMENTS(builder *flatbuffers.Builder, ARGUMENTS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(ARGUMENTS), 0)
 }
+func MetaCommandAddArguments(builder *flatbuffers.Builder, ARGUMENTS flatbuffers.UOffsetT) {
+	MetaCommandAddARGUMENTS(builder, ARGUMENTS)
+}
 func MetaCommandStartARGUMENTSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func MetaCommandStartArgumentsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return MetaCommandStartARGUMENTSVector(builder, numElems)
 }
 func MetaCommandAddCOMMAND_CONTAINER(builder *flatbuffers.Builder, COMMAND_CONTAINER flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(COMMAND_CONTAINER), 0)
 }
+func MetaCommandAddCommandContainer(builder *flatbuffers.Builder, COMMAND_CONTAINER flatbuffers.UOffsetT) {
+	MetaCommandAddCOMMAND_CONTAINER(builder, COMMAND_CONTAINER)
+}
 func MetaCommandAddBASE_META_COMMAND(builder *flatbuffers.Builder, BASE_META_COMMAND flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(BASE_META_COMMAND), 0)
+}
+func MetaCommandAddBaseMetaCommand(builder *flatbuffers.Builder, BASE_META_COMMAND flatbuffers.UOffsetT) {
+	MetaCommandAddBASE_META_COMMAND(builder, BASE_META_COMMAND)
 }
 func MetaCommandAddVERIFIERS(builder *flatbuffers.Builder, VERIFIERS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(VERIFIERS), 0)
 }
+func MetaCommandAddVerifiers(builder *flatbuffers.Builder, VERIFIERS flatbuffers.UOffsetT) {
+	MetaCommandAddVERIFIERS(builder, VERIFIERS)
+}
 func MetaCommandStartVERIFIERSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func MetaCommandStartVerifiersVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return MetaCommandStartVERIFIERSVector(builder, numElems)
 }
 func MetaCommandAddSIGNIFICANCE(builder *flatbuffers.Builder, SIGNIFICANCE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(SIGNIFICANCE), 0)
 }
+func MetaCommandAddSignificance(builder *flatbuffers.Builder, SIGNIFICANCE flatbuffers.UOffsetT) {
+	MetaCommandAddSIGNIFICANCE(builder, SIGNIFICANCE)
+}
 func MetaCommandAddINTERLOCKS(builder *flatbuffers.Builder, INTERLOCKS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(INTERLOCKS), 0)
+}
+func MetaCommandAddInterlocks(builder *flatbuffers.Builder, INTERLOCKS flatbuffers.UOffsetT) {
+	MetaCommandAddINTERLOCKS(builder, INTERLOCKS)
 }
 func MetaCommandStartINTERLOCKSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
+func MetaCommandStartInterlocksVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return MetaCommandStartINTERLOCKSVector(builder, numElems)
+}
 func MetaCommandAddDEFAULT_SIGNIFICANCE(builder *flatbuffers.Builder, DEFAULT_SIGNIFICANCE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(DEFAULT_SIGNIFICANCE), 0)
+}
+func MetaCommandAddDefaultSignificance(builder *flatbuffers.Builder, DEFAULT_SIGNIFICANCE flatbuffers.UOffsetT) {
+	MetaCommandAddDEFAULT_SIGNIFICANCE(builder, DEFAULT_SIGNIFICANCE)
 }
 func MetaCommandEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

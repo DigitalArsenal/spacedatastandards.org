@@ -29,7 +29,7 @@ class TPN : Table() {
         __init(_i, _bb)
         return this
     }
-    val ID : String?
+    val id : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -38,9 +38,9 @@ class TPN : Table() {
                 null
             }
         }
-    val IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
-    val NAME : String?
+    val idAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun idInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
+    val name : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -49,9 +49,9 @@ class TPN : Table() {
                 null
             }
         }
-    val NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
-    val NID : String?
+    val nameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun nameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
+    val nid : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -60,9 +60,9 @@ class TPN : Table() {
                 null
             }
         }
-    val NIDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun NIDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
-    val TID : String?
+    val nidAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun nidInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
+    val tid : String?
         get() {
             val o = __offset(10)
             return if (o != 0) {
@@ -71,24 +71,24 @@ class TPN : Table() {
                 null
             }
         }
-    val TIDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
-    fun TIDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
-    val TTF : Double
+    val tidAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(10, 1)
+    fun tidInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 10, 1)
+    val ttf : Double
         get() {
             val o = __offset(12)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val SYMBOL_RATE : Double
+    val symbolRate : Double
         get() {
             val o = __offset(14)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val FEC : Int
+    val fec : Int
         get() {
             val o = __offset(16)
             return if(o != 0) bb.getInt(o + bb_pos) else 0
         }
-    val MODULATION : String?
+    val modulation : String?
         get() {
             val o = __offset(18)
             return if (o != 0) {
@@ -97,9 +97,9 @@ class TPN : Table() {
                 null
             }
         }
-    val MODULATIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(18, 1)
-    fun MODULATIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 18, 1)
-    val FORMAT : String?
+    val modulationAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(18, 1)
+    fun modulationInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 18, 1)
+    val format : String?
         get() {
             val o = __offset(20)
             return if (o != 0) {
@@ -108,9 +108,9 @@ class TPN : Table() {
                 null
             }
         }
-    val FORMATAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(20, 1)
-    fun FORMATInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 20, 1)
-    val SYSTEM : String?
+    val formatAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(20, 1)
+    fun formatInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 20, 1)
+    val system : String?
         get() {
             val o = __offset(22)
             return if (o != 0) {
@@ -119,9 +119,9 @@ class TPN : Table() {
                 null
             }
         }
-    val SYSTEMAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(22, 1)
-    fun SYSTEMInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 22, 1)
-    fun CHANNELS(j: Int) : String? {
+    val systemAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(22, 1)
+    fun systemInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 22, 1)
+    fun channels(j: Int) : String? {
         val o = __offset(24)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
@@ -129,45 +129,45 @@ class TPN : Table() {
             null
         }
     }
-    val CHANNELSLength : Int
+    val channelsLength : Int
         get() {
             val o = __offset(24); return if (o != 0) __vector_len(o) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsTPN(_bb: ByteBuffer): TPN = getRootAsTPN(_bb, TPN())
         fun getRootAsTPN(_bb: ByteBuffer, obj: TPN): TPN {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun TPNBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$TPN")
-        fun createTPN(builder: FlatBufferBuilder, IDOffset: Int, NAMEOffset: Int, NIDOffset: Int, TIDOffset: Int, TTF: Double, SYMBOL_RATE: Double, FEC: Int, MODULATIONOffset: Int, FORMATOffset: Int, SYSTEMOffset: Int, CHANNELSOffset: Int) : Int {
+        fun createTPN(builder: FlatBufferBuilder, idOffset: Int, nameOffset: Int, nidOffset: Int, tidOffset: Int, ttf: Double, symbolRate: Double, fec: Int, modulationOffset: Int, formatOffset: Int, systemOffset: Int, channelsOffset: Int) : Int {
             builder.startTable(11)
-            addSYMBOL_RATE(builder, SYMBOL_RATE)
-            addTTF(builder, TTF)
-            addCHANNELS(builder, CHANNELSOffset)
-            addSYSTEM(builder, SYSTEMOffset)
-            addFORMAT(builder, FORMATOffset)
-            addMODULATION(builder, MODULATIONOffset)
-            addFEC(builder, FEC)
-            addTID(builder, TIDOffset)
-            addNID(builder, NIDOffset)
-            addNAME(builder, NAMEOffset)
-            addID(builder, IDOffset)
+            addSYMBOLRATE(builder, symbolRate)
+            addTTF(builder, ttf)
+            addCHANNELS(builder, channelsOffset)
+            addSYSTEM(builder, systemOffset)
+            addFORMAT(builder, formatOffset)
+            addMODULATION(builder, modulationOffset)
+            addFEC(builder, fec)
+            addTID(builder, tidOffset)
+            addNID(builder, nidOffset)
+            addNAME(builder, nameOffset)
+            addID(builder, idOffset)
             return endTPN(builder)
         }
         fun startTPN(builder: FlatBufferBuilder) = builder.startTable(11)
-        fun addID(builder: FlatBufferBuilder, ID: Int) = builder.addOffset(0, ID, 0)
-        fun addNAME(builder: FlatBufferBuilder, NAME: Int) = builder.addOffset(1, NAME, 0)
-        fun addNID(builder: FlatBufferBuilder, NID: Int) = builder.addOffset(2, NID, 0)
-        fun addTID(builder: FlatBufferBuilder, TID: Int) = builder.addOffset(3, TID, 0)
-        fun addTTF(builder: FlatBufferBuilder, TTF: Double) = builder.addDouble(4, TTF, 0.0)
-        fun addSYMBOL_RATE(builder: FlatBufferBuilder, SYMBOL_RATE: Double) = builder.addDouble(5, SYMBOL_RATE, 0.0)
-        fun addFEC(builder: FlatBufferBuilder, FEC: Int) = builder.addInt(6, FEC, 0)
-        fun addMODULATION(builder: FlatBufferBuilder, MODULATION: Int) = builder.addOffset(7, MODULATION, 0)
-        fun addFORMAT(builder: FlatBufferBuilder, FORMAT: Int) = builder.addOffset(8, FORMAT, 0)
-        fun addSYSTEM(builder: FlatBufferBuilder, SYSTEM: Int) = builder.addOffset(9, SYSTEM, 0)
-        fun addCHANNELS(builder: FlatBufferBuilder, CHANNELS: Int) = builder.addOffset(10, CHANNELS, 0)
+        fun addID(builder: FlatBufferBuilder, id: Int) = builder.addOffset(0, id, 0)
+        fun addNAME(builder: FlatBufferBuilder, name: Int) = builder.addOffset(1, name, 0)
+        fun addNID(builder: FlatBufferBuilder, nid: Int) = builder.addOffset(2, nid, 0)
+        fun addTID(builder: FlatBufferBuilder, tid: Int) = builder.addOffset(3, tid, 0)
+        fun addTTF(builder: FlatBufferBuilder, ttf: Double) = builder.addDouble(4, ttf, 0.0)
+        fun addSYMBOLRATE(builder: FlatBufferBuilder, symbolRate: Double) = builder.addDouble(5, symbolRate, 0.0)
+        fun addFEC(builder: FlatBufferBuilder, fec: Int) = builder.addInt(6, fec, 0)
+        fun addMODULATION(builder: FlatBufferBuilder, modulation: Int) = builder.addOffset(7, modulation, 0)
+        fun addFORMAT(builder: FlatBufferBuilder, format: Int) = builder.addOffset(8, format, 0)
+        fun addSYSTEM(builder: FlatBufferBuilder, system: Int) = builder.addOffset(9, system, 0)
+        fun addCHANNELS(builder: FlatBufferBuilder, channels: Int) = builder.addOffset(10, channels, 0)
         fun createChannelsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {

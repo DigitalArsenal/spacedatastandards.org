@@ -51,6 +51,10 @@ func (rcv *KMLItemIcon) STATE() []byte {
 	return nil
 }
 
+func (rcv *KMLItemIcon) State() []byte {
+	return rcv.STATE()
+}
+
 /// State (open, closed, error, fetching0-2)
 /// Icon URL
 func (rcv *KMLItemIcon) HREF() []byte {
@@ -61,6 +65,10 @@ func (rcv *KMLItemIcon) HREF() []byte {
 	return nil
 }
 
+func (rcv *KMLItemIcon) Href() []byte {
+	return rcv.HREF()
+}
+
 /// Icon URL
 func KMLItemIconStart(builder *flatbuffers.Builder) {
 	builder.StartObject(2)
@@ -68,8 +76,14 @@ func KMLItemIconStart(builder *flatbuffers.Builder) {
 func KMLItemIconAddSTATE(builder *flatbuffers.Builder, STATE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(STATE), 0)
 }
+func KMLItemIconAddState(builder *flatbuffers.Builder, STATE flatbuffers.UOffsetT) {
+	KMLItemIconAddSTATE(builder, STATE)
+}
 func KMLItemIconAddHREF(builder *flatbuffers.Builder, HREF flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(HREF), 0)
+}
+func KMLItemIconAddHref(builder *flatbuffers.Builder, HREF flatbuffers.UOffsetT) {
+	KMLItemIconAddHREF(builder, HREF)
 }
 func KMLItemIconEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

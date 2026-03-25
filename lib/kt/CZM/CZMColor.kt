@@ -32,7 +32,7 @@ class CZMColor : Table() {
     /**
      * Red component (0-255)
      */
-    val RED : UByte
+    val red : UByte
         get() {
             val o = __offset(4)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
@@ -40,7 +40,7 @@ class CZMColor : Table() {
     /**
      * Green component (0-255)
      */
-    val GREEN : UByte
+    val green : UByte
         get() {
             val o = __offset(6)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
@@ -48,7 +48,7 @@ class CZMColor : Table() {
     /**
      * Blue component (0-255)
      */
-    val BLUE : UByte
+    val blue : UByte
         get() {
             val o = __offset(8)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
@@ -56,31 +56,31 @@ class CZMColor : Table() {
     /**
      * Alpha component (0-255)
      */
-    val ALPHA : UByte
+    val alpha : UByte
         get() {
             val o = __offset(10)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsCZMColor(_bb: ByteBuffer): CZMColor = getRootAsCZMColor(_bb, CZMColor())
         fun getRootAsCZMColor(_bb: ByteBuffer, obj: CZMColor): CZMColor {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createCZMColor(builder: FlatBufferBuilder, RED: UByte, GREEN: UByte, BLUE: UByte, ALPHA: UByte) : Int {
+        fun createCZMColor(builder: FlatBufferBuilder, red: UByte, green: UByte, blue: UByte, alpha: UByte) : Int {
             builder.startTable(4)
-            addALPHA(builder, ALPHA)
-            addBLUE(builder, BLUE)
-            addGREEN(builder, GREEN)
-            addRED(builder, RED)
+            addALPHA(builder, alpha)
+            addBLUE(builder, blue)
+            addGREEN(builder, green)
+            addRED(builder, red)
             return endCZMColor(builder)
         }
         fun startCZMColor(builder: FlatBufferBuilder) = builder.startTable(4)
-        fun addRED(builder: FlatBufferBuilder, RED: UByte) = builder.addByte(0, RED.toByte(), 0)
-        fun addGREEN(builder: FlatBufferBuilder, GREEN: UByte) = builder.addByte(1, GREEN.toByte(), 0)
-        fun addBLUE(builder: FlatBufferBuilder, BLUE: UByte) = builder.addByte(2, BLUE.toByte(), 0)
-        fun addALPHA(builder: FlatBufferBuilder, ALPHA: UByte) = builder.addByte(3, ALPHA.toByte(), 0)
+        fun addRED(builder: FlatBufferBuilder, red: UByte) = builder.addByte(0, red.toByte(), 0)
+        fun addGREEN(builder: FlatBufferBuilder, green: UByte) = builder.addByte(1, green.toByte(), 0)
+        fun addBLUE(builder: FlatBufferBuilder, blue: UByte) = builder.addByte(2, blue.toByte(), 0)
+        fun addALPHA(builder: FlatBufferBuilder, alpha: UByte) = builder.addByte(3, alpha.toByte(), 0)
         fun endCZMColor(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

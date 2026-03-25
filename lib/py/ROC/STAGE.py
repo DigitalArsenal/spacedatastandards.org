@@ -111,6 +111,12 @@ def STAGEStartENGINESVector(builder, numElems):
 def StartENGINESVector(builder, numElems):
     return STAGEStartENGINESVector(builder, numElems)
 
+def STAGECreateENGINESVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateENGINESVector(builder, data):
+    STAGECreateENGINESVector(builder, data)
+
 def STAGEAddFUEL_TYPE(builder, FUEL_TYPE):
     builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(FUEL_TYPE), 0)
 
@@ -144,18 +150,25 @@ except:
 class STAGET(object):
 
     # STAGET
-    def __init__(self):
-        self.STAGE_NUMBER = 0  # type: int
-        self.ENGINES = None  # type: List[ENGINE.ENGINET]
-        self.FUEL_TYPE = None  # type: str
-        self.THRUST = 0.0  # type: float
-        self.BURN_DURATION = 0.0  # type: float
+    def __init__(
+        self,
+        STAGE_NUMBER = 0,
+        ENGINES = None,
+        FUEL_TYPE = None,
+        THRUST = 0.0,
+        BURN_DURATION = 0.0,
+    ):
+        self.STAGE_NUMBER = STAGE_NUMBER  # type: int
+        self.ENGINES = ENGINES  # type: Optional[List[ENGINE.ENGINET]]
+        self.FUEL_TYPE = FUEL_TYPE  # type: Optional[str]
+        self.THRUST = THRUST  # type: float
+        self.BURN_DURATION = BURN_DURATION  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        STAGE = STAGE()
-        STAGE.Init(buf, pos)
-        return cls.InitFromObj(STAGE)
+        tmpStage = STAGE()
+        tmpStage.Init(buf, pos)
+        return cls.InitFromObj(tmpStage)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -163,9 +176,9 @@ class STAGET(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, STAGE):
+    def InitFromObj(cls, tmpStage):
         x = STAGET()
-        x._UnPack(STAGE)
+        x._UnPack(tmpStage)
         return x
 
     # STAGET

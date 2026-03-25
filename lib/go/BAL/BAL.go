@@ -62,12 +62,20 @@ func (rcv *BAL) COMMAND() []byte {
 	return nil
 }
 
+func (rcv *BAL) Command() []byte {
+	return rcv.COMMAND()
+}
+
 func (rcv *BAL) TRAJECTORY_REQUEST() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *BAL) TrajectoryRequest() []byte {
+	return rcv.TRAJECTORY_REQUEST()
 }
 
 func (rcv *BAL) TABLE_REQUEST() []byte {
@@ -78,12 +86,20 @@ func (rcv *BAL) TABLE_REQUEST() []byte {
 	return nil
 }
 
+func (rcv *BAL) TableRequest() []byte {
+	return rcv.TABLE_REQUEST()
+}
+
 func (rcv *BAL) FIRE_CONTROL() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *BAL) FireControl() []byte {
+	return rcv.FIRE_CONTROL()
 }
 
 func (rcv *BAL) PENETRATION_PROJECTILE() []byte {
@@ -94,12 +110,20 @@ func (rcv *BAL) PENETRATION_PROJECTILE() []byte {
 	return nil
 }
 
+func (rcv *BAL) PenetrationProjectile() []byte {
+	return rcv.PENETRATION_PROJECTILE()
+}
+
 func (rcv *BAL) PENETRATION_ARMOR() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *BAL) PenetrationArmor() []byte {
+	return rcv.PENETRATION_ARMOR()
 }
 
 func (rcv *BAL) IMPACT_VELOCITY_MPS() float64 {
@@ -110,8 +134,16 @@ func (rcv *BAL) IMPACT_VELOCITY_MPS() float64 {
 	return 0.0
 }
 
+func (rcv *BAL) ImpactVelocityMps() float64 {
+	return rcv.IMPACT_VELOCITY_MPS()
+}
+
 func (rcv *BAL) MutateIMPACT_VELOCITY_MPS(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(16, n)
+}
+
+func (rcv *BAL) MutateImpactVelocityMps(n float64) bool {
+	return rcv.MutateIMPACT_VELOCITY_MPS(n)
 }
 
 func (rcv *BAL) IMPACT_ANGLE_DEG() float64 {
@@ -122,8 +154,16 @@ func (rcv *BAL) IMPACT_ANGLE_DEG() float64 {
 	return 0.0
 }
 
+func (rcv *BAL) ImpactAngleDeg() float64 {
+	return rcv.IMPACT_ANGLE_DEG()
+}
+
 func (rcv *BAL) MutateIMPACT_ANGLE_DEG(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(18, n)
+}
+
+func (rcv *BAL) MutateImpactAngleDeg(n float64) bool {
+	return rcv.MutateIMPACT_ANGLE_DEG(n)
 }
 
 func BALStart(builder *flatbuffers.Builder) {
@@ -132,26 +172,50 @@ func BALStart(builder *flatbuffers.Builder) {
 func BALAddCOMMAND(builder *flatbuffers.Builder, COMMAND flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(COMMAND), 0)
 }
+func BALAddCommand(builder *flatbuffers.Builder, COMMAND flatbuffers.UOffsetT) {
+	BALAddCOMMAND(builder, COMMAND)
+}
 func BALAddTRAJECTORY_REQUEST(builder *flatbuffers.Builder, TRAJECTORY_REQUEST flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(TRAJECTORY_REQUEST), 0)
+}
+func BALAddTrajectoryRequest(builder *flatbuffers.Builder, TRAJECTORY_REQUEST flatbuffers.UOffsetT) {
+	BALAddTRAJECTORY_REQUEST(builder, TRAJECTORY_REQUEST)
 }
 func BALAddTABLE_REQUEST(builder *flatbuffers.Builder, TABLE_REQUEST flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(TABLE_REQUEST), 0)
 }
+func BALAddTableRequest(builder *flatbuffers.Builder, TABLE_REQUEST flatbuffers.UOffsetT) {
+	BALAddTABLE_REQUEST(builder, TABLE_REQUEST)
+}
 func BALAddFIRE_CONTROL(builder *flatbuffers.Builder, FIRE_CONTROL flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(FIRE_CONTROL), 0)
+}
+func BALAddFireControl(builder *flatbuffers.Builder, FIRE_CONTROL flatbuffers.UOffsetT) {
+	BALAddFIRE_CONTROL(builder, FIRE_CONTROL)
 }
 func BALAddPENETRATION_PROJECTILE(builder *flatbuffers.Builder, PENETRATION_PROJECTILE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(PENETRATION_PROJECTILE), 0)
 }
+func BALAddPenetrationProjectile(builder *flatbuffers.Builder, PENETRATION_PROJECTILE flatbuffers.UOffsetT) {
+	BALAddPENETRATION_PROJECTILE(builder, PENETRATION_PROJECTILE)
+}
 func BALAddPENETRATION_ARMOR(builder *flatbuffers.Builder, PENETRATION_ARMOR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(PENETRATION_ARMOR), 0)
+}
+func BALAddPenetrationArmor(builder *flatbuffers.Builder, PENETRATION_ARMOR flatbuffers.UOffsetT) {
+	BALAddPENETRATION_ARMOR(builder, PENETRATION_ARMOR)
 }
 func BALAddIMPACT_VELOCITY_MPS(builder *flatbuffers.Builder, IMPACT_VELOCITY_MPS float64) {
 	builder.PrependFloat64Slot(6, IMPACT_VELOCITY_MPS, 0.0)
 }
+func BALAddImpactVelocityMps(builder *flatbuffers.Builder, IMPACT_VELOCITY_MPS float64) {
+	BALAddIMPACT_VELOCITY_MPS(builder, IMPACT_VELOCITY_MPS)
+}
 func BALAddIMPACT_ANGLE_DEG(builder *flatbuffers.Builder, IMPACT_ANGLE_DEG float64) {
 	builder.PrependFloat64Slot(7, IMPACT_ANGLE_DEG, 0.0)
+}
+func BALAddImpactAngleDeg(builder *flatbuffers.Builder, IMPACT_ANGLE_DEG float64) {
+	BALAddIMPACT_ANGLE_DEG(builder, IMPACT_ANGLE_DEG)
 }
 func BALEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

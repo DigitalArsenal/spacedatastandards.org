@@ -2,4 +2,10 @@
 
 # namespace: 
 
-# NOTE soiCalibrationType.py does not declare any structs or enums
+class soiCalibrationType(object):
+    PHOTOMETRIC = 0
+    ASTROMETRIC = 1
+    RADIOMETRIC = 2
+    POLARIMETRIC = 3
+    TEMPORAL = 4
+    NONE = 5

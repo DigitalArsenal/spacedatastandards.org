@@ -51,6 +51,10 @@ func (rcv *KMLUpdate) TARGET_HREF() []byte {
 	return nil
 }
 
+func (rcv *KMLUpdate) TargetHref() []byte {
+	return rcv.TARGET_HREF()
+}
+
 /// Target href
 /// Change KML (raw)
 func (rcv *KMLUpdate) CHANGE_KML() []byte {
@@ -59,6 +63,10 @@ func (rcv *KMLUpdate) CHANGE_KML() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *KMLUpdate) ChangeKml() []byte {
+	return rcv.CHANGE_KML()
 }
 
 /// Change KML (raw)
@@ -71,6 +79,10 @@ func (rcv *KMLUpdate) CREATE_KML() []byte {
 	return nil
 }
 
+func (rcv *KMLUpdate) CreateKml() []byte {
+	return rcv.CREATE_KML()
+}
+
 /// Create KML (raw)
 /// Delete KML (raw)
 func (rcv *KMLUpdate) DELETE_KML() []byte {
@@ -81,6 +93,10 @@ func (rcv *KMLUpdate) DELETE_KML() []byte {
 	return nil
 }
 
+func (rcv *KMLUpdate) DeleteKml() []byte {
+	return rcv.DELETE_KML()
+}
+
 /// Delete KML (raw)
 func KMLUpdateStart(builder *flatbuffers.Builder) {
 	builder.StartObject(4)
@@ -88,14 +104,26 @@ func KMLUpdateStart(builder *flatbuffers.Builder) {
 func KMLUpdateAddTARGET_HREF(builder *flatbuffers.Builder, TARGET_HREF flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(TARGET_HREF), 0)
 }
+func KMLUpdateAddTargetHref(builder *flatbuffers.Builder, TARGET_HREF flatbuffers.UOffsetT) {
+	KMLUpdateAddTARGET_HREF(builder, TARGET_HREF)
+}
 func KMLUpdateAddCHANGE_KML(builder *flatbuffers.Builder, CHANGE_KML flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(CHANGE_KML), 0)
+}
+func KMLUpdateAddChangeKml(builder *flatbuffers.Builder, CHANGE_KML flatbuffers.UOffsetT) {
+	KMLUpdateAddCHANGE_KML(builder, CHANGE_KML)
 }
 func KMLUpdateAddCREATE_KML(builder *flatbuffers.Builder, CREATE_KML flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(CREATE_KML), 0)
 }
+func KMLUpdateAddCreateKml(builder *flatbuffers.Builder, CREATE_KML flatbuffers.UOffsetT) {
+	KMLUpdateAddCREATE_KML(builder, CREATE_KML)
+}
 func KMLUpdateAddDELETE_KML(builder *flatbuffers.Builder, DELETE_KML flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(DELETE_KML), 0)
+}
+func KMLUpdateAddDeleteKml(builder *flatbuffers.Builder, DELETE_KML flatbuffers.UOffsetT) {
+	KMLUpdateAddDELETE_KML(builder, DELETE_KML)
 }
 func KMLUpdateEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

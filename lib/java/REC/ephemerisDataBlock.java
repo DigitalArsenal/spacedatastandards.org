@@ -12,7 +12,6 @@ import com.google.flatbuffers.LongVector;
 import com.google.flatbuffers.ShortVector;
 import com.google.flatbuffers.StringVector;
 import com.google.flatbuffers.Struct;
-import com.google.flatbuffers.Table;
 import com.google.flatbuffers.UnionVector;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -21,8 +20,8 @@ import java.nio.ByteOrder;
  * OEM Ephemeris Data Block
  */
 @SuppressWarnings("unused")
-public final class ephemerisDataBlock extends Table {
-  public static void ValidateVersion() { Constants.FLATBUFFERS_24_3_25(); }
+public final class ephemerisDataBlock extends com.google.flatbuffers.Table {
+  public static void ValidateVersion() { Constants.FLATBUFFERS_25_12_19(); }
   public static ephemerisDataBlock getRootAsephemerisDataBlock(ByteBuffer _bb) { return getRootAsephemerisDataBlock(_bb, new ephemerisDataBlock()); }
   public static ephemerisDataBlock getRootAsephemerisDataBlock(ByteBuffer _bb, ephemerisDataBlock obj) { _bb.order(ByteOrder.LITTLE_ENDIAN); return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb)); }
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
@@ -90,7 +89,11 @@ public final class ephemerisDataBlock extends Table {
   public ByteBuffer STOP_TIMEAsByteBuffer() { return __vector_as_bytebuffer(24, 1); }
   public ByteBuffer STOP_TIMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 24, 1); }
   /**
-   * Recommended interpolation method for ephemeris data (Hermite, Linear, Lagrange, etc.)
+   * Recommended interpolation method for ephemeris data.
+   * Supported methods: Hermite, Linear, Lagrange, Chebyshev.
+   * When set to "Chebyshev", parsers should use POLYNOMIAL_POSITION_RECORDS
+   * for high-fidelity polynomial interpolation instead of interpolating across
+   * discrete state vectors.
    */
   public String INTERPOLATION() { int o = __offset(26); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer INTERPOLATIONAsByteBuffer() { return __vector_as_bytebuffer(26, 1); }
@@ -144,6 +147,17 @@ public final class ephemerisDataBlock extends Table {
   public int COVARIANCE_MATRIX_LINESLength() { int o = __offset(38); return o != 0 ? __vector_len(o) : 0; }
   public covarianceMatrixLine.Vector covarianceMatrixLinesVector() { return covarianceMatrixLinesVector(new covarianceMatrixLine.Vector()); }
   public covarianceMatrixLine.Vector covarianceMatrixLinesVector(covarianceMatrixLine.Vector obj) { int o = __offset(38); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Optional polynomial position records for high-fidelity interpolation.
+   * Used when INTERPOLATION is "Chebyshev". Each record covers a time segment with
+   * polynomial coefficients for continuous position (and optionally velocity) evaluation.
+   * See PPE schema for record structure and evaluation procedure.
+   */
+  public PPEPositionRecord POLYNOMIAL_POSITION_RECORDS(int j) { return POLYNOMIAL_POSITION_RECORDS(new PPEPositionRecord(), j); }
+  public PPEPositionRecord POLYNOMIAL_POSITION_RECORDS(PPEPositionRecord obj, int j) { int o = __offset(40); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int POLYNOMIAL_POSITION_RECORDSLength() { int o = __offset(40); return o != 0 ? __vector_len(o) : 0; }
+  public PPEPositionRecord.Vector polynomialPositionRecordsVector() { return polynomialPositionRecordsVector(new PPEPositionRecord.Vector()); }
+  public PPEPositionRecord.Vector polynomialPositionRecordsVector(PPEPositionRecord.Vector obj) { int o = __offset(40); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
 
   public static int createephemerisDataBlock(FlatBufferBuilder builder,
       int COMMENTOffset,
@@ -163,9 +177,11 @@ public final class ephemerisDataBlock extends Table {
       int STATE_VECTOR_SIZE,
       int EPHEMERIS_DATAOffset,
       int EPHEMERIS_DATA_LINESOffset,
-      int COVARIANCE_MATRIX_LINESOffset) {
-    builder.startTable(18);
+      int COVARIANCE_MATRIX_LINESOffset,
+      int POLYNOMIAL_POSITION_RECORDSOffset) {
+    builder.startTable(19);
     ephemerisDataBlock.addStepSize(builder, STEP_SIZE);
+    ephemerisDataBlock.addPolynomialPositionRecords(builder, POLYNOMIAL_POSITION_RECORDSOffset);
     ephemerisDataBlock.addCovarianceMatrixLines(builder, COVARIANCE_MATRIX_LINESOffset);
     ephemerisDataBlock.addEphemerisDataLines(builder, EPHEMERIS_DATA_LINESOffset);
     ephemerisDataBlock.addEphemerisData(builder, EPHEMERIS_DATAOffset);
@@ -186,7 +202,7 @@ public final class ephemerisDataBlock extends Table {
     return ephemerisDataBlock.endephemerisDataBlock(builder);
   }
 
-  public static void startephemerisDataBlock(FlatBufferBuilder builder) { builder.startTable(18); }
+  public static void startephemerisDataBlock(FlatBufferBuilder builder) { builder.startTable(19); }
   public static void addComment(FlatBufferBuilder builder, int COMMENTOffset) { builder.addOffset(0, COMMENTOffset, 0); }
   public static void addObject(FlatBufferBuilder builder, int OBJECTOffset) { builder.addOffset(1, OBJECTOffset, 0); }
   public static void addCenterName(FlatBufferBuilder builder, int CENTER_NAMEOffset) { builder.addOffset(2, CENTER_NAMEOffset, 0); }
@@ -211,6 +227,9 @@ public final class ephemerisDataBlock extends Table {
   public static void addCovarianceMatrixLines(FlatBufferBuilder builder, int COVARIANCE_MATRIX_LINESOffset) { builder.addOffset(17, COVARIANCE_MATRIX_LINESOffset, 0); }
   public static int createCovarianceMatrixLinesVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startCovarianceMatrixLinesVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addPolynomialPositionRecords(FlatBufferBuilder builder, int POLYNOMIAL_POSITION_RECORDSOffset) { builder.addOffset(18, POLYNOMIAL_POSITION_RECORDSOffset, 0); }
+  public static int createPolynomialPositionRecordsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startPolynomialPositionRecordsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
   public static int endephemerisDataBlock(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

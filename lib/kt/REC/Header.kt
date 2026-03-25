@@ -29,7 +29,7 @@ class Header : Table() {
     /**
      * Format version in the form of 'x.y', where 'y' is incremented for minor changes, and 'x' for major changes.
      */
-    val CCSDS_OCM_VERS : String?
+    val ccsdsOcmVers : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -38,12 +38,12 @@ class Header : Table() {
                 null
             }
         }
-    val CCSDS_OCM_VERSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun CCSDS_OCM_VERSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val ccsdsOcmVersAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun ccsdsOcmVersInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Comments (a contiguous set of one or more comment lines may be provided immediately after the version number).
      */
-    fun COMMENT(j: Int) : String? {
+    fun comment(j: Int) : String? {
         val o = __offset(6)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
@@ -51,14 +51,14 @@ class Header : Table() {
             null
         }
     }
-    val COMMENTLength : Int
+    val commentLength : Int
         get() {
             val o = __offset(6); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * User-defined free-text message classification/caveats of this OCM.
      */
-    val CLASSIFICATION : String?
+    val classification : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -67,12 +67,12 @@ class Header : Table() {
                 null
             }
         }
-    val CLASSIFICATIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun CLASSIFICATIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val classificationAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun classificationInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
     /**
      * File creation date/time in UTC.
      */
-    val CREATION_DATE : String?
+    val creationDate : String?
         get() {
             val o = __offset(10)
             return if (o != 0) {
@@ -81,12 +81,12 @@ class Header : Table() {
                 null
             }
         }
-    val CREATION_DATEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
-    fun CREATION_DATEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
+    val creationDateAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(10, 1)
+    fun creationDateInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 10, 1)
     /**
      * Creating agency or operator.
      */
-    val ORIGINATOR : String?
+    val originator : String?
         get() {
             val o = __offset(12)
             return if (o != 0) {
@@ -95,12 +95,12 @@ class Header : Table() {
                 null
             }
         }
-    val ORIGINATORAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
-    fun ORIGINATORInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
+    val originatorAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(12, 1)
+    fun originatorInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 12, 1)
     /**
      * Free-text field containing an ID that uniquely identifies a message from this originator.
      */
-    val MESSAGE_ID : String?
+    val messageId : String?
         get() {
             val o = __offset(14)
             return if (o != 0) {
@@ -109,28 +109,28 @@ class Header : Table() {
                 null
             }
         }
-    val MESSAGE_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(14, 1)
-    fun MESSAGE_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 14, 1)
+    val messageIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(14, 1)
+    fun messageIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 14, 1)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsHeader(_bb: ByteBuffer): Header = getRootAsHeader(_bb, Header())
         fun getRootAsHeader(_bb: ByteBuffer, obj: Header): Header {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createHeader(builder: FlatBufferBuilder, CCSDS_OCM_VERSOffset: Int, COMMENTOffset: Int, CLASSIFICATIONOffset: Int, CREATION_DATEOffset: Int, ORIGINATOROffset: Int, MESSAGE_IDOffset: Int) : Int {
+        fun createHeader(builder: FlatBufferBuilder, ccsdsOcmVersOffset: Int, commentOffset: Int, classificationOffset: Int, creationDateOffset: Int, originatorOffset: Int, messageIdOffset: Int) : Int {
             builder.startTable(6)
-            addMESSAGE_ID(builder, MESSAGE_IDOffset)
-            addORIGINATOR(builder, ORIGINATOROffset)
-            addCREATION_DATE(builder, CREATION_DATEOffset)
-            addCLASSIFICATION(builder, CLASSIFICATIONOffset)
-            addCOMMENT(builder, COMMENTOffset)
-            addCCSDS_OCM_VERS(builder, CCSDS_OCM_VERSOffset)
+            addMESSAGEID(builder, messageIdOffset)
+            addORIGINATOR(builder, originatorOffset)
+            addCREATIONDATE(builder, creationDateOffset)
+            addCLASSIFICATION(builder, classificationOffset)
+            addCOMMENT(builder, commentOffset)
+            addCCSDSOCMVERS(builder, ccsdsOcmVersOffset)
             return endHeader(builder)
         }
         fun startHeader(builder: FlatBufferBuilder) = builder.startTable(6)
-        fun addCCSDS_OCM_VERS(builder: FlatBufferBuilder, CCSDS_OCM_VERS: Int) = builder.addOffset(0, CCSDS_OCM_VERS, 0)
-        fun addCOMMENT(builder: FlatBufferBuilder, COMMENT: Int) = builder.addOffset(1, COMMENT, 0)
+        fun addCCSDSOCMVERS(builder: FlatBufferBuilder, ccsdsOcmVers: Int) = builder.addOffset(0, ccsdsOcmVers, 0)
+        fun addCOMMENT(builder: FlatBufferBuilder, comment: Int) = builder.addOffset(1, comment, 0)
         fun createCommentVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -139,10 +139,10 @@ class Header : Table() {
             return builder.endVector()
         }
         fun startCommentVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addCLASSIFICATION(builder: FlatBufferBuilder, CLASSIFICATION: Int) = builder.addOffset(2, CLASSIFICATION, 0)
-        fun addCREATION_DATE(builder: FlatBufferBuilder, CREATION_DATE: Int) = builder.addOffset(3, CREATION_DATE, 0)
-        fun addORIGINATOR(builder: FlatBufferBuilder, ORIGINATOR: Int) = builder.addOffset(4, ORIGINATOR, 0)
-        fun addMESSAGE_ID(builder: FlatBufferBuilder, MESSAGE_ID: Int) = builder.addOffset(5, MESSAGE_ID, 0)
+        fun addCLASSIFICATION(builder: FlatBufferBuilder, classification: Int) = builder.addOffset(2, classification, 0)
+        fun addCREATIONDATE(builder: FlatBufferBuilder, creationDate: Int) = builder.addOffset(3, creationDate, 0)
+        fun addORIGINATOR(builder: FlatBufferBuilder, originator: Int) = builder.addOffset(4, originator, 0)
+        fun addMESSAGEID(builder: FlatBufferBuilder, messageId: Int) = builder.addOffset(5, messageId, 0)
         fun endHeader(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

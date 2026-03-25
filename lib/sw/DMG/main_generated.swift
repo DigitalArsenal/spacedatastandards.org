@@ -2,9 +2,13 @@
 // swiftlint:disable all
 // swiftformat:disable all
 
+#if canImport(Common)
+import Common
+#endif
+
 import FlatBuffers
 
-public enum ModuleType: Int8, Enum, Verifiable {
+public enum ModuleType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -48,7 +52,7 @@ public enum ModuleType: Int8, Enum, Verifiable {
 }
 
 
-public enum ModuleState: Int8, Enum, Verifiable {
+public enum ModuleState: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -63,7 +67,7 @@ public enum ModuleState: Int8, Enum, Verifiable {
 }
 
 
-public enum CrewRole: Int8, Enum, Verifiable {
+public enum CrewRole: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -82,7 +86,7 @@ public enum CrewRole: Int8, Enum, Verifiable {
 }
 
 
-public enum CrewState: Int8, Enum, Verifiable {
+public enum CrewState: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -97,7 +101,7 @@ public enum CrewState: Int8, Enum, Verifiable {
 }
 
 
-public enum DestructionCause: Int8, Enum, Verifiable {
+public enum DestructionCause: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -114,9 +118,9 @@ public enum DestructionCause: Int8, Enum, Verifiable {
 
 
 ///  Damage Models
-public struct DMG: FlatBufferObject, Verifiable {
+public struct DMG: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -161,10 +165,8 @@ public struct DMG: FlatBufferObject, Verifiable {
   public var ACCURACY_MULTIPLIER: Float32 { let o = _accessor.offset(VTOFFSET.ACCURACY_MULTIPLIER.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
   public var CREW_ALIVE: UInt8 { let o = _accessor.offset(VTOFFSET.CREW_ALIVE.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
   public var CREW_WOUNDED: UInt8 { let o = _accessor.offset(VTOFFSET.CREW_WOUNDED.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
-  public var hasReserved: Bool { let o = _accessor.offset(VTOFFSET.RESERVED.v); return o == 0 ? false : true }
-  public var RESERVEDCount: Int32 { let o = _accessor.offset(VTOFFSET.RESERVED.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func RESERVED(at index: Int32) -> UInt8 { let o = _accessor.offset(VTOFFSET.RESERVED.v); return o == 0 ? 0 : _accessor.directRead(of: UInt8.self, offset: _accessor.vector(at: o) + index * 1) }
-  public var RESERVED: [UInt8] { return _accessor.getVector(at: VTOFFSET.RESERVED.v) ?? [] }
+  public var RESERVED: FlatbufferVector<UInt8> { return _accessor.vector(at: VTOFFSET.RESERVED.v, byteSize: 1) }
+  public func withUnsafePointerToReserved<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.RESERVED.v, body: body) }
   public static func startDMG(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 16) }
   public static func add(OVERALL_HEALTH: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OVERALL_HEALTH, def: 0.0, at: VTOFFSET.OVERALL_HEALTH.p) }
   public static func add(MOBILITY: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MOBILITY, def: 0.0, at: VTOFFSET.MOBILITY.p) }

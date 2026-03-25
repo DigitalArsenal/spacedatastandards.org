@@ -29,7 +29,7 @@ class APM : Table() {
         __init(_i, _bb)
         return this
     }
-    val CCSDS_APM_VERS : String?
+    val ccsdsApmVers : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -38,9 +38,9 @@ class APM : Table() {
                 null
             }
         }
-    val CCSDS_APM_VERSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun CCSDS_APM_VERSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
-    val CREATION_DATE : String?
+    val ccsdsApmVersAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun ccsdsApmVersInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
+    val creationDate : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -49,9 +49,9 @@ class APM : Table() {
                 null
             }
         }
-    val CREATION_DATEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun CREATION_DATEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
-    val ORIGINATOR : String?
+    val creationDateAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun creationDateInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
+    val originator : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -60,9 +60,9 @@ class APM : Table() {
                 null
             }
         }
-    val ORIGINATORAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun ORIGINATORInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
-    val OBJECT_NAME : String?
+    val originatorAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun originatorInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
+    val objectName : String?
         get() {
             val o = __offset(10)
             return if (o != 0) {
@@ -71,9 +71,9 @@ class APM : Table() {
                 null
             }
         }
-    val OBJECT_NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
-    fun OBJECT_NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
-    val OBJECT_ID : String?
+    val objectNameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(10, 1)
+    fun objectNameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 10, 1)
+    val objectId : String?
         get() {
             val o = __offset(12)
             return if (o != 0) {
@@ -82,9 +82,9 @@ class APM : Table() {
                 null
             }
         }
-    val OBJECT_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
-    fun OBJECT_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
-    val EPOCH : String?
+    val objectIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(12, 1)
+    fun objectIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 12, 1)
+    val epoch : String?
         get() {
             val o = __offset(14)
             return if (o != 0) {
@@ -93,61 +93,61 @@ class APM : Table() {
                 null
             }
         }
-    val EPOCHAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(14, 1)
-    fun EPOCHInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 14, 1)
-    val Q1 : Double
+    val epochAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(14, 1)
+    fun epochInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 14, 1)
+    val q1 : Double
         get() {
             val o = __offset(16)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val Q2 : Double
+    val q2 : Double
         get() {
             val o = __offset(18)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val Q3 : Double
+    val q3 : Double
         get() {
             val o = __offset(20)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val QC : Double
+    val qc : Double
         get() {
             val o = __offset(22)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsAPM(_bb: ByteBuffer): APM = getRootAsAPM(_bb, APM())
         fun getRootAsAPM(_bb: ByteBuffer, obj: APM): APM {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun APMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$APM")
-        fun createAPM(builder: FlatBufferBuilder, CCSDS_APM_VERSOffset: Int, CREATION_DATEOffset: Int, ORIGINATOROffset: Int, OBJECT_NAMEOffset: Int, OBJECT_IDOffset: Int, EPOCHOffset: Int, Q1: Double, Q2: Double, Q3: Double, QC: Double) : Int {
+        fun createAPM(builder: FlatBufferBuilder, ccsdsApmVersOffset: Int, creationDateOffset: Int, originatorOffset: Int, objectNameOffset: Int, objectIdOffset: Int, epochOffset: Int, q1: Double, q2: Double, q3: Double, qc: Double) : Int {
             builder.startTable(10)
-            addQC(builder, QC)
-            addQ3(builder, Q3)
-            addQ2(builder, Q2)
-            addQ1(builder, Q1)
-            addEPOCH(builder, EPOCHOffset)
-            addOBJECT_ID(builder, OBJECT_IDOffset)
-            addOBJECT_NAME(builder, OBJECT_NAMEOffset)
-            addORIGINATOR(builder, ORIGINATOROffset)
-            addCREATION_DATE(builder, CREATION_DATEOffset)
-            addCCSDS_APM_VERS(builder, CCSDS_APM_VERSOffset)
+            addQC(builder, qc)
+            addQ3(builder, q3)
+            addQ2(builder, q2)
+            addQ1(builder, q1)
+            addEPOCH(builder, epochOffset)
+            addOBJECTID(builder, objectIdOffset)
+            addOBJECTNAME(builder, objectNameOffset)
+            addORIGINATOR(builder, originatorOffset)
+            addCREATIONDATE(builder, creationDateOffset)
+            addCCSDSAPMVERS(builder, ccsdsApmVersOffset)
             return endAPM(builder)
         }
         fun startAPM(builder: FlatBufferBuilder) = builder.startTable(10)
-        fun addCCSDS_APM_VERS(builder: FlatBufferBuilder, CCSDS_APM_VERS: Int) = builder.addOffset(0, CCSDS_APM_VERS, 0)
-        fun addCREATION_DATE(builder: FlatBufferBuilder, CREATION_DATE: Int) = builder.addOffset(1, CREATION_DATE, 0)
-        fun addORIGINATOR(builder: FlatBufferBuilder, ORIGINATOR: Int) = builder.addOffset(2, ORIGINATOR, 0)
-        fun addOBJECT_NAME(builder: FlatBufferBuilder, OBJECT_NAME: Int) = builder.addOffset(3, OBJECT_NAME, 0)
-        fun addOBJECT_ID(builder: FlatBufferBuilder, OBJECT_ID: Int) = builder.addOffset(4, OBJECT_ID, 0)
-        fun addEPOCH(builder: FlatBufferBuilder, EPOCH: Int) = builder.addOffset(5, EPOCH, 0)
-        fun addQ1(builder: FlatBufferBuilder, Q1: Double) = builder.addDouble(6, Q1, 0.0)
-        fun addQ2(builder: FlatBufferBuilder, Q2: Double) = builder.addDouble(7, Q2, 0.0)
-        fun addQ3(builder: FlatBufferBuilder, Q3: Double) = builder.addDouble(8, Q3, 0.0)
-        fun addQC(builder: FlatBufferBuilder, QC: Double) = builder.addDouble(9, QC, 0.0)
+        fun addCCSDSAPMVERS(builder: FlatBufferBuilder, ccsdsApmVers: Int) = builder.addOffset(0, ccsdsApmVers, 0)
+        fun addCREATIONDATE(builder: FlatBufferBuilder, creationDate: Int) = builder.addOffset(1, creationDate, 0)
+        fun addORIGINATOR(builder: FlatBufferBuilder, originator: Int) = builder.addOffset(2, originator, 0)
+        fun addOBJECTNAME(builder: FlatBufferBuilder, objectName: Int) = builder.addOffset(3, objectName, 0)
+        fun addOBJECTID(builder: FlatBufferBuilder, objectId: Int) = builder.addOffset(4, objectId, 0)
+        fun addEPOCH(builder: FlatBufferBuilder, epoch: Int) = builder.addOffset(5, epoch, 0)
+        fun addQ1(builder: FlatBufferBuilder, q1: Double) = builder.addDouble(6, q1, 0.0)
+        fun addQ2(builder: FlatBufferBuilder, q2: Double) = builder.addDouble(7, q2, 0.0)
+        fun addQ3(builder: FlatBufferBuilder, q3: Double) = builder.addDouble(8, q3, 0.0)
+        fun addQC(builder: FlatBufferBuilder, qc: Double) = builder.addDouble(9, qc, 0.0)
         fun endAPM(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

@@ -2,4 +2,10 @@
 
 # namespace: 
 
-# NOTE geoStationKeeping.py does not declare any structs or enums
+class geoStationKeeping(object):
+    ACTIVE = 0
+    DRIFTING = 1
+    INCLINED = 2
+    GRAVEYARD = 3
+    REPOSITIONING = 4
+    UNKNOWN = 5

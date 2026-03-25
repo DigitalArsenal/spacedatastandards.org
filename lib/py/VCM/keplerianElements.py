@@ -132,20 +132,29 @@ def End(builder):
 class keplerianElementsT(object):
 
     # keplerianElementsT
-    def __init__(self):
-        self.SEMI_MAJOR_AXIS = 0.0  # type: float
-        self.ECCENTRICITY = 0.0  # type: float
-        self.INCLINATION = 0.0  # type: float
-        self.RA_OF_ASC_NODE = 0.0  # type: float
-        self.ARG_OF_PERICENTER = 0.0  # type: float
-        self.ANOMALY_TYPE = 0  # type: int
-        self.ANOMALY = 0.0  # type: float
+    def __init__(
+        self,
+        SEMI_MAJOR_AXIS = 0.0,
+        ECCENTRICITY = 0.0,
+        INCLINATION = 0.0,
+        RA_OF_ASC_NODE = 0.0,
+        ARG_OF_PERICENTER = 0.0,
+        ANOMALY_TYPE = 0,
+        ANOMALY = 0.0,
+    ):
+        self.SEMI_MAJOR_AXIS = SEMI_MAJOR_AXIS  # type: float
+        self.ECCENTRICITY = ECCENTRICITY  # type: float
+        self.INCLINATION = INCLINATION  # type: float
+        self.RA_OF_ASC_NODE = RA_OF_ASC_NODE  # type: float
+        self.ARG_OF_PERICENTER = ARG_OF_PERICENTER  # type: float
+        self.ANOMALY_TYPE = ANOMALY_TYPE  # type: int
+        self.ANOMALY = ANOMALY  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        keplerianElements = keplerianElements()
-        keplerianElements.Init(buf, pos)
-        return cls.InitFromObj(keplerianElements)
+        tmpKeplerianElements = keplerianElements()
+        tmpKeplerianElements.Init(buf, pos)
+        return cls.InitFromObj(tmpKeplerianElements)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -153,9 +162,9 @@ class keplerianElementsT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, keplerianElements):
+    def InitFromObj(cls, tmpKeplerianElements):
         x = keplerianElementsT()
-        x._UnPack(keplerianElements)
+        x._UnPack(tmpKeplerianElements)
         return x
 
     # keplerianElementsT

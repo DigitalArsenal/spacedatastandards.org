@@ -2,4 +2,452 @@
 
 # namespace: 
 
-# NOTE CZMPolyline.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Polyline properties
+class CZMPolyline(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = CZMPolyline()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsCZMPolyline(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def CZMPolylineBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x43\x5A\x4D", size_prefixed=size_prefixed)
+
+    # CZMPolyline
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Whether the polyline is displayed
+    # CZMPolyline
+    def SHOW(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # Positions as cartographic degrees [lon, lat, height, lon, lat, height, ...]
+    # CZMPolyline
+    def POSITIONS_CARTOGRAPHIC_DEGREES(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # CZMPolyline
+    def POSITIONS_CARTOGRAPHIC_DEGREESAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
+
+    # CZMPolyline
+    def POSITIONS_CARTOGRAPHIC_DEGREESLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # CZMPolyline
+    def POSITIONS_CARTOGRAPHIC_DEGREESIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        return o == 0
+
+    # Positions as Cartesian [X, Y, Z, X, Y, Z, ...]
+    # CZMPolyline
+    def POSITIONS_CARTESIAN(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # CZMPolyline
+    def POSITIONS_CARTESIANAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
+
+    # CZMPolyline
+    def POSITIONS_CARTESIANLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # CZMPolyline
+    def POSITIONS_CARTESIANIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        return o == 0
+
+    # Line width in pixels
+    # CZMPolyline
+    def WIDTH(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Line color (solid color material, legacy)
+    # CZMPolyline
+    def COLOR(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from CZMColor import CZMColor
+            obj = CZMColor()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Whether to clamp to ground
+    # CZMPolyline
+    def CLAMP_TO_GROUND(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # Arc type
+    # CZMPolyline
+    def ARC_TYPE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Granularity in radians
+    # CZMPolyline
+    def GRANULARITY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Full polyline material
+    # CZMPolyline
+    def MATERIAL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from CZMPolylineMaterial import CZMPolylineMaterial
+            obj = CZMPolylineMaterial()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Shadow mode
+    # CZMPolyline
+    def SHADOWS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Depth fail material
+    # CZMPolyline
+    def DEPTH_FAIL_MATERIAL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from CZMPolylineMaterial import CZMPolylineMaterial
+            obj = CZMPolylineMaterial()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Classification type
+    # CZMPolyline
+    def CLASSIFICATION_TYPE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Z-index for ordering
+    # CZMPolyline
+    def Z_INDEX(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+def CZMPolylineStart(builder):
+    builder.StartObject(13)
+
+def Start(builder):
+    CZMPolylineStart(builder)
+
+def CZMPolylineAddSHOW(builder, SHOW):
+    builder.PrependBoolSlot(0, SHOW, 0)
+
+def AddSHOW(builder, SHOW):
+    CZMPolylineAddSHOW(builder, SHOW)
+
+def CZMPolylineAddPOSITIONS_CARTOGRAPHIC_DEGREES(builder, POSITIONS_CARTOGRAPHIC_DEGREES):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(POSITIONS_CARTOGRAPHIC_DEGREES), 0)
+
+def AddPOSITIONS_CARTOGRAPHIC_DEGREES(builder, POSITIONS_CARTOGRAPHIC_DEGREES):
+    CZMPolylineAddPOSITIONS_CARTOGRAPHIC_DEGREES(builder, POSITIONS_CARTOGRAPHIC_DEGREES)
+
+def CZMPolylineStartPOSITIONS_CARTOGRAPHIC_DEGREESVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
+def StartPOSITIONS_CARTOGRAPHIC_DEGREESVector(builder, numElems):
+    return CZMPolylineStartPOSITIONS_CARTOGRAPHIC_DEGREESVector(builder, numElems)
+
+def CZMPolylineCreatePOSITIONS_CARTOGRAPHIC_DEGREESVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreatePOSITIONS_CARTOGRAPHIC_DEGREESVector(builder, data):
+    CZMPolylineCreatePOSITIONS_CARTOGRAPHIC_DEGREESVector(builder, data)
+
+def CZMPolylineAddPOSITIONS_CARTESIAN(builder, POSITIONS_CARTESIAN):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(POSITIONS_CARTESIAN), 0)
+
+def AddPOSITIONS_CARTESIAN(builder, POSITIONS_CARTESIAN):
+    CZMPolylineAddPOSITIONS_CARTESIAN(builder, POSITIONS_CARTESIAN)
+
+def CZMPolylineStartPOSITIONS_CARTESIANVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
+def StartPOSITIONS_CARTESIANVector(builder, numElems):
+    return CZMPolylineStartPOSITIONS_CARTESIANVector(builder, numElems)
+
+def CZMPolylineCreatePOSITIONS_CARTESIANVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreatePOSITIONS_CARTESIANVector(builder, data):
+    CZMPolylineCreatePOSITIONS_CARTESIANVector(builder, data)
+
+def CZMPolylineAddWIDTH(builder, WIDTH):
+    builder.PrependFloat64Slot(3, WIDTH, 0.0)
+
+def AddWIDTH(builder, WIDTH):
+    CZMPolylineAddWIDTH(builder, WIDTH)
+
+def CZMPolylineAddCOLOR(builder, COLOR):
+    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(COLOR), 0)
+
+def AddCOLOR(builder, COLOR):
+    CZMPolylineAddCOLOR(builder, COLOR)
+
+def CZMPolylineAddCLAMP_TO_GROUND(builder, CLAMP_TO_GROUND):
+    builder.PrependBoolSlot(5, CLAMP_TO_GROUND, 0)
+
+def AddCLAMP_TO_GROUND(builder, CLAMP_TO_GROUND):
+    CZMPolylineAddCLAMP_TO_GROUND(builder, CLAMP_TO_GROUND)
+
+def CZMPolylineAddARC_TYPE(builder, ARC_TYPE):
+    builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(ARC_TYPE), 0)
+
+def AddARC_TYPE(builder, ARC_TYPE):
+    CZMPolylineAddARC_TYPE(builder, ARC_TYPE)
+
+def CZMPolylineAddGRANULARITY(builder, GRANULARITY):
+    builder.PrependFloat64Slot(7, GRANULARITY, 0.0)
+
+def AddGRANULARITY(builder, GRANULARITY):
+    CZMPolylineAddGRANULARITY(builder, GRANULARITY)
+
+def CZMPolylineAddMATERIAL(builder, MATERIAL):
+    builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(MATERIAL), 0)
+
+def AddMATERIAL(builder, MATERIAL):
+    CZMPolylineAddMATERIAL(builder, MATERIAL)
+
+def CZMPolylineAddSHADOWS(builder, SHADOWS):
+    builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(SHADOWS), 0)
+
+def AddSHADOWS(builder, SHADOWS):
+    CZMPolylineAddSHADOWS(builder, SHADOWS)
+
+def CZMPolylineAddDEPTH_FAIL_MATERIAL(builder, DEPTH_FAIL_MATERIAL):
+    builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(DEPTH_FAIL_MATERIAL), 0)
+
+def AddDEPTH_FAIL_MATERIAL(builder, DEPTH_FAIL_MATERIAL):
+    CZMPolylineAddDEPTH_FAIL_MATERIAL(builder, DEPTH_FAIL_MATERIAL)
+
+def CZMPolylineAddCLASSIFICATION_TYPE(builder, CLASSIFICATION_TYPE):
+    builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(CLASSIFICATION_TYPE), 0)
+
+def AddCLASSIFICATION_TYPE(builder, CLASSIFICATION_TYPE):
+    CZMPolylineAddCLASSIFICATION_TYPE(builder, CLASSIFICATION_TYPE)
+
+def CZMPolylineAddZ_INDEX(builder, Z_INDEX):
+    builder.PrependInt32Slot(12, Z_INDEX, 0)
+
+def AddZ_INDEX(builder, Z_INDEX):
+    CZMPolylineAddZ_INDEX(builder, Z_INDEX)
+
+def CZMPolylineEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return CZMPolylineEnd(builder)
+
+import CZMColor
+import CZMPolylineMaterial
+try:
+    from typing import List, Optional
+except:
+    pass
+
+class CZMPolylineT(object):
+
+    # CZMPolylineT
+    def __init__(
+        self,
+        SHOW = False,
+        POSITIONS_CARTOGRAPHIC_DEGREES = None,
+        POSITIONS_CARTESIAN = None,
+        WIDTH = 0.0,
+        COLOR = None,
+        CLAMP_TO_GROUND = False,
+        ARC_TYPE = None,
+        GRANULARITY = 0.0,
+        MATERIAL = None,
+        SHADOWS = None,
+        DEPTH_FAIL_MATERIAL = None,
+        CLASSIFICATION_TYPE = None,
+        Z_INDEX = 0,
+    ):
+        self.SHOW = SHOW  # type: bool
+        self.POSITIONS_CARTOGRAPHIC_DEGREES = POSITIONS_CARTOGRAPHIC_DEGREES  # type: Optional[List[float]]
+        self.POSITIONS_CARTESIAN = POSITIONS_CARTESIAN  # type: Optional[List[float]]
+        self.WIDTH = WIDTH  # type: float
+        self.COLOR = COLOR  # type: Optional[CZMColor.CZMColorT]
+        self.CLAMP_TO_GROUND = CLAMP_TO_GROUND  # type: bool
+        self.ARC_TYPE = ARC_TYPE  # type: Optional[str]
+        self.GRANULARITY = GRANULARITY  # type: float
+        self.MATERIAL = MATERIAL  # type: Optional[CZMPolylineMaterial.CZMPolylineMaterialT]
+        self.SHADOWS = SHADOWS  # type: Optional[str]
+        self.DEPTH_FAIL_MATERIAL = DEPTH_FAIL_MATERIAL  # type: Optional[CZMPolylineMaterial.CZMPolylineMaterialT]
+        self.CLASSIFICATION_TYPE = CLASSIFICATION_TYPE  # type: Optional[str]
+        self.Z_INDEX = Z_INDEX  # type: int
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpCzmpolyline = CZMPolyline()
+        tmpCzmpolyline.Init(buf, pos)
+        return cls.InitFromObj(tmpCzmpolyline)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpCzmpolyline):
+        x = CZMPolylineT()
+        x._UnPack(tmpCzmpolyline)
+        return x
+
+    # CZMPolylineT
+    def _UnPack(self, CZMPolyline):
+        if CZMPolyline is None:
+            return
+        self.SHOW = CZMPolyline.SHOW()
+        if not CZMPolyline.POSITIONS_CARTOGRAPHIC_DEGREESIsNone():
+            if np is None:
+                self.POSITIONS_CARTOGRAPHIC_DEGREES = []
+                for i in range(CZMPolyline.POSITIONS_CARTOGRAPHIC_DEGREESLength()):
+                    self.POSITIONS_CARTOGRAPHIC_DEGREES.append(CZMPolyline.POSITIONS_CARTOGRAPHIC_DEGREES(i))
+            else:
+                self.POSITIONS_CARTOGRAPHIC_DEGREES = CZMPolyline.POSITIONS_CARTOGRAPHIC_DEGREESAsNumpy()
+        if not CZMPolyline.POSITIONS_CARTESIANIsNone():
+            if np is None:
+                self.POSITIONS_CARTESIAN = []
+                for i in range(CZMPolyline.POSITIONS_CARTESIANLength()):
+                    self.POSITIONS_CARTESIAN.append(CZMPolyline.POSITIONS_CARTESIAN(i))
+            else:
+                self.POSITIONS_CARTESIAN = CZMPolyline.POSITIONS_CARTESIANAsNumpy()
+        self.WIDTH = CZMPolyline.WIDTH()
+        if CZMPolyline.COLOR() is not None:
+            self.COLOR = CZMColor.CZMColorT.InitFromObj(CZMPolyline.COLOR())
+        self.CLAMP_TO_GROUND = CZMPolyline.CLAMP_TO_GROUND()
+        self.ARC_TYPE = CZMPolyline.ARC_TYPE()
+        self.GRANULARITY = CZMPolyline.GRANULARITY()
+        if CZMPolyline.MATERIAL() is not None:
+            self.MATERIAL = CZMPolylineMaterial.CZMPolylineMaterialT.InitFromObj(CZMPolyline.MATERIAL())
+        self.SHADOWS = CZMPolyline.SHADOWS()
+        if CZMPolyline.DEPTH_FAIL_MATERIAL() is not None:
+            self.DEPTH_FAIL_MATERIAL = CZMPolylineMaterial.CZMPolylineMaterialT.InitFromObj(CZMPolyline.DEPTH_FAIL_MATERIAL())
+        self.CLASSIFICATION_TYPE = CZMPolyline.CLASSIFICATION_TYPE()
+        self.Z_INDEX = CZMPolyline.Z_INDEX()
+
+    # CZMPolylineT
+    def Pack(self, builder):
+        if self.POSITIONS_CARTOGRAPHIC_DEGREES is not None:
+            if np is not None and type(self.POSITIONS_CARTOGRAPHIC_DEGREES) is np.ndarray:
+                POSITIONS_CARTOGRAPHIC_DEGREES = builder.CreateNumpyVector(self.POSITIONS_CARTOGRAPHIC_DEGREES)
+            else:
+                CZMPolylineStartPOSITIONS_CARTOGRAPHIC_DEGREESVector(builder, len(self.POSITIONS_CARTOGRAPHIC_DEGREES))
+                for i in reversed(range(len(self.POSITIONS_CARTOGRAPHIC_DEGREES))):
+                    builder.PrependFloat64(self.POSITIONS_CARTOGRAPHIC_DEGREES[i])
+                POSITIONS_CARTOGRAPHIC_DEGREES = builder.EndVector()
+        if self.POSITIONS_CARTESIAN is not None:
+            if np is not None and type(self.POSITIONS_CARTESIAN) is np.ndarray:
+                POSITIONS_CARTESIAN = builder.CreateNumpyVector(self.POSITIONS_CARTESIAN)
+            else:
+                CZMPolylineStartPOSITIONS_CARTESIANVector(builder, len(self.POSITIONS_CARTESIAN))
+                for i in reversed(range(len(self.POSITIONS_CARTESIAN))):
+                    builder.PrependFloat64(self.POSITIONS_CARTESIAN[i])
+                POSITIONS_CARTESIAN = builder.EndVector()
+        if self.COLOR is not None:
+            COLOR = self.COLOR.Pack(builder)
+        if self.ARC_TYPE is not None:
+            ARC_TYPE = builder.CreateString(self.ARC_TYPE)
+        if self.MATERIAL is not None:
+            MATERIAL = self.MATERIAL.Pack(builder)
+        if self.SHADOWS is not None:
+            SHADOWS = builder.CreateString(self.SHADOWS)
+        if self.DEPTH_FAIL_MATERIAL is not None:
+            DEPTH_FAIL_MATERIAL = self.DEPTH_FAIL_MATERIAL.Pack(builder)
+        if self.CLASSIFICATION_TYPE is not None:
+            CLASSIFICATION_TYPE = builder.CreateString(self.CLASSIFICATION_TYPE)
+        CZMPolylineStart(builder)
+        CZMPolylineAddSHOW(builder, self.SHOW)
+        if self.POSITIONS_CARTOGRAPHIC_DEGREES is not None:
+            CZMPolylineAddPOSITIONS_CARTOGRAPHIC_DEGREES(builder, POSITIONS_CARTOGRAPHIC_DEGREES)
+        if self.POSITIONS_CARTESIAN is not None:
+            CZMPolylineAddPOSITIONS_CARTESIAN(builder, POSITIONS_CARTESIAN)
+        CZMPolylineAddWIDTH(builder, self.WIDTH)
+        if self.COLOR is not None:
+            CZMPolylineAddCOLOR(builder, COLOR)
+        CZMPolylineAddCLAMP_TO_GROUND(builder, self.CLAMP_TO_GROUND)
+        if self.ARC_TYPE is not None:
+            CZMPolylineAddARC_TYPE(builder, ARC_TYPE)
+        CZMPolylineAddGRANULARITY(builder, self.GRANULARITY)
+        if self.MATERIAL is not None:
+            CZMPolylineAddMATERIAL(builder, MATERIAL)
+        if self.SHADOWS is not None:
+            CZMPolylineAddSHADOWS(builder, SHADOWS)
+        if self.DEPTH_FAIL_MATERIAL is not None:
+            CZMPolylineAddDEPTH_FAIL_MATERIAL(builder, DEPTH_FAIL_MATERIAL)
+        if self.CLASSIFICATION_TYPE is not None:
+            CZMPolylineAddCLASSIFICATION_TYPE(builder, CLASSIFICATION_TYPE)
+        CZMPolylineAddZ_INDEX(builder, self.Z_INDEX)
+        CZMPolyline = CZMPolylineEnd(builder)
+        return CZMPolyline

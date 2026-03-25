@@ -8,9 +8,9 @@
 
 // Ensure the included flatbuffers.h is the same version as when this file was
 // generated, otherwise it may not be compatible.
-static_assert(FLATBUFFERS_VERSION_MAJOR == 24 &&
-              FLATBUFFERS_VERSION_MINOR == 3 &&
-              FLATBUFFERS_VERSION_REVISION == 25,
+static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
+              FLATBUFFERS_VERSION_MINOR == 12 &&
+              FLATBUFFERS_VERSION_REVISION == 19,
              "Non-compatible flatbuffers version included");
 
 struct GPXLink;
@@ -94,7 +94,8 @@ struct GPXLink FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *TYPE() const {
     return GetPointer<const ::flatbuffers::String *>(VT_TYPE);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_HREF) &&
            verifier.VerifyString(HREF()) &&
@@ -272,7 +273,8 @@ struct GPXWaypoint FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   double COURSE() const {
     return GetField<double>(VT_COURSE, 0.0);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<double>(verifier, VT_LATITUDE, 8) &&
            VerifyField<double>(verifier, VT_LONGITUDE, 8) &&
@@ -508,7 +510,8 @@ struct GPXTrackSegment FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::Vector<::flatbuffers::Offset<GPXWaypoint>> *POINTS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<GPXWaypoint>> *>(VT_POINTS);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_POINTS) &&
            verifier.VerifyVector(POINTS()) &&
@@ -597,7 +600,8 @@ struct GPXTrack FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::Vector<::flatbuffers::Offset<GPXTrackSegment>> *SEGMENTS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<GPXTrackSegment>> *>(VT_SEGMENTS);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_NAME) &&
            verifier.VerifyString(NAME()) &&
@@ -755,7 +759,8 @@ struct GPXRoute FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::Vector<::flatbuffers::Offset<GPXWaypoint>> *POINTS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<GPXWaypoint>> *>(VT_POINTS);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_NAME) &&
            verifier.VerifyString(NAME()) &&
@@ -973,7 +978,8 @@ struct GPX FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::Vector<::flatbuffers::Offset<GPXTrack>> *TRACKS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<GPXTrack>> *>(VT_TRACKS);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_VERSION) &&
            verifier.VerifyString(VERSION()) &&
@@ -1223,14 +1229,16 @@ inline bool SizePrefixedGPXBufferHasIdentifier(const void *buf) {
       buf, GPXIdentifier(), true);
 }
 
+template <bool B = false>
 inline bool VerifyGPXBuffer(
-    ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifyBuffer<GPX>(GPXIdentifier());
+    ::flatbuffers::VerifierTemplate<B> &verifier) {
+  return verifier.template VerifyBuffer<GPX>(GPXIdentifier());
 }
 
+template <bool B = false>
 inline bool VerifySizePrefixedGPXBuffer(
-    ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifySizePrefixedBuffer<GPX>(GPXIdentifier());
+    ::flatbuffers::VerifierTemplate<B> &verifier) {
+  return verifier.template VerifySizePrefixedBuffer<GPX>(GPXIdentifier());
 }
 
 inline void FinishGPXBuffer(

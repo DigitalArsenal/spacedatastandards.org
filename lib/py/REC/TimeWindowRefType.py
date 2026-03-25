@@ -2,4 +2,9 @@
 
 # namespace: 
 
-# NOTE TimeWindowRefType.py does not declare any structs or enums
+# Time window reference for command verification
+class TimeWindowRefType(object):
+    # Relative to command release time
+    COMMAND_RELEASE = 0
+    # Relative to last verifier passed
+    TIME_LAST_VERIFIER_PASSED = 1

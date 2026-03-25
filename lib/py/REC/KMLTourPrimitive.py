@@ -2,4 +2,216 @@
 
 # namespace: 
 
-# NOTE KMLTourPrimitive.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Tour primitive (union-like)
+class KMLTourPrimitive(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = KMLTourPrimitive()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsKMLTourPrimitive(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def KMLTourPrimitiveBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x4B\x4D\x4C", size_prefixed=size_prefixed)
+
+    # KMLTourPrimitive
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # FlyTo
+    # KMLTourPrimitive
+    def FLY_TO(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from KMLFlyTo import KMLFlyTo
+            obj = KMLFlyTo()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Wait
+    # KMLTourPrimitive
+    def WAIT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from KMLWait import KMLWait
+            obj = KMLWait()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # AnimatedUpdate
+    # KMLTourPrimitive
+    def ANIMATED_UPDATE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from KMLAnimatedUpdate import KMLAnimatedUpdate
+            obj = KMLAnimatedUpdate()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # TourControl
+    # KMLTourPrimitive
+    def TOUR_CONTROL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from KMLTourControl import KMLTourControl
+            obj = KMLTourControl()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # SoundCue
+    # KMLTourPrimitive
+    def SOUND_CUE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from KMLSoundCue import KMLSoundCue
+            obj = KMLSoundCue()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+def KMLTourPrimitiveStart(builder):
+    builder.StartObject(5)
+
+def Start(builder):
+    KMLTourPrimitiveStart(builder)
+
+def KMLTourPrimitiveAddFLY_TO(builder, FLY_TO):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(FLY_TO), 0)
+
+def AddFLY_TO(builder, FLY_TO):
+    KMLTourPrimitiveAddFLY_TO(builder, FLY_TO)
+
+def KMLTourPrimitiveAddWAIT(builder, WAIT):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(WAIT), 0)
+
+def AddWAIT(builder, WAIT):
+    KMLTourPrimitiveAddWAIT(builder, WAIT)
+
+def KMLTourPrimitiveAddANIMATED_UPDATE(builder, ANIMATED_UPDATE):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(ANIMATED_UPDATE), 0)
+
+def AddANIMATED_UPDATE(builder, ANIMATED_UPDATE):
+    KMLTourPrimitiveAddANIMATED_UPDATE(builder, ANIMATED_UPDATE)
+
+def KMLTourPrimitiveAddTOUR_CONTROL(builder, TOUR_CONTROL):
+    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(TOUR_CONTROL), 0)
+
+def AddTOUR_CONTROL(builder, TOUR_CONTROL):
+    KMLTourPrimitiveAddTOUR_CONTROL(builder, TOUR_CONTROL)
+
+def KMLTourPrimitiveAddSOUND_CUE(builder, SOUND_CUE):
+    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(SOUND_CUE), 0)
+
+def AddSOUND_CUE(builder, SOUND_CUE):
+    KMLTourPrimitiveAddSOUND_CUE(builder, SOUND_CUE)
+
+def KMLTourPrimitiveEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return KMLTourPrimitiveEnd(builder)
+
+import KMLAnimatedUpdate
+import KMLFlyTo
+import KMLSoundCue
+import KMLTourControl
+import KMLWait
+try:
+    from typing import Optional
+except:
+    pass
+
+class KMLTourPrimitiveT(object):
+
+    # KMLTourPrimitiveT
+    def __init__(
+        self,
+        FLY_TO = None,
+        WAIT = None,
+        ANIMATED_UPDATE = None,
+        TOUR_CONTROL = None,
+        SOUND_CUE = None,
+    ):
+        self.FLY_TO = FLY_TO  # type: Optional[KMLFlyTo.KMLFlyToT]
+        self.WAIT = WAIT  # type: Optional[KMLWait.KMLWaitT]
+        self.ANIMATED_UPDATE = ANIMATED_UPDATE  # type: Optional[KMLAnimatedUpdate.KMLAnimatedUpdateT]
+        self.TOUR_CONTROL = TOUR_CONTROL  # type: Optional[KMLTourControl.KMLTourControlT]
+        self.SOUND_CUE = SOUND_CUE  # type: Optional[KMLSoundCue.KMLSoundCueT]
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpKmltourPrimitive = KMLTourPrimitive()
+        tmpKmltourPrimitive.Init(buf, pos)
+        return cls.InitFromObj(tmpKmltourPrimitive)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpKmltourPrimitive):
+        x = KMLTourPrimitiveT()
+        x._UnPack(tmpKmltourPrimitive)
+        return x
+
+    # KMLTourPrimitiveT
+    def _UnPack(self, KMLTourPrimitive):
+        if KMLTourPrimitive is None:
+            return
+        if KMLTourPrimitive.FLY_TO() is not None:
+            self.FLY_TO = KMLFlyTo.KMLFlyToT.InitFromObj(KMLTourPrimitive.FLY_TO())
+        if KMLTourPrimitive.WAIT() is not None:
+            self.WAIT = KMLWait.KMLWaitT.InitFromObj(KMLTourPrimitive.WAIT())
+        if KMLTourPrimitive.ANIMATED_UPDATE() is not None:
+            self.ANIMATED_UPDATE = KMLAnimatedUpdate.KMLAnimatedUpdateT.InitFromObj(KMLTourPrimitive.ANIMATED_UPDATE())
+        if KMLTourPrimitive.TOUR_CONTROL() is not None:
+            self.TOUR_CONTROL = KMLTourControl.KMLTourControlT.InitFromObj(KMLTourPrimitive.TOUR_CONTROL())
+        if KMLTourPrimitive.SOUND_CUE() is not None:
+            self.SOUND_CUE = KMLSoundCue.KMLSoundCueT.InitFromObj(KMLTourPrimitive.SOUND_CUE())
+
+    # KMLTourPrimitiveT
+    def Pack(self, builder):
+        if self.FLY_TO is not None:
+            FLY_TO = self.FLY_TO.Pack(builder)
+        if self.WAIT is not None:
+            WAIT = self.WAIT.Pack(builder)
+        if self.ANIMATED_UPDATE is not None:
+            ANIMATED_UPDATE = self.ANIMATED_UPDATE.Pack(builder)
+        if self.TOUR_CONTROL is not None:
+            TOUR_CONTROL = self.TOUR_CONTROL.Pack(builder)
+        if self.SOUND_CUE is not None:
+            SOUND_CUE = self.SOUND_CUE.Pack(builder)
+        KMLTourPrimitiveStart(builder)
+        if self.FLY_TO is not None:
+            KMLTourPrimitiveAddFLY_TO(builder, FLY_TO)
+        if self.WAIT is not None:
+            KMLTourPrimitiveAddWAIT(builder, WAIT)
+        if self.ANIMATED_UPDATE is not None:
+            KMLTourPrimitiveAddANIMATED_UPDATE(builder, ANIMATED_UPDATE)
+        if self.TOUR_CONTROL is not None:
+            KMLTourPrimitiveAddTOUR_CONTROL(builder, TOUR_CONTROL)
+        if self.SOUND_CUE is not None:
+            KMLTourPrimitiveAddSOUND_CUE(builder, SOUND_CUE)
+        KMLTourPrimitive = KMLTourPrimitiveEnd(builder)
+        return KMLTourPrimitive

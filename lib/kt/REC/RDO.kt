@@ -32,7 +32,7 @@ class RDO : Table() {
     /**
      * Unique identifier
      */
-    val ID : String?
+    val id : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class RDO : Table() {
                 null
             }
         }
-    val IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val idAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun idInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Observation time (ISO 8601)
      */
-    val OB_TIME : String?
+    val obTime : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -55,12 +55,12 @@ class RDO : Table() {
                 null
             }
         }
-    val OB_TIMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun OB_TIMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val obTimeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun obTimeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * Sensor identifier
      */
-    val ID_SENSOR : String?
+    val idSensor : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -69,12 +69,12 @@ class RDO : Table() {
                 null
             }
         }
-    val ID_SENSORAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun ID_SENSORInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val idSensorAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun idSensorInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
     /**
      * Original sensor identifier
      */
-    val ORIG_SENSOR_ID : String?
+    val origSensorId : String?
         get() {
             val o = __offset(10)
             return if (o != 0) {
@@ -83,12 +83,12 @@ class RDO : Table() {
                 null
             }
         }
-    val ORIG_SENSOR_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
-    fun ORIG_SENSOR_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
+    val origSensorIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(10, 1)
+    fun origSensorIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 10, 1)
     /**
      * Satellite catalog number
      */
-    val SAT_NO : UInt
+    val satNo : UInt
         get() {
             val o = __offset(12)
             return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
@@ -96,7 +96,7 @@ class RDO : Table() {
     /**
      * International designator
      */
-    val ORIG_OBJECT_ID : String?
+    val origObjectId : String?
         get() {
             val o = __offset(14)
             return if (o != 0) {
@@ -105,12 +105,12 @@ class RDO : Table() {
                 null
             }
         }
-    val ORIG_OBJECT_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(14, 1)
-    fun ORIG_OBJECT_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 14, 1)
+    val origObjectIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(14, 1)
+    fun origObjectIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 14, 1)
     /**
      * On-orbit reference
      */
-    val ON_ORBIT : String?
+    val onOrbit : String?
         get() {
             val o = __offset(16)
             return if (o != 0) {
@@ -119,12 +119,12 @@ class RDO : Table() {
                 null
             }
         }
-    val ON_ORBITAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(16, 1)
-    fun ON_ORBITInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 16, 1)
+    val onOrbitAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(16, 1)
+    fun onOrbitInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 16, 1)
     /**
      * True if uncorrelated target
      */
-    val UCT : Boolean
+    val uct : Boolean
         get() {
             val o = __offset(18)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -132,7 +132,7 @@ class RDO : Table() {
     /**
      * Observation type
      */
-    val OBS_TYPE : Byte
+    val obsType : Byte
         get() {
             val o = __offset(20)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -140,7 +140,7 @@ class RDO : Table() {
     /**
      * Task identifier
      */
-    val TASK_ID : String?
+    val taskId : String?
         get() {
             val o = __offset(22)
             return if (o != 0) {
@@ -149,12 +149,12 @@ class RDO : Table() {
                 null
             }
         }
-    val TASK_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(22, 1)
-    fun TASK_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 22, 1)
+    val taskIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(22, 1)
+    fun taskIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 22, 1)
     /**
      * Transaction identifier
      */
-    val TRANSACTION_ID : String?
+    val transactionId : String?
         get() {
             val o = __offset(24)
             return if (o != 0) {
@@ -163,12 +163,12 @@ class RDO : Table() {
                 null
             }
         }
-    val TRANSACTION_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(24, 1)
-    fun TRANSACTION_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 24, 1)
+    val transactionIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(24, 1)
+    fun transactionIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 24, 1)
     /**
      * Track identifier
      */
-    val TRACK_ID : String?
+    val trackId : String?
         get() {
             val o = __offset(26)
             return if (o != 0) {
@@ -177,12 +177,12 @@ class RDO : Table() {
                 null
             }
         }
-    val TRACK_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(26, 1)
-    fun TRACK_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 26, 1)
+    val trackIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(26, 1)
+    fun trackIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 26, 1)
     /**
      * Observation position identifier
      */
-    val OB_POSITION : String?
+    val obPosition : String?
         get() {
             val o = __offset(28)
             return if (o != 0) {
@@ -191,12 +191,12 @@ class RDO : Table() {
                 null
             }
         }
-    val OB_POSITIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(28, 1)
-    fun OB_POSITIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 28, 1)
+    val obPositionAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(28, 1)
+    fun obPositionInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 28, 1)
     /**
      * Sensor reference frame
      */
-    val SEN_REFERENCE_FRAME : String?
+    val senReferenceFrame : String?
         get() {
             val o = __offset(30)
             return if (o != 0) {
@@ -205,12 +205,12 @@ class RDO : Table() {
                 null
             }
         }
-    val SEN_REFERENCE_FRAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(30, 1)
-    fun SEN_REFERENCE_FRAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 30, 1)
+    val senReferenceFrameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(30, 1)
+    fun senReferenceFrameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 30, 1)
     /**
      * Azimuth angle (degrees)
      */
-    val AZIMUTH : Double
+    val azimuth : Double
         get() {
             val o = __offset(32)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -218,7 +218,7 @@ class RDO : Table() {
     /**
      * Azimuth uncertainty (degrees, 1-sigma)
      */
-    val AZIMUTH_UNC : Double
+    val azimuthUnc : Double
         get() {
             val o = __offset(34)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -226,7 +226,7 @@ class RDO : Table() {
     /**
      * Azimuth bias (degrees)
      */
-    val AZIMUTH_BIAS : Double
+    val azimuthBias : Double
         get() {
             val o = __offset(36)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -234,7 +234,7 @@ class RDO : Table() {
     /**
      * Azimuth rate (degrees/s)
      */
-    val AZIMUTH_RATE : Double
+    val azimuthRate : Double
         get() {
             val o = __offset(38)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -242,7 +242,7 @@ class RDO : Table() {
     /**
      * Elevation angle (degrees)
      */
-    val ELEVATION : Double
+    val elevation : Double
         get() {
             val o = __offset(40)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -250,7 +250,7 @@ class RDO : Table() {
     /**
      * Elevation uncertainty (degrees, 1-sigma)
      */
-    val ELEVATION_UNC : Double
+    val elevationUnc : Double
         get() {
             val o = __offset(42)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -258,7 +258,7 @@ class RDO : Table() {
     /**
      * Elevation bias (degrees)
      */
-    val ELEVATION_BIAS : Double
+    val elevationBias : Double
         get() {
             val o = __offset(44)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -266,7 +266,7 @@ class RDO : Table() {
     /**
      * Elevation rate (degrees/s)
      */
-    val ELEVATION_RATE : Double
+    val elevationRate : Double
         get() {
             val o = __offset(46)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -274,7 +274,7 @@ class RDO : Table() {
     /**
      * Slant range (km)
      */
-    val RANGE : Double
+    val range : Double
         get() {
             val o = __offset(48)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -282,7 +282,7 @@ class RDO : Table() {
     /**
      * Range uncertainty (km, 1-sigma)
      */
-    val RANGE_UNC : Double
+    val rangeUnc : Double
         get() {
             val o = __offset(50)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -290,7 +290,7 @@ class RDO : Table() {
     /**
      * Range bias (km)
      */
-    val RANGE_BIAS : Double
+    val rangeBias : Double
         get() {
             val o = __offset(52)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -298,7 +298,7 @@ class RDO : Table() {
     /**
      * Range rate (km/s)
      */
-    val RANGE_RATE : Double
+    val rangeRate : Double
         get() {
             val o = __offset(54)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -306,7 +306,7 @@ class RDO : Table() {
     /**
      * Range rate uncertainty (km/s, 1-sigma)
      */
-    val RANGE_RATE_UNC : Double
+    val rangeRateUnc : Double
         get() {
             val o = __offset(56)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -314,7 +314,7 @@ class RDO : Table() {
     /**
      * Range acceleration (km/s^2)
      */
-    val RANGE_ACCEL : Double
+    val rangeAccel : Double
         get() {
             val o = __offset(58)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -322,7 +322,7 @@ class RDO : Table() {
     /**
      * Range acceleration uncertainty (km/s^2, 1-sigma)
      */
-    val RANGE_ACCEL_UNC : Double
+    val rangeAccelUnc : Double
         get() {
             val o = __offset(60)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -330,7 +330,7 @@ class RDO : Table() {
     /**
      * Doppler shift (Hz)
      */
-    val DOPPLER : Double
+    val doppler : Double
         get() {
             val o = __offset(62)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -338,7 +338,7 @@ class RDO : Table() {
     /**
      * Doppler uncertainty (Hz, 1-sigma)
      */
-    val DOPPLER_UNC : Double
+    val dopplerUnc : Double
         get() {
             val o = __offset(64)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -346,7 +346,7 @@ class RDO : Table() {
     /**
      * Right ascension (degrees)
      */
-    val RA : Double
+    val ra : Double
         get() {
             val o = __offset(66)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -354,7 +354,7 @@ class RDO : Table() {
     /**
      * Declination (degrees)
      */
-    val DECLINATION : Double
+    val declination : Double
         get() {
             val o = __offset(68)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -362,7 +362,7 @@ class RDO : Table() {
     /**
      * Target position X (km, ECI)
      */
-    val X : Double
+    val x : Double
         get() {
             val o = __offset(70)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -370,7 +370,7 @@ class RDO : Table() {
     /**
      * Target position Y (km, ECI)
      */
-    val Y : Double
+    val y : Double
         get() {
             val o = __offset(72)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -378,7 +378,7 @@ class RDO : Table() {
     /**
      * Target position Z (km, ECI)
      */
-    val Z : Double
+    val z : Double
         get() {
             val o = __offset(74)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -386,7 +386,7 @@ class RDO : Table() {
     /**
      * Target velocity X (km/s, ECI)
      */
-    val XVEL : Double
+    val xvel : Double
         get() {
             val o = __offset(76)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -394,7 +394,7 @@ class RDO : Table() {
     /**
      * Target velocity Y (km/s, ECI)
      */
-    val YVEL : Double
+    val yvel : Double
         get() {
             val o = __offset(78)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -402,7 +402,7 @@ class RDO : Table() {
     /**
      * Target velocity Z (km/s, ECI)
      */
-    val ZVEL : Double
+    val zvel : Double
         get() {
             val o = __offset(80)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -410,7 +410,7 @@ class RDO : Table() {
     /**
      * Sensor position X (km, ECEF)
      */
-    val SENX : Double
+    val senx : Double
         get() {
             val o = __offset(82)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -418,7 +418,7 @@ class RDO : Table() {
     /**
      * Sensor position Y (km, ECEF)
      */
-    val SENY : Double
+    val seny : Double
         get() {
             val o = __offset(84)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -426,7 +426,7 @@ class RDO : Table() {
     /**
      * Sensor position Z (km, ECEF)
      */
-    val SENZ : Double
+    val senz : Double
         get() {
             val o = __offset(86)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -434,7 +434,7 @@ class RDO : Table() {
     /**
      * Radar cross-section (dBsm)
      */
-    val RCS : Double
+    val rcs : Double
         get() {
             val o = __offset(88)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -442,7 +442,7 @@ class RDO : Table() {
     /**
      * RCS uncertainty (dBsm, 1-sigma)
      */
-    val RCS_UNC : Double
+    val rcsUnc : Double
         get() {
             val o = __offset(90)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -450,7 +450,7 @@ class RDO : Table() {
     /**
      * Orthogonal polarization RCS (dBsm)
      */
-    val ORTHOGONAL_RCS : Double
+    val orthogonalRcs : Double
         get() {
             val o = __offset(92)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -458,7 +458,7 @@ class RDO : Table() {
     /**
      * Orthogonal RCS uncertainty (dBsm, 1-sigma)
      */
-    val ORTHOGONAL_RCS_UNC : Double
+    val orthogonalRcsUnc : Double
         get() {
             val o = __offset(94)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -466,7 +466,7 @@ class RDO : Table() {
     /**
      * Signal-to-noise ratio (dB)
      */
-    val SNR : Double
+    val snr : Double
         get() {
             val o = __offset(96)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -474,7 +474,7 @@ class RDO : Table() {
     /**
      * Beam identifier
      */
-    val BEAM : Double
+    val beam : Double
         get() {
             val o = __offset(98)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -482,7 +482,7 @@ class RDO : Table() {
     /**
      * Timing bias (seconds)
      */
-    val TIMING_BIAS : Double
+    val timingBias : Double
         get() {
             val o = __offset(100)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -490,7 +490,7 @@ class RDO : Table() {
     /**
      * Reference to raw data file
      */
-    val RAW_FILE_URI : String?
+    val rawFileUri : String?
         get() {
             val o = __offset(102)
             return if (o != 0) {
@@ -499,12 +499,12 @@ class RDO : Table() {
                 null
             }
         }
-    val RAW_FILE_URIAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(102, 1)
-    fun RAW_FILE_URIInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 102, 1)
+    val rawFileUriAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(102, 1)
+    fun rawFileUriInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 102, 1)
     /**
      * Event descriptor
      */
-    val DESCRIPTOR : String?
+    val descriptor : String?
         get() {
             val o = __offset(104)
             return if (o != 0) {
@@ -513,12 +513,12 @@ class RDO : Table() {
                 null
             }
         }
-    val DESCRIPTORAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(104, 1)
-    fun DESCRIPTORInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 104, 1)
+    val descriptorAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(104, 1)
+    fun descriptorInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 104, 1)
     /**
      * Associated tags
      */
-    fun TAGS(j: Int) : String? {
+    fun tags(j: Int) : String? {
         val o = __offset(106)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
@@ -526,127 +526,127 @@ class RDO : Table() {
             null
         }
     }
-    val TAGSLength : Int
+    val tagsLength : Int
         get() {
             val o = __offset(106); return if (o != 0) __vector_len(o) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsRDO(_bb: ByteBuffer): RDO = getRootAsRDO(_bb, RDO())
         fun getRootAsRDO(_bb: ByteBuffer, obj: RDO): RDO {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun RDOBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$RDO")
-        fun createRDO(builder: FlatBufferBuilder, IDOffset: Int, OB_TIMEOffset: Int, ID_SENSOROffset: Int, ORIG_SENSOR_IDOffset: Int, SAT_NO: UInt, ORIG_OBJECT_IDOffset: Int, ON_ORBITOffset: Int, UCT: Boolean, OBS_TYPE: Byte, TASK_IDOffset: Int, TRANSACTION_IDOffset: Int, TRACK_IDOffset: Int, OB_POSITIONOffset: Int, SEN_REFERENCE_FRAMEOffset: Int, AZIMUTH: Double, AZIMUTH_UNC: Double, AZIMUTH_BIAS: Double, AZIMUTH_RATE: Double, ELEVATION: Double, ELEVATION_UNC: Double, ELEVATION_BIAS: Double, ELEVATION_RATE: Double, RANGE: Double, RANGE_UNC: Double, RANGE_BIAS: Double, RANGE_RATE: Double, RANGE_RATE_UNC: Double, RANGE_ACCEL: Double, RANGE_ACCEL_UNC: Double, DOPPLER: Double, DOPPLER_UNC: Double, RA: Double, DECLINATION: Double, X: Double, Y: Double, Z: Double, XVEL: Double, YVEL: Double, ZVEL: Double, SENX: Double, SENY: Double, SENZ: Double, RCS: Double, RCS_UNC: Double, ORTHOGONAL_RCS: Double, ORTHOGONAL_RCS_UNC: Double, SNR: Double, BEAM: Double, TIMING_BIAS: Double, RAW_FILE_URIOffset: Int, DESCRIPTOROffset: Int, TAGSOffset: Int) : Int {
+        fun createRDO(builder: FlatBufferBuilder, idOffset: Int, obTimeOffset: Int, idSensorOffset: Int, origSensorIdOffset: Int, satNo: UInt, origObjectIdOffset: Int, onOrbitOffset: Int, uct: Boolean, obsType: Byte, taskIdOffset: Int, transactionIdOffset: Int, trackIdOffset: Int, obPositionOffset: Int, senReferenceFrameOffset: Int, azimuth: Double, azimuthUnc: Double, azimuthBias: Double, azimuthRate: Double, elevation: Double, elevationUnc: Double, elevationBias: Double, elevationRate: Double, range: Double, rangeUnc: Double, rangeBias: Double, rangeRate: Double, rangeRateUnc: Double, rangeAccel: Double, rangeAccelUnc: Double, doppler: Double, dopplerUnc: Double, ra: Double, declination: Double, x: Double, y: Double, z: Double, xvel: Double, yvel: Double, zvel: Double, senx: Double, seny: Double, senz: Double, rcs: Double, rcsUnc: Double, orthogonalRcs: Double, orthogonalRcsUnc: Double, snr: Double, beam: Double, timingBias: Double, rawFileUriOffset: Int, descriptorOffset: Int, tagsOffset: Int) : Int {
             builder.startTable(52)
-            addTIMING_BIAS(builder, TIMING_BIAS)
-            addBEAM(builder, BEAM)
-            addSNR(builder, SNR)
-            addORTHOGONAL_RCS_UNC(builder, ORTHOGONAL_RCS_UNC)
-            addORTHOGONAL_RCS(builder, ORTHOGONAL_RCS)
-            addRCS_UNC(builder, RCS_UNC)
-            addRCS(builder, RCS)
-            addSENZ(builder, SENZ)
-            addSENY(builder, SENY)
-            addSENX(builder, SENX)
-            addZVEL(builder, ZVEL)
-            addYVEL(builder, YVEL)
-            addXVEL(builder, XVEL)
-            addZ(builder, Z)
-            addY(builder, Y)
-            addX(builder, X)
-            addDECLINATION(builder, DECLINATION)
-            addRA(builder, RA)
-            addDOPPLER_UNC(builder, DOPPLER_UNC)
-            addDOPPLER(builder, DOPPLER)
-            addRANGE_ACCEL_UNC(builder, RANGE_ACCEL_UNC)
-            addRANGE_ACCEL(builder, RANGE_ACCEL)
-            addRANGE_RATE_UNC(builder, RANGE_RATE_UNC)
-            addRANGE_RATE(builder, RANGE_RATE)
-            addRANGE_BIAS(builder, RANGE_BIAS)
-            addRANGE_UNC(builder, RANGE_UNC)
-            addRANGE(builder, RANGE)
-            addELEVATION_RATE(builder, ELEVATION_RATE)
-            addELEVATION_BIAS(builder, ELEVATION_BIAS)
-            addELEVATION_UNC(builder, ELEVATION_UNC)
-            addELEVATION(builder, ELEVATION)
-            addAZIMUTH_RATE(builder, AZIMUTH_RATE)
-            addAZIMUTH_BIAS(builder, AZIMUTH_BIAS)
-            addAZIMUTH_UNC(builder, AZIMUTH_UNC)
-            addAZIMUTH(builder, AZIMUTH)
-            addTAGS(builder, TAGSOffset)
-            addDESCRIPTOR(builder, DESCRIPTOROffset)
-            addRAW_FILE_URI(builder, RAW_FILE_URIOffset)
-            addSEN_REFERENCE_FRAME(builder, SEN_REFERENCE_FRAMEOffset)
-            addOB_POSITION(builder, OB_POSITIONOffset)
-            addTRACK_ID(builder, TRACK_IDOffset)
-            addTRANSACTION_ID(builder, TRANSACTION_IDOffset)
-            addTASK_ID(builder, TASK_IDOffset)
-            addON_ORBIT(builder, ON_ORBITOffset)
-            addORIG_OBJECT_ID(builder, ORIG_OBJECT_IDOffset)
-            addSAT_NO(builder, SAT_NO)
-            addORIG_SENSOR_ID(builder, ORIG_SENSOR_IDOffset)
-            addID_SENSOR(builder, ID_SENSOROffset)
-            addOB_TIME(builder, OB_TIMEOffset)
-            addID(builder, IDOffset)
-            addOBS_TYPE(builder, OBS_TYPE)
-            addUCT(builder, UCT)
+            addTIMINGBIAS(builder, timingBias)
+            addBEAM(builder, beam)
+            addSNR(builder, snr)
+            addORTHOGONALRCSUNC(builder, orthogonalRcsUnc)
+            addORTHOGONALRCS(builder, orthogonalRcs)
+            addRCSUNC(builder, rcsUnc)
+            addRCS(builder, rcs)
+            addSENZ(builder, senz)
+            addSENY(builder, seny)
+            addSENX(builder, senx)
+            addZVEL(builder, zvel)
+            addYVEL(builder, yvel)
+            addXVEL(builder, xvel)
+            addZ(builder, z)
+            addY(builder, y)
+            addX(builder, x)
+            addDECLINATION(builder, declination)
+            addRA(builder, ra)
+            addDOPPLERUNC(builder, dopplerUnc)
+            addDOPPLER(builder, doppler)
+            addRANGEACCELUNC(builder, rangeAccelUnc)
+            addRANGEACCEL(builder, rangeAccel)
+            addRANGERATEUNC(builder, rangeRateUnc)
+            addRANGERATE(builder, rangeRate)
+            addRANGEBIAS(builder, rangeBias)
+            addRANGEUNC(builder, rangeUnc)
+            addRANGE(builder, range)
+            addELEVATIONRATE(builder, elevationRate)
+            addELEVATIONBIAS(builder, elevationBias)
+            addELEVATIONUNC(builder, elevationUnc)
+            addELEVATION(builder, elevation)
+            addAZIMUTHRATE(builder, azimuthRate)
+            addAZIMUTHBIAS(builder, azimuthBias)
+            addAZIMUTHUNC(builder, azimuthUnc)
+            addAZIMUTH(builder, azimuth)
+            addTAGS(builder, tagsOffset)
+            addDESCRIPTOR(builder, descriptorOffset)
+            addRAWFILEURI(builder, rawFileUriOffset)
+            addSENREFERENCEFRAME(builder, senReferenceFrameOffset)
+            addOBPOSITION(builder, obPositionOffset)
+            addTRACKID(builder, trackIdOffset)
+            addTRANSACTIONID(builder, transactionIdOffset)
+            addTASKID(builder, taskIdOffset)
+            addONORBIT(builder, onOrbitOffset)
+            addORIGOBJECTID(builder, origObjectIdOffset)
+            addSATNO(builder, satNo)
+            addORIGSENSORID(builder, origSensorIdOffset)
+            addIDSENSOR(builder, idSensorOffset)
+            addOBTIME(builder, obTimeOffset)
+            addID(builder, idOffset)
+            addOBSTYPE(builder, obsType)
+            addUCT(builder, uct)
             return endRDO(builder)
         }
         fun startRDO(builder: FlatBufferBuilder) = builder.startTable(52)
-        fun addID(builder: FlatBufferBuilder, ID: Int) = builder.addOffset(0, ID, 0)
-        fun addOB_TIME(builder: FlatBufferBuilder, OB_TIME: Int) = builder.addOffset(1, OB_TIME, 0)
-        fun addID_SENSOR(builder: FlatBufferBuilder, ID_SENSOR: Int) = builder.addOffset(2, ID_SENSOR, 0)
-        fun addORIG_SENSOR_ID(builder: FlatBufferBuilder, ORIG_SENSOR_ID: Int) = builder.addOffset(3, ORIG_SENSOR_ID, 0)
-        fun addSAT_NO(builder: FlatBufferBuilder, SAT_NO: UInt) = builder.addInt(4, SAT_NO.toInt(), 0)
-        fun addORIG_OBJECT_ID(builder: FlatBufferBuilder, ORIG_OBJECT_ID: Int) = builder.addOffset(5, ORIG_OBJECT_ID, 0)
-        fun addON_ORBIT(builder: FlatBufferBuilder, ON_ORBIT: Int) = builder.addOffset(6, ON_ORBIT, 0)
-        fun addUCT(builder: FlatBufferBuilder, UCT: Boolean) = builder.addBoolean(7, UCT, false)
-        fun addOBS_TYPE(builder: FlatBufferBuilder, OBS_TYPE: Byte) = builder.addByte(8, OBS_TYPE, 0)
-        fun addTASK_ID(builder: FlatBufferBuilder, TASK_ID: Int) = builder.addOffset(9, TASK_ID, 0)
-        fun addTRANSACTION_ID(builder: FlatBufferBuilder, TRANSACTION_ID: Int) = builder.addOffset(10, TRANSACTION_ID, 0)
-        fun addTRACK_ID(builder: FlatBufferBuilder, TRACK_ID: Int) = builder.addOffset(11, TRACK_ID, 0)
-        fun addOB_POSITION(builder: FlatBufferBuilder, OB_POSITION: Int) = builder.addOffset(12, OB_POSITION, 0)
-        fun addSEN_REFERENCE_FRAME(builder: FlatBufferBuilder, SEN_REFERENCE_FRAME: Int) = builder.addOffset(13, SEN_REFERENCE_FRAME, 0)
-        fun addAZIMUTH(builder: FlatBufferBuilder, AZIMUTH: Double) = builder.addDouble(14, AZIMUTH, 0.0)
-        fun addAZIMUTH_UNC(builder: FlatBufferBuilder, AZIMUTH_UNC: Double) = builder.addDouble(15, AZIMUTH_UNC, 0.0)
-        fun addAZIMUTH_BIAS(builder: FlatBufferBuilder, AZIMUTH_BIAS: Double) = builder.addDouble(16, AZIMUTH_BIAS, 0.0)
-        fun addAZIMUTH_RATE(builder: FlatBufferBuilder, AZIMUTH_RATE: Double) = builder.addDouble(17, AZIMUTH_RATE, 0.0)
-        fun addELEVATION(builder: FlatBufferBuilder, ELEVATION: Double) = builder.addDouble(18, ELEVATION, 0.0)
-        fun addELEVATION_UNC(builder: FlatBufferBuilder, ELEVATION_UNC: Double) = builder.addDouble(19, ELEVATION_UNC, 0.0)
-        fun addELEVATION_BIAS(builder: FlatBufferBuilder, ELEVATION_BIAS: Double) = builder.addDouble(20, ELEVATION_BIAS, 0.0)
-        fun addELEVATION_RATE(builder: FlatBufferBuilder, ELEVATION_RATE: Double) = builder.addDouble(21, ELEVATION_RATE, 0.0)
-        fun addRANGE(builder: FlatBufferBuilder, RANGE: Double) = builder.addDouble(22, RANGE, 0.0)
-        fun addRANGE_UNC(builder: FlatBufferBuilder, RANGE_UNC: Double) = builder.addDouble(23, RANGE_UNC, 0.0)
-        fun addRANGE_BIAS(builder: FlatBufferBuilder, RANGE_BIAS: Double) = builder.addDouble(24, RANGE_BIAS, 0.0)
-        fun addRANGE_RATE(builder: FlatBufferBuilder, RANGE_RATE: Double) = builder.addDouble(25, RANGE_RATE, 0.0)
-        fun addRANGE_RATE_UNC(builder: FlatBufferBuilder, RANGE_RATE_UNC: Double) = builder.addDouble(26, RANGE_RATE_UNC, 0.0)
-        fun addRANGE_ACCEL(builder: FlatBufferBuilder, RANGE_ACCEL: Double) = builder.addDouble(27, RANGE_ACCEL, 0.0)
-        fun addRANGE_ACCEL_UNC(builder: FlatBufferBuilder, RANGE_ACCEL_UNC: Double) = builder.addDouble(28, RANGE_ACCEL_UNC, 0.0)
-        fun addDOPPLER(builder: FlatBufferBuilder, DOPPLER: Double) = builder.addDouble(29, DOPPLER, 0.0)
-        fun addDOPPLER_UNC(builder: FlatBufferBuilder, DOPPLER_UNC: Double) = builder.addDouble(30, DOPPLER_UNC, 0.0)
-        fun addRA(builder: FlatBufferBuilder, RA: Double) = builder.addDouble(31, RA, 0.0)
-        fun addDECLINATION(builder: FlatBufferBuilder, DECLINATION: Double) = builder.addDouble(32, DECLINATION, 0.0)
-        fun addX(builder: FlatBufferBuilder, X: Double) = builder.addDouble(33, X, 0.0)
-        fun addY(builder: FlatBufferBuilder, Y: Double) = builder.addDouble(34, Y, 0.0)
-        fun addZ(builder: FlatBufferBuilder, Z: Double) = builder.addDouble(35, Z, 0.0)
-        fun addXVEL(builder: FlatBufferBuilder, XVEL: Double) = builder.addDouble(36, XVEL, 0.0)
-        fun addYVEL(builder: FlatBufferBuilder, YVEL: Double) = builder.addDouble(37, YVEL, 0.0)
-        fun addZVEL(builder: FlatBufferBuilder, ZVEL: Double) = builder.addDouble(38, ZVEL, 0.0)
-        fun addSENX(builder: FlatBufferBuilder, SENX: Double) = builder.addDouble(39, SENX, 0.0)
-        fun addSENY(builder: FlatBufferBuilder, SENY: Double) = builder.addDouble(40, SENY, 0.0)
-        fun addSENZ(builder: FlatBufferBuilder, SENZ: Double) = builder.addDouble(41, SENZ, 0.0)
-        fun addRCS(builder: FlatBufferBuilder, RCS: Double) = builder.addDouble(42, RCS, 0.0)
-        fun addRCS_UNC(builder: FlatBufferBuilder, RCS_UNC: Double) = builder.addDouble(43, RCS_UNC, 0.0)
-        fun addORTHOGONAL_RCS(builder: FlatBufferBuilder, ORTHOGONAL_RCS: Double) = builder.addDouble(44, ORTHOGONAL_RCS, 0.0)
-        fun addORTHOGONAL_RCS_UNC(builder: FlatBufferBuilder, ORTHOGONAL_RCS_UNC: Double) = builder.addDouble(45, ORTHOGONAL_RCS_UNC, 0.0)
-        fun addSNR(builder: FlatBufferBuilder, SNR: Double) = builder.addDouble(46, SNR, 0.0)
-        fun addBEAM(builder: FlatBufferBuilder, BEAM: Double) = builder.addDouble(47, BEAM, 0.0)
-        fun addTIMING_BIAS(builder: FlatBufferBuilder, TIMING_BIAS: Double) = builder.addDouble(48, TIMING_BIAS, 0.0)
-        fun addRAW_FILE_URI(builder: FlatBufferBuilder, RAW_FILE_URI: Int) = builder.addOffset(49, RAW_FILE_URI, 0)
-        fun addDESCRIPTOR(builder: FlatBufferBuilder, DESCRIPTOR: Int) = builder.addOffset(50, DESCRIPTOR, 0)
-        fun addTAGS(builder: FlatBufferBuilder, TAGS: Int) = builder.addOffset(51, TAGS, 0)
+        fun addID(builder: FlatBufferBuilder, id: Int) = builder.addOffset(0, id, 0)
+        fun addOBTIME(builder: FlatBufferBuilder, obTime: Int) = builder.addOffset(1, obTime, 0)
+        fun addIDSENSOR(builder: FlatBufferBuilder, idSensor: Int) = builder.addOffset(2, idSensor, 0)
+        fun addORIGSENSORID(builder: FlatBufferBuilder, origSensorId: Int) = builder.addOffset(3, origSensorId, 0)
+        fun addSATNO(builder: FlatBufferBuilder, satNo: UInt) = builder.addInt(4, satNo.toInt(), 0)
+        fun addORIGOBJECTID(builder: FlatBufferBuilder, origObjectId: Int) = builder.addOffset(5, origObjectId, 0)
+        fun addONORBIT(builder: FlatBufferBuilder, onOrbit: Int) = builder.addOffset(6, onOrbit, 0)
+        fun addUCT(builder: FlatBufferBuilder, uct: Boolean) = builder.addBoolean(7, uct, false)
+        fun addOBSTYPE(builder: FlatBufferBuilder, obsType: Byte) = builder.addByte(8, obsType, 0)
+        fun addTASKID(builder: FlatBufferBuilder, taskId: Int) = builder.addOffset(9, taskId, 0)
+        fun addTRANSACTIONID(builder: FlatBufferBuilder, transactionId: Int) = builder.addOffset(10, transactionId, 0)
+        fun addTRACKID(builder: FlatBufferBuilder, trackId: Int) = builder.addOffset(11, trackId, 0)
+        fun addOBPOSITION(builder: FlatBufferBuilder, obPosition: Int) = builder.addOffset(12, obPosition, 0)
+        fun addSENREFERENCEFRAME(builder: FlatBufferBuilder, senReferenceFrame: Int) = builder.addOffset(13, senReferenceFrame, 0)
+        fun addAZIMUTH(builder: FlatBufferBuilder, azimuth: Double) = builder.addDouble(14, azimuth, 0.0)
+        fun addAZIMUTHUNC(builder: FlatBufferBuilder, azimuthUnc: Double) = builder.addDouble(15, azimuthUnc, 0.0)
+        fun addAZIMUTHBIAS(builder: FlatBufferBuilder, azimuthBias: Double) = builder.addDouble(16, azimuthBias, 0.0)
+        fun addAZIMUTHRATE(builder: FlatBufferBuilder, azimuthRate: Double) = builder.addDouble(17, azimuthRate, 0.0)
+        fun addELEVATION(builder: FlatBufferBuilder, elevation: Double) = builder.addDouble(18, elevation, 0.0)
+        fun addELEVATIONUNC(builder: FlatBufferBuilder, elevationUnc: Double) = builder.addDouble(19, elevationUnc, 0.0)
+        fun addELEVATIONBIAS(builder: FlatBufferBuilder, elevationBias: Double) = builder.addDouble(20, elevationBias, 0.0)
+        fun addELEVATIONRATE(builder: FlatBufferBuilder, elevationRate: Double) = builder.addDouble(21, elevationRate, 0.0)
+        fun addRANGE(builder: FlatBufferBuilder, range: Double) = builder.addDouble(22, range, 0.0)
+        fun addRANGEUNC(builder: FlatBufferBuilder, rangeUnc: Double) = builder.addDouble(23, rangeUnc, 0.0)
+        fun addRANGEBIAS(builder: FlatBufferBuilder, rangeBias: Double) = builder.addDouble(24, rangeBias, 0.0)
+        fun addRANGERATE(builder: FlatBufferBuilder, rangeRate: Double) = builder.addDouble(25, rangeRate, 0.0)
+        fun addRANGERATEUNC(builder: FlatBufferBuilder, rangeRateUnc: Double) = builder.addDouble(26, rangeRateUnc, 0.0)
+        fun addRANGEACCEL(builder: FlatBufferBuilder, rangeAccel: Double) = builder.addDouble(27, rangeAccel, 0.0)
+        fun addRANGEACCELUNC(builder: FlatBufferBuilder, rangeAccelUnc: Double) = builder.addDouble(28, rangeAccelUnc, 0.0)
+        fun addDOPPLER(builder: FlatBufferBuilder, doppler: Double) = builder.addDouble(29, doppler, 0.0)
+        fun addDOPPLERUNC(builder: FlatBufferBuilder, dopplerUnc: Double) = builder.addDouble(30, dopplerUnc, 0.0)
+        fun addRA(builder: FlatBufferBuilder, ra: Double) = builder.addDouble(31, ra, 0.0)
+        fun addDECLINATION(builder: FlatBufferBuilder, declination: Double) = builder.addDouble(32, declination, 0.0)
+        fun addX(builder: FlatBufferBuilder, x: Double) = builder.addDouble(33, x, 0.0)
+        fun addY(builder: FlatBufferBuilder, y: Double) = builder.addDouble(34, y, 0.0)
+        fun addZ(builder: FlatBufferBuilder, z: Double) = builder.addDouble(35, z, 0.0)
+        fun addXVEL(builder: FlatBufferBuilder, xvel: Double) = builder.addDouble(36, xvel, 0.0)
+        fun addYVEL(builder: FlatBufferBuilder, yvel: Double) = builder.addDouble(37, yvel, 0.0)
+        fun addZVEL(builder: FlatBufferBuilder, zvel: Double) = builder.addDouble(38, zvel, 0.0)
+        fun addSENX(builder: FlatBufferBuilder, senx: Double) = builder.addDouble(39, senx, 0.0)
+        fun addSENY(builder: FlatBufferBuilder, seny: Double) = builder.addDouble(40, seny, 0.0)
+        fun addSENZ(builder: FlatBufferBuilder, senz: Double) = builder.addDouble(41, senz, 0.0)
+        fun addRCS(builder: FlatBufferBuilder, rcs: Double) = builder.addDouble(42, rcs, 0.0)
+        fun addRCSUNC(builder: FlatBufferBuilder, rcsUnc: Double) = builder.addDouble(43, rcsUnc, 0.0)
+        fun addORTHOGONALRCS(builder: FlatBufferBuilder, orthogonalRcs: Double) = builder.addDouble(44, orthogonalRcs, 0.0)
+        fun addORTHOGONALRCSUNC(builder: FlatBufferBuilder, orthogonalRcsUnc: Double) = builder.addDouble(45, orthogonalRcsUnc, 0.0)
+        fun addSNR(builder: FlatBufferBuilder, snr: Double) = builder.addDouble(46, snr, 0.0)
+        fun addBEAM(builder: FlatBufferBuilder, beam: Double) = builder.addDouble(47, beam, 0.0)
+        fun addTIMINGBIAS(builder: FlatBufferBuilder, timingBias: Double) = builder.addDouble(48, timingBias, 0.0)
+        fun addRAWFILEURI(builder: FlatBufferBuilder, rawFileUri: Int) = builder.addOffset(49, rawFileUri, 0)
+        fun addDESCRIPTOR(builder: FlatBufferBuilder, descriptor: Int) = builder.addOffset(50, descriptor, 0)
+        fun addTAGS(builder: FlatBufferBuilder, tags: Int) = builder.addOffset(51, tags, 0)
         fun createTagsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {

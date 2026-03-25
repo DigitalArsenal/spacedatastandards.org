@@ -59,14 +59,17 @@ def End(builder):
 class MathOperationT(object):
 
     # MathOperationT
-    def __init__(self):
-        self.RPN_EXPRESSION = None  # type: str
+    def __init__(
+        self,
+        RPN_EXPRESSION = None,
+    ):
+        self.RPN_EXPRESSION = RPN_EXPRESSION  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        mathOperation = MathOperation()
-        mathOperation.Init(buf, pos)
-        return cls.InitFromObj(mathOperation)
+        tmpMathOperation = MathOperation()
+        tmpMathOperation.Init(buf, pos)
+        return cls.InitFromObj(tmpMathOperation)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -74,16 +77,16 @@ class MathOperationT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, mathOperation):
+    def InitFromObj(cls, tmpMathOperation):
         x = MathOperationT()
-        x._UnPack(mathOperation)
+        x._UnPack(tmpMathOperation)
         return x
 
     # MathOperationT
-    def _UnPack(self, mathOperation):
-        if mathOperation is None:
+    def _UnPack(self, MathOperation):
+        if MathOperation is None:
             return
-        self.RPN_EXPRESSION = mathOperation.RPN_EXPRESSION()
+        self.RPN_EXPRESSION = MathOperation.RPN_EXPRESSION()
 
     # MathOperationT
     def Pack(self, builder):
@@ -92,5 +95,5 @@ class MathOperationT(object):
         MathOperationStart(builder)
         if self.RPN_EXPRESSION is not None:
             MathOperationAddRPN_EXPRESSION(builder, RPN_EXPRESSION)
-        mathOperation = MathOperationEnd(builder)
-        return mathOperation
+        MathOperation = MathOperationEnd(builder)
+        return MathOperation

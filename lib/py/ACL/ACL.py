@@ -193,6 +193,16 @@ def ACLStartBUYER_ENCRYPTION_PUBKEYVector(builder, numElems):
 def StartBUYER_ENCRYPTION_PUBKEYVector(builder, numElems):
     return ACLStartBUYER_ENCRYPTION_PUBKEYVector(builder, numElems)
 
+def ACLCreateBUYER_ENCRYPTION_PUBKEYVector(builder, data):
+    data = list(data)
+    builder.StartVector(1, len(data), 1)
+    for item in reversed(data):
+        builder.PrependUint8(item)
+    return builder.EndVector()
+
+def CreateBUYER_ENCRYPTION_PUBKEYVector(builder, data):
+    ACLCreateBUYER_ENCRYPTION_PUBKEYVector(builder, data)
+
 def ACLAddACCESS_TYPE(builder, ACCESS_TYPE):
     builder.PrependInt8Slot(4, ACCESS_TYPE, 0)
 
@@ -241,6 +251,16 @@ def ACLStartPROVIDER_SIGNATUREVector(builder, numElems):
 def StartPROVIDER_SIGNATUREVector(builder, numElems):
     return ACLStartPROVIDER_SIGNATUREVector(builder, numElems)
 
+def ACLCreatePROVIDER_SIGNATUREVector(builder, data):
+    data = list(data)
+    builder.StartVector(1, len(data), 1)
+    for item in reversed(data):
+        builder.PrependUint8(item)
+    return builder.EndVector()
+
+def CreatePROVIDER_SIGNATUREVector(builder, data):
+    ACLCreatePROVIDER_SIGNATUREVector(builder, data)
+
 def ACLEnd(builder):
     return builder.EndObject()
 
@@ -255,24 +275,37 @@ except:
 class ACLT(object):
 
     # ACLT
-    def __init__(self):
-        self.GRANT_ID = None  # type: str
-        self.LISTING_ID = None  # type: str
-        self.BUYER_PEER_ID = None  # type: str
-        self.BUYER_ENCRYPTION_PUBKEY = None  # type: List[int]
-        self.ACCESS_TYPE = 0  # type: int
-        self.TIER_NAME = None  # type: str
-        self.GRANTED_AT = 0  # type: int
-        self.EXPIRES_AT = 0  # type: int
-        self.PAYMENT_TX_HASH = None  # type: str
-        self.PAYMENT_METHOD = 0  # type: int
-        self.PROVIDER_SIGNATURE = None  # type: List[int]
+    def __init__(
+        self,
+        GRANT_ID = None,
+        LISTING_ID = None,
+        BUYER_PEER_ID = None,
+        BUYER_ENCRYPTION_PUBKEY = None,
+        ACCESS_TYPE = 0,
+        TIER_NAME = None,
+        GRANTED_AT = 0,
+        EXPIRES_AT = 0,
+        PAYMENT_TX_HASH = None,
+        PAYMENT_METHOD = 0,
+        PROVIDER_SIGNATURE = None,
+    ):
+        self.GRANT_ID = GRANT_ID  # type: Optional[str]
+        self.LISTING_ID = LISTING_ID  # type: Optional[str]
+        self.BUYER_PEER_ID = BUYER_PEER_ID  # type: Optional[str]
+        self.BUYER_ENCRYPTION_PUBKEY = BUYER_ENCRYPTION_PUBKEY  # type: Optional[List[int]]
+        self.ACCESS_TYPE = ACCESS_TYPE  # type: int
+        self.TIER_NAME = TIER_NAME  # type: Optional[str]
+        self.GRANTED_AT = GRANTED_AT  # type: int
+        self.EXPIRES_AT = EXPIRES_AT  # type: int
+        self.PAYMENT_TX_HASH = PAYMENT_TX_HASH  # type: Optional[str]
+        self.PAYMENT_METHOD = PAYMENT_METHOD  # type: int
+        self.PROVIDER_SIGNATURE = PROVIDER_SIGNATURE  # type: Optional[List[int]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        ACL = ACL()
-        ACL.Init(buf, pos)
-        return cls.InitFromObj(ACL)
+        tmpAcl = ACL()
+        tmpAcl.Init(buf, pos)
+        return cls.InitFromObj(tmpAcl)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -280,9 +313,9 @@ class ACLT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, ACL):
+    def InitFromObj(cls, tmpAcl):
         x = ACLT()
-        x._UnPack(ACL)
+        x._UnPack(tmpAcl)
         return x
 
     # ACLT

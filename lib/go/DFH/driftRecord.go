@@ -51,6 +51,10 @@ func (rcv *driftRecord) EPOCH() []byte {
 	return nil
 }
 
+func (rcv *driftRecord) Epoch() []byte {
+	return rcv.EPOCH()
+}
+
 /// Epoch of drift measurement (ISO 8601)
 /// Longitude drift rate in degrees/day
 func (rcv *driftRecord) DRIFT_RATE() float64 {
@@ -61,9 +65,17 @@ func (rcv *driftRecord) DRIFT_RATE() float64 {
 	return 0.0
 }
 
+func (rcv *driftRecord) DriftRate() float64 {
+	return rcv.DRIFT_RATE()
+}
+
 /// Longitude drift rate in degrees/day
 func (rcv *driftRecord) MutateDRIFT_RATE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(6, n)
+}
+
+func (rcv *driftRecord) MutateDriftRate(n float64) bool {
+	return rcv.MutateDRIFT_RATE(n)
 }
 
 /// Mean longitude in degrees East
@@ -75,9 +87,17 @@ func (rcv *driftRecord) MEAN_LONGITUDE() float64 {
 	return 0.0
 }
 
+func (rcv *driftRecord) MeanLongitude() float64 {
+	return rcv.MEAN_LONGITUDE()
+}
+
 /// Mean longitude in degrees East
 func (rcv *driftRecord) MutateMEAN_LONGITUDE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(8, n)
+}
+
+func (rcv *driftRecord) MutateMeanLongitude(n float64) bool {
+	return rcv.MutateMEAN_LONGITUDE(n)
 }
 
 /// Longitude oscillation amplitude in degrees
@@ -89,9 +109,17 @@ func (rcv *driftRecord) LONGITUDE_AMPLITUDE() float64 {
 	return 0.0
 }
 
+func (rcv *driftRecord) LongitudeAmplitude() float64 {
+	return rcv.LONGITUDE_AMPLITUDE()
+}
+
 /// Longitude oscillation amplitude in degrees
 func (rcv *driftRecord) MutateLONGITUDE_AMPLITUDE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(10, n)
+}
+
+func (rcv *driftRecord) MutateLongitudeAmplitude(n float64) bool {
+	return rcv.MutateLONGITUDE_AMPLITUDE(n)
 }
 
 /// Eccentricity
@@ -103,9 +131,17 @@ func (rcv *driftRecord) ECCENTRICITY() float64 {
 	return 0.0
 }
 
+func (rcv *driftRecord) Eccentricity() float64 {
+	return rcv.ECCENTRICITY()
+}
+
 /// Eccentricity
 func (rcv *driftRecord) MutateECCENTRICITY(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(12, n)
+}
+
+func (rcv *driftRecord) MutateEccentricity(n float64) bool {
+	return rcv.MutateECCENTRICITY(n)
 }
 
 /// Inclination in degrees
@@ -117,9 +153,17 @@ func (rcv *driftRecord) INCLINATION() float64 {
 	return 0.0
 }
 
+func (rcv *driftRecord) Inclination() float64 {
+	return rcv.INCLINATION()
+}
+
 /// Inclination in degrees
 func (rcv *driftRecord) MutateINCLINATION(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(14, n)
+}
+
+func (rcv *driftRecord) MutateInclination(n float64) bool {
+	return rcv.MutateINCLINATION(n)
 }
 
 func driftRecordStart(builder *flatbuffers.Builder) {
@@ -128,20 +172,38 @@ func driftRecordStart(builder *flatbuffers.Builder) {
 func driftRecordAddEPOCH(builder *flatbuffers.Builder, EPOCH flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(EPOCH), 0)
 }
+func driftRecordAddEpoch(builder *flatbuffers.Builder, EPOCH flatbuffers.UOffsetT) {
+	driftRecordAddEPOCH(builder, EPOCH)
+}
 func driftRecordAddDRIFT_RATE(builder *flatbuffers.Builder, DRIFT_RATE float64) {
 	builder.PrependFloat64Slot(1, DRIFT_RATE, 0.0)
+}
+func driftRecordAddDriftRate(builder *flatbuffers.Builder, DRIFT_RATE float64) {
+	driftRecordAddDRIFT_RATE(builder, DRIFT_RATE)
 }
 func driftRecordAddMEAN_LONGITUDE(builder *flatbuffers.Builder, MEAN_LONGITUDE float64) {
 	builder.PrependFloat64Slot(2, MEAN_LONGITUDE, 0.0)
 }
+func driftRecordAddMeanLongitude(builder *flatbuffers.Builder, MEAN_LONGITUDE float64) {
+	driftRecordAddMEAN_LONGITUDE(builder, MEAN_LONGITUDE)
+}
 func driftRecordAddLONGITUDE_AMPLITUDE(builder *flatbuffers.Builder, LONGITUDE_AMPLITUDE float64) {
 	builder.PrependFloat64Slot(3, LONGITUDE_AMPLITUDE, 0.0)
+}
+func driftRecordAddLongitudeAmplitude(builder *flatbuffers.Builder, LONGITUDE_AMPLITUDE float64) {
+	driftRecordAddLONGITUDE_AMPLITUDE(builder, LONGITUDE_AMPLITUDE)
 }
 func driftRecordAddECCENTRICITY(builder *flatbuffers.Builder, ECCENTRICITY float64) {
 	builder.PrependFloat64Slot(4, ECCENTRICITY, 0.0)
 }
+func driftRecordAddEccentricity(builder *flatbuffers.Builder, ECCENTRICITY float64) {
+	driftRecordAddECCENTRICITY(builder, ECCENTRICITY)
+}
 func driftRecordAddINCLINATION(builder *flatbuffers.Builder, INCLINATION float64) {
 	builder.PrependFloat64Slot(5, INCLINATION, 0.0)
+}
+func driftRecordAddInclination(builder *flatbuffers.Builder, INCLINATION float64) {
+	driftRecordAddINCLINATION(builder, INCLINATION)
 }
 func driftRecordEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

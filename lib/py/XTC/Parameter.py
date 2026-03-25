@@ -152,20 +152,29 @@ except:
 class ParameterT(object):
 
     # ParameterT
-    def __init__(self):
-        self.NAME = None  # type: str
-        self.PARAMETER_TYPE_REF = None  # type: str
-        self.SHORT_DESCRIPTION = None  # type: str
-        self.LONG_DESCRIPTION = None  # type: str
-        self.PROPERTIES = None  # type: Optional[ParameterProperties.ParameterPropertiesT]
-        self.PHYSICAL_ADDRESS = None  # type: str
-        self.INITIAL_VALUE = None  # type: str
+    def __init__(
+        self,
+        NAME = None,
+        PARAMETER_TYPE_REF = None,
+        SHORT_DESCRIPTION = None,
+        LONG_DESCRIPTION = None,
+        PROPERTIES = None,
+        PHYSICAL_ADDRESS = None,
+        INITIAL_VALUE = None,
+    ):
+        self.NAME = NAME  # type: Optional[str]
+        self.PARAMETER_TYPE_REF = PARAMETER_TYPE_REF  # type: Optional[str]
+        self.SHORT_DESCRIPTION = SHORT_DESCRIPTION  # type: Optional[str]
+        self.LONG_DESCRIPTION = LONG_DESCRIPTION  # type: Optional[str]
+        self.PROPERTIES = PROPERTIES  # type: Optional[ParameterProperties.ParameterPropertiesT]
+        self.PHYSICAL_ADDRESS = PHYSICAL_ADDRESS  # type: Optional[str]
+        self.INITIAL_VALUE = INITIAL_VALUE  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        parameter = Parameter()
-        parameter.Init(buf, pos)
-        return cls.InitFromObj(parameter)
+        tmpParameter = Parameter()
+        tmpParameter.Init(buf, pos)
+        return cls.InitFromObj(tmpParameter)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -173,23 +182,23 @@ class ParameterT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, parameter):
+    def InitFromObj(cls, tmpParameter):
         x = ParameterT()
-        x._UnPack(parameter)
+        x._UnPack(tmpParameter)
         return x
 
     # ParameterT
-    def _UnPack(self, parameter):
-        if parameter is None:
+    def _UnPack(self, Parameter):
+        if Parameter is None:
             return
-        self.NAME = parameter.NAME()
-        self.PARAMETER_TYPE_REF = parameter.PARAMETER_TYPE_REF()
-        self.SHORT_DESCRIPTION = parameter.SHORT_DESCRIPTION()
-        self.LONG_DESCRIPTION = parameter.LONG_DESCRIPTION()
-        if parameter.PROPERTIES() is not None:
-            self.PROPERTIES = ParameterProperties.ParameterPropertiesT.InitFromObj(parameter.PROPERTIES())
-        self.PHYSICAL_ADDRESS = parameter.PHYSICAL_ADDRESS()
-        self.INITIAL_VALUE = parameter.INITIAL_VALUE()
+        self.NAME = Parameter.NAME()
+        self.PARAMETER_TYPE_REF = Parameter.PARAMETER_TYPE_REF()
+        self.SHORT_DESCRIPTION = Parameter.SHORT_DESCRIPTION()
+        self.LONG_DESCRIPTION = Parameter.LONG_DESCRIPTION()
+        if Parameter.PROPERTIES() is not None:
+            self.PROPERTIES = ParameterProperties.ParameterPropertiesT.InitFromObj(Parameter.PROPERTIES())
+        self.PHYSICAL_ADDRESS = Parameter.PHYSICAL_ADDRESS()
+        self.INITIAL_VALUE = Parameter.INITIAL_VALUE()
 
     # ParameterT
     def Pack(self, builder):
@@ -222,5 +231,5 @@ class ParameterT(object):
             ParameterAddPHYSICAL_ADDRESS(builder, PHYSICAL_ADDRESS)
         if self.INITIAL_VALUE is not None:
             ParameterAddINITIAL_VALUE(builder, INITIAL_VALUE)
-        parameter = ParameterEnd(builder)
-        return parameter
+        Parameter = ParameterEnd(builder)
+        return Parameter

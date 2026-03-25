@@ -32,7 +32,7 @@ class OMM : Table() {
     /**
      * CCSDS OMM Version
      */
-    val CCSDS_OMM_VERS : Double
+    val ccsdsOmmVers : Double
         get() {
             val o = __offset(4)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -40,7 +40,7 @@ class OMM : Table() {
     /**
      * Creation Date (ISO 8601 UTC format)
      */
-    val CREATION_DATE : String?
+    val creationDate : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -49,12 +49,12 @@ class OMM : Table() {
                 null
             }
         }
-    val CREATION_DATEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun CREATION_DATEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val creationDateAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun creationDateInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * Originator
      */
-    val ORIGINATOR : String?
+    val originator : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -63,12 +63,12 @@ class OMM : Table() {
                 null
             }
         }
-    val ORIGINATORAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun ORIGINATORInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val originatorAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun originatorInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
     /**
      * Satellite Name(s)
      */
-    val OBJECT_NAME : String?
+    val objectName : String?
         get() {
             val o = __offset(10)
             return if (o != 0) {
@@ -77,12 +77,12 @@ class OMM : Table() {
                 null
             }
         }
-    val OBJECT_NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
-    fun OBJECT_NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
+    val objectNameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(10, 1)
+    fun objectNameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 10, 1)
     /**
      * International Designator (YYYY-NNNAAA)
      */
-    val OBJECT_ID : String?
+    val objectId : String?
         get() {
             val o = __offset(12)
             return if (o != 0) {
@@ -91,12 +91,12 @@ class OMM : Table() {
                 null
             }
         }
-    val OBJECT_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
-    fun OBJECT_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
+    val objectIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(12, 1)
+    fun objectIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 12, 1)
     /**
      * Center Name (e.g. EARTH, MARS)
      */
-    val CENTER_NAME : String?
+    val centerName : String?
         get() {
             val o = __offset(14)
             return if (o != 0) {
@@ -105,14 +105,14 @@ class OMM : Table() {
                 null
             }
         }
-    val CENTER_NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(14, 1)
-    fun CENTER_NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 14, 1)
+    val centerNameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(14, 1)
+    fun centerNameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 14, 1)
     /**
      * Reference Frame
      * Typically TEMEOFDATE
      */
-    val REFERENCE_FRAME : RFM? get() = REFERENCE_FRAME(RFM())
-    fun REFERENCE_FRAME(obj: RFM) : RFM? {
+    val referenceFrame : RFM? get() = referenceFrame(RFM())
+    fun referenceFrame(obj: RFM) : RFM? {
         val o = __offset(16)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -123,7 +123,7 @@ class OMM : Table() {
     /**
      * Reference Frame Epoch (ISO 8601 UTC format)
      */
-    val REFERENCE_FRAME_EPOCH : String?
+    val referenceFrameEpoch : String?
         get() {
             val o = __offset(18)
             return if (o != 0) {
@@ -132,12 +132,12 @@ class OMM : Table() {
                 null
             }
         }
-    val REFERENCE_FRAME_EPOCHAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(18, 1)
-    fun REFERENCE_FRAME_EPOCHInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 18, 1)
+    val referenceFrameEpochAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(18, 1)
+    fun referenceFrameEpochInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 18, 1)
     /**
      * Time System [M, UTC]
      */
-    val TIME_SYSTEM : Byte
+    val timeSystem : Byte
         get() {
             val o = __offset(20)
             return if(o != 0) bb.get(o + bb_pos) else 11
@@ -145,7 +145,7 @@ class OMM : Table() {
     /**
      * Mean Element Theory
      */
-    val MEAN_ELEMENT_THEORY : Byte
+    val meanElementTheory : Byte
         get() {
             val o = __offset(22)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -153,7 +153,7 @@ class OMM : Table() {
     /**
      * COMMENT (O)
      */
-    val COMMENT : String?
+    val comment : String?
         get() {
             val o = __offset(24)
             return if (o != 0) {
@@ -162,12 +162,12 @@ class OMM : Table() {
                 null
             }
         }
-    val COMMENTAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(24, 1)
-    fun COMMENTInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 24, 1)
+    val commentAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(24, 1)
+    fun commentInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 24, 1)
     /**
      * EPOCH of Mean Keplerian elements (ISO 8601 UTC format)
      */
-    val EPOCH : String?
+    val epoch : String?
         get() {
             val o = __offset(26)
             return if (o != 0) {
@@ -176,12 +176,12 @@ class OMM : Table() {
                 null
             }
         }
-    val EPOCHAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(26, 1)
-    fun EPOCHInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 26, 1)
+    val epochAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(26, 1)
+    fun epochInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 26, 1)
     /**
      * Semi-major axis in km or Mean Motion in rev/day
      */
-    val SEMI_MAJOR_AXIS : Double
+    val semiMajorAxis : Double
         get() {
             val o = __offset(28)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -189,7 +189,7 @@ class OMM : Table() {
     /**
      * Mean motion in rev/day if MEAN_ELEMENT_THEORY=SGP/SGP4 else unused
      */
-    val MEAN_MOTION : Double
+    val meanMotion : Double
         get() {
             val o = __offset(30)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -197,7 +197,7 @@ class OMM : Table() {
     /**
      * Eccentricity (unitless)
      */
-    val ECCENTRICITY : Double
+    val eccentricity : Double
         get() {
             val o = __offset(32)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -205,7 +205,7 @@ class OMM : Table() {
     /**
      * Inclination in degrees
      */
-    val INCLINATION : Double
+    val inclination : Double
         get() {
             val o = __offset(34)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -213,7 +213,7 @@ class OMM : Table() {
     /**
      * RA_OF_ASC_NODE in degrees
      */
-    val RA_OF_ASC_NODE : Double
+    val raOfAscNode : Double
         get() {
             val o = __offset(36)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -221,7 +221,7 @@ class OMM : Table() {
     /**
      * ARG_OF_PERICENTER in degrees
      */
-    val ARG_OF_PERICENTER : Double
+    val argOfPericenter : Double
         get() {
             val o = __offset(38)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -229,7 +229,7 @@ class OMM : Table() {
     /**
      * MEAN_ANOMALY in degrees
      */
-    val MEAN_ANOMALY : Double
+    val meanAnomaly : Double
         get() {
             val o = __offset(40)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -237,7 +237,7 @@ class OMM : Table() {
     /**
      * GM in km**3/s**2
      */
-    val GM : Double
+    val gm : Double
         get() {
             val o = __offset(42)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -245,7 +245,7 @@ class OMM : Table() {
     /**
      * MASS in kg
      */
-    val MASS : Double
+    val mass : Double
         get() {
             val o = __offset(44)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -253,7 +253,7 @@ class OMM : Table() {
     /**
      * SOLAR_RAD_AREA in m**2
      */
-    val SOLAR_RAD_AREA : Double
+    val solarRadArea : Double
         get() {
             val o = __offset(46)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -261,7 +261,7 @@ class OMM : Table() {
     /**
      * SOLAR_RAD_COEFF (unitless)
      */
-    val SOLAR_RAD_COEFF : Double
+    val solarRadCoeff : Double
         get() {
             val o = __offset(48)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -269,7 +269,7 @@ class OMM : Table() {
     /**
      * DRAG_AREA in m**2
      */
-    val DRAG_AREA : Double
+    val dragArea : Double
         get() {
             val o = __offset(50)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -277,7 +277,7 @@ class OMM : Table() {
     /**
      * DRAG_COEFF (unitless)
      */
-    val DRAG_COEFF : Double
+    val dragCoeff : Double
         get() {
             val o = __offset(52)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -286,7 +286,7 @@ class OMM : Table() {
      * TLE Related Parameters (Only if MEAN_ELEMENT_THEORY=SGP/SGP4)
      * EPHEMERIS_TYPE Default=0
      */
-    val EPHEMERIS_TYPE : Byte
+    val ephemerisType : Byte
         get() {
             val o = __offset(54)
             return if(o != 0) bb.get(o + bb_pos) else 1
@@ -294,7 +294,7 @@ class OMM : Table() {
     /**
      * CLASSIFICATION_TYPE Default=U
      */
-    val CLASSIFICATION_TYPE : String?
+    val classificationType : String?
         get() {
             val o = __offset(56)
             return if (o != 0) {
@@ -303,12 +303,12 @@ class OMM : Table() {
                 null
             }
         }
-    val CLASSIFICATION_TYPEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(56, 1)
-    fun CLASSIFICATION_TYPEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 56, 1)
+    val classificationTypeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(56, 1)
+    fun classificationTypeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 56, 1)
     /**
      * NORAD_CAT_ID (integer) [O if SGP/SGP4]
      */
-    val NORAD_CAT_ID : UInt
+    val noradCatId : UInt
         get() {
             val o = __offset(58)
             return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
@@ -316,7 +316,7 @@ class OMM : Table() {
     /**
      * ELEMENT_SET_NO [O if SGP/SGP4]
      */
-    val ELEMENT_SET_NO : UInt
+    val elementSetNo : UInt
         get() {
             val o = __offset(60)
             return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
@@ -324,7 +324,7 @@ class OMM : Table() {
     /**
      * REV_AT_EPOCH [O if SGP/SGP4]
      */
-    val REV_AT_EPOCH : Double
+    val revAtEpoch : Double
         get() {
             val o = __offset(62)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -332,7 +332,7 @@ class OMM : Table() {
     /**
      * BSTAR in 1/Earth radii or BTERM in m**2/kg depending on MEAN_ELEMENT_THEORY [C]
      */
-    val BSTAR : Double
+    val bstar : Double
         get() {
             val o = __offset(64)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -340,7 +340,7 @@ class OMM : Table() {
     /**
      * MEAN_MOTION_DOT in rev/day**2 [C if SGP or PPT3]
      */
-    val MEAN_MOTION_DOT : Double
+    val meanMotionDot : Double
         get() {
             val o = __offset(66)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -348,7 +348,7 @@ class OMM : Table() {
     /**
      * MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]
      */
-    val MEAN_MOTION_DDOT : Double
+    val meanMotionDdot : Double
         get() {
             val o = __offset(68)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -358,8 +358,8 @@ class OMM : Table() {
      * COV_REF_FRAME reference frame for covariance [C if covariance given]
      * Typically RSW
      */
-    val COV_REFERENCE_FRAME : RFM? get() = COV_REFERENCE_FRAME(RFM())
-    fun COV_REFERENCE_FRAME(obj: RFM) : RFM? {
+    val covReferenceFrame : RFM? get() = covReferenceFrame(RFM())
+    fun covReferenceFrame(obj: RFM) : RFM? {
         val o = __offset(70)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -375,7 +375,7 @@ class OMM : Table() {
      *         CZ_DOT_X, CZ_DOT_Y, CZ_DOT_Z, CZ_DOT_X_DOT, CZ_DOT_Y_DOT, CZ_DOT_Z_DOT]
      * Units: position in km**2, velocity in km**2/s**2, cross in km**2/s
      */
-    fun COVARIANCE(j: Int) : Double {
+    fun covariance(j: Int) : Double {
         val o = __offset(72)
         return if (o != 0) {
             bb.getDouble(__vector(o) + j * 8)
@@ -383,16 +383,16 @@ class OMM : Table() {
             0.0
         }
     }
-    val COVARIANCELength : Int
+    val covarianceLength : Int
         get() {
             val o = __offset(72); return if (o != 0) __vector_len(o) else 0
         }
-    val COVARIANCEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(72, 8)
-    fun COVARIANCEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 72, 8)
+    val covarianceAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(72, 8)
+    fun covarianceInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 72, 8)
     /**
      * USER_DEFINED_BIP_0044_TYPE [O, units per ICD]
      */
-    val USER_DEFINED_BIP_0044_TYPE : UInt
+    val userDefinedBip0044Type : UInt
         get() {
             val o = __offset(74)
             return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
@@ -400,7 +400,7 @@ class OMM : Table() {
     /**
      * USER_DEFINED_OBJECT_DESIGNATOR [O, units per ICD]
      */
-    val USER_DEFINED_OBJECT_DESIGNATOR : String?
+    val userDefinedObjectDesignator : String?
         get() {
             val o = __offset(76)
             return if (o != 0) {
@@ -409,12 +409,12 @@ class OMM : Table() {
                 null
             }
         }
-    val USER_DEFINED_OBJECT_DESIGNATORAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(76, 1)
-    fun USER_DEFINED_OBJECT_DESIGNATORInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 76, 1)
+    val userDefinedObjectDesignatorAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(76, 1)
+    fun userDefinedObjectDesignatorInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 76, 1)
     /**
      * USER_DEFINED_EARTH_MODEL [O, units per ICD]
      */
-    val USER_DEFINED_EARTH_MODEL : String?
+    val userDefinedEarthModel : String?
         get() {
             val o = __offset(78)
             return if (o != 0) {
@@ -423,12 +423,12 @@ class OMM : Table() {
                 null
             }
         }
-    val USER_DEFINED_EARTH_MODELAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(78, 1)
-    fun USER_DEFINED_EARTH_MODELInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 78, 1)
+    val userDefinedEarthModelAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(78, 1)
+    fun userDefinedEarthModelInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 78, 1)
     /**
      * USER_DEFINED_EPOCH_TIMESTAMP [O, units per ICD]
      */
-    val USER_DEFINED_EPOCH_TIMESTAMP : Double
+    val userDefinedEpochTimestamp : Double
         get() {
             val o = __offset(80)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -436,99 +436,99 @@ class OMM : Table() {
     /**
      * USER_DEFINED_MICROSECONDS [O, units per ICD]
      */
-    val USER_DEFINED_MICROSECONDS : Double
+    val userDefinedMicroseconds : Double
         get() {
             val o = __offset(82)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsOMM(_bb: ByteBuffer): OMM = getRootAsOMM(_bb, OMM())
         fun getRootAsOMM(_bb: ByteBuffer, obj: OMM): OMM {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun OMMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$OMM")
-        fun createOMM(builder: FlatBufferBuilder, CCSDS_OMM_VERS: Double, CREATION_DATEOffset: Int, ORIGINATOROffset: Int, OBJECT_NAMEOffset: Int, OBJECT_IDOffset: Int, CENTER_NAMEOffset: Int, REFERENCE_FRAMEOffset: Int, REFERENCE_FRAME_EPOCHOffset: Int, TIME_SYSTEM: Byte, MEAN_ELEMENT_THEORY: Byte, COMMENTOffset: Int, EPOCHOffset: Int, SEMI_MAJOR_AXIS: Double, MEAN_MOTION: Double, ECCENTRICITY: Double, INCLINATION: Double, RA_OF_ASC_NODE: Double, ARG_OF_PERICENTER: Double, MEAN_ANOMALY: Double, GM: Double, MASS: Double, SOLAR_RAD_AREA: Double, SOLAR_RAD_COEFF: Double, DRAG_AREA: Double, DRAG_COEFF: Double, EPHEMERIS_TYPE: Byte, CLASSIFICATION_TYPEOffset: Int, NORAD_CAT_ID: UInt, ELEMENT_SET_NO: UInt, REV_AT_EPOCH: Double, BSTAR: Double, MEAN_MOTION_DOT: Double, MEAN_MOTION_DDOT: Double, COV_REFERENCE_FRAMEOffset: Int, COVARIANCEOffset: Int, USER_DEFINED_BIP_0044_TYPE: UInt, USER_DEFINED_OBJECT_DESIGNATOROffset: Int, USER_DEFINED_EARTH_MODELOffset: Int, USER_DEFINED_EPOCH_TIMESTAMP: Double, USER_DEFINED_MICROSECONDS: Double) : Int {
+        fun createOMM(builder: FlatBufferBuilder, ccsdsOmmVers: Double, creationDateOffset: Int, originatorOffset: Int, objectNameOffset: Int, objectIdOffset: Int, centerNameOffset: Int, referenceFrameOffset: Int, referenceFrameEpochOffset: Int, timeSystem: Byte, meanElementTheory: Byte, commentOffset: Int, epochOffset: Int, semiMajorAxis: Double, meanMotion: Double, eccentricity: Double, inclination: Double, raOfAscNode: Double, argOfPericenter: Double, meanAnomaly: Double, gm: Double, mass: Double, solarRadArea: Double, solarRadCoeff: Double, dragArea: Double, dragCoeff: Double, ephemerisType: Byte, classificationTypeOffset: Int, noradCatId: UInt, elementSetNo: UInt, revAtEpoch: Double, bstar: Double, meanMotionDot: Double, meanMotionDdot: Double, covReferenceFrameOffset: Int, covarianceOffset: Int, userDefinedBip0044Type: UInt, userDefinedObjectDesignatorOffset: Int, userDefinedEarthModelOffset: Int, userDefinedEpochTimestamp: Double, userDefinedMicroseconds: Double) : Int {
             builder.startTable(40)
-            addUSER_DEFINED_MICROSECONDS(builder, USER_DEFINED_MICROSECONDS)
-            addUSER_DEFINED_EPOCH_TIMESTAMP(builder, USER_DEFINED_EPOCH_TIMESTAMP)
-            addMEAN_MOTION_DDOT(builder, MEAN_MOTION_DDOT)
-            addMEAN_MOTION_DOT(builder, MEAN_MOTION_DOT)
-            addBSTAR(builder, BSTAR)
-            addREV_AT_EPOCH(builder, REV_AT_EPOCH)
-            addDRAG_COEFF(builder, DRAG_COEFF)
-            addDRAG_AREA(builder, DRAG_AREA)
-            addSOLAR_RAD_COEFF(builder, SOLAR_RAD_COEFF)
-            addSOLAR_RAD_AREA(builder, SOLAR_RAD_AREA)
-            addMASS(builder, MASS)
-            addGM(builder, GM)
-            addMEAN_ANOMALY(builder, MEAN_ANOMALY)
-            addARG_OF_PERICENTER(builder, ARG_OF_PERICENTER)
-            addRA_OF_ASC_NODE(builder, RA_OF_ASC_NODE)
-            addINCLINATION(builder, INCLINATION)
-            addECCENTRICITY(builder, ECCENTRICITY)
-            addMEAN_MOTION(builder, MEAN_MOTION)
-            addSEMI_MAJOR_AXIS(builder, SEMI_MAJOR_AXIS)
-            addCCSDS_OMM_VERS(builder, CCSDS_OMM_VERS)
-            addUSER_DEFINED_EARTH_MODEL(builder, USER_DEFINED_EARTH_MODELOffset)
-            addUSER_DEFINED_OBJECT_DESIGNATOR(builder, USER_DEFINED_OBJECT_DESIGNATOROffset)
-            addUSER_DEFINED_BIP_0044_TYPE(builder, USER_DEFINED_BIP_0044_TYPE)
-            addCOVARIANCE(builder, COVARIANCEOffset)
-            addCOV_REFERENCE_FRAME(builder, COV_REFERENCE_FRAMEOffset)
-            addELEMENT_SET_NO(builder, ELEMENT_SET_NO)
-            addNORAD_CAT_ID(builder, NORAD_CAT_ID)
-            addCLASSIFICATION_TYPE(builder, CLASSIFICATION_TYPEOffset)
-            addEPOCH(builder, EPOCHOffset)
-            addCOMMENT(builder, COMMENTOffset)
-            addREFERENCE_FRAME_EPOCH(builder, REFERENCE_FRAME_EPOCHOffset)
-            addREFERENCE_FRAME(builder, REFERENCE_FRAMEOffset)
-            addCENTER_NAME(builder, CENTER_NAMEOffset)
-            addOBJECT_ID(builder, OBJECT_IDOffset)
-            addOBJECT_NAME(builder, OBJECT_NAMEOffset)
-            addORIGINATOR(builder, ORIGINATOROffset)
-            addCREATION_DATE(builder, CREATION_DATEOffset)
-            addEPHEMERIS_TYPE(builder, EPHEMERIS_TYPE)
-            addMEAN_ELEMENT_THEORY(builder, MEAN_ELEMENT_THEORY)
-            addTIME_SYSTEM(builder, TIME_SYSTEM)
+            addUSERDEFINEDMICROSECONDS(builder, userDefinedMicroseconds)
+            addUSERDEFINEDEPOCHTIMESTAMP(builder, userDefinedEpochTimestamp)
+            addMEANMOTIONDDOT(builder, meanMotionDdot)
+            addMEANMOTIONDOT(builder, meanMotionDot)
+            addBSTAR(builder, bstar)
+            addREVATEPOCH(builder, revAtEpoch)
+            addDRAGCOEFF(builder, dragCoeff)
+            addDRAGAREA(builder, dragArea)
+            addSOLARRADCOEFF(builder, solarRadCoeff)
+            addSOLARRADAREA(builder, solarRadArea)
+            addMASS(builder, mass)
+            addGM(builder, gm)
+            addMEANANOMALY(builder, meanAnomaly)
+            addARGOFPERICENTER(builder, argOfPericenter)
+            addRAOFASCNODE(builder, raOfAscNode)
+            addINCLINATION(builder, inclination)
+            addECCENTRICITY(builder, eccentricity)
+            addMEANMOTION(builder, meanMotion)
+            addSEMIMAJORAXIS(builder, semiMajorAxis)
+            addCCSDSOMMVERS(builder, ccsdsOmmVers)
+            addUSERDEFINEDEARTHMODEL(builder, userDefinedEarthModelOffset)
+            addUSERDEFINEDOBJECTDESIGNATOR(builder, userDefinedObjectDesignatorOffset)
+            addUSERDEFINEDBIP0044TYPE(builder, userDefinedBip0044Type)
+            addCOVARIANCE(builder, covarianceOffset)
+            addCOVREFERENCEFRAME(builder, covReferenceFrameOffset)
+            addELEMENTSETNO(builder, elementSetNo)
+            addNORADCATID(builder, noradCatId)
+            addCLASSIFICATIONTYPE(builder, classificationTypeOffset)
+            addEPOCH(builder, epochOffset)
+            addCOMMENT(builder, commentOffset)
+            addREFERENCEFRAMEEPOCH(builder, referenceFrameEpochOffset)
+            addREFERENCEFRAME(builder, referenceFrameOffset)
+            addCENTERNAME(builder, centerNameOffset)
+            addOBJECTID(builder, objectIdOffset)
+            addOBJECTNAME(builder, objectNameOffset)
+            addORIGINATOR(builder, originatorOffset)
+            addCREATIONDATE(builder, creationDateOffset)
+            addEPHEMERISTYPE(builder, ephemerisType)
+            addMEANELEMENTTHEORY(builder, meanElementTheory)
+            addTIMESYSTEM(builder, timeSystem)
             return endOMM(builder)
         }
         fun startOMM(builder: FlatBufferBuilder) = builder.startTable(40)
-        fun addCCSDS_OMM_VERS(builder: FlatBufferBuilder, CCSDS_OMM_VERS: Double) = builder.addDouble(0, CCSDS_OMM_VERS, 0.0)
-        fun addCREATION_DATE(builder: FlatBufferBuilder, CREATION_DATE: Int) = builder.addOffset(1, CREATION_DATE, 0)
-        fun addORIGINATOR(builder: FlatBufferBuilder, ORIGINATOR: Int) = builder.addOffset(2, ORIGINATOR, 0)
-        fun addOBJECT_NAME(builder: FlatBufferBuilder, OBJECT_NAME: Int) = builder.addOffset(3, OBJECT_NAME, 0)
-        fun addOBJECT_ID(builder: FlatBufferBuilder, OBJECT_ID: Int) = builder.addOffset(4, OBJECT_ID, 0)
-        fun addCENTER_NAME(builder: FlatBufferBuilder, CENTER_NAME: Int) = builder.addOffset(5, CENTER_NAME, 0)
-        fun addREFERENCE_FRAME(builder: FlatBufferBuilder, REFERENCE_FRAME: Int) = builder.addOffset(6, REFERENCE_FRAME, 0)
-        fun addREFERENCE_FRAME_EPOCH(builder: FlatBufferBuilder, REFERENCE_FRAME_EPOCH: Int) = builder.addOffset(7, REFERENCE_FRAME_EPOCH, 0)
-        fun addTIME_SYSTEM(builder: FlatBufferBuilder, TIME_SYSTEM: Byte) = builder.addByte(8, TIME_SYSTEM, 11)
-        fun addMEAN_ELEMENT_THEORY(builder: FlatBufferBuilder, MEAN_ELEMENT_THEORY: Byte) = builder.addByte(9, MEAN_ELEMENT_THEORY, 0)
-        fun addCOMMENT(builder: FlatBufferBuilder, COMMENT: Int) = builder.addOffset(10, COMMENT, 0)
-        fun addEPOCH(builder: FlatBufferBuilder, EPOCH: Int) = builder.addOffset(11, EPOCH, 0)
-        fun addSEMI_MAJOR_AXIS(builder: FlatBufferBuilder, SEMI_MAJOR_AXIS: Double) = builder.addDouble(12, SEMI_MAJOR_AXIS, 0.0)
-        fun addMEAN_MOTION(builder: FlatBufferBuilder, MEAN_MOTION: Double) = builder.addDouble(13, MEAN_MOTION, 0.0)
-        fun addECCENTRICITY(builder: FlatBufferBuilder, ECCENTRICITY: Double) = builder.addDouble(14, ECCENTRICITY, 0.0)
-        fun addINCLINATION(builder: FlatBufferBuilder, INCLINATION: Double) = builder.addDouble(15, INCLINATION, 0.0)
-        fun addRA_OF_ASC_NODE(builder: FlatBufferBuilder, RA_OF_ASC_NODE: Double) = builder.addDouble(16, RA_OF_ASC_NODE, 0.0)
-        fun addARG_OF_PERICENTER(builder: FlatBufferBuilder, ARG_OF_PERICENTER: Double) = builder.addDouble(17, ARG_OF_PERICENTER, 0.0)
-        fun addMEAN_ANOMALY(builder: FlatBufferBuilder, MEAN_ANOMALY: Double) = builder.addDouble(18, MEAN_ANOMALY, 0.0)
-        fun addGM(builder: FlatBufferBuilder, GM: Double) = builder.addDouble(19, GM, 0.0)
-        fun addMASS(builder: FlatBufferBuilder, MASS: Double) = builder.addDouble(20, MASS, 0.0)
-        fun addSOLAR_RAD_AREA(builder: FlatBufferBuilder, SOLAR_RAD_AREA: Double) = builder.addDouble(21, SOLAR_RAD_AREA, 0.0)
-        fun addSOLAR_RAD_COEFF(builder: FlatBufferBuilder, SOLAR_RAD_COEFF: Double) = builder.addDouble(22, SOLAR_RAD_COEFF, 0.0)
-        fun addDRAG_AREA(builder: FlatBufferBuilder, DRAG_AREA: Double) = builder.addDouble(23, DRAG_AREA, 0.0)
-        fun addDRAG_COEFF(builder: FlatBufferBuilder, DRAG_COEFF: Double) = builder.addDouble(24, DRAG_COEFF, 0.0)
-        fun addEPHEMERIS_TYPE(builder: FlatBufferBuilder, EPHEMERIS_TYPE: Byte) = builder.addByte(25, EPHEMERIS_TYPE, 1)
-        fun addCLASSIFICATION_TYPE(builder: FlatBufferBuilder, CLASSIFICATION_TYPE: Int) = builder.addOffset(26, CLASSIFICATION_TYPE, 0)
-        fun addNORAD_CAT_ID(builder: FlatBufferBuilder, NORAD_CAT_ID: UInt) = builder.addInt(27, NORAD_CAT_ID.toInt(), 0)
-        fun addELEMENT_SET_NO(builder: FlatBufferBuilder, ELEMENT_SET_NO: UInt) = builder.addInt(28, ELEMENT_SET_NO.toInt(), 0)
-        fun addREV_AT_EPOCH(builder: FlatBufferBuilder, REV_AT_EPOCH: Double) = builder.addDouble(29, REV_AT_EPOCH, 0.0)
-        fun addBSTAR(builder: FlatBufferBuilder, BSTAR: Double) = builder.addDouble(30, BSTAR, 0.0)
-        fun addMEAN_MOTION_DOT(builder: FlatBufferBuilder, MEAN_MOTION_DOT: Double) = builder.addDouble(31, MEAN_MOTION_DOT, 0.0)
-        fun addMEAN_MOTION_DDOT(builder: FlatBufferBuilder, MEAN_MOTION_DDOT: Double) = builder.addDouble(32, MEAN_MOTION_DDOT, 0.0)
-        fun addCOV_REFERENCE_FRAME(builder: FlatBufferBuilder, COV_REFERENCE_FRAME: Int) = builder.addOffset(33, COV_REFERENCE_FRAME, 0)
-        fun addCOVARIANCE(builder: FlatBufferBuilder, COVARIANCE: Int) = builder.addOffset(34, COVARIANCE, 0)
+        fun addCCSDSOMMVERS(builder: FlatBufferBuilder, ccsdsOmmVers: Double) = builder.addDouble(0, ccsdsOmmVers, 0.0)
+        fun addCREATIONDATE(builder: FlatBufferBuilder, creationDate: Int) = builder.addOffset(1, creationDate, 0)
+        fun addORIGINATOR(builder: FlatBufferBuilder, originator: Int) = builder.addOffset(2, originator, 0)
+        fun addOBJECTNAME(builder: FlatBufferBuilder, objectName: Int) = builder.addOffset(3, objectName, 0)
+        fun addOBJECTID(builder: FlatBufferBuilder, objectId: Int) = builder.addOffset(4, objectId, 0)
+        fun addCENTERNAME(builder: FlatBufferBuilder, centerName: Int) = builder.addOffset(5, centerName, 0)
+        fun addREFERENCEFRAME(builder: FlatBufferBuilder, referenceFrame: Int) = builder.addOffset(6, referenceFrame, 0)
+        fun addREFERENCEFRAMEEPOCH(builder: FlatBufferBuilder, referenceFrameEpoch: Int) = builder.addOffset(7, referenceFrameEpoch, 0)
+        fun addTIMESYSTEM(builder: FlatBufferBuilder, timeSystem: Byte) = builder.addByte(8, timeSystem, 11)
+        fun addMEANELEMENTTHEORY(builder: FlatBufferBuilder, meanElementTheory: Byte) = builder.addByte(9, meanElementTheory, 0)
+        fun addCOMMENT(builder: FlatBufferBuilder, comment: Int) = builder.addOffset(10, comment, 0)
+        fun addEPOCH(builder: FlatBufferBuilder, epoch: Int) = builder.addOffset(11, epoch, 0)
+        fun addSEMIMAJORAXIS(builder: FlatBufferBuilder, semiMajorAxis: Double) = builder.addDouble(12, semiMajorAxis, 0.0)
+        fun addMEANMOTION(builder: FlatBufferBuilder, meanMotion: Double) = builder.addDouble(13, meanMotion, 0.0)
+        fun addECCENTRICITY(builder: FlatBufferBuilder, eccentricity: Double) = builder.addDouble(14, eccentricity, 0.0)
+        fun addINCLINATION(builder: FlatBufferBuilder, inclination: Double) = builder.addDouble(15, inclination, 0.0)
+        fun addRAOFASCNODE(builder: FlatBufferBuilder, raOfAscNode: Double) = builder.addDouble(16, raOfAscNode, 0.0)
+        fun addARGOFPERICENTER(builder: FlatBufferBuilder, argOfPericenter: Double) = builder.addDouble(17, argOfPericenter, 0.0)
+        fun addMEANANOMALY(builder: FlatBufferBuilder, meanAnomaly: Double) = builder.addDouble(18, meanAnomaly, 0.0)
+        fun addGM(builder: FlatBufferBuilder, gm: Double) = builder.addDouble(19, gm, 0.0)
+        fun addMASS(builder: FlatBufferBuilder, mass: Double) = builder.addDouble(20, mass, 0.0)
+        fun addSOLARRADAREA(builder: FlatBufferBuilder, solarRadArea: Double) = builder.addDouble(21, solarRadArea, 0.0)
+        fun addSOLARRADCOEFF(builder: FlatBufferBuilder, solarRadCoeff: Double) = builder.addDouble(22, solarRadCoeff, 0.0)
+        fun addDRAGAREA(builder: FlatBufferBuilder, dragArea: Double) = builder.addDouble(23, dragArea, 0.0)
+        fun addDRAGCOEFF(builder: FlatBufferBuilder, dragCoeff: Double) = builder.addDouble(24, dragCoeff, 0.0)
+        fun addEPHEMERISTYPE(builder: FlatBufferBuilder, ephemerisType: Byte) = builder.addByte(25, ephemerisType, 1)
+        fun addCLASSIFICATIONTYPE(builder: FlatBufferBuilder, classificationType: Int) = builder.addOffset(26, classificationType, 0)
+        fun addNORADCATID(builder: FlatBufferBuilder, noradCatId: UInt) = builder.addInt(27, noradCatId.toInt(), 0)
+        fun addELEMENTSETNO(builder: FlatBufferBuilder, elementSetNo: UInt) = builder.addInt(28, elementSetNo.toInt(), 0)
+        fun addREVATEPOCH(builder: FlatBufferBuilder, revAtEpoch: Double) = builder.addDouble(29, revAtEpoch, 0.0)
+        fun addBSTAR(builder: FlatBufferBuilder, bstar: Double) = builder.addDouble(30, bstar, 0.0)
+        fun addMEANMOTIONDOT(builder: FlatBufferBuilder, meanMotionDot: Double) = builder.addDouble(31, meanMotionDot, 0.0)
+        fun addMEANMOTIONDDOT(builder: FlatBufferBuilder, meanMotionDdot: Double) = builder.addDouble(32, meanMotionDdot, 0.0)
+        fun addCOVREFERENCEFRAME(builder: FlatBufferBuilder, covReferenceFrame: Int) = builder.addOffset(33, covReferenceFrame, 0)
+        fun addCOVARIANCE(builder: FlatBufferBuilder, covariance: Int) = builder.addOffset(34, covariance, 0)
         fun createCovarianceVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
             builder.startVector(8, data.size, 8)
             for (i in data.size - 1 downTo 0) {
@@ -537,11 +537,11 @@ class OMM : Table() {
             return builder.endVector()
         }
         fun startCovarianceVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
-        fun addUSER_DEFINED_BIP_0044_TYPE(builder: FlatBufferBuilder, USER_DEFINED_BIP_0044_TYPE: UInt) = builder.addInt(35, USER_DEFINED_BIP_0044_TYPE.toInt(), 0)
-        fun addUSER_DEFINED_OBJECT_DESIGNATOR(builder: FlatBufferBuilder, USER_DEFINED_OBJECT_DESIGNATOR: Int) = builder.addOffset(36, USER_DEFINED_OBJECT_DESIGNATOR, 0)
-        fun addUSER_DEFINED_EARTH_MODEL(builder: FlatBufferBuilder, USER_DEFINED_EARTH_MODEL: Int) = builder.addOffset(37, USER_DEFINED_EARTH_MODEL, 0)
-        fun addUSER_DEFINED_EPOCH_TIMESTAMP(builder: FlatBufferBuilder, USER_DEFINED_EPOCH_TIMESTAMP: Double) = builder.addDouble(38, USER_DEFINED_EPOCH_TIMESTAMP, 0.0)
-        fun addUSER_DEFINED_MICROSECONDS(builder: FlatBufferBuilder, USER_DEFINED_MICROSECONDS: Double) = builder.addDouble(39, USER_DEFINED_MICROSECONDS, 0.0)
+        fun addUSERDEFINEDBIP0044TYPE(builder: FlatBufferBuilder, userDefinedBip0044Type: UInt) = builder.addInt(35, userDefinedBip0044Type.toInt(), 0)
+        fun addUSERDEFINEDOBJECTDESIGNATOR(builder: FlatBufferBuilder, userDefinedObjectDesignator: Int) = builder.addOffset(36, userDefinedObjectDesignator, 0)
+        fun addUSERDEFINEDEARTHMODEL(builder: FlatBufferBuilder, userDefinedEarthModel: Int) = builder.addOffset(37, userDefinedEarthModel, 0)
+        fun addUSERDEFINEDEPOCHTIMESTAMP(builder: FlatBufferBuilder, userDefinedEpochTimestamp: Double) = builder.addDouble(38, userDefinedEpochTimestamp, 0.0)
+        fun addUSERDEFINEDMICROSECONDS(builder: FlatBufferBuilder, userDefinedMicroseconds: Double) = builder.addDouble(39, userDefinedMicroseconds, 0.0)
         fun endOMM(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

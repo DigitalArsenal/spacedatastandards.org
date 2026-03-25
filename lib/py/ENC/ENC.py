@@ -239,6 +239,16 @@ def ENCStartEPHEMERAL_PUBLIC_KEYVector(builder, numElems):
 def StartEPHEMERAL_PUBLIC_KEYVector(builder, numElems):
     return ENCStartEPHEMERAL_PUBLIC_KEYVector(builder, numElems)
 
+def ENCCreateEPHEMERAL_PUBLIC_KEYVector(builder, data):
+    data = list(data)
+    builder.StartVector(1, len(data), 1)
+    for item in reversed(data):
+        builder.PrependUint8(item)
+    return builder.EndVector()
+
+def CreateEPHEMERAL_PUBLIC_KEYVector(builder, data):
+    ENCCreateEPHEMERAL_PUBLIC_KEYVector(builder, data)
+
 def ENCAddNONCE_START(builder, NONCE_START):
     builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(NONCE_START), 0)
 
@@ -251,6 +261,16 @@ def ENCStartNONCE_STARTVector(builder, numElems):
 def StartNONCE_STARTVector(builder, numElems):
     return ENCStartNONCE_STARTVector(builder, numElems)
 
+def ENCCreateNONCE_STARTVector(builder, data):
+    data = list(data)
+    builder.StartVector(1, len(data), 1)
+    for item in reversed(data):
+        builder.PrependUint8(item)
+    return builder.EndVector()
+
+def CreateNONCE_STARTVector(builder, data):
+    ENCCreateNONCE_STARTVector(builder, data)
+
 def ENCAddRECIPIENT_KEY_ID(builder, RECIPIENT_KEY_ID):
     builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(RECIPIENT_KEY_ID), 0)
 
@@ -262,6 +282,16 @@ def ENCStartRECIPIENT_KEY_IDVector(builder, numElems):
 
 def StartRECIPIENT_KEY_IDVector(builder, numElems):
     return ENCStartRECIPIENT_KEY_IDVector(builder, numElems)
+
+def ENCCreateRECIPIENT_KEY_IDVector(builder, data):
+    data = list(data)
+    builder.StartVector(1, len(data), 1)
+    for item in reversed(data):
+        builder.PrependUint8(item)
+    return builder.EndVector()
+
+def CreateRECIPIENT_KEY_IDVector(builder, data):
+    ENCCreateRECIPIENT_KEY_IDVector(builder, data)
 
 def ENCAddCONTEXT(builder, CONTEXT):
     builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(CONTEXT), 0)
@@ -280,6 +310,16 @@ def ENCStartSCHEMA_HASHVector(builder, numElems):
 
 def StartSCHEMA_HASHVector(builder, numElems):
     return ENCStartSCHEMA_HASHVector(builder, numElems)
+
+def ENCCreateSCHEMA_HASHVector(builder, data):
+    data = list(data)
+    builder.StartVector(1, len(data), 1)
+    for item in reversed(data):
+        builder.PrependUint8(item)
+    return builder.EndVector()
+
+def CreateSCHEMA_HASHVector(builder, data):
+    ENCCreateSCHEMA_HASHVector(builder, data)
 
 def ENCAddROOT_TYPE(builder, ROOT_TYPE):
     builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(ROOT_TYPE), 0)
@@ -307,24 +347,37 @@ except:
 class ENCT(object):
 
     # ENCT
-    def __init__(self):
-        self.VERSION = 1  # type: int
-        self.KEY_EXCHANGE = 0  # type: int
-        self.SYMMETRIC = 0  # type: int
-        self.KEY_DERIVATION = 0  # type: int
-        self.EPHEMERAL_PUBLIC_KEY = None  # type: List[int]
-        self.NONCE_START = None  # type: List[int]
-        self.RECIPIENT_KEY_ID = None  # type: List[int]
-        self.CONTEXT = None  # type: str
-        self.SCHEMA_HASH = None  # type: List[int]
-        self.ROOT_TYPE = None  # type: str
-        self.TIMESTAMP = 0  # type: int
+    def __init__(
+        self,
+        VERSION = 1,
+        KEY_EXCHANGE = 0,
+        SYMMETRIC = 0,
+        KEY_DERIVATION = 0,
+        EPHEMERAL_PUBLIC_KEY = None,
+        NONCE_START = None,
+        RECIPIENT_KEY_ID = None,
+        CONTEXT = None,
+        SCHEMA_HASH = None,
+        ROOT_TYPE = None,
+        TIMESTAMP = 0,
+    ):
+        self.VERSION = VERSION  # type: int
+        self.KEY_EXCHANGE = KEY_EXCHANGE  # type: int
+        self.SYMMETRIC = SYMMETRIC  # type: int
+        self.KEY_DERIVATION = KEY_DERIVATION  # type: int
+        self.EPHEMERAL_PUBLIC_KEY = EPHEMERAL_PUBLIC_KEY  # type: Optional[List[int]]
+        self.NONCE_START = NONCE_START  # type: Optional[List[int]]
+        self.RECIPIENT_KEY_ID = RECIPIENT_KEY_ID  # type: Optional[List[int]]
+        self.CONTEXT = CONTEXT  # type: Optional[str]
+        self.SCHEMA_HASH = SCHEMA_HASH  # type: Optional[List[int]]
+        self.ROOT_TYPE = ROOT_TYPE  # type: Optional[str]
+        self.TIMESTAMP = TIMESTAMP  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        ENC = ENC()
-        ENC.Init(buf, pos)
-        return cls.InitFromObj(ENC)
+        tmpEnc = ENC()
+        tmpEnc.Init(buf, pos)
+        return cls.InitFromObj(tmpEnc)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -332,9 +385,9 @@ class ENCT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, ENC):
+    def InitFromObj(cls, tmpEnc):
         x = ENCT()
-        x._UnPack(ENC)
+        x._UnPack(tmpEnc)
         return x
 
     # ENCT

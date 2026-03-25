@@ -2,12 +2,16 @@
 // swiftlint:disable all
 // swiftformat:disable all
 
+#if canImport(Common)
+import Common
+#endif
+
 import FlatBuffers
 
 ///  Space Environment Observation Detail
-public struct SEV: FlatBufferObject, Verifiable {
+public struct SEV: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -36,9 +40,7 @@ public struct SEV: FlatBufferObject, Verifiable {
   public var OB_VALUE: Double { let o = _accessor.offset(VTOFFSET.OB_VALUE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public var OB_STRING: String? { let o = _accessor.offset(VTOFFSET.OB_STRING.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var OB_STRINGSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OB_STRING.v) }
-  public var hasObArray: Bool { let o = _accessor.offset(VTOFFSET.OB_ARRAY.v); return o == 0 ? false : true }
-  public var OB_ARRAYCount: Int32 { let o = _accessor.offset(VTOFFSET.OB_ARRAY.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func OB_ARRAY(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.OB_ARRAY.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  public var OB_ARRAY: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.OB_ARRAY.v, byteSize: 4) }
   public var OB_BOOL: Bool { let o = _accessor.offset(VTOFFSET.OB_BOOL.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   public var OB_QUALITY: String? { let o = _accessor.offset(VTOFFSET.OB_QUALITY.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var OB_QUALITYSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OB_QUALITY.v) }

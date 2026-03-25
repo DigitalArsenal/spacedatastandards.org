@@ -32,7 +32,7 @@ class rfEmitterDetail : Table() {
     /**
      * Mode name or identifier
      */
-    val MODE_NAME : String?
+    val modeName : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class rfEmitterDetail : Table() {
                 null
             }
         }
-    val MODE_NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun MODE_NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val modeNameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun modeNameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Center frequency in MHz
      */
-    val FREQUENCY : Double
+    val frequency : Double
         get() {
             val o = __offset(6)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -54,7 +54,7 @@ class rfEmitterDetail : Table() {
     /**
      * Frequency minimum in MHz
      */
-    val FREQ_MIN : Double
+    val freqMin : Double
         get() {
             val o = __offset(8)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -62,7 +62,7 @@ class rfEmitterDetail : Table() {
     /**
      * Frequency maximum in MHz
      */
-    val FREQ_MAX : Double
+    val freqMax : Double
         get() {
             val o = __offset(10)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -70,7 +70,7 @@ class rfEmitterDetail : Table() {
     /**
      * Pulse repetition interval in microseconds
      */
-    val PRI : Double
+    val pri : Double
         get() {
             val o = __offset(12)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -78,7 +78,7 @@ class rfEmitterDetail : Table() {
     /**
      * PRI minimum in microseconds
      */
-    val PRI_MIN : Double
+    val priMin : Double
         get() {
             val o = __offset(14)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -86,7 +86,7 @@ class rfEmitterDetail : Table() {
     /**
      * PRI maximum in microseconds
      */
-    val PRI_MAX : Double
+    val priMax : Double
         get() {
             val o = __offset(16)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -94,7 +94,7 @@ class rfEmitterDetail : Table() {
     /**
      * Pulse width in microseconds
      */
-    val PULSE_WIDTH : Double
+    val pulseWidth : Double
         get() {
             val o = __offset(18)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -102,7 +102,7 @@ class rfEmitterDetail : Table() {
     /**
      * Pulse width minimum in microseconds
      */
-    val PW_MIN : Double
+    val pwMin : Double
         get() {
             val o = __offset(20)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -110,7 +110,7 @@ class rfEmitterDetail : Table() {
     /**
      * Pulse width maximum in microseconds
      */
-    val PW_MAX : Double
+    val pwMax : Double
         get() {
             val o = __offset(22)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -118,7 +118,7 @@ class rfEmitterDetail : Table() {
     /**
      * Scan period in seconds
      */
-    val SCAN_PERIOD : Double
+    val scanPeriod : Double
         get() {
             val o = __offset(24)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -126,7 +126,7 @@ class rfEmitterDetail : Table() {
     /**
      * Effective radiated power in dBW
      */
-    val ERP : Double
+    val erp : Double
         get() {
             val o = __offset(26)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -134,7 +134,7 @@ class rfEmitterDetail : Table() {
     /**
      * Signal modulation
      */
-    val MODULATION : Byte
+    val modulation : Byte
         get() {
             val o = __offset(28)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -142,7 +142,7 @@ class rfEmitterDetail : Table() {
     /**
      * Antenna pattern type
      */
-    val ANTENNA_PATTERN : String?
+    val antennaPattern : String?
         get() {
             val o = __offset(30)
             return if (o != 0) {
@@ -151,58 +151,58 @@ class rfEmitterDetail : Table() {
                 null
             }
         }
-    val ANTENNA_PATTERNAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(30, 1)
-    fun ANTENNA_PATTERNInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 30, 1)
+    val antennaPatternAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(30, 1)
+    fun antennaPatternInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 30, 1)
     /**
      * 3dB beamwidth in degrees
      */
-    val BEAMWIDTH : Double
+    val beamwidth : Double
         get() {
             val o = __offset(32)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsrfEmitterDetail(_bb: ByteBuffer): rfEmitterDetail = getRootAsrfEmitterDetail(_bb, rfEmitterDetail())
         fun getRootAsrfEmitterDetail(_bb: ByteBuffer, obj: rfEmitterDetail): rfEmitterDetail {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createrfEmitterDetail(builder: FlatBufferBuilder, MODE_NAMEOffset: Int, FREQUENCY: Double, FREQ_MIN: Double, FREQ_MAX: Double, PRI: Double, PRI_MIN: Double, PRI_MAX: Double, PULSE_WIDTH: Double, PW_MIN: Double, PW_MAX: Double, SCAN_PERIOD: Double, ERP: Double, MODULATION: Byte, ANTENNA_PATTERNOffset: Int, BEAMWIDTH: Double) : Int {
+        fun createrfEmitterDetail(builder: FlatBufferBuilder, modeNameOffset: Int, frequency: Double, freqMin: Double, freqMax: Double, pri: Double, priMin: Double, priMax: Double, pulseWidth: Double, pwMin: Double, pwMax: Double, scanPeriod: Double, erp: Double, modulation: Byte, antennaPatternOffset: Int, beamwidth: Double) : Int {
             builder.startTable(15)
-            addBEAMWIDTH(builder, BEAMWIDTH)
-            addERP(builder, ERP)
-            addSCAN_PERIOD(builder, SCAN_PERIOD)
-            addPW_MAX(builder, PW_MAX)
-            addPW_MIN(builder, PW_MIN)
-            addPULSE_WIDTH(builder, PULSE_WIDTH)
-            addPRI_MAX(builder, PRI_MAX)
-            addPRI_MIN(builder, PRI_MIN)
-            addPRI(builder, PRI)
-            addFREQ_MAX(builder, FREQ_MAX)
-            addFREQ_MIN(builder, FREQ_MIN)
-            addFREQUENCY(builder, FREQUENCY)
-            addANTENNA_PATTERN(builder, ANTENNA_PATTERNOffset)
-            addMODE_NAME(builder, MODE_NAMEOffset)
-            addMODULATION(builder, MODULATION)
+            addBEAMWIDTH(builder, beamwidth)
+            addERP(builder, erp)
+            addSCANPERIOD(builder, scanPeriod)
+            addPWMAX(builder, pwMax)
+            addPWMIN(builder, pwMin)
+            addPULSEWIDTH(builder, pulseWidth)
+            addPRIMAX(builder, priMax)
+            addPRIMIN(builder, priMin)
+            addPRI(builder, pri)
+            addFREQMAX(builder, freqMax)
+            addFREQMIN(builder, freqMin)
+            addFREQUENCY(builder, frequency)
+            addANTENNAPATTERN(builder, antennaPatternOffset)
+            addMODENAME(builder, modeNameOffset)
+            addMODULATION(builder, modulation)
             return endrfEmitterDetail(builder)
         }
         fun startrfEmitterDetail(builder: FlatBufferBuilder) = builder.startTable(15)
-        fun addMODE_NAME(builder: FlatBufferBuilder, MODE_NAME: Int) = builder.addOffset(0, MODE_NAME, 0)
-        fun addFREQUENCY(builder: FlatBufferBuilder, FREQUENCY: Double) = builder.addDouble(1, FREQUENCY, 0.0)
-        fun addFREQ_MIN(builder: FlatBufferBuilder, FREQ_MIN: Double) = builder.addDouble(2, FREQ_MIN, 0.0)
-        fun addFREQ_MAX(builder: FlatBufferBuilder, FREQ_MAX: Double) = builder.addDouble(3, FREQ_MAX, 0.0)
-        fun addPRI(builder: FlatBufferBuilder, PRI: Double) = builder.addDouble(4, PRI, 0.0)
-        fun addPRI_MIN(builder: FlatBufferBuilder, PRI_MIN: Double) = builder.addDouble(5, PRI_MIN, 0.0)
-        fun addPRI_MAX(builder: FlatBufferBuilder, PRI_MAX: Double) = builder.addDouble(6, PRI_MAX, 0.0)
-        fun addPULSE_WIDTH(builder: FlatBufferBuilder, PULSE_WIDTH: Double) = builder.addDouble(7, PULSE_WIDTH, 0.0)
-        fun addPW_MIN(builder: FlatBufferBuilder, PW_MIN: Double) = builder.addDouble(8, PW_MIN, 0.0)
-        fun addPW_MAX(builder: FlatBufferBuilder, PW_MAX: Double) = builder.addDouble(9, PW_MAX, 0.0)
-        fun addSCAN_PERIOD(builder: FlatBufferBuilder, SCAN_PERIOD: Double) = builder.addDouble(10, SCAN_PERIOD, 0.0)
-        fun addERP(builder: FlatBufferBuilder, ERP: Double) = builder.addDouble(11, ERP, 0.0)
-        fun addMODULATION(builder: FlatBufferBuilder, MODULATION: Byte) = builder.addByte(12, MODULATION, 0)
-        fun addANTENNA_PATTERN(builder: FlatBufferBuilder, ANTENNA_PATTERN: Int) = builder.addOffset(13, ANTENNA_PATTERN, 0)
-        fun addBEAMWIDTH(builder: FlatBufferBuilder, BEAMWIDTH: Double) = builder.addDouble(14, BEAMWIDTH, 0.0)
+        fun addMODENAME(builder: FlatBufferBuilder, modeName: Int) = builder.addOffset(0, modeName, 0)
+        fun addFREQUENCY(builder: FlatBufferBuilder, frequency: Double) = builder.addDouble(1, frequency, 0.0)
+        fun addFREQMIN(builder: FlatBufferBuilder, freqMin: Double) = builder.addDouble(2, freqMin, 0.0)
+        fun addFREQMAX(builder: FlatBufferBuilder, freqMax: Double) = builder.addDouble(3, freqMax, 0.0)
+        fun addPRI(builder: FlatBufferBuilder, pri: Double) = builder.addDouble(4, pri, 0.0)
+        fun addPRIMIN(builder: FlatBufferBuilder, priMin: Double) = builder.addDouble(5, priMin, 0.0)
+        fun addPRIMAX(builder: FlatBufferBuilder, priMax: Double) = builder.addDouble(6, priMax, 0.0)
+        fun addPULSEWIDTH(builder: FlatBufferBuilder, pulseWidth: Double) = builder.addDouble(7, pulseWidth, 0.0)
+        fun addPWMIN(builder: FlatBufferBuilder, pwMin: Double) = builder.addDouble(8, pwMin, 0.0)
+        fun addPWMAX(builder: FlatBufferBuilder, pwMax: Double) = builder.addDouble(9, pwMax, 0.0)
+        fun addSCANPERIOD(builder: FlatBufferBuilder, scanPeriod: Double) = builder.addDouble(10, scanPeriod, 0.0)
+        fun addERP(builder: FlatBufferBuilder, erp: Double) = builder.addDouble(11, erp, 0.0)
+        fun addMODULATION(builder: FlatBufferBuilder, modulation: Byte) = builder.addByte(12, modulation, 0)
+        fun addANTENNAPATTERN(builder: FlatBufferBuilder, antennaPattern: Int) = builder.addOffset(13, antennaPattern, 0)
+        fun addBEAMWIDTH(builder: FlatBufferBuilder, beamwidth: Double) = builder.addDouble(14, beamwidth, 0.0)
         fun endrfEmitterDetail(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

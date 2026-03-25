@@ -2,8 +2,8 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export { ION, IONT } from './ION.js';
-export { ionoDataPoint, ionoDataPointT } from './ionoDataPoint.js';
-export { ionoDensityProfile, ionoDensityProfileT } from './ionoDensityProfile.js';
-export { ionoLayer } from './ionoLayer.js';
-export { ionoSource } from './ionoSource.js';
+export * from './ION.js';
+export * from './ionoDataPoint.js';
+export * from './ionoDensityProfile.js';
+export * from './ionoLayer.js';
+export * from './ionoSource.js';

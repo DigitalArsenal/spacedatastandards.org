@@ -50,6 +50,10 @@ func (rcv *VCMStateVector) EPOCH() []byte {
 	return nil
 }
 
+func (rcv *VCMStateVector) Epoch() []byte {
+	return rcv.EPOCH()
+}
+
 func (rcv *VCMStateVector) X() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
@@ -94,8 +98,16 @@ func (rcv *VCMStateVector) X_DOT() float64 {
 	return 0.0
 }
 
+func (rcv *VCMStateVector) XDot() float64 {
+	return rcv.X_DOT()
+}
+
 func (rcv *VCMStateVector) MutateX_DOT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(12, n)
+}
+
+func (rcv *VCMStateVector) MutateXDot(n float64) bool {
+	return rcv.MutateX_DOT(n)
 }
 
 func (rcv *VCMStateVector) Y_DOT() float64 {
@@ -106,8 +118,16 @@ func (rcv *VCMStateVector) Y_DOT() float64 {
 	return 0.0
 }
 
+func (rcv *VCMStateVector) YDot() float64 {
+	return rcv.Y_DOT()
+}
+
 func (rcv *VCMStateVector) MutateY_DOT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(14, n)
+}
+
+func (rcv *VCMStateVector) MutateYDot(n float64) bool {
+	return rcv.MutateY_DOT(n)
 }
 
 func (rcv *VCMStateVector) Z_DOT() float64 {
@@ -118,8 +138,16 @@ func (rcv *VCMStateVector) Z_DOT() float64 {
 	return 0.0
 }
 
+func (rcv *VCMStateVector) ZDot() float64 {
+	return rcv.Z_DOT()
+}
+
 func (rcv *VCMStateVector) MutateZ_DOT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(16, n)
+}
+
+func (rcv *VCMStateVector) MutateZDot(n float64) bool {
+	return rcv.MutateZ_DOT(n)
 }
 
 func VCMStateVectorStart(builder *flatbuffers.Builder) {
@@ -127,6 +155,9 @@ func VCMStateVectorStart(builder *flatbuffers.Builder) {
 }
 func VCMStateVectorAddEPOCH(builder *flatbuffers.Builder, EPOCH flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(EPOCH), 0)
+}
+func VCMStateVectorAddEpoch(builder *flatbuffers.Builder, EPOCH flatbuffers.UOffsetT) {
+	VCMStateVectorAddEPOCH(builder, EPOCH)
 }
 func VCMStateVectorAddX(builder *flatbuffers.Builder, X float64) {
 	builder.PrependFloat64Slot(1, X, 0.0)
@@ -140,11 +171,20 @@ func VCMStateVectorAddZ(builder *flatbuffers.Builder, Z float64) {
 func VCMStateVectorAddX_DOT(builder *flatbuffers.Builder, X_DOT float64) {
 	builder.PrependFloat64Slot(4, X_DOT, 0.0)
 }
+func VCMStateVectorAddXDot(builder *flatbuffers.Builder, X_DOT float64) {
+	VCMStateVectorAddX_DOT(builder, X_DOT)
+}
 func VCMStateVectorAddY_DOT(builder *flatbuffers.Builder, Y_DOT float64) {
 	builder.PrependFloat64Slot(5, Y_DOT, 0.0)
 }
+func VCMStateVectorAddYDot(builder *flatbuffers.Builder, Y_DOT float64) {
+	VCMStateVectorAddY_DOT(builder, Y_DOT)
+}
 func VCMStateVectorAddZ_DOT(builder *flatbuffers.Builder, Z_DOT float64) {
 	builder.PrependFloat64Slot(6, Z_DOT, 0.0)
+}
+func VCMStateVectorAddZDot(builder *flatbuffers.Builder, Z_DOT float64) {
+	VCMStateVectorAddZ_DOT(builder, Z_DOT)
 }
 func VCMStateVectorEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

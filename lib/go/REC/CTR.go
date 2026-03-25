@@ -63,6 +63,10 @@ func (rcv *CTR) ID() []byte {
 	return nil
 }
 
+func (rcv *CTR) Id() []byte {
+	return rcv.ID()
+}
+
 /// ISO 3166 Numeric code
 /// Country name
 func (rcv *CTR) NAME() []byte {
@@ -71,6 +75,10 @@ func (rcv *CTR) NAME() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *CTR) Name() []byte {
+	return rcv.NAME()
 }
 
 /// Country name
@@ -83,6 +91,10 @@ func (rcv *CTR) GENC_CODE() []byte {
 	return nil
 }
 
+func (rcv *CTR) GencCode() []byte {
+	return rcv.GENC_CODE()
+}
+
 /// GENC code
 /// ISO 3166 Alpha-2 code
 func (rcv *CTR) ALPHA_2_CODE() []byte {
@@ -91,6 +103,10 @@ func (rcv *CTR) ALPHA_2_CODE() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *CTR) Alpha2Code() []byte {
+	return rcv.ALPHA_2_CODE()
 }
 
 /// ISO 3166 Alpha-2 code
@@ -103,6 +119,10 @@ func (rcv *CTR) ALPHA_3_CODE() []byte {
 	return nil
 }
 
+func (rcv *CTR) Alpha3Code() []byte {
+	return rcv.ALPHA_3_CODE()
+}
+
 /// ISO 3166 Alpha-3 code
 /// Stanag code
 func (rcv *CTR) STANAG_CODE() []byte {
@@ -111,6 +131,10 @@ func (rcv *CTR) STANAG_CODE() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *CTR) StanagCode() []byte {
+	return rcv.STANAG_CODE()
 }
 
 /// Stanag code
@@ -123,6 +147,10 @@ func (rcv *CTR) INTERNET_CCTLD() []byte {
 	return nil
 }
 
+func (rcv *CTR) InternetCctld() []byte {
+	return rcv.INTERNET_CCTLD()
+}
+
 /// Internet country code top-level domain (ccTLD)
 /// Additional comments
 func (rcv *CTR) COMMENT() []byte {
@@ -133,6 +161,10 @@ func (rcv *CTR) COMMENT() []byte {
 	return nil
 }
 
+func (rcv *CTR) Comment() []byte {
+	return rcv.COMMENT()
+}
+
 /// Additional comments
 func CTRStart(builder *flatbuffers.Builder) {
 	builder.StartObject(8)
@@ -140,26 +172,50 @@ func CTRStart(builder *flatbuffers.Builder) {
 func CTRAddID(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ID), 0)
 }
+func CTRAddId(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
+	CTRAddID(builder, ID)
+}
 func CTRAddNAME(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(NAME), 0)
+}
+func CTRAddName(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
+	CTRAddNAME(builder, NAME)
 }
 func CTRAddGENC_CODE(builder *flatbuffers.Builder, GENC_CODE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(GENC_CODE), 0)
 }
+func CTRAddGencCode(builder *flatbuffers.Builder, GENC_CODE flatbuffers.UOffsetT) {
+	CTRAddGENC_CODE(builder, GENC_CODE)
+}
 func CTRAddALPHA_2_CODE(builder *flatbuffers.Builder, ALPHA_2_CODE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(ALPHA_2_CODE), 0)
+}
+func CTRAddAlpha2Code(builder *flatbuffers.Builder, ALPHA_2_CODE flatbuffers.UOffsetT) {
+	CTRAddALPHA_2_CODE(builder, ALPHA_2_CODE)
 }
 func CTRAddALPHA_3_CODE(builder *flatbuffers.Builder, ALPHA_3_CODE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(ALPHA_3_CODE), 0)
 }
+func CTRAddAlpha3Code(builder *flatbuffers.Builder, ALPHA_3_CODE flatbuffers.UOffsetT) {
+	CTRAddALPHA_3_CODE(builder, ALPHA_3_CODE)
+}
 func CTRAddSTANAG_CODE(builder *flatbuffers.Builder, STANAG_CODE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(STANAG_CODE), 0)
+}
+func CTRAddStanagCode(builder *flatbuffers.Builder, STANAG_CODE flatbuffers.UOffsetT) {
+	CTRAddSTANAG_CODE(builder, STANAG_CODE)
 }
 func CTRAddINTERNET_CCTLD(builder *flatbuffers.Builder, INTERNET_CCTLD flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(INTERNET_CCTLD), 0)
 }
+func CTRAddInternetCctld(builder *flatbuffers.Builder, INTERNET_CCTLD flatbuffers.UOffsetT) {
+	CTRAddINTERNET_CCTLD(builder, INTERNET_CCTLD)
+}
 func CTRAddCOMMENT(builder *flatbuffers.Builder, COMMENT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(COMMENT), 0)
+}
+func CTRAddComment(builder *flatbuffers.Builder, COMMENT flatbuffers.UOffsetT) {
+	CTRAddCOMMENT(builder, COMMENT)
 }
 func CTREnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

@@ -1,3 +1,3 @@
-export { TIM, TIMT } from './TIM.js';
-export { timeSystem } from './timeSystem.js';
+export * from './TIM.js';
+export * from './timeSystem.js';
 //# sourceMappingURL=main.d.ts.map

@@ -87,6 +87,12 @@ def KMLSchemaDataStartSIMPLE_DATAVector(builder, numElems):
 def StartSIMPLE_DATAVector(builder, numElems):
     return KMLSchemaDataStartSIMPLE_DATAVector(builder, numElems)
 
+def KMLSchemaDataCreateSIMPLE_DATAVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateSIMPLE_DATAVector(builder, data):
+    KMLSchemaDataCreateSIMPLE_DATAVector(builder, data)
+
 def KMLSchemaDataEnd(builder):
     return builder.EndObject()
 
@@ -102,15 +108,19 @@ except:
 class KMLSchemaDataT(object):
 
     # KMLSchemaDataT
-    def __init__(self):
-        self.SCHEMA_URL = None  # type: str
-        self.SIMPLE_DATA = None  # type: List[KMLSimpleData.KMLSimpleDataT]
+    def __init__(
+        self,
+        SCHEMA_URL = None,
+        SIMPLE_DATA = None,
+    ):
+        self.SCHEMA_URL = SCHEMA_URL  # type: Optional[str]
+        self.SIMPLE_DATA = SIMPLE_DATA  # type: Optional[List[KMLSimpleData.KMLSimpleDataT]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        kmlschemaData = KMLSchemaData()
-        kmlschemaData.Init(buf, pos)
-        return cls.InitFromObj(kmlschemaData)
+        tmpKmlschemaData = KMLSchemaData()
+        tmpKmlschemaData.Init(buf, pos)
+        return cls.InitFromObj(tmpKmlschemaData)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -118,23 +128,23 @@ class KMLSchemaDataT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, kmlschemaData):
+    def InitFromObj(cls, tmpKmlschemaData):
         x = KMLSchemaDataT()
-        x._UnPack(kmlschemaData)
+        x._UnPack(tmpKmlschemaData)
         return x
 
     # KMLSchemaDataT
-    def _UnPack(self, kmlschemaData):
-        if kmlschemaData is None:
+    def _UnPack(self, KMLSchemaData):
+        if KMLSchemaData is None:
             return
-        self.SCHEMA_URL = kmlschemaData.SCHEMA_URL()
-        if not kmlschemaData.SIMPLE_DATAIsNone():
+        self.SCHEMA_URL = KMLSchemaData.SCHEMA_URL()
+        if not KMLSchemaData.SIMPLE_DATAIsNone():
             self.SIMPLE_DATA = []
-            for i in range(kmlschemaData.SIMPLE_DATALength()):
-                if kmlschemaData.SIMPLE_DATA(i) is None:
+            for i in range(KMLSchemaData.SIMPLE_DATALength()):
+                if KMLSchemaData.SIMPLE_DATA(i) is None:
                     self.SIMPLE_DATA.append(None)
                 else:
-                    kMLSimpleData_ = KMLSimpleData.KMLSimpleDataT.InitFromObj(kmlschemaData.SIMPLE_DATA(i))
+                    kMLSimpleData_ = KMLSimpleData.KMLSimpleDataT.InitFromObj(KMLSchemaData.SIMPLE_DATA(i))
                     self.SIMPLE_DATA.append(kMLSimpleData_)
 
     # KMLSchemaDataT
@@ -154,5 +164,5 @@ class KMLSchemaDataT(object):
             KMLSchemaDataAddSCHEMA_URL(builder, SCHEMA_URL)
         if self.SIMPLE_DATA is not None:
             KMLSchemaDataAddSIMPLE_DATA(builder, SIMPLE_DATA)
-        kmlschemaData = KMLSchemaDataEnd(builder)
-        return kmlschemaData
+        KMLSchemaData = KMLSchemaDataEnd(builder)
+        return KMLSchemaData

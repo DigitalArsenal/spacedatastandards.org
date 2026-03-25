@@ -150,6 +150,12 @@ def PLDStartINSTRUMENTSVector(builder, numElems):
 def StartINSTRUMENTSVector(builder, numElems):
     return PLDStartINSTRUMENTSVector(builder, numElems)
 
+def PLDCreateINSTRUMENTSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateINSTRUMENTSVector(builder, data):
+    PLDCreateINSTRUMENTSVector(builder, data)
+
 def PLDEnd(builder):
     return builder.EndObject()
 
@@ -165,20 +171,29 @@ except:
 class PLDT(object):
 
     # PLDT
-    def __init__(self):
-        self.PAYLOAD_DURATION = None  # type: str
-        self.MASS_AT_LAUNCH = 0.0  # type: float
-        self.DIMENSIONS = None  # type: str
-        self.SOLAR_ARRAY_AREA = 0.0  # type: float
-        self.SOLAR_ARRAY_DIMENSIONS = None  # type: str
-        self.NOMINAL_OPERATIONAL_LIFETIME = None  # type: str
-        self.INSTRUMENTS = None  # type: List[IDM.IDMT]
+    def __init__(
+        self,
+        PAYLOAD_DURATION = None,
+        MASS_AT_LAUNCH = 0.0,
+        DIMENSIONS = None,
+        SOLAR_ARRAY_AREA = 0.0,
+        SOLAR_ARRAY_DIMENSIONS = None,
+        NOMINAL_OPERATIONAL_LIFETIME = None,
+        INSTRUMENTS = None,
+    ):
+        self.PAYLOAD_DURATION = PAYLOAD_DURATION  # type: Optional[str]
+        self.MASS_AT_LAUNCH = MASS_AT_LAUNCH  # type: float
+        self.DIMENSIONS = DIMENSIONS  # type: Optional[str]
+        self.SOLAR_ARRAY_AREA = SOLAR_ARRAY_AREA  # type: float
+        self.SOLAR_ARRAY_DIMENSIONS = SOLAR_ARRAY_DIMENSIONS  # type: Optional[str]
+        self.NOMINAL_OPERATIONAL_LIFETIME = NOMINAL_OPERATIONAL_LIFETIME  # type: Optional[str]
+        self.INSTRUMENTS = INSTRUMENTS  # type: Optional[List[IDM.IDMT]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        PLD = PLD()
-        PLD.Init(buf, pos)
-        return cls.InitFromObj(PLD)
+        tmpPld = PLD()
+        tmpPld.Init(buf, pos)
+        return cls.InitFromObj(tmpPld)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -186,9 +201,9 @@ class PLDT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, PLD):
+    def InitFromObj(cls, tmpPld):
         x = PLDT()
-        x._UnPack(PLD)
+        x._UnPack(tmpPld)
         return x
 
     # PLDT

@@ -283,30 +283,49 @@ def End(builder):
 class OOAT(object):
 
     # OOAT
-    def __init__(self):
-        self.ID = None  # type: str
-        self.ID_ON_ORBIT = None  # type: str
-        self.ID_ANTENNA = None  # type: str
-        self.NAME = None  # type: str
-        self.ANTENNA_TYPE = None  # type: str
-        self.QUANTITY = 0  # type: int
-        self.BAND = None  # type: str
-        self.FREQ_MIN = 0.0  # type: float
-        self.FREQ_MAX = 0.0  # type: float
-        self.GAIN = 0.0  # type: float
-        self.APERTURE = 0.0  # type: float
-        self.BEAMWIDTH = 0.0  # type: float
-        self.POLARIZATION = None  # type: str
-        self.STEERABLE = False  # type: bool
-        self.SLEW_RATE = 0.0  # type: float
-        self.PURPOSE = None  # type: str
-        self.NOTES = None  # type: str
+    def __init__(
+        self,
+        ID = None,
+        ID_ON_ORBIT = None,
+        ID_ANTENNA = None,
+        NAME = None,
+        ANTENNA_TYPE = None,
+        QUANTITY = 0,
+        BAND = None,
+        FREQ_MIN = 0.0,
+        FREQ_MAX = 0.0,
+        GAIN = 0.0,
+        APERTURE = 0.0,
+        BEAMWIDTH = 0.0,
+        POLARIZATION = None,
+        STEERABLE = False,
+        SLEW_RATE = 0.0,
+        PURPOSE = None,
+        NOTES = None,
+    ):
+        self.ID = ID  # type: Optional[str]
+        self.ID_ON_ORBIT = ID_ON_ORBIT  # type: Optional[str]
+        self.ID_ANTENNA = ID_ANTENNA  # type: Optional[str]
+        self.NAME = NAME  # type: Optional[str]
+        self.ANTENNA_TYPE = ANTENNA_TYPE  # type: Optional[str]
+        self.QUANTITY = QUANTITY  # type: int
+        self.BAND = BAND  # type: Optional[str]
+        self.FREQ_MIN = FREQ_MIN  # type: float
+        self.FREQ_MAX = FREQ_MAX  # type: float
+        self.GAIN = GAIN  # type: float
+        self.APERTURE = APERTURE  # type: float
+        self.BEAMWIDTH = BEAMWIDTH  # type: float
+        self.POLARIZATION = POLARIZATION  # type: Optional[str]
+        self.STEERABLE = STEERABLE  # type: bool
+        self.SLEW_RATE = SLEW_RATE  # type: float
+        self.PURPOSE = PURPOSE  # type: Optional[str]
+        self.NOTES = NOTES  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        OOA = OOA()
-        OOA.Init(buf, pos)
-        return cls.InitFromObj(OOA)
+        tmpOoa = OOA()
+        tmpOoa.Init(buf, pos)
+        return cls.InitFromObj(tmpOoa)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -314,9 +333,9 @@ class OOAT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, OOA):
+    def InitFromObj(cls, tmpOoa):
         x = OOAT()
-        x._UnPack(OOA)
+        x._UnPack(tmpOoa)
         return x
 
     # OOAT

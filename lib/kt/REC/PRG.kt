@@ -32,7 +32,7 @@ class PRG : Table() {
     /**
      * The name of the program
      */
-    val NAME : String?
+    val name : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class PRG : Table() {
                 null
             }
         }
-    val NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val nameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun nameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Hierarchical Deterministic (HD) derivation path for the program's key, used in cryptocurrency wallets
      */
-    val HD_KEY_PATH : String?
+    val hdKeyPath : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -55,12 +55,12 @@ class PRG : Table() {
                 null
             }
         }
-    val HD_KEY_PATHAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun HD_KEY_PATHInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val hdKeyPathAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun hdKeyPathInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * Vector of standard message types used by the program
      */
-    fun MESSAGE_TYPES(j: Int) : String? {
+    fun messageTypes(j: Int) : String? {
         val o = __offset(8)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
@@ -68,15 +68,15 @@ class PRG : Table() {
             null
         }
     }
-    val MESSAGE_TYPESLength : Int
+    val messageTypesLength : Int
         get() {
             val o = __offset(8); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Vector of users associated with the program, each user can have assigned message types
      */
-    fun USERS(j: Int) : USR? = USERS(USR(), j)
-    fun USERS(obj: USR, j: Int) : USR? {
+    fun users(j: Int) : USR? = users(USR(), j)
+    fun users(obj: USR, j: Int) : USR? {
         val o = __offset(10)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -84,30 +84,30 @@ class PRG : Table() {
             null
         }
     }
-    val USERSLength : Int
+    val usersLength : Int
         get() {
             val o = __offset(10); return if (o != 0) __vector_len(o) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsPRG(_bb: ByteBuffer): PRG = getRootAsPRG(_bb, PRG())
         fun getRootAsPRG(_bb: ByteBuffer, obj: PRG): PRG {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun PRGBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$PRG")
-        fun createPRG(builder: FlatBufferBuilder, NAMEOffset: Int, HD_KEY_PATHOffset: Int, MESSAGE_TYPESOffset: Int, USERSOffset: Int) : Int {
+        fun createPRG(builder: FlatBufferBuilder, nameOffset: Int, hdKeyPathOffset: Int, messageTypesOffset: Int, usersOffset: Int) : Int {
             builder.startTable(4)
-            addUSERS(builder, USERSOffset)
-            addMESSAGE_TYPES(builder, MESSAGE_TYPESOffset)
-            addHD_KEY_PATH(builder, HD_KEY_PATHOffset)
-            addNAME(builder, NAMEOffset)
+            addUSERS(builder, usersOffset)
+            addMESSAGETYPES(builder, messageTypesOffset)
+            addHDKEYPATH(builder, hdKeyPathOffset)
+            addNAME(builder, nameOffset)
             return endPRG(builder)
         }
         fun startPRG(builder: FlatBufferBuilder) = builder.startTable(4)
-        fun addNAME(builder: FlatBufferBuilder, NAME: Int) = builder.addOffset(0, NAME, 0)
-        fun addHD_KEY_PATH(builder: FlatBufferBuilder, HD_KEY_PATH: Int) = builder.addOffset(1, HD_KEY_PATH, 0)
-        fun addMESSAGE_TYPES(builder: FlatBufferBuilder, MESSAGE_TYPES: Int) = builder.addOffset(2, MESSAGE_TYPES, 0)
+        fun addNAME(builder: FlatBufferBuilder, name: Int) = builder.addOffset(0, name, 0)
+        fun addHDKEYPATH(builder: FlatBufferBuilder, hdKeyPath: Int) = builder.addOffset(1, hdKeyPath, 0)
+        fun addMESSAGETYPES(builder: FlatBufferBuilder, messageTypes: Int) = builder.addOffset(2, messageTypes, 0)
         fun createMessageTypesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -116,7 +116,7 @@ class PRG : Table() {
             return builder.endVector()
         }
         fun startMessageTypesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addUSERS(builder: FlatBufferBuilder, USERS: Int) = builder.addOffset(3, USERS, 0)
+        fun addUSERS(builder: FlatBufferBuilder, users: Int) = builder.addOffset(3, users, 0)
         fun createUsersVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {

@@ -115,18 +115,25 @@ def End(builder):
 class survivingDebrisT(object):
 
     # survivingDebrisT
-    def __init__(self):
-        self.FRAGMENT_ID = None  # type: str
-        self.MATERIAL = None  # type: str
-        self.MASS = 0.0  # type: float
-        self.CASUALTY_AREA = 0.0  # type: float
-        self.SURVIVAL_PROBABILITY = 0.0  # type: float
+    def __init__(
+        self,
+        FRAGMENT_ID = None,
+        MATERIAL = None,
+        MASS = 0.0,
+        CASUALTY_AREA = 0.0,
+        SURVIVAL_PROBABILITY = 0.0,
+    ):
+        self.FRAGMENT_ID = FRAGMENT_ID  # type: Optional[str]
+        self.MATERIAL = MATERIAL  # type: Optional[str]
+        self.MASS = MASS  # type: float
+        self.CASUALTY_AREA = CASUALTY_AREA  # type: float
+        self.SURVIVAL_PROBABILITY = SURVIVAL_PROBABILITY  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        survivingDebris = survivingDebris()
-        survivingDebris.Init(buf, pos)
-        return cls.InitFromObj(survivingDebris)
+        tmpSurvivingDebris = survivingDebris()
+        tmpSurvivingDebris.Init(buf, pos)
+        return cls.InitFromObj(tmpSurvivingDebris)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -134,9 +141,9 @@ class survivingDebrisT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, survivingDebris):
+    def InitFromObj(cls, tmpSurvivingDebris):
         x = survivingDebrisT()
-        x._UnPack(survivingDebris)
+        x._UnPack(tmpSurvivingDebris)
         return x
 
     # survivingDebrisT

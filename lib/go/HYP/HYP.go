@@ -64,12 +64,20 @@ func (rcv *HYP) CAT_IDS(j int) []byte {
 	return nil
 }
 
+func (rcv *HYP) CatIds(j int) []byte {
+	return rcv.CAT_IDS(j)
+}
+
 func (rcv *HYP) CAT_IDSLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *HYP) CatIdsLength() int {
+	return rcv.CAT_IDSLength()
 }
 
 /// Space Objects Involved
@@ -83,12 +91,20 @@ func (rcv *HYP) SIT_IDS(j int) []byte {
 	return nil
 }
 
+func (rcv *HYP) SitIds(j int) []byte {
+	return rcv.SIT_IDS(j)
+}
+
 func (rcv *HYP) SIT_IDSLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *HYP) SitIdsLength() int {
+	return rcv.SIT_IDSLength()
 }
 
 /// Space Objects Involved
@@ -101,6 +117,10 @@ func (rcv *HYP) NAME() []byte {
 	return nil
 }
 
+func (rcv *HYP) Name() []byte {
+	return rcv.NAME()
+}
+
 /// Name of the hypothesis
 /// Category of the hypothesis
 func (rcv *HYP) CATEGORY() []byte {
@@ -109,6 +129,10 @@ func (rcv *HYP) CATEGORY() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *HYP) Category() []byte {
+	return rcv.CATEGORY()
 }
 
 /// Category of the hypothesis
@@ -122,12 +146,20 @@ func (rcv *HYP) ROW_INDICATORS(j int) []byte {
 	return nil
 }
 
+func (rcv *HYP) RowIndicators(j int) []byte {
+	return rcv.ROW_INDICATORS(j)
+}
+
 func (rcv *HYP) ROW_INDICATORSLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *HYP) RowIndicatorsLength() int {
+	return rcv.ROW_INDICATORSLength()
 }
 
 /// Row indicators for the hypothesis matrix
@@ -141,12 +173,20 @@ func (rcv *HYP) COL_INDICATORS(j int) []byte {
 	return nil
 }
 
+func (rcv *HYP) ColIndicators(j int) []byte {
+	return rcv.COL_INDICATORS(j)
+}
+
 func (rcv *HYP) COL_INDICATORSLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *HYP) ColIndicatorsLength() int {
+	return rcv.COL_INDICATORSLength()
 }
 
 /// Column indicators for the hypothesis matrix
@@ -160,12 +200,20 @@ func (rcv *HYP) MATRIX(j int) bool {
 	return false
 }
 
+func (rcv *HYP) Matrix(j int) bool {
+	return rcv.MATRIX(j)
+}
+
 func (rcv *HYP) MATRIXLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *HYP) MatrixLength() int {
+	return rcv.MATRIXLength()
 }
 
 /// Matrix data as a boolean array in row major format; if overflow, adds additional rows
@@ -178,6 +226,10 @@ func (rcv *HYP) MutateMATRIX(j int, n bool) bool {
 	return false
 }
 
+func (rcv *HYP) MutateMatrix(j int, n bool) bool {
+	return rcv.MutateMATRIX(j, n)
+}
+
 /// Scores for objects
 func (rcv *HYP) SCORE(obj *Score, j int) bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
@@ -185,10 +237,17 @@ func (rcv *HYP) SCORE(obj *Score, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(Score)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *HYP) Score(obj *Score, j int) bool {
+	return rcv.SCORE(obj, j)
 }
 
 func (rcv *HYP) SCORELength() int {
@@ -197,6 +256,10 @@ func (rcv *HYP) SCORELength() int {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *HYP) ScoreLength() int {
+	return rcv.SCORELength()
 }
 
 /// Scores for objects
@@ -209,6 +272,10 @@ func (rcv *HYP) ANALYSIS_METHOD() []byte {
 	return nil
 }
 
+func (rcv *HYP) AnalysisMethod() []byte {
+	return rcv.ANALYSIS_METHOD()
+}
+
 /// Analysis methodology used to form the hypothesis
 func (rcv *HYP) EVENT_START_TIME() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
@@ -216,6 +283,10 @@ func (rcv *HYP) EVENT_START_TIME() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *HYP) EventStartTime() []byte {
+	return rcv.EVENT_START_TIME()
 }
 
 func (rcv *HYP) EVENT_END_TIME() []byte {
@@ -226,59 +297,114 @@ func (rcv *HYP) EVENT_END_TIME() []byte {
 	return nil
 }
 
+func (rcv *HYP) EventEndTime() []byte {
+	return rcv.EVENT_END_TIME()
+}
+
 func HYPStart(builder *flatbuffers.Builder) {
 	builder.StartObject(11)
 }
 func HYPAddCAT_IDS(builder *flatbuffers.Builder, CAT_IDS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(CAT_IDS), 0)
 }
+func HYPAddCatIds(builder *flatbuffers.Builder, CAT_IDS flatbuffers.UOffsetT) {
+	HYPAddCAT_IDS(builder, CAT_IDS)
+}
 func HYPStartCAT_IDSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func HYPStartCatIdsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return HYPStartCAT_IDSVector(builder, numElems)
 }
 func HYPAddSIT_IDS(builder *flatbuffers.Builder, SIT_IDS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(SIT_IDS), 0)
 }
+func HYPAddSitIds(builder *flatbuffers.Builder, SIT_IDS flatbuffers.UOffsetT) {
+	HYPAddSIT_IDS(builder, SIT_IDS)
+}
 func HYPStartSIT_IDSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func HYPStartSitIdsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return HYPStartSIT_IDSVector(builder, numElems)
 }
 func HYPAddNAME(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(NAME), 0)
 }
+func HYPAddName(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
+	HYPAddNAME(builder, NAME)
+}
 func HYPAddCATEGORY(builder *flatbuffers.Builder, CATEGORY flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(CATEGORY), 0)
+}
+func HYPAddCategory(builder *flatbuffers.Builder, CATEGORY flatbuffers.UOffsetT) {
+	HYPAddCATEGORY(builder, CATEGORY)
 }
 func HYPAddROW_INDICATORS(builder *flatbuffers.Builder, ROW_INDICATORS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(ROW_INDICATORS), 0)
 }
+func HYPAddRowIndicators(builder *flatbuffers.Builder, ROW_INDICATORS flatbuffers.UOffsetT) {
+	HYPAddROW_INDICATORS(builder, ROW_INDICATORS)
+}
 func HYPStartROW_INDICATORSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func HYPStartRowIndicatorsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return HYPStartROW_INDICATORSVector(builder, numElems)
 }
 func HYPAddCOL_INDICATORS(builder *flatbuffers.Builder, COL_INDICATORS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(COL_INDICATORS), 0)
 }
+func HYPAddColIndicators(builder *flatbuffers.Builder, COL_INDICATORS flatbuffers.UOffsetT) {
+	HYPAddCOL_INDICATORS(builder, COL_INDICATORS)
+}
 func HYPStartCOL_INDICATORSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func HYPStartColIndicatorsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return HYPStartCOL_INDICATORSVector(builder, numElems)
 }
 func HYPAddMATRIX(builder *flatbuffers.Builder, MATRIX flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(MATRIX), 0)
 }
+func HYPAddMatrix(builder *flatbuffers.Builder, MATRIX flatbuffers.UOffsetT) {
+	HYPAddMATRIX(builder, MATRIX)
+}
 func HYPStartMATRIXVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(1, numElems, 1)
+}
+func HYPStartMatrixVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return HYPStartMATRIXVector(builder, numElems)
 }
 func HYPAddSCORE(builder *flatbuffers.Builder, SCORE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(SCORE), 0)
 }
+func HYPAddScore(builder *flatbuffers.Builder, SCORE flatbuffers.UOffsetT) {
+	HYPAddSCORE(builder, SCORE)
+}
 func HYPStartSCOREVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func HYPStartScoreVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return HYPStartSCOREVector(builder, numElems)
 }
 func HYPAddANALYSIS_METHOD(builder *flatbuffers.Builder, ANALYSIS_METHOD flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(ANALYSIS_METHOD), 0)
 }
+func HYPAddAnalysisMethod(builder *flatbuffers.Builder, ANALYSIS_METHOD flatbuffers.UOffsetT) {
+	HYPAddANALYSIS_METHOD(builder, ANALYSIS_METHOD)
+}
 func HYPAddEVENT_START_TIME(builder *flatbuffers.Builder, EVENT_START_TIME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(EVENT_START_TIME), 0)
 }
+func HYPAddEventStartTime(builder *flatbuffers.Builder, EVENT_START_TIME flatbuffers.UOffsetT) {
+	HYPAddEVENT_START_TIME(builder, EVENT_START_TIME)
+}
 func HYPAddEVENT_END_TIME(builder *flatbuffers.Builder, EVENT_END_TIME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(EVENT_END_TIME), 0)
+}
+func HYPAddEventEndTime(builder *flatbuffers.Builder, EVENT_END_TIME flatbuffers.UOffsetT) {
+	HYPAddEVENT_END_TIME(builder, EVENT_END_TIME)
 }
 func HYPEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

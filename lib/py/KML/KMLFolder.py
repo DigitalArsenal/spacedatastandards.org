@@ -431,6 +431,12 @@ def KMLFolderStartPLACEMARKSVector(builder, numElems):
 def StartPLACEMARKSVector(builder, numElems):
     return KMLFolderStartPLACEMARKSVector(builder, numElems)
 
+def KMLFolderCreatePLACEMARKSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreatePLACEMARKSVector(builder, data):
+    KMLFolderCreatePLACEMARKSVector(builder, data)
+
 def KMLFolderAddFOLDERS(builder, FOLDERS):
     builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(FOLDERS), 0)
 
@@ -442,6 +448,12 @@ def KMLFolderStartFOLDERSVector(builder, numElems):
 
 def StartFOLDERSVector(builder, numElems):
     return KMLFolderStartFOLDERSVector(builder, numElems)
+
+def KMLFolderCreateFOLDERSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateFOLDERSVector(builder, data):
+    KMLFolderCreateFOLDERSVector(builder, data)
 
 def KMLFolderAddNETWORK_LINKS(builder, NETWORK_LINKS):
     builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(NETWORK_LINKS), 0)
@@ -455,6 +467,12 @@ def KMLFolderStartNETWORK_LINKSVector(builder, numElems):
 def StartNETWORK_LINKSVector(builder, numElems):
     return KMLFolderStartNETWORK_LINKSVector(builder, numElems)
 
+def KMLFolderCreateNETWORK_LINKSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateNETWORK_LINKSVector(builder, data):
+    KMLFolderCreateNETWORK_LINKSVector(builder, data)
+
 def KMLFolderAddGROUND_OVERLAYS(builder, GROUND_OVERLAYS):
     builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(GROUND_OVERLAYS), 0)
 
@@ -466,6 +484,12 @@ def KMLFolderStartGROUND_OVERLAYSVector(builder, numElems):
 
 def StartGROUND_OVERLAYSVector(builder, numElems):
     return KMLFolderStartGROUND_OVERLAYSVector(builder, numElems)
+
+def KMLFolderCreateGROUND_OVERLAYSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateGROUND_OVERLAYSVector(builder, data):
+    KMLFolderCreateGROUND_OVERLAYSVector(builder, data)
 
 def KMLFolderAddSTYLES(builder, STYLES):
     builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(STYLES), 0)
@@ -479,6 +503,12 @@ def KMLFolderStartSTYLESVector(builder, numElems):
 def StartSTYLESVector(builder, numElems):
     return KMLFolderStartSTYLESVector(builder, numElems)
 
+def KMLFolderCreateSTYLESVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateSTYLESVector(builder, data):
+    KMLFolderCreateSTYLESVector(builder, data)
+
 def KMLFolderAddSTYLE_MAPS(builder, STYLE_MAPS):
     builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(STYLE_MAPS), 0)
 
@@ -490,6 +520,12 @@ def KMLFolderStartSTYLE_MAPSVector(builder, numElems):
 
 def StartSTYLE_MAPSVector(builder, numElems):
     return KMLFolderStartSTYLE_MAPSVector(builder, numElems)
+
+def KMLFolderCreateSTYLE_MAPSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateSTYLE_MAPSVector(builder, data):
+    KMLFolderCreateSTYLE_MAPSVector(builder, data)
 
 def KMLFolderAddSCREEN_OVERLAYS(builder, SCREEN_OVERLAYS):
     builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(SCREEN_OVERLAYS), 0)
@@ -503,6 +539,12 @@ def KMLFolderStartSCREEN_OVERLAYSVector(builder, numElems):
 def StartSCREEN_OVERLAYSVector(builder, numElems):
     return KMLFolderStartSCREEN_OVERLAYSVector(builder, numElems)
 
+def KMLFolderCreateSCREEN_OVERLAYSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateSCREEN_OVERLAYSVector(builder, data):
+    KMLFolderCreateSCREEN_OVERLAYSVector(builder, data)
+
 def KMLFolderAddPHOTO_OVERLAYS(builder, PHOTO_OVERLAYS):
     builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(PHOTO_OVERLAYS), 0)
 
@@ -515,6 +557,12 @@ def KMLFolderStartPHOTO_OVERLAYSVector(builder, numElems):
 def StartPHOTO_OVERLAYSVector(builder, numElems):
     return KMLFolderStartPHOTO_OVERLAYSVector(builder, numElems)
 
+def KMLFolderCreatePHOTO_OVERLAYSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreatePHOTO_OVERLAYSVector(builder, data):
+    KMLFolderCreatePHOTO_OVERLAYSVector(builder, data)
+
 def KMLFolderAddTOURS(builder, TOURS):
     builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(TOURS), 0)
 
@@ -526,6 +574,12 @@ def KMLFolderStartTOURSVector(builder, numElems):
 
 def StartTOURSVector(builder, numElems):
     return KMLFolderStartTOURSVector(builder, numElems)
+
+def KMLFolderCreateTOURSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateTOURSVector(builder, data):
+    KMLFolderCreateTOURSVector(builder, data)
 
 def KMLFolderAddSTYLE_URL(builder, STYLE_URL):
     builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(STYLE_URL), 0)
@@ -550,6 +604,12 @@ def KMLFolderStartEXTENDED_DATAVector(builder, numElems):
 
 def StartEXTENDED_DATAVector(builder, numElems):
     return KMLFolderStartEXTENDED_DATAVector(builder, numElems)
+
+def KMLFolderCreateEXTENDED_DATAVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateEXTENDED_DATAVector(builder, data):
+    KMLFolderCreateEXTENDED_DATAVector(builder, data)
 
 def KMLFolderAddLOOK_AT(builder, LOOK_AT):
     builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(LOOK_AT), 0)
@@ -603,33 +663,55 @@ except:
 class KMLFolderT(object):
 
     # KMLFolderT
-    def __init__(self):
-        self.NAME = None  # type: str
-        self.DESCRIPTION = None  # type: str
-        self.VISIBILITY = False  # type: bool
-        self.OPEN = False  # type: bool
-        self.PLACEMARKS = None  # type: List[KMLPlacemark.KMLPlacemarkT]
-        self.FOLDERS = None  # type: List[KMLFolder.KMLFolderT]
-        self.NETWORK_LINKS = None  # type: List[KMLNetworkLink.KMLNetworkLinkT]
-        self.GROUND_OVERLAYS = None  # type: List[KMLGroundOverlay.KMLGroundOverlayT]
-        self.STYLES = None  # type: List[KMLStyle.KMLStyleT]
-        self.STYLE_MAPS = None  # type: List[KMLStyleMap.KMLStyleMapT]
-        self.SCREEN_OVERLAYS = None  # type: List[KMLScreenOverlay.KMLScreenOverlayT]
-        self.PHOTO_OVERLAYS = None  # type: List[KMLPhotoOverlay.KMLPhotoOverlayT]
-        self.TOURS = None  # type: List[KMLTour.KMLTourT]
-        self.STYLE_URL = None  # type: str
-        self.REGION = None  # type: Optional[KMLRegion.KMLRegionT]
-        self.EXTENDED_DATA = None  # type: List[KMLData.KMLDataT]
-        self.LOOK_AT = None  # type: Optional[KMLLookAt.KMLLookAtT]
-        self.CAMERA = None  # type: Optional[KMLCamera.KMLCameraT]
-        self.TIME_SPAN = None  # type: Optional[KMLTimeSpan.KMLTimeSpanT]
-        self.TIME_STAMP = None  # type: Optional[KMLTimeStamp.KMLTimeStampT]
+    def __init__(
+        self,
+        NAME = None,
+        DESCRIPTION = None,
+        VISIBILITY = False,
+        OPEN = False,
+        PLACEMARKS = None,
+        FOLDERS = None,
+        NETWORK_LINKS = None,
+        GROUND_OVERLAYS = None,
+        STYLES = None,
+        STYLE_MAPS = None,
+        SCREEN_OVERLAYS = None,
+        PHOTO_OVERLAYS = None,
+        TOURS = None,
+        STYLE_URL = None,
+        REGION = None,
+        EXTENDED_DATA = None,
+        LOOK_AT = None,
+        CAMERA = None,
+        TIME_SPAN = None,
+        TIME_STAMP = None,
+    ):
+        self.NAME = NAME  # type: Optional[str]
+        self.DESCRIPTION = DESCRIPTION  # type: Optional[str]
+        self.VISIBILITY = VISIBILITY  # type: bool
+        self.OPEN = OPEN  # type: bool
+        self.PLACEMARKS = PLACEMARKS  # type: Optional[List[KMLPlacemark.KMLPlacemarkT]]
+        self.FOLDERS = FOLDERS  # type: Optional[List[KMLFolder.KMLFolderT]]
+        self.NETWORK_LINKS = NETWORK_LINKS  # type: Optional[List[KMLNetworkLink.KMLNetworkLinkT]]
+        self.GROUND_OVERLAYS = GROUND_OVERLAYS  # type: Optional[List[KMLGroundOverlay.KMLGroundOverlayT]]
+        self.STYLES = STYLES  # type: Optional[List[KMLStyle.KMLStyleT]]
+        self.STYLE_MAPS = STYLE_MAPS  # type: Optional[List[KMLStyleMap.KMLStyleMapT]]
+        self.SCREEN_OVERLAYS = SCREEN_OVERLAYS  # type: Optional[List[KMLScreenOverlay.KMLScreenOverlayT]]
+        self.PHOTO_OVERLAYS = PHOTO_OVERLAYS  # type: Optional[List[KMLPhotoOverlay.KMLPhotoOverlayT]]
+        self.TOURS = TOURS  # type: Optional[List[KMLTour.KMLTourT]]
+        self.STYLE_URL = STYLE_URL  # type: Optional[str]
+        self.REGION = REGION  # type: Optional[KMLRegion.KMLRegionT]
+        self.EXTENDED_DATA = EXTENDED_DATA  # type: Optional[List[KMLData.KMLDataT]]
+        self.LOOK_AT = LOOK_AT  # type: Optional[KMLLookAt.KMLLookAtT]
+        self.CAMERA = CAMERA  # type: Optional[KMLCamera.KMLCameraT]
+        self.TIME_SPAN = TIME_SPAN  # type: Optional[KMLTimeSpan.KMLTimeSpanT]
+        self.TIME_STAMP = TIME_STAMP  # type: Optional[KMLTimeStamp.KMLTimeStampT]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        kmlfolder = KMLFolder()
-        kmlfolder.Init(buf, pos)
-        return cls.InitFromObj(kmlfolder)
+        tmpKmlfolder = KMLFolder()
+        tmpKmlfolder.Init(buf, pos)
+        return cls.InitFromObj(tmpKmlfolder)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -637,110 +719,110 @@ class KMLFolderT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, kmlfolder):
+    def InitFromObj(cls, tmpKmlfolder):
         x = KMLFolderT()
-        x._UnPack(kmlfolder)
+        x._UnPack(tmpKmlfolder)
         return x
 
     # KMLFolderT
-    def _UnPack(self, kmlfolder):
-        if kmlfolder is None:
+    def _UnPack(self, KMLFolder):
+        if KMLFolder is None:
             return
-        self.NAME = kmlfolder.NAME()
-        self.DESCRIPTION = kmlfolder.DESCRIPTION()
-        self.VISIBILITY = kmlfolder.VISIBILITY()
-        self.OPEN = kmlfolder.OPEN()
-        if not kmlfolder.PLACEMARKSIsNone():
+        self.NAME = KMLFolder.NAME()
+        self.DESCRIPTION = KMLFolder.DESCRIPTION()
+        self.VISIBILITY = KMLFolder.VISIBILITY()
+        self.OPEN = KMLFolder.OPEN()
+        if not KMLFolder.PLACEMARKSIsNone():
             self.PLACEMARKS = []
-            for i in range(kmlfolder.PLACEMARKSLength()):
-                if kmlfolder.PLACEMARKS(i) is None:
+            for i in range(KMLFolder.PLACEMARKSLength()):
+                if KMLFolder.PLACEMARKS(i) is None:
                     self.PLACEMARKS.append(None)
                 else:
-                    kMLPlacemark_ = KMLPlacemark.KMLPlacemarkT.InitFromObj(kmlfolder.PLACEMARKS(i))
+                    kMLPlacemark_ = KMLPlacemark.KMLPlacemarkT.InitFromObj(KMLFolder.PLACEMARKS(i))
                     self.PLACEMARKS.append(kMLPlacemark_)
-        if not kmlfolder.FOLDERSIsNone():
+        if not KMLFolder.FOLDERSIsNone():
             self.FOLDERS = []
-            for i in range(kmlfolder.FOLDERSLength()):
-                if kmlfolder.FOLDERS(i) is None:
+            for i in range(KMLFolder.FOLDERSLength()):
+                if KMLFolder.FOLDERS(i) is None:
                     self.FOLDERS.append(None)
                 else:
-                    kMLFolder_ = KMLFolder.KMLFolderT.InitFromObj(kmlfolder.FOLDERS(i))
+                    kMLFolder_ = KMLFolder.KMLFolderT.InitFromObj(KMLFolder.FOLDERS(i))
                     self.FOLDERS.append(kMLFolder_)
-        if not kmlfolder.NETWORK_LINKSIsNone():
+        if not KMLFolder.NETWORK_LINKSIsNone():
             self.NETWORK_LINKS = []
-            for i in range(kmlfolder.NETWORK_LINKSLength()):
-                if kmlfolder.NETWORK_LINKS(i) is None:
+            for i in range(KMLFolder.NETWORK_LINKSLength()):
+                if KMLFolder.NETWORK_LINKS(i) is None:
                     self.NETWORK_LINKS.append(None)
                 else:
-                    kMLNetworkLink_ = KMLNetworkLink.KMLNetworkLinkT.InitFromObj(kmlfolder.NETWORK_LINKS(i))
+                    kMLNetworkLink_ = KMLNetworkLink.KMLNetworkLinkT.InitFromObj(KMLFolder.NETWORK_LINKS(i))
                     self.NETWORK_LINKS.append(kMLNetworkLink_)
-        if not kmlfolder.GROUND_OVERLAYSIsNone():
+        if not KMLFolder.GROUND_OVERLAYSIsNone():
             self.GROUND_OVERLAYS = []
-            for i in range(kmlfolder.GROUND_OVERLAYSLength()):
-                if kmlfolder.GROUND_OVERLAYS(i) is None:
+            for i in range(KMLFolder.GROUND_OVERLAYSLength()):
+                if KMLFolder.GROUND_OVERLAYS(i) is None:
                     self.GROUND_OVERLAYS.append(None)
                 else:
-                    kMLGroundOverlay_ = KMLGroundOverlay.KMLGroundOverlayT.InitFromObj(kmlfolder.GROUND_OVERLAYS(i))
+                    kMLGroundOverlay_ = KMLGroundOverlay.KMLGroundOverlayT.InitFromObj(KMLFolder.GROUND_OVERLAYS(i))
                     self.GROUND_OVERLAYS.append(kMLGroundOverlay_)
-        if not kmlfolder.STYLESIsNone():
+        if not KMLFolder.STYLESIsNone():
             self.STYLES = []
-            for i in range(kmlfolder.STYLESLength()):
-                if kmlfolder.STYLES(i) is None:
+            for i in range(KMLFolder.STYLESLength()):
+                if KMLFolder.STYLES(i) is None:
                     self.STYLES.append(None)
                 else:
-                    kMLStyle_ = KMLStyle.KMLStyleT.InitFromObj(kmlfolder.STYLES(i))
+                    kMLStyle_ = KMLStyle.KMLStyleT.InitFromObj(KMLFolder.STYLES(i))
                     self.STYLES.append(kMLStyle_)
-        if not kmlfolder.STYLE_MAPSIsNone():
+        if not KMLFolder.STYLE_MAPSIsNone():
             self.STYLE_MAPS = []
-            for i in range(kmlfolder.STYLE_MAPSLength()):
-                if kmlfolder.STYLE_MAPS(i) is None:
+            for i in range(KMLFolder.STYLE_MAPSLength()):
+                if KMLFolder.STYLE_MAPS(i) is None:
                     self.STYLE_MAPS.append(None)
                 else:
-                    kMLStyleMap_ = KMLStyleMap.KMLStyleMapT.InitFromObj(kmlfolder.STYLE_MAPS(i))
+                    kMLStyleMap_ = KMLStyleMap.KMLStyleMapT.InitFromObj(KMLFolder.STYLE_MAPS(i))
                     self.STYLE_MAPS.append(kMLStyleMap_)
-        if not kmlfolder.SCREEN_OVERLAYSIsNone():
+        if not KMLFolder.SCREEN_OVERLAYSIsNone():
             self.SCREEN_OVERLAYS = []
-            for i in range(kmlfolder.SCREEN_OVERLAYSLength()):
-                if kmlfolder.SCREEN_OVERLAYS(i) is None:
+            for i in range(KMLFolder.SCREEN_OVERLAYSLength()):
+                if KMLFolder.SCREEN_OVERLAYS(i) is None:
                     self.SCREEN_OVERLAYS.append(None)
                 else:
-                    kMLScreenOverlay_ = KMLScreenOverlay.KMLScreenOverlayT.InitFromObj(kmlfolder.SCREEN_OVERLAYS(i))
+                    kMLScreenOverlay_ = KMLScreenOverlay.KMLScreenOverlayT.InitFromObj(KMLFolder.SCREEN_OVERLAYS(i))
                     self.SCREEN_OVERLAYS.append(kMLScreenOverlay_)
-        if not kmlfolder.PHOTO_OVERLAYSIsNone():
+        if not KMLFolder.PHOTO_OVERLAYSIsNone():
             self.PHOTO_OVERLAYS = []
-            for i in range(kmlfolder.PHOTO_OVERLAYSLength()):
-                if kmlfolder.PHOTO_OVERLAYS(i) is None:
+            for i in range(KMLFolder.PHOTO_OVERLAYSLength()):
+                if KMLFolder.PHOTO_OVERLAYS(i) is None:
                     self.PHOTO_OVERLAYS.append(None)
                 else:
-                    kMLPhotoOverlay_ = KMLPhotoOverlay.KMLPhotoOverlayT.InitFromObj(kmlfolder.PHOTO_OVERLAYS(i))
+                    kMLPhotoOverlay_ = KMLPhotoOverlay.KMLPhotoOverlayT.InitFromObj(KMLFolder.PHOTO_OVERLAYS(i))
                     self.PHOTO_OVERLAYS.append(kMLPhotoOverlay_)
-        if not kmlfolder.TOURSIsNone():
+        if not KMLFolder.TOURSIsNone():
             self.TOURS = []
-            for i in range(kmlfolder.TOURSLength()):
-                if kmlfolder.TOURS(i) is None:
+            for i in range(KMLFolder.TOURSLength()):
+                if KMLFolder.TOURS(i) is None:
                     self.TOURS.append(None)
                 else:
-                    kMLTour_ = KMLTour.KMLTourT.InitFromObj(kmlfolder.TOURS(i))
+                    kMLTour_ = KMLTour.KMLTourT.InitFromObj(KMLFolder.TOURS(i))
                     self.TOURS.append(kMLTour_)
-        self.STYLE_URL = kmlfolder.STYLE_URL()
-        if kmlfolder.REGION() is not None:
-            self.REGION = KMLRegion.KMLRegionT.InitFromObj(kmlfolder.REGION())
-        if not kmlfolder.EXTENDED_DATAIsNone():
+        self.STYLE_URL = KMLFolder.STYLE_URL()
+        if KMLFolder.REGION() is not None:
+            self.REGION = KMLRegion.KMLRegionT.InitFromObj(KMLFolder.REGION())
+        if not KMLFolder.EXTENDED_DATAIsNone():
             self.EXTENDED_DATA = []
-            for i in range(kmlfolder.EXTENDED_DATALength()):
-                if kmlfolder.EXTENDED_DATA(i) is None:
+            for i in range(KMLFolder.EXTENDED_DATALength()):
+                if KMLFolder.EXTENDED_DATA(i) is None:
                     self.EXTENDED_DATA.append(None)
                 else:
-                    kMLData_ = KMLData.KMLDataT.InitFromObj(kmlfolder.EXTENDED_DATA(i))
+                    kMLData_ = KMLData.KMLDataT.InitFromObj(KMLFolder.EXTENDED_DATA(i))
                     self.EXTENDED_DATA.append(kMLData_)
-        if kmlfolder.LOOK_AT() is not None:
-            self.LOOK_AT = KMLLookAt.KMLLookAtT.InitFromObj(kmlfolder.LOOK_AT())
-        if kmlfolder.CAMERA() is not None:
-            self.CAMERA = KMLCamera.KMLCameraT.InitFromObj(kmlfolder.CAMERA())
-        if kmlfolder.TIME_SPAN() is not None:
-            self.TIME_SPAN = KMLTimeSpan.KMLTimeSpanT.InitFromObj(kmlfolder.TIME_SPAN())
-        if kmlfolder.TIME_STAMP() is not None:
-            self.TIME_STAMP = KMLTimeStamp.KMLTimeStampT.InitFromObj(kmlfolder.TIME_STAMP())
+        if KMLFolder.LOOK_AT() is not None:
+            self.LOOK_AT = KMLLookAt.KMLLookAtT.InitFromObj(KMLFolder.LOOK_AT())
+        if KMLFolder.CAMERA() is not None:
+            self.CAMERA = KMLCamera.KMLCameraT.InitFromObj(KMLFolder.CAMERA())
+        if KMLFolder.TIME_SPAN() is not None:
+            self.TIME_SPAN = KMLTimeSpan.KMLTimeSpanT.InitFromObj(KMLFolder.TIME_SPAN())
+        if KMLFolder.TIME_STAMP() is not None:
+            self.TIME_STAMP = KMLTimeStamp.KMLTimeStampT.InitFromObj(KMLFolder.TIME_STAMP())
 
     # KMLFolderT
     def Pack(self, builder):
@@ -879,5 +961,5 @@ class KMLFolderT(object):
             KMLFolderAddTIME_SPAN(builder, TIME_SPAN)
         if self.TIME_STAMP is not None:
             KMLFolderAddTIME_STAMP(builder, TIME_STAMP)
-        kmlfolder = KMLFolderEnd(builder)
-        return kmlfolder
+        KMLFolder = KMLFolderEnd(builder)
+        return KMLFolder

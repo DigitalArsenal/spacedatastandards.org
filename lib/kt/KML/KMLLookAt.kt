@@ -32,7 +32,7 @@ class KMLLookAt : Table() {
     /**
      * Longitude of the point being looked at
      */
-    val LONGITUDE : Double
+    val longitude : Double
         get() {
             val o = __offset(4)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -40,7 +40,7 @@ class KMLLookAt : Table() {
     /**
      * Latitude of the point being looked at
      */
-    val LATITUDE : Double
+    val latitude : Double
         get() {
             val o = __offset(6)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -48,7 +48,7 @@ class KMLLookAt : Table() {
     /**
      * Altitude of the point being looked at
      */
-    val ALTITUDE : Double
+    val altitude : Double
         get() {
             val o = __offset(8)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -56,7 +56,7 @@ class KMLLookAt : Table() {
     /**
      * Heading in degrees (0=North)
      */
-    val HEADING : Double
+    val heading : Double
         get() {
             val o = __offset(10)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -64,7 +64,7 @@ class KMLLookAt : Table() {
     /**
      * Tilt in degrees from vertical (0=straight down)
      */
-    val TILT : Double
+    val tilt : Double
         get() {
             val o = __offset(12)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -72,7 +72,7 @@ class KMLLookAt : Table() {
     /**
      * Range in meters from the point
      */
-    val RANGE : Double
+    val range : Double
         get() {
             val o = __offset(14)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -80,37 +80,37 @@ class KMLLookAt : Table() {
     /**
      * Altitude mode
      */
-    val ALTITUDE_MODE : Byte
+    val altitudeMode : Byte
         get() {
             val o = __offset(16)
             return if(o != 0) bb.get(o + bb_pos) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsKMLLookAt(_bb: ByteBuffer): KMLLookAt = getRootAsKMLLookAt(_bb, KMLLookAt())
         fun getRootAsKMLLookAt(_bb: ByteBuffer, obj: KMLLookAt): KMLLookAt {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createKMLLookAt(builder: FlatBufferBuilder, LONGITUDE: Double, LATITUDE: Double, ALTITUDE: Double, HEADING: Double, TILT: Double, RANGE: Double, ALTITUDE_MODE: Byte) : Int {
+        fun createKMLLookAt(builder: FlatBufferBuilder, longitude: Double, latitude: Double, altitude: Double, heading: Double, tilt: Double, range: Double, altitudeMode: Byte) : Int {
             builder.startTable(7)
-            addRANGE(builder, RANGE)
-            addTILT(builder, TILT)
-            addHEADING(builder, HEADING)
-            addALTITUDE(builder, ALTITUDE)
-            addLATITUDE(builder, LATITUDE)
-            addLONGITUDE(builder, LONGITUDE)
-            addALTITUDE_MODE(builder, ALTITUDE_MODE)
+            addRANGE(builder, range)
+            addTILT(builder, tilt)
+            addHEADING(builder, heading)
+            addALTITUDE(builder, altitude)
+            addLATITUDE(builder, latitude)
+            addLONGITUDE(builder, longitude)
+            addALTITUDEMODE(builder, altitudeMode)
             return endKMLLookAt(builder)
         }
         fun startKMLLookAt(builder: FlatBufferBuilder) = builder.startTable(7)
-        fun addLONGITUDE(builder: FlatBufferBuilder, LONGITUDE: Double) = builder.addDouble(0, LONGITUDE, 0.0)
-        fun addLATITUDE(builder: FlatBufferBuilder, LATITUDE: Double) = builder.addDouble(1, LATITUDE, 0.0)
-        fun addALTITUDE(builder: FlatBufferBuilder, ALTITUDE: Double) = builder.addDouble(2, ALTITUDE, 0.0)
-        fun addHEADING(builder: FlatBufferBuilder, HEADING: Double) = builder.addDouble(3, HEADING, 0.0)
-        fun addTILT(builder: FlatBufferBuilder, TILT: Double) = builder.addDouble(4, TILT, 0.0)
-        fun addRANGE(builder: FlatBufferBuilder, RANGE: Double) = builder.addDouble(5, RANGE, 0.0)
-        fun addALTITUDE_MODE(builder: FlatBufferBuilder, ALTITUDE_MODE: Byte) = builder.addByte(6, ALTITUDE_MODE, 0)
+        fun addLONGITUDE(builder: FlatBufferBuilder, longitude: Double) = builder.addDouble(0, longitude, 0.0)
+        fun addLATITUDE(builder: FlatBufferBuilder, latitude: Double) = builder.addDouble(1, latitude, 0.0)
+        fun addALTITUDE(builder: FlatBufferBuilder, altitude: Double) = builder.addDouble(2, altitude, 0.0)
+        fun addHEADING(builder: FlatBufferBuilder, heading: Double) = builder.addDouble(3, heading, 0.0)
+        fun addTILT(builder: FlatBufferBuilder, tilt: Double) = builder.addDouble(4, tilt, 0.0)
+        fun addRANGE(builder: FlatBufferBuilder, range: Double) = builder.addDouble(5, range, 0.0)
+        fun addALTITUDEMODE(builder: FlatBufferBuilder, altitudeMode: Byte) = builder.addByte(6, altitudeMode, 0)
         fun endKMLLookAt(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

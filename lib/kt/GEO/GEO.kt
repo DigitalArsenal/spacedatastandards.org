@@ -32,7 +32,7 @@ class GEO : Table() {
     /**
      * Unique identifier
      */
-    val ID : String?
+    val id : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class GEO : Table() {
                 null
             }
         }
-    val IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val idAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun idInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * International designator
      */
-    val ORIG_OBJECT_ID : String?
+    val origObjectId : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -55,12 +55,12 @@ class GEO : Table() {
                 null
             }
         }
-    val ORIG_OBJECT_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun ORIG_OBJECT_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val origObjectIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun origObjectIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * Satellite catalog number
      */
-    val SAT_NO : UInt
+    val satNo : UInt
         get() {
             val o = __offset(8)
             return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
@@ -68,7 +68,7 @@ class GEO : Table() {
     /**
      * On-orbit reference identifier
      */
-    val ON_ORBIT : String?
+    val onOrbit : String?
         get() {
             val o = __offset(10)
             return if (o != 0) {
@@ -77,12 +77,12 @@ class GEO : Table() {
                 null
             }
         }
-    val ON_ORBITAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
-    fun ON_ORBITInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
+    val onOrbitAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(10, 1)
+    fun onOrbitInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 10, 1)
     /**
      * Station-keeping status
      */
-    val STATION_KEEPING : Byte
+    val stationKeeping : Byte
         get() {
             val o = __offset(12)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -90,7 +90,7 @@ class GEO : Table() {
     /**
      * Subsatellite point longitude (degrees east)
      */
-    val SS : Double
+    val ss : Double
         get() {
             val o = __offset(14)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -98,7 +98,7 @@ class GEO : Table() {
     /**
      * Longitude of ascending node (degrees)
      */
-    val SC : Double
+    val sc : Double
         get() {
             val o = __offset(16)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -106,7 +106,7 @@ class GEO : Table() {
     /**
      * Relative energy (km^2/s^2)
      */
-    val RELATIVE_ENERGY : Double
+    val relativeEnergy : Double
         get() {
             val o = __offset(18)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -114,7 +114,7 @@ class GEO : Table() {
     /**
      * Longitude drift rate (degrees/day)
      */
-    val LONGITUDE_RATE : Double
+    val longitudeRate : Double
         get() {
             val o = __offset(20)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -122,7 +122,7 @@ class GEO : Table() {
     /**
      * Western longitude boundary of slot (degrees east)
      */
-    val LONGITUDE_MIN : Double
+    val longitudeMin : Double
         get() {
             val o = __offset(22)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -130,7 +130,7 @@ class GEO : Table() {
     /**
      * Eastern longitude boundary of slot (degrees east)
      */
-    val LONGITUDE_MAX : Double
+    val longitudeMax : Double
         get() {
             val o = __offset(24)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -138,7 +138,7 @@ class GEO : Table() {
     /**
      * Assessment confidence level
      */
-    val CONFIDENCE : Byte
+    val confidence : Byte
         get() {
             val o = __offset(26)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -146,7 +146,7 @@ class GEO : Table() {
     /**
      * Trough type (east/west gravitational well)
      */
-    val TROUGH : Byte
+    val trough : Byte
         get() {
             val o = __offset(28)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -154,7 +154,7 @@ class GEO : Table() {
     /**
      * Plane change status description
      */
-    val PLANE_CHANGE_STATUS : String?
+    val planeChangeStatus : String?
         get() {
             val o = __offset(30)
             return if (o != 0) {
@@ -163,12 +163,12 @@ class GEO : Table() {
                 null
             }
         }
-    val PLANE_CHANGE_STATUSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(30, 1)
-    fun PLANE_CHANGE_STATUSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 30, 1)
+    val planeChangeStatusAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(30, 1)
+    fun planeChangeStatusInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 30, 1)
     /**
      * True if object is lost/not tracked
      */
-    val LOST_FLAG : Boolean
+    val lostFlag : Boolean
         get() {
             val o = __offset(32)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -176,7 +176,7 @@ class GEO : Table() {
     /**
      * True if semi-annual correction applied
      */
-    val SEMI_ANNUAL_CORR_FLAG : Boolean
+    val semiAnnualCorrFlag : Boolean
         get() {
             val o = __offset(34)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -184,7 +184,7 @@ class GEO : Table() {
     /**
      * Current operational status
      */
-    val OBJECT_STATUS : String?
+    val objectStatus : String?
         get() {
             val o = __offset(36)
             return if (o != 0) {
@@ -193,12 +193,12 @@ class GEO : Table() {
                 null
             }
         }
-    val OBJECT_STATUSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(36, 1)
-    fun OBJECT_STATUSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 36, 1)
+    val objectStatusAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(36, 1)
+    fun objectStatusInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 36, 1)
     /**
      * Inclination (degrees)
      */
-    val INCLINATION : Double
+    val inclination : Double
         get() {
             val o = __offset(38)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -206,7 +206,7 @@ class GEO : Table() {
     /**
      * Eccentricity
      */
-    val ECCENTRICITY : Double
+    val eccentricity : Double
         get() {
             val o = __offset(40)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -214,7 +214,7 @@ class GEO : Table() {
     /**
      * Epoch of status (ISO 8601)
      */
-    val EPOCH : String?
+    val epoch : String?
         get() {
             val o = __offset(42)
             return if (o != 0) {
@@ -223,12 +223,12 @@ class GEO : Table() {
                 null
             }
         }
-    val EPOCHAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(42, 1)
-    fun EPOCHInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 42, 1)
+    val epochAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(42, 1)
+    fun epochInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 42, 1)
     /**
      * Reference to raw data file
      */
-    val RAW_FILE_URI : String?
+    val rawFileUri : String?
         get() {
             val o = __offset(44)
             return if (o != 0) {
@@ -237,63 +237,63 @@ class GEO : Table() {
                 null
             }
         }
-    val RAW_FILE_URIAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(44, 1)
-    fun RAW_FILE_URIInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 44, 1)
+    val rawFileUriAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(44, 1)
+    fun rawFileUriInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 44, 1)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsGEO(_bb: ByteBuffer): GEO = getRootAsGEO(_bb, GEO())
         fun getRootAsGEO(_bb: ByteBuffer, obj: GEO): GEO {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun GEOBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$GEO")
-        fun createGEO(builder: FlatBufferBuilder, IDOffset: Int, ORIG_OBJECT_IDOffset: Int, SAT_NO: UInt, ON_ORBITOffset: Int, STATION_KEEPING: Byte, SS: Double, SC: Double, RELATIVE_ENERGY: Double, LONGITUDE_RATE: Double, LONGITUDE_MIN: Double, LONGITUDE_MAX: Double, CONFIDENCE: Byte, TROUGH: Byte, PLANE_CHANGE_STATUSOffset: Int, LOST_FLAG: Boolean, SEMI_ANNUAL_CORR_FLAG: Boolean, OBJECT_STATUSOffset: Int, INCLINATION: Double, ECCENTRICITY: Double, EPOCHOffset: Int, RAW_FILE_URIOffset: Int) : Int {
+        fun createGEO(builder: FlatBufferBuilder, idOffset: Int, origObjectIdOffset: Int, satNo: UInt, onOrbitOffset: Int, stationKeeping: Byte, ss: Double, sc: Double, relativeEnergy: Double, longitudeRate: Double, longitudeMin: Double, longitudeMax: Double, confidence: Byte, trough: Byte, planeChangeStatusOffset: Int, lostFlag: Boolean, semiAnnualCorrFlag: Boolean, objectStatusOffset: Int, inclination: Double, eccentricity: Double, epochOffset: Int, rawFileUriOffset: Int) : Int {
             builder.startTable(21)
-            addECCENTRICITY(builder, ECCENTRICITY)
-            addINCLINATION(builder, INCLINATION)
-            addLONGITUDE_MAX(builder, LONGITUDE_MAX)
-            addLONGITUDE_MIN(builder, LONGITUDE_MIN)
-            addLONGITUDE_RATE(builder, LONGITUDE_RATE)
-            addRELATIVE_ENERGY(builder, RELATIVE_ENERGY)
-            addSC(builder, SC)
-            addSS(builder, SS)
-            addRAW_FILE_URI(builder, RAW_FILE_URIOffset)
-            addEPOCH(builder, EPOCHOffset)
-            addOBJECT_STATUS(builder, OBJECT_STATUSOffset)
-            addPLANE_CHANGE_STATUS(builder, PLANE_CHANGE_STATUSOffset)
-            addON_ORBIT(builder, ON_ORBITOffset)
-            addSAT_NO(builder, SAT_NO)
-            addORIG_OBJECT_ID(builder, ORIG_OBJECT_IDOffset)
-            addID(builder, IDOffset)
-            addSEMI_ANNUAL_CORR_FLAG(builder, SEMI_ANNUAL_CORR_FLAG)
-            addLOST_FLAG(builder, LOST_FLAG)
-            addTROUGH(builder, TROUGH)
-            addCONFIDENCE(builder, CONFIDENCE)
-            addSTATION_KEEPING(builder, STATION_KEEPING)
+            addECCENTRICITY(builder, eccentricity)
+            addINCLINATION(builder, inclination)
+            addLONGITUDEMAX(builder, longitudeMax)
+            addLONGITUDEMIN(builder, longitudeMin)
+            addLONGITUDERATE(builder, longitudeRate)
+            addRELATIVEENERGY(builder, relativeEnergy)
+            addSC(builder, sc)
+            addSS(builder, ss)
+            addRAWFILEURI(builder, rawFileUriOffset)
+            addEPOCH(builder, epochOffset)
+            addOBJECTSTATUS(builder, objectStatusOffset)
+            addPLANECHANGESTATUS(builder, planeChangeStatusOffset)
+            addONORBIT(builder, onOrbitOffset)
+            addSATNO(builder, satNo)
+            addORIGOBJECTID(builder, origObjectIdOffset)
+            addID(builder, idOffset)
+            addSEMIANNUALCORRFLAG(builder, semiAnnualCorrFlag)
+            addLOSTFLAG(builder, lostFlag)
+            addTROUGH(builder, trough)
+            addCONFIDENCE(builder, confidence)
+            addSTATIONKEEPING(builder, stationKeeping)
             return endGEO(builder)
         }
         fun startGEO(builder: FlatBufferBuilder) = builder.startTable(21)
-        fun addID(builder: FlatBufferBuilder, ID: Int) = builder.addOffset(0, ID, 0)
-        fun addORIG_OBJECT_ID(builder: FlatBufferBuilder, ORIG_OBJECT_ID: Int) = builder.addOffset(1, ORIG_OBJECT_ID, 0)
-        fun addSAT_NO(builder: FlatBufferBuilder, SAT_NO: UInt) = builder.addInt(2, SAT_NO.toInt(), 0)
-        fun addON_ORBIT(builder: FlatBufferBuilder, ON_ORBIT: Int) = builder.addOffset(3, ON_ORBIT, 0)
-        fun addSTATION_KEEPING(builder: FlatBufferBuilder, STATION_KEEPING: Byte) = builder.addByte(4, STATION_KEEPING, 0)
-        fun addSS(builder: FlatBufferBuilder, SS: Double) = builder.addDouble(5, SS, 0.0)
-        fun addSC(builder: FlatBufferBuilder, SC: Double) = builder.addDouble(6, SC, 0.0)
-        fun addRELATIVE_ENERGY(builder: FlatBufferBuilder, RELATIVE_ENERGY: Double) = builder.addDouble(7, RELATIVE_ENERGY, 0.0)
-        fun addLONGITUDE_RATE(builder: FlatBufferBuilder, LONGITUDE_RATE: Double) = builder.addDouble(8, LONGITUDE_RATE, 0.0)
-        fun addLONGITUDE_MIN(builder: FlatBufferBuilder, LONGITUDE_MIN: Double) = builder.addDouble(9, LONGITUDE_MIN, 0.0)
-        fun addLONGITUDE_MAX(builder: FlatBufferBuilder, LONGITUDE_MAX: Double) = builder.addDouble(10, LONGITUDE_MAX, 0.0)
-        fun addCONFIDENCE(builder: FlatBufferBuilder, CONFIDENCE: Byte) = builder.addByte(11, CONFIDENCE, 0)
-        fun addTROUGH(builder: FlatBufferBuilder, TROUGH: Byte) = builder.addByte(12, TROUGH, 0)
-        fun addPLANE_CHANGE_STATUS(builder: FlatBufferBuilder, PLANE_CHANGE_STATUS: Int) = builder.addOffset(13, PLANE_CHANGE_STATUS, 0)
-        fun addLOST_FLAG(builder: FlatBufferBuilder, LOST_FLAG: Boolean) = builder.addBoolean(14, LOST_FLAG, false)
-        fun addSEMI_ANNUAL_CORR_FLAG(builder: FlatBufferBuilder, SEMI_ANNUAL_CORR_FLAG: Boolean) = builder.addBoolean(15, SEMI_ANNUAL_CORR_FLAG, false)
-        fun addOBJECT_STATUS(builder: FlatBufferBuilder, OBJECT_STATUS: Int) = builder.addOffset(16, OBJECT_STATUS, 0)
-        fun addINCLINATION(builder: FlatBufferBuilder, INCLINATION: Double) = builder.addDouble(17, INCLINATION, 0.0)
-        fun addECCENTRICITY(builder: FlatBufferBuilder, ECCENTRICITY: Double) = builder.addDouble(18, ECCENTRICITY, 0.0)
-        fun addEPOCH(builder: FlatBufferBuilder, EPOCH: Int) = builder.addOffset(19, EPOCH, 0)
-        fun addRAW_FILE_URI(builder: FlatBufferBuilder, RAW_FILE_URI: Int) = builder.addOffset(20, RAW_FILE_URI, 0)
+        fun addID(builder: FlatBufferBuilder, id: Int) = builder.addOffset(0, id, 0)
+        fun addORIGOBJECTID(builder: FlatBufferBuilder, origObjectId: Int) = builder.addOffset(1, origObjectId, 0)
+        fun addSATNO(builder: FlatBufferBuilder, satNo: UInt) = builder.addInt(2, satNo.toInt(), 0)
+        fun addONORBIT(builder: FlatBufferBuilder, onOrbit: Int) = builder.addOffset(3, onOrbit, 0)
+        fun addSTATIONKEEPING(builder: FlatBufferBuilder, stationKeeping: Byte) = builder.addByte(4, stationKeeping, 0)
+        fun addSS(builder: FlatBufferBuilder, ss: Double) = builder.addDouble(5, ss, 0.0)
+        fun addSC(builder: FlatBufferBuilder, sc: Double) = builder.addDouble(6, sc, 0.0)
+        fun addRELATIVEENERGY(builder: FlatBufferBuilder, relativeEnergy: Double) = builder.addDouble(7, relativeEnergy, 0.0)
+        fun addLONGITUDERATE(builder: FlatBufferBuilder, longitudeRate: Double) = builder.addDouble(8, longitudeRate, 0.0)
+        fun addLONGITUDEMIN(builder: FlatBufferBuilder, longitudeMin: Double) = builder.addDouble(9, longitudeMin, 0.0)
+        fun addLONGITUDEMAX(builder: FlatBufferBuilder, longitudeMax: Double) = builder.addDouble(10, longitudeMax, 0.0)
+        fun addCONFIDENCE(builder: FlatBufferBuilder, confidence: Byte) = builder.addByte(11, confidence, 0)
+        fun addTROUGH(builder: FlatBufferBuilder, trough: Byte) = builder.addByte(12, trough, 0)
+        fun addPLANECHANGESTATUS(builder: FlatBufferBuilder, planeChangeStatus: Int) = builder.addOffset(13, planeChangeStatus, 0)
+        fun addLOSTFLAG(builder: FlatBufferBuilder, lostFlag: Boolean) = builder.addBoolean(14, lostFlag, false)
+        fun addSEMIANNUALCORRFLAG(builder: FlatBufferBuilder, semiAnnualCorrFlag: Boolean) = builder.addBoolean(15, semiAnnualCorrFlag, false)
+        fun addOBJECTSTATUS(builder: FlatBufferBuilder, objectStatus: Int) = builder.addOffset(16, objectStatus, 0)
+        fun addINCLINATION(builder: FlatBufferBuilder, inclination: Double) = builder.addDouble(17, inclination, 0.0)
+        fun addECCENTRICITY(builder: FlatBufferBuilder, eccentricity: Double) = builder.addDouble(18, eccentricity, 0.0)
+        fun addEPOCH(builder: FlatBufferBuilder, epoch: Int) = builder.addOffset(19, epoch, 0)
+        fun addRAWFILEURI(builder: FlatBufferBuilder, rawFileUri: Int) = builder.addOffset(20, rawFileUri, 0)
         fun endGEO(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

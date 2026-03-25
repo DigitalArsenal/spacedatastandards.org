@@ -51,9 +51,17 @@ func (rcv *FloatDataEncoding) SIZE_IN_BITS() uint16 {
 	return 0
 }
 
+func (rcv *FloatDataEncoding) SizeInBits() uint16 {
+	return rcv.SIZE_IN_BITS()
+}
+
 /// Number of bits (typically 32 or 64)
 func (rcv *FloatDataEncoding) MutateSIZE_IN_BITS(n uint16) bool {
 	return rcv._tab.MutateUint16Slot(4, n)
+}
+
+func (rcv *FloatDataEncoding) MutateSizeInBits(n uint16) bool {
+	return rcv.MutateSIZE_IN_BITS(n)
 }
 
 /// Byte ordering
@@ -65,9 +73,17 @@ func (rcv *FloatDataEncoding) BYTE_ORDER() ByteOrderType {
 	return 0
 }
 
+func (rcv *FloatDataEncoding) ByteOrder() ByteOrderType {
+	return rcv.BYTE_ORDER()
+}
+
 /// Byte ordering
 func (rcv *FloatDataEncoding) MutateBYTE_ORDER(n ByteOrderType) bool {
 	return rcv._tab.MutateInt8Slot(6, int8(n))
+}
+
+func (rcv *FloatDataEncoding) MutateByteOrder(n ByteOrderType) bool {
+	return rcv.MutateBYTE_ORDER(n)
 }
 
 /// Float encoding format
@@ -79,9 +95,17 @@ func (rcv *FloatDataEncoding) ENCODING() FloatEncodingType {
 	return 0
 }
 
+func (rcv *FloatDataEncoding) Encoding() FloatEncodingType {
+	return rcv.ENCODING()
+}
+
 /// Float encoding format
 func (rcv *FloatDataEncoding) MutateENCODING(n FloatEncodingType) bool {
 	return rcv._tab.MutateInt8Slot(8, int8(n))
+}
+
+func (rcv *FloatDataEncoding) MutateEncoding(n FloatEncodingType) bool {
+	return rcv.MutateENCODING(n)
 }
 
 /// Default calibrator reference
@@ -93,6 +117,10 @@ func (rcv *FloatDataEncoding) DEFAULT_CALIBRATOR() []byte {
 	return nil
 }
 
+func (rcv *FloatDataEncoding) DefaultCalibrator() []byte {
+	return rcv.DEFAULT_CALIBRATOR()
+}
+
 /// Default calibrator reference
 /// Context-dependent calibrators
 func (rcv *FloatDataEncoding) CONTEXT_CALIBRATOR_LIST(obj *ContextCalibrator, j int) bool {
@@ -101,10 +129,17 @@ func (rcv *FloatDataEncoding) CONTEXT_CALIBRATOR_LIST(obj *ContextCalibrator, j 
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(ContextCalibrator)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *FloatDataEncoding) ContextCalibratorList(obj *ContextCalibrator, j int) bool {
+	return rcv.CONTEXT_CALIBRATOR_LIST(obj, j)
 }
 
 func (rcv *FloatDataEncoding) CONTEXT_CALIBRATOR_LISTLength() int {
@@ -115,6 +150,10 @@ func (rcv *FloatDataEncoding) CONTEXT_CALIBRATOR_LISTLength() int {
 	return 0
 }
 
+func (rcv *FloatDataEncoding) ContextCalibratorListLength() int {
+	return rcv.CONTEXT_CALIBRATOR_LISTLength()
+}
+
 /// Context-dependent calibrators
 func FloatDataEncodingStart(builder *flatbuffers.Builder) {
 	builder.StartObject(5)
@@ -122,20 +161,38 @@ func FloatDataEncodingStart(builder *flatbuffers.Builder) {
 func FloatDataEncodingAddSIZE_IN_BITS(builder *flatbuffers.Builder, SIZE_IN_BITS uint16) {
 	builder.PrependUint16Slot(0, SIZE_IN_BITS, 0)
 }
+func FloatDataEncodingAddSizeInBits(builder *flatbuffers.Builder, SIZE_IN_BITS uint16) {
+	FloatDataEncodingAddSIZE_IN_BITS(builder, SIZE_IN_BITS)
+}
 func FloatDataEncodingAddBYTE_ORDER(builder *flatbuffers.Builder, BYTE_ORDER ByteOrderType) {
 	builder.PrependInt8Slot(1, int8(BYTE_ORDER), 0)
+}
+func FloatDataEncodingAddByteOrder(builder *flatbuffers.Builder, BYTE_ORDER ByteOrderType) {
+	FloatDataEncodingAddBYTE_ORDER(builder, BYTE_ORDER)
 }
 func FloatDataEncodingAddENCODING(builder *flatbuffers.Builder, ENCODING FloatEncodingType) {
 	builder.PrependInt8Slot(2, int8(ENCODING), 0)
 }
+func FloatDataEncodingAddEncoding(builder *flatbuffers.Builder, ENCODING FloatEncodingType) {
+	FloatDataEncodingAddENCODING(builder, ENCODING)
+}
 func FloatDataEncodingAddDEFAULT_CALIBRATOR(builder *flatbuffers.Builder, DEFAULT_CALIBRATOR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(DEFAULT_CALIBRATOR), 0)
+}
+func FloatDataEncodingAddDefaultCalibrator(builder *flatbuffers.Builder, DEFAULT_CALIBRATOR flatbuffers.UOffsetT) {
+	FloatDataEncodingAddDEFAULT_CALIBRATOR(builder, DEFAULT_CALIBRATOR)
 }
 func FloatDataEncodingAddCONTEXT_CALIBRATOR_LIST(builder *flatbuffers.Builder, CONTEXT_CALIBRATOR_LIST flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(CONTEXT_CALIBRATOR_LIST), 0)
 }
+func FloatDataEncodingAddContextCalibratorList(builder *flatbuffers.Builder, CONTEXT_CALIBRATOR_LIST flatbuffers.UOffsetT) {
+	FloatDataEncodingAddCONTEXT_CALIBRATOR_LIST(builder, CONTEXT_CALIBRATOR_LIST)
+}
 func FloatDataEncodingStartCONTEXT_CALIBRATOR_LISTVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func FloatDataEncodingStartContextCalibratorListVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return FloatDataEncodingStartCONTEXT_CALIBRATOR_LISTVector(builder, numElems)
 }
 func FloatDataEncodingEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

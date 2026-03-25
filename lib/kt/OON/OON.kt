@@ -29,12 +29,12 @@ class OON : Table() {
         __init(_i, _bb)
         return this
     }
-    val SAT_NO : Int
+    val satNo : Int
         get() {
             val o = __offset(4)
             return if(o != 0) bb.getInt(o + bb_pos) else 0
         }
-    val COMMON_NAME : String?
+    val commonName : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -43,9 +43,9 @@ class OON : Table() {
                 null
             }
         }
-    val COMMON_NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun COMMON_NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
-    val CONSTELLATION : String?
+    val commonNameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun commonNameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
+    val constellation : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -54,9 +54,9 @@ class OON : Table() {
                 null
             }
         }
-    val CONSTELLATIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun CONSTELLATIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
-    val INTL_DES : String?
+    val constellationAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun constellationInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
+    val intlDes : String?
         get() {
             val o = __offset(10)
             return if (o != 0) {
@@ -65,9 +65,9 @@ class OON : Table() {
                 null
             }
         }
-    val INTL_DESAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
-    fun INTL_DESInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
-    val LAUNCH_DATE : String?
+    val intlDesAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(10, 1)
+    fun intlDesInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 10, 1)
+    val launchDate : String?
         get() {
             val o = __offset(12)
             return if (o != 0) {
@@ -76,9 +76,9 @@ class OON : Table() {
                 null
             }
         }
-    val LAUNCH_DATEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
-    fun LAUNCH_DATEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
-    val DECAY_DATE : String?
+    val launchDateAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(12, 1)
+    fun launchDateInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 12, 1)
+    val decayDate : String?
         get() {
             val o = __offset(14)
             return if (o != 0) {
@@ -87,9 +87,9 @@ class OON : Table() {
                 null
             }
         }
-    val DECAY_DATEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(14, 1)
-    fun DECAY_DATEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 14, 1)
-    val OBJECT_TYPE : String?
+    val decayDateAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(14, 1)
+    fun decayDateInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 14, 1)
+    val objectType : String?
         get() {
             val o = __offset(16)
             return if (o != 0) {
@@ -98,9 +98,9 @@ class OON : Table() {
                 null
             }
         }
-    val OBJECT_TYPEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(16, 1)
-    fun OBJECT_TYPEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 16, 1)
-    val MISSION_NUMBER : String?
+    val objectTypeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(16, 1)
+    fun objectTypeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 16, 1)
+    val missionNumber : String?
         get() {
             val o = __offset(18)
             return if (o != 0) {
@@ -109,9 +109,9 @@ class OON : Table() {
                 null
             }
         }
-    val MISSION_NUMBERAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(18, 1)
-    fun MISSION_NUMBERInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 18, 1)
-    val CATEGORY : String?
+    val missionNumberAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(18, 1)
+    fun missionNumberInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 18, 1)
+    val category : String?
         get() {
             val o = __offset(20)
             return if (o != 0) {
@@ -120,14 +120,14 @@ class OON : Table() {
                 null
             }
         }
-    val CATEGORYAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(20, 1)
-    fun CATEGORYInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 20, 1)
-    val LIFETIME_YEARS : Int
+    val categoryAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(20, 1)
+    fun categoryInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 20, 1)
+    val lifetimeYears : Int
         get() {
             val o = __offset(22)
             return if(o != 0) bb.getInt(o + bb_pos) else 0
         }
-    val ALT_NAME : String?
+    val altName : String?
         get() {
             val o = __offset(24)
             return if (o != 0) {
@@ -136,9 +136,9 @@ class OON : Table() {
                 null
             }
         }
-    val ALT_NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(24, 1)
-    fun ALT_NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 24, 1)
-    val LAUNCH_SITE_ID : String?
+    val altNameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(24, 1)
+    fun altNameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 24, 1)
+    val launchSiteId : String?
         get() {
             val o = __offset(26)
             return if (o != 0) {
@@ -147,9 +147,9 @@ class OON : Table() {
                 null
             }
         }
-    val LAUNCH_SITE_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(26, 1)
-    fun LAUNCH_SITE_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 26, 1)
-    fun ANTENNAS(j: Int) : String? {
+    val launchSiteIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(26, 1)
+    fun launchSiteIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 26, 1)
+    fun antennas(j: Int) : String? {
         val o = __offset(28)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
@@ -157,11 +157,11 @@ class OON : Table() {
             null
         }
     }
-    val ANTENNASLength : Int
+    val antennasLength : Int
         get() {
             val o = __offset(28); return if (o != 0) __vector_len(o) else 0
         }
-    fun BATTERIES(j: Int) : String? {
+    fun batteries(j: Int) : String? {
         val o = __offset(30)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
@@ -169,11 +169,11 @@ class OON : Table() {
             null
         }
     }
-    val BATTERIESLength : Int
+    val batteriesLength : Int
         get() {
             val o = __offset(30); return if (o != 0) __vector_len(o) else 0
         }
-    fun SOLAR_ARRAYS(j: Int) : String? {
+    fun solarArrays(j: Int) : String? {
         val o = __offset(32)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
@@ -181,11 +181,11 @@ class OON : Table() {
             null
         }
     }
-    val SOLAR_ARRAYSLength : Int
+    val solarArraysLength : Int
         get() {
             val o = __offset(32); return if (o != 0) __vector_len(o) else 0
         }
-    fun THRUSTERS(j: Int) : String? {
+    fun thrusters(j: Int) : String? {
         val o = __offset(34)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
@@ -193,11 +193,11 @@ class OON : Table() {
             null
         }
     }
-    val THRUSTERSLength : Int
+    val thrustersLength : Int
         get() {
             val o = __offset(34); return if (o != 0) __vector_len(o) else 0
         }
-    fun ONORBIT_DETAILS(j: Int) : String? {
+    fun onorbitDetails(j: Int) : String? {
         val o = __offset(36)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
@@ -205,11 +205,11 @@ class OON : Table() {
             null
         }
     }
-    val ONORBIT_DETAILSLength : Int
+    val onorbitDetailsLength : Int
         get() {
             val o = __offset(36); return if (o != 0) __vector_len(o) else 0
         }
-    val COUNTRY_CODE : String?
+    val countryCode : String?
         get() {
             val o = __offset(38)
             return if (o != 0) {
@@ -218,9 +218,9 @@ class OON : Table() {
                 null
             }
         }
-    val COUNTRY_CODEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(38, 1)
-    fun COUNTRY_CODEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 38, 1)
-    fun ENTITY_COLLECTION(j: Int) : String? {
+    val countryCodeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(38, 1)
+    fun countryCodeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 38, 1)
+    fun entityCollection(j: Int) : String? {
         val o = __offset(40)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
@@ -228,55 +228,55 @@ class OON : Table() {
             null
         }
     }
-    val ENTITY_COLLECTIONLength : Int
+    val entityCollectionLength : Int
         get() {
             val o = __offset(40); return if (o != 0) __vector_len(o) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsOON(_bb: ByteBuffer): OON = getRootAsOON(_bb, OON())
         fun getRootAsOON(_bb: ByteBuffer, obj: OON): OON {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun OONBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$OON")
-        fun createOON(builder: FlatBufferBuilder, SAT_NO: Int, COMMON_NAMEOffset: Int, CONSTELLATIONOffset: Int, INTL_DESOffset: Int, LAUNCH_DATEOffset: Int, DECAY_DATEOffset: Int, OBJECT_TYPEOffset: Int, MISSION_NUMBEROffset: Int, CATEGORYOffset: Int, LIFETIME_YEARS: Int, ALT_NAMEOffset: Int, LAUNCH_SITE_IDOffset: Int, ANTENNASOffset: Int, BATTERIESOffset: Int, SOLAR_ARRAYSOffset: Int, THRUSTERSOffset: Int, ONORBIT_DETAILSOffset: Int, COUNTRY_CODEOffset: Int, ENTITY_COLLECTIONOffset: Int) : Int {
+        fun createOON(builder: FlatBufferBuilder, satNo: Int, commonNameOffset: Int, constellationOffset: Int, intlDesOffset: Int, launchDateOffset: Int, decayDateOffset: Int, objectTypeOffset: Int, missionNumberOffset: Int, categoryOffset: Int, lifetimeYears: Int, altNameOffset: Int, launchSiteIdOffset: Int, antennasOffset: Int, batteriesOffset: Int, solarArraysOffset: Int, thrustersOffset: Int, onorbitDetailsOffset: Int, countryCodeOffset: Int, entityCollectionOffset: Int) : Int {
             builder.startTable(19)
-            addENTITY_COLLECTION(builder, ENTITY_COLLECTIONOffset)
-            addCOUNTRY_CODE(builder, COUNTRY_CODEOffset)
-            addONORBIT_DETAILS(builder, ONORBIT_DETAILSOffset)
-            addTHRUSTERS(builder, THRUSTERSOffset)
-            addSOLAR_ARRAYS(builder, SOLAR_ARRAYSOffset)
-            addBATTERIES(builder, BATTERIESOffset)
-            addANTENNAS(builder, ANTENNASOffset)
-            addLAUNCH_SITE_ID(builder, LAUNCH_SITE_IDOffset)
-            addALT_NAME(builder, ALT_NAMEOffset)
-            addLIFETIME_YEARS(builder, LIFETIME_YEARS)
-            addCATEGORY(builder, CATEGORYOffset)
-            addMISSION_NUMBER(builder, MISSION_NUMBEROffset)
-            addOBJECT_TYPE(builder, OBJECT_TYPEOffset)
-            addDECAY_DATE(builder, DECAY_DATEOffset)
-            addLAUNCH_DATE(builder, LAUNCH_DATEOffset)
-            addINTL_DES(builder, INTL_DESOffset)
-            addCONSTELLATION(builder, CONSTELLATIONOffset)
-            addCOMMON_NAME(builder, COMMON_NAMEOffset)
-            addSAT_NO(builder, SAT_NO)
+            addENTITYCOLLECTION(builder, entityCollectionOffset)
+            addCOUNTRYCODE(builder, countryCodeOffset)
+            addONORBITDETAILS(builder, onorbitDetailsOffset)
+            addTHRUSTERS(builder, thrustersOffset)
+            addSOLARARRAYS(builder, solarArraysOffset)
+            addBATTERIES(builder, batteriesOffset)
+            addANTENNAS(builder, antennasOffset)
+            addLAUNCHSITEID(builder, launchSiteIdOffset)
+            addALTNAME(builder, altNameOffset)
+            addLIFETIMEYEARS(builder, lifetimeYears)
+            addCATEGORY(builder, categoryOffset)
+            addMISSIONNUMBER(builder, missionNumberOffset)
+            addOBJECTTYPE(builder, objectTypeOffset)
+            addDECAYDATE(builder, decayDateOffset)
+            addLAUNCHDATE(builder, launchDateOffset)
+            addINTLDES(builder, intlDesOffset)
+            addCONSTELLATION(builder, constellationOffset)
+            addCOMMONNAME(builder, commonNameOffset)
+            addSATNO(builder, satNo)
             return endOON(builder)
         }
         fun startOON(builder: FlatBufferBuilder) = builder.startTable(19)
-        fun addSAT_NO(builder: FlatBufferBuilder, SAT_NO: Int) = builder.addInt(0, SAT_NO, 0)
-        fun addCOMMON_NAME(builder: FlatBufferBuilder, COMMON_NAME: Int) = builder.addOffset(1, COMMON_NAME, 0)
-        fun addCONSTELLATION(builder: FlatBufferBuilder, CONSTELLATION: Int) = builder.addOffset(2, CONSTELLATION, 0)
-        fun addINTL_DES(builder: FlatBufferBuilder, INTL_DES: Int) = builder.addOffset(3, INTL_DES, 0)
-        fun addLAUNCH_DATE(builder: FlatBufferBuilder, LAUNCH_DATE: Int) = builder.addOffset(4, LAUNCH_DATE, 0)
-        fun addDECAY_DATE(builder: FlatBufferBuilder, DECAY_DATE: Int) = builder.addOffset(5, DECAY_DATE, 0)
-        fun addOBJECT_TYPE(builder: FlatBufferBuilder, OBJECT_TYPE: Int) = builder.addOffset(6, OBJECT_TYPE, 0)
-        fun addMISSION_NUMBER(builder: FlatBufferBuilder, MISSION_NUMBER: Int) = builder.addOffset(7, MISSION_NUMBER, 0)
-        fun addCATEGORY(builder: FlatBufferBuilder, CATEGORY: Int) = builder.addOffset(8, CATEGORY, 0)
-        fun addLIFETIME_YEARS(builder: FlatBufferBuilder, LIFETIME_YEARS: Int) = builder.addInt(9, LIFETIME_YEARS, 0)
-        fun addALT_NAME(builder: FlatBufferBuilder, ALT_NAME: Int) = builder.addOffset(10, ALT_NAME, 0)
-        fun addLAUNCH_SITE_ID(builder: FlatBufferBuilder, LAUNCH_SITE_ID: Int) = builder.addOffset(11, LAUNCH_SITE_ID, 0)
-        fun addANTENNAS(builder: FlatBufferBuilder, ANTENNAS: Int) = builder.addOffset(12, ANTENNAS, 0)
+        fun addSATNO(builder: FlatBufferBuilder, satNo: Int) = builder.addInt(0, satNo, 0)
+        fun addCOMMONNAME(builder: FlatBufferBuilder, commonName: Int) = builder.addOffset(1, commonName, 0)
+        fun addCONSTELLATION(builder: FlatBufferBuilder, constellation: Int) = builder.addOffset(2, constellation, 0)
+        fun addINTLDES(builder: FlatBufferBuilder, intlDes: Int) = builder.addOffset(3, intlDes, 0)
+        fun addLAUNCHDATE(builder: FlatBufferBuilder, launchDate: Int) = builder.addOffset(4, launchDate, 0)
+        fun addDECAYDATE(builder: FlatBufferBuilder, decayDate: Int) = builder.addOffset(5, decayDate, 0)
+        fun addOBJECTTYPE(builder: FlatBufferBuilder, objectType: Int) = builder.addOffset(6, objectType, 0)
+        fun addMISSIONNUMBER(builder: FlatBufferBuilder, missionNumber: Int) = builder.addOffset(7, missionNumber, 0)
+        fun addCATEGORY(builder: FlatBufferBuilder, category: Int) = builder.addOffset(8, category, 0)
+        fun addLIFETIMEYEARS(builder: FlatBufferBuilder, lifetimeYears: Int) = builder.addInt(9, lifetimeYears, 0)
+        fun addALTNAME(builder: FlatBufferBuilder, altName: Int) = builder.addOffset(10, altName, 0)
+        fun addLAUNCHSITEID(builder: FlatBufferBuilder, launchSiteId: Int) = builder.addOffset(11, launchSiteId, 0)
+        fun addANTENNAS(builder: FlatBufferBuilder, antennas: Int) = builder.addOffset(12, antennas, 0)
         fun createAntennasVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -285,7 +285,7 @@ class OON : Table() {
             return builder.endVector()
         }
         fun startAntennasVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addBATTERIES(builder: FlatBufferBuilder, BATTERIES: Int) = builder.addOffset(13, BATTERIES, 0)
+        fun addBATTERIES(builder: FlatBufferBuilder, batteries: Int) = builder.addOffset(13, batteries, 0)
         fun createBatteriesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -294,7 +294,7 @@ class OON : Table() {
             return builder.endVector()
         }
         fun startBatteriesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addSOLAR_ARRAYS(builder: FlatBufferBuilder, SOLAR_ARRAYS: Int) = builder.addOffset(14, SOLAR_ARRAYS, 0)
+        fun addSOLARARRAYS(builder: FlatBufferBuilder, solarArrays: Int) = builder.addOffset(14, solarArrays, 0)
         fun createSolarArraysVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -303,7 +303,7 @@ class OON : Table() {
             return builder.endVector()
         }
         fun startSolarArraysVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addTHRUSTERS(builder: FlatBufferBuilder, THRUSTERS: Int) = builder.addOffset(15, THRUSTERS, 0)
+        fun addTHRUSTERS(builder: FlatBufferBuilder, thrusters: Int) = builder.addOffset(15, thrusters, 0)
         fun createThrustersVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -312,7 +312,7 @@ class OON : Table() {
             return builder.endVector()
         }
         fun startThrustersVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addONORBIT_DETAILS(builder: FlatBufferBuilder, ONORBIT_DETAILS: Int) = builder.addOffset(16, ONORBIT_DETAILS, 0)
+        fun addONORBITDETAILS(builder: FlatBufferBuilder, onorbitDetails: Int) = builder.addOffset(16, onorbitDetails, 0)
         fun createOnorbitDetailsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -321,8 +321,8 @@ class OON : Table() {
             return builder.endVector()
         }
         fun startOnorbitDetailsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addCOUNTRY_CODE(builder: FlatBufferBuilder, COUNTRY_CODE: Int) = builder.addOffset(17, COUNTRY_CODE, 0)
-        fun addENTITY_COLLECTION(builder: FlatBufferBuilder, ENTITY_COLLECTION: Int) = builder.addOffset(18, ENTITY_COLLECTION, 0)
+        fun addCOUNTRYCODE(builder: FlatBufferBuilder, countryCode: Int) = builder.addOffset(17, countryCode, 0)
+        fun addENTITYCOLLECTION(builder: FlatBufferBuilder, entityCollection: Int) = builder.addOffset(18, entityCollection, 0)
         fun createEntityCollectionVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {

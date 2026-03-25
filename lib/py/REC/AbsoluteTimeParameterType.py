@@ -2,4 +2,338 @@
 
 # namespace: 
 
-# NOTE AbsoluteTimeParameterType.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Absolute time parameter type
+class AbsoluteTimeParameterType(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = AbsoluteTimeParameterType()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsAbsoluteTimeParameterType(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def AbsoluteTimeParameterTypeBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x58\x54\x43", size_prefixed=size_prefixed)
+
+    # AbsoluteTimeParameterType
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Type name
+    # AbsoluteTimeParameterType
+    def NAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Short description
+    # AbsoluteTimeParameterType
+    def SHORT_DESCRIPTION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Long description
+    # AbsoluteTimeParameterType
+    def LONG_DESCRIPTION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Reference epoch
+    # AbsoluteTimeParameterType
+    def EPOCH(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 2
+
+    # Custom epoch date (ISO 8601) when EPOCH=CUSTOM
+    # AbsoluteTimeParameterType
+    def EPOCH_DATE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Data encoding
+    # AbsoluteTimeParameterType
+    def DATA_ENCODING(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from IntegerDataEncoding import IntegerDataEncoding
+            obj = IntegerDataEncoding()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Time unit scale factor
+    # AbsoluteTimeParameterType
+    def SCALE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Time unit offset
+    # AbsoluteTimeParameterType
+    def OFFSET(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Default alarm
+    # AbsoluteTimeParameterType
+    def DEFAULT_ALARM(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from DefaultAlarm import DefaultAlarm
+            obj = DefaultAlarm()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Context alarms
+    # AbsoluteTimeParameterType
+    def CONTEXT_ALARMS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from ContextAlarm import ContextAlarm
+            obj = ContextAlarm()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # AbsoluteTimeParameterType
+    def CONTEXT_ALARMSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # AbsoluteTimeParameterType
+    def CONTEXT_ALARMSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        return o == 0
+
+def AbsoluteTimeParameterTypeStart(builder):
+    builder.StartObject(10)
+
+def Start(builder):
+    AbsoluteTimeParameterTypeStart(builder)
+
+def AbsoluteTimeParameterTypeAddNAME(builder, NAME):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(NAME), 0)
+
+def AddNAME(builder, NAME):
+    AbsoluteTimeParameterTypeAddNAME(builder, NAME)
+
+def AbsoluteTimeParameterTypeAddSHORT_DESCRIPTION(builder, SHORT_DESCRIPTION):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(SHORT_DESCRIPTION), 0)
+
+def AddSHORT_DESCRIPTION(builder, SHORT_DESCRIPTION):
+    AbsoluteTimeParameterTypeAddSHORT_DESCRIPTION(builder, SHORT_DESCRIPTION)
+
+def AbsoluteTimeParameterTypeAddLONG_DESCRIPTION(builder, LONG_DESCRIPTION):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(LONG_DESCRIPTION), 0)
+
+def AddLONG_DESCRIPTION(builder, LONG_DESCRIPTION):
+    AbsoluteTimeParameterTypeAddLONG_DESCRIPTION(builder, LONG_DESCRIPTION)
+
+def AbsoluteTimeParameterTypeAddEPOCH(builder, EPOCH):
+    builder.PrependInt8Slot(3, EPOCH, 2)
+
+def AddEPOCH(builder, EPOCH):
+    AbsoluteTimeParameterTypeAddEPOCH(builder, EPOCH)
+
+def AbsoluteTimeParameterTypeAddEPOCH_DATE(builder, EPOCH_DATE):
+    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(EPOCH_DATE), 0)
+
+def AddEPOCH_DATE(builder, EPOCH_DATE):
+    AbsoluteTimeParameterTypeAddEPOCH_DATE(builder, EPOCH_DATE)
+
+def AbsoluteTimeParameterTypeAddDATA_ENCODING(builder, DATA_ENCODING):
+    builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(DATA_ENCODING), 0)
+
+def AddDATA_ENCODING(builder, DATA_ENCODING):
+    AbsoluteTimeParameterTypeAddDATA_ENCODING(builder, DATA_ENCODING)
+
+def AbsoluteTimeParameterTypeAddSCALE(builder, SCALE):
+    builder.PrependFloat64Slot(6, SCALE, 0.0)
+
+def AddSCALE(builder, SCALE):
+    AbsoluteTimeParameterTypeAddSCALE(builder, SCALE)
+
+def AbsoluteTimeParameterTypeAddOFFSET(builder, OFFSET):
+    builder.PrependFloat64Slot(7, OFFSET, 0.0)
+
+def AddOFFSET(builder, OFFSET):
+    AbsoluteTimeParameterTypeAddOFFSET(builder, OFFSET)
+
+def AbsoluteTimeParameterTypeAddDEFAULT_ALARM(builder, DEFAULT_ALARM):
+    builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(DEFAULT_ALARM), 0)
+
+def AddDEFAULT_ALARM(builder, DEFAULT_ALARM):
+    AbsoluteTimeParameterTypeAddDEFAULT_ALARM(builder, DEFAULT_ALARM)
+
+def AbsoluteTimeParameterTypeAddCONTEXT_ALARMS(builder, CONTEXT_ALARMS):
+    builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(CONTEXT_ALARMS), 0)
+
+def AddCONTEXT_ALARMS(builder, CONTEXT_ALARMS):
+    AbsoluteTimeParameterTypeAddCONTEXT_ALARMS(builder, CONTEXT_ALARMS)
+
+def AbsoluteTimeParameterTypeStartCONTEXT_ALARMSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartCONTEXT_ALARMSVector(builder, numElems):
+    return AbsoluteTimeParameterTypeStartCONTEXT_ALARMSVector(builder, numElems)
+
+def AbsoluteTimeParameterTypeCreateCONTEXT_ALARMSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateCONTEXT_ALARMSVector(builder, data):
+    AbsoluteTimeParameterTypeCreateCONTEXT_ALARMSVector(builder, data)
+
+def AbsoluteTimeParameterTypeEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return AbsoluteTimeParameterTypeEnd(builder)
+
+import ContextAlarm
+import DefaultAlarm
+import IntegerDataEncoding
+try:
+    from typing import List, Optional
+except:
+    pass
+
+class AbsoluteTimeParameterTypeT(object):
+
+    # AbsoluteTimeParameterTypeT
+    def __init__(
+        self,
+        NAME = None,
+        SHORT_DESCRIPTION = None,
+        LONG_DESCRIPTION = None,
+        EPOCH = 2,
+        EPOCH_DATE = None,
+        DATA_ENCODING = None,
+        SCALE = 0.0,
+        OFFSET = 0.0,
+        DEFAULT_ALARM = None,
+        CONTEXT_ALARMS = None,
+    ):
+        self.NAME = NAME  # type: Optional[str]
+        self.SHORT_DESCRIPTION = SHORT_DESCRIPTION  # type: Optional[str]
+        self.LONG_DESCRIPTION = LONG_DESCRIPTION  # type: Optional[str]
+        self.EPOCH = EPOCH  # type: int
+        self.EPOCH_DATE = EPOCH_DATE  # type: Optional[str]
+        self.DATA_ENCODING = DATA_ENCODING  # type: Optional[IntegerDataEncoding.IntegerDataEncodingT]
+        self.SCALE = SCALE  # type: float
+        self.OFFSET = OFFSET  # type: float
+        self.DEFAULT_ALARM = DEFAULT_ALARM  # type: Optional[DefaultAlarm.DefaultAlarmT]
+        self.CONTEXT_ALARMS = CONTEXT_ALARMS  # type: Optional[List[ContextAlarm.ContextAlarmT]]
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpAbsoluteTimeParameterType = AbsoluteTimeParameterType()
+        tmpAbsoluteTimeParameterType.Init(buf, pos)
+        return cls.InitFromObj(tmpAbsoluteTimeParameterType)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpAbsoluteTimeParameterType):
+        x = AbsoluteTimeParameterTypeT()
+        x._UnPack(tmpAbsoluteTimeParameterType)
+        return x
+
+    # AbsoluteTimeParameterTypeT
+    def _UnPack(self, AbsoluteTimeParameterType):
+        if AbsoluteTimeParameterType is None:
+            return
+        self.NAME = AbsoluteTimeParameterType.NAME()
+        self.SHORT_DESCRIPTION = AbsoluteTimeParameterType.SHORT_DESCRIPTION()
+        self.LONG_DESCRIPTION = AbsoluteTimeParameterType.LONG_DESCRIPTION()
+        self.EPOCH = AbsoluteTimeParameterType.EPOCH()
+        self.EPOCH_DATE = AbsoluteTimeParameterType.EPOCH_DATE()
+        if AbsoluteTimeParameterType.DATA_ENCODING() is not None:
+            self.DATA_ENCODING = IntegerDataEncoding.IntegerDataEncodingT.InitFromObj(AbsoluteTimeParameterType.DATA_ENCODING())
+        self.SCALE = AbsoluteTimeParameterType.SCALE()
+        self.OFFSET = AbsoluteTimeParameterType.OFFSET()
+        if AbsoluteTimeParameterType.DEFAULT_ALARM() is not None:
+            self.DEFAULT_ALARM = DefaultAlarm.DefaultAlarmT.InitFromObj(AbsoluteTimeParameterType.DEFAULT_ALARM())
+        if not AbsoluteTimeParameterType.CONTEXT_ALARMSIsNone():
+            self.CONTEXT_ALARMS = []
+            for i in range(AbsoluteTimeParameterType.CONTEXT_ALARMSLength()):
+                if AbsoluteTimeParameterType.CONTEXT_ALARMS(i) is None:
+                    self.CONTEXT_ALARMS.append(None)
+                else:
+                    contextAlarm_ = ContextAlarm.ContextAlarmT.InitFromObj(AbsoluteTimeParameterType.CONTEXT_ALARMS(i))
+                    self.CONTEXT_ALARMS.append(contextAlarm_)
+
+    # AbsoluteTimeParameterTypeT
+    def Pack(self, builder):
+        if self.NAME is not None:
+            NAME = builder.CreateString(self.NAME)
+        if self.SHORT_DESCRIPTION is not None:
+            SHORT_DESCRIPTION = builder.CreateString(self.SHORT_DESCRIPTION)
+        if self.LONG_DESCRIPTION is not None:
+            LONG_DESCRIPTION = builder.CreateString(self.LONG_DESCRIPTION)
+        if self.EPOCH_DATE is not None:
+            EPOCH_DATE = builder.CreateString(self.EPOCH_DATE)
+        if self.DATA_ENCODING is not None:
+            DATA_ENCODING = self.DATA_ENCODING.Pack(builder)
+        if self.DEFAULT_ALARM is not None:
+            DEFAULT_ALARM = self.DEFAULT_ALARM.Pack(builder)
+        if self.CONTEXT_ALARMS is not None:
+            CONTEXT_ALARMSlist = []
+            for i in range(len(self.CONTEXT_ALARMS)):
+                CONTEXT_ALARMSlist.append(self.CONTEXT_ALARMS[i].Pack(builder))
+            AbsoluteTimeParameterTypeStartCONTEXT_ALARMSVector(builder, len(self.CONTEXT_ALARMS))
+            for i in reversed(range(len(self.CONTEXT_ALARMS))):
+                builder.PrependUOffsetTRelative(CONTEXT_ALARMSlist[i])
+            CONTEXT_ALARMS = builder.EndVector()
+        AbsoluteTimeParameterTypeStart(builder)
+        if self.NAME is not None:
+            AbsoluteTimeParameterTypeAddNAME(builder, NAME)
+        if self.SHORT_DESCRIPTION is not None:
+            AbsoluteTimeParameterTypeAddSHORT_DESCRIPTION(builder, SHORT_DESCRIPTION)
+        if self.LONG_DESCRIPTION is not None:
+            AbsoluteTimeParameterTypeAddLONG_DESCRIPTION(builder, LONG_DESCRIPTION)
+        AbsoluteTimeParameterTypeAddEPOCH(builder, self.EPOCH)
+        if self.EPOCH_DATE is not None:
+            AbsoluteTimeParameterTypeAddEPOCH_DATE(builder, EPOCH_DATE)
+        if self.DATA_ENCODING is not None:
+            AbsoluteTimeParameterTypeAddDATA_ENCODING(builder, DATA_ENCODING)
+        AbsoluteTimeParameterTypeAddSCALE(builder, self.SCALE)
+        AbsoluteTimeParameterTypeAddOFFSET(builder, self.OFFSET)
+        if self.DEFAULT_ALARM is not None:
+            AbsoluteTimeParameterTypeAddDEFAULT_ALARM(builder, DEFAULT_ALARM)
+        if self.CONTEXT_ALARMS is not None:
+            AbsoluteTimeParameterTypeAddCONTEXT_ALARMS(builder, CONTEXT_ALARMS)
+        AbsoluteTimeParameterType = AbsoluteTimeParameterTypeEnd(builder)
+        return AbsoluteTimeParameterType

@@ -2,12 +2,16 @@
 // swiftlint:disable all
 // swiftformat:disable all
 
+#if canImport(Common)
+import Common
+#endif
+
 import FlatBuffers
 
 ///  On-Orbit Object List
-public struct OOL: FlatBufferObject, Verifiable {
+public struct OOL: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -31,9 +35,7 @@ public struct OOL: FlatBufferObject, Verifiable {
   public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NAME.v) }
   public var DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.DESCRIPTION.v) }
-  public var hasOnorbits: Bool { let o = _accessor.offset(VTOFFSET.ONORBITS.v); return o == 0 ? false : true }
-  public var ONORBITSCount: Int32 { let o = _accessor.offset(VTOFFSET.ONORBITS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func ONORBITS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.ONORBITS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  public var ONORBITS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.ONORBITS.v, byteSize: 4) }
   public static func startOOL(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
   public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VTOFFSET.ID.p) }
   public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }

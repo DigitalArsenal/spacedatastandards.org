@@ -12,7 +12,6 @@ import com.google.flatbuffers.LongVector;
 import com.google.flatbuffers.ShortVector;
 import com.google.flatbuffers.StringVector;
 import com.google.flatbuffers.Struct;
-import com.google.flatbuffers.Table;
 import com.google.flatbuffers.UnionVector;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -26,8 +25,8 @@ import java.nio.ByteOrder;
  * cover the time span [START_TIME, STOP_TIME] without gaps.
  */
 @SuppressWarnings("unused")
-public final class PPE extends Table {
-  public static void ValidateVersion() { Constants.FLATBUFFERS_24_3_25(); }
+public final class PPE extends com.google.flatbuffers.Table {
+  public static void ValidateVersion() { Constants.FLATBUFFERS_25_12_19(); }
   public static PPE getRootAsPPE(ByteBuffer _bb) { return getRootAsPPE(_bb, new PPE()); }
   public static PPE getRootAsPPE(ByteBuffer _bb, PPE obj) { _bb.order(ByteOrder.LITTLE_ENDIAN); return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb)); }
   public static boolean PPEBufferHasIdentifier(ByteBuffer _bb) { return __has_identifier(_bb, "$PPE"); }

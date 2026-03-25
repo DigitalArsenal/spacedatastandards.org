@@ -8,9 +8,9 @@
 
 // Ensure the included flatbuffers.h is the same version as when this file was
 // generated, otherwise it may not be compatible.
-static_assert(FLATBUFFERS_VERSION_MAJOR == 24 &&
-              FLATBUFFERS_VERSION_MINOR == 3 &&
-              FLATBUFFERS_VERSION_REVISION == 25,
+static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
+              FLATBUFFERS_VERSION_MINOR == 12 &&
+              FLATBUFFERS_VERSION_REVISION == 19,
              "Non-compatible flatbuffers version included");
 
 struct SpatialCoverage;
@@ -138,7 +138,8 @@ struct SpatialCoverage FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *OBJECT_IDS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_OBJECT_IDS);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_TYPE) &&
            verifier.VerifyString(TYPE()) &&
@@ -228,7 +229,8 @@ struct TemporalCoverage FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   uint32_t HISTORICAL_DEPTH() const {
     return GetField<uint32_t>(VT_HISTORICAL_DEPTH, 0);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_START_EPOCH) &&
            verifier.VerifyString(START_EPOCH()) &&
@@ -314,7 +316,8 @@ struct DataCoverage FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const TemporalCoverage *TEMPORAL() const {
     return GetPointer<const TemporalCoverage *>(VT_TEMPORAL);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_SPATIAL) &&
            verifier.VerifyTable(SPATIAL()) &&
@@ -390,7 +393,8 @@ struct PricingTier FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *FEATURES() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_FEATURES);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_NAME) &&
            verifier.VerifyString(NAME()) &&
@@ -563,7 +567,8 @@ struct STF FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::Vector<uint8_t> *SIGNATURE() const {
     return GetPointer<const ::flatbuffers::Vector<uint8_t> *>(VT_SIGNATURE);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffsetRequired(verifier, VT_LISTING_ID) &&
            verifier.VerifyString(LISTING_ID()) &&
@@ -772,14 +777,16 @@ inline bool SizePrefixedSTFBufferHasIdentifier(const void *buf) {
       buf, STFIdentifier(), true);
 }
 
+template <bool B = false>
 inline bool VerifySTFBuffer(
-    ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifyBuffer<STF>(STFIdentifier());
+    ::flatbuffers::VerifierTemplate<B> &verifier) {
+  return verifier.template VerifyBuffer<STF>(STFIdentifier());
 }
 
+template <bool B = false>
 inline bool VerifySizePrefixedSTFBuffer(
-    ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifySizePrefixedBuffer<STF>(STFIdentifier());
+    ::flatbuffers::VerifierTemplate<B> &verifier) {
+  return verifier.template VerifySizePrefixedBuffer<STF>(STFIdentifier());
 }
 
 inline void FinishSTFBuffer(

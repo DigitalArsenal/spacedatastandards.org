@@ -51,9 +51,17 @@ func (rcv *attPhysicalProperties) DRAG_COEFF() float64 {
 	return 0.0
 }
 
+func (rcv *attPhysicalProperties) DragCoeff() float64 {
+	return rcv.DRAG_COEFF()
+}
+
 /// Drag coefficient
 func (rcv *attPhysicalProperties) MutateDRAG_COEFF(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(4, n)
+}
+
+func (rcv *attPhysicalProperties) MutateDragCoeff(n float64) bool {
+	return rcv.MutateDRAG_COEFF(n)
 }
 
 /// Wet mass in kg
@@ -65,9 +73,17 @@ func (rcv *attPhysicalProperties) WET_MASS() float64 {
 	return 0.0
 }
 
+func (rcv *attPhysicalProperties) WetMass() float64 {
+	return rcv.WET_MASS()
+}
+
 /// Wet mass in kg
 func (rcv *attPhysicalProperties) MutateWET_MASS(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(6, n)
+}
+
+func (rcv *attPhysicalProperties) MutateWetMass(n float64) bool {
+	return rcv.MutateWET_MASS(n)
 }
 
 /// Dry mass in kg
@@ -79,9 +95,17 @@ func (rcv *attPhysicalProperties) DRY_MASS() float64 {
 	return 0.0
 }
 
+func (rcv *attPhysicalProperties) DryMass() float64 {
+	return rcv.DRY_MASS()
+}
+
 /// Dry mass in kg
 func (rcv *attPhysicalProperties) MutateDRY_MASS(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(8, n)
+}
+
+func (rcv *attPhysicalProperties) MutateDryMass(n float64) bool {
+	return rcv.MutateDRY_MASS(n)
 }
 
 /// Center of pressure reference frame
@@ -91,6 +115,10 @@ func (rcv *attPhysicalProperties) CP_REF_FRAME() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *attPhysicalProperties) CpRefFrame() []byte {
+	return rcv.CP_REF_FRAME()
 }
 
 /// Center of pressure reference frame
@@ -103,9 +131,17 @@ func (rcv *attPhysicalProperties) CP_X() float64 {
 	return 0.0
 }
 
+func (rcv *attPhysicalProperties) CpX() float64 {
+	return rcv.CP_X()
+}
+
 /// Center of pressure X in m
 func (rcv *attPhysicalProperties) MutateCP_X(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(12, n)
+}
+
+func (rcv *attPhysicalProperties) MutateCpX(n float64) bool {
+	return rcv.MutateCP_X(n)
 }
 
 /// Center of pressure Y in m
@@ -117,9 +153,17 @@ func (rcv *attPhysicalProperties) CP_Y() float64 {
 	return 0.0
 }
 
+func (rcv *attPhysicalProperties) CpY() float64 {
+	return rcv.CP_Y()
+}
+
 /// Center of pressure Y in m
 func (rcv *attPhysicalProperties) MutateCP_Y(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(14, n)
+}
+
+func (rcv *attPhysicalProperties) MutateCpY(n float64) bool {
+	return rcv.MutateCP_Y(n)
 }
 
 /// Center of pressure Z in m
@@ -131,9 +175,17 @@ func (rcv *attPhysicalProperties) CP_Z() float64 {
 	return 0.0
 }
 
+func (rcv *attPhysicalProperties) CpZ() float64 {
+	return rcv.CP_Z()
+}
+
 /// Center of pressure Z in m
 func (rcv *attPhysicalProperties) MutateCP_Z(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(16, n)
+}
+
+func (rcv *attPhysicalProperties) MutateCpZ(n float64) bool {
+	return rcv.MutateCP_Z(n)
 }
 
 /// Inertia reference frame
@@ -143,6 +195,10 @@ func (rcv *attPhysicalProperties) INERTIA_REF_FRAME() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *attPhysicalProperties) InertiaRefFrame() []byte {
+	return rcv.INERTIA_REF_FRAME()
 }
 
 /// Inertia reference frame
@@ -155,9 +211,17 @@ func (rcv *attPhysicalProperties) IXX() float64 {
 	return 0.0
 }
 
+func (rcv *attPhysicalProperties) Ixx() float64 {
+	return rcv.IXX()
+}
+
 /// Moment of inertia about X axis in kg*m^2
 func (rcv *attPhysicalProperties) MutateIXX(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(20, n)
+}
+
+func (rcv *attPhysicalProperties) MutateIxx(n float64) bool {
+	return rcv.MutateIXX(n)
 }
 
 /// Moment of inertia about Y axis in kg*m^2
@@ -169,9 +233,17 @@ func (rcv *attPhysicalProperties) IYY() float64 {
 	return 0.0
 }
 
+func (rcv *attPhysicalProperties) Iyy() float64 {
+	return rcv.IYY()
+}
+
 /// Moment of inertia about Y axis in kg*m^2
 func (rcv *attPhysicalProperties) MutateIYY(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(22, n)
+}
+
+func (rcv *attPhysicalProperties) MutateIyy(n float64) bool {
+	return rcv.MutateIYY(n)
 }
 
 /// Moment of inertia about Z axis in kg*m^2
@@ -183,9 +255,17 @@ func (rcv *attPhysicalProperties) IZZ() float64 {
 	return 0.0
 }
 
+func (rcv *attPhysicalProperties) Izz() float64 {
+	return rcv.IZZ()
+}
+
 /// Moment of inertia about Z axis in kg*m^2
 func (rcv *attPhysicalProperties) MutateIZZ(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(24, n)
+}
+
+func (rcv *attPhysicalProperties) MutateIzz(n float64) bool {
+	return rcv.MutateIZZ(n)
 }
 
 /// Product of inertia XY in kg*m^2
@@ -197,9 +277,17 @@ func (rcv *attPhysicalProperties) IXY() float64 {
 	return 0.0
 }
 
+func (rcv *attPhysicalProperties) Ixy() float64 {
+	return rcv.IXY()
+}
+
 /// Product of inertia XY in kg*m^2
 func (rcv *attPhysicalProperties) MutateIXY(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(26, n)
+}
+
+func (rcv *attPhysicalProperties) MutateIxy(n float64) bool {
+	return rcv.MutateIXY(n)
 }
 
 /// Product of inertia XZ in kg*m^2
@@ -211,9 +299,17 @@ func (rcv *attPhysicalProperties) IXZ() float64 {
 	return 0.0
 }
 
+func (rcv *attPhysicalProperties) Ixz() float64 {
+	return rcv.IXZ()
+}
+
 /// Product of inertia XZ in kg*m^2
 func (rcv *attPhysicalProperties) MutateIXZ(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(28, n)
+}
+
+func (rcv *attPhysicalProperties) MutateIxz(n float64) bool {
+	return rcv.MutateIXZ(n)
 }
 
 /// Product of inertia YZ in kg*m^2
@@ -225,9 +321,17 @@ func (rcv *attPhysicalProperties) IYZ() float64 {
 	return 0.0
 }
 
+func (rcv *attPhysicalProperties) Iyz() float64 {
+	return rcv.IYZ()
+}
+
 /// Product of inertia YZ in kg*m^2
 func (rcv *attPhysicalProperties) MutateIYZ(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(30, n)
+}
+
+func (rcv *attPhysicalProperties) MutateIyz(n float64) bool {
+	return rcv.MutateIYZ(n)
 }
 
 func attPhysicalPropertiesStart(builder *flatbuffers.Builder) {
@@ -236,44 +340,86 @@ func attPhysicalPropertiesStart(builder *flatbuffers.Builder) {
 func attPhysicalPropertiesAddDRAG_COEFF(builder *flatbuffers.Builder, DRAG_COEFF float64) {
 	builder.PrependFloat64Slot(0, DRAG_COEFF, 0.0)
 }
+func attPhysicalPropertiesAddDragCoeff(builder *flatbuffers.Builder, DRAG_COEFF float64) {
+	attPhysicalPropertiesAddDRAG_COEFF(builder, DRAG_COEFF)
+}
 func attPhysicalPropertiesAddWET_MASS(builder *flatbuffers.Builder, WET_MASS float64) {
 	builder.PrependFloat64Slot(1, WET_MASS, 0.0)
+}
+func attPhysicalPropertiesAddWetMass(builder *flatbuffers.Builder, WET_MASS float64) {
+	attPhysicalPropertiesAddWET_MASS(builder, WET_MASS)
 }
 func attPhysicalPropertiesAddDRY_MASS(builder *flatbuffers.Builder, DRY_MASS float64) {
 	builder.PrependFloat64Slot(2, DRY_MASS, 0.0)
 }
+func attPhysicalPropertiesAddDryMass(builder *flatbuffers.Builder, DRY_MASS float64) {
+	attPhysicalPropertiesAddDRY_MASS(builder, DRY_MASS)
+}
 func attPhysicalPropertiesAddCP_REF_FRAME(builder *flatbuffers.Builder, CP_REF_FRAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(CP_REF_FRAME), 0)
+}
+func attPhysicalPropertiesAddCpRefFrame(builder *flatbuffers.Builder, CP_REF_FRAME flatbuffers.UOffsetT) {
+	attPhysicalPropertiesAddCP_REF_FRAME(builder, CP_REF_FRAME)
 }
 func attPhysicalPropertiesAddCP_X(builder *flatbuffers.Builder, CP_X float64) {
 	builder.PrependFloat64Slot(4, CP_X, 0.0)
 }
+func attPhysicalPropertiesAddCpX(builder *flatbuffers.Builder, CP_X float64) {
+	attPhysicalPropertiesAddCP_X(builder, CP_X)
+}
 func attPhysicalPropertiesAddCP_Y(builder *flatbuffers.Builder, CP_Y float64) {
 	builder.PrependFloat64Slot(5, CP_Y, 0.0)
+}
+func attPhysicalPropertiesAddCpY(builder *flatbuffers.Builder, CP_Y float64) {
+	attPhysicalPropertiesAddCP_Y(builder, CP_Y)
 }
 func attPhysicalPropertiesAddCP_Z(builder *flatbuffers.Builder, CP_Z float64) {
 	builder.PrependFloat64Slot(6, CP_Z, 0.0)
 }
+func attPhysicalPropertiesAddCpZ(builder *flatbuffers.Builder, CP_Z float64) {
+	attPhysicalPropertiesAddCP_Z(builder, CP_Z)
+}
 func attPhysicalPropertiesAddINERTIA_REF_FRAME(builder *flatbuffers.Builder, INERTIA_REF_FRAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(INERTIA_REF_FRAME), 0)
+}
+func attPhysicalPropertiesAddInertiaRefFrame(builder *flatbuffers.Builder, INERTIA_REF_FRAME flatbuffers.UOffsetT) {
+	attPhysicalPropertiesAddINERTIA_REF_FRAME(builder, INERTIA_REF_FRAME)
 }
 func attPhysicalPropertiesAddIXX(builder *flatbuffers.Builder, IXX float64) {
 	builder.PrependFloat64Slot(8, IXX, 0.0)
 }
+func attPhysicalPropertiesAddIxx(builder *flatbuffers.Builder, IXX float64) {
+	attPhysicalPropertiesAddIXX(builder, IXX)
+}
 func attPhysicalPropertiesAddIYY(builder *flatbuffers.Builder, IYY float64) {
 	builder.PrependFloat64Slot(9, IYY, 0.0)
+}
+func attPhysicalPropertiesAddIyy(builder *flatbuffers.Builder, IYY float64) {
+	attPhysicalPropertiesAddIYY(builder, IYY)
 }
 func attPhysicalPropertiesAddIZZ(builder *flatbuffers.Builder, IZZ float64) {
 	builder.PrependFloat64Slot(10, IZZ, 0.0)
 }
+func attPhysicalPropertiesAddIzz(builder *flatbuffers.Builder, IZZ float64) {
+	attPhysicalPropertiesAddIZZ(builder, IZZ)
+}
 func attPhysicalPropertiesAddIXY(builder *flatbuffers.Builder, IXY float64) {
 	builder.PrependFloat64Slot(11, IXY, 0.0)
+}
+func attPhysicalPropertiesAddIxy(builder *flatbuffers.Builder, IXY float64) {
+	attPhysicalPropertiesAddIXY(builder, IXY)
 }
 func attPhysicalPropertiesAddIXZ(builder *flatbuffers.Builder, IXZ float64) {
 	builder.PrependFloat64Slot(12, IXZ, 0.0)
 }
+func attPhysicalPropertiesAddIxz(builder *flatbuffers.Builder, IXZ float64) {
+	attPhysicalPropertiesAddIXZ(builder, IXZ)
+}
 func attPhysicalPropertiesAddIYZ(builder *flatbuffers.Builder, IYZ float64) {
 	builder.PrependFloat64Slot(13, IYZ, 0.0)
+}
+func attPhysicalPropertiesAddIyz(builder *flatbuffers.Builder, IYZ float64) {
+	attPhysicalPropertiesAddIYZ(builder, IYZ)
 }
 func attPhysicalPropertiesEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

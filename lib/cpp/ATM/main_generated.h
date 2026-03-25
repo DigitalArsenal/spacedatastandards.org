@@ -8,9 +8,9 @@
 
 // Ensure the included flatbuffers.h is the same version as when this file was
 // generated, otherwise it may not be compatible.
-static_assert(FLATBUFFERS_VERSION_MAJOR == 24 &&
-              FLATBUFFERS_VERSION_MINOR == 3 &&
-              FLATBUFFERS_VERSION_REVISION == 25,
+static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
+              FLATBUFFERS_VERSION_MINOR == 12 &&
+              FLATBUFFERS_VERSION_REVISION == 19,
              "Non-compatible flatbuffers version included");
 
 struct ATM;
@@ -159,7 +159,8 @@ struct ATM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   int32_t YEAR() const {
     return GetField<int32_t>(VT_YEAR, 0);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<int8_t>(verifier, VT_MODEL, 1) &&
            VerifyField<int32_t>(verifier, VT_YEAR, 4) &&
@@ -220,14 +221,16 @@ inline bool SizePrefixedATMBufferHasIdentifier(const void *buf) {
       buf, ATMIdentifier(), true);
 }
 
+template <bool B = false>
 inline bool VerifyATMBuffer(
-    ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifyBuffer<ATM>(ATMIdentifier());
+    ::flatbuffers::VerifierTemplate<B> &verifier) {
+  return verifier.template VerifyBuffer<ATM>(ATMIdentifier());
 }
 
+template <bool B = false>
 inline bool VerifySizePrefixedATMBuffer(
-    ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifySizePrefixedBuffer<ATM>(ATMIdentifier());
+    ::flatbuffers::VerifierTemplate<B> &verifier) {
+  return verifier.template VerifySizePrefixedBuffer<ATM>(ATMIdentifier());
 }
 
 inline void FinishATMBuffer(

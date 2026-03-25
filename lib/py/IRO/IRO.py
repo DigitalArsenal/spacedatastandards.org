@@ -483,6 +483,16 @@ def IROStartWAVELENGTHSVector(builder, numElems):
 def StartWAVELENGTHSVector(builder, numElems):
     return IROStartWAVELENGTHSVector(builder, numElems)
 
+def IROCreateWAVELENGTHSVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateWAVELENGTHSVector(builder, data):
+    IROCreateWAVELENGTHSVector(builder, data)
+
 def IROAddSPECTRAL_VALUES(builder, SPECTRAL_VALUES):
     builder.PrependUOffsetTRelativeSlot(27, flatbuffers.number_types.UOffsetTFlags.py_type(SPECTRAL_VALUES), 0)
 
@@ -494,6 +504,16 @@ def IROStartSPECTRAL_VALUESVector(builder, numElems):
 
 def StartSPECTRAL_VALUESVector(builder, numElems):
     return IROStartSPECTRAL_VALUESVector(builder, numElems)
+
+def IROCreateSPECTRAL_VALUESVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateSPECTRAL_VALUESVector(builder, data):
+    IROCreateSPECTRAL_VALUESVector(builder, data)
 
 def IROAddQUALITY(builder, QUALITY):
     builder.PrependUint8Slot(28, QUALITY, 0)
@@ -521,43 +541,75 @@ except:
 class IROT(object):
 
     # IROT
-    def __init__(self):
-        self.ID = None  # type: str
-        self.ID_ENTITY = None  # type: str
-        self.NAME = None  # type: str
-        self.DESCRIPTION = None  # type: str
-        self.ENTITY = None  # type: str
-        self.EPOCH = None  # type: str
-        self.SENSOR_ID = None  # type: str
-        self.SAT_NO = 0  # type: int
-        self.OBJECT_DESIGNATOR = None  # type: str
-        self.BAND = 0  # type: int
-        self.DETECTION_TYPE = 0  # type: int
-        self.RA = 0.0  # type: float
-        self.DEC = 0.0  # type: float
-        self.RA_UNC = 0.0  # type: float
-        self.DEC_UNC = 0.0  # type: float
-        self.AZIMUTH = 0.0  # type: float
-        self.ELEVATION = 0.0  # type: float
-        self.RANGE = 0.0  # type: float
-        self.IRRADIANCE = 0.0  # type: float
-        self.IRRADIANCE_UNC = 0.0  # type: float
-        self.IR_MAG = 0.0  # type: float
-        self.MAG_UNC = 0.0  # type: float
-        self.TEMPERATURE = 0.0  # type: float
-        self.INTEGRATION_TIME = 0.0  # type: float
-        self.BACKGROUND = 0.0  # type: float
-        self.SNR = 0.0  # type: float
-        self.WAVELENGTHS = None  # type: List[float]
-        self.SPECTRAL_VALUES = None  # type: List[float]
-        self.QUALITY = 0  # type: int
-        self.NOTES = None  # type: str
+    def __init__(
+        self,
+        ID = None,
+        ID_ENTITY = None,
+        NAME = None,
+        DESCRIPTION = None,
+        ENTITY = None,
+        EPOCH = None,
+        SENSOR_ID = None,
+        SAT_NO = 0,
+        OBJECT_DESIGNATOR = None,
+        BAND = 0,
+        DETECTION_TYPE = 0,
+        RA = 0.0,
+        DEC = 0.0,
+        RA_UNC = 0.0,
+        DEC_UNC = 0.0,
+        AZIMUTH = 0.0,
+        ELEVATION = 0.0,
+        RANGE = 0.0,
+        IRRADIANCE = 0.0,
+        IRRADIANCE_UNC = 0.0,
+        IR_MAG = 0.0,
+        MAG_UNC = 0.0,
+        TEMPERATURE = 0.0,
+        INTEGRATION_TIME = 0.0,
+        BACKGROUND = 0.0,
+        SNR = 0.0,
+        WAVELENGTHS = None,
+        SPECTRAL_VALUES = None,
+        QUALITY = 0,
+        NOTES = None,
+    ):
+        self.ID = ID  # type: Optional[str]
+        self.ID_ENTITY = ID_ENTITY  # type: Optional[str]
+        self.NAME = NAME  # type: Optional[str]
+        self.DESCRIPTION = DESCRIPTION  # type: Optional[str]
+        self.ENTITY = ENTITY  # type: Optional[str]
+        self.EPOCH = EPOCH  # type: Optional[str]
+        self.SENSOR_ID = SENSOR_ID  # type: Optional[str]
+        self.SAT_NO = SAT_NO  # type: int
+        self.OBJECT_DESIGNATOR = OBJECT_DESIGNATOR  # type: Optional[str]
+        self.BAND = BAND  # type: int
+        self.DETECTION_TYPE = DETECTION_TYPE  # type: int
+        self.RA = RA  # type: float
+        self.DEC = DEC  # type: float
+        self.RA_UNC = RA_UNC  # type: float
+        self.DEC_UNC = DEC_UNC  # type: float
+        self.AZIMUTH = AZIMUTH  # type: float
+        self.ELEVATION = ELEVATION  # type: float
+        self.RANGE = RANGE  # type: float
+        self.IRRADIANCE = IRRADIANCE  # type: float
+        self.IRRADIANCE_UNC = IRRADIANCE_UNC  # type: float
+        self.IR_MAG = IR_MAG  # type: float
+        self.MAG_UNC = MAG_UNC  # type: float
+        self.TEMPERATURE = TEMPERATURE  # type: float
+        self.INTEGRATION_TIME = INTEGRATION_TIME  # type: float
+        self.BACKGROUND = BACKGROUND  # type: float
+        self.SNR = SNR  # type: float
+        self.WAVELENGTHS = WAVELENGTHS  # type: Optional[List[float]]
+        self.SPECTRAL_VALUES = SPECTRAL_VALUES  # type: Optional[List[float]]
+        self.QUALITY = QUALITY  # type: int
+        self.NOTES = NOTES  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        IRO = IRO()
-        IRO.Init(buf, pos)
-        return cls.InitFromObj(IRO)
+        tmpIro = IRO()
+        tmpIro.Init(buf, pos)
+        return cls.InitFromObj(tmpIro)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -565,9 +617,9 @@ class IROT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, IRO):
+    def InitFromObj(cls, tmpIro):
         x = IROT()
-        x._UnPack(IRO)
+        x._UnPack(tmpIro)
         return x
 
     # IROT

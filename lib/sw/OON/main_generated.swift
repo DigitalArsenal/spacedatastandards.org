@@ -2,12 +2,16 @@
 // swiftlint:disable all
 // swiftformat:disable all
 
+#if canImport(Common)
+import Common
+#endif
+
 import FlatBuffers
 
 ///  On-Orbit Object
-public struct OON: FlatBufferObject, Verifiable {
+public struct OON: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -62,26 +66,14 @@ public struct OON: FlatBufferObject, Verifiable {
   public var ALT_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ALT_NAME.v) }
   public var LAUNCH_SITE_ID: String? { let o = _accessor.offset(VTOFFSET.LAUNCH_SITE_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var LAUNCH_SITE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LAUNCH_SITE_ID.v) }
-  public var hasAntennas: Bool { let o = _accessor.offset(VTOFFSET.ANTENNAS.v); return o == 0 ? false : true }
-  public var ANTENNASCount: Int32 { let o = _accessor.offset(VTOFFSET.ANTENNAS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func ANTENNAS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.ANTENNAS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
-  public var hasBatteries: Bool { let o = _accessor.offset(VTOFFSET.BATTERIES.v); return o == 0 ? false : true }
-  public var BATTERIESCount: Int32 { let o = _accessor.offset(VTOFFSET.BATTERIES.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func BATTERIES(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.BATTERIES.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
-  public var hasSolarArrays: Bool { let o = _accessor.offset(VTOFFSET.SOLAR_ARRAYS.v); return o == 0 ? false : true }
-  public var SOLAR_ARRAYSCount: Int32 { let o = _accessor.offset(VTOFFSET.SOLAR_ARRAYS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func SOLAR_ARRAYS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.SOLAR_ARRAYS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
-  public var hasThrusters: Bool { let o = _accessor.offset(VTOFFSET.THRUSTERS.v); return o == 0 ? false : true }
-  public var THRUSTERSCount: Int32 { let o = _accessor.offset(VTOFFSET.THRUSTERS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func THRUSTERS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.THRUSTERS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
-  public var hasOnorbitDetails: Bool { let o = _accessor.offset(VTOFFSET.ONORBIT_DETAILS.v); return o == 0 ? false : true }
-  public var ONORBIT_DETAILSCount: Int32 { let o = _accessor.offset(VTOFFSET.ONORBIT_DETAILS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func ONORBIT_DETAILS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.ONORBIT_DETAILS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  public var ANTENNAS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.ANTENNAS.v, byteSize: 4) }
+  public var BATTERIES: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.BATTERIES.v, byteSize: 4) }
+  public var SOLAR_ARRAYS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.SOLAR_ARRAYS.v, byteSize: 4) }
+  public var THRUSTERS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.THRUSTERS.v, byteSize: 4) }
+  public var ONORBIT_DETAILS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.ONORBIT_DETAILS.v, byteSize: 4) }
   public var COUNTRY_CODE: String? { let o = _accessor.offset(VTOFFSET.COUNTRY_CODE.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var COUNTRY_CODESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.COUNTRY_CODE.v) }
-  public var hasEntityCollection: Bool { let o = _accessor.offset(VTOFFSET.ENTITY_COLLECTION.v); return o == 0 ? false : true }
-  public var ENTITY_COLLECTIONCount: Int32 { let o = _accessor.offset(VTOFFSET.ENTITY_COLLECTION.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func ENTITY_COLLECTION(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.ENTITY_COLLECTION.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  public var ENTITY_COLLECTION: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.ENTITY_COLLECTION.v, byteSize: 4) }
   public static func startOON(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 19) }
   public static func add(SAT_NO: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SAT_NO, def: 0, at: VTOFFSET.SAT_NO.p) }
   public static func add(COMMON_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMMON_NAME, at: VTOFFSET.COMMON_NAME.p) }

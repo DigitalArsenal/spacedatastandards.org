@@ -32,7 +32,7 @@ class MathOperation : Table() {
     /**
      * Operation in Reverse Polish Notation (RPN)
      */
-    val RPN_EXPRESSION : String?
+    val rpnExpression : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,22 +41,22 @@ class MathOperation : Table() {
                 null
             }
         }
-    val RPN_EXPRESSIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun RPN_EXPRESSIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val rpnExpressionAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun rpnExpressionInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsMathOperation(_bb: ByteBuffer): MathOperation = getRootAsMathOperation(_bb, MathOperation())
         fun getRootAsMathOperation(_bb: ByteBuffer, obj: MathOperation): MathOperation {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createMathOperation(builder: FlatBufferBuilder, RPN_EXPRESSIONOffset: Int) : Int {
+        fun createMathOperation(builder: FlatBufferBuilder, rpnExpressionOffset: Int) : Int {
             builder.startTable(1)
-            addRPN_EXPRESSION(builder, RPN_EXPRESSIONOffset)
+            addRPNEXPRESSION(builder, rpnExpressionOffset)
             return endMathOperation(builder)
         }
         fun startMathOperation(builder: FlatBufferBuilder) = builder.startTable(1)
-        fun addRPN_EXPRESSION(builder: FlatBufferBuilder, RPN_EXPRESSION: Int) = builder.addOffset(0, RPN_EXPRESSION, 0)
+        fun addRPNEXPRESSION(builder: FlatBufferBuilder, rpnExpression: Int) = builder.addOffset(0, rpnExpression, 0)
         fun endMathOperation(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

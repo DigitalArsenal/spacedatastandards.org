@@ -51,9 +51,17 @@ func (rcv *KMLCamera) LONGITUDE() float64 {
 	return 0.0
 }
 
+func (rcv *KMLCamera) Longitude() float64 {
+	return rcv.LONGITUDE()
+}
+
 /// Camera longitude
 func (rcv *KMLCamera) MutateLONGITUDE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(4, n)
+}
+
+func (rcv *KMLCamera) MutateLongitude(n float64) bool {
+	return rcv.MutateLONGITUDE(n)
 }
 
 /// Camera latitude
@@ -65,9 +73,17 @@ func (rcv *KMLCamera) LATITUDE() float64 {
 	return 0.0
 }
 
+func (rcv *KMLCamera) Latitude() float64 {
+	return rcv.LATITUDE()
+}
+
 /// Camera latitude
 func (rcv *KMLCamera) MutateLATITUDE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(6, n)
+}
+
+func (rcv *KMLCamera) MutateLatitude(n float64) bool {
+	return rcv.MutateLATITUDE(n)
 }
 
 /// Camera altitude
@@ -79,9 +95,17 @@ func (rcv *KMLCamera) ALTITUDE() float64 {
 	return 0.0
 }
 
+func (rcv *KMLCamera) Altitude() float64 {
+	return rcv.ALTITUDE()
+}
+
 /// Camera altitude
 func (rcv *KMLCamera) MutateALTITUDE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(8, n)
+}
+
+func (rcv *KMLCamera) MutateAltitude(n float64) bool {
+	return rcv.MutateALTITUDE(n)
 }
 
 /// Heading in degrees (0=North)
@@ -93,9 +117,17 @@ func (rcv *KMLCamera) HEADING() float64 {
 	return 0.0
 }
 
+func (rcv *KMLCamera) Heading() float64 {
+	return rcv.HEADING()
+}
+
 /// Heading in degrees (0=North)
 func (rcv *KMLCamera) MutateHEADING(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(10, n)
+}
+
+func (rcv *KMLCamera) MutateHeading(n float64) bool {
+	return rcv.MutateHEADING(n)
 }
 
 /// Tilt in degrees from vertical
@@ -107,9 +139,17 @@ func (rcv *KMLCamera) TILT() float64 {
 	return 0.0
 }
 
+func (rcv *KMLCamera) Tilt() float64 {
+	return rcv.TILT()
+}
+
 /// Tilt in degrees from vertical
 func (rcv *KMLCamera) MutateTILT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(12, n)
+}
+
+func (rcv *KMLCamera) MutateTilt(n float64) bool {
+	return rcv.MutateTILT(n)
 }
 
 /// Roll in degrees
@@ -121,9 +161,17 @@ func (rcv *KMLCamera) ROLL() float64 {
 	return 0.0
 }
 
+func (rcv *KMLCamera) Roll() float64 {
+	return rcv.ROLL()
+}
+
 /// Roll in degrees
 func (rcv *KMLCamera) MutateROLL(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(14, n)
+}
+
+func (rcv *KMLCamera) MutateRoll(n float64) bool {
+	return rcv.MutateROLL(n)
 }
 
 /// Altitude mode
@@ -135,9 +183,17 @@ func (rcv *KMLCamera) ALTITUDE_MODE() KMLAltitudeMode {
 	return 0
 }
 
+func (rcv *KMLCamera) AltitudeMode() KMLAltitudeMode {
+	return rcv.ALTITUDE_MODE()
+}
+
 /// Altitude mode
 func (rcv *KMLCamera) MutateALTITUDE_MODE(n KMLAltitudeMode) bool {
 	return rcv._tab.MutateInt8Slot(16, int8(n))
+}
+
+func (rcv *KMLCamera) MutateAltitudeMode(n KMLAltitudeMode) bool {
+	return rcv.MutateALTITUDE_MODE(n)
 }
 
 func KMLCameraStart(builder *flatbuffers.Builder) {
@@ -146,23 +202,44 @@ func KMLCameraStart(builder *flatbuffers.Builder) {
 func KMLCameraAddLONGITUDE(builder *flatbuffers.Builder, LONGITUDE float64) {
 	builder.PrependFloat64Slot(0, LONGITUDE, 0.0)
 }
+func KMLCameraAddLongitude(builder *flatbuffers.Builder, LONGITUDE float64) {
+	KMLCameraAddLONGITUDE(builder, LONGITUDE)
+}
 func KMLCameraAddLATITUDE(builder *flatbuffers.Builder, LATITUDE float64) {
 	builder.PrependFloat64Slot(1, LATITUDE, 0.0)
+}
+func KMLCameraAddLatitude(builder *flatbuffers.Builder, LATITUDE float64) {
+	KMLCameraAddLATITUDE(builder, LATITUDE)
 }
 func KMLCameraAddALTITUDE(builder *flatbuffers.Builder, ALTITUDE float64) {
 	builder.PrependFloat64Slot(2, ALTITUDE, 0.0)
 }
+func KMLCameraAddAltitude(builder *flatbuffers.Builder, ALTITUDE float64) {
+	KMLCameraAddALTITUDE(builder, ALTITUDE)
+}
 func KMLCameraAddHEADING(builder *flatbuffers.Builder, HEADING float64) {
 	builder.PrependFloat64Slot(3, HEADING, 0.0)
+}
+func KMLCameraAddHeading(builder *flatbuffers.Builder, HEADING float64) {
+	KMLCameraAddHEADING(builder, HEADING)
 }
 func KMLCameraAddTILT(builder *flatbuffers.Builder, TILT float64) {
 	builder.PrependFloat64Slot(4, TILT, 0.0)
 }
+func KMLCameraAddTilt(builder *flatbuffers.Builder, TILT float64) {
+	KMLCameraAddTILT(builder, TILT)
+}
 func KMLCameraAddROLL(builder *flatbuffers.Builder, ROLL float64) {
 	builder.PrependFloat64Slot(5, ROLL, 0.0)
 }
+func KMLCameraAddRoll(builder *flatbuffers.Builder, ROLL float64) {
+	KMLCameraAddROLL(builder, ROLL)
+}
 func KMLCameraAddALTITUDE_MODE(builder *flatbuffers.Builder, ALTITUDE_MODE KMLAltitudeMode) {
 	builder.PrependInt8Slot(6, int8(ALTITUDE_MODE), 0)
+}
+func KMLCameraAddAltitudeMode(builder *flatbuffers.Builder, ALTITUDE_MODE KMLAltitudeMode) {
+	KMLCameraAddALTITUDE_MODE(builder, ALTITUDE_MODE)
 }
 func KMLCameraEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

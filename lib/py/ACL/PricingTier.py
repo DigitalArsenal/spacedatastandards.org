@@ -2,4 +2,232 @@
 
 # namespace: 
 
-# NOTE PricingTier.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Pricing tier for a listing
+class PricingTier(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = PricingTier()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsPricingTier(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def PricingTierBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x53\x54\x46", size_prefixed=size_prefixed)
+
+    # PricingTier
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Tier name, e.g., "Basic", "Pro", "Enterprise"
+    # PricingTier
+    def NAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Price in smallest unit (cents, satoshis, etc.)
+    # PricingTier
+    def PRICE_AMOUNT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint64Flags, o + self._tab.Pos)
+        return 0
+
+    # Currency code: "USD", "ETH", "SOL", "SDN_CREDITS"
+    # PricingTier
+    def PRICE_CURRENCY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Duration in days (0 = one-time purchase)
+    # PricingTier
+    def DURATION_DAYS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+        return 0
+
+    # Rate limit in requests per hour
+    # PricingTier
+    def RATE_LIMIT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+        return 0
+
+    # List of features included in this tier
+    # PricingTier
+    def FEATURES(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
+        return ""
+
+    # PricingTier
+    def FEATURESLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # PricingTier
+    def FEATURESIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        return o == 0
+
+def PricingTierStart(builder):
+    builder.StartObject(6)
+
+def Start(builder):
+    PricingTierStart(builder)
+
+def PricingTierAddNAME(builder, NAME):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(NAME), 0)
+
+def AddNAME(builder, NAME):
+    PricingTierAddNAME(builder, NAME)
+
+def PricingTierAddPRICE_AMOUNT(builder, PRICE_AMOUNT):
+    builder.PrependUint64Slot(1, PRICE_AMOUNT, 0)
+
+def AddPRICE_AMOUNT(builder, PRICE_AMOUNT):
+    PricingTierAddPRICE_AMOUNT(builder, PRICE_AMOUNT)
+
+def PricingTierAddPRICE_CURRENCY(builder, PRICE_CURRENCY):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(PRICE_CURRENCY), 0)
+
+def AddPRICE_CURRENCY(builder, PRICE_CURRENCY):
+    PricingTierAddPRICE_CURRENCY(builder, PRICE_CURRENCY)
+
+def PricingTierAddDURATION_DAYS(builder, DURATION_DAYS):
+    builder.PrependUint32Slot(3, DURATION_DAYS, 0)
+
+def AddDURATION_DAYS(builder, DURATION_DAYS):
+    PricingTierAddDURATION_DAYS(builder, DURATION_DAYS)
+
+def PricingTierAddRATE_LIMIT(builder, RATE_LIMIT):
+    builder.PrependUint32Slot(4, RATE_LIMIT, 0)
+
+def AddRATE_LIMIT(builder, RATE_LIMIT):
+    PricingTierAddRATE_LIMIT(builder, RATE_LIMIT)
+
+def PricingTierAddFEATURES(builder, FEATURES):
+    builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(FEATURES), 0)
+
+def AddFEATURES(builder, FEATURES):
+    PricingTierAddFEATURES(builder, FEATURES)
+
+def PricingTierStartFEATURESVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartFEATURESVector(builder, numElems):
+    return PricingTierStartFEATURESVector(builder, numElems)
+
+def PricingTierCreateFEATURESVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateFEATURESVector(builder, data):
+    PricingTierCreateFEATURESVector(builder, data)
+
+def PricingTierEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return PricingTierEnd(builder)
+
+try:
+    from typing import List
+except:
+    pass
+
+class PricingTierT(object):
+
+    # PricingTierT
+    def __init__(
+        self,
+        NAME = None,
+        PRICE_AMOUNT = 0,
+        PRICE_CURRENCY = None,
+        DURATION_DAYS = 0,
+        RATE_LIMIT = 0,
+        FEATURES = None,
+    ):
+        self.NAME = NAME  # type: Optional[str]
+        self.PRICE_AMOUNT = PRICE_AMOUNT  # type: int
+        self.PRICE_CURRENCY = PRICE_CURRENCY  # type: Optional[str]
+        self.DURATION_DAYS = DURATION_DAYS  # type: int
+        self.RATE_LIMIT = RATE_LIMIT  # type: int
+        self.FEATURES = FEATURES  # type: Optional[List[Optional[str]]]
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpPricingTier = PricingTier()
+        tmpPricingTier.Init(buf, pos)
+        return cls.InitFromObj(tmpPricingTier)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpPricingTier):
+        x = PricingTierT()
+        x._UnPack(tmpPricingTier)
+        return x
+
+    # PricingTierT
+    def _UnPack(self, PricingTier):
+        if PricingTier is None:
+            return
+        self.NAME = PricingTier.NAME()
+        self.PRICE_AMOUNT = PricingTier.PRICE_AMOUNT()
+        self.PRICE_CURRENCY = PricingTier.PRICE_CURRENCY()
+        self.DURATION_DAYS = PricingTier.DURATION_DAYS()
+        self.RATE_LIMIT = PricingTier.RATE_LIMIT()
+        if not PricingTier.FEATURESIsNone():
+            self.FEATURES = []
+            for i in range(PricingTier.FEATURESLength()):
+                self.FEATURES.append(PricingTier.FEATURES(i))
+
+    # PricingTierT
+    def Pack(self, builder):
+        if self.NAME is not None:
+            NAME = builder.CreateString(self.NAME)
+        if self.PRICE_CURRENCY is not None:
+            PRICE_CURRENCY = builder.CreateString(self.PRICE_CURRENCY)
+        if self.FEATURES is not None:
+            FEATURESlist = []
+            for i in range(len(self.FEATURES)):
+                FEATURESlist.append(builder.CreateString(self.FEATURES[i]))
+            PricingTierStartFEATURESVector(builder, len(self.FEATURES))
+            for i in reversed(range(len(self.FEATURES))):
+                builder.PrependUOffsetTRelative(FEATURESlist[i])
+            FEATURES = builder.EndVector()
+        PricingTierStart(builder)
+        if self.NAME is not None:
+            PricingTierAddNAME(builder, NAME)
+        PricingTierAddPRICE_AMOUNT(builder, self.PRICE_AMOUNT)
+        if self.PRICE_CURRENCY is not None:
+            PricingTierAddPRICE_CURRENCY(builder, PRICE_CURRENCY)
+        PricingTierAddDURATION_DAYS(builder, self.DURATION_DAYS)
+        PricingTierAddRATE_LIMIT(builder, self.RATE_LIMIT)
+        if self.FEATURES is not None:
+            PricingTierAddFEATURES(builder, FEATURES)
+        PricingTier = PricingTierEnd(builder)
+        return PricingTier

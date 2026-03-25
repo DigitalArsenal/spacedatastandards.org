@@ -32,7 +32,7 @@ class Service : Table() {
     /**
      * Service name
      */
-    val NAME : String?
+    val name : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class Service : Table() {
                 null
             }
         }
-    val NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val nameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun nameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Short description
      */
-    val SHORT_DESCRIPTION : String?
+    val shortDescription : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -55,12 +55,12 @@ class Service : Table() {
                 null
             }
         }
-    val SHORT_DESCRIPTIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun SHORT_DESCRIPTIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val shortDescriptionAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun shortDescriptionInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * Long description
      */
-    val LONG_DESCRIPTION : String?
+    val longDescription : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -69,12 +69,12 @@ class Service : Table() {
                 null
             }
         }
-    val LONG_DESCRIPTIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun LONG_DESCRIPTIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val longDescriptionAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun longDescriptionInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
     /**
      * Container references provided by this service
      */
-    fun CONTAINER_REFS(j: Int) : String? {
+    fun containerRefs(j: Int) : String? {
         val o = __offset(10)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
@@ -82,14 +82,14 @@ class Service : Table() {
             null
         }
     }
-    val CONTAINER_REFSLength : Int
+    val containerRefsLength : Int
         get() {
             val o = __offset(10); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Command references accepted by this service
      */
-    fun COMMAND_REFS(j: Int) : String? {
+    fun commandRefs(j: Int) : String? {
         val o = __offset(12)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
@@ -97,31 +97,31 @@ class Service : Table() {
             null
         }
     }
-    val COMMAND_REFSLength : Int
+    val commandRefsLength : Int
         get() {
             val o = __offset(12); return if (o != 0) __vector_len(o) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsService(_bb: ByteBuffer): Service = getRootAsService(_bb, Service())
         fun getRootAsService(_bb: ByteBuffer, obj: Service): Service {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createService(builder: FlatBufferBuilder, NAMEOffset: Int, SHORT_DESCRIPTIONOffset: Int, LONG_DESCRIPTIONOffset: Int, CONTAINER_REFSOffset: Int, COMMAND_REFSOffset: Int) : Int {
+        fun createService(builder: FlatBufferBuilder, nameOffset: Int, shortDescriptionOffset: Int, longDescriptionOffset: Int, containerRefsOffset: Int, commandRefsOffset: Int) : Int {
             builder.startTable(5)
-            addCOMMAND_REFS(builder, COMMAND_REFSOffset)
-            addCONTAINER_REFS(builder, CONTAINER_REFSOffset)
-            addLONG_DESCRIPTION(builder, LONG_DESCRIPTIONOffset)
-            addSHORT_DESCRIPTION(builder, SHORT_DESCRIPTIONOffset)
-            addNAME(builder, NAMEOffset)
+            addCOMMANDREFS(builder, commandRefsOffset)
+            addCONTAINERREFS(builder, containerRefsOffset)
+            addLONGDESCRIPTION(builder, longDescriptionOffset)
+            addSHORTDESCRIPTION(builder, shortDescriptionOffset)
+            addNAME(builder, nameOffset)
             return endService(builder)
         }
         fun startService(builder: FlatBufferBuilder) = builder.startTable(5)
-        fun addNAME(builder: FlatBufferBuilder, NAME: Int) = builder.addOffset(0, NAME, 0)
-        fun addSHORT_DESCRIPTION(builder: FlatBufferBuilder, SHORT_DESCRIPTION: Int) = builder.addOffset(1, SHORT_DESCRIPTION, 0)
-        fun addLONG_DESCRIPTION(builder: FlatBufferBuilder, LONG_DESCRIPTION: Int) = builder.addOffset(2, LONG_DESCRIPTION, 0)
-        fun addCONTAINER_REFS(builder: FlatBufferBuilder, CONTAINER_REFS: Int) = builder.addOffset(3, CONTAINER_REFS, 0)
+        fun addNAME(builder: FlatBufferBuilder, name: Int) = builder.addOffset(0, name, 0)
+        fun addSHORTDESCRIPTION(builder: FlatBufferBuilder, shortDescription: Int) = builder.addOffset(1, shortDescription, 0)
+        fun addLONGDESCRIPTION(builder: FlatBufferBuilder, longDescription: Int) = builder.addOffset(2, longDescription, 0)
+        fun addCONTAINERREFS(builder: FlatBufferBuilder, containerRefs: Int) = builder.addOffset(3, containerRefs, 0)
         fun createContainerRefsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -130,7 +130,7 @@ class Service : Table() {
             return builder.endVector()
         }
         fun startContainerRefsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addCOMMAND_REFS(builder: FlatBufferBuilder, COMMAND_REFS: Int) = builder.addOffset(4, COMMAND_REFS, 0)
+        fun addCOMMANDREFS(builder: FlatBufferBuilder, commandRefs: Int) = builder.addOffset(4, commandRefs, 0)
         fun createCommandRefsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {

@@ -101,17 +101,23 @@ def End(builder):
 class ParameterComparisonT(object):
 
     # ParameterComparisonT
-    def __init__(self):
-        self.PARAMETER_REF = None  # type: str
-        self.OPERATOR = 0  # type: int
-        self.VALUE = None  # type: str
-        self.USE_CALIBRATED_VALUE = True  # type: bool
+    def __init__(
+        self,
+        PARAMETER_REF = None,
+        OPERATOR = 0,
+        VALUE = None,
+        USE_CALIBRATED_VALUE = True,
+    ):
+        self.PARAMETER_REF = PARAMETER_REF  # type: Optional[str]
+        self.OPERATOR = OPERATOR  # type: int
+        self.VALUE = VALUE  # type: Optional[str]
+        self.USE_CALIBRATED_VALUE = USE_CALIBRATED_VALUE  # type: bool
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        parameterComparison = ParameterComparison()
-        parameterComparison.Init(buf, pos)
-        return cls.InitFromObj(parameterComparison)
+        tmpParameterComparison = ParameterComparison()
+        tmpParameterComparison.Init(buf, pos)
+        return cls.InitFromObj(tmpParameterComparison)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -119,19 +125,19 @@ class ParameterComparisonT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, parameterComparison):
+    def InitFromObj(cls, tmpParameterComparison):
         x = ParameterComparisonT()
-        x._UnPack(parameterComparison)
+        x._UnPack(tmpParameterComparison)
         return x
 
     # ParameterComparisonT
-    def _UnPack(self, parameterComparison):
-        if parameterComparison is None:
+    def _UnPack(self, ParameterComparison):
+        if ParameterComparison is None:
             return
-        self.PARAMETER_REF = parameterComparison.PARAMETER_REF()
-        self.OPERATOR = parameterComparison.OPERATOR()
-        self.VALUE = parameterComparison.VALUE()
-        self.USE_CALIBRATED_VALUE = parameterComparison.USE_CALIBRATED_VALUE()
+        self.PARAMETER_REF = ParameterComparison.PARAMETER_REF()
+        self.OPERATOR = ParameterComparison.OPERATOR()
+        self.VALUE = ParameterComparison.VALUE()
+        self.USE_CALIBRATED_VALUE = ParameterComparison.USE_CALIBRATED_VALUE()
 
     # ParameterComparisonT
     def Pack(self, builder):
@@ -146,5 +152,5 @@ class ParameterComparisonT(object):
         if self.VALUE is not None:
             ParameterComparisonAddVALUE(builder, VALUE)
         ParameterComparisonAddUSE_CALIBRATED_VALUE(builder, self.USE_CALIBRATED_VALUE)
-        parameterComparison = ParameterComparisonEnd(builder)
-        return parameterComparison
+        ParameterComparison = ParameterComparisonEnd(builder)
+        return ParameterComparison

@@ -87,16 +87,21 @@ def End(builder):
 class PluginCapabilityT(object):
 
     # PluginCapabilityT
-    def __init__(self):
-        self.NAME = None  # type: str
-        self.VERSION = None  # type: str
-        self.REQUIRED = False  # type: bool
+    def __init__(
+        self,
+        NAME = None,
+        VERSION = None,
+        REQUIRED = False,
+    ):
+        self.NAME = NAME  # type: Optional[str]
+        self.VERSION = VERSION  # type: Optional[str]
+        self.REQUIRED = REQUIRED  # type: bool
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        pluginCapability = PluginCapability()
-        pluginCapability.Init(buf, pos)
-        return cls.InitFromObj(pluginCapability)
+        tmpPluginCapability = PluginCapability()
+        tmpPluginCapability.Init(buf, pos)
+        return cls.InitFromObj(tmpPluginCapability)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -104,18 +109,18 @@ class PluginCapabilityT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, pluginCapability):
+    def InitFromObj(cls, tmpPluginCapability):
         x = PluginCapabilityT()
-        x._UnPack(pluginCapability)
+        x._UnPack(tmpPluginCapability)
         return x
 
     # PluginCapabilityT
-    def _UnPack(self, pluginCapability):
-        if pluginCapability is None:
+    def _UnPack(self, PluginCapability):
+        if PluginCapability is None:
             return
-        self.NAME = pluginCapability.NAME()
-        self.VERSION = pluginCapability.VERSION()
-        self.REQUIRED = pluginCapability.REQUIRED()
+        self.NAME = PluginCapability.NAME()
+        self.VERSION = PluginCapability.VERSION()
+        self.REQUIRED = PluginCapability.REQUIRED()
 
     # PluginCapabilityT
     def Pack(self, builder):
@@ -129,5 +134,5 @@ class PluginCapabilityT(object):
         if self.VERSION is not None:
             PluginCapabilityAddVERSION(builder, VERSION)
         PluginCapabilityAddREQUIRED(builder, self.REQUIRED)
-        pluginCapability = PluginCapabilityEnd(builder)
-        return pluginCapability
+        PluginCapability = PluginCapabilityEnd(builder)
+        return PluginCapability

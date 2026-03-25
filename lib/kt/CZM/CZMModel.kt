@@ -32,7 +32,7 @@ class CZMModel : Table() {
     /**
      * Whether the model is displayed
      */
-    val SHOW : Boolean
+    val show : Boolean
         get() {
             val o = __offset(4)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -40,7 +40,7 @@ class CZMModel : Table() {
     /**
      * URI to the glTF model
      */
-    val GLTF : String?
+    val gltf : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -49,12 +49,12 @@ class CZMModel : Table() {
                 null
             }
         }
-    val GLTFAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun GLTFInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val gltfAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun gltfInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * Scale factor
      */
-    val SCALE : Double
+    val scale : Double
         get() {
             val o = __offset(8)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -62,7 +62,7 @@ class CZMModel : Table() {
     /**
      * Minimum pixel size
      */
-    val MINIMUM_PIXEL_SIZE : Double
+    val minimumPixelSize : Double
         get() {
             val o = __offset(10)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -70,7 +70,7 @@ class CZMModel : Table() {
     /**
      * Maximum scale
      */
-    val MAXIMUM_SCALE : Double
+    val maximumScale : Double
         get() {
             val o = __offset(12)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -78,7 +78,7 @@ class CZMModel : Table() {
     /**
      * Height reference
      */
-    val HEIGHT_REFERENCE : Byte
+    val heightReference : Byte
         get() {
             val o = __offset(14)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -86,8 +86,8 @@ class CZMModel : Table() {
     /**
      * Color tint
      */
-    val COLOR : CZMColor? get() = COLOR(CZMColor())
-    fun COLOR(obj: CZMColor) : CZMColor? {
+    val color : CZMColor? get() = color(CZMColor())
+    fun color(obj: CZMColor) : CZMColor? {
         val o = __offset(16)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -98,7 +98,7 @@ class CZMModel : Table() {
     /**
      * Whether to incrementally load textures
      */
-    val INCREMENTALLY_LOAD_TEXTURES : Boolean
+    val incrementallyLoadTextures : Boolean
         get() {
             val o = __offset(18)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -106,7 +106,7 @@ class CZMModel : Table() {
     /**
      * Whether to run animations
      */
-    val RUN_ANIMATIONS : Boolean
+    val runAnimations : Boolean
         get() {
             val o = __offset(20)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -114,7 +114,7 @@ class CZMModel : Table() {
     /**
      * Shadow mode
      */
-    val SHADOWS : String?
+    val shadows : String?
         get() {
             val o = __offset(22)
             return if (o != 0) {
@@ -123,13 +123,13 @@ class CZMModel : Table() {
                 null
             }
         }
-    val SHADOWSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(22, 1)
-    fun SHADOWSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 22, 1)
+    val shadowsAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(22, 1)
+    fun shadowsInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 22, 1)
     /**
      * Silhouette color
      */
-    val SILHOUETTE_COLOR : CZMColor? get() = SILHOUETTE_COLOR(CZMColor())
-    fun SILHOUETTE_COLOR(obj: CZMColor) : CZMColor? {
+    val silhouetteColor : CZMColor? get() = silhouetteColor(CZMColor())
+    fun silhouetteColor(obj: CZMColor) : CZMColor? {
         val o = __offset(24)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -140,7 +140,7 @@ class CZMModel : Table() {
     /**
      * Silhouette size in pixels
      */
-    val SILHOUETTE_SIZE : Double
+    val silhouetteSize : Double
         get() {
             val o = __offset(26)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -148,7 +148,7 @@ class CZMModel : Table() {
     /**
      * Color blend mode
      */
-    val COLOR_BLEND_MODE : String?
+    val colorBlendMode : String?
         get() {
             val o = __offset(28)
             return if (o != 0) {
@@ -157,56 +157,56 @@ class CZMModel : Table() {
                 null
             }
         }
-    val COLOR_BLEND_MODEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(28, 1)
-    fun COLOR_BLEND_MODEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 28, 1)
+    val colorBlendModeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(28, 1)
+    fun colorBlendModeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 28, 1)
     /**
      * Color blend amount (0-1)
      */
-    val COLOR_BLEND_AMOUNT : Double
+    val colorBlendAmount : Double
         get() {
             val o = __offset(30)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsCZMModel(_bb: ByteBuffer): CZMModel = getRootAsCZMModel(_bb, CZMModel())
         fun getRootAsCZMModel(_bb: ByteBuffer, obj: CZMModel): CZMModel {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createCZMModel(builder: FlatBufferBuilder, SHOW: Boolean, GLTFOffset: Int, SCALE: Double, MINIMUM_PIXEL_SIZE: Double, MAXIMUM_SCALE: Double, HEIGHT_REFERENCE: Byte, COLOROffset: Int, INCREMENTALLY_LOAD_TEXTURES: Boolean, RUN_ANIMATIONS: Boolean, SHADOWSOffset: Int, SILHOUETTE_COLOROffset: Int, SILHOUETTE_SIZE: Double, COLOR_BLEND_MODEOffset: Int, COLOR_BLEND_AMOUNT: Double) : Int {
+        fun createCZMModel(builder: FlatBufferBuilder, show: Boolean, gltfOffset: Int, scale: Double, minimumPixelSize: Double, maximumScale: Double, heightReference: Byte, colorOffset: Int, incrementallyLoadTextures: Boolean, runAnimations: Boolean, shadowsOffset: Int, silhouetteColorOffset: Int, silhouetteSize: Double, colorBlendModeOffset: Int, colorBlendAmount: Double) : Int {
             builder.startTable(14)
-            addCOLOR_BLEND_AMOUNT(builder, COLOR_BLEND_AMOUNT)
-            addSILHOUETTE_SIZE(builder, SILHOUETTE_SIZE)
-            addMAXIMUM_SCALE(builder, MAXIMUM_SCALE)
-            addMINIMUM_PIXEL_SIZE(builder, MINIMUM_PIXEL_SIZE)
-            addSCALE(builder, SCALE)
-            addCOLOR_BLEND_MODE(builder, COLOR_BLEND_MODEOffset)
-            addSILHOUETTE_COLOR(builder, SILHOUETTE_COLOROffset)
-            addSHADOWS(builder, SHADOWSOffset)
-            addCOLOR(builder, COLOROffset)
-            addGLTF(builder, GLTFOffset)
-            addRUN_ANIMATIONS(builder, RUN_ANIMATIONS)
-            addINCREMENTALLY_LOAD_TEXTURES(builder, INCREMENTALLY_LOAD_TEXTURES)
-            addHEIGHT_REFERENCE(builder, HEIGHT_REFERENCE)
-            addSHOW(builder, SHOW)
+            addCOLORBLENDAMOUNT(builder, colorBlendAmount)
+            addSILHOUETTESIZE(builder, silhouetteSize)
+            addMAXIMUMSCALE(builder, maximumScale)
+            addMINIMUMPIXELSIZE(builder, minimumPixelSize)
+            addSCALE(builder, scale)
+            addCOLORBLENDMODE(builder, colorBlendModeOffset)
+            addSILHOUETTECOLOR(builder, silhouetteColorOffset)
+            addSHADOWS(builder, shadowsOffset)
+            addCOLOR(builder, colorOffset)
+            addGLTF(builder, gltfOffset)
+            addRUNANIMATIONS(builder, runAnimations)
+            addINCREMENTALLYLOADTEXTURES(builder, incrementallyLoadTextures)
+            addHEIGHTREFERENCE(builder, heightReference)
+            addSHOW(builder, show)
             return endCZMModel(builder)
         }
         fun startCZMModel(builder: FlatBufferBuilder) = builder.startTable(14)
-        fun addSHOW(builder: FlatBufferBuilder, SHOW: Boolean) = builder.addBoolean(0, SHOW, false)
-        fun addGLTF(builder: FlatBufferBuilder, GLTF: Int) = builder.addOffset(1, GLTF, 0)
-        fun addSCALE(builder: FlatBufferBuilder, SCALE: Double) = builder.addDouble(2, SCALE, 0.0)
-        fun addMINIMUM_PIXEL_SIZE(builder: FlatBufferBuilder, MINIMUM_PIXEL_SIZE: Double) = builder.addDouble(3, MINIMUM_PIXEL_SIZE, 0.0)
-        fun addMAXIMUM_SCALE(builder: FlatBufferBuilder, MAXIMUM_SCALE: Double) = builder.addDouble(4, MAXIMUM_SCALE, 0.0)
-        fun addHEIGHT_REFERENCE(builder: FlatBufferBuilder, HEIGHT_REFERENCE: Byte) = builder.addByte(5, HEIGHT_REFERENCE, 0)
-        fun addCOLOR(builder: FlatBufferBuilder, COLOR: Int) = builder.addOffset(6, COLOR, 0)
-        fun addINCREMENTALLY_LOAD_TEXTURES(builder: FlatBufferBuilder, INCREMENTALLY_LOAD_TEXTURES: Boolean) = builder.addBoolean(7, INCREMENTALLY_LOAD_TEXTURES, false)
-        fun addRUN_ANIMATIONS(builder: FlatBufferBuilder, RUN_ANIMATIONS: Boolean) = builder.addBoolean(8, RUN_ANIMATIONS, false)
-        fun addSHADOWS(builder: FlatBufferBuilder, SHADOWS: Int) = builder.addOffset(9, SHADOWS, 0)
-        fun addSILHOUETTE_COLOR(builder: FlatBufferBuilder, SILHOUETTE_COLOR: Int) = builder.addOffset(10, SILHOUETTE_COLOR, 0)
-        fun addSILHOUETTE_SIZE(builder: FlatBufferBuilder, SILHOUETTE_SIZE: Double) = builder.addDouble(11, SILHOUETTE_SIZE, 0.0)
-        fun addCOLOR_BLEND_MODE(builder: FlatBufferBuilder, COLOR_BLEND_MODE: Int) = builder.addOffset(12, COLOR_BLEND_MODE, 0)
-        fun addCOLOR_BLEND_AMOUNT(builder: FlatBufferBuilder, COLOR_BLEND_AMOUNT: Double) = builder.addDouble(13, COLOR_BLEND_AMOUNT, 0.0)
+        fun addSHOW(builder: FlatBufferBuilder, show: Boolean) = builder.addBoolean(0, show, false)
+        fun addGLTF(builder: FlatBufferBuilder, gltf: Int) = builder.addOffset(1, gltf, 0)
+        fun addSCALE(builder: FlatBufferBuilder, scale: Double) = builder.addDouble(2, scale, 0.0)
+        fun addMINIMUMPIXELSIZE(builder: FlatBufferBuilder, minimumPixelSize: Double) = builder.addDouble(3, minimumPixelSize, 0.0)
+        fun addMAXIMUMSCALE(builder: FlatBufferBuilder, maximumScale: Double) = builder.addDouble(4, maximumScale, 0.0)
+        fun addHEIGHTREFERENCE(builder: FlatBufferBuilder, heightReference: Byte) = builder.addByte(5, heightReference, 0)
+        fun addCOLOR(builder: FlatBufferBuilder, color: Int) = builder.addOffset(6, color, 0)
+        fun addINCREMENTALLYLOADTEXTURES(builder: FlatBufferBuilder, incrementallyLoadTextures: Boolean) = builder.addBoolean(7, incrementallyLoadTextures, false)
+        fun addRUNANIMATIONS(builder: FlatBufferBuilder, runAnimations: Boolean) = builder.addBoolean(8, runAnimations, false)
+        fun addSHADOWS(builder: FlatBufferBuilder, shadows: Int) = builder.addOffset(9, shadows, 0)
+        fun addSILHOUETTECOLOR(builder: FlatBufferBuilder, silhouetteColor: Int) = builder.addOffset(10, silhouetteColor, 0)
+        fun addSILHOUETTESIZE(builder: FlatBufferBuilder, silhouetteSize: Double) = builder.addDouble(11, silhouetteSize, 0.0)
+        fun addCOLORBLENDMODE(builder: FlatBufferBuilder, colorBlendMode: Int) = builder.addOffset(12, colorBlendMode, 0)
+        fun addCOLORBLENDAMOUNT(builder: FlatBufferBuilder, colorBlendAmount: Double) = builder.addDouble(13, colorBlendAmount, 0.0)
         fun endCZMModel(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

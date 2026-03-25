@@ -2,4 +2,13 @@
 
 # namespace: 
 
-# NOTE DataMode.py does not declare any structs or enums
+# Enum for the mode of data (real, simulated, synthetic)
+class DataMode(object):
+    # Data collected during an exercise scenario.
+    EXERCISE = 0
+    # Data collected from real-world observations.
+    REAL = 1
+    # Data generated through simulation.
+    SIMULATED = 2
+    # Data collected for testing purposes.
+    TEST = 3

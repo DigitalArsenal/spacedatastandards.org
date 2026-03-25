@@ -35,7 +35,7 @@ static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
 
 SOURCES(index: number):TerrainDataSource|null {
   const offset = this.bb!.__offset(this.bb_pos, 4);
-  return offset ? this.bb!.readInt8(this.bb!.__vector(this.bb_pos + offset) + index) : 0;
+  return offset ? this.bb!.readInt8(this.bb!.__vector(this.bb_pos + offset) + index) : null;
 }
 
 sourcesLength():number {

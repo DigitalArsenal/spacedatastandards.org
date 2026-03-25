@@ -175,23 +175,35 @@ def End(builder):
 class APMT(object):
 
     # APMT
-    def __init__(self):
-        self.CCSDS_APM_VERS = None  # type: str
-        self.CREATION_DATE = None  # type: str
-        self.ORIGINATOR = None  # type: str
-        self.OBJECT_NAME = None  # type: str
-        self.OBJECT_ID = None  # type: str
-        self.EPOCH = None  # type: str
-        self.Q1 = 0.0  # type: float
-        self.Q2 = 0.0  # type: float
-        self.Q3 = 0.0  # type: float
-        self.QC = 0.0  # type: float
+    def __init__(
+        self,
+        CCSDS_APM_VERS = None,
+        CREATION_DATE = None,
+        ORIGINATOR = None,
+        OBJECT_NAME = None,
+        OBJECT_ID = None,
+        EPOCH = None,
+        Q1 = 0.0,
+        Q2 = 0.0,
+        Q3 = 0.0,
+        QC = 0.0,
+    ):
+        self.CCSDS_APM_VERS = CCSDS_APM_VERS  # type: Optional[str]
+        self.CREATION_DATE = CREATION_DATE  # type: Optional[str]
+        self.ORIGINATOR = ORIGINATOR  # type: Optional[str]
+        self.OBJECT_NAME = OBJECT_NAME  # type: Optional[str]
+        self.OBJECT_ID = OBJECT_ID  # type: Optional[str]
+        self.EPOCH = EPOCH  # type: Optional[str]
+        self.Q1 = Q1  # type: float
+        self.Q2 = Q2  # type: float
+        self.Q3 = Q3  # type: float
+        self.QC = QC  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        APM = APM()
-        APM.Init(buf, pos)
-        return cls.InitFromObj(APM)
+        tmpApm = APM()
+        tmpApm.Init(buf, pos)
+        return cls.InitFromObj(tmpApm)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -199,9 +211,9 @@ class APMT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, APM):
+    def InitFromObj(cls, tmpApm):
         x = APMT()
-        x._UnPack(APM)
+        x._UnPack(tmpApm)
         return x
 
     # APMT

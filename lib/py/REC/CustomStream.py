@@ -2,4 +2,140 @@
 
 # namespace: 
 
-# NOTE CustomStream.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Custom stream
+class CustomStream(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = CustomStream()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsCustomStream(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def CustomStreamBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x58\x54\x43", size_prefixed=size_prefixed)
+
+    # CustomStream
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Stream name
+    # CustomStream
+    def NAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Short description
+    # CustomStream
+    def SHORT_DESCRIPTION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Algorithm reference for parsing
+    # CustomStream
+    def ALGORITHM_REF(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+def CustomStreamStart(builder):
+    builder.StartObject(3)
+
+def Start(builder):
+    CustomStreamStart(builder)
+
+def CustomStreamAddNAME(builder, NAME):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(NAME), 0)
+
+def AddNAME(builder, NAME):
+    CustomStreamAddNAME(builder, NAME)
+
+def CustomStreamAddSHORT_DESCRIPTION(builder, SHORT_DESCRIPTION):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(SHORT_DESCRIPTION), 0)
+
+def AddSHORT_DESCRIPTION(builder, SHORT_DESCRIPTION):
+    CustomStreamAddSHORT_DESCRIPTION(builder, SHORT_DESCRIPTION)
+
+def CustomStreamAddALGORITHM_REF(builder, ALGORITHM_REF):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(ALGORITHM_REF), 0)
+
+def AddALGORITHM_REF(builder, ALGORITHM_REF):
+    CustomStreamAddALGORITHM_REF(builder, ALGORITHM_REF)
+
+def CustomStreamEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return CustomStreamEnd(builder)
+
+
+class CustomStreamT(object):
+
+    # CustomStreamT
+    def __init__(
+        self,
+        NAME = None,
+        SHORT_DESCRIPTION = None,
+        ALGORITHM_REF = None,
+    ):
+        self.NAME = NAME  # type: Optional[str]
+        self.SHORT_DESCRIPTION = SHORT_DESCRIPTION  # type: Optional[str]
+        self.ALGORITHM_REF = ALGORITHM_REF  # type: Optional[str]
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpCustomStream = CustomStream()
+        tmpCustomStream.Init(buf, pos)
+        return cls.InitFromObj(tmpCustomStream)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpCustomStream):
+        x = CustomStreamT()
+        x._UnPack(tmpCustomStream)
+        return x
+
+    # CustomStreamT
+    def _UnPack(self, CustomStream):
+        if CustomStream is None:
+            return
+        self.NAME = CustomStream.NAME()
+        self.SHORT_DESCRIPTION = CustomStream.SHORT_DESCRIPTION()
+        self.ALGORITHM_REF = CustomStream.ALGORITHM_REF()
+
+    # CustomStreamT
+    def Pack(self, builder):
+        if self.NAME is not None:
+            NAME = builder.CreateString(self.NAME)
+        if self.SHORT_DESCRIPTION is not None:
+            SHORT_DESCRIPTION = builder.CreateString(self.SHORT_DESCRIPTION)
+        if self.ALGORITHM_REF is not None:
+            ALGORITHM_REF = builder.CreateString(self.ALGORITHM_REF)
+        CustomStreamStart(builder)
+        if self.NAME is not None:
+            CustomStreamAddNAME(builder, NAME)
+        if self.SHORT_DESCRIPTION is not None:
+            CustomStreamAddSHORT_DESCRIPTION(builder, SHORT_DESCRIPTION)
+        if self.ALGORITHM_REF is not None:
+            CustomStreamAddALGORITHM_REF(builder, ALGORITHM_REF)
+        CustomStream = CustomStreamEnd(builder)
+        return CustomStream

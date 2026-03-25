@@ -147,30 +147,30 @@ def MTICreateHRRSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-def MTIStartJOB_DEFSVector(b_:flatbuffers.builder, n_:int):
+def MTIStartJOBDEFSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def MTICreateJOB_DEFSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def MTICreateJOBDEFSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-def MTIStartFREE_TEXTSVector(b_:flatbuffers.builder, n_:int):
+def MTIStartFREETEXTSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def MTICreateFREE_TEXTSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def MTICreateFREETEXTSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-def MTIStartPLATFORM_LOCSVector(b_:flatbuffers.builder, n_:int):
+def MTIStartPLATFORMLOCSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def MTICreatePLATFORM_LOCSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def MTICreatePLATFORMLOCSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-def MTIStartJOB_REQUESTSVector(b_:flatbuffers.builder, n_:int):
+def MTIStartJOBREQUESTSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def MTICreateJOB_REQUESTSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def MTICreateJOBREQUESTSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)

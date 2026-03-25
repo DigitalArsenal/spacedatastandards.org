@@ -2,4 +2,8 @@
 
 # namespace: 
 
-# NOTE solarPerturbationModel.py does not declare any structs or enums
+# Enum to represent various solar perturbation models
+class solarPerturbationModel(object):
+    NONE = 0
+    DE430 = 1
+    DE431 = 2

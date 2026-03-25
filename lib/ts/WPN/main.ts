@@ -2,7 +2,7 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export { FuzeType } from './FuzeType.js';
-export { ProjectilePhase } from './ProjectilePhase.js';
-export { WPN, WPNT } from './WPN.js';
-export { WeaponType } from './WeaponType.js';
+export * from './FuzeType.js';
+export * from './ProjectilePhase.js';
+export * from './WeaponType.js';
+export * from './WPN.js';

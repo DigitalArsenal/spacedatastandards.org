@@ -63,6 +63,10 @@ func (rcv *OOB) ID() []byte {
 	return nil
 }
 
+func (rcv *OOB) Id() []byte {
+	return rcv.ID()
+}
+
 /// Unique identifier
 /// Reference to parent on-orbit object
 func (rcv *OOB) ID_ON_ORBIT() []byte {
@@ -71,6 +75,10 @@ func (rcv *OOB) ID_ON_ORBIT() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *OOB) IdOnOrbit() []byte {
+	return rcv.ID_ON_ORBIT()
 }
 
 /// Reference to parent on-orbit object
@@ -83,6 +91,10 @@ func (rcv *OOB) ID_BATTERY() []byte {
 	return nil
 }
 
+func (rcv *OOB) IdBattery() []byte {
+	return rcv.ID_BATTERY()
+}
+
 /// Reference to battery specification
 /// Battery name or designation
 func (rcv *OOB) NAME() []byte {
@@ -91,6 +103,10 @@ func (rcv *OOB) NAME() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *OOB) Name() []byte {
+	return rcv.NAME()
 }
 
 /// Battery name or designation
@@ -103,6 +119,10 @@ func (rcv *OOB) CHEMISTRY() []byte {
 	return nil
 }
 
+func (rcv *OOB) Chemistry() []byte {
+	return rcv.CHEMISTRY()
+}
+
 /// Battery chemistry (e.g., LI_ION, NICD, NIMH, LIPO, SILVER_ZINC)
 /// Number of batteries of this type
 func (rcv *OOB) QUANTITY() uint32 {
@@ -113,9 +133,17 @@ func (rcv *OOB) QUANTITY() uint32 {
 	return 0
 }
 
+func (rcv *OOB) Quantity() uint32 {
+	return rcv.QUANTITY()
+}
+
 /// Number of batteries of this type
 func (rcv *OOB) MutateQUANTITY(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(14, n)
+}
+
+func (rcv *OOB) MutateQuantity(n uint32) bool {
+	return rcv.MutateQUANTITY(n)
 }
 
 /// Nominal voltage in Volts
@@ -127,9 +155,17 @@ func (rcv *OOB) VOLTAGE() float64 {
 	return 0.0
 }
 
+func (rcv *OOB) Voltage() float64 {
+	return rcv.VOLTAGE()
+}
+
 /// Nominal voltage in Volts
 func (rcv *OOB) MutateVOLTAGE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(16, n)
+}
+
+func (rcv *OOB) MutateVoltage(n float64) bool {
+	return rcv.MutateVOLTAGE(n)
 }
 
 /// Capacity in Amp-hours
@@ -141,9 +177,17 @@ func (rcv *OOB) CAPACITY_AH() float64 {
 	return 0.0
 }
 
+func (rcv *OOB) CapacityAh() float64 {
+	return rcv.CAPACITY_AH()
+}
+
 /// Capacity in Amp-hours
 func (rcv *OOB) MutateCAPACITY_AH(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(18, n)
+}
+
+func (rcv *OOB) MutateCapacityAh(n float64) bool {
+	return rcv.MutateCAPACITY_AH(n)
 }
 
 /// Energy capacity in Watt-hours
@@ -155,9 +199,17 @@ func (rcv *OOB) ENERGY_WH() float64 {
 	return 0.0
 }
 
+func (rcv *OOB) EnergyWh() float64 {
+	return rcv.ENERGY_WH()
+}
+
 /// Energy capacity in Watt-hours
 func (rcv *OOB) MutateENERGY_WH(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(20, n)
+}
+
+func (rcv *OOB) MutateEnergyWh(n float64) bool {
+	return rcv.MutateENERGY_WH(n)
 }
 
 /// Maximum depth of discharge as fraction (0.0-1.0)
@@ -169,9 +221,17 @@ func (rcv *OOB) MAX_DOD() float64 {
 	return 0.0
 }
 
+func (rcv *OOB) MaxDod() float64 {
+	return rcv.MAX_DOD()
+}
+
 /// Maximum depth of discharge as fraction (0.0-1.0)
 func (rcv *OOB) MutateMAX_DOD(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(22, n)
+}
+
+func (rcv *OOB) MutateMaxDod(n float64) bool {
+	return rcv.MutateMAX_DOD(n)
 }
 
 /// Number of charge/discharge cycles rated
@@ -183,9 +243,17 @@ func (rcv *OOB) CYCLE_LIFE() uint32 {
 	return 0
 }
 
+func (rcv *OOB) CycleLife() uint32 {
+	return rcv.CYCLE_LIFE()
+}
+
 /// Number of charge/discharge cycles rated
 func (rcv *OOB) MutateCYCLE_LIFE(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(24, n)
+}
+
+func (rcv *OOB) MutateCycleLife(n uint32) bool {
+	return rcv.MutateCYCLE_LIFE(n)
 }
 
 /// Battery mass in kg
@@ -197,9 +265,17 @@ func (rcv *OOB) MASS() float64 {
 	return 0.0
 }
 
+func (rcv *OOB) Mass() float64 {
+	return rcv.MASS()
+}
+
 /// Battery mass in kg
 func (rcv *OOB) MutateMASS(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(26, n)
+}
+
+func (rcv *OOB) MutateMass(n float64) bool {
+	return rcv.MutateMASS(n)
 }
 
 /// Current state of health as fraction (0.0-1.0)
@@ -211,9 +287,17 @@ func (rcv *OOB) STATE_OF_HEALTH() float64 {
 	return 0.0
 }
 
+func (rcv *OOB) StateOfHealth() float64 {
+	return rcv.STATE_OF_HEALTH()
+}
+
 /// Current state of health as fraction (0.0-1.0)
 func (rcv *OOB) MutateSTATE_OF_HEALTH(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(28, n)
+}
+
+func (rcv *OOB) MutateStateOfHealth(n float64) bool {
+	return rcv.MutateSTATE_OF_HEALTH(n)
 }
 
 /// Additional notes
@@ -225,6 +309,10 @@ func (rcv *OOB) NOTES() []byte {
 	return nil
 }
 
+func (rcv *OOB) Notes() []byte {
+	return rcv.NOTES()
+}
+
 /// Additional notes
 func OOBStart(builder *flatbuffers.Builder) {
 	builder.StartObject(14)
@@ -232,44 +320,86 @@ func OOBStart(builder *flatbuffers.Builder) {
 func OOBAddID(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ID), 0)
 }
+func OOBAddId(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
+	OOBAddID(builder, ID)
+}
 func OOBAddID_ON_ORBIT(builder *flatbuffers.Builder, ID_ON_ORBIT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(ID_ON_ORBIT), 0)
+}
+func OOBAddIdOnOrbit(builder *flatbuffers.Builder, ID_ON_ORBIT flatbuffers.UOffsetT) {
+	OOBAddID_ON_ORBIT(builder, ID_ON_ORBIT)
 }
 func OOBAddID_BATTERY(builder *flatbuffers.Builder, ID_BATTERY flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(ID_BATTERY), 0)
 }
+func OOBAddIdBattery(builder *flatbuffers.Builder, ID_BATTERY flatbuffers.UOffsetT) {
+	OOBAddID_BATTERY(builder, ID_BATTERY)
+}
 func OOBAddNAME(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(NAME), 0)
+}
+func OOBAddName(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
+	OOBAddNAME(builder, NAME)
 }
 func OOBAddCHEMISTRY(builder *flatbuffers.Builder, CHEMISTRY flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(CHEMISTRY), 0)
 }
+func OOBAddChemistry(builder *flatbuffers.Builder, CHEMISTRY flatbuffers.UOffsetT) {
+	OOBAddCHEMISTRY(builder, CHEMISTRY)
+}
 func OOBAddQUANTITY(builder *flatbuffers.Builder, QUANTITY uint32) {
 	builder.PrependUint32Slot(5, QUANTITY, 0)
+}
+func OOBAddQuantity(builder *flatbuffers.Builder, QUANTITY uint32) {
+	OOBAddQUANTITY(builder, QUANTITY)
 }
 func OOBAddVOLTAGE(builder *flatbuffers.Builder, VOLTAGE float64) {
 	builder.PrependFloat64Slot(6, VOLTAGE, 0.0)
 }
+func OOBAddVoltage(builder *flatbuffers.Builder, VOLTAGE float64) {
+	OOBAddVOLTAGE(builder, VOLTAGE)
+}
 func OOBAddCAPACITY_AH(builder *flatbuffers.Builder, CAPACITY_AH float64) {
 	builder.PrependFloat64Slot(7, CAPACITY_AH, 0.0)
+}
+func OOBAddCapacityAh(builder *flatbuffers.Builder, CAPACITY_AH float64) {
+	OOBAddCAPACITY_AH(builder, CAPACITY_AH)
 }
 func OOBAddENERGY_WH(builder *flatbuffers.Builder, ENERGY_WH float64) {
 	builder.PrependFloat64Slot(8, ENERGY_WH, 0.0)
 }
+func OOBAddEnergyWh(builder *flatbuffers.Builder, ENERGY_WH float64) {
+	OOBAddENERGY_WH(builder, ENERGY_WH)
+}
 func OOBAddMAX_DOD(builder *flatbuffers.Builder, MAX_DOD float64) {
 	builder.PrependFloat64Slot(9, MAX_DOD, 0.0)
+}
+func OOBAddMaxDod(builder *flatbuffers.Builder, MAX_DOD float64) {
+	OOBAddMAX_DOD(builder, MAX_DOD)
 }
 func OOBAddCYCLE_LIFE(builder *flatbuffers.Builder, CYCLE_LIFE uint32) {
 	builder.PrependUint32Slot(10, CYCLE_LIFE, 0)
 }
+func OOBAddCycleLife(builder *flatbuffers.Builder, CYCLE_LIFE uint32) {
+	OOBAddCYCLE_LIFE(builder, CYCLE_LIFE)
+}
 func OOBAddMASS(builder *flatbuffers.Builder, MASS float64) {
 	builder.PrependFloat64Slot(11, MASS, 0.0)
+}
+func OOBAddMass(builder *flatbuffers.Builder, MASS float64) {
+	OOBAddMASS(builder, MASS)
 }
 func OOBAddSTATE_OF_HEALTH(builder *flatbuffers.Builder, STATE_OF_HEALTH float64) {
 	builder.PrependFloat64Slot(12, STATE_OF_HEALTH, 0.0)
 }
+func OOBAddStateOfHealth(builder *flatbuffers.Builder, STATE_OF_HEALTH float64) {
+	OOBAddSTATE_OF_HEALTH(builder, STATE_OF_HEALTH)
+}
 func OOBAddNOTES(builder *flatbuffers.Builder, NOTES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(13, flatbuffers.UOffsetT(NOTES), 0)
+}
+func OOBAddNotes(builder *flatbuffers.Builder, NOTES flatbuffers.UOffsetT) {
+	OOBAddNOTES(builder, NOTES)
 }
 func OOBEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

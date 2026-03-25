@@ -29,87 +29,87 @@ class WPN : Table() {
         __init(_i, _bb)
         return this
     }
-    val CALIBER : Float
+    val caliber : Float
         get() {
             val o = __offset(4)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
-    val MUZZLE_VELOCITY : Float
+    val muzzleVelocity : Float
         get() {
             val o = __offset(6)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
-    val RATE_OF_FIRE : Float
+    val rateOfFire : Float
         get() {
             val o = __offset(8)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
-    val DISPERSION : Float
+    val dispersion : Float
         get() {
             val o = __offset(10)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
-    val AMMO_CAPACITY : UShort
+    val ammoCapacity : UShort
         get() {
             val o = __offset(12)
             return if(o != 0) bb.getShort(o + bb_pos).toUShort() else 0u
         }
-    val BURST_LENGTH : UShort
+    val burstLength : UShort
         get() {
             val o = __offset(14)
             return if(o != 0) bb.getShort(o + bb_pos).toUShort() else 0u
         }
-    val RELOAD_TIME : Float
+    val reloadTime : Float
         get() {
             val o = __offset(16)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
-    val OVERHEAT_ROUNDS : UShort
+    val overheatRounds : UShort
         get() {
             val o = __offset(18)
             return if(o != 0) bb.getShort(o + bb_pos).toUShort() else 0u
         }
-    val COOLDOWN_RATE : Float
+    val cooldownRate : Float
         get() {
             val o = __offset(20)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
-    val ELEVATION_MIN : Float
+    val elevationMin : Float
         get() {
             val o = __offset(22)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
-    val ELEVATION_MAX : Float
+    val elevationMax : Float
         get() {
             val o = __offset(24)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
-    val TRAVERSE_MIN : Float
+    val traverseMin : Float
         get() {
             val o = __offset(26)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
-    val TRAVERSE_MAX : Float
+    val traverseMax : Float
         get() {
             val o = __offset(28)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
-    val SLEW_RATE : Float
+    val slewRate : Float
         get() {
             val o = __offset(30)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
-    val WEAPON_TYPE : UByte
+    val weaponType : UByte
         get() {
             val o = __offset(32)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
         }
-    val FUZE_TYPE : UByte
+    val fuzeType : UByte
         get() {
             val o = __offset(34)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
         }
-    fun RESERVED(j: Int) : UByte {
+    fun reserved(j: Int) : UByte {
         val o = __offset(36)
         return if (o != 0) {
             bb.get(__vector(o) + j * 1).toUByte()
@@ -117,59 +117,59 @@ class WPN : Table() {
             0u
         }
     }
-    val RESERVEDLength : Int
+    val reservedLength : Int
         get() {
             val o = __offset(36); return if (o != 0) __vector_len(o) else 0
         }
-    val RESERVEDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(36, 1)
-    fun RESERVEDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 36, 1)
+    val reservedAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(36, 1)
+    fun reservedInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 36, 1)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsWPN(_bb: ByteBuffer): WPN = getRootAsWPN(_bb, WPN())
         fun getRootAsWPN(_bb: ByteBuffer, obj: WPN): WPN {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun WPNBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$WPN")
-        fun createWPN(builder: FlatBufferBuilder, CALIBER: Float, MUZZLE_VELOCITY: Float, RATE_OF_FIRE: Float, DISPERSION: Float, AMMO_CAPACITY: UShort, BURST_LENGTH: UShort, RELOAD_TIME: Float, OVERHEAT_ROUNDS: UShort, COOLDOWN_RATE: Float, ELEVATION_MIN: Float, ELEVATION_MAX: Float, TRAVERSE_MIN: Float, TRAVERSE_MAX: Float, SLEW_RATE: Float, WEAPON_TYPE: UByte, FUZE_TYPE: UByte, RESERVEDOffset: Int) : Int {
+        fun createWPN(builder: FlatBufferBuilder, caliber: Float, muzzleVelocity: Float, rateOfFire: Float, dispersion: Float, ammoCapacity: UShort, burstLength: UShort, reloadTime: Float, overheatRounds: UShort, cooldownRate: Float, elevationMin: Float, elevationMax: Float, traverseMin: Float, traverseMax: Float, slewRate: Float, weaponType: UByte, fuzeType: UByte, reservedOffset: Int) : Int {
             builder.startTable(17)
-            addRESERVED(builder, RESERVEDOffset)
-            addSLEW_RATE(builder, SLEW_RATE)
-            addTRAVERSE_MAX(builder, TRAVERSE_MAX)
-            addTRAVERSE_MIN(builder, TRAVERSE_MIN)
-            addELEVATION_MAX(builder, ELEVATION_MAX)
-            addELEVATION_MIN(builder, ELEVATION_MIN)
-            addCOOLDOWN_RATE(builder, COOLDOWN_RATE)
-            addRELOAD_TIME(builder, RELOAD_TIME)
-            addDISPERSION(builder, DISPERSION)
-            addRATE_OF_FIRE(builder, RATE_OF_FIRE)
-            addMUZZLE_VELOCITY(builder, MUZZLE_VELOCITY)
-            addCALIBER(builder, CALIBER)
-            addOVERHEAT_ROUNDS(builder, OVERHEAT_ROUNDS)
-            addBURST_LENGTH(builder, BURST_LENGTH)
-            addAMMO_CAPACITY(builder, AMMO_CAPACITY)
-            addFUZE_TYPE(builder, FUZE_TYPE)
-            addWEAPON_TYPE(builder, WEAPON_TYPE)
+            addRESERVED(builder, reservedOffset)
+            addSLEWRATE(builder, slewRate)
+            addTRAVERSEMAX(builder, traverseMax)
+            addTRAVERSEMIN(builder, traverseMin)
+            addELEVATIONMAX(builder, elevationMax)
+            addELEVATIONMIN(builder, elevationMin)
+            addCOOLDOWNRATE(builder, cooldownRate)
+            addRELOADTIME(builder, reloadTime)
+            addDISPERSION(builder, dispersion)
+            addRATEOFFIRE(builder, rateOfFire)
+            addMUZZLEVELOCITY(builder, muzzleVelocity)
+            addCALIBER(builder, caliber)
+            addOVERHEATROUNDS(builder, overheatRounds)
+            addBURSTLENGTH(builder, burstLength)
+            addAMMOCAPACITY(builder, ammoCapacity)
+            addFUZETYPE(builder, fuzeType)
+            addWEAPONTYPE(builder, weaponType)
             return endWPN(builder)
         }
         fun startWPN(builder: FlatBufferBuilder) = builder.startTable(17)
-        fun addCALIBER(builder: FlatBufferBuilder, CALIBER: Float) = builder.addFloat(0, CALIBER, 0.0)
-        fun addMUZZLE_VELOCITY(builder: FlatBufferBuilder, MUZZLE_VELOCITY: Float) = builder.addFloat(1, MUZZLE_VELOCITY, 0.0)
-        fun addRATE_OF_FIRE(builder: FlatBufferBuilder, RATE_OF_FIRE: Float) = builder.addFloat(2, RATE_OF_FIRE, 0.0)
-        fun addDISPERSION(builder: FlatBufferBuilder, DISPERSION: Float) = builder.addFloat(3, DISPERSION, 0.0)
-        fun addAMMO_CAPACITY(builder: FlatBufferBuilder, AMMO_CAPACITY: UShort) = builder.addShort(4, AMMO_CAPACITY.toShort(), 0)
-        fun addBURST_LENGTH(builder: FlatBufferBuilder, BURST_LENGTH: UShort) = builder.addShort(5, BURST_LENGTH.toShort(), 0)
-        fun addRELOAD_TIME(builder: FlatBufferBuilder, RELOAD_TIME: Float) = builder.addFloat(6, RELOAD_TIME, 0.0)
-        fun addOVERHEAT_ROUNDS(builder: FlatBufferBuilder, OVERHEAT_ROUNDS: UShort) = builder.addShort(7, OVERHEAT_ROUNDS.toShort(), 0)
-        fun addCOOLDOWN_RATE(builder: FlatBufferBuilder, COOLDOWN_RATE: Float) = builder.addFloat(8, COOLDOWN_RATE, 0.0)
-        fun addELEVATION_MIN(builder: FlatBufferBuilder, ELEVATION_MIN: Float) = builder.addFloat(9, ELEVATION_MIN, 0.0)
-        fun addELEVATION_MAX(builder: FlatBufferBuilder, ELEVATION_MAX: Float) = builder.addFloat(10, ELEVATION_MAX, 0.0)
-        fun addTRAVERSE_MIN(builder: FlatBufferBuilder, TRAVERSE_MIN: Float) = builder.addFloat(11, TRAVERSE_MIN, 0.0)
-        fun addTRAVERSE_MAX(builder: FlatBufferBuilder, TRAVERSE_MAX: Float) = builder.addFloat(12, TRAVERSE_MAX, 0.0)
-        fun addSLEW_RATE(builder: FlatBufferBuilder, SLEW_RATE: Float) = builder.addFloat(13, SLEW_RATE, 0.0)
-        fun addWEAPON_TYPE(builder: FlatBufferBuilder, WEAPON_TYPE: UByte) = builder.addByte(14, WEAPON_TYPE.toByte(), 0)
-        fun addFUZE_TYPE(builder: FlatBufferBuilder, FUZE_TYPE: UByte) = builder.addByte(15, FUZE_TYPE.toByte(), 0)
-        fun addRESERVED(builder: FlatBufferBuilder, RESERVED: Int) = builder.addOffset(16, RESERVED, 0)
+        fun addCALIBER(builder: FlatBufferBuilder, caliber: Float) = builder.addFloat(0, caliber, 0.0)
+        fun addMUZZLEVELOCITY(builder: FlatBufferBuilder, muzzleVelocity: Float) = builder.addFloat(1, muzzleVelocity, 0.0)
+        fun addRATEOFFIRE(builder: FlatBufferBuilder, rateOfFire: Float) = builder.addFloat(2, rateOfFire, 0.0)
+        fun addDISPERSION(builder: FlatBufferBuilder, dispersion: Float) = builder.addFloat(3, dispersion, 0.0)
+        fun addAMMOCAPACITY(builder: FlatBufferBuilder, ammoCapacity: UShort) = builder.addShort(4, ammoCapacity.toShort(), 0)
+        fun addBURSTLENGTH(builder: FlatBufferBuilder, burstLength: UShort) = builder.addShort(5, burstLength.toShort(), 0)
+        fun addRELOADTIME(builder: FlatBufferBuilder, reloadTime: Float) = builder.addFloat(6, reloadTime, 0.0)
+        fun addOVERHEATROUNDS(builder: FlatBufferBuilder, overheatRounds: UShort) = builder.addShort(7, overheatRounds.toShort(), 0)
+        fun addCOOLDOWNRATE(builder: FlatBufferBuilder, cooldownRate: Float) = builder.addFloat(8, cooldownRate, 0.0)
+        fun addELEVATIONMIN(builder: FlatBufferBuilder, elevationMin: Float) = builder.addFloat(9, elevationMin, 0.0)
+        fun addELEVATIONMAX(builder: FlatBufferBuilder, elevationMax: Float) = builder.addFloat(10, elevationMax, 0.0)
+        fun addTRAVERSEMIN(builder: FlatBufferBuilder, traverseMin: Float) = builder.addFloat(11, traverseMin, 0.0)
+        fun addTRAVERSEMAX(builder: FlatBufferBuilder, traverseMax: Float) = builder.addFloat(12, traverseMax, 0.0)
+        fun addSLEWRATE(builder: FlatBufferBuilder, slewRate: Float) = builder.addFloat(13, slewRate, 0.0)
+        fun addWEAPONTYPE(builder: FlatBufferBuilder, weaponType: UByte) = builder.addByte(14, weaponType.toByte(), 0)
+        fun addFUZETYPE(builder: FlatBufferBuilder, fuzeType: UByte) = builder.addByte(15, fuzeType.toByte(), 0)
+        fun addRESERVED(builder: FlatBufferBuilder, reserved: Int) = builder.addOffset(16, reserved, 0)
         @kotlin.ExperimentalUnsignedTypes
         fun createReservedVector(builder: FlatBufferBuilder, data: UByteArray) : Int {
             builder.startVector(1, data.size, 1)

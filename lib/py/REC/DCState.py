@@ -2,4 +2,11 @@
 
 # namespace: 
 
-# NOTE DCState.py does not declare any structs or enums
+class DCState(object):
+    NORMAL = 0
+    MINOR_DAMAGE = 1
+    MODERATE_DAMAGE = 2
+    SEVERE_DAMAGE = 3
+    CRITICAL = 4
+    SINKING = 5
+    ABANDONED = 6

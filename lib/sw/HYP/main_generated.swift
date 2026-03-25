@@ -2,9 +2,13 @@
 // swiftlint:disable all
 // swiftformat:disable all
 
+#if canImport(Common)
+import Common
+#endif
+
 import FlatBuffers
 
-public enum ScoreType: Int8, Enum, Verifiable {
+public enum ScoreType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -15,9 +19,9 @@ public enum ScoreType: Int8, Enum, Verifiable {
 }
 
 
-public struct Score: FlatBufferObject, Verifiable {
+public struct Score: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -73,9 +77,9 @@ public struct Score: FlatBufferObject, Verifiable {
 }
 
 ///  Hypothesis Message
-public struct HYP: FlatBufferObject, Verifiable {
+public struct HYP: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -101,13 +105,9 @@ public struct HYP: FlatBufferObject, Verifiable {
   }
 
   ///  Space Objects Involved
-  public var hasCatIds: Bool { let o = _accessor.offset(VTOFFSET.CAT_IDS.v); return o == 0 ? false : true }
-  public var CAT_IDSCount: Int32 { let o = _accessor.offset(VTOFFSET.CAT_IDS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func CAT_IDS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.CAT_IDS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  public var CAT_IDS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.CAT_IDS.v, byteSize: 4) }
   ///  Space Objects Involved
-  public var hasSitIds: Bool { let o = _accessor.offset(VTOFFSET.SIT_IDS.v); return o == 0 ? false : true }
-  public var SIT_IDSCount: Int32 { let o = _accessor.offset(VTOFFSET.SIT_IDS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func SIT_IDS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.SIT_IDS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  public var SIT_IDS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.SIT_IDS.v, byteSize: 4) }
   ///  Name of the hypothesis
   public var NAME: String? { let o = _accessor.offset(VTOFFSET.NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NAME.v) }
@@ -115,22 +115,14 @@ public struct HYP: FlatBufferObject, Verifiable {
   public var CATEGORY: String? { let o = _accessor.offset(VTOFFSET.CATEGORY.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var CATEGORYSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CATEGORY.v) }
   ///  Row indicators for the hypothesis matrix
-  public var hasRowIndicators: Bool { let o = _accessor.offset(VTOFFSET.ROW_INDICATORS.v); return o == 0 ? false : true }
-  public var ROW_INDICATORSCount: Int32 { let o = _accessor.offset(VTOFFSET.ROW_INDICATORS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func ROW_INDICATORS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.ROW_INDICATORS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  public var ROW_INDICATORS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.ROW_INDICATORS.v, byteSize: 4) }
   ///  Column indicators for the hypothesis matrix
-  public var hasColIndicators: Bool { let o = _accessor.offset(VTOFFSET.COL_INDICATORS.v); return o == 0 ? false : true }
-  public var COL_INDICATORSCount: Int32 { let o = _accessor.offset(VTOFFSET.COL_INDICATORS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func COL_INDICATORS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.COL_INDICATORS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  public var COL_INDICATORS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.COL_INDICATORS.v, byteSize: 4) }
   ///  Matrix data as a boolean array in row major format; if overflow, adds additional rows
-  public var hasMatrix: Bool { let o = _accessor.offset(VTOFFSET.MATRIX.v); return o == 0 ? false : true }
-  public var MATRIXCount: Int32 { let o = _accessor.offset(VTOFFSET.MATRIX.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func MATRIX(at index: Int32) -> Bool { let o = _accessor.offset(VTOFFSET.MATRIX.v); return o == 0 ? true : _accessor.directRead(of: Bool.self, offset: _accessor.vector(at: o) + index * 1) }
-  public var MATRIX: [Bool] { return _accessor.getVector(at: VTOFFSET.MATRIX.v) ?? [] }
+  public var MATRIX: FlatbufferVector<Bool> { return _accessor.vector(at: VTOFFSET.MATRIX.v, byteSize: 1) }
+  public func withUnsafePointerToMatrix<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.MATRIX.v, body: body) }
   ///  Scores for objects
-  public var hasScore: Bool { let o = _accessor.offset(VTOFFSET.SCORE.v); return o == 0 ? false : true }
-  public var SCORECount: Int32 { let o = _accessor.offset(VTOFFSET.SCORE.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func SCORE(at index: Int32) -> Score? { let o = _accessor.offset(VTOFFSET.SCORE.v); return o == 0 ? nil : Score(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var SCORE: FlatbufferVector<Score> { return _accessor.vector(at: VTOFFSET.SCORE.v, byteSize: 4) }
   ///  Analysis methodology used to form the hypothesis
   public var ANALYSIS_METHOD: String? { let o = _accessor.offset(VTOFFSET.ANALYSIS_METHOD.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var ANALYSIS_METHODSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ANALYSIS_METHOD.v) }

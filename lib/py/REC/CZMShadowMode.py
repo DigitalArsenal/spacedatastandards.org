@@ -2,4 +2,8 @@
 
 # namespace: 
 
-# NOTE CZMShadowMode.py does not declare any structs or enums
+class CZMShadowMode(object):
+    DISABLED = 0
+    ENABLED = 1
+    CAST_ONLY = 2
+    RECEIVE_ONLY = 3

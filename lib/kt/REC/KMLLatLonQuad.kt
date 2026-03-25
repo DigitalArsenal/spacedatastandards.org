@@ -32,8 +32,8 @@ class KMLLatLonQuad : Table() {
     /**
      * Four corner coordinates
      */
-    fun COORDINATES(j: Int) : KMLCoordinate? = COORDINATES(KMLCoordinate(), j)
-    fun COORDINATES(obj: KMLCoordinate, j: Int) : KMLCoordinate? {
+    fun coordinates(j: Int) : KMLCoordinate? = coordinates(KMLCoordinate(), j)
+    fun coordinates(obj: KMLCoordinate, j: Int) : KMLCoordinate? {
         val o = __offset(4)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -41,24 +41,24 @@ class KMLLatLonQuad : Table() {
             null
         }
     }
-    val COORDINATESLength : Int
+    val coordinatesLength : Int
         get() {
             val o = __offset(4); return if (o != 0) __vector_len(o) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsKMLLatLonQuad(_bb: ByteBuffer): KMLLatLonQuad = getRootAsKMLLatLonQuad(_bb, KMLLatLonQuad())
         fun getRootAsKMLLatLonQuad(_bb: ByteBuffer, obj: KMLLatLonQuad): KMLLatLonQuad {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createKMLLatLonQuad(builder: FlatBufferBuilder, COORDINATESOffset: Int) : Int {
+        fun createKMLLatLonQuad(builder: FlatBufferBuilder, coordinatesOffset: Int) : Int {
             builder.startTable(1)
-            addCOORDINATES(builder, COORDINATESOffset)
+            addCOORDINATES(builder, coordinatesOffset)
             return endKMLLatLonQuad(builder)
         }
         fun startKMLLatLonQuad(builder: FlatBufferBuilder) = builder.startTable(1)
-        fun addCOORDINATES(builder: FlatBufferBuilder, COORDINATES: Int) = builder.addOffset(0, COORDINATES, 0)
+        fun addCOORDINATES(builder: FlatBufferBuilder, coordinates: Int) = builder.addOffset(0, coordinates, 0)
         fun createCoordinatesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {

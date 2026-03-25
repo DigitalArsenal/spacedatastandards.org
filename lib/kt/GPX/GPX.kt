@@ -32,7 +32,7 @@ class GPX : Table() {
     /**
      * GPX schema version
      */
-    val VERSION : String?
+    val version : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class GPX : Table() {
                 null
             }
         }
-    val VERSIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun VERSIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val versionAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun versionInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Creator software/organization
      */
-    val CREATOR : String?
+    val creator : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -55,12 +55,12 @@ class GPX : Table() {
                 null
             }
         }
-    val CREATORAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun CREATORInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val creatorAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun creatorInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * File name
      */
-    val NAME : String?
+    val name : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -69,12 +69,12 @@ class GPX : Table() {
                 null
             }
         }
-    val NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val nameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun nameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
     /**
      * File description
      */
-    val DESCRIPTION : String?
+    val description : String?
         get() {
             val o = __offset(10)
             return if (o != 0) {
@@ -83,12 +83,12 @@ class GPX : Table() {
                 null
             }
         }
-    val DESCRIPTIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
-    fun DESCRIPTIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
+    val descriptionAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(10, 1)
+    fun descriptionInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 10, 1)
     /**
      * Person or organization who created the file
      */
-    val AUTHOR_NAME : String?
+    val authorName : String?
         get() {
             val o = __offset(12)
             return if (o != 0) {
@@ -97,12 +97,12 @@ class GPX : Table() {
                 null
             }
         }
-    val AUTHOR_NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
-    fun AUTHOR_NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
+    val authorNameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(12, 1)
+    fun authorNameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 12, 1)
     /**
      * Author email
      */
-    val AUTHOR_EMAIL : String?
+    val authorEmail : String?
         get() {
             val o = __offset(14)
             return if (o != 0) {
@@ -111,13 +111,13 @@ class GPX : Table() {
                 null
             }
         }
-    val AUTHOR_EMAILAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(14, 1)
-    fun AUTHOR_EMAILInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 14, 1)
+    val authorEmailAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(14, 1)
+    fun authorEmailInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 14, 1)
     /**
      * Author link
      */
-    val AUTHOR_LINK : GPXLink? get() = AUTHOR_LINK(GPXLink())
-    fun AUTHOR_LINK(obj: GPXLink) : GPXLink? {
+    val authorLink : GPXLink? get() = authorLink(GPXLink())
+    fun authorLink(obj: GPXLink) : GPXLink? {
         val o = __offset(16)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -128,7 +128,7 @@ class GPX : Table() {
     /**
      * Copyright holder
      */
-    val COPYRIGHT_AUTHOR : String?
+    val copyrightAuthor : String?
         get() {
             val o = __offset(18)
             return if (o != 0) {
@@ -137,12 +137,12 @@ class GPX : Table() {
                 null
             }
         }
-    val COPYRIGHT_AUTHORAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(18, 1)
-    fun COPYRIGHT_AUTHORInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 18, 1)
+    val copyrightAuthorAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(18, 1)
+    fun copyrightAuthorInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 18, 1)
     /**
      * Copyright year
      */
-    val COPYRIGHT_YEAR : String?
+    val copyrightYear : String?
         get() {
             val o = __offset(20)
             return if (o != 0) {
@@ -151,12 +151,12 @@ class GPX : Table() {
                 null
             }
         }
-    val COPYRIGHT_YEARAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(20, 1)
-    fun COPYRIGHT_YEARInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 20, 1)
+    val copyrightYearAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(20, 1)
+    fun copyrightYearInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 20, 1)
     /**
      * Copyright license URL
      */
-    val COPYRIGHT_LICENSE : String?
+    val copyrightLicense : String?
         get() {
             val o = __offset(22)
             return if (o != 0) {
@@ -165,13 +165,13 @@ class GPX : Table() {
                 null
             }
         }
-    val COPYRIGHT_LICENSEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(22, 1)
-    fun COPYRIGHT_LICENSEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 22, 1)
+    val copyrightLicenseAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(22, 1)
+    fun copyrightLicenseInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 22, 1)
     /**
      * Links to additional information
      */
-    fun LINKS(j: Int) : GPXLink? = LINKS(GPXLink(), j)
-    fun LINKS(obj: GPXLink, j: Int) : GPXLink? {
+    fun links(j: Int) : GPXLink? = links(GPXLink(), j)
+    fun links(obj: GPXLink, j: Int) : GPXLink? {
         val o = __offset(24)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -179,14 +179,14 @@ class GPX : Table() {
             null
         }
     }
-    val LINKSLength : Int
+    val linksLength : Int
         get() {
             val o = __offset(24); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Creation timestamp (ISO 8601)
      */
-    val TIME : String?
+    val time : String?
         get() {
             val o = __offset(26)
             return if (o != 0) {
@@ -195,12 +195,12 @@ class GPX : Table() {
                 null
             }
         }
-    val TIMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(26, 1)
-    fun TIMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 26, 1)
+    val timeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(26, 1)
+    fun timeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 26, 1)
     /**
      * Keywords
      */
-    val KEYWORDS : String?
+    val keywords : String?
         get() {
             val o = __offset(28)
             return if (o != 0) {
@@ -209,12 +209,12 @@ class GPX : Table() {
                 null
             }
         }
-    val KEYWORDSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(28, 1)
-    fun KEYWORDSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 28, 1)
+    val keywordsAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(28, 1)
+    fun keywordsInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 28, 1)
     /**
      * Minimum latitude of bounding box
      */
-    val BOUNDS_MIN_LAT : Double
+    val boundsMinLat : Double
         get() {
             val o = __offset(30)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -222,7 +222,7 @@ class GPX : Table() {
     /**
      * Minimum longitude of bounding box
      */
-    val BOUNDS_MIN_LON : Double
+    val boundsMinLon : Double
         get() {
             val o = __offset(32)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -230,7 +230,7 @@ class GPX : Table() {
     /**
      * Maximum latitude of bounding box
      */
-    val BOUNDS_MAX_LAT : Double
+    val boundsMaxLat : Double
         get() {
             val o = __offset(34)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -238,7 +238,7 @@ class GPX : Table() {
     /**
      * Maximum longitude of bounding box
      */
-    val BOUNDS_MAX_LON : Double
+    val boundsMaxLon : Double
         get() {
             val o = __offset(36)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -246,8 +246,8 @@ class GPX : Table() {
     /**
      * Waypoints
      */
-    fun WAYPOINTS(j: Int) : GPXWaypoint? = WAYPOINTS(GPXWaypoint(), j)
-    fun WAYPOINTS(obj: GPXWaypoint, j: Int) : GPXWaypoint? {
+    fun waypoints(j: Int) : GPXWaypoint? = waypoints(GPXWaypoint(), j)
+    fun waypoints(obj: GPXWaypoint, j: Int) : GPXWaypoint? {
         val o = __offset(38)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -255,15 +255,15 @@ class GPX : Table() {
             null
         }
     }
-    val WAYPOINTSLength : Int
+    val waypointsLength : Int
         get() {
             val o = __offset(38); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Routes
      */
-    fun ROUTES(j: Int) : GPXRoute? = ROUTES(GPXRoute(), j)
-    fun ROUTES(obj: GPXRoute, j: Int) : GPXRoute? {
+    fun routes(j: Int) : GPXRoute? = routes(GPXRoute(), j)
+    fun routes(obj: GPXRoute, j: Int) : GPXRoute? {
         val o = __offset(40)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -271,15 +271,15 @@ class GPX : Table() {
             null
         }
     }
-    val ROUTESLength : Int
+    val routesLength : Int
         get() {
             val o = __offset(40); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Tracks
      */
-    fun TRACKS(j: Int) : GPXTrack? = TRACKS(GPXTrack(), j)
-    fun TRACKS(obj: GPXTrack, j: Int) : GPXTrack? {
+    fun tracks(j: Int) : GPXTrack? = tracks(GPXTrack(), j)
+    fun tracks(obj: GPXTrack, j: Int) : GPXTrack? {
         val o = __offset(42)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -287,54 +287,54 @@ class GPX : Table() {
             null
         }
     }
-    val TRACKSLength : Int
+    val tracksLength : Int
         get() {
             val o = __offset(42); return if (o != 0) __vector_len(o) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsGPX(_bb: ByteBuffer): GPX = getRootAsGPX(_bb, GPX())
         fun getRootAsGPX(_bb: ByteBuffer, obj: GPX): GPX {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun GPXBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$GPX")
-        fun createGPX(builder: FlatBufferBuilder, VERSIONOffset: Int, CREATOROffset: Int, NAMEOffset: Int, DESCRIPTIONOffset: Int, AUTHOR_NAMEOffset: Int, AUTHOR_EMAILOffset: Int, AUTHOR_LINKOffset: Int, COPYRIGHT_AUTHOROffset: Int, COPYRIGHT_YEAROffset: Int, COPYRIGHT_LICENSEOffset: Int, LINKSOffset: Int, TIMEOffset: Int, KEYWORDSOffset: Int, BOUNDS_MIN_LAT: Double, BOUNDS_MIN_LON: Double, BOUNDS_MAX_LAT: Double, BOUNDS_MAX_LON: Double, WAYPOINTSOffset: Int, ROUTESOffset: Int, TRACKSOffset: Int) : Int {
+        fun createGPX(builder: FlatBufferBuilder, versionOffset: Int, creatorOffset: Int, nameOffset: Int, descriptionOffset: Int, authorNameOffset: Int, authorEmailOffset: Int, authorLinkOffset: Int, copyrightAuthorOffset: Int, copyrightYearOffset: Int, copyrightLicenseOffset: Int, linksOffset: Int, timeOffset: Int, keywordsOffset: Int, boundsMinLat: Double, boundsMinLon: Double, boundsMaxLat: Double, boundsMaxLon: Double, waypointsOffset: Int, routesOffset: Int, tracksOffset: Int) : Int {
             builder.startTable(20)
-            addBOUNDS_MAX_LON(builder, BOUNDS_MAX_LON)
-            addBOUNDS_MAX_LAT(builder, BOUNDS_MAX_LAT)
-            addBOUNDS_MIN_LON(builder, BOUNDS_MIN_LON)
-            addBOUNDS_MIN_LAT(builder, BOUNDS_MIN_LAT)
-            addTRACKS(builder, TRACKSOffset)
-            addROUTES(builder, ROUTESOffset)
-            addWAYPOINTS(builder, WAYPOINTSOffset)
-            addKEYWORDS(builder, KEYWORDSOffset)
-            addTIME(builder, TIMEOffset)
-            addLINKS(builder, LINKSOffset)
-            addCOPYRIGHT_LICENSE(builder, COPYRIGHT_LICENSEOffset)
-            addCOPYRIGHT_YEAR(builder, COPYRIGHT_YEAROffset)
-            addCOPYRIGHT_AUTHOR(builder, COPYRIGHT_AUTHOROffset)
-            addAUTHOR_LINK(builder, AUTHOR_LINKOffset)
-            addAUTHOR_EMAIL(builder, AUTHOR_EMAILOffset)
-            addAUTHOR_NAME(builder, AUTHOR_NAMEOffset)
-            addDESCRIPTION(builder, DESCRIPTIONOffset)
-            addNAME(builder, NAMEOffset)
-            addCREATOR(builder, CREATOROffset)
-            addVERSION(builder, VERSIONOffset)
+            addBOUNDSMAXLON(builder, boundsMaxLon)
+            addBOUNDSMAXLAT(builder, boundsMaxLat)
+            addBOUNDSMINLON(builder, boundsMinLon)
+            addBOUNDSMINLAT(builder, boundsMinLat)
+            addTRACKS(builder, tracksOffset)
+            addROUTES(builder, routesOffset)
+            addWAYPOINTS(builder, waypointsOffset)
+            addKEYWORDS(builder, keywordsOffset)
+            addTIME(builder, timeOffset)
+            addLINKS(builder, linksOffset)
+            addCOPYRIGHTLICENSE(builder, copyrightLicenseOffset)
+            addCOPYRIGHTYEAR(builder, copyrightYearOffset)
+            addCOPYRIGHTAUTHOR(builder, copyrightAuthorOffset)
+            addAUTHORLINK(builder, authorLinkOffset)
+            addAUTHOREMAIL(builder, authorEmailOffset)
+            addAUTHORNAME(builder, authorNameOffset)
+            addDESCRIPTION(builder, descriptionOffset)
+            addNAME(builder, nameOffset)
+            addCREATOR(builder, creatorOffset)
+            addVERSION(builder, versionOffset)
             return endGPX(builder)
         }
         fun startGPX(builder: FlatBufferBuilder) = builder.startTable(20)
-        fun addVERSION(builder: FlatBufferBuilder, VERSION: Int) = builder.addOffset(0, VERSION, 0)
-        fun addCREATOR(builder: FlatBufferBuilder, CREATOR: Int) = builder.addOffset(1, CREATOR, 0)
-        fun addNAME(builder: FlatBufferBuilder, NAME: Int) = builder.addOffset(2, NAME, 0)
-        fun addDESCRIPTION(builder: FlatBufferBuilder, DESCRIPTION: Int) = builder.addOffset(3, DESCRIPTION, 0)
-        fun addAUTHOR_NAME(builder: FlatBufferBuilder, AUTHOR_NAME: Int) = builder.addOffset(4, AUTHOR_NAME, 0)
-        fun addAUTHOR_EMAIL(builder: FlatBufferBuilder, AUTHOR_EMAIL: Int) = builder.addOffset(5, AUTHOR_EMAIL, 0)
-        fun addAUTHOR_LINK(builder: FlatBufferBuilder, AUTHOR_LINK: Int) = builder.addOffset(6, AUTHOR_LINK, 0)
-        fun addCOPYRIGHT_AUTHOR(builder: FlatBufferBuilder, COPYRIGHT_AUTHOR: Int) = builder.addOffset(7, COPYRIGHT_AUTHOR, 0)
-        fun addCOPYRIGHT_YEAR(builder: FlatBufferBuilder, COPYRIGHT_YEAR: Int) = builder.addOffset(8, COPYRIGHT_YEAR, 0)
-        fun addCOPYRIGHT_LICENSE(builder: FlatBufferBuilder, COPYRIGHT_LICENSE: Int) = builder.addOffset(9, COPYRIGHT_LICENSE, 0)
-        fun addLINKS(builder: FlatBufferBuilder, LINKS: Int) = builder.addOffset(10, LINKS, 0)
+        fun addVERSION(builder: FlatBufferBuilder, version: Int) = builder.addOffset(0, version, 0)
+        fun addCREATOR(builder: FlatBufferBuilder, creator: Int) = builder.addOffset(1, creator, 0)
+        fun addNAME(builder: FlatBufferBuilder, name: Int) = builder.addOffset(2, name, 0)
+        fun addDESCRIPTION(builder: FlatBufferBuilder, description: Int) = builder.addOffset(3, description, 0)
+        fun addAUTHORNAME(builder: FlatBufferBuilder, authorName: Int) = builder.addOffset(4, authorName, 0)
+        fun addAUTHOREMAIL(builder: FlatBufferBuilder, authorEmail: Int) = builder.addOffset(5, authorEmail, 0)
+        fun addAUTHORLINK(builder: FlatBufferBuilder, authorLink: Int) = builder.addOffset(6, authorLink, 0)
+        fun addCOPYRIGHTAUTHOR(builder: FlatBufferBuilder, copyrightAuthor: Int) = builder.addOffset(7, copyrightAuthor, 0)
+        fun addCOPYRIGHTYEAR(builder: FlatBufferBuilder, copyrightYear: Int) = builder.addOffset(8, copyrightYear, 0)
+        fun addCOPYRIGHTLICENSE(builder: FlatBufferBuilder, copyrightLicense: Int) = builder.addOffset(9, copyrightLicense, 0)
+        fun addLINKS(builder: FlatBufferBuilder, links: Int) = builder.addOffset(10, links, 0)
         fun createLinksVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -343,13 +343,13 @@ class GPX : Table() {
             return builder.endVector()
         }
         fun startLinksVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addTIME(builder: FlatBufferBuilder, TIME: Int) = builder.addOffset(11, TIME, 0)
-        fun addKEYWORDS(builder: FlatBufferBuilder, KEYWORDS: Int) = builder.addOffset(12, KEYWORDS, 0)
-        fun addBOUNDS_MIN_LAT(builder: FlatBufferBuilder, BOUNDS_MIN_LAT: Double) = builder.addDouble(13, BOUNDS_MIN_LAT, 0.0)
-        fun addBOUNDS_MIN_LON(builder: FlatBufferBuilder, BOUNDS_MIN_LON: Double) = builder.addDouble(14, BOUNDS_MIN_LON, 0.0)
-        fun addBOUNDS_MAX_LAT(builder: FlatBufferBuilder, BOUNDS_MAX_LAT: Double) = builder.addDouble(15, BOUNDS_MAX_LAT, 0.0)
-        fun addBOUNDS_MAX_LON(builder: FlatBufferBuilder, BOUNDS_MAX_LON: Double) = builder.addDouble(16, BOUNDS_MAX_LON, 0.0)
-        fun addWAYPOINTS(builder: FlatBufferBuilder, WAYPOINTS: Int) = builder.addOffset(17, WAYPOINTS, 0)
+        fun addTIME(builder: FlatBufferBuilder, time: Int) = builder.addOffset(11, time, 0)
+        fun addKEYWORDS(builder: FlatBufferBuilder, keywords: Int) = builder.addOffset(12, keywords, 0)
+        fun addBOUNDSMINLAT(builder: FlatBufferBuilder, boundsMinLat: Double) = builder.addDouble(13, boundsMinLat, 0.0)
+        fun addBOUNDSMINLON(builder: FlatBufferBuilder, boundsMinLon: Double) = builder.addDouble(14, boundsMinLon, 0.0)
+        fun addBOUNDSMAXLAT(builder: FlatBufferBuilder, boundsMaxLat: Double) = builder.addDouble(15, boundsMaxLat, 0.0)
+        fun addBOUNDSMAXLON(builder: FlatBufferBuilder, boundsMaxLon: Double) = builder.addDouble(16, boundsMaxLon, 0.0)
+        fun addWAYPOINTS(builder: FlatBufferBuilder, waypoints: Int) = builder.addOffset(17, waypoints, 0)
         fun createWaypointsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -358,7 +358,7 @@ class GPX : Table() {
             return builder.endVector()
         }
         fun startWaypointsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addROUTES(builder: FlatBufferBuilder, ROUTES: Int) = builder.addOffset(18, ROUTES, 0)
+        fun addROUTES(builder: FlatBufferBuilder, routes: Int) = builder.addOffset(18, routes, 0)
         fun createRoutesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -367,7 +367,7 @@ class GPX : Table() {
             return builder.endVector()
         }
         fun startRoutesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addTRACKS(builder: FlatBufferBuilder, TRACKS: Int) = builder.addOffset(19, TRACKS, 0)
+        fun addTRACKS(builder: FlatBufferBuilder, tracks: Int) = builder.addOffset(19, tracks, 0)
         fun createTracksVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {

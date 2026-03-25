@@ -62,8 +62,16 @@ func (rcv *MET) MEAN_ELEMENT_THEORY() meanElementTheory {
 	return 0
 }
 
+func (rcv *MET) MeanElementTheory() meanElementTheory {
+	return rcv.MEAN_ELEMENT_THEORY()
+}
+
 func (rcv *MET) MutateMEAN_ELEMENT_THEORY(n meanElementTheory) bool {
 	return rcv._tab.MutateInt8Slot(4, int8(n))
+}
+
+func (rcv *MET) MutateMeanElementTheory(n meanElementTheory) bool {
+	return rcv.MutateMEAN_ELEMENT_THEORY(n)
 }
 
 func METStart(builder *flatbuffers.Builder) {
@@ -71,6 +79,9 @@ func METStart(builder *flatbuffers.Builder) {
 }
 func METAddMEAN_ELEMENT_THEORY(builder *flatbuffers.Builder, MEAN_ELEMENT_THEORY meanElementTheory) {
 	builder.PrependInt8Slot(0, int8(MEAN_ELEMENT_THEORY), 0)
+}
+func METAddMeanElementTheory(builder *flatbuffers.Builder, MEAN_ELEMENT_THEORY meanElementTheory) {
+	METAddMEAN_ELEMENT_THEORY(builder, MEAN_ELEMENT_THEORY)
 }
 func METEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

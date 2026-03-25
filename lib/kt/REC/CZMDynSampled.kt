@@ -32,7 +32,7 @@ class CZMDynSampled : Table() {
     /**
      * Reference epoch (ISO 8601)
      */
-    val EPOCH : String?
+    val epoch : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class CZMDynSampled : Table() {
                 null
             }
         }
-    val EPOCHAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun EPOCHInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val epochAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun epochInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Value type determines stride through DATA
      */
-    val VALUE_TYPE : Byte
+    val valueType : Byte
         get() {
             val o = __offset(6)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -54,7 +54,7 @@ class CZMDynSampled : Table() {
     /**
      * Interleaved [time, value(s), ...] — stride depends on VALUE_TYPE
      */
-    fun DATA(j: Int) : Double {
+    fun data(j: Int) : Double {
         val o = __offset(8)
         return if (o != 0) {
             bb.getDouble(__vector(o) + j * 8)
@@ -62,17 +62,17 @@ class CZMDynSampled : Table() {
             0.0
         }
     }
-    val DATALength : Int
+    val dataLength : Int
         get() {
             val o = __offset(8); return if (o != 0) __vector_len(o) else 0
         }
-    val DATAAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 8)
-    fun DATAInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 8)
+    val dataAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 8)
+    fun dataInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 8)
     /**
      * Interpolation settings
      */
-    val INTERPOLATION : CZMInterpolation? get() = INTERPOLATION(CZMInterpolation())
-    fun INTERPOLATION(obj: CZMInterpolation) : CZMInterpolation? {
+    val interpolation : CZMInterpolation? get() = interpolation(CZMInterpolation())
+    fun interpolation(obj: CZMInterpolation) : CZMInterpolation? {
         val o = __offset(10)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -81,24 +81,24 @@ class CZMDynSampled : Table() {
         }
     }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsCZMDynSampled(_bb: ByteBuffer): CZMDynSampled = getRootAsCZMDynSampled(_bb, CZMDynSampled())
         fun getRootAsCZMDynSampled(_bb: ByteBuffer, obj: CZMDynSampled): CZMDynSampled {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createCZMDynSampled(builder: FlatBufferBuilder, EPOCHOffset: Int, VALUE_TYPE: Byte, DATAOffset: Int, INTERPOLATIONOffset: Int) : Int {
+        fun createCZMDynSampled(builder: FlatBufferBuilder, epochOffset: Int, valueType: Byte, dataOffset: Int, interpolationOffset: Int) : Int {
             builder.startTable(4)
-            addINTERPOLATION(builder, INTERPOLATIONOffset)
-            addDATA(builder, DATAOffset)
-            addEPOCH(builder, EPOCHOffset)
-            addVALUE_TYPE(builder, VALUE_TYPE)
+            addINTERPOLATION(builder, interpolationOffset)
+            addDATA(builder, dataOffset)
+            addEPOCH(builder, epochOffset)
+            addVALUETYPE(builder, valueType)
             return endCZMDynSampled(builder)
         }
         fun startCZMDynSampled(builder: FlatBufferBuilder) = builder.startTable(4)
-        fun addEPOCH(builder: FlatBufferBuilder, EPOCH: Int) = builder.addOffset(0, EPOCH, 0)
-        fun addVALUE_TYPE(builder: FlatBufferBuilder, VALUE_TYPE: Byte) = builder.addByte(1, VALUE_TYPE, 0)
-        fun addDATA(builder: FlatBufferBuilder, DATA: Int) = builder.addOffset(2, DATA, 0)
+        fun addEPOCH(builder: FlatBufferBuilder, epoch: Int) = builder.addOffset(0, epoch, 0)
+        fun addVALUETYPE(builder: FlatBufferBuilder, valueType: Byte) = builder.addByte(1, valueType, 0)
+        fun addDATA(builder: FlatBufferBuilder, data: Int) = builder.addOffset(2, data, 0)
         fun createDataVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
             builder.startVector(8, data.size, 8)
             for (i in data.size - 1 downTo 0) {
@@ -107,7 +107,7 @@ class CZMDynSampled : Table() {
             return builder.endVector()
         }
         fun startDataVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
-        fun addINTERPOLATION(builder: FlatBufferBuilder, INTERPOLATION: Int) = builder.addOffset(3, INTERPOLATION, 0)
+        fun addINTERPOLATION(builder: FlatBufferBuilder, interpolation: Int) = builder.addOffset(3, interpolation, 0)
         fun endCZMDynSampled(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

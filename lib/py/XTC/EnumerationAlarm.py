@@ -73,15 +73,19 @@ def End(builder):
 class EnumerationAlarmT(object):
 
     # EnumerationAlarmT
-    def __init__(self):
-        self.LABEL = None  # type: str
-        self.ALARM_LEVEL = 0  # type: int
+    def __init__(
+        self,
+        LABEL = None,
+        ALARM_LEVEL = 0,
+    ):
+        self.LABEL = LABEL  # type: Optional[str]
+        self.ALARM_LEVEL = ALARM_LEVEL  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        enumerationAlarm = EnumerationAlarm()
-        enumerationAlarm.Init(buf, pos)
-        return cls.InitFromObj(enumerationAlarm)
+        tmpEnumerationAlarm = EnumerationAlarm()
+        tmpEnumerationAlarm.Init(buf, pos)
+        return cls.InitFromObj(tmpEnumerationAlarm)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -89,17 +93,17 @@ class EnumerationAlarmT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, enumerationAlarm):
+    def InitFromObj(cls, tmpEnumerationAlarm):
         x = EnumerationAlarmT()
-        x._UnPack(enumerationAlarm)
+        x._UnPack(tmpEnumerationAlarm)
         return x
 
     # EnumerationAlarmT
-    def _UnPack(self, enumerationAlarm):
-        if enumerationAlarm is None:
+    def _UnPack(self, EnumerationAlarm):
+        if EnumerationAlarm is None:
             return
-        self.LABEL = enumerationAlarm.LABEL()
-        self.ALARM_LEVEL = enumerationAlarm.ALARM_LEVEL()
+        self.LABEL = EnumerationAlarm.LABEL()
+        self.ALARM_LEVEL = EnumerationAlarm.ALARM_LEVEL()
 
     # EnumerationAlarmT
     def Pack(self, builder):
@@ -109,5 +113,5 @@ class EnumerationAlarmT(object):
         if self.LABEL is not None:
             EnumerationAlarmAddLABEL(builder, LABEL)
         EnumerationAlarmAddALARM_LEVEL(builder, self.ALARM_LEVEL)
-        enumerationAlarm = EnumerationAlarmEnd(builder)
-        return enumerationAlarm
+        EnumerationAlarm = EnumerationAlarmEnd(builder)
+        return EnumerationAlarm

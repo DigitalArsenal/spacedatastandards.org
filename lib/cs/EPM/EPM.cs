@@ -11,7 +11,7 @@ public struct EPM : IFlatbufferObject
 {
   private Table __p;
   public ByteBuffer ByteBuffer { get { return __p.bb; } }
-  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_24_3_25(); }
+  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_25_12_19(); }
   public static EPM GetRootAsEPM(ByteBuffer _bb) { return GetRootAsEPM(_bb, new EPM()); }
   public static EPM GetRootAsEPM(ByteBuffer _bb, EPM obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
   public static bool EPMBufferHasIdentifier(ByteBuffer _bb) { return Table.__has_identifier(_bb, "$EPM"); }

@@ -32,7 +32,7 @@ class ENGINE : Table() {
     /**
      * Engine Name
      */
-    val ENGINE_NAME : String?
+    val engineName : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class ENGINE : Table() {
                 null
             }
         }
-    val ENGINE_NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun ENGINE_NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val engineNameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun engineNameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Type of Engine
      */
-    val TYPE : Byte
+    val type : Byte
         get() {
             val o = __offset(6)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -54,29 +54,29 @@ class ENGINE : Table() {
     /**
      * Thrust Produced by the Engine (in Newtons)
      */
-    val THRUST : Double
+    val thrust : Double
         get() {
             val o = __offset(8)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsENGINE(_bb: ByteBuffer): ENGINE = getRootAsENGINE(_bb, ENGINE())
         fun getRootAsENGINE(_bb: ByteBuffer, obj: ENGINE): ENGINE {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createENGINE(builder: FlatBufferBuilder, ENGINE_NAMEOffset: Int, TYPE: Byte, THRUST: Double) : Int {
+        fun createENGINE(builder: FlatBufferBuilder, engineNameOffset: Int, type: Byte, thrust: Double) : Int {
             builder.startTable(3)
-            addTHRUST(builder, THRUST)
-            addENGINE_NAME(builder, ENGINE_NAMEOffset)
-            addTYPE(builder, TYPE)
+            addTHRUST(builder, thrust)
+            addENGINENAME(builder, engineNameOffset)
+            addTYPE(builder, type)
             return endENGINE(builder)
         }
         fun startENGINE(builder: FlatBufferBuilder) = builder.startTable(3)
-        fun addENGINE_NAME(builder: FlatBufferBuilder, ENGINE_NAME: Int) = builder.addOffset(0, ENGINE_NAME, 0)
-        fun addTYPE(builder: FlatBufferBuilder, TYPE: Byte) = builder.addByte(1, TYPE, 0)
-        fun addTHRUST(builder: FlatBufferBuilder, THRUST: Double) = builder.addDouble(2, THRUST, 0.0)
+        fun addENGINENAME(builder: FlatBufferBuilder, engineName: Int) = builder.addOffset(0, engineName, 0)
+        fun addTYPE(builder: FlatBufferBuilder, type: Byte) = builder.addByte(1, type, 0)
+        fun addTHRUST(builder: FlatBufferBuilder, thrust: Double) = builder.addDouble(2, thrust, 0.0)
         fun endENGINE(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

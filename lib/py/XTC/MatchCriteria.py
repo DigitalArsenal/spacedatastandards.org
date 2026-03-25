@@ -111,6 +111,12 @@ def MatchCriteriaStartCOMPARISON_LISTVector(builder, numElems):
 def StartCOMPARISON_LISTVector(builder, numElems):
     return MatchCriteriaStartCOMPARISON_LISTVector(builder, numElems)
 
+def MatchCriteriaCreateCOMPARISON_LISTVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateCOMPARISON_LISTVector(builder, data):
+    MatchCriteriaCreateCOMPARISON_LISTVector(builder, data)
+
 def MatchCriteriaAddBOOLEAN_EXPRESSION(builder, BOOLEAN_EXPRESSION):
     builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(BOOLEAN_EXPRESSION), 0)
 
@@ -139,17 +145,23 @@ except:
 class MatchCriteriaT(object):
 
     # MatchCriteriaT
-    def __init__(self):
-        self.COMPARISON = None  # type: Optional[ParameterComparison.ParameterComparisonT]
-        self.COMPARISON_LIST = None  # type: List[ParameterComparison.ParameterComparisonT]
-        self.BOOLEAN_EXPRESSION = None  # type: Optional[BooleanExpression.BooleanExpressionT]
-        self.CUSTOM_ALGORITHM = None  # type: str
+    def __init__(
+        self,
+        COMPARISON = None,
+        COMPARISON_LIST = None,
+        BOOLEAN_EXPRESSION = None,
+        CUSTOM_ALGORITHM = None,
+    ):
+        self.COMPARISON = COMPARISON  # type: Optional[ParameterComparison.ParameterComparisonT]
+        self.COMPARISON_LIST = COMPARISON_LIST  # type: Optional[List[ParameterComparison.ParameterComparisonT]]
+        self.BOOLEAN_EXPRESSION = BOOLEAN_EXPRESSION  # type: Optional[BooleanExpression.BooleanExpressionT]
+        self.CUSTOM_ALGORITHM = CUSTOM_ALGORITHM  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        matchCriteria = MatchCriteria()
-        matchCriteria.Init(buf, pos)
-        return cls.InitFromObj(matchCriteria)
+        tmpMatchCriteria = MatchCriteria()
+        tmpMatchCriteria.Init(buf, pos)
+        return cls.InitFromObj(tmpMatchCriteria)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -157,28 +169,28 @@ class MatchCriteriaT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, matchCriteria):
+    def InitFromObj(cls, tmpMatchCriteria):
         x = MatchCriteriaT()
-        x._UnPack(matchCriteria)
+        x._UnPack(tmpMatchCriteria)
         return x
 
     # MatchCriteriaT
-    def _UnPack(self, matchCriteria):
-        if matchCriteria is None:
+    def _UnPack(self, MatchCriteria):
+        if MatchCriteria is None:
             return
-        if matchCriteria.COMPARISON() is not None:
-            self.COMPARISON = ParameterComparison.ParameterComparisonT.InitFromObj(matchCriteria.COMPARISON())
-        if not matchCriteria.COMPARISON_LISTIsNone():
+        if MatchCriteria.COMPARISON() is not None:
+            self.COMPARISON = ParameterComparison.ParameterComparisonT.InitFromObj(MatchCriteria.COMPARISON())
+        if not MatchCriteria.COMPARISON_LISTIsNone():
             self.COMPARISON_LIST = []
-            for i in range(matchCriteria.COMPARISON_LISTLength()):
-                if matchCriteria.COMPARISON_LIST(i) is None:
+            for i in range(MatchCriteria.COMPARISON_LISTLength()):
+                if MatchCriteria.COMPARISON_LIST(i) is None:
                     self.COMPARISON_LIST.append(None)
                 else:
-                    parameterComparison_ = ParameterComparison.ParameterComparisonT.InitFromObj(matchCriteria.COMPARISON_LIST(i))
+                    parameterComparison_ = ParameterComparison.ParameterComparisonT.InitFromObj(MatchCriteria.COMPARISON_LIST(i))
                     self.COMPARISON_LIST.append(parameterComparison_)
-        if matchCriteria.BOOLEAN_EXPRESSION() is not None:
-            self.BOOLEAN_EXPRESSION = BooleanExpression.BooleanExpressionT.InitFromObj(matchCriteria.BOOLEAN_EXPRESSION())
-        self.CUSTOM_ALGORITHM = matchCriteria.CUSTOM_ALGORITHM()
+        if MatchCriteria.BOOLEAN_EXPRESSION() is not None:
+            self.BOOLEAN_EXPRESSION = BooleanExpression.BooleanExpressionT.InitFromObj(MatchCriteria.BOOLEAN_EXPRESSION())
+        self.CUSTOM_ALGORITHM = MatchCriteria.CUSTOM_ALGORITHM()
 
     # MatchCriteriaT
     def Pack(self, builder):
@@ -205,5 +217,5 @@ class MatchCriteriaT(object):
             MatchCriteriaAddBOOLEAN_EXPRESSION(builder, BOOLEAN_EXPRESSION)
         if self.CUSTOM_ALGORITHM is not None:
             MatchCriteriaAddCUSTOM_ALGORITHM(builder, CUSTOM_ALGORITHM)
-        matchCriteria = MatchCriteriaEnd(builder)
-        return matchCriteria
+        MatchCriteria = MatchCriteriaEnd(builder)
+        return MatchCriteria

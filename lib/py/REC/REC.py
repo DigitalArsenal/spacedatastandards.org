@@ -31,7 +31,7 @@ class REC(object):
 
     # Schema version identifier
     # REC
-    def Version(self):
+    def version(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
@@ -69,11 +69,11 @@ def RECStart(builder):
 def Start(builder):
     RECStart(builder)
 
-def RECAddVersion(builder, version):
+def RECAddversion(builder, version):
     builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(version), 0)
 
-def AddVersion(builder, version):
-    RECAddVersion(builder, version)
+def Addversion(builder, version):
+    RECAddversion(builder, version)
 
 def RECAddRECORDS(builder, RECORDS):
     builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(RECORDS), 0)
@@ -86,6 +86,12 @@ def RECStartRECORDSVector(builder, numElems):
 
 def StartRECORDSVector(builder, numElems):
     return RECStartRECORDSVector(builder, numElems)
+
+def RECCreateRECORDSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateRECORDSVector(builder, data):
+    RECCreateRECORDSVector(builder, data)
 
 def RECEnd(builder):
     return builder.EndObject()
@@ -102,15 +108,19 @@ except:
 class RECT(object):
 
     # RECT
-    def __init__(self):
-        self.version = None  # type: str
-        self.RECORDS = None  # type: List[Record.RecordT]
+    def __init__(
+        self,
+        version = None,
+        RECORDS = None,
+    ):
+        self.version = version  # type: Optional[str]
+        self.RECORDS = RECORDS  # type: Optional[List[Record.RecordT]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        REC = REC()
-        REC.Init(buf, pos)
-        return cls.InitFromObj(REC)
+        tmpRec = REC()
+        tmpRec.Init(buf, pos)
+        return cls.InitFromObj(tmpRec)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -118,16 +128,16 @@ class RECT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, REC):
+    def InitFromObj(cls, tmpRec):
         x = RECT()
-        x._UnPack(REC)
+        x._UnPack(tmpRec)
         return x
 
     # RECT
     def _UnPack(self, REC):
         if REC is None:
             return
-        self.version = REC.Version()
+        self.version = REC.version()
         if not REC.RECORDSIsNone():
             self.RECORDS = []
             for i in range(REC.RECORDSLength()):
@@ -151,7 +161,7 @@ class RECT(object):
             RECORDS = builder.EndVector()
         RECStart(builder)
         if self.version is not None:
-            RECAddVersion(builder, version)
+            RECAddversion(builder, version)
         if self.RECORDS is not None:
             RECAddRECORDS(builder, RECORDS)
         REC = RECEnd(builder)

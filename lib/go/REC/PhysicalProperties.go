@@ -51,12 +51,20 @@ func (rcv *PhysicalProperties) COMMENT(j int) []byte {
 	return nil
 }
 
+func (rcv *PhysicalProperties) Comment(j int) []byte {
+	return rcv.COMMENT(j)
+}
+
 func (rcv *PhysicalProperties) COMMENTLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *PhysicalProperties) CommentLength() int {
+	return rcv.COMMENTLength()
 }
 
 /// Comments in the Physical Properties section.
@@ -69,9 +77,17 @@ func (rcv *PhysicalProperties) WET_MASS() float64 {
 	return 0.0
 }
 
+func (rcv *PhysicalProperties) WetMass() float64 {
+	return rcv.WET_MASS()
+}
+
 /// Wet mass of the space object.
 func (rcv *PhysicalProperties) MutateWET_MASS(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(6, n)
+}
+
+func (rcv *PhysicalProperties) MutateWetMass(n float64) bool {
+	return rcv.MutateWET_MASS(n)
 }
 
 /// Dry mass of the space object.
@@ -83,9 +99,17 @@ func (rcv *PhysicalProperties) DRY_MASS() float64 {
 	return 0.0
 }
 
+func (rcv *PhysicalProperties) DryMass() float64 {
+	return rcv.DRY_MASS()
+}
+
 /// Dry mass of the space object.
 func (rcv *PhysicalProperties) MutateDRY_MASS(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(8, n)
+}
+
+func (rcv *PhysicalProperties) MutateDryMass(n float64) bool {
+	return rcv.MutateDRY_MASS(n)
 }
 
 /// Units for mass values.
@@ -95,6 +119,10 @@ func (rcv *PhysicalProperties) MASS_UNITS() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *PhysicalProperties) MassUnits() []byte {
+	return rcv.MASS_UNITS()
 }
 
 /// Units for mass values.
@@ -107,9 +135,17 @@ func (rcv *PhysicalProperties) OEB_Q1() float64 {
 	return 0.0
 }
 
+func (rcv *PhysicalProperties) OebQ1() float64 {
+	return rcv.OEB_Q1()
+}
+
 /// Quaternion component q1 of orientation from OEB to EME2000.
 func (rcv *PhysicalProperties) MutateOEB_Q1(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(12, n)
+}
+
+func (rcv *PhysicalProperties) MutateOebQ1(n float64) bool {
+	return rcv.MutateOEB_Q1(n)
 }
 
 /// Quaternion component q2.
@@ -121,9 +157,17 @@ func (rcv *PhysicalProperties) OEB_Q2() float64 {
 	return 0.0
 }
 
+func (rcv *PhysicalProperties) OebQ2() float64 {
+	return rcv.OEB_Q2()
+}
+
 /// Quaternion component q2.
 func (rcv *PhysicalProperties) MutateOEB_Q2(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(14, n)
+}
+
+func (rcv *PhysicalProperties) MutateOebQ2(n float64) bool {
+	return rcv.MutateOEB_Q2(n)
 }
 
 /// Quaternion component q3.
@@ -135,9 +179,17 @@ func (rcv *PhysicalProperties) OEB_Q3() float64 {
 	return 0.0
 }
 
+func (rcv *PhysicalProperties) OebQ3() float64 {
+	return rcv.OEB_Q3()
+}
+
 /// Quaternion component q3.
 func (rcv *PhysicalProperties) MutateOEB_Q3(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(16, n)
+}
+
+func (rcv *PhysicalProperties) MutateOebQ3(n float64) bool {
+	return rcv.MutateOEB_Q3(n)
 }
 
 /// Quaternion scalar component qc.
@@ -149,9 +201,17 @@ func (rcv *PhysicalProperties) OEB_QC() float64 {
 	return 0.0
 }
 
+func (rcv *PhysicalProperties) OebQc() float64 {
+	return rcv.OEB_QC()
+}
+
 /// Quaternion scalar component qc.
 func (rcv *PhysicalProperties) MutateOEB_QC(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(18, n)
+}
+
+func (rcv *PhysicalProperties) MutateOebQc(n float64) bool {
+	return rcv.MutateOEB_QC(n)
 }
 
 /// Maximum dimension of the object along OEB frame axes.
@@ -163,9 +223,17 @@ func (rcv *PhysicalProperties) OEB_MAX() float64 {
 	return 0.0
 }
 
+func (rcv *PhysicalProperties) OebMax() float64 {
+	return rcv.OEB_MAX()
+}
+
 /// Maximum dimension of the object along OEB frame axes.
 func (rcv *PhysicalProperties) MutateOEB_MAX(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(20, n)
+}
+
+func (rcv *PhysicalProperties) MutateOebMax(n float64) bool {
+	return rcv.MutateOEB_MAX(n)
 }
 
 /// Intermediate dimension along OEB frame axes.
@@ -177,9 +245,17 @@ func (rcv *PhysicalProperties) OEB_INT() float64 {
 	return 0.0
 }
 
+func (rcv *PhysicalProperties) OebInt() float64 {
+	return rcv.OEB_INT()
+}
+
 /// Intermediate dimension along OEB frame axes.
 func (rcv *PhysicalProperties) MutateOEB_INT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(22, n)
+}
+
+func (rcv *PhysicalProperties) MutateOebInt(n float64) bool {
+	return rcv.MutateOEB_INT(n)
 }
 
 /// Minimum dimension of the object along OEB frame axes.
@@ -191,9 +267,17 @@ func (rcv *PhysicalProperties) OEB_MIN() float64 {
 	return 0.0
 }
 
+func (rcv *PhysicalProperties) OebMin() float64 {
+	return rcv.OEB_MIN()
+}
+
 /// Minimum dimension of the object along OEB frame axes.
 func (rcv *PhysicalProperties) MutateOEB_MIN(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(24, n)
+}
+
+func (rcv *PhysicalProperties) MutateOebMin(n float64) bool {
+	return rcv.MutateOEB_MIN(n)
 }
 
 /// Area along OEB_MAX axis.
@@ -205,9 +289,17 @@ func (rcv *PhysicalProperties) AREA_ALONG_OEB_MAX() float64 {
 	return 0.0
 }
 
+func (rcv *PhysicalProperties) AreaAlongOebMax() float64 {
+	return rcv.AREA_ALONG_OEB_MAX()
+}
+
 /// Area along OEB_MAX axis.
 func (rcv *PhysicalProperties) MutateAREA_ALONG_OEB_MAX(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(26, n)
+}
+
+func (rcv *PhysicalProperties) MutateAreaAlongOebMax(n float64) bool {
+	return rcv.MutateAREA_ALONG_OEB_MAX(n)
 }
 
 /// Area along OEB_INT axis.
@@ -219,9 +311,17 @@ func (rcv *PhysicalProperties) AREA_ALONG_OEB_INT() float64 {
 	return 0.0
 }
 
+func (rcv *PhysicalProperties) AreaAlongOebInt() float64 {
+	return rcv.AREA_ALONG_OEB_INT()
+}
+
 /// Area along OEB_INT axis.
 func (rcv *PhysicalProperties) MutateAREA_ALONG_OEB_INT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(28, n)
+}
+
+func (rcv *PhysicalProperties) MutateAreaAlongOebInt(n float64) bool {
+	return rcv.MutateAREA_ALONG_OEB_INT(n)
 }
 
 /// Area along OEB_MIN axis.
@@ -233,9 +333,17 @@ func (rcv *PhysicalProperties) AREA_ALONG_OEB_MIN() float64 {
 	return 0.0
 }
 
+func (rcv *PhysicalProperties) AreaAlongOebMin() float64 {
+	return rcv.AREA_ALONG_OEB_MIN()
+}
+
 /// Area along OEB_MIN axis.
 func (rcv *PhysicalProperties) MutateAREA_ALONG_OEB_MIN(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(30, n)
+}
+
+func (rcv *PhysicalProperties) MutateAreaAlongOebMin(n float64) bool {
+	return rcv.MutateAREA_ALONG_OEB_MIN(n)
 }
 
 /// Units for area values.
@@ -245,6 +353,10 @@ func (rcv *PhysicalProperties) AREA_UNITS() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *PhysicalProperties) AreaUnits() []byte {
+	return rcv.AREA_UNITS()
 }
 
 /// Units for area values.
@@ -257,9 +369,17 @@ func (rcv *PhysicalProperties) DRAG_CONST_AREA() float64 {
 	return 0.0
 }
 
+func (rcv *PhysicalProperties) DragConstArea() float64 {
+	return rcv.DRAG_CONST_AREA()
+}
+
 /// Constant area for drag computations.
 func (rcv *PhysicalProperties) MutateDRAG_CONST_AREA(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(34, n)
+}
+
+func (rcv *PhysicalProperties) MutateDragConstArea(n float64) bool {
+	return rcv.MutateDRAG_CONST_AREA(n)
 }
 
 /// Nominal drag coefficient.
@@ -271,9 +391,17 @@ func (rcv *PhysicalProperties) DRAG_COEFF_NOM() float64 {
 	return 0.0
 }
 
+func (rcv *PhysicalProperties) DragCoeffNom() float64 {
+	return rcv.DRAG_COEFF_NOM()
+}
+
 /// Nominal drag coefficient.
 func (rcv *PhysicalProperties) MutateDRAG_COEFF_NOM(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(36, n)
+}
+
+func (rcv *PhysicalProperties) MutateDragCoeffNom(n float64) bool {
+	return rcv.MutateDRAG_COEFF_NOM(n)
 }
 
 /// Uncertainty in the drag coefficient.
@@ -285,9 +413,17 @@ func (rcv *PhysicalProperties) DRAG_UNCERTAINTY() float64 {
 	return 0.0
 }
 
+func (rcv *PhysicalProperties) DragUncertainty() float64 {
+	return rcv.DRAG_UNCERTAINTY()
+}
+
 /// Uncertainty in the drag coefficient.
 func (rcv *PhysicalProperties) MutateDRAG_UNCERTAINTY(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(38, n)
+}
+
+func (rcv *PhysicalProperties) MutateDragUncertainty(n float64) bool {
+	return rcv.MutateDRAG_UNCERTAINTY(n)
 }
 
 /// Constant area for solar radiation pressure computations.
@@ -299,9 +435,17 @@ func (rcv *PhysicalProperties) SRP_CONST_AREA() float64 {
 	return 0.0
 }
 
+func (rcv *PhysicalProperties) SrpConstArea() float64 {
+	return rcv.SRP_CONST_AREA()
+}
+
 /// Constant area for solar radiation pressure computations.
 func (rcv *PhysicalProperties) MutateSRP_CONST_AREA(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(40, n)
+}
+
+func (rcv *PhysicalProperties) MutateSrpConstArea(n float64) bool {
+	return rcv.MutateSRP_CONST_AREA(n)
 }
 
 /// Nominal solar radiation pressure coefficient.
@@ -313,9 +457,17 @@ func (rcv *PhysicalProperties) SOLAR_RAD_COEFF() float64 {
 	return 0.0
 }
 
+func (rcv *PhysicalProperties) SolarRadCoeff() float64 {
+	return rcv.SOLAR_RAD_COEFF()
+}
+
 /// Nominal solar radiation pressure coefficient.
 func (rcv *PhysicalProperties) MutateSOLAR_RAD_COEFF(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(42, n)
+}
+
+func (rcv *PhysicalProperties) MutateSolarRadCoeff(n float64) bool {
+	return rcv.MutateSOLAR_RAD_COEFF(n)
 }
 
 /// Uncertainty in the solar radiation pressure coefficient.
@@ -327,9 +479,17 @@ func (rcv *PhysicalProperties) SRP_UNCERTAINTY() float64 {
 	return 0.0
 }
 
+func (rcv *PhysicalProperties) SrpUncertainty() float64 {
+	return rcv.SRP_UNCERTAINTY()
+}
+
 /// Uncertainty in the solar radiation pressure coefficient.
 func (rcv *PhysicalProperties) MutateSRP_UNCERTAINTY(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(44, n)
+}
+
+func (rcv *PhysicalProperties) MutateSrpUncertainty(n float64) bool {
+	return rcv.MutateSRP_UNCERTAINTY(n)
 }
 
 func PhysicalPropertiesStart(builder *flatbuffers.Builder) {
@@ -338,68 +498,134 @@ func PhysicalPropertiesStart(builder *flatbuffers.Builder) {
 func PhysicalPropertiesAddCOMMENT(builder *flatbuffers.Builder, COMMENT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(COMMENT), 0)
 }
+func PhysicalPropertiesAddComment(builder *flatbuffers.Builder, COMMENT flatbuffers.UOffsetT) {
+	PhysicalPropertiesAddCOMMENT(builder, COMMENT)
+}
 func PhysicalPropertiesStartCOMMENTVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func PhysicalPropertiesStartCommentVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return PhysicalPropertiesStartCOMMENTVector(builder, numElems)
 }
 func PhysicalPropertiesAddWET_MASS(builder *flatbuffers.Builder, WET_MASS float64) {
 	builder.PrependFloat64Slot(1, WET_MASS, 0.0)
 }
+func PhysicalPropertiesAddWetMass(builder *flatbuffers.Builder, WET_MASS float64) {
+	PhysicalPropertiesAddWET_MASS(builder, WET_MASS)
+}
 func PhysicalPropertiesAddDRY_MASS(builder *flatbuffers.Builder, DRY_MASS float64) {
 	builder.PrependFloat64Slot(2, DRY_MASS, 0.0)
+}
+func PhysicalPropertiesAddDryMass(builder *flatbuffers.Builder, DRY_MASS float64) {
+	PhysicalPropertiesAddDRY_MASS(builder, DRY_MASS)
 }
 func PhysicalPropertiesAddMASS_UNITS(builder *flatbuffers.Builder, MASS_UNITS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(MASS_UNITS), 0)
 }
+func PhysicalPropertiesAddMassUnits(builder *flatbuffers.Builder, MASS_UNITS flatbuffers.UOffsetT) {
+	PhysicalPropertiesAddMASS_UNITS(builder, MASS_UNITS)
+}
 func PhysicalPropertiesAddOEB_Q1(builder *flatbuffers.Builder, OEB_Q1 float64) {
 	builder.PrependFloat64Slot(4, OEB_Q1, 0.0)
+}
+func PhysicalPropertiesAddOebQ1(builder *flatbuffers.Builder, OEB_Q1 float64) {
+	PhysicalPropertiesAddOEB_Q1(builder, OEB_Q1)
 }
 func PhysicalPropertiesAddOEB_Q2(builder *flatbuffers.Builder, OEB_Q2 float64) {
 	builder.PrependFloat64Slot(5, OEB_Q2, 0.0)
 }
+func PhysicalPropertiesAddOebQ2(builder *flatbuffers.Builder, OEB_Q2 float64) {
+	PhysicalPropertiesAddOEB_Q2(builder, OEB_Q2)
+}
 func PhysicalPropertiesAddOEB_Q3(builder *flatbuffers.Builder, OEB_Q3 float64) {
 	builder.PrependFloat64Slot(6, OEB_Q3, 0.0)
+}
+func PhysicalPropertiesAddOebQ3(builder *flatbuffers.Builder, OEB_Q3 float64) {
+	PhysicalPropertiesAddOEB_Q3(builder, OEB_Q3)
 }
 func PhysicalPropertiesAddOEB_QC(builder *flatbuffers.Builder, OEB_QC float64) {
 	builder.PrependFloat64Slot(7, OEB_QC, 0.0)
 }
+func PhysicalPropertiesAddOebQc(builder *flatbuffers.Builder, OEB_QC float64) {
+	PhysicalPropertiesAddOEB_QC(builder, OEB_QC)
+}
 func PhysicalPropertiesAddOEB_MAX(builder *flatbuffers.Builder, OEB_MAX float64) {
 	builder.PrependFloat64Slot(8, OEB_MAX, 0.0)
+}
+func PhysicalPropertiesAddOebMax(builder *flatbuffers.Builder, OEB_MAX float64) {
+	PhysicalPropertiesAddOEB_MAX(builder, OEB_MAX)
 }
 func PhysicalPropertiesAddOEB_INT(builder *flatbuffers.Builder, OEB_INT float64) {
 	builder.PrependFloat64Slot(9, OEB_INT, 0.0)
 }
+func PhysicalPropertiesAddOebInt(builder *flatbuffers.Builder, OEB_INT float64) {
+	PhysicalPropertiesAddOEB_INT(builder, OEB_INT)
+}
 func PhysicalPropertiesAddOEB_MIN(builder *flatbuffers.Builder, OEB_MIN float64) {
 	builder.PrependFloat64Slot(10, OEB_MIN, 0.0)
+}
+func PhysicalPropertiesAddOebMin(builder *flatbuffers.Builder, OEB_MIN float64) {
+	PhysicalPropertiesAddOEB_MIN(builder, OEB_MIN)
 }
 func PhysicalPropertiesAddAREA_ALONG_OEB_MAX(builder *flatbuffers.Builder, AREA_ALONG_OEB_MAX float64) {
 	builder.PrependFloat64Slot(11, AREA_ALONG_OEB_MAX, 0.0)
 }
+func PhysicalPropertiesAddAreaAlongOebMax(builder *flatbuffers.Builder, AREA_ALONG_OEB_MAX float64) {
+	PhysicalPropertiesAddAREA_ALONG_OEB_MAX(builder, AREA_ALONG_OEB_MAX)
+}
 func PhysicalPropertiesAddAREA_ALONG_OEB_INT(builder *flatbuffers.Builder, AREA_ALONG_OEB_INT float64) {
 	builder.PrependFloat64Slot(12, AREA_ALONG_OEB_INT, 0.0)
+}
+func PhysicalPropertiesAddAreaAlongOebInt(builder *flatbuffers.Builder, AREA_ALONG_OEB_INT float64) {
+	PhysicalPropertiesAddAREA_ALONG_OEB_INT(builder, AREA_ALONG_OEB_INT)
 }
 func PhysicalPropertiesAddAREA_ALONG_OEB_MIN(builder *flatbuffers.Builder, AREA_ALONG_OEB_MIN float64) {
 	builder.PrependFloat64Slot(13, AREA_ALONG_OEB_MIN, 0.0)
 }
+func PhysicalPropertiesAddAreaAlongOebMin(builder *flatbuffers.Builder, AREA_ALONG_OEB_MIN float64) {
+	PhysicalPropertiesAddAREA_ALONG_OEB_MIN(builder, AREA_ALONG_OEB_MIN)
+}
 func PhysicalPropertiesAddAREA_UNITS(builder *flatbuffers.Builder, AREA_UNITS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(14, flatbuffers.UOffsetT(AREA_UNITS), 0)
+}
+func PhysicalPropertiesAddAreaUnits(builder *flatbuffers.Builder, AREA_UNITS flatbuffers.UOffsetT) {
+	PhysicalPropertiesAddAREA_UNITS(builder, AREA_UNITS)
 }
 func PhysicalPropertiesAddDRAG_CONST_AREA(builder *flatbuffers.Builder, DRAG_CONST_AREA float64) {
 	builder.PrependFloat64Slot(15, DRAG_CONST_AREA, 0.0)
 }
+func PhysicalPropertiesAddDragConstArea(builder *flatbuffers.Builder, DRAG_CONST_AREA float64) {
+	PhysicalPropertiesAddDRAG_CONST_AREA(builder, DRAG_CONST_AREA)
+}
 func PhysicalPropertiesAddDRAG_COEFF_NOM(builder *flatbuffers.Builder, DRAG_COEFF_NOM float64) {
 	builder.PrependFloat64Slot(16, DRAG_COEFF_NOM, 0.0)
+}
+func PhysicalPropertiesAddDragCoeffNom(builder *flatbuffers.Builder, DRAG_COEFF_NOM float64) {
+	PhysicalPropertiesAddDRAG_COEFF_NOM(builder, DRAG_COEFF_NOM)
 }
 func PhysicalPropertiesAddDRAG_UNCERTAINTY(builder *flatbuffers.Builder, DRAG_UNCERTAINTY float64) {
 	builder.PrependFloat64Slot(17, DRAG_UNCERTAINTY, 0.0)
 }
+func PhysicalPropertiesAddDragUncertainty(builder *flatbuffers.Builder, DRAG_UNCERTAINTY float64) {
+	PhysicalPropertiesAddDRAG_UNCERTAINTY(builder, DRAG_UNCERTAINTY)
+}
 func PhysicalPropertiesAddSRP_CONST_AREA(builder *flatbuffers.Builder, SRP_CONST_AREA float64) {
 	builder.PrependFloat64Slot(18, SRP_CONST_AREA, 0.0)
+}
+func PhysicalPropertiesAddSrpConstArea(builder *flatbuffers.Builder, SRP_CONST_AREA float64) {
+	PhysicalPropertiesAddSRP_CONST_AREA(builder, SRP_CONST_AREA)
 }
 func PhysicalPropertiesAddSOLAR_RAD_COEFF(builder *flatbuffers.Builder, SOLAR_RAD_COEFF float64) {
 	builder.PrependFloat64Slot(19, SOLAR_RAD_COEFF, 0.0)
 }
+func PhysicalPropertiesAddSolarRadCoeff(builder *flatbuffers.Builder, SOLAR_RAD_COEFF float64) {
+	PhysicalPropertiesAddSOLAR_RAD_COEFF(builder, SOLAR_RAD_COEFF)
+}
 func PhysicalPropertiesAddSRP_UNCERTAINTY(builder *flatbuffers.Builder, SRP_UNCERTAINTY float64) {
 	builder.PrependFloat64Slot(20, SRP_UNCERTAINTY, 0.0)
+}
+func PhysicalPropertiesAddSrpUncertainty(builder *flatbuffers.Builder, SRP_UNCERTAINTY float64) {
+	PhysicalPropertiesAddSRP_UNCERTAINTY(builder, SRP_UNCERTAINTY)
 }
 func PhysicalPropertiesEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

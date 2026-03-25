@@ -51,6 +51,10 @@ func (rcv *gnssObsData) SIGNAL() []byte {
 	return nil
 }
 
+func (rcv *gnssObsData) Signal() []byte {
+	return rcv.SIGNAL()
+}
+
 /// Signal type code (e.g., L1C, L2P, L5Q, E1B)
 /// Observation type
 func (rcv *gnssObsData) OBS_TYPE() gnssObsType {
@@ -61,9 +65,17 @@ func (rcv *gnssObsData) OBS_TYPE() gnssObsType {
 	return 0
 }
 
+func (rcv *gnssObsData) ObsType() gnssObsType {
+	return rcv.OBS_TYPE()
+}
+
 /// Observation type
 func (rcv *gnssObsData) MutateOBS_TYPE(n gnssObsType) bool {
 	return rcv._tab.MutateInt8Slot(6, int8(n))
+}
+
+func (rcv *gnssObsData) MutateObsType(n gnssObsType) bool {
+	return rcv.MutateOBS_TYPE(n)
 }
 
 /// Observation value (units depend on type: m, cycles, Hz, dB-Hz)
@@ -75,9 +87,17 @@ func (rcv *gnssObsData) VALUE() float64 {
 	return 0.0
 }
 
+func (rcv *gnssObsData) Value() float64 {
+	return rcv.VALUE()
+}
+
 /// Observation value (units depend on type: m, cycles, Hz, dB-Hz)
 func (rcv *gnssObsData) MutateVALUE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(8, n)
+}
+
+func (rcv *gnssObsData) MutateValue(n float64) bool {
+	return rcv.MutateVALUE(n)
 }
 
 /// Loss of lock indicator
@@ -89,9 +109,17 @@ func (rcv *gnssObsData) LLI() byte {
 	return 0
 }
 
+func (rcv *gnssObsData) Lli() byte {
+	return rcv.LLI()
+}
+
 /// Loss of lock indicator
 func (rcv *gnssObsData) MutateLLI(n byte) bool {
 	return rcv._tab.MutateByteSlot(10, n)
+}
+
+func (rcv *gnssObsData) MutateLli(n byte) bool {
+	return rcv.MutateLLI(n)
 }
 
 /// Signal strength indicator (1-9)
@@ -103,9 +131,17 @@ func (rcv *gnssObsData) SSI() byte {
 	return 0
 }
 
+func (rcv *gnssObsData) Ssi() byte {
+	return rcv.SSI()
+}
+
 /// Signal strength indicator (1-9)
 func (rcv *gnssObsData) MutateSSI(n byte) bool {
 	return rcv._tab.MutateByteSlot(12, n)
+}
+
+func (rcv *gnssObsData) MutateSsi(n byte) bool {
+	return rcv.MutateSSI(n)
 }
 
 func gnssObsDataStart(builder *flatbuffers.Builder) {
@@ -114,17 +150,32 @@ func gnssObsDataStart(builder *flatbuffers.Builder) {
 func gnssObsDataAddSIGNAL(builder *flatbuffers.Builder, SIGNAL flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(SIGNAL), 0)
 }
+func gnssObsDataAddSignal(builder *flatbuffers.Builder, SIGNAL flatbuffers.UOffsetT) {
+	gnssObsDataAddSIGNAL(builder, SIGNAL)
+}
 func gnssObsDataAddOBS_TYPE(builder *flatbuffers.Builder, OBS_TYPE gnssObsType) {
 	builder.PrependInt8Slot(1, int8(OBS_TYPE), 0)
+}
+func gnssObsDataAddObsType(builder *flatbuffers.Builder, OBS_TYPE gnssObsType) {
+	gnssObsDataAddOBS_TYPE(builder, OBS_TYPE)
 }
 func gnssObsDataAddVALUE(builder *flatbuffers.Builder, VALUE float64) {
 	builder.PrependFloat64Slot(2, VALUE, 0.0)
 }
+func gnssObsDataAddValue(builder *flatbuffers.Builder, VALUE float64) {
+	gnssObsDataAddVALUE(builder, VALUE)
+}
 func gnssObsDataAddLLI(builder *flatbuffers.Builder, LLI byte) {
 	builder.PrependByteSlot(3, LLI, 0)
 }
+func gnssObsDataAddLli(builder *flatbuffers.Builder, LLI byte) {
+	gnssObsDataAddLLI(builder, LLI)
+}
 func gnssObsDataAddSSI(builder *flatbuffers.Builder, SSI byte) {
 	builder.PrependByteSlot(4, SSI, 0)
+}
+func gnssObsDataAddSsi(builder *flatbuffers.Builder, SSI byte) {
+	gnssObsDataAddSSI(builder, SSI)
 }
 func gnssObsDataEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

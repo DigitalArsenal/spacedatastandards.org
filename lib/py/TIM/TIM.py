@@ -58,14 +58,17 @@ def End(builder):
 class TIMT(object):
 
     # TIMT
-    def __init__(self):
-        self.TIME_SYSTEM = 0  # type: int
+    def __init__(
+        self,
+        TIME_SYSTEM = 0,
+    ):
+        self.TIME_SYSTEM = TIME_SYSTEM  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        TIM = TIM()
-        TIM.Init(buf, pos)
-        return cls.InitFromObj(TIM)
+        tmpTim = TIM()
+        tmpTim.Init(buf, pos)
+        return cls.InitFromObj(tmpTim)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -73,9 +76,9 @@ class TIMT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, TIM):
+    def InitFromObj(cls, tmpTim):
         x = TIMT()
-        x._UnPack(TIM)
+        x._UnPack(tmpTim)
         return x
 
     # TIMT

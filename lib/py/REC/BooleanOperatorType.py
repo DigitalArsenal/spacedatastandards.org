@@ -2,4 +2,11 @@
 
 # namespace: 
 
-# NOTE BooleanOperatorType.py does not declare any structs or enums
+# Boolean operators for combining conditions
+class BooleanOperatorType(object):
+    # Logical AND
+    AND = 0
+    # Logical OR
+    OR = 1
+    # Logical XOR
+    XOR = 2

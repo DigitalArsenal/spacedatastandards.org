@@ -441,6 +441,12 @@ def KMLPlacemarkStartEXTENDED_DATAVector(builder, numElems):
 def StartEXTENDED_DATAVector(builder, numElems):
     return KMLPlacemarkStartEXTENDED_DATAVector(builder, numElems)
 
+def KMLPlacemarkCreateEXTENDED_DATAVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateEXTENDED_DATAVector(builder, data):
+    KMLPlacemarkCreateEXTENDED_DATAVector(builder, data)
+
 def KMLPlacemarkAddSCHEMA_DATA(builder, SCHEMA_DATA):
     builder.PrependUOffsetTRelativeSlot(21, flatbuffers.number_types.UOffsetTFlags.py_type(SCHEMA_DATA), 0)
 
@@ -490,37 +496,63 @@ except:
 class KMLPlacemarkT(object):
 
     # KMLPlacemarkT
-    def __init__(self):
-        self.NAME = None  # type: str
-        self.DESCRIPTION = None  # type: str
-        self.VISIBILITY = False  # type: bool
-        self.STYLE_URL = None  # type: str
-        self.STYLE = None  # type: Optional[KMLStyle.KMLStyleT]
-        self.SNIPPET = None  # type: str
-        self.OPEN = False  # type: bool
-        self.ADDRESS = None  # type: str
-        self.POINT = None  # type: Optional[KMLPoint.KMLPointT]
-        self.LINE_STRING = None  # type: Optional[KMLLineString.KMLLineStringT]
-        self.POLYGON = None  # type: Optional[KMLPolygon.KMLPolygonT]
-        self.LINEAR_RING = None  # type: Optional[KMLLinearRing.KMLLinearRingT]
-        self.MULTI_GEOMETRY = None  # type: Optional[KMLMultiGeometry.KMLMultiGeometryT]
-        self.MODEL = None  # type: Optional[KMLModel.KMLModelT]
-        self.TRACK = None  # type: Optional[KMLTrack.KMLTrackT]
-        self.MULTI_TRACK = None  # type: Optional[KMLMultiTrack.KMLMultiTrackT]
-        self.LOOK_AT = None  # type: Optional[KMLLookAt.KMLLookAtT]
-        self.CAMERA = None  # type: Optional[KMLCamera.KMLCameraT]
-        self.TIME_SPAN = None  # type: Optional[KMLTimeSpan.KMLTimeSpanT]
-        self.TIME_STAMP = None  # type: Optional[KMLTimeStamp.KMLTimeStampT]
-        self.EXTENDED_DATA = None  # type: List[KMLData.KMLDataT]
-        self.SCHEMA_DATA = None  # type: Optional[KMLSchemaData.KMLSchemaDataT]
-        self.REGION = None  # type: Optional[KMLRegion.KMLRegionT]
-        self.STYLE_MAP = None  # type: Optional[KMLStyleMap.KMLStyleMapT]
+    def __init__(
+        self,
+        NAME = None,
+        DESCRIPTION = None,
+        VISIBILITY = False,
+        STYLE_URL = None,
+        STYLE = None,
+        SNIPPET = None,
+        OPEN = False,
+        ADDRESS = None,
+        POINT = None,
+        LINE_STRING = None,
+        POLYGON = None,
+        LINEAR_RING = None,
+        MULTI_GEOMETRY = None,
+        MODEL = None,
+        TRACK = None,
+        MULTI_TRACK = None,
+        LOOK_AT = None,
+        CAMERA = None,
+        TIME_SPAN = None,
+        TIME_STAMP = None,
+        EXTENDED_DATA = None,
+        SCHEMA_DATA = None,
+        REGION = None,
+        STYLE_MAP = None,
+    ):
+        self.NAME = NAME  # type: Optional[str]
+        self.DESCRIPTION = DESCRIPTION  # type: Optional[str]
+        self.VISIBILITY = VISIBILITY  # type: bool
+        self.STYLE_URL = STYLE_URL  # type: Optional[str]
+        self.STYLE = STYLE  # type: Optional[KMLStyle.KMLStyleT]
+        self.SNIPPET = SNIPPET  # type: Optional[str]
+        self.OPEN = OPEN  # type: bool
+        self.ADDRESS = ADDRESS  # type: Optional[str]
+        self.POINT = POINT  # type: Optional[KMLPoint.KMLPointT]
+        self.LINE_STRING = LINE_STRING  # type: Optional[KMLLineString.KMLLineStringT]
+        self.POLYGON = POLYGON  # type: Optional[KMLPolygon.KMLPolygonT]
+        self.LINEAR_RING = LINEAR_RING  # type: Optional[KMLLinearRing.KMLLinearRingT]
+        self.MULTI_GEOMETRY = MULTI_GEOMETRY  # type: Optional[KMLMultiGeometry.KMLMultiGeometryT]
+        self.MODEL = MODEL  # type: Optional[KMLModel.KMLModelT]
+        self.TRACK = TRACK  # type: Optional[KMLTrack.KMLTrackT]
+        self.MULTI_TRACK = MULTI_TRACK  # type: Optional[KMLMultiTrack.KMLMultiTrackT]
+        self.LOOK_AT = LOOK_AT  # type: Optional[KMLLookAt.KMLLookAtT]
+        self.CAMERA = CAMERA  # type: Optional[KMLCamera.KMLCameraT]
+        self.TIME_SPAN = TIME_SPAN  # type: Optional[KMLTimeSpan.KMLTimeSpanT]
+        self.TIME_STAMP = TIME_STAMP  # type: Optional[KMLTimeStamp.KMLTimeStampT]
+        self.EXTENDED_DATA = EXTENDED_DATA  # type: Optional[List[KMLData.KMLDataT]]
+        self.SCHEMA_DATA = SCHEMA_DATA  # type: Optional[KMLSchemaData.KMLSchemaDataT]
+        self.REGION = REGION  # type: Optional[KMLRegion.KMLRegionT]
+        self.STYLE_MAP = STYLE_MAP  # type: Optional[KMLStyleMap.KMLStyleMapT]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        kmlplacemark = KMLPlacemark()
-        kmlplacemark.Init(buf, pos)
-        return cls.InitFromObj(kmlplacemark)
+        tmpKmlplacemark = KMLPlacemark()
+        tmpKmlplacemark.Init(buf, pos)
+        return cls.InitFromObj(tmpKmlplacemark)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -528,62 +560,62 @@ class KMLPlacemarkT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, kmlplacemark):
+    def InitFromObj(cls, tmpKmlplacemark):
         x = KMLPlacemarkT()
-        x._UnPack(kmlplacemark)
+        x._UnPack(tmpKmlplacemark)
         return x
 
     # KMLPlacemarkT
-    def _UnPack(self, kmlplacemark):
-        if kmlplacemark is None:
+    def _UnPack(self, KMLPlacemark):
+        if KMLPlacemark is None:
             return
-        self.NAME = kmlplacemark.NAME()
-        self.DESCRIPTION = kmlplacemark.DESCRIPTION()
-        self.VISIBILITY = kmlplacemark.VISIBILITY()
-        self.STYLE_URL = kmlplacemark.STYLE_URL()
-        if kmlplacemark.STYLE() is not None:
-            self.STYLE = KMLStyle.KMLStyleT.InitFromObj(kmlplacemark.STYLE())
-        self.SNIPPET = kmlplacemark.SNIPPET()
-        self.OPEN = kmlplacemark.OPEN()
-        self.ADDRESS = kmlplacemark.ADDRESS()
-        if kmlplacemark.POINT() is not None:
-            self.POINT = KMLPoint.KMLPointT.InitFromObj(kmlplacemark.POINT())
-        if kmlplacemark.LINE_STRING() is not None:
-            self.LINE_STRING = KMLLineString.KMLLineStringT.InitFromObj(kmlplacemark.LINE_STRING())
-        if kmlplacemark.POLYGON() is not None:
-            self.POLYGON = KMLPolygon.KMLPolygonT.InitFromObj(kmlplacemark.POLYGON())
-        if kmlplacemark.LINEAR_RING() is not None:
-            self.LINEAR_RING = KMLLinearRing.KMLLinearRingT.InitFromObj(kmlplacemark.LINEAR_RING())
-        if kmlplacemark.MULTI_GEOMETRY() is not None:
-            self.MULTI_GEOMETRY = KMLMultiGeometry.KMLMultiGeometryT.InitFromObj(kmlplacemark.MULTI_GEOMETRY())
-        if kmlplacemark.MODEL() is not None:
-            self.MODEL = KMLModel.KMLModelT.InitFromObj(kmlplacemark.MODEL())
-        if kmlplacemark.TRACK() is not None:
-            self.TRACK = KMLTrack.KMLTrackT.InitFromObj(kmlplacemark.TRACK())
-        if kmlplacemark.MULTI_TRACK() is not None:
-            self.MULTI_TRACK = KMLMultiTrack.KMLMultiTrackT.InitFromObj(kmlplacemark.MULTI_TRACK())
-        if kmlplacemark.LOOK_AT() is not None:
-            self.LOOK_AT = KMLLookAt.KMLLookAtT.InitFromObj(kmlplacemark.LOOK_AT())
-        if kmlplacemark.CAMERA() is not None:
-            self.CAMERA = KMLCamera.KMLCameraT.InitFromObj(kmlplacemark.CAMERA())
-        if kmlplacemark.TIME_SPAN() is not None:
-            self.TIME_SPAN = KMLTimeSpan.KMLTimeSpanT.InitFromObj(kmlplacemark.TIME_SPAN())
-        if kmlplacemark.TIME_STAMP() is not None:
-            self.TIME_STAMP = KMLTimeStamp.KMLTimeStampT.InitFromObj(kmlplacemark.TIME_STAMP())
-        if not kmlplacemark.EXTENDED_DATAIsNone():
+        self.NAME = KMLPlacemark.NAME()
+        self.DESCRIPTION = KMLPlacemark.DESCRIPTION()
+        self.VISIBILITY = KMLPlacemark.VISIBILITY()
+        self.STYLE_URL = KMLPlacemark.STYLE_URL()
+        if KMLPlacemark.STYLE() is not None:
+            self.STYLE = KMLStyle.KMLStyleT.InitFromObj(KMLPlacemark.STYLE())
+        self.SNIPPET = KMLPlacemark.SNIPPET()
+        self.OPEN = KMLPlacemark.OPEN()
+        self.ADDRESS = KMLPlacemark.ADDRESS()
+        if KMLPlacemark.POINT() is not None:
+            self.POINT = KMLPoint.KMLPointT.InitFromObj(KMLPlacemark.POINT())
+        if KMLPlacemark.LINE_STRING() is not None:
+            self.LINE_STRING = KMLLineString.KMLLineStringT.InitFromObj(KMLPlacemark.LINE_STRING())
+        if KMLPlacemark.POLYGON() is not None:
+            self.POLYGON = KMLPolygon.KMLPolygonT.InitFromObj(KMLPlacemark.POLYGON())
+        if KMLPlacemark.LINEAR_RING() is not None:
+            self.LINEAR_RING = KMLLinearRing.KMLLinearRingT.InitFromObj(KMLPlacemark.LINEAR_RING())
+        if KMLPlacemark.MULTI_GEOMETRY() is not None:
+            self.MULTI_GEOMETRY = KMLMultiGeometry.KMLMultiGeometryT.InitFromObj(KMLPlacemark.MULTI_GEOMETRY())
+        if KMLPlacemark.MODEL() is not None:
+            self.MODEL = KMLModel.KMLModelT.InitFromObj(KMLPlacemark.MODEL())
+        if KMLPlacemark.TRACK() is not None:
+            self.TRACK = KMLTrack.KMLTrackT.InitFromObj(KMLPlacemark.TRACK())
+        if KMLPlacemark.MULTI_TRACK() is not None:
+            self.MULTI_TRACK = KMLMultiTrack.KMLMultiTrackT.InitFromObj(KMLPlacemark.MULTI_TRACK())
+        if KMLPlacemark.LOOK_AT() is not None:
+            self.LOOK_AT = KMLLookAt.KMLLookAtT.InitFromObj(KMLPlacemark.LOOK_AT())
+        if KMLPlacemark.CAMERA() is not None:
+            self.CAMERA = KMLCamera.KMLCameraT.InitFromObj(KMLPlacemark.CAMERA())
+        if KMLPlacemark.TIME_SPAN() is not None:
+            self.TIME_SPAN = KMLTimeSpan.KMLTimeSpanT.InitFromObj(KMLPlacemark.TIME_SPAN())
+        if KMLPlacemark.TIME_STAMP() is not None:
+            self.TIME_STAMP = KMLTimeStamp.KMLTimeStampT.InitFromObj(KMLPlacemark.TIME_STAMP())
+        if not KMLPlacemark.EXTENDED_DATAIsNone():
             self.EXTENDED_DATA = []
-            for i in range(kmlplacemark.EXTENDED_DATALength()):
-                if kmlplacemark.EXTENDED_DATA(i) is None:
+            for i in range(KMLPlacemark.EXTENDED_DATALength()):
+                if KMLPlacemark.EXTENDED_DATA(i) is None:
                     self.EXTENDED_DATA.append(None)
                 else:
-                    kMLData_ = KMLData.KMLDataT.InitFromObj(kmlplacemark.EXTENDED_DATA(i))
+                    kMLData_ = KMLData.KMLDataT.InitFromObj(KMLPlacemark.EXTENDED_DATA(i))
                     self.EXTENDED_DATA.append(kMLData_)
-        if kmlplacemark.SCHEMA_DATA() is not None:
-            self.SCHEMA_DATA = KMLSchemaData.KMLSchemaDataT.InitFromObj(kmlplacemark.SCHEMA_DATA())
-        if kmlplacemark.REGION() is not None:
-            self.REGION = KMLRegion.KMLRegionT.InitFromObj(kmlplacemark.REGION())
-        if kmlplacemark.STYLE_MAP() is not None:
-            self.STYLE_MAP = KMLStyleMap.KMLStyleMapT.InitFromObj(kmlplacemark.STYLE_MAP())
+        if KMLPlacemark.SCHEMA_DATA() is not None:
+            self.SCHEMA_DATA = KMLSchemaData.KMLSchemaDataT.InitFromObj(KMLPlacemark.SCHEMA_DATA())
+        if KMLPlacemark.REGION() is not None:
+            self.REGION = KMLRegion.KMLRegionT.InitFromObj(KMLPlacemark.REGION())
+        if KMLPlacemark.STYLE_MAP() is not None:
+            self.STYLE_MAP = KMLStyleMap.KMLStyleMapT.InitFromObj(KMLPlacemark.STYLE_MAP())
 
     # KMLPlacemarkT
     def Pack(self, builder):
@@ -684,5 +716,5 @@ class KMLPlacemarkT(object):
             KMLPlacemarkAddREGION(builder, REGION)
         if self.STYLE_MAP is not None:
             KMLPlacemarkAddSTYLE_MAP(builder, STYLE_MAP)
-        kmlplacemark = KMLPlacemarkEnd(builder)
-        return kmlplacemark
+        KMLPlacemark = KMLPlacemarkEnd(builder)
+        return KMLPlacemark

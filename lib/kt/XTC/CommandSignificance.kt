@@ -32,7 +32,7 @@ class CommandSignificance : Table() {
     /**
      * Consequence level (1=lowest, higher=more severe)
      */
-    val CONSEQUENCE_LEVEL : UByte
+    val consequenceLevel : UByte
         get() {
             val o = __offset(4)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
@@ -40,7 +40,7 @@ class CommandSignificance : Table() {
     /**
      * Reason for significance
      */
-    val REASON_FOR_WARNING : String?
+    val reasonForWarning : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -49,24 +49,24 @@ class CommandSignificance : Table() {
                 null
             }
         }
-    val REASON_FOR_WARNINGAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun REASON_FOR_WARNINGInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val reasonForWarningAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun reasonForWarningInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsCommandSignificance(_bb: ByteBuffer): CommandSignificance = getRootAsCommandSignificance(_bb, CommandSignificance())
         fun getRootAsCommandSignificance(_bb: ByteBuffer, obj: CommandSignificance): CommandSignificance {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createCommandSignificance(builder: FlatBufferBuilder, CONSEQUENCE_LEVEL: UByte, REASON_FOR_WARNINGOffset: Int) : Int {
+        fun createCommandSignificance(builder: FlatBufferBuilder, consequenceLevel: UByte, reasonForWarningOffset: Int) : Int {
             builder.startTable(2)
-            addREASON_FOR_WARNING(builder, REASON_FOR_WARNINGOffset)
-            addCONSEQUENCE_LEVEL(builder, CONSEQUENCE_LEVEL)
+            addREASONFORWARNING(builder, reasonForWarningOffset)
+            addCONSEQUENCELEVEL(builder, consequenceLevel)
             return endCommandSignificance(builder)
         }
         fun startCommandSignificance(builder: FlatBufferBuilder) = builder.startTable(2)
-        fun addCONSEQUENCE_LEVEL(builder: FlatBufferBuilder, CONSEQUENCE_LEVEL: UByte) = builder.addByte(0, CONSEQUENCE_LEVEL.toByte(), 0)
-        fun addREASON_FOR_WARNING(builder: FlatBufferBuilder, REASON_FOR_WARNING: Int) = builder.addOffset(1, REASON_FOR_WARNING, 0)
+        fun addCONSEQUENCELEVEL(builder: FlatBufferBuilder, consequenceLevel: UByte) = builder.addByte(0, consequenceLevel.toByte(), 0)
+        fun addREASONFORWARNING(builder: FlatBufferBuilder, reasonForWarning: Int) = builder.addOffset(1, reasonForWarning, 0)
         fun endCommandSignificance(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

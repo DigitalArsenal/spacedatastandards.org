@@ -1,5 +1,5 @@
-export { COT, COTT } from './COT.js';
-export { COTDetail, COTDetailT } from './COTDetail.js';
-export { COTHowType } from './COTHowType.js';
-export { COTPoint, COTPointT } from './COTPoint.js';
+export * from './COT.js';
+export * from './COTDetail.js';
+export * from './COTHowType.js';
+export * from './COTPoint.js';
 //# sourceMappingURL=main.d.ts.map

@@ -52,12 +52,20 @@ func (rcv *CZMPolygonHole) POSITIONS_CARTOGRAPHIC_DEGREES(j int) float64 {
 	return 0
 }
 
+func (rcv *CZMPolygonHole) PositionsCartographicDegrees(j int) float64 {
+	return rcv.POSITIONS_CARTOGRAPHIC_DEGREES(j)
+}
+
 func (rcv *CZMPolygonHole) POSITIONS_CARTOGRAPHIC_DEGREESLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *CZMPolygonHole) PositionsCartographicDegreesLength() int {
+	return rcv.POSITIONS_CARTOGRAPHIC_DEGREESLength()
 }
 
 /// Positions as cartographic degrees [lon, lat, height, ...]
@@ -70,6 +78,10 @@ func (rcv *CZMPolygonHole) MutatePOSITIONS_CARTOGRAPHIC_DEGREES(j int, n float64
 	return false
 }
 
+func (rcv *CZMPolygonHole) MutatePositionsCartographicDegrees(j int, n float64) bool {
+	return rcv.MutatePOSITIONS_CARTOGRAPHIC_DEGREES(j, n)
+}
+
 /// Positions as Cartesian [X, Y, Z, ...]
 func (rcv *CZMPolygonHole) POSITIONS_CARTESIAN(j int) float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
@@ -80,12 +92,20 @@ func (rcv *CZMPolygonHole) POSITIONS_CARTESIAN(j int) float64 {
 	return 0
 }
 
+func (rcv *CZMPolygonHole) PositionsCartesian(j int) float64 {
+	return rcv.POSITIONS_CARTESIAN(j)
+}
+
 func (rcv *CZMPolygonHole) POSITIONS_CARTESIANLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *CZMPolygonHole) PositionsCartesianLength() int {
+	return rcv.POSITIONS_CARTESIANLength()
 }
 
 /// Positions as Cartesian [X, Y, Z, ...]
@@ -98,20 +118,36 @@ func (rcv *CZMPolygonHole) MutatePOSITIONS_CARTESIAN(j int, n float64) bool {
 	return false
 }
 
+func (rcv *CZMPolygonHole) MutatePositionsCartesian(j int, n float64) bool {
+	return rcv.MutatePOSITIONS_CARTESIAN(j, n)
+}
+
 func CZMPolygonHoleStart(builder *flatbuffers.Builder) {
 	builder.StartObject(2)
 }
 func CZMPolygonHoleAddPOSITIONS_CARTOGRAPHIC_DEGREES(builder *flatbuffers.Builder, POSITIONS_CARTOGRAPHIC_DEGREES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(POSITIONS_CARTOGRAPHIC_DEGREES), 0)
 }
+func CZMPolygonHoleAddPositionsCartographicDegrees(builder *flatbuffers.Builder, POSITIONS_CARTOGRAPHIC_DEGREES flatbuffers.UOffsetT) {
+	CZMPolygonHoleAddPOSITIONS_CARTOGRAPHIC_DEGREES(builder, POSITIONS_CARTOGRAPHIC_DEGREES)
+}
 func CZMPolygonHoleStartPOSITIONS_CARTOGRAPHIC_DEGREESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(8, numElems, 8)
+}
+func CZMPolygonHoleStartPositionsCartographicDegreesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return CZMPolygonHoleStartPOSITIONS_CARTOGRAPHIC_DEGREESVector(builder, numElems)
 }
 func CZMPolygonHoleAddPOSITIONS_CARTESIAN(builder *flatbuffers.Builder, POSITIONS_CARTESIAN flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(POSITIONS_CARTESIAN), 0)
 }
+func CZMPolygonHoleAddPositionsCartesian(builder *flatbuffers.Builder, POSITIONS_CARTESIAN flatbuffers.UOffsetT) {
+	CZMPolygonHoleAddPOSITIONS_CARTESIAN(builder, POSITIONS_CARTESIAN)
+}
 func CZMPolygonHoleStartPOSITIONS_CARTESIANVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(8, numElems, 8)
+}
+func CZMPolygonHoleStartPositionsCartesianVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return CZMPolygonHoleStartPOSITIONS_CARTESIANVector(builder, numElems)
 }
 func CZMPolygonHoleEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

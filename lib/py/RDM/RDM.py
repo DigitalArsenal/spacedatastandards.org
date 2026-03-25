@@ -429,6 +429,12 @@ def RDMStartIMPACT_PREDICTIONSVector(builder, numElems):
 def StartIMPACT_PREDICTIONSVector(builder, numElems):
     return RDMStartIMPACT_PREDICTIONSVector(builder, numElems)
 
+def RDMCreateIMPACT_PREDICTIONSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateIMPACT_PREDICTIONSVector(builder, data):
+    RDMCreateIMPACT_PREDICTIONSVector(builder, data)
+
 def RDMAddSURVIVING_DEBRIS(builder, SURVIVING_DEBRIS):
     builder.PrependUOffsetTRelativeSlot(22, flatbuffers.number_types.UOffsetTFlags.py_type(SURVIVING_DEBRIS), 0)
 
@@ -440,6 +446,12 @@ def RDMStartSURVIVING_DEBRISVector(builder, numElems):
 
 def StartSURVIVING_DEBRISVector(builder, numElems):
     return RDMStartSURVIVING_DEBRISVector(builder, numElems)
+
+def RDMCreateSURVIVING_DEBRISVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateSURVIVING_DEBRISVector(builder, data):
+    RDMCreateSURVIVING_DEBRISVector(builder, data)
 
 def RDMAddCASUALTY_EXPECTATION(builder, CASUALTY_EXPECTATION):
     builder.PrependFloat64Slot(23, CASUALTY_EXPECTATION, 0.0)
@@ -482,40 +494,69 @@ except:
 class RDMT(object):
 
     # RDMT
-    def __init__(self):
-        self.CCSDS_RDM_VERS = None  # type: str
-        self.CREATION_DATE = None  # type: str
-        self.ORIGINATOR = None  # type: str
-        self.OBJECT_NAME = None  # type: str
-        self.OBJECT_ID = None  # type: str
-        self.NORAD_CAT_ID = 0  # type: int
-        self.OBJECT_TYPE = None  # type: str
-        self.DISPOSITION = 0  # type: int
-        self.REASON = 0  # type: int
-        self.REENTRY_EPOCH = None  # type: str
-        self.REENTRY_EPOCH_UNC = 0.0  # type: float
-        self.REENTRY_LATITUDE = 0.0  # type: float
-        self.REENTRY_LONGITUDE = 0.0  # type: float
-        self.REENTRY_ALTITUDE = 0.0  # type: float
-        self.TIME_SYSTEM = None  # type: str
-        self.PREV_PREDICTION_EPOCH = None  # type: str
-        self.BALLISTIC_COEFF = 0.0  # type: float
-        self.MASS = 0.0  # type: float
-        self.SOLAR_RAD_AREA = 0.0  # type: float
-        self.DRAG_AREA = 0.0  # type: float
-        self.INITIAL_STATE = None  # type: Optional[reentryStateVector.reentryStateVectorT]
-        self.IMPACT_PREDICTIONS = None  # type: List[reentryImpact.reentryImpactT]
-        self.SURVIVING_DEBRIS = None  # type: List[survivingDebris.survivingDebrisT]
-        self.CASUALTY_EXPECTATION = 0.0  # type: float
-        self.NUM_FRAGMENTS = 0  # type: int
-        self.SURVIVING_MASS = 0.0  # type: float
-        self.COMMENT = None  # type: str
+    def __init__(
+        self,
+        CCSDS_RDM_VERS = None,
+        CREATION_DATE = None,
+        ORIGINATOR = None,
+        OBJECT_NAME = None,
+        OBJECT_ID = None,
+        NORAD_CAT_ID = 0,
+        OBJECT_TYPE = None,
+        DISPOSITION = 0,
+        REASON = 0,
+        REENTRY_EPOCH = None,
+        REENTRY_EPOCH_UNC = 0.0,
+        REENTRY_LATITUDE = 0.0,
+        REENTRY_LONGITUDE = 0.0,
+        REENTRY_ALTITUDE = 0.0,
+        TIME_SYSTEM = None,
+        PREV_PREDICTION_EPOCH = None,
+        BALLISTIC_COEFF = 0.0,
+        MASS = 0.0,
+        SOLAR_RAD_AREA = 0.0,
+        DRAG_AREA = 0.0,
+        INITIAL_STATE = None,
+        IMPACT_PREDICTIONS = None,
+        SURVIVING_DEBRIS = None,
+        CASUALTY_EXPECTATION = 0.0,
+        NUM_FRAGMENTS = 0,
+        SURVIVING_MASS = 0.0,
+        COMMENT = None,
+    ):
+        self.CCSDS_RDM_VERS = CCSDS_RDM_VERS  # type: Optional[str]
+        self.CREATION_DATE = CREATION_DATE  # type: Optional[str]
+        self.ORIGINATOR = ORIGINATOR  # type: Optional[str]
+        self.OBJECT_NAME = OBJECT_NAME  # type: Optional[str]
+        self.OBJECT_ID = OBJECT_ID  # type: Optional[str]
+        self.NORAD_CAT_ID = NORAD_CAT_ID  # type: int
+        self.OBJECT_TYPE = OBJECT_TYPE  # type: Optional[str]
+        self.DISPOSITION = DISPOSITION  # type: int
+        self.REASON = REASON  # type: int
+        self.REENTRY_EPOCH = REENTRY_EPOCH  # type: Optional[str]
+        self.REENTRY_EPOCH_UNC = REENTRY_EPOCH_UNC  # type: float
+        self.REENTRY_LATITUDE = REENTRY_LATITUDE  # type: float
+        self.REENTRY_LONGITUDE = REENTRY_LONGITUDE  # type: float
+        self.REENTRY_ALTITUDE = REENTRY_ALTITUDE  # type: float
+        self.TIME_SYSTEM = TIME_SYSTEM  # type: Optional[str]
+        self.PREV_PREDICTION_EPOCH = PREV_PREDICTION_EPOCH  # type: Optional[str]
+        self.BALLISTIC_COEFF = BALLISTIC_COEFF  # type: float
+        self.MASS = MASS  # type: float
+        self.SOLAR_RAD_AREA = SOLAR_RAD_AREA  # type: float
+        self.DRAG_AREA = DRAG_AREA  # type: float
+        self.INITIAL_STATE = INITIAL_STATE  # type: Optional[reentryStateVector.reentryStateVectorT]
+        self.IMPACT_PREDICTIONS = IMPACT_PREDICTIONS  # type: Optional[List[reentryImpact.reentryImpactT]]
+        self.SURVIVING_DEBRIS = SURVIVING_DEBRIS  # type: Optional[List[survivingDebris.survivingDebrisT]]
+        self.CASUALTY_EXPECTATION = CASUALTY_EXPECTATION  # type: float
+        self.NUM_FRAGMENTS = NUM_FRAGMENTS  # type: int
+        self.SURVIVING_MASS = SURVIVING_MASS  # type: float
+        self.COMMENT = COMMENT  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        RDM = RDM()
-        RDM.Init(buf, pos)
-        return cls.InitFromObj(RDM)
+        tmpRdm = RDM()
+        tmpRdm.Init(buf, pos)
+        return cls.InitFromObj(tmpRdm)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -523,9 +564,9 @@ class RDMT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, RDM):
+    def InitFromObj(cls, tmpRdm):
         x = RDMT()
-        x._UnPack(RDM)
+        x._UnPack(tmpRdm)
         return x
 
     # RDMT

@@ -269,29 +269,47 @@ def End(builder):
 class OOST(object):
 
     # OOST
-    def __init__(self):
-        self.ID = None  # type: str
-        self.ID_ON_ORBIT = None  # type: str
-        self.ID_SOLAR_ARRAY = None  # type: str
-        self.NAME = None  # type: str
-        self.CELL_TYPE = None  # type: str
-        self.QUANTITY = 0  # type: int
-        self.AREA = 0.0  # type: float
-        self.POWER_BOL = 0.0  # type: float
-        self.POWER_EOL = 0.0  # type: float
-        self.EFFICIENCY = 0.0  # type: float
-        self.DEGRADATION_RATE = 0.0  # type: float
-        self.NUM_PANELS = 0  # type: int
-        self.DEPLOYABLE = False  # type: bool
-        self.TRACKING = False  # type: bool
-        self.MASS = 0.0  # type: float
-        self.NOTES = None  # type: str
+    def __init__(
+        self,
+        ID = None,
+        ID_ON_ORBIT = None,
+        ID_SOLAR_ARRAY = None,
+        NAME = None,
+        CELL_TYPE = None,
+        QUANTITY = 0,
+        AREA = 0.0,
+        POWER_BOL = 0.0,
+        POWER_EOL = 0.0,
+        EFFICIENCY = 0.0,
+        DEGRADATION_RATE = 0.0,
+        NUM_PANELS = 0,
+        DEPLOYABLE = False,
+        TRACKING = False,
+        MASS = 0.0,
+        NOTES = None,
+    ):
+        self.ID = ID  # type: Optional[str]
+        self.ID_ON_ORBIT = ID_ON_ORBIT  # type: Optional[str]
+        self.ID_SOLAR_ARRAY = ID_SOLAR_ARRAY  # type: Optional[str]
+        self.NAME = NAME  # type: Optional[str]
+        self.CELL_TYPE = CELL_TYPE  # type: Optional[str]
+        self.QUANTITY = QUANTITY  # type: int
+        self.AREA = AREA  # type: float
+        self.POWER_BOL = POWER_BOL  # type: float
+        self.POWER_EOL = POWER_EOL  # type: float
+        self.EFFICIENCY = EFFICIENCY  # type: float
+        self.DEGRADATION_RATE = DEGRADATION_RATE  # type: float
+        self.NUM_PANELS = NUM_PANELS  # type: int
+        self.DEPLOYABLE = DEPLOYABLE  # type: bool
+        self.TRACKING = TRACKING  # type: bool
+        self.MASS = MASS  # type: float
+        self.NOTES = NOTES  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        OOS = OOS()
-        OOS.Init(buf, pos)
-        return cls.InitFromObj(OOS)
+        tmpOos = OOS()
+        tmpOos.Init(buf, pos)
+        return cls.InitFromObj(tmpOos)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -299,9 +317,9 @@ class OOST(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, OOS):
+    def InitFromObj(cls, tmpOos):
         x = OOST()
-        x._UnPack(OOS)
+        x._UnPack(tmpOos)
         return x
 
     # OOST

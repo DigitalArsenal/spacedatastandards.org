@@ -2,4 +2,545 @@
 
 # namespace: 
 
-# NOTE GPXWaypoint.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# A waypoint, point of interest, or named feature
+class GPXWaypoint(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = GPXWaypoint()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsGPXWaypoint(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def GPXWaypointBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x47\x50\x58", size_prefixed=size_prefixed)
+
+    # GPXWaypoint
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Latitude in decimal degrees (WGS84)
+    # GPXWaypoint
+    def LATITUDE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Longitude in decimal degrees (WGS84)
+    # GPXWaypoint
+    def LONGITUDE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Elevation in meters above WGS84 ellipsoid
+    # GPXWaypoint
+    def ELEVATION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # UTC timestamp (ISO 8601)
+    # GPXWaypoint
+    def TIME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Magnetic variation in degrees
+    # GPXWaypoint
+    def MAGVAR(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Height of geoid above WGS84 ellipsoid in meters
+    # GPXWaypoint
+    def GEOID_HEIGHT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Waypoint name
+    # GPXWaypoint
+    def NAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Comment
+    # GPXWaypoint
+    def COMMENT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Description
+    # GPXWaypoint
+    def DESCRIPTION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Source of data
+    # GPXWaypoint
+    def SOURCE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Links to additional information
+    # GPXWaypoint
+    def LINKS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from GPXLink import GPXLink
+            obj = GPXLink()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # GPXWaypoint
+    def LINKSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # GPXWaypoint
+    def LINKSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        return o == 0
+
+    # Symbol name
+    # GPXWaypoint
+    def SYMBOL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Type/category
+    # GPXWaypoint
+    def TYPE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Type of GPS fix
+    # GPXWaypoint
+    def FIX(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # Number of satellites used for fix
+    # GPXWaypoint
+    def SAT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint16Flags, o + self._tab.Pos)
+        return 0
+
+    # Horizontal dilution of precision
+    # GPXWaypoint
+    def HDOP(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Vertical dilution of precision
+    # GPXWaypoint
+    def VDOP(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Position dilution of precision
+    # GPXWaypoint
+    def PDOP(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Age of DGPS data in seconds
+    # GPXWaypoint
+    def AGE_OF_DGPS_DATA(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # DGPS station ID
+    # GPXWaypoint
+    def DGPS_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint16Flags, o + self._tab.Pos)
+        return 0
+
+    # Speed in meters per second
+    # GPXWaypoint
+    def SPEED(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Course/heading in degrees true
+    # GPXWaypoint
+    def COURSE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+def GPXWaypointStart(builder):
+    builder.StartObject(22)
+
+def Start(builder):
+    GPXWaypointStart(builder)
+
+def GPXWaypointAddLATITUDE(builder, LATITUDE):
+    builder.PrependFloat64Slot(0, LATITUDE, 0.0)
+
+def AddLATITUDE(builder, LATITUDE):
+    GPXWaypointAddLATITUDE(builder, LATITUDE)
+
+def GPXWaypointAddLONGITUDE(builder, LONGITUDE):
+    builder.PrependFloat64Slot(1, LONGITUDE, 0.0)
+
+def AddLONGITUDE(builder, LONGITUDE):
+    GPXWaypointAddLONGITUDE(builder, LONGITUDE)
+
+def GPXWaypointAddELEVATION(builder, ELEVATION):
+    builder.PrependFloat64Slot(2, ELEVATION, 0.0)
+
+def AddELEVATION(builder, ELEVATION):
+    GPXWaypointAddELEVATION(builder, ELEVATION)
+
+def GPXWaypointAddTIME(builder, TIME):
+    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(TIME), 0)
+
+def AddTIME(builder, TIME):
+    GPXWaypointAddTIME(builder, TIME)
+
+def GPXWaypointAddMAGVAR(builder, MAGVAR):
+    builder.PrependFloat64Slot(4, MAGVAR, 0.0)
+
+def AddMAGVAR(builder, MAGVAR):
+    GPXWaypointAddMAGVAR(builder, MAGVAR)
+
+def GPXWaypointAddGEOID_HEIGHT(builder, GEOID_HEIGHT):
+    builder.PrependFloat64Slot(5, GEOID_HEIGHT, 0.0)
+
+def AddGEOID_HEIGHT(builder, GEOID_HEIGHT):
+    GPXWaypointAddGEOID_HEIGHT(builder, GEOID_HEIGHT)
+
+def GPXWaypointAddNAME(builder, NAME):
+    builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(NAME), 0)
+
+def AddNAME(builder, NAME):
+    GPXWaypointAddNAME(builder, NAME)
+
+def GPXWaypointAddCOMMENT(builder, COMMENT):
+    builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(COMMENT), 0)
+
+def AddCOMMENT(builder, COMMENT):
+    GPXWaypointAddCOMMENT(builder, COMMENT)
+
+def GPXWaypointAddDESCRIPTION(builder, DESCRIPTION):
+    builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(DESCRIPTION), 0)
+
+def AddDESCRIPTION(builder, DESCRIPTION):
+    GPXWaypointAddDESCRIPTION(builder, DESCRIPTION)
+
+def GPXWaypointAddSOURCE(builder, SOURCE):
+    builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(SOURCE), 0)
+
+def AddSOURCE(builder, SOURCE):
+    GPXWaypointAddSOURCE(builder, SOURCE)
+
+def GPXWaypointAddLINKS(builder, LINKS):
+    builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(LINKS), 0)
+
+def AddLINKS(builder, LINKS):
+    GPXWaypointAddLINKS(builder, LINKS)
+
+def GPXWaypointStartLINKSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartLINKSVector(builder, numElems):
+    return GPXWaypointStartLINKSVector(builder, numElems)
+
+def GPXWaypointCreateLINKSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateLINKSVector(builder, data):
+    GPXWaypointCreateLINKSVector(builder, data)
+
+def GPXWaypointAddSYMBOL(builder, SYMBOL):
+    builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(SYMBOL), 0)
+
+def AddSYMBOL(builder, SYMBOL):
+    GPXWaypointAddSYMBOL(builder, SYMBOL)
+
+def GPXWaypointAddTYPE(builder, TYPE):
+    builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(TYPE), 0)
+
+def AddTYPE(builder, TYPE):
+    GPXWaypointAddTYPE(builder, TYPE)
+
+def GPXWaypointAddFIX(builder, FIX):
+    builder.PrependInt8Slot(13, FIX, 0)
+
+def AddFIX(builder, FIX):
+    GPXWaypointAddFIX(builder, FIX)
+
+def GPXWaypointAddSAT(builder, SAT):
+    builder.PrependUint16Slot(14, SAT, 0)
+
+def AddSAT(builder, SAT):
+    GPXWaypointAddSAT(builder, SAT)
+
+def GPXWaypointAddHDOP(builder, HDOP):
+    builder.PrependFloat64Slot(15, HDOP, 0.0)
+
+def AddHDOP(builder, HDOP):
+    GPXWaypointAddHDOP(builder, HDOP)
+
+def GPXWaypointAddVDOP(builder, VDOP):
+    builder.PrependFloat64Slot(16, VDOP, 0.0)
+
+def AddVDOP(builder, VDOP):
+    GPXWaypointAddVDOP(builder, VDOP)
+
+def GPXWaypointAddPDOP(builder, PDOP):
+    builder.PrependFloat64Slot(17, PDOP, 0.0)
+
+def AddPDOP(builder, PDOP):
+    GPXWaypointAddPDOP(builder, PDOP)
+
+def GPXWaypointAddAGE_OF_DGPS_DATA(builder, AGE_OF_DGPS_DATA):
+    builder.PrependFloat64Slot(18, AGE_OF_DGPS_DATA, 0.0)
+
+def AddAGE_OF_DGPS_DATA(builder, AGE_OF_DGPS_DATA):
+    GPXWaypointAddAGE_OF_DGPS_DATA(builder, AGE_OF_DGPS_DATA)
+
+def GPXWaypointAddDGPS_ID(builder, DGPS_ID):
+    builder.PrependUint16Slot(19, DGPS_ID, 0)
+
+def AddDGPS_ID(builder, DGPS_ID):
+    GPXWaypointAddDGPS_ID(builder, DGPS_ID)
+
+def GPXWaypointAddSPEED(builder, SPEED):
+    builder.PrependFloat64Slot(20, SPEED, 0.0)
+
+def AddSPEED(builder, SPEED):
+    GPXWaypointAddSPEED(builder, SPEED)
+
+def GPXWaypointAddCOURSE(builder, COURSE):
+    builder.PrependFloat64Slot(21, COURSE, 0.0)
+
+def AddCOURSE(builder, COURSE):
+    GPXWaypointAddCOURSE(builder, COURSE)
+
+def GPXWaypointEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return GPXWaypointEnd(builder)
+
+import GPXLink
+try:
+    from typing import List
+except:
+    pass
+
+class GPXWaypointT(object):
+
+    # GPXWaypointT
+    def __init__(
+        self,
+        LATITUDE = 0.0,
+        LONGITUDE = 0.0,
+        ELEVATION = 0.0,
+        TIME = None,
+        MAGVAR = 0.0,
+        GEOID_HEIGHT = 0.0,
+        NAME = None,
+        COMMENT = None,
+        DESCRIPTION = None,
+        SOURCE = None,
+        LINKS = None,
+        SYMBOL = None,
+        TYPE = None,
+        FIX = 0,
+        SAT = 0,
+        HDOP = 0.0,
+        VDOP = 0.0,
+        PDOP = 0.0,
+        AGE_OF_DGPS_DATA = 0.0,
+        DGPS_ID = 0,
+        SPEED = 0.0,
+        COURSE = 0.0,
+    ):
+        self.LATITUDE = LATITUDE  # type: float
+        self.LONGITUDE = LONGITUDE  # type: float
+        self.ELEVATION = ELEVATION  # type: float
+        self.TIME = TIME  # type: Optional[str]
+        self.MAGVAR = MAGVAR  # type: float
+        self.GEOID_HEIGHT = GEOID_HEIGHT  # type: float
+        self.NAME = NAME  # type: Optional[str]
+        self.COMMENT = COMMENT  # type: Optional[str]
+        self.DESCRIPTION = DESCRIPTION  # type: Optional[str]
+        self.SOURCE = SOURCE  # type: Optional[str]
+        self.LINKS = LINKS  # type: Optional[List[GPXLink.GPXLinkT]]
+        self.SYMBOL = SYMBOL  # type: Optional[str]
+        self.TYPE = TYPE  # type: Optional[str]
+        self.FIX = FIX  # type: int
+        self.SAT = SAT  # type: int
+        self.HDOP = HDOP  # type: float
+        self.VDOP = VDOP  # type: float
+        self.PDOP = PDOP  # type: float
+        self.AGE_OF_DGPS_DATA = AGE_OF_DGPS_DATA  # type: float
+        self.DGPS_ID = DGPS_ID  # type: int
+        self.SPEED = SPEED  # type: float
+        self.COURSE = COURSE  # type: float
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpGpxwaypoint = GPXWaypoint()
+        tmpGpxwaypoint.Init(buf, pos)
+        return cls.InitFromObj(tmpGpxwaypoint)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpGpxwaypoint):
+        x = GPXWaypointT()
+        x._UnPack(tmpGpxwaypoint)
+        return x
+
+    # GPXWaypointT
+    def _UnPack(self, GPXWaypoint):
+        if GPXWaypoint is None:
+            return
+        self.LATITUDE = GPXWaypoint.LATITUDE()
+        self.LONGITUDE = GPXWaypoint.LONGITUDE()
+        self.ELEVATION = GPXWaypoint.ELEVATION()
+        self.TIME = GPXWaypoint.TIME()
+        self.MAGVAR = GPXWaypoint.MAGVAR()
+        self.GEOID_HEIGHT = GPXWaypoint.GEOID_HEIGHT()
+        self.NAME = GPXWaypoint.NAME()
+        self.COMMENT = GPXWaypoint.COMMENT()
+        self.DESCRIPTION = GPXWaypoint.DESCRIPTION()
+        self.SOURCE = GPXWaypoint.SOURCE()
+        if not GPXWaypoint.LINKSIsNone():
+            self.LINKS = []
+            for i in range(GPXWaypoint.LINKSLength()):
+                if GPXWaypoint.LINKS(i) is None:
+                    self.LINKS.append(None)
+                else:
+                    gPXLink_ = GPXLink.GPXLinkT.InitFromObj(GPXWaypoint.LINKS(i))
+                    self.LINKS.append(gPXLink_)
+        self.SYMBOL = GPXWaypoint.SYMBOL()
+        self.TYPE = GPXWaypoint.TYPE()
+        self.FIX = GPXWaypoint.FIX()
+        self.SAT = GPXWaypoint.SAT()
+        self.HDOP = GPXWaypoint.HDOP()
+        self.VDOP = GPXWaypoint.VDOP()
+        self.PDOP = GPXWaypoint.PDOP()
+        self.AGE_OF_DGPS_DATA = GPXWaypoint.AGE_OF_DGPS_DATA()
+        self.DGPS_ID = GPXWaypoint.DGPS_ID()
+        self.SPEED = GPXWaypoint.SPEED()
+        self.COURSE = GPXWaypoint.COURSE()
+
+    # GPXWaypointT
+    def Pack(self, builder):
+        if self.TIME is not None:
+            TIME = builder.CreateString(self.TIME)
+        if self.NAME is not None:
+            NAME = builder.CreateString(self.NAME)
+        if self.COMMENT is not None:
+            COMMENT = builder.CreateString(self.COMMENT)
+        if self.DESCRIPTION is not None:
+            DESCRIPTION = builder.CreateString(self.DESCRIPTION)
+        if self.SOURCE is not None:
+            SOURCE = builder.CreateString(self.SOURCE)
+        if self.LINKS is not None:
+            LINKSlist = []
+            for i in range(len(self.LINKS)):
+                LINKSlist.append(self.LINKS[i].Pack(builder))
+            GPXWaypointStartLINKSVector(builder, len(self.LINKS))
+            for i in reversed(range(len(self.LINKS))):
+                builder.PrependUOffsetTRelative(LINKSlist[i])
+            LINKS = builder.EndVector()
+        if self.SYMBOL is not None:
+            SYMBOL = builder.CreateString(self.SYMBOL)
+        if self.TYPE is not None:
+            TYPE = builder.CreateString(self.TYPE)
+        GPXWaypointStart(builder)
+        GPXWaypointAddLATITUDE(builder, self.LATITUDE)
+        GPXWaypointAddLONGITUDE(builder, self.LONGITUDE)
+        GPXWaypointAddELEVATION(builder, self.ELEVATION)
+        if self.TIME is not None:
+            GPXWaypointAddTIME(builder, TIME)
+        GPXWaypointAddMAGVAR(builder, self.MAGVAR)
+        GPXWaypointAddGEOID_HEIGHT(builder, self.GEOID_HEIGHT)
+        if self.NAME is not None:
+            GPXWaypointAddNAME(builder, NAME)
+        if self.COMMENT is not None:
+            GPXWaypointAddCOMMENT(builder, COMMENT)
+        if self.DESCRIPTION is not None:
+            GPXWaypointAddDESCRIPTION(builder, DESCRIPTION)
+        if self.SOURCE is not None:
+            GPXWaypointAddSOURCE(builder, SOURCE)
+        if self.LINKS is not None:
+            GPXWaypointAddLINKS(builder, LINKS)
+        if self.SYMBOL is not None:
+            GPXWaypointAddSYMBOL(builder, SYMBOL)
+        if self.TYPE is not None:
+            GPXWaypointAddTYPE(builder, TYPE)
+        GPXWaypointAddFIX(builder, self.FIX)
+        GPXWaypointAddSAT(builder, self.SAT)
+        GPXWaypointAddHDOP(builder, self.HDOP)
+        GPXWaypointAddVDOP(builder, self.VDOP)
+        GPXWaypointAddPDOP(builder, self.PDOP)
+        GPXWaypointAddAGE_OF_DGPS_DATA(builder, self.AGE_OF_DGPS_DATA)
+        GPXWaypointAddDGPS_ID(builder, self.DGPS_ID)
+        GPXWaypointAddSPEED(builder, self.SPEED)
+        GPXWaypointAddCOURSE(builder, self.COURSE)
+        GPXWaypoint = GPXWaypointEnd(builder)
+        return GPXWaypoint

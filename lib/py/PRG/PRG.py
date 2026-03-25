@@ -122,6 +122,12 @@ def PRGStartMESSAGE_TYPESVector(builder, numElems):
 def StartMESSAGE_TYPESVector(builder, numElems):
     return PRGStartMESSAGE_TYPESVector(builder, numElems)
 
+def PRGCreateMESSAGE_TYPESVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateMESSAGE_TYPESVector(builder, data):
+    PRGCreateMESSAGE_TYPESVector(builder, data)
+
 def PRGAddUSERS(builder, USERS):
     builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(USERS), 0)
 
@@ -133,6 +139,12 @@ def PRGStartUSERSVector(builder, numElems):
 
 def StartUSERSVector(builder, numElems):
     return PRGStartUSERSVector(builder, numElems)
+
+def PRGCreateUSERSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateUSERSVector(builder, data):
+    PRGCreateUSERSVector(builder, data)
 
 def PRGEnd(builder):
     return builder.EndObject()
@@ -149,17 +161,23 @@ except:
 class PRGT(object):
 
     # PRGT
-    def __init__(self):
-        self.NAME = None  # type: str
-        self.HD_KEY_PATH = None  # type: str
-        self.MESSAGE_TYPES = None  # type: List[str]
-        self.USERS = None  # type: List[USR.USRT]
+    def __init__(
+        self,
+        NAME = None,
+        HD_KEY_PATH = None,
+        MESSAGE_TYPES = None,
+        USERS = None,
+    ):
+        self.NAME = NAME  # type: Optional[str]
+        self.HD_KEY_PATH = HD_KEY_PATH  # type: Optional[str]
+        self.MESSAGE_TYPES = MESSAGE_TYPES  # type: Optional[List[Optional[str]]]
+        self.USERS = USERS  # type: Optional[List[USR.USRT]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        PRG = PRG()
-        PRG.Init(buf, pos)
-        return cls.InitFromObj(PRG)
+        tmpPrg = PRG()
+        tmpPrg.Init(buf, pos)
+        return cls.InitFromObj(tmpPrg)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -167,9 +185,9 @@ class PRGT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, PRG):
+    def InitFromObj(cls, tmpPrg):
         x = PRGT()
-        x._UnPack(PRG)
+        x._UnPack(tmpPrg)
         return x
 
     # PRGT

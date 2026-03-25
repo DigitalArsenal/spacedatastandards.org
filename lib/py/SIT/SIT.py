@@ -341,6 +341,16 @@ def SITStartCENTER_POINT_GEOMETRYVector(builder, numElems):
 def StartCENTER_POINT_GEOMETRYVector(builder, numElems):
     return SITStartCENTER_POINT_GEOMETRYVector(builder, numElems)
 
+def SITCreateCENTER_POINT_GEOMETRYVector(builder, data):
+    data = list(data)
+    builder.StartVector(4, len(data), 4)
+    for item in reversed(data):
+        builder.PrependFloat32(item)
+    return builder.EndVector()
+
+def CreateCENTER_POINT_GEOMETRYVector(builder, data):
+    SITCreateCENTER_POINT_GEOMETRYVector(builder, data)
+
 def SITAddCLASSIFICATION(builder, CLASSIFICATION):
     builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(CLASSIFICATION), 0)
 
@@ -425,6 +435,12 @@ def SITStartINTEGRATED_DEVICESVector(builder, numElems):
 def StartINTEGRATED_DEVICESVector(builder, numElems):
     return SITStartINTEGRATED_DEVICESVector(builder, numElems)
 
+def SITCreateINTEGRATED_DEVICESVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateINTEGRATED_DEVICESVector(builder, data):
+    SITCreateINTEGRATED_DEVICESVector(builder, data)
+
 def SITEnd(builder):
     return builder.EndObject()
 
@@ -441,37 +457,63 @@ except:
 class SITT(object):
 
     # SITT
-    def __init__(self):
-        self.ID = None  # type: str
-        self.NAME = None  # type: str
-        self.ABBREVIATION = None  # type: str
-        self.SITE_TYPE = 0  # type: int
-        self.CATCODE = None  # type: str
-        self.NETWORK = None  # type: str
-        self.LATITUDE = 0.0  # type: float
-        self.LONGITUDE = 0.0  # type: float
-        self.ALTITUDE = 0.0  # type: float
-        self.GEOMETRY = None  # type: Optional[Geometry.GeometryT]
-        self.CENTER_POINT_GEOMETRY = None  # type: List[float]
-        self.CLASSIFICATION = None  # type: str
-        self.CTR_ID = None  # type: str
-        self.CREATED_BY = None  # type: str
-        self.DESCRIPTION = None  # type: str
-        self.MODEL_URL = None  # type: str
-        self.SOURCE = None  # type: str
-        self.TASKABLE = False  # type: bool
-        self.OPERATIONAL_STATUS = None  # type: str
-        self.ESTABLISHMENT_DATE = None  # type: str
-        self.CONTACT_INFO = None  # type: str
-        self.ENVIRONMENTAL_IMPACT = None  # type: str
-        self.ACCESSIBILITY_INFRA = None  # type: str
-        self.INTEGRATED_DEVICES = None  # type: List[IDM.IDMT]
+    def __init__(
+        self,
+        ID = None,
+        NAME = None,
+        ABBREVIATION = None,
+        SITE_TYPE = 0,
+        CATCODE = None,
+        NETWORK = None,
+        LATITUDE = 0.0,
+        LONGITUDE = 0.0,
+        ALTITUDE = 0.0,
+        GEOMETRY = None,
+        CENTER_POINT_GEOMETRY = None,
+        CLASSIFICATION = None,
+        CTR_ID = None,
+        CREATED_BY = None,
+        DESCRIPTION = None,
+        MODEL_URL = None,
+        SOURCE = None,
+        TASKABLE = False,
+        OPERATIONAL_STATUS = None,
+        ESTABLISHMENT_DATE = None,
+        CONTACT_INFO = None,
+        ENVIRONMENTAL_IMPACT = None,
+        ACCESSIBILITY_INFRA = None,
+        INTEGRATED_DEVICES = None,
+    ):
+        self.ID = ID  # type: Optional[str]
+        self.NAME = NAME  # type: Optional[str]
+        self.ABBREVIATION = ABBREVIATION  # type: Optional[str]
+        self.SITE_TYPE = SITE_TYPE  # type: int
+        self.CATCODE = CATCODE  # type: Optional[str]
+        self.NETWORK = NETWORK  # type: Optional[str]
+        self.LATITUDE = LATITUDE  # type: float
+        self.LONGITUDE = LONGITUDE  # type: float
+        self.ALTITUDE = ALTITUDE  # type: float
+        self.GEOMETRY = GEOMETRY  # type: Optional[Geometry.GeometryT]
+        self.CENTER_POINT_GEOMETRY = CENTER_POINT_GEOMETRY  # type: Optional[List[float]]
+        self.CLASSIFICATION = CLASSIFICATION  # type: Optional[str]
+        self.CTR_ID = CTR_ID  # type: Optional[str]
+        self.CREATED_BY = CREATED_BY  # type: Optional[str]
+        self.DESCRIPTION = DESCRIPTION  # type: Optional[str]
+        self.MODEL_URL = MODEL_URL  # type: Optional[str]
+        self.SOURCE = SOURCE  # type: Optional[str]
+        self.TASKABLE = TASKABLE  # type: bool
+        self.OPERATIONAL_STATUS = OPERATIONAL_STATUS  # type: Optional[str]
+        self.ESTABLISHMENT_DATE = ESTABLISHMENT_DATE  # type: Optional[str]
+        self.CONTACT_INFO = CONTACT_INFO  # type: Optional[str]
+        self.ENVIRONMENTAL_IMPACT = ENVIRONMENTAL_IMPACT  # type: Optional[str]
+        self.ACCESSIBILITY_INFRA = ACCESSIBILITY_INFRA  # type: Optional[str]
+        self.INTEGRATED_DEVICES = INTEGRATED_DEVICES  # type: Optional[List[IDM.IDMT]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        SIT = SIT()
-        SIT.Init(buf, pos)
-        return cls.InitFromObj(SIT)
+        tmpSit = SIT()
+        tmpSit.Init(buf, pos)
+        return cls.InitFromObj(tmpSit)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -479,9 +521,9 @@ class SITT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, SIT):
+    def InitFromObj(cls, tmpSit):
         x = SITT()
-        x._UnPack(SIT)
+        x._UnPack(tmpSit)
         return x
 
     # SITT

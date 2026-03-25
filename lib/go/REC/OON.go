@@ -62,8 +62,16 @@ func (rcv *OON) SAT_NO() int32 {
 	return 0
 }
 
+func (rcv *OON) SatNo() int32 {
+	return rcv.SAT_NO()
+}
+
 func (rcv *OON) MutateSAT_NO(n int32) bool {
 	return rcv._tab.MutateInt32Slot(4, n)
+}
+
+func (rcv *OON) MutateSatNo(n int32) bool {
+	return rcv.MutateSAT_NO(n)
 }
 
 func (rcv *OON) COMMON_NAME() []byte {
@@ -74,12 +82,20 @@ func (rcv *OON) COMMON_NAME() []byte {
 	return nil
 }
 
+func (rcv *OON) CommonName() []byte {
+	return rcv.COMMON_NAME()
+}
+
 func (rcv *OON) CONSTELLATION() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *OON) Constellation() []byte {
+	return rcv.CONSTELLATION()
 }
 
 func (rcv *OON) INTL_DES() []byte {
@@ -90,12 +106,20 @@ func (rcv *OON) INTL_DES() []byte {
 	return nil
 }
 
+func (rcv *OON) IntlDes() []byte {
+	return rcv.INTL_DES()
+}
+
 func (rcv *OON) LAUNCH_DATE() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *OON) LaunchDate() []byte {
+	return rcv.LAUNCH_DATE()
 }
 
 func (rcv *OON) DECAY_DATE() []byte {
@@ -106,12 +130,20 @@ func (rcv *OON) DECAY_DATE() []byte {
 	return nil
 }
 
+func (rcv *OON) DecayDate() []byte {
+	return rcv.DECAY_DATE()
+}
+
 func (rcv *OON) OBJECT_TYPE() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *OON) ObjectType() []byte {
+	return rcv.OBJECT_TYPE()
 }
 
 func (rcv *OON) MISSION_NUMBER() []byte {
@@ -122,12 +154,20 @@ func (rcv *OON) MISSION_NUMBER() []byte {
 	return nil
 }
 
+func (rcv *OON) MissionNumber() []byte {
+	return rcv.MISSION_NUMBER()
+}
+
 func (rcv *OON) CATEGORY() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *OON) Category() []byte {
+	return rcv.CATEGORY()
 }
 
 func (rcv *OON) LIFETIME_YEARS() int32 {
@@ -138,8 +178,16 @@ func (rcv *OON) LIFETIME_YEARS() int32 {
 	return 0
 }
 
+func (rcv *OON) LifetimeYears() int32 {
+	return rcv.LIFETIME_YEARS()
+}
+
 func (rcv *OON) MutateLIFETIME_YEARS(n int32) bool {
 	return rcv._tab.MutateInt32Slot(22, n)
+}
+
+func (rcv *OON) MutateLifetimeYears(n int32) bool {
+	return rcv.MutateLIFETIME_YEARS(n)
 }
 
 func (rcv *OON) ALT_NAME() []byte {
@@ -150,12 +198,20 @@ func (rcv *OON) ALT_NAME() []byte {
 	return nil
 }
 
+func (rcv *OON) AltName() []byte {
+	return rcv.ALT_NAME()
+}
+
 func (rcv *OON) LAUNCH_SITE_ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *OON) LaunchSiteId() []byte {
+	return rcv.LAUNCH_SITE_ID()
 }
 
 func (rcv *OON) ANTENNAS(j int) []byte {
@@ -167,12 +223,20 @@ func (rcv *OON) ANTENNAS(j int) []byte {
 	return nil
 }
 
+func (rcv *OON) Antennas(j int) []byte {
+	return rcv.ANTENNAS(j)
+}
+
 func (rcv *OON) ANTENNASLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *OON) AntennasLength() int {
+	return rcv.ANTENNASLength()
 }
 
 func (rcv *OON) BATTERIES(j int) []byte {
@@ -184,12 +248,20 @@ func (rcv *OON) BATTERIES(j int) []byte {
 	return nil
 }
 
+func (rcv *OON) Batteries(j int) []byte {
+	return rcv.BATTERIES(j)
+}
+
 func (rcv *OON) BATTERIESLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *OON) BatteriesLength() int {
+	return rcv.BATTERIESLength()
 }
 
 func (rcv *OON) SOLAR_ARRAYS(j int) []byte {
@@ -201,12 +273,20 @@ func (rcv *OON) SOLAR_ARRAYS(j int) []byte {
 	return nil
 }
 
+func (rcv *OON) SolarArrays(j int) []byte {
+	return rcv.SOLAR_ARRAYS(j)
+}
+
 func (rcv *OON) SOLAR_ARRAYSLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *OON) SolarArraysLength() int {
+	return rcv.SOLAR_ARRAYSLength()
 }
 
 func (rcv *OON) THRUSTERS(j int) []byte {
@@ -218,12 +298,20 @@ func (rcv *OON) THRUSTERS(j int) []byte {
 	return nil
 }
 
+func (rcv *OON) Thrusters(j int) []byte {
+	return rcv.THRUSTERS(j)
+}
+
 func (rcv *OON) THRUSTERSLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *OON) ThrustersLength() int {
+	return rcv.THRUSTERSLength()
 }
 
 func (rcv *OON) ONORBIT_DETAILS(j int) []byte {
@@ -235,6 +323,10 @@ func (rcv *OON) ONORBIT_DETAILS(j int) []byte {
 	return nil
 }
 
+func (rcv *OON) OnorbitDetails(j int) []byte {
+	return rcv.ONORBIT_DETAILS(j)
+}
+
 func (rcv *OON) ONORBIT_DETAILSLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
 	if o != 0 {
@@ -243,12 +335,20 @@ func (rcv *OON) ONORBIT_DETAILSLength() int {
 	return 0
 }
 
+func (rcv *OON) OnorbitDetailsLength() int {
+	return rcv.ONORBIT_DETAILSLength()
+}
+
 func (rcv *OON) COUNTRY_CODE() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *OON) CountryCode() []byte {
+	return rcv.COUNTRY_CODE()
 }
 
 func (rcv *OON) ENTITY_COLLECTION(j int) []byte {
@@ -260,6 +360,10 @@ func (rcv *OON) ENTITY_COLLECTION(j int) []byte {
 	return nil
 }
 
+func (rcv *OON) EntityCollection(j int) []byte {
+	return rcv.ENTITY_COLLECTION(j)
+}
+
 func (rcv *OON) ENTITY_COLLECTIONLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
 	if o != 0 {
@@ -268,83 +372,162 @@ func (rcv *OON) ENTITY_COLLECTIONLength() int {
 	return 0
 }
 
+func (rcv *OON) EntityCollectionLength() int {
+	return rcv.ENTITY_COLLECTIONLength()
+}
+
 func OONStart(builder *flatbuffers.Builder) {
 	builder.StartObject(19)
 }
 func OONAddSAT_NO(builder *flatbuffers.Builder, SAT_NO int32) {
 	builder.PrependInt32Slot(0, SAT_NO, 0)
 }
+func OONAddSatNo(builder *flatbuffers.Builder, SAT_NO int32) {
+	OONAddSAT_NO(builder, SAT_NO)
+}
 func OONAddCOMMON_NAME(builder *flatbuffers.Builder, COMMON_NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(COMMON_NAME), 0)
+}
+func OONAddCommonName(builder *flatbuffers.Builder, COMMON_NAME flatbuffers.UOffsetT) {
+	OONAddCOMMON_NAME(builder, COMMON_NAME)
 }
 func OONAddCONSTELLATION(builder *flatbuffers.Builder, CONSTELLATION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(CONSTELLATION), 0)
 }
+func OONAddConstellation(builder *flatbuffers.Builder, CONSTELLATION flatbuffers.UOffsetT) {
+	OONAddCONSTELLATION(builder, CONSTELLATION)
+}
 func OONAddINTL_DES(builder *flatbuffers.Builder, INTL_DES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(INTL_DES), 0)
+}
+func OONAddIntlDes(builder *flatbuffers.Builder, INTL_DES flatbuffers.UOffsetT) {
+	OONAddINTL_DES(builder, INTL_DES)
 }
 func OONAddLAUNCH_DATE(builder *flatbuffers.Builder, LAUNCH_DATE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(LAUNCH_DATE), 0)
 }
+func OONAddLaunchDate(builder *flatbuffers.Builder, LAUNCH_DATE flatbuffers.UOffsetT) {
+	OONAddLAUNCH_DATE(builder, LAUNCH_DATE)
+}
 func OONAddDECAY_DATE(builder *flatbuffers.Builder, DECAY_DATE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(DECAY_DATE), 0)
+}
+func OONAddDecayDate(builder *flatbuffers.Builder, DECAY_DATE flatbuffers.UOffsetT) {
+	OONAddDECAY_DATE(builder, DECAY_DATE)
 }
 func OONAddOBJECT_TYPE(builder *flatbuffers.Builder, OBJECT_TYPE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(OBJECT_TYPE), 0)
 }
+func OONAddObjectType(builder *flatbuffers.Builder, OBJECT_TYPE flatbuffers.UOffsetT) {
+	OONAddOBJECT_TYPE(builder, OBJECT_TYPE)
+}
 func OONAddMISSION_NUMBER(builder *flatbuffers.Builder, MISSION_NUMBER flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(MISSION_NUMBER), 0)
+}
+func OONAddMissionNumber(builder *flatbuffers.Builder, MISSION_NUMBER flatbuffers.UOffsetT) {
+	OONAddMISSION_NUMBER(builder, MISSION_NUMBER)
 }
 func OONAddCATEGORY(builder *flatbuffers.Builder, CATEGORY flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(CATEGORY), 0)
 }
+func OONAddCategory(builder *flatbuffers.Builder, CATEGORY flatbuffers.UOffsetT) {
+	OONAddCATEGORY(builder, CATEGORY)
+}
 func OONAddLIFETIME_YEARS(builder *flatbuffers.Builder, LIFETIME_YEARS int32) {
 	builder.PrependInt32Slot(9, LIFETIME_YEARS, 0)
+}
+func OONAddLifetimeYears(builder *flatbuffers.Builder, LIFETIME_YEARS int32) {
+	OONAddLIFETIME_YEARS(builder, LIFETIME_YEARS)
 }
 func OONAddALT_NAME(builder *flatbuffers.Builder, ALT_NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(ALT_NAME), 0)
 }
+func OONAddAltName(builder *flatbuffers.Builder, ALT_NAME flatbuffers.UOffsetT) {
+	OONAddALT_NAME(builder, ALT_NAME)
+}
 func OONAddLAUNCH_SITE_ID(builder *flatbuffers.Builder, LAUNCH_SITE_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(LAUNCH_SITE_ID), 0)
+}
+func OONAddLaunchSiteId(builder *flatbuffers.Builder, LAUNCH_SITE_ID flatbuffers.UOffsetT) {
+	OONAddLAUNCH_SITE_ID(builder, LAUNCH_SITE_ID)
 }
 func OONAddANTENNAS(builder *flatbuffers.Builder, ANTENNAS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(12, flatbuffers.UOffsetT(ANTENNAS), 0)
 }
+func OONAddAntennas(builder *flatbuffers.Builder, ANTENNAS flatbuffers.UOffsetT) {
+	OONAddANTENNAS(builder, ANTENNAS)
+}
 func OONStartANTENNASVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func OONStartAntennasVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return OONStartANTENNASVector(builder, numElems)
 }
 func OONAddBATTERIES(builder *flatbuffers.Builder, BATTERIES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(13, flatbuffers.UOffsetT(BATTERIES), 0)
 }
+func OONAddBatteries(builder *flatbuffers.Builder, BATTERIES flatbuffers.UOffsetT) {
+	OONAddBATTERIES(builder, BATTERIES)
+}
 func OONStartBATTERIESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func OONStartBatteriesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return OONStartBATTERIESVector(builder, numElems)
 }
 func OONAddSOLAR_ARRAYS(builder *flatbuffers.Builder, SOLAR_ARRAYS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(14, flatbuffers.UOffsetT(SOLAR_ARRAYS), 0)
 }
+func OONAddSolarArrays(builder *flatbuffers.Builder, SOLAR_ARRAYS flatbuffers.UOffsetT) {
+	OONAddSOLAR_ARRAYS(builder, SOLAR_ARRAYS)
+}
 func OONStartSOLAR_ARRAYSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func OONStartSolarArraysVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return OONStartSOLAR_ARRAYSVector(builder, numElems)
 }
 func OONAddTHRUSTERS(builder *flatbuffers.Builder, THRUSTERS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(15, flatbuffers.UOffsetT(THRUSTERS), 0)
 }
+func OONAddThrusters(builder *flatbuffers.Builder, THRUSTERS flatbuffers.UOffsetT) {
+	OONAddTHRUSTERS(builder, THRUSTERS)
+}
 func OONStartTHRUSTERSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func OONStartThrustersVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return OONStartTHRUSTERSVector(builder, numElems)
 }
 func OONAddONORBIT_DETAILS(builder *flatbuffers.Builder, ONORBIT_DETAILS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(16, flatbuffers.UOffsetT(ONORBIT_DETAILS), 0)
 }
+func OONAddOnorbitDetails(builder *flatbuffers.Builder, ONORBIT_DETAILS flatbuffers.UOffsetT) {
+	OONAddONORBIT_DETAILS(builder, ONORBIT_DETAILS)
+}
 func OONStartONORBIT_DETAILSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func OONStartOnorbitDetailsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return OONStartONORBIT_DETAILSVector(builder, numElems)
 }
 func OONAddCOUNTRY_CODE(builder *flatbuffers.Builder, COUNTRY_CODE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(17, flatbuffers.UOffsetT(COUNTRY_CODE), 0)
 }
+func OONAddCountryCode(builder *flatbuffers.Builder, COUNTRY_CODE flatbuffers.UOffsetT) {
+	OONAddCOUNTRY_CODE(builder, COUNTRY_CODE)
+}
 func OONAddENTITY_COLLECTION(builder *flatbuffers.Builder, ENTITY_COLLECTION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(18, flatbuffers.UOffsetT(ENTITY_COLLECTION), 0)
 }
+func OONAddEntityCollection(builder *flatbuffers.Builder, ENTITY_COLLECTION flatbuffers.UOffsetT) {
+	OONAddENTITY_COLLECTION(builder, ENTITY_COLLECTION)
+}
 func OONStartENTITY_COLLECTIONVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func OONStartEntityCollectionVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return OONStartENTITY_COLLECTIONVector(builder, numElems)
 }
 func OONEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

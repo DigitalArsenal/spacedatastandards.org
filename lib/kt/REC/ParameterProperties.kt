@@ -32,7 +32,7 @@ class ParameterProperties : Table() {
     /**
      * Data source type
      */
-    val DATA_SOURCE : Byte
+    val dataSource : Byte
         get() {
             val o = __offset(4)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -40,7 +40,7 @@ class ParameterProperties : Table() {
     /**
      * Read-only parameter
      */
-    val READ_ONLY : Boolean
+    val readOnly : Boolean
         get() {
             val o = __offset(6)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else true
@@ -48,7 +48,7 @@ class ParameterProperties : Table() {
     /**
      * System/subsystem name
      */
-    val SYSTEM_NAME : String?
+    val systemName : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -57,13 +57,13 @@ class ParameterProperties : Table() {
                 null
             }
         }
-    val SYSTEM_NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun SYSTEM_NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val systemNameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun systemNameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
     /**
      * Validity condition
      */
-    val VALIDITY_CONDITION : MatchCriteria? get() = VALIDITY_CONDITION(MatchCriteria())
-    fun VALIDITY_CONDITION(obj: MatchCriteria) : MatchCriteria? {
+    val validityCondition : MatchCriteria? get() = validityCondition(MatchCriteria())
+    fun validityCondition(obj: MatchCriteria) : MatchCriteria? {
         val o = __offset(10)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -72,25 +72,25 @@ class ParameterProperties : Table() {
         }
     }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsParameterProperties(_bb: ByteBuffer): ParameterProperties = getRootAsParameterProperties(_bb, ParameterProperties())
         fun getRootAsParameterProperties(_bb: ByteBuffer, obj: ParameterProperties): ParameterProperties {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createParameterProperties(builder: FlatBufferBuilder, DATA_SOURCE: Byte, READ_ONLY: Boolean, SYSTEM_NAMEOffset: Int, VALIDITY_CONDITIONOffset: Int) : Int {
+        fun createParameterProperties(builder: FlatBufferBuilder, dataSource: Byte, readOnly: Boolean, systemNameOffset: Int, validityConditionOffset: Int) : Int {
             builder.startTable(4)
-            addVALIDITY_CONDITION(builder, VALIDITY_CONDITIONOffset)
-            addSYSTEM_NAME(builder, SYSTEM_NAMEOffset)
-            addREAD_ONLY(builder, READ_ONLY)
-            addDATA_SOURCE(builder, DATA_SOURCE)
+            addVALIDITYCONDITION(builder, validityConditionOffset)
+            addSYSTEMNAME(builder, systemNameOffset)
+            addREADONLY(builder, readOnly)
+            addDATASOURCE(builder, dataSource)
             return endParameterProperties(builder)
         }
         fun startParameterProperties(builder: FlatBufferBuilder) = builder.startTable(4)
-        fun addDATA_SOURCE(builder: FlatBufferBuilder, DATA_SOURCE: Byte) = builder.addByte(0, DATA_SOURCE, 0)
-        fun addREAD_ONLY(builder: FlatBufferBuilder, READ_ONLY: Boolean) = builder.addBoolean(1, READ_ONLY, true)
-        fun addSYSTEM_NAME(builder: FlatBufferBuilder, SYSTEM_NAME: Int) = builder.addOffset(2, SYSTEM_NAME, 0)
-        fun addVALIDITY_CONDITION(builder: FlatBufferBuilder, VALIDITY_CONDITION: Int) = builder.addOffset(3, VALIDITY_CONDITION, 0)
+        fun addDATASOURCE(builder: FlatBufferBuilder, dataSource: Byte) = builder.addByte(0, dataSource, 0)
+        fun addREADONLY(builder: FlatBufferBuilder, readOnly: Boolean) = builder.addBoolean(1, readOnly, true)
+        fun addSYSTEMNAME(builder: FlatBufferBuilder, systemName: Int) = builder.addOffset(2, systemName, 0)
+        fun addVALIDITYCONDITION(builder: FlatBufferBuilder, validityCondition: Int) = builder.addOffset(3, validityCondition, 0)
         fun endParameterProperties(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

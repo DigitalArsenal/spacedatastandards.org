@@ -32,7 +32,7 @@ class GJNGeometry : Table() {
     /**
      * Geometry type
      */
-    val TYPE : Byte
+    val type : Byte
         get() {
             val o = __offset(4)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -40,8 +40,8 @@ class GJNGeometry : Table() {
     /**
      * Single position (for Point)
      */
-    val POINT : GJNPosition? get() = POINT(GJNPosition())
-    fun POINT(obj: GJNPosition) : GJNPosition? {
+    val point : GJNPosition? get() = point(GJNPosition())
+    fun point(obj: GJNPosition) : GJNPosition? {
         val o = __offset(6)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -52,8 +52,8 @@ class GJNGeometry : Table() {
     /**
      * Array of positions (for MultiPoint, LineString)
      */
-    fun POSITIONS(j: Int) : GJNPosition? = POSITIONS(GJNPosition(), j)
-    fun POSITIONS(obj: GJNPosition, j: Int) : GJNPosition? {
+    fun positions(j: Int) : GJNPosition? = positions(GJNPosition(), j)
+    fun positions(obj: GJNPosition, j: Int) : GJNPosition? {
         val o = __offset(8)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -61,15 +61,15 @@ class GJNGeometry : Table() {
             null
         }
     }
-    val POSITIONSLength : Int
+    val positionsLength : Int
         get() {
             val o = __offset(8); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Array of position arrays (for MultiLineString, Polygon rings)
      */
-    fun RINGS(j: Int) : GJNLinearRing? = RINGS(GJNLinearRing(), j)
-    fun RINGS(obj: GJNLinearRing, j: Int) : GJNLinearRing? {
+    fun rings(j: Int) : GJNLinearRing? = rings(GJNLinearRing(), j)
+    fun rings(obj: GJNLinearRing, j: Int) : GJNLinearRing? {
         val o = __offset(10)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -77,15 +77,15 @@ class GJNGeometry : Table() {
             null
         }
     }
-    val RINGSLength : Int
+    val ringsLength : Int
         get() {
             val o = __offset(10); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Array of polygons each as array of rings (for MultiPolygon)
      */
-    fun POLYGON_RINGS(j: Int) : GJNPolygonRings? = POLYGON_RINGS(GJNPolygonRings(), j)
-    fun POLYGON_RINGS(obj: GJNPolygonRings, j: Int) : GJNPolygonRings? {
+    fun polygonRings(j: Int) : GJNPolygonRings? = polygonRings(GJNPolygonRings(), j)
+    fun polygonRings(obj: GJNPolygonRings, j: Int) : GJNPolygonRings? {
         val o = __offset(12)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -93,15 +93,15 @@ class GJNGeometry : Table() {
             null
         }
     }
-    val POLYGON_RINGSLength : Int
+    val polygonRingsLength : Int
         get() {
             val o = __offset(12); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Child geometries (for GeometryCollection)
      */
-    fun GEOMETRIES(j: Int) : GJNGeometry? = GEOMETRIES(GJNGeometry(), j)
-    fun GEOMETRIES(obj: GJNGeometry, j: Int) : GJNGeometry? {
+    fun geometries(j: Int) : GJNGeometry? = geometries(GJNGeometry(), j)
+    fun geometries(obj: GJNGeometry, j: Int) : GJNGeometry? {
         val o = __offset(14)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -109,15 +109,15 @@ class GJNGeometry : Table() {
             null
         }
     }
-    val GEOMETRIESLength : Int
+    val geometriesLength : Int
         get() {
             val o = __offset(14); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Bounding box (optional, per RFC 7946 Section 5)
      */
-    val BBOX : GJNBoundingBox? get() = BBOX(GJNBoundingBox())
-    fun BBOX(obj: GJNBoundingBox) : GJNBoundingBox? {
+    val bbox : GJNBoundingBox? get() = bbox(GJNBoundingBox())
+    fun bbox(obj: GJNBoundingBox) : GJNBoundingBox? {
         val o = __offset(16)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -126,27 +126,27 @@ class GJNGeometry : Table() {
         }
     }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsGJNGeometry(_bb: ByteBuffer): GJNGeometry = getRootAsGJNGeometry(_bb, GJNGeometry())
         fun getRootAsGJNGeometry(_bb: ByteBuffer, obj: GJNGeometry): GJNGeometry {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createGJNGeometry(builder: FlatBufferBuilder, TYPE: Byte, POINTOffset: Int, POSITIONSOffset: Int, RINGSOffset: Int, POLYGON_RINGSOffset: Int, GEOMETRIESOffset: Int, BBOXOffset: Int) : Int {
+        fun createGJNGeometry(builder: FlatBufferBuilder, type: Byte, pointOffset: Int, positionsOffset: Int, ringsOffset: Int, polygonRingsOffset: Int, geometriesOffset: Int, bboxOffset: Int) : Int {
             builder.startTable(7)
-            addBBOX(builder, BBOXOffset)
-            addGEOMETRIES(builder, GEOMETRIESOffset)
-            addPOLYGON_RINGS(builder, POLYGON_RINGSOffset)
-            addRINGS(builder, RINGSOffset)
-            addPOSITIONS(builder, POSITIONSOffset)
-            addPOINT(builder, POINTOffset)
-            addTYPE(builder, TYPE)
+            addBBOX(builder, bboxOffset)
+            addGEOMETRIES(builder, geometriesOffset)
+            addPOLYGONRINGS(builder, polygonRingsOffset)
+            addRINGS(builder, ringsOffset)
+            addPOSITIONS(builder, positionsOffset)
+            addPOINT(builder, pointOffset)
+            addTYPE(builder, type)
             return endGJNGeometry(builder)
         }
         fun startGJNGeometry(builder: FlatBufferBuilder) = builder.startTable(7)
-        fun addTYPE(builder: FlatBufferBuilder, TYPE: Byte) = builder.addByte(0, TYPE, 0)
-        fun addPOINT(builder: FlatBufferBuilder, POINT: Int) = builder.addOffset(1, POINT, 0)
-        fun addPOSITIONS(builder: FlatBufferBuilder, POSITIONS: Int) = builder.addOffset(2, POSITIONS, 0)
+        fun addTYPE(builder: FlatBufferBuilder, type: Byte) = builder.addByte(0, type, 0)
+        fun addPOINT(builder: FlatBufferBuilder, point: Int) = builder.addOffset(1, point, 0)
+        fun addPOSITIONS(builder: FlatBufferBuilder, positions: Int) = builder.addOffset(2, positions, 0)
         fun createPositionsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -155,7 +155,7 @@ class GJNGeometry : Table() {
             return builder.endVector()
         }
         fun startPositionsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addRINGS(builder: FlatBufferBuilder, RINGS: Int) = builder.addOffset(3, RINGS, 0)
+        fun addRINGS(builder: FlatBufferBuilder, rings: Int) = builder.addOffset(3, rings, 0)
         fun createRingsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -164,7 +164,7 @@ class GJNGeometry : Table() {
             return builder.endVector()
         }
         fun startRingsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addPOLYGON_RINGS(builder: FlatBufferBuilder, POLYGON_RINGS: Int) = builder.addOffset(4, POLYGON_RINGS, 0)
+        fun addPOLYGONRINGS(builder: FlatBufferBuilder, polygonRings: Int) = builder.addOffset(4, polygonRings, 0)
         fun createPolygonRingsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -173,7 +173,7 @@ class GJNGeometry : Table() {
             return builder.endVector()
         }
         fun startPolygonRingsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addGEOMETRIES(builder: FlatBufferBuilder, GEOMETRIES: Int) = builder.addOffset(5, GEOMETRIES, 0)
+        fun addGEOMETRIES(builder: FlatBufferBuilder, geometries: Int) = builder.addOffset(5, geometries, 0)
         fun createGeometriesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -182,7 +182,7 @@ class GJNGeometry : Table() {
             return builder.endVector()
         }
         fun startGeometriesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addBBOX(builder: FlatBufferBuilder, BBOX: Int) = builder.addOffset(6, BBOX, 0)
+        fun addBBOX(builder: FlatBufferBuilder, bbox: Int) = builder.addOffset(6, bbox, 0)
         fun endGJNGeometry(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

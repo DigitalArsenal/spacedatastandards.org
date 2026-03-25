@@ -2,4 +2,170 @@
 
 # namespace: 
 
-# NOTE CZMPolylineDashMaterial.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Polyline dash material
+class CZMPolylineDashMaterial(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = CZMPolylineDashMaterial()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsCZMPolylineDashMaterial(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def CZMPolylineDashMaterialBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x43\x5A\x4D", size_prefixed=size_prefixed)
+
+    # CZMPolylineDashMaterial
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Dash color
+    # CZMPolylineDashMaterial
+    def COLOR(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from CZMColor import CZMColor
+            obj = CZMColor()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Gap color
+    # CZMPolylineDashMaterial
+    def GAP_COLOR(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from CZMColor import CZMColor
+            obj = CZMColor()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Dash length in pixels
+    # CZMPolylineDashMaterial
+    def DASH_LENGTH(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Dash pattern (bitmask)
+    # CZMPolylineDashMaterial
+    def DASH_PATTERN(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+def CZMPolylineDashMaterialStart(builder):
+    builder.StartObject(4)
+
+def Start(builder):
+    CZMPolylineDashMaterialStart(builder)
+
+def CZMPolylineDashMaterialAddCOLOR(builder, COLOR):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(COLOR), 0)
+
+def AddCOLOR(builder, COLOR):
+    CZMPolylineDashMaterialAddCOLOR(builder, COLOR)
+
+def CZMPolylineDashMaterialAddGAP_COLOR(builder, GAP_COLOR):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(GAP_COLOR), 0)
+
+def AddGAP_COLOR(builder, GAP_COLOR):
+    CZMPolylineDashMaterialAddGAP_COLOR(builder, GAP_COLOR)
+
+def CZMPolylineDashMaterialAddDASH_LENGTH(builder, DASH_LENGTH):
+    builder.PrependFloat64Slot(2, DASH_LENGTH, 0.0)
+
+def AddDASH_LENGTH(builder, DASH_LENGTH):
+    CZMPolylineDashMaterialAddDASH_LENGTH(builder, DASH_LENGTH)
+
+def CZMPolylineDashMaterialAddDASH_PATTERN(builder, DASH_PATTERN):
+    builder.PrependInt32Slot(3, DASH_PATTERN, 0)
+
+def AddDASH_PATTERN(builder, DASH_PATTERN):
+    CZMPolylineDashMaterialAddDASH_PATTERN(builder, DASH_PATTERN)
+
+def CZMPolylineDashMaterialEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return CZMPolylineDashMaterialEnd(builder)
+
+import CZMColor
+try:
+    from typing import Optional
+except:
+    pass
+
+class CZMPolylineDashMaterialT(object):
+
+    # CZMPolylineDashMaterialT
+    def __init__(
+        self,
+        COLOR = None,
+        GAP_COLOR = None,
+        DASH_LENGTH = 0.0,
+        DASH_PATTERN = 0,
+    ):
+        self.COLOR = COLOR  # type: Optional[CZMColor.CZMColorT]
+        self.GAP_COLOR = GAP_COLOR  # type: Optional[CZMColor.CZMColorT]
+        self.DASH_LENGTH = DASH_LENGTH  # type: float
+        self.DASH_PATTERN = DASH_PATTERN  # type: int
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpCzmpolylineDashMaterial = CZMPolylineDashMaterial()
+        tmpCzmpolylineDashMaterial.Init(buf, pos)
+        return cls.InitFromObj(tmpCzmpolylineDashMaterial)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpCzmpolylineDashMaterial):
+        x = CZMPolylineDashMaterialT()
+        x._UnPack(tmpCzmpolylineDashMaterial)
+        return x
+
+    # CZMPolylineDashMaterialT
+    def _UnPack(self, CZMPolylineDashMaterial):
+        if CZMPolylineDashMaterial is None:
+            return
+        if CZMPolylineDashMaterial.COLOR() is not None:
+            self.COLOR = CZMColor.CZMColorT.InitFromObj(CZMPolylineDashMaterial.COLOR())
+        if CZMPolylineDashMaterial.GAP_COLOR() is not None:
+            self.GAP_COLOR = CZMColor.CZMColorT.InitFromObj(CZMPolylineDashMaterial.GAP_COLOR())
+        self.DASH_LENGTH = CZMPolylineDashMaterial.DASH_LENGTH()
+        self.DASH_PATTERN = CZMPolylineDashMaterial.DASH_PATTERN()
+
+    # CZMPolylineDashMaterialT
+    def Pack(self, builder):
+        if self.COLOR is not None:
+            COLOR = self.COLOR.Pack(builder)
+        if self.GAP_COLOR is not None:
+            GAP_COLOR = self.GAP_COLOR.Pack(builder)
+        CZMPolylineDashMaterialStart(builder)
+        if self.COLOR is not None:
+            CZMPolylineDashMaterialAddCOLOR(builder, COLOR)
+        if self.GAP_COLOR is not None:
+            CZMPolylineDashMaterialAddGAP_COLOR(builder, GAP_COLOR)
+        CZMPolylineDashMaterialAddDASH_LENGTH(builder, self.DASH_LENGTH)
+        CZMPolylineDashMaterialAddDASH_PATTERN(builder, self.DASH_PATTERN)
+        CZMPolylineDashMaterial = CZMPolylineDashMaterialEnd(builder)
+        return CZMPolylineDashMaterial

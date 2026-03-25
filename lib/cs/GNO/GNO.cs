@@ -11,7 +11,7 @@ public struct GNO : IFlatbufferObject
 {
   private Table __p;
   public ByteBuffer ByteBuffer { get { return __p.bb; } }
-  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_24_3_25(); }
+  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_25_12_19(); }
   public static GNO GetRootAsGNO(ByteBuffer _bb) { return GetRootAsGNO(_bb, new GNO()); }
   public static GNO GetRootAsGNO(ByteBuffer _bb, GNO obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
   public static bool GNOBufferHasIdentifier(ByteBuffer _bb) { return Table.__has_identifier(_bb, "$GNO"); }

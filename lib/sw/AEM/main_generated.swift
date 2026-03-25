@@ -2,11 +2,15 @@
 // swiftlint:disable all
 // swiftformat:disable all
 
+#if canImport(Common)
+import Common
+#endif
+
 import FlatBuffers
 
-public struct AEMSegment: FlatBufferObject, Verifiable {
+public struct AEMSegment: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -60,10 +64,8 @@ public struct AEMSegment: FlatBufferObject, Verifiable {
   ///  Layout: [Q1_0, Q2_0, Q3_0, QC_0, RATE_X_0, RATE_Y_0, RATE_Z_0, Q1_1, ...]
   ///  Time reconstruction: epoch[i] = START_TIME + (i * STEP_SIZE)
   ///  Length must be divisible by ATTITUDE_COMPONENTS.
-  public var hasAttitudeData: Bool { let o = _accessor.offset(VTOFFSET.ATTITUDE_DATA.v); return o == 0 ? false : true }
-  public var ATTITUDE_DATACount: Int32 { let o = _accessor.offset(VTOFFSET.ATTITUDE_DATA.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func ATTITUDE_DATA(at index: Int32) -> Double { let o = _accessor.offset(VTOFFSET.ATTITUDE_DATA.v); return o == 0 ? 0 : _accessor.directRead(of: Double.self, offset: _accessor.vector(at: o) + index * 8) }
-  public var ATTITUDE_DATA: [Double] { return _accessor.getVector(at: VTOFFSET.ATTITUDE_DATA.v) ?? [] }
+  public var ATTITUDE_DATA: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.ATTITUDE_DATA.v, byteSize: 8) }
+  public func withUnsafePointerToAttitudeData<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.ATTITUDE_DATA.v, body: body) }
   public static func startAEMSegment(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 12) }
   public static func add(OBJECT_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_NAME, at: VTOFFSET.OBJECT_NAME.p) }
   public static func add(OBJECT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_ID, at: VTOFFSET.OBJECT_ID.p) }
@@ -128,9 +130,9 @@ public struct AEMSegment: FlatBufferObject, Verifiable {
 }
 
 ///  Attitude Ephemeris Message
-public struct AEM: FlatBufferObject, Verifiable {
+public struct AEM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -154,9 +156,7 @@ public struct AEM: FlatBufferObject, Verifiable {
   public var CREATION_DATESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CREATION_DATE.v) }
   public var ORIGINATOR: String? { let o = _accessor.offset(VTOFFSET.ORIGINATOR.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var ORIGINATORSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ORIGINATOR.v) }
-  public var hasSegments: Bool { let o = _accessor.offset(VTOFFSET.SEGMENTS.v); return o == 0 ? false : true }
-  public var SEGMENTSCount: Int32 { let o = _accessor.offset(VTOFFSET.SEGMENTS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func SEGMENTS(at index: Int32) -> AEMSegment? { let o = _accessor.offset(VTOFFSET.SEGMENTS.v); return o == 0 ? nil : AEMSegment(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var SEGMENTS: FlatbufferVector<AEMSegment> { return _accessor.vector(at: VTOFFSET.SEGMENTS.v, byteSize: 4) }
   public static func startAEM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
   public static func add(CCSDS_AEM_VERS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CCSDS_AEM_VERS, at: VTOFFSET.CCSDS_AEM_VERS.p) }
   public static func add(CREATION_DATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CREATION_DATE, at: VTOFFSET.CREATION_DATE.p) }

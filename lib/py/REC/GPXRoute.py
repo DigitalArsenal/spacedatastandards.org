@@ -2,4 +2,334 @@
 
 # namespace: 
 
-# NOTE GPXRoute.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Route (ordered list of waypoints for navigation)
+class GPXRoute(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = GPXRoute()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsGPXRoute(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def GPXRouteBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x47\x50\x58", size_prefixed=size_prefixed)
+
+    # GPXRoute
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Route name
+    # GPXRoute
+    def NAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Comment
+    # GPXRoute
+    def COMMENT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Description
+    # GPXRoute
+    def DESCRIPTION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Source of data
+    # GPXRoute
+    def SOURCE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Links to additional information
+    # GPXRoute
+    def LINKS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from GPXLink import GPXLink
+            obj = GPXLink()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # GPXRoute
+    def LINKSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # GPXRoute
+    def LINKSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        return o == 0
+
+    # Route number
+    # GPXRoute
+    def NUMBER(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+        return 0
+
+    # Type/category
+    # GPXRoute
+    def TYPE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Route points (ordered waypoints)
+    # GPXRoute
+    def POINTS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from GPXWaypoint import GPXWaypoint
+            obj = GPXWaypoint()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # GPXRoute
+    def POINTSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # GPXRoute
+    def POINTSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        return o == 0
+
+def GPXRouteStart(builder):
+    builder.StartObject(8)
+
+def Start(builder):
+    GPXRouteStart(builder)
+
+def GPXRouteAddNAME(builder, NAME):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(NAME), 0)
+
+def AddNAME(builder, NAME):
+    GPXRouteAddNAME(builder, NAME)
+
+def GPXRouteAddCOMMENT(builder, COMMENT):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(COMMENT), 0)
+
+def AddCOMMENT(builder, COMMENT):
+    GPXRouteAddCOMMENT(builder, COMMENT)
+
+def GPXRouteAddDESCRIPTION(builder, DESCRIPTION):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(DESCRIPTION), 0)
+
+def AddDESCRIPTION(builder, DESCRIPTION):
+    GPXRouteAddDESCRIPTION(builder, DESCRIPTION)
+
+def GPXRouteAddSOURCE(builder, SOURCE):
+    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(SOURCE), 0)
+
+def AddSOURCE(builder, SOURCE):
+    GPXRouteAddSOURCE(builder, SOURCE)
+
+def GPXRouteAddLINKS(builder, LINKS):
+    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(LINKS), 0)
+
+def AddLINKS(builder, LINKS):
+    GPXRouteAddLINKS(builder, LINKS)
+
+def GPXRouteStartLINKSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartLINKSVector(builder, numElems):
+    return GPXRouteStartLINKSVector(builder, numElems)
+
+def GPXRouteCreateLINKSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateLINKSVector(builder, data):
+    GPXRouteCreateLINKSVector(builder, data)
+
+def GPXRouteAddNUMBER(builder, NUMBER):
+    builder.PrependUint32Slot(5, NUMBER, 0)
+
+def AddNUMBER(builder, NUMBER):
+    GPXRouteAddNUMBER(builder, NUMBER)
+
+def GPXRouteAddTYPE(builder, TYPE):
+    builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(TYPE), 0)
+
+def AddTYPE(builder, TYPE):
+    GPXRouteAddTYPE(builder, TYPE)
+
+def GPXRouteAddPOINTS(builder, POINTS):
+    builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(POINTS), 0)
+
+def AddPOINTS(builder, POINTS):
+    GPXRouteAddPOINTS(builder, POINTS)
+
+def GPXRouteStartPOINTSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartPOINTSVector(builder, numElems):
+    return GPXRouteStartPOINTSVector(builder, numElems)
+
+def GPXRouteCreatePOINTSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreatePOINTSVector(builder, data):
+    GPXRouteCreatePOINTSVector(builder, data)
+
+def GPXRouteEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return GPXRouteEnd(builder)
+
+import GPXLink
+import GPXWaypoint
+try:
+    from typing import List
+except:
+    pass
+
+class GPXRouteT(object):
+
+    # GPXRouteT
+    def __init__(
+        self,
+        NAME = None,
+        COMMENT = None,
+        DESCRIPTION = None,
+        SOURCE = None,
+        LINKS = None,
+        NUMBER = 0,
+        TYPE = None,
+        POINTS = None,
+    ):
+        self.NAME = NAME  # type: Optional[str]
+        self.COMMENT = COMMENT  # type: Optional[str]
+        self.DESCRIPTION = DESCRIPTION  # type: Optional[str]
+        self.SOURCE = SOURCE  # type: Optional[str]
+        self.LINKS = LINKS  # type: Optional[List[GPXLink.GPXLinkT]]
+        self.NUMBER = NUMBER  # type: int
+        self.TYPE = TYPE  # type: Optional[str]
+        self.POINTS = POINTS  # type: Optional[List[GPXWaypoint.GPXWaypointT]]
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpGpxroute = GPXRoute()
+        tmpGpxroute.Init(buf, pos)
+        return cls.InitFromObj(tmpGpxroute)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpGpxroute):
+        x = GPXRouteT()
+        x._UnPack(tmpGpxroute)
+        return x
+
+    # GPXRouteT
+    def _UnPack(self, GPXRoute):
+        if GPXRoute is None:
+            return
+        self.NAME = GPXRoute.NAME()
+        self.COMMENT = GPXRoute.COMMENT()
+        self.DESCRIPTION = GPXRoute.DESCRIPTION()
+        self.SOURCE = GPXRoute.SOURCE()
+        if not GPXRoute.LINKSIsNone():
+            self.LINKS = []
+            for i in range(GPXRoute.LINKSLength()):
+                if GPXRoute.LINKS(i) is None:
+                    self.LINKS.append(None)
+                else:
+                    gPXLink_ = GPXLink.GPXLinkT.InitFromObj(GPXRoute.LINKS(i))
+                    self.LINKS.append(gPXLink_)
+        self.NUMBER = GPXRoute.NUMBER()
+        self.TYPE = GPXRoute.TYPE()
+        if not GPXRoute.POINTSIsNone():
+            self.POINTS = []
+            for i in range(GPXRoute.POINTSLength()):
+                if GPXRoute.POINTS(i) is None:
+                    self.POINTS.append(None)
+                else:
+                    gPXWaypoint_ = GPXWaypoint.GPXWaypointT.InitFromObj(GPXRoute.POINTS(i))
+                    self.POINTS.append(gPXWaypoint_)
+
+    # GPXRouteT
+    def Pack(self, builder):
+        if self.NAME is not None:
+            NAME = builder.CreateString(self.NAME)
+        if self.COMMENT is not None:
+            COMMENT = builder.CreateString(self.COMMENT)
+        if self.DESCRIPTION is not None:
+            DESCRIPTION = builder.CreateString(self.DESCRIPTION)
+        if self.SOURCE is not None:
+            SOURCE = builder.CreateString(self.SOURCE)
+        if self.LINKS is not None:
+            LINKSlist = []
+            for i in range(len(self.LINKS)):
+                LINKSlist.append(self.LINKS[i].Pack(builder))
+            GPXRouteStartLINKSVector(builder, len(self.LINKS))
+            for i in reversed(range(len(self.LINKS))):
+                builder.PrependUOffsetTRelative(LINKSlist[i])
+            LINKS = builder.EndVector()
+        if self.TYPE is not None:
+            TYPE = builder.CreateString(self.TYPE)
+        if self.POINTS is not None:
+            POINTSlist = []
+            for i in range(len(self.POINTS)):
+                POINTSlist.append(self.POINTS[i].Pack(builder))
+            GPXRouteStartPOINTSVector(builder, len(self.POINTS))
+            for i in reversed(range(len(self.POINTS))):
+                builder.PrependUOffsetTRelative(POINTSlist[i])
+            POINTS = builder.EndVector()
+        GPXRouteStart(builder)
+        if self.NAME is not None:
+            GPXRouteAddNAME(builder, NAME)
+        if self.COMMENT is not None:
+            GPXRouteAddCOMMENT(builder, COMMENT)
+        if self.DESCRIPTION is not None:
+            GPXRouteAddDESCRIPTION(builder, DESCRIPTION)
+        if self.SOURCE is not None:
+            GPXRouteAddSOURCE(builder, SOURCE)
+        if self.LINKS is not None:
+            GPXRouteAddLINKS(builder, LINKS)
+        GPXRouteAddNUMBER(builder, self.NUMBER)
+        if self.TYPE is not None:
+            GPXRouteAddTYPE(builder, TYPE)
+        if self.POINTS is not None:
+            GPXRouteAddPOINTS(builder, POINTS)
+        GPXRoute = GPXRouteEnd(builder)
+        return GPXRoute

@@ -229,6 +229,12 @@ def ArgumentTypeSetStartINTEGER_TYPESVector(builder, numElems):
 def StartINTEGER_TYPESVector(builder, numElems):
     return ArgumentTypeSetStartINTEGER_TYPESVector(builder, numElems)
 
+def ArgumentTypeSetCreateINTEGER_TYPESVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateINTEGER_TYPESVector(builder, data):
+    ArgumentTypeSetCreateINTEGER_TYPESVector(builder, data)
+
 def ArgumentTypeSetAddFLOAT_TYPES(builder, FLOAT_TYPES):
     builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(FLOAT_TYPES), 0)
 
@@ -240,6 +246,12 @@ def ArgumentTypeSetStartFLOAT_TYPESVector(builder, numElems):
 
 def StartFLOAT_TYPESVector(builder, numElems):
     return ArgumentTypeSetStartFLOAT_TYPESVector(builder, numElems)
+
+def ArgumentTypeSetCreateFLOAT_TYPESVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateFLOAT_TYPESVector(builder, data):
+    ArgumentTypeSetCreateFLOAT_TYPESVector(builder, data)
 
 def ArgumentTypeSetAddSTRING_TYPES(builder, STRING_TYPES):
     builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(STRING_TYPES), 0)
@@ -253,6 +265,12 @@ def ArgumentTypeSetStartSTRING_TYPESVector(builder, numElems):
 def StartSTRING_TYPESVector(builder, numElems):
     return ArgumentTypeSetStartSTRING_TYPESVector(builder, numElems)
 
+def ArgumentTypeSetCreateSTRING_TYPESVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateSTRING_TYPESVector(builder, data):
+    ArgumentTypeSetCreateSTRING_TYPESVector(builder, data)
+
 def ArgumentTypeSetAddBOOLEAN_TYPES(builder, BOOLEAN_TYPES):
     builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(BOOLEAN_TYPES), 0)
 
@@ -264,6 +282,12 @@ def ArgumentTypeSetStartBOOLEAN_TYPESVector(builder, numElems):
 
 def StartBOOLEAN_TYPESVector(builder, numElems):
     return ArgumentTypeSetStartBOOLEAN_TYPESVector(builder, numElems)
+
+def ArgumentTypeSetCreateBOOLEAN_TYPESVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateBOOLEAN_TYPESVector(builder, data):
+    ArgumentTypeSetCreateBOOLEAN_TYPESVector(builder, data)
 
 def ArgumentTypeSetAddENUMERATED_TYPES(builder, ENUMERATED_TYPES):
     builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(ENUMERATED_TYPES), 0)
@@ -277,6 +301,12 @@ def ArgumentTypeSetStartENUMERATED_TYPESVector(builder, numElems):
 def StartENUMERATED_TYPESVector(builder, numElems):
     return ArgumentTypeSetStartENUMERATED_TYPESVector(builder, numElems)
 
+def ArgumentTypeSetCreateENUMERATED_TYPESVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateENUMERATED_TYPESVector(builder, data):
+    ArgumentTypeSetCreateENUMERATED_TYPESVector(builder, data)
+
 def ArgumentTypeSetAddBINARY_TYPES(builder, BINARY_TYPES):
     builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(BINARY_TYPES), 0)
 
@@ -289,6 +319,12 @@ def ArgumentTypeSetStartBINARY_TYPESVector(builder, numElems):
 def StartBINARY_TYPESVector(builder, numElems):
     return ArgumentTypeSetStartBINARY_TYPESVector(builder, numElems)
 
+def ArgumentTypeSetCreateBINARY_TYPESVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateBINARY_TYPESVector(builder, data):
+    ArgumentTypeSetCreateBINARY_TYPESVector(builder, data)
+
 def ArgumentTypeSetAddAGGREGATE_TYPES(builder, AGGREGATE_TYPES):
     builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(AGGREGATE_TYPES), 0)
 
@@ -300,6 +336,12 @@ def ArgumentTypeSetStartAGGREGATE_TYPESVector(builder, numElems):
 
 def StartAGGREGATE_TYPESVector(builder, numElems):
     return ArgumentTypeSetStartAGGREGATE_TYPESVector(builder, numElems)
+
+def ArgumentTypeSetCreateAGGREGATE_TYPESVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateAGGREGATE_TYPESVector(builder, data):
+    ArgumentTypeSetCreateAGGREGATE_TYPESVector(builder, data)
 
 def ArgumentTypeSetEnd(builder):
     return builder.EndObject()
@@ -322,20 +364,29 @@ except:
 class ArgumentTypeSetT(object):
 
     # ArgumentTypeSetT
-    def __init__(self):
-        self.INTEGER_TYPES = None  # type: List[IntegerArgumentType.IntegerArgumentTypeT]
-        self.FLOAT_TYPES = None  # type: List[FloatArgumentType.FloatArgumentTypeT]
-        self.STRING_TYPES = None  # type: List[StringArgumentType.StringArgumentTypeT]
-        self.BOOLEAN_TYPES = None  # type: List[BooleanArgumentType.BooleanArgumentTypeT]
-        self.ENUMERATED_TYPES = None  # type: List[EnumeratedArgumentType.EnumeratedArgumentTypeT]
-        self.BINARY_TYPES = None  # type: List[BinaryArgumentType.BinaryArgumentTypeT]
-        self.AGGREGATE_TYPES = None  # type: List[AggregateArgumentType.AggregateArgumentTypeT]
+    def __init__(
+        self,
+        INTEGER_TYPES = None,
+        FLOAT_TYPES = None,
+        STRING_TYPES = None,
+        BOOLEAN_TYPES = None,
+        ENUMERATED_TYPES = None,
+        BINARY_TYPES = None,
+        AGGREGATE_TYPES = None,
+    ):
+        self.INTEGER_TYPES = INTEGER_TYPES  # type: Optional[List[IntegerArgumentType.IntegerArgumentTypeT]]
+        self.FLOAT_TYPES = FLOAT_TYPES  # type: Optional[List[FloatArgumentType.FloatArgumentTypeT]]
+        self.STRING_TYPES = STRING_TYPES  # type: Optional[List[StringArgumentType.StringArgumentTypeT]]
+        self.BOOLEAN_TYPES = BOOLEAN_TYPES  # type: Optional[List[BooleanArgumentType.BooleanArgumentTypeT]]
+        self.ENUMERATED_TYPES = ENUMERATED_TYPES  # type: Optional[List[EnumeratedArgumentType.EnumeratedArgumentTypeT]]
+        self.BINARY_TYPES = BINARY_TYPES  # type: Optional[List[BinaryArgumentType.BinaryArgumentTypeT]]
+        self.AGGREGATE_TYPES = AGGREGATE_TYPES  # type: Optional[List[AggregateArgumentType.AggregateArgumentTypeT]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        argumentTypeSet = ArgumentTypeSet()
-        argumentTypeSet.Init(buf, pos)
-        return cls.InitFromObj(argumentTypeSet)
+        tmpArgumentTypeSet = ArgumentTypeSet()
+        tmpArgumentTypeSet.Init(buf, pos)
+        return cls.InitFromObj(tmpArgumentTypeSet)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -343,70 +394,70 @@ class ArgumentTypeSetT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, argumentTypeSet):
+    def InitFromObj(cls, tmpArgumentTypeSet):
         x = ArgumentTypeSetT()
-        x._UnPack(argumentTypeSet)
+        x._UnPack(tmpArgumentTypeSet)
         return x
 
     # ArgumentTypeSetT
-    def _UnPack(self, argumentTypeSet):
-        if argumentTypeSet is None:
+    def _UnPack(self, ArgumentTypeSet):
+        if ArgumentTypeSet is None:
             return
-        if not argumentTypeSet.INTEGER_TYPESIsNone():
+        if not ArgumentTypeSet.INTEGER_TYPESIsNone():
             self.INTEGER_TYPES = []
-            for i in range(argumentTypeSet.INTEGER_TYPESLength()):
-                if argumentTypeSet.INTEGER_TYPES(i) is None:
+            for i in range(ArgumentTypeSet.INTEGER_TYPESLength()):
+                if ArgumentTypeSet.INTEGER_TYPES(i) is None:
                     self.INTEGER_TYPES.append(None)
                 else:
-                    integerArgumentType_ = IntegerArgumentType.IntegerArgumentTypeT.InitFromObj(argumentTypeSet.INTEGER_TYPES(i))
+                    integerArgumentType_ = IntegerArgumentType.IntegerArgumentTypeT.InitFromObj(ArgumentTypeSet.INTEGER_TYPES(i))
                     self.INTEGER_TYPES.append(integerArgumentType_)
-        if not argumentTypeSet.FLOAT_TYPESIsNone():
+        if not ArgumentTypeSet.FLOAT_TYPESIsNone():
             self.FLOAT_TYPES = []
-            for i in range(argumentTypeSet.FLOAT_TYPESLength()):
-                if argumentTypeSet.FLOAT_TYPES(i) is None:
+            for i in range(ArgumentTypeSet.FLOAT_TYPESLength()):
+                if ArgumentTypeSet.FLOAT_TYPES(i) is None:
                     self.FLOAT_TYPES.append(None)
                 else:
-                    floatArgumentType_ = FloatArgumentType.FloatArgumentTypeT.InitFromObj(argumentTypeSet.FLOAT_TYPES(i))
+                    floatArgumentType_ = FloatArgumentType.FloatArgumentTypeT.InitFromObj(ArgumentTypeSet.FLOAT_TYPES(i))
                     self.FLOAT_TYPES.append(floatArgumentType_)
-        if not argumentTypeSet.STRING_TYPESIsNone():
+        if not ArgumentTypeSet.STRING_TYPESIsNone():
             self.STRING_TYPES = []
-            for i in range(argumentTypeSet.STRING_TYPESLength()):
-                if argumentTypeSet.STRING_TYPES(i) is None:
+            for i in range(ArgumentTypeSet.STRING_TYPESLength()):
+                if ArgumentTypeSet.STRING_TYPES(i) is None:
                     self.STRING_TYPES.append(None)
                 else:
-                    stringArgumentType_ = StringArgumentType.StringArgumentTypeT.InitFromObj(argumentTypeSet.STRING_TYPES(i))
+                    stringArgumentType_ = StringArgumentType.StringArgumentTypeT.InitFromObj(ArgumentTypeSet.STRING_TYPES(i))
                     self.STRING_TYPES.append(stringArgumentType_)
-        if not argumentTypeSet.BOOLEAN_TYPESIsNone():
+        if not ArgumentTypeSet.BOOLEAN_TYPESIsNone():
             self.BOOLEAN_TYPES = []
-            for i in range(argumentTypeSet.BOOLEAN_TYPESLength()):
-                if argumentTypeSet.BOOLEAN_TYPES(i) is None:
+            for i in range(ArgumentTypeSet.BOOLEAN_TYPESLength()):
+                if ArgumentTypeSet.BOOLEAN_TYPES(i) is None:
                     self.BOOLEAN_TYPES.append(None)
                 else:
-                    booleanArgumentType_ = BooleanArgumentType.BooleanArgumentTypeT.InitFromObj(argumentTypeSet.BOOLEAN_TYPES(i))
+                    booleanArgumentType_ = BooleanArgumentType.BooleanArgumentTypeT.InitFromObj(ArgumentTypeSet.BOOLEAN_TYPES(i))
                     self.BOOLEAN_TYPES.append(booleanArgumentType_)
-        if not argumentTypeSet.ENUMERATED_TYPESIsNone():
+        if not ArgumentTypeSet.ENUMERATED_TYPESIsNone():
             self.ENUMERATED_TYPES = []
-            for i in range(argumentTypeSet.ENUMERATED_TYPESLength()):
-                if argumentTypeSet.ENUMERATED_TYPES(i) is None:
+            for i in range(ArgumentTypeSet.ENUMERATED_TYPESLength()):
+                if ArgumentTypeSet.ENUMERATED_TYPES(i) is None:
                     self.ENUMERATED_TYPES.append(None)
                 else:
-                    enumeratedArgumentType_ = EnumeratedArgumentType.EnumeratedArgumentTypeT.InitFromObj(argumentTypeSet.ENUMERATED_TYPES(i))
+                    enumeratedArgumentType_ = EnumeratedArgumentType.EnumeratedArgumentTypeT.InitFromObj(ArgumentTypeSet.ENUMERATED_TYPES(i))
                     self.ENUMERATED_TYPES.append(enumeratedArgumentType_)
-        if not argumentTypeSet.BINARY_TYPESIsNone():
+        if not ArgumentTypeSet.BINARY_TYPESIsNone():
             self.BINARY_TYPES = []
-            for i in range(argumentTypeSet.BINARY_TYPESLength()):
-                if argumentTypeSet.BINARY_TYPES(i) is None:
+            for i in range(ArgumentTypeSet.BINARY_TYPESLength()):
+                if ArgumentTypeSet.BINARY_TYPES(i) is None:
                     self.BINARY_TYPES.append(None)
                 else:
-                    binaryArgumentType_ = BinaryArgumentType.BinaryArgumentTypeT.InitFromObj(argumentTypeSet.BINARY_TYPES(i))
+                    binaryArgumentType_ = BinaryArgumentType.BinaryArgumentTypeT.InitFromObj(ArgumentTypeSet.BINARY_TYPES(i))
                     self.BINARY_TYPES.append(binaryArgumentType_)
-        if not argumentTypeSet.AGGREGATE_TYPESIsNone():
+        if not ArgumentTypeSet.AGGREGATE_TYPESIsNone():
             self.AGGREGATE_TYPES = []
-            for i in range(argumentTypeSet.AGGREGATE_TYPESLength()):
-                if argumentTypeSet.AGGREGATE_TYPES(i) is None:
+            for i in range(ArgumentTypeSet.AGGREGATE_TYPESLength()):
+                if ArgumentTypeSet.AGGREGATE_TYPES(i) is None:
                     self.AGGREGATE_TYPES.append(None)
                 else:
-                    aggregateArgumentType_ = AggregateArgumentType.AggregateArgumentTypeT.InitFromObj(argumentTypeSet.AGGREGATE_TYPES(i))
+                    aggregateArgumentType_ = AggregateArgumentType.AggregateArgumentTypeT.InitFromObj(ArgumentTypeSet.AGGREGATE_TYPES(i))
                     self.AGGREGATE_TYPES.append(aggregateArgumentType_)
 
     # ArgumentTypeSetT
@@ -482,5 +533,5 @@ class ArgumentTypeSetT(object):
             ArgumentTypeSetAddBINARY_TYPES(builder, BINARY_TYPES)
         if self.AGGREGATE_TYPES is not None:
             ArgumentTypeSetAddAGGREGATE_TYPES(builder, AGGREGATE_TYPES)
-        argumentTypeSet = ArgumentTypeSetEnd(builder)
-        return argumentTypeSet
+        ArgumentTypeSet = ArgumentTypeSetEnd(builder)
+        return ArgumentTypeSet

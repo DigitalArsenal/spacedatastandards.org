@@ -8,973 +8,934 @@
 
 // Ensure the included flatbuffers.h is the same version as when this file was
 // generated, otherwise it may not be compatible.
-static_assert(FLATBUFFERS_VERSION_MAJOR == 24 &&
-              FLATBUFFERS_VERSION_MINOR == 3 &&
-              FLATBUFFERS_VERSION_REVISION == 25,
+static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
+              FLATBUFFERS_VERSION_MINOR == 12 &&
+              FLATBUFFERS_VERSION_REVISION == 19,
              "Non-compatible flatbuffers version included");
 
-#include "main_generated.h"
+struct CelestialFrameWrapper;
+struct CelestialFrameWrapperBuilder;
 
-struct TDM;
-struct TDMBuilder;
+struct SpacecraftFrameWrapper;
+struct SpacecraftFrameWrapperBuilder;
 
-/// Tracking Data Message
-struct TDM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef TDMBuilder Builder;
-  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_OBSERVER_ID = 4,
-    VT_OBSERVER_X = 6,
-    VT_OBSERVER_Y = 8,
-    VT_OBSERVER_Z = 10,
-    VT_OBSERVER_VX = 12,
-    VT_OBSERVER_VY = 14,
-    VT_OBSERVER_VZ = 16,
-    VT_OBSERVER_POSITION_REFERENCE_FRAME = 18,
-    VT_OBS_REFERENCE_FRAME = 20,
-    VT_EPOCH = 22,
-    VT_OBSERVATION_STEP_SIZE = 24,
-    VT_OBSERVATION_START_TIME = 26,
-    VT_CCSDS_TDM_VERS = 28,
-    VT_COMMENT = 30,
-    VT_CREATION_DATE = 32,
-    VT_ORIGINATOR = 34,
-    VT_META_START = 36,
-    VT_TIME_SYSTEM = 38,
-    VT_START_TIME = 40,
-    VT_STOP_TIME = 42,
-    VT_PARTICIPANT_1 = 44,
-    VT_PARTICIPANT_2 = 46,
-    VT_PARTICIPANT_3 = 48,
-    VT_PARTICIPANT_4 = 50,
-    VT_PARTICIPANT_5 = 52,
-    VT_MODE = 54,
-    VT_PATH_1 = 56,
-    VT_PATH_2 = 58,
-    VT_TRANSMIT_BAND = 60,
-    VT_RECEIVE_BAND = 62,
-    VT_INTEGRATION_INTERVAL = 64,
-    VT_INTEGRATION_REF = 66,
-    VT_RECEIVE_DELAY_2 = 68,
-    VT_RECEIVE_DELAY_3 = 70,
-    VT_DATA_QUALITY = 72,
-    VT_META_STOP = 74,
-    VT_DATA_START = 76,
-    VT_TRANSMIT_FREQ_1 = 78,
-    VT_RECEIVE_FREQ = 80,
-    VT_DATA_STOP = 82,
-    VT_TIMETAG_REF = 84,
-    VT_ANGLE_TYPE = 86,
-    VT_ANGLE_1 = 88,
-    VT_ANGLE_2 = 90,
-    VT_ANGLE_UNCERTAINTY_1 = 92,
-    VT_ANGLE_UNCERTAINTY_2 = 94,
-    VT_RANGE_RATE = 96,
-    VT_RANGE_UNCERTAINTY = 98,
-    VT_RANGE_MODE = 100,
-    VT_RANGE_MODULUS = 102,
-    VT_CORRECTION_ANGLE_1 = 104,
-    VT_CORRECTION_ANGLE_2 = 106,
-    VT_CORRECTIONS_APPLIED = 108,
-    VT_TROPO_DRY = 110,
-    VT_TROPO_WET = 112,
-    VT_STEC = 114,
-    VT_PRESSURE = 116,
-    VT_RHUMIDITY = 118,
-    VT_TEMPERATURE = 120,
-    VT_CLOCK_BIAS = 122,
-    VT_CLOCK_DRIFT = 124
+struct OrbitFrameWrapper;
+struct OrbitFrameWrapperBuilder;
+
+struct CustomFrameWrapper;
+struct CustomFrameWrapperBuilder;
+
+struct RFM;
+struct RFMBuilder;
+
+/// https://www.sanaregistry.org/r/celestial_body_reference_frames/
+/// Celestial Reference Frames (SANA registry 1.3.112.4.57.2)
+enum CelestialFrame : int8_t {
+  /// OID: 1.3.112.4.57.2.9
+  /// Inertial Earth-centered frame aligned with Earth's center of mass.
+  CelestialFrame_GCRF = 0,
+  /// OID: 1.3.112.4.57.2.11
+  /// International Celestial Reference Frame based on distant quasars.
+  CelestialFrame_ICRF = 1,
+  /// OID: 1.3.112.4.57.2.14
+  /// Classical J2000 inertial frame defined at epoch J2000.0.
+  CelestialFrame_J2000 = 2,
+  /// OID: 1.3.112.4.57.2.15
+  /// Updated J2000 frame using IAU2000A precession-nutation models.
+  CelestialFrame_J2000A = 3,
+  /// OID: 1.3.112.4.57.2.7
+  /// Earth Mean Equator frame at epoch J2000 used in orbit determination.
+  CelestialFrame_EME2000 = 4,
+  /// OID: 1.3.112.4.57.2.25
+  /// True Equator Mean Equinox of Date frame for satellite tracking.
+  CelestialFrame_TEMEOFDATE = 5,
+  /// OID: 1.3.112.4.57.2.10
+  /// Greenwich True of Date: Earth rotation relative to celestial reference.
+  CelestialFrame_GTOD = 6,
+  /// OID: 1.3.112.4.57.2.4
+  /// Celestial Intermediate Reference System based on CIP and CIO.
+  CelestialFrame_CIRS = 7,
+  /// OID: 1.3.112.4.57.2.18
+  /// Mean of Date (MOD) Earth frame using IAU1976 precession.
+  CelestialFrame_MOD_EARTH = 8,
+  /// OID: 1.3.112.4.57.2.17
+  /// Mean of Date (MOD) celestial body frame evaluated at each epoch.
+  CelestialFrame_MOD_CB = 9,
+  /// OID: 1.3.112.4.57.2.19
+  /// Mean of Date (MOD) Moon frame evaluated at each epoch.
+  CelestialFrame_MOD_MOON = 10,
+  /// OID: 1.3.112.4.57.2.29
+  /// True of Date (TOD) Earth frame with polar motion included.
+  CelestialFrame_TOD_EARTH = 11,
+  /// OID: 1.3.112.4.57.2.28
+  /// True of Date (TOD) celestial body frame.
+  CelestialFrame_TOD_CB = 12,
+  /// OID: 1.3.112.4.57.2.30
+  /// True of Date (TOD) Moon frame.
+  CelestialFrame_TOD_MOON = 13,
+  /// OID: 1.3.112.4.57.2.32
+  /// True of Epoch (TOE) Earth frame at specific epoch.
+  CelestialFrame_TOE_EARTH = 14,
+  /// OID: 1.3.112.4.57.2.31
+  /// True of Epoch (TOE) celestial body frame at specific epoch.
+  CelestialFrame_TOE_CB = 15,
+  /// OID: 1.3.112.4.57.2.33
+  /// True of Epoch (TOE) Moon frame at specific epoch.
+  CelestialFrame_TOE_MOON = 16,
+  /// OID: 1.3.112.4.57.2.13
+  /// International Terrestrial Reference Frame 2000 (Earth-fixed).
+  CelestialFrame_ITRF2000 = 17,
+  /// OID: 1.3.112.4.57.2.13
+  /// International Terrestrial Reference Frame 1993 (Earth-fixed).
+  CelestialFrame_ITRF93 = 18,
+  /// OID: 1.3.112.4.57.2.13
+  /// International Terrestrial Reference Frame 1997 (Earth-fixed).
+  CelestialFrame_ITRF97 = 19,
+  /// OID: 1.3.112.4.57.2.6
+  /// Earth-Fixed Geocentric frame using geodetic coordinates.
+  CelestialFrame_EFG = 20,
+  /// OID: 1.3.112.4.57.2.8
+  /// Fixed frame of a celestial body.
+  CelestialFrame_FIXED_CB = 21,
+  /// OID: 1.3.112.4.57.2.39
+  /// Fixed Earth frame aligned with WGS84 ellipsoid.
+  CelestialFrame_FIXED_EARTH = 22,
+  /// WGS84 Earth-fixed terrestrial system.
+  CelestialFrame_WGS84 = 23,
+  /// OID: 1.3.112.4.57.2.5
+  /// Dynamic Terrestrial Reference Frame for a given year (DTRFYYYY).
+  CelestialFrame_DTRFYYYY = 24,
+  /// OID: 1.3.112.4.57.2.2
+  /// Mean Earth Equator and Equinox (ALIGN_EARTH) frame.
+  CelestialFrame_ALIGN_EARTH = 25,
+  /// OID: 1.3.112.4.57.2.1
+  /// Mean Central Body Equator and Equinox (ALIGN_CB) frame.
+  CelestialFrame_ALIGN_CB = 26,
+  /// OID: 1.3.112.4.57.2.3
+  /// Classical Besselian 1950 equator and equinox frame.
+  CelestialFrame_B1950 = 27,
+  CelestialFrame_MIN = CelestialFrame_GCRF,
+  CelestialFrame_MAX = CelestialFrame_B1950
+};
+
+inline const CelestialFrame (&EnumValuesCelestialFrame())[28] {
+  static const CelestialFrame values[] = {
+    CelestialFrame_GCRF,
+    CelestialFrame_ICRF,
+    CelestialFrame_J2000,
+    CelestialFrame_J2000A,
+    CelestialFrame_EME2000,
+    CelestialFrame_TEMEOFDATE,
+    CelestialFrame_GTOD,
+    CelestialFrame_CIRS,
+    CelestialFrame_MOD_EARTH,
+    CelestialFrame_MOD_CB,
+    CelestialFrame_MOD_MOON,
+    CelestialFrame_TOD_EARTH,
+    CelestialFrame_TOD_CB,
+    CelestialFrame_TOD_MOON,
+    CelestialFrame_TOE_EARTH,
+    CelestialFrame_TOE_CB,
+    CelestialFrame_TOE_MOON,
+    CelestialFrame_ITRF2000,
+    CelestialFrame_ITRF93,
+    CelestialFrame_ITRF97,
+    CelestialFrame_EFG,
+    CelestialFrame_FIXED_CB,
+    CelestialFrame_FIXED_EARTH,
+    CelestialFrame_WGS84,
+    CelestialFrame_DTRFYYYY,
+    CelestialFrame_ALIGN_EARTH,
+    CelestialFrame_ALIGN_CB,
+    CelestialFrame_B1950
   };
-  /// Unique identifier for the observation OBSERVER -  [Specific CCSDS Document]
-  const ::flatbuffers::String *OBSERVER_ID() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_OBSERVER_ID);
+  return values;
+}
+
+inline const char * const *EnumNamesCelestialFrame() {
+  static const char * const names[29] = {
+    "GCRF",
+    "ICRF",
+    "J2000",
+    "J2000A",
+    "EME2000",
+    "TEMEOFDATE",
+    "GTOD",
+    "CIRS",
+    "MOD_EARTH",
+    "MOD_CB",
+    "MOD_MOON",
+    "TOD_EARTH",
+    "TOD_CB",
+    "TOD_MOON",
+    "TOE_EARTH",
+    "TOE_CB",
+    "TOE_MOON",
+    "ITRF2000",
+    "ITRF93",
+    "ITRF97",
+    "EFG",
+    "FIXED_CB",
+    "FIXED_EARTH",
+    "WGS84",
+    "DTRFYYYY",
+    "ALIGN_EARTH",
+    "ALIGN_CB",
+    "B1950",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNameCelestialFrame(CelestialFrame e) {
+  if (::flatbuffers::IsOutRange(e, CelestialFrame_GCRF, CelestialFrame_B1950)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesCelestialFrame()[index];
+}
+
+/// https://sanaregistry.org/r/spacecraft_body_reference_frames/
+/// Spacecraft Body Reference Frames (SANA registry 1.3.112.4.57.8)
+enum SpacecraftFrame : int8_t {
+  /// OID: 1.3.112.4.57.8.1
+  /// Accelerometer instrument frame.
+  SpacecraftFrame_ACC_i = 0,
+  /// OID: 1.3.112.4.57.8.2
+  /// Actuator system frame.
+  SpacecraftFrame_ACTUATOR_i = 1,
+  /// OID: 1.3.112.4.57.8.3
+  /// Attitude Sensor Target frame.
+  SpacecraftFrame_AST_i = 2,
+  /// OID: 1.3.112.4.57.8.4
+  /// Coarse Sun Sensor frame.
+  SpacecraftFrame_CSS_i = 3,
+  /// OID: 1.3.112.4.57.8.5
+  /// Digital Sun Sensor frame.
+  SpacecraftFrame_DSS_i = 4,
+  /// OID: 1.3.112.4.57.8.6
+  /// Earth Sensor Assembly frame.
+  SpacecraftFrame_ESA_i = 5,
+  /// OID: 1.3.112.4.57.8.7
+  /// Gyroscope instrument frame.
+  SpacecraftFrame_GYRO_FRAME_i = 6,
+  /// OID: 1.3.112.4.57.8.8
+  /// Inertial Measurement Unit frame.
+  SpacecraftFrame_IMU_FRAME_i = 7,
+  /// OID: 1.3.112.4.57.8.9
+  /// Generic instrument mounting frame.
+  SpacecraftFrame_INSTRUMENT_i = 8,
+  /// OID: 1.3.112.4.57.8.10
+  /// Magnetic Torquer Assembly frame.
+  SpacecraftFrame_MTA_i = 9,
+  /// OID: 1.3.112.4.57.8.11
+  /// Reaction Wheel assembly frame.
+  SpacecraftFrame_RW_i = 10,
+  /// OID: 1.3.112.4.57.8.12
+  /// Solar Array frame.
+  SpacecraftFrame_SA_i = 11,
+  /// OID: 1.3.112.4.57.8.13
+  /// Spacecraft body fixed frame.
+  SpacecraftFrame_SC_BODY_i = 12,
+  /// OID: 1.3.112.4.57.8.14
+  /// Generic sensor assembly frame.
+  SpacecraftFrame_SENSOR_i = 13,
+  /// OID: 1.3.112.4.57.8.15
+  /// Star Tracker instrument frame.
+  SpacecraftFrame_STARTRACKER_i = 14,
+  /// OID: 1.3.112.4.57.8.16
+  /// Thermal Assembly Module frame.
+  SpacecraftFrame_TAM_i = 15,
+  SpacecraftFrame_MIN = SpacecraftFrame_ACC_i,
+  SpacecraftFrame_MAX = SpacecraftFrame_TAM_i
+};
+
+inline const SpacecraftFrame (&EnumValuesSpacecraftFrame())[16] {
+  static const SpacecraftFrame values[] = {
+    SpacecraftFrame_ACC_i,
+    SpacecraftFrame_ACTUATOR_i,
+    SpacecraftFrame_AST_i,
+    SpacecraftFrame_CSS_i,
+    SpacecraftFrame_DSS_i,
+    SpacecraftFrame_ESA_i,
+    SpacecraftFrame_GYRO_FRAME_i,
+    SpacecraftFrame_IMU_FRAME_i,
+    SpacecraftFrame_INSTRUMENT_i,
+    SpacecraftFrame_MTA_i,
+    SpacecraftFrame_RW_i,
+    SpacecraftFrame_SA_i,
+    SpacecraftFrame_SC_BODY_i,
+    SpacecraftFrame_SENSOR_i,
+    SpacecraftFrame_STARTRACKER_i,
+    SpacecraftFrame_TAM_i
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesSpacecraftFrame() {
+  static const char * const names[17] = {
+    "ACC_i",
+    "ACTUATOR_i",
+    "AST_i",
+    "CSS_i",
+    "DSS_i",
+    "ESA_i",
+    "GYRO_FRAME_i",
+    "IMU_FRAME_i",
+    "INSTRUMENT_i",
+    "MTA_i",
+    "RW_i",
+    "SA_i",
+    "SC_BODY_i",
+    "SENSOR_i",
+    "STARTRACKER_i",
+    "TAM_i",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNameSpacecraftFrame(SpacecraftFrame e) {
+  if (::flatbuffers::IsOutRange(e, SpacecraftFrame_ACC_i, SpacecraftFrame_TAM_i)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesSpacecraftFrame()[index];
+}
+
+/// https://sanaregistry.org/r/orbit_relative_reference_frames/
+/// Orbit-Relative Reference Frames (SANA registry 1.3.112.4.57.3)
+enum OrbitFrame : int8_t {
+  /// OID: 1.3.112.4.57.3.1
+  /// Earth Equatorial Inertial frame aligned with J2000 epoch.
+  OrbitFrame_EQW_INERTIAL = 0,
+  /// OID: 1.3.112.4.57.3.3
+  /// Local Vertical Local Horizontal inertial frame.
+  OrbitFrame_LVLH_INERTIAL = 1,
+  /// OID: 1.3.112.4.57.3.2
+  /// Local Vertical Local Horizontal rotating frame.
+  OrbitFrame_LVLH_ROTATING = 2,
+  /// OID: 1.3.112.4.57.3.5
+  /// Normal along-track cross-track inertial frame.
+  OrbitFrame_NSW_INERTIAL = 3,
+  /// OID: 1.3.112.4.57.3.4
+  /// Normal along-track cross-track rotating frame.
+  OrbitFrame_NSW_ROTATING = 4,
+  /// OID: 1.3.112.4.57.3.7
+  /// Orbit normal Tangential cross-track inertial frame.
+  OrbitFrame_NTW_INERTIAL = 5,
+  /// OID: 1.3.112.4.57.3.6
+  /// Orbit normal Tangential cross-track rotating frame.
+  OrbitFrame_NTW_ROTATING = 6,
+  /// OID: 1.3.112.4.57.3.8
+  /// Perifocal frame aligned with orbit's perigee.
+  OrbitFrame_PQW_INERTIAL = 7,
+  /// OID: 1.3.112.4.57.3.10
+  /// Radial along-track cross-track inertial frame.
+  OrbitFrame_RSW_INERTIAL = 8,
+  /// OID: 1.3.112.4.57.3.9
+  /// Radial along-track cross-track rotating frame.
+  OrbitFrame_RSW_ROTATING = 9,
+  /// OID: 1.3.112.4.57.3.14
+  /// South-East-Zenith inertial (topocentric) frame.
+  OrbitFrame_SEZ_INERTIAL = 10,
+  /// OID: 1.3.112.4.57.3.13
+  /// South-East-Zenith rotating (topocentric) frame.
+  OrbitFrame_SEZ_ROTATING = 11,
+  /// OID: 1.3.112.4.57.3.12
+  /// Transverse normal cross-track inertial frame.
+  OrbitFrame_TNW_INERTIAL = 12,
+  /// OID: 1.3.112.4.57.3.11
+  /// Transverse normal cross-track rotating frame.
+  OrbitFrame_TNW_ROTATING = 13,
+  /// OID: 1.3.112.4.57.3.16
+  /// Velocity-normal co-normal inertial frame.
+  OrbitFrame_VNC_INERTIAL = 14,
+  /// OID: 1.3.112.4.57.3.15
+  /// Velocity-normal co-normal rotating frame.
+  OrbitFrame_VNC_ROTATING = 15,
+  OrbitFrame_MIN = OrbitFrame_EQW_INERTIAL,
+  OrbitFrame_MAX = OrbitFrame_VNC_ROTATING
+};
+
+inline const OrbitFrame (&EnumValuesOrbitFrame())[16] {
+  static const OrbitFrame values[] = {
+    OrbitFrame_EQW_INERTIAL,
+    OrbitFrame_LVLH_INERTIAL,
+    OrbitFrame_LVLH_ROTATING,
+    OrbitFrame_NSW_INERTIAL,
+    OrbitFrame_NSW_ROTATING,
+    OrbitFrame_NTW_INERTIAL,
+    OrbitFrame_NTW_ROTATING,
+    OrbitFrame_PQW_INERTIAL,
+    OrbitFrame_RSW_INERTIAL,
+    OrbitFrame_RSW_ROTATING,
+    OrbitFrame_SEZ_INERTIAL,
+    OrbitFrame_SEZ_ROTATING,
+    OrbitFrame_TNW_INERTIAL,
+    OrbitFrame_TNW_ROTATING,
+    OrbitFrame_VNC_INERTIAL,
+    OrbitFrame_VNC_ROTATING
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesOrbitFrame() {
+  static const char * const names[17] = {
+    "EQW_INERTIAL",
+    "LVLH_INERTIAL",
+    "LVLH_ROTATING",
+    "NSW_INERTIAL",
+    "NSW_ROTATING",
+    "NTW_INERTIAL",
+    "NTW_ROTATING",
+    "PQW_INERTIAL",
+    "RSW_INERTIAL",
+    "RSW_ROTATING",
+    "SEZ_INERTIAL",
+    "SEZ_ROTATING",
+    "TNW_INERTIAL",
+    "TNW_ROTATING",
+    "VNC_INERTIAL",
+    "VNC_ROTATING",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNameOrbitFrame(OrbitFrame e) {
+  if (::flatbuffers::IsOutRange(e, OrbitFrame_EQW_INERTIAL, OrbitFrame_VNC_ROTATING)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesOrbitFrame()[index];
+}
+
+/// Non-registered or local use frames
+enum CustomFrame : int8_t {
+  /// Earth-Centered-Earth-Fixed: Rotates with Earth. X-axis at prime meridian, Y eastward, Z towards North Pole.
+  CustomFrame_ECEF = 0,
+  /// True Equator Mean Equinox of Date, same as TEMEOFDATE: Dynamic frame for SGP4 satellite tracking.
+  CustomFrame_TEME = 1,
+  /// True Equator Mean Equinox of Epoch: Static version of TEMEOFDATE at a given epoch.
+  CustomFrame_TEMEOFEPOCH = 2,
+  /// East-North-Up: Local tangent plane for surface points.
+  CustomFrame_ENU = 3,
+  /// North-East-Down: Aviation/navigation frame aligned with gravity.
+  CustomFrame_NED = 4,
+  /// North-East-Up: Local tangent plane variant with Up positive.
+  CustomFrame_NEU = 5,
+  /// Radial-Intrack-Cross-track: Spacecraft orientation aligned with orbit.
+  CustomFrame_RIC = 6,
+  /// Radial-Transverse-Normal: Orbit frame for spacecraft dynamics.
+  CustomFrame_RTN = 7,
+  /// Transverse-Velocity-Normal: Alternative orbit frame.
+  CustomFrame_TVN = 8,
+  /// Vehicle-Velocity-Local-Horizontal: Orbit frame aligned with velocity vector.
+  CustomFrame_VVLH = 9,
+  /// Radial-Tangential-Cross-track: Equivalent to LVLH/QSW.
+  CustomFrame_QSW = 10,
+  /// Local Tangent Plane: Surface-fixed frame centered on a point.
+  CustomFrame_LTP = 11,
+  /// Local Vertical-Local Horizontal: Z axis towards Earth center, X along velocity.
+  CustomFrame_LVLH = 12,
+  /// Polar-North-East: Surface coordinate frame.
+  CustomFrame_PNE = 13,
+  /// Body-Fixed Reference Frame: Fixed to a spacecraft or celestial object.
+  CustomFrame_BRF = 14,
+  /// Radial-Along-track-Cross-track: Same as RSW.
+  CustomFrame_RSW = 15,
+  /// Tangential-Normal-Cross-track: Same as TNW.
+  CustomFrame_TNW = 16,
+  /// Radial-UTF: Radial, Along-track, Cross-track variant.
+  CustomFrame_UVW = 17,
+  CustomFrame_MIN = CustomFrame_ECEF,
+  CustomFrame_MAX = CustomFrame_UVW
+};
+
+inline const CustomFrame (&EnumValuesCustomFrame())[18] {
+  static const CustomFrame values[] = {
+    CustomFrame_ECEF,
+    CustomFrame_TEME,
+    CustomFrame_TEMEOFEPOCH,
+    CustomFrame_ENU,
+    CustomFrame_NED,
+    CustomFrame_NEU,
+    CustomFrame_RIC,
+    CustomFrame_RTN,
+    CustomFrame_TVN,
+    CustomFrame_VVLH,
+    CustomFrame_QSW,
+    CustomFrame_LTP,
+    CustomFrame_LVLH,
+    CustomFrame_PNE,
+    CustomFrame_BRF,
+    CustomFrame_RSW,
+    CustomFrame_TNW,
+    CustomFrame_UVW
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesCustomFrame() {
+  static const char * const names[19] = {
+    "ECEF",
+    "TEME",
+    "TEMEOFEPOCH",
+    "ENU",
+    "NED",
+    "NEU",
+    "RIC",
+    "RTN",
+    "TVN",
+    "VVLH",
+    "QSW",
+    "LTP",
+    "LVLH",
+    "PNE",
+    "BRF",
+    "RSW",
+    "TNW",
+    "UVW",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNameCustomFrame(CustomFrame e) {
+  if (::flatbuffers::IsOutRange(e, CustomFrame_ECEF, CustomFrame_UVW)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesCustomFrame()[index];
+}
+
+enum RFMUnion : uint8_t {
+  RFMUnion_NONE = 0,
+  RFMUnion_CelestialFrameWrapper = 1,
+  RFMUnion_SpacecraftFrameWrapper = 2,
+  RFMUnion_OrbitFrameWrapper = 3,
+  RFMUnion_CustomFrameWrapper = 4,
+  RFMUnion_MIN = RFMUnion_NONE,
+  RFMUnion_MAX = RFMUnion_CustomFrameWrapper
+};
+
+inline const RFMUnion (&EnumValuesRFMUnion())[5] {
+  static const RFMUnion values[] = {
+    RFMUnion_NONE,
+    RFMUnion_CelestialFrameWrapper,
+    RFMUnion_SpacecraftFrameWrapper,
+    RFMUnion_OrbitFrameWrapper,
+    RFMUnion_CustomFrameWrapper
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesRFMUnion() {
+  static const char * const names[6] = {
+    "NONE",
+    "CelestialFrameWrapper",
+    "SpacecraftFrameWrapper",
+    "OrbitFrameWrapper",
+    "CustomFrameWrapper",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNameRFMUnion(RFMUnion e) {
+  if (::flatbuffers::IsOutRange(e, RFMUnion_NONE, RFMUnion_CustomFrameWrapper)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesRFMUnion()[index];
+}
+
+template<typename T> struct RFMUnionTraits {
+  static const RFMUnion enum_value = RFMUnion_NONE;
+};
+
+template<> struct RFMUnionTraits<CelestialFrameWrapper> {
+  static const RFMUnion enum_value = RFMUnion_CelestialFrameWrapper;
+};
+
+template<> struct RFMUnionTraits<SpacecraftFrameWrapper> {
+  static const RFMUnion enum_value = RFMUnion_SpacecraftFrameWrapper;
+};
+
+template<> struct RFMUnionTraits<OrbitFrameWrapper> {
+  static const RFMUnion enum_value = RFMUnion_OrbitFrameWrapper;
+};
+
+template<> struct RFMUnionTraits<CustomFrameWrapper> {
+  static const RFMUnion enum_value = RFMUnion_CustomFrameWrapper;
+};
+
+template <bool B = false>
+bool VerifyRFMUnion(::flatbuffers::VerifierTemplate<B> &verifier, const void *obj, RFMUnion type);
+template <bool B = false>
+bool VerifyRFMUnionVector(::flatbuffers::VerifierTemplate<B> &verifier, const ::flatbuffers::Vector<::flatbuffers::Offset<void>> *values, const ::flatbuffers::Vector<uint8_t> *types);
+
+struct CelestialFrameWrapper FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef CelestialFrameWrapperBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_FRAME = 4
+  };
+  CelestialFrame frame() const {
+    return static_cast<CelestialFrame>(GetField<int8_t>(VT_FRAME, 0));
   }
-  /// Cartesian X coordinate of the OBSERVER location in chosen reference frame
-  double OBSERVER_X() const {
-    return GetField<double>(VT_OBSERVER_X, 0.0);
-  }
-  /// Cartesian Y coordinate of the OBSERVER location in chosen reference frame 
-  double OBSERVER_Y() const {
-    return GetField<double>(VT_OBSERVER_Y, 0.0);
-  }
-  /// Cartesian Z coordinate of the OBSERVER location in chosen reference frame 
-  double OBSERVER_Z() const {
-    return GetField<double>(VT_OBSERVER_Z, 0.0);
-  }
-  /// Cartesian X coordinate of the OBSERVER velocity in chosen reference frame
-  double OBSERVER_VX() const {
-    return GetField<double>(VT_OBSERVER_VX, 0.0);
-  }
-  /// Cartesian Y coordinate of the OBSERVER velocity in chosen reference frame 
-  double OBSERVER_VY() const {
-    return GetField<double>(VT_OBSERVER_VY, 0.0);
-  }
-  /// Cartesian Z coordinate of the OBSERVER velocity in chosen reference frame 
-  double OBSERVER_VZ() const {
-    return GetField<double>(VT_OBSERVER_VZ, 0.0);
-  }
-  /// Reference frame used for OBSERVER location Cartesian coordinates (e.g., ECEF, ECI)
-  const RFM *OBSERVER_POSITION_REFERENCE_FRAME() const {
-    return GetPointer<const RFM *>(VT_OBSERVER_POSITION_REFERENCE_FRAME);
-  }
-  /// Reference frame used for obs location Cartesian coordinates (e.g., ECEF, ECI)
-  const RFM *OBS_REFERENCE_FRAME() const {
-    return GetPointer<const RFM *>(VT_OBS_REFERENCE_FRAME);
-  }
-  /// Epoch time or observation time, in ISO 8601 UTC format -  CCSDS 503.0-B-1
-  const ::flatbuffers::String *EPOCH() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_EPOCH);
-  }
-  /// Time interval between observations in seconds (required).
-  /// Time reconstruction: time[i] = OBSERVATION_START_TIME + (i * OBSERVATION_STEP_SIZE)
-  double OBSERVATION_STEP_SIZE() const {
-    return GetField<double>(VT_OBSERVATION_STEP_SIZE, 0.0);
-  }
-  /// Start time for observation time reconstruction (ISO 8601 UTC format).
-  const ::flatbuffers::String *OBSERVATION_START_TIME() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_OBSERVATION_START_TIME);
-  }
-  /// TDM version number -  CCSDS 503.0-B-1, Page D-9
-  const ::flatbuffers::String *CCSDS_TDM_VERS() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_CCSDS_TDM_VERS);
-  }
-  /// Comments regarding TDM -  various sections, e.g., Page D-9
-  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *COMMENT() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_COMMENT);
-  }
-  /// Date of TDM creation -  CCSDS 503.0-B-1, Page D-9
-  const ::flatbuffers::String *CREATION_DATE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_CREATION_DATE);
-  }
-  /// Originator of the TDM -  CCSDS 503.0-B-1, Page D-9
-  const ::flatbuffers::String *ORIGINATOR() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_ORIGINATOR);
-  }
-  /// Start of metadata section -  CCSDS 503.0-B-1, Page D-9
-  const ::flatbuffers::String *META_START() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_META_START);
-  }
-  /// Time system used -  CCSDS 503.0-B-1, Page D-9
-  const ::flatbuffers::String *TIME_SYSTEM() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_TIME_SYSTEM);
-  }
-  /// Start time of the data -  CCSDS 503.0-B-1, Page D-9
-  const ::flatbuffers::String *START_TIME() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_START_TIME);
-  }
-  /// Stop time of the data -  CCSDS 503.0-B-1, Page D-9
-  const ::flatbuffers::String *STOP_TIME() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_STOP_TIME);
-  }
-  /// First participant in the TDM -  CCSDS 503.0-B-1, Page D-9
-  const ::flatbuffers::String *PARTICIPANT_1() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_PARTICIPANT_1);
-  }
-  /// Second participant in the TDM -  CCSDS 503.0-B-1, Page D-9
-  const ::flatbuffers::String *PARTICIPANT_2() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_PARTICIPANT_2);
-  }
-  /// Third participant in the TDM (if applicable) -  CCSDS 503.0-B-1, Page D-9
-  const ::flatbuffers::String *PARTICIPANT_3() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_PARTICIPANT_3);
-  }
-  /// Fourth participant in the TDM (if applicable) -  CCSDS 503.0-B-1, Page D-9
-  const ::flatbuffers::String *PARTICIPANT_4() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_PARTICIPANT_4);
-  }
-  /// Fifth participant in the TDM (if applicable) -  CCSDS 503.0-B-1, Page D-9, max participants
-  const ::flatbuffers::String *PARTICIPANT_5() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_PARTICIPANT_5);
-  }
-  /// Mode of TDM -  CCSDS 503.0-B-1, Page D-9
-  const ::flatbuffers::String *MODE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_MODE);
-  }
-  /// First path in TDM -  CCSDS 503.0-B-1, Page D-9
-  uint16_t PATH_1() const {
-    return GetField<uint16_t>(VT_PATH_1, 0);
-  }
-  /// Second path in TDM (if applicable) -  CCSDS 503.0-B-1, Page D-9
-  uint16_t PATH_2() const {
-    return GetField<uint16_t>(VT_PATH_2, 0);
-  }
-  /// Transmit band -  CCSDS 503.0-B-1, Page D-9
-  const ::flatbuffers::String *TRANSMIT_BAND() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_TRANSMIT_BAND);
-  }
-  /// Receive band -  CCSDS 503.0-B-1, Page D-9
-  const ::flatbuffers::String *RECEIVE_BAND() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_RECEIVE_BAND);
-  }
-  /// Integration interval -  CCSDS 503.0-B-1, Page D-9
-  float INTEGRATION_INTERVAL() const {
-    return GetField<float>(VT_INTEGRATION_INTERVAL, 0.0f);
-  }
-  /// Integration reference -  CCSDS 503.0-B-1, Page D-9
-  const ::flatbuffers::String *INTEGRATION_REF() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_INTEGRATION_REF);
-  }
-  /// Receive delay for second participant -  CCSDS 503.0-B-1, Page D-9
-  double RECEIVE_DELAY_2() const {
-    return GetField<double>(VT_RECEIVE_DELAY_2, 0.0);
-  }
-  /// Receive delay for third participant -  CCSDS 503.0-B-1, Page D-9
-  double RECEIVE_DELAY_3() const {
-    return GetField<double>(VT_RECEIVE_DELAY_3, 0.0);
-  }
-  /// Data quality -  CCSDS 503.0-B-1, Page D-9
-  const ::flatbuffers::String *DATA_QUALITY() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_DATA_QUALITY);
-  }
-  /// End of metadata section -  CCSDS 503.0-B-1, Page D-9
-  const ::flatbuffers::String *META_STOP() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_META_STOP);
-  }
-  /// Start of data section -  CCSDS 503.0-B-1, Page D-9
-  const ::flatbuffers::String *DATA_START() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_DATA_START);
-  }
-  /// Transmit frequency for first participant -  CCSDS 503.0-B-1, Page D-9
-  double TRANSMIT_FREQ_1() const {
-    return GetField<double>(VT_TRANSMIT_FREQ_1, 0.0);
-  }
-  /// Receive frequency -  CCSDS 503.0-B-1, Page D-9
-  const ::flatbuffers::Vector<double> *RECEIVE_FREQ() const {
-    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_RECEIVE_FREQ);
-  }
-  /// End of data section -  CCSDS 503.0-B-1, Page D-9
-  const ::flatbuffers::String *DATA_STOP() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_DATA_STOP);
-  }
-  /// Additional properties as required by the specific application of the TDM...
-  /// Reference for time tagging -  CCSDS 503.0-B-1, Page D-10
-  const ::flatbuffers::String *TIMETAG_REF() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_TIMETAG_REF);
-  }
-  /// Type of angle data -  CCSDS 503.0-B-1, Page D-12
-  /// Can be AZEL, RADEC, XEYN, XSYE, or another value with provided ICD
-  const ::flatbuffers::String *ANGLE_TYPE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_ANGLE_TYPE);
-  }
-  /// First angle value -  CCSDS 503.0-B-1, Page D-12
-  const ::flatbuffers::Vector<float> *ANGLE_1() const {
-    return GetPointer<const ::flatbuffers::Vector<float> *>(VT_ANGLE_1);
-  }
-  /// Second angle value -  CCSDS 503.0-B-1, Page D-12
-  const ::flatbuffers::Vector<float> *ANGLE_2() const {
-    return GetPointer<const ::flatbuffers::Vector<float> *>(VT_ANGLE_2);
-  }
-  /// Uncertainty of first angle -  CCSDS 503.0-B-1
-  float ANGLE_UNCERTAINTY_1() const {
-    return GetField<float>(VT_ANGLE_UNCERTAINTY_1, 0.0f);
-  }
-  /// Uncertainty of second angle -  CCSDS 503.0-B-1
-  float ANGLE_UNCERTAINTY_2() const {
-    return GetField<float>(VT_ANGLE_UNCERTAINTY_2, 0.0f);
-  }
-  /// Rate of change of range -  CCSDS 503.0-B-1
-  double RANGE_RATE() const {
-    return GetField<double>(VT_RANGE_RATE, 0.0);
-  }
-  /// Uncertainty in range -  CCSDS 503.0-B-1
-  double RANGE_UNCERTAINTY() const {
-    return GetField<double>(VT_RANGE_UNCERTAINTY, 0.0);
-  }
-  /// Mode of range data -  CCSDS 503.0-B-1, Page D-10
-  const ::flatbuffers::String *RANGE_MODE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_RANGE_MODE);
-  }
-  /// Modulus value for range data -  CCSDS 503.0-B-1, Page D-10
-  double RANGE_MODULUS() const {
-    return GetField<double>(VT_RANGE_MODULUS, 0.0);
-  }
-  /// First correction angle -  CCSDS 503.0-B-1, Page D-12
-  float CORRECTION_ANGLE_1() const {
-    return GetField<float>(VT_CORRECTION_ANGLE_1, 0.0f);
-  }
-  /// Second correction angle -  CCSDS 503.0-B-1, Page D-12
-  float CORRECTION_ANGLE_2() const {
-    return GetField<float>(VT_CORRECTION_ANGLE_2, 0.0f);
-  }
-  /// Indicator of corrections applied -  CCSDS 503.0-B-1, Page D-12
-  const ::flatbuffers::String *CORRECTIONS_APPLIED() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_CORRECTIONS_APPLIED);
-  }
-  /// Dry component of tropospheric delay -  CCSDS 503.0-B-1, Page D-14
-  const ::flatbuffers::Vector<double> *TROPO_DRY() const {
-    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_TROPO_DRY);
-  }
-  /// Wet component of tropospheric delay -  CCSDS 503.0-B-1, Page D-14
-  const ::flatbuffers::Vector<double> *TROPO_WET() const {
-    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_TROPO_WET);
-  }
-  /// Slant total electron content -  CCSDS 503.0-B-1, Page D-13
-  const ::flatbuffers::Vector<double> *STEC() const {
-    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_STEC);
-  }
-  /// Atmospheric pressure -  CCSDS 503.0-B-1, Page D-14
-  const ::flatbuffers::Vector<double> *PRESSURE() const {
-    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_PRESSURE);
-  }
-  /// Relative humidity -  CCSDS 503.0-B-1, Page D-14
-  const ::flatbuffers::Vector<double> *RHUMIDITY() const {
-    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_RHUMIDITY);
-  }
-  /// Ambient temperature -  CCSDS 503.0-B-1, Page D-14
-  const ::flatbuffers::Vector<double> *TEMPERATURE() const {
-    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_TEMPERATURE);
-  }
-  /// Clock bias values -  CCSDS 503.0-B-1, Page D-15
-  const ::flatbuffers::Vector<double> *CLOCK_BIAS() const {
-    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_CLOCK_BIAS);
-  }
-  /// Clock drift values -  CCSDS 503.0-B-1, Page D-15
-  const ::flatbuffers::Vector<double> *CLOCK_DRIFT() const {
-    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_CLOCK_DRIFT);
-  }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
-           VerifyOffset(verifier, VT_OBSERVER_ID) &&
-           verifier.VerifyString(OBSERVER_ID()) &&
-           VerifyField<double>(verifier, VT_OBSERVER_X, 8) &&
-           VerifyField<double>(verifier, VT_OBSERVER_Y, 8) &&
-           VerifyField<double>(verifier, VT_OBSERVER_Z, 8) &&
-           VerifyField<double>(verifier, VT_OBSERVER_VX, 8) &&
-           VerifyField<double>(verifier, VT_OBSERVER_VY, 8) &&
-           VerifyField<double>(verifier, VT_OBSERVER_VZ, 8) &&
-           VerifyOffset(verifier, VT_OBSERVER_POSITION_REFERENCE_FRAME) &&
-           verifier.VerifyTable(OBSERVER_POSITION_REFERENCE_FRAME()) &&
-           VerifyOffset(verifier, VT_OBS_REFERENCE_FRAME) &&
-           verifier.VerifyTable(OBS_REFERENCE_FRAME()) &&
-           VerifyOffset(verifier, VT_EPOCH) &&
-           verifier.VerifyString(EPOCH()) &&
-           VerifyField<double>(verifier, VT_OBSERVATION_STEP_SIZE, 8) &&
-           VerifyOffset(verifier, VT_OBSERVATION_START_TIME) &&
-           verifier.VerifyString(OBSERVATION_START_TIME()) &&
-           VerifyOffset(verifier, VT_CCSDS_TDM_VERS) &&
-           verifier.VerifyString(CCSDS_TDM_VERS()) &&
-           VerifyOffset(verifier, VT_COMMENT) &&
-           verifier.VerifyVector(COMMENT()) &&
-           verifier.VerifyVectorOfStrings(COMMENT()) &&
-           VerifyOffset(verifier, VT_CREATION_DATE) &&
-           verifier.VerifyString(CREATION_DATE()) &&
-           VerifyOffset(verifier, VT_ORIGINATOR) &&
-           verifier.VerifyString(ORIGINATOR()) &&
-           VerifyOffset(verifier, VT_META_START) &&
-           verifier.VerifyString(META_START()) &&
-           VerifyOffset(verifier, VT_TIME_SYSTEM) &&
-           verifier.VerifyString(TIME_SYSTEM()) &&
-           VerifyOffset(verifier, VT_START_TIME) &&
-           verifier.VerifyString(START_TIME()) &&
-           VerifyOffset(verifier, VT_STOP_TIME) &&
-           verifier.VerifyString(STOP_TIME()) &&
-           VerifyOffset(verifier, VT_PARTICIPANT_1) &&
-           verifier.VerifyString(PARTICIPANT_1()) &&
-           VerifyOffset(verifier, VT_PARTICIPANT_2) &&
-           verifier.VerifyString(PARTICIPANT_2()) &&
-           VerifyOffset(verifier, VT_PARTICIPANT_3) &&
-           verifier.VerifyString(PARTICIPANT_3()) &&
-           VerifyOffset(verifier, VT_PARTICIPANT_4) &&
-           verifier.VerifyString(PARTICIPANT_4()) &&
-           VerifyOffset(verifier, VT_PARTICIPANT_5) &&
-           verifier.VerifyString(PARTICIPANT_5()) &&
-           VerifyOffset(verifier, VT_MODE) &&
-           verifier.VerifyString(MODE()) &&
-           VerifyField<uint16_t>(verifier, VT_PATH_1, 2) &&
-           VerifyField<uint16_t>(verifier, VT_PATH_2, 2) &&
-           VerifyOffset(verifier, VT_TRANSMIT_BAND) &&
-           verifier.VerifyString(TRANSMIT_BAND()) &&
-           VerifyOffset(verifier, VT_RECEIVE_BAND) &&
-           verifier.VerifyString(RECEIVE_BAND()) &&
-           VerifyField<float>(verifier, VT_INTEGRATION_INTERVAL, 4) &&
-           VerifyOffset(verifier, VT_INTEGRATION_REF) &&
-           verifier.VerifyString(INTEGRATION_REF()) &&
-           VerifyField<double>(verifier, VT_RECEIVE_DELAY_2, 8) &&
-           VerifyField<double>(verifier, VT_RECEIVE_DELAY_3, 8) &&
-           VerifyOffset(verifier, VT_DATA_QUALITY) &&
-           verifier.VerifyString(DATA_QUALITY()) &&
-           VerifyOffset(verifier, VT_META_STOP) &&
-           verifier.VerifyString(META_STOP()) &&
-           VerifyOffset(verifier, VT_DATA_START) &&
-           verifier.VerifyString(DATA_START()) &&
-           VerifyField<double>(verifier, VT_TRANSMIT_FREQ_1, 8) &&
-           VerifyOffset(verifier, VT_RECEIVE_FREQ) &&
-           verifier.VerifyVector(RECEIVE_FREQ()) &&
-           VerifyOffset(verifier, VT_DATA_STOP) &&
-           verifier.VerifyString(DATA_STOP()) &&
-           VerifyOffset(verifier, VT_TIMETAG_REF) &&
-           verifier.VerifyString(TIMETAG_REF()) &&
-           VerifyOffset(verifier, VT_ANGLE_TYPE) &&
-           verifier.VerifyString(ANGLE_TYPE()) &&
-           VerifyOffset(verifier, VT_ANGLE_1) &&
-           verifier.VerifyVector(ANGLE_1()) &&
-           VerifyOffset(verifier, VT_ANGLE_2) &&
-           verifier.VerifyVector(ANGLE_2()) &&
-           VerifyField<float>(verifier, VT_ANGLE_UNCERTAINTY_1, 4) &&
-           VerifyField<float>(verifier, VT_ANGLE_UNCERTAINTY_2, 4) &&
-           VerifyField<double>(verifier, VT_RANGE_RATE, 8) &&
-           VerifyField<double>(verifier, VT_RANGE_UNCERTAINTY, 8) &&
-           VerifyOffset(verifier, VT_RANGE_MODE) &&
-           verifier.VerifyString(RANGE_MODE()) &&
-           VerifyField<double>(verifier, VT_RANGE_MODULUS, 8) &&
-           VerifyField<float>(verifier, VT_CORRECTION_ANGLE_1, 4) &&
-           VerifyField<float>(verifier, VT_CORRECTION_ANGLE_2, 4) &&
-           VerifyOffset(verifier, VT_CORRECTIONS_APPLIED) &&
-           verifier.VerifyString(CORRECTIONS_APPLIED()) &&
-           VerifyOffset(verifier, VT_TROPO_DRY) &&
-           verifier.VerifyVector(TROPO_DRY()) &&
-           VerifyOffset(verifier, VT_TROPO_WET) &&
-           verifier.VerifyVector(TROPO_WET()) &&
-           VerifyOffset(verifier, VT_STEC) &&
-           verifier.VerifyVector(STEC()) &&
-           VerifyOffset(verifier, VT_PRESSURE) &&
-           verifier.VerifyVector(PRESSURE()) &&
-           VerifyOffset(verifier, VT_RHUMIDITY) &&
-           verifier.VerifyVector(RHUMIDITY()) &&
-           VerifyOffset(verifier, VT_TEMPERATURE) &&
-           verifier.VerifyVector(TEMPERATURE()) &&
-           VerifyOffset(verifier, VT_CLOCK_BIAS) &&
-           verifier.VerifyVector(CLOCK_BIAS()) &&
-           VerifyOffset(verifier, VT_CLOCK_DRIFT) &&
-           verifier.VerifyVector(CLOCK_DRIFT()) &&
+           VerifyField<int8_t>(verifier, VT_FRAME, 1) &&
            verifier.EndTable();
   }
 };
 
-struct TDMBuilder {
-  typedef TDM Table;
+struct CelestialFrameWrapperBuilder {
+  typedef CelestialFrameWrapper Table;
   ::flatbuffers::FlatBufferBuilder &fbb_;
   ::flatbuffers::uoffset_t start_;
-  void add_OBSERVER_ID(::flatbuffers::Offset<::flatbuffers::String> OBSERVER_ID) {
-    fbb_.AddOffset(TDM::VT_OBSERVER_ID, OBSERVER_ID);
+  void add_frame(CelestialFrame frame) {
+    fbb_.AddElement<int8_t>(CelestialFrameWrapper::VT_FRAME, static_cast<int8_t>(frame), 0);
   }
-  void add_OBSERVER_X(double OBSERVER_X) {
-    fbb_.AddElement<double>(TDM::VT_OBSERVER_X, OBSERVER_X, 0.0);
-  }
-  void add_OBSERVER_Y(double OBSERVER_Y) {
-    fbb_.AddElement<double>(TDM::VT_OBSERVER_Y, OBSERVER_Y, 0.0);
-  }
-  void add_OBSERVER_Z(double OBSERVER_Z) {
-    fbb_.AddElement<double>(TDM::VT_OBSERVER_Z, OBSERVER_Z, 0.0);
-  }
-  void add_OBSERVER_VX(double OBSERVER_VX) {
-    fbb_.AddElement<double>(TDM::VT_OBSERVER_VX, OBSERVER_VX, 0.0);
-  }
-  void add_OBSERVER_VY(double OBSERVER_VY) {
-    fbb_.AddElement<double>(TDM::VT_OBSERVER_VY, OBSERVER_VY, 0.0);
-  }
-  void add_OBSERVER_VZ(double OBSERVER_VZ) {
-    fbb_.AddElement<double>(TDM::VT_OBSERVER_VZ, OBSERVER_VZ, 0.0);
-  }
-  void add_OBSERVER_POSITION_REFERENCE_FRAME(::flatbuffers::Offset<RFM> OBSERVER_POSITION_REFERENCE_FRAME) {
-    fbb_.AddOffset(TDM::VT_OBSERVER_POSITION_REFERENCE_FRAME, OBSERVER_POSITION_REFERENCE_FRAME);
-  }
-  void add_OBS_REFERENCE_FRAME(::flatbuffers::Offset<RFM> OBS_REFERENCE_FRAME) {
-    fbb_.AddOffset(TDM::VT_OBS_REFERENCE_FRAME, OBS_REFERENCE_FRAME);
-  }
-  void add_EPOCH(::flatbuffers::Offset<::flatbuffers::String> EPOCH) {
-    fbb_.AddOffset(TDM::VT_EPOCH, EPOCH);
-  }
-  void add_OBSERVATION_STEP_SIZE(double OBSERVATION_STEP_SIZE) {
-    fbb_.AddElement<double>(TDM::VT_OBSERVATION_STEP_SIZE, OBSERVATION_STEP_SIZE, 0.0);
-  }
-  void add_OBSERVATION_START_TIME(::flatbuffers::Offset<::flatbuffers::String> OBSERVATION_START_TIME) {
-    fbb_.AddOffset(TDM::VT_OBSERVATION_START_TIME, OBSERVATION_START_TIME);
-  }
-  void add_CCSDS_TDM_VERS(::flatbuffers::Offset<::flatbuffers::String> CCSDS_TDM_VERS) {
-    fbb_.AddOffset(TDM::VT_CCSDS_TDM_VERS, CCSDS_TDM_VERS);
-  }
-  void add_COMMENT(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> COMMENT) {
-    fbb_.AddOffset(TDM::VT_COMMENT, COMMENT);
-  }
-  void add_CREATION_DATE(::flatbuffers::Offset<::flatbuffers::String> CREATION_DATE) {
-    fbb_.AddOffset(TDM::VT_CREATION_DATE, CREATION_DATE);
-  }
-  void add_ORIGINATOR(::flatbuffers::Offset<::flatbuffers::String> ORIGINATOR) {
-    fbb_.AddOffset(TDM::VT_ORIGINATOR, ORIGINATOR);
-  }
-  void add_META_START(::flatbuffers::Offset<::flatbuffers::String> META_START) {
-    fbb_.AddOffset(TDM::VT_META_START, META_START);
-  }
-  void add_TIME_SYSTEM(::flatbuffers::Offset<::flatbuffers::String> TIME_SYSTEM) {
-    fbb_.AddOffset(TDM::VT_TIME_SYSTEM, TIME_SYSTEM);
-  }
-  void add_START_TIME(::flatbuffers::Offset<::flatbuffers::String> START_TIME) {
-    fbb_.AddOffset(TDM::VT_START_TIME, START_TIME);
-  }
-  void add_STOP_TIME(::flatbuffers::Offset<::flatbuffers::String> STOP_TIME) {
-    fbb_.AddOffset(TDM::VT_STOP_TIME, STOP_TIME);
-  }
-  void add_PARTICIPANT_1(::flatbuffers::Offset<::flatbuffers::String> PARTICIPANT_1) {
-    fbb_.AddOffset(TDM::VT_PARTICIPANT_1, PARTICIPANT_1);
-  }
-  void add_PARTICIPANT_2(::flatbuffers::Offset<::flatbuffers::String> PARTICIPANT_2) {
-    fbb_.AddOffset(TDM::VT_PARTICIPANT_2, PARTICIPANT_2);
-  }
-  void add_PARTICIPANT_3(::flatbuffers::Offset<::flatbuffers::String> PARTICIPANT_3) {
-    fbb_.AddOffset(TDM::VT_PARTICIPANT_3, PARTICIPANT_3);
-  }
-  void add_PARTICIPANT_4(::flatbuffers::Offset<::flatbuffers::String> PARTICIPANT_4) {
-    fbb_.AddOffset(TDM::VT_PARTICIPANT_4, PARTICIPANT_4);
-  }
-  void add_PARTICIPANT_5(::flatbuffers::Offset<::flatbuffers::String> PARTICIPANT_5) {
-    fbb_.AddOffset(TDM::VT_PARTICIPANT_5, PARTICIPANT_5);
-  }
-  void add_MODE(::flatbuffers::Offset<::flatbuffers::String> MODE) {
-    fbb_.AddOffset(TDM::VT_MODE, MODE);
-  }
-  void add_PATH_1(uint16_t PATH_1) {
-    fbb_.AddElement<uint16_t>(TDM::VT_PATH_1, PATH_1, 0);
-  }
-  void add_PATH_2(uint16_t PATH_2) {
-    fbb_.AddElement<uint16_t>(TDM::VT_PATH_2, PATH_2, 0);
-  }
-  void add_TRANSMIT_BAND(::flatbuffers::Offset<::flatbuffers::String> TRANSMIT_BAND) {
-    fbb_.AddOffset(TDM::VT_TRANSMIT_BAND, TRANSMIT_BAND);
-  }
-  void add_RECEIVE_BAND(::flatbuffers::Offset<::flatbuffers::String> RECEIVE_BAND) {
-    fbb_.AddOffset(TDM::VT_RECEIVE_BAND, RECEIVE_BAND);
-  }
-  void add_INTEGRATION_INTERVAL(float INTEGRATION_INTERVAL) {
-    fbb_.AddElement<float>(TDM::VT_INTEGRATION_INTERVAL, INTEGRATION_INTERVAL, 0.0f);
-  }
-  void add_INTEGRATION_REF(::flatbuffers::Offset<::flatbuffers::String> INTEGRATION_REF) {
-    fbb_.AddOffset(TDM::VT_INTEGRATION_REF, INTEGRATION_REF);
-  }
-  void add_RECEIVE_DELAY_2(double RECEIVE_DELAY_2) {
-    fbb_.AddElement<double>(TDM::VT_RECEIVE_DELAY_2, RECEIVE_DELAY_2, 0.0);
-  }
-  void add_RECEIVE_DELAY_3(double RECEIVE_DELAY_3) {
-    fbb_.AddElement<double>(TDM::VT_RECEIVE_DELAY_3, RECEIVE_DELAY_3, 0.0);
-  }
-  void add_DATA_QUALITY(::flatbuffers::Offset<::flatbuffers::String> DATA_QUALITY) {
-    fbb_.AddOffset(TDM::VT_DATA_QUALITY, DATA_QUALITY);
-  }
-  void add_META_STOP(::flatbuffers::Offset<::flatbuffers::String> META_STOP) {
-    fbb_.AddOffset(TDM::VT_META_STOP, META_STOP);
-  }
-  void add_DATA_START(::flatbuffers::Offset<::flatbuffers::String> DATA_START) {
-    fbb_.AddOffset(TDM::VT_DATA_START, DATA_START);
-  }
-  void add_TRANSMIT_FREQ_1(double TRANSMIT_FREQ_1) {
-    fbb_.AddElement<double>(TDM::VT_TRANSMIT_FREQ_1, TRANSMIT_FREQ_1, 0.0);
-  }
-  void add_RECEIVE_FREQ(::flatbuffers::Offset<::flatbuffers::Vector<double>> RECEIVE_FREQ) {
-    fbb_.AddOffset(TDM::VT_RECEIVE_FREQ, RECEIVE_FREQ);
-  }
-  void add_DATA_STOP(::flatbuffers::Offset<::flatbuffers::String> DATA_STOP) {
-    fbb_.AddOffset(TDM::VT_DATA_STOP, DATA_STOP);
-  }
-  void add_TIMETAG_REF(::flatbuffers::Offset<::flatbuffers::String> TIMETAG_REF) {
-    fbb_.AddOffset(TDM::VT_TIMETAG_REF, TIMETAG_REF);
-  }
-  void add_ANGLE_TYPE(::flatbuffers::Offset<::flatbuffers::String> ANGLE_TYPE) {
-    fbb_.AddOffset(TDM::VT_ANGLE_TYPE, ANGLE_TYPE);
-  }
-  void add_ANGLE_1(::flatbuffers::Offset<::flatbuffers::Vector<float>> ANGLE_1) {
-    fbb_.AddOffset(TDM::VT_ANGLE_1, ANGLE_1);
-  }
-  void add_ANGLE_2(::flatbuffers::Offset<::flatbuffers::Vector<float>> ANGLE_2) {
-    fbb_.AddOffset(TDM::VT_ANGLE_2, ANGLE_2);
-  }
-  void add_ANGLE_UNCERTAINTY_1(float ANGLE_UNCERTAINTY_1) {
-    fbb_.AddElement<float>(TDM::VT_ANGLE_UNCERTAINTY_1, ANGLE_UNCERTAINTY_1, 0.0f);
-  }
-  void add_ANGLE_UNCERTAINTY_2(float ANGLE_UNCERTAINTY_2) {
-    fbb_.AddElement<float>(TDM::VT_ANGLE_UNCERTAINTY_2, ANGLE_UNCERTAINTY_2, 0.0f);
-  }
-  void add_RANGE_RATE(double RANGE_RATE) {
-    fbb_.AddElement<double>(TDM::VT_RANGE_RATE, RANGE_RATE, 0.0);
-  }
-  void add_RANGE_UNCERTAINTY(double RANGE_UNCERTAINTY) {
-    fbb_.AddElement<double>(TDM::VT_RANGE_UNCERTAINTY, RANGE_UNCERTAINTY, 0.0);
-  }
-  void add_RANGE_MODE(::flatbuffers::Offset<::flatbuffers::String> RANGE_MODE) {
-    fbb_.AddOffset(TDM::VT_RANGE_MODE, RANGE_MODE);
-  }
-  void add_RANGE_MODULUS(double RANGE_MODULUS) {
-    fbb_.AddElement<double>(TDM::VT_RANGE_MODULUS, RANGE_MODULUS, 0.0);
-  }
-  void add_CORRECTION_ANGLE_1(float CORRECTION_ANGLE_1) {
-    fbb_.AddElement<float>(TDM::VT_CORRECTION_ANGLE_1, CORRECTION_ANGLE_1, 0.0f);
-  }
-  void add_CORRECTION_ANGLE_2(float CORRECTION_ANGLE_2) {
-    fbb_.AddElement<float>(TDM::VT_CORRECTION_ANGLE_2, CORRECTION_ANGLE_2, 0.0f);
-  }
-  void add_CORRECTIONS_APPLIED(::flatbuffers::Offset<::flatbuffers::String> CORRECTIONS_APPLIED) {
-    fbb_.AddOffset(TDM::VT_CORRECTIONS_APPLIED, CORRECTIONS_APPLIED);
-  }
-  void add_TROPO_DRY(::flatbuffers::Offset<::flatbuffers::Vector<double>> TROPO_DRY) {
-    fbb_.AddOffset(TDM::VT_TROPO_DRY, TROPO_DRY);
-  }
-  void add_TROPO_WET(::flatbuffers::Offset<::flatbuffers::Vector<double>> TROPO_WET) {
-    fbb_.AddOffset(TDM::VT_TROPO_WET, TROPO_WET);
-  }
-  void add_STEC(::flatbuffers::Offset<::flatbuffers::Vector<double>> STEC) {
-    fbb_.AddOffset(TDM::VT_STEC, STEC);
-  }
-  void add_PRESSURE(::flatbuffers::Offset<::flatbuffers::Vector<double>> PRESSURE) {
-    fbb_.AddOffset(TDM::VT_PRESSURE, PRESSURE);
-  }
-  void add_RHUMIDITY(::flatbuffers::Offset<::flatbuffers::Vector<double>> RHUMIDITY) {
-    fbb_.AddOffset(TDM::VT_RHUMIDITY, RHUMIDITY);
-  }
-  void add_TEMPERATURE(::flatbuffers::Offset<::flatbuffers::Vector<double>> TEMPERATURE) {
-    fbb_.AddOffset(TDM::VT_TEMPERATURE, TEMPERATURE);
-  }
-  void add_CLOCK_BIAS(::flatbuffers::Offset<::flatbuffers::Vector<double>> CLOCK_BIAS) {
-    fbb_.AddOffset(TDM::VT_CLOCK_BIAS, CLOCK_BIAS);
-  }
-  void add_CLOCK_DRIFT(::flatbuffers::Offset<::flatbuffers::Vector<double>> CLOCK_DRIFT) {
-    fbb_.AddOffset(TDM::VT_CLOCK_DRIFT, CLOCK_DRIFT);
-  }
-  explicit TDMBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+  explicit CelestialFrameWrapperBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
   }
-  ::flatbuffers::Offset<TDM> Finish() {
+  ::flatbuffers::Offset<CelestialFrameWrapper> Finish() {
     const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<TDM>(end);
+    auto o = ::flatbuffers::Offset<CelestialFrameWrapper>(end);
     return o;
   }
 };
 
-inline ::flatbuffers::Offset<TDM> CreateTDM(
+inline ::flatbuffers::Offset<CelestialFrameWrapper> CreateCelestialFrameWrapper(
     ::flatbuffers::FlatBufferBuilder &_fbb,
-    ::flatbuffers::Offset<::flatbuffers::String> OBSERVER_ID = 0,
-    double OBSERVER_X = 0.0,
-    double OBSERVER_Y = 0.0,
-    double OBSERVER_Z = 0.0,
-    double OBSERVER_VX = 0.0,
-    double OBSERVER_VY = 0.0,
-    double OBSERVER_VZ = 0.0,
-    ::flatbuffers::Offset<RFM> OBSERVER_POSITION_REFERENCE_FRAME = 0,
-    ::flatbuffers::Offset<RFM> OBS_REFERENCE_FRAME = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> EPOCH = 0,
-    double OBSERVATION_STEP_SIZE = 0.0,
-    ::flatbuffers::Offset<::flatbuffers::String> OBSERVATION_START_TIME = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> CCSDS_TDM_VERS = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> COMMENT = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> CREATION_DATE = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> ORIGINATOR = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> META_START = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> TIME_SYSTEM = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> START_TIME = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> STOP_TIME = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> PARTICIPANT_1 = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> PARTICIPANT_2 = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> PARTICIPANT_3 = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> PARTICIPANT_4 = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> PARTICIPANT_5 = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> MODE = 0,
-    uint16_t PATH_1 = 0,
-    uint16_t PATH_2 = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> TRANSMIT_BAND = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> RECEIVE_BAND = 0,
-    float INTEGRATION_INTERVAL = 0.0f,
-    ::flatbuffers::Offset<::flatbuffers::String> INTEGRATION_REF = 0,
-    double RECEIVE_DELAY_2 = 0.0,
-    double RECEIVE_DELAY_3 = 0.0,
-    ::flatbuffers::Offset<::flatbuffers::String> DATA_QUALITY = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> META_STOP = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> DATA_START = 0,
-    double TRANSMIT_FREQ_1 = 0.0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<double>> RECEIVE_FREQ = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> DATA_STOP = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> TIMETAG_REF = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> ANGLE_TYPE = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<float>> ANGLE_1 = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<float>> ANGLE_2 = 0,
-    float ANGLE_UNCERTAINTY_1 = 0.0f,
-    float ANGLE_UNCERTAINTY_2 = 0.0f,
-    double RANGE_RATE = 0.0,
-    double RANGE_UNCERTAINTY = 0.0,
-    ::flatbuffers::Offset<::flatbuffers::String> RANGE_MODE = 0,
-    double RANGE_MODULUS = 0.0,
-    float CORRECTION_ANGLE_1 = 0.0f,
-    float CORRECTION_ANGLE_2 = 0.0f,
-    ::flatbuffers::Offset<::flatbuffers::String> CORRECTIONS_APPLIED = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<double>> TROPO_DRY = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<double>> TROPO_WET = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<double>> STEC = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<double>> PRESSURE = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<double>> RHUMIDITY = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<double>> TEMPERATURE = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<double>> CLOCK_BIAS = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<double>> CLOCK_DRIFT = 0) {
-  TDMBuilder builder_(_fbb);
-  builder_.add_RANGE_MODULUS(RANGE_MODULUS);
-  builder_.add_RANGE_UNCERTAINTY(RANGE_UNCERTAINTY);
-  builder_.add_RANGE_RATE(RANGE_RATE);
-  builder_.add_TRANSMIT_FREQ_1(TRANSMIT_FREQ_1);
-  builder_.add_RECEIVE_DELAY_3(RECEIVE_DELAY_3);
-  builder_.add_RECEIVE_DELAY_2(RECEIVE_DELAY_2);
-  builder_.add_OBSERVATION_STEP_SIZE(OBSERVATION_STEP_SIZE);
-  builder_.add_OBSERVER_VZ(OBSERVER_VZ);
-  builder_.add_OBSERVER_VY(OBSERVER_VY);
-  builder_.add_OBSERVER_VX(OBSERVER_VX);
-  builder_.add_OBSERVER_Z(OBSERVER_Z);
-  builder_.add_OBSERVER_Y(OBSERVER_Y);
-  builder_.add_OBSERVER_X(OBSERVER_X);
-  builder_.add_CLOCK_DRIFT(CLOCK_DRIFT);
-  builder_.add_CLOCK_BIAS(CLOCK_BIAS);
-  builder_.add_TEMPERATURE(TEMPERATURE);
-  builder_.add_RHUMIDITY(RHUMIDITY);
-  builder_.add_PRESSURE(PRESSURE);
-  builder_.add_STEC(STEC);
-  builder_.add_TROPO_WET(TROPO_WET);
-  builder_.add_TROPO_DRY(TROPO_DRY);
-  builder_.add_CORRECTIONS_APPLIED(CORRECTIONS_APPLIED);
-  builder_.add_CORRECTION_ANGLE_2(CORRECTION_ANGLE_2);
-  builder_.add_CORRECTION_ANGLE_1(CORRECTION_ANGLE_1);
-  builder_.add_RANGE_MODE(RANGE_MODE);
-  builder_.add_ANGLE_UNCERTAINTY_2(ANGLE_UNCERTAINTY_2);
-  builder_.add_ANGLE_UNCERTAINTY_1(ANGLE_UNCERTAINTY_1);
-  builder_.add_ANGLE_2(ANGLE_2);
-  builder_.add_ANGLE_1(ANGLE_1);
-  builder_.add_ANGLE_TYPE(ANGLE_TYPE);
-  builder_.add_TIMETAG_REF(TIMETAG_REF);
-  builder_.add_DATA_STOP(DATA_STOP);
-  builder_.add_RECEIVE_FREQ(RECEIVE_FREQ);
-  builder_.add_DATA_START(DATA_START);
-  builder_.add_META_STOP(META_STOP);
-  builder_.add_DATA_QUALITY(DATA_QUALITY);
-  builder_.add_INTEGRATION_REF(INTEGRATION_REF);
-  builder_.add_INTEGRATION_INTERVAL(INTEGRATION_INTERVAL);
-  builder_.add_RECEIVE_BAND(RECEIVE_BAND);
-  builder_.add_TRANSMIT_BAND(TRANSMIT_BAND);
-  builder_.add_MODE(MODE);
-  builder_.add_PARTICIPANT_5(PARTICIPANT_5);
-  builder_.add_PARTICIPANT_4(PARTICIPANT_4);
-  builder_.add_PARTICIPANT_3(PARTICIPANT_3);
-  builder_.add_PARTICIPANT_2(PARTICIPANT_2);
-  builder_.add_PARTICIPANT_1(PARTICIPANT_1);
-  builder_.add_STOP_TIME(STOP_TIME);
-  builder_.add_START_TIME(START_TIME);
-  builder_.add_TIME_SYSTEM(TIME_SYSTEM);
-  builder_.add_META_START(META_START);
-  builder_.add_ORIGINATOR(ORIGINATOR);
-  builder_.add_CREATION_DATE(CREATION_DATE);
-  builder_.add_COMMENT(COMMENT);
-  builder_.add_CCSDS_TDM_VERS(CCSDS_TDM_VERS);
-  builder_.add_OBSERVATION_START_TIME(OBSERVATION_START_TIME);
-  builder_.add_EPOCH(EPOCH);
-  builder_.add_OBS_REFERENCE_FRAME(OBS_REFERENCE_FRAME);
-  builder_.add_OBSERVER_POSITION_REFERENCE_FRAME(OBSERVER_POSITION_REFERENCE_FRAME);
-  builder_.add_OBSERVER_ID(OBSERVER_ID);
-  builder_.add_PATH_2(PATH_2);
-  builder_.add_PATH_1(PATH_1);
+    CelestialFrame frame = CelestialFrame_GCRF) {
+  CelestialFrameWrapperBuilder builder_(_fbb);
+  builder_.add_frame(frame);
   return builder_.Finish();
 }
 
-inline ::flatbuffers::Offset<TDM> CreateTDMDirect(
+struct SpacecraftFrameWrapper FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef SpacecraftFrameWrapperBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_FRAME = 4
+  };
+  SpacecraftFrame frame() const {
+    return static_cast<SpacecraftFrame>(GetField<int8_t>(VT_FRAME, 0));
+  }
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<int8_t>(verifier, VT_FRAME, 1) &&
+           verifier.EndTable();
+  }
+};
+
+struct SpacecraftFrameWrapperBuilder {
+  typedef SpacecraftFrameWrapper Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_frame(SpacecraftFrame frame) {
+    fbb_.AddElement<int8_t>(SpacecraftFrameWrapper::VT_FRAME, static_cast<int8_t>(frame), 0);
+  }
+  explicit SpacecraftFrameWrapperBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<SpacecraftFrameWrapper> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<SpacecraftFrameWrapper>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<SpacecraftFrameWrapper> CreateSpacecraftFrameWrapper(
     ::flatbuffers::FlatBufferBuilder &_fbb,
-    const char *OBSERVER_ID = nullptr,
-    double OBSERVER_X = 0.0,
-    double OBSERVER_Y = 0.0,
-    double OBSERVER_Z = 0.0,
-    double OBSERVER_VX = 0.0,
-    double OBSERVER_VY = 0.0,
-    double OBSERVER_VZ = 0.0,
-    ::flatbuffers::Offset<RFM> OBSERVER_POSITION_REFERENCE_FRAME = 0,
-    ::flatbuffers::Offset<RFM> OBS_REFERENCE_FRAME = 0,
-    const char *EPOCH = nullptr,
-    double OBSERVATION_STEP_SIZE = 0.0,
-    const char *OBSERVATION_START_TIME = nullptr,
-    const char *CCSDS_TDM_VERS = nullptr,
-    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *COMMENT = nullptr,
-    const char *CREATION_DATE = nullptr,
-    const char *ORIGINATOR = nullptr,
-    const char *META_START = nullptr,
-    const char *TIME_SYSTEM = nullptr,
-    const char *START_TIME = nullptr,
-    const char *STOP_TIME = nullptr,
-    const char *PARTICIPANT_1 = nullptr,
-    const char *PARTICIPANT_2 = nullptr,
-    const char *PARTICIPANT_3 = nullptr,
-    const char *PARTICIPANT_4 = nullptr,
-    const char *PARTICIPANT_5 = nullptr,
-    const char *MODE = nullptr,
-    uint16_t PATH_1 = 0,
-    uint16_t PATH_2 = 0,
-    const char *TRANSMIT_BAND = nullptr,
-    const char *RECEIVE_BAND = nullptr,
-    float INTEGRATION_INTERVAL = 0.0f,
-    const char *INTEGRATION_REF = nullptr,
-    double RECEIVE_DELAY_2 = 0.0,
-    double RECEIVE_DELAY_3 = 0.0,
-    const char *DATA_QUALITY = nullptr,
-    const char *META_STOP = nullptr,
-    const char *DATA_START = nullptr,
-    double TRANSMIT_FREQ_1 = 0.0,
-    const std::vector<double> *RECEIVE_FREQ = nullptr,
-    const char *DATA_STOP = nullptr,
-    const char *TIMETAG_REF = nullptr,
-    const char *ANGLE_TYPE = nullptr,
-    const std::vector<float> *ANGLE_1 = nullptr,
-    const std::vector<float> *ANGLE_2 = nullptr,
-    float ANGLE_UNCERTAINTY_1 = 0.0f,
-    float ANGLE_UNCERTAINTY_2 = 0.0f,
-    double RANGE_RATE = 0.0,
-    double RANGE_UNCERTAINTY = 0.0,
-    const char *RANGE_MODE = nullptr,
-    double RANGE_MODULUS = 0.0,
-    float CORRECTION_ANGLE_1 = 0.0f,
-    float CORRECTION_ANGLE_2 = 0.0f,
-    const char *CORRECTIONS_APPLIED = nullptr,
-    const std::vector<double> *TROPO_DRY = nullptr,
-    const std::vector<double> *TROPO_WET = nullptr,
-    const std::vector<double> *STEC = nullptr,
-    const std::vector<double> *PRESSURE = nullptr,
-    const std::vector<double> *RHUMIDITY = nullptr,
-    const std::vector<double> *TEMPERATURE = nullptr,
-    const std::vector<double> *CLOCK_BIAS = nullptr,
-    const std::vector<double> *CLOCK_DRIFT = nullptr) {
-  auto OBSERVER_ID__ = OBSERVER_ID ? _fbb.CreateString(OBSERVER_ID) : 0;
-  auto EPOCH__ = EPOCH ? _fbb.CreateString(EPOCH) : 0;
-  auto OBSERVATION_START_TIME__ = OBSERVATION_START_TIME ? _fbb.CreateString(OBSERVATION_START_TIME) : 0;
-  auto CCSDS_TDM_VERS__ = CCSDS_TDM_VERS ? _fbb.CreateString(CCSDS_TDM_VERS) : 0;
-  auto COMMENT__ = COMMENT ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*COMMENT) : 0;
-  auto CREATION_DATE__ = CREATION_DATE ? _fbb.CreateString(CREATION_DATE) : 0;
-  auto ORIGINATOR__ = ORIGINATOR ? _fbb.CreateString(ORIGINATOR) : 0;
-  auto META_START__ = META_START ? _fbb.CreateString(META_START) : 0;
-  auto TIME_SYSTEM__ = TIME_SYSTEM ? _fbb.CreateString(TIME_SYSTEM) : 0;
-  auto START_TIME__ = START_TIME ? _fbb.CreateString(START_TIME) : 0;
-  auto STOP_TIME__ = STOP_TIME ? _fbb.CreateString(STOP_TIME) : 0;
-  auto PARTICIPANT_1__ = PARTICIPANT_1 ? _fbb.CreateString(PARTICIPANT_1) : 0;
-  auto PARTICIPANT_2__ = PARTICIPANT_2 ? _fbb.CreateString(PARTICIPANT_2) : 0;
-  auto PARTICIPANT_3__ = PARTICIPANT_3 ? _fbb.CreateString(PARTICIPANT_3) : 0;
-  auto PARTICIPANT_4__ = PARTICIPANT_4 ? _fbb.CreateString(PARTICIPANT_4) : 0;
-  auto PARTICIPANT_5__ = PARTICIPANT_5 ? _fbb.CreateString(PARTICIPANT_5) : 0;
-  auto MODE__ = MODE ? _fbb.CreateString(MODE) : 0;
-  auto TRANSMIT_BAND__ = TRANSMIT_BAND ? _fbb.CreateString(TRANSMIT_BAND) : 0;
-  auto RECEIVE_BAND__ = RECEIVE_BAND ? _fbb.CreateString(RECEIVE_BAND) : 0;
-  auto INTEGRATION_REF__ = INTEGRATION_REF ? _fbb.CreateString(INTEGRATION_REF) : 0;
-  auto DATA_QUALITY__ = DATA_QUALITY ? _fbb.CreateString(DATA_QUALITY) : 0;
-  auto META_STOP__ = META_STOP ? _fbb.CreateString(META_STOP) : 0;
-  auto DATA_START__ = DATA_START ? _fbb.CreateString(DATA_START) : 0;
-  auto RECEIVE_FREQ__ = RECEIVE_FREQ ? _fbb.CreateVector<double>(*RECEIVE_FREQ) : 0;
-  auto DATA_STOP__ = DATA_STOP ? _fbb.CreateString(DATA_STOP) : 0;
-  auto TIMETAG_REF__ = TIMETAG_REF ? _fbb.CreateString(TIMETAG_REF) : 0;
-  auto ANGLE_TYPE__ = ANGLE_TYPE ? _fbb.CreateString(ANGLE_TYPE) : 0;
-  auto ANGLE_1__ = ANGLE_1 ? _fbb.CreateVector<float>(*ANGLE_1) : 0;
-  auto ANGLE_2__ = ANGLE_2 ? _fbb.CreateVector<float>(*ANGLE_2) : 0;
-  auto RANGE_MODE__ = RANGE_MODE ? _fbb.CreateString(RANGE_MODE) : 0;
-  auto CORRECTIONS_APPLIED__ = CORRECTIONS_APPLIED ? _fbb.CreateString(CORRECTIONS_APPLIED) : 0;
-  auto TROPO_DRY__ = TROPO_DRY ? _fbb.CreateVector<double>(*TROPO_DRY) : 0;
-  auto TROPO_WET__ = TROPO_WET ? _fbb.CreateVector<double>(*TROPO_WET) : 0;
-  auto STEC__ = STEC ? _fbb.CreateVector<double>(*STEC) : 0;
-  auto PRESSURE__ = PRESSURE ? _fbb.CreateVector<double>(*PRESSURE) : 0;
-  auto RHUMIDITY__ = RHUMIDITY ? _fbb.CreateVector<double>(*RHUMIDITY) : 0;
-  auto TEMPERATURE__ = TEMPERATURE ? _fbb.CreateVector<double>(*TEMPERATURE) : 0;
-  auto CLOCK_BIAS__ = CLOCK_BIAS ? _fbb.CreateVector<double>(*CLOCK_BIAS) : 0;
-  auto CLOCK_DRIFT__ = CLOCK_DRIFT ? _fbb.CreateVector<double>(*CLOCK_DRIFT) : 0;
-  return CreateTDM(
+    SpacecraftFrame frame = SpacecraftFrame_ACC_i) {
+  SpacecraftFrameWrapperBuilder builder_(_fbb);
+  builder_.add_frame(frame);
+  return builder_.Finish();
+}
+
+struct OrbitFrameWrapper FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef OrbitFrameWrapperBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_FRAME = 4
+  };
+  OrbitFrame frame() const {
+    return static_cast<OrbitFrame>(GetField<int8_t>(VT_FRAME, 0));
+  }
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<int8_t>(verifier, VT_FRAME, 1) &&
+           verifier.EndTable();
+  }
+};
+
+struct OrbitFrameWrapperBuilder {
+  typedef OrbitFrameWrapper Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_frame(OrbitFrame frame) {
+    fbb_.AddElement<int8_t>(OrbitFrameWrapper::VT_FRAME, static_cast<int8_t>(frame), 0);
+  }
+  explicit OrbitFrameWrapperBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<OrbitFrameWrapper> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<OrbitFrameWrapper>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<OrbitFrameWrapper> CreateOrbitFrameWrapper(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    OrbitFrame frame = OrbitFrame_EQW_INERTIAL) {
+  OrbitFrameWrapperBuilder builder_(_fbb);
+  builder_.add_frame(frame);
+  return builder_.Finish();
+}
+
+struct CustomFrameWrapper FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef CustomFrameWrapperBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_FRAME = 4
+  };
+  CustomFrame frame() const {
+    return static_cast<CustomFrame>(GetField<int8_t>(VT_FRAME, 0));
+  }
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<int8_t>(verifier, VT_FRAME, 1) &&
+           verifier.EndTable();
+  }
+};
+
+struct CustomFrameWrapperBuilder {
+  typedef CustomFrameWrapper Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_frame(CustomFrame frame) {
+    fbb_.AddElement<int8_t>(CustomFrameWrapper::VT_FRAME, static_cast<int8_t>(frame), 0);
+  }
+  explicit CustomFrameWrapperBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<CustomFrameWrapper> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<CustomFrameWrapper>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<CustomFrameWrapper> CreateCustomFrameWrapper(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    CustomFrame frame = CustomFrame_ECEF) {
+  CustomFrameWrapperBuilder builder_(_fbb);
+  builder_.add_frame(frame);
+  return builder_.Finish();
+}
+
+/// Reference Frame Message
+struct RFM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef RFMBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_REFERENCE_FRAME_TYPE = 4,
+    VT_REFERENCE_FRAME = 6,
+    VT_INDEX = 8,
+    VT_NAME = 10
+  };
+  RFMUnion REFERENCE_FRAME_type() const {
+    return static_cast<RFMUnion>(GetField<uint8_t>(VT_REFERENCE_FRAME_TYPE, 0));
+  }
+  const void *REFERENCE_FRAME() const {
+    return GetPointer<const void *>(VT_REFERENCE_FRAME);
+  }
+  template<typename T> const T *REFERENCE_FRAME_as() const;
+  const CelestialFrameWrapper *REFERENCE_FRAME_as_CelestialFrameWrapper() const {
+    return REFERENCE_FRAME_type() == RFMUnion_CelestialFrameWrapper ? static_cast<const CelestialFrameWrapper *>(REFERENCE_FRAME()) : nullptr;
+  }
+  const SpacecraftFrameWrapper *REFERENCE_FRAME_as_SpacecraftFrameWrapper() const {
+    return REFERENCE_FRAME_type() == RFMUnion_SpacecraftFrameWrapper ? static_cast<const SpacecraftFrameWrapper *>(REFERENCE_FRAME()) : nullptr;
+  }
+  const OrbitFrameWrapper *REFERENCE_FRAME_as_OrbitFrameWrapper() const {
+    return REFERENCE_FRAME_type() == RFMUnion_OrbitFrameWrapper ? static_cast<const OrbitFrameWrapper *>(REFERENCE_FRAME()) : nullptr;
+  }
+  const CustomFrameWrapper *REFERENCE_FRAME_as_CustomFrameWrapper() const {
+    return REFERENCE_FRAME_type() == RFMUnion_CustomFrameWrapper ? static_cast<const CustomFrameWrapper *>(REFERENCE_FRAME()) : nullptr;
+  }
+  int32_t INDEX() const {
+    return GetField<int32_t>(VT_INDEX, 0);
+  }
+  const ::flatbuffers::String *NAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_NAME);
+  }
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<uint8_t>(verifier, VT_REFERENCE_FRAME_TYPE, 1) &&
+           VerifyOffset(verifier, VT_REFERENCE_FRAME) &&
+           VerifyRFMUnion(verifier, REFERENCE_FRAME(), REFERENCE_FRAME_type()) &&
+           VerifyField<int32_t>(verifier, VT_INDEX, 4) &&
+           VerifyOffset(verifier, VT_NAME) &&
+           verifier.VerifyString(NAME()) &&
+           verifier.EndTable();
+  }
+};
+
+template<> inline const CelestialFrameWrapper *RFM::REFERENCE_FRAME_as<CelestialFrameWrapper>() const {
+  return REFERENCE_FRAME_as_CelestialFrameWrapper();
+}
+
+template<> inline const SpacecraftFrameWrapper *RFM::REFERENCE_FRAME_as<SpacecraftFrameWrapper>() const {
+  return REFERENCE_FRAME_as_SpacecraftFrameWrapper();
+}
+
+template<> inline const OrbitFrameWrapper *RFM::REFERENCE_FRAME_as<OrbitFrameWrapper>() const {
+  return REFERENCE_FRAME_as_OrbitFrameWrapper();
+}
+
+template<> inline const CustomFrameWrapper *RFM::REFERENCE_FRAME_as<CustomFrameWrapper>() const {
+  return REFERENCE_FRAME_as_CustomFrameWrapper();
+}
+
+struct RFMBuilder {
+  typedef RFM Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_REFERENCE_FRAME_type(RFMUnion REFERENCE_FRAME_type) {
+    fbb_.AddElement<uint8_t>(RFM::VT_REFERENCE_FRAME_TYPE, static_cast<uint8_t>(REFERENCE_FRAME_type), 0);
+  }
+  void add_REFERENCE_FRAME(::flatbuffers::Offset<void> REFERENCE_FRAME) {
+    fbb_.AddOffset(RFM::VT_REFERENCE_FRAME, REFERENCE_FRAME);
+  }
+  void add_INDEX(int32_t INDEX) {
+    fbb_.AddElement<int32_t>(RFM::VT_INDEX, INDEX, 0);
+  }
+  void add_NAME(::flatbuffers::Offset<::flatbuffers::String> NAME) {
+    fbb_.AddOffset(RFM::VT_NAME, NAME);
+  }
+  explicit RFMBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<RFM> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<RFM>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<RFM> CreateRFM(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    RFMUnion REFERENCE_FRAME_type = RFMUnion_NONE,
+    ::flatbuffers::Offset<void> REFERENCE_FRAME = 0,
+    int32_t INDEX = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> NAME = 0) {
+  RFMBuilder builder_(_fbb);
+  builder_.add_NAME(NAME);
+  builder_.add_INDEX(INDEX);
+  builder_.add_REFERENCE_FRAME(REFERENCE_FRAME);
+  builder_.add_REFERENCE_FRAME_type(REFERENCE_FRAME_type);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<RFM> CreateRFMDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    RFMUnion REFERENCE_FRAME_type = RFMUnion_NONE,
+    ::flatbuffers::Offset<void> REFERENCE_FRAME = 0,
+    int32_t INDEX = 0,
+    const char *NAME = nullptr) {
+  auto NAME__ = NAME ? _fbb.CreateString(NAME) : 0;
+  return CreateRFM(
       _fbb,
-      OBSERVER_ID__,
-      OBSERVER_X,
-      OBSERVER_Y,
-      OBSERVER_Z,
-      OBSERVER_VX,
-      OBSERVER_VY,
-      OBSERVER_VZ,
-      OBSERVER_POSITION_REFERENCE_FRAME,
-      OBS_REFERENCE_FRAME,
-      EPOCH__,
-      OBSERVATION_STEP_SIZE,
-      OBSERVATION_START_TIME__,
-      CCSDS_TDM_VERS__,
-      COMMENT__,
-      CREATION_DATE__,
-      ORIGINATOR__,
-      META_START__,
-      TIME_SYSTEM__,
-      START_TIME__,
-      STOP_TIME__,
-      PARTICIPANT_1__,
-      PARTICIPANT_2__,
-      PARTICIPANT_3__,
-      PARTICIPANT_4__,
-      PARTICIPANT_5__,
-      MODE__,
-      PATH_1,
-      PATH_2,
-      TRANSMIT_BAND__,
-      RECEIVE_BAND__,
-      INTEGRATION_INTERVAL,
-      INTEGRATION_REF__,
-      RECEIVE_DELAY_2,
-      RECEIVE_DELAY_3,
-      DATA_QUALITY__,
-      META_STOP__,
-      DATA_START__,
-      TRANSMIT_FREQ_1,
-      RECEIVE_FREQ__,
-      DATA_STOP__,
-      TIMETAG_REF__,
-      ANGLE_TYPE__,
-      ANGLE_1__,
-      ANGLE_2__,
-      ANGLE_UNCERTAINTY_1,
-      ANGLE_UNCERTAINTY_2,
-      RANGE_RATE,
-      RANGE_UNCERTAINTY,
-      RANGE_MODE__,
-      RANGE_MODULUS,
-      CORRECTION_ANGLE_1,
-      CORRECTION_ANGLE_2,
-      CORRECTIONS_APPLIED__,
-      TROPO_DRY__,
-      TROPO_WET__,
-      STEC__,
-      PRESSURE__,
-      RHUMIDITY__,
-      TEMPERATURE__,
-      CLOCK_BIAS__,
-      CLOCK_DRIFT__);
+      REFERENCE_FRAME_type,
+      REFERENCE_FRAME,
+      INDEX,
+      NAME__);
 }
 
-inline const TDM *GetTDM(const void *buf) {
-  return ::flatbuffers::GetRoot<TDM>(buf);
+template <bool B>
+inline bool VerifyRFMUnion(::flatbuffers::VerifierTemplate<B> &verifier, const void *obj, RFMUnion type) {
+  switch (type) {
+    case RFMUnion_NONE: {
+      return true;
+    }
+    case RFMUnion_CelestialFrameWrapper: {
+      auto ptr = reinterpret_cast<const CelestialFrameWrapper *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case RFMUnion_SpacecraftFrameWrapper: {
+      auto ptr = reinterpret_cast<const SpacecraftFrameWrapper *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case RFMUnion_OrbitFrameWrapper: {
+      auto ptr = reinterpret_cast<const OrbitFrameWrapper *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case RFMUnion_CustomFrameWrapper: {
+      auto ptr = reinterpret_cast<const CustomFrameWrapper *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    default: return true;
+  }
 }
 
-inline const TDM *GetSizePrefixedTDM(const void *buf) {
-  return ::flatbuffers::GetSizePrefixedRoot<TDM>(buf);
+template <bool B>
+inline bool VerifyRFMUnionVector(::flatbuffers::VerifierTemplate<B> &verifier, const ::flatbuffers::Vector<::flatbuffers::Offset<void>> *values, const ::flatbuffers::Vector<uint8_t> *types) {
+  if (!values || !types) return !values && !types;
+  if (values->size() != types->size()) return false;
+  for (::flatbuffers::uoffset_t i = 0; i < values->size(); ++i) {
+    if (!VerifyRFMUnion(
+        verifier,  values->Get(i), types->GetEnum<RFMUnion>(i))) {
+      return false;
+    }
+  }
+  return true;
 }
 
-inline const char *TDMIdentifier() {
-  return "$TDM";
+inline const RFM *GetRFM(const void *buf) {
+  return ::flatbuffers::GetRoot<RFM>(buf);
 }
 
-inline bool TDMBufferHasIdentifier(const void *buf) {
+inline const RFM *GetSizePrefixedRFM(const void *buf) {
+  return ::flatbuffers::GetSizePrefixedRoot<RFM>(buf);
+}
+
+inline const char *RFMIdentifier() {
+  return "$RFM";
+}
+
+inline bool RFMBufferHasIdentifier(const void *buf) {
   return ::flatbuffers::BufferHasIdentifier(
-      buf, TDMIdentifier());
+      buf, RFMIdentifier());
 }
 
-inline bool SizePrefixedTDMBufferHasIdentifier(const void *buf) {
+inline bool SizePrefixedRFMBufferHasIdentifier(const void *buf) {
   return ::flatbuffers::BufferHasIdentifier(
-      buf, TDMIdentifier(), true);
+      buf, RFMIdentifier(), true);
 }
 
-inline bool VerifyTDMBuffer(
-    ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifyBuffer<TDM>(TDMIdentifier());
+template <bool B = false>
+inline bool VerifyRFMBuffer(
+    ::flatbuffers::VerifierTemplate<B> &verifier) {
+  return verifier.template VerifyBuffer<RFM>(RFMIdentifier());
 }
 
-inline bool VerifySizePrefixedTDMBuffer(
-    ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifySizePrefixedBuffer<TDM>(TDMIdentifier());
+template <bool B = false>
+inline bool VerifySizePrefixedRFMBuffer(
+    ::flatbuffers::VerifierTemplate<B> &verifier) {
+  return verifier.template VerifySizePrefixedBuffer<RFM>(RFMIdentifier());
 }
 
-inline void FinishTDMBuffer(
+inline void FinishRFMBuffer(
     ::flatbuffers::FlatBufferBuilder &fbb,
-    ::flatbuffers::Offset<TDM> root) {
-  fbb.Finish(root, TDMIdentifier());
+    ::flatbuffers::Offset<RFM> root) {
+  fbb.Finish(root, RFMIdentifier());
 }
 
-inline void FinishSizePrefixedTDMBuffer(
+inline void FinishSizePrefixedRFMBuffer(
     ::flatbuffers::FlatBufferBuilder &fbb,
-    ::flatbuffers::Offset<TDM> root) {
-  fbb.FinishSizePrefixed(root, TDMIdentifier());
+    ::flatbuffers::Offset<RFM> root) {
+  fbb.FinishSizePrefixed(root, RFMIdentifier());
 }
 
 #endif  // FLATBUFFERS_GENERATED_MAIN_H_

@@ -330,6 +330,12 @@ def OONStartANTENNASVector(builder, numElems):
 def StartANTENNASVector(builder, numElems):
     return OONStartANTENNASVector(builder, numElems)
 
+def OONCreateANTENNASVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateANTENNASVector(builder, data):
+    OONCreateANTENNASVector(builder, data)
+
 def OONAddBATTERIES(builder, BATTERIES):
     builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(BATTERIES), 0)
 
@@ -341,6 +347,12 @@ def OONStartBATTERIESVector(builder, numElems):
 
 def StartBATTERIESVector(builder, numElems):
     return OONStartBATTERIESVector(builder, numElems)
+
+def OONCreateBATTERIESVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateBATTERIESVector(builder, data):
+    OONCreateBATTERIESVector(builder, data)
 
 def OONAddSOLAR_ARRAYS(builder, SOLAR_ARRAYS):
     builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(SOLAR_ARRAYS), 0)
@@ -354,6 +366,12 @@ def OONStartSOLAR_ARRAYSVector(builder, numElems):
 def StartSOLAR_ARRAYSVector(builder, numElems):
     return OONStartSOLAR_ARRAYSVector(builder, numElems)
 
+def OONCreateSOLAR_ARRAYSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateSOLAR_ARRAYSVector(builder, data):
+    OONCreateSOLAR_ARRAYSVector(builder, data)
+
 def OONAddTHRUSTERS(builder, THRUSTERS):
     builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(THRUSTERS), 0)
 
@@ -366,6 +384,12 @@ def OONStartTHRUSTERSVector(builder, numElems):
 def StartTHRUSTERSVector(builder, numElems):
     return OONStartTHRUSTERSVector(builder, numElems)
 
+def OONCreateTHRUSTERSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateTHRUSTERSVector(builder, data):
+    OONCreateTHRUSTERSVector(builder, data)
+
 def OONAddONORBIT_DETAILS(builder, ONORBIT_DETAILS):
     builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(ONORBIT_DETAILS), 0)
 
@@ -377,6 +401,12 @@ def OONStartONORBIT_DETAILSVector(builder, numElems):
 
 def StartONORBIT_DETAILSVector(builder, numElems):
     return OONStartONORBIT_DETAILSVector(builder, numElems)
+
+def OONCreateONORBIT_DETAILSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateONORBIT_DETAILSVector(builder, data):
+    OONCreateONORBIT_DETAILSVector(builder, data)
 
 def OONAddCOUNTRY_CODE(builder, COUNTRY_CODE):
     builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(COUNTRY_CODE), 0)
@@ -396,6 +426,12 @@ def OONStartENTITY_COLLECTIONVector(builder, numElems):
 def StartENTITY_COLLECTIONVector(builder, numElems):
     return OONStartENTITY_COLLECTIONVector(builder, numElems)
 
+def OONCreateENTITY_COLLECTIONVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateENTITY_COLLECTIONVector(builder, data):
+    OONCreateENTITY_COLLECTIONVector(builder, data)
+
 def OONEnd(builder):
     return builder.EndObject()
 
@@ -410,32 +446,53 @@ except:
 class OONT(object):
 
     # OONT
-    def __init__(self):
-        self.SAT_NO = 0  # type: int
-        self.COMMON_NAME = None  # type: str
-        self.CONSTELLATION = None  # type: str
-        self.INTL_DES = None  # type: str
-        self.LAUNCH_DATE = None  # type: str
-        self.DECAY_DATE = None  # type: str
-        self.OBJECT_TYPE = None  # type: str
-        self.MISSION_NUMBER = None  # type: str
-        self.CATEGORY = None  # type: str
-        self.LIFETIME_YEARS = 0  # type: int
-        self.ALT_NAME = None  # type: str
-        self.LAUNCH_SITE_ID = None  # type: str
-        self.ANTENNAS = None  # type: List[str]
-        self.BATTERIES = None  # type: List[str]
-        self.SOLAR_ARRAYS = None  # type: List[str]
-        self.THRUSTERS = None  # type: List[str]
-        self.ONORBIT_DETAILS = None  # type: List[str]
-        self.COUNTRY_CODE = None  # type: str
-        self.ENTITY_COLLECTION = None  # type: List[str]
+    def __init__(
+        self,
+        SAT_NO = 0,
+        COMMON_NAME = None,
+        CONSTELLATION = None,
+        INTL_DES = None,
+        LAUNCH_DATE = None,
+        DECAY_DATE = None,
+        OBJECT_TYPE = None,
+        MISSION_NUMBER = None,
+        CATEGORY = None,
+        LIFETIME_YEARS = 0,
+        ALT_NAME = None,
+        LAUNCH_SITE_ID = None,
+        ANTENNAS = None,
+        BATTERIES = None,
+        SOLAR_ARRAYS = None,
+        THRUSTERS = None,
+        ONORBIT_DETAILS = None,
+        COUNTRY_CODE = None,
+        ENTITY_COLLECTION = None,
+    ):
+        self.SAT_NO = SAT_NO  # type: int
+        self.COMMON_NAME = COMMON_NAME  # type: Optional[str]
+        self.CONSTELLATION = CONSTELLATION  # type: Optional[str]
+        self.INTL_DES = INTL_DES  # type: Optional[str]
+        self.LAUNCH_DATE = LAUNCH_DATE  # type: Optional[str]
+        self.DECAY_DATE = DECAY_DATE  # type: Optional[str]
+        self.OBJECT_TYPE = OBJECT_TYPE  # type: Optional[str]
+        self.MISSION_NUMBER = MISSION_NUMBER  # type: Optional[str]
+        self.CATEGORY = CATEGORY  # type: Optional[str]
+        self.LIFETIME_YEARS = LIFETIME_YEARS  # type: int
+        self.ALT_NAME = ALT_NAME  # type: Optional[str]
+        self.LAUNCH_SITE_ID = LAUNCH_SITE_ID  # type: Optional[str]
+        self.ANTENNAS = ANTENNAS  # type: Optional[List[Optional[str]]]
+        self.BATTERIES = BATTERIES  # type: Optional[List[Optional[str]]]
+        self.SOLAR_ARRAYS = SOLAR_ARRAYS  # type: Optional[List[Optional[str]]]
+        self.THRUSTERS = THRUSTERS  # type: Optional[List[Optional[str]]]
+        self.ONORBIT_DETAILS = ONORBIT_DETAILS  # type: Optional[List[Optional[str]]]
+        self.COUNTRY_CODE = COUNTRY_CODE  # type: Optional[str]
+        self.ENTITY_COLLECTION = ENTITY_COLLECTION  # type: Optional[List[Optional[str]]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        OON = OON()
-        OON.Init(buf, pos)
-        return cls.InitFromObj(OON)
+        tmpOon = OON()
+        tmpOon.Init(buf, pos)
+        return cls.InitFromObj(tmpOon)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -443,9 +500,9 @@ class OONT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, OON):
+    def InitFromObj(cls, tmpOon):
         x = OONT()
-        x._UnPack(OON)
+        x._UnPack(tmpOon)
         return x
 
     # OONT

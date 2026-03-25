@@ -32,7 +32,7 @@ class STAGE : Table() {
     /**
      * Stage Number
      */
-    val STAGE_NUMBER : Int
+    val stageNumber : Int
         get() {
             val o = __offset(4)
             return if(o != 0) bb.getInt(o + bb_pos) else 0
@@ -40,8 +40,8 @@ class STAGE : Table() {
     /**
      * Engines Used in This Stage
      */
-    fun ENGINES(j: Int) : ENGINE? = ENGINES(ENGINE(), j)
-    fun ENGINES(obj: ENGINE, j: Int) : ENGINE? {
+    fun engines(j: Int) : ENGINE? = engines(ENGINE(), j)
+    fun engines(obj: ENGINE, j: Int) : ENGINE? {
         val o = __offset(6)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -49,14 +49,14 @@ class STAGE : Table() {
             null
         }
     }
-    val ENGINESLength : Int
+    val enginesLength : Int
         get() {
             val o = __offset(6); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Fuel Type Used in This Stage
      */
-    val FUEL_TYPE : String?
+    val fuelType : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -65,12 +65,12 @@ class STAGE : Table() {
                 null
             }
         }
-    val FUEL_TYPEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun FUEL_TYPEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val fuelTypeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun fuelTypeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
     /**
      * Thrust Produced by This Stage (in Newtons)
      */
-    val THRUST : Double
+    val thrust : Double
         get() {
             val o = __offset(10)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -78,30 +78,30 @@ class STAGE : Table() {
     /**
      * Duration of the Burn (in Seconds)
      */
-    val BURN_DURATION : Double
+    val burnDuration : Double
         get() {
             val o = __offset(12)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsSTAGE(_bb: ByteBuffer): STAGE = getRootAsSTAGE(_bb, STAGE())
         fun getRootAsSTAGE(_bb: ByteBuffer, obj: STAGE): STAGE {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createSTAGE(builder: FlatBufferBuilder, STAGE_NUMBER: Int, ENGINESOffset: Int, FUEL_TYPEOffset: Int, THRUST: Double, BURN_DURATION: Double) : Int {
+        fun createSTAGE(builder: FlatBufferBuilder, stageNumber: Int, enginesOffset: Int, fuelTypeOffset: Int, thrust: Double, burnDuration: Double) : Int {
             builder.startTable(5)
-            addBURN_DURATION(builder, BURN_DURATION)
-            addTHRUST(builder, THRUST)
-            addFUEL_TYPE(builder, FUEL_TYPEOffset)
-            addENGINES(builder, ENGINESOffset)
-            addSTAGE_NUMBER(builder, STAGE_NUMBER)
+            addBURNDURATION(builder, burnDuration)
+            addTHRUST(builder, thrust)
+            addFUELTYPE(builder, fuelTypeOffset)
+            addENGINES(builder, enginesOffset)
+            addSTAGENUMBER(builder, stageNumber)
             return endSTAGE(builder)
         }
         fun startSTAGE(builder: FlatBufferBuilder) = builder.startTable(5)
-        fun addSTAGE_NUMBER(builder: FlatBufferBuilder, STAGE_NUMBER: Int) = builder.addInt(0, STAGE_NUMBER, 0)
-        fun addENGINES(builder: FlatBufferBuilder, ENGINES: Int) = builder.addOffset(1, ENGINES, 0)
+        fun addSTAGENUMBER(builder: FlatBufferBuilder, stageNumber: Int) = builder.addInt(0, stageNumber, 0)
+        fun addENGINES(builder: FlatBufferBuilder, engines: Int) = builder.addOffset(1, engines, 0)
         fun createEnginesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -110,9 +110,9 @@ class STAGE : Table() {
             return builder.endVector()
         }
         fun startEnginesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addFUEL_TYPE(builder: FlatBufferBuilder, FUEL_TYPE: Int) = builder.addOffset(2, FUEL_TYPE, 0)
-        fun addTHRUST(builder: FlatBufferBuilder, THRUST: Double) = builder.addDouble(3, THRUST, 0.0)
-        fun addBURN_DURATION(builder: FlatBufferBuilder, BURN_DURATION: Double) = builder.addDouble(4, BURN_DURATION, 0.0)
+        fun addFUELTYPE(builder: FlatBufferBuilder, fuelType: Int) = builder.addOffset(2, fuelType, 0)
+        fun addTHRUST(builder: FlatBufferBuilder, thrust: Double) = builder.addDouble(3, thrust, 0.0)
+        fun addBURNDURATION(builder: FlatBufferBuilder, burnDuration: Double) = builder.addDouble(4, burnDuration, 0.0)
         fun endSTAGE(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

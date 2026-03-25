@@ -1,2 +1,2 @@
-export { REV, REVT } from './REV.js';
+export * from './REV.js';
 //# sourceMappingURL=main.d.ts.map

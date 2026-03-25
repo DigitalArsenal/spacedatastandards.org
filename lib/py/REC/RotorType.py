@@ -2,4 +2,10 @@
 
 # namespace: 
 
-# NOTE RotorType.py does not declare any structs or enums
+class RotorType(object):
+    MAIN = 0
+    TAIL = 1
+    TANDEM_FRONT = 2
+    TANDEM_REAR = 3
+    COAXIAL_UPPER = 4
+    COAXIAL_LOWER = 5

@@ -2,4 +2,9 @@
 
 # namespace: 
 
-# NOTE DriveType.py does not declare any structs or enums
+class DriveType(object):
+    TRACKED = 0
+    WHEELED_4X4 = 1
+    WHEELED_6X6 = 2
+    WHEELED_8X8 = 3
+    HALF_TRACK = 4

@@ -228,6 +228,12 @@ def PerturbationsStartCOMMENTVector(builder, numElems):
 def StartCOMMENTVector(builder, numElems):
     return PerturbationsStartCOMMENTVector(builder, numElems)
 
+def PerturbationsCreateCOMMENTVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateCOMMENTVector(builder, data):
+    PerturbationsCreateCOMMENTVector(builder, data)
+
 def PerturbationsAddATMOSPHERIC_MODEL(builder, ATMOSPHERIC_MODEL):
     builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(ATMOSPHERIC_MODEL), 0)
 
@@ -269,6 +275,12 @@ def PerturbationsStartN_BODY_PERTURBATIONSVector(builder, numElems):
 
 def StartN_BODY_PERTURBATIONSVector(builder, numElems):
     return PerturbationsStartN_BODY_PERTURBATIONSVector(builder, numElems)
+
+def PerturbationsCreateN_BODY_PERTURBATIONSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateN_BODY_PERTURBATIONSVector(builder, data):
+    PerturbationsCreateN_BODY_PERTURBATIONSVector(builder, data)
 
 def PerturbationsAddOCEAN_TIDES_MODEL(builder, OCEAN_TIDES_MODEL):
     builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(OCEAN_TIDES_MODEL), 0)
@@ -357,32 +369,53 @@ except:
 class PerturbationsT(object):
 
     # PerturbationsT
-    def __init__(self):
-        self.COMMENT = None  # type: List[str]
-        self.ATMOSPHERIC_MODEL = None  # type: Optional[ATM.ATMT]
-        self.GRAVITY_MODEL = None  # type: str
-        self.GRAVITY_DEGREE = 0  # type: int
-        self.GRAVITY_ORDER = 0  # type: int
-        self.GM = 0.0  # type: float
-        self.N_BODY_PERTURBATIONS = None  # type: List[str]
-        self.OCEAN_TIDES_MODEL = None  # type: str
-        self.SOLID_TIDES_MODEL = None  # type: str
-        self.ATMOSPHERIC_TIDES_MODEL = None  # type: str
-        self.GEOPOTENTIAL_MODEL = None  # type: str
-        self.SOLAR_RAD_PRESSURE = None  # type: str
-        self.ALBEDO = None  # type: str
-        self.THERMAL = None  # type: str
-        self.RELATIVITY = None  # type: str
-        self.ATMOSPHERIC_DRAG = None  # type: str
-        self.FIXED_GEOMAG_KP = 0.0  # type: float
-        self.FIXED_F10P7 = 0.0  # type: float
-        self.FIXED_F10P7_MEAN = 0.0  # type: float
+    def __init__(
+        self,
+        COMMENT = None,
+        ATMOSPHERIC_MODEL = None,
+        GRAVITY_MODEL = None,
+        GRAVITY_DEGREE = 0,
+        GRAVITY_ORDER = 0,
+        GM = 0.0,
+        N_BODY_PERTURBATIONS = None,
+        OCEAN_TIDES_MODEL = None,
+        SOLID_TIDES_MODEL = None,
+        ATMOSPHERIC_TIDES_MODEL = None,
+        GEOPOTENTIAL_MODEL = None,
+        SOLAR_RAD_PRESSURE = None,
+        ALBEDO = None,
+        THERMAL = None,
+        RELATIVITY = None,
+        ATMOSPHERIC_DRAG = None,
+        FIXED_GEOMAG_KP = 0.0,
+        FIXED_F10P7 = 0.0,
+        FIXED_F10P7_MEAN = 0.0,
+    ):
+        self.COMMENT = COMMENT  # type: Optional[List[Optional[str]]]
+        self.ATMOSPHERIC_MODEL = ATMOSPHERIC_MODEL  # type: Optional[ATM.ATMT]
+        self.GRAVITY_MODEL = GRAVITY_MODEL  # type: Optional[str]
+        self.GRAVITY_DEGREE = GRAVITY_DEGREE  # type: int
+        self.GRAVITY_ORDER = GRAVITY_ORDER  # type: int
+        self.GM = GM  # type: float
+        self.N_BODY_PERTURBATIONS = N_BODY_PERTURBATIONS  # type: Optional[List[Optional[str]]]
+        self.OCEAN_TIDES_MODEL = OCEAN_TIDES_MODEL  # type: Optional[str]
+        self.SOLID_TIDES_MODEL = SOLID_TIDES_MODEL  # type: Optional[str]
+        self.ATMOSPHERIC_TIDES_MODEL = ATMOSPHERIC_TIDES_MODEL  # type: Optional[str]
+        self.GEOPOTENTIAL_MODEL = GEOPOTENTIAL_MODEL  # type: Optional[str]
+        self.SOLAR_RAD_PRESSURE = SOLAR_RAD_PRESSURE  # type: Optional[str]
+        self.ALBEDO = ALBEDO  # type: Optional[str]
+        self.THERMAL = THERMAL  # type: Optional[str]
+        self.RELATIVITY = RELATIVITY  # type: Optional[str]
+        self.ATMOSPHERIC_DRAG = ATMOSPHERIC_DRAG  # type: Optional[str]
+        self.FIXED_GEOMAG_KP = FIXED_GEOMAG_KP  # type: float
+        self.FIXED_F10P7 = FIXED_F10P7  # type: float
+        self.FIXED_F10P7_MEAN = FIXED_F10P7_MEAN  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        perturbations = Perturbations()
-        perturbations.Init(buf, pos)
-        return cls.InitFromObj(perturbations)
+        tmpPerturbations = Perturbations()
+        tmpPerturbations.Init(buf, pos)
+        return cls.InitFromObj(tmpPerturbations)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -390,41 +423,41 @@ class PerturbationsT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, perturbations):
+    def InitFromObj(cls, tmpPerturbations):
         x = PerturbationsT()
-        x._UnPack(perturbations)
+        x._UnPack(tmpPerturbations)
         return x
 
     # PerturbationsT
-    def _UnPack(self, perturbations):
-        if perturbations is None:
+    def _UnPack(self, Perturbations):
+        if Perturbations is None:
             return
-        if not perturbations.COMMENTIsNone():
+        if not Perturbations.COMMENTIsNone():
             self.COMMENT = []
-            for i in range(perturbations.COMMENTLength()):
-                self.COMMENT.append(perturbations.COMMENT(i))
-        if perturbations.ATMOSPHERIC_MODEL() is not None:
-            self.ATMOSPHERIC_MODEL = ATM.ATMT.InitFromObj(perturbations.ATMOSPHERIC_MODEL())
-        self.GRAVITY_MODEL = perturbations.GRAVITY_MODEL()
-        self.GRAVITY_DEGREE = perturbations.GRAVITY_DEGREE()
-        self.GRAVITY_ORDER = perturbations.GRAVITY_ORDER()
-        self.GM = perturbations.GM()
-        if not perturbations.N_BODY_PERTURBATIONSIsNone():
+            for i in range(Perturbations.COMMENTLength()):
+                self.COMMENT.append(Perturbations.COMMENT(i))
+        if Perturbations.ATMOSPHERIC_MODEL() is not None:
+            self.ATMOSPHERIC_MODEL = ATM.ATMT.InitFromObj(Perturbations.ATMOSPHERIC_MODEL())
+        self.GRAVITY_MODEL = Perturbations.GRAVITY_MODEL()
+        self.GRAVITY_DEGREE = Perturbations.GRAVITY_DEGREE()
+        self.GRAVITY_ORDER = Perturbations.GRAVITY_ORDER()
+        self.GM = Perturbations.GM()
+        if not Perturbations.N_BODY_PERTURBATIONSIsNone():
             self.N_BODY_PERTURBATIONS = []
-            for i in range(perturbations.N_BODY_PERTURBATIONSLength()):
-                self.N_BODY_PERTURBATIONS.append(perturbations.N_BODY_PERTURBATIONS(i))
-        self.OCEAN_TIDES_MODEL = perturbations.OCEAN_TIDES_MODEL()
-        self.SOLID_TIDES_MODEL = perturbations.SOLID_TIDES_MODEL()
-        self.ATMOSPHERIC_TIDES_MODEL = perturbations.ATMOSPHERIC_TIDES_MODEL()
-        self.GEOPOTENTIAL_MODEL = perturbations.GEOPOTENTIAL_MODEL()
-        self.SOLAR_RAD_PRESSURE = perturbations.SOLAR_RAD_PRESSURE()
-        self.ALBEDO = perturbations.ALBEDO()
-        self.THERMAL = perturbations.THERMAL()
-        self.RELATIVITY = perturbations.RELATIVITY()
-        self.ATMOSPHERIC_DRAG = perturbations.ATMOSPHERIC_DRAG()
-        self.FIXED_GEOMAG_KP = perturbations.FIXED_GEOMAG_KP()
-        self.FIXED_F10P7 = perturbations.FIXED_F10P7()
-        self.FIXED_F10P7_MEAN = perturbations.FIXED_F10P7_MEAN()
+            for i in range(Perturbations.N_BODY_PERTURBATIONSLength()):
+                self.N_BODY_PERTURBATIONS.append(Perturbations.N_BODY_PERTURBATIONS(i))
+        self.OCEAN_TIDES_MODEL = Perturbations.OCEAN_TIDES_MODEL()
+        self.SOLID_TIDES_MODEL = Perturbations.SOLID_TIDES_MODEL()
+        self.ATMOSPHERIC_TIDES_MODEL = Perturbations.ATMOSPHERIC_TIDES_MODEL()
+        self.GEOPOTENTIAL_MODEL = Perturbations.GEOPOTENTIAL_MODEL()
+        self.SOLAR_RAD_PRESSURE = Perturbations.SOLAR_RAD_PRESSURE()
+        self.ALBEDO = Perturbations.ALBEDO()
+        self.THERMAL = Perturbations.THERMAL()
+        self.RELATIVITY = Perturbations.RELATIVITY()
+        self.ATMOSPHERIC_DRAG = Perturbations.ATMOSPHERIC_DRAG()
+        self.FIXED_GEOMAG_KP = Perturbations.FIXED_GEOMAG_KP()
+        self.FIXED_F10P7 = Perturbations.FIXED_F10P7()
+        self.FIXED_F10P7_MEAN = Perturbations.FIXED_F10P7_MEAN()
 
     # PerturbationsT
     def Pack(self, builder):
@@ -499,5 +532,5 @@ class PerturbationsT(object):
         PerturbationsAddFIXED_GEOMAG_KP(builder, self.FIXED_GEOMAG_KP)
         PerturbationsAddFIXED_F10P7(builder, self.FIXED_F10P7)
         PerturbationsAddFIXED_F10P7_MEAN(builder, self.FIXED_F10P7_MEAN)
-        perturbations = PerturbationsEnd(builder)
-        return perturbations
+        Perturbations = PerturbationsEnd(builder)
+        return Perturbations

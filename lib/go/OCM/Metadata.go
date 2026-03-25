@@ -51,12 +51,20 @@ func (rcv *Metadata) COMMENT(j int) []byte {
 	return nil
 }
 
+func (rcv *Metadata) Comment(j int) []byte {
+	return rcv.COMMENT(j)
+}
+
 func (rcv *Metadata) COMMENTLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *Metadata) CommentLength() int {
+	return rcv.COMMENTLength()
 }
 
 /// Comments in the Metadata section.
@@ -69,6 +77,10 @@ func (rcv *Metadata) OBJECT_NAME() []byte {
 	return nil
 }
 
+func (rcv *Metadata) ObjectName() []byte {
+	return rcv.OBJECT_NAME()
+}
+
 /// Free-text field containing the name of the object.
 /// International designator for the object as assigned by COSPAR.
 func (rcv *Metadata) INTERNATIONAL_DESIGNATOR() []byte {
@@ -77,6 +89,10 @@ func (rcv *Metadata) INTERNATIONAL_DESIGNATOR() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *Metadata) InternationalDesignator() []byte {
+	return rcv.INTERNATIONAL_DESIGNATOR()
 }
 
 /// International designator for the object as assigned by COSPAR.
@@ -89,6 +105,10 @@ func (rcv *Metadata) CATALOG_NAME() []byte {
 	return nil
 }
 
+func (rcv *Metadata) CatalogName() []byte {
+	return rcv.CATALOG_NAME()
+}
+
 /// Satellite catalog source from which 'OBJECT_DESIGNATOR' was obtained.
 /// Unique satellite identification designator from the catalog.
 func (rcv *Metadata) OBJECT_DESIGNATOR() []byte {
@@ -97,6 +117,10 @@ func (rcv *Metadata) OBJECT_DESIGNATOR() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *Metadata) ObjectDesignator() []byte {
+	return rcv.OBJECT_DESIGNATOR()
 }
 
 /// Unique satellite identification designator from the catalog.
@@ -110,12 +134,20 @@ func (rcv *Metadata) ALTERNATE_NAMES(j int) []byte {
 	return nil
 }
 
+func (rcv *Metadata) AlternateNames(j int) []byte {
+	return rcv.ALTERNATE_NAMES(j)
+}
+
 func (rcv *Metadata) ALTERNATE_NAMESLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *Metadata) AlternateNamesLength() int {
+	return rcv.ALTERNATE_NAMESLength()
 }
 
 /// Alternate names of this space object.
@@ -128,6 +160,10 @@ func (rcv *Metadata) ORIGINATOR_POC() []byte {
 	return nil
 }
 
+func (rcv *Metadata) OriginatorPoc() []byte {
+	return rcv.ORIGINATOR_POC()
+}
+
 /// Originator or programmatic Point-of-Contact (PoC) for OCM.
 /// Contact position of the originator PoC.
 func (rcv *Metadata) ORIGINATOR_POSITION() []byte {
@@ -136,6 +172,10 @@ func (rcv *Metadata) ORIGINATOR_POSITION() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *Metadata) OriginatorPosition() []byte {
+	return rcv.ORIGINATOR_POSITION()
 }
 
 /// Contact position of the originator PoC.
@@ -148,6 +188,10 @@ func (rcv *Metadata) ORIGINATOR_PHONE() []byte {
 	return nil
 }
 
+func (rcv *Metadata) OriginatorPhone() []byte {
+	return rcv.ORIGINATOR_PHONE()
+}
+
 /// Originator PoC phone number.
 /// Originator PoC email address.
 func (rcv *Metadata) ORIGINATOR_EMAIL() []byte {
@@ -156,6 +200,10 @@ func (rcv *Metadata) ORIGINATOR_EMAIL() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *Metadata) OriginatorEmail() []byte {
+	return rcv.ORIGINATOR_EMAIL()
 }
 
 /// Originator PoC email address.
@@ -168,6 +216,10 @@ func (rcv *Metadata) ORIGINATOR_ADDRESS() []byte {
 	return nil
 }
 
+func (rcv *Metadata) OriginatorAddress() []byte {
+	return rcv.ORIGINATOR_ADDRESS()
+}
+
 /// Originator's physical address information.
 /// Creating agency or operator for technical contact.
 func (rcv *Metadata) TECH_ORG() []byte {
@@ -176,6 +228,10 @@ func (rcv *Metadata) TECH_ORG() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *Metadata) TechOrg() []byte {
+	return rcv.TECH_ORG()
 }
 
 /// Creating agency or operator for technical contact.
@@ -188,6 +244,10 @@ func (rcv *Metadata) TECH_POC() []byte {
 	return nil
 }
 
+func (rcv *Metadata) TechPoc() []byte {
+	return rcv.TECH_POC()
+}
+
 /// Technical Point-of-Contact (PoC) for OCM.
 /// Contact position of the technical PoC.
 func (rcv *Metadata) TECH_POSITION() []byte {
@@ -196,6 +256,10 @@ func (rcv *Metadata) TECH_POSITION() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *Metadata) TechPosition() []byte {
+	return rcv.TECH_POSITION()
 }
 
 /// Contact position of the technical PoC.
@@ -208,6 +272,10 @@ func (rcv *Metadata) TECH_PHONE() []byte {
 	return nil
 }
 
+func (rcv *Metadata) TechPhone() []byte {
+	return rcv.TECH_PHONE()
+}
+
 /// Technical PoC phone number.
 /// Technical PoC email address.
 func (rcv *Metadata) TECH_EMAIL() []byte {
@@ -216,6 +284,10 @@ func (rcv *Metadata) TECH_EMAIL() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *Metadata) TechEmail() []byte {
+	return rcv.TECH_EMAIL()
 }
 
 /// Technical PoC email address.
@@ -228,6 +300,10 @@ func (rcv *Metadata) TECH_ADDRESS() []byte {
 	return nil
 }
 
+func (rcv *Metadata) TechAddress() []byte {
+	return rcv.TECH_ADDRESS()
+}
+
 /// Technical PoC physical address information.
 /// ID that uniquely identifies the previous message from this originator.
 func (rcv *Metadata) PREVIOUS_MESSAGE_ID() []byte {
@@ -236,6 +312,10 @@ func (rcv *Metadata) PREVIOUS_MESSAGE_ID() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *Metadata) PreviousMessageId() []byte {
+	return rcv.PREVIOUS_MESSAGE_ID()
 }
 
 /// ID that uniquely identifies the previous message from this originator.
@@ -248,6 +328,10 @@ func (rcv *Metadata) NEXT_MESSAGE_ID() []byte {
 	return nil
 }
 
+func (rcv *Metadata) NextMessageId() []byte {
+	return rcv.NEXT_MESSAGE_ID()
+}
+
 /// ID that uniquely identifies the next message from this originator.
 /// Unique identifier of Attitude Data Messages linked to this OCM.
 func (rcv *Metadata) ADM_MSG_LINK() []byte {
@@ -256,6 +340,10 @@ func (rcv *Metadata) ADM_MSG_LINK() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *Metadata) AdmMsgLink() []byte {
+	return rcv.ADM_MSG_LINK()
 }
 
 /// Unique identifier of Attitude Data Messages linked to this OCM.
@@ -268,6 +356,10 @@ func (rcv *Metadata) CDM_MSG_LINK() []byte {
 	return nil
 }
 
+func (rcv *Metadata) CdmMsgLink() []byte {
+	return rcv.CDM_MSG_LINK()
+}
+
 /// Unique identifier of Conjunction Data Messages linked to this OCM.
 /// Unique identifier of Pointing Request Messages linked to this OCM.
 func (rcv *Metadata) PRM_MSG_LINK() []byte {
@@ -278,6 +370,10 @@ func (rcv *Metadata) PRM_MSG_LINK() []byte {
 	return nil
 }
 
+func (rcv *Metadata) PrmMsgLink() []byte {
+	return rcv.PRM_MSG_LINK()
+}
+
 /// Unique identifier of Pointing Request Messages linked to this OCM.
 /// Unique identifier of Reentry Data Messages linked to this OCM.
 func (rcv *Metadata) RDM_MSG_LINK() []byte {
@@ -286,6 +382,10 @@ func (rcv *Metadata) RDM_MSG_LINK() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *Metadata) RdmMsgLink() []byte {
+	return rcv.RDM_MSG_LINK()
 }
 
 /// Unique identifier of Reentry Data Messages linked to this OCM.
@@ -299,12 +399,20 @@ func (rcv *Metadata) TDM_MSG_LINK(j int) []byte {
 	return nil
 }
 
+func (rcv *Metadata) TdmMsgLink(j int) []byte {
+	return rcv.TDM_MSG_LINK(j)
+}
+
 func (rcv *Metadata) TDM_MSG_LINKLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(50))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *Metadata) TdmMsgLinkLength() int {
+	return rcv.TDM_MSG_LINKLength()
 }
 
 /// List of Tracking Data Messages upon which this orbit determination is based.
@@ -317,6 +425,10 @@ func (rcv *Metadata) OPERATOR() []byte {
 	return nil
 }
 
+func (rcv *Metadata) Operator() []byte {
+	return rcv.OPERATOR()
+}
+
 /// Operator of the space object.
 /// Owner of the space object.
 func (rcv *Metadata) OWNER() []byte {
@@ -325,6 +437,10 @@ func (rcv *Metadata) OWNER() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *Metadata) Owner() []byte {
+	return rcv.OWNER()
 }
 
 /// Owner of the space object.
@@ -337,6 +453,10 @@ func (rcv *Metadata) COUNTRY() []byte {
 	return nil
 }
 
+func (rcv *Metadata) Country() []byte {
+	return rcv.COUNTRY()
+}
+
 /// Country where the space object owner is based.
 /// Name of the constellation to which this space object belongs.
 func (rcv *Metadata) CONSTELLATION() []byte {
@@ -345,6 +465,10 @@ func (rcv *Metadata) CONSTELLATION() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *Metadata) Constellation() []byte {
+	return rcv.CONSTELLATION()
 }
 
 /// Name of the constellation to which this space object belongs.
@@ -357,6 +481,10 @@ func (rcv *Metadata) OBJECT_TYPE() []byte {
 	return nil
 }
 
+func (rcv *Metadata) ObjectType() []byte {
+	return rcv.OBJECT_TYPE()
+}
+
 /// Specification of the type of object (e.g., PAYLOAD, ROCKET BODY, DEBRIS).
 /// Time system for all absolute time stamps in this OCM, including EPOCH_TZERO.
 func (rcv *Metadata) TIME_SYSTEM() []byte {
@@ -365,6 +493,10 @@ func (rcv *Metadata) TIME_SYSTEM() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *Metadata) TimeSystem() []byte {
+	return rcv.TIME_SYSTEM()
 }
 
 /// Time system for all absolute time stamps in this OCM, including EPOCH_TZERO.
@@ -377,6 +509,10 @@ func (rcv *Metadata) EPOCH_TZERO() []byte {
 	return nil
 }
 
+func (rcv *Metadata) EpochTzero() []byte {
+	return rcv.EPOCH_TZERO()
+}
+
 /// Default epoch to which all relative times are referenced in data blocks.
 /// Specification of the operational status of the space object.
 func (rcv *Metadata) OPS_STATUS() []byte {
@@ -387,6 +523,10 @@ func (rcv *Metadata) OPS_STATUS() []byte {
 	return nil
 }
 
+func (rcv *Metadata) OpsStatus() []byte {
+	return rcv.OPS_STATUS()
+}
+
 /// Specification of the operational status of the space object.
 /// Specification of the type of orbit (e.g., GEO, LEO).
 func (rcv *Metadata) ORBIT_CATEGORY() []byte {
@@ -395,6 +535,10 @@ func (rcv *Metadata) ORBIT_CATEGORY() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *Metadata) OrbitCategory() []byte {
+	return rcv.ORBIT_CATEGORY()
 }
 
 /// Specification of the type of orbit (e.g., GEO, LEO).
@@ -408,12 +552,20 @@ func (rcv *Metadata) OCM_DATA_ELEMENTS(j int) []byte {
 	return nil
 }
 
+func (rcv *Metadata) OcmDataElements(j int) []byte {
+	return rcv.OCM_DATA_ELEMENTS(j)
+}
+
 func (rcv *Metadata) OCM_DATA_ELEMENTSLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(70))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *Metadata) OcmDataElementsLength() int {
+	return rcv.OCM_DATA_ELEMENTSLength()
 }
 
 /// List of elements of information data blocks included in this message.
@@ -426,9 +578,17 @@ func (rcv *Metadata) SCLK_OFFSET_AT_EPOCH() float64 {
 	return 0.0
 }
 
+func (rcv *Metadata) SclkOffsetAtEpoch() float64 {
+	return rcv.SCLK_OFFSET_AT_EPOCH()
+}
+
 /// Number of spacecraft clock counts at EPOCH_TZERO (used if TIME_SYSTEM is SCLK).
 func (rcv *Metadata) MutateSCLK_OFFSET_AT_EPOCH(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(72, n)
+}
+
+func (rcv *Metadata) MutateSclkOffsetAtEpoch(n float64) bool {
+	return rcv.MutateSCLK_OFFSET_AT_EPOCH(n)
 }
 
 /// Number of clock seconds occurring during one SI second (used if TIME_SYSTEM is SCLK).
@@ -440,9 +600,17 @@ func (rcv *Metadata) SCLK_SEC_PER_SI_SEC() float64 {
 	return 0.0
 }
 
+func (rcv *Metadata) SclkSecPerSiSec() float64 {
+	return rcv.SCLK_SEC_PER_SI_SEC()
+}
+
 /// Number of clock seconds occurring during one SI second (used if TIME_SYSTEM is SCLK).
 func (rcv *Metadata) MutateSCLK_SEC_PER_SI_SEC(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(74, n)
+}
+
+func (rcv *Metadata) MutateSclkSecPerSiSec(n float64) bool {
+	return rcv.MutateSCLK_SEC_PER_SI_SEC(n)
 }
 
 /// Creation epoch of the previous message from this originator.
@@ -452,6 +620,10 @@ func (rcv *Metadata) PREVIOUS_MESSAGE_EPOCH() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *Metadata) PreviousMessageEpoch() []byte {
+	return rcv.PREVIOUS_MESSAGE_EPOCH()
 }
 
 /// Creation epoch of the previous message from this originator.
@@ -464,6 +636,10 @@ func (rcv *Metadata) NEXT_MESSAGE_EPOCH() []byte {
 	return nil
 }
 
+func (rcv *Metadata) NextMessageEpoch() []byte {
+	return rcv.NEXT_MESSAGE_EPOCH()
+}
+
 /// Anticipated (or actual) epoch of the next message from this originator.
 /// Time of the earliest data contained in the OCM.
 func (rcv *Metadata) START_TIME() []byte {
@@ -472,6 +648,10 @@ func (rcv *Metadata) START_TIME() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *Metadata) StartTime() []byte {
+	return rcv.START_TIME()
 }
 
 /// Time of the earliest data contained in the OCM.
@@ -484,6 +664,10 @@ func (rcv *Metadata) STOP_TIME() []byte {
 	return nil
 }
 
+func (rcv *Metadata) StopTime() []byte {
+	return rcv.STOP_TIME()
+}
+
 /// Time of the latest data contained in the OCM.
 /// Span of time that the OCM covers, measured in days.
 func (rcv *Metadata) TIME_SPAN() float64 {
@@ -494,9 +678,17 @@ func (rcv *Metadata) TIME_SPAN() float64 {
 	return 0.0
 }
 
+func (rcv *Metadata) TimeSpan() float64 {
+	return rcv.TIME_SPAN()
+}
+
 /// Span of time that the OCM covers, measured in days.
 func (rcv *Metadata) MutateTIME_SPAN(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(84, n)
+}
+
+func (rcv *Metadata) MutateTimeSpan(n float64) bool {
+	return rcv.MutateTIME_SPAN(n)
 }
 
 /// Difference (TAI - UTC) in seconds at EPOCH_TZERO.
@@ -508,9 +700,17 @@ func (rcv *Metadata) TAIMUTC_AT_TZERO() float64 {
 	return 0.0
 }
 
+func (rcv *Metadata) TaimutcAtTzero() float64 {
+	return rcv.TAIMUTC_AT_TZERO()
+}
+
 /// Difference (TAI - UTC) in seconds at EPOCH_TZERO.
 func (rcv *Metadata) MutateTAIMUTC_AT_TZERO(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(86, n)
+}
+
+func (rcv *Metadata) MutateTaimutcAtTzero(n float64) bool {
+	return rcv.MutateTAIMUTC_AT_TZERO(n)
 }
 
 /// Epoch of next leap second.
@@ -520,6 +720,10 @@ func (rcv *Metadata) NEXT_LEAP_EPOCH() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *Metadata) NextLeapEpoch() []byte {
+	return rcv.NEXT_LEAP_EPOCH()
 }
 
 /// Epoch of next leap second.
@@ -532,9 +736,17 @@ func (rcv *Metadata) NEXT_LEAP_TAIMUTC() float64 {
 	return 0.0
 }
 
+func (rcv *Metadata) NextLeapTaimutc() float64 {
+	return rcv.NEXT_LEAP_TAIMUTC()
+}
+
 /// Difference (TAI - UTC) in seconds at NEXT_LEAP_EPOCH.
 func (rcv *Metadata) MutateNEXT_LEAP_TAIMUTC(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(90, n)
+}
+
+func (rcv *Metadata) MutateNextLeapTaimutc(n float64) bool {
+	return rcv.MutateNEXT_LEAP_TAIMUTC(n)
 }
 
 /// Difference (UT1 - UTC) in seconds at EPOCH_TZERO.
@@ -546,9 +758,17 @@ func (rcv *Metadata) UT1MUTC_AT_TZERO() float64 {
 	return 0.0
 }
 
+func (rcv *Metadata) Ut1mutcAtTzero() float64 {
+	return rcv.UT1MUTC_AT_TZERO()
+}
+
 /// Difference (UT1 - UTC) in seconds at EPOCH_TZERO.
 func (rcv *Metadata) MutateUT1MUTC_AT_TZERO(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(92, n)
+}
+
+func (rcv *Metadata) MutateUt1mutcAtTzero(n float64) bool {
+	return rcv.MutateUT1MUTC_AT_TZERO(n)
 }
 
 /// Source and version of Earth Orientation Parameters used.
@@ -558,6 +778,10 @@ func (rcv *Metadata) EOP_SOURCE() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *Metadata) EopSource() []byte {
+	return rcv.EOP_SOURCE()
 }
 
 /// Source and version of Earth Orientation Parameters used.
@@ -570,6 +794,10 @@ func (rcv *Metadata) INTERP_METHOD_EOP() []byte {
 	return nil
 }
 
+func (rcv *Metadata) InterpMethodEop() []byte {
+	return rcv.INTERP_METHOD_EOP()
+}
+
 /// Method used to select or interpolate sequential EOP data.
 /// Source and version of celestial body ephemeris data used.
 func (rcv *Metadata) CELESTIAL_SOURCE() []byte {
@@ -580,6 +808,10 @@ func (rcv *Metadata) CELESTIAL_SOURCE() []byte {
 	return nil
 }
 
+func (rcv *Metadata) CelestialSource() []byte {
+	return rcv.CELESTIAL_SOURCE()
+}
+
 /// Source and version of celestial body ephemeris data used.
 func MetadataStart(builder *flatbuffers.Builder) {
 	builder.StartObject(48)
@@ -587,158 +819,314 @@ func MetadataStart(builder *flatbuffers.Builder) {
 func MetadataAddCOMMENT(builder *flatbuffers.Builder, COMMENT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(COMMENT), 0)
 }
+func MetadataAddComment(builder *flatbuffers.Builder, COMMENT flatbuffers.UOffsetT) {
+	MetadataAddCOMMENT(builder, COMMENT)
+}
 func MetadataStartCOMMENTVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func MetadataStartCommentVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return MetadataStartCOMMENTVector(builder, numElems)
 }
 func MetadataAddOBJECT_NAME(builder *flatbuffers.Builder, OBJECT_NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(OBJECT_NAME), 0)
 }
+func MetadataAddObjectName(builder *flatbuffers.Builder, OBJECT_NAME flatbuffers.UOffsetT) {
+	MetadataAddOBJECT_NAME(builder, OBJECT_NAME)
+}
 func MetadataAddINTERNATIONAL_DESIGNATOR(builder *flatbuffers.Builder, INTERNATIONAL_DESIGNATOR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(INTERNATIONAL_DESIGNATOR), 0)
+}
+func MetadataAddInternationalDesignator(builder *flatbuffers.Builder, INTERNATIONAL_DESIGNATOR flatbuffers.UOffsetT) {
+	MetadataAddINTERNATIONAL_DESIGNATOR(builder, INTERNATIONAL_DESIGNATOR)
 }
 func MetadataAddCATALOG_NAME(builder *flatbuffers.Builder, CATALOG_NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(CATALOG_NAME), 0)
 }
+func MetadataAddCatalogName(builder *flatbuffers.Builder, CATALOG_NAME flatbuffers.UOffsetT) {
+	MetadataAddCATALOG_NAME(builder, CATALOG_NAME)
+}
 func MetadataAddOBJECT_DESIGNATOR(builder *flatbuffers.Builder, OBJECT_DESIGNATOR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(OBJECT_DESIGNATOR), 0)
+}
+func MetadataAddObjectDesignator(builder *flatbuffers.Builder, OBJECT_DESIGNATOR flatbuffers.UOffsetT) {
+	MetadataAddOBJECT_DESIGNATOR(builder, OBJECT_DESIGNATOR)
 }
 func MetadataAddALTERNATE_NAMES(builder *flatbuffers.Builder, ALTERNATE_NAMES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(ALTERNATE_NAMES), 0)
 }
+func MetadataAddAlternateNames(builder *flatbuffers.Builder, ALTERNATE_NAMES flatbuffers.UOffsetT) {
+	MetadataAddALTERNATE_NAMES(builder, ALTERNATE_NAMES)
+}
 func MetadataStartALTERNATE_NAMESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func MetadataStartAlternateNamesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return MetadataStartALTERNATE_NAMESVector(builder, numElems)
 }
 func MetadataAddORIGINATOR_POC(builder *flatbuffers.Builder, ORIGINATOR_POC flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(ORIGINATOR_POC), 0)
 }
+func MetadataAddOriginatorPoc(builder *flatbuffers.Builder, ORIGINATOR_POC flatbuffers.UOffsetT) {
+	MetadataAddORIGINATOR_POC(builder, ORIGINATOR_POC)
+}
 func MetadataAddORIGINATOR_POSITION(builder *flatbuffers.Builder, ORIGINATOR_POSITION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(ORIGINATOR_POSITION), 0)
+}
+func MetadataAddOriginatorPosition(builder *flatbuffers.Builder, ORIGINATOR_POSITION flatbuffers.UOffsetT) {
+	MetadataAddORIGINATOR_POSITION(builder, ORIGINATOR_POSITION)
 }
 func MetadataAddORIGINATOR_PHONE(builder *flatbuffers.Builder, ORIGINATOR_PHONE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(ORIGINATOR_PHONE), 0)
 }
+func MetadataAddOriginatorPhone(builder *flatbuffers.Builder, ORIGINATOR_PHONE flatbuffers.UOffsetT) {
+	MetadataAddORIGINATOR_PHONE(builder, ORIGINATOR_PHONE)
+}
 func MetadataAddORIGINATOR_EMAIL(builder *flatbuffers.Builder, ORIGINATOR_EMAIL flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(ORIGINATOR_EMAIL), 0)
+}
+func MetadataAddOriginatorEmail(builder *flatbuffers.Builder, ORIGINATOR_EMAIL flatbuffers.UOffsetT) {
+	MetadataAddORIGINATOR_EMAIL(builder, ORIGINATOR_EMAIL)
 }
 func MetadataAddORIGINATOR_ADDRESS(builder *flatbuffers.Builder, ORIGINATOR_ADDRESS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(ORIGINATOR_ADDRESS), 0)
 }
+func MetadataAddOriginatorAddress(builder *flatbuffers.Builder, ORIGINATOR_ADDRESS flatbuffers.UOffsetT) {
+	MetadataAddORIGINATOR_ADDRESS(builder, ORIGINATOR_ADDRESS)
+}
 func MetadataAddTECH_ORG(builder *flatbuffers.Builder, TECH_ORG flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(TECH_ORG), 0)
+}
+func MetadataAddTechOrg(builder *flatbuffers.Builder, TECH_ORG flatbuffers.UOffsetT) {
+	MetadataAddTECH_ORG(builder, TECH_ORG)
 }
 func MetadataAddTECH_POC(builder *flatbuffers.Builder, TECH_POC flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(12, flatbuffers.UOffsetT(TECH_POC), 0)
 }
+func MetadataAddTechPoc(builder *flatbuffers.Builder, TECH_POC flatbuffers.UOffsetT) {
+	MetadataAddTECH_POC(builder, TECH_POC)
+}
 func MetadataAddTECH_POSITION(builder *flatbuffers.Builder, TECH_POSITION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(13, flatbuffers.UOffsetT(TECH_POSITION), 0)
+}
+func MetadataAddTechPosition(builder *flatbuffers.Builder, TECH_POSITION flatbuffers.UOffsetT) {
+	MetadataAddTECH_POSITION(builder, TECH_POSITION)
 }
 func MetadataAddTECH_PHONE(builder *flatbuffers.Builder, TECH_PHONE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(14, flatbuffers.UOffsetT(TECH_PHONE), 0)
 }
+func MetadataAddTechPhone(builder *flatbuffers.Builder, TECH_PHONE flatbuffers.UOffsetT) {
+	MetadataAddTECH_PHONE(builder, TECH_PHONE)
+}
 func MetadataAddTECH_EMAIL(builder *flatbuffers.Builder, TECH_EMAIL flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(15, flatbuffers.UOffsetT(TECH_EMAIL), 0)
+}
+func MetadataAddTechEmail(builder *flatbuffers.Builder, TECH_EMAIL flatbuffers.UOffsetT) {
+	MetadataAddTECH_EMAIL(builder, TECH_EMAIL)
 }
 func MetadataAddTECH_ADDRESS(builder *flatbuffers.Builder, TECH_ADDRESS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(16, flatbuffers.UOffsetT(TECH_ADDRESS), 0)
 }
+func MetadataAddTechAddress(builder *flatbuffers.Builder, TECH_ADDRESS flatbuffers.UOffsetT) {
+	MetadataAddTECH_ADDRESS(builder, TECH_ADDRESS)
+}
 func MetadataAddPREVIOUS_MESSAGE_ID(builder *flatbuffers.Builder, PREVIOUS_MESSAGE_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(17, flatbuffers.UOffsetT(PREVIOUS_MESSAGE_ID), 0)
+}
+func MetadataAddPreviousMessageId(builder *flatbuffers.Builder, PREVIOUS_MESSAGE_ID flatbuffers.UOffsetT) {
+	MetadataAddPREVIOUS_MESSAGE_ID(builder, PREVIOUS_MESSAGE_ID)
 }
 func MetadataAddNEXT_MESSAGE_ID(builder *flatbuffers.Builder, NEXT_MESSAGE_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(18, flatbuffers.UOffsetT(NEXT_MESSAGE_ID), 0)
 }
+func MetadataAddNextMessageId(builder *flatbuffers.Builder, NEXT_MESSAGE_ID flatbuffers.UOffsetT) {
+	MetadataAddNEXT_MESSAGE_ID(builder, NEXT_MESSAGE_ID)
+}
 func MetadataAddADM_MSG_LINK(builder *flatbuffers.Builder, ADM_MSG_LINK flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(19, flatbuffers.UOffsetT(ADM_MSG_LINK), 0)
+}
+func MetadataAddAdmMsgLink(builder *flatbuffers.Builder, ADM_MSG_LINK flatbuffers.UOffsetT) {
+	MetadataAddADM_MSG_LINK(builder, ADM_MSG_LINK)
 }
 func MetadataAddCDM_MSG_LINK(builder *flatbuffers.Builder, CDM_MSG_LINK flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(20, flatbuffers.UOffsetT(CDM_MSG_LINK), 0)
 }
+func MetadataAddCdmMsgLink(builder *flatbuffers.Builder, CDM_MSG_LINK flatbuffers.UOffsetT) {
+	MetadataAddCDM_MSG_LINK(builder, CDM_MSG_LINK)
+}
 func MetadataAddPRM_MSG_LINK(builder *flatbuffers.Builder, PRM_MSG_LINK flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(21, flatbuffers.UOffsetT(PRM_MSG_LINK), 0)
+}
+func MetadataAddPrmMsgLink(builder *flatbuffers.Builder, PRM_MSG_LINK flatbuffers.UOffsetT) {
+	MetadataAddPRM_MSG_LINK(builder, PRM_MSG_LINK)
 }
 func MetadataAddRDM_MSG_LINK(builder *flatbuffers.Builder, RDM_MSG_LINK flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(22, flatbuffers.UOffsetT(RDM_MSG_LINK), 0)
 }
+func MetadataAddRdmMsgLink(builder *flatbuffers.Builder, RDM_MSG_LINK flatbuffers.UOffsetT) {
+	MetadataAddRDM_MSG_LINK(builder, RDM_MSG_LINK)
+}
 func MetadataAddTDM_MSG_LINK(builder *flatbuffers.Builder, TDM_MSG_LINK flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(23, flatbuffers.UOffsetT(TDM_MSG_LINK), 0)
+}
+func MetadataAddTdmMsgLink(builder *flatbuffers.Builder, TDM_MSG_LINK flatbuffers.UOffsetT) {
+	MetadataAddTDM_MSG_LINK(builder, TDM_MSG_LINK)
 }
 func MetadataStartTDM_MSG_LINKVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
+func MetadataStartTdmMsgLinkVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return MetadataStartTDM_MSG_LINKVector(builder, numElems)
+}
 func MetadataAddOPERATOR(builder *flatbuffers.Builder, OPERATOR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(24, flatbuffers.UOffsetT(OPERATOR), 0)
+}
+func MetadataAddOperator(builder *flatbuffers.Builder, OPERATOR flatbuffers.UOffsetT) {
+	MetadataAddOPERATOR(builder, OPERATOR)
 }
 func MetadataAddOWNER(builder *flatbuffers.Builder, OWNER flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(25, flatbuffers.UOffsetT(OWNER), 0)
 }
+func MetadataAddOwner(builder *flatbuffers.Builder, OWNER flatbuffers.UOffsetT) {
+	MetadataAddOWNER(builder, OWNER)
+}
 func MetadataAddCOUNTRY(builder *flatbuffers.Builder, COUNTRY flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(26, flatbuffers.UOffsetT(COUNTRY), 0)
+}
+func MetadataAddCountry(builder *flatbuffers.Builder, COUNTRY flatbuffers.UOffsetT) {
+	MetadataAddCOUNTRY(builder, COUNTRY)
 }
 func MetadataAddCONSTELLATION(builder *flatbuffers.Builder, CONSTELLATION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(27, flatbuffers.UOffsetT(CONSTELLATION), 0)
 }
+func MetadataAddConstellation(builder *flatbuffers.Builder, CONSTELLATION flatbuffers.UOffsetT) {
+	MetadataAddCONSTELLATION(builder, CONSTELLATION)
+}
 func MetadataAddOBJECT_TYPE(builder *flatbuffers.Builder, OBJECT_TYPE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(28, flatbuffers.UOffsetT(OBJECT_TYPE), 0)
+}
+func MetadataAddObjectType(builder *flatbuffers.Builder, OBJECT_TYPE flatbuffers.UOffsetT) {
+	MetadataAddOBJECT_TYPE(builder, OBJECT_TYPE)
 }
 func MetadataAddTIME_SYSTEM(builder *flatbuffers.Builder, TIME_SYSTEM flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(29, flatbuffers.UOffsetT(TIME_SYSTEM), 0)
 }
+func MetadataAddTimeSystem(builder *flatbuffers.Builder, TIME_SYSTEM flatbuffers.UOffsetT) {
+	MetadataAddTIME_SYSTEM(builder, TIME_SYSTEM)
+}
 func MetadataAddEPOCH_TZERO(builder *flatbuffers.Builder, EPOCH_TZERO flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(30, flatbuffers.UOffsetT(EPOCH_TZERO), 0)
+}
+func MetadataAddEpochTzero(builder *flatbuffers.Builder, EPOCH_TZERO flatbuffers.UOffsetT) {
+	MetadataAddEPOCH_TZERO(builder, EPOCH_TZERO)
 }
 func MetadataAddOPS_STATUS(builder *flatbuffers.Builder, OPS_STATUS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(31, flatbuffers.UOffsetT(OPS_STATUS), 0)
 }
+func MetadataAddOpsStatus(builder *flatbuffers.Builder, OPS_STATUS flatbuffers.UOffsetT) {
+	MetadataAddOPS_STATUS(builder, OPS_STATUS)
+}
 func MetadataAddORBIT_CATEGORY(builder *flatbuffers.Builder, ORBIT_CATEGORY flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(32, flatbuffers.UOffsetT(ORBIT_CATEGORY), 0)
+}
+func MetadataAddOrbitCategory(builder *flatbuffers.Builder, ORBIT_CATEGORY flatbuffers.UOffsetT) {
+	MetadataAddORBIT_CATEGORY(builder, ORBIT_CATEGORY)
 }
 func MetadataAddOCM_DATA_ELEMENTS(builder *flatbuffers.Builder, OCM_DATA_ELEMENTS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(33, flatbuffers.UOffsetT(OCM_DATA_ELEMENTS), 0)
 }
+func MetadataAddOcmDataElements(builder *flatbuffers.Builder, OCM_DATA_ELEMENTS flatbuffers.UOffsetT) {
+	MetadataAddOCM_DATA_ELEMENTS(builder, OCM_DATA_ELEMENTS)
+}
 func MetadataStartOCM_DATA_ELEMENTSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func MetadataStartOcmDataElementsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return MetadataStartOCM_DATA_ELEMENTSVector(builder, numElems)
 }
 func MetadataAddSCLK_OFFSET_AT_EPOCH(builder *flatbuffers.Builder, SCLK_OFFSET_AT_EPOCH float64) {
 	builder.PrependFloat64Slot(34, SCLK_OFFSET_AT_EPOCH, 0.0)
 }
+func MetadataAddSclkOffsetAtEpoch(builder *flatbuffers.Builder, SCLK_OFFSET_AT_EPOCH float64) {
+	MetadataAddSCLK_OFFSET_AT_EPOCH(builder, SCLK_OFFSET_AT_EPOCH)
+}
 func MetadataAddSCLK_SEC_PER_SI_SEC(builder *flatbuffers.Builder, SCLK_SEC_PER_SI_SEC float64) {
 	builder.PrependFloat64Slot(35, SCLK_SEC_PER_SI_SEC, 0.0)
+}
+func MetadataAddSclkSecPerSiSec(builder *flatbuffers.Builder, SCLK_SEC_PER_SI_SEC float64) {
+	MetadataAddSCLK_SEC_PER_SI_SEC(builder, SCLK_SEC_PER_SI_SEC)
 }
 func MetadataAddPREVIOUS_MESSAGE_EPOCH(builder *flatbuffers.Builder, PREVIOUS_MESSAGE_EPOCH flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(36, flatbuffers.UOffsetT(PREVIOUS_MESSAGE_EPOCH), 0)
 }
+func MetadataAddPreviousMessageEpoch(builder *flatbuffers.Builder, PREVIOUS_MESSAGE_EPOCH flatbuffers.UOffsetT) {
+	MetadataAddPREVIOUS_MESSAGE_EPOCH(builder, PREVIOUS_MESSAGE_EPOCH)
+}
 func MetadataAddNEXT_MESSAGE_EPOCH(builder *flatbuffers.Builder, NEXT_MESSAGE_EPOCH flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(37, flatbuffers.UOffsetT(NEXT_MESSAGE_EPOCH), 0)
+}
+func MetadataAddNextMessageEpoch(builder *flatbuffers.Builder, NEXT_MESSAGE_EPOCH flatbuffers.UOffsetT) {
+	MetadataAddNEXT_MESSAGE_EPOCH(builder, NEXT_MESSAGE_EPOCH)
 }
 func MetadataAddSTART_TIME(builder *flatbuffers.Builder, START_TIME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(38, flatbuffers.UOffsetT(START_TIME), 0)
 }
+func MetadataAddStartTime(builder *flatbuffers.Builder, START_TIME flatbuffers.UOffsetT) {
+	MetadataAddSTART_TIME(builder, START_TIME)
+}
 func MetadataAddSTOP_TIME(builder *flatbuffers.Builder, STOP_TIME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(39, flatbuffers.UOffsetT(STOP_TIME), 0)
+}
+func MetadataAddStopTime(builder *flatbuffers.Builder, STOP_TIME flatbuffers.UOffsetT) {
+	MetadataAddSTOP_TIME(builder, STOP_TIME)
 }
 func MetadataAddTIME_SPAN(builder *flatbuffers.Builder, TIME_SPAN float64) {
 	builder.PrependFloat64Slot(40, TIME_SPAN, 0.0)
 }
+func MetadataAddTimeSpan(builder *flatbuffers.Builder, TIME_SPAN float64) {
+	MetadataAddTIME_SPAN(builder, TIME_SPAN)
+}
 func MetadataAddTAIMUTC_AT_TZERO(builder *flatbuffers.Builder, TAIMUTC_AT_TZERO float64) {
 	builder.PrependFloat64Slot(41, TAIMUTC_AT_TZERO, 0.0)
+}
+func MetadataAddTaimutcAtTzero(builder *flatbuffers.Builder, TAIMUTC_AT_TZERO float64) {
+	MetadataAddTAIMUTC_AT_TZERO(builder, TAIMUTC_AT_TZERO)
 }
 func MetadataAddNEXT_LEAP_EPOCH(builder *flatbuffers.Builder, NEXT_LEAP_EPOCH flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(42, flatbuffers.UOffsetT(NEXT_LEAP_EPOCH), 0)
 }
+func MetadataAddNextLeapEpoch(builder *flatbuffers.Builder, NEXT_LEAP_EPOCH flatbuffers.UOffsetT) {
+	MetadataAddNEXT_LEAP_EPOCH(builder, NEXT_LEAP_EPOCH)
+}
 func MetadataAddNEXT_LEAP_TAIMUTC(builder *flatbuffers.Builder, NEXT_LEAP_TAIMUTC float64) {
 	builder.PrependFloat64Slot(43, NEXT_LEAP_TAIMUTC, 0.0)
+}
+func MetadataAddNextLeapTaimutc(builder *flatbuffers.Builder, NEXT_LEAP_TAIMUTC float64) {
+	MetadataAddNEXT_LEAP_TAIMUTC(builder, NEXT_LEAP_TAIMUTC)
 }
 func MetadataAddUT1MUTC_AT_TZERO(builder *flatbuffers.Builder, UT1MUTC_AT_TZERO float64) {
 	builder.PrependFloat64Slot(44, UT1MUTC_AT_TZERO, 0.0)
 }
+func MetadataAddUt1mutcAtTzero(builder *flatbuffers.Builder, UT1MUTC_AT_TZERO float64) {
+	MetadataAddUT1MUTC_AT_TZERO(builder, UT1MUTC_AT_TZERO)
+}
 func MetadataAddEOP_SOURCE(builder *flatbuffers.Builder, EOP_SOURCE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(45, flatbuffers.UOffsetT(EOP_SOURCE), 0)
+}
+func MetadataAddEopSource(builder *flatbuffers.Builder, EOP_SOURCE flatbuffers.UOffsetT) {
+	MetadataAddEOP_SOURCE(builder, EOP_SOURCE)
 }
 func MetadataAddINTERP_METHOD_EOP(builder *flatbuffers.Builder, INTERP_METHOD_EOP flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(46, flatbuffers.UOffsetT(INTERP_METHOD_EOP), 0)
 }
+func MetadataAddInterpMethodEop(builder *flatbuffers.Builder, INTERP_METHOD_EOP flatbuffers.UOffsetT) {
+	MetadataAddINTERP_METHOD_EOP(builder, INTERP_METHOD_EOP)
+}
 func MetadataAddCELESTIAL_SOURCE(builder *flatbuffers.Builder, CELESTIAL_SOURCE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(47, flatbuffers.UOffsetT(CELESTIAL_SOURCE), 0)
+}
+func MetadataAddCelestialSource(builder *flatbuffers.Builder, CELESTIAL_SOURCE flatbuffers.UOffsetT) {
+	MetadataAddCELESTIAL_SOURCE(builder, CELESTIAL_SOURCE)
 }
 func MetadataEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

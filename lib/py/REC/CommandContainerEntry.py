@@ -2,4 +2,162 @@
 
 # namespace: 
 
-# NOTE CommandContainerEntry.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Command container entry
+class CommandContainerEntry(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = CommandContainerEntry()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsCommandContainerEntry(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def CommandContainerEntryBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x58\x54\x43", size_prefixed=size_prefixed)
+
+    # CommandContainerEntry
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Argument reference entry
+    # CommandContainerEntry
+    def ARGUMENT_REF_ENTRY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from ArgumentRefEntry import ArgumentRefEntry
+            obj = ArgumentRefEntry()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Parameter reference entry
+    # CommandContainerEntry
+    def PARAMETER_REF_ENTRY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from ParameterRefEntry import ParameterRefEntry
+            obj = ParameterRefEntry()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Fixed value entry
+    # CommandContainerEntry
+    def FIXED_VALUE_ENTRY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from FixedValueEntry import FixedValueEntry
+            obj = FixedValueEntry()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+def CommandContainerEntryStart(builder):
+    builder.StartObject(3)
+
+def Start(builder):
+    CommandContainerEntryStart(builder)
+
+def CommandContainerEntryAddARGUMENT_REF_ENTRY(builder, ARGUMENT_REF_ENTRY):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(ARGUMENT_REF_ENTRY), 0)
+
+def AddARGUMENT_REF_ENTRY(builder, ARGUMENT_REF_ENTRY):
+    CommandContainerEntryAddARGUMENT_REF_ENTRY(builder, ARGUMENT_REF_ENTRY)
+
+def CommandContainerEntryAddPARAMETER_REF_ENTRY(builder, PARAMETER_REF_ENTRY):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(PARAMETER_REF_ENTRY), 0)
+
+def AddPARAMETER_REF_ENTRY(builder, PARAMETER_REF_ENTRY):
+    CommandContainerEntryAddPARAMETER_REF_ENTRY(builder, PARAMETER_REF_ENTRY)
+
+def CommandContainerEntryAddFIXED_VALUE_ENTRY(builder, FIXED_VALUE_ENTRY):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(FIXED_VALUE_ENTRY), 0)
+
+def AddFIXED_VALUE_ENTRY(builder, FIXED_VALUE_ENTRY):
+    CommandContainerEntryAddFIXED_VALUE_ENTRY(builder, FIXED_VALUE_ENTRY)
+
+def CommandContainerEntryEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return CommandContainerEntryEnd(builder)
+
+import ArgumentRefEntry
+import FixedValueEntry
+import ParameterRefEntry
+try:
+    from typing import Optional
+except:
+    pass
+
+class CommandContainerEntryT(object):
+
+    # CommandContainerEntryT
+    def __init__(
+        self,
+        ARGUMENT_REF_ENTRY = None,
+        PARAMETER_REF_ENTRY = None,
+        FIXED_VALUE_ENTRY = None,
+    ):
+        self.ARGUMENT_REF_ENTRY = ARGUMENT_REF_ENTRY  # type: Optional[ArgumentRefEntry.ArgumentRefEntryT]
+        self.PARAMETER_REF_ENTRY = PARAMETER_REF_ENTRY  # type: Optional[ParameterRefEntry.ParameterRefEntryT]
+        self.FIXED_VALUE_ENTRY = FIXED_VALUE_ENTRY  # type: Optional[FixedValueEntry.FixedValueEntryT]
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpCommandContainerEntry = CommandContainerEntry()
+        tmpCommandContainerEntry.Init(buf, pos)
+        return cls.InitFromObj(tmpCommandContainerEntry)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpCommandContainerEntry):
+        x = CommandContainerEntryT()
+        x._UnPack(tmpCommandContainerEntry)
+        return x
+
+    # CommandContainerEntryT
+    def _UnPack(self, CommandContainerEntry):
+        if CommandContainerEntry is None:
+            return
+        if CommandContainerEntry.ARGUMENT_REF_ENTRY() is not None:
+            self.ARGUMENT_REF_ENTRY = ArgumentRefEntry.ArgumentRefEntryT.InitFromObj(CommandContainerEntry.ARGUMENT_REF_ENTRY())
+        if CommandContainerEntry.PARAMETER_REF_ENTRY() is not None:
+            self.PARAMETER_REF_ENTRY = ParameterRefEntry.ParameterRefEntryT.InitFromObj(CommandContainerEntry.PARAMETER_REF_ENTRY())
+        if CommandContainerEntry.FIXED_VALUE_ENTRY() is not None:
+            self.FIXED_VALUE_ENTRY = FixedValueEntry.FixedValueEntryT.InitFromObj(CommandContainerEntry.FIXED_VALUE_ENTRY())
+
+    # CommandContainerEntryT
+    def Pack(self, builder):
+        if self.ARGUMENT_REF_ENTRY is not None:
+            ARGUMENT_REF_ENTRY = self.ARGUMENT_REF_ENTRY.Pack(builder)
+        if self.PARAMETER_REF_ENTRY is not None:
+            PARAMETER_REF_ENTRY = self.PARAMETER_REF_ENTRY.Pack(builder)
+        if self.FIXED_VALUE_ENTRY is not None:
+            FIXED_VALUE_ENTRY = self.FIXED_VALUE_ENTRY.Pack(builder)
+        CommandContainerEntryStart(builder)
+        if self.ARGUMENT_REF_ENTRY is not None:
+            CommandContainerEntryAddARGUMENT_REF_ENTRY(builder, ARGUMENT_REF_ENTRY)
+        if self.PARAMETER_REF_ENTRY is not None:
+            CommandContainerEntryAddPARAMETER_REF_ENTRY(builder, PARAMETER_REF_ENTRY)
+        if self.FIXED_VALUE_ENTRY is not None:
+            CommandContainerEntryAddFIXED_VALUE_ENTRY(builder, FIXED_VALUE_ENTRY)
+        CommandContainerEntry = CommandContainerEntryEnd(builder)
+        return CommandContainerEntry

@@ -2,4 +2,9 @@
 
 # namespace: 
 
-# NOTE RangefinderType.py does not declare any structs or enums
+class RangefinderType(object):
+    STADIAMETRIC = 0
+    STEREOSCOPIC = 1
+    COINCIDENCE = 2
+    LASER = 3
+    RADAR = 4

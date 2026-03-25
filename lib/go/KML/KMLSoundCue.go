@@ -51,6 +51,10 @@ func (rcv *KMLSoundCue) HREF() []byte {
 	return nil
 }
 
+func (rcv *KMLSoundCue) Href() []byte {
+	return rcv.HREF()
+}
+
 /// Audio file URL
 /// Delayed start in seconds
 func (rcv *KMLSoundCue) DELAYED_START() float64 {
@@ -61,9 +65,17 @@ func (rcv *KMLSoundCue) DELAYED_START() float64 {
 	return 0.0
 }
 
+func (rcv *KMLSoundCue) DelayedStart() float64 {
+	return rcv.DELAYED_START()
+}
+
 /// Delayed start in seconds
 func (rcv *KMLSoundCue) MutateDELAYED_START(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(6, n)
+}
+
+func (rcv *KMLSoundCue) MutateDelayedStart(n float64) bool {
+	return rcv.MutateDELAYED_START(n)
 }
 
 func KMLSoundCueStart(builder *flatbuffers.Builder) {
@@ -72,8 +84,14 @@ func KMLSoundCueStart(builder *flatbuffers.Builder) {
 func KMLSoundCueAddHREF(builder *flatbuffers.Builder, HREF flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(HREF), 0)
 }
+func KMLSoundCueAddHref(builder *flatbuffers.Builder, HREF flatbuffers.UOffsetT) {
+	KMLSoundCueAddHREF(builder, HREF)
+}
 func KMLSoundCueAddDELAYED_START(builder *flatbuffers.Builder, DELAYED_START float64) {
 	builder.PrependFloat64Slot(1, DELAYED_START, 0.0)
+}
+func KMLSoundCueAddDelayedStart(builder *flatbuffers.Builder, DELAYED_START float64) {
+	KMLSoundCueAddDELAYED_START(builder, DELAYED_START)
 }
 func KMLSoundCueEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

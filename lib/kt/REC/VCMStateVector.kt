@@ -29,7 +29,7 @@ class VCMStateVector : Table() {
         __init(_i, _bb)
         return this
     }
-    val EPOCH : String?
+    val epoch : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -38,64 +38,64 @@ class VCMStateVector : Table() {
                 null
             }
         }
-    val EPOCHAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun EPOCHInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
-    val X : Double
+    val epochAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun epochInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
+    val x : Double
         get() {
             val o = __offset(6)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val Y : Double
+    val y : Double
         get() {
             val o = __offset(8)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val Z : Double
+    val z : Double
         get() {
             val o = __offset(10)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val X_DOT : Double
+    val xDot : Double
         get() {
             val o = __offset(12)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val Y_DOT : Double
+    val yDot : Double
         get() {
             val o = __offset(14)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val Z_DOT : Double
+    val zDot : Double
         get() {
             val o = __offset(16)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsVCMStateVector(_bb: ByteBuffer): VCMStateVector = getRootAsVCMStateVector(_bb, VCMStateVector())
         fun getRootAsVCMStateVector(_bb: ByteBuffer, obj: VCMStateVector): VCMStateVector {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createVCMStateVector(builder: FlatBufferBuilder, EPOCHOffset: Int, X: Double, Y: Double, Z: Double, X_DOT: Double, Y_DOT: Double, Z_DOT: Double) : Int {
+        fun createVCMStateVector(builder: FlatBufferBuilder, epochOffset: Int, x: Double, y: Double, z: Double, xDot: Double, yDot: Double, zDot: Double) : Int {
             builder.startTable(7)
-            addZ_DOT(builder, Z_DOT)
-            addY_DOT(builder, Y_DOT)
-            addX_DOT(builder, X_DOT)
-            addZ(builder, Z)
-            addY(builder, Y)
-            addX(builder, X)
-            addEPOCH(builder, EPOCHOffset)
+            addZDOT(builder, zDot)
+            addYDOT(builder, yDot)
+            addXDOT(builder, xDot)
+            addZ(builder, z)
+            addY(builder, y)
+            addX(builder, x)
+            addEPOCH(builder, epochOffset)
             return endVCMStateVector(builder)
         }
         fun startVCMStateVector(builder: FlatBufferBuilder) = builder.startTable(7)
-        fun addEPOCH(builder: FlatBufferBuilder, EPOCH: Int) = builder.addOffset(0, EPOCH, 0)
-        fun addX(builder: FlatBufferBuilder, X: Double) = builder.addDouble(1, X, 0.0)
-        fun addY(builder: FlatBufferBuilder, Y: Double) = builder.addDouble(2, Y, 0.0)
-        fun addZ(builder: FlatBufferBuilder, Z: Double) = builder.addDouble(3, Z, 0.0)
-        fun addX_DOT(builder: FlatBufferBuilder, X_DOT: Double) = builder.addDouble(4, X_DOT, 0.0)
-        fun addY_DOT(builder: FlatBufferBuilder, Y_DOT: Double) = builder.addDouble(5, Y_DOT, 0.0)
-        fun addZ_DOT(builder: FlatBufferBuilder, Z_DOT: Double) = builder.addDouble(6, Z_DOT, 0.0)
+        fun addEPOCH(builder: FlatBufferBuilder, epoch: Int) = builder.addOffset(0, epoch, 0)
+        fun addX(builder: FlatBufferBuilder, x: Double) = builder.addDouble(1, x, 0.0)
+        fun addY(builder: FlatBufferBuilder, y: Double) = builder.addDouble(2, y, 0.0)
+        fun addZ(builder: FlatBufferBuilder, z: Double) = builder.addDouble(3, z, 0.0)
+        fun addXDOT(builder: FlatBufferBuilder, xDot: Double) = builder.addDouble(4, xDot, 0.0)
+        fun addYDOT(builder: FlatBufferBuilder, yDot: Double) = builder.addDouble(5, yDot, 0.0)
+        fun addZDOT(builder: FlatBufferBuilder, zDot: Double) = builder.addDouble(6, zDot, 0.0)
         fun endVCMStateVector(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

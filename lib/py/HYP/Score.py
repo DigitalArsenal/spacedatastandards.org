@@ -96,17 +96,23 @@ def End(builder):
 class ScoreT(object):
 
     # ScoreT
-    def __init__(self):
-        self.NORAD_CAT_ID = None  # type: str
-        self.TYPE = 0  # type: int
-        self.TAG = None  # type: str
-        self.SCORE = 0.0  # type: float
+    def __init__(
+        self,
+        NORAD_CAT_ID = None,
+        TYPE = 0,
+        TAG = None,
+        SCORE = 0.0,
+    ):
+        self.NORAD_CAT_ID = NORAD_CAT_ID  # type: Optional[str]
+        self.TYPE = TYPE  # type: int
+        self.TAG = TAG  # type: Optional[str]
+        self.SCORE = SCORE  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        score = Score()
-        score.Init(buf, pos)
-        return cls.InitFromObj(score)
+        tmpScore = Score()
+        tmpScore.Init(buf, pos)
+        return cls.InitFromObj(tmpScore)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -114,19 +120,19 @@ class ScoreT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, score):
+    def InitFromObj(cls, tmpScore):
         x = ScoreT()
-        x._UnPack(score)
+        x._UnPack(tmpScore)
         return x
 
     # ScoreT
-    def _UnPack(self, score):
-        if score is None:
+    def _UnPack(self, Score):
+        if Score is None:
             return
-        self.NORAD_CAT_ID = score.NORAD_CAT_ID()
-        self.TYPE = score.TYPE()
-        self.TAG = score.TAG()
-        self.SCORE = score.SCORE()
+        self.NORAD_CAT_ID = Score.NORAD_CAT_ID()
+        self.TYPE = Score.TYPE()
+        self.TAG = Score.TAG()
+        self.SCORE = Score.SCORE()
 
     # ScoreT
     def Pack(self, builder):
@@ -141,5 +147,5 @@ class ScoreT(object):
         if self.TAG is not None:
             ScoreAddTAG(builder, TAG)
         ScoreAddSCORE(builder, self.SCORE)
-        score = ScoreEnd(builder)
-        return score
+        Score = ScoreEnd(builder)
+        return Score

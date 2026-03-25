@@ -12,7 +12,6 @@ import com.google.flatbuffers.LongVector;
 import com.google.flatbuffers.ShortVector;
 import com.google.flatbuffers.StringVector;
 import com.google.flatbuffers.Struct;
-import com.google.flatbuffers.Table;
 import com.google.flatbuffers.UnionVector;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -21,8 +20,8 @@ import java.nio.ByteOrder;
  * On-Orbit Thruster
  */
 @SuppressWarnings("unused")
-public final class OOT extends Table {
-  public static void ValidateVersion() { Constants.FLATBUFFERS_24_3_25(); }
+public final class OOT extends com.google.flatbuffers.Table {
+  public static void ValidateVersion() { Constants.FLATBUFFERS_25_12_19(); }
   public static OOT getRootAsOOT(ByteBuffer _bb) { return getRootAsOOT(_bb, new OOT()); }
   public static OOT getRootAsOOT(ByteBuffer _bb, OOT obj) { _bb.order(ByteOrder.LITTLE_ENDIAN); return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb)); }
   public static boolean OOTBufferHasIdentifier(ByteBuffer _bb) { return __has_identifier(_bb, "$OOT"); }

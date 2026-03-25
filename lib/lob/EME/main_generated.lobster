@@ -86,16 +86,16 @@ struct EMEBuilder:
     def end():
         return b_.EndObject()
 
-def EMEStartENCRYPTED_BLOBVector(b_:flatbuffers.builder, n_:int):
+def EMEStartENCRYPTEDBLOBVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(1, n_, 1)
-def EMECreateENCRYPTED_BLOBVector(b_:flatbuffers.builder, v_:[int]):
+def EMECreateENCRYPTEDBLOBVector(b_:flatbuffers.builder, v_:[int]):
     b_.StartVector(1, v_.length, 1)
     reverse(v_) e_: b_.PrependUint8(e_)
     return b_.EndVector(v_.length)
 
-def EMEStartNONCE_STARTVector(b_:flatbuffers.builder, n_:int):
+def EMEStartNONCESTARTVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(1, n_, 1)
-def EMECreateNONCE_STARTVector(b_:flatbuffers.builder, v_:[int]):
+def EMECreateNONCESTARTVector(b_:flatbuffers.builder, v_:[int]):
     b_.StartVector(1, v_.length, 1)
     reverse(v_) e_: b_.PrependUint8(e_)
     return b_.EndVector(v_.length)

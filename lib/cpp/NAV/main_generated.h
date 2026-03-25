@@ -8,9 +8,9 @@
 
 // Ensure the included flatbuffers.h is the same version as when this file was
 // generated, otherwise it may not be compatible.
-static_assert(FLATBUFFERS_VERSION_MAJOR == 24 &&
-              FLATBUFFERS_VERSION_MINOR == 3 &&
-              FLATBUFFERS_VERSION_REVISION == 25,
+static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
+              FLATBUFFERS_VERSION_MINOR == 12 &&
+              FLATBUFFERS_VERSION_REVISION == 19,
              "Non-compatible flatbuffers version included");
 
 struct NAV;
@@ -329,7 +329,8 @@ struct NAV FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::Vector<uint8_t> *RESERVED() const {
     return GetPointer<const ::flatbuffers::Vector<uint8_t> *>(VT_RESERVED);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<double>(verifier, VT_POSITION_X, 8) &&
            VerifyField<double>(verifier, VT_POSITION_Y, 8) &&
@@ -670,14 +671,16 @@ inline bool SizePrefixedNAVBufferHasIdentifier(const void *buf) {
       buf, NAVIdentifier(), true);
 }
 
+template <bool B = false>
 inline bool VerifyNAVBuffer(
-    ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifyBuffer<NAV>(NAVIdentifier());
+    ::flatbuffers::VerifierTemplate<B> &verifier) {
+  return verifier.template VerifyBuffer<NAV>(NAVIdentifier());
 }
 
+template <bool B = false>
 inline bool VerifySizePrefixedNAVBuffer(
-    ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifySizePrefixedBuffer<NAV>(NAVIdentifier());
+    ::flatbuffers::VerifierTemplate<B> &verifier) {
+  return verifier.template VerifySizePrefixedBuffer<NAV>(NAVIdentifier());
 }
 
 inline void FinishNAVBuffer(

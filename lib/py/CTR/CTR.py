@@ -157,21 +157,31 @@ def End(builder):
 class CTRT(object):
 
     # CTRT
-    def __init__(self):
-        self.ID = None  # type: str
-        self.NAME = None  # type: str
-        self.GENC_CODE = None  # type: str
-        self.ALPHA_2_CODE = None  # type: str
-        self.ALPHA_3_CODE = None  # type: str
-        self.STANAG_CODE = None  # type: str
-        self.INTERNET_CCTLD = None  # type: str
-        self.COMMENT = None  # type: str
+    def __init__(
+        self,
+        ID = None,
+        NAME = None,
+        GENC_CODE = None,
+        ALPHA_2_CODE = None,
+        ALPHA_3_CODE = None,
+        STANAG_CODE = None,
+        INTERNET_CCTLD = None,
+        COMMENT = None,
+    ):
+        self.ID = ID  # type: Optional[str]
+        self.NAME = NAME  # type: Optional[str]
+        self.GENC_CODE = GENC_CODE  # type: Optional[str]
+        self.ALPHA_2_CODE = ALPHA_2_CODE  # type: Optional[str]
+        self.ALPHA_3_CODE = ALPHA_3_CODE  # type: Optional[str]
+        self.STANAG_CODE = STANAG_CODE  # type: Optional[str]
+        self.INTERNET_CCTLD = INTERNET_CCTLD  # type: Optional[str]
+        self.COMMENT = COMMENT  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        CTR = CTR()
-        CTR.Init(buf, pos)
-        return cls.InitFromObj(CTR)
+        tmpCtr = CTR()
+        tmpCtr.Init(buf, pos)
+        return cls.InitFromObj(tmpCtr)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -179,9 +189,9 @@ class CTRT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, CTR):
+    def InitFromObj(cls, tmpCtr):
         x = CTRT()
-        x._UnPack(CTR)
+        x._UnPack(tmpCtr)
         return x
 
     # CTRT

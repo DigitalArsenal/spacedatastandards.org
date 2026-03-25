@@ -2,4 +2,158 @@
 
 # namespace: 
 
-# NOTE KMLBalloonStyle.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Balloon style
+class KMLBalloonStyle(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = KMLBalloonStyle()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsKMLBalloonStyle(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def KMLBalloonStyleBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x4B\x4D\x4C", size_prefixed=size_prefixed)
+
+    # KMLBalloonStyle
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Background color in aabbggrr hex format
+    # KMLBalloonStyle
+    def BG_COLOR(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Text color in aabbggrr hex format
+    # KMLBalloonStyle
+    def TEXT_COLOR(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Balloon text template (supports $[name], $[description])
+    # KMLBalloonStyle
+    def TEXT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Display mode
+    # KMLBalloonStyle
+    def DISPLAY_MODE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+def KMLBalloonStyleStart(builder):
+    builder.StartObject(4)
+
+def Start(builder):
+    KMLBalloonStyleStart(builder)
+
+def KMLBalloonStyleAddBG_COLOR(builder, BG_COLOR):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(BG_COLOR), 0)
+
+def AddBG_COLOR(builder, BG_COLOR):
+    KMLBalloonStyleAddBG_COLOR(builder, BG_COLOR)
+
+def KMLBalloonStyleAddTEXT_COLOR(builder, TEXT_COLOR):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(TEXT_COLOR), 0)
+
+def AddTEXT_COLOR(builder, TEXT_COLOR):
+    KMLBalloonStyleAddTEXT_COLOR(builder, TEXT_COLOR)
+
+def KMLBalloonStyleAddTEXT(builder, TEXT):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(TEXT), 0)
+
+def AddTEXT(builder, TEXT):
+    KMLBalloonStyleAddTEXT(builder, TEXT)
+
+def KMLBalloonStyleAddDISPLAY_MODE(builder, DISPLAY_MODE):
+    builder.PrependInt8Slot(3, DISPLAY_MODE, 0)
+
+def AddDISPLAY_MODE(builder, DISPLAY_MODE):
+    KMLBalloonStyleAddDISPLAY_MODE(builder, DISPLAY_MODE)
+
+def KMLBalloonStyleEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return KMLBalloonStyleEnd(builder)
+
+
+class KMLBalloonStyleT(object):
+
+    # KMLBalloonStyleT
+    def __init__(
+        self,
+        BG_COLOR = None,
+        TEXT_COLOR = None,
+        TEXT = None,
+        DISPLAY_MODE = 0,
+    ):
+        self.BG_COLOR = BG_COLOR  # type: Optional[str]
+        self.TEXT_COLOR = TEXT_COLOR  # type: Optional[str]
+        self.TEXT = TEXT  # type: Optional[str]
+        self.DISPLAY_MODE = DISPLAY_MODE  # type: int
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpKmlballoonStyle = KMLBalloonStyle()
+        tmpKmlballoonStyle.Init(buf, pos)
+        return cls.InitFromObj(tmpKmlballoonStyle)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpKmlballoonStyle):
+        x = KMLBalloonStyleT()
+        x._UnPack(tmpKmlballoonStyle)
+        return x
+
+    # KMLBalloonStyleT
+    def _UnPack(self, KMLBalloonStyle):
+        if KMLBalloonStyle is None:
+            return
+        self.BG_COLOR = KMLBalloonStyle.BG_COLOR()
+        self.TEXT_COLOR = KMLBalloonStyle.TEXT_COLOR()
+        self.TEXT = KMLBalloonStyle.TEXT()
+        self.DISPLAY_MODE = KMLBalloonStyle.DISPLAY_MODE()
+
+    # KMLBalloonStyleT
+    def Pack(self, builder):
+        if self.BG_COLOR is not None:
+            BG_COLOR = builder.CreateString(self.BG_COLOR)
+        if self.TEXT_COLOR is not None:
+            TEXT_COLOR = builder.CreateString(self.TEXT_COLOR)
+        if self.TEXT is not None:
+            TEXT = builder.CreateString(self.TEXT)
+        KMLBalloonStyleStart(builder)
+        if self.BG_COLOR is not None:
+            KMLBalloonStyleAddBG_COLOR(builder, BG_COLOR)
+        if self.TEXT_COLOR is not None:
+            KMLBalloonStyleAddTEXT_COLOR(builder, TEXT_COLOR)
+        if self.TEXT is not None:
+            KMLBalloonStyleAddTEXT(builder, TEXT)
+        KMLBalloonStyleAddDISPLAY_MODE(builder, self.DISPLAY_MODE)
+        KMLBalloonStyle = KMLBalloonStyleEnd(builder)
+        return KMLBalloonStyle

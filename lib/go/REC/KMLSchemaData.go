@@ -51,6 +51,10 @@ func (rcv *KMLSchemaData) SCHEMA_URL() []byte {
 	return nil
 }
 
+func (rcv *KMLSchemaData) SchemaUrl() []byte {
+	return rcv.SCHEMA_URL()
+}
+
 /// Schema URL reference
 /// Simple data values
 func (rcv *KMLSchemaData) SIMPLE_DATA(obj *KMLSimpleData, j int) bool {
@@ -59,10 +63,17 @@ func (rcv *KMLSchemaData) SIMPLE_DATA(obj *KMLSimpleData, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(KMLSimpleData)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *KMLSchemaData) SimpleData(obj *KMLSimpleData, j int) bool {
+	return rcv.SIMPLE_DATA(obj, j)
 }
 
 func (rcv *KMLSchemaData) SIMPLE_DATALength() int {
@@ -73,6 +84,10 @@ func (rcv *KMLSchemaData) SIMPLE_DATALength() int {
 	return 0
 }
 
+func (rcv *KMLSchemaData) SimpleDataLength() int {
+	return rcv.SIMPLE_DATALength()
+}
+
 /// Simple data values
 func KMLSchemaDataStart(builder *flatbuffers.Builder) {
 	builder.StartObject(2)
@@ -80,11 +95,20 @@ func KMLSchemaDataStart(builder *flatbuffers.Builder) {
 func KMLSchemaDataAddSCHEMA_URL(builder *flatbuffers.Builder, SCHEMA_URL flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(SCHEMA_URL), 0)
 }
+func KMLSchemaDataAddSchemaUrl(builder *flatbuffers.Builder, SCHEMA_URL flatbuffers.UOffsetT) {
+	KMLSchemaDataAddSCHEMA_URL(builder, SCHEMA_URL)
+}
 func KMLSchemaDataAddSIMPLE_DATA(builder *flatbuffers.Builder, SIMPLE_DATA flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(SIMPLE_DATA), 0)
 }
+func KMLSchemaDataAddSimpleData(builder *flatbuffers.Builder, SIMPLE_DATA flatbuffers.UOffsetT) {
+	KMLSchemaDataAddSIMPLE_DATA(builder, SIMPLE_DATA)
+}
 func KMLSchemaDataStartSIMPLE_DATAVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func KMLSchemaDataStartSimpleDataVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return KMLSchemaDataStartSIMPLE_DATAVector(builder, numElems)
 }
 func KMLSchemaDataEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

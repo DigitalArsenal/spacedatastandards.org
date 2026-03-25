@@ -694,6 +694,16 @@ def MNVStartCOVVector(builder, numElems):
 def StartCOVVector(builder, numElems):
     return MNVStartCOVVector(builder, numElems)
 
+def MNVCreateCOVVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateCOVVector(builder, data):
+    MNVCreateCOVVector(builder, data)
+
 def MNVAddNUM_OBS(builder, NUM_OBS):
     builder.PrependUint32Slot(31, NUM_OBS, 0)
 
@@ -730,6 +740,12 @@ def MNVStartMNVR_ACCEL_TIMESVector(builder, numElems):
 def StartMNVR_ACCEL_TIMESVector(builder, numElems):
     return MNVStartMNVR_ACCEL_TIMESVector(builder, numElems)
 
+def MNVCreateMNVR_ACCEL_TIMESVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateMNVR_ACCEL_TIMESVector(builder, data):
+    MNVCreateMNVR_ACCEL_TIMESVector(builder, data)
+
 def MNVAddMNVR_ACCELS(builder, MNVR_ACCELS):
     builder.PrependUOffsetTRelativeSlot(36, flatbuffers.number_types.UOffsetTFlags.py_type(MNVR_ACCELS), 0)
 
@@ -742,6 +758,16 @@ def MNVStartMNVR_ACCELSVector(builder, numElems):
 def StartMNVR_ACCELSVector(builder, numElems):
     return MNVStartMNVR_ACCELSVector(builder, numElems)
 
+def MNVCreateMNVR_ACCELSVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateMNVR_ACCELSVector(builder, data):
+    MNVCreateMNVR_ACCELSVector(builder, data)
+
 def MNVAddMNVR_ACCEL_UNCS(builder, MNVR_ACCEL_UNCS):
     builder.PrependUOffsetTRelativeSlot(37, flatbuffers.number_types.UOffsetTFlags.py_type(MNVR_ACCEL_UNCS), 0)
 
@@ -753,6 +779,16 @@ def MNVStartMNVR_ACCEL_UNCSVector(builder, numElems):
 
 def StartMNVR_ACCEL_UNCSVector(builder, numElems):
     return MNVStartMNVR_ACCEL_UNCSVector(builder, numElems)
+
+def MNVCreateMNVR_ACCEL_UNCSVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateMNVR_ACCEL_UNCSVector(builder, data):
+    MNVCreateMNVR_ACCEL_UNCSVector(builder, data)
 
 def MNVAddDESCRIPTION(builder, DESCRIPTION):
     builder.PrependUOffsetTRelativeSlot(38, flatbuffers.number_types.UOffsetTFlags.py_type(DESCRIPTION), 0)
@@ -784,6 +820,12 @@ def MNVStartTAGSVector(builder, numElems):
 def StartTAGSVector(builder, numElems):
     return MNVStartTAGSVector(builder, numElems)
 
+def MNVCreateTAGSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateTAGSVector(builder, data):
+    MNVCreateTAGSVector(builder, data)
+
 def MNVAddSOURCED_DATA(builder, SOURCED_DATA):
     builder.PrependUOffsetTRelativeSlot(42, flatbuffers.number_types.UOffsetTFlags.py_type(SOURCED_DATA), 0)
 
@@ -795,6 +837,12 @@ def MNVStartSOURCED_DATAVector(builder, numElems):
 
 def StartSOURCED_DATAVector(builder, numElems):
     return MNVStartSOURCED_DATAVector(builder, numElems)
+
+def MNVCreateSOURCED_DATAVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateSOURCED_DATAVector(builder, data):
+    MNVCreateSOURCED_DATAVector(builder, data)
 
 def MNVAddSOURCED_DATA_TYPES(builder, SOURCED_DATA_TYPES):
     builder.PrependUOffsetTRelativeSlot(43, flatbuffers.number_types.UOffsetTFlags.py_type(SOURCED_DATA_TYPES), 0)
@@ -823,58 +871,105 @@ except:
 class MNVT(object):
 
     # MNVT
-    def __init__(self):
-        self.ID = None  # type: str
-        self.SAT_NO = 0  # type: int
-        self.ORIG_OBJECT_ID = None  # type: str
-        self.ON_ORBIT = None  # type: str
-        self.STATUS = 0  # type: int
-        self.CHARACTERIZATION = 0  # type: int
-        self.CHARACTERIZATION_UNC = 0.0  # type: float
-        self.REPORT_TIME = None  # type: str
-        self.EVENT_START_TIME = None  # type: str
-        self.EVENT_END_TIME = None  # type: str
-        self.TOTAL_BURN_TIME = 0.0  # type: float
-        self.OD_FIT_END_TIME = None  # type: str
-        self.ID_SENSOR = None  # type: str
-        self.ORIG_SENSOR_ID = None  # type: str
-        self.EVENT_ID = None  # type: str
-        self.UCT = False  # type: bool
-        self.MANEUVER_UNC = 0.0  # type: float
-        self.DELTA_VEL = 0.0  # type: float
-        self.DELTA_VEL_U = 0.0  # type: float
-        self.DELTA_VEL_V = 0.0  # type: float
-        self.DELTA_VEL_W = 0.0  # type: float
-        self.DELTA_POS = 0.0  # type: float
-        self.DELTA_POS_U = 0.0  # type: float
-        self.DELTA_POS_V = 0.0  # type: float
-        self.DELTA_POS_W = 0.0  # type: float
-        self.DELTA_MASS = 0.0  # type: float
-        self.PRE_EVENT = None  # type: Optional[mnvOrbitalState.mnvOrbitalStateT]
-        self.POST_EVENT = None  # type: Optional[mnvOrbitalState.mnvOrbitalStateT]
-        self.POST_MASS = 0.0  # type: float
-        self.POST_AREA = 0.0  # type: float
-        self.COV = None  # type: List[float]
-        self.NUM_OBS = 0  # type: int
-        self.STATE_MODEL = None  # type: str
-        self.STATE_MODEL_VERSION = 0.0  # type: float
-        self.NUM_ACCEL_POINTS = 0  # type: int
-        self.MNVR_ACCEL_TIMES = None  # type: List[str]
-        self.MNVR_ACCELS = None  # type: List[float]
-        self.MNVR_ACCEL_UNCS = None  # type: List[float]
-        self.DESCRIPTION = None  # type: str
-        self.DESCRIPTOR = None  # type: str
-        self.ALGORITHM = None  # type: str
-        self.TAGS = None  # type: List[str]
-        self.SOURCED_DATA = None  # type: List[str]
-        self.SOURCED_DATA_TYPES = None  # type: str
-        self.TRANSACTION_ID = None  # type: str
+    def __init__(
+        self,
+        ID = None,
+        SAT_NO = 0,
+        ORIG_OBJECT_ID = None,
+        ON_ORBIT = None,
+        STATUS = 0,
+        CHARACTERIZATION = 0,
+        CHARACTERIZATION_UNC = 0.0,
+        REPORT_TIME = None,
+        EVENT_START_TIME = None,
+        EVENT_END_TIME = None,
+        TOTAL_BURN_TIME = 0.0,
+        OD_FIT_END_TIME = None,
+        ID_SENSOR = None,
+        ORIG_SENSOR_ID = None,
+        EVENT_ID = None,
+        UCT = False,
+        MANEUVER_UNC = 0.0,
+        DELTA_VEL = 0.0,
+        DELTA_VEL_U = 0.0,
+        DELTA_VEL_V = 0.0,
+        DELTA_VEL_W = 0.0,
+        DELTA_POS = 0.0,
+        DELTA_POS_U = 0.0,
+        DELTA_POS_V = 0.0,
+        DELTA_POS_W = 0.0,
+        DELTA_MASS = 0.0,
+        PRE_EVENT = None,
+        POST_EVENT = None,
+        POST_MASS = 0.0,
+        POST_AREA = 0.0,
+        COV = None,
+        NUM_OBS = 0,
+        STATE_MODEL = None,
+        STATE_MODEL_VERSION = 0.0,
+        NUM_ACCEL_POINTS = 0,
+        MNVR_ACCEL_TIMES = None,
+        MNVR_ACCELS = None,
+        MNVR_ACCEL_UNCS = None,
+        DESCRIPTION = None,
+        DESCRIPTOR = None,
+        ALGORITHM = None,
+        TAGS = None,
+        SOURCED_DATA = None,
+        SOURCED_DATA_TYPES = None,
+        TRANSACTION_ID = None,
+    ):
+        self.ID = ID  # type: Optional[str]
+        self.SAT_NO = SAT_NO  # type: int
+        self.ORIG_OBJECT_ID = ORIG_OBJECT_ID  # type: Optional[str]
+        self.ON_ORBIT = ON_ORBIT  # type: Optional[str]
+        self.STATUS = STATUS  # type: int
+        self.CHARACTERIZATION = CHARACTERIZATION  # type: int
+        self.CHARACTERIZATION_UNC = CHARACTERIZATION_UNC  # type: float
+        self.REPORT_TIME = REPORT_TIME  # type: Optional[str]
+        self.EVENT_START_TIME = EVENT_START_TIME  # type: Optional[str]
+        self.EVENT_END_TIME = EVENT_END_TIME  # type: Optional[str]
+        self.TOTAL_BURN_TIME = TOTAL_BURN_TIME  # type: float
+        self.OD_FIT_END_TIME = OD_FIT_END_TIME  # type: Optional[str]
+        self.ID_SENSOR = ID_SENSOR  # type: Optional[str]
+        self.ORIG_SENSOR_ID = ORIG_SENSOR_ID  # type: Optional[str]
+        self.EVENT_ID = EVENT_ID  # type: Optional[str]
+        self.UCT = UCT  # type: bool
+        self.MANEUVER_UNC = MANEUVER_UNC  # type: float
+        self.DELTA_VEL = DELTA_VEL  # type: float
+        self.DELTA_VEL_U = DELTA_VEL_U  # type: float
+        self.DELTA_VEL_V = DELTA_VEL_V  # type: float
+        self.DELTA_VEL_W = DELTA_VEL_W  # type: float
+        self.DELTA_POS = DELTA_POS  # type: float
+        self.DELTA_POS_U = DELTA_POS_U  # type: float
+        self.DELTA_POS_V = DELTA_POS_V  # type: float
+        self.DELTA_POS_W = DELTA_POS_W  # type: float
+        self.DELTA_MASS = DELTA_MASS  # type: float
+        self.PRE_EVENT = PRE_EVENT  # type: Optional[mnvOrbitalState.mnvOrbitalStateT]
+        self.POST_EVENT = POST_EVENT  # type: Optional[mnvOrbitalState.mnvOrbitalStateT]
+        self.POST_MASS = POST_MASS  # type: float
+        self.POST_AREA = POST_AREA  # type: float
+        self.COV = COV  # type: Optional[List[float]]
+        self.NUM_OBS = NUM_OBS  # type: int
+        self.STATE_MODEL = STATE_MODEL  # type: Optional[str]
+        self.STATE_MODEL_VERSION = STATE_MODEL_VERSION  # type: float
+        self.NUM_ACCEL_POINTS = NUM_ACCEL_POINTS  # type: int
+        self.MNVR_ACCEL_TIMES = MNVR_ACCEL_TIMES  # type: Optional[List[Optional[str]]]
+        self.MNVR_ACCELS = MNVR_ACCELS  # type: Optional[List[float]]
+        self.MNVR_ACCEL_UNCS = MNVR_ACCEL_UNCS  # type: Optional[List[float]]
+        self.DESCRIPTION = DESCRIPTION  # type: Optional[str]
+        self.DESCRIPTOR = DESCRIPTOR  # type: Optional[str]
+        self.ALGORITHM = ALGORITHM  # type: Optional[str]
+        self.TAGS = TAGS  # type: Optional[List[Optional[str]]]
+        self.SOURCED_DATA = SOURCED_DATA  # type: Optional[List[Optional[str]]]
+        self.SOURCED_DATA_TYPES = SOURCED_DATA_TYPES  # type: Optional[str]
+        self.TRANSACTION_ID = TRANSACTION_ID  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        MNV = MNV()
-        MNV.Init(buf, pos)
-        return cls.InitFromObj(MNV)
+        tmpMnv = MNV()
+        tmpMnv.Init(buf, pos)
+        return cls.InitFromObj(tmpMnv)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -882,9 +977,9 @@ class MNVT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, MNV):
+    def InitFromObj(cls, tmpMnv):
         x = MNVT()
-        x._UnPack(MNV)
+        x._UnPack(tmpMnv)
         return x
 
     # MNVT

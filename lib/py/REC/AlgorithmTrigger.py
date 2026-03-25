@@ -2,4 +2,137 @@
 
 # namespace: 
 
-# NOTE AlgorithmTrigger.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Trigger condition for algorithm execution
+class AlgorithmTrigger(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = AlgorithmTrigger()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsAlgorithmTrigger(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def AlgorithmTriggerBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x58\x54\x43", size_prefixed=size_prefixed)
+
+    # AlgorithmTrigger
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Trigger on parameter update
+    # AlgorithmTrigger
+    def PARAMETER_REF(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Trigger on container reception
+    # AlgorithmTrigger
+    def CONTAINER_REF(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Trigger rate (per second)
+    # AlgorithmTrigger
+    def RATE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+def AlgorithmTriggerStart(builder):
+    builder.StartObject(3)
+
+def Start(builder):
+    AlgorithmTriggerStart(builder)
+
+def AlgorithmTriggerAddPARAMETER_REF(builder, PARAMETER_REF):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(PARAMETER_REF), 0)
+
+def AddPARAMETER_REF(builder, PARAMETER_REF):
+    AlgorithmTriggerAddPARAMETER_REF(builder, PARAMETER_REF)
+
+def AlgorithmTriggerAddCONTAINER_REF(builder, CONTAINER_REF):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(CONTAINER_REF), 0)
+
+def AddCONTAINER_REF(builder, CONTAINER_REF):
+    AlgorithmTriggerAddCONTAINER_REF(builder, CONTAINER_REF)
+
+def AlgorithmTriggerAddRATE(builder, RATE):
+    builder.PrependFloat64Slot(2, RATE, 0.0)
+
+def AddRATE(builder, RATE):
+    AlgorithmTriggerAddRATE(builder, RATE)
+
+def AlgorithmTriggerEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return AlgorithmTriggerEnd(builder)
+
+
+class AlgorithmTriggerT(object):
+
+    # AlgorithmTriggerT
+    def __init__(
+        self,
+        PARAMETER_REF = None,
+        CONTAINER_REF = None,
+        RATE = 0.0,
+    ):
+        self.PARAMETER_REF = PARAMETER_REF  # type: Optional[str]
+        self.CONTAINER_REF = CONTAINER_REF  # type: Optional[str]
+        self.RATE = RATE  # type: float
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpAlgorithmTrigger = AlgorithmTrigger()
+        tmpAlgorithmTrigger.Init(buf, pos)
+        return cls.InitFromObj(tmpAlgorithmTrigger)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpAlgorithmTrigger):
+        x = AlgorithmTriggerT()
+        x._UnPack(tmpAlgorithmTrigger)
+        return x
+
+    # AlgorithmTriggerT
+    def _UnPack(self, AlgorithmTrigger):
+        if AlgorithmTrigger is None:
+            return
+        self.PARAMETER_REF = AlgorithmTrigger.PARAMETER_REF()
+        self.CONTAINER_REF = AlgorithmTrigger.CONTAINER_REF()
+        self.RATE = AlgorithmTrigger.RATE()
+
+    # AlgorithmTriggerT
+    def Pack(self, builder):
+        if self.PARAMETER_REF is not None:
+            PARAMETER_REF = builder.CreateString(self.PARAMETER_REF)
+        if self.CONTAINER_REF is not None:
+            CONTAINER_REF = builder.CreateString(self.CONTAINER_REF)
+        AlgorithmTriggerStart(builder)
+        if self.PARAMETER_REF is not None:
+            AlgorithmTriggerAddPARAMETER_REF(builder, PARAMETER_REF)
+        if self.CONTAINER_REF is not None:
+            AlgorithmTriggerAddCONTAINER_REF(builder, CONTAINER_REF)
+        AlgorithmTriggerAddRATE(builder, self.RATE)
+        AlgorithmTrigger = AlgorithmTriggerEnd(builder)
+        return AlgorithmTrigger

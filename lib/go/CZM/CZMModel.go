@@ -51,9 +51,17 @@ func (rcv *CZMModel) SHOW() bool {
 	return false
 }
 
+func (rcv *CZMModel) Show() bool {
+	return rcv.SHOW()
+}
+
 /// Whether the model is displayed
 func (rcv *CZMModel) MutateSHOW(n bool) bool {
 	return rcv._tab.MutateBoolSlot(4, n)
+}
+
+func (rcv *CZMModel) MutateShow(n bool) bool {
+	return rcv.MutateSHOW(n)
 }
 
 /// URI to the glTF model
@@ -63,6 +71,10 @@ func (rcv *CZMModel) GLTF() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *CZMModel) Gltf() []byte {
+	return rcv.GLTF()
 }
 
 /// URI to the glTF model
@@ -75,9 +87,17 @@ func (rcv *CZMModel) SCALE() float64 {
 	return 0.0
 }
 
+func (rcv *CZMModel) Scale() float64 {
+	return rcv.SCALE()
+}
+
 /// Scale factor
 func (rcv *CZMModel) MutateSCALE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(8, n)
+}
+
+func (rcv *CZMModel) MutateScale(n float64) bool {
+	return rcv.MutateSCALE(n)
 }
 
 /// Minimum pixel size
@@ -89,9 +109,17 @@ func (rcv *CZMModel) MINIMUM_PIXEL_SIZE() float64 {
 	return 0.0
 }
 
+func (rcv *CZMModel) MinimumPixelSize() float64 {
+	return rcv.MINIMUM_PIXEL_SIZE()
+}
+
 /// Minimum pixel size
 func (rcv *CZMModel) MutateMINIMUM_PIXEL_SIZE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(10, n)
+}
+
+func (rcv *CZMModel) MutateMinimumPixelSize(n float64) bool {
+	return rcv.MutateMINIMUM_PIXEL_SIZE(n)
 }
 
 /// Maximum scale
@@ -103,9 +131,17 @@ func (rcv *CZMModel) MAXIMUM_SCALE() float64 {
 	return 0.0
 }
 
+func (rcv *CZMModel) MaximumScale() float64 {
+	return rcv.MAXIMUM_SCALE()
+}
+
 /// Maximum scale
 func (rcv *CZMModel) MutateMAXIMUM_SCALE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(12, n)
+}
+
+func (rcv *CZMModel) MutateMaximumScale(n float64) bool {
+	return rcv.MutateMAXIMUM_SCALE(n)
 }
 
 /// Height reference
@@ -117,9 +153,17 @@ func (rcv *CZMModel) HEIGHT_REFERENCE() CZMHeightReference {
 	return 0
 }
 
+func (rcv *CZMModel) HeightReference() CZMHeightReference {
+	return rcv.HEIGHT_REFERENCE()
+}
+
 /// Height reference
 func (rcv *CZMModel) MutateHEIGHT_REFERENCE(n CZMHeightReference) bool {
 	return rcv._tab.MutateInt8Slot(14, int8(n))
+}
+
+func (rcv *CZMModel) MutateHeightReference(n CZMHeightReference) bool {
+	return rcv.MutateHEIGHT_REFERENCE(n)
 }
 
 /// Color tint
@@ -136,6 +180,10 @@ func (rcv *CZMModel) COLOR(obj *CZMColor) *CZMColor {
 	return nil
 }
 
+func (rcv *CZMModel) Color(obj *CZMColor) *CZMColor {
+	return rcv.COLOR(obj)
+}
+
 /// Color tint
 /// Whether to incrementally load textures
 func (rcv *CZMModel) INCREMENTALLY_LOAD_TEXTURES() bool {
@@ -146,9 +194,17 @@ func (rcv *CZMModel) INCREMENTALLY_LOAD_TEXTURES() bool {
 	return false
 }
 
+func (rcv *CZMModel) IncrementallyLoadTextures() bool {
+	return rcv.INCREMENTALLY_LOAD_TEXTURES()
+}
+
 /// Whether to incrementally load textures
 func (rcv *CZMModel) MutateINCREMENTALLY_LOAD_TEXTURES(n bool) bool {
 	return rcv._tab.MutateBoolSlot(18, n)
+}
+
+func (rcv *CZMModel) MutateIncrementallyLoadTextures(n bool) bool {
+	return rcv.MutateINCREMENTALLY_LOAD_TEXTURES(n)
 }
 
 /// Whether to run animations
@@ -160,9 +216,17 @@ func (rcv *CZMModel) RUN_ANIMATIONS() bool {
 	return false
 }
 
+func (rcv *CZMModel) RunAnimations() bool {
+	return rcv.RUN_ANIMATIONS()
+}
+
 /// Whether to run animations
 func (rcv *CZMModel) MutateRUN_ANIMATIONS(n bool) bool {
 	return rcv._tab.MutateBoolSlot(20, n)
+}
+
+func (rcv *CZMModel) MutateRunAnimations(n bool) bool {
+	return rcv.MutateRUN_ANIMATIONS(n)
 }
 
 /// Shadow mode
@@ -172,6 +236,10 @@ func (rcv *CZMModel) SHADOWS() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *CZMModel) Shadows() []byte {
+	return rcv.SHADOWS()
 }
 
 /// Shadow mode
@@ -189,6 +257,10 @@ func (rcv *CZMModel) SILHOUETTE_COLOR(obj *CZMColor) *CZMColor {
 	return nil
 }
 
+func (rcv *CZMModel) SilhouetteColor(obj *CZMColor) *CZMColor {
+	return rcv.SILHOUETTE_COLOR(obj)
+}
+
 /// Silhouette color
 /// Silhouette size in pixels
 func (rcv *CZMModel) SILHOUETTE_SIZE() float64 {
@@ -199,9 +271,17 @@ func (rcv *CZMModel) SILHOUETTE_SIZE() float64 {
 	return 0.0
 }
 
+func (rcv *CZMModel) SilhouetteSize() float64 {
+	return rcv.SILHOUETTE_SIZE()
+}
+
 /// Silhouette size in pixels
 func (rcv *CZMModel) MutateSILHOUETTE_SIZE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(26, n)
+}
+
+func (rcv *CZMModel) MutateSilhouetteSize(n float64) bool {
+	return rcv.MutateSILHOUETTE_SIZE(n)
 }
 
 /// Color blend mode
@@ -211,6 +291,10 @@ func (rcv *CZMModel) COLOR_BLEND_MODE() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *CZMModel) ColorBlendMode() []byte {
+	return rcv.COLOR_BLEND_MODE()
 }
 
 /// Color blend mode
@@ -223,9 +307,17 @@ func (rcv *CZMModel) COLOR_BLEND_AMOUNT() float64 {
 	return 0.0
 }
 
+func (rcv *CZMModel) ColorBlendAmount() float64 {
+	return rcv.COLOR_BLEND_AMOUNT()
+}
+
 /// Color blend amount (0-1)
 func (rcv *CZMModel) MutateCOLOR_BLEND_AMOUNT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(30, n)
+}
+
+func (rcv *CZMModel) MutateColorBlendAmount(n float64) bool {
+	return rcv.MutateCOLOR_BLEND_AMOUNT(n)
 }
 
 func CZMModelStart(builder *flatbuffers.Builder) {
@@ -234,44 +326,86 @@ func CZMModelStart(builder *flatbuffers.Builder) {
 func CZMModelAddSHOW(builder *flatbuffers.Builder, SHOW bool) {
 	builder.PrependBoolSlot(0, SHOW, false)
 }
+func CZMModelAddShow(builder *flatbuffers.Builder, SHOW bool) {
+	CZMModelAddSHOW(builder, SHOW)
+}
 func CZMModelAddGLTF(builder *flatbuffers.Builder, GLTF flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(GLTF), 0)
+}
+func CZMModelAddGltf(builder *flatbuffers.Builder, GLTF flatbuffers.UOffsetT) {
+	CZMModelAddGLTF(builder, GLTF)
 }
 func CZMModelAddSCALE(builder *flatbuffers.Builder, SCALE float64) {
 	builder.PrependFloat64Slot(2, SCALE, 0.0)
 }
+func CZMModelAddScale(builder *flatbuffers.Builder, SCALE float64) {
+	CZMModelAddSCALE(builder, SCALE)
+}
 func CZMModelAddMINIMUM_PIXEL_SIZE(builder *flatbuffers.Builder, MINIMUM_PIXEL_SIZE float64) {
 	builder.PrependFloat64Slot(3, MINIMUM_PIXEL_SIZE, 0.0)
+}
+func CZMModelAddMinimumPixelSize(builder *flatbuffers.Builder, MINIMUM_PIXEL_SIZE float64) {
+	CZMModelAddMINIMUM_PIXEL_SIZE(builder, MINIMUM_PIXEL_SIZE)
 }
 func CZMModelAddMAXIMUM_SCALE(builder *flatbuffers.Builder, MAXIMUM_SCALE float64) {
 	builder.PrependFloat64Slot(4, MAXIMUM_SCALE, 0.0)
 }
+func CZMModelAddMaximumScale(builder *flatbuffers.Builder, MAXIMUM_SCALE float64) {
+	CZMModelAddMAXIMUM_SCALE(builder, MAXIMUM_SCALE)
+}
 func CZMModelAddHEIGHT_REFERENCE(builder *flatbuffers.Builder, HEIGHT_REFERENCE CZMHeightReference) {
 	builder.PrependInt8Slot(5, int8(HEIGHT_REFERENCE), 0)
+}
+func CZMModelAddHeightReference(builder *flatbuffers.Builder, HEIGHT_REFERENCE CZMHeightReference) {
+	CZMModelAddHEIGHT_REFERENCE(builder, HEIGHT_REFERENCE)
 }
 func CZMModelAddCOLOR(builder *flatbuffers.Builder, COLOR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(COLOR), 0)
 }
+func CZMModelAddColor(builder *flatbuffers.Builder, COLOR flatbuffers.UOffsetT) {
+	CZMModelAddCOLOR(builder, COLOR)
+}
 func CZMModelAddINCREMENTALLY_LOAD_TEXTURES(builder *flatbuffers.Builder, INCREMENTALLY_LOAD_TEXTURES bool) {
 	builder.PrependBoolSlot(7, INCREMENTALLY_LOAD_TEXTURES, false)
+}
+func CZMModelAddIncrementallyLoadTextures(builder *flatbuffers.Builder, INCREMENTALLY_LOAD_TEXTURES bool) {
+	CZMModelAddINCREMENTALLY_LOAD_TEXTURES(builder, INCREMENTALLY_LOAD_TEXTURES)
 }
 func CZMModelAddRUN_ANIMATIONS(builder *flatbuffers.Builder, RUN_ANIMATIONS bool) {
 	builder.PrependBoolSlot(8, RUN_ANIMATIONS, false)
 }
+func CZMModelAddRunAnimations(builder *flatbuffers.Builder, RUN_ANIMATIONS bool) {
+	CZMModelAddRUN_ANIMATIONS(builder, RUN_ANIMATIONS)
+}
 func CZMModelAddSHADOWS(builder *flatbuffers.Builder, SHADOWS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(SHADOWS), 0)
+}
+func CZMModelAddShadows(builder *flatbuffers.Builder, SHADOWS flatbuffers.UOffsetT) {
+	CZMModelAddSHADOWS(builder, SHADOWS)
 }
 func CZMModelAddSILHOUETTE_COLOR(builder *flatbuffers.Builder, SILHOUETTE_COLOR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(SILHOUETTE_COLOR), 0)
 }
+func CZMModelAddSilhouetteColor(builder *flatbuffers.Builder, SILHOUETTE_COLOR flatbuffers.UOffsetT) {
+	CZMModelAddSILHOUETTE_COLOR(builder, SILHOUETTE_COLOR)
+}
 func CZMModelAddSILHOUETTE_SIZE(builder *flatbuffers.Builder, SILHOUETTE_SIZE float64) {
 	builder.PrependFloat64Slot(11, SILHOUETTE_SIZE, 0.0)
+}
+func CZMModelAddSilhouetteSize(builder *flatbuffers.Builder, SILHOUETTE_SIZE float64) {
+	CZMModelAddSILHOUETTE_SIZE(builder, SILHOUETTE_SIZE)
 }
 func CZMModelAddCOLOR_BLEND_MODE(builder *flatbuffers.Builder, COLOR_BLEND_MODE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(12, flatbuffers.UOffsetT(COLOR_BLEND_MODE), 0)
 }
+func CZMModelAddColorBlendMode(builder *flatbuffers.Builder, COLOR_BLEND_MODE flatbuffers.UOffsetT) {
+	CZMModelAddCOLOR_BLEND_MODE(builder, COLOR_BLEND_MODE)
+}
 func CZMModelAddCOLOR_BLEND_AMOUNT(builder *flatbuffers.Builder, COLOR_BLEND_AMOUNT float64) {
 	builder.PrependFloat64Slot(13, COLOR_BLEND_AMOUNT, 0.0)
+}
+func CZMModelAddColorBlendAmount(builder *flatbuffers.Builder, COLOR_BLEND_AMOUNT float64) {
+	CZMModelAddCOLOR_BLEND_AMOUNT(builder, COLOR_BLEND_AMOUNT)
 }
 func CZMModelEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

@@ -51,9 +51,17 @@ func (rcv *RepeatEntry) COUNT() uint32 {
 	return 0
 }
 
+func (rcv *RepeatEntry) Count() uint32 {
+	return rcv.COUNT()
+}
+
 /// Fixed repeat count
 func (rcv *RepeatEntry) MutateCOUNT(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(4, n)
+}
+
+func (rcv *RepeatEntry) MutateCount(n uint32) bool {
+	return rcv.MutateCOUNT(n)
 }
 
 /// Dynamic count from parameter reference
@@ -63,6 +71,10 @@ func (rcv *RepeatEntry) COUNT_PARAMETER_REF() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *RepeatEntry) CountParameterRef() []byte {
+	return rcv.COUNT_PARAMETER_REF()
 }
 
 /// Dynamic count from parameter reference
@@ -75,9 +87,17 @@ func (rcv *RepeatEntry) OFFSET_IN_BITS() int32 {
 	return 0
 }
 
+func (rcv *RepeatEntry) OffsetInBits() int32 {
+	return rcv.OFFSET_IN_BITS()
+}
+
 /// Offset in bits between repetitions
 func (rcv *RepeatEntry) MutateOFFSET_IN_BITS(n int32) bool {
 	return rcv._tab.MutateInt32Slot(8, n)
+}
+
+func (rcv *RepeatEntry) MutateOffsetInBits(n int32) bool {
+	return rcv.MutateOFFSET_IN_BITS(n)
 }
 
 func RepeatEntryStart(builder *flatbuffers.Builder) {
@@ -86,11 +106,20 @@ func RepeatEntryStart(builder *flatbuffers.Builder) {
 func RepeatEntryAddCOUNT(builder *flatbuffers.Builder, COUNT uint32) {
 	builder.PrependUint32Slot(0, COUNT, 0)
 }
+func RepeatEntryAddCount(builder *flatbuffers.Builder, COUNT uint32) {
+	RepeatEntryAddCOUNT(builder, COUNT)
+}
 func RepeatEntryAddCOUNT_PARAMETER_REF(builder *flatbuffers.Builder, COUNT_PARAMETER_REF flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(COUNT_PARAMETER_REF), 0)
 }
+func RepeatEntryAddCountParameterRef(builder *flatbuffers.Builder, COUNT_PARAMETER_REF flatbuffers.UOffsetT) {
+	RepeatEntryAddCOUNT_PARAMETER_REF(builder, COUNT_PARAMETER_REF)
+}
 func RepeatEntryAddOFFSET_IN_BITS(builder *flatbuffers.Builder, OFFSET_IN_BITS int32) {
 	builder.PrependInt32Slot(2, OFFSET_IN_BITS, 0)
+}
+func RepeatEntryAddOffsetInBits(builder *flatbuffers.Builder, OFFSET_IN_BITS int32) {
+	RepeatEntryAddOFFSET_IN_BITS(builder, OFFSET_IN_BITS)
 }
 func RepeatEntryEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

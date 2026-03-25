@@ -32,7 +32,7 @@ class FixedFrameStream : Table() {
     /**
      * Stream name
      */
-    val NAME : String?
+    val name : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class FixedFrameStream : Table() {
                 null
             }
         }
-    val NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val nameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun nameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Short description
      */
-    val SHORT_DESCRIPTION : String?
+    val shortDescription : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -55,12 +55,12 @@ class FixedFrameStream : Table() {
                 null
             }
         }
-    val SHORT_DESCRIPTIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun SHORT_DESCRIPTIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val shortDescriptionAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun shortDescriptionInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * Frame size in bits
      */
-    val FRAME_SIZE_IN_BITS : UInt
+    val frameSizeInBits : UInt
         get() {
             val o = __offset(8)
             return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
@@ -68,7 +68,7 @@ class FixedFrameStream : Table() {
     /**
      * Sync pattern (hex string)
      */
-    val SYNC_PATTERN : String?
+    val syncPattern : String?
         get() {
             val o = __offset(10)
             return if (o != 0) {
@@ -77,28 +77,28 @@ class FixedFrameStream : Table() {
                 null
             }
         }
-    val SYNC_PATTERNAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
-    fun SYNC_PATTERNInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
+    val syncPatternAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(10, 1)
+    fun syncPatternInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 10, 1)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsFixedFrameStream(_bb: ByteBuffer): FixedFrameStream = getRootAsFixedFrameStream(_bb, FixedFrameStream())
         fun getRootAsFixedFrameStream(_bb: ByteBuffer, obj: FixedFrameStream): FixedFrameStream {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createFixedFrameStream(builder: FlatBufferBuilder, NAMEOffset: Int, SHORT_DESCRIPTIONOffset: Int, FRAME_SIZE_IN_BITS: UInt, SYNC_PATTERNOffset: Int) : Int {
+        fun createFixedFrameStream(builder: FlatBufferBuilder, nameOffset: Int, shortDescriptionOffset: Int, frameSizeInBits: UInt, syncPatternOffset: Int) : Int {
             builder.startTable(4)
-            addSYNC_PATTERN(builder, SYNC_PATTERNOffset)
-            addFRAME_SIZE_IN_BITS(builder, FRAME_SIZE_IN_BITS)
-            addSHORT_DESCRIPTION(builder, SHORT_DESCRIPTIONOffset)
-            addNAME(builder, NAMEOffset)
+            addSYNCPATTERN(builder, syncPatternOffset)
+            addFRAMESIZEINBITS(builder, frameSizeInBits)
+            addSHORTDESCRIPTION(builder, shortDescriptionOffset)
+            addNAME(builder, nameOffset)
             return endFixedFrameStream(builder)
         }
         fun startFixedFrameStream(builder: FlatBufferBuilder) = builder.startTable(4)
-        fun addNAME(builder: FlatBufferBuilder, NAME: Int) = builder.addOffset(0, NAME, 0)
-        fun addSHORT_DESCRIPTION(builder: FlatBufferBuilder, SHORT_DESCRIPTION: Int) = builder.addOffset(1, SHORT_DESCRIPTION, 0)
-        fun addFRAME_SIZE_IN_BITS(builder: FlatBufferBuilder, FRAME_SIZE_IN_BITS: UInt) = builder.addInt(2, FRAME_SIZE_IN_BITS.toInt(), 0)
-        fun addSYNC_PATTERN(builder: FlatBufferBuilder, SYNC_PATTERN: Int) = builder.addOffset(3, SYNC_PATTERN, 0)
+        fun addNAME(builder: FlatBufferBuilder, name: Int) = builder.addOffset(0, name, 0)
+        fun addSHORTDESCRIPTION(builder: FlatBufferBuilder, shortDescription: Int) = builder.addOffset(1, shortDescription, 0)
+        fun addFRAMESIZEINBITS(builder: FlatBufferBuilder, frameSizeInBits: UInt) = builder.addInt(2, frameSizeInBits.toInt(), 0)
+        fun addSYNCPATTERN(builder: FlatBufferBuilder, syncPattern: Int) = builder.addOffset(3, syncPattern, 0)
         fun endFixedFrameStream(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

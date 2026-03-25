@@ -205,6 +205,12 @@ def IntegerParameterTypeStartUNITSVector(builder, numElems):
 def StartUNITSVector(builder, numElems):
     return IntegerParameterTypeStartUNITSVector(builder, numElems)
 
+def IntegerParameterTypeCreateUNITSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateUNITSVector(builder, data):
+    IntegerParameterTypeCreateUNITSVector(builder, data)
+
 def IntegerParameterTypeAddDATA_ENCODING(builder, DATA_ENCODING):
     builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(DATA_ENCODING), 0)
 
@@ -228,6 +234,12 @@ def IntegerParameterTypeStartCONTEXT_ALARMSVector(builder, numElems):
 
 def StartCONTEXT_ALARMSVector(builder, numElems):
     return IntegerParameterTypeStartCONTEXT_ALARMSVector(builder, numElems)
+
+def IntegerParameterTypeCreateCONTEXT_ALARMSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateCONTEXT_ALARMSVector(builder, data):
+    IntegerParameterTypeCreateCONTEXT_ALARMSVector(builder, data)
 
 def IntegerParameterTypeAddVALID_MIN(builder, VALID_MIN):
     builder.PrependInt64Slot(7, VALID_MIN, 0)
@@ -277,25 +289,39 @@ except:
 class IntegerParameterTypeT(object):
 
     # IntegerParameterTypeT
-    def __init__(self):
-        self.NAME = None  # type: str
-        self.SHORT_DESCRIPTION = None  # type: str
-        self.LONG_DESCRIPTION = None  # type: str
-        self.UNITS = None  # type: List[Unit.UnitT]
-        self.DATA_ENCODING = None  # type: Optional[IntegerDataEncoding.IntegerDataEncodingT]
-        self.DEFAULT_ALARM = None  # type: Optional[DefaultAlarm.DefaultAlarmT]
-        self.CONTEXT_ALARMS = None  # type: List[ContextAlarm.ContextAlarmT]
-        self.VALID_MIN = 0  # type: int
-        self.VALID_MAX = 0  # type: int
-        self.SIGNED = False  # type: bool
-        self.SIZE_IN_BITS = 0  # type: int
-        self.INITIAL_VALUE = 0  # type: int
+    def __init__(
+        self,
+        NAME = None,
+        SHORT_DESCRIPTION = None,
+        LONG_DESCRIPTION = None,
+        UNITS = None,
+        DATA_ENCODING = None,
+        DEFAULT_ALARM = None,
+        CONTEXT_ALARMS = None,
+        VALID_MIN = 0,
+        VALID_MAX = 0,
+        SIGNED = False,
+        SIZE_IN_BITS = 0,
+        INITIAL_VALUE = 0,
+    ):
+        self.NAME = NAME  # type: Optional[str]
+        self.SHORT_DESCRIPTION = SHORT_DESCRIPTION  # type: Optional[str]
+        self.LONG_DESCRIPTION = LONG_DESCRIPTION  # type: Optional[str]
+        self.UNITS = UNITS  # type: Optional[List[Unit.UnitT]]
+        self.DATA_ENCODING = DATA_ENCODING  # type: Optional[IntegerDataEncoding.IntegerDataEncodingT]
+        self.DEFAULT_ALARM = DEFAULT_ALARM  # type: Optional[DefaultAlarm.DefaultAlarmT]
+        self.CONTEXT_ALARMS = CONTEXT_ALARMS  # type: Optional[List[ContextAlarm.ContextAlarmT]]
+        self.VALID_MIN = VALID_MIN  # type: int
+        self.VALID_MAX = VALID_MAX  # type: int
+        self.SIGNED = SIGNED  # type: bool
+        self.SIZE_IN_BITS = SIZE_IN_BITS  # type: int
+        self.INITIAL_VALUE = INITIAL_VALUE  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        integerParameterType = IntegerParameterType()
-        integerParameterType.Init(buf, pos)
-        return cls.InitFromObj(integerParameterType)
+        tmpIntegerParameterType = IntegerParameterType()
+        tmpIntegerParameterType.Init(buf, pos)
+        return cls.InitFromObj(tmpIntegerParameterType)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -303,43 +329,43 @@ class IntegerParameterTypeT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, integerParameterType):
+    def InitFromObj(cls, tmpIntegerParameterType):
         x = IntegerParameterTypeT()
-        x._UnPack(integerParameterType)
+        x._UnPack(tmpIntegerParameterType)
         return x
 
     # IntegerParameterTypeT
-    def _UnPack(self, integerParameterType):
-        if integerParameterType is None:
+    def _UnPack(self, IntegerParameterType):
+        if IntegerParameterType is None:
             return
-        self.NAME = integerParameterType.NAME()
-        self.SHORT_DESCRIPTION = integerParameterType.SHORT_DESCRIPTION()
-        self.LONG_DESCRIPTION = integerParameterType.LONG_DESCRIPTION()
-        if not integerParameterType.UNITSIsNone():
+        self.NAME = IntegerParameterType.NAME()
+        self.SHORT_DESCRIPTION = IntegerParameterType.SHORT_DESCRIPTION()
+        self.LONG_DESCRIPTION = IntegerParameterType.LONG_DESCRIPTION()
+        if not IntegerParameterType.UNITSIsNone():
             self.UNITS = []
-            for i in range(integerParameterType.UNITSLength()):
-                if integerParameterType.UNITS(i) is None:
+            for i in range(IntegerParameterType.UNITSLength()):
+                if IntegerParameterType.UNITS(i) is None:
                     self.UNITS.append(None)
                 else:
-                    unit_ = Unit.UnitT.InitFromObj(integerParameterType.UNITS(i))
+                    unit_ = Unit.UnitT.InitFromObj(IntegerParameterType.UNITS(i))
                     self.UNITS.append(unit_)
-        if integerParameterType.DATA_ENCODING() is not None:
-            self.DATA_ENCODING = IntegerDataEncoding.IntegerDataEncodingT.InitFromObj(integerParameterType.DATA_ENCODING())
-        if integerParameterType.DEFAULT_ALARM() is not None:
-            self.DEFAULT_ALARM = DefaultAlarm.DefaultAlarmT.InitFromObj(integerParameterType.DEFAULT_ALARM())
-        if not integerParameterType.CONTEXT_ALARMSIsNone():
+        if IntegerParameterType.DATA_ENCODING() is not None:
+            self.DATA_ENCODING = IntegerDataEncoding.IntegerDataEncodingT.InitFromObj(IntegerParameterType.DATA_ENCODING())
+        if IntegerParameterType.DEFAULT_ALARM() is not None:
+            self.DEFAULT_ALARM = DefaultAlarm.DefaultAlarmT.InitFromObj(IntegerParameterType.DEFAULT_ALARM())
+        if not IntegerParameterType.CONTEXT_ALARMSIsNone():
             self.CONTEXT_ALARMS = []
-            for i in range(integerParameterType.CONTEXT_ALARMSLength()):
-                if integerParameterType.CONTEXT_ALARMS(i) is None:
+            for i in range(IntegerParameterType.CONTEXT_ALARMSLength()):
+                if IntegerParameterType.CONTEXT_ALARMS(i) is None:
                     self.CONTEXT_ALARMS.append(None)
                 else:
-                    contextAlarm_ = ContextAlarm.ContextAlarmT.InitFromObj(integerParameterType.CONTEXT_ALARMS(i))
+                    contextAlarm_ = ContextAlarm.ContextAlarmT.InitFromObj(IntegerParameterType.CONTEXT_ALARMS(i))
                     self.CONTEXT_ALARMS.append(contextAlarm_)
-        self.VALID_MIN = integerParameterType.VALID_MIN()
-        self.VALID_MAX = integerParameterType.VALID_MAX()
-        self.SIGNED = integerParameterType.SIGNED()
-        self.SIZE_IN_BITS = integerParameterType.SIZE_IN_BITS()
-        self.INITIAL_VALUE = integerParameterType.INITIAL_VALUE()
+        self.VALID_MIN = IntegerParameterType.VALID_MIN()
+        self.VALID_MAX = IntegerParameterType.VALID_MAX()
+        self.SIGNED = IntegerParameterType.SIGNED()
+        self.SIZE_IN_BITS = IntegerParameterType.SIZE_IN_BITS()
+        self.INITIAL_VALUE = IntegerParameterType.INITIAL_VALUE()
 
     # IntegerParameterTypeT
     def Pack(self, builder):
@@ -389,5 +415,5 @@ class IntegerParameterTypeT(object):
         IntegerParameterTypeAddSIGNED(builder, self.SIGNED)
         IntegerParameterTypeAddSIZE_IN_BITS(builder, self.SIZE_IN_BITS)
         IntegerParameterTypeAddINITIAL_VALUE(builder, self.INITIAL_VALUE)
-        integerParameterType = IntegerParameterTypeEnd(builder)
-        return integerParameterType
+        IntegerParameterType = IntegerParameterTypeEnd(builder)
+        return IntegerParameterType

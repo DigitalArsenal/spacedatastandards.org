@@ -168,16 +168,16 @@ struct COMBuilder:
     def end():
         return b_.EndObject()
 
-def COMStartCONNECTED_NODESVector(b_:flatbuffers.builder, n_:int):
+def COMStartCONNECTEDNODESVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def COMCreateCONNECTED_NODESVector(b_:flatbuffers.builder, v_:[int]):
+def COMCreateCONNECTEDNODESVector(b_:flatbuffers.builder, v_:[int]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUint32(e_)
     return b_.EndVector(v_.length)
 
-def COMStartACTIVE_LINKSVector(b_:flatbuffers.builder, n_:int):
+def COMStartACTIVELINKSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(1, n_, 1)
-def COMCreateACTIVE_LINKSVector(b_:flatbuffers.builder, v_:[DataLinkType]):
+def COMCreateACTIVELINKSVector(b_:flatbuffers.builder, v_:[DataLinkType]):
     b_.StartVector(1, v_.length, 1)
     reverse(v_) e_: b_.PrependInt8(e_)
     return b_.EndVector(v_.length)

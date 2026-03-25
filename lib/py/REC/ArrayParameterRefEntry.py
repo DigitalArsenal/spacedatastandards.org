@@ -2,4 +2,165 @@
 
 # namespace: 
 
-# NOTE ArrayParameterRefEntry.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Array parameter reference entry
+class ArrayParameterRefEntry(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = ArrayParameterRefEntry()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsArrayParameterRefEntry(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def ArrayParameterRefEntryBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x58\x54\x43", size_prefixed=size_prefixed)
+
+    # ArrayParameterRefEntry
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Parameter reference path
+    # ArrayParameterRefEntry
+    def PARAMETER_REF(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Location in container
+    # ArrayParameterRefEntry
+    def LOCATION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from LocationInContainer import LocationInContainer
+            obj = LocationInContainer()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # First index to include
+    # ArrayParameterRefEntry
+    def FIRST_INDEX(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+        return 0
+
+    # Last index to include
+    # ArrayParameterRefEntry
+    def LAST_INDEX(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+        return 0
+
+def ArrayParameterRefEntryStart(builder):
+    builder.StartObject(4)
+
+def Start(builder):
+    ArrayParameterRefEntryStart(builder)
+
+def ArrayParameterRefEntryAddPARAMETER_REF(builder, PARAMETER_REF):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(PARAMETER_REF), 0)
+
+def AddPARAMETER_REF(builder, PARAMETER_REF):
+    ArrayParameterRefEntryAddPARAMETER_REF(builder, PARAMETER_REF)
+
+def ArrayParameterRefEntryAddLOCATION(builder, LOCATION):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(LOCATION), 0)
+
+def AddLOCATION(builder, LOCATION):
+    ArrayParameterRefEntryAddLOCATION(builder, LOCATION)
+
+def ArrayParameterRefEntryAddFIRST_INDEX(builder, FIRST_INDEX):
+    builder.PrependUint32Slot(2, FIRST_INDEX, 0)
+
+def AddFIRST_INDEX(builder, FIRST_INDEX):
+    ArrayParameterRefEntryAddFIRST_INDEX(builder, FIRST_INDEX)
+
+def ArrayParameterRefEntryAddLAST_INDEX(builder, LAST_INDEX):
+    builder.PrependUint32Slot(3, LAST_INDEX, 0)
+
+def AddLAST_INDEX(builder, LAST_INDEX):
+    ArrayParameterRefEntryAddLAST_INDEX(builder, LAST_INDEX)
+
+def ArrayParameterRefEntryEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return ArrayParameterRefEntryEnd(builder)
+
+import LocationInContainer
+try:
+    from typing import Optional
+except:
+    pass
+
+class ArrayParameterRefEntryT(object):
+
+    # ArrayParameterRefEntryT
+    def __init__(
+        self,
+        PARAMETER_REF = None,
+        LOCATION = None,
+        FIRST_INDEX = 0,
+        LAST_INDEX = 0,
+    ):
+        self.PARAMETER_REF = PARAMETER_REF  # type: Optional[str]
+        self.LOCATION = LOCATION  # type: Optional[LocationInContainer.LocationInContainerT]
+        self.FIRST_INDEX = FIRST_INDEX  # type: int
+        self.LAST_INDEX = LAST_INDEX  # type: int
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpArrayParameterRefEntry = ArrayParameterRefEntry()
+        tmpArrayParameterRefEntry.Init(buf, pos)
+        return cls.InitFromObj(tmpArrayParameterRefEntry)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpArrayParameterRefEntry):
+        x = ArrayParameterRefEntryT()
+        x._UnPack(tmpArrayParameterRefEntry)
+        return x
+
+    # ArrayParameterRefEntryT
+    def _UnPack(self, ArrayParameterRefEntry):
+        if ArrayParameterRefEntry is None:
+            return
+        self.PARAMETER_REF = ArrayParameterRefEntry.PARAMETER_REF()
+        if ArrayParameterRefEntry.LOCATION() is not None:
+            self.LOCATION = LocationInContainer.LocationInContainerT.InitFromObj(ArrayParameterRefEntry.LOCATION())
+        self.FIRST_INDEX = ArrayParameterRefEntry.FIRST_INDEX()
+        self.LAST_INDEX = ArrayParameterRefEntry.LAST_INDEX()
+
+    # ArrayParameterRefEntryT
+    def Pack(self, builder):
+        if self.PARAMETER_REF is not None:
+            PARAMETER_REF = builder.CreateString(self.PARAMETER_REF)
+        if self.LOCATION is not None:
+            LOCATION = self.LOCATION.Pack(builder)
+        ArrayParameterRefEntryStart(builder)
+        if self.PARAMETER_REF is not None:
+            ArrayParameterRefEntryAddPARAMETER_REF(builder, PARAMETER_REF)
+        if self.LOCATION is not None:
+            ArrayParameterRefEntryAddLOCATION(builder, LOCATION)
+        ArrayParameterRefEntryAddFIRST_INDEX(builder, self.FIRST_INDEX)
+        ArrayParameterRefEntryAddLAST_INDEX(builder, self.LAST_INDEX)
+        ArrayParameterRefEntry = ArrayParameterRefEntryEnd(builder)
+        return ArrayParameterRefEntry

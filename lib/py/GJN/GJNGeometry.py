@@ -195,6 +195,12 @@ def GJNGeometryStartPOSITIONSVector(builder, numElems):
 def StartPOSITIONSVector(builder, numElems):
     return GJNGeometryStartPOSITIONSVector(builder, numElems)
 
+def GJNGeometryCreatePOSITIONSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreatePOSITIONSVector(builder, data):
+    GJNGeometryCreatePOSITIONSVector(builder, data)
+
 def GJNGeometryAddRINGS(builder, RINGS):
     builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(RINGS), 0)
 
@@ -206,6 +212,12 @@ def GJNGeometryStartRINGSVector(builder, numElems):
 
 def StartRINGSVector(builder, numElems):
     return GJNGeometryStartRINGSVector(builder, numElems)
+
+def GJNGeometryCreateRINGSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateRINGSVector(builder, data):
+    GJNGeometryCreateRINGSVector(builder, data)
 
 def GJNGeometryAddPOLYGON_RINGS(builder, POLYGON_RINGS):
     builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(POLYGON_RINGS), 0)
@@ -219,6 +231,12 @@ def GJNGeometryStartPOLYGON_RINGSVector(builder, numElems):
 def StartPOLYGON_RINGSVector(builder, numElems):
     return GJNGeometryStartPOLYGON_RINGSVector(builder, numElems)
 
+def GJNGeometryCreatePOLYGON_RINGSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreatePOLYGON_RINGSVector(builder, data):
+    GJNGeometryCreatePOLYGON_RINGSVector(builder, data)
+
 def GJNGeometryAddGEOMETRIES(builder, GEOMETRIES):
     builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(GEOMETRIES), 0)
 
@@ -230,6 +248,12 @@ def GJNGeometryStartGEOMETRIESVector(builder, numElems):
 
 def StartGEOMETRIESVector(builder, numElems):
     return GJNGeometryStartGEOMETRIESVector(builder, numElems)
+
+def GJNGeometryCreateGEOMETRIESVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateGEOMETRIESVector(builder, data):
+    GJNGeometryCreateGEOMETRIESVector(builder, data)
 
 def GJNGeometryAddBBOX(builder, BBOX):
     builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(BBOX), 0)
@@ -255,20 +279,29 @@ except:
 class GJNGeometryT(object):
 
     # GJNGeometryT
-    def __init__(self):
-        self.TYPE = 0  # type: int
-        self.POINT = None  # type: Optional[GJNPosition.GJNPositionT]
-        self.POSITIONS = None  # type: List[GJNPosition.GJNPositionT]
-        self.RINGS = None  # type: List[GJNLinearRing.GJNLinearRingT]
-        self.POLYGON_RINGS = None  # type: List[GJNPolygonRings.GJNPolygonRingsT]
-        self.GEOMETRIES = None  # type: List[GJNGeometry.GJNGeometryT]
-        self.BBOX = None  # type: Optional[GJNBoundingBox.GJNBoundingBoxT]
+    def __init__(
+        self,
+        TYPE = 0,
+        POINT = None,
+        POSITIONS = None,
+        RINGS = None,
+        POLYGON_RINGS = None,
+        GEOMETRIES = None,
+        BBOX = None,
+    ):
+        self.TYPE = TYPE  # type: int
+        self.POINT = POINT  # type: Optional[GJNPosition.GJNPositionT]
+        self.POSITIONS = POSITIONS  # type: Optional[List[GJNPosition.GJNPositionT]]
+        self.RINGS = RINGS  # type: Optional[List[GJNLinearRing.GJNLinearRingT]]
+        self.POLYGON_RINGS = POLYGON_RINGS  # type: Optional[List[GJNPolygonRings.GJNPolygonRingsT]]
+        self.GEOMETRIES = GEOMETRIES  # type: Optional[List[GJNGeometry.GJNGeometryT]]
+        self.BBOX = BBOX  # type: Optional[GJNBoundingBox.GJNBoundingBoxT]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        gjngeometry = GJNGeometry()
-        gjngeometry.Init(buf, pos)
-        return cls.InitFromObj(gjngeometry)
+        tmpGjngeometry = GJNGeometry()
+        tmpGjngeometry.Init(buf, pos)
+        return cls.InitFromObj(tmpGjngeometry)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -276,52 +309,52 @@ class GJNGeometryT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, gjngeometry):
+    def InitFromObj(cls, tmpGjngeometry):
         x = GJNGeometryT()
-        x._UnPack(gjngeometry)
+        x._UnPack(tmpGjngeometry)
         return x
 
     # GJNGeometryT
-    def _UnPack(self, gjngeometry):
-        if gjngeometry is None:
+    def _UnPack(self, GJNGeometry):
+        if GJNGeometry is None:
             return
-        self.TYPE = gjngeometry.TYPE()
-        if gjngeometry.POINT() is not None:
-            self.POINT = GJNPosition.GJNPositionT.InitFromObj(gjngeometry.POINT())
-        if not gjngeometry.POSITIONSIsNone():
+        self.TYPE = GJNGeometry.TYPE()
+        if GJNGeometry.POINT() is not None:
+            self.POINT = GJNPosition.GJNPositionT.InitFromObj(GJNGeometry.POINT())
+        if not GJNGeometry.POSITIONSIsNone():
             self.POSITIONS = []
-            for i in range(gjngeometry.POSITIONSLength()):
-                if gjngeometry.POSITIONS(i) is None:
+            for i in range(GJNGeometry.POSITIONSLength()):
+                if GJNGeometry.POSITIONS(i) is None:
                     self.POSITIONS.append(None)
                 else:
-                    gJNPosition_ = GJNPosition.GJNPositionT.InitFromObj(gjngeometry.POSITIONS(i))
+                    gJNPosition_ = GJNPosition.GJNPositionT.InitFromObj(GJNGeometry.POSITIONS(i))
                     self.POSITIONS.append(gJNPosition_)
-        if not gjngeometry.RINGSIsNone():
+        if not GJNGeometry.RINGSIsNone():
             self.RINGS = []
-            for i in range(gjngeometry.RINGSLength()):
-                if gjngeometry.RINGS(i) is None:
+            for i in range(GJNGeometry.RINGSLength()):
+                if GJNGeometry.RINGS(i) is None:
                     self.RINGS.append(None)
                 else:
-                    gJNLinearRing_ = GJNLinearRing.GJNLinearRingT.InitFromObj(gjngeometry.RINGS(i))
+                    gJNLinearRing_ = GJNLinearRing.GJNLinearRingT.InitFromObj(GJNGeometry.RINGS(i))
                     self.RINGS.append(gJNLinearRing_)
-        if not gjngeometry.POLYGON_RINGSIsNone():
+        if not GJNGeometry.POLYGON_RINGSIsNone():
             self.POLYGON_RINGS = []
-            for i in range(gjngeometry.POLYGON_RINGSLength()):
-                if gjngeometry.POLYGON_RINGS(i) is None:
+            for i in range(GJNGeometry.POLYGON_RINGSLength()):
+                if GJNGeometry.POLYGON_RINGS(i) is None:
                     self.POLYGON_RINGS.append(None)
                 else:
-                    gJNPolygonRings_ = GJNPolygonRings.GJNPolygonRingsT.InitFromObj(gjngeometry.POLYGON_RINGS(i))
+                    gJNPolygonRings_ = GJNPolygonRings.GJNPolygonRingsT.InitFromObj(GJNGeometry.POLYGON_RINGS(i))
                     self.POLYGON_RINGS.append(gJNPolygonRings_)
-        if not gjngeometry.GEOMETRIESIsNone():
+        if not GJNGeometry.GEOMETRIESIsNone():
             self.GEOMETRIES = []
-            for i in range(gjngeometry.GEOMETRIESLength()):
-                if gjngeometry.GEOMETRIES(i) is None:
+            for i in range(GJNGeometry.GEOMETRIESLength()):
+                if GJNGeometry.GEOMETRIES(i) is None:
                     self.GEOMETRIES.append(None)
                 else:
-                    gJNGeometry_ = GJNGeometry.GJNGeometryT.InitFromObj(gjngeometry.GEOMETRIES(i))
+                    gJNGeometry_ = GJNGeometry.GJNGeometryT.InitFromObj(GJNGeometry.GEOMETRIES(i))
                     self.GEOMETRIES.append(gJNGeometry_)
-        if gjngeometry.BBOX() is not None:
-            self.BBOX = GJNBoundingBox.GJNBoundingBoxT.InitFromObj(gjngeometry.BBOX())
+        if GJNGeometry.BBOX() is not None:
+            self.BBOX = GJNBoundingBox.GJNBoundingBoxT.InitFromObj(GJNGeometry.BBOX())
 
     # GJNGeometryT
     def Pack(self, builder):
@@ -375,5 +408,5 @@ class GJNGeometryT(object):
             GJNGeometryAddGEOMETRIES(builder, GEOMETRIES)
         if self.BBOX is not None:
             GJNGeometryAddBBOX(builder, BBOX)
-        gjngeometry = GJNGeometryEnd(builder)
-        return gjngeometry
+        GJNGeometry = GJNGeometryEnd(builder)
+        return GJNGeometry

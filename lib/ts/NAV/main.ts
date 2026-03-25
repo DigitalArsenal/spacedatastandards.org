@@ -2,7 +2,7 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export { DCState } from './DCState.js';
-export { NAV, NAVT } from './NAV.js';
-export { PropulsionType } from './PropulsionType.js';
-export { VesselType } from './VesselType.js';
+export * from './DCState.js';
+export * from './NAV.js';
+export * from './PropulsionType.js';
+export * from './VesselType.js';

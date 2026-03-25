@@ -138,6 +138,12 @@ def odSensorContributionStartOB_TYPESVector(builder, numElems):
 def StartOB_TYPESVector(builder, numElems):
     return odSensorContributionStartOB_TYPESVector(builder, numElems)
 
+def odSensorContributionCreateOB_TYPESVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateOB_TYPESVector(builder, data):
+    odSensorContributionCreateOB_TYPESVector(builder, data)
+
 def odSensorContributionEnd(builder):
     return builder.EndObject()
 
@@ -152,19 +158,27 @@ except:
 class odSensorContributionT(object):
 
     # odSensorContributionT
-    def __init__(self):
-        self.SENSOR_ID = None  # type: str
-        self.ORIG_SENSOR_ID = None  # type: str
-        self.NUM_ACCEPTED = 0  # type: int
-        self.NUM_REJECTED = 0  # type: int
-        self.WRMS = 0.0  # type: float
-        self.OB_TYPES = None  # type: List[str]
+    def __init__(
+        self,
+        SENSOR_ID = None,
+        ORIG_SENSOR_ID = None,
+        NUM_ACCEPTED = 0,
+        NUM_REJECTED = 0,
+        WRMS = 0.0,
+        OB_TYPES = None,
+    ):
+        self.SENSOR_ID = SENSOR_ID  # type: Optional[str]
+        self.ORIG_SENSOR_ID = ORIG_SENSOR_ID  # type: Optional[str]
+        self.NUM_ACCEPTED = NUM_ACCEPTED  # type: int
+        self.NUM_REJECTED = NUM_REJECTED  # type: int
+        self.WRMS = WRMS  # type: float
+        self.OB_TYPES = OB_TYPES  # type: Optional[List[Optional[str]]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        odSensorContribution = odSensorContribution()
-        odSensorContribution.Init(buf, pos)
-        return cls.InitFromObj(odSensorContribution)
+        tmpOdSensorContribution = odSensorContribution()
+        tmpOdSensorContribution.Init(buf, pos)
+        return cls.InitFromObj(tmpOdSensorContribution)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -172,9 +186,9 @@ class odSensorContributionT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, odSensorContribution):
+    def InitFromObj(cls, tmpOdSensorContribution):
         x = odSensorContributionT()
-        x._UnPack(odSensorContribution)
+        x._UnPack(tmpOdSensorContribution)
         return x
 
     # odSensorContributionT

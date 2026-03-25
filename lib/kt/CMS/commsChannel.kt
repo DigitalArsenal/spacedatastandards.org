@@ -32,7 +32,7 @@ class commsChannel : Table() {
     /**
      * Channel identifier
      */
-    val CHANNEL_ID : String?
+    val channelId : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class commsChannel : Table() {
                 null
             }
         }
-    val CHANNEL_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun CHANNEL_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val channelIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun channelIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Channel name
      */
-    val NAME : String?
+    val name : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -55,12 +55,12 @@ class commsChannel : Table() {
                 null
             }
         }
-    val NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val nameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun nameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * Uplink frequency in MHz
      */
-    val UPLINK_FREQ : Double
+    val uplinkFreq : Double
         get() {
             val o = __offset(8)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -68,7 +68,7 @@ class commsChannel : Table() {
     /**
      * Downlink frequency in MHz
      */
-    val DOWNLINK_FREQ : Double
+    val downlinkFreq : Double
         get() {
             val o = __offset(10)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -76,7 +76,7 @@ class commsChannel : Table() {
     /**
      * Channel bandwidth in MHz
      */
-    val BANDWIDTH : Double
+    val bandwidth : Double
         get() {
             val o = __offset(12)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -84,7 +84,7 @@ class commsChannel : Table() {
     /**
      * Modulation type
      */
-    val MODULATION : Byte
+    val modulation : Byte
         get() {
             val o = __offset(14)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -92,7 +92,7 @@ class commsChannel : Table() {
     /**
      * Data rate in Mbps
      */
-    val DATA_RATE : Double
+    val dataRate : Double
         get() {
             val o = __offset(16)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -100,7 +100,7 @@ class commsChannel : Table() {
     /**
      * Encryption method
      */
-    val ENCRYPTION : Byte
+    val encryption : Byte
         get() {
             val o = __offset(18)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -108,7 +108,7 @@ class commsChannel : Table() {
     /**
      * Forward error correction coding rate (e.g., 0.5, 0.75)
      */
-    val FEC_RATE : Double
+    val fecRate : Double
         get() {
             val o = __offset(20)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -116,43 +116,43 @@ class commsChannel : Table() {
     /**
      * Channel power in dBW
      */
-    val POWER : Double
+    val power : Double
         get() {
             val o = __offset(22)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAscommsChannel(_bb: ByteBuffer): commsChannel = getRootAscommsChannel(_bb, commsChannel())
         fun getRootAscommsChannel(_bb: ByteBuffer, obj: commsChannel): commsChannel {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createcommsChannel(builder: FlatBufferBuilder, CHANNEL_IDOffset: Int, NAMEOffset: Int, UPLINK_FREQ: Double, DOWNLINK_FREQ: Double, BANDWIDTH: Double, MODULATION: Byte, DATA_RATE: Double, ENCRYPTION: Byte, FEC_RATE: Double, POWER: Double) : Int {
+        fun createcommsChannel(builder: FlatBufferBuilder, channelIdOffset: Int, nameOffset: Int, uplinkFreq: Double, downlinkFreq: Double, bandwidth: Double, modulation: Byte, dataRate: Double, encryption: Byte, fecRate: Double, power: Double) : Int {
             builder.startTable(10)
-            addPOWER(builder, POWER)
-            addFEC_RATE(builder, FEC_RATE)
-            addDATA_RATE(builder, DATA_RATE)
-            addBANDWIDTH(builder, BANDWIDTH)
-            addDOWNLINK_FREQ(builder, DOWNLINK_FREQ)
-            addUPLINK_FREQ(builder, UPLINK_FREQ)
-            addNAME(builder, NAMEOffset)
-            addCHANNEL_ID(builder, CHANNEL_IDOffset)
-            addENCRYPTION(builder, ENCRYPTION)
-            addMODULATION(builder, MODULATION)
+            addPOWER(builder, power)
+            addFECRATE(builder, fecRate)
+            addDATARATE(builder, dataRate)
+            addBANDWIDTH(builder, bandwidth)
+            addDOWNLINKFREQ(builder, downlinkFreq)
+            addUPLINKFREQ(builder, uplinkFreq)
+            addNAME(builder, nameOffset)
+            addCHANNELID(builder, channelIdOffset)
+            addENCRYPTION(builder, encryption)
+            addMODULATION(builder, modulation)
             return endcommsChannel(builder)
         }
         fun startcommsChannel(builder: FlatBufferBuilder) = builder.startTable(10)
-        fun addCHANNEL_ID(builder: FlatBufferBuilder, CHANNEL_ID: Int) = builder.addOffset(0, CHANNEL_ID, 0)
-        fun addNAME(builder: FlatBufferBuilder, NAME: Int) = builder.addOffset(1, NAME, 0)
-        fun addUPLINK_FREQ(builder: FlatBufferBuilder, UPLINK_FREQ: Double) = builder.addDouble(2, UPLINK_FREQ, 0.0)
-        fun addDOWNLINK_FREQ(builder: FlatBufferBuilder, DOWNLINK_FREQ: Double) = builder.addDouble(3, DOWNLINK_FREQ, 0.0)
-        fun addBANDWIDTH(builder: FlatBufferBuilder, BANDWIDTH: Double) = builder.addDouble(4, BANDWIDTH, 0.0)
-        fun addMODULATION(builder: FlatBufferBuilder, MODULATION: Byte) = builder.addByte(5, MODULATION, 0)
-        fun addDATA_RATE(builder: FlatBufferBuilder, DATA_RATE: Double) = builder.addDouble(6, DATA_RATE, 0.0)
-        fun addENCRYPTION(builder: FlatBufferBuilder, ENCRYPTION: Byte) = builder.addByte(7, ENCRYPTION, 0)
-        fun addFEC_RATE(builder: FlatBufferBuilder, FEC_RATE: Double) = builder.addDouble(8, FEC_RATE, 0.0)
-        fun addPOWER(builder: FlatBufferBuilder, POWER: Double) = builder.addDouble(9, POWER, 0.0)
+        fun addCHANNELID(builder: FlatBufferBuilder, channelId: Int) = builder.addOffset(0, channelId, 0)
+        fun addNAME(builder: FlatBufferBuilder, name: Int) = builder.addOffset(1, name, 0)
+        fun addUPLINKFREQ(builder: FlatBufferBuilder, uplinkFreq: Double) = builder.addDouble(2, uplinkFreq, 0.0)
+        fun addDOWNLINKFREQ(builder: FlatBufferBuilder, downlinkFreq: Double) = builder.addDouble(3, downlinkFreq, 0.0)
+        fun addBANDWIDTH(builder: FlatBufferBuilder, bandwidth: Double) = builder.addDouble(4, bandwidth, 0.0)
+        fun addMODULATION(builder: FlatBufferBuilder, modulation: Byte) = builder.addByte(5, modulation, 0)
+        fun addDATARATE(builder: FlatBufferBuilder, dataRate: Double) = builder.addDouble(6, dataRate, 0.0)
+        fun addENCRYPTION(builder: FlatBufferBuilder, encryption: Byte) = builder.addByte(7, encryption, 0)
+        fun addFECRATE(builder: FlatBufferBuilder, fecRate: Double) = builder.addDouble(8, fecRate, 0.0)
+        fun addPOWER(builder: FlatBufferBuilder, power: Double) = builder.addDouble(9, power, 0.0)
         fun endcommsChannel(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

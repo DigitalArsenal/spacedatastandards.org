@@ -64,6 +64,10 @@ func (rcv *EME) ENCRYPTED_BLOB(j int) byte {
 	return 0
 }
 
+func (rcv *EME) EncryptedBlob(j int) byte {
+	return rcv.ENCRYPTED_BLOB(j)
+}
+
 func (rcv *EME) ENCRYPTED_BLOBLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
@@ -72,12 +76,20 @@ func (rcv *EME) ENCRYPTED_BLOBLength() int {
 	return 0
 }
 
+func (rcv *EME) EncryptedBlobLength() int {
+	return rcv.ENCRYPTED_BLOBLength()
+}
+
 func (rcv *EME) ENCRYPTED_BLOBBytes() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *EME) EncryptedBlobBytes() []byte {
+	return rcv.ENCRYPTED_BLOBBytes()
 }
 
 /// Encrypted data blob, containing the ciphertext of the original plaintext message.
@@ -90,6 +102,10 @@ func (rcv *EME) MutateENCRYPTED_BLOB(j int, n byte) bool {
 	return false
 }
 
+func (rcv *EME) MutateEncryptedBlob(j int, n byte) bool {
+	return rcv.MutateENCRYPTED_BLOB(j, n)
+}
+
 /// Temporary public key used for the encryption session, contributing to the derivation of the shared secret.
 func (rcv *EME) EPHEMERAL_PUBLIC_KEY() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
@@ -97,6 +113,10 @@ func (rcv *EME) EPHEMERAL_PUBLIC_KEY() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *EME) EphemeralPublicKey() []byte {
+	return rcv.EPHEMERAL_PUBLIC_KEY()
 }
 
 /// Temporary public key used for the encryption session, contributing to the derivation of the shared secret.
@@ -107,6 +127,10 @@ func (rcv *EME) MAC() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *EME) Mac() []byte {
+	return rcv.MAC()
 }
 
 /// Message Authentication Code to verify the integrity and authenticity of the encrypted message.
@@ -120,6 +144,10 @@ func (rcv *EME) NONCE_START(j int) byte {
 	return 0
 }
 
+func (rcv *EME) NonceStart(j int) byte {
+	return rcv.NONCE_START(j)
+}
+
 func (rcv *EME) NONCE_STARTLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
@@ -128,12 +156,20 @@ func (rcv *EME) NONCE_STARTLength() int {
 	return 0
 }
 
+func (rcv *EME) NonceStartLength() int {
+	return rcv.NONCE_STARTLength()
+}
+
 func (rcv *EME) NONCE_STARTBytes() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *EME) NonceStartBytes() []byte {
+	return rcv.NONCE_STARTBytes()
 }
 
 /// Random 12-byte nonce starting value. Incremented for each record in the stream to ensure unique nonces.
@@ -146,6 +182,10 @@ func (rcv *EME) MutateNONCE_START(j int, n byte) bool {
 	return false
 }
 
+func (rcv *EME) MutateNonceStart(j int, n byte) bool {
+	return rcv.MutateNONCE_START(j, n)
+}
+
 /// Additional authentication tag used in some encryption schemes for integrity and authenticity verification.
 func (rcv *EME) TAG() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
@@ -153,6 +193,10 @@ func (rcv *EME) TAG() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *EME) Tag() []byte {
+	return rcv.TAG()
 }
 
 /// Additional authentication tag used in some encryption schemes for integrity and authenticity verification.
@@ -165,6 +209,10 @@ func (rcv *EME) IV() []byte {
 	return nil
 }
 
+func (rcv *EME) Iv() []byte {
+	return rcv.IV()
+}
+
 /// Initialization vector used to introduce randomness in the encryption process, enhancing security.
 /// Cryptographic salt used in key derivation (e.g. HKDF) to ensure unique key material per session.
 func (rcv *EME) SALT() []byte {
@@ -173,6 +221,10 @@ func (rcv *EME) SALT() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *EME) Salt() []byte {
+	return rcv.SALT()
 }
 
 /// Cryptographic salt used in key derivation (e.g. HKDF) to ensure unique key material per session.
@@ -185,6 +237,10 @@ func (rcv *EME) PUBLIC_KEY_IDENTIFIER() []byte {
 	return nil
 }
 
+func (rcv *EME) PublicKeyIdentifier() []byte {
+	return rcv.PUBLIC_KEY_IDENTIFIER()
+}
+
 /// Identifier for the public key used, aiding in recipient key management and message decryption.
 /// Specifies the set of cryptographic algorithms used in the encryption process.
 func (rcv *EME) CIPHER_SUITE() []byte {
@@ -193,6 +249,10 @@ func (rcv *EME) CIPHER_SUITE() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *EME) CipherSuite() []byte {
+	return rcv.CIPHER_SUITE()
 }
 
 /// Specifies the set of cryptographic algorithms used in the encryption process.
@@ -205,6 +265,10 @@ func (rcv *EME) KDF_PARAMETERS() []byte {
 	return nil
 }
 
+func (rcv *EME) KdfParameters() []byte {
+	return rcv.KDF_PARAMETERS()
+}
+
 /// Parameters for the Key Derivation Function, guiding the process of deriving keys from the shared secret.
 /// Parameters defining specific settings for the encryption algorithm, such as block size or operation mode.
 func (rcv *EME) ENCRYPTION_ALGORITHM_PARAMETERS() []byte {
@@ -215,6 +279,10 @@ func (rcv *EME) ENCRYPTION_ALGORITHM_PARAMETERS() []byte {
 	return nil
 }
 
+func (rcv *EME) EncryptionAlgorithmParameters() []byte {
+	return rcv.ENCRYPTION_ALGORITHM_PARAMETERS()
+}
+
 /// Parameters defining specific settings for the encryption algorithm, such as block size or operation mode.
 func EMEStart(builder *flatbuffers.Builder) {
 	builder.StartObject(11)
@@ -222,41 +290,80 @@ func EMEStart(builder *flatbuffers.Builder) {
 func EMEAddENCRYPTED_BLOB(builder *flatbuffers.Builder, ENCRYPTED_BLOB flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ENCRYPTED_BLOB), 0)
 }
+func EMEAddEncryptedBlob(builder *flatbuffers.Builder, ENCRYPTED_BLOB flatbuffers.UOffsetT) {
+	EMEAddENCRYPTED_BLOB(builder, ENCRYPTED_BLOB)
+}
 func EMEStartENCRYPTED_BLOBVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(1, numElems, 1)
+}
+func EMEStartEncryptedBlobVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return EMEStartENCRYPTED_BLOBVector(builder, numElems)
 }
 func EMEAddEPHEMERAL_PUBLIC_KEY(builder *flatbuffers.Builder, EPHEMERAL_PUBLIC_KEY flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(EPHEMERAL_PUBLIC_KEY), 0)
 }
+func EMEAddEphemeralPublicKey(builder *flatbuffers.Builder, EPHEMERAL_PUBLIC_KEY flatbuffers.UOffsetT) {
+	EMEAddEPHEMERAL_PUBLIC_KEY(builder, EPHEMERAL_PUBLIC_KEY)
+}
 func EMEAddMAC(builder *flatbuffers.Builder, MAC flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(MAC), 0)
+}
+func EMEAddMac(builder *flatbuffers.Builder, MAC flatbuffers.UOffsetT) {
+	EMEAddMAC(builder, MAC)
 }
 func EMEAddNONCE_START(builder *flatbuffers.Builder, NONCE_START flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(NONCE_START), 0)
 }
+func EMEAddNonceStart(builder *flatbuffers.Builder, NONCE_START flatbuffers.UOffsetT) {
+	EMEAddNONCE_START(builder, NONCE_START)
+}
 func EMEStartNONCE_STARTVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(1, numElems, 1)
+}
+func EMEStartNonceStartVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return EMEStartNONCE_STARTVector(builder, numElems)
 }
 func EMEAddTAG(builder *flatbuffers.Builder, TAG flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(TAG), 0)
 }
+func EMEAddTag(builder *flatbuffers.Builder, TAG flatbuffers.UOffsetT) {
+	EMEAddTAG(builder, TAG)
+}
 func EMEAddIV(builder *flatbuffers.Builder, IV flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(IV), 0)
+}
+func EMEAddIv(builder *flatbuffers.Builder, IV flatbuffers.UOffsetT) {
+	EMEAddIV(builder, IV)
 }
 func EMEAddSALT(builder *flatbuffers.Builder, SALT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(SALT), 0)
 }
+func EMEAddSalt(builder *flatbuffers.Builder, SALT flatbuffers.UOffsetT) {
+	EMEAddSALT(builder, SALT)
+}
 func EMEAddPUBLIC_KEY_IDENTIFIER(builder *flatbuffers.Builder, PUBLIC_KEY_IDENTIFIER flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(PUBLIC_KEY_IDENTIFIER), 0)
+}
+func EMEAddPublicKeyIdentifier(builder *flatbuffers.Builder, PUBLIC_KEY_IDENTIFIER flatbuffers.UOffsetT) {
+	EMEAddPUBLIC_KEY_IDENTIFIER(builder, PUBLIC_KEY_IDENTIFIER)
 }
 func EMEAddCIPHER_SUITE(builder *flatbuffers.Builder, CIPHER_SUITE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(CIPHER_SUITE), 0)
 }
+func EMEAddCipherSuite(builder *flatbuffers.Builder, CIPHER_SUITE flatbuffers.UOffsetT) {
+	EMEAddCIPHER_SUITE(builder, CIPHER_SUITE)
+}
 func EMEAddKDF_PARAMETERS(builder *flatbuffers.Builder, KDF_PARAMETERS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(KDF_PARAMETERS), 0)
 }
+func EMEAddKdfParameters(builder *flatbuffers.Builder, KDF_PARAMETERS flatbuffers.UOffsetT) {
+	EMEAddKDF_PARAMETERS(builder, KDF_PARAMETERS)
+}
 func EMEAddENCRYPTION_ALGORITHM_PARAMETERS(builder *flatbuffers.Builder, ENCRYPTION_ALGORITHM_PARAMETERS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(ENCRYPTION_ALGORITHM_PARAMETERS), 0)
+}
+func EMEAddEncryptionAlgorithmParameters(builder *flatbuffers.Builder, ENCRYPTION_ALGORITHM_PARAMETERS flatbuffers.UOffsetT) {
+	EMEAddENCRYPTION_ALGORITHM_PARAMETERS(builder, ENCRYPTION_ALGORITHM_PARAMETERS)
 }
 func EMEEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

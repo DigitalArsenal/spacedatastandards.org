@@ -2,4 +2,98 @@
 
 # namespace: 
 
-# NOTE MathOperation.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Mathematical operation for math operation calibrator
+class MathOperation(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = MathOperation()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsMathOperation(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def MathOperationBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x58\x54\x43", size_prefixed=size_prefixed)
+
+    # MathOperation
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Operation in Reverse Polish Notation (RPN)
+    # MathOperation
+    def RPN_EXPRESSION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+def MathOperationStart(builder):
+    builder.StartObject(1)
+
+def Start(builder):
+    MathOperationStart(builder)
+
+def MathOperationAddRPN_EXPRESSION(builder, RPN_EXPRESSION):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(RPN_EXPRESSION), 0)
+
+def AddRPN_EXPRESSION(builder, RPN_EXPRESSION):
+    MathOperationAddRPN_EXPRESSION(builder, RPN_EXPRESSION)
+
+def MathOperationEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return MathOperationEnd(builder)
+
+
+class MathOperationT(object):
+
+    # MathOperationT
+    def __init__(
+        self,
+        RPN_EXPRESSION = None,
+    ):
+        self.RPN_EXPRESSION = RPN_EXPRESSION  # type: Optional[str]
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpMathOperation = MathOperation()
+        tmpMathOperation.Init(buf, pos)
+        return cls.InitFromObj(tmpMathOperation)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpMathOperation):
+        x = MathOperationT()
+        x._UnPack(tmpMathOperation)
+        return x
+
+    # MathOperationT
+    def _UnPack(self, MathOperation):
+        if MathOperation is None:
+            return
+        self.RPN_EXPRESSION = MathOperation.RPN_EXPRESSION()
+
+    # MathOperationT
+    def Pack(self, builder):
+        if self.RPN_EXPRESSION is not None:
+            RPN_EXPRESSION = builder.CreateString(self.RPN_EXPRESSION)
+        MathOperationStart(builder)
+        if self.RPN_EXPRESSION is not None:
+            MathOperationAddRPN_EXPRESSION(builder, RPN_EXPRESSION)
+        MathOperation = MathOperationEnd(builder)
+        return MathOperation

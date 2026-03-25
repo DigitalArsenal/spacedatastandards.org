@@ -32,7 +32,7 @@ class MathAlgorithm : Table() {
     /**
      * Algorithm name
      */
-    val NAME : String?
+    val name : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class MathAlgorithm : Table() {
                 null
             }
         }
-    val NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val nameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun nameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Short description
      */
-    val SHORT_DESCRIPTION : String?
+    val shortDescription : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -55,12 +55,12 @@ class MathAlgorithm : Table() {
                 null
             }
         }
-    val SHORT_DESCRIPTIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun SHORT_DESCRIPTIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val shortDescriptionAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun shortDescriptionInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * Math operation in RPN
      */
-    val MATH_OPERATION : String?
+    val mathOperation : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -69,12 +69,12 @@ class MathAlgorithm : Table() {
                 null
             }
         }
-    val MATH_OPERATIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun MATH_OPERATIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val mathOperationAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun mathOperationInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
     /**
      * Output parameter reference
      */
-    val OUTPUT_PARAMETER_REF : String?
+    val outputParameterRef : String?
         get() {
             val o = __offset(10)
             return if (o != 0) {
@@ -83,13 +83,13 @@ class MathAlgorithm : Table() {
                 null
             }
         }
-    val OUTPUT_PARAMETER_REFAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
-    fun OUTPUT_PARAMETER_REFInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
+    val outputParameterRefAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(10, 1)
+    fun outputParameterRefInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 10, 1)
     /**
      * Trigger conditions
      */
-    fun TRIGGERS(j: Int) : AlgorithmTrigger? = TRIGGERS(AlgorithmTrigger(), j)
-    fun TRIGGERS(obj: AlgorithmTrigger, j: Int) : AlgorithmTrigger? {
+    fun triggers(j: Int) : AlgorithmTrigger? = triggers(AlgorithmTrigger(), j)
+    fun triggers(obj: AlgorithmTrigger, j: Int) : AlgorithmTrigger? {
         val o = __offset(12)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -97,32 +97,32 @@ class MathAlgorithm : Table() {
             null
         }
     }
-    val TRIGGERSLength : Int
+    val triggersLength : Int
         get() {
             val o = __offset(12); return if (o != 0) __vector_len(o) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsMathAlgorithm(_bb: ByteBuffer): MathAlgorithm = getRootAsMathAlgorithm(_bb, MathAlgorithm())
         fun getRootAsMathAlgorithm(_bb: ByteBuffer, obj: MathAlgorithm): MathAlgorithm {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createMathAlgorithm(builder: FlatBufferBuilder, NAMEOffset: Int, SHORT_DESCRIPTIONOffset: Int, MATH_OPERATIONOffset: Int, OUTPUT_PARAMETER_REFOffset: Int, TRIGGERSOffset: Int) : Int {
+        fun createMathAlgorithm(builder: FlatBufferBuilder, nameOffset: Int, shortDescriptionOffset: Int, mathOperationOffset: Int, outputParameterRefOffset: Int, triggersOffset: Int) : Int {
             builder.startTable(5)
-            addTRIGGERS(builder, TRIGGERSOffset)
-            addOUTPUT_PARAMETER_REF(builder, OUTPUT_PARAMETER_REFOffset)
-            addMATH_OPERATION(builder, MATH_OPERATIONOffset)
-            addSHORT_DESCRIPTION(builder, SHORT_DESCRIPTIONOffset)
-            addNAME(builder, NAMEOffset)
+            addTRIGGERS(builder, triggersOffset)
+            addOUTPUTPARAMETERREF(builder, outputParameterRefOffset)
+            addMATHOPERATION(builder, mathOperationOffset)
+            addSHORTDESCRIPTION(builder, shortDescriptionOffset)
+            addNAME(builder, nameOffset)
             return endMathAlgorithm(builder)
         }
         fun startMathAlgorithm(builder: FlatBufferBuilder) = builder.startTable(5)
-        fun addNAME(builder: FlatBufferBuilder, NAME: Int) = builder.addOffset(0, NAME, 0)
-        fun addSHORT_DESCRIPTION(builder: FlatBufferBuilder, SHORT_DESCRIPTION: Int) = builder.addOffset(1, SHORT_DESCRIPTION, 0)
-        fun addMATH_OPERATION(builder: FlatBufferBuilder, MATH_OPERATION: Int) = builder.addOffset(2, MATH_OPERATION, 0)
-        fun addOUTPUT_PARAMETER_REF(builder: FlatBufferBuilder, OUTPUT_PARAMETER_REF: Int) = builder.addOffset(3, OUTPUT_PARAMETER_REF, 0)
-        fun addTRIGGERS(builder: FlatBufferBuilder, TRIGGERS: Int) = builder.addOffset(4, TRIGGERS, 0)
+        fun addNAME(builder: FlatBufferBuilder, name: Int) = builder.addOffset(0, name, 0)
+        fun addSHORTDESCRIPTION(builder: FlatBufferBuilder, shortDescription: Int) = builder.addOffset(1, shortDescription, 0)
+        fun addMATHOPERATION(builder: FlatBufferBuilder, mathOperation: Int) = builder.addOffset(2, mathOperation, 0)
+        fun addOUTPUTPARAMETERREF(builder: FlatBufferBuilder, outputParameterRef: Int) = builder.addOffset(3, outputParameterRef, 0)
+        fun addTRIGGERS(builder: FlatBufferBuilder, triggers: Int) = builder.addOffset(4, triggers, 0)
         fun createTriggersVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {

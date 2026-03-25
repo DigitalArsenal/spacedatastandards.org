@@ -50,6 +50,10 @@ func (rcv *OrbitDetermination) OD_ID() []byte {
 	return nil
 }
 
+func (rcv *OrbitDetermination) OdId() []byte {
+	return rcv.OD_ID()
+}
+
 /// Unique identifier for the orbit determination.
 /// Identifier of the previous orbit determination.
 func (rcv *OrbitDetermination) OD_PREV_ID() []byte {
@@ -58,6 +62,10 @@ func (rcv *OrbitDetermination) OD_PREV_ID() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *OrbitDetermination) OdPrevId() []byte {
+	return rcv.OD_PREV_ID()
 }
 
 /// Identifier of the previous orbit determination.
@@ -70,6 +78,10 @@ func (rcv *OrbitDetermination) OD_ALGORITHM() []byte {
 	return nil
 }
 
+func (rcv *OrbitDetermination) OdAlgorithm() []byte {
+	return rcv.OD_ALGORITHM()
+}
+
 /// Algorithm used for orbit determination.
 /// Method used for orbit determination.
 func (rcv *OrbitDetermination) OD_METHOD() []byte {
@@ -78,6 +90,10 @@ func (rcv *OrbitDetermination) OD_METHOD() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *OrbitDetermination) OdMethod() []byte {
+	return rcv.OD_METHOD()
 }
 
 /// Method used for orbit determination.
@@ -90,6 +106,10 @@ func (rcv *OrbitDetermination) OD_EPOCH() []byte {
 	return nil
 }
 
+func (rcv *OrbitDetermination) OdEpoch() []byte {
+	return rcv.OD_EPOCH()
+}
+
 /// Epoch of the orbit determination.
 /// Time tag of the orbit determination.
 func (rcv *OrbitDetermination) OD_TIME_TAG() []byte {
@@ -98,6 +118,10 @@ func (rcv *OrbitDetermination) OD_TIME_TAG() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *OrbitDetermination) OdTimeTag() []byte {
+	return rcv.OD_TIME_TAG()
 }
 
 /// Time tag of the orbit determination.
@@ -110,6 +134,10 @@ func (rcv *OrbitDetermination) OD_PROCESS_NOISE() []byte {
 	return nil
 }
 
+func (rcv *OrbitDetermination) OdProcessNoise() []byte {
+	return rcv.OD_PROCESS_NOISE()
+}
+
 /// Process noise model used.
 /// Covariance reduction techniques used.
 func (rcv *OrbitDetermination) OD_COV_REDUCTION() []byte {
@@ -120,6 +148,10 @@ func (rcv *OrbitDetermination) OD_COV_REDUCTION() []byte {
 	return nil
 }
 
+func (rcv *OrbitDetermination) OdCovReduction() []byte {
+	return rcv.OD_COV_REDUCTION()
+}
+
 /// Covariance reduction techniques used.
 /// Noise models used.
 func (rcv *OrbitDetermination) OD_NOISE_MODELS() []byte {
@@ -128,6 +160,10 @@ func (rcv *OrbitDetermination) OD_NOISE_MODELS() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *OrbitDetermination) OdNoiseModels() []byte {
+	return rcv.OD_NOISE_MODELS()
 }
 
 /// Noise models used.
@@ -141,12 +177,20 @@ func (rcv *OrbitDetermination) OD_OBSERVATIONS_TYPE(j int) []byte {
 	return nil
 }
 
+func (rcv *OrbitDetermination) OdObservationsType(j int) []byte {
+	return rcv.OD_OBSERVATIONS_TYPE(j)
+}
+
 func (rcv *OrbitDetermination) OD_OBSERVATIONS_TYPELength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *OrbitDetermination) OdObservationsTypeLength() int {
+	return rcv.OD_OBSERVATIONS_TYPELength()
 }
 
 /// Types of observations used (e.g., RANGE, DOPPLER).
@@ -159,9 +203,17 @@ func (rcv *OrbitDetermination) OD_OBSERVATIONS_USED() int32 {
 	return 0
 }
 
+func (rcv *OrbitDetermination) OdObservationsUsed() int32 {
+	return rcv.OD_OBSERVATIONS_USED()
+}
+
 /// Number of observations used.
 func (rcv *OrbitDetermination) MutateOD_OBSERVATIONS_USED(n int32) bool {
 	return rcv._tab.MutateInt32Slot(24, n)
+}
+
+func (rcv *OrbitDetermination) MutateOdObservationsUsed(n int32) bool {
+	return rcv.MutateOD_OBSERVATIONS_USED(n)
 }
 
 /// Number of tracks used.
@@ -173,9 +225,17 @@ func (rcv *OrbitDetermination) OD_TRACKS_USED() int32 {
 	return 0
 }
 
+func (rcv *OrbitDetermination) OdTracksUsed() int32 {
+	return rcv.OD_TRACKS_USED()
+}
+
 /// Number of tracks used.
 func (rcv *OrbitDetermination) MutateOD_TRACKS_USED(n int32) bool {
 	return rcv._tab.MutateInt32Slot(26, n)
+}
+
+func (rcv *OrbitDetermination) MutateOdTracksUsed(n int32) bool {
+	return rcv.MutateOD_TRACKS_USED(n)
 }
 
 /// Data weighting scheme used.
@@ -187,6 +247,10 @@ func (rcv *OrbitDetermination) OD_DATA_WEIGHTING() []byte {
 	return nil
 }
 
+func (rcv *OrbitDetermination) OdDataWeighting() []byte {
+	return rcv.OD_DATA_WEIGHTING()
+}
+
 /// Data weighting scheme used.
 /// Convergence criteria used.
 func (rcv *OrbitDetermination) OD_CONVERGENCE_CRITERIA() []byte {
@@ -195,6 +259,10 @@ func (rcv *OrbitDetermination) OD_CONVERGENCE_CRITERIA() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *OrbitDetermination) OdConvergenceCriteria() []byte {
+	return rcv.OD_CONVERGENCE_CRITERIA()
 }
 
 /// Convergence criteria used.
@@ -208,12 +276,20 @@ func (rcv *OrbitDetermination) OD_EST_PARAMETERS(j int) []byte {
 	return nil
 }
 
+func (rcv *OrbitDetermination) OdEstParameters(j int) []byte {
+	return rcv.OD_EST_PARAMETERS(j)
+}
+
 func (rcv *OrbitDetermination) OD_EST_PARAMETERSLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *OrbitDetermination) OdEstParametersLength() int {
+	return rcv.OD_EST_PARAMETERSLength()
 }
 
 /// Parameters estimated during orbit determination.
@@ -226,6 +302,10 @@ func (rcv *OrbitDetermination) OD_APRIORI_DATA() []byte {
 	return nil
 }
 
+func (rcv *OrbitDetermination) OdAprioriData() []byte {
+	return rcv.OD_APRIORI_DATA()
+}
+
 /// A priori data used for orbit determination.
 /// Residuals from the orbit determination.
 func (rcv *OrbitDetermination) OD_RESIDUALS() []byte {
@@ -236,6 +316,10 @@ func (rcv *OrbitDetermination) OD_RESIDUALS() []byte {
 	return nil
 }
 
+func (rcv *OrbitDetermination) OdResiduals() []byte {
+	return rcv.OD_RESIDUALS()
+}
+
 /// Residuals from the orbit determination.
 func OrbitDeterminationStart(builder *flatbuffers.Builder) {
 	builder.StartObject(17)
@@ -243,59 +327,116 @@ func OrbitDeterminationStart(builder *flatbuffers.Builder) {
 func OrbitDeterminationAddOD_ID(builder *flatbuffers.Builder, OD_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(OD_ID), 0)
 }
+func OrbitDeterminationAddOdId(builder *flatbuffers.Builder, OD_ID flatbuffers.UOffsetT) {
+	OrbitDeterminationAddOD_ID(builder, OD_ID)
+}
 func OrbitDeterminationAddOD_PREV_ID(builder *flatbuffers.Builder, OD_PREV_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(OD_PREV_ID), 0)
+}
+func OrbitDeterminationAddOdPrevId(builder *flatbuffers.Builder, OD_PREV_ID flatbuffers.UOffsetT) {
+	OrbitDeterminationAddOD_PREV_ID(builder, OD_PREV_ID)
 }
 func OrbitDeterminationAddOD_ALGORITHM(builder *flatbuffers.Builder, OD_ALGORITHM flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(OD_ALGORITHM), 0)
 }
+func OrbitDeterminationAddOdAlgorithm(builder *flatbuffers.Builder, OD_ALGORITHM flatbuffers.UOffsetT) {
+	OrbitDeterminationAddOD_ALGORITHM(builder, OD_ALGORITHM)
+}
 func OrbitDeterminationAddOD_METHOD(builder *flatbuffers.Builder, OD_METHOD flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(OD_METHOD), 0)
+}
+func OrbitDeterminationAddOdMethod(builder *flatbuffers.Builder, OD_METHOD flatbuffers.UOffsetT) {
+	OrbitDeterminationAddOD_METHOD(builder, OD_METHOD)
 }
 func OrbitDeterminationAddOD_EPOCH(builder *flatbuffers.Builder, OD_EPOCH flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(OD_EPOCH), 0)
 }
+func OrbitDeterminationAddOdEpoch(builder *flatbuffers.Builder, OD_EPOCH flatbuffers.UOffsetT) {
+	OrbitDeterminationAddOD_EPOCH(builder, OD_EPOCH)
+}
 func OrbitDeterminationAddOD_TIME_TAG(builder *flatbuffers.Builder, OD_TIME_TAG flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(OD_TIME_TAG), 0)
+}
+func OrbitDeterminationAddOdTimeTag(builder *flatbuffers.Builder, OD_TIME_TAG flatbuffers.UOffsetT) {
+	OrbitDeterminationAddOD_TIME_TAG(builder, OD_TIME_TAG)
 }
 func OrbitDeterminationAddOD_PROCESS_NOISE(builder *flatbuffers.Builder, OD_PROCESS_NOISE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(OD_PROCESS_NOISE), 0)
 }
+func OrbitDeterminationAddOdProcessNoise(builder *flatbuffers.Builder, OD_PROCESS_NOISE flatbuffers.UOffsetT) {
+	OrbitDeterminationAddOD_PROCESS_NOISE(builder, OD_PROCESS_NOISE)
+}
 func OrbitDeterminationAddOD_COV_REDUCTION(builder *flatbuffers.Builder, OD_COV_REDUCTION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(OD_COV_REDUCTION), 0)
+}
+func OrbitDeterminationAddOdCovReduction(builder *flatbuffers.Builder, OD_COV_REDUCTION flatbuffers.UOffsetT) {
+	OrbitDeterminationAddOD_COV_REDUCTION(builder, OD_COV_REDUCTION)
 }
 func OrbitDeterminationAddOD_NOISE_MODELS(builder *flatbuffers.Builder, OD_NOISE_MODELS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(OD_NOISE_MODELS), 0)
 }
+func OrbitDeterminationAddOdNoiseModels(builder *flatbuffers.Builder, OD_NOISE_MODELS flatbuffers.UOffsetT) {
+	OrbitDeterminationAddOD_NOISE_MODELS(builder, OD_NOISE_MODELS)
+}
 func OrbitDeterminationAddOD_OBSERVATIONS_TYPE(builder *flatbuffers.Builder, OD_OBSERVATIONS_TYPE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(OD_OBSERVATIONS_TYPE), 0)
+}
+func OrbitDeterminationAddOdObservationsType(builder *flatbuffers.Builder, OD_OBSERVATIONS_TYPE flatbuffers.UOffsetT) {
+	OrbitDeterminationAddOD_OBSERVATIONS_TYPE(builder, OD_OBSERVATIONS_TYPE)
 }
 func OrbitDeterminationStartOD_OBSERVATIONS_TYPEVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
+func OrbitDeterminationStartOdObservationsTypeVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return OrbitDeterminationStartOD_OBSERVATIONS_TYPEVector(builder, numElems)
+}
 func OrbitDeterminationAddOD_OBSERVATIONS_USED(builder *flatbuffers.Builder, OD_OBSERVATIONS_USED int32) {
 	builder.PrependInt32Slot(10, OD_OBSERVATIONS_USED, 0)
+}
+func OrbitDeterminationAddOdObservationsUsed(builder *flatbuffers.Builder, OD_OBSERVATIONS_USED int32) {
+	OrbitDeterminationAddOD_OBSERVATIONS_USED(builder, OD_OBSERVATIONS_USED)
 }
 func OrbitDeterminationAddOD_TRACKS_USED(builder *flatbuffers.Builder, OD_TRACKS_USED int32) {
 	builder.PrependInt32Slot(11, OD_TRACKS_USED, 0)
 }
+func OrbitDeterminationAddOdTracksUsed(builder *flatbuffers.Builder, OD_TRACKS_USED int32) {
+	OrbitDeterminationAddOD_TRACKS_USED(builder, OD_TRACKS_USED)
+}
 func OrbitDeterminationAddOD_DATA_WEIGHTING(builder *flatbuffers.Builder, OD_DATA_WEIGHTING flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(12, flatbuffers.UOffsetT(OD_DATA_WEIGHTING), 0)
+}
+func OrbitDeterminationAddOdDataWeighting(builder *flatbuffers.Builder, OD_DATA_WEIGHTING flatbuffers.UOffsetT) {
+	OrbitDeterminationAddOD_DATA_WEIGHTING(builder, OD_DATA_WEIGHTING)
 }
 func OrbitDeterminationAddOD_CONVERGENCE_CRITERIA(builder *flatbuffers.Builder, OD_CONVERGENCE_CRITERIA flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(13, flatbuffers.UOffsetT(OD_CONVERGENCE_CRITERIA), 0)
 }
+func OrbitDeterminationAddOdConvergenceCriteria(builder *flatbuffers.Builder, OD_CONVERGENCE_CRITERIA flatbuffers.UOffsetT) {
+	OrbitDeterminationAddOD_CONVERGENCE_CRITERIA(builder, OD_CONVERGENCE_CRITERIA)
+}
 func OrbitDeterminationAddOD_EST_PARAMETERS(builder *flatbuffers.Builder, OD_EST_PARAMETERS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(14, flatbuffers.UOffsetT(OD_EST_PARAMETERS), 0)
+}
+func OrbitDeterminationAddOdEstParameters(builder *flatbuffers.Builder, OD_EST_PARAMETERS flatbuffers.UOffsetT) {
+	OrbitDeterminationAddOD_EST_PARAMETERS(builder, OD_EST_PARAMETERS)
 }
 func OrbitDeterminationStartOD_EST_PARAMETERSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
+func OrbitDeterminationStartOdEstParametersVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return OrbitDeterminationStartOD_EST_PARAMETERSVector(builder, numElems)
+}
 func OrbitDeterminationAddOD_APRIORI_DATA(builder *flatbuffers.Builder, OD_APRIORI_DATA flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(15, flatbuffers.UOffsetT(OD_APRIORI_DATA), 0)
 }
+func OrbitDeterminationAddOdAprioriData(builder *flatbuffers.Builder, OD_APRIORI_DATA flatbuffers.UOffsetT) {
+	OrbitDeterminationAddOD_APRIORI_DATA(builder, OD_APRIORI_DATA)
+}
 func OrbitDeterminationAddOD_RESIDUALS(builder *flatbuffers.Builder, OD_RESIDUALS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(16, flatbuffers.UOffsetT(OD_RESIDUALS), 0)
+}
+func OrbitDeterminationAddOdResiduals(builder *flatbuffers.Builder, OD_RESIDUALS flatbuffers.UOffsetT) {
+	OrbitDeterminationAddOD_RESIDUALS(builder, OD_RESIDUALS)
 }
 func OrbitDeterminationEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

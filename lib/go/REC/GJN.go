@@ -61,10 +61,17 @@ func (rcv *GJN) FEATURES(obj *GJNFeature, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(GJNFeature)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *GJN) Features(obj *GJNFeature, j int) bool {
+	return rcv.FEATURES(obj, j)
 }
 
 func (rcv *GJN) FEATURESLength() int {
@@ -73,6 +80,10 @@ func (rcv *GJN) FEATURESLength() int {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *GJN) FeaturesLength() int {
+	return rcv.FEATURESLength()
 }
 
 /// Features in the collection
@@ -90,6 +101,10 @@ func (rcv *GJN) BBOX(obj *GJNBoundingBox) *GJNBoundingBox {
 	return nil
 }
 
+func (rcv *GJN) Bbox(obj *GJNBoundingBox) *GJNBoundingBox {
+	return rcv.BBOX(obj)
+}
+
 /// Bounding box (optional)
 func GJNStart(builder *flatbuffers.Builder) {
 	builder.StartObject(2)
@@ -97,11 +112,20 @@ func GJNStart(builder *flatbuffers.Builder) {
 func GJNAddFEATURES(builder *flatbuffers.Builder, FEATURES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(FEATURES), 0)
 }
+func GJNAddFeatures(builder *flatbuffers.Builder, FEATURES flatbuffers.UOffsetT) {
+	GJNAddFEATURES(builder, FEATURES)
+}
 func GJNStartFEATURESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
+func GJNStartFeaturesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return GJNStartFEATURESVector(builder, numElems)
+}
 func GJNAddBBOX(builder *flatbuffers.Builder, BBOX flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(BBOX), 0)
+}
+func GJNAddBbox(builder *flatbuffers.Builder, BBOX flatbuffers.UOffsetT) {
+	GJNAddBBOX(builder, BBOX)
 }
 func GJNEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

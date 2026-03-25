@@ -141,6 +141,12 @@ def EnumeratedArgumentTypeStartENUMERATION_LISTVector(builder, numElems):
 def StartENUMERATION_LISTVector(builder, numElems):
     return EnumeratedArgumentTypeStartENUMERATION_LISTVector(builder, numElems)
 
+def EnumeratedArgumentTypeCreateENUMERATION_LISTVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateENUMERATION_LISTVector(builder, data):
+    EnumeratedArgumentTypeCreateENUMERATION_LISTVector(builder, data)
+
 def EnumeratedArgumentTypeAddINITIAL_VALUE(builder, INITIAL_VALUE):
     builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(INITIAL_VALUE), 0)
 
@@ -163,19 +169,27 @@ except:
 class EnumeratedArgumentTypeT(object):
 
     # EnumeratedArgumentTypeT
-    def __init__(self):
-        self.NAME = None  # type: str
-        self.SHORT_DESCRIPTION = None  # type: str
-        self.LONG_DESCRIPTION = None  # type: str
-        self.DATA_ENCODING = None  # type: Optional[IntegerDataEncoding.IntegerDataEncodingT]
-        self.ENUMERATION_LIST = None  # type: List[EnumerationValue.EnumerationValueT]
-        self.INITIAL_VALUE = None  # type: str
+    def __init__(
+        self,
+        NAME = None,
+        SHORT_DESCRIPTION = None,
+        LONG_DESCRIPTION = None,
+        DATA_ENCODING = None,
+        ENUMERATION_LIST = None,
+        INITIAL_VALUE = None,
+    ):
+        self.NAME = NAME  # type: Optional[str]
+        self.SHORT_DESCRIPTION = SHORT_DESCRIPTION  # type: Optional[str]
+        self.LONG_DESCRIPTION = LONG_DESCRIPTION  # type: Optional[str]
+        self.DATA_ENCODING = DATA_ENCODING  # type: Optional[IntegerDataEncoding.IntegerDataEncodingT]
+        self.ENUMERATION_LIST = ENUMERATION_LIST  # type: Optional[List[EnumerationValue.EnumerationValueT]]
+        self.INITIAL_VALUE = INITIAL_VALUE  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        enumeratedArgumentType = EnumeratedArgumentType()
-        enumeratedArgumentType.Init(buf, pos)
-        return cls.InitFromObj(enumeratedArgumentType)
+        tmpEnumeratedArgumentType = EnumeratedArgumentType()
+        tmpEnumeratedArgumentType.Init(buf, pos)
+        return cls.InitFromObj(tmpEnumeratedArgumentType)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -183,29 +197,29 @@ class EnumeratedArgumentTypeT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, enumeratedArgumentType):
+    def InitFromObj(cls, tmpEnumeratedArgumentType):
         x = EnumeratedArgumentTypeT()
-        x._UnPack(enumeratedArgumentType)
+        x._UnPack(tmpEnumeratedArgumentType)
         return x
 
     # EnumeratedArgumentTypeT
-    def _UnPack(self, enumeratedArgumentType):
-        if enumeratedArgumentType is None:
+    def _UnPack(self, EnumeratedArgumentType):
+        if EnumeratedArgumentType is None:
             return
-        self.NAME = enumeratedArgumentType.NAME()
-        self.SHORT_DESCRIPTION = enumeratedArgumentType.SHORT_DESCRIPTION()
-        self.LONG_DESCRIPTION = enumeratedArgumentType.LONG_DESCRIPTION()
-        if enumeratedArgumentType.DATA_ENCODING() is not None:
-            self.DATA_ENCODING = IntegerDataEncoding.IntegerDataEncodingT.InitFromObj(enumeratedArgumentType.DATA_ENCODING())
-        if not enumeratedArgumentType.ENUMERATION_LISTIsNone():
+        self.NAME = EnumeratedArgumentType.NAME()
+        self.SHORT_DESCRIPTION = EnumeratedArgumentType.SHORT_DESCRIPTION()
+        self.LONG_DESCRIPTION = EnumeratedArgumentType.LONG_DESCRIPTION()
+        if EnumeratedArgumentType.DATA_ENCODING() is not None:
+            self.DATA_ENCODING = IntegerDataEncoding.IntegerDataEncodingT.InitFromObj(EnumeratedArgumentType.DATA_ENCODING())
+        if not EnumeratedArgumentType.ENUMERATION_LISTIsNone():
             self.ENUMERATION_LIST = []
-            for i in range(enumeratedArgumentType.ENUMERATION_LISTLength()):
-                if enumeratedArgumentType.ENUMERATION_LIST(i) is None:
+            for i in range(EnumeratedArgumentType.ENUMERATION_LISTLength()):
+                if EnumeratedArgumentType.ENUMERATION_LIST(i) is None:
                     self.ENUMERATION_LIST.append(None)
                 else:
-                    enumerationValue_ = EnumerationValue.EnumerationValueT.InitFromObj(enumeratedArgumentType.ENUMERATION_LIST(i))
+                    enumerationValue_ = EnumerationValue.EnumerationValueT.InitFromObj(EnumeratedArgumentType.ENUMERATION_LIST(i))
                     self.ENUMERATION_LIST.append(enumerationValue_)
-        self.INITIAL_VALUE = enumeratedArgumentType.INITIAL_VALUE()
+        self.INITIAL_VALUE = EnumeratedArgumentType.INITIAL_VALUE()
 
     # EnumeratedArgumentTypeT
     def Pack(self, builder):
@@ -240,5 +254,5 @@ class EnumeratedArgumentTypeT(object):
             EnumeratedArgumentTypeAddENUMERATION_LIST(builder, ENUMERATION_LIST)
         if self.INITIAL_VALUE is not None:
             EnumeratedArgumentTypeAddINITIAL_VALUE(builder, INITIAL_VALUE)
-        enumeratedArgumentType = EnumeratedArgumentTypeEnd(builder)
-        return enumeratedArgumentType
+        EnumeratedArgumentType = EnumeratedArgumentTypeEnd(builder)
+        return EnumeratedArgumentType

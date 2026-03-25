@@ -32,7 +32,7 @@ class KMLIconStyle : Table() {
     /**
      * KML color in aabbggrr hex format
      */
-    val COLOR : String?
+    val color : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class KMLIconStyle : Table() {
                 null
             }
         }
-    val COLORAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun COLORInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val colorAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun colorInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Color mode
      */
-    val COLOR_MODE : Byte
+    val colorMode : Byte
         get() {
             val o = __offset(6)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -54,7 +54,7 @@ class KMLIconStyle : Table() {
     /**
      * Scale factor
      */
-    val SCALE : Double
+    val scale : Double
         get() {
             val o = __offset(8)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -62,7 +62,7 @@ class KMLIconStyle : Table() {
     /**
      * Heading in degrees
      */
-    val HEADING : Double
+    val heading : Double
         get() {
             val o = __offset(10)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -70,7 +70,7 @@ class KMLIconStyle : Table() {
     /**
      * Icon href (URL)
      */
-    val ICON_HREF : String?
+    val iconHref : String?
         get() {
             val o = __offset(12)
             return if (o != 0) {
@@ -79,12 +79,12 @@ class KMLIconStyle : Table() {
                 null
             }
         }
-    val ICON_HREFAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
-    fun ICON_HREFInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
+    val iconHrefAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(12, 1)
+    fun iconHrefInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 12, 1)
     /**
      * Hot spot X value
      */
-    val HOTSPOT_X : Double
+    val hotspotX : Double
         get() {
             val o = __offset(14)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -92,7 +92,7 @@ class KMLIconStyle : Table() {
     /**
      * Hot spot Y value
      */
-    val HOTSPOT_Y : Double
+    val hotspotY : Double
         get() {
             val o = __offset(16)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -100,7 +100,7 @@ class KMLIconStyle : Table() {
     /**
      * Hot spot X units
      */
-    val HOTSPOT_X_UNITS : Byte
+    val hotspotXUnits : Byte
         get() {
             val o = __offset(18)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -108,41 +108,41 @@ class KMLIconStyle : Table() {
     /**
      * Hot spot Y units
      */
-    val HOTSPOT_Y_UNITS : Byte
+    val hotspotYUnits : Byte
         get() {
             val o = __offset(20)
             return if(o != 0) bb.get(o + bb_pos) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsKMLIconStyle(_bb: ByteBuffer): KMLIconStyle = getRootAsKMLIconStyle(_bb, KMLIconStyle())
         fun getRootAsKMLIconStyle(_bb: ByteBuffer, obj: KMLIconStyle): KMLIconStyle {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createKMLIconStyle(builder: FlatBufferBuilder, COLOROffset: Int, COLOR_MODE: Byte, SCALE: Double, HEADING: Double, ICON_HREFOffset: Int, HOTSPOT_X: Double, HOTSPOT_Y: Double, HOTSPOT_X_UNITS: Byte, HOTSPOT_Y_UNITS: Byte) : Int {
+        fun createKMLIconStyle(builder: FlatBufferBuilder, colorOffset: Int, colorMode: Byte, scale: Double, heading: Double, iconHrefOffset: Int, hotspotX: Double, hotspotY: Double, hotspotXUnits: Byte, hotspotYUnits: Byte) : Int {
             builder.startTable(9)
-            addHOTSPOT_Y(builder, HOTSPOT_Y)
-            addHOTSPOT_X(builder, HOTSPOT_X)
-            addHEADING(builder, HEADING)
-            addSCALE(builder, SCALE)
-            addICON_HREF(builder, ICON_HREFOffset)
-            addCOLOR(builder, COLOROffset)
-            addHOTSPOT_Y_UNITS(builder, HOTSPOT_Y_UNITS)
-            addHOTSPOT_X_UNITS(builder, HOTSPOT_X_UNITS)
-            addCOLOR_MODE(builder, COLOR_MODE)
+            addHOTSPOTY(builder, hotspotY)
+            addHOTSPOTX(builder, hotspotX)
+            addHEADING(builder, heading)
+            addSCALE(builder, scale)
+            addICONHREF(builder, iconHrefOffset)
+            addCOLOR(builder, colorOffset)
+            addHOTSPOTYUNITS(builder, hotspotYUnits)
+            addHOTSPOTXUNITS(builder, hotspotXUnits)
+            addCOLORMODE(builder, colorMode)
             return endKMLIconStyle(builder)
         }
         fun startKMLIconStyle(builder: FlatBufferBuilder) = builder.startTable(9)
-        fun addCOLOR(builder: FlatBufferBuilder, COLOR: Int) = builder.addOffset(0, COLOR, 0)
-        fun addCOLOR_MODE(builder: FlatBufferBuilder, COLOR_MODE: Byte) = builder.addByte(1, COLOR_MODE, 0)
-        fun addSCALE(builder: FlatBufferBuilder, SCALE: Double) = builder.addDouble(2, SCALE, 0.0)
-        fun addHEADING(builder: FlatBufferBuilder, HEADING: Double) = builder.addDouble(3, HEADING, 0.0)
-        fun addICON_HREF(builder: FlatBufferBuilder, ICON_HREF: Int) = builder.addOffset(4, ICON_HREF, 0)
-        fun addHOTSPOT_X(builder: FlatBufferBuilder, HOTSPOT_X: Double) = builder.addDouble(5, HOTSPOT_X, 0.0)
-        fun addHOTSPOT_Y(builder: FlatBufferBuilder, HOTSPOT_Y: Double) = builder.addDouble(6, HOTSPOT_Y, 0.0)
-        fun addHOTSPOT_X_UNITS(builder: FlatBufferBuilder, HOTSPOT_X_UNITS: Byte) = builder.addByte(7, HOTSPOT_X_UNITS, 0)
-        fun addHOTSPOT_Y_UNITS(builder: FlatBufferBuilder, HOTSPOT_Y_UNITS: Byte) = builder.addByte(8, HOTSPOT_Y_UNITS, 0)
+        fun addCOLOR(builder: FlatBufferBuilder, color: Int) = builder.addOffset(0, color, 0)
+        fun addCOLORMODE(builder: FlatBufferBuilder, colorMode: Byte) = builder.addByte(1, colorMode, 0)
+        fun addSCALE(builder: FlatBufferBuilder, scale: Double) = builder.addDouble(2, scale, 0.0)
+        fun addHEADING(builder: FlatBufferBuilder, heading: Double) = builder.addDouble(3, heading, 0.0)
+        fun addICONHREF(builder: FlatBufferBuilder, iconHref: Int) = builder.addOffset(4, iconHref, 0)
+        fun addHOTSPOTX(builder: FlatBufferBuilder, hotspotX: Double) = builder.addDouble(5, hotspotX, 0.0)
+        fun addHOTSPOTY(builder: FlatBufferBuilder, hotspotY: Double) = builder.addDouble(6, hotspotY, 0.0)
+        fun addHOTSPOTXUNITS(builder: FlatBufferBuilder, hotspotXUnits: Byte) = builder.addByte(7, hotspotXUnits, 0)
+        fun addHOTSPOTYUNITS(builder: FlatBufferBuilder, hotspotYUnits: Byte) = builder.addByte(8, hotspotYUnits, 0)
         fun endKMLIconStyle(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

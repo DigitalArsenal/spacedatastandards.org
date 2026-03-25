@@ -2,4 +2,13 @@
 
 # namespace: 
 
-# NOTE ErrorDetectionType.py does not declare any structs or enums
+# Error detection/correction algorithms
+class ErrorDetectionType(object):
+    # No error detection
+    NONE = 0
+    # Cyclic redundancy check
+    CRC = 1
+    # Checksum
+    CHECKSUM = 2
+    # Parity
+    PARITY = 3

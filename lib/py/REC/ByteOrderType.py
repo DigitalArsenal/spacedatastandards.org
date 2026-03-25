@@ -2,4 +2,9 @@
 
 # namespace: 
 
-# NOTE ByteOrderType.py does not declare any structs or enums
+# Byte ordering for data encoding
+class ByteOrderType(object):
+    # Most significant byte first
+    BIG_ENDIAN = 0
+    # Least significant byte first
+    LITTLE_ENDIAN = 1

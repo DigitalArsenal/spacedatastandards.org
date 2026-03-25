@@ -32,7 +32,7 @@ class beamContourPoint : Table() {
     /**
      * Latitude in degrees
      */
-    val LATITUDE : Double
+    val latitude : Double
         get() {
             val o = __offset(4)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -40,7 +40,7 @@ class beamContourPoint : Table() {
     /**
      * Longitude in degrees
      */
-    val LONGITUDE : Double
+    val longitude : Double
         get() {
             val o = __offset(6)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -48,29 +48,29 @@ class beamContourPoint : Table() {
     /**
      * Gain level in dBi at this contour
      */
-    val GAIN : Double
+    val gain : Double
         get() {
             val o = __offset(8)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsbeamContourPoint(_bb: ByteBuffer): beamContourPoint = getRootAsbeamContourPoint(_bb, beamContourPoint())
         fun getRootAsbeamContourPoint(_bb: ByteBuffer, obj: beamContourPoint): beamContourPoint {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createbeamContourPoint(builder: FlatBufferBuilder, LATITUDE: Double, LONGITUDE: Double, GAIN: Double) : Int {
+        fun createbeamContourPoint(builder: FlatBufferBuilder, latitude: Double, longitude: Double, gain: Double) : Int {
             builder.startTable(3)
-            addGAIN(builder, GAIN)
-            addLONGITUDE(builder, LONGITUDE)
-            addLATITUDE(builder, LATITUDE)
+            addGAIN(builder, gain)
+            addLONGITUDE(builder, longitude)
+            addLATITUDE(builder, latitude)
             return endbeamContourPoint(builder)
         }
         fun startbeamContourPoint(builder: FlatBufferBuilder) = builder.startTable(3)
-        fun addLATITUDE(builder: FlatBufferBuilder, LATITUDE: Double) = builder.addDouble(0, LATITUDE, 0.0)
-        fun addLONGITUDE(builder: FlatBufferBuilder, LONGITUDE: Double) = builder.addDouble(1, LONGITUDE, 0.0)
-        fun addGAIN(builder: FlatBufferBuilder, GAIN: Double) = builder.addDouble(2, GAIN, 0.0)
+        fun addLATITUDE(builder: FlatBufferBuilder, latitude: Double) = builder.addDouble(0, latitude, 0.0)
+        fun addLONGITUDE(builder: FlatBufferBuilder, longitude: Double) = builder.addDouble(1, longitude, 0.0)
+        fun addGAIN(builder: FlatBufferBuilder, gain: Double) = builder.addDouble(2, gain, 0.0)
         fun endbeamContourPoint(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

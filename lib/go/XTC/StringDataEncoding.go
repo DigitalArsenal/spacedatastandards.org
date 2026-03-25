@@ -51,9 +51,17 @@ func (rcv *StringDataEncoding) ENCODING() StringEncodingType {
 	return 3
 }
 
+func (rcv *StringDataEncoding) Encoding() StringEncodingType {
+	return rcv.ENCODING()
+}
+
 /// Character encoding
 func (rcv *StringDataEncoding) MutateENCODING(n StringEncodingType) bool {
 	return rcv._tab.MutateInt8Slot(4, int8(n))
+}
+
+func (rcv *StringDataEncoding) MutateEncoding(n StringEncodingType) bool {
+	return rcv.MutateENCODING(n)
 }
 
 /// Size type specification
@@ -65,9 +73,17 @@ func (rcv *StringDataEncoding) SIZE_TYPE() StringSizeType {
 	return 0
 }
 
+func (rcv *StringDataEncoding) SizeType() StringSizeType {
+	return rcv.SIZE_TYPE()
+}
+
 /// Size type specification
 func (rcv *StringDataEncoding) MutateSIZE_TYPE(n StringSizeType) bool {
 	return rcv._tab.MutateInt8Slot(6, int8(n))
+}
+
+func (rcv *StringDataEncoding) MutateSizeType(n StringSizeType) bool {
+	return rcv.MutateSIZE_TYPE(n)
 }
 
 /// Fixed size in bits (when SIZE_TYPE=FIXED)
@@ -79,9 +95,17 @@ func (rcv *StringDataEncoding) SIZE_IN_BITS() uint16 {
 	return 0
 }
 
+func (rcv *StringDataEncoding) SizeInBits() uint16 {
+	return rcv.SIZE_IN_BITS()
+}
+
 /// Fixed size in bits (when SIZE_TYPE=FIXED)
 func (rcv *StringDataEncoding) MutateSIZE_IN_BITS(n uint16) bool {
 	return rcv._tab.MutateUint16Slot(8, n)
+}
+
+func (rcv *StringDataEncoding) MutateSizeInBits(n uint16) bool {
+	return rcv.MutateSIZE_IN_BITS(n)
 }
 
 /// Termination character (when SIZE_TYPE=TERMINATION_CHAR)
@@ -93,9 +117,17 @@ func (rcv *StringDataEncoding) TERMINATION_CHAR() byte {
 	return 0
 }
 
+func (rcv *StringDataEncoding) TerminationChar() byte {
+	return rcv.TERMINATION_CHAR()
+}
+
 /// Termination character (when SIZE_TYPE=TERMINATION_CHAR)
 func (rcv *StringDataEncoding) MutateTERMINATION_CHAR(n byte) bool {
 	return rcv._tab.MutateByteSlot(10, n)
+}
+
+func (rcv *StringDataEncoding) MutateTerminationChar(n byte) bool {
+	return rcv.MutateTERMINATION_CHAR(n)
 }
 
 /// Maximum size in bits (for variable length)
@@ -107,9 +139,17 @@ func (rcv *StringDataEncoding) MAX_SIZE_IN_BITS() uint16 {
 	return 0
 }
 
+func (rcv *StringDataEncoding) MaxSizeInBits() uint16 {
+	return rcv.MAX_SIZE_IN_BITS()
+}
+
 /// Maximum size in bits (for variable length)
 func (rcv *StringDataEncoding) MutateMAX_SIZE_IN_BITS(n uint16) bool {
 	return rcv._tab.MutateUint16Slot(12, n)
+}
+
+func (rcv *StringDataEncoding) MutateMaxSizeInBits(n uint16) bool {
+	return rcv.MutateMAX_SIZE_IN_BITS(n)
 }
 
 /// Leading size field bits (when SIZE_TYPE=LEADING_SIZE)
@@ -121,9 +161,17 @@ func (rcv *StringDataEncoding) LEADING_SIZE_BITS() byte {
 	return 0
 }
 
+func (rcv *StringDataEncoding) LeadingSizeBits() byte {
+	return rcv.LEADING_SIZE_BITS()
+}
+
 /// Leading size field bits (when SIZE_TYPE=LEADING_SIZE)
 func (rcv *StringDataEncoding) MutateLEADING_SIZE_BITS(n byte) bool {
 	return rcv._tab.MutateByteSlot(14, n)
+}
+
+func (rcv *StringDataEncoding) MutateLeadingSizeBits(n byte) bool {
+	return rcv.MutateLEADING_SIZE_BITS(n)
 }
 
 func StringDataEncodingStart(builder *flatbuffers.Builder) {
@@ -132,20 +180,38 @@ func StringDataEncodingStart(builder *flatbuffers.Builder) {
 func StringDataEncodingAddENCODING(builder *flatbuffers.Builder, ENCODING StringEncodingType) {
 	builder.PrependInt8Slot(0, int8(ENCODING), 3)
 }
+func StringDataEncodingAddEncoding(builder *flatbuffers.Builder, ENCODING StringEncodingType) {
+	StringDataEncodingAddENCODING(builder, ENCODING)
+}
 func StringDataEncodingAddSIZE_TYPE(builder *flatbuffers.Builder, SIZE_TYPE StringSizeType) {
 	builder.PrependInt8Slot(1, int8(SIZE_TYPE), 0)
+}
+func StringDataEncodingAddSizeType(builder *flatbuffers.Builder, SIZE_TYPE StringSizeType) {
+	StringDataEncodingAddSIZE_TYPE(builder, SIZE_TYPE)
 }
 func StringDataEncodingAddSIZE_IN_BITS(builder *flatbuffers.Builder, SIZE_IN_BITS uint16) {
 	builder.PrependUint16Slot(2, SIZE_IN_BITS, 0)
 }
+func StringDataEncodingAddSizeInBits(builder *flatbuffers.Builder, SIZE_IN_BITS uint16) {
+	StringDataEncodingAddSIZE_IN_BITS(builder, SIZE_IN_BITS)
+}
 func StringDataEncodingAddTERMINATION_CHAR(builder *flatbuffers.Builder, TERMINATION_CHAR byte) {
 	builder.PrependByteSlot(3, TERMINATION_CHAR, 0)
+}
+func StringDataEncodingAddTerminationChar(builder *flatbuffers.Builder, TERMINATION_CHAR byte) {
+	StringDataEncodingAddTERMINATION_CHAR(builder, TERMINATION_CHAR)
 }
 func StringDataEncodingAddMAX_SIZE_IN_BITS(builder *flatbuffers.Builder, MAX_SIZE_IN_BITS uint16) {
 	builder.PrependUint16Slot(4, MAX_SIZE_IN_BITS, 0)
 }
+func StringDataEncodingAddMaxSizeInBits(builder *flatbuffers.Builder, MAX_SIZE_IN_BITS uint16) {
+	StringDataEncodingAddMAX_SIZE_IN_BITS(builder, MAX_SIZE_IN_BITS)
+}
 func StringDataEncodingAddLEADING_SIZE_BITS(builder *flatbuffers.Builder, LEADING_SIZE_BITS byte) {
 	builder.PrependByteSlot(5, LEADING_SIZE_BITS, 0)
+}
+func StringDataEncodingAddLeadingSizeBits(builder *flatbuffers.Builder, LEADING_SIZE_BITS byte) {
+	StringDataEncodingAddLEADING_SIZE_BITS(builder, LEADING_SIZE_BITS)
 }
 func StringDataEncodingEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

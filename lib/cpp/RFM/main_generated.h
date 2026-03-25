@@ -8,9 +8,9 @@
 
 // Ensure the included flatbuffers.h is the same version as when this file was
 // generated, otherwise it may not be compatible.
-static_assert(FLATBUFFERS_VERSION_MAJOR == 24 &&
-              FLATBUFFERS_VERSION_MINOR == 3 &&
-              FLATBUFFERS_VERSION_REVISION == 25,
+static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
+              FLATBUFFERS_VERSION_MINOR == 12 &&
+              FLATBUFFERS_VERSION_REVISION == 19,
              "Non-compatible flatbuffers version included");
 
 struct CelestialFrameWrapper;
@@ -561,8 +561,10 @@ template<> struct RFMUnionTraits<CustomFrameWrapper> {
   static const RFMUnion enum_value = RFMUnion_CustomFrameWrapper;
 };
 
-bool VerifyRFMUnion(::flatbuffers::Verifier &verifier, const void *obj, RFMUnion type);
-bool VerifyRFMUnionVector(::flatbuffers::Verifier &verifier, const ::flatbuffers::Vector<::flatbuffers::Offset<void>> *values, const ::flatbuffers::Vector<uint8_t> *types);
+template <bool B = false>
+bool VerifyRFMUnion(::flatbuffers::VerifierTemplate<B> &verifier, const void *obj, RFMUnion type);
+template <bool B = false>
+bool VerifyRFMUnionVector(::flatbuffers::VerifierTemplate<B> &verifier, const ::flatbuffers::Vector<::flatbuffers::Offset<void>> *values, const ::flatbuffers::Vector<uint8_t> *types);
 
 struct CelestialFrameWrapper FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef CelestialFrameWrapperBuilder Builder;
@@ -572,7 +574,8 @@ struct CelestialFrameWrapper FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Ta
   CelestialFrame frame() const {
     return static_cast<CelestialFrame>(GetField<int8_t>(VT_FRAME, 0));
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<int8_t>(verifier, VT_FRAME, 1) &&
            verifier.EndTable();
@@ -613,7 +616,8 @@ struct SpacecraftFrameWrapper FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::T
   SpacecraftFrame frame() const {
     return static_cast<SpacecraftFrame>(GetField<int8_t>(VT_FRAME, 0));
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<int8_t>(verifier, VT_FRAME, 1) &&
            verifier.EndTable();
@@ -654,7 +658,8 @@ struct OrbitFrameWrapper FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table 
   OrbitFrame frame() const {
     return static_cast<OrbitFrame>(GetField<int8_t>(VT_FRAME, 0));
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<int8_t>(verifier, VT_FRAME, 1) &&
            verifier.EndTable();
@@ -695,7 +700,8 @@ struct CustomFrameWrapper FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table
   CustomFrame frame() const {
     return static_cast<CustomFrame>(GetField<int8_t>(VT_FRAME, 0));
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<int8_t>(verifier, VT_FRAME, 1) &&
            verifier.EndTable();
@@ -762,7 +768,8 @@ struct RFM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *NAME() const {
     return GetPointer<const ::flatbuffers::String *>(VT_NAME);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<uint8_t>(verifier, VT_REFERENCE_FRAME_TYPE, 1) &&
            VerifyOffset(verifier, VT_REFERENCE_FRAME) &&
@@ -846,7 +853,8 @@ inline ::flatbuffers::Offset<RFM> CreateRFMDirect(
       NAME__);
 }
 
-inline bool VerifyRFMUnion(::flatbuffers::Verifier &verifier, const void *obj, RFMUnion type) {
+template <bool B>
+inline bool VerifyRFMUnion(::flatbuffers::VerifierTemplate<B> &verifier, const void *obj, RFMUnion type) {
   switch (type) {
     case RFMUnion_NONE: {
       return true;
@@ -871,7 +879,8 @@ inline bool VerifyRFMUnion(::flatbuffers::Verifier &verifier, const void *obj, R
   }
 }
 
-inline bool VerifyRFMUnionVector(::flatbuffers::Verifier &verifier, const ::flatbuffers::Vector<::flatbuffers::Offset<void>> *values, const ::flatbuffers::Vector<uint8_t> *types) {
+template <bool B>
+inline bool VerifyRFMUnionVector(::flatbuffers::VerifierTemplate<B> &verifier, const ::flatbuffers::Vector<::flatbuffers::Offset<void>> *values, const ::flatbuffers::Vector<uint8_t> *types) {
   if (!values || !types) return !values && !types;
   if (values->size() != types->size()) return false;
   for (::flatbuffers::uoffset_t i = 0; i < values->size(); ++i) {
@@ -905,14 +914,16 @@ inline bool SizePrefixedRFMBufferHasIdentifier(const void *buf) {
       buf, RFMIdentifier(), true);
 }
 
+template <bool B = false>
 inline bool VerifyRFMBuffer(
-    ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifyBuffer<RFM>(RFMIdentifier());
+    ::flatbuffers::VerifierTemplate<B> &verifier) {
+  return verifier.template VerifyBuffer<RFM>(RFMIdentifier());
 }
 
+template <bool B = false>
 inline bool VerifySizePrefixedRFMBuffer(
-    ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifySizePrefixedBuffer<RFM>(RFMIdentifier());
+    ::flatbuffers::VerifierTemplate<B> &verifier) {
+  return verifier.template VerifySizePrefixedBuffer<RFM>(RFMIdentifier());
 }
 
 inline void FinishRFMBuffer(

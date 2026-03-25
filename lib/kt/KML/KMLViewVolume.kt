@@ -32,7 +32,7 @@ class KMLViewVolume : Table() {
     /**
      * Left field of view angle
      */
-    val LEFT_FOV : Double
+    val leftFov : Double
         get() {
             val o = __offset(4)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -40,7 +40,7 @@ class KMLViewVolume : Table() {
     /**
      * Right field of view angle
      */
-    val RIGHT_FOV : Double
+    val rightFov : Double
         get() {
             val o = __offset(6)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -48,7 +48,7 @@ class KMLViewVolume : Table() {
     /**
      * Bottom field of view angle
      */
-    val BOTTOM_FOV : Double
+    val bottomFov : Double
         get() {
             val o = __offset(8)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -56,7 +56,7 @@ class KMLViewVolume : Table() {
     /**
      * Top field of view angle
      */
-    val TOP_FOV : Double
+    val topFov : Double
         get() {
             val o = __offset(10)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -64,33 +64,33 @@ class KMLViewVolume : Table() {
     /**
      * Near clipping plane
      */
-    val NEAR : Double
+    val near : Double
         get() {
             val o = __offset(12)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsKMLViewVolume(_bb: ByteBuffer): KMLViewVolume = getRootAsKMLViewVolume(_bb, KMLViewVolume())
         fun getRootAsKMLViewVolume(_bb: ByteBuffer, obj: KMLViewVolume): KMLViewVolume {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createKMLViewVolume(builder: FlatBufferBuilder, LEFT_FOV: Double, RIGHT_FOV: Double, BOTTOM_FOV: Double, TOP_FOV: Double, NEAR: Double) : Int {
+        fun createKMLViewVolume(builder: FlatBufferBuilder, leftFov: Double, rightFov: Double, bottomFov: Double, topFov: Double, near: Double) : Int {
             builder.startTable(5)
-            addNEAR(builder, NEAR)
-            addTOP_FOV(builder, TOP_FOV)
-            addBOTTOM_FOV(builder, BOTTOM_FOV)
-            addRIGHT_FOV(builder, RIGHT_FOV)
-            addLEFT_FOV(builder, LEFT_FOV)
+            addNEAR(builder, near)
+            addTOPFOV(builder, topFov)
+            addBOTTOMFOV(builder, bottomFov)
+            addRIGHTFOV(builder, rightFov)
+            addLEFTFOV(builder, leftFov)
             return endKMLViewVolume(builder)
         }
         fun startKMLViewVolume(builder: FlatBufferBuilder) = builder.startTable(5)
-        fun addLEFT_FOV(builder: FlatBufferBuilder, LEFT_FOV: Double) = builder.addDouble(0, LEFT_FOV, 0.0)
-        fun addRIGHT_FOV(builder: FlatBufferBuilder, RIGHT_FOV: Double) = builder.addDouble(1, RIGHT_FOV, 0.0)
-        fun addBOTTOM_FOV(builder: FlatBufferBuilder, BOTTOM_FOV: Double) = builder.addDouble(2, BOTTOM_FOV, 0.0)
-        fun addTOP_FOV(builder: FlatBufferBuilder, TOP_FOV: Double) = builder.addDouble(3, TOP_FOV, 0.0)
-        fun addNEAR(builder: FlatBufferBuilder, NEAR: Double) = builder.addDouble(4, NEAR, 0.0)
+        fun addLEFTFOV(builder: FlatBufferBuilder, leftFov: Double) = builder.addDouble(0, leftFov, 0.0)
+        fun addRIGHTFOV(builder: FlatBufferBuilder, rightFov: Double) = builder.addDouble(1, rightFov, 0.0)
+        fun addBOTTOMFOV(builder: FlatBufferBuilder, bottomFov: Double) = builder.addDouble(2, bottomFov, 0.0)
+        fun addTOPFOV(builder: FlatBufferBuilder, topFov: Double) = builder.addDouble(3, topFov, 0.0)
+        fun addNEAR(builder: FlatBufferBuilder, near: Double) = builder.addDouble(4, near, 0.0)
         fun endKMLViewVolume(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

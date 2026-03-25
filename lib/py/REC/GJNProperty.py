@@ -2,4 +2,230 @@
 
 # namespace: 
 
-# NOTE GJNProperty.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# A key-value property entry for Feature properties
+class GJNProperty(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = GJNProperty()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsGJNProperty(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def GJNPropertyBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x47\x4A\x4E", size_prefixed=size_prefixed)
+
+    # GJNProperty
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Property key
+    # GJNProperty
+    def KEY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Property value as string
+    # GJNProperty
+    def VALUE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Property value as number (use if numeric)
+    # GJNProperty
+    def NUM_VALUE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # True if NUM_VALUE should be used instead of VALUE
+    # GJNProperty
+    def IS_NUMERIC(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # True if this property value is a boolean
+    # GJNProperty
+    def IS_BOOL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # Boolean value (use when IS_BOOL is true)
+    # GJNProperty
+    def BOOL_VALUE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # True if this property value is JSON null
+    # GJNProperty
+    def IS_NULL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # Raw JSON string for complex values (objects, arrays)
+    # GJNProperty
+    def JSON_VALUE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+def GJNPropertyStart(builder):
+    builder.StartObject(8)
+
+def Start(builder):
+    GJNPropertyStart(builder)
+
+def GJNPropertyAddKEY(builder, KEY):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(KEY), 0)
+
+def AddKEY(builder, KEY):
+    GJNPropertyAddKEY(builder, KEY)
+
+def GJNPropertyAddVALUE(builder, VALUE):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(VALUE), 0)
+
+def AddVALUE(builder, VALUE):
+    GJNPropertyAddVALUE(builder, VALUE)
+
+def GJNPropertyAddNUM_VALUE(builder, NUM_VALUE):
+    builder.PrependFloat64Slot(2, NUM_VALUE, 0.0)
+
+def AddNUM_VALUE(builder, NUM_VALUE):
+    GJNPropertyAddNUM_VALUE(builder, NUM_VALUE)
+
+def GJNPropertyAddIS_NUMERIC(builder, IS_NUMERIC):
+    builder.PrependBoolSlot(3, IS_NUMERIC, 0)
+
+def AddIS_NUMERIC(builder, IS_NUMERIC):
+    GJNPropertyAddIS_NUMERIC(builder, IS_NUMERIC)
+
+def GJNPropertyAddIS_BOOL(builder, IS_BOOL):
+    builder.PrependBoolSlot(4, IS_BOOL, 0)
+
+def AddIS_BOOL(builder, IS_BOOL):
+    GJNPropertyAddIS_BOOL(builder, IS_BOOL)
+
+def GJNPropertyAddBOOL_VALUE(builder, BOOL_VALUE):
+    builder.PrependBoolSlot(5, BOOL_VALUE, 0)
+
+def AddBOOL_VALUE(builder, BOOL_VALUE):
+    GJNPropertyAddBOOL_VALUE(builder, BOOL_VALUE)
+
+def GJNPropertyAddIS_NULL(builder, IS_NULL):
+    builder.PrependBoolSlot(6, IS_NULL, 0)
+
+def AddIS_NULL(builder, IS_NULL):
+    GJNPropertyAddIS_NULL(builder, IS_NULL)
+
+def GJNPropertyAddJSON_VALUE(builder, JSON_VALUE):
+    builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(JSON_VALUE), 0)
+
+def AddJSON_VALUE(builder, JSON_VALUE):
+    GJNPropertyAddJSON_VALUE(builder, JSON_VALUE)
+
+def GJNPropertyEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return GJNPropertyEnd(builder)
+
+
+class GJNPropertyT(object):
+
+    # GJNPropertyT
+    def __init__(
+        self,
+        KEY = None,
+        VALUE = None,
+        NUM_VALUE = 0.0,
+        IS_NUMERIC = False,
+        IS_BOOL = False,
+        BOOL_VALUE = False,
+        IS_NULL = False,
+        JSON_VALUE = None,
+    ):
+        self.KEY = KEY  # type: Optional[str]
+        self.VALUE = VALUE  # type: Optional[str]
+        self.NUM_VALUE = NUM_VALUE  # type: float
+        self.IS_NUMERIC = IS_NUMERIC  # type: bool
+        self.IS_BOOL = IS_BOOL  # type: bool
+        self.BOOL_VALUE = BOOL_VALUE  # type: bool
+        self.IS_NULL = IS_NULL  # type: bool
+        self.JSON_VALUE = JSON_VALUE  # type: Optional[str]
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpGjnproperty = GJNProperty()
+        tmpGjnproperty.Init(buf, pos)
+        return cls.InitFromObj(tmpGjnproperty)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpGjnproperty):
+        x = GJNPropertyT()
+        x._UnPack(tmpGjnproperty)
+        return x
+
+    # GJNPropertyT
+    def _UnPack(self, GJNProperty):
+        if GJNProperty is None:
+            return
+        self.KEY = GJNProperty.KEY()
+        self.VALUE = GJNProperty.VALUE()
+        self.NUM_VALUE = GJNProperty.NUM_VALUE()
+        self.IS_NUMERIC = GJNProperty.IS_NUMERIC()
+        self.IS_BOOL = GJNProperty.IS_BOOL()
+        self.BOOL_VALUE = GJNProperty.BOOL_VALUE()
+        self.IS_NULL = GJNProperty.IS_NULL()
+        self.JSON_VALUE = GJNProperty.JSON_VALUE()
+
+    # GJNPropertyT
+    def Pack(self, builder):
+        if self.KEY is not None:
+            KEY = builder.CreateString(self.KEY)
+        if self.VALUE is not None:
+            VALUE = builder.CreateString(self.VALUE)
+        if self.JSON_VALUE is not None:
+            JSON_VALUE = builder.CreateString(self.JSON_VALUE)
+        GJNPropertyStart(builder)
+        if self.KEY is not None:
+            GJNPropertyAddKEY(builder, KEY)
+        if self.VALUE is not None:
+            GJNPropertyAddVALUE(builder, VALUE)
+        GJNPropertyAddNUM_VALUE(builder, self.NUM_VALUE)
+        GJNPropertyAddIS_NUMERIC(builder, self.IS_NUMERIC)
+        GJNPropertyAddIS_BOOL(builder, self.IS_BOOL)
+        GJNPropertyAddBOOL_VALUE(builder, self.BOOL_VALUE)
+        GJNPropertyAddIS_NULL(builder, self.IS_NULL)
+        if self.JSON_VALUE is not None:
+            GJNPropertyAddJSON_VALUE(builder, JSON_VALUE)
+        GJNProperty = GJNPropertyEnd(builder)
+        return GJNProperty

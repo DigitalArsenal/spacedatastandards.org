@@ -32,7 +32,7 @@ class KMLFlyTo : Table() {
     /**
      * Duration in seconds
      */
-    val DURATION : Double
+    val duration : Double
         get() {
             val o = __offset(4)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -40,7 +40,7 @@ class KMLFlyTo : Table() {
     /**
      * Fly-to mode
      */
-    val FLY_TO_MODE : Byte
+    val flyToMode : Byte
         get() {
             val o = __offset(6)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -48,8 +48,8 @@ class KMLFlyTo : Table() {
     /**
      * LookAt viewpoint
      */
-    val LOOK_AT : KMLLookAt? get() = LOOK_AT(KMLLookAt())
-    fun LOOK_AT(obj: KMLLookAt) : KMLLookAt? {
+    val lookAt : KMLLookAt? get() = lookAt(KMLLookAt())
+    fun lookAt(obj: KMLLookAt) : KMLLookAt? {
         val o = __offset(8)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -60,8 +60,8 @@ class KMLFlyTo : Table() {
     /**
      * Camera viewpoint
      */
-    val CAMERA : KMLCamera? get() = CAMERA(KMLCamera())
-    fun CAMERA(obj: KMLCamera) : KMLCamera? {
+    val camera : KMLCamera? get() = camera(KMLCamera())
+    fun camera(obj: KMLCamera) : KMLCamera? {
         val o = __offset(10)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -70,25 +70,25 @@ class KMLFlyTo : Table() {
         }
     }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsKMLFlyTo(_bb: ByteBuffer): KMLFlyTo = getRootAsKMLFlyTo(_bb, KMLFlyTo())
         fun getRootAsKMLFlyTo(_bb: ByteBuffer, obj: KMLFlyTo): KMLFlyTo {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createKMLFlyTo(builder: FlatBufferBuilder, DURATION: Double, FLY_TO_MODE: Byte, LOOK_ATOffset: Int, CAMERAOffset: Int) : Int {
+        fun createKMLFlyTo(builder: FlatBufferBuilder, duration: Double, flyToMode: Byte, lookAtOffset: Int, cameraOffset: Int) : Int {
             builder.startTable(4)
-            addDURATION(builder, DURATION)
-            addCAMERA(builder, CAMERAOffset)
-            addLOOK_AT(builder, LOOK_ATOffset)
-            addFLY_TO_MODE(builder, FLY_TO_MODE)
+            addDURATION(builder, duration)
+            addCAMERA(builder, cameraOffset)
+            addLOOKAT(builder, lookAtOffset)
+            addFLYTOMODE(builder, flyToMode)
             return endKMLFlyTo(builder)
         }
         fun startKMLFlyTo(builder: FlatBufferBuilder) = builder.startTable(4)
-        fun addDURATION(builder: FlatBufferBuilder, DURATION: Double) = builder.addDouble(0, DURATION, 0.0)
-        fun addFLY_TO_MODE(builder: FlatBufferBuilder, FLY_TO_MODE: Byte) = builder.addByte(1, FLY_TO_MODE, 0)
-        fun addLOOK_AT(builder: FlatBufferBuilder, LOOK_AT: Int) = builder.addOffset(2, LOOK_AT, 0)
-        fun addCAMERA(builder: FlatBufferBuilder, CAMERA: Int) = builder.addOffset(3, CAMERA, 0)
+        fun addDURATION(builder: FlatBufferBuilder, duration: Double) = builder.addDouble(0, duration, 0.0)
+        fun addFLYTOMODE(builder: FlatBufferBuilder, flyToMode: Byte) = builder.addByte(1, flyToMode, 0)
+        fun addLOOKAT(builder: FlatBufferBuilder, lookAt: Int) = builder.addOffset(2, lookAt, 0)
+        fun addCAMERA(builder: FlatBufferBuilder, camera: Int) = builder.addOffset(3, camera, 0)
         fun endKMLFlyTo(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

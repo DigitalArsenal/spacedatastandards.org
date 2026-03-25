@@ -32,7 +32,7 @@ class CustomStream : Table() {
     /**
      * Stream name
      */
-    val NAME : String?
+    val name : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class CustomStream : Table() {
                 null
             }
         }
-    val NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val nameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun nameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Short description
      */
-    val SHORT_DESCRIPTION : String?
+    val shortDescription : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -55,12 +55,12 @@ class CustomStream : Table() {
                 null
             }
         }
-    val SHORT_DESCRIPTIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun SHORT_DESCRIPTIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val shortDescriptionAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun shortDescriptionInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * Algorithm reference for parsing
      */
-    val ALGORITHM_REF : String?
+    val algorithmRef : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -69,26 +69,26 @@ class CustomStream : Table() {
                 null
             }
         }
-    val ALGORITHM_REFAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun ALGORITHM_REFInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val algorithmRefAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun algorithmRefInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsCustomStream(_bb: ByteBuffer): CustomStream = getRootAsCustomStream(_bb, CustomStream())
         fun getRootAsCustomStream(_bb: ByteBuffer, obj: CustomStream): CustomStream {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createCustomStream(builder: FlatBufferBuilder, NAMEOffset: Int, SHORT_DESCRIPTIONOffset: Int, ALGORITHM_REFOffset: Int) : Int {
+        fun createCustomStream(builder: FlatBufferBuilder, nameOffset: Int, shortDescriptionOffset: Int, algorithmRefOffset: Int) : Int {
             builder.startTable(3)
-            addALGORITHM_REF(builder, ALGORITHM_REFOffset)
-            addSHORT_DESCRIPTION(builder, SHORT_DESCRIPTIONOffset)
-            addNAME(builder, NAMEOffset)
+            addALGORITHMREF(builder, algorithmRefOffset)
+            addSHORTDESCRIPTION(builder, shortDescriptionOffset)
+            addNAME(builder, nameOffset)
             return endCustomStream(builder)
         }
         fun startCustomStream(builder: FlatBufferBuilder) = builder.startTable(3)
-        fun addNAME(builder: FlatBufferBuilder, NAME: Int) = builder.addOffset(0, NAME, 0)
-        fun addSHORT_DESCRIPTION(builder: FlatBufferBuilder, SHORT_DESCRIPTION: Int) = builder.addOffset(1, SHORT_DESCRIPTION, 0)
-        fun addALGORITHM_REF(builder: FlatBufferBuilder, ALGORITHM_REF: Int) = builder.addOffset(2, ALGORITHM_REF, 0)
+        fun addNAME(builder: FlatBufferBuilder, name: Int) = builder.addOffset(0, name, 0)
+        fun addSHORTDESCRIPTION(builder: FlatBufferBuilder, shortDescription: Int) = builder.addOffset(1, shortDescription, 0)
+        fun addALGORITHMREF(builder: FlatBufferBuilder, algorithmRef: Int) = builder.addOffset(2, algorithmRef, 0)
         fun endCustomStream(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

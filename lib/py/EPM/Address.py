@@ -129,19 +129,27 @@ def End(builder):
 class AddressT(object):
 
     # AddressT
-    def __init__(self):
-        self.COUNTRY = None  # type: str
-        self.REGION = None  # type: str
-        self.LOCALITY = None  # type: str
-        self.POSTAL_CODE = None  # type: str
-        self.STREET = None  # type: str
-        self.POST_OFFICE_BOX_NUMBER = None  # type: str
+    def __init__(
+        self,
+        COUNTRY = None,
+        REGION = None,
+        LOCALITY = None,
+        POSTAL_CODE = None,
+        STREET = None,
+        POST_OFFICE_BOX_NUMBER = None,
+    ):
+        self.COUNTRY = COUNTRY  # type: Optional[str]
+        self.REGION = REGION  # type: Optional[str]
+        self.LOCALITY = LOCALITY  # type: Optional[str]
+        self.POSTAL_CODE = POSTAL_CODE  # type: Optional[str]
+        self.STREET = STREET  # type: Optional[str]
+        self.POST_OFFICE_BOX_NUMBER = POST_OFFICE_BOX_NUMBER  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        address = Address()
-        address.Init(buf, pos)
-        return cls.InitFromObj(address)
+        tmpAddress = Address()
+        tmpAddress.Init(buf, pos)
+        return cls.InitFromObj(tmpAddress)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -149,21 +157,21 @@ class AddressT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, address):
+    def InitFromObj(cls, tmpAddress):
         x = AddressT()
-        x._UnPack(address)
+        x._UnPack(tmpAddress)
         return x
 
     # AddressT
-    def _UnPack(self, address):
-        if address is None:
+    def _UnPack(self, Address):
+        if Address is None:
             return
-        self.COUNTRY = address.COUNTRY()
-        self.REGION = address.REGION()
-        self.LOCALITY = address.LOCALITY()
-        self.POSTAL_CODE = address.POSTAL_CODE()
-        self.STREET = address.STREET()
-        self.POST_OFFICE_BOX_NUMBER = address.POST_OFFICE_BOX_NUMBER()
+        self.COUNTRY = Address.COUNTRY()
+        self.REGION = Address.REGION()
+        self.LOCALITY = Address.LOCALITY()
+        self.POSTAL_CODE = Address.POSTAL_CODE()
+        self.STREET = Address.STREET()
+        self.POST_OFFICE_BOX_NUMBER = Address.POST_OFFICE_BOX_NUMBER()
 
     # AddressT
     def Pack(self, builder):
@@ -192,5 +200,5 @@ class AddressT(object):
             AddressAddSTREET(builder, STREET)
         if self.POST_OFFICE_BOX_NUMBER is not None:
             AddressAddPOST_OFFICE_BOX_NUMBER(builder, POST_OFFICE_BOX_NUMBER)
-        address = AddressEnd(builder)
-        return address
+        Address = AddressEnd(builder)
+        return Address

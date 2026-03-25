@@ -2,4 +2,11 @@
 
 # namespace: 
 
-# NOTE ionoLayer.py does not declare any structs or enums
+class ionoLayer(object):
+    D = 0
+    E = 1
+    ES = 2
+    F = 3
+    F1 = 4
+    F2 = 5
+    TOPSIDE = 6

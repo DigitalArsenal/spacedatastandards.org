@@ -2,12 +2,16 @@
 // swiftlint:disable all
 // swiftformat:disable all
 
+#if canImport(Common)
+import Common
+#endif
+
 import FlatBuffers
 
 ///  AOS Transfer Frame (CCSDS 732.0-B-3)
-public struct AOF: FlatBufferObject, Verifiable {
+public struct AOF: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -47,20 +51,14 @@ public struct AOF: FlatBufferObject, Verifiable {
   ///  VC frame count cycle
   public var VC_FRAME_COUNT_CYCLE: UInt8 { let o = _accessor.offset(VTOFFSET.VC_FRAME_COUNT_CYCLE.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
   ///  Insert zone
-  public var hasInsertZone: Bool { let o = _accessor.offset(VTOFFSET.INSERT_ZONE.v); return o == 0 ? false : true }
-  public var INSERT_ZONECount: Int32 { let o = _accessor.offset(VTOFFSET.INSERT_ZONE.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func INSERT_ZONE(at index: Int32) -> UInt8 { let o = _accessor.offset(VTOFFSET.INSERT_ZONE.v); return o == 0 ? 0 : _accessor.directRead(of: UInt8.self, offset: _accessor.vector(at: o) + index * 1) }
-  public var INSERT_ZONE: [UInt8] { return _accessor.getVector(at: VTOFFSET.INSERT_ZONE.v) ?? [] }
+  public var INSERT_ZONE: FlatbufferVector<UInt8> { return _accessor.vector(at: VTOFFSET.INSERT_ZONE.v, byteSize: 1) }
+  public func withUnsafePointerToInsertZone<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.INSERT_ZONE.v, body: body) }
   ///  Data field
-  public var hasData: Bool { let o = _accessor.offset(VTOFFSET.DATA.v); return o == 0 ? false : true }
-  public var DATACount: Int32 { let o = _accessor.offset(VTOFFSET.DATA.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func DATA(at index: Int32) -> UInt8 { let o = _accessor.offset(VTOFFSET.DATA.v); return o == 0 ? 0 : _accessor.directRead(of: UInt8.self, offset: _accessor.vector(at: o) + index * 1) }
-  public var DATA: [UInt8] { return _accessor.getVector(at: VTOFFSET.DATA.v) ?? [] }
+  public var DATA: FlatbufferVector<UInt8> { return _accessor.vector(at: VTOFFSET.DATA.v, byteSize: 1) }
+  public func withUnsafePointerToData<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.DATA.v, body: body) }
   ///  Operational control field
-  public var hasOcf: Bool { let o = _accessor.offset(VTOFFSET.OCF.v); return o == 0 ? false : true }
-  public var OCFCount: Int32 { let o = _accessor.offset(VTOFFSET.OCF.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func OCF(at index: Int32) -> UInt8 { let o = _accessor.offset(VTOFFSET.OCF.v); return o == 0 ? 0 : _accessor.directRead(of: UInt8.self, offset: _accessor.vector(at: o) + index * 1) }
-  public var OCF: [UInt8] { return _accessor.getVector(at: VTOFFSET.OCF.v) ?? [] }
+  public var OCF: FlatbufferVector<UInt8> { return _accessor.vector(at: VTOFFSET.OCF.v, byteSize: 1) }
+  public func withUnsafePointerToOcf<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.OCF.v, body: body) }
   ///  Frame error control field
   public var FECF: UInt16 { let o = _accessor.offset(VTOFFSET.FECF.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
   public static func startAOF(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 11) }

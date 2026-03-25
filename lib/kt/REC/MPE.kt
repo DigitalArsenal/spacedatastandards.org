@@ -32,7 +32,7 @@ class MPE : Table() {
     /**
      * Unique ID as a String [no units]
      */
-    val ENTITY_ID : String?
+    val entityId : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class MPE : Table() {
                 null
             }
         }
-    val ENTITY_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun ENTITY_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val entityIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun entityIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Epoch of Mean Keplerian elements (UNIX timestamp) [numeric seconds since 1970-01-01T00:00:00 UTC]
      */
-    val EPOCH : Double
+    val epoch : Double
         get() {
             val o = __offset(6)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -54,7 +54,7 @@ class MPE : Table() {
     /**
      * Mean motion in rev/day [M if chosen to represent orbit size for SGP/SGP4 elements]
      */
-    val MEAN_MOTION : Double
+    val meanMotion : Double
         get() {
             val o = __offset(8)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -62,7 +62,7 @@ class MPE : Table() {
     /**
      * Eccentricity (unitless)
      */
-    val ECCENTRICITY : Double
+    val eccentricity : Double
         get() {
             val o = __offset(10)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -70,7 +70,7 @@ class MPE : Table() {
     /**
      * Inclination in degrees
      */
-    val INCLINATION : Double
+    val inclination : Double
         get() {
             val o = __offset(12)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -78,7 +78,7 @@ class MPE : Table() {
     /**
      * Right ascension of ascending node in degrees
      */
-    val RA_OF_ASC_NODE : Double
+    val raOfAscNode : Double
         get() {
             val o = __offset(14)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -86,7 +86,7 @@ class MPE : Table() {
     /**
      * Argument of pericenter in degrees
      */
-    val ARG_OF_PERICENTER : Double
+    val argOfPericenter : Double
         get() {
             val o = __offset(16)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -94,7 +94,7 @@ class MPE : Table() {
     /**
      * Mean anomaly in degrees
      */
-    val MEAN_ANOMALY : Double
+    val meanAnomaly : Double
         get() {
             val o = __offset(18)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -102,7 +102,7 @@ class MPE : Table() {
     /**
      * SGP/SGP4 drag-like coefficient (BSTAR) in units of 1/[Earth radii]
      */
-    val BSTAR : Double
+    val bstar : Double
         get() {
             val o = __offset(20)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -110,44 +110,44 @@ class MPE : Table() {
     /**
      * Description of the Mean Element Theory (SGP4, DSST, USM)
      */
-    val MEAN_ELEMENT_THEORY : Byte
+    val meanElementTheory : Byte
         get() {
             val o = __offset(22)
             return if(o != 0) bb.get(o + bb_pos) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsMPE(_bb: ByteBuffer): MPE = getRootAsMPE(_bb, MPE())
         fun getRootAsMPE(_bb: ByteBuffer, obj: MPE): MPE {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun MPEBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$MPE")
-        fun createMPE(builder: FlatBufferBuilder, ENTITY_IDOffset: Int, EPOCH: Double, MEAN_MOTION: Double, ECCENTRICITY: Double, INCLINATION: Double, RA_OF_ASC_NODE: Double, ARG_OF_PERICENTER: Double, MEAN_ANOMALY: Double, BSTAR: Double, MEAN_ELEMENT_THEORY: Byte) : Int {
+        fun createMPE(builder: FlatBufferBuilder, entityIdOffset: Int, epoch: Double, meanMotion: Double, eccentricity: Double, inclination: Double, raOfAscNode: Double, argOfPericenter: Double, meanAnomaly: Double, bstar: Double, meanElementTheory: Byte) : Int {
             builder.startTable(10)
-            addBSTAR(builder, BSTAR)
-            addMEAN_ANOMALY(builder, MEAN_ANOMALY)
-            addARG_OF_PERICENTER(builder, ARG_OF_PERICENTER)
-            addRA_OF_ASC_NODE(builder, RA_OF_ASC_NODE)
-            addINCLINATION(builder, INCLINATION)
-            addECCENTRICITY(builder, ECCENTRICITY)
-            addMEAN_MOTION(builder, MEAN_MOTION)
-            addEPOCH(builder, EPOCH)
-            addENTITY_ID(builder, ENTITY_IDOffset)
-            addMEAN_ELEMENT_THEORY(builder, MEAN_ELEMENT_THEORY)
+            addBSTAR(builder, bstar)
+            addMEANANOMALY(builder, meanAnomaly)
+            addARGOFPERICENTER(builder, argOfPericenter)
+            addRAOFASCNODE(builder, raOfAscNode)
+            addINCLINATION(builder, inclination)
+            addECCENTRICITY(builder, eccentricity)
+            addMEANMOTION(builder, meanMotion)
+            addEPOCH(builder, epoch)
+            addENTITYID(builder, entityIdOffset)
+            addMEANELEMENTTHEORY(builder, meanElementTheory)
             return endMPE(builder)
         }
         fun startMPE(builder: FlatBufferBuilder) = builder.startTable(10)
-        fun addENTITY_ID(builder: FlatBufferBuilder, ENTITY_ID: Int) = builder.addOffset(0, ENTITY_ID, 0)
-        fun addEPOCH(builder: FlatBufferBuilder, EPOCH: Double) = builder.addDouble(1, EPOCH, 0.0)
-        fun addMEAN_MOTION(builder: FlatBufferBuilder, MEAN_MOTION: Double) = builder.addDouble(2, MEAN_MOTION, 0.0)
-        fun addECCENTRICITY(builder: FlatBufferBuilder, ECCENTRICITY: Double) = builder.addDouble(3, ECCENTRICITY, 0.0)
-        fun addINCLINATION(builder: FlatBufferBuilder, INCLINATION: Double) = builder.addDouble(4, INCLINATION, 0.0)
-        fun addRA_OF_ASC_NODE(builder: FlatBufferBuilder, RA_OF_ASC_NODE: Double) = builder.addDouble(5, RA_OF_ASC_NODE, 0.0)
-        fun addARG_OF_PERICENTER(builder: FlatBufferBuilder, ARG_OF_PERICENTER: Double) = builder.addDouble(6, ARG_OF_PERICENTER, 0.0)
-        fun addMEAN_ANOMALY(builder: FlatBufferBuilder, MEAN_ANOMALY: Double) = builder.addDouble(7, MEAN_ANOMALY, 0.0)
-        fun addBSTAR(builder: FlatBufferBuilder, BSTAR: Double) = builder.addDouble(8, BSTAR, 0.0)
-        fun addMEAN_ELEMENT_THEORY(builder: FlatBufferBuilder, MEAN_ELEMENT_THEORY: Byte) = builder.addByte(9, MEAN_ELEMENT_THEORY, 0)
+        fun addENTITYID(builder: FlatBufferBuilder, entityId: Int) = builder.addOffset(0, entityId, 0)
+        fun addEPOCH(builder: FlatBufferBuilder, epoch: Double) = builder.addDouble(1, epoch, 0.0)
+        fun addMEANMOTION(builder: FlatBufferBuilder, meanMotion: Double) = builder.addDouble(2, meanMotion, 0.0)
+        fun addECCENTRICITY(builder: FlatBufferBuilder, eccentricity: Double) = builder.addDouble(3, eccentricity, 0.0)
+        fun addINCLINATION(builder: FlatBufferBuilder, inclination: Double) = builder.addDouble(4, inclination, 0.0)
+        fun addRAOFASCNODE(builder: FlatBufferBuilder, raOfAscNode: Double) = builder.addDouble(5, raOfAscNode, 0.0)
+        fun addARGOFPERICENTER(builder: FlatBufferBuilder, argOfPericenter: Double) = builder.addDouble(6, argOfPericenter, 0.0)
+        fun addMEANANOMALY(builder: FlatBufferBuilder, meanAnomaly: Double) = builder.addDouble(7, meanAnomaly, 0.0)
+        fun addBSTAR(builder: FlatBufferBuilder, bstar: Double) = builder.addDouble(8, bstar, 0.0)
+        fun addMEANELEMENTTHEORY(builder: FlatBufferBuilder, meanElementTheory: Byte) = builder.addByte(9, meanElementTheory, 0)
         fun endMPE(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

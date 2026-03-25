@@ -34,35 +34,35 @@ class PLK : Table() {
     /**
      * Unique license key identifier
      */
-    val LICENSE_ID : String
+    val licenseId : String
         get() {
             val o = __offset(4)
             return if (o != 0) {
                 __string(o + bb_pos)
             } else {
-                throw AssertionError("No value for (required) field LICENSE_ID")
+                throw AssertionError("No value for (required) field licenseId")
             }
         }
-    val LICENSE_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun LICENSE_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val licenseIdAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
+    fun licenseIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Plugin ID this license is for
      */
-    val PLUGIN_ID : String
+    val pluginId : String
         get() {
             val o = __offset(6)
             return if (o != 0) {
                 __string(o + bb_pos)
             } else {
-                throw AssertionError("No value for (required) field PLUGIN_ID")
+                throw AssertionError("No value for (required) field pluginId")
             }
         }
-    val PLUGIN_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun PLUGIN_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val pluginIdAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
+    fun pluginIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * Plugin version or version range (semver)
      */
-    val PLUGIN_VERSION : String?
+    val pluginVersion : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -71,26 +71,26 @@ class PLK : Table() {
                 null
             }
         }
-    val PLUGIN_VERSIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun PLUGIN_VERSIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val pluginVersionAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun pluginVersionInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
     /**
      * Licensee organization name
      */
-    val LICENSEE_ORG : String
+    val licenseeOrg : String
         get() {
             val o = __offset(10)
             return if (o != 0) {
                 __string(o + bb_pos)
             } else {
-                throw AssertionError("No value for (required) field LICENSEE_ORG")
+                throw AssertionError("No value for (required) field licenseeOrg")
             }
         }
-    val LICENSEE_ORGAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
-    fun LICENSEE_ORGInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
+    val licenseeOrgAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
+    fun licenseeOrgInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
     /**
      * Licensee contact email
      */
-    val LICENSEE_EMAIL : String?
+    val licenseeEmail : String?
         get() {
             val o = __offset(12)
             return if (o != 0) {
@@ -99,12 +99,12 @@ class PLK : Table() {
                 null
             }
         }
-    val LICENSEE_EMAILAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
-    fun LICENSEE_EMAILInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
+    val licenseeEmailAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(12, 1)
+    fun licenseeEmailInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 12, 1)
     /**
      * Licensee's SDN Peer ID
      */
-    val LICENSEE_PEER_ID : String?
+    val licenseePeerId : String?
         get() {
             val o = __offset(14)
             return if (o != 0) {
@@ -113,12 +113,12 @@ class PLK : Table() {
                 null
             }
         }
-    val LICENSEE_PEER_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(14, 1)
-    fun LICENSEE_PEER_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 14, 1)
+    val licenseePeerIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(14, 1)
+    fun licenseePeerIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 14, 1)
     /**
      * Licensee's X25519 public key (32 bytes)
      */
-    fun LICENSEE_PUBKEY(j: Int) : UByte {
+    fun licenseePubkey(j: Int) : UByte {
         val o = __offset(16)
         return if (o != 0) {
             bb.get(__vector(o) + j * 1).toUByte()
@@ -126,17 +126,17 @@ class PLK : Table() {
             0u
         }
     }
-    val LICENSEE_PUBKEYLength : Int
+    val licenseePubkeyLength : Int
         get() {
             val o = __offset(16); return if (o != 0) __vector_len(o) else 0
         }
-    val LICENSEE_PUBKEYAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(16, 1)
-    fun LICENSEE_PUBKEYInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 16, 1)
+    val licenseePubkeyAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(16, 1)
+    fun licenseePubkeyInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 16, 1)
     /**
      * Issuer's X25519 public key (32 bytes)
      * Used with licensee's private key to derive shared secret via ECDH
      */
-    fun ISSUER_PUBKEY(j: Int) : UByte {
+    fun issuerPubkey(j: Int) : UByte {
         val o = __offset(18)
         return if (o != 0) {
             bb.get(__vector(o) + j * 1).toUByte()
@@ -144,16 +144,16 @@ class PLK : Table() {
             0u
         }
     }
-    val ISSUER_PUBKEYLength : Int
+    val issuerPubkeyLength : Int
         get() {
             val o = __offset(18); return if (o != 0) __vector_len(o) else 0
         }
-    val ISSUER_PUBKEYAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(18, 1)
-    fun ISSUER_PUBKEYInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 18, 1)
+    val issuerPubkeyAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(18, 1)
+    fun issuerPubkeyInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 18, 1)
     /**
      * Domain restrictions (empty = any domain allowed)
      */
-    fun ALLOWED_DOMAINS(j: Int) : String? {
+    fun allowedDomains(j: Int) : String? {
         val o = __offset(20)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
@@ -161,14 +161,14 @@ class PLK : Table() {
             null
         }
     }
-    val ALLOWED_DOMAINSLength : Int
+    val allowedDomainsLength : Int
         get() {
             val o = __offset(20); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * TLD restrictions (e.g., ".gov", ".mil", ".edu")
      */
-    fun ALLOWED_TLDS(j: Int) : String? {
+    fun allowedTlds(j: Int) : String? {
         val o = __offset(22)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
@@ -176,14 +176,14 @@ class PLK : Table() {
             null
         }
     }
-    val ALLOWED_TLDSLength : Int
+    val allowedTldsLength : Int
         get() {
             val o = __offset(22); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Type of license
      */
-    val LICENSE_TYPE : Byte
+    val licenseType : Byte
         get() {
             val o = __offset(24)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -191,7 +191,7 @@ class PLK : Table() {
     /**
      * Maximum concurrent activations (0 = unlimited)
      */
-    val MAX_ACTIVATIONS : UInt
+    val maxActivations : UInt
         get() {
             val o = __offset(26)
             return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
@@ -199,7 +199,7 @@ class PLK : Table() {
     /**
      * Unix timestamp when license was issued
      */
-    val ISSUED_AT : ULong
+    val issuedAt : ULong
         get() {
             val o = __offset(28)
             return if(o != 0) bb.getLong(o + bb_pos).toULong() else 0UL
@@ -207,7 +207,7 @@ class PLK : Table() {
     /**
      * Unix timestamp when license becomes valid
      */
-    val VALID_FROM : ULong
+    val validFrom : ULong
         get() {
             val o = __offset(30)
             return if(o != 0) bb.getLong(o + bb_pos).toULong() else 0UL
@@ -215,7 +215,7 @@ class PLK : Table() {
     /**
      * Unix timestamp when license expires (0 = never expires)
      */
-    val EXPIRES_AT : ULong
+    val expiresAt : ULong
         get() {
             val o = __offset(32)
             return if(o != 0) bb.getLong(o + bb_pos).toULong() else 0UL
@@ -223,7 +223,7 @@ class PLK : Table() {
     /**
      * Peer ID of the license issuer (OrbPro)
      */
-    val ISSUER_PEER_ID : String?
+    val issuerPeerId : String?
         get() {
             val o = __offset(34)
             return if (o != 0) {
@@ -232,12 +232,12 @@ class PLK : Table() {
                 null
             }
         }
-    val ISSUER_PEER_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(34, 1)
-    fun ISSUER_PEER_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 34, 1)
+    val issuerPeerIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(34, 1)
+    fun issuerPeerIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 34, 1)
     /**
      * Ed25519 signature from issuer over all fields (except SIGNATURE)
      */
-    fun SIGNATURE(j: Int) : UByte {
+    fun signature(j: Int) : UByte {
         val o = __offset(36)
         return if (o != 0) {
             bb.get(__vector(o) + j * 1).toUByte()
@@ -245,49 +245,49 @@ class PLK : Table() {
             0u
         }
     }
-    val SIGNATURELength : Int
+    val signatureLength : Int
         get() {
             val o = __offset(36); return if (o != 0) __vector_len(o) else 0
         }
-    val SIGNATUREAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(36, 1)
-    fun SIGNATUREInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 36, 1)
+    val signatureAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(36, 1)
+    fun signatureInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 36, 1)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsPLK(_bb: ByteBuffer): PLK = getRootAsPLK(_bb, PLK())
         fun getRootAsPLK(_bb: ByteBuffer, obj: PLK): PLK {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun PLKBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$PLK")
-        fun createPLK(builder: FlatBufferBuilder, LICENSE_IDOffset: Int, PLUGIN_IDOffset: Int, PLUGIN_VERSIONOffset: Int, LICENSEE_ORGOffset: Int, LICENSEE_EMAILOffset: Int, LICENSEE_PEER_IDOffset: Int, LICENSEE_PUBKEYOffset: Int, ISSUER_PUBKEYOffset: Int, ALLOWED_DOMAINSOffset: Int, ALLOWED_TLDSOffset: Int, LICENSE_TYPE: Byte, MAX_ACTIVATIONS: UInt, ISSUED_AT: ULong, VALID_FROM: ULong, EXPIRES_AT: ULong, ISSUER_PEER_IDOffset: Int, SIGNATUREOffset: Int) : Int {
+        fun createPLK(builder: FlatBufferBuilder, licenseIdOffset: Int, pluginIdOffset: Int, pluginVersionOffset: Int, licenseeOrgOffset: Int, licenseeEmailOffset: Int, licenseePeerIdOffset: Int, licenseePubkeyOffset: Int, issuerPubkeyOffset: Int, allowedDomainsOffset: Int, allowedTldsOffset: Int, licenseType: Byte, maxActivations: UInt, issuedAt: ULong, validFrom: ULong, expiresAt: ULong, issuerPeerIdOffset: Int, signatureOffset: Int) : Int {
             builder.startTable(17)
-            addEXPIRES_AT(builder, EXPIRES_AT)
-            addVALID_FROM(builder, VALID_FROM)
-            addISSUED_AT(builder, ISSUED_AT)
-            addSIGNATURE(builder, SIGNATUREOffset)
-            addISSUER_PEER_ID(builder, ISSUER_PEER_IDOffset)
-            addMAX_ACTIVATIONS(builder, MAX_ACTIVATIONS)
-            addALLOWED_TLDS(builder, ALLOWED_TLDSOffset)
-            addALLOWED_DOMAINS(builder, ALLOWED_DOMAINSOffset)
-            addISSUER_PUBKEY(builder, ISSUER_PUBKEYOffset)
-            addLICENSEE_PUBKEY(builder, LICENSEE_PUBKEYOffset)
-            addLICENSEE_PEER_ID(builder, LICENSEE_PEER_IDOffset)
-            addLICENSEE_EMAIL(builder, LICENSEE_EMAILOffset)
-            addLICENSEE_ORG(builder, LICENSEE_ORGOffset)
-            addPLUGIN_VERSION(builder, PLUGIN_VERSIONOffset)
-            addPLUGIN_ID(builder, PLUGIN_IDOffset)
-            addLICENSE_ID(builder, LICENSE_IDOffset)
-            addLICENSE_TYPE(builder, LICENSE_TYPE)
+            addEXPIRESAT(builder, expiresAt)
+            addVALIDFROM(builder, validFrom)
+            addISSUEDAT(builder, issuedAt)
+            addSIGNATURE(builder, signatureOffset)
+            addISSUERPEERID(builder, issuerPeerIdOffset)
+            addMAXACTIVATIONS(builder, maxActivations)
+            addALLOWEDTLDS(builder, allowedTldsOffset)
+            addALLOWEDDOMAINS(builder, allowedDomainsOffset)
+            addISSUERPUBKEY(builder, issuerPubkeyOffset)
+            addLICENSEEPUBKEY(builder, licenseePubkeyOffset)
+            addLICENSEEPEERID(builder, licenseePeerIdOffset)
+            addLICENSEEEMAIL(builder, licenseeEmailOffset)
+            addLICENSEEORG(builder, licenseeOrgOffset)
+            addPLUGINVERSION(builder, pluginVersionOffset)
+            addPLUGINID(builder, pluginIdOffset)
+            addLICENSEID(builder, licenseIdOffset)
+            addLICENSETYPE(builder, licenseType)
             return endPLK(builder)
         }
         fun startPLK(builder: FlatBufferBuilder) = builder.startTable(17)
-        fun addLICENSE_ID(builder: FlatBufferBuilder, LICENSE_ID: Int) = builder.addOffset(0, LICENSE_ID, 0)
-        fun addPLUGIN_ID(builder: FlatBufferBuilder, PLUGIN_ID: Int) = builder.addOffset(1, PLUGIN_ID, 0)
-        fun addPLUGIN_VERSION(builder: FlatBufferBuilder, PLUGIN_VERSION: Int) = builder.addOffset(2, PLUGIN_VERSION, 0)
-        fun addLICENSEE_ORG(builder: FlatBufferBuilder, LICENSEE_ORG: Int) = builder.addOffset(3, LICENSEE_ORG, 0)
-        fun addLICENSEE_EMAIL(builder: FlatBufferBuilder, LICENSEE_EMAIL: Int) = builder.addOffset(4, LICENSEE_EMAIL, 0)
-        fun addLICENSEE_PEER_ID(builder: FlatBufferBuilder, LICENSEE_PEER_ID: Int) = builder.addOffset(5, LICENSEE_PEER_ID, 0)
-        fun addLICENSEE_PUBKEY(builder: FlatBufferBuilder, LICENSEE_PUBKEY: Int) = builder.addOffset(6, LICENSEE_PUBKEY, 0)
+        fun addLICENSEID(builder: FlatBufferBuilder, licenseId: Int) = builder.addOffset(0, licenseId, 0)
+        fun addPLUGINID(builder: FlatBufferBuilder, pluginId: Int) = builder.addOffset(1, pluginId, 0)
+        fun addPLUGINVERSION(builder: FlatBufferBuilder, pluginVersion: Int) = builder.addOffset(2, pluginVersion, 0)
+        fun addLICENSEEORG(builder: FlatBufferBuilder, licenseeOrg: Int) = builder.addOffset(3, licenseeOrg, 0)
+        fun addLICENSEEEMAIL(builder: FlatBufferBuilder, licenseeEmail: Int) = builder.addOffset(4, licenseeEmail, 0)
+        fun addLICENSEEPEERID(builder: FlatBufferBuilder, licenseePeerId: Int) = builder.addOffset(5, licenseePeerId, 0)
+        fun addLICENSEEPUBKEY(builder: FlatBufferBuilder, licenseePubkey: Int) = builder.addOffset(6, licenseePubkey, 0)
         @kotlin.ExperimentalUnsignedTypes
         fun createLicenseePubkeyVector(builder: FlatBufferBuilder, data: UByteArray) : Int {
             builder.startVector(1, data.size, 1)
@@ -297,7 +297,7 @@ class PLK : Table() {
             return builder.endVector()
         }
         fun startLicenseePubkeyVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(1, numElems, 1)
-        fun addISSUER_PUBKEY(builder: FlatBufferBuilder, ISSUER_PUBKEY: Int) = builder.addOffset(7, ISSUER_PUBKEY, 0)
+        fun addISSUERPUBKEY(builder: FlatBufferBuilder, issuerPubkey: Int) = builder.addOffset(7, issuerPubkey, 0)
         @kotlin.ExperimentalUnsignedTypes
         fun createIssuerPubkeyVector(builder: FlatBufferBuilder, data: UByteArray) : Int {
             builder.startVector(1, data.size, 1)
@@ -307,7 +307,7 @@ class PLK : Table() {
             return builder.endVector()
         }
         fun startIssuerPubkeyVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(1, numElems, 1)
-        fun addALLOWED_DOMAINS(builder: FlatBufferBuilder, ALLOWED_DOMAINS: Int) = builder.addOffset(8, ALLOWED_DOMAINS, 0)
+        fun addALLOWEDDOMAINS(builder: FlatBufferBuilder, allowedDomains: Int) = builder.addOffset(8, allowedDomains, 0)
         fun createAllowedDomainsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -316,7 +316,7 @@ class PLK : Table() {
             return builder.endVector()
         }
         fun startAllowedDomainsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addALLOWED_TLDS(builder: FlatBufferBuilder, ALLOWED_TLDS: Int) = builder.addOffset(9, ALLOWED_TLDS, 0)
+        fun addALLOWEDTLDS(builder: FlatBufferBuilder, allowedTlds: Int) = builder.addOffset(9, allowedTlds, 0)
         fun createAllowedTldsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -325,13 +325,13 @@ class PLK : Table() {
             return builder.endVector()
         }
         fun startAllowedTldsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addLICENSE_TYPE(builder: FlatBufferBuilder, LICENSE_TYPE: Byte) = builder.addByte(10, LICENSE_TYPE, 0)
-        fun addMAX_ACTIVATIONS(builder: FlatBufferBuilder, MAX_ACTIVATIONS: UInt) = builder.addInt(11, MAX_ACTIVATIONS.toInt(), 0)
-        fun addISSUED_AT(builder: FlatBufferBuilder, ISSUED_AT: ULong) = builder.addLong(12, ISSUED_AT.toLong(), 0)
-        fun addVALID_FROM(builder: FlatBufferBuilder, VALID_FROM: ULong) = builder.addLong(13, VALID_FROM.toLong(), 0)
-        fun addEXPIRES_AT(builder: FlatBufferBuilder, EXPIRES_AT: ULong) = builder.addLong(14, EXPIRES_AT.toLong(), 0)
-        fun addISSUER_PEER_ID(builder: FlatBufferBuilder, ISSUER_PEER_ID: Int) = builder.addOffset(15, ISSUER_PEER_ID, 0)
-        fun addSIGNATURE(builder: FlatBufferBuilder, SIGNATURE: Int) = builder.addOffset(16, SIGNATURE, 0)
+        fun addLICENSETYPE(builder: FlatBufferBuilder, licenseType: Byte) = builder.addByte(10, licenseType, 0)
+        fun addMAXACTIVATIONS(builder: FlatBufferBuilder, maxActivations: UInt) = builder.addInt(11, maxActivations.toInt(), 0)
+        fun addISSUEDAT(builder: FlatBufferBuilder, issuedAt: ULong) = builder.addLong(12, issuedAt.toLong(), 0)
+        fun addVALIDFROM(builder: FlatBufferBuilder, validFrom: ULong) = builder.addLong(13, validFrom.toLong(), 0)
+        fun addEXPIRESAT(builder: FlatBufferBuilder, expiresAt: ULong) = builder.addLong(14, expiresAt.toLong(), 0)
+        fun addISSUERPEERID(builder: FlatBufferBuilder, issuerPeerId: Int) = builder.addOffset(15, issuerPeerId, 0)
+        fun addSIGNATURE(builder: FlatBufferBuilder, signature: Int) = builder.addOffset(16, signature, 0)
         @kotlin.ExperimentalUnsignedTypes
         fun createSignatureVector(builder: FlatBufferBuilder, data: UByteArray) : Int {
             builder.startVector(1, data.size, 1)

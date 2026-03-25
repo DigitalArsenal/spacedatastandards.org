@@ -25,15 +25,51 @@ def read_manifest_flatbuffer(file_path):
     return manifest
 
 
+def read_accessor(obj, *names):
+    """Read the first callable attribute that exists on the generated object."""
+    for name in names:
+        accessor = getattr(obj, name, None)
+        if callable(accessor):
+            return accessor()
+    raise AttributeError(
+        f"{type(obj).__name__} is missing all expected accessors: {', '.join(names)}"
+    )
+
+
+def read_vector_item(obj, index, *names):
+    """Read an indexed vector entry from the generated object."""
+    for name in names:
+        accessor = getattr(obj, name, None)
+        if callable(accessor):
+            return accessor(index)
+    raise AttributeError(
+        f"{type(obj).__name__} is missing all expected vector accessors: {', '.join(names)}"
+    )
+
+
+def read_vector_length(obj, *names):
+    """Read a generated vector length field."""
+    for name in names:
+        accessor = getattr(obj, name, None)
+        if callable(accessor):
+            return accessor()
+    raise AttributeError(
+        f"{type(obj).__name__} is missing all expected length accessors: {', '.join(names)}"
+    )
+
+
 def manifest_to_dict(manifest):
     """Convert the SCM object to a Python dictionary."""
-    manifest_dict = {"version": manifest.Version().decode("utf-8"), "STANDARDS": {}}
-    for i in range(manifest.RECORDSLength()):
-        standard = manifest.RECORDS(i)
-        key = standard.Key().decode("utf-8")
-        idl = standard.Idl().decode("utf-8") if standard.Idl() else None
+    version = read_accessor(manifest, "version", "Version")
+    manifest_dict = {"version": version.decode("utf-8"), "STANDARDS": {}}
+    for i in range(read_vector_length(manifest, "RECORDSLength", "recordsLength")):
+        standard = read_vector_item(manifest, i, "RECORDS", "records")
+        key = read_accessor(standard, "key", "Key").decode("utf-8")
+        idl_value = read_accessor(standard, "idl", "Idl")
+        idl = idl_value.decode("utf-8") if idl_value else None
         files = [
-            standard.Files(j).decode("utf-8") for j in range(standard.FilesLength())
+            read_vector_item(standard, j, "files", "Files").decode("utf-8")
+            for j in range(read_vector_length(standard, "filesLength", "FilesLength"))
         ]
         manifest_dict["STANDARDS"][key] = {"IDL": idl, "files": files}
     return manifest_dict

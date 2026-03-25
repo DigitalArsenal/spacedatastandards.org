@@ -2,4 +2,334 @@
 
 # namespace: 
 
-# NOTE GPXTrack.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Track (ordered list of track segments)
+class GPXTrack(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = GPXTrack()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsGPXTrack(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def GPXTrackBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x47\x50\x58", size_prefixed=size_prefixed)
+
+    # GPXTrack
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Track name
+    # GPXTrack
+    def NAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Comment
+    # GPXTrack
+    def COMMENT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Description
+    # GPXTrack
+    def DESCRIPTION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Source of data
+    # GPXTrack
+    def SOURCE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Links to additional information
+    # GPXTrack
+    def LINKS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from GPXLink import GPXLink
+            obj = GPXLink()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # GPXTrack
+    def LINKSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # GPXTrack
+    def LINKSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        return o == 0
+
+    # Track number
+    # GPXTrack
+    def NUMBER(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+        return 0
+
+    # Type/category
+    # GPXTrack
+    def TYPE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Track segments
+    # GPXTrack
+    def SEGMENTS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from GPXTrackSegment import GPXTrackSegment
+            obj = GPXTrackSegment()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # GPXTrack
+    def SEGMENTSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # GPXTrack
+    def SEGMENTSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        return o == 0
+
+def GPXTrackStart(builder):
+    builder.StartObject(8)
+
+def Start(builder):
+    GPXTrackStart(builder)
+
+def GPXTrackAddNAME(builder, NAME):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(NAME), 0)
+
+def AddNAME(builder, NAME):
+    GPXTrackAddNAME(builder, NAME)
+
+def GPXTrackAddCOMMENT(builder, COMMENT):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(COMMENT), 0)
+
+def AddCOMMENT(builder, COMMENT):
+    GPXTrackAddCOMMENT(builder, COMMENT)
+
+def GPXTrackAddDESCRIPTION(builder, DESCRIPTION):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(DESCRIPTION), 0)
+
+def AddDESCRIPTION(builder, DESCRIPTION):
+    GPXTrackAddDESCRIPTION(builder, DESCRIPTION)
+
+def GPXTrackAddSOURCE(builder, SOURCE):
+    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(SOURCE), 0)
+
+def AddSOURCE(builder, SOURCE):
+    GPXTrackAddSOURCE(builder, SOURCE)
+
+def GPXTrackAddLINKS(builder, LINKS):
+    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(LINKS), 0)
+
+def AddLINKS(builder, LINKS):
+    GPXTrackAddLINKS(builder, LINKS)
+
+def GPXTrackStartLINKSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartLINKSVector(builder, numElems):
+    return GPXTrackStartLINKSVector(builder, numElems)
+
+def GPXTrackCreateLINKSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateLINKSVector(builder, data):
+    GPXTrackCreateLINKSVector(builder, data)
+
+def GPXTrackAddNUMBER(builder, NUMBER):
+    builder.PrependUint32Slot(5, NUMBER, 0)
+
+def AddNUMBER(builder, NUMBER):
+    GPXTrackAddNUMBER(builder, NUMBER)
+
+def GPXTrackAddTYPE(builder, TYPE):
+    builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(TYPE), 0)
+
+def AddTYPE(builder, TYPE):
+    GPXTrackAddTYPE(builder, TYPE)
+
+def GPXTrackAddSEGMENTS(builder, SEGMENTS):
+    builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(SEGMENTS), 0)
+
+def AddSEGMENTS(builder, SEGMENTS):
+    GPXTrackAddSEGMENTS(builder, SEGMENTS)
+
+def GPXTrackStartSEGMENTSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartSEGMENTSVector(builder, numElems):
+    return GPXTrackStartSEGMENTSVector(builder, numElems)
+
+def GPXTrackCreateSEGMENTSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateSEGMENTSVector(builder, data):
+    GPXTrackCreateSEGMENTSVector(builder, data)
+
+def GPXTrackEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return GPXTrackEnd(builder)
+
+import GPXLink
+import GPXTrackSegment
+try:
+    from typing import List
+except:
+    pass
+
+class GPXTrackT(object):
+
+    # GPXTrackT
+    def __init__(
+        self,
+        NAME = None,
+        COMMENT = None,
+        DESCRIPTION = None,
+        SOURCE = None,
+        LINKS = None,
+        NUMBER = 0,
+        TYPE = None,
+        SEGMENTS = None,
+    ):
+        self.NAME = NAME  # type: Optional[str]
+        self.COMMENT = COMMENT  # type: Optional[str]
+        self.DESCRIPTION = DESCRIPTION  # type: Optional[str]
+        self.SOURCE = SOURCE  # type: Optional[str]
+        self.LINKS = LINKS  # type: Optional[List[GPXLink.GPXLinkT]]
+        self.NUMBER = NUMBER  # type: int
+        self.TYPE = TYPE  # type: Optional[str]
+        self.SEGMENTS = SEGMENTS  # type: Optional[List[GPXTrackSegment.GPXTrackSegmentT]]
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpGpxtrack = GPXTrack()
+        tmpGpxtrack.Init(buf, pos)
+        return cls.InitFromObj(tmpGpxtrack)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpGpxtrack):
+        x = GPXTrackT()
+        x._UnPack(tmpGpxtrack)
+        return x
+
+    # GPXTrackT
+    def _UnPack(self, GPXTrack):
+        if GPXTrack is None:
+            return
+        self.NAME = GPXTrack.NAME()
+        self.COMMENT = GPXTrack.COMMENT()
+        self.DESCRIPTION = GPXTrack.DESCRIPTION()
+        self.SOURCE = GPXTrack.SOURCE()
+        if not GPXTrack.LINKSIsNone():
+            self.LINKS = []
+            for i in range(GPXTrack.LINKSLength()):
+                if GPXTrack.LINKS(i) is None:
+                    self.LINKS.append(None)
+                else:
+                    gPXLink_ = GPXLink.GPXLinkT.InitFromObj(GPXTrack.LINKS(i))
+                    self.LINKS.append(gPXLink_)
+        self.NUMBER = GPXTrack.NUMBER()
+        self.TYPE = GPXTrack.TYPE()
+        if not GPXTrack.SEGMENTSIsNone():
+            self.SEGMENTS = []
+            for i in range(GPXTrack.SEGMENTSLength()):
+                if GPXTrack.SEGMENTS(i) is None:
+                    self.SEGMENTS.append(None)
+                else:
+                    gPXTrackSegment_ = GPXTrackSegment.GPXTrackSegmentT.InitFromObj(GPXTrack.SEGMENTS(i))
+                    self.SEGMENTS.append(gPXTrackSegment_)
+
+    # GPXTrackT
+    def Pack(self, builder):
+        if self.NAME is not None:
+            NAME = builder.CreateString(self.NAME)
+        if self.COMMENT is not None:
+            COMMENT = builder.CreateString(self.COMMENT)
+        if self.DESCRIPTION is not None:
+            DESCRIPTION = builder.CreateString(self.DESCRIPTION)
+        if self.SOURCE is not None:
+            SOURCE = builder.CreateString(self.SOURCE)
+        if self.LINKS is not None:
+            LINKSlist = []
+            for i in range(len(self.LINKS)):
+                LINKSlist.append(self.LINKS[i].Pack(builder))
+            GPXTrackStartLINKSVector(builder, len(self.LINKS))
+            for i in reversed(range(len(self.LINKS))):
+                builder.PrependUOffsetTRelative(LINKSlist[i])
+            LINKS = builder.EndVector()
+        if self.TYPE is not None:
+            TYPE = builder.CreateString(self.TYPE)
+        if self.SEGMENTS is not None:
+            SEGMENTSlist = []
+            for i in range(len(self.SEGMENTS)):
+                SEGMENTSlist.append(self.SEGMENTS[i].Pack(builder))
+            GPXTrackStartSEGMENTSVector(builder, len(self.SEGMENTS))
+            for i in reversed(range(len(self.SEGMENTS))):
+                builder.PrependUOffsetTRelative(SEGMENTSlist[i])
+            SEGMENTS = builder.EndVector()
+        GPXTrackStart(builder)
+        if self.NAME is not None:
+            GPXTrackAddNAME(builder, NAME)
+        if self.COMMENT is not None:
+            GPXTrackAddCOMMENT(builder, COMMENT)
+        if self.DESCRIPTION is not None:
+            GPXTrackAddDESCRIPTION(builder, DESCRIPTION)
+        if self.SOURCE is not None:
+            GPXTrackAddSOURCE(builder, SOURCE)
+        if self.LINKS is not None:
+            GPXTrackAddLINKS(builder, LINKS)
+        GPXTrackAddNUMBER(builder, self.NUMBER)
+        if self.TYPE is not None:
+            GPXTrackAddTYPE(builder, TYPE)
+        if self.SEGMENTS is not None:
+            GPXTrackAddSEGMENTS(builder, SEGMENTS)
+        GPXTrack = GPXTrackEnd(builder)
+        return GPXTrack

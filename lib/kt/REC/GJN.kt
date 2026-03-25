@@ -32,8 +32,8 @@ class GJN : Table() {
     /**
      * Features in the collection
      */
-    fun FEATURES(j: Int) : GJNFeature? = FEATURES(GJNFeature(), j)
-    fun FEATURES(obj: GJNFeature, j: Int) : GJNFeature? {
+    fun features(j: Int) : GJNFeature? = features(GJNFeature(), j)
+    fun features(obj: GJNFeature, j: Int) : GJNFeature? {
         val o = __offset(4)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -41,15 +41,15 @@ class GJN : Table() {
             null
         }
     }
-    val FEATURESLength : Int
+    val featuresLength : Int
         get() {
             val o = __offset(4); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Bounding box (optional)
      */
-    val BBOX : GJNBoundingBox? get() = BBOX(GJNBoundingBox())
-    fun BBOX(obj: GJNBoundingBox) : GJNBoundingBox? {
+    val bbox : GJNBoundingBox? get() = bbox(GJNBoundingBox())
+    fun bbox(obj: GJNBoundingBox) : GJNBoundingBox? {
         val o = __offset(6)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -58,21 +58,21 @@ class GJN : Table() {
         }
     }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsGJN(_bb: ByteBuffer): GJN = getRootAsGJN(_bb, GJN())
         fun getRootAsGJN(_bb: ByteBuffer, obj: GJN): GJN {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun GJNBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$GJN")
-        fun createGJN(builder: FlatBufferBuilder, FEATURESOffset: Int, BBOXOffset: Int) : Int {
+        fun createGJN(builder: FlatBufferBuilder, featuresOffset: Int, bboxOffset: Int) : Int {
             builder.startTable(2)
-            addBBOX(builder, BBOXOffset)
-            addFEATURES(builder, FEATURESOffset)
+            addBBOX(builder, bboxOffset)
+            addFEATURES(builder, featuresOffset)
             return endGJN(builder)
         }
         fun startGJN(builder: FlatBufferBuilder) = builder.startTable(2)
-        fun addFEATURES(builder: FlatBufferBuilder, FEATURES: Int) = builder.addOffset(0, FEATURES, 0)
+        fun addFEATURES(builder: FlatBufferBuilder, features: Int) = builder.addOffset(0, features, 0)
         fun createFeaturesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -81,7 +81,7 @@ class GJN : Table() {
             return builder.endVector()
         }
         fun startFeaturesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addBBOX(builder: FlatBufferBuilder, BBOX: Int) = builder.addOffset(1, BBOX, 0)
+        fun addBBOX(builder: FlatBufferBuilder, bbox: Int) = builder.addOffset(1, bbox, 0)
         fun endGJN(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

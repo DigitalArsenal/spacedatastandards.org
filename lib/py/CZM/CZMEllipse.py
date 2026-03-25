@@ -343,33 +343,55 @@ except:
 class CZMEllipseT(object):
 
     # CZMEllipseT
-    def __init__(self):
-        self.SHOW = False  # type: bool
-        self.SEMI_MAJOR_AXIS = 0.0  # type: float
-        self.SEMI_MINOR_AXIS = 0.0  # type: float
-        self.ROTATION = 0.0  # type: float
-        self.FILL = False  # type: bool
-        self.COLOR = None  # type: Optional[CZMColor.CZMColorT]
-        self.OUTLINE = False  # type: bool
-        self.OUTLINE_COLOR = None  # type: Optional[CZMColor.CZMColorT]
-        self.HEIGHT = 0.0  # type: float
-        self.HEIGHT_REFERENCE = 0  # type: int
-        self.EXTRUDED_HEIGHT = 0.0  # type: float
-        self.EXTRUDED_HEIGHT_REFERENCE = None  # type: str
-        self.ST_ROTATION = 0.0  # type: float
-        self.GRANULARITY = 0.0  # type: float
-        self.MATERIAL = None  # type: Optional[CZMMaterial.CZMMaterialT]
-        self.OUTLINE_WIDTH = 0.0  # type: float
-        self.NUMBER_OF_VERTICAL_LINES = 0  # type: int
-        self.SHADOWS = None  # type: str
-        self.CLASSIFICATION_TYPE = None  # type: str
-        self.Z_INDEX = 0  # type: int
+    def __init__(
+        self,
+        SHOW = False,
+        SEMI_MAJOR_AXIS = 0.0,
+        SEMI_MINOR_AXIS = 0.0,
+        ROTATION = 0.0,
+        FILL = False,
+        COLOR = None,
+        OUTLINE = False,
+        OUTLINE_COLOR = None,
+        HEIGHT = 0.0,
+        HEIGHT_REFERENCE = 0,
+        EXTRUDED_HEIGHT = 0.0,
+        EXTRUDED_HEIGHT_REFERENCE = None,
+        ST_ROTATION = 0.0,
+        GRANULARITY = 0.0,
+        MATERIAL = None,
+        OUTLINE_WIDTH = 0.0,
+        NUMBER_OF_VERTICAL_LINES = 0,
+        SHADOWS = None,
+        CLASSIFICATION_TYPE = None,
+        Z_INDEX = 0,
+    ):
+        self.SHOW = SHOW  # type: bool
+        self.SEMI_MAJOR_AXIS = SEMI_MAJOR_AXIS  # type: float
+        self.SEMI_MINOR_AXIS = SEMI_MINOR_AXIS  # type: float
+        self.ROTATION = ROTATION  # type: float
+        self.FILL = FILL  # type: bool
+        self.COLOR = COLOR  # type: Optional[CZMColor.CZMColorT]
+        self.OUTLINE = OUTLINE  # type: bool
+        self.OUTLINE_COLOR = OUTLINE_COLOR  # type: Optional[CZMColor.CZMColorT]
+        self.HEIGHT = HEIGHT  # type: float
+        self.HEIGHT_REFERENCE = HEIGHT_REFERENCE  # type: int
+        self.EXTRUDED_HEIGHT = EXTRUDED_HEIGHT  # type: float
+        self.EXTRUDED_HEIGHT_REFERENCE = EXTRUDED_HEIGHT_REFERENCE  # type: Optional[str]
+        self.ST_ROTATION = ST_ROTATION  # type: float
+        self.GRANULARITY = GRANULARITY  # type: float
+        self.MATERIAL = MATERIAL  # type: Optional[CZMMaterial.CZMMaterialT]
+        self.OUTLINE_WIDTH = OUTLINE_WIDTH  # type: float
+        self.NUMBER_OF_VERTICAL_LINES = NUMBER_OF_VERTICAL_LINES  # type: int
+        self.SHADOWS = SHADOWS  # type: Optional[str]
+        self.CLASSIFICATION_TYPE = CLASSIFICATION_TYPE  # type: Optional[str]
+        self.Z_INDEX = Z_INDEX  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        czmellipse = CZMEllipse()
-        czmellipse.Init(buf, pos)
-        return cls.InitFromObj(czmellipse)
+        tmpCzmellipse = CZMEllipse()
+        tmpCzmellipse.Init(buf, pos)
+        return cls.InitFromObj(tmpCzmellipse)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -377,38 +399,38 @@ class CZMEllipseT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, czmellipse):
+    def InitFromObj(cls, tmpCzmellipse):
         x = CZMEllipseT()
-        x._UnPack(czmellipse)
+        x._UnPack(tmpCzmellipse)
         return x
 
     # CZMEllipseT
-    def _UnPack(self, czmellipse):
-        if czmellipse is None:
+    def _UnPack(self, CZMEllipse):
+        if CZMEllipse is None:
             return
-        self.SHOW = czmellipse.SHOW()
-        self.SEMI_MAJOR_AXIS = czmellipse.SEMI_MAJOR_AXIS()
-        self.SEMI_MINOR_AXIS = czmellipse.SEMI_MINOR_AXIS()
-        self.ROTATION = czmellipse.ROTATION()
-        self.FILL = czmellipse.FILL()
-        if czmellipse.COLOR() is not None:
-            self.COLOR = CZMColor.CZMColorT.InitFromObj(czmellipse.COLOR())
-        self.OUTLINE = czmellipse.OUTLINE()
-        if czmellipse.OUTLINE_COLOR() is not None:
-            self.OUTLINE_COLOR = CZMColor.CZMColorT.InitFromObj(czmellipse.OUTLINE_COLOR())
-        self.HEIGHT = czmellipse.HEIGHT()
-        self.HEIGHT_REFERENCE = czmellipse.HEIGHT_REFERENCE()
-        self.EXTRUDED_HEIGHT = czmellipse.EXTRUDED_HEIGHT()
-        self.EXTRUDED_HEIGHT_REFERENCE = czmellipse.EXTRUDED_HEIGHT_REFERENCE()
-        self.ST_ROTATION = czmellipse.ST_ROTATION()
-        self.GRANULARITY = czmellipse.GRANULARITY()
-        if czmellipse.MATERIAL() is not None:
-            self.MATERIAL = CZMMaterial.CZMMaterialT.InitFromObj(czmellipse.MATERIAL())
-        self.OUTLINE_WIDTH = czmellipse.OUTLINE_WIDTH()
-        self.NUMBER_OF_VERTICAL_LINES = czmellipse.NUMBER_OF_VERTICAL_LINES()
-        self.SHADOWS = czmellipse.SHADOWS()
-        self.CLASSIFICATION_TYPE = czmellipse.CLASSIFICATION_TYPE()
-        self.Z_INDEX = czmellipse.Z_INDEX()
+        self.SHOW = CZMEllipse.SHOW()
+        self.SEMI_MAJOR_AXIS = CZMEllipse.SEMI_MAJOR_AXIS()
+        self.SEMI_MINOR_AXIS = CZMEllipse.SEMI_MINOR_AXIS()
+        self.ROTATION = CZMEllipse.ROTATION()
+        self.FILL = CZMEllipse.FILL()
+        if CZMEllipse.COLOR() is not None:
+            self.COLOR = CZMColor.CZMColorT.InitFromObj(CZMEllipse.COLOR())
+        self.OUTLINE = CZMEllipse.OUTLINE()
+        if CZMEllipse.OUTLINE_COLOR() is not None:
+            self.OUTLINE_COLOR = CZMColor.CZMColorT.InitFromObj(CZMEllipse.OUTLINE_COLOR())
+        self.HEIGHT = CZMEllipse.HEIGHT()
+        self.HEIGHT_REFERENCE = CZMEllipse.HEIGHT_REFERENCE()
+        self.EXTRUDED_HEIGHT = CZMEllipse.EXTRUDED_HEIGHT()
+        self.EXTRUDED_HEIGHT_REFERENCE = CZMEllipse.EXTRUDED_HEIGHT_REFERENCE()
+        self.ST_ROTATION = CZMEllipse.ST_ROTATION()
+        self.GRANULARITY = CZMEllipse.GRANULARITY()
+        if CZMEllipse.MATERIAL() is not None:
+            self.MATERIAL = CZMMaterial.CZMMaterialT.InitFromObj(CZMEllipse.MATERIAL())
+        self.OUTLINE_WIDTH = CZMEllipse.OUTLINE_WIDTH()
+        self.NUMBER_OF_VERTICAL_LINES = CZMEllipse.NUMBER_OF_VERTICAL_LINES()
+        self.SHADOWS = CZMEllipse.SHADOWS()
+        self.CLASSIFICATION_TYPE = CZMEllipse.CLASSIFICATION_TYPE()
+        self.Z_INDEX = CZMEllipse.Z_INDEX()
 
     # CZMEllipseT
     def Pack(self, builder):
@@ -451,5 +473,5 @@ class CZMEllipseT(object):
         if self.CLASSIFICATION_TYPE is not None:
             CZMEllipseAddCLASSIFICATION_TYPE(builder, CLASSIFICATION_TYPE)
         CZMEllipseAddZ_INDEX(builder, self.Z_INDEX)
-        czmellipse = CZMEllipseEnd(builder)
-        return czmellipse
+        CZMEllipse = CZMEllipseEnd(builder)
+        return CZMEllipse

@@ -32,7 +32,7 @@ class BUS : Table() {
     /**
      * Unique identifier
      */
-    val ID : String?
+    val id : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class BUS : Table() {
                 null
             }
         }
-    val IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val idAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun idInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Bus name or model
      */
-    val NAME : String?
+    val name : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -55,12 +55,12 @@ class BUS : Table() {
                 null
             }
         }
-    val NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val nameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun nameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * Manufacturer
      */
-    val MANUFACTURER : String?
+    val manufacturer : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -69,12 +69,12 @@ class BUS : Table() {
                 null
             }
         }
-    val MANUFACTURERAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun MANUFACTURERInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val manufacturerAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun manufacturerInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
     /**
      * Bus size category
      */
-    val SIZE : Byte
+    val size : Byte
         get() {
             val o = __offset(10)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -82,7 +82,7 @@ class BUS : Table() {
     /**
      * Dry mass in kg
      */
-    val DRY_MASS : Double
+    val dryMass : Double
         get() {
             val o = __offset(12)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -90,7 +90,7 @@ class BUS : Table() {
     /**
      * Maximum wet mass (with propellant) in kg
      */
-    val WET_MASS : Double
+    val wetMass : Double
         get() {
             val o = __offset(14)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -98,7 +98,7 @@ class BUS : Table() {
     /**
      * Maximum payload mass in kg
      */
-    val PAYLOAD_MASS : Double
+    val payloadMass : Double
         get() {
             val o = __offset(16)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -106,7 +106,7 @@ class BUS : Table() {
     /**
      * Bus dimensions X in meters
      */
-    val DIM_X : Double
+    val dimX : Double
         get() {
             val o = __offset(18)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -114,7 +114,7 @@ class BUS : Table() {
     /**
      * Bus dimensions Y in meters
      */
-    val DIM_Y : Double
+    val dimY : Double
         get() {
             val o = __offset(20)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -122,7 +122,7 @@ class BUS : Table() {
     /**
      * Bus dimensions Z in meters
      */
-    val DIM_Z : Double
+    val dimZ : Double
         get() {
             val o = __offset(22)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -130,7 +130,7 @@ class BUS : Table() {
     /**
      * Stowed dimensions X in meters
      */
-    val STOWED_X : Double
+    val stowedX : Double
         get() {
             val o = __offset(24)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -138,7 +138,7 @@ class BUS : Table() {
     /**
      * Stowed dimensions Y in meters
      */
-    val STOWED_Y : Double
+    val stowedY : Double
         get() {
             val o = __offset(26)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -146,7 +146,7 @@ class BUS : Table() {
     /**
      * Stowed dimensions Z in meters
      */
-    val STOWED_Z : Double
+    val stowedZ : Double
         get() {
             val o = __offset(28)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -154,7 +154,7 @@ class BUS : Table() {
     /**
      * Total power generation in Watts
      */
-    val POWER_GENERATION : Double
+    val powerGeneration : Double
         get() {
             val o = __offset(30)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -162,7 +162,7 @@ class BUS : Table() {
     /**
      * Available payload power in Watts
      */
-    val PAYLOAD_POWER : Double
+    val payloadPower : Double
         get() {
             val o = __offset(32)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -170,7 +170,7 @@ class BUS : Table() {
     /**
      * Battery capacity in Watt-hours
      */
-    val BATTERY_CAPACITY : Double
+    val batteryCapacity : Double
         get() {
             val o = __offset(34)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -178,7 +178,7 @@ class BUS : Table() {
     /**
      * Stabilization method
      */
-    val STABILIZATION : Byte
+    val stabilization : Byte
         get() {
             val o = __offset(36)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -186,7 +186,7 @@ class BUS : Table() {
     /**
      * Pointing accuracy in degrees
      */
-    val POINTING_ACCURACY : Double
+    val pointingAccuracy : Double
         get() {
             val o = __offset(38)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -194,7 +194,7 @@ class BUS : Table() {
     /**
      * Pointing knowledge in degrees
      */
-    val POINTING_KNOWLEDGE : Double
+    val pointingKnowledge : Double
         get() {
             val o = __offset(40)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -202,7 +202,7 @@ class BUS : Table() {
     /**
      * Design life in years
      */
-    val DESIGN_LIFE : Double
+    val designLife : Double
         get() {
             val o = __offset(42)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -210,7 +210,7 @@ class BUS : Table() {
     /**
      * Data storage capacity in Gbits
      */
-    val DATA_STORAGE : Double
+    val dataStorage : Double
         get() {
             val o = __offset(44)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -218,7 +218,7 @@ class BUS : Table() {
     /**
      * Downlink data rate in Mbps
      */
-    val DOWNLINK_RATE : Double
+    val downlinkRate : Double
         get() {
             val o = __offset(46)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -226,7 +226,7 @@ class BUS : Table() {
     /**
      * Number of payload slots/interfaces
      */
-    val PAYLOAD_SLOTS : UInt
+    val payloadSlots : UInt
         get() {
             val o = __offset(48)
             return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
@@ -234,7 +234,7 @@ class BUS : Table() {
     /**
      * Heritage missions count
      */
-    val HERITAGE_COUNT : UInt
+    val heritageCount : UInt
         get() {
             val o = __offset(50)
             return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
@@ -242,7 +242,7 @@ class BUS : Table() {
     /**
      * Additional notes
      */
-    val NOTES : String?
+    val notes : String?
         get() {
             val o = __offset(52)
             return if (o != 0) {
@@ -251,71 +251,71 @@ class BUS : Table() {
                 null
             }
         }
-    val NOTESAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(52, 1)
-    fun NOTESInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 52, 1)
+    val notesAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(52, 1)
+    fun notesInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 52, 1)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsBUS(_bb: ByteBuffer): BUS = getRootAsBUS(_bb, BUS())
         fun getRootAsBUS(_bb: ByteBuffer, obj: BUS): BUS {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun BUSBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$BUS")
-        fun createBUS(builder: FlatBufferBuilder, IDOffset: Int, NAMEOffset: Int, MANUFACTUREROffset: Int, SIZE: Byte, DRY_MASS: Double, WET_MASS: Double, PAYLOAD_MASS: Double, DIM_X: Double, DIM_Y: Double, DIM_Z: Double, STOWED_X: Double, STOWED_Y: Double, STOWED_Z: Double, POWER_GENERATION: Double, PAYLOAD_POWER: Double, BATTERY_CAPACITY: Double, STABILIZATION: Byte, POINTING_ACCURACY: Double, POINTING_KNOWLEDGE: Double, DESIGN_LIFE: Double, DATA_STORAGE: Double, DOWNLINK_RATE: Double, PAYLOAD_SLOTS: UInt, HERITAGE_COUNT: UInt, NOTESOffset: Int) : Int {
+        fun createBUS(builder: FlatBufferBuilder, idOffset: Int, nameOffset: Int, manufacturerOffset: Int, size: Byte, dryMass: Double, wetMass: Double, payloadMass: Double, dimX: Double, dimY: Double, dimZ: Double, stowedX: Double, stowedY: Double, stowedZ: Double, powerGeneration: Double, payloadPower: Double, batteryCapacity: Double, stabilization: Byte, pointingAccuracy: Double, pointingKnowledge: Double, designLife: Double, dataStorage: Double, downlinkRate: Double, payloadSlots: UInt, heritageCount: UInt, notesOffset: Int) : Int {
             builder.startTable(25)
-            addDOWNLINK_RATE(builder, DOWNLINK_RATE)
-            addDATA_STORAGE(builder, DATA_STORAGE)
-            addDESIGN_LIFE(builder, DESIGN_LIFE)
-            addPOINTING_KNOWLEDGE(builder, POINTING_KNOWLEDGE)
-            addPOINTING_ACCURACY(builder, POINTING_ACCURACY)
-            addBATTERY_CAPACITY(builder, BATTERY_CAPACITY)
-            addPAYLOAD_POWER(builder, PAYLOAD_POWER)
-            addPOWER_GENERATION(builder, POWER_GENERATION)
-            addSTOWED_Z(builder, STOWED_Z)
-            addSTOWED_Y(builder, STOWED_Y)
-            addSTOWED_X(builder, STOWED_X)
-            addDIM_Z(builder, DIM_Z)
-            addDIM_Y(builder, DIM_Y)
-            addDIM_X(builder, DIM_X)
-            addPAYLOAD_MASS(builder, PAYLOAD_MASS)
-            addWET_MASS(builder, WET_MASS)
-            addDRY_MASS(builder, DRY_MASS)
-            addNOTES(builder, NOTESOffset)
-            addHERITAGE_COUNT(builder, HERITAGE_COUNT)
-            addPAYLOAD_SLOTS(builder, PAYLOAD_SLOTS)
-            addMANUFACTURER(builder, MANUFACTUREROffset)
-            addNAME(builder, NAMEOffset)
-            addID(builder, IDOffset)
-            addSTABILIZATION(builder, STABILIZATION)
-            addSIZE(builder, SIZE)
+            addDOWNLINKRATE(builder, downlinkRate)
+            addDATASTORAGE(builder, dataStorage)
+            addDESIGNLIFE(builder, designLife)
+            addPOINTINGKNOWLEDGE(builder, pointingKnowledge)
+            addPOINTINGACCURACY(builder, pointingAccuracy)
+            addBATTERYCAPACITY(builder, batteryCapacity)
+            addPAYLOADPOWER(builder, payloadPower)
+            addPOWERGENERATION(builder, powerGeneration)
+            addSTOWEDZ(builder, stowedZ)
+            addSTOWEDY(builder, stowedY)
+            addSTOWEDX(builder, stowedX)
+            addDIMZ(builder, dimZ)
+            addDIMY(builder, dimY)
+            addDIMX(builder, dimX)
+            addPAYLOADMASS(builder, payloadMass)
+            addWETMASS(builder, wetMass)
+            addDRYMASS(builder, dryMass)
+            addNOTES(builder, notesOffset)
+            addHERITAGECOUNT(builder, heritageCount)
+            addPAYLOADSLOTS(builder, payloadSlots)
+            addMANUFACTURER(builder, manufacturerOffset)
+            addNAME(builder, nameOffset)
+            addID(builder, idOffset)
+            addSTABILIZATION(builder, stabilization)
+            addSIZE(builder, size)
             return endBUS(builder)
         }
         fun startBUS(builder: FlatBufferBuilder) = builder.startTable(25)
-        fun addID(builder: FlatBufferBuilder, ID: Int) = builder.addOffset(0, ID, 0)
-        fun addNAME(builder: FlatBufferBuilder, NAME: Int) = builder.addOffset(1, NAME, 0)
-        fun addMANUFACTURER(builder: FlatBufferBuilder, MANUFACTURER: Int) = builder.addOffset(2, MANUFACTURER, 0)
-        fun addSIZE(builder: FlatBufferBuilder, SIZE: Byte) = builder.addByte(3, SIZE, 0)
-        fun addDRY_MASS(builder: FlatBufferBuilder, DRY_MASS: Double) = builder.addDouble(4, DRY_MASS, 0.0)
-        fun addWET_MASS(builder: FlatBufferBuilder, WET_MASS: Double) = builder.addDouble(5, WET_MASS, 0.0)
-        fun addPAYLOAD_MASS(builder: FlatBufferBuilder, PAYLOAD_MASS: Double) = builder.addDouble(6, PAYLOAD_MASS, 0.0)
-        fun addDIM_X(builder: FlatBufferBuilder, DIM_X: Double) = builder.addDouble(7, DIM_X, 0.0)
-        fun addDIM_Y(builder: FlatBufferBuilder, DIM_Y: Double) = builder.addDouble(8, DIM_Y, 0.0)
-        fun addDIM_Z(builder: FlatBufferBuilder, DIM_Z: Double) = builder.addDouble(9, DIM_Z, 0.0)
-        fun addSTOWED_X(builder: FlatBufferBuilder, STOWED_X: Double) = builder.addDouble(10, STOWED_X, 0.0)
-        fun addSTOWED_Y(builder: FlatBufferBuilder, STOWED_Y: Double) = builder.addDouble(11, STOWED_Y, 0.0)
-        fun addSTOWED_Z(builder: FlatBufferBuilder, STOWED_Z: Double) = builder.addDouble(12, STOWED_Z, 0.0)
-        fun addPOWER_GENERATION(builder: FlatBufferBuilder, POWER_GENERATION: Double) = builder.addDouble(13, POWER_GENERATION, 0.0)
-        fun addPAYLOAD_POWER(builder: FlatBufferBuilder, PAYLOAD_POWER: Double) = builder.addDouble(14, PAYLOAD_POWER, 0.0)
-        fun addBATTERY_CAPACITY(builder: FlatBufferBuilder, BATTERY_CAPACITY: Double) = builder.addDouble(15, BATTERY_CAPACITY, 0.0)
-        fun addSTABILIZATION(builder: FlatBufferBuilder, STABILIZATION: Byte) = builder.addByte(16, STABILIZATION, 0)
-        fun addPOINTING_ACCURACY(builder: FlatBufferBuilder, POINTING_ACCURACY: Double) = builder.addDouble(17, POINTING_ACCURACY, 0.0)
-        fun addPOINTING_KNOWLEDGE(builder: FlatBufferBuilder, POINTING_KNOWLEDGE: Double) = builder.addDouble(18, POINTING_KNOWLEDGE, 0.0)
-        fun addDESIGN_LIFE(builder: FlatBufferBuilder, DESIGN_LIFE: Double) = builder.addDouble(19, DESIGN_LIFE, 0.0)
-        fun addDATA_STORAGE(builder: FlatBufferBuilder, DATA_STORAGE: Double) = builder.addDouble(20, DATA_STORAGE, 0.0)
-        fun addDOWNLINK_RATE(builder: FlatBufferBuilder, DOWNLINK_RATE: Double) = builder.addDouble(21, DOWNLINK_RATE, 0.0)
-        fun addPAYLOAD_SLOTS(builder: FlatBufferBuilder, PAYLOAD_SLOTS: UInt) = builder.addInt(22, PAYLOAD_SLOTS.toInt(), 0)
-        fun addHERITAGE_COUNT(builder: FlatBufferBuilder, HERITAGE_COUNT: UInt) = builder.addInt(23, HERITAGE_COUNT.toInt(), 0)
-        fun addNOTES(builder: FlatBufferBuilder, NOTES: Int) = builder.addOffset(24, NOTES, 0)
+        fun addID(builder: FlatBufferBuilder, id: Int) = builder.addOffset(0, id, 0)
+        fun addNAME(builder: FlatBufferBuilder, name: Int) = builder.addOffset(1, name, 0)
+        fun addMANUFACTURER(builder: FlatBufferBuilder, manufacturer: Int) = builder.addOffset(2, manufacturer, 0)
+        fun addSIZE(builder: FlatBufferBuilder, size: Byte) = builder.addByte(3, size, 0)
+        fun addDRYMASS(builder: FlatBufferBuilder, dryMass: Double) = builder.addDouble(4, dryMass, 0.0)
+        fun addWETMASS(builder: FlatBufferBuilder, wetMass: Double) = builder.addDouble(5, wetMass, 0.0)
+        fun addPAYLOADMASS(builder: FlatBufferBuilder, payloadMass: Double) = builder.addDouble(6, payloadMass, 0.0)
+        fun addDIMX(builder: FlatBufferBuilder, dimX: Double) = builder.addDouble(7, dimX, 0.0)
+        fun addDIMY(builder: FlatBufferBuilder, dimY: Double) = builder.addDouble(8, dimY, 0.0)
+        fun addDIMZ(builder: FlatBufferBuilder, dimZ: Double) = builder.addDouble(9, dimZ, 0.0)
+        fun addSTOWEDX(builder: FlatBufferBuilder, stowedX: Double) = builder.addDouble(10, stowedX, 0.0)
+        fun addSTOWEDY(builder: FlatBufferBuilder, stowedY: Double) = builder.addDouble(11, stowedY, 0.0)
+        fun addSTOWEDZ(builder: FlatBufferBuilder, stowedZ: Double) = builder.addDouble(12, stowedZ, 0.0)
+        fun addPOWERGENERATION(builder: FlatBufferBuilder, powerGeneration: Double) = builder.addDouble(13, powerGeneration, 0.0)
+        fun addPAYLOADPOWER(builder: FlatBufferBuilder, payloadPower: Double) = builder.addDouble(14, payloadPower, 0.0)
+        fun addBATTERYCAPACITY(builder: FlatBufferBuilder, batteryCapacity: Double) = builder.addDouble(15, batteryCapacity, 0.0)
+        fun addSTABILIZATION(builder: FlatBufferBuilder, stabilization: Byte) = builder.addByte(16, stabilization, 0)
+        fun addPOINTINGACCURACY(builder: FlatBufferBuilder, pointingAccuracy: Double) = builder.addDouble(17, pointingAccuracy, 0.0)
+        fun addPOINTINGKNOWLEDGE(builder: FlatBufferBuilder, pointingKnowledge: Double) = builder.addDouble(18, pointingKnowledge, 0.0)
+        fun addDESIGNLIFE(builder: FlatBufferBuilder, designLife: Double) = builder.addDouble(19, designLife, 0.0)
+        fun addDATASTORAGE(builder: FlatBufferBuilder, dataStorage: Double) = builder.addDouble(20, dataStorage, 0.0)
+        fun addDOWNLINKRATE(builder: FlatBufferBuilder, downlinkRate: Double) = builder.addDouble(21, downlinkRate, 0.0)
+        fun addPAYLOADSLOTS(builder: FlatBufferBuilder, payloadSlots: UInt) = builder.addInt(22, payloadSlots.toInt(), 0)
+        fun addHERITAGECOUNT(builder: FlatBufferBuilder, heritageCount: UInt) = builder.addInt(23, heritageCount.toInt(), 0)
+        fun addNOTES(builder: FlatBufferBuilder, notes: Int) = builder.addOffset(24, notes, 0)
         fun endBUS(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

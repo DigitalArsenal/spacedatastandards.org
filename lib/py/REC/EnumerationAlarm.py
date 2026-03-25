@@ -2,4 +2,116 @@
 
 # namespace: 
 
-# NOTE EnumerationAlarm.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Enumerated alarm
+class EnumerationAlarm(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = EnumerationAlarm()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsEnumerationAlarm(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def EnumerationAlarmBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x58\x54\x43", size_prefixed=size_prefixed)
+
+    # EnumerationAlarm
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Enumerated value label
+    # EnumerationAlarm
+    def LABEL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Alarm level for this value
+    # EnumerationAlarm
+    def ALARM_LEVEL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+def EnumerationAlarmStart(builder):
+    builder.StartObject(2)
+
+def Start(builder):
+    EnumerationAlarmStart(builder)
+
+def EnumerationAlarmAddLABEL(builder, LABEL):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(LABEL), 0)
+
+def AddLABEL(builder, LABEL):
+    EnumerationAlarmAddLABEL(builder, LABEL)
+
+def EnumerationAlarmAddALARM_LEVEL(builder, ALARM_LEVEL):
+    builder.PrependInt8Slot(1, ALARM_LEVEL, 0)
+
+def AddALARM_LEVEL(builder, ALARM_LEVEL):
+    EnumerationAlarmAddALARM_LEVEL(builder, ALARM_LEVEL)
+
+def EnumerationAlarmEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return EnumerationAlarmEnd(builder)
+
+
+class EnumerationAlarmT(object):
+
+    # EnumerationAlarmT
+    def __init__(
+        self,
+        LABEL = None,
+        ALARM_LEVEL = 0,
+    ):
+        self.LABEL = LABEL  # type: Optional[str]
+        self.ALARM_LEVEL = ALARM_LEVEL  # type: int
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpEnumerationAlarm = EnumerationAlarm()
+        tmpEnumerationAlarm.Init(buf, pos)
+        return cls.InitFromObj(tmpEnumerationAlarm)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpEnumerationAlarm):
+        x = EnumerationAlarmT()
+        x._UnPack(tmpEnumerationAlarm)
+        return x
+
+    # EnumerationAlarmT
+    def _UnPack(self, EnumerationAlarm):
+        if EnumerationAlarm is None:
+            return
+        self.LABEL = EnumerationAlarm.LABEL()
+        self.ALARM_LEVEL = EnumerationAlarm.ALARM_LEVEL()
+
+    # EnumerationAlarmT
+    def Pack(self, builder):
+        if self.LABEL is not None:
+            LABEL = builder.CreateString(self.LABEL)
+        EnumerationAlarmStart(builder)
+        if self.LABEL is not None:
+            EnumerationAlarmAddLABEL(builder, LABEL)
+        EnumerationAlarmAddALARM_LEVEL(builder, self.ALARM_LEVEL)
+        EnumerationAlarm = EnumerationAlarmEnd(builder)
+        return EnumerationAlarm

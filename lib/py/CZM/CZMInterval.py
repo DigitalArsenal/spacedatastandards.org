@@ -59,14 +59,17 @@ def End(builder):
 class CZMIntervalT(object):
 
     # CZMIntervalT
-    def __init__(self):
-        self.INTERVAL = None  # type: str
+    def __init__(
+        self,
+        INTERVAL = None,
+    ):
+        self.INTERVAL = INTERVAL  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        czminterval = CZMInterval()
-        czminterval.Init(buf, pos)
-        return cls.InitFromObj(czminterval)
+        tmpCzminterval = CZMInterval()
+        tmpCzminterval.Init(buf, pos)
+        return cls.InitFromObj(tmpCzminterval)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -74,16 +77,16 @@ class CZMIntervalT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, czminterval):
+    def InitFromObj(cls, tmpCzminterval):
         x = CZMIntervalT()
-        x._UnPack(czminterval)
+        x._UnPack(tmpCzminterval)
         return x
 
     # CZMIntervalT
-    def _UnPack(self, czminterval):
-        if czminterval is None:
+    def _UnPack(self, CZMInterval):
+        if CZMInterval is None:
             return
-        self.INTERVAL = czminterval.INTERVAL()
+        self.INTERVAL = CZMInterval.INTERVAL()
 
     # CZMIntervalT
     def Pack(self, builder):
@@ -92,5 +95,5 @@ class CZMIntervalT(object):
         CZMIntervalStart(builder)
         if self.INTERVAL is not None:
             CZMIntervalAddINTERVAL(builder, INTERVAL)
-        czminterval = CZMIntervalEnd(builder)
-        return czminterval
+        CZMInterval = CZMIntervalEnd(builder)
+        return CZMInterval

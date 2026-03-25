@@ -2,9 +2,13 @@
 // swiftlint:disable all
 // swiftformat:disable all
 
+#if canImport(Common)
+import Common
+#endif
+
 import FlatBuffers
 
-public enum WeaponType: Int8, Enum, Verifiable {
+public enum WeaponType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -28,7 +32,7 @@ public enum WeaponType: Int8, Enum, Verifiable {
 }
 
 
-public enum FuzeType: Int8, Enum, Verifiable {
+public enum FuzeType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -46,7 +50,7 @@ public enum FuzeType: Int8, Enum, Verifiable {
 }
 
 
-public enum ProjectilePhase: Int8, Enum, Verifiable {
+public enum ProjectilePhase: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -62,9 +66,9 @@ public enum ProjectilePhase: Int8, Enum, Verifiable {
 
 
 ///  Weapons and Munitions
-public struct WPN: FlatBufferObject, Verifiable {
+public struct WPN: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -111,10 +115,8 @@ public struct WPN: FlatBufferObject, Verifiable {
   public var SLEW_RATE: Float32 { let o = _accessor.offset(VTOFFSET.SLEW_RATE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
   public var WEAPON_TYPE: UInt8 { let o = _accessor.offset(VTOFFSET.WEAPON_TYPE.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
   public var FUZE_TYPE: UInt8 { let o = _accessor.offset(VTOFFSET.FUZE_TYPE.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
-  public var hasReserved: Bool { let o = _accessor.offset(VTOFFSET.RESERVED.v); return o == 0 ? false : true }
-  public var RESERVEDCount: Int32 { let o = _accessor.offset(VTOFFSET.RESERVED.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func RESERVED(at index: Int32) -> UInt8 { let o = _accessor.offset(VTOFFSET.RESERVED.v); return o == 0 ? 0 : _accessor.directRead(of: UInt8.self, offset: _accessor.vector(at: o) + index * 1) }
-  public var RESERVED: [UInt8] { return _accessor.getVector(at: VTOFFSET.RESERVED.v) ?? [] }
+  public var RESERVED: FlatbufferVector<UInt8> { return _accessor.vector(at: VTOFFSET.RESERVED.v, byteSize: 1) }
+  public func withUnsafePointerToReserved<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.RESERVED.v, body: body) }
   public static func startWPN(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 17) }
   public static func add(CALIBER: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CALIBER, def: 0.0, at: VTOFFSET.CALIBER.p) }
   public static func add(MUZZLE_VELOCITY: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MUZZLE_VELOCITY, def: 0.0, at: VTOFFSET.MUZZLE_VELOCITY.p) }

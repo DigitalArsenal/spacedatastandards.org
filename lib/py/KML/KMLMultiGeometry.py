@@ -255,6 +255,12 @@ def KMLMultiGeometryStartPOINTSVector(builder, numElems):
 def StartPOINTSVector(builder, numElems):
     return KMLMultiGeometryStartPOINTSVector(builder, numElems)
 
+def KMLMultiGeometryCreatePOINTSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreatePOINTSVector(builder, data):
+    KMLMultiGeometryCreatePOINTSVector(builder, data)
+
 def KMLMultiGeometryAddLINE_STRINGS(builder, LINE_STRINGS):
     builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(LINE_STRINGS), 0)
 
@@ -266,6 +272,12 @@ def KMLMultiGeometryStartLINE_STRINGSVector(builder, numElems):
 
 def StartLINE_STRINGSVector(builder, numElems):
     return KMLMultiGeometryStartLINE_STRINGSVector(builder, numElems)
+
+def KMLMultiGeometryCreateLINE_STRINGSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateLINE_STRINGSVector(builder, data):
+    KMLMultiGeometryCreateLINE_STRINGSVector(builder, data)
 
 def KMLMultiGeometryAddPOLYGONS(builder, POLYGONS):
     builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(POLYGONS), 0)
@@ -279,6 +291,12 @@ def KMLMultiGeometryStartPOLYGONSVector(builder, numElems):
 def StartPOLYGONSVector(builder, numElems):
     return KMLMultiGeometryStartPOLYGONSVector(builder, numElems)
 
+def KMLMultiGeometryCreatePOLYGONSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreatePOLYGONSVector(builder, data):
+    KMLMultiGeometryCreatePOLYGONSVector(builder, data)
+
 def KMLMultiGeometryAddMULTI_GEOMETRIES(builder, MULTI_GEOMETRIES):
     builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(MULTI_GEOMETRIES), 0)
 
@@ -290,6 +308,12 @@ def KMLMultiGeometryStartMULTI_GEOMETRIESVector(builder, numElems):
 
 def StartMULTI_GEOMETRIESVector(builder, numElems):
     return KMLMultiGeometryStartMULTI_GEOMETRIESVector(builder, numElems)
+
+def KMLMultiGeometryCreateMULTI_GEOMETRIESVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateMULTI_GEOMETRIESVector(builder, data):
+    KMLMultiGeometryCreateMULTI_GEOMETRIESVector(builder, data)
 
 def KMLMultiGeometryAddLINEAR_RINGS(builder, LINEAR_RINGS):
     builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(LINEAR_RINGS), 0)
@@ -303,6 +327,12 @@ def KMLMultiGeometryStartLINEAR_RINGSVector(builder, numElems):
 def StartLINEAR_RINGSVector(builder, numElems):
     return KMLMultiGeometryStartLINEAR_RINGSVector(builder, numElems)
 
+def KMLMultiGeometryCreateLINEAR_RINGSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateLINEAR_RINGSVector(builder, data):
+    KMLMultiGeometryCreateLINEAR_RINGSVector(builder, data)
+
 def KMLMultiGeometryAddMODELS(builder, MODELS):
     builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(MODELS), 0)
 
@@ -314,6 +344,12 @@ def KMLMultiGeometryStartMODELSVector(builder, numElems):
 
 def StartMODELSVector(builder, numElems):
     return KMLMultiGeometryStartMODELSVector(builder, numElems)
+
+def KMLMultiGeometryCreateMODELSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateMODELSVector(builder, data):
+    KMLMultiGeometryCreateMODELSVector(builder, data)
 
 def KMLMultiGeometryAddTRACKS(builder, TRACKS):
     builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(TRACKS), 0)
@@ -327,6 +363,12 @@ def KMLMultiGeometryStartTRACKSVector(builder, numElems):
 def StartTRACKSVector(builder, numElems):
     return KMLMultiGeometryStartTRACKSVector(builder, numElems)
 
+def KMLMultiGeometryCreateTRACKSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateTRACKSVector(builder, data):
+    KMLMultiGeometryCreateTRACKSVector(builder, data)
+
 def KMLMultiGeometryAddMULTI_TRACKS(builder, MULTI_TRACKS):
     builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(MULTI_TRACKS), 0)
 
@@ -338,6 +380,12 @@ def KMLMultiGeometryStartMULTI_TRACKSVector(builder, numElems):
 
 def StartMULTI_TRACKSVector(builder, numElems):
     return KMLMultiGeometryStartMULTI_TRACKSVector(builder, numElems)
+
+def KMLMultiGeometryCreateMULTI_TRACKSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateMULTI_TRACKSVector(builder, data):
+    KMLMultiGeometryCreateMULTI_TRACKSVector(builder, data)
 
 def KMLMultiGeometryEnd(builder):
     return builder.EndObject()
@@ -360,21 +408,31 @@ except:
 class KMLMultiGeometryT(object):
 
     # KMLMultiGeometryT
-    def __init__(self):
-        self.POINTS = None  # type: List[KMLPoint.KMLPointT]
-        self.LINE_STRINGS = None  # type: List[KMLLineString.KMLLineStringT]
-        self.POLYGONS = None  # type: List[KMLPolygon.KMLPolygonT]
-        self.MULTI_GEOMETRIES = None  # type: List[KMLMultiGeometry.KMLMultiGeometryT]
-        self.LINEAR_RINGS = None  # type: List[KMLLinearRing.KMLLinearRingT]
-        self.MODELS = None  # type: List[KMLModel.KMLModelT]
-        self.TRACKS = None  # type: List[KMLTrack.KMLTrackT]
-        self.MULTI_TRACKS = None  # type: List[KMLMultiTrack.KMLMultiTrackT]
+    def __init__(
+        self,
+        POINTS = None,
+        LINE_STRINGS = None,
+        POLYGONS = None,
+        MULTI_GEOMETRIES = None,
+        LINEAR_RINGS = None,
+        MODELS = None,
+        TRACKS = None,
+        MULTI_TRACKS = None,
+    ):
+        self.POINTS = POINTS  # type: Optional[List[KMLPoint.KMLPointT]]
+        self.LINE_STRINGS = LINE_STRINGS  # type: Optional[List[KMLLineString.KMLLineStringT]]
+        self.POLYGONS = POLYGONS  # type: Optional[List[KMLPolygon.KMLPolygonT]]
+        self.MULTI_GEOMETRIES = MULTI_GEOMETRIES  # type: Optional[List[KMLMultiGeometry.KMLMultiGeometryT]]
+        self.LINEAR_RINGS = LINEAR_RINGS  # type: Optional[List[KMLLinearRing.KMLLinearRingT]]
+        self.MODELS = MODELS  # type: Optional[List[KMLModel.KMLModelT]]
+        self.TRACKS = TRACKS  # type: Optional[List[KMLTrack.KMLTrackT]]
+        self.MULTI_TRACKS = MULTI_TRACKS  # type: Optional[List[KMLMultiTrack.KMLMultiTrackT]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        kmlmultiGeometry = KMLMultiGeometry()
-        kmlmultiGeometry.Init(buf, pos)
-        return cls.InitFromObj(kmlmultiGeometry)
+        tmpKmlmultiGeometry = KMLMultiGeometry()
+        tmpKmlmultiGeometry.Init(buf, pos)
+        return cls.InitFromObj(tmpKmlmultiGeometry)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -382,78 +440,78 @@ class KMLMultiGeometryT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, kmlmultiGeometry):
+    def InitFromObj(cls, tmpKmlmultiGeometry):
         x = KMLMultiGeometryT()
-        x._UnPack(kmlmultiGeometry)
+        x._UnPack(tmpKmlmultiGeometry)
         return x
 
     # KMLMultiGeometryT
-    def _UnPack(self, kmlmultiGeometry):
-        if kmlmultiGeometry is None:
+    def _UnPack(self, KMLMultiGeometry):
+        if KMLMultiGeometry is None:
             return
-        if not kmlmultiGeometry.POINTSIsNone():
+        if not KMLMultiGeometry.POINTSIsNone():
             self.POINTS = []
-            for i in range(kmlmultiGeometry.POINTSLength()):
-                if kmlmultiGeometry.POINTS(i) is None:
+            for i in range(KMLMultiGeometry.POINTSLength()):
+                if KMLMultiGeometry.POINTS(i) is None:
                     self.POINTS.append(None)
                 else:
-                    kMLPoint_ = KMLPoint.KMLPointT.InitFromObj(kmlmultiGeometry.POINTS(i))
+                    kMLPoint_ = KMLPoint.KMLPointT.InitFromObj(KMLMultiGeometry.POINTS(i))
                     self.POINTS.append(kMLPoint_)
-        if not kmlmultiGeometry.LINE_STRINGSIsNone():
+        if not KMLMultiGeometry.LINE_STRINGSIsNone():
             self.LINE_STRINGS = []
-            for i in range(kmlmultiGeometry.LINE_STRINGSLength()):
-                if kmlmultiGeometry.LINE_STRINGS(i) is None:
+            for i in range(KMLMultiGeometry.LINE_STRINGSLength()):
+                if KMLMultiGeometry.LINE_STRINGS(i) is None:
                     self.LINE_STRINGS.append(None)
                 else:
-                    kMLLineString_ = KMLLineString.KMLLineStringT.InitFromObj(kmlmultiGeometry.LINE_STRINGS(i))
+                    kMLLineString_ = KMLLineString.KMLLineStringT.InitFromObj(KMLMultiGeometry.LINE_STRINGS(i))
                     self.LINE_STRINGS.append(kMLLineString_)
-        if not kmlmultiGeometry.POLYGONSIsNone():
+        if not KMLMultiGeometry.POLYGONSIsNone():
             self.POLYGONS = []
-            for i in range(kmlmultiGeometry.POLYGONSLength()):
-                if kmlmultiGeometry.POLYGONS(i) is None:
+            for i in range(KMLMultiGeometry.POLYGONSLength()):
+                if KMLMultiGeometry.POLYGONS(i) is None:
                     self.POLYGONS.append(None)
                 else:
-                    kMLPolygon_ = KMLPolygon.KMLPolygonT.InitFromObj(kmlmultiGeometry.POLYGONS(i))
+                    kMLPolygon_ = KMLPolygon.KMLPolygonT.InitFromObj(KMLMultiGeometry.POLYGONS(i))
                     self.POLYGONS.append(kMLPolygon_)
-        if not kmlmultiGeometry.MULTI_GEOMETRIESIsNone():
+        if not KMLMultiGeometry.MULTI_GEOMETRIESIsNone():
             self.MULTI_GEOMETRIES = []
-            for i in range(kmlmultiGeometry.MULTI_GEOMETRIESLength()):
-                if kmlmultiGeometry.MULTI_GEOMETRIES(i) is None:
+            for i in range(KMLMultiGeometry.MULTI_GEOMETRIESLength()):
+                if KMLMultiGeometry.MULTI_GEOMETRIES(i) is None:
                     self.MULTI_GEOMETRIES.append(None)
                 else:
-                    kMLMultiGeometry_ = KMLMultiGeometry.KMLMultiGeometryT.InitFromObj(kmlmultiGeometry.MULTI_GEOMETRIES(i))
+                    kMLMultiGeometry_ = KMLMultiGeometry.KMLMultiGeometryT.InitFromObj(KMLMultiGeometry.MULTI_GEOMETRIES(i))
                     self.MULTI_GEOMETRIES.append(kMLMultiGeometry_)
-        if not kmlmultiGeometry.LINEAR_RINGSIsNone():
+        if not KMLMultiGeometry.LINEAR_RINGSIsNone():
             self.LINEAR_RINGS = []
-            for i in range(kmlmultiGeometry.LINEAR_RINGSLength()):
-                if kmlmultiGeometry.LINEAR_RINGS(i) is None:
+            for i in range(KMLMultiGeometry.LINEAR_RINGSLength()):
+                if KMLMultiGeometry.LINEAR_RINGS(i) is None:
                     self.LINEAR_RINGS.append(None)
                 else:
-                    kMLLinearRing_ = KMLLinearRing.KMLLinearRingT.InitFromObj(kmlmultiGeometry.LINEAR_RINGS(i))
+                    kMLLinearRing_ = KMLLinearRing.KMLLinearRingT.InitFromObj(KMLMultiGeometry.LINEAR_RINGS(i))
                     self.LINEAR_RINGS.append(kMLLinearRing_)
-        if not kmlmultiGeometry.MODELSIsNone():
+        if not KMLMultiGeometry.MODELSIsNone():
             self.MODELS = []
-            for i in range(kmlmultiGeometry.MODELSLength()):
-                if kmlmultiGeometry.MODELS(i) is None:
+            for i in range(KMLMultiGeometry.MODELSLength()):
+                if KMLMultiGeometry.MODELS(i) is None:
                     self.MODELS.append(None)
                 else:
-                    kMLModel_ = KMLModel.KMLModelT.InitFromObj(kmlmultiGeometry.MODELS(i))
+                    kMLModel_ = KMLModel.KMLModelT.InitFromObj(KMLMultiGeometry.MODELS(i))
                     self.MODELS.append(kMLModel_)
-        if not kmlmultiGeometry.TRACKSIsNone():
+        if not KMLMultiGeometry.TRACKSIsNone():
             self.TRACKS = []
-            for i in range(kmlmultiGeometry.TRACKSLength()):
-                if kmlmultiGeometry.TRACKS(i) is None:
+            for i in range(KMLMultiGeometry.TRACKSLength()):
+                if KMLMultiGeometry.TRACKS(i) is None:
                     self.TRACKS.append(None)
                 else:
-                    kMLTrack_ = KMLTrack.KMLTrackT.InitFromObj(kmlmultiGeometry.TRACKS(i))
+                    kMLTrack_ = KMLTrack.KMLTrackT.InitFromObj(KMLMultiGeometry.TRACKS(i))
                     self.TRACKS.append(kMLTrack_)
-        if not kmlmultiGeometry.MULTI_TRACKSIsNone():
+        if not KMLMultiGeometry.MULTI_TRACKSIsNone():
             self.MULTI_TRACKS = []
-            for i in range(kmlmultiGeometry.MULTI_TRACKSLength()):
-                if kmlmultiGeometry.MULTI_TRACKS(i) is None:
+            for i in range(KMLMultiGeometry.MULTI_TRACKSLength()):
+                if KMLMultiGeometry.MULTI_TRACKS(i) is None:
                     self.MULTI_TRACKS.append(None)
                 else:
-                    kMLMultiTrack_ = KMLMultiTrack.KMLMultiTrackT.InitFromObj(kmlmultiGeometry.MULTI_TRACKS(i))
+                    kMLMultiTrack_ = KMLMultiTrack.KMLMultiTrackT.InitFromObj(KMLMultiGeometry.MULTI_TRACKS(i))
                     self.MULTI_TRACKS.append(kMLMultiTrack_)
 
     # KMLMultiGeometryT
@@ -539,5 +597,5 @@ class KMLMultiGeometryT(object):
             KMLMultiGeometryAddTRACKS(builder, TRACKS)
         if self.MULTI_TRACKS is not None:
             KMLMultiGeometryAddMULTI_TRACKS(builder, MULTI_TRACKS)
-        kmlmultiGeometry = KMLMultiGeometryEnd(builder)
-        return kmlmultiGeometry
+        KMLMultiGeometry = KMLMultiGeometryEnd(builder)
+        return KMLMultiGeometry

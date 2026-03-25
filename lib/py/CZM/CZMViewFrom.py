@@ -87,16 +87,21 @@ def End(builder):
 class CZMViewFromT(object):
 
     # CZMViewFromT
-    def __init__(self):
-        self.X = 0.0  # type: float
-        self.Y = 0.0  # type: float
-        self.Z = 0.0  # type: float
+    def __init__(
+        self,
+        X = 0.0,
+        Y = 0.0,
+        Z = 0.0,
+    ):
+        self.X = X  # type: float
+        self.Y = Y  # type: float
+        self.Z = Z  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        czmviewFrom = CZMViewFrom()
-        czmviewFrom.Init(buf, pos)
-        return cls.InitFromObj(czmviewFrom)
+        tmpCzmviewFrom = CZMViewFrom()
+        tmpCzmviewFrom.Init(buf, pos)
+        return cls.InitFromObj(tmpCzmviewFrom)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -104,18 +109,18 @@ class CZMViewFromT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, czmviewFrom):
+    def InitFromObj(cls, tmpCzmviewFrom):
         x = CZMViewFromT()
-        x._UnPack(czmviewFrom)
+        x._UnPack(tmpCzmviewFrom)
         return x
 
     # CZMViewFromT
-    def _UnPack(self, czmviewFrom):
-        if czmviewFrom is None:
+    def _UnPack(self, CZMViewFrom):
+        if CZMViewFrom is None:
             return
-        self.X = czmviewFrom.X()
-        self.Y = czmviewFrom.Y()
-        self.Z = czmviewFrom.Z()
+        self.X = CZMViewFrom.X()
+        self.Y = CZMViewFrom.Y()
+        self.Z = CZMViewFrom.Z()
 
     # CZMViewFromT
     def Pack(self, builder):
@@ -123,5 +128,5 @@ class CZMViewFromT(object):
         CZMViewFromAddX(builder, self.X)
         CZMViewFromAddY(builder, self.Y)
         CZMViewFromAddZ(builder, self.Z)
-        czmviewFrom = CZMViewFromEnd(builder)
-        return czmviewFrom
+        CZMViewFrom = CZMViewFromEnd(builder)
+        return CZMViewFrom

@@ -87,16 +87,21 @@ def End(builder):
 class CZMTilesetT(object):
 
     # CZMTilesetT
-    def __init__(self):
-        self.SHOW = False  # type: bool
-        self.URI = None  # type: str
-        self.MAXIMUM_SCREEN_SPACE_ERROR = 0.0  # type: float
+    def __init__(
+        self,
+        SHOW = False,
+        URI = None,
+        MAXIMUM_SCREEN_SPACE_ERROR = 0.0,
+    ):
+        self.SHOW = SHOW  # type: bool
+        self.URI = URI  # type: Optional[str]
+        self.MAXIMUM_SCREEN_SPACE_ERROR = MAXIMUM_SCREEN_SPACE_ERROR  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        czmtileset = CZMTileset()
-        czmtileset.Init(buf, pos)
-        return cls.InitFromObj(czmtileset)
+        tmpCzmtileset = CZMTileset()
+        tmpCzmtileset.Init(buf, pos)
+        return cls.InitFromObj(tmpCzmtileset)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -104,18 +109,18 @@ class CZMTilesetT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, czmtileset):
+    def InitFromObj(cls, tmpCzmtileset):
         x = CZMTilesetT()
-        x._UnPack(czmtileset)
+        x._UnPack(tmpCzmtileset)
         return x
 
     # CZMTilesetT
-    def _UnPack(self, czmtileset):
-        if czmtileset is None:
+    def _UnPack(self, CZMTileset):
+        if CZMTileset is None:
             return
-        self.SHOW = czmtileset.SHOW()
-        self.URI = czmtileset.URI()
-        self.MAXIMUM_SCREEN_SPACE_ERROR = czmtileset.MAXIMUM_SCREEN_SPACE_ERROR()
+        self.SHOW = CZMTileset.SHOW()
+        self.URI = CZMTileset.URI()
+        self.MAXIMUM_SCREEN_SPACE_ERROR = CZMTileset.MAXIMUM_SCREEN_SPACE_ERROR()
 
     # CZMTilesetT
     def Pack(self, builder):
@@ -126,5 +131,5 @@ class CZMTilesetT(object):
         if self.URI is not None:
             CZMTilesetAddURI(builder, URI)
         CZMTilesetAddMAXIMUM_SCREEN_SPACE_ERROR(builder, self.MAXIMUM_SCREEN_SPACE_ERROR)
-        czmtileset = CZMTilesetEnd(builder)
-        return czmtileset
+        CZMTileset = CZMTilesetEnd(builder)
+        return CZMTileset

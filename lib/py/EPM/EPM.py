@@ -317,6 +317,12 @@ def EPMStartALTERNATE_NAMESVector(builder, numElems):
 def StartALTERNATE_NAMESVector(builder, numElems):
     return EPMStartALTERNATE_NAMESVector(builder, numElems)
 
+def EPMCreateALTERNATE_NAMESVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateALTERNATE_NAMESVector(builder, data):
+    EPMCreateALTERNATE_NAMESVector(builder, data)
+
 def EPMAddEMAIL(builder, EMAIL):
     builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(EMAIL), 0)
 
@@ -341,6 +347,12 @@ def EPMStartKEYSVector(builder, numElems):
 def StartKEYSVector(builder, numElems):
     return EPMStartKEYSVector(builder, numElems)
 
+def EPMCreateKEYSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateKEYSVector(builder, data):
+    EPMCreateKEYSVector(builder, data)
+
 def EPMAddMULTIFORMAT_ADDRESS(builder, MULTIFORMAT_ADDRESS):
     builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(MULTIFORMAT_ADDRESS), 0)
 
@@ -352,6 +364,12 @@ def EPMStartMULTIFORMAT_ADDRESSVector(builder, numElems):
 
 def StartMULTIFORMAT_ADDRESSVector(builder, numElems):
     return EPMStartMULTIFORMAT_ADDRESSVector(builder, numElems)
+
+def EPMCreateMULTIFORMAT_ADDRESSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateMULTIFORMAT_ADDRESSVector(builder, data):
+    EPMCreateMULTIFORMAT_ADDRESSVector(builder, data)
 
 def EPMAddSIGNATURE(builder, SIGNATURE):
     builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(SIGNATURE), 0)
@@ -377,6 +395,12 @@ def EPMStartCHAIN_PROOFSVector(builder, numElems):
 def StartCHAIN_PROOFSVector(builder, numElems):
     return EPMStartCHAIN_PROOFSVector(builder, numElems)
 
+def EPMCreateCHAIN_PROOFSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateCHAIN_PROOFSVector(builder, data):
+    EPMCreateCHAIN_PROOFSVector(builder, data)
+
 def EPMEnd(builder):
     return builder.EndObject()
 
@@ -394,31 +418,51 @@ except:
 class EPMT(object):
 
     # EPMT
-    def __init__(self):
-        self.DN = None  # type: str
-        self.LEGAL_NAME = None  # type: str
-        self.FAMILY_NAME = None  # type: str
-        self.GIVEN_NAME = None  # type: str
-        self.ADDITIONAL_NAME = None  # type: str
-        self.HONORIFIC_PREFIX = None  # type: str
-        self.HONORIFIC_SUFFIX = None  # type: str
-        self.JOB_TITLE = None  # type: str
-        self.OCCUPATION = None  # type: str
-        self.ADDRESS = None  # type: Optional[Address.AddressT]
-        self.ALTERNATE_NAMES = None  # type: List[str]
-        self.EMAIL = None  # type: str
-        self.TELEPHONE = None  # type: str
-        self.KEYS = None  # type: List[CryptoKey.CryptoKeyT]
-        self.MULTIFORMAT_ADDRESS = None  # type: List[str]
-        self.SIGNATURE = None  # type: str
-        self.SIGNATURE_TIMESTAMP = 0  # type: int
-        self.CHAIN_PROOFS = None  # type: List[ChainProof.ChainProofT]
+    def __init__(
+        self,
+        DN = None,
+        LEGAL_NAME = None,
+        FAMILY_NAME = None,
+        GIVEN_NAME = None,
+        ADDITIONAL_NAME = None,
+        HONORIFIC_PREFIX = None,
+        HONORIFIC_SUFFIX = None,
+        JOB_TITLE = None,
+        OCCUPATION = None,
+        ADDRESS = None,
+        ALTERNATE_NAMES = None,
+        EMAIL = None,
+        TELEPHONE = None,
+        KEYS = None,
+        MULTIFORMAT_ADDRESS = None,
+        SIGNATURE = None,
+        SIGNATURE_TIMESTAMP = 0,
+        CHAIN_PROOFS = None,
+    ):
+        self.DN = DN  # type: Optional[str]
+        self.LEGAL_NAME = LEGAL_NAME  # type: Optional[str]
+        self.FAMILY_NAME = FAMILY_NAME  # type: Optional[str]
+        self.GIVEN_NAME = GIVEN_NAME  # type: Optional[str]
+        self.ADDITIONAL_NAME = ADDITIONAL_NAME  # type: Optional[str]
+        self.HONORIFIC_PREFIX = HONORIFIC_PREFIX  # type: Optional[str]
+        self.HONORIFIC_SUFFIX = HONORIFIC_SUFFIX  # type: Optional[str]
+        self.JOB_TITLE = JOB_TITLE  # type: Optional[str]
+        self.OCCUPATION = OCCUPATION  # type: Optional[str]
+        self.ADDRESS = ADDRESS  # type: Optional[Address.AddressT]
+        self.ALTERNATE_NAMES = ALTERNATE_NAMES  # type: Optional[List[Optional[str]]]
+        self.EMAIL = EMAIL  # type: Optional[str]
+        self.TELEPHONE = TELEPHONE  # type: Optional[str]
+        self.KEYS = KEYS  # type: Optional[List[CryptoKey.CryptoKeyT]]
+        self.MULTIFORMAT_ADDRESS = MULTIFORMAT_ADDRESS  # type: Optional[List[Optional[str]]]
+        self.SIGNATURE = SIGNATURE  # type: Optional[str]
+        self.SIGNATURE_TIMESTAMP = SIGNATURE_TIMESTAMP  # type: int
+        self.CHAIN_PROOFS = CHAIN_PROOFS  # type: Optional[List[ChainProof.ChainProofT]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        EPM = EPM()
-        EPM.Init(buf, pos)
-        return cls.InitFromObj(EPM)
+        tmpEpm = EPM()
+        tmpEpm.Init(buf, pos)
+        return cls.InitFromObj(tmpEpm)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -426,9 +470,9 @@ class EPMT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, EPM):
+    def InitFromObj(cls, tmpEpm):
         x = EPMT()
-        x._UnPack(EPM)
+        x._UnPack(tmpEpm)
         return x
 
     # EPMT

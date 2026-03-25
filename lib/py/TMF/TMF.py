@@ -265,6 +265,16 @@ def TMFStartDATAVector(builder, numElems):
 def StartDATAVector(builder, numElems):
     return TMFStartDATAVector(builder, numElems)
 
+def TMFCreateDATAVector(builder, data):
+    data = list(data)
+    builder.StartVector(1, len(data), 1)
+    for item in reversed(data):
+        builder.PrependUint8(item)
+    return builder.EndVector()
+
+def CreateDATAVector(builder, data):
+    TMFCreateDATAVector(builder, data)
+
 def TMFAddOCF(builder, OCF):
     builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(OCF), 0)
 
@@ -276,6 +286,16 @@ def TMFStartOCFVector(builder, numElems):
 
 def StartOCFVector(builder, numElems):
     return TMFStartOCFVector(builder, numElems)
+
+def TMFCreateOCFVector(builder, data):
+    data = list(data)
+    builder.StartVector(1, len(data), 1)
+    for item in reversed(data):
+        builder.PrependUint8(item)
+    return builder.EndVector()
+
+def CreateOCFVector(builder, data):
+    TMFCreateOCFVector(builder, data)
 
 def TMFAddFECF(builder, FECF):
     builder.PrependUint16Slot(13, FECF, 0)
@@ -297,27 +317,43 @@ except:
 class TMFT(object):
 
     # TMFT
-    def __init__(self):
-        self.VERSION = 0  # type: int
-        self.SPACECRAFT_ID = 0  # type: int
-        self.VIRTUAL_CHANNEL_ID = 0  # type: int
-        self.OCF_FLAG = False  # type: bool
-        self.MASTER_FRAME_COUNT = 0  # type: int
-        self.VIRTUAL_FRAME_COUNT = 0  # type: int
-        self.SEC_HDR_FLAG = False  # type: bool
-        self.SYNCH_FLAG = False  # type: bool
-        self.PACKET_ORDER_FLAG = False  # type: bool
-        self.SEGMENT_LENGTH_ID = 0  # type: int
-        self.FIRST_HDR_POINTER = 0  # type: int
-        self.DATA = None  # type: List[int]
-        self.OCF = None  # type: List[int]
-        self.FECF = 0  # type: int
+    def __init__(
+        self,
+        VERSION = 0,
+        SPACECRAFT_ID = 0,
+        VIRTUAL_CHANNEL_ID = 0,
+        OCF_FLAG = False,
+        MASTER_FRAME_COUNT = 0,
+        VIRTUAL_FRAME_COUNT = 0,
+        SEC_HDR_FLAG = False,
+        SYNCH_FLAG = False,
+        PACKET_ORDER_FLAG = False,
+        SEGMENT_LENGTH_ID = 0,
+        FIRST_HDR_POINTER = 0,
+        DATA = None,
+        OCF = None,
+        FECF = 0,
+    ):
+        self.VERSION = VERSION  # type: int
+        self.SPACECRAFT_ID = SPACECRAFT_ID  # type: int
+        self.VIRTUAL_CHANNEL_ID = VIRTUAL_CHANNEL_ID  # type: int
+        self.OCF_FLAG = OCF_FLAG  # type: bool
+        self.MASTER_FRAME_COUNT = MASTER_FRAME_COUNT  # type: int
+        self.VIRTUAL_FRAME_COUNT = VIRTUAL_FRAME_COUNT  # type: int
+        self.SEC_HDR_FLAG = SEC_HDR_FLAG  # type: bool
+        self.SYNCH_FLAG = SYNCH_FLAG  # type: bool
+        self.PACKET_ORDER_FLAG = PACKET_ORDER_FLAG  # type: bool
+        self.SEGMENT_LENGTH_ID = SEGMENT_LENGTH_ID  # type: int
+        self.FIRST_HDR_POINTER = FIRST_HDR_POINTER  # type: int
+        self.DATA = DATA  # type: Optional[List[int]]
+        self.OCF = OCF  # type: Optional[List[int]]
+        self.FECF = FECF  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        TMF = TMF()
-        TMF.Init(buf, pos)
-        return cls.InitFromObj(TMF)
+        tmpTmf = TMF()
+        tmpTmf.Init(buf, pos)
+        return cls.InitFromObj(tmpTmf)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -325,9 +361,9 @@ class TMFT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, TMF):
+    def InitFromObj(cls, tmpTmf):
         x = TMFT()
-        x._UnPack(TMF)
+        x._UnPack(tmpTmf)
         return x
 
     # TMFT

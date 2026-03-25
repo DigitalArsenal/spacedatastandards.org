@@ -2,4 +2,9 @@
 
 # namespace: 
 
-# NOTE missileEnvironment.py does not declare any structs or enums
+class missileEnvironment(object):
+    SPACE = 0
+    ENDO_ATMOSPHERIC = 1
+    EXO_ATMOSPHERIC = 2
+    TRANSITIONAL = 3
+    UNKNOWN = 4

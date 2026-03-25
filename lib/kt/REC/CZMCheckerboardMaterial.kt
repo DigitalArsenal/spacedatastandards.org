@@ -32,8 +32,8 @@ class CZMCheckerboardMaterial : Table() {
     /**
      * Even color
      */
-    val EVEN_COLOR : CZMColor? get() = EVEN_COLOR(CZMColor())
-    fun EVEN_COLOR(obj: CZMColor) : CZMColor? {
+    val evenColor : CZMColor? get() = evenColor(CZMColor())
+    fun evenColor(obj: CZMColor) : CZMColor? {
         val o = __offset(4)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -44,8 +44,8 @@ class CZMCheckerboardMaterial : Table() {
     /**
      * Odd color
      */
-    val ODD_COLOR : CZMColor? get() = ODD_COLOR(CZMColor())
-    fun ODD_COLOR(obj: CZMColor) : CZMColor? {
+    val oddColor : CZMColor? get() = oddColor(CZMColor())
+    fun oddColor(obj: CZMColor) : CZMColor? {
         val o = __offset(6)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -56,7 +56,7 @@ class CZMCheckerboardMaterial : Table() {
     /**
      * Repeat X
      */
-    val REPEAT_X : Double
+    val repeatX : Double
         get() {
             val o = __offset(8)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -64,31 +64,31 @@ class CZMCheckerboardMaterial : Table() {
     /**
      * Repeat Y
      */
-    val REPEAT_Y : Double
+    val repeatY : Double
         get() {
             val o = __offset(10)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsCZMCheckerboardMaterial(_bb: ByteBuffer): CZMCheckerboardMaterial = getRootAsCZMCheckerboardMaterial(_bb, CZMCheckerboardMaterial())
         fun getRootAsCZMCheckerboardMaterial(_bb: ByteBuffer, obj: CZMCheckerboardMaterial): CZMCheckerboardMaterial {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createCZMCheckerboardMaterial(builder: FlatBufferBuilder, EVEN_COLOROffset: Int, ODD_COLOROffset: Int, REPEAT_X: Double, REPEAT_Y: Double) : Int {
+        fun createCZMCheckerboardMaterial(builder: FlatBufferBuilder, evenColorOffset: Int, oddColorOffset: Int, repeatX: Double, repeatY: Double) : Int {
             builder.startTable(4)
-            addREPEAT_Y(builder, REPEAT_Y)
-            addREPEAT_X(builder, REPEAT_X)
-            addODD_COLOR(builder, ODD_COLOROffset)
-            addEVEN_COLOR(builder, EVEN_COLOROffset)
+            addREPEATY(builder, repeatY)
+            addREPEATX(builder, repeatX)
+            addODDCOLOR(builder, oddColorOffset)
+            addEVENCOLOR(builder, evenColorOffset)
             return endCZMCheckerboardMaterial(builder)
         }
         fun startCZMCheckerboardMaterial(builder: FlatBufferBuilder) = builder.startTable(4)
-        fun addEVEN_COLOR(builder: FlatBufferBuilder, EVEN_COLOR: Int) = builder.addOffset(0, EVEN_COLOR, 0)
-        fun addODD_COLOR(builder: FlatBufferBuilder, ODD_COLOR: Int) = builder.addOffset(1, ODD_COLOR, 0)
-        fun addREPEAT_X(builder: FlatBufferBuilder, REPEAT_X: Double) = builder.addDouble(2, REPEAT_X, 0.0)
-        fun addREPEAT_Y(builder: FlatBufferBuilder, REPEAT_Y: Double) = builder.addDouble(3, REPEAT_Y, 0.0)
+        fun addEVENCOLOR(builder: FlatBufferBuilder, evenColor: Int) = builder.addOffset(0, evenColor, 0)
+        fun addODDCOLOR(builder: FlatBufferBuilder, oddColor: Int) = builder.addOffset(1, oddColor, 0)
+        fun addREPEATX(builder: FlatBufferBuilder, repeatX: Double) = builder.addDouble(2, repeatX, 0.0)
+        fun addREPEATY(builder: FlatBufferBuilder, repeatY: Double) = builder.addDouble(3, repeatY, 0.0)
         fun endCZMCheckerboardMaterial(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

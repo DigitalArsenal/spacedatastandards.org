@@ -73,15 +73,19 @@ def End(builder):
 class KMLResourceMapAliasT(object):
 
     # KMLResourceMapAliasT
-    def __init__(self):
-        self.TARGET_HREF = None  # type: str
-        self.SOURCE_HREF = None  # type: str
+    def __init__(
+        self,
+        TARGET_HREF = None,
+        SOURCE_HREF = None,
+    ):
+        self.TARGET_HREF = TARGET_HREF  # type: Optional[str]
+        self.SOURCE_HREF = SOURCE_HREF  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        kmlresourceMapAlias = KMLResourceMapAlias()
-        kmlresourceMapAlias.Init(buf, pos)
-        return cls.InitFromObj(kmlresourceMapAlias)
+        tmpKmlresourceMapAlias = KMLResourceMapAlias()
+        tmpKmlresourceMapAlias.Init(buf, pos)
+        return cls.InitFromObj(tmpKmlresourceMapAlias)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -89,17 +93,17 @@ class KMLResourceMapAliasT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, kmlresourceMapAlias):
+    def InitFromObj(cls, tmpKmlresourceMapAlias):
         x = KMLResourceMapAliasT()
-        x._UnPack(kmlresourceMapAlias)
+        x._UnPack(tmpKmlresourceMapAlias)
         return x
 
     # KMLResourceMapAliasT
-    def _UnPack(self, kmlresourceMapAlias):
-        if kmlresourceMapAlias is None:
+    def _UnPack(self, KMLResourceMapAlias):
+        if KMLResourceMapAlias is None:
             return
-        self.TARGET_HREF = kmlresourceMapAlias.TARGET_HREF()
-        self.SOURCE_HREF = kmlresourceMapAlias.SOURCE_HREF()
+        self.TARGET_HREF = KMLResourceMapAlias.TARGET_HREF()
+        self.SOURCE_HREF = KMLResourceMapAlias.SOURCE_HREF()
 
     # KMLResourceMapAliasT
     def Pack(self, builder):
@@ -112,5 +116,5 @@ class KMLResourceMapAliasT(object):
             KMLResourceMapAliasAddTARGET_HREF(builder, TARGET_HREF)
         if self.SOURCE_HREF is not None:
             KMLResourceMapAliasAddSOURCE_HREF(builder, SOURCE_HREF)
-        kmlresourceMapAlias = KMLResourceMapAliasEnd(builder)
-        return kmlresourceMapAlias
+        KMLResourceMapAlias = KMLResourceMapAliasEnd(builder)
+        return KMLResourceMapAlias

@@ -32,7 +32,7 @@ class KMLStyleMapPair : Table() {
     /**
      * State (normal or highlight)
      */
-    val STATE : Byte
+    val state : Byte
         get() {
             val o = __offset(4)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -40,7 +40,7 @@ class KMLStyleMapPair : Table() {
     /**
      * Style URL or inline style ID
      */
-    val STYLE_URL : String?
+    val styleUrl : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -49,24 +49,24 @@ class KMLStyleMapPair : Table() {
                 null
             }
         }
-    val STYLE_URLAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun STYLE_URLInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val styleUrlAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun styleUrlInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsKMLStyleMapPair(_bb: ByteBuffer): KMLStyleMapPair = getRootAsKMLStyleMapPair(_bb, KMLStyleMapPair())
         fun getRootAsKMLStyleMapPair(_bb: ByteBuffer, obj: KMLStyleMapPair): KMLStyleMapPair {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createKMLStyleMapPair(builder: FlatBufferBuilder, STATE: Byte, STYLE_URLOffset: Int) : Int {
+        fun createKMLStyleMapPair(builder: FlatBufferBuilder, state: Byte, styleUrlOffset: Int) : Int {
             builder.startTable(2)
-            addSTYLE_URL(builder, STYLE_URLOffset)
-            addSTATE(builder, STATE)
+            addSTYLEURL(builder, styleUrlOffset)
+            addSTATE(builder, state)
             return endKMLStyleMapPair(builder)
         }
         fun startKMLStyleMapPair(builder: FlatBufferBuilder) = builder.startTable(2)
-        fun addSTATE(builder: FlatBufferBuilder, STATE: Byte) = builder.addByte(0, STATE, 0)
-        fun addSTYLE_URL(builder: FlatBufferBuilder, STYLE_URL: Int) = builder.addOffset(1, STYLE_URL, 0)
+        fun addSTATE(builder: FlatBufferBuilder, state: Byte) = builder.addByte(0, state, 0)
+        fun addSTYLEURL(builder: FlatBufferBuilder, styleUrl: Int) = builder.addOffset(1, styleUrl, 0)
         fun endKMLStyleMapPair(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

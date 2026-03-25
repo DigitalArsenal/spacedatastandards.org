@@ -32,7 +32,7 @@ class attManeuver : Table() {
     /**
      * Maneuver epoch start (ISO 8601)
      */
-    val MAN_EPOCH_START : String?
+    val manEpochStart : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class attManeuver : Table() {
                 null
             }
         }
-    val MAN_EPOCH_STARTAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun MAN_EPOCH_STARTInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val manEpochStartAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun manEpochStartInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Duration in seconds
      */
-    val DURATION : Double
+    val duration : Double
         get() {
             val o = __offset(6)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -54,7 +54,7 @@ class attManeuver : Table() {
     /**
      * Reference frame
      */
-    val REF_FRAME : String?
+    val refFrame : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -63,12 +63,12 @@ class attManeuver : Table() {
                 null
             }
         }
-    val REF_FRAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun REF_FRAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val refFrameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun refFrameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
     /**
      * Torque about body X in N*m
      */
-    val TOR_1 : Double
+    val tor1 : Double
         get() {
             val o = __offset(10)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -76,7 +76,7 @@ class attManeuver : Table() {
     /**
      * Torque about body Y in N*m
      */
-    val TOR_2 : Double
+    val tor2 : Double
         get() {
             val o = __offset(12)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -84,35 +84,35 @@ class attManeuver : Table() {
     /**
      * Torque about body Z in N*m
      */
-    val TOR_3 : Double
+    val tor3 : Double
         get() {
             val o = __offset(14)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsattManeuver(_bb: ByteBuffer): attManeuver = getRootAsattManeuver(_bb, attManeuver())
         fun getRootAsattManeuver(_bb: ByteBuffer, obj: attManeuver): attManeuver {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createattManeuver(builder: FlatBufferBuilder, MAN_EPOCH_STARTOffset: Int, DURATION: Double, REF_FRAMEOffset: Int, TOR_1: Double, TOR_2: Double, TOR_3: Double) : Int {
+        fun createattManeuver(builder: FlatBufferBuilder, manEpochStartOffset: Int, duration: Double, refFrameOffset: Int, tor1: Double, tor2: Double, tor3: Double) : Int {
             builder.startTable(6)
-            addTOR_3(builder, TOR_3)
-            addTOR_2(builder, TOR_2)
-            addTOR_1(builder, TOR_1)
-            addDURATION(builder, DURATION)
-            addREF_FRAME(builder, REF_FRAMEOffset)
-            addMAN_EPOCH_START(builder, MAN_EPOCH_STARTOffset)
+            addTOR3(builder, tor3)
+            addTOR2(builder, tor2)
+            addTOR1(builder, tor1)
+            addDURATION(builder, duration)
+            addREFFRAME(builder, refFrameOffset)
+            addMANEPOCHSTART(builder, manEpochStartOffset)
             return endattManeuver(builder)
         }
         fun startattManeuver(builder: FlatBufferBuilder) = builder.startTable(6)
-        fun addMAN_EPOCH_START(builder: FlatBufferBuilder, MAN_EPOCH_START: Int) = builder.addOffset(0, MAN_EPOCH_START, 0)
-        fun addDURATION(builder: FlatBufferBuilder, DURATION: Double) = builder.addDouble(1, DURATION, 0.0)
-        fun addREF_FRAME(builder: FlatBufferBuilder, REF_FRAME: Int) = builder.addOffset(2, REF_FRAME, 0)
-        fun addTOR_1(builder: FlatBufferBuilder, TOR_1: Double) = builder.addDouble(3, TOR_1, 0.0)
-        fun addTOR_2(builder: FlatBufferBuilder, TOR_2: Double) = builder.addDouble(4, TOR_2, 0.0)
-        fun addTOR_3(builder: FlatBufferBuilder, TOR_3: Double) = builder.addDouble(5, TOR_3, 0.0)
+        fun addMANEPOCHSTART(builder: FlatBufferBuilder, manEpochStart: Int) = builder.addOffset(0, manEpochStart, 0)
+        fun addDURATION(builder: FlatBufferBuilder, duration: Double) = builder.addDouble(1, duration, 0.0)
+        fun addREFFRAME(builder: FlatBufferBuilder, refFrame: Int) = builder.addOffset(2, refFrame, 0)
+        fun addTOR1(builder: FlatBufferBuilder, tor1: Double) = builder.addDouble(3, tor1, 0.0)
+        fun addTOR2(builder: FlatBufferBuilder, tor2: Double) = builder.addDouble(4, tor2, 0.0)
+        fun addTOR3(builder: FlatBufferBuilder, tor3: Double) = builder.addDouble(5, tor3, 0.0)
         fun endattManeuver(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

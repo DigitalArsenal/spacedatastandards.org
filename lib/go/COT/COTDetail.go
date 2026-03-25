@@ -51,6 +51,10 @@ func (rcv *COTDetail) CALLSIGN() []byte {
 	return nil
 }
 
+func (rcv *COTDetail) Callsign() []byte {
+	return rcv.CALLSIGN()
+}
+
 /// Contact callsign
 /// Contact endpoint (e.g. IP:port)
 func (rcv *COTDetail) ENDPOINT() []byte {
@@ -59,6 +63,10 @@ func (rcv *COTDetail) ENDPOINT() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *COTDetail) Endpoint() []byte {
+	return rcv.ENDPOINT()
 }
 
 /// Contact endpoint (e.g. IP:port)
@@ -71,6 +79,10 @@ func (rcv *COTDetail) PHONE() []byte {
 	return nil
 }
 
+func (rcv *COTDetail) Phone() []byte {
+	return rcv.PHONE()
+}
+
 /// Contact phone number
 /// Track course in degrees true
 func (rcv *COTDetail) COURSE() float64 {
@@ -81,9 +93,17 @@ func (rcv *COTDetail) COURSE() float64 {
 	return 0.0
 }
 
+func (rcv *COTDetail) Course() float64 {
+	return rcv.COURSE()
+}
+
 /// Track course in degrees true
 func (rcv *COTDetail) MutateCOURSE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(10, n)
+}
+
+func (rcv *COTDetail) MutateCourse(n float64) bool {
+	return rcv.MutateCOURSE(n)
 }
 
 /// Track speed in m/s
@@ -95,9 +115,17 @@ func (rcv *COTDetail) SPEED() float64 {
 	return 0.0
 }
 
+func (rcv *COTDetail) Speed() float64 {
+	return rcv.SPEED()
+}
+
 /// Track speed in m/s
 func (rcv *COTDetail) MutateSPEED(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(12, n)
+}
+
+func (rcv *COTDetail) MutateSpeed(n float64) bool {
+	return rcv.MutateSPEED(n)
 }
 
 /// Group name/team
@@ -107,6 +135,10 @@ func (rcv *COTDetail) GROUP_NAME() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *COTDetail) GroupName() []byte {
+	return rcv.GROUP_NAME()
 }
 
 /// Group name/team
@@ -119,6 +151,10 @@ func (rcv *COTDetail) GROUP_ROLE() []byte {
 	return nil
 }
 
+func (rcv *COTDetail) GroupRole() []byte {
+	return rcv.GROUP_ROLE()
+}
+
 /// Group role
 /// Status (battery percentage, etc.)
 func (rcv *COTDetail) STATUS_BATTERY() float64 {
@@ -129,9 +165,17 @@ func (rcv *COTDetail) STATUS_BATTERY() float64 {
 	return 0.0
 }
 
+func (rcv *COTDetail) StatusBattery() float64 {
+	return rcv.STATUS_BATTERY()
+}
+
 /// Status (battery percentage, etc.)
 func (rcv *COTDetail) MutateSTATUS_BATTERY(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(18, n)
+}
+
+func (rcv *COTDetail) MutateStatusBattery(n float64) bool {
+	return rcv.MutateSTATUS_BATTERY(n)
 }
 
 /// Status readiness
@@ -143,9 +187,17 @@ func (rcv *COTDetail) STATUS_READINESS() bool {
 	return false
 }
 
+func (rcv *COTDetail) StatusReadiness() bool {
+	return rcv.STATUS_READINESS()
+}
+
 /// Status readiness
 func (rcv *COTDetail) MutateSTATUS_READINESS(n bool) bool {
 	return rcv._tab.MutateBoolSlot(20, n)
+}
+
+func (rcv *COTDetail) MutateStatusReadiness(n bool) bool {
+	return rcv.MutateSTATUS_READINESS(n)
 }
 
 /// Precision location source
@@ -155,6 +207,10 @@ func (rcv *COTDetail) PREC_LOCATION_SOURCE() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *COTDetail) PrecLocationSource() []byte {
+	return rcv.PREC_LOCATION_SOURCE()
 }
 
 /// Precision location source
@@ -167,6 +223,10 @@ func (rcv *COTDetail) PREC_ALTSRC() []byte {
 	return nil
 }
 
+func (rcv *COTDetail) PrecAltsrc() []byte {
+	return rcv.PREC_ALTSRC()
+}
+
 /// Precision location altitude source
 /// UID of the device
 func (rcv *COTDetail) UID_DROID() []byte {
@@ -175,6 +235,10 @@ func (rcv *COTDetail) UID_DROID() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *COTDetail) UidDroid() []byte {
+	return rcv.UID_DROID()
 }
 
 /// UID of the device
@@ -187,6 +251,10 @@ func (rcv *COTDetail) REMARKS() []byte {
 	return nil
 }
 
+func (rcv *COTDetail) Remarks() []byte {
+	return rcv.REMARKS()
+}
+
 /// Remarks text
 /// Remarks source
 func (rcv *COTDetail) REMARKS_SOURCE() []byte {
@@ -195,6 +263,10 @@ func (rcv *COTDetail) REMARKS_SOURCE() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *COTDetail) RemarksSource() []byte {
+	return rcv.REMARKS_SOURCE()
 }
 
 /// Remarks source
@@ -207,6 +279,10 @@ func (rcv *COTDetail) REMARKS_TIME() []byte {
 	return nil
 }
 
+func (rcv *COTDetail) RemarksTime() []byte {
+	return rcv.REMARKS_TIME()
+}
+
 /// Remarks timestamp (ISO 8601)
 /// Link UID (for related events)
 func (rcv *COTDetail) LINK_UID() []byte {
@@ -215,6 +291,10 @@ func (rcv *COTDetail) LINK_UID() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *COTDetail) LinkUid() []byte {
+	return rcv.LINK_UID()
 }
 
 /// Link UID (for related events)
@@ -227,6 +307,10 @@ func (rcv *COTDetail) LINK_TYPE() []byte {
 	return nil
 }
 
+func (rcv *COTDetail) LinkType() []byte {
+	return rcv.LINK_TYPE()
+}
+
 /// Link type
 /// Link relation
 func (rcv *COTDetail) LINK_RELATION() []byte {
@@ -235,6 +319,10 @@ func (rcv *COTDetail) LINK_RELATION() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *COTDetail) LinkRelation() []byte {
+	return rcv.LINK_RELATION()
 }
 
 /// Link relation
@@ -247,9 +335,17 @@ func (rcv *COTDetail) COLOR() int32 {
 	return 0
 }
 
+func (rcv *COTDetail) Color() int32 {
+	return rcv.COLOR()
+}
+
 /// Color in ARGB integer format
 func (rcv *COTDetail) MutateCOLOR(n int32) bool {
 	return rcv._tab.MutateInt32Slot(40, n)
+}
+
+func (rcv *COTDetail) MutateColor(n int32) bool {
+	return rcv.MutateCOLOR(n)
 }
 
 /// Stroke weight for drawing
@@ -261,9 +357,17 @@ func (rcv *COTDetail) STROKE_WEIGHT() float64 {
 	return 0.0
 }
 
+func (rcv *COTDetail) StrokeWeight() float64 {
+	return rcv.STROKE_WEIGHT()
+}
+
 /// Stroke weight for drawing
 func (rcv *COTDetail) MutateSTROKE_WEIGHT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(42, n)
+}
+
+func (rcv *COTDetail) MutateStrokeWeight(n float64) bool {
+	return rcv.MutateSTROKE_WEIGHT(n)
 }
 
 /// Fill color in ARGB integer format
@@ -275,9 +379,17 @@ func (rcv *COTDetail) FILL_COLOR() int32 {
 	return 0
 }
 
+func (rcv *COTDetail) FillColor() int32 {
+	return rcv.FILL_COLOR()
+}
+
 /// Fill color in ARGB integer format
 func (rcv *COTDetail) MutateFILL_COLOR(n int32) bool {
 	return rcv._tab.MutateInt32Slot(44, n)
+}
+
+func (rcv *COTDetail) MutateFillColor(n int32) bool {
+	return rcv.MutateFILL_COLOR(n)
 }
 
 /// Labeled flag
@@ -289,9 +401,17 @@ func (rcv *COTDetail) LABELLED() bool {
 	return false
 }
 
+func (rcv *COTDetail) Labelled() bool {
+	return rcv.LABELLED()
+}
+
 /// Labeled flag
 func (rcv *COTDetail) MutateLABELLED(n bool) bool {
 	return rcv._tab.MutateBoolSlot(46, n)
+}
+
+func (rcv *COTDetail) MutateLabelled(n bool) bool {
+	return rcv.MutateLABELLED(n)
 }
 
 /// Archive flag
@@ -303,9 +423,17 @@ func (rcv *COTDetail) ARCHIVE() bool {
 	return false
 }
 
+func (rcv *COTDetail) Archive() bool {
+	return rcv.ARCHIVE()
+}
+
 /// Archive flag
 func (rcv *COTDetail) MutateARCHIVE(n bool) bool {
 	return rcv._tab.MutateBoolSlot(48, n)
+}
+
+func (rcv *COTDetail) MutateArchive(n bool) bool {
+	return rcv.MutateARCHIVE(n)
 }
 
 /// Raw XML detail content (for extensions not covered above)
@@ -317,6 +445,10 @@ func (rcv *COTDetail) RAW_XML() []byte {
 	return nil
 }
 
+func (rcv *COTDetail) RawXml() []byte {
+	return rcv.RAW_XML()
+}
+
 /// Raw XML detail content (for extensions not covered above)
 func COTDetailStart(builder *flatbuffers.Builder) {
 	builder.StartObject(24)
@@ -324,74 +456,146 @@ func COTDetailStart(builder *flatbuffers.Builder) {
 func COTDetailAddCALLSIGN(builder *flatbuffers.Builder, CALLSIGN flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(CALLSIGN), 0)
 }
+func COTDetailAddCallsign(builder *flatbuffers.Builder, CALLSIGN flatbuffers.UOffsetT) {
+	COTDetailAddCALLSIGN(builder, CALLSIGN)
+}
 func COTDetailAddENDPOINT(builder *flatbuffers.Builder, ENDPOINT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(ENDPOINT), 0)
+}
+func COTDetailAddEndpoint(builder *flatbuffers.Builder, ENDPOINT flatbuffers.UOffsetT) {
+	COTDetailAddENDPOINT(builder, ENDPOINT)
 }
 func COTDetailAddPHONE(builder *flatbuffers.Builder, PHONE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(PHONE), 0)
 }
+func COTDetailAddPhone(builder *flatbuffers.Builder, PHONE flatbuffers.UOffsetT) {
+	COTDetailAddPHONE(builder, PHONE)
+}
 func COTDetailAddCOURSE(builder *flatbuffers.Builder, COURSE float64) {
 	builder.PrependFloat64Slot(3, COURSE, 0.0)
+}
+func COTDetailAddCourse(builder *flatbuffers.Builder, COURSE float64) {
+	COTDetailAddCOURSE(builder, COURSE)
 }
 func COTDetailAddSPEED(builder *flatbuffers.Builder, SPEED float64) {
 	builder.PrependFloat64Slot(4, SPEED, 0.0)
 }
+func COTDetailAddSpeed(builder *flatbuffers.Builder, SPEED float64) {
+	COTDetailAddSPEED(builder, SPEED)
+}
 func COTDetailAddGROUP_NAME(builder *flatbuffers.Builder, GROUP_NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(GROUP_NAME), 0)
+}
+func COTDetailAddGroupName(builder *flatbuffers.Builder, GROUP_NAME flatbuffers.UOffsetT) {
+	COTDetailAddGROUP_NAME(builder, GROUP_NAME)
 }
 func COTDetailAddGROUP_ROLE(builder *flatbuffers.Builder, GROUP_ROLE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(GROUP_ROLE), 0)
 }
+func COTDetailAddGroupRole(builder *flatbuffers.Builder, GROUP_ROLE flatbuffers.UOffsetT) {
+	COTDetailAddGROUP_ROLE(builder, GROUP_ROLE)
+}
 func COTDetailAddSTATUS_BATTERY(builder *flatbuffers.Builder, STATUS_BATTERY float64) {
 	builder.PrependFloat64Slot(7, STATUS_BATTERY, 0.0)
+}
+func COTDetailAddStatusBattery(builder *flatbuffers.Builder, STATUS_BATTERY float64) {
+	COTDetailAddSTATUS_BATTERY(builder, STATUS_BATTERY)
 }
 func COTDetailAddSTATUS_READINESS(builder *flatbuffers.Builder, STATUS_READINESS bool) {
 	builder.PrependBoolSlot(8, STATUS_READINESS, false)
 }
+func COTDetailAddStatusReadiness(builder *flatbuffers.Builder, STATUS_READINESS bool) {
+	COTDetailAddSTATUS_READINESS(builder, STATUS_READINESS)
+}
 func COTDetailAddPREC_LOCATION_SOURCE(builder *flatbuffers.Builder, PREC_LOCATION_SOURCE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(PREC_LOCATION_SOURCE), 0)
+}
+func COTDetailAddPrecLocationSource(builder *flatbuffers.Builder, PREC_LOCATION_SOURCE flatbuffers.UOffsetT) {
+	COTDetailAddPREC_LOCATION_SOURCE(builder, PREC_LOCATION_SOURCE)
 }
 func COTDetailAddPREC_ALTSRC(builder *flatbuffers.Builder, PREC_ALTSRC flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(PREC_ALTSRC), 0)
 }
+func COTDetailAddPrecAltsrc(builder *flatbuffers.Builder, PREC_ALTSRC flatbuffers.UOffsetT) {
+	COTDetailAddPREC_ALTSRC(builder, PREC_ALTSRC)
+}
 func COTDetailAddUID_DROID(builder *flatbuffers.Builder, UID_DROID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(UID_DROID), 0)
+}
+func COTDetailAddUidDroid(builder *flatbuffers.Builder, UID_DROID flatbuffers.UOffsetT) {
+	COTDetailAddUID_DROID(builder, UID_DROID)
 }
 func COTDetailAddREMARKS(builder *flatbuffers.Builder, REMARKS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(12, flatbuffers.UOffsetT(REMARKS), 0)
 }
+func COTDetailAddRemarks(builder *flatbuffers.Builder, REMARKS flatbuffers.UOffsetT) {
+	COTDetailAddREMARKS(builder, REMARKS)
+}
 func COTDetailAddREMARKS_SOURCE(builder *flatbuffers.Builder, REMARKS_SOURCE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(13, flatbuffers.UOffsetT(REMARKS_SOURCE), 0)
+}
+func COTDetailAddRemarksSource(builder *flatbuffers.Builder, REMARKS_SOURCE flatbuffers.UOffsetT) {
+	COTDetailAddREMARKS_SOURCE(builder, REMARKS_SOURCE)
 }
 func COTDetailAddREMARKS_TIME(builder *flatbuffers.Builder, REMARKS_TIME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(14, flatbuffers.UOffsetT(REMARKS_TIME), 0)
 }
+func COTDetailAddRemarksTime(builder *flatbuffers.Builder, REMARKS_TIME flatbuffers.UOffsetT) {
+	COTDetailAddREMARKS_TIME(builder, REMARKS_TIME)
+}
 func COTDetailAddLINK_UID(builder *flatbuffers.Builder, LINK_UID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(15, flatbuffers.UOffsetT(LINK_UID), 0)
+}
+func COTDetailAddLinkUid(builder *flatbuffers.Builder, LINK_UID flatbuffers.UOffsetT) {
+	COTDetailAddLINK_UID(builder, LINK_UID)
 }
 func COTDetailAddLINK_TYPE(builder *flatbuffers.Builder, LINK_TYPE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(16, flatbuffers.UOffsetT(LINK_TYPE), 0)
 }
+func COTDetailAddLinkType(builder *flatbuffers.Builder, LINK_TYPE flatbuffers.UOffsetT) {
+	COTDetailAddLINK_TYPE(builder, LINK_TYPE)
+}
 func COTDetailAddLINK_RELATION(builder *flatbuffers.Builder, LINK_RELATION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(17, flatbuffers.UOffsetT(LINK_RELATION), 0)
+}
+func COTDetailAddLinkRelation(builder *flatbuffers.Builder, LINK_RELATION flatbuffers.UOffsetT) {
+	COTDetailAddLINK_RELATION(builder, LINK_RELATION)
 }
 func COTDetailAddCOLOR(builder *flatbuffers.Builder, COLOR int32) {
 	builder.PrependInt32Slot(18, COLOR, 0)
 }
+func COTDetailAddColor(builder *flatbuffers.Builder, COLOR int32) {
+	COTDetailAddCOLOR(builder, COLOR)
+}
 func COTDetailAddSTROKE_WEIGHT(builder *flatbuffers.Builder, STROKE_WEIGHT float64) {
 	builder.PrependFloat64Slot(19, STROKE_WEIGHT, 0.0)
+}
+func COTDetailAddStrokeWeight(builder *flatbuffers.Builder, STROKE_WEIGHT float64) {
+	COTDetailAddSTROKE_WEIGHT(builder, STROKE_WEIGHT)
 }
 func COTDetailAddFILL_COLOR(builder *flatbuffers.Builder, FILL_COLOR int32) {
 	builder.PrependInt32Slot(20, FILL_COLOR, 0)
 }
+func COTDetailAddFillColor(builder *flatbuffers.Builder, FILL_COLOR int32) {
+	COTDetailAddFILL_COLOR(builder, FILL_COLOR)
+}
 func COTDetailAddLABELLED(builder *flatbuffers.Builder, LABELLED bool) {
 	builder.PrependBoolSlot(21, LABELLED, false)
+}
+func COTDetailAddLabelled(builder *flatbuffers.Builder, LABELLED bool) {
+	COTDetailAddLABELLED(builder, LABELLED)
 }
 func COTDetailAddARCHIVE(builder *flatbuffers.Builder, ARCHIVE bool) {
 	builder.PrependBoolSlot(22, ARCHIVE, false)
 }
+func COTDetailAddArchive(builder *flatbuffers.Builder, ARCHIVE bool) {
+	COTDetailAddARCHIVE(builder, ARCHIVE)
+}
 func COTDetailAddRAW_XML(builder *flatbuffers.Builder, RAW_XML flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(23, flatbuffers.UOffsetT(RAW_XML), 0)
+}
+func COTDetailAddRawXml(builder *flatbuffers.Builder, RAW_XML flatbuffers.UOffsetT) {
+	COTDetailAddRAW_XML(builder, RAW_XML)
 }
 func COTDetailEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

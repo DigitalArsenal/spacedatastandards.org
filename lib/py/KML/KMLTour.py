@@ -110,17 +110,23 @@ except:
 class KMLTourT(object):
 
     # KMLTourT
-    def __init__(self):
-        self.NAME = None  # type: str
-        self.DESCRIPTION = None  # type: str
-        self.VISIBILITY = False  # type: bool
-        self.PLAYLIST = None  # type: Optional[KMLPlaylist.KMLPlaylistT]
+    def __init__(
+        self,
+        NAME = None,
+        DESCRIPTION = None,
+        VISIBILITY = False,
+        PLAYLIST = None,
+    ):
+        self.NAME = NAME  # type: Optional[str]
+        self.DESCRIPTION = DESCRIPTION  # type: Optional[str]
+        self.VISIBILITY = VISIBILITY  # type: bool
+        self.PLAYLIST = PLAYLIST  # type: Optional[KMLPlaylist.KMLPlaylistT]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        kmltour = KMLTour()
-        kmltour.Init(buf, pos)
-        return cls.InitFromObj(kmltour)
+        tmpKmltour = KMLTour()
+        tmpKmltour.Init(buf, pos)
+        return cls.InitFromObj(tmpKmltour)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -128,20 +134,20 @@ class KMLTourT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, kmltour):
+    def InitFromObj(cls, tmpKmltour):
         x = KMLTourT()
-        x._UnPack(kmltour)
+        x._UnPack(tmpKmltour)
         return x
 
     # KMLTourT
-    def _UnPack(self, kmltour):
-        if kmltour is None:
+    def _UnPack(self, KMLTour):
+        if KMLTour is None:
             return
-        self.NAME = kmltour.NAME()
-        self.DESCRIPTION = kmltour.DESCRIPTION()
-        self.VISIBILITY = kmltour.VISIBILITY()
-        if kmltour.PLAYLIST() is not None:
-            self.PLAYLIST = KMLPlaylist.KMLPlaylistT.InitFromObj(kmltour.PLAYLIST())
+        self.NAME = KMLTour.NAME()
+        self.DESCRIPTION = KMLTour.DESCRIPTION()
+        self.VISIBILITY = KMLTour.VISIBILITY()
+        if KMLTour.PLAYLIST() is not None:
+            self.PLAYLIST = KMLPlaylist.KMLPlaylistT.InitFromObj(KMLTour.PLAYLIST())
 
     # KMLTourT
     def Pack(self, builder):
@@ -159,5 +165,5 @@ class KMLTourT(object):
         KMLTourAddVISIBILITY(builder, self.VISIBILITY)
         if self.PLAYLIST is not None:
             KMLTourAddPLAYLIST(builder, PLAYLIST)
-        kmltour = KMLTourEnd(builder)
-        return kmltour
+        KMLTour = KMLTourEnd(builder)
+        return KMLTour

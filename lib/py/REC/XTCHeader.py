@@ -2,4 +2,241 @@
 
 # namespace: 
 
-# NOTE XTCHeader.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Document header information
+class XTCHeader(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = XTCHeader()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsXTCHeader(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def XTCHeaderBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x58\x54\x43", size_prefixed=size_prefixed)
+
+    # XTCHeader
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Version of this XTCE document
+    # XTCHeader
+    def VERSION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Date of document creation (ISO 8601)
+    # XTCHeader
+    def DATE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Classification level
+    # XTCHeader
+    def CLASSIFICATION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Validation status
+    # XTCHeader
+    def VALIDATION_STATUS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Author information
+    # XTCHeader
+    def AUTHOR(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Notes/comments
+    # XTCHeader
+    def NOTES(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
+        return ""
+
+    # XTCHeader
+    def NOTESLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # XTCHeader
+    def NOTESIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        return o == 0
+
+def XTCHeaderStart(builder):
+    builder.StartObject(6)
+
+def Start(builder):
+    XTCHeaderStart(builder)
+
+def XTCHeaderAddVERSION(builder, VERSION):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(VERSION), 0)
+
+def AddVERSION(builder, VERSION):
+    XTCHeaderAddVERSION(builder, VERSION)
+
+def XTCHeaderAddDATE(builder, DATE):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(DATE), 0)
+
+def AddDATE(builder, DATE):
+    XTCHeaderAddDATE(builder, DATE)
+
+def XTCHeaderAddCLASSIFICATION(builder, CLASSIFICATION):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(CLASSIFICATION), 0)
+
+def AddCLASSIFICATION(builder, CLASSIFICATION):
+    XTCHeaderAddCLASSIFICATION(builder, CLASSIFICATION)
+
+def XTCHeaderAddVALIDATION_STATUS(builder, VALIDATION_STATUS):
+    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(VALIDATION_STATUS), 0)
+
+def AddVALIDATION_STATUS(builder, VALIDATION_STATUS):
+    XTCHeaderAddVALIDATION_STATUS(builder, VALIDATION_STATUS)
+
+def XTCHeaderAddAUTHOR(builder, AUTHOR):
+    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(AUTHOR), 0)
+
+def AddAUTHOR(builder, AUTHOR):
+    XTCHeaderAddAUTHOR(builder, AUTHOR)
+
+def XTCHeaderAddNOTES(builder, NOTES):
+    builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(NOTES), 0)
+
+def AddNOTES(builder, NOTES):
+    XTCHeaderAddNOTES(builder, NOTES)
+
+def XTCHeaderStartNOTESVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartNOTESVector(builder, numElems):
+    return XTCHeaderStartNOTESVector(builder, numElems)
+
+def XTCHeaderCreateNOTESVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateNOTESVector(builder, data):
+    XTCHeaderCreateNOTESVector(builder, data)
+
+def XTCHeaderEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return XTCHeaderEnd(builder)
+
+try:
+    from typing import List
+except:
+    pass
+
+class XTCHeaderT(object):
+
+    # XTCHeaderT
+    def __init__(
+        self,
+        VERSION = None,
+        DATE = None,
+        CLASSIFICATION = None,
+        VALIDATION_STATUS = None,
+        AUTHOR = None,
+        NOTES = None,
+    ):
+        self.VERSION = VERSION  # type: Optional[str]
+        self.DATE = DATE  # type: Optional[str]
+        self.CLASSIFICATION = CLASSIFICATION  # type: Optional[str]
+        self.VALIDATION_STATUS = VALIDATION_STATUS  # type: Optional[str]
+        self.AUTHOR = AUTHOR  # type: Optional[str]
+        self.NOTES = NOTES  # type: Optional[List[Optional[str]]]
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpXtcheader = XTCHeader()
+        tmpXtcheader.Init(buf, pos)
+        return cls.InitFromObj(tmpXtcheader)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpXtcheader):
+        x = XTCHeaderT()
+        x._UnPack(tmpXtcheader)
+        return x
+
+    # XTCHeaderT
+    def _UnPack(self, XTCHeader):
+        if XTCHeader is None:
+            return
+        self.VERSION = XTCHeader.VERSION()
+        self.DATE = XTCHeader.DATE()
+        self.CLASSIFICATION = XTCHeader.CLASSIFICATION()
+        self.VALIDATION_STATUS = XTCHeader.VALIDATION_STATUS()
+        self.AUTHOR = XTCHeader.AUTHOR()
+        if not XTCHeader.NOTESIsNone():
+            self.NOTES = []
+            for i in range(XTCHeader.NOTESLength()):
+                self.NOTES.append(XTCHeader.NOTES(i))
+
+    # XTCHeaderT
+    def Pack(self, builder):
+        if self.VERSION is not None:
+            VERSION = builder.CreateString(self.VERSION)
+        if self.DATE is not None:
+            DATE = builder.CreateString(self.DATE)
+        if self.CLASSIFICATION is not None:
+            CLASSIFICATION = builder.CreateString(self.CLASSIFICATION)
+        if self.VALIDATION_STATUS is not None:
+            VALIDATION_STATUS = builder.CreateString(self.VALIDATION_STATUS)
+        if self.AUTHOR is not None:
+            AUTHOR = builder.CreateString(self.AUTHOR)
+        if self.NOTES is not None:
+            NOTESlist = []
+            for i in range(len(self.NOTES)):
+                NOTESlist.append(builder.CreateString(self.NOTES[i]))
+            XTCHeaderStartNOTESVector(builder, len(self.NOTES))
+            for i in reversed(range(len(self.NOTES))):
+                builder.PrependUOffsetTRelative(NOTESlist[i])
+            NOTES = builder.EndVector()
+        XTCHeaderStart(builder)
+        if self.VERSION is not None:
+            XTCHeaderAddVERSION(builder, VERSION)
+        if self.DATE is not None:
+            XTCHeaderAddDATE(builder, DATE)
+        if self.CLASSIFICATION is not None:
+            XTCHeaderAddCLASSIFICATION(builder, CLASSIFICATION)
+        if self.VALIDATION_STATUS is not None:
+            XTCHeaderAddVALIDATION_STATUS(builder, VALIDATION_STATUS)
+        if self.AUTHOR is not None:
+            XTCHeaderAddAUTHOR(builder, AUTHOR)
+        if self.NOTES is not None:
+            XTCHeaderAddNOTES(builder, NOTES)
+        XTCHeader = XTCHeaderEnd(builder)
+        return XTCHeader

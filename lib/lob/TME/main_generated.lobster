@@ -101,9 +101,9 @@ struct TMEBuilder:
     def end():
         return b_.EndObject()
 
-def TMEStartSUNRISE_SUNSET_QUERYVector(b_:flatbuffers.builder, n_:int):
+def TMEStartSUNRISESUNSETQUERYVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(8, n_, 8)
-def TMECreateSUNRISE_SUNSET_QUERYVector(b_:flatbuffers.builder, v_:[float]):
+def TMECreateSUNRISESUNSETQUERYVector(b_:flatbuffers.builder, v_:[float]):
     b_.StartVector(8, v_.length, 8)
     reverse(v_) e_: b_.PrependFloat64(e_)
     return b_.EndVector(v_.length)

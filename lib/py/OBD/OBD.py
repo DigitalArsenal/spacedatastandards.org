@@ -619,6 +619,12 @@ def OBDStartSENSORSVector(builder, numElems):
 def StartSENSORSVector(builder, numElems):
     return OBDStartSENSORSVector(builder, numElems)
 
+def OBDCreateSENSORSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateSENSORSVector(builder, data):
+    OBDCreateSENSORSVector(builder, data)
+
 def OBDAddACCEPTED_OB_TYPS(builder, ACCEPTED_OB_TYPS):
     builder.PrependUOffsetTRelativeSlot(34, flatbuffers.number_types.UOffsetTFlags.py_type(ACCEPTED_OB_TYPS), 0)
 
@@ -630,6 +636,12 @@ def OBDStartACCEPTED_OB_TYPSVector(builder, numElems):
 
 def StartACCEPTED_OB_TYPSVector(builder, numElems):
     return OBDStartACCEPTED_OB_TYPSVector(builder, numElems)
+
+def OBDCreateACCEPTED_OB_TYPSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateACCEPTED_OB_TYPSVector(builder, data):
+    OBDCreateACCEPTED_OB_TYPSVector(builder, data)
 
 def OBDAddACCEPTED_OB_IDS(builder, ACCEPTED_OB_IDS):
     builder.PrependUOffsetTRelativeSlot(35, flatbuffers.number_types.UOffsetTFlags.py_type(ACCEPTED_OB_IDS), 0)
@@ -643,6 +655,12 @@ def OBDStartACCEPTED_OB_IDSVector(builder, numElems):
 def StartACCEPTED_OB_IDSVector(builder, numElems):
     return OBDStartACCEPTED_OB_IDSVector(builder, numElems)
 
+def OBDCreateACCEPTED_OB_IDSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateACCEPTED_OB_IDSVector(builder, data):
+    OBDCreateACCEPTED_OB_IDSVector(builder, data)
+
 def OBDAddREJECTED_OB_TYPS(builder, REJECTED_OB_TYPS):
     builder.PrependUOffsetTRelativeSlot(36, flatbuffers.number_types.UOffsetTFlags.py_type(REJECTED_OB_TYPS), 0)
 
@@ -655,6 +673,12 @@ def OBDStartREJECTED_OB_TYPSVector(builder, numElems):
 def StartREJECTED_OB_TYPSVector(builder, numElems):
     return OBDStartREJECTED_OB_TYPSVector(builder, numElems)
 
+def OBDCreateREJECTED_OB_TYPSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateREJECTED_OB_TYPSVector(builder, data):
+    OBDCreateREJECTED_OB_TYPSVector(builder, data)
+
 def OBDAddREJECTED_OB_IDS(builder, REJECTED_OB_IDS):
     builder.PrependUOffsetTRelativeSlot(37, flatbuffers.number_types.UOffsetTFlags.py_type(REJECTED_OB_IDS), 0)
 
@@ -666,6 +690,12 @@ def OBDStartREJECTED_OB_IDSVector(builder, numElems):
 
 def StartREJECTED_OB_IDSVector(builder, numElems):
     return OBDStartREJECTED_OB_IDSVector(builder, numElems)
+
+def OBDCreateREJECTED_OB_IDSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateREJECTED_OB_IDSVector(builder, data):
+    OBDCreateREJECTED_OB_IDSVector(builder, data)
 
 def OBDEnd(builder):
     return builder.EndObject()
@@ -682,51 +712,91 @@ except:
 class OBDT(object):
 
     # OBDT
-    def __init__(self):
-        self.ID = None  # type: str
-        self.SAT_NO = 0  # type: int
-        self.ORIG_OBJECT_ID = None  # type: str
-        self.ON_ORBIT = None  # type: str
-        self.START_TIME = None  # type: str
-        self.END_TIME = None  # type: str
-        self.METHOD = 0  # type: int
-        self.METHOD_SOURCE = None  # type: str
-        self.INITIAL_OD = False  # type: bool
-        self.APRIORI_ID_ELSET = None  # type: str
-        self.APRIORI_ELSET = None  # type: str
-        self.APRIORI_ID_STATE_VECTOR = None  # type: str
-        self.APRIORI_STATE_VECTOR = None  # type: str
-        self.LAST_OB_START = None  # type: str
-        self.LAST_OB_END = None  # type: str
-        self.TIME_SPAN = 0.0  # type: float
-        self.FIT_SPAN = 0.0  # type: float
-        self.EFFECTIVE_FROM = None  # type: str
-        self.EFFECTIVE_UNTIL = None  # type: str
-        self.WRMS = 0.0  # type: float
-        self.PREVIOUS_WRMS = 0.0  # type: float
-        self.FIRST_PASS_WRMS = 0.0  # type: float
-        self.BEST_PASS_WRMS = 0.0  # type: float
-        self.ERROR_GROWTH_RATE = 0.0  # type: float
-        self.EDR = 0.0  # type: float
-        self.BALLISTIC_COEFF_EST = False  # type: bool
-        self.BALLISTIC_COEFF_MODEL = None  # type: str
-        self.AGOM_EST = False  # type: bool
-        self.AGOM_MODEL = None  # type: str
-        self.RMS_CONVERGENCE_CRITERIA = 0.0  # type: float
-        self.NUM_ITERATIONS = 0  # type: int
-        self.NUM_ACCEPTED_OBS = 0  # type: int
-        self.NUM_REJECTED_OBS = 0  # type: int
-        self.SENSORS = None  # type: List[odSensorContribution.odSensorContributionT]
-        self.ACCEPTED_OB_TYPS = None  # type: List[str]
-        self.ACCEPTED_OB_IDS = None  # type: List[str]
-        self.REJECTED_OB_TYPS = None  # type: List[str]
-        self.REJECTED_OB_IDS = None  # type: List[str]
+    def __init__(
+        self,
+        ID = None,
+        SAT_NO = 0,
+        ORIG_OBJECT_ID = None,
+        ON_ORBIT = None,
+        START_TIME = None,
+        END_TIME = None,
+        METHOD = 0,
+        METHOD_SOURCE = None,
+        INITIAL_OD = False,
+        APRIORI_ID_ELSET = None,
+        APRIORI_ELSET = None,
+        APRIORI_ID_STATE_VECTOR = None,
+        APRIORI_STATE_VECTOR = None,
+        LAST_OB_START = None,
+        LAST_OB_END = None,
+        TIME_SPAN = 0.0,
+        FIT_SPAN = 0.0,
+        EFFECTIVE_FROM = None,
+        EFFECTIVE_UNTIL = None,
+        WRMS = 0.0,
+        PREVIOUS_WRMS = 0.0,
+        FIRST_PASS_WRMS = 0.0,
+        BEST_PASS_WRMS = 0.0,
+        ERROR_GROWTH_RATE = 0.0,
+        EDR = 0.0,
+        BALLISTIC_COEFF_EST = False,
+        BALLISTIC_COEFF_MODEL = None,
+        AGOM_EST = False,
+        AGOM_MODEL = None,
+        RMS_CONVERGENCE_CRITERIA = 0.0,
+        NUM_ITERATIONS = 0,
+        NUM_ACCEPTED_OBS = 0,
+        NUM_REJECTED_OBS = 0,
+        SENSORS = None,
+        ACCEPTED_OB_TYPS = None,
+        ACCEPTED_OB_IDS = None,
+        REJECTED_OB_TYPS = None,
+        REJECTED_OB_IDS = None,
+    ):
+        self.ID = ID  # type: Optional[str]
+        self.SAT_NO = SAT_NO  # type: int
+        self.ORIG_OBJECT_ID = ORIG_OBJECT_ID  # type: Optional[str]
+        self.ON_ORBIT = ON_ORBIT  # type: Optional[str]
+        self.START_TIME = START_TIME  # type: Optional[str]
+        self.END_TIME = END_TIME  # type: Optional[str]
+        self.METHOD = METHOD  # type: int
+        self.METHOD_SOURCE = METHOD_SOURCE  # type: Optional[str]
+        self.INITIAL_OD = INITIAL_OD  # type: bool
+        self.APRIORI_ID_ELSET = APRIORI_ID_ELSET  # type: Optional[str]
+        self.APRIORI_ELSET = APRIORI_ELSET  # type: Optional[str]
+        self.APRIORI_ID_STATE_VECTOR = APRIORI_ID_STATE_VECTOR  # type: Optional[str]
+        self.APRIORI_STATE_VECTOR = APRIORI_STATE_VECTOR  # type: Optional[str]
+        self.LAST_OB_START = LAST_OB_START  # type: Optional[str]
+        self.LAST_OB_END = LAST_OB_END  # type: Optional[str]
+        self.TIME_SPAN = TIME_SPAN  # type: float
+        self.FIT_SPAN = FIT_SPAN  # type: float
+        self.EFFECTIVE_FROM = EFFECTIVE_FROM  # type: Optional[str]
+        self.EFFECTIVE_UNTIL = EFFECTIVE_UNTIL  # type: Optional[str]
+        self.WRMS = WRMS  # type: float
+        self.PREVIOUS_WRMS = PREVIOUS_WRMS  # type: float
+        self.FIRST_PASS_WRMS = FIRST_PASS_WRMS  # type: float
+        self.BEST_PASS_WRMS = BEST_PASS_WRMS  # type: float
+        self.ERROR_GROWTH_RATE = ERROR_GROWTH_RATE  # type: float
+        self.EDR = EDR  # type: float
+        self.BALLISTIC_COEFF_EST = BALLISTIC_COEFF_EST  # type: bool
+        self.BALLISTIC_COEFF_MODEL = BALLISTIC_COEFF_MODEL  # type: Optional[str]
+        self.AGOM_EST = AGOM_EST  # type: bool
+        self.AGOM_MODEL = AGOM_MODEL  # type: Optional[str]
+        self.RMS_CONVERGENCE_CRITERIA = RMS_CONVERGENCE_CRITERIA  # type: float
+        self.NUM_ITERATIONS = NUM_ITERATIONS  # type: int
+        self.NUM_ACCEPTED_OBS = NUM_ACCEPTED_OBS  # type: int
+        self.NUM_REJECTED_OBS = NUM_REJECTED_OBS  # type: int
+        self.SENSORS = SENSORS  # type: Optional[List[odSensorContribution.odSensorContributionT]]
+        self.ACCEPTED_OB_TYPS = ACCEPTED_OB_TYPS  # type: Optional[List[Optional[str]]]
+        self.ACCEPTED_OB_IDS = ACCEPTED_OB_IDS  # type: Optional[List[Optional[str]]]
+        self.REJECTED_OB_TYPS = REJECTED_OB_TYPS  # type: Optional[List[Optional[str]]]
+        self.REJECTED_OB_IDS = REJECTED_OB_IDS  # type: Optional[List[Optional[str]]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        OBD = OBD()
-        OBD.Init(buf, pos)
-        return cls.InitFromObj(OBD)
+        tmpObd = OBD()
+        tmpObd.Init(buf, pos)
+        return cls.InitFromObj(tmpObd)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -734,9 +804,9 @@ class OBDT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, OBD):
+    def InitFromObj(cls, tmpObd):
         x = OBDT()
-        x._UnPack(OBD)
+        x._UnPack(tmpObd)
         return x
 
     # OBDT

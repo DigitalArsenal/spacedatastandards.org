@@ -2,4 +2,750 @@
 
 # namespace: 
 
-# NOTE IRO.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Infrared Observation
+class IRO(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = IRO()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsIRO(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def IROBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x49\x52\x4F", size_prefixed=size_prefixed)
+
+    # IRO
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Unique identifier
+    # IRO
+    def ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Reference to source entity
+    # IRO
+    def ID_ENTITY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Sensor or observation name
+    # IRO
+    def NAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Description of observation
+    # IRO
+    def DESCRIPTION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Source entity designator
+    # IRO
+    def ENTITY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Observation epoch (ISO 8601)
+    # IRO
+    def EPOCH(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Sensor identifier
+    # IRO
+    def SENSOR_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Target satellite number (if identified)
+    # IRO
+    def SAT_NO(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+        return 0
+
+    # Target object designator
+    # IRO
+    def OBJECT_DESIGNATOR(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # IR spectral band
+    # IRO
+    def BAND(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # Detection type
+    # IRO
+    def DETECTION_TYPE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # Right ascension in degrees
+    # IRO
+    def RA(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Declination in degrees
+    # IRO
+    def DEC(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Right ascension uncertainty in arcseconds
+    # IRO
+    def RA_UNC(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Declination uncertainty in arcseconds
+    # IRO
+    def DEC_UNC(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Azimuth angle in degrees
+    # IRO
+    def AZIMUTH(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Elevation angle in degrees
+    # IRO
+    def ELEVATION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Range in km (if available)
+    # IRO
+    def RANGE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Irradiance in W/m^2
+    # IRO
+    def IRRADIANCE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Irradiance uncertainty in W/m^2
+    # IRO
+    def IRRADIANCE_UNC(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Apparent IR magnitude
+    # IRO
+    def IR_MAG(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Magnitude uncertainty
+    # IRO
+    def MAG_UNC(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Effective temperature in Kelvin
+    # IRO
+    def TEMPERATURE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Integration time in seconds
+    # IRO
+    def INTEGRATION_TIME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Background irradiance in W/m^2/sr
+    # IRO
+    def BACKGROUND(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(52))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Signal-to-noise ratio
+    # IRO
+    def SNR(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(54))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Spectral data wavelengths in micrometers
+    # IRO
+    def WAVELENGTHS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(56))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # IRO
+    def WAVELENGTHSAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(56))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
+
+    # IRO
+    def WAVELENGTHSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(56))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # IRO
+    def WAVELENGTHSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(56))
+        return o == 0
+
+    # Spectral data values in W/m^2/um
+    # IRO
+    def SPECTRAL_VALUES(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # IRO
+    def SPECTRAL_VALUESAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
+
+    # IRO
+    def SPECTRAL_VALUESLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # IRO
+    def SPECTRAL_VALUESIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
+        return o == 0
+
+    # Data quality indicator (0-9, 9=best)
+    # IRO
+    def QUALITY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
+        return 0
+
+    # Additional notes
+    # IRO
+    def NOTES(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(62))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+def IROStart(builder):
+    builder.StartObject(30)
+
+def Start(builder):
+    IROStart(builder)
+
+def IROAddID(builder, ID):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(ID), 0)
+
+def AddID(builder, ID):
+    IROAddID(builder, ID)
+
+def IROAddID_ENTITY(builder, ID_ENTITY):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(ID_ENTITY), 0)
+
+def AddID_ENTITY(builder, ID_ENTITY):
+    IROAddID_ENTITY(builder, ID_ENTITY)
+
+def IROAddNAME(builder, NAME):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(NAME), 0)
+
+def AddNAME(builder, NAME):
+    IROAddNAME(builder, NAME)
+
+def IROAddDESCRIPTION(builder, DESCRIPTION):
+    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(DESCRIPTION), 0)
+
+def AddDESCRIPTION(builder, DESCRIPTION):
+    IROAddDESCRIPTION(builder, DESCRIPTION)
+
+def IROAddENTITY(builder, ENTITY):
+    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(ENTITY), 0)
+
+def AddENTITY(builder, ENTITY):
+    IROAddENTITY(builder, ENTITY)
+
+def IROAddEPOCH(builder, EPOCH):
+    builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(EPOCH), 0)
+
+def AddEPOCH(builder, EPOCH):
+    IROAddEPOCH(builder, EPOCH)
+
+def IROAddSENSOR_ID(builder, SENSOR_ID):
+    builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(SENSOR_ID), 0)
+
+def AddSENSOR_ID(builder, SENSOR_ID):
+    IROAddSENSOR_ID(builder, SENSOR_ID)
+
+def IROAddSAT_NO(builder, SAT_NO):
+    builder.PrependUint32Slot(7, SAT_NO, 0)
+
+def AddSAT_NO(builder, SAT_NO):
+    IROAddSAT_NO(builder, SAT_NO)
+
+def IROAddOBJECT_DESIGNATOR(builder, OBJECT_DESIGNATOR):
+    builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(OBJECT_DESIGNATOR), 0)
+
+def AddOBJECT_DESIGNATOR(builder, OBJECT_DESIGNATOR):
+    IROAddOBJECT_DESIGNATOR(builder, OBJECT_DESIGNATOR)
+
+def IROAddBAND(builder, BAND):
+    builder.PrependInt8Slot(9, BAND, 0)
+
+def AddBAND(builder, BAND):
+    IROAddBAND(builder, BAND)
+
+def IROAddDETECTION_TYPE(builder, DETECTION_TYPE):
+    builder.PrependInt8Slot(10, DETECTION_TYPE, 0)
+
+def AddDETECTION_TYPE(builder, DETECTION_TYPE):
+    IROAddDETECTION_TYPE(builder, DETECTION_TYPE)
+
+def IROAddRA(builder, RA):
+    builder.PrependFloat64Slot(11, RA, 0.0)
+
+def AddRA(builder, RA):
+    IROAddRA(builder, RA)
+
+def IROAddDEC(builder, DEC):
+    builder.PrependFloat64Slot(12, DEC, 0.0)
+
+def AddDEC(builder, DEC):
+    IROAddDEC(builder, DEC)
+
+def IROAddRA_UNC(builder, RA_UNC):
+    builder.PrependFloat64Slot(13, RA_UNC, 0.0)
+
+def AddRA_UNC(builder, RA_UNC):
+    IROAddRA_UNC(builder, RA_UNC)
+
+def IROAddDEC_UNC(builder, DEC_UNC):
+    builder.PrependFloat64Slot(14, DEC_UNC, 0.0)
+
+def AddDEC_UNC(builder, DEC_UNC):
+    IROAddDEC_UNC(builder, DEC_UNC)
+
+def IROAddAZIMUTH(builder, AZIMUTH):
+    builder.PrependFloat64Slot(15, AZIMUTH, 0.0)
+
+def AddAZIMUTH(builder, AZIMUTH):
+    IROAddAZIMUTH(builder, AZIMUTH)
+
+def IROAddELEVATION(builder, ELEVATION):
+    builder.PrependFloat64Slot(16, ELEVATION, 0.0)
+
+def AddELEVATION(builder, ELEVATION):
+    IROAddELEVATION(builder, ELEVATION)
+
+def IROAddRANGE(builder, RANGE):
+    builder.PrependFloat64Slot(17, RANGE, 0.0)
+
+def AddRANGE(builder, RANGE):
+    IROAddRANGE(builder, RANGE)
+
+def IROAddIRRADIANCE(builder, IRRADIANCE):
+    builder.PrependFloat64Slot(18, IRRADIANCE, 0.0)
+
+def AddIRRADIANCE(builder, IRRADIANCE):
+    IROAddIRRADIANCE(builder, IRRADIANCE)
+
+def IROAddIRRADIANCE_UNC(builder, IRRADIANCE_UNC):
+    builder.PrependFloat64Slot(19, IRRADIANCE_UNC, 0.0)
+
+def AddIRRADIANCE_UNC(builder, IRRADIANCE_UNC):
+    IROAddIRRADIANCE_UNC(builder, IRRADIANCE_UNC)
+
+def IROAddIR_MAG(builder, IR_MAG):
+    builder.PrependFloat64Slot(20, IR_MAG, 0.0)
+
+def AddIR_MAG(builder, IR_MAG):
+    IROAddIR_MAG(builder, IR_MAG)
+
+def IROAddMAG_UNC(builder, MAG_UNC):
+    builder.PrependFloat64Slot(21, MAG_UNC, 0.0)
+
+def AddMAG_UNC(builder, MAG_UNC):
+    IROAddMAG_UNC(builder, MAG_UNC)
+
+def IROAddTEMPERATURE(builder, TEMPERATURE):
+    builder.PrependFloat64Slot(22, TEMPERATURE, 0.0)
+
+def AddTEMPERATURE(builder, TEMPERATURE):
+    IROAddTEMPERATURE(builder, TEMPERATURE)
+
+def IROAddINTEGRATION_TIME(builder, INTEGRATION_TIME):
+    builder.PrependFloat64Slot(23, INTEGRATION_TIME, 0.0)
+
+def AddINTEGRATION_TIME(builder, INTEGRATION_TIME):
+    IROAddINTEGRATION_TIME(builder, INTEGRATION_TIME)
+
+def IROAddBACKGROUND(builder, BACKGROUND):
+    builder.PrependFloat64Slot(24, BACKGROUND, 0.0)
+
+def AddBACKGROUND(builder, BACKGROUND):
+    IROAddBACKGROUND(builder, BACKGROUND)
+
+def IROAddSNR(builder, SNR):
+    builder.PrependFloat64Slot(25, SNR, 0.0)
+
+def AddSNR(builder, SNR):
+    IROAddSNR(builder, SNR)
+
+def IROAddWAVELENGTHS(builder, WAVELENGTHS):
+    builder.PrependUOffsetTRelativeSlot(26, flatbuffers.number_types.UOffsetTFlags.py_type(WAVELENGTHS), 0)
+
+def AddWAVELENGTHS(builder, WAVELENGTHS):
+    IROAddWAVELENGTHS(builder, WAVELENGTHS)
+
+def IROStartWAVELENGTHSVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
+def StartWAVELENGTHSVector(builder, numElems):
+    return IROStartWAVELENGTHSVector(builder, numElems)
+
+def IROCreateWAVELENGTHSVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateWAVELENGTHSVector(builder, data):
+    IROCreateWAVELENGTHSVector(builder, data)
+
+def IROAddSPECTRAL_VALUES(builder, SPECTRAL_VALUES):
+    builder.PrependUOffsetTRelativeSlot(27, flatbuffers.number_types.UOffsetTFlags.py_type(SPECTRAL_VALUES), 0)
+
+def AddSPECTRAL_VALUES(builder, SPECTRAL_VALUES):
+    IROAddSPECTRAL_VALUES(builder, SPECTRAL_VALUES)
+
+def IROStartSPECTRAL_VALUESVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
+def StartSPECTRAL_VALUESVector(builder, numElems):
+    return IROStartSPECTRAL_VALUESVector(builder, numElems)
+
+def IROCreateSPECTRAL_VALUESVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateSPECTRAL_VALUESVector(builder, data):
+    IROCreateSPECTRAL_VALUESVector(builder, data)
+
+def IROAddQUALITY(builder, QUALITY):
+    builder.PrependUint8Slot(28, QUALITY, 0)
+
+def AddQUALITY(builder, QUALITY):
+    IROAddQUALITY(builder, QUALITY)
+
+def IROAddNOTES(builder, NOTES):
+    builder.PrependUOffsetTRelativeSlot(29, flatbuffers.number_types.UOffsetTFlags.py_type(NOTES), 0)
+
+def AddNOTES(builder, NOTES):
+    IROAddNOTES(builder, NOTES)
+
+def IROEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return IROEnd(builder)
+
+try:
+    from typing import List
+except:
+    pass
+
+class IROT(object):
+
+    # IROT
+    def __init__(
+        self,
+        ID = None,
+        ID_ENTITY = None,
+        NAME = None,
+        DESCRIPTION = None,
+        ENTITY = None,
+        EPOCH = None,
+        SENSOR_ID = None,
+        SAT_NO = 0,
+        OBJECT_DESIGNATOR = None,
+        BAND = 0,
+        DETECTION_TYPE = 0,
+        RA = 0.0,
+        DEC = 0.0,
+        RA_UNC = 0.0,
+        DEC_UNC = 0.0,
+        AZIMUTH = 0.0,
+        ELEVATION = 0.0,
+        RANGE = 0.0,
+        IRRADIANCE = 0.0,
+        IRRADIANCE_UNC = 0.0,
+        IR_MAG = 0.0,
+        MAG_UNC = 0.0,
+        TEMPERATURE = 0.0,
+        INTEGRATION_TIME = 0.0,
+        BACKGROUND = 0.0,
+        SNR = 0.0,
+        WAVELENGTHS = None,
+        SPECTRAL_VALUES = None,
+        QUALITY = 0,
+        NOTES = None,
+    ):
+        self.ID = ID  # type: Optional[str]
+        self.ID_ENTITY = ID_ENTITY  # type: Optional[str]
+        self.NAME = NAME  # type: Optional[str]
+        self.DESCRIPTION = DESCRIPTION  # type: Optional[str]
+        self.ENTITY = ENTITY  # type: Optional[str]
+        self.EPOCH = EPOCH  # type: Optional[str]
+        self.SENSOR_ID = SENSOR_ID  # type: Optional[str]
+        self.SAT_NO = SAT_NO  # type: int
+        self.OBJECT_DESIGNATOR = OBJECT_DESIGNATOR  # type: Optional[str]
+        self.BAND = BAND  # type: int
+        self.DETECTION_TYPE = DETECTION_TYPE  # type: int
+        self.RA = RA  # type: float
+        self.DEC = DEC  # type: float
+        self.RA_UNC = RA_UNC  # type: float
+        self.DEC_UNC = DEC_UNC  # type: float
+        self.AZIMUTH = AZIMUTH  # type: float
+        self.ELEVATION = ELEVATION  # type: float
+        self.RANGE = RANGE  # type: float
+        self.IRRADIANCE = IRRADIANCE  # type: float
+        self.IRRADIANCE_UNC = IRRADIANCE_UNC  # type: float
+        self.IR_MAG = IR_MAG  # type: float
+        self.MAG_UNC = MAG_UNC  # type: float
+        self.TEMPERATURE = TEMPERATURE  # type: float
+        self.INTEGRATION_TIME = INTEGRATION_TIME  # type: float
+        self.BACKGROUND = BACKGROUND  # type: float
+        self.SNR = SNR  # type: float
+        self.WAVELENGTHS = WAVELENGTHS  # type: Optional[List[float]]
+        self.SPECTRAL_VALUES = SPECTRAL_VALUES  # type: Optional[List[float]]
+        self.QUALITY = QUALITY  # type: int
+        self.NOTES = NOTES  # type: Optional[str]
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpIro = IRO()
+        tmpIro.Init(buf, pos)
+        return cls.InitFromObj(tmpIro)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpIro):
+        x = IROT()
+        x._UnPack(tmpIro)
+        return x
+
+    # IROT
+    def _UnPack(self, IRO):
+        if IRO is None:
+            return
+        self.ID = IRO.ID()
+        self.ID_ENTITY = IRO.ID_ENTITY()
+        self.NAME = IRO.NAME()
+        self.DESCRIPTION = IRO.DESCRIPTION()
+        self.ENTITY = IRO.ENTITY()
+        self.EPOCH = IRO.EPOCH()
+        self.SENSOR_ID = IRO.SENSOR_ID()
+        self.SAT_NO = IRO.SAT_NO()
+        self.OBJECT_DESIGNATOR = IRO.OBJECT_DESIGNATOR()
+        self.BAND = IRO.BAND()
+        self.DETECTION_TYPE = IRO.DETECTION_TYPE()
+        self.RA = IRO.RA()
+        self.DEC = IRO.DEC()
+        self.RA_UNC = IRO.RA_UNC()
+        self.DEC_UNC = IRO.DEC_UNC()
+        self.AZIMUTH = IRO.AZIMUTH()
+        self.ELEVATION = IRO.ELEVATION()
+        self.RANGE = IRO.RANGE()
+        self.IRRADIANCE = IRO.IRRADIANCE()
+        self.IRRADIANCE_UNC = IRO.IRRADIANCE_UNC()
+        self.IR_MAG = IRO.IR_MAG()
+        self.MAG_UNC = IRO.MAG_UNC()
+        self.TEMPERATURE = IRO.TEMPERATURE()
+        self.INTEGRATION_TIME = IRO.INTEGRATION_TIME()
+        self.BACKGROUND = IRO.BACKGROUND()
+        self.SNR = IRO.SNR()
+        if not IRO.WAVELENGTHSIsNone():
+            if np is None:
+                self.WAVELENGTHS = []
+                for i in range(IRO.WAVELENGTHSLength()):
+                    self.WAVELENGTHS.append(IRO.WAVELENGTHS(i))
+            else:
+                self.WAVELENGTHS = IRO.WAVELENGTHSAsNumpy()
+        if not IRO.SPECTRAL_VALUESIsNone():
+            if np is None:
+                self.SPECTRAL_VALUES = []
+                for i in range(IRO.SPECTRAL_VALUESLength()):
+                    self.SPECTRAL_VALUES.append(IRO.SPECTRAL_VALUES(i))
+            else:
+                self.SPECTRAL_VALUES = IRO.SPECTRAL_VALUESAsNumpy()
+        self.QUALITY = IRO.QUALITY()
+        self.NOTES = IRO.NOTES()
+
+    # IROT
+    def Pack(self, builder):
+        if self.ID is not None:
+            ID = builder.CreateString(self.ID)
+        if self.ID_ENTITY is not None:
+            ID_ENTITY = builder.CreateString(self.ID_ENTITY)
+        if self.NAME is not None:
+            NAME = builder.CreateString(self.NAME)
+        if self.DESCRIPTION is not None:
+            DESCRIPTION = builder.CreateString(self.DESCRIPTION)
+        if self.ENTITY is not None:
+            ENTITY = builder.CreateString(self.ENTITY)
+        if self.EPOCH is not None:
+            EPOCH = builder.CreateString(self.EPOCH)
+        if self.SENSOR_ID is not None:
+            SENSOR_ID = builder.CreateString(self.SENSOR_ID)
+        if self.OBJECT_DESIGNATOR is not None:
+            OBJECT_DESIGNATOR = builder.CreateString(self.OBJECT_DESIGNATOR)
+        if self.WAVELENGTHS is not None:
+            if np is not None and type(self.WAVELENGTHS) is np.ndarray:
+                WAVELENGTHS = builder.CreateNumpyVector(self.WAVELENGTHS)
+            else:
+                IROStartWAVELENGTHSVector(builder, len(self.WAVELENGTHS))
+                for i in reversed(range(len(self.WAVELENGTHS))):
+                    builder.PrependFloat64(self.WAVELENGTHS[i])
+                WAVELENGTHS = builder.EndVector()
+        if self.SPECTRAL_VALUES is not None:
+            if np is not None and type(self.SPECTRAL_VALUES) is np.ndarray:
+                SPECTRAL_VALUES = builder.CreateNumpyVector(self.SPECTRAL_VALUES)
+            else:
+                IROStartSPECTRAL_VALUESVector(builder, len(self.SPECTRAL_VALUES))
+                for i in reversed(range(len(self.SPECTRAL_VALUES))):
+                    builder.PrependFloat64(self.SPECTRAL_VALUES[i])
+                SPECTRAL_VALUES = builder.EndVector()
+        if self.NOTES is not None:
+            NOTES = builder.CreateString(self.NOTES)
+        IROStart(builder)
+        if self.ID is not None:
+            IROAddID(builder, ID)
+        if self.ID_ENTITY is not None:
+            IROAddID_ENTITY(builder, ID_ENTITY)
+        if self.NAME is not None:
+            IROAddNAME(builder, NAME)
+        if self.DESCRIPTION is not None:
+            IROAddDESCRIPTION(builder, DESCRIPTION)
+        if self.ENTITY is not None:
+            IROAddENTITY(builder, ENTITY)
+        if self.EPOCH is not None:
+            IROAddEPOCH(builder, EPOCH)
+        if self.SENSOR_ID is not None:
+            IROAddSENSOR_ID(builder, SENSOR_ID)
+        IROAddSAT_NO(builder, self.SAT_NO)
+        if self.OBJECT_DESIGNATOR is not None:
+            IROAddOBJECT_DESIGNATOR(builder, OBJECT_DESIGNATOR)
+        IROAddBAND(builder, self.BAND)
+        IROAddDETECTION_TYPE(builder, self.DETECTION_TYPE)
+        IROAddRA(builder, self.RA)
+        IROAddDEC(builder, self.DEC)
+        IROAddRA_UNC(builder, self.RA_UNC)
+        IROAddDEC_UNC(builder, self.DEC_UNC)
+        IROAddAZIMUTH(builder, self.AZIMUTH)
+        IROAddELEVATION(builder, self.ELEVATION)
+        IROAddRANGE(builder, self.RANGE)
+        IROAddIRRADIANCE(builder, self.IRRADIANCE)
+        IROAddIRRADIANCE_UNC(builder, self.IRRADIANCE_UNC)
+        IROAddIR_MAG(builder, self.IR_MAG)
+        IROAddMAG_UNC(builder, self.MAG_UNC)
+        IROAddTEMPERATURE(builder, self.TEMPERATURE)
+        IROAddINTEGRATION_TIME(builder, self.INTEGRATION_TIME)
+        IROAddBACKGROUND(builder, self.BACKGROUND)
+        IROAddSNR(builder, self.SNR)
+        if self.WAVELENGTHS is not None:
+            IROAddWAVELENGTHS(builder, WAVELENGTHS)
+        if self.SPECTRAL_VALUES is not None:
+            IROAddSPECTRAL_VALUES(builder, SPECTRAL_VALUES)
+        IROAddQUALITY(builder, self.QUALITY)
+        if self.NOTES is not None:
+            IROAddNOTES(builder, NOTES)
+        IRO = IROEnd(builder)
+        return IRO

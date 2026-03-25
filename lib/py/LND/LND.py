@@ -376,6 +376,12 @@ def LNDStartTAGSVector(builder, numElems):
 def StartTAGSVector(builder, numElems):
     return LNDStartTAGSVector(builder, numElems)
 
+def LNDCreateTAGSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateTAGSVector(builder, data):
+    LNDCreateTAGSVector(builder, data)
+
 def LNDEnd(builder):
     return builder.EndObject()
 
@@ -390,36 +396,61 @@ except:
 class LNDT(object):
 
     # LNDT
-    def __init__(self):
-        self.ID = None  # type: str
-        self.EVENT_ID = None  # type: str
-        self.DETECTION_TYPE = 0  # type: int
-        self.MESSAGE_TYPE = None  # type: str
-        self.LAUNCH_TIME = None  # type: str
-        self.LAUNCH_LATITUDE = 0.0  # type: float
-        self.LAUNCH_LONGITUDE = 0.0  # type: float
-        self.LAUNCH_AZIMUTH = 0.0  # type: float
-        self.RAAN = 0.0  # type: float
-        self.INCLINATION = 0.0  # type: float
-        self.OBSERVATION_TIME = None  # type: str
-        self.OBSERVATION_LATITUDE = 0.0  # type: float
-        self.OBSERVATION_LONGITUDE = 0.0  # type: float
-        self.OBSERVATION_ALTITUDE = 0.0  # type: float
-        self.STEREO_FLAG = False  # type: bool
-        self.HIGH_ZENITH_AZIMUTH = False  # type: bool
-        self.SEQUENCE_NUMBER = 0  # type: int
-        self.LAUNCH_SITE_ID = None  # type: str
-        self.LAUNCH_VEHICLE = None  # type: str
-        self.TRAJECTORY_TYPE = None  # type: str
-        self.CONFIDENCE = 0.0  # type: float
-        self.DESCRIPTOR = None  # type: str
-        self.TAGS = None  # type: List[str]
+    def __init__(
+        self,
+        ID = None,
+        EVENT_ID = None,
+        DETECTION_TYPE = 0,
+        MESSAGE_TYPE = None,
+        LAUNCH_TIME = None,
+        LAUNCH_LATITUDE = 0.0,
+        LAUNCH_LONGITUDE = 0.0,
+        LAUNCH_AZIMUTH = 0.0,
+        RAAN = 0.0,
+        INCLINATION = 0.0,
+        OBSERVATION_TIME = None,
+        OBSERVATION_LATITUDE = 0.0,
+        OBSERVATION_LONGITUDE = 0.0,
+        OBSERVATION_ALTITUDE = 0.0,
+        STEREO_FLAG = False,
+        HIGH_ZENITH_AZIMUTH = False,
+        SEQUENCE_NUMBER = 0,
+        LAUNCH_SITE_ID = None,
+        LAUNCH_VEHICLE = None,
+        TRAJECTORY_TYPE = None,
+        CONFIDENCE = 0.0,
+        DESCRIPTOR = None,
+        TAGS = None,
+    ):
+        self.ID = ID  # type: Optional[str]
+        self.EVENT_ID = EVENT_ID  # type: Optional[str]
+        self.DETECTION_TYPE = DETECTION_TYPE  # type: int
+        self.MESSAGE_TYPE = MESSAGE_TYPE  # type: Optional[str]
+        self.LAUNCH_TIME = LAUNCH_TIME  # type: Optional[str]
+        self.LAUNCH_LATITUDE = LAUNCH_LATITUDE  # type: float
+        self.LAUNCH_LONGITUDE = LAUNCH_LONGITUDE  # type: float
+        self.LAUNCH_AZIMUTH = LAUNCH_AZIMUTH  # type: float
+        self.RAAN = RAAN  # type: float
+        self.INCLINATION = INCLINATION  # type: float
+        self.OBSERVATION_TIME = OBSERVATION_TIME  # type: Optional[str]
+        self.OBSERVATION_LATITUDE = OBSERVATION_LATITUDE  # type: float
+        self.OBSERVATION_LONGITUDE = OBSERVATION_LONGITUDE  # type: float
+        self.OBSERVATION_ALTITUDE = OBSERVATION_ALTITUDE  # type: float
+        self.STEREO_FLAG = STEREO_FLAG  # type: bool
+        self.HIGH_ZENITH_AZIMUTH = HIGH_ZENITH_AZIMUTH  # type: bool
+        self.SEQUENCE_NUMBER = SEQUENCE_NUMBER  # type: int
+        self.LAUNCH_SITE_ID = LAUNCH_SITE_ID  # type: Optional[str]
+        self.LAUNCH_VEHICLE = LAUNCH_VEHICLE  # type: Optional[str]
+        self.TRAJECTORY_TYPE = TRAJECTORY_TYPE  # type: Optional[str]
+        self.CONFIDENCE = CONFIDENCE  # type: float
+        self.DESCRIPTOR = DESCRIPTOR  # type: Optional[str]
+        self.TAGS = TAGS  # type: Optional[List[Optional[str]]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        LND = LND()
-        LND.Init(buf, pos)
-        return cls.InitFromObj(LND)
+        tmpLnd = LND()
+        tmpLnd.Init(buf, pos)
+        return cls.InitFromObj(tmpLnd)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -427,9 +458,9 @@ class LNDT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, LND):
+    def InitFromObj(cls, tmpLnd):
         x = LNDT()
-        x._UnPack(LND)
+        x._UnPack(tmpLnd)
         return x
 
     # LNDT

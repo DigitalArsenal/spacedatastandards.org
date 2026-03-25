@@ -105,7 +105,7 @@ class PPEOrbitalElementRecord extends Table
     public function getANOMALY_TYPE()
     {
         $o = $this->__offset(14);
-        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \anomalyType::TRUE_ANOMALY;
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \ppeAnomalyType::TRUE_ANOMALY;
     }
 
     /// Coefficients for SMA or radius of periapsis (km).

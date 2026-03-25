@@ -197,6 +197,12 @@ def TPNStartCHANNELSVector(builder, numElems):
 def StartCHANNELSVector(builder, numElems):
     return TPNStartCHANNELSVector(builder, numElems)
 
+def TPNCreateCHANNELSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateCHANNELSVector(builder, data):
+    TPNCreateCHANNELSVector(builder, data)
+
 def TPNEnd(builder):
     return builder.EndObject()
 
@@ -211,24 +217,37 @@ except:
 class TPNT(object):
 
     # TPNT
-    def __init__(self):
-        self.ID = None  # type: str
-        self.NAME = None  # type: str
-        self.NID = None  # type: str
-        self.TID = None  # type: str
-        self.TTF = 0.0  # type: float
-        self.SYMBOL_RATE = 0.0  # type: float
-        self.FEC = 0  # type: int
-        self.MODULATION = None  # type: str
-        self.FORMAT = None  # type: str
-        self.SYSTEM = None  # type: str
-        self.CHANNELS = None  # type: List[str]
+    def __init__(
+        self,
+        ID = None,
+        NAME = None,
+        NID = None,
+        TID = None,
+        TTF = 0.0,
+        SYMBOL_RATE = 0.0,
+        FEC = 0,
+        MODULATION = None,
+        FORMAT = None,
+        SYSTEM = None,
+        CHANNELS = None,
+    ):
+        self.ID = ID  # type: Optional[str]
+        self.NAME = NAME  # type: Optional[str]
+        self.NID = NID  # type: Optional[str]
+        self.TID = TID  # type: Optional[str]
+        self.TTF = TTF  # type: float
+        self.SYMBOL_RATE = SYMBOL_RATE  # type: float
+        self.FEC = FEC  # type: int
+        self.MODULATION = MODULATION  # type: Optional[str]
+        self.FORMAT = FORMAT  # type: Optional[str]
+        self.SYSTEM = SYSTEM  # type: Optional[str]
+        self.CHANNELS = CHANNELS  # type: Optional[List[Optional[str]]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        TPN = TPN()
-        TPN.Init(buf, pos)
-        return cls.InitFromObj(TPN)
+        tmpTpn = TPN()
+        tmpTpn.Init(buf, pos)
+        return cls.InitFromObj(tmpTpn)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -236,9 +255,9 @@ class TPNT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, TPN):
+    def InitFromObj(cls, tmpTpn):
         x = TPNT()
-        x._UnPack(TPN)
+        x._UnPack(tmpTpn)
         return x
 
     # TPNT

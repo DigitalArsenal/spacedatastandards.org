@@ -32,8 +32,8 @@ class KMLPolygon : Table() {
     /**
      * Outer boundary
      */
-    val OUTER_BOUNDARY : KMLLinearRing? get() = OUTER_BOUNDARY(KMLLinearRing())
-    fun OUTER_BOUNDARY(obj: KMLLinearRing) : KMLLinearRing? {
+    val outerBoundary : KMLLinearRing? get() = outerBoundary(KMLLinearRing())
+    fun outerBoundary(obj: KMLLinearRing) : KMLLinearRing? {
         val o = __offset(4)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -44,8 +44,8 @@ class KMLPolygon : Table() {
     /**
      * Inner boundaries (holes)
      */
-    fun INNER_BOUNDARIES(j: Int) : KMLLinearRing? = INNER_BOUNDARIES(KMLLinearRing(), j)
-    fun INNER_BOUNDARIES(obj: KMLLinearRing, j: Int) : KMLLinearRing? {
+    fun innerBoundaries(j: Int) : KMLLinearRing? = innerBoundaries(KMLLinearRing(), j)
+    fun innerBoundaries(obj: KMLLinearRing, j: Int) : KMLLinearRing? {
         val o = __offset(6)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -53,14 +53,14 @@ class KMLPolygon : Table() {
             null
         }
     }
-    val INNER_BOUNDARIESLength : Int
+    val innerBoundariesLength : Int
         get() {
             val o = __offset(6); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Altitude mode
      */
-    val ALTITUDE_MODE : Byte
+    val altitudeMode : Byte
         get() {
             val o = __offset(8)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -68,7 +68,7 @@ class KMLPolygon : Table() {
     /**
      * Whether to extrude to ground
      */
-    val EXTRUDE : Boolean
+    val extrude : Boolean
         get() {
             val o = __offset(10)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -76,30 +76,30 @@ class KMLPolygon : Table() {
     /**
      * Whether to tessellate
      */
-    val TESSELLATE : Boolean
+    val tessellate : Boolean
         get() {
             val o = __offset(12)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsKMLPolygon(_bb: ByteBuffer): KMLPolygon = getRootAsKMLPolygon(_bb, KMLPolygon())
         fun getRootAsKMLPolygon(_bb: ByteBuffer, obj: KMLPolygon): KMLPolygon {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createKMLPolygon(builder: FlatBufferBuilder, OUTER_BOUNDARYOffset: Int, INNER_BOUNDARIESOffset: Int, ALTITUDE_MODE: Byte, EXTRUDE: Boolean, TESSELLATE: Boolean) : Int {
+        fun createKMLPolygon(builder: FlatBufferBuilder, outerBoundaryOffset: Int, innerBoundariesOffset: Int, altitudeMode: Byte, extrude: Boolean, tessellate: Boolean) : Int {
             builder.startTable(5)
-            addINNER_BOUNDARIES(builder, INNER_BOUNDARIESOffset)
-            addOUTER_BOUNDARY(builder, OUTER_BOUNDARYOffset)
-            addTESSELLATE(builder, TESSELLATE)
-            addEXTRUDE(builder, EXTRUDE)
-            addALTITUDE_MODE(builder, ALTITUDE_MODE)
+            addINNERBOUNDARIES(builder, innerBoundariesOffset)
+            addOUTERBOUNDARY(builder, outerBoundaryOffset)
+            addTESSELLATE(builder, tessellate)
+            addEXTRUDE(builder, extrude)
+            addALTITUDEMODE(builder, altitudeMode)
             return endKMLPolygon(builder)
         }
         fun startKMLPolygon(builder: FlatBufferBuilder) = builder.startTable(5)
-        fun addOUTER_BOUNDARY(builder: FlatBufferBuilder, OUTER_BOUNDARY: Int) = builder.addOffset(0, OUTER_BOUNDARY, 0)
-        fun addINNER_BOUNDARIES(builder: FlatBufferBuilder, INNER_BOUNDARIES: Int) = builder.addOffset(1, INNER_BOUNDARIES, 0)
+        fun addOUTERBOUNDARY(builder: FlatBufferBuilder, outerBoundary: Int) = builder.addOffset(0, outerBoundary, 0)
+        fun addINNERBOUNDARIES(builder: FlatBufferBuilder, innerBoundaries: Int) = builder.addOffset(1, innerBoundaries, 0)
         fun createInnerBoundariesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -108,9 +108,9 @@ class KMLPolygon : Table() {
             return builder.endVector()
         }
         fun startInnerBoundariesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addALTITUDE_MODE(builder: FlatBufferBuilder, ALTITUDE_MODE: Byte) = builder.addByte(2, ALTITUDE_MODE, 0)
-        fun addEXTRUDE(builder: FlatBufferBuilder, EXTRUDE: Boolean) = builder.addBoolean(3, EXTRUDE, false)
-        fun addTESSELLATE(builder: FlatBufferBuilder, TESSELLATE: Boolean) = builder.addBoolean(4, TESSELLATE, false)
+        fun addALTITUDEMODE(builder: FlatBufferBuilder, altitudeMode: Byte) = builder.addByte(2, altitudeMode, 0)
+        fun addEXTRUDE(builder: FlatBufferBuilder, extrude: Boolean) = builder.addBoolean(3, extrude, false)
+        fun addTESSELLATE(builder: FlatBufferBuilder, tessellate: Boolean) = builder.addBoolean(4, tessellate, false)
         fun endKMLPolygon(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

@@ -2,4 +2,6 @@
 
 # namespace: 
 
-# NOTE transmissionMode.py does not declare any structs or enums
+class transmissionMode(object):
+    ACKNOWLEDGED = 0
+    UNACKNOWLEDGED = 1

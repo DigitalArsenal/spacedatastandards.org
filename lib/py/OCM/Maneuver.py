@@ -249,6 +249,12 @@ def ManeuverStartMAN_UNITSVector(builder, numElems):
 def StartMAN_UNITSVector(builder, numElems):
     return ManeuverStartMAN_UNITSVector(builder, numElems)
 
+def ManeuverCreateMAN_UNITSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateMAN_UNITSVector(builder, data):
+    ManeuverCreateMAN_UNITSVector(builder, data)
+
 def ManeuverAddDATA(builder, DATA):
     builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(DATA), 0)
 
@@ -261,6 +267,12 @@ def ManeuverStartDATAVector(builder, numElems):
 def StartDATAVector(builder, numElems):
     return ManeuverStartDATAVector(builder, numElems)
 
+def ManeuverCreateDATAVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateDATAVector(builder, data):
+    ManeuverCreateDATAVector(builder, data)
+
 def ManeuverAddMAN_COMMENT(builder, MAN_COMMENT):
     builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(MAN_COMMENT), 0)
 
@@ -272,6 +284,12 @@ def ManeuverStartMAN_COMMENTVector(builder, numElems):
 
 def StartMAN_COMMENTVector(builder, numElems):
     return ManeuverStartMAN_COMMENTVector(builder, numElems)
+
+def ManeuverCreateMAN_COMMENTVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateMAN_COMMENTVector(builder, data):
+    ManeuverCreateMAN_COMMENTVector(builder, data)
 
 def ManeuverEnd(builder):
     return builder.EndObject()
@@ -287,26 +305,41 @@ except:
 class ManeuverT(object):
 
     # ManeuverT
-    def __init__(self):
-        self.MAN_ID = None  # type: str
-        self.MAN_BASIS = None  # type: str
-        self.MAN_DEVICE_ID = None  # type: str
-        self.MAN_PREV_ID = None  # type: str
-        self.MAN_PURPOSE = None  # type: str
-        self.MAN_REF_FRAME = None  # type: str
-        self.MAN_FRAME_EPOCH = None  # type: str
-        self.MAN_TYPE = None  # type: str
-        self.MAN_EPOCH_START = None  # type: str
-        self.MAN_DURATION = 0.0  # type: float
-        self.MAN_UNITS = None  # type: List[str]
-        self.DATA = None  # type: List[str]
-        self.MAN_COMMENT = None  # type: List[str]
+    def __init__(
+        self,
+        MAN_ID = None,
+        MAN_BASIS = None,
+        MAN_DEVICE_ID = None,
+        MAN_PREV_ID = None,
+        MAN_PURPOSE = None,
+        MAN_REF_FRAME = None,
+        MAN_FRAME_EPOCH = None,
+        MAN_TYPE = None,
+        MAN_EPOCH_START = None,
+        MAN_DURATION = 0.0,
+        MAN_UNITS = None,
+        DATA = None,
+        MAN_COMMENT = None,
+    ):
+        self.MAN_ID = MAN_ID  # type: Optional[str]
+        self.MAN_BASIS = MAN_BASIS  # type: Optional[str]
+        self.MAN_DEVICE_ID = MAN_DEVICE_ID  # type: Optional[str]
+        self.MAN_PREV_ID = MAN_PREV_ID  # type: Optional[str]
+        self.MAN_PURPOSE = MAN_PURPOSE  # type: Optional[str]
+        self.MAN_REF_FRAME = MAN_REF_FRAME  # type: Optional[str]
+        self.MAN_FRAME_EPOCH = MAN_FRAME_EPOCH  # type: Optional[str]
+        self.MAN_TYPE = MAN_TYPE  # type: Optional[str]
+        self.MAN_EPOCH_START = MAN_EPOCH_START  # type: Optional[str]
+        self.MAN_DURATION = MAN_DURATION  # type: float
+        self.MAN_UNITS = MAN_UNITS  # type: Optional[List[Optional[str]]]
+        self.DATA = DATA  # type: Optional[List[Optional[str]]]
+        self.MAN_COMMENT = MAN_COMMENT  # type: Optional[List[Optional[str]]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        maneuver = Maneuver()
-        maneuver.Init(buf, pos)
-        return cls.InitFromObj(maneuver)
+        tmpManeuver = Maneuver()
+        tmpManeuver.Init(buf, pos)
+        return cls.InitFromObj(tmpManeuver)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -314,37 +347,37 @@ class ManeuverT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, maneuver):
+    def InitFromObj(cls, tmpManeuver):
         x = ManeuverT()
-        x._UnPack(maneuver)
+        x._UnPack(tmpManeuver)
         return x
 
     # ManeuverT
-    def _UnPack(self, maneuver):
-        if maneuver is None:
+    def _UnPack(self, Maneuver):
+        if Maneuver is None:
             return
-        self.MAN_ID = maneuver.MAN_ID()
-        self.MAN_BASIS = maneuver.MAN_BASIS()
-        self.MAN_DEVICE_ID = maneuver.MAN_DEVICE_ID()
-        self.MAN_PREV_ID = maneuver.MAN_PREV_ID()
-        self.MAN_PURPOSE = maneuver.MAN_PURPOSE()
-        self.MAN_REF_FRAME = maneuver.MAN_REF_FRAME()
-        self.MAN_FRAME_EPOCH = maneuver.MAN_FRAME_EPOCH()
-        self.MAN_TYPE = maneuver.MAN_TYPE()
-        self.MAN_EPOCH_START = maneuver.MAN_EPOCH_START()
-        self.MAN_DURATION = maneuver.MAN_DURATION()
-        if not maneuver.MAN_UNITSIsNone():
+        self.MAN_ID = Maneuver.MAN_ID()
+        self.MAN_BASIS = Maneuver.MAN_BASIS()
+        self.MAN_DEVICE_ID = Maneuver.MAN_DEVICE_ID()
+        self.MAN_PREV_ID = Maneuver.MAN_PREV_ID()
+        self.MAN_PURPOSE = Maneuver.MAN_PURPOSE()
+        self.MAN_REF_FRAME = Maneuver.MAN_REF_FRAME()
+        self.MAN_FRAME_EPOCH = Maneuver.MAN_FRAME_EPOCH()
+        self.MAN_TYPE = Maneuver.MAN_TYPE()
+        self.MAN_EPOCH_START = Maneuver.MAN_EPOCH_START()
+        self.MAN_DURATION = Maneuver.MAN_DURATION()
+        if not Maneuver.MAN_UNITSIsNone():
             self.MAN_UNITS = []
-            for i in range(maneuver.MAN_UNITSLength()):
-                self.MAN_UNITS.append(maneuver.MAN_UNITS(i))
-        if not maneuver.DATAIsNone():
+            for i in range(Maneuver.MAN_UNITSLength()):
+                self.MAN_UNITS.append(Maneuver.MAN_UNITS(i))
+        if not Maneuver.DATAIsNone():
             self.DATA = []
-            for i in range(maneuver.DATALength()):
-                self.DATA.append(maneuver.DATA(i))
-        if not maneuver.MAN_COMMENTIsNone():
+            for i in range(Maneuver.DATALength()):
+                self.DATA.append(Maneuver.DATA(i))
+        if not Maneuver.MAN_COMMENTIsNone():
             self.MAN_COMMENT = []
-            for i in range(maneuver.MAN_COMMENTLength()):
-                self.MAN_COMMENT.append(maneuver.MAN_COMMENT(i))
+            for i in range(Maneuver.MAN_COMMENTLength()):
+                self.MAN_COMMENT.append(Maneuver.MAN_COMMENT(i))
 
     # ManeuverT
     def Pack(self, builder):
@@ -416,5 +449,5 @@ class ManeuverT(object):
             ManeuverAddDATA(builder, DATA)
         if self.MAN_COMMENT is not None:
             ManeuverAddMAN_COMMENT(builder, MAN_COMMENT)
-        maneuver = ManeuverEnd(builder)
-        return maneuver
+        Maneuver = ManeuverEnd(builder)
+        return Maneuver

@@ -2,4 +2,119 @@
 
 # namespace: 
 
-# NOTE KMLResourceMapAlias.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Resource map alias for Model
+class KMLResourceMapAlias(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = KMLResourceMapAlias()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsKMLResourceMapAlias(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def KMLResourceMapAliasBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x4B\x4D\x4C", size_prefixed=size_prefixed)
+
+    # KMLResourceMapAlias
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Target href
+    # KMLResourceMapAlias
+    def TARGET_HREF(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Source href
+    # KMLResourceMapAlias
+    def SOURCE_HREF(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+def KMLResourceMapAliasStart(builder):
+    builder.StartObject(2)
+
+def Start(builder):
+    KMLResourceMapAliasStart(builder)
+
+def KMLResourceMapAliasAddTARGET_HREF(builder, TARGET_HREF):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(TARGET_HREF), 0)
+
+def AddTARGET_HREF(builder, TARGET_HREF):
+    KMLResourceMapAliasAddTARGET_HREF(builder, TARGET_HREF)
+
+def KMLResourceMapAliasAddSOURCE_HREF(builder, SOURCE_HREF):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(SOURCE_HREF), 0)
+
+def AddSOURCE_HREF(builder, SOURCE_HREF):
+    KMLResourceMapAliasAddSOURCE_HREF(builder, SOURCE_HREF)
+
+def KMLResourceMapAliasEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return KMLResourceMapAliasEnd(builder)
+
+
+class KMLResourceMapAliasT(object):
+
+    # KMLResourceMapAliasT
+    def __init__(
+        self,
+        TARGET_HREF = None,
+        SOURCE_HREF = None,
+    ):
+        self.TARGET_HREF = TARGET_HREF  # type: Optional[str]
+        self.SOURCE_HREF = SOURCE_HREF  # type: Optional[str]
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpKmlresourceMapAlias = KMLResourceMapAlias()
+        tmpKmlresourceMapAlias.Init(buf, pos)
+        return cls.InitFromObj(tmpKmlresourceMapAlias)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpKmlresourceMapAlias):
+        x = KMLResourceMapAliasT()
+        x._UnPack(tmpKmlresourceMapAlias)
+        return x
+
+    # KMLResourceMapAliasT
+    def _UnPack(self, KMLResourceMapAlias):
+        if KMLResourceMapAlias is None:
+            return
+        self.TARGET_HREF = KMLResourceMapAlias.TARGET_HREF()
+        self.SOURCE_HREF = KMLResourceMapAlias.SOURCE_HREF()
+
+    # KMLResourceMapAliasT
+    def Pack(self, builder):
+        if self.TARGET_HREF is not None:
+            TARGET_HREF = builder.CreateString(self.TARGET_HREF)
+        if self.SOURCE_HREF is not None:
+            SOURCE_HREF = builder.CreateString(self.SOURCE_HREF)
+        KMLResourceMapAliasStart(builder)
+        if self.TARGET_HREF is not None:
+            KMLResourceMapAliasAddTARGET_HREF(builder, TARGET_HREF)
+        if self.SOURCE_HREF is not None:
+            KMLResourceMapAliasAddSOURCE_HREF(builder, SOURCE_HREF)
+        KMLResourceMapAlias = KMLResourceMapAliasEnd(builder)
+        return KMLResourceMapAlias

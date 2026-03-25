@@ -12,7 +12,6 @@ import com.google.flatbuffers.LongVector;
 import com.google.flatbuffers.ShortVector;
 import com.google.flatbuffers.StringVector;
 import com.google.flatbuffers.Struct;
-import com.google.flatbuffers.Table;
 import com.google.flatbuffers.UnionVector;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -21,8 +20,8 @@ import java.nio.ByteOrder;
  * Earth Orientation Parameters
  */
 @SuppressWarnings("unused")
-public final class EOP extends Table {
-  public static void ValidateVersion() { Constants.FLATBUFFERS_24_3_25(); }
+public final class EOP extends com.google.flatbuffers.Table {
+  public static void ValidateVersion() { Constants.FLATBUFFERS_25_12_19(); }
   public static EOP getRootAsEOP(ByteBuffer _bb) { return getRootAsEOP(_bb, new EOP()); }
   public static EOP getRootAsEOP(ByteBuffer _bb, EOP obj) { _bb.order(ByteOrder.LITTLE_ENDIAN); return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb)); }
   public static boolean EOPBufferHasIdentifier(ByteBuffer _bb) { return __has_identifier(_bb, "$EOP"); }

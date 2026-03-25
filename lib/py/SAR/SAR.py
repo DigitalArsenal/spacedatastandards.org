@@ -880,6 +880,12 @@ def SARStartTAGSVector(builder, numElems):
 def StartTAGSVector(builder, numElems):
     return SARStartTAGSVector(builder, numElems)
 
+def SARCreateTAGSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateTAGSVector(builder, data):
+    SARCreateTAGSVector(builder, data)
+
 def SARAddSRC_TYPS(builder, SRC_TYPS):
     builder.PrependUOffsetTRelativeSlot(56, flatbuffers.number_types.UOffsetTFlags.py_type(SRC_TYPS), 0)
 
@@ -892,6 +898,12 @@ def SARStartSRC_TYPSVector(builder, numElems):
 def StartSRC_TYPSVector(builder, numElems):
     return SARStartSRC_TYPSVector(builder, numElems)
 
+def SARCreateSRC_TYPSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateSRC_TYPSVector(builder, data):
+    SARCreateSRC_TYPSVector(builder, data)
+
 def SARAddSRC_IDS(builder, SRC_IDS):
     builder.PrependUOffsetTRelativeSlot(57, flatbuffers.number_types.UOffsetTFlags.py_type(SRC_IDS), 0)
 
@@ -903,6 +915,12 @@ def SARStartSRC_IDSVector(builder, numElems):
 
 def StartSRC_IDSVector(builder, numElems):
     return SARStartSRC_IDSVector(builder, numElems)
+
+def SARCreateSRC_IDSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateSRC_IDSVector(builder, data):
+    SARCreateSRC_IDSVector(builder, data)
 
 def SAREnd(builder):
     return builder.EndObject()
@@ -918,71 +936,131 @@ except:
 class SART(object):
 
     # SART
-    def __init__(self):
-        self.ID = None  # type: str
-        self.SAT_NO = 0  # type: int
-        self.ORIG_OBJECT_ID = None  # type: str
-        self.ON_ORBIT = None  # type: str
-        self.ID_SENSOR = None  # type: str
-        self.ORIG_SENSOR_ID = None  # type: str
-        self.EXTERNAL_ID = None  # type: str
-        self.COLLECTION_ID = None  # type: str
-        self.DETECTION_ID = None  # type: str
-        self.COLLECTION_START = None  # type: str
-        self.COLLECTION_END = None  # type: str
-        self.CENTER_TIME = None  # type: str
-        self.DETECTION_START = None  # type: str
-        self.DETECTION_END = None  # type: str
-        self.DWELL_TIME = 0.0  # type: float
-        self.ORBIT_STATE = None  # type: str
-        self.SAR_MODE = 0  # type: int
-        self.OPERATING_BAND = None  # type: str
-        self.OPERATING_FREQ = 0.0  # type: float
-        self.SNR = 0.0  # type: float
-        self.TX_POLARIZATION = 0  # type: int
-        self.RX_POLARIZATION = 0  # type: int
-        self.GRAZE_ANGLE = 0.0  # type: float
-        self.INCIDENCE_ANGLE = 0.0  # type: float
-        self.SQUINT_ANGLE = 0.0  # type: float
-        self.PULSE_BANDWIDTH = 0.0  # type: float
-        self.PULSE_DURATION = 0.0  # type: float
-        self.CONTINUOUS_SPOT_ANGLE = 0.0  # type: float
-        self.SLANT_RANGE = 0.0  # type: float
-        self.NEAR_RANGE = 0.0  # type: float
-        self.FAR_RANGE = 0.0  # type: float
-        self.SWATH_LENGTH = 0.0  # type: float
-        self.AGJSON = None  # type: str
-        self.ATEXT = None  # type: str
-        self.ATYPE = None  # type: str
-        self.COORD_SYS = None  # type: str
-        self.SPACING_RANGE = 0.0  # type: float
-        self.SPACING_AZIMUTH = 0.0  # type: float
-        self.LOOKS_AZIMUTH = 0  # type: int
-        self.LOOKS_RANGE = 0  # type: int
-        self.RESOLUTION_RANGE = 0.0  # type: float
-        self.RESOLUTION_AZIMUTH = 0.0  # type: float
-        self.OB_DIRECTION = None  # type: str
-        self.TARGETPOSX = 0.0  # type: float
-        self.TARGETPOSY = 0.0  # type: float
-        self.TARGETPOSZ = 0.0  # type: float
-        self.SENALT = 0.0  # type: float
-        self.SENVELX = 0.0  # type: float
-        self.SENVELY = 0.0  # type: float
-        self.SENVELZ = 0.0  # type: float
-        self.SENLAT_START = 0.0  # type: float
-        self.SENLON_START = 0.0  # type: float
-        self.SENLAT_END = 0.0  # type: float
-        self.SENLON_END = 0.0  # type: float
-        self.TRANSACTION_ID = None  # type: str
-        self.TAGS = None  # type: List[str]
-        self.SRC_TYPS = None  # type: List[str]
-        self.SRC_IDS = None  # type: List[str]
+    def __init__(
+        self,
+        ID = None,
+        SAT_NO = 0,
+        ORIG_OBJECT_ID = None,
+        ON_ORBIT = None,
+        ID_SENSOR = None,
+        ORIG_SENSOR_ID = None,
+        EXTERNAL_ID = None,
+        COLLECTION_ID = None,
+        DETECTION_ID = None,
+        COLLECTION_START = None,
+        COLLECTION_END = None,
+        CENTER_TIME = None,
+        DETECTION_START = None,
+        DETECTION_END = None,
+        DWELL_TIME = 0.0,
+        ORBIT_STATE = None,
+        SAR_MODE = 0,
+        OPERATING_BAND = None,
+        OPERATING_FREQ = 0.0,
+        SNR = 0.0,
+        TX_POLARIZATION = 0,
+        RX_POLARIZATION = 0,
+        GRAZE_ANGLE = 0.0,
+        INCIDENCE_ANGLE = 0.0,
+        SQUINT_ANGLE = 0.0,
+        PULSE_BANDWIDTH = 0.0,
+        PULSE_DURATION = 0.0,
+        CONTINUOUS_SPOT_ANGLE = 0.0,
+        SLANT_RANGE = 0.0,
+        NEAR_RANGE = 0.0,
+        FAR_RANGE = 0.0,
+        SWATH_LENGTH = 0.0,
+        AGJSON = None,
+        ATEXT = None,
+        ATYPE = None,
+        COORD_SYS = None,
+        SPACING_RANGE = 0.0,
+        SPACING_AZIMUTH = 0.0,
+        LOOKS_AZIMUTH = 0,
+        LOOKS_RANGE = 0,
+        RESOLUTION_RANGE = 0.0,
+        RESOLUTION_AZIMUTH = 0.0,
+        OB_DIRECTION = None,
+        TARGETPOSX = 0.0,
+        TARGETPOSY = 0.0,
+        TARGETPOSZ = 0.0,
+        SENALT = 0.0,
+        SENVELX = 0.0,
+        SENVELY = 0.0,
+        SENVELZ = 0.0,
+        SENLAT_START = 0.0,
+        SENLON_START = 0.0,
+        SENLAT_END = 0.0,
+        SENLON_END = 0.0,
+        TRANSACTION_ID = None,
+        TAGS = None,
+        SRC_TYPS = None,
+        SRC_IDS = None,
+    ):
+        self.ID = ID  # type: Optional[str]
+        self.SAT_NO = SAT_NO  # type: int
+        self.ORIG_OBJECT_ID = ORIG_OBJECT_ID  # type: Optional[str]
+        self.ON_ORBIT = ON_ORBIT  # type: Optional[str]
+        self.ID_SENSOR = ID_SENSOR  # type: Optional[str]
+        self.ORIG_SENSOR_ID = ORIG_SENSOR_ID  # type: Optional[str]
+        self.EXTERNAL_ID = EXTERNAL_ID  # type: Optional[str]
+        self.COLLECTION_ID = COLLECTION_ID  # type: Optional[str]
+        self.DETECTION_ID = DETECTION_ID  # type: Optional[str]
+        self.COLLECTION_START = COLLECTION_START  # type: Optional[str]
+        self.COLLECTION_END = COLLECTION_END  # type: Optional[str]
+        self.CENTER_TIME = CENTER_TIME  # type: Optional[str]
+        self.DETECTION_START = DETECTION_START  # type: Optional[str]
+        self.DETECTION_END = DETECTION_END  # type: Optional[str]
+        self.DWELL_TIME = DWELL_TIME  # type: float
+        self.ORBIT_STATE = ORBIT_STATE  # type: Optional[str]
+        self.SAR_MODE = SAR_MODE  # type: int
+        self.OPERATING_BAND = OPERATING_BAND  # type: Optional[str]
+        self.OPERATING_FREQ = OPERATING_FREQ  # type: float
+        self.SNR = SNR  # type: float
+        self.TX_POLARIZATION = TX_POLARIZATION  # type: int
+        self.RX_POLARIZATION = RX_POLARIZATION  # type: int
+        self.GRAZE_ANGLE = GRAZE_ANGLE  # type: float
+        self.INCIDENCE_ANGLE = INCIDENCE_ANGLE  # type: float
+        self.SQUINT_ANGLE = SQUINT_ANGLE  # type: float
+        self.PULSE_BANDWIDTH = PULSE_BANDWIDTH  # type: float
+        self.PULSE_DURATION = PULSE_DURATION  # type: float
+        self.CONTINUOUS_SPOT_ANGLE = CONTINUOUS_SPOT_ANGLE  # type: float
+        self.SLANT_RANGE = SLANT_RANGE  # type: float
+        self.NEAR_RANGE = NEAR_RANGE  # type: float
+        self.FAR_RANGE = FAR_RANGE  # type: float
+        self.SWATH_LENGTH = SWATH_LENGTH  # type: float
+        self.AGJSON = AGJSON  # type: Optional[str]
+        self.ATEXT = ATEXT  # type: Optional[str]
+        self.ATYPE = ATYPE  # type: Optional[str]
+        self.COORD_SYS = COORD_SYS  # type: Optional[str]
+        self.SPACING_RANGE = SPACING_RANGE  # type: float
+        self.SPACING_AZIMUTH = SPACING_AZIMUTH  # type: float
+        self.LOOKS_AZIMUTH = LOOKS_AZIMUTH  # type: int
+        self.LOOKS_RANGE = LOOKS_RANGE  # type: int
+        self.RESOLUTION_RANGE = RESOLUTION_RANGE  # type: float
+        self.RESOLUTION_AZIMUTH = RESOLUTION_AZIMUTH  # type: float
+        self.OB_DIRECTION = OB_DIRECTION  # type: Optional[str]
+        self.TARGETPOSX = TARGETPOSX  # type: float
+        self.TARGETPOSY = TARGETPOSY  # type: float
+        self.TARGETPOSZ = TARGETPOSZ  # type: float
+        self.SENALT = SENALT  # type: float
+        self.SENVELX = SENVELX  # type: float
+        self.SENVELY = SENVELY  # type: float
+        self.SENVELZ = SENVELZ  # type: float
+        self.SENLAT_START = SENLAT_START  # type: float
+        self.SENLON_START = SENLON_START  # type: float
+        self.SENLAT_END = SENLAT_END  # type: float
+        self.SENLON_END = SENLON_END  # type: float
+        self.TRANSACTION_ID = TRANSACTION_ID  # type: Optional[str]
+        self.TAGS = TAGS  # type: Optional[List[Optional[str]]]
+        self.SRC_TYPS = SRC_TYPS  # type: Optional[List[Optional[str]]]
+        self.SRC_IDS = SRC_IDS  # type: Optional[List[Optional[str]]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        SAR = SAR()
-        SAR.Init(buf, pos)
-        return cls.InitFromObj(SAR)
+        tmpSar = SAR()
+        tmpSar.Init(buf, pos)
+        return cls.InitFromObj(tmpSar)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -990,9 +1068,9 @@ class SART(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, SAR):
+    def InitFromObj(cls, tmpSar):
         x = SART()
-        x._UnPack(SAR)
+        x._UnPack(tmpSar)
         return x
 
     # SART

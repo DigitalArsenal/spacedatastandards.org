@@ -32,7 +32,7 @@ class CAT : Table() {
     /**
      * Satellite Name(s)
      */
-    val OBJECT_NAME : String?
+    val objectName : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class CAT : Table() {
                 null
             }
         }
-    val OBJECT_NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun OBJECT_NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val objectNameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun objectNameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * International Designator (YYYY-NNNAAA)
      */
-    val OBJECT_ID : String?
+    val objectId : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -55,12 +55,12 @@ class CAT : Table() {
                 null
             }
         }
-    val OBJECT_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun OBJECT_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val objectIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun objectIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * NORAD Catalog Number
      */
-    val NORAD_CAT_ID : UInt
+    val noradCatId : UInt
         get() {
             val o = __offset(8)
             return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
@@ -68,7 +68,7 @@ class CAT : Table() {
     /**
      * Object type (Payload, Rocket body, Debris, Unknown)
      */
-    val OBJECT_TYPE : Byte
+    val objectType : Byte
         get() {
             val o = __offset(10)
             return if(o != 0) bb.get(o + bb_pos) else 3
@@ -76,7 +76,7 @@ class CAT : Table() {
     /**
      * Operational Status Code
      */
-    val OPS_STATUS_CODE : Byte
+    val opsStatusCode : Byte
         get() {
             val o = __offset(12)
             return if(o != 0) bb.get(o + bb_pos) else 7
@@ -84,7 +84,7 @@ class CAT : Table() {
     /**
      * Ownership, typically country or company
      */
-    val OWNER : Byte
+    val owner : Byte
         get() {
             val o = __offset(14)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -92,7 +92,7 @@ class CAT : Table() {
     /**
      * Launch Date [year-month-day] (ISO 8601)
      */
-    val LAUNCH_DATE : String?
+    val launchDate : String?
         get() {
             val o = __offset(16)
             return if (o != 0) {
@@ -101,12 +101,12 @@ class CAT : Table() {
                 null
             }
         }
-    val LAUNCH_DATEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(16, 1)
-    fun LAUNCH_DATEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 16, 1)
+    val launchDateAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(16, 1)
+    fun launchDateInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 16, 1)
     /**
      * Launch Site
      */
-    val LAUNCH_SITE : String?
+    val launchSite : String?
         get() {
             val o = __offset(18)
             return if (o != 0) {
@@ -115,12 +115,12 @@ class CAT : Table() {
                 null
             }
         }
-    val LAUNCH_SITEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(18, 1)
-    fun LAUNCH_SITEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 18, 1)
+    val launchSiteAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(18, 1)
+    fun launchSiteInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 18, 1)
     /**
      * Decay Date, if applicable [year-month-day] (ISO 8601)
      */
-    val DECAY_DATE : String?
+    val decayDate : String?
         get() {
             val o = __offset(20)
             return if (o != 0) {
@@ -129,12 +129,12 @@ class CAT : Table() {
                 null
             }
         }
-    val DECAY_DATEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(20, 1)
-    fun DECAY_DATEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 20, 1)
+    val decayDateAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(20, 1)
+    fun decayDateInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 20, 1)
     /**
      * Orbital period [minutes]
      */
-    val PERIOD : Double
+    val period : Double
         get() {
             val o = __offset(22)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -142,7 +142,7 @@ class CAT : Table() {
     /**
      * Inclination [degrees]
      */
-    val INCLINATION : Double
+    val inclination : Double
         get() {
             val o = __offset(24)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -150,7 +150,7 @@ class CAT : Table() {
     /**
      * Apogee Altitude [kilometers]
      */
-    val APOGEE : Double
+    val apogee : Double
         get() {
             val o = __offset(26)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -158,7 +158,7 @@ class CAT : Table() {
     /**
      * Perigee Altitude [kilometers]
      */
-    val PERIGEE : Double
+    val perigee : Double
         get() {
             val o = __offset(28)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -166,7 +166,7 @@ class CAT : Table() {
     /**
      * Radar Cross Section [meters2]; blank if no data available
      */
-    val RCS : Double
+    val rcs : Double
         get() {
             val o = __offset(30)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -174,7 +174,7 @@ class CAT : Table() {
     /**
      * Data status code; blank otherwise
      */
-    val DATA_STATUS_CODE : Byte
+    val dataStatusCode : Byte
         get() {
             val o = __offset(32)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -182,7 +182,7 @@ class CAT : Table() {
     /**
      * Orbit center
      */
-    val ORBIT_CENTER : String?
+    val orbitCenter : String?
         get() {
             val o = __offset(34)
             return if (o != 0) {
@@ -191,12 +191,12 @@ class CAT : Table() {
                 null
             }
         }
-    val ORBIT_CENTERAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(34, 1)
-    fun ORBIT_CENTERInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 34, 1)
+    val orbitCenterAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(34, 1)
+    fun orbitCenterInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 34, 1)
     /**
      * Orbit type (Orbit, Landing, Impact, Docked to RSO, roundtrip)
      */
-    val ORBIT_TYPE : Byte
+    val orbitType : Byte
         get() {
             val o = __offset(36)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -204,7 +204,7 @@ class CAT : Table() {
     /**
      * Deployment Date [year-month-day] (ISO 8601)
      */
-    val DEPLOYMENT_DATE : String?
+    val deploymentDate : String?
         get() {
             val o = __offset(38)
             return if (o != 0) {
@@ -213,12 +213,12 @@ class CAT : Table() {
                 null
             }
         }
-    val DEPLOYMENT_DATEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(38, 1)
-    fun DEPLOYMENT_DATEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 38, 1)
+    val deploymentDateAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(38, 1)
+    fun deploymentDateInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 38, 1)
     /**
      * Indicates if the object is maneuverable
      */
-    val MANEUVERABLE : Boolean
+    val maneuverable : Boolean
         get() {
             val o = __offset(40)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -226,7 +226,7 @@ class CAT : Table() {
     /**
      * Size [meters]; blank if no data available
      */
-    val SIZE : Double
+    val size : Double
         get() {
             val o = __offset(42)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -234,7 +234,7 @@ class CAT : Table() {
     /**
      * Mass [kilograms]; blank if no data available
      */
-    val MASS : Double
+    val mass : Double
         get() {
             val o = __offset(44)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -242,7 +242,7 @@ class CAT : Table() {
     /**
      * Mass type (Dry, Wet)
      */
-    val MASS_TYPE : Byte
+    val massType : Byte
         get() {
             val o = __offset(46)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -250,8 +250,8 @@ class CAT : Table() {
     /**
      * Vector of PAYLOADS
      */
-    fun PAYLOADS(j: Int) : PLD? = PAYLOADS(PLD(), j)
-    fun PAYLOADS(obj: PLD, j: Int) : PLD? {
+    fun payloads(j: Int) : PLD? = payloads(PLD(), j)
+    fun payloads(obj: PLD, j: Int) : PLD? {
         val o = __offset(48)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -259,69 +259,69 @@ class CAT : Table() {
             null
         }
     }
-    val PAYLOADSLength : Int
+    val payloadsLength : Int
         get() {
             val o = __offset(48); return if (o != 0) __vector_len(o) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsCAT(_bb: ByteBuffer): CAT = getRootAsCAT(_bb, CAT())
         fun getRootAsCAT(_bb: ByteBuffer, obj: CAT): CAT {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun CATBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$CAT")
-        fun createCAT(builder: FlatBufferBuilder, OBJECT_NAMEOffset: Int, OBJECT_IDOffset: Int, NORAD_CAT_ID: UInt, OBJECT_TYPE: Byte, OPS_STATUS_CODE: Byte, OWNER: Byte, LAUNCH_DATEOffset: Int, LAUNCH_SITEOffset: Int, DECAY_DATEOffset: Int, PERIOD: Double, INCLINATION: Double, APOGEE: Double, PERIGEE: Double, RCS: Double, DATA_STATUS_CODE: Byte, ORBIT_CENTEROffset: Int, ORBIT_TYPE: Byte, DEPLOYMENT_DATEOffset: Int, MANEUVERABLE: Boolean, SIZE: Double, MASS: Double, MASS_TYPE: Byte, PAYLOADSOffset: Int) : Int {
+        fun createCAT(builder: FlatBufferBuilder, objectNameOffset: Int, objectIdOffset: Int, noradCatId: UInt, objectType: Byte, opsStatusCode: Byte, owner: Byte, launchDateOffset: Int, launchSiteOffset: Int, decayDateOffset: Int, period: Double, inclination: Double, apogee: Double, perigee: Double, rcs: Double, dataStatusCode: Byte, orbitCenterOffset: Int, orbitType: Byte, deploymentDateOffset: Int, maneuverable: Boolean, size: Double, mass: Double, massType: Byte, payloadsOffset: Int) : Int {
             builder.startTable(23)
-            addMASS(builder, MASS)
-            addSIZE(builder, SIZE)
-            addRCS(builder, RCS)
-            addPERIGEE(builder, PERIGEE)
-            addAPOGEE(builder, APOGEE)
-            addINCLINATION(builder, INCLINATION)
-            addPERIOD(builder, PERIOD)
-            addPAYLOADS(builder, PAYLOADSOffset)
-            addDEPLOYMENT_DATE(builder, DEPLOYMENT_DATEOffset)
-            addORBIT_CENTER(builder, ORBIT_CENTEROffset)
-            addDECAY_DATE(builder, DECAY_DATEOffset)
-            addLAUNCH_SITE(builder, LAUNCH_SITEOffset)
-            addLAUNCH_DATE(builder, LAUNCH_DATEOffset)
-            addNORAD_CAT_ID(builder, NORAD_CAT_ID)
-            addOBJECT_ID(builder, OBJECT_IDOffset)
-            addOBJECT_NAME(builder, OBJECT_NAMEOffset)
-            addMASS_TYPE(builder, MASS_TYPE)
-            addMANEUVERABLE(builder, MANEUVERABLE)
-            addORBIT_TYPE(builder, ORBIT_TYPE)
-            addDATA_STATUS_CODE(builder, DATA_STATUS_CODE)
-            addOWNER(builder, OWNER)
-            addOPS_STATUS_CODE(builder, OPS_STATUS_CODE)
-            addOBJECT_TYPE(builder, OBJECT_TYPE)
+            addMASS(builder, mass)
+            addSIZE(builder, size)
+            addRCS(builder, rcs)
+            addPERIGEE(builder, perigee)
+            addAPOGEE(builder, apogee)
+            addINCLINATION(builder, inclination)
+            addPERIOD(builder, period)
+            addPAYLOADS(builder, payloadsOffset)
+            addDEPLOYMENTDATE(builder, deploymentDateOffset)
+            addORBITCENTER(builder, orbitCenterOffset)
+            addDECAYDATE(builder, decayDateOffset)
+            addLAUNCHSITE(builder, launchSiteOffset)
+            addLAUNCHDATE(builder, launchDateOffset)
+            addNORADCATID(builder, noradCatId)
+            addOBJECTID(builder, objectIdOffset)
+            addOBJECTNAME(builder, objectNameOffset)
+            addMASSTYPE(builder, massType)
+            addMANEUVERABLE(builder, maneuverable)
+            addORBITTYPE(builder, orbitType)
+            addDATASTATUSCODE(builder, dataStatusCode)
+            addOWNER(builder, owner)
+            addOPSSTATUSCODE(builder, opsStatusCode)
+            addOBJECTTYPE(builder, objectType)
             return endCAT(builder)
         }
         fun startCAT(builder: FlatBufferBuilder) = builder.startTable(23)
-        fun addOBJECT_NAME(builder: FlatBufferBuilder, OBJECT_NAME: Int) = builder.addOffset(0, OBJECT_NAME, 0)
-        fun addOBJECT_ID(builder: FlatBufferBuilder, OBJECT_ID: Int) = builder.addOffset(1, OBJECT_ID, 0)
-        fun addNORAD_CAT_ID(builder: FlatBufferBuilder, NORAD_CAT_ID: UInt) = builder.addInt(2, NORAD_CAT_ID.toInt(), 0)
-        fun addOBJECT_TYPE(builder: FlatBufferBuilder, OBJECT_TYPE: Byte) = builder.addByte(3, OBJECT_TYPE, 3)
-        fun addOPS_STATUS_CODE(builder: FlatBufferBuilder, OPS_STATUS_CODE: Byte) = builder.addByte(4, OPS_STATUS_CODE, 7)
-        fun addOWNER(builder: FlatBufferBuilder, OWNER: Byte) = builder.addByte(5, OWNER, 0)
-        fun addLAUNCH_DATE(builder: FlatBufferBuilder, LAUNCH_DATE: Int) = builder.addOffset(6, LAUNCH_DATE, 0)
-        fun addLAUNCH_SITE(builder: FlatBufferBuilder, LAUNCH_SITE: Int) = builder.addOffset(7, LAUNCH_SITE, 0)
-        fun addDECAY_DATE(builder: FlatBufferBuilder, DECAY_DATE: Int) = builder.addOffset(8, DECAY_DATE, 0)
-        fun addPERIOD(builder: FlatBufferBuilder, PERIOD: Double) = builder.addDouble(9, PERIOD, 0.0)
-        fun addINCLINATION(builder: FlatBufferBuilder, INCLINATION: Double) = builder.addDouble(10, INCLINATION, 0.0)
-        fun addAPOGEE(builder: FlatBufferBuilder, APOGEE: Double) = builder.addDouble(11, APOGEE, 0.0)
-        fun addPERIGEE(builder: FlatBufferBuilder, PERIGEE: Double) = builder.addDouble(12, PERIGEE, 0.0)
-        fun addRCS(builder: FlatBufferBuilder, RCS: Double) = builder.addDouble(13, RCS, 0.0)
-        fun addDATA_STATUS_CODE(builder: FlatBufferBuilder, DATA_STATUS_CODE: Byte) = builder.addByte(14, DATA_STATUS_CODE, 0)
-        fun addORBIT_CENTER(builder: FlatBufferBuilder, ORBIT_CENTER: Int) = builder.addOffset(15, ORBIT_CENTER, 0)
-        fun addORBIT_TYPE(builder: FlatBufferBuilder, ORBIT_TYPE: Byte) = builder.addByte(16, ORBIT_TYPE, 0)
-        fun addDEPLOYMENT_DATE(builder: FlatBufferBuilder, DEPLOYMENT_DATE: Int) = builder.addOffset(17, DEPLOYMENT_DATE, 0)
-        fun addMANEUVERABLE(builder: FlatBufferBuilder, MANEUVERABLE: Boolean) = builder.addBoolean(18, MANEUVERABLE, false)
-        fun addSIZE(builder: FlatBufferBuilder, SIZE: Double) = builder.addDouble(19, SIZE, 0.0)
-        fun addMASS(builder: FlatBufferBuilder, MASS: Double) = builder.addDouble(20, MASS, 0.0)
-        fun addMASS_TYPE(builder: FlatBufferBuilder, MASS_TYPE: Byte) = builder.addByte(21, MASS_TYPE, 0)
-        fun addPAYLOADS(builder: FlatBufferBuilder, PAYLOADS: Int) = builder.addOffset(22, PAYLOADS, 0)
+        fun addOBJECTNAME(builder: FlatBufferBuilder, objectName: Int) = builder.addOffset(0, objectName, 0)
+        fun addOBJECTID(builder: FlatBufferBuilder, objectId: Int) = builder.addOffset(1, objectId, 0)
+        fun addNORADCATID(builder: FlatBufferBuilder, noradCatId: UInt) = builder.addInt(2, noradCatId.toInt(), 0)
+        fun addOBJECTTYPE(builder: FlatBufferBuilder, objectType: Byte) = builder.addByte(3, objectType, 3)
+        fun addOPSSTATUSCODE(builder: FlatBufferBuilder, opsStatusCode: Byte) = builder.addByte(4, opsStatusCode, 7)
+        fun addOWNER(builder: FlatBufferBuilder, owner: Byte) = builder.addByte(5, owner, 0)
+        fun addLAUNCHDATE(builder: FlatBufferBuilder, launchDate: Int) = builder.addOffset(6, launchDate, 0)
+        fun addLAUNCHSITE(builder: FlatBufferBuilder, launchSite: Int) = builder.addOffset(7, launchSite, 0)
+        fun addDECAYDATE(builder: FlatBufferBuilder, decayDate: Int) = builder.addOffset(8, decayDate, 0)
+        fun addPERIOD(builder: FlatBufferBuilder, period: Double) = builder.addDouble(9, period, 0.0)
+        fun addINCLINATION(builder: FlatBufferBuilder, inclination: Double) = builder.addDouble(10, inclination, 0.0)
+        fun addAPOGEE(builder: FlatBufferBuilder, apogee: Double) = builder.addDouble(11, apogee, 0.0)
+        fun addPERIGEE(builder: FlatBufferBuilder, perigee: Double) = builder.addDouble(12, perigee, 0.0)
+        fun addRCS(builder: FlatBufferBuilder, rcs: Double) = builder.addDouble(13, rcs, 0.0)
+        fun addDATASTATUSCODE(builder: FlatBufferBuilder, dataStatusCode: Byte) = builder.addByte(14, dataStatusCode, 0)
+        fun addORBITCENTER(builder: FlatBufferBuilder, orbitCenter: Int) = builder.addOffset(15, orbitCenter, 0)
+        fun addORBITTYPE(builder: FlatBufferBuilder, orbitType: Byte) = builder.addByte(16, orbitType, 0)
+        fun addDEPLOYMENTDATE(builder: FlatBufferBuilder, deploymentDate: Int) = builder.addOffset(17, deploymentDate, 0)
+        fun addMANEUVERABLE(builder: FlatBufferBuilder, maneuverable: Boolean) = builder.addBoolean(18, maneuverable, false)
+        fun addSIZE(builder: FlatBufferBuilder, size: Double) = builder.addDouble(19, size, 0.0)
+        fun addMASS(builder: FlatBufferBuilder, mass: Double) = builder.addDouble(20, mass, 0.0)
+        fun addMASSTYPE(builder: FlatBufferBuilder, massType: Byte) = builder.addByte(21, massType, 0)
+        fun addPAYLOADS(builder: FlatBufferBuilder, payloads: Int) = builder.addOffset(22, payloads, 0)
         fun createPayloadsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {

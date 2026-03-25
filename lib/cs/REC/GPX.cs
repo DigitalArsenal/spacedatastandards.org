@@ -11,7 +11,7 @@ public struct GPX : IFlatbufferObject
 {
   private Table __p;
   public ByteBuffer ByteBuffer { get { return __p.bb; } }
-  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_24_3_25(); }
+  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_25_12_19(); }
   public static GPX GetRootAsGPX(ByteBuffer _bb) { return GetRootAsGPX(_bb, new GPX()); }
   public static GPX GetRootAsGPX(ByteBuffer _bb, GPX obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
   public static bool GPXBufferHasIdentifier(ByteBuffer _bb) { return Table.__has_identifier(_bb, "$GPX"); }

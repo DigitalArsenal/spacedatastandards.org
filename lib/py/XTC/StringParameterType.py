@@ -167,6 +167,12 @@ def StringParameterTypeStartCONTEXT_ALARMSVector(builder, numElems):
 def StartCONTEXT_ALARMSVector(builder, numElems):
     return StringParameterTypeStartCONTEXT_ALARMSVector(builder, numElems)
 
+def StringParameterTypeCreateCONTEXT_ALARMSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateCONTEXT_ALARMSVector(builder, data):
+    StringParameterTypeCreateCONTEXT_ALARMSVector(builder, data)
+
 def StringParameterTypeAddINITIAL_VALUE(builder, INITIAL_VALUE):
     builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(INITIAL_VALUE), 0)
 
@@ -196,21 +202,31 @@ except:
 class StringParameterTypeT(object):
 
     # StringParameterTypeT
-    def __init__(self):
-        self.NAME = None  # type: str
-        self.SHORT_DESCRIPTION = None  # type: str
-        self.LONG_DESCRIPTION = None  # type: str
-        self.DATA_ENCODING = None  # type: Optional[StringDataEncoding.StringDataEncodingT]
-        self.DEFAULT_ALARM = None  # type: Optional[DefaultAlarm.DefaultAlarmT]
-        self.CONTEXT_ALARMS = None  # type: List[ContextAlarm.ContextAlarmT]
-        self.INITIAL_VALUE = None  # type: str
-        self.RESTRICTION_PATTERN = None  # type: str
+    def __init__(
+        self,
+        NAME = None,
+        SHORT_DESCRIPTION = None,
+        LONG_DESCRIPTION = None,
+        DATA_ENCODING = None,
+        DEFAULT_ALARM = None,
+        CONTEXT_ALARMS = None,
+        INITIAL_VALUE = None,
+        RESTRICTION_PATTERN = None,
+    ):
+        self.NAME = NAME  # type: Optional[str]
+        self.SHORT_DESCRIPTION = SHORT_DESCRIPTION  # type: Optional[str]
+        self.LONG_DESCRIPTION = LONG_DESCRIPTION  # type: Optional[str]
+        self.DATA_ENCODING = DATA_ENCODING  # type: Optional[StringDataEncoding.StringDataEncodingT]
+        self.DEFAULT_ALARM = DEFAULT_ALARM  # type: Optional[DefaultAlarm.DefaultAlarmT]
+        self.CONTEXT_ALARMS = CONTEXT_ALARMS  # type: Optional[List[ContextAlarm.ContextAlarmT]]
+        self.INITIAL_VALUE = INITIAL_VALUE  # type: Optional[str]
+        self.RESTRICTION_PATTERN = RESTRICTION_PATTERN  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        stringParameterType = StringParameterType()
-        stringParameterType.Init(buf, pos)
-        return cls.InitFromObj(stringParameterType)
+        tmpStringParameterType = StringParameterType()
+        tmpStringParameterType.Init(buf, pos)
+        return cls.InitFromObj(tmpStringParameterType)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -218,32 +234,32 @@ class StringParameterTypeT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, stringParameterType):
+    def InitFromObj(cls, tmpStringParameterType):
         x = StringParameterTypeT()
-        x._UnPack(stringParameterType)
+        x._UnPack(tmpStringParameterType)
         return x
 
     # StringParameterTypeT
-    def _UnPack(self, stringParameterType):
-        if stringParameterType is None:
+    def _UnPack(self, StringParameterType):
+        if StringParameterType is None:
             return
-        self.NAME = stringParameterType.NAME()
-        self.SHORT_DESCRIPTION = stringParameterType.SHORT_DESCRIPTION()
-        self.LONG_DESCRIPTION = stringParameterType.LONG_DESCRIPTION()
-        if stringParameterType.DATA_ENCODING() is not None:
-            self.DATA_ENCODING = StringDataEncoding.StringDataEncodingT.InitFromObj(stringParameterType.DATA_ENCODING())
-        if stringParameterType.DEFAULT_ALARM() is not None:
-            self.DEFAULT_ALARM = DefaultAlarm.DefaultAlarmT.InitFromObj(stringParameterType.DEFAULT_ALARM())
-        if not stringParameterType.CONTEXT_ALARMSIsNone():
+        self.NAME = StringParameterType.NAME()
+        self.SHORT_DESCRIPTION = StringParameterType.SHORT_DESCRIPTION()
+        self.LONG_DESCRIPTION = StringParameterType.LONG_DESCRIPTION()
+        if StringParameterType.DATA_ENCODING() is not None:
+            self.DATA_ENCODING = StringDataEncoding.StringDataEncodingT.InitFromObj(StringParameterType.DATA_ENCODING())
+        if StringParameterType.DEFAULT_ALARM() is not None:
+            self.DEFAULT_ALARM = DefaultAlarm.DefaultAlarmT.InitFromObj(StringParameterType.DEFAULT_ALARM())
+        if not StringParameterType.CONTEXT_ALARMSIsNone():
             self.CONTEXT_ALARMS = []
-            for i in range(stringParameterType.CONTEXT_ALARMSLength()):
-                if stringParameterType.CONTEXT_ALARMS(i) is None:
+            for i in range(StringParameterType.CONTEXT_ALARMSLength()):
+                if StringParameterType.CONTEXT_ALARMS(i) is None:
                     self.CONTEXT_ALARMS.append(None)
                 else:
-                    contextAlarm_ = ContextAlarm.ContextAlarmT.InitFromObj(stringParameterType.CONTEXT_ALARMS(i))
+                    contextAlarm_ = ContextAlarm.ContextAlarmT.InitFromObj(StringParameterType.CONTEXT_ALARMS(i))
                     self.CONTEXT_ALARMS.append(contextAlarm_)
-        self.INITIAL_VALUE = stringParameterType.INITIAL_VALUE()
-        self.RESTRICTION_PATTERN = stringParameterType.RESTRICTION_PATTERN()
+        self.INITIAL_VALUE = StringParameterType.INITIAL_VALUE()
+        self.RESTRICTION_PATTERN = StringParameterType.RESTRICTION_PATTERN()
 
     # StringParameterTypeT
     def Pack(self, builder):
@@ -286,5 +302,5 @@ class StringParameterTypeT(object):
             StringParameterTypeAddINITIAL_VALUE(builder, INITIAL_VALUE)
         if self.RESTRICTION_PATTERN is not None:
             StringParameterTypeAddRESTRICTION_PATTERN(builder, RESTRICTION_PATTERN)
-        stringParameterType = StringParameterTypeEnd(builder)
-        return stringParameterType
+        StringParameterType = StringParameterTypeEnd(builder)
+        return StringParameterType

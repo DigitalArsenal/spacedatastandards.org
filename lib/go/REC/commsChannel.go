@@ -51,6 +51,10 @@ func (rcv *commsChannel) CHANNEL_ID() []byte {
 	return nil
 }
 
+func (rcv *commsChannel) ChannelId() []byte {
+	return rcv.CHANNEL_ID()
+}
+
 /// Channel identifier
 /// Channel name
 func (rcv *commsChannel) NAME() []byte {
@@ -59,6 +63,10 @@ func (rcv *commsChannel) NAME() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *commsChannel) Name() []byte {
+	return rcv.NAME()
 }
 
 /// Channel name
@@ -71,9 +79,17 @@ func (rcv *commsChannel) UPLINK_FREQ() float64 {
 	return 0.0
 }
 
+func (rcv *commsChannel) UplinkFreq() float64 {
+	return rcv.UPLINK_FREQ()
+}
+
 /// Uplink frequency in MHz
 func (rcv *commsChannel) MutateUPLINK_FREQ(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(8, n)
+}
+
+func (rcv *commsChannel) MutateUplinkFreq(n float64) bool {
+	return rcv.MutateUPLINK_FREQ(n)
 }
 
 /// Downlink frequency in MHz
@@ -85,9 +101,17 @@ func (rcv *commsChannel) DOWNLINK_FREQ() float64 {
 	return 0.0
 }
 
+func (rcv *commsChannel) DownlinkFreq() float64 {
+	return rcv.DOWNLINK_FREQ()
+}
+
 /// Downlink frequency in MHz
 func (rcv *commsChannel) MutateDOWNLINK_FREQ(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(10, n)
+}
+
+func (rcv *commsChannel) MutateDownlinkFreq(n float64) bool {
+	return rcv.MutateDOWNLINK_FREQ(n)
 }
 
 /// Channel bandwidth in MHz
@@ -99,9 +123,17 @@ func (rcv *commsChannel) BANDWIDTH() float64 {
 	return 0.0
 }
 
+func (rcv *commsChannel) Bandwidth() float64 {
+	return rcv.BANDWIDTH()
+}
+
 /// Channel bandwidth in MHz
 func (rcv *commsChannel) MutateBANDWIDTH(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(12, n)
+}
+
+func (rcv *commsChannel) MutateBandwidth(n float64) bool {
+	return rcv.MutateBANDWIDTH(n)
 }
 
 /// Modulation type
@@ -113,9 +145,17 @@ func (rcv *commsChannel) MODULATION() CmsModulationType {
 	return 0
 }
 
+func (rcv *commsChannel) Modulation() CmsModulationType {
+	return rcv.MODULATION()
+}
+
 /// Modulation type
 func (rcv *commsChannel) MutateMODULATION(n CmsModulationType) bool {
 	return rcv._tab.MutateInt8Slot(14, int8(n))
+}
+
+func (rcv *commsChannel) MutateModulation(n CmsModulationType) bool {
+	return rcv.MutateMODULATION(n)
 }
 
 /// Data rate in Mbps
@@ -127,9 +167,17 @@ func (rcv *commsChannel) DATA_RATE() float64 {
 	return 0.0
 }
 
+func (rcv *commsChannel) DataRate() float64 {
+	return rcv.DATA_RATE()
+}
+
 /// Data rate in Mbps
 func (rcv *commsChannel) MutateDATA_RATE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(16, n)
+}
+
+func (rcv *commsChannel) MutateDataRate(n float64) bool {
+	return rcv.MutateDATA_RATE(n)
 }
 
 /// Encryption method
@@ -141,9 +189,17 @@ func (rcv *commsChannel) ENCRYPTION() encryptionType {
 	return 0
 }
 
+func (rcv *commsChannel) Encryption() encryptionType {
+	return rcv.ENCRYPTION()
+}
+
 /// Encryption method
 func (rcv *commsChannel) MutateENCRYPTION(n encryptionType) bool {
 	return rcv._tab.MutateInt8Slot(18, int8(n))
+}
+
+func (rcv *commsChannel) MutateEncryption(n encryptionType) bool {
+	return rcv.MutateENCRYPTION(n)
 }
 
 /// Forward error correction coding rate (e.g., 0.5, 0.75)
@@ -155,9 +211,17 @@ func (rcv *commsChannel) FEC_RATE() float64 {
 	return 0.0
 }
 
+func (rcv *commsChannel) FecRate() float64 {
+	return rcv.FEC_RATE()
+}
+
 /// Forward error correction coding rate (e.g., 0.5, 0.75)
 func (rcv *commsChannel) MutateFEC_RATE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(20, n)
+}
+
+func (rcv *commsChannel) MutateFecRate(n float64) bool {
+	return rcv.MutateFEC_RATE(n)
 }
 
 /// Channel power in dBW
@@ -169,9 +233,17 @@ func (rcv *commsChannel) POWER() float64 {
 	return 0.0
 }
 
+func (rcv *commsChannel) Power() float64 {
+	return rcv.POWER()
+}
+
 /// Channel power in dBW
 func (rcv *commsChannel) MutatePOWER(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(22, n)
+}
+
+func (rcv *commsChannel) MutatePower(n float64) bool {
+	return rcv.MutatePOWER(n)
 }
 
 func commsChannelStart(builder *flatbuffers.Builder) {
@@ -180,32 +252,62 @@ func commsChannelStart(builder *flatbuffers.Builder) {
 func commsChannelAddCHANNEL_ID(builder *flatbuffers.Builder, CHANNEL_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(CHANNEL_ID), 0)
 }
+func commsChannelAddChannelId(builder *flatbuffers.Builder, CHANNEL_ID flatbuffers.UOffsetT) {
+	commsChannelAddCHANNEL_ID(builder, CHANNEL_ID)
+}
 func commsChannelAddNAME(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(NAME), 0)
+}
+func commsChannelAddName(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
+	commsChannelAddNAME(builder, NAME)
 }
 func commsChannelAddUPLINK_FREQ(builder *flatbuffers.Builder, UPLINK_FREQ float64) {
 	builder.PrependFloat64Slot(2, UPLINK_FREQ, 0.0)
 }
+func commsChannelAddUplinkFreq(builder *flatbuffers.Builder, UPLINK_FREQ float64) {
+	commsChannelAddUPLINK_FREQ(builder, UPLINK_FREQ)
+}
 func commsChannelAddDOWNLINK_FREQ(builder *flatbuffers.Builder, DOWNLINK_FREQ float64) {
 	builder.PrependFloat64Slot(3, DOWNLINK_FREQ, 0.0)
+}
+func commsChannelAddDownlinkFreq(builder *flatbuffers.Builder, DOWNLINK_FREQ float64) {
+	commsChannelAddDOWNLINK_FREQ(builder, DOWNLINK_FREQ)
 }
 func commsChannelAddBANDWIDTH(builder *flatbuffers.Builder, BANDWIDTH float64) {
 	builder.PrependFloat64Slot(4, BANDWIDTH, 0.0)
 }
+func commsChannelAddBandwidth(builder *flatbuffers.Builder, BANDWIDTH float64) {
+	commsChannelAddBANDWIDTH(builder, BANDWIDTH)
+}
 func commsChannelAddMODULATION(builder *flatbuffers.Builder, MODULATION CmsModulationType) {
 	builder.PrependInt8Slot(5, int8(MODULATION), 0)
+}
+func commsChannelAddModulation(builder *flatbuffers.Builder, MODULATION CmsModulationType) {
+	commsChannelAddMODULATION(builder, MODULATION)
 }
 func commsChannelAddDATA_RATE(builder *flatbuffers.Builder, DATA_RATE float64) {
 	builder.PrependFloat64Slot(6, DATA_RATE, 0.0)
 }
+func commsChannelAddDataRate(builder *flatbuffers.Builder, DATA_RATE float64) {
+	commsChannelAddDATA_RATE(builder, DATA_RATE)
+}
 func commsChannelAddENCRYPTION(builder *flatbuffers.Builder, ENCRYPTION encryptionType) {
 	builder.PrependInt8Slot(7, int8(ENCRYPTION), 0)
+}
+func commsChannelAddEncryption(builder *flatbuffers.Builder, ENCRYPTION encryptionType) {
+	commsChannelAddENCRYPTION(builder, ENCRYPTION)
 }
 func commsChannelAddFEC_RATE(builder *flatbuffers.Builder, FEC_RATE float64) {
 	builder.PrependFloat64Slot(8, FEC_RATE, 0.0)
 }
+func commsChannelAddFecRate(builder *flatbuffers.Builder, FEC_RATE float64) {
+	commsChannelAddFEC_RATE(builder, FEC_RATE)
+}
 func commsChannelAddPOWER(builder *flatbuffers.Builder, POWER float64) {
 	builder.PrependFloat64Slot(9, POWER, 0.0)
+}
+func commsChannelAddPower(builder *flatbuffers.Builder, POWER float64) {
+	commsChannelAddPOWER(builder, POWER)
 }
 func commsChannelEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

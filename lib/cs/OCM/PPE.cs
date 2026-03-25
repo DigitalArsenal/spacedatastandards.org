@@ -16,7 +16,7 @@ public struct PPE : IFlatbufferObject
 {
   private Table __p;
   public ByteBuffer ByteBuffer { get { return __p.bb; } }
-  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_24_3_25(); }
+  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_25_12_19(); }
   public static PPE GetRootAsPPE(ByteBuffer _bb) { return GetRootAsPPE(_bb, new PPE()); }
   public static PPE GetRootAsPPE(ByteBuffer _bb, PPE obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
   public static bool PPEBufferHasIdentifier(ByteBuffer _bb) { return Table.__has_identifier(_bb, "$PPE"); }

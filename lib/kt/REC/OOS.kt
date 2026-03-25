@@ -32,7 +32,7 @@ class OOS : Table() {
     /**
      * Unique identifier
      */
-    val ID : String?
+    val id : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class OOS : Table() {
                 null
             }
         }
-    val IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val idAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun idInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Reference to parent on-orbit object
      */
-    val ID_ON_ORBIT : String?
+    val idOnOrbit : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -55,12 +55,12 @@ class OOS : Table() {
                 null
             }
         }
-    val ID_ON_ORBITAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun ID_ON_ORBITInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val idOnOrbitAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun idOnOrbitInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * Reference to solar array specification
      */
-    val ID_SOLAR_ARRAY : String?
+    val idSolarArray : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -69,12 +69,12 @@ class OOS : Table() {
                 null
             }
         }
-    val ID_SOLAR_ARRAYAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun ID_SOLAR_ARRAYInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val idSolarArrayAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun idSolarArrayInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
     /**
      * Solar array name or designation
      */
-    val NAME : String?
+    val name : String?
         get() {
             val o = __offset(10)
             return if (o != 0) {
@@ -83,12 +83,12 @@ class OOS : Table() {
                 null
             }
         }
-    val NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
-    fun NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
+    val nameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(10, 1)
+    fun nameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 10, 1)
     /**
      * Solar cell type (e.g., SILICON, GAAS, MULTI_JUNCTION, THIN_FILM, PEROVSKITE)
      */
-    val CELL_TYPE : String?
+    val cellType : String?
         get() {
             val o = __offset(12)
             return if (o != 0) {
@@ -97,12 +97,12 @@ class OOS : Table() {
                 null
             }
         }
-    val CELL_TYPEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
-    fun CELL_TYPEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
+    val cellTypeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(12, 1)
+    fun cellTypeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 12, 1)
     /**
      * Number of solar arrays of this type
      */
-    val QUANTITY : UInt
+    val quantity : UInt
         get() {
             val o = __offset(14)
             return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
@@ -110,7 +110,7 @@ class OOS : Table() {
     /**
      * Total array area in square meters
      */
-    val AREA : Double
+    val area : Double
         get() {
             val o = __offset(16)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -118,7 +118,7 @@ class OOS : Table() {
     /**
      * Beginning of life power output in Watts
      */
-    val POWER_BOL : Double
+    val powerBol : Double
         get() {
             val o = __offset(18)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -126,7 +126,7 @@ class OOS : Table() {
     /**
      * End of life power output in Watts
      */
-    val POWER_EOL : Double
+    val powerEol : Double
         get() {
             val o = __offset(20)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -134,7 +134,7 @@ class OOS : Table() {
     /**
      * Conversion efficiency as fraction (0.0-1.0)
      */
-    val EFFICIENCY : Double
+    val efficiency : Double
         get() {
             val o = __offset(22)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -142,7 +142,7 @@ class OOS : Table() {
     /**
      * Degradation rate per year as fraction
      */
-    val DEGRADATION_RATE : Double
+    val degradationRate : Double
         get() {
             val o = __offset(24)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -150,7 +150,7 @@ class OOS : Table() {
     /**
      * Number of panels per array
      */
-    val NUM_PANELS : UInt
+    val numPanels : UInt
         get() {
             val o = __offset(26)
             return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
@@ -158,7 +158,7 @@ class OOS : Table() {
     /**
      * Whether the array is deployable
      */
-    val DEPLOYABLE : Boolean
+    val deployable : Boolean
         get() {
             val o = __offset(28)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -166,7 +166,7 @@ class OOS : Table() {
     /**
      * Whether the array is articulable/tracking
      */
-    val TRACKING : Boolean
+    val tracking : Boolean
         get() {
             val o = __offset(30)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -174,7 +174,7 @@ class OOS : Table() {
     /**
      * Array mass in kg
      */
-    val MASS : Double
+    val mass : Double
         get() {
             val o = __offset(32)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -182,7 +182,7 @@ class OOS : Table() {
     /**
      * Additional notes
      */
-    val NOTES : String?
+    val notes : String?
         get() {
             val o = __offset(34)
             return if (o != 0) {
@@ -191,53 +191,53 @@ class OOS : Table() {
                 null
             }
         }
-    val NOTESAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(34, 1)
-    fun NOTESInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 34, 1)
+    val notesAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(34, 1)
+    fun notesInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 34, 1)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsOOS(_bb: ByteBuffer): OOS = getRootAsOOS(_bb, OOS())
         fun getRootAsOOS(_bb: ByteBuffer, obj: OOS): OOS {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun OOSBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$OOS")
-        fun createOOS(builder: FlatBufferBuilder, IDOffset: Int, ID_ON_ORBITOffset: Int, ID_SOLAR_ARRAYOffset: Int, NAMEOffset: Int, CELL_TYPEOffset: Int, QUANTITY: UInt, AREA: Double, POWER_BOL: Double, POWER_EOL: Double, EFFICIENCY: Double, DEGRADATION_RATE: Double, NUM_PANELS: UInt, DEPLOYABLE: Boolean, TRACKING: Boolean, MASS: Double, NOTESOffset: Int) : Int {
+        fun createOOS(builder: FlatBufferBuilder, idOffset: Int, idOnOrbitOffset: Int, idSolarArrayOffset: Int, nameOffset: Int, cellTypeOffset: Int, quantity: UInt, area: Double, powerBol: Double, powerEol: Double, efficiency: Double, degradationRate: Double, numPanels: UInt, deployable: Boolean, tracking: Boolean, mass: Double, notesOffset: Int) : Int {
             builder.startTable(16)
-            addMASS(builder, MASS)
-            addDEGRADATION_RATE(builder, DEGRADATION_RATE)
-            addEFFICIENCY(builder, EFFICIENCY)
-            addPOWER_EOL(builder, POWER_EOL)
-            addPOWER_BOL(builder, POWER_BOL)
-            addAREA(builder, AREA)
-            addNOTES(builder, NOTESOffset)
-            addNUM_PANELS(builder, NUM_PANELS)
-            addQUANTITY(builder, QUANTITY)
-            addCELL_TYPE(builder, CELL_TYPEOffset)
-            addNAME(builder, NAMEOffset)
-            addID_SOLAR_ARRAY(builder, ID_SOLAR_ARRAYOffset)
-            addID_ON_ORBIT(builder, ID_ON_ORBITOffset)
-            addID(builder, IDOffset)
-            addTRACKING(builder, TRACKING)
-            addDEPLOYABLE(builder, DEPLOYABLE)
+            addMASS(builder, mass)
+            addDEGRADATIONRATE(builder, degradationRate)
+            addEFFICIENCY(builder, efficiency)
+            addPOWEREOL(builder, powerEol)
+            addPOWERBOL(builder, powerBol)
+            addAREA(builder, area)
+            addNOTES(builder, notesOffset)
+            addNUMPANELS(builder, numPanels)
+            addQUANTITY(builder, quantity)
+            addCELLTYPE(builder, cellTypeOffset)
+            addNAME(builder, nameOffset)
+            addIDSOLARARRAY(builder, idSolarArrayOffset)
+            addIDONORBIT(builder, idOnOrbitOffset)
+            addID(builder, idOffset)
+            addTRACKING(builder, tracking)
+            addDEPLOYABLE(builder, deployable)
             return endOOS(builder)
         }
         fun startOOS(builder: FlatBufferBuilder) = builder.startTable(16)
-        fun addID(builder: FlatBufferBuilder, ID: Int) = builder.addOffset(0, ID, 0)
-        fun addID_ON_ORBIT(builder: FlatBufferBuilder, ID_ON_ORBIT: Int) = builder.addOffset(1, ID_ON_ORBIT, 0)
-        fun addID_SOLAR_ARRAY(builder: FlatBufferBuilder, ID_SOLAR_ARRAY: Int) = builder.addOffset(2, ID_SOLAR_ARRAY, 0)
-        fun addNAME(builder: FlatBufferBuilder, NAME: Int) = builder.addOffset(3, NAME, 0)
-        fun addCELL_TYPE(builder: FlatBufferBuilder, CELL_TYPE: Int) = builder.addOffset(4, CELL_TYPE, 0)
-        fun addQUANTITY(builder: FlatBufferBuilder, QUANTITY: UInt) = builder.addInt(5, QUANTITY.toInt(), 0)
-        fun addAREA(builder: FlatBufferBuilder, AREA: Double) = builder.addDouble(6, AREA, 0.0)
-        fun addPOWER_BOL(builder: FlatBufferBuilder, POWER_BOL: Double) = builder.addDouble(7, POWER_BOL, 0.0)
-        fun addPOWER_EOL(builder: FlatBufferBuilder, POWER_EOL: Double) = builder.addDouble(8, POWER_EOL, 0.0)
-        fun addEFFICIENCY(builder: FlatBufferBuilder, EFFICIENCY: Double) = builder.addDouble(9, EFFICIENCY, 0.0)
-        fun addDEGRADATION_RATE(builder: FlatBufferBuilder, DEGRADATION_RATE: Double) = builder.addDouble(10, DEGRADATION_RATE, 0.0)
-        fun addNUM_PANELS(builder: FlatBufferBuilder, NUM_PANELS: UInt) = builder.addInt(11, NUM_PANELS.toInt(), 0)
-        fun addDEPLOYABLE(builder: FlatBufferBuilder, DEPLOYABLE: Boolean) = builder.addBoolean(12, DEPLOYABLE, false)
-        fun addTRACKING(builder: FlatBufferBuilder, TRACKING: Boolean) = builder.addBoolean(13, TRACKING, false)
-        fun addMASS(builder: FlatBufferBuilder, MASS: Double) = builder.addDouble(14, MASS, 0.0)
-        fun addNOTES(builder: FlatBufferBuilder, NOTES: Int) = builder.addOffset(15, NOTES, 0)
+        fun addID(builder: FlatBufferBuilder, id: Int) = builder.addOffset(0, id, 0)
+        fun addIDONORBIT(builder: FlatBufferBuilder, idOnOrbit: Int) = builder.addOffset(1, idOnOrbit, 0)
+        fun addIDSOLARARRAY(builder: FlatBufferBuilder, idSolarArray: Int) = builder.addOffset(2, idSolarArray, 0)
+        fun addNAME(builder: FlatBufferBuilder, name: Int) = builder.addOffset(3, name, 0)
+        fun addCELLTYPE(builder: FlatBufferBuilder, cellType: Int) = builder.addOffset(4, cellType, 0)
+        fun addQUANTITY(builder: FlatBufferBuilder, quantity: UInt) = builder.addInt(5, quantity.toInt(), 0)
+        fun addAREA(builder: FlatBufferBuilder, area: Double) = builder.addDouble(6, area, 0.0)
+        fun addPOWERBOL(builder: FlatBufferBuilder, powerBol: Double) = builder.addDouble(7, powerBol, 0.0)
+        fun addPOWEREOL(builder: FlatBufferBuilder, powerEol: Double) = builder.addDouble(8, powerEol, 0.0)
+        fun addEFFICIENCY(builder: FlatBufferBuilder, efficiency: Double) = builder.addDouble(9, efficiency, 0.0)
+        fun addDEGRADATIONRATE(builder: FlatBufferBuilder, degradationRate: Double) = builder.addDouble(10, degradationRate, 0.0)
+        fun addNUMPANELS(builder: FlatBufferBuilder, numPanels: UInt) = builder.addInt(11, numPanels.toInt(), 0)
+        fun addDEPLOYABLE(builder: FlatBufferBuilder, deployable: Boolean) = builder.addBoolean(12, deployable, false)
+        fun addTRACKING(builder: FlatBufferBuilder, tracking: Boolean) = builder.addBoolean(13, tracking, false)
+        fun addMASS(builder: FlatBufferBuilder, mass: Double) = builder.addDouble(14, mass, 0.0)
+        fun addNOTES(builder: FlatBufferBuilder, notes: Int) = builder.addOffset(15, notes, 0)
         fun endOOS(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

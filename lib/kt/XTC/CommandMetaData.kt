@@ -32,8 +32,8 @@ class CommandMetaData : Table() {
     /**
      * Argument type definitions
      */
-    val ARGUMENT_TYPE_SET : ArgumentTypeSet? get() = ARGUMENT_TYPE_SET(ArgumentTypeSet())
-    fun ARGUMENT_TYPE_SET(obj: ArgumentTypeSet) : ArgumentTypeSet? {
+    val argumentTypeSet : ArgumentTypeSet? get() = argumentTypeSet(ArgumentTypeSet())
+    fun argumentTypeSet(obj: ArgumentTypeSet) : ArgumentTypeSet? {
         val o = __offset(4)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -44,8 +44,8 @@ class CommandMetaData : Table() {
     /**
      * Parameter types used by commands
      */
-    val PARAMETER_TYPE_SET : ParameterTypeSet? get() = PARAMETER_TYPE_SET(ParameterTypeSet())
-    fun PARAMETER_TYPE_SET(obj: ParameterTypeSet) : ParameterTypeSet? {
+    val parameterTypeSet : ParameterTypeSet? get() = parameterTypeSet(ParameterTypeSet())
+    fun parameterTypeSet(obj: ParameterTypeSet) : ParameterTypeSet? {
         val o = __offset(6)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -56,8 +56,8 @@ class CommandMetaData : Table() {
     /**
      * Parameters used by commands
      */
-    val PARAMETER_SET : ParameterSet? get() = PARAMETER_SET(ParameterSet())
-    fun PARAMETER_SET(obj: ParameterSet) : ParameterSet? {
+    val parameterSet : ParameterSet? get() = parameterSet(ParameterSet())
+    fun parameterSet(obj: ParameterSet) : ParameterSet? {
         val o = __offset(8)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -68,8 +68,8 @@ class CommandMetaData : Table() {
     /**
      * MetaCommand definitions
      */
-    val META_COMMAND_SET : MetaCommandSet? get() = META_COMMAND_SET(MetaCommandSet())
-    fun META_COMMAND_SET(obj: MetaCommandSet) : MetaCommandSet? {
+    val metaCommandSet : MetaCommandSet? get() = metaCommandSet(MetaCommandSet())
+    fun metaCommandSet(obj: MetaCommandSet) : MetaCommandSet? {
         val o = __offset(10)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -80,8 +80,8 @@ class CommandMetaData : Table() {
     /**
      * Command container set
      */
-    val COMMAND_CONTAINER_SET : ContainerSet? get() = COMMAND_CONTAINER_SET(ContainerSet())
-    fun COMMAND_CONTAINER_SET(obj: ContainerSet) : ContainerSet? {
+    val commandContainerSet : ContainerSet? get() = commandContainerSet(ContainerSet())
+    fun commandContainerSet(obj: ContainerSet) : ContainerSet? {
         val o = __offset(12)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -92,8 +92,8 @@ class CommandMetaData : Table() {
     /**
      * Algorithm definitions
      */
-    val ALGORITHM_SET : AlgorithmSet? get() = ALGORITHM_SET(AlgorithmSet())
-    fun ALGORITHM_SET(obj: AlgorithmSet) : AlgorithmSet? {
+    val algorithmSet : AlgorithmSet? get() = algorithmSet(AlgorithmSet())
+    fun algorithmSet(obj: AlgorithmSet) : AlgorithmSet? {
         val o = __offset(14)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -104,8 +104,8 @@ class CommandMetaData : Table() {
     /**
      * Stream definitions
      */
-    val STREAM_SET : StreamSet? get() = STREAM_SET(StreamSet())
-    fun STREAM_SET(obj: StreamSet) : StreamSet? {
+    val streamSet : StreamSet? get() = streamSet(StreamSet())
+    fun streamSet(obj: StreamSet) : StreamSet? {
         val o = __offset(16)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -114,31 +114,31 @@ class CommandMetaData : Table() {
         }
     }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsCommandMetaData(_bb: ByteBuffer): CommandMetaData = getRootAsCommandMetaData(_bb, CommandMetaData())
         fun getRootAsCommandMetaData(_bb: ByteBuffer, obj: CommandMetaData): CommandMetaData {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createCommandMetaData(builder: FlatBufferBuilder, ARGUMENT_TYPE_SETOffset: Int, PARAMETER_TYPE_SETOffset: Int, PARAMETER_SETOffset: Int, META_COMMAND_SETOffset: Int, COMMAND_CONTAINER_SETOffset: Int, ALGORITHM_SETOffset: Int, STREAM_SETOffset: Int) : Int {
+        fun createCommandMetaData(builder: FlatBufferBuilder, argumentTypeSetOffset: Int, parameterTypeSetOffset: Int, parameterSetOffset: Int, metaCommandSetOffset: Int, commandContainerSetOffset: Int, algorithmSetOffset: Int, streamSetOffset: Int) : Int {
             builder.startTable(7)
-            addSTREAM_SET(builder, STREAM_SETOffset)
-            addALGORITHM_SET(builder, ALGORITHM_SETOffset)
-            addCOMMAND_CONTAINER_SET(builder, COMMAND_CONTAINER_SETOffset)
-            addMETA_COMMAND_SET(builder, META_COMMAND_SETOffset)
-            addPARAMETER_SET(builder, PARAMETER_SETOffset)
-            addPARAMETER_TYPE_SET(builder, PARAMETER_TYPE_SETOffset)
-            addARGUMENT_TYPE_SET(builder, ARGUMENT_TYPE_SETOffset)
+            addSTREAMSET(builder, streamSetOffset)
+            addALGORITHMSET(builder, algorithmSetOffset)
+            addCOMMANDCONTAINERSET(builder, commandContainerSetOffset)
+            addMETACOMMANDSET(builder, metaCommandSetOffset)
+            addPARAMETERSET(builder, parameterSetOffset)
+            addPARAMETERTYPESET(builder, parameterTypeSetOffset)
+            addARGUMENTTYPESET(builder, argumentTypeSetOffset)
             return endCommandMetaData(builder)
         }
         fun startCommandMetaData(builder: FlatBufferBuilder) = builder.startTable(7)
-        fun addARGUMENT_TYPE_SET(builder: FlatBufferBuilder, ARGUMENT_TYPE_SET: Int) = builder.addOffset(0, ARGUMENT_TYPE_SET, 0)
-        fun addPARAMETER_TYPE_SET(builder: FlatBufferBuilder, PARAMETER_TYPE_SET: Int) = builder.addOffset(1, PARAMETER_TYPE_SET, 0)
-        fun addPARAMETER_SET(builder: FlatBufferBuilder, PARAMETER_SET: Int) = builder.addOffset(2, PARAMETER_SET, 0)
-        fun addMETA_COMMAND_SET(builder: FlatBufferBuilder, META_COMMAND_SET: Int) = builder.addOffset(3, META_COMMAND_SET, 0)
-        fun addCOMMAND_CONTAINER_SET(builder: FlatBufferBuilder, COMMAND_CONTAINER_SET: Int) = builder.addOffset(4, COMMAND_CONTAINER_SET, 0)
-        fun addALGORITHM_SET(builder: FlatBufferBuilder, ALGORITHM_SET: Int) = builder.addOffset(5, ALGORITHM_SET, 0)
-        fun addSTREAM_SET(builder: FlatBufferBuilder, STREAM_SET: Int) = builder.addOffset(6, STREAM_SET, 0)
+        fun addARGUMENTTYPESET(builder: FlatBufferBuilder, argumentTypeSet: Int) = builder.addOffset(0, argumentTypeSet, 0)
+        fun addPARAMETERTYPESET(builder: FlatBufferBuilder, parameterTypeSet: Int) = builder.addOffset(1, parameterTypeSet, 0)
+        fun addPARAMETERSET(builder: FlatBufferBuilder, parameterSet: Int) = builder.addOffset(2, parameterSet, 0)
+        fun addMETACOMMANDSET(builder: FlatBufferBuilder, metaCommandSet: Int) = builder.addOffset(3, metaCommandSet, 0)
+        fun addCOMMANDCONTAINERSET(builder: FlatBufferBuilder, commandContainerSet: Int) = builder.addOffset(4, commandContainerSet, 0)
+        fun addALGORITHMSET(builder: FlatBufferBuilder, algorithmSet: Int) = builder.addOffset(5, algorithmSet, 0)
+        fun addSTREAMSET(builder: FlatBufferBuilder, streamSet: Int) = builder.addOffset(6, streamSet, 0)
         fun endCommandMetaData(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

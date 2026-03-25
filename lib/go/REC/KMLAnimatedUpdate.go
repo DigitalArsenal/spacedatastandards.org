@@ -51,9 +51,17 @@ func (rcv *KMLAnimatedUpdate) DURATION() float64 {
 	return 0.0
 }
 
+func (rcv *KMLAnimatedUpdate) Duration() float64 {
+	return rcv.DURATION()
+}
+
 /// Duration in seconds
 func (rcv *KMLAnimatedUpdate) MutateDURATION(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(4, n)
+}
+
+func (rcv *KMLAnimatedUpdate) MutateDuration(n float64) bool {
+	return rcv.MutateDURATION(n)
 }
 
 /// Delayed start in seconds
@@ -65,9 +73,17 @@ func (rcv *KMLAnimatedUpdate) DELAYED_START() float64 {
 	return 0.0
 }
 
+func (rcv *KMLAnimatedUpdate) DelayedStart() float64 {
+	return rcv.DELAYED_START()
+}
+
 /// Delayed start in seconds
 func (rcv *KMLAnimatedUpdate) MutateDELAYED_START(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(6, n)
+}
+
+func (rcv *KMLAnimatedUpdate) MutateDelayedStart(n float64) bool {
+	return rcv.MutateDELAYED_START(n)
 }
 
 /// Update
@@ -84,6 +100,10 @@ func (rcv *KMLAnimatedUpdate) UPDATE(obj *KMLUpdate) *KMLUpdate {
 	return nil
 }
 
+func (rcv *KMLAnimatedUpdate) Update(obj *KMLUpdate) *KMLUpdate {
+	return rcv.UPDATE(obj)
+}
+
 /// Update
 func KMLAnimatedUpdateStart(builder *flatbuffers.Builder) {
 	builder.StartObject(3)
@@ -91,11 +111,20 @@ func KMLAnimatedUpdateStart(builder *flatbuffers.Builder) {
 func KMLAnimatedUpdateAddDURATION(builder *flatbuffers.Builder, DURATION float64) {
 	builder.PrependFloat64Slot(0, DURATION, 0.0)
 }
+func KMLAnimatedUpdateAddDuration(builder *flatbuffers.Builder, DURATION float64) {
+	KMLAnimatedUpdateAddDURATION(builder, DURATION)
+}
 func KMLAnimatedUpdateAddDELAYED_START(builder *flatbuffers.Builder, DELAYED_START float64) {
 	builder.PrependFloat64Slot(1, DELAYED_START, 0.0)
 }
+func KMLAnimatedUpdateAddDelayedStart(builder *flatbuffers.Builder, DELAYED_START float64) {
+	KMLAnimatedUpdateAddDELAYED_START(builder, DELAYED_START)
+}
 func KMLAnimatedUpdateAddUPDATE(builder *flatbuffers.Builder, UPDATE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(UPDATE), 0)
+}
+func KMLAnimatedUpdateAddUpdate(builder *flatbuffers.Builder, UPDATE flatbuffers.UOffsetT) {
+	KMLAnimatedUpdateAddUPDATE(builder, UPDATE)
 }
 func KMLAnimatedUpdateEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

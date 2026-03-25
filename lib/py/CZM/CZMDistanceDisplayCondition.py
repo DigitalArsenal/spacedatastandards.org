@@ -73,15 +73,19 @@ def End(builder):
 class CZMDistanceDisplayConditionT(object):
 
     # CZMDistanceDisplayConditionT
-    def __init__(self):
-        self.NEAR_DISTANCE = 0.0  # type: float
-        self.FAR_DISTANCE = 0.0  # type: float
+    def __init__(
+        self,
+        NEAR_DISTANCE = 0.0,
+        FAR_DISTANCE = 0.0,
+    ):
+        self.NEAR_DISTANCE = NEAR_DISTANCE  # type: float
+        self.FAR_DISTANCE = FAR_DISTANCE  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        czmdistanceDisplayCondition = CZMDistanceDisplayCondition()
-        czmdistanceDisplayCondition.Init(buf, pos)
-        return cls.InitFromObj(czmdistanceDisplayCondition)
+        tmpCzmdistanceDisplayCondition = CZMDistanceDisplayCondition()
+        tmpCzmdistanceDisplayCondition.Init(buf, pos)
+        return cls.InitFromObj(tmpCzmdistanceDisplayCondition)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -89,22 +93,22 @@ class CZMDistanceDisplayConditionT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, czmdistanceDisplayCondition):
+    def InitFromObj(cls, tmpCzmdistanceDisplayCondition):
         x = CZMDistanceDisplayConditionT()
-        x._UnPack(czmdistanceDisplayCondition)
+        x._UnPack(tmpCzmdistanceDisplayCondition)
         return x
 
     # CZMDistanceDisplayConditionT
-    def _UnPack(self, czmdistanceDisplayCondition):
-        if czmdistanceDisplayCondition is None:
+    def _UnPack(self, CZMDistanceDisplayCondition):
+        if CZMDistanceDisplayCondition is None:
             return
-        self.NEAR_DISTANCE = czmdistanceDisplayCondition.NEAR_DISTANCE()
-        self.FAR_DISTANCE = czmdistanceDisplayCondition.FAR_DISTANCE()
+        self.NEAR_DISTANCE = CZMDistanceDisplayCondition.NEAR_DISTANCE()
+        self.FAR_DISTANCE = CZMDistanceDisplayCondition.FAR_DISTANCE()
 
     # CZMDistanceDisplayConditionT
     def Pack(self, builder):
         CZMDistanceDisplayConditionStart(builder)
         CZMDistanceDisplayConditionAddNEAR_DISTANCE(builder, self.NEAR_DISTANCE)
         CZMDistanceDisplayConditionAddFAR_DISTANCE(builder, self.FAR_DISTANCE)
-        czmdistanceDisplayCondition = CZMDistanceDisplayConditionEnd(builder)
-        return czmdistanceDisplayCondition
+        CZMDistanceDisplayCondition = CZMDistanceDisplayConditionEnd(builder)
+        return CZMDistanceDisplayCondition

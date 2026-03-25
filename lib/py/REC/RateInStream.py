@@ -2,4 +2,134 @@
 
 # namespace: 
 
-# NOTE RateInStream.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Rate specification for container in stream
+class RateInStream(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = RateInStream()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsRateInStream(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def RateInStreamBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x58\x54\x43", size_prefixed=size_prefixed)
+
+    # RateInStream
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Stream reference
+    # RateInStream
+    def STREAM_REF(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Rate value
+    # RateInStream
+    def RATE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Rate basis
+    # RateInStream
+    def BASIS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+def RateInStreamStart(builder):
+    builder.StartObject(3)
+
+def Start(builder):
+    RateInStreamStart(builder)
+
+def RateInStreamAddSTREAM_REF(builder, STREAM_REF):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(STREAM_REF), 0)
+
+def AddSTREAM_REF(builder, STREAM_REF):
+    RateInStreamAddSTREAM_REF(builder, STREAM_REF)
+
+def RateInStreamAddRATE(builder, RATE):
+    builder.PrependFloat64Slot(1, RATE, 0.0)
+
+def AddRATE(builder, RATE):
+    RateInStreamAddRATE(builder, RATE)
+
+def RateInStreamAddBASIS(builder, BASIS):
+    builder.PrependInt8Slot(2, BASIS, 0)
+
+def AddBASIS(builder, BASIS):
+    RateInStreamAddBASIS(builder, BASIS)
+
+def RateInStreamEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return RateInStreamEnd(builder)
+
+
+class RateInStreamT(object):
+
+    # RateInStreamT
+    def __init__(
+        self,
+        STREAM_REF = None,
+        RATE = 0.0,
+        BASIS = 0,
+    ):
+        self.STREAM_REF = STREAM_REF  # type: Optional[str]
+        self.RATE = RATE  # type: float
+        self.BASIS = BASIS  # type: int
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpRateInStream = RateInStream()
+        tmpRateInStream.Init(buf, pos)
+        return cls.InitFromObj(tmpRateInStream)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpRateInStream):
+        x = RateInStreamT()
+        x._UnPack(tmpRateInStream)
+        return x
+
+    # RateInStreamT
+    def _UnPack(self, RateInStream):
+        if RateInStream is None:
+            return
+        self.STREAM_REF = RateInStream.STREAM_REF()
+        self.RATE = RateInStream.RATE()
+        self.BASIS = RateInStream.BASIS()
+
+    # RateInStreamT
+    def Pack(self, builder):
+        if self.STREAM_REF is not None:
+            STREAM_REF = builder.CreateString(self.STREAM_REF)
+        RateInStreamStart(builder)
+        if self.STREAM_REF is not None:
+            RateInStreamAddSTREAM_REF(builder, STREAM_REF)
+        RateInStreamAddRATE(builder, self.RATE)
+        RateInStreamAddBASIS(builder, self.BASIS)
+        RateInStream = RateInStreamEnd(builder)
+        return RateInStream

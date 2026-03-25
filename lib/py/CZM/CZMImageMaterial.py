@@ -124,18 +124,25 @@ except:
 class CZMImageMaterialT(object):
 
     # CZMImageMaterialT
-    def __init__(self):
-        self.IMAGE = None  # type: str
-        self.REPEAT_X = 0.0  # type: float
-        self.REPEAT_Y = 0.0  # type: float
-        self.COLOR = None  # type: Optional[CZMColor.CZMColorT]
-        self.TRANSPARENT = False  # type: bool
+    def __init__(
+        self,
+        IMAGE = None,
+        REPEAT_X = 0.0,
+        REPEAT_Y = 0.0,
+        COLOR = None,
+        TRANSPARENT = False,
+    ):
+        self.IMAGE = IMAGE  # type: Optional[str]
+        self.REPEAT_X = REPEAT_X  # type: float
+        self.REPEAT_Y = REPEAT_Y  # type: float
+        self.COLOR = COLOR  # type: Optional[CZMColor.CZMColorT]
+        self.TRANSPARENT = TRANSPARENT  # type: bool
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        czmimageMaterial = CZMImageMaterial()
-        czmimageMaterial.Init(buf, pos)
-        return cls.InitFromObj(czmimageMaterial)
+        tmpCzmimageMaterial = CZMImageMaterial()
+        tmpCzmimageMaterial.Init(buf, pos)
+        return cls.InitFromObj(tmpCzmimageMaterial)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -143,21 +150,21 @@ class CZMImageMaterialT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, czmimageMaterial):
+    def InitFromObj(cls, tmpCzmimageMaterial):
         x = CZMImageMaterialT()
-        x._UnPack(czmimageMaterial)
+        x._UnPack(tmpCzmimageMaterial)
         return x
 
     # CZMImageMaterialT
-    def _UnPack(self, czmimageMaterial):
-        if czmimageMaterial is None:
+    def _UnPack(self, CZMImageMaterial):
+        if CZMImageMaterial is None:
             return
-        self.IMAGE = czmimageMaterial.IMAGE()
-        self.REPEAT_X = czmimageMaterial.REPEAT_X()
-        self.REPEAT_Y = czmimageMaterial.REPEAT_Y()
-        if czmimageMaterial.COLOR() is not None:
-            self.COLOR = CZMColor.CZMColorT.InitFromObj(czmimageMaterial.COLOR())
-        self.TRANSPARENT = czmimageMaterial.TRANSPARENT()
+        self.IMAGE = CZMImageMaterial.IMAGE()
+        self.REPEAT_X = CZMImageMaterial.REPEAT_X()
+        self.REPEAT_Y = CZMImageMaterial.REPEAT_Y()
+        if CZMImageMaterial.COLOR() is not None:
+            self.COLOR = CZMColor.CZMColorT.InitFromObj(CZMImageMaterial.COLOR())
+        self.TRANSPARENT = CZMImageMaterial.TRANSPARENT()
 
     # CZMImageMaterialT
     def Pack(self, builder):
@@ -173,5 +180,5 @@ class CZMImageMaterialT(object):
         if self.COLOR is not None:
             CZMImageMaterialAddCOLOR(builder, COLOR)
         CZMImageMaterialAddTRANSPARENT(builder, self.TRANSPARENT)
-        czmimageMaterial = CZMImageMaterialEnd(builder)
-        return czmimageMaterial
+        CZMImageMaterial = CZMImageMaterialEnd(builder)
+        return CZMImageMaterial

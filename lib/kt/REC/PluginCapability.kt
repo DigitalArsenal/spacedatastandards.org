@@ -32,7 +32,7 @@ class PluginCapability : Table() {
     /**
      * Capability name, e.g., "gpu_compute", "wasm_simd"
      */
-    val NAME : String?
+    val name : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class PluginCapability : Table() {
                 null
             }
         }
-    val NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val nameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun nameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Capability version
      */
-    val VERSION : String?
+    val version : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -55,34 +55,34 @@ class PluginCapability : Table() {
                 null
             }
         }
-    val VERSIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun VERSIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val versionAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun versionInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * Whether this capability is required
      */
-    val REQUIRED : Boolean
+    val required : Boolean
         get() {
             val o = __offset(8)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsPluginCapability(_bb: ByteBuffer): PluginCapability = getRootAsPluginCapability(_bb, PluginCapability())
         fun getRootAsPluginCapability(_bb: ByteBuffer, obj: PluginCapability): PluginCapability {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createPluginCapability(builder: FlatBufferBuilder, NAMEOffset: Int, VERSIONOffset: Int, REQUIRED: Boolean) : Int {
+        fun createPluginCapability(builder: FlatBufferBuilder, nameOffset: Int, versionOffset: Int, required: Boolean) : Int {
             builder.startTable(3)
-            addVERSION(builder, VERSIONOffset)
-            addNAME(builder, NAMEOffset)
-            addREQUIRED(builder, REQUIRED)
+            addVERSION(builder, versionOffset)
+            addNAME(builder, nameOffset)
+            addREQUIRED(builder, required)
             return endPluginCapability(builder)
         }
         fun startPluginCapability(builder: FlatBufferBuilder) = builder.startTable(3)
-        fun addNAME(builder: FlatBufferBuilder, NAME: Int) = builder.addOffset(0, NAME, 0)
-        fun addVERSION(builder: FlatBufferBuilder, VERSION: Int) = builder.addOffset(1, VERSION, 0)
-        fun addREQUIRED(builder: FlatBufferBuilder, REQUIRED: Boolean) = builder.addBoolean(2, REQUIRED, false)
+        fun addNAME(builder: FlatBufferBuilder, name: Int) = builder.addOffset(0, name, 0)
+        fun addVERSION(builder: FlatBufferBuilder, version: Int) = builder.addOffset(1, version, 0)
+        fun addREQUIRED(builder: FlatBufferBuilder, required: Boolean) = builder.addBoolean(2, required, false)
         fun endPluginCapability(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

@@ -187,6 +187,16 @@ def REVStartREVIEWER_SIGNATUREVector(builder, numElems):
 def StartREVIEWER_SIGNATUREVector(builder, numElems):
     return REVStartREVIEWER_SIGNATUREVector(builder, numElems)
 
+def REVCreateREVIEWER_SIGNATUREVector(builder, data):
+    data = list(data)
+    builder.StartVector(1, len(data), 1)
+    for item in reversed(data):
+        builder.PrependUint8(item)
+    return builder.EndVector()
+
+def CreateREVIEWER_SIGNATUREVector(builder, data):
+    REVCreateREVIEWER_SIGNATUREVector(builder, data)
+
 def REVEnd(builder):
     return builder.EndObject()
 
@@ -201,22 +211,33 @@ except:
 class REVT(object):
 
     # REVT
-    def __init__(self):
-        self.REVIEW_ID = None  # type: str
-        self.LISTING_ID = None  # type: str
-        self.REVIEWER_PEER_ID = None  # type: str
-        self.RATING = 0  # type: int
-        self.TITLE = None  # type: str
-        self.CONTENT = None  # type: str
-        self.ACL_GRANT_ID = None  # type: str
-        self.TIMESTAMP = 0  # type: int
-        self.REVIEWER_SIGNATURE = None  # type: List[int]
+    def __init__(
+        self,
+        REVIEW_ID = None,
+        LISTING_ID = None,
+        REVIEWER_PEER_ID = None,
+        RATING = 0,
+        TITLE = None,
+        CONTENT = None,
+        ACL_GRANT_ID = None,
+        TIMESTAMP = 0,
+        REVIEWER_SIGNATURE = None,
+    ):
+        self.REVIEW_ID = REVIEW_ID  # type: Optional[str]
+        self.LISTING_ID = LISTING_ID  # type: Optional[str]
+        self.REVIEWER_PEER_ID = REVIEWER_PEER_ID  # type: Optional[str]
+        self.RATING = RATING  # type: int
+        self.TITLE = TITLE  # type: Optional[str]
+        self.CONTENT = CONTENT  # type: Optional[str]
+        self.ACL_GRANT_ID = ACL_GRANT_ID  # type: Optional[str]
+        self.TIMESTAMP = TIMESTAMP  # type: int
+        self.REVIEWER_SIGNATURE = REVIEWER_SIGNATURE  # type: Optional[List[int]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        REV = REV()
-        REV.Init(buf, pos)
-        return cls.InitFromObj(REV)
+        tmpRev = REV()
+        tmpRev.Init(buf, pos)
+        return cls.InitFromObj(tmpRev)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -224,9 +245,9 @@ class REVT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, REV):
+    def InitFromObj(cls, tmpRev):
         x = REVT()
-        x._UnPack(REV)
+        x._UnPack(tmpRev)
         return x
 
     # REVT

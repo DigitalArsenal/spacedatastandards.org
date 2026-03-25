@@ -73,15 +73,19 @@ def End(builder):
 class KMLStyleMapPairT(object):
 
     # KMLStyleMapPairT
-    def __init__(self):
-        self.STATE = 0  # type: int
-        self.STYLE_URL = None  # type: str
+    def __init__(
+        self,
+        STATE = 0,
+        STYLE_URL = None,
+    ):
+        self.STATE = STATE  # type: int
+        self.STYLE_URL = STYLE_URL  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        kmlstyleMapPair = KMLStyleMapPair()
-        kmlstyleMapPair.Init(buf, pos)
-        return cls.InitFromObj(kmlstyleMapPair)
+        tmpKmlstyleMapPair = KMLStyleMapPair()
+        tmpKmlstyleMapPair.Init(buf, pos)
+        return cls.InitFromObj(tmpKmlstyleMapPair)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -89,17 +93,17 @@ class KMLStyleMapPairT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, kmlstyleMapPair):
+    def InitFromObj(cls, tmpKmlstyleMapPair):
         x = KMLStyleMapPairT()
-        x._UnPack(kmlstyleMapPair)
+        x._UnPack(tmpKmlstyleMapPair)
         return x
 
     # KMLStyleMapPairT
-    def _UnPack(self, kmlstyleMapPair):
-        if kmlstyleMapPair is None:
+    def _UnPack(self, KMLStyleMapPair):
+        if KMLStyleMapPair is None:
             return
-        self.STATE = kmlstyleMapPair.STATE()
-        self.STYLE_URL = kmlstyleMapPair.STYLE_URL()
+        self.STATE = KMLStyleMapPair.STATE()
+        self.STYLE_URL = KMLStyleMapPair.STYLE_URL()
 
     # KMLStyleMapPairT
     def Pack(self, builder):
@@ -109,5 +113,5 @@ class KMLStyleMapPairT(object):
         KMLStyleMapPairAddSTATE(builder, self.STATE)
         if self.STYLE_URL is not None:
             KMLStyleMapPairAddSTYLE_URL(builder, STYLE_URL)
-        kmlstyleMapPair = KMLStyleMapPairEnd(builder)
-        return kmlstyleMapPair
+        KMLStyleMapPair = KMLStyleMapPairEnd(builder)
+        return KMLStyleMapPair

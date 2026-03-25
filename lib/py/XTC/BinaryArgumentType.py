@@ -124,18 +124,25 @@ except:
 class BinaryArgumentTypeT(object):
 
     # BinaryArgumentTypeT
-    def __init__(self):
-        self.NAME = None  # type: str
-        self.SHORT_DESCRIPTION = None  # type: str
-        self.LONG_DESCRIPTION = None  # type: str
-        self.DATA_ENCODING = None  # type: Optional[BinaryDataEncoding.BinaryDataEncodingT]
-        self.INITIAL_VALUE = None  # type: str
+    def __init__(
+        self,
+        NAME = None,
+        SHORT_DESCRIPTION = None,
+        LONG_DESCRIPTION = None,
+        DATA_ENCODING = None,
+        INITIAL_VALUE = None,
+    ):
+        self.NAME = NAME  # type: Optional[str]
+        self.SHORT_DESCRIPTION = SHORT_DESCRIPTION  # type: Optional[str]
+        self.LONG_DESCRIPTION = LONG_DESCRIPTION  # type: Optional[str]
+        self.DATA_ENCODING = DATA_ENCODING  # type: Optional[BinaryDataEncoding.BinaryDataEncodingT]
+        self.INITIAL_VALUE = INITIAL_VALUE  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        binaryArgumentType = BinaryArgumentType()
-        binaryArgumentType.Init(buf, pos)
-        return cls.InitFromObj(binaryArgumentType)
+        tmpBinaryArgumentType = BinaryArgumentType()
+        tmpBinaryArgumentType.Init(buf, pos)
+        return cls.InitFromObj(tmpBinaryArgumentType)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -143,21 +150,21 @@ class BinaryArgumentTypeT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, binaryArgumentType):
+    def InitFromObj(cls, tmpBinaryArgumentType):
         x = BinaryArgumentTypeT()
-        x._UnPack(binaryArgumentType)
+        x._UnPack(tmpBinaryArgumentType)
         return x
 
     # BinaryArgumentTypeT
-    def _UnPack(self, binaryArgumentType):
-        if binaryArgumentType is None:
+    def _UnPack(self, BinaryArgumentType):
+        if BinaryArgumentType is None:
             return
-        self.NAME = binaryArgumentType.NAME()
-        self.SHORT_DESCRIPTION = binaryArgumentType.SHORT_DESCRIPTION()
-        self.LONG_DESCRIPTION = binaryArgumentType.LONG_DESCRIPTION()
-        if binaryArgumentType.DATA_ENCODING() is not None:
-            self.DATA_ENCODING = BinaryDataEncoding.BinaryDataEncodingT.InitFromObj(binaryArgumentType.DATA_ENCODING())
-        self.INITIAL_VALUE = binaryArgumentType.INITIAL_VALUE()
+        self.NAME = BinaryArgumentType.NAME()
+        self.SHORT_DESCRIPTION = BinaryArgumentType.SHORT_DESCRIPTION()
+        self.LONG_DESCRIPTION = BinaryArgumentType.LONG_DESCRIPTION()
+        if BinaryArgumentType.DATA_ENCODING() is not None:
+            self.DATA_ENCODING = BinaryDataEncoding.BinaryDataEncodingT.InitFromObj(BinaryArgumentType.DATA_ENCODING())
+        self.INITIAL_VALUE = BinaryArgumentType.INITIAL_VALUE()
 
     # BinaryArgumentTypeT
     def Pack(self, builder):
@@ -182,5 +189,5 @@ class BinaryArgumentTypeT(object):
             BinaryArgumentTypeAddDATA_ENCODING(builder, DATA_ENCODING)
         if self.INITIAL_VALUE is not None:
             BinaryArgumentTypeAddINITIAL_VALUE(builder, INITIAL_VALUE)
-        binaryArgumentType = BinaryArgumentTypeEnd(builder)
-        return binaryArgumentType
+        BinaryArgumentType = BinaryArgumentTypeEnd(builder)
+        return BinaryArgumentType

@@ -32,7 +32,7 @@ class ChainProof : Table() {
     /**
      * Chain identifier (e.g., "bitcoin", "ethereum", "solana")
      */
-    val CHAIN : String?
+    val chain : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class ChainProof : Table() {
                 null
             }
         }
-    val CHAINAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun CHAINInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val chainAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun chainInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Derived blockchain address
      */
-    val ADDRESS : String?
+    val address : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -55,12 +55,12 @@ class ChainProof : Table() {
                 null
             }
         }
-    val ADDRESSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun ADDRESSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val addressAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun addressInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * Public key for this chain (hex-encoded)
      */
-    val PUBLIC_KEY : String?
+    val publicKey : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -69,12 +69,12 @@ class ChainProof : Table() {
                 null
             }
         }
-    val PUBLIC_KEYAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun PUBLIC_KEYInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val publicKeyAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun publicKeyInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
     /**
      * BIP-44 derivation path (e.g., "m/44'/0'/0'/0/0")
      */
-    val KEY_PATH : String?
+    val keyPath : String?
         get() {
             val o = __offset(10)
             return if (o != 0) {
@@ -83,12 +83,12 @@ class ChainProof : Table() {
                 null
             }
         }
-    val KEY_PATHAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
-    fun KEY_PATHInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
+    val keyPathAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(10, 1)
+    fun keyPathInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 10, 1)
     /**
      * Signature over the attestation payload (hex-encoded)
      */
-    val SIGNATURE : String?
+    val signature : String?
         get() {
             val o = __offset(12)
             return if (o != 0) {
@@ -97,12 +97,12 @@ class ChainProof : Table() {
                 null
             }
         }
-    val SIGNATUREAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
-    fun SIGNATUREInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
+    val signatureAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(12, 1)
+    fun signatureInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 12, 1)
     /**
      * The canonical payload that was signed (hex-encoded)
      */
-    val SIGNED_PAYLOAD : String?
+    val signedPayload : String?
         get() {
             val o = __offset(14)
             return if (o != 0) {
@@ -111,12 +111,12 @@ class ChainProof : Table() {
                 null
             }
         }
-    val SIGNED_PAYLOADAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(14, 1)
-    fun SIGNED_PAYLOADInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 14, 1)
+    val signedPayloadAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(14, 1)
+    fun signedPayloadInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 14, 1)
     /**
      * Signature algorithm (e.g., "secp256k1-compact-bitcoin", "secp256k1-compact-ethereum", "ed25519")
      */
-    val ALGORITHM : String?
+    val algorithm : String?
         get() {
             val o = __offset(16)
             return if (o != 0) {
@@ -125,12 +125,12 @@ class ChainProof : Table() {
                 null
             }
         }
-    val ALGORITHMAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(16, 1)
-    fun ALGORITHMInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 16, 1)
+    val algorithmAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(16, 1)
+    fun algorithmInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 16, 1)
     /**
      * Signature encoding format (e.g., "compact", "raw-ed25519")
      */
-    val ENCODING : String?
+    val encoding : String?
         get() {
             val o = __offset(18)
             return if (o != 0) {
@@ -139,36 +139,36 @@ class ChainProof : Table() {
                 null
             }
         }
-    val ENCODINGAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(18, 1)
-    fun ENCODINGInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 18, 1)
+    val encodingAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(18, 1)
+    fun encodingInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 18, 1)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsChainProof(_bb: ByteBuffer): ChainProof = getRootAsChainProof(_bb, ChainProof())
         fun getRootAsChainProof(_bb: ByteBuffer, obj: ChainProof): ChainProof {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createChainProof(builder: FlatBufferBuilder, CHAINOffset: Int, ADDRESSOffset: Int, PUBLIC_KEYOffset: Int, KEY_PATHOffset: Int, SIGNATUREOffset: Int, SIGNED_PAYLOADOffset: Int, ALGORITHMOffset: Int, ENCODINGOffset: Int) : Int {
+        fun createChainProof(builder: FlatBufferBuilder, chainOffset: Int, addressOffset: Int, publicKeyOffset: Int, keyPathOffset: Int, signatureOffset: Int, signedPayloadOffset: Int, algorithmOffset: Int, encodingOffset: Int) : Int {
             builder.startTable(8)
-            addENCODING(builder, ENCODINGOffset)
-            addALGORITHM(builder, ALGORITHMOffset)
-            addSIGNED_PAYLOAD(builder, SIGNED_PAYLOADOffset)
-            addSIGNATURE(builder, SIGNATUREOffset)
-            addKEY_PATH(builder, KEY_PATHOffset)
-            addPUBLIC_KEY(builder, PUBLIC_KEYOffset)
-            addADDRESS(builder, ADDRESSOffset)
-            addCHAIN(builder, CHAINOffset)
+            addENCODING(builder, encodingOffset)
+            addALGORITHM(builder, algorithmOffset)
+            addSIGNEDPAYLOAD(builder, signedPayloadOffset)
+            addSIGNATURE(builder, signatureOffset)
+            addKEYPATH(builder, keyPathOffset)
+            addPUBLICKEY(builder, publicKeyOffset)
+            addADDRESS(builder, addressOffset)
+            addCHAIN(builder, chainOffset)
             return endChainProof(builder)
         }
         fun startChainProof(builder: FlatBufferBuilder) = builder.startTable(8)
-        fun addCHAIN(builder: FlatBufferBuilder, CHAIN: Int) = builder.addOffset(0, CHAIN, 0)
-        fun addADDRESS(builder: FlatBufferBuilder, ADDRESS: Int) = builder.addOffset(1, ADDRESS, 0)
-        fun addPUBLIC_KEY(builder: FlatBufferBuilder, PUBLIC_KEY: Int) = builder.addOffset(2, PUBLIC_KEY, 0)
-        fun addKEY_PATH(builder: FlatBufferBuilder, KEY_PATH: Int) = builder.addOffset(3, KEY_PATH, 0)
-        fun addSIGNATURE(builder: FlatBufferBuilder, SIGNATURE: Int) = builder.addOffset(4, SIGNATURE, 0)
-        fun addSIGNED_PAYLOAD(builder: FlatBufferBuilder, SIGNED_PAYLOAD: Int) = builder.addOffset(5, SIGNED_PAYLOAD, 0)
-        fun addALGORITHM(builder: FlatBufferBuilder, ALGORITHM: Int) = builder.addOffset(6, ALGORITHM, 0)
-        fun addENCODING(builder: FlatBufferBuilder, ENCODING: Int) = builder.addOffset(7, ENCODING, 0)
+        fun addCHAIN(builder: FlatBufferBuilder, chain: Int) = builder.addOffset(0, chain, 0)
+        fun addADDRESS(builder: FlatBufferBuilder, address: Int) = builder.addOffset(1, address, 0)
+        fun addPUBLICKEY(builder: FlatBufferBuilder, publicKey: Int) = builder.addOffset(2, publicKey, 0)
+        fun addKEYPATH(builder: FlatBufferBuilder, keyPath: Int) = builder.addOffset(3, keyPath, 0)
+        fun addSIGNATURE(builder: FlatBufferBuilder, signature: Int) = builder.addOffset(4, signature, 0)
+        fun addSIGNEDPAYLOAD(builder: FlatBufferBuilder, signedPayload: Int) = builder.addOffset(5, signedPayload, 0)
+        fun addALGORITHM(builder: FlatBufferBuilder, algorithm: Int) = builder.addOffset(6, algorithm, 0)
+        fun addENCODING(builder: FlatBufferBuilder, encoding: Int) = builder.addOffset(7, encoding, 0)
         fun endChainProof(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

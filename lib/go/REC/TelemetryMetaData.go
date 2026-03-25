@@ -56,6 +56,10 @@ func (rcv *TelemetryMetaData) PARAMETER_TYPE_SET(obj *ParameterTypeSet) *Paramet
 	return nil
 }
 
+func (rcv *TelemetryMetaData) ParameterTypeSet(obj *ParameterTypeSet) *ParameterTypeSet {
+	return rcv.PARAMETER_TYPE_SET(obj)
+}
+
 /// Parameter type definitions
 /// Parameter definitions
 func (rcv *TelemetryMetaData) PARAMETER_SET(obj *ParameterSet) *ParameterSet {
@@ -69,6 +73,10 @@ func (rcv *TelemetryMetaData) PARAMETER_SET(obj *ParameterSet) *ParameterSet {
 		return obj
 	}
 	return nil
+}
+
+func (rcv *TelemetryMetaData) ParameterSet(obj *ParameterSet) *ParameterSet {
+	return rcv.PARAMETER_SET(obj)
 }
 
 /// Parameter definitions
@@ -86,6 +94,10 @@ func (rcv *TelemetryMetaData) CONTAINER_SET(obj *ContainerSet) *ContainerSet {
 	return nil
 }
 
+func (rcv *TelemetryMetaData) ContainerSet(obj *ContainerSet) *ContainerSet {
+	return rcv.CONTAINER_SET(obj)
+}
+
 /// Container definitions
 /// Algorithm definitions
 func (rcv *TelemetryMetaData) ALGORITHM_SET(obj *AlgorithmSet) *AlgorithmSet {
@@ -99,6 +111,10 @@ func (rcv *TelemetryMetaData) ALGORITHM_SET(obj *AlgorithmSet) *AlgorithmSet {
 		return obj
 	}
 	return nil
+}
+
+func (rcv *TelemetryMetaData) AlgorithmSet(obj *AlgorithmSet) *AlgorithmSet {
+	return rcv.ALGORITHM_SET(obj)
 }
 
 /// Algorithm definitions
@@ -116,6 +132,10 @@ func (rcv *TelemetryMetaData) STREAM_SET(obj *StreamSet) *StreamSet {
 	return nil
 }
 
+func (rcv *TelemetryMetaData) StreamSet(obj *StreamSet) *StreamSet {
+	return rcv.STREAM_SET(obj)
+}
+
 /// Stream definitions
 func TelemetryMetaDataStart(builder *flatbuffers.Builder) {
 	builder.StartObject(5)
@@ -123,17 +143,32 @@ func TelemetryMetaDataStart(builder *flatbuffers.Builder) {
 func TelemetryMetaDataAddPARAMETER_TYPE_SET(builder *flatbuffers.Builder, PARAMETER_TYPE_SET flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(PARAMETER_TYPE_SET), 0)
 }
+func TelemetryMetaDataAddParameterTypeSet(builder *flatbuffers.Builder, PARAMETER_TYPE_SET flatbuffers.UOffsetT) {
+	TelemetryMetaDataAddPARAMETER_TYPE_SET(builder, PARAMETER_TYPE_SET)
+}
 func TelemetryMetaDataAddPARAMETER_SET(builder *flatbuffers.Builder, PARAMETER_SET flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(PARAMETER_SET), 0)
+}
+func TelemetryMetaDataAddParameterSet(builder *flatbuffers.Builder, PARAMETER_SET flatbuffers.UOffsetT) {
+	TelemetryMetaDataAddPARAMETER_SET(builder, PARAMETER_SET)
 }
 func TelemetryMetaDataAddCONTAINER_SET(builder *flatbuffers.Builder, CONTAINER_SET flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(CONTAINER_SET), 0)
 }
+func TelemetryMetaDataAddContainerSet(builder *flatbuffers.Builder, CONTAINER_SET flatbuffers.UOffsetT) {
+	TelemetryMetaDataAddCONTAINER_SET(builder, CONTAINER_SET)
+}
 func TelemetryMetaDataAddALGORITHM_SET(builder *flatbuffers.Builder, ALGORITHM_SET flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(ALGORITHM_SET), 0)
 }
+func TelemetryMetaDataAddAlgorithmSet(builder *flatbuffers.Builder, ALGORITHM_SET flatbuffers.UOffsetT) {
+	TelemetryMetaDataAddALGORITHM_SET(builder, ALGORITHM_SET)
+}
 func TelemetryMetaDataAddSTREAM_SET(builder *flatbuffers.Builder, STREAM_SET flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(STREAM_SET), 0)
+}
+func TelemetryMetaDataAddStreamSet(builder *flatbuffers.Builder, STREAM_SET flatbuffers.UOffsetT) {
+	TelemetryMetaDataAddSTREAM_SET(builder, STREAM_SET)
 }
 func TelemetryMetaDataEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

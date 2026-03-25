@@ -113,6 +113,12 @@ def HeaderStartCOMMENTVector(builder, numElems):
 def StartCOMMENTVector(builder, numElems):
     return HeaderStartCOMMENTVector(builder, numElems)
 
+def HeaderCreateCOMMENTVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateCOMMENTVector(builder, data):
+    HeaderCreateCOMMENTVector(builder, data)
+
 def HeaderAddCLASSIFICATION(builder, CLASSIFICATION):
     builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(CLASSIFICATION), 0)
 
@@ -151,19 +157,27 @@ except:
 class HeaderT(object):
 
     # HeaderT
-    def __init__(self):
-        self.CCSDS_OCM_VERS = None  # type: str
-        self.COMMENT = None  # type: List[str]
-        self.CLASSIFICATION = None  # type: str
-        self.CREATION_DATE = None  # type: str
-        self.ORIGINATOR = None  # type: str
-        self.MESSAGE_ID = None  # type: str
+    def __init__(
+        self,
+        CCSDS_OCM_VERS = None,
+        COMMENT = None,
+        CLASSIFICATION = None,
+        CREATION_DATE = None,
+        ORIGINATOR = None,
+        MESSAGE_ID = None,
+    ):
+        self.CCSDS_OCM_VERS = CCSDS_OCM_VERS  # type: Optional[str]
+        self.COMMENT = COMMENT  # type: Optional[List[Optional[str]]]
+        self.CLASSIFICATION = CLASSIFICATION  # type: Optional[str]
+        self.CREATION_DATE = CREATION_DATE  # type: Optional[str]
+        self.ORIGINATOR = ORIGINATOR  # type: Optional[str]
+        self.MESSAGE_ID = MESSAGE_ID  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        header = Header()
-        header.Init(buf, pos)
-        return cls.InitFromObj(header)
+        tmpHeader = Header()
+        tmpHeader.Init(buf, pos)
+        return cls.InitFromObj(tmpHeader)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -171,24 +185,24 @@ class HeaderT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, header):
+    def InitFromObj(cls, tmpHeader):
         x = HeaderT()
-        x._UnPack(header)
+        x._UnPack(tmpHeader)
         return x
 
     # HeaderT
-    def _UnPack(self, header):
-        if header is None:
+    def _UnPack(self, Header):
+        if Header is None:
             return
-        self.CCSDS_OCM_VERS = header.CCSDS_OCM_VERS()
-        if not header.COMMENTIsNone():
+        self.CCSDS_OCM_VERS = Header.CCSDS_OCM_VERS()
+        if not Header.COMMENTIsNone():
             self.COMMENT = []
-            for i in range(header.COMMENTLength()):
-                self.COMMENT.append(header.COMMENT(i))
-        self.CLASSIFICATION = header.CLASSIFICATION()
-        self.CREATION_DATE = header.CREATION_DATE()
-        self.ORIGINATOR = header.ORIGINATOR()
-        self.MESSAGE_ID = header.MESSAGE_ID()
+            for i in range(Header.COMMENTLength()):
+                self.COMMENT.append(Header.COMMENT(i))
+        self.CLASSIFICATION = Header.CLASSIFICATION()
+        self.CREATION_DATE = Header.CREATION_DATE()
+        self.ORIGINATOR = Header.ORIGINATOR()
+        self.MESSAGE_ID = Header.MESSAGE_ID()
 
     # HeaderT
     def Pack(self, builder):
@@ -223,5 +237,5 @@ class HeaderT(object):
             HeaderAddORIGINATOR(builder, ORIGINATOR)
         if self.MESSAGE_ID is not None:
             HeaderAddMESSAGE_ID(builder, MESSAGE_ID)
-        header = HeaderEnd(builder)
-        return header
+        Header = HeaderEnd(builder)
+        return Header

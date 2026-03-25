@@ -87,16 +87,21 @@ def End(builder):
 class KMLSimpleFieldT(object):
 
     # KMLSimpleFieldT
-    def __init__(self):
-        self.NAME = None  # type: str
-        self.FIELD_TYPE = None  # type: str
-        self.DISPLAY_NAME = None  # type: str
+    def __init__(
+        self,
+        NAME = None,
+        FIELD_TYPE = None,
+        DISPLAY_NAME = None,
+    ):
+        self.NAME = NAME  # type: Optional[str]
+        self.FIELD_TYPE = FIELD_TYPE  # type: Optional[str]
+        self.DISPLAY_NAME = DISPLAY_NAME  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        kmlsimpleField = KMLSimpleField()
-        kmlsimpleField.Init(buf, pos)
-        return cls.InitFromObj(kmlsimpleField)
+        tmpKmlsimpleField = KMLSimpleField()
+        tmpKmlsimpleField.Init(buf, pos)
+        return cls.InitFromObj(tmpKmlsimpleField)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -104,18 +109,18 @@ class KMLSimpleFieldT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, kmlsimpleField):
+    def InitFromObj(cls, tmpKmlsimpleField):
         x = KMLSimpleFieldT()
-        x._UnPack(kmlsimpleField)
+        x._UnPack(tmpKmlsimpleField)
         return x
 
     # KMLSimpleFieldT
-    def _UnPack(self, kmlsimpleField):
-        if kmlsimpleField is None:
+    def _UnPack(self, KMLSimpleField):
+        if KMLSimpleField is None:
             return
-        self.NAME = kmlsimpleField.NAME()
-        self.FIELD_TYPE = kmlsimpleField.FIELD_TYPE()
-        self.DISPLAY_NAME = kmlsimpleField.DISPLAY_NAME()
+        self.NAME = KMLSimpleField.NAME()
+        self.FIELD_TYPE = KMLSimpleField.FIELD_TYPE()
+        self.DISPLAY_NAME = KMLSimpleField.DISPLAY_NAME()
 
     # KMLSimpleFieldT
     def Pack(self, builder):
@@ -132,5 +137,5 @@ class KMLSimpleFieldT(object):
             KMLSimpleFieldAddFIELD_TYPE(builder, FIELD_TYPE)
         if self.DISPLAY_NAME is not None:
             KMLSimpleFieldAddDISPLAY_NAME(builder, DISPLAY_NAME)
-        kmlsimpleField = KMLSimpleFieldEnd(builder)
-        return kmlsimpleField
+        KMLSimpleField = KMLSimpleFieldEnd(builder)
+        return KMLSimpleField

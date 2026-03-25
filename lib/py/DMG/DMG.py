@@ -269,6 +269,16 @@ def DMGStartRESERVEDVector(builder, numElems):
 def StartRESERVEDVector(builder, numElems):
     return DMGStartRESERVEDVector(builder, numElems)
 
+def DMGCreateRESERVEDVector(builder, data):
+    data = list(data)
+    builder.StartVector(1, len(data), 1)
+    for item in reversed(data):
+        builder.PrependUint8(item)
+    return builder.EndVector()
+
+def CreateRESERVEDVector(builder, data):
+    DMGCreateRESERVEDVector(builder, data)
+
 def DMGEnd(builder):
     return builder.EndObject()
 
@@ -283,29 +293,47 @@ except:
 class DMGT(object):
 
     # DMGT
-    def __init__(self):
-        self.OVERALL_HEALTH = 0.0  # type: float
-        self.MOBILITY = 0.0  # type: float
-        self.FIREPOWER = 0.0  # type: float
-        self.MODULE_COUNT = 0  # type: int
-        self.CREW_COUNT = 0  # type: int
-        self.FIRE_COUNT = 0  # type: int
-        self.FLOOD_COUNT = 0  # type: int
-        self.IS_DESTROYED = 0  # type: int
-        self.DESTRUCTION_CAUSE = 0  # type: int
-        self.EXTINGUISHERS = 0  # type: int
-        self.REPAIR_ACTIVE = 0  # type: int
-        self.RELOAD_MULTIPLIER = 0.0  # type: float
-        self.ACCURACY_MULTIPLIER = 0.0  # type: float
-        self.CREW_ALIVE = 0  # type: int
-        self.CREW_WOUNDED = 0  # type: int
-        self.RESERVED = None  # type: List[int]
+    def __init__(
+        self,
+        OVERALL_HEALTH = 0.0,
+        MOBILITY = 0.0,
+        FIREPOWER = 0.0,
+        MODULE_COUNT = 0,
+        CREW_COUNT = 0,
+        FIRE_COUNT = 0,
+        FLOOD_COUNT = 0,
+        IS_DESTROYED = 0,
+        DESTRUCTION_CAUSE = 0,
+        EXTINGUISHERS = 0,
+        REPAIR_ACTIVE = 0,
+        RELOAD_MULTIPLIER = 0.0,
+        ACCURACY_MULTIPLIER = 0.0,
+        CREW_ALIVE = 0,
+        CREW_WOUNDED = 0,
+        RESERVED = None,
+    ):
+        self.OVERALL_HEALTH = OVERALL_HEALTH  # type: float
+        self.MOBILITY = MOBILITY  # type: float
+        self.FIREPOWER = FIREPOWER  # type: float
+        self.MODULE_COUNT = MODULE_COUNT  # type: int
+        self.CREW_COUNT = CREW_COUNT  # type: int
+        self.FIRE_COUNT = FIRE_COUNT  # type: int
+        self.FLOOD_COUNT = FLOOD_COUNT  # type: int
+        self.IS_DESTROYED = IS_DESTROYED  # type: int
+        self.DESTRUCTION_CAUSE = DESTRUCTION_CAUSE  # type: int
+        self.EXTINGUISHERS = EXTINGUISHERS  # type: int
+        self.REPAIR_ACTIVE = REPAIR_ACTIVE  # type: int
+        self.RELOAD_MULTIPLIER = RELOAD_MULTIPLIER  # type: float
+        self.ACCURACY_MULTIPLIER = ACCURACY_MULTIPLIER  # type: float
+        self.CREW_ALIVE = CREW_ALIVE  # type: int
+        self.CREW_WOUNDED = CREW_WOUNDED  # type: int
+        self.RESERVED = RESERVED  # type: Optional[List[int]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        DMG = DMG()
-        DMG.Init(buf, pos)
-        return cls.InitFromObj(DMG)
+        tmpDmg = DMG()
+        tmpDmg.Init(buf, pos)
+        return cls.InitFromObj(tmpDmg)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -313,9 +341,9 @@ class DMGT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, DMG):
+    def InitFromObj(cls, tmpDmg):
         x = DMGT()
-        x._UnPack(DMG)
+        x._UnPack(tmpDmg)
         return x
 
     # DMGT

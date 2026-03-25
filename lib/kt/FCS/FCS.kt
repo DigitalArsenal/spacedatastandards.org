@@ -29,27 +29,27 @@ class FCS : Table() {
         __init(_i, _bb)
         return this
     }
-    val MODE : UByte
+    val mode : UByte
         get() {
             val o = __offset(4)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
         }
-    val LEAD_METHOD : UByte
+    val leadMethod : UByte
         get() {
             val o = __offset(6)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
         }
-    val RANGEFINDER_TYPE : UByte
+    val rangefinderType : UByte
         get() {
             val o = __offset(8)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
         }
-    val AMMO_SELECTED : UByte
+    val ammoSelected : UByte
         get() {
             val o = __offset(10)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
         }
-    val TARGET : String?
+    val target : String?
         get() {
             val o = __offset(12)
             return if (o != 0) {
@@ -58,9 +58,9 @@ class FCS : Table() {
                 null
             }
         }
-    val TARGETAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
-    fun TARGETInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
-    val SOLUTION : String?
+    val targetAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(12, 1)
+    fun targetInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 12, 1)
+    val solution : String?
         get() {
             val o = __offset(14)
             return if (o != 0) {
@@ -69,29 +69,29 @@ class FCS : Table() {
                 null
             }
         }
-    val SOLUTIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(14, 1)
-    fun SOLUTIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 14, 1)
-    val LAST_RANGE : Double
+    val solutionAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(14, 1)
+    fun solutionInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 14, 1)
+    val lastRange : Double
         get() {
             val o = __offset(16)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val RANGE_RATE : Double
+    val rangeRate : Double
         get() {
             val o = __offset(18)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val ROUNDS_REMAINING : UShort
+    val roundsRemaining : UShort
         get() {
             val o = __offset(20)
             return if(o != 0) bb.getShort(o + bb_pos).toUShort() else 0u
         }
-    val TEMPERATURE : Float
+    val temperature : Float
         get() {
             val o = __offset(22)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
-    fun RESERVED(j: Int) : UByte {
+    fun reserved(j: Int) : UByte {
         val o = __offset(24)
         return if (o != 0) {
             bb.get(__vector(o) + j * 1).toUByte()
@@ -99,47 +99,47 @@ class FCS : Table() {
             0u
         }
     }
-    val RESERVEDLength : Int
+    val reservedLength : Int
         get() {
             val o = __offset(24); return if (o != 0) __vector_len(o) else 0
         }
-    val RESERVEDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(24, 1)
-    fun RESERVEDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 24, 1)
+    val reservedAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(24, 1)
+    fun reservedInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 24, 1)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsFCS(_bb: ByteBuffer): FCS = getRootAsFCS(_bb, FCS())
         fun getRootAsFCS(_bb: ByteBuffer, obj: FCS): FCS {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun FCSBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$FCS")
-        fun createFCS(builder: FlatBufferBuilder, MODE: UByte, LEAD_METHOD: UByte, RANGEFINDER_TYPE: UByte, AMMO_SELECTED: UByte, TARGETOffset: Int, SOLUTIONOffset: Int, LAST_RANGE: Double, RANGE_RATE: Double, ROUNDS_REMAINING: UShort, TEMPERATURE: Float, RESERVEDOffset: Int) : Int {
+        fun createFCS(builder: FlatBufferBuilder, mode: UByte, leadMethod: UByte, rangefinderType: UByte, ammoSelected: UByte, targetOffset: Int, solutionOffset: Int, lastRange: Double, rangeRate: Double, roundsRemaining: UShort, temperature: Float, reservedOffset: Int) : Int {
             builder.startTable(11)
-            addRANGE_RATE(builder, RANGE_RATE)
-            addLAST_RANGE(builder, LAST_RANGE)
-            addRESERVED(builder, RESERVEDOffset)
-            addTEMPERATURE(builder, TEMPERATURE)
-            addSOLUTION(builder, SOLUTIONOffset)
-            addTARGET(builder, TARGETOffset)
-            addROUNDS_REMAINING(builder, ROUNDS_REMAINING)
-            addAMMO_SELECTED(builder, AMMO_SELECTED)
-            addRANGEFINDER_TYPE(builder, RANGEFINDER_TYPE)
-            addLEAD_METHOD(builder, LEAD_METHOD)
-            addMODE(builder, MODE)
+            addRANGERATE(builder, rangeRate)
+            addLASTRANGE(builder, lastRange)
+            addRESERVED(builder, reservedOffset)
+            addTEMPERATURE(builder, temperature)
+            addSOLUTION(builder, solutionOffset)
+            addTARGET(builder, targetOffset)
+            addROUNDSREMAINING(builder, roundsRemaining)
+            addAMMOSELECTED(builder, ammoSelected)
+            addRANGEFINDERTYPE(builder, rangefinderType)
+            addLEADMETHOD(builder, leadMethod)
+            addMODE(builder, mode)
             return endFCS(builder)
         }
         fun startFCS(builder: FlatBufferBuilder) = builder.startTable(11)
-        fun addMODE(builder: FlatBufferBuilder, MODE: UByte) = builder.addByte(0, MODE.toByte(), 0)
-        fun addLEAD_METHOD(builder: FlatBufferBuilder, LEAD_METHOD: UByte) = builder.addByte(1, LEAD_METHOD.toByte(), 0)
-        fun addRANGEFINDER_TYPE(builder: FlatBufferBuilder, RANGEFINDER_TYPE: UByte) = builder.addByte(2, RANGEFINDER_TYPE.toByte(), 0)
-        fun addAMMO_SELECTED(builder: FlatBufferBuilder, AMMO_SELECTED: UByte) = builder.addByte(3, AMMO_SELECTED.toByte(), 0)
-        fun addTARGET(builder: FlatBufferBuilder, TARGET: Int) = builder.addOffset(4, TARGET, 0)
-        fun addSOLUTION(builder: FlatBufferBuilder, SOLUTION: Int) = builder.addOffset(5, SOLUTION, 0)
-        fun addLAST_RANGE(builder: FlatBufferBuilder, LAST_RANGE: Double) = builder.addDouble(6, LAST_RANGE, 0.0)
-        fun addRANGE_RATE(builder: FlatBufferBuilder, RANGE_RATE: Double) = builder.addDouble(7, RANGE_RATE, 0.0)
-        fun addROUNDS_REMAINING(builder: FlatBufferBuilder, ROUNDS_REMAINING: UShort) = builder.addShort(8, ROUNDS_REMAINING.toShort(), 0)
-        fun addTEMPERATURE(builder: FlatBufferBuilder, TEMPERATURE: Float) = builder.addFloat(9, TEMPERATURE, 0.0)
-        fun addRESERVED(builder: FlatBufferBuilder, RESERVED: Int) = builder.addOffset(10, RESERVED, 0)
+        fun addMODE(builder: FlatBufferBuilder, mode: UByte) = builder.addByte(0, mode.toByte(), 0)
+        fun addLEADMETHOD(builder: FlatBufferBuilder, leadMethod: UByte) = builder.addByte(1, leadMethod.toByte(), 0)
+        fun addRANGEFINDERTYPE(builder: FlatBufferBuilder, rangefinderType: UByte) = builder.addByte(2, rangefinderType.toByte(), 0)
+        fun addAMMOSELECTED(builder: FlatBufferBuilder, ammoSelected: UByte) = builder.addByte(3, ammoSelected.toByte(), 0)
+        fun addTARGET(builder: FlatBufferBuilder, target: Int) = builder.addOffset(4, target, 0)
+        fun addSOLUTION(builder: FlatBufferBuilder, solution: Int) = builder.addOffset(5, solution, 0)
+        fun addLASTRANGE(builder: FlatBufferBuilder, lastRange: Double) = builder.addDouble(6, lastRange, 0.0)
+        fun addRANGERATE(builder: FlatBufferBuilder, rangeRate: Double) = builder.addDouble(7, rangeRate, 0.0)
+        fun addROUNDSREMAINING(builder: FlatBufferBuilder, roundsRemaining: UShort) = builder.addShort(8, roundsRemaining.toShort(), 0)
+        fun addTEMPERATURE(builder: FlatBufferBuilder, temperature: Float) = builder.addFloat(9, temperature, 0.0)
+        fun addRESERVED(builder: FlatBufferBuilder, reserved: Int) = builder.addOffset(10, reserved, 0)
         @kotlin.ExperimentalUnsignedTypes
         fun createReservedVector(builder: FlatBufferBuilder, data: UByteArray) : Int {
             builder.startVector(1, data.size, 1)

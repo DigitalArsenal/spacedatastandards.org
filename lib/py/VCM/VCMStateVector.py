@@ -132,20 +132,29 @@ def End(builder):
 class VCMStateVectorT(object):
 
     # VCMStateVectorT
-    def __init__(self):
-        self.EPOCH = None  # type: str
-        self.X = 0.0  # type: float
-        self.Y = 0.0  # type: float
-        self.Z = 0.0  # type: float
-        self.X_DOT = 0.0  # type: float
-        self.Y_DOT = 0.0  # type: float
-        self.Z_DOT = 0.0  # type: float
+    def __init__(
+        self,
+        EPOCH = None,
+        X = 0.0,
+        Y = 0.0,
+        Z = 0.0,
+        X_DOT = 0.0,
+        Y_DOT = 0.0,
+        Z_DOT = 0.0,
+    ):
+        self.EPOCH = EPOCH  # type: Optional[str]
+        self.X = X  # type: float
+        self.Y = Y  # type: float
+        self.Z = Z  # type: float
+        self.X_DOT = X_DOT  # type: float
+        self.Y_DOT = Y_DOT  # type: float
+        self.Z_DOT = Z_DOT  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        vcmstateVector = VCMStateVector()
-        vcmstateVector.Init(buf, pos)
-        return cls.InitFromObj(vcmstateVector)
+        tmpVcmstateVector = VCMStateVector()
+        tmpVcmstateVector.Init(buf, pos)
+        return cls.InitFromObj(tmpVcmstateVector)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -153,22 +162,22 @@ class VCMStateVectorT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, vcmstateVector):
+    def InitFromObj(cls, tmpVcmstateVector):
         x = VCMStateVectorT()
-        x._UnPack(vcmstateVector)
+        x._UnPack(tmpVcmstateVector)
         return x
 
     # VCMStateVectorT
-    def _UnPack(self, vcmstateVector):
-        if vcmstateVector is None:
+    def _UnPack(self, VCMStateVector):
+        if VCMStateVector is None:
             return
-        self.EPOCH = vcmstateVector.EPOCH()
-        self.X = vcmstateVector.X()
-        self.Y = vcmstateVector.Y()
-        self.Z = vcmstateVector.Z()
-        self.X_DOT = vcmstateVector.X_DOT()
-        self.Y_DOT = vcmstateVector.Y_DOT()
-        self.Z_DOT = vcmstateVector.Z_DOT()
+        self.EPOCH = VCMStateVector.EPOCH()
+        self.X = VCMStateVector.X()
+        self.Y = VCMStateVector.Y()
+        self.Z = VCMStateVector.Z()
+        self.X_DOT = VCMStateVector.X_DOT()
+        self.Y_DOT = VCMStateVector.Y_DOT()
+        self.Z_DOT = VCMStateVector.Z_DOT()
 
     # VCMStateVectorT
     def Pack(self, builder):
@@ -183,5 +192,5 @@ class VCMStateVectorT(object):
         VCMStateVectorAddX_DOT(builder, self.X_DOT)
         VCMStateVectorAddY_DOT(builder, self.Y_DOT)
         VCMStateVectorAddZ_DOT(builder, self.Z_DOT)
-        vcmstateVector = VCMStateVectorEnd(builder)
-        return vcmstateVector
+        VCMStateVector = VCMStateVectorEnd(builder)
+        return VCMStateVector

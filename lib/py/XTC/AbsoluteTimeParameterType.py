@@ -207,6 +207,12 @@ def AbsoluteTimeParameterTypeStartCONTEXT_ALARMSVector(builder, numElems):
 def StartCONTEXT_ALARMSVector(builder, numElems):
     return AbsoluteTimeParameterTypeStartCONTEXT_ALARMSVector(builder, numElems)
 
+def AbsoluteTimeParameterTypeCreateCONTEXT_ALARMSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateCONTEXT_ALARMSVector(builder, data):
+    AbsoluteTimeParameterTypeCreateCONTEXT_ALARMSVector(builder, data)
+
 def AbsoluteTimeParameterTypeEnd(builder):
     return builder.EndObject()
 
@@ -224,23 +230,35 @@ except:
 class AbsoluteTimeParameterTypeT(object):
 
     # AbsoluteTimeParameterTypeT
-    def __init__(self):
-        self.NAME = None  # type: str
-        self.SHORT_DESCRIPTION = None  # type: str
-        self.LONG_DESCRIPTION = None  # type: str
-        self.EPOCH = 2  # type: int
-        self.EPOCH_DATE = None  # type: str
-        self.DATA_ENCODING = None  # type: Optional[IntegerDataEncoding.IntegerDataEncodingT]
-        self.SCALE = 0.0  # type: float
-        self.OFFSET = 0.0  # type: float
-        self.DEFAULT_ALARM = None  # type: Optional[DefaultAlarm.DefaultAlarmT]
-        self.CONTEXT_ALARMS = None  # type: List[ContextAlarm.ContextAlarmT]
+    def __init__(
+        self,
+        NAME = None,
+        SHORT_DESCRIPTION = None,
+        LONG_DESCRIPTION = None,
+        EPOCH = 2,
+        EPOCH_DATE = None,
+        DATA_ENCODING = None,
+        SCALE = 0.0,
+        OFFSET = 0.0,
+        DEFAULT_ALARM = None,
+        CONTEXT_ALARMS = None,
+    ):
+        self.NAME = NAME  # type: Optional[str]
+        self.SHORT_DESCRIPTION = SHORT_DESCRIPTION  # type: Optional[str]
+        self.LONG_DESCRIPTION = LONG_DESCRIPTION  # type: Optional[str]
+        self.EPOCH = EPOCH  # type: int
+        self.EPOCH_DATE = EPOCH_DATE  # type: Optional[str]
+        self.DATA_ENCODING = DATA_ENCODING  # type: Optional[IntegerDataEncoding.IntegerDataEncodingT]
+        self.SCALE = SCALE  # type: float
+        self.OFFSET = OFFSET  # type: float
+        self.DEFAULT_ALARM = DEFAULT_ALARM  # type: Optional[DefaultAlarm.DefaultAlarmT]
+        self.CONTEXT_ALARMS = CONTEXT_ALARMS  # type: Optional[List[ContextAlarm.ContextAlarmT]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        absoluteTimeParameterType = AbsoluteTimeParameterType()
-        absoluteTimeParameterType.Init(buf, pos)
-        return cls.InitFromObj(absoluteTimeParameterType)
+        tmpAbsoluteTimeParameterType = AbsoluteTimeParameterType()
+        tmpAbsoluteTimeParameterType.Init(buf, pos)
+        return cls.InitFromObj(tmpAbsoluteTimeParameterType)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -248,33 +266,33 @@ class AbsoluteTimeParameterTypeT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, absoluteTimeParameterType):
+    def InitFromObj(cls, tmpAbsoluteTimeParameterType):
         x = AbsoluteTimeParameterTypeT()
-        x._UnPack(absoluteTimeParameterType)
+        x._UnPack(tmpAbsoluteTimeParameterType)
         return x
 
     # AbsoluteTimeParameterTypeT
-    def _UnPack(self, absoluteTimeParameterType):
-        if absoluteTimeParameterType is None:
+    def _UnPack(self, AbsoluteTimeParameterType):
+        if AbsoluteTimeParameterType is None:
             return
-        self.NAME = absoluteTimeParameterType.NAME()
-        self.SHORT_DESCRIPTION = absoluteTimeParameterType.SHORT_DESCRIPTION()
-        self.LONG_DESCRIPTION = absoluteTimeParameterType.LONG_DESCRIPTION()
-        self.EPOCH = absoluteTimeParameterType.EPOCH()
-        self.EPOCH_DATE = absoluteTimeParameterType.EPOCH_DATE()
-        if absoluteTimeParameterType.DATA_ENCODING() is not None:
-            self.DATA_ENCODING = IntegerDataEncoding.IntegerDataEncodingT.InitFromObj(absoluteTimeParameterType.DATA_ENCODING())
-        self.SCALE = absoluteTimeParameterType.SCALE()
-        self.OFFSET = absoluteTimeParameterType.OFFSET()
-        if absoluteTimeParameterType.DEFAULT_ALARM() is not None:
-            self.DEFAULT_ALARM = DefaultAlarm.DefaultAlarmT.InitFromObj(absoluteTimeParameterType.DEFAULT_ALARM())
-        if not absoluteTimeParameterType.CONTEXT_ALARMSIsNone():
+        self.NAME = AbsoluteTimeParameterType.NAME()
+        self.SHORT_DESCRIPTION = AbsoluteTimeParameterType.SHORT_DESCRIPTION()
+        self.LONG_DESCRIPTION = AbsoluteTimeParameterType.LONG_DESCRIPTION()
+        self.EPOCH = AbsoluteTimeParameterType.EPOCH()
+        self.EPOCH_DATE = AbsoluteTimeParameterType.EPOCH_DATE()
+        if AbsoluteTimeParameterType.DATA_ENCODING() is not None:
+            self.DATA_ENCODING = IntegerDataEncoding.IntegerDataEncodingT.InitFromObj(AbsoluteTimeParameterType.DATA_ENCODING())
+        self.SCALE = AbsoluteTimeParameterType.SCALE()
+        self.OFFSET = AbsoluteTimeParameterType.OFFSET()
+        if AbsoluteTimeParameterType.DEFAULT_ALARM() is not None:
+            self.DEFAULT_ALARM = DefaultAlarm.DefaultAlarmT.InitFromObj(AbsoluteTimeParameterType.DEFAULT_ALARM())
+        if not AbsoluteTimeParameterType.CONTEXT_ALARMSIsNone():
             self.CONTEXT_ALARMS = []
-            for i in range(absoluteTimeParameterType.CONTEXT_ALARMSLength()):
-                if absoluteTimeParameterType.CONTEXT_ALARMS(i) is None:
+            for i in range(AbsoluteTimeParameterType.CONTEXT_ALARMSLength()):
+                if AbsoluteTimeParameterType.CONTEXT_ALARMS(i) is None:
                     self.CONTEXT_ALARMS.append(None)
                 else:
-                    contextAlarm_ = ContextAlarm.ContextAlarmT.InitFromObj(absoluteTimeParameterType.CONTEXT_ALARMS(i))
+                    contextAlarm_ = ContextAlarm.ContextAlarmT.InitFromObj(AbsoluteTimeParameterType.CONTEXT_ALARMS(i))
                     self.CONTEXT_ALARMS.append(contextAlarm_)
 
     # AbsoluteTimeParameterTypeT
@@ -317,5 +335,5 @@ class AbsoluteTimeParameterTypeT(object):
             AbsoluteTimeParameterTypeAddDEFAULT_ALARM(builder, DEFAULT_ALARM)
         if self.CONTEXT_ALARMS is not None:
             AbsoluteTimeParameterTypeAddCONTEXT_ALARMS(builder, CONTEXT_ALARMS)
-        absoluteTimeParameterType = AbsoluteTimeParameterTypeEnd(builder)
-        return absoluteTimeParameterType
+        AbsoluteTimeParameterType = AbsoluteTimeParameterTypeEnd(builder)
+        return AbsoluteTimeParameterType

@@ -73,15 +73,19 @@ def End(builder):
 class KMLTimeSpanT(object):
 
     # KMLTimeSpanT
-    def __init__(self):
-        self.BEGIN = None  # type: str
-        self.END = None  # type: str
+    def __init__(
+        self,
+        BEGIN = None,
+        END = None,
+    ):
+        self.BEGIN = BEGIN  # type: Optional[str]
+        self.END = END  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        kmltimeSpan = KMLTimeSpan()
-        kmltimeSpan.Init(buf, pos)
-        return cls.InitFromObj(kmltimeSpan)
+        tmpKmltimeSpan = KMLTimeSpan()
+        tmpKmltimeSpan.Init(buf, pos)
+        return cls.InitFromObj(tmpKmltimeSpan)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -89,17 +93,17 @@ class KMLTimeSpanT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, kmltimeSpan):
+    def InitFromObj(cls, tmpKmltimeSpan):
         x = KMLTimeSpanT()
-        x._UnPack(kmltimeSpan)
+        x._UnPack(tmpKmltimeSpan)
         return x
 
     # KMLTimeSpanT
-    def _UnPack(self, kmltimeSpan):
-        if kmltimeSpan is None:
+    def _UnPack(self, KMLTimeSpan):
+        if KMLTimeSpan is None:
             return
-        self.BEGIN = kmltimeSpan.BEGIN()
-        self.END = kmltimeSpan.END()
+        self.BEGIN = KMLTimeSpan.BEGIN()
+        self.END = KMLTimeSpan.END()
 
     # KMLTimeSpanT
     def Pack(self, builder):
@@ -112,5 +116,5 @@ class KMLTimeSpanT(object):
             KMLTimeSpanAddBEGIN(builder, BEGIN)
         if self.END is not None:
             KMLTimeSpanAddEND(builder, END)
-        kmltimeSpan = KMLTimeSpanEnd(builder)
-        return kmltimeSpan
+        KMLTimeSpan = KMLTimeSpanEnd(builder)
+        return KMLTimeSpan

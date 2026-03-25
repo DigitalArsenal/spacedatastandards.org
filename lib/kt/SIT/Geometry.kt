@@ -32,7 +32,7 @@ class Geometry : Table() {
     /**
      * Type of geometry
      */
-    val GEOMETRY_TYPE : String?
+    val geometryType : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class Geometry : Table() {
                 null
             }
         }
-    val GEOMETRY_TYPEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun GEOMETRY_TYPEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val geometryTypeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun geometryTypeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Coordinates of the geometry
      */
-    fun COORDINATES(j: Int) : Float {
+    fun coordinates(j: Int) : Float {
         val o = __offset(6)
         return if (o != 0) {
             bb.getFloat(__vector(o) + j * 4)
@@ -54,28 +54,28 @@ class Geometry : Table() {
             0.0f
         }
     }
-    val COORDINATESLength : Int
+    val coordinatesLength : Int
         get() {
             val o = __offset(6); return if (o != 0) __vector_len(o) else 0
         }
-    val COORDINATESAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 4)
-    fun COORDINATESInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 4)
+    val coordinatesAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 4)
+    fun coordinatesInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 4)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsGeometry(_bb: ByteBuffer): Geometry = getRootAsGeometry(_bb, Geometry())
         fun getRootAsGeometry(_bb: ByteBuffer, obj: Geometry): Geometry {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createGeometry(builder: FlatBufferBuilder, GEOMETRY_TYPEOffset: Int, COORDINATESOffset: Int) : Int {
+        fun createGeometry(builder: FlatBufferBuilder, geometryTypeOffset: Int, coordinatesOffset: Int) : Int {
             builder.startTable(2)
-            addCOORDINATES(builder, COORDINATESOffset)
-            addGEOMETRY_TYPE(builder, GEOMETRY_TYPEOffset)
+            addCOORDINATES(builder, coordinatesOffset)
+            addGEOMETRYTYPE(builder, geometryTypeOffset)
             return endGeometry(builder)
         }
         fun startGeometry(builder: FlatBufferBuilder) = builder.startTable(2)
-        fun addGEOMETRY_TYPE(builder: FlatBufferBuilder, GEOMETRY_TYPE: Int) = builder.addOffset(0, GEOMETRY_TYPE, 0)
-        fun addCOORDINATES(builder: FlatBufferBuilder, COORDINATES: Int) = builder.addOffset(1, COORDINATES, 0)
+        fun addGEOMETRYTYPE(builder: FlatBufferBuilder, geometryType: Int) = builder.addOffset(0, geometryType, 0)
+        fun addCOORDINATES(builder: FlatBufferBuilder, coordinates: Int) = builder.addOffset(1, coordinates, 0)
         fun createCoordinatesVector(builder: FlatBufferBuilder, data: FloatArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {

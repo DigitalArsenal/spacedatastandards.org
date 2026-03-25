@@ -2,11 +2,15 @@
 // swiftlint:disable all
 // swiftformat:disable all
 
+#if canImport(Common)
+import Common
+#endif
+
 import FlatBuffers
 
 ///  https://www.sanaregistry.org/r/celestial_body_reference_frames/
 ///  Celestial Reference Frames (SANA registry 1.3.112.4.57.2)
-public enum CelestialFrame: Int8, Enum, Verifiable {
+public enum CelestialFrame: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -101,7 +105,7 @@ public enum CelestialFrame: Int8, Enum, Verifiable {
 
 ///  https://sanaregistry.org/r/spacecraft_body_reference_frames/
 ///  Spacecraft Body Reference Frames (SANA registry 1.3.112.4.57.8)
-public enum SpacecraftFrame: Int8, Enum, Verifiable {
+public enum SpacecraftFrame: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -161,7 +165,7 @@ public enum SpacecraftFrame: Int8, Enum, Verifiable {
 
 ///  https://sanaregistry.org/r/orbit_relative_reference_frames/
 ///  Orbit-Relative Reference Frames (SANA registry 1.3.112.4.57.3)
-public enum OrbitFrame: Int8, Enum, Verifiable {
+public enum OrbitFrame: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -220,7 +224,7 @@ public enum OrbitFrame: Int8, Enum, Verifiable {
 
 
 ///  Non-registered or local use frames
-public enum CustomFrame: Int8, Enum, Verifiable {
+public enum CustomFrame: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -266,7 +270,7 @@ public enum CustomFrame: Int8, Enum, Verifiable {
 }
 
 
-public enum RFMUnion: UInt8, UnionEnum {
+public enum RFMUnion: UInt8, FlatbuffersVectorInitializable, UnionEnum {
   public typealias T = UInt8
 
   public init?(value: T) {
@@ -286,9 +290,9 @@ public enum RFMUnion: UInt8, UnionEnum {
 }
 
 
-public struct CelestialFrameWrapper: FlatBufferObject, Verifiable {
+public struct CelestialFrameWrapper: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -323,9 +327,9 @@ public struct CelestialFrameWrapper: FlatBufferObject, Verifiable {
   }
 }
 
-public struct SpacecraftFrameWrapper: FlatBufferObject, Verifiable {
+public struct SpacecraftFrameWrapper: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -360,9 +364,9 @@ public struct SpacecraftFrameWrapper: FlatBufferObject, Verifiable {
   }
 }
 
-public struct OrbitFrameWrapper: FlatBufferObject, Verifiable {
+public struct OrbitFrameWrapper: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -397,9 +401,9 @@ public struct OrbitFrameWrapper: FlatBufferObject, Verifiable {
   }
 }
 
-public struct CustomFrameWrapper: FlatBufferObject, Verifiable {
+public struct CustomFrameWrapper: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -435,9 +439,9 @@ public struct CustomFrameWrapper: FlatBufferObject, Verifiable {
 }
 
 ///  Reference Frame Message
-public struct RFM: FlatBufferObject, Verifiable {
+public struct RFM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -447,7 +451,7 @@ public struct RFM: FlatBufferObject, Verifiable {
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private enum VTOFFSET: VOffset {
-    case referenceFrameType = 4
+    case REFERENCE_FRAME_type = 4
     case REFERENCE_FRAME = 6
     case INDEX = 8
     case NAME = 10
@@ -455,26 +459,26 @@ public struct RFM: FlatBufferObject, Verifiable {
     var p: VOffset { self.rawValue }
   }
 
-  public var referenceFrameType: RFMUnion { let o = _accessor.offset(VTOFFSET.referenceFrameType.v); return o == 0 ? .none_ : RFMUnion(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .none_ }
+  public var REFERENCE_FRAME_type: RFMUnion { let o = _accessor.offset(VTOFFSET.REFERENCE_FRAME_type.v); return o == 0 ? .none_ : RFMUnion(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .none_ }
   public func REFERENCE_FRAME<T: FlatbuffersInitializable>(type: T.Type) -> T? { let o = _accessor.offset(VTOFFSET.REFERENCE_FRAME.v); return o == 0 ? nil : _accessor.union(o) }
   public var INDEX: Int32 { let o = _accessor.offset(VTOFFSET.INDEX.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
   public var NAME: String? { let o = _accessor.offset(VTOFFSET.NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NAME.v) }
   public static func startRFM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
-  public static func add(referenceFrameType: RFMUnion, _ fbb: inout FlatBufferBuilder) { fbb.add(element: referenceFrameType.rawValue, def: 0, at: VTOFFSET.referenceFrameType.p) }
+  public static func add(REFERENCE_FRAME_type: RFMUnion, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REFERENCE_FRAME_type.rawValue, def: 0, at: VTOFFSET.REFERENCE_FRAME_type.p) }
   public static func add(REFERENCE_FRAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REFERENCE_FRAME, at: VTOFFSET.REFERENCE_FRAME.p) }
   public static func add(INDEX: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INDEX, def: 0, at: VTOFFSET.INDEX.p) }
   public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
   public static func endRFM(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createRFM(
     _ fbb: inout FlatBufferBuilder,
-    referenceFrameType: RFMUnion = .none_,
+    REFERENCE_FRAME_type: RFMUnion = .none_,
     REFERENCE_FRAMEOffset REFERENCE_FRAME: Offset = Offset(),
     INDEX: Int32 = 0,
     NAMEOffset NAME: Offset = Offset()
   ) -> Offset {
     let __start = RFM.startRFM(&fbb)
-    RFM.add(referenceFrameType: referenceFrameType, &fbb)
+    RFM.add(REFERENCE_FRAME_type: REFERENCE_FRAME_type, &fbb)
     RFM.add(REFERENCE_FRAME: REFERENCE_FRAME, &fbb)
     RFM.add(INDEX: INDEX, &fbb)
     RFM.add(NAME: NAME, &fbb)

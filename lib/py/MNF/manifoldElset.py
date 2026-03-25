@@ -269,29 +269,47 @@ def End(builder):
 class manifoldElsetT(object):
 
     # manifoldElsetT
-    def __init__(self):
-        self.EPOCH = None  # type: str
-        self.SEMI_MAJOR_AXIS = 0.0  # type: float
-        self.ECCENTRICITY = 0.0  # type: float
-        self.INCLINATION = 0.0  # type: float
-        self.RA_OF_ASC_NODE = 0.0  # type: float
-        self.ARG_OF_PERICENTER = 0.0  # type: float
-        self.MEAN_ANOMALY = 0.0  # type: float
-        self.DELTA_V = 0.0  # type: float
-        self.DELTA_T = 0.0  # type: float
-        self.DV_X = 0.0  # type: float
-        self.DV_Y = 0.0  # type: float
-        self.DV_Z = 0.0  # type: float
-        self.WEIGHT = 0.0  # type: float
-        self.APOGEE = 0.0  # type: float
-        self.PERIGEE = 0.0  # type: float
-        self.PERIOD = 0.0  # type: float
+    def __init__(
+        self,
+        EPOCH = None,
+        SEMI_MAJOR_AXIS = 0.0,
+        ECCENTRICITY = 0.0,
+        INCLINATION = 0.0,
+        RA_OF_ASC_NODE = 0.0,
+        ARG_OF_PERICENTER = 0.0,
+        MEAN_ANOMALY = 0.0,
+        DELTA_V = 0.0,
+        DELTA_T = 0.0,
+        DV_X = 0.0,
+        DV_Y = 0.0,
+        DV_Z = 0.0,
+        WEIGHT = 0.0,
+        APOGEE = 0.0,
+        PERIGEE = 0.0,
+        PERIOD = 0.0,
+    ):
+        self.EPOCH = EPOCH  # type: Optional[str]
+        self.SEMI_MAJOR_AXIS = SEMI_MAJOR_AXIS  # type: float
+        self.ECCENTRICITY = ECCENTRICITY  # type: float
+        self.INCLINATION = INCLINATION  # type: float
+        self.RA_OF_ASC_NODE = RA_OF_ASC_NODE  # type: float
+        self.ARG_OF_PERICENTER = ARG_OF_PERICENTER  # type: float
+        self.MEAN_ANOMALY = MEAN_ANOMALY  # type: float
+        self.DELTA_V = DELTA_V  # type: float
+        self.DELTA_T = DELTA_T  # type: float
+        self.DV_X = DV_X  # type: float
+        self.DV_Y = DV_Y  # type: float
+        self.DV_Z = DV_Z  # type: float
+        self.WEIGHT = WEIGHT  # type: float
+        self.APOGEE = APOGEE  # type: float
+        self.PERIGEE = PERIGEE  # type: float
+        self.PERIOD = PERIOD  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        manifoldElset = manifoldElset()
-        manifoldElset.Init(buf, pos)
-        return cls.InitFromObj(manifoldElset)
+        tmpManifoldElset = manifoldElset()
+        tmpManifoldElset.Init(buf, pos)
+        return cls.InitFromObj(tmpManifoldElset)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -299,9 +317,9 @@ class manifoldElsetT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, manifoldElset):
+    def InitFromObj(cls, tmpManifoldElset):
         x = manifoldElsetT()
-        x._UnPack(manifoldElset)
+        x._UnPack(tmpManifoldElset)
         return x
 
     # manifoldElsetT

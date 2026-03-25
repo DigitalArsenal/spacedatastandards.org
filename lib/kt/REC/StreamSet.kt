@@ -32,8 +32,8 @@ class StreamSet : Table() {
     /**
      * Fixed frame streams
      */
-    fun FIXED_FRAME_STREAMS(j: Int) : FixedFrameStream? = FIXED_FRAME_STREAMS(FixedFrameStream(), j)
-    fun FIXED_FRAME_STREAMS(obj: FixedFrameStream, j: Int) : FixedFrameStream? {
+    fun fixedFrameStreams(j: Int) : FixedFrameStream? = fixedFrameStreams(FixedFrameStream(), j)
+    fun fixedFrameStreams(obj: FixedFrameStream, j: Int) : FixedFrameStream? {
         val o = __offset(4)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -41,15 +41,15 @@ class StreamSet : Table() {
             null
         }
     }
-    val FIXED_FRAME_STREAMSLength : Int
+    val fixedFrameStreamsLength : Int
         get() {
             val o = __offset(4); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Variable frame streams
      */
-    fun VARIABLE_FRAME_STREAMS(j: Int) : VariableFrameStream? = VARIABLE_FRAME_STREAMS(VariableFrameStream(), j)
-    fun VARIABLE_FRAME_STREAMS(obj: VariableFrameStream, j: Int) : VariableFrameStream? {
+    fun variableFrameStreams(j: Int) : VariableFrameStream? = variableFrameStreams(VariableFrameStream(), j)
+    fun variableFrameStreams(obj: VariableFrameStream, j: Int) : VariableFrameStream? {
         val o = __offset(6)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -57,15 +57,15 @@ class StreamSet : Table() {
             null
         }
     }
-    val VARIABLE_FRAME_STREAMSLength : Int
+    val variableFrameStreamsLength : Int
         get() {
             val o = __offset(6); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Custom streams
      */
-    fun CUSTOM_STREAMS(j: Int) : CustomStream? = CUSTOM_STREAMS(CustomStream(), j)
-    fun CUSTOM_STREAMS(obj: CustomStream, j: Int) : CustomStream? {
+    fun customStreams(j: Int) : CustomStream? = customStreams(CustomStream(), j)
+    fun customStreams(obj: CustomStream, j: Int) : CustomStream? {
         val o = __offset(8)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -73,26 +73,26 @@ class StreamSet : Table() {
             null
         }
     }
-    val CUSTOM_STREAMSLength : Int
+    val customStreamsLength : Int
         get() {
             val o = __offset(8); return if (o != 0) __vector_len(o) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsStreamSet(_bb: ByteBuffer): StreamSet = getRootAsStreamSet(_bb, StreamSet())
         fun getRootAsStreamSet(_bb: ByteBuffer, obj: StreamSet): StreamSet {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createStreamSet(builder: FlatBufferBuilder, FIXED_FRAME_STREAMSOffset: Int, VARIABLE_FRAME_STREAMSOffset: Int, CUSTOM_STREAMSOffset: Int) : Int {
+        fun createStreamSet(builder: FlatBufferBuilder, fixedFrameStreamsOffset: Int, variableFrameStreamsOffset: Int, customStreamsOffset: Int) : Int {
             builder.startTable(3)
-            addCUSTOM_STREAMS(builder, CUSTOM_STREAMSOffset)
-            addVARIABLE_FRAME_STREAMS(builder, VARIABLE_FRAME_STREAMSOffset)
-            addFIXED_FRAME_STREAMS(builder, FIXED_FRAME_STREAMSOffset)
+            addCUSTOMSTREAMS(builder, customStreamsOffset)
+            addVARIABLEFRAMESTREAMS(builder, variableFrameStreamsOffset)
+            addFIXEDFRAMESTREAMS(builder, fixedFrameStreamsOffset)
             return endStreamSet(builder)
         }
         fun startStreamSet(builder: FlatBufferBuilder) = builder.startTable(3)
-        fun addFIXED_FRAME_STREAMS(builder: FlatBufferBuilder, FIXED_FRAME_STREAMS: Int) = builder.addOffset(0, FIXED_FRAME_STREAMS, 0)
+        fun addFIXEDFRAMESTREAMS(builder: FlatBufferBuilder, fixedFrameStreams: Int) = builder.addOffset(0, fixedFrameStreams, 0)
         fun createFixedFrameStreamsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -101,7 +101,7 @@ class StreamSet : Table() {
             return builder.endVector()
         }
         fun startFixedFrameStreamsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addVARIABLE_FRAME_STREAMS(builder: FlatBufferBuilder, VARIABLE_FRAME_STREAMS: Int) = builder.addOffset(1, VARIABLE_FRAME_STREAMS, 0)
+        fun addVARIABLEFRAMESTREAMS(builder: FlatBufferBuilder, variableFrameStreams: Int) = builder.addOffset(1, variableFrameStreams, 0)
         fun createVariableFrameStreamsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -110,7 +110,7 @@ class StreamSet : Table() {
             return builder.endVector()
         }
         fun startVariableFrameStreamsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addCUSTOM_STREAMS(builder: FlatBufferBuilder, CUSTOM_STREAMS: Int) = builder.addOffset(2, CUSTOM_STREAMS, 0)
+        fun addCUSTOMSTREAMS(builder: FlatBufferBuilder, customStreams: Int) = builder.addOffset(2, customStreams, 0)
         fun createCustomStreamsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {

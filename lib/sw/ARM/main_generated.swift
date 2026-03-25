@@ -2,9 +2,13 @@
 // swiftlint:disable all
 // swiftformat:disable all
 
+#if canImport(Common)
+import Common
+#endif
+
 import FlatBuffers
 
-public enum ArmorMaterial: Int8, Enum, Verifiable {
+public enum ArmorMaterial: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -29,7 +33,7 @@ public enum ArmorMaterial: Int8, Enum, Verifiable {
 }
 
 
-public enum AmmoType: Int8, Enum, Verifiable {
+public enum AmmoType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -57,7 +61,7 @@ public enum AmmoType: Int8, Enum, Verifiable {
 }
 
 
-public enum PenResult: Int8, Enum, Verifiable {
+public enum PenResult: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -74,9 +78,9 @@ public enum PenResult: Int8, Enum, Verifiable {
 
 
 ///  Armor and Protection
-public struct ARM: FlatBufferObject, Verifiable {
+public struct ARM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -115,10 +119,8 @@ public struct ARM: FlatBufferObject, Verifiable {
   public var NORMAL_X: Double { let o = _accessor.offset(VTOFFSET.NORMAL_X.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public var NORMAL_Y: Double { let o = _accessor.offset(VTOFFSET.NORMAL_Y.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public var NORMAL_Z: Double { let o = _accessor.offset(VTOFFSET.NORMAL_Z.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var hasReserved: Bool { let o = _accessor.offset(VTOFFSET.RESERVED.v); return o == 0 ? false : true }
-  public var RESERVEDCount: Int32 { let o = _accessor.offset(VTOFFSET.RESERVED.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func RESERVED(at index: Int32) -> UInt8 { let o = _accessor.offset(VTOFFSET.RESERVED.v); return o == 0 ? 0 : _accessor.directRead(of: UInt8.self, offset: _accessor.vector(at: o) + index * 1) }
-  public var RESERVED: [UInt8] { return _accessor.getVector(at: VTOFFSET.RESERVED.v) ?? [] }
+  public var RESERVED: FlatbufferVector<UInt8> { return _accessor.vector(at: VTOFFSET.RESERVED.v, byteSize: 1) }
+  public func withUnsafePointerToReserved<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.RESERVED.v, body: body) }
   public static func startARM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 13) }
   public static func add(THICKNESS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: THICKNESS, def: 0.0, at: VTOFFSET.THICKNESS.p) }
   public static func add(ANGLE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ANGLE, def: 0.0, at: VTOFFSET.ANGLE.p) }

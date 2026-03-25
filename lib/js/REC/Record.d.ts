@@ -88,6 +88,7 @@ import { PLDT } from './PLD.js';
 import { PLGT } from './PLG.js';
 import { PLKT } from './PLK.js';
 import { PNMT } from './PNM.js';
+import { PPET } from './PPE.js';
 import { PRGT } from './PRG.js';
 import { PURT } from './PUR.js';
 import { RAFT } from './RAF.js';
@@ -140,7 +141,7 @@ export declare class Record implements flatbuffers.IUnpackableObject<RecordT> {
     __init(i: number, bb: flatbuffers.ByteBuffer): Record;
     static getRootAsRecord(bb: flatbuffers.ByteBuffer, obj?: Record): Record;
     static getSizePrefixedRootAsRecord(bb: flatbuffers.ByteBuffer, obj?: Record): Record;
-    valueType(): RecordType;
+    value_type(): RecordType;
     /**
      * The record data (union of all supported standards)
      */
@@ -151,19 +152,19 @@ export declare class Record implements flatbuffers.IUnpackableObject<RecordT> {
     standard(): string | null;
     standard(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     static startRecord(builder: flatbuffers.Builder): void;
-    static addValueType(builder: flatbuffers.Builder, valueType: RecordType): void;
+    static addValueType(builder: flatbuffers.Builder, value_type: RecordType): void;
     static addValue(builder: flatbuffers.Builder, valueOffset: flatbuffers.Offset): void;
     static addStandard(builder: flatbuffers.Builder, standardOffset: flatbuffers.Offset): void;
     static endRecord(builder: flatbuffers.Builder): flatbuffers.Offset;
-    static createRecord(builder: flatbuffers.Builder, valueType: RecordType, valueOffset: flatbuffers.Offset, standardOffset: flatbuffers.Offset): flatbuffers.Offset;
+    static createRecord(builder: flatbuffers.Builder, value_type: RecordType, valueOffset: flatbuffers.Offset, standardOffset: flatbuffers.Offset): flatbuffers.Offset;
     unpack(): RecordT;
     unpackTo(_o: RecordT): void;
 }
 export declare class RecordT implements flatbuffers.IGeneratedObject {
-    valueType: RecordType;
-    value: ACLT | ACMT | ACRT | AEMT | ANIT | AOFT | APMT | ARMT | ASTT | ATDT | ATMT | BALT | BEMT | BMCT | BOVT | BUST | CATT | CDMT | CFPT | CHNT | CLTT | CMST | COMT | COTT | CRDT | CRMT | CSMT | CTRT | CZMT | DFHT | DMGT | DOAT | EMET | ENCT | ENVT | EOOT | EOPT | EPMT | EWRT | FCST | GDIT | GEOT | GJNT | GNOT | GPXT | GRVT | GVHT | HELT | HYPT | IDMT | IONT | IROT | KMLT | LCCT | LDMT | LKST | LNDT | LNET | METT | MFET | MNFT | MNVT | MPET | MSLT | MSTT | MTIT | NAVT | OBDT | OBTT | OCMT | OEMT | OMMT | OOAT | OOBT | OODT | OOET | OOIT | OOLT | OONT | OOST | OOTT | OPMT | OSMT | PCFT | PHYT | PLDT | PLGT | PLKT | PNMT | PRGT | PURT | RAFT | RCFT | RDMT | RDOT | REVT | RFBT | RFET | RFMT | RFOT | ROCT | SART | SCMT | SDLT | SENT | SEOT | SEVT | SITT | SKIT | SNRT | SOIT | SONT | SPPT | SPWT | STFT | STRT | STVT | SWRT | TCFT | TDMT | TIMT | TKGT | TMET | TMFT | TPNT | TRKT | TRNT | VCMT | WPNT | WTHT | XTCT | null;
+    value_type: RecordType;
+    value: ACLT | ACMT | ACRT | AEMT | ANIT | AOFT | APMT | ARMT | ASTT | ATDT | ATMT | BALT | BEMT | BMCT | BOVT | BUST | CATT | CDMT | CFPT | CHNT | CLTT | CMST | COMT | COTT | CRDT | CRMT | CSMT | CTRT | CZMT | DFHT | DMGT | DOAT | EMET | ENCT | ENVT | EOOT | EOPT | EPMT | EWRT | FCST | GDIT | GEOT | GJNT | GNOT | GPXT | GRVT | GVHT | HELT | HYPT | IDMT | IONT | IROT | KMLT | LCCT | LDMT | LKST | LNDT | LNET | METT | MFET | MNFT | MNVT | MPET | MSLT | MSTT | MTIT | NAVT | OBDT | OBTT | OCMT | OEMT | OMMT | OOAT | OOBT | OODT | OOET | OOIT | OOLT | OONT | OOST | OOTT | OPMT | OSMT | PCFT | PHYT | PLDT | PLGT | PLKT | PNMT | PPET | PRGT | PURT | RAFT | RCFT | RDMT | RDOT | REVT | RFBT | RFET | RFMT | RFOT | ROCT | SART | SCMT | SDLT | SENT | SEOT | SEVT | SITT | SKIT | SNRT | SOIT | SONT | SPPT | SPWT | STFT | STRT | STVT | SWRT | TCFT | TDMT | TIMT | TKGT | TMET | TMFT | TPNT | TRKT | TRNT | VCMT | WPNT | WTHT | XTCT | null;
     standard: string | Uint8Array | null;
-    constructor(valueType?: RecordType, value?: ACLT | ACMT | ACRT | AEMT | ANIT | AOFT | APMT | ARMT | ASTT | ATDT | ATMT | BALT | BEMT | BMCT | BOVT | BUST | CATT | CDMT | CFPT | CHNT | CLTT | CMST | COMT | COTT | CRDT | CRMT | CSMT | CTRT | CZMT | DFHT | DMGT | DOAT | EMET | ENCT | ENVT | EOOT | EOPT | EPMT | EWRT | FCST | GDIT | GEOT | GJNT | GNOT | GPXT | GRVT | GVHT | HELT | HYPT | IDMT | IONT | IROT | KMLT | LCCT | LDMT | LKST | LNDT | LNET | METT | MFET | MNFT | MNVT | MPET | MSLT | MSTT | MTIT | NAVT | OBDT | OBTT | OCMT | OEMT | OMMT | OOAT | OOBT | OODT | OOET | OOIT | OOLT | OONT | OOST | OOTT | OPMT | OSMT | PCFT | PHYT | PLDT | PLGT | PLKT | PNMT | PRGT | PURT | RAFT | RCFT | RDMT | RDOT | REVT | RFBT | RFET | RFMT | RFOT | ROCT | SART | SCMT | SDLT | SENT | SEOT | SEVT | SITT | SKIT | SNRT | SOIT | SONT | SPPT | SPWT | STFT | STRT | STVT | SWRT | TCFT | TDMT | TIMT | TKGT | TMET | TMFT | TPNT | TRKT | TRNT | VCMT | WPNT | WTHT | XTCT | null, standard?: string | Uint8Array | null);
+    constructor(value_type?: RecordType, value?: ACLT | ACMT | ACRT | AEMT | ANIT | AOFT | APMT | ARMT | ASTT | ATDT | ATMT | BALT | BEMT | BMCT | BOVT | BUST | CATT | CDMT | CFPT | CHNT | CLTT | CMST | COMT | COTT | CRDT | CRMT | CSMT | CTRT | CZMT | DFHT | DMGT | DOAT | EMET | ENCT | ENVT | EOOT | EOPT | EPMT | EWRT | FCST | GDIT | GEOT | GJNT | GNOT | GPXT | GRVT | GVHT | HELT | HYPT | IDMT | IONT | IROT | KMLT | LCCT | LDMT | LKST | LNDT | LNET | METT | MFET | MNFT | MNVT | MPET | MSLT | MSTT | MTIT | NAVT | OBDT | OBTT | OCMT | OEMT | OMMT | OOAT | OOBT | OODT | OOET | OOIT | OOLT | OONT | OOST | OOTT | OPMT | OSMT | PCFT | PHYT | PLDT | PLGT | PLKT | PNMT | PPET | PRGT | PURT | RAFT | RCFT | RDMT | RDOT | REVT | RFBT | RFET | RFMT | RFOT | ROCT | SART | SCMT | SDLT | SENT | SEOT | SEVT | SITT | SKIT | SNRT | SOIT | SONT | SPPT | SPWT | STFT | STRT | STVT | SWRT | TCFT | TDMT | TIMT | TKGT | TMET | TMFT | TPNT | TRKT | TRNT | VCMT | WPNT | WTHT | XTCT | null, standard?: string | Uint8Array | null);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=Record.d.ts.map

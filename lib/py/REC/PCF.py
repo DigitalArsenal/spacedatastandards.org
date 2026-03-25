@@ -2,4 +2,370 @@
 
 # namespace: 
 
-# NOTE PCF.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Propagator Configuration
+class PCF(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = PCF()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsPCF(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def PCFBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x50\x43\x46", size_prefixed=size_prefixed)
+
+    # PCF
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # PCF
+    def STEP_SIZE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # PCF
+    def TOLERANCE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # PCF
+    def MIN_STEP(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # PCF
+    def MAX_STEP(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # PCF
+    def MAX_ITERATIONS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+        return 0
+
+    # PCF
+    def GRAVITY_DEGREE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint16Flags, o + self._tab.Pos)
+        return 0
+
+    # PCF
+    def GRAVITY_ORDER(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint16Flags, o + self._tab.Pos)
+        return 0
+
+    # PCF
+    def INTEGRATOR(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
+        return 0
+
+    # PCF
+    def OUTPUT_FRAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
+        return 0
+
+    # PCF
+    def FORCE_FLAGS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint16Flags, o + self._tab.Pos)
+        return 0
+
+    # PCF
+    def DRAG_COEFFICIENT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # PCF
+    def SRP_COEFFICIENT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # PCF
+    def AREA_MASS_RATIO(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # PCF
+    def RESERVED(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 1))
+        return 0
+
+    # PCF
+    def RESERVEDAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Uint8Flags, o)
+        return 0
+
+    # PCF
+    def RESERVEDLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # PCF
+    def RESERVEDIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        return o == 0
+
+def PCFStart(builder):
+    builder.StartObject(14)
+
+def Start(builder):
+    PCFStart(builder)
+
+def PCFAddSTEP_SIZE(builder, STEP_SIZE):
+    builder.PrependFloat64Slot(0, STEP_SIZE, 0.0)
+
+def AddSTEP_SIZE(builder, STEP_SIZE):
+    PCFAddSTEP_SIZE(builder, STEP_SIZE)
+
+def PCFAddTOLERANCE(builder, TOLERANCE):
+    builder.PrependFloat64Slot(1, TOLERANCE, 0.0)
+
+def AddTOLERANCE(builder, TOLERANCE):
+    PCFAddTOLERANCE(builder, TOLERANCE)
+
+def PCFAddMIN_STEP(builder, MIN_STEP):
+    builder.PrependFloat64Slot(2, MIN_STEP, 0.0)
+
+def AddMIN_STEP(builder, MIN_STEP):
+    PCFAddMIN_STEP(builder, MIN_STEP)
+
+def PCFAddMAX_STEP(builder, MAX_STEP):
+    builder.PrependFloat64Slot(3, MAX_STEP, 0.0)
+
+def AddMAX_STEP(builder, MAX_STEP):
+    PCFAddMAX_STEP(builder, MAX_STEP)
+
+def PCFAddMAX_ITERATIONS(builder, MAX_ITERATIONS):
+    builder.PrependUint32Slot(4, MAX_ITERATIONS, 0)
+
+def AddMAX_ITERATIONS(builder, MAX_ITERATIONS):
+    PCFAddMAX_ITERATIONS(builder, MAX_ITERATIONS)
+
+def PCFAddGRAVITY_DEGREE(builder, GRAVITY_DEGREE):
+    builder.PrependUint16Slot(5, GRAVITY_DEGREE, 0)
+
+def AddGRAVITY_DEGREE(builder, GRAVITY_DEGREE):
+    PCFAddGRAVITY_DEGREE(builder, GRAVITY_DEGREE)
+
+def PCFAddGRAVITY_ORDER(builder, GRAVITY_ORDER):
+    builder.PrependUint16Slot(6, GRAVITY_ORDER, 0)
+
+def AddGRAVITY_ORDER(builder, GRAVITY_ORDER):
+    PCFAddGRAVITY_ORDER(builder, GRAVITY_ORDER)
+
+def PCFAddINTEGRATOR(builder, INTEGRATOR):
+    builder.PrependUint8Slot(7, INTEGRATOR, 0)
+
+def AddINTEGRATOR(builder, INTEGRATOR):
+    PCFAddINTEGRATOR(builder, INTEGRATOR)
+
+def PCFAddOUTPUT_FRAME(builder, OUTPUT_FRAME):
+    builder.PrependUint8Slot(8, OUTPUT_FRAME, 0)
+
+def AddOUTPUT_FRAME(builder, OUTPUT_FRAME):
+    PCFAddOUTPUT_FRAME(builder, OUTPUT_FRAME)
+
+def PCFAddFORCE_FLAGS(builder, FORCE_FLAGS):
+    builder.PrependUint16Slot(9, FORCE_FLAGS, 0)
+
+def AddFORCE_FLAGS(builder, FORCE_FLAGS):
+    PCFAddFORCE_FLAGS(builder, FORCE_FLAGS)
+
+def PCFAddDRAG_COEFFICIENT(builder, DRAG_COEFFICIENT):
+    builder.PrependFloat32Slot(10, DRAG_COEFFICIENT, 0.0)
+
+def AddDRAG_COEFFICIENT(builder, DRAG_COEFFICIENT):
+    PCFAddDRAG_COEFFICIENT(builder, DRAG_COEFFICIENT)
+
+def PCFAddSRP_COEFFICIENT(builder, SRP_COEFFICIENT):
+    builder.PrependFloat32Slot(11, SRP_COEFFICIENT, 0.0)
+
+def AddSRP_COEFFICIENT(builder, SRP_COEFFICIENT):
+    PCFAddSRP_COEFFICIENT(builder, SRP_COEFFICIENT)
+
+def PCFAddAREA_MASS_RATIO(builder, AREA_MASS_RATIO):
+    builder.PrependFloat32Slot(12, AREA_MASS_RATIO, 0.0)
+
+def AddAREA_MASS_RATIO(builder, AREA_MASS_RATIO):
+    PCFAddAREA_MASS_RATIO(builder, AREA_MASS_RATIO)
+
+def PCFAddRESERVED(builder, RESERVED):
+    builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(RESERVED), 0)
+
+def AddRESERVED(builder, RESERVED):
+    PCFAddRESERVED(builder, RESERVED)
+
+def PCFStartRESERVEDVector(builder, numElems):
+    return builder.StartVector(1, numElems, 1)
+
+def StartRESERVEDVector(builder, numElems):
+    return PCFStartRESERVEDVector(builder, numElems)
+
+def PCFCreateRESERVEDVector(builder, data):
+    data = list(data)
+    builder.StartVector(1, len(data), 1)
+    for item in reversed(data):
+        builder.PrependUint8(item)
+    return builder.EndVector()
+
+def CreateRESERVEDVector(builder, data):
+    PCFCreateRESERVEDVector(builder, data)
+
+def PCFEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return PCFEnd(builder)
+
+try:
+    from typing import List
+except:
+    pass
+
+class PCFT(object):
+
+    # PCFT
+    def __init__(
+        self,
+        STEP_SIZE = 0.0,
+        TOLERANCE = 0.0,
+        MIN_STEP = 0.0,
+        MAX_STEP = 0.0,
+        MAX_ITERATIONS = 0,
+        GRAVITY_DEGREE = 0,
+        GRAVITY_ORDER = 0,
+        INTEGRATOR = 0,
+        OUTPUT_FRAME = 0,
+        FORCE_FLAGS = 0,
+        DRAG_COEFFICIENT = 0.0,
+        SRP_COEFFICIENT = 0.0,
+        AREA_MASS_RATIO = 0.0,
+        RESERVED = None,
+    ):
+        self.STEP_SIZE = STEP_SIZE  # type: float
+        self.TOLERANCE = TOLERANCE  # type: float
+        self.MIN_STEP = MIN_STEP  # type: float
+        self.MAX_STEP = MAX_STEP  # type: float
+        self.MAX_ITERATIONS = MAX_ITERATIONS  # type: int
+        self.GRAVITY_DEGREE = GRAVITY_DEGREE  # type: int
+        self.GRAVITY_ORDER = GRAVITY_ORDER  # type: int
+        self.INTEGRATOR = INTEGRATOR  # type: int
+        self.OUTPUT_FRAME = OUTPUT_FRAME  # type: int
+        self.FORCE_FLAGS = FORCE_FLAGS  # type: int
+        self.DRAG_COEFFICIENT = DRAG_COEFFICIENT  # type: float
+        self.SRP_COEFFICIENT = SRP_COEFFICIENT  # type: float
+        self.AREA_MASS_RATIO = AREA_MASS_RATIO  # type: float
+        self.RESERVED = RESERVED  # type: Optional[List[int]]
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpPcf = PCF()
+        tmpPcf.Init(buf, pos)
+        return cls.InitFromObj(tmpPcf)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpPcf):
+        x = PCFT()
+        x._UnPack(tmpPcf)
+        return x
+
+    # PCFT
+    def _UnPack(self, PCF):
+        if PCF is None:
+            return
+        self.STEP_SIZE = PCF.STEP_SIZE()
+        self.TOLERANCE = PCF.TOLERANCE()
+        self.MIN_STEP = PCF.MIN_STEP()
+        self.MAX_STEP = PCF.MAX_STEP()
+        self.MAX_ITERATIONS = PCF.MAX_ITERATIONS()
+        self.GRAVITY_DEGREE = PCF.GRAVITY_DEGREE()
+        self.GRAVITY_ORDER = PCF.GRAVITY_ORDER()
+        self.INTEGRATOR = PCF.INTEGRATOR()
+        self.OUTPUT_FRAME = PCF.OUTPUT_FRAME()
+        self.FORCE_FLAGS = PCF.FORCE_FLAGS()
+        self.DRAG_COEFFICIENT = PCF.DRAG_COEFFICIENT()
+        self.SRP_COEFFICIENT = PCF.SRP_COEFFICIENT()
+        self.AREA_MASS_RATIO = PCF.AREA_MASS_RATIO()
+        if not PCF.RESERVEDIsNone():
+            if np is None:
+                self.RESERVED = []
+                for i in range(PCF.RESERVEDLength()):
+                    self.RESERVED.append(PCF.RESERVED(i))
+            else:
+                self.RESERVED = PCF.RESERVEDAsNumpy()
+
+    # PCFT
+    def Pack(self, builder):
+        if self.RESERVED is not None:
+            if np is not None and type(self.RESERVED) is np.ndarray:
+                RESERVED = builder.CreateNumpyVector(self.RESERVED)
+            else:
+                PCFStartRESERVEDVector(builder, len(self.RESERVED))
+                for i in reversed(range(len(self.RESERVED))):
+                    builder.PrependUint8(self.RESERVED[i])
+                RESERVED = builder.EndVector()
+        PCFStart(builder)
+        PCFAddSTEP_SIZE(builder, self.STEP_SIZE)
+        PCFAddTOLERANCE(builder, self.TOLERANCE)
+        PCFAddMIN_STEP(builder, self.MIN_STEP)
+        PCFAddMAX_STEP(builder, self.MAX_STEP)
+        PCFAddMAX_ITERATIONS(builder, self.MAX_ITERATIONS)
+        PCFAddGRAVITY_DEGREE(builder, self.GRAVITY_DEGREE)
+        PCFAddGRAVITY_ORDER(builder, self.GRAVITY_ORDER)
+        PCFAddINTEGRATOR(builder, self.INTEGRATOR)
+        PCFAddOUTPUT_FRAME(builder, self.OUTPUT_FRAME)
+        PCFAddFORCE_FLAGS(builder, self.FORCE_FLAGS)
+        PCFAddDRAG_COEFFICIENT(builder, self.DRAG_COEFFICIENT)
+        PCFAddSRP_COEFFICIENT(builder, self.SRP_COEFFICIENT)
+        PCFAddAREA_MASS_RATIO(builder, self.AREA_MASS_RATIO)
+        if self.RESERVED is not None:
+            PCFAddRESERVED(builder, RESERVED)
+        PCF = PCFEnd(builder)
+        return PCF

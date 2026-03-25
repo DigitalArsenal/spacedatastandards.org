@@ -209,6 +209,16 @@ def CZMPolylineStartPOSITIONS_CARTOGRAPHIC_DEGREESVector(builder, numElems):
 def StartPOSITIONS_CARTOGRAPHIC_DEGREESVector(builder, numElems):
     return CZMPolylineStartPOSITIONS_CARTOGRAPHIC_DEGREESVector(builder, numElems)
 
+def CZMPolylineCreatePOSITIONS_CARTOGRAPHIC_DEGREESVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreatePOSITIONS_CARTOGRAPHIC_DEGREESVector(builder, data):
+    CZMPolylineCreatePOSITIONS_CARTOGRAPHIC_DEGREESVector(builder, data)
+
 def CZMPolylineAddPOSITIONS_CARTESIAN(builder, POSITIONS_CARTESIAN):
     builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(POSITIONS_CARTESIAN), 0)
 
@@ -220,6 +230,16 @@ def CZMPolylineStartPOSITIONS_CARTESIANVector(builder, numElems):
 
 def StartPOSITIONS_CARTESIANVector(builder, numElems):
     return CZMPolylineStartPOSITIONS_CARTESIANVector(builder, numElems)
+
+def CZMPolylineCreatePOSITIONS_CARTESIANVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreatePOSITIONS_CARTESIANVector(builder, data):
+    CZMPolylineCreatePOSITIONS_CARTESIANVector(builder, data)
 
 def CZMPolylineAddWIDTH(builder, WIDTH):
     builder.PrependFloat64Slot(3, WIDTH, 0.0)
@@ -297,26 +317,41 @@ except:
 class CZMPolylineT(object):
 
     # CZMPolylineT
-    def __init__(self):
-        self.SHOW = False  # type: bool
-        self.POSITIONS_CARTOGRAPHIC_DEGREES = None  # type: List[float]
-        self.POSITIONS_CARTESIAN = None  # type: List[float]
-        self.WIDTH = 0.0  # type: float
-        self.COLOR = None  # type: Optional[CZMColor.CZMColorT]
-        self.CLAMP_TO_GROUND = False  # type: bool
-        self.ARC_TYPE = None  # type: str
-        self.GRANULARITY = 0.0  # type: float
-        self.MATERIAL = None  # type: Optional[CZMPolylineMaterial.CZMPolylineMaterialT]
-        self.SHADOWS = None  # type: str
-        self.DEPTH_FAIL_MATERIAL = None  # type: Optional[CZMPolylineMaterial.CZMPolylineMaterialT]
-        self.CLASSIFICATION_TYPE = None  # type: str
-        self.Z_INDEX = 0  # type: int
+    def __init__(
+        self,
+        SHOW = False,
+        POSITIONS_CARTOGRAPHIC_DEGREES = None,
+        POSITIONS_CARTESIAN = None,
+        WIDTH = 0.0,
+        COLOR = None,
+        CLAMP_TO_GROUND = False,
+        ARC_TYPE = None,
+        GRANULARITY = 0.0,
+        MATERIAL = None,
+        SHADOWS = None,
+        DEPTH_FAIL_MATERIAL = None,
+        CLASSIFICATION_TYPE = None,
+        Z_INDEX = 0,
+    ):
+        self.SHOW = SHOW  # type: bool
+        self.POSITIONS_CARTOGRAPHIC_DEGREES = POSITIONS_CARTOGRAPHIC_DEGREES  # type: Optional[List[float]]
+        self.POSITIONS_CARTESIAN = POSITIONS_CARTESIAN  # type: Optional[List[float]]
+        self.WIDTH = WIDTH  # type: float
+        self.COLOR = COLOR  # type: Optional[CZMColor.CZMColorT]
+        self.CLAMP_TO_GROUND = CLAMP_TO_GROUND  # type: bool
+        self.ARC_TYPE = ARC_TYPE  # type: Optional[str]
+        self.GRANULARITY = GRANULARITY  # type: float
+        self.MATERIAL = MATERIAL  # type: Optional[CZMPolylineMaterial.CZMPolylineMaterialT]
+        self.SHADOWS = SHADOWS  # type: Optional[str]
+        self.DEPTH_FAIL_MATERIAL = DEPTH_FAIL_MATERIAL  # type: Optional[CZMPolylineMaterial.CZMPolylineMaterialT]
+        self.CLASSIFICATION_TYPE = CLASSIFICATION_TYPE  # type: Optional[str]
+        self.Z_INDEX = Z_INDEX  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        czmpolyline = CZMPolyline()
-        czmpolyline.Init(buf, pos)
-        return cls.InitFromObj(czmpolyline)
+        tmpCzmpolyline = CZMPolyline()
+        tmpCzmpolyline.Init(buf, pos)
+        return cls.InitFromObj(tmpCzmpolyline)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -324,43 +359,43 @@ class CZMPolylineT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, czmpolyline):
+    def InitFromObj(cls, tmpCzmpolyline):
         x = CZMPolylineT()
-        x._UnPack(czmpolyline)
+        x._UnPack(tmpCzmpolyline)
         return x
 
     # CZMPolylineT
-    def _UnPack(self, czmpolyline):
-        if czmpolyline is None:
+    def _UnPack(self, CZMPolyline):
+        if CZMPolyline is None:
             return
-        self.SHOW = czmpolyline.SHOW()
-        if not czmpolyline.POSITIONS_CARTOGRAPHIC_DEGREESIsNone():
+        self.SHOW = CZMPolyline.SHOW()
+        if not CZMPolyline.POSITIONS_CARTOGRAPHIC_DEGREESIsNone():
             if np is None:
                 self.POSITIONS_CARTOGRAPHIC_DEGREES = []
-                for i in range(czmpolyline.POSITIONS_CARTOGRAPHIC_DEGREESLength()):
-                    self.POSITIONS_CARTOGRAPHIC_DEGREES.append(czmpolyline.POSITIONS_CARTOGRAPHIC_DEGREES(i))
+                for i in range(CZMPolyline.POSITIONS_CARTOGRAPHIC_DEGREESLength()):
+                    self.POSITIONS_CARTOGRAPHIC_DEGREES.append(CZMPolyline.POSITIONS_CARTOGRAPHIC_DEGREES(i))
             else:
-                self.POSITIONS_CARTOGRAPHIC_DEGREES = czmpolyline.POSITIONS_CARTOGRAPHIC_DEGREESAsNumpy()
-        if not czmpolyline.POSITIONS_CARTESIANIsNone():
+                self.POSITIONS_CARTOGRAPHIC_DEGREES = CZMPolyline.POSITIONS_CARTOGRAPHIC_DEGREESAsNumpy()
+        if not CZMPolyline.POSITIONS_CARTESIANIsNone():
             if np is None:
                 self.POSITIONS_CARTESIAN = []
-                for i in range(czmpolyline.POSITIONS_CARTESIANLength()):
-                    self.POSITIONS_CARTESIAN.append(czmpolyline.POSITIONS_CARTESIAN(i))
+                for i in range(CZMPolyline.POSITIONS_CARTESIANLength()):
+                    self.POSITIONS_CARTESIAN.append(CZMPolyline.POSITIONS_CARTESIAN(i))
             else:
-                self.POSITIONS_CARTESIAN = czmpolyline.POSITIONS_CARTESIANAsNumpy()
-        self.WIDTH = czmpolyline.WIDTH()
-        if czmpolyline.COLOR() is not None:
-            self.COLOR = CZMColor.CZMColorT.InitFromObj(czmpolyline.COLOR())
-        self.CLAMP_TO_GROUND = czmpolyline.CLAMP_TO_GROUND()
-        self.ARC_TYPE = czmpolyline.ARC_TYPE()
-        self.GRANULARITY = czmpolyline.GRANULARITY()
-        if czmpolyline.MATERIAL() is not None:
-            self.MATERIAL = CZMPolylineMaterial.CZMPolylineMaterialT.InitFromObj(czmpolyline.MATERIAL())
-        self.SHADOWS = czmpolyline.SHADOWS()
-        if czmpolyline.DEPTH_FAIL_MATERIAL() is not None:
-            self.DEPTH_FAIL_MATERIAL = CZMPolylineMaterial.CZMPolylineMaterialT.InitFromObj(czmpolyline.DEPTH_FAIL_MATERIAL())
-        self.CLASSIFICATION_TYPE = czmpolyline.CLASSIFICATION_TYPE()
-        self.Z_INDEX = czmpolyline.Z_INDEX()
+                self.POSITIONS_CARTESIAN = CZMPolyline.POSITIONS_CARTESIANAsNumpy()
+        self.WIDTH = CZMPolyline.WIDTH()
+        if CZMPolyline.COLOR() is not None:
+            self.COLOR = CZMColor.CZMColorT.InitFromObj(CZMPolyline.COLOR())
+        self.CLAMP_TO_GROUND = CZMPolyline.CLAMP_TO_GROUND()
+        self.ARC_TYPE = CZMPolyline.ARC_TYPE()
+        self.GRANULARITY = CZMPolyline.GRANULARITY()
+        if CZMPolyline.MATERIAL() is not None:
+            self.MATERIAL = CZMPolylineMaterial.CZMPolylineMaterialT.InitFromObj(CZMPolyline.MATERIAL())
+        self.SHADOWS = CZMPolyline.SHADOWS()
+        if CZMPolyline.DEPTH_FAIL_MATERIAL() is not None:
+            self.DEPTH_FAIL_MATERIAL = CZMPolylineMaterial.CZMPolylineMaterialT.InitFromObj(CZMPolyline.DEPTH_FAIL_MATERIAL())
+        self.CLASSIFICATION_TYPE = CZMPolyline.CLASSIFICATION_TYPE()
+        self.Z_INDEX = CZMPolyline.Z_INDEX()
 
     # CZMPolylineT
     def Pack(self, builder):
@@ -414,5 +449,5 @@ class CZMPolylineT(object):
         if self.CLASSIFICATION_TYPE is not None:
             CZMPolylineAddCLASSIFICATION_TYPE(builder, CLASSIFICATION_TYPE)
         CZMPolylineAddZ_INDEX(builder, self.Z_INDEX)
-        czmpolyline = CZMPolylineEnd(builder)
-        return czmpolyline
+        CZMPolyline = CZMPolylineEnd(builder)
+        return CZMPolyline

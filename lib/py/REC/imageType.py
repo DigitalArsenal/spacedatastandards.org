@@ -2,4 +2,10 @@
 
 # namespace: 
 
-# NOTE imageType.py does not declare any structs or enums
+class imageType(object):
+    VISIBLE = 0
+    INFRARED = 1
+    MULTISPECTRAL = 2
+    HYPERSPECTRAL = 3
+    UV = 4
+    BROADBAND = 5

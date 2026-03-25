@@ -1137,91 +1137,171 @@ def End(builder):
 class CRMT(object):
 
     # CRMT
-    def __init__(self):
-        self.ID = None  # type: str
-        self.CLASSIFICATION = None  # type: str
-        self.TYPE = None  # type: str
-        self.ID_PLAN = None  # type: str
-        self.PLAN_INDEX = 0  # type: int
-        self.TASK_ID = None  # type: str
-        self.DWELL_ID = None  # type: str
-        self.EXTERNAL_ID = None  # type: str
-        self.ID_SENSOR = None  # type: str
-        self.ORIG_SENSOR_ID = None  # type: str
-        self.OB_TYPE = None  # type: str
-        self.PRIORITY = None  # type: str
-        self.TASK_CATEGORY = 0  # type: int
-        self.SUFFIX = None  # type: str
-        self.UCT_FOLLOW_UP = False  # type: bool
-        self.START_TIME = None  # type: str
-        self.END_TIME = None  # type: str
-        self.NORAD_CAT_ID = 0  # type: int
-        self.ORIG_OBJECT_ID = None  # type: str
-        self.TASK_GROUP = None  # type: str
-        self.IRON = 0  # type: int
-        self.ORBIT_REGIME = None  # type: str
-        self.TARGET_SIZE = 0.0  # type: float
-        self.RCS_MIN = 0.0  # type: float
-        self.RCS = 0.0  # type: float
-        self.RCS_MAX = 0.0  # type: float
-        self.FREQ_MIN = 0.0  # type: float
-        self.FREQ = 0.0  # type: float
-        self.FREQ_MAX = 0.0  # type: float
-        self.POLARIZATION = None  # type: str
-        self.VIS_MAG_MIN = 0.0  # type: float
-        self.VIS_MAG = 0.0  # type: float
-        self.VIS_MAG_MAX = 0.0  # type: float
-        self.SPECTRAL_MODEL = None  # type: str
-        self.REFLECTANCE = 0.0  # type: float
-        self.IRRADIANCE = 0.0  # type: float
-        self.NUM_FRAMES = 0  # type: int
-        self.FRAME_RATE = 0.0  # type: float
-        self.INTEGRATION_TIME = 0.0  # type: float
-        self.NUM_TRACKS = 0  # type: int
-        self.NUM_OBS = 0  # type: int
-        self.DURATION = 0  # type: int
-        self.SRCH_PATTERN = None  # type: str
-        self.SCENARIO = None  # type: str
-        self.ID_ELSET = None  # type: str
-        self.ID_MANIFOLD = None  # type: str
-        self.ID_STATE_VECTOR = None  # type: str
-        self.ES_ID = None  # type: str
-        self.EPOCH = None  # type: str
-        self.SEMI_MAJOR_AXIS = 0.0  # type: float
-        self.ECCENTRICITY = 0.0  # type: float
-        self.INCLINATION = 0.0  # type: float
-        self.RAAN = 0.0  # type: float
-        self.ARG_OF_PERIGEE = 0.0  # type: float
-        self.MEAN_ANOMALY = 0.0  # type: float
-        self.RA = 0.0  # type: float
-        self.DEC = 0.0  # type: float
-        self.AZ = 0.0  # type: float
-        self.EL = 0.0  # type: float
-        self.RANGE = 0.0  # type: float
-        self.EXTENT_AZ = 0.0  # type: float
-        self.EXTENT_EL = 0.0  # type: float
-        self.EXTENT_RANGE = 0.0  # type: float
-        self.LAT = 0.0  # type: float
-        self.LON = 0.0  # type: float
-        self.ALT = 0.0  # type: float
-        self.STOP_LAT = 0.0  # type: float
-        self.STOP_LON = 0.0  # type: float
-        self.STOP_ALT = 0.0  # type: float
-        self.SRCH_INC = 0.0  # type: float
-        self.X_ANGLE = 0.0  # type: float
-        self.Y_ANGLE = 0.0  # type: float
-        self.ORIENT_ANGLE = 0.0  # type: float
-        self.CUSTOMER = None  # type: str
-        self.NOTES = None  # type: str
-        self.SOURCE = None  # type: str
-        self.ORIGIN = None  # type: str
-        self.DATA_MODE = None  # type: str
+    def __init__(
+        self,
+        ID = None,
+        CLASSIFICATION = None,
+        TYPE = None,
+        ID_PLAN = None,
+        PLAN_INDEX = 0,
+        TASK_ID = None,
+        DWELL_ID = None,
+        EXTERNAL_ID = None,
+        ID_SENSOR = None,
+        ORIG_SENSOR_ID = None,
+        OB_TYPE = None,
+        PRIORITY = None,
+        TASK_CATEGORY = 0,
+        SUFFIX = None,
+        UCT_FOLLOW_UP = False,
+        START_TIME = None,
+        END_TIME = None,
+        NORAD_CAT_ID = 0,
+        ORIG_OBJECT_ID = None,
+        TASK_GROUP = None,
+        IRON = 0,
+        ORBIT_REGIME = None,
+        TARGET_SIZE = 0.0,
+        RCS_MIN = 0.0,
+        RCS = 0.0,
+        RCS_MAX = 0.0,
+        FREQ_MIN = 0.0,
+        FREQ = 0.0,
+        FREQ_MAX = 0.0,
+        POLARIZATION = None,
+        VIS_MAG_MIN = 0.0,
+        VIS_MAG = 0.0,
+        VIS_MAG_MAX = 0.0,
+        SPECTRAL_MODEL = None,
+        REFLECTANCE = 0.0,
+        IRRADIANCE = 0.0,
+        NUM_FRAMES = 0,
+        FRAME_RATE = 0.0,
+        INTEGRATION_TIME = 0.0,
+        NUM_TRACKS = 0,
+        NUM_OBS = 0,
+        DURATION = 0,
+        SRCH_PATTERN = None,
+        SCENARIO = None,
+        ID_ELSET = None,
+        ID_MANIFOLD = None,
+        ID_STATE_VECTOR = None,
+        ES_ID = None,
+        EPOCH = None,
+        SEMI_MAJOR_AXIS = 0.0,
+        ECCENTRICITY = 0.0,
+        INCLINATION = 0.0,
+        RAAN = 0.0,
+        ARG_OF_PERIGEE = 0.0,
+        MEAN_ANOMALY = 0.0,
+        RA = 0.0,
+        DEC = 0.0,
+        AZ = 0.0,
+        EL = 0.0,
+        RANGE = 0.0,
+        EXTENT_AZ = 0.0,
+        EXTENT_EL = 0.0,
+        EXTENT_RANGE = 0.0,
+        LAT = 0.0,
+        LON = 0.0,
+        ALT = 0.0,
+        STOP_LAT = 0.0,
+        STOP_LON = 0.0,
+        STOP_ALT = 0.0,
+        SRCH_INC = 0.0,
+        X_ANGLE = 0.0,
+        Y_ANGLE = 0.0,
+        ORIENT_ANGLE = 0.0,
+        CUSTOMER = None,
+        NOTES = None,
+        SOURCE = None,
+        ORIGIN = None,
+        DATA_MODE = None,
+    ):
+        self.ID = ID  # type: Optional[str]
+        self.CLASSIFICATION = CLASSIFICATION  # type: Optional[str]
+        self.TYPE = TYPE  # type: Optional[str]
+        self.ID_PLAN = ID_PLAN  # type: Optional[str]
+        self.PLAN_INDEX = PLAN_INDEX  # type: int
+        self.TASK_ID = TASK_ID  # type: Optional[str]
+        self.DWELL_ID = DWELL_ID  # type: Optional[str]
+        self.EXTERNAL_ID = EXTERNAL_ID  # type: Optional[str]
+        self.ID_SENSOR = ID_SENSOR  # type: Optional[str]
+        self.ORIG_SENSOR_ID = ORIG_SENSOR_ID  # type: Optional[str]
+        self.OB_TYPE = OB_TYPE  # type: Optional[str]
+        self.PRIORITY = PRIORITY  # type: Optional[str]
+        self.TASK_CATEGORY = TASK_CATEGORY  # type: int
+        self.SUFFIX = SUFFIX  # type: Optional[str]
+        self.UCT_FOLLOW_UP = UCT_FOLLOW_UP  # type: bool
+        self.START_TIME = START_TIME  # type: Optional[str]
+        self.END_TIME = END_TIME  # type: Optional[str]
+        self.NORAD_CAT_ID = NORAD_CAT_ID  # type: int
+        self.ORIG_OBJECT_ID = ORIG_OBJECT_ID  # type: Optional[str]
+        self.TASK_GROUP = TASK_GROUP  # type: Optional[str]
+        self.IRON = IRON  # type: int
+        self.ORBIT_REGIME = ORBIT_REGIME  # type: Optional[str]
+        self.TARGET_SIZE = TARGET_SIZE  # type: float
+        self.RCS_MIN = RCS_MIN  # type: float
+        self.RCS = RCS  # type: float
+        self.RCS_MAX = RCS_MAX  # type: float
+        self.FREQ_MIN = FREQ_MIN  # type: float
+        self.FREQ = FREQ  # type: float
+        self.FREQ_MAX = FREQ_MAX  # type: float
+        self.POLARIZATION = POLARIZATION  # type: Optional[str]
+        self.VIS_MAG_MIN = VIS_MAG_MIN  # type: float
+        self.VIS_MAG = VIS_MAG  # type: float
+        self.VIS_MAG_MAX = VIS_MAG_MAX  # type: float
+        self.SPECTRAL_MODEL = SPECTRAL_MODEL  # type: Optional[str]
+        self.REFLECTANCE = REFLECTANCE  # type: float
+        self.IRRADIANCE = IRRADIANCE  # type: float
+        self.NUM_FRAMES = NUM_FRAMES  # type: int
+        self.FRAME_RATE = FRAME_RATE  # type: float
+        self.INTEGRATION_TIME = INTEGRATION_TIME  # type: float
+        self.NUM_TRACKS = NUM_TRACKS  # type: int
+        self.NUM_OBS = NUM_OBS  # type: int
+        self.DURATION = DURATION  # type: int
+        self.SRCH_PATTERN = SRCH_PATTERN  # type: Optional[str]
+        self.SCENARIO = SCENARIO  # type: Optional[str]
+        self.ID_ELSET = ID_ELSET  # type: Optional[str]
+        self.ID_MANIFOLD = ID_MANIFOLD  # type: Optional[str]
+        self.ID_STATE_VECTOR = ID_STATE_VECTOR  # type: Optional[str]
+        self.ES_ID = ES_ID  # type: Optional[str]
+        self.EPOCH = EPOCH  # type: Optional[str]
+        self.SEMI_MAJOR_AXIS = SEMI_MAJOR_AXIS  # type: float
+        self.ECCENTRICITY = ECCENTRICITY  # type: float
+        self.INCLINATION = INCLINATION  # type: float
+        self.RAAN = RAAN  # type: float
+        self.ARG_OF_PERIGEE = ARG_OF_PERIGEE  # type: float
+        self.MEAN_ANOMALY = MEAN_ANOMALY  # type: float
+        self.RA = RA  # type: float
+        self.DEC = DEC  # type: float
+        self.AZ = AZ  # type: float
+        self.EL = EL  # type: float
+        self.RANGE = RANGE  # type: float
+        self.EXTENT_AZ = EXTENT_AZ  # type: float
+        self.EXTENT_EL = EXTENT_EL  # type: float
+        self.EXTENT_RANGE = EXTENT_RANGE  # type: float
+        self.LAT = LAT  # type: float
+        self.LON = LON  # type: float
+        self.ALT = ALT  # type: float
+        self.STOP_LAT = STOP_LAT  # type: float
+        self.STOP_LON = STOP_LON  # type: float
+        self.STOP_ALT = STOP_ALT  # type: float
+        self.SRCH_INC = SRCH_INC  # type: float
+        self.X_ANGLE = X_ANGLE  # type: float
+        self.Y_ANGLE = Y_ANGLE  # type: float
+        self.ORIENT_ANGLE = ORIENT_ANGLE  # type: float
+        self.CUSTOMER = CUSTOMER  # type: Optional[str]
+        self.NOTES = NOTES  # type: Optional[str]
+        self.SOURCE = SOURCE  # type: Optional[str]
+        self.ORIGIN = ORIGIN  # type: Optional[str]
+        self.DATA_MODE = DATA_MODE  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        CRM = CRM()
-        CRM.Init(buf, pos)
-        return cls.InitFromObj(CRM)
+        tmpCrm = CRM()
+        tmpCrm.Init(buf, pos)
+        return cls.InitFromObj(tmpCrm)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -1229,9 +1309,9 @@ class CRMT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, CRM):
+    def InitFromObj(cls, tmpCrm):
         x = CRMT()
-        x._UnPack(CRM)
+        x._UnPack(tmpCrm)
         return x
 
     # CRMT

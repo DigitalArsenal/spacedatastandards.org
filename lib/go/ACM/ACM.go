@@ -63,6 +63,10 @@ func (rcv *ACM) CCSDS_ACM_VERS() []byte {
 	return nil
 }
 
+func (rcv *ACM) CcsdsAcmVers() []byte {
+	return rcv.CCSDS_ACM_VERS()
+}
+
 /// CCSDS ACM version
 /// Message creation date (ISO 8601)
 func (rcv *ACM) CREATION_DATE() []byte {
@@ -71,6 +75,10 @@ func (rcv *ACM) CREATION_DATE() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *ACM) CreationDate() []byte {
+	return rcv.CREATION_DATE()
 }
 
 /// Message creation date (ISO 8601)
@@ -83,6 +91,10 @@ func (rcv *ACM) ORIGINATOR() []byte {
 	return nil
 }
 
+func (rcv *ACM) Originator() []byte {
+	return rcv.ORIGINATOR()
+}
+
 /// Creating organization
 /// Object name
 func (rcv *ACM) OBJECT_NAME() []byte {
@@ -91,6 +103,10 @@ func (rcv *ACM) OBJECT_NAME() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *ACM) ObjectName() []byte {
+	return rcv.OBJECT_NAME()
 }
 
 /// Object name
@@ -103,6 +119,10 @@ func (rcv *ACM) OBJECT_ID() []byte {
 	return nil
 }
 
+func (rcv *ACM) ObjectId() []byte {
+	return rcv.OBJECT_ID()
+}
+
 /// International designator
 /// Catalog name
 func (rcv *ACM) CATALOG_NAME() []byte {
@@ -111,6 +131,10 @@ func (rcv *ACM) CATALOG_NAME() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *ACM) CatalogName() []byte {
+	return rcv.CATALOG_NAME()
 }
 
 /// Catalog name
@@ -123,6 +147,10 @@ func (rcv *ACM) EPOCH() []byte {
 	return nil
 }
 
+func (rcv *ACM) Epoch() []byte {
+	return rcv.EPOCH()
+}
+
 /// Epoch of state (ISO 8601)
 /// Time system
 func (rcv *ACM) TIME_SYSTEM() []byte {
@@ -133,6 +161,10 @@ func (rcv *ACM) TIME_SYSTEM() []byte {
 	return nil
 }
 
+func (rcv *ACM) TimeSystem() []byte {
+	return rcv.TIME_SYSTEM()
+}
+
 /// Time system
 /// Attitude states
 func (rcv *ACM) ATT_STATES(obj *attitudeState, j int) bool {
@@ -141,10 +173,17 @@ func (rcv *ACM) ATT_STATES(obj *attitudeState, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(attitudeState)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *ACM) AttStates(obj *attitudeState, j int) bool {
+	return rcv.ATT_STATES(obj, j)
 }
 
 func (rcv *ACM) ATT_STATESLength() int {
@@ -153,6 +192,10 @@ func (rcv *ACM) ATT_STATESLength() int {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *ACM) AttStatesLength() int {
+	return rcv.ATT_STATESLength()
 }
 
 /// Attitude states
@@ -170,6 +213,10 @@ func (rcv *ACM) PHYS_PROPERTIES(obj *attPhysicalProperties) *attPhysicalProperti
 	return nil
 }
 
+func (rcv *ACM) PhysProperties(obj *attPhysicalProperties) *attPhysicalProperties {
+	return rcv.PHYS_PROPERTIES(obj)
+}
+
 /// Physical properties
 /// Attitude covariance data
 func (rcv *ACM) COV_DATA(obj *attCovariance, j int) bool {
@@ -178,10 +225,17 @@ func (rcv *ACM) COV_DATA(obj *attCovariance, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(attCovariance)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *ACM) CovData(obj *attCovariance, j int) bool {
+	return rcv.COV_DATA(obj, j)
 }
 
 func (rcv *ACM) COV_DATALength() int {
@@ -192,6 +246,10 @@ func (rcv *ACM) COV_DATALength() int {
 	return 0
 }
 
+func (rcv *ACM) CovDataLength() int {
+	return rcv.COV_DATALength()
+}
+
 /// Attitude covariance data
 /// Attitude maneuvers
 func (rcv *ACM) MANEUVERS(obj *attManeuver, j int) bool {
@@ -200,10 +258,17 @@ func (rcv *ACM) MANEUVERS(obj *attManeuver, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(attManeuver)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *ACM) Maneuvers(obj *attManeuver, j int) bool {
+	return rcv.MANEUVERS(obj, j)
 }
 
 func (rcv *ACM) MANEUVERSLength() int {
@@ -212,6 +277,10 @@ func (rcv *ACM) MANEUVERSLength() int {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *ACM) ManeuversLength() int {
+	return rcv.MANEUVERSLength()
 }
 
 /// Attitude maneuvers
@@ -224,9 +293,17 @@ func (rcv *ACM) MANEUVERABLE() maneuverableFlag {
 	return 0
 }
 
+func (rcv *ACM) Maneuverable() maneuverableFlag {
+	return rcv.MANEUVERABLE()
+}
+
 /// Maneuverability status
 func (rcv *ACM) MutateMANEUVERABLE(n maneuverableFlag) bool {
 	return rcv._tab.MutateInt8Slot(28, int8(n))
+}
+
+func (rcv *ACM) MutateManeuverable(n maneuverableFlag) bool {
+	return rcv.MutateMANEUVERABLE(n)
 }
 
 /// Additional comments
@@ -238,6 +315,10 @@ func (rcv *ACM) COMMENT() []byte {
 	return nil
 }
 
+func (rcv *ACM) Comment() []byte {
+	return rcv.COMMENT()
+}
+
 /// Additional comments
 func ACMStart(builder *flatbuffers.Builder) {
 	builder.StartObject(14)
@@ -245,53 +326,104 @@ func ACMStart(builder *flatbuffers.Builder) {
 func ACMAddCCSDS_ACM_VERS(builder *flatbuffers.Builder, CCSDS_ACM_VERS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(CCSDS_ACM_VERS), 0)
 }
+func ACMAddCcsdsAcmVers(builder *flatbuffers.Builder, CCSDS_ACM_VERS flatbuffers.UOffsetT) {
+	ACMAddCCSDS_ACM_VERS(builder, CCSDS_ACM_VERS)
+}
 func ACMAddCREATION_DATE(builder *flatbuffers.Builder, CREATION_DATE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(CREATION_DATE), 0)
+}
+func ACMAddCreationDate(builder *flatbuffers.Builder, CREATION_DATE flatbuffers.UOffsetT) {
+	ACMAddCREATION_DATE(builder, CREATION_DATE)
 }
 func ACMAddORIGINATOR(builder *flatbuffers.Builder, ORIGINATOR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(ORIGINATOR), 0)
 }
+func ACMAddOriginator(builder *flatbuffers.Builder, ORIGINATOR flatbuffers.UOffsetT) {
+	ACMAddORIGINATOR(builder, ORIGINATOR)
+}
 func ACMAddOBJECT_NAME(builder *flatbuffers.Builder, OBJECT_NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(OBJECT_NAME), 0)
+}
+func ACMAddObjectName(builder *flatbuffers.Builder, OBJECT_NAME flatbuffers.UOffsetT) {
+	ACMAddOBJECT_NAME(builder, OBJECT_NAME)
 }
 func ACMAddOBJECT_ID(builder *flatbuffers.Builder, OBJECT_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(OBJECT_ID), 0)
 }
+func ACMAddObjectId(builder *flatbuffers.Builder, OBJECT_ID flatbuffers.UOffsetT) {
+	ACMAddOBJECT_ID(builder, OBJECT_ID)
+}
 func ACMAddCATALOG_NAME(builder *flatbuffers.Builder, CATALOG_NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(CATALOG_NAME), 0)
+}
+func ACMAddCatalogName(builder *flatbuffers.Builder, CATALOG_NAME flatbuffers.UOffsetT) {
+	ACMAddCATALOG_NAME(builder, CATALOG_NAME)
 }
 func ACMAddEPOCH(builder *flatbuffers.Builder, EPOCH flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(EPOCH), 0)
 }
+func ACMAddEpoch(builder *flatbuffers.Builder, EPOCH flatbuffers.UOffsetT) {
+	ACMAddEPOCH(builder, EPOCH)
+}
 func ACMAddTIME_SYSTEM(builder *flatbuffers.Builder, TIME_SYSTEM flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(TIME_SYSTEM), 0)
+}
+func ACMAddTimeSystem(builder *flatbuffers.Builder, TIME_SYSTEM flatbuffers.UOffsetT) {
+	ACMAddTIME_SYSTEM(builder, TIME_SYSTEM)
 }
 func ACMAddATT_STATES(builder *flatbuffers.Builder, ATT_STATES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(ATT_STATES), 0)
 }
+func ACMAddAttStates(builder *flatbuffers.Builder, ATT_STATES flatbuffers.UOffsetT) {
+	ACMAddATT_STATES(builder, ATT_STATES)
+}
 func ACMStartATT_STATESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func ACMStartAttStatesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return ACMStartATT_STATESVector(builder, numElems)
 }
 func ACMAddPHYS_PROPERTIES(builder *flatbuffers.Builder, PHYS_PROPERTIES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(PHYS_PROPERTIES), 0)
 }
+func ACMAddPhysProperties(builder *flatbuffers.Builder, PHYS_PROPERTIES flatbuffers.UOffsetT) {
+	ACMAddPHYS_PROPERTIES(builder, PHYS_PROPERTIES)
+}
 func ACMAddCOV_DATA(builder *flatbuffers.Builder, COV_DATA flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(COV_DATA), 0)
+}
+func ACMAddCovData(builder *flatbuffers.Builder, COV_DATA flatbuffers.UOffsetT) {
+	ACMAddCOV_DATA(builder, COV_DATA)
 }
 func ACMStartCOV_DATAVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
+func ACMStartCovDataVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return ACMStartCOV_DATAVector(builder, numElems)
+}
 func ACMAddMANEUVERS(builder *flatbuffers.Builder, MANEUVERS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(MANEUVERS), 0)
+}
+func ACMAddManeuvers(builder *flatbuffers.Builder, MANEUVERS flatbuffers.UOffsetT) {
+	ACMAddMANEUVERS(builder, MANEUVERS)
 }
 func ACMStartMANEUVERSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
+func ACMStartManeuversVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return ACMStartMANEUVERSVector(builder, numElems)
+}
 func ACMAddMANEUVERABLE(builder *flatbuffers.Builder, MANEUVERABLE maneuverableFlag) {
 	builder.PrependInt8Slot(12, int8(MANEUVERABLE), 0)
 }
+func ACMAddManeuverable(builder *flatbuffers.Builder, MANEUVERABLE maneuverableFlag) {
+	ACMAddMANEUVERABLE(builder, MANEUVERABLE)
+}
 func ACMAddCOMMENT(builder *flatbuffers.Builder, COMMENT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(13, flatbuffers.UOffsetT(COMMENT), 0)
+}
+func ACMAddComment(builder *flatbuffers.Builder, COMMENT flatbuffers.UOffsetT) {
+	ACMAddCOMMENT(builder, COMMENT)
 }
 func ACMEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

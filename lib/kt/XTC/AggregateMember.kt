@@ -32,7 +32,7 @@ class AggregateMember : Table() {
     /**
      * Member name
      */
-    val NAME : String?
+    val name : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class AggregateMember : Table() {
                 null
             }
         }
-    val NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val nameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun nameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Reference to parameter type
      */
-    val TYPE_REF : String?
+    val typeRef : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -55,12 +55,12 @@ class AggregateMember : Table() {
                 null
             }
         }
-    val TYPE_REFAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun TYPE_REFInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val typeRefAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun typeRefInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * Short description
      */
-    val SHORT_DESCRIPTION : String?
+    val shortDescription : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -69,26 +69,26 @@ class AggregateMember : Table() {
                 null
             }
         }
-    val SHORT_DESCRIPTIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun SHORT_DESCRIPTIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val shortDescriptionAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun shortDescriptionInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsAggregateMember(_bb: ByteBuffer): AggregateMember = getRootAsAggregateMember(_bb, AggregateMember())
         fun getRootAsAggregateMember(_bb: ByteBuffer, obj: AggregateMember): AggregateMember {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createAggregateMember(builder: FlatBufferBuilder, NAMEOffset: Int, TYPE_REFOffset: Int, SHORT_DESCRIPTIONOffset: Int) : Int {
+        fun createAggregateMember(builder: FlatBufferBuilder, nameOffset: Int, typeRefOffset: Int, shortDescriptionOffset: Int) : Int {
             builder.startTable(3)
-            addSHORT_DESCRIPTION(builder, SHORT_DESCRIPTIONOffset)
-            addTYPE_REF(builder, TYPE_REFOffset)
-            addNAME(builder, NAMEOffset)
+            addSHORTDESCRIPTION(builder, shortDescriptionOffset)
+            addTYPEREF(builder, typeRefOffset)
+            addNAME(builder, nameOffset)
             return endAggregateMember(builder)
         }
         fun startAggregateMember(builder: FlatBufferBuilder) = builder.startTable(3)
-        fun addNAME(builder: FlatBufferBuilder, NAME: Int) = builder.addOffset(0, NAME, 0)
-        fun addTYPE_REF(builder: FlatBufferBuilder, TYPE_REF: Int) = builder.addOffset(1, TYPE_REF, 0)
-        fun addSHORT_DESCRIPTION(builder: FlatBufferBuilder, SHORT_DESCRIPTION: Int) = builder.addOffset(2, SHORT_DESCRIPTION, 0)
+        fun addNAME(builder: FlatBufferBuilder, name: Int) = builder.addOffset(0, name, 0)
+        fun addTYPEREF(builder: FlatBufferBuilder, typeRef: Int) = builder.addOffset(1, typeRef, 0)
+        fun addSHORTDESCRIPTION(builder: FlatBufferBuilder, shortDescription: Int) = builder.addOffset(2, shortDescription, 0)
         fun endAggregateMember(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

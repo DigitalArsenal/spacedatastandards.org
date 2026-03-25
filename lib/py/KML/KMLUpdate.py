@@ -101,17 +101,23 @@ def End(builder):
 class KMLUpdateT(object):
 
     # KMLUpdateT
-    def __init__(self):
-        self.TARGET_HREF = None  # type: str
-        self.CHANGE_KML = None  # type: str
-        self.CREATE_KML = None  # type: str
-        self.DELETE_KML = None  # type: str
+    def __init__(
+        self,
+        TARGET_HREF = None,
+        CHANGE_KML = None,
+        CREATE_KML = None,
+        DELETE_KML = None,
+    ):
+        self.TARGET_HREF = TARGET_HREF  # type: Optional[str]
+        self.CHANGE_KML = CHANGE_KML  # type: Optional[str]
+        self.CREATE_KML = CREATE_KML  # type: Optional[str]
+        self.DELETE_KML = DELETE_KML  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        kmlupdate = KMLUpdate()
-        kmlupdate.Init(buf, pos)
-        return cls.InitFromObj(kmlupdate)
+        tmpKmlupdate = KMLUpdate()
+        tmpKmlupdate.Init(buf, pos)
+        return cls.InitFromObj(tmpKmlupdate)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -119,19 +125,19 @@ class KMLUpdateT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, kmlupdate):
+    def InitFromObj(cls, tmpKmlupdate):
         x = KMLUpdateT()
-        x._UnPack(kmlupdate)
+        x._UnPack(tmpKmlupdate)
         return x
 
     # KMLUpdateT
-    def _UnPack(self, kmlupdate):
-        if kmlupdate is None:
+    def _UnPack(self, KMLUpdate):
+        if KMLUpdate is None:
             return
-        self.TARGET_HREF = kmlupdate.TARGET_HREF()
-        self.CHANGE_KML = kmlupdate.CHANGE_KML()
-        self.CREATE_KML = kmlupdate.CREATE_KML()
-        self.DELETE_KML = kmlupdate.DELETE_KML()
+        self.TARGET_HREF = KMLUpdate.TARGET_HREF()
+        self.CHANGE_KML = KMLUpdate.CHANGE_KML()
+        self.CREATE_KML = KMLUpdate.CREATE_KML()
+        self.DELETE_KML = KMLUpdate.DELETE_KML()
 
     # KMLUpdateT
     def Pack(self, builder):
@@ -152,5 +158,5 @@ class KMLUpdateT(object):
             KMLUpdateAddCREATE_KML(builder, CREATE_KML)
         if self.DELETE_KML is not None:
             KMLUpdateAddDELETE_KML(builder, DELETE_KML)
-        kmlupdate = KMLUpdateEnd(builder)
-        return kmlupdate
+        KMLUpdate = KMLUpdateEnd(builder)
+        return KMLUpdate

@@ -2,4 +2,155 @@
 
 # namespace: 
 
-# NOTE EnumerationValue.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Enumeration value mapping
+class EnumerationValue(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = EnumerationValue()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsEnumerationValue(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def EnumerationValueBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x58\x54\x43", size_prefixed=size_prefixed)
+
+    # EnumerationValue
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Label/name for this value
+    # EnumerationValue
+    def LABEL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Numeric value
+    # EnumerationValue
+    def VALUE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+    # Maximum value (for ranges)
+    # EnumerationValue
+    def MAX_VALUE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+    # Description of this enumeration value
+    # EnumerationValue
+    def DESCRIPTION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+def EnumerationValueStart(builder):
+    builder.StartObject(4)
+
+def Start(builder):
+    EnumerationValueStart(builder)
+
+def EnumerationValueAddLABEL(builder, LABEL):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(LABEL), 0)
+
+def AddLABEL(builder, LABEL):
+    EnumerationValueAddLABEL(builder, LABEL)
+
+def EnumerationValueAddVALUE(builder, VALUE):
+    builder.PrependInt64Slot(1, VALUE, 0)
+
+def AddVALUE(builder, VALUE):
+    EnumerationValueAddVALUE(builder, VALUE)
+
+def EnumerationValueAddMAX_VALUE(builder, MAX_VALUE):
+    builder.PrependInt64Slot(2, MAX_VALUE, 0)
+
+def AddMAX_VALUE(builder, MAX_VALUE):
+    EnumerationValueAddMAX_VALUE(builder, MAX_VALUE)
+
+def EnumerationValueAddDESCRIPTION(builder, DESCRIPTION):
+    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(DESCRIPTION), 0)
+
+def AddDESCRIPTION(builder, DESCRIPTION):
+    EnumerationValueAddDESCRIPTION(builder, DESCRIPTION)
+
+def EnumerationValueEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return EnumerationValueEnd(builder)
+
+
+class EnumerationValueT(object):
+
+    # EnumerationValueT
+    def __init__(
+        self,
+        LABEL = None,
+        VALUE = 0,
+        MAX_VALUE = 0,
+        DESCRIPTION = None,
+    ):
+        self.LABEL = LABEL  # type: Optional[str]
+        self.VALUE = VALUE  # type: int
+        self.MAX_VALUE = MAX_VALUE  # type: int
+        self.DESCRIPTION = DESCRIPTION  # type: Optional[str]
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpEnumerationValue = EnumerationValue()
+        tmpEnumerationValue.Init(buf, pos)
+        return cls.InitFromObj(tmpEnumerationValue)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpEnumerationValue):
+        x = EnumerationValueT()
+        x._UnPack(tmpEnumerationValue)
+        return x
+
+    # EnumerationValueT
+    def _UnPack(self, EnumerationValue):
+        if EnumerationValue is None:
+            return
+        self.LABEL = EnumerationValue.LABEL()
+        self.VALUE = EnumerationValue.VALUE()
+        self.MAX_VALUE = EnumerationValue.MAX_VALUE()
+        self.DESCRIPTION = EnumerationValue.DESCRIPTION()
+
+    # EnumerationValueT
+    def Pack(self, builder):
+        if self.LABEL is not None:
+            LABEL = builder.CreateString(self.LABEL)
+        if self.DESCRIPTION is not None:
+            DESCRIPTION = builder.CreateString(self.DESCRIPTION)
+        EnumerationValueStart(builder)
+        if self.LABEL is not None:
+            EnumerationValueAddLABEL(builder, LABEL)
+        EnumerationValueAddVALUE(builder, self.VALUE)
+        EnumerationValueAddMAX_VALUE(builder, self.MAX_VALUE)
+        if self.DESCRIPTION is not None:
+            EnumerationValueAddDESCRIPTION(builder, DESCRIPTION)
+        EnumerationValue = EnumerationValueEnd(builder)
+        return EnumerationValue

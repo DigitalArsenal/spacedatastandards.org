@@ -32,7 +32,7 @@ class KMLSimpleField : Table() {
     /**
      * Field name
      */
-    val NAME : String?
+    val name : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class KMLSimpleField : Table() {
                 null
             }
         }
-    val NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val nameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun nameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Field type (xsd:string, xsd:int, xsd:float, etc.)
      */
-    val FIELD_TYPE : String?
+    val fieldType : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -55,12 +55,12 @@ class KMLSimpleField : Table() {
                 null
             }
         }
-    val FIELD_TYPEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun FIELD_TYPEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val fieldTypeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun fieldTypeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * Display name
      */
-    val DISPLAY_NAME : String?
+    val displayName : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -69,26 +69,26 @@ class KMLSimpleField : Table() {
                 null
             }
         }
-    val DISPLAY_NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun DISPLAY_NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val displayNameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun displayNameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsKMLSimpleField(_bb: ByteBuffer): KMLSimpleField = getRootAsKMLSimpleField(_bb, KMLSimpleField())
         fun getRootAsKMLSimpleField(_bb: ByteBuffer, obj: KMLSimpleField): KMLSimpleField {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createKMLSimpleField(builder: FlatBufferBuilder, NAMEOffset: Int, FIELD_TYPEOffset: Int, DISPLAY_NAMEOffset: Int) : Int {
+        fun createKMLSimpleField(builder: FlatBufferBuilder, nameOffset: Int, fieldTypeOffset: Int, displayNameOffset: Int) : Int {
             builder.startTable(3)
-            addDISPLAY_NAME(builder, DISPLAY_NAMEOffset)
-            addFIELD_TYPE(builder, FIELD_TYPEOffset)
-            addNAME(builder, NAMEOffset)
+            addDISPLAYNAME(builder, displayNameOffset)
+            addFIELDTYPE(builder, fieldTypeOffset)
+            addNAME(builder, nameOffset)
             return endKMLSimpleField(builder)
         }
         fun startKMLSimpleField(builder: FlatBufferBuilder) = builder.startTable(3)
-        fun addNAME(builder: FlatBufferBuilder, NAME: Int) = builder.addOffset(0, NAME, 0)
-        fun addFIELD_TYPE(builder: FlatBufferBuilder, FIELD_TYPE: Int) = builder.addOffset(1, FIELD_TYPE, 0)
-        fun addDISPLAY_NAME(builder: FlatBufferBuilder, DISPLAY_NAME: Int) = builder.addOffset(2, DISPLAY_NAME, 0)
+        fun addNAME(builder: FlatBufferBuilder, name: Int) = builder.addOffset(0, name, 0)
+        fun addFIELDTYPE(builder: FlatBufferBuilder, fieldType: Int) = builder.addOffset(1, fieldType, 0)
+        fun addDISPLAYNAME(builder: FlatBufferBuilder, displayName: Int) = builder.addOffset(2, displayName, 0)
         fun endKMLSimpleField(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

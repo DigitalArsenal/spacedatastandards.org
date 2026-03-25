@@ -32,7 +32,7 @@ class commsTransponder : Table() {
     /**
      * Transponder identifier
      */
-    val TRANSPONDER_ID : String?
+    val transponderId : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class commsTransponder : Table() {
                 null
             }
         }
-    val TRANSPONDER_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun TRANSPONDER_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val transponderIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun transponderIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Transponder name
      */
-    val NAME : String?
+    val name : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -55,12 +55,12 @@ class commsTransponder : Table() {
                 null
             }
         }
-    val NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val nameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun nameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * Transponder type (e.g., BENT_PIPE, REGENERATIVE, OBP)
      */
-    val TYPE : String?
+    val type : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -69,12 +69,12 @@ class commsTransponder : Table() {
                 null
             }
         }
-    val TYPEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun TYPEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val typeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun typeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
     /**
      * Operating band (e.g., C, Ku, Ka, L, S, X)
      */
-    val BAND : String?
+    val band : String?
         get() {
             val o = __offset(10)
             return if (o != 0) {
@@ -83,12 +83,12 @@ class commsTransponder : Table() {
                 null
             }
         }
-    val BANDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
-    fun BANDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
+    val bandAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(10, 1)
+    fun bandInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 10, 1)
     /**
      * Uplink frequency range minimum in MHz
      */
-    val UPLINK_FREQ_MIN : Double
+    val uplinkFreqMin : Double
         get() {
             val o = __offset(12)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -96,7 +96,7 @@ class commsTransponder : Table() {
     /**
      * Uplink frequency range maximum in MHz
      */
-    val UPLINK_FREQ_MAX : Double
+    val uplinkFreqMax : Double
         get() {
             val o = __offset(14)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -104,7 +104,7 @@ class commsTransponder : Table() {
     /**
      * Downlink frequency range minimum in MHz
      */
-    val DOWNLINK_FREQ_MIN : Double
+    val downlinkFreqMin : Double
         get() {
             val o = __offset(16)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -112,7 +112,7 @@ class commsTransponder : Table() {
     /**
      * Downlink frequency range maximum in MHz
      */
-    val DOWNLINK_FREQ_MAX : Double
+    val downlinkFreqMax : Double
         get() {
             val o = __offset(18)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -120,7 +120,7 @@ class commsTransponder : Table() {
     /**
      * Saturated EIRP in dBW
      */
-    val EIRP : Double
+    val eirp : Double
         get() {
             val o = __offset(20)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -128,7 +128,7 @@ class commsTransponder : Table() {
     /**
      * G/T in dB/K
      */
-    val G_OVER_T : Double
+    val gOverT : Double
         get() {
             val o = __offset(22)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -136,7 +136,7 @@ class commsTransponder : Table() {
     /**
      * Total bandwidth in MHz
      */
-    val BANDWIDTH : Double
+    val bandwidth : Double
         get() {
             val o = __offset(24)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -144,7 +144,7 @@ class commsTransponder : Table() {
     /**
      * Number of channels
      */
-    val NUM_CHANNELS : UInt
+    val numChannels : UInt
         get() {
             val o = __offset(26)
             return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
@@ -152,8 +152,8 @@ class commsTransponder : Table() {
     /**
      * Channels on this transponder
      */
-    fun CHANNELS(j: Int) : commsChannel? = CHANNELS(commsChannel(), j)
-    fun CHANNELS(obj: commsChannel, j: Int) : commsChannel? {
+    fun channels(j: Int) : commsChannel? = channels(commsChannel(), j)
+    fun channels(obj: commsChannel, j: Int) : commsChannel? {
         val o = __offset(28)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -161,14 +161,14 @@ class commsTransponder : Table() {
             null
         }
     }
-    val CHANNELSLength : Int
+    val channelsLength : Int
         get() {
             val o = __offset(28); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Polarization (e.g., RHCP, LHCP, LINEAR_H, LINEAR_V)
      */
-    val POLARIZATION : String?
+    val polarization : String?
         get() {
             val o = __offset(30)
             return if (o != 0) {
@@ -177,47 +177,47 @@ class commsTransponder : Table() {
                 null
             }
         }
-    val POLARIZATIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(30, 1)
-    fun POLARIZATIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 30, 1)
+    val polarizationAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(30, 1)
+    fun polarizationInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 30, 1)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAscommsTransponder(_bb: ByteBuffer): commsTransponder = getRootAscommsTransponder(_bb, commsTransponder())
         fun getRootAscommsTransponder(_bb: ByteBuffer, obj: commsTransponder): commsTransponder {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createcommsTransponder(builder: FlatBufferBuilder, TRANSPONDER_IDOffset: Int, NAMEOffset: Int, TYPEOffset: Int, BANDOffset: Int, UPLINK_FREQ_MIN: Double, UPLINK_FREQ_MAX: Double, DOWNLINK_FREQ_MIN: Double, DOWNLINK_FREQ_MAX: Double, EIRP: Double, G_OVER_T: Double, BANDWIDTH: Double, NUM_CHANNELS: UInt, CHANNELSOffset: Int, POLARIZATIONOffset: Int) : Int {
+        fun createcommsTransponder(builder: FlatBufferBuilder, transponderIdOffset: Int, nameOffset: Int, typeOffset: Int, bandOffset: Int, uplinkFreqMin: Double, uplinkFreqMax: Double, downlinkFreqMin: Double, downlinkFreqMax: Double, eirp: Double, gOverT: Double, bandwidth: Double, numChannels: UInt, channelsOffset: Int, polarizationOffset: Int) : Int {
             builder.startTable(14)
-            addBANDWIDTH(builder, BANDWIDTH)
-            addG_OVER_T(builder, G_OVER_T)
-            addEIRP(builder, EIRP)
-            addDOWNLINK_FREQ_MAX(builder, DOWNLINK_FREQ_MAX)
-            addDOWNLINK_FREQ_MIN(builder, DOWNLINK_FREQ_MIN)
-            addUPLINK_FREQ_MAX(builder, UPLINK_FREQ_MAX)
-            addUPLINK_FREQ_MIN(builder, UPLINK_FREQ_MIN)
-            addPOLARIZATION(builder, POLARIZATIONOffset)
-            addCHANNELS(builder, CHANNELSOffset)
-            addNUM_CHANNELS(builder, NUM_CHANNELS)
-            addBAND(builder, BANDOffset)
-            addTYPE(builder, TYPEOffset)
-            addNAME(builder, NAMEOffset)
-            addTRANSPONDER_ID(builder, TRANSPONDER_IDOffset)
+            addBANDWIDTH(builder, bandwidth)
+            addGOVERT(builder, gOverT)
+            addEIRP(builder, eirp)
+            addDOWNLINKFREQMAX(builder, downlinkFreqMax)
+            addDOWNLINKFREQMIN(builder, downlinkFreqMin)
+            addUPLINKFREQMAX(builder, uplinkFreqMax)
+            addUPLINKFREQMIN(builder, uplinkFreqMin)
+            addPOLARIZATION(builder, polarizationOffset)
+            addCHANNELS(builder, channelsOffset)
+            addNUMCHANNELS(builder, numChannels)
+            addBAND(builder, bandOffset)
+            addTYPE(builder, typeOffset)
+            addNAME(builder, nameOffset)
+            addTRANSPONDERID(builder, transponderIdOffset)
             return endcommsTransponder(builder)
         }
         fun startcommsTransponder(builder: FlatBufferBuilder) = builder.startTable(14)
-        fun addTRANSPONDER_ID(builder: FlatBufferBuilder, TRANSPONDER_ID: Int) = builder.addOffset(0, TRANSPONDER_ID, 0)
-        fun addNAME(builder: FlatBufferBuilder, NAME: Int) = builder.addOffset(1, NAME, 0)
-        fun addTYPE(builder: FlatBufferBuilder, TYPE: Int) = builder.addOffset(2, TYPE, 0)
-        fun addBAND(builder: FlatBufferBuilder, BAND: Int) = builder.addOffset(3, BAND, 0)
-        fun addUPLINK_FREQ_MIN(builder: FlatBufferBuilder, UPLINK_FREQ_MIN: Double) = builder.addDouble(4, UPLINK_FREQ_MIN, 0.0)
-        fun addUPLINK_FREQ_MAX(builder: FlatBufferBuilder, UPLINK_FREQ_MAX: Double) = builder.addDouble(5, UPLINK_FREQ_MAX, 0.0)
-        fun addDOWNLINK_FREQ_MIN(builder: FlatBufferBuilder, DOWNLINK_FREQ_MIN: Double) = builder.addDouble(6, DOWNLINK_FREQ_MIN, 0.0)
-        fun addDOWNLINK_FREQ_MAX(builder: FlatBufferBuilder, DOWNLINK_FREQ_MAX: Double) = builder.addDouble(7, DOWNLINK_FREQ_MAX, 0.0)
-        fun addEIRP(builder: FlatBufferBuilder, EIRP: Double) = builder.addDouble(8, EIRP, 0.0)
-        fun addG_OVER_T(builder: FlatBufferBuilder, G_OVER_T: Double) = builder.addDouble(9, G_OVER_T, 0.0)
-        fun addBANDWIDTH(builder: FlatBufferBuilder, BANDWIDTH: Double) = builder.addDouble(10, BANDWIDTH, 0.0)
-        fun addNUM_CHANNELS(builder: FlatBufferBuilder, NUM_CHANNELS: UInt) = builder.addInt(11, NUM_CHANNELS.toInt(), 0)
-        fun addCHANNELS(builder: FlatBufferBuilder, CHANNELS: Int) = builder.addOffset(12, CHANNELS, 0)
+        fun addTRANSPONDERID(builder: FlatBufferBuilder, transponderId: Int) = builder.addOffset(0, transponderId, 0)
+        fun addNAME(builder: FlatBufferBuilder, name: Int) = builder.addOffset(1, name, 0)
+        fun addTYPE(builder: FlatBufferBuilder, type: Int) = builder.addOffset(2, type, 0)
+        fun addBAND(builder: FlatBufferBuilder, band: Int) = builder.addOffset(3, band, 0)
+        fun addUPLINKFREQMIN(builder: FlatBufferBuilder, uplinkFreqMin: Double) = builder.addDouble(4, uplinkFreqMin, 0.0)
+        fun addUPLINKFREQMAX(builder: FlatBufferBuilder, uplinkFreqMax: Double) = builder.addDouble(5, uplinkFreqMax, 0.0)
+        fun addDOWNLINKFREQMIN(builder: FlatBufferBuilder, downlinkFreqMin: Double) = builder.addDouble(6, downlinkFreqMin, 0.0)
+        fun addDOWNLINKFREQMAX(builder: FlatBufferBuilder, downlinkFreqMax: Double) = builder.addDouble(7, downlinkFreqMax, 0.0)
+        fun addEIRP(builder: FlatBufferBuilder, eirp: Double) = builder.addDouble(8, eirp, 0.0)
+        fun addGOVERT(builder: FlatBufferBuilder, gOverT: Double) = builder.addDouble(9, gOverT, 0.0)
+        fun addBANDWIDTH(builder: FlatBufferBuilder, bandwidth: Double) = builder.addDouble(10, bandwidth, 0.0)
+        fun addNUMCHANNELS(builder: FlatBufferBuilder, numChannels: UInt) = builder.addInt(11, numChannels.toInt(), 0)
+        fun addCHANNELS(builder: FlatBufferBuilder, channels: Int) = builder.addOffset(12, channels, 0)
         fun createChannelsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -226,7 +226,7 @@ class commsTransponder : Table() {
             return builder.endVector()
         }
         fun startChannelsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addPOLARIZATION(builder: FlatBufferBuilder, POLARIZATION: Int) = builder.addOffset(13, POLARIZATION, 0)
+        fun addPOLARIZATION(builder: FlatBufferBuilder, polarization: Int) = builder.addOffset(13, polarization, 0)
         fun endcommsTransponder(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

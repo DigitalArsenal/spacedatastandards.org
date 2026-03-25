@@ -2,4 +2,6 @@
 
 # namespace: 
 
-# NOTE anomalyType.py does not declare any structs or enums
+class anomalyType(object):
+    TRUE_ANOMALY = 0
+    MEAN_ANOMALY = 1

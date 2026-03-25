@@ -42,7 +42,7 @@ class SCM extends Table
     }
 
     /// Version of Space Data Standards
-    public function getVersion()
+    public function getversion()
     {
         $o = $this->__offset(4);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
@@ -55,7 +55,7 @@ class SCM extends Table
     public function getRECORDS($j)
     {
         $o = $this->__offset(6);
-        $obj = new SCHEMA_STANDARD();
+        $obj = new SCHEMASTANDARD();
         return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
     }
 
@@ -84,7 +84,7 @@ class SCM extends Table
     public static function createSCM(FlatBufferBuilder $builder, $version, $RECORDS)
     {
         $builder->startObject(2);
-        self::addVersion($builder, $version);
+        self::addversion($builder, $version);
         self::addRECORDS($builder, $RECORDS);
         $o = $builder->endObject();
         return $o;
@@ -95,7 +95,7 @@ class SCM extends Table
      * @param StringOffset
      * @return void
      */
-    public static function addVersion(FlatBufferBuilder $builder, $version)
+    public static function addversion(FlatBufferBuilder $builder, $version)
     {
         $builder->addOffsetX(0, $version, 0);
     }

@@ -32,7 +32,7 @@ class KMLTrack : Table() {
     /**
      * Whether to extrude
      */
-    val EXTRUDE : Boolean
+    val extrude : Boolean
         get() {
             val o = __offset(4)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -40,7 +40,7 @@ class KMLTrack : Table() {
     /**
      * Whether to tessellate
      */
-    val TESSELLATE : Boolean
+    val tessellate : Boolean
         get() {
             val o = __offset(6)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -48,7 +48,7 @@ class KMLTrack : Table() {
     /**
      * Altitude mode
      */
-    val ALTITUDE_MODE : Byte
+    val altitudeMode : Byte
         get() {
             val o = __offset(8)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -56,7 +56,7 @@ class KMLTrack : Table() {
     /**
      * Time stamps (ISO 8601)
      */
-    fun WHEN(j: Int) : String? {
+    fun when(j: Int) : String? {
         val o = __offset(10)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
@@ -64,15 +64,15 @@ class KMLTrack : Table() {
             null
         }
     }
-    val WHENLength : Int
+    val whenLength : Int
         get() {
             val o = __offset(10); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Coordinates (lon lat alt per entry)
      */
-    fun COORDS(j: Int) : KMLCoordinate? = COORDS(KMLCoordinate(), j)
-    fun COORDS(obj: KMLCoordinate, j: Int) : KMLCoordinate? {
+    fun coords(j: Int) : KMLCoordinate? = coords(KMLCoordinate(), j)
+    fun coords(obj: KMLCoordinate, j: Int) : KMLCoordinate? {
         val o = __offset(12)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -80,15 +80,15 @@ class KMLTrack : Table() {
             null
         }
     }
-    val COORDSLength : Int
+    val coordsLength : Int
         get() {
             val o = __offset(12); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Angles (heading tilt roll per entry)
      */
-    fun ANGLES(j: Int) : KMLCoordinate? = ANGLES(KMLCoordinate(), j)
-    fun ANGLES(obj: KMLCoordinate, j: Int) : KMLCoordinate? {
+    fun angles(j: Int) : KMLCoordinate? = angles(KMLCoordinate(), j)
+    fun angles(obj: KMLCoordinate, j: Int) : KMLCoordinate? {
         val o = __offset(14)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -96,15 +96,15 @@ class KMLTrack : Table() {
             null
         }
     }
-    val ANGLESLength : Int
+    val anglesLength : Int
         get() {
             val o = __offset(14); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Model for track visualization
      */
-    val MODEL : KMLModel? get() = MODEL(KMLModel())
-    fun MODEL(obj: KMLModel) : KMLModel? {
+    val model : KMLModel? get() = model(KMLModel())
+    fun model(obj: KMLModel) : KMLModel? {
         val o = __offset(16)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -113,28 +113,28 @@ class KMLTrack : Table() {
         }
     }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsKMLTrack(_bb: ByteBuffer): KMLTrack = getRootAsKMLTrack(_bb, KMLTrack())
         fun getRootAsKMLTrack(_bb: ByteBuffer, obj: KMLTrack): KMLTrack {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createKMLTrack(builder: FlatBufferBuilder, EXTRUDE: Boolean, TESSELLATE: Boolean, ALTITUDE_MODE: Byte, WHENOffset: Int, COORDSOffset: Int, ANGLESOffset: Int, MODELOffset: Int) : Int {
+        fun createKMLTrack(builder: FlatBufferBuilder, extrude: Boolean, tessellate: Boolean, altitudeMode: Byte, whenOffset: Int, coordsOffset: Int, anglesOffset: Int, modelOffset: Int) : Int {
             builder.startTable(7)
-            addMODEL(builder, MODELOffset)
-            addANGLES(builder, ANGLESOffset)
-            addCOORDS(builder, COORDSOffset)
-            addWHEN(builder, WHENOffset)
-            addALTITUDE_MODE(builder, ALTITUDE_MODE)
-            addTESSELLATE(builder, TESSELLATE)
-            addEXTRUDE(builder, EXTRUDE)
+            addMODEL(builder, modelOffset)
+            addANGLES(builder, anglesOffset)
+            addCOORDS(builder, coordsOffset)
+            addWHEN(builder, whenOffset)
+            addALTITUDEMODE(builder, altitudeMode)
+            addTESSELLATE(builder, tessellate)
+            addEXTRUDE(builder, extrude)
             return endKMLTrack(builder)
         }
         fun startKMLTrack(builder: FlatBufferBuilder) = builder.startTable(7)
-        fun addEXTRUDE(builder: FlatBufferBuilder, EXTRUDE: Boolean) = builder.addBoolean(0, EXTRUDE, false)
-        fun addTESSELLATE(builder: FlatBufferBuilder, TESSELLATE: Boolean) = builder.addBoolean(1, TESSELLATE, false)
-        fun addALTITUDE_MODE(builder: FlatBufferBuilder, ALTITUDE_MODE: Byte) = builder.addByte(2, ALTITUDE_MODE, 0)
-        fun addWHEN(builder: FlatBufferBuilder, WHEN: Int) = builder.addOffset(3, WHEN, 0)
+        fun addEXTRUDE(builder: FlatBufferBuilder, extrude: Boolean) = builder.addBoolean(0, extrude, false)
+        fun addTESSELLATE(builder: FlatBufferBuilder, tessellate: Boolean) = builder.addBoolean(1, tessellate, false)
+        fun addALTITUDEMODE(builder: FlatBufferBuilder, altitudeMode: Byte) = builder.addByte(2, altitudeMode, 0)
+        fun addWHEN(builder: FlatBufferBuilder, when: Int) = builder.addOffset(3, when, 0)
         fun createWhenVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -143,7 +143,7 @@ class KMLTrack : Table() {
             return builder.endVector()
         }
         fun startWhenVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addCOORDS(builder: FlatBufferBuilder, COORDS: Int) = builder.addOffset(4, COORDS, 0)
+        fun addCOORDS(builder: FlatBufferBuilder, coords: Int) = builder.addOffset(4, coords, 0)
         fun createCoordsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -152,7 +152,7 @@ class KMLTrack : Table() {
             return builder.endVector()
         }
         fun startCoordsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addANGLES(builder: FlatBufferBuilder, ANGLES: Int) = builder.addOffset(5, ANGLES, 0)
+        fun addANGLES(builder: FlatBufferBuilder, angles: Int) = builder.addOffset(5, angles, 0)
         fun createAnglesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -161,7 +161,7 @@ class KMLTrack : Table() {
             return builder.endVector()
         }
         fun startAnglesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addMODEL(builder: FlatBufferBuilder, MODEL: Int) = builder.addOffset(6, MODEL, 0)
+        fun addMODEL(builder: FlatBufferBuilder, model: Int) = builder.addOffset(6, model, 0)
         fun endKMLTrack(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

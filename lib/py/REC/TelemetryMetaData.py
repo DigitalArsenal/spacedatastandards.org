@@ -2,4 +2,216 @@
 
 # namespace: 
 
-# NOTE TelemetryMetaData.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Telemetry metadata collection
+class TelemetryMetaData(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = TelemetryMetaData()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsTelemetryMetaData(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def TelemetryMetaDataBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x58\x54\x43", size_prefixed=size_prefixed)
+
+    # TelemetryMetaData
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Parameter type definitions
+    # TelemetryMetaData
+    def PARAMETER_TYPE_SET(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from ParameterTypeSet import ParameterTypeSet
+            obj = ParameterTypeSet()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Parameter definitions
+    # TelemetryMetaData
+    def PARAMETER_SET(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from ParameterSet import ParameterSet
+            obj = ParameterSet()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Container definitions
+    # TelemetryMetaData
+    def CONTAINER_SET(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from ContainerSet import ContainerSet
+            obj = ContainerSet()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Algorithm definitions
+    # TelemetryMetaData
+    def ALGORITHM_SET(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from AlgorithmSet import AlgorithmSet
+            obj = AlgorithmSet()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Stream definitions
+    # TelemetryMetaData
+    def STREAM_SET(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from StreamSet import StreamSet
+            obj = StreamSet()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+def TelemetryMetaDataStart(builder):
+    builder.StartObject(5)
+
+def Start(builder):
+    TelemetryMetaDataStart(builder)
+
+def TelemetryMetaDataAddPARAMETER_TYPE_SET(builder, PARAMETER_TYPE_SET):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(PARAMETER_TYPE_SET), 0)
+
+def AddPARAMETER_TYPE_SET(builder, PARAMETER_TYPE_SET):
+    TelemetryMetaDataAddPARAMETER_TYPE_SET(builder, PARAMETER_TYPE_SET)
+
+def TelemetryMetaDataAddPARAMETER_SET(builder, PARAMETER_SET):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(PARAMETER_SET), 0)
+
+def AddPARAMETER_SET(builder, PARAMETER_SET):
+    TelemetryMetaDataAddPARAMETER_SET(builder, PARAMETER_SET)
+
+def TelemetryMetaDataAddCONTAINER_SET(builder, CONTAINER_SET):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(CONTAINER_SET), 0)
+
+def AddCONTAINER_SET(builder, CONTAINER_SET):
+    TelemetryMetaDataAddCONTAINER_SET(builder, CONTAINER_SET)
+
+def TelemetryMetaDataAddALGORITHM_SET(builder, ALGORITHM_SET):
+    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(ALGORITHM_SET), 0)
+
+def AddALGORITHM_SET(builder, ALGORITHM_SET):
+    TelemetryMetaDataAddALGORITHM_SET(builder, ALGORITHM_SET)
+
+def TelemetryMetaDataAddSTREAM_SET(builder, STREAM_SET):
+    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(STREAM_SET), 0)
+
+def AddSTREAM_SET(builder, STREAM_SET):
+    TelemetryMetaDataAddSTREAM_SET(builder, STREAM_SET)
+
+def TelemetryMetaDataEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return TelemetryMetaDataEnd(builder)
+
+import AlgorithmSet
+import ContainerSet
+import ParameterSet
+import ParameterTypeSet
+import StreamSet
+try:
+    from typing import Optional
+except:
+    pass
+
+class TelemetryMetaDataT(object):
+
+    # TelemetryMetaDataT
+    def __init__(
+        self,
+        PARAMETER_TYPE_SET = None,
+        PARAMETER_SET = None,
+        CONTAINER_SET = None,
+        ALGORITHM_SET = None,
+        STREAM_SET = None,
+    ):
+        self.PARAMETER_TYPE_SET = PARAMETER_TYPE_SET  # type: Optional[ParameterTypeSet.ParameterTypeSetT]
+        self.PARAMETER_SET = PARAMETER_SET  # type: Optional[ParameterSet.ParameterSetT]
+        self.CONTAINER_SET = CONTAINER_SET  # type: Optional[ContainerSet.ContainerSetT]
+        self.ALGORITHM_SET = ALGORITHM_SET  # type: Optional[AlgorithmSet.AlgorithmSetT]
+        self.STREAM_SET = STREAM_SET  # type: Optional[StreamSet.StreamSetT]
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpTelemetryMetaData = TelemetryMetaData()
+        tmpTelemetryMetaData.Init(buf, pos)
+        return cls.InitFromObj(tmpTelemetryMetaData)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpTelemetryMetaData):
+        x = TelemetryMetaDataT()
+        x._UnPack(tmpTelemetryMetaData)
+        return x
+
+    # TelemetryMetaDataT
+    def _UnPack(self, TelemetryMetaData):
+        if TelemetryMetaData is None:
+            return
+        if TelemetryMetaData.PARAMETER_TYPE_SET() is not None:
+            self.PARAMETER_TYPE_SET = ParameterTypeSet.ParameterTypeSetT.InitFromObj(TelemetryMetaData.PARAMETER_TYPE_SET())
+        if TelemetryMetaData.PARAMETER_SET() is not None:
+            self.PARAMETER_SET = ParameterSet.ParameterSetT.InitFromObj(TelemetryMetaData.PARAMETER_SET())
+        if TelemetryMetaData.CONTAINER_SET() is not None:
+            self.CONTAINER_SET = ContainerSet.ContainerSetT.InitFromObj(TelemetryMetaData.CONTAINER_SET())
+        if TelemetryMetaData.ALGORITHM_SET() is not None:
+            self.ALGORITHM_SET = AlgorithmSet.AlgorithmSetT.InitFromObj(TelemetryMetaData.ALGORITHM_SET())
+        if TelemetryMetaData.STREAM_SET() is not None:
+            self.STREAM_SET = StreamSet.StreamSetT.InitFromObj(TelemetryMetaData.STREAM_SET())
+
+    # TelemetryMetaDataT
+    def Pack(self, builder):
+        if self.PARAMETER_TYPE_SET is not None:
+            PARAMETER_TYPE_SET = self.PARAMETER_TYPE_SET.Pack(builder)
+        if self.PARAMETER_SET is not None:
+            PARAMETER_SET = self.PARAMETER_SET.Pack(builder)
+        if self.CONTAINER_SET is not None:
+            CONTAINER_SET = self.CONTAINER_SET.Pack(builder)
+        if self.ALGORITHM_SET is not None:
+            ALGORITHM_SET = self.ALGORITHM_SET.Pack(builder)
+        if self.STREAM_SET is not None:
+            STREAM_SET = self.STREAM_SET.Pack(builder)
+        TelemetryMetaDataStart(builder)
+        if self.PARAMETER_TYPE_SET is not None:
+            TelemetryMetaDataAddPARAMETER_TYPE_SET(builder, PARAMETER_TYPE_SET)
+        if self.PARAMETER_SET is not None:
+            TelemetryMetaDataAddPARAMETER_SET(builder, PARAMETER_SET)
+        if self.CONTAINER_SET is not None:
+            TelemetryMetaDataAddCONTAINER_SET(builder, CONTAINER_SET)
+        if self.ALGORITHM_SET is not None:
+            TelemetryMetaDataAddALGORITHM_SET(builder, ALGORITHM_SET)
+        if self.STREAM_SET is not None:
+            TelemetryMetaDataAddSTREAM_SET(builder, STREAM_SET)
+        TelemetryMetaData = TelemetryMetaDataEnd(builder)
+        return TelemetryMetaData

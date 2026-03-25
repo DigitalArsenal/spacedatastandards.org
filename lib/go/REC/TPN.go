@@ -62,12 +62,20 @@ func (rcv *TPN) ID() []byte {
 	return nil
 }
 
+func (rcv *TPN) Id() []byte {
+	return rcv.ID()
+}
+
 func (rcv *TPN) NAME() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *TPN) Name() []byte {
+	return rcv.NAME()
 }
 
 func (rcv *TPN) NID() []byte {
@@ -78,12 +86,20 @@ func (rcv *TPN) NID() []byte {
 	return nil
 }
 
+func (rcv *TPN) Nid() []byte {
+	return rcv.NID()
+}
+
 func (rcv *TPN) TID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *TPN) Tid() []byte {
+	return rcv.TID()
 }
 
 func (rcv *TPN) TTF() float64 {
@@ -94,8 +110,16 @@ func (rcv *TPN) TTF() float64 {
 	return 0.0
 }
 
+func (rcv *TPN) Ttf() float64 {
+	return rcv.TTF()
+}
+
 func (rcv *TPN) MutateTTF(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(12, n)
+}
+
+func (rcv *TPN) MutateTtf(n float64) bool {
+	return rcv.MutateTTF(n)
 }
 
 func (rcv *TPN) SYMBOL_RATE() float64 {
@@ -106,8 +130,16 @@ func (rcv *TPN) SYMBOL_RATE() float64 {
 	return 0.0
 }
 
+func (rcv *TPN) SymbolRate() float64 {
+	return rcv.SYMBOL_RATE()
+}
+
 func (rcv *TPN) MutateSYMBOL_RATE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(14, n)
+}
+
+func (rcv *TPN) MutateSymbolRate(n float64) bool {
+	return rcv.MutateSYMBOL_RATE(n)
 }
 
 func (rcv *TPN) FEC() int32 {
@@ -118,8 +150,16 @@ func (rcv *TPN) FEC() int32 {
 	return 0
 }
 
+func (rcv *TPN) Fec() int32 {
+	return rcv.FEC()
+}
+
 func (rcv *TPN) MutateFEC(n int32) bool {
 	return rcv._tab.MutateInt32Slot(16, n)
+}
+
+func (rcv *TPN) MutateFec(n int32) bool {
+	return rcv.MutateFEC(n)
 }
 
 func (rcv *TPN) MODULATION() []byte {
@@ -130,6 +170,10 @@ func (rcv *TPN) MODULATION() []byte {
 	return nil
 }
 
+func (rcv *TPN) Modulation() []byte {
+	return rcv.MODULATION()
+}
+
 func (rcv *TPN) FORMAT() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
 	if o != 0 {
@@ -138,12 +182,20 @@ func (rcv *TPN) FORMAT() []byte {
 	return nil
 }
 
+func (rcv *TPN) Format() []byte {
+	return rcv.FORMAT()
+}
+
 func (rcv *TPN) SYSTEM() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *TPN) System() []byte {
+	return rcv.SYSTEM()
 }
 
 func (rcv *TPN) CHANNELS(j int) []byte {
@@ -155,6 +207,10 @@ func (rcv *TPN) CHANNELS(j int) []byte {
 	return nil
 }
 
+func (rcv *TPN) Channels(j int) []byte {
+	return rcv.CHANNELS(j)
+}
+
 func (rcv *TPN) CHANNELSLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
 	if o != 0 {
@@ -163,44 +219,84 @@ func (rcv *TPN) CHANNELSLength() int {
 	return 0
 }
 
+func (rcv *TPN) ChannelsLength() int {
+	return rcv.CHANNELSLength()
+}
+
 func TPNStart(builder *flatbuffers.Builder) {
 	builder.StartObject(11)
 }
 func TPNAddID(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ID), 0)
 }
+func TPNAddId(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
+	TPNAddID(builder, ID)
+}
 func TPNAddNAME(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(NAME), 0)
+}
+func TPNAddName(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
+	TPNAddNAME(builder, NAME)
 }
 func TPNAddNID(builder *flatbuffers.Builder, NID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(NID), 0)
 }
+func TPNAddNid(builder *flatbuffers.Builder, NID flatbuffers.UOffsetT) {
+	TPNAddNID(builder, NID)
+}
 func TPNAddTID(builder *flatbuffers.Builder, TID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(TID), 0)
+}
+func TPNAddTid(builder *flatbuffers.Builder, TID flatbuffers.UOffsetT) {
+	TPNAddTID(builder, TID)
 }
 func TPNAddTTF(builder *flatbuffers.Builder, TTF float64) {
 	builder.PrependFloat64Slot(4, TTF, 0.0)
 }
+func TPNAddTtf(builder *flatbuffers.Builder, TTF float64) {
+	TPNAddTTF(builder, TTF)
+}
 func TPNAddSYMBOL_RATE(builder *flatbuffers.Builder, SYMBOL_RATE float64) {
 	builder.PrependFloat64Slot(5, SYMBOL_RATE, 0.0)
+}
+func TPNAddSymbolRate(builder *flatbuffers.Builder, SYMBOL_RATE float64) {
+	TPNAddSYMBOL_RATE(builder, SYMBOL_RATE)
 }
 func TPNAddFEC(builder *flatbuffers.Builder, FEC int32) {
 	builder.PrependInt32Slot(6, FEC, 0)
 }
+func TPNAddFec(builder *flatbuffers.Builder, FEC int32) {
+	TPNAddFEC(builder, FEC)
+}
 func TPNAddMODULATION(builder *flatbuffers.Builder, MODULATION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(MODULATION), 0)
+}
+func TPNAddModulation(builder *flatbuffers.Builder, MODULATION flatbuffers.UOffsetT) {
+	TPNAddMODULATION(builder, MODULATION)
 }
 func TPNAddFORMAT(builder *flatbuffers.Builder, FORMAT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(FORMAT), 0)
 }
+func TPNAddFormat(builder *flatbuffers.Builder, FORMAT flatbuffers.UOffsetT) {
+	TPNAddFORMAT(builder, FORMAT)
+}
 func TPNAddSYSTEM(builder *flatbuffers.Builder, SYSTEM flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(SYSTEM), 0)
+}
+func TPNAddSystem(builder *flatbuffers.Builder, SYSTEM flatbuffers.UOffsetT) {
+	TPNAddSYSTEM(builder, SYSTEM)
 }
 func TPNAddCHANNELS(builder *flatbuffers.Builder, CHANNELS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(CHANNELS), 0)
 }
+func TPNAddChannels(builder *flatbuffers.Builder, CHANNELS flatbuffers.UOffsetT) {
+	TPNAddCHANNELS(builder, CHANNELS)
+}
 func TPNStartCHANNELSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func TPNStartChannelsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return TPNStartCHANNELSVector(builder, numElems)
 }
 func TPNEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

@@ -2,9 +2,13 @@
 // swiftlint:disable all
 // swiftformat:disable all
 
+#if canImport(Common)
+import Common
+#endif
+
 import FlatBuffers
 
-public enum STVReferenceFrame: Int8, Enum, Verifiable {
+public enum STVReferenceFrame: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -22,9 +26,9 @@ public enum STVReferenceFrame: Int8, Enum, Verifiable {
 
 
 ///  State Vector
-public struct STV: FlatBufferObject, Verifiable {
+public struct STV: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -57,10 +61,8 @@ public struct STV: FlatBufferObject, Verifiable {
   public var VEL_Z: Double { let o = _accessor.offset(VTOFFSET.VEL_Z.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public var REF_FRAME: UInt8 { let o = _accessor.offset(VTOFFSET.REF_FRAME.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
   public var FLAGS: UInt8 { let o = _accessor.offset(VTOFFSET.FLAGS.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
-  public var hasReserved: Bool { let o = _accessor.offset(VTOFFSET.RESERVED.v); return o == 0 ? false : true }
-  public var RESERVEDCount: Int32 { let o = _accessor.offset(VTOFFSET.RESERVED.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func RESERVED(at index: Int32) -> UInt8 { let o = _accessor.offset(VTOFFSET.RESERVED.v); return o == 0 ? 0 : _accessor.directRead(of: UInt8.self, offset: _accessor.vector(at: o) + index * 1) }
-  public var RESERVED: [UInt8] { return _accessor.getVector(at: VTOFFSET.RESERVED.v) ?? [] }
+  public var RESERVED: FlatbufferVector<UInt8> { return _accessor.vector(at: VTOFFSET.RESERVED.v, byteSize: 1) }
+  public func withUnsafePointerToReserved<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.RESERVED.v, body: body) }
   public static func startSTV(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 10) }
   public static func add(EPOCH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EPOCH, def: 0.0, at: VTOFFSET.EPOCH.p) }
   public static func add(POS_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POS_X, def: 0.0, at: VTOFFSET.POS_X.p) }

@@ -2,4 +2,15 @@
 
 # namespace: 
 
-# NOTE DataSourceType.py does not declare any structs or enums
+# Data source types for telemetry parameters
+class DataSourceType(object):
+    # Data received from spacecraft telemetry
+    TELEMETERED = 0
+    # Computed from other parameters
+    DERIVED = 1
+    # Fixed constant value
+    CONSTANT = 2
+    # Local ground system value
+    LOCAL = 3
+    # Ground-generated data
+    GROUND = 4

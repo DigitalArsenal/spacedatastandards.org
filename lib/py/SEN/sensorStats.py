@@ -171,22 +171,33 @@ def End(builder):
 class sensorStatsT(object):
 
     # sensorStatsT
-    def __init__(self):
-        self.PERIOD_START = None  # type: str
-        self.PERIOD_END = None  # type: str
-        self.OBS_ATTEMPTED = 0  # type: int
-        self.OBS_SUCCESSFUL = 0  # type: int
-        self.OBS_FAILED = 0  # type: int
-        self.UPTIME = 0.0  # type: float
-        self.AVG_ACCURACY = 0.0  # type: float
-        self.DETECTIONS = 0  # type: int
-        self.UCT_COUNT = 0  # type: int
+    def __init__(
+        self,
+        PERIOD_START = None,
+        PERIOD_END = None,
+        OBS_ATTEMPTED = 0,
+        OBS_SUCCESSFUL = 0,
+        OBS_FAILED = 0,
+        UPTIME = 0.0,
+        AVG_ACCURACY = 0.0,
+        DETECTIONS = 0,
+        UCT_COUNT = 0,
+    ):
+        self.PERIOD_START = PERIOD_START  # type: Optional[str]
+        self.PERIOD_END = PERIOD_END  # type: Optional[str]
+        self.OBS_ATTEMPTED = OBS_ATTEMPTED  # type: int
+        self.OBS_SUCCESSFUL = OBS_SUCCESSFUL  # type: int
+        self.OBS_FAILED = OBS_FAILED  # type: int
+        self.UPTIME = UPTIME  # type: float
+        self.AVG_ACCURACY = AVG_ACCURACY  # type: float
+        self.DETECTIONS = DETECTIONS  # type: int
+        self.UCT_COUNT = UCT_COUNT  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        sensorStats = sensorStats()
-        sensorStats.Init(buf, pos)
-        return cls.InitFromObj(sensorStats)
+        tmpSensorStats = sensorStats()
+        tmpSensorStats.Init(buf, pos)
+        return cls.InitFromObj(tmpSensorStats)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -194,9 +205,9 @@ class sensorStatsT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, sensorStats):
+    def InitFromObj(cls, tmpSensorStats):
         x = sensorStatsT()
-        x._UnPack(sensorStats)
+        x._UnPack(tmpSensorStats)
         return x
 
     # sensorStatsT

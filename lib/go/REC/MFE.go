@@ -62,6 +62,10 @@ func (rcv *MFE) ID() []byte {
 	return nil
 }
 
+func (rcv *MFE) Id() []byte {
+	return rcv.ID()
+}
+
 func (rcv *MFE) TMP_SAT_NO() int32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
@@ -70,8 +74,16 @@ func (rcv *MFE) TMP_SAT_NO() int32 {
 	return 0
 }
 
+func (rcv *MFE) TmpSatNo() int32 {
+	return rcv.TMP_SAT_NO()
+}
+
 func (rcv *MFE) MutateTMP_SAT_NO(n int32) bool {
 	return rcv._tab.MutateInt32Slot(6, n)
+}
+
+func (rcv *MFE) MutateTmpSatNo(n int32) bool {
+	return rcv.MutateTMP_SAT_NO(n)
 }
 
 func (rcv *MFE) EPOCH() []byte {
@@ -82,6 +94,10 @@ func (rcv *MFE) EPOCH() []byte {
 	return nil
 }
 
+func (rcv *MFE) Epoch() []byte {
+	return rcv.EPOCH()
+}
+
 func (rcv *MFE) MEAN_MOTION() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
@@ -90,8 +106,16 @@ func (rcv *MFE) MEAN_MOTION() float64 {
 	return 0.0
 }
 
+func (rcv *MFE) MeanMotion() float64 {
+	return rcv.MEAN_MOTION()
+}
+
 func (rcv *MFE) MutateMEAN_MOTION(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(10, n)
+}
+
+func (rcv *MFE) MutateMeanMotion(n float64) bool {
+	return rcv.MutateMEAN_MOTION(n)
 }
 
 func (rcv *MFE) ECCENTRICITY() float64 {
@@ -102,8 +126,16 @@ func (rcv *MFE) ECCENTRICITY() float64 {
 	return 0.0
 }
 
+func (rcv *MFE) Eccentricity() float64 {
+	return rcv.ECCENTRICITY()
+}
+
 func (rcv *MFE) MutateECCENTRICITY(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(12, n)
+}
+
+func (rcv *MFE) MutateEccentricity(n float64) bool {
+	return rcv.MutateECCENTRICITY(n)
 }
 
 func (rcv *MFE) INCLINATION() float64 {
@@ -114,8 +146,16 @@ func (rcv *MFE) INCLINATION() float64 {
 	return 0.0
 }
 
+func (rcv *MFE) Inclination() float64 {
+	return rcv.INCLINATION()
+}
+
 func (rcv *MFE) MutateINCLINATION(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(14, n)
+}
+
+func (rcv *MFE) MutateInclination(n float64) bool {
+	return rcv.MutateINCLINATION(n)
 }
 
 func (rcv *MFE) RAAN() float64 {
@@ -126,8 +166,16 @@ func (rcv *MFE) RAAN() float64 {
 	return 0.0
 }
 
+func (rcv *MFE) Raan() float64 {
+	return rcv.RAAN()
+}
+
 func (rcv *MFE) MutateRAAN(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(16, n)
+}
+
+func (rcv *MFE) MutateRaan(n float64) bool {
+	return rcv.MutateRAAN(n)
 }
 
 func (rcv *MFE) ARG_OF_PERIGEE() float64 {
@@ -138,8 +186,16 @@ func (rcv *MFE) ARG_OF_PERIGEE() float64 {
 	return 0.0
 }
 
+func (rcv *MFE) ArgOfPerigee() float64 {
+	return rcv.ARG_OF_PERIGEE()
+}
+
 func (rcv *MFE) MutateARG_OF_PERIGEE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(18, n)
+}
+
+func (rcv *MFE) MutateArgOfPerigee(n float64) bool {
+	return rcv.MutateARG_OF_PERIGEE(n)
 }
 
 func (rcv *MFE) MEAN_ANOMALY() float64 {
@@ -150,8 +206,16 @@ func (rcv *MFE) MEAN_ANOMALY() float64 {
 	return 0.0
 }
 
+func (rcv *MFE) MeanAnomaly() float64 {
+	return rcv.MEAN_ANOMALY()
+}
+
 func (rcv *MFE) MutateMEAN_ANOMALY(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(20, n)
+}
+
+func (rcv *MFE) MutateMeanAnomaly(n float64) bool {
+	return rcv.MutateMEAN_ANOMALY(n)
 }
 
 func (rcv *MFE) REV_NO() int32 {
@@ -162,8 +226,16 @@ func (rcv *MFE) REV_NO() int32 {
 	return 0
 }
 
+func (rcv *MFE) RevNo() int32 {
+	return rcv.REV_NO()
+}
+
 func (rcv *MFE) MutateREV_NO(n int32) bool {
 	return rcv._tab.MutateInt32Slot(22, n)
+}
+
+func (rcv *MFE) MutateRevNo(n int32) bool {
+	return rcv.MutateREV_NO(n)
 }
 
 func (rcv *MFE) B_STAR() float64 {
@@ -174,8 +246,16 @@ func (rcv *MFE) B_STAR() float64 {
 	return 0.0
 }
 
+func (rcv *MFE) BStar() float64 {
+	return rcv.B_STAR()
+}
+
 func (rcv *MFE) MutateB_STAR(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(24, n)
+}
+
+func (rcv *MFE) MutateBStar(n float64) bool {
+	return rcv.MutateB_STAR(n)
 }
 
 func (rcv *MFE) MEAN_MOTION_DOT() float64 {
@@ -186,8 +266,16 @@ func (rcv *MFE) MEAN_MOTION_DOT() float64 {
 	return 0.0
 }
 
+func (rcv *MFE) MeanMotionDot() float64 {
+	return rcv.MEAN_MOTION_DOT()
+}
+
 func (rcv *MFE) MutateMEAN_MOTION_DOT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(26, n)
+}
+
+func (rcv *MFE) MutateMeanMotionDot(n float64) bool {
+	return rcv.MutateMEAN_MOTION_DOT(n)
 }
 
 func (rcv *MFE) MEAN_MOTION_DDOT() float64 {
@@ -198,8 +286,16 @@ func (rcv *MFE) MEAN_MOTION_DDOT() float64 {
 	return 0.0
 }
 
+func (rcv *MFE) MeanMotionDdot() float64 {
+	return rcv.MEAN_MOTION_DDOT()
+}
+
 func (rcv *MFE) MutateMEAN_MOTION_DDOT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(28, n)
+}
+
+func (rcv *MFE) MutateMeanMotionDdot(n float64) bool {
+	return rcv.MutateMEAN_MOTION_DDOT(n)
 }
 
 func (rcv *MFE) SEMI_MAJOR_AXIS() float64 {
@@ -210,8 +306,16 @@ func (rcv *MFE) SEMI_MAJOR_AXIS() float64 {
 	return 0.0
 }
 
+func (rcv *MFE) SemiMajorAxis() float64 {
+	return rcv.SEMI_MAJOR_AXIS()
+}
+
 func (rcv *MFE) MutateSEMI_MAJOR_AXIS(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(30, n)
+}
+
+func (rcv *MFE) MutateSemiMajorAxis(n float64) bool {
+	return rcv.MutateSEMI_MAJOR_AXIS(n)
 }
 
 func (rcv *MFE) PERIOD() float64 {
@@ -222,8 +326,16 @@ func (rcv *MFE) PERIOD() float64 {
 	return 0.0
 }
 
+func (rcv *MFE) Period() float64 {
+	return rcv.PERIOD()
+}
+
 func (rcv *MFE) MutatePERIOD(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(32, n)
+}
+
+func (rcv *MFE) MutatePeriod(n float64) bool {
+	return rcv.MutatePERIOD(n)
 }
 
 func (rcv *MFE) APOGEE() float64 {
@@ -234,8 +346,16 @@ func (rcv *MFE) APOGEE() float64 {
 	return 0.0
 }
 
+func (rcv *MFE) Apogee() float64 {
+	return rcv.APOGEE()
+}
+
 func (rcv *MFE) MutateAPOGEE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(34, n)
+}
+
+func (rcv *MFE) MutateApogee(n float64) bool {
+	return rcv.MutateAPOGEE(n)
 }
 
 func (rcv *MFE) PERIGEE() float64 {
@@ -246,8 +366,16 @@ func (rcv *MFE) PERIGEE() float64 {
 	return 0.0
 }
 
+func (rcv *MFE) Perigee() float64 {
+	return rcv.PERIGEE()
+}
+
 func (rcv *MFE) MutatePERIGEE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(36, n)
+}
+
+func (rcv *MFE) MutatePerigee(n float64) bool {
+	return rcv.MutatePERIGEE(n)
 }
 
 func (rcv *MFE) LINE1() []byte {
@@ -258,6 +386,10 @@ func (rcv *MFE) LINE1() []byte {
 	return nil
 }
 
+func (rcv *MFE) Line1() []byte {
+	return rcv.LINE1()
+}
+
 func (rcv *MFE) LINE2() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
 	if o != 0 {
@@ -266,65 +398,126 @@ func (rcv *MFE) LINE2() []byte {
 	return nil
 }
 
+func (rcv *MFE) Line2() []byte {
+	return rcv.LINE2()
+}
+
 func MFEStart(builder *flatbuffers.Builder) {
 	builder.StartObject(19)
 }
 func MFEAddID(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ID), 0)
 }
+func MFEAddId(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
+	MFEAddID(builder, ID)
+}
 func MFEAddTMP_SAT_NO(builder *flatbuffers.Builder, TMP_SAT_NO int32) {
 	builder.PrependInt32Slot(1, TMP_SAT_NO, 0)
+}
+func MFEAddTmpSatNo(builder *flatbuffers.Builder, TMP_SAT_NO int32) {
+	MFEAddTMP_SAT_NO(builder, TMP_SAT_NO)
 }
 func MFEAddEPOCH(builder *flatbuffers.Builder, EPOCH flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(EPOCH), 0)
 }
+func MFEAddEpoch(builder *flatbuffers.Builder, EPOCH flatbuffers.UOffsetT) {
+	MFEAddEPOCH(builder, EPOCH)
+}
 func MFEAddMEAN_MOTION(builder *flatbuffers.Builder, MEAN_MOTION float64) {
 	builder.PrependFloat64Slot(3, MEAN_MOTION, 0.0)
+}
+func MFEAddMeanMotion(builder *flatbuffers.Builder, MEAN_MOTION float64) {
+	MFEAddMEAN_MOTION(builder, MEAN_MOTION)
 }
 func MFEAddECCENTRICITY(builder *flatbuffers.Builder, ECCENTRICITY float64) {
 	builder.PrependFloat64Slot(4, ECCENTRICITY, 0.0)
 }
+func MFEAddEccentricity(builder *flatbuffers.Builder, ECCENTRICITY float64) {
+	MFEAddECCENTRICITY(builder, ECCENTRICITY)
+}
 func MFEAddINCLINATION(builder *flatbuffers.Builder, INCLINATION float64) {
 	builder.PrependFloat64Slot(5, INCLINATION, 0.0)
+}
+func MFEAddInclination(builder *flatbuffers.Builder, INCLINATION float64) {
+	MFEAddINCLINATION(builder, INCLINATION)
 }
 func MFEAddRAAN(builder *flatbuffers.Builder, RAAN float64) {
 	builder.PrependFloat64Slot(6, RAAN, 0.0)
 }
+func MFEAddRaan(builder *flatbuffers.Builder, RAAN float64) {
+	MFEAddRAAN(builder, RAAN)
+}
 func MFEAddARG_OF_PERIGEE(builder *flatbuffers.Builder, ARG_OF_PERIGEE float64) {
 	builder.PrependFloat64Slot(7, ARG_OF_PERIGEE, 0.0)
+}
+func MFEAddArgOfPerigee(builder *flatbuffers.Builder, ARG_OF_PERIGEE float64) {
+	MFEAddARG_OF_PERIGEE(builder, ARG_OF_PERIGEE)
 }
 func MFEAddMEAN_ANOMALY(builder *flatbuffers.Builder, MEAN_ANOMALY float64) {
 	builder.PrependFloat64Slot(8, MEAN_ANOMALY, 0.0)
 }
+func MFEAddMeanAnomaly(builder *flatbuffers.Builder, MEAN_ANOMALY float64) {
+	MFEAddMEAN_ANOMALY(builder, MEAN_ANOMALY)
+}
 func MFEAddREV_NO(builder *flatbuffers.Builder, REV_NO int32) {
 	builder.PrependInt32Slot(9, REV_NO, 0)
+}
+func MFEAddRevNo(builder *flatbuffers.Builder, REV_NO int32) {
+	MFEAddREV_NO(builder, REV_NO)
 }
 func MFEAddB_STAR(builder *flatbuffers.Builder, B_STAR float64) {
 	builder.PrependFloat64Slot(10, B_STAR, 0.0)
 }
+func MFEAddBStar(builder *flatbuffers.Builder, B_STAR float64) {
+	MFEAddB_STAR(builder, B_STAR)
+}
 func MFEAddMEAN_MOTION_DOT(builder *flatbuffers.Builder, MEAN_MOTION_DOT float64) {
 	builder.PrependFloat64Slot(11, MEAN_MOTION_DOT, 0.0)
+}
+func MFEAddMeanMotionDot(builder *flatbuffers.Builder, MEAN_MOTION_DOT float64) {
+	MFEAddMEAN_MOTION_DOT(builder, MEAN_MOTION_DOT)
 }
 func MFEAddMEAN_MOTION_DDOT(builder *flatbuffers.Builder, MEAN_MOTION_DDOT float64) {
 	builder.PrependFloat64Slot(12, MEAN_MOTION_DDOT, 0.0)
 }
+func MFEAddMeanMotionDdot(builder *flatbuffers.Builder, MEAN_MOTION_DDOT float64) {
+	MFEAddMEAN_MOTION_DDOT(builder, MEAN_MOTION_DDOT)
+}
 func MFEAddSEMI_MAJOR_AXIS(builder *flatbuffers.Builder, SEMI_MAJOR_AXIS float64) {
 	builder.PrependFloat64Slot(13, SEMI_MAJOR_AXIS, 0.0)
+}
+func MFEAddSemiMajorAxis(builder *flatbuffers.Builder, SEMI_MAJOR_AXIS float64) {
+	MFEAddSEMI_MAJOR_AXIS(builder, SEMI_MAJOR_AXIS)
 }
 func MFEAddPERIOD(builder *flatbuffers.Builder, PERIOD float64) {
 	builder.PrependFloat64Slot(14, PERIOD, 0.0)
 }
+func MFEAddPeriod(builder *flatbuffers.Builder, PERIOD float64) {
+	MFEAddPERIOD(builder, PERIOD)
+}
 func MFEAddAPOGEE(builder *flatbuffers.Builder, APOGEE float64) {
 	builder.PrependFloat64Slot(15, APOGEE, 0.0)
+}
+func MFEAddApogee(builder *flatbuffers.Builder, APOGEE float64) {
+	MFEAddAPOGEE(builder, APOGEE)
 }
 func MFEAddPERIGEE(builder *flatbuffers.Builder, PERIGEE float64) {
 	builder.PrependFloat64Slot(16, PERIGEE, 0.0)
 }
+func MFEAddPerigee(builder *flatbuffers.Builder, PERIGEE float64) {
+	MFEAddPERIGEE(builder, PERIGEE)
+}
 func MFEAddLINE1(builder *flatbuffers.Builder, LINE1 flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(17, flatbuffers.UOffsetT(LINE1), 0)
 }
+func MFEAddLine1(builder *flatbuffers.Builder, LINE1 flatbuffers.UOffsetT) {
+	MFEAddLINE1(builder, LINE1)
+}
 func MFEAddLINE2(builder *flatbuffers.Builder, LINE2 flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(18, flatbuffers.UOffsetT(LINE2), 0)
+}
+func MFEAddLine2(builder *flatbuffers.Builder, LINE2 flatbuffers.UOffsetT) {
+	MFEAddLINE2(builder, LINE2)
 }
 func MFEEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

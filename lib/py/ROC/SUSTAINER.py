@@ -87,16 +87,21 @@ def End(builder):
 class SUSTAINERT(object):
 
     # SUSTAINERT
-    def __init__(self):
-        self.SUSTAINER_NAME = None  # type: str
-        self.THRUST = 0.0  # type: float
-        self.BURN_DURATION = 0.0  # type: float
+    def __init__(
+        self,
+        SUSTAINER_NAME = None,
+        THRUST = 0.0,
+        BURN_DURATION = 0.0,
+    ):
+        self.SUSTAINER_NAME = SUSTAINER_NAME  # type: Optional[str]
+        self.THRUST = THRUST  # type: float
+        self.BURN_DURATION = BURN_DURATION  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        SUSTAINER = SUSTAINER()
-        SUSTAINER.Init(buf, pos)
-        return cls.InitFromObj(SUSTAINER)
+        tmpSustainer = SUSTAINER()
+        tmpSustainer.Init(buf, pos)
+        return cls.InitFromObj(tmpSustainer)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -104,9 +109,9 @@ class SUSTAINERT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, SUSTAINER):
+    def InitFromObj(cls, tmpSustainer):
         x = SUSTAINERT()
-        x._UnPack(SUSTAINER)
+        x._UnPack(tmpSustainer)
         return x
 
     # SUSTAINERT

@@ -63,6 +63,10 @@ func (rcv *LKS) ID() []byte {
 	return nil
 }
 
+func (rcv *LKS) Id() []byte {
+	return rcv.ID()
+}
+
 /// Unique identifier
 /// First endpoint on-orbit identifier
 func (rcv *LKS) ID_ON_ORBIT1() []byte {
@@ -71,6 +75,10 @@ func (rcv *LKS) ID_ON_ORBIT1() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *LKS) IdOnOrbit1() []byte {
+	return rcv.ID_ON_ORBIT1()
 }
 
 /// First endpoint on-orbit identifier
@@ -83,9 +91,17 @@ func (rcv *LKS) SAT_NO1() uint32 {
 	return 0
 }
 
+func (rcv *LKS) SatNo1() uint32 {
+	return rcv.SAT_NO1()
+}
+
 /// First endpoint satellite catalog number
 func (rcv *LKS) MutateSAT_NO1(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(8, n)
+}
+
+func (rcv *LKS) MutateSatNo1(n uint32) bool {
+	return rcv.MutateSAT_NO1(n)
 }
 
 /// Second endpoint on-orbit identifier
@@ -95,6 +111,10 @@ func (rcv *LKS) ID_ON_ORBIT2() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *LKS) IdOnOrbit2() []byte {
+	return rcv.ID_ON_ORBIT2()
 }
 
 /// Second endpoint on-orbit identifier
@@ -107,9 +127,17 @@ func (rcv *LKS) SAT_NO2() uint32 {
 	return 0
 }
 
+func (rcv *LKS) SatNo2() uint32 {
+	return rcv.SAT_NO2()
+}
+
 /// Second endpoint satellite catalog number
 func (rcv *LKS) MutateSAT_NO2(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(12, n)
+}
+
+func (rcv *LKS) MutateSatNo2(n uint32) bool {
+	return rcv.MutateSAT_NO2(n)
 }
 
 /// Constellation name
@@ -119,6 +147,10 @@ func (rcv *LKS) CONSTELLATION() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *LKS) Constellation() []byte {
+	return rcv.CONSTELLATION()
 }
 
 /// Constellation name
@@ -131,6 +163,10 @@ func (rcv *LKS) LINK_NAME() []byte {
 	return nil
 }
 
+func (rcv *LKS) LinkName() []byte {
+	return rcv.LINK_NAME()
+}
+
 /// Link name or identifier
 /// Link type
 func (rcv *LKS) LINK_TYPE() linkType {
@@ -141,9 +177,17 @@ func (rcv *LKS) LINK_TYPE() linkType {
 	return 0
 }
 
+func (rcv *LKS) LinkType() linkType {
+	return rcv.LINK_TYPE()
+}
+
 /// Link type
 func (rcv *LKS) MutateLINK_TYPE(n linkType) bool {
 	return rcv._tab.MutateInt8Slot(18, int8(n))
+}
+
+func (rcv *LKS) MutateLinkType(n linkType) bool {
+	return rcv.MutateLINK_TYPE(n)
 }
 
 /// Link state
@@ -155,9 +199,17 @@ func (rcv *LKS) LINK_STATE() linkState {
 	return 0
 }
 
+func (rcv *LKS) LinkState() linkState {
+	return rcv.LINK_STATE()
+}
+
 /// Link state
 func (rcv *LKS) MutateLINK_STATE(n linkState) bool {
 	return rcv._tab.MutateInt8Slot(20, int8(n))
+}
+
+func (rcv *LKS) MutateLinkState(n linkState) bool {
+	return rcv.MutateLINK_STATE(n)
 }
 
 /// RF band
@@ -167,6 +219,10 @@ func (rcv *LKS) BAND() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *LKS) Band() []byte {
+	return rcv.BAND()
 }
 
 /// RF band
@@ -179,6 +235,10 @@ func (rcv *LKS) LINK_START_TIME() []byte {
 	return nil
 }
 
+func (rcv *LKS) LinkStartTime() []byte {
+	return rcv.LINK_START_TIME()
+}
+
 /// Link start time (ISO 8601)
 /// Link stop time (ISO 8601)
 func (rcv *LKS) LINK_STOP_TIME() []byte {
@@ -187,6 +247,10 @@ func (rcv *LKS) LINK_STOP_TIME() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *LKS) LinkStopTime() []byte {
+	return rcv.LINK_STOP_TIME()
 }
 
 /// Link stop time (ISO 8601)
@@ -199,6 +263,10 @@ func (rcv *LKS) ID_BEAM1() []byte {
 	return nil
 }
 
+func (rcv *LKS) IdBeam1() []byte {
+	return rcv.ID_BEAM1()
+}
+
 /// First endpoint beam identifier
 /// First endpoint name
 func (rcv *LKS) END_POINT1_NAME() []byte {
@@ -207,6 +275,10 @@ func (rcv *LKS) END_POINT1_NAME() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *LKS) EndPoint1Name() []byte {
+	return rcv.END_POINT1_NAME()
 }
 
 /// First endpoint name
@@ -219,9 +291,17 @@ func (rcv *LKS) END_POINT1_LAT() float64 {
 	return 0.0
 }
 
+func (rcv *LKS) EndPoint1Lat() float64 {
+	return rcv.END_POINT1_LAT()
+}
+
 /// First endpoint latitude (degrees)
 func (rcv *LKS) MutateEND_POINT1_LAT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(32, n)
+}
+
+func (rcv *LKS) MutateEndPoint1Lat(n float64) bool {
+	return rcv.MutateEND_POINT1_LAT(n)
 }
 
 /// First endpoint longitude (degrees)
@@ -233,9 +313,17 @@ func (rcv *LKS) END_POINT1_LON() float64 {
 	return 0.0
 }
 
+func (rcv *LKS) EndPoint1Lon() float64 {
+	return rcv.END_POINT1_LON()
+}
+
 /// First endpoint longitude (degrees)
 func (rcv *LKS) MutateEND_POINT1_LON(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(34, n)
+}
+
+func (rcv *LKS) MutateEndPoint1Lon(n float64) bool {
+	return rcv.MutateEND_POINT1_LON(n)
 }
 
 /// Second endpoint beam identifier
@@ -245,6 +333,10 @@ func (rcv *LKS) ID_BEAM2() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *LKS) IdBeam2() []byte {
+	return rcv.ID_BEAM2()
 }
 
 /// Second endpoint beam identifier
@@ -257,6 +349,10 @@ func (rcv *LKS) END_POINT2_NAME() []byte {
 	return nil
 }
 
+func (rcv *LKS) EndPoint2Name() []byte {
+	return rcv.END_POINT2_NAME()
+}
+
 /// Second endpoint name
 /// Second endpoint latitude (degrees)
 func (rcv *LKS) END_POINT2_LAT() float64 {
@@ -267,9 +363,17 @@ func (rcv *LKS) END_POINT2_LAT() float64 {
 	return 0.0
 }
 
+func (rcv *LKS) EndPoint2Lat() float64 {
+	return rcv.END_POINT2_LAT()
+}
+
 /// Second endpoint latitude (degrees)
 func (rcv *LKS) MutateEND_POINT2_LAT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(40, n)
+}
+
+func (rcv *LKS) MutateEndPoint2Lat(n float64) bool {
+	return rcv.MutateEND_POINT2_LAT(n)
 }
 
 /// Second endpoint longitude (degrees)
@@ -281,9 +385,17 @@ func (rcv *LKS) END_POINT2_LON() float64 {
 	return 0.0
 }
 
+func (rcv *LKS) EndPoint2Lon() float64 {
+	return rcv.END_POINT2_LON()
+}
+
 /// Second endpoint longitude (degrees)
 func (rcv *LKS) MutateEND_POINT2_LON(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(42, n)
+}
+
+func (rcv *LKS) MutateEndPoint2Lon(n float64) bool {
+	return rcv.MutateEND_POINT2_LON(n)
 }
 
 /// Data rate from endpoint 1 to 2 (Mbps)
@@ -295,9 +407,17 @@ func (rcv *LKS) DATA_RATE1_TO2() float64 {
 	return 0.0
 }
 
+func (rcv *LKS) DataRate1To2() float64 {
+	return rcv.DATA_RATE1_TO2()
+}
+
 /// Data rate from endpoint 1 to 2 (Mbps)
 func (rcv *LKS) MutateDATA_RATE1_TO2(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(44, n)
+}
+
+func (rcv *LKS) MutateDataRate1To2(n float64) bool {
+	return rcv.MutateDATA_RATE1_TO2(n)
 }
 
 /// Data rate from endpoint 2 to 1 (Mbps)
@@ -309,9 +429,17 @@ func (rcv *LKS) DATA_RATE2_TO1() float64 {
 	return 0.0
 }
 
+func (rcv *LKS) DataRate2To1() float64 {
+	return rcv.DATA_RATE2_TO1()
+}
+
 /// Data rate from endpoint 2 to 1 (Mbps)
 func (rcv *LKS) MutateDATA_RATE2_TO1(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(46, n)
+}
+
+func (rcv *LKS) MutateDataRate2To1(n float64) bool {
+	return rcv.MutateDATA_RATE2_TO1(n)
 }
 
 /// System capability status
@@ -321,6 +449,10 @@ func (rcv *LKS) SYS_CAP() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *LKS) SysCap() []byte {
+	return rcv.SYS_CAP()
 }
 
 /// System capability status
@@ -333,6 +465,10 @@ func (rcv *LKS) OPS_CAP() []byte {
 	return nil
 }
 
+func (rcv *LKS) OpsCap() []byte {
+	return rcv.OPS_CAP()
+}
+
 /// Operational capability status
 func LKSStart(builder *flatbuffers.Builder) {
 	builder.StartObject(24)
@@ -340,74 +476,146 @@ func LKSStart(builder *flatbuffers.Builder) {
 func LKSAddID(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ID), 0)
 }
+func LKSAddId(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
+	LKSAddID(builder, ID)
+}
 func LKSAddID_ON_ORBIT1(builder *flatbuffers.Builder, ID_ON_ORBIT1 flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(ID_ON_ORBIT1), 0)
+}
+func LKSAddIdOnOrbit1(builder *flatbuffers.Builder, ID_ON_ORBIT1 flatbuffers.UOffsetT) {
+	LKSAddID_ON_ORBIT1(builder, ID_ON_ORBIT1)
 }
 func LKSAddSAT_NO1(builder *flatbuffers.Builder, SAT_NO1 uint32) {
 	builder.PrependUint32Slot(2, SAT_NO1, 0)
 }
+func LKSAddSatNo1(builder *flatbuffers.Builder, SAT_NO1 uint32) {
+	LKSAddSAT_NO1(builder, SAT_NO1)
+}
 func LKSAddID_ON_ORBIT2(builder *flatbuffers.Builder, ID_ON_ORBIT2 flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(ID_ON_ORBIT2), 0)
+}
+func LKSAddIdOnOrbit2(builder *flatbuffers.Builder, ID_ON_ORBIT2 flatbuffers.UOffsetT) {
+	LKSAddID_ON_ORBIT2(builder, ID_ON_ORBIT2)
 }
 func LKSAddSAT_NO2(builder *flatbuffers.Builder, SAT_NO2 uint32) {
 	builder.PrependUint32Slot(4, SAT_NO2, 0)
 }
+func LKSAddSatNo2(builder *flatbuffers.Builder, SAT_NO2 uint32) {
+	LKSAddSAT_NO2(builder, SAT_NO2)
+}
 func LKSAddCONSTELLATION(builder *flatbuffers.Builder, CONSTELLATION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(CONSTELLATION), 0)
+}
+func LKSAddConstellation(builder *flatbuffers.Builder, CONSTELLATION flatbuffers.UOffsetT) {
+	LKSAddCONSTELLATION(builder, CONSTELLATION)
 }
 func LKSAddLINK_NAME(builder *flatbuffers.Builder, LINK_NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(LINK_NAME), 0)
 }
+func LKSAddLinkName(builder *flatbuffers.Builder, LINK_NAME flatbuffers.UOffsetT) {
+	LKSAddLINK_NAME(builder, LINK_NAME)
+}
 func LKSAddLINK_TYPE(builder *flatbuffers.Builder, LINK_TYPE linkType) {
 	builder.PrependInt8Slot(7, int8(LINK_TYPE), 0)
+}
+func LKSAddLinkType(builder *flatbuffers.Builder, LINK_TYPE linkType) {
+	LKSAddLINK_TYPE(builder, LINK_TYPE)
 }
 func LKSAddLINK_STATE(builder *flatbuffers.Builder, LINK_STATE linkState) {
 	builder.PrependInt8Slot(8, int8(LINK_STATE), 0)
 }
+func LKSAddLinkState(builder *flatbuffers.Builder, LINK_STATE linkState) {
+	LKSAddLINK_STATE(builder, LINK_STATE)
+}
 func LKSAddBAND(builder *flatbuffers.Builder, BAND flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(BAND), 0)
+}
+func LKSAddBand(builder *flatbuffers.Builder, BAND flatbuffers.UOffsetT) {
+	LKSAddBAND(builder, BAND)
 }
 func LKSAddLINK_START_TIME(builder *flatbuffers.Builder, LINK_START_TIME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(LINK_START_TIME), 0)
 }
+func LKSAddLinkStartTime(builder *flatbuffers.Builder, LINK_START_TIME flatbuffers.UOffsetT) {
+	LKSAddLINK_START_TIME(builder, LINK_START_TIME)
+}
 func LKSAddLINK_STOP_TIME(builder *flatbuffers.Builder, LINK_STOP_TIME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(LINK_STOP_TIME), 0)
+}
+func LKSAddLinkStopTime(builder *flatbuffers.Builder, LINK_STOP_TIME flatbuffers.UOffsetT) {
+	LKSAddLINK_STOP_TIME(builder, LINK_STOP_TIME)
 }
 func LKSAddID_BEAM1(builder *flatbuffers.Builder, ID_BEAM1 flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(12, flatbuffers.UOffsetT(ID_BEAM1), 0)
 }
+func LKSAddIdBeam1(builder *flatbuffers.Builder, ID_BEAM1 flatbuffers.UOffsetT) {
+	LKSAddID_BEAM1(builder, ID_BEAM1)
+}
 func LKSAddEND_POINT1_NAME(builder *flatbuffers.Builder, END_POINT1_NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(13, flatbuffers.UOffsetT(END_POINT1_NAME), 0)
+}
+func LKSAddEndPoint1Name(builder *flatbuffers.Builder, END_POINT1_NAME flatbuffers.UOffsetT) {
+	LKSAddEND_POINT1_NAME(builder, END_POINT1_NAME)
 }
 func LKSAddEND_POINT1_LAT(builder *flatbuffers.Builder, END_POINT1_LAT float64) {
 	builder.PrependFloat64Slot(14, END_POINT1_LAT, 0.0)
 }
+func LKSAddEndPoint1Lat(builder *flatbuffers.Builder, END_POINT1_LAT float64) {
+	LKSAddEND_POINT1_LAT(builder, END_POINT1_LAT)
+}
 func LKSAddEND_POINT1_LON(builder *flatbuffers.Builder, END_POINT1_LON float64) {
 	builder.PrependFloat64Slot(15, END_POINT1_LON, 0.0)
+}
+func LKSAddEndPoint1Lon(builder *flatbuffers.Builder, END_POINT1_LON float64) {
+	LKSAddEND_POINT1_LON(builder, END_POINT1_LON)
 }
 func LKSAddID_BEAM2(builder *flatbuffers.Builder, ID_BEAM2 flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(16, flatbuffers.UOffsetT(ID_BEAM2), 0)
 }
+func LKSAddIdBeam2(builder *flatbuffers.Builder, ID_BEAM2 flatbuffers.UOffsetT) {
+	LKSAddID_BEAM2(builder, ID_BEAM2)
+}
 func LKSAddEND_POINT2_NAME(builder *flatbuffers.Builder, END_POINT2_NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(17, flatbuffers.UOffsetT(END_POINT2_NAME), 0)
+}
+func LKSAddEndPoint2Name(builder *flatbuffers.Builder, END_POINT2_NAME flatbuffers.UOffsetT) {
+	LKSAddEND_POINT2_NAME(builder, END_POINT2_NAME)
 }
 func LKSAddEND_POINT2_LAT(builder *flatbuffers.Builder, END_POINT2_LAT float64) {
 	builder.PrependFloat64Slot(18, END_POINT2_LAT, 0.0)
 }
+func LKSAddEndPoint2Lat(builder *flatbuffers.Builder, END_POINT2_LAT float64) {
+	LKSAddEND_POINT2_LAT(builder, END_POINT2_LAT)
+}
 func LKSAddEND_POINT2_LON(builder *flatbuffers.Builder, END_POINT2_LON float64) {
 	builder.PrependFloat64Slot(19, END_POINT2_LON, 0.0)
+}
+func LKSAddEndPoint2Lon(builder *flatbuffers.Builder, END_POINT2_LON float64) {
+	LKSAddEND_POINT2_LON(builder, END_POINT2_LON)
 }
 func LKSAddDATA_RATE1_TO2(builder *flatbuffers.Builder, DATA_RATE1_TO2 float64) {
 	builder.PrependFloat64Slot(20, DATA_RATE1_TO2, 0.0)
 }
+func LKSAddDataRate1To2(builder *flatbuffers.Builder, DATA_RATE1_TO2 float64) {
+	LKSAddDATA_RATE1_TO2(builder, DATA_RATE1_TO2)
+}
 func LKSAddDATA_RATE2_TO1(builder *flatbuffers.Builder, DATA_RATE2_TO1 float64) {
 	builder.PrependFloat64Slot(21, DATA_RATE2_TO1, 0.0)
+}
+func LKSAddDataRate2To1(builder *flatbuffers.Builder, DATA_RATE2_TO1 float64) {
+	LKSAddDATA_RATE2_TO1(builder, DATA_RATE2_TO1)
 }
 func LKSAddSYS_CAP(builder *flatbuffers.Builder, SYS_CAP flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(22, flatbuffers.UOffsetT(SYS_CAP), 0)
 }
+func LKSAddSysCap(builder *flatbuffers.Builder, SYS_CAP flatbuffers.UOffsetT) {
+	LKSAddSYS_CAP(builder, SYS_CAP)
+}
 func LKSAddOPS_CAP(builder *flatbuffers.Builder, OPS_CAP flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(23, flatbuffers.UOffsetT(OPS_CAP), 0)
+}
+func LKSAddOpsCap(builder *flatbuffers.Builder, OPS_CAP flatbuffers.UOffsetT) {
+	LKSAddOPS_CAP(builder, OPS_CAP)
 }
 func LKSEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

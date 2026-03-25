@@ -2,4 +2,200 @@
 
 # namespace: 
 
-# NOTE KMLLinearRing.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# LinearRing geometry
+class KMLLinearRing(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = KMLLinearRing()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsKMLLinearRing(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def KMLLinearRingBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x4B\x4D\x4C", size_prefixed=size_prefixed)
+
+    # KMLLinearRing
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Coordinates (first = last to close the ring)
+    # KMLLinearRing
+    def COORDINATES(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from KMLCoordinate import KMLCoordinate
+            obj = KMLCoordinate()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # KMLLinearRing
+    def COORDINATESLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # KMLLinearRing
+    def COORDINATESIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        return o == 0
+
+    # Whether to extrude to ground
+    # KMLLinearRing
+    def EXTRUDE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # Whether to tessellate
+    # KMLLinearRing
+    def TESSELLATE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # Altitude mode
+    # KMLLinearRing
+    def ALTITUDE_MODE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+def KMLLinearRingStart(builder):
+    builder.StartObject(4)
+
+def Start(builder):
+    KMLLinearRingStart(builder)
+
+def KMLLinearRingAddCOORDINATES(builder, COORDINATES):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(COORDINATES), 0)
+
+def AddCOORDINATES(builder, COORDINATES):
+    KMLLinearRingAddCOORDINATES(builder, COORDINATES)
+
+def KMLLinearRingStartCOORDINATESVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartCOORDINATESVector(builder, numElems):
+    return KMLLinearRingStartCOORDINATESVector(builder, numElems)
+
+def KMLLinearRingCreateCOORDINATESVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateCOORDINATESVector(builder, data):
+    KMLLinearRingCreateCOORDINATESVector(builder, data)
+
+def KMLLinearRingAddEXTRUDE(builder, EXTRUDE):
+    builder.PrependBoolSlot(1, EXTRUDE, 0)
+
+def AddEXTRUDE(builder, EXTRUDE):
+    KMLLinearRingAddEXTRUDE(builder, EXTRUDE)
+
+def KMLLinearRingAddTESSELLATE(builder, TESSELLATE):
+    builder.PrependBoolSlot(2, TESSELLATE, 0)
+
+def AddTESSELLATE(builder, TESSELLATE):
+    KMLLinearRingAddTESSELLATE(builder, TESSELLATE)
+
+def KMLLinearRingAddALTITUDE_MODE(builder, ALTITUDE_MODE):
+    builder.PrependInt8Slot(3, ALTITUDE_MODE, 0)
+
+def AddALTITUDE_MODE(builder, ALTITUDE_MODE):
+    KMLLinearRingAddALTITUDE_MODE(builder, ALTITUDE_MODE)
+
+def KMLLinearRingEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return KMLLinearRingEnd(builder)
+
+import KMLCoordinate
+try:
+    from typing import List
+except:
+    pass
+
+class KMLLinearRingT(object):
+
+    # KMLLinearRingT
+    def __init__(
+        self,
+        COORDINATES = None,
+        EXTRUDE = False,
+        TESSELLATE = False,
+        ALTITUDE_MODE = 0,
+    ):
+        self.COORDINATES = COORDINATES  # type: Optional[List[KMLCoordinate.KMLCoordinateT]]
+        self.EXTRUDE = EXTRUDE  # type: bool
+        self.TESSELLATE = TESSELLATE  # type: bool
+        self.ALTITUDE_MODE = ALTITUDE_MODE  # type: int
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpKmllinearRing = KMLLinearRing()
+        tmpKmllinearRing.Init(buf, pos)
+        return cls.InitFromObj(tmpKmllinearRing)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpKmllinearRing):
+        x = KMLLinearRingT()
+        x._UnPack(tmpKmllinearRing)
+        return x
+
+    # KMLLinearRingT
+    def _UnPack(self, KMLLinearRing):
+        if KMLLinearRing is None:
+            return
+        if not KMLLinearRing.COORDINATESIsNone():
+            self.COORDINATES = []
+            for i in range(KMLLinearRing.COORDINATESLength()):
+                if KMLLinearRing.COORDINATES(i) is None:
+                    self.COORDINATES.append(None)
+                else:
+                    kMLCoordinate_ = KMLCoordinate.KMLCoordinateT.InitFromObj(KMLLinearRing.COORDINATES(i))
+                    self.COORDINATES.append(kMLCoordinate_)
+        self.EXTRUDE = KMLLinearRing.EXTRUDE()
+        self.TESSELLATE = KMLLinearRing.TESSELLATE()
+        self.ALTITUDE_MODE = KMLLinearRing.ALTITUDE_MODE()
+
+    # KMLLinearRingT
+    def Pack(self, builder):
+        if self.COORDINATES is not None:
+            COORDINATESlist = []
+            for i in range(len(self.COORDINATES)):
+                COORDINATESlist.append(self.COORDINATES[i].Pack(builder))
+            KMLLinearRingStartCOORDINATESVector(builder, len(self.COORDINATES))
+            for i in reversed(range(len(self.COORDINATES))):
+                builder.PrependUOffsetTRelative(COORDINATESlist[i])
+            COORDINATES = builder.EndVector()
+        KMLLinearRingStart(builder)
+        if self.COORDINATES is not None:
+            KMLLinearRingAddCOORDINATES(builder, COORDINATES)
+        KMLLinearRingAddEXTRUDE(builder, self.EXTRUDE)
+        KMLLinearRingAddTESSELLATE(builder, self.TESSELLATE)
+        KMLLinearRingAddALTITUDE_MODE(builder, self.ALTITUDE_MODE)
+        KMLLinearRing = KMLLinearRingEnd(builder)
+        return KMLLinearRing

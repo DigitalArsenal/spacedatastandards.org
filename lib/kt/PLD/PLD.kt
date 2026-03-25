@@ -29,7 +29,7 @@ class PLD : Table() {
         __init(_i, _bb)
         return this
     }
-    val PAYLOAD_DURATION : String?
+    val payloadDuration : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -38,14 +38,14 @@ class PLD : Table() {
                 null
             }
         }
-    val PAYLOAD_DURATIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun PAYLOAD_DURATIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
-    val MASS_AT_LAUNCH : Float
+    val payloadDurationAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun payloadDurationInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
+    val massAtLaunch : Float
         get() {
             val o = __offset(6)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
-    val DIMENSIONS : String?
+    val dimensions : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -54,14 +54,14 @@ class PLD : Table() {
                 null
             }
         }
-    val DIMENSIONSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun DIMENSIONSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
-    val SOLAR_ARRAY_AREA : Float
+    val dimensionsAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun dimensionsInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
+    val solarArrayArea : Float
         get() {
             val o = __offset(10)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
-    val SOLAR_ARRAY_DIMENSIONS : String?
+    val solarArrayDimensions : String?
         get() {
             val o = __offset(12)
             return if (o != 0) {
@@ -70,9 +70,9 @@ class PLD : Table() {
                 null
             }
         }
-    val SOLAR_ARRAY_DIMENSIONSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
-    fun SOLAR_ARRAY_DIMENSIONSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
-    val NOMINAL_OPERATIONAL_LIFETIME : String?
+    val solarArrayDimensionsAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(12, 1)
+    fun solarArrayDimensionsInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 12, 1)
+    val nominalOperationalLifetime : String?
         get() {
             val o = __offset(14)
             return if (o != 0) {
@@ -81,10 +81,10 @@ class PLD : Table() {
                 null
             }
         }
-    val NOMINAL_OPERATIONAL_LIFETIMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(14, 1)
-    fun NOMINAL_OPERATIONAL_LIFETIMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 14, 1)
-    fun INSTRUMENTS(j: Int) : IDM? = INSTRUMENTS(IDM(), j)
-    fun INSTRUMENTS(obj: IDM, j: Int) : IDM? {
+    val nominalOperationalLifetimeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(14, 1)
+    fun nominalOperationalLifetimeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 14, 1)
+    fun instruments(j: Int) : IDM? = instruments(IDM(), j)
+    fun instruments(obj: IDM, j: Int) : IDM? {
         val o = __offset(16)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -92,37 +92,37 @@ class PLD : Table() {
             null
         }
     }
-    val INSTRUMENTSLength : Int
+    val instrumentsLength : Int
         get() {
             val o = __offset(16); return if (o != 0) __vector_len(o) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsPLD(_bb: ByteBuffer): PLD = getRootAsPLD(_bb, PLD())
         fun getRootAsPLD(_bb: ByteBuffer, obj: PLD): PLD {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun PLDBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$PLD")
-        fun createPLD(builder: FlatBufferBuilder, PAYLOAD_DURATIONOffset: Int, MASS_AT_LAUNCH: Float, DIMENSIONSOffset: Int, SOLAR_ARRAY_AREA: Float, SOLAR_ARRAY_DIMENSIONSOffset: Int, NOMINAL_OPERATIONAL_LIFETIMEOffset: Int, INSTRUMENTSOffset: Int) : Int {
+        fun createPLD(builder: FlatBufferBuilder, payloadDurationOffset: Int, massAtLaunch: Float, dimensionsOffset: Int, solarArrayArea: Float, solarArrayDimensionsOffset: Int, nominalOperationalLifetimeOffset: Int, instrumentsOffset: Int) : Int {
             builder.startTable(7)
-            addINSTRUMENTS(builder, INSTRUMENTSOffset)
-            addNOMINAL_OPERATIONAL_LIFETIME(builder, NOMINAL_OPERATIONAL_LIFETIMEOffset)
-            addSOLAR_ARRAY_DIMENSIONS(builder, SOLAR_ARRAY_DIMENSIONSOffset)
-            addSOLAR_ARRAY_AREA(builder, SOLAR_ARRAY_AREA)
-            addDIMENSIONS(builder, DIMENSIONSOffset)
-            addMASS_AT_LAUNCH(builder, MASS_AT_LAUNCH)
-            addPAYLOAD_DURATION(builder, PAYLOAD_DURATIONOffset)
+            addINSTRUMENTS(builder, instrumentsOffset)
+            addNOMINALOPERATIONALLIFETIME(builder, nominalOperationalLifetimeOffset)
+            addSOLARARRAYDIMENSIONS(builder, solarArrayDimensionsOffset)
+            addSOLARARRAYAREA(builder, solarArrayArea)
+            addDIMENSIONS(builder, dimensionsOffset)
+            addMASSATLAUNCH(builder, massAtLaunch)
+            addPAYLOADDURATION(builder, payloadDurationOffset)
             return endPLD(builder)
         }
         fun startPLD(builder: FlatBufferBuilder) = builder.startTable(7)
-        fun addPAYLOAD_DURATION(builder: FlatBufferBuilder, PAYLOAD_DURATION: Int) = builder.addOffset(0, PAYLOAD_DURATION, 0)
-        fun addMASS_AT_LAUNCH(builder: FlatBufferBuilder, MASS_AT_LAUNCH: Float) = builder.addFloat(1, MASS_AT_LAUNCH, 0.0)
-        fun addDIMENSIONS(builder: FlatBufferBuilder, DIMENSIONS: Int) = builder.addOffset(2, DIMENSIONS, 0)
-        fun addSOLAR_ARRAY_AREA(builder: FlatBufferBuilder, SOLAR_ARRAY_AREA: Float) = builder.addFloat(3, SOLAR_ARRAY_AREA, 0.0)
-        fun addSOLAR_ARRAY_DIMENSIONS(builder: FlatBufferBuilder, SOLAR_ARRAY_DIMENSIONS: Int) = builder.addOffset(4, SOLAR_ARRAY_DIMENSIONS, 0)
-        fun addNOMINAL_OPERATIONAL_LIFETIME(builder: FlatBufferBuilder, NOMINAL_OPERATIONAL_LIFETIME: Int) = builder.addOffset(5, NOMINAL_OPERATIONAL_LIFETIME, 0)
-        fun addINSTRUMENTS(builder: FlatBufferBuilder, INSTRUMENTS: Int) = builder.addOffset(6, INSTRUMENTS, 0)
+        fun addPAYLOADDURATION(builder: FlatBufferBuilder, payloadDuration: Int) = builder.addOffset(0, payloadDuration, 0)
+        fun addMASSATLAUNCH(builder: FlatBufferBuilder, massAtLaunch: Float) = builder.addFloat(1, massAtLaunch, 0.0)
+        fun addDIMENSIONS(builder: FlatBufferBuilder, dimensions: Int) = builder.addOffset(2, dimensions, 0)
+        fun addSOLARARRAYAREA(builder: FlatBufferBuilder, solarArrayArea: Float) = builder.addFloat(3, solarArrayArea, 0.0)
+        fun addSOLARARRAYDIMENSIONS(builder: FlatBufferBuilder, solarArrayDimensions: Int) = builder.addOffset(4, solarArrayDimensions, 0)
+        fun addNOMINALOPERATIONALLIFETIME(builder: FlatBufferBuilder, nominalOperationalLifetime: Int) = builder.addOffset(5, nominalOperationalLifetime, 0)
+        fun addINSTRUMENTS(builder: FlatBufferBuilder, instruments: Int) = builder.addOffset(6, instruments, 0)
         fun createInstrumentsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {

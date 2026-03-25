@@ -51,6 +51,10 @@ func (rcv *BooleanArgumentType) NAME() []byte {
 	return nil
 }
 
+func (rcv *BooleanArgumentType) Name() []byte {
+	return rcv.NAME()
+}
+
 /// Type name
 /// Short description
 func (rcv *BooleanArgumentType) SHORT_DESCRIPTION() []byte {
@@ -61,6 +65,10 @@ func (rcv *BooleanArgumentType) SHORT_DESCRIPTION() []byte {
 	return nil
 }
 
+func (rcv *BooleanArgumentType) ShortDescription() []byte {
+	return rcv.SHORT_DESCRIPTION()
+}
+
 /// Short description
 /// Long description
 func (rcv *BooleanArgumentType) LONG_DESCRIPTION() []byte {
@@ -69,6 +77,10 @@ func (rcv *BooleanArgumentType) LONG_DESCRIPTION() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *BooleanArgumentType) LongDescription() []byte {
+	return rcv.LONG_DESCRIPTION()
 }
 
 /// Long description
@@ -86,6 +98,10 @@ func (rcv *BooleanArgumentType) DATA_ENCODING(obj *IntegerDataEncoding) *Integer
 	return nil
 }
 
+func (rcv *BooleanArgumentType) DataEncoding(obj *IntegerDataEncoding) *IntegerDataEncoding {
+	return rcv.DATA_ENCODING(obj)
+}
+
 /// Data encoding
 /// String representation of true value
 func (rcv *BooleanArgumentType) ONE_STRING_VALUE() []byte {
@@ -94,6 +110,10 @@ func (rcv *BooleanArgumentType) ONE_STRING_VALUE() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *BooleanArgumentType) OneStringValue() []byte {
+	return rcv.ONE_STRING_VALUE()
 }
 
 /// String representation of true value
@@ -106,6 +126,10 @@ func (rcv *BooleanArgumentType) ZERO_STRING_VALUE() []byte {
 	return nil
 }
 
+func (rcv *BooleanArgumentType) ZeroStringValue() []byte {
+	return rcv.ZERO_STRING_VALUE()
+}
+
 /// String representation of false value
 /// Initial/default value
 func (rcv *BooleanArgumentType) INITIAL_VALUE() bool {
@@ -116,9 +140,17 @@ func (rcv *BooleanArgumentType) INITIAL_VALUE() bool {
 	return false
 }
 
+func (rcv *BooleanArgumentType) InitialValue() bool {
+	return rcv.INITIAL_VALUE()
+}
+
 /// Initial/default value
 func (rcv *BooleanArgumentType) MutateINITIAL_VALUE(n bool) bool {
 	return rcv._tab.MutateBoolSlot(16, n)
+}
+
+func (rcv *BooleanArgumentType) MutateInitialValue(n bool) bool {
+	return rcv.MutateINITIAL_VALUE(n)
 }
 
 func BooleanArgumentTypeStart(builder *flatbuffers.Builder) {
@@ -127,23 +159,44 @@ func BooleanArgumentTypeStart(builder *flatbuffers.Builder) {
 func BooleanArgumentTypeAddNAME(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(NAME), 0)
 }
+func BooleanArgumentTypeAddName(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
+	BooleanArgumentTypeAddNAME(builder, NAME)
+}
 func BooleanArgumentTypeAddSHORT_DESCRIPTION(builder *flatbuffers.Builder, SHORT_DESCRIPTION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(SHORT_DESCRIPTION), 0)
+}
+func BooleanArgumentTypeAddShortDescription(builder *flatbuffers.Builder, SHORT_DESCRIPTION flatbuffers.UOffsetT) {
+	BooleanArgumentTypeAddSHORT_DESCRIPTION(builder, SHORT_DESCRIPTION)
 }
 func BooleanArgumentTypeAddLONG_DESCRIPTION(builder *flatbuffers.Builder, LONG_DESCRIPTION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(LONG_DESCRIPTION), 0)
 }
+func BooleanArgumentTypeAddLongDescription(builder *flatbuffers.Builder, LONG_DESCRIPTION flatbuffers.UOffsetT) {
+	BooleanArgumentTypeAddLONG_DESCRIPTION(builder, LONG_DESCRIPTION)
+}
 func BooleanArgumentTypeAddDATA_ENCODING(builder *flatbuffers.Builder, DATA_ENCODING flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(DATA_ENCODING), 0)
+}
+func BooleanArgumentTypeAddDataEncoding(builder *flatbuffers.Builder, DATA_ENCODING flatbuffers.UOffsetT) {
+	BooleanArgumentTypeAddDATA_ENCODING(builder, DATA_ENCODING)
 }
 func BooleanArgumentTypeAddONE_STRING_VALUE(builder *flatbuffers.Builder, ONE_STRING_VALUE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(ONE_STRING_VALUE), 0)
 }
+func BooleanArgumentTypeAddOneStringValue(builder *flatbuffers.Builder, ONE_STRING_VALUE flatbuffers.UOffsetT) {
+	BooleanArgumentTypeAddONE_STRING_VALUE(builder, ONE_STRING_VALUE)
+}
 func BooleanArgumentTypeAddZERO_STRING_VALUE(builder *flatbuffers.Builder, ZERO_STRING_VALUE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(ZERO_STRING_VALUE), 0)
 }
+func BooleanArgumentTypeAddZeroStringValue(builder *flatbuffers.Builder, ZERO_STRING_VALUE flatbuffers.UOffsetT) {
+	BooleanArgumentTypeAddZERO_STRING_VALUE(builder, ZERO_STRING_VALUE)
+}
 func BooleanArgumentTypeAddINITIAL_VALUE(builder *flatbuffers.Builder, INITIAL_VALUE bool) {
 	builder.PrependBoolSlot(6, INITIAL_VALUE, false)
+}
+func BooleanArgumentTypeAddInitialValue(builder *flatbuffers.Builder, INITIAL_VALUE bool) {
+	BooleanArgumentTypeAddINITIAL_VALUE(builder, INITIAL_VALUE)
 }
 func BooleanArgumentTypeEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

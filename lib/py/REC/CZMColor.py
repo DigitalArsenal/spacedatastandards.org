@@ -2,4 +2,149 @@
 
 # namespace: 
 
-# NOTE CZMColor.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# RGBA color
+class CZMColor(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = CZMColor()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsCZMColor(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def CZMColorBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x43\x5A\x4D", size_prefixed=size_prefixed)
+
+    # CZMColor
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Red component (0-255)
+    # CZMColor
+    def RED(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
+        return 0
+
+    # Green component (0-255)
+    # CZMColor
+    def GREEN(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
+        return 0
+
+    # Blue component (0-255)
+    # CZMColor
+    def BLUE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
+        return 0
+
+    # Alpha component (0-255)
+    # CZMColor
+    def ALPHA(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
+        return 0
+
+def CZMColorStart(builder):
+    builder.StartObject(4)
+
+def Start(builder):
+    CZMColorStart(builder)
+
+def CZMColorAddRED(builder, RED):
+    builder.PrependUint8Slot(0, RED, 0)
+
+def AddRED(builder, RED):
+    CZMColorAddRED(builder, RED)
+
+def CZMColorAddGREEN(builder, GREEN):
+    builder.PrependUint8Slot(1, GREEN, 0)
+
+def AddGREEN(builder, GREEN):
+    CZMColorAddGREEN(builder, GREEN)
+
+def CZMColorAddBLUE(builder, BLUE):
+    builder.PrependUint8Slot(2, BLUE, 0)
+
+def AddBLUE(builder, BLUE):
+    CZMColorAddBLUE(builder, BLUE)
+
+def CZMColorAddALPHA(builder, ALPHA):
+    builder.PrependUint8Slot(3, ALPHA, 0)
+
+def AddALPHA(builder, ALPHA):
+    CZMColorAddALPHA(builder, ALPHA)
+
+def CZMColorEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return CZMColorEnd(builder)
+
+
+class CZMColorT(object):
+
+    # CZMColorT
+    def __init__(
+        self,
+        RED = 0,
+        GREEN = 0,
+        BLUE = 0,
+        ALPHA = 0,
+    ):
+        self.RED = RED  # type: int
+        self.GREEN = GREEN  # type: int
+        self.BLUE = BLUE  # type: int
+        self.ALPHA = ALPHA  # type: int
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpCzmcolor = CZMColor()
+        tmpCzmcolor.Init(buf, pos)
+        return cls.InitFromObj(tmpCzmcolor)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpCzmcolor):
+        x = CZMColorT()
+        x._UnPack(tmpCzmcolor)
+        return x
+
+    # CZMColorT
+    def _UnPack(self, CZMColor):
+        if CZMColor is None:
+            return
+        self.RED = CZMColor.RED()
+        self.GREEN = CZMColor.GREEN()
+        self.BLUE = CZMColor.BLUE()
+        self.ALPHA = CZMColor.ALPHA()
+
+    # CZMColorT
+    def Pack(self, builder):
+        CZMColorStart(builder)
+        CZMColorAddRED(builder, self.RED)
+        CZMColorAddGREEN(builder, self.GREEN)
+        CZMColorAddBLUE(builder, self.BLUE)
+        CZMColorAddALPHA(builder, self.ALPHA)
+        CZMColor = CZMColorEnd(builder)
+        return CZMColor

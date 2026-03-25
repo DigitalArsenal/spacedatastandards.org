@@ -381,37 +381,63 @@ def End(builder):
 class COTDetailT(object):
 
     # COTDetailT
-    def __init__(self):
-        self.CALLSIGN = None  # type: str
-        self.ENDPOINT = None  # type: str
-        self.PHONE = None  # type: str
-        self.COURSE = 0.0  # type: float
-        self.SPEED = 0.0  # type: float
-        self.GROUP_NAME = None  # type: str
-        self.GROUP_ROLE = None  # type: str
-        self.STATUS_BATTERY = 0.0  # type: float
-        self.STATUS_READINESS = False  # type: bool
-        self.PREC_LOCATION_SOURCE = None  # type: str
-        self.PREC_ALTSRC = None  # type: str
-        self.UID_DROID = None  # type: str
-        self.REMARKS = None  # type: str
-        self.REMARKS_SOURCE = None  # type: str
-        self.REMARKS_TIME = None  # type: str
-        self.LINK_UID = None  # type: str
-        self.LINK_TYPE = None  # type: str
-        self.LINK_RELATION = None  # type: str
-        self.COLOR = 0  # type: int
-        self.STROKE_WEIGHT = 0.0  # type: float
-        self.FILL_COLOR = 0  # type: int
-        self.LABELLED = False  # type: bool
-        self.ARCHIVE = False  # type: bool
-        self.RAW_XML = None  # type: str
+    def __init__(
+        self,
+        CALLSIGN = None,
+        ENDPOINT = None,
+        PHONE = None,
+        COURSE = 0.0,
+        SPEED = 0.0,
+        GROUP_NAME = None,
+        GROUP_ROLE = None,
+        STATUS_BATTERY = 0.0,
+        STATUS_READINESS = False,
+        PREC_LOCATION_SOURCE = None,
+        PREC_ALTSRC = None,
+        UID_DROID = None,
+        REMARKS = None,
+        REMARKS_SOURCE = None,
+        REMARKS_TIME = None,
+        LINK_UID = None,
+        LINK_TYPE = None,
+        LINK_RELATION = None,
+        COLOR = 0,
+        STROKE_WEIGHT = 0.0,
+        FILL_COLOR = 0,
+        LABELLED = False,
+        ARCHIVE = False,
+        RAW_XML = None,
+    ):
+        self.CALLSIGN = CALLSIGN  # type: Optional[str]
+        self.ENDPOINT = ENDPOINT  # type: Optional[str]
+        self.PHONE = PHONE  # type: Optional[str]
+        self.COURSE = COURSE  # type: float
+        self.SPEED = SPEED  # type: float
+        self.GROUP_NAME = GROUP_NAME  # type: Optional[str]
+        self.GROUP_ROLE = GROUP_ROLE  # type: Optional[str]
+        self.STATUS_BATTERY = STATUS_BATTERY  # type: float
+        self.STATUS_READINESS = STATUS_READINESS  # type: bool
+        self.PREC_LOCATION_SOURCE = PREC_LOCATION_SOURCE  # type: Optional[str]
+        self.PREC_ALTSRC = PREC_ALTSRC  # type: Optional[str]
+        self.UID_DROID = UID_DROID  # type: Optional[str]
+        self.REMARKS = REMARKS  # type: Optional[str]
+        self.REMARKS_SOURCE = REMARKS_SOURCE  # type: Optional[str]
+        self.REMARKS_TIME = REMARKS_TIME  # type: Optional[str]
+        self.LINK_UID = LINK_UID  # type: Optional[str]
+        self.LINK_TYPE = LINK_TYPE  # type: Optional[str]
+        self.LINK_RELATION = LINK_RELATION  # type: Optional[str]
+        self.COLOR = COLOR  # type: int
+        self.STROKE_WEIGHT = STROKE_WEIGHT  # type: float
+        self.FILL_COLOR = FILL_COLOR  # type: int
+        self.LABELLED = LABELLED  # type: bool
+        self.ARCHIVE = ARCHIVE  # type: bool
+        self.RAW_XML = RAW_XML  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        cotdetail = COTDetail()
-        cotdetail.Init(buf, pos)
-        return cls.InitFromObj(cotdetail)
+        tmpCotdetail = COTDetail()
+        tmpCotdetail.Init(buf, pos)
+        return cls.InitFromObj(tmpCotdetail)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -419,39 +445,39 @@ class COTDetailT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, cotdetail):
+    def InitFromObj(cls, tmpCotdetail):
         x = COTDetailT()
-        x._UnPack(cotdetail)
+        x._UnPack(tmpCotdetail)
         return x
 
     # COTDetailT
-    def _UnPack(self, cotdetail):
-        if cotdetail is None:
+    def _UnPack(self, COTDetail):
+        if COTDetail is None:
             return
-        self.CALLSIGN = cotdetail.CALLSIGN()
-        self.ENDPOINT = cotdetail.ENDPOINT()
-        self.PHONE = cotdetail.PHONE()
-        self.COURSE = cotdetail.COURSE()
-        self.SPEED = cotdetail.SPEED()
-        self.GROUP_NAME = cotdetail.GROUP_NAME()
-        self.GROUP_ROLE = cotdetail.GROUP_ROLE()
-        self.STATUS_BATTERY = cotdetail.STATUS_BATTERY()
-        self.STATUS_READINESS = cotdetail.STATUS_READINESS()
-        self.PREC_LOCATION_SOURCE = cotdetail.PREC_LOCATION_SOURCE()
-        self.PREC_ALTSRC = cotdetail.PREC_ALTSRC()
-        self.UID_DROID = cotdetail.UID_DROID()
-        self.REMARKS = cotdetail.REMARKS()
-        self.REMARKS_SOURCE = cotdetail.REMARKS_SOURCE()
-        self.REMARKS_TIME = cotdetail.REMARKS_TIME()
-        self.LINK_UID = cotdetail.LINK_UID()
-        self.LINK_TYPE = cotdetail.LINK_TYPE()
-        self.LINK_RELATION = cotdetail.LINK_RELATION()
-        self.COLOR = cotdetail.COLOR()
-        self.STROKE_WEIGHT = cotdetail.STROKE_WEIGHT()
-        self.FILL_COLOR = cotdetail.FILL_COLOR()
-        self.LABELLED = cotdetail.LABELLED()
-        self.ARCHIVE = cotdetail.ARCHIVE()
-        self.RAW_XML = cotdetail.RAW_XML()
+        self.CALLSIGN = COTDetail.CALLSIGN()
+        self.ENDPOINT = COTDetail.ENDPOINT()
+        self.PHONE = COTDetail.PHONE()
+        self.COURSE = COTDetail.COURSE()
+        self.SPEED = COTDetail.SPEED()
+        self.GROUP_NAME = COTDetail.GROUP_NAME()
+        self.GROUP_ROLE = COTDetail.GROUP_ROLE()
+        self.STATUS_BATTERY = COTDetail.STATUS_BATTERY()
+        self.STATUS_READINESS = COTDetail.STATUS_READINESS()
+        self.PREC_LOCATION_SOURCE = COTDetail.PREC_LOCATION_SOURCE()
+        self.PREC_ALTSRC = COTDetail.PREC_ALTSRC()
+        self.UID_DROID = COTDetail.UID_DROID()
+        self.REMARKS = COTDetail.REMARKS()
+        self.REMARKS_SOURCE = COTDetail.REMARKS_SOURCE()
+        self.REMARKS_TIME = COTDetail.REMARKS_TIME()
+        self.LINK_UID = COTDetail.LINK_UID()
+        self.LINK_TYPE = COTDetail.LINK_TYPE()
+        self.LINK_RELATION = COTDetail.LINK_RELATION()
+        self.COLOR = COTDetail.COLOR()
+        self.STROKE_WEIGHT = COTDetail.STROKE_WEIGHT()
+        self.FILL_COLOR = COTDetail.FILL_COLOR()
+        self.LABELLED = COTDetail.LABELLED()
+        self.ARCHIVE = COTDetail.ARCHIVE()
+        self.RAW_XML = COTDetail.RAW_XML()
 
     # COTDetailT
     def Pack(self, builder):
@@ -525,5 +551,5 @@ class COTDetailT(object):
         COTDetailAddARCHIVE(builder, self.ARCHIVE)
         if self.RAW_XML is not None:
             COTDetailAddRAW_XML(builder, RAW_XML)
-        cotdetail = COTDetailEnd(builder)
-        return cotdetail
+        COTDetail = COTDetailEnd(builder)
+        return COTDetail

@@ -110,17 +110,23 @@ except:
 class FixedValueEntryT(object):
 
     # FixedValueEntryT
-    def __init__(self):
-        self.BINARY_VALUE = None  # type: str
-        self.SIZE_IN_BITS = 0  # type: int
-        self.NAME = None  # type: str
-        self.LOCATION = None  # type: Optional[LocationInContainer.LocationInContainerT]
+    def __init__(
+        self,
+        BINARY_VALUE = None,
+        SIZE_IN_BITS = 0,
+        NAME = None,
+        LOCATION = None,
+    ):
+        self.BINARY_VALUE = BINARY_VALUE  # type: Optional[str]
+        self.SIZE_IN_BITS = SIZE_IN_BITS  # type: int
+        self.NAME = NAME  # type: Optional[str]
+        self.LOCATION = LOCATION  # type: Optional[LocationInContainer.LocationInContainerT]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        fixedValueEntry = FixedValueEntry()
-        fixedValueEntry.Init(buf, pos)
-        return cls.InitFromObj(fixedValueEntry)
+        tmpFixedValueEntry = FixedValueEntry()
+        tmpFixedValueEntry.Init(buf, pos)
+        return cls.InitFromObj(tmpFixedValueEntry)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -128,20 +134,20 @@ class FixedValueEntryT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, fixedValueEntry):
+    def InitFromObj(cls, tmpFixedValueEntry):
         x = FixedValueEntryT()
-        x._UnPack(fixedValueEntry)
+        x._UnPack(tmpFixedValueEntry)
         return x
 
     # FixedValueEntryT
-    def _UnPack(self, fixedValueEntry):
-        if fixedValueEntry is None:
+    def _UnPack(self, FixedValueEntry):
+        if FixedValueEntry is None:
             return
-        self.BINARY_VALUE = fixedValueEntry.BINARY_VALUE()
-        self.SIZE_IN_BITS = fixedValueEntry.SIZE_IN_BITS()
-        self.NAME = fixedValueEntry.NAME()
-        if fixedValueEntry.LOCATION() is not None:
-            self.LOCATION = LocationInContainer.LocationInContainerT.InitFromObj(fixedValueEntry.LOCATION())
+        self.BINARY_VALUE = FixedValueEntry.BINARY_VALUE()
+        self.SIZE_IN_BITS = FixedValueEntry.SIZE_IN_BITS()
+        self.NAME = FixedValueEntry.NAME()
+        if FixedValueEntry.LOCATION() is not None:
+            self.LOCATION = LocationInContainer.LocationInContainerT.InitFromObj(FixedValueEntry.LOCATION())
 
     # FixedValueEntryT
     def Pack(self, builder):
@@ -159,5 +165,5 @@ class FixedValueEntryT(object):
             FixedValueEntryAddNAME(builder, NAME)
         if self.LOCATION is not None:
             FixedValueEntryAddLOCATION(builder, LOCATION)
-        fixedValueEntry = FixedValueEntryEnd(builder)
-        return fixedValueEntry
+        FixedValueEntry = FixedValueEntryEnd(builder)
+        return FixedValueEntry

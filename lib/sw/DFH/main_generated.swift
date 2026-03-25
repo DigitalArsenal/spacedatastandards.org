@@ -2,12 +2,16 @@
 // swiftlint:disable all
 // swiftformat:disable all
 
+#if canImport(Common)
+import Common
+#endif
+
 import FlatBuffers
 
 ///  GEO Drift History Record
-public struct driftRecord: FlatBufferObject, Verifiable {
+public struct driftRecord: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -80,9 +84,9 @@ public struct driftRecord: FlatBufferObject, Verifiable {
 }
 
 ///  GEO Drift History
-public struct DFH: FlatBufferObject, Verifiable {
+public struct DFH: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -142,9 +146,7 @@ public struct DFH: FlatBufferObject, Verifiable {
   ///  Whether object is actively station-keeping
   public var STATION_KEEPING: Bool { let o = _accessor.offset(VTOFFSET.STATION_KEEPING.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Historical drift records
-  public var hasRecords: Bool { let o = _accessor.offset(VTOFFSET.RECORDS.v); return o == 0 ? false : true }
-  public var RECORDSCount: Int32 { let o = _accessor.offset(VTOFFSET.RECORDS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func RECORDS(at index: Int32) -> driftRecord? { let o = _accessor.offset(VTOFFSET.RECORDS.v); return o == 0 ? nil : driftRecord(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var RECORDS: FlatbufferVector<driftRecord> { return _accessor.vector(at: VTOFFSET.RECORDS.v, byteSize: 4) }
   ///  Number of records in history
   public var NUM_RECORDS: UInt32 { let o = _accessor.offset(VTOFFSET.NUM_RECORDS.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  Additional notes

@@ -61,6 +61,10 @@ func (rcv *PPEOrbitalElementRecord) EPOCH_MID() []byte {
 	return nil
 }
 
+func (rcv *PPEOrbitalElementRecord) EpochMid() []byte {
+	return rcv.EPOCH_MID()
+}
+
 /// Midpoint epoch of this record's validity window (ISO 8601 UTC or TDB).
 /// Half-span of the validity window in seconds.
 func (rcv *PPEOrbitalElementRecord) EPOCH_HALF_SPAN() float64 {
@@ -71,9 +75,17 @@ func (rcv *PPEOrbitalElementRecord) EPOCH_HALF_SPAN() float64 {
 	return 0.0
 }
 
+func (rcv *PPEOrbitalElementRecord) EpochHalfSpan() float64 {
+	return rcv.EPOCH_HALF_SPAN()
+}
+
 /// Half-span of the validity window in seconds.
 func (rcv *PPEOrbitalElementRecord) MutateEPOCH_HALF_SPAN(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(6, n)
+}
+
+func (rcv *PPEOrbitalElementRecord) MutateEpochHalfSpan(n float64) bool {
+	return rcv.MutateEPOCH_HALF_SPAN(n)
 }
 
 /// Number of polynomial coefficients per element.
@@ -85,9 +97,17 @@ func (rcv *PPEOrbitalElementRecord) NUM_COEFFICIENTS() uint16 {
 	return 0
 }
 
+func (rcv *PPEOrbitalElementRecord) NumCoefficients() uint16 {
+	return rcv.NUM_COEFFICIENTS()
+}
+
 /// Number of polynomial coefficients per element.
 func (rcv *PPEOrbitalElementRecord) MutateNUM_COEFFICIENTS(n uint16) bool {
 	return rcv._tab.MutateUint16Slot(8, n)
+}
+
+func (rcv *PPEOrbitalElementRecord) MutateNumCoefficients(n uint16) bool {
+	return rcv.MutateNUM_COEFFICIENTS(n)
 }
 
 /// Polynomial basis type for interpreting the coefficient arrays.
@@ -99,9 +119,17 @@ func (rcv *PPEOrbitalElementRecord) BASIS_TYPE() polynomialBasisType {
 	return 0
 }
 
+func (rcv *PPEOrbitalElementRecord) BasisType() polynomialBasisType {
+	return rcv.BASIS_TYPE()
+}
+
 /// Polynomial basis type for interpreting the coefficient arrays.
 func (rcv *PPEOrbitalElementRecord) MutateBASIS_TYPE(n polynomialBasisType) bool {
 	return rcv._tab.MutateInt8Slot(10, int8(n))
+}
+
+func (rcv *PPEOrbitalElementRecord) MutateBasisType(n polynomialBasisType) bool {
+	return rcv.MutateBASIS_TYPE(n)
 }
 
 /// Parameterization of the first orbital element (SMA vs R_PERIAPSIS).
@@ -113,23 +141,39 @@ func (rcv *PPEOrbitalElementRecord) SIZE_SHAPE_TYPE() sizeShapeType {
 	return 0
 }
 
+func (rcv *PPEOrbitalElementRecord) SizeShapeType() sizeShapeType {
+	return rcv.SIZE_SHAPE_TYPE()
+}
+
 /// Parameterization of the first orbital element (SMA vs R_PERIAPSIS).
 func (rcv *PPEOrbitalElementRecord) MutateSIZE_SHAPE_TYPE(n sizeShapeType) bool {
 	return rcv._tab.MutateInt8Slot(12, int8(n))
 }
 
+func (rcv *PPEOrbitalElementRecord) MutateSizeShapeType(n sizeShapeType) bool {
+	return rcv.MutateSIZE_SHAPE_TYPE(n)
+}
+
 /// Anomaly type for the sixth orbital element.
-func (rcv *PPEOrbitalElementRecord) ANOMALY_TYPE() anomalyType {
+func (rcv *PPEOrbitalElementRecord) ANOMALY_TYPE() ppeAnomalyType {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
-		return anomalyType(rcv._tab.GetInt8(o + rcv._tab.Pos))
+		return ppeAnomalyType(rcv._tab.GetInt8(o + rcv._tab.Pos))
 	}
 	return 0
 }
 
+func (rcv *PPEOrbitalElementRecord) AnomalyType() ppeAnomalyType {
+	return rcv.ANOMALY_TYPE()
+}
+
 /// Anomaly type for the sixth orbital element.
-func (rcv *PPEOrbitalElementRecord) MutateANOMALY_TYPE(n anomalyType) bool {
+func (rcv *PPEOrbitalElementRecord) MutateANOMALY_TYPE(n ppeAnomalyType) bool {
 	return rcv._tab.MutateInt8Slot(14, int8(n))
+}
+
+func (rcv *PPEOrbitalElementRecord) MutateAnomalyType(n ppeAnomalyType) bool {
+	return rcv.MutateANOMALY_TYPE(n)
 }
 
 /// Coefficients for SMA or radius of periapsis (km).
@@ -143,12 +187,20 @@ func (rcv *PPEOrbitalElementRecord) COEFF_SIZE_SHAPE(j int) float64 {
 	return 0
 }
 
+func (rcv *PPEOrbitalElementRecord) CoeffSizeShape(j int) float64 {
+	return rcv.COEFF_SIZE_SHAPE(j)
+}
+
 func (rcv *PPEOrbitalElementRecord) COEFF_SIZE_SHAPELength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *PPEOrbitalElementRecord) CoeffSizeShapeLength() int {
+	return rcv.COEFF_SIZE_SHAPELength()
 }
 
 /// Coefficients for SMA or radius of periapsis (km).
@@ -162,6 +214,10 @@ func (rcv *PPEOrbitalElementRecord) MutateCOEFF_SIZE_SHAPE(j int, n float64) boo
 	return false
 }
 
+func (rcv *PPEOrbitalElementRecord) MutateCoeffSizeShape(j int, n float64) bool {
+	return rcv.MutateCOEFF_SIZE_SHAPE(j, n)
+}
+
 /// Coefficients for eccentricity (dimensionless).
 /// Length must equal NUM_COEFFICIENTS.
 func (rcv *PPEOrbitalElementRecord) COEFF_ECCENTRICITY(j int) float64 {
@@ -173,12 +229,20 @@ func (rcv *PPEOrbitalElementRecord) COEFF_ECCENTRICITY(j int) float64 {
 	return 0
 }
 
+func (rcv *PPEOrbitalElementRecord) CoeffEccentricity(j int) float64 {
+	return rcv.COEFF_ECCENTRICITY(j)
+}
+
 func (rcv *PPEOrbitalElementRecord) COEFF_ECCENTRICITYLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *PPEOrbitalElementRecord) CoeffEccentricityLength() int {
+	return rcv.COEFF_ECCENTRICITYLength()
 }
 
 /// Coefficients for eccentricity (dimensionless).
@@ -192,6 +256,10 @@ func (rcv *PPEOrbitalElementRecord) MutateCOEFF_ECCENTRICITY(j int, n float64) b
 	return false
 }
 
+func (rcv *PPEOrbitalElementRecord) MutateCoeffEccentricity(j int, n float64) bool {
+	return rcv.MutateCOEFF_ECCENTRICITY(j, n)
+}
+
 /// Coefficients for inclination (degrees).
 /// Length must equal NUM_COEFFICIENTS.
 func (rcv *PPEOrbitalElementRecord) COEFF_INCLINATION(j int) float64 {
@@ -203,12 +271,20 @@ func (rcv *PPEOrbitalElementRecord) COEFF_INCLINATION(j int) float64 {
 	return 0
 }
 
+func (rcv *PPEOrbitalElementRecord) CoeffInclination(j int) float64 {
+	return rcv.COEFF_INCLINATION(j)
+}
+
 func (rcv *PPEOrbitalElementRecord) COEFF_INCLINATIONLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *PPEOrbitalElementRecord) CoeffInclinationLength() int {
+	return rcv.COEFF_INCLINATIONLength()
 }
 
 /// Coefficients for inclination (degrees).
@@ -222,6 +298,10 @@ func (rcv *PPEOrbitalElementRecord) MutateCOEFF_INCLINATION(j int, n float64) bo
 	return false
 }
 
+func (rcv *PPEOrbitalElementRecord) MutateCoeffInclination(j int, n float64) bool {
+	return rcv.MutateCOEFF_INCLINATION(j, n)
+}
+
 /// Coefficients for RAAN (degrees).
 /// Length must equal NUM_COEFFICIENTS.
 func (rcv *PPEOrbitalElementRecord) COEFF_RAAN(j int) float64 {
@@ -233,12 +313,20 @@ func (rcv *PPEOrbitalElementRecord) COEFF_RAAN(j int) float64 {
 	return 0
 }
 
+func (rcv *PPEOrbitalElementRecord) CoeffRaan(j int) float64 {
+	return rcv.COEFF_RAAN(j)
+}
+
 func (rcv *PPEOrbitalElementRecord) COEFF_RAANLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *PPEOrbitalElementRecord) CoeffRaanLength() int {
+	return rcv.COEFF_RAANLength()
 }
 
 /// Coefficients for RAAN (degrees).
@@ -252,6 +340,10 @@ func (rcv *PPEOrbitalElementRecord) MutateCOEFF_RAAN(j int, n float64) bool {
 	return false
 }
 
+func (rcv *PPEOrbitalElementRecord) MutateCoeffRaan(j int, n float64) bool {
+	return rcv.MutateCOEFF_RAAN(j, n)
+}
+
 /// Coefficients for argument of periapsis (degrees).
 /// Length must equal NUM_COEFFICIENTS.
 func (rcv *PPEOrbitalElementRecord) COEFF_ARG_PERIAPSIS(j int) float64 {
@@ -263,12 +355,20 @@ func (rcv *PPEOrbitalElementRecord) COEFF_ARG_PERIAPSIS(j int) float64 {
 	return 0
 }
 
+func (rcv *PPEOrbitalElementRecord) CoeffArgPeriapsis(j int) float64 {
+	return rcv.COEFF_ARG_PERIAPSIS(j)
+}
+
 func (rcv *PPEOrbitalElementRecord) COEFF_ARG_PERIAPSISLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *PPEOrbitalElementRecord) CoeffArgPeriapsisLength() int {
+	return rcv.COEFF_ARG_PERIAPSISLength()
 }
 
 /// Coefficients for argument of periapsis (degrees).
@@ -282,6 +382,10 @@ func (rcv *PPEOrbitalElementRecord) MutateCOEFF_ARG_PERIAPSIS(j int, n float64) 
 	return false
 }
 
+func (rcv *PPEOrbitalElementRecord) MutateCoeffArgPeriapsis(j int, n float64) bool {
+	return rcv.MutateCOEFF_ARG_PERIAPSIS(j, n)
+}
+
 /// Coefficients for anomaly (degrees). See ANOMALY_TYPE for interpretation.
 /// Length must equal NUM_COEFFICIENTS.
 func (rcv *PPEOrbitalElementRecord) COEFF_ANOMALY(j int) float64 {
@@ -293,12 +397,20 @@ func (rcv *PPEOrbitalElementRecord) COEFF_ANOMALY(j int) float64 {
 	return 0
 }
 
+func (rcv *PPEOrbitalElementRecord) CoeffAnomaly(j int) float64 {
+	return rcv.COEFF_ANOMALY(j)
+}
+
 func (rcv *PPEOrbitalElementRecord) COEFF_ANOMALYLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *PPEOrbitalElementRecord) CoeffAnomalyLength() int {
+	return rcv.COEFF_ANOMALYLength()
 }
 
 /// Coefficients for anomaly (degrees). See ANOMALY_TYPE for interpretation.
@@ -312,6 +424,10 @@ func (rcv *PPEOrbitalElementRecord) MutateCOEFF_ANOMALY(j int, n float64) bool {
 	return false
 }
 
+func (rcv *PPEOrbitalElementRecord) MutateCoeffAnomaly(j int, n float64) bool {
+	return rcv.MutateCOEFF_ANOMALY(j, n)
+}
+
 /// Maximum element fit residual over this segment. Optional quality metric.
 /// Units depend on the element (km for SMA, degrees for angles, dimensionless for ecc).
 func (rcv *PPEOrbitalElementRecord) MAX_ELEMENT_RESIDUAL() float64 {
@@ -322,10 +438,18 @@ func (rcv *PPEOrbitalElementRecord) MAX_ELEMENT_RESIDUAL() float64 {
 	return 0.0
 }
 
+func (rcv *PPEOrbitalElementRecord) MaxElementResidual() float64 {
+	return rcv.MAX_ELEMENT_RESIDUAL()
+}
+
 /// Maximum element fit residual over this segment. Optional quality metric.
 /// Units depend on the element (km for SMA, degrees for angles, dimensionless for ecc).
 func (rcv *PPEOrbitalElementRecord) MutateMAX_ELEMENT_RESIDUAL(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(28, n)
+}
+
+func (rcv *PPEOrbitalElementRecord) MutateMaxElementResidual(n float64) bool {
+	return rcv.MutateMAX_ELEMENT_RESIDUAL(n)
 }
 
 /// RMS element fit residual over this segment. Optional quality metric.
@@ -337,9 +461,17 @@ func (rcv *PPEOrbitalElementRecord) RMS_ELEMENT_RESIDUAL() float64 {
 	return 0.0
 }
 
+func (rcv *PPEOrbitalElementRecord) RmsElementResidual() float64 {
+	return rcv.RMS_ELEMENT_RESIDUAL()
+}
+
 /// RMS element fit residual over this segment. Optional quality metric.
 func (rcv *PPEOrbitalElementRecord) MutateRMS_ELEMENT_RESIDUAL(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(30, n)
+}
+
+func (rcv *PPEOrbitalElementRecord) MutateRmsElementResidual(n float64) bool {
+	return rcv.MutateRMS_ELEMENT_RESIDUAL(n)
 }
 
 func PPEOrbitalElementRecordStart(builder *flatbuffers.Builder) {
@@ -348,62 +480,122 @@ func PPEOrbitalElementRecordStart(builder *flatbuffers.Builder) {
 func PPEOrbitalElementRecordAddEPOCH_MID(builder *flatbuffers.Builder, EPOCH_MID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(EPOCH_MID), 0)
 }
+func PPEOrbitalElementRecordAddEpochMid(builder *flatbuffers.Builder, EPOCH_MID flatbuffers.UOffsetT) {
+	PPEOrbitalElementRecordAddEPOCH_MID(builder, EPOCH_MID)
+}
 func PPEOrbitalElementRecordAddEPOCH_HALF_SPAN(builder *flatbuffers.Builder, EPOCH_HALF_SPAN float64) {
 	builder.PrependFloat64Slot(1, EPOCH_HALF_SPAN, 0.0)
+}
+func PPEOrbitalElementRecordAddEpochHalfSpan(builder *flatbuffers.Builder, EPOCH_HALF_SPAN float64) {
+	PPEOrbitalElementRecordAddEPOCH_HALF_SPAN(builder, EPOCH_HALF_SPAN)
 }
 func PPEOrbitalElementRecordAddNUM_COEFFICIENTS(builder *flatbuffers.Builder, NUM_COEFFICIENTS uint16) {
 	builder.PrependUint16Slot(2, NUM_COEFFICIENTS, 0)
 }
+func PPEOrbitalElementRecordAddNumCoefficients(builder *flatbuffers.Builder, NUM_COEFFICIENTS uint16) {
+	PPEOrbitalElementRecordAddNUM_COEFFICIENTS(builder, NUM_COEFFICIENTS)
+}
 func PPEOrbitalElementRecordAddBASIS_TYPE(builder *flatbuffers.Builder, BASIS_TYPE polynomialBasisType) {
 	builder.PrependInt8Slot(3, int8(BASIS_TYPE), 0)
+}
+func PPEOrbitalElementRecordAddBasisType(builder *flatbuffers.Builder, BASIS_TYPE polynomialBasisType) {
+	PPEOrbitalElementRecordAddBASIS_TYPE(builder, BASIS_TYPE)
 }
 func PPEOrbitalElementRecordAddSIZE_SHAPE_TYPE(builder *flatbuffers.Builder, SIZE_SHAPE_TYPE sizeShapeType) {
 	builder.PrependInt8Slot(4, int8(SIZE_SHAPE_TYPE), 0)
 }
-func PPEOrbitalElementRecordAddANOMALY_TYPE(builder *flatbuffers.Builder, ANOMALY_TYPE anomalyType) {
+func PPEOrbitalElementRecordAddSizeShapeType(builder *flatbuffers.Builder, SIZE_SHAPE_TYPE sizeShapeType) {
+	PPEOrbitalElementRecordAddSIZE_SHAPE_TYPE(builder, SIZE_SHAPE_TYPE)
+}
+func PPEOrbitalElementRecordAddANOMALY_TYPE(builder *flatbuffers.Builder, ANOMALY_TYPE ppeAnomalyType) {
 	builder.PrependInt8Slot(5, int8(ANOMALY_TYPE), 0)
+}
+func PPEOrbitalElementRecordAddAnomalyType(builder *flatbuffers.Builder, ANOMALY_TYPE ppeAnomalyType) {
+	PPEOrbitalElementRecordAddANOMALY_TYPE(builder, ANOMALY_TYPE)
 }
 func PPEOrbitalElementRecordAddCOEFF_SIZE_SHAPE(builder *flatbuffers.Builder, COEFF_SIZE_SHAPE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(COEFF_SIZE_SHAPE), 0)
 }
+func PPEOrbitalElementRecordAddCoeffSizeShape(builder *flatbuffers.Builder, COEFF_SIZE_SHAPE flatbuffers.UOffsetT) {
+	PPEOrbitalElementRecordAddCOEFF_SIZE_SHAPE(builder, COEFF_SIZE_SHAPE)
+}
 func PPEOrbitalElementRecordStartCOEFF_SIZE_SHAPEVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(8, numElems, 8)
+}
+func PPEOrbitalElementRecordStartCoeffSizeShapeVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return PPEOrbitalElementRecordStartCOEFF_SIZE_SHAPEVector(builder, numElems)
 }
 func PPEOrbitalElementRecordAddCOEFF_ECCENTRICITY(builder *flatbuffers.Builder, COEFF_ECCENTRICITY flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(COEFF_ECCENTRICITY), 0)
 }
+func PPEOrbitalElementRecordAddCoeffEccentricity(builder *flatbuffers.Builder, COEFF_ECCENTRICITY flatbuffers.UOffsetT) {
+	PPEOrbitalElementRecordAddCOEFF_ECCENTRICITY(builder, COEFF_ECCENTRICITY)
+}
 func PPEOrbitalElementRecordStartCOEFF_ECCENTRICITYVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(8, numElems, 8)
+}
+func PPEOrbitalElementRecordStartCoeffEccentricityVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return PPEOrbitalElementRecordStartCOEFF_ECCENTRICITYVector(builder, numElems)
 }
 func PPEOrbitalElementRecordAddCOEFF_INCLINATION(builder *flatbuffers.Builder, COEFF_INCLINATION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(COEFF_INCLINATION), 0)
 }
+func PPEOrbitalElementRecordAddCoeffInclination(builder *flatbuffers.Builder, COEFF_INCLINATION flatbuffers.UOffsetT) {
+	PPEOrbitalElementRecordAddCOEFF_INCLINATION(builder, COEFF_INCLINATION)
+}
 func PPEOrbitalElementRecordStartCOEFF_INCLINATIONVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(8, numElems, 8)
+}
+func PPEOrbitalElementRecordStartCoeffInclinationVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return PPEOrbitalElementRecordStartCOEFF_INCLINATIONVector(builder, numElems)
 }
 func PPEOrbitalElementRecordAddCOEFF_RAAN(builder *flatbuffers.Builder, COEFF_RAAN flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(COEFF_RAAN), 0)
 }
+func PPEOrbitalElementRecordAddCoeffRaan(builder *flatbuffers.Builder, COEFF_RAAN flatbuffers.UOffsetT) {
+	PPEOrbitalElementRecordAddCOEFF_RAAN(builder, COEFF_RAAN)
+}
 func PPEOrbitalElementRecordStartCOEFF_RAANVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(8, numElems, 8)
+}
+func PPEOrbitalElementRecordStartCoeffRaanVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return PPEOrbitalElementRecordStartCOEFF_RAANVector(builder, numElems)
 }
 func PPEOrbitalElementRecordAddCOEFF_ARG_PERIAPSIS(builder *flatbuffers.Builder, COEFF_ARG_PERIAPSIS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(COEFF_ARG_PERIAPSIS), 0)
 }
+func PPEOrbitalElementRecordAddCoeffArgPeriapsis(builder *flatbuffers.Builder, COEFF_ARG_PERIAPSIS flatbuffers.UOffsetT) {
+	PPEOrbitalElementRecordAddCOEFF_ARG_PERIAPSIS(builder, COEFF_ARG_PERIAPSIS)
+}
 func PPEOrbitalElementRecordStartCOEFF_ARG_PERIAPSISVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(8, numElems, 8)
+}
+func PPEOrbitalElementRecordStartCoeffArgPeriapsisVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return PPEOrbitalElementRecordStartCOEFF_ARG_PERIAPSISVector(builder, numElems)
 }
 func PPEOrbitalElementRecordAddCOEFF_ANOMALY(builder *flatbuffers.Builder, COEFF_ANOMALY flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(COEFF_ANOMALY), 0)
 }
+func PPEOrbitalElementRecordAddCoeffAnomaly(builder *flatbuffers.Builder, COEFF_ANOMALY flatbuffers.UOffsetT) {
+	PPEOrbitalElementRecordAddCOEFF_ANOMALY(builder, COEFF_ANOMALY)
+}
 func PPEOrbitalElementRecordStartCOEFF_ANOMALYVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(8, numElems, 8)
+}
+func PPEOrbitalElementRecordStartCoeffAnomalyVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return PPEOrbitalElementRecordStartCOEFF_ANOMALYVector(builder, numElems)
 }
 func PPEOrbitalElementRecordAddMAX_ELEMENT_RESIDUAL(builder *flatbuffers.Builder, MAX_ELEMENT_RESIDUAL float64) {
 	builder.PrependFloat64Slot(12, MAX_ELEMENT_RESIDUAL, 0.0)
 }
+func PPEOrbitalElementRecordAddMaxElementResidual(builder *flatbuffers.Builder, MAX_ELEMENT_RESIDUAL float64) {
+	PPEOrbitalElementRecordAddMAX_ELEMENT_RESIDUAL(builder, MAX_ELEMENT_RESIDUAL)
+}
 func PPEOrbitalElementRecordAddRMS_ELEMENT_RESIDUAL(builder *flatbuffers.Builder, RMS_ELEMENT_RESIDUAL float64) {
 	builder.PrependFloat64Slot(13, RMS_ELEMENT_RESIDUAL, 0.0)
+}
+func PPEOrbitalElementRecordAddRmsElementResidual(builder *flatbuffers.Builder, RMS_ELEMENT_RESIDUAL float64) {
+	PPEOrbitalElementRecordAddRMS_ELEMENT_RESIDUAL(builder, RMS_ELEMENT_RESIDUAL)
 }
 func PPEOrbitalElementRecordEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

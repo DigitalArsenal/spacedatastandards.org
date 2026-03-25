@@ -32,7 +32,7 @@ class Band : Table() {
     /**
      * Name of the band
      */
-    val NAME : String?
+    val name : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,13 +41,13 @@ class Band : Table() {
                 null
             }
         }
-    val NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val nameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun nameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Frequency range of the band
      */
-    val FREQUENCY_RANGE : FrequencyRange? get() = FREQUENCY_RANGE(FrequencyRange())
-    fun FREQUENCY_RANGE(obj: FrequencyRange) : FrequencyRange? {
+    val frequencyRange : FrequencyRange? get() = frequencyRange(FrequencyRange())
+    fun frequencyRange(obj: FrequencyRange) : FrequencyRange? {
         val o = __offset(6)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -56,21 +56,21 @@ class Band : Table() {
         }
     }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsBand(_bb: ByteBuffer): Band = getRootAsBand(_bb, Band())
         fun getRootAsBand(_bb: ByteBuffer, obj: Band): Band {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createBand(builder: FlatBufferBuilder, NAMEOffset: Int, FREQUENCY_RANGEOffset: Int) : Int {
+        fun createBand(builder: FlatBufferBuilder, nameOffset: Int, frequencyRangeOffset: Int) : Int {
             builder.startTable(2)
-            addFREQUENCY_RANGE(builder, FREQUENCY_RANGEOffset)
-            addNAME(builder, NAMEOffset)
+            addFREQUENCYRANGE(builder, frequencyRangeOffset)
+            addNAME(builder, nameOffset)
             return endBand(builder)
         }
         fun startBand(builder: FlatBufferBuilder) = builder.startTable(2)
-        fun addNAME(builder: FlatBufferBuilder, NAME: Int) = builder.addOffset(0, NAME, 0)
-        fun addFREQUENCY_RANGE(builder: FlatBufferBuilder, FREQUENCY_RANGE: Int) = builder.addOffset(1, FREQUENCY_RANGE, 0)
+        fun addNAME(builder: FlatBufferBuilder, name: Int) = builder.addOffset(0, name, 0)
+        fun addFREQUENCYRANGE(builder: FlatBufferBuilder, frequencyRange: Int) = builder.addOffset(1, frequencyRange, 0)
         fun endBand(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

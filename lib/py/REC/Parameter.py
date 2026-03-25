@@ -2,4 +2,234 @@
 
 # namespace: 
 
-# NOTE Parameter.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Parameter definition
+class Parameter(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = Parameter()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsParameter(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def ParameterBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x58\x54\x43", size_prefixed=size_prefixed)
+
+    # Parameter
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Parameter name
+    # Parameter
+    def NAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Reference to parameter type
+    # Parameter
+    def PARAMETER_TYPE_REF(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Short description
+    # Parameter
+    def SHORT_DESCRIPTION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Long description
+    # Parameter
+    def LONG_DESCRIPTION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Parameter properties
+    # Parameter
+    def PROPERTIES(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from ParameterProperties import ParameterProperties
+            obj = ParameterProperties()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Physical address mapping
+    # Parameter
+    def PHYSICAL_ADDRESS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Initial/default value
+    # Parameter
+    def INITIAL_VALUE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+def ParameterStart(builder):
+    builder.StartObject(7)
+
+def Start(builder):
+    ParameterStart(builder)
+
+def ParameterAddNAME(builder, NAME):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(NAME), 0)
+
+def AddNAME(builder, NAME):
+    ParameterAddNAME(builder, NAME)
+
+def ParameterAddPARAMETER_TYPE_REF(builder, PARAMETER_TYPE_REF):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(PARAMETER_TYPE_REF), 0)
+
+def AddPARAMETER_TYPE_REF(builder, PARAMETER_TYPE_REF):
+    ParameterAddPARAMETER_TYPE_REF(builder, PARAMETER_TYPE_REF)
+
+def ParameterAddSHORT_DESCRIPTION(builder, SHORT_DESCRIPTION):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(SHORT_DESCRIPTION), 0)
+
+def AddSHORT_DESCRIPTION(builder, SHORT_DESCRIPTION):
+    ParameterAddSHORT_DESCRIPTION(builder, SHORT_DESCRIPTION)
+
+def ParameterAddLONG_DESCRIPTION(builder, LONG_DESCRIPTION):
+    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(LONG_DESCRIPTION), 0)
+
+def AddLONG_DESCRIPTION(builder, LONG_DESCRIPTION):
+    ParameterAddLONG_DESCRIPTION(builder, LONG_DESCRIPTION)
+
+def ParameterAddPROPERTIES(builder, PROPERTIES):
+    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(PROPERTIES), 0)
+
+def AddPROPERTIES(builder, PROPERTIES):
+    ParameterAddPROPERTIES(builder, PROPERTIES)
+
+def ParameterAddPHYSICAL_ADDRESS(builder, PHYSICAL_ADDRESS):
+    builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(PHYSICAL_ADDRESS), 0)
+
+def AddPHYSICAL_ADDRESS(builder, PHYSICAL_ADDRESS):
+    ParameterAddPHYSICAL_ADDRESS(builder, PHYSICAL_ADDRESS)
+
+def ParameterAddINITIAL_VALUE(builder, INITIAL_VALUE):
+    builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(INITIAL_VALUE), 0)
+
+def AddINITIAL_VALUE(builder, INITIAL_VALUE):
+    ParameterAddINITIAL_VALUE(builder, INITIAL_VALUE)
+
+def ParameterEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return ParameterEnd(builder)
+
+import ParameterProperties
+try:
+    from typing import Optional
+except:
+    pass
+
+class ParameterT(object):
+
+    # ParameterT
+    def __init__(
+        self,
+        NAME = None,
+        PARAMETER_TYPE_REF = None,
+        SHORT_DESCRIPTION = None,
+        LONG_DESCRIPTION = None,
+        PROPERTIES = None,
+        PHYSICAL_ADDRESS = None,
+        INITIAL_VALUE = None,
+    ):
+        self.NAME = NAME  # type: Optional[str]
+        self.PARAMETER_TYPE_REF = PARAMETER_TYPE_REF  # type: Optional[str]
+        self.SHORT_DESCRIPTION = SHORT_DESCRIPTION  # type: Optional[str]
+        self.LONG_DESCRIPTION = LONG_DESCRIPTION  # type: Optional[str]
+        self.PROPERTIES = PROPERTIES  # type: Optional[ParameterProperties.ParameterPropertiesT]
+        self.PHYSICAL_ADDRESS = PHYSICAL_ADDRESS  # type: Optional[str]
+        self.INITIAL_VALUE = INITIAL_VALUE  # type: Optional[str]
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpParameter = Parameter()
+        tmpParameter.Init(buf, pos)
+        return cls.InitFromObj(tmpParameter)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpParameter):
+        x = ParameterT()
+        x._UnPack(tmpParameter)
+        return x
+
+    # ParameterT
+    def _UnPack(self, Parameter):
+        if Parameter is None:
+            return
+        self.NAME = Parameter.NAME()
+        self.PARAMETER_TYPE_REF = Parameter.PARAMETER_TYPE_REF()
+        self.SHORT_DESCRIPTION = Parameter.SHORT_DESCRIPTION()
+        self.LONG_DESCRIPTION = Parameter.LONG_DESCRIPTION()
+        if Parameter.PROPERTIES() is not None:
+            self.PROPERTIES = ParameterProperties.ParameterPropertiesT.InitFromObj(Parameter.PROPERTIES())
+        self.PHYSICAL_ADDRESS = Parameter.PHYSICAL_ADDRESS()
+        self.INITIAL_VALUE = Parameter.INITIAL_VALUE()
+
+    # ParameterT
+    def Pack(self, builder):
+        if self.NAME is not None:
+            NAME = builder.CreateString(self.NAME)
+        if self.PARAMETER_TYPE_REF is not None:
+            PARAMETER_TYPE_REF = builder.CreateString(self.PARAMETER_TYPE_REF)
+        if self.SHORT_DESCRIPTION is not None:
+            SHORT_DESCRIPTION = builder.CreateString(self.SHORT_DESCRIPTION)
+        if self.LONG_DESCRIPTION is not None:
+            LONG_DESCRIPTION = builder.CreateString(self.LONG_DESCRIPTION)
+        if self.PROPERTIES is not None:
+            PROPERTIES = self.PROPERTIES.Pack(builder)
+        if self.PHYSICAL_ADDRESS is not None:
+            PHYSICAL_ADDRESS = builder.CreateString(self.PHYSICAL_ADDRESS)
+        if self.INITIAL_VALUE is not None:
+            INITIAL_VALUE = builder.CreateString(self.INITIAL_VALUE)
+        ParameterStart(builder)
+        if self.NAME is not None:
+            ParameterAddNAME(builder, NAME)
+        if self.PARAMETER_TYPE_REF is not None:
+            ParameterAddPARAMETER_TYPE_REF(builder, PARAMETER_TYPE_REF)
+        if self.SHORT_DESCRIPTION is not None:
+            ParameterAddSHORT_DESCRIPTION(builder, SHORT_DESCRIPTION)
+        if self.LONG_DESCRIPTION is not None:
+            ParameterAddLONG_DESCRIPTION(builder, LONG_DESCRIPTION)
+        if self.PROPERTIES is not None:
+            ParameterAddPROPERTIES(builder, PROPERTIES)
+        if self.PHYSICAL_ADDRESS is not None:
+            ParameterAddPHYSICAL_ADDRESS(builder, PHYSICAL_ADDRESS)
+        if self.INITIAL_VALUE is not None:
+            ParameterAddINITIAL_VALUE(builder, INITIAL_VALUE)
+        Parameter = ParameterEnd(builder)
+        return Parameter

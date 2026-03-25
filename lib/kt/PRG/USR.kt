@@ -26,7 +26,7 @@ class USR : Table() {
         __init(_i, _bb)
         return this
     }
-    val ID : String?
+    val id : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -35,9 +35,9 @@ class USR : Table() {
                 null
             }
         }
-    val IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
-    fun MESSAGE_TYPES(j: Int) : String? {
+    val idAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun idInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
+    fun messageTypes(j: Int) : String? {
         val o = __offset(6)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
@@ -45,26 +45,26 @@ class USR : Table() {
             null
         }
     }
-    val MESSAGE_TYPESLength : Int
+    val messageTypesLength : Int
         get() {
             val o = __offset(6); return if (o != 0) __vector_len(o) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsUSR(_bb: ByteBuffer): USR = getRootAsUSR(_bb, USR())
         fun getRootAsUSR(_bb: ByteBuffer, obj: USR): USR {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createUSR(builder: FlatBufferBuilder, IDOffset: Int, MESSAGE_TYPESOffset: Int) : Int {
+        fun createUSR(builder: FlatBufferBuilder, idOffset: Int, messageTypesOffset: Int) : Int {
             builder.startTable(2)
-            addMESSAGE_TYPES(builder, MESSAGE_TYPESOffset)
-            addID(builder, IDOffset)
+            addMESSAGETYPES(builder, messageTypesOffset)
+            addID(builder, idOffset)
             return endUSR(builder)
         }
         fun startUSR(builder: FlatBufferBuilder) = builder.startTable(2)
-        fun addID(builder: FlatBufferBuilder, ID: Int) = builder.addOffset(0, ID, 0)
-        fun addMESSAGE_TYPES(builder: FlatBufferBuilder, MESSAGE_TYPES: Int) = builder.addOffset(1, MESSAGE_TYPES, 0)
+        fun addID(builder: FlatBufferBuilder, id: Int) = builder.addOffset(0, id, 0)
+        fun addMESSAGETYPES(builder: FlatBufferBuilder, messageTypes: Int) = builder.addOffset(1, messageTypes, 0)
         fun createMessageTypesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {

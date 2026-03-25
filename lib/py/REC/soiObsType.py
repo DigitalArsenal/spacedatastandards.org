@@ -2,4 +2,7 @@
 
 # namespace: 
 
-# NOTE soiObsType.py does not declare any structs or enums
+class soiObsType(object):
+    OPTICAL = 0
+    RADAR = 1
+    COMBINED = 2

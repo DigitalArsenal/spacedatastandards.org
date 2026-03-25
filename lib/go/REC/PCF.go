@@ -62,8 +62,16 @@ func (rcv *PCF) STEP_SIZE() float64 {
 	return 0.0
 }
 
+func (rcv *PCF) StepSize() float64 {
+	return rcv.STEP_SIZE()
+}
+
 func (rcv *PCF) MutateSTEP_SIZE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(4, n)
+}
+
+func (rcv *PCF) MutateStepSize(n float64) bool {
+	return rcv.MutateSTEP_SIZE(n)
 }
 
 func (rcv *PCF) TOLERANCE() float64 {
@@ -74,8 +82,16 @@ func (rcv *PCF) TOLERANCE() float64 {
 	return 0.0
 }
 
+func (rcv *PCF) Tolerance() float64 {
+	return rcv.TOLERANCE()
+}
+
 func (rcv *PCF) MutateTOLERANCE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(6, n)
+}
+
+func (rcv *PCF) MutateTolerance(n float64) bool {
+	return rcv.MutateTOLERANCE(n)
 }
 
 func (rcv *PCF) MIN_STEP() float64 {
@@ -86,8 +102,16 @@ func (rcv *PCF) MIN_STEP() float64 {
 	return 0.0
 }
 
+func (rcv *PCF) MinStep() float64 {
+	return rcv.MIN_STEP()
+}
+
 func (rcv *PCF) MutateMIN_STEP(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(8, n)
+}
+
+func (rcv *PCF) MutateMinStep(n float64) bool {
+	return rcv.MutateMIN_STEP(n)
 }
 
 func (rcv *PCF) MAX_STEP() float64 {
@@ -98,8 +122,16 @@ func (rcv *PCF) MAX_STEP() float64 {
 	return 0.0
 }
 
+func (rcv *PCF) MaxStep() float64 {
+	return rcv.MAX_STEP()
+}
+
 func (rcv *PCF) MutateMAX_STEP(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(10, n)
+}
+
+func (rcv *PCF) MutateMaxStep(n float64) bool {
+	return rcv.MutateMAX_STEP(n)
 }
 
 func (rcv *PCF) MAX_ITERATIONS() uint32 {
@@ -110,8 +142,16 @@ func (rcv *PCF) MAX_ITERATIONS() uint32 {
 	return 0
 }
 
+func (rcv *PCF) MaxIterations() uint32 {
+	return rcv.MAX_ITERATIONS()
+}
+
 func (rcv *PCF) MutateMAX_ITERATIONS(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(12, n)
+}
+
+func (rcv *PCF) MutateMaxIterations(n uint32) bool {
+	return rcv.MutateMAX_ITERATIONS(n)
 }
 
 func (rcv *PCF) GRAVITY_DEGREE() uint16 {
@@ -122,8 +162,16 @@ func (rcv *PCF) GRAVITY_DEGREE() uint16 {
 	return 0
 }
 
+func (rcv *PCF) GravityDegree() uint16 {
+	return rcv.GRAVITY_DEGREE()
+}
+
 func (rcv *PCF) MutateGRAVITY_DEGREE(n uint16) bool {
 	return rcv._tab.MutateUint16Slot(14, n)
+}
+
+func (rcv *PCF) MutateGravityDegree(n uint16) bool {
+	return rcv.MutateGRAVITY_DEGREE(n)
 }
 
 func (rcv *PCF) GRAVITY_ORDER() uint16 {
@@ -134,8 +182,16 @@ func (rcv *PCF) GRAVITY_ORDER() uint16 {
 	return 0
 }
 
+func (rcv *PCF) GravityOrder() uint16 {
+	return rcv.GRAVITY_ORDER()
+}
+
 func (rcv *PCF) MutateGRAVITY_ORDER(n uint16) bool {
 	return rcv._tab.MutateUint16Slot(16, n)
+}
+
+func (rcv *PCF) MutateGravityOrder(n uint16) bool {
+	return rcv.MutateGRAVITY_ORDER(n)
 }
 
 func (rcv *PCF) INTEGRATOR() byte {
@@ -146,8 +202,16 @@ func (rcv *PCF) INTEGRATOR() byte {
 	return 0
 }
 
+func (rcv *PCF) Integrator() byte {
+	return rcv.INTEGRATOR()
+}
+
 func (rcv *PCF) MutateINTEGRATOR(n byte) bool {
 	return rcv._tab.MutateByteSlot(18, n)
+}
+
+func (rcv *PCF) MutateIntegrator(n byte) bool {
+	return rcv.MutateINTEGRATOR(n)
 }
 
 func (rcv *PCF) OUTPUT_FRAME() byte {
@@ -158,8 +222,16 @@ func (rcv *PCF) OUTPUT_FRAME() byte {
 	return 0
 }
 
+func (rcv *PCF) OutputFrame() byte {
+	return rcv.OUTPUT_FRAME()
+}
+
 func (rcv *PCF) MutateOUTPUT_FRAME(n byte) bool {
 	return rcv._tab.MutateByteSlot(20, n)
+}
+
+func (rcv *PCF) MutateOutputFrame(n byte) bool {
+	return rcv.MutateOUTPUT_FRAME(n)
 }
 
 func (rcv *PCF) FORCE_FLAGS() uint16 {
@@ -170,8 +242,16 @@ func (rcv *PCF) FORCE_FLAGS() uint16 {
 	return 0
 }
 
+func (rcv *PCF) ForceFlags() uint16 {
+	return rcv.FORCE_FLAGS()
+}
+
 func (rcv *PCF) MutateFORCE_FLAGS(n uint16) bool {
 	return rcv._tab.MutateUint16Slot(22, n)
+}
+
+func (rcv *PCF) MutateForceFlags(n uint16) bool {
+	return rcv.MutateFORCE_FLAGS(n)
 }
 
 func (rcv *PCF) DRAG_COEFFICIENT() float32 {
@@ -182,8 +262,16 @@ func (rcv *PCF) DRAG_COEFFICIENT() float32 {
 	return 0.0
 }
 
+func (rcv *PCF) DragCoefficient() float32 {
+	return rcv.DRAG_COEFFICIENT()
+}
+
 func (rcv *PCF) MutateDRAG_COEFFICIENT(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(24, n)
+}
+
+func (rcv *PCF) MutateDragCoefficient(n float32) bool {
+	return rcv.MutateDRAG_COEFFICIENT(n)
 }
 
 func (rcv *PCF) SRP_COEFFICIENT() float32 {
@@ -194,8 +282,16 @@ func (rcv *PCF) SRP_COEFFICIENT() float32 {
 	return 0.0
 }
 
+func (rcv *PCF) SrpCoefficient() float32 {
+	return rcv.SRP_COEFFICIENT()
+}
+
 func (rcv *PCF) MutateSRP_COEFFICIENT(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(26, n)
+}
+
+func (rcv *PCF) MutateSrpCoefficient(n float32) bool {
+	return rcv.MutateSRP_COEFFICIENT(n)
 }
 
 func (rcv *PCF) AREA_MASS_RATIO() float32 {
@@ -206,8 +302,16 @@ func (rcv *PCF) AREA_MASS_RATIO() float32 {
 	return 0.0
 }
 
+func (rcv *PCF) AreaMassRatio() float32 {
+	return rcv.AREA_MASS_RATIO()
+}
+
 func (rcv *PCF) MutateAREA_MASS_RATIO(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(28, n)
+}
+
+func (rcv *PCF) MutateAreaMassRatio(n float32) bool {
+	return rcv.MutateAREA_MASS_RATIO(n)
 }
 
 func (rcv *PCF) RESERVED(j int) byte {
@@ -219,6 +323,10 @@ func (rcv *PCF) RESERVED(j int) byte {
 	return 0
 }
 
+func (rcv *PCF) Reserved(j int) byte {
+	return rcv.RESERVED(j)
+}
+
 func (rcv *PCF) RESERVEDLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
 	if o != 0 {
@@ -227,12 +335,20 @@ func (rcv *PCF) RESERVEDLength() int {
 	return 0
 }
 
+func (rcv *PCF) ReservedLength() int {
+	return rcv.RESERVEDLength()
+}
+
 func (rcv *PCF) RESERVEDBytes() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *PCF) ReservedBytes() []byte {
+	return rcv.RESERVEDBytes()
 }
 
 func (rcv *PCF) MutateRESERVED(j int, n byte) bool {
@@ -244,53 +360,102 @@ func (rcv *PCF) MutateRESERVED(j int, n byte) bool {
 	return false
 }
 
+func (rcv *PCF) MutateReserved(j int, n byte) bool {
+	return rcv.MutateRESERVED(j, n)
+}
+
 func PCFStart(builder *flatbuffers.Builder) {
 	builder.StartObject(14)
 }
 func PCFAddSTEP_SIZE(builder *flatbuffers.Builder, STEP_SIZE float64) {
 	builder.PrependFloat64Slot(0, STEP_SIZE, 0.0)
 }
+func PCFAddStepSize(builder *flatbuffers.Builder, STEP_SIZE float64) {
+	PCFAddSTEP_SIZE(builder, STEP_SIZE)
+}
 func PCFAddTOLERANCE(builder *flatbuffers.Builder, TOLERANCE float64) {
 	builder.PrependFloat64Slot(1, TOLERANCE, 0.0)
+}
+func PCFAddTolerance(builder *flatbuffers.Builder, TOLERANCE float64) {
+	PCFAddTOLERANCE(builder, TOLERANCE)
 }
 func PCFAddMIN_STEP(builder *flatbuffers.Builder, MIN_STEP float64) {
 	builder.PrependFloat64Slot(2, MIN_STEP, 0.0)
 }
+func PCFAddMinStep(builder *flatbuffers.Builder, MIN_STEP float64) {
+	PCFAddMIN_STEP(builder, MIN_STEP)
+}
 func PCFAddMAX_STEP(builder *flatbuffers.Builder, MAX_STEP float64) {
 	builder.PrependFloat64Slot(3, MAX_STEP, 0.0)
+}
+func PCFAddMaxStep(builder *flatbuffers.Builder, MAX_STEP float64) {
+	PCFAddMAX_STEP(builder, MAX_STEP)
 }
 func PCFAddMAX_ITERATIONS(builder *flatbuffers.Builder, MAX_ITERATIONS uint32) {
 	builder.PrependUint32Slot(4, MAX_ITERATIONS, 0)
 }
+func PCFAddMaxIterations(builder *flatbuffers.Builder, MAX_ITERATIONS uint32) {
+	PCFAddMAX_ITERATIONS(builder, MAX_ITERATIONS)
+}
 func PCFAddGRAVITY_DEGREE(builder *flatbuffers.Builder, GRAVITY_DEGREE uint16) {
 	builder.PrependUint16Slot(5, GRAVITY_DEGREE, 0)
+}
+func PCFAddGravityDegree(builder *flatbuffers.Builder, GRAVITY_DEGREE uint16) {
+	PCFAddGRAVITY_DEGREE(builder, GRAVITY_DEGREE)
 }
 func PCFAddGRAVITY_ORDER(builder *flatbuffers.Builder, GRAVITY_ORDER uint16) {
 	builder.PrependUint16Slot(6, GRAVITY_ORDER, 0)
 }
+func PCFAddGravityOrder(builder *flatbuffers.Builder, GRAVITY_ORDER uint16) {
+	PCFAddGRAVITY_ORDER(builder, GRAVITY_ORDER)
+}
 func PCFAddINTEGRATOR(builder *flatbuffers.Builder, INTEGRATOR byte) {
 	builder.PrependByteSlot(7, INTEGRATOR, 0)
+}
+func PCFAddIntegrator(builder *flatbuffers.Builder, INTEGRATOR byte) {
+	PCFAddINTEGRATOR(builder, INTEGRATOR)
 }
 func PCFAddOUTPUT_FRAME(builder *flatbuffers.Builder, OUTPUT_FRAME byte) {
 	builder.PrependByteSlot(8, OUTPUT_FRAME, 0)
 }
+func PCFAddOutputFrame(builder *flatbuffers.Builder, OUTPUT_FRAME byte) {
+	PCFAddOUTPUT_FRAME(builder, OUTPUT_FRAME)
+}
 func PCFAddFORCE_FLAGS(builder *flatbuffers.Builder, FORCE_FLAGS uint16) {
 	builder.PrependUint16Slot(9, FORCE_FLAGS, 0)
+}
+func PCFAddForceFlags(builder *flatbuffers.Builder, FORCE_FLAGS uint16) {
+	PCFAddFORCE_FLAGS(builder, FORCE_FLAGS)
 }
 func PCFAddDRAG_COEFFICIENT(builder *flatbuffers.Builder, DRAG_COEFFICIENT float32) {
 	builder.PrependFloat32Slot(10, DRAG_COEFFICIENT, 0.0)
 }
+func PCFAddDragCoefficient(builder *flatbuffers.Builder, DRAG_COEFFICIENT float32) {
+	PCFAddDRAG_COEFFICIENT(builder, DRAG_COEFFICIENT)
+}
 func PCFAddSRP_COEFFICIENT(builder *flatbuffers.Builder, SRP_COEFFICIENT float32) {
 	builder.PrependFloat32Slot(11, SRP_COEFFICIENT, 0.0)
+}
+func PCFAddSrpCoefficient(builder *flatbuffers.Builder, SRP_COEFFICIENT float32) {
+	PCFAddSRP_COEFFICIENT(builder, SRP_COEFFICIENT)
 }
 func PCFAddAREA_MASS_RATIO(builder *flatbuffers.Builder, AREA_MASS_RATIO float32) {
 	builder.PrependFloat32Slot(12, AREA_MASS_RATIO, 0.0)
 }
+func PCFAddAreaMassRatio(builder *flatbuffers.Builder, AREA_MASS_RATIO float32) {
+	PCFAddAREA_MASS_RATIO(builder, AREA_MASS_RATIO)
+}
 func PCFAddRESERVED(builder *flatbuffers.Builder, RESERVED flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(13, flatbuffers.UOffsetT(RESERVED), 0)
 }
+func PCFAddReserved(builder *flatbuffers.Builder, RESERVED flatbuffers.UOffsetT) {
+	PCFAddRESERVED(builder, RESERVED)
+}
 func PCFStartRESERVEDVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(1, numElems, 1)
+}
+func PCFStartReservedVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return PCFStartRESERVEDVector(builder, numElems)
 }
 func PCFEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

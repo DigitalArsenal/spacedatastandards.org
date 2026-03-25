@@ -2,305 +2,554 @@
 // swiftlint:disable all
 // swiftformat:disable all
 
+#if canImport(Common)
+import Common
+#endif
+
 import FlatBuffers
 
-///  Enum for the type of site
-public enum SiteType: Int8, Enum, Verifiable {
+///  Different types of polarization in EMT
+public enum PolarizationType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
-  case launchSite = 0
-  case observationStation = 1
-  case hobbyistObserver = 2
-  case researchFacility = 3
-  case satelliteGroundStation = 4
-  case spaceport = 5
-  case militaryBase = 6
-  case weatherStation = 7
-  case astronomicalObservatory = 8
-  case educationalInstitute = 9
-  case communicationHub = 10
-  case powerPlant = 11
-  case industrialComplex = 12
-  case transportationHub = 13
-  case urbanArea = 14
-  case nationalPark = 15
-  case historicalSite = 16
-  case other = 17
+  case linear = 0
+  case circular = 1
+  case elliptical = 2
+  case unpolarized = 3
 
-  public static var max: SiteType { return .other }
-  public static var min: SiteType { return .launchSite }
+  public static var max: PolarizationType { return .unpolarized }
+  public static var min: PolarizationType { return .linear }
 }
 
 
-///  Geometry table with information about geometric properties
-public struct Geometry: FlatBufferObject, Verifiable {
+///  Simple polarization types
+public enum SimplePolarization: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  case vertical = 0
+  case horizontal = 1
+  case leftHandCircular = 2
+  case rightHandCircular = 3
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  public static var max: SimplePolarization { return .rightHandCircular }
+  public static var min: SimplePolarization { return .vertical }
+}
+
+
+///  Enum for the mode of data (real, simulated, synthetic)
+public enum DataMode: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  ///  Data collected during an exercise scenario.
+  case exercise = 0
+  ///  Data collected from real-world observations.
+  case real = 1
+  ///  Data generated through simulation.
+  case simulated = 2
+  ///  Data collected for testing purposes.
+  case test = 3
+
+  public static var max: DataMode { return .test }
+  public static var min: DataMode { return .exercise }
+}
+
+
+public enum DeviceType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  ///  Basic or undefined sensor type
+  case unknown = 0
+  ///  General optical sensors
+  case optical = 1
+  ///  Detects infrared radiation
+  case infraredSensor = 2
+  ///  Sensitive to ultraviolet light
+  case ultravioletSensor = 3
+  ///  For X-ray detection
+  case xRaySensor = 4
+  ///  For gamma-ray detection
+  case gammaRaySensor = 5
+  ///  Basic radar systems
+  case radar = 6
+  ///  Advanced radar with phased array technology
+  case phasedArrayRadar = 7
+  ///  For high-resolution imaging
+  case syntheticApertureRadar = 8
+  ///  For astronomical observations using bistatic setup
+  case bistaticRadioTelescope = 9
+  ///  For radio astronomy
+  case radioTelescope = 10
+  ///  For atmospheric studies
+  case atmosphericSensor = 11
+  ///  For observing space weather phenomena
+  case spaceWeatherSensor = 12
+  ///  General environmental monitoring
+  case environmentalSensor = 13
+  ///  For measuring seismic activities
+  case seismicSensor = 14
+  ///  For gravity measurements
+  case gravimetricSensor = 15
+  ///  For magnetic field detection
+  case magneticSensor = 16
+  ///  For electromagnetic field analysis
+  case electromagneticSensor = 17
+  ///  For temperature and heat detection
+  case thermalSensor = 18
+  ///  For detecting chemicals and substances
+  case chemicalSensor = 19
+  ///  For biological research and detection
+  case biologicalSensor = 20
+  ///  For detecting ionizing radiation
+  case radiationSensor = 21
+  ///  For detecting subatomic particles
+  case particleDetector = 22
+  ///  Light Detection and Ranging
+  case lidar = 23
+  ///  Sound Navigation and Ranging
+  case sonar = 24
+  ///  General telescopes for astronomical observations
+  case telescope = 25
+  ///  For spectral analysis
+  case spectroscopicSensor = 26
+  ///  For measuring light intensity
+  case photometricSensor = 27
+  ///  For analyzing polarization of light
+  case polarimetricSensor = 28
+  ///  For detailed imaging using interference
+  case interferometricSensor = 29
+  ///  Capturing image data at multiple wavelengths
+  case multispectralSensor = 30
+  ///  Advanced imaging across many spectral bands
+  case hyperspectralSensor = 31
+  ///  For Global Positioning System reception
+  case gpsReceiver = 32
+  ///  Standard radio communication device
+  case radioCommunications = 33
+  ///  Advanced laser communication system
+  case laserCommunications = 34
+  ///  Satellite communication system
+  case satelliteCommunications = 35
+  ///  Device for laser-based experiments and measurements
+  case laserInstrument = 36
+  ///  Radio frequency analysis and measurement device
+  case rfAnalyzer = 37
+  ///  Device for ionospheric research
+  case ionosphericSensor = 38
+  ///  Device for laser-based imaging
+  case laserImaging = 39
+  ///  Advanced optical telescope
+  case opticalTelescope = 40
+  ///  Device for high-resolution optical observations
+  case highResolutionOptical = 41
+  case radio = 42
+  ///  Microwave communication device
+  case microwaveTransmitter = 43
+  ///  Device for radio frequency monitoring
+  case rfMonitor = 44
+  ///  High-frequency radio communication device
+  case hfRadioCommunications = 45
+
+  public static var max: DeviceType { return .hfRadioCommunications }
+  public static var min: DeviceType { return .unknown }
+}
+
+
+///  Frequency range with lower and upper limits
+public struct FrequencyRange: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$SIT" } 
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: Geometry.id, addPrefix: prefix) }
+  public static var id: String { "$IDM" } 
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: FrequencyRange.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private enum VTOFFSET: VOffset {
-    case GEOMETRY_TYPE = 4
-    case COORDINATES = 6
+    case LOWER = 4
+    case UPPER = 6
     var v: Int32 { Int32(self.rawValue) }
     var p: VOffset { self.rawValue }
   }
 
-  ///  Type of geometry
-  public var GEOMETRY_TYPE: String? { let o = _accessor.offset(VTOFFSET.GEOMETRY_TYPE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var GEOMETRY_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.GEOMETRY_TYPE.v) }
-  ///  Coordinates of the geometry
-  public var hasCoordinates: Bool { let o = _accessor.offset(VTOFFSET.COORDINATES.v); return o == 0 ? false : true }
-  public var COORDINATESCount: Int32 { let o = _accessor.offset(VTOFFSET.COORDINATES.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func COORDINATES(at index: Int32) -> Float32 { let o = _accessor.offset(VTOFFSET.COORDINATES.v); return o == 0 ? 0 : _accessor.directRead(of: Float32.self, offset: _accessor.vector(at: o) + index * 4) }
-  public var COORDINATES: [Float32] { return _accessor.getVector(at: VTOFFSET.COORDINATES.v) ?? [] }
-  public static func startGeometry(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 2) }
-  public static func add(GEOMETRY_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GEOMETRY_TYPE, at: VTOFFSET.GEOMETRY_TYPE.p) }
-  public static func addVectorOf(COORDINATES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COORDINATES, at: VTOFFSET.COORDINATES.p) }
-  public static func endGeometry(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createGeometry(
+  ///  Lower frequency in MHz
+  public var LOWER: Double { let o = _accessor.offset(VTOFFSET.LOWER.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Upper frequency in MHz
+  public var UPPER: Double { let o = _accessor.offset(VTOFFSET.UPPER.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public static func startFrequencyRange(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 2) }
+  public static func add(LOWER: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LOWER, def: 0.0, at: VTOFFSET.LOWER.p) }
+  public static func add(UPPER: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: UPPER, def: 0.0, at: VTOFFSET.UPPER.p) }
+  public static func endFrequencyRange(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createFrequencyRange(
     _ fbb: inout FlatBufferBuilder,
-    GEOMETRY_TYPEOffset GEOMETRY_TYPE: Offset = Offset(),
-    COORDINATESVectorOffset COORDINATES: Offset = Offset()
+    LOWER: Double = 0.0,
+    UPPER: Double = 0.0
   ) -> Offset {
-    let __start = Geometry.startGeometry(&fbb)
-    Geometry.add(GEOMETRY_TYPE: GEOMETRY_TYPE, &fbb)
-    Geometry.addVectorOf(COORDINATES: COORDINATES, &fbb)
-    return Geometry.endGeometry(&fbb, start: __start)
+    let __start = FrequencyRange.startFrequencyRange(&fbb)
+    FrequencyRange.add(LOWER: LOWER, &fbb)
+    FrequencyRange.add(UPPER: UPPER, &fbb)
+    return FrequencyRange.endFrequencyRange(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.GEOMETRY_TYPE.p, fieldName: "GEOMETRY_TYPE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.COORDINATES.p, fieldName: "COORDINATES", required: false, type: ForwardOffset<Vector<Float32, Float32>>.self)
+    try _v.visit(field: VTOFFSET.LOWER.p, fieldName: "LOWER", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.UPPER.p, fieldName: "UPPER", required: false, type: Double.self)
     _v.finish()
   }
 }
 
-///  Site Information Message
-public struct SIT: FlatBufferObject, Verifiable {
+///  Stokes parameters, representing different aspects of polarization
+public struct StokesParameters: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$SIT" } 
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: SIT.id, addPrefix: prefix) }
+  public static var id: String { "$IDM" } 
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: StokesParameters.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private enum VTOFFSET: VOffset {
+    case I = 4
+    case Q = 6
+    case U = 8
+    case V = 10
+    var v: Int32 { Int32(self.rawValue) }
+    var p: VOffset { self.rawValue }
+  }
+
+  ///  Intensity
+  public var I: Double { let o = _accessor.offset(VTOFFSET.I.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Linear polarization
+  public var Q: Double { let o = _accessor.offset(VTOFFSET.Q.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Another linear polarization, orthogonal to Q
+  public var U: Double { let o = _accessor.offset(VTOFFSET.U.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Circular polarization
+  public var V: Double { let o = _accessor.offset(VTOFFSET.V.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public static func startStokesParameters(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
+  public static func add(I: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: I, def: 0.0, at: VTOFFSET.I.p) }
+  public static func add(Q: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Q, def: 0.0, at: VTOFFSET.Q.p) }
+  public static func add(U: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: U, def: 0.0, at: VTOFFSET.U.p) }
+  public static func add(V: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: V, def: 0.0, at: VTOFFSET.V.p) }
+  public static func endStokesParameters(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createStokesParameters(
+    _ fbb: inout FlatBufferBuilder,
+    I: Double = 0.0,
+    Q: Double = 0.0,
+    U: Double = 0.0,
+    V: Double = 0.0
+  ) -> Offset {
+    let __start = StokesParameters.startStokesParameters(&fbb)
+    StokesParameters.add(I: I, &fbb)
+    StokesParameters.add(Q: Q, &fbb)
+    StokesParameters.add(U: U, &fbb)
+    StokesParameters.add(V: V, &fbb)
+    return StokesParameters.endStokesParameters(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VTOFFSET.I.p, fieldName: "I", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.Q.p, fieldName: "Q", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.U.p, fieldName: "U", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.V.p, fieldName: "V", required: false, type: Double.self)
+    _v.finish()
+  }
+}
+
+///  Table representing a frequency band with a name and frequency range
+public struct Band: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$IDM" } 
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: Band.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private enum VTOFFSET: VOffset {
+    case NAME = 4
+    case FREQUENCY_RANGE = 6
+    var v: Int32 { Int32(self.rawValue) }
+    var p: VOffset { self.rawValue }
+  }
+
+  ///  Name of the band
+  public var NAME: String? { let o = _accessor.offset(VTOFFSET.NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NAME.v) }
+  ///  Frequency range of the band
+  public var FREQUENCY_RANGE: FrequencyRange? { let o = _accessor.offset(VTOFFSET.FREQUENCY_RANGE.v); return o == 0 ? nil : FrequencyRange(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public static func startBand(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 2) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
+  public static func add(FREQUENCY_RANGE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FREQUENCY_RANGE, at: VTOFFSET.FREQUENCY_RANGE.p) }
+  public static func endBand(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createBand(
+    _ fbb: inout FlatBufferBuilder,
+    NAMEOffset NAME: Offset = Offset(),
+    FREQUENCY_RANGEOffset FREQUENCY_RANGE: Offset = Offset()
+  ) -> Offset {
+    let __start = Band.startBand(&fbb)
+    Band.add(NAME: NAME, &fbb)
+    Band.add(FREQUENCY_RANGE: FREQUENCY_RANGE, &fbb)
+    return Band.endBand(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VTOFFSET.NAME.p, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.FREQUENCY_RANGE.p, fieldName: "FREQUENCY_RANGE", required: false, type: ForwardOffset<FrequencyRange>.self)
+    _v.finish()
+  }
+}
+
+///  Integrated Device Message
+public struct IDM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$IDM" } 
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: IDM.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private enum VTOFFSET: VOffset {
     case ID = 4
     case NAME = 6
-    case ABBREVIATION = 8
-    case SITE_TYPE = 10
-    case CATCODE = 12
-    case NETWORK = 14
-    case LATITUDE = 16
-    case LONGITUDE = 18
-    case ALTITUDE = 20
-    case GEOMETRY = 22
-    case CENTER_POINT_GEOMETRY = 24
-    case CLASSIFICATION = 26
-    case CTR_ID = 28
-    case CREATED_BY = 30
-    case DESCRIPTION = 32
-    case MODEL_URL = 34
-    case SOURCE = 36
-    case TASKABLE = 38
-    case OPERATIONAL_STATUS = 40
-    case ESTABLISHMENT_DATE = 42
-    case CONTACT_INFO = 44
-    case ENVIRONMENTAL_IMPACT = 46
-    case ACCESSIBILITY_INFRA = 48
-    case INTEGRATED_DEVICES = 50
+    case DATA_MODE = 8
+    case UPLINK = 10
+    case DOWNLINK = 12
+    case BEACON = 14
+    case BAND = 16
+    case POLARIZATION_TYPE = 18
+    case SIMPLE_POLARIZATION = 20
+    case STOKES_PARAMETERS = 22
+    case POWER_REQUIRED = 24
+    case POWER_TYPE = 26
+    case TRANSMIT = 28
+    case RECEIVE = 30
+    case SENSOR_TYPE = 32
+    case SOURCE = 34
+    case LAST_OB_TIME = 36
+    case LOWER_LEFT_ELEVATION_LIMIT = 38
+    case UPPER_LEFT_AZIMUTH_LIMIT = 40
+    case LOWER_RIGHT_ELEVATION_LIMIT = 42
+    case LOWER_LEFT_AZIMUTH_LIMIT = 44
+    case UPPER_RIGHT_ELEVATION_LIMIT = 46
+    case UPPER_RIGHT_AZIMUTH_LIMIT = 48
+    case LOWER_RIGHT_AZIMUTH_LIMIT = 50
+    case UPPER_LEFT_ELEVATION_LIMIT = 52
+    case RIGHT_GEO_BELT_LIMIT = 54
+    case LEFT_GEO_BELT_LIMIT = 56
+    case MAGNITUDE_LIMIT = 58
+    case TASKABLE = 60
     var v: Int32 { Int32(self.rawValue) }
     var p: VOffset { self.rawValue }
   }
 
-  ///  Unique identifier for the site, BE_NUMBER
+  ///  Unique identifier for the EMT
   public var ID: String? { let o = _accessor.offset(VTOFFSET.ID.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ID.v) }
-  ///  Name of the site
+  ///  Name of the EMT
   public var NAME: String? { let o = _accessor.offset(VTOFFSET.NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NAME.v) }
-  ///  Abbreviation
-  public var ABBREVIATION: String? { let o = _accessor.offset(VTOFFSET.ABBREVIATION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ABBREVIATIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ABBREVIATION.v) }
-  ///  Site type as defined in SiteType enum
-  public var SITE_TYPE: SiteType { let o = _accessor.offset(VTOFFSET.SITE_TYPE.v); return o == 0 ? .launchSite : SiteType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .launchSite }
-  ///  Site type CATCODE
-  public var CATCODE: String? { let o = _accessor.offset(VTOFFSET.CATCODE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var CATCODESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CATCODE.v) }
-  ///  Network identifier
-  public var NETWORK: String? { let o = _accessor.offset(VTOFFSET.NETWORK.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NETWORKSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NETWORK.v) }
-  ///  Latitude of the site
-  public var LATITUDE: Float32 { let o = _accessor.offset(VTOFFSET.LATITUDE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
-  ///  Longitude of the site
-  public var LONGITUDE: Float32 { let o = _accessor.offset(VTOFFSET.LONGITUDE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
-  ///  Altitude of the site
-  public var ALTITUDE: Float32 { let o = _accessor.offset(VTOFFSET.ALTITUDE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
-  ///  Geometry of the site
-  public var GEOMETRY: Geometry? { let o = _accessor.offset(VTOFFSET.GEOMETRY.v); return o == 0 ? nil : Geometry(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
-  ///  Center point geometry coordinates
-  public var hasCenterPointGeometry: Bool { let o = _accessor.offset(VTOFFSET.CENTER_POINT_GEOMETRY.v); return o == 0 ? false : true }
-  public var CENTER_POINT_GEOMETRYCount: Int32 { let o = _accessor.offset(VTOFFSET.CENTER_POINT_GEOMETRY.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func CENTER_POINT_GEOMETRY(at index: Int32) -> Float32 { let o = _accessor.offset(VTOFFSET.CENTER_POINT_GEOMETRY.v); return o == 0 ? 0 : _accessor.directRead(of: Float32.self, offset: _accessor.vector(at: o) + index * 4) }
-  public var CENTER_POINT_GEOMETRY: [Float32] { return _accessor.getVector(at: VTOFFSET.CENTER_POINT_GEOMETRY.v) ?? [] }
-  ///  Classification marking of the site
-  public var CLASSIFICATION: String? { let o = _accessor.offset(VTOFFSET.CLASSIFICATION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var CLASSIFICATIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CLASSIFICATION.v) }
-  ///  CTR ISO 3166 Numeric code as string
-  public var CTR_ID: String? { let o = _accessor.offset(VTOFFSET.CTR_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var CTR_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CTR_ID.v) }
-  ///  Identifier of the user who created the site data
-  public var CREATED_BY: String? { let o = _accessor.offset(VTOFFSET.CREATED_BY.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var CREATED_BYSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CREATED_BY.v) }
-  ///  Description of the site
-  public var DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.DESCRIPTION.v) }
-  ///  URL for the 3D model of the site
-  public var MODEL_URL: String? { let o = _accessor.offset(VTOFFSET.MODEL_URL.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var MODEL_URLSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.MODEL_URL.v) }
-  ///  Source of the site data
+  ///  Mode of the data (real, simulated, synthetic)
+  public var DATA_MODE: DataMode { let o = _accessor.offset(VTOFFSET.DATA_MODE.v); return o == 0 ? .exercise : DataMode(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .exercise }
+  ///  Uplink frequency range
+  public var UPLINK: FrequencyRange? { let o = _accessor.offset(VTOFFSET.UPLINK.v); return o == 0 ? nil : FrequencyRange(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Downlink frequency range
+  public var DOWNLINK: FrequencyRange? { let o = _accessor.offset(VTOFFSET.DOWNLINK.v); return o == 0 ? nil : FrequencyRange(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Beacon frequency range
+  public var BEACON: FrequencyRange? { let o = _accessor.offset(VTOFFSET.BEACON.v); return o == 0 ? nil : FrequencyRange(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Bands associated with the EMT
+  public var BAND: FlatbufferVector<Band> { return _accessor.vector(at: VTOFFSET.BAND.v, byteSize: 4) }
+  ///  Type of polarization used
+  public var POLARIZATION_TYPE: PolarizationType { let o = _accessor.offset(VTOFFSET.POLARIZATION_TYPE.v); return o == 0 ? .linear : PolarizationType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .linear }
+  ///  Simple polarization configuration
+  public var SIMPLE_POLARIZATION: SimplePolarization { let o = _accessor.offset(VTOFFSET.SIMPLE_POLARIZATION.v); return o == 0 ? .vertical : SimplePolarization(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .vertical }
+  ///  Stokes parameters for polarization characterization
+  public var STOKES_PARAMETERS: StokesParameters? { let o = _accessor.offset(VTOFFSET.STOKES_PARAMETERS.v); return o == 0 ? nil : StokesParameters(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Power required in Watts
+  public var POWER_REQUIRED: Double { let o = _accessor.offset(VTOFFSET.POWER_REQUIRED.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Type of power (eg. AC or DC)
+  public var POWER_TYPE: String? { let o = _accessor.offset(VTOFFSET.POWER_TYPE.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var POWER_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.POWER_TYPE.v) }
+  ///  Indicates if the EMT can transmit
+  public var TRANSMIT: Bool { let o = _accessor.offset(VTOFFSET.TRANSMIT.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Indicates if the EMT can receive
+  public var RECEIVE: Bool { let o = _accessor.offset(VTOFFSET.RECEIVE.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Type of the sensor
+  public var SENSOR_TYPE: DeviceType { let o = _accessor.offset(VTOFFSET.SENSOR_TYPE.v); return o == 0 ? .unknown : DeviceType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unknown }
+  ///  Source of the data
   public var SOURCE: String? { let o = _accessor.offset(VTOFFSET.SOURCE.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var SOURCESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SOURCE.v) }
+  ///  Timestamp of the last observation
+  public var LAST_OB_TIME: String? { let o = _accessor.offset(VTOFFSET.LAST_OB_TIME.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LAST_OB_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LAST_OB_TIME.v) }
+  ///  Lower left elevation limit
+  public var LOWER_LEFT_ELEVATION_LIMIT: Double { let o = _accessor.offset(VTOFFSET.LOWER_LEFT_ELEVATION_LIMIT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Upper left azimuth limit
+  public var UPPER_LEFT_AZIMUTH_LIMIT: Double { let o = _accessor.offset(VTOFFSET.UPPER_LEFT_AZIMUTH_LIMIT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Lower right elevation limit
+  public var LOWER_RIGHT_ELEVATION_LIMIT: Double { let o = _accessor.offset(VTOFFSET.LOWER_RIGHT_ELEVATION_LIMIT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Lower left azimuth limit
+  public var LOWER_LEFT_AZIMUTH_LIMIT: Double { let o = _accessor.offset(VTOFFSET.LOWER_LEFT_AZIMUTH_LIMIT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Upper right elevation limit
+  public var UPPER_RIGHT_ELEVATION_LIMIT: Double { let o = _accessor.offset(VTOFFSET.UPPER_RIGHT_ELEVATION_LIMIT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Upper right azimuth limit
+  public var UPPER_RIGHT_AZIMUTH_LIMIT: Double { let o = _accessor.offset(VTOFFSET.UPPER_RIGHT_AZIMUTH_LIMIT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Lower right azimuth limit
+  public var LOWER_RIGHT_AZIMUTH_LIMIT: Double { let o = _accessor.offset(VTOFFSET.LOWER_RIGHT_AZIMUTH_LIMIT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Upper left elevation limit
+  public var UPPER_LEFT_ELEVATION_LIMIT: Double { let o = _accessor.offset(VTOFFSET.UPPER_LEFT_ELEVATION_LIMIT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Right geostationary belt limit
+  public var RIGHT_GEO_BELT_LIMIT: Double { let o = _accessor.offset(VTOFFSET.RIGHT_GEO_BELT_LIMIT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Left geostationary belt limit
+  public var LEFT_GEO_BELT_LIMIT: Double { let o = _accessor.offset(VTOFFSET.LEFT_GEO_BELT_LIMIT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Magnitude limit of the sensor
+  public var MAGNITUDE_LIMIT: Double { let o = _accessor.offset(VTOFFSET.MAGNITUDE_LIMIT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Indicates if the site is taskable
   public var TASKABLE: Bool { let o = _accessor.offset(VTOFFSET.TASKABLE.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
-  ///  Operational status of the site (e.g., active, inactive, under construction)
-  public var OPERATIONAL_STATUS: String? { let o = _accessor.offset(VTOFFSET.OPERATIONAL_STATUS.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var OPERATIONAL_STATUSSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OPERATIONAL_STATUS.v) }
-  ///  Date of establishment
-  public var ESTABLISHMENT_DATE: String? { let o = _accessor.offset(VTOFFSET.ESTABLISHMENT_DATE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ESTABLISHMENT_DATESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ESTABLISHMENT_DATE.v) }
-  ///  Contact information for the site
-  public var CONTACT_INFO: String? { let o = _accessor.offset(VTOFFSET.CONTACT_INFO.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var CONTACT_INFOSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CONTACT_INFO.v) }
-  ///  Environmental impact or considerations
-  public var ENVIRONMENTAL_IMPACT: String? { let o = _accessor.offset(VTOFFSET.ENVIRONMENTAL_IMPACT.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ENVIRONMENTAL_IMPACTSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ENVIRONMENTAL_IMPACT.v) }
-  ///  Accessibility and infrastructure details
-  public var ACCESSIBILITY_INFRA: String? { let o = _accessor.offset(VTOFFSET.ACCESSIBILITY_INFRA.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ACCESSIBILITY_INFRASegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ACCESSIBILITY_INFRA.v) }
-  ///  Vector of Integrated Devices (IDM)
-  public var hasIntegratedDevices: Bool { let o = _accessor.offset(VTOFFSET.INTEGRATED_DEVICES.v); return o == 0 ? false : true }
-  public var INTEGRATED_DEVICESCount: Int32 { let o = _accessor.offset(VTOFFSET.INTEGRATED_DEVICES.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func INTEGRATED_DEVICES(at index: Int32) -> IDM? { let o = _accessor.offset(VTOFFSET.INTEGRATED_DEVICES.v); return o == 0 ? nil : IDM(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
-  public static func startSIT(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 24) }
+  public static func startIDM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 29) }
   public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VTOFFSET.ID.p) }
   public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
-  public static func add(ABBREVIATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ABBREVIATION, at: VTOFFSET.ABBREVIATION.p) }
-  public static func add(SITE_TYPE: SiteType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SITE_TYPE.rawValue, def: 0, at: VTOFFSET.SITE_TYPE.p) }
-  public static func add(CATCODE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CATCODE, at: VTOFFSET.CATCODE.p) }
-  public static func add(NETWORK: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NETWORK, at: VTOFFSET.NETWORK.p) }
-  public static func add(LATITUDE: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LATITUDE, def: 0.0, at: VTOFFSET.LATITUDE.p) }
-  public static func add(LONGITUDE: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LONGITUDE, def: 0.0, at: VTOFFSET.LONGITUDE.p) }
-  public static func add(ALTITUDE: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ALTITUDE, def: 0.0, at: VTOFFSET.ALTITUDE.p) }
-  public static func add(GEOMETRY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GEOMETRY, at: VTOFFSET.GEOMETRY.p) }
-  public static func addVectorOf(CENTER_POINT_GEOMETRY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CENTER_POINT_GEOMETRY, at: VTOFFSET.CENTER_POINT_GEOMETRY.p) }
-  public static func add(CLASSIFICATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CLASSIFICATION, at: VTOFFSET.CLASSIFICATION.p) }
-  public static func add(CTR_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CTR_ID, at: VTOFFSET.CTR_ID.p) }
-  public static func add(CREATED_BY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CREATED_BY, at: VTOFFSET.CREATED_BY.p) }
-  public static func add(DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTION, at: VTOFFSET.DESCRIPTION.p) }
-  public static func add(MODEL_URL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MODEL_URL, at: VTOFFSET.MODEL_URL.p) }
+  public static func add(DATA_MODE: DataMode, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DATA_MODE.rawValue, def: 0, at: VTOFFSET.DATA_MODE.p) }
+  public static func add(UPLINK: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: UPLINK, at: VTOFFSET.UPLINK.p) }
+  public static func add(DOWNLINK: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DOWNLINK, at: VTOFFSET.DOWNLINK.p) }
+  public static func add(BEACON: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BEACON, at: VTOFFSET.BEACON.p) }
+  public static func addVectorOf(BAND: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BAND, at: VTOFFSET.BAND.p) }
+  public static func add(POLARIZATION_TYPE: PolarizationType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POLARIZATION_TYPE.rawValue, def: 0, at: VTOFFSET.POLARIZATION_TYPE.p) }
+  public static func add(SIMPLE_POLARIZATION: SimplePolarization, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SIMPLE_POLARIZATION.rawValue, def: 0, at: VTOFFSET.SIMPLE_POLARIZATION.p) }
+  public static func add(STOKES_PARAMETERS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STOKES_PARAMETERS, at: VTOFFSET.STOKES_PARAMETERS.p) }
+  public static func add(POWER_REQUIRED: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POWER_REQUIRED, def: 0.0, at: VTOFFSET.POWER_REQUIRED.p) }
+  public static func add(POWER_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POWER_TYPE, at: VTOFFSET.POWER_TYPE.p) }
+  public static func add(TRANSMIT: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TRANSMIT, def: false,
+   at: VTOFFSET.TRANSMIT.p) }
+  public static func add(RECEIVE: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RECEIVE, def: false,
+   at: VTOFFSET.RECEIVE.p) }
+  public static func add(SENSOR_TYPE: DeviceType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENSOR_TYPE.rawValue, def: 0, at: VTOFFSET.SENSOR_TYPE.p) }
   public static func add(SOURCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE, at: VTOFFSET.SOURCE.p) }
+  public static func add(LAST_OB_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LAST_OB_TIME, at: VTOFFSET.LAST_OB_TIME.p) }
+  public static func add(LOWER_LEFT_ELEVATION_LIMIT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LOWER_LEFT_ELEVATION_LIMIT, def: 0.0, at: VTOFFSET.LOWER_LEFT_ELEVATION_LIMIT.p) }
+  public static func add(UPPER_LEFT_AZIMUTH_LIMIT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: UPPER_LEFT_AZIMUTH_LIMIT, def: 0.0, at: VTOFFSET.UPPER_LEFT_AZIMUTH_LIMIT.p) }
+  public static func add(LOWER_RIGHT_ELEVATION_LIMIT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LOWER_RIGHT_ELEVATION_LIMIT, def: 0.0, at: VTOFFSET.LOWER_RIGHT_ELEVATION_LIMIT.p) }
+  public static func add(LOWER_LEFT_AZIMUTH_LIMIT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LOWER_LEFT_AZIMUTH_LIMIT, def: 0.0, at: VTOFFSET.LOWER_LEFT_AZIMUTH_LIMIT.p) }
+  public static func add(UPPER_RIGHT_ELEVATION_LIMIT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: UPPER_RIGHT_ELEVATION_LIMIT, def: 0.0, at: VTOFFSET.UPPER_RIGHT_ELEVATION_LIMIT.p) }
+  public static func add(UPPER_RIGHT_AZIMUTH_LIMIT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: UPPER_RIGHT_AZIMUTH_LIMIT, def: 0.0, at: VTOFFSET.UPPER_RIGHT_AZIMUTH_LIMIT.p) }
+  public static func add(LOWER_RIGHT_AZIMUTH_LIMIT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LOWER_RIGHT_AZIMUTH_LIMIT, def: 0.0, at: VTOFFSET.LOWER_RIGHT_AZIMUTH_LIMIT.p) }
+  public static func add(UPPER_LEFT_ELEVATION_LIMIT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: UPPER_LEFT_ELEVATION_LIMIT, def: 0.0, at: VTOFFSET.UPPER_LEFT_ELEVATION_LIMIT.p) }
+  public static func add(RIGHT_GEO_BELT_LIMIT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RIGHT_GEO_BELT_LIMIT, def: 0.0, at: VTOFFSET.RIGHT_GEO_BELT_LIMIT.p) }
+  public static func add(LEFT_GEO_BELT_LIMIT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LEFT_GEO_BELT_LIMIT, def: 0.0, at: VTOFFSET.LEFT_GEO_BELT_LIMIT.p) }
+  public static func add(MAGNITUDE_LIMIT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAGNITUDE_LIMIT, def: 0.0, at: VTOFFSET.MAGNITUDE_LIMIT.p) }
   public static func add(TASKABLE: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TASKABLE, def: false,
    at: VTOFFSET.TASKABLE.p) }
-  public static func add(OPERATIONAL_STATUS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OPERATIONAL_STATUS, at: VTOFFSET.OPERATIONAL_STATUS.p) }
-  public static func add(ESTABLISHMENT_DATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ESTABLISHMENT_DATE, at: VTOFFSET.ESTABLISHMENT_DATE.p) }
-  public static func add(CONTACT_INFO: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONTACT_INFO, at: VTOFFSET.CONTACT_INFO.p) }
-  public static func add(ENVIRONMENTAL_IMPACT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ENVIRONMENTAL_IMPACT, at: VTOFFSET.ENVIRONMENTAL_IMPACT.p) }
-  public static func add(ACCESSIBILITY_INFRA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ACCESSIBILITY_INFRA, at: VTOFFSET.ACCESSIBILITY_INFRA.p) }
-  public static func addVectorOf(INTEGRATED_DEVICES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INTEGRATED_DEVICES, at: VTOFFSET.INTEGRATED_DEVICES.p) }
-  public static func endSIT(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createSIT(
+  public static func endIDM(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createIDM(
     _ fbb: inout FlatBufferBuilder,
     IDOffset ID: Offset = Offset(),
     NAMEOffset NAME: Offset = Offset(),
-    ABBREVIATIONOffset ABBREVIATION: Offset = Offset(),
-    SITE_TYPE: SiteType = .launchSite,
-    CATCODEOffset CATCODE: Offset = Offset(),
-    NETWORKOffset NETWORK: Offset = Offset(),
-    LATITUDE: Float32 = 0.0,
-    LONGITUDE: Float32 = 0.0,
-    ALTITUDE: Float32 = 0.0,
-    GEOMETRYOffset GEOMETRY: Offset = Offset(),
-    CENTER_POINT_GEOMETRYVectorOffset CENTER_POINT_GEOMETRY: Offset = Offset(),
-    CLASSIFICATIONOffset CLASSIFICATION: Offset = Offset(),
-    CTR_IDOffset CTR_ID: Offset = Offset(),
-    CREATED_BYOffset CREATED_BY: Offset = Offset(),
-    DESCRIPTIONOffset DESCRIPTION: Offset = Offset(),
-    MODEL_URLOffset MODEL_URL: Offset = Offset(),
+    DATA_MODE: DataMode = .exercise,
+    UPLINKOffset UPLINK: Offset = Offset(),
+    DOWNLINKOffset DOWNLINK: Offset = Offset(),
+    BEACONOffset BEACON: Offset = Offset(),
+    BANDVectorOffset BAND: Offset = Offset(),
+    POLARIZATION_TYPE: PolarizationType = .linear,
+    SIMPLE_POLARIZATION: SimplePolarization = .vertical,
+    STOKES_PARAMETERSOffset STOKES_PARAMETERS: Offset = Offset(),
+    POWER_REQUIRED: Double = 0.0,
+    POWER_TYPEOffset POWER_TYPE: Offset = Offset(),
+    TRANSMIT: Bool = false,
+    RECEIVE: Bool = false,
+    SENSOR_TYPE: DeviceType = .unknown,
     SOURCEOffset SOURCE: Offset = Offset(),
-    TASKABLE: Bool = false,
-    OPERATIONAL_STATUSOffset OPERATIONAL_STATUS: Offset = Offset(),
-    ESTABLISHMENT_DATEOffset ESTABLISHMENT_DATE: Offset = Offset(),
-    CONTACT_INFOOffset CONTACT_INFO: Offset = Offset(),
-    ENVIRONMENTAL_IMPACTOffset ENVIRONMENTAL_IMPACT: Offset = Offset(),
-    ACCESSIBILITY_INFRAOffset ACCESSIBILITY_INFRA: Offset = Offset(),
-    INTEGRATED_DEVICESVectorOffset INTEGRATED_DEVICES: Offset = Offset()
+    LAST_OB_TIMEOffset LAST_OB_TIME: Offset = Offset(),
+    LOWER_LEFT_ELEVATION_LIMIT: Double = 0.0,
+    UPPER_LEFT_AZIMUTH_LIMIT: Double = 0.0,
+    LOWER_RIGHT_ELEVATION_LIMIT: Double = 0.0,
+    LOWER_LEFT_AZIMUTH_LIMIT: Double = 0.0,
+    UPPER_RIGHT_ELEVATION_LIMIT: Double = 0.0,
+    UPPER_RIGHT_AZIMUTH_LIMIT: Double = 0.0,
+    LOWER_RIGHT_AZIMUTH_LIMIT: Double = 0.0,
+    UPPER_LEFT_ELEVATION_LIMIT: Double = 0.0,
+    RIGHT_GEO_BELT_LIMIT: Double = 0.0,
+    LEFT_GEO_BELT_LIMIT: Double = 0.0,
+    MAGNITUDE_LIMIT: Double = 0.0,
+    TASKABLE: Bool = false
   ) -> Offset {
-    let __start = SIT.startSIT(&fbb)
-    SIT.add(ID: ID, &fbb)
-    SIT.add(NAME: NAME, &fbb)
-    SIT.add(ABBREVIATION: ABBREVIATION, &fbb)
-    SIT.add(SITE_TYPE: SITE_TYPE, &fbb)
-    SIT.add(CATCODE: CATCODE, &fbb)
-    SIT.add(NETWORK: NETWORK, &fbb)
-    SIT.add(LATITUDE: LATITUDE, &fbb)
-    SIT.add(LONGITUDE: LONGITUDE, &fbb)
-    SIT.add(ALTITUDE: ALTITUDE, &fbb)
-    SIT.add(GEOMETRY: GEOMETRY, &fbb)
-    SIT.addVectorOf(CENTER_POINT_GEOMETRY: CENTER_POINT_GEOMETRY, &fbb)
-    SIT.add(CLASSIFICATION: CLASSIFICATION, &fbb)
-    SIT.add(CTR_ID: CTR_ID, &fbb)
-    SIT.add(CREATED_BY: CREATED_BY, &fbb)
-    SIT.add(DESCRIPTION: DESCRIPTION, &fbb)
-    SIT.add(MODEL_URL: MODEL_URL, &fbb)
-    SIT.add(SOURCE: SOURCE, &fbb)
-    SIT.add(TASKABLE: TASKABLE, &fbb)
-    SIT.add(OPERATIONAL_STATUS: OPERATIONAL_STATUS, &fbb)
-    SIT.add(ESTABLISHMENT_DATE: ESTABLISHMENT_DATE, &fbb)
-    SIT.add(CONTACT_INFO: CONTACT_INFO, &fbb)
-    SIT.add(ENVIRONMENTAL_IMPACT: ENVIRONMENTAL_IMPACT, &fbb)
-    SIT.add(ACCESSIBILITY_INFRA: ACCESSIBILITY_INFRA, &fbb)
-    SIT.addVectorOf(INTEGRATED_DEVICES: INTEGRATED_DEVICES, &fbb)
-    return SIT.endSIT(&fbb, start: __start)
+    let __start = IDM.startIDM(&fbb)
+    IDM.add(ID: ID, &fbb)
+    IDM.add(NAME: NAME, &fbb)
+    IDM.add(DATA_MODE: DATA_MODE, &fbb)
+    IDM.add(UPLINK: UPLINK, &fbb)
+    IDM.add(DOWNLINK: DOWNLINK, &fbb)
+    IDM.add(BEACON: BEACON, &fbb)
+    IDM.addVectorOf(BAND: BAND, &fbb)
+    IDM.add(POLARIZATION_TYPE: POLARIZATION_TYPE, &fbb)
+    IDM.add(SIMPLE_POLARIZATION: SIMPLE_POLARIZATION, &fbb)
+    IDM.add(STOKES_PARAMETERS: STOKES_PARAMETERS, &fbb)
+    IDM.add(POWER_REQUIRED: POWER_REQUIRED, &fbb)
+    IDM.add(POWER_TYPE: POWER_TYPE, &fbb)
+    IDM.add(TRANSMIT: TRANSMIT, &fbb)
+    IDM.add(RECEIVE: RECEIVE, &fbb)
+    IDM.add(SENSOR_TYPE: SENSOR_TYPE, &fbb)
+    IDM.add(SOURCE: SOURCE, &fbb)
+    IDM.add(LAST_OB_TIME: LAST_OB_TIME, &fbb)
+    IDM.add(LOWER_LEFT_ELEVATION_LIMIT: LOWER_LEFT_ELEVATION_LIMIT, &fbb)
+    IDM.add(UPPER_LEFT_AZIMUTH_LIMIT: UPPER_LEFT_AZIMUTH_LIMIT, &fbb)
+    IDM.add(LOWER_RIGHT_ELEVATION_LIMIT: LOWER_RIGHT_ELEVATION_LIMIT, &fbb)
+    IDM.add(LOWER_LEFT_AZIMUTH_LIMIT: LOWER_LEFT_AZIMUTH_LIMIT, &fbb)
+    IDM.add(UPPER_RIGHT_ELEVATION_LIMIT: UPPER_RIGHT_ELEVATION_LIMIT, &fbb)
+    IDM.add(UPPER_RIGHT_AZIMUTH_LIMIT: UPPER_RIGHT_AZIMUTH_LIMIT, &fbb)
+    IDM.add(LOWER_RIGHT_AZIMUTH_LIMIT: LOWER_RIGHT_AZIMUTH_LIMIT, &fbb)
+    IDM.add(UPPER_LEFT_ELEVATION_LIMIT: UPPER_LEFT_ELEVATION_LIMIT, &fbb)
+    IDM.add(RIGHT_GEO_BELT_LIMIT: RIGHT_GEO_BELT_LIMIT, &fbb)
+    IDM.add(LEFT_GEO_BELT_LIMIT: LEFT_GEO_BELT_LIMIT, &fbb)
+    IDM.add(MAGNITUDE_LIMIT: MAGNITUDE_LIMIT, &fbb)
+    IDM.add(TASKABLE: TASKABLE, &fbb)
+    return IDM.endIDM(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
     try _v.visit(field: VTOFFSET.ID.p, fieldName: "ID", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.NAME.p, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ABBREVIATION.p, fieldName: "ABBREVIATION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SITE_TYPE.p, fieldName: "SITE_TYPE", required: false, type: SiteType.self)
-    try _v.visit(field: VTOFFSET.CATCODE.p, fieldName: "CATCODE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.NETWORK.p, fieldName: "NETWORK", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.LATITUDE.p, fieldName: "LATITUDE", required: false, type: Float32.self)
-    try _v.visit(field: VTOFFSET.LONGITUDE.p, fieldName: "LONGITUDE", required: false, type: Float32.self)
-    try _v.visit(field: VTOFFSET.ALTITUDE.p, fieldName: "ALTITUDE", required: false, type: Float32.self)
-    try _v.visit(field: VTOFFSET.GEOMETRY.p, fieldName: "GEOMETRY", required: false, type: ForwardOffset<Geometry>.self)
-    try _v.visit(field: VTOFFSET.CENTER_POINT_GEOMETRY.p, fieldName: "CENTER_POINT_GEOMETRY", required: false, type: ForwardOffset<Vector<Float32, Float32>>.self)
-    try _v.visit(field: VTOFFSET.CLASSIFICATION.p, fieldName: "CLASSIFICATION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.CTR_ID.p, fieldName: "CTR_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.CREATED_BY.p, fieldName: "CREATED_BY", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.DESCRIPTION.p, fieldName: "DESCRIPTION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.MODEL_URL.p, fieldName: "MODEL_URL", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.DATA_MODE.p, fieldName: "DATA_MODE", required: false, type: DataMode.self)
+    try _v.visit(field: VTOFFSET.UPLINK.p, fieldName: "UPLINK", required: false, type: ForwardOffset<FrequencyRange>.self)
+    try _v.visit(field: VTOFFSET.DOWNLINK.p, fieldName: "DOWNLINK", required: false, type: ForwardOffset<FrequencyRange>.self)
+    try _v.visit(field: VTOFFSET.BEACON.p, fieldName: "BEACON", required: false, type: ForwardOffset<FrequencyRange>.self)
+    try _v.visit(field: VTOFFSET.BAND.p, fieldName: "BAND", required: false, type: ForwardOffset<Vector<ForwardOffset<Band>, Band>>.self)
+    try _v.visit(field: VTOFFSET.POLARIZATION_TYPE.p, fieldName: "POLARIZATION_TYPE", required: false, type: PolarizationType.self)
+    try _v.visit(field: VTOFFSET.SIMPLE_POLARIZATION.p, fieldName: "SIMPLE_POLARIZATION", required: false, type: SimplePolarization.self)
+    try _v.visit(field: VTOFFSET.STOKES_PARAMETERS.p, fieldName: "STOKES_PARAMETERS", required: false, type: ForwardOffset<StokesParameters>.self)
+    try _v.visit(field: VTOFFSET.POWER_REQUIRED.p, fieldName: "POWER_REQUIRED", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.POWER_TYPE.p, fieldName: "POWER_TYPE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.TRANSMIT.p, fieldName: "TRANSMIT", required: false, type: Bool.self)
+    try _v.visit(field: VTOFFSET.RECEIVE.p, fieldName: "RECEIVE", required: false, type: Bool.self)
+    try _v.visit(field: VTOFFSET.SENSOR_TYPE.p, fieldName: "SENSOR_TYPE", required: false, type: DeviceType.self)
     try _v.visit(field: VTOFFSET.SOURCE.p, fieldName: "SOURCE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.LAST_OB_TIME.p, fieldName: "LAST_OB_TIME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.LOWER_LEFT_ELEVATION_LIMIT.p, fieldName: "LOWER_LEFT_ELEVATION_LIMIT", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.UPPER_LEFT_AZIMUTH_LIMIT.p, fieldName: "UPPER_LEFT_AZIMUTH_LIMIT", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.LOWER_RIGHT_ELEVATION_LIMIT.p, fieldName: "LOWER_RIGHT_ELEVATION_LIMIT", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.LOWER_LEFT_AZIMUTH_LIMIT.p, fieldName: "LOWER_LEFT_AZIMUTH_LIMIT", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.UPPER_RIGHT_ELEVATION_LIMIT.p, fieldName: "UPPER_RIGHT_ELEVATION_LIMIT", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.UPPER_RIGHT_AZIMUTH_LIMIT.p, fieldName: "UPPER_RIGHT_AZIMUTH_LIMIT", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.LOWER_RIGHT_AZIMUTH_LIMIT.p, fieldName: "LOWER_RIGHT_AZIMUTH_LIMIT", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.UPPER_LEFT_ELEVATION_LIMIT.p, fieldName: "UPPER_LEFT_ELEVATION_LIMIT", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.RIGHT_GEO_BELT_LIMIT.p, fieldName: "RIGHT_GEO_BELT_LIMIT", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.LEFT_GEO_BELT_LIMIT.p, fieldName: "LEFT_GEO_BELT_LIMIT", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.MAGNITUDE_LIMIT.p, fieldName: "MAGNITUDE_LIMIT", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.TASKABLE.p, fieldName: "TASKABLE", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.OPERATIONAL_STATUS.p, fieldName: "OPERATIONAL_STATUS", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ESTABLISHMENT_DATE.p, fieldName: "ESTABLISHMENT_DATE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.CONTACT_INFO.p, fieldName: "CONTACT_INFO", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ENVIRONMENTAL_IMPACT.p, fieldName: "ENVIRONMENTAL_IMPACT", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ACCESSIBILITY_INFRA.p, fieldName: "ACCESSIBILITY_INFRA", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.INTEGRATED_DEVICES.p, fieldName: "INTEGRATED_DEVICES", required: false, type: ForwardOffset<Vector<ForwardOffset<IDM>, IDM>>.self)
     _v.finish()
   }
 }

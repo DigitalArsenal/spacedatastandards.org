@@ -32,7 +32,7 @@ class CommandContainer : Table() {
     /**
      * Container name
      */
-    val NAME : String?
+    val name : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,13 +41,13 @@ class CommandContainer : Table() {
                 null
             }
         }
-    val NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val nameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun nameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Entry list
      */
-    fun ENTRY_LIST(j: Int) : CommandContainerEntry? = ENTRY_LIST(CommandContainerEntry(), j)
-    fun ENTRY_LIST(obj: CommandContainerEntry, j: Int) : CommandContainerEntry? {
+    fun entryList(j: Int) : CommandContainerEntry? = entryList(CommandContainerEntry(), j)
+    fun entryList(obj: CommandContainerEntry, j: Int) : CommandContainerEntry? {
         val o = __offset(6)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -55,15 +55,15 @@ class CommandContainer : Table() {
             null
         }
     }
-    val ENTRY_LISTLength : Int
+    val entryListLength : Int
         get() {
             val o = __offset(6); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Base container reference
      */
-    val BASE_CONTAINER : BaseContainer? get() = BASE_CONTAINER(BaseContainer())
-    fun BASE_CONTAINER(obj: BaseContainer) : BaseContainer? {
+    val baseContainer : BaseContainer? get() = baseContainer(BaseContainer())
+    fun baseContainer(obj: BaseContainer) : BaseContainer? {
         val o = __offset(8)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -72,22 +72,22 @@ class CommandContainer : Table() {
         }
     }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsCommandContainer(_bb: ByteBuffer): CommandContainer = getRootAsCommandContainer(_bb, CommandContainer())
         fun getRootAsCommandContainer(_bb: ByteBuffer, obj: CommandContainer): CommandContainer {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createCommandContainer(builder: FlatBufferBuilder, NAMEOffset: Int, ENTRY_LISTOffset: Int, BASE_CONTAINEROffset: Int) : Int {
+        fun createCommandContainer(builder: FlatBufferBuilder, nameOffset: Int, entryListOffset: Int, baseContainerOffset: Int) : Int {
             builder.startTable(3)
-            addBASE_CONTAINER(builder, BASE_CONTAINEROffset)
-            addENTRY_LIST(builder, ENTRY_LISTOffset)
-            addNAME(builder, NAMEOffset)
+            addBASECONTAINER(builder, baseContainerOffset)
+            addENTRYLIST(builder, entryListOffset)
+            addNAME(builder, nameOffset)
             return endCommandContainer(builder)
         }
         fun startCommandContainer(builder: FlatBufferBuilder) = builder.startTable(3)
-        fun addNAME(builder: FlatBufferBuilder, NAME: Int) = builder.addOffset(0, NAME, 0)
-        fun addENTRY_LIST(builder: FlatBufferBuilder, ENTRY_LIST: Int) = builder.addOffset(1, ENTRY_LIST, 0)
+        fun addNAME(builder: FlatBufferBuilder, name: Int) = builder.addOffset(0, name, 0)
+        fun addENTRYLIST(builder: FlatBufferBuilder, entryList: Int) = builder.addOffset(1, entryList, 0)
         fun createEntryListVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -96,7 +96,7 @@ class CommandContainer : Table() {
             return builder.endVector()
         }
         fun startEntryListVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addBASE_CONTAINER(builder: FlatBufferBuilder, BASE_CONTAINER: Int) = builder.addOffset(2, BASE_CONTAINER, 0)
+        fun addBASECONTAINER(builder: FlatBufferBuilder, baseContainer: Int) = builder.addOffset(2, baseContainer, 0)
         fun endCommandContainer(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

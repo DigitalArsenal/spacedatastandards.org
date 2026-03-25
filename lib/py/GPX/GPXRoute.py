@@ -171,6 +171,12 @@ def GPXRouteStartLINKSVector(builder, numElems):
 def StartLINKSVector(builder, numElems):
     return GPXRouteStartLINKSVector(builder, numElems)
 
+def GPXRouteCreateLINKSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateLINKSVector(builder, data):
+    GPXRouteCreateLINKSVector(builder, data)
+
 def GPXRouteAddNUMBER(builder, NUMBER):
     builder.PrependUint32Slot(5, NUMBER, 0)
 
@@ -195,6 +201,12 @@ def GPXRouteStartPOINTSVector(builder, numElems):
 def StartPOINTSVector(builder, numElems):
     return GPXRouteStartPOINTSVector(builder, numElems)
 
+def GPXRouteCreatePOINTSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreatePOINTSVector(builder, data):
+    GPXRouteCreatePOINTSVector(builder, data)
+
 def GPXRouteEnd(builder):
     return builder.EndObject()
 
@@ -211,21 +223,31 @@ except:
 class GPXRouteT(object):
 
     # GPXRouteT
-    def __init__(self):
-        self.NAME = None  # type: str
-        self.COMMENT = None  # type: str
-        self.DESCRIPTION = None  # type: str
-        self.SOURCE = None  # type: str
-        self.LINKS = None  # type: List[GPXLink.GPXLinkT]
-        self.NUMBER = 0  # type: int
-        self.TYPE = None  # type: str
-        self.POINTS = None  # type: List[GPXWaypoint.GPXWaypointT]
+    def __init__(
+        self,
+        NAME = None,
+        COMMENT = None,
+        DESCRIPTION = None,
+        SOURCE = None,
+        LINKS = None,
+        NUMBER = 0,
+        TYPE = None,
+        POINTS = None,
+    ):
+        self.NAME = NAME  # type: Optional[str]
+        self.COMMENT = COMMENT  # type: Optional[str]
+        self.DESCRIPTION = DESCRIPTION  # type: Optional[str]
+        self.SOURCE = SOURCE  # type: Optional[str]
+        self.LINKS = LINKS  # type: Optional[List[GPXLink.GPXLinkT]]
+        self.NUMBER = NUMBER  # type: int
+        self.TYPE = TYPE  # type: Optional[str]
+        self.POINTS = POINTS  # type: Optional[List[GPXWaypoint.GPXWaypointT]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        gpxroute = GPXRoute()
-        gpxroute.Init(buf, pos)
-        return cls.InitFromObj(gpxroute)
+        tmpGpxroute = GPXRoute()
+        tmpGpxroute.Init(buf, pos)
+        return cls.InitFromObj(tmpGpxroute)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -233,36 +255,36 @@ class GPXRouteT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, gpxroute):
+    def InitFromObj(cls, tmpGpxroute):
         x = GPXRouteT()
-        x._UnPack(gpxroute)
+        x._UnPack(tmpGpxroute)
         return x
 
     # GPXRouteT
-    def _UnPack(self, gpxroute):
-        if gpxroute is None:
+    def _UnPack(self, GPXRoute):
+        if GPXRoute is None:
             return
-        self.NAME = gpxroute.NAME()
-        self.COMMENT = gpxroute.COMMENT()
-        self.DESCRIPTION = gpxroute.DESCRIPTION()
-        self.SOURCE = gpxroute.SOURCE()
-        if not gpxroute.LINKSIsNone():
+        self.NAME = GPXRoute.NAME()
+        self.COMMENT = GPXRoute.COMMENT()
+        self.DESCRIPTION = GPXRoute.DESCRIPTION()
+        self.SOURCE = GPXRoute.SOURCE()
+        if not GPXRoute.LINKSIsNone():
             self.LINKS = []
-            for i in range(gpxroute.LINKSLength()):
-                if gpxroute.LINKS(i) is None:
+            for i in range(GPXRoute.LINKSLength()):
+                if GPXRoute.LINKS(i) is None:
                     self.LINKS.append(None)
                 else:
-                    gPXLink_ = GPXLink.GPXLinkT.InitFromObj(gpxroute.LINKS(i))
+                    gPXLink_ = GPXLink.GPXLinkT.InitFromObj(GPXRoute.LINKS(i))
                     self.LINKS.append(gPXLink_)
-        self.NUMBER = gpxroute.NUMBER()
-        self.TYPE = gpxroute.TYPE()
-        if not gpxroute.POINTSIsNone():
+        self.NUMBER = GPXRoute.NUMBER()
+        self.TYPE = GPXRoute.TYPE()
+        if not GPXRoute.POINTSIsNone():
             self.POINTS = []
-            for i in range(gpxroute.POINTSLength()):
-                if gpxroute.POINTS(i) is None:
+            for i in range(GPXRoute.POINTSLength()):
+                if GPXRoute.POINTS(i) is None:
                     self.POINTS.append(None)
                 else:
-                    gPXWaypoint_ = GPXWaypoint.GPXWaypointT.InitFromObj(gpxroute.POINTS(i))
+                    gPXWaypoint_ = GPXWaypoint.GPXWaypointT.InitFromObj(GPXRoute.POINTS(i))
                     self.POINTS.append(gPXWaypoint_)
 
     # GPXRouteT
@@ -309,5 +331,5 @@ class GPXRouteT(object):
             GPXRouteAddTYPE(builder, TYPE)
         if self.POINTS is not None:
             GPXRouteAddPOINTS(builder, POINTS)
-        gpxroute = GPXRouteEnd(builder)
-        return gpxroute
+        GPXRoute = GPXRouteEnd(builder)
+        return GPXRoute

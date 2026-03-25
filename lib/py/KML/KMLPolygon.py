@@ -115,6 +115,12 @@ def KMLPolygonStartINNER_BOUNDARIESVector(builder, numElems):
 def StartINNER_BOUNDARIESVector(builder, numElems):
     return KMLPolygonStartINNER_BOUNDARIESVector(builder, numElems)
 
+def KMLPolygonCreateINNER_BOUNDARIESVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateINNER_BOUNDARIESVector(builder, data):
+    KMLPolygonCreateINNER_BOUNDARIESVector(builder, data)
+
 def KMLPolygonAddALTITUDE_MODE(builder, ALTITUDE_MODE):
     builder.PrependInt8Slot(2, ALTITUDE_MODE, 0)
 
@@ -148,18 +154,25 @@ except:
 class KMLPolygonT(object):
 
     # KMLPolygonT
-    def __init__(self):
-        self.OUTER_BOUNDARY = None  # type: Optional[KMLLinearRing.KMLLinearRingT]
-        self.INNER_BOUNDARIES = None  # type: List[KMLLinearRing.KMLLinearRingT]
-        self.ALTITUDE_MODE = 0  # type: int
-        self.EXTRUDE = False  # type: bool
-        self.TESSELLATE = False  # type: bool
+    def __init__(
+        self,
+        OUTER_BOUNDARY = None,
+        INNER_BOUNDARIES = None,
+        ALTITUDE_MODE = 0,
+        EXTRUDE = False,
+        TESSELLATE = False,
+    ):
+        self.OUTER_BOUNDARY = OUTER_BOUNDARY  # type: Optional[KMLLinearRing.KMLLinearRingT]
+        self.INNER_BOUNDARIES = INNER_BOUNDARIES  # type: Optional[List[KMLLinearRing.KMLLinearRingT]]
+        self.ALTITUDE_MODE = ALTITUDE_MODE  # type: int
+        self.EXTRUDE = EXTRUDE  # type: bool
+        self.TESSELLATE = TESSELLATE  # type: bool
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        kmlpolygon = KMLPolygon()
-        kmlpolygon.Init(buf, pos)
-        return cls.InitFromObj(kmlpolygon)
+        tmpKmlpolygon = KMLPolygon()
+        tmpKmlpolygon.Init(buf, pos)
+        return cls.InitFromObj(tmpKmlpolygon)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -167,28 +180,28 @@ class KMLPolygonT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, kmlpolygon):
+    def InitFromObj(cls, tmpKmlpolygon):
         x = KMLPolygonT()
-        x._UnPack(kmlpolygon)
+        x._UnPack(tmpKmlpolygon)
         return x
 
     # KMLPolygonT
-    def _UnPack(self, kmlpolygon):
-        if kmlpolygon is None:
+    def _UnPack(self, KMLPolygon):
+        if KMLPolygon is None:
             return
-        if kmlpolygon.OUTER_BOUNDARY() is not None:
-            self.OUTER_BOUNDARY = KMLLinearRing.KMLLinearRingT.InitFromObj(kmlpolygon.OUTER_BOUNDARY())
-        if not kmlpolygon.INNER_BOUNDARIESIsNone():
+        if KMLPolygon.OUTER_BOUNDARY() is not None:
+            self.OUTER_BOUNDARY = KMLLinearRing.KMLLinearRingT.InitFromObj(KMLPolygon.OUTER_BOUNDARY())
+        if not KMLPolygon.INNER_BOUNDARIESIsNone():
             self.INNER_BOUNDARIES = []
-            for i in range(kmlpolygon.INNER_BOUNDARIESLength()):
-                if kmlpolygon.INNER_BOUNDARIES(i) is None:
+            for i in range(KMLPolygon.INNER_BOUNDARIESLength()):
+                if KMLPolygon.INNER_BOUNDARIES(i) is None:
                     self.INNER_BOUNDARIES.append(None)
                 else:
-                    kMLLinearRing_ = KMLLinearRing.KMLLinearRingT.InitFromObj(kmlpolygon.INNER_BOUNDARIES(i))
+                    kMLLinearRing_ = KMLLinearRing.KMLLinearRingT.InitFromObj(KMLPolygon.INNER_BOUNDARIES(i))
                     self.INNER_BOUNDARIES.append(kMLLinearRing_)
-        self.ALTITUDE_MODE = kmlpolygon.ALTITUDE_MODE()
-        self.EXTRUDE = kmlpolygon.EXTRUDE()
-        self.TESSELLATE = kmlpolygon.TESSELLATE()
+        self.ALTITUDE_MODE = KMLPolygon.ALTITUDE_MODE()
+        self.EXTRUDE = KMLPolygon.EXTRUDE()
+        self.TESSELLATE = KMLPolygon.TESSELLATE()
 
     # KMLPolygonT
     def Pack(self, builder):
@@ -210,5 +223,5 @@ class KMLPolygonT(object):
         KMLPolygonAddALTITUDE_MODE(builder, self.ALTITUDE_MODE)
         KMLPolygonAddEXTRUDE(builder, self.EXTRUDE)
         KMLPolygonAddTESSELLATE(builder, self.TESSELLATE)
-        kmlpolygon = KMLPolygonEnd(builder)
-        return kmlpolygon
+        KMLPolygon = KMLPolygonEnd(builder)
+        return KMLPolygon

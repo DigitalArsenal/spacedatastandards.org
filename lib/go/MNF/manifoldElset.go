@@ -51,6 +51,10 @@ func (rcv *manifoldElset) EPOCH() []byte {
 	return nil
 }
 
+func (rcv *manifoldElset) Epoch() []byte {
+	return rcv.EPOCH()
+}
+
 /// Epoch of element set (ISO 8601)
 /// Semi-major axis in km
 func (rcv *manifoldElset) SEMI_MAJOR_AXIS() float64 {
@@ -61,9 +65,17 @@ func (rcv *manifoldElset) SEMI_MAJOR_AXIS() float64 {
 	return 0.0
 }
 
+func (rcv *manifoldElset) SemiMajorAxis() float64 {
+	return rcv.SEMI_MAJOR_AXIS()
+}
+
 /// Semi-major axis in km
 func (rcv *manifoldElset) MutateSEMI_MAJOR_AXIS(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(6, n)
+}
+
+func (rcv *manifoldElset) MutateSemiMajorAxis(n float64) bool {
+	return rcv.MutateSEMI_MAJOR_AXIS(n)
 }
 
 /// Eccentricity
@@ -75,9 +87,17 @@ func (rcv *manifoldElset) ECCENTRICITY() float64 {
 	return 0.0
 }
 
+func (rcv *manifoldElset) Eccentricity() float64 {
+	return rcv.ECCENTRICITY()
+}
+
 /// Eccentricity
 func (rcv *manifoldElset) MutateECCENTRICITY(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(8, n)
+}
+
+func (rcv *manifoldElset) MutateEccentricity(n float64) bool {
+	return rcv.MutateECCENTRICITY(n)
 }
 
 /// Inclination in degrees
@@ -89,9 +109,17 @@ func (rcv *manifoldElset) INCLINATION() float64 {
 	return 0.0
 }
 
+func (rcv *manifoldElset) Inclination() float64 {
+	return rcv.INCLINATION()
+}
+
 /// Inclination in degrees
 func (rcv *manifoldElset) MutateINCLINATION(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(10, n)
+}
+
+func (rcv *manifoldElset) MutateInclination(n float64) bool {
+	return rcv.MutateINCLINATION(n)
 }
 
 /// Right ascension of ascending node in degrees
@@ -103,9 +131,17 @@ func (rcv *manifoldElset) RA_OF_ASC_NODE() float64 {
 	return 0.0
 }
 
+func (rcv *manifoldElset) RaOfAscNode() float64 {
+	return rcv.RA_OF_ASC_NODE()
+}
+
 /// Right ascension of ascending node in degrees
 func (rcv *manifoldElset) MutateRA_OF_ASC_NODE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(12, n)
+}
+
+func (rcv *manifoldElset) MutateRaOfAscNode(n float64) bool {
+	return rcv.MutateRA_OF_ASC_NODE(n)
 }
 
 /// Argument of pericenter in degrees
@@ -117,9 +153,17 @@ func (rcv *manifoldElset) ARG_OF_PERICENTER() float64 {
 	return 0.0
 }
 
+func (rcv *manifoldElset) ArgOfPericenter() float64 {
+	return rcv.ARG_OF_PERICENTER()
+}
+
 /// Argument of pericenter in degrees
 func (rcv *manifoldElset) MutateARG_OF_PERICENTER(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(14, n)
+}
+
+func (rcv *manifoldElset) MutateArgOfPericenter(n float64) bool {
+	return rcv.MutateARG_OF_PERICENTER(n)
 }
 
 /// Mean anomaly in degrees
@@ -131,9 +175,17 @@ func (rcv *manifoldElset) MEAN_ANOMALY() float64 {
 	return 0.0
 }
 
+func (rcv *manifoldElset) MeanAnomaly() float64 {
+	return rcv.MEAN_ANOMALY()
+}
+
 /// Mean anomaly in degrees
 func (rcv *manifoldElset) MutateMEAN_ANOMALY(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(16, n)
+}
+
+func (rcv *manifoldElset) MutateMeanAnomaly(n float64) bool {
+	return rcv.MutateMEAN_ANOMALY(n)
 }
 
 /// Applied delta-V in m/s
@@ -145,9 +197,17 @@ func (rcv *manifoldElset) DELTA_V() float64 {
 	return 0.0
 }
 
+func (rcv *manifoldElset) DeltaV() float64 {
+	return rcv.DELTA_V()
+}
+
 /// Applied delta-V in m/s
 func (rcv *manifoldElset) MutateDELTA_V(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(18, n)
+}
+
+func (rcv *manifoldElset) MutateDeltaV(n float64) bool {
+	return rcv.MutateDELTA_V(n)
 }
 
 /// Applied delta-T in seconds
@@ -159,9 +219,17 @@ func (rcv *manifoldElset) DELTA_T() float64 {
 	return 0.0
 }
 
+func (rcv *manifoldElset) DeltaT() float64 {
+	return rcv.DELTA_T()
+}
+
 /// Applied delta-T in seconds
 func (rcv *manifoldElset) MutateDELTA_T(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(20, n)
+}
+
+func (rcv *manifoldElset) MutateDeltaT(n float64) bool {
+	return rcv.MutateDELTA_T(n)
 }
 
 /// Delta-V direction X (unit vector)
@@ -173,9 +241,17 @@ func (rcv *manifoldElset) DV_X() float64 {
 	return 0.0
 }
 
+func (rcv *manifoldElset) DvX() float64 {
+	return rcv.DV_X()
+}
+
 /// Delta-V direction X (unit vector)
 func (rcv *manifoldElset) MutateDV_X(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(22, n)
+}
+
+func (rcv *manifoldElset) MutateDvX(n float64) bool {
+	return rcv.MutateDV_X(n)
 }
 
 /// Delta-V direction Y (unit vector)
@@ -187,9 +263,17 @@ func (rcv *manifoldElset) DV_Y() float64 {
 	return 0.0
 }
 
+func (rcv *manifoldElset) DvY() float64 {
+	return rcv.DV_Y()
+}
+
 /// Delta-V direction Y (unit vector)
 func (rcv *manifoldElset) MutateDV_Y(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(24, n)
+}
+
+func (rcv *manifoldElset) MutateDvY(n float64) bool {
+	return rcv.MutateDV_Y(n)
 }
 
 /// Delta-V direction Z (unit vector)
@@ -201,9 +285,17 @@ func (rcv *manifoldElset) DV_Z() float64 {
 	return 0.0
 }
 
+func (rcv *manifoldElset) DvZ() float64 {
+	return rcv.DV_Z()
+}
+
 /// Delta-V direction Z (unit vector)
 func (rcv *manifoldElset) MutateDV_Z(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(26, n)
+}
+
+func (rcv *manifoldElset) MutateDvZ(n float64) bool {
+	return rcv.MutateDV_Z(n)
 }
 
 /// Probability weight (0.0-1.0)
@@ -215,9 +307,17 @@ func (rcv *manifoldElset) WEIGHT() float64 {
 	return 0.0
 }
 
+func (rcv *manifoldElset) Weight() float64 {
+	return rcv.WEIGHT()
+}
+
 /// Probability weight (0.0-1.0)
 func (rcv *manifoldElset) MutateWEIGHT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(28, n)
+}
+
+func (rcv *manifoldElset) MutateWeight(n float64) bool {
+	return rcv.MutateWEIGHT(n)
 }
 
 /// Apogee altitude in km
@@ -229,9 +329,17 @@ func (rcv *manifoldElset) APOGEE() float64 {
 	return 0.0
 }
 
+func (rcv *manifoldElset) Apogee() float64 {
+	return rcv.APOGEE()
+}
+
 /// Apogee altitude in km
 func (rcv *manifoldElset) MutateAPOGEE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(30, n)
+}
+
+func (rcv *manifoldElset) MutateApogee(n float64) bool {
+	return rcv.MutateAPOGEE(n)
 }
 
 /// Perigee altitude in km
@@ -243,9 +351,17 @@ func (rcv *manifoldElset) PERIGEE() float64 {
 	return 0.0
 }
 
+func (rcv *manifoldElset) Perigee() float64 {
+	return rcv.PERIGEE()
+}
+
 /// Perigee altitude in km
 func (rcv *manifoldElset) MutatePERIGEE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(32, n)
+}
+
+func (rcv *manifoldElset) MutatePerigee(n float64) bool {
+	return rcv.MutatePERIGEE(n)
 }
 
 /// Period in minutes
@@ -257,9 +373,17 @@ func (rcv *manifoldElset) PERIOD() float64 {
 	return 0.0
 }
 
+func (rcv *manifoldElset) Period() float64 {
+	return rcv.PERIOD()
+}
+
 /// Period in minutes
 func (rcv *manifoldElset) MutatePERIOD(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(34, n)
+}
+
+func (rcv *manifoldElset) MutatePeriod(n float64) bool {
+	return rcv.MutatePERIOD(n)
 }
 
 func manifoldElsetStart(builder *flatbuffers.Builder) {
@@ -268,50 +392,98 @@ func manifoldElsetStart(builder *flatbuffers.Builder) {
 func manifoldElsetAddEPOCH(builder *flatbuffers.Builder, EPOCH flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(EPOCH), 0)
 }
+func manifoldElsetAddEpoch(builder *flatbuffers.Builder, EPOCH flatbuffers.UOffsetT) {
+	manifoldElsetAddEPOCH(builder, EPOCH)
+}
 func manifoldElsetAddSEMI_MAJOR_AXIS(builder *flatbuffers.Builder, SEMI_MAJOR_AXIS float64) {
 	builder.PrependFloat64Slot(1, SEMI_MAJOR_AXIS, 0.0)
+}
+func manifoldElsetAddSemiMajorAxis(builder *flatbuffers.Builder, SEMI_MAJOR_AXIS float64) {
+	manifoldElsetAddSEMI_MAJOR_AXIS(builder, SEMI_MAJOR_AXIS)
 }
 func manifoldElsetAddECCENTRICITY(builder *flatbuffers.Builder, ECCENTRICITY float64) {
 	builder.PrependFloat64Slot(2, ECCENTRICITY, 0.0)
 }
+func manifoldElsetAddEccentricity(builder *flatbuffers.Builder, ECCENTRICITY float64) {
+	manifoldElsetAddECCENTRICITY(builder, ECCENTRICITY)
+}
 func manifoldElsetAddINCLINATION(builder *flatbuffers.Builder, INCLINATION float64) {
 	builder.PrependFloat64Slot(3, INCLINATION, 0.0)
+}
+func manifoldElsetAddInclination(builder *flatbuffers.Builder, INCLINATION float64) {
+	manifoldElsetAddINCLINATION(builder, INCLINATION)
 }
 func manifoldElsetAddRA_OF_ASC_NODE(builder *flatbuffers.Builder, RA_OF_ASC_NODE float64) {
 	builder.PrependFloat64Slot(4, RA_OF_ASC_NODE, 0.0)
 }
+func manifoldElsetAddRaOfAscNode(builder *flatbuffers.Builder, RA_OF_ASC_NODE float64) {
+	manifoldElsetAddRA_OF_ASC_NODE(builder, RA_OF_ASC_NODE)
+}
 func manifoldElsetAddARG_OF_PERICENTER(builder *flatbuffers.Builder, ARG_OF_PERICENTER float64) {
 	builder.PrependFloat64Slot(5, ARG_OF_PERICENTER, 0.0)
+}
+func manifoldElsetAddArgOfPericenter(builder *flatbuffers.Builder, ARG_OF_PERICENTER float64) {
+	manifoldElsetAddARG_OF_PERICENTER(builder, ARG_OF_PERICENTER)
 }
 func manifoldElsetAddMEAN_ANOMALY(builder *flatbuffers.Builder, MEAN_ANOMALY float64) {
 	builder.PrependFloat64Slot(6, MEAN_ANOMALY, 0.0)
 }
+func manifoldElsetAddMeanAnomaly(builder *flatbuffers.Builder, MEAN_ANOMALY float64) {
+	manifoldElsetAddMEAN_ANOMALY(builder, MEAN_ANOMALY)
+}
 func manifoldElsetAddDELTA_V(builder *flatbuffers.Builder, DELTA_V float64) {
 	builder.PrependFloat64Slot(7, DELTA_V, 0.0)
+}
+func manifoldElsetAddDeltaV(builder *flatbuffers.Builder, DELTA_V float64) {
+	manifoldElsetAddDELTA_V(builder, DELTA_V)
 }
 func manifoldElsetAddDELTA_T(builder *flatbuffers.Builder, DELTA_T float64) {
 	builder.PrependFloat64Slot(8, DELTA_T, 0.0)
 }
+func manifoldElsetAddDeltaT(builder *flatbuffers.Builder, DELTA_T float64) {
+	manifoldElsetAddDELTA_T(builder, DELTA_T)
+}
 func manifoldElsetAddDV_X(builder *flatbuffers.Builder, DV_X float64) {
 	builder.PrependFloat64Slot(9, DV_X, 0.0)
+}
+func manifoldElsetAddDvX(builder *flatbuffers.Builder, DV_X float64) {
+	manifoldElsetAddDV_X(builder, DV_X)
 }
 func manifoldElsetAddDV_Y(builder *flatbuffers.Builder, DV_Y float64) {
 	builder.PrependFloat64Slot(10, DV_Y, 0.0)
 }
+func manifoldElsetAddDvY(builder *flatbuffers.Builder, DV_Y float64) {
+	manifoldElsetAddDV_Y(builder, DV_Y)
+}
 func manifoldElsetAddDV_Z(builder *flatbuffers.Builder, DV_Z float64) {
 	builder.PrependFloat64Slot(11, DV_Z, 0.0)
+}
+func manifoldElsetAddDvZ(builder *flatbuffers.Builder, DV_Z float64) {
+	manifoldElsetAddDV_Z(builder, DV_Z)
 }
 func manifoldElsetAddWEIGHT(builder *flatbuffers.Builder, WEIGHT float64) {
 	builder.PrependFloat64Slot(12, WEIGHT, 0.0)
 }
+func manifoldElsetAddWeight(builder *flatbuffers.Builder, WEIGHT float64) {
+	manifoldElsetAddWEIGHT(builder, WEIGHT)
+}
 func manifoldElsetAddAPOGEE(builder *flatbuffers.Builder, APOGEE float64) {
 	builder.PrependFloat64Slot(13, APOGEE, 0.0)
+}
+func manifoldElsetAddApogee(builder *flatbuffers.Builder, APOGEE float64) {
+	manifoldElsetAddAPOGEE(builder, APOGEE)
 }
 func manifoldElsetAddPERIGEE(builder *flatbuffers.Builder, PERIGEE float64) {
 	builder.PrependFloat64Slot(14, PERIGEE, 0.0)
 }
+func manifoldElsetAddPerigee(builder *flatbuffers.Builder, PERIGEE float64) {
+	manifoldElsetAddPERIGEE(builder, PERIGEE)
+}
 func manifoldElsetAddPERIOD(builder *flatbuffers.Builder, PERIOD float64) {
 	builder.PrependFloat64Slot(15, PERIOD, 0.0)
+}
+func manifoldElsetAddPeriod(builder *flatbuffers.Builder, PERIOD float64) {
+	manifoldElsetAddPERIOD(builder, PERIOD)
 }
 func manifoldElsetEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

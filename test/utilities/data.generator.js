@@ -12,6 +12,22 @@ export const generateData = async (total = 10, numFiles = 5, dataPath = `test/ou
     if (!dataPath) return [];
     execSync(`rm -rf ${dataPath}/*.* && mkdir -p ${dataPath}`);
 
+    const resolveTableModule = (tableName) => {
+        if (standards[tableName]?.[`${tableName}T`]) {
+            return standards[tableName];
+        }
+        return Object.values(standards).find((candidate) => candidate?.[`${tableName}T`]) || null;
+    };
+
+    const createTableInstance = (tableName) => {
+        const tableModule = resolveTableModule(tableName);
+        const ctor = tableModule?.[`${tableName}T`];
+        if (!ctor) {
+            throw new TypeError(`Missing generated constructor for ${tableName}T`);
+        }
+        return new ctor();
+    };
+
     const buildProp = (prop, propName) => {
         let { type, minimum: min, maximum: max, enum: enumValues } = prop;
         let fakerValue = null;
@@ -45,16 +61,21 @@ export const generateData = async (total = 10, numFiles = 5, dataPath = `test/ou
         return fakerValue;
     }
 
-    const buildObject = (classProperties, parentClass, tableName, jsonSchema, depth = 0) => {
-        if (depth > 5) return new parentClass[`${tableName}T`];
-        let newObject = new parentClass[`${tableName}T`];
+    const buildObject = (classProperties, tableName, jsonSchema, depth = 0) => {
+        if (depth > 5) return createTableInstance(tableName);
+        let newObject = createTableInstance(tableName);
 
         for (let x in classProperties) {
             let resolvedProp = resolver(classProperties[x]?.items || classProperties[x], jsonSchema);
             if (!fTCheck(resolvedProp?.type)) {
                 newObject[x] = buildProp(resolvedProp, x);
             } else if (resolvedProp?.type === "object" && classProperties[x]?.type !== "array") {
-                newObject[x] = buildObject(resolvedProp.properties, parentClass, refRootName(resolvedProp.$$ref), jsonSchema, depth + 1);
+                newObject[x] = buildObject(
+                    resolvedProp.properties,
+                    refRootName(resolvedProp.$$ref),
+                    jsonSchema,
+                    depth + 1,
+                );
             } else if (classProperties[x]?.type === "array") {
                 newObject[x] = [];
                 for (let i = 0; i < 2; i++) {
@@ -62,7 +83,6 @@ export const generateData = async (total = 10, numFiles = 5, dataPath = `test/ou
                         buildProp(resolvedProp, x) :
                         buildObject(
                             resolvedProp?.items || resolvedProp.properties,
-                            parentClass,
                             refRootName(resolvedProp.$$ref),
                             jsonSchema,
                             depth + 1);
@@ -78,7 +98,7 @@ export const generateData = async (total = 10, numFiles = 5, dataPath = `test/ou
         for (let standard of standardsToGenerate) {
             let currentStandard = standardsJSON.STANDARDS[standard];
             let tableName = refRootName(currentStandard.$ref);
-            let parentClass = standards[tableName];
+            let parentClass = resolveTableModule(tableName);
 
             if (!tableName || !parentClass) {
                 console.log(`Skipping unknown standard: ${standard}`);
@@ -87,7 +107,11 @@ export const generateData = async (total = 10, numFiles = 5, dataPath = `test/ou
 
             let objects = [];
             for (let j = 0; j < total; j++) {
-                let newObject = buildObject(currentStandard.definitions[tableName].properties, parentClass, tableName, currentStandard);
+                let newObject = buildObject(
+                    currentStandard.definitions[tableName].properties,
+                    tableName,
+                    currentStandard,
+                );
                 objects.push(newObject);
             }
 

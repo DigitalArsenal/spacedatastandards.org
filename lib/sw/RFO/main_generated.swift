@@ -2,9 +2,13 @@
 // swiftlint:disable all
 // swiftformat:disable all
 
+#if canImport(Common)
+import Common
+#endif
+
 import FlatBuffers
 
-public enum rfObsType: Int8, Enum, Verifiable {
+public enum rfObsType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -20,7 +24,7 @@ public enum rfObsType: Int8, Enum, Verifiable {
 }
 
 
-public enum rfDetectionStatus: Int8, Enum, Verifiable {
+public enum rfDetectionStatus: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -36,9 +40,9 @@ public enum rfDetectionStatus: Int8, Enum, Verifiable {
 
 
 ///  RF Observation
-public struct RFO: FlatBufferObject, Verifiable {
+public struct RFO: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -293,9 +297,7 @@ public struct RFO: FlatBufferObject, Verifiable {
   public var URL: String? { let o = _accessor.offset(VTOFFSET.URL.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var URLSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.URL.v) }
   ///  Associated tags
-  public var hasTags: Bool { let o = _accessor.offset(VTOFFSET.TAGS.v); return o == 0 ? false : true }
-  public var TAGSCount: Int32 { let o = _accessor.offset(VTOFFSET.TAGS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func TAGS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.TAGS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  public var TAGS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.TAGS.v, byteSize: 4) }
   public static func startRFO(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 74) }
   public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VTOFFSET.ID.p) }
   public static func add(OB_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OB_TIME, at: VTOFFSET.OB_TIME.p) }

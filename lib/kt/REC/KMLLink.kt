@@ -32,7 +32,7 @@ class KMLLink : Table() {
     /**
      * URL
      */
-    val HREF : String?
+    val href : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class KMLLink : Table() {
                 null
             }
         }
-    val HREFAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun HREFInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val hrefAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun hrefInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Refresh mode
      */
-    val REFRESH_MODE : Byte
+    val refreshMode : Byte
         get() {
             val o = __offset(6)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -54,7 +54,7 @@ class KMLLink : Table() {
     /**
      * Refresh interval in seconds
      */
-    val REFRESH_INTERVAL : Double
+    val refreshInterval : Double
         get() {
             val o = __offset(8)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -62,7 +62,7 @@ class KMLLink : Table() {
     /**
      * View refresh mode
      */
-    val VIEW_REFRESH_MODE : Byte
+    val viewRefreshMode : Byte
         get() {
             val o = __offset(10)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -70,7 +70,7 @@ class KMLLink : Table() {
     /**
      * View refresh time in seconds
      */
-    val VIEW_REFRESH_TIME : Double
+    val viewRefreshTime : Double
         get() {
             val o = __offset(12)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -78,7 +78,7 @@ class KMLLink : Table() {
     /**
      * View bound scale
      */
-    val VIEW_BOUND_SCALE : Double
+    val viewBoundScale : Double
         get() {
             val o = __offset(14)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -86,7 +86,7 @@ class KMLLink : Table() {
     /**
      * View format string
      */
-    val VIEW_FORMAT : String?
+    val viewFormat : String?
         get() {
             val o = __offset(16)
             return if (o != 0) {
@@ -95,12 +95,12 @@ class KMLLink : Table() {
                 null
             }
         }
-    val VIEW_FORMATAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(16, 1)
-    fun VIEW_FORMATInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 16, 1)
+    val viewFormatAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(16, 1)
+    fun viewFormatInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 16, 1)
     /**
      * HTTP query string
      */
-    val HTTP_QUERY : String?
+    val httpQuery : String?
         get() {
             val o = __offset(18)
             return if (o != 0) {
@@ -109,36 +109,36 @@ class KMLLink : Table() {
                 null
             }
         }
-    val HTTP_QUERYAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(18, 1)
-    fun HTTP_QUERYInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 18, 1)
+    val httpQueryAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(18, 1)
+    fun httpQueryInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 18, 1)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsKMLLink(_bb: ByteBuffer): KMLLink = getRootAsKMLLink(_bb, KMLLink())
         fun getRootAsKMLLink(_bb: ByteBuffer, obj: KMLLink): KMLLink {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createKMLLink(builder: FlatBufferBuilder, HREFOffset: Int, REFRESH_MODE: Byte, REFRESH_INTERVAL: Double, VIEW_REFRESH_MODE: Byte, VIEW_REFRESH_TIME: Double, VIEW_BOUND_SCALE: Double, VIEW_FORMATOffset: Int, HTTP_QUERYOffset: Int) : Int {
+        fun createKMLLink(builder: FlatBufferBuilder, hrefOffset: Int, refreshMode: Byte, refreshInterval: Double, viewRefreshMode: Byte, viewRefreshTime: Double, viewBoundScale: Double, viewFormatOffset: Int, httpQueryOffset: Int) : Int {
             builder.startTable(8)
-            addVIEW_BOUND_SCALE(builder, VIEW_BOUND_SCALE)
-            addVIEW_REFRESH_TIME(builder, VIEW_REFRESH_TIME)
-            addREFRESH_INTERVAL(builder, REFRESH_INTERVAL)
-            addHTTP_QUERY(builder, HTTP_QUERYOffset)
-            addVIEW_FORMAT(builder, VIEW_FORMATOffset)
-            addHREF(builder, HREFOffset)
-            addVIEW_REFRESH_MODE(builder, VIEW_REFRESH_MODE)
-            addREFRESH_MODE(builder, REFRESH_MODE)
+            addVIEWBOUNDSCALE(builder, viewBoundScale)
+            addVIEWREFRESHTIME(builder, viewRefreshTime)
+            addREFRESHINTERVAL(builder, refreshInterval)
+            addHTTPQUERY(builder, httpQueryOffset)
+            addVIEWFORMAT(builder, viewFormatOffset)
+            addHREF(builder, hrefOffset)
+            addVIEWREFRESHMODE(builder, viewRefreshMode)
+            addREFRESHMODE(builder, refreshMode)
             return endKMLLink(builder)
         }
         fun startKMLLink(builder: FlatBufferBuilder) = builder.startTable(8)
-        fun addHREF(builder: FlatBufferBuilder, HREF: Int) = builder.addOffset(0, HREF, 0)
-        fun addREFRESH_MODE(builder: FlatBufferBuilder, REFRESH_MODE: Byte) = builder.addByte(1, REFRESH_MODE, 0)
-        fun addREFRESH_INTERVAL(builder: FlatBufferBuilder, REFRESH_INTERVAL: Double) = builder.addDouble(2, REFRESH_INTERVAL, 0.0)
-        fun addVIEW_REFRESH_MODE(builder: FlatBufferBuilder, VIEW_REFRESH_MODE: Byte) = builder.addByte(3, VIEW_REFRESH_MODE, 0)
-        fun addVIEW_REFRESH_TIME(builder: FlatBufferBuilder, VIEW_REFRESH_TIME: Double) = builder.addDouble(4, VIEW_REFRESH_TIME, 0.0)
-        fun addVIEW_BOUND_SCALE(builder: FlatBufferBuilder, VIEW_BOUND_SCALE: Double) = builder.addDouble(5, VIEW_BOUND_SCALE, 0.0)
-        fun addVIEW_FORMAT(builder: FlatBufferBuilder, VIEW_FORMAT: Int) = builder.addOffset(6, VIEW_FORMAT, 0)
-        fun addHTTP_QUERY(builder: FlatBufferBuilder, HTTP_QUERY: Int) = builder.addOffset(7, HTTP_QUERY, 0)
+        fun addHREF(builder: FlatBufferBuilder, href: Int) = builder.addOffset(0, href, 0)
+        fun addREFRESHMODE(builder: FlatBufferBuilder, refreshMode: Byte) = builder.addByte(1, refreshMode, 0)
+        fun addREFRESHINTERVAL(builder: FlatBufferBuilder, refreshInterval: Double) = builder.addDouble(2, refreshInterval, 0.0)
+        fun addVIEWREFRESHMODE(builder: FlatBufferBuilder, viewRefreshMode: Byte) = builder.addByte(3, viewRefreshMode, 0)
+        fun addVIEWREFRESHTIME(builder: FlatBufferBuilder, viewRefreshTime: Double) = builder.addDouble(4, viewRefreshTime, 0.0)
+        fun addVIEWBOUNDSCALE(builder: FlatBufferBuilder, viewBoundScale: Double) = builder.addDouble(5, viewBoundScale, 0.0)
+        fun addVIEWFORMAT(builder: FlatBufferBuilder, viewFormat: Int) = builder.addOffset(6, viewFormat, 0)
+        fun addHTTPQUERY(builder: FlatBufferBuilder, httpQuery: Int) = builder.addOffset(7, httpQuery, 0)
         fun endKMLLink(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

@@ -2,9 +2,13 @@
 // swiftlint:disable all
 // swiftformat:disable all
 
+#if canImport(Common)
+import Common
+#endif
+
 import FlatBuffers
 
-public enum gnssConstellation: Int8, Enum, Verifiable {
+public enum gnssConstellation: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -22,7 +26,7 @@ public enum gnssConstellation: Int8, Enum, Verifiable {
 }
 
 
-public enum gnssObsType: Int8, Enum, Verifiable {
+public enum gnssObsType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -38,9 +42,9 @@ public enum gnssObsType: Int8, Enum, Verifiable {
 
 
 ///  GNSS Observation Data Point
-public struct gnssObsData: FlatBufferObject, Verifiable {
+public struct gnssObsData: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -106,9 +110,9 @@ public struct gnssObsData: FlatBufferObject, Verifiable {
 }
 
 ///  GNSS Satellite Observation
-public struct gnssSatObs: FlatBufferObject, Verifiable {
+public struct gnssSatObs: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -143,9 +147,7 @@ public struct gnssSatObs: FlatBufferObject, Verifiable {
   ///  AGC state
   public var AGC_STATE: Int32 { let o = _accessor.offset(VTOFFSET.AGC_STATE.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
   ///  Observations for this satellite
-  public var hasObservations: Bool { let o = _accessor.offset(VTOFFSET.OBSERVATIONS.v); return o == 0 ? false : true }
-  public var OBSERVATIONSCount: Int32 { let o = _accessor.offset(VTOFFSET.OBSERVATIONS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func OBSERVATIONS(at index: Int32) -> gnssObsData? { let o = _accessor.offset(VTOFFSET.OBSERVATIONS.v); return o == 0 ? nil : gnssObsData(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var OBSERVATIONS: FlatbufferVector<gnssObsData> { return _accessor.vector(at: VTOFFSET.OBSERVATIONS.v, byteSize: 4) }
   public static func startgnssSatObs(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 7) }
   public static func add(GNSS_SAT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GNSS_SAT_ID, at: VTOFFSET.GNSS_SAT_ID.p) }
   public static func add(CONSTELLATION: gnssConstellation, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CONSTELLATION.rawValue, def: 0, at: VTOFFSET.CONSTELLATION.p) }
@@ -190,9 +192,9 @@ public struct gnssSatObs: FlatBufferObject, Verifiable {
 }
 
 ///  GNSS Observation
-public struct GNO: FlatBufferObject, Verifiable {
+public struct GNO: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -277,13 +279,9 @@ public struct GNO: FlatBufferObject, Verifiable {
   ///  VDOP
   public var VDOP: Double { let o = _accessor.offset(VTOFFSET.VDOP.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Satellite observations
-  public var hasSatObs: Bool { let o = _accessor.offset(VTOFFSET.SAT_OBS.v); return o == 0 ? false : true }
-  public var SAT_OBSCount: Int32 { let o = _accessor.offset(VTOFFSET.SAT_OBS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func SAT_OBS(at index: Int32) -> gnssSatObs? { let o = _accessor.offset(VTOFFSET.SAT_OBS.v); return o == 0 ? nil : gnssSatObs(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var SAT_OBS: FlatbufferVector<gnssSatObs> { return _accessor.vector(at: VTOFFSET.SAT_OBS.v, byteSize: 4) }
   ///  Observation code set identifiers
-  public var hasObsCodeSet: Bool { let o = _accessor.offset(VTOFFSET.OBS_CODE_SET.v); return o == 0 ? false : true }
-  public var OBS_CODE_SETCount: Int32 { let o = _accessor.offset(VTOFFSET.OBS_CODE_SET.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func OBS_CODE_SET(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.OBS_CODE_SET.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  public var OBS_CODE_SET: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.OBS_CODE_SET.v, byteSize: 4) }
   ///  Additional notes
   public var NOTES: String? { let o = _accessor.offset(VTOFFSET.NOTES.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var NOTESSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NOTES.v) }

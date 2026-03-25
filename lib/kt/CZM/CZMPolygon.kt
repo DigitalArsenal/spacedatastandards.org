@@ -32,7 +32,7 @@ class CZMPolygon : Table() {
     /**
      * Whether the polygon is displayed
      */
-    val SHOW : Boolean
+    val show : Boolean
         get() {
             val o = __offset(4)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -40,7 +40,7 @@ class CZMPolygon : Table() {
     /**
      * Positions as cartographic degrees [lon, lat, height, ...]
      */
-    fun POSITIONS_CARTOGRAPHIC_DEGREES(j: Int) : Double {
+    fun positionsCartographicDegrees(j: Int) : Double {
         val o = __offset(6)
         return if (o != 0) {
             bb.getDouble(__vector(o) + j * 8)
@@ -48,16 +48,16 @@ class CZMPolygon : Table() {
             0.0
         }
     }
-    val POSITIONS_CARTOGRAPHIC_DEGREESLength : Int
+    val positionsCartographicDegreesLength : Int
         get() {
             val o = __offset(6); return if (o != 0) __vector_len(o) else 0
         }
-    val POSITIONS_CARTOGRAPHIC_DEGREESAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 8)
-    fun POSITIONS_CARTOGRAPHIC_DEGREESInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 8)
+    val positionsCartographicDegreesAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 8)
+    fun positionsCartographicDegreesInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 8)
     /**
      * Positions as Cartesian [X, Y, Z, ...]
      */
-    fun POSITIONS_CARTESIAN(j: Int) : Double {
+    fun positionsCartesian(j: Int) : Double {
         val o = __offset(8)
         return if (o != 0) {
             bb.getDouble(__vector(o) + j * 8)
@@ -65,16 +65,16 @@ class CZMPolygon : Table() {
             0.0
         }
     }
-    val POSITIONS_CARTESIANLength : Int
+    val positionsCartesianLength : Int
         get() {
             val o = __offset(8); return if (o != 0) __vector_len(o) else 0
         }
-    val POSITIONS_CARTESIANAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 8)
-    fun POSITIONS_CARTESIANInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 8)
+    val positionsCartesianAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 8)
+    fun positionsCartesianInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 8)
     /**
      * Fill flag
      */
-    val FILL : Boolean
+    val fill : Boolean
         get() {
             val o = __offset(10)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -82,8 +82,8 @@ class CZMPolygon : Table() {
     /**
      * Fill color (solid color material, legacy)
      */
-    val COLOR : CZMColor? get() = COLOR(CZMColor())
-    fun COLOR(obj: CZMColor) : CZMColor? {
+    val color : CZMColor? get() = color(CZMColor())
+    fun color(obj: CZMColor) : CZMColor? {
         val o = __offset(12)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -94,7 +94,7 @@ class CZMPolygon : Table() {
     /**
      * Outline flag
      */
-    val OUTLINE : Boolean
+    val outline : Boolean
         get() {
             val o = __offset(14)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -102,8 +102,8 @@ class CZMPolygon : Table() {
     /**
      * Outline color
      */
-    val OUTLINE_COLOR : CZMColor? get() = OUTLINE_COLOR(CZMColor())
-    fun OUTLINE_COLOR(obj: CZMColor) : CZMColor? {
+    val outlineColor : CZMColor? get() = outlineColor(CZMColor())
+    fun outlineColor(obj: CZMColor) : CZMColor? {
         val o = __offset(16)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -114,7 +114,7 @@ class CZMPolygon : Table() {
     /**
      * Extruded height in meters
      */
-    val EXTRUDED_HEIGHT : Double
+    val extrudedHeight : Double
         get() {
             val o = __offset(18)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -122,7 +122,7 @@ class CZMPolygon : Table() {
     /**
      * Height reference
      */
-    val HEIGHT_REFERENCE : Byte
+    val heightReference : Byte
         get() {
             val o = __offset(20)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -130,7 +130,7 @@ class CZMPolygon : Table() {
     /**
      * Classification type
      */
-    val CLASSIFICATION_TYPE : Byte
+    val classificationType : Byte
         get() {
             val o = __offset(22)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -138,8 +138,8 @@ class CZMPolygon : Table() {
     /**
      * Holes (position lists: each hole is [lon,lat,h,...])
      */
-    fun HOLES(j: Int) : CZMPolygonHole? = HOLES(CZMPolygonHole(), j)
-    fun HOLES(obj: CZMPolygonHole, j: Int) : CZMPolygonHole? {
+    fun holes(j: Int) : CZMPolygonHole? = holes(CZMPolygonHole(), j)
+    fun holes(obj: CZMPolygonHole, j: Int) : CZMPolygonHole? {
         val o = __offset(24)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -147,14 +147,14 @@ class CZMPolygon : Table() {
             null
         }
     }
-    val HOLESLength : Int
+    val holesLength : Int
         get() {
             val o = __offset(24); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Arc type
      */
-    val ARC_TYPE : String?
+    val arcType : String?
         get() {
             val o = __offset(26)
             return if (o != 0) {
@@ -163,12 +163,12 @@ class CZMPolygon : Table() {
                 null
             }
         }
-    val ARC_TYPEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(26, 1)
-    fun ARC_TYPEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 26, 1)
+    val arcTypeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(26, 1)
+    fun arcTypeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 26, 1)
     /**
      * Height in meters
      */
-    val HEIGHT : Double
+    val height : Double
         get() {
             val o = __offset(28)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -176,7 +176,7 @@ class CZMPolygon : Table() {
     /**
      * Extruded height reference
      */
-    val EXTRUDED_HEIGHT_REFERENCE : String?
+    val extrudedHeightReference : String?
         get() {
             val o = __offset(30)
             return if (o != 0) {
@@ -185,12 +185,12 @@ class CZMPolygon : Table() {
                 null
             }
         }
-    val EXTRUDED_HEIGHT_REFERENCEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(30, 1)
-    fun EXTRUDED_HEIGHT_REFERENCEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 30, 1)
+    val extrudedHeightReferenceAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(30, 1)
+    fun extrudedHeightReferenceInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 30, 1)
     /**
      * Texture rotation in radians
      */
-    val ST_ROTATION : Double
+    val stRotation : Double
         get() {
             val o = __offset(32)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -198,7 +198,7 @@ class CZMPolygon : Table() {
     /**
      * Granularity in radians
      */
-    val GRANULARITY : Double
+    val granularity : Double
         get() {
             val o = __offset(34)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -206,8 +206,8 @@ class CZMPolygon : Table() {
     /**
      * Full surface material
      */
-    val MATERIAL : CZMMaterial? get() = MATERIAL(CZMMaterial())
-    fun MATERIAL(obj: CZMMaterial) : CZMMaterial? {
+    val material : CZMMaterial? get() = material(CZMMaterial())
+    fun material(obj: CZMMaterial) : CZMMaterial? {
         val o = __offset(36)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -218,7 +218,7 @@ class CZMPolygon : Table() {
     /**
      * Outline width in pixels
      */
-    val OUTLINE_WIDTH : Double
+    val outlineWidth : Double
         get() {
             val o = __offset(38)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -226,7 +226,7 @@ class CZMPolygon : Table() {
     /**
      * Whether to use per-position heights
      */
-    val PER_POSITION_HEIGHT : Boolean
+    val perPositionHeight : Boolean
         get() {
             val o = __offset(40)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -234,7 +234,7 @@ class CZMPolygon : Table() {
     /**
      * Whether to close the top of extruded polygon
      */
-    val CLOSE_TOP : Boolean
+    val closeTop : Boolean
         get() {
             val o = __offset(42)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -242,7 +242,7 @@ class CZMPolygon : Table() {
     /**
      * Whether to close the bottom of extruded polygon
      */
-    val CLOSE_BOTTOM : Boolean
+    val closeBottom : Boolean
         get() {
             val o = __offset(44)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -250,7 +250,7 @@ class CZMPolygon : Table() {
     /**
      * Shadow mode
      */
-    val SHADOWS : String?
+    val shadows : String?
         get() {
             val o = __offset(46)
             return if (o != 0) {
@@ -259,53 +259,53 @@ class CZMPolygon : Table() {
                 null
             }
         }
-    val SHADOWSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(46, 1)
-    fun SHADOWSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 46, 1)
+    val shadowsAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(46, 1)
+    fun shadowsInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 46, 1)
     /**
      * Z-index for ordering
      */
-    val Z_INDEX : Int
+    val zIndex : Int
         get() {
             val o = __offset(48)
             return if(o != 0) bb.getInt(o + bb_pos) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsCZMPolygon(_bb: ByteBuffer): CZMPolygon = getRootAsCZMPolygon(_bb, CZMPolygon())
         fun getRootAsCZMPolygon(_bb: ByteBuffer, obj: CZMPolygon): CZMPolygon {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createCZMPolygon(builder: FlatBufferBuilder, SHOW: Boolean, POSITIONS_CARTOGRAPHIC_DEGREESOffset: Int, POSITIONS_CARTESIANOffset: Int, FILL: Boolean, COLOROffset: Int, OUTLINE: Boolean, OUTLINE_COLOROffset: Int, EXTRUDED_HEIGHT: Double, HEIGHT_REFERENCE: Byte, CLASSIFICATION_TYPE: Byte, HOLESOffset: Int, ARC_TYPEOffset: Int, HEIGHT: Double, EXTRUDED_HEIGHT_REFERENCEOffset: Int, ST_ROTATION: Double, GRANULARITY: Double, MATERIALOffset: Int, OUTLINE_WIDTH: Double, PER_POSITION_HEIGHT: Boolean, CLOSE_TOP: Boolean, CLOSE_BOTTOM: Boolean, SHADOWSOffset: Int, Z_INDEX: Int) : Int {
+        fun createCZMPolygon(builder: FlatBufferBuilder, show: Boolean, positionsCartographicDegreesOffset: Int, positionsCartesianOffset: Int, fill: Boolean, colorOffset: Int, outline: Boolean, outlineColorOffset: Int, extrudedHeight: Double, heightReference: Byte, classificationType: Byte, holesOffset: Int, arcTypeOffset: Int, height: Double, extrudedHeightReferenceOffset: Int, stRotation: Double, granularity: Double, materialOffset: Int, outlineWidth: Double, perPositionHeight: Boolean, closeTop: Boolean, closeBottom: Boolean, shadowsOffset: Int, zIndex: Int) : Int {
             builder.startTable(23)
-            addOUTLINE_WIDTH(builder, OUTLINE_WIDTH)
-            addGRANULARITY(builder, GRANULARITY)
-            addST_ROTATION(builder, ST_ROTATION)
-            addHEIGHT(builder, HEIGHT)
-            addEXTRUDED_HEIGHT(builder, EXTRUDED_HEIGHT)
-            addZ_INDEX(builder, Z_INDEX)
-            addSHADOWS(builder, SHADOWSOffset)
-            addMATERIAL(builder, MATERIALOffset)
-            addEXTRUDED_HEIGHT_REFERENCE(builder, EXTRUDED_HEIGHT_REFERENCEOffset)
-            addARC_TYPE(builder, ARC_TYPEOffset)
-            addHOLES(builder, HOLESOffset)
-            addOUTLINE_COLOR(builder, OUTLINE_COLOROffset)
-            addCOLOR(builder, COLOROffset)
-            addPOSITIONS_CARTESIAN(builder, POSITIONS_CARTESIANOffset)
-            addPOSITIONS_CARTOGRAPHIC_DEGREES(builder, POSITIONS_CARTOGRAPHIC_DEGREESOffset)
-            addCLOSE_BOTTOM(builder, CLOSE_BOTTOM)
-            addCLOSE_TOP(builder, CLOSE_TOP)
-            addPER_POSITION_HEIGHT(builder, PER_POSITION_HEIGHT)
-            addCLASSIFICATION_TYPE(builder, CLASSIFICATION_TYPE)
-            addHEIGHT_REFERENCE(builder, HEIGHT_REFERENCE)
-            addOUTLINE(builder, OUTLINE)
-            addFILL(builder, FILL)
-            addSHOW(builder, SHOW)
+            addOUTLINEWIDTH(builder, outlineWidth)
+            addGRANULARITY(builder, granularity)
+            addSTROTATION(builder, stRotation)
+            addHEIGHT(builder, height)
+            addEXTRUDEDHEIGHT(builder, extrudedHeight)
+            addZINDEX(builder, zIndex)
+            addSHADOWS(builder, shadowsOffset)
+            addMATERIAL(builder, materialOffset)
+            addEXTRUDEDHEIGHTREFERENCE(builder, extrudedHeightReferenceOffset)
+            addARCTYPE(builder, arcTypeOffset)
+            addHOLES(builder, holesOffset)
+            addOUTLINECOLOR(builder, outlineColorOffset)
+            addCOLOR(builder, colorOffset)
+            addPOSITIONSCARTESIAN(builder, positionsCartesianOffset)
+            addPOSITIONSCARTOGRAPHICDEGREES(builder, positionsCartographicDegreesOffset)
+            addCLOSEBOTTOM(builder, closeBottom)
+            addCLOSETOP(builder, closeTop)
+            addPERPOSITIONHEIGHT(builder, perPositionHeight)
+            addCLASSIFICATIONTYPE(builder, classificationType)
+            addHEIGHTREFERENCE(builder, heightReference)
+            addOUTLINE(builder, outline)
+            addFILL(builder, fill)
+            addSHOW(builder, show)
             return endCZMPolygon(builder)
         }
         fun startCZMPolygon(builder: FlatBufferBuilder) = builder.startTable(23)
-        fun addSHOW(builder: FlatBufferBuilder, SHOW: Boolean) = builder.addBoolean(0, SHOW, false)
-        fun addPOSITIONS_CARTOGRAPHIC_DEGREES(builder: FlatBufferBuilder, POSITIONS_CARTOGRAPHIC_DEGREES: Int) = builder.addOffset(1, POSITIONS_CARTOGRAPHIC_DEGREES, 0)
+        fun addSHOW(builder: FlatBufferBuilder, show: Boolean) = builder.addBoolean(0, show, false)
+        fun addPOSITIONSCARTOGRAPHICDEGREES(builder: FlatBufferBuilder, positionsCartographicDegrees: Int) = builder.addOffset(1, positionsCartographicDegrees, 0)
         fun createPositionsCartographicDegreesVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
             builder.startVector(8, data.size, 8)
             for (i in data.size - 1 downTo 0) {
@@ -314,7 +314,7 @@ class CZMPolygon : Table() {
             return builder.endVector()
         }
         fun startPositionsCartographicDegreesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
-        fun addPOSITIONS_CARTESIAN(builder: FlatBufferBuilder, POSITIONS_CARTESIAN: Int) = builder.addOffset(2, POSITIONS_CARTESIAN, 0)
+        fun addPOSITIONSCARTESIAN(builder: FlatBufferBuilder, positionsCartesian: Int) = builder.addOffset(2, positionsCartesian, 0)
         fun createPositionsCartesianVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
             builder.startVector(8, data.size, 8)
             for (i in data.size - 1 downTo 0) {
@@ -323,14 +323,14 @@ class CZMPolygon : Table() {
             return builder.endVector()
         }
         fun startPositionsCartesianVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
-        fun addFILL(builder: FlatBufferBuilder, FILL: Boolean) = builder.addBoolean(3, FILL, false)
-        fun addCOLOR(builder: FlatBufferBuilder, COLOR: Int) = builder.addOffset(4, COLOR, 0)
-        fun addOUTLINE(builder: FlatBufferBuilder, OUTLINE: Boolean) = builder.addBoolean(5, OUTLINE, false)
-        fun addOUTLINE_COLOR(builder: FlatBufferBuilder, OUTLINE_COLOR: Int) = builder.addOffset(6, OUTLINE_COLOR, 0)
-        fun addEXTRUDED_HEIGHT(builder: FlatBufferBuilder, EXTRUDED_HEIGHT: Double) = builder.addDouble(7, EXTRUDED_HEIGHT, 0.0)
-        fun addHEIGHT_REFERENCE(builder: FlatBufferBuilder, HEIGHT_REFERENCE: Byte) = builder.addByte(8, HEIGHT_REFERENCE, 0)
-        fun addCLASSIFICATION_TYPE(builder: FlatBufferBuilder, CLASSIFICATION_TYPE: Byte) = builder.addByte(9, CLASSIFICATION_TYPE, 0)
-        fun addHOLES(builder: FlatBufferBuilder, HOLES: Int) = builder.addOffset(10, HOLES, 0)
+        fun addFILL(builder: FlatBufferBuilder, fill: Boolean) = builder.addBoolean(3, fill, false)
+        fun addCOLOR(builder: FlatBufferBuilder, color: Int) = builder.addOffset(4, color, 0)
+        fun addOUTLINE(builder: FlatBufferBuilder, outline: Boolean) = builder.addBoolean(5, outline, false)
+        fun addOUTLINECOLOR(builder: FlatBufferBuilder, outlineColor: Int) = builder.addOffset(6, outlineColor, 0)
+        fun addEXTRUDEDHEIGHT(builder: FlatBufferBuilder, extrudedHeight: Double) = builder.addDouble(7, extrudedHeight, 0.0)
+        fun addHEIGHTREFERENCE(builder: FlatBufferBuilder, heightReference: Byte) = builder.addByte(8, heightReference, 0)
+        fun addCLASSIFICATIONTYPE(builder: FlatBufferBuilder, classificationType: Byte) = builder.addByte(9, classificationType, 0)
+        fun addHOLES(builder: FlatBufferBuilder, holes: Int) = builder.addOffset(10, holes, 0)
         fun createHolesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -339,18 +339,18 @@ class CZMPolygon : Table() {
             return builder.endVector()
         }
         fun startHolesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addARC_TYPE(builder: FlatBufferBuilder, ARC_TYPE: Int) = builder.addOffset(11, ARC_TYPE, 0)
-        fun addHEIGHT(builder: FlatBufferBuilder, HEIGHT: Double) = builder.addDouble(12, HEIGHT, 0.0)
-        fun addEXTRUDED_HEIGHT_REFERENCE(builder: FlatBufferBuilder, EXTRUDED_HEIGHT_REFERENCE: Int) = builder.addOffset(13, EXTRUDED_HEIGHT_REFERENCE, 0)
-        fun addST_ROTATION(builder: FlatBufferBuilder, ST_ROTATION: Double) = builder.addDouble(14, ST_ROTATION, 0.0)
-        fun addGRANULARITY(builder: FlatBufferBuilder, GRANULARITY: Double) = builder.addDouble(15, GRANULARITY, 0.0)
-        fun addMATERIAL(builder: FlatBufferBuilder, MATERIAL: Int) = builder.addOffset(16, MATERIAL, 0)
-        fun addOUTLINE_WIDTH(builder: FlatBufferBuilder, OUTLINE_WIDTH: Double) = builder.addDouble(17, OUTLINE_WIDTH, 0.0)
-        fun addPER_POSITION_HEIGHT(builder: FlatBufferBuilder, PER_POSITION_HEIGHT: Boolean) = builder.addBoolean(18, PER_POSITION_HEIGHT, false)
-        fun addCLOSE_TOP(builder: FlatBufferBuilder, CLOSE_TOP: Boolean) = builder.addBoolean(19, CLOSE_TOP, false)
-        fun addCLOSE_BOTTOM(builder: FlatBufferBuilder, CLOSE_BOTTOM: Boolean) = builder.addBoolean(20, CLOSE_BOTTOM, false)
-        fun addSHADOWS(builder: FlatBufferBuilder, SHADOWS: Int) = builder.addOffset(21, SHADOWS, 0)
-        fun addZ_INDEX(builder: FlatBufferBuilder, Z_INDEX: Int) = builder.addInt(22, Z_INDEX, 0)
+        fun addARCTYPE(builder: FlatBufferBuilder, arcType: Int) = builder.addOffset(11, arcType, 0)
+        fun addHEIGHT(builder: FlatBufferBuilder, height: Double) = builder.addDouble(12, height, 0.0)
+        fun addEXTRUDEDHEIGHTREFERENCE(builder: FlatBufferBuilder, extrudedHeightReference: Int) = builder.addOffset(13, extrudedHeightReference, 0)
+        fun addSTROTATION(builder: FlatBufferBuilder, stRotation: Double) = builder.addDouble(14, stRotation, 0.0)
+        fun addGRANULARITY(builder: FlatBufferBuilder, granularity: Double) = builder.addDouble(15, granularity, 0.0)
+        fun addMATERIAL(builder: FlatBufferBuilder, material: Int) = builder.addOffset(16, material, 0)
+        fun addOUTLINEWIDTH(builder: FlatBufferBuilder, outlineWidth: Double) = builder.addDouble(17, outlineWidth, 0.0)
+        fun addPERPOSITIONHEIGHT(builder: FlatBufferBuilder, perPositionHeight: Boolean) = builder.addBoolean(18, perPositionHeight, false)
+        fun addCLOSETOP(builder: FlatBufferBuilder, closeTop: Boolean) = builder.addBoolean(19, closeTop, false)
+        fun addCLOSEBOTTOM(builder: FlatBufferBuilder, closeBottom: Boolean) = builder.addBoolean(20, closeBottom, false)
+        fun addSHADOWS(builder: FlatBufferBuilder, shadows: Int) = builder.addOffset(21, shadows, 0)
+        fun addZINDEX(builder: FlatBufferBuilder, zIndex: Int) = builder.addInt(22, zIndex, 0)
         fun endCZMPolygon(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

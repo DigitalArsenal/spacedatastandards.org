@@ -29,72 +29,72 @@ class PCF : Table() {
         __init(_i, _bb)
         return this
     }
-    val STEP_SIZE : Double
+    val stepSize : Double
         get() {
             val o = __offset(4)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val TOLERANCE : Double
+    val tolerance : Double
         get() {
             val o = __offset(6)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val MIN_STEP : Double
+    val minStep : Double
         get() {
             val o = __offset(8)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val MAX_STEP : Double
+    val maxStep : Double
         get() {
             val o = __offset(10)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val MAX_ITERATIONS : UInt
+    val maxIterations : UInt
         get() {
             val o = __offset(12)
             return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
         }
-    val GRAVITY_DEGREE : UShort
+    val gravityDegree : UShort
         get() {
             val o = __offset(14)
             return if(o != 0) bb.getShort(o + bb_pos).toUShort() else 0u
         }
-    val GRAVITY_ORDER : UShort
+    val gravityOrder : UShort
         get() {
             val o = __offset(16)
             return if(o != 0) bb.getShort(o + bb_pos).toUShort() else 0u
         }
-    val INTEGRATOR : UByte
+    val integrator : UByte
         get() {
             val o = __offset(18)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
         }
-    val OUTPUT_FRAME : UByte
+    val outputFrame : UByte
         get() {
             val o = __offset(20)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
         }
-    val FORCE_FLAGS : UShort
+    val forceFlags : UShort
         get() {
             val o = __offset(22)
             return if(o != 0) bb.getShort(o + bb_pos).toUShort() else 0u
         }
-    val DRAG_COEFFICIENT : Float
+    val dragCoefficient : Float
         get() {
             val o = __offset(24)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
-    val SRP_COEFFICIENT : Float
+    val srpCoefficient : Float
         get() {
             val o = __offset(26)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
-    val AREA_MASS_RATIO : Float
+    val areaMassRatio : Float
         get() {
             val o = __offset(28)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
-    fun RESERVED(j: Int) : UByte {
+    fun reserved(j: Int) : UByte {
         val o = __offset(30)
         return if (o != 0) {
             bb.get(__vector(o) + j * 1).toUByte()
@@ -102,53 +102,53 @@ class PCF : Table() {
             0u
         }
     }
-    val RESERVEDLength : Int
+    val reservedLength : Int
         get() {
             val o = __offset(30); return if (o != 0) __vector_len(o) else 0
         }
-    val RESERVEDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(30, 1)
-    fun RESERVEDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 30, 1)
+    val reservedAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(30, 1)
+    fun reservedInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 30, 1)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsPCF(_bb: ByteBuffer): PCF = getRootAsPCF(_bb, PCF())
         fun getRootAsPCF(_bb: ByteBuffer, obj: PCF): PCF {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun PCFBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$PCF")
-        fun createPCF(builder: FlatBufferBuilder, STEP_SIZE: Double, TOLERANCE: Double, MIN_STEP: Double, MAX_STEP: Double, MAX_ITERATIONS: UInt, GRAVITY_DEGREE: UShort, GRAVITY_ORDER: UShort, INTEGRATOR: UByte, OUTPUT_FRAME: UByte, FORCE_FLAGS: UShort, DRAG_COEFFICIENT: Float, SRP_COEFFICIENT: Float, AREA_MASS_RATIO: Float, RESERVEDOffset: Int) : Int {
+        fun createPCF(builder: FlatBufferBuilder, stepSize: Double, tolerance: Double, minStep: Double, maxStep: Double, maxIterations: UInt, gravityDegree: UShort, gravityOrder: UShort, integrator: UByte, outputFrame: UByte, forceFlags: UShort, dragCoefficient: Float, srpCoefficient: Float, areaMassRatio: Float, reservedOffset: Int) : Int {
             builder.startTable(14)
-            addMAX_STEP(builder, MAX_STEP)
-            addMIN_STEP(builder, MIN_STEP)
-            addTOLERANCE(builder, TOLERANCE)
-            addSTEP_SIZE(builder, STEP_SIZE)
-            addRESERVED(builder, RESERVEDOffset)
-            addAREA_MASS_RATIO(builder, AREA_MASS_RATIO)
-            addSRP_COEFFICIENT(builder, SRP_COEFFICIENT)
-            addDRAG_COEFFICIENT(builder, DRAG_COEFFICIENT)
-            addMAX_ITERATIONS(builder, MAX_ITERATIONS)
-            addFORCE_FLAGS(builder, FORCE_FLAGS)
-            addGRAVITY_ORDER(builder, GRAVITY_ORDER)
-            addGRAVITY_DEGREE(builder, GRAVITY_DEGREE)
-            addOUTPUT_FRAME(builder, OUTPUT_FRAME)
-            addINTEGRATOR(builder, INTEGRATOR)
+            addMAXSTEP(builder, maxStep)
+            addMINSTEP(builder, minStep)
+            addTOLERANCE(builder, tolerance)
+            addSTEPSIZE(builder, stepSize)
+            addRESERVED(builder, reservedOffset)
+            addAREAMASSRATIO(builder, areaMassRatio)
+            addSRPCOEFFICIENT(builder, srpCoefficient)
+            addDRAGCOEFFICIENT(builder, dragCoefficient)
+            addMAXITERATIONS(builder, maxIterations)
+            addFORCEFLAGS(builder, forceFlags)
+            addGRAVITYORDER(builder, gravityOrder)
+            addGRAVITYDEGREE(builder, gravityDegree)
+            addOUTPUTFRAME(builder, outputFrame)
+            addINTEGRATOR(builder, integrator)
             return endPCF(builder)
         }
         fun startPCF(builder: FlatBufferBuilder) = builder.startTable(14)
-        fun addSTEP_SIZE(builder: FlatBufferBuilder, STEP_SIZE: Double) = builder.addDouble(0, STEP_SIZE, 0.0)
-        fun addTOLERANCE(builder: FlatBufferBuilder, TOLERANCE: Double) = builder.addDouble(1, TOLERANCE, 0.0)
-        fun addMIN_STEP(builder: FlatBufferBuilder, MIN_STEP: Double) = builder.addDouble(2, MIN_STEP, 0.0)
-        fun addMAX_STEP(builder: FlatBufferBuilder, MAX_STEP: Double) = builder.addDouble(3, MAX_STEP, 0.0)
-        fun addMAX_ITERATIONS(builder: FlatBufferBuilder, MAX_ITERATIONS: UInt) = builder.addInt(4, MAX_ITERATIONS.toInt(), 0)
-        fun addGRAVITY_DEGREE(builder: FlatBufferBuilder, GRAVITY_DEGREE: UShort) = builder.addShort(5, GRAVITY_DEGREE.toShort(), 0)
-        fun addGRAVITY_ORDER(builder: FlatBufferBuilder, GRAVITY_ORDER: UShort) = builder.addShort(6, GRAVITY_ORDER.toShort(), 0)
-        fun addINTEGRATOR(builder: FlatBufferBuilder, INTEGRATOR: UByte) = builder.addByte(7, INTEGRATOR.toByte(), 0)
-        fun addOUTPUT_FRAME(builder: FlatBufferBuilder, OUTPUT_FRAME: UByte) = builder.addByte(8, OUTPUT_FRAME.toByte(), 0)
-        fun addFORCE_FLAGS(builder: FlatBufferBuilder, FORCE_FLAGS: UShort) = builder.addShort(9, FORCE_FLAGS.toShort(), 0)
-        fun addDRAG_COEFFICIENT(builder: FlatBufferBuilder, DRAG_COEFFICIENT: Float) = builder.addFloat(10, DRAG_COEFFICIENT, 0.0)
-        fun addSRP_COEFFICIENT(builder: FlatBufferBuilder, SRP_COEFFICIENT: Float) = builder.addFloat(11, SRP_COEFFICIENT, 0.0)
-        fun addAREA_MASS_RATIO(builder: FlatBufferBuilder, AREA_MASS_RATIO: Float) = builder.addFloat(12, AREA_MASS_RATIO, 0.0)
-        fun addRESERVED(builder: FlatBufferBuilder, RESERVED: Int) = builder.addOffset(13, RESERVED, 0)
+        fun addSTEPSIZE(builder: FlatBufferBuilder, stepSize: Double) = builder.addDouble(0, stepSize, 0.0)
+        fun addTOLERANCE(builder: FlatBufferBuilder, tolerance: Double) = builder.addDouble(1, tolerance, 0.0)
+        fun addMINSTEP(builder: FlatBufferBuilder, minStep: Double) = builder.addDouble(2, minStep, 0.0)
+        fun addMAXSTEP(builder: FlatBufferBuilder, maxStep: Double) = builder.addDouble(3, maxStep, 0.0)
+        fun addMAXITERATIONS(builder: FlatBufferBuilder, maxIterations: UInt) = builder.addInt(4, maxIterations.toInt(), 0)
+        fun addGRAVITYDEGREE(builder: FlatBufferBuilder, gravityDegree: UShort) = builder.addShort(5, gravityDegree.toShort(), 0)
+        fun addGRAVITYORDER(builder: FlatBufferBuilder, gravityOrder: UShort) = builder.addShort(6, gravityOrder.toShort(), 0)
+        fun addINTEGRATOR(builder: FlatBufferBuilder, integrator: UByte) = builder.addByte(7, integrator.toByte(), 0)
+        fun addOUTPUTFRAME(builder: FlatBufferBuilder, outputFrame: UByte) = builder.addByte(8, outputFrame.toByte(), 0)
+        fun addFORCEFLAGS(builder: FlatBufferBuilder, forceFlags: UShort) = builder.addShort(9, forceFlags.toShort(), 0)
+        fun addDRAGCOEFFICIENT(builder: FlatBufferBuilder, dragCoefficient: Float) = builder.addFloat(10, dragCoefficient, 0.0)
+        fun addSRPCOEFFICIENT(builder: FlatBufferBuilder, srpCoefficient: Float) = builder.addFloat(11, srpCoefficient, 0.0)
+        fun addAREAMASSRATIO(builder: FlatBufferBuilder, areaMassRatio: Float) = builder.addFloat(12, areaMassRatio, 0.0)
+        fun addRESERVED(builder: FlatBufferBuilder, reserved: Int) = builder.addOffset(13, reserved, 0)
         @kotlin.ExperimentalUnsignedTypes
         fun createReservedVector(builder: FlatBufferBuilder, data: UByteArray) : Int {
             builder.startVector(1, data.size, 1)

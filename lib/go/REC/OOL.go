@@ -62,6 +62,10 @@ func (rcv *OOL) ID() []byte {
 	return nil
 }
 
+func (rcv *OOL) Id() []byte {
+	return rcv.ID()
+}
+
 func (rcv *OOL) NAME() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
@@ -70,12 +74,20 @@ func (rcv *OOL) NAME() []byte {
 	return nil
 }
 
+func (rcv *OOL) Name() []byte {
+	return rcv.NAME()
+}
+
 func (rcv *OOL) DESCRIPTION() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *OOL) Description() []byte {
+	return rcv.DESCRIPTION()
 }
 
 func (rcv *OOL) ONORBITS(j int) []byte {
@@ -87,6 +99,10 @@ func (rcv *OOL) ONORBITS(j int) []byte {
 	return nil
 }
 
+func (rcv *OOL) Onorbits(j int) []byte {
+	return rcv.ONORBITS(j)
+}
+
 func (rcv *OOL) ONORBITSLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
@@ -95,23 +111,42 @@ func (rcv *OOL) ONORBITSLength() int {
 	return 0
 }
 
+func (rcv *OOL) OnorbitsLength() int {
+	return rcv.ONORBITSLength()
+}
+
 func OOLStart(builder *flatbuffers.Builder) {
 	builder.StartObject(4)
 }
 func OOLAddID(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ID), 0)
 }
+func OOLAddId(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
+	OOLAddID(builder, ID)
+}
 func OOLAddNAME(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(NAME), 0)
+}
+func OOLAddName(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
+	OOLAddNAME(builder, NAME)
 }
 func OOLAddDESCRIPTION(builder *flatbuffers.Builder, DESCRIPTION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(DESCRIPTION), 0)
 }
+func OOLAddDescription(builder *flatbuffers.Builder, DESCRIPTION flatbuffers.UOffsetT) {
+	OOLAddDESCRIPTION(builder, DESCRIPTION)
+}
 func OOLAddONORBITS(builder *flatbuffers.Builder, ONORBITS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(ONORBITS), 0)
 }
+func OOLAddOnorbits(builder *flatbuffers.Builder, ONORBITS flatbuffers.UOffsetT) {
+	OOLAddONORBITS(builder, ONORBITS)
+}
 func OOLStartONORBITSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func OOLStartOnorbitsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return OOLStartONORBITSVector(builder, numElems)
 }
 func OOLEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

@@ -98,8 +98,16 @@ func (rcv *CRD) VX() float64 {
 	return 0.0
 }
 
+func (rcv *CRD) Vx() float64 {
+	return rcv.VX()
+}
+
 func (rcv *CRD) MutateVX(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(10, n)
+}
+
+func (rcv *CRD) MutateVx(n float64) bool {
+	return rcv.MutateVX(n)
 }
 
 func (rcv *CRD) VY() float64 {
@@ -110,8 +118,16 @@ func (rcv *CRD) VY() float64 {
 	return 0.0
 }
 
+func (rcv *CRD) Vy() float64 {
+	return rcv.VY()
+}
+
 func (rcv *CRD) MutateVY(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(12, n)
+}
+
+func (rcv *CRD) MutateVy(n float64) bool {
+	return rcv.MutateVY(n)
 }
 
 func (rcv *CRD) VZ() float64 {
@@ -122,8 +138,16 @@ func (rcv *CRD) VZ() float64 {
 	return 0.0
 }
 
+func (rcv *CRD) Vz() float64 {
+	return rcv.VZ()
+}
+
 func (rcv *CRD) MutateVZ(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(14, n)
+}
+
+func (rcv *CRD) MutateVz(n float64) bool {
+	return rcv.MutateVZ(n)
 }
 
 func (rcv *CRD) FRAME() byte {
@@ -134,8 +158,16 @@ func (rcv *CRD) FRAME() byte {
 	return 0
 }
 
+func (rcv *CRD) Frame() byte {
+	return rcv.FRAME()
+}
+
 func (rcv *CRD) MutateFRAME(n byte) bool {
 	return rcv._tab.MutateByteSlot(16, n)
+}
+
+func (rcv *CRD) MutateFrame(n byte) bool {
+	return rcv.MutateFRAME(n)
 }
 
 func (rcv *CRD) ELLIPSOID() byte {
@@ -146,8 +178,16 @@ func (rcv *CRD) ELLIPSOID() byte {
 	return 0
 }
 
+func (rcv *CRD) Ellipsoid() byte {
+	return rcv.ELLIPSOID()
+}
+
 func (rcv *CRD) MutateELLIPSOID(n byte) bool {
 	return rcv._tab.MutateByteSlot(18, n)
+}
+
+func (rcv *CRD) MutateEllipsoid(n byte) bool {
+	return rcv.MutateELLIPSOID(n)
 }
 
 func (rcv *CRD) RESERVED(j int) byte {
@@ -159,12 +199,20 @@ func (rcv *CRD) RESERVED(j int) byte {
 	return 0
 }
 
+func (rcv *CRD) Reserved(j int) byte {
+	return rcv.RESERVED(j)
+}
+
 func (rcv *CRD) RESERVEDLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *CRD) ReservedLength() int {
+	return rcv.RESERVEDLength()
 }
 
 func (rcv *CRD) RESERVEDBytes() []byte {
@@ -175,6 +223,10 @@ func (rcv *CRD) RESERVEDBytes() []byte {
 	return nil
 }
 
+func (rcv *CRD) ReservedBytes() []byte {
+	return rcv.RESERVEDBytes()
+}
+
 func (rcv *CRD) MutateRESERVED(j int, n byte) bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
 	if o != 0 {
@@ -182,6 +234,10 @@ func (rcv *CRD) MutateRESERVED(j int, n byte) bool {
 		return rcv._tab.MutateByte(a+flatbuffers.UOffsetT(j*1), n)
 	}
 	return false
+}
+
+func (rcv *CRD) MutateReserved(j int, n byte) bool {
+	return rcv.MutateRESERVED(j, n)
 }
 
 func CRDStart(builder *flatbuffers.Builder) {
@@ -199,23 +255,44 @@ func CRDAddZ(builder *flatbuffers.Builder, Z float64) {
 func CRDAddVX(builder *flatbuffers.Builder, VX float64) {
 	builder.PrependFloat64Slot(3, VX, 0.0)
 }
+func CRDAddVx(builder *flatbuffers.Builder, VX float64) {
+	CRDAddVX(builder, VX)
+}
 func CRDAddVY(builder *flatbuffers.Builder, VY float64) {
 	builder.PrependFloat64Slot(4, VY, 0.0)
+}
+func CRDAddVy(builder *flatbuffers.Builder, VY float64) {
+	CRDAddVY(builder, VY)
 }
 func CRDAddVZ(builder *flatbuffers.Builder, VZ float64) {
 	builder.PrependFloat64Slot(5, VZ, 0.0)
 }
+func CRDAddVz(builder *flatbuffers.Builder, VZ float64) {
+	CRDAddVZ(builder, VZ)
+}
 func CRDAddFRAME(builder *flatbuffers.Builder, FRAME byte) {
 	builder.PrependByteSlot(6, FRAME, 0)
+}
+func CRDAddFrame(builder *flatbuffers.Builder, FRAME byte) {
+	CRDAddFRAME(builder, FRAME)
 }
 func CRDAddELLIPSOID(builder *flatbuffers.Builder, ELLIPSOID byte) {
 	builder.PrependByteSlot(7, ELLIPSOID, 0)
 }
+func CRDAddEllipsoid(builder *flatbuffers.Builder, ELLIPSOID byte) {
+	CRDAddELLIPSOID(builder, ELLIPSOID)
+}
 func CRDAddRESERVED(builder *flatbuffers.Builder, RESERVED flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(RESERVED), 0)
 }
+func CRDAddReserved(builder *flatbuffers.Builder, RESERVED flatbuffers.UOffsetT) {
+	CRDAddRESERVED(builder, RESERVED)
+}
 func CRDStartRESERVEDVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(1, numElems, 1)
+}
+func CRDStartReservedVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return CRDStartRESERVEDVector(builder, numElems)
 }
 func CRDEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

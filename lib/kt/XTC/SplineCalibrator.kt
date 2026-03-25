@@ -32,8 +32,8 @@ class SplineCalibrator : Table() {
     /**
      * Spline points ordered by raw value
      */
-    fun POINTS(j: Int) : SplinePoint? = POINTS(SplinePoint(), j)
-    fun POINTS(obj: SplinePoint, j: Int) : SplinePoint? {
+    fun points(j: Int) : SplinePoint? = points(SplinePoint(), j)
+    fun points(obj: SplinePoint, j: Int) : SplinePoint? {
         val o = __offset(4)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -41,14 +41,14 @@ class SplineCalibrator : Table() {
             null
         }
     }
-    val POINTSLength : Int
+    val pointsLength : Int
         get() {
             val o = __offset(4); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Extrapolate below minimum point
      */
-    val EXTRAPOLATE_LOW : Boolean
+    val extrapolateLow : Boolean
         get() {
             val o = __offset(6)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -56,27 +56,27 @@ class SplineCalibrator : Table() {
     /**
      * Extrapolate above maximum point
      */
-    val EXTRAPOLATE_HIGH : Boolean
+    val extrapolateHigh : Boolean
         get() {
             val o = __offset(8)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsSplineCalibrator(_bb: ByteBuffer): SplineCalibrator = getRootAsSplineCalibrator(_bb, SplineCalibrator())
         fun getRootAsSplineCalibrator(_bb: ByteBuffer, obj: SplineCalibrator): SplineCalibrator {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createSplineCalibrator(builder: FlatBufferBuilder, POINTSOffset: Int, EXTRAPOLATE_LOW: Boolean, EXTRAPOLATE_HIGH: Boolean) : Int {
+        fun createSplineCalibrator(builder: FlatBufferBuilder, pointsOffset: Int, extrapolateLow: Boolean, extrapolateHigh: Boolean) : Int {
             builder.startTable(3)
-            addPOINTS(builder, POINTSOffset)
-            addEXTRAPOLATE_HIGH(builder, EXTRAPOLATE_HIGH)
-            addEXTRAPOLATE_LOW(builder, EXTRAPOLATE_LOW)
+            addPOINTS(builder, pointsOffset)
+            addEXTRAPOLATEHIGH(builder, extrapolateHigh)
+            addEXTRAPOLATELOW(builder, extrapolateLow)
             return endSplineCalibrator(builder)
         }
         fun startSplineCalibrator(builder: FlatBufferBuilder) = builder.startTable(3)
-        fun addPOINTS(builder: FlatBufferBuilder, POINTS: Int) = builder.addOffset(0, POINTS, 0)
+        fun addPOINTS(builder: FlatBufferBuilder, points: Int) = builder.addOffset(0, points, 0)
         fun createPointsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -85,8 +85,8 @@ class SplineCalibrator : Table() {
             return builder.endVector()
         }
         fun startPointsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addEXTRAPOLATE_LOW(builder: FlatBufferBuilder, EXTRAPOLATE_LOW: Boolean) = builder.addBoolean(1, EXTRAPOLATE_LOW, false)
-        fun addEXTRAPOLATE_HIGH(builder: FlatBufferBuilder, EXTRAPOLATE_HIGH: Boolean) = builder.addBoolean(2, EXTRAPOLATE_HIGH, false)
+        fun addEXTRAPOLATELOW(builder: FlatBufferBuilder, extrapolateLow: Boolean) = builder.addBoolean(1, extrapolateLow, false)
+        fun addEXTRAPOLATEHIGH(builder: FlatBufferBuilder, extrapolateHigh: Boolean) = builder.addBoolean(2, extrapolateHigh, false)
         fun endSplineCalibrator(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

@@ -2,5 +2,5 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export { MET, METT } from './MET.js';
-export { meanElementTheory } from './meanElementTheory.js';
+export * from './meanElementTheory.js';
+export * from './MET.js';

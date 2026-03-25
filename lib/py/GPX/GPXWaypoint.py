@@ -301,6 +301,12 @@ def GPXWaypointStartLINKSVector(builder, numElems):
 def StartLINKSVector(builder, numElems):
     return GPXWaypointStartLINKSVector(builder, numElems)
 
+def GPXWaypointCreateLINKSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateLINKSVector(builder, data):
+    GPXWaypointCreateLINKSVector(builder, data)
+
 def GPXWaypointAddSYMBOL(builder, SYMBOL):
     builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(SYMBOL), 0)
 
@@ -382,35 +388,59 @@ except:
 class GPXWaypointT(object):
 
     # GPXWaypointT
-    def __init__(self):
-        self.LATITUDE = 0.0  # type: float
-        self.LONGITUDE = 0.0  # type: float
-        self.ELEVATION = 0.0  # type: float
-        self.TIME = None  # type: str
-        self.MAGVAR = 0.0  # type: float
-        self.GEOID_HEIGHT = 0.0  # type: float
-        self.NAME = None  # type: str
-        self.COMMENT = None  # type: str
-        self.DESCRIPTION = None  # type: str
-        self.SOURCE = None  # type: str
-        self.LINKS = None  # type: List[GPXLink.GPXLinkT]
-        self.SYMBOL = None  # type: str
-        self.TYPE = None  # type: str
-        self.FIX = 0  # type: int
-        self.SAT = 0  # type: int
-        self.HDOP = 0.0  # type: float
-        self.VDOP = 0.0  # type: float
-        self.PDOP = 0.0  # type: float
-        self.AGE_OF_DGPS_DATA = 0.0  # type: float
-        self.DGPS_ID = 0  # type: int
-        self.SPEED = 0.0  # type: float
-        self.COURSE = 0.0  # type: float
+    def __init__(
+        self,
+        LATITUDE = 0.0,
+        LONGITUDE = 0.0,
+        ELEVATION = 0.0,
+        TIME = None,
+        MAGVAR = 0.0,
+        GEOID_HEIGHT = 0.0,
+        NAME = None,
+        COMMENT = None,
+        DESCRIPTION = None,
+        SOURCE = None,
+        LINKS = None,
+        SYMBOL = None,
+        TYPE = None,
+        FIX = 0,
+        SAT = 0,
+        HDOP = 0.0,
+        VDOP = 0.0,
+        PDOP = 0.0,
+        AGE_OF_DGPS_DATA = 0.0,
+        DGPS_ID = 0,
+        SPEED = 0.0,
+        COURSE = 0.0,
+    ):
+        self.LATITUDE = LATITUDE  # type: float
+        self.LONGITUDE = LONGITUDE  # type: float
+        self.ELEVATION = ELEVATION  # type: float
+        self.TIME = TIME  # type: Optional[str]
+        self.MAGVAR = MAGVAR  # type: float
+        self.GEOID_HEIGHT = GEOID_HEIGHT  # type: float
+        self.NAME = NAME  # type: Optional[str]
+        self.COMMENT = COMMENT  # type: Optional[str]
+        self.DESCRIPTION = DESCRIPTION  # type: Optional[str]
+        self.SOURCE = SOURCE  # type: Optional[str]
+        self.LINKS = LINKS  # type: Optional[List[GPXLink.GPXLinkT]]
+        self.SYMBOL = SYMBOL  # type: Optional[str]
+        self.TYPE = TYPE  # type: Optional[str]
+        self.FIX = FIX  # type: int
+        self.SAT = SAT  # type: int
+        self.HDOP = HDOP  # type: float
+        self.VDOP = VDOP  # type: float
+        self.PDOP = PDOP  # type: float
+        self.AGE_OF_DGPS_DATA = AGE_OF_DGPS_DATA  # type: float
+        self.DGPS_ID = DGPS_ID  # type: int
+        self.SPEED = SPEED  # type: float
+        self.COURSE = COURSE  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        gpxwaypoint = GPXWaypoint()
-        gpxwaypoint.Init(buf, pos)
-        return cls.InitFromObj(gpxwaypoint)
+        tmpGpxwaypoint = GPXWaypoint()
+        tmpGpxwaypoint.Init(buf, pos)
+        return cls.InitFromObj(tmpGpxwaypoint)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -418,44 +448,44 @@ class GPXWaypointT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, gpxwaypoint):
+    def InitFromObj(cls, tmpGpxwaypoint):
         x = GPXWaypointT()
-        x._UnPack(gpxwaypoint)
+        x._UnPack(tmpGpxwaypoint)
         return x
 
     # GPXWaypointT
-    def _UnPack(self, gpxwaypoint):
-        if gpxwaypoint is None:
+    def _UnPack(self, GPXWaypoint):
+        if GPXWaypoint is None:
             return
-        self.LATITUDE = gpxwaypoint.LATITUDE()
-        self.LONGITUDE = gpxwaypoint.LONGITUDE()
-        self.ELEVATION = gpxwaypoint.ELEVATION()
-        self.TIME = gpxwaypoint.TIME()
-        self.MAGVAR = gpxwaypoint.MAGVAR()
-        self.GEOID_HEIGHT = gpxwaypoint.GEOID_HEIGHT()
-        self.NAME = gpxwaypoint.NAME()
-        self.COMMENT = gpxwaypoint.COMMENT()
-        self.DESCRIPTION = gpxwaypoint.DESCRIPTION()
-        self.SOURCE = gpxwaypoint.SOURCE()
-        if not gpxwaypoint.LINKSIsNone():
+        self.LATITUDE = GPXWaypoint.LATITUDE()
+        self.LONGITUDE = GPXWaypoint.LONGITUDE()
+        self.ELEVATION = GPXWaypoint.ELEVATION()
+        self.TIME = GPXWaypoint.TIME()
+        self.MAGVAR = GPXWaypoint.MAGVAR()
+        self.GEOID_HEIGHT = GPXWaypoint.GEOID_HEIGHT()
+        self.NAME = GPXWaypoint.NAME()
+        self.COMMENT = GPXWaypoint.COMMENT()
+        self.DESCRIPTION = GPXWaypoint.DESCRIPTION()
+        self.SOURCE = GPXWaypoint.SOURCE()
+        if not GPXWaypoint.LINKSIsNone():
             self.LINKS = []
-            for i in range(gpxwaypoint.LINKSLength()):
-                if gpxwaypoint.LINKS(i) is None:
+            for i in range(GPXWaypoint.LINKSLength()):
+                if GPXWaypoint.LINKS(i) is None:
                     self.LINKS.append(None)
                 else:
-                    gPXLink_ = GPXLink.GPXLinkT.InitFromObj(gpxwaypoint.LINKS(i))
+                    gPXLink_ = GPXLink.GPXLinkT.InitFromObj(GPXWaypoint.LINKS(i))
                     self.LINKS.append(gPXLink_)
-        self.SYMBOL = gpxwaypoint.SYMBOL()
-        self.TYPE = gpxwaypoint.TYPE()
-        self.FIX = gpxwaypoint.FIX()
-        self.SAT = gpxwaypoint.SAT()
-        self.HDOP = gpxwaypoint.HDOP()
-        self.VDOP = gpxwaypoint.VDOP()
-        self.PDOP = gpxwaypoint.PDOP()
-        self.AGE_OF_DGPS_DATA = gpxwaypoint.AGE_OF_DGPS_DATA()
-        self.DGPS_ID = gpxwaypoint.DGPS_ID()
-        self.SPEED = gpxwaypoint.SPEED()
-        self.COURSE = gpxwaypoint.COURSE()
+        self.SYMBOL = GPXWaypoint.SYMBOL()
+        self.TYPE = GPXWaypoint.TYPE()
+        self.FIX = GPXWaypoint.FIX()
+        self.SAT = GPXWaypoint.SAT()
+        self.HDOP = GPXWaypoint.HDOP()
+        self.VDOP = GPXWaypoint.VDOP()
+        self.PDOP = GPXWaypoint.PDOP()
+        self.AGE_OF_DGPS_DATA = GPXWaypoint.AGE_OF_DGPS_DATA()
+        self.DGPS_ID = GPXWaypoint.DGPS_ID()
+        self.SPEED = GPXWaypoint.SPEED()
+        self.COURSE = GPXWaypoint.COURSE()
 
     # GPXWaypointT
     def Pack(self, builder):
@@ -512,5 +542,5 @@ class GPXWaypointT(object):
         GPXWaypointAddDGPS_ID(builder, self.DGPS_ID)
         GPXWaypointAddSPEED(builder, self.SPEED)
         GPXWaypointAddCOURSE(builder, self.COURSE)
-        gpxwaypoint = GPXWaypointEnd(builder)
-        return gpxwaypoint
+        GPXWaypoint = GPXWaypointEnd(builder)
+        return GPXWaypoint

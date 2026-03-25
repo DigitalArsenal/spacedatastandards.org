@@ -479,44 +479,77 @@ def End(builder):
 class ATDT(object):
 
     # ATDT
-    def __init__(self):
-        self.ID = None  # type: str
-        self.AS_ID = None  # type: str
-        self.SAT_NO = 0  # type: int
-        self.ORIG_OBJECT_ID = None  # type: str
-        self.EPOCH = None  # type: str
-        self.REPRESENTATION = 0  # type: int
-        self.MOTION_TYPE = 0  # type: int
-        self.QC = 0.0  # type: float
-        self.Q1 = 0.0  # type: float
-        self.Q2 = 0.0  # type: float
-        self.Q3 = 0.0  # type: float
-        self.QC_DOT = 0.0  # type: float
-        self.Q1_DOT = 0.0  # type: float
-        self.Q2_DOT = 0.0  # type: float
-        self.Q3_DOT = 0.0  # type: float
-        self.X_ANGLE = 0.0  # type: float
-        self.Y_ANGLE = 0.0  # type: float
-        self.Z_ANGLE = 0.0  # type: float
-        self.X_RATE = 0.0  # type: float
-        self.Y_RATE = 0.0  # type: float
-        self.Z_RATE = 0.0  # type: float
-        self.RA = 0.0  # type: float
-        self.DECLINATION = 0.0  # type: float
-        self.CONING_ANGLE = 0.0  # type: float
-        self.PREC_PERIOD = 0.0  # type: float
-        self.SPIN_PERIOD = 0.0  # type: float
-        self.ATTITUDE_UNC = 0.0  # type: float
-        self.RATE_UNC = 0.0  # type: float
-        self.QUALITY = 0  # type: int
-        self.REF_FRAME = None  # type: str
-        self.SENSOR_ID = None  # type: str
+    def __init__(
+        self,
+        ID = None,
+        AS_ID = None,
+        SAT_NO = 0,
+        ORIG_OBJECT_ID = None,
+        EPOCH = None,
+        REPRESENTATION = 0,
+        MOTION_TYPE = 0,
+        QC = 0.0,
+        Q1 = 0.0,
+        Q2 = 0.0,
+        Q3 = 0.0,
+        QC_DOT = 0.0,
+        Q1_DOT = 0.0,
+        Q2_DOT = 0.0,
+        Q3_DOT = 0.0,
+        X_ANGLE = 0.0,
+        Y_ANGLE = 0.0,
+        Z_ANGLE = 0.0,
+        X_RATE = 0.0,
+        Y_RATE = 0.0,
+        Z_RATE = 0.0,
+        RA = 0.0,
+        DECLINATION = 0.0,
+        CONING_ANGLE = 0.0,
+        PREC_PERIOD = 0.0,
+        SPIN_PERIOD = 0.0,
+        ATTITUDE_UNC = 0.0,
+        RATE_UNC = 0.0,
+        QUALITY = 0,
+        REF_FRAME = None,
+        SENSOR_ID = None,
+    ):
+        self.ID = ID  # type: Optional[str]
+        self.AS_ID = AS_ID  # type: Optional[str]
+        self.SAT_NO = SAT_NO  # type: int
+        self.ORIG_OBJECT_ID = ORIG_OBJECT_ID  # type: Optional[str]
+        self.EPOCH = EPOCH  # type: Optional[str]
+        self.REPRESENTATION = REPRESENTATION  # type: int
+        self.MOTION_TYPE = MOTION_TYPE  # type: int
+        self.QC = QC  # type: float
+        self.Q1 = Q1  # type: float
+        self.Q2 = Q2  # type: float
+        self.Q3 = Q3  # type: float
+        self.QC_DOT = QC_DOT  # type: float
+        self.Q1_DOT = Q1_DOT  # type: float
+        self.Q2_DOT = Q2_DOT  # type: float
+        self.Q3_DOT = Q3_DOT  # type: float
+        self.X_ANGLE = X_ANGLE  # type: float
+        self.Y_ANGLE = Y_ANGLE  # type: float
+        self.Z_ANGLE = Z_ANGLE  # type: float
+        self.X_RATE = X_RATE  # type: float
+        self.Y_RATE = Y_RATE  # type: float
+        self.Z_RATE = Z_RATE  # type: float
+        self.RA = RA  # type: float
+        self.DECLINATION = DECLINATION  # type: float
+        self.CONING_ANGLE = CONING_ANGLE  # type: float
+        self.PREC_PERIOD = PREC_PERIOD  # type: float
+        self.SPIN_PERIOD = SPIN_PERIOD  # type: float
+        self.ATTITUDE_UNC = ATTITUDE_UNC  # type: float
+        self.RATE_UNC = RATE_UNC  # type: float
+        self.QUALITY = QUALITY  # type: int
+        self.REF_FRAME = REF_FRAME  # type: Optional[str]
+        self.SENSOR_ID = SENSOR_ID  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        ATD = ATD()
-        ATD.Init(buf, pos)
-        return cls.InitFromObj(ATD)
+        tmpAtd = ATD()
+        tmpAtd.Init(buf, pos)
+        return cls.InitFromObj(tmpAtd)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -524,9 +557,9 @@ class ATDT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, ATD):
+    def InitFromObj(cls, tmpAtd):
         x = ATDT()
-        x._UnPack(ATD)
+        x._UnPack(tmpAtd)
         return x
 
     # ATDT

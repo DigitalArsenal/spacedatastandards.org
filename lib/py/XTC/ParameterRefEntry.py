@@ -134,18 +134,25 @@ except:
 class ParameterRefEntryT(object):
 
     # ParameterRefEntryT
-    def __init__(self):
-        self.PARAMETER_REF = None  # type: str
-        self.LOCATION = None  # type: Optional[LocationInContainer.LocationInContainerT]
-        self.REPEAT = None  # type: Optional[RepeatEntry.RepeatEntryT]
-        self.INCLUDE_CONDITION = None  # type: Optional[MatchCriteria.MatchCriteriaT]
-        self.SHORT_DESCRIPTION = None  # type: str
+    def __init__(
+        self,
+        PARAMETER_REF = None,
+        LOCATION = None,
+        REPEAT = None,
+        INCLUDE_CONDITION = None,
+        SHORT_DESCRIPTION = None,
+    ):
+        self.PARAMETER_REF = PARAMETER_REF  # type: Optional[str]
+        self.LOCATION = LOCATION  # type: Optional[LocationInContainer.LocationInContainerT]
+        self.REPEAT = REPEAT  # type: Optional[RepeatEntry.RepeatEntryT]
+        self.INCLUDE_CONDITION = INCLUDE_CONDITION  # type: Optional[MatchCriteria.MatchCriteriaT]
+        self.SHORT_DESCRIPTION = SHORT_DESCRIPTION  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        parameterRefEntry = ParameterRefEntry()
-        parameterRefEntry.Init(buf, pos)
-        return cls.InitFromObj(parameterRefEntry)
+        tmpParameterRefEntry = ParameterRefEntry()
+        tmpParameterRefEntry.Init(buf, pos)
+        return cls.InitFromObj(tmpParameterRefEntry)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -153,23 +160,23 @@ class ParameterRefEntryT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, parameterRefEntry):
+    def InitFromObj(cls, tmpParameterRefEntry):
         x = ParameterRefEntryT()
-        x._UnPack(parameterRefEntry)
+        x._UnPack(tmpParameterRefEntry)
         return x
 
     # ParameterRefEntryT
-    def _UnPack(self, parameterRefEntry):
-        if parameterRefEntry is None:
+    def _UnPack(self, ParameterRefEntry):
+        if ParameterRefEntry is None:
             return
-        self.PARAMETER_REF = parameterRefEntry.PARAMETER_REF()
-        if parameterRefEntry.LOCATION() is not None:
-            self.LOCATION = LocationInContainer.LocationInContainerT.InitFromObj(parameterRefEntry.LOCATION())
-        if parameterRefEntry.REPEAT() is not None:
-            self.REPEAT = RepeatEntry.RepeatEntryT.InitFromObj(parameterRefEntry.REPEAT())
-        if parameterRefEntry.INCLUDE_CONDITION() is not None:
-            self.INCLUDE_CONDITION = MatchCriteria.MatchCriteriaT.InitFromObj(parameterRefEntry.INCLUDE_CONDITION())
-        self.SHORT_DESCRIPTION = parameterRefEntry.SHORT_DESCRIPTION()
+        self.PARAMETER_REF = ParameterRefEntry.PARAMETER_REF()
+        if ParameterRefEntry.LOCATION() is not None:
+            self.LOCATION = LocationInContainer.LocationInContainerT.InitFromObj(ParameterRefEntry.LOCATION())
+        if ParameterRefEntry.REPEAT() is not None:
+            self.REPEAT = RepeatEntry.RepeatEntryT.InitFromObj(ParameterRefEntry.REPEAT())
+        if ParameterRefEntry.INCLUDE_CONDITION() is not None:
+            self.INCLUDE_CONDITION = MatchCriteria.MatchCriteriaT.InitFromObj(ParameterRefEntry.INCLUDE_CONDITION())
+        self.SHORT_DESCRIPTION = ParameterRefEntry.SHORT_DESCRIPTION()
 
     # ParameterRefEntryT
     def Pack(self, builder):
@@ -194,5 +201,5 @@ class ParameterRefEntryT(object):
             ParameterRefEntryAddINCLUDE_CONDITION(builder, INCLUDE_CONDITION)
         if self.SHORT_DESCRIPTION is not None:
             ParameterRefEntryAddSHORT_DESCRIPTION(builder, SHORT_DESCRIPTION)
-        parameterRefEntry = ParameterRefEntryEnd(builder)
-        return parameterRefEntry
+        ParameterRefEntry = ParameterRefEntryEnd(builder)
+        return ParameterRefEntry

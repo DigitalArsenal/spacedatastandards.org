@@ -29,7 +29,7 @@ class OOD : Table() {
         __init(_i, _bb)
         return this
     }
-    val ID : String?
+    val id : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -38,9 +38,9 @@ class OOD : Table() {
                 null
             }
         }
-    val IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
-    val LAST_OB_TIME : String?
+    val idAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun idInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
+    val lastObTime : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -49,74 +49,74 @@ class OOD : Table() {
                 null
             }
         }
-    val LAST_OB_TIMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun LAST_OB_TIMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
-    val VISMAG : Double
+    val lastObTimeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun lastObTimeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
+    val vismag : Double
         get() {
             val o = __offset(8)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val VISMAG_MIN : Double
+    val vismagMin : Double
         get() {
             val o = __offset(10)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val VISMAG_MAX : Double
+    val vismagMax : Double
         get() {
             val o = __offset(12)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val VISMAG_MEAN : Double
+    val vismagMean : Double
         get() {
             val o = __offset(14)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val RCS : Double
+    val rcs : Double
         get() {
             val o = __offset(16)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val RCS_MIN : Double
+    val rcsMin : Double
         get() {
             val o = __offset(18)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val RCS_MAX : Double
+    val rcsMax : Double
         get() {
             val o = __offset(20)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val RCS_MEAN : Double
+    val rcsMean : Double
         get() {
             val o = __offset(22)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val BOL_DELTA_V : Double
+    val bolDeltaV : Double
         get() {
             val o = __offset(24)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val MAX_DELTA_V : Double
+    val maxDeltaV : Double
         get() {
             val o = __offset(26)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val DELTA_VUNC : Double
+    val deltaVunc : Double
         get() {
             val o = __offset(28)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val EST_DELTA_VDURATION : Double
+    val estDeltaVduration : Double
         get() {
             val o = __offset(30)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val NUM_MISSION : Int
+    val numMission : Int
         get() {
             val o = __offset(32)
             return if(o != 0) bb.getInt(o + bb_pos) else 0
         }
-    fun MISSION_TYPES(j: Int) : String? {
+    fun missionTypes(j: Int) : String? {
         val o = __offset(34)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
@@ -124,11 +124,11 @@ class OOD : Table() {
             null
         }
     }
-    val MISSION_TYPESLength : Int
+    val missionTypesLength : Int
         get() {
             val o = __offset(34); return if (o != 0) __vector_len(o) else 0
         }
-    val BUS_TYPE : String?
+    val busType : String?
         get() {
             val o = __offset(36)
             return if (o != 0) {
@@ -137,104 +137,104 @@ class OOD : Table() {
                 null
             }
         }
-    val BUS_TYPEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(36, 1)
-    fun BUS_TYPEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 36, 1)
-    val GEO_SLOT : Double
+    val busTypeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(36, 1)
+    fun busTypeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 36, 1)
+    val geoSlot : Double
         get() {
             val o = __offset(38)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val DRIFT_RATE : Double
+    val driftRate : Double
         get() {
             val o = __offset(40)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val DRY_MASS : Double
+    val dryMass : Double
         get() {
             val o = __offset(42)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val ADDITIONAL_MASS : Double
+    val additionalMass : Double
         get() {
             val o = __offset(44)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val LAUNCH_MASS_MIN : Double
+    val launchMassMin : Double
         get() {
             val o = __offset(46)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val LAUNCH_MASS : Double
+    val launchMass : Double
         get() {
             val o = __offset(48)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val LAUNCH_MASS_MAX : Double
+    val launchMassMax : Double
         get() {
             val o = __offset(50)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val BOL_FUEL_MASS : Double
+    val bolFuelMass : Double
         get() {
             val o = __offset(52)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val CURRENT_MASS : Double
+    val currentMass : Double
         get() {
             val o = __offset(54)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val TOTAL_MASS_UNC : Double
+    val totalMassUnc : Double
         get() {
             val o = __offset(56)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val SOLAR_ARRAY_AREA : Double
+    val solarArrayArea : Double
         get() {
             val o = __offset(58)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val MANEUVERABLE : Boolean
+    val maneuverable : Boolean
         get() {
             val o = __offset(60)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
-    val FUEL_REMAINING : Double
+    val fuelRemaining : Double
         get() {
             val o = __offset(62)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val CROSS_SECTION : Double
+    val crossSection : Double
         get() {
             val o = __offset(64)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val BUS_CROSS_SECTION : Double
+    val busCrossSection : Double
         get() {
             val o = __offset(66)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val MAX_RADIUS : Double
+    val maxRadius : Double
         get() {
             val o = __offset(68)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val COLA_RADIUS : Double
+    val colaRadius : Double
         get() {
             val o = __offset(70)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val ADEPT_RADIUS : Double
+    val adeptRadius : Double
         get() {
             val o = __offset(72)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val NUM_DEPLOYABLE : Int
+    val numDeployable : Int
         get() {
             val o = __offset(74)
             return if(o != 0) bb.getInt(o + bb_pos) else 0
         }
-    fun DEP_NAMES(j: Int) : String? {
+    fun depNames(j: Int) : String? {
         val o = __offset(76)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
@@ -242,11 +242,11 @@ class OOD : Table() {
             null
         }
     }
-    val DEP_NAMESLength : Int
+    val depNamesLength : Int
         get() {
             val o = __offset(76); return if (o != 0) __vector_len(o) else 0
         }
-    fun DEP_EST_MASSES(j: Int) : String? {
+    fun depEstMasses(j: Int) : String? {
         val o = __offset(78)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
@@ -254,11 +254,11 @@ class OOD : Table() {
             null
         }
     }
-    val DEP_EST_MASSESLength : Int
+    val depEstMassesLength : Int
         get() {
             val o = __offset(78); return if (o != 0) __vector_len(o) else 0
         }
-    fun DEP_MASS_UNCS(j: Int) : String? {
+    fun depMassUncs(j: Int) : String? {
         val o = __offset(80)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
@@ -266,11 +266,11 @@ class OOD : Table() {
             null
         }
     }
-    val DEP_MASS_UNCSLength : Int
+    val depMassUncsLength : Int
         get() {
             val o = __offset(80); return if (o != 0) __vector_len(o) else 0
         }
-    val LAST_OB_SOURCE : String?
+    val lastObSource : String?
         get() {
             val o = __offset(82)
             return if (o != 0) {
@@ -279,77 +279,77 @@ class OOD : Table() {
                 null
             }
         }
-    val LAST_OB_SOURCEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(82, 1)
-    fun LAST_OB_SOURCEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 82, 1)
+    val lastObSourceAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(82, 1)
+    fun lastObSourceInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 82, 1)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsOOD(_bb: ByteBuffer): OOD = getRootAsOOD(_bb, OOD())
         fun getRootAsOOD(_bb: ByteBuffer, obj: OOD): OOD {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun OODBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$OOD")
-        fun createOOD(builder: FlatBufferBuilder, IDOffset: Int, LAST_OB_TIMEOffset: Int, VISMAG: Double, VISMAG_MIN: Double, VISMAG_MAX: Double, VISMAG_MEAN: Double, RCS: Double, RCS_MIN: Double, RCS_MAX: Double, RCS_MEAN: Double, BOL_DELTA_V: Double, MAX_DELTA_V: Double, DELTA_VUNC: Double, EST_DELTA_VDURATION: Double, NUM_MISSION: Int, MISSION_TYPESOffset: Int, BUS_TYPEOffset: Int, GEO_SLOT: Double, DRIFT_RATE: Double, DRY_MASS: Double, ADDITIONAL_MASS: Double, LAUNCH_MASS_MIN: Double, LAUNCH_MASS: Double, LAUNCH_MASS_MAX: Double, BOL_FUEL_MASS: Double, CURRENT_MASS: Double, TOTAL_MASS_UNC: Double, SOLAR_ARRAY_AREA: Double, MANEUVERABLE: Boolean, FUEL_REMAINING: Double, CROSS_SECTION: Double, BUS_CROSS_SECTION: Double, MAX_RADIUS: Double, COLA_RADIUS: Double, ADEPT_RADIUS: Double, NUM_DEPLOYABLE: Int, DEP_NAMESOffset: Int, DEP_EST_MASSESOffset: Int, DEP_MASS_UNCSOffset: Int, LAST_OB_SOURCEOffset: Int) : Int {
+        fun createOOD(builder: FlatBufferBuilder, idOffset: Int, lastObTimeOffset: Int, vismag: Double, vismagMin: Double, vismagMax: Double, vismagMean: Double, rcs: Double, rcsMin: Double, rcsMax: Double, rcsMean: Double, bolDeltaV: Double, maxDeltaV: Double, deltaVunc: Double, estDeltaVduration: Double, numMission: Int, missionTypesOffset: Int, busTypeOffset: Int, geoSlot: Double, driftRate: Double, dryMass: Double, additionalMass: Double, launchMassMin: Double, launchMass: Double, launchMassMax: Double, bolFuelMass: Double, currentMass: Double, totalMassUnc: Double, solarArrayArea: Double, maneuverable: Boolean, fuelRemaining: Double, crossSection: Double, busCrossSection: Double, maxRadius: Double, colaRadius: Double, adeptRadius: Double, numDeployable: Int, depNamesOffset: Int, depEstMassesOffset: Int, depMassUncsOffset: Int, lastObSourceOffset: Int) : Int {
             builder.startTable(40)
-            addADEPT_RADIUS(builder, ADEPT_RADIUS)
-            addCOLA_RADIUS(builder, COLA_RADIUS)
-            addMAX_RADIUS(builder, MAX_RADIUS)
-            addBUS_CROSS_SECTION(builder, BUS_CROSS_SECTION)
-            addCROSS_SECTION(builder, CROSS_SECTION)
-            addFUEL_REMAINING(builder, FUEL_REMAINING)
-            addSOLAR_ARRAY_AREA(builder, SOLAR_ARRAY_AREA)
-            addTOTAL_MASS_UNC(builder, TOTAL_MASS_UNC)
-            addCURRENT_MASS(builder, CURRENT_MASS)
-            addBOL_FUEL_MASS(builder, BOL_FUEL_MASS)
-            addLAUNCH_MASS_MAX(builder, LAUNCH_MASS_MAX)
-            addLAUNCH_MASS(builder, LAUNCH_MASS)
-            addLAUNCH_MASS_MIN(builder, LAUNCH_MASS_MIN)
-            addADDITIONAL_MASS(builder, ADDITIONAL_MASS)
-            addDRY_MASS(builder, DRY_MASS)
-            addDRIFT_RATE(builder, DRIFT_RATE)
-            addGEO_SLOT(builder, GEO_SLOT)
-            addEST_DELTA_VDURATION(builder, EST_DELTA_VDURATION)
-            addDELTA_VUNC(builder, DELTA_VUNC)
-            addMAX_DELTA_V(builder, MAX_DELTA_V)
-            addBOL_DELTA_V(builder, BOL_DELTA_V)
-            addRCS_MEAN(builder, RCS_MEAN)
-            addRCS_MAX(builder, RCS_MAX)
-            addRCS_MIN(builder, RCS_MIN)
-            addRCS(builder, RCS)
-            addVISMAG_MEAN(builder, VISMAG_MEAN)
-            addVISMAG_MAX(builder, VISMAG_MAX)
-            addVISMAG_MIN(builder, VISMAG_MIN)
-            addVISMAG(builder, VISMAG)
-            addLAST_OB_SOURCE(builder, LAST_OB_SOURCEOffset)
-            addDEP_MASS_UNCS(builder, DEP_MASS_UNCSOffset)
-            addDEP_EST_MASSES(builder, DEP_EST_MASSESOffset)
-            addDEP_NAMES(builder, DEP_NAMESOffset)
-            addNUM_DEPLOYABLE(builder, NUM_DEPLOYABLE)
-            addBUS_TYPE(builder, BUS_TYPEOffset)
-            addMISSION_TYPES(builder, MISSION_TYPESOffset)
-            addNUM_MISSION(builder, NUM_MISSION)
-            addLAST_OB_TIME(builder, LAST_OB_TIMEOffset)
-            addID(builder, IDOffset)
-            addMANEUVERABLE(builder, MANEUVERABLE)
+            addADEPTRADIUS(builder, adeptRadius)
+            addCOLARADIUS(builder, colaRadius)
+            addMAXRADIUS(builder, maxRadius)
+            addBUSCROSSSECTION(builder, busCrossSection)
+            addCROSSSECTION(builder, crossSection)
+            addFUELREMAINING(builder, fuelRemaining)
+            addSOLARARRAYAREA(builder, solarArrayArea)
+            addTOTALMASSUNC(builder, totalMassUnc)
+            addCURRENTMASS(builder, currentMass)
+            addBOLFUELMASS(builder, bolFuelMass)
+            addLAUNCHMASSMAX(builder, launchMassMax)
+            addLAUNCHMASS(builder, launchMass)
+            addLAUNCHMASSMIN(builder, launchMassMin)
+            addADDITIONALMASS(builder, additionalMass)
+            addDRYMASS(builder, dryMass)
+            addDRIFTRATE(builder, driftRate)
+            addGEOSLOT(builder, geoSlot)
+            addESTDELTAVDURATION(builder, estDeltaVduration)
+            addDELTAVUNC(builder, deltaVunc)
+            addMAXDELTAV(builder, maxDeltaV)
+            addBOLDELTAV(builder, bolDeltaV)
+            addRCSMEAN(builder, rcsMean)
+            addRCSMAX(builder, rcsMax)
+            addRCSMIN(builder, rcsMin)
+            addRCS(builder, rcs)
+            addVISMAGMEAN(builder, vismagMean)
+            addVISMAGMAX(builder, vismagMax)
+            addVISMAGMIN(builder, vismagMin)
+            addVISMAG(builder, vismag)
+            addLASTOBSOURCE(builder, lastObSourceOffset)
+            addDEPMASSUNCS(builder, depMassUncsOffset)
+            addDEPESTMASSES(builder, depEstMassesOffset)
+            addDEPNAMES(builder, depNamesOffset)
+            addNUMDEPLOYABLE(builder, numDeployable)
+            addBUSTYPE(builder, busTypeOffset)
+            addMISSIONTYPES(builder, missionTypesOffset)
+            addNUMMISSION(builder, numMission)
+            addLASTOBTIME(builder, lastObTimeOffset)
+            addID(builder, idOffset)
+            addMANEUVERABLE(builder, maneuverable)
             return endOOD(builder)
         }
         fun startOOD(builder: FlatBufferBuilder) = builder.startTable(40)
-        fun addID(builder: FlatBufferBuilder, ID: Int) = builder.addOffset(0, ID, 0)
-        fun addLAST_OB_TIME(builder: FlatBufferBuilder, LAST_OB_TIME: Int) = builder.addOffset(1, LAST_OB_TIME, 0)
-        fun addVISMAG(builder: FlatBufferBuilder, VISMAG: Double) = builder.addDouble(2, VISMAG, 0.0)
-        fun addVISMAG_MIN(builder: FlatBufferBuilder, VISMAG_MIN: Double) = builder.addDouble(3, VISMAG_MIN, 0.0)
-        fun addVISMAG_MAX(builder: FlatBufferBuilder, VISMAG_MAX: Double) = builder.addDouble(4, VISMAG_MAX, 0.0)
-        fun addVISMAG_MEAN(builder: FlatBufferBuilder, VISMAG_MEAN: Double) = builder.addDouble(5, VISMAG_MEAN, 0.0)
-        fun addRCS(builder: FlatBufferBuilder, RCS: Double) = builder.addDouble(6, RCS, 0.0)
-        fun addRCS_MIN(builder: FlatBufferBuilder, RCS_MIN: Double) = builder.addDouble(7, RCS_MIN, 0.0)
-        fun addRCS_MAX(builder: FlatBufferBuilder, RCS_MAX: Double) = builder.addDouble(8, RCS_MAX, 0.0)
-        fun addRCS_MEAN(builder: FlatBufferBuilder, RCS_MEAN: Double) = builder.addDouble(9, RCS_MEAN, 0.0)
-        fun addBOL_DELTA_V(builder: FlatBufferBuilder, BOL_DELTA_V: Double) = builder.addDouble(10, BOL_DELTA_V, 0.0)
-        fun addMAX_DELTA_V(builder: FlatBufferBuilder, MAX_DELTA_V: Double) = builder.addDouble(11, MAX_DELTA_V, 0.0)
-        fun addDELTA_VUNC(builder: FlatBufferBuilder, DELTA_VUNC: Double) = builder.addDouble(12, DELTA_VUNC, 0.0)
-        fun addEST_DELTA_VDURATION(builder: FlatBufferBuilder, EST_DELTA_VDURATION: Double) = builder.addDouble(13, EST_DELTA_VDURATION, 0.0)
-        fun addNUM_MISSION(builder: FlatBufferBuilder, NUM_MISSION: Int) = builder.addInt(14, NUM_MISSION, 0)
-        fun addMISSION_TYPES(builder: FlatBufferBuilder, MISSION_TYPES: Int) = builder.addOffset(15, MISSION_TYPES, 0)
+        fun addID(builder: FlatBufferBuilder, id: Int) = builder.addOffset(0, id, 0)
+        fun addLASTOBTIME(builder: FlatBufferBuilder, lastObTime: Int) = builder.addOffset(1, lastObTime, 0)
+        fun addVISMAG(builder: FlatBufferBuilder, vismag: Double) = builder.addDouble(2, vismag, 0.0)
+        fun addVISMAGMIN(builder: FlatBufferBuilder, vismagMin: Double) = builder.addDouble(3, vismagMin, 0.0)
+        fun addVISMAGMAX(builder: FlatBufferBuilder, vismagMax: Double) = builder.addDouble(4, vismagMax, 0.0)
+        fun addVISMAGMEAN(builder: FlatBufferBuilder, vismagMean: Double) = builder.addDouble(5, vismagMean, 0.0)
+        fun addRCS(builder: FlatBufferBuilder, rcs: Double) = builder.addDouble(6, rcs, 0.0)
+        fun addRCSMIN(builder: FlatBufferBuilder, rcsMin: Double) = builder.addDouble(7, rcsMin, 0.0)
+        fun addRCSMAX(builder: FlatBufferBuilder, rcsMax: Double) = builder.addDouble(8, rcsMax, 0.0)
+        fun addRCSMEAN(builder: FlatBufferBuilder, rcsMean: Double) = builder.addDouble(9, rcsMean, 0.0)
+        fun addBOLDELTAV(builder: FlatBufferBuilder, bolDeltaV: Double) = builder.addDouble(10, bolDeltaV, 0.0)
+        fun addMAXDELTAV(builder: FlatBufferBuilder, maxDeltaV: Double) = builder.addDouble(11, maxDeltaV, 0.0)
+        fun addDELTAVUNC(builder: FlatBufferBuilder, deltaVunc: Double) = builder.addDouble(12, deltaVunc, 0.0)
+        fun addESTDELTAVDURATION(builder: FlatBufferBuilder, estDeltaVduration: Double) = builder.addDouble(13, estDeltaVduration, 0.0)
+        fun addNUMMISSION(builder: FlatBufferBuilder, numMission: Int) = builder.addInt(14, numMission, 0)
+        fun addMISSIONTYPES(builder: FlatBufferBuilder, missionTypes: Int) = builder.addOffset(15, missionTypes, 0)
         fun createMissionTypesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -358,27 +358,27 @@ class OOD : Table() {
             return builder.endVector()
         }
         fun startMissionTypesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addBUS_TYPE(builder: FlatBufferBuilder, BUS_TYPE: Int) = builder.addOffset(16, BUS_TYPE, 0)
-        fun addGEO_SLOT(builder: FlatBufferBuilder, GEO_SLOT: Double) = builder.addDouble(17, GEO_SLOT, 0.0)
-        fun addDRIFT_RATE(builder: FlatBufferBuilder, DRIFT_RATE: Double) = builder.addDouble(18, DRIFT_RATE, 0.0)
-        fun addDRY_MASS(builder: FlatBufferBuilder, DRY_MASS: Double) = builder.addDouble(19, DRY_MASS, 0.0)
-        fun addADDITIONAL_MASS(builder: FlatBufferBuilder, ADDITIONAL_MASS: Double) = builder.addDouble(20, ADDITIONAL_MASS, 0.0)
-        fun addLAUNCH_MASS_MIN(builder: FlatBufferBuilder, LAUNCH_MASS_MIN: Double) = builder.addDouble(21, LAUNCH_MASS_MIN, 0.0)
-        fun addLAUNCH_MASS(builder: FlatBufferBuilder, LAUNCH_MASS: Double) = builder.addDouble(22, LAUNCH_MASS, 0.0)
-        fun addLAUNCH_MASS_MAX(builder: FlatBufferBuilder, LAUNCH_MASS_MAX: Double) = builder.addDouble(23, LAUNCH_MASS_MAX, 0.0)
-        fun addBOL_FUEL_MASS(builder: FlatBufferBuilder, BOL_FUEL_MASS: Double) = builder.addDouble(24, BOL_FUEL_MASS, 0.0)
-        fun addCURRENT_MASS(builder: FlatBufferBuilder, CURRENT_MASS: Double) = builder.addDouble(25, CURRENT_MASS, 0.0)
-        fun addTOTAL_MASS_UNC(builder: FlatBufferBuilder, TOTAL_MASS_UNC: Double) = builder.addDouble(26, TOTAL_MASS_UNC, 0.0)
-        fun addSOLAR_ARRAY_AREA(builder: FlatBufferBuilder, SOLAR_ARRAY_AREA: Double) = builder.addDouble(27, SOLAR_ARRAY_AREA, 0.0)
-        fun addMANEUVERABLE(builder: FlatBufferBuilder, MANEUVERABLE: Boolean) = builder.addBoolean(28, MANEUVERABLE, false)
-        fun addFUEL_REMAINING(builder: FlatBufferBuilder, FUEL_REMAINING: Double) = builder.addDouble(29, FUEL_REMAINING, 0.0)
-        fun addCROSS_SECTION(builder: FlatBufferBuilder, CROSS_SECTION: Double) = builder.addDouble(30, CROSS_SECTION, 0.0)
-        fun addBUS_CROSS_SECTION(builder: FlatBufferBuilder, BUS_CROSS_SECTION: Double) = builder.addDouble(31, BUS_CROSS_SECTION, 0.0)
-        fun addMAX_RADIUS(builder: FlatBufferBuilder, MAX_RADIUS: Double) = builder.addDouble(32, MAX_RADIUS, 0.0)
-        fun addCOLA_RADIUS(builder: FlatBufferBuilder, COLA_RADIUS: Double) = builder.addDouble(33, COLA_RADIUS, 0.0)
-        fun addADEPT_RADIUS(builder: FlatBufferBuilder, ADEPT_RADIUS: Double) = builder.addDouble(34, ADEPT_RADIUS, 0.0)
-        fun addNUM_DEPLOYABLE(builder: FlatBufferBuilder, NUM_DEPLOYABLE: Int) = builder.addInt(35, NUM_DEPLOYABLE, 0)
-        fun addDEP_NAMES(builder: FlatBufferBuilder, DEP_NAMES: Int) = builder.addOffset(36, DEP_NAMES, 0)
+        fun addBUSTYPE(builder: FlatBufferBuilder, busType: Int) = builder.addOffset(16, busType, 0)
+        fun addGEOSLOT(builder: FlatBufferBuilder, geoSlot: Double) = builder.addDouble(17, geoSlot, 0.0)
+        fun addDRIFTRATE(builder: FlatBufferBuilder, driftRate: Double) = builder.addDouble(18, driftRate, 0.0)
+        fun addDRYMASS(builder: FlatBufferBuilder, dryMass: Double) = builder.addDouble(19, dryMass, 0.0)
+        fun addADDITIONALMASS(builder: FlatBufferBuilder, additionalMass: Double) = builder.addDouble(20, additionalMass, 0.0)
+        fun addLAUNCHMASSMIN(builder: FlatBufferBuilder, launchMassMin: Double) = builder.addDouble(21, launchMassMin, 0.0)
+        fun addLAUNCHMASS(builder: FlatBufferBuilder, launchMass: Double) = builder.addDouble(22, launchMass, 0.0)
+        fun addLAUNCHMASSMAX(builder: FlatBufferBuilder, launchMassMax: Double) = builder.addDouble(23, launchMassMax, 0.0)
+        fun addBOLFUELMASS(builder: FlatBufferBuilder, bolFuelMass: Double) = builder.addDouble(24, bolFuelMass, 0.0)
+        fun addCURRENTMASS(builder: FlatBufferBuilder, currentMass: Double) = builder.addDouble(25, currentMass, 0.0)
+        fun addTOTALMASSUNC(builder: FlatBufferBuilder, totalMassUnc: Double) = builder.addDouble(26, totalMassUnc, 0.0)
+        fun addSOLARARRAYAREA(builder: FlatBufferBuilder, solarArrayArea: Double) = builder.addDouble(27, solarArrayArea, 0.0)
+        fun addMANEUVERABLE(builder: FlatBufferBuilder, maneuverable: Boolean) = builder.addBoolean(28, maneuverable, false)
+        fun addFUELREMAINING(builder: FlatBufferBuilder, fuelRemaining: Double) = builder.addDouble(29, fuelRemaining, 0.0)
+        fun addCROSSSECTION(builder: FlatBufferBuilder, crossSection: Double) = builder.addDouble(30, crossSection, 0.0)
+        fun addBUSCROSSSECTION(builder: FlatBufferBuilder, busCrossSection: Double) = builder.addDouble(31, busCrossSection, 0.0)
+        fun addMAXRADIUS(builder: FlatBufferBuilder, maxRadius: Double) = builder.addDouble(32, maxRadius, 0.0)
+        fun addCOLARADIUS(builder: FlatBufferBuilder, colaRadius: Double) = builder.addDouble(33, colaRadius, 0.0)
+        fun addADEPTRADIUS(builder: FlatBufferBuilder, adeptRadius: Double) = builder.addDouble(34, adeptRadius, 0.0)
+        fun addNUMDEPLOYABLE(builder: FlatBufferBuilder, numDeployable: Int) = builder.addInt(35, numDeployable, 0)
+        fun addDEPNAMES(builder: FlatBufferBuilder, depNames: Int) = builder.addOffset(36, depNames, 0)
         fun createDepNamesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -387,7 +387,7 @@ class OOD : Table() {
             return builder.endVector()
         }
         fun startDepNamesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addDEP_EST_MASSES(builder: FlatBufferBuilder, DEP_EST_MASSES: Int) = builder.addOffset(37, DEP_EST_MASSES, 0)
+        fun addDEPESTMASSES(builder: FlatBufferBuilder, depEstMasses: Int) = builder.addOffset(37, depEstMasses, 0)
         fun createDepEstMassesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -396,7 +396,7 @@ class OOD : Table() {
             return builder.endVector()
         }
         fun startDepEstMassesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addDEP_MASS_UNCS(builder: FlatBufferBuilder, DEP_MASS_UNCS: Int) = builder.addOffset(38, DEP_MASS_UNCS, 0)
+        fun addDEPMASSUNCS(builder: FlatBufferBuilder, depMassUncs: Int) = builder.addOffset(38, depMassUncs, 0)
         fun createDepMassUncsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -405,7 +405,7 @@ class OOD : Table() {
             return builder.endVector()
         }
         fun startDepMassUncsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addLAST_OB_SOURCE(builder: FlatBufferBuilder, LAST_OB_SOURCE: Int) = builder.addOffset(39, LAST_OB_SOURCE, 0)
+        fun addLASTOBSOURCE(builder: FlatBufferBuilder, lastObSource: Int) = builder.addOffset(39, lastObSource, 0)
         fun endOOD(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

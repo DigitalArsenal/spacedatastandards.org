@@ -2,9 +2,13 @@
 // swiftlint:disable all
 // swiftformat:disable all
 
+#if canImport(Common)
+import Common
+#endif
+
 import FlatBuffers
 
-public enum irBand: Int8, Enum, Verifiable {
+public enum irBand: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -19,7 +23,7 @@ public enum irBand: Int8, Enum, Verifiable {
 }
 
 
-public enum irDetectionType: Int8, Enum, Verifiable {
+public enum irDetectionType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -35,9 +39,9 @@ public enum irDetectionType: Int8, Enum, Verifiable {
 
 
 ///  Infrared Observation
-public struct IRO: FlatBufferObject, Verifiable {
+public struct IRO: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -142,15 +146,11 @@ public struct IRO: FlatBufferObject, Verifiable {
   ///  Signal-to-noise ratio
   public var SNR: Double { let o = _accessor.offset(VTOFFSET.SNR.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Spectral data wavelengths in micrometers
-  public var hasWavelengths: Bool { let o = _accessor.offset(VTOFFSET.WAVELENGTHS.v); return o == 0 ? false : true }
-  public var WAVELENGTHSCount: Int32 { let o = _accessor.offset(VTOFFSET.WAVELENGTHS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func WAVELENGTHS(at index: Int32) -> Double { let o = _accessor.offset(VTOFFSET.WAVELENGTHS.v); return o == 0 ? 0 : _accessor.directRead(of: Double.self, offset: _accessor.vector(at: o) + index * 8) }
-  public var WAVELENGTHS: [Double] { return _accessor.getVector(at: VTOFFSET.WAVELENGTHS.v) ?? [] }
+  public var WAVELENGTHS: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.WAVELENGTHS.v, byteSize: 8) }
+  public func withUnsafePointerToWavelengths<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.WAVELENGTHS.v, body: body) }
   ///  Spectral data values in W/m^2/um
-  public var hasSpectralValues: Bool { let o = _accessor.offset(VTOFFSET.SPECTRAL_VALUES.v); return o == 0 ? false : true }
-  public var SPECTRAL_VALUESCount: Int32 { let o = _accessor.offset(VTOFFSET.SPECTRAL_VALUES.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func SPECTRAL_VALUES(at index: Int32) -> Double { let o = _accessor.offset(VTOFFSET.SPECTRAL_VALUES.v); return o == 0 ? 0 : _accessor.directRead(of: Double.self, offset: _accessor.vector(at: o) + index * 8) }
-  public var SPECTRAL_VALUES: [Double] { return _accessor.getVector(at: VTOFFSET.SPECTRAL_VALUES.v) ?? [] }
+  public var SPECTRAL_VALUES: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.SPECTRAL_VALUES.v, byteSize: 8) }
+  public func withUnsafePointerToSpectralValues<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.SPECTRAL_VALUES.v, body: body) }
   ///  Data quality indicator (0-9, 9=best)
   public var QUALITY: UInt8 { let o = _accessor.offset(VTOFFSET.QUALITY.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
   ///  Additional notes

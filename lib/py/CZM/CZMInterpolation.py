@@ -73,15 +73,19 @@ def End(builder):
 class CZMInterpolationT(object):
 
     # CZMInterpolationT
-    def __init__(self):
-        self.ALGORITHM = None  # type: str
-        self.DEGREE = 0  # type: int
+    def __init__(
+        self,
+        ALGORITHM = None,
+        DEGREE = 0,
+    ):
+        self.ALGORITHM = ALGORITHM  # type: Optional[str]
+        self.DEGREE = DEGREE  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        czminterpolation = CZMInterpolation()
-        czminterpolation.Init(buf, pos)
-        return cls.InitFromObj(czminterpolation)
+        tmpCzminterpolation = CZMInterpolation()
+        tmpCzminterpolation.Init(buf, pos)
+        return cls.InitFromObj(tmpCzminterpolation)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -89,17 +93,17 @@ class CZMInterpolationT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, czminterpolation):
+    def InitFromObj(cls, tmpCzminterpolation):
         x = CZMInterpolationT()
-        x._UnPack(czminterpolation)
+        x._UnPack(tmpCzminterpolation)
         return x
 
     # CZMInterpolationT
-    def _UnPack(self, czminterpolation):
-        if czminterpolation is None:
+    def _UnPack(self, CZMInterpolation):
+        if CZMInterpolation is None:
             return
-        self.ALGORITHM = czminterpolation.ALGORITHM()
-        self.DEGREE = czminterpolation.DEGREE()
+        self.ALGORITHM = CZMInterpolation.ALGORITHM()
+        self.DEGREE = CZMInterpolation.DEGREE()
 
     # CZMInterpolationT
     def Pack(self, builder):
@@ -109,5 +113,5 @@ class CZMInterpolationT(object):
         if self.ALGORITHM is not None:
             CZMInterpolationAddALGORITHM(builder, ALGORITHM)
         CZMInterpolationAddDEGREE(builder, self.DEGREE)
-        czminterpolation = CZMInterpolationEnd(builder)
-        return czminterpolation
+        CZMInterpolation = CZMInterpolationEnd(builder)
+        return CZMInterpolation

@@ -463,6 +463,12 @@ def LDMStartPOINTS_OF_CONTACTVector(builder, numElems):
 def StartPOINTS_OF_CONTACTVector(builder, numElems):
     return LDMStartPOINTS_OF_CONTACTVector(builder, numElems)
 
+def LDMCreatePOINTS_OF_CONTACTVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreatePOINTS_OF_CONTACTVector(builder, data):
+    LDMCreatePOINTS_OF_CONTACTVector(builder, data)
+
 def LDMAddOPERATIONS_POINTS_OF_CONTACT(builder, OPERATIONS_POINTS_OF_CONTACT):
     builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(OPERATIONS_POINTS_OF_CONTACT), 0)
 
@@ -474,6 +480,12 @@ def LDMStartOPERATIONS_POINTS_OF_CONTACTVector(builder, numElems):
 
 def StartOPERATIONS_POINTS_OF_CONTACTVector(builder, numElems):
     return LDMStartOPERATIONS_POINTS_OF_CONTACTVector(builder, numElems)
+
+def LDMCreateOPERATIONS_POINTS_OF_CONTACTVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateOPERATIONS_POINTS_OF_CONTACTVector(builder, data):
+    LDMCreateOPERATIONS_POINTS_OF_CONTACTVector(builder, data)
 
 def LDMAddNET(builder, NET):
     builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(NET), 0)
@@ -541,6 +553,12 @@ def LDMStartMEDIA_LINKSVector(builder, numElems):
 def StartMEDIA_LINKSVector(builder, numElems):
     return LDMStartMEDIA_LINKSVector(builder, numElems)
 
+def LDMCreateMEDIA_LINKSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateMEDIA_LINKSVector(builder, data):
+    LDMCreateMEDIA_LINKSVector(builder, data)
+
 def LDMAddEARLIEST_LAUNCH_TIMES(builder, EARLIEST_LAUNCH_TIMES):
     builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(EARLIEST_LAUNCH_TIMES), 0)
 
@@ -552,6 +570,12 @@ def LDMStartEARLIEST_LAUNCH_TIMESVector(builder, numElems):
 
 def StartEARLIEST_LAUNCH_TIMESVector(builder, numElems):
     return LDMStartEARLIEST_LAUNCH_TIMESVector(builder, numElems)
+
+def LDMCreateEARLIEST_LAUNCH_TIMESVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateEARLIEST_LAUNCH_TIMESVector(builder, data):
+    LDMCreateEARLIEST_LAUNCH_TIMESVector(builder, data)
 
 def LDMAddLATEST_LAUNCH_TIMES(builder, LATEST_LAUNCH_TIMES):
     builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(LATEST_LAUNCH_TIMES), 0)
@@ -565,6 +589,12 @@ def LDMStartLATEST_LAUNCH_TIMESVector(builder, numElems):
 def StartLATEST_LAUNCH_TIMESVector(builder, numElems):
     return LDMStartLATEST_LAUNCH_TIMESVector(builder, numElems)
 
+def LDMCreateLATEST_LAUNCH_TIMESVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateLATEST_LAUNCH_TIMESVector(builder, data):
+    LDMCreateLATEST_LAUNCH_TIMESVector(builder, data)
+
 def LDMAddLCOLA_WINDOW_CLOSURES(builder, LCOLA_WINDOW_CLOSURES):
     builder.PrependUOffsetTRelativeSlot(18, flatbuffers.number_types.UOffsetTFlags.py_type(LCOLA_WINDOW_CLOSURES), 0)
 
@@ -576,6 +606,12 @@ def LDMStartLCOLA_WINDOW_CLOSURESVector(builder, numElems):
 
 def StartLCOLA_WINDOW_CLOSURESVector(builder, numElems):
     return LDMStartLCOLA_WINDOW_CLOSURESVector(builder, numElems)
+
+def LDMCreateLCOLA_WINDOW_CLOSURESVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateLCOLA_WINDOW_CLOSURESVector(builder, data):
+    LDMCreateLCOLA_WINDOW_CLOSURESVector(builder, data)
 
 def LDMAddOBJECTS(builder, OBJECTS):
     builder.PrependUOffsetTRelativeSlot(19, flatbuffers.number_types.UOffsetTFlags.py_type(OBJECTS), 0)
@@ -589,6 +625,12 @@ def LDMStartOBJECTSVector(builder, numElems):
 def StartOBJECTSVector(builder, numElems):
     return LDMStartOBJECTSVector(builder, numElems)
 
+def LDMCreateOBJECTSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateOBJECTSVector(builder, data):
+    LDMCreateOBJECTSVector(builder, data)
+
 def LDMAddTRACKING_REQUIREMENTS(builder, TRACKING_REQUIREMENTS):
     builder.PrependUOffsetTRelativeSlot(20, flatbuffers.number_types.UOffsetTFlags.py_type(TRACKING_REQUIREMENTS), 0)
 
@@ -600,6 +642,12 @@ def LDMStartTRACKING_REQUIREMENTSVector(builder, numElems):
 
 def StartTRACKING_REQUIREMENTSVector(builder, numElems):
     return LDMStartTRACKING_REQUIREMENTSVector(builder, numElems)
+
+def LDMCreateTRACKING_REQUIREMENTSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateTRACKING_REQUIREMENTSVector(builder, data):
+    LDMCreateTRACKING_REQUIREMENTSVector(builder, data)
 
 def LDMAddCOLA_SCREEN_DURATION(builder, COLA_SCREEN_DURATION):
     builder.PrependUOffsetTRelativeSlot(21, flatbuffers.number_types.UOffsetTFlags.py_type(COLA_SCREEN_DURATION), 0)
@@ -631,6 +679,12 @@ def LDMStartCOLA_POINTS_OF_CONTACTVector(builder, numElems):
 def StartCOLA_POINTS_OF_CONTACTVector(builder, numElems):
     return LDMStartCOLA_POINTS_OF_CONTACTVector(builder, numElems)
 
+def LDMCreateCOLA_POINTS_OF_CONTACTVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateCOLA_POINTS_OF_CONTACTVector(builder, data):
+    LDMCreateCOLA_POINTS_OF_CONTACTVector(builder, data)
+
 def LDMAddORBITAL_PARAMETERS(builder, ORBITAL_PARAMETERS):
     builder.PrependUOffsetTRelativeSlot(25, flatbuffers.number_types.UOffsetTFlags.py_type(ORBITAL_PARAMETERS), 0)
 
@@ -643,6 +697,12 @@ def LDMStartORBITAL_PARAMETERSVector(builder, numElems):
 def StartORBITAL_PARAMETERSVector(builder, numElems):
     return LDMStartORBITAL_PARAMETERSVector(builder, numElems)
 
+def LDMCreateORBITAL_PARAMETERSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateORBITAL_PARAMETERSVector(builder, data):
+    LDMCreateORBITAL_PARAMETERSVector(builder, data)
+
 def LDMAddBURN_OUT_VECTORS(builder, BURN_OUT_VECTORS):
     builder.PrependUOffsetTRelativeSlot(26, flatbuffers.number_types.UOffsetTFlags.py_type(BURN_OUT_VECTORS), 0)
 
@@ -654,6 +714,12 @@ def LDMStartBURN_OUT_VECTORSVector(builder, numElems):
 
 def StartBURN_OUT_VECTORSVector(builder, numElems):
     return LDMStartBURN_OUT_VECTORSVector(builder, numElems)
+
+def LDMCreateBURN_OUT_VECTORSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateBURN_OUT_VECTORSVector(builder, data):
+    LDMCreateBURN_OUT_VECTORSVector(builder, data)
 
 def LDMEnd(builder):
     return builder.EndObject()
@@ -674,40 +740,69 @@ except:
 class LDMT(object):
 
     # LDMT
-    def __init__(self):
-        self.SITE = None  # type: Optional[SIT.SITT]
-        self.AZIMUTH = 0.0  # type: float
-        self.REFERENCES = None  # type: str
-        self.AGENCY_NAME = None  # type: str
-        self.POINTS_OF_CONTACT = None  # type: List[EPM.EPMT]
-        self.OPERATIONS_POINTS_OF_CONTACT = None  # type: List[EPM.EPMT]
-        self.NET = None  # type: str
-        self.ROCKET_CONFIGURATION = None  # type: Optional[ROC.ROCT]
-        self.MISSION_NAME = None  # type: str
-        self.MISSION_DESCRIPTION = None  # type: str
-        self.MISSION_TYPE = None  # type: str
-        self.ORBIT_TYPE = None  # type: str
-        self.WEATHER_CONDITIONS = None  # type: str
-        self.LAUNCH_STATUS = None  # type: str
-        self.WEBCAST_URL = None  # type: str
-        self.MEDIA_LINKS = None  # type: List[str]
-        self.EARLIEST_LAUNCH_TIMES = None  # type: List[str]
-        self.LATEST_LAUNCH_TIMES = None  # type: List[str]
-        self.LCOLA_WINDOW_CLOSURES = None  # type: List[str]
-        self.OBJECTS = None  # type: List[CAT.CATT]
-        self.TRACKING_REQUIREMENTS = None  # type: List[str]
-        self.COLA_SCREEN_DURATION = None  # type: str
-        self.PROBABILITY_OF_COLLISION_THRESHOLD = None  # type: str
-        self.COLA_RUNS_REQUIRED = None  # type: str
-        self.COLA_POINTS_OF_CONTACT = None  # type: List[EPM.EPMT]
-        self.ORBITAL_PARAMETERS = None  # type: List[str]
-        self.BURN_OUT_VECTORS = None  # type: List[BOV.BOVT]
+    def __init__(
+        self,
+        SITE = None,
+        AZIMUTH = 0.0,
+        REFERENCES = None,
+        AGENCY_NAME = None,
+        POINTS_OF_CONTACT = None,
+        OPERATIONS_POINTS_OF_CONTACT = None,
+        NET = None,
+        ROCKET_CONFIGURATION = None,
+        MISSION_NAME = None,
+        MISSION_DESCRIPTION = None,
+        MISSION_TYPE = None,
+        ORBIT_TYPE = None,
+        WEATHER_CONDITIONS = None,
+        LAUNCH_STATUS = None,
+        WEBCAST_URL = None,
+        MEDIA_LINKS = None,
+        EARLIEST_LAUNCH_TIMES = None,
+        LATEST_LAUNCH_TIMES = None,
+        LCOLA_WINDOW_CLOSURES = None,
+        OBJECTS = None,
+        TRACKING_REQUIREMENTS = None,
+        COLA_SCREEN_DURATION = None,
+        PROBABILITY_OF_COLLISION_THRESHOLD = None,
+        COLA_RUNS_REQUIRED = None,
+        COLA_POINTS_OF_CONTACT = None,
+        ORBITAL_PARAMETERS = None,
+        BURN_OUT_VECTORS = None,
+    ):
+        self.SITE = SITE  # type: Optional[SIT.SITT]
+        self.AZIMUTH = AZIMUTH  # type: float
+        self.REFERENCES = REFERENCES  # type: Optional[str]
+        self.AGENCY_NAME = AGENCY_NAME  # type: Optional[str]
+        self.POINTS_OF_CONTACT = POINTS_OF_CONTACT  # type: Optional[List[EPM.EPMT]]
+        self.OPERATIONS_POINTS_OF_CONTACT = OPERATIONS_POINTS_OF_CONTACT  # type: Optional[List[EPM.EPMT]]
+        self.NET = NET  # type: Optional[str]
+        self.ROCKET_CONFIGURATION = ROCKET_CONFIGURATION  # type: Optional[ROC.ROCT]
+        self.MISSION_NAME = MISSION_NAME  # type: Optional[str]
+        self.MISSION_DESCRIPTION = MISSION_DESCRIPTION  # type: Optional[str]
+        self.MISSION_TYPE = MISSION_TYPE  # type: Optional[str]
+        self.ORBIT_TYPE = ORBIT_TYPE  # type: Optional[str]
+        self.WEATHER_CONDITIONS = WEATHER_CONDITIONS  # type: Optional[str]
+        self.LAUNCH_STATUS = LAUNCH_STATUS  # type: Optional[str]
+        self.WEBCAST_URL = WEBCAST_URL  # type: Optional[str]
+        self.MEDIA_LINKS = MEDIA_LINKS  # type: Optional[List[Optional[str]]]
+        self.EARLIEST_LAUNCH_TIMES = EARLIEST_LAUNCH_TIMES  # type: Optional[List[Optional[str]]]
+        self.LATEST_LAUNCH_TIMES = LATEST_LAUNCH_TIMES  # type: Optional[List[Optional[str]]]
+        self.LCOLA_WINDOW_CLOSURES = LCOLA_WINDOW_CLOSURES  # type: Optional[List[Optional[str]]]
+        self.OBJECTS = OBJECTS  # type: Optional[List[CAT.CATT]]
+        self.TRACKING_REQUIREMENTS = TRACKING_REQUIREMENTS  # type: Optional[List[Optional[str]]]
+        self.COLA_SCREEN_DURATION = COLA_SCREEN_DURATION  # type: Optional[str]
+        self.PROBABILITY_OF_COLLISION_THRESHOLD = PROBABILITY_OF_COLLISION_THRESHOLD  # type: Optional[str]
+        self.COLA_RUNS_REQUIRED = COLA_RUNS_REQUIRED  # type: Optional[str]
+        self.COLA_POINTS_OF_CONTACT = COLA_POINTS_OF_CONTACT  # type: Optional[List[EPM.EPMT]]
+        self.ORBITAL_PARAMETERS = ORBITAL_PARAMETERS  # type: Optional[List[Optional[str]]]
+        self.BURN_OUT_VECTORS = BURN_OUT_VECTORS  # type: Optional[List[BOV.BOVT]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        LDM = LDM()
-        LDM.Init(buf, pos)
-        return cls.InitFromObj(LDM)
+        tmpLdm = LDM()
+        tmpLdm.Init(buf, pos)
+        return cls.InitFromObj(tmpLdm)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -715,9 +810,9 @@ class LDMT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, LDM):
+    def InitFromObj(cls, tmpLdm):
         x = LDMT()
-        x._UnPack(LDM)
+        x._UnPack(tmpLdm)
         return x
 
     # LDMT

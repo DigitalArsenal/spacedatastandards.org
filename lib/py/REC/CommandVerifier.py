@@ -2,4 +2,222 @@
 
 # namespace: 
 
-# NOTE CommandVerifier.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Command verifier definition
+class CommandVerifier(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = CommandVerifier()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsCommandVerifier(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def CommandVerifierBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x58\x54\x43", size_prefixed=size_prefixed)
+
+    # CommandVerifier
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Verifier name
+    # CommandVerifier
+    def NAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Verifier type
+    # CommandVerifier
+    def VERIFIER_TYPE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # Verification condition
+    # CommandVerifier
+    def CONDITION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from MatchCriteria import MatchCriteria
+            obj = MatchCriteria()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Container reference for verification
+    # CommandVerifier
+    def CONTAINER_REF(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Time window start (seconds)
+    # CommandVerifier
+    def TIME_WINDOW_START(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Time window stop (seconds)
+    # CommandVerifier
+    def TIME_WINDOW_STOP(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Time window reference type
+    # CommandVerifier
+    def TIME_WINDOW_REF(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+def CommandVerifierStart(builder):
+    builder.StartObject(7)
+
+def Start(builder):
+    CommandVerifierStart(builder)
+
+def CommandVerifierAddNAME(builder, NAME):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(NAME), 0)
+
+def AddNAME(builder, NAME):
+    CommandVerifierAddNAME(builder, NAME)
+
+def CommandVerifierAddVERIFIER_TYPE(builder, VERIFIER_TYPE):
+    builder.PrependInt8Slot(1, VERIFIER_TYPE, 0)
+
+def AddVERIFIER_TYPE(builder, VERIFIER_TYPE):
+    CommandVerifierAddVERIFIER_TYPE(builder, VERIFIER_TYPE)
+
+def CommandVerifierAddCONDITION(builder, CONDITION):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(CONDITION), 0)
+
+def AddCONDITION(builder, CONDITION):
+    CommandVerifierAddCONDITION(builder, CONDITION)
+
+def CommandVerifierAddCONTAINER_REF(builder, CONTAINER_REF):
+    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(CONTAINER_REF), 0)
+
+def AddCONTAINER_REF(builder, CONTAINER_REF):
+    CommandVerifierAddCONTAINER_REF(builder, CONTAINER_REF)
+
+def CommandVerifierAddTIME_WINDOW_START(builder, TIME_WINDOW_START):
+    builder.PrependFloat64Slot(4, TIME_WINDOW_START, 0.0)
+
+def AddTIME_WINDOW_START(builder, TIME_WINDOW_START):
+    CommandVerifierAddTIME_WINDOW_START(builder, TIME_WINDOW_START)
+
+def CommandVerifierAddTIME_WINDOW_STOP(builder, TIME_WINDOW_STOP):
+    builder.PrependFloat64Slot(5, TIME_WINDOW_STOP, 0.0)
+
+def AddTIME_WINDOW_STOP(builder, TIME_WINDOW_STOP):
+    CommandVerifierAddTIME_WINDOW_STOP(builder, TIME_WINDOW_STOP)
+
+def CommandVerifierAddTIME_WINDOW_REF(builder, TIME_WINDOW_REF):
+    builder.PrependInt8Slot(6, TIME_WINDOW_REF, 0)
+
+def AddTIME_WINDOW_REF(builder, TIME_WINDOW_REF):
+    CommandVerifierAddTIME_WINDOW_REF(builder, TIME_WINDOW_REF)
+
+def CommandVerifierEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return CommandVerifierEnd(builder)
+
+import MatchCriteria
+try:
+    from typing import Optional
+except:
+    pass
+
+class CommandVerifierT(object):
+
+    # CommandVerifierT
+    def __init__(
+        self,
+        NAME = None,
+        VERIFIER_TYPE = 0,
+        CONDITION = None,
+        CONTAINER_REF = None,
+        TIME_WINDOW_START = 0.0,
+        TIME_WINDOW_STOP = 0.0,
+        TIME_WINDOW_REF = 0,
+    ):
+        self.NAME = NAME  # type: Optional[str]
+        self.VERIFIER_TYPE = VERIFIER_TYPE  # type: int
+        self.CONDITION = CONDITION  # type: Optional[MatchCriteria.MatchCriteriaT]
+        self.CONTAINER_REF = CONTAINER_REF  # type: Optional[str]
+        self.TIME_WINDOW_START = TIME_WINDOW_START  # type: float
+        self.TIME_WINDOW_STOP = TIME_WINDOW_STOP  # type: float
+        self.TIME_WINDOW_REF = TIME_WINDOW_REF  # type: int
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpCommandVerifier = CommandVerifier()
+        tmpCommandVerifier.Init(buf, pos)
+        return cls.InitFromObj(tmpCommandVerifier)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpCommandVerifier):
+        x = CommandVerifierT()
+        x._UnPack(tmpCommandVerifier)
+        return x
+
+    # CommandVerifierT
+    def _UnPack(self, CommandVerifier):
+        if CommandVerifier is None:
+            return
+        self.NAME = CommandVerifier.NAME()
+        self.VERIFIER_TYPE = CommandVerifier.VERIFIER_TYPE()
+        if CommandVerifier.CONDITION() is not None:
+            self.CONDITION = MatchCriteria.MatchCriteriaT.InitFromObj(CommandVerifier.CONDITION())
+        self.CONTAINER_REF = CommandVerifier.CONTAINER_REF()
+        self.TIME_WINDOW_START = CommandVerifier.TIME_WINDOW_START()
+        self.TIME_WINDOW_STOP = CommandVerifier.TIME_WINDOW_STOP()
+        self.TIME_WINDOW_REF = CommandVerifier.TIME_WINDOW_REF()
+
+    # CommandVerifierT
+    def Pack(self, builder):
+        if self.NAME is not None:
+            NAME = builder.CreateString(self.NAME)
+        if self.CONDITION is not None:
+            CONDITION = self.CONDITION.Pack(builder)
+        if self.CONTAINER_REF is not None:
+            CONTAINER_REF = builder.CreateString(self.CONTAINER_REF)
+        CommandVerifierStart(builder)
+        if self.NAME is not None:
+            CommandVerifierAddNAME(builder, NAME)
+        CommandVerifierAddVERIFIER_TYPE(builder, self.VERIFIER_TYPE)
+        if self.CONDITION is not None:
+            CommandVerifierAddCONDITION(builder, CONDITION)
+        if self.CONTAINER_REF is not None:
+            CommandVerifierAddCONTAINER_REF(builder, CONTAINER_REF)
+        CommandVerifierAddTIME_WINDOW_START(builder, self.TIME_WINDOW_START)
+        CommandVerifierAddTIME_WINDOW_STOP(builder, self.TIME_WINDOW_STOP)
+        CommandVerifierAddTIME_WINDOW_REF(builder, self.TIME_WINDOW_REF)
+        CommandVerifier = CommandVerifierEnd(builder)
+        return CommandVerifier

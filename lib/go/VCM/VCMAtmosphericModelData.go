@@ -50,8 +50,16 @@ func (rcv *VCMAtmosphericModelData) ATMOSPHERIC_MODEL() atmosphericModel {
 	return 0
 }
 
+func (rcv *VCMAtmosphericModelData) AtmosphericModel() atmosphericModel {
+	return rcv.ATMOSPHERIC_MODEL()
+}
+
 func (rcv *VCMAtmosphericModelData) MutateATMOSPHERIC_MODEL(n atmosphericModel) bool {
 	return rcv._tab.MutateInt8Slot(4, int8(n))
+}
+
+func (rcv *VCMAtmosphericModelData) MutateAtmosphericModel(n atmosphericModel) bool {
+	return rcv.MutateATMOSPHERIC_MODEL(n)
 }
 
 func (rcv *VCMAtmosphericModelData) GEOPOTENTIAL_MODEL() geopotentialModel {
@@ -62,8 +70,16 @@ func (rcv *VCMAtmosphericModelData) GEOPOTENTIAL_MODEL() geopotentialModel {
 	return 0
 }
 
+func (rcv *VCMAtmosphericModelData) GeopotentialModel() geopotentialModel {
+	return rcv.GEOPOTENTIAL_MODEL()
+}
+
 func (rcv *VCMAtmosphericModelData) MutateGEOPOTENTIAL_MODEL(n geopotentialModel) bool {
 	return rcv._tab.MutateInt8Slot(6, int8(n))
+}
+
+func (rcv *VCMAtmosphericModelData) MutateGeopotentialModel(n geopotentialModel) bool {
+	return rcv.MutateGEOPOTENTIAL_MODEL(n)
 }
 
 func (rcv *VCMAtmosphericModelData) LUNAR_SOLAR_PERTURBATION() perturbationStatus {
@@ -74,8 +90,16 @@ func (rcv *VCMAtmosphericModelData) LUNAR_SOLAR_PERTURBATION() perturbationStatu
 	return 0
 }
 
+func (rcv *VCMAtmosphericModelData) LunarSolarPerturbation() perturbationStatus {
+	return rcv.LUNAR_SOLAR_PERTURBATION()
+}
+
 func (rcv *VCMAtmosphericModelData) MutateLUNAR_SOLAR_PERTURBATION(n perturbationStatus) bool {
 	return rcv._tab.MutateInt8Slot(8, int8(n))
+}
+
+func (rcv *VCMAtmosphericModelData) MutateLunarSolarPerturbation(n perturbationStatus) bool {
+	return rcv.MutateLUNAR_SOLAR_PERTURBATION(n)
 }
 
 func (rcv *VCMAtmosphericModelData) LUNAR_PERTURBATION_MODEL() lunarPerturbationModel {
@@ -86,8 +110,16 @@ func (rcv *VCMAtmosphericModelData) LUNAR_PERTURBATION_MODEL() lunarPerturbation
 	return 0
 }
 
+func (rcv *VCMAtmosphericModelData) LunarPerturbationModel() lunarPerturbationModel {
+	return rcv.LUNAR_PERTURBATION_MODEL()
+}
+
 func (rcv *VCMAtmosphericModelData) MutateLUNAR_PERTURBATION_MODEL(n lunarPerturbationModel) bool {
 	return rcv._tab.MutateInt8Slot(10, int8(n))
+}
+
+func (rcv *VCMAtmosphericModelData) MutateLunarPerturbationModel(n lunarPerturbationModel) bool {
+	return rcv.MutateLUNAR_PERTURBATION_MODEL(n)
 }
 
 func (rcv *VCMAtmosphericModelData) SOLAR_PERTURBATION_MODEL() solarPerturbationModel {
@@ -98,8 +130,16 @@ func (rcv *VCMAtmosphericModelData) SOLAR_PERTURBATION_MODEL() solarPerturbation
 	return 0
 }
 
+func (rcv *VCMAtmosphericModelData) SolarPerturbationModel() solarPerturbationModel {
+	return rcv.SOLAR_PERTURBATION_MODEL()
+}
+
 func (rcv *VCMAtmosphericModelData) MutateSOLAR_PERTURBATION_MODEL(n solarPerturbationModel) bool {
 	return rcv._tab.MutateInt8Slot(12, int8(n))
+}
+
+func (rcv *VCMAtmosphericModelData) MutateSolarPerturbationModel(n solarPerturbationModel) bool {
+	return rcv.MutateSOLAR_PERTURBATION_MODEL(n)
 }
 
 func (rcv *VCMAtmosphericModelData) SOLAR_RADIATION_PRESSURE() perturbationStatus {
@@ -110,8 +150,16 @@ func (rcv *VCMAtmosphericModelData) SOLAR_RADIATION_PRESSURE() perturbationStatu
 	return 0
 }
 
+func (rcv *VCMAtmosphericModelData) SolarRadiationPressure() perturbationStatus {
+	return rcv.SOLAR_RADIATION_PRESSURE()
+}
+
 func (rcv *VCMAtmosphericModelData) MutateSOLAR_RADIATION_PRESSURE(n perturbationStatus) bool {
 	return rcv._tab.MutateInt8Slot(14, int8(n))
+}
+
+func (rcv *VCMAtmosphericModelData) MutateSolarRadiationPressure(n perturbationStatus) bool {
+	return rcv.MutateSOLAR_RADIATION_PRESSURE(n)
 }
 
 func (rcv *VCMAtmosphericModelData) SRP_MODEL() solarRadiationPressureModel {
@@ -122,8 +170,16 @@ func (rcv *VCMAtmosphericModelData) SRP_MODEL() solarRadiationPressureModel {
 	return 0
 }
 
+func (rcv *VCMAtmosphericModelData) SrpModel() solarRadiationPressureModel {
+	return rcv.SRP_MODEL()
+}
+
 func (rcv *VCMAtmosphericModelData) MutateSRP_MODEL(n solarRadiationPressureModel) bool {
 	return rcv._tab.MutateInt8Slot(16, int8(n))
+}
+
+func (rcv *VCMAtmosphericModelData) MutateSrpModel(n solarRadiationPressureModel) bool {
+	return rcv.MutateSRP_MODEL(n)
 }
 
 func (rcv *VCMAtmosphericModelData) RESONANCE_MODEL() resonanceModel {
@@ -134,8 +190,16 @@ func (rcv *VCMAtmosphericModelData) RESONANCE_MODEL() resonanceModel {
 	return 0
 }
 
+func (rcv *VCMAtmosphericModelData) ResonanceModel() resonanceModel {
+	return rcv.RESONANCE_MODEL()
+}
+
 func (rcv *VCMAtmosphericModelData) MutateRESONANCE_MODEL(n resonanceModel) bool {
 	return rcv._tab.MutateInt8Slot(18, int8(n))
+}
+
+func (rcv *VCMAtmosphericModelData) MutateResonanceModel(n resonanceModel) bool {
+	return rcv.MutateRESONANCE_MODEL(n)
 }
 
 func VCMAtmosphericModelDataStart(builder *flatbuffers.Builder) {
@@ -144,26 +208,50 @@ func VCMAtmosphericModelDataStart(builder *flatbuffers.Builder) {
 func VCMAtmosphericModelDataAddATMOSPHERIC_MODEL(builder *flatbuffers.Builder, ATMOSPHERIC_MODEL atmosphericModel) {
 	builder.PrependInt8Slot(0, int8(ATMOSPHERIC_MODEL), 0)
 }
+func VCMAtmosphericModelDataAddAtmosphericModel(builder *flatbuffers.Builder, ATMOSPHERIC_MODEL atmosphericModel) {
+	VCMAtmosphericModelDataAddATMOSPHERIC_MODEL(builder, ATMOSPHERIC_MODEL)
+}
 func VCMAtmosphericModelDataAddGEOPOTENTIAL_MODEL(builder *flatbuffers.Builder, GEOPOTENTIAL_MODEL geopotentialModel) {
 	builder.PrependInt8Slot(1, int8(GEOPOTENTIAL_MODEL), 0)
+}
+func VCMAtmosphericModelDataAddGeopotentialModel(builder *flatbuffers.Builder, GEOPOTENTIAL_MODEL geopotentialModel) {
+	VCMAtmosphericModelDataAddGEOPOTENTIAL_MODEL(builder, GEOPOTENTIAL_MODEL)
 }
 func VCMAtmosphericModelDataAddLUNAR_SOLAR_PERTURBATION(builder *flatbuffers.Builder, LUNAR_SOLAR_PERTURBATION perturbationStatus) {
 	builder.PrependInt8Slot(2, int8(LUNAR_SOLAR_PERTURBATION), 0)
 }
+func VCMAtmosphericModelDataAddLunarSolarPerturbation(builder *flatbuffers.Builder, LUNAR_SOLAR_PERTURBATION perturbationStatus) {
+	VCMAtmosphericModelDataAddLUNAR_SOLAR_PERTURBATION(builder, LUNAR_SOLAR_PERTURBATION)
+}
 func VCMAtmosphericModelDataAddLUNAR_PERTURBATION_MODEL(builder *flatbuffers.Builder, LUNAR_PERTURBATION_MODEL lunarPerturbationModel) {
 	builder.PrependInt8Slot(3, int8(LUNAR_PERTURBATION_MODEL), 0)
+}
+func VCMAtmosphericModelDataAddLunarPerturbationModel(builder *flatbuffers.Builder, LUNAR_PERTURBATION_MODEL lunarPerturbationModel) {
+	VCMAtmosphericModelDataAddLUNAR_PERTURBATION_MODEL(builder, LUNAR_PERTURBATION_MODEL)
 }
 func VCMAtmosphericModelDataAddSOLAR_PERTURBATION_MODEL(builder *flatbuffers.Builder, SOLAR_PERTURBATION_MODEL solarPerturbationModel) {
 	builder.PrependInt8Slot(4, int8(SOLAR_PERTURBATION_MODEL), 0)
 }
+func VCMAtmosphericModelDataAddSolarPerturbationModel(builder *flatbuffers.Builder, SOLAR_PERTURBATION_MODEL solarPerturbationModel) {
+	VCMAtmosphericModelDataAddSOLAR_PERTURBATION_MODEL(builder, SOLAR_PERTURBATION_MODEL)
+}
 func VCMAtmosphericModelDataAddSOLAR_RADIATION_PRESSURE(builder *flatbuffers.Builder, SOLAR_RADIATION_PRESSURE perturbationStatus) {
 	builder.PrependInt8Slot(5, int8(SOLAR_RADIATION_PRESSURE), 0)
+}
+func VCMAtmosphericModelDataAddSolarRadiationPressure(builder *flatbuffers.Builder, SOLAR_RADIATION_PRESSURE perturbationStatus) {
+	VCMAtmosphericModelDataAddSOLAR_RADIATION_PRESSURE(builder, SOLAR_RADIATION_PRESSURE)
 }
 func VCMAtmosphericModelDataAddSRP_MODEL(builder *flatbuffers.Builder, SRP_MODEL solarRadiationPressureModel) {
 	builder.PrependInt8Slot(6, int8(SRP_MODEL), 0)
 }
+func VCMAtmosphericModelDataAddSrpModel(builder *flatbuffers.Builder, SRP_MODEL solarRadiationPressureModel) {
+	VCMAtmosphericModelDataAddSRP_MODEL(builder, SRP_MODEL)
+}
 func VCMAtmosphericModelDataAddRESONANCE_MODEL(builder *flatbuffers.Builder, RESONANCE_MODEL resonanceModel) {
 	builder.PrependInt8Slot(7, int8(RESONANCE_MODEL), 0)
+}
+func VCMAtmosphericModelDataAddResonanceModel(builder *flatbuffers.Builder, RESONANCE_MODEL resonanceModel) {
+	VCMAtmosphericModelDataAddRESONANCE_MODEL(builder, RESONANCE_MODEL)
 }
 func VCMAtmosphericModelDataEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

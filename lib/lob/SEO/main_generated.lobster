@@ -266,16 +266,16 @@ struct SEOBuilder:
     def end():
         return b_.EndObject()
 
-def SEOStartSEN_POSVector(b_:flatbuffers.builder, n_:int):
+def SEOStartSENPOSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(8, n_, 8)
-def SEOCreateSEN_POSVector(b_:flatbuffers.builder, v_:[float]):
+def SEOCreateSENPOSVector(b_:flatbuffers.builder, v_:[float]):
     b_.StartVector(8, v_.length, 8)
     reverse(v_) e_: b_.PrependFloat64(e_)
     return b_.EndVector(v_.length)
 
-def SEOStartSEN_VELVector(b_:flatbuffers.builder, n_:int):
+def SEOStartSENVELVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(8, n_, 8)
-def SEOCreateSEN_VELVector(b_:flatbuffers.builder, v_:[float]):
+def SEOCreateSENVELVector(b_:flatbuffers.builder, v_:[float]):
     b_.StartVector(8, v_.length, 8)
     reverse(v_) e_: b_.PrependFloat64(e_)
     return b_.EndVector(v_.length)
@@ -294,16 +294,16 @@ def SEOCreateUNCERTAINTIESVector(b_:flatbuffers.builder, v_:[float]):
     reverse(v_) e_: b_.PrependFloat64(e_)
     return b_.EndVector(v_.length)
 
-def SEOStartSRC_TYPSVector(b_:flatbuffers.builder, n_:int):
+def SEOStartSRCTYPSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def SEOCreateSRC_TYPSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def SEOCreateSRCTYPSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-def SEOStartSRC_IDSVector(b_:flatbuffers.builder, n_:int):
+def SEOStartSRCIDSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def SEOCreateSRC_IDSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def SEOCreateSRCIDSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)

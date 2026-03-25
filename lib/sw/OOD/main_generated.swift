@@ -2,12 +2,16 @@
 // swiftlint:disable all
 // swiftformat:disable all
 
+#if canImport(Common)
+import Common
+#endif
+
 import FlatBuffers
 
 ///  On-Orbit Object Details
-public struct OOD: FlatBufferObject, Verifiable {
+public struct OOD: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -78,9 +82,7 @@ public struct OOD: FlatBufferObject, Verifiable {
   public var DELTA_VUNC: Double { let o = _accessor.offset(VTOFFSET.DELTA_VUNC.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public var EST_DELTA_VDURATION: Double { let o = _accessor.offset(VTOFFSET.EST_DELTA_VDURATION.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public var NUM_MISSION: Int32 { let o = _accessor.offset(VTOFFSET.NUM_MISSION.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
-  public var hasMissionTypes: Bool { let o = _accessor.offset(VTOFFSET.MISSION_TYPES.v); return o == 0 ? false : true }
-  public var MISSION_TYPESCount: Int32 { let o = _accessor.offset(VTOFFSET.MISSION_TYPES.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func MISSION_TYPES(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.MISSION_TYPES.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  public var MISSION_TYPES: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.MISSION_TYPES.v, byteSize: 4) }
   public var BUS_TYPE: String? { let o = _accessor.offset(VTOFFSET.BUS_TYPE.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var BUS_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.BUS_TYPE.v) }
   public var GEO_SLOT: Double { let o = _accessor.offset(VTOFFSET.GEO_SLOT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
@@ -102,15 +104,9 @@ public struct OOD: FlatBufferObject, Verifiable {
   public var COLA_RADIUS: Double { let o = _accessor.offset(VTOFFSET.COLA_RADIUS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public var ADEPT_RADIUS: Double { let o = _accessor.offset(VTOFFSET.ADEPT_RADIUS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public var NUM_DEPLOYABLE: Int32 { let o = _accessor.offset(VTOFFSET.NUM_DEPLOYABLE.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
-  public var hasDepNames: Bool { let o = _accessor.offset(VTOFFSET.DEP_NAMES.v); return o == 0 ? false : true }
-  public var DEP_NAMESCount: Int32 { let o = _accessor.offset(VTOFFSET.DEP_NAMES.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func DEP_NAMES(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.DEP_NAMES.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
-  public var hasDepEstMasses: Bool { let o = _accessor.offset(VTOFFSET.DEP_EST_MASSES.v); return o == 0 ? false : true }
-  public var DEP_EST_MASSESCount: Int32 { let o = _accessor.offset(VTOFFSET.DEP_EST_MASSES.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func DEP_EST_MASSES(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.DEP_EST_MASSES.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
-  public var hasDepMassUncs: Bool { let o = _accessor.offset(VTOFFSET.DEP_MASS_UNCS.v); return o == 0 ? false : true }
-  public var DEP_MASS_UNCSCount: Int32 { let o = _accessor.offset(VTOFFSET.DEP_MASS_UNCS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func DEP_MASS_UNCS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.DEP_MASS_UNCS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  public var DEP_NAMES: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.DEP_NAMES.v, byteSize: 4) }
+  public var DEP_EST_MASSES: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.DEP_EST_MASSES.v, byteSize: 4) }
+  public var DEP_MASS_UNCS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.DEP_MASS_UNCS.v, byteSize: 4) }
   public var LAST_OB_SOURCE: String? { let o = _accessor.offset(VTOFFSET.LAST_OB_SOURCE.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var LAST_OB_SOURCESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LAST_OB_SOURCE.v) }
   public static func startOOD(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 40) }

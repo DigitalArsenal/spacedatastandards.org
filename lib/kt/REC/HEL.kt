@@ -29,72 +29,72 @@ class HEL : Table() {
         __init(_i, _bb)
         return this
     }
-    val POSITION_X : Double
+    val positionX : Double
         get() {
             val o = __offset(4)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val POSITION_Y : Double
+    val positionY : Double
         get() {
             val o = __offset(6)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val POSITION_Z : Double
+    val positionZ : Double
         get() {
             val o = __offset(8)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val VELOCITY_X : Double
+    val velocityX : Double
         get() {
             val o = __offset(10)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val VELOCITY_Y : Double
+    val velocityY : Double
         get() {
             val o = __offset(12)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val VELOCITY_Z : Double
+    val velocityZ : Double
         get() {
             val o = __offset(14)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val QUAT_W : Double
+    val quatW : Double
         get() {
             val o = __offset(16)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val QUAT_X : Double
+    val quatX : Double
         get() {
             val o = __offset(18)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val QUAT_Y : Double
+    val quatY : Double
         get() {
             val o = __offset(20)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val QUAT_Z : Double
+    val quatZ : Double
         get() {
             val o = __offset(22)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val OMEGA_BODY_X : Double
+    val omegaBodyX : Double
         get() {
             val o = __offset(24)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val OMEGA_BODY_Y : Double
+    val omegaBodyY : Double
         get() {
             val o = __offset(26)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val OMEGA_BODY_Z : Double
+    val omegaBodyZ : Double
         get() {
             val o = __offset(28)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val MAIN_ROTOR : String?
+    val mainRotor : String?
         get() {
             val o = __offset(30)
             return if (o != 0) {
@@ -103,9 +103,9 @@ class HEL : Table() {
                 null
             }
         }
-    val MAIN_ROTORAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(30, 1)
-    fun MAIN_ROTORInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 30, 1)
-    val TAIL_ROTOR : String?
+    val mainRotorAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(30, 1)
+    fun mainRotorInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 30, 1)
+    val tailRotor : String?
         get() {
             val o = __offset(32)
             return if (o != 0) {
@@ -114,79 +114,79 @@ class HEL : Table() {
                 null
             }
         }
-    val TAIL_ROTORAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(32, 1)
-    fun TAIL_ROTORInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 32, 1)
-    val ENGINE_N1 : Double
+    val tailRotorAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(32, 1)
+    fun tailRotorInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 32, 1)
+    val engineN1 : Double
         get() {
             val o = __offset(34)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val ENGINE_TORQUE : Double
+    val engineTorque : Double
         get() {
             val o = __offset(36)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val FLAGS : UInt
+    val flags : UInt
         get() {
             val o = __offset(38)
             return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
         }
-    val FUEL_REMAINING : Float
+    val fuelRemaining : Float
         get() {
             val o = __offset(40)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsHEL(_bb: ByteBuffer): HEL = getRootAsHEL(_bb, HEL())
         fun getRootAsHEL(_bb: ByteBuffer, obj: HEL): HEL {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun HELBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$HEL")
-        fun createHEL(builder: FlatBufferBuilder, POSITION_X: Double, POSITION_Y: Double, POSITION_Z: Double, VELOCITY_X: Double, VELOCITY_Y: Double, VELOCITY_Z: Double, QUAT_W: Double, QUAT_X: Double, QUAT_Y: Double, QUAT_Z: Double, OMEGA_BODY_X: Double, OMEGA_BODY_Y: Double, OMEGA_BODY_Z: Double, MAIN_ROTOROffset: Int, TAIL_ROTOROffset: Int, ENGINE_N1: Double, ENGINE_TORQUE: Double, FLAGS: UInt, FUEL_REMAINING: Float) : Int {
+        fun createHEL(builder: FlatBufferBuilder, positionX: Double, positionY: Double, positionZ: Double, velocityX: Double, velocityY: Double, velocityZ: Double, quatW: Double, quatX: Double, quatY: Double, quatZ: Double, omegaBodyX: Double, omegaBodyY: Double, omegaBodyZ: Double, mainRotorOffset: Int, tailRotorOffset: Int, engineN1: Double, engineTorque: Double, flags: UInt, fuelRemaining: Float) : Int {
             builder.startTable(19)
-            addENGINE_TORQUE(builder, ENGINE_TORQUE)
-            addENGINE_N1(builder, ENGINE_N1)
-            addOMEGA_BODY_Z(builder, OMEGA_BODY_Z)
-            addOMEGA_BODY_Y(builder, OMEGA_BODY_Y)
-            addOMEGA_BODY_X(builder, OMEGA_BODY_X)
-            addQUAT_Z(builder, QUAT_Z)
-            addQUAT_Y(builder, QUAT_Y)
-            addQUAT_X(builder, QUAT_X)
-            addQUAT_W(builder, QUAT_W)
-            addVELOCITY_Z(builder, VELOCITY_Z)
-            addVELOCITY_Y(builder, VELOCITY_Y)
-            addVELOCITY_X(builder, VELOCITY_X)
-            addPOSITION_Z(builder, POSITION_Z)
-            addPOSITION_Y(builder, POSITION_Y)
-            addPOSITION_X(builder, POSITION_X)
-            addFUEL_REMAINING(builder, FUEL_REMAINING)
-            addFLAGS(builder, FLAGS)
-            addTAIL_ROTOR(builder, TAIL_ROTOROffset)
-            addMAIN_ROTOR(builder, MAIN_ROTOROffset)
+            addENGINETORQUE(builder, engineTorque)
+            addENGINEN1(builder, engineN1)
+            addOMEGABODYZ(builder, omegaBodyZ)
+            addOMEGABODYY(builder, omegaBodyY)
+            addOMEGABODYX(builder, omegaBodyX)
+            addQUATZ(builder, quatZ)
+            addQUATY(builder, quatY)
+            addQUATX(builder, quatX)
+            addQUATW(builder, quatW)
+            addVELOCITYZ(builder, velocityZ)
+            addVELOCITYY(builder, velocityY)
+            addVELOCITYX(builder, velocityX)
+            addPOSITIONZ(builder, positionZ)
+            addPOSITIONY(builder, positionY)
+            addPOSITIONX(builder, positionX)
+            addFUELREMAINING(builder, fuelRemaining)
+            addFLAGS(builder, flags)
+            addTAILROTOR(builder, tailRotorOffset)
+            addMAINROTOR(builder, mainRotorOffset)
             return endHEL(builder)
         }
         fun startHEL(builder: FlatBufferBuilder) = builder.startTable(19)
-        fun addPOSITION_X(builder: FlatBufferBuilder, POSITION_X: Double) = builder.addDouble(0, POSITION_X, 0.0)
-        fun addPOSITION_Y(builder: FlatBufferBuilder, POSITION_Y: Double) = builder.addDouble(1, POSITION_Y, 0.0)
-        fun addPOSITION_Z(builder: FlatBufferBuilder, POSITION_Z: Double) = builder.addDouble(2, POSITION_Z, 0.0)
-        fun addVELOCITY_X(builder: FlatBufferBuilder, VELOCITY_X: Double) = builder.addDouble(3, VELOCITY_X, 0.0)
-        fun addVELOCITY_Y(builder: FlatBufferBuilder, VELOCITY_Y: Double) = builder.addDouble(4, VELOCITY_Y, 0.0)
-        fun addVELOCITY_Z(builder: FlatBufferBuilder, VELOCITY_Z: Double) = builder.addDouble(5, VELOCITY_Z, 0.0)
-        fun addQUAT_W(builder: FlatBufferBuilder, QUAT_W: Double) = builder.addDouble(6, QUAT_W, 0.0)
-        fun addQUAT_X(builder: FlatBufferBuilder, QUAT_X: Double) = builder.addDouble(7, QUAT_X, 0.0)
-        fun addQUAT_Y(builder: FlatBufferBuilder, QUAT_Y: Double) = builder.addDouble(8, QUAT_Y, 0.0)
-        fun addQUAT_Z(builder: FlatBufferBuilder, QUAT_Z: Double) = builder.addDouble(9, QUAT_Z, 0.0)
-        fun addOMEGA_BODY_X(builder: FlatBufferBuilder, OMEGA_BODY_X: Double) = builder.addDouble(10, OMEGA_BODY_X, 0.0)
-        fun addOMEGA_BODY_Y(builder: FlatBufferBuilder, OMEGA_BODY_Y: Double) = builder.addDouble(11, OMEGA_BODY_Y, 0.0)
-        fun addOMEGA_BODY_Z(builder: FlatBufferBuilder, OMEGA_BODY_Z: Double) = builder.addDouble(12, OMEGA_BODY_Z, 0.0)
-        fun addMAIN_ROTOR(builder: FlatBufferBuilder, MAIN_ROTOR: Int) = builder.addOffset(13, MAIN_ROTOR, 0)
-        fun addTAIL_ROTOR(builder: FlatBufferBuilder, TAIL_ROTOR: Int) = builder.addOffset(14, TAIL_ROTOR, 0)
-        fun addENGINE_N1(builder: FlatBufferBuilder, ENGINE_N1: Double) = builder.addDouble(15, ENGINE_N1, 0.0)
-        fun addENGINE_TORQUE(builder: FlatBufferBuilder, ENGINE_TORQUE: Double) = builder.addDouble(16, ENGINE_TORQUE, 0.0)
-        fun addFLAGS(builder: FlatBufferBuilder, FLAGS: UInt) = builder.addInt(17, FLAGS.toInt(), 0)
-        fun addFUEL_REMAINING(builder: FlatBufferBuilder, FUEL_REMAINING: Float) = builder.addFloat(18, FUEL_REMAINING, 0.0)
+        fun addPOSITIONX(builder: FlatBufferBuilder, positionX: Double) = builder.addDouble(0, positionX, 0.0)
+        fun addPOSITIONY(builder: FlatBufferBuilder, positionY: Double) = builder.addDouble(1, positionY, 0.0)
+        fun addPOSITIONZ(builder: FlatBufferBuilder, positionZ: Double) = builder.addDouble(2, positionZ, 0.0)
+        fun addVELOCITYX(builder: FlatBufferBuilder, velocityX: Double) = builder.addDouble(3, velocityX, 0.0)
+        fun addVELOCITYY(builder: FlatBufferBuilder, velocityY: Double) = builder.addDouble(4, velocityY, 0.0)
+        fun addVELOCITYZ(builder: FlatBufferBuilder, velocityZ: Double) = builder.addDouble(5, velocityZ, 0.0)
+        fun addQUATW(builder: FlatBufferBuilder, quatW: Double) = builder.addDouble(6, quatW, 0.0)
+        fun addQUATX(builder: FlatBufferBuilder, quatX: Double) = builder.addDouble(7, quatX, 0.0)
+        fun addQUATY(builder: FlatBufferBuilder, quatY: Double) = builder.addDouble(8, quatY, 0.0)
+        fun addQUATZ(builder: FlatBufferBuilder, quatZ: Double) = builder.addDouble(9, quatZ, 0.0)
+        fun addOMEGABODYX(builder: FlatBufferBuilder, omegaBodyX: Double) = builder.addDouble(10, omegaBodyX, 0.0)
+        fun addOMEGABODYY(builder: FlatBufferBuilder, omegaBodyY: Double) = builder.addDouble(11, omegaBodyY, 0.0)
+        fun addOMEGABODYZ(builder: FlatBufferBuilder, omegaBodyZ: Double) = builder.addDouble(12, omegaBodyZ, 0.0)
+        fun addMAINROTOR(builder: FlatBufferBuilder, mainRotor: Int) = builder.addOffset(13, mainRotor, 0)
+        fun addTAILROTOR(builder: FlatBufferBuilder, tailRotor: Int) = builder.addOffset(14, tailRotor, 0)
+        fun addENGINEN1(builder: FlatBufferBuilder, engineN1: Double) = builder.addDouble(15, engineN1, 0.0)
+        fun addENGINETORQUE(builder: FlatBufferBuilder, engineTorque: Double) = builder.addDouble(16, engineTorque, 0.0)
+        fun addFLAGS(builder: FlatBufferBuilder, flags: UInt) = builder.addInt(17, flags.toInt(), 0)
+        fun addFUELREMAINING(builder: FlatBufferBuilder, fuelRemaining: Float) = builder.addFloat(18, fuelRemaining, 0.0)
         fun endHEL(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

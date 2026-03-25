@@ -32,7 +32,7 @@ class ArrayDimension : Table() {
     /**
      * Fixed size of this dimension
      */
-    val SIZE : UInt
+    val size : UInt
         get() {
             val o = __offset(4)
             return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
@@ -40,7 +40,7 @@ class ArrayDimension : Table() {
     /**
      * Dynamic size from parameter reference
      */
-    val SIZE_PARAMETER_REF : String?
+    val sizeParameterRef : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -49,24 +49,24 @@ class ArrayDimension : Table() {
                 null
             }
         }
-    val SIZE_PARAMETER_REFAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun SIZE_PARAMETER_REFInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val sizeParameterRefAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun sizeParameterRefInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsArrayDimension(_bb: ByteBuffer): ArrayDimension = getRootAsArrayDimension(_bb, ArrayDimension())
         fun getRootAsArrayDimension(_bb: ByteBuffer, obj: ArrayDimension): ArrayDimension {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createArrayDimension(builder: FlatBufferBuilder, SIZE: UInt, SIZE_PARAMETER_REFOffset: Int) : Int {
+        fun createArrayDimension(builder: FlatBufferBuilder, size: UInt, sizeParameterRefOffset: Int) : Int {
             builder.startTable(2)
-            addSIZE_PARAMETER_REF(builder, SIZE_PARAMETER_REFOffset)
-            addSIZE(builder, SIZE)
+            addSIZEPARAMETERREF(builder, sizeParameterRefOffset)
+            addSIZE(builder, size)
             return endArrayDimension(builder)
         }
         fun startArrayDimension(builder: FlatBufferBuilder) = builder.startTable(2)
-        fun addSIZE(builder: FlatBufferBuilder, SIZE: UInt) = builder.addInt(0, SIZE.toInt(), 0)
-        fun addSIZE_PARAMETER_REF(builder: FlatBufferBuilder, SIZE_PARAMETER_REF: Int) = builder.addOffset(1, SIZE_PARAMETER_REF, 0)
+        fun addSIZE(builder: FlatBufferBuilder, size: UInt) = builder.addInt(0, size.toInt(), 0)
+        fun addSIZEPARAMETERREF(builder: FlatBufferBuilder, sizeParameterRef: Int) = builder.addOffset(1, sizeParameterRef, 0)
         fun endArrayDimension(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

@@ -46,9 +46,9 @@ struct PRGBuilder:
     def end():
         return b_.EndObject()
 
-def PRGStartMESSAGE_TYPESVector(b_:flatbuffers.builder, n_:int):
+def PRGStartMESSAGETYPESVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def PRGCreateMESSAGE_TYPESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def PRGCreateMESSAGETYPESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
@@ -84,9 +84,9 @@ struct USRBuilder:
     def end():
         return b_.EndObject()
 
-def USRStartMESSAGE_TYPESVector(b_:flatbuffers.builder, n_:int):
+def USRStartMESSAGETYPESVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def USRCreateMESSAGE_TYPESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def USRCreateMESSAGETYPESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)

@@ -32,7 +32,7 @@ class FrequencyRange : Table() {
     /**
      * Lower frequency in MHz
      */
-    val LOWER : Double
+    val lower : Double
         get() {
             val o = __offset(4)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -40,27 +40,27 @@ class FrequencyRange : Table() {
     /**
      * Upper frequency in MHz
      */
-    val UPPER : Double
+    val upper : Double
         get() {
             val o = __offset(6)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsFrequencyRange(_bb: ByteBuffer): FrequencyRange = getRootAsFrequencyRange(_bb, FrequencyRange())
         fun getRootAsFrequencyRange(_bb: ByteBuffer, obj: FrequencyRange): FrequencyRange {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createFrequencyRange(builder: FlatBufferBuilder, LOWER: Double, UPPER: Double) : Int {
+        fun createFrequencyRange(builder: FlatBufferBuilder, lower: Double, upper: Double) : Int {
             builder.startTable(2)
-            addUPPER(builder, UPPER)
-            addLOWER(builder, LOWER)
+            addUPPER(builder, upper)
+            addLOWER(builder, lower)
             return endFrequencyRange(builder)
         }
         fun startFrequencyRange(builder: FlatBufferBuilder) = builder.startTable(2)
-        fun addLOWER(builder: FlatBufferBuilder, LOWER: Double) = builder.addDouble(0, LOWER, 0.0)
-        fun addUPPER(builder: FlatBufferBuilder, UPPER: Double) = builder.addDouble(1, UPPER, 0.0)
+        fun addLOWER(builder: FlatBufferBuilder, lower: Double) = builder.addDouble(0, lower, 0.0)
+        fun addUPPER(builder: FlatBufferBuilder, upper: Double) = builder.addDouble(1, upper, 0.0)
         fun endFrequencyRange(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

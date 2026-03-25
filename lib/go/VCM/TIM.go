@@ -62,8 +62,16 @@ func (rcv *TIM) TIME_SYSTEM() timeSystem {
 	return 0
 }
 
+func (rcv *TIM) TimeSystem() timeSystem {
+	return rcv.TIME_SYSTEM()
+}
+
 func (rcv *TIM) MutateTIME_SYSTEM(n timeSystem) bool {
 	return rcv._tab.MutateInt8Slot(4, int8(n))
+}
+
+func (rcv *TIM) MutateTimeSystem(n timeSystem) bool {
+	return rcv.MutateTIME_SYSTEM(n)
 }
 
 func TIMStart(builder *flatbuffers.Builder) {
@@ -71,6 +79,9 @@ func TIMStart(builder *flatbuffers.Builder) {
 }
 func TIMAddTIME_SYSTEM(builder *flatbuffers.Builder, TIME_SYSTEM timeSystem) {
 	builder.PrependInt8Slot(0, int8(TIME_SYSTEM), 0)
+}
+func TIMAddTimeSystem(builder *flatbuffers.Builder, TIME_SYSTEM timeSystem) {
+	TIMAddTIME_SYSTEM(builder, TIME_SYSTEM)
 }
 func TIMEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

@@ -2,4 +2,293 @@
 
 # namespace: 
 
-# NOTE GJNFeature.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# GeoJSON Feature object
+class GJNFeature(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = GJNFeature()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsGJNFeature(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def GJNFeatureBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x47\x4A\x4E", size_prefixed=size_prefixed)
+
+    # GJNFeature
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Feature identifier (optional, string form)
+    # GJNFeature
+    def ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Geometry of the feature
+    # GJNFeature
+    def GEOMETRY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from GJNGeometry import GJNGeometry
+            obj = GJNGeometry()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Properties as key-value pairs
+    # GJNFeature
+    def PROPERTIES(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from GJNProperty import GJNProperty
+            obj = GJNProperty()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # GJNFeature
+    def PROPERTIESLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # GJNFeature
+    def PROPERTIESIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        return o == 0
+
+    # Numeric feature identifier (use when ID_IS_NUMERIC is true)
+    # GJNFeature
+    def NUM_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # True if the feature id is numeric rather than string
+    # GJNFeature
+    def ID_IS_NUMERIC(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # True if the feature has a geometry (false means geometry was JSON null)
+    # GJNFeature
+    def HAS_GEOMETRY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # True if properties was JSON null (vs empty object)
+    # GJNFeature
+    def PROPERTIES_IS_NULL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # Bounding box (optional, per RFC 7946 Section 5)
+    # GJNFeature
+    def BBOX(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from GJNBoundingBox import GJNBoundingBox
+            obj = GJNBoundingBox()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+def GJNFeatureStart(builder):
+    builder.StartObject(8)
+
+def Start(builder):
+    GJNFeatureStart(builder)
+
+def GJNFeatureAddID(builder, ID):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(ID), 0)
+
+def AddID(builder, ID):
+    GJNFeatureAddID(builder, ID)
+
+def GJNFeatureAddGEOMETRY(builder, GEOMETRY):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(GEOMETRY), 0)
+
+def AddGEOMETRY(builder, GEOMETRY):
+    GJNFeatureAddGEOMETRY(builder, GEOMETRY)
+
+def GJNFeatureAddPROPERTIES(builder, PROPERTIES):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(PROPERTIES), 0)
+
+def AddPROPERTIES(builder, PROPERTIES):
+    GJNFeatureAddPROPERTIES(builder, PROPERTIES)
+
+def GJNFeatureStartPROPERTIESVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartPROPERTIESVector(builder, numElems):
+    return GJNFeatureStartPROPERTIESVector(builder, numElems)
+
+def GJNFeatureCreatePROPERTIESVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreatePROPERTIESVector(builder, data):
+    GJNFeatureCreatePROPERTIESVector(builder, data)
+
+def GJNFeatureAddNUM_ID(builder, NUM_ID):
+    builder.PrependFloat64Slot(3, NUM_ID, 0.0)
+
+def AddNUM_ID(builder, NUM_ID):
+    GJNFeatureAddNUM_ID(builder, NUM_ID)
+
+def GJNFeatureAddID_IS_NUMERIC(builder, ID_IS_NUMERIC):
+    builder.PrependBoolSlot(4, ID_IS_NUMERIC, 0)
+
+def AddID_IS_NUMERIC(builder, ID_IS_NUMERIC):
+    GJNFeatureAddID_IS_NUMERIC(builder, ID_IS_NUMERIC)
+
+def GJNFeatureAddHAS_GEOMETRY(builder, HAS_GEOMETRY):
+    builder.PrependBoolSlot(5, HAS_GEOMETRY, 0)
+
+def AddHAS_GEOMETRY(builder, HAS_GEOMETRY):
+    GJNFeatureAddHAS_GEOMETRY(builder, HAS_GEOMETRY)
+
+def GJNFeatureAddPROPERTIES_IS_NULL(builder, PROPERTIES_IS_NULL):
+    builder.PrependBoolSlot(6, PROPERTIES_IS_NULL, 0)
+
+def AddPROPERTIES_IS_NULL(builder, PROPERTIES_IS_NULL):
+    GJNFeatureAddPROPERTIES_IS_NULL(builder, PROPERTIES_IS_NULL)
+
+def GJNFeatureAddBBOX(builder, BBOX):
+    builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(BBOX), 0)
+
+def AddBBOX(builder, BBOX):
+    GJNFeatureAddBBOX(builder, BBOX)
+
+def GJNFeatureEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return GJNFeatureEnd(builder)
+
+import GJNBoundingBox
+import GJNGeometry
+import GJNProperty
+try:
+    from typing import List, Optional
+except:
+    pass
+
+class GJNFeatureT(object):
+
+    # GJNFeatureT
+    def __init__(
+        self,
+        ID = None,
+        GEOMETRY = None,
+        PROPERTIES = None,
+        NUM_ID = 0.0,
+        ID_IS_NUMERIC = False,
+        HAS_GEOMETRY = False,
+        PROPERTIES_IS_NULL = False,
+        BBOX = None,
+    ):
+        self.ID = ID  # type: Optional[str]
+        self.GEOMETRY = GEOMETRY  # type: Optional[GJNGeometry.GJNGeometryT]
+        self.PROPERTIES = PROPERTIES  # type: Optional[List[GJNProperty.GJNPropertyT]]
+        self.NUM_ID = NUM_ID  # type: float
+        self.ID_IS_NUMERIC = ID_IS_NUMERIC  # type: bool
+        self.HAS_GEOMETRY = HAS_GEOMETRY  # type: bool
+        self.PROPERTIES_IS_NULL = PROPERTIES_IS_NULL  # type: bool
+        self.BBOX = BBOX  # type: Optional[GJNBoundingBox.GJNBoundingBoxT]
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpGjnfeature = GJNFeature()
+        tmpGjnfeature.Init(buf, pos)
+        return cls.InitFromObj(tmpGjnfeature)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpGjnfeature):
+        x = GJNFeatureT()
+        x._UnPack(tmpGjnfeature)
+        return x
+
+    # GJNFeatureT
+    def _UnPack(self, GJNFeature):
+        if GJNFeature is None:
+            return
+        self.ID = GJNFeature.ID()
+        if GJNFeature.GEOMETRY() is not None:
+            self.GEOMETRY = GJNGeometry.GJNGeometryT.InitFromObj(GJNFeature.GEOMETRY())
+        if not GJNFeature.PROPERTIESIsNone():
+            self.PROPERTIES = []
+            for i in range(GJNFeature.PROPERTIESLength()):
+                if GJNFeature.PROPERTIES(i) is None:
+                    self.PROPERTIES.append(None)
+                else:
+                    gJNProperty_ = GJNProperty.GJNPropertyT.InitFromObj(GJNFeature.PROPERTIES(i))
+                    self.PROPERTIES.append(gJNProperty_)
+        self.NUM_ID = GJNFeature.NUM_ID()
+        self.ID_IS_NUMERIC = GJNFeature.ID_IS_NUMERIC()
+        self.HAS_GEOMETRY = GJNFeature.HAS_GEOMETRY()
+        self.PROPERTIES_IS_NULL = GJNFeature.PROPERTIES_IS_NULL()
+        if GJNFeature.BBOX() is not None:
+            self.BBOX = GJNBoundingBox.GJNBoundingBoxT.InitFromObj(GJNFeature.BBOX())
+
+    # GJNFeatureT
+    def Pack(self, builder):
+        if self.ID is not None:
+            ID = builder.CreateString(self.ID)
+        if self.GEOMETRY is not None:
+            GEOMETRY = self.GEOMETRY.Pack(builder)
+        if self.PROPERTIES is not None:
+            PROPERTIESlist = []
+            for i in range(len(self.PROPERTIES)):
+                PROPERTIESlist.append(self.PROPERTIES[i].Pack(builder))
+            GJNFeatureStartPROPERTIESVector(builder, len(self.PROPERTIES))
+            for i in reversed(range(len(self.PROPERTIES))):
+                builder.PrependUOffsetTRelative(PROPERTIESlist[i])
+            PROPERTIES = builder.EndVector()
+        if self.BBOX is not None:
+            BBOX = self.BBOX.Pack(builder)
+        GJNFeatureStart(builder)
+        if self.ID is not None:
+            GJNFeatureAddID(builder, ID)
+        if self.GEOMETRY is not None:
+            GJNFeatureAddGEOMETRY(builder, GEOMETRY)
+        if self.PROPERTIES is not None:
+            GJNFeatureAddPROPERTIES(builder, PROPERTIES)
+        GJNFeatureAddNUM_ID(builder, self.NUM_ID)
+        GJNFeatureAddID_IS_NUMERIC(builder, self.ID_IS_NUMERIC)
+        GJNFeatureAddHAS_GEOMETRY(builder, self.HAS_GEOMETRY)
+        GJNFeatureAddPROPERTIES_IS_NULL(builder, self.PROPERTIES_IS_NULL)
+        if self.BBOX is not None:
+            GJNFeatureAddBBOX(builder, BBOX)
+        GJNFeature = GJNFeatureEnd(builder)
+        return GJNFeature

@@ -51,6 +51,10 @@ func (rcv *BaseContainer) CONTAINER_REF() []byte {
 	return nil
 }
 
+func (rcv *BaseContainer) ContainerRef() []byte {
+	return rcv.CONTAINER_REF()
+}
+
 /// Container reference path
 /// Restriction criteria
 func (rcv *BaseContainer) RESTRICTION_CRITERIA(obj *MatchCriteria) *MatchCriteria {
@@ -66,6 +70,10 @@ func (rcv *BaseContainer) RESTRICTION_CRITERIA(obj *MatchCriteria) *MatchCriteri
 	return nil
 }
 
+func (rcv *BaseContainer) RestrictionCriteria(obj *MatchCriteria) *MatchCriteria {
+	return rcv.RESTRICTION_CRITERIA(obj)
+}
+
 /// Restriction criteria
 func BaseContainerStart(builder *flatbuffers.Builder) {
 	builder.StartObject(2)
@@ -73,8 +81,14 @@ func BaseContainerStart(builder *flatbuffers.Builder) {
 func BaseContainerAddCONTAINER_REF(builder *flatbuffers.Builder, CONTAINER_REF flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(CONTAINER_REF), 0)
 }
+func BaseContainerAddContainerRef(builder *flatbuffers.Builder, CONTAINER_REF flatbuffers.UOffsetT) {
+	BaseContainerAddCONTAINER_REF(builder, CONTAINER_REF)
+}
 func BaseContainerAddRESTRICTION_CRITERIA(builder *flatbuffers.Builder, RESTRICTION_CRITERIA flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(RESTRICTION_CRITERIA), 0)
+}
+func BaseContainerAddRestrictionCriteria(builder *flatbuffers.Builder, RESTRICTION_CRITERIA flatbuffers.UOffsetT) {
+	BaseContainerAddRESTRICTION_CRITERIA(builder, RESTRICTION_CRITERIA)
 }
 func BaseContainerEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

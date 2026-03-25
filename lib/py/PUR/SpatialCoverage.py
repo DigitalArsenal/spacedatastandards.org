@@ -2,4 +2,212 @@
 
 # namespace: 
 
-# NOTE SpatialCoverage.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Spatial coverage definition
+class SpatialCoverage(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = SpatialCoverage()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsSpatialCoverage(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def SpatialCoverageBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x53\x54\x46", size_prefixed=size_prefixed)
+
+    # SpatialCoverage
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Type of coverage: "global", "region", "object_list"
+    # SpatialCoverage
+    def TYPE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Regions covered, e.g., ["LEO", "GEO", "MEO"]
+    # SpatialCoverage
+    def REGIONS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
+        return ""
+
+    # SpatialCoverage
+    def REGIONSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # SpatialCoverage
+    def REGIONSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        return o == 0
+
+    # Specific NORAD IDs or catalog numbers
+    # SpatialCoverage
+    def OBJECT_IDS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
+        return ""
+
+    # SpatialCoverage
+    def OBJECT_IDSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # SpatialCoverage
+    def OBJECT_IDSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        return o == 0
+
+def SpatialCoverageStart(builder):
+    builder.StartObject(3)
+
+def Start(builder):
+    SpatialCoverageStart(builder)
+
+def SpatialCoverageAddTYPE(builder, TYPE):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(TYPE), 0)
+
+def AddTYPE(builder, TYPE):
+    SpatialCoverageAddTYPE(builder, TYPE)
+
+def SpatialCoverageAddREGIONS(builder, REGIONS):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(REGIONS), 0)
+
+def AddREGIONS(builder, REGIONS):
+    SpatialCoverageAddREGIONS(builder, REGIONS)
+
+def SpatialCoverageStartREGIONSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartREGIONSVector(builder, numElems):
+    return SpatialCoverageStartREGIONSVector(builder, numElems)
+
+def SpatialCoverageCreateREGIONSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateREGIONSVector(builder, data):
+    SpatialCoverageCreateREGIONSVector(builder, data)
+
+def SpatialCoverageAddOBJECT_IDS(builder, OBJECT_IDS):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(OBJECT_IDS), 0)
+
+def AddOBJECT_IDS(builder, OBJECT_IDS):
+    SpatialCoverageAddOBJECT_IDS(builder, OBJECT_IDS)
+
+def SpatialCoverageStartOBJECT_IDSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartOBJECT_IDSVector(builder, numElems):
+    return SpatialCoverageStartOBJECT_IDSVector(builder, numElems)
+
+def SpatialCoverageCreateOBJECT_IDSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateOBJECT_IDSVector(builder, data):
+    SpatialCoverageCreateOBJECT_IDSVector(builder, data)
+
+def SpatialCoverageEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return SpatialCoverageEnd(builder)
+
+try:
+    from typing import List
+except:
+    pass
+
+class SpatialCoverageT(object):
+
+    # SpatialCoverageT
+    def __init__(
+        self,
+        TYPE = None,
+        REGIONS = None,
+        OBJECT_IDS = None,
+    ):
+        self.TYPE = TYPE  # type: Optional[str]
+        self.REGIONS = REGIONS  # type: Optional[List[Optional[str]]]
+        self.OBJECT_IDS = OBJECT_IDS  # type: Optional[List[Optional[str]]]
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpSpatialCoverage = SpatialCoverage()
+        tmpSpatialCoverage.Init(buf, pos)
+        return cls.InitFromObj(tmpSpatialCoverage)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpSpatialCoverage):
+        x = SpatialCoverageT()
+        x._UnPack(tmpSpatialCoverage)
+        return x
+
+    # SpatialCoverageT
+    def _UnPack(self, SpatialCoverage):
+        if SpatialCoverage is None:
+            return
+        self.TYPE = SpatialCoverage.TYPE()
+        if not SpatialCoverage.REGIONSIsNone():
+            self.REGIONS = []
+            for i in range(SpatialCoverage.REGIONSLength()):
+                self.REGIONS.append(SpatialCoverage.REGIONS(i))
+        if not SpatialCoverage.OBJECT_IDSIsNone():
+            self.OBJECT_IDS = []
+            for i in range(SpatialCoverage.OBJECT_IDSLength()):
+                self.OBJECT_IDS.append(SpatialCoverage.OBJECT_IDS(i))
+
+    # SpatialCoverageT
+    def Pack(self, builder):
+        if self.TYPE is not None:
+            TYPE = builder.CreateString(self.TYPE)
+        if self.REGIONS is not None:
+            REGIONSlist = []
+            for i in range(len(self.REGIONS)):
+                REGIONSlist.append(builder.CreateString(self.REGIONS[i]))
+            SpatialCoverageStartREGIONSVector(builder, len(self.REGIONS))
+            for i in reversed(range(len(self.REGIONS))):
+                builder.PrependUOffsetTRelative(REGIONSlist[i])
+            REGIONS = builder.EndVector()
+        if self.OBJECT_IDS is not None:
+            OBJECT_IDSlist = []
+            for i in range(len(self.OBJECT_IDS)):
+                OBJECT_IDSlist.append(builder.CreateString(self.OBJECT_IDS[i]))
+            SpatialCoverageStartOBJECT_IDSVector(builder, len(self.OBJECT_IDS))
+            for i in reversed(range(len(self.OBJECT_IDS))):
+                builder.PrependUOffsetTRelative(OBJECT_IDSlist[i])
+            OBJECT_IDS = builder.EndVector()
+        SpatialCoverageStart(builder)
+        if self.TYPE is not None:
+            SpatialCoverageAddTYPE(builder, TYPE)
+        if self.REGIONS is not None:
+            SpatialCoverageAddREGIONS(builder, REGIONS)
+        if self.OBJECT_IDS is not None:
+            SpatialCoverageAddOBJECT_IDS(builder, OBJECT_IDS)
+        SpatialCoverage = SpatialCoverageEnd(builder)
+        return SpatialCoverage

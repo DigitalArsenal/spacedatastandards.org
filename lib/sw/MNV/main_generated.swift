@@ -2,9 +2,13 @@
 // swiftlint:disable all
 // swiftformat:disable all
 
+#if canImport(Common)
+import Common
+#endif
+
 import FlatBuffers
 
-public enum maneuverStatus: Int8, Enum, Verifiable {
+public enum maneuverStatus: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -21,7 +25,7 @@ public enum maneuverStatus: Int8, Enum, Verifiable {
 }
 
 
-public enum maneuverCharacterization: Int8, Enum, Verifiable {
+public enum maneuverCharacterization: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -42,9 +46,9 @@ public enum maneuverCharacterization: Int8, Enum, Verifiable {
 
 
 ///  Pre/post-maneuver orbital state
-public struct mnvOrbitalState: FlatBufferObject, Verifiable {
+public struct mnvOrbitalState: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -246,9 +250,9 @@ public struct mnvOrbitalState: FlatBufferObject, Verifiable {
 }
 
 ///  Spacecraft Maneuver
-public struct MNV: FlatBufferObject, Verifiable {
+public struct MNV: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -370,18 +374,16 @@ public struct MNV: FlatBufferObject, Verifiable {
   ///  Propellant mass consumed (kg)
   public var DELTA_MASS: Double { let o = _accessor.offset(VTOFFSET.DELTA_MASS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Pre-maneuver orbital state
-  public var PRE_EVENT: mnvOrbitalState? { let o = _accessor.offset(VTOFFSET.PRE_EVENT.v); return o == 0 ? nil : mnvOrbitalState(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var PRE_EVENT: mnvOrbitalState? { let o = _accessor.offset(VTOFFSET.PRE_EVENT.v); return o == 0 ? nil : mnvOrbitalState(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Post-maneuver orbital state
-  public var POST_EVENT: mnvOrbitalState? { let o = _accessor.offset(VTOFFSET.POST_EVENT.v); return o == 0 ? nil : mnvOrbitalState(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var POST_EVENT: mnvOrbitalState? { let o = _accessor.offset(VTOFFSET.POST_EVENT.v); return o == 0 ? nil : mnvOrbitalState(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Post-maneuver mass (kg)
   public var POST_MASS: Double { let o = _accessor.offset(VTOFFSET.POST_MASS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Post-maneuver cross-sectional area (m^2)
   public var POST_AREA: Double { let o = _accessor.offset(VTOFFSET.POST_AREA.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  6x6 covariance matrix (upper triangle, row-major)
-  public var hasCov: Bool { let o = _accessor.offset(VTOFFSET.COV.v); return o == 0 ? false : true }
-  public var COVCount: Int32 { let o = _accessor.offset(VTOFFSET.COV.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func COV(at index: Int32) -> Double { let o = _accessor.offset(VTOFFSET.COV.v); return o == 0 ? 0 : _accessor.directRead(of: Double.self, offset: _accessor.vector(at: o) + index * 8) }
-  public var COV: [Double] { return _accessor.getVector(at: VTOFFSET.COV.v) ?? [] }
+  public var COV: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.COV.v, byteSize: 8) }
+  public func withUnsafePointerToCov<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.COV.v, body: body) }
   ///  Number of observations used
   public var NUM_OBS: UInt32 { let o = _accessor.offset(VTOFFSET.NUM_OBS.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  State model used
@@ -392,19 +394,13 @@ public struct MNV: FlatBufferObject, Verifiable {
   ///  Number of acceleration profile points
   public var NUM_ACCEL_POINTS: UInt16 { let o = _accessor.offset(VTOFFSET.NUM_ACCEL_POINTS.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
   ///  Acceleration profile times (ISO 8601)
-  public var hasMnvrAccelTimes: Bool { let o = _accessor.offset(VTOFFSET.MNVR_ACCEL_TIMES.v); return o == 0 ? false : true }
-  public var MNVR_ACCEL_TIMESCount: Int32 { let o = _accessor.offset(VTOFFSET.MNVR_ACCEL_TIMES.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func MNVR_ACCEL_TIMES(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.MNVR_ACCEL_TIMES.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  public var MNVR_ACCEL_TIMES: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.MNVR_ACCEL_TIMES.v, byteSize: 4) }
   ///  Acceleration values (km/s^2, 3 components per point)
-  public var hasMnvrAccels: Bool { let o = _accessor.offset(VTOFFSET.MNVR_ACCELS.v); return o == 0 ? false : true }
-  public var MNVR_ACCELSCount: Int32 { let o = _accessor.offset(VTOFFSET.MNVR_ACCELS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func MNVR_ACCELS(at index: Int32) -> Double { let o = _accessor.offset(VTOFFSET.MNVR_ACCELS.v); return o == 0 ? 0 : _accessor.directRead(of: Double.self, offset: _accessor.vector(at: o) + index * 8) }
-  public var MNVR_ACCELS: [Double] { return _accessor.getVector(at: VTOFFSET.MNVR_ACCELS.v) ?? [] }
+  public var MNVR_ACCELS: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.MNVR_ACCELS.v, byteSize: 8) }
+  public func withUnsafePointerToMnvrAccels<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.MNVR_ACCELS.v, body: body) }
   ///  Acceleration uncertainties (km/s^2)
-  public var hasMnvrAccelUncs: Bool { let o = _accessor.offset(VTOFFSET.MNVR_ACCEL_UNCS.v); return o == 0 ? false : true }
-  public var MNVR_ACCEL_UNCSCount: Int32 { let o = _accessor.offset(VTOFFSET.MNVR_ACCEL_UNCS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func MNVR_ACCEL_UNCS(at index: Int32) -> Double { let o = _accessor.offset(VTOFFSET.MNVR_ACCEL_UNCS.v); return o == 0 ? 0 : _accessor.directRead(of: Double.self, offset: _accessor.vector(at: o) + index * 8) }
-  public var MNVR_ACCEL_UNCS: [Double] { return _accessor.getVector(at: VTOFFSET.MNVR_ACCEL_UNCS.v) ?? [] }
+  public var MNVR_ACCEL_UNCS: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.MNVR_ACCEL_UNCS.v, byteSize: 8) }
+  public func withUnsafePointerToMnvrAccelUncs<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.MNVR_ACCEL_UNCS.v, body: body) }
   ///  Description
   public var DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.DESCRIPTION.v) }
@@ -415,13 +411,9 @@ public struct MNV: FlatBufferObject, Verifiable {
   public var ALGORITHM: String? { let o = _accessor.offset(VTOFFSET.ALGORITHM.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var ALGORITHMSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ALGORITHM.v) }
   ///  Associated tags
-  public var hasTags: Bool { let o = _accessor.offset(VTOFFSET.TAGS.v); return o == 0 ? false : true }
-  public var TAGSCount: Int32 { let o = _accessor.offset(VTOFFSET.TAGS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func TAGS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.TAGS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  public var TAGS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.TAGS.v, byteSize: 4) }
   ///  Sourced data references
-  public var hasSourcedData: Bool { let o = _accessor.offset(VTOFFSET.SOURCED_DATA.v); return o == 0 ? false : true }
-  public var SOURCED_DATACount: Int32 { let o = _accessor.offset(VTOFFSET.SOURCED_DATA.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func SOURCED_DATA(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.SOURCED_DATA.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  public var SOURCED_DATA: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.SOURCED_DATA.v, byteSize: 4) }
   ///  Sourced data types
   public var SOURCED_DATA_TYPES: String? { let o = _accessor.offset(VTOFFSET.SOURCED_DATA_TYPES.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var SOURCED_DATA_TYPESSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SOURCED_DATA_TYPES.v) }

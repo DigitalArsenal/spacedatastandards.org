@@ -56,6 +56,10 @@ func (rcv *StaticAlarmRanges) WATCH_RANGE(obj *AlarmRange) *AlarmRange {
 	return nil
 }
 
+func (rcv *StaticAlarmRanges) WatchRange(obj *AlarmRange) *AlarmRange {
+	return rcv.WATCH_RANGE(obj)
+}
+
 /// Watch range
 /// Warning range
 func (rcv *StaticAlarmRanges) WARNING_RANGE(obj *AlarmRange) *AlarmRange {
@@ -69,6 +73,10 @@ func (rcv *StaticAlarmRanges) WARNING_RANGE(obj *AlarmRange) *AlarmRange {
 		return obj
 	}
 	return nil
+}
+
+func (rcv *StaticAlarmRanges) WarningRange(obj *AlarmRange) *AlarmRange {
+	return rcv.WARNING_RANGE(obj)
 }
 
 /// Warning range
@@ -86,6 +94,10 @@ func (rcv *StaticAlarmRanges) DISTRESS_RANGE(obj *AlarmRange) *AlarmRange {
 	return nil
 }
 
+func (rcv *StaticAlarmRanges) DistressRange(obj *AlarmRange) *AlarmRange {
+	return rcv.DISTRESS_RANGE(obj)
+}
+
 /// Distress range
 /// Critical range
 func (rcv *StaticAlarmRanges) CRITICAL_RANGE(obj *AlarmRange) *AlarmRange {
@@ -99,6 +111,10 @@ func (rcv *StaticAlarmRanges) CRITICAL_RANGE(obj *AlarmRange) *AlarmRange {
 		return obj
 	}
 	return nil
+}
+
+func (rcv *StaticAlarmRanges) CriticalRange(obj *AlarmRange) *AlarmRange {
+	return rcv.CRITICAL_RANGE(obj)
 }
 
 /// Critical range
@@ -116,6 +132,10 @@ func (rcv *StaticAlarmRanges) SEVERE_RANGE(obj *AlarmRange) *AlarmRange {
 	return nil
 }
 
+func (rcv *StaticAlarmRanges) SevereRange(obj *AlarmRange) *AlarmRange {
+	return rcv.SEVERE_RANGE(obj)
+}
+
 /// Severe range
 func StaticAlarmRangesStart(builder *flatbuffers.Builder) {
 	builder.StartObject(5)
@@ -123,17 +143,32 @@ func StaticAlarmRangesStart(builder *flatbuffers.Builder) {
 func StaticAlarmRangesAddWATCH_RANGE(builder *flatbuffers.Builder, WATCH_RANGE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(WATCH_RANGE), 0)
 }
+func StaticAlarmRangesAddWatchRange(builder *flatbuffers.Builder, WATCH_RANGE flatbuffers.UOffsetT) {
+	StaticAlarmRangesAddWATCH_RANGE(builder, WATCH_RANGE)
+}
 func StaticAlarmRangesAddWARNING_RANGE(builder *flatbuffers.Builder, WARNING_RANGE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(WARNING_RANGE), 0)
+}
+func StaticAlarmRangesAddWarningRange(builder *flatbuffers.Builder, WARNING_RANGE flatbuffers.UOffsetT) {
+	StaticAlarmRangesAddWARNING_RANGE(builder, WARNING_RANGE)
 }
 func StaticAlarmRangesAddDISTRESS_RANGE(builder *flatbuffers.Builder, DISTRESS_RANGE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(DISTRESS_RANGE), 0)
 }
+func StaticAlarmRangesAddDistressRange(builder *flatbuffers.Builder, DISTRESS_RANGE flatbuffers.UOffsetT) {
+	StaticAlarmRangesAddDISTRESS_RANGE(builder, DISTRESS_RANGE)
+}
 func StaticAlarmRangesAddCRITICAL_RANGE(builder *flatbuffers.Builder, CRITICAL_RANGE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(CRITICAL_RANGE), 0)
 }
+func StaticAlarmRangesAddCriticalRange(builder *flatbuffers.Builder, CRITICAL_RANGE flatbuffers.UOffsetT) {
+	StaticAlarmRangesAddCRITICAL_RANGE(builder, CRITICAL_RANGE)
+}
 func StaticAlarmRangesAddSEVERE_RANGE(builder *flatbuffers.Builder, SEVERE_RANGE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(SEVERE_RANGE), 0)
+}
+func StaticAlarmRangesAddSevereRange(builder *flatbuffers.Builder, SEVERE_RANGE flatbuffers.UOffsetT) {
+	StaticAlarmRangesAddSEVERE_RANGE(builder, SEVERE_RANGE)
 }
 func StaticAlarmRangesEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

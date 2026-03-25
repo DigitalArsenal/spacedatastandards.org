@@ -143,20 +143,29 @@ def End(builder):
 class reentryImpactT(object):
 
     # reentryImpactT
-    def __init__(self):
-        self.IMPACT_EPOCH = None  # type: str
-        self.EPOCH_UNCERTAINTY = 0.0  # type: float
-        self.LATITUDE = 0.0  # type: float
-        self.LONGITUDE = 0.0  # type: float
-        self.ALONG_TRACK_UNC = 0.0  # type: float
-        self.CROSS_TRACK_UNC = 0.0  # type: float
-        self.IMPACT_PROBABILITY = 0.0  # type: float
+    def __init__(
+        self,
+        IMPACT_EPOCH = None,
+        EPOCH_UNCERTAINTY = 0.0,
+        LATITUDE = 0.0,
+        LONGITUDE = 0.0,
+        ALONG_TRACK_UNC = 0.0,
+        CROSS_TRACK_UNC = 0.0,
+        IMPACT_PROBABILITY = 0.0,
+    ):
+        self.IMPACT_EPOCH = IMPACT_EPOCH  # type: Optional[str]
+        self.EPOCH_UNCERTAINTY = EPOCH_UNCERTAINTY  # type: float
+        self.LATITUDE = LATITUDE  # type: float
+        self.LONGITUDE = LONGITUDE  # type: float
+        self.ALONG_TRACK_UNC = ALONG_TRACK_UNC  # type: float
+        self.CROSS_TRACK_UNC = CROSS_TRACK_UNC  # type: float
+        self.IMPACT_PROBABILITY = IMPACT_PROBABILITY  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        reentryImpact = reentryImpact()
-        reentryImpact.Init(buf, pos)
-        return cls.InitFromObj(reentryImpact)
+        tmpReentryImpact = reentryImpact()
+        tmpReentryImpact.Init(buf, pos)
+        return cls.InitFromObj(tmpReentryImpact)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -164,9 +173,9 @@ class reentryImpactT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, reentryImpact):
+    def InitFromObj(cls, tmpReentryImpact):
         x = reentryImpactT()
-        x._UnPack(reentryImpact)
+        x._UnPack(tmpReentryImpact)
         return x
 
     # reentryImpactT

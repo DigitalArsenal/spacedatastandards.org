@@ -2,4 +2,7 @@
 
 # namespace: 
 
-# NOTE CZMClassificationType.py does not declare any structs or enums
+class CZMClassificationType(object):
+    TERRAIN = 0
+    CESIUM_3D_TILE = 1
+    BOTH = 2

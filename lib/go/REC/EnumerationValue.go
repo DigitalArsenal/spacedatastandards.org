@@ -51,6 +51,10 @@ func (rcv *EnumerationValue) LABEL() []byte {
 	return nil
 }
 
+func (rcv *EnumerationValue) Label() []byte {
+	return rcv.LABEL()
+}
+
 /// Label/name for this value
 /// Numeric value
 func (rcv *EnumerationValue) VALUE() int64 {
@@ -61,9 +65,17 @@ func (rcv *EnumerationValue) VALUE() int64 {
 	return 0
 }
 
+func (rcv *EnumerationValue) Value() int64 {
+	return rcv.VALUE()
+}
+
 /// Numeric value
 func (rcv *EnumerationValue) MutateVALUE(n int64) bool {
 	return rcv._tab.MutateInt64Slot(6, n)
+}
+
+func (rcv *EnumerationValue) MutateValue(n int64) bool {
+	return rcv.MutateVALUE(n)
 }
 
 /// Maximum value (for ranges)
@@ -75,9 +87,17 @@ func (rcv *EnumerationValue) MAX_VALUE() int64 {
 	return 0
 }
 
+func (rcv *EnumerationValue) MaxValue() int64 {
+	return rcv.MAX_VALUE()
+}
+
 /// Maximum value (for ranges)
 func (rcv *EnumerationValue) MutateMAX_VALUE(n int64) bool {
 	return rcv._tab.MutateInt64Slot(8, n)
+}
+
+func (rcv *EnumerationValue) MutateMaxValue(n int64) bool {
+	return rcv.MutateMAX_VALUE(n)
 }
 
 /// Description of this enumeration value
@@ -89,6 +109,10 @@ func (rcv *EnumerationValue) DESCRIPTION() []byte {
 	return nil
 }
 
+func (rcv *EnumerationValue) Description() []byte {
+	return rcv.DESCRIPTION()
+}
+
 /// Description of this enumeration value
 func EnumerationValueStart(builder *flatbuffers.Builder) {
 	builder.StartObject(4)
@@ -96,14 +120,26 @@ func EnumerationValueStart(builder *flatbuffers.Builder) {
 func EnumerationValueAddLABEL(builder *flatbuffers.Builder, LABEL flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(LABEL), 0)
 }
+func EnumerationValueAddLabel(builder *flatbuffers.Builder, LABEL flatbuffers.UOffsetT) {
+	EnumerationValueAddLABEL(builder, LABEL)
+}
 func EnumerationValueAddVALUE(builder *flatbuffers.Builder, VALUE int64) {
 	builder.PrependInt64Slot(1, VALUE, 0)
+}
+func EnumerationValueAddValue(builder *flatbuffers.Builder, VALUE int64) {
+	EnumerationValueAddVALUE(builder, VALUE)
 }
 func EnumerationValueAddMAX_VALUE(builder *flatbuffers.Builder, MAX_VALUE int64) {
 	builder.PrependInt64Slot(2, MAX_VALUE, 0)
 }
+func EnumerationValueAddMaxValue(builder *flatbuffers.Builder, MAX_VALUE int64) {
+	EnumerationValueAddMAX_VALUE(builder, MAX_VALUE)
+}
 func EnumerationValueAddDESCRIPTION(builder *flatbuffers.Builder, DESCRIPTION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(DESCRIPTION), 0)
+}
+func EnumerationValueAddDescription(builder *flatbuffers.Builder, DESCRIPTION flatbuffers.UOffsetT) {
+	EnumerationValueAddDESCRIPTION(builder, DESCRIPTION)
 }
 func EnumerationValueEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

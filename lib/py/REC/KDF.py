@@ -2,4 +2,6 @@
 
 # namespace: 
 
-# NOTE KDF.py does not declare any structs or enums
+# Key derivation function
+class KDF(object):
+    HKDF_SHA256 = 0

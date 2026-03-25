@@ -2,4 +2,6 @@
 
 # namespace: 
 
-# NOTE KMLStyleState.py does not declare any structs or enums
+class KMLStyleState(object):
+    NORMAL = 0
+    HIGHLIGHT = 1

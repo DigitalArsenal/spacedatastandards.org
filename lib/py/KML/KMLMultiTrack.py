@@ -101,6 +101,12 @@ def KMLMultiTrackStartTRACKSVector(builder, numElems):
 def StartTRACKSVector(builder, numElems):
     return KMLMultiTrackStartTRACKSVector(builder, numElems)
 
+def KMLMultiTrackCreateTRACKSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateTRACKSVector(builder, data):
+    KMLMultiTrackCreateTRACKSVector(builder, data)
+
 def KMLMultiTrackEnd(builder):
     return builder.EndObject()
 
@@ -116,16 +122,21 @@ except:
 class KMLMultiTrackT(object):
 
     # KMLMultiTrackT
-    def __init__(self):
-        self.ALTITUDE_MODE = 0  # type: int
-        self.INTERPOLATE = False  # type: bool
-        self.TRACKS = None  # type: List[KMLTrack.KMLTrackT]
+    def __init__(
+        self,
+        ALTITUDE_MODE = 0,
+        INTERPOLATE = False,
+        TRACKS = None,
+    ):
+        self.ALTITUDE_MODE = ALTITUDE_MODE  # type: int
+        self.INTERPOLATE = INTERPOLATE  # type: bool
+        self.TRACKS = TRACKS  # type: Optional[List[KMLTrack.KMLTrackT]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        kmlmultiTrack = KMLMultiTrack()
-        kmlmultiTrack.Init(buf, pos)
-        return cls.InitFromObj(kmlmultiTrack)
+        tmpKmlmultiTrack = KMLMultiTrack()
+        tmpKmlmultiTrack.Init(buf, pos)
+        return cls.InitFromObj(tmpKmlmultiTrack)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -133,24 +144,24 @@ class KMLMultiTrackT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, kmlmultiTrack):
+    def InitFromObj(cls, tmpKmlmultiTrack):
         x = KMLMultiTrackT()
-        x._UnPack(kmlmultiTrack)
+        x._UnPack(tmpKmlmultiTrack)
         return x
 
     # KMLMultiTrackT
-    def _UnPack(self, kmlmultiTrack):
-        if kmlmultiTrack is None:
+    def _UnPack(self, KMLMultiTrack):
+        if KMLMultiTrack is None:
             return
-        self.ALTITUDE_MODE = kmlmultiTrack.ALTITUDE_MODE()
-        self.INTERPOLATE = kmlmultiTrack.INTERPOLATE()
-        if not kmlmultiTrack.TRACKSIsNone():
+        self.ALTITUDE_MODE = KMLMultiTrack.ALTITUDE_MODE()
+        self.INTERPOLATE = KMLMultiTrack.INTERPOLATE()
+        if not KMLMultiTrack.TRACKSIsNone():
             self.TRACKS = []
-            for i in range(kmlmultiTrack.TRACKSLength()):
-                if kmlmultiTrack.TRACKS(i) is None:
+            for i in range(KMLMultiTrack.TRACKSLength()):
+                if KMLMultiTrack.TRACKS(i) is None:
                     self.TRACKS.append(None)
                 else:
-                    kMLTrack_ = KMLTrack.KMLTrackT.InitFromObj(kmlmultiTrack.TRACKS(i))
+                    kMLTrack_ = KMLTrack.KMLTrackT.InitFromObj(KMLMultiTrack.TRACKS(i))
                     self.TRACKS.append(kMLTrack_)
 
     # KMLMultiTrackT
@@ -168,5 +179,5 @@ class KMLMultiTrackT(object):
         KMLMultiTrackAddINTERPOLATE(builder, self.INTERPOLATE)
         if self.TRACKS is not None:
             KMLMultiTrackAddTRACKS(builder, TRACKS)
-        kmlmultiTrack = KMLMultiTrackEnd(builder)
-        return kmlmultiTrack
+        KMLMultiTrack = KMLMultiTrackEnd(builder)
+        return KMLMultiTrack

@@ -2,9 +2,13 @@
 // swiftlint:disable all
 // swiftformat:disable all
 
+#if canImport(Common)
+import Common
+#endif
+
 import FlatBuffers
 
-public enum sarMode: Int8, Enum, Verifiable {
+public enum sarMode: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -22,7 +26,7 @@ public enum sarMode: Int8, Enum, Verifiable {
 }
 
 
-public enum sarPolarization: Int8, Enum, Verifiable {
+public enum sarPolarization: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -42,9 +46,9 @@ public enum sarPolarization: Int8, Enum, Verifiable {
 
 
 ///  SAR Observation
-public struct SAR: FlatBufferObject, Verifiable {
+public struct SAR: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -248,17 +252,11 @@ public struct SAR: FlatBufferObject, Verifiable {
   public var TRANSACTION_ID: String? { let o = _accessor.offset(VTOFFSET.TRANSACTION_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var TRANSACTION_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TRANSACTION_ID.v) }
   ///  Associated tags
-  public var hasTags: Bool { let o = _accessor.offset(VTOFFSET.TAGS.v); return o == 0 ? false : true }
-  public var TAGSCount: Int32 { let o = _accessor.offset(VTOFFSET.TAGS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func TAGS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.TAGS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  public var TAGS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.TAGS.v, byteSize: 4) }
   ///  Source types
-  public var hasSrcTyps: Bool { let o = _accessor.offset(VTOFFSET.SRC_TYPS.v); return o == 0 ? false : true }
-  public var SRC_TYPSCount: Int32 { let o = _accessor.offset(VTOFFSET.SRC_TYPS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func SRC_TYPS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.SRC_TYPS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  public var SRC_TYPS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.SRC_TYPS.v, byteSize: 4) }
   ///  Source identifiers
-  public var hasSrcIds: Bool { let o = _accessor.offset(VTOFFSET.SRC_IDS.v); return o == 0 ? false : true }
-  public var SRC_IDSCount: Int32 { let o = _accessor.offset(VTOFFSET.SRC_IDS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func SRC_IDS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.SRC_IDS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  public var SRC_IDS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.SRC_IDS.v, byteSize: 4) }
   public static func startSAR(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 58) }
   public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VTOFFSET.ID.p) }
   public static func add(SAT_NO: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SAT_NO, def: 0, at: VTOFFSET.SAT_NO.p) }

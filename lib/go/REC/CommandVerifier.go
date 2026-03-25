@@ -51,6 +51,10 @@ func (rcv *CommandVerifier) NAME() []byte {
 	return nil
 }
 
+func (rcv *CommandVerifier) Name() []byte {
+	return rcv.NAME()
+}
+
 /// Verifier name
 /// Verifier type
 func (rcv *CommandVerifier) VERIFIER_TYPE() VerifierType {
@@ -61,9 +65,17 @@ func (rcv *CommandVerifier) VERIFIER_TYPE() VerifierType {
 	return 0
 }
 
+func (rcv *CommandVerifier) VerifierType() VerifierType {
+	return rcv.VERIFIER_TYPE()
+}
+
 /// Verifier type
 func (rcv *CommandVerifier) MutateVERIFIER_TYPE(n VerifierType) bool {
 	return rcv._tab.MutateInt8Slot(6, int8(n))
+}
+
+func (rcv *CommandVerifier) MutateVerifierType(n VerifierType) bool {
+	return rcv.MutateVERIFIER_TYPE(n)
 }
 
 /// Verification condition
@@ -80,6 +92,10 @@ func (rcv *CommandVerifier) CONDITION(obj *MatchCriteria) *MatchCriteria {
 	return nil
 }
 
+func (rcv *CommandVerifier) Condition(obj *MatchCriteria) *MatchCriteria {
+	return rcv.CONDITION(obj)
+}
+
 /// Verification condition
 /// Container reference for verification
 func (rcv *CommandVerifier) CONTAINER_REF() []byte {
@@ -88,6 +104,10 @@ func (rcv *CommandVerifier) CONTAINER_REF() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *CommandVerifier) ContainerRef() []byte {
+	return rcv.CONTAINER_REF()
 }
 
 /// Container reference for verification
@@ -100,9 +120,17 @@ func (rcv *CommandVerifier) TIME_WINDOW_START() float64 {
 	return 0.0
 }
 
+func (rcv *CommandVerifier) TimeWindowStart() float64 {
+	return rcv.TIME_WINDOW_START()
+}
+
 /// Time window start (seconds)
 func (rcv *CommandVerifier) MutateTIME_WINDOW_START(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(12, n)
+}
+
+func (rcv *CommandVerifier) MutateTimeWindowStart(n float64) bool {
+	return rcv.MutateTIME_WINDOW_START(n)
 }
 
 /// Time window stop (seconds)
@@ -114,9 +142,17 @@ func (rcv *CommandVerifier) TIME_WINDOW_STOP() float64 {
 	return 0.0
 }
 
+func (rcv *CommandVerifier) TimeWindowStop() float64 {
+	return rcv.TIME_WINDOW_STOP()
+}
+
 /// Time window stop (seconds)
 func (rcv *CommandVerifier) MutateTIME_WINDOW_STOP(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(14, n)
+}
+
+func (rcv *CommandVerifier) MutateTimeWindowStop(n float64) bool {
+	return rcv.MutateTIME_WINDOW_STOP(n)
 }
 
 /// Time window reference type
@@ -128,9 +164,17 @@ func (rcv *CommandVerifier) TIME_WINDOW_REF() TimeWindowRefType {
 	return 0
 }
 
+func (rcv *CommandVerifier) TimeWindowRef() TimeWindowRefType {
+	return rcv.TIME_WINDOW_REF()
+}
+
 /// Time window reference type
 func (rcv *CommandVerifier) MutateTIME_WINDOW_REF(n TimeWindowRefType) bool {
 	return rcv._tab.MutateInt8Slot(16, int8(n))
+}
+
+func (rcv *CommandVerifier) MutateTimeWindowRef(n TimeWindowRefType) bool {
+	return rcv.MutateTIME_WINDOW_REF(n)
 }
 
 func CommandVerifierStart(builder *flatbuffers.Builder) {
@@ -139,23 +183,44 @@ func CommandVerifierStart(builder *flatbuffers.Builder) {
 func CommandVerifierAddNAME(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(NAME), 0)
 }
+func CommandVerifierAddName(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
+	CommandVerifierAddNAME(builder, NAME)
+}
 func CommandVerifierAddVERIFIER_TYPE(builder *flatbuffers.Builder, VERIFIER_TYPE VerifierType) {
 	builder.PrependInt8Slot(1, int8(VERIFIER_TYPE), 0)
+}
+func CommandVerifierAddVerifierType(builder *flatbuffers.Builder, VERIFIER_TYPE VerifierType) {
+	CommandVerifierAddVERIFIER_TYPE(builder, VERIFIER_TYPE)
 }
 func CommandVerifierAddCONDITION(builder *flatbuffers.Builder, CONDITION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(CONDITION), 0)
 }
+func CommandVerifierAddCondition(builder *flatbuffers.Builder, CONDITION flatbuffers.UOffsetT) {
+	CommandVerifierAddCONDITION(builder, CONDITION)
+}
 func CommandVerifierAddCONTAINER_REF(builder *flatbuffers.Builder, CONTAINER_REF flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(CONTAINER_REF), 0)
+}
+func CommandVerifierAddContainerRef(builder *flatbuffers.Builder, CONTAINER_REF flatbuffers.UOffsetT) {
+	CommandVerifierAddCONTAINER_REF(builder, CONTAINER_REF)
 }
 func CommandVerifierAddTIME_WINDOW_START(builder *flatbuffers.Builder, TIME_WINDOW_START float64) {
 	builder.PrependFloat64Slot(4, TIME_WINDOW_START, 0.0)
 }
+func CommandVerifierAddTimeWindowStart(builder *flatbuffers.Builder, TIME_WINDOW_START float64) {
+	CommandVerifierAddTIME_WINDOW_START(builder, TIME_WINDOW_START)
+}
 func CommandVerifierAddTIME_WINDOW_STOP(builder *flatbuffers.Builder, TIME_WINDOW_STOP float64) {
 	builder.PrependFloat64Slot(5, TIME_WINDOW_STOP, 0.0)
 }
+func CommandVerifierAddTimeWindowStop(builder *flatbuffers.Builder, TIME_WINDOW_STOP float64) {
+	CommandVerifierAddTIME_WINDOW_STOP(builder, TIME_WINDOW_STOP)
+}
 func CommandVerifierAddTIME_WINDOW_REF(builder *flatbuffers.Builder, TIME_WINDOW_REF TimeWindowRefType) {
 	builder.PrependInt8Slot(6, int8(TIME_WINDOW_REF), 0)
+}
+func CommandVerifierAddTimeWindowRef(builder *flatbuffers.Builder, TIME_WINDOW_REF TimeWindowRefType) {
+	CommandVerifierAddTIME_WINDOW_REF(builder, TIME_WINDOW_REF)
 }
 func CommandVerifierEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

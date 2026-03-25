@@ -2,4 +2,15 @@
 
 # namespace: 
 
-# NOTE rafPduType.py does not declare any structs or enums
+class rafPduType(object):
+    BIND_INVOCATION = 0
+    BIND_RETURN = 1
+    UNBIND_INVOCATION = 2
+    UNBIND_RETURN = 3
+    START_INVOCATION = 4
+    START_RETURN = 5
+    STOP_INVOCATION = 6
+    STOP_RETURN = 7
+    TRANSFER_BUFFER = 8
+    STATUS_REPORT = 9
+    PEER_ABORT = 10

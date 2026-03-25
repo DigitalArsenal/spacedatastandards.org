@@ -115,18 +115,25 @@ def End(builder):
 class gnssObsDataT(object):
 
     # gnssObsDataT
-    def __init__(self):
-        self.SIGNAL = None  # type: str
-        self.OBS_TYPE = 0  # type: int
-        self.VALUE = 0.0  # type: float
-        self.LLI = 0  # type: int
-        self.SSI = 0  # type: int
+    def __init__(
+        self,
+        SIGNAL = None,
+        OBS_TYPE = 0,
+        VALUE = 0.0,
+        LLI = 0,
+        SSI = 0,
+    ):
+        self.SIGNAL = SIGNAL  # type: Optional[str]
+        self.OBS_TYPE = OBS_TYPE  # type: int
+        self.VALUE = VALUE  # type: float
+        self.LLI = LLI  # type: int
+        self.SSI = SSI  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        gnssObsData = gnssObsData()
-        gnssObsData.Init(buf, pos)
-        return cls.InitFromObj(gnssObsData)
+        tmpGnssObsData = gnssObsData()
+        tmpGnssObsData.Init(buf, pos)
+        return cls.InitFromObj(tmpGnssObsData)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -134,9 +141,9 @@ class gnssObsDataT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, gnssObsData):
+    def InitFromObj(cls, tmpGnssObsData):
         x = gnssObsDataT()
-        x._UnPack(gnssObsData)
+        x._UnPack(tmpGnssObsData)
         return x
 
     # gnssObsDataT

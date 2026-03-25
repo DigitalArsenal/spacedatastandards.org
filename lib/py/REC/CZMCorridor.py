@@ -2,4 +2,540 @@
 
 # namespace: 
 
-# NOTE CZMCorridor.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Corridor (centerline + width shape)
+class CZMCorridor(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = CZMCorridor()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsCZMCorridor(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def CZMCorridorBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x43\x5A\x4D", size_prefixed=size_prefixed)
+
+    # CZMCorridor
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Whether the corridor is displayed
+    # CZMCorridor
+    def SHOW(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # Positions as cartographic degrees
+    # CZMCorridor
+    def POSITIONS_CARTOGRAPHIC_DEGREES(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # CZMCorridor
+    def POSITIONS_CARTOGRAPHIC_DEGREESAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
+
+    # CZMCorridor
+    def POSITIONS_CARTOGRAPHIC_DEGREESLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # CZMCorridor
+    def POSITIONS_CARTOGRAPHIC_DEGREESIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        return o == 0
+
+    # Positions as Cartesian
+    # CZMCorridor
+    def POSITIONS_CARTESIAN(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # CZMCorridor
+    def POSITIONS_CARTESIANAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
+
+    # CZMCorridor
+    def POSITIONS_CARTESIANLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # CZMCorridor
+    def POSITIONS_CARTESIANIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        return o == 0
+
+    # Width in meters
+    # CZMCorridor
+    def WIDTH(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Height in meters
+    # CZMCorridor
+    def HEIGHT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Height reference
+    # CZMCorridor
+    def HEIGHT_REFERENCE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Extruded height
+    # CZMCorridor
+    def EXTRUDED_HEIGHT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Extruded height reference
+    # CZMCorridor
+    def EXTRUDED_HEIGHT_REFERENCE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Corner type
+    # CZMCorridor
+    def CORNER_TYPE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Granularity in radians
+    # CZMCorridor
+    def GRANULARITY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Fill flag
+    # CZMCorridor
+    def FILL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # Surface material
+    # CZMCorridor
+    def MATERIAL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from CZMMaterial import CZMMaterial
+            obj = CZMMaterial()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Outline flag
+    # CZMCorridor
+    def OUTLINE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # Outline color
+    # CZMCorridor
+    def OUTLINE_COLOR(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from CZMColor import CZMColor
+            obj = CZMColor()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Outline width
+    # CZMCorridor
+    def OUTLINE_WIDTH(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Shadow mode
+    # CZMCorridor
+    def SHADOWS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Classification type
+    # CZMCorridor
+    def CLASSIFICATION_TYPE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Z-index for ordering
+    # CZMCorridor
+    def Z_INDEX(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+def CZMCorridorStart(builder):
+    builder.StartObject(18)
+
+def Start(builder):
+    CZMCorridorStart(builder)
+
+def CZMCorridorAddSHOW(builder, SHOW):
+    builder.PrependBoolSlot(0, SHOW, 0)
+
+def AddSHOW(builder, SHOW):
+    CZMCorridorAddSHOW(builder, SHOW)
+
+def CZMCorridorAddPOSITIONS_CARTOGRAPHIC_DEGREES(builder, POSITIONS_CARTOGRAPHIC_DEGREES):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(POSITIONS_CARTOGRAPHIC_DEGREES), 0)
+
+def AddPOSITIONS_CARTOGRAPHIC_DEGREES(builder, POSITIONS_CARTOGRAPHIC_DEGREES):
+    CZMCorridorAddPOSITIONS_CARTOGRAPHIC_DEGREES(builder, POSITIONS_CARTOGRAPHIC_DEGREES)
+
+def CZMCorridorStartPOSITIONS_CARTOGRAPHIC_DEGREESVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
+def StartPOSITIONS_CARTOGRAPHIC_DEGREESVector(builder, numElems):
+    return CZMCorridorStartPOSITIONS_CARTOGRAPHIC_DEGREESVector(builder, numElems)
+
+def CZMCorridorCreatePOSITIONS_CARTOGRAPHIC_DEGREESVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreatePOSITIONS_CARTOGRAPHIC_DEGREESVector(builder, data):
+    CZMCorridorCreatePOSITIONS_CARTOGRAPHIC_DEGREESVector(builder, data)
+
+def CZMCorridorAddPOSITIONS_CARTESIAN(builder, POSITIONS_CARTESIAN):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(POSITIONS_CARTESIAN), 0)
+
+def AddPOSITIONS_CARTESIAN(builder, POSITIONS_CARTESIAN):
+    CZMCorridorAddPOSITIONS_CARTESIAN(builder, POSITIONS_CARTESIAN)
+
+def CZMCorridorStartPOSITIONS_CARTESIANVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
+def StartPOSITIONS_CARTESIANVector(builder, numElems):
+    return CZMCorridorStartPOSITIONS_CARTESIANVector(builder, numElems)
+
+def CZMCorridorCreatePOSITIONS_CARTESIANVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreatePOSITIONS_CARTESIANVector(builder, data):
+    CZMCorridorCreatePOSITIONS_CARTESIANVector(builder, data)
+
+def CZMCorridorAddWIDTH(builder, WIDTH):
+    builder.PrependFloat64Slot(3, WIDTH, 0.0)
+
+def AddWIDTH(builder, WIDTH):
+    CZMCorridorAddWIDTH(builder, WIDTH)
+
+def CZMCorridorAddHEIGHT(builder, HEIGHT):
+    builder.PrependFloat64Slot(4, HEIGHT, 0.0)
+
+def AddHEIGHT(builder, HEIGHT):
+    CZMCorridorAddHEIGHT(builder, HEIGHT)
+
+def CZMCorridorAddHEIGHT_REFERENCE(builder, HEIGHT_REFERENCE):
+    builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(HEIGHT_REFERENCE), 0)
+
+def AddHEIGHT_REFERENCE(builder, HEIGHT_REFERENCE):
+    CZMCorridorAddHEIGHT_REFERENCE(builder, HEIGHT_REFERENCE)
+
+def CZMCorridorAddEXTRUDED_HEIGHT(builder, EXTRUDED_HEIGHT):
+    builder.PrependFloat64Slot(6, EXTRUDED_HEIGHT, 0.0)
+
+def AddEXTRUDED_HEIGHT(builder, EXTRUDED_HEIGHT):
+    CZMCorridorAddEXTRUDED_HEIGHT(builder, EXTRUDED_HEIGHT)
+
+def CZMCorridorAddEXTRUDED_HEIGHT_REFERENCE(builder, EXTRUDED_HEIGHT_REFERENCE):
+    builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(EXTRUDED_HEIGHT_REFERENCE), 0)
+
+def AddEXTRUDED_HEIGHT_REFERENCE(builder, EXTRUDED_HEIGHT_REFERENCE):
+    CZMCorridorAddEXTRUDED_HEIGHT_REFERENCE(builder, EXTRUDED_HEIGHT_REFERENCE)
+
+def CZMCorridorAddCORNER_TYPE(builder, CORNER_TYPE):
+    builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(CORNER_TYPE), 0)
+
+def AddCORNER_TYPE(builder, CORNER_TYPE):
+    CZMCorridorAddCORNER_TYPE(builder, CORNER_TYPE)
+
+def CZMCorridorAddGRANULARITY(builder, GRANULARITY):
+    builder.PrependFloat64Slot(9, GRANULARITY, 0.0)
+
+def AddGRANULARITY(builder, GRANULARITY):
+    CZMCorridorAddGRANULARITY(builder, GRANULARITY)
+
+def CZMCorridorAddFILL(builder, FILL):
+    builder.PrependBoolSlot(10, FILL, 0)
+
+def AddFILL(builder, FILL):
+    CZMCorridorAddFILL(builder, FILL)
+
+def CZMCorridorAddMATERIAL(builder, MATERIAL):
+    builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(MATERIAL), 0)
+
+def AddMATERIAL(builder, MATERIAL):
+    CZMCorridorAddMATERIAL(builder, MATERIAL)
+
+def CZMCorridorAddOUTLINE(builder, OUTLINE):
+    builder.PrependBoolSlot(12, OUTLINE, 0)
+
+def AddOUTLINE(builder, OUTLINE):
+    CZMCorridorAddOUTLINE(builder, OUTLINE)
+
+def CZMCorridorAddOUTLINE_COLOR(builder, OUTLINE_COLOR):
+    builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(OUTLINE_COLOR), 0)
+
+def AddOUTLINE_COLOR(builder, OUTLINE_COLOR):
+    CZMCorridorAddOUTLINE_COLOR(builder, OUTLINE_COLOR)
+
+def CZMCorridorAddOUTLINE_WIDTH(builder, OUTLINE_WIDTH):
+    builder.PrependFloat64Slot(14, OUTLINE_WIDTH, 0.0)
+
+def AddOUTLINE_WIDTH(builder, OUTLINE_WIDTH):
+    CZMCorridorAddOUTLINE_WIDTH(builder, OUTLINE_WIDTH)
+
+def CZMCorridorAddSHADOWS(builder, SHADOWS):
+    builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(SHADOWS), 0)
+
+def AddSHADOWS(builder, SHADOWS):
+    CZMCorridorAddSHADOWS(builder, SHADOWS)
+
+def CZMCorridorAddCLASSIFICATION_TYPE(builder, CLASSIFICATION_TYPE):
+    builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(CLASSIFICATION_TYPE), 0)
+
+def AddCLASSIFICATION_TYPE(builder, CLASSIFICATION_TYPE):
+    CZMCorridorAddCLASSIFICATION_TYPE(builder, CLASSIFICATION_TYPE)
+
+def CZMCorridorAddZ_INDEX(builder, Z_INDEX):
+    builder.PrependInt32Slot(17, Z_INDEX, 0)
+
+def AddZ_INDEX(builder, Z_INDEX):
+    CZMCorridorAddZ_INDEX(builder, Z_INDEX)
+
+def CZMCorridorEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return CZMCorridorEnd(builder)
+
+import CZMColor
+import CZMMaterial
+try:
+    from typing import List, Optional
+except:
+    pass
+
+class CZMCorridorT(object):
+
+    # CZMCorridorT
+    def __init__(
+        self,
+        SHOW = False,
+        POSITIONS_CARTOGRAPHIC_DEGREES = None,
+        POSITIONS_CARTESIAN = None,
+        WIDTH = 0.0,
+        HEIGHT = 0.0,
+        HEIGHT_REFERENCE = None,
+        EXTRUDED_HEIGHT = 0.0,
+        EXTRUDED_HEIGHT_REFERENCE = None,
+        CORNER_TYPE = None,
+        GRANULARITY = 0.0,
+        FILL = False,
+        MATERIAL = None,
+        OUTLINE = False,
+        OUTLINE_COLOR = None,
+        OUTLINE_WIDTH = 0.0,
+        SHADOWS = None,
+        CLASSIFICATION_TYPE = None,
+        Z_INDEX = 0,
+    ):
+        self.SHOW = SHOW  # type: bool
+        self.POSITIONS_CARTOGRAPHIC_DEGREES = POSITIONS_CARTOGRAPHIC_DEGREES  # type: Optional[List[float]]
+        self.POSITIONS_CARTESIAN = POSITIONS_CARTESIAN  # type: Optional[List[float]]
+        self.WIDTH = WIDTH  # type: float
+        self.HEIGHT = HEIGHT  # type: float
+        self.HEIGHT_REFERENCE = HEIGHT_REFERENCE  # type: Optional[str]
+        self.EXTRUDED_HEIGHT = EXTRUDED_HEIGHT  # type: float
+        self.EXTRUDED_HEIGHT_REFERENCE = EXTRUDED_HEIGHT_REFERENCE  # type: Optional[str]
+        self.CORNER_TYPE = CORNER_TYPE  # type: Optional[str]
+        self.GRANULARITY = GRANULARITY  # type: float
+        self.FILL = FILL  # type: bool
+        self.MATERIAL = MATERIAL  # type: Optional[CZMMaterial.CZMMaterialT]
+        self.OUTLINE = OUTLINE  # type: bool
+        self.OUTLINE_COLOR = OUTLINE_COLOR  # type: Optional[CZMColor.CZMColorT]
+        self.OUTLINE_WIDTH = OUTLINE_WIDTH  # type: float
+        self.SHADOWS = SHADOWS  # type: Optional[str]
+        self.CLASSIFICATION_TYPE = CLASSIFICATION_TYPE  # type: Optional[str]
+        self.Z_INDEX = Z_INDEX  # type: int
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpCzmcorridor = CZMCorridor()
+        tmpCzmcorridor.Init(buf, pos)
+        return cls.InitFromObj(tmpCzmcorridor)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpCzmcorridor):
+        x = CZMCorridorT()
+        x._UnPack(tmpCzmcorridor)
+        return x
+
+    # CZMCorridorT
+    def _UnPack(self, CZMCorridor):
+        if CZMCorridor is None:
+            return
+        self.SHOW = CZMCorridor.SHOW()
+        if not CZMCorridor.POSITIONS_CARTOGRAPHIC_DEGREESIsNone():
+            if np is None:
+                self.POSITIONS_CARTOGRAPHIC_DEGREES = []
+                for i in range(CZMCorridor.POSITIONS_CARTOGRAPHIC_DEGREESLength()):
+                    self.POSITIONS_CARTOGRAPHIC_DEGREES.append(CZMCorridor.POSITIONS_CARTOGRAPHIC_DEGREES(i))
+            else:
+                self.POSITIONS_CARTOGRAPHIC_DEGREES = CZMCorridor.POSITIONS_CARTOGRAPHIC_DEGREESAsNumpy()
+        if not CZMCorridor.POSITIONS_CARTESIANIsNone():
+            if np is None:
+                self.POSITIONS_CARTESIAN = []
+                for i in range(CZMCorridor.POSITIONS_CARTESIANLength()):
+                    self.POSITIONS_CARTESIAN.append(CZMCorridor.POSITIONS_CARTESIAN(i))
+            else:
+                self.POSITIONS_CARTESIAN = CZMCorridor.POSITIONS_CARTESIANAsNumpy()
+        self.WIDTH = CZMCorridor.WIDTH()
+        self.HEIGHT = CZMCorridor.HEIGHT()
+        self.HEIGHT_REFERENCE = CZMCorridor.HEIGHT_REFERENCE()
+        self.EXTRUDED_HEIGHT = CZMCorridor.EXTRUDED_HEIGHT()
+        self.EXTRUDED_HEIGHT_REFERENCE = CZMCorridor.EXTRUDED_HEIGHT_REFERENCE()
+        self.CORNER_TYPE = CZMCorridor.CORNER_TYPE()
+        self.GRANULARITY = CZMCorridor.GRANULARITY()
+        self.FILL = CZMCorridor.FILL()
+        if CZMCorridor.MATERIAL() is not None:
+            self.MATERIAL = CZMMaterial.CZMMaterialT.InitFromObj(CZMCorridor.MATERIAL())
+        self.OUTLINE = CZMCorridor.OUTLINE()
+        if CZMCorridor.OUTLINE_COLOR() is not None:
+            self.OUTLINE_COLOR = CZMColor.CZMColorT.InitFromObj(CZMCorridor.OUTLINE_COLOR())
+        self.OUTLINE_WIDTH = CZMCorridor.OUTLINE_WIDTH()
+        self.SHADOWS = CZMCorridor.SHADOWS()
+        self.CLASSIFICATION_TYPE = CZMCorridor.CLASSIFICATION_TYPE()
+        self.Z_INDEX = CZMCorridor.Z_INDEX()
+
+    # CZMCorridorT
+    def Pack(self, builder):
+        if self.POSITIONS_CARTOGRAPHIC_DEGREES is not None:
+            if np is not None and type(self.POSITIONS_CARTOGRAPHIC_DEGREES) is np.ndarray:
+                POSITIONS_CARTOGRAPHIC_DEGREES = builder.CreateNumpyVector(self.POSITIONS_CARTOGRAPHIC_DEGREES)
+            else:
+                CZMCorridorStartPOSITIONS_CARTOGRAPHIC_DEGREESVector(builder, len(self.POSITIONS_CARTOGRAPHIC_DEGREES))
+                for i in reversed(range(len(self.POSITIONS_CARTOGRAPHIC_DEGREES))):
+                    builder.PrependFloat64(self.POSITIONS_CARTOGRAPHIC_DEGREES[i])
+                POSITIONS_CARTOGRAPHIC_DEGREES = builder.EndVector()
+        if self.POSITIONS_CARTESIAN is not None:
+            if np is not None and type(self.POSITIONS_CARTESIAN) is np.ndarray:
+                POSITIONS_CARTESIAN = builder.CreateNumpyVector(self.POSITIONS_CARTESIAN)
+            else:
+                CZMCorridorStartPOSITIONS_CARTESIANVector(builder, len(self.POSITIONS_CARTESIAN))
+                for i in reversed(range(len(self.POSITIONS_CARTESIAN))):
+                    builder.PrependFloat64(self.POSITIONS_CARTESIAN[i])
+                POSITIONS_CARTESIAN = builder.EndVector()
+        if self.HEIGHT_REFERENCE is not None:
+            HEIGHT_REFERENCE = builder.CreateString(self.HEIGHT_REFERENCE)
+        if self.EXTRUDED_HEIGHT_REFERENCE is not None:
+            EXTRUDED_HEIGHT_REFERENCE = builder.CreateString(self.EXTRUDED_HEIGHT_REFERENCE)
+        if self.CORNER_TYPE is not None:
+            CORNER_TYPE = builder.CreateString(self.CORNER_TYPE)
+        if self.MATERIAL is not None:
+            MATERIAL = self.MATERIAL.Pack(builder)
+        if self.OUTLINE_COLOR is not None:
+            OUTLINE_COLOR = self.OUTLINE_COLOR.Pack(builder)
+        if self.SHADOWS is not None:
+            SHADOWS = builder.CreateString(self.SHADOWS)
+        if self.CLASSIFICATION_TYPE is not None:
+            CLASSIFICATION_TYPE = builder.CreateString(self.CLASSIFICATION_TYPE)
+        CZMCorridorStart(builder)
+        CZMCorridorAddSHOW(builder, self.SHOW)
+        if self.POSITIONS_CARTOGRAPHIC_DEGREES is not None:
+            CZMCorridorAddPOSITIONS_CARTOGRAPHIC_DEGREES(builder, POSITIONS_CARTOGRAPHIC_DEGREES)
+        if self.POSITIONS_CARTESIAN is not None:
+            CZMCorridorAddPOSITIONS_CARTESIAN(builder, POSITIONS_CARTESIAN)
+        CZMCorridorAddWIDTH(builder, self.WIDTH)
+        CZMCorridorAddHEIGHT(builder, self.HEIGHT)
+        if self.HEIGHT_REFERENCE is not None:
+            CZMCorridorAddHEIGHT_REFERENCE(builder, HEIGHT_REFERENCE)
+        CZMCorridorAddEXTRUDED_HEIGHT(builder, self.EXTRUDED_HEIGHT)
+        if self.EXTRUDED_HEIGHT_REFERENCE is not None:
+            CZMCorridorAddEXTRUDED_HEIGHT_REFERENCE(builder, EXTRUDED_HEIGHT_REFERENCE)
+        if self.CORNER_TYPE is not None:
+            CZMCorridorAddCORNER_TYPE(builder, CORNER_TYPE)
+        CZMCorridorAddGRANULARITY(builder, self.GRANULARITY)
+        CZMCorridorAddFILL(builder, self.FILL)
+        if self.MATERIAL is not None:
+            CZMCorridorAddMATERIAL(builder, MATERIAL)
+        CZMCorridorAddOUTLINE(builder, self.OUTLINE)
+        if self.OUTLINE_COLOR is not None:
+            CZMCorridorAddOUTLINE_COLOR(builder, OUTLINE_COLOR)
+        CZMCorridorAddOUTLINE_WIDTH(builder, self.OUTLINE_WIDTH)
+        if self.SHADOWS is not None:
+            CZMCorridorAddSHADOWS(builder, SHADOWS)
+        if self.CLASSIFICATION_TYPE is not None:
+            CZMCorridorAddCLASSIFICATION_TYPE(builder, CLASSIFICATION_TYPE)
+        CZMCorridorAddZ_INDEX(builder, self.Z_INDEX)
+        CZMCorridor = CZMCorridorEnd(builder)
+        return CZMCorridor

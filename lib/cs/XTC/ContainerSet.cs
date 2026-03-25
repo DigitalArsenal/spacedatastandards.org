@@ -11,7 +11,7 @@ public struct ContainerSet : IFlatbufferObject
 {
   private Table __p;
   public ByteBuffer ByteBuffer { get { return __p.bb; } }
-  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_24_3_25(); }
+  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_25_12_19(); }
   public static ContainerSet GetRootAsContainerSet(ByteBuffer _bb) { return GetRootAsContainerSet(_bb, new ContainerSet()); }
   public static ContainerSet GetRootAsContainerSet(ByteBuffer _bb, ContainerSet obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }

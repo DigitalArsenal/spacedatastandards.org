@@ -2,4 +2,11 @@
 
 # namespace: 
 
-# NOTE sensorStatus.py does not declare any structs or enums
+class sensorStatus(object):
+    OPERATIONAL = 0
+    DEGRADED = 1
+    MAINTENANCE = 2
+    OFFLINE = 3
+    CALIBRATING = 4
+    TESTING = 5
+    DECOMMISSIONED = 6

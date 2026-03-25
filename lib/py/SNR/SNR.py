@@ -269,6 +269,16 @@ def SNRStartRESERVEDVector(builder, numElems):
 def StartRESERVEDVector(builder, numElems):
     return SNRStartRESERVEDVector(builder, numElems)
 
+def SNRCreateRESERVEDVector(builder, data):
+    data = list(data)
+    builder.StartVector(1, len(data), 1)
+    for item in reversed(data):
+        builder.PrependUint8(item)
+    return builder.EndVector()
+
+def CreateRESERVEDVector(builder, data):
+    SNRCreateRESERVEDVector(builder, data)
+
 def SNREnd(builder):
     return builder.EndObject()
 
@@ -283,29 +293,47 @@ except:
 class SNRT(object):
 
     # SNRT
-    def __init__(self):
-        self.TYPE = 0  # type: int
-        self.MODE = 0  # type: int
-        self.RESERVED1 = 0  # type: int
-        self.MAX_RANGE = 0.0  # type: float
-        self.MIN_RANGE = 0.0  # type: float
-        self.FOV_AZIMUTH = 0.0  # type: float
-        self.FOV_ELEVATION = 0.0  # type: float
-        self.ANGULAR_RESOLUTION = 0.0  # type: float
-        self.RANGE_RESOLUTION = 0.0  # type: float
-        self.UPDATE_RATE = 0.0  # type: float
-        self.DETECTION_THRESHOLD = 0.0  # type: float
-        self.AZIMUTH_SCAN_RATE = 0.0  # type: float
-        self.ELEVATION_SCAN_RATE = 0.0  # type: float
-        self.POWER = 0.0  # type: float
-        self.FREQUENCY = 0.0  # type: float
-        self.RESERVED = None  # type: List[int]
+    def __init__(
+        self,
+        TYPE = 0,
+        MODE = 0,
+        RESERVED1 = 0,
+        MAX_RANGE = 0.0,
+        MIN_RANGE = 0.0,
+        FOV_AZIMUTH = 0.0,
+        FOV_ELEVATION = 0.0,
+        ANGULAR_RESOLUTION = 0.0,
+        RANGE_RESOLUTION = 0.0,
+        UPDATE_RATE = 0.0,
+        DETECTION_THRESHOLD = 0.0,
+        AZIMUTH_SCAN_RATE = 0.0,
+        ELEVATION_SCAN_RATE = 0.0,
+        POWER = 0.0,
+        FREQUENCY = 0.0,
+        RESERVED = None,
+    ):
+        self.TYPE = TYPE  # type: int
+        self.MODE = MODE  # type: int
+        self.RESERVED1 = RESERVED1  # type: int
+        self.MAX_RANGE = MAX_RANGE  # type: float
+        self.MIN_RANGE = MIN_RANGE  # type: float
+        self.FOV_AZIMUTH = FOV_AZIMUTH  # type: float
+        self.FOV_ELEVATION = FOV_ELEVATION  # type: float
+        self.ANGULAR_RESOLUTION = ANGULAR_RESOLUTION  # type: float
+        self.RANGE_RESOLUTION = RANGE_RESOLUTION  # type: float
+        self.UPDATE_RATE = UPDATE_RATE  # type: float
+        self.DETECTION_THRESHOLD = DETECTION_THRESHOLD  # type: float
+        self.AZIMUTH_SCAN_RATE = AZIMUTH_SCAN_RATE  # type: float
+        self.ELEVATION_SCAN_RATE = ELEVATION_SCAN_RATE  # type: float
+        self.POWER = POWER  # type: float
+        self.FREQUENCY = FREQUENCY  # type: float
+        self.RESERVED = RESERVED  # type: Optional[List[int]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        SNR = SNR()
-        SNR.Init(buf, pos)
-        return cls.InitFromObj(SNR)
+        tmpSnr = SNR()
+        tmpSnr.Init(buf, pos)
+        return cls.InitFromObj(tmpSnr)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -313,9 +341,9 @@ class SNRT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, SNR):
+    def InitFromObj(cls, tmpSnr):
         x = SNRT()
-        x._UnPack(SNR)
+        x._UnPack(tmpSnr)
         return x
 
     # SNRT

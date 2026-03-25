@@ -51,9 +51,17 @@ func (rcv *KMLFlyTo) DURATION() float64 {
 	return 0.0
 }
 
+func (rcv *KMLFlyTo) Duration() float64 {
+	return rcv.DURATION()
+}
+
 /// Duration in seconds
 func (rcv *KMLFlyTo) MutateDURATION(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(4, n)
+}
+
+func (rcv *KMLFlyTo) MutateDuration(n float64) bool {
+	return rcv.MutateDURATION(n)
 }
 
 /// Fly-to mode
@@ -65,9 +73,17 @@ func (rcv *KMLFlyTo) FLY_TO_MODE() KMLFlyToMode {
 	return 0
 }
 
+func (rcv *KMLFlyTo) FlyToMode() KMLFlyToMode {
+	return rcv.FLY_TO_MODE()
+}
+
 /// Fly-to mode
 func (rcv *KMLFlyTo) MutateFLY_TO_MODE(n KMLFlyToMode) bool {
 	return rcv._tab.MutateInt8Slot(6, int8(n))
+}
+
+func (rcv *KMLFlyTo) MutateFlyToMode(n KMLFlyToMode) bool {
+	return rcv.MutateFLY_TO_MODE(n)
 }
 
 /// LookAt viewpoint
@@ -82,6 +98,10 @@ func (rcv *KMLFlyTo) LOOK_AT(obj *KMLLookAt) *KMLLookAt {
 		return obj
 	}
 	return nil
+}
+
+func (rcv *KMLFlyTo) LookAt(obj *KMLLookAt) *KMLLookAt {
+	return rcv.LOOK_AT(obj)
 }
 
 /// LookAt viewpoint
@@ -99,6 +119,10 @@ func (rcv *KMLFlyTo) CAMERA(obj *KMLCamera) *KMLCamera {
 	return nil
 }
 
+func (rcv *KMLFlyTo) Camera(obj *KMLCamera) *KMLCamera {
+	return rcv.CAMERA(obj)
+}
+
 /// Camera viewpoint
 func KMLFlyToStart(builder *flatbuffers.Builder) {
 	builder.StartObject(4)
@@ -106,14 +130,26 @@ func KMLFlyToStart(builder *flatbuffers.Builder) {
 func KMLFlyToAddDURATION(builder *flatbuffers.Builder, DURATION float64) {
 	builder.PrependFloat64Slot(0, DURATION, 0.0)
 }
+func KMLFlyToAddDuration(builder *flatbuffers.Builder, DURATION float64) {
+	KMLFlyToAddDURATION(builder, DURATION)
+}
 func KMLFlyToAddFLY_TO_MODE(builder *flatbuffers.Builder, FLY_TO_MODE KMLFlyToMode) {
 	builder.PrependInt8Slot(1, int8(FLY_TO_MODE), 0)
+}
+func KMLFlyToAddFlyToMode(builder *flatbuffers.Builder, FLY_TO_MODE KMLFlyToMode) {
+	KMLFlyToAddFLY_TO_MODE(builder, FLY_TO_MODE)
 }
 func KMLFlyToAddLOOK_AT(builder *flatbuffers.Builder, LOOK_AT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(LOOK_AT), 0)
 }
+func KMLFlyToAddLookAt(builder *flatbuffers.Builder, LOOK_AT flatbuffers.UOffsetT) {
+	KMLFlyToAddLOOK_AT(builder, LOOK_AT)
+}
 func KMLFlyToAddCAMERA(builder *flatbuffers.Builder, CAMERA flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(CAMERA), 0)
+}
+func KMLFlyToAddCamera(builder *flatbuffers.Builder, CAMERA flatbuffers.UOffsetT) {
+	KMLFlyToAddCAMERA(builder, CAMERA)
 }
 func KMLFlyToEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

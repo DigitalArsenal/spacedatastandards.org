@@ -131,6 +131,12 @@ def ServiceStartCONTAINER_REFSVector(builder, numElems):
 def StartCONTAINER_REFSVector(builder, numElems):
     return ServiceStartCONTAINER_REFSVector(builder, numElems)
 
+def ServiceCreateCONTAINER_REFSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateCONTAINER_REFSVector(builder, data):
+    ServiceCreateCONTAINER_REFSVector(builder, data)
+
 def ServiceAddCOMMAND_REFS(builder, COMMAND_REFS):
     builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(COMMAND_REFS), 0)
 
@@ -142,6 +148,12 @@ def ServiceStartCOMMAND_REFSVector(builder, numElems):
 
 def StartCOMMAND_REFSVector(builder, numElems):
     return ServiceStartCOMMAND_REFSVector(builder, numElems)
+
+def ServiceCreateCOMMAND_REFSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateCOMMAND_REFSVector(builder, data):
+    ServiceCreateCOMMAND_REFSVector(builder, data)
 
 def ServiceEnd(builder):
     return builder.EndObject()
@@ -157,18 +169,25 @@ except:
 class ServiceT(object):
 
     # ServiceT
-    def __init__(self):
-        self.NAME = None  # type: str
-        self.SHORT_DESCRIPTION = None  # type: str
-        self.LONG_DESCRIPTION = None  # type: str
-        self.CONTAINER_REFS = None  # type: List[str]
-        self.COMMAND_REFS = None  # type: List[str]
+    def __init__(
+        self,
+        NAME = None,
+        SHORT_DESCRIPTION = None,
+        LONG_DESCRIPTION = None,
+        CONTAINER_REFS = None,
+        COMMAND_REFS = None,
+    ):
+        self.NAME = NAME  # type: Optional[str]
+        self.SHORT_DESCRIPTION = SHORT_DESCRIPTION  # type: Optional[str]
+        self.LONG_DESCRIPTION = LONG_DESCRIPTION  # type: Optional[str]
+        self.CONTAINER_REFS = CONTAINER_REFS  # type: Optional[List[Optional[str]]]
+        self.COMMAND_REFS = COMMAND_REFS  # type: Optional[List[Optional[str]]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        service = Service()
-        service.Init(buf, pos)
-        return cls.InitFromObj(service)
+        tmpService = Service()
+        tmpService.Init(buf, pos)
+        return cls.InitFromObj(tmpService)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -176,26 +195,26 @@ class ServiceT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, service):
+    def InitFromObj(cls, tmpService):
         x = ServiceT()
-        x._UnPack(service)
+        x._UnPack(tmpService)
         return x
 
     # ServiceT
-    def _UnPack(self, service):
-        if service is None:
+    def _UnPack(self, Service):
+        if Service is None:
             return
-        self.NAME = service.NAME()
-        self.SHORT_DESCRIPTION = service.SHORT_DESCRIPTION()
-        self.LONG_DESCRIPTION = service.LONG_DESCRIPTION()
-        if not service.CONTAINER_REFSIsNone():
+        self.NAME = Service.NAME()
+        self.SHORT_DESCRIPTION = Service.SHORT_DESCRIPTION()
+        self.LONG_DESCRIPTION = Service.LONG_DESCRIPTION()
+        if not Service.CONTAINER_REFSIsNone():
             self.CONTAINER_REFS = []
-            for i in range(service.CONTAINER_REFSLength()):
-                self.CONTAINER_REFS.append(service.CONTAINER_REFS(i))
-        if not service.COMMAND_REFSIsNone():
+            for i in range(Service.CONTAINER_REFSLength()):
+                self.CONTAINER_REFS.append(Service.CONTAINER_REFS(i))
+        if not Service.COMMAND_REFSIsNone():
             self.COMMAND_REFS = []
-            for i in range(service.COMMAND_REFSLength()):
-                self.COMMAND_REFS.append(service.COMMAND_REFS(i))
+            for i in range(Service.COMMAND_REFSLength()):
+                self.COMMAND_REFS.append(Service.COMMAND_REFS(i))
 
     # ServiceT
     def Pack(self, builder):
@@ -232,5 +251,5 @@ class ServiceT(object):
             ServiceAddCONTAINER_REFS(builder, CONTAINER_REFS)
         if self.COMMAND_REFS is not None:
             ServiceAddCOMMAND_REFS(builder, COMMAND_REFS)
-        service = ServiceEnd(builder)
-        return service
+        Service = ServiceEnd(builder)
+        return Service

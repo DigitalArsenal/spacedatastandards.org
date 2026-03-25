@@ -2,4 +2,8 @@
 
 # namespace: 
 
-# NOTE geoConfidence.py does not declare any structs or enums
+class geoConfidence(object):
+    HIGH = 0
+    MEDIUM = 1
+    LOW = 2
+    TENTATIVE = 3

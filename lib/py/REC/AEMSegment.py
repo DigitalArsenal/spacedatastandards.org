@@ -2,4 +2,370 @@
 
 # namespace: 
 
-# NOTE AEMSegment.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+class AEMSegment(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = AEMSegment()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsAEMSegment(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def AEMSegmentBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x41\x45\x4D", size_prefixed=size_prefixed)
+
+    # AEMSegment
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # AEMSegment
+    def OBJECT_NAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # AEMSegment
+    def OBJECT_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # AEMSegment
+    def REF_FRAME_A(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # AEMSegment
+    def REF_FRAME_B(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # AEMSegment
+    def ATTITUDE_DIR(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # AEMSegment
+    def TIME_SYSTEM(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # AEMSegment
+    def ATTITUDE_TYPE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # AEMSegment
+    def START_TIME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # AEMSegment
+    def STOP_TIME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Time interval between attitude states in seconds (required).
+    # AEMSegment
+    def STEP_SIZE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Number of components per attitude state.
+    # 7 = quaternion + angular rates (Q1, Q2, Q3, QC, RATE_X, RATE_Y, RATE_Z)
+    # 4 = quaternion only (Q1, Q2, Q3, QC)
+    # AEMSegment
+    def ATTITUDE_COMPONENTS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
+        return 7
+
+    # Attitude data as row-major array of doubles.
+    # Layout: [Q1_0, Q2_0, Q3_0, QC_0, RATE_X_0, RATE_Y_0, RATE_Z_0, Q1_1, ...]
+    # Time reconstruction: epoch[i] = START_TIME + (i * STEP_SIZE)
+    # Length must be divisible by ATTITUDE_COMPONENTS.
+    # AEMSegment
+    def ATTITUDE_DATA(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # AEMSegment
+    def ATTITUDE_DATAAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
+
+    # AEMSegment
+    def ATTITUDE_DATALength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # AEMSegment
+    def ATTITUDE_DATAIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        return o == 0
+
+def AEMSegmentStart(builder):
+    builder.StartObject(12)
+
+def Start(builder):
+    AEMSegmentStart(builder)
+
+def AEMSegmentAddOBJECT_NAME(builder, OBJECT_NAME):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(OBJECT_NAME), 0)
+
+def AddOBJECT_NAME(builder, OBJECT_NAME):
+    AEMSegmentAddOBJECT_NAME(builder, OBJECT_NAME)
+
+def AEMSegmentAddOBJECT_ID(builder, OBJECT_ID):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(OBJECT_ID), 0)
+
+def AddOBJECT_ID(builder, OBJECT_ID):
+    AEMSegmentAddOBJECT_ID(builder, OBJECT_ID)
+
+def AEMSegmentAddREF_FRAME_A(builder, REF_FRAME_A):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(REF_FRAME_A), 0)
+
+def AddREF_FRAME_A(builder, REF_FRAME_A):
+    AEMSegmentAddREF_FRAME_A(builder, REF_FRAME_A)
+
+def AEMSegmentAddREF_FRAME_B(builder, REF_FRAME_B):
+    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(REF_FRAME_B), 0)
+
+def AddREF_FRAME_B(builder, REF_FRAME_B):
+    AEMSegmentAddREF_FRAME_B(builder, REF_FRAME_B)
+
+def AEMSegmentAddATTITUDE_DIR(builder, ATTITUDE_DIR):
+    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(ATTITUDE_DIR), 0)
+
+def AddATTITUDE_DIR(builder, ATTITUDE_DIR):
+    AEMSegmentAddATTITUDE_DIR(builder, ATTITUDE_DIR)
+
+def AEMSegmentAddTIME_SYSTEM(builder, TIME_SYSTEM):
+    builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(TIME_SYSTEM), 0)
+
+def AddTIME_SYSTEM(builder, TIME_SYSTEM):
+    AEMSegmentAddTIME_SYSTEM(builder, TIME_SYSTEM)
+
+def AEMSegmentAddATTITUDE_TYPE(builder, ATTITUDE_TYPE):
+    builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(ATTITUDE_TYPE), 0)
+
+def AddATTITUDE_TYPE(builder, ATTITUDE_TYPE):
+    AEMSegmentAddATTITUDE_TYPE(builder, ATTITUDE_TYPE)
+
+def AEMSegmentAddSTART_TIME(builder, START_TIME):
+    builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(START_TIME), 0)
+
+def AddSTART_TIME(builder, START_TIME):
+    AEMSegmentAddSTART_TIME(builder, START_TIME)
+
+def AEMSegmentAddSTOP_TIME(builder, STOP_TIME):
+    builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(STOP_TIME), 0)
+
+def AddSTOP_TIME(builder, STOP_TIME):
+    AEMSegmentAddSTOP_TIME(builder, STOP_TIME)
+
+def AEMSegmentAddSTEP_SIZE(builder, STEP_SIZE):
+    builder.PrependFloat64Slot(9, STEP_SIZE, 0.0)
+
+def AddSTEP_SIZE(builder, STEP_SIZE):
+    AEMSegmentAddSTEP_SIZE(builder, STEP_SIZE)
+
+def AEMSegmentAddATTITUDE_COMPONENTS(builder, ATTITUDE_COMPONENTS):
+    builder.PrependUint8Slot(10, ATTITUDE_COMPONENTS, 7)
+
+def AddATTITUDE_COMPONENTS(builder, ATTITUDE_COMPONENTS):
+    AEMSegmentAddATTITUDE_COMPONENTS(builder, ATTITUDE_COMPONENTS)
+
+def AEMSegmentAddATTITUDE_DATA(builder, ATTITUDE_DATA):
+    builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(ATTITUDE_DATA), 0)
+
+def AddATTITUDE_DATA(builder, ATTITUDE_DATA):
+    AEMSegmentAddATTITUDE_DATA(builder, ATTITUDE_DATA)
+
+def AEMSegmentStartATTITUDE_DATAVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
+def StartATTITUDE_DATAVector(builder, numElems):
+    return AEMSegmentStartATTITUDE_DATAVector(builder, numElems)
+
+def AEMSegmentCreateATTITUDE_DATAVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateATTITUDE_DATAVector(builder, data):
+    AEMSegmentCreateATTITUDE_DATAVector(builder, data)
+
+def AEMSegmentEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return AEMSegmentEnd(builder)
+
+try:
+    from typing import List
+except:
+    pass
+
+class AEMSegmentT(object):
+
+    # AEMSegmentT
+    def __init__(
+        self,
+        OBJECT_NAME = None,
+        OBJECT_ID = None,
+        REF_FRAME_A = None,
+        REF_FRAME_B = None,
+        ATTITUDE_DIR = None,
+        TIME_SYSTEM = None,
+        ATTITUDE_TYPE = None,
+        START_TIME = None,
+        STOP_TIME = None,
+        STEP_SIZE = 0.0,
+        ATTITUDE_COMPONENTS = 7,
+        ATTITUDE_DATA = None,
+    ):
+        self.OBJECT_NAME = OBJECT_NAME  # type: Optional[str]
+        self.OBJECT_ID = OBJECT_ID  # type: Optional[str]
+        self.REF_FRAME_A = REF_FRAME_A  # type: Optional[str]
+        self.REF_FRAME_B = REF_FRAME_B  # type: Optional[str]
+        self.ATTITUDE_DIR = ATTITUDE_DIR  # type: Optional[str]
+        self.TIME_SYSTEM = TIME_SYSTEM  # type: Optional[str]
+        self.ATTITUDE_TYPE = ATTITUDE_TYPE  # type: Optional[str]
+        self.START_TIME = START_TIME  # type: Optional[str]
+        self.STOP_TIME = STOP_TIME  # type: Optional[str]
+        self.STEP_SIZE = STEP_SIZE  # type: float
+        self.ATTITUDE_COMPONENTS = ATTITUDE_COMPONENTS  # type: int
+        self.ATTITUDE_DATA = ATTITUDE_DATA  # type: Optional[List[float]]
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpAemsegment = AEMSegment()
+        tmpAemsegment.Init(buf, pos)
+        return cls.InitFromObj(tmpAemsegment)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpAemsegment):
+        x = AEMSegmentT()
+        x._UnPack(tmpAemsegment)
+        return x
+
+    # AEMSegmentT
+    def _UnPack(self, AEMSegment):
+        if AEMSegment is None:
+            return
+        self.OBJECT_NAME = AEMSegment.OBJECT_NAME()
+        self.OBJECT_ID = AEMSegment.OBJECT_ID()
+        self.REF_FRAME_A = AEMSegment.REF_FRAME_A()
+        self.REF_FRAME_B = AEMSegment.REF_FRAME_B()
+        self.ATTITUDE_DIR = AEMSegment.ATTITUDE_DIR()
+        self.TIME_SYSTEM = AEMSegment.TIME_SYSTEM()
+        self.ATTITUDE_TYPE = AEMSegment.ATTITUDE_TYPE()
+        self.START_TIME = AEMSegment.START_TIME()
+        self.STOP_TIME = AEMSegment.STOP_TIME()
+        self.STEP_SIZE = AEMSegment.STEP_SIZE()
+        self.ATTITUDE_COMPONENTS = AEMSegment.ATTITUDE_COMPONENTS()
+        if not AEMSegment.ATTITUDE_DATAIsNone():
+            if np is None:
+                self.ATTITUDE_DATA = []
+                for i in range(AEMSegment.ATTITUDE_DATALength()):
+                    self.ATTITUDE_DATA.append(AEMSegment.ATTITUDE_DATA(i))
+            else:
+                self.ATTITUDE_DATA = AEMSegment.ATTITUDE_DATAAsNumpy()
+
+    # AEMSegmentT
+    def Pack(self, builder):
+        if self.OBJECT_NAME is not None:
+            OBJECT_NAME = builder.CreateString(self.OBJECT_NAME)
+        if self.OBJECT_ID is not None:
+            OBJECT_ID = builder.CreateString(self.OBJECT_ID)
+        if self.REF_FRAME_A is not None:
+            REF_FRAME_A = builder.CreateString(self.REF_FRAME_A)
+        if self.REF_FRAME_B is not None:
+            REF_FRAME_B = builder.CreateString(self.REF_FRAME_B)
+        if self.ATTITUDE_DIR is not None:
+            ATTITUDE_DIR = builder.CreateString(self.ATTITUDE_DIR)
+        if self.TIME_SYSTEM is not None:
+            TIME_SYSTEM = builder.CreateString(self.TIME_SYSTEM)
+        if self.ATTITUDE_TYPE is not None:
+            ATTITUDE_TYPE = builder.CreateString(self.ATTITUDE_TYPE)
+        if self.START_TIME is not None:
+            START_TIME = builder.CreateString(self.START_TIME)
+        if self.STOP_TIME is not None:
+            STOP_TIME = builder.CreateString(self.STOP_TIME)
+        if self.ATTITUDE_DATA is not None:
+            if np is not None and type(self.ATTITUDE_DATA) is np.ndarray:
+                ATTITUDE_DATA = builder.CreateNumpyVector(self.ATTITUDE_DATA)
+            else:
+                AEMSegmentStartATTITUDE_DATAVector(builder, len(self.ATTITUDE_DATA))
+                for i in reversed(range(len(self.ATTITUDE_DATA))):
+                    builder.PrependFloat64(self.ATTITUDE_DATA[i])
+                ATTITUDE_DATA = builder.EndVector()
+        AEMSegmentStart(builder)
+        if self.OBJECT_NAME is not None:
+            AEMSegmentAddOBJECT_NAME(builder, OBJECT_NAME)
+        if self.OBJECT_ID is not None:
+            AEMSegmentAddOBJECT_ID(builder, OBJECT_ID)
+        if self.REF_FRAME_A is not None:
+            AEMSegmentAddREF_FRAME_A(builder, REF_FRAME_A)
+        if self.REF_FRAME_B is not None:
+            AEMSegmentAddREF_FRAME_B(builder, REF_FRAME_B)
+        if self.ATTITUDE_DIR is not None:
+            AEMSegmentAddATTITUDE_DIR(builder, ATTITUDE_DIR)
+        if self.TIME_SYSTEM is not None:
+            AEMSegmentAddTIME_SYSTEM(builder, TIME_SYSTEM)
+        if self.ATTITUDE_TYPE is not None:
+            AEMSegmentAddATTITUDE_TYPE(builder, ATTITUDE_TYPE)
+        if self.START_TIME is not None:
+            AEMSegmentAddSTART_TIME(builder, START_TIME)
+        if self.STOP_TIME is not None:
+            AEMSegmentAddSTOP_TIME(builder, STOP_TIME)
+        AEMSegmentAddSTEP_SIZE(builder, self.STEP_SIZE)
+        AEMSegmentAddATTITUDE_COMPONENTS(builder, self.ATTITUDE_COMPONENTS)
+        if self.ATTITUDE_DATA is not None:
+            AEMSegmentAddATTITUDE_DATA(builder, ATTITUDE_DATA)
+        AEMSegment = AEMSegmentEnd(builder)
+        return AEMSegment

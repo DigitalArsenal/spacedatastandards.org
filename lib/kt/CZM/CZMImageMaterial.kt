@@ -32,7 +32,7 @@ class CZMImageMaterial : Table() {
     /**
      * Image URI
      */
-    val IMAGE : String?
+    val image : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class CZMImageMaterial : Table() {
                 null
             }
         }
-    val IMAGEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun IMAGEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val imageAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun imageInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Repeat X
      */
-    val REPEAT_X : Double
+    val repeatX : Double
         get() {
             val o = __offset(6)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -54,7 +54,7 @@ class CZMImageMaterial : Table() {
     /**
      * Repeat Y
      */
-    val REPEAT_Y : Double
+    val repeatY : Double
         get() {
             val o = __offset(8)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -62,8 +62,8 @@ class CZMImageMaterial : Table() {
     /**
      * Color tint
      */
-    val COLOR : CZMColor? get() = COLOR(CZMColor())
-    fun COLOR(obj: CZMColor) : CZMColor? {
+    val color : CZMColor? get() = color(CZMColor())
+    fun color(obj: CZMColor) : CZMColor? {
         val o = __offset(10)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -74,33 +74,33 @@ class CZMImageMaterial : Table() {
     /**
      * Whether the image has transparency
      */
-    val TRANSPARENT : Boolean
+    val transparent : Boolean
         get() {
             val o = __offset(12)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsCZMImageMaterial(_bb: ByteBuffer): CZMImageMaterial = getRootAsCZMImageMaterial(_bb, CZMImageMaterial())
         fun getRootAsCZMImageMaterial(_bb: ByteBuffer, obj: CZMImageMaterial): CZMImageMaterial {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createCZMImageMaterial(builder: FlatBufferBuilder, IMAGEOffset: Int, REPEAT_X: Double, REPEAT_Y: Double, COLOROffset: Int, TRANSPARENT: Boolean) : Int {
+        fun createCZMImageMaterial(builder: FlatBufferBuilder, imageOffset: Int, repeatX: Double, repeatY: Double, colorOffset: Int, transparent: Boolean) : Int {
             builder.startTable(5)
-            addREPEAT_Y(builder, REPEAT_Y)
-            addREPEAT_X(builder, REPEAT_X)
-            addCOLOR(builder, COLOROffset)
-            addIMAGE(builder, IMAGEOffset)
-            addTRANSPARENT(builder, TRANSPARENT)
+            addREPEATY(builder, repeatY)
+            addREPEATX(builder, repeatX)
+            addCOLOR(builder, colorOffset)
+            addIMAGE(builder, imageOffset)
+            addTRANSPARENT(builder, transparent)
             return endCZMImageMaterial(builder)
         }
         fun startCZMImageMaterial(builder: FlatBufferBuilder) = builder.startTable(5)
-        fun addIMAGE(builder: FlatBufferBuilder, IMAGE: Int) = builder.addOffset(0, IMAGE, 0)
-        fun addREPEAT_X(builder: FlatBufferBuilder, REPEAT_X: Double) = builder.addDouble(1, REPEAT_X, 0.0)
-        fun addREPEAT_Y(builder: FlatBufferBuilder, REPEAT_Y: Double) = builder.addDouble(2, REPEAT_Y, 0.0)
-        fun addCOLOR(builder: FlatBufferBuilder, COLOR: Int) = builder.addOffset(3, COLOR, 0)
-        fun addTRANSPARENT(builder: FlatBufferBuilder, TRANSPARENT: Boolean) = builder.addBoolean(4, TRANSPARENT, false)
+        fun addIMAGE(builder: FlatBufferBuilder, image: Int) = builder.addOffset(0, image, 0)
+        fun addREPEATX(builder: FlatBufferBuilder, repeatX: Double) = builder.addDouble(1, repeatX, 0.0)
+        fun addREPEATY(builder: FlatBufferBuilder, repeatY: Double) = builder.addDouble(2, repeatY, 0.0)
+        fun addCOLOR(builder: FlatBufferBuilder, color: Int) = builder.addOffset(3, color, 0)
+        fun addTRANSPARENT(builder: FlatBufferBuilder, transparent: Boolean) = builder.addBoolean(4, transparent, false)
         fun endCZMImageMaterial(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

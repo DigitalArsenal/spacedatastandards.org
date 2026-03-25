@@ -73,6 +73,12 @@ def ContainerSetStartCONTAINERSVector(builder, numElems):
 def StartCONTAINERSVector(builder, numElems):
     return ContainerSetStartCONTAINERSVector(builder, numElems)
 
+def ContainerSetCreateCONTAINERSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateCONTAINERSVector(builder, data):
+    ContainerSetCreateCONTAINERSVector(builder, data)
+
 def ContainerSetEnd(builder):
     return builder.EndObject()
 
@@ -88,14 +94,17 @@ except:
 class ContainerSetT(object):
 
     # ContainerSetT
-    def __init__(self):
-        self.CONTAINERS = None  # type: List[SequenceContainer.SequenceContainerT]
+    def __init__(
+        self,
+        CONTAINERS = None,
+    ):
+        self.CONTAINERS = CONTAINERS  # type: Optional[List[SequenceContainer.SequenceContainerT]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        containerSet = ContainerSet()
-        containerSet.Init(buf, pos)
-        return cls.InitFromObj(containerSet)
+        tmpContainerSet = ContainerSet()
+        tmpContainerSet.Init(buf, pos)
+        return cls.InitFromObj(tmpContainerSet)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -103,22 +112,22 @@ class ContainerSetT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, containerSet):
+    def InitFromObj(cls, tmpContainerSet):
         x = ContainerSetT()
-        x._UnPack(containerSet)
+        x._UnPack(tmpContainerSet)
         return x
 
     # ContainerSetT
-    def _UnPack(self, containerSet):
-        if containerSet is None:
+    def _UnPack(self, ContainerSet):
+        if ContainerSet is None:
             return
-        if not containerSet.CONTAINERSIsNone():
+        if not ContainerSet.CONTAINERSIsNone():
             self.CONTAINERS = []
-            for i in range(containerSet.CONTAINERSLength()):
-                if containerSet.CONTAINERS(i) is None:
+            for i in range(ContainerSet.CONTAINERSLength()):
+                if ContainerSet.CONTAINERS(i) is None:
                     self.CONTAINERS.append(None)
                 else:
-                    sequenceContainer_ = SequenceContainer.SequenceContainerT.InitFromObj(containerSet.CONTAINERS(i))
+                    sequenceContainer_ = SequenceContainer.SequenceContainerT.InitFromObj(ContainerSet.CONTAINERS(i))
                     self.CONTAINERS.append(sequenceContainer_)
 
     # ContainerSetT
@@ -134,5 +143,5 @@ class ContainerSetT(object):
         ContainerSetStart(builder)
         if self.CONTAINERS is not None:
             ContainerSetAddCONTAINERS(builder, CONTAINERS)
-        containerSet = ContainerSetEnd(builder)
-        return containerSet
+        ContainerSet = ContainerSetEnd(builder)
+        return ContainerSet

@@ -43,7 +43,7 @@ func (rcv *SCHEMA_STANDARD) Table() flatbuffers.Table {
 }
 
 /// Unique identifier for the standard
-func (rcv *SCHEMA_STANDARD) Key() []byte {
+func (rcv *SCHEMA_STANDARD) key() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
@@ -51,9 +51,13 @@ func (rcv *SCHEMA_STANDARD) Key() []byte {
 	return nil
 }
 
+func (rcv *SCHEMA_STANDARD) Key() []byte {
+	return rcv.key()
+}
+
 /// Unique identifier for the standard
 /// IDL
-func (rcv *SCHEMA_STANDARD) Idl() []byte {
+func (rcv *SCHEMA_STANDARD) idl() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
@@ -61,9 +65,13 @@ func (rcv *SCHEMA_STANDARD) Idl() []byte {
 	return nil
 }
 
+func (rcv *SCHEMA_STANDARD) Idl() []byte {
+	return rcv.idl()
+}
+
 /// IDL
 /// List Of File Paths
-func (rcv *SCHEMA_STANDARD) Files(j int) []byte {
+func (rcv *SCHEMA_STANDARD) files(j int) []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
 		a := rcv._tab.Vector(o)
@@ -72,7 +80,11 @@ func (rcv *SCHEMA_STANDARD) Files(j int) []byte {
 	return nil
 }
 
-func (rcv *SCHEMA_STANDARD) FilesLength() int {
+func (rcv *SCHEMA_STANDARD) Files(j int) []byte {
+	return rcv.files(j)
+}
+
+func (rcv *SCHEMA_STANDARD) filesLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
@@ -80,21 +92,37 @@ func (rcv *SCHEMA_STANDARD) FilesLength() int {
 	return 0
 }
 
+func (rcv *SCHEMA_STANDARD) FilesLength() int {
+	return rcv.filesLength()
+}
+
 /// List Of File Paths
 func SCHEMA_STANDARDStart(builder *flatbuffers.Builder) {
 	builder.StartObject(3)
 }
-func SCHEMA_STANDARDAddKey(builder *flatbuffers.Builder, key flatbuffers.UOffsetT) {
+func SCHEMA_STANDARDAddkey(builder *flatbuffers.Builder, key flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(key), 0)
 }
-func SCHEMA_STANDARDAddIdl(builder *flatbuffers.Builder, idl flatbuffers.UOffsetT) {
+func SCHEMA_STANDARDAddKey(builder *flatbuffers.Builder, key flatbuffers.UOffsetT) {
+	SCHEMA_STANDARDAddkey(builder, key)
+}
+func SCHEMA_STANDARDAddidl(builder *flatbuffers.Builder, idl flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(idl), 0)
 }
-func SCHEMA_STANDARDAddFiles(builder *flatbuffers.Builder, files flatbuffers.UOffsetT) {
+func SCHEMA_STANDARDAddIdl(builder *flatbuffers.Builder, idl flatbuffers.UOffsetT) {
+	SCHEMA_STANDARDAddidl(builder, idl)
+}
+func SCHEMA_STANDARDAddfiles(builder *flatbuffers.Builder, files flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(files), 0)
 }
-func SCHEMA_STANDARDStartFilesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+func SCHEMA_STANDARDAddFiles(builder *flatbuffers.Builder, files flatbuffers.UOffsetT) {
+	SCHEMA_STANDARDAddfiles(builder, files)
+}
+func SCHEMA_STANDARDStartfilesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func SCHEMA_STANDARDStartFilesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return SCHEMA_STANDARDStartfilesVector(builder, numElems)
 }
 func SCHEMA_STANDARDEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

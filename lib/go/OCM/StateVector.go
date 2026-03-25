@@ -50,6 +50,10 @@ func (rcv *StateVector) EPOCH() []byte {
 	return nil
 }
 
+func (rcv *StateVector) Epoch() []byte {
+	return rcv.EPOCH()
+}
+
 /// Epoch of the state vector.
 /// X component of position in the specified reference frame.
 func (rcv *StateVector) X() float64 {
@@ -102,9 +106,17 @@ func (rcv *StateVector) X_DOT() float64 {
 	return 0.0
 }
 
+func (rcv *StateVector) XDot() float64 {
+	return rcv.X_DOT()
+}
+
 /// X component of velocity.
 func (rcv *StateVector) MutateX_DOT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(12, n)
+}
+
+func (rcv *StateVector) MutateXDot(n float64) bool {
+	return rcv.MutateX_DOT(n)
 }
 
 /// Y component of velocity.
@@ -116,9 +128,17 @@ func (rcv *StateVector) Y_DOT() float64 {
 	return 0.0
 }
 
+func (rcv *StateVector) YDot() float64 {
+	return rcv.Y_DOT()
+}
+
 /// Y component of velocity.
 func (rcv *StateVector) MutateY_DOT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(14, n)
+}
+
+func (rcv *StateVector) MutateYDot(n float64) bool {
+	return rcv.MutateY_DOT(n)
 }
 
 /// Z component of velocity.
@@ -130,9 +150,17 @@ func (rcv *StateVector) Z_DOT() float64 {
 	return 0.0
 }
 
+func (rcv *StateVector) ZDot() float64 {
+	return rcv.Z_DOT()
+}
+
 /// Z component of velocity.
 func (rcv *StateVector) MutateZ_DOT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(16, n)
+}
+
+func (rcv *StateVector) MutateZDot(n float64) bool {
+	return rcv.MutateZ_DOT(n)
 }
 
 /// X component of acceleration.
@@ -144,9 +172,17 @@ func (rcv *StateVector) X_DDOT() float64 {
 	return 0.0
 }
 
+func (rcv *StateVector) XDdot() float64 {
+	return rcv.X_DDOT()
+}
+
 /// X component of acceleration.
 func (rcv *StateVector) MutateX_DDOT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(18, n)
+}
+
+func (rcv *StateVector) MutateXDdot(n float64) bool {
+	return rcv.MutateX_DDOT(n)
 }
 
 /// Y component of acceleration.
@@ -158,9 +194,17 @@ func (rcv *StateVector) Y_DDOT() float64 {
 	return 0.0
 }
 
+func (rcv *StateVector) YDdot() float64 {
+	return rcv.Y_DDOT()
+}
+
 /// Y component of acceleration.
 func (rcv *StateVector) MutateY_DDOT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(20, n)
+}
+
+func (rcv *StateVector) MutateYDdot(n float64) bool {
+	return rcv.MutateY_DDOT(n)
 }
 
 /// Z component of acceleration.
@@ -172,9 +216,17 @@ func (rcv *StateVector) Z_DDOT() float64 {
 	return 0.0
 }
 
+func (rcv *StateVector) ZDdot() float64 {
+	return rcv.Z_DDOT()
+}
+
 /// Z component of acceleration.
 func (rcv *StateVector) MutateZ_DDOT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(22, n)
+}
+
+func (rcv *StateVector) MutateZDdot(n float64) bool {
+	return rcv.MutateZ_DDOT(n)
 }
 
 func StateVectorStart(builder *flatbuffers.Builder) {
@@ -182,6 +234,9 @@ func StateVectorStart(builder *flatbuffers.Builder) {
 }
 func StateVectorAddEPOCH(builder *flatbuffers.Builder, EPOCH flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(EPOCH), 0)
+}
+func StateVectorAddEpoch(builder *flatbuffers.Builder, EPOCH flatbuffers.UOffsetT) {
+	StateVectorAddEPOCH(builder, EPOCH)
 }
 func StateVectorAddX(builder *flatbuffers.Builder, X float64) {
 	builder.PrependFloat64Slot(1, X, 0.0)
@@ -195,20 +250,38 @@ func StateVectorAddZ(builder *flatbuffers.Builder, Z float64) {
 func StateVectorAddX_DOT(builder *flatbuffers.Builder, X_DOT float64) {
 	builder.PrependFloat64Slot(4, X_DOT, 0.0)
 }
+func StateVectorAddXDot(builder *flatbuffers.Builder, X_DOT float64) {
+	StateVectorAddX_DOT(builder, X_DOT)
+}
 func StateVectorAddY_DOT(builder *flatbuffers.Builder, Y_DOT float64) {
 	builder.PrependFloat64Slot(5, Y_DOT, 0.0)
+}
+func StateVectorAddYDot(builder *flatbuffers.Builder, Y_DOT float64) {
+	StateVectorAddY_DOT(builder, Y_DOT)
 }
 func StateVectorAddZ_DOT(builder *flatbuffers.Builder, Z_DOT float64) {
 	builder.PrependFloat64Slot(6, Z_DOT, 0.0)
 }
+func StateVectorAddZDot(builder *flatbuffers.Builder, Z_DOT float64) {
+	StateVectorAddZ_DOT(builder, Z_DOT)
+}
 func StateVectorAddX_DDOT(builder *flatbuffers.Builder, X_DDOT float64) {
 	builder.PrependFloat64Slot(7, X_DDOT, 0.0)
+}
+func StateVectorAddXDdot(builder *flatbuffers.Builder, X_DDOT float64) {
+	StateVectorAddX_DDOT(builder, X_DDOT)
 }
 func StateVectorAddY_DDOT(builder *flatbuffers.Builder, Y_DDOT float64) {
 	builder.PrependFloat64Slot(8, Y_DDOT, 0.0)
 }
+func StateVectorAddYDdot(builder *flatbuffers.Builder, Y_DDOT float64) {
+	StateVectorAddY_DDOT(builder, Y_DDOT)
+}
 func StateVectorAddZ_DDOT(builder *flatbuffers.Builder, Z_DDOT float64) {
 	builder.PrependFloat64Slot(9, Z_DDOT, 0.0)
+}
+func StateVectorAddZDdot(builder *flatbuffers.Builder, Z_DDOT float64) {
+	StateVectorAddZ_DDOT(builder, Z_DDOT)
 }
 func StateVectorEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

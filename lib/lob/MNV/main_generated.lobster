@@ -487,23 +487,23 @@ def MNVCreateCOVVector(b_:flatbuffers.builder, v_:[float]):
     reverse(v_) e_: b_.PrependFloat64(e_)
     return b_.EndVector(v_.length)
 
-def MNVStartMNVR_ACCEL_TIMESVector(b_:flatbuffers.builder, n_:int):
+def MNVStartMNVRACCELTIMESVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def MNVCreateMNVR_ACCEL_TIMESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def MNVCreateMNVRACCELTIMESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-def MNVStartMNVR_ACCELSVector(b_:flatbuffers.builder, n_:int):
+def MNVStartMNVRACCELSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(8, n_, 8)
-def MNVCreateMNVR_ACCELSVector(b_:flatbuffers.builder, v_:[float]):
+def MNVCreateMNVRACCELSVector(b_:flatbuffers.builder, v_:[float]):
     b_.StartVector(8, v_.length, 8)
     reverse(v_) e_: b_.PrependFloat64(e_)
     return b_.EndVector(v_.length)
 
-def MNVStartMNVR_ACCEL_UNCSVector(b_:flatbuffers.builder, n_:int):
+def MNVStartMNVRACCELUNCSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(8, n_, 8)
-def MNVCreateMNVR_ACCEL_UNCSVector(b_:flatbuffers.builder, v_:[float]):
+def MNVCreateMNVRACCELUNCSVector(b_:flatbuffers.builder, v_:[float]):
     b_.StartVector(8, v_.length, 8)
     reverse(v_) e_: b_.PrependFloat64(e_)
     return b_.EndVector(v_.length)
@@ -515,9 +515,9 @@ def MNVCreateTAGSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-def MNVStartSOURCED_DATAVector(b_:flatbuffers.builder, n_:int):
+def MNVStartSOURCEDDATAVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def MNVCreateSOURCED_DATAVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def MNVCreateSOURCEDDATAVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)

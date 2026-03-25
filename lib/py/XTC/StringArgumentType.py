@@ -138,19 +138,27 @@ except:
 class StringArgumentTypeT(object):
 
     # StringArgumentTypeT
-    def __init__(self):
-        self.NAME = None  # type: str
-        self.SHORT_DESCRIPTION = None  # type: str
-        self.LONG_DESCRIPTION = None  # type: str
-        self.DATA_ENCODING = None  # type: Optional[StringDataEncoding.StringDataEncodingT]
-        self.INITIAL_VALUE = None  # type: str
-        self.RESTRICTION_PATTERN = None  # type: str
+    def __init__(
+        self,
+        NAME = None,
+        SHORT_DESCRIPTION = None,
+        LONG_DESCRIPTION = None,
+        DATA_ENCODING = None,
+        INITIAL_VALUE = None,
+        RESTRICTION_PATTERN = None,
+    ):
+        self.NAME = NAME  # type: Optional[str]
+        self.SHORT_DESCRIPTION = SHORT_DESCRIPTION  # type: Optional[str]
+        self.LONG_DESCRIPTION = LONG_DESCRIPTION  # type: Optional[str]
+        self.DATA_ENCODING = DATA_ENCODING  # type: Optional[StringDataEncoding.StringDataEncodingT]
+        self.INITIAL_VALUE = INITIAL_VALUE  # type: Optional[str]
+        self.RESTRICTION_PATTERN = RESTRICTION_PATTERN  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        stringArgumentType = StringArgumentType()
-        stringArgumentType.Init(buf, pos)
-        return cls.InitFromObj(stringArgumentType)
+        tmpStringArgumentType = StringArgumentType()
+        tmpStringArgumentType.Init(buf, pos)
+        return cls.InitFromObj(tmpStringArgumentType)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -158,22 +166,22 @@ class StringArgumentTypeT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, stringArgumentType):
+    def InitFromObj(cls, tmpStringArgumentType):
         x = StringArgumentTypeT()
-        x._UnPack(stringArgumentType)
+        x._UnPack(tmpStringArgumentType)
         return x
 
     # StringArgumentTypeT
-    def _UnPack(self, stringArgumentType):
-        if stringArgumentType is None:
+    def _UnPack(self, StringArgumentType):
+        if StringArgumentType is None:
             return
-        self.NAME = stringArgumentType.NAME()
-        self.SHORT_DESCRIPTION = stringArgumentType.SHORT_DESCRIPTION()
-        self.LONG_DESCRIPTION = stringArgumentType.LONG_DESCRIPTION()
-        if stringArgumentType.DATA_ENCODING() is not None:
-            self.DATA_ENCODING = StringDataEncoding.StringDataEncodingT.InitFromObj(stringArgumentType.DATA_ENCODING())
-        self.INITIAL_VALUE = stringArgumentType.INITIAL_VALUE()
-        self.RESTRICTION_PATTERN = stringArgumentType.RESTRICTION_PATTERN()
+        self.NAME = StringArgumentType.NAME()
+        self.SHORT_DESCRIPTION = StringArgumentType.SHORT_DESCRIPTION()
+        self.LONG_DESCRIPTION = StringArgumentType.LONG_DESCRIPTION()
+        if StringArgumentType.DATA_ENCODING() is not None:
+            self.DATA_ENCODING = StringDataEncoding.StringDataEncodingT.InitFromObj(StringArgumentType.DATA_ENCODING())
+        self.INITIAL_VALUE = StringArgumentType.INITIAL_VALUE()
+        self.RESTRICTION_PATTERN = StringArgumentType.RESTRICTION_PATTERN()
 
     # StringArgumentTypeT
     def Pack(self, builder):
@@ -202,5 +210,5 @@ class StringArgumentTypeT(object):
             StringArgumentTypeAddINITIAL_VALUE(builder, INITIAL_VALUE)
         if self.RESTRICTION_PATTERN is not None:
             StringArgumentTypeAddRESTRICTION_PATTERN(builder, RESTRICTION_PATTERN)
-        stringArgumentType = StringArgumentTypeEnd(builder)
-        return stringArgumentType
+        StringArgumentType = StringArgumentTypeEnd(builder)
+        return StringArgumentType

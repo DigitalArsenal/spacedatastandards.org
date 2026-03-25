@@ -2,4 +2,140 @@
 
 # namespace: 
 
-# NOTE KMLData.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Extended data key-value pair
+class KMLData(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = KMLData()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsKMLData(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def KMLDataBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x4B\x4D\x4C", size_prefixed=size_prefixed)
+
+    # KMLData
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Data name
+    # KMLData
+    def NAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Display name
+    # KMLData
+    def DISPLAY_NAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Data value
+    # KMLData
+    def VALUE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+def KMLDataStart(builder):
+    builder.StartObject(3)
+
+def Start(builder):
+    KMLDataStart(builder)
+
+def KMLDataAddNAME(builder, NAME):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(NAME), 0)
+
+def AddNAME(builder, NAME):
+    KMLDataAddNAME(builder, NAME)
+
+def KMLDataAddDISPLAY_NAME(builder, DISPLAY_NAME):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(DISPLAY_NAME), 0)
+
+def AddDISPLAY_NAME(builder, DISPLAY_NAME):
+    KMLDataAddDISPLAY_NAME(builder, DISPLAY_NAME)
+
+def KMLDataAddVALUE(builder, VALUE):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(VALUE), 0)
+
+def AddVALUE(builder, VALUE):
+    KMLDataAddVALUE(builder, VALUE)
+
+def KMLDataEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return KMLDataEnd(builder)
+
+
+class KMLDataT(object):
+
+    # KMLDataT
+    def __init__(
+        self,
+        NAME = None,
+        DISPLAY_NAME = None,
+        VALUE = None,
+    ):
+        self.NAME = NAME  # type: Optional[str]
+        self.DISPLAY_NAME = DISPLAY_NAME  # type: Optional[str]
+        self.VALUE = VALUE  # type: Optional[str]
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpKmldata = KMLData()
+        tmpKmldata.Init(buf, pos)
+        return cls.InitFromObj(tmpKmldata)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpKmldata):
+        x = KMLDataT()
+        x._UnPack(tmpKmldata)
+        return x
+
+    # KMLDataT
+    def _UnPack(self, KMLData):
+        if KMLData is None:
+            return
+        self.NAME = KMLData.NAME()
+        self.DISPLAY_NAME = KMLData.DISPLAY_NAME()
+        self.VALUE = KMLData.VALUE()
+
+    # KMLDataT
+    def Pack(self, builder):
+        if self.NAME is not None:
+            NAME = builder.CreateString(self.NAME)
+        if self.DISPLAY_NAME is not None:
+            DISPLAY_NAME = builder.CreateString(self.DISPLAY_NAME)
+        if self.VALUE is not None:
+            VALUE = builder.CreateString(self.VALUE)
+        KMLDataStart(builder)
+        if self.NAME is not None:
+            KMLDataAddNAME(builder, NAME)
+        if self.DISPLAY_NAME is not None:
+            KMLDataAddDISPLAY_NAME(builder, DISPLAY_NAME)
+        if self.VALUE is not None:
+            KMLDataAddVALUE(builder, VALUE)
+        KMLData = KMLDataEnd(builder)
+        return KMLData

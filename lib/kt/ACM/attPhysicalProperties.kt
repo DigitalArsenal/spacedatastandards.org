@@ -32,7 +32,7 @@ class attPhysicalProperties : Table() {
     /**
      * Drag coefficient
      */
-    val DRAG_COEFF : Double
+    val dragCoeff : Double
         get() {
             val o = __offset(4)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -40,7 +40,7 @@ class attPhysicalProperties : Table() {
     /**
      * Wet mass in kg
      */
-    val WET_MASS : Double
+    val wetMass : Double
         get() {
             val o = __offset(6)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -48,7 +48,7 @@ class attPhysicalProperties : Table() {
     /**
      * Dry mass in kg
      */
-    val DRY_MASS : Double
+    val dryMass : Double
         get() {
             val o = __offset(8)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -56,7 +56,7 @@ class attPhysicalProperties : Table() {
     /**
      * Center of pressure reference frame
      */
-    val CP_REF_FRAME : String?
+    val cpRefFrame : String?
         get() {
             val o = __offset(10)
             return if (o != 0) {
@@ -65,12 +65,12 @@ class attPhysicalProperties : Table() {
                 null
             }
         }
-    val CP_REF_FRAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
-    fun CP_REF_FRAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
+    val cpRefFrameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(10, 1)
+    fun cpRefFrameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 10, 1)
     /**
      * Center of pressure X in m
      */
-    val CP_X : Double
+    val cpX : Double
         get() {
             val o = __offset(12)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -78,7 +78,7 @@ class attPhysicalProperties : Table() {
     /**
      * Center of pressure Y in m
      */
-    val CP_Y : Double
+    val cpY : Double
         get() {
             val o = __offset(14)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -86,7 +86,7 @@ class attPhysicalProperties : Table() {
     /**
      * Center of pressure Z in m
      */
-    val CP_Z : Double
+    val cpZ : Double
         get() {
             val o = __offset(16)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -94,7 +94,7 @@ class attPhysicalProperties : Table() {
     /**
      * Inertia reference frame
      */
-    val INERTIA_REF_FRAME : String?
+    val inertiaRefFrame : String?
         get() {
             val o = __offset(18)
             return if (o != 0) {
@@ -103,12 +103,12 @@ class attPhysicalProperties : Table() {
                 null
             }
         }
-    val INERTIA_REF_FRAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(18, 1)
-    fun INERTIA_REF_FRAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 18, 1)
+    val inertiaRefFrameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(18, 1)
+    fun inertiaRefFrameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 18, 1)
     /**
      * Moment of inertia about X axis in kg*m^2
      */
-    val IXX : Double
+    val ixx : Double
         get() {
             val o = __offset(20)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -116,7 +116,7 @@ class attPhysicalProperties : Table() {
     /**
      * Moment of inertia about Y axis in kg*m^2
      */
-    val IYY : Double
+    val iyy : Double
         get() {
             val o = __offset(22)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -124,7 +124,7 @@ class attPhysicalProperties : Table() {
     /**
      * Moment of inertia about Z axis in kg*m^2
      */
-    val IZZ : Double
+    val izz : Double
         get() {
             val o = __offset(24)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -132,7 +132,7 @@ class attPhysicalProperties : Table() {
     /**
      * Product of inertia XY in kg*m^2
      */
-    val IXY : Double
+    val ixy : Double
         get() {
             val o = __offset(26)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -140,7 +140,7 @@ class attPhysicalProperties : Table() {
     /**
      * Product of inertia XZ in kg*m^2
      */
-    val IXZ : Double
+    val ixz : Double
         get() {
             val o = __offset(28)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -148,51 +148,51 @@ class attPhysicalProperties : Table() {
     /**
      * Product of inertia YZ in kg*m^2
      */
-    val IYZ : Double
+    val iyz : Double
         get() {
             val o = __offset(30)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsattPhysicalProperties(_bb: ByteBuffer): attPhysicalProperties = getRootAsattPhysicalProperties(_bb, attPhysicalProperties())
         fun getRootAsattPhysicalProperties(_bb: ByteBuffer, obj: attPhysicalProperties): attPhysicalProperties {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createattPhysicalProperties(builder: FlatBufferBuilder, DRAG_COEFF: Double, WET_MASS: Double, DRY_MASS: Double, CP_REF_FRAMEOffset: Int, CP_X: Double, CP_Y: Double, CP_Z: Double, INERTIA_REF_FRAMEOffset: Int, IXX: Double, IYY: Double, IZZ: Double, IXY: Double, IXZ: Double, IYZ: Double) : Int {
+        fun createattPhysicalProperties(builder: FlatBufferBuilder, dragCoeff: Double, wetMass: Double, dryMass: Double, cpRefFrameOffset: Int, cpX: Double, cpY: Double, cpZ: Double, inertiaRefFrameOffset: Int, ixx: Double, iyy: Double, izz: Double, ixy: Double, ixz: Double, iyz: Double) : Int {
             builder.startTable(14)
-            addIYZ(builder, IYZ)
-            addIXZ(builder, IXZ)
-            addIXY(builder, IXY)
-            addIZZ(builder, IZZ)
-            addIYY(builder, IYY)
-            addIXX(builder, IXX)
-            addCP_Z(builder, CP_Z)
-            addCP_Y(builder, CP_Y)
-            addCP_X(builder, CP_X)
-            addDRY_MASS(builder, DRY_MASS)
-            addWET_MASS(builder, WET_MASS)
-            addDRAG_COEFF(builder, DRAG_COEFF)
-            addINERTIA_REF_FRAME(builder, INERTIA_REF_FRAMEOffset)
-            addCP_REF_FRAME(builder, CP_REF_FRAMEOffset)
+            addIYZ(builder, iyz)
+            addIXZ(builder, ixz)
+            addIXY(builder, ixy)
+            addIZZ(builder, izz)
+            addIYY(builder, iyy)
+            addIXX(builder, ixx)
+            addCPZ(builder, cpZ)
+            addCPY(builder, cpY)
+            addCPX(builder, cpX)
+            addDRYMASS(builder, dryMass)
+            addWETMASS(builder, wetMass)
+            addDRAGCOEFF(builder, dragCoeff)
+            addINERTIAREFFRAME(builder, inertiaRefFrameOffset)
+            addCPREFFRAME(builder, cpRefFrameOffset)
             return endattPhysicalProperties(builder)
         }
         fun startattPhysicalProperties(builder: FlatBufferBuilder) = builder.startTable(14)
-        fun addDRAG_COEFF(builder: FlatBufferBuilder, DRAG_COEFF: Double) = builder.addDouble(0, DRAG_COEFF, 0.0)
-        fun addWET_MASS(builder: FlatBufferBuilder, WET_MASS: Double) = builder.addDouble(1, WET_MASS, 0.0)
-        fun addDRY_MASS(builder: FlatBufferBuilder, DRY_MASS: Double) = builder.addDouble(2, DRY_MASS, 0.0)
-        fun addCP_REF_FRAME(builder: FlatBufferBuilder, CP_REF_FRAME: Int) = builder.addOffset(3, CP_REF_FRAME, 0)
-        fun addCP_X(builder: FlatBufferBuilder, CP_X: Double) = builder.addDouble(4, CP_X, 0.0)
-        fun addCP_Y(builder: FlatBufferBuilder, CP_Y: Double) = builder.addDouble(5, CP_Y, 0.0)
-        fun addCP_Z(builder: FlatBufferBuilder, CP_Z: Double) = builder.addDouble(6, CP_Z, 0.0)
-        fun addINERTIA_REF_FRAME(builder: FlatBufferBuilder, INERTIA_REF_FRAME: Int) = builder.addOffset(7, INERTIA_REF_FRAME, 0)
-        fun addIXX(builder: FlatBufferBuilder, IXX: Double) = builder.addDouble(8, IXX, 0.0)
-        fun addIYY(builder: FlatBufferBuilder, IYY: Double) = builder.addDouble(9, IYY, 0.0)
-        fun addIZZ(builder: FlatBufferBuilder, IZZ: Double) = builder.addDouble(10, IZZ, 0.0)
-        fun addIXY(builder: FlatBufferBuilder, IXY: Double) = builder.addDouble(11, IXY, 0.0)
-        fun addIXZ(builder: FlatBufferBuilder, IXZ: Double) = builder.addDouble(12, IXZ, 0.0)
-        fun addIYZ(builder: FlatBufferBuilder, IYZ: Double) = builder.addDouble(13, IYZ, 0.0)
+        fun addDRAGCOEFF(builder: FlatBufferBuilder, dragCoeff: Double) = builder.addDouble(0, dragCoeff, 0.0)
+        fun addWETMASS(builder: FlatBufferBuilder, wetMass: Double) = builder.addDouble(1, wetMass, 0.0)
+        fun addDRYMASS(builder: FlatBufferBuilder, dryMass: Double) = builder.addDouble(2, dryMass, 0.0)
+        fun addCPREFFRAME(builder: FlatBufferBuilder, cpRefFrame: Int) = builder.addOffset(3, cpRefFrame, 0)
+        fun addCPX(builder: FlatBufferBuilder, cpX: Double) = builder.addDouble(4, cpX, 0.0)
+        fun addCPY(builder: FlatBufferBuilder, cpY: Double) = builder.addDouble(5, cpY, 0.0)
+        fun addCPZ(builder: FlatBufferBuilder, cpZ: Double) = builder.addDouble(6, cpZ, 0.0)
+        fun addINERTIAREFFRAME(builder: FlatBufferBuilder, inertiaRefFrame: Int) = builder.addOffset(7, inertiaRefFrame, 0)
+        fun addIXX(builder: FlatBufferBuilder, ixx: Double) = builder.addDouble(8, ixx, 0.0)
+        fun addIYY(builder: FlatBufferBuilder, iyy: Double) = builder.addDouble(9, iyy, 0.0)
+        fun addIZZ(builder: FlatBufferBuilder, izz: Double) = builder.addDouble(10, izz, 0.0)
+        fun addIXY(builder: FlatBufferBuilder, ixy: Double) = builder.addDouble(11, ixy, 0.0)
+        fun addIXZ(builder: FlatBufferBuilder, ixz: Double) = builder.addDouble(12, ixz, 0.0)
+        fun addIYZ(builder: FlatBufferBuilder, iyz: Double) = builder.addDouble(13, iyz, 0.0)
         fun endattPhysicalProperties(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

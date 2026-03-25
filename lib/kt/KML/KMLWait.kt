@@ -32,25 +32,25 @@ class KMLWait : Table() {
     /**
      * Duration in seconds
      */
-    val DURATION : Double
+    val duration : Double
         get() {
             val o = __offset(4)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsKMLWait(_bb: ByteBuffer): KMLWait = getRootAsKMLWait(_bb, KMLWait())
         fun getRootAsKMLWait(_bb: ByteBuffer, obj: KMLWait): KMLWait {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createKMLWait(builder: FlatBufferBuilder, DURATION: Double) : Int {
+        fun createKMLWait(builder: FlatBufferBuilder, duration: Double) : Int {
             builder.startTable(1)
-            addDURATION(builder, DURATION)
+            addDURATION(builder, duration)
             return endKMLWait(builder)
         }
         fun startKMLWait(builder: FlatBufferBuilder) = builder.startTable(1)
-        fun addDURATION(builder: FlatBufferBuilder, DURATION: Double) = builder.addDouble(0, DURATION, 0.0)
+        fun addDURATION(builder: FlatBufferBuilder, duration: Double) = builder.addDouble(0, duration, 0.0)
         fun endKMLWait(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

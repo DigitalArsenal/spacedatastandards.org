@@ -56,6 +56,10 @@ func (rcv *CommandMetaData) ARGUMENT_TYPE_SET(obj *ArgumentTypeSet) *ArgumentTyp
 	return nil
 }
 
+func (rcv *CommandMetaData) ArgumentTypeSet(obj *ArgumentTypeSet) *ArgumentTypeSet {
+	return rcv.ARGUMENT_TYPE_SET(obj)
+}
+
 /// Argument type definitions
 /// Parameter types used by commands
 func (rcv *CommandMetaData) PARAMETER_TYPE_SET(obj *ParameterTypeSet) *ParameterTypeSet {
@@ -69,6 +73,10 @@ func (rcv *CommandMetaData) PARAMETER_TYPE_SET(obj *ParameterTypeSet) *Parameter
 		return obj
 	}
 	return nil
+}
+
+func (rcv *CommandMetaData) ParameterTypeSet(obj *ParameterTypeSet) *ParameterTypeSet {
+	return rcv.PARAMETER_TYPE_SET(obj)
 }
 
 /// Parameter types used by commands
@@ -86,6 +94,10 @@ func (rcv *CommandMetaData) PARAMETER_SET(obj *ParameterSet) *ParameterSet {
 	return nil
 }
 
+func (rcv *CommandMetaData) ParameterSet(obj *ParameterSet) *ParameterSet {
+	return rcv.PARAMETER_SET(obj)
+}
+
 /// Parameters used by commands
 /// MetaCommand definitions
 func (rcv *CommandMetaData) META_COMMAND_SET(obj *MetaCommandSet) *MetaCommandSet {
@@ -99,6 +111,10 @@ func (rcv *CommandMetaData) META_COMMAND_SET(obj *MetaCommandSet) *MetaCommandSe
 		return obj
 	}
 	return nil
+}
+
+func (rcv *CommandMetaData) MetaCommandSet(obj *MetaCommandSet) *MetaCommandSet {
+	return rcv.META_COMMAND_SET(obj)
 }
 
 /// MetaCommand definitions
@@ -116,6 +132,10 @@ func (rcv *CommandMetaData) COMMAND_CONTAINER_SET(obj *ContainerSet) *ContainerS
 	return nil
 }
 
+func (rcv *CommandMetaData) CommandContainerSet(obj *ContainerSet) *ContainerSet {
+	return rcv.COMMAND_CONTAINER_SET(obj)
+}
+
 /// Command container set
 /// Algorithm definitions
 func (rcv *CommandMetaData) ALGORITHM_SET(obj *AlgorithmSet) *AlgorithmSet {
@@ -129,6 +149,10 @@ func (rcv *CommandMetaData) ALGORITHM_SET(obj *AlgorithmSet) *AlgorithmSet {
 		return obj
 	}
 	return nil
+}
+
+func (rcv *CommandMetaData) AlgorithmSet(obj *AlgorithmSet) *AlgorithmSet {
+	return rcv.ALGORITHM_SET(obj)
 }
 
 /// Algorithm definitions
@@ -146,6 +170,10 @@ func (rcv *CommandMetaData) STREAM_SET(obj *StreamSet) *StreamSet {
 	return nil
 }
 
+func (rcv *CommandMetaData) StreamSet(obj *StreamSet) *StreamSet {
+	return rcv.STREAM_SET(obj)
+}
+
 /// Stream definitions
 func CommandMetaDataStart(builder *flatbuffers.Builder) {
 	builder.StartObject(7)
@@ -153,23 +181,44 @@ func CommandMetaDataStart(builder *flatbuffers.Builder) {
 func CommandMetaDataAddARGUMENT_TYPE_SET(builder *flatbuffers.Builder, ARGUMENT_TYPE_SET flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ARGUMENT_TYPE_SET), 0)
 }
+func CommandMetaDataAddArgumentTypeSet(builder *flatbuffers.Builder, ARGUMENT_TYPE_SET flatbuffers.UOffsetT) {
+	CommandMetaDataAddARGUMENT_TYPE_SET(builder, ARGUMENT_TYPE_SET)
+}
 func CommandMetaDataAddPARAMETER_TYPE_SET(builder *flatbuffers.Builder, PARAMETER_TYPE_SET flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(PARAMETER_TYPE_SET), 0)
+}
+func CommandMetaDataAddParameterTypeSet(builder *flatbuffers.Builder, PARAMETER_TYPE_SET flatbuffers.UOffsetT) {
+	CommandMetaDataAddPARAMETER_TYPE_SET(builder, PARAMETER_TYPE_SET)
 }
 func CommandMetaDataAddPARAMETER_SET(builder *flatbuffers.Builder, PARAMETER_SET flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(PARAMETER_SET), 0)
 }
+func CommandMetaDataAddParameterSet(builder *flatbuffers.Builder, PARAMETER_SET flatbuffers.UOffsetT) {
+	CommandMetaDataAddPARAMETER_SET(builder, PARAMETER_SET)
+}
 func CommandMetaDataAddMETA_COMMAND_SET(builder *flatbuffers.Builder, META_COMMAND_SET flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(META_COMMAND_SET), 0)
+}
+func CommandMetaDataAddMetaCommandSet(builder *flatbuffers.Builder, META_COMMAND_SET flatbuffers.UOffsetT) {
+	CommandMetaDataAddMETA_COMMAND_SET(builder, META_COMMAND_SET)
 }
 func CommandMetaDataAddCOMMAND_CONTAINER_SET(builder *flatbuffers.Builder, COMMAND_CONTAINER_SET flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(COMMAND_CONTAINER_SET), 0)
 }
+func CommandMetaDataAddCommandContainerSet(builder *flatbuffers.Builder, COMMAND_CONTAINER_SET flatbuffers.UOffsetT) {
+	CommandMetaDataAddCOMMAND_CONTAINER_SET(builder, COMMAND_CONTAINER_SET)
+}
 func CommandMetaDataAddALGORITHM_SET(builder *flatbuffers.Builder, ALGORITHM_SET flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(ALGORITHM_SET), 0)
 }
+func CommandMetaDataAddAlgorithmSet(builder *flatbuffers.Builder, ALGORITHM_SET flatbuffers.UOffsetT) {
+	CommandMetaDataAddALGORITHM_SET(builder, ALGORITHM_SET)
+}
 func CommandMetaDataAddSTREAM_SET(builder *flatbuffers.Builder, STREAM_SET flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(STREAM_SET), 0)
+}
+func CommandMetaDataAddStreamSet(builder *flatbuffers.Builder, STREAM_SET flatbuffers.UOffsetT) {
+	CommandMetaDataAddSTREAM_SET(builder, STREAM_SET)
 }
 func CommandMetaDataEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

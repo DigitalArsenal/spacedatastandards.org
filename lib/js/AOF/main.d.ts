@@ -1,2 +1,2 @@
-export { AOF, AOFT } from './AOF.js';
+export * from './AOF.js';
 //# sourceMappingURL=main.d.ts.map

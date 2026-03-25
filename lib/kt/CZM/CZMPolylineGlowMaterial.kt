@@ -32,8 +32,8 @@ class CZMPolylineGlowMaterial : Table() {
     /**
      * Glow color
      */
-    val COLOR : CZMColor? get() = COLOR(CZMColor())
-    fun COLOR(obj: CZMColor) : CZMColor? {
+    val color : CZMColor? get() = color(CZMColor())
+    fun color(obj: CZMColor) : CZMColor? {
         val o = __offset(4)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -44,7 +44,7 @@ class CZMPolylineGlowMaterial : Table() {
     /**
      * Glow power
      */
-    val GLOW_POWER : Double
+    val glowPower : Double
         get() {
             val o = __offset(6)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -52,29 +52,29 @@ class CZMPolylineGlowMaterial : Table() {
     /**
      * Taper power
      */
-    val TAPER_POWER : Double
+    val taperPower : Double
         get() {
             val o = __offset(8)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsCZMPolylineGlowMaterial(_bb: ByteBuffer): CZMPolylineGlowMaterial = getRootAsCZMPolylineGlowMaterial(_bb, CZMPolylineGlowMaterial())
         fun getRootAsCZMPolylineGlowMaterial(_bb: ByteBuffer, obj: CZMPolylineGlowMaterial): CZMPolylineGlowMaterial {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createCZMPolylineGlowMaterial(builder: FlatBufferBuilder, COLOROffset: Int, GLOW_POWER: Double, TAPER_POWER: Double) : Int {
+        fun createCZMPolylineGlowMaterial(builder: FlatBufferBuilder, colorOffset: Int, glowPower: Double, taperPower: Double) : Int {
             builder.startTable(3)
-            addTAPER_POWER(builder, TAPER_POWER)
-            addGLOW_POWER(builder, GLOW_POWER)
-            addCOLOR(builder, COLOROffset)
+            addTAPERPOWER(builder, taperPower)
+            addGLOWPOWER(builder, glowPower)
+            addCOLOR(builder, colorOffset)
             return endCZMPolylineGlowMaterial(builder)
         }
         fun startCZMPolylineGlowMaterial(builder: FlatBufferBuilder) = builder.startTable(3)
-        fun addCOLOR(builder: FlatBufferBuilder, COLOR: Int) = builder.addOffset(0, COLOR, 0)
-        fun addGLOW_POWER(builder: FlatBufferBuilder, GLOW_POWER: Double) = builder.addDouble(1, GLOW_POWER, 0.0)
-        fun addTAPER_POWER(builder: FlatBufferBuilder, TAPER_POWER: Double) = builder.addDouble(2, TAPER_POWER, 0.0)
+        fun addCOLOR(builder: FlatBufferBuilder, color: Int) = builder.addOffset(0, color, 0)
+        fun addGLOWPOWER(builder: FlatBufferBuilder, glowPower: Double) = builder.addDouble(1, glowPower, 0.0)
+        fun addTAPERPOWER(builder: FlatBufferBuilder, taperPower: Double) = builder.addDouble(2, taperPower, 0.0)
         fun endCZMPolylineGlowMaterial(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

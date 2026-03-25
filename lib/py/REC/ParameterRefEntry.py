@@ -2,4 +2,204 @@
 
 # namespace: 
 
-# NOTE ParameterRefEntry.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Parameter reference entry in container
+class ParameterRefEntry(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = ParameterRefEntry()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsParameterRefEntry(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def ParameterRefEntryBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x58\x54\x43", size_prefixed=size_prefixed)
+
+    # ParameterRefEntry
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Parameter reference path
+    # ParameterRefEntry
+    def PARAMETER_REF(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Location in container
+    # ParameterRefEntry
+    def LOCATION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from LocationInContainer import LocationInContainer
+            obj = LocationInContainer()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Repeat specification
+    # ParameterRefEntry
+    def REPEAT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from RepeatEntry import RepeatEntry
+            obj = RepeatEntry()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Include condition
+    # ParameterRefEntry
+    def INCLUDE_CONDITION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from MatchCriteria import MatchCriteria
+            obj = MatchCriteria()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Short description
+    # ParameterRefEntry
+    def SHORT_DESCRIPTION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+def ParameterRefEntryStart(builder):
+    builder.StartObject(5)
+
+def Start(builder):
+    ParameterRefEntryStart(builder)
+
+def ParameterRefEntryAddPARAMETER_REF(builder, PARAMETER_REF):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(PARAMETER_REF), 0)
+
+def AddPARAMETER_REF(builder, PARAMETER_REF):
+    ParameterRefEntryAddPARAMETER_REF(builder, PARAMETER_REF)
+
+def ParameterRefEntryAddLOCATION(builder, LOCATION):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(LOCATION), 0)
+
+def AddLOCATION(builder, LOCATION):
+    ParameterRefEntryAddLOCATION(builder, LOCATION)
+
+def ParameterRefEntryAddREPEAT(builder, REPEAT):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(REPEAT), 0)
+
+def AddREPEAT(builder, REPEAT):
+    ParameterRefEntryAddREPEAT(builder, REPEAT)
+
+def ParameterRefEntryAddINCLUDE_CONDITION(builder, INCLUDE_CONDITION):
+    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(INCLUDE_CONDITION), 0)
+
+def AddINCLUDE_CONDITION(builder, INCLUDE_CONDITION):
+    ParameterRefEntryAddINCLUDE_CONDITION(builder, INCLUDE_CONDITION)
+
+def ParameterRefEntryAddSHORT_DESCRIPTION(builder, SHORT_DESCRIPTION):
+    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(SHORT_DESCRIPTION), 0)
+
+def AddSHORT_DESCRIPTION(builder, SHORT_DESCRIPTION):
+    ParameterRefEntryAddSHORT_DESCRIPTION(builder, SHORT_DESCRIPTION)
+
+def ParameterRefEntryEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return ParameterRefEntryEnd(builder)
+
+import LocationInContainer
+import MatchCriteria
+import RepeatEntry
+try:
+    from typing import Optional
+except:
+    pass
+
+class ParameterRefEntryT(object):
+
+    # ParameterRefEntryT
+    def __init__(
+        self,
+        PARAMETER_REF = None,
+        LOCATION = None,
+        REPEAT = None,
+        INCLUDE_CONDITION = None,
+        SHORT_DESCRIPTION = None,
+    ):
+        self.PARAMETER_REF = PARAMETER_REF  # type: Optional[str]
+        self.LOCATION = LOCATION  # type: Optional[LocationInContainer.LocationInContainerT]
+        self.REPEAT = REPEAT  # type: Optional[RepeatEntry.RepeatEntryT]
+        self.INCLUDE_CONDITION = INCLUDE_CONDITION  # type: Optional[MatchCriteria.MatchCriteriaT]
+        self.SHORT_DESCRIPTION = SHORT_DESCRIPTION  # type: Optional[str]
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpParameterRefEntry = ParameterRefEntry()
+        tmpParameterRefEntry.Init(buf, pos)
+        return cls.InitFromObj(tmpParameterRefEntry)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpParameterRefEntry):
+        x = ParameterRefEntryT()
+        x._UnPack(tmpParameterRefEntry)
+        return x
+
+    # ParameterRefEntryT
+    def _UnPack(self, ParameterRefEntry):
+        if ParameterRefEntry is None:
+            return
+        self.PARAMETER_REF = ParameterRefEntry.PARAMETER_REF()
+        if ParameterRefEntry.LOCATION() is not None:
+            self.LOCATION = LocationInContainer.LocationInContainerT.InitFromObj(ParameterRefEntry.LOCATION())
+        if ParameterRefEntry.REPEAT() is not None:
+            self.REPEAT = RepeatEntry.RepeatEntryT.InitFromObj(ParameterRefEntry.REPEAT())
+        if ParameterRefEntry.INCLUDE_CONDITION() is not None:
+            self.INCLUDE_CONDITION = MatchCriteria.MatchCriteriaT.InitFromObj(ParameterRefEntry.INCLUDE_CONDITION())
+        self.SHORT_DESCRIPTION = ParameterRefEntry.SHORT_DESCRIPTION()
+
+    # ParameterRefEntryT
+    def Pack(self, builder):
+        if self.PARAMETER_REF is not None:
+            PARAMETER_REF = builder.CreateString(self.PARAMETER_REF)
+        if self.LOCATION is not None:
+            LOCATION = self.LOCATION.Pack(builder)
+        if self.REPEAT is not None:
+            REPEAT = self.REPEAT.Pack(builder)
+        if self.INCLUDE_CONDITION is not None:
+            INCLUDE_CONDITION = self.INCLUDE_CONDITION.Pack(builder)
+        if self.SHORT_DESCRIPTION is not None:
+            SHORT_DESCRIPTION = builder.CreateString(self.SHORT_DESCRIPTION)
+        ParameterRefEntryStart(builder)
+        if self.PARAMETER_REF is not None:
+            ParameterRefEntryAddPARAMETER_REF(builder, PARAMETER_REF)
+        if self.LOCATION is not None:
+            ParameterRefEntryAddLOCATION(builder, LOCATION)
+        if self.REPEAT is not None:
+            ParameterRefEntryAddREPEAT(builder, REPEAT)
+        if self.INCLUDE_CONDITION is not None:
+            ParameterRefEntryAddINCLUDE_CONDITION(builder, INCLUDE_CONDITION)
+        if self.SHORT_DESCRIPTION is not None:
+            ParameterRefEntryAddSHORT_DESCRIPTION(builder, SHORT_DESCRIPTION)
+        ParameterRefEntry = ParameterRefEntryEnd(builder)
+        return ParameterRefEntry

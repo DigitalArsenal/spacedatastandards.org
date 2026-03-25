@@ -2,4 +2,326 @@
 
 # namespace: 
 
-# NOTE IntegerArgumentType.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Integer argument type
+class IntegerArgumentType(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = IntegerArgumentType()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsIntegerArgumentType(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def IntegerArgumentTypeBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x58\x54\x43", size_prefixed=size_prefixed)
+
+    # IntegerArgumentType
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Type name
+    # IntegerArgumentType
+    def NAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Short description
+    # IntegerArgumentType
+    def SHORT_DESCRIPTION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Long description
+    # IntegerArgumentType
+    def LONG_DESCRIPTION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Units
+    # IntegerArgumentType
+    def UNITS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from Unit import Unit
+            obj = Unit()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # IntegerArgumentType
+    def UNITSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # IntegerArgumentType
+    def UNITSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        return o == 0
+
+    # Data encoding
+    # IntegerArgumentType
+    def DATA_ENCODING(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from IntegerDataEncoding import IntegerDataEncoding
+            obj = IntegerDataEncoding()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Minimum valid value
+    # IntegerArgumentType
+    def VALID_MIN(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+    # Maximum valid value
+    # IntegerArgumentType
+    def VALID_MAX(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+    # Signed integer (true) or unsigned (false)
+    # IntegerArgumentType
+    def SIGNED(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # Size in bits
+    # IntegerArgumentType
+    def SIZE_IN_BITS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint16Flags, o + self._tab.Pos)
+        return 0
+
+    # Initial/default value
+    # IntegerArgumentType
+    def INITIAL_VALUE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+def IntegerArgumentTypeStart(builder):
+    builder.StartObject(10)
+
+def Start(builder):
+    IntegerArgumentTypeStart(builder)
+
+def IntegerArgumentTypeAddNAME(builder, NAME):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(NAME), 0)
+
+def AddNAME(builder, NAME):
+    IntegerArgumentTypeAddNAME(builder, NAME)
+
+def IntegerArgumentTypeAddSHORT_DESCRIPTION(builder, SHORT_DESCRIPTION):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(SHORT_DESCRIPTION), 0)
+
+def AddSHORT_DESCRIPTION(builder, SHORT_DESCRIPTION):
+    IntegerArgumentTypeAddSHORT_DESCRIPTION(builder, SHORT_DESCRIPTION)
+
+def IntegerArgumentTypeAddLONG_DESCRIPTION(builder, LONG_DESCRIPTION):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(LONG_DESCRIPTION), 0)
+
+def AddLONG_DESCRIPTION(builder, LONG_DESCRIPTION):
+    IntegerArgumentTypeAddLONG_DESCRIPTION(builder, LONG_DESCRIPTION)
+
+def IntegerArgumentTypeAddUNITS(builder, UNITS):
+    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(UNITS), 0)
+
+def AddUNITS(builder, UNITS):
+    IntegerArgumentTypeAddUNITS(builder, UNITS)
+
+def IntegerArgumentTypeStartUNITSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartUNITSVector(builder, numElems):
+    return IntegerArgumentTypeStartUNITSVector(builder, numElems)
+
+def IntegerArgumentTypeCreateUNITSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateUNITSVector(builder, data):
+    IntegerArgumentTypeCreateUNITSVector(builder, data)
+
+def IntegerArgumentTypeAddDATA_ENCODING(builder, DATA_ENCODING):
+    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(DATA_ENCODING), 0)
+
+def AddDATA_ENCODING(builder, DATA_ENCODING):
+    IntegerArgumentTypeAddDATA_ENCODING(builder, DATA_ENCODING)
+
+def IntegerArgumentTypeAddVALID_MIN(builder, VALID_MIN):
+    builder.PrependInt64Slot(5, VALID_MIN, 0)
+
+def AddVALID_MIN(builder, VALID_MIN):
+    IntegerArgumentTypeAddVALID_MIN(builder, VALID_MIN)
+
+def IntegerArgumentTypeAddVALID_MAX(builder, VALID_MAX):
+    builder.PrependInt64Slot(6, VALID_MAX, 0)
+
+def AddVALID_MAX(builder, VALID_MAX):
+    IntegerArgumentTypeAddVALID_MAX(builder, VALID_MAX)
+
+def IntegerArgumentTypeAddSIGNED(builder, SIGNED):
+    builder.PrependBoolSlot(7, SIGNED, 0)
+
+def AddSIGNED(builder, SIGNED):
+    IntegerArgumentTypeAddSIGNED(builder, SIGNED)
+
+def IntegerArgumentTypeAddSIZE_IN_BITS(builder, SIZE_IN_BITS):
+    builder.PrependUint16Slot(8, SIZE_IN_BITS, 0)
+
+def AddSIZE_IN_BITS(builder, SIZE_IN_BITS):
+    IntegerArgumentTypeAddSIZE_IN_BITS(builder, SIZE_IN_BITS)
+
+def IntegerArgumentTypeAddINITIAL_VALUE(builder, INITIAL_VALUE):
+    builder.PrependInt64Slot(9, INITIAL_VALUE, 0)
+
+def AddINITIAL_VALUE(builder, INITIAL_VALUE):
+    IntegerArgumentTypeAddINITIAL_VALUE(builder, INITIAL_VALUE)
+
+def IntegerArgumentTypeEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return IntegerArgumentTypeEnd(builder)
+
+import IntegerDataEncoding
+import Unit
+try:
+    from typing import List, Optional
+except:
+    pass
+
+class IntegerArgumentTypeT(object):
+
+    # IntegerArgumentTypeT
+    def __init__(
+        self,
+        NAME = None,
+        SHORT_DESCRIPTION = None,
+        LONG_DESCRIPTION = None,
+        UNITS = None,
+        DATA_ENCODING = None,
+        VALID_MIN = 0,
+        VALID_MAX = 0,
+        SIGNED = False,
+        SIZE_IN_BITS = 0,
+        INITIAL_VALUE = 0,
+    ):
+        self.NAME = NAME  # type: Optional[str]
+        self.SHORT_DESCRIPTION = SHORT_DESCRIPTION  # type: Optional[str]
+        self.LONG_DESCRIPTION = LONG_DESCRIPTION  # type: Optional[str]
+        self.UNITS = UNITS  # type: Optional[List[Unit.UnitT]]
+        self.DATA_ENCODING = DATA_ENCODING  # type: Optional[IntegerDataEncoding.IntegerDataEncodingT]
+        self.VALID_MIN = VALID_MIN  # type: int
+        self.VALID_MAX = VALID_MAX  # type: int
+        self.SIGNED = SIGNED  # type: bool
+        self.SIZE_IN_BITS = SIZE_IN_BITS  # type: int
+        self.INITIAL_VALUE = INITIAL_VALUE  # type: int
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpIntegerArgumentType = IntegerArgumentType()
+        tmpIntegerArgumentType.Init(buf, pos)
+        return cls.InitFromObj(tmpIntegerArgumentType)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpIntegerArgumentType):
+        x = IntegerArgumentTypeT()
+        x._UnPack(tmpIntegerArgumentType)
+        return x
+
+    # IntegerArgumentTypeT
+    def _UnPack(self, IntegerArgumentType):
+        if IntegerArgumentType is None:
+            return
+        self.NAME = IntegerArgumentType.NAME()
+        self.SHORT_DESCRIPTION = IntegerArgumentType.SHORT_DESCRIPTION()
+        self.LONG_DESCRIPTION = IntegerArgumentType.LONG_DESCRIPTION()
+        if not IntegerArgumentType.UNITSIsNone():
+            self.UNITS = []
+            for i in range(IntegerArgumentType.UNITSLength()):
+                if IntegerArgumentType.UNITS(i) is None:
+                    self.UNITS.append(None)
+                else:
+                    unit_ = Unit.UnitT.InitFromObj(IntegerArgumentType.UNITS(i))
+                    self.UNITS.append(unit_)
+        if IntegerArgumentType.DATA_ENCODING() is not None:
+            self.DATA_ENCODING = IntegerDataEncoding.IntegerDataEncodingT.InitFromObj(IntegerArgumentType.DATA_ENCODING())
+        self.VALID_MIN = IntegerArgumentType.VALID_MIN()
+        self.VALID_MAX = IntegerArgumentType.VALID_MAX()
+        self.SIGNED = IntegerArgumentType.SIGNED()
+        self.SIZE_IN_BITS = IntegerArgumentType.SIZE_IN_BITS()
+        self.INITIAL_VALUE = IntegerArgumentType.INITIAL_VALUE()
+
+    # IntegerArgumentTypeT
+    def Pack(self, builder):
+        if self.NAME is not None:
+            NAME = builder.CreateString(self.NAME)
+        if self.SHORT_DESCRIPTION is not None:
+            SHORT_DESCRIPTION = builder.CreateString(self.SHORT_DESCRIPTION)
+        if self.LONG_DESCRIPTION is not None:
+            LONG_DESCRIPTION = builder.CreateString(self.LONG_DESCRIPTION)
+        if self.UNITS is not None:
+            UNITSlist = []
+            for i in range(len(self.UNITS)):
+                UNITSlist.append(self.UNITS[i].Pack(builder))
+            IntegerArgumentTypeStartUNITSVector(builder, len(self.UNITS))
+            for i in reversed(range(len(self.UNITS))):
+                builder.PrependUOffsetTRelative(UNITSlist[i])
+            UNITS = builder.EndVector()
+        if self.DATA_ENCODING is not None:
+            DATA_ENCODING = self.DATA_ENCODING.Pack(builder)
+        IntegerArgumentTypeStart(builder)
+        if self.NAME is not None:
+            IntegerArgumentTypeAddNAME(builder, NAME)
+        if self.SHORT_DESCRIPTION is not None:
+            IntegerArgumentTypeAddSHORT_DESCRIPTION(builder, SHORT_DESCRIPTION)
+        if self.LONG_DESCRIPTION is not None:
+            IntegerArgumentTypeAddLONG_DESCRIPTION(builder, LONG_DESCRIPTION)
+        if self.UNITS is not None:
+            IntegerArgumentTypeAddUNITS(builder, UNITS)
+        if self.DATA_ENCODING is not None:
+            IntegerArgumentTypeAddDATA_ENCODING(builder, DATA_ENCODING)
+        IntegerArgumentTypeAddVALID_MIN(builder, self.VALID_MIN)
+        IntegerArgumentTypeAddVALID_MAX(builder, self.VALID_MAX)
+        IntegerArgumentTypeAddSIGNED(builder, self.SIGNED)
+        IntegerArgumentTypeAddSIZE_IN_BITS(builder, self.SIZE_IN_BITS)
+        IntegerArgumentTypeAddINITIAL_VALUE(builder, self.INITIAL_VALUE)
+        IntegerArgumentType = IntegerArgumentTypeEnd(builder)
+        return IntegerArgumentType

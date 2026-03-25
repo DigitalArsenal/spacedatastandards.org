@@ -29,74 +29,74 @@ class VCMAtmosphericModelData : Table() {
         __init(_i, _bb)
         return this
     }
-    val ATMOSPHERIC_MODEL : Byte
+    val atmosphericModel : Byte
         get() {
             val o = __offset(4)
             return if(o != 0) bb.get(o + bb_pos) else 0
         }
-    val GEOPOTENTIAL_MODEL : Byte
+    val geopotentialModel : Byte
         get() {
             val o = __offset(6)
             return if(o != 0) bb.get(o + bb_pos) else 0
         }
-    val LUNAR_SOLAR_PERTURBATION : Byte
+    val lunarSolarPerturbation : Byte
         get() {
             val o = __offset(8)
             return if(o != 0) bb.get(o + bb_pos) else 0
         }
-    val LUNAR_PERTURBATION_MODEL : Byte
+    val lunarPerturbationModel : Byte
         get() {
             val o = __offset(10)
             return if(o != 0) bb.get(o + bb_pos) else 0
         }
-    val SOLAR_PERTURBATION_MODEL : Byte
+    val solarPerturbationModel : Byte
         get() {
             val o = __offset(12)
             return if(o != 0) bb.get(o + bb_pos) else 0
         }
-    val SOLAR_RADIATION_PRESSURE : Byte
+    val solarRadiationPressure : Byte
         get() {
             val o = __offset(14)
             return if(o != 0) bb.get(o + bb_pos) else 0
         }
-    val SRP_MODEL : Byte
+    val srpModel : Byte
         get() {
             val o = __offset(16)
             return if(o != 0) bb.get(o + bb_pos) else 0
         }
-    val RESONANCE_MODEL : Byte
+    val resonanceModel : Byte
         get() {
             val o = __offset(18)
             return if(o != 0) bb.get(o + bb_pos) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsVCMAtmosphericModelData(_bb: ByteBuffer): VCMAtmosphericModelData = getRootAsVCMAtmosphericModelData(_bb, VCMAtmosphericModelData())
         fun getRootAsVCMAtmosphericModelData(_bb: ByteBuffer, obj: VCMAtmosphericModelData): VCMAtmosphericModelData {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createVCMAtmosphericModelData(builder: FlatBufferBuilder, ATMOSPHERIC_MODEL: Byte, GEOPOTENTIAL_MODEL: Byte, LUNAR_SOLAR_PERTURBATION: Byte, LUNAR_PERTURBATION_MODEL: Byte, SOLAR_PERTURBATION_MODEL: Byte, SOLAR_RADIATION_PRESSURE: Byte, SRP_MODEL: Byte, RESONANCE_MODEL: Byte) : Int {
+        fun createVCMAtmosphericModelData(builder: FlatBufferBuilder, atmosphericModel: Byte, geopotentialModel: Byte, lunarSolarPerturbation: Byte, lunarPerturbationModel: Byte, solarPerturbationModel: Byte, solarRadiationPressure: Byte, srpModel: Byte, resonanceModel: Byte) : Int {
             builder.startTable(8)
-            addRESONANCE_MODEL(builder, RESONANCE_MODEL)
-            addSRP_MODEL(builder, SRP_MODEL)
-            addSOLAR_RADIATION_PRESSURE(builder, SOLAR_RADIATION_PRESSURE)
-            addSOLAR_PERTURBATION_MODEL(builder, SOLAR_PERTURBATION_MODEL)
-            addLUNAR_PERTURBATION_MODEL(builder, LUNAR_PERTURBATION_MODEL)
-            addLUNAR_SOLAR_PERTURBATION(builder, LUNAR_SOLAR_PERTURBATION)
-            addGEOPOTENTIAL_MODEL(builder, GEOPOTENTIAL_MODEL)
-            addATMOSPHERIC_MODEL(builder, ATMOSPHERIC_MODEL)
+            addRESONANCEMODEL(builder, resonanceModel)
+            addSRPMODEL(builder, srpModel)
+            addSOLARRADIATIONPRESSURE(builder, solarRadiationPressure)
+            addSOLARPERTURBATIONMODEL(builder, solarPerturbationModel)
+            addLUNARPERTURBATIONMODEL(builder, lunarPerturbationModel)
+            addLUNARSOLARPERTURBATION(builder, lunarSolarPerturbation)
+            addGEOPOTENTIALMODEL(builder, geopotentialModel)
+            addATMOSPHERICMODEL(builder, atmosphericModel)
             return endVCMAtmosphericModelData(builder)
         }
         fun startVCMAtmosphericModelData(builder: FlatBufferBuilder) = builder.startTable(8)
-        fun addATMOSPHERIC_MODEL(builder: FlatBufferBuilder, ATMOSPHERIC_MODEL: Byte) = builder.addByte(0, ATMOSPHERIC_MODEL, 0)
-        fun addGEOPOTENTIAL_MODEL(builder: FlatBufferBuilder, GEOPOTENTIAL_MODEL: Byte) = builder.addByte(1, GEOPOTENTIAL_MODEL, 0)
-        fun addLUNAR_SOLAR_PERTURBATION(builder: FlatBufferBuilder, LUNAR_SOLAR_PERTURBATION: Byte) = builder.addByte(2, LUNAR_SOLAR_PERTURBATION, 0)
-        fun addLUNAR_PERTURBATION_MODEL(builder: FlatBufferBuilder, LUNAR_PERTURBATION_MODEL: Byte) = builder.addByte(3, LUNAR_PERTURBATION_MODEL, 0)
-        fun addSOLAR_PERTURBATION_MODEL(builder: FlatBufferBuilder, SOLAR_PERTURBATION_MODEL: Byte) = builder.addByte(4, SOLAR_PERTURBATION_MODEL, 0)
-        fun addSOLAR_RADIATION_PRESSURE(builder: FlatBufferBuilder, SOLAR_RADIATION_PRESSURE: Byte) = builder.addByte(5, SOLAR_RADIATION_PRESSURE, 0)
-        fun addSRP_MODEL(builder: FlatBufferBuilder, SRP_MODEL: Byte) = builder.addByte(6, SRP_MODEL, 0)
-        fun addRESONANCE_MODEL(builder: FlatBufferBuilder, RESONANCE_MODEL: Byte) = builder.addByte(7, RESONANCE_MODEL, 0)
+        fun addATMOSPHERICMODEL(builder: FlatBufferBuilder, atmosphericModel: Byte) = builder.addByte(0, atmosphericModel, 0)
+        fun addGEOPOTENTIALMODEL(builder: FlatBufferBuilder, geopotentialModel: Byte) = builder.addByte(1, geopotentialModel, 0)
+        fun addLUNARSOLARPERTURBATION(builder: FlatBufferBuilder, lunarSolarPerturbation: Byte) = builder.addByte(2, lunarSolarPerturbation, 0)
+        fun addLUNARPERTURBATIONMODEL(builder: FlatBufferBuilder, lunarPerturbationModel: Byte) = builder.addByte(3, lunarPerturbationModel, 0)
+        fun addSOLARPERTURBATIONMODEL(builder: FlatBufferBuilder, solarPerturbationModel: Byte) = builder.addByte(4, solarPerturbationModel, 0)
+        fun addSOLARRADIATIONPRESSURE(builder: FlatBufferBuilder, solarRadiationPressure: Byte) = builder.addByte(5, solarRadiationPressure, 0)
+        fun addSRPMODEL(builder: FlatBufferBuilder, srpModel: Byte) = builder.addByte(6, srpModel, 0)
+        fun addRESONANCEMODEL(builder: FlatBufferBuilder, resonanceModel: Byte) = builder.addByte(7, resonanceModel, 0)
         fun endVCMAtmosphericModelData(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

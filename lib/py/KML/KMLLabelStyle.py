@@ -87,16 +87,21 @@ def End(builder):
 class KMLLabelStyleT(object):
 
     # KMLLabelStyleT
-    def __init__(self):
-        self.COLOR = None  # type: str
-        self.COLOR_MODE = 0  # type: int
-        self.SCALE = 0.0  # type: float
+    def __init__(
+        self,
+        COLOR = None,
+        COLOR_MODE = 0,
+        SCALE = 0.0,
+    ):
+        self.COLOR = COLOR  # type: Optional[str]
+        self.COLOR_MODE = COLOR_MODE  # type: int
+        self.SCALE = SCALE  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        kmllabelStyle = KMLLabelStyle()
-        kmllabelStyle.Init(buf, pos)
-        return cls.InitFromObj(kmllabelStyle)
+        tmpKmllabelStyle = KMLLabelStyle()
+        tmpKmllabelStyle.Init(buf, pos)
+        return cls.InitFromObj(tmpKmllabelStyle)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -104,18 +109,18 @@ class KMLLabelStyleT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, kmllabelStyle):
+    def InitFromObj(cls, tmpKmllabelStyle):
         x = KMLLabelStyleT()
-        x._UnPack(kmllabelStyle)
+        x._UnPack(tmpKmllabelStyle)
         return x
 
     # KMLLabelStyleT
-    def _UnPack(self, kmllabelStyle):
-        if kmllabelStyle is None:
+    def _UnPack(self, KMLLabelStyle):
+        if KMLLabelStyle is None:
             return
-        self.COLOR = kmllabelStyle.COLOR()
-        self.COLOR_MODE = kmllabelStyle.COLOR_MODE()
-        self.SCALE = kmllabelStyle.SCALE()
+        self.COLOR = KMLLabelStyle.COLOR()
+        self.COLOR_MODE = KMLLabelStyle.COLOR_MODE()
+        self.SCALE = KMLLabelStyle.SCALE()
 
     # KMLLabelStyleT
     def Pack(self, builder):
@@ -126,5 +131,5 @@ class KMLLabelStyleT(object):
             KMLLabelStyleAddCOLOR(builder, COLOR)
         KMLLabelStyleAddCOLOR_MODE(builder, self.COLOR_MODE)
         KMLLabelStyleAddSCALE(builder, self.SCALE)
-        kmllabelStyle = KMLLabelStyleEnd(builder)
-        return kmllabelStyle
+        KMLLabelStyle = KMLLabelStyleEnd(builder)
+        return KMLLabelStyle

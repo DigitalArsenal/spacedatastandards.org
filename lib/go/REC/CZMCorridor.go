@@ -51,9 +51,17 @@ func (rcv *CZMCorridor) SHOW() bool {
 	return false
 }
 
+func (rcv *CZMCorridor) Show() bool {
+	return rcv.SHOW()
+}
+
 /// Whether the corridor is displayed
 func (rcv *CZMCorridor) MutateSHOW(n bool) bool {
 	return rcv._tab.MutateBoolSlot(4, n)
+}
+
+func (rcv *CZMCorridor) MutateShow(n bool) bool {
+	return rcv.MutateSHOW(n)
 }
 
 /// Positions as cartographic degrees
@@ -66,12 +74,20 @@ func (rcv *CZMCorridor) POSITIONS_CARTOGRAPHIC_DEGREES(j int) float64 {
 	return 0
 }
 
+func (rcv *CZMCorridor) PositionsCartographicDegrees(j int) float64 {
+	return rcv.POSITIONS_CARTOGRAPHIC_DEGREES(j)
+}
+
 func (rcv *CZMCorridor) POSITIONS_CARTOGRAPHIC_DEGREESLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *CZMCorridor) PositionsCartographicDegreesLength() int {
+	return rcv.POSITIONS_CARTOGRAPHIC_DEGREESLength()
 }
 
 /// Positions as cartographic degrees
@@ -84,6 +100,10 @@ func (rcv *CZMCorridor) MutatePOSITIONS_CARTOGRAPHIC_DEGREES(j int, n float64) b
 	return false
 }
 
+func (rcv *CZMCorridor) MutatePositionsCartographicDegrees(j int, n float64) bool {
+	return rcv.MutatePOSITIONS_CARTOGRAPHIC_DEGREES(j, n)
+}
+
 /// Positions as Cartesian
 func (rcv *CZMCorridor) POSITIONS_CARTESIAN(j int) float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
@@ -94,12 +114,20 @@ func (rcv *CZMCorridor) POSITIONS_CARTESIAN(j int) float64 {
 	return 0
 }
 
+func (rcv *CZMCorridor) PositionsCartesian(j int) float64 {
+	return rcv.POSITIONS_CARTESIAN(j)
+}
+
 func (rcv *CZMCorridor) POSITIONS_CARTESIANLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *CZMCorridor) PositionsCartesianLength() int {
+	return rcv.POSITIONS_CARTESIANLength()
 }
 
 /// Positions as Cartesian
@@ -112,6 +140,10 @@ func (rcv *CZMCorridor) MutatePOSITIONS_CARTESIAN(j int, n float64) bool {
 	return false
 }
 
+func (rcv *CZMCorridor) MutatePositionsCartesian(j int, n float64) bool {
+	return rcv.MutatePOSITIONS_CARTESIAN(j, n)
+}
+
 /// Width in meters
 func (rcv *CZMCorridor) WIDTH() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
@@ -121,9 +153,17 @@ func (rcv *CZMCorridor) WIDTH() float64 {
 	return 0.0
 }
 
+func (rcv *CZMCorridor) Width() float64 {
+	return rcv.WIDTH()
+}
+
 /// Width in meters
 func (rcv *CZMCorridor) MutateWIDTH(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(10, n)
+}
+
+func (rcv *CZMCorridor) MutateWidth(n float64) bool {
+	return rcv.MutateWIDTH(n)
 }
 
 /// Height in meters
@@ -135,9 +175,17 @@ func (rcv *CZMCorridor) HEIGHT() float64 {
 	return 0.0
 }
 
+func (rcv *CZMCorridor) Height() float64 {
+	return rcv.HEIGHT()
+}
+
 /// Height in meters
 func (rcv *CZMCorridor) MutateHEIGHT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(12, n)
+}
+
+func (rcv *CZMCorridor) MutateHeight(n float64) bool {
+	return rcv.MutateHEIGHT(n)
 }
 
 /// Height reference
@@ -147,6 +195,10 @@ func (rcv *CZMCorridor) HEIGHT_REFERENCE() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *CZMCorridor) HeightReference() []byte {
+	return rcv.HEIGHT_REFERENCE()
 }
 
 /// Height reference
@@ -159,9 +211,17 @@ func (rcv *CZMCorridor) EXTRUDED_HEIGHT() float64 {
 	return 0.0
 }
 
+func (rcv *CZMCorridor) ExtrudedHeight() float64 {
+	return rcv.EXTRUDED_HEIGHT()
+}
+
 /// Extruded height
 func (rcv *CZMCorridor) MutateEXTRUDED_HEIGHT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(16, n)
+}
+
+func (rcv *CZMCorridor) MutateExtrudedHeight(n float64) bool {
+	return rcv.MutateEXTRUDED_HEIGHT(n)
 }
 
 /// Extruded height reference
@@ -171,6 +231,10 @@ func (rcv *CZMCorridor) EXTRUDED_HEIGHT_REFERENCE() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *CZMCorridor) ExtrudedHeightReference() []byte {
+	return rcv.EXTRUDED_HEIGHT_REFERENCE()
 }
 
 /// Extruded height reference
@@ -183,6 +247,10 @@ func (rcv *CZMCorridor) CORNER_TYPE() []byte {
 	return nil
 }
 
+func (rcv *CZMCorridor) CornerType() []byte {
+	return rcv.CORNER_TYPE()
+}
+
 /// Corner type
 /// Granularity in radians
 func (rcv *CZMCorridor) GRANULARITY() float64 {
@@ -193,9 +261,17 @@ func (rcv *CZMCorridor) GRANULARITY() float64 {
 	return 0.0
 }
 
+func (rcv *CZMCorridor) Granularity() float64 {
+	return rcv.GRANULARITY()
+}
+
 /// Granularity in radians
 func (rcv *CZMCorridor) MutateGRANULARITY(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(22, n)
+}
+
+func (rcv *CZMCorridor) MutateGranularity(n float64) bool {
+	return rcv.MutateGRANULARITY(n)
 }
 
 /// Fill flag
@@ -207,9 +283,17 @@ func (rcv *CZMCorridor) FILL() bool {
 	return false
 }
 
+func (rcv *CZMCorridor) Fill() bool {
+	return rcv.FILL()
+}
+
 /// Fill flag
 func (rcv *CZMCorridor) MutateFILL(n bool) bool {
 	return rcv._tab.MutateBoolSlot(24, n)
+}
+
+func (rcv *CZMCorridor) MutateFill(n bool) bool {
+	return rcv.MutateFILL(n)
 }
 
 /// Surface material
@@ -226,6 +310,10 @@ func (rcv *CZMCorridor) MATERIAL(obj *CZMMaterial) *CZMMaterial {
 	return nil
 }
 
+func (rcv *CZMCorridor) Material(obj *CZMMaterial) *CZMMaterial {
+	return rcv.MATERIAL(obj)
+}
+
 /// Surface material
 /// Outline flag
 func (rcv *CZMCorridor) OUTLINE() bool {
@@ -236,9 +324,17 @@ func (rcv *CZMCorridor) OUTLINE() bool {
 	return false
 }
 
+func (rcv *CZMCorridor) Outline() bool {
+	return rcv.OUTLINE()
+}
+
 /// Outline flag
 func (rcv *CZMCorridor) MutateOUTLINE(n bool) bool {
 	return rcv._tab.MutateBoolSlot(28, n)
+}
+
+func (rcv *CZMCorridor) MutateOutline(n bool) bool {
+	return rcv.MutateOUTLINE(n)
 }
 
 /// Outline color
@@ -255,6 +351,10 @@ func (rcv *CZMCorridor) OUTLINE_COLOR(obj *CZMColor) *CZMColor {
 	return nil
 }
 
+func (rcv *CZMCorridor) OutlineColor(obj *CZMColor) *CZMColor {
+	return rcv.OUTLINE_COLOR(obj)
+}
+
 /// Outline color
 /// Outline width
 func (rcv *CZMCorridor) OUTLINE_WIDTH() float64 {
@@ -265,9 +365,17 @@ func (rcv *CZMCorridor) OUTLINE_WIDTH() float64 {
 	return 0.0
 }
 
+func (rcv *CZMCorridor) OutlineWidth() float64 {
+	return rcv.OUTLINE_WIDTH()
+}
+
 /// Outline width
 func (rcv *CZMCorridor) MutateOUTLINE_WIDTH(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(32, n)
+}
+
+func (rcv *CZMCorridor) MutateOutlineWidth(n float64) bool {
+	return rcv.MutateOUTLINE_WIDTH(n)
 }
 
 /// Shadow mode
@@ -277,6 +385,10 @@ func (rcv *CZMCorridor) SHADOWS() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *CZMCorridor) Shadows() []byte {
+	return rcv.SHADOWS()
 }
 
 /// Shadow mode
@@ -289,6 +401,10 @@ func (rcv *CZMCorridor) CLASSIFICATION_TYPE() []byte {
 	return nil
 }
 
+func (rcv *CZMCorridor) ClassificationType() []byte {
+	return rcv.CLASSIFICATION_TYPE()
+}
+
 /// Classification type
 /// Z-index for ordering
 func (rcv *CZMCorridor) Z_INDEX() int32 {
@@ -299,9 +415,17 @@ func (rcv *CZMCorridor) Z_INDEX() int32 {
 	return 0
 }
 
+func (rcv *CZMCorridor) ZIndex() int32 {
+	return rcv.Z_INDEX()
+}
+
 /// Z-index for ordering
 func (rcv *CZMCorridor) MutateZ_INDEX(n int32) bool {
 	return rcv._tab.MutateInt32Slot(38, n)
+}
+
+func (rcv *CZMCorridor) MutateZIndex(n int32) bool {
+	return rcv.MutateZ_INDEX(n)
 }
 
 func CZMCorridorStart(builder *flatbuffers.Builder) {
@@ -310,62 +434,122 @@ func CZMCorridorStart(builder *flatbuffers.Builder) {
 func CZMCorridorAddSHOW(builder *flatbuffers.Builder, SHOW bool) {
 	builder.PrependBoolSlot(0, SHOW, false)
 }
+func CZMCorridorAddShow(builder *flatbuffers.Builder, SHOW bool) {
+	CZMCorridorAddSHOW(builder, SHOW)
+}
 func CZMCorridorAddPOSITIONS_CARTOGRAPHIC_DEGREES(builder *flatbuffers.Builder, POSITIONS_CARTOGRAPHIC_DEGREES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(POSITIONS_CARTOGRAPHIC_DEGREES), 0)
+}
+func CZMCorridorAddPositionsCartographicDegrees(builder *flatbuffers.Builder, POSITIONS_CARTOGRAPHIC_DEGREES flatbuffers.UOffsetT) {
+	CZMCorridorAddPOSITIONS_CARTOGRAPHIC_DEGREES(builder, POSITIONS_CARTOGRAPHIC_DEGREES)
 }
 func CZMCorridorStartPOSITIONS_CARTOGRAPHIC_DEGREESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(8, numElems, 8)
 }
+func CZMCorridorStartPositionsCartographicDegreesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return CZMCorridorStartPOSITIONS_CARTOGRAPHIC_DEGREESVector(builder, numElems)
+}
 func CZMCorridorAddPOSITIONS_CARTESIAN(builder *flatbuffers.Builder, POSITIONS_CARTESIAN flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(POSITIONS_CARTESIAN), 0)
+}
+func CZMCorridorAddPositionsCartesian(builder *flatbuffers.Builder, POSITIONS_CARTESIAN flatbuffers.UOffsetT) {
+	CZMCorridorAddPOSITIONS_CARTESIAN(builder, POSITIONS_CARTESIAN)
 }
 func CZMCorridorStartPOSITIONS_CARTESIANVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(8, numElems, 8)
 }
+func CZMCorridorStartPositionsCartesianVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return CZMCorridorStartPOSITIONS_CARTESIANVector(builder, numElems)
+}
 func CZMCorridorAddWIDTH(builder *flatbuffers.Builder, WIDTH float64) {
 	builder.PrependFloat64Slot(3, WIDTH, 0.0)
+}
+func CZMCorridorAddWidth(builder *flatbuffers.Builder, WIDTH float64) {
+	CZMCorridorAddWIDTH(builder, WIDTH)
 }
 func CZMCorridorAddHEIGHT(builder *flatbuffers.Builder, HEIGHT float64) {
 	builder.PrependFloat64Slot(4, HEIGHT, 0.0)
 }
+func CZMCorridorAddHeight(builder *flatbuffers.Builder, HEIGHT float64) {
+	CZMCorridorAddHEIGHT(builder, HEIGHT)
+}
 func CZMCorridorAddHEIGHT_REFERENCE(builder *flatbuffers.Builder, HEIGHT_REFERENCE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(HEIGHT_REFERENCE), 0)
+}
+func CZMCorridorAddHeightReference(builder *flatbuffers.Builder, HEIGHT_REFERENCE flatbuffers.UOffsetT) {
+	CZMCorridorAddHEIGHT_REFERENCE(builder, HEIGHT_REFERENCE)
 }
 func CZMCorridorAddEXTRUDED_HEIGHT(builder *flatbuffers.Builder, EXTRUDED_HEIGHT float64) {
 	builder.PrependFloat64Slot(6, EXTRUDED_HEIGHT, 0.0)
 }
+func CZMCorridorAddExtrudedHeight(builder *flatbuffers.Builder, EXTRUDED_HEIGHT float64) {
+	CZMCorridorAddEXTRUDED_HEIGHT(builder, EXTRUDED_HEIGHT)
+}
 func CZMCorridorAddEXTRUDED_HEIGHT_REFERENCE(builder *flatbuffers.Builder, EXTRUDED_HEIGHT_REFERENCE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(EXTRUDED_HEIGHT_REFERENCE), 0)
+}
+func CZMCorridorAddExtrudedHeightReference(builder *flatbuffers.Builder, EXTRUDED_HEIGHT_REFERENCE flatbuffers.UOffsetT) {
+	CZMCorridorAddEXTRUDED_HEIGHT_REFERENCE(builder, EXTRUDED_HEIGHT_REFERENCE)
 }
 func CZMCorridorAddCORNER_TYPE(builder *flatbuffers.Builder, CORNER_TYPE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(CORNER_TYPE), 0)
 }
+func CZMCorridorAddCornerType(builder *flatbuffers.Builder, CORNER_TYPE flatbuffers.UOffsetT) {
+	CZMCorridorAddCORNER_TYPE(builder, CORNER_TYPE)
+}
 func CZMCorridorAddGRANULARITY(builder *flatbuffers.Builder, GRANULARITY float64) {
 	builder.PrependFloat64Slot(9, GRANULARITY, 0.0)
+}
+func CZMCorridorAddGranularity(builder *flatbuffers.Builder, GRANULARITY float64) {
+	CZMCorridorAddGRANULARITY(builder, GRANULARITY)
 }
 func CZMCorridorAddFILL(builder *flatbuffers.Builder, FILL bool) {
 	builder.PrependBoolSlot(10, FILL, false)
 }
+func CZMCorridorAddFill(builder *flatbuffers.Builder, FILL bool) {
+	CZMCorridorAddFILL(builder, FILL)
+}
 func CZMCorridorAddMATERIAL(builder *flatbuffers.Builder, MATERIAL flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(MATERIAL), 0)
+}
+func CZMCorridorAddMaterial(builder *flatbuffers.Builder, MATERIAL flatbuffers.UOffsetT) {
+	CZMCorridorAddMATERIAL(builder, MATERIAL)
 }
 func CZMCorridorAddOUTLINE(builder *flatbuffers.Builder, OUTLINE bool) {
 	builder.PrependBoolSlot(12, OUTLINE, false)
 }
+func CZMCorridorAddOutline(builder *flatbuffers.Builder, OUTLINE bool) {
+	CZMCorridorAddOUTLINE(builder, OUTLINE)
+}
 func CZMCorridorAddOUTLINE_COLOR(builder *flatbuffers.Builder, OUTLINE_COLOR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(13, flatbuffers.UOffsetT(OUTLINE_COLOR), 0)
+}
+func CZMCorridorAddOutlineColor(builder *flatbuffers.Builder, OUTLINE_COLOR flatbuffers.UOffsetT) {
+	CZMCorridorAddOUTLINE_COLOR(builder, OUTLINE_COLOR)
 }
 func CZMCorridorAddOUTLINE_WIDTH(builder *flatbuffers.Builder, OUTLINE_WIDTH float64) {
 	builder.PrependFloat64Slot(14, OUTLINE_WIDTH, 0.0)
 }
+func CZMCorridorAddOutlineWidth(builder *flatbuffers.Builder, OUTLINE_WIDTH float64) {
+	CZMCorridorAddOUTLINE_WIDTH(builder, OUTLINE_WIDTH)
+}
 func CZMCorridorAddSHADOWS(builder *flatbuffers.Builder, SHADOWS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(15, flatbuffers.UOffsetT(SHADOWS), 0)
+}
+func CZMCorridorAddShadows(builder *flatbuffers.Builder, SHADOWS flatbuffers.UOffsetT) {
+	CZMCorridorAddSHADOWS(builder, SHADOWS)
 }
 func CZMCorridorAddCLASSIFICATION_TYPE(builder *flatbuffers.Builder, CLASSIFICATION_TYPE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(16, flatbuffers.UOffsetT(CLASSIFICATION_TYPE), 0)
 }
+func CZMCorridorAddClassificationType(builder *flatbuffers.Builder, CLASSIFICATION_TYPE flatbuffers.UOffsetT) {
+	CZMCorridorAddCLASSIFICATION_TYPE(builder, CLASSIFICATION_TYPE)
+}
 func CZMCorridorAddZ_INDEX(builder *flatbuffers.Builder, Z_INDEX int32) {
 	builder.PrependInt32Slot(17, Z_INDEX, 0)
+}
+func CZMCorridorAddZIndex(builder *flatbuffers.Builder, Z_INDEX int32) {
+	CZMCorridorAddZ_INDEX(builder, Z_INDEX)
 }
 func CZMCorridorEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

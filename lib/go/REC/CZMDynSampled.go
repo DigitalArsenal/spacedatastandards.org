@@ -51,6 +51,10 @@ func (rcv *CZMDynSampled) EPOCH() []byte {
 	return nil
 }
 
+func (rcv *CZMDynSampled) Epoch() []byte {
+	return rcv.EPOCH()
+}
+
 /// Reference epoch (ISO 8601)
 /// Value type determines stride through DATA
 func (rcv *CZMDynSampled) VALUE_TYPE() CZMDynValueType {
@@ -61,9 +65,17 @@ func (rcv *CZMDynSampled) VALUE_TYPE() CZMDynValueType {
 	return 0
 }
 
+func (rcv *CZMDynSampled) ValueType() CZMDynValueType {
+	return rcv.VALUE_TYPE()
+}
+
 /// Value type determines stride through DATA
 func (rcv *CZMDynSampled) MutateVALUE_TYPE(n CZMDynValueType) bool {
 	return rcv._tab.MutateInt8Slot(6, int8(n))
+}
+
+func (rcv *CZMDynSampled) MutateValueType(n CZMDynValueType) bool {
+	return rcv.MutateVALUE_TYPE(n)
 }
 
 /// Interleaved [time, value(s), ...] — stride depends on VALUE_TYPE
@@ -76,12 +88,20 @@ func (rcv *CZMDynSampled) DATA(j int) float64 {
 	return 0
 }
 
+func (rcv *CZMDynSampled) Data(j int) float64 {
+	return rcv.DATA(j)
+}
+
 func (rcv *CZMDynSampled) DATALength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *CZMDynSampled) DataLength() int {
+	return rcv.DATALength()
 }
 
 /// Interleaved [time, value(s), ...] — stride depends on VALUE_TYPE
@@ -92,6 +112,10 @@ func (rcv *CZMDynSampled) MutateDATA(j int, n float64) bool {
 		return rcv._tab.MutateFloat64(a+flatbuffers.UOffsetT(j*8), n)
 	}
 	return false
+}
+
+func (rcv *CZMDynSampled) MutateData(j int, n float64) bool {
+	return rcv.MutateDATA(j, n)
 }
 
 /// Interpolation settings
@@ -108,6 +132,10 @@ func (rcv *CZMDynSampled) INTERPOLATION(obj *CZMInterpolation) *CZMInterpolation
 	return nil
 }
 
+func (rcv *CZMDynSampled) Interpolation(obj *CZMInterpolation) *CZMInterpolation {
+	return rcv.INTERPOLATION(obj)
+}
+
 /// Interpolation settings
 func CZMDynSampledStart(builder *flatbuffers.Builder) {
 	builder.StartObject(4)
@@ -115,17 +143,32 @@ func CZMDynSampledStart(builder *flatbuffers.Builder) {
 func CZMDynSampledAddEPOCH(builder *flatbuffers.Builder, EPOCH flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(EPOCH), 0)
 }
+func CZMDynSampledAddEpoch(builder *flatbuffers.Builder, EPOCH flatbuffers.UOffsetT) {
+	CZMDynSampledAddEPOCH(builder, EPOCH)
+}
 func CZMDynSampledAddVALUE_TYPE(builder *flatbuffers.Builder, VALUE_TYPE CZMDynValueType) {
 	builder.PrependInt8Slot(1, int8(VALUE_TYPE), 0)
+}
+func CZMDynSampledAddValueType(builder *flatbuffers.Builder, VALUE_TYPE CZMDynValueType) {
+	CZMDynSampledAddVALUE_TYPE(builder, VALUE_TYPE)
 }
 func CZMDynSampledAddDATA(builder *flatbuffers.Builder, DATA flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(DATA), 0)
 }
+func CZMDynSampledAddData(builder *flatbuffers.Builder, DATA flatbuffers.UOffsetT) {
+	CZMDynSampledAddDATA(builder, DATA)
+}
 func CZMDynSampledStartDATAVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(8, numElems, 8)
 }
+func CZMDynSampledStartDataVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return CZMDynSampledStartDATAVector(builder, numElems)
+}
 func CZMDynSampledAddINTERPOLATION(builder *flatbuffers.Builder, INTERPOLATION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(INTERPOLATION), 0)
+}
+func CZMDynSampledAddInterpolation(builder *flatbuffers.Builder, INTERPOLATION flatbuffers.UOffsetT) {
+	CZMDynSampledAddINTERPOLATION(builder, INTERPOLATION)
 }
 func CZMDynSampledEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

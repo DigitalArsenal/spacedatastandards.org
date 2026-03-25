@@ -2,4 +2,13 @@
 
 # namespace: 
 
-# NOTE CZMDynValueType.py does not declare any structs or enums
+# Dynamic value types for time-varying properties
+class CZMDynValueType(object):
+    NUMBER = 0
+    BOOLEAN = 1
+    STRING = 2
+    COLOR = 3
+    CARTESIAN3 = 4
+    CARTESIAN2 = 5
+    NEAR_FAR_SCALAR = 6
+    UNIT_QUATERNION = 7

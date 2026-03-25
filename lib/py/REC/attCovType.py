@@ -2,4 +2,8 @@
 
 # namespace: 
 
-# NOTE attCovType.py does not declare any structs or enums
+class attCovType(object):
+    ANGLE = 0
+    ANGLE_GYROBIAS = 1
+    ANGLE_ANGVEL = 2
+    QUATERNION_COV = 3

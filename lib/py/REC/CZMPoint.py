@@ -2,4 +2,313 @@
 
 # namespace: 
 
-# NOTE CZMPoint.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Point properties
+class CZMPoint(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = CZMPoint()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsCZMPoint(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def CZMPointBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x43\x5A\x4D", size_prefixed=size_prefixed)
+
+    # CZMPoint
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Whether the point is displayed
+    # CZMPoint
+    def SHOW(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # Point color
+    # CZMPoint
+    def COLOR(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from CZMColor import CZMColor
+            obj = CZMColor()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Outline color
+    # CZMPoint
+    def OUTLINE_COLOR(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from CZMColor import CZMColor
+            obj = CZMColor()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Outline width in pixels
+    # CZMPoint
+    def OUTLINE_WIDTH(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Pixel size
+    # CZMPoint
+    def PIXEL_SIZE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Height reference
+    # CZMPoint
+    def HEIGHT_REFERENCE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # Scale by distance
+    # CZMPoint
+    def SCALE_BY_DISTANCE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from CZMNearFarScalar import CZMNearFarScalar
+            obj = CZMNearFarScalar()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Translucency by distance
+    # CZMPoint
+    def TRANSLUCENCY_BY_DISTANCE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from CZMNearFarScalar import CZMNearFarScalar
+            obj = CZMNearFarScalar()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Distance display condition near
+    # CZMPoint
+    def DISTANCE_DISPLAY_CONDITION_NEAR(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Distance display condition far
+    # CZMPoint
+    def DISTANCE_DISPLAY_CONDITION_FAR(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Disable depth test distance
+    # CZMPoint
+    def DISABLE_DEPTH_TEST_DISTANCE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+def CZMPointStart(builder):
+    builder.StartObject(11)
+
+def Start(builder):
+    CZMPointStart(builder)
+
+def CZMPointAddSHOW(builder, SHOW):
+    builder.PrependBoolSlot(0, SHOW, 0)
+
+def AddSHOW(builder, SHOW):
+    CZMPointAddSHOW(builder, SHOW)
+
+def CZMPointAddCOLOR(builder, COLOR):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(COLOR), 0)
+
+def AddCOLOR(builder, COLOR):
+    CZMPointAddCOLOR(builder, COLOR)
+
+def CZMPointAddOUTLINE_COLOR(builder, OUTLINE_COLOR):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(OUTLINE_COLOR), 0)
+
+def AddOUTLINE_COLOR(builder, OUTLINE_COLOR):
+    CZMPointAddOUTLINE_COLOR(builder, OUTLINE_COLOR)
+
+def CZMPointAddOUTLINE_WIDTH(builder, OUTLINE_WIDTH):
+    builder.PrependFloat64Slot(3, OUTLINE_WIDTH, 0.0)
+
+def AddOUTLINE_WIDTH(builder, OUTLINE_WIDTH):
+    CZMPointAddOUTLINE_WIDTH(builder, OUTLINE_WIDTH)
+
+def CZMPointAddPIXEL_SIZE(builder, PIXEL_SIZE):
+    builder.PrependFloat64Slot(4, PIXEL_SIZE, 0.0)
+
+def AddPIXEL_SIZE(builder, PIXEL_SIZE):
+    CZMPointAddPIXEL_SIZE(builder, PIXEL_SIZE)
+
+def CZMPointAddHEIGHT_REFERENCE(builder, HEIGHT_REFERENCE):
+    builder.PrependInt8Slot(5, HEIGHT_REFERENCE, 0)
+
+def AddHEIGHT_REFERENCE(builder, HEIGHT_REFERENCE):
+    CZMPointAddHEIGHT_REFERENCE(builder, HEIGHT_REFERENCE)
+
+def CZMPointAddSCALE_BY_DISTANCE(builder, SCALE_BY_DISTANCE):
+    builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(SCALE_BY_DISTANCE), 0)
+
+def AddSCALE_BY_DISTANCE(builder, SCALE_BY_DISTANCE):
+    CZMPointAddSCALE_BY_DISTANCE(builder, SCALE_BY_DISTANCE)
+
+def CZMPointAddTRANSLUCENCY_BY_DISTANCE(builder, TRANSLUCENCY_BY_DISTANCE):
+    builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(TRANSLUCENCY_BY_DISTANCE), 0)
+
+def AddTRANSLUCENCY_BY_DISTANCE(builder, TRANSLUCENCY_BY_DISTANCE):
+    CZMPointAddTRANSLUCENCY_BY_DISTANCE(builder, TRANSLUCENCY_BY_DISTANCE)
+
+def CZMPointAddDISTANCE_DISPLAY_CONDITION_NEAR(builder, DISTANCE_DISPLAY_CONDITION_NEAR):
+    builder.PrependFloat64Slot(8, DISTANCE_DISPLAY_CONDITION_NEAR, 0.0)
+
+def AddDISTANCE_DISPLAY_CONDITION_NEAR(builder, DISTANCE_DISPLAY_CONDITION_NEAR):
+    CZMPointAddDISTANCE_DISPLAY_CONDITION_NEAR(builder, DISTANCE_DISPLAY_CONDITION_NEAR)
+
+def CZMPointAddDISTANCE_DISPLAY_CONDITION_FAR(builder, DISTANCE_DISPLAY_CONDITION_FAR):
+    builder.PrependFloat64Slot(9, DISTANCE_DISPLAY_CONDITION_FAR, 0.0)
+
+def AddDISTANCE_DISPLAY_CONDITION_FAR(builder, DISTANCE_DISPLAY_CONDITION_FAR):
+    CZMPointAddDISTANCE_DISPLAY_CONDITION_FAR(builder, DISTANCE_DISPLAY_CONDITION_FAR)
+
+def CZMPointAddDISABLE_DEPTH_TEST_DISTANCE(builder, DISABLE_DEPTH_TEST_DISTANCE):
+    builder.PrependFloat64Slot(10, DISABLE_DEPTH_TEST_DISTANCE, 0.0)
+
+def AddDISABLE_DEPTH_TEST_DISTANCE(builder, DISABLE_DEPTH_TEST_DISTANCE):
+    CZMPointAddDISABLE_DEPTH_TEST_DISTANCE(builder, DISABLE_DEPTH_TEST_DISTANCE)
+
+def CZMPointEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return CZMPointEnd(builder)
+
+import CZMColor
+import CZMNearFarScalar
+try:
+    from typing import Optional
+except:
+    pass
+
+class CZMPointT(object):
+
+    # CZMPointT
+    def __init__(
+        self,
+        SHOW = False,
+        COLOR = None,
+        OUTLINE_COLOR = None,
+        OUTLINE_WIDTH = 0.0,
+        PIXEL_SIZE = 0.0,
+        HEIGHT_REFERENCE = 0,
+        SCALE_BY_DISTANCE = None,
+        TRANSLUCENCY_BY_DISTANCE = None,
+        DISTANCE_DISPLAY_CONDITION_NEAR = 0.0,
+        DISTANCE_DISPLAY_CONDITION_FAR = 0.0,
+        DISABLE_DEPTH_TEST_DISTANCE = 0.0,
+    ):
+        self.SHOW = SHOW  # type: bool
+        self.COLOR = COLOR  # type: Optional[CZMColor.CZMColorT]
+        self.OUTLINE_COLOR = OUTLINE_COLOR  # type: Optional[CZMColor.CZMColorT]
+        self.OUTLINE_WIDTH = OUTLINE_WIDTH  # type: float
+        self.PIXEL_SIZE = PIXEL_SIZE  # type: float
+        self.HEIGHT_REFERENCE = HEIGHT_REFERENCE  # type: int
+        self.SCALE_BY_DISTANCE = SCALE_BY_DISTANCE  # type: Optional[CZMNearFarScalar.CZMNearFarScalarT]
+        self.TRANSLUCENCY_BY_DISTANCE = TRANSLUCENCY_BY_DISTANCE  # type: Optional[CZMNearFarScalar.CZMNearFarScalarT]
+        self.DISTANCE_DISPLAY_CONDITION_NEAR = DISTANCE_DISPLAY_CONDITION_NEAR  # type: float
+        self.DISTANCE_DISPLAY_CONDITION_FAR = DISTANCE_DISPLAY_CONDITION_FAR  # type: float
+        self.DISABLE_DEPTH_TEST_DISTANCE = DISABLE_DEPTH_TEST_DISTANCE  # type: float
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpCzmpoint = CZMPoint()
+        tmpCzmpoint.Init(buf, pos)
+        return cls.InitFromObj(tmpCzmpoint)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpCzmpoint):
+        x = CZMPointT()
+        x._UnPack(tmpCzmpoint)
+        return x
+
+    # CZMPointT
+    def _UnPack(self, CZMPoint):
+        if CZMPoint is None:
+            return
+        self.SHOW = CZMPoint.SHOW()
+        if CZMPoint.COLOR() is not None:
+            self.COLOR = CZMColor.CZMColorT.InitFromObj(CZMPoint.COLOR())
+        if CZMPoint.OUTLINE_COLOR() is not None:
+            self.OUTLINE_COLOR = CZMColor.CZMColorT.InitFromObj(CZMPoint.OUTLINE_COLOR())
+        self.OUTLINE_WIDTH = CZMPoint.OUTLINE_WIDTH()
+        self.PIXEL_SIZE = CZMPoint.PIXEL_SIZE()
+        self.HEIGHT_REFERENCE = CZMPoint.HEIGHT_REFERENCE()
+        if CZMPoint.SCALE_BY_DISTANCE() is not None:
+            self.SCALE_BY_DISTANCE = CZMNearFarScalar.CZMNearFarScalarT.InitFromObj(CZMPoint.SCALE_BY_DISTANCE())
+        if CZMPoint.TRANSLUCENCY_BY_DISTANCE() is not None:
+            self.TRANSLUCENCY_BY_DISTANCE = CZMNearFarScalar.CZMNearFarScalarT.InitFromObj(CZMPoint.TRANSLUCENCY_BY_DISTANCE())
+        self.DISTANCE_DISPLAY_CONDITION_NEAR = CZMPoint.DISTANCE_DISPLAY_CONDITION_NEAR()
+        self.DISTANCE_DISPLAY_CONDITION_FAR = CZMPoint.DISTANCE_DISPLAY_CONDITION_FAR()
+        self.DISABLE_DEPTH_TEST_DISTANCE = CZMPoint.DISABLE_DEPTH_TEST_DISTANCE()
+
+    # CZMPointT
+    def Pack(self, builder):
+        if self.COLOR is not None:
+            COLOR = self.COLOR.Pack(builder)
+        if self.OUTLINE_COLOR is not None:
+            OUTLINE_COLOR = self.OUTLINE_COLOR.Pack(builder)
+        if self.SCALE_BY_DISTANCE is not None:
+            SCALE_BY_DISTANCE = self.SCALE_BY_DISTANCE.Pack(builder)
+        if self.TRANSLUCENCY_BY_DISTANCE is not None:
+            TRANSLUCENCY_BY_DISTANCE = self.TRANSLUCENCY_BY_DISTANCE.Pack(builder)
+        CZMPointStart(builder)
+        CZMPointAddSHOW(builder, self.SHOW)
+        if self.COLOR is not None:
+            CZMPointAddCOLOR(builder, COLOR)
+        if self.OUTLINE_COLOR is not None:
+            CZMPointAddOUTLINE_COLOR(builder, OUTLINE_COLOR)
+        CZMPointAddOUTLINE_WIDTH(builder, self.OUTLINE_WIDTH)
+        CZMPointAddPIXEL_SIZE(builder, self.PIXEL_SIZE)
+        CZMPointAddHEIGHT_REFERENCE(builder, self.HEIGHT_REFERENCE)
+        if self.SCALE_BY_DISTANCE is not None:
+            CZMPointAddSCALE_BY_DISTANCE(builder, SCALE_BY_DISTANCE)
+        if self.TRANSLUCENCY_BY_DISTANCE is not None:
+            CZMPointAddTRANSLUCENCY_BY_DISTANCE(builder, TRANSLUCENCY_BY_DISTANCE)
+        CZMPointAddDISTANCE_DISPLAY_CONDITION_NEAR(builder, self.DISTANCE_DISPLAY_CONDITION_NEAR)
+        CZMPointAddDISTANCE_DISPLAY_CONDITION_FAR(builder, self.DISTANCE_DISPLAY_CONDITION_FAR)
+        CZMPointAddDISABLE_DEPTH_TEST_DISTANCE(builder, self.DISABLE_DEPTH_TEST_DISTANCE)
+        CZMPoint = CZMPointEnd(builder)
+        return CZMPoint

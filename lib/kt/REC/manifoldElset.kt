@@ -32,7 +32,7 @@ class manifoldElset : Table() {
     /**
      * Epoch of element set (ISO 8601)
      */
-    val EPOCH : String?
+    val epoch : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class manifoldElset : Table() {
                 null
             }
         }
-    val EPOCHAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun EPOCHInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val epochAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun epochInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Semi-major axis in km
      */
-    val SEMI_MAJOR_AXIS : Double
+    val semiMajorAxis : Double
         get() {
             val o = __offset(6)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -54,7 +54,7 @@ class manifoldElset : Table() {
     /**
      * Eccentricity
      */
-    val ECCENTRICITY : Double
+    val eccentricity : Double
         get() {
             val o = __offset(8)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -62,7 +62,7 @@ class manifoldElset : Table() {
     /**
      * Inclination in degrees
      */
-    val INCLINATION : Double
+    val inclination : Double
         get() {
             val o = __offset(10)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -70,7 +70,7 @@ class manifoldElset : Table() {
     /**
      * Right ascension of ascending node in degrees
      */
-    val RA_OF_ASC_NODE : Double
+    val raOfAscNode : Double
         get() {
             val o = __offset(12)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -78,7 +78,7 @@ class manifoldElset : Table() {
     /**
      * Argument of pericenter in degrees
      */
-    val ARG_OF_PERICENTER : Double
+    val argOfPericenter : Double
         get() {
             val o = __offset(14)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -86,7 +86,7 @@ class manifoldElset : Table() {
     /**
      * Mean anomaly in degrees
      */
-    val MEAN_ANOMALY : Double
+    val meanAnomaly : Double
         get() {
             val o = __offset(16)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -94,7 +94,7 @@ class manifoldElset : Table() {
     /**
      * Applied delta-V in m/s
      */
-    val DELTA_V : Double
+    val deltaV : Double
         get() {
             val o = __offset(18)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -102,7 +102,7 @@ class manifoldElset : Table() {
     /**
      * Applied delta-T in seconds
      */
-    val DELTA_T : Double
+    val deltaT : Double
         get() {
             val o = __offset(20)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -110,7 +110,7 @@ class manifoldElset : Table() {
     /**
      * Delta-V direction X (unit vector)
      */
-    val DV_X : Double
+    val dvX : Double
         get() {
             val o = __offset(22)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -118,7 +118,7 @@ class manifoldElset : Table() {
     /**
      * Delta-V direction Y (unit vector)
      */
-    val DV_Y : Double
+    val dvY : Double
         get() {
             val o = __offset(24)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -126,7 +126,7 @@ class manifoldElset : Table() {
     /**
      * Delta-V direction Z (unit vector)
      */
-    val DV_Z : Double
+    val dvZ : Double
         get() {
             val o = __offset(26)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -134,7 +134,7 @@ class manifoldElset : Table() {
     /**
      * Probability weight (0.0-1.0)
      */
-    val WEIGHT : Double
+    val weight : Double
         get() {
             val o = __offset(28)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -142,7 +142,7 @@ class manifoldElset : Table() {
     /**
      * Apogee altitude in km
      */
-    val APOGEE : Double
+    val apogee : Double
         get() {
             val o = __offset(30)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -150,7 +150,7 @@ class manifoldElset : Table() {
     /**
      * Perigee altitude in km
      */
-    val PERIGEE : Double
+    val perigee : Double
         get() {
             val o = __offset(32)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -158,55 +158,55 @@ class manifoldElset : Table() {
     /**
      * Period in minutes
      */
-    val PERIOD : Double
+    val period : Double
         get() {
             val o = __offset(34)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsmanifoldElset(_bb: ByteBuffer): manifoldElset = getRootAsmanifoldElset(_bb, manifoldElset())
         fun getRootAsmanifoldElset(_bb: ByteBuffer, obj: manifoldElset): manifoldElset {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createmanifoldElset(builder: FlatBufferBuilder, EPOCHOffset: Int, SEMI_MAJOR_AXIS: Double, ECCENTRICITY: Double, INCLINATION: Double, RA_OF_ASC_NODE: Double, ARG_OF_PERICENTER: Double, MEAN_ANOMALY: Double, DELTA_V: Double, DELTA_T: Double, DV_X: Double, DV_Y: Double, DV_Z: Double, WEIGHT: Double, APOGEE: Double, PERIGEE: Double, PERIOD: Double) : Int {
+        fun createmanifoldElset(builder: FlatBufferBuilder, epochOffset: Int, semiMajorAxis: Double, eccentricity: Double, inclination: Double, raOfAscNode: Double, argOfPericenter: Double, meanAnomaly: Double, deltaV: Double, deltaT: Double, dvX: Double, dvY: Double, dvZ: Double, weight: Double, apogee: Double, perigee: Double, period: Double) : Int {
             builder.startTable(16)
-            addPERIOD(builder, PERIOD)
-            addPERIGEE(builder, PERIGEE)
-            addAPOGEE(builder, APOGEE)
-            addWEIGHT(builder, WEIGHT)
-            addDV_Z(builder, DV_Z)
-            addDV_Y(builder, DV_Y)
-            addDV_X(builder, DV_X)
-            addDELTA_T(builder, DELTA_T)
-            addDELTA_V(builder, DELTA_V)
-            addMEAN_ANOMALY(builder, MEAN_ANOMALY)
-            addARG_OF_PERICENTER(builder, ARG_OF_PERICENTER)
-            addRA_OF_ASC_NODE(builder, RA_OF_ASC_NODE)
-            addINCLINATION(builder, INCLINATION)
-            addECCENTRICITY(builder, ECCENTRICITY)
-            addSEMI_MAJOR_AXIS(builder, SEMI_MAJOR_AXIS)
-            addEPOCH(builder, EPOCHOffset)
+            addPERIOD(builder, period)
+            addPERIGEE(builder, perigee)
+            addAPOGEE(builder, apogee)
+            addWEIGHT(builder, weight)
+            addDVZ(builder, dvZ)
+            addDVY(builder, dvY)
+            addDVX(builder, dvX)
+            addDELTAT(builder, deltaT)
+            addDELTAV(builder, deltaV)
+            addMEANANOMALY(builder, meanAnomaly)
+            addARGOFPERICENTER(builder, argOfPericenter)
+            addRAOFASCNODE(builder, raOfAscNode)
+            addINCLINATION(builder, inclination)
+            addECCENTRICITY(builder, eccentricity)
+            addSEMIMAJORAXIS(builder, semiMajorAxis)
+            addEPOCH(builder, epochOffset)
             return endmanifoldElset(builder)
         }
         fun startmanifoldElset(builder: FlatBufferBuilder) = builder.startTable(16)
-        fun addEPOCH(builder: FlatBufferBuilder, EPOCH: Int) = builder.addOffset(0, EPOCH, 0)
-        fun addSEMI_MAJOR_AXIS(builder: FlatBufferBuilder, SEMI_MAJOR_AXIS: Double) = builder.addDouble(1, SEMI_MAJOR_AXIS, 0.0)
-        fun addECCENTRICITY(builder: FlatBufferBuilder, ECCENTRICITY: Double) = builder.addDouble(2, ECCENTRICITY, 0.0)
-        fun addINCLINATION(builder: FlatBufferBuilder, INCLINATION: Double) = builder.addDouble(3, INCLINATION, 0.0)
-        fun addRA_OF_ASC_NODE(builder: FlatBufferBuilder, RA_OF_ASC_NODE: Double) = builder.addDouble(4, RA_OF_ASC_NODE, 0.0)
-        fun addARG_OF_PERICENTER(builder: FlatBufferBuilder, ARG_OF_PERICENTER: Double) = builder.addDouble(5, ARG_OF_PERICENTER, 0.0)
-        fun addMEAN_ANOMALY(builder: FlatBufferBuilder, MEAN_ANOMALY: Double) = builder.addDouble(6, MEAN_ANOMALY, 0.0)
-        fun addDELTA_V(builder: FlatBufferBuilder, DELTA_V: Double) = builder.addDouble(7, DELTA_V, 0.0)
-        fun addDELTA_T(builder: FlatBufferBuilder, DELTA_T: Double) = builder.addDouble(8, DELTA_T, 0.0)
-        fun addDV_X(builder: FlatBufferBuilder, DV_X: Double) = builder.addDouble(9, DV_X, 0.0)
-        fun addDV_Y(builder: FlatBufferBuilder, DV_Y: Double) = builder.addDouble(10, DV_Y, 0.0)
-        fun addDV_Z(builder: FlatBufferBuilder, DV_Z: Double) = builder.addDouble(11, DV_Z, 0.0)
-        fun addWEIGHT(builder: FlatBufferBuilder, WEIGHT: Double) = builder.addDouble(12, WEIGHT, 0.0)
-        fun addAPOGEE(builder: FlatBufferBuilder, APOGEE: Double) = builder.addDouble(13, APOGEE, 0.0)
-        fun addPERIGEE(builder: FlatBufferBuilder, PERIGEE: Double) = builder.addDouble(14, PERIGEE, 0.0)
-        fun addPERIOD(builder: FlatBufferBuilder, PERIOD: Double) = builder.addDouble(15, PERIOD, 0.0)
+        fun addEPOCH(builder: FlatBufferBuilder, epoch: Int) = builder.addOffset(0, epoch, 0)
+        fun addSEMIMAJORAXIS(builder: FlatBufferBuilder, semiMajorAxis: Double) = builder.addDouble(1, semiMajorAxis, 0.0)
+        fun addECCENTRICITY(builder: FlatBufferBuilder, eccentricity: Double) = builder.addDouble(2, eccentricity, 0.0)
+        fun addINCLINATION(builder: FlatBufferBuilder, inclination: Double) = builder.addDouble(3, inclination, 0.0)
+        fun addRAOFASCNODE(builder: FlatBufferBuilder, raOfAscNode: Double) = builder.addDouble(4, raOfAscNode, 0.0)
+        fun addARGOFPERICENTER(builder: FlatBufferBuilder, argOfPericenter: Double) = builder.addDouble(5, argOfPericenter, 0.0)
+        fun addMEANANOMALY(builder: FlatBufferBuilder, meanAnomaly: Double) = builder.addDouble(6, meanAnomaly, 0.0)
+        fun addDELTAV(builder: FlatBufferBuilder, deltaV: Double) = builder.addDouble(7, deltaV, 0.0)
+        fun addDELTAT(builder: FlatBufferBuilder, deltaT: Double) = builder.addDouble(8, deltaT, 0.0)
+        fun addDVX(builder: FlatBufferBuilder, dvX: Double) = builder.addDouble(9, dvX, 0.0)
+        fun addDVY(builder: FlatBufferBuilder, dvY: Double) = builder.addDouble(10, dvY, 0.0)
+        fun addDVZ(builder: FlatBufferBuilder, dvZ: Double) = builder.addDouble(11, dvZ, 0.0)
+        fun addWEIGHT(builder: FlatBufferBuilder, weight: Double) = builder.addDouble(12, weight, 0.0)
+        fun addAPOGEE(builder: FlatBufferBuilder, apogee: Double) = builder.addDouble(13, apogee, 0.0)
+        fun addPERIGEE(builder: FlatBufferBuilder, perigee: Double) = builder.addDouble(14, perigee, 0.0)
+        fun addPERIOD(builder: FlatBufferBuilder, period: Double) = builder.addDouble(15, period, 0.0)
         fun endmanifoldElset(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

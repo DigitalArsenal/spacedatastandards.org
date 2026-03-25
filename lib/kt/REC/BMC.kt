@@ -29,7 +29,7 @@ class BMC : Table() {
         __init(_i, _bb)
         return this
     }
-    val ID : String?
+    val id : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -38,9 +38,9 @@ class BMC : Table() {
                 null
             }
         }
-    val IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
-    val TYPE : String?
+    val idAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun idInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
+    val type : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -49,19 +49,19 @@ class BMC : Table() {
                 null
             }
         }
-    val TYPEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun TYPEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
-    val CONTOUR_IDX : Int
+    val typeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun typeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
+    val contourIdx : Int
         get() {
             val o = __offset(8)
             return if(o != 0) bb.getInt(o + bb_pos) else 0
         }
-    val GAIN : Double
+    val gain : Double
         get() {
             val o = __offset(10)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val REGION_NAME : String?
+    val regionName : String?
         get() {
             val o = __offset(12)
             return if (o != 0) {
@@ -70,9 +70,9 @@ class BMC : Table() {
                 null
             }
         }
-    val REGION_NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
-    fun REGION_NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
-    val GEOGRAPHY : String?
+    val regionNameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(12, 1)
+    fun regionNameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 12, 1)
+    val geography : String?
         get() {
             val o = __offset(14)
             return if (o != 0) {
@@ -81,9 +81,9 @@ class BMC : Table() {
                 null
             }
         }
-    val GEOGRAPHYAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(14, 1)
-    fun GEOGRAPHYInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 14, 1)
-    val GEOGRAPHY_TEXT : String?
+    val geographyAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(14, 1)
+    fun geographyInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 14, 1)
+    val geographyText : String?
         get() {
             val o = __offset(16)
             return if (o != 0) {
@@ -92,9 +92,9 @@ class BMC : Table() {
                 null
             }
         }
-    val GEOGRAPHY_TEXTAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(16, 1)
-    fun GEOGRAPHY_TEXTInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 16, 1)
-    val GEOGRAPHY_JSON : String?
+    val geographyTextAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(16, 1)
+    fun geographyTextInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 16, 1)
+    val geographyJson : String?
         get() {
             val o = __offset(18)
             return if (o != 0) {
@@ -103,9 +103,9 @@ class BMC : Table() {
                 null
             }
         }
-    val GEOGRAPHY_JSONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(18, 1)
-    fun GEOGRAPHY_JSONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 18, 1)
-    val GEOGRAPHY_TYPE : String?
+    val geographyJsonAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(18, 1)
+    fun geographyJsonInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 18, 1)
+    val geographyType : String?
         get() {
             val o = __offset(20)
             return if (o != 0) {
@@ -114,53 +114,53 @@ class BMC : Table() {
                 null
             }
         }
-    val GEOGRAPHY_TYPEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(20, 1)
-    fun GEOGRAPHY_TYPEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 20, 1)
-    val GEOGRAPHY_NDIMS : Int
+    val geographyTypeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(20, 1)
+    fun geographyTypeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 20, 1)
+    val geographyNdims : Int
         get() {
             val o = __offset(22)
             return if(o != 0) bb.getInt(o + bb_pos) else 0
         }
-    val GEOGRAPHY_SRID : Int
+    val geographySrid : Int
         get() {
             val o = __offset(24)
             return if(o != 0) bb.getInt(o + bb_pos) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsBMC(_bb: ByteBuffer): BMC = getRootAsBMC(_bb, BMC())
         fun getRootAsBMC(_bb: ByteBuffer, obj: BMC): BMC {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun BMCBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$BMC")
-        fun createBMC(builder: FlatBufferBuilder, IDOffset: Int, TYPEOffset: Int, CONTOUR_IDX: Int, GAIN: Double, REGION_NAMEOffset: Int, GEOGRAPHYOffset: Int, GEOGRAPHY_TEXTOffset: Int, GEOGRAPHY_JSONOffset: Int, GEOGRAPHY_TYPEOffset: Int, GEOGRAPHY_NDIMS: Int, GEOGRAPHY_SRID: Int) : Int {
+        fun createBMC(builder: FlatBufferBuilder, idOffset: Int, typeOffset: Int, contourIdx: Int, gain: Double, regionNameOffset: Int, geographyOffset: Int, geographyTextOffset: Int, geographyJsonOffset: Int, geographyTypeOffset: Int, geographyNdims: Int, geographySrid: Int) : Int {
             builder.startTable(11)
-            addGAIN(builder, GAIN)
-            addGEOGRAPHY_SRID(builder, GEOGRAPHY_SRID)
-            addGEOGRAPHY_NDIMS(builder, GEOGRAPHY_NDIMS)
-            addGEOGRAPHY_TYPE(builder, GEOGRAPHY_TYPEOffset)
-            addGEOGRAPHY_JSON(builder, GEOGRAPHY_JSONOffset)
-            addGEOGRAPHY_TEXT(builder, GEOGRAPHY_TEXTOffset)
-            addGEOGRAPHY(builder, GEOGRAPHYOffset)
-            addREGION_NAME(builder, REGION_NAMEOffset)
-            addCONTOUR_IDX(builder, CONTOUR_IDX)
-            addTYPE(builder, TYPEOffset)
-            addID(builder, IDOffset)
+            addGAIN(builder, gain)
+            addGEOGRAPHYSRID(builder, geographySrid)
+            addGEOGRAPHYNDIMS(builder, geographyNdims)
+            addGEOGRAPHYTYPE(builder, geographyTypeOffset)
+            addGEOGRAPHYJSON(builder, geographyJsonOffset)
+            addGEOGRAPHYTEXT(builder, geographyTextOffset)
+            addGEOGRAPHY(builder, geographyOffset)
+            addREGIONNAME(builder, regionNameOffset)
+            addCONTOURIDX(builder, contourIdx)
+            addTYPE(builder, typeOffset)
+            addID(builder, idOffset)
             return endBMC(builder)
         }
         fun startBMC(builder: FlatBufferBuilder) = builder.startTable(11)
-        fun addID(builder: FlatBufferBuilder, ID: Int) = builder.addOffset(0, ID, 0)
-        fun addTYPE(builder: FlatBufferBuilder, TYPE: Int) = builder.addOffset(1, TYPE, 0)
-        fun addCONTOUR_IDX(builder: FlatBufferBuilder, CONTOUR_IDX: Int) = builder.addInt(2, CONTOUR_IDX, 0)
-        fun addGAIN(builder: FlatBufferBuilder, GAIN: Double) = builder.addDouble(3, GAIN, 0.0)
-        fun addREGION_NAME(builder: FlatBufferBuilder, REGION_NAME: Int) = builder.addOffset(4, REGION_NAME, 0)
-        fun addGEOGRAPHY(builder: FlatBufferBuilder, GEOGRAPHY: Int) = builder.addOffset(5, GEOGRAPHY, 0)
-        fun addGEOGRAPHY_TEXT(builder: FlatBufferBuilder, GEOGRAPHY_TEXT: Int) = builder.addOffset(6, GEOGRAPHY_TEXT, 0)
-        fun addGEOGRAPHY_JSON(builder: FlatBufferBuilder, GEOGRAPHY_JSON: Int) = builder.addOffset(7, GEOGRAPHY_JSON, 0)
-        fun addGEOGRAPHY_TYPE(builder: FlatBufferBuilder, GEOGRAPHY_TYPE: Int) = builder.addOffset(8, GEOGRAPHY_TYPE, 0)
-        fun addGEOGRAPHY_NDIMS(builder: FlatBufferBuilder, GEOGRAPHY_NDIMS: Int) = builder.addInt(9, GEOGRAPHY_NDIMS, 0)
-        fun addGEOGRAPHY_SRID(builder: FlatBufferBuilder, GEOGRAPHY_SRID: Int) = builder.addInt(10, GEOGRAPHY_SRID, 0)
+        fun addID(builder: FlatBufferBuilder, id: Int) = builder.addOffset(0, id, 0)
+        fun addTYPE(builder: FlatBufferBuilder, type: Int) = builder.addOffset(1, type, 0)
+        fun addCONTOURIDX(builder: FlatBufferBuilder, contourIdx: Int) = builder.addInt(2, contourIdx, 0)
+        fun addGAIN(builder: FlatBufferBuilder, gain: Double) = builder.addDouble(3, gain, 0.0)
+        fun addREGIONNAME(builder: FlatBufferBuilder, regionName: Int) = builder.addOffset(4, regionName, 0)
+        fun addGEOGRAPHY(builder: FlatBufferBuilder, geography: Int) = builder.addOffset(5, geography, 0)
+        fun addGEOGRAPHYTEXT(builder: FlatBufferBuilder, geographyText: Int) = builder.addOffset(6, geographyText, 0)
+        fun addGEOGRAPHYJSON(builder: FlatBufferBuilder, geographyJson: Int) = builder.addOffset(7, geographyJson, 0)
+        fun addGEOGRAPHYTYPE(builder: FlatBufferBuilder, geographyType: Int) = builder.addOffset(8, geographyType, 0)
+        fun addGEOGRAPHYNDIMS(builder: FlatBufferBuilder, geographyNdims: Int) = builder.addInt(9, geographyNdims, 0)
+        fun addGEOGRAPHYSRID(builder: FlatBufferBuilder, geographySrid: Int) = builder.addInt(10, geographySrid, 0)
         fun endBMC(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

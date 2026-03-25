@@ -51,6 +51,10 @@ func (rcv *KMLLabelStyle) COLOR() []byte {
 	return nil
 }
 
+func (rcv *KMLLabelStyle) Color() []byte {
+	return rcv.COLOR()
+}
+
 /// KML color in aabbggrr hex format
 /// Color mode
 func (rcv *KMLLabelStyle) COLOR_MODE() KMLColorMode {
@@ -61,9 +65,17 @@ func (rcv *KMLLabelStyle) COLOR_MODE() KMLColorMode {
 	return 0
 }
 
+func (rcv *KMLLabelStyle) ColorMode() KMLColorMode {
+	return rcv.COLOR_MODE()
+}
+
 /// Color mode
 func (rcv *KMLLabelStyle) MutateCOLOR_MODE(n KMLColorMode) bool {
 	return rcv._tab.MutateInt8Slot(6, int8(n))
+}
+
+func (rcv *KMLLabelStyle) MutateColorMode(n KMLColorMode) bool {
+	return rcv.MutateCOLOR_MODE(n)
 }
 
 /// Scale factor
@@ -75,9 +87,17 @@ func (rcv *KMLLabelStyle) SCALE() float64 {
 	return 0.0
 }
 
+func (rcv *KMLLabelStyle) Scale() float64 {
+	return rcv.SCALE()
+}
+
 /// Scale factor
 func (rcv *KMLLabelStyle) MutateSCALE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(8, n)
+}
+
+func (rcv *KMLLabelStyle) MutateScale(n float64) bool {
+	return rcv.MutateSCALE(n)
 }
 
 func KMLLabelStyleStart(builder *flatbuffers.Builder) {
@@ -86,11 +106,20 @@ func KMLLabelStyleStart(builder *flatbuffers.Builder) {
 func KMLLabelStyleAddCOLOR(builder *flatbuffers.Builder, COLOR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(COLOR), 0)
 }
+func KMLLabelStyleAddColor(builder *flatbuffers.Builder, COLOR flatbuffers.UOffsetT) {
+	KMLLabelStyleAddCOLOR(builder, COLOR)
+}
 func KMLLabelStyleAddCOLOR_MODE(builder *flatbuffers.Builder, COLOR_MODE KMLColorMode) {
 	builder.PrependInt8Slot(1, int8(COLOR_MODE), 0)
 }
+func KMLLabelStyleAddColorMode(builder *flatbuffers.Builder, COLOR_MODE KMLColorMode) {
+	KMLLabelStyleAddCOLOR_MODE(builder, COLOR_MODE)
+}
 func KMLLabelStyleAddSCALE(builder *flatbuffers.Builder, SCALE float64) {
 	builder.PrependFloat64Slot(2, SCALE, 0.0)
+}
+func KMLLabelStyleAddScale(builder *flatbuffers.Builder, SCALE float64) {
+	KMLLabelStyleAddSCALE(builder, SCALE)
 }
 func KMLLabelStyleEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

@@ -2,12 +2,16 @@
 // swiftlint:disable all
 // swiftformat:disable all
 
+#if canImport(Common)
+import Common
+#endif
+
 import FlatBuffers
 
 ///  Schema Standard Definition
-public struct SCHEMA_STANDARD: FlatBufferObject, Verifiable {
+public struct SCHEMA_STANDARD: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -31,9 +35,7 @@ public struct SCHEMA_STANDARD: FlatBufferObject, Verifiable {
   public var idl: String? { let o = _accessor.offset(VTOFFSET.idl.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var idlSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.idl.v) }
   ///  List Of File Paths
-  public var hasFiles: Bool { let o = _accessor.offset(VTOFFSET.files.v); return o == 0 ? false : true }
-  public var filesCount: Int32 { let o = _accessor.offset(VTOFFSET.files.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func files(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.files.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  public var files: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.files.v, byteSize: 4) }
   public static func startSCHEMA_STANDARD(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 3) }
   public static func add(key: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: key, at: VTOFFSET.key.p) }
   public static func add(idl: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: idl, at: VTOFFSET.idl.p) }
@@ -62,9 +64,9 @@ public struct SCHEMA_STANDARD: FlatBufferObject, Verifiable {
 }
 
 ///  Schema Manifest
-public struct SCM: FlatBufferObject, Verifiable {
+public struct SCM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -84,9 +86,7 @@ public struct SCM: FlatBufferObject, Verifiable {
   public var version: String? { let o = _accessor.offset(VTOFFSET.version.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var versionSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.version.v) }
   ///  Standards Dictionary
-  public var hasRecords: Bool { let o = _accessor.offset(VTOFFSET.RECORDS.v); return o == 0 ? false : true }
-  public var RECORDSCount: Int32 { let o = _accessor.offset(VTOFFSET.RECORDS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func RECORDS(at index: Int32) -> SCHEMA_STANDARD? { let o = _accessor.offset(VTOFFSET.RECORDS.v); return o == 0 ? nil : SCHEMA_STANDARD(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var RECORDS: FlatbufferVector<SCHEMA_STANDARD> { return _accessor.vector(at: VTOFFSET.RECORDS.v, byteSize: 4) }
   public static func startSCM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 2) }
   public static func add(version: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: version, at: VTOFFSET.version.p) }
   public static func addVectorOf(RECORDS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RECORDS, at: VTOFFSET.RECORDS.p) }

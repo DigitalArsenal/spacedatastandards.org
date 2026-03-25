@@ -87,16 +87,21 @@ def End(builder):
 class ContainerBinaryEncodingT(object):
 
     # ContainerBinaryEncodingT
-    def __init__(self):
-        self.ERROR_DETECTION = 0  # type: int
-        self.CRC_POLYNOMIAL = None  # type: str
-        self.SIZE_IN_BITS = 0  # type: int
+    def __init__(
+        self,
+        ERROR_DETECTION = 0,
+        CRC_POLYNOMIAL = None,
+        SIZE_IN_BITS = 0,
+    ):
+        self.ERROR_DETECTION = ERROR_DETECTION  # type: int
+        self.CRC_POLYNOMIAL = CRC_POLYNOMIAL  # type: Optional[str]
+        self.SIZE_IN_BITS = SIZE_IN_BITS  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        containerBinaryEncoding = ContainerBinaryEncoding()
-        containerBinaryEncoding.Init(buf, pos)
-        return cls.InitFromObj(containerBinaryEncoding)
+        tmpContainerBinaryEncoding = ContainerBinaryEncoding()
+        tmpContainerBinaryEncoding.Init(buf, pos)
+        return cls.InitFromObj(tmpContainerBinaryEncoding)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -104,18 +109,18 @@ class ContainerBinaryEncodingT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, containerBinaryEncoding):
+    def InitFromObj(cls, tmpContainerBinaryEncoding):
         x = ContainerBinaryEncodingT()
-        x._UnPack(containerBinaryEncoding)
+        x._UnPack(tmpContainerBinaryEncoding)
         return x
 
     # ContainerBinaryEncodingT
-    def _UnPack(self, containerBinaryEncoding):
-        if containerBinaryEncoding is None:
+    def _UnPack(self, ContainerBinaryEncoding):
+        if ContainerBinaryEncoding is None:
             return
-        self.ERROR_DETECTION = containerBinaryEncoding.ERROR_DETECTION()
-        self.CRC_POLYNOMIAL = containerBinaryEncoding.CRC_POLYNOMIAL()
-        self.SIZE_IN_BITS = containerBinaryEncoding.SIZE_IN_BITS()
+        self.ERROR_DETECTION = ContainerBinaryEncoding.ERROR_DETECTION()
+        self.CRC_POLYNOMIAL = ContainerBinaryEncoding.CRC_POLYNOMIAL()
+        self.SIZE_IN_BITS = ContainerBinaryEncoding.SIZE_IN_BITS()
 
     # ContainerBinaryEncodingT
     def Pack(self, builder):
@@ -126,5 +131,5 @@ class ContainerBinaryEncodingT(object):
         if self.CRC_POLYNOMIAL is not None:
             ContainerBinaryEncodingAddCRC_POLYNOMIAL(builder, CRC_POLYNOMIAL)
         ContainerBinaryEncodingAddSIZE_IN_BITS(builder, self.SIZE_IN_BITS)
-        containerBinaryEncoding = ContainerBinaryEncodingEnd(builder)
-        return containerBinaryEncoding
+        ContainerBinaryEncoding = ContainerBinaryEncodingEnd(builder)
+        return ContainerBinaryEncoding

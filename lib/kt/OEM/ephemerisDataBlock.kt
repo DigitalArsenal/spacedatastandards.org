@@ -32,7 +32,7 @@ class ephemerisDataBlock : Table() {
     /**
      * Plain-Text Comment
      */
-    val COMMENT : String?
+    val comment : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,13 +41,13 @@ class ephemerisDataBlock : Table() {
                 null
             }
         }
-    val COMMENTAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun COMMENTInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val commentAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun commentInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Satellite name for the first object
      */
-    val OBJECT : CAT? get() = OBJECT(CAT())
-    fun OBJECT(obj: CAT) : CAT? {
+    val object : CAT? get() = object(CAT())
+    fun object(obj: CAT) : CAT? {
         val o = __offset(6)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -58,7 +58,7 @@ class ephemerisDataBlock : Table() {
     /**
      * Origin of reference frame (EARTH, MARS, MOON, etc.)
      */
-    val CENTER_NAME : String?
+    val centerName : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -67,13 +67,13 @@ class ephemerisDataBlock : Table() {
                 null
             }
         }
-    val CENTER_NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun CENTER_NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val centerNameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun centerNameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
     /**
      * Name of the reference frame (TEME, EME2000, etc.)
      */
-    val REFERENCE_FRAME : RFM? get() = REFERENCE_FRAME(RFM())
-    fun REFERENCE_FRAME(obj: RFM) : RFM? {
+    val referenceFrame : RFM? get() = referenceFrame(RFM())
+    fun referenceFrame(obj: RFM) : RFM? {
         val o = __offset(10)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -84,7 +84,7 @@ class ephemerisDataBlock : Table() {
     /**
      * Epoch of reference frame, if not intrinsic to the definition of the reference frame
      */
-    val REFERENCE_FRAME_EPOCH : String?
+    val referenceFrameEpoch : String?
         get() {
             val o = __offset(12)
             return if (o != 0) {
@@ -93,13 +93,13 @@ class ephemerisDataBlock : Table() {
                 null
             }
         }
-    val REFERENCE_FRAME_EPOCHAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
-    fun REFERENCE_FRAME_EPOCHInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
+    val referenceFrameEpochAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(12, 1)
+    fun referenceFrameEpochInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 12, 1)
     /**
      * Reference frame for the covariance matrix
      */
-    val COV_REFERENCE_FRAME : RFM? get() = COV_REFERENCE_FRAME(RFM())
-    fun COV_REFERENCE_FRAME(obj: RFM) : RFM? {
+    val covReferenceFrame : RFM? get() = covReferenceFrame(RFM())
+    fun covReferenceFrame(obj: RFM) : RFM? {
         val o = __offset(14)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -110,7 +110,7 @@ class ephemerisDataBlock : Table() {
     /**
      * Time system used for the orbit state and covariance matrix. (UTC)
      */
-    val TIME_SYSTEM : Byte
+    val timeSystem : Byte
         get() {
             val o = __offset(16)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -118,7 +118,7 @@ class ephemerisDataBlock : Table() {
     /**
      * Start of TOTAL time span covered by ephemeris data and covariance data (ISO 8601)
      */
-    val START_TIME : String?
+    val startTime : String?
         get() {
             val o = __offset(18)
             return if (o != 0) {
@@ -127,12 +127,12 @@ class ephemerisDataBlock : Table() {
                 null
             }
         }
-    val START_TIMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(18, 1)
-    fun START_TIMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 18, 1)
+    val startTimeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(18, 1)
+    fun startTimeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 18, 1)
     /**
      * Optional start USEABLE time span covered by ephemeris data (ISO 8601)
      */
-    val USEABLE_START_TIME : String?
+    val useableStartTime : String?
         get() {
             val o = __offset(20)
             return if (o != 0) {
@@ -141,12 +141,12 @@ class ephemerisDataBlock : Table() {
                 null
             }
         }
-    val USEABLE_START_TIMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(20, 1)
-    fun USEABLE_START_TIMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 20, 1)
+    val useableStartTimeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(20, 1)
+    fun useableStartTimeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 20, 1)
     /**
      * Optional end of USEABLE time span covered by ephemeris data (ISO 8601)
      */
-    val USEABLE_STOP_TIME : String?
+    val useableStopTime : String?
         get() {
             val o = __offset(22)
             return if (o != 0) {
@@ -155,12 +155,12 @@ class ephemerisDataBlock : Table() {
                 null
             }
         }
-    val USEABLE_STOP_TIMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(22, 1)
-    fun USEABLE_STOP_TIMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 22, 1)
+    val useableStopTimeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(22, 1)
+    fun useableStopTimeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 22, 1)
     /**
      * End of TOTAL time span covered by ephemeris data and covariance data (ISO 8601)
      */
-    val STOP_TIME : String?
+    val stopTime : String?
         get() {
             val o = __offset(24)
             return if (o != 0) {
@@ -169,12 +169,16 @@ class ephemerisDataBlock : Table() {
                 null
             }
         }
-    val STOP_TIMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(24, 1)
-    fun STOP_TIMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 24, 1)
+    val stopTimeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(24, 1)
+    fun stopTimeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 24, 1)
     /**
-     * Recommended interpolation method for ephemeris data (Hermite, Linear, Lagrange, etc.)
+     * Recommended interpolation method for ephemeris data.
+     * Supported methods: Hermite, Linear, Lagrange, Chebyshev.
+     * When set to "Chebyshev", parsers should use POLYNOMIAL_POSITION_RECORDS
+     * for high-fidelity polynomial interpolation instead of interpolating across
+     * discrete state vectors.
      */
-    val INTERPOLATION : String?
+    val interpolation : String?
         get() {
             val o = __offset(26)
             return if (o != 0) {
@@ -183,12 +187,12 @@ class ephemerisDataBlock : Table() {
                 null
             }
         }
-    val INTERPOLATIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(26, 1)
-    fun INTERPOLATIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 26, 1)
+    val interpolationAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(26, 1)
+    fun interpolationInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 26, 1)
     /**
      * Recommended interpolation degree for ephemeris data
      */
-    val INTERPOLATION_DEGREE : UInt
+    val interpolationDegree : UInt
         get() {
             val o = __offset(28)
             return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
@@ -198,7 +202,7 @@ class ephemerisDataBlock : Table() {
      * If > 0: Use compact EPHEMERIS_DATA array (times are implicit).
      * If 0 or omitted: Use EPHEMERIS_DATA_LINES with explicit epochs.
      */
-    val STEP_SIZE : Double
+    val stepSize : Double
         get() {
             val o = __offset(30)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -209,7 +213,7 @@ class ephemerisDataBlock : Table() {
      * 9 = position + velocity + acceleration (adds X_DDOT, Y_DDOT, Z_DDOT)
      * Only used when STEP_SIZE > 0. Default is 6.
      */
-    val STATE_VECTOR_SIZE : UByte
+    val stateVectorSize : UByte
         get() {
             val o = __offset(32)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 6u
@@ -222,7 +226,7 @@ class ephemerisDataBlock : Table() {
      * Length must be divisible by STATE_VECTOR_SIZE.
      * Number of states = length(EPHEMERIS_DATA) / STATE_VECTOR_SIZE
      */
-    fun EPHEMERIS_DATA(j: Int) : Double {
+    fun ephemerisData(j: Int) : Double {
         val o = __offset(34)
         return if (o != 0) {
             bb.getDouble(__vector(o) + j * 8)
@@ -230,19 +234,19 @@ class ephemerisDataBlock : Table() {
             0.0
         }
     }
-    val EPHEMERIS_DATALength : Int
+    val ephemerisDataLength : Int
         get() {
             val o = __offset(34); return if (o != 0) __vector_len(o) else 0
         }
-    val EPHEMERIS_DATAAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(34, 8)
-    fun EPHEMERIS_DATAInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 34, 8)
+    val ephemerisDataAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(34, 8)
+    fun ephemerisDataInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 34, 8)
     /**
      * Array of ephemeris data lines with explicit epochs.
      * Only used when STEP_SIZE == 0 or omitted (non-uniform time steps).
      * Each line contains its own EPOCH timestamp.
      */
-    fun EPHEMERIS_DATA_LINES(j: Int) : ephemerisDataLine? = EPHEMERIS_DATA_LINES(ephemerisDataLine(), j)
-    fun EPHEMERIS_DATA_LINES(obj: ephemerisDataLine, j: Int) : ephemerisDataLine? {
+    fun ephemerisDataLines(j: Int) : ephemerisDataLine? = ephemerisDataLines(ephemerisDataLine(), j)
+    fun ephemerisDataLines(obj: ephemerisDataLine, j: Int) : ephemerisDataLine? {
         val o = __offset(36)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -250,15 +254,15 @@ class ephemerisDataBlock : Table() {
             null
         }
     }
-    val EPHEMERIS_DATA_LINESLength : Int
+    val ephemerisDataLinesLength : Int
         get() {
             val o = __offset(36); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Array of covariance matrix lines (optional)
      */
-    fun COVARIANCE_MATRIX_LINES(j: Int) : covarianceMatrixLine? = COVARIANCE_MATRIX_LINES(covarianceMatrixLine(), j)
-    fun COVARIANCE_MATRIX_LINES(obj: covarianceMatrixLine, j: Int) : covarianceMatrixLine? {
+    fun covarianceMatrixLines(j: Int) : covarianceMatrixLine? = covarianceMatrixLines(covarianceMatrixLine(), j)
+    fun covarianceMatrixLines(obj: covarianceMatrixLine, j: Int) : covarianceMatrixLine? {
         val o = __offset(38)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -266,56 +270,76 @@ class ephemerisDataBlock : Table() {
             null
         }
     }
-    val COVARIANCE_MATRIX_LINESLength : Int
+    val covarianceMatrixLinesLength : Int
         get() {
             val o = __offset(38); return if (o != 0) __vector_len(o) else 0
         }
+    /**
+     * Optional polynomial position records for high-fidelity interpolation.
+     * Used when INTERPOLATION is "Chebyshev". Each record covers a time segment with
+     * polynomial coefficients for continuous position (and optionally velocity) evaluation.
+     * See PPE schema for record structure and evaluation procedure.
+     */
+    fun polynomialPositionRecords(j: Int) : PPEPositionRecord? = polynomialPositionRecords(PPEPositionRecord(), j)
+    fun polynomialPositionRecords(obj: PPEPositionRecord, j: Int) : PPEPositionRecord? {
+        val o = __offset(40)
+        return if (o != 0) {
+            obj.__assign(__indirect(__vector(o) + j * 4), bb)
+        } else {
+            null
+        }
+    }
+    val polynomialPositionRecordsLength : Int
+        get() {
+            val o = __offset(40); return if (o != 0) __vector_len(o) else 0
+        }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsephemerisDataBlock(_bb: ByteBuffer): ephemerisDataBlock = getRootAsephemerisDataBlock(_bb, ephemerisDataBlock())
         fun getRootAsephemerisDataBlock(_bb: ByteBuffer, obj: ephemerisDataBlock): ephemerisDataBlock {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createephemerisDataBlock(builder: FlatBufferBuilder, COMMENTOffset: Int, OBJECTOffset: Int, CENTER_NAMEOffset: Int, REFERENCE_FRAMEOffset: Int, REFERENCE_FRAME_EPOCHOffset: Int, COV_REFERENCE_FRAMEOffset: Int, TIME_SYSTEM: Byte, START_TIMEOffset: Int, USEABLE_START_TIMEOffset: Int, USEABLE_STOP_TIMEOffset: Int, STOP_TIMEOffset: Int, INTERPOLATIONOffset: Int, INTERPOLATION_DEGREE: UInt, STEP_SIZE: Double, STATE_VECTOR_SIZE: UByte, EPHEMERIS_DATAOffset: Int, EPHEMERIS_DATA_LINESOffset: Int, COVARIANCE_MATRIX_LINESOffset: Int) : Int {
-            builder.startTable(18)
-            addSTEP_SIZE(builder, STEP_SIZE)
-            addCOVARIANCE_MATRIX_LINES(builder, COVARIANCE_MATRIX_LINESOffset)
-            addEPHEMERIS_DATA_LINES(builder, EPHEMERIS_DATA_LINESOffset)
-            addEPHEMERIS_DATA(builder, EPHEMERIS_DATAOffset)
-            addINTERPOLATION_DEGREE(builder, INTERPOLATION_DEGREE)
-            addINTERPOLATION(builder, INTERPOLATIONOffset)
-            addSTOP_TIME(builder, STOP_TIMEOffset)
-            addUSEABLE_STOP_TIME(builder, USEABLE_STOP_TIMEOffset)
-            addUSEABLE_START_TIME(builder, USEABLE_START_TIMEOffset)
-            addSTART_TIME(builder, START_TIMEOffset)
-            addCOV_REFERENCE_FRAME(builder, COV_REFERENCE_FRAMEOffset)
-            addREFERENCE_FRAME_EPOCH(builder, REFERENCE_FRAME_EPOCHOffset)
-            addREFERENCE_FRAME(builder, REFERENCE_FRAMEOffset)
-            addCENTER_NAME(builder, CENTER_NAMEOffset)
-            addOBJECT(builder, OBJECTOffset)
-            addCOMMENT(builder, COMMENTOffset)
-            addSTATE_VECTOR_SIZE(builder, STATE_VECTOR_SIZE)
-            addTIME_SYSTEM(builder, TIME_SYSTEM)
+        fun createephemerisDataBlock(builder: FlatBufferBuilder, commentOffset: Int, objectOffset: Int, centerNameOffset: Int, referenceFrameOffset: Int, referenceFrameEpochOffset: Int, covReferenceFrameOffset: Int, timeSystem: Byte, startTimeOffset: Int, useableStartTimeOffset: Int, useableStopTimeOffset: Int, stopTimeOffset: Int, interpolationOffset: Int, interpolationDegree: UInt, stepSize: Double, stateVectorSize: UByte, ephemerisDataOffset: Int, ephemerisDataLinesOffset: Int, covarianceMatrixLinesOffset: Int, polynomialPositionRecordsOffset: Int) : Int {
+            builder.startTable(19)
+            addSTEPSIZE(builder, stepSize)
+            addPOLYNOMIALPOSITIONRECORDS(builder, polynomialPositionRecordsOffset)
+            addCOVARIANCEMATRIXLINES(builder, covarianceMatrixLinesOffset)
+            addEPHEMERISDATALINES(builder, ephemerisDataLinesOffset)
+            addEPHEMERISDATA(builder, ephemerisDataOffset)
+            addINTERPOLATIONDEGREE(builder, interpolationDegree)
+            addINTERPOLATION(builder, interpolationOffset)
+            addSTOPTIME(builder, stopTimeOffset)
+            addUSEABLESTOPTIME(builder, useableStopTimeOffset)
+            addUSEABLESTARTTIME(builder, useableStartTimeOffset)
+            addSTARTTIME(builder, startTimeOffset)
+            addCOVREFERENCEFRAME(builder, covReferenceFrameOffset)
+            addREFERENCEFRAMEEPOCH(builder, referenceFrameEpochOffset)
+            addREFERENCEFRAME(builder, referenceFrameOffset)
+            addCENTERNAME(builder, centerNameOffset)
+            addOBJECT(builder, objectOffset)
+            addCOMMENT(builder, commentOffset)
+            addSTATEVECTORSIZE(builder, stateVectorSize)
+            addTIMESYSTEM(builder, timeSystem)
             return endephemerisDataBlock(builder)
         }
-        fun startephemerisDataBlock(builder: FlatBufferBuilder) = builder.startTable(18)
-        fun addCOMMENT(builder: FlatBufferBuilder, COMMENT: Int) = builder.addOffset(0, COMMENT, 0)
-        fun addOBJECT(builder: FlatBufferBuilder, OBJECT: Int) = builder.addOffset(1, OBJECT, 0)
-        fun addCENTER_NAME(builder: FlatBufferBuilder, CENTER_NAME: Int) = builder.addOffset(2, CENTER_NAME, 0)
-        fun addREFERENCE_FRAME(builder: FlatBufferBuilder, REFERENCE_FRAME: Int) = builder.addOffset(3, REFERENCE_FRAME, 0)
-        fun addREFERENCE_FRAME_EPOCH(builder: FlatBufferBuilder, REFERENCE_FRAME_EPOCH: Int) = builder.addOffset(4, REFERENCE_FRAME_EPOCH, 0)
-        fun addCOV_REFERENCE_FRAME(builder: FlatBufferBuilder, COV_REFERENCE_FRAME: Int) = builder.addOffset(5, COV_REFERENCE_FRAME, 0)
-        fun addTIME_SYSTEM(builder: FlatBufferBuilder, TIME_SYSTEM: Byte) = builder.addByte(6, TIME_SYSTEM, 0)
-        fun addSTART_TIME(builder: FlatBufferBuilder, START_TIME: Int) = builder.addOffset(7, START_TIME, 0)
-        fun addUSEABLE_START_TIME(builder: FlatBufferBuilder, USEABLE_START_TIME: Int) = builder.addOffset(8, USEABLE_START_TIME, 0)
-        fun addUSEABLE_STOP_TIME(builder: FlatBufferBuilder, USEABLE_STOP_TIME: Int) = builder.addOffset(9, USEABLE_STOP_TIME, 0)
-        fun addSTOP_TIME(builder: FlatBufferBuilder, STOP_TIME: Int) = builder.addOffset(10, STOP_TIME, 0)
-        fun addINTERPOLATION(builder: FlatBufferBuilder, INTERPOLATION: Int) = builder.addOffset(11, INTERPOLATION, 0)
-        fun addINTERPOLATION_DEGREE(builder: FlatBufferBuilder, INTERPOLATION_DEGREE: UInt) = builder.addInt(12, INTERPOLATION_DEGREE.toInt(), 0)
-        fun addSTEP_SIZE(builder: FlatBufferBuilder, STEP_SIZE: Double) = builder.addDouble(13, STEP_SIZE, 0.0)
-        fun addSTATE_VECTOR_SIZE(builder: FlatBufferBuilder, STATE_VECTOR_SIZE: UByte) = builder.addByte(14, STATE_VECTOR_SIZE.toByte(), 6)
-        fun addEPHEMERIS_DATA(builder: FlatBufferBuilder, EPHEMERIS_DATA: Int) = builder.addOffset(15, EPHEMERIS_DATA, 0)
+        fun startephemerisDataBlock(builder: FlatBufferBuilder) = builder.startTable(19)
+        fun addCOMMENT(builder: FlatBufferBuilder, comment: Int) = builder.addOffset(0, comment, 0)
+        fun addOBJECT(builder: FlatBufferBuilder, object: Int) = builder.addOffset(1, object, 0)
+        fun addCENTERNAME(builder: FlatBufferBuilder, centerName: Int) = builder.addOffset(2, centerName, 0)
+        fun addREFERENCEFRAME(builder: FlatBufferBuilder, referenceFrame: Int) = builder.addOffset(3, referenceFrame, 0)
+        fun addREFERENCEFRAMEEPOCH(builder: FlatBufferBuilder, referenceFrameEpoch: Int) = builder.addOffset(4, referenceFrameEpoch, 0)
+        fun addCOVREFERENCEFRAME(builder: FlatBufferBuilder, covReferenceFrame: Int) = builder.addOffset(5, covReferenceFrame, 0)
+        fun addTIMESYSTEM(builder: FlatBufferBuilder, timeSystem: Byte) = builder.addByte(6, timeSystem, 0)
+        fun addSTARTTIME(builder: FlatBufferBuilder, startTime: Int) = builder.addOffset(7, startTime, 0)
+        fun addUSEABLESTARTTIME(builder: FlatBufferBuilder, useableStartTime: Int) = builder.addOffset(8, useableStartTime, 0)
+        fun addUSEABLESTOPTIME(builder: FlatBufferBuilder, useableStopTime: Int) = builder.addOffset(9, useableStopTime, 0)
+        fun addSTOPTIME(builder: FlatBufferBuilder, stopTime: Int) = builder.addOffset(10, stopTime, 0)
+        fun addINTERPOLATION(builder: FlatBufferBuilder, interpolation: Int) = builder.addOffset(11, interpolation, 0)
+        fun addINTERPOLATIONDEGREE(builder: FlatBufferBuilder, interpolationDegree: UInt) = builder.addInt(12, interpolationDegree.toInt(), 0)
+        fun addSTEPSIZE(builder: FlatBufferBuilder, stepSize: Double) = builder.addDouble(13, stepSize, 0.0)
+        fun addSTATEVECTORSIZE(builder: FlatBufferBuilder, stateVectorSize: UByte) = builder.addByte(14, stateVectorSize.toByte(), 6)
+        fun addEPHEMERISDATA(builder: FlatBufferBuilder, ephemerisData: Int) = builder.addOffset(15, ephemerisData, 0)
         fun createEphemerisDataVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
             builder.startVector(8, data.size, 8)
             for (i in data.size - 1 downTo 0) {
@@ -324,7 +348,7 @@ class ephemerisDataBlock : Table() {
             return builder.endVector()
         }
         fun startEphemerisDataVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
-        fun addEPHEMERIS_DATA_LINES(builder: FlatBufferBuilder, EPHEMERIS_DATA_LINES: Int) = builder.addOffset(16, EPHEMERIS_DATA_LINES, 0)
+        fun addEPHEMERISDATALINES(builder: FlatBufferBuilder, ephemerisDataLines: Int) = builder.addOffset(16, ephemerisDataLines, 0)
         fun createEphemerisDataLinesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -333,7 +357,7 @@ class ephemerisDataBlock : Table() {
             return builder.endVector()
         }
         fun startEphemerisDataLinesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addCOVARIANCE_MATRIX_LINES(builder: FlatBufferBuilder, COVARIANCE_MATRIX_LINES: Int) = builder.addOffset(17, COVARIANCE_MATRIX_LINES, 0)
+        fun addCOVARIANCEMATRIXLINES(builder: FlatBufferBuilder, covarianceMatrixLines: Int) = builder.addOffset(17, covarianceMatrixLines, 0)
         fun createCovarianceMatrixLinesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -342,6 +366,15 @@ class ephemerisDataBlock : Table() {
             return builder.endVector()
         }
         fun startCovarianceMatrixLinesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addPOLYNOMIALPOSITIONRECORDS(builder: FlatBufferBuilder, polynomialPositionRecords: Int) = builder.addOffset(18, polynomialPositionRecords, 0)
+        fun createPolynomialPositionRecordsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startPolynomialPositionRecordsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
         fun endephemerisDataBlock(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

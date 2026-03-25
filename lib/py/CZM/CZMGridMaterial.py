@@ -166,21 +166,31 @@ except:
 class CZMGridMaterialT(object):
 
     # CZMGridMaterialT
-    def __init__(self):
-        self.COLOR = None  # type: Optional[CZMColor.CZMColorT]
-        self.CELL_ALPHA = 0.0  # type: float
-        self.LINE_COUNT_X = 0.0  # type: float
-        self.LINE_COUNT_Y = 0.0  # type: float
-        self.LINE_THICKNESS_X = 0.0  # type: float
-        self.LINE_THICKNESS_Y = 0.0  # type: float
-        self.LINE_OFFSET_X = 0.0  # type: float
-        self.LINE_OFFSET_Y = 0.0  # type: float
+    def __init__(
+        self,
+        COLOR = None,
+        CELL_ALPHA = 0.0,
+        LINE_COUNT_X = 0.0,
+        LINE_COUNT_Y = 0.0,
+        LINE_THICKNESS_X = 0.0,
+        LINE_THICKNESS_Y = 0.0,
+        LINE_OFFSET_X = 0.0,
+        LINE_OFFSET_Y = 0.0,
+    ):
+        self.COLOR = COLOR  # type: Optional[CZMColor.CZMColorT]
+        self.CELL_ALPHA = CELL_ALPHA  # type: float
+        self.LINE_COUNT_X = LINE_COUNT_X  # type: float
+        self.LINE_COUNT_Y = LINE_COUNT_Y  # type: float
+        self.LINE_THICKNESS_X = LINE_THICKNESS_X  # type: float
+        self.LINE_THICKNESS_Y = LINE_THICKNESS_Y  # type: float
+        self.LINE_OFFSET_X = LINE_OFFSET_X  # type: float
+        self.LINE_OFFSET_Y = LINE_OFFSET_Y  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        czmgridMaterial = CZMGridMaterial()
-        czmgridMaterial.Init(buf, pos)
-        return cls.InitFromObj(czmgridMaterial)
+        tmpCzmgridMaterial = CZMGridMaterial()
+        tmpCzmgridMaterial.Init(buf, pos)
+        return cls.InitFromObj(tmpCzmgridMaterial)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -188,24 +198,24 @@ class CZMGridMaterialT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, czmgridMaterial):
+    def InitFromObj(cls, tmpCzmgridMaterial):
         x = CZMGridMaterialT()
-        x._UnPack(czmgridMaterial)
+        x._UnPack(tmpCzmgridMaterial)
         return x
 
     # CZMGridMaterialT
-    def _UnPack(self, czmgridMaterial):
-        if czmgridMaterial is None:
+    def _UnPack(self, CZMGridMaterial):
+        if CZMGridMaterial is None:
             return
-        if czmgridMaterial.COLOR() is not None:
-            self.COLOR = CZMColor.CZMColorT.InitFromObj(czmgridMaterial.COLOR())
-        self.CELL_ALPHA = czmgridMaterial.CELL_ALPHA()
-        self.LINE_COUNT_X = czmgridMaterial.LINE_COUNT_X()
-        self.LINE_COUNT_Y = czmgridMaterial.LINE_COUNT_Y()
-        self.LINE_THICKNESS_X = czmgridMaterial.LINE_THICKNESS_X()
-        self.LINE_THICKNESS_Y = czmgridMaterial.LINE_THICKNESS_Y()
-        self.LINE_OFFSET_X = czmgridMaterial.LINE_OFFSET_X()
-        self.LINE_OFFSET_Y = czmgridMaterial.LINE_OFFSET_Y()
+        if CZMGridMaterial.COLOR() is not None:
+            self.COLOR = CZMColor.CZMColorT.InitFromObj(CZMGridMaterial.COLOR())
+        self.CELL_ALPHA = CZMGridMaterial.CELL_ALPHA()
+        self.LINE_COUNT_X = CZMGridMaterial.LINE_COUNT_X()
+        self.LINE_COUNT_Y = CZMGridMaterial.LINE_COUNT_Y()
+        self.LINE_THICKNESS_X = CZMGridMaterial.LINE_THICKNESS_X()
+        self.LINE_THICKNESS_Y = CZMGridMaterial.LINE_THICKNESS_Y()
+        self.LINE_OFFSET_X = CZMGridMaterial.LINE_OFFSET_X()
+        self.LINE_OFFSET_Y = CZMGridMaterial.LINE_OFFSET_Y()
 
     # CZMGridMaterialT
     def Pack(self, builder):
@@ -221,5 +231,5 @@ class CZMGridMaterialT(object):
         CZMGridMaterialAddLINE_THICKNESS_Y(builder, self.LINE_THICKNESS_Y)
         CZMGridMaterialAddLINE_OFFSET_X(builder, self.LINE_OFFSET_X)
         CZMGridMaterialAddLINE_OFFSET_Y(builder, self.LINE_OFFSET_Y)
-        czmgridMaterial = CZMGridMaterialEnd(builder)
-        return czmgridMaterial
+        CZMGridMaterial = CZMGridMaterialEnd(builder)
+        return CZMGridMaterial

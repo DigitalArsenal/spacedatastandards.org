@@ -56,12 +56,19 @@ func (rcv *CZMSolidColorMaterial) COLOR(obj *CZMColor) *CZMColor {
 	return nil
 }
 
+func (rcv *CZMSolidColorMaterial) Color(obj *CZMColor) *CZMColor {
+	return rcv.COLOR(obj)
+}
+
 /// Color
 func CZMSolidColorMaterialStart(builder *flatbuffers.Builder) {
 	builder.StartObject(1)
 }
 func CZMSolidColorMaterialAddCOLOR(builder *flatbuffers.Builder, COLOR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(COLOR), 0)
+}
+func CZMSolidColorMaterialAddColor(builder *flatbuffers.Builder, COLOR flatbuffers.UOffsetT) {
+	CZMSolidColorMaterialAddCOLOR(builder, COLOR)
 }
 func CZMSolidColorMaterialEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

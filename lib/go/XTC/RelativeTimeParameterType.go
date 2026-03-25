@@ -51,6 +51,10 @@ func (rcv *RelativeTimeParameterType) NAME() []byte {
 	return nil
 }
 
+func (rcv *RelativeTimeParameterType) Name() []byte {
+	return rcv.NAME()
+}
+
 /// Type name
 /// Short description
 func (rcv *RelativeTimeParameterType) SHORT_DESCRIPTION() []byte {
@@ -59,6 +63,10 @@ func (rcv *RelativeTimeParameterType) SHORT_DESCRIPTION() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *RelativeTimeParameterType) ShortDescription() []byte {
+	return rcv.SHORT_DESCRIPTION()
 }
 
 /// Short description
@@ -71,6 +79,10 @@ func (rcv *RelativeTimeParameterType) LONG_DESCRIPTION() []byte {
 	return nil
 }
 
+func (rcv *RelativeTimeParameterType) LongDescription() []byte {
+	return rcv.LONG_DESCRIPTION()
+}
+
 /// Long description
 /// Units
 func (rcv *RelativeTimeParameterType) UNITS(obj *Unit, j int) bool {
@@ -79,10 +91,17 @@ func (rcv *RelativeTimeParameterType) UNITS(obj *Unit, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(Unit)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *RelativeTimeParameterType) Units(obj *Unit, j int) bool {
+	return rcv.UNITS(obj, j)
 }
 
 func (rcv *RelativeTimeParameterType) UNITSLength() int {
@@ -91,6 +110,10 @@ func (rcv *RelativeTimeParameterType) UNITSLength() int {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *RelativeTimeParameterType) UnitsLength() int {
+	return rcv.UNITSLength()
 }
 
 /// Units
@@ -108,6 +131,10 @@ func (rcv *RelativeTimeParameterType) DATA_ENCODING(obj *IntegerDataEncoding) *I
 	return nil
 }
 
+func (rcv *RelativeTimeParameterType) DataEncoding(obj *IntegerDataEncoding) *IntegerDataEncoding {
+	return rcv.DATA_ENCODING(obj)
+}
+
 /// Data encoding
 /// Default alarm
 func (rcv *RelativeTimeParameterType) DEFAULT_ALARM(obj *DefaultAlarm) *DefaultAlarm {
@@ -123,6 +150,10 @@ func (rcv *RelativeTimeParameterType) DEFAULT_ALARM(obj *DefaultAlarm) *DefaultA
 	return nil
 }
 
+func (rcv *RelativeTimeParameterType) DefaultAlarm(obj *DefaultAlarm) *DefaultAlarm {
+	return rcv.DEFAULT_ALARM(obj)
+}
+
 /// Default alarm
 /// Context alarms
 func (rcv *RelativeTimeParameterType) CONTEXT_ALARMS(obj *ContextAlarm, j int) bool {
@@ -131,10 +162,17 @@ func (rcv *RelativeTimeParameterType) CONTEXT_ALARMS(obj *ContextAlarm, j int) b
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(ContextAlarm)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *RelativeTimeParameterType) ContextAlarms(obj *ContextAlarm, j int) bool {
+	return rcv.CONTEXT_ALARMS(obj, j)
 }
 
 func (rcv *RelativeTimeParameterType) CONTEXT_ALARMSLength() int {
@@ -145,6 +183,10 @@ func (rcv *RelativeTimeParameterType) CONTEXT_ALARMSLength() int {
 	return 0
 }
 
+func (rcv *RelativeTimeParameterType) ContextAlarmsLength() int {
+	return rcv.CONTEXT_ALARMSLength()
+}
+
 /// Context alarms
 func RelativeTimeParameterTypeStart(builder *flatbuffers.Builder) {
 	builder.StartObject(7)
@@ -152,29 +194,56 @@ func RelativeTimeParameterTypeStart(builder *flatbuffers.Builder) {
 func RelativeTimeParameterTypeAddNAME(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(NAME), 0)
 }
+func RelativeTimeParameterTypeAddName(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
+	RelativeTimeParameterTypeAddNAME(builder, NAME)
+}
 func RelativeTimeParameterTypeAddSHORT_DESCRIPTION(builder *flatbuffers.Builder, SHORT_DESCRIPTION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(SHORT_DESCRIPTION), 0)
+}
+func RelativeTimeParameterTypeAddShortDescription(builder *flatbuffers.Builder, SHORT_DESCRIPTION flatbuffers.UOffsetT) {
+	RelativeTimeParameterTypeAddSHORT_DESCRIPTION(builder, SHORT_DESCRIPTION)
 }
 func RelativeTimeParameterTypeAddLONG_DESCRIPTION(builder *flatbuffers.Builder, LONG_DESCRIPTION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(LONG_DESCRIPTION), 0)
 }
+func RelativeTimeParameterTypeAddLongDescription(builder *flatbuffers.Builder, LONG_DESCRIPTION flatbuffers.UOffsetT) {
+	RelativeTimeParameterTypeAddLONG_DESCRIPTION(builder, LONG_DESCRIPTION)
+}
 func RelativeTimeParameterTypeAddUNITS(builder *flatbuffers.Builder, UNITS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(UNITS), 0)
+}
+func RelativeTimeParameterTypeAddUnits(builder *flatbuffers.Builder, UNITS flatbuffers.UOffsetT) {
+	RelativeTimeParameterTypeAddUNITS(builder, UNITS)
 }
 func RelativeTimeParameterTypeStartUNITSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
+func RelativeTimeParameterTypeStartUnitsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return RelativeTimeParameterTypeStartUNITSVector(builder, numElems)
+}
 func RelativeTimeParameterTypeAddDATA_ENCODING(builder *flatbuffers.Builder, DATA_ENCODING flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(DATA_ENCODING), 0)
+}
+func RelativeTimeParameterTypeAddDataEncoding(builder *flatbuffers.Builder, DATA_ENCODING flatbuffers.UOffsetT) {
+	RelativeTimeParameterTypeAddDATA_ENCODING(builder, DATA_ENCODING)
 }
 func RelativeTimeParameterTypeAddDEFAULT_ALARM(builder *flatbuffers.Builder, DEFAULT_ALARM flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(DEFAULT_ALARM), 0)
 }
+func RelativeTimeParameterTypeAddDefaultAlarm(builder *flatbuffers.Builder, DEFAULT_ALARM flatbuffers.UOffsetT) {
+	RelativeTimeParameterTypeAddDEFAULT_ALARM(builder, DEFAULT_ALARM)
+}
 func RelativeTimeParameterTypeAddCONTEXT_ALARMS(builder *flatbuffers.Builder, CONTEXT_ALARMS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(CONTEXT_ALARMS), 0)
 }
+func RelativeTimeParameterTypeAddContextAlarms(builder *flatbuffers.Builder, CONTEXT_ALARMS flatbuffers.UOffsetT) {
+	RelativeTimeParameterTypeAddCONTEXT_ALARMS(builder, CONTEXT_ALARMS)
+}
 func RelativeTimeParameterTypeStartCONTEXT_ALARMSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func RelativeTimeParameterTypeStartContextAlarmsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return RelativeTimeParameterTypeStartCONTEXT_ALARMSVector(builder, numElems)
 }
 func RelativeTimeParameterTypeEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

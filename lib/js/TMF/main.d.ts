@@ -1,2 +1,2 @@
-export { TMF, TMFT } from './TMF.js';
+export * from './TMF.js';
 //# sourceMappingURL=main.d.ts.map

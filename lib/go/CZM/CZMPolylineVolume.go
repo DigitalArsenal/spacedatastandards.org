@@ -51,9 +51,17 @@ func (rcv *CZMPolylineVolume) SHOW() bool {
 	return false
 }
 
+func (rcv *CZMPolylineVolume) Show() bool {
+	return rcv.SHOW()
+}
+
 /// Whether displayed
 func (rcv *CZMPolylineVolume) MutateSHOW(n bool) bool {
 	return rcv._tab.MutateBoolSlot(4, n)
+}
+
+func (rcv *CZMPolylineVolume) MutateShow(n bool) bool {
+	return rcv.MutateSHOW(n)
 }
 
 /// Positions as cartographic degrees
@@ -66,12 +74,20 @@ func (rcv *CZMPolylineVolume) POSITIONS_CARTOGRAPHIC_DEGREES(j int) float64 {
 	return 0
 }
 
+func (rcv *CZMPolylineVolume) PositionsCartographicDegrees(j int) float64 {
+	return rcv.POSITIONS_CARTOGRAPHIC_DEGREES(j)
+}
+
 func (rcv *CZMPolylineVolume) POSITIONS_CARTOGRAPHIC_DEGREESLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *CZMPolylineVolume) PositionsCartographicDegreesLength() int {
+	return rcv.POSITIONS_CARTOGRAPHIC_DEGREESLength()
 }
 
 /// Positions as cartographic degrees
@@ -84,6 +100,10 @@ func (rcv *CZMPolylineVolume) MutatePOSITIONS_CARTOGRAPHIC_DEGREES(j int, n floa
 	return false
 }
 
+func (rcv *CZMPolylineVolume) MutatePositionsCartographicDegrees(j int, n float64) bool {
+	return rcv.MutatePOSITIONS_CARTOGRAPHIC_DEGREES(j, n)
+}
+
 /// Positions as Cartesian
 func (rcv *CZMPolylineVolume) POSITIONS_CARTESIAN(j int) float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
@@ -94,12 +114,20 @@ func (rcv *CZMPolylineVolume) POSITIONS_CARTESIAN(j int) float64 {
 	return 0
 }
 
+func (rcv *CZMPolylineVolume) PositionsCartesian(j int) float64 {
+	return rcv.POSITIONS_CARTESIAN(j)
+}
+
 func (rcv *CZMPolylineVolume) POSITIONS_CARTESIANLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *CZMPolylineVolume) PositionsCartesianLength() int {
+	return rcv.POSITIONS_CARTESIANLength()
 }
 
 /// Positions as Cartesian
@@ -112,6 +140,10 @@ func (rcv *CZMPolylineVolume) MutatePOSITIONS_CARTESIAN(j int, n float64) bool {
 	return false
 }
 
+func (rcv *CZMPolylineVolume) MutatePositionsCartesian(j int, n float64) bool {
+	return rcv.MutatePOSITIONS_CARTESIAN(j, n)
+}
+
 /// 2D shape [x, y, x, y, ...]
 func (rcv *CZMPolylineVolume) SHAPE(j int) float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
@@ -122,12 +154,20 @@ func (rcv *CZMPolylineVolume) SHAPE(j int) float64 {
 	return 0
 }
 
+func (rcv *CZMPolylineVolume) Shape(j int) float64 {
+	return rcv.SHAPE(j)
+}
+
 func (rcv *CZMPolylineVolume) SHAPELength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *CZMPolylineVolume) ShapeLength() int {
+	return rcv.SHAPELength()
 }
 
 /// 2D shape [x, y, x, y, ...]
@@ -140,6 +180,10 @@ func (rcv *CZMPolylineVolume) MutateSHAPE(j int, n float64) bool {
 	return false
 }
 
+func (rcv *CZMPolylineVolume) MutateShape(j int, n float64) bool {
+	return rcv.MutateSHAPE(j, n)
+}
+
 /// Corner type
 func (rcv *CZMPolylineVolume) CORNER_TYPE() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
@@ -147,6 +191,10 @@ func (rcv *CZMPolylineVolume) CORNER_TYPE() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *CZMPolylineVolume) CornerType() []byte {
+	return rcv.CORNER_TYPE()
 }
 
 /// Corner type
@@ -159,9 +207,17 @@ func (rcv *CZMPolylineVolume) GRANULARITY() float64 {
 	return 0.0
 }
 
+func (rcv *CZMPolylineVolume) Granularity() float64 {
+	return rcv.GRANULARITY()
+}
+
 /// Granularity in radians
 func (rcv *CZMPolylineVolume) MutateGRANULARITY(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(14, n)
+}
+
+func (rcv *CZMPolylineVolume) MutateGranularity(n float64) bool {
+	return rcv.MutateGRANULARITY(n)
 }
 
 /// Fill flag
@@ -173,9 +229,17 @@ func (rcv *CZMPolylineVolume) FILL() bool {
 	return false
 }
 
+func (rcv *CZMPolylineVolume) Fill() bool {
+	return rcv.FILL()
+}
+
 /// Fill flag
 func (rcv *CZMPolylineVolume) MutateFILL(n bool) bool {
 	return rcv._tab.MutateBoolSlot(16, n)
+}
+
+func (rcv *CZMPolylineVolume) MutateFill(n bool) bool {
+	return rcv.MutateFILL(n)
 }
 
 /// Surface material
@@ -192,6 +256,10 @@ func (rcv *CZMPolylineVolume) MATERIAL(obj *CZMMaterial) *CZMMaterial {
 	return nil
 }
 
+func (rcv *CZMPolylineVolume) Material(obj *CZMMaterial) *CZMMaterial {
+	return rcv.MATERIAL(obj)
+}
+
 /// Surface material
 /// Outline flag
 func (rcv *CZMPolylineVolume) OUTLINE() bool {
@@ -202,9 +270,17 @@ func (rcv *CZMPolylineVolume) OUTLINE() bool {
 	return false
 }
 
+func (rcv *CZMPolylineVolume) Outline() bool {
+	return rcv.OUTLINE()
+}
+
 /// Outline flag
 func (rcv *CZMPolylineVolume) MutateOUTLINE(n bool) bool {
 	return rcv._tab.MutateBoolSlot(20, n)
+}
+
+func (rcv *CZMPolylineVolume) MutateOutline(n bool) bool {
+	return rcv.MutateOUTLINE(n)
 }
 
 /// Outline color
@@ -221,6 +297,10 @@ func (rcv *CZMPolylineVolume) OUTLINE_COLOR(obj *CZMColor) *CZMColor {
 	return nil
 }
 
+func (rcv *CZMPolylineVolume) OutlineColor(obj *CZMColor) *CZMColor {
+	return rcv.OUTLINE_COLOR(obj)
+}
+
 /// Outline color
 /// Outline width
 func (rcv *CZMPolylineVolume) OUTLINE_WIDTH() float64 {
@@ -231,9 +311,17 @@ func (rcv *CZMPolylineVolume) OUTLINE_WIDTH() float64 {
 	return 0.0
 }
 
+func (rcv *CZMPolylineVolume) OutlineWidth() float64 {
+	return rcv.OUTLINE_WIDTH()
+}
+
 /// Outline width
 func (rcv *CZMPolylineVolume) MutateOUTLINE_WIDTH(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(24, n)
+}
+
+func (rcv *CZMPolylineVolume) MutateOutlineWidth(n float64) bool {
+	return rcv.MutateOUTLINE_WIDTH(n)
 }
 
 /// Shadow mode
@@ -245,6 +333,10 @@ func (rcv *CZMPolylineVolume) SHADOWS() []byte {
 	return nil
 }
 
+func (rcv *CZMPolylineVolume) Shadows() []byte {
+	return rcv.SHADOWS()
+}
+
 /// Shadow mode
 func CZMPolylineVolumeStart(builder *flatbuffers.Builder) {
 	builder.StartObject(12)
@@ -252,47 +344,92 @@ func CZMPolylineVolumeStart(builder *flatbuffers.Builder) {
 func CZMPolylineVolumeAddSHOW(builder *flatbuffers.Builder, SHOW bool) {
 	builder.PrependBoolSlot(0, SHOW, false)
 }
+func CZMPolylineVolumeAddShow(builder *flatbuffers.Builder, SHOW bool) {
+	CZMPolylineVolumeAddSHOW(builder, SHOW)
+}
 func CZMPolylineVolumeAddPOSITIONS_CARTOGRAPHIC_DEGREES(builder *flatbuffers.Builder, POSITIONS_CARTOGRAPHIC_DEGREES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(POSITIONS_CARTOGRAPHIC_DEGREES), 0)
+}
+func CZMPolylineVolumeAddPositionsCartographicDegrees(builder *flatbuffers.Builder, POSITIONS_CARTOGRAPHIC_DEGREES flatbuffers.UOffsetT) {
+	CZMPolylineVolumeAddPOSITIONS_CARTOGRAPHIC_DEGREES(builder, POSITIONS_CARTOGRAPHIC_DEGREES)
 }
 func CZMPolylineVolumeStartPOSITIONS_CARTOGRAPHIC_DEGREESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(8, numElems, 8)
 }
+func CZMPolylineVolumeStartPositionsCartographicDegreesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return CZMPolylineVolumeStartPOSITIONS_CARTOGRAPHIC_DEGREESVector(builder, numElems)
+}
 func CZMPolylineVolumeAddPOSITIONS_CARTESIAN(builder *flatbuffers.Builder, POSITIONS_CARTESIAN flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(POSITIONS_CARTESIAN), 0)
+}
+func CZMPolylineVolumeAddPositionsCartesian(builder *flatbuffers.Builder, POSITIONS_CARTESIAN flatbuffers.UOffsetT) {
+	CZMPolylineVolumeAddPOSITIONS_CARTESIAN(builder, POSITIONS_CARTESIAN)
 }
 func CZMPolylineVolumeStartPOSITIONS_CARTESIANVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(8, numElems, 8)
 }
+func CZMPolylineVolumeStartPositionsCartesianVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return CZMPolylineVolumeStartPOSITIONS_CARTESIANVector(builder, numElems)
+}
 func CZMPolylineVolumeAddSHAPE(builder *flatbuffers.Builder, SHAPE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(SHAPE), 0)
+}
+func CZMPolylineVolumeAddShape(builder *flatbuffers.Builder, SHAPE flatbuffers.UOffsetT) {
+	CZMPolylineVolumeAddSHAPE(builder, SHAPE)
 }
 func CZMPolylineVolumeStartSHAPEVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(8, numElems, 8)
 }
+func CZMPolylineVolumeStartShapeVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return CZMPolylineVolumeStartSHAPEVector(builder, numElems)
+}
 func CZMPolylineVolumeAddCORNER_TYPE(builder *flatbuffers.Builder, CORNER_TYPE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(CORNER_TYPE), 0)
+}
+func CZMPolylineVolumeAddCornerType(builder *flatbuffers.Builder, CORNER_TYPE flatbuffers.UOffsetT) {
+	CZMPolylineVolumeAddCORNER_TYPE(builder, CORNER_TYPE)
 }
 func CZMPolylineVolumeAddGRANULARITY(builder *flatbuffers.Builder, GRANULARITY float64) {
 	builder.PrependFloat64Slot(5, GRANULARITY, 0.0)
 }
+func CZMPolylineVolumeAddGranularity(builder *flatbuffers.Builder, GRANULARITY float64) {
+	CZMPolylineVolumeAddGRANULARITY(builder, GRANULARITY)
+}
 func CZMPolylineVolumeAddFILL(builder *flatbuffers.Builder, FILL bool) {
 	builder.PrependBoolSlot(6, FILL, false)
+}
+func CZMPolylineVolumeAddFill(builder *flatbuffers.Builder, FILL bool) {
+	CZMPolylineVolumeAddFILL(builder, FILL)
 }
 func CZMPolylineVolumeAddMATERIAL(builder *flatbuffers.Builder, MATERIAL flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(MATERIAL), 0)
 }
+func CZMPolylineVolumeAddMaterial(builder *flatbuffers.Builder, MATERIAL flatbuffers.UOffsetT) {
+	CZMPolylineVolumeAddMATERIAL(builder, MATERIAL)
+}
 func CZMPolylineVolumeAddOUTLINE(builder *flatbuffers.Builder, OUTLINE bool) {
 	builder.PrependBoolSlot(8, OUTLINE, false)
+}
+func CZMPolylineVolumeAddOutline(builder *flatbuffers.Builder, OUTLINE bool) {
+	CZMPolylineVolumeAddOUTLINE(builder, OUTLINE)
 }
 func CZMPolylineVolumeAddOUTLINE_COLOR(builder *flatbuffers.Builder, OUTLINE_COLOR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(OUTLINE_COLOR), 0)
 }
+func CZMPolylineVolumeAddOutlineColor(builder *flatbuffers.Builder, OUTLINE_COLOR flatbuffers.UOffsetT) {
+	CZMPolylineVolumeAddOUTLINE_COLOR(builder, OUTLINE_COLOR)
+}
 func CZMPolylineVolumeAddOUTLINE_WIDTH(builder *flatbuffers.Builder, OUTLINE_WIDTH float64) {
 	builder.PrependFloat64Slot(10, OUTLINE_WIDTH, 0.0)
 }
+func CZMPolylineVolumeAddOutlineWidth(builder *flatbuffers.Builder, OUTLINE_WIDTH float64) {
+	CZMPolylineVolumeAddOUTLINE_WIDTH(builder, OUTLINE_WIDTH)
+}
 func CZMPolylineVolumeAddSHADOWS(builder *flatbuffers.Builder, SHADOWS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(SHADOWS), 0)
+}
+func CZMPolylineVolumeAddShadows(builder *flatbuffers.Builder, SHADOWS flatbuffers.UOffsetT) {
+	CZMPolylineVolumeAddSHADOWS(builder, SHADOWS)
 }
 func CZMPolylineVolumeEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

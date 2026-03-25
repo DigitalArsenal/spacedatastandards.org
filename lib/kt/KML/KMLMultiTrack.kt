@@ -32,7 +32,7 @@ class KMLMultiTrack : Table() {
     /**
      * Altitude mode
      */
-    val ALTITUDE_MODE : Byte
+    val altitudeMode : Byte
         get() {
             val o = __offset(4)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -40,7 +40,7 @@ class KMLMultiTrack : Table() {
     /**
      * Whether to interpolate between tracks
      */
-    val INTERPOLATE : Boolean
+    val interpolate : Boolean
         get() {
             val o = __offset(6)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -48,8 +48,8 @@ class KMLMultiTrack : Table() {
     /**
      * Child tracks
      */
-    fun TRACKS(j: Int) : KMLTrack? = TRACKS(KMLTrack(), j)
-    fun TRACKS(obj: KMLTrack, j: Int) : KMLTrack? {
+    fun tracks(j: Int) : KMLTrack? = tracks(KMLTrack(), j)
+    fun tracks(obj: KMLTrack, j: Int) : KMLTrack? {
         val o = __offset(8)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -57,28 +57,28 @@ class KMLMultiTrack : Table() {
             null
         }
     }
-    val TRACKSLength : Int
+    val tracksLength : Int
         get() {
             val o = __offset(8); return if (o != 0) __vector_len(o) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsKMLMultiTrack(_bb: ByteBuffer): KMLMultiTrack = getRootAsKMLMultiTrack(_bb, KMLMultiTrack())
         fun getRootAsKMLMultiTrack(_bb: ByteBuffer, obj: KMLMultiTrack): KMLMultiTrack {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createKMLMultiTrack(builder: FlatBufferBuilder, ALTITUDE_MODE: Byte, INTERPOLATE: Boolean, TRACKSOffset: Int) : Int {
+        fun createKMLMultiTrack(builder: FlatBufferBuilder, altitudeMode: Byte, interpolate: Boolean, tracksOffset: Int) : Int {
             builder.startTable(3)
-            addTRACKS(builder, TRACKSOffset)
-            addINTERPOLATE(builder, INTERPOLATE)
-            addALTITUDE_MODE(builder, ALTITUDE_MODE)
+            addTRACKS(builder, tracksOffset)
+            addINTERPOLATE(builder, interpolate)
+            addALTITUDEMODE(builder, altitudeMode)
             return endKMLMultiTrack(builder)
         }
         fun startKMLMultiTrack(builder: FlatBufferBuilder) = builder.startTable(3)
-        fun addALTITUDE_MODE(builder: FlatBufferBuilder, ALTITUDE_MODE: Byte) = builder.addByte(0, ALTITUDE_MODE, 0)
-        fun addINTERPOLATE(builder: FlatBufferBuilder, INTERPOLATE: Boolean) = builder.addBoolean(1, INTERPOLATE, false)
-        fun addTRACKS(builder: FlatBufferBuilder, TRACKS: Int) = builder.addOffset(2, TRACKS, 0)
+        fun addALTITUDEMODE(builder: FlatBufferBuilder, altitudeMode: Byte) = builder.addByte(0, altitudeMode, 0)
+        fun addINTERPOLATE(builder: FlatBufferBuilder, interpolate: Boolean) = builder.addBoolean(1, interpolate, false)
+        fun addTRACKS(builder: FlatBufferBuilder, tracks: Int) = builder.addOffset(2, tracks, 0)
         fun createTracksVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {

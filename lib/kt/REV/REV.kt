@@ -32,49 +32,49 @@ class REV : Table() {
     /**
      * Unique identifier for this review
      */
-    val REVIEW_ID : String
+    val reviewId : String
         get() {
             val o = __offset(4)
             return if (o != 0) {
                 __string(o + bb_pos)
             } else {
-                throw AssertionError("No value for (required) field REVIEW_ID")
+                throw AssertionError("No value for (required) field reviewId")
             }
         }
-    val REVIEW_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun REVIEW_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val reviewIdAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
+    fun reviewIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * ID of the listing being reviewed
      */
-    val LISTING_ID : String
+    val listingId : String
         get() {
             val o = __offset(6)
             return if (o != 0) {
                 __string(o + bb_pos)
             } else {
-                throw AssertionError("No value for (required) field LISTING_ID")
+                throw AssertionError("No value for (required) field listingId")
             }
         }
-    val LISTING_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun LISTING_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val listingIdAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
+    fun listingIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * Peer ID of the reviewer
      */
-    val REVIEWER_PEER_ID : String
+    val reviewerPeerId : String
         get() {
             val o = __offset(8)
             return if (o != 0) {
                 __string(o + bb_pos)
             } else {
-                throw AssertionError("No value for (required) field REVIEWER_PEER_ID")
+                throw AssertionError("No value for (required) field reviewerPeerId")
             }
         }
-    val REVIEWER_PEER_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun REVIEWER_PEER_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val reviewerPeerIdAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
+    fun reviewerPeerIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
     /**
      * Rating from 1-5 stars
      */
-    val RATING : UByte
+    val rating : UByte
         get() {
             val o = __offset(10)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
@@ -82,7 +82,7 @@ class REV : Table() {
     /**
      * Review title
      */
-    val TITLE : String?
+    val title : String?
         get() {
             val o = __offset(12)
             return if (o != 0) {
@@ -91,12 +91,12 @@ class REV : Table() {
                 null
             }
         }
-    val TITLEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
-    fun TITLEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
+    val titleAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(12, 1)
+    fun titleInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 12, 1)
     /**
      * Review content/body
      */
-    val CONTENT : String?
+    val content : String?
         get() {
             val o = __offset(14)
             return if (o != 0) {
@@ -105,12 +105,12 @@ class REV : Table() {
                 null
             }
         }
-    val CONTENTAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(14, 1)
-    fun CONTENTInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 14, 1)
+    val contentAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(14, 1)
+    fun contentInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 14, 1)
     /**
      * ACL grant ID proving purchase (proof of purchase)
      */
-    val ACL_GRANT_ID : String?
+    val aclGrantId : String?
         get() {
             val o = __offset(16)
             return if (o != 0) {
@@ -119,12 +119,12 @@ class REV : Table() {
                 null
             }
         }
-    val ACL_GRANT_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(16, 1)
-    fun ACL_GRANT_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 16, 1)
+    val aclGrantIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(16, 1)
+    fun aclGrantIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 16, 1)
     /**
      * Unix timestamp of the review
      */
-    val TIMESTAMP : ULong
+    val timestamp : ULong
         get() {
             val o = __offset(18)
             return if(o != 0) bb.getLong(o + bb_pos).toULong() else 0UL
@@ -132,7 +132,7 @@ class REV : Table() {
     /**
      * Ed25519 signature from reviewer
      */
-    fun REVIEWER_SIGNATURE(j: Int) : UByte {
+    fun reviewerSignature(j: Int) : UByte {
         val o = __offset(20)
         return if (o != 0) {
             bb.get(__vector(o) + j * 1).toUByte()
@@ -140,43 +140,43 @@ class REV : Table() {
             0u
         }
     }
-    val REVIEWER_SIGNATURELength : Int
+    val reviewerSignatureLength : Int
         get() {
             val o = __offset(20); return if (o != 0) __vector_len(o) else 0
         }
-    val REVIEWER_SIGNATUREAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(20, 1)
-    fun REVIEWER_SIGNATUREInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 20, 1)
+    val reviewerSignatureAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(20, 1)
+    fun reviewerSignatureInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 20, 1)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsREV(_bb: ByteBuffer): REV = getRootAsREV(_bb, REV())
         fun getRootAsREV(_bb: ByteBuffer, obj: REV): REV {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun REVBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$REV")
-        fun createREV(builder: FlatBufferBuilder, REVIEW_IDOffset: Int, LISTING_IDOffset: Int, REVIEWER_PEER_IDOffset: Int, RATING: UByte, TITLEOffset: Int, CONTENTOffset: Int, ACL_GRANT_IDOffset: Int, TIMESTAMP: ULong, REVIEWER_SIGNATUREOffset: Int) : Int {
+        fun createREV(builder: FlatBufferBuilder, reviewIdOffset: Int, listingIdOffset: Int, reviewerPeerIdOffset: Int, rating: UByte, titleOffset: Int, contentOffset: Int, aclGrantIdOffset: Int, timestamp: ULong, reviewerSignatureOffset: Int) : Int {
             builder.startTable(9)
-            addTIMESTAMP(builder, TIMESTAMP)
-            addREVIEWER_SIGNATURE(builder, REVIEWER_SIGNATUREOffset)
-            addACL_GRANT_ID(builder, ACL_GRANT_IDOffset)
-            addCONTENT(builder, CONTENTOffset)
-            addTITLE(builder, TITLEOffset)
-            addREVIEWER_PEER_ID(builder, REVIEWER_PEER_IDOffset)
-            addLISTING_ID(builder, LISTING_IDOffset)
-            addREVIEW_ID(builder, REVIEW_IDOffset)
-            addRATING(builder, RATING)
+            addTIMESTAMP(builder, timestamp)
+            addREVIEWERSIGNATURE(builder, reviewerSignatureOffset)
+            addACLGRANTID(builder, aclGrantIdOffset)
+            addCONTENT(builder, contentOffset)
+            addTITLE(builder, titleOffset)
+            addREVIEWERPEERID(builder, reviewerPeerIdOffset)
+            addLISTINGID(builder, listingIdOffset)
+            addREVIEWID(builder, reviewIdOffset)
+            addRATING(builder, rating)
             return endREV(builder)
         }
         fun startREV(builder: FlatBufferBuilder) = builder.startTable(9)
-        fun addREVIEW_ID(builder: FlatBufferBuilder, REVIEW_ID: Int) = builder.addOffset(0, REVIEW_ID, 0)
-        fun addLISTING_ID(builder: FlatBufferBuilder, LISTING_ID: Int) = builder.addOffset(1, LISTING_ID, 0)
-        fun addREVIEWER_PEER_ID(builder: FlatBufferBuilder, REVIEWER_PEER_ID: Int) = builder.addOffset(2, REVIEWER_PEER_ID, 0)
-        fun addRATING(builder: FlatBufferBuilder, RATING: UByte) = builder.addByte(3, RATING.toByte(), 0)
-        fun addTITLE(builder: FlatBufferBuilder, TITLE: Int) = builder.addOffset(4, TITLE, 0)
-        fun addCONTENT(builder: FlatBufferBuilder, CONTENT: Int) = builder.addOffset(5, CONTENT, 0)
-        fun addACL_GRANT_ID(builder: FlatBufferBuilder, ACL_GRANT_ID: Int) = builder.addOffset(6, ACL_GRANT_ID, 0)
-        fun addTIMESTAMP(builder: FlatBufferBuilder, TIMESTAMP: ULong) = builder.addLong(7, TIMESTAMP.toLong(), 0)
-        fun addREVIEWER_SIGNATURE(builder: FlatBufferBuilder, REVIEWER_SIGNATURE: Int) = builder.addOffset(8, REVIEWER_SIGNATURE, 0)
+        fun addREVIEWID(builder: FlatBufferBuilder, reviewId: Int) = builder.addOffset(0, reviewId, 0)
+        fun addLISTINGID(builder: FlatBufferBuilder, listingId: Int) = builder.addOffset(1, listingId, 0)
+        fun addREVIEWERPEERID(builder: FlatBufferBuilder, reviewerPeerId: Int) = builder.addOffset(2, reviewerPeerId, 0)
+        fun addRATING(builder: FlatBufferBuilder, rating: UByte) = builder.addByte(3, rating.toByte(), 0)
+        fun addTITLE(builder: FlatBufferBuilder, title: Int) = builder.addOffset(4, title, 0)
+        fun addCONTENT(builder: FlatBufferBuilder, content: Int) = builder.addOffset(5, content, 0)
+        fun addACLGRANTID(builder: FlatBufferBuilder, aclGrantId: Int) = builder.addOffset(6, aclGrantId, 0)
+        fun addTIMESTAMP(builder: FlatBufferBuilder, timestamp: ULong) = builder.addLong(7, timestamp.toLong(), 0)
+        fun addREVIEWERSIGNATURE(builder: FlatBufferBuilder, reviewerSignature: Int) = builder.addOffset(8, reviewerSignature, 0)
         @kotlin.ExperimentalUnsignedTypes
         fun createReviewerSignatureVector(builder: FlatBufferBuilder, data: UByteArray) : Int {
             builder.startVector(1, data.size, 1)

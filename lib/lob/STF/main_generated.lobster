@@ -79,9 +79,9 @@ def SpatialCoverageCreateREGIONSVector(b_:flatbuffers.builder, v_:[flatbuffers.o
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-def SpatialCoverageStartOBJECT_IDSVector(b_:flatbuffers.builder, n_:int):
+def SpatialCoverageStartOBJECTIDSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def SpatialCoverageCreateOBJECT_IDSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def SpatialCoverageCreateOBJECTIDSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
@@ -326,9 +326,9 @@ struct STFBuilder:
     def end():
         return b_.EndObject()
 
-def STFStartDATA_TYPESVector(b_:flatbuffers.builder, n_:int):
+def STFStartDATATYPESVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def STFCreateDATA_TYPESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def STFCreateDATATYPESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
@@ -340,9 +340,9 @@ def STFCreatePRICINGVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-def STFStartACCEPTED_PAYMENTSVector(b_:flatbuffers.builder, n_:int):
+def STFStartACCEPTEDPAYMENTSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(1, n_, 1)
-def STFCreateACCEPTED_PAYMENTSVector(b_:flatbuffers.builder, v_:[paymentMethod]):
+def STFCreateACCEPTEDPAYMENTSVector(b_:flatbuffers.builder, v_:[paymentMethod]):
     b_.StartVector(1, v_.length, 1)
     reverse(v_) e_: b_.PrependInt8(e_)
     return b_.EndVector(v_.length)

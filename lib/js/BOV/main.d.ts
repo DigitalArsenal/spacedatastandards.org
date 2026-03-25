@@ -1,2 +1,2 @@
-export { BOV, BOVT } from './BOV.js';
+export * from './BOV.js';
 //# sourceMappingURL=main.d.ts.map

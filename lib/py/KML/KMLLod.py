@@ -101,17 +101,23 @@ def End(builder):
 class KMLLodT(object):
 
     # KMLLodT
-    def __init__(self):
-        self.MIN_LOD_PIXELS = 0.0  # type: float
-        self.MAX_LOD_PIXELS = 0.0  # type: float
-        self.MIN_FADE_EXTENT = 0.0  # type: float
-        self.MAX_FADE_EXTENT = 0.0  # type: float
+    def __init__(
+        self,
+        MIN_LOD_PIXELS = 0.0,
+        MAX_LOD_PIXELS = 0.0,
+        MIN_FADE_EXTENT = 0.0,
+        MAX_FADE_EXTENT = 0.0,
+    ):
+        self.MIN_LOD_PIXELS = MIN_LOD_PIXELS  # type: float
+        self.MAX_LOD_PIXELS = MAX_LOD_PIXELS  # type: float
+        self.MIN_FADE_EXTENT = MIN_FADE_EXTENT  # type: float
+        self.MAX_FADE_EXTENT = MAX_FADE_EXTENT  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        kmllod = KMLLod()
-        kmllod.Init(buf, pos)
-        return cls.InitFromObj(kmllod)
+        tmpKmllod = KMLLod()
+        tmpKmllod.Init(buf, pos)
+        return cls.InitFromObj(tmpKmllod)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -119,19 +125,19 @@ class KMLLodT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, kmllod):
+    def InitFromObj(cls, tmpKmllod):
         x = KMLLodT()
-        x._UnPack(kmllod)
+        x._UnPack(tmpKmllod)
         return x
 
     # KMLLodT
-    def _UnPack(self, kmllod):
-        if kmllod is None:
+    def _UnPack(self, KMLLod):
+        if KMLLod is None:
             return
-        self.MIN_LOD_PIXELS = kmllod.MIN_LOD_PIXELS()
-        self.MAX_LOD_PIXELS = kmllod.MAX_LOD_PIXELS()
-        self.MIN_FADE_EXTENT = kmllod.MIN_FADE_EXTENT()
-        self.MAX_FADE_EXTENT = kmllod.MAX_FADE_EXTENT()
+        self.MIN_LOD_PIXELS = KMLLod.MIN_LOD_PIXELS()
+        self.MAX_LOD_PIXELS = KMLLod.MAX_LOD_PIXELS()
+        self.MIN_FADE_EXTENT = KMLLod.MIN_FADE_EXTENT()
+        self.MAX_FADE_EXTENT = KMLLod.MAX_FADE_EXTENT()
 
     # KMLLodT
     def Pack(self, builder):
@@ -140,5 +146,5 @@ class KMLLodT(object):
         KMLLodAddMAX_LOD_PIXELS(builder, self.MAX_LOD_PIXELS)
         KMLLodAddMIN_FADE_EXTENT(builder, self.MIN_FADE_EXTENT)
         KMLLodAddMAX_FADE_EXTENT(builder, self.MAX_FADE_EXTENT)
-        kmllod = KMLLodEnd(builder)
-        return kmllod
+        KMLLod = KMLLodEnd(builder)
+        return KMLLod

@@ -32,7 +32,7 @@ class SUSTAINER : Table() {
     /**
      * Name of the Sustainer
      */
-    val SUSTAINER_NAME : String?
+    val sustainerName : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class SUSTAINER : Table() {
                 null
             }
         }
-    val SUSTAINER_NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun SUSTAINER_NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val sustainerNameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun sustainerNameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Thrust Produced by the Sustainer (in Newtons)
      */
-    val THRUST : Double
+    val thrust : Double
         get() {
             val o = __offset(6)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -54,29 +54,29 @@ class SUSTAINER : Table() {
     /**
      * Duration of the Burn (in Seconds)
      */
-    val BURN_DURATION : Double
+    val burnDuration : Double
         get() {
             val o = __offset(8)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsSUSTAINER(_bb: ByteBuffer): SUSTAINER = getRootAsSUSTAINER(_bb, SUSTAINER())
         fun getRootAsSUSTAINER(_bb: ByteBuffer, obj: SUSTAINER): SUSTAINER {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createSUSTAINER(builder: FlatBufferBuilder, SUSTAINER_NAMEOffset: Int, THRUST: Double, BURN_DURATION: Double) : Int {
+        fun createSUSTAINER(builder: FlatBufferBuilder, sustainerNameOffset: Int, thrust: Double, burnDuration: Double) : Int {
             builder.startTable(3)
-            addBURN_DURATION(builder, BURN_DURATION)
-            addTHRUST(builder, THRUST)
-            addSUSTAINER_NAME(builder, SUSTAINER_NAMEOffset)
+            addBURNDURATION(builder, burnDuration)
+            addTHRUST(builder, thrust)
+            addSUSTAINERNAME(builder, sustainerNameOffset)
             return endSUSTAINER(builder)
         }
         fun startSUSTAINER(builder: FlatBufferBuilder) = builder.startTable(3)
-        fun addSUSTAINER_NAME(builder: FlatBufferBuilder, SUSTAINER_NAME: Int) = builder.addOffset(0, SUSTAINER_NAME, 0)
-        fun addTHRUST(builder: FlatBufferBuilder, THRUST: Double) = builder.addDouble(1, THRUST, 0.0)
-        fun addBURN_DURATION(builder: FlatBufferBuilder, BURN_DURATION: Double) = builder.addDouble(2, BURN_DURATION, 0.0)
+        fun addSUSTAINERNAME(builder: FlatBufferBuilder, sustainerName: Int) = builder.addOffset(0, sustainerName, 0)
+        fun addTHRUST(builder: FlatBufferBuilder, thrust: Double) = builder.addDouble(1, thrust, 0.0)
+        fun addBURNDURATION(builder: FlatBufferBuilder, burnDuration: Double) = builder.addDouble(2, burnDuration, 0.0)
         fun endSUSTAINER(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

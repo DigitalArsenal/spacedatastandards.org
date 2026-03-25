@@ -382,6 +382,12 @@ def GNOStartSAT_OBSVector(builder, numElems):
 def StartSAT_OBSVector(builder, numElems):
     return GNOStartSAT_OBSVector(builder, numElems)
 
+def GNOCreateSAT_OBSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateSAT_OBSVector(builder, data):
+    GNOCreateSAT_OBSVector(builder, data)
+
 def GNOAddOBS_CODE_SET(builder, OBS_CODE_SET):
     builder.PrependUOffsetTRelativeSlot(21, flatbuffers.number_types.UOffsetTFlags.py_type(OBS_CODE_SET), 0)
 
@@ -393,6 +399,12 @@ def GNOStartOBS_CODE_SETVector(builder, numElems):
 
 def StartOBS_CODE_SETVector(builder, numElems):
     return GNOStartOBS_CODE_SETVector(builder, numElems)
+
+def GNOCreateOBS_CODE_SETVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateOBS_CODE_SETVector(builder, data):
+    GNOCreateOBS_CODE_SETVector(builder, data)
 
 def GNOAddNOTES(builder, NOTES):
     builder.PrependUOffsetTRelativeSlot(22, flatbuffers.number_types.UOffsetTFlags.py_type(NOTES), 0)
@@ -415,36 +427,61 @@ except:
 class GNOT(object):
 
     # GNOT
-    def __init__(self):
-        self.ID = None  # type: str
-        self.RECEIVER_ID = None  # type: str
-        self.RECEIVER_TYPE = None  # type: str
-        self.ANTENNA_ID = None  # type: str
-        self.ANTENNA_TYPE = None  # type: str
-        self.FIRMWARE_VERSION = None  # type: str
-        self.EPOCH = None  # type: str
-        self.CLOCK_OFFSET = 0.0  # type: float
-        self.CLOCK_DRIFT = 0.0  # type: float
-        self.LATITUDE = 0.0  # type: float
-        self.LONGITUDE = 0.0  # type: float
-        self.ALTITUDE = 0.0  # type: float
-        self.APPROX_X = 0.0  # type: float
-        self.APPROX_Y = 0.0  # type: float
-        self.APPROX_Z = 0.0  # type: float
-        self.INTERVAL = 0.0  # type: float
-        self.NUM_SATS = 0  # type: int
-        self.PDOP = 0.0  # type: float
-        self.HDOP = 0.0  # type: float
-        self.VDOP = 0.0  # type: float
-        self.SAT_OBS = None  # type: List[gnssSatObs.gnssSatObsT]
-        self.OBS_CODE_SET = None  # type: List[str]
-        self.NOTES = None  # type: str
+    def __init__(
+        self,
+        ID = None,
+        RECEIVER_ID = None,
+        RECEIVER_TYPE = None,
+        ANTENNA_ID = None,
+        ANTENNA_TYPE = None,
+        FIRMWARE_VERSION = None,
+        EPOCH = None,
+        CLOCK_OFFSET = 0.0,
+        CLOCK_DRIFT = 0.0,
+        LATITUDE = 0.0,
+        LONGITUDE = 0.0,
+        ALTITUDE = 0.0,
+        APPROX_X = 0.0,
+        APPROX_Y = 0.0,
+        APPROX_Z = 0.0,
+        INTERVAL = 0.0,
+        NUM_SATS = 0,
+        PDOP = 0.0,
+        HDOP = 0.0,
+        VDOP = 0.0,
+        SAT_OBS = None,
+        OBS_CODE_SET = None,
+        NOTES = None,
+    ):
+        self.ID = ID  # type: Optional[str]
+        self.RECEIVER_ID = RECEIVER_ID  # type: Optional[str]
+        self.RECEIVER_TYPE = RECEIVER_TYPE  # type: Optional[str]
+        self.ANTENNA_ID = ANTENNA_ID  # type: Optional[str]
+        self.ANTENNA_TYPE = ANTENNA_TYPE  # type: Optional[str]
+        self.FIRMWARE_VERSION = FIRMWARE_VERSION  # type: Optional[str]
+        self.EPOCH = EPOCH  # type: Optional[str]
+        self.CLOCK_OFFSET = CLOCK_OFFSET  # type: float
+        self.CLOCK_DRIFT = CLOCK_DRIFT  # type: float
+        self.LATITUDE = LATITUDE  # type: float
+        self.LONGITUDE = LONGITUDE  # type: float
+        self.ALTITUDE = ALTITUDE  # type: float
+        self.APPROX_X = APPROX_X  # type: float
+        self.APPROX_Y = APPROX_Y  # type: float
+        self.APPROX_Z = APPROX_Z  # type: float
+        self.INTERVAL = INTERVAL  # type: float
+        self.NUM_SATS = NUM_SATS  # type: int
+        self.PDOP = PDOP  # type: float
+        self.HDOP = HDOP  # type: float
+        self.VDOP = VDOP  # type: float
+        self.SAT_OBS = SAT_OBS  # type: Optional[List[gnssSatObs.gnssSatObsT]]
+        self.OBS_CODE_SET = OBS_CODE_SET  # type: Optional[List[Optional[str]]]
+        self.NOTES = NOTES  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        GNO = GNO()
-        GNO.Init(buf, pos)
-        return cls.InitFromObj(GNO)
+        tmpGno = GNO()
+        tmpGno.Init(buf, pos)
+        return cls.InitFromObj(tmpGno)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -452,9 +489,9 @@ class GNOT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, GNO):
+    def InitFromObj(cls, tmpGno):
         x = GNOT()
-        x._UnPack(GNO)
+        x._UnPack(tmpGno)
         return x
 
     # GNOT

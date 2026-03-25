@@ -2,12 +2,16 @@
 // swiftlint:disable all
 // swiftformat:disable all
 
+#if canImport(Common)
+import Common
+#endif
+
 import FlatBuffers
 
 ///  Weather Data
-public struct WTH: FlatBufferObject, Verifiable {
+public struct WTH: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -83,60 +87,38 @@ public struct WTH: FlatBufferObject, Verifiable {
   ///  Checksum
   public var CHECKSUM: UInt32 { let o = _accessor.offset(VTOFFSET.CHECKSUM.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  Signal power values (dBm)
-  public var hasSigPwrs: Bool { let o = _accessor.offset(VTOFFSET.SIG_PWRS.v); return o == 0 ? false : true }
-  public var SIG_PWRSCount: Int32 { let o = _accessor.offset(VTOFFSET.SIG_PWRS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func SIG_PWRS(at index: Int32) -> Double { let o = _accessor.offset(VTOFFSET.SIG_PWRS.v); return o == 0 ? 0 : _accessor.directRead(of: Double.self, offset: _accessor.vector(at: o) + index * 8) }
-  public var SIG_PWRS: [Double] { return _accessor.getVector(at: VTOFFSET.SIG_PWRS.v) ?? [] }
+  public var SIG_PWRS: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.SIG_PWRS.v, byteSize: 8) }
+  public func withUnsafePointerToSigPwrs<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.SIG_PWRS.v, body: body) }
   ///  Noise level values (dBm)
-  public var hasNoiseLvls: Bool { let o = _accessor.offset(VTOFFSET.NOISE_LVLS.v); return o == 0 ? false : true }
-  public var NOISE_LVLSCount: Int32 { let o = _accessor.offset(VTOFFSET.NOISE_LVLS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func NOISE_LVLS(at index: Int32) -> Double { let o = _accessor.offset(VTOFFSET.NOISE_LVLS.v); return o == 0 ? 0 : _accessor.directRead(of: Double.self, offset: _accessor.vector(at: o) + index * 8) }
-  public var NOISE_LVLS: [Double] { return _accessor.getVector(at: VTOFFSET.NOISE_LVLS.v) ?? [] }
+  public var NOISE_LVLS: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.NOISE_LVLS.v, byteSize: 8) }
+  public func withUnsafePointerToNoiseLvls<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.NOISE_LVLS.v, body: body) }
   ///  Spectral width values (m/s)
-  public var hasSpecWidths: Bool { let o = _accessor.offset(VTOFFSET.SPEC_WIDTHS.v); return o == 0 ? false : true }
-  public var SPEC_WIDTHSCount: Int32 { let o = _accessor.offset(VTOFFSET.SPEC_WIDTHS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func SPEC_WIDTHS(at index: Int32) -> Double { let o = _accessor.offset(VTOFFSET.SPEC_WIDTHS.v); return o == 0 ? 0 : _accessor.directRead(of: Double.self, offset: _accessor.vector(at: o) + index * 8) }
-  public var SPEC_WIDTHS: [Double] { return _accessor.getVector(at: VTOFFSET.SPEC_WIDTHS.v) ?? [] }
+  public var SPEC_WIDTHS: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.SPEC_WIDTHS.v, byteSize: 8) }
+  public func withUnsafePointerToSpecWidths<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.SPEC_WIDTHS.v, body: body) }
   ///  First guess average values
-  public var hasFirstGuessAvgs: Bool { let o = _accessor.offset(VTOFFSET.FIRST_GUESS_AVGS.v); return o == 0 ? false : true }
-  public var FIRST_GUESS_AVGSCount: Int32 { let o = _accessor.offset(VTOFFSET.FIRST_GUESS_AVGS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func FIRST_GUESS_AVGS(at index: Int32) -> Double { let o = _accessor.offset(VTOFFSET.FIRST_GUESS_AVGS.v); return o == 0 ? 0 : _accessor.directRead(of: Double.self, offset: _accessor.vector(at: o) + index * 8) }
-  public var FIRST_GUESS_AVGS: [Double] { return _accessor.getVector(at: VTOFFSET.FIRST_GUESS_AVGS.v) ?? [] }
+  public var FIRST_GUESS_AVGS: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.FIRST_GUESS_AVGS.v, byteSize: 8) }
+  public func withUnsafePointerToFirstGuessAvgs<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.FIRST_GUESS_AVGS.v, body: body) }
   ///  Time domain average sample numbers
-  public var hasTdAvgSampleNums: Bool { let o = _accessor.offset(VTOFFSET.TD_AVG_SAMPLE_NUMS.v); return o == 0 ? false : true }
-  public var TD_AVG_SAMPLE_NUMSCount: Int32 { let o = _accessor.offset(VTOFFSET.TD_AVG_SAMPLE_NUMS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func TD_AVG_SAMPLE_NUMS(at index: Int32) -> Double { let o = _accessor.offset(VTOFFSET.TD_AVG_SAMPLE_NUMS.v); return o == 0 ? 0 : _accessor.directRead(of: Double.self, offset: _accessor.vector(at: o) + index * 8) }
-  public var TD_AVG_SAMPLE_NUMS: [Double] { return _accessor.getVector(at: VTOFFSET.TD_AVG_SAMPLE_NUMS.v) ?? [] }
+  public var TD_AVG_SAMPLE_NUMS: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.TD_AVG_SAMPLE_NUMS.v, byteSize: 8) }
+  public func withUnsafePointerToTdAvgSampleNums<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.TD_AVG_SAMPLE_NUMS.v, body: body) }
   ///  Co-integration values
-  public var hasCoIntegs: Bool { let o = _accessor.offset(VTOFFSET.CO_INTEGS.v); return o == 0 ? false : true }
-  public var CO_INTEGSCount: Int32 { let o = _accessor.offset(VTOFFSET.CO_INTEGS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func CO_INTEGS(at index: Int32) -> Double { let o = _accessor.offset(VTOFFSET.CO_INTEGS.v); return o == 0 ? 0 : _accessor.directRead(of: Double.self, offset: _accessor.vector(at: o) + index * 8) }
-  public var CO_INTEGS: [Double] { return _accessor.getVector(at: VTOFFSET.CO_INTEGS.v) ?? [] }
+  public var CO_INTEGS: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.CO_INTEGS.v, byteSize: 8) }
+  public func withUnsafePointerToCoIntegs<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.CO_INTEGS.v, body: body) }
   ///  Spectral average values
-  public var hasSpecAvgs: Bool { let o = _accessor.offset(VTOFFSET.SPEC_AVGS.v); return o == 0 ? false : true }
-  public var SPEC_AVGSCount: Int32 { let o = _accessor.offset(VTOFFSET.SPEC_AVGS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func SPEC_AVGS(at index: Int32) -> Double { let o = _accessor.offset(VTOFFSET.SPEC_AVGS.v); return o == 0 ? 0 : _accessor.directRead(of: Double.self, offset: _accessor.vector(at: o) + index * 8) }
-  public var SPEC_AVGS: [Double] { return _accessor.getVector(at: VTOFFSET.SPEC_AVGS.v) ?? [] }
+  public var SPEC_AVGS: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.SPEC_AVGS.v, byteSize: 8) }
+  public func withUnsafePointerToSpecAvgs<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.SPEC_AVGS.v, body: body) }
   ///  Interpulse periods (microseconds)
-  public var hasInterpulsePeriods: Bool { let o = _accessor.offset(VTOFFSET.INTERPULSE_PERIODS.v); return o == 0 ? false : true }
-  public var INTERPULSE_PERIODSCount: Int32 { let o = _accessor.offset(VTOFFSET.INTERPULSE_PERIODS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func INTERPULSE_PERIODS(at index: Int32) -> Double { let o = _accessor.offset(VTOFFSET.INTERPULSE_PERIODS.v); return o == 0 ? 0 : _accessor.directRead(of: Double.self, offset: _accessor.vector(at: o) + index * 8) }
-  public var INTERPULSE_PERIODS: [Double] { return _accessor.getVector(at: VTOFFSET.INTERPULSE_PERIODS.v) ?? [] }
+  public var INTERPULSE_PERIODS: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.INTERPULSE_PERIODS.v, byteSize: 8) }
+  public func withUnsafePointerToInterpulsePeriods<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.INTERPULSE_PERIODS.v, body: body) }
   ///  Doppler velocities (m/s)
-  public var hasDoppVels: Bool { let o = _accessor.offset(VTOFFSET.DOPP_VELS.v); return o == 0 ? false : true }
-  public var DOPP_VELSCount: Int32 { let o = _accessor.offset(VTOFFSET.DOPP_VELS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func DOPP_VELS(at index: Int32) -> Double { let o = _accessor.offset(VTOFFSET.DOPP_VELS.v); return o == 0 ? 0 : _accessor.directRead(of: Double.self, offset: _accessor.vector(at: o) + index * 8) }
-  public var DOPP_VELS: [Double] { return _accessor.getVector(at: VTOFFSET.DOPP_VELS.v) ?? [] }
+  public var DOPP_VELS: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.DOPP_VELS.v, byteSize: 8) }
+  public func withUnsafePointerToDoppVels<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.DOPP_VELS.v, body: body) }
   ///  Consecutive records count
-  public var hasConsRecs: Bool { let o = _accessor.offset(VTOFFSET.CONS_RECS.v); return o == 0 ? false : true }
-  public var CONS_RECSCount: Int32 { let o = _accessor.offset(VTOFFSET.CONS_RECS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func CONS_RECS(at index: Int32) -> Double { let o = _accessor.offset(VTOFFSET.CONS_RECS.v); return o == 0 ? 0 : _accessor.directRead(of: Double.self, offset: _accessor.vector(at: o) + index * 8) }
-  public var CONS_RECS: [Double] { return _accessor.getVector(at: VTOFFSET.CONS_RECS.v) ?? [] }
+  public var CONS_RECS: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.CONS_RECS.v, byteSize: 8) }
+  public func withUnsafePointerToConsRecs<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.CONS_RECS.v, body: body) }
   ///  Signal-to-noise ratios (dB)
-  public var hasSnrs: Bool { let o = _accessor.offset(VTOFFSET.SNRS.v); return o == 0 ? false : true }
-  public var SNRSCount: Int32 { let o = _accessor.offset(VTOFFSET.SNRS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func SNRS(at index: Int32) -> Double { let o = _accessor.offset(VTOFFSET.SNRS.v); return o == 0 ? 0 : _accessor.directRead(of: Double.self, offset: _accessor.vector(at: o) + index * 8) }
-  public var SNRS: [Double] { return _accessor.getVector(at: VTOFFSET.SNRS.v) ?? [] }
+  public var SNRS: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.SNRS.v, byteSize: 8) }
+  public func withUnsafePointerToSnrs<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.SNRS.v, body: body) }
   ///  Signal strength (dBm)
   public var SIG_STRENGTH: Double { let o = _accessor.offset(VTOFFSET.SIG_STRENGTH.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Error ellipse semi-major axis (km)
@@ -148,19 +130,13 @@ public struct WTH: FlatBufferObject, Verifiable {
   ///  Lightning event number
   public var LIGHT_EVENT_NUM: UInt32 { let o = _accessor.offset(VTOFFSET.LIGHT_EVENT_NUM.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  Lightning detection sensor identifiers
-  public var hasLightDetSensors: Bool { let o = _accessor.offset(VTOFFSET.LIGHT_DET_SENSORS.v); return o == 0 ? false : true }
-  public var LIGHT_DET_SENSORSCount: Int32 { let o = _accessor.offset(VTOFFSET.LIGHT_DET_SENSORS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func LIGHT_DET_SENSORS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.LIGHT_DET_SENSORS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  public var LIGHT_DET_SENSORS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.LIGHT_DET_SENSORS.v, byteSize: 4) }
   ///  Position confidence (0-1)
   public var POS_CONFIDENCE: Double { let o = _accessor.offset(VTOFFSET.POS_CONFIDENCE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Source types
-  public var hasSrcTyps: Bool { let o = _accessor.offset(VTOFFSET.SRC_TYPS.v); return o == 0 ? false : true }
-  public var SRC_TYPSCount: Int32 { let o = _accessor.offset(VTOFFSET.SRC_TYPS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func SRC_TYPS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.SRC_TYPS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  public var SRC_TYPS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.SRC_TYPS.v, byteSize: 4) }
   ///  Source identifiers
-  public var hasSrcIds: Bool { let o = _accessor.offset(VTOFFSET.SRC_IDS.v); return o == 0 ? false : true }
-  public var SRC_IDSCount: Int32 { let o = _accessor.offset(VTOFFSET.SRC_IDS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func SRC_IDS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.SRC_IDS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  public var SRC_IDS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.SRC_IDS.v, byteSize: 4) }
   public static func startWTH(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 32) }
   public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VTOFFSET.ID.p) }
   public static func add(ID_SENSOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID_SENSOR, at: VTOFFSET.ID_SENSOR.p) }

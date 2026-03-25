@@ -1,6 +1,6 @@
-export { EntryFunction, EntryFunctionT } from './EntryFunction.js';
-export { PLG, PLGT } from './PLG.js';
-export { PluginCapability, PluginCapabilityT } from './PluginCapability.js';
-export { PluginDependency, PluginDependencyT } from './PluginDependency.js';
-export { pluginType } from './pluginType.js';
+export * from './EntryFunction.js';
+export * from './PLG.js';
+export * from './PluginCapability.js';
+export * from './PluginDependency.js';
+export * from './pluginType.js';
 //# sourceMappingURL=main.d.ts.map

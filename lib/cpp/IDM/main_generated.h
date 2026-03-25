@@ -8,9 +8,9 @@
 
 // Ensure the included flatbuffers.h is the same version as when this file was
 // generated, otherwise it may not be compatible.
-static_assert(FLATBUFFERS_VERSION_MAJOR == 24 &&
-              FLATBUFFERS_VERSION_MINOR == 3 &&
-              FLATBUFFERS_VERSION_REVISION == 25,
+static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
+              FLATBUFFERS_VERSION_MINOR == 12 &&
+              FLATBUFFERS_VERSION_REVISION == 19,
              "Non-compatible flatbuffers version included");
 
 struct FrequencyRange;
@@ -362,7 +362,8 @@ struct FrequencyRange FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   double UPPER() const {
     return GetField<double>(VT_UPPER, 0.0);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<double>(verifier, VT_LOWER, 8) &&
            VerifyField<double>(verifier, VT_UPPER, 8) &&
@@ -426,7 +427,8 @@ struct StokesParameters FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   double V() const {
     return GetField<double>(VT_V, 0.0);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<double>(verifier, VT_I, 8) &&
            VerifyField<double>(verifier, VT_Q, 8) &&
@@ -492,7 +494,8 @@ struct Band FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const FrequencyRange *FREQUENCY_RANGE() const {
     return GetPointer<const FrequencyRange *>(VT_FREQUENCY_RANGE);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_NAME) &&
            verifier.VerifyString(NAME()) &&
@@ -694,7 +697,8 @@ struct IDM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   bool TASKABLE() const {
     return GetField<uint8_t>(VT_TASKABLE, 0) != 0;
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_ID) &&
            verifier.VerifyString(ID()) &&
@@ -998,14 +1002,16 @@ inline bool SizePrefixedIDMBufferHasIdentifier(const void *buf) {
       buf, IDMIdentifier(), true);
 }
 
+template <bool B = false>
 inline bool VerifyIDMBuffer(
-    ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifyBuffer<IDM>(IDMIdentifier());
+    ::flatbuffers::VerifierTemplate<B> &verifier) {
+  return verifier.template VerifyBuffer<IDM>(IDMIdentifier());
 }
 
+template <bool B = false>
 inline bool VerifySizePrefixedIDMBuffer(
-    ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifySizePrefixedBuffer<IDM>(IDMIdentifier());
+    ::flatbuffers::VerifierTemplate<B> &verifier) {
+  return verifier.template VerifySizePrefixedBuffer<IDM>(IDMIdentifier());
 }
 
 inline void FinishIDMBuffer(

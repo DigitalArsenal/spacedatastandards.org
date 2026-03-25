@@ -51,9 +51,17 @@ func (rcv *CZMOrientation) UNIT_QUATERNION_X() float64 {
 	return 0.0
 }
 
+func (rcv *CZMOrientation) UnitQuaternionX() float64 {
+	return rcv.UNIT_QUATERNION_X()
+}
+
 /// X component
 func (rcv *CZMOrientation) MutateUNIT_QUATERNION_X(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(4, n)
+}
+
+func (rcv *CZMOrientation) MutateUnitQuaternionX(n float64) bool {
+	return rcv.MutateUNIT_QUATERNION_X(n)
 }
 
 /// Y component
@@ -65,9 +73,17 @@ func (rcv *CZMOrientation) UNIT_QUATERNION_Y() float64 {
 	return 0.0
 }
 
+func (rcv *CZMOrientation) UnitQuaternionY() float64 {
+	return rcv.UNIT_QUATERNION_Y()
+}
+
 /// Y component
 func (rcv *CZMOrientation) MutateUNIT_QUATERNION_Y(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(6, n)
+}
+
+func (rcv *CZMOrientation) MutateUnitQuaternionY(n float64) bool {
+	return rcv.MutateUNIT_QUATERNION_Y(n)
 }
 
 /// Z component
@@ -79,9 +95,17 @@ func (rcv *CZMOrientation) UNIT_QUATERNION_Z() float64 {
 	return 0.0
 }
 
+func (rcv *CZMOrientation) UnitQuaternionZ() float64 {
+	return rcv.UNIT_QUATERNION_Z()
+}
+
 /// Z component
 func (rcv *CZMOrientation) MutateUNIT_QUATERNION_Z(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(8, n)
+}
+
+func (rcv *CZMOrientation) MutateUnitQuaternionZ(n float64) bool {
+	return rcv.MutateUNIT_QUATERNION_Z(n)
 }
 
 /// W component
@@ -93,9 +117,17 @@ func (rcv *CZMOrientation) UNIT_QUATERNION_W() float64 {
 	return 0.0
 }
 
+func (rcv *CZMOrientation) UnitQuaternionW() float64 {
+	return rcv.UNIT_QUATERNION_W()
+}
+
 /// W component
 func (rcv *CZMOrientation) MutateUNIT_QUATERNION_W(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(10, n)
+}
+
+func (rcv *CZMOrientation) MutateUnitQuaternionW(n float64) bool {
+	return rcv.MutateUNIT_QUATERNION_W(n)
 }
 
 func CZMOrientationStart(builder *flatbuffers.Builder) {
@@ -104,14 +136,26 @@ func CZMOrientationStart(builder *flatbuffers.Builder) {
 func CZMOrientationAddUNIT_QUATERNION_X(builder *flatbuffers.Builder, UNIT_QUATERNION_X float64) {
 	builder.PrependFloat64Slot(0, UNIT_QUATERNION_X, 0.0)
 }
+func CZMOrientationAddUnitQuaternionX(builder *flatbuffers.Builder, UNIT_QUATERNION_X float64) {
+	CZMOrientationAddUNIT_QUATERNION_X(builder, UNIT_QUATERNION_X)
+}
 func CZMOrientationAddUNIT_QUATERNION_Y(builder *flatbuffers.Builder, UNIT_QUATERNION_Y float64) {
 	builder.PrependFloat64Slot(1, UNIT_QUATERNION_Y, 0.0)
+}
+func CZMOrientationAddUnitQuaternionY(builder *flatbuffers.Builder, UNIT_QUATERNION_Y float64) {
+	CZMOrientationAddUNIT_QUATERNION_Y(builder, UNIT_QUATERNION_Y)
 }
 func CZMOrientationAddUNIT_QUATERNION_Z(builder *flatbuffers.Builder, UNIT_QUATERNION_Z float64) {
 	builder.PrependFloat64Slot(2, UNIT_QUATERNION_Z, 0.0)
 }
+func CZMOrientationAddUnitQuaternionZ(builder *flatbuffers.Builder, UNIT_QUATERNION_Z float64) {
+	CZMOrientationAddUNIT_QUATERNION_Z(builder, UNIT_QUATERNION_Z)
+}
 func CZMOrientationAddUNIT_QUATERNION_W(builder *flatbuffers.Builder, UNIT_QUATERNION_W float64) {
 	builder.PrependFloat64Slot(3, UNIT_QUATERNION_W, 0.0)
+}
+func CZMOrientationAddUnitQuaternionW(builder *flatbuffers.Builder, UNIT_QUATERNION_W float64) {
+	CZMOrientationAddUNIT_QUATERNION_W(builder, UNIT_QUATERNION_W)
 }
 func CZMOrientationEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

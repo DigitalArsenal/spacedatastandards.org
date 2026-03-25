@@ -32,7 +32,7 @@ class GPXWaypoint : Table() {
     /**
      * Latitude in decimal degrees (WGS84)
      */
-    val LATITUDE : Double
+    val latitude : Double
         get() {
             val o = __offset(4)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -40,7 +40,7 @@ class GPXWaypoint : Table() {
     /**
      * Longitude in decimal degrees (WGS84)
      */
-    val LONGITUDE : Double
+    val longitude : Double
         get() {
             val o = __offset(6)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -48,7 +48,7 @@ class GPXWaypoint : Table() {
     /**
      * Elevation in meters above WGS84 ellipsoid
      */
-    val ELEVATION : Double
+    val elevation : Double
         get() {
             val o = __offset(8)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -56,7 +56,7 @@ class GPXWaypoint : Table() {
     /**
      * UTC timestamp (ISO 8601)
      */
-    val TIME : String?
+    val time : String?
         get() {
             val o = __offset(10)
             return if (o != 0) {
@@ -65,12 +65,12 @@ class GPXWaypoint : Table() {
                 null
             }
         }
-    val TIMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
-    fun TIMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
+    val timeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(10, 1)
+    fun timeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 10, 1)
     /**
      * Magnetic variation in degrees
      */
-    val MAGVAR : Double
+    val magvar : Double
         get() {
             val o = __offset(12)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -78,7 +78,7 @@ class GPXWaypoint : Table() {
     /**
      * Height of geoid above WGS84 ellipsoid in meters
      */
-    val GEOID_HEIGHT : Double
+    val geoidHeight : Double
         get() {
             val o = __offset(14)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -86,7 +86,7 @@ class GPXWaypoint : Table() {
     /**
      * Waypoint name
      */
-    val NAME : String?
+    val name : String?
         get() {
             val o = __offset(16)
             return if (o != 0) {
@@ -95,12 +95,12 @@ class GPXWaypoint : Table() {
                 null
             }
         }
-    val NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(16, 1)
-    fun NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 16, 1)
+    val nameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(16, 1)
+    fun nameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 16, 1)
     /**
      * Comment
      */
-    val COMMENT : String?
+    val comment : String?
         get() {
             val o = __offset(18)
             return if (o != 0) {
@@ -109,12 +109,12 @@ class GPXWaypoint : Table() {
                 null
             }
         }
-    val COMMENTAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(18, 1)
-    fun COMMENTInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 18, 1)
+    val commentAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(18, 1)
+    fun commentInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 18, 1)
     /**
      * Description
      */
-    val DESCRIPTION : String?
+    val description : String?
         get() {
             val o = __offset(20)
             return if (o != 0) {
@@ -123,12 +123,12 @@ class GPXWaypoint : Table() {
                 null
             }
         }
-    val DESCRIPTIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(20, 1)
-    fun DESCRIPTIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 20, 1)
+    val descriptionAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(20, 1)
+    fun descriptionInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 20, 1)
     /**
      * Source of data
      */
-    val SOURCE : String?
+    val source : String?
         get() {
             val o = __offset(22)
             return if (o != 0) {
@@ -137,13 +137,13 @@ class GPXWaypoint : Table() {
                 null
             }
         }
-    val SOURCEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(22, 1)
-    fun SOURCEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 22, 1)
+    val sourceAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(22, 1)
+    fun sourceInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 22, 1)
     /**
      * Links to additional information
      */
-    fun LINKS(j: Int) : GPXLink? = LINKS(GPXLink(), j)
-    fun LINKS(obj: GPXLink, j: Int) : GPXLink? {
+    fun links(j: Int) : GPXLink? = links(GPXLink(), j)
+    fun links(obj: GPXLink, j: Int) : GPXLink? {
         val o = __offset(24)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -151,14 +151,14 @@ class GPXWaypoint : Table() {
             null
         }
     }
-    val LINKSLength : Int
+    val linksLength : Int
         get() {
             val o = __offset(24); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Symbol name
      */
-    val SYMBOL : String?
+    val symbol : String?
         get() {
             val o = __offset(26)
             return if (o != 0) {
@@ -167,12 +167,12 @@ class GPXWaypoint : Table() {
                 null
             }
         }
-    val SYMBOLAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(26, 1)
-    fun SYMBOLInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 26, 1)
+    val symbolAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(26, 1)
+    fun symbolInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 26, 1)
     /**
      * Type/category
      */
-    val TYPE : String?
+    val type : String?
         get() {
             val o = __offset(28)
             return if (o != 0) {
@@ -181,12 +181,12 @@ class GPXWaypoint : Table() {
                 null
             }
         }
-    val TYPEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(28, 1)
-    fun TYPEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 28, 1)
+    val typeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(28, 1)
+    fun typeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 28, 1)
     /**
      * Type of GPS fix
      */
-    val FIX : Byte
+    val fix : Byte
         get() {
             val o = __offset(30)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -194,7 +194,7 @@ class GPXWaypoint : Table() {
     /**
      * Number of satellites used for fix
      */
-    val SAT : UShort
+    val sat : UShort
         get() {
             val o = __offset(32)
             return if(o != 0) bb.getShort(o + bb_pos).toUShort() else 0u
@@ -202,7 +202,7 @@ class GPXWaypoint : Table() {
     /**
      * Horizontal dilution of precision
      */
-    val HDOP : Double
+    val hdop : Double
         get() {
             val o = __offset(34)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -210,7 +210,7 @@ class GPXWaypoint : Table() {
     /**
      * Vertical dilution of precision
      */
-    val VDOP : Double
+    val vdop : Double
         get() {
             val o = __offset(36)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -218,7 +218,7 @@ class GPXWaypoint : Table() {
     /**
      * Position dilution of precision
      */
-    val PDOP : Double
+    val pdop : Double
         get() {
             val o = __offset(38)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -226,7 +226,7 @@ class GPXWaypoint : Table() {
     /**
      * Age of DGPS data in seconds
      */
-    val AGE_OF_DGPS_DATA : Double
+    val ageOfDgpsData : Double
         get() {
             val o = __offset(40)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -234,7 +234,7 @@ class GPXWaypoint : Table() {
     /**
      * DGPS station ID
      */
-    val DGPS_ID : UShort
+    val dgpsId : UShort
         get() {
             val o = __offset(42)
             return if(o != 0) bb.getShort(o + bb_pos).toUShort() else 0u
@@ -242,7 +242,7 @@ class GPXWaypoint : Table() {
     /**
      * Speed in meters per second
      */
-    val SPEED : Double
+    val speed : Double
         get() {
             val o = __offset(44)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -250,56 +250,56 @@ class GPXWaypoint : Table() {
     /**
      * Course/heading in degrees true
      */
-    val COURSE : Double
+    val course : Double
         get() {
             val o = __offset(46)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsGPXWaypoint(_bb: ByteBuffer): GPXWaypoint = getRootAsGPXWaypoint(_bb, GPXWaypoint())
         fun getRootAsGPXWaypoint(_bb: ByteBuffer, obj: GPXWaypoint): GPXWaypoint {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createGPXWaypoint(builder: FlatBufferBuilder, LATITUDE: Double, LONGITUDE: Double, ELEVATION: Double, TIMEOffset: Int, MAGVAR: Double, GEOID_HEIGHT: Double, NAMEOffset: Int, COMMENTOffset: Int, DESCRIPTIONOffset: Int, SOURCEOffset: Int, LINKSOffset: Int, SYMBOLOffset: Int, TYPEOffset: Int, FIX: Byte, SAT: UShort, HDOP: Double, VDOP: Double, PDOP: Double, AGE_OF_DGPS_DATA: Double, DGPS_ID: UShort, SPEED: Double, COURSE: Double) : Int {
+        fun createGPXWaypoint(builder: FlatBufferBuilder, latitude: Double, longitude: Double, elevation: Double, timeOffset: Int, magvar: Double, geoidHeight: Double, nameOffset: Int, commentOffset: Int, descriptionOffset: Int, sourceOffset: Int, linksOffset: Int, symbolOffset: Int, typeOffset: Int, fix: Byte, sat: UShort, hdop: Double, vdop: Double, pdop: Double, ageOfDgpsData: Double, dgpsId: UShort, speed: Double, course: Double) : Int {
             builder.startTable(22)
-            addCOURSE(builder, COURSE)
-            addSPEED(builder, SPEED)
-            addAGE_OF_DGPS_DATA(builder, AGE_OF_DGPS_DATA)
-            addPDOP(builder, PDOP)
-            addVDOP(builder, VDOP)
-            addHDOP(builder, HDOP)
-            addGEOID_HEIGHT(builder, GEOID_HEIGHT)
-            addMAGVAR(builder, MAGVAR)
-            addELEVATION(builder, ELEVATION)
-            addLONGITUDE(builder, LONGITUDE)
-            addLATITUDE(builder, LATITUDE)
-            addTYPE(builder, TYPEOffset)
-            addSYMBOL(builder, SYMBOLOffset)
-            addLINKS(builder, LINKSOffset)
-            addSOURCE(builder, SOURCEOffset)
-            addDESCRIPTION(builder, DESCRIPTIONOffset)
-            addCOMMENT(builder, COMMENTOffset)
-            addNAME(builder, NAMEOffset)
-            addTIME(builder, TIMEOffset)
-            addDGPS_ID(builder, DGPS_ID)
-            addSAT(builder, SAT)
-            addFIX(builder, FIX)
+            addCOURSE(builder, course)
+            addSPEED(builder, speed)
+            addAGEOFDGPSDATA(builder, ageOfDgpsData)
+            addPDOP(builder, pdop)
+            addVDOP(builder, vdop)
+            addHDOP(builder, hdop)
+            addGEOIDHEIGHT(builder, geoidHeight)
+            addMAGVAR(builder, magvar)
+            addELEVATION(builder, elevation)
+            addLONGITUDE(builder, longitude)
+            addLATITUDE(builder, latitude)
+            addTYPE(builder, typeOffset)
+            addSYMBOL(builder, symbolOffset)
+            addLINKS(builder, linksOffset)
+            addSOURCE(builder, sourceOffset)
+            addDESCRIPTION(builder, descriptionOffset)
+            addCOMMENT(builder, commentOffset)
+            addNAME(builder, nameOffset)
+            addTIME(builder, timeOffset)
+            addDGPSID(builder, dgpsId)
+            addSAT(builder, sat)
+            addFIX(builder, fix)
             return endGPXWaypoint(builder)
         }
         fun startGPXWaypoint(builder: FlatBufferBuilder) = builder.startTable(22)
-        fun addLATITUDE(builder: FlatBufferBuilder, LATITUDE: Double) = builder.addDouble(0, LATITUDE, 0.0)
-        fun addLONGITUDE(builder: FlatBufferBuilder, LONGITUDE: Double) = builder.addDouble(1, LONGITUDE, 0.0)
-        fun addELEVATION(builder: FlatBufferBuilder, ELEVATION: Double) = builder.addDouble(2, ELEVATION, 0.0)
-        fun addTIME(builder: FlatBufferBuilder, TIME: Int) = builder.addOffset(3, TIME, 0)
-        fun addMAGVAR(builder: FlatBufferBuilder, MAGVAR: Double) = builder.addDouble(4, MAGVAR, 0.0)
-        fun addGEOID_HEIGHT(builder: FlatBufferBuilder, GEOID_HEIGHT: Double) = builder.addDouble(5, GEOID_HEIGHT, 0.0)
-        fun addNAME(builder: FlatBufferBuilder, NAME: Int) = builder.addOffset(6, NAME, 0)
-        fun addCOMMENT(builder: FlatBufferBuilder, COMMENT: Int) = builder.addOffset(7, COMMENT, 0)
-        fun addDESCRIPTION(builder: FlatBufferBuilder, DESCRIPTION: Int) = builder.addOffset(8, DESCRIPTION, 0)
-        fun addSOURCE(builder: FlatBufferBuilder, SOURCE: Int) = builder.addOffset(9, SOURCE, 0)
-        fun addLINKS(builder: FlatBufferBuilder, LINKS: Int) = builder.addOffset(10, LINKS, 0)
+        fun addLATITUDE(builder: FlatBufferBuilder, latitude: Double) = builder.addDouble(0, latitude, 0.0)
+        fun addLONGITUDE(builder: FlatBufferBuilder, longitude: Double) = builder.addDouble(1, longitude, 0.0)
+        fun addELEVATION(builder: FlatBufferBuilder, elevation: Double) = builder.addDouble(2, elevation, 0.0)
+        fun addTIME(builder: FlatBufferBuilder, time: Int) = builder.addOffset(3, time, 0)
+        fun addMAGVAR(builder: FlatBufferBuilder, magvar: Double) = builder.addDouble(4, magvar, 0.0)
+        fun addGEOIDHEIGHT(builder: FlatBufferBuilder, geoidHeight: Double) = builder.addDouble(5, geoidHeight, 0.0)
+        fun addNAME(builder: FlatBufferBuilder, name: Int) = builder.addOffset(6, name, 0)
+        fun addCOMMENT(builder: FlatBufferBuilder, comment: Int) = builder.addOffset(7, comment, 0)
+        fun addDESCRIPTION(builder: FlatBufferBuilder, description: Int) = builder.addOffset(8, description, 0)
+        fun addSOURCE(builder: FlatBufferBuilder, source: Int) = builder.addOffset(9, source, 0)
+        fun addLINKS(builder: FlatBufferBuilder, links: Int) = builder.addOffset(10, links, 0)
         fun createLinksVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -308,17 +308,17 @@ class GPXWaypoint : Table() {
             return builder.endVector()
         }
         fun startLinksVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addSYMBOL(builder: FlatBufferBuilder, SYMBOL: Int) = builder.addOffset(11, SYMBOL, 0)
-        fun addTYPE(builder: FlatBufferBuilder, TYPE: Int) = builder.addOffset(12, TYPE, 0)
-        fun addFIX(builder: FlatBufferBuilder, FIX: Byte) = builder.addByte(13, FIX, 0)
-        fun addSAT(builder: FlatBufferBuilder, SAT: UShort) = builder.addShort(14, SAT.toShort(), 0)
-        fun addHDOP(builder: FlatBufferBuilder, HDOP: Double) = builder.addDouble(15, HDOP, 0.0)
-        fun addVDOP(builder: FlatBufferBuilder, VDOP: Double) = builder.addDouble(16, VDOP, 0.0)
-        fun addPDOP(builder: FlatBufferBuilder, PDOP: Double) = builder.addDouble(17, PDOP, 0.0)
-        fun addAGE_OF_DGPS_DATA(builder: FlatBufferBuilder, AGE_OF_DGPS_DATA: Double) = builder.addDouble(18, AGE_OF_DGPS_DATA, 0.0)
-        fun addDGPS_ID(builder: FlatBufferBuilder, DGPS_ID: UShort) = builder.addShort(19, DGPS_ID.toShort(), 0)
-        fun addSPEED(builder: FlatBufferBuilder, SPEED: Double) = builder.addDouble(20, SPEED, 0.0)
-        fun addCOURSE(builder: FlatBufferBuilder, COURSE: Double) = builder.addDouble(21, COURSE, 0.0)
+        fun addSYMBOL(builder: FlatBufferBuilder, symbol: Int) = builder.addOffset(11, symbol, 0)
+        fun addTYPE(builder: FlatBufferBuilder, type: Int) = builder.addOffset(12, type, 0)
+        fun addFIX(builder: FlatBufferBuilder, fix: Byte) = builder.addByte(13, fix, 0)
+        fun addSAT(builder: FlatBufferBuilder, sat: UShort) = builder.addShort(14, sat.toShort(), 0)
+        fun addHDOP(builder: FlatBufferBuilder, hdop: Double) = builder.addDouble(15, hdop, 0.0)
+        fun addVDOP(builder: FlatBufferBuilder, vdop: Double) = builder.addDouble(16, vdop, 0.0)
+        fun addPDOP(builder: FlatBufferBuilder, pdop: Double) = builder.addDouble(17, pdop, 0.0)
+        fun addAGEOFDGPSDATA(builder: FlatBufferBuilder, ageOfDgpsData: Double) = builder.addDouble(18, ageOfDgpsData, 0.0)
+        fun addDGPSID(builder: FlatBufferBuilder, dgpsId: UShort) = builder.addShort(19, dgpsId.toShort(), 0)
+        fun addSPEED(builder: FlatBufferBuilder, speed: Double) = builder.addDouble(20, speed, 0.0)
+        fun addCOURSE(builder: FlatBufferBuilder, course: Double) = builder.addDouble(21, course, 0.0)
         fun endGPXWaypoint(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

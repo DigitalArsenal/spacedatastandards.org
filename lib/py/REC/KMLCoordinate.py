@@ -2,4 +2,131 @@
 
 # namespace: 
 
-# NOTE KMLCoordinate.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# KML coordinate (longitude, latitude, optional altitude)
+class KMLCoordinate(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = KMLCoordinate()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsKMLCoordinate(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def KMLCoordinateBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x4B\x4D\x4C", size_prefixed=size_prefixed)
+
+    # KMLCoordinate
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Longitude in decimal degrees
+    # KMLCoordinate
+    def LONGITUDE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Latitude in decimal degrees
+    # KMLCoordinate
+    def LATITUDE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Altitude in meters
+    # KMLCoordinate
+    def ALTITUDE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+def KMLCoordinateStart(builder):
+    builder.StartObject(3)
+
+def Start(builder):
+    KMLCoordinateStart(builder)
+
+def KMLCoordinateAddLONGITUDE(builder, LONGITUDE):
+    builder.PrependFloat64Slot(0, LONGITUDE, 0.0)
+
+def AddLONGITUDE(builder, LONGITUDE):
+    KMLCoordinateAddLONGITUDE(builder, LONGITUDE)
+
+def KMLCoordinateAddLATITUDE(builder, LATITUDE):
+    builder.PrependFloat64Slot(1, LATITUDE, 0.0)
+
+def AddLATITUDE(builder, LATITUDE):
+    KMLCoordinateAddLATITUDE(builder, LATITUDE)
+
+def KMLCoordinateAddALTITUDE(builder, ALTITUDE):
+    builder.PrependFloat64Slot(2, ALTITUDE, 0.0)
+
+def AddALTITUDE(builder, ALTITUDE):
+    KMLCoordinateAddALTITUDE(builder, ALTITUDE)
+
+def KMLCoordinateEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return KMLCoordinateEnd(builder)
+
+
+class KMLCoordinateT(object):
+
+    # KMLCoordinateT
+    def __init__(
+        self,
+        LONGITUDE = 0.0,
+        LATITUDE = 0.0,
+        ALTITUDE = 0.0,
+    ):
+        self.LONGITUDE = LONGITUDE  # type: float
+        self.LATITUDE = LATITUDE  # type: float
+        self.ALTITUDE = ALTITUDE  # type: float
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpKmlcoordinate = KMLCoordinate()
+        tmpKmlcoordinate.Init(buf, pos)
+        return cls.InitFromObj(tmpKmlcoordinate)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpKmlcoordinate):
+        x = KMLCoordinateT()
+        x._UnPack(tmpKmlcoordinate)
+        return x
+
+    # KMLCoordinateT
+    def _UnPack(self, KMLCoordinate):
+        if KMLCoordinate is None:
+            return
+        self.LONGITUDE = KMLCoordinate.LONGITUDE()
+        self.LATITUDE = KMLCoordinate.LATITUDE()
+        self.ALTITUDE = KMLCoordinate.ALTITUDE()
+
+    # KMLCoordinateT
+    def Pack(self, builder):
+        KMLCoordinateStart(builder)
+        KMLCoordinateAddLONGITUDE(builder, self.LONGITUDE)
+        KMLCoordinateAddLATITUDE(builder, self.LATITUDE)
+        KMLCoordinateAddALTITUDE(builder, self.ALTITUDE)
+        KMLCoordinate = KMLCoordinateEnd(builder)
+        return KMLCoordinate

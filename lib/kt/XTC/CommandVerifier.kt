@@ -32,7 +32,7 @@ class CommandVerifier : Table() {
     /**
      * Verifier name
      */
-    val NAME : String?
+    val name : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class CommandVerifier : Table() {
                 null
             }
         }
-    val NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val nameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun nameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Verifier type
      */
-    val VERIFIER_TYPE : Byte
+    val verifierType : Byte
         get() {
             val o = __offset(6)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -54,8 +54,8 @@ class CommandVerifier : Table() {
     /**
      * Verification condition
      */
-    val CONDITION : MatchCriteria? get() = CONDITION(MatchCriteria())
-    fun CONDITION(obj: MatchCriteria) : MatchCriteria? {
+    val condition : MatchCriteria? get() = condition(MatchCriteria())
+    fun condition(obj: MatchCriteria) : MatchCriteria? {
         val o = __offset(8)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -66,7 +66,7 @@ class CommandVerifier : Table() {
     /**
      * Container reference for verification
      */
-    val CONTAINER_REF : String?
+    val containerRef : String?
         get() {
             val o = __offset(10)
             return if (o != 0) {
@@ -75,12 +75,12 @@ class CommandVerifier : Table() {
                 null
             }
         }
-    val CONTAINER_REFAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
-    fun CONTAINER_REFInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
+    val containerRefAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(10, 1)
+    fun containerRefInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 10, 1)
     /**
      * Time window start (seconds)
      */
-    val TIME_WINDOW_START : Double
+    val timeWindowStart : Double
         get() {
             val o = __offset(12)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -88,7 +88,7 @@ class CommandVerifier : Table() {
     /**
      * Time window stop (seconds)
      */
-    val TIME_WINDOW_STOP : Double
+    val timeWindowStop : Double
         get() {
             val o = __offset(14)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -96,37 +96,37 @@ class CommandVerifier : Table() {
     /**
      * Time window reference type
      */
-    val TIME_WINDOW_REF : Byte
+    val timeWindowRef : Byte
         get() {
             val o = __offset(16)
             return if(o != 0) bb.get(o + bb_pos) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsCommandVerifier(_bb: ByteBuffer): CommandVerifier = getRootAsCommandVerifier(_bb, CommandVerifier())
         fun getRootAsCommandVerifier(_bb: ByteBuffer, obj: CommandVerifier): CommandVerifier {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createCommandVerifier(builder: FlatBufferBuilder, NAMEOffset: Int, VERIFIER_TYPE: Byte, CONDITIONOffset: Int, CONTAINER_REFOffset: Int, TIME_WINDOW_START: Double, TIME_WINDOW_STOP: Double, TIME_WINDOW_REF: Byte) : Int {
+        fun createCommandVerifier(builder: FlatBufferBuilder, nameOffset: Int, verifierType: Byte, conditionOffset: Int, containerRefOffset: Int, timeWindowStart: Double, timeWindowStop: Double, timeWindowRef: Byte) : Int {
             builder.startTable(7)
-            addTIME_WINDOW_STOP(builder, TIME_WINDOW_STOP)
-            addTIME_WINDOW_START(builder, TIME_WINDOW_START)
-            addCONTAINER_REF(builder, CONTAINER_REFOffset)
-            addCONDITION(builder, CONDITIONOffset)
-            addNAME(builder, NAMEOffset)
-            addTIME_WINDOW_REF(builder, TIME_WINDOW_REF)
-            addVERIFIER_TYPE(builder, VERIFIER_TYPE)
+            addTIMEWINDOWSTOP(builder, timeWindowStop)
+            addTIMEWINDOWSTART(builder, timeWindowStart)
+            addCONTAINERREF(builder, containerRefOffset)
+            addCONDITION(builder, conditionOffset)
+            addNAME(builder, nameOffset)
+            addTIMEWINDOWREF(builder, timeWindowRef)
+            addVERIFIERTYPE(builder, verifierType)
             return endCommandVerifier(builder)
         }
         fun startCommandVerifier(builder: FlatBufferBuilder) = builder.startTable(7)
-        fun addNAME(builder: FlatBufferBuilder, NAME: Int) = builder.addOffset(0, NAME, 0)
-        fun addVERIFIER_TYPE(builder: FlatBufferBuilder, VERIFIER_TYPE: Byte) = builder.addByte(1, VERIFIER_TYPE, 0)
-        fun addCONDITION(builder: FlatBufferBuilder, CONDITION: Int) = builder.addOffset(2, CONDITION, 0)
-        fun addCONTAINER_REF(builder: FlatBufferBuilder, CONTAINER_REF: Int) = builder.addOffset(3, CONTAINER_REF, 0)
-        fun addTIME_WINDOW_START(builder: FlatBufferBuilder, TIME_WINDOW_START: Double) = builder.addDouble(4, TIME_WINDOW_START, 0.0)
-        fun addTIME_WINDOW_STOP(builder: FlatBufferBuilder, TIME_WINDOW_STOP: Double) = builder.addDouble(5, TIME_WINDOW_STOP, 0.0)
-        fun addTIME_WINDOW_REF(builder: FlatBufferBuilder, TIME_WINDOW_REF: Byte) = builder.addByte(6, TIME_WINDOW_REF, 0)
+        fun addNAME(builder: FlatBufferBuilder, name: Int) = builder.addOffset(0, name, 0)
+        fun addVERIFIERTYPE(builder: FlatBufferBuilder, verifierType: Byte) = builder.addByte(1, verifierType, 0)
+        fun addCONDITION(builder: FlatBufferBuilder, condition: Int) = builder.addOffset(2, condition, 0)
+        fun addCONTAINERREF(builder: FlatBufferBuilder, containerRef: Int) = builder.addOffset(3, containerRef, 0)
+        fun addTIMEWINDOWSTART(builder: FlatBufferBuilder, timeWindowStart: Double) = builder.addDouble(4, timeWindowStart, 0.0)
+        fun addTIMEWINDOWSTOP(builder: FlatBufferBuilder, timeWindowStop: Double) = builder.addDouble(5, timeWindowStop, 0.0)
+        fun addTIMEWINDOWREF(builder: FlatBufferBuilder, timeWindowRef: Byte) = builder.addByte(6, timeWindowRef, 0)
         fun endCommandVerifier(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

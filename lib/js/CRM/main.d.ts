@@ -1,2 +1,2 @@
-export { CRM, CRMT } from './CRM.js';
+export * from './CRM.js';
 //# sourceMappingURL=main.d.ts.map

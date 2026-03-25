@@ -50,8 +50,16 @@ func (rcv *keplerianElements) SEMI_MAJOR_AXIS() float64 {
 	return 0.0
 }
 
+func (rcv *keplerianElements) SemiMajorAxis() float64 {
+	return rcv.SEMI_MAJOR_AXIS()
+}
+
 func (rcv *keplerianElements) MutateSEMI_MAJOR_AXIS(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(4, n)
+}
+
+func (rcv *keplerianElements) MutateSemiMajorAxis(n float64) bool {
+	return rcv.MutateSEMI_MAJOR_AXIS(n)
 }
 
 func (rcv *keplerianElements) ECCENTRICITY() float64 {
@@ -62,8 +70,16 @@ func (rcv *keplerianElements) ECCENTRICITY() float64 {
 	return 0.0
 }
 
+func (rcv *keplerianElements) Eccentricity() float64 {
+	return rcv.ECCENTRICITY()
+}
+
 func (rcv *keplerianElements) MutateECCENTRICITY(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(6, n)
+}
+
+func (rcv *keplerianElements) MutateEccentricity(n float64) bool {
+	return rcv.MutateECCENTRICITY(n)
 }
 
 func (rcv *keplerianElements) INCLINATION() float64 {
@@ -74,8 +90,16 @@ func (rcv *keplerianElements) INCLINATION() float64 {
 	return 0.0
 }
 
+func (rcv *keplerianElements) Inclination() float64 {
+	return rcv.INCLINATION()
+}
+
 func (rcv *keplerianElements) MutateINCLINATION(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(8, n)
+}
+
+func (rcv *keplerianElements) MutateInclination(n float64) bool {
+	return rcv.MutateINCLINATION(n)
 }
 
 func (rcv *keplerianElements) RA_OF_ASC_NODE() float64 {
@@ -86,8 +110,16 @@ func (rcv *keplerianElements) RA_OF_ASC_NODE() float64 {
 	return 0.0
 }
 
+func (rcv *keplerianElements) RaOfAscNode() float64 {
+	return rcv.RA_OF_ASC_NODE()
+}
+
 func (rcv *keplerianElements) MutateRA_OF_ASC_NODE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(10, n)
+}
+
+func (rcv *keplerianElements) MutateRaOfAscNode(n float64) bool {
+	return rcv.MutateRA_OF_ASC_NODE(n)
 }
 
 func (rcv *keplerianElements) ARG_OF_PERICENTER() float64 {
@@ -98,8 +130,16 @@ func (rcv *keplerianElements) ARG_OF_PERICENTER() float64 {
 	return 0.0
 }
 
+func (rcv *keplerianElements) ArgOfPericenter() float64 {
+	return rcv.ARG_OF_PERICENTER()
+}
+
 func (rcv *keplerianElements) MutateARG_OF_PERICENTER(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(12, n)
+}
+
+func (rcv *keplerianElements) MutateArgOfPericenter(n float64) bool {
+	return rcv.MutateARG_OF_PERICENTER(n)
 }
 
 func (rcv *keplerianElements) ANOMALY_TYPE() anomalyType {
@@ -110,8 +150,16 @@ func (rcv *keplerianElements) ANOMALY_TYPE() anomalyType {
 	return 0
 }
 
+func (rcv *keplerianElements) AnomalyType() anomalyType {
+	return rcv.ANOMALY_TYPE()
+}
+
 func (rcv *keplerianElements) MutateANOMALY_TYPE(n anomalyType) bool {
 	return rcv._tab.MutateInt8Slot(14, int8(n))
+}
+
+func (rcv *keplerianElements) MutateAnomalyType(n anomalyType) bool {
+	return rcv.MutateANOMALY_TYPE(n)
 }
 
 func (rcv *keplerianElements) ANOMALY() float64 {
@@ -122,8 +170,16 @@ func (rcv *keplerianElements) ANOMALY() float64 {
 	return 0.0
 }
 
+func (rcv *keplerianElements) Anomaly() float64 {
+	return rcv.ANOMALY()
+}
+
 func (rcv *keplerianElements) MutateANOMALY(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(16, n)
+}
+
+func (rcv *keplerianElements) MutateAnomaly(n float64) bool {
+	return rcv.MutateANOMALY(n)
 }
 
 func keplerianElementsStart(builder *flatbuffers.Builder) {
@@ -132,23 +188,44 @@ func keplerianElementsStart(builder *flatbuffers.Builder) {
 func keplerianElementsAddSEMI_MAJOR_AXIS(builder *flatbuffers.Builder, SEMI_MAJOR_AXIS float64) {
 	builder.PrependFloat64Slot(0, SEMI_MAJOR_AXIS, 0.0)
 }
+func keplerianElementsAddSemiMajorAxis(builder *flatbuffers.Builder, SEMI_MAJOR_AXIS float64) {
+	keplerianElementsAddSEMI_MAJOR_AXIS(builder, SEMI_MAJOR_AXIS)
+}
 func keplerianElementsAddECCENTRICITY(builder *flatbuffers.Builder, ECCENTRICITY float64) {
 	builder.PrependFloat64Slot(1, ECCENTRICITY, 0.0)
+}
+func keplerianElementsAddEccentricity(builder *flatbuffers.Builder, ECCENTRICITY float64) {
+	keplerianElementsAddECCENTRICITY(builder, ECCENTRICITY)
 }
 func keplerianElementsAddINCLINATION(builder *flatbuffers.Builder, INCLINATION float64) {
 	builder.PrependFloat64Slot(2, INCLINATION, 0.0)
 }
+func keplerianElementsAddInclination(builder *flatbuffers.Builder, INCLINATION float64) {
+	keplerianElementsAddINCLINATION(builder, INCLINATION)
+}
 func keplerianElementsAddRA_OF_ASC_NODE(builder *flatbuffers.Builder, RA_OF_ASC_NODE float64) {
 	builder.PrependFloat64Slot(3, RA_OF_ASC_NODE, 0.0)
+}
+func keplerianElementsAddRaOfAscNode(builder *flatbuffers.Builder, RA_OF_ASC_NODE float64) {
+	keplerianElementsAddRA_OF_ASC_NODE(builder, RA_OF_ASC_NODE)
 }
 func keplerianElementsAddARG_OF_PERICENTER(builder *flatbuffers.Builder, ARG_OF_PERICENTER float64) {
 	builder.PrependFloat64Slot(4, ARG_OF_PERICENTER, 0.0)
 }
+func keplerianElementsAddArgOfPericenter(builder *flatbuffers.Builder, ARG_OF_PERICENTER float64) {
+	keplerianElementsAddARG_OF_PERICENTER(builder, ARG_OF_PERICENTER)
+}
 func keplerianElementsAddANOMALY_TYPE(builder *flatbuffers.Builder, ANOMALY_TYPE anomalyType) {
 	builder.PrependInt8Slot(5, int8(ANOMALY_TYPE), 0)
 }
+func keplerianElementsAddAnomalyType(builder *flatbuffers.Builder, ANOMALY_TYPE anomalyType) {
+	keplerianElementsAddANOMALY_TYPE(builder, ANOMALY_TYPE)
+}
 func keplerianElementsAddANOMALY(builder *flatbuffers.Builder, ANOMALY float64) {
 	builder.PrependFloat64Slot(6, ANOMALY, 0.0)
+}
+func keplerianElementsAddAnomaly(builder *flatbuffers.Builder, ANOMALY float64) {
+	keplerianElementsAddANOMALY(builder, ANOMALY)
 }
 func keplerianElementsEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

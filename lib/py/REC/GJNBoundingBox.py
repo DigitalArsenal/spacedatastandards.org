@@ -2,4 +2,203 @@
 
 # namespace: 
 
-# NOTE GJNBoundingBox.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# GeoJSON Bounding Box [west, south, east, north] or [west, south, min-alt, east, north, max-alt]
+class GJNBoundingBox(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = GJNBoundingBox()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsGJNBoundingBox(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def GJNBoundingBoxBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x47\x4A\x4E", size_prefixed=size_prefixed)
+
+    # GJNBoundingBox
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Western longitude
+    # GJNBoundingBox
+    def WEST(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Southern latitude
+    # GJNBoundingBox
+    def SOUTH(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Eastern longitude
+    # GJNBoundingBox
+    def EAST(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Northern latitude
+    # GJNBoundingBox
+    def NORTH(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Minimum altitude (optional)
+    # GJNBoundingBox
+    def MIN_ALTITUDE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Maximum altitude (optional)
+    # GJNBoundingBox
+    def MAX_ALTITUDE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # True if the bbox includes altitude (6 values vs 4)
+    # GJNBoundingBox
+    def HAS_ALTITUDE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+def GJNBoundingBoxStart(builder):
+    builder.StartObject(7)
+
+def Start(builder):
+    GJNBoundingBoxStart(builder)
+
+def GJNBoundingBoxAddWEST(builder, WEST):
+    builder.PrependFloat64Slot(0, WEST, 0.0)
+
+def AddWEST(builder, WEST):
+    GJNBoundingBoxAddWEST(builder, WEST)
+
+def GJNBoundingBoxAddSOUTH(builder, SOUTH):
+    builder.PrependFloat64Slot(1, SOUTH, 0.0)
+
+def AddSOUTH(builder, SOUTH):
+    GJNBoundingBoxAddSOUTH(builder, SOUTH)
+
+def GJNBoundingBoxAddEAST(builder, EAST):
+    builder.PrependFloat64Slot(2, EAST, 0.0)
+
+def AddEAST(builder, EAST):
+    GJNBoundingBoxAddEAST(builder, EAST)
+
+def GJNBoundingBoxAddNORTH(builder, NORTH):
+    builder.PrependFloat64Slot(3, NORTH, 0.0)
+
+def AddNORTH(builder, NORTH):
+    GJNBoundingBoxAddNORTH(builder, NORTH)
+
+def GJNBoundingBoxAddMIN_ALTITUDE(builder, MIN_ALTITUDE):
+    builder.PrependFloat64Slot(4, MIN_ALTITUDE, 0.0)
+
+def AddMIN_ALTITUDE(builder, MIN_ALTITUDE):
+    GJNBoundingBoxAddMIN_ALTITUDE(builder, MIN_ALTITUDE)
+
+def GJNBoundingBoxAddMAX_ALTITUDE(builder, MAX_ALTITUDE):
+    builder.PrependFloat64Slot(5, MAX_ALTITUDE, 0.0)
+
+def AddMAX_ALTITUDE(builder, MAX_ALTITUDE):
+    GJNBoundingBoxAddMAX_ALTITUDE(builder, MAX_ALTITUDE)
+
+def GJNBoundingBoxAddHAS_ALTITUDE(builder, HAS_ALTITUDE):
+    builder.PrependBoolSlot(6, HAS_ALTITUDE, 0)
+
+def AddHAS_ALTITUDE(builder, HAS_ALTITUDE):
+    GJNBoundingBoxAddHAS_ALTITUDE(builder, HAS_ALTITUDE)
+
+def GJNBoundingBoxEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return GJNBoundingBoxEnd(builder)
+
+
+class GJNBoundingBoxT(object):
+
+    # GJNBoundingBoxT
+    def __init__(
+        self,
+        WEST = 0.0,
+        SOUTH = 0.0,
+        EAST = 0.0,
+        NORTH = 0.0,
+        MIN_ALTITUDE = 0.0,
+        MAX_ALTITUDE = 0.0,
+        HAS_ALTITUDE = False,
+    ):
+        self.WEST = WEST  # type: float
+        self.SOUTH = SOUTH  # type: float
+        self.EAST = EAST  # type: float
+        self.NORTH = NORTH  # type: float
+        self.MIN_ALTITUDE = MIN_ALTITUDE  # type: float
+        self.MAX_ALTITUDE = MAX_ALTITUDE  # type: float
+        self.HAS_ALTITUDE = HAS_ALTITUDE  # type: bool
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpGjnboundingBox = GJNBoundingBox()
+        tmpGjnboundingBox.Init(buf, pos)
+        return cls.InitFromObj(tmpGjnboundingBox)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpGjnboundingBox):
+        x = GJNBoundingBoxT()
+        x._UnPack(tmpGjnboundingBox)
+        return x
+
+    # GJNBoundingBoxT
+    def _UnPack(self, GJNBoundingBox):
+        if GJNBoundingBox is None:
+            return
+        self.WEST = GJNBoundingBox.WEST()
+        self.SOUTH = GJNBoundingBox.SOUTH()
+        self.EAST = GJNBoundingBox.EAST()
+        self.NORTH = GJNBoundingBox.NORTH()
+        self.MIN_ALTITUDE = GJNBoundingBox.MIN_ALTITUDE()
+        self.MAX_ALTITUDE = GJNBoundingBox.MAX_ALTITUDE()
+        self.HAS_ALTITUDE = GJNBoundingBox.HAS_ALTITUDE()
+
+    # GJNBoundingBoxT
+    def Pack(self, builder):
+        GJNBoundingBoxStart(builder)
+        GJNBoundingBoxAddWEST(builder, self.WEST)
+        GJNBoundingBoxAddSOUTH(builder, self.SOUTH)
+        GJNBoundingBoxAddEAST(builder, self.EAST)
+        GJNBoundingBoxAddNORTH(builder, self.NORTH)
+        GJNBoundingBoxAddMIN_ALTITUDE(builder, self.MIN_ALTITUDE)
+        GJNBoundingBoxAddMAX_ALTITUDE(builder, self.MAX_ALTITUDE)
+        GJNBoundingBoxAddHAS_ALTITUDE(builder, self.HAS_ALTITUDE)
+        GJNBoundingBox = GJNBoundingBoxEnd(builder)
+        return GJNBoundingBox

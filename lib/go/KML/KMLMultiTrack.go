@@ -51,9 +51,17 @@ func (rcv *KMLMultiTrack) ALTITUDE_MODE() KMLAltitudeMode {
 	return 0
 }
 
+func (rcv *KMLMultiTrack) AltitudeMode() KMLAltitudeMode {
+	return rcv.ALTITUDE_MODE()
+}
+
 /// Altitude mode
 func (rcv *KMLMultiTrack) MutateALTITUDE_MODE(n KMLAltitudeMode) bool {
 	return rcv._tab.MutateInt8Slot(4, int8(n))
+}
+
+func (rcv *KMLMultiTrack) MutateAltitudeMode(n KMLAltitudeMode) bool {
+	return rcv.MutateALTITUDE_MODE(n)
 }
 
 /// Whether to interpolate between tracks
@@ -65,9 +73,17 @@ func (rcv *KMLMultiTrack) INTERPOLATE() bool {
 	return false
 }
 
+func (rcv *KMLMultiTrack) Interpolate() bool {
+	return rcv.INTERPOLATE()
+}
+
 /// Whether to interpolate between tracks
 func (rcv *KMLMultiTrack) MutateINTERPOLATE(n bool) bool {
 	return rcv._tab.MutateBoolSlot(6, n)
+}
+
+func (rcv *KMLMultiTrack) MutateInterpolate(n bool) bool {
+	return rcv.MutateINTERPOLATE(n)
 }
 
 /// Child tracks
@@ -77,10 +93,17 @@ func (rcv *KMLMultiTrack) TRACKS(obj *KMLTrack, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(KMLTrack)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *KMLMultiTrack) Tracks(obj *KMLTrack, j int) bool {
+	return rcv.TRACKS(obj, j)
 }
 
 func (rcv *KMLMultiTrack) TRACKSLength() int {
@@ -91,6 +114,10 @@ func (rcv *KMLMultiTrack) TRACKSLength() int {
 	return 0
 }
 
+func (rcv *KMLMultiTrack) TracksLength() int {
+	return rcv.TRACKSLength()
+}
+
 /// Child tracks
 func KMLMultiTrackStart(builder *flatbuffers.Builder) {
 	builder.StartObject(3)
@@ -98,14 +125,26 @@ func KMLMultiTrackStart(builder *flatbuffers.Builder) {
 func KMLMultiTrackAddALTITUDE_MODE(builder *flatbuffers.Builder, ALTITUDE_MODE KMLAltitudeMode) {
 	builder.PrependInt8Slot(0, int8(ALTITUDE_MODE), 0)
 }
+func KMLMultiTrackAddAltitudeMode(builder *flatbuffers.Builder, ALTITUDE_MODE KMLAltitudeMode) {
+	KMLMultiTrackAddALTITUDE_MODE(builder, ALTITUDE_MODE)
+}
 func KMLMultiTrackAddINTERPOLATE(builder *flatbuffers.Builder, INTERPOLATE bool) {
 	builder.PrependBoolSlot(1, INTERPOLATE, false)
+}
+func KMLMultiTrackAddInterpolate(builder *flatbuffers.Builder, INTERPOLATE bool) {
+	KMLMultiTrackAddINTERPOLATE(builder, INTERPOLATE)
 }
 func KMLMultiTrackAddTRACKS(builder *flatbuffers.Builder, TRACKS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(TRACKS), 0)
 }
+func KMLMultiTrackAddTracks(builder *flatbuffers.Builder, TRACKS flatbuffers.UOffsetT) {
+	KMLMultiTrackAddTRACKS(builder, TRACKS)
+}
 func KMLMultiTrackStartTRACKSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func KMLMultiTrackStartTracksVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return KMLMultiTrackStartTRACKSVector(builder, numElems)
 }
 func KMLMultiTrackEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

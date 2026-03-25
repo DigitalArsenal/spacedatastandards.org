@@ -96,16 +96,21 @@ except:
 class KMLAnimatedUpdateT(object):
 
     # KMLAnimatedUpdateT
-    def __init__(self):
-        self.DURATION = 0.0  # type: float
-        self.DELAYED_START = 0.0  # type: float
-        self.UPDATE = None  # type: Optional[KMLUpdate.KMLUpdateT]
+    def __init__(
+        self,
+        DURATION = 0.0,
+        DELAYED_START = 0.0,
+        UPDATE = None,
+    ):
+        self.DURATION = DURATION  # type: float
+        self.DELAYED_START = DELAYED_START  # type: float
+        self.UPDATE = UPDATE  # type: Optional[KMLUpdate.KMLUpdateT]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        kmlanimatedUpdate = KMLAnimatedUpdate()
-        kmlanimatedUpdate.Init(buf, pos)
-        return cls.InitFromObj(kmlanimatedUpdate)
+        tmpKmlanimatedUpdate = KMLAnimatedUpdate()
+        tmpKmlanimatedUpdate.Init(buf, pos)
+        return cls.InitFromObj(tmpKmlanimatedUpdate)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -113,19 +118,19 @@ class KMLAnimatedUpdateT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, kmlanimatedUpdate):
+    def InitFromObj(cls, tmpKmlanimatedUpdate):
         x = KMLAnimatedUpdateT()
-        x._UnPack(kmlanimatedUpdate)
+        x._UnPack(tmpKmlanimatedUpdate)
         return x
 
     # KMLAnimatedUpdateT
-    def _UnPack(self, kmlanimatedUpdate):
-        if kmlanimatedUpdate is None:
+    def _UnPack(self, KMLAnimatedUpdate):
+        if KMLAnimatedUpdate is None:
             return
-        self.DURATION = kmlanimatedUpdate.DURATION()
-        self.DELAYED_START = kmlanimatedUpdate.DELAYED_START()
-        if kmlanimatedUpdate.UPDATE() is not None:
-            self.UPDATE = KMLUpdate.KMLUpdateT.InitFromObj(kmlanimatedUpdate.UPDATE())
+        self.DURATION = KMLAnimatedUpdate.DURATION()
+        self.DELAYED_START = KMLAnimatedUpdate.DELAYED_START()
+        if KMLAnimatedUpdate.UPDATE() is not None:
+            self.UPDATE = KMLUpdate.KMLUpdateT.InitFromObj(KMLAnimatedUpdate.UPDATE())
 
     # KMLAnimatedUpdateT
     def Pack(self, builder):
@@ -136,5 +141,5 @@ class KMLAnimatedUpdateT(object):
         KMLAnimatedUpdateAddDELAYED_START(builder, self.DELAYED_START)
         if self.UPDATE is not None:
             KMLAnimatedUpdateAddUPDATE(builder, UPDATE)
-        kmlanimatedUpdate = KMLAnimatedUpdateEnd(builder)
-        return kmlanimatedUpdate
+        KMLAnimatedUpdate = KMLAnimatedUpdateEnd(builder)
+        return KMLAnimatedUpdate

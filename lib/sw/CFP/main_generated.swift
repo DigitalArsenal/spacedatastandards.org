@@ -2,9 +2,13 @@
 // swiftlint:disable all
 // swiftformat:disable all
 
+#if canImport(Common)
+import Common
+#endif
+
 import FlatBuffers
 
-public enum pduType: Int8, Enum, Verifiable {
+public enum pduType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -16,7 +20,7 @@ public enum pduType: Int8, Enum, Verifiable {
 }
 
 
-public enum transmissionMode: Int8, Enum, Verifiable {
+public enum transmissionMode: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -29,9 +33,9 @@ public enum transmissionMode: Int8, Enum, Verifiable {
 
 
 ///  CCSDS File Delivery Protocol PDU (CCSDS 727.0-B-5)
-public struct CFP: FlatBufferObject, Verifiable {
+public struct CFP: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -91,10 +95,8 @@ public struct CFP: FlatBufferObject, Verifiable {
   public var DESTINATION_FILENAME: String? { let o = _accessor.offset(VTOFFSET.DESTINATION_FILENAME.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var DESTINATION_FILENAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.DESTINATION_FILENAME.v) }
   ///  PDU data
-  public var hasData: Bool { let o = _accessor.offset(VTOFFSET.DATA.v); return o == 0 ? false : true }
-  public var DATACount: Int32 { let o = _accessor.offset(VTOFFSET.DATA.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func DATA(at index: Int32) -> UInt8 { let o = _accessor.offset(VTOFFSET.DATA.v); return o == 0 ? 0 : _accessor.directRead(of: UInt8.self, offset: _accessor.vector(at: o) + index * 1) }
-  public var DATA: [UInt8] { return _accessor.getVector(at: VTOFFSET.DATA.v) ?? [] }
+  public var DATA: FlatbufferVector<UInt8> { return _accessor.vector(at: VTOFFSET.DATA.v, byteSize: 1) }
+  public func withUnsafePointerToData<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.DATA.v, body: body) }
   public static func startCFP(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 15) }
   public static func add(VERSION: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VERSION, def: 0, at: VTOFFSET.VERSION.p) }
   public static func add(PDU_TYPE: pduType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PDU_TYPE.rawValue, def: 0, at: VTOFFSET.PDU_TYPE.p) }

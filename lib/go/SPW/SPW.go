@@ -63,6 +63,10 @@ func (rcv *SPW) DATE() []byte {
 	return nil
 }
 
+func (rcv *SPW) Date() []byte {
+	return rcv.DATE()
+}
+
 /// Date in ISO 8601 format
 /// Bartels Solar Rotation Number
 func (rcv *SPW) BSRN() int32 {
@@ -73,9 +77,17 @@ func (rcv *SPW) BSRN() int32 {
 	return 0
 }
 
+func (rcv *SPW) Bsrn() int32 {
+	return rcv.BSRN()
+}
+
 /// Bartels Solar Rotation Number
 func (rcv *SPW) MutateBSRN(n int32) bool {
 	return rcv._tab.MutateInt32Slot(6, n)
+}
+
+func (rcv *SPW) MutateBsrn(n int32) bool {
+	return rcv.MutateBSRN(n)
 }
 
 /// Day within Bartels cycle (1-27)
@@ -87,9 +99,17 @@ func (rcv *SPW) ND() int32 {
 	return 0
 }
 
+func (rcv *SPW) Nd() int32 {
+	return rcv.ND()
+}
+
 /// Day within Bartels cycle (1-27)
 func (rcv *SPW) MutateND(n int32) bool {
 	return rcv._tab.MutateInt32Slot(8, n)
+}
+
+func (rcv *SPW) MutateNd(n int32) bool {
+	return rcv.MutateND(n)
 }
 
 /// Planetary 3-hour Range Index (Kp) for 0000-0300 UT, multiplied by 10
@@ -101,9 +121,17 @@ func (rcv *SPW) KP1() int32 {
 	return 0
 }
 
+func (rcv *SPW) Kp1() int32 {
+	return rcv.KP1()
+}
+
 /// Planetary 3-hour Range Index (Kp) for 0000-0300 UT, multiplied by 10
 func (rcv *SPW) MutateKP1(n int32) bool {
 	return rcv._tab.MutateInt32Slot(10, n)
+}
+
+func (rcv *SPW) MutateKp1(n int32) bool {
+	return rcv.MutateKP1(n)
 }
 
 /// Planetary 3-hour Range Index (Kp) for 0300-0600 UT, multiplied by 10
@@ -115,9 +143,17 @@ func (rcv *SPW) KP2() int32 {
 	return 0
 }
 
+func (rcv *SPW) Kp2() int32 {
+	return rcv.KP2()
+}
+
 /// Planetary 3-hour Range Index (Kp) for 0300-0600 UT, multiplied by 10
 func (rcv *SPW) MutateKP2(n int32) bool {
 	return rcv._tab.MutateInt32Slot(12, n)
+}
+
+func (rcv *SPW) MutateKp2(n int32) bool {
+	return rcv.MutateKP2(n)
 }
 
 /// Planetary 3-hour Range Index (Kp) for 0600-0900 UT, multiplied by 10
@@ -129,9 +165,17 @@ func (rcv *SPW) KP3() int32 {
 	return 0
 }
 
+func (rcv *SPW) Kp3() int32 {
+	return rcv.KP3()
+}
+
 /// Planetary 3-hour Range Index (Kp) for 0600-0900 UT, multiplied by 10
 func (rcv *SPW) MutateKP3(n int32) bool {
 	return rcv._tab.MutateInt32Slot(14, n)
+}
+
+func (rcv *SPW) MutateKp3(n int32) bool {
+	return rcv.MutateKP3(n)
 }
 
 /// Planetary 3-hour Range Index (Kp) for 0900-1200 UT, multiplied by 10
@@ -143,9 +187,17 @@ func (rcv *SPW) KP4() int32 {
 	return 0
 }
 
+func (rcv *SPW) Kp4() int32 {
+	return rcv.KP4()
+}
+
 /// Planetary 3-hour Range Index (Kp) for 0900-1200 UT, multiplied by 10
 func (rcv *SPW) MutateKP4(n int32) bool {
 	return rcv._tab.MutateInt32Slot(16, n)
+}
+
+func (rcv *SPW) MutateKp4(n int32) bool {
+	return rcv.MutateKP4(n)
 }
 
 /// Planetary 3-hour Range Index (Kp) for 1200-1500 UT, multiplied by 10
@@ -157,9 +209,17 @@ func (rcv *SPW) KP5() int32 {
 	return 0
 }
 
+func (rcv *SPW) Kp5() int32 {
+	return rcv.KP5()
+}
+
 /// Planetary 3-hour Range Index (Kp) for 1200-1500 UT, multiplied by 10
 func (rcv *SPW) MutateKP5(n int32) bool {
 	return rcv._tab.MutateInt32Slot(18, n)
+}
+
+func (rcv *SPW) MutateKp5(n int32) bool {
+	return rcv.MutateKP5(n)
 }
 
 /// Planetary 3-hour Range Index (Kp) for 1500-1800 UT, multiplied by 10
@@ -171,9 +231,17 @@ func (rcv *SPW) KP6() int32 {
 	return 0
 }
 
+func (rcv *SPW) Kp6() int32 {
+	return rcv.KP6()
+}
+
 /// Planetary 3-hour Range Index (Kp) for 1500-1800 UT, multiplied by 10
 func (rcv *SPW) MutateKP6(n int32) bool {
 	return rcv._tab.MutateInt32Slot(20, n)
+}
+
+func (rcv *SPW) MutateKp6(n int32) bool {
+	return rcv.MutateKP6(n)
 }
 
 /// Planetary 3-hour Range Index (Kp) for 1800-2100 UT, multiplied by 10
@@ -185,9 +253,17 @@ func (rcv *SPW) KP7() int32 {
 	return 0
 }
 
+func (rcv *SPW) Kp7() int32 {
+	return rcv.KP7()
+}
+
 /// Planetary 3-hour Range Index (Kp) for 1800-2100 UT, multiplied by 10
 func (rcv *SPW) MutateKP7(n int32) bool {
 	return rcv._tab.MutateInt32Slot(22, n)
+}
+
+func (rcv *SPW) MutateKp7(n int32) bool {
+	return rcv.MutateKP7(n)
 }
 
 /// Planetary 3-hour Range Index (Kp) for 2100-0000 UT, multiplied by 10
@@ -199,9 +275,17 @@ func (rcv *SPW) KP8() int32 {
 	return 0
 }
 
+func (rcv *SPW) Kp8() int32 {
+	return rcv.KP8()
+}
+
 /// Planetary 3-hour Range Index (Kp) for 2100-0000 UT, multiplied by 10
 func (rcv *SPW) MutateKP8(n int32) bool {
 	return rcv._tab.MutateInt32Slot(24, n)
+}
+
+func (rcv *SPW) MutateKp8(n int32) bool {
+	return rcv.MutateKP8(n)
 }
 
 /// Sum of the 8 Kp indices for the day
@@ -213,9 +297,17 @@ func (rcv *SPW) KP_SUM() int32 {
 	return 0
 }
 
+func (rcv *SPW) KpSum() int32 {
+	return rcv.KP_SUM()
+}
+
 /// Sum of the 8 Kp indices for the day
 func (rcv *SPW) MutateKP_SUM(n int32) bool {
 	return rcv._tab.MutateInt32Slot(26, n)
+}
+
+func (rcv *SPW) MutateKpSum(n int32) bool {
+	return rcv.MutateKP_SUM(n)
 }
 
 /// Planetary Equivalent Amplitude (Ap) for 0000-0300 UT
@@ -227,9 +319,17 @@ func (rcv *SPW) AP1() int32 {
 	return 0
 }
 
+func (rcv *SPW) Ap1() int32 {
+	return rcv.AP1()
+}
+
 /// Planetary Equivalent Amplitude (Ap) for 0000-0300 UT
 func (rcv *SPW) MutateAP1(n int32) bool {
 	return rcv._tab.MutateInt32Slot(28, n)
+}
+
+func (rcv *SPW) MutateAp1(n int32) bool {
+	return rcv.MutateAP1(n)
 }
 
 /// Planetary Equivalent Amplitude (Ap) for 0300-0600 UT
@@ -241,9 +341,17 @@ func (rcv *SPW) AP2() int32 {
 	return 0
 }
 
+func (rcv *SPW) Ap2() int32 {
+	return rcv.AP2()
+}
+
 /// Planetary Equivalent Amplitude (Ap) for 0300-0600 UT
 func (rcv *SPW) MutateAP2(n int32) bool {
 	return rcv._tab.MutateInt32Slot(30, n)
+}
+
+func (rcv *SPW) MutateAp2(n int32) bool {
+	return rcv.MutateAP2(n)
 }
 
 /// Planetary Equivalent Amplitude (Ap) for 0600-0900 UT
@@ -255,9 +363,17 @@ func (rcv *SPW) AP3() int32 {
 	return 0
 }
 
+func (rcv *SPW) Ap3() int32 {
+	return rcv.AP3()
+}
+
 /// Planetary Equivalent Amplitude (Ap) for 0600-0900 UT
 func (rcv *SPW) MutateAP3(n int32) bool {
 	return rcv._tab.MutateInt32Slot(32, n)
+}
+
+func (rcv *SPW) MutateAp3(n int32) bool {
+	return rcv.MutateAP3(n)
 }
 
 /// Planetary Equivalent Amplitude (Ap) for 0900-1200 UT
@@ -269,9 +385,17 @@ func (rcv *SPW) AP4() int32 {
 	return 0
 }
 
+func (rcv *SPW) Ap4() int32 {
+	return rcv.AP4()
+}
+
 /// Planetary Equivalent Amplitude (Ap) for 0900-1200 UT
 func (rcv *SPW) MutateAP4(n int32) bool {
 	return rcv._tab.MutateInt32Slot(34, n)
+}
+
+func (rcv *SPW) MutateAp4(n int32) bool {
+	return rcv.MutateAP4(n)
 }
 
 /// Planetary Equivalent Amplitude (Ap) for 1200-1500 UT
@@ -283,9 +407,17 @@ func (rcv *SPW) AP5() int32 {
 	return 0
 }
 
+func (rcv *SPW) Ap5() int32 {
+	return rcv.AP5()
+}
+
 /// Planetary Equivalent Amplitude (Ap) for 1200-1500 UT
 func (rcv *SPW) MutateAP5(n int32) bool {
 	return rcv._tab.MutateInt32Slot(36, n)
+}
+
+func (rcv *SPW) MutateAp5(n int32) bool {
+	return rcv.MutateAP5(n)
 }
 
 /// Planetary Equivalent Amplitude (Ap) for 1500-1800 UT
@@ -297,9 +429,17 @@ func (rcv *SPW) AP6() int32 {
 	return 0
 }
 
+func (rcv *SPW) Ap6() int32 {
+	return rcv.AP6()
+}
+
 /// Planetary Equivalent Amplitude (Ap) for 1500-1800 UT
 func (rcv *SPW) MutateAP6(n int32) bool {
 	return rcv._tab.MutateInt32Slot(38, n)
+}
+
+func (rcv *SPW) MutateAp6(n int32) bool {
+	return rcv.MutateAP6(n)
 }
 
 /// Planetary Equivalent Amplitude (Ap) for 1800-2100 UT
@@ -311,9 +451,17 @@ func (rcv *SPW) AP7() int32 {
 	return 0
 }
 
+func (rcv *SPW) Ap7() int32 {
+	return rcv.AP7()
+}
+
 /// Planetary Equivalent Amplitude (Ap) for 1800-2100 UT
 func (rcv *SPW) MutateAP7(n int32) bool {
 	return rcv._tab.MutateInt32Slot(40, n)
+}
+
+func (rcv *SPW) MutateAp7(n int32) bool {
+	return rcv.MutateAP7(n)
 }
 
 /// Planetary Equivalent Amplitude (Ap) for 2100-0000 UT
@@ -325,9 +473,17 @@ func (rcv *SPW) AP8() int32 {
 	return 0
 }
 
+func (rcv *SPW) Ap8() int32 {
+	return rcv.AP8()
+}
+
 /// Planetary Equivalent Amplitude (Ap) for 2100-0000 UT
 func (rcv *SPW) MutateAP8(n int32) bool {
 	return rcv._tab.MutateInt32Slot(42, n)
+}
+
+func (rcv *SPW) MutateAp8(n int32) bool {
+	return rcv.MutateAP8(n)
 }
 
 /// Arithmetic average of the 8 Ap indices for the day
@@ -339,9 +495,17 @@ func (rcv *SPW) AP_AVG() int32 {
 	return 0
 }
 
+func (rcv *SPW) ApAvg() int32 {
+	return rcv.AP_AVG()
+}
+
 /// Arithmetic average of the 8 Ap indices for the day
 func (rcv *SPW) MutateAP_AVG(n int32) bool {
 	return rcv._tab.MutateInt32Slot(44, n)
+}
+
+func (rcv *SPW) MutateApAvg(n int32) bool {
+	return rcv.MutateAP_AVG(n)
 }
 
 /// Planetary Daily Character Figure (0.0 to 2.5)
@@ -353,9 +517,17 @@ func (rcv *SPW) CP() float32 {
 	return 0.0
 }
 
+func (rcv *SPW) Cp() float32 {
+	return rcv.CP()
+}
+
 /// Planetary Daily Character Figure (0.0 to 2.5)
 func (rcv *SPW) MutateCP(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(46, n)
+}
+
+func (rcv *SPW) MutateCp(n float32) bool {
+	return rcv.MutateCP(n)
 }
 
 /// C9 index (0-9)
@@ -381,9 +553,17 @@ func (rcv *SPW) ISN() int32 {
 	return 0
 }
 
+func (rcv *SPW) Isn() int32 {
+	return rcv.ISN()
+}
+
 /// International Sunspot Number
 func (rcv *SPW) MutateISN(n int32) bool {
 	return rcv._tab.MutateInt32Slot(50, n)
+}
+
+func (rcv *SPW) MutateIsn(n int32) bool {
+	return rcv.MutateISN(n)
 }
 
 /// Observed 10.7cm Solar Radio Flux
@@ -395,9 +575,17 @@ func (rcv *SPW) F107_OBS() float32 {
 	return 0.0
 }
 
+func (rcv *SPW) F107Obs() float32 {
+	return rcv.F107_OBS()
+}
+
 /// Observed 10.7cm Solar Radio Flux
 func (rcv *SPW) MutateF107_OBS(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(52, n)
+}
+
+func (rcv *SPW) MutateF107Obs(n float32) bool {
+	return rcv.MutateF107_OBS(n)
 }
 
 /// Adjusted 10.7cm Solar Radio Flux (to 1 AU)
@@ -409,9 +597,17 @@ func (rcv *SPW) F107_ADJ() float32 {
 	return 0.0
 }
 
+func (rcv *SPW) F107Adj() float32 {
+	return rcv.F107_ADJ()
+}
+
 /// Adjusted 10.7cm Solar Radio Flux (to 1 AU)
 func (rcv *SPW) MutateF107_ADJ(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(54, n)
+}
+
+func (rcv *SPW) MutateF107Adj(n float32) bool {
+	return rcv.MutateF107_ADJ(n)
 }
 
 /// F10.7 Data Type
@@ -423,9 +619,17 @@ func (rcv *SPW) F107_DATA_TYPE() F107DataType {
 	return 0
 }
 
+func (rcv *SPW) F107DataType() F107DataType {
+	return rcv.F107_DATA_TYPE()
+}
+
 /// F10.7 Data Type
 func (rcv *SPW) MutateF107_DATA_TYPE(n F107DataType) bool {
 	return rcv._tab.MutateInt8Slot(56, int8(n))
+}
+
+func (rcv *SPW) MutateF107DataType(n F107DataType) bool {
+	return rcv.MutateF107_DATA_TYPE(n)
 }
 
 /// 81-day centered average of observed F10.7
@@ -437,9 +641,17 @@ func (rcv *SPW) F107_OBS_CENTER81() float32 {
 	return 0.0
 }
 
+func (rcv *SPW) F107ObsCenter81() float32 {
+	return rcv.F107_OBS_CENTER81()
+}
+
 /// 81-day centered average of observed F10.7
 func (rcv *SPW) MutateF107_OBS_CENTER81(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(58, n)
+}
+
+func (rcv *SPW) MutateF107ObsCenter81(n float32) bool {
+	return rcv.MutateF107_OBS_CENTER81(n)
 }
 
 /// 81-day trailing average of observed F10.7
@@ -451,9 +663,17 @@ func (rcv *SPW) F107_OBS_LAST81() float32 {
 	return 0.0
 }
 
+func (rcv *SPW) F107ObsLast81() float32 {
+	return rcv.F107_OBS_LAST81()
+}
+
 /// 81-day trailing average of observed F10.7
 func (rcv *SPW) MutateF107_OBS_LAST81(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(60, n)
+}
+
+func (rcv *SPW) MutateF107ObsLast81(n float32) bool {
+	return rcv.MutateF107_OBS_LAST81(n)
 }
 
 /// 81-day centered average of adjusted F10.7
@@ -465,9 +685,17 @@ func (rcv *SPW) F107_ADJ_CENTER81() float32 {
 	return 0.0
 }
 
+func (rcv *SPW) F107AdjCenter81() float32 {
+	return rcv.F107_ADJ_CENTER81()
+}
+
 /// 81-day centered average of adjusted F10.7
 func (rcv *SPW) MutateF107_ADJ_CENTER81(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(62, n)
+}
+
+func (rcv *SPW) MutateF107AdjCenter81(n float32) bool {
+	return rcv.MutateF107_ADJ_CENTER81(n)
 }
 
 /// 81-day trailing average of adjusted F10.7
@@ -479,9 +707,17 @@ func (rcv *SPW) F107_ADJ_LAST81() float32 {
 	return 0.0
 }
 
+func (rcv *SPW) F107AdjLast81() float32 {
+	return rcv.F107_ADJ_LAST81()
+}
+
 /// 81-day trailing average of adjusted F10.7
 func (rcv *SPW) MutateF107_ADJ_LAST81(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(64, n)
+}
+
+func (rcv *SPW) MutateF107AdjLast81(n float32) bool {
+	return rcv.MutateF107_ADJ_LAST81(n)
 }
 
 func SPWStart(builder *flatbuffers.Builder) {
@@ -490,68 +726,134 @@ func SPWStart(builder *flatbuffers.Builder) {
 func SPWAddDATE(builder *flatbuffers.Builder, DATE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(DATE), 0)
 }
+func SPWAddDate(builder *flatbuffers.Builder, DATE flatbuffers.UOffsetT) {
+	SPWAddDATE(builder, DATE)
+}
 func SPWAddBSRN(builder *flatbuffers.Builder, BSRN int32) {
 	builder.PrependInt32Slot(1, BSRN, 0)
+}
+func SPWAddBsrn(builder *flatbuffers.Builder, BSRN int32) {
+	SPWAddBSRN(builder, BSRN)
 }
 func SPWAddND(builder *flatbuffers.Builder, ND int32) {
 	builder.PrependInt32Slot(2, ND, 0)
 }
+func SPWAddNd(builder *flatbuffers.Builder, ND int32) {
+	SPWAddND(builder, ND)
+}
 func SPWAddKP1(builder *flatbuffers.Builder, KP1 int32) {
 	builder.PrependInt32Slot(3, KP1, 0)
+}
+func SPWAddKp1(builder *flatbuffers.Builder, KP1 int32) {
+	SPWAddKP1(builder, KP1)
 }
 func SPWAddKP2(builder *flatbuffers.Builder, KP2 int32) {
 	builder.PrependInt32Slot(4, KP2, 0)
 }
+func SPWAddKp2(builder *flatbuffers.Builder, KP2 int32) {
+	SPWAddKP2(builder, KP2)
+}
 func SPWAddKP3(builder *flatbuffers.Builder, KP3 int32) {
 	builder.PrependInt32Slot(5, KP3, 0)
+}
+func SPWAddKp3(builder *flatbuffers.Builder, KP3 int32) {
+	SPWAddKP3(builder, KP3)
 }
 func SPWAddKP4(builder *flatbuffers.Builder, KP4 int32) {
 	builder.PrependInt32Slot(6, KP4, 0)
 }
+func SPWAddKp4(builder *flatbuffers.Builder, KP4 int32) {
+	SPWAddKP4(builder, KP4)
+}
 func SPWAddKP5(builder *flatbuffers.Builder, KP5 int32) {
 	builder.PrependInt32Slot(7, KP5, 0)
+}
+func SPWAddKp5(builder *flatbuffers.Builder, KP5 int32) {
+	SPWAddKP5(builder, KP5)
 }
 func SPWAddKP6(builder *flatbuffers.Builder, KP6 int32) {
 	builder.PrependInt32Slot(8, KP6, 0)
 }
+func SPWAddKp6(builder *flatbuffers.Builder, KP6 int32) {
+	SPWAddKP6(builder, KP6)
+}
 func SPWAddKP7(builder *flatbuffers.Builder, KP7 int32) {
 	builder.PrependInt32Slot(9, KP7, 0)
+}
+func SPWAddKp7(builder *flatbuffers.Builder, KP7 int32) {
+	SPWAddKP7(builder, KP7)
 }
 func SPWAddKP8(builder *flatbuffers.Builder, KP8 int32) {
 	builder.PrependInt32Slot(10, KP8, 0)
 }
+func SPWAddKp8(builder *flatbuffers.Builder, KP8 int32) {
+	SPWAddKP8(builder, KP8)
+}
 func SPWAddKP_SUM(builder *flatbuffers.Builder, KP_SUM int32) {
 	builder.PrependInt32Slot(11, KP_SUM, 0)
+}
+func SPWAddKpSum(builder *flatbuffers.Builder, KP_SUM int32) {
+	SPWAddKP_SUM(builder, KP_SUM)
 }
 func SPWAddAP1(builder *flatbuffers.Builder, AP1 int32) {
 	builder.PrependInt32Slot(12, AP1, 0)
 }
+func SPWAddAp1(builder *flatbuffers.Builder, AP1 int32) {
+	SPWAddAP1(builder, AP1)
+}
 func SPWAddAP2(builder *flatbuffers.Builder, AP2 int32) {
 	builder.PrependInt32Slot(13, AP2, 0)
+}
+func SPWAddAp2(builder *flatbuffers.Builder, AP2 int32) {
+	SPWAddAP2(builder, AP2)
 }
 func SPWAddAP3(builder *flatbuffers.Builder, AP3 int32) {
 	builder.PrependInt32Slot(14, AP3, 0)
 }
+func SPWAddAp3(builder *flatbuffers.Builder, AP3 int32) {
+	SPWAddAP3(builder, AP3)
+}
 func SPWAddAP4(builder *flatbuffers.Builder, AP4 int32) {
 	builder.PrependInt32Slot(15, AP4, 0)
+}
+func SPWAddAp4(builder *flatbuffers.Builder, AP4 int32) {
+	SPWAddAP4(builder, AP4)
 }
 func SPWAddAP5(builder *flatbuffers.Builder, AP5 int32) {
 	builder.PrependInt32Slot(16, AP5, 0)
 }
+func SPWAddAp5(builder *flatbuffers.Builder, AP5 int32) {
+	SPWAddAP5(builder, AP5)
+}
 func SPWAddAP6(builder *flatbuffers.Builder, AP6 int32) {
 	builder.PrependInt32Slot(17, AP6, 0)
+}
+func SPWAddAp6(builder *flatbuffers.Builder, AP6 int32) {
+	SPWAddAP6(builder, AP6)
 }
 func SPWAddAP7(builder *flatbuffers.Builder, AP7 int32) {
 	builder.PrependInt32Slot(18, AP7, 0)
 }
+func SPWAddAp7(builder *flatbuffers.Builder, AP7 int32) {
+	SPWAddAP7(builder, AP7)
+}
 func SPWAddAP8(builder *flatbuffers.Builder, AP8 int32) {
 	builder.PrependInt32Slot(19, AP8, 0)
+}
+func SPWAddAp8(builder *flatbuffers.Builder, AP8 int32) {
+	SPWAddAP8(builder, AP8)
 }
 func SPWAddAP_AVG(builder *flatbuffers.Builder, AP_AVG int32) {
 	builder.PrependInt32Slot(20, AP_AVG, 0)
 }
+func SPWAddApAvg(builder *flatbuffers.Builder, AP_AVG int32) {
+	SPWAddAP_AVG(builder, AP_AVG)
+}
 func SPWAddCP(builder *flatbuffers.Builder, CP float32) {
 	builder.PrependFloat32Slot(21, CP, 0.0)
+}
+func SPWAddCp(builder *flatbuffers.Builder, CP float32) {
+	SPWAddCP(builder, CP)
 }
 func SPWAddC9(builder *flatbuffers.Builder, C9 int32) {
 	builder.PrependInt32Slot(22, C9, 0)
@@ -559,26 +861,50 @@ func SPWAddC9(builder *flatbuffers.Builder, C9 int32) {
 func SPWAddISN(builder *flatbuffers.Builder, ISN int32) {
 	builder.PrependInt32Slot(23, ISN, 0)
 }
+func SPWAddIsn(builder *flatbuffers.Builder, ISN int32) {
+	SPWAddISN(builder, ISN)
+}
 func SPWAddF107_OBS(builder *flatbuffers.Builder, F107_OBS float32) {
 	builder.PrependFloat32Slot(24, F107_OBS, 0.0)
+}
+func SPWAddF107Obs(builder *flatbuffers.Builder, F107_OBS float32) {
+	SPWAddF107_OBS(builder, F107_OBS)
 }
 func SPWAddF107_ADJ(builder *flatbuffers.Builder, F107_ADJ float32) {
 	builder.PrependFloat32Slot(25, F107_ADJ, 0.0)
 }
+func SPWAddF107Adj(builder *flatbuffers.Builder, F107_ADJ float32) {
+	SPWAddF107_ADJ(builder, F107_ADJ)
+}
 func SPWAddF107_DATA_TYPE(builder *flatbuffers.Builder, F107_DATA_TYPE F107DataType) {
 	builder.PrependInt8Slot(26, int8(F107_DATA_TYPE), 0)
+}
+func SPWAddF107DataType(builder *flatbuffers.Builder, F107_DATA_TYPE F107DataType) {
+	SPWAddF107_DATA_TYPE(builder, F107_DATA_TYPE)
 }
 func SPWAddF107_OBS_CENTER81(builder *flatbuffers.Builder, F107_OBS_CENTER81 float32) {
 	builder.PrependFloat32Slot(27, F107_OBS_CENTER81, 0.0)
 }
+func SPWAddF107ObsCenter81(builder *flatbuffers.Builder, F107_OBS_CENTER81 float32) {
+	SPWAddF107_OBS_CENTER81(builder, F107_OBS_CENTER81)
+}
 func SPWAddF107_OBS_LAST81(builder *flatbuffers.Builder, F107_OBS_LAST81 float32) {
 	builder.PrependFloat32Slot(28, F107_OBS_LAST81, 0.0)
+}
+func SPWAddF107ObsLast81(builder *flatbuffers.Builder, F107_OBS_LAST81 float32) {
+	SPWAddF107_OBS_LAST81(builder, F107_OBS_LAST81)
 }
 func SPWAddF107_ADJ_CENTER81(builder *flatbuffers.Builder, F107_ADJ_CENTER81 float32) {
 	builder.PrependFloat32Slot(29, F107_ADJ_CENTER81, 0.0)
 }
+func SPWAddF107AdjCenter81(builder *flatbuffers.Builder, F107_ADJ_CENTER81 float32) {
+	SPWAddF107_ADJ_CENTER81(builder, F107_ADJ_CENTER81)
+}
 func SPWAddF107_ADJ_LAST81(builder *flatbuffers.Builder, F107_ADJ_LAST81 float32) {
 	builder.PrependFloat32Slot(30, F107_ADJ_LAST81, 0.0)
+}
+func SPWAddF107AdjLast81(builder *flatbuffers.Builder, F107_ADJ_LAST81 float32) {
+	SPWAddF107_ADJ_LAST81(builder, F107_ADJ_LAST81)
 }
 func SPWEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

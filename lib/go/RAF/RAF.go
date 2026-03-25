@@ -63,9 +63,17 @@ func (rcv *RAF) PDU_TYPE() rafPduType {
 	return 0
 }
 
+func (rcv *RAF) PduType() rafPduType {
+	return rcv.PDU_TYPE()
+}
+
 /// PDU type
 func (rcv *RAF) MutatePDU_TYPE(n rafPduType) bool {
 	return rcv._tab.MutateInt8Slot(4, int8(n))
+}
+
+func (rcv *RAF) MutatePduType(n rafPduType) bool {
+	return rcv.MutatePDU_TYPE(n)
 }
 
 /// Initiator identifier
@@ -75,6 +83,10 @@ func (rcv *RAF) INITIATOR_ID() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *RAF) InitiatorId() []byte {
+	return rcv.INITIATOR_ID()
 }
 
 /// Initiator identifier
@@ -87,6 +99,10 @@ func (rcv *RAF) RESPONDER_PORT_ID() []byte {
 	return nil
 }
 
+func (rcv *RAF) ResponderPortId() []byte {
+	return rcv.RESPONDER_PORT_ID()
+}
+
 /// Responder port identifier
 /// Service type
 func (rcv *RAF) SERVICE_TYPE() byte {
@@ -97,9 +113,17 @@ func (rcv *RAF) SERVICE_TYPE() byte {
 	return 0
 }
 
+func (rcv *RAF) ServiceType() byte {
+	return rcv.SERVICE_TYPE()
+}
+
 /// Service type
 func (rcv *RAF) MutateSERVICE_TYPE(n byte) bool {
 	return rcv._tab.MutateByteSlot(10, n)
+}
+
+func (rcv *RAF) MutateServiceType(n byte) bool {
+	return rcv.MutateSERVICE_TYPE(n)
 }
 
 /// Version number
@@ -111,9 +135,17 @@ func (rcv *RAF) VERSION() uint16 {
 	return 0
 }
 
+func (rcv *RAF) Version() uint16 {
+	return rcv.VERSION()
+}
+
 /// Version number
 func (rcv *RAF) MutateVERSION(n uint16) bool {
 	return rcv._tab.MutateUint16Slot(12, n)
+}
+
+func (rcv *RAF) MutateVersion(n uint16) bool {
+	return rcv.MutateVERSION(n)
 }
 
 /// Invoke ID
@@ -125,9 +157,17 @@ func (rcv *RAF) INVOKE_ID() uint32 {
 	return 0
 }
 
+func (rcv *RAF) InvokeId() uint32 {
+	return rcv.INVOKE_ID()
+}
+
 /// Invoke ID
 func (rcv *RAF) MutateINVOKE_ID(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(14, n)
+}
+
+func (rcv *RAF) MutateInvokeId(n uint32) bool {
+	return rcv.MutateINVOKE_ID(n)
 }
 
 /// Frame quality
@@ -139,9 +179,17 @@ func (rcv *RAF) FRAME_QUALITY() byte {
 	return 0
 }
 
+func (rcv *RAF) FrameQuality() byte {
+	return rcv.FRAME_QUALITY()
+}
+
 /// Frame quality
 func (rcv *RAF) MutateFRAME_QUALITY(n byte) bool {
 	return rcv._tab.MutateByteSlot(16, n)
+}
+
+func (rcv *RAF) MutateFrameQuality(n byte) bool {
+	return rcv.MutateFRAME_QUALITY(n)
 }
 
 /// Data
@@ -154,6 +202,10 @@ func (rcv *RAF) DATA(j int) byte {
 	return 0
 }
 
+func (rcv *RAF) Data(j int) byte {
+	return rcv.DATA(j)
+}
+
 func (rcv *RAF) DATALength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
 	if o != 0 {
@@ -162,12 +214,20 @@ func (rcv *RAF) DATALength() int {
 	return 0
 }
 
+func (rcv *RAF) DataLength() int {
+	return rcv.DATALength()
+}
+
 func (rcv *RAF) DATABytes() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *RAF) DataBytes() []byte {
+	return rcv.DATABytes()
 }
 
 /// Data
@@ -180,35 +240,66 @@ func (rcv *RAF) MutateDATA(j int, n byte) bool {
 	return false
 }
 
+func (rcv *RAF) MutateData(j int, n byte) bool {
+	return rcv.MutateDATA(j, n)
+}
+
 func RAFStart(builder *flatbuffers.Builder) {
 	builder.StartObject(8)
 }
 func RAFAddPDU_TYPE(builder *flatbuffers.Builder, PDU_TYPE rafPduType) {
 	builder.PrependInt8Slot(0, int8(PDU_TYPE), 0)
 }
+func RAFAddPduType(builder *flatbuffers.Builder, PDU_TYPE rafPduType) {
+	RAFAddPDU_TYPE(builder, PDU_TYPE)
+}
 func RAFAddINITIATOR_ID(builder *flatbuffers.Builder, INITIATOR_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(INITIATOR_ID), 0)
+}
+func RAFAddInitiatorId(builder *flatbuffers.Builder, INITIATOR_ID flatbuffers.UOffsetT) {
+	RAFAddINITIATOR_ID(builder, INITIATOR_ID)
 }
 func RAFAddRESPONDER_PORT_ID(builder *flatbuffers.Builder, RESPONDER_PORT_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(RESPONDER_PORT_ID), 0)
 }
+func RAFAddResponderPortId(builder *flatbuffers.Builder, RESPONDER_PORT_ID flatbuffers.UOffsetT) {
+	RAFAddRESPONDER_PORT_ID(builder, RESPONDER_PORT_ID)
+}
 func RAFAddSERVICE_TYPE(builder *flatbuffers.Builder, SERVICE_TYPE byte) {
 	builder.PrependByteSlot(3, SERVICE_TYPE, 0)
+}
+func RAFAddServiceType(builder *flatbuffers.Builder, SERVICE_TYPE byte) {
+	RAFAddSERVICE_TYPE(builder, SERVICE_TYPE)
 }
 func RAFAddVERSION(builder *flatbuffers.Builder, VERSION uint16) {
 	builder.PrependUint16Slot(4, VERSION, 0)
 }
+func RAFAddVersion(builder *flatbuffers.Builder, VERSION uint16) {
+	RAFAddVERSION(builder, VERSION)
+}
 func RAFAddINVOKE_ID(builder *flatbuffers.Builder, INVOKE_ID uint32) {
 	builder.PrependUint32Slot(5, INVOKE_ID, 0)
+}
+func RAFAddInvokeId(builder *flatbuffers.Builder, INVOKE_ID uint32) {
+	RAFAddINVOKE_ID(builder, INVOKE_ID)
 }
 func RAFAddFRAME_QUALITY(builder *flatbuffers.Builder, FRAME_QUALITY byte) {
 	builder.PrependByteSlot(6, FRAME_QUALITY, 0)
 }
+func RAFAddFrameQuality(builder *flatbuffers.Builder, FRAME_QUALITY byte) {
+	RAFAddFRAME_QUALITY(builder, FRAME_QUALITY)
+}
 func RAFAddDATA(builder *flatbuffers.Builder, DATA flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(DATA), 0)
 }
+func RAFAddData(builder *flatbuffers.Builder, DATA flatbuffers.UOffsetT) {
+	RAFAddDATA(builder, DATA)
+}
 func RAFStartDATAVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(1, numElems, 1)
+}
+func RAFStartDataVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return RAFStartDATAVector(builder, numElems)
 }
 func RAFEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

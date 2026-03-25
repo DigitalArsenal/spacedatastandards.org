@@ -2,4 +2,9 @@
 
 # namespace: 
 
-# NOTE irBand.py does not declare any structs or enums
+class irBand(object):
+    SWIR = 0
+    MWIR = 1
+    LWIR = 2
+    VLWIR = 3
+    BROADBAND = 4

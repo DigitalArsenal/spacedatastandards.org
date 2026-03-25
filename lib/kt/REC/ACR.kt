@@ -29,87 +29,87 @@ class ACR : Table() {
         __init(_i, _bb)
         return this
     }
-    val POSITION_X : Double
+    val positionX : Double
         get() {
             val o = __offset(4)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val POSITION_Y : Double
+    val positionY : Double
         get() {
             val o = __offset(6)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val POSITION_Z : Double
+    val positionZ : Double
         get() {
             val o = __offset(8)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val VELOCITY_X : Double
+    val velocityX : Double
         get() {
             val o = __offset(10)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val VELOCITY_Y : Double
+    val velocityY : Double
         get() {
             val o = __offset(12)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val VELOCITY_Z : Double
+    val velocityZ : Double
         get() {
             val o = __offset(14)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val ATTITUDE_X : Double
+    val attitudeX : Double
         get() {
             val o = __offset(16)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val ATTITUDE_Y : Double
+    val attitudeY : Double
         get() {
             val o = __offset(18)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val ATTITUDE_Z : Double
+    val attitudeZ : Double
         get() {
             val o = __offset(20)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val ATTITUDE_W : Double
+    val attitudeW : Double
         get() {
             val o = __offset(22)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val OMEGA_X : Double
+    val omegaX : Double
         get() {
             val o = __offset(24)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val OMEGA_Y : Double
+    val omegaY : Double
         get() {
             val o = __offset(26)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val OMEGA_Z : Double
+    val omegaZ : Double
         get() {
             val o = __offset(28)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val MASS : Double
+    val mass : Double
         get() {
             val o = __offset(30)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val CG_X : Float
+    val cgX : Float
         get() {
             val o = __offset(32)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
-    val CG_Z : Float
+    val cgZ : Float
         get() {
             val o = __offset(34)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
-    val AERO : String?
+    val aero : String?
         get() {
             val o = __offset(36)
             return if (o != 0) {
@@ -118,9 +118,9 @@ class ACR : Table() {
                 null
             }
         }
-    val AEROAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(36, 1)
-    fun AEROInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 36, 1)
-    val CONTROLS : String?
+    val aeroAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(36, 1)
+    fun aeroInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 36, 1)
+    val controls : String?
         get() {
             val o = __offset(38)
             return if (o != 0) {
@@ -129,9 +129,9 @@ class ACR : Table() {
                 null
             }
         }
-    val CONTROLSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(38, 1)
-    fun CONTROLSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 38, 1)
-    val ENGINE : String?
+    val controlsAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(38, 1)
+    fun controlsInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 38, 1)
+    val engine : String?
         get() {
             val o = __offset(40)
             return if (o != 0) {
@@ -140,115 +140,115 @@ class ACR : Table() {
                 null
             }
         }
-    val ENGINEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(40, 1)
-    fun ENGINEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 40, 1)
-    val GEAR_STATE : UByte
+    val engineAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(40, 1)
+    fun engineInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 40, 1)
+    val gearState : UByte
         get() {
             val o = __offset(42)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
         }
-    val GEAR_POSITION : UByte
+    val gearPosition : UByte
         get() {
             val o = __offset(44)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
         }
-    val FLAP_POSITION : UByte
+    val flapPosition : UByte
         get() {
             val o = __offset(46)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
         }
-    val SPEEDBRAKE_POS : UByte
+    val speedbrakePos : UByte
         get() {
             val o = __offset(48)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
         }
-    val FLIGHT_PHASE : UByte
+    val flightPhase : UByte
         get() {
             val o = __offset(50)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
         }
-    val AUTOPILOT_MODE : UByte
+    val autopilotMode : UByte
         get() {
             val o = __offset(52)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
         }
-    val WEIGHT_ON_WHEELS : UByte
+    val weightOnWheels : UByte
         get() {
             val o = __offset(54)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
         }
-    val RESERVED : UByte
+    val reserved : UByte
         get() {
             val o = __offset(56)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsACR(_bb: ByteBuffer): ACR = getRootAsACR(_bb, ACR())
         fun getRootAsACR(_bb: ByteBuffer, obj: ACR): ACR {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun ACRBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$ACR")
-        fun createACR(builder: FlatBufferBuilder, POSITION_X: Double, POSITION_Y: Double, POSITION_Z: Double, VELOCITY_X: Double, VELOCITY_Y: Double, VELOCITY_Z: Double, ATTITUDE_X: Double, ATTITUDE_Y: Double, ATTITUDE_Z: Double, ATTITUDE_W: Double, OMEGA_X: Double, OMEGA_Y: Double, OMEGA_Z: Double, MASS: Double, CG_X: Float, CG_Z: Float, AEROOffset: Int, CONTROLSOffset: Int, ENGINEOffset: Int, GEAR_STATE: UByte, GEAR_POSITION: UByte, FLAP_POSITION: UByte, SPEEDBRAKE_POS: UByte, FLIGHT_PHASE: UByte, AUTOPILOT_MODE: UByte, WEIGHT_ON_WHEELS: UByte, RESERVED: UByte) : Int {
+        fun createACR(builder: FlatBufferBuilder, positionX: Double, positionY: Double, positionZ: Double, velocityX: Double, velocityY: Double, velocityZ: Double, attitudeX: Double, attitudeY: Double, attitudeZ: Double, attitudeW: Double, omegaX: Double, omegaY: Double, omegaZ: Double, mass: Double, cgX: Float, cgZ: Float, aeroOffset: Int, controlsOffset: Int, engineOffset: Int, gearState: UByte, gearPosition: UByte, flapPosition: UByte, speedbrakePos: UByte, flightPhase: UByte, autopilotMode: UByte, weightOnWheels: UByte, reserved: UByte) : Int {
             builder.startTable(27)
-            addMASS(builder, MASS)
-            addOMEGA_Z(builder, OMEGA_Z)
-            addOMEGA_Y(builder, OMEGA_Y)
-            addOMEGA_X(builder, OMEGA_X)
-            addATTITUDE_W(builder, ATTITUDE_W)
-            addATTITUDE_Z(builder, ATTITUDE_Z)
-            addATTITUDE_Y(builder, ATTITUDE_Y)
-            addATTITUDE_X(builder, ATTITUDE_X)
-            addVELOCITY_Z(builder, VELOCITY_Z)
-            addVELOCITY_Y(builder, VELOCITY_Y)
-            addVELOCITY_X(builder, VELOCITY_X)
-            addPOSITION_Z(builder, POSITION_Z)
-            addPOSITION_Y(builder, POSITION_Y)
-            addPOSITION_X(builder, POSITION_X)
-            addENGINE(builder, ENGINEOffset)
-            addCONTROLS(builder, CONTROLSOffset)
-            addAERO(builder, AEROOffset)
-            addCG_Z(builder, CG_Z)
-            addCG_X(builder, CG_X)
-            addRESERVED(builder, RESERVED)
-            addWEIGHT_ON_WHEELS(builder, WEIGHT_ON_WHEELS)
-            addAUTOPILOT_MODE(builder, AUTOPILOT_MODE)
-            addFLIGHT_PHASE(builder, FLIGHT_PHASE)
-            addSPEEDBRAKE_POS(builder, SPEEDBRAKE_POS)
-            addFLAP_POSITION(builder, FLAP_POSITION)
-            addGEAR_POSITION(builder, GEAR_POSITION)
-            addGEAR_STATE(builder, GEAR_STATE)
+            addMASS(builder, mass)
+            addOMEGAZ(builder, omegaZ)
+            addOMEGAY(builder, omegaY)
+            addOMEGAX(builder, omegaX)
+            addATTITUDEW(builder, attitudeW)
+            addATTITUDEZ(builder, attitudeZ)
+            addATTITUDEY(builder, attitudeY)
+            addATTITUDEX(builder, attitudeX)
+            addVELOCITYZ(builder, velocityZ)
+            addVELOCITYY(builder, velocityY)
+            addVELOCITYX(builder, velocityX)
+            addPOSITIONZ(builder, positionZ)
+            addPOSITIONY(builder, positionY)
+            addPOSITIONX(builder, positionX)
+            addENGINE(builder, engineOffset)
+            addCONTROLS(builder, controlsOffset)
+            addAERO(builder, aeroOffset)
+            addCGZ(builder, cgZ)
+            addCGX(builder, cgX)
+            addRESERVED(builder, reserved)
+            addWEIGHTONWHEELS(builder, weightOnWheels)
+            addAUTOPILOTMODE(builder, autopilotMode)
+            addFLIGHTPHASE(builder, flightPhase)
+            addSPEEDBRAKEPOS(builder, speedbrakePos)
+            addFLAPPOSITION(builder, flapPosition)
+            addGEARPOSITION(builder, gearPosition)
+            addGEARSTATE(builder, gearState)
             return endACR(builder)
         }
         fun startACR(builder: FlatBufferBuilder) = builder.startTable(27)
-        fun addPOSITION_X(builder: FlatBufferBuilder, POSITION_X: Double) = builder.addDouble(0, POSITION_X, 0.0)
-        fun addPOSITION_Y(builder: FlatBufferBuilder, POSITION_Y: Double) = builder.addDouble(1, POSITION_Y, 0.0)
-        fun addPOSITION_Z(builder: FlatBufferBuilder, POSITION_Z: Double) = builder.addDouble(2, POSITION_Z, 0.0)
-        fun addVELOCITY_X(builder: FlatBufferBuilder, VELOCITY_X: Double) = builder.addDouble(3, VELOCITY_X, 0.0)
-        fun addVELOCITY_Y(builder: FlatBufferBuilder, VELOCITY_Y: Double) = builder.addDouble(4, VELOCITY_Y, 0.0)
-        fun addVELOCITY_Z(builder: FlatBufferBuilder, VELOCITY_Z: Double) = builder.addDouble(5, VELOCITY_Z, 0.0)
-        fun addATTITUDE_X(builder: FlatBufferBuilder, ATTITUDE_X: Double) = builder.addDouble(6, ATTITUDE_X, 0.0)
-        fun addATTITUDE_Y(builder: FlatBufferBuilder, ATTITUDE_Y: Double) = builder.addDouble(7, ATTITUDE_Y, 0.0)
-        fun addATTITUDE_Z(builder: FlatBufferBuilder, ATTITUDE_Z: Double) = builder.addDouble(8, ATTITUDE_Z, 0.0)
-        fun addATTITUDE_W(builder: FlatBufferBuilder, ATTITUDE_W: Double) = builder.addDouble(9, ATTITUDE_W, 0.0)
-        fun addOMEGA_X(builder: FlatBufferBuilder, OMEGA_X: Double) = builder.addDouble(10, OMEGA_X, 0.0)
-        fun addOMEGA_Y(builder: FlatBufferBuilder, OMEGA_Y: Double) = builder.addDouble(11, OMEGA_Y, 0.0)
-        fun addOMEGA_Z(builder: FlatBufferBuilder, OMEGA_Z: Double) = builder.addDouble(12, OMEGA_Z, 0.0)
-        fun addMASS(builder: FlatBufferBuilder, MASS: Double) = builder.addDouble(13, MASS, 0.0)
-        fun addCG_X(builder: FlatBufferBuilder, CG_X: Float) = builder.addFloat(14, CG_X, 0.0)
-        fun addCG_Z(builder: FlatBufferBuilder, CG_Z: Float) = builder.addFloat(15, CG_Z, 0.0)
-        fun addAERO(builder: FlatBufferBuilder, AERO: Int) = builder.addOffset(16, AERO, 0)
-        fun addCONTROLS(builder: FlatBufferBuilder, CONTROLS: Int) = builder.addOffset(17, CONTROLS, 0)
-        fun addENGINE(builder: FlatBufferBuilder, ENGINE: Int) = builder.addOffset(18, ENGINE, 0)
-        fun addGEAR_STATE(builder: FlatBufferBuilder, GEAR_STATE: UByte) = builder.addByte(19, GEAR_STATE.toByte(), 0)
-        fun addGEAR_POSITION(builder: FlatBufferBuilder, GEAR_POSITION: UByte) = builder.addByte(20, GEAR_POSITION.toByte(), 0)
-        fun addFLAP_POSITION(builder: FlatBufferBuilder, FLAP_POSITION: UByte) = builder.addByte(21, FLAP_POSITION.toByte(), 0)
-        fun addSPEEDBRAKE_POS(builder: FlatBufferBuilder, SPEEDBRAKE_POS: UByte) = builder.addByte(22, SPEEDBRAKE_POS.toByte(), 0)
-        fun addFLIGHT_PHASE(builder: FlatBufferBuilder, FLIGHT_PHASE: UByte) = builder.addByte(23, FLIGHT_PHASE.toByte(), 0)
-        fun addAUTOPILOT_MODE(builder: FlatBufferBuilder, AUTOPILOT_MODE: UByte) = builder.addByte(24, AUTOPILOT_MODE.toByte(), 0)
-        fun addWEIGHT_ON_WHEELS(builder: FlatBufferBuilder, WEIGHT_ON_WHEELS: UByte) = builder.addByte(25, WEIGHT_ON_WHEELS.toByte(), 0)
-        fun addRESERVED(builder: FlatBufferBuilder, RESERVED: UByte) = builder.addByte(26, RESERVED.toByte(), 0)
+        fun addPOSITIONX(builder: FlatBufferBuilder, positionX: Double) = builder.addDouble(0, positionX, 0.0)
+        fun addPOSITIONY(builder: FlatBufferBuilder, positionY: Double) = builder.addDouble(1, positionY, 0.0)
+        fun addPOSITIONZ(builder: FlatBufferBuilder, positionZ: Double) = builder.addDouble(2, positionZ, 0.0)
+        fun addVELOCITYX(builder: FlatBufferBuilder, velocityX: Double) = builder.addDouble(3, velocityX, 0.0)
+        fun addVELOCITYY(builder: FlatBufferBuilder, velocityY: Double) = builder.addDouble(4, velocityY, 0.0)
+        fun addVELOCITYZ(builder: FlatBufferBuilder, velocityZ: Double) = builder.addDouble(5, velocityZ, 0.0)
+        fun addATTITUDEX(builder: FlatBufferBuilder, attitudeX: Double) = builder.addDouble(6, attitudeX, 0.0)
+        fun addATTITUDEY(builder: FlatBufferBuilder, attitudeY: Double) = builder.addDouble(7, attitudeY, 0.0)
+        fun addATTITUDEZ(builder: FlatBufferBuilder, attitudeZ: Double) = builder.addDouble(8, attitudeZ, 0.0)
+        fun addATTITUDEW(builder: FlatBufferBuilder, attitudeW: Double) = builder.addDouble(9, attitudeW, 0.0)
+        fun addOMEGAX(builder: FlatBufferBuilder, omegaX: Double) = builder.addDouble(10, omegaX, 0.0)
+        fun addOMEGAY(builder: FlatBufferBuilder, omegaY: Double) = builder.addDouble(11, omegaY, 0.0)
+        fun addOMEGAZ(builder: FlatBufferBuilder, omegaZ: Double) = builder.addDouble(12, omegaZ, 0.0)
+        fun addMASS(builder: FlatBufferBuilder, mass: Double) = builder.addDouble(13, mass, 0.0)
+        fun addCGX(builder: FlatBufferBuilder, cgX: Float) = builder.addFloat(14, cgX, 0.0)
+        fun addCGZ(builder: FlatBufferBuilder, cgZ: Float) = builder.addFloat(15, cgZ, 0.0)
+        fun addAERO(builder: FlatBufferBuilder, aero: Int) = builder.addOffset(16, aero, 0)
+        fun addCONTROLS(builder: FlatBufferBuilder, controls: Int) = builder.addOffset(17, controls, 0)
+        fun addENGINE(builder: FlatBufferBuilder, engine: Int) = builder.addOffset(18, engine, 0)
+        fun addGEARSTATE(builder: FlatBufferBuilder, gearState: UByte) = builder.addByte(19, gearState.toByte(), 0)
+        fun addGEARPOSITION(builder: FlatBufferBuilder, gearPosition: UByte) = builder.addByte(20, gearPosition.toByte(), 0)
+        fun addFLAPPOSITION(builder: FlatBufferBuilder, flapPosition: UByte) = builder.addByte(21, flapPosition.toByte(), 0)
+        fun addSPEEDBRAKEPOS(builder: FlatBufferBuilder, speedbrakePos: UByte) = builder.addByte(22, speedbrakePos.toByte(), 0)
+        fun addFLIGHTPHASE(builder: FlatBufferBuilder, flightPhase: UByte) = builder.addByte(23, flightPhase.toByte(), 0)
+        fun addAUTOPILOTMODE(builder: FlatBufferBuilder, autopilotMode: UByte) = builder.addByte(24, autopilotMode.toByte(), 0)
+        fun addWEIGHTONWHEELS(builder: FlatBufferBuilder, weightOnWheels: UByte) = builder.addByte(25, weightOnWheels.toByte(), 0)
+        fun addRESERVED(builder: FlatBufferBuilder, reserved: UByte) = builder.addByte(26, reserved.toByte(), 0)
         fun endACR(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

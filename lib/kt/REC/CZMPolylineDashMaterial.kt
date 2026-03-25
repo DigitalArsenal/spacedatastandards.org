@@ -32,8 +32,8 @@ class CZMPolylineDashMaterial : Table() {
     /**
      * Dash color
      */
-    val COLOR : CZMColor? get() = COLOR(CZMColor())
-    fun COLOR(obj: CZMColor) : CZMColor? {
+    val color : CZMColor? get() = color(CZMColor())
+    fun color(obj: CZMColor) : CZMColor? {
         val o = __offset(4)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -44,8 +44,8 @@ class CZMPolylineDashMaterial : Table() {
     /**
      * Gap color
      */
-    val GAP_COLOR : CZMColor? get() = GAP_COLOR(CZMColor())
-    fun GAP_COLOR(obj: CZMColor) : CZMColor? {
+    val gapColor : CZMColor? get() = gapColor(CZMColor())
+    fun gapColor(obj: CZMColor) : CZMColor? {
         val o = __offset(6)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -56,7 +56,7 @@ class CZMPolylineDashMaterial : Table() {
     /**
      * Dash length in pixels
      */
-    val DASH_LENGTH : Double
+    val dashLength : Double
         get() {
             val o = __offset(8)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -64,31 +64,31 @@ class CZMPolylineDashMaterial : Table() {
     /**
      * Dash pattern (bitmask)
      */
-    val DASH_PATTERN : Int
+    val dashPattern : Int
         get() {
             val o = __offset(10)
             return if(o != 0) bb.getInt(o + bb_pos) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsCZMPolylineDashMaterial(_bb: ByteBuffer): CZMPolylineDashMaterial = getRootAsCZMPolylineDashMaterial(_bb, CZMPolylineDashMaterial())
         fun getRootAsCZMPolylineDashMaterial(_bb: ByteBuffer, obj: CZMPolylineDashMaterial): CZMPolylineDashMaterial {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createCZMPolylineDashMaterial(builder: FlatBufferBuilder, COLOROffset: Int, GAP_COLOROffset: Int, DASH_LENGTH: Double, DASH_PATTERN: Int) : Int {
+        fun createCZMPolylineDashMaterial(builder: FlatBufferBuilder, colorOffset: Int, gapColorOffset: Int, dashLength: Double, dashPattern: Int) : Int {
             builder.startTable(4)
-            addDASH_LENGTH(builder, DASH_LENGTH)
-            addDASH_PATTERN(builder, DASH_PATTERN)
-            addGAP_COLOR(builder, GAP_COLOROffset)
-            addCOLOR(builder, COLOROffset)
+            addDASHLENGTH(builder, dashLength)
+            addDASHPATTERN(builder, dashPattern)
+            addGAPCOLOR(builder, gapColorOffset)
+            addCOLOR(builder, colorOffset)
             return endCZMPolylineDashMaterial(builder)
         }
         fun startCZMPolylineDashMaterial(builder: FlatBufferBuilder) = builder.startTable(4)
-        fun addCOLOR(builder: FlatBufferBuilder, COLOR: Int) = builder.addOffset(0, COLOR, 0)
-        fun addGAP_COLOR(builder: FlatBufferBuilder, GAP_COLOR: Int) = builder.addOffset(1, GAP_COLOR, 0)
-        fun addDASH_LENGTH(builder: FlatBufferBuilder, DASH_LENGTH: Double) = builder.addDouble(2, DASH_LENGTH, 0.0)
-        fun addDASH_PATTERN(builder: FlatBufferBuilder, DASH_PATTERN: Int) = builder.addInt(3, DASH_PATTERN, 0)
+        fun addCOLOR(builder: FlatBufferBuilder, color: Int) = builder.addOffset(0, color, 0)
+        fun addGAPCOLOR(builder: FlatBufferBuilder, gapColor: Int) = builder.addOffset(1, gapColor, 0)
+        fun addDASHLENGTH(builder: FlatBufferBuilder, dashLength: Double) = builder.addDouble(2, dashLength, 0.0)
+        fun addDASHPATTERN(builder: FlatBufferBuilder, dashPattern: Int) = builder.addInt(3, dashPattern, 0)
         fun endCZMPolylineDashMaterial(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

@@ -8,9 +8,9 @@
 
 // Ensure the included flatbuffers.h is the same version as when this file was
 // generated, otherwise it may not be compatible.
-static_assert(FLATBUFFERS_VERSION_MAJOR == 24 &&
-              FLATBUFFERS_VERSION_MINOR == 3 &&
-              FLATBUFFERS_VERSION_REVISION == 25,
+static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
+              FLATBUFFERS_VERSION_MINOR == 12 &&
+              FLATBUFFERS_VERSION_REVISION == 19,
              "Non-compatible flatbuffers version included");
 
 struct SOI;
@@ -453,7 +453,8 @@ struct SOI FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *RADAR_SOIOBSERVATION_LIST() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_RADAR_SOIOBSERVATION_LIST);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_ID) &&
            verifier.VerifyString(ID()) &&
@@ -1067,14 +1068,16 @@ inline bool SizePrefixedSOIBufferHasIdentifier(const void *buf) {
       buf, SOIIdentifier(), true);
 }
 
+template <bool B = false>
 inline bool VerifySOIBuffer(
-    ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifyBuffer<SOI>(SOIIdentifier());
+    ::flatbuffers::VerifierTemplate<B> &verifier) {
+  return verifier.template VerifyBuffer<SOI>(SOIIdentifier());
 }
 
+template <bool B = false>
 inline bool VerifySizePrefixedSOIBuffer(
-    ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifySizePrefixedBuffer<SOI>(SOIIdentifier());
+    ::flatbuffers::VerifierTemplate<B> &verifier) {
+  return verifier.template VerifySizePrefixedBuffer<SOI>(SOIIdentifier());
 }
 
 inline void FinishSOIBuffer(

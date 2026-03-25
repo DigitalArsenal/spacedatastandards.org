@@ -2,7 +2,7 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export { CentralBody } from './CentralBody.js';
-export { GRV, GRVT } from './GRV.js';
-export { GravityModelName } from './GravityModelName.js';
-export { GravityModelType } from './GravityModelType.js';
+export * from './CentralBody.js';
+export * from './GravityModelName.js';
+export * from './GravityModelType.js';
+export * from './GRV.js';

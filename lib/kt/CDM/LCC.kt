@@ -29,26 +29,26 @@ class LCC : Table() {
         __init(_i, _bb)
         return this
     }
-    val OWNER : Byte
+    val owner : Byte
         get() {
             val o = __offset(4)
             return if(o != 0) bb.get(o + bb_pos) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsLCC(_bb: ByteBuffer): LCC = getRootAsLCC(_bb, LCC())
         fun getRootAsLCC(_bb: ByteBuffer, obj: LCC): LCC {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun LCCBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$LCC")
-        fun createLCC(builder: FlatBufferBuilder, OWNER: Byte) : Int {
+        fun createLCC(builder: FlatBufferBuilder, owner: Byte) : Int {
             builder.startTable(1)
-            addOWNER(builder, OWNER)
+            addOWNER(builder, owner)
             return endLCC(builder)
         }
         fun startLCC(builder: FlatBufferBuilder) = builder.startTable(1)
-        fun addOWNER(builder: FlatBufferBuilder, OWNER: Byte) = builder.addByte(0, OWNER, 0)
+        fun addOWNER(builder: FlatBufferBuilder, owner: Byte) = builder.addByte(0, owner, 0)
         fun endLCC(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

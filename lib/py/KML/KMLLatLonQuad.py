@@ -73,6 +73,12 @@ def KMLLatLonQuadStartCOORDINATESVector(builder, numElems):
 def StartCOORDINATESVector(builder, numElems):
     return KMLLatLonQuadStartCOORDINATESVector(builder, numElems)
 
+def KMLLatLonQuadCreateCOORDINATESVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateCOORDINATESVector(builder, data):
+    KMLLatLonQuadCreateCOORDINATESVector(builder, data)
+
 def KMLLatLonQuadEnd(builder):
     return builder.EndObject()
 
@@ -88,14 +94,17 @@ except:
 class KMLLatLonQuadT(object):
 
     # KMLLatLonQuadT
-    def __init__(self):
-        self.COORDINATES = None  # type: List[KMLCoordinate.KMLCoordinateT]
+    def __init__(
+        self,
+        COORDINATES = None,
+    ):
+        self.COORDINATES = COORDINATES  # type: Optional[List[KMLCoordinate.KMLCoordinateT]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        kmllatLonQuad = KMLLatLonQuad()
-        kmllatLonQuad.Init(buf, pos)
-        return cls.InitFromObj(kmllatLonQuad)
+        tmpKmllatLonQuad = KMLLatLonQuad()
+        tmpKmllatLonQuad.Init(buf, pos)
+        return cls.InitFromObj(tmpKmllatLonQuad)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -103,22 +112,22 @@ class KMLLatLonQuadT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, kmllatLonQuad):
+    def InitFromObj(cls, tmpKmllatLonQuad):
         x = KMLLatLonQuadT()
-        x._UnPack(kmllatLonQuad)
+        x._UnPack(tmpKmllatLonQuad)
         return x
 
     # KMLLatLonQuadT
-    def _UnPack(self, kmllatLonQuad):
-        if kmllatLonQuad is None:
+    def _UnPack(self, KMLLatLonQuad):
+        if KMLLatLonQuad is None:
             return
-        if not kmllatLonQuad.COORDINATESIsNone():
+        if not KMLLatLonQuad.COORDINATESIsNone():
             self.COORDINATES = []
-            for i in range(kmllatLonQuad.COORDINATESLength()):
-                if kmllatLonQuad.COORDINATES(i) is None:
+            for i in range(KMLLatLonQuad.COORDINATESLength()):
+                if KMLLatLonQuad.COORDINATES(i) is None:
                     self.COORDINATES.append(None)
                 else:
-                    kMLCoordinate_ = KMLCoordinate.KMLCoordinateT.InitFromObj(kmllatLonQuad.COORDINATES(i))
+                    kMLCoordinate_ = KMLCoordinate.KMLCoordinateT.InitFromObj(KMLLatLonQuad.COORDINATES(i))
                     self.COORDINATES.append(kMLCoordinate_)
 
     # KMLLatLonQuadT
@@ -134,5 +143,5 @@ class KMLLatLonQuadT(object):
         KMLLatLonQuadStart(builder)
         if self.COORDINATES is not None:
             KMLLatLonQuadAddCOORDINATES(builder, COORDINATES)
-        kmllatLonQuad = KMLLatLonQuadEnd(builder)
-        return kmllatLonQuad
+        KMLLatLonQuad = KMLLatLonQuadEnd(builder)
+        return KMLLatLonQuad

@@ -32,7 +32,7 @@ class CTR : Table() {
     /**
      * ISO 3166 Numeric code
      */
-    val ID : String?
+    val id : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class CTR : Table() {
                 null
             }
         }
-    val IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val idAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun idInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Country name
      */
-    val NAME : String?
+    val name : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -55,12 +55,12 @@ class CTR : Table() {
                 null
             }
         }
-    val NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val nameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun nameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * GENC code
      */
-    val GENC_CODE : String?
+    val gencCode : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -69,12 +69,12 @@ class CTR : Table() {
                 null
             }
         }
-    val GENC_CODEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun GENC_CODEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val gencCodeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun gencCodeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
     /**
      * ISO 3166 Alpha-2 code
      */
-    val ALPHA_2_CODE : String?
+    val alpha2Code : String?
         get() {
             val o = __offset(10)
             return if (o != 0) {
@@ -83,12 +83,12 @@ class CTR : Table() {
                 null
             }
         }
-    val ALPHA_2_CODEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
-    fun ALPHA_2_CODEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
+    val alpha2CodeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(10, 1)
+    fun alpha2CodeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 10, 1)
     /**
      * ISO 3166 Alpha-3 code
      */
-    val ALPHA_3_CODE : String?
+    val alpha3Code : String?
         get() {
             val o = __offset(12)
             return if (o != 0) {
@@ -97,12 +97,12 @@ class CTR : Table() {
                 null
             }
         }
-    val ALPHA_3_CODEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
-    fun ALPHA_3_CODEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
+    val alpha3CodeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(12, 1)
+    fun alpha3CodeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 12, 1)
     /**
      * Stanag code
      */
-    val STANAG_CODE : String?
+    val stanagCode : String?
         get() {
             val o = __offset(14)
             return if (o != 0) {
@@ -111,12 +111,12 @@ class CTR : Table() {
                 null
             }
         }
-    val STANAG_CODEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(14, 1)
-    fun STANAG_CODEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 14, 1)
+    val stanagCodeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(14, 1)
+    fun stanagCodeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 14, 1)
     /**
      * Internet country code top-level domain (ccTLD)
      */
-    val INTERNET_CCTLD : String?
+    val internetCctld : String?
         get() {
             val o = __offset(16)
             return if (o != 0) {
@@ -125,12 +125,12 @@ class CTR : Table() {
                 null
             }
         }
-    val INTERNET_CCTLDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(16, 1)
-    fun INTERNET_CCTLDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 16, 1)
+    val internetCctldAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(16, 1)
+    fun internetCctldInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 16, 1)
     /**
      * Additional comments
      */
-    val COMMENT : String?
+    val comment : String?
         get() {
             val o = __offset(18)
             return if (o != 0) {
@@ -139,37 +139,37 @@ class CTR : Table() {
                 null
             }
         }
-    val COMMENTAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(18, 1)
-    fun COMMENTInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 18, 1)
+    val commentAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(18, 1)
+    fun commentInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 18, 1)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsCTR(_bb: ByteBuffer): CTR = getRootAsCTR(_bb, CTR())
         fun getRootAsCTR(_bb: ByteBuffer, obj: CTR): CTR {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun CTRBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$CTR")
-        fun createCTR(builder: FlatBufferBuilder, IDOffset: Int, NAMEOffset: Int, GENC_CODEOffset: Int, ALPHA_2_CODEOffset: Int, ALPHA_3_CODEOffset: Int, STANAG_CODEOffset: Int, INTERNET_CCTLDOffset: Int, COMMENTOffset: Int) : Int {
+        fun createCTR(builder: FlatBufferBuilder, idOffset: Int, nameOffset: Int, gencCodeOffset: Int, alpha2CodeOffset: Int, alpha3CodeOffset: Int, stanagCodeOffset: Int, internetCctldOffset: Int, commentOffset: Int) : Int {
             builder.startTable(8)
-            addCOMMENT(builder, COMMENTOffset)
-            addINTERNET_CCTLD(builder, INTERNET_CCTLDOffset)
-            addSTANAG_CODE(builder, STANAG_CODEOffset)
-            addALPHA_3_CODE(builder, ALPHA_3_CODEOffset)
-            addALPHA_2_CODE(builder, ALPHA_2_CODEOffset)
-            addGENC_CODE(builder, GENC_CODEOffset)
-            addNAME(builder, NAMEOffset)
-            addID(builder, IDOffset)
+            addCOMMENT(builder, commentOffset)
+            addINTERNETCCTLD(builder, internetCctldOffset)
+            addSTANAGCODE(builder, stanagCodeOffset)
+            addALPHA3CODE(builder, alpha3CodeOffset)
+            addALPHA2CODE(builder, alpha2CodeOffset)
+            addGENCCODE(builder, gencCodeOffset)
+            addNAME(builder, nameOffset)
+            addID(builder, idOffset)
             return endCTR(builder)
         }
         fun startCTR(builder: FlatBufferBuilder) = builder.startTable(8)
-        fun addID(builder: FlatBufferBuilder, ID: Int) = builder.addOffset(0, ID, 0)
-        fun addNAME(builder: FlatBufferBuilder, NAME: Int) = builder.addOffset(1, NAME, 0)
-        fun addGENC_CODE(builder: FlatBufferBuilder, GENC_CODE: Int) = builder.addOffset(2, GENC_CODE, 0)
-        fun addALPHA_2_CODE(builder: FlatBufferBuilder, ALPHA_2_CODE: Int) = builder.addOffset(3, ALPHA_2_CODE, 0)
-        fun addALPHA_3_CODE(builder: FlatBufferBuilder, ALPHA_3_CODE: Int) = builder.addOffset(4, ALPHA_3_CODE, 0)
-        fun addSTANAG_CODE(builder: FlatBufferBuilder, STANAG_CODE: Int) = builder.addOffset(5, STANAG_CODE, 0)
-        fun addINTERNET_CCTLD(builder: FlatBufferBuilder, INTERNET_CCTLD: Int) = builder.addOffset(6, INTERNET_CCTLD, 0)
-        fun addCOMMENT(builder: FlatBufferBuilder, COMMENT: Int) = builder.addOffset(7, COMMENT, 0)
+        fun addID(builder: FlatBufferBuilder, id: Int) = builder.addOffset(0, id, 0)
+        fun addNAME(builder: FlatBufferBuilder, name: Int) = builder.addOffset(1, name, 0)
+        fun addGENCCODE(builder: FlatBufferBuilder, gencCode: Int) = builder.addOffset(2, gencCode, 0)
+        fun addALPHA2CODE(builder: FlatBufferBuilder, alpha2Code: Int) = builder.addOffset(3, alpha2Code, 0)
+        fun addALPHA3CODE(builder: FlatBufferBuilder, alpha3Code: Int) = builder.addOffset(4, alpha3Code, 0)
+        fun addSTANAGCODE(builder: FlatBufferBuilder, stanagCode: Int) = builder.addOffset(5, stanagCode, 0)
+        fun addINTERNETCCTLD(builder: FlatBufferBuilder, internetCctld: Int) = builder.addOffset(6, internetCctld, 0)
+        fun addCOMMENT(builder: FlatBufferBuilder, comment: Int) = builder.addOffset(7, comment, 0)
         fun endCTR(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

@@ -398,16 +398,16 @@ def SARCreateTAGSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-def SARStartSRC_TYPSVector(b_:flatbuffers.builder, n_:int):
+def SARStartSRCTYPSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def SARCreateSRC_TYPSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def SARCreateSRCTYPSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-def SARStartSRC_IDSVector(b_:flatbuffers.builder, n_:int):
+def SARStartSRCIDSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def SARCreateSRC_IDSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def SARCreateSRCIDSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)

@@ -1,2 +1,2 @@
-export { EME, EMET } from './EME.js';
+export * from './EME.js';
 //# sourceMappingURL=main.d.ts.map

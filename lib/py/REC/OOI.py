@@ -2,4 +2,974 @@
 
 # namespace: 
 
-# NOTE OOI.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Object of Interest
+class OOI(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = OOI()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsOOI(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def OOIBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x4F\x4F\x49", size_prefixed=size_prefixed)
+
+    # OOI
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Unique identifier
+    # OOI
+    def ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Satellite catalog number
+    # OOI
+    def SAT_NO(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+        return 0
+
+    # Object name or designator
+    # OOI
+    def NAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # On-orbit reference
+    # OOI
+    def ON_ORBIT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Tasking status
+    # OOI
+    def STATUS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # Status update date (ISO 8601)
+    # OOI
+    def STATUS_DATE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Collection priority
+    # OOI
+    def PRIORITY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # Description of why object is of interest
+    # OOI
+    def DESCRIPTION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Sensor tasking start time (ISO 8601)
+    # OOI
+    def SENSOR_TASKING_START_TIME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Sensor tasking stop time (ISO 8601)
+    # OOI
+    def SENSOR_TASKING_STOP_TIME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Last observation time (ISO 8601)
+    # OOI
+    def LAST_OB_TIME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Last missed observation time (ISO 8601)
+    # OOI
+    def MISSED_OB_TIME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # State vector epoch (ISO 8601)
+    # OOI
+    def SV_EPOCH(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Position X (km, TEME)
+    # OOI
+    def X(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Position Y (km, TEME)
+    # OOI
+    def Y(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Position Z (km, TEME)
+    # OOI
+    def Z(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Velocity X (km/s, TEME)
+    # OOI
+    def XVEL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Velocity Y (km/s, TEME)
+    # OOI
+    def YVEL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Velocity Z (km/s, TEME)
+    # OOI
+    def ZVEL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Element set epoch (ISO 8601)
+    # OOI
+    def ELSET_EPOCH(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Mean motion (rev/day)
+    # OOI
+    def MEAN_MOTION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Eccentricity
+    # OOI
+    def ECCENTRICITY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Inclination (degrees)
+    # OOI
+    def INCLINATION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Right ascension of ascending node (degrees)
+    # OOI
+    def RAAN(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Argument of perigee (degrees)
+    # OOI
+    def ARG_OF_PERIGEE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(52))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Mean anomaly (degrees)
+    # OOI
+    def MEAN_ANOMALY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(54))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Revolution number at epoch
+    # OOI
+    def REV_NO(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(56))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+        return 0
+
+    # BSTAR drag term (1/Earth radii)
+    # OOI
+    def B_STAR(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Mean motion first derivative (rev/day^2)
+    # OOI
+    def MEAN_MOTION_DOT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Mean motion second derivative (rev/day^3)
+    # OOI
+    def MEAN_MOTION_DDOT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(62))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Semi-major axis (km)
+    # OOI
+    def SEMI_MAJOR_AXIS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(64))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Orbital period (minutes)
+    # OOI
+    def PERIOD(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(66))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Apogee altitude (km)
+    # OOI
+    def APOGEE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(68))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Perigee altitude (km)
+    # OOI
+    def PERIGEE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(70))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Delta-V estimates for maneuver hypotheses (m/s)
+    # OOI
+    def DELTA_VS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(72))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # OOI
+    def DELTA_VSAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(72))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
+
+    # OOI
+    def DELTA_VSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(72))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # OOI
+    def DELTA_VSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(72))
+        return o == 0
+
+    # Delta-T estimates for maneuver timing (seconds)
+    # OOI
+    def DELTA_TS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(74))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # OOI
+    def DELTA_TSAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(74))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
+
+    # OOI
+    def DELTA_TSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(74))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # OOI
+    def DELTA_TSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(74))
+        return o == 0
+
+    # Other affected satellite catalog numbers
+    # OOI
+    def AFFECTED_OBJECTS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(76))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
+        return ""
+
+    # OOI
+    def AFFECTED_OBJECTSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(76))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # OOI
+    def AFFECTED_OBJECTSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(76))
+        return o == 0
+
+    # Associated orbit manifold identifiers
+    # OOI
+    def MANIFOLDS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(78))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
+        return ""
+
+    # OOI
+    def MANIFOLDSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(78))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # OOI
+    def MANIFOLDSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(78))
+        return o == 0
+
+def OOIStart(builder):
+    builder.StartObject(38)
+
+def Start(builder):
+    OOIStart(builder)
+
+def OOIAddID(builder, ID):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(ID), 0)
+
+def AddID(builder, ID):
+    OOIAddID(builder, ID)
+
+def OOIAddSAT_NO(builder, SAT_NO):
+    builder.PrependUint32Slot(1, SAT_NO, 0)
+
+def AddSAT_NO(builder, SAT_NO):
+    OOIAddSAT_NO(builder, SAT_NO)
+
+def OOIAddNAME(builder, NAME):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(NAME), 0)
+
+def AddNAME(builder, NAME):
+    OOIAddNAME(builder, NAME)
+
+def OOIAddON_ORBIT(builder, ON_ORBIT):
+    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(ON_ORBIT), 0)
+
+def AddON_ORBIT(builder, ON_ORBIT):
+    OOIAddON_ORBIT(builder, ON_ORBIT)
+
+def OOIAddSTATUS(builder, STATUS):
+    builder.PrependInt8Slot(4, STATUS, 0)
+
+def AddSTATUS(builder, STATUS):
+    OOIAddSTATUS(builder, STATUS)
+
+def OOIAddSTATUS_DATE(builder, STATUS_DATE):
+    builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(STATUS_DATE), 0)
+
+def AddSTATUS_DATE(builder, STATUS_DATE):
+    OOIAddSTATUS_DATE(builder, STATUS_DATE)
+
+def OOIAddPRIORITY(builder, PRIORITY):
+    builder.PrependInt8Slot(6, PRIORITY, 0)
+
+def AddPRIORITY(builder, PRIORITY):
+    OOIAddPRIORITY(builder, PRIORITY)
+
+def OOIAddDESCRIPTION(builder, DESCRIPTION):
+    builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(DESCRIPTION), 0)
+
+def AddDESCRIPTION(builder, DESCRIPTION):
+    OOIAddDESCRIPTION(builder, DESCRIPTION)
+
+def OOIAddSENSOR_TASKING_START_TIME(builder, SENSOR_TASKING_START_TIME):
+    builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(SENSOR_TASKING_START_TIME), 0)
+
+def AddSENSOR_TASKING_START_TIME(builder, SENSOR_TASKING_START_TIME):
+    OOIAddSENSOR_TASKING_START_TIME(builder, SENSOR_TASKING_START_TIME)
+
+def OOIAddSENSOR_TASKING_STOP_TIME(builder, SENSOR_TASKING_STOP_TIME):
+    builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(SENSOR_TASKING_STOP_TIME), 0)
+
+def AddSENSOR_TASKING_STOP_TIME(builder, SENSOR_TASKING_STOP_TIME):
+    OOIAddSENSOR_TASKING_STOP_TIME(builder, SENSOR_TASKING_STOP_TIME)
+
+def OOIAddLAST_OB_TIME(builder, LAST_OB_TIME):
+    builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(LAST_OB_TIME), 0)
+
+def AddLAST_OB_TIME(builder, LAST_OB_TIME):
+    OOIAddLAST_OB_TIME(builder, LAST_OB_TIME)
+
+def OOIAddMISSED_OB_TIME(builder, MISSED_OB_TIME):
+    builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(MISSED_OB_TIME), 0)
+
+def AddMISSED_OB_TIME(builder, MISSED_OB_TIME):
+    OOIAddMISSED_OB_TIME(builder, MISSED_OB_TIME)
+
+def OOIAddSV_EPOCH(builder, SV_EPOCH):
+    builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(SV_EPOCH), 0)
+
+def AddSV_EPOCH(builder, SV_EPOCH):
+    OOIAddSV_EPOCH(builder, SV_EPOCH)
+
+def OOIAddX(builder, X):
+    builder.PrependFloat64Slot(13, X, 0.0)
+
+def AddX(builder, X):
+    OOIAddX(builder, X)
+
+def OOIAddY(builder, Y):
+    builder.PrependFloat64Slot(14, Y, 0.0)
+
+def AddY(builder, Y):
+    OOIAddY(builder, Y)
+
+def OOIAddZ(builder, Z):
+    builder.PrependFloat64Slot(15, Z, 0.0)
+
+def AddZ(builder, Z):
+    OOIAddZ(builder, Z)
+
+def OOIAddXVEL(builder, XVEL):
+    builder.PrependFloat64Slot(16, XVEL, 0.0)
+
+def AddXVEL(builder, XVEL):
+    OOIAddXVEL(builder, XVEL)
+
+def OOIAddYVEL(builder, YVEL):
+    builder.PrependFloat64Slot(17, YVEL, 0.0)
+
+def AddYVEL(builder, YVEL):
+    OOIAddYVEL(builder, YVEL)
+
+def OOIAddZVEL(builder, ZVEL):
+    builder.PrependFloat64Slot(18, ZVEL, 0.0)
+
+def AddZVEL(builder, ZVEL):
+    OOIAddZVEL(builder, ZVEL)
+
+def OOIAddELSET_EPOCH(builder, ELSET_EPOCH):
+    builder.PrependUOffsetTRelativeSlot(19, flatbuffers.number_types.UOffsetTFlags.py_type(ELSET_EPOCH), 0)
+
+def AddELSET_EPOCH(builder, ELSET_EPOCH):
+    OOIAddELSET_EPOCH(builder, ELSET_EPOCH)
+
+def OOIAddMEAN_MOTION(builder, MEAN_MOTION):
+    builder.PrependFloat64Slot(20, MEAN_MOTION, 0.0)
+
+def AddMEAN_MOTION(builder, MEAN_MOTION):
+    OOIAddMEAN_MOTION(builder, MEAN_MOTION)
+
+def OOIAddECCENTRICITY(builder, ECCENTRICITY):
+    builder.PrependFloat64Slot(21, ECCENTRICITY, 0.0)
+
+def AddECCENTRICITY(builder, ECCENTRICITY):
+    OOIAddECCENTRICITY(builder, ECCENTRICITY)
+
+def OOIAddINCLINATION(builder, INCLINATION):
+    builder.PrependFloat64Slot(22, INCLINATION, 0.0)
+
+def AddINCLINATION(builder, INCLINATION):
+    OOIAddINCLINATION(builder, INCLINATION)
+
+def OOIAddRAAN(builder, RAAN):
+    builder.PrependFloat64Slot(23, RAAN, 0.0)
+
+def AddRAAN(builder, RAAN):
+    OOIAddRAAN(builder, RAAN)
+
+def OOIAddARG_OF_PERIGEE(builder, ARG_OF_PERIGEE):
+    builder.PrependFloat64Slot(24, ARG_OF_PERIGEE, 0.0)
+
+def AddARG_OF_PERIGEE(builder, ARG_OF_PERIGEE):
+    OOIAddARG_OF_PERIGEE(builder, ARG_OF_PERIGEE)
+
+def OOIAddMEAN_ANOMALY(builder, MEAN_ANOMALY):
+    builder.PrependFloat64Slot(25, MEAN_ANOMALY, 0.0)
+
+def AddMEAN_ANOMALY(builder, MEAN_ANOMALY):
+    OOIAddMEAN_ANOMALY(builder, MEAN_ANOMALY)
+
+def OOIAddREV_NO(builder, REV_NO):
+    builder.PrependUint32Slot(26, REV_NO, 0)
+
+def AddREV_NO(builder, REV_NO):
+    OOIAddREV_NO(builder, REV_NO)
+
+def OOIAddB_STAR(builder, B_STAR):
+    builder.PrependFloat64Slot(27, B_STAR, 0.0)
+
+def AddB_STAR(builder, B_STAR):
+    OOIAddB_STAR(builder, B_STAR)
+
+def OOIAddMEAN_MOTION_DOT(builder, MEAN_MOTION_DOT):
+    builder.PrependFloat64Slot(28, MEAN_MOTION_DOT, 0.0)
+
+def AddMEAN_MOTION_DOT(builder, MEAN_MOTION_DOT):
+    OOIAddMEAN_MOTION_DOT(builder, MEAN_MOTION_DOT)
+
+def OOIAddMEAN_MOTION_DDOT(builder, MEAN_MOTION_DDOT):
+    builder.PrependFloat64Slot(29, MEAN_MOTION_DDOT, 0.0)
+
+def AddMEAN_MOTION_DDOT(builder, MEAN_MOTION_DDOT):
+    OOIAddMEAN_MOTION_DDOT(builder, MEAN_MOTION_DDOT)
+
+def OOIAddSEMI_MAJOR_AXIS(builder, SEMI_MAJOR_AXIS):
+    builder.PrependFloat64Slot(30, SEMI_MAJOR_AXIS, 0.0)
+
+def AddSEMI_MAJOR_AXIS(builder, SEMI_MAJOR_AXIS):
+    OOIAddSEMI_MAJOR_AXIS(builder, SEMI_MAJOR_AXIS)
+
+def OOIAddPERIOD(builder, PERIOD):
+    builder.PrependFloat64Slot(31, PERIOD, 0.0)
+
+def AddPERIOD(builder, PERIOD):
+    OOIAddPERIOD(builder, PERIOD)
+
+def OOIAddAPOGEE(builder, APOGEE):
+    builder.PrependFloat64Slot(32, APOGEE, 0.0)
+
+def AddAPOGEE(builder, APOGEE):
+    OOIAddAPOGEE(builder, APOGEE)
+
+def OOIAddPERIGEE(builder, PERIGEE):
+    builder.PrependFloat64Slot(33, PERIGEE, 0.0)
+
+def AddPERIGEE(builder, PERIGEE):
+    OOIAddPERIGEE(builder, PERIGEE)
+
+def OOIAddDELTA_VS(builder, DELTA_VS):
+    builder.PrependUOffsetTRelativeSlot(34, flatbuffers.number_types.UOffsetTFlags.py_type(DELTA_VS), 0)
+
+def AddDELTA_VS(builder, DELTA_VS):
+    OOIAddDELTA_VS(builder, DELTA_VS)
+
+def OOIStartDELTA_VSVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
+def StartDELTA_VSVector(builder, numElems):
+    return OOIStartDELTA_VSVector(builder, numElems)
+
+def OOICreateDELTA_VSVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateDELTA_VSVector(builder, data):
+    OOICreateDELTA_VSVector(builder, data)
+
+def OOIAddDELTA_TS(builder, DELTA_TS):
+    builder.PrependUOffsetTRelativeSlot(35, flatbuffers.number_types.UOffsetTFlags.py_type(DELTA_TS), 0)
+
+def AddDELTA_TS(builder, DELTA_TS):
+    OOIAddDELTA_TS(builder, DELTA_TS)
+
+def OOIStartDELTA_TSVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
+def StartDELTA_TSVector(builder, numElems):
+    return OOIStartDELTA_TSVector(builder, numElems)
+
+def OOICreateDELTA_TSVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateDELTA_TSVector(builder, data):
+    OOICreateDELTA_TSVector(builder, data)
+
+def OOIAddAFFECTED_OBJECTS(builder, AFFECTED_OBJECTS):
+    builder.PrependUOffsetTRelativeSlot(36, flatbuffers.number_types.UOffsetTFlags.py_type(AFFECTED_OBJECTS), 0)
+
+def AddAFFECTED_OBJECTS(builder, AFFECTED_OBJECTS):
+    OOIAddAFFECTED_OBJECTS(builder, AFFECTED_OBJECTS)
+
+def OOIStartAFFECTED_OBJECTSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartAFFECTED_OBJECTSVector(builder, numElems):
+    return OOIStartAFFECTED_OBJECTSVector(builder, numElems)
+
+def OOICreateAFFECTED_OBJECTSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateAFFECTED_OBJECTSVector(builder, data):
+    OOICreateAFFECTED_OBJECTSVector(builder, data)
+
+def OOIAddMANIFOLDS(builder, MANIFOLDS):
+    builder.PrependUOffsetTRelativeSlot(37, flatbuffers.number_types.UOffsetTFlags.py_type(MANIFOLDS), 0)
+
+def AddMANIFOLDS(builder, MANIFOLDS):
+    OOIAddMANIFOLDS(builder, MANIFOLDS)
+
+def OOIStartMANIFOLDSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartMANIFOLDSVector(builder, numElems):
+    return OOIStartMANIFOLDSVector(builder, numElems)
+
+def OOICreateMANIFOLDSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateMANIFOLDSVector(builder, data):
+    OOICreateMANIFOLDSVector(builder, data)
+
+def OOIEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return OOIEnd(builder)
+
+try:
+    from typing import List
+except:
+    pass
+
+class OOIT(object):
+
+    # OOIT
+    def __init__(
+        self,
+        ID = None,
+        SAT_NO = 0,
+        NAME = None,
+        ON_ORBIT = None,
+        STATUS = 0,
+        STATUS_DATE = None,
+        PRIORITY = 0,
+        DESCRIPTION = None,
+        SENSOR_TASKING_START_TIME = None,
+        SENSOR_TASKING_STOP_TIME = None,
+        LAST_OB_TIME = None,
+        MISSED_OB_TIME = None,
+        SV_EPOCH = None,
+        X = 0.0,
+        Y = 0.0,
+        Z = 0.0,
+        XVEL = 0.0,
+        YVEL = 0.0,
+        ZVEL = 0.0,
+        ELSET_EPOCH = None,
+        MEAN_MOTION = 0.0,
+        ECCENTRICITY = 0.0,
+        INCLINATION = 0.0,
+        RAAN = 0.0,
+        ARG_OF_PERIGEE = 0.0,
+        MEAN_ANOMALY = 0.0,
+        REV_NO = 0,
+        B_STAR = 0.0,
+        MEAN_MOTION_DOT = 0.0,
+        MEAN_MOTION_DDOT = 0.0,
+        SEMI_MAJOR_AXIS = 0.0,
+        PERIOD = 0.0,
+        APOGEE = 0.0,
+        PERIGEE = 0.0,
+        DELTA_VS = None,
+        DELTA_TS = None,
+        AFFECTED_OBJECTS = None,
+        MANIFOLDS = None,
+    ):
+        self.ID = ID  # type: Optional[str]
+        self.SAT_NO = SAT_NO  # type: int
+        self.NAME = NAME  # type: Optional[str]
+        self.ON_ORBIT = ON_ORBIT  # type: Optional[str]
+        self.STATUS = STATUS  # type: int
+        self.STATUS_DATE = STATUS_DATE  # type: Optional[str]
+        self.PRIORITY = PRIORITY  # type: int
+        self.DESCRIPTION = DESCRIPTION  # type: Optional[str]
+        self.SENSOR_TASKING_START_TIME = SENSOR_TASKING_START_TIME  # type: Optional[str]
+        self.SENSOR_TASKING_STOP_TIME = SENSOR_TASKING_STOP_TIME  # type: Optional[str]
+        self.LAST_OB_TIME = LAST_OB_TIME  # type: Optional[str]
+        self.MISSED_OB_TIME = MISSED_OB_TIME  # type: Optional[str]
+        self.SV_EPOCH = SV_EPOCH  # type: Optional[str]
+        self.X = X  # type: float
+        self.Y = Y  # type: float
+        self.Z = Z  # type: float
+        self.XVEL = XVEL  # type: float
+        self.YVEL = YVEL  # type: float
+        self.ZVEL = ZVEL  # type: float
+        self.ELSET_EPOCH = ELSET_EPOCH  # type: Optional[str]
+        self.MEAN_MOTION = MEAN_MOTION  # type: float
+        self.ECCENTRICITY = ECCENTRICITY  # type: float
+        self.INCLINATION = INCLINATION  # type: float
+        self.RAAN = RAAN  # type: float
+        self.ARG_OF_PERIGEE = ARG_OF_PERIGEE  # type: float
+        self.MEAN_ANOMALY = MEAN_ANOMALY  # type: float
+        self.REV_NO = REV_NO  # type: int
+        self.B_STAR = B_STAR  # type: float
+        self.MEAN_MOTION_DOT = MEAN_MOTION_DOT  # type: float
+        self.MEAN_MOTION_DDOT = MEAN_MOTION_DDOT  # type: float
+        self.SEMI_MAJOR_AXIS = SEMI_MAJOR_AXIS  # type: float
+        self.PERIOD = PERIOD  # type: float
+        self.APOGEE = APOGEE  # type: float
+        self.PERIGEE = PERIGEE  # type: float
+        self.DELTA_VS = DELTA_VS  # type: Optional[List[float]]
+        self.DELTA_TS = DELTA_TS  # type: Optional[List[float]]
+        self.AFFECTED_OBJECTS = AFFECTED_OBJECTS  # type: Optional[List[Optional[str]]]
+        self.MANIFOLDS = MANIFOLDS  # type: Optional[List[Optional[str]]]
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpOoi = OOI()
+        tmpOoi.Init(buf, pos)
+        return cls.InitFromObj(tmpOoi)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpOoi):
+        x = OOIT()
+        x._UnPack(tmpOoi)
+        return x
+
+    # OOIT
+    def _UnPack(self, OOI):
+        if OOI is None:
+            return
+        self.ID = OOI.ID()
+        self.SAT_NO = OOI.SAT_NO()
+        self.NAME = OOI.NAME()
+        self.ON_ORBIT = OOI.ON_ORBIT()
+        self.STATUS = OOI.STATUS()
+        self.STATUS_DATE = OOI.STATUS_DATE()
+        self.PRIORITY = OOI.PRIORITY()
+        self.DESCRIPTION = OOI.DESCRIPTION()
+        self.SENSOR_TASKING_START_TIME = OOI.SENSOR_TASKING_START_TIME()
+        self.SENSOR_TASKING_STOP_TIME = OOI.SENSOR_TASKING_STOP_TIME()
+        self.LAST_OB_TIME = OOI.LAST_OB_TIME()
+        self.MISSED_OB_TIME = OOI.MISSED_OB_TIME()
+        self.SV_EPOCH = OOI.SV_EPOCH()
+        self.X = OOI.X()
+        self.Y = OOI.Y()
+        self.Z = OOI.Z()
+        self.XVEL = OOI.XVEL()
+        self.YVEL = OOI.YVEL()
+        self.ZVEL = OOI.ZVEL()
+        self.ELSET_EPOCH = OOI.ELSET_EPOCH()
+        self.MEAN_MOTION = OOI.MEAN_MOTION()
+        self.ECCENTRICITY = OOI.ECCENTRICITY()
+        self.INCLINATION = OOI.INCLINATION()
+        self.RAAN = OOI.RAAN()
+        self.ARG_OF_PERIGEE = OOI.ARG_OF_PERIGEE()
+        self.MEAN_ANOMALY = OOI.MEAN_ANOMALY()
+        self.REV_NO = OOI.REV_NO()
+        self.B_STAR = OOI.B_STAR()
+        self.MEAN_MOTION_DOT = OOI.MEAN_MOTION_DOT()
+        self.MEAN_MOTION_DDOT = OOI.MEAN_MOTION_DDOT()
+        self.SEMI_MAJOR_AXIS = OOI.SEMI_MAJOR_AXIS()
+        self.PERIOD = OOI.PERIOD()
+        self.APOGEE = OOI.APOGEE()
+        self.PERIGEE = OOI.PERIGEE()
+        if not OOI.DELTA_VSIsNone():
+            if np is None:
+                self.DELTA_VS = []
+                for i in range(OOI.DELTA_VSLength()):
+                    self.DELTA_VS.append(OOI.DELTA_VS(i))
+            else:
+                self.DELTA_VS = OOI.DELTA_VSAsNumpy()
+        if not OOI.DELTA_TSIsNone():
+            if np is None:
+                self.DELTA_TS = []
+                for i in range(OOI.DELTA_TSLength()):
+                    self.DELTA_TS.append(OOI.DELTA_TS(i))
+            else:
+                self.DELTA_TS = OOI.DELTA_TSAsNumpy()
+        if not OOI.AFFECTED_OBJECTSIsNone():
+            self.AFFECTED_OBJECTS = []
+            for i in range(OOI.AFFECTED_OBJECTSLength()):
+                self.AFFECTED_OBJECTS.append(OOI.AFFECTED_OBJECTS(i))
+        if not OOI.MANIFOLDSIsNone():
+            self.MANIFOLDS = []
+            for i in range(OOI.MANIFOLDSLength()):
+                self.MANIFOLDS.append(OOI.MANIFOLDS(i))
+
+    # OOIT
+    def Pack(self, builder):
+        if self.ID is not None:
+            ID = builder.CreateString(self.ID)
+        if self.NAME is not None:
+            NAME = builder.CreateString(self.NAME)
+        if self.ON_ORBIT is not None:
+            ON_ORBIT = builder.CreateString(self.ON_ORBIT)
+        if self.STATUS_DATE is not None:
+            STATUS_DATE = builder.CreateString(self.STATUS_DATE)
+        if self.DESCRIPTION is not None:
+            DESCRIPTION = builder.CreateString(self.DESCRIPTION)
+        if self.SENSOR_TASKING_START_TIME is not None:
+            SENSOR_TASKING_START_TIME = builder.CreateString(self.SENSOR_TASKING_START_TIME)
+        if self.SENSOR_TASKING_STOP_TIME is not None:
+            SENSOR_TASKING_STOP_TIME = builder.CreateString(self.SENSOR_TASKING_STOP_TIME)
+        if self.LAST_OB_TIME is not None:
+            LAST_OB_TIME = builder.CreateString(self.LAST_OB_TIME)
+        if self.MISSED_OB_TIME is not None:
+            MISSED_OB_TIME = builder.CreateString(self.MISSED_OB_TIME)
+        if self.SV_EPOCH is not None:
+            SV_EPOCH = builder.CreateString(self.SV_EPOCH)
+        if self.ELSET_EPOCH is not None:
+            ELSET_EPOCH = builder.CreateString(self.ELSET_EPOCH)
+        if self.DELTA_VS is not None:
+            if np is not None and type(self.DELTA_VS) is np.ndarray:
+                DELTA_VS = builder.CreateNumpyVector(self.DELTA_VS)
+            else:
+                OOIStartDELTA_VSVector(builder, len(self.DELTA_VS))
+                for i in reversed(range(len(self.DELTA_VS))):
+                    builder.PrependFloat64(self.DELTA_VS[i])
+                DELTA_VS = builder.EndVector()
+        if self.DELTA_TS is not None:
+            if np is not None and type(self.DELTA_TS) is np.ndarray:
+                DELTA_TS = builder.CreateNumpyVector(self.DELTA_TS)
+            else:
+                OOIStartDELTA_TSVector(builder, len(self.DELTA_TS))
+                for i in reversed(range(len(self.DELTA_TS))):
+                    builder.PrependFloat64(self.DELTA_TS[i])
+                DELTA_TS = builder.EndVector()
+        if self.AFFECTED_OBJECTS is not None:
+            AFFECTED_OBJECTSlist = []
+            for i in range(len(self.AFFECTED_OBJECTS)):
+                AFFECTED_OBJECTSlist.append(builder.CreateString(self.AFFECTED_OBJECTS[i]))
+            OOIStartAFFECTED_OBJECTSVector(builder, len(self.AFFECTED_OBJECTS))
+            for i in reversed(range(len(self.AFFECTED_OBJECTS))):
+                builder.PrependUOffsetTRelative(AFFECTED_OBJECTSlist[i])
+            AFFECTED_OBJECTS = builder.EndVector()
+        if self.MANIFOLDS is not None:
+            MANIFOLDSlist = []
+            for i in range(len(self.MANIFOLDS)):
+                MANIFOLDSlist.append(builder.CreateString(self.MANIFOLDS[i]))
+            OOIStartMANIFOLDSVector(builder, len(self.MANIFOLDS))
+            for i in reversed(range(len(self.MANIFOLDS))):
+                builder.PrependUOffsetTRelative(MANIFOLDSlist[i])
+            MANIFOLDS = builder.EndVector()
+        OOIStart(builder)
+        if self.ID is not None:
+            OOIAddID(builder, ID)
+        OOIAddSAT_NO(builder, self.SAT_NO)
+        if self.NAME is not None:
+            OOIAddNAME(builder, NAME)
+        if self.ON_ORBIT is not None:
+            OOIAddON_ORBIT(builder, ON_ORBIT)
+        OOIAddSTATUS(builder, self.STATUS)
+        if self.STATUS_DATE is not None:
+            OOIAddSTATUS_DATE(builder, STATUS_DATE)
+        OOIAddPRIORITY(builder, self.PRIORITY)
+        if self.DESCRIPTION is not None:
+            OOIAddDESCRIPTION(builder, DESCRIPTION)
+        if self.SENSOR_TASKING_START_TIME is not None:
+            OOIAddSENSOR_TASKING_START_TIME(builder, SENSOR_TASKING_START_TIME)
+        if self.SENSOR_TASKING_STOP_TIME is not None:
+            OOIAddSENSOR_TASKING_STOP_TIME(builder, SENSOR_TASKING_STOP_TIME)
+        if self.LAST_OB_TIME is not None:
+            OOIAddLAST_OB_TIME(builder, LAST_OB_TIME)
+        if self.MISSED_OB_TIME is not None:
+            OOIAddMISSED_OB_TIME(builder, MISSED_OB_TIME)
+        if self.SV_EPOCH is not None:
+            OOIAddSV_EPOCH(builder, SV_EPOCH)
+        OOIAddX(builder, self.X)
+        OOIAddY(builder, self.Y)
+        OOIAddZ(builder, self.Z)
+        OOIAddXVEL(builder, self.XVEL)
+        OOIAddYVEL(builder, self.YVEL)
+        OOIAddZVEL(builder, self.ZVEL)
+        if self.ELSET_EPOCH is not None:
+            OOIAddELSET_EPOCH(builder, ELSET_EPOCH)
+        OOIAddMEAN_MOTION(builder, self.MEAN_MOTION)
+        OOIAddECCENTRICITY(builder, self.ECCENTRICITY)
+        OOIAddINCLINATION(builder, self.INCLINATION)
+        OOIAddRAAN(builder, self.RAAN)
+        OOIAddARG_OF_PERIGEE(builder, self.ARG_OF_PERIGEE)
+        OOIAddMEAN_ANOMALY(builder, self.MEAN_ANOMALY)
+        OOIAddREV_NO(builder, self.REV_NO)
+        OOIAddB_STAR(builder, self.B_STAR)
+        OOIAddMEAN_MOTION_DOT(builder, self.MEAN_MOTION_DOT)
+        OOIAddMEAN_MOTION_DDOT(builder, self.MEAN_MOTION_DDOT)
+        OOIAddSEMI_MAJOR_AXIS(builder, self.SEMI_MAJOR_AXIS)
+        OOIAddPERIOD(builder, self.PERIOD)
+        OOIAddAPOGEE(builder, self.APOGEE)
+        OOIAddPERIGEE(builder, self.PERIGEE)
+        if self.DELTA_VS is not None:
+            OOIAddDELTA_VS(builder, DELTA_VS)
+        if self.DELTA_TS is not None:
+            OOIAddDELTA_TS(builder, DELTA_TS)
+        if self.AFFECTED_OBJECTS is not None:
+            OOIAddAFFECTED_OBJECTS(builder, AFFECTED_OBJECTS)
+        if self.MANIFOLDS is not None:
+            OOIAddMANIFOLDS(builder, MANIFOLDS)
+        OOI = OOIEnd(builder)
+        return OOI

@@ -51,6 +51,10 @@ func (rcv *TemporalCoverage) START_EPOCH() []byte {
 	return nil
 }
 
+func (rcv *TemporalCoverage) StartEpoch() []byte {
+	return rcv.START_EPOCH()
+}
+
 /// Start epoch in ISO 8601 format
 /// End epoch in ISO 8601 format
 func (rcv *TemporalCoverage) END_EPOCH() []byte {
@@ -59,6 +63,10 @@ func (rcv *TemporalCoverage) END_EPOCH() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *TemporalCoverage) EndEpoch() []byte {
+	return rcv.END_EPOCH()
 }
 
 /// End epoch in ISO 8601 format
@@ -71,6 +79,10 @@ func (rcv *TemporalCoverage) UPDATE_FREQUENCY() []byte {
 	return nil
 }
 
+func (rcv *TemporalCoverage) UpdateFrequency() []byte {
+	return rcv.UPDATE_FREQUENCY()
+}
+
 /// Update frequency: "realtime", "hourly", "daily"
 /// Days of historical data available
 func (rcv *TemporalCoverage) HISTORICAL_DEPTH() uint32 {
@@ -81,9 +93,17 @@ func (rcv *TemporalCoverage) HISTORICAL_DEPTH() uint32 {
 	return 0
 }
 
+func (rcv *TemporalCoverage) HistoricalDepth() uint32 {
+	return rcv.HISTORICAL_DEPTH()
+}
+
 /// Days of historical data available
 func (rcv *TemporalCoverage) MutateHISTORICAL_DEPTH(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(10, n)
+}
+
+func (rcv *TemporalCoverage) MutateHistoricalDepth(n uint32) bool {
+	return rcv.MutateHISTORICAL_DEPTH(n)
 }
 
 func TemporalCoverageStart(builder *flatbuffers.Builder) {
@@ -92,14 +112,26 @@ func TemporalCoverageStart(builder *flatbuffers.Builder) {
 func TemporalCoverageAddSTART_EPOCH(builder *flatbuffers.Builder, START_EPOCH flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(START_EPOCH), 0)
 }
+func TemporalCoverageAddStartEpoch(builder *flatbuffers.Builder, START_EPOCH flatbuffers.UOffsetT) {
+	TemporalCoverageAddSTART_EPOCH(builder, START_EPOCH)
+}
 func TemporalCoverageAddEND_EPOCH(builder *flatbuffers.Builder, END_EPOCH flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(END_EPOCH), 0)
+}
+func TemporalCoverageAddEndEpoch(builder *flatbuffers.Builder, END_EPOCH flatbuffers.UOffsetT) {
+	TemporalCoverageAddEND_EPOCH(builder, END_EPOCH)
 }
 func TemporalCoverageAddUPDATE_FREQUENCY(builder *flatbuffers.Builder, UPDATE_FREQUENCY flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(UPDATE_FREQUENCY), 0)
 }
+func TemporalCoverageAddUpdateFrequency(builder *flatbuffers.Builder, UPDATE_FREQUENCY flatbuffers.UOffsetT) {
+	TemporalCoverageAddUPDATE_FREQUENCY(builder, UPDATE_FREQUENCY)
+}
 func TemporalCoverageAddHISTORICAL_DEPTH(builder *flatbuffers.Builder, HISTORICAL_DEPTH uint32) {
 	builder.PrependUint32Slot(3, HISTORICAL_DEPTH, 0)
+}
+func TemporalCoverageAddHistoricalDepth(builder *flatbuffers.Builder, HISTORICAL_DEPTH uint32) {
+	TemporalCoverageAddHISTORICAL_DEPTH(builder, HISTORICAL_DEPTH)
 }
 func TemporalCoverageEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

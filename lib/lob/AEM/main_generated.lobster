@@ -87,9 +87,9 @@ struct AEMSegmentBuilder:
     def end():
         return b_.EndObject()
 
-def AEMSegmentStartATTITUDE_DATAVector(b_:flatbuffers.builder, n_:int):
+def AEMSegmentStartATTITUDEDATAVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(8, n_, 8)
-def AEMSegmentCreateATTITUDE_DATAVector(b_:flatbuffers.builder, v_:[float]):
+def AEMSegmentCreateATTITUDEDATAVector(b_:flatbuffers.builder, v_:[float]):
     b_.StartVector(8, v_.length, 8)
     reverse(v_) e_: b_.PrependFloat64(e_)
     return b_.EndVector(v_.length)

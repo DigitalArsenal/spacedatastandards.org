@@ -119,19 +119,27 @@ def End(builder):
 class equinoctialElementsT(object):
 
     # equinoctialElementsT
-    def __init__(self):
-        self.AF = 0.0  # type: float
-        self.AG = 0.0  # type: float
-        self.L = 0.0  # type: float
-        self.N = 0.0  # type: float
-        self.CHI = 0.0  # type: float
-        self.PSI = 0.0  # type: float
+    def __init__(
+        self,
+        AF = 0.0,
+        AG = 0.0,
+        L = 0.0,
+        N = 0.0,
+        CHI = 0.0,
+        PSI = 0.0,
+    ):
+        self.AF = AF  # type: float
+        self.AG = AG  # type: float
+        self.L = L  # type: float
+        self.N = N  # type: float
+        self.CHI = CHI  # type: float
+        self.PSI = PSI  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        equinoctialElements = equinoctialElements()
-        equinoctialElements.Init(buf, pos)
-        return cls.InitFromObj(equinoctialElements)
+        tmpEquinoctialElements = equinoctialElements()
+        tmpEquinoctialElements.Init(buf, pos)
+        return cls.InitFromObj(tmpEquinoctialElements)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -139,9 +147,9 @@ class equinoctialElementsT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, equinoctialElements):
+    def InitFromObj(cls, tmpEquinoctialElements):
         x = equinoctialElementsT()
-        x._UnPack(equinoctialElements)
+        x._UnPack(tmpEquinoctialElements)
         return x
 
     # equinoctialElementsT

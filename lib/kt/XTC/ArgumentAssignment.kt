@@ -32,7 +32,7 @@ class ArgumentAssignment : Table() {
     /**
      * Argument name
      */
-    val ARGUMENT_NAME : String?
+    val argumentName : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class ArgumentAssignment : Table() {
                 null
             }
         }
-    val ARGUMENT_NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun ARGUMENT_NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val argumentNameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun argumentNameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Assigned value
      */
-    val VALUE : String?
+    val value : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -55,24 +55,24 @@ class ArgumentAssignment : Table() {
                 null
             }
         }
-    val VALUEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun VALUEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val valueAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun valueInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsArgumentAssignment(_bb: ByteBuffer): ArgumentAssignment = getRootAsArgumentAssignment(_bb, ArgumentAssignment())
         fun getRootAsArgumentAssignment(_bb: ByteBuffer, obj: ArgumentAssignment): ArgumentAssignment {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createArgumentAssignment(builder: FlatBufferBuilder, ARGUMENT_NAMEOffset: Int, VALUEOffset: Int) : Int {
+        fun createArgumentAssignment(builder: FlatBufferBuilder, argumentNameOffset: Int, valueOffset: Int) : Int {
             builder.startTable(2)
-            addVALUE(builder, VALUEOffset)
-            addARGUMENT_NAME(builder, ARGUMENT_NAMEOffset)
+            addVALUE(builder, valueOffset)
+            addARGUMENTNAME(builder, argumentNameOffset)
             return endArgumentAssignment(builder)
         }
         fun startArgumentAssignment(builder: FlatBufferBuilder) = builder.startTable(2)
-        fun addARGUMENT_NAME(builder: FlatBufferBuilder, ARGUMENT_NAME: Int) = builder.addOffset(0, ARGUMENT_NAME, 0)
-        fun addVALUE(builder: FlatBufferBuilder, VALUE: Int) = builder.addOffset(1, VALUE, 0)
+        fun addARGUMENTNAME(builder: FlatBufferBuilder, argumentName: Int) = builder.addOffset(0, argumentName, 0)
+        fun addVALUE(builder: FlatBufferBuilder, value: Int) = builder.addOffset(1, value, 0)
         fun endArgumentAssignment(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

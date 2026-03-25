@@ -51,6 +51,10 @@ func (rcv *BinaryArgumentType) NAME() []byte {
 	return nil
 }
 
+func (rcv *BinaryArgumentType) Name() []byte {
+	return rcv.NAME()
+}
+
 /// Type name
 /// Short description
 func (rcv *BinaryArgumentType) SHORT_DESCRIPTION() []byte {
@@ -61,6 +65,10 @@ func (rcv *BinaryArgumentType) SHORT_DESCRIPTION() []byte {
 	return nil
 }
 
+func (rcv *BinaryArgumentType) ShortDescription() []byte {
+	return rcv.SHORT_DESCRIPTION()
+}
+
 /// Short description
 /// Long description
 func (rcv *BinaryArgumentType) LONG_DESCRIPTION() []byte {
@@ -69,6 +77,10 @@ func (rcv *BinaryArgumentType) LONG_DESCRIPTION() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *BinaryArgumentType) LongDescription() []byte {
+	return rcv.LONG_DESCRIPTION()
 }
 
 /// Long description
@@ -86,6 +98,10 @@ func (rcv *BinaryArgumentType) DATA_ENCODING(obj *BinaryDataEncoding) *BinaryDat
 	return nil
 }
 
+func (rcv *BinaryArgumentType) DataEncoding(obj *BinaryDataEncoding) *BinaryDataEncoding {
+	return rcv.DATA_ENCODING(obj)
+}
+
 /// Data encoding
 /// Initial/default value (hex string)
 func (rcv *BinaryArgumentType) INITIAL_VALUE() []byte {
@@ -96,6 +112,10 @@ func (rcv *BinaryArgumentType) INITIAL_VALUE() []byte {
 	return nil
 }
 
+func (rcv *BinaryArgumentType) InitialValue() []byte {
+	return rcv.INITIAL_VALUE()
+}
+
 /// Initial/default value (hex string)
 func BinaryArgumentTypeStart(builder *flatbuffers.Builder) {
 	builder.StartObject(5)
@@ -103,17 +123,32 @@ func BinaryArgumentTypeStart(builder *flatbuffers.Builder) {
 func BinaryArgumentTypeAddNAME(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(NAME), 0)
 }
+func BinaryArgumentTypeAddName(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
+	BinaryArgumentTypeAddNAME(builder, NAME)
+}
 func BinaryArgumentTypeAddSHORT_DESCRIPTION(builder *flatbuffers.Builder, SHORT_DESCRIPTION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(SHORT_DESCRIPTION), 0)
+}
+func BinaryArgumentTypeAddShortDescription(builder *flatbuffers.Builder, SHORT_DESCRIPTION flatbuffers.UOffsetT) {
+	BinaryArgumentTypeAddSHORT_DESCRIPTION(builder, SHORT_DESCRIPTION)
 }
 func BinaryArgumentTypeAddLONG_DESCRIPTION(builder *flatbuffers.Builder, LONG_DESCRIPTION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(LONG_DESCRIPTION), 0)
 }
+func BinaryArgumentTypeAddLongDescription(builder *flatbuffers.Builder, LONG_DESCRIPTION flatbuffers.UOffsetT) {
+	BinaryArgumentTypeAddLONG_DESCRIPTION(builder, LONG_DESCRIPTION)
+}
 func BinaryArgumentTypeAddDATA_ENCODING(builder *flatbuffers.Builder, DATA_ENCODING flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(DATA_ENCODING), 0)
 }
+func BinaryArgumentTypeAddDataEncoding(builder *flatbuffers.Builder, DATA_ENCODING flatbuffers.UOffsetT) {
+	BinaryArgumentTypeAddDATA_ENCODING(builder, DATA_ENCODING)
+}
 func BinaryArgumentTypeAddINITIAL_VALUE(builder *flatbuffers.Builder, INITIAL_VALUE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(INITIAL_VALUE), 0)
+}
+func BinaryArgumentTypeAddInitialValue(builder *flatbuffers.Builder, INITIAL_VALUE flatbuffers.UOffsetT) {
+	BinaryArgumentTypeAddINITIAL_VALUE(builder, INITIAL_VALUE)
 }
 func BinaryArgumentTypeEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

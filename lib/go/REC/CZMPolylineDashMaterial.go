@@ -56,6 +56,10 @@ func (rcv *CZMPolylineDashMaterial) COLOR(obj *CZMColor) *CZMColor {
 	return nil
 }
 
+func (rcv *CZMPolylineDashMaterial) Color(obj *CZMColor) *CZMColor {
+	return rcv.COLOR(obj)
+}
+
 /// Dash color
 /// Gap color
 func (rcv *CZMPolylineDashMaterial) GAP_COLOR(obj *CZMColor) *CZMColor {
@@ -71,6 +75,10 @@ func (rcv *CZMPolylineDashMaterial) GAP_COLOR(obj *CZMColor) *CZMColor {
 	return nil
 }
 
+func (rcv *CZMPolylineDashMaterial) GapColor(obj *CZMColor) *CZMColor {
+	return rcv.GAP_COLOR(obj)
+}
+
 /// Gap color
 /// Dash length in pixels
 func (rcv *CZMPolylineDashMaterial) DASH_LENGTH() float64 {
@@ -81,9 +89,17 @@ func (rcv *CZMPolylineDashMaterial) DASH_LENGTH() float64 {
 	return 0.0
 }
 
+func (rcv *CZMPolylineDashMaterial) DashLength() float64 {
+	return rcv.DASH_LENGTH()
+}
+
 /// Dash length in pixels
 func (rcv *CZMPolylineDashMaterial) MutateDASH_LENGTH(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(8, n)
+}
+
+func (rcv *CZMPolylineDashMaterial) MutateDashLength(n float64) bool {
+	return rcv.MutateDASH_LENGTH(n)
 }
 
 /// Dash pattern (bitmask)
@@ -95,9 +111,17 @@ func (rcv *CZMPolylineDashMaterial) DASH_PATTERN() int32 {
 	return 0
 }
 
+func (rcv *CZMPolylineDashMaterial) DashPattern() int32 {
+	return rcv.DASH_PATTERN()
+}
+
 /// Dash pattern (bitmask)
 func (rcv *CZMPolylineDashMaterial) MutateDASH_PATTERN(n int32) bool {
 	return rcv._tab.MutateInt32Slot(10, n)
+}
+
+func (rcv *CZMPolylineDashMaterial) MutateDashPattern(n int32) bool {
+	return rcv.MutateDASH_PATTERN(n)
 }
 
 func CZMPolylineDashMaterialStart(builder *flatbuffers.Builder) {
@@ -106,14 +130,26 @@ func CZMPolylineDashMaterialStart(builder *flatbuffers.Builder) {
 func CZMPolylineDashMaterialAddCOLOR(builder *flatbuffers.Builder, COLOR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(COLOR), 0)
 }
+func CZMPolylineDashMaterialAddColor(builder *flatbuffers.Builder, COLOR flatbuffers.UOffsetT) {
+	CZMPolylineDashMaterialAddCOLOR(builder, COLOR)
+}
 func CZMPolylineDashMaterialAddGAP_COLOR(builder *flatbuffers.Builder, GAP_COLOR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(GAP_COLOR), 0)
+}
+func CZMPolylineDashMaterialAddGapColor(builder *flatbuffers.Builder, GAP_COLOR flatbuffers.UOffsetT) {
+	CZMPolylineDashMaterialAddGAP_COLOR(builder, GAP_COLOR)
 }
 func CZMPolylineDashMaterialAddDASH_LENGTH(builder *flatbuffers.Builder, DASH_LENGTH float64) {
 	builder.PrependFloat64Slot(2, DASH_LENGTH, 0.0)
 }
+func CZMPolylineDashMaterialAddDashLength(builder *flatbuffers.Builder, DASH_LENGTH float64) {
+	CZMPolylineDashMaterialAddDASH_LENGTH(builder, DASH_LENGTH)
+}
 func CZMPolylineDashMaterialAddDASH_PATTERN(builder *flatbuffers.Builder, DASH_PATTERN int32) {
 	builder.PrependInt32Slot(3, DASH_PATTERN, 0)
+}
+func CZMPolylineDashMaterialAddDashPattern(builder *flatbuffers.Builder, DASH_PATTERN int32) {
+	CZMPolylineDashMaterialAddDASH_PATTERN(builder, DASH_PATTERN)
 }
 func CZMPolylineDashMaterialEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

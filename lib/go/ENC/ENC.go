@@ -63,9 +63,17 @@ func (rcv *ENC) VERSION() byte {
 	return 1
 }
 
+func (rcv *ENC) Version() byte {
+	return rcv.VERSION()
+}
+
 /// Schema version for forward compatibility
 func (rcv *ENC) MutateVERSION(n byte) bool {
 	return rcv._tab.MutateByteSlot(4, n)
+}
+
+func (rcv *ENC) MutateVersion(n byte) bool {
+	return rcv.MutateVERSION(n)
 }
 
 /// Key exchange algorithm used
@@ -77,9 +85,17 @@ func (rcv *ENC) KEY_EXCHANGE() KeyExchange {
 	return 0
 }
 
+func (rcv *ENC) KeyExchange() KeyExchange {
+	return rcv.KEY_EXCHANGE()
+}
+
 /// Key exchange algorithm used
 func (rcv *ENC) MutateKEY_EXCHANGE(n KeyExchange) bool {
 	return rcv._tab.MutateInt8Slot(6, int8(n))
+}
+
+func (rcv *ENC) MutateKeyExchange(n KeyExchange) bool {
+	return rcv.MutateKEY_EXCHANGE(n)
 }
 
 /// Symmetric encryption algorithm used
@@ -91,9 +107,17 @@ func (rcv *ENC) SYMMETRIC() SymmetricAlgo {
 	return 0
 }
 
+func (rcv *ENC) Symmetric() SymmetricAlgo {
+	return rcv.SYMMETRIC()
+}
+
 /// Symmetric encryption algorithm used
 func (rcv *ENC) MutateSYMMETRIC(n SymmetricAlgo) bool {
 	return rcv._tab.MutateInt8Slot(8, int8(n))
+}
+
+func (rcv *ENC) MutateSymmetric(n SymmetricAlgo) bool {
+	return rcv.MutateSYMMETRIC(n)
 }
 
 /// Key derivation function used
@@ -105,9 +129,17 @@ func (rcv *ENC) KEY_DERIVATION() KDF {
 	return 0
 }
 
+func (rcv *ENC) KeyDerivation() KDF {
+	return rcv.KEY_DERIVATION()
+}
+
 /// Key derivation function used
 func (rcv *ENC) MutateKEY_DERIVATION(n KDF) bool {
 	return rcv._tab.MutateInt8Slot(10, int8(n))
+}
+
+func (rcv *ENC) MutateKeyDerivation(n KDF) bool {
+	return rcv.MutateKEY_DERIVATION(n)
 }
 
 /// Ephemeral public key for ECDH key agreement (32-65 bytes depending on algorithm)
@@ -120,6 +152,10 @@ func (rcv *ENC) EPHEMERAL_PUBLIC_KEY(j int) byte {
 	return 0
 }
 
+func (rcv *ENC) EphemeralPublicKey(j int) byte {
+	return rcv.EPHEMERAL_PUBLIC_KEY(j)
+}
+
 func (rcv *ENC) EPHEMERAL_PUBLIC_KEYLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
@@ -128,12 +164,20 @@ func (rcv *ENC) EPHEMERAL_PUBLIC_KEYLength() int {
 	return 0
 }
 
+func (rcv *ENC) EphemeralPublicKeyLength() int {
+	return rcv.EPHEMERAL_PUBLIC_KEYLength()
+}
+
 func (rcv *ENC) EPHEMERAL_PUBLIC_KEYBytes() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *ENC) EphemeralPublicKeyBytes() []byte {
+	return rcv.EPHEMERAL_PUBLIC_KEYBytes()
 }
 
 /// Ephemeral public key for ECDH key agreement (32-65 bytes depending on algorithm)
@@ -146,6 +190,10 @@ func (rcv *ENC) MutateEPHEMERAL_PUBLIC_KEY(j int, n byte) bool {
 	return false
 }
 
+func (rcv *ENC) MutateEphemeralPublicKey(j int, n byte) bool {
+	return rcv.MutateEPHEMERAL_PUBLIC_KEY(j, n)
+}
+
 /// Random 12-byte nonce starting value. Incremented for each record in the stream to ensure unique nonces.
 func (rcv *ENC) NONCE_START(j int) byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
@@ -156,6 +204,10 @@ func (rcv *ENC) NONCE_START(j int) byte {
 	return 0
 }
 
+func (rcv *ENC) NonceStart(j int) byte {
+	return rcv.NONCE_START(j)
+}
+
 func (rcv *ENC) NONCE_STARTLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
@@ -164,12 +216,20 @@ func (rcv *ENC) NONCE_STARTLength() int {
 	return 0
 }
 
+func (rcv *ENC) NonceStartLength() int {
+	return rcv.NONCE_STARTLength()
+}
+
 func (rcv *ENC) NONCE_STARTBytes() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *ENC) NonceStartBytes() []byte {
+	return rcv.NONCE_STARTBytes()
 }
 
 /// Random 12-byte nonce starting value. Incremented for each record in the stream to ensure unique nonces.
@@ -182,6 +242,10 @@ func (rcv *ENC) MutateNONCE_START(j int, n byte) bool {
 	return false
 }
 
+func (rcv *ENC) MutateNonceStart(j int, n byte) bool {
+	return rcv.MutateNONCE_START(j, n)
+}
+
 /// Optional identifier for the recipient's public key (up to 32 bytes)
 func (rcv *ENC) RECIPIENT_KEY_ID(j int) byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
@@ -192,6 +256,10 @@ func (rcv *ENC) RECIPIENT_KEY_ID(j int) byte {
 	return 0
 }
 
+func (rcv *ENC) RecipientKeyId(j int) byte {
+	return rcv.RECIPIENT_KEY_ID(j)
+}
+
 func (rcv *ENC) RECIPIENT_KEY_IDLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
 	if o != 0 {
@@ -200,12 +268,20 @@ func (rcv *ENC) RECIPIENT_KEY_IDLength() int {
 	return 0
 }
 
+func (rcv *ENC) RecipientKeyIdLength() int {
+	return rcv.RECIPIENT_KEY_IDLength()
+}
+
 func (rcv *ENC) RECIPIENT_KEY_IDBytes() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *ENC) RecipientKeyIdBytes() []byte {
+	return rcv.RECIPIENT_KEY_IDBytes()
 }
 
 /// Optional identifier for the recipient's public key (up to 32 bytes)
@@ -218,6 +294,10 @@ func (rcv *ENC) MutateRECIPIENT_KEY_ID(j int, n byte) bool {
 	return false
 }
 
+func (rcv *ENC) MutateRecipientKeyId(j int, n byte) bool {
+	return rcv.MutateRECIPIENT_KEY_ID(j, n)
+}
+
 /// Optional domain separation context string
 func (rcv *ENC) CONTEXT() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
@@ -225,6 +305,10 @@ func (rcv *ENC) CONTEXT() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *ENC) Context() []byte {
+	return rcv.CONTEXT()
 }
 
 /// Optional domain separation context string
@@ -238,6 +322,10 @@ func (rcv *ENC) SCHEMA_HASH(j int) byte {
 	return 0
 }
 
+func (rcv *ENC) SchemaHash(j int) byte {
+	return rcv.SCHEMA_HASH(j)
+}
+
 func (rcv *ENC) SCHEMA_HASHLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
 	if o != 0 {
@@ -246,12 +334,20 @@ func (rcv *ENC) SCHEMA_HASHLength() int {
 	return 0
 }
 
+func (rcv *ENC) SchemaHashLength() int {
+	return rcv.SCHEMA_HASHLength()
+}
+
 func (rcv *ENC) SCHEMA_HASHBytes() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *ENC) SchemaHashBytes() []byte {
+	return rcv.SCHEMA_HASHBytes()
 }
 
 /// Optional SHA-256 hash of the FlatBuffers schema (32 bytes)
@@ -264,6 +360,10 @@ func (rcv *ENC) MutateSCHEMA_HASH(j int, n byte) bool {
 	return false
 }
 
+func (rcv *ENC) MutateSchemaHash(j int, n byte) bool {
+	return rcv.MutateSCHEMA_HASH(j, n)
+}
+
 /// Optional root type name from the schema
 func (rcv *ENC) ROOT_TYPE() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
@@ -271,6 +371,10 @@ func (rcv *ENC) ROOT_TYPE() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *ENC) RootType() []byte {
+	return rcv.ROOT_TYPE()
 }
 
 /// Optional root type name from the schema
@@ -283,9 +387,17 @@ func (rcv *ENC) TIMESTAMP() uint64 {
 	return 0
 }
 
+func (rcv *ENC) Timestamp() uint64 {
+	return rcv.TIMESTAMP()
+}
+
 /// Optional Unix timestamp (milliseconds) when encryption was performed
 func (rcv *ENC) MutateTIMESTAMP(n uint64) bool {
 	return rcv._tab.MutateUint64Slot(24, n)
+}
+
+func (rcv *ENC) MutateTimestamp(n uint64) bool {
+	return rcv.MutateTIMESTAMP(n)
 }
 
 func ENCStart(builder *flatbuffers.Builder) {
@@ -294,47 +406,92 @@ func ENCStart(builder *flatbuffers.Builder) {
 func ENCAddVERSION(builder *flatbuffers.Builder, VERSION byte) {
 	builder.PrependByteSlot(0, VERSION, 1)
 }
+func ENCAddVersion(builder *flatbuffers.Builder, VERSION byte) {
+	ENCAddVERSION(builder, VERSION)
+}
 func ENCAddKEY_EXCHANGE(builder *flatbuffers.Builder, KEY_EXCHANGE KeyExchange) {
 	builder.PrependInt8Slot(1, int8(KEY_EXCHANGE), 0)
+}
+func ENCAddKeyExchange(builder *flatbuffers.Builder, KEY_EXCHANGE KeyExchange) {
+	ENCAddKEY_EXCHANGE(builder, KEY_EXCHANGE)
 }
 func ENCAddSYMMETRIC(builder *flatbuffers.Builder, SYMMETRIC SymmetricAlgo) {
 	builder.PrependInt8Slot(2, int8(SYMMETRIC), 0)
 }
+func ENCAddSymmetric(builder *flatbuffers.Builder, SYMMETRIC SymmetricAlgo) {
+	ENCAddSYMMETRIC(builder, SYMMETRIC)
+}
 func ENCAddKEY_DERIVATION(builder *flatbuffers.Builder, KEY_DERIVATION KDF) {
 	builder.PrependInt8Slot(3, int8(KEY_DERIVATION), 0)
+}
+func ENCAddKeyDerivation(builder *flatbuffers.Builder, KEY_DERIVATION KDF) {
+	ENCAddKEY_DERIVATION(builder, KEY_DERIVATION)
 }
 func ENCAddEPHEMERAL_PUBLIC_KEY(builder *flatbuffers.Builder, EPHEMERAL_PUBLIC_KEY flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(EPHEMERAL_PUBLIC_KEY), 0)
 }
+func ENCAddEphemeralPublicKey(builder *flatbuffers.Builder, EPHEMERAL_PUBLIC_KEY flatbuffers.UOffsetT) {
+	ENCAddEPHEMERAL_PUBLIC_KEY(builder, EPHEMERAL_PUBLIC_KEY)
+}
 func ENCStartEPHEMERAL_PUBLIC_KEYVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(1, numElems, 1)
+}
+func ENCStartEphemeralPublicKeyVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return ENCStartEPHEMERAL_PUBLIC_KEYVector(builder, numElems)
 }
 func ENCAddNONCE_START(builder *flatbuffers.Builder, NONCE_START flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(NONCE_START), 0)
 }
+func ENCAddNonceStart(builder *flatbuffers.Builder, NONCE_START flatbuffers.UOffsetT) {
+	ENCAddNONCE_START(builder, NONCE_START)
+}
 func ENCStartNONCE_STARTVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(1, numElems, 1)
+}
+func ENCStartNonceStartVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return ENCStartNONCE_STARTVector(builder, numElems)
 }
 func ENCAddRECIPIENT_KEY_ID(builder *flatbuffers.Builder, RECIPIENT_KEY_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(RECIPIENT_KEY_ID), 0)
 }
+func ENCAddRecipientKeyId(builder *flatbuffers.Builder, RECIPIENT_KEY_ID flatbuffers.UOffsetT) {
+	ENCAddRECIPIENT_KEY_ID(builder, RECIPIENT_KEY_ID)
+}
 func ENCStartRECIPIENT_KEY_IDVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(1, numElems, 1)
+}
+func ENCStartRecipientKeyIdVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return ENCStartRECIPIENT_KEY_IDVector(builder, numElems)
 }
 func ENCAddCONTEXT(builder *flatbuffers.Builder, CONTEXT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(CONTEXT), 0)
 }
+func ENCAddContext(builder *flatbuffers.Builder, CONTEXT flatbuffers.UOffsetT) {
+	ENCAddCONTEXT(builder, CONTEXT)
+}
 func ENCAddSCHEMA_HASH(builder *flatbuffers.Builder, SCHEMA_HASH flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(SCHEMA_HASH), 0)
+}
+func ENCAddSchemaHash(builder *flatbuffers.Builder, SCHEMA_HASH flatbuffers.UOffsetT) {
+	ENCAddSCHEMA_HASH(builder, SCHEMA_HASH)
 }
 func ENCStartSCHEMA_HASHVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(1, numElems, 1)
 }
+func ENCStartSchemaHashVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return ENCStartSCHEMA_HASHVector(builder, numElems)
+}
 func ENCAddROOT_TYPE(builder *flatbuffers.Builder, ROOT_TYPE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(ROOT_TYPE), 0)
 }
+func ENCAddRootType(builder *flatbuffers.Builder, ROOT_TYPE flatbuffers.UOffsetT) {
+	ENCAddROOT_TYPE(builder, ROOT_TYPE)
+}
 func ENCAddTIMESTAMP(builder *flatbuffers.Builder, TIMESTAMP uint64) {
 	builder.PrependUint64Slot(10, TIMESTAMP, 0)
+}
+func ENCAddTimestamp(builder *flatbuffers.Builder, TIMESTAMP uint64) {
+	ENCAddTIMESTAMP(builder, TIMESTAMP)
 }
 func ENCEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

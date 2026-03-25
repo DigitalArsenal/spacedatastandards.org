@@ -409,41 +409,71 @@ def End(builder):
 class GVHT(object):
 
     # GVHT
-    def __init__(self):
-        self.POSITION_X = 0.0  # type: float
-        self.POSITION_Y = 0.0  # type: float
-        self.POSITION_Z = 0.0  # type: float
-        self.VELOCITY_X = 0.0  # type: float
-        self.VELOCITY_Y = 0.0  # type: float
-        self.VELOCITY_Z = 0.0  # type: float
-        self.ATTITUDE_X = 0.0  # type: float
-        self.ATTITUDE_Y = 0.0  # type: float
-        self.ATTITUDE_Z = 0.0  # type: float
-        self.ATTITUDE_W = 0.0  # type: float
-        self.OMEGA_X = 0.0  # type: float
-        self.OMEGA_Y = 0.0  # type: float
-        self.OMEGA_Z = 0.0  # type: float
-        self.SPEED = 0.0  # type: float
-        self.HEADING = 0.0  # type: float
-        self.LATERAL_G = 0.0  # type: float
-        self.LONGITUDINAL_G = 0.0  # type: float
-        self.TURRET = None  # type: str
-        self.DRIVETRAIN = None  # type: str
-        self.SUSPENSION_LF = None  # type: str
-        self.SUSPENSION_RF = None  # type: str
-        self.SUSPENSION_LR = None  # type: str
-        self.SUSPENSION_RR = None  # type: str
-        self.VEHICLE_TYPE = 0  # type: int
-        self.DRIVE_TYPE = 0  # type: int
-        self.ENGINE_RUNNING = 0  # type: int
-        self.LIGHTS = 0  # type: int
-        self.FUEL_LEVEL = 0.0  # type: float
+    def __init__(
+        self,
+        POSITION_X = 0.0,
+        POSITION_Y = 0.0,
+        POSITION_Z = 0.0,
+        VELOCITY_X = 0.0,
+        VELOCITY_Y = 0.0,
+        VELOCITY_Z = 0.0,
+        ATTITUDE_X = 0.0,
+        ATTITUDE_Y = 0.0,
+        ATTITUDE_Z = 0.0,
+        ATTITUDE_W = 0.0,
+        OMEGA_X = 0.0,
+        OMEGA_Y = 0.0,
+        OMEGA_Z = 0.0,
+        SPEED = 0.0,
+        HEADING = 0.0,
+        LATERAL_G = 0.0,
+        LONGITUDINAL_G = 0.0,
+        TURRET = None,
+        DRIVETRAIN = None,
+        SUSPENSION_LF = None,
+        SUSPENSION_RF = None,
+        SUSPENSION_LR = None,
+        SUSPENSION_RR = None,
+        VEHICLE_TYPE = 0,
+        DRIVE_TYPE = 0,
+        ENGINE_RUNNING = 0,
+        LIGHTS = 0,
+        FUEL_LEVEL = 0.0,
+    ):
+        self.POSITION_X = POSITION_X  # type: float
+        self.POSITION_Y = POSITION_Y  # type: float
+        self.POSITION_Z = POSITION_Z  # type: float
+        self.VELOCITY_X = VELOCITY_X  # type: float
+        self.VELOCITY_Y = VELOCITY_Y  # type: float
+        self.VELOCITY_Z = VELOCITY_Z  # type: float
+        self.ATTITUDE_X = ATTITUDE_X  # type: float
+        self.ATTITUDE_Y = ATTITUDE_Y  # type: float
+        self.ATTITUDE_Z = ATTITUDE_Z  # type: float
+        self.ATTITUDE_W = ATTITUDE_W  # type: float
+        self.OMEGA_X = OMEGA_X  # type: float
+        self.OMEGA_Y = OMEGA_Y  # type: float
+        self.OMEGA_Z = OMEGA_Z  # type: float
+        self.SPEED = SPEED  # type: float
+        self.HEADING = HEADING  # type: float
+        self.LATERAL_G = LATERAL_G  # type: float
+        self.LONGITUDINAL_G = LONGITUDINAL_G  # type: float
+        self.TURRET = TURRET  # type: Optional[str]
+        self.DRIVETRAIN = DRIVETRAIN  # type: Optional[str]
+        self.SUSPENSION_LF = SUSPENSION_LF  # type: Optional[str]
+        self.SUSPENSION_RF = SUSPENSION_RF  # type: Optional[str]
+        self.SUSPENSION_LR = SUSPENSION_LR  # type: Optional[str]
+        self.SUSPENSION_RR = SUSPENSION_RR  # type: Optional[str]
+        self.VEHICLE_TYPE = VEHICLE_TYPE  # type: int
+        self.DRIVE_TYPE = DRIVE_TYPE  # type: int
+        self.ENGINE_RUNNING = ENGINE_RUNNING  # type: int
+        self.LIGHTS = LIGHTS  # type: int
+        self.FUEL_LEVEL = FUEL_LEVEL  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        GVH = GVH()
-        GVH.Init(buf, pos)
-        return cls.InitFromObj(GVH)
+        tmpGvh = GVH()
+        tmpGvh.Init(buf, pos)
+        return cls.InitFromObj(tmpGvh)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -451,9 +481,9 @@ class GVHT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, GVH):
+    def InitFromObj(cls, tmpGvh):
         x = GVHT()
-        x._UnPack(GVH)
+        x._UnPack(tmpGvh)
         return x
 
     # GVHT

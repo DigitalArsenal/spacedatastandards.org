@@ -2,4 +2,209 @@
 
 # namespace: 
 
-# NOTE VCMAtmosphericModelData.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# VCM Atmospheric and Perturbation Model Data
+class VCMAtmosphericModelData(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = VCMAtmosphericModelData()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsVCMAtmosphericModelData(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    # VCMAtmosphericModelData
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # VCMAtmosphericModelData
+    def ATMOSPHERIC_MODEL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # VCMAtmosphericModelData
+    def GEOPOTENTIAL_MODEL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # VCMAtmosphericModelData
+    def LUNAR_SOLAR_PERTURBATION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # VCMAtmosphericModelData
+    def LUNAR_PERTURBATION_MODEL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # VCMAtmosphericModelData
+    def SOLAR_PERTURBATION_MODEL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # VCMAtmosphericModelData
+    def SOLAR_RADIATION_PRESSURE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # VCMAtmosphericModelData
+    def SRP_MODEL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # VCMAtmosphericModelData
+    def RESONANCE_MODEL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+def VCMAtmosphericModelDataStart(builder):
+    builder.StartObject(8)
+
+def Start(builder):
+    VCMAtmosphericModelDataStart(builder)
+
+def VCMAtmosphericModelDataAddATMOSPHERIC_MODEL(builder, ATMOSPHERIC_MODEL):
+    builder.PrependInt8Slot(0, ATMOSPHERIC_MODEL, 0)
+
+def AddATMOSPHERIC_MODEL(builder, ATMOSPHERIC_MODEL):
+    VCMAtmosphericModelDataAddATMOSPHERIC_MODEL(builder, ATMOSPHERIC_MODEL)
+
+def VCMAtmosphericModelDataAddGEOPOTENTIAL_MODEL(builder, GEOPOTENTIAL_MODEL):
+    builder.PrependInt8Slot(1, GEOPOTENTIAL_MODEL, 0)
+
+def AddGEOPOTENTIAL_MODEL(builder, GEOPOTENTIAL_MODEL):
+    VCMAtmosphericModelDataAddGEOPOTENTIAL_MODEL(builder, GEOPOTENTIAL_MODEL)
+
+def VCMAtmosphericModelDataAddLUNAR_SOLAR_PERTURBATION(builder, LUNAR_SOLAR_PERTURBATION):
+    builder.PrependInt8Slot(2, LUNAR_SOLAR_PERTURBATION, 0)
+
+def AddLUNAR_SOLAR_PERTURBATION(builder, LUNAR_SOLAR_PERTURBATION):
+    VCMAtmosphericModelDataAddLUNAR_SOLAR_PERTURBATION(builder, LUNAR_SOLAR_PERTURBATION)
+
+def VCMAtmosphericModelDataAddLUNAR_PERTURBATION_MODEL(builder, LUNAR_PERTURBATION_MODEL):
+    builder.PrependInt8Slot(3, LUNAR_PERTURBATION_MODEL, 0)
+
+def AddLUNAR_PERTURBATION_MODEL(builder, LUNAR_PERTURBATION_MODEL):
+    VCMAtmosphericModelDataAddLUNAR_PERTURBATION_MODEL(builder, LUNAR_PERTURBATION_MODEL)
+
+def VCMAtmosphericModelDataAddSOLAR_PERTURBATION_MODEL(builder, SOLAR_PERTURBATION_MODEL):
+    builder.PrependInt8Slot(4, SOLAR_PERTURBATION_MODEL, 0)
+
+def AddSOLAR_PERTURBATION_MODEL(builder, SOLAR_PERTURBATION_MODEL):
+    VCMAtmosphericModelDataAddSOLAR_PERTURBATION_MODEL(builder, SOLAR_PERTURBATION_MODEL)
+
+def VCMAtmosphericModelDataAddSOLAR_RADIATION_PRESSURE(builder, SOLAR_RADIATION_PRESSURE):
+    builder.PrependInt8Slot(5, SOLAR_RADIATION_PRESSURE, 0)
+
+def AddSOLAR_RADIATION_PRESSURE(builder, SOLAR_RADIATION_PRESSURE):
+    VCMAtmosphericModelDataAddSOLAR_RADIATION_PRESSURE(builder, SOLAR_RADIATION_PRESSURE)
+
+def VCMAtmosphericModelDataAddSRP_MODEL(builder, SRP_MODEL):
+    builder.PrependInt8Slot(6, SRP_MODEL, 0)
+
+def AddSRP_MODEL(builder, SRP_MODEL):
+    VCMAtmosphericModelDataAddSRP_MODEL(builder, SRP_MODEL)
+
+def VCMAtmosphericModelDataAddRESONANCE_MODEL(builder, RESONANCE_MODEL):
+    builder.PrependInt8Slot(7, RESONANCE_MODEL, 0)
+
+def AddRESONANCE_MODEL(builder, RESONANCE_MODEL):
+    VCMAtmosphericModelDataAddRESONANCE_MODEL(builder, RESONANCE_MODEL)
+
+def VCMAtmosphericModelDataEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return VCMAtmosphericModelDataEnd(builder)
+
+
+class VCMAtmosphericModelDataT(object):
+
+    # VCMAtmosphericModelDataT
+    def __init__(
+        self,
+        ATMOSPHERIC_MODEL = 0,
+        GEOPOTENTIAL_MODEL = 0,
+        LUNAR_SOLAR_PERTURBATION = 0,
+        LUNAR_PERTURBATION_MODEL = 0,
+        SOLAR_PERTURBATION_MODEL = 0,
+        SOLAR_RADIATION_PRESSURE = 0,
+        SRP_MODEL = 0,
+        RESONANCE_MODEL = 0,
+    ):
+        self.ATMOSPHERIC_MODEL = ATMOSPHERIC_MODEL  # type: int
+        self.GEOPOTENTIAL_MODEL = GEOPOTENTIAL_MODEL  # type: int
+        self.LUNAR_SOLAR_PERTURBATION = LUNAR_SOLAR_PERTURBATION  # type: int
+        self.LUNAR_PERTURBATION_MODEL = LUNAR_PERTURBATION_MODEL  # type: int
+        self.SOLAR_PERTURBATION_MODEL = SOLAR_PERTURBATION_MODEL  # type: int
+        self.SOLAR_RADIATION_PRESSURE = SOLAR_RADIATION_PRESSURE  # type: int
+        self.SRP_MODEL = SRP_MODEL  # type: int
+        self.RESONANCE_MODEL = RESONANCE_MODEL  # type: int
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpVcmatmosphericModelData = VCMAtmosphericModelData()
+        tmpVcmatmosphericModelData.Init(buf, pos)
+        return cls.InitFromObj(tmpVcmatmosphericModelData)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpVcmatmosphericModelData):
+        x = VCMAtmosphericModelDataT()
+        x._UnPack(tmpVcmatmosphericModelData)
+        return x
+
+    # VCMAtmosphericModelDataT
+    def _UnPack(self, VCMAtmosphericModelData):
+        if VCMAtmosphericModelData is None:
+            return
+        self.ATMOSPHERIC_MODEL = VCMAtmosphericModelData.ATMOSPHERIC_MODEL()
+        self.GEOPOTENTIAL_MODEL = VCMAtmosphericModelData.GEOPOTENTIAL_MODEL()
+        self.LUNAR_SOLAR_PERTURBATION = VCMAtmosphericModelData.LUNAR_SOLAR_PERTURBATION()
+        self.LUNAR_PERTURBATION_MODEL = VCMAtmosphericModelData.LUNAR_PERTURBATION_MODEL()
+        self.SOLAR_PERTURBATION_MODEL = VCMAtmosphericModelData.SOLAR_PERTURBATION_MODEL()
+        self.SOLAR_RADIATION_PRESSURE = VCMAtmosphericModelData.SOLAR_RADIATION_PRESSURE()
+        self.SRP_MODEL = VCMAtmosphericModelData.SRP_MODEL()
+        self.RESONANCE_MODEL = VCMAtmosphericModelData.RESONANCE_MODEL()
+
+    # VCMAtmosphericModelDataT
+    def Pack(self, builder):
+        VCMAtmosphericModelDataStart(builder)
+        VCMAtmosphericModelDataAddATMOSPHERIC_MODEL(builder, self.ATMOSPHERIC_MODEL)
+        VCMAtmosphericModelDataAddGEOPOTENTIAL_MODEL(builder, self.GEOPOTENTIAL_MODEL)
+        VCMAtmosphericModelDataAddLUNAR_SOLAR_PERTURBATION(builder, self.LUNAR_SOLAR_PERTURBATION)
+        VCMAtmosphericModelDataAddLUNAR_PERTURBATION_MODEL(builder, self.LUNAR_PERTURBATION_MODEL)
+        VCMAtmosphericModelDataAddSOLAR_PERTURBATION_MODEL(builder, self.SOLAR_PERTURBATION_MODEL)
+        VCMAtmosphericModelDataAddSOLAR_RADIATION_PRESSURE(builder, self.SOLAR_RADIATION_PRESSURE)
+        VCMAtmosphericModelDataAddSRP_MODEL(builder, self.SRP_MODEL)
+        VCMAtmosphericModelDataAddRESONANCE_MODEL(builder, self.RESONANCE_MODEL)
+        VCMAtmosphericModelData = VCMAtmosphericModelDataEnd(builder)
+        return VCMAtmosphericModelData

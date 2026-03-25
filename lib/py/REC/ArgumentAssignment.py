@@ -2,4 +2,119 @@
 
 # namespace: 
 
-# NOTE ArgumentAssignment.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Argument assignment (value binding)
+class ArgumentAssignment(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = ArgumentAssignment()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsArgumentAssignment(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def ArgumentAssignmentBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x58\x54\x43", size_prefixed=size_prefixed)
+
+    # ArgumentAssignment
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Argument name
+    # ArgumentAssignment
+    def ARGUMENT_NAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Assigned value
+    # ArgumentAssignment
+    def VALUE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+def ArgumentAssignmentStart(builder):
+    builder.StartObject(2)
+
+def Start(builder):
+    ArgumentAssignmentStart(builder)
+
+def ArgumentAssignmentAddARGUMENT_NAME(builder, ARGUMENT_NAME):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(ARGUMENT_NAME), 0)
+
+def AddARGUMENT_NAME(builder, ARGUMENT_NAME):
+    ArgumentAssignmentAddARGUMENT_NAME(builder, ARGUMENT_NAME)
+
+def ArgumentAssignmentAddVALUE(builder, VALUE):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(VALUE), 0)
+
+def AddVALUE(builder, VALUE):
+    ArgumentAssignmentAddVALUE(builder, VALUE)
+
+def ArgumentAssignmentEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return ArgumentAssignmentEnd(builder)
+
+
+class ArgumentAssignmentT(object):
+
+    # ArgumentAssignmentT
+    def __init__(
+        self,
+        ARGUMENT_NAME = None,
+        VALUE = None,
+    ):
+        self.ARGUMENT_NAME = ARGUMENT_NAME  # type: Optional[str]
+        self.VALUE = VALUE  # type: Optional[str]
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpArgumentAssignment = ArgumentAssignment()
+        tmpArgumentAssignment.Init(buf, pos)
+        return cls.InitFromObj(tmpArgumentAssignment)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpArgumentAssignment):
+        x = ArgumentAssignmentT()
+        x._UnPack(tmpArgumentAssignment)
+        return x
+
+    # ArgumentAssignmentT
+    def _UnPack(self, ArgumentAssignment):
+        if ArgumentAssignment is None:
+            return
+        self.ARGUMENT_NAME = ArgumentAssignment.ARGUMENT_NAME()
+        self.VALUE = ArgumentAssignment.VALUE()
+
+    # ArgumentAssignmentT
+    def Pack(self, builder):
+        if self.ARGUMENT_NAME is not None:
+            ARGUMENT_NAME = builder.CreateString(self.ARGUMENT_NAME)
+        if self.VALUE is not None:
+            VALUE = builder.CreateString(self.VALUE)
+        ArgumentAssignmentStart(builder)
+        if self.ARGUMENT_NAME is not None:
+            ArgumentAssignmentAddARGUMENT_NAME(builder, ARGUMENT_NAME)
+        if self.VALUE is not None:
+            ArgumentAssignmentAddVALUE(builder, VALUE)
+        ArgumentAssignment = ArgumentAssignmentEnd(builder)
+        return ArgumentAssignment

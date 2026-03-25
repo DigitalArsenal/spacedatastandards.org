@@ -2,9 +2,13 @@
 // swiftlint:disable all
 // swiftformat:disable all
 
+#if canImport(Common)
+import Common
+#endif
+
 import FlatBuffers
 
-public enum MissileType: Int8, Enum, Verifiable {
+public enum MissileType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -29,7 +33,7 @@ public enum MissileType: Int8, Enum, Verifiable {
 }
 
 
-public enum SeekerType: Int8, Enum, Verifiable {
+public enum SeekerType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -52,7 +56,7 @@ public enum SeekerType: Int8, Enum, Verifiable {
 }
 
 
-public enum GuidanceLaw: Int8, Enum, Verifiable {
+public enum GuidanceLaw: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -73,7 +77,7 @@ public enum GuidanceLaw: Int8, Enum, Verifiable {
 }
 
 
-public enum MissilePhase: Int8, Enum, Verifiable {
+public enum MissilePhase: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -92,7 +96,7 @@ public enum MissilePhase: Int8, Enum, Verifiable {
 }
 
 
-public enum SeekerStatus: Int8, Enum, Verifiable {
+public enum SeekerStatus: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -110,9 +114,9 @@ public enum SeekerStatus: Int8, Enum, Verifiable {
 
 
 ///  Guided Missiles
-public struct MSL: FlatBufferObject, Verifiable {
+public struct MSL: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -192,10 +196,8 @@ public struct MSL: FlatBufferObject, Verifiable {
   public var ARMED: UInt8 { let o = _accessor.offset(VTOFFSET.ARMED.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
   public var TIME_OF_FLIGHT: Float32 { let o = _accessor.offset(VTOFFSET.TIME_OF_FLIGHT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
   public var MAX_G: Float32 { let o = _accessor.offset(VTOFFSET.MAX_G.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
-  public var hasReserved: Bool { let o = _accessor.offset(VTOFFSET.RESERVED.v); return o == 0 ? false : true }
-  public var RESERVEDCount: Int32 { let o = _accessor.offset(VTOFFSET.RESERVED.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func RESERVED(at index: Int32) -> UInt8 { let o = _accessor.offset(VTOFFSET.RESERVED.v); return o == 0 ? 0 : _accessor.directRead(of: UInt8.self, offset: _accessor.vector(at: o) + index * 1) }
-  public var RESERVED: [UInt8] { return _accessor.getVector(at: VTOFFSET.RESERVED.v) ?? [] }
+  public var RESERVED: FlatbufferVector<UInt8> { return _accessor.vector(at: VTOFFSET.RESERVED.v, byteSize: 1) }
+  public func withUnsafePointerToReserved<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.RESERVED.v, body: body) }
   public static func startMSL(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 32) }
   public static func add(POSITION_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POSITION_X, def: 0.0, at: VTOFFSET.POSITION_X.p) }
   public static func add(POSITION_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POSITION_Y, def: 0.0, at: VTOFFSET.POSITION_Y.p) }

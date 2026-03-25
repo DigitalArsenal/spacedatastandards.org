@@ -32,7 +32,7 @@ class sensorStats : Table() {
     /**
      * Statistics period start (ISO 8601)
      */
-    val PERIOD_START : String?
+    val periodStart : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class sensorStats : Table() {
                 null
             }
         }
-    val PERIOD_STARTAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun PERIOD_STARTInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val periodStartAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun periodStartInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Statistics period end (ISO 8601)
      */
-    val PERIOD_END : String?
+    val periodEnd : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -55,12 +55,12 @@ class sensorStats : Table() {
                 null
             }
         }
-    val PERIOD_ENDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun PERIOD_ENDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val periodEndAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun periodEndInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * Total observation attempts
      */
-    val OBS_ATTEMPTED : UInt
+    val obsAttempted : UInt
         get() {
             val o = __offset(8)
             return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
@@ -68,7 +68,7 @@ class sensorStats : Table() {
     /**
      * Successful observations
      */
-    val OBS_SUCCESSFUL : UInt
+    val obsSuccessful : UInt
         get() {
             val o = __offset(10)
             return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
@@ -76,7 +76,7 @@ class sensorStats : Table() {
     /**
      * Failed observations
      */
-    val OBS_FAILED : UInt
+    val obsFailed : UInt
         get() {
             val o = __offset(12)
             return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
@@ -84,7 +84,7 @@ class sensorStats : Table() {
     /**
      * Uptime fraction (0.0-1.0)
      */
-    val UPTIME : Double
+    val uptime : Double
         get() {
             val o = __offset(14)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -92,7 +92,7 @@ class sensorStats : Table() {
     /**
      * Average tracking accuracy in arcseconds
      */
-    val AVG_ACCURACY : Double
+    val avgAccuracy : Double
         get() {
             val o = __offset(16)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -100,7 +100,7 @@ class sensorStats : Table() {
     /**
      * Detected objects count
      */
-    val DETECTIONS : UInt
+    val detections : UInt
         get() {
             val o = __offset(18)
             return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
@@ -108,41 +108,41 @@ class sensorStats : Table() {
     /**
      * Uncorrelated tracks count
      */
-    val UCT_COUNT : UInt
+    val uctCount : UInt
         get() {
             val o = __offset(20)
             return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAssensorStats(_bb: ByteBuffer): sensorStats = getRootAssensorStats(_bb, sensorStats())
         fun getRootAssensorStats(_bb: ByteBuffer, obj: sensorStats): sensorStats {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createsensorStats(builder: FlatBufferBuilder, PERIOD_STARTOffset: Int, PERIOD_ENDOffset: Int, OBS_ATTEMPTED: UInt, OBS_SUCCESSFUL: UInt, OBS_FAILED: UInt, UPTIME: Double, AVG_ACCURACY: Double, DETECTIONS: UInt, UCT_COUNT: UInt) : Int {
+        fun createsensorStats(builder: FlatBufferBuilder, periodStartOffset: Int, periodEndOffset: Int, obsAttempted: UInt, obsSuccessful: UInt, obsFailed: UInt, uptime: Double, avgAccuracy: Double, detections: UInt, uctCount: UInt) : Int {
             builder.startTable(9)
-            addAVG_ACCURACY(builder, AVG_ACCURACY)
-            addUPTIME(builder, UPTIME)
-            addUCT_COUNT(builder, UCT_COUNT)
-            addDETECTIONS(builder, DETECTIONS)
-            addOBS_FAILED(builder, OBS_FAILED)
-            addOBS_SUCCESSFUL(builder, OBS_SUCCESSFUL)
-            addOBS_ATTEMPTED(builder, OBS_ATTEMPTED)
-            addPERIOD_END(builder, PERIOD_ENDOffset)
-            addPERIOD_START(builder, PERIOD_STARTOffset)
+            addAVGACCURACY(builder, avgAccuracy)
+            addUPTIME(builder, uptime)
+            addUCTCOUNT(builder, uctCount)
+            addDETECTIONS(builder, detections)
+            addOBSFAILED(builder, obsFailed)
+            addOBSSUCCESSFUL(builder, obsSuccessful)
+            addOBSATTEMPTED(builder, obsAttempted)
+            addPERIODEND(builder, periodEndOffset)
+            addPERIODSTART(builder, periodStartOffset)
             return endsensorStats(builder)
         }
         fun startsensorStats(builder: FlatBufferBuilder) = builder.startTable(9)
-        fun addPERIOD_START(builder: FlatBufferBuilder, PERIOD_START: Int) = builder.addOffset(0, PERIOD_START, 0)
-        fun addPERIOD_END(builder: FlatBufferBuilder, PERIOD_END: Int) = builder.addOffset(1, PERIOD_END, 0)
-        fun addOBS_ATTEMPTED(builder: FlatBufferBuilder, OBS_ATTEMPTED: UInt) = builder.addInt(2, OBS_ATTEMPTED.toInt(), 0)
-        fun addOBS_SUCCESSFUL(builder: FlatBufferBuilder, OBS_SUCCESSFUL: UInt) = builder.addInt(3, OBS_SUCCESSFUL.toInt(), 0)
-        fun addOBS_FAILED(builder: FlatBufferBuilder, OBS_FAILED: UInt) = builder.addInt(4, OBS_FAILED.toInt(), 0)
-        fun addUPTIME(builder: FlatBufferBuilder, UPTIME: Double) = builder.addDouble(5, UPTIME, 0.0)
-        fun addAVG_ACCURACY(builder: FlatBufferBuilder, AVG_ACCURACY: Double) = builder.addDouble(6, AVG_ACCURACY, 0.0)
-        fun addDETECTIONS(builder: FlatBufferBuilder, DETECTIONS: UInt) = builder.addInt(7, DETECTIONS.toInt(), 0)
-        fun addUCT_COUNT(builder: FlatBufferBuilder, UCT_COUNT: UInt) = builder.addInt(8, UCT_COUNT.toInt(), 0)
+        fun addPERIODSTART(builder: FlatBufferBuilder, periodStart: Int) = builder.addOffset(0, periodStart, 0)
+        fun addPERIODEND(builder: FlatBufferBuilder, periodEnd: Int) = builder.addOffset(1, periodEnd, 0)
+        fun addOBSATTEMPTED(builder: FlatBufferBuilder, obsAttempted: UInt) = builder.addInt(2, obsAttempted.toInt(), 0)
+        fun addOBSSUCCESSFUL(builder: FlatBufferBuilder, obsSuccessful: UInt) = builder.addInt(3, obsSuccessful.toInt(), 0)
+        fun addOBSFAILED(builder: FlatBufferBuilder, obsFailed: UInt) = builder.addInt(4, obsFailed.toInt(), 0)
+        fun addUPTIME(builder: FlatBufferBuilder, uptime: Double) = builder.addDouble(5, uptime, 0.0)
+        fun addAVGACCURACY(builder: FlatBufferBuilder, avgAccuracy: Double) = builder.addDouble(6, avgAccuracy, 0.0)
+        fun addDETECTIONS(builder: FlatBufferBuilder, detections: UInt) = builder.addInt(7, detections.toInt(), 0)
+        fun addUCTCOUNT(builder: FlatBufferBuilder, uctCount: UInt) = builder.addInt(8, uctCount.toInt(), 0)
         fun endsensorStats(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

@@ -32,7 +32,7 @@ class SplinePoint : Table() {
     /**
      * Raw value
      */
-    val RAW : Double
+    val raw : Double
         get() {
             val o = __offset(4)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -40,27 +40,27 @@ class SplinePoint : Table() {
     /**
      * Calibrated/engineering value
      */
-    val CALIBRATED : Double
+    val calibrated : Double
         get() {
             val o = __offset(6)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsSplinePoint(_bb: ByteBuffer): SplinePoint = getRootAsSplinePoint(_bb, SplinePoint())
         fun getRootAsSplinePoint(_bb: ByteBuffer, obj: SplinePoint): SplinePoint {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createSplinePoint(builder: FlatBufferBuilder, RAW: Double, CALIBRATED: Double) : Int {
+        fun createSplinePoint(builder: FlatBufferBuilder, raw: Double, calibrated: Double) : Int {
             builder.startTable(2)
-            addCALIBRATED(builder, CALIBRATED)
-            addRAW(builder, RAW)
+            addCALIBRATED(builder, calibrated)
+            addRAW(builder, raw)
             return endSplinePoint(builder)
         }
         fun startSplinePoint(builder: FlatBufferBuilder) = builder.startTable(2)
-        fun addRAW(builder: FlatBufferBuilder, RAW: Double) = builder.addDouble(0, RAW, 0.0)
-        fun addCALIBRATED(builder: FlatBufferBuilder, CALIBRATED: Double) = builder.addDouble(1, CALIBRATED, 0.0)
+        fun addRAW(builder: FlatBufferBuilder, raw: Double) = builder.addDouble(0, raw, 0.0)
+        fun addCALIBRATED(builder: FlatBufferBuilder, calibrated: Double) = builder.addDouble(1, calibrated, 0.0)
         fun endSplinePoint(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

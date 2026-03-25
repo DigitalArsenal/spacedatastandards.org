@@ -58,14 +58,17 @@ def End(builder):
 class LCCT(object):
 
     # LCCT
-    def __init__(self):
-        self.OWNER = 0  # type: int
+    def __init__(
+        self,
+        OWNER = 0,
+    ):
+        self.OWNER = OWNER  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        LCC = LCC()
-        LCC.Init(buf, pos)
-        return cls.InitFromObj(LCC)
+        tmpLcc = LCC()
+        tmpLcc.Init(buf, pos)
+        return cls.InitFromObj(tmpLcc)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -73,9 +76,9 @@ class LCCT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, LCC):
+    def InitFromObj(cls, tmpLcc):
         x = LCCT()
-        x._UnPack(LCC)
+        x._UnPack(tmpLcc)
         return x
 
     # LCCT

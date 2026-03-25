@@ -2,9 +2,13 @@
 // swiftlint:disable all
 // swiftformat:disable all
 
+#if canImport(Common)
+import Common
+#endif
+
 import FlatBuffers
 
-public enum imageFormat: Int8, Enum, Verifiable {
+public enum imageFormat: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -23,9 +27,9 @@ public enum imageFormat: Int8, Enum, Verifiable {
 
 
 ///  Ground Imagery
-public struct GDI: FlatBufferObject, Verifiable {
+public struct GDI: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -107,13 +111,9 @@ public struct GDI: FlatBufferObject, Verifiable {
   public var TRANSACTION_ID: String? { let o = _accessor.offset(VTOFFSET.TRANSACTION_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var TRANSACTION_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TRANSACTION_ID.v) }
   ///  Associated tags
-  public var hasTags: Bool { let o = _accessor.offset(VTOFFSET.TAGS.v); return o == 0 ? false : true }
-  public var TAGSCount: Int32 { let o = _accessor.offset(VTOFFSET.TAGS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func TAGS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.TAGS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  public var TAGS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.TAGS.v, byteSize: 4) }
   ///  Keywords for search/classification
-  public var hasKeywords: Bool { let o = _accessor.offset(VTOFFSET.KEYWORDS.v); return o == 0 ? false : true }
-  public var KEYWORDSCount: Int32 { let o = _accessor.offset(VTOFFSET.KEYWORDS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func KEYWORDS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.KEYWORDS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  public var KEYWORDS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.KEYWORDS.v, byteSize: 4) }
   ///  Notes
   public var NOTES: String? { let o = _accessor.offset(VTOFFSET.NOTES.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var NOTESSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NOTES.v) }

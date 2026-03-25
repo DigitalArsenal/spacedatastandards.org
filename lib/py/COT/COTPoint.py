@@ -115,18 +115,25 @@ def End(builder):
 class COTPointT(object):
 
     # COTPointT
-    def __init__(self):
-        self.LATITUDE = 0.0  # type: float
-        self.LONGITUDE = 0.0  # type: float
-        self.HAE = 0.0  # type: float
-        self.CE = 0.0  # type: float
-        self.LE = 0.0  # type: float
+    def __init__(
+        self,
+        LATITUDE = 0.0,
+        LONGITUDE = 0.0,
+        HAE = 0.0,
+        CE = 0.0,
+        LE = 0.0,
+    ):
+        self.LATITUDE = LATITUDE  # type: float
+        self.LONGITUDE = LONGITUDE  # type: float
+        self.HAE = HAE  # type: float
+        self.CE = CE  # type: float
+        self.LE = LE  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        cotpoint = COTPoint()
-        cotpoint.Init(buf, pos)
-        return cls.InitFromObj(cotpoint)
+        tmpCotpoint = COTPoint()
+        tmpCotpoint.Init(buf, pos)
+        return cls.InitFromObj(tmpCotpoint)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -134,20 +141,20 @@ class COTPointT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, cotpoint):
+    def InitFromObj(cls, tmpCotpoint):
         x = COTPointT()
-        x._UnPack(cotpoint)
+        x._UnPack(tmpCotpoint)
         return x
 
     # COTPointT
-    def _UnPack(self, cotpoint):
-        if cotpoint is None:
+    def _UnPack(self, COTPoint):
+        if COTPoint is None:
             return
-        self.LATITUDE = cotpoint.LATITUDE()
-        self.LONGITUDE = cotpoint.LONGITUDE()
-        self.HAE = cotpoint.HAE()
-        self.CE = cotpoint.CE()
-        self.LE = cotpoint.LE()
+        self.LATITUDE = COTPoint.LATITUDE()
+        self.LONGITUDE = COTPoint.LONGITUDE()
+        self.HAE = COTPoint.HAE()
+        self.CE = COTPoint.CE()
+        self.LE = COTPoint.LE()
 
     # COTPointT
     def Pack(self, builder):
@@ -157,5 +164,5 @@ class COTPointT(object):
         COTPointAddHAE(builder, self.HAE)
         COTPointAddCE(builder, self.CE)
         COTPointAddLE(builder, self.LE)
-        cotpoint = COTPointEnd(builder)
-        return cotpoint
+        COTPoint = COTPointEnd(builder)
+        return COTPoint

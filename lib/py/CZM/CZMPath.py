@@ -157,20 +157,29 @@ except:
 class CZMPathT(object):
 
     # CZMPathT
-    def __init__(self):
-        self.SHOW = False  # type: bool
-        self.LEAD_TIME = 0.0  # type: float
-        self.TRAIL_TIME = 0.0  # type: float
-        self.WIDTH = 0.0  # type: float
-        self.COLOR = None  # type: Optional[CZMColor.CZMColorT]
-        self.RESOLUTION = 0.0  # type: float
-        self.MATERIAL = None  # type: Optional[CZMPolylineMaterial.CZMPolylineMaterialT]
+    def __init__(
+        self,
+        SHOW = False,
+        LEAD_TIME = 0.0,
+        TRAIL_TIME = 0.0,
+        WIDTH = 0.0,
+        COLOR = None,
+        RESOLUTION = 0.0,
+        MATERIAL = None,
+    ):
+        self.SHOW = SHOW  # type: bool
+        self.LEAD_TIME = LEAD_TIME  # type: float
+        self.TRAIL_TIME = TRAIL_TIME  # type: float
+        self.WIDTH = WIDTH  # type: float
+        self.COLOR = COLOR  # type: Optional[CZMColor.CZMColorT]
+        self.RESOLUTION = RESOLUTION  # type: float
+        self.MATERIAL = MATERIAL  # type: Optional[CZMPolylineMaterial.CZMPolylineMaterialT]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        czmpath = CZMPath()
-        czmpath.Init(buf, pos)
-        return cls.InitFromObj(czmpath)
+        tmpCzmpath = CZMPath()
+        tmpCzmpath.Init(buf, pos)
+        return cls.InitFromObj(tmpCzmpath)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -178,24 +187,24 @@ class CZMPathT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, czmpath):
+    def InitFromObj(cls, tmpCzmpath):
         x = CZMPathT()
-        x._UnPack(czmpath)
+        x._UnPack(tmpCzmpath)
         return x
 
     # CZMPathT
-    def _UnPack(self, czmpath):
-        if czmpath is None:
+    def _UnPack(self, CZMPath):
+        if CZMPath is None:
             return
-        self.SHOW = czmpath.SHOW()
-        self.LEAD_TIME = czmpath.LEAD_TIME()
-        self.TRAIL_TIME = czmpath.TRAIL_TIME()
-        self.WIDTH = czmpath.WIDTH()
-        if czmpath.COLOR() is not None:
-            self.COLOR = CZMColor.CZMColorT.InitFromObj(czmpath.COLOR())
-        self.RESOLUTION = czmpath.RESOLUTION()
-        if czmpath.MATERIAL() is not None:
-            self.MATERIAL = CZMPolylineMaterial.CZMPolylineMaterialT.InitFromObj(czmpath.MATERIAL())
+        self.SHOW = CZMPath.SHOW()
+        self.LEAD_TIME = CZMPath.LEAD_TIME()
+        self.TRAIL_TIME = CZMPath.TRAIL_TIME()
+        self.WIDTH = CZMPath.WIDTH()
+        if CZMPath.COLOR() is not None:
+            self.COLOR = CZMColor.CZMColorT.InitFromObj(CZMPath.COLOR())
+        self.RESOLUTION = CZMPath.RESOLUTION()
+        if CZMPath.MATERIAL() is not None:
+            self.MATERIAL = CZMPolylineMaterial.CZMPolylineMaterialT.InitFromObj(CZMPath.MATERIAL())
 
     # CZMPathT
     def Pack(self, builder):
@@ -213,5 +222,5 @@ class CZMPathT(object):
         CZMPathAddRESOLUTION(builder, self.RESOLUTION)
         if self.MATERIAL is not None:
             CZMPathAddMATERIAL(builder, MATERIAL)
-        czmpath = CZMPathEnd(builder)
-        return czmpath
+        CZMPath = CZMPathEnd(builder)
+        return CZMPath

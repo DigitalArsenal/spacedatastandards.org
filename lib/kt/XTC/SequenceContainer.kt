@@ -32,7 +32,7 @@ class SequenceContainer : Table() {
     /**
      * Container name
      */
-    val NAME : String?
+    val name : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class SequenceContainer : Table() {
                 null
             }
         }
-    val NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val nameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun nameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Short description
      */
-    val SHORT_DESCRIPTION : String?
+    val shortDescription : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -55,12 +55,12 @@ class SequenceContainer : Table() {
                 null
             }
         }
-    val SHORT_DESCRIPTIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun SHORT_DESCRIPTIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val shortDescriptionAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun shortDescriptionInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * Long description
      */
-    val LONG_DESCRIPTION : String?
+    val longDescription : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -69,12 +69,12 @@ class SequenceContainer : Table() {
                 null
             }
         }
-    val LONG_DESCRIPTIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun LONG_DESCRIPTIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val longDescriptionAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun longDescriptionInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
     /**
      * Abstract container (used as base only)
      */
-    val ABSTRACT : Boolean
+    val abstract : Boolean
         get() {
             val o = __offset(10)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -82,8 +82,8 @@ class SequenceContainer : Table() {
     /**
      * Container entry list
      */
-    fun ENTRY_LIST(j: Int) : ContainerEntry? = ENTRY_LIST(ContainerEntry(), j)
-    fun ENTRY_LIST(obj: ContainerEntry, j: Int) : ContainerEntry? {
+    fun entryList(j: Int) : ContainerEntry? = entryList(ContainerEntry(), j)
+    fun entryList(obj: ContainerEntry, j: Int) : ContainerEntry? {
         val o = __offset(12)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -91,15 +91,15 @@ class SequenceContainer : Table() {
             null
         }
     }
-    val ENTRY_LISTLength : Int
+    val entryListLength : Int
         get() {
             val o = __offset(12); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Base container (inheritance)
      */
-    val BASE_CONTAINER : BaseContainer? get() = BASE_CONTAINER(BaseContainer())
-    fun BASE_CONTAINER(obj: BaseContainer) : BaseContainer? {
+    val baseContainer : BaseContainer? get() = baseContainer(BaseContainer())
+    fun baseContainer(obj: BaseContainer) : BaseContainer? {
         val o = __offset(14)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -110,8 +110,8 @@ class SequenceContainer : Table() {
     /**
      * Binary encoding
      */
-    val BINARY_ENCODING : ContainerBinaryEncoding? get() = BINARY_ENCODING(ContainerBinaryEncoding())
-    fun BINARY_ENCODING(obj: ContainerBinaryEncoding) : ContainerBinaryEncoding? {
+    val binaryEncoding : ContainerBinaryEncoding? get() = binaryEncoding(ContainerBinaryEncoding())
+    fun binaryEncoding(obj: ContainerBinaryEncoding) : ContainerBinaryEncoding? {
         val o = __offset(16)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -122,8 +122,8 @@ class SequenceContainer : Table() {
     /**
      * Rate in stream
      */
-    val RATE_IN_STREAM : RateInStream? get() = RATE_IN_STREAM(RateInStream())
-    fun RATE_IN_STREAM(obj: RateInStream) : RateInStream? {
+    val rateInStream : RateInStream? get() = rateInStream(RateInStream())
+    fun rateInStream(obj: RateInStream) : RateInStream? {
         val o = __offset(18)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -134,7 +134,7 @@ class SequenceContainer : Table() {
     /**
      * Idle pattern (hex string for padding)
      */
-    val IDLE_PATTERN : String?
+    val idlePattern : String?
         get() {
             val o = __offset(20)
             return if (o != 0) {
@@ -143,34 +143,34 @@ class SequenceContainer : Table() {
                 null
             }
         }
-    val IDLE_PATTERNAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(20, 1)
-    fun IDLE_PATTERNInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 20, 1)
+    val idlePatternAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(20, 1)
+    fun idlePatternInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 20, 1)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsSequenceContainer(_bb: ByteBuffer): SequenceContainer = getRootAsSequenceContainer(_bb, SequenceContainer())
         fun getRootAsSequenceContainer(_bb: ByteBuffer, obj: SequenceContainer): SequenceContainer {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createSequenceContainer(builder: FlatBufferBuilder, NAMEOffset: Int, SHORT_DESCRIPTIONOffset: Int, LONG_DESCRIPTIONOffset: Int, ABSTRACT: Boolean, ENTRY_LISTOffset: Int, BASE_CONTAINEROffset: Int, BINARY_ENCODINGOffset: Int, RATE_IN_STREAMOffset: Int, IDLE_PATTERNOffset: Int) : Int {
+        fun createSequenceContainer(builder: FlatBufferBuilder, nameOffset: Int, shortDescriptionOffset: Int, longDescriptionOffset: Int, abstract: Boolean, entryListOffset: Int, baseContainerOffset: Int, binaryEncodingOffset: Int, rateInStreamOffset: Int, idlePatternOffset: Int) : Int {
             builder.startTable(9)
-            addIDLE_PATTERN(builder, IDLE_PATTERNOffset)
-            addRATE_IN_STREAM(builder, RATE_IN_STREAMOffset)
-            addBINARY_ENCODING(builder, BINARY_ENCODINGOffset)
-            addBASE_CONTAINER(builder, BASE_CONTAINEROffset)
-            addENTRY_LIST(builder, ENTRY_LISTOffset)
-            addLONG_DESCRIPTION(builder, LONG_DESCRIPTIONOffset)
-            addSHORT_DESCRIPTION(builder, SHORT_DESCRIPTIONOffset)
-            addNAME(builder, NAMEOffset)
-            addABSTRACT(builder, ABSTRACT)
+            addIDLEPATTERN(builder, idlePatternOffset)
+            addRATEINSTREAM(builder, rateInStreamOffset)
+            addBINARYENCODING(builder, binaryEncodingOffset)
+            addBASECONTAINER(builder, baseContainerOffset)
+            addENTRYLIST(builder, entryListOffset)
+            addLONGDESCRIPTION(builder, longDescriptionOffset)
+            addSHORTDESCRIPTION(builder, shortDescriptionOffset)
+            addNAME(builder, nameOffset)
+            addABSTRACT(builder, abstract)
             return endSequenceContainer(builder)
         }
         fun startSequenceContainer(builder: FlatBufferBuilder) = builder.startTable(9)
-        fun addNAME(builder: FlatBufferBuilder, NAME: Int) = builder.addOffset(0, NAME, 0)
-        fun addSHORT_DESCRIPTION(builder: FlatBufferBuilder, SHORT_DESCRIPTION: Int) = builder.addOffset(1, SHORT_DESCRIPTION, 0)
-        fun addLONG_DESCRIPTION(builder: FlatBufferBuilder, LONG_DESCRIPTION: Int) = builder.addOffset(2, LONG_DESCRIPTION, 0)
-        fun addABSTRACT(builder: FlatBufferBuilder, ABSTRACT: Boolean) = builder.addBoolean(3, ABSTRACT, false)
-        fun addENTRY_LIST(builder: FlatBufferBuilder, ENTRY_LIST: Int) = builder.addOffset(4, ENTRY_LIST, 0)
+        fun addNAME(builder: FlatBufferBuilder, name: Int) = builder.addOffset(0, name, 0)
+        fun addSHORTDESCRIPTION(builder: FlatBufferBuilder, shortDescription: Int) = builder.addOffset(1, shortDescription, 0)
+        fun addLONGDESCRIPTION(builder: FlatBufferBuilder, longDescription: Int) = builder.addOffset(2, longDescription, 0)
+        fun addABSTRACT(builder: FlatBufferBuilder, abstract: Boolean) = builder.addBoolean(3, abstract, false)
+        fun addENTRYLIST(builder: FlatBufferBuilder, entryList: Int) = builder.addOffset(4, entryList, 0)
         fun createEntryListVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -179,10 +179,10 @@ class SequenceContainer : Table() {
             return builder.endVector()
         }
         fun startEntryListVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addBASE_CONTAINER(builder: FlatBufferBuilder, BASE_CONTAINER: Int) = builder.addOffset(5, BASE_CONTAINER, 0)
-        fun addBINARY_ENCODING(builder: FlatBufferBuilder, BINARY_ENCODING: Int) = builder.addOffset(6, BINARY_ENCODING, 0)
-        fun addRATE_IN_STREAM(builder: FlatBufferBuilder, RATE_IN_STREAM: Int) = builder.addOffset(7, RATE_IN_STREAM, 0)
-        fun addIDLE_PATTERN(builder: FlatBufferBuilder, IDLE_PATTERN: Int) = builder.addOffset(8, IDLE_PATTERN, 0)
+        fun addBASECONTAINER(builder: FlatBufferBuilder, baseContainer: Int) = builder.addOffset(5, baseContainer, 0)
+        fun addBINARYENCODING(builder: FlatBufferBuilder, binaryEncoding: Int) = builder.addOffset(6, binaryEncoding, 0)
+        fun addRATEINSTREAM(builder: FlatBufferBuilder, rateInStream: Int) = builder.addOffset(7, rateInStream, 0)
+        fun addIDLEPATTERN(builder: FlatBufferBuilder, idlePattern: Int) = builder.addOffset(8, idlePattern, 0)
         fun endSequenceContainer(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

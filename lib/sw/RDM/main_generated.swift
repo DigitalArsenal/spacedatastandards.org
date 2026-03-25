@@ -2,9 +2,13 @@
 // swiftlint:disable all
 // swiftformat:disable all
 
+#if canImport(Common)
+import Common
+#endif
+
 import FlatBuffers
 
-public enum reentryDisposition: Int8, Enum, Verifiable {
+public enum reentryDisposition: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -17,7 +21,7 @@ public enum reentryDisposition: Int8, Enum, Verifiable {
 }
 
 
-public enum reentryReason: Int8, Enum, Verifiable {
+public enum reentryReason: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -34,9 +38,9 @@ public enum reentryReason: Int8, Enum, Verifiable {
 
 
 ///  Reentry State Vector
-public struct reentryStateVector: FlatBufferObject, Verifiable {
+public struct reentryStateVector: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -124,9 +128,9 @@ public struct reentryStateVector: FlatBufferObject, Verifiable {
 }
 
 ///  Reentry Ground Impact Prediction
-public struct reentryImpact: FlatBufferObject, Verifiable {
+public struct reentryImpact: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -206,9 +210,9 @@ public struct reentryImpact: FlatBufferObject, Verifiable {
 }
 
 ///  Surviving Debris Prediction
-public struct survivingDebris: FlatBufferObject, Verifiable {
+public struct survivingDebris: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -275,9 +279,9 @@ public struct survivingDebris: FlatBufferObject, Verifiable {
 }
 
 ///  Reentry Data Message
-public struct RDM: FlatBufferObject, Verifiable {
+public struct RDM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -368,15 +372,11 @@ public struct RDM: FlatBufferObject, Verifiable {
   ///  Drag area in m^2
   public var DRAG_AREA: Double { let o = _accessor.offset(VTOFFSET.DRAG_AREA.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Initial state vector
-  public var INITIAL_STATE: reentryStateVector? { let o = _accessor.offset(VTOFFSET.INITIAL_STATE.v); return o == 0 ? nil : reentryStateVector(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var INITIAL_STATE: reentryStateVector? { let o = _accessor.offset(VTOFFSET.INITIAL_STATE.v); return o == 0 ? nil : reentryStateVector(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Ground impact predictions
-  public var hasImpactPredictions: Bool { let o = _accessor.offset(VTOFFSET.IMPACT_PREDICTIONS.v); return o == 0 ? false : true }
-  public var IMPACT_PREDICTIONSCount: Int32 { let o = _accessor.offset(VTOFFSET.IMPACT_PREDICTIONS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func IMPACT_PREDICTIONS(at index: Int32) -> reentryImpact? { let o = _accessor.offset(VTOFFSET.IMPACT_PREDICTIONS.v); return o == 0 ? nil : reentryImpact(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var IMPACT_PREDICTIONS: FlatbufferVector<reentryImpact> { return _accessor.vector(at: VTOFFSET.IMPACT_PREDICTIONS.v, byteSize: 4) }
   ///  Predicted surviving debris
-  public var hasSurvivingDebris: Bool { let o = _accessor.offset(VTOFFSET.SURVIVING_DEBRIS.v); return o == 0 ? false : true }
-  public var SURVIVING_DEBRISCount: Int32 { let o = _accessor.offset(VTOFFSET.SURVIVING_DEBRIS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func SURVIVING_DEBRIS(at index: Int32) -> survivingDebris? { let o = _accessor.offset(VTOFFSET.SURVIVING_DEBRIS.v); return o == 0 ? nil : survivingDebris(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var SURVIVING_DEBRIS: FlatbufferVector<survivingDebris> { return _accessor.vector(at: VTOFFSET.SURVIVING_DEBRIS.v, byteSize: 4) }
   ///  Casualty expectation
   public var CASUALTY_EXPECTATION: Double { let o = _accessor.offset(VTOFFSET.CASUALTY_EXPECTATION.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Number of breakup fragments predicted

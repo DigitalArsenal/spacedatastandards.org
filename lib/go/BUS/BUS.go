@@ -63,6 +63,10 @@ func (rcv *BUS) ID() []byte {
 	return nil
 }
 
+func (rcv *BUS) Id() []byte {
+	return rcv.ID()
+}
+
 /// Unique identifier
 /// Bus name or model
 func (rcv *BUS) NAME() []byte {
@@ -71,6 +75,10 @@ func (rcv *BUS) NAME() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *BUS) Name() []byte {
+	return rcv.NAME()
 }
 
 /// Bus name or model
@@ -83,6 +91,10 @@ func (rcv *BUS) MANUFACTURER() []byte {
 	return nil
 }
 
+func (rcv *BUS) Manufacturer() []byte {
+	return rcv.MANUFACTURER()
+}
+
 /// Manufacturer
 /// Bus size category
 func (rcv *BUS) SIZE() busSize {
@@ -93,9 +105,17 @@ func (rcv *BUS) SIZE() busSize {
 	return 0
 }
 
+func (rcv *BUS) Size() busSize {
+	return rcv.SIZE()
+}
+
 /// Bus size category
 func (rcv *BUS) MutateSIZE(n busSize) bool {
 	return rcv._tab.MutateInt8Slot(10, int8(n))
+}
+
+func (rcv *BUS) MutateSize(n busSize) bool {
+	return rcv.MutateSIZE(n)
 }
 
 /// Dry mass in kg
@@ -107,9 +127,17 @@ func (rcv *BUS) DRY_MASS() float64 {
 	return 0.0
 }
 
+func (rcv *BUS) DryMass() float64 {
+	return rcv.DRY_MASS()
+}
+
 /// Dry mass in kg
 func (rcv *BUS) MutateDRY_MASS(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(12, n)
+}
+
+func (rcv *BUS) MutateDryMass(n float64) bool {
+	return rcv.MutateDRY_MASS(n)
 }
 
 /// Maximum wet mass (with propellant) in kg
@@ -121,9 +149,17 @@ func (rcv *BUS) WET_MASS() float64 {
 	return 0.0
 }
 
+func (rcv *BUS) WetMass() float64 {
+	return rcv.WET_MASS()
+}
+
 /// Maximum wet mass (with propellant) in kg
 func (rcv *BUS) MutateWET_MASS(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(14, n)
+}
+
+func (rcv *BUS) MutateWetMass(n float64) bool {
+	return rcv.MutateWET_MASS(n)
 }
 
 /// Maximum payload mass in kg
@@ -135,9 +171,17 @@ func (rcv *BUS) PAYLOAD_MASS() float64 {
 	return 0.0
 }
 
+func (rcv *BUS) PayloadMass() float64 {
+	return rcv.PAYLOAD_MASS()
+}
+
 /// Maximum payload mass in kg
 func (rcv *BUS) MutatePAYLOAD_MASS(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(16, n)
+}
+
+func (rcv *BUS) MutatePayloadMass(n float64) bool {
+	return rcv.MutatePAYLOAD_MASS(n)
 }
 
 /// Bus dimensions X in meters
@@ -149,9 +193,17 @@ func (rcv *BUS) DIM_X() float64 {
 	return 0.0
 }
 
+func (rcv *BUS) DimX() float64 {
+	return rcv.DIM_X()
+}
+
 /// Bus dimensions X in meters
 func (rcv *BUS) MutateDIM_X(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(18, n)
+}
+
+func (rcv *BUS) MutateDimX(n float64) bool {
+	return rcv.MutateDIM_X(n)
 }
 
 /// Bus dimensions Y in meters
@@ -163,9 +215,17 @@ func (rcv *BUS) DIM_Y() float64 {
 	return 0.0
 }
 
+func (rcv *BUS) DimY() float64 {
+	return rcv.DIM_Y()
+}
+
 /// Bus dimensions Y in meters
 func (rcv *BUS) MutateDIM_Y(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(20, n)
+}
+
+func (rcv *BUS) MutateDimY(n float64) bool {
+	return rcv.MutateDIM_Y(n)
 }
 
 /// Bus dimensions Z in meters
@@ -177,9 +237,17 @@ func (rcv *BUS) DIM_Z() float64 {
 	return 0.0
 }
 
+func (rcv *BUS) DimZ() float64 {
+	return rcv.DIM_Z()
+}
+
 /// Bus dimensions Z in meters
 func (rcv *BUS) MutateDIM_Z(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(22, n)
+}
+
+func (rcv *BUS) MutateDimZ(n float64) bool {
+	return rcv.MutateDIM_Z(n)
 }
 
 /// Stowed dimensions X in meters
@@ -191,9 +259,17 @@ func (rcv *BUS) STOWED_X() float64 {
 	return 0.0
 }
 
+func (rcv *BUS) StowedX() float64 {
+	return rcv.STOWED_X()
+}
+
 /// Stowed dimensions X in meters
 func (rcv *BUS) MutateSTOWED_X(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(24, n)
+}
+
+func (rcv *BUS) MutateStowedX(n float64) bool {
+	return rcv.MutateSTOWED_X(n)
 }
 
 /// Stowed dimensions Y in meters
@@ -205,9 +281,17 @@ func (rcv *BUS) STOWED_Y() float64 {
 	return 0.0
 }
 
+func (rcv *BUS) StowedY() float64 {
+	return rcv.STOWED_Y()
+}
+
 /// Stowed dimensions Y in meters
 func (rcv *BUS) MutateSTOWED_Y(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(26, n)
+}
+
+func (rcv *BUS) MutateStowedY(n float64) bool {
+	return rcv.MutateSTOWED_Y(n)
 }
 
 /// Stowed dimensions Z in meters
@@ -219,9 +303,17 @@ func (rcv *BUS) STOWED_Z() float64 {
 	return 0.0
 }
 
+func (rcv *BUS) StowedZ() float64 {
+	return rcv.STOWED_Z()
+}
+
 /// Stowed dimensions Z in meters
 func (rcv *BUS) MutateSTOWED_Z(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(28, n)
+}
+
+func (rcv *BUS) MutateStowedZ(n float64) bool {
+	return rcv.MutateSTOWED_Z(n)
 }
 
 /// Total power generation in Watts
@@ -233,9 +325,17 @@ func (rcv *BUS) POWER_GENERATION() float64 {
 	return 0.0
 }
 
+func (rcv *BUS) PowerGeneration() float64 {
+	return rcv.POWER_GENERATION()
+}
+
 /// Total power generation in Watts
 func (rcv *BUS) MutatePOWER_GENERATION(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(30, n)
+}
+
+func (rcv *BUS) MutatePowerGeneration(n float64) bool {
+	return rcv.MutatePOWER_GENERATION(n)
 }
 
 /// Available payload power in Watts
@@ -247,9 +347,17 @@ func (rcv *BUS) PAYLOAD_POWER() float64 {
 	return 0.0
 }
 
+func (rcv *BUS) PayloadPower() float64 {
+	return rcv.PAYLOAD_POWER()
+}
+
 /// Available payload power in Watts
 func (rcv *BUS) MutatePAYLOAD_POWER(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(32, n)
+}
+
+func (rcv *BUS) MutatePayloadPower(n float64) bool {
+	return rcv.MutatePAYLOAD_POWER(n)
 }
 
 /// Battery capacity in Watt-hours
@@ -261,9 +369,17 @@ func (rcv *BUS) BATTERY_CAPACITY() float64 {
 	return 0.0
 }
 
+func (rcv *BUS) BatteryCapacity() float64 {
+	return rcv.BATTERY_CAPACITY()
+}
+
 /// Battery capacity in Watt-hours
 func (rcv *BUS) MutateBATTERY_CAPACITY(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(34, n)
+}
+
+func (rcv *BUS) MutateBatteryCapacity(n float64) bool {
+	return rcv.MutateBATTERY_CAPACITY(n)
 }
 
 /// Stabilization method
@@ -275,9 +391,17 @@ func (rcv *BUS) STABILIZATION() BusStabilizationType {
 	return 0
 }
 
+func (rcv *BUS) Stabilization() BusStabilizationType {
+	return rcv.STABILIZATION()
+}
+
 /// Stabilization method
 func (rcv *BUS) MutateSTABILIZATION(n BusStabilizationType) bool {
 	return rcv._tab.MutateInt8Slot(36, int8(n))
+}
+
+func (rcv *BUS) MutateStabilization(n BusStabilizationType) bool {
+	return rcv.MutateSTABILIZATION(n)
 }
 
 /// Pointing accuracy in degrees
@@ -289,9 +413,17 @@ func (rcv *BUS) POINTING_ACCURACY() float64 {
 	return 0.0
 }
 
+func (rcv *BUS) PointingAccuracy() float64 {
+	return rcv.POINTING_ACCURACY()
+}
+
 /// Pointing accuracy in degrees
 func (rcv *BUS) MutatePOINTING_ACCURACY(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(38, n)
+}
+
+func (rcv *BUS) MutatePointingAccuracy(n float64) bool {
+	return rcv.MutatePOINTING_ACCURACY(n)
 }
 
 /// Pointing knowledge in degrees
@@ -303,9 +435,17 @@ func (rcv *BUS) POINTING_KNOWLEDGE() float64 {
 	return 0.0
 }
 
+func (rcv *BUS) PointingKnowledge() float64 {
+	return rcv.POINTING_KNOWLEDGE()
+}
+
 /// Pointing knowledge in degrees
 func (rcv *BUS) MutatePOINTING_KNOWLEDGE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(40, n)
+}
+
+func (rcv *BUS) MutatePointingKnowledge(n float64) bool {
+	return rcv.MutatePOINTING_KNOWLEDGE(n)
 }
 
 /// Design life in years
@@ -317,9 +457,17 @@ func (rcv *BUS) DESIGN_LIFE() float64 {
 	return 0.0
 }
 
+func (rcv *BUS) DesignLife() float64 {
+	return rcv.DESIGN_LIFE()
+}
+
 /// Design life in years
 func (rcv *BUS) MutateDESIGN_LIFE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(42, n)
+}
+
+func (rcv *BUS) MutateDesignLife(n float64) bool {
+	return rcv.MutateDESIGN_LIFE(n)
 }
 
 /// Data storage capacity in Gbits
@@ -331,9 +479,17 @@ func (rcv *BUS) DATA_STORAGE() float64 {
 	return 0.0
 }
 
+func (rcv *BUS) DataStorage() float64 {
+	return rcv.DATA_STORAGE()
+}
+
 /// Data storage capacity in Gbits
 func (rcv *BUS) MutateDATA_STORAGE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(44, n)
+}
+
+func (rcv *BUS) MutateDataStorage(n float64) bool {
+	return rcv.MutateDATA_STORAGE(n)
 }
 
 /// Downlink data rate in Mbps
@@ -345,9 +501,17 @@ func (rcv *BUS) DOWNLINK_RATE() float64 {
 	return 0.0
 }
 
+func (rcv *BUS) DownlinkRate() float64 {
+	return rcv.DOWNLINK_RATE()
+}
+
 /// Downlink data rate in Mbps
 func (rcv *BUS) MutateDOWNLINK_RATE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(46, n)
+}
+
+func (rcv *BUS) MutateDownlinkRate(n float64) bool {
+	return rcv.MutateDOWNLINK_RATE(n)
 }
 
 /// Number of payload slots/interfaces
@@ -359,9 +523,17 @@ func (rcv *BUS) PAYLOAD_SLOTS() uint32 {
 	return 0
 }
 
+func (rcv *BUS) PayloadSlots() uint32 {
+	return rcv.PAYLOAD_SLOTS()
+}
+
 /// Number of payload slots/interfaces
 func (rcv *BUS) MutatePAYLOAD_SLOTS(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(48, n)
+}
+
+func (rcv *BUS) MutatePayloadSlots(n uint32) bool {
+	return rcv.MutatePAYLOAD_SLOTS(n)
 }
 
 /// Heritage missions count
@@ -373,9 +545,17 @@ func (rcv *BUS) HERITAGE_COUNT() uint32 {
 	return 0
 }
 
+func (rcv *BUS) HeritageCount() uint32 {
+	return rcv.HERITAGE_COUNT()
+}
+
 /// Heritage missions count
 func (rcv *BUS) MutateHERITAGE_COUNT(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(50, n)
+}
+
+func (rcv *BUS) MutateHeritageCount(n uint32) bool {
+	return rcv.MutateHERITAGE_COUNT(n)
 }
 
 /// Additional notes
@@ -387,6 +567,10 @@ func (rcv *BUS) NOTES() []byte {
 	return nil
 }
 
+func (rcv *BUS) Notes() []byte {
+	return rcv.NOTES()
+}
+
 /// Additional notes
 func BUSStart(builder *flatbuffers.Builder) {
 	builder.StartObject(25)
@@ -394,77 +578,152 @@ func BUSStart(builder *flatbuffers.Builder) {
 func BUSAddID(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ID), 0)
 }
+func BUSAddId(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
+	BUSAddID(builder, ID)
+}
 func BUSAddNAME(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(NAME), 0)
+}
+func BUSAddName(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
+	BUSAddNAME(builder, NAME)
 }
 func BUSAddMANUFACTURER(builder *flatbuffers.Builder, MANUFACTURER flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(MANUFACTURER), 0)
 }
+func BUSAddManufacturer(builder *flatbuffers.Builder, MANUFACTURER flatbuffers.UOffsetT) {
+	BUSAddMANUFACTURER(builder, MANUFACTURER)
+}
 func BUSAddSIZE(builder *flatbuffers.Builder, SIZE busSize) {
 	builder.PrependInt8Slot(3, int8(SIZE), 0)
+}
+func BUSAddSize(builder *flatbuffers.Builder, SIZE busSize) {
+	BUSAddSIZE(builder, SIZE)
 }
 func BUSAddDRY_MASS(builder *flatbuffers.Builder, DRY_MASS float64) {
 	builder.PrependFloat64Slot(4, DRY_MASS, 0.0)
 }
+func BUSAddDryMass(builder *flatbuffers.Builder, DRY_MASS float64) {
+	BUSAddDRY_MASS(builder, DRY_MASS)
+}
 func BUSAddWET_MASS(builder *flatbuffers.Builder, WET_MASS float64) {
 	builder.PrependFloat64Slot(5, WET_MASS, 0.0)
+}
+func BUSAddWetMass(builder *flatbuffers.Builder, WET_MASS float64) {
+	BUSAddWET_MASS(builder, WET_MASS)
 }
 func BUSAddPAYLOAD_MASS(builder *flatbuffers.Builder, PAYLOAD_MASS float64) {
 	builder.PrependFloat64Slot(6, PAYLOAD_MASS, 0.0)
 }
+func BUSAddPayloadMass(builder *flatbuffers.Builder, PAYLOAD_MASS float64) {
+	BUSAddPAYLOAD_MASS(builder, PAYLOAD_MASS)
+}
 func BUSAddDIM_X(builder *flatbuffers.Builder, DIM_X float64) {
 	builder.PrependFloat64Slot(7, DIM_X, 0.0)
+}
+func BUSAddDimX(builder *flatbuffers.Builder, DIM_X float64) {
+	BUSAddDIM_X(builder, DIM_X)
 }
 func BUSAddDIM_Y(builder *flatbuffers.Builder, DIM_Y float64) {
 	builder.PrependFloat64Slot(8, DIM_Y, 0.0)
 }
+func BUSAddDimY(builder *flatbuffers.Builder, DIM_Y float64) {
+	BUSAddDIM_Y(builder, DIM_Y)
+}
 func BUSAddDIM_Z(builder *flatbuffers.Builder, DIM_Z float64) {
 	builder.PrependFloat64Slot(9, DIM_Z, 0.0)
+}
+func BUSAddDimZ(builder *flatbuffers.Builder, DIM_Z float64) {
+	BUSAddDIM_Z(builder, DIM_Z)
 }
 func BUSAddSTOWED_X(builder *flatbuffers.Builder, STOWED_X float64) {
 	builder.PrependFloat64Slot(10, STOWED_X, 0.0)
 }
+func BUSAddStowedX(builder *flatbuffers.Builder, STOWED_X float64) {
+	BUSAddSTOWED_X(builder, STOWED_X)
+}
 func BUSAddSTOWED_Y(builder *flatbuffers.Builder, STOWED_Y float64) {
 	builder.PrependFloat64Slot(11, STOWED_Y, 0.0)
+}
+func BUSAddStowedY(builder *flatbuffers.Builder, STOWED_Y float64) {
+	BUSAddSTOWED_Y(builder, STOWED_Y)
 }
 func BUSAddSTOWED_Z(builder *flatbuffers.Builder, STOWED_Z float64) {
 	builder.PrependFloat64Slot(12, STOWED_Z, 0.0)
 }
+func BUSAddStowedZ(builder *flatbuffers.Builder, STOWED_Z float64) {
+	BUSAddSTOWED_Z(builder, STOWED_Z)
+}
 func BUSAddPOWER_GENERATION(builder *flatbuffers.Builder, POWER_GENERATION float64) {
 	builder.PrependFloat64Slot(13, POWER_GENERATION, 0.0)
+}
+func BUSAddPowerGeneration(builder *flatbuffers.Builder, POWER_GENERATION float64) {
+	BUSAddPOWER_GENERATION(builder, POWER_GENERATION)
 }
 func BUSAddPAYLOAD_POWER(builder *flatbuffers.Builder, PAYLOAD_POWER float64) {
 	builder.PrependFloat64Slot(14, PAYLOAD_POWER, 0.0)
 }
+func BUSAddPayloadPower(builder *flatbuffers.Builder, PAYLOAD_POWER float64) {
+	BUSAddPAYLOAD_POWER(builder, PAYLOAD_POWER)
+}
 func BUSAddBATTERY_CAPACITY(builder *flatbuffers.Builder, BATTERY_CAPACITY float64) {
 	builder.PrependFloat64Slot(15, BATTERY_CAPACITY, 0.0)
+}
+func BUSAddBatteryCapacity(builder *flatbuffers.Builder, BATTERY_CAPACITY float64) {
+	BUSAddBATTERY_CAPACITY(builder, BATTERY_CAPACITY)
 }
 func BUSAddSTABILIZATION(builder *flatbuffers.Builder, STABILIZATION BusStabilizationType) {
 	builder.PrependInt8Slot(16, int8(STABILIZATION), 0)
 }
+func BUSAddStabilization(builder *flatbuffers.Builder, STABILIZATION BusStabilizationType) {
+	BUSAddSTABILIZATION(builder, STABILIZATION)
+}
 func BUSAddPOINTING_ACCURACY(builder *flatbuffers.Builder, POINTING_ACCURACY float64) {
 	builder.PrependFloat64Slot(17, POINTING_ACCURACY, 0.0)
+}
+func BUSAddPointingAccuracy(builder *flatbuffers.Builder, POINTING_ACCURACY float64) {
+	BUSAddPOINTING_ACCURACY(builder, POINTING_ACCURACY)
 }
 func BUSAddPOINTING_KNOWLEDGE(builder *flatbuffers.Builder, POINTING_KNOWLEDGE float64) {
 	builder.PrependFloat64Slot(18, POINTING_KNOWLEDGE, 0.0)
 }
+func BUSAddPointingKnowledge(builder *flatbuffers.Builder, POINTING_KNOWLEDGE float64) {
+	BUSAddPOINTING_KNOWLEDGE(builder, POINTING_KNOWLEDGE)
+}
 func BUSAddDESIGN_LIFE(builder *flatbuffers.Builder, DESIGN_LIFE float64) {
 	builder.PrependFloat64Slot(19, DESIGN_LIFE, 0.0)
+}
+func BUSAddDesignLife(builder *flatbuffers.Builder, DESIGN_LIFE float64) {
+	BUSAddDESIGN_LIFE(builder, DESIGN_LIFE)
 }
 func BUSAddDATA_STORAGE(builder *flatbuffers.Builder, DATA_STORAGE float64) {
 	builder.PrependFloat64Slot(20, DATA_STORAGE, 0.0)
 }
+func BUSAddDataStorage(builder *flatbuffers.Builder, DATA_STORAGE float64) {
+	BUSAddDATA_STORAGE(builder, DATA_STORAGE)
+}
 func BUSAddDOWNLINK_RATE(builder *flatbuffers.Builder, DOWNLINK_RATE float64) {
 	builder.PrependFloat64Slot(21, DOWNLINK_RATE, 0.0)
+}
+func BUSAddDownlinkRate(builder *flatbuffers.Builder, DOWNLINK_RATE float64) {
+	BUSAddDOWNLINK_RATE(builder, DOWNLINK_RATE)
 }
 func BUSAddPAYLOAD_SLOTS(builder *flatbuffers.Builder, PAYLOAD_SLOTS uint32) {
 	builder.PrependUint32Slot(22, PAYLOAD_SLOTS, 0)
 }
+func BUSAddPayloadSlots(builder *flatbuffers.Builder, PAYLOAD_SLOTS uint32) {
+	BUSAddPAYLOAD_SLOTS(builder, PAYLOAD_SLOTS)
+}
 func BUSAddHERITAGE_COUNT(builder *flatbuffers.Builder, HERITAGE_COUNT uint32) {
 	builder.PrependUint32Slot(23, HERITAGE_COUNT, 0)
 }
+func BUSAddHeritageCount(builder *flatbuffers.Builder, HERITAGE_COUNT uint32) {
+	BUSAddHERITAGE_COUNT(builder, HERITAGE_COUNT)
+}
 func BUSAddNOTES(builder *flatbuffers.Builder, NOTES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(24, flatbuffers.UOffsetT(NOTES), 0)
+}
+func BUSAddNotes(builder *flatbuffers.Builder, NOTES flatbuffers.UOffsetT) {
+	BUSAddNOTES(builder, NOTES)
 }
 func BUSEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

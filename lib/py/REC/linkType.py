@@ -2,4 +2,10 @@
 
 # namespace: 
 
-# NOTE linkType.py does not declare any structs or enums
+class linkType(object):
+    UPLINK = 0
+    DOWNLINK = 1
+    CROSSLINK = 2
+    INTER_SATELLITE = 3
+    GROUND_TO_GROUND = 4
+    RELAY = 5

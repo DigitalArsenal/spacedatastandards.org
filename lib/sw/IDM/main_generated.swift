@@ -2,10 +2,14 @@
 // swiftlint:disable all
 // swiftformat:disable all
 
+#if canImport(Common)
+import Common
+#endif
+
 import FlatBuffers
 
 ///  Different types of polarization in EMT
-public enum PolarizationType: Int8, Enum, Verifiable {
+public enum PolarizationType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -20,7 +24,7 @@ public enum PolarizationType: Int8, Enum, Verifiable {
 
 
 ///  Simple polarization types
-public enum SimplePolarization: Int8, Enum, Verifiable {
+public enum SimplePolarization: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -35,7 +39,7 @@ public enum SimplePolarization: Int8, Enum, Verifiable {
 
 
 ///  Enum for the mode of data (real, simulated, synthetic)
-public enum DataMode: Int8, Enum, Verifiable {
+public enum DataMode: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -53,7 +57,7 @@ public enum DataMode: Int8, Enum, Verifiable {
 }
 
 
-public enum DeviceType: Int8, Enum, Verifiable {
+public enum DeviceType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -155,9 +159,9 @@ public enum DeviceType: Int8, Enum, Verifiable {
 
 
 ///  Frequency range with lower and upper limits
-public struct FrequencyRange: FlatBufferObject, Verifiable {
+public struct FrequencyRange: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -201,9 +205,9 @@ public struct FrequencyRange: FlatBufferObject, Verifiable {
 }
 
 ///  Stokes parameters, representing different aspects of polarization
-public struct StokesParameters: FlatBufferObject, Verifiable {
+public struct StokesParameters: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -261,9 +265,9 @@ public struct StokesParameters: FlatBufferObject, Verifiable {
 }
 
 ///  Table representing a frequency band with a name and frequency range
-public struct Band: FlatBufferObject, Verifiable {
+public struct Band: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -283,7 +287,7 @@ public struct Band: FlatBufferObject, Verifiable {
   public var NAME: String? { let o = _accessor.offset(VTOFFSET.NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NAME.v) }
   ///  Frequency range of the band
-  public var FREQUENCY_RANGE: FrequencyRange? { let o = _accessor.offset(VTOFFSET.FREQUENCY_RANGE.v); return o == 0 ? nil : FrequencyRange(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var FREQUENCY_RANGE: FrequencyRange? { let o = _accessor.offset(VTOFFSET.FREQUENCY_RANGE.v); return o == 0 ? nil : FrequencyRange(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public static func startBand(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 2) }
   public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
   public static func add(FREQUENCY_RANGE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FREQUENCY_RANGE, at: VTOFFSET.FREQUENCY_RANGE.p) }
@@ -308,9 +312,9 @@ public struct Band: FlatBufferObject, Verifiable {
 }
 
 ///  Integrated Device Message
-public struct IDM: FlatBufferObject, Verifiable {
+public struct IDM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -362,21 +366,19 @@ public struct IDM: FlatBufferObject, Verifiable {
   ///  Mode of the data (real, simulated, synthetic)
   public var DATA_MODE: DataMode { let o = _accessor.offset(VTOFFSET.DATA_MODE.v); return o == 0 ? .exercise : DataMode(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .exercise }
   ///  Uplink frequency range
-  public var UPLINK: FrequencyRange? { let o = _accessor.offset(VTOFFSET.UPLINK.v); return o == 0 ? nil : FrequencyRange(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var UPLINK: FrequencyRange? { let o = _accessor.offset(VTOFFSET.UPLINK.v); return o == 0 ? nil : FrequencyRange(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Downlink frequency range
-  public var DOWNLINK: FrequencyRange? { let o = _accessor.offset(VTOFFSET.DOWNLINK.v); return o == 0 ? nil : FrequencyRange(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var DOWNLINK: FrequencyRange? { let o = _accessor.offset(VTOFFSET.DOWNLINK.v); return o == 0 ? nil : FrequencyRange(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Beacon frequency range
-  public var BEACON: FrequencyRange? { let o = _accessor.offset(VTOFFSET.BEACON.v); return o == 0 ? nil : FrequencyRange(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var BEACON: FrequencyRange? { let o = _accessor.offset(VTOFFSET.BEACON.v); return o == 0 ? nil : FrequencyRange(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Bands associated with the EMT
-  public var hasBand: Bool { let o = _accessor.offset(VTOFFSET.BAND.v); return o == 0 ? false : true }
-  public var BANDCount: Int32 { let o = _accessor.offset(VTOFFSET.BAND.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func BAND(at index: Int32) -> Band? { let o = _accessor.offset(VTOFFSET.BAND.v); return o == 0 ? nil : Band(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var BAND: FlatbufferVector<Band> { return _accessor.vector(at: VTOFFSET.BAND.v, byteSize: 4) }
   ///  Type of polarization used
   public var POLARIZATION_TYPE: PolarizationType { let o = _accessor.offset(VTOFFSET.POLARIZATION_TYPE.v); return o == 0 ? .linear : PolarizationType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .linear }
   ///  Simple polarization configuration
   public var SIMPLE_POLARIZATION: SimplePolarization { let o = _accessor.offset(VTOFFSET.SIMPLE_POLARIZATION.v); return o == 0 ? .vertical : SimplePolarization(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .vertical }
   ///  Stokes parameters for polarization characterization
-  public var STOKES_PARAMETERS: StokesParameters? { let o = _accessor.offset(VTOFFSET.STOKES_PARAMETERS.v); return o == 0 ? nil : StokesParameters(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var STOKES_PARAMETERS: StokesParameters? { let o = _accessor.offset(VTOFFSET.STOKES_PARAMETERS.v); return o == 0 ? nil : StokesParameters(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Power required in Watts
   public var POWER_REQUIRED: Double { let o = _accessor.offset(VTOFFSET.POWER_REQUIRED.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Type of power (eg. AC or DC)

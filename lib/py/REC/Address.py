@@ -2,4 +2,203 @@
 
 # namespace: 
 
-# NOTE Address.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Represents a geographic address
+class Address(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = Address()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsAddress(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def AddressBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x45\x50\x4D", size_prefixed=size_prefixed)
+
+    # Address
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Country of the address
+    # Address
+    def COUNTRY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Region of the address (e.g., state or province)
+    # Address
+    def REGION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Locality of the address (e.g., city or town)
+    # Address
+    def LOCALITY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Postal code of the address
+    # Address
+    def POSTAL_CODE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Street address
+    # Address
+    def STREET(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Post office box number
+    # Address
+    def POST_OFFICE_BOX_NUMBER(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+def AddressStart(builder):
+    builder.StartObject(6)
+
+def Start(builder):
+    AddressStart(builder)
+
+def AddressAddCOUNTRY(builder, COUNTRY):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(COUNTRY), 0)
+
+def AddCOUNTRY(builder, COUNTRY):
+    AddressAddCOUNTRY(builder, COUNTRY)
+
+def AddressAddREGION(builder, REGION):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(REGION), 0)
+
+def AddREGION(builder, REGION):
+    AddressAddREGION(builder, REGION)
+
+def AddressAddLOCALITY(builder, LOCALITY):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(LOCALITY), 0)
+
+def AddLOCALITY(builder, LOCALITY):
+    AddressAddLOCALITY(builder, LOCALITY)
+
+def AddressAddPOSTAL_CODE(builder, POSTAL_CODE):
+    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(POSTAL_CODE), 0)
+
+def AddPOSTAL_CODE(builder, POSTAL_CODE):
+    AddressAddPOSTAL_CODE(builder, POSTAL_CODE)
+
+def AddressAddSTREET(builder, STREET):
+    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(STREET), 0)
+
+def AddSTREET(builder, STREET):
+    AddressAddSTREET(builder, STREET)
+
+def AddressAddPOST_OFFICE_BOX_NUMBER(builder, POST_OFFICE_BOX_NUMBER):
+    builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(POST_OFFICE_BOX_NUMBER), 0)
+
+def AddPOST_OFFICE_BOX_NUMBER(builder, POST_OFFICE_BOX_NUMBER):
+    AddressAddPOST_OFFICE_BOX_NUMBER(builder, POST_OFFICE_BOX_NUMBER)
+
+def AddressEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return AddressEnd(builder)
+
+
+class AddressT(object):
+
+    # AddressT
+    def __init__(
+        self,
+        COUNTRY = None,
+        REGION = None,
+        LOCALITY = None,
+        POSTAL_CODE = None,
+        STREET = None,
+        POST_OFFICE_BOX_NUMBER = None,
+    ):
+        self.COUNTRY = COUNTRY  # type: Optional[str]
+        self.REGION = REGION  # type: Optional[str]
+        self.LOCALITY = LOCALITY  # type: Optional[str]
+        self.POSTAL_CODE = POSTAL_CODE  # type: Optional[str]
+        self.STREET = STREET  # type: Optional[str]
+        self.POST_OFFICE_BOX_NUMBER = POST_OFFICE_BOX_NUMBER  # type: Optional[str]
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpAddress = Address()
+        tmpAddress.Init(buf, pos)
+        return cls.InitFromObj(tmpAddress)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpAddress):
+        x = AddressT()
+        x._UnPack(tmpAddress)
+        return x
+
+    # AddressT
+    def _UnPack(self, Address):
+        if Address is None:
+            return
+        self.COUNTRY = Address.COUNTRY()
+        self.REGION = Address.REGION()
+        self.LOCALITY = Address.LOCALITY()
+        self.POSTAL_CODE = Address.POSTAL_CODE()
+        self.STREET = Address.STREET()
+        self.POST_OFFICE_BOX_NUMBER = Address.POST_OFFICE_BOX_NUMBER()
+
+    # AddressT
+    def Pack(self, builder):
+        if self.COUNTRY is not None:
+            COUNTRY = builder.CreateString(self.COUNTRY)
+        if self.REGION is not None:
+            REGION = builder.CreateString(self.REGION)
+        if self.LOCALITY is not None:
+            LOCALITY = builder.CreateString(self.LOCALITY)
+        if self.POSTAL_CODE is not None:
+            POSTAL_CODE = builder.CreateString(self.POSTAL_CODE)
+        if self.STREET is not None:
+            STREET = builder.CreateString(self.STREET)
+        if self.POST_OFFICE_BOX_NUMBER is not None:
+            POST_OFFICE_BOX_NUMBER = builder.CreateString(self.POST_OFFICE_BOX_NUMBER)
+        AddressStart(builder)
+        if self.COUNTRY is not None:
+            AddressAddCOUNTRY(builder, COUNTRY)
+        if self.REGION is not None:
+            AddressAddREGION(builder, REGION)
+        if self.LOCALITY is not None:
+            AddressAddLOCALITY(builder, LOCALITY)
+        if self.POSTAL_CODE is not None:
+            AddressAddPOSTAL_CODE(builder, POSTAL_CODE)
+        if self.STREET is not None:
+            AddressAddSTREET(builder, STREET)
+        if self.POST_OFFICE_BOX_NUMBER is not None:
+            AddressAddPOST_OFFICE_BOX_NUMBER(builder, POST_OFFICE_BOX_NUMBER)
+        Address = AddressEnd(builder)
+        return Address

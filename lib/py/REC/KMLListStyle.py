@@ -2,4 +2,203 @@
 
 # namespace: 
 
-# NOTE KMLListStyle.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# List style
+class KMLListStyle(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = KMLListStyle()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsKMLListStyle(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def KMLListStyleBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x4B\x4D\x4C", size_prefixed=size_prefixed)
+
+    # KMLListStyle
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # List item type
+    # KMLListStyle
+    def LIST_ITEM_TYPE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # Background color
+    # KMLListStyle
+    def BG_COLOR(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Item icons
+    # KMLListStyle
+    def ITEM_ICONS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from KMLItemIcon import KMLItemIcon
+            obj = KMLItemIcon()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # KMLListStyle
+    def ITEM_ICONSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # KMLListStyle
+    def ITEM_ICONSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        return o == 0
+
+    # Maximum snippet lines
+    # KMLListStyle
+    def MAX_SNIPPET_LINES(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+def KMLListStyleStart(builder):
+    builder.StartObject(4)
+
+def Start(builder):
+    KMLListStyleStart(builder)
+
+def KMLListStyleAddLIST_ITEM_TYPE(builder, LIST_ITEM_TYPE):
+    builder.PrependInt8Slot(0, LIST_ITEM_TYPE, 0)
+
+def AddLIST_ITEM_TYPE(builder, LIST_ITEM_TYPE):
+    KMLListStyleAddLIST_ITEM_TYPE(builder, LIST_ITEM_TYPE)
+
+def KMLListStyleAddBG_COLOR(builder, BG_COLOR):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(BG_COLOR), 0)
+
+def AddBG_COLOR(builder, BG_COLOR):
+    KMLListStyleAddBG_COLOR(builder, BG_COLOR)
+
+def KMLListStyleAddITEM_ICONS(builder, ITEM_ICONS):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(ITEM_ICONS), 0)
+
+def AddITEM_ICONS(builder, ITEM_ICONS):
+    KMLListStyleAddITEM_ICONS(builder, ITEM_ICONS)
+
+def KMLListStyleStartITEM_ICONSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartITEM_ICONSVector(builder, numElems):
+    return KMLListStyleStartITEM_ICONSVector(builder, numElems)
+
+def KMLListStyleCreateITEM_ICONSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateITEM_ICONSVector(builder, data):
+    KMLListStyleCreateITEM_ICONSVector(builder, data)
+
+def KMLListStyleAddMAX_SNIPPET_LINES(builder, MAX_SNIPPET_LINES):
+    builder.PrependInt32Slot(3, MAX_SNIPPET_LINES, 0)
+
+def AddMAX_SNIPPET_LINES(builder, MAX_SNIPPET_LINES):
+    KMLListStyleAddMAX_SNIPPET_LINES(builder, MAX_SNIPPET_LINES)
+
+def KMLListStyleEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return KMLListStyleEnd(builder)
+
+import KMLItemIcon
+try:
+    from typing import List
+except:
+    pass
+
+class KMLListStyleT(object):
+
+    # KMLListStyleT
+    def __init__(
+        self,
+        LIST_ITEM_TYPE = 0,
+        BG_COLOR = None,
+        ITEM_ICONS = None,
+        MAX_SNIPPET_LINES = 0,
+    ):
+        self.LIST_ITEM_TYPE = LIST_ITEM_TYPE  # type: int
+        self.BG_COLOR = BG_COLOR  # type: Optional[str]
+        self.ITEM_ICONS = ITEM_ICONS  # type: Optional[List[KMLItemIcon.KMLItemIconT]]
+        self.MAX_SNIPPET_LINES = MAX_SNIPPET_LINES  # type: int
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpKmllistStyle = KMLListStyle()
+        tmpKmllistStyle.Init(buf, pos)
+        return cls.InitFromObj(tmpKmllistStyle)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpKmllistStyle):
+        x = KMLListStyleT()
+        x._UnPack(tmpKmllistStyle)
+        return x
+
+    # KMLListStyleT
+    def _UnPack(self, KMLListStyle):
+        if KMLListStyle is None:
+            return
+        self.LIST_ITEM_TYPE = KMLListStyle.LIST_ITEM_TYPE()
+        self.BG_COLOR = KMLListStyle.BG_COLOR()
+        if not KMLListStyle.ITEM_ICONSIsNone():
+            self.ITEM_ICONS = []
+            for i in range(KMLListStyle.ITEM_ICONSLength()):
+                if KMLListStyle.ITEM_ICONS(i) is None:
+                    self.ITEM_ICONS.append(None)
+                else:
+                    kMLItemIcon_ = KMLItemIcon.KMLItemIconT.InitFromObj(KMLListStyle.ITEM_ICONS(i))
+                    self.ITEM_ICONS.append(kMLItemIcon_)
+        self.MAX_SNIPPET_LINES = KMLListStyle.MAX_SNIPPET_LINES()
+
+    # KMLListStyleT
+    def Pack(self, builder):
+        if self.BG_COLOR is not None:
+            BG_COLOR = builder.CreateString(self.BG_COLOR)
+        if self.ITEM_ICONS is not None:
+            ITEM_ICONSlist = []
+            for i in range(len(self.ITEM_ICONS)):
+                ITEM_ICONSlist.append(self.ITEM_ICONS[i].Pack(builder))
+            KMLListStyleStartITEM_ICONSVector(builder, len(self.ITEM_ICONS))
+            for i in reversed(range(len(self.ITEM_ICONS))):
+                builder.PrependUOffsetTRelative(ITEM_ICONSlist[i])
+            ITEM_ICONS = builder.EndVector()
+        KMLListStyleStart(builder)
+        KMLListStyleAddLIST_ITEM_TYPE(builder, self.LIST_ITEM_TYPE)
+        if self.BG_COLOR is not None:
+            KMLListStyleAddBG_COLOR(builder, BG_COLOR)
+        if self.ITEM_ICONS is not None:
+            KMLListStyleAddITEM_ICONS(builder, ITEM_ICONS)
+        KMLListStyleAddMAX_SNIPPET_LINES(builder, self.MAX_SNIPPET_LINES)
+        KMLListStyle = KMLListStyleEnd(builder)
+        return KMLListStyle

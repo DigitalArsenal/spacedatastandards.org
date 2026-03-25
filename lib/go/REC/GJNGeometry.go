@@ -51,9 +51,17 @@ func (rcv *GJNGeometry) TYPE() GJNGeometryType {
 	return 0
 }
 
+func (rcv *GJNGeometry) Type() GJNGeometryType {
+	return rcv.TYPE()
+}
+
 /// Geometry type
 func (rcv *GJNGeometry) MutateTYPE(n GJNGeometryType) bool {
 	return rcv._tab.MutateInt8Slot(4, int8(n))
+}
+
+func (rcv *GJNGeometry) MutateType(n GJNGeometryType) bool {
+	return rcv.MutateTYPE(n)
 }
 
 /// Single position (for Point)
@@ -70,6 +78,10 @@ func (rcv *GJNGeometry) POINT(obj *GJNPosition) *GJNPosition {
 	return nil
 }
 
+func (rcv *GJNGeometry) Point(obj *GJNPosition) *GJNPosition {
+	return rcv.POINT(obj)
+}
+
 /// Single position (for Point)
 /// Array of positions (for MultiPoint, LineString)
 func (rcv *GJNGeometry) POSITIONS(obj *GJNPosition, j int) bool {
@@ -78,10 +90,17 @@ func (rcv *GJNGeometry) POSITIONS(obj *GJNPosition, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(GJNPosition)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *GJNGeometry) Positions(obj *GJNPosition, j int) bool {
+	return rcv.POSITIONS(obj, j)
 }
 
 func (rcv *GJNGeometry) POSITIONSLength() int {
@@ -92,6 +111,10 @@ func (rcv *GJNGeometry) POSITIONSLength() int {
 	return 0
 }
 
+func (rcv *GJNGeometry) PositionsLength() int {
+	return rcv.POSITIONSLength()
+}
+
 /// Array of positions (for MultiPoint, LineString)
 /// Array of position arrays (for MultiLineString, Polygon rings)
 func (rcv *GJNGeometry) RINGS(obj *GJNLinearRing, j int) bool {
@@ -100,10 +123,17 @@ func (rcv *GJNGeometry) RINGS(obj *GJNLinearRing, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(GJNLinearRing)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *GJNGeometry) Rings(obj *GJNLinearRing, j int) bool {
+	return rcv.RINGS(obj, j)
 }
 
 func (rcv *GJNGeometry) RINGSLength() int {
@@ -114,6 +144,10 @@ func (rcv *GJNGeometry) RINGSLength() int {
 	return 0
 }
 
+func (rcv *GJNGeometry) RingsLength() int {
+	return rcv.RINGSLength()
+}
+
 /// Array of position arrays (for MultiLineString, Polygon rings)
 /// Array of polygons each as array of rings (for MultiPolygon)
 func (rcv *GJNGeometry) POLYGON_RINGS(obj *GJNPolygonRings, j int) bool {
@@ -122,10 +156,17 @@ func (rcv *GJNGeometry) POLYGON_RINGS(obj *GJNPolygonRings, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(GJNPolygonRings)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *GJNGeometry) PolygonRings(obj *GJNPolygonRings, j int) bool {
+	return rcv.POLYGON_RINGS(obj, j)
 }
 
 func (rcv *GJNGeometry) POLYGON_RINGSLength() int {
@@ -136,6 +177,10 @@ func (rcv *GJNGeometry) POLYGON_RINGSLength() int {
 	return 0
 }
 
+func (rcv *GJNGeometry) PolygonRingsLength() int {
+	return rcv.POLYGON_RINGSLength()
+}
+
 /// Array of polygons each as array of rings (for MultiPolygon)
 /// Child geometries (for GeometryCollection)
 func (rcv *GJNGeometry) GEOMETRIES(obj *GJNGeometry, j int) bool {
@@ -144,10 +189,17 @@ func (rcv *GJNGeometry) GEOMETRIES(obj *GJNGeometry, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(GJNGeometry)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *GJNGeometry) Geometries(obj *GJNGeometry, j int) bool {
+	return rcv.GEOMETRIES(obj, j)
 }
 
 func (rcv *GJNGeometry) GEOMETRIESLength() int {
@@ -156,6 +208,10 @@ func (rcv *GJNGeometry) GEOMETRIESLength() int {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *GJNGeometry) GeometriesLength() int {
+	return rcv.GEOMETRIESLength()
 }
 
 /// Child geometries (for GeometryCollection)
@@ -173,6 +229,10 @@ func (rcv *GJNGeometry) BBOX(obj *GJNBoundingBox) *GJNBoundingBox {
 	return nil
 }
 
+func (rcv *GJNGeometry) Bbox(obj *GJNBoundingBox) *GJNBoundingBox {
+	return rcv.BBOX(obj)
+}
+
 /// Bounding box (optional, per RFC 7946 Section 5)
 func GJNGeometryStart(builder *flatbuffers.Builder) {
 	builder.StartObject(7)
@@ -180,35 +240,68 @@ func GJNGeometryStart(builder *flatbuffers.Builder) {
 func GJNGeometryAddTYPE(builder *flatbuffers.Builder, TYPE GJNGeometryType) {
 	builder.PrependInt8Slot(0, int8(TYPE), 0)
 }
+func GJNGeometryAddType(builder *flatbuffers.Builder, TYPE GJNGeometryType) {
+	GJNGeometryAddTYPE(builder, TYPE)
+}
 func GJNGeometryAddPOINT(builder *flatbuffers.Builder, POINT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(POINT), 0)
+}
+func GJNGeometryAddPoint(builder *flatbuffers.Builder, POINT flatbuffers.UOffsetT) {
+	GJNGeometryAddPOINT(builder, POINT)
 }
 func GJNGeometryAddPOSITIONS(builder *flatbuffers.Builder, POSITIONS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(POSITIONS), 0)
 }
+func GJNGeometryAddPositions(builder *flatbuffers.Builder, POSITIONS flatbuffers.UOffsetT) {
+	GJNGeometryAddPOSITIONS(builder, POSITIONS)
+}
 func GJNGeometryStartPOSITIONSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func GJNGeometryStartPositionsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return GJNGeometryStartPOSITIONSVector(builder, numElems)
 }
 func GJNGeometryAddRINGS(builder *flatbuffers.Builder, RINGS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(RINGS), 0)
 }
+func GJNGeometryAddRings(builder *flatbuffers.Builder, RINGS flatbuffers.UOffsetT) {
+	GJNGeometryAddRINGS(builder, RINGS)
+}
 func GJNGeometryStartRINGSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func GJNGeometryStartRingsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return GJNGeometryStartRINGSVector(builder, numElems)
 }
 func GJNGeometryAddPOLYGON_RINGS(builder *flatbuffers.Builder, POLYGON_RINGS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(POLYGON_RINGS), 0)
 }
+func GJNGeometryAddPolygonRings(builder *flatbuffers.Builder, POLYGON_RINGS flatbuffers.UOffsetT) {
+	GJNGeometryAddPOLYGON_RINGS(builder, POLYGON_RINGS)
+}
 func GJNGeometryStartPOLYGON_RINGSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func GJNGeometryStartPolygonRingsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return GJNGeometryStartPOLYGON_RINGSVector(builder, numElems)
 }
 func GJNGeometryAddGEOMETRIES(builder *flatbuffers.Builder, GEOMETRIES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(GEOMETRIES), 0)
 }
+func GJNGeometryAddGeometries(builder *flatbuffers.Builder, GEOMETRIES flatbuffers.UOffsetT) {
+	GJNGeometryAddGEOMETRIES(builder, GEOMETRIES)
+}
 func GJNGeometryStartGEOMETRIESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
+func GJNGeometryStartGeometriesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return GJNGeometryStartGEOMETRIESVector(builder, numElems)
+}
 func GJNGeometryAddBBOX(builder *flatbuffers.Builder, BBOX flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(BBOX), 0)
+}
+func GJNGeometryAddBbox(builder *flatbuffers.Builder, BBOX flatbuffers.UOffsetT) {
+	GJNGeometryAddBBOX(builder, BBOX)
 }
 func GJNGeometryEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

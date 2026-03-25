@@ -2,4 +2,1206 @@
 
 # namespace: 
 
-# NOTE Metadata.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+class Metadata(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = Metadata()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsMetadata(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def MetadataBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x4F\x43\x4D", size_prefixed=size_prefixed)
+
+    # Metadata
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Comments in the Metadata section.
+    # Metadata
+    def COMMENT(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
+        return ""
+
+    # Metadata
+    def COMMENTLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # Metadata
+    def COMMENTIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        return o == 0
+
+    # Free-text field containing the name of the object.
+    # Metadata
+    def OBJECT_NAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # International designator for the object as assigned by COSPAR.
+    # Metadata
+    def INTERNATIONAL_DESIGNATOR(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Satellite catalog source from which 'OBJECT_DESIGNATOR' was obtained.
+    # Metadata
+    def CATALOG_NAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Unique satellite identification designator from the catalog.
+    # Metadata
+    def OBJECT_DESIGNATOR(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Alternate names of this space object.
+    # Metadata
+    def ALTERNATE_NAMES(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
+        return ""
+
+    # Metadata
+    def ALTERNATE_NAMESLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # Metadata
+    def ALTERNATE_NAMESIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        return o == 0
+
+    # Originator or programmatic Point-of-Contact (PoC) for OCM.
+    # Metadata
+    def ORIGINATOR_POC(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Contact position of the originator PoC.
+    # Metadata
+    def ORIGINATOR_POSITION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Originator PoC phone number.
+    # Metadata
+    def ORIGINATOR_PHONE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Originator PoC email address.
+    # Metadata
+    def ORIGINATOR_EMAIL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Originator's physical address information.
+    # Metadata
+    def ORIGINATOR_ADDRESS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Creating agency or operator for technical contact.
+    # Metadata
+    def TECH_ORG(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Technical Point-of-Contact (PoC) for OCM.
+    # Metadata
+    def TECH_POC(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Contact position of the technical PoC.
+    # Metadata
+    def TECH_POSITION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Technical PoC phone number.
+    # Metadata
+    def TECH_PHONE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Technical PoC email address.
+    # Metadata
+    def TECH_EMAIL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Technical PoC physical address information.
+    # Metadata
+    def TECH_ADDRESS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # ID that uniquely identifies the previous message from this originator.
+    # Metadata
+    def PREVIOUS_MESSAGE_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # ID that uniquely identifies the next message from this originator.
+    # Metadata
+    def NEXT_MESSAGE_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Unique identifier of Attitude Data Messages linked to this OCM.
+    # Metadata
+    def ADM_MSG_LINK(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Unique identifier of Conjunction Data Messages linked to this OCM.
+    # Metadata
+    def CDM_MSG_LINK(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Unique identifier of Pointing Request Messages linked to this OCM.
+    # Metadata
+    def PRM_MSG_LINK(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Unique identifier of Reentry Data Messages linked to this OCM.
+    # Metadata
+    def RDM_MSG_LINK(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # List of Tracking Data Messages upon which this orbit determination is based.
+    # Metadata
+    def TDM_MSG_LINK(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
+        return ""
+
+    # Metadata
+    def TDM_MSG_LINKLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # Metadata
+    def TDM_MSG_LINKIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
+        return o == 0
+
+    # Operator of the space object.
+    # Metadata
+    def OPERATOR(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(52))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Owner of the space object.
+    # Metadata
+    def OWNER(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(54))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Country where the space object owner is based.
+    # Metadata
+    def COUNTRY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(56))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Name of the constellation to which this space object belongs.
+    # Metadata
+    def CONSTELLATION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Specification of the type of object (e.g., PAYLOAD, ROCKET BODY, DEBRIS).
+    # Metadata
+    def OBJECT_TYPE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Time system for all absolute time stamps in this OCM, including EPOCH_TZERO.
+    # Metadata
+    def TIME_SYSTEM(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(62))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Default epoch to which all relative times are referenced in data blocks.
+    # Metadata
+    def EPOCH_TZERO(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(64))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Specification of the operational status of the space object.
+    # Metadata
+    def OPS_STATUS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(66))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Specification of the type of orbit (e.g., GEO, LEO).
+    # Metadata
+    def ORBIT_CATEGORY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(68))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # List of elements of information data blocks included in this message.
+    # Metadata
+    def OCM_DATA_ELEMENTS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(70))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
+        return ""
+
+    # Metadata
+    def OCM_DATA_ELEMENTSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(70))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # Metadata
+    def OCM_DATA_ELEMENTSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(70))
+        return o == 0
+
+    # Number of spacecraft clock counts at EPOCH_TZERO (used if TIME_SYSTEM is SCLK).
+    # Metadata
+    def SCLK_OFFSET_AT_EPOCH(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(72))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Number of clock seconds occurring during one SI second (used if TIME_SYSTEM is SCLK).
+    # Metadata
+    def SCLK_SEC_PER_SI_SEC(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(74))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Creation epoch of the previous message from this originator.
+    # Metadata
+    def PREVIOUS_MESSAGE_EPOCH(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(76))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Anticipated (or actual) epoch of the next message from this originator.
+    # Metadata
+    def NEXT_MESSAGE_EPOCH(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(78))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Time of the earliest data contained in the OCM.
+    # Metadata
+    def START_TIME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(80))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Time of the latest data contained in the OCM.
+    # Metadata
+    def STOP_TIME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(82))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Span of time that the OCM covers, measured in days.
+    # Metadata
+    def TIME_SPAN(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(84))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Difference (TAI - UTC) in seconds at EPOCH_TZERO.
+    # Metadata
+    def TAIMUTC_AT_TZERO(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(86))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Epoch of next leap second.
+    # Metadata
+    def NEXT_LEAP_EPOCH(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(88))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Difference (TAI - UTC) in seconds at NEXT_LEAP_EPOCH.
+    # Metadata
+    def NEXT_LEAP_TAIMUTC(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(90))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Difference (UT1 - UTC) in seconds at EPOCH_TZERO.
+    # Metadata
+    def UT1MUTC_AT_TZERO(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(92))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Source and version of Earth Orientation Parameters used.
+    # Metadata
+    def EOP_SOURCE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(94))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Method used to select or interpolate sequential EOP data.
+    # Metadata
+    def INTERP_METHOD_EOP(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(96))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Source and version of celestial body ephemeris data used.
+    # Metadata
+    def CELESTIAL_SOURCE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(98))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+def MetadataStart(builder):
+    builder.StartObject(48)
+
+def Start(builder):
+    MetadataStart(builder)
+
+def MetadataAddCOMMENT(builder, COMMENT):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(COMMENT), 0)
+
+def AddCOMMENT(builder, COMMENT):
+    MetadataAddCOMMENT(builder, COMMENT)
+
+def MetadataStartCOMMENTVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartCOMMENTVector(builder, numElems):
+    return MetadataStartCOMMENTVector(builder, numElems)
+
+def MetadataCreateCOMMENTVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateCOMMENTVector(builder, data):
+    MetadataCreateCOMMENTVector(builder, data)
+
+def MetadataAddOBJECT_NAME(builder, OBJECT_NAME):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(OBJECT_NAME), 0)
+
+def AddOBJECT_NAME(builder, OBJECT_NAME):
+    MetadataAddOBJECT_NAME(builder, OBJECT_NAME)
+
+def MetadataAddINTERNATIONAL_DESIGNATOR(builder, INTERNATIONAL_DESIGNATOR):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(INTERNATIONAL_DESIGNATOR), 0)
+
+def AddINTERNATIONAL_DESIGNATOR(builder, INTERNATIONAL_DESIGNATOR):
+    MetadataAddINTERNATIONAL_DESIGNATOR(builder, INTERNATIONAL_DESIGNATOR)
+
+def MetadataAddCATALOG_NAME(builder, CATALOG_NAME):
+    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(CATALOG_NAME), 0)
+
+def AddCATALOG_NAME(builder, CATALOG_NAME):
+    MetadataAddCATALOG_NAME(builder, CATALOG_NAME)
+
+def MetadataAddOBJECT_DESIGNATOR(builder, OBJECT_DESIGNATOR):
+    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(OBJECT_DESIGNATOR), 0)
+
+def AddOBJECT_DESIGNATOR(builder, OBJECT_DESIGNATOR):
+    MetadataAddOBJECT_DESIGNATOR(builder, OBJECT_DESIGNATOR)
+
+def MetadataAddALTERNATE_NAMES(builder, ALTERNATE_NAMES):
+    builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(ALTERNATE_NAMES), 0)
+
+def AddALTERNATE_NAMES(builder, ALTERNATE_NAMES):
+    MetadataAddALTERNATE_NAMES(builder, ALTERNATE_NAMES)
+
+def MetadataStartALTERNATE_NAMESVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartALTERNATE_NAMESVector(builder, numElems):
+    return MetadataStartALTERNATE_NAMESVector(builder, numElems)
+
+def MetadataCreateALTERNATE_NAMESVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateALTERNATE_NAMESVector(builder, data):
+    MetadataCreateALTERNATE_NAMESVector(builder, data)
+
+def MetadataAddORIGINATOR_POC(builder, ORIGINATOR_POC):
+    builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(ORIGINATOR_POC), 0)
+
+def AddORIGINATOR_POC(builder, ORIGINATOR_POC):
+    MetadataAddORIGINATOR_POC(builder, ORIGINATOR_POC)
+
+def MetadataAddORIGINATOR_POSITION(builder, ORIGINATOR_POSITION):
+    builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(ORIGINATOR_POSITION), 0)
+
+def AddORIGINATOR_POSITION(builder, ORIGINATOR_POSITION):
+    MetadataAddORIGINATOR_POSITION(builder, ORIGINATOR_POSITION)
+
+def MetadataAddORIGINATOR_PHONE(builder, ORIGINATOR_PHONE):
+    builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(ORIGINATOR_PHONE), 0)
+
+def AddORIGINATOR_PHONE(builder, ORIGINATOR_PHONE):
+    MetadataAddORIGINATOR_PHONE(builder, ORIGINATOR_PHONE)
+
+def MetadataAddORIGINATOR_EMAIL(builder, ORIGINATOR_EMAIL):
+    builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(ORIGINATOR_EMAIL), 0)
+
+def AddORIGINATOR_EMAIL(builder, ORIGINATOR_EMAIL):
+    MetadataAddORIGINATOR_EMAIL(builder, ORIGINATOR_EMAIL)
+
+def MetadataAddORIGINATOR_ADDRESS(builder, ORIGINATOR_ADDRESS):
+    builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(ORIGINATOR_ADDRESS), 0)
+
+def AddORIGINATOR_ADDRESS(builder, ORIGINATOR_ADDRESS):
+    MetadataAddORIGINATOR_ADDRESS(builder, ORIGINATOR_ADDRESS)
+
+def MetadataAddTECH_ORG(builder, TECH_ORG):
+    builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(TECH_ORG), 0)
+
+def AddTECH_ORG(builder, TECH_ORG):
+    MetadataAddTECH_ORG(builder, TECH_ORG)
+
+def MetadataAddTECH_POC(builder, TECH_POC):
+    builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(TECH_POC), 0)
+
+def AddTECH_POC(builder, TECH_POC):
+    MetadataAddTECH_POC(builder, TECH_POC)
+
+def MetadataAddTECH_POSITION(builder, TECH_POSITION):
+    builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(TECH_POSITION), 0)
+
+def AddTECH_POSITION(builder, TECH_POSITION):
+    MetadataAddTECH_POSITION(builder, TECH_POSITION)
+
+def MetadataAddTECH_PHONE(builder, TECH_PHONE):
+    builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(TECH_PHONE), 0)
+
+def AddTECH_PHONE(builder, TECH_PHONE):
+    MetadataAddTECH_PHONE(builder, TECH_PHONE)
+
+def MetadataAddTECH_EMAIL(builder, TECH_EMAIL):
+    builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(TECH_EMAIL), 0)
+
+def AddTECH_EMAIL(builder, TECH_EMAIL):
+    MetadataAddTECH_EMAIL(builder, TECH_EMAIL)
+
+def MetadataAddTECH_ADDRESS(builder, TECH_ADDRESS):
+    builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(TECH_ADDRESS), 0)
+
+def AddTECH_ADDRESS(builder, TECH_ADDRESS):
+    MetadataAddTECH_ADDRESS(builder, TECH_ADDRESS)
+
+def MetadataAddPREVIOUS_MESSAGE_ID(builder, PREVIOUS_MESSAGE_ID):
+    builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(PREVIOUS_MESSAGE_ID), 0)
+
+def AddPREVIOUS_MESSAGE_ID(builder, PREVIOUS_MESSAGE_ID):
+    MetadataAddPREVIOUS_MESSAGE_ID(builder, PREVIOUS_MESSAGE_ID)
+
+def MetadataAddNEXT_MESSAGE_ID(builder, NEXT_MESSAGE_ID):
+    builder.PrependUOffsetTRelativeSlot(18, flatbuffers.number_types.UOffsetTFlags.py_type(NEXT_MESSAGE_ID), 0)
+
+def AddNEXT_MESSAGE_ID(builder, NEXT_MESSAGE_ID):
+    MetadataAddNEXT_MESSAGE_ID(builder, NEXT_MESSAGE_ID)
+
+def MetadataAddADM_MSG_LINK(builder, ADM_MSG_LINK):
+    builder.PrependUOffsetTRelativeSlot(19, flatbuffers.number_types.UOffsetTFlags.py_type(ADM_MSG_LINK), 0)
+
+def AddADM_MSG_LINK(builder, ADM_MSG_LINK):
+    MetadataAddADM_MSG_LINK(builder, ADM_MSG_LINK)
+
+def MetadataAddCDM_MSG_LINK(builder, CDM_MSG_LINK):
+    builder.PrependUOffsetTRelativeSlot(20, flatbuffers.number_types.UOffsetTFlags.py_type(CDM_MSG_LINK), 0)
+
+def AddCDM_MSG_LINK(builder, CDM_MSG_LINK):
+    MetadataAddCDM_MSG_LINK(builder, CDM_MSG_LINK)
+
+def MetadataAddPRM_MSG_LINK(builder, PRM_MSG_LINK):
+    builder.PrependUOffsetTRelativeSlot(21, flatbuffers.number_types.UOffsetTFlags.py_type(PRM_MSG_LINK), 0)
+
+def AddPRM_MSG_LINK(builder, PRM_MSG_LINK):
+    MetadataAddPRM_MSG_LINK(builder, PRM_MSG_LINK)
+
+def MetadataAddRDM_MSG_LINK(builder, RDM_MSG_LINK):
+    builder.PrependUOffsetTRelativeSlot(22, flatbuffers.number_types.UOffsetTFlags.py_type(RDM_MSG_LINK), 0)
+
+def AddRDM_MSG_LINK(builder, RDM_MSG_LINK):
+    MetadataAddRDM_MSG_LINK(builder, RDM_MSG_LINK)
+
+def MetadataAddTDM_MSG_LINK(builder, TDM_MSG_LINK):
+    builder.PrependUOffsetTRelativeSlot(23, flatbuffers.number_types.UOffsetTFlags.py_type(TDM_MSG_LINK), 0)
+
+def AddTDM_MSG_LINK(builder, TDM_MSG_LINK):
+    MetadataAddTDM_MSG_LINK(builder, TDM_MSG_LINK)
+
+def MetadataStartTDM_MSG_LINKVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartTDM_MSG_LINKVector(builder, numElems):
+    return MetadataStartTDM_MSG_LINKVector(builder, numElems)
+
+def MetadataCreateTDM_MSG_LINKVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateTDM_MSG_LINKVector(builder, data):
+    MetadataCreateTDM_MSG_LINKVector(builder, data)
+
+def MetadataAddOPERATOR(builder, OPERATOR):
+    builder.PrependUOffsetTRelativeSlot(24, flatbuffers.number_types.UOffsetTFlags.py_type(OPERATOR), 0)
+
+def AddOPERATOR(builder, OPERATOR):
+    MetadataAddOPERATOR(builder, OPERATOR)
+
+def MetadataAddOWNER(builder, OWNER):
+    builder.PrependUOffsetTRelativeSlot(25, flatbuffers.number_types.UOffsetTFlags.py_type(OWNER), 0)
+
+def AddOWNER(builder, OWNER):
+    MetadataAddOWNER(builder, OWNER)
+
+def MetadataAddCOUNTRY(builder, COUNTRY):
+    builder.PrependUOffsetTRelativeSlot(26, flatbuffers.number_types.UOffsetTFlags.py_type(COUNTRY), 0)
+
+def AddCOUNTRY(builder, COUNTRY):
+    MetadataAddCOUNTRY(builder, COUNTRY)
+
+def MetadataAddCONSTELLATION(builder, CONSTELLATION):
+    builder.PrependUOffsetTRelativeSlot(27, flatbuffers.number_types.UOffsetTFlags.py_type(CONSTELLATION), 0)
+
+def AddCONSTELLATION(builder, CONSTELLATION):
+    MetadataAddCONSTELLATION(builder, CONSTELLATION)
+
+def MetadataAddOBJECT_TYPE(builder, OBJECT_TYPE):
+    builder.PrependUOffsetTRelativeSlot(28, flatbuffers.number_types.UOffsetTFlags.py_type(OBJECT_TYPE), 0)
+
+def AddOBJECT_TYPE(builder, OBJECT_TYPE):
+    MetadataAddOBJECT_TYPE(builder, OBJECT_TYPE)
+
+def MetadataAddTIME_SYSTEM(builder, TIME_SYSTEM):
+    builder.PrependUOffsetTRelativeSlot(29, flatbuffers.number_types.UOffsetTFlags.py_type(TIME_SYSTEM), 0)
+
+def AddTIME_SYSTEM(builder, TIME_SYSTEM):
+    MetadataAddTIME_SYSTEM(builder, TIME_SYSTEM)
+
+def MetadataAddEPOCH_TZERO(builder, EPOCH_TZERO):
+    builder.PrependUOffsetTRelativeSlot(30, flatbuffers.number_types.UOffsetTFlags.py_type(EPOCH_TZERO), 0)
+
+def AddEPOCH_TZERO(builder, EPOCH_TZERO):
+    MetadataAddEPOCH_TZERO(builder, EPOCH_TZERO)
+
+def MetadataAddOPS_STATUS(builder, OPS_STATUS):
+    builder.PrependUOffsetTRelativeSlot(31, flatbuffers.number_types.UOffsetTFlags.py_type(OPS_STATUS), 0)
+
+def AddOPS_STATUS(builder, OPS_STATUS):
+    MetadataAddOPS_STATUS(builder, OPS_STATUS)
+
+def MetadataAddORBIT_CATEGORY(builder, ORBIT_CATEGORY):
+    builder.PrependUOffsetTRelativeSlot(32, flatbuffers.number_types.UOffsetTFlags.py_type(ORBIT_CATEGORY), 0)
+
+def AddORBIT_CATEGORY(builder, ORBIT_CATEGORY):
+    MetadataAddORBIT_CATEGORY(builder, ORBIT_CATEGORY)
+
+def MetadataAddOCM_DATA_ELEMENTS(builder, OCM_DATA_ELEMENTS):
+    builder.PrependUOffsetTRelativeSlot(33, flatbuffers.number_types.UOffsetTFlags.py_type(OCM_DATA_ELEMENTS), 0)
+
+def AddOCM_DATA_ELEMENTS(builder, OCM_DATA_ELEMENTS):
+    MetadataAddOCM_DATA_ELEMENTS(builder, OCM_DATA_ELEMENTS)
+
+def MetadataStartOCM_DATA_ELEMENTSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartOCM_DATA_ELEMENTSVector(builder, numElems):
+    return MetadataStartOCM_DATA_ELEMENTSVector(builder, numElems)
+
+def MetadataCreateOCM_DATA_ELEMENTSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateOCM_DATA_ELEMENTSVector(builder, data):
+    MetadataCreateOCM_DATA_ELEMENTSVector(builder, data)
+
+def MetadataAddSCLK_OFFSET_AT_EPOCH(builder, SCLK_OFFSET_AT_EPOCH):
+    builder.PrependFloat64Slot(34, SCLK_OFFSET_AT_EPOCH, 0.0)
+
+def AddSCLK_OFFSET_AT_EPOCH(builder, SCLK_OFFSET_AT_EPOCH):
+    MetadataAddSCLK_OFFSET_AT_EPOCH(builder, SCLK_OFFSET_AT_EPOCH)
+
+def MetadataAddSCLK_SEC_PER_SI_SEC(builder, SCLK_SEC_PER_SI_SEC):
+    builder.PrependFloat64Slot(35, SCLK_SEC_PER_SI_SEC, 0.0)
+
+def AddSCLK_SEC_PER_SI_SEC(builder, SCLK_SEC_PER_SI_SEC):
+    MetadataAddSCLK_SEC_PER_SI_SEC(builder, SCLK_SEC_PER_SI_SEC)
+
+def MetadataAddPREVIOUS_MESSAGE_EPOCH(builder, PREVIOUS_MESSAGE_EPOCH):
+    builder.PrependUOffsetTRelativeSlot(36, flatbuffers.number_types.UOffsetTFlags.py_type(PREVIOUS_MESSAGE_EPOCH), 0)
+
+def AddPREVIOUS_MESSAGE_EPOCH(builder, PREVIOUS_MESSAGE_EPOCH):
+    MetadataAddPREVIOUS_MESSAGE_EPOCH(builder, PREVIOUS_MESSAGE_EPOCH)
+
+def MetadataAddNEXT_MESSAGE_EPOCH(builder, NEXT_MESSAGE_EPOCH):
+    builder.PrependUOffsetTRelativeSlot(37, flatbuffers.number_types.UOffsetTFlags.py_type(NEXT_MESSAGE_EPOCH), 0)
+
+def AddNEXT_MESSAGE_EPOCH(builder, NEXT_MESSAGE_EPOCH):
+    MetadataAddNEXT_MESSAGE_EPOCH(builder, NEXT_MESSAGE_EPOCH)
+
+def MetadataAddSTART_TIME(builder, START_TIME):
+    builder.PrependUOffsetTRelativeSlot(38, flatbuffers.number_types.UOffsetTFlags.py_type(START_TIME), 0)
+
+def AddSTART_TIME(builder, START_TIME):
+    MetadataAddSTART_TIME(builder, START_TIME)
+
+def MetadataAddSTOP_TIME(builder, STOP_TIME):
+    builder.PrependUOffsetTRelativeSlot(39, flatbuffers.number_types.UOffsetTFlags.py_type(STOP_TIME), 0)
+
+def AddSTOP_TIME(builder, STOP_TIME):
+    MetadataAddSTOP_TIME(builder, STOP_TIME)
+
+def MetadataAddTIME_SPAN(builder, TIME_SPAN):
+    builder.PrependFloat64Slot(40, TIME_SPAN, 0.0)
+
+def AddTIME_SPAN(builder, TIME_SPAN):
+    MetadataAddTIME_SPAN(builder, TIME_SPAN)
+
+def MetadataAddTAIMUTC_AT_TZERO(builder, TAIMUTC_AT_TZERO):
+    builder.PrependFloat64Slot(41, TAIMUTC_AT_TZERO, 0.0)
+
+def AddTAIMUTC_AT_TZERO(builder, TAIMUTC_AT_TZERO):
+    MetadataAddTAIMUTC_AT_TZERO(builder, TAIMUTC_AT_TZERO)
+
+def MetadataAddNEXT_LEAP_EPOCH(builder, NEXT_LEAP_EPOCH):
+    builder.PrependUOffsetTRelativeSlot(42, flatbuffers.number_types.UOffsetTFlags.py_type(NEXT_LEAP_EPOCH), 0)
+
+def AddNEXT_LEAP_EPOCH(builder, NEXT_LEAP_EPOCH):
+    MetadataAddNEXT_LEAP_EPOCH(builder, NEXT_LEAP_EPOCH)
+
+def MetadataAddNEXT_LEAP_TAIMUTC(builder, NEXT_LEAP_TAIMUTC):
+    builder.PrependFloat64Slot(43, NEXT_LEAP_TAIMUTC, 0.0)
+
+def AddNEXT_LEAP_TAIMUTC(builder, NEXT_LEAP_TAIMUTC):
+    MetadataAddNEXT_LEAP_TAIMUTC(builder, NEXT_LEAP_TAIMUTC)
+
+def MetadataAddUT1MUTC_AT_TZERO(builder, UT1MUTC_AT_TZERO):
+    builder.PrependFloat64Slot(44, UT1MUTC_AT_TZERO, 0.0)
+
+def AddUT1MUTC_AT_TZERO(builder, UT1MUTC_AT_TZERO):
+    MetadataAddUT1MUTC_AT_TZERO(builder, UT1MUTC_AT_TZERO)
+
+def MetadataAddEOP_SOURCE(builder, EOP_SOURCE):
+    builder.PrependUOffsetTRelativeSlot(45, flatbuffers.number_types.UOffsetTFlags.py_type(EOP_SOURCE), 0)
+
+def AddEOP_SOURCE(builder, EOP_SOURCE):
+    MetadataAddEOP_SOURCE(builder, EOP_SOURCE)
+
+def MetadataAddINTERP_METHOD_EOP(builder, INTERP_METHOD_EOP):
+    builder.PrependUOffsetTRelativeSlot(46, flatbuffers.number_types.UOffsetTFlags.py_type(INTERP_METHOD_EOP), 0)
+
+def AddINTERP_METHOD_EOP(builder, INTERP_METHOD_EOP):
+    MetadataAddINTERP_METHOD_EOP(builder, INTERP_METHOD_EOP)
+
+def MetadataAddCELESTIAL_SOURCE(builder, CELESTIAL_SOURCE):
+    builder.PrependUOffsetTRelativeSlot(47, flatbuffers.number_types.UOffsetTFlags.py_type(CELESTIAL_SOURCE), 0)
+
+def AddCELESTIAL_SOURCE(builder, CELESTIAL_SOURCE):
+    MetadataAddCELESTIAL_SOURCE(builder, CELESTIAL_SOURCE)
+
+def MetadataEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return MetadataEnd(builder)
+
+try:
+    from typing import List
+except:
+    pass
+
+class MetadataT(object):
+
+    # MetadataT
+    def __init__(
+        self,
+        COMMENT = None,
+        OBJECT_NAME = None,
+        INTERNATIONAL_DESIGNATOR = None,
+        CATALOG_NAME = None,
+        OBJECT_DESIGNATOR = None,
+        ALTERNATE_NAMES = None,
+        ORIGINATOR_POC = None,
+        ORIGINATOR_POSITION = None,
+        ORIGINATOR_PHONE = None,
+        ORIGINATOR_EMAIL = None,
+        ORIGINATOR_ADDRESS = None,
+        TECH_ORG = None,
+        TECH_POC = None,
+        TECH_POSITION = None,
+        TECH_PHONE = None,
+        TECH_EMAIL = None,
+        TECH_ADDRESS = None,
+        PREVIOUS_MESSAGE_ID = None,
+        NEXT_MESSAGE_ID = None,
+        ADM_MSG_LINK = None,
+        CDM_MSG_LINK = None,
+        PRM_MSG_LINK = None,
+        RDM_MSG_LINK = None,
+        TDM_MSG_LINK = None,
+        OPERATOR = None,
+        OWNER = None,
+        COUNTRY = None,
+        CONSTELLATION = None,
+        OBJECT_TYPE = None,
+        TIME_SYSTEM = None,
+        EPOCH_TZERO = None,
+        OPS_STATUS = None,
+        ORBIT_CATEGORY = None,
+        OCM_DATA_ELEMENTS = None,
+        SCLK_OFFSET_AT_EPOCH = 0.0,
+        SCLK_SEC_PER_SI_SEC = 0.0,
+        PREVIOUS_MESSAGE_EPOCH = None,
+        NEXT_MESSAGE_EPOCH = None,
+        START_TIME = None,
+        STOP_TIME = None,
+        TIME_SPAN = 0.0,
+        TAIMUTC_AT_TZERO = 0.0,
+        NEXT_LEAP_EPOCH = None,
+        NEXT_LEAP_TAIMUTC = 0.0,
+        UT1MUTC_AT_TZERO = 0.0,
+        EOP_SOURCE = None,
+        INTERP_METHOD_EOP = None,
+        CELESTIAL_SOURCE = None,
+    ):
+        self.COMMENT = COMMENT  # type: Optional[List[Optional[str]]]
+        self.OBJECT_NAME = OBJECT_NAME  # type: Optional[str]
+        self.INTERNATIONAL_DESIGNATOR = INTERNATIONAL_DESIGNATOR  # type: Optional[str]
+        self.CATALOG_NAME = CATALOG_NAME  # type: Optional[str]
+        self.OBJECT_DESIGNATOR = OBJECT_DESIGNATOR  # type: Optional[str]
+        self.ALTERNATE_NAMES = ALTERNATE_NAMES  # type: Optional[List[Optional[str]]]
+        self.ORIGINATOR_POC = ORIGINATOR_POC  # type: Optional[str]
+        self.ORIGINATOR_POSITION = ORIGINATOR_POSITION  # type: Optional[str]
+        self.ORIGINATOR_PHONE = ORIGINATOR_PHONE  # type: Optional[str]
+        self.ORIGINATOR_EMAIL = ORIGINATOR_EMAIL  # type: Optional[str]
+        self.ORIGINATOR_ADDRESS = ORIGINATOR_ADDRESS  # type: Optional[str]
+        self.TECH_ORG = TECH_ORG  # type: Optional[str]
+        self.TECH_POC = TECH_POC  # type: Optional[str]
+        self.TECH_POSITION = TECH_POSITION  # type: Optional[str]
+        self.TECH_PHONE = TECH_PHONE  # type: Optional[str]
+        self.TECH_EMAIL = TECH_EMAIL  # type: Optional[str]
+        self.TECH_ADDRESS = TECH_ADDRESS  # type: Optional[str]
+        self.PREVIOUS_MESSAGE_ID = PREVIOUS_MESSAGE_ID  # type: Optional[str]
+        self.NEXT_MESSAGE_ID = NEXT_MESSAGE_ID  # type: Optional[str]
+        self.ADM_MSG_LINK = ADM_MSG_LINK  # type: Optional[str]
+        self.CDM_MSG_LINK = CDM_MSG_LINK  # type: Optional[str]
+        self.PRM_MSG_LINK = PRM_MSG_LINK  # type: Optional[str]
+        self.RDM_MSG_LINK = RDM_MSG_LINK  # type: Optional[str]
+        self.TDM_MSG_LINK = TDM_MSG_LINK  # type: Optional[List[Optional[str]]]
+        self.OPERATOR = OPERATOR  # type: Optional[str]
+        self.OWNER = OWNER  # type: Optional[str]
+        self.COUNTRY = COUNTRY  # type: Optional[str]
+        self.CONSTELLATION = CONSTELLATION  # type: Optional[str]
+        self.OBJECT_TYPE = OBJECT_TYPE  # type: Optional[str]
+        self.TIME_SYSTEM = TIME_SYSTEM  # type: Optional[str]
+        self.EPOCH_TZERO = EPOCH_TZERO  # type: Optional[str]
+        self.OPS_STATUS = OPS_STATUS  # type: Optional[str]
+        self.ORBIT_CATEGORY = ORBIT_CATEGORY  # type: Optional[str]
+        self.OCM_DATA_ELEMENTS = OCM_DATA_ELEMENTS  # type: Optional[List[Optional[str]]]
+        self.SCLK_OFFSET_AT_EPOCH = SCLK_OFFSET_AT_EPOCH  # type: float
+        self.SCLK_SEC_PER_SI_SEC = SCLK_SEC_PER_SI_SEC  # type: float
+        self.PREVIOUS_MESSAGE_EPOCH = PREVIOUS_MESSAGE_EPOCH  # type: Optional[str]
+        self.NEXT_MESSAGE_EPOCH = NEXT_MESSAGE_EPOCH  # type: Optional[str]
+        self.START_TIME = START_TIME  # type: Optional[str]
+        self.STOP_TIME = STOP_TIME  # type: Optional[str]
+        self.TIME_SPAN = TIME_SPAN  # type: float
+        self.TAIMUTC_AT_TZERO = TAIMUTC_AT_TZERO  # type: float
+        self.NEXT_LEAP_EPOCH = NEXT_LEAP_EPOCH  # type: Optional[str]
+        self.NEXT_LEAP_TAIMUTC = NEXT_LEAP_TAIMUTC  # type: float
+        self.UT1MUTC_AT_TZERO = UT1MUTC_AT_TZERO  # type: float
+        self.EOP_SOURCE = EOP_SOURCE  # type: Optional[str]
+        self.INTERP_METHOD_EOP = INTERP_METHOD_EOP  # type: Optional[str]
+        self.CELESTIAL_SOURCE = CELESTIAL_SOURCE  # type: Optional[str]
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpMetadata = Metadata()
+        tmpMetadata.Init(buf, pos)
+        return cls.InitFromObj(tmpMetadata)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpMetadata):
+        x = MetadataT()
+        x._UnPack(tmpMetadata)
+        return x
+
+    # MetadataT
+    def _UnPack(self, Metadata):
+        if Metadata is None:
+            return
+        if not Metadata.COMMENTIsNone():
+            self.COMMENT = []
+            for i in range(Metadata.COMMENTLength()):
+                self.COMMENT.append(Metadata.COMMENT(i))
+        self.OBJECT_NAME = Metadata.OBJECT_NAME()
+        self.INTERNATIONAL_DESIGNATOR = Metadata.INTERNATIONAL_DESIGNATOR()
+        self.CATALOG_NAME = Metadata.CATALOG_NAME()
+        self.OBJECT_DESIGNATOR = Metadata.OBJECT_DESIGNATOR()
+        if not Metadata.ALTERNATE_NAMESIsNone():
+            self.ALTERNATE_NAMES = []
+            for i in range(Metadata.ALTERNATE_NAMESLength()):
+                self.ALTERNATE_NAMES.append(Metadata.ALTERNATE_NAMES(i))
+        self.ORIGINATOR_POC = Metadata.ORIGINATOR_POC()
+        self.ORIGINATOR_POSITION = Metadata.ORIGINATOR_POSITION()
+        self.ORIGINATOR_PHONE = Metadata.ORIGINATOR_PHONE()
+        self.ORIGINATOR_EMAIL = Metadata.ORIGINATOR_EMAIL()
+        self.ORIGINATOR_ADDRESS = Metadata.ORIGINATOR_ADDRESS()
+        self.TECH_ORG = Metadata.TECH_ORG()
+        self.TECH_POC = Metadata.TECH_POC()
+        self.TECH_POSITION = Metadata.TECH_POSITION()
+        self.TECH_PHONE = Metadata.TECH_PHONE()
+        self.TECH_EMAIL = Metadata.TECH_EMAIL()
+        self.TECH_ADDRESS = Metadata.TECH_ADDRESS()
+        self.PREVIOUS_MESSAGE_ID = Metadata.PREVIOUS_MESSAGE_ID()
+        self.NEXT_MESSAGE_ID = Metadata.NEXT_MESSAGE_ID()
+        self.ADM_MSG_LINK = Metadata.ADM_MSG_LINK()
+        self.CDM_MSG_LINK = Metadata.CDM_MSG_LINK()
+        self.PRM_MSG_LINK = Metadata.PRM_MSG_LINK()
+        self.RDM_MSG_LINK = Metadata.RDM_MSG_LINK()
+        if not Metadata.TDM_MSG_LINKIsNone():
+            self.TDM_MSG_LINK = []
+            for i in range(Metadata.TDM_MSG_LINKLength()):
+                self.TDM_MSG_LINK.append(Metadata.TDM_MSG_LINK(i))
+        self.OPERATOR = Metadata.OPERATOR()
+        self.OWNER = Metadata.OWNER()
+        self.COUNTRY = Metadata.COUNTRY()
+        self.CONSTELLATION = Metadata.CONSTELLATION()
+        self.OBJECT_TYPE = Metadata.OBJECT_TYPE()
+        self.TIME_SYSTEM = Metadata.TIME_SYSTEM()
+        self.EPOCH_TZERO = Metadata.EPOCH_TZERO()
+        self.OPS_STATUS = Metadata.OPS_STATUS()
+        self.ORBIT_CATEGORY = Metadata.ORBIT_CATEGORY()
+        if not Metadata.OCM_DATA_ELEMENTSIsNone():
+            self.OCM_DATA_ELEMENTS = []
+            for i in range(Metadata.OCM_DATA_ELEMENTSLength()):
+                self.OCM_DATA_ELEMENTS.append(Metadata.OCM_DATA_ELEMENTS(i))
+        self.SCLK_OFFSET_AT_EPOCH = Metadata.SCLK_OFFSET_AT_EPOCH()
+        self.SCLK_SEC_PER_SI_SEC = Metadata.SCLK_SEC_PER_SI_SEC()
+        self.PREVIOUS_MESSAGE_EPOCH = Metadata.PREVIOUS_MESSAGE_EPOCH()
+        self.NEXT_MESSAGE_EPOCH = Metadata.NEXT_MESSAGE_EPOCH()
+        self.START_TIME = Metadata.START_TIME()
+        self.STOP_TIME = Metadata.STOP_TIME()
+        self.TIME_SPAN = Metadata.TIME_SPAN()
+        self.TAIMUTC_AT_TZERO = Metadata.TAIMUTC_AT_TZERO()
+        self.NEXT_LEAP_EPOCH = Metadata.NEXT_LEAP_EPOCH()
+        self.NEXT_LEAP_TAIMUTC = Metadata.NEXT_LEAP_TAIMUTC()
+        self.UT1MUTC_AT_TZERO = Metadata.UT1MUTC_AT_TZERO()
+        self.EOP_SOURCE = Metadata.EOP_SOURCE()
+        self.INTERP_METHOD_EOP = Metadata.INTERP_METHOD_EOP()
+        self.CELESTIAL_SOURCE = Metadata.CELESTIAL_SOURCE()
+
+    # MetadataT
+    def Pack(self, builder):
+        if self.COMMENT is not None:
+            COMMENTlist = []
+            for i in range(len(self.COMMENT)):
+                COMMENTlist.append(builder.CreateString(self.COMMENT[i]))
+            MetadataStartCOMMENTVector(builder, len(self.COMMENT))
+            for i in reversed(range(len(self.COMMENT))):
+                builder.PrependUOffsetTRelative(COMMENTlist[i])
+            COMMENT = builder.EndVector()
+        if self.OBJECT_NAME is not None:
+            OBJECT_NAME = builder.CreateString(self.OBJECT_NAME)
+        if self.INTERNATIONAL_DESIGNATOR is not None:
+            INTERNATIONAL_DESIGNATOR = builder.CreateString(self.INTERNATIONAL_DESIGNATOR)
+        if self.CATALOG_NAME is not None:
+            CATALOG_NAME = builder.CreateString(self.CATALOG_NAME)
+        if self.OBJECT_DESIGNATOR is not None:
+            OBJECT_DESIGNATOR = builder.CreateString(self.OBJECT_DESIGNATOR)
+        if self.ALTERNATE_NAMES is not None:
+            ALTERNATE_NAMESlist = []
+            for i in range(len(self.ALTERNATE_NAMES)):
+                ALTERNATE_NAMESlist.append(builder.CreateString(self.ALTERNATE_NAMES[i]))
+            MetadataStartALTERNATE_NAMESVector(builder, len(self.ALTERNATE_NAMES))
+            for i in reversed(range(len(self.ALTERNATE_NAMES))):
+                builder.PrependUOffsetTRelative(ALTERNATE_NAMESlist[i])
+            ALTERNATE_NAMES = builder.EndVector()
+        if self.ORIGINATOR_POC is not None:
+            ORIGINATOR_POC = builder.CreateString(self.ORIGINATOR_POC)
+        if self.ORIGINATOR_POSITION is not None:
+            ORIGINATOR_POSITION = builder.CreateString(self.ORIGINATOR_POSITION)
+        if self.ORIGINATOR_PHONE is not None:
+            ORIGINATOR_PHONE = builder.CreateString(self.ORIGINATOR_PHONE)
+        if self.ORIGINATOR_EMAIL is not None:
+            ORIGINATOR_EMAIL = builder.CreateString(self.ORIGINATOR_EMAIL)
+        if self.ORIGINATOR_ADDRESS is not None:
+            ORIGINATOR_ADDRESS = builder.CreateString(self.ORIGINATOR_ADDRESS)
+        if self.TECH_ORG is not None:
+            TECH_ORG = builder.CreateString(self.TECH_ORG)
+        if self.TECH_POC is not None:
+            TECH_POC = builder.CreateString(self.TECH_POC)
+        if self.TECH_POSITION is not None:
+            TECH_POSITION = builder.CreateString(self.TECH_POSITION)
+        if self.TECH_PHONE is not None:
+            TECH_PHONE = builder.CreateString(self.TECH_PHONE)
+        if self.TECH_EMAIL is not None:
+            TECH_EMAIL = builder.CreateString(self.TECH_EMAIL)
+        if self.TECH_ADDRESS is not None:
+            TECH_ADDRESS = builder.CreateString(self.TECH_ADDRESS)
+        if self.PREVIOUS_MESSAGE_ID is not None:
+            PREVIOUS_MESSAGE_ID = builder.CreateString(self.PREVIOUS_MESSAGE_ID)
+        if self.NEXT_MESSAGE_ID is not None:
+            NEXT_MESSAGE_ID = builder.CreateString(self.NEXT_MESSAGE_ID)
+        if self.ADM_MSG_LINK is not None:
+            ADM_MSG_LINK = builder.CreateString(self.ADM_MSG_LINK)
+        if self.CDM_MSG_LINK is not None:
+            CDM_MSG_LINK = builder.CreateString(self.CDM_MSG_LINK)
+        if self.PRM_MSG_LINK is not None:
+            PRM_MSG_LINK = builder.CreateString(self.PRM_MSG_LINK)
+        if self.RDM_MSG_LINK is not None:
+            RDM_MSG_LINK = builder.CreateString(self.RDM_MSG_LINK)
+        if self.TDM_MSG_LINK is not None:
+            TDM_MSG_LINKlist = []
+            for i in range(len(self.TDM_MSG_LINK)):
+                TDM_MSG_LINKlist.append(builder.CreateString(self.TDM_MSG_LINK[i]))
+            MetadataStartTDM_MSG_LINKVector(builder, len(self.TDM_MSG_LINK))
+            for i in reversed(range(len(self.TDM_MSG_LINK))):
+                builder.PrependUOffsetTRelative(TDM_MSG_LINKlist[i])
+            TDM_MSG_LINK = builder.EndVector()
+        if self.OPERATOR is not None:
+            OPERATOR = builder.CreateString(self.OPERATOR)
+        if self.OWNER is not None:
+            OWNER = builder.CreateString(self.OWNER)
+        if self.COUNTRY is not None:
+            COUNTRY = builder.CreateString(self.COUNTRY)
+        if self.CONSTELLATION is not None:
+            CONSTELLATION = builder.CreateString(self.CONSTELLATION)
+        if self.OBJECT_TYPE is not None:
+            OBJECT_TYPE = builder.CreateString(self.OBJECT_TYPE)
+        if self.TIME_SYSTEM is not None:
+            TIME_SYSTEM = builder.CreateString(self.TIME_SYSTEM)
+        if self.EPOCH_TZERO is not None:
+            EPOCH_TZERO = builder.CreateString(self.EPOCH_TZERO)
+        if self.OPS_STATUS is not None:
+            OPS_STATUS = builder.CreateString(self.OPS_STATUS)
+        if self.ORBIT_CATEGORY is not None:
+            ORBIT_CATEGORY = builder.CreateString(self.ORBIT_CATEGORY)
+        if self.OCM_DATA_ELEMENTS is not None:
+            OCM_DATA_ELEMENTSlist = []
+            for i in range(len(self.OCM_DATA_ELEMENTS)):
+                OCM_DATA_ELEMENTSlist.append(builder.CreateString(self.OCM_DATA_ELEMENTS[i]))
+            MetadataStartOCM_DATA_ELEMENTSVector(builder, len(self.OCM_DATA_ELEMENTS))
+            for i in reversed(range(len(self.OCM_DATA_ELEMENTS))):
+                builder.PrependUOffsetTRelative(OCM_DATA_ELEMENTSlist[i])
+            OCM_DATA_ELEMENTS = builder.EndVector()
+        if self.PREVIOUS_MESSAGE_EPOCH is not None:
+            PREVIOUS_MESSAGE_EPOCH = builder.CreateString(self.PREVIOUS_MESSAGE_EPOCH)
+        if self.NEXT_MESSAGE_EPOCH is not None:
+            NEXT_MESSAGE_EPOCH = builder.CreateString(self.NEXT_MESSAGE_EPOCH)
+        if self.START_TIME is not None:
+            START_TIME = builder.CreateString(self.START_TIME)
+        if self.STOP_TIME is not None:
+            STOP_TIME = builder.CreateString(self.STOP_TIME)
+        if self.NEXT_LEAP_EPOCH is not None:
+            NEXT_LEAP_EPOCH = builder.CreateString(self.NEXT_LEAP_EPOCH)
+        if self.EOP_SOURCE is not None:
+            EOP_SOURCE = builder.CreateString(self.EOP_SOURCE)
+        if self.INTERP_METHOD_EOP is not None:
+            INTERP_METHOD_EOP = builder.CreateString(self.INTERP_METHOD_EOP)
+        if self.CELESTIAL_SOURCE is not None:
+            CELESTIAL_SOURCE = builder.CreateString(self.CELESTIAL_SOURCE)
+        MetadataStart(builder)
+        if self.COMMENT is not None:
+            MetadataAddCOMMENT(builder, COMMENT)
+        if self.OBJECT_NAME is not None:
+            MetadataAddOBJECT_NAME(builder, OBJECT_NAME)
+        if self.INTERNATIONAL_DESIGNATOR is not None:
+            MetadataAddINTERNATIONAL_DESIGNATOR(builder, INTERNATIONAL_DESIGNATOR)
+        if self.CATALOG_NAME is not None:
+            MetadataAddCATALOG_NAME(builder, CATALOG_NAME)
+        if self.OBJECT_DESIGNATOR is not None:
+            MetadataAddOBJECT_DESIGNATOR(builder, OBJECT_DESIGNATOR)
+        if self.ALTERNATE_NAMES is not None:
+            MetadataAddALTERNATE_NAMES(builder, ALTERNATE_NAMES)
+        if self.ORIGINATOR_POC is not None:
+            MetadataAddORIGINATOR_POC(builder, ORIGINATOR_POC)
+        if self.ORIGINATOR_POSITION is not None:
+            MetadataAddORIGINATOR_POSITION(builder, ORIGINATOR_POSITION)
+        if self.ORIGINATOR_PHONE is not None:
+            MetadataAddORIGINATOR_PHONE(builder, ORIGINATOR_PHONE)
+        if self.ORIGINATOR_EMAIL is not None:
+            MetadataAddORIGINATOR_EMAIL(builder, ORIGINATOR_EMAIL)
+        if self.ORIGINATOR_ADDRESS is not None:
+            MetadataAddORIGINATOR_ADDRESS(builder, ORIGINATOR_ADDRESS)
+        if self.TECH_ORG is not None:
+            MetadataAddTECH_ORG(builder, TECH_ORG)
+        if self.TECH_POC is not None:
+            MetadataAddTECH_POC(builder, TECH_POC)
+        if self.TECH_POSITION is not None:
+            MetadataAddTECH_POSITION(builder, TECH_POSITION)
+        if self.TECH_PHONE is not None:
+            MetadataAddTECH_PHONE(builder, TECH_PHONE)
+        if self.TECH_EMAIL is not None:
+            MetadataAddTECH_EMAIL(builder, TECH_EMAIL)
+        if self.TECH_ADDRESS is not None:
+            MetadataAddTECH_ADDRESS(builder, TECH_ADDRESS)
+        if self.PREVIOUS_MESSAGE_ID is not None:
+            MetadataAddPREVIOUS_MESSAGE_ID(builder, PREVIOUS_MESSAGE_ID)
+        if self.NEXT_MESSAGE_ID is not None:
+            MetadataAddNEXT_MESSAGE_ID(builder, NEXT_MESSAGE_ID)
+        if self.ADM_MSG_LINK is not None:
+            MetadataAddADM_MSG_LINK(builder, ADM_MSG_LINK)
+        if self.CDM_MSG_LINK is not None:
+            MetadataAddCDM_MSG_LINK(builder, CDM_MSG_LINK)
+        if self.PRM_MSG_LINK is not None:
+            MetadataAddPRM_MSG_LINK(builder, PRM_MSG_LINK)
+        if self.RDM_MSG_LINK is not None:
+            MetadataAddRDM_MSG_LINK(builder, RDM_MSG_LINK)
+        if self.TDM_MSG_LINK is not None:
+            MetadataAddTDM_MSG_LINK(builder, TDM_MSG_LINK)
+        if self.OPERATOR is not None:
+            MetadataAddOPERATOR(builder, OPERATOR)
+        if self.OWNER is not None:
+            MetadataAddOWNER(builder, OWNER)
+        if self.COUNTRY is not None:
+            MetadataAddCOUNTRY(builder, COUNTRY)
+        if self.CONSTELLATION is not None:
+            MetadataAddCONSTELLATION(builder, CONSTELLATION)
+        if self.OBJECT_TYPE is not None:
+            MetadataAddOBJECT_TYPE(builder, OBJECT_TYPE)
+        if self.TIME_SYSTEM is not None:
+            MetadataAddTIME_SYSTEM(builder, TIME_SYSTEM)
+        if self.EPOCH_TZERO is not None:
+            MetadataAddEPOCH_TZERO(builder, EPOCH_TZERO)
+        if self.OPS_STATUS is not None:
+            MetadataAddOPS_STATUS(builder, OPS_STATUS)
+        if self.ORBIT_CATEGORY is not None:
+            MetadataAddORBIT_CATEGORY(builder, ORBIT_CATEGORY)
+        if self.OCM_DATA_ELEMENTS is not None:
+            MetadataAddOCM_DATA_ELEMENTS(builder, OCM_DATA_ELEMENTS)
+        MetadataAddSCLK_OFFSET_AT_EPOCH(builder, self.SCLK_OFFSET_AT_EPOCH)
+        MetadataAddSCLK_SEC_PER_SI_SEC(builder, self.SCLK_SEC_PER_SI_SEC)
+        if self.PREVIOUS_MESSAGE_EPOCH is not None:
+            MetadataAddPREVIOUS_MESSAGE_EPOCH(builder, PREVIOUS_MESSAGE_EPOCH)
+        if self.NEXT_MESSAGE_EPOCH is not None:
+            MetadataAddNEXT_MESSAGE_EPOCH(builder, NEXT_MESSAGE_EPOCH)
+        if self.START_TIME is not None:
+            MetadataAddSTART_TIME(builder, START_TIME)
+        if self.STOP_TIME is not None:
+            MetadataAddSTOP_TIME(builder, STOP_TIME)
+        MetadataAddTIME_SPAN(builder, self.TIME_SPAN)
+        MetadataAddTAIMUTC_AT_TZERO(builder, self.TAIMUTC_AT_TZERO)
+        if self.NEXT_LEAP_EPOCH is not None:
+            MetadataAddNEXT_LEAP_EPOCH(builder, NEXT_LEAP_EPOCH)
+        MetadataAddNEXT_LEAP_TAIMUTC(builder, self.NEXT_LEAP_TAIMUTC)
+        MetadataAddUT1MUTC_AT_TZERO(builder, self.UT1MUTC_AT_TZERO)
+        if self.EOP_SOURCE is not None:
+            MetadataAddEOP_SOURCE(builder, EOP_SOURCE)
+        if self.INTERP_METHOD_EOP is not None:
+            MetadataAddINTERP_METHOD_EOP(builder, INTERP_METHOD_EOP)
+        if self.CELESTIAL_SOURCE is not None:
+            MetadataAddCELESTIAL_SOURCE(builder, CELESTIAL_SOURCE)
+        Metadata = MetadataEnd(builder)
+        return Metadata

@@ -32,7 +32,7 @@ class IDM : Table() {
     /**
      * Unique identifier for the EMT
      */
-    val ID : String?
+    val id : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class IDM : Table() {
                 null
             }
         }
-    val IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val idAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun idInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Name of the EMT
      */
-    val NAME : String?
+    val name : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -55,12 +55,12 @@ class IDM : Table() {
                 null
             }
         }
-    val NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val nameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun nameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * Mode of the data (real, simulated, synthetic)
      */
-    val DATA_MODE : Byte
+    val dataMode : Byte
         get() {
             val o = __offset(8)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -68,8 +68,8 @@ class IDM : Table() {
     /**
      * Uplink frequency range
      */
-    val UPLINK : FrequencyRange? get() = UPLINK(FrequencyRange())
-    fun UPLINK(obj: FrequencyRange) : FrequencyRange? {
+    val uplink : FrequencyRange? get() = uplink(FrequencyRange())
+    fun uplink(obj: FrequencyRange) : FrequencyRange? {
         val o = __offset(10)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -80,8 +80,8 @@ class IDM : Table() {
     /**
      * Downlink frequency range
      */
-    val DOWNLINK : FrequencyRange? get() = DOWNLINK(FrequencyRange())
-    fun DOWNLINK(obj: FrequencyRange) : FrequencyRange? {
+    val downlink : FrequencyRange? get() = downlink(FrequencyRange())
+    fun downlink(obj: FrequencyRange) : FrequencyRange? {
         val o = __offset(12)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -92,8 +92,8 @@ class IDM : Table() {
     /**
      * Beacon frequency range
      */
-    val BEACON : FrequencyRange? get() = BEACON(FrequencyRange())
-    fun BEACON(obj: FrequencyRange) : FrequencyRange? {
+    val beacon : FrequencyRange? get() = beacon(FrequencyRange())
+    fun beacon(obj: FrequencyRange) : FrequencyRange? {
         val o = __offset(14)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -104,8 +104,8 @@ class IDM : Table() {
     /**
      * Bands associated with the EMT
      */
-    fun BAND(j: Int) : Band? = BAND(Band(), j)
-    fun BAND(obj: Band, j: Int) : Band? {
+    fun band(j: Int) : Band? = band(Band(), j)
+    fun band(obj: Band, j: Int) : Band? {
         val o = __offset(16)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -113,14 +113,14 @@ class IDM : Table() {
             null
         }
     }
-    val BANDLength : Int
+    val bandLength : Int
         get() {
             val o = __offset(16); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Type of polarization used
      */
-    val POLARIZATION_TYPE : Byte
+    val polarizationType : Byte
         get() {
             val o = __offset(18)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -128,7 +128,7 @@ class IDM : Table() {
     /**
      * Simple polarization configuration
      */
-    val SIMPLE_POLARIZATION : Byte
+    val simplePolarization : Byte
         get() {
             val o = __offset(20)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -136,8 +136,8 @@ class IDM : Table() {
     /**
      * Stokes parameters for polarization characterization
      */
-    val STOKES_PARAMETERS : StokesParameters? get() = STOKES_PARAMETERS(StokesParameters())
-    fun STOKES_PARAMETERS(obj: StokesParameters) : StokesParameters? {
+    val stokesParameters : StokesParameters? get() = stokesParameters(StokesParameters())
+    fun stokesParameters(obj: StokesParameters) : StokesParameters? {
         val o = __offset(22)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -148,7 +148,7 @@ class IDM : Table() {
     /**
      * Power required in Watts
      */
-    val POWER_REQUIRED : Double
+    val powerRequired : Double
         get() {
             val o = __offset(24)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -156,7 +156,7 @@ class IDM : Table() {
     /**
      * Type of power (eg. AC or DC)
      */
-    val POWER_TYPE : String?
+    val powerType : String?
         get() {
             val o = __offset(26)
             return if (o != 0) {
@@ -165,12 +165,12 @@ class IDM : Table() {
                 null
             }
         }
-    val POWER_TYPEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(26, 1)
-    fun POWER_TYPEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 26, 1)
+    val powerTypeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(26, 1)
+    fun powerTypeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 26, 1)
     /**
      * Indicates if the EMT can transmit
      */
-    val TRANSMIT : Boolean
+    val transmit : Boolean
         get() {
             val o = __offset(28)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -178,7 +178,7 @@ class IDM : Table() {
     /**
      * Indicates if the EMT can receive
      */
-    val RECEIVE : Boolean
+    val receive : Boolean
         get() {
             val o = __offset(30)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -186,7 +186,7 @@ class IDM : Table() {
     /**
      * Type of the sensor
      */
-    val SENSOR_TYPE : Byte
+    val sensorType : Byte
         get() {
             val o = __offset(32)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -194,7 +194,7 @@ class IDM : Table() {
     /**
      * Source of the data
      */
-    val SOURCE : String?
+    val source : String?
         get() {
             val o = __offset(34)
             return if (o != 0) {
@@ -203,12 +203,12 @@ class IDM : Table() {
                 null
             }
         }
-    val SOURCEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(34, 1)
-    fun SOURCEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 34, 1)
+    val sourceAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(34, 1)
+    fun sourceInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 34, 1)
     /**
      * Timestamp of the last observation
      */
-    val LAST_OB_TIME : String?
+    val lastObTime : String?
         get() {
             val o = __offset(36)
             return if (o != 0) {
@@ -217,12 +217,12 @@ class IDM : Table() {
                 null
             }
         }
-    val LAST_OB_TIMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(36, 1)
-    fun LAST_OB_TIMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 36, 1)
+    val lastObTimeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(36, 1)
+    fun lastObTimeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 36, 1)
     /**
      * Lower left elevation limit
      */
-    val LOWER_LEFT_ELEVATION_LIMIT : Double
+    val lowerLeftElevationLimit : Double
         get() {
             val o = __offset(38)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -230,7 +230,7 @@ class IDM : Table() {
     /**
      * Upper left azimuth limit
      */
-    val UPPER_LEFT_AZIMUTH_LIMIT : Double
+    val upperLeftAzimuthLimit : Double
         get() {
             val o = __offset(40)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -238,7 +238,7 @@ class IDM : Table() {
     /**
      * Lower right elevation limit
      */
-    val LOWER_RIGHT_ELEVATION_LIMIT : Double
+    val lowerRightElevationLimit : Double
         get() {
             val o = __offset(42)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -246,7 +246,7 @@ class IDM : Table() {
     /**
      * Lower left azimuth limit
      */
-    val LOWER_LEFT_AZIMUTH_LIMIT : Double
+    val lowerLeftAzimuthLimit : Double
         get() {
             val o = __offset(44)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -254,7 +254,7 @@ class IDM : Table() {
     /**
      * Upper right elevation limit
      */
-    val UPPER_RIGHT_ELEVATION_LIMIT : Double
+    val upperRightElevationLimit : Double
         get() {
             val o = __offset(46)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -262,7 +262,7 @@ class IDM : Table() {
     /**
      * Upper right azimuth limit
      */
-    val UPPER_RIGHT_AZIMUTH_LIMIT : Double
+    val upperRightAzimuthLimit : Double
         get() {
             val o = __offset(48)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -270,7 +270,7 @@ class IDM : Table() {
     /**
      * Lower right azimuth limit
      */
-    val LOWER_RIGHT_AZIMUTH_LIMIT : Double
+    val lowerRightAzimuthLimit : Double
         get() {
             val o = __offset(50)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -278,7 +278,7 @@ class IDM : Table() {
     /**
      * Upper left elevation limit
      */
-    val UPPER_LEFT_ELEVATION_LIMIT : Double
+    val upperLeftElevationLimit : Double
         get() {
             val o = __offset(52)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -286,7 +286,7 @@ class IDM : Table() {
     /**
      * Right geostationary belt limit
      */
-    val RIGHT_GEO_BELT_LIMIT : Double
+    val rightGeoBeltLimit : Double
         get() {
             val o = __offset(54)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -294,7 +294,7 @@ class IDM : Table() {
     /**
      * Left geostationary belt limit
      */
-    val LEFT_GEO_BELT_LIMIT : Double
+    val leftGeoBeltLimit : Double
         get() {
             val o = __offset(56)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -302,7 +302,7 @@ class IDM : Table() {
     /**
      * Magnitude limit of the sensor
      */
-    val MAGNITUDE_LIMIT : Double
+    val magnitudeLimit : Double
         get() {
             val o = __offset(58)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -310,60 +310,60 @@ class IDM : Table() {
     /**
      * Indicates if the site is taskable
      */
-    val TASKABLE : Boolean
+    val taskable : Boolean
         get() {
             val o = __offset(60)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsIDM(_bb: ByteBuffer): IDM = getRootAsIDM(_bb, IDM())
         fun getRootAsIDM(_bb: ByteBuffer, obj: IDM): IDM {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun IDMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$IDM")
-        fun createIDM(builder: FlatBufferBuilder, IDOffset: Int, NAMEOffset: Int, DATA_MODE: Byte, UPLINKOffset: Int, DOWNLINKOffset: Int, BEACONOffset: Int, BANDOffset: Int, POLARIZATION_TYPE: Byte, SIMPLE_POLARIZATION: Byte, STOKES_PARAMETERSOffset: Int, POWER_REQUIRED: Double, POWER_TYPEOffset: Int, TRANSMIT: Boolean, RECEIVE: Boolean, SENSOR_TYPE: Byte, SOURCEOffset: Int, LAST_OB_TIMEOffset: Int, LOWER_LEFT_ELEVATION_LIMIT: Double, UPPER_LEFT_AZIMUTH_LIMIT: Double, LOWER_RIGHT_ELEVATION_LIMIT: Double, LOWER_LEFT_AZIMUTH_LIMIT: Double, UPPER_RIGHT_ELEVATION_LIMIT: Double, UPPER_RIGHT_AZIMUTH_LIMIT: Double, LOWER_RIGHT_AZIMUTH_LIMIT: Double, UPPER_LEFT_ELEVATION_LIMIT: Double, RIGHT_GEO_BELT_LIMIT: Double, LEFT_GEO_BELT_LIMIT: Double, MAGNITUDE_LIMIT: Double, TASKABLE: Boolean) : Int {
+        fun createIDM(builder: FlatBufferBuilder, idOffset: Int, nameOffset: Int, dataMode: Byte, uplinkOffset: Int, downlinkOffset: Int, beaconOffset: Int, bandOffset: Int, polarizationType: Byte, simplePolarization: Byte, stokesParametersOffset: Int, powerRequired: Double, powerTypeOffset: Int, transmit: Boolean, receive: Boolean, sensorType: Byte, sourceOffset: Int, lastObTimeOffset: Int, lowerLeftElevationLimit: Double, upperLeftAzimuthLimit: Double, lowerRightElevationLimit: Double, lowerLeftAzimuthLimit: Double, upperRightElevationLimit: Double, upperRightAzimuthLimit: Double, lowerRightAzimuthLimit: Double, upperLeftElevationLimit: Double, rightGeoBeltLimit: Double, leftGeoBeltLimit: Double, magnitudeLimit: Double, taskable: Boolean) : Int {
             builder.startTable(29)
-            addMAGNITUDE_LIMIT(builder, MAGNITUDE_LIMIT)
-            addLEFT_GEO_BELT_LIMIT(builder, LEFT_GEO_BELT_LIMIT)
-            addRIGHT_GEO_BELT_LIMIT(builder, RIGHT_GEO_BELT_LIMIT)
-            addUPPER_LEFT_ELEVATION_LIMIT(builder, UPPER_LEFT_ELEVATION_LIMIT)
-            addLOWER_RIGHT_AZIMUTH_LIMIT(builder, LOWER_RIGHT_AZIMUTH_LIMIT)
-            addUPPER_RIGHT_AZIMUTH_LIMIT(builder, UPPER_RIGHT_AZIMUTH_LIMIT)
-            addUPPER_RIGHT_ELEVATION_LIMIT(builder, UPPER_RIGHT_ELEVATION_LIMIT)
-            addLOWER_LEFT_AZIMUTH_LIMIT(builder, LOWER_LEFT_AZIMUTH_LIMIT)
-            addLOWER_RIGHT_ELEVATION_LIMIT(builder, LOWER_RIGHT_ELEVATION_LIMIT)
-            addUPPER_LEFT_AZIMUTH_LIMIT(builder, UPPER_LEFT_AZIMUTH_LIMIT)
-            addLOWER_LEFT_ELEVATION_LIMIT(builder, LOWER_LEFT_ELEVATION_LIMIT)
-            addPOWER_REQUIRED(builder, POWER_REQUIRED)
-            addLAST_OB_TIME(builder, LAST_OB_TIMEOffset)
-            addSOURCE(builder, SOURCEOffset)
-            addPOWER_TYPE(builder, POWER_TYPEOffset)
-            addSTOKES_PARAMETERS(builder, STOKES_PARAMETERSOffset)
-            addBAND(builder, BANDOffset)
-            addBEACON(builder, BEACONOffset)
-            addDOWNLINK(builder, DOWNLINKOffset)
-            addUPLINK(builder, UPLINKOffset)
-            addNAME(builder, NAMEOffset)
-            addID(builder, IDOffset)
-            addTASKABLE(builder, TASKABLE)
-            addSENSOR_TYPE(builder, SENSOR_TYPE)
-            addRECEIVE(builder, RECEIVE)
-            addTRANSMIT(builder, TRANSMIT)
-            addSIMPLE_POLARIZATION(builder, SIMPLE_POLARIZATION)
-            addPOLARIZATION_TYPE(builder, POLARIZATION_TYPE)
-            addDATA_MODE(builder, DATA_MODE)
+            addMAGNITUDELIMIT(builder, magnitudeLimit)
+            addLEFTGEOBELTLIMIT(builder, leftGeoBeltLimit)
+            addRIGHTGEOBELTLIMIT(builder, rightGeoBeltLimit)
+            addUPPERLEFTELEVATIONLIMIT(builder, upperLeftElevationLimit)
+            addLOWERRIGHTAZIMUTHLIMIT(builder, lowerRightAzimuthLimit)
+            addUPPERRIGHTAZIMUTHLIMIT(builder, upperRightAzimuthLimit)
+            addUPPERRIGHTELEVATIONLIMIT(builder, upperRightElevationLimit)
+            addLOWERLEFTAZIMUTHLIMIT(builder, lowerLeftAzimuthLimit)
+            addLOWERRIGHTELEVATIONLIMIT(builder, lowerRightElevationLimit)
+            addUPPERLEFTAZIMUTHLIMIT(builder, upperLeftAzimuthLimit)
+            addLOWERLEFTELEVATIONLIMIT(builder, lowerLeftElevationLimit)
+            addPOWERREQUIRED(builder, powerRequired)
+            addLASTOBTIME(builder, lastObTimeOffset)
+            addSOURCE(builder, sourceOffset)
+            addPOWERTYPE(builder, powerTypeOffset)
+            addSTOKESPARAMETERS(builder, stokesParametersOffset)
+            addBAND(builder, bandOffset)
+            addBEACON(builder, beaconOffset)
+            addDOWNLINK(builder, downlinkOffset)
+            addUPLINK(builder, uplinkOffset)
+            addNAME(builder, nameOffset)
+            addID(builder, idOffset)
+            addTASKABLE(builder, taskable)
+            addSENSORTYPE(builder, sensorType)
+            addRECEIVE(builder, receive)
+            addTRANSMIT(builder, transmit)
+            addSIMPLEPOLARIZATION(builder, simplePolarization)
+            addPOLARIZATIONTYPE(builder, polarizationType)
+            addDATAMODE(builder, dataMode)
             return endIDM(builder)
         }
         fun startIDM(builder: FlatBufferBuilder) = builder.startTable(29)
-        fun addID(builder: FlatBufferBuilder, ID: Int) = builder.addOffset(0, ID, 0)
-        fun addNAME(builder: FlatBufferBuilder, NAME: Int) = builder.addOffset(1, NAME, 0)
-        fun addDATA_MODE(builder: FlatBufferBuilder, DATA_MODE: Byte) = builder.addByte(2, DATA_MODE, 0)
-        fun addUPLINK(builder: FlatBufferBuilder, UPLINK: Int) = builder.addOffset(3, UPLINK, 0)
-        fun addDOWNLINK(builder: FlatBufferBuilder, DOWNLINK: Int) = builder.addOffset(4, DOWNLINK, 0)
-        fun addBEACON(builder: FlatBufferBuilder, BEACON: Int) = builder.addOffset(5, BEACON, 0)
-        fun addBAND(builder: FlatBufferBuilder, BAND: Int) = builder.addOffset(6, BAND, 0)
+        fun addID(builder: FlatBufferBuilder, id: Int) = builder.addOffset(0, id, 0)
+        fun addNAME(builder: FlatBufferBuilder, name: Int) = builder.addOffset(1, name, 0)
+        fun addDATAMODE(builder: FlatBufferBuilder, dataMode: Byte) = builder.addByte(2, dataMode, 0)
+        fun addUPLINK(builder: FlatBufferBuilder, uplink: Int) = builder.addOffset(3, uplink, 0)
+        fun addDOWNLINK(builder: FlatBufferBuilder, downlink: Int) = builder.addOffset(4, downlink, 0)
+        fun addBEACON(builder: FlatBufferBuilder, beacon: Int) = builder.addOffset(5, beacon, 0)
+        fun addBAND(builder: FlatBufferBuilder, band: Int) = builder.addOffset(6, band, 0)
         fun createBandVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -372,28 +372,28 @@ class IDM : Table() {
             return builder.endVector()
         }
         fun startBandVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addPOLARIZATION_TYPE(builder: FlatBufferBuilder, POLARIZATION_TYPE: Byte) = builder.addByte(7, POLARIZATION_TYPE, 0)
-        fun addSIMPLE_POLARIZATION(builder: FlatBufferBuilder, SIMPLE_POLARIZATION: Byte) = builder.addByte(8, SIMPLE_POLARIZATION, 0)
-        fun addSTOKES_PARAMETERS(builder: FlatBufferBuilder, STOKES_PARAMETERS: Int) = builder.addOffset(9, STOKES_PARAMETERS, 0)
-        fun addPOWER_REQUIRED(builder: FlatBufferBuilder, POWER_REQUIRED: Double) = builder.addDouble(10, POWER_REQUIRED, 0.0)
-        fun addPOWER_TYPE(builder: FlatBufferBuilder, POWER_TYPE: Int) = builder.addOffset(11, POWER_TYPE, 0)
-        fun addTRANSMIT(builder: FlatBufferBuilder, TRANSMIT: Boolean) = builder.addBoolean(12, TRANSMIT, false)
-        fun addRECEIVE(builder: FlatBufferBuilder, RECEIVE: Boolean) = builder.addBoolean(13, RECEIVE, false)
-        fun addSENSOR_TYPE(builder: FlatBufferBuilder, SENSOR_TYPE: Byte) = builder.addByte(14, SENSOR_TYPE, 0)
-        fun addSOURCE(builder: FlatBufferBuilder, SOURCE: Int) = builder.addOffset(15, SOURCE, 0)
-        fun addLAST_OB_TIME(builder: FlatBufferBuilder, LAST_OB_TIME: Int) = builder.addOffset(16, LAST_OB_TIME, 0)
-        fun addLOWER_LEFT_ELEVATION_LIMIT(builder: FlatBufferBuilder, LOWER_LEFT_ELEVATION_LIMIT: Double) = builder.addDouble(17, LOWER_LEFT_ELEVATION_LIMIT, 0.0)
-        fun addUPPER_LEFT_AZIMUTH_LIMIT(builder: FlatBufferBuilder, UPPER_LEFT_AZIMUTH_LIMIT: Double) = builder.addDouble(18, UPPER_LEFT_AZIMUTH_LIMIT, 0.0)
-        fun addLOWER_RIGHT_ELEVATION_LIMIT(builder: FlatBufferBuilder, LOWER_RIGHT_ELEVATION_LIMIT: Double) = builder.addDouble(19, LOWER_RIGHT_ELEVATION_LIMIT, 0.0)
-        fun addLOWER_LEFT_AZIMUTH_LIMIT(builder: FlatBufferBuilder, LOWER_LEFT_AZIMUTH_LIMIT: Double) = builder.addDouble(20, LOWER_LEFT_AZIMUTH_LIMIT, 0.0)
-        fun addUPPER_RIGHT_ELEVATION_LIMIT(builder: FlatBufferBuilder, UPPER_RIGHT_ELEVATION_LIMIT: Double) = builder.addDouble(21, UPPER_RIGHT_ELEVATION_LIMIT, 0.0)
-        fun addUPPER_RIGHT_AZIMUTH_LIMIT(builder: FlatBufferBuilder, UPPER_RIGHT_AZIMUTH_LIMIT: Double) = builder.addDouble(22, UPPER_RIGHT_AZIMUTH_LIMIT, 0.0)
-        fun addLOWER_RIGHT_AZIMUTH_LIMIT(builder: FlatBufferBuilder, LOWER_RIGHT_AZIMUTH_LIMIT: Double) = builder.addDouble(23, LOWER_RIGHT_AZIMUTH_LIMIT, 0.0)
-        fun addUPPER_LEFT_ELEVATION_LIMIT(builder: FlatBufferBuilder, UPPER_LEFT_ELEVATION_LIMIT: Double) = builder.addDouble(24, UPPER_LEFT_ELEVATION_LIMIT, 0.0)
-        fun addRIGHT_GEO_BELT_LIMIT(builder: FlatBufferBuilder, RIGHT_GEO_BELT_LIMIT: Double) = builder.addDouble(25, RIGHT_GEO_BELT_LIMIT, 0.0)
-        fun addLEFT_GEO_BELT_LIMIT(builder: FlatBufferBuilder, LEFT_GEO_BELT_LIMIT: Double) = builder.addDouble(26, LEFT_GEO_BELT_LIMIT, 0.0)
-        fun addMAGNITUDE_LIMIT(builder: FlatBufferBuilder, MAGNITUDE_LIMIT: Double) = builder.addDouble(27, MAGNITUDE_LIMIT, 0.0)
-        fun addTASKABLE(builder: FlatBufferBuilder, TASKABLE: Boolean) = builder.addBoolean(28, TASKABLE, false)
+        fun addPOLARIZATIONTYPE(builder: FlatBufferBuilder, polarizationType: Byte) = builder.addByte(7, polarizationType, 0)
+        fun addSIMPLEPOLARIZATION(builder: FlatBufferBuilder, simplePolarization: Byte) = builder.addByte(8, simplePolarization, 0)
+        fun addSTOKESPARAMETERS(builder: FlatBufferBuilder, stokesParameters: Int) = builder.addOffset(9, stokesParameters, 0)
+        fun addPOWERREQUIRED(builder: FlatBufferBuilder, powerRequired: Double) = builder.addDouble(10, powerRequired, 0.0)
+        fun addPOWERTYPE(builder: FlatBufferBuilder, powerType: Int) = builder.addOffset(11, powerType, 0)
+        fun addTRANSMIT(builder: FlatBufferBuilder, transmit: Boolean) = builder.addBoolean(12, transmit, false)
+        fun addRECEIVE(builder: FlatBufferBuilder, receive: Boolean) = builder.addBoolean(13, receive, false)
+        fun addSENSORTYPE(builder: FlatBufferBuilder, sensorType: Byte) = builder.addByte(14, sensorType, 0)
+        fun addSOURCE(builder: FlatBufferBuilder, source: Int) = builder.addOffset(15, source, 0)
+        fun addLASTOBTIME(builder: FlatBufferBuilder, lastObTime: Int) = builder.addOffset(16, lastObTime, 0)
+        fun addLOWERLEFTELEVATIONLIMIT(builder: FlatBufferBuilder, lowerLeftElevationLimit: Double) = builder.addDouble(17, lowerLeftElevationLimit, 0.0)
+        fun addUPPERLEFTAZIMUTHLIMIT(builder: FlatBufferBuilder, upperLeftAzimuthLimit: Double) = builder.addDouble(18, upperLeftAzimuthLimit, 0.0)
+        fun addLOWERRIGHTELEVATIONLIMIT(builder: FlatBufferBuilder, lowerRightElevationLimit: Double) = builder.addDouble(19, lowerRightElevationLimit, 0.0)
+        fun addLOWERLEFTAZIMUTHLIMIT(builder: FlatBufferBuilder, lowerLeftAzimuthLimit: Double) = builder.addDouble(20, lowerLeftAzimuthLimit, 0.0)
+        fun addUPPERRIGHTELEVATIONLIMIT(builder: FlatBufferBuilder, upperRightElevationLimit: Double) = builder.addDouble(21, upperRightElevationLimit, 0.0)
+        fun addUPPERRIGHTAZIMUTHLIMIT(builder: FlatBufferBuilder, upperRightAzimuthLimit: Double) = builder.addDouble(22, upperRightAzimuthLimit, 0.0)
+        fun addLOWERRIGHTAZIMUTHLIMIT(builder: FlatBufferBuilder, lowerRightAzimuthLimit: Double) = builder.addDouble(23, lowerRightAzimuthLimit, 0.0)
+        fun addUPPERLEFTELEVATIONLIMIT(builder: FlatBufferBuilder, upperLeftElevationLimit: Double) = builder.addDouble(24, upperLeftElevationLimit, 0.0)
+        fun addRIGHTGEOBELTLIMIT(builder: FlatBufferBuilder, rightGeoBeltLimit: Double) = builder.addDouble(25, rightGeoBeltLimit, 0.0)
+        fun addLEFTGEOBELTLIMIT(builder: FlatBufferBuilder, leftGeoBeltLimit: Double) = builder.addDouble(26, leftGeoBeltLimit, 0.0)
+        fun addMAGNITUDELIMIT(builder: FlatBufferBuilder, magnitudeLimit: Double) = builder.addDouble(27, magnitudeLimit, 0.0)
+        fun addTASKABLE(builder: FlatBufferBuilder, taskable: Boolean) = builder.addBoolean(28, taskable, false)
         fun endIDM(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

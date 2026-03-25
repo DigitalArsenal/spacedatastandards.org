@@ -26,7 +26,7 @@ class Score : Table() {
         __init(_i, _bb)
         return this
     }
-    val NORAD_CAT_ID : String?
+    val noradCatId : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -35,14 +35,14 @@ class Score : Table() {
                 null
             }
         }
-    val NORAD_CAT_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun NORAD_CAT_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
-    val TYPE : Byte
+    val noradCatIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun noradCatIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
+    val type : Byte
         get() {
             val o = __offset(6)
             return if(o != 0) bb.get(o + bb_pos) else 0
         }
-    val TAG : String?
+    val tag : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -51,33 +51,33 @@ class Score : Table() {
                 null
             }
         }
-    val TAGAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun TAGInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
-    val SCORE : Float
+    val tagAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun tagInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
+    val score : Float
         get() {
             val o = __offset(10)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsScore(_bb: ByteBuffer): Score = getRootAsScore(_bb, Score())
         fun getRootAsScore(_bb: ByteBuffer, obj: Score): Score {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createScore(builder: FlatBufferBuilder, NORAD_CAT_IDOffset: Int, TYPE: Byte, TAGOffset: Int, SCORE: Float) : Int {
+        fun createScore(builder: FlatBufferBuilder, noradCatIdOffset: Int, type: Byte, tagOffset: Int, score: Float) : Int {
             builder.startTable(4)
-            addSCORE(builder, SCORE)
-            addTAG(builder, TAGOffset)
-            addNORAD_CAT_ID(builder, NORAD_CAT_IDOffset)
-            addTYPE(builder, TYPE)
+            addSCORE(builder, score)
+            addTAG(builder, tagOffset)
+            addNORADCATID(builder, noradCatIdOffset)
+            addTYPE(builder, type)
             return endScore(builder)
         }
         fun startScore(builder: FlatBufferBuilder) = builder.startTable(4)
-        fun addNORAD_CAT_ID(builder: FlatBufferBuilder, NORAD_CAT_ID: Int) = builder.addOffset(0, NORAD_CAT_ID, 0)
-        fun addTYPE(builder: FlatBufferBuilder, TYPE: Byte) = builder.addByte(1, TYPE, 0)
-        fun addTAG(builder: FlatBufferBuilder, TAG: Int) = builder.addOffset(2, TAG, 0)
-        fun addSCORE(builder: FlatBufferBuilder, SCORE: Float) = builder.addFloat(3, SCORE, 0.0)
+        fun addNORADCATID(builder: FlatBufferBuilder, noradCatId: Int) = builder.addOffset(0, noradCatId, 0)
+        fun addTYPE(builder: FlatBufferBuilder, type: Byte) = builder.addByte(1, type, 0)
+        fun addTAG(builder: FlatBufferBuilder, tag: Int) = builder.addOffset(2, tag, 0)
+        fun addSCORE(builder: FlatBufferBuilder, score: Float) = builder.addFloat(3, score, 0.0)
         fun endScore(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

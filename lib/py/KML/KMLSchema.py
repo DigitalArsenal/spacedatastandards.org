@@ -101,6 +101,12 @@ def KMLSchemaStartSIMPLE_FIELDSVector(builder, numElems):
 def StartSIMPLE_FIELDSVector(builder, numElems):
     return KMLSchemaStartSIMPLE_FIELDSVector(builder, numElems)
 
+def KMLSchemaCreateSIMPLE_FIELDSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateSIMPLE_FIELDSVector(builder, data):
+    KMLSchemaCreateSIMPLE_FIELDSVector(builder, data)
+
 def KMLSchemaEnd(builder):
     return builder.EndObject()
 
@@ -116,16 +122,21 @@ except:
 class KMLSchemaT(object):
 
     # KMLSchemaT
-    def __init__(self):
-        self.NAME = None  # type: str
-        self.ID = None  # type: str
-        self.SIMPLE_FIELDS = None  # type: List[KMLSimpleField.KMLSimpleFieldT]
+    def __init__(
+        self,
+        NAME = None,
+        ID = None,
+        SIMPLE_FIELDS = None,
+    ):
+        self.NAME = NAME  # type: Optional[str]
+        self.ID = ID  # type: Optional[str]
+        self.SIMPLE_FIELDS = SIMPLE_FIELDS  # type: Optional[List[KMLSimpleField.KMLSimpleFieldT]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        kmlschema = KMLSchema()
-        kmlschema.Init(buf, pos)
-        return cls.InitFromObj(kmlschema)
+        tmpKmlschema = KMLSchema()
+        tmpKmlschema.Init(buf, pos)
+        return cls.InitFromObj(tmpKmlschema)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -133,24 +144,24 @@ class KMLSchemaT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, kmlschema):
+    def InitFromObj(cls, tmpKmlschema):
         x = KMLSchemaT()
-        x._UnPack(kmlschema)
+        x._UnPack(tmpKmlschema)
         return x
 
     # KMLSchemaT
-    def _UnPack(self, kmlschema):
-        if kmlschema is None:
+    def _UnPack(self, KMLSchema):
+        if KMLSchema is None:
             return
-        self.NAME = kmlschema.NAME()
-        self.ID = kmlschema.ID()
-        if not kmlschema.SIMPLE_FIELDSIsNone():
+        self.NAME = KMLSchema.NAME()
+        self.ID = KMLSchema.ID()
+        if not KMLSchema.SIMPLE_FIELDSIsNone():
             self.SIMPLE_FIELDS = []
-            for i in range(kmlschema.SIMPLE_FIELDSLength()):
-                if kmlschema.SIMPLE_FIELDS(i) is None:
+            for i in range(KMLSchema.SIMPLE_FIELDSLength()):
+                if KMLSchema.SIMPLE_FIELDS(i) is None:
                     self.SIMPLE_FIELDS.append(None)
                 else:
-                    kMLSimpleField_ = KMLSimpleField.KMLSimpleFieldT.InitFromObj(kmlschema.SIMPLE_FIELDS(i))
+                    kMLSimpleField_ = KMLSimpleField.KMLSimpleFieldT.InitFromObj(KMLSchema.SIMPLE_FIELDS(i))
                     self.SIMPLE_FIELDS.append(kMLSimpleField_)
 
     # KMLSchemaT
@@ -174,5 +185,5 @@ class KMLSchemaT(object):
             KMLSchemaAddID(builder, ID)
         if self.SIMPLE_FIELDS is not None:
             KMLSchemaAddSIMPLE_FIELDS(builder, SIMPLE_FIELDS)
-        kmlschema = KMLSchemaEnd(builder)
-        return kmlschema
+        KMLSchema = KMLSchemaEnd(builder)
+        return KMLSchema

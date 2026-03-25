@@ -30,7 +30,7 @@ class RFM(object):
         self._tab = flatbuffers.table.Table(buf, pos)
 
     # RFM
-    def ReferenceFrameType(self):
+    def REFERENCE_FRAME_type(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
@@ -66,11 +66,11 @@ def RFMStart(builder):
 def Start(builder):
     RFMStart(builder)
 
-def RFMAddReferenceFrameType(builder, referenceFrameType):
-    builder.PrependUint8Slot(0, referenceFrameType, 0)
+def RFMAddREFERENCE_FRAME_type(builder, REFERENCE_FRAME_type):
+    builder.PrependUint8Slot(0, REFERENCE_FRAME_type, 0)
 
-def AddReferenceFrameType(builder, referenceFrameType):
-    RFMAddReferenceFrameType(builder, referenceFrameType)
+def AddREFERENCE_FRAME_type(builder, REFERENCE_FRAME_type):
+    RFMAddREFERENCE_FRAME_type(builder, REFERENCE_FRAME_type)
 
 def RFMAddREFERENCE_FRAME(builder, REFERENCE_FRAME):
     builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(REFERENCE_FRAME), 0)
@@ -109,17 +109,23 @@ except:
 class RFMT(object):
 
     # RFMT
-    def __init__(self):
-        self.referenceFrameType = 0  # type: int
-        self.REFERENCE_FRAME = None  # type: Union[None, CelestialFrameWrapper.CelestialFrameWrapperT, SpacecraftFrameWrapper.SpacecraftFrameWrapperT, OrbitFrameWrapper.OrbitFrameWrapperT, CustomFrameWrapper.CustomFrameWrapperT]
-        self.INDEX = 0  # type: int
-        self.NAME = None  # type: str
+    def __init__(
+        self,
+        REFERENCE_FRAME_type = 0,
+        REFERENCE_FRAME = None,
+        INDEX = 0,
+        NAME = None,
+    ):
+        self.REFERENCE_FRAME_type = REFERENCE_FRAME_type  # type: int
+        self.REFERENCE_FRAME = REFERENCE_FRAME  # type: Union[None, 'CelestialFrameWrapper.CelestialFrameWrapperT', 'SpacecraftFrameWrapper.SpacecraftFrameWrapperT', 'OrbitFrameWrapper.OrbitFrameWrapperT', 'CustomFrameWrapper.CustomFrameWrapperT']
+        self.INDEX = INDEX  # type: int
+        self.NAME = NAME  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        RFM = RFM()
-        RFM.Init(buf, pos)
-        return cls.InitFromObj(RFM)
+        tmpRfm = RFM()
+        tmpRfm.Init(buf, pos)
+        return cls.InitFromObj(tmpRfm)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -127,17 +133,17 @@ class RFMT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, RFM):
+    def InitFromObj(cls, tmpRfm):
         x = RFMT()
-        x._UnPack(RFM)
+        x._UnPack(tmpRfm)
         return x
 
     # RFMT
     def _UnPack(self, RFM):
         if RFM is None:
             return
-        self.referenceFrameType = RFM.ReferenceFrameType()
-        self.REFERENCE_FRAME = RFMUnion.RFMUnionCreator(self.REFERENCE_FRAMEType, RFM.REFERENCE_FRAME())
+        self.REFERENCE_FRAME_type = RFM.REFERENCE_FRAME_type()
+        self.REFERENCE_FRAME = RFMUnion.RFMUnionCreator(self.REFERENCE_FRAME_type, RFM.REFERENCE_FRAME())
         self.INDEX = RFM.INDEX()
         self.NAME = RFM.NAME()
 
@@ -148,7 +154,7 @@ class RFMT(object):
         if self.NAME is not None:
             NAME = builder.CreateString(self.NAME)
         RFMStart(builder)
-        RFMAddReferenceFrameType(builder, self.referenceFrameType)
+        RFMAddREFERENCE_FRAME_type(builder, self.REFERENCE_FRAME_type)
         if self.REFERENCE_FRAME is not None:
             RFMAddREFERENCE_FRAME(builder, REFERENCE_FRAME)
         RFMAddINDEX(builder, self.INDEX)

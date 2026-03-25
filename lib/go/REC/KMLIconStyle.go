@@ -51,6 +51,10 @@ func (rcv *KMLIconStyle) COLOR() []byte {
 	return nil
 }
 
+func (rcv *KMLIconStyle) Color() []byte {
+	return rcv.COLOR()
+}
+
 /// KML color in aabbggrr hex format
 /// Color mode
 func (rcv *KMLIconStyle) COLOR_MODE() KMLColorMode {
@@ -61,9 +65,17 @@ func (rcv *KMLIconStyle) COLOR_MODE() KMLColorMode {
 	return 0
 }
 
+func (rcv *KMLIconStyle) ColorMode() KMLColorMode {
+	return rcv.COLOR_MODE()
+}
+
 /// Color mode
 func (rcv *KMLIconStyle) MutateCOLOR_MODE(n KMLColorMode) bool {
 	return rcv._tab.MutateInt8Slot(6, int8(n))
+}
+
+func (rcv *KMLIconStyle) MutateColorMode(n KMLColorMode) bool {
+	return rcv.MutateCOLOR_MODE(n)
 }
 
 /// Scale factor
@@ -75,9 +87,17 @@ func (rcv *KMLIconStyle) SCALE() float64 {
 	return 0.0
 }
 
+func (rcv *KMLIconStyle) Scale() float64 {
+	return rcv.SCALE()
+}
+
 /// Scale factor
 func (rcv *KMLIconStyle) MutateSCALE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(8, n)
+}
+
+func (rcv *KMLIconStyle) MutateScale(n float64) bool {
+	return rcv.MutateSCALE(n)
 }
 
 /// Heading in degrees
@@ -89,9 +109,17 @@ func (rcv *KMLIconStyle) HEADING() float64 {
 	return 0.0
 }
 
+func (rcv *KMLIconStyle) Heading() float64 {
+	return rcv.HEADING()
+}
+
 /// Heading in degrees
 func (rcv *KMLIconStyle) MutateHEADING(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(10, n)
+}
+
+func (rcv *KMLIconStyle) MutateHeading(n float64) bool {
+	return rcv.MutateHEADING(n)
 }
 
 /// Icon href (URL)
@@ -101,6 +129,10 @@ func (rcv *KMLIconStyle) ICON_HREF() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *KMLIconStyle) IconHref() []byte {
+	return rcv.ICON_HREF()
 }
 
 /// Icon href (URL)
@@ -113,9 +145,17 @@ func (rcv *KMLIconStyle) HOTSPOT_X() float64 {
 	return 0.0
 }
 
+func (rcv *KMLIconStyle) HotspotX() float64 {
+	return rcv.HOTSPOT_X()
+}
+
 /// Hot spot X value
 func (rcv *KMLIconStyle) MutateHOTSPOT_X(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(14, n)
+}
+
+func (rcv *KMLIconStyle) MutateHotspotX(n float64) bool {
+	return rcv.MutateHOTSPOT_X(n)
 }
 
 /// Hot spot Y value
@@ -127,9 +167,17 @@ func (rcv *KMLIconStyle) HOTSPOT_Y() float64 {
 	return 0.0
 }
 
+func (rcv *KMLIconStyle) HotspotY() float64 {
+	return rcv.HOTSPOT_Y()
+}
+
 /// Hot spot Y value
 func (rcv *KMLIconStyle) MutateHOTSPOT_Y(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(16, n)
+}
+
+func (rcv *KMLIconStyle) MutateHotspotY(n float64) bool {
+	return rcv.MutateHOTSPOT_Y(n)
 }
 
 /// Hot spot X units
@@ -141,9 +189,17 @@ func (rcv *KMLIconStyle) HOTSPOT_X_UNITS() KMLUnits {
 	return 0
 }
 
+func (rcv *KMLIconStyle) HotspotXUnits() KMLUnits {
+	return rcv.HOTSPOT_X_UNITS()
+}
+
 /// Hot spot X units
 func (rcv *KMLIconStyle) MutateHOTSPOT_X_UNITS(n KMLUnits) bool {
 	return rcv._tab.MutateInt8Slot(18, int8(n))
+}
+
+func (rcv *KMLIconStyle) MutateHotspotXUnits(n KMLUnits) bool {
+	return rcv.MutateHOTSPOT_X_UNITS(n)
 }
 
 /// Hot spot Y units
@@ -155,9 +211,17 @@ func (rcv *KMLIconStyle) HOTSPOT_Y_UNITS() KMLUnits {
 	return 0
 }
 
+func (rcv *KMLIconStyle) HotspotYUnits() KMLUnits {
+	return rcv.HOTSPOT_Y_UNITS()
+}
+
 /// Hot spot Y units
 func (rcv *KMLIconStyle) MutateHOTSPOT_Y_UNITS(n KMLUnits) bool {
 	return rcv._tab.MutateInt8Slot(20, int8(n))
+}
+
+func (rcv *KMLIconStyle) MutateHotspotYUnits(n KMLUnits) bool {
+	return rcv.MutateHOTSPOT_Y_UNITS(n)
 }
 
 func KMLIconStyleStart(builder *flatbuffers.Builder) {
@@ -166,29 +230,56 @@ func KMLIconStyleStart(builder *flatbuffers.Builder) {
 func KMLIconStyleAddCOLOR(builder *flatbuffers.Builder, COLOR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(COLOR), 0)
 }
+func KMLIconStyleAddColor(builder *flatbuffers.Builder, COLOR flatbuffers.UOffsetT) {
+	KMLIconStyleAddCOLOR(builder, COLOR)
+}
 func KMLIconStyleAddCOLOR_MODE(builder *flatbuffers.Builder, COLOR_MODE KMLColorMode) {
 	builder.PrependInt8Slot(1, int8(COLOR_MODE), 0)
+}
+func KMLIconStyleAddColorMode(builder *flatbuffers.Builder, COLOR_MODE KMLColorMode) {
+	KMLIconStyleAddCOLOR_MODE(builder, COLOR_MODE)
 }
 func KMLIconStyleAddSCALE(builder *flatbuffers.Builder, SCALE float64) {
 	builder.PrependFloat64Slot(2, SCALE, 0.0)
 }
+func KMLIconStyleAddScale(builder *flatbuffers.Builder, SCALE float64) {
+	KMLIconStyleAddSCALE(builder, SCALE)
+}
 func KMLIconStyleAddHEADING(builder *flatbuffers.Builder, HEADING float64) {
 	builder.PrependFloat64Slot(3, HEADING, 0.0)
+}
+func KMLIconStyleAddHeading(builder *flatbuffers.Builder, HEADING float64) {
+	KMLIconStyleAddHEADING(builder, HEADING)
 }
 func KMLIconStyleAddICON_HREF(builder *flatbuffers.Builder, ICON_HREF flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(ICON_HREF), 0)
 }
+func KMLIconStyleAddIconHref(builder *flatbuffers.Builder, ICON_HREF flatbuffers.UOffsetT) {
+	KMLIconStyleAddICON_HREF(builder, ICON_HREF)
+}
 func KMLIconStyleAddHOTSPOT_X(builder *flatbuffers.Builder, HOTSPOT_X float64) {
 	builder.PrependFloat64Slot(5, HOTSPOT_X, 0.0)
+}
+func KMLIconStyleAddHotspotX(builder *flatbuffers.Builder, HOTSPOT_X float64) {
+	KMLIconStyleAddHOTSPOT_X(builder, HOTSPOT_X)
 }
 func KMLIconStyleAddHOTSPOT_Y(builder *flatbuffers.Builder, HOTSPOT_Y float64) {
 	builder.PrependFloat64Slot(6, HOTSPOT_Y, 0.0)
 }
+func KMLIconStyleAddHotspotY(builder *flatbuffers.Builder, HOTSPOT_Y float64) {
+	KMLIconStyleAddHOTSPOT_Y(builder, HOTSPOT_Y)
+}
 func KMLIconStyleAddHOTSPOT_X_UNITS(builder *flatbuffers.Builder, HOTSPOT_X_UNITS KMLUnits) {
 	builder.PrependInt8Slot(7, int8(HOTSPOT_X_UNITS), 0)
 }
+func KMLIconStyleAddHotspotXUnits(builder *flatbuffers.Builder, HOTSPOT_X_UNITS KMLUnits) {
+	KMLIconStyleAddHOTSPOT_X_UNITS(builder, HOTSPOT_X_UNITS)
+}
 func KMLIconStyleAddHOTSPOT_Y_UNITS(builder *flatbuffers.Builder, HOTSPOT_Y_UNITS KMLUnits) {
 	builder.PrependInt8Slot(8, int8(HOTSPOT_Y_UNITS), 0)
+}
+func KMLIconStyleAddHotspotYUnits(builder *flatbuffers.Builder, HOTSPOT_Y_UNITS KMLUnits) {
+	KMLIconStyleAddHOTSPOT_Y_UNITS(builder, HOTSPOT_Y_UNITS)
 }
 func KMLIconStyleEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

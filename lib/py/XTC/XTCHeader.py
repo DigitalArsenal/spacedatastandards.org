@@ -138,6 +138,12 @@ def XTCHeaderStartNOTESVector(builder, numElems):
 def StartNOTESVector(builder, numElems):
     return XTCHeaderStartNOTESVector(builder, numElems)
 
+def XTCHeaderCreateNOTESVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateNOTESVector(builder, data):
+    XTCHeaderCreateNOTESVector(builder, data)
+
 def XTCHeaderEnd(builder):
     return builder.EndObject()
 
@@ -152,19 +158,27 @@ except:
 class XTCHeaderT(object):
 
     # XTCHeaderT
-    def __init__(self):
-        self.VERSION = None  # type: str
-        self.DATE = None  # type: str
-        self.CLASSIFICATION = None  # type: str
-        self.VALIDATION_STATUS = None  # type: str
-        self.AUTHOR = None  # type: str
-        self.NOTES = None  # type: List[str]
+    def __init__(
+        self,
+        VERSION = None,
+        DATE = None,
+        CLASSIFICATION = None,
+        VALIDATION_STATUS = None,
+        AUTHOR = None,
+        NOTES = None,
+    ):
+        self.VERSION = VERSION  # type: Optional[str]
+        self.DATE = DATE  # type: Optional[str]
+        self.CLASSIFICATION = CLASSIFICATION  # type: Optional[str]
+        self.VALIDATION_STATUS = VALIDATION_STATUS  # type: Optional[str]
+        self.AUTHOR = AUTHOR  # type: Optional[str]
+        self.NOTES = NOTES  # type: Optional[List[Optional[str]]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        xtcheader = XTCHeader()
-        xtcheader.Init(buf, pos)
-        return cls.InitFromObj(xtcheader)
+        tmpXtcheader = XTCHeader()
+        tmpXtcheader.Init(buf, pos)
+        return cls.InitFromObj(tmpXtcheader)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -172,24 +186,24 @@ class XTCHeaderT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, xtcheader):
+    def InitFromObj(cls, tmpXtcheader):
         x = XTCHeaderT()
-        x._UnPack(xtcheader)
+        x._UnPack(tmpXtcheader)
         return x
 
     # XTCHeaderT
-    def _UnPack(self, xtcheader):
-        if xtcheader is None:
+    def _UnPack(self, XTCHeader):
+        if XTCHeader is None:
             return
-        self.VERSION = xtcheader.VERSION()
-        self.DATE = xtcheader.DATE()
-        self.CLASSIFICATION = xtcheader.CLASSIFICATION()
-        self.VALIDATION_STATUS = xtcheader.VALIDATION_STATUS()
-        self.AUTHOR = xtcheader.AUTHOR()
-        if not xtcheader.NOTESIsNone():
+        self.VERSION = XTCHeader.VERSION()
+        self.DATE = XTCHeader.DATE()
+        self.CLASSIFICATION = XTCHeader.CLASSIFICATION()
+        self.VALIDATION_STATUS = XTCHeader.VALIDATION_STATUS()
+        self.AUTHOR = XTCHeader.AUTHOR()
+        if not XTCHeader.NOTESIsNone():
             self.NOTES = []
-            for i in range(xtcheader.NOTESLength()):
-                self.NOTES.append(xtcheader.NOTES(i))
+            for i in range(XTCHeader.NOTESLength()):
+                self.NOTES.append(XTCHeader.NOTES(i))
 
     # XTCHeaderT
     def Pack(self, builder):
@@ -224,5 +238,5 @@ class XTCHeaderT(object):
             XTCHeaderAddAUTHOR(builder, AUTHOR)
         if self.NOTES is not None:
             XTCHeaderAddNOTES(builder, NOTES)
-        xtcheader = XTCHeaderEnd(builder)
-        return xtcheader
+        XTCHeader = XTCHeaderEnd(builder)
+        return XTCHeader

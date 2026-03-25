@@ -29,67 +29,67 @@ class keplerianElements : Table() {
         __init(_i, _bb)
         return this
     }
-    val SEMI_MAJOR_AXIS : Double
+    val semiMajorAxis : Double
         get() {
             val o = __offset(4)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val ECCENTRICITY : Double
+    val eccentricity : Double
         get() {
             val o = __offset(6)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val INCLINATION : Double
+    val inclination : Double
         get() {
             val o = __offset(8)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val RA_OF_ASC_NODE : Double
+    val raOfAscNode : Double
         get() {
             val o = __offset(10)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val ARG_OF_PERICENTER : Double
+    val argOfPericenter : Double
         get() {
             val o = __offset(12)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val ANOMALY_TYPE : Byte
+    val anomalyType : Byte
         get() {
             val o = __offset(14)
             return if(o != 0) bb.get(o + bb_pos) else 0
         }
-    val ANOMALY : Double
+    val anomaly : Double
         get() {
             val o = __offset(16)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAskeplerianElements(_bb: ByteBuffer): keplerianElements = getRootAskeplerianElements(_bb, keplerianElements())
         fun getRootAskeplerianElements(_bb: ByteBuffer, obj: keplerianElements): keplerianElements {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createkeplerianElements(builder: FlatBufferBuilder, SEMI_MAJOR_AXIS: Double, ECCENTRICITY: Double, INCLINATION: Double, RA_OF_ASC_NODE: Double, ARG_OF_PERICENTER: Double, ANOMALY_TYPE: Byte, ANOMALY: Double) : Int {
+        fun createkeplerianElements(builder: FlatBufferBuilder, semiMajorAxis: Double, eccentricity: Double, inclination: Double, raOfAscNode: Double, argOfPericenter: Double, anomalyType: Byte, anomaly: Double) : Int {
             builder.startTable(7)
-            addANOMALY(builder, ANOMALY)
-            addARG_OF_PERICENTER(builder, ARG_OF_PERICENTER)
-            addRA_OF_ASC_NODE(builder, RA_OF_ASC_NODE)
-            addINCLINATION(builder, INCLINATION)
-            addECCENTRICITY(builder, ECCENTRICITY)
-            addSEMI_MAJOR_AXIS(builder, SEMI_MAJOR_AXIS)
-            addANOMALY_TYPE(builder, ANOMALY_TYPE)
+            addANOMALY(builder, anomaly)
+            addARGOFPERICENTER(builder, argOfPericenter)
+            addRAOFASCNODE(builder, raOfAscNode)
+            addINCLINATION(builder, inclination)
+            addECCENTRICITY(builder, eccentricity)
+            addSEMIMAJORAXIS(builder, semiMajorAxis)
+            addANOMALYTYPE(builder, anomalyType)
             return endkeplerianElements(builder)
         }
         fun startkeplerianElements(builder: FlatBufferBuilder) = builder.startTable(7)
-        fun addSEMI_MAJOR_AXIS(builder: FlatBufferBuilder, SEMI_MAJOR_AXIS: Double) = builder.addDouble(0, SEMI_MAJOR_AXIS, 0.0)
-        fun addECCENTRICITY(builder: FlatBufferBuilder, ECCENTRICITY: Double) = builder.addDouble(1, ECCENTRICITY, 0.0)
-        fun addINCLINATION(builder: FlatBufferBuilder, INCLINATION: Double) = builder.addDouble(2, INCLINATION, 0.0)
-        fun addRA_OF_ASC_NODE(builder: FlatBufferBuilder, RA_OF_ASC_NODE: Double) = builder.addDouble(3, RA_OF_ASC_NODE, 0.0)
-        fun addARG_OF_PERICENTER(builder: FlatBufferBuilder, ARG_OF_PERICENTER: Double) = builder.addDouble(4, ARG_OF_PERICENTER, 0.0)
-        fun addANOMALY_TYPE(builder: FlatBufferBuilder, ANOMALY_TYPE: Byte) = builder.addByte(5, ANOMALY_TYPE, 0)
-        fun addANOMALY(builder: FlatBufferBuilder, ANOMALY: Double) = builder.addDouble(6, ANOMALY, 0.0)
+        fun addSEMIMAJORAXIS(builder: FlatBufferBuilder, semiMajorAxis: Double) = builder.addDouble(0, semiMajorAxis, 0.0)
+        fun addECCENTRICITY(builder: FlatBufferBuilder, eccentricity: Double) = builder.addDouble(1, eccentricity, 0.0)
+        fun addINCLINATION(builder: FlatBufferBuilder, inclination: Double) = builder.addDouble(2, inclination, 0.0)
+        fun addRAOFASCNODE(builder: FlatBufferBuilder, raOfAscNode: Double) = builder.addDouble(3, raOfAscNode, 0.0)
+        fun addARGOFPERICENTER(builder: FlatBufferBuilder, argOfPericenter: Double) = builder.addDouble(4, argOfPericenter, 0.0)
+        fun addANOMALYTYPE(builder: FlatBufferBuilder, anomalyType: Byte) = builder.addByte(5, anomalyType, 0)
+        fun addANOMALY(builder: FlatBufferBuilder, anomaly: Double) = builder.addDouble(6, anomaly, 0.0)
         fun endkeplerianElements(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

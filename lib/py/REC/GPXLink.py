@@ -2,4 +2,140 @@
 
 # namespace: 
 
-# NOTE GPXLink.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# GPX link to an external resource
+class GPXLink(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = GPXLink()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsGPXLink(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def GPXLinkBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x47\x50\x58", size_prefixed=size_prefixed)
+
+    # GPXLink
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # URL
+    # GPXLink
+    def HREF(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Link text
+    # GPXLink
+    def TEXT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # MIME type
+    # GPXLink
+    def TYPE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+def GPXLinkStart(builder):
+    builder.StartObject(3)
+
+def Start(builder):
+    GPXLinkStart(builder)
+
+def GPXLinkAddHREF(builder, HREF):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(HREF), 0)
+
+def AddHREF(builder, HREF):
+    GPXLinkAddHREF(builder, HREF)
+
+def GPXLinkAddTEXT(builder, TEXT):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(TEXT), 0)
+
+def AddTEXT(builder, TEXT):
+    GPXLinkAddTEXT(builder, TEXT)
+
+def GPXLinkAddTYPE(builder, TYPE):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(TYPE), 0)
+
+def AddTYPE(builder, TYPE):
+    GPXLinkAddTYPE(builder, TYPE)
+
+def GPXLinkEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return GPXLinkEnd(builder)
+
+
+class GPXLinkT(object):
+
+    # GPXLinkT
+    def __init__(
+        self,
+        HREF = None,
+        TEXT = None,
+        TYPE = None,
+    ):
+        self.HREF = HREF  # type: Optional[str]
+        self.TEXT = TEXT  # type: Optional[str]
+        self.TYPE = TYPE  # type: Optional[str]
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpGpxlink = GPXLink()
+        tmpGpxlink.Init(buf, pos)
+        return cls.InitFromObj(tmpGpxlink)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpGpxlink):
+        x = GPXLinkT()
+        x._UnPack(tmpGpxlink)
+        return x
+
+    # GPXLinkT
+    def _UnPack(self, GPXLink):
+        if GPXLink is None:
+            return
+        self.HREF = GPXLink.HREF()
+        self.TEXT = GPXLink.TEXT()
+        self.TYPE = GPXLink.TYPE()
+
+    # GPXLinkT
+    def Pack(self, builder):
+        if self.HREF is not None:
+            HREF = builder.CreateString(self.HREF)
+        if self.TEXT is not None:
+            TEXT = builder.CreateString(self.TEXT)
+        if self.TYPE is not None:
+            TYPE = builder.CreateString(self.TYPE)
+        GPXLinkStart(builder)
+        if self.HREF is not None:
+            GPXLinkAddHREF(builder, HREF)
+        if self.TEXT is not None:
+            GPXLinkAddTEXT(builder, TEXT)
+        if self.TYPE is not None:
+            GPXLinkAddTYPE(builder, TYPE)
+        GPXLink = GPXLinkEnd(builder)
+        return GPXLink

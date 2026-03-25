@@ -29,7 +29,7 @@ class Maneuver : Table() {
     /**
      * Unique identifier for the maneuver.
      */
-    val MAN_ID : String?
+    val manId : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -38,12 +38,12 @@ class Maneuver : Table() {
                 null
             }
         }
-    val MAN_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun MAN_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val manIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun manIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Basis of the maneuver plan (e.g., planned, predicted, estimated).
      */
-    val MAN_BASIS : String?
+    val manBasis : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -52,12 +52,12 @@ class Maneuver : Table() {
                 null
             }
         }
-    val MAN_BASISAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun MAN_BASISInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val manBasisAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun manBasisInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * Identifier of the maneuver device.
      */
-    val MAN_DEVICE_ID : String?
+    val manDeviceId : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -66,12 +66,12 @@ class Maneuver : Table() {
                 null
             }
         }
-    val MAN_DEVICE_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun MAN_DEVICE_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val manDeviceIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun manDeviceIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
     /**
      * Identifier of the previous maneuver.
      */
-    val MAN_PREV_ID : String?
+    val manPrevId : String?
         get() {
             val o = __offset(10)
             return if (o != 0) {
@@ -80,12 +80,12 @@ class Maneuver : Table() {
                 null
             }
         }
-    val MAN_PREV_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
-    fun MAN_PREV_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
+    val manPrevIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(10, 1)
+    fun manPrevIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 10, 1)
     /**
      * Purpose of the maneuver.
      */
-    val MAN_PURPOSE : String?
+    val manPurpose : String?
         get() {
             val o = __offset(12)
             return if (o != 0) {
@@ -94,12 +94,12 @@ class Maneuver : Table() {
                 null
             }
         }
-    val MAN_PURPOSEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
-    fun MAN_PURPOSEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
+    val manPurposeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(12, 1)
+    fun manPurposeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 12, 1)
     /**
      * Reference frame for the maneuver data.
      */
-    val MAN_REF_FRAME : String?
+    val manRefFrame : String?
         get() {
             val o = __offset(14)
             return if (o != 0) {
@@ -108,12 +108,12 @@ class Maneuver : Table() {
                 null
             }
         }
-    val MAN_REF_FRAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(14, 1)
-    fun MAN_REF_FRAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 14, 1)
+    val manRefFrameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(14, 1)
+    fun manRefFrameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 14, 1)
     /**
      * Epoch of the maneuver reference frame.
      */
-    val MAN_FRAME_EPOCH : String?
+    val manFrameEpoch : String?
         get() {
             val o = __offset(16)
             return if (o != 0) {
@@ -122,12 +122,12 @@ class Maneuver : Table() {
                 null
             }
         }
-    val MAN_FRAME_EPOCHAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(16, 1)
-    fun MAN_FRAME_EPOCHInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 16, 1)
+    val manFrameEpochAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(16, 1)
+    fun manFrameEpochInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 16, 1)
     /**
      * Type of maneuver (e.g., IMPULSIVE, FINITE).
      */
-    val MAN_TYPE : String?
+    val manType : String?
         get() {
             val o = __offset(18)
             return if (o != 0) {
@@ -136,12 +136,12 @@ class Maneuver : Table() {
                 null
             }
         }
-    val MAN_TYPEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(18, 1)
-    fun MAN_TYPEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 18, 1)
+    val manTypeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(18, 1)
+    fun manTypeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 18, 1)
     /**
      * Start epoch of the maneuver.
      */
-    val MAN_EPOCH_START : String?
+    val manEpochStart : String?
         get() {
             val o = __offset(20)
             return if (o != 0) {
@@ -150,12 +150,12 @@ class Maneuver : Table() {
                 null
             }
         }
-    val MAN_EPOCH_STARTAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(20, 1)
-    fun MAN_EPOCH_STARTInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 20, 1)
+    val manEpochStartAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(20, 1)
+    fun manEpochStartInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 20, 1)
     /**
      * Duration of the maneuver.
      */
-    val MAN_DURATION : Double
+    val manDuration : Double
         get() {
             val o = __offset(22)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -163,7 +163,7 @@ class Maneuver : Table() {
     /**
      * Units for the maneuver data values.
      */
-    fun MAN_UNITS(j: Int) : String? {
+    fun manUnits(j: Int) : String? {
         val o = __offset(24)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
@@ -171,14 +171,14 @@ class Maneuver : Table() {
             null
         }
     }
-    val MAN_UNITSLength : Int
+    val manUnitsLength : Int
         get() {
             val o = __offset(24); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Data associated with the maneuver.
      */
-    fun DATA(j: Int) : String? {
+    fun data(j: Int) : String? {
         val o = __offset(26)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
@@ -186,14 +186,14 @@ class Maneuver : Table() {
             null
         }
     }
-    val DATALength : Int
+    val dataLength : Int
         get() {
             val o = __offset(26); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Comments related to the maneuver.
      */
-    fun MAN_COMMENT(j: Int) : String? {
+    fun manComment(j: Int) : String? {
         val o = __offset(28)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
@@ -201,46 +201,46 @@ class Maneuver : Table() {
             null
         }
     }
-    val MAN_COMMENTLength : Int
+    val manCommentLength : Int
         get() {
             val o = __offset(28); return if (o != 0) __vector_len(o) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsManeuver(_bb: ByteBuffer): Maneuver = getRootAsManeuver(_bb, Maneuver())
         fun getRootAsManeuver(_bb: ByteBuffer, obj: Maneuver): Maneuver {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createManeuver(builder: FlatBufferBuilder, MAN_IDOffset: Int, MAN_BASISOffset: Int, MAN_DEVICE_IDOffset: Int, MAN_PREV_IDOffset: Int, MAN_PURPOSEOffset: Int, MAN_REF_FRAMEOffset: Int, MAN_FRAME_EPOCHOffset: Int, MAN_TYPEOffset: Int, MAN_EPOCH_STARTOffset: Int, MAN_DURATION: Double, MAN_UNITSOffset: Int, DATAOffset: Int, MAN_COMMENTOffset: Int) : Int {
+        fun createManeuver(builder: FlatBufferBuilder, manIdOffset: Int, manBasisOffset: Int, manDeviceIdOffset: Int, manPrevIdOffset: Int, manPurposeOffset: Int, manRefFrameOffset: Int, manFrameEpochOffset: Int, manTypeOffset: Int, manEpochStartOffset: Int, manDuration: Double, manUnitsOffset: Int, dataOffset: Int, manCommentOffset: Int) : Int {
             builder.startTable(13)
-            addMAN_DURATION(builder, MAN_DURATION)
-            addMAN_COMMENT(builder, MAN_COMMENTOffset)
-            addDATA(builder, DATAOffset)
-            addMAN_UNITS(builder, MAN_UNITSOffset)
-            addMAN_EPOCH_START(builder, MAN_EPOCH_STARTOffset)
-            addMAN_TYPE(builder, MAN_TYPEOffset)
-            addMAN_FRAME_EPOCH(builder, MAN_FRAME_EPOCHOffset)
-            addMAN_REF_FRAME(builder, MAN_REF_FRAMEOffset)
-            addMAN_PURPOSE(builder, MAN_PURPOSEOffset)
-            addMAN_PREV_ID(builder, MAN_PREV_IDOffset)
-            addMAN_DEVICE_ID(builder, MAN_DEVICE_IDOffset)
-            addMAN_BASIS(builder, MAN_BASISOffset)
-            addMAN_ID(builder, MAN_IDOffset)
+            addMANDURATION(builder, manDuration)
+            addMANCOMMENT(builder, manCommentOffset)
+            addDATA(builder, dataOffset)
+            addMANUNITS(builder, manUnitsOffset)
+            addMANEPOCHSTART(builder, manEpochStartOffset)
+            addMANTYPE(builder, manTypeOffset)
+            addMANFRAMEEPOCH(builder, manFrameEpochOffset)
+            addMANREFFRAME(builder, manRefFrameOffset)
+            addMANPURPOSE(builder, manPurposeOffset)
+            addMANPREVID(builder, manPrevIdOffset)
+            addMANDEVICEID(builder, manDeviceIdOffset)
+            addMANBASIS(builder, manBasisOffset)
+            addMANID(builder, manIdOffset)
             return endManeuver(builder)
         }
         fun startManeuver(builder: FlatBufferBuilder) = builder.startTable(13)
-        fun addMAN_ID(builder: FlatBufferBuilder, MAN_ID: Int) = builder.addOffset(0, MAN_ID, 0)
-        fun addMAN_BASIS(builder: FlatBufferBuilder, MAN_BASIS: Int) = builder.addOffset(1, MAN_BASIS, 0)
-        fun addMAN_DEVICE_ID(builder: FlatBufferBuilder, MAN_DEVICE_ID: Int) = builder.addOffset(2, MAN_DEVICE_ID, 0)
-        fun addMAN_PREV_ID(builder: FlatBufferBuilder, MAN_PREV_ID: Int) = builder.addOffset(3, MAN_PREV_ID, 0)
-        fun addMAN_PURPOSE(builder: FlatBufferBuilder, MAN_PURPOSE: Int) = builder.addOffset(4, MAN_PURPOSE, 0)
-        fun addMAN_REF_FRAME(builder: FlatBufferBuilder, MAN_REF_FRAME: Int) = builder.addOffset(5, MAN_REF_FRAME, 0)
-        fun addMAN_FRAME_EPOCH(builder: FlatBufferBuilder, MAN_FRAME_EPOCH: Int) = builder.addOffset(6, MAN_FRAME_EPOCH, 0)
-        fun addMAN_TYPE(builder: FlatBufferBuilder, MAN_TYPE: Int) = builder.addOffset(7, MAN_TYPE, 0)
-        fun addMAN_EPOCH_START(builder: FlatBufferBuilder, MAN_EPOCH_START: Int) = builder.addOffset(8, MAN_EPOCH_START, 0)
-        fun addMAN_DURATION(builder: FlatBufferBuilder, MAN_DURATION: Double) = builder.addDouble(9, MAN_DURATION, 0.0)
-        fun addMAN_UNITS(builder: FlatBufferBuilder, MAN_UNITS: Int) = builder.addOffset(10, MAN_UNITS, 0)
+        fun addMANID(builder: FlatBufferBuilder, manId: Int) = builder.addOffset(0, manId, 0)
+        fun addMANBASIS(builder: FlatBufferBuilder, manBasis: Int) = builder.addOffset(1, manBasis, 0)
+        fun addMANDEVICEID(builder: FlatBufferBuilder, manDeviceId: Int) = builder.addOffset(2, manDeviceId, 0)
+        fun addMANPREVID(builder: FlatBufferBuilder, manPrevId: Int) = builder.addOffset(3, manPrevId, 0)
+        fun addMANPURPOSE(builder: FlatBufferBuilder, manPurpose: Int) = builder.addOffset(4, manPurpose, 0)
+        fun addMANREFFRAME(builder: FlatBufferBuilder, manRefFrame: Int) = builder.addOffset(5, manRefFrame, 0)
+        fun addMANFRAMEEPOCH(builder: FlatBufferBuilder, manFrameEpoch: Int) = builder.addOffset(6, manFrameEpoch, 0)
+        fun addMANTYPE(builder: FlatBufferBuilder, manType: Int) = builder.addOffset(7, manType, 0)
+        fun addMANEPOCHSTART(builder: FlatBufferBuilder, manEpochStart: Int) = builder.addOffset(8, manEpochStart, 0)
+        fun addMANDURATION(builder: FlatBufferBuilder, manDuration: Double) = builder.addDouble(9, manDuration, 0.0)
+        fun addMANUNITS(builder: FlatBufferBuilder, manUnits: Int) = builder.addOffset(10, manUnits, 0)
         fun createManUnitsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -249,7 +249,7 @@ class Maneuver : Table() {
             return builder.endVector()
         }
         fun startManUnitsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addDATA(builder: FlatBufferBuilder, DATA: Int) = builder.addOffset(11, DATA, 0)
+        fun addDATA(builder: FlatBufferBuilder, data: Int) = builder.addOffset(11, data, 0)
         fun createDataVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -258,7 +258,7 @@ class Maneuver : Table() {
             return builder.endVector()
         }
         fun startDataVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addMAN_COMMENT(builder: FlatBufferBuilder, MAN_COMMENT: Int) = builder.addOffset(12, MAN_COMMENT, 0)
+        fun addMANCOMMENT(builder: FlatBufferBuilder, manComment: Int) = builder.addOffset(12, manComment, 0)
         fun createManCommentVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {

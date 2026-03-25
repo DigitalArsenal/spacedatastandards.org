@@ -32,7 +32,7 @@ class CZMPolygonHole : Table() {
     /**
      * Positions as cartographic degrees [lon, lat, height, ...]
      */
-    fun POSITIONS_CARTOGRAPHIC_DEGREES(j: Int) : Double {
+    fun positionsCartographicDegrees(j: Int) : Double {
         val o = __offset(4)
         return if (o != 0) {
             bb.getDouble(__vector(o) + j * 8)
@@ -40,16 +40,16 @@ class CZMPolygonHole : Table() {
             0.0
         }
     }
-    val POSITIONS_CARTOGRAPHIC_DEGREESLength : Int
+    val positionsCartographicDegreesLength : Int
         get() {
             val o = __offset(4); return if (o != 0) __vector_len(o) else 0
         }
-    val POSITIONS_CARTOGRAPHIC_DEGREESAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 8)
-    fun POSITIONS_CARTOGRAPHIC_DEGREESInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 8)
+    val positionsCartographicDegreesAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 8)
+    fun positionsCartographicDegreesInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 8)
     /**
      * Positions as Cartesian [X, Y, Z, ...]
      */
-    fun POSITIONS_CARTESIAN(j: Int) : Double {
+    fun positionsCartesian(j: Int) : Double {
         val o = __offset(6)
         return if (o != 0) {
             bb.getDouble(__vector(o) + j * 8)
@@ -57,27 +57,27 @@ class CZMPolygonHole : Table() {
             0.0
         }
     }
-    val POSITIONS_CARTESIANLength : Int
+    val positionsCartesianLength : Int
         get() {
             val o = __offset(6); return if (o != 0) __vector_len(o) else 0
         }
-    val POSITIONS_CARTESIANAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 8)
-    fun POSITIONS_CARTESIANInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 8)
+    val positionsCartesianAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 8)
+    fun positionsCartesianInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 8)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsCZMPolygonHole(_bb: ByteBuffer): CZMPolygonHole = getRootAsCZMPolygonHole(_bb, CZMPolygonHole())
         fun getRootAsCZMPolygonHole(_bb: ByteBuffer, obj: CZMPolygonHole): CZMPolygonHole {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createCZMPolygonHole(builder: FlatBufferBuilder, POSITIONS_CARTOGRAPHIC_DEGREESOffset: Int, POSITIONS_CARTESIANOffset: Int) : Int {
+        fun createCZMPolygonHole(builder: FlatBufferBuilder, positionsCartographicDegreesOffset: Int, positionsCartesianOffset: Int) : Int {
             builder.startTable(2)
-            addPOSITIONS_CARTESIAN(builder, POSITIONS_CARTESIANOffset)
-            addPOSITIONS_CARTOGRAPHIC_DEGREES(builder, POSITIONS_CARTOGRAPHIC_DEGREESOffset)
+            addPOSITIONSCARTESIAN(builder, positionsCartesianOffset)
+            addPOSITIONSCARTOGRAPHICDEGREES(builder, positionsCartographicDegreesOffset)
             return endCZMPolygonHole(builder)
         }
         fun startCZMPolygonHole(builder: FlatBufferBuilder) = builder.startTable(2)
-        fun addPOSITIONS_CARTOGRAPHIC_DEGREES(builder: FlatBufferBuilder, POSITIONS_CARTOGRAPHIC_DEGREES: Int) = builder.addOffset(0, POSITIONS_CARTOGRAPHIC_DEGREES, 0)
+        fun addPOSITIONSCARTOGRAPHICDEGREES(builder: FlatBufferBuilder, positionsCartographicDegrees: Int) = builder.addOffset(0, positionsCartographicDegrees, 0)
         fun createPositionsCartographicDegreesVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
             builder.startVector(8, data.size, 8)
             for (i in data.size - 1 downTo 0) {
@@ -86,7 +86,7 @@ class CZMPolygonHole : Table() {
             return builder.endVector()
         }
         fun startPositionsCartographicDegreesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
-        fun addPOSITIONS_CARTESIAN(builder: FlatBufferBuilder, POSITIONS_CARTESIAN: Int) = builder.addOffset(1, POSITIONS_CARTESIAN, 0)
+        fun addPOSITIONSCARTESIAN(builder: FlatBufferBuilder, positionsCartesian: Int) = builder.addOffset(1, positionsCartesian, 0)
         fun createPositionsCartesianVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
             builder.startVector(8, data.size, 8)
             for (i in data.size - 1 downTo 0) {

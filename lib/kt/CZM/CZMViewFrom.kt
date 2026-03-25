@@ -32,7 +32,7 @@ class CZMViewFrom : Table() {
     /**
      * X offset in meters
      */
-    val X : Double
+    val x : Double
         get() {
             val o = __offset(4)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -40,7 +40,7 @@ class CZMViewFrom : Table() {
     /**
      * Y offset in meters
      */
-    val Y : Double
+    val y : Double
         get() {
             val o = __offset(6)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -48,29 +48,29 @@ class CZMViewFrom : Table() {
     /**
      * Z offset in meters
      */
-    val Z : Double
+    val z : Double
         get() {
             val o = __offset(8)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsCZMViewFrom(_bb: ByteBuffer): CZMViewFrom = getRootAsCZMViewFrom(_bb, CZMViewFrom())
         fun getRootAsCZMViewFrom(_bb: ByteBuffer, obj: CZMViewFrom): CZMViewFrom {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createCZMViewFrom(builder: FlatBufferBuilder, X: Double, Y: Double, Z: Double) : Int {
+        fun createCZMViewFrom(builder: FlatBufferBuilder, x: Double, y: Double, z: Double) : Int {
             builder.startTable(3)
-            addZ(builder, Z)
-            addY(builder, Y)
-            addX(builder, X)
+            addZ(builder, z)
+            addY(builder, y)
+            addX(builder, x)
             return endCZMViewFrom(builder)
         }
         fun startCZMViewFrom(builder: FlatBufferBuilder) = builder.startTable(3)
-        fun addX(builder: FlatBufferBuilder, X: Double) = builder.addDouble(0, X, 0.0)
-        fun addY(builder: FlatBufferBuilder, Y: Double) = builder.addDouble(1, Y, 0.0)
-        fun addZ(builder: FlatBufferBuilder, Z: Double) = builder.addDouble(2, Z, 0.0)
+        fun addX(builder: FlatBufferBuilder, x: Double) = builder.addDouble(0, x, 0.0)
+        fun addY(builder: FlatBufferBuilder, y: Double) = builder.addDouble(1, y, 0.0)
+        fun addZ(builder: FlatBufferBuilder, z: Double) = builder.addDouble(2, z, 0.0)
         fun endCZMViewFrom(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

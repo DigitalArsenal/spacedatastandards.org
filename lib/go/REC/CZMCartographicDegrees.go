@@ -51,9 +51,17 @@ func (rcv *CZMCartographicDegrees) LONGITUDE() float64 {
 	return 0.0
 }
 
+func (rcv *CZMCartographicDegrees) Longitude() float64 {
+	return rcv.LONGITUDE()
+}
+
 /// Longitude in degrees
 func (rcv *CZMCartographicDegrees) MutateLONGITUDE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(4, n)
+}
+
+func (rcv *CZMCartographicDegrees) MutateLongitude(n float64) bool {
+	return rcv.MutateLONGITUDE(n)
 }
 
 /// Latitude in degrees
@@ -65,9 +73,17 @@ func (rcv *CZMCartographicDegrees) LATITUDE() float64 {
 	return 0.0
 }
 
+func (rcv *CZMCartographicDegrees) Latitude() float64 {
+	return rcv.LATITUDE()
+}
+
 /// Latitude in degrees
 func (rcv *CZMCartographicDegrees) MutateLATITUDE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(6, n)
+}
+
+func (rcv *CZMCartographicDegrees) MutateLatitude(n float64) bool {
+	return rcv.MutateLATITUDE(n)
 }
 
 /// Height in meters above WGS84 ellipsoid
@@ -79,9 +95,17 @@ func (rcv *CZMCartographicDegrees) HEIGHT() float64 {
 	return 0.0
 }
 
+func (rcv *CZMCartographicDegrees) Height() float64 {
+	return rcv.HEIGHT()
+}
+
 /// Height in meters above WGS84 ellipsoid
 func (rcv *CZMCartographicDegrees) MutateHEIGHT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(8, n)
+}
+
+func (rcv *CZMCartographicDegrees) MutateHeight(n float64) bool {
+	return rcv.MutateHEIGHT(n)
 }
 
 func CZMCartographicDegreesStart(builder *flatbuffers.Builder) {
@@ -90,11 +114,20 @@ func CZMCartographicDegreesStart(builder *flatbuffers.Builder) {
 func CZMCartographicDegreesAddLONGITUDE(builder *flatbuffers.Builder, LONGITUDE float64) {
 	builder.PrependFloat64Slot(0, LONGITUDE, 0.0)
 }
+func CZMCartographicDegreesAddLongitude(builder *flatbuffers.Builder, LONGITUDE float64) {
+	CZMCartographicDegreesAddLONGITUDE(builder, LONGITUDE)
+}
 func CZMCartographicDegreesAddLATITUDE(builder *flatbuffers.Builder, LATITUDE float64) {
 	builder.PrependFloat64Slot(1, LATITUDE, 0.0)
 }
+func CZMCartographicDegreesAddLatitude(builder *flatbuffers.Builder, LATITUDE float64) {
+	CZMCartographicDegreesAddLATITUDE(builder, LATITUDE)
+}
 func CZMCartographicDegreesAddHEIGHT(builder *flatbuffers.Builder, HEIGHT float64) {
 	builder.PrependFloat64Slot(2, HEIGHT, 0.0)
+}
+func CZMCartographicDegreesAddHeight(builder *flatbuffers.Builder, HEIGHT float64) {
+	CZMCartographicDegreesAddHEIGHT(builder, HEIGHT)
 }
 func CZMCartographicDegreesEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

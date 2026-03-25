@@ -2,4 +2,93 @@
 
 # namespace: 
 
-# NOTE SpacecraftFrameWrapper.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+class SpacecraftFrameWrapper(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = SpacecraftFrameWrapper()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsSpacecraftFrameWrapper(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def SpacecraftFrameWrapperBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x52\x46\x4D", size_prefixed=size_prefixed)
+
+    # SpacecraftFrameWrapper
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # SpacecraftFrameWrapper
+    def frame(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+def SpacecraftFrameWrapperStart(builder):
+    builder.StartObject(1)
+
+def Start(builder):
+    SpacecraftFrameWrapperStart(builder)
+
+def SpacecraftFrameWrapperAddframe(builder, frame):
+    builder.PrependInt8Slot(0, frame, 0)
+
+def Addframe(builder, frame):
+    SpacecraftFrameWrapperAddframe(builder, frame)
+
+def SpacecraftFrameWrapperEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return SpacecraftFrameWrapperEnd(builder)
+
+
+class SpacecraftFrameWrapperT(object):
+
+    # SpacecraftFrameWrapperT
+    def __init__(
+        self,
+        frame = 0,
+    ):
+        self.frame = frame  # type: int
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpSpacecraftFrameWrapper = SpacecraftFrameWrapper()
+        tmpSpacecraftFrameWrapper.Init(buf, pos)
+        return cls.InitFromObj(tmpSpacecraftFrameWrapper)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpSpacecraftFrameWrapper):
+        x = SpacecraftFrameWrapperT()
+        x._UnPack(tmpSpacecraftFrameWrapper)
+        return x
+
+    # SpacecraftFrameWrapperT
+    def _UnPack(self, SpacecraftFrameWrapper):
+        if SpacecraftFrameWrapper is None:
+            return
+        self.frame = SpacecraftFrameWrapper.frame()
+
+    # SpacecraftFrameWrapperT
+    def Pack(self, builder):
+        SpacecraftFrameWrapperStart(builder)
+        SpacecraftFrameWrapperAddframe(builder, self.frame)
+        SpacecraftFrameWrapper = SpacecraftFrameWrapperEnd(builder)
+        return SpacecraftFrameWrapper

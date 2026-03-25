@@ -469,6 +469,12 @@ def OODStartMISSION_TYPESVector(builder, numElems):
 def StartMISSION_TYPESVector(builder, numElems):
     return OODStartMISSION_TYPESVector(builder, numElems)
 
+def OODCreateMISSION_TYPESVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateMISSION_TYPESVector(builder, data):
+    OODCreateMISSION_TYPESVector(builder, data)
+
 def OODAddBUS_TYPE(builder, BUS_TYPE):
     builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(BUS_TYPE), 0)
 
@@ -601,6 +607,12 @@ def OODStartDEP_NAMESVector(builder, numElems):
 def StartDEP_NAMESVector(builder, numElems):
     return OODStartDEP_NAMESVector(builder, numElems)
 
+def OODCreateDEP_NAMESVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateDEP_NAMESVector(builder, data):
+    OODCreateDEP_NAMESVector(builder, data)
+
 def OODAddDEP_EST_MASSES(builder, DEP_EST_MASSES):
     builder.PrependUOffsetTRelativeSlot(37, flatbuffers.number_types.UOffsetTFlags.py_type(DEP_EST_MASSES), 0)
 
@@ -613,6 +625,12 @@ def OODStartDEP_EST_MASSESVector(builder, numElems):
 def StartDEP_EST_MASSESVector(builder, numElems):
     return OODStartDEP_EST_MASSESVector(builder, numElems)
 
+def OODCreateDEP_EST_MASSESVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateDEP_EST_MASSESVector(builder, data):
+    OODCreateDEP_EST_MASSESVector(builder, data)
+
 def OODAddDEP_MASS_UNCS(builder, DEP_MASS_UNCS):
     builder.PrependUOffsetTRelativeSlot(38, flatbuffers.number_types.UOffsetTFlags.py_type(DEP_MASS_UNCS), 0)
 
@@ -624,6 +642,12 @@ def OODStartDEP_MASS_UNCSVector(builder, numElems):
 
 def StartDEP_MASS_UNCSVector(builder, numElems):
     return OODStartDEP_MASS_UNCSVector(builder, numElems)
+
+def OODCreateDEP_MASS_UNCSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateDEP_MASS_UNCSVector(builder, data):
+    OODCreateDEP_MASS_UNCSVector(builder, data)
 
 def OODAddLAST_OB_SOURCE(builder, LAST_OB_SOURCE):
     builder.PrependUOffsetTRelativeSlot(39, flatbuffers.number_types.UOffsetTFlags.py_type(LAST_OB_SOURCE), 0)
@@ -645,53 +669,95 @@ except:
 class OODT(object):
 
     # OODT
-    def __init__(self):
-        self.ID = None  # type: str
-        self.LAST_OB_TIME = None  # type: str
-        self.VISMAG = 0.0  # type: float
-        self.VISMAG_MIN = 0.0  # type: float
-        self.VISMAG_MAX = 0.0  # type: float
-        self.VISMAG_MEAN = 0.0  # type: float
-        self.RCS = 0.0  # type: float
-        self.RCS_MIN = 0.0  # type: float
-        self.RCS_MAX = 0.0  # type: float
-        self.RCS_MEAN = 0.0  # type: float
-        self.BOL_DELTA_V = 0.0  # type: float
-        self.MAX_DELTA_V = 0.0  # type: float
-        self.DELTA_VUNC = 0.0  # type: float
-        self.EST_DELTA_VDURATION = 0.0  # type: float
-        self.NUM_MISSION = 0  # type: int
-        self.MISSION_TYPES = None  # type: List[str]
-        self.BUS_TYPE = None  # type: str
-        self.GEO_SLOT = 0.0  # type: float
-        self.DRIFT_RATE = 0.0  # type: float
-        self.DRY_MASS = 0.0  # type: float
-        self.ADDITIONAL_MASS = 0.0  # type: float
-        self.LAUNCH_MASS_MIN = 0.0  # type: float
-        self.LAUNCH_MASS = 0.0  # type: float
-        self.LAUNCH_MASS_MAX = 0.0  # type: float
-        self.BOL_FUEL_MASS = 0.0  # type: float
-        self.CURRENT_MASS = 0.0  # type: float
-        self.TOTAL_MASS_UNC = 0.0  # type: float
-        self.SOLAR_ARRAY_AREA = 0.0  # type: float
-        self.MANEUVERABLE = False  # type: bool
-        self.FUEL_REMAINING = 0.0  # type: float
-        self.CROSS_SECTION = 0.0  # type: float
-        self.BUS_CROSS_SECTION = 0.0  # type: float
-        self.MAX_RADIUS = 0.0  # type: float
-        self.COLA_RADIUS = 0.0  # type: float
-        self.ADEPT_RADIUS = 0.0  # type: float
-        self.NUM_DEPLOYABLE = 0  # type: int
-        self.DEP_NAMES = None  # type: List[str]
-        self.DEP_EST_MASSES = None  # type: List[str]
-        self.DEP_MASS_UNCS = None  # type: List[str]
-        self.LAST_OB_SOURCE = None  # type: str
+    def __init__(
+        self,
+        ID = None,
+        LAST_OB_TIME = None,
+        VISMAG = 0.0,
+        VISMAG_MIN = 0.0,
+        VISMAG_MAX = 0.0,
+        VISMAG_MEAN = 0.0,
+        RCS = 0.0,
+        RCS_MIN = 0.0,
+        RCS_MAX = 0.0,
+        RCS_MEAN = 0.0,
+        BOL_DELTA_V = 0.0,
+        MAX_DELTA_V = 0.0,
+        DELTA_VUNC = 0.0,
+        EST_DELTA_VDURATION = 0.0,
+        NUM_MISSION = 0,
+        MISSION_TYPES = None,
+        BUS_TYPE = None,
+        GEO_SLOT = 0.0,
+        DRIFT_RATE = 0.0,
+        DRY_MASS = 0.0,
+        ADDITIONAL_MASS = 0.0,
+        LAUNCH_MASS_MIN = 0.0,
+        LAUNCH_MASS = 0.0,
+        LAUNCH_MASS_MAX = 0.0,
+        BOL_FUEL_MASS = 0.0,
+        CURRENT_MASS = 0.0,
+        TOTAL_MASS_UNC = 0.0,
+        SOLAR_ARRAY_AREA = 0.0,
+        MANEUVERABLE = False,
+        FUEL_REMAINING = 0.0,
+        CROSS_SECTION = 0.0,
+        BUS_CROSS_SECTION = 0.0,
+        MAX_RADIUS = 0.0,
+        COLA_RADIUS = 0.0,
+        ADEPT_RADIUS = 0.0,
+        NUM_DEPLOYABLE = 0,
+        DEP_NAMES = None,
+        DEP_EST_MASSES = None,
+        DEP_MASS_UNCS = None,
+        LAST_OB_SOURCE = None,
+    ):
+        self.ID = ID  # type: Optional[str]
+        self.LAST_OB_TIME = LAST_OB_TIME  # type: Optional[str]
+        self.VISMAG = VISMAG  # type: float
+        self.VISMAG_MIN = VISMAG_MIN  # type: float
+        self.VISMAG_MAX = VISMAG_MAX  # type: float
+        self.VISMAG_MEAN = VISMAG_MEAN  # type: float
+        self.RCS = RCS  # type: float
+        self.RCS_MIN = RCS_MIN  # type: float
+        self.RCS_MAX = RCS_MAX  # type: float
+        self.RCS_MEAN = RCS_MEAN  # type: float
+        self.BOL_DELTA_V = BOL_DELTA_V  # type: float
+        self.MAX_DELTA_V = MAX_DELTA_V  # type: float
+        self.DELTA_VUNC = DELTA_VUNC  # type: float
+        self.EST_DELTA_VDURATION = EST_DELTA_VDURATION  # type: float
+        self.NUM_MISSION = NUM_MISSION  # type: int
+        self.MISSION_TYPES = MISSION_TYPES  # type: Optional[List[Optional[str]]]
+        self.BUS_TYPE = BUS_TYPE  # type: Optional[str]
+        self.GEO_SLOT = GEO_SLOT  # type: float
+        self.DRIFT_RATE = DRIFT_RATE  # type: float
+        self.DRY_MASS = DRY_MASS  # type: float
+        self.ADDITIONAL_MASS = ADDITIONAL_MASS  # type: float
+        self.LAUNCH_MASS_MIN = LAUNCH_MASS_MIN  # type: float
+        self.LAUNCH_MASS = LAUNCH_MASS  # type: float
+        self.LAUNCH_MASS_MAX = LAUNCH_MASS_MAX  # type: float
+        self.BOL_FUEL_MASS = BOL_FUEL_MASS  # type: float
+        self.CURRENT_MASS = CURRENT_MASS  # type: float
+        self.TOTAL_MASS_UNC = TOTAL_MASS_UNC  # type: float
+        self.SOLAR_ARRAY_AREA = SOLAR_ARRAY_AREA  # type: float
+        self.MANEUVERABLE = MANEUVERABLE  # type: bool
+        self.FUEL_REMAINING = FUEL_REMAINING  # type: float
+        self.CROSS_SECTION = CROSS_SECTION  # type: float
+        self.BUS_CROSS_SECTION = BUS_CROSS_SECTION  # type: float
+        self.MAX_RADIUS = MAX_RADIUS  # type: float
+        self.COLA_RADIUS = COLA_RADIUS  # type: float
+        self.ADEPT_RADIUS = ADEPT_RADIUS  # type: float
+        self.NUM_DEPLOYABLE = NUM_DEPLOYABLE  # type: int
+        self.DEP_NAMES = DEP_NAMES  # type: Optional[List[Optional[str]]]
+        self.DEP_EST_MASSES = DEP_EST_MASSES  # type: Optional[List[Optional[str]]]
+        self.DEP_MASS_UNCS = DEP_MASS_UNCS  # type: Optional[List[Optional[str]]]
+        self.LAST_OB_SOURCE = LAST_OB_SOURCE  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        OOD = OOD()
-        OOD.Init(buf, pos)
-        return cls.InitFromObj(OOD)
+        tmpOod = OOD()
+        tmpOod.Init(buf, pos)
+        return cls.InitFromObj(tmpOod)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -699,9 +765,9 @@ class OODT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, OOD):
+    def InitFromObj(cls, tmpOod):
         x = OODT()
-        x._UnPack(OOD)
+        x._UnPack(tmpOod)
         return x
 
     # OODT

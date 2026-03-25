@@ -32,7 +32,7 @@ class SPW : Table() {
     /**
      * Date in ISO 8601 format
      */
-    val DATE : String?
+    val date : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class SPW : Table() {
                 null
             }
         }
-    val DATEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun DATEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val dateAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun dateInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Bartels Solar Rotation Number
      */
-    val BSRN : Int
+    val bsrn : Int
         get() {
             val o = __offset(6)
             return if(o != 0) bb.getInt(o + bb_pos) else 0
@@ -54,7 +54,7 @@ class SPW : Table() {
     /**
      * Day within Bartels cycle (1-27)
      */
-    val ND : Int
+    val nd : Int
         get() {
             val o = __offset(8)
             return if(o != 0) bb.getInt(o + bb_pos) else 0
@@ -62,7 +62,7 @@ class SPW : Table() {
     /**
      * Planetary 3-hour Range Index (Kp) for 0000-0300 UT, multiplied by 10
      */
-    val KP1 : Int
+    val kp1 : Int
         get() {
             val o = __offset(10)
             return if(o != 0) bb.getInt(o + bb_pos) else 0
@@ -70,7 +70,7 @@ class SPW : Table() {
     /**
      * Planetary 3-hour Range Index (Kp) for 0300-0600 UT, multiplied by 10
      */
-    val KP2 : Int
+    val kp2 : Int
         get() {
             val o = __offset(12)
             return if(o != 0) bb.getInt(o + bb_pos) else 0
@@ -78,7 +78,7 @@ class SPW : Table() {
     /**
      * Planetary 3-hour Range Index (Kp) for 0600-0900 UT, multiplied by 10
      */
-    val KP3 : Int
+    val kp3 : Int
         get() {
             val o = __offset(14)
             return if(o != 0) bb.getInt(o + bb_pos) else 0
@@ -86,7 +86,7 @@ class SPW : Table() {
     /**
      * Planetary 3-hour Range Index (Kp) for 0900-1200 UT, multiplied by 10
      */
-    val KP4 : Int
+    val kp4 : Int
         get() {
             val o = __offset(16)
             return if(o != 0) bb.getInt(o + bb_pos) else 0
@@ -94,7 +94,7 @@ class SPW : Table() {
     /**
      * Planetary 3-hour Range Index (Kp) for 1200-1500 UT, multiplied by 10
      */
-    val KP5 : Int
+    val kp5 : Int
         get() {
             val o = __offset(18)
             return if(o != 0) bb.getInt(o + bb_pos) else 0
@@ -102,7 +102,7 @@ class SPW : Table() {
     /**
      * Planetary 3-hour Range Index (Kp) for 1500-1800 UT, multiplied by 10
      */
-    val KP6 : Int
+    val kp6 : Int
         get() {
             val o = __offset(20)
             return if(o != 0) bb.getInt(o + bb_pos) else 0
@@ -110,7 +110,7 @@ class SPW : Table() {
     /**
      * Planetary 3-hour Range Index (Kp) for 1800-2100 UT, multiplied by 10
      */
-    val KP7 : Int
+    val kp7 : Int
         get() {
             val o = __offset(22)
             return if(o != 0) bb.getInt(o + bb_pos) else 0
@@ -118,7 +118,7 @@ class SPW : Table() {
     /**
      * Planetary 3-hour Range Index (Kp) for 2100-0000 UT, multiplied by 10
      */
-    val KP8 : Int
+    val kp8 : Int
         get() {
             val o = __offset(24)
             return if(o != 0) bb.getInt(o + bb_pos) else 0
@@ -126,7 +126,7 @@ class SPW : Table() {
     /**
      * Sum of the 8 Kp indices for the day
      */
-    val KP_SUM : Int
+    val kpSum : Int
         get() {
             val o = __offset(26)
             return if(o != 0) bb.getInt(o + bb_pos) else 0
@@ -134,7 +134,7 @@ class SPW : Table() {
     /**
      * Planetary Equivalent Amplitude (Ap) for 0000-0300 UT
      */
-    val AP1 : Int
+    val ap1 : Int
         get() {
             val o = __offset(28)
             return if(o != 0) bb.getInt(o + bb_pos) else 0
@@ -142,7 +142,7 @@ class SPW : Table() {
     /**
      * Planetary Equivalent Amplitude (Ap) for 0300-0600 UT
      */
-    val AP2 : Int
+    val ap2 : Int
         get() {
             val o = __offset(30)
             return if(o != 0) bb.getInt(o + bb_pos) else 0
@@ -150,7 +150,7 @@ class SPW : Table() {
     /**
      * Planetary Equivalent Amplitude (Ap) for 0600-0900 UT
      */
-    val AP3 : Int
+    val ap3 : Int
         get() {
             val o = __offset(32)
             return if(o != 0) bb.getInt(o + bb_pos) else 0
@@ -158,7 +158,7 @@ class SPW : Table() {
     /**
      * Planetary Equivalent Amplitude (Ap) for 0900-1200 UT
      */
-    val AP4 : Int
+    val ap4 : Int
         get() {
             val o = __offset(34)
             return if(o != 0) bb.getInt(o + bb_pos) else 0
@@ -166,7 +166,7 @@ class SPW : Table() {
     /**
      * Planetary Equivalent Amplitude (Ap) for 1200-1500 UT
      */
-    val AP5 : Int
+    val ap5 : Int
         get() {
             val o = __offset(36)
             return if(o != 0) bb.getInt(o + bb_pos) else 0
@@ -174,7 +174,7 @@ class SPW : Table() {
     /**
      * Planetary Equivalent Amplitude (Ap) for 1500-1800 UT
      */
-    val AP6 : Int
+    val ap6 : Int
         get() {
             val o = __offset(38)
             return if(o != 0) bb.getInt(o + bb_pos) else 0
@@ -182,7 +182,7 @@ class SPW : Table() {
     /**
      * Planetary Equivalent Amplitude (Ap) for 1800-2100 UT
      */
-    val AP7 : Int
+    val ap7 : Int
         get() {
             val o = __offset(40)
             return if(o != 0) bb.getInt(o + bb_pos) else 0
@@ -190,7 +190,7 @@ class SPW : Table() {
     /**
      * Planetary Equivalent Amplitude (Ap) for 2100-0000 UT
      */
-    val AP8 : Int
+    val ap8 : Int
         get() {
             val o = __offset(42)
             return if(o != 0) bb.getInt(o + bb_pos) else 0
@@ -198,7 +198,7 @@ class SPW : Table() {
     /**
      * Arithmetic average of the 8 Ap indices for the day
      */
-    val AP_AVG : Int
+    val apAvg : Int
         get() {
             val o = __offset(44)
             return if(o != 0) bb.getInt(o + bb_pos) else 0
@@ -206,7 +206,7 @@ class SPW : Table() {
     /**
      * Planetary Daily Character Figure (0.0 to 2.5)
      */
-    val CP : Float
+    val cp : Float
         get() {
             val o = __offset(46)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -214,7 +214,7 @@ class SPW : Table() {
     /**
      * C9 index (0-9)
      */
-    val C9 : Int
+    val c9 : Int
         get() {
             val o = __offset(48)
             return if(o != 0) bb.getInt(o + bb_pos) else 0
@@ -222,7 +222,7 @@ class SPW : Table() {
     /**
      * International Sunspot Number
      */
-    val ISN : Int
+    val isn : Int
         get() {
             val o = __offset(50)
             return if(o != 0) bb.getInt(o + bb_pos) else 0
@@ -230,7 +230,7 @@ class SPW : Table() {
     /**
      * Observed 10.7cm Solar Radio Flux
      */
-    val F107_OBS : Float
+    val f107Obs : Float
         get() {
             val o = __offset(52)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -238,7 +238,7 @@ class SPW : Table() {
     /**
      * Adjusted 10.7cm Solar Radio Flux (to 1 AU)
      */
-    val F107_ADJ : Float
+    val f107Adj : Float
         get() {
             val o = __offset(54)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -246,7 +246,7 @@ class SPW : Table() {
     /**
      * F10.7 Data Type
      */
-    val F107_DATA_TYPE : Byte
+    val f107DataType : Byte
         get() {
             val o = __offset(56)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -254,7 +254,7 @@ class SPW : Table() {
     /**
      * 81-day centered average of observed F10.7
      */
-    val F107_OBS_CENTER81 : Float
+    val f107ObsCenter81 : Float
         get() {
             val o = __offset(58)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -262,7 +262,7 @@ class SPW : Table() {
     /**
      * 81-day trailing average of observed F10.7
      */
-    val F107_OBS_LAST81 : Float
+    val f107ObsLast81 : Float
         get() {
             val o = __offset(60)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -270,7 +270,7 @@ class SPW : Table() {
     /**
      * 81-day centered average of adjusted F10.7
      */
-    val F107_ADJ_CENTER81 : Float
+    val f107AdjCenter81 : Float
         get() {
             val o = __offset(62)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -278,86 +278,86 @@ class SPW : Table() {
     /**
      * 81-day trailing average of adjusted F10.7
      */
-    val F107_ADJ_LAST81 : Float
+    val f107AdjLast81 : Float
         get() {
             val o = __offset(64)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsSPW(_bb: ByteBuffer): SPW = getRootAsSPW(_bb, SPW())
         fun getRootAsSPW(_bb: ByteBuffer, obj: SPW): SPW {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun SPWBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$SPW")
-        fun createSPW(builder: FlatBufferBuilder, DATEOffset: Int, BSRN: Int, ND: Int, KP1: Int, KP2: Int, KP3: Int, KP4: Int, KP5: Int, KP6: Int, KP7: Int, KP8: Int, KP_SUM: Int, AP1: Int, AP2: Int, AP3: Int, AP4: Int, AP5: Int, AP6: Int, AP7: Int, AP8: Int, AP_AVG: Int, CP: Float, C9: Int, ISN: Int, F107_OBS: Float, F107_ADJ: Float, F107_DATA_TYPE: Byte, F107_OBS_CENTER81: Float, F107_OBS_LAST81: Float, F107_ADJ_CENTER81: Float, F107_ADJ_LAST81: Float) : Int {
+        fun createSPW(builder: FlatBufferBuilder, dateOffset: Int, bsrn: Int, nd: Int, kp1: Int, kp2: Int, kp3: Int, kp4: Int, kp5: Int, kp6: Int, kp7: Int, kp8: Int, kpSum: Int, ap1: Int, ap2: Int, ap3: Int, ap4: Int, ap5: Int, ap6: Int, ap7: Int, ap8: Int, apAvg: Int, cp: Float, c9: Int, isn: Int, f107Obs: Float, f107Adj: Float, f107DataType: Byte, f107ObsCenter81: Float, f107ObsLast81: Float, f107AdjCenter81: Float, f107AdjLast81: Float) : Int {
             builder.startTable(31)
-            addF107_ADJ_LAST81(builder, F107_ADJ_LAST81)
-            addF107_ADJ_CENTER81(builder, F107_ADJ_CENTER81)
-            addF107_OBS_LAST81(builder, F107_OBS_LAST81)
-            addF107_OBS_CENTER81(builder, F107_OBS_CENTER81)
-            addF107_ADJ(builder, F107_ADJ)
-            addF107_OBS(builder, F107_OBS)
-            addISN(builder, ISN)
-            addC9(builder, C9)
-            addCP(builder, CP)
-            addAP_AVG(builder, AP_AVG)
-            addAP8(builder, AP8)
-            addAP7(builder, AP7)
-            addAP6(builder, AP6)
-            addAP5(builder, AP5)
-            addAP4(builder, AP4)
-            addAP3(builder, AP3)
-            addAP2(builder, AP2)
-            addAP1(builder, AP1)
-            addKP_SUM(builder, KP_SUM)
-            addKP8(builder, KP8)
-            addKP7(builder, KP7)
-            addKP6(builder, KP6)
-            addKP5(builder, KP5)
-            addKP4(builder, KP4)
-            addKP3(builder, KP3)
-            addKP2(builder, KP2)
-            addKP1(builder, KP1)
-            addND(builder, ND)
-            addBSRN(builder, BSRN)
-            addDATE(builder, DATEOffset)
-            addF107_DATA_TYPE(builder, F107_DATA_TYPE)
+            addF107ADJLAST81(builder, f107AdjLast81)
+            addF107ADJCENTER81(builder, f107AdjCenter81)
+            addF107OBSLAST81(builder, f107ObsLast81)
+            addF107OBSCENTER81(builder, f107ObsCenter81)
+            addF107ADJ(builder, f107Adj)
+            addF107OBS(builder, f107Obs)
+            addISN(builder, isn)
+            addC9(builder, c9)
+            addCP(builder, cp)
+            addAPAVG(builder, apAvg)
+            addAP8(builder, ap8)
+            addAP7(builder, ap7)
+            addAP6(builder, ap6)
+            addAP5(builder, ap5)
+            addAP4(builder, ap4)
+            addAP3(builder, ap3)
+            addAP2(builder, ap2)
+            addAP1(builder, ap1)
+            addKPSUM(builder, kpSum)
+            addKP8(builder, kp8)
+            addKP7(builder, kp7)
+            addKP6(builder, kp6)
+            addKP5(builder, kp5)
+            addKP4(builder, kp4)
+            addKP3(builder, kp3)
+            addKP2(builder, kp2)
+            addKP1(builder, kp1)
+            addND(builder, nd)
+            addBSRN(builder, bsrn)
+            addDATE(builder, dateOffset)
+            addF107DATATYPE(builder, f107DataType)
             return endSPW(builder)
         }
         fun startSPW(builder: FlatBufferBuilder) = builder.startTable(31)
-        fun addDATE(builder: FlatBufferBuilder, DATE: Int) = builder.addOffset(0, DATE, 0)
-        fun addBSRN(builder: FlatBufferBuilder, BSRN: Int) = builder.addInt(1, BSRN, 0)
-        fun addND(builder: FlatBufferBuilder, ND: Int) = builder.addInt(2, ND, 0)
-        fun addKP1(builder: FlatBufferBuilder, KP1: Int) = builder.addInt(3, KP1, 0)
-        fun addKP2(builder: FlatBufferBuilder, KP2: Int) = builder.addInt(4, KP2, 0)
-        fun addKP3(builder: FlatBufferBuilder, KP3: Int) = builder.addInt(5, KP3, 0)
-        fun addKP4(builder: FlatBufferBuilder, KP4: Int) = builder.addInt(6, KP4, 0)
-        fun addKP5(builder: FlatBufferBuilder, KP5: Int) = builder.addInt(7, KP5, 0)
-        fun addKP6(builder: FlatBufferBuilder, KP6: Int) = builder.addInt(8, KP6, 0)
-        fun addKP7(builder: FlatBufferBuilder, KP7: Int) = builder.addInt(9, KP7, 0)
-        fun addKP8(builder: FlatBufferBuilder, KP8: Int) = builder.addInt(10, KP8, 0)
-        fun addKP_SUM(builder: FlatBufferBuilder, KP_SUM: Int) = builder.addInt(11, KP_SUM, 0)
-        fun addAP1(builder: FlatBufferBuilder, AP1: Int) = builder.addInt(12, AP1, 0)
-        fun addAP2(builder: FlatBufferBuilder, AP2: Int) = builder.addInt(13, AP2, 0)
-        fun addAP3(builder: FlatBufferBuilder, AP3: Int) = builder.addInt(14, AP3, 0)
-        fun addAP4(builder: FlatBufferBuilder, AP4: Int) = builder.addInt(15, AP4, 0)
-        fun addAP5(builder: FlatBufferBuilder, AP5: Int) = builder.addInt(16, AP5, 0)
-        fun addAP6(builder: FlatBufferBuilder, AP6: Int) = builder.addInt(17, AP6, 0)
-        fun addAP7(builder: FlatBufferBuilder, AP7: Int) = builder.addInt(18, AP7, 0)
-        fun addAP8(builder: FlatBufferBuilder, AP8: Int) = builder.addInt(19, AP8, 0)
-        fun addAP_AVG(builder: FlatBufferBuilder, AP_AVG: Int) = builder.addInt(20, AP_AVG, 0)
-        fun addCP(builder: FlatBufferBuilder, CP: Float) = builder.addFloat(21, CP, 0.0)
-        fun addC9(builder: FlatBufferBuilder, C9: Int) = builder.addInt(22, C9, 0)
-        fun addISN(builder: FlatBufferBuilder, ISN: Int) = builder.addInt(23, ISN, 0)
-        fun addF107_OBS(builder: FlatBufferBuilder, F107_OBS: Float) = builder.addFloat(24, F107_OBS, 0.0)
-        fun addF107_ADJ(builder: FlatBufferBuilder, F107_ADJ: Float) = builder.addFloat(25, F107_ADJ, 0.0)
-        fun addF107_DATA_TYPE(builder: FlatBufferBuilder, F107_DATA_TYPE: Byte) = builder.addByte(26, F107_DATA_TYPE, 0)
-        fun addF107_OBS_CENTER81(builder: FlatBufferBuilder, F107_OBS_CENTER81: Float) = builder.addFloat(27, F107_OBS_CENTER81, 0.0)
-        fun addF107_OBS_LAST81(builder: FlatBufferBuilder, F107_OBS_LAST81: Float) = builder.addFloat(28, F107_OBS_LAST81, 0.0)
-        fun addF107_ADJ_CENTER81(builder: FlatBufferBuilder, F107_ADJ_CENTER81: Float) = builder.addFloat(29, F107_ADJ_CENTER81, 0.0)
-        fun addF107_ADJ_LAST81(builder: FlatBufferBuilder, F107_ADJ_LAST81: Float) = builder.addFloat(30, F107_ADJ_LAST81, 0.0)
+        fun addDATE(builder: FlatBufferBuilder, date: Int) = builder.addOffset(0, date, 0)
+        fun addBSRN(builder: FlatBufferBuilder, bsrn: Int) = builder.addInt(1, bsrn, 0)
+        fun addND(builder: FlatBufferBuilder, nd: Int) = builder.addInt(2, nd, 0)
+        fun addKP1(builder: FlatBufferBuilder, kp1: Int) = builder.addInt(3, kp1, 0)
+        fun addKP2(builder: FlatBufferBuilder, kp2: Int) = builder.addInt(4, kp2, 0)
+        fun addKP3(builder: FlatBufferBuilder, kp3: Int) = builder.addInt(5, kp3, 0)
+        fun addKP4(builder: FlatBufferBuilder, kp4: Int) = builder.addInt(6, kp4, 0)
+        fun addKP5(builder: FlatBufferBuilder, kp5: Int) = builder.addInt(7, kp5, 0)
+        fun addKP6(builder: FlatBufferBuilder, kp6: Int) = builder.addInt(8, kp6, 0)
+        fun addKP7(builder: FlatBufferBuilder, kp7: Int) = builder.addInt(9, kp7, 0)
+        fun addKP8(builder: FlatBufferBuilder, kp8: Int) = builder.addInt(10, kp8, 0)
+        fun addKPSUM(builder: FlatBufferBuilder, kpSum: Int) = builder.addInt(11, kpSum, 0)
+        fun addAP1(builder: FlatBufferBuilder, ap1: Int) = builder.addInt(12, ap1, 0)
+        fun addAP2(builder: FlatBufferBuilder, ap2: Int) = builder.addInt(13, ap2, 0)
+        fun addAP3(builder: FlatBufferBuilder, ap3: Int) = builder.addInt(14, ap3, 0)
+        fun addAP4(builder: FlatBufferBuilder, ap4: Int) = builder.addInt(15, ap4, 0)
+        fun addAP5(builder: FlatBufferBuilder, ap5: Int) = builder.addInt(16, ap5, 0)
+        fun addAP6(builder: FlatBufferBuilder, ap6: Int) = builder.addInt(17, ap6, 0)
+        fun addAP7(builder: FlatBufferBuilder, ap7: Int) = builder.addInt(18, ap7, 0)
+        fun addAP8(builder: FlatBufferBuilder, ap8: Int) = builder.addInt(19, ap8, 0)
+        fun addAPAVG(builder: FlatBufferBuilder, apAvg: Int) = builder.addInt(20, apAvg, 0)
+        fun addCP(builder: FlatBufferBuilder, cp: Float) = builder.addFloat(21, cp, 0.0)
+        fun addC9(builder: FlatBufferBuilder, c9: Int) = builder.addInt(22, c9, 0)
+        fun addISN(builder: FlatBufferBuilder, isn: Int) = builder.addInt(23, isn, 0)
+        fun addF107OBS(builder: FlatBufferBuilder, f107Obs: Float) = builder.addFloat(24, f107Obs, 0.0)
+        fun addF107ADJ(builder: FlatBufferBuilder, f107Adj: Float) = builder.addFloat(25, f107Adj, 0.0)
+        fun addF107DATATYPE(builder: FlatBufferBuilder, f107DataType: Byte) = builder.addByte(26, f107DataType, 0)
+        fun addF107OBSCENTER81(builder: FlatBufferBuilder, f107ObsCenter81: Float) = builder.addFloat(27, f107ObsCenter81, 0.0)
+        fun addF107OBSLAST81(builder: FlatBufferBuilder, f107ObsLast81: Float) = builder.addFloat(28, f107ObsLast81, 0.0)
+        fun addF107ADJCENTER81(builder: FlatBufferBuilder, f107AdjCenter81: Float) = builder.addFloat(29, f107AdjCenter81, 0.0)
+        fun addF107ADJLAST81(builder: FlatBufferBuilder, f107AdjLast81: Float) = builder.addFloat(30, f107AdjLast81, 0.0)
         fun endSPW(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

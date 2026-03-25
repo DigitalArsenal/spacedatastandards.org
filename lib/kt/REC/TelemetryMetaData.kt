@@ -32,8 +32,8 @@ class TelemetryMetaData : Table() {
     /**
      * Parameter type definitions
      */
-    val PARAMETER_TYPE_SET : ParameterTypeSet? get() = PARAMETER_TYPE_SET(ParameterTypeSet())
-    fun PARAMETER_TYPE_SET(obj: ParameterTypeSet) : ParameterTypeSet? {
+    val parameterTypeSet : ParameterTypeSet? get() = parameterTypeSet(ParameterTypeSet())
+    fun parameterTypeSet(obj: ParameterTypeSet) : ParameterTypeSet? {
         val o = __offset(4)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -44,8 +44,8 @@ class TelemetryMetaData : Table() {
     /**
      * Parameter definitions
      */
-    val PARAMETER_SET : ParameterSet? get() = PARAMETER_SET(ParameterSet())
-    fun PARAMETER_SET(obj: ParameterSet) : ParameterSet? {
+    val parameterSet : ParameterSet? get() = parameterSet(ParameterSet())
+    fun parameterSet(obj: ParameterSet) : ParameterSet? {
         val o = __offset(6)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -56,8 +56,8 @@ class TelemetryMetaData : Table() {
     /**
      * Container definitions
      */
-    val CONTAINER_SET : ContainerSet? get() = CONTAINER_SET(ContainerSet())
-    fun CONTAINER_SET(obj: ContainerSet) : ContainerSet? {
+    val containerSet : ContainerSet? get() = containerSet(ContainerSet())
+    fun containerSet(obj: ContainerSet) : ContainerSet? {
         val o = __offset(8)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -68,8 +68,8 @@ class TelemetryMetaData : Table() {
     /**
      * Algorithm definitions
      */
-    val ALGORITHM_SET : AlgorithmSet? get() = ALGORITHM_SET(AlgorithmSet())
-    fun ALGORITHM_SET(obj: AlgorithmSet) : AlgorithmSet? {
+    val algorithmSet : AlgorithmSet? get() = algorithmSet(AlgorithmSet())
+    fun algorithmSet(obj: AlgorithmSet) : AlgorithmSet? {
         val o = __offset(10)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -80,8 +80,8 @@ class TelemetryMetaData : Table() {
     /**
      * Stream definitions
      */
-    val STREAM_SET : StreamSet? get() = STREAM_SET(StreamSet())
-    fun STREAM_SET(obj: StreamSet) : StreamSet? {
+    val streamSet : StreamSet? get() = streamSet(StreamSet())
+    fun streamSet(obj: StreamSet) : StreamSet? {
         val o = __offset(12)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -90,27 +90,27 @@ class TelemetryMetaData : Table() {
         }
     }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsTelemetryMetaData(_bb: ByteBuffer): TelemetryMetaData = getRootAsTelemetryMetaData(_bb, TelemetryMetaData())
         fun getRootAsTelemetryMetaData(_bb: ByteBuffer, obj: TelemetryMetaData): TelemetryMetaData {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createTelemetryMetaData(builder: FlatBufferBuilder, PARAMETER_TYPE_SETOffset: Int, PARAMETER_SETOffset: Int, CONTAINER_SETOffset: Int, ALGORITHM_SETOffset: Int, STREAM_SETOffset: Int) : Int {
+        fun createTelemetryMetaData(builder: FlatBufferBuilder, parameterTypeSetOffset: Int, parameterSetOffset: Int, containerSetOffset: Int, algorithmSetOffset: Int, streamSetOffset: Int) : Int {
             builder.startTable(5)
-            addSTREAM_SET(builder, STREAM_SETOffset)
-            addALGORITHM_SET(builder, ALGORITHM_SETOffset)
-            addCONTAINER_SET(builder, CONTAINER_SETOffset)
-            addPARAMETER_SET(builder, PARAMETER_SETOffset)
-            addPARAMETER_TYPE_SET(builder, PARAMETER_TYPE_SETOffset)
+            addSTREAMSET(builder, streamSetOffset)
+            addALGORITHMSET(builder, algorithmSetOffset)
+            addCONTAINERSET(builder, containerSetOffset)
+            addPARAMETERSET(builder, parameterSetOffset)
+            addPARAMETERTYPESET(builder, parameterTypeSetOffset)
             return endTelemetryMetaData(builder)
         }
         fun startTelemetryMetaData(builder: FlatBufferBuilder) = builder.startTable(5)
-        fun addPARAMETER_TYPE_SET(builder: FlatBufferBuilder, PARAMETER_TYPE_SET: Int) = builder.addOffset(0, PARAMETER_TYPE_SET, 0)
-        fun addPARAMETER_SET(builder: FlatBufferBuilder, PARAMETER_SET: Int) = builder.addOffset(1, PARAMETER_SET, 0)
-        fun addCONTAINER_SET(builder: FlatBufferBuilder, CONTAINER_SET: Int) = builder.addOffset(2, CONTAINER_SET, 0)
-        fun addALGORITHM_SET(builder: FlatBufferBuilder, ALGORITHM_SET: Int) = builder.addOffset(3, ALGORITHM_SET, 0)
-        fun addSTREAM_SET(builder: FlatBufferBuilder, STREAM_SET: Int) = builder.addOffset(4, STREAM_SET, 0)
+        fun addPARAMETERTYPESET(builder: FlatBufferBuilder, parameterTypeSet: Int) = builder.addOffset(0, parameterTypeSet, 0)
+        fun addPARAMETERSET(builder: FlatBufferBuilder, parameterSet: Int) = builder.addOffset(1, parameterSet, 0)
+        fun addCONTAINERSET(builder: FlatBufferBuilder, containerSet: Int) = builder.addOffset(2, containerSet, 0)
+        fun addALGORITHMSET(builder: FlatBufferBuilder, algorithmSet: Int) = builder.addOffset(3, algorithmSet, 0)
+        fun addSTREAMSET(builder: FlatBufferBuilder, streamSet: Int) = builder.addOffset(4, streamSet, 0)
         fun endTelemetryMetaData(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

@@ -87,16 +87,21 @@ def End(builder):
 class InterlockT(object):
 
     # InterlockT
-    def __init__(self):
-        self.PARAMETER_REF = None  # type: str
-        self.VALUE = None  # type: str
-        self.OPERATOR = 0  # type: int
+    def __init__(
+        self,
+        PARAMETER_REF = None,
+        VALUE = None,
+        OPERATOR = 0,
+    ):
+        self.PARAMETER_REF = PARAMETER_REF  # type: Optional[str]
+        self.VALUE = VALUE  # type: Optional[str]
+        self.OPERATOR = OPERATOR  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        interlock = Interlock()
-        interlock.Init(buf, pos)
-        return cls.InitFromObj(interlock)
+        tmpInterlock = Interlock()
+        tmpInterlock.Init(buf, pos)
+        return cls.InitFromObj(tmpInterlock)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -104,18 +109,18 @@ class InterlockT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, interlock):
+    def InitFromObj(cls, tmpInterlock):
         x = InterlockT()
-        x._UnPack(interlock)
+        x._UnPack(tmpInterlock)
         return x
 
     # InterlockT
-    def _UnPack(self, interlock):
-        if interlock is None:
+    def _UnPack(self, Interlock):
+        if Interlock is None:
             return
-        self.PARAMETER_REF = interlock.PARAMETER_REF()
-        self.VALUE = interlock.VALUE()
-        self.OPERATOR = interlock.OPERATOR()
+        self.PARAMETER_REF = Interlock.PARAMETER_REF()
+        self.VALUE = Interlock.VALUE()
+        self.OPERATOR = Interlock.OPERATOR()
 
     # InterlockT
     def Pack(self, builder):
@@ -129,5 +134,5 @@ class InterlockT(object):
         if self.VALUE is not None:
             InterlockAddVALUE(builder, VALUE)
         InterlockAddOPERATOR(builder, self.OPERATOR)
-        interlock = InterlockEnd(builder)
-        return interlock
+        Interlock = InterlockEnd(builder)
+        return Interlock

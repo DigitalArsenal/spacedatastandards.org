@@ -101,17 +101,23 @@ def End(builder):
 class KMLPolyStyleT(object):
 
     # KMLPolyStyleT
-    def __init__(self):
-        self.COLOR = None  # type: str
-        self.COLOR_MODE = 0  # type: int
-        self.FILL = False  # type: bool
-        self.OUTLINE = False  # type: bool
+    def __init__(
+        self,
+        COLOR = None,
+        COLOR_MODE = 0,
+        FILL = False,
+        OUTLINE = False,
+    ):
+        self.COLOR = COLOR  # type: Optional[str]
+        self.COLOR_MODE = COLOR_MODE  # type: int
+        self.FILL = FILL  # type: bool
+        self.OUTLINE = OUTLINE  # type: bool
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        kmlpolyStyle = KMLPolyStyle()
-        kmlpolyStyle.Init(buf, pos)
-        return cls.InitFromObj(kmlpolyStyle)
+        tmpKmlpolyStyle = KMLPolyStyle()
+        tmpKmlpolyStyle.Init(buf, pos)
+        return cls.InitFromObj(tmpKmlpolyStyle)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -119,19 +125,19 @@ class KMLPolyStyleT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, kmlpolyStyle):
+    def InitFromObj(cls, tmpKmlpolyStyle):
         x = KMLPolyStyleT()
-        x._UnPack(kmlpolyStyle)
+        x._UnPack(tmpKmlpolyStyle)
         return x
 
     # KMLPolyStyleT
-    def _UnPack(self, kmlpolyStyle):
-        if kmlpolyStyle is None:
+    def _UnPack(self, KMLPolyStyle):
+        if KMLPolyStyle is None:
             return
-        self.COLOR = kmlpolyStyle.COLOR()
-        self.COLOR_MODE = kmlpolyStyle.COLOR_MODE()
-        self.FILL = kmlpolyStyle.FILL()
-        self.OUTLINE = kmlpolyStyle.OUTLINE()
+        self.COLOR = KMLPolyStyle.COLOR()
+        self.COLOR_MODE = KMLPolyStyle.COLOR_MODE()
+        self.FILL = KMLPolyStyle.FILL()
+        self.OUTLINE = KMLPolyStyle.OUTLINE()
 
     # KMLPolyStyleT
     def Pack(self, builder):
@@ -143,5 +149,5 @@ class KMLPolyStyleT(object):
         KMLPolyStyleAddCOLOR_MODE(builder, self.COLOR_MODE)
         KMLPolyStyleAddFILL(builder, self.FILL)
         KMLPolyStyleAddOUTLINE(builder, self.OUTLINE)
-        kmlpolyStyle = KMLPolyStyleEnd(builder)
-        return kmlpolyStyle
+        KMLPolyStyle = KMLPolyStyleEnd(builder)
+        return KMLPolyStyle

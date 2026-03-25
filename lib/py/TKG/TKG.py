@@ -184,6 +184,12 @@ def TKGStartTRACKS_TO_CORRELATEVector(builder, numElems):
 def StartTRACKS_TO_CORRELATEVector(builder, numElems):
     return TKGStartTRACKS_TO_CORRELATEVector(builder, numElems)
 
+def TKGCreateTRACKS_TO_CORRELATEVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateTRACKS_TO_CORRELATEVector(builder, data):
+    TKGCreateTRACKS_TO_CORRELATEVector(builder, data)
+
 def TKGEnd(builder):
     return builder.EndObject()
 
@@ -198,23 +204,35 @@ except:
 class TKGT(object):
 
     # TKGT
-    def __init__(self):
-        self.COMMAND = None  # type: str
-        self.FILTER_CONFIG = None  # type: str
-        self.IMM_CONFIG = None  # type: str
-        self.MHT_CONFIG = None  # type: str
-        self.JPDA_CONFIG = None  # type: str
-        self.FUSION_CONFIG = None  # type: str
-        self.MEASUREMENTS = None  # type: str
-        self.INITIAL_STATE = None  # type: str
-        self.TRACK_TO_UPDATE = None  # type: str
-        self.TRACKS_TO_CORRELATE = None  # type: List[str]
+    def __init__(
+        self,
+        COMMAND = None,
+        FILTER_CONFIG = None,
+        IMM_CONFIG = None,
+        MHT_CONFIG = None,
+        JPDA_CONFIG = None,
+        FUSION_CONFIG = None,
+        MEASUREMENTS = None,
+        INITIAL_STATE = None,
+        TRACK_TO_UPDATE = None,
+        TRACKS_TO_CORRELATE = None,
+    ):
+        self.COMMAND = COMMAND  # type: Optional[str]
+        self.FILTER_CONFIG = FILTER_CONFIG  # type: Optional[str]
+        self.IMM_CONFIG = IMM_CONFIG  # type: Optional[str]
+        self.MHT_CONFIG = MHT_CONFIG  # type: Optional[str]
+        self.JPDA_CONFIG = JPDA_CONFIG  # type: Optional[str]
+        self.FUSION_CONFIG = FUSION_CONFIG  # type: Optional[str]
+        self.MEASUREMENTS = MEASUREMENTS  # type: Optional[str]
+        self.INITIAL_STATE = INITIAL_STATE  # type: Optional[str]
+        self.TRACK_TO_UPDATE = TRACK_TO_UPDATE  # type: Optional[str]
+        self.TRACKS_TO_CORRELATE = TRACKS_TO_CORRELATE  # type: Optional[List[Optional[str]]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        TKG = TKG()
-        TKG.Init(buf, pos)
-        return cls.InitFromObj(TKG)
+        tmpTkg = TKG()
+        tmpTkg.Init(buf, pos)
+        return cls.InitFromObj(tmpTkg)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -222,9 +240,9 @@ class TKGT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, TKG):
+    def InitFromObj(cls, tmpTkg):
         x = TKGT()
-        x._UnPack(TKG)
+        x._UnPack(tmpTkg)
         return x
 
     # TKGT

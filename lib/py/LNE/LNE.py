@@ -353,35 +353,59 @@ def End(builder):
 class LNET(object):
 
     # LNET
-    def __init__(self):
-        self.ID = None  # type: str
-        self.SAT_NO = 0  # type: int
-        self.ORIG_OBJECT_ID = None  # type: str
-        self.DERIVED_FROM = None  # type: str
-        self.DECLASSIFICATION_DATE = None  # type: str
-        self.DECLASSIFICATION_STRING = None  # type: str
-        self.MSG_CREATE_DATE = None  # type: str
-        self.LAUNCH_DATE = None  # type: str
-        self.OUTCOME = 0  # type: int
-        self.LAUNCH_FAILURE_CODE = None  # type: str
-        self.BE_NUMBER = None  # type: str
-        self.O_SUFFIX = None  # type: str
-        self.LAUNCH_FACILITY_NAME = None  # type: str
-        self.LAUNCH_FACILITY_CODE = None  # type: str
-        self.LAUNCH_VEHICLE = None  # type: str
-        self.LAUNCH_VEHICLE_CONFIG = None  # type: str
-        self.TARGET_ORBIT = None  # type: str
-        self.OBJECTS_ON_ORBIT = 0  # type: int
-        self.ON_ORBIT = None  # type: str
-        self.LAUNCH_COUNTRY = None  # type: str
-        self.MISSION_NAME = None  # type: str
-        self.REMARKS = None  # type: str
+    def __init__(
+        self,
+        ID = None,
+        SAT_NO = 0,
+        ORIG_OBJECT_ID = None,
+        DERIVED_FROM = None,
+        DECLASSIFICATION_DATE = None,
+        DECLASSIFICATION_STRING = None,
+        MSG_CREATE_DATE = None,
+        LAUNCH_DATE = None,
+        OUTCOME = 0,
+        LAUNCH_FAILURE_CODE = None,
+        BE_NUMBER = None,
+        O_SUFFIX = None,
+        LAUNCH_FACILITY_NAME = None,
+        LAUNCH_FACILITY_CODE = None,
+        LAUNCH_VEHICLE = None,
+        LAUNCH_VEHICLE_CONFIG = None,
+        TARGET_ORBIT = None,
+        OBJECTS_ON_ORBIT = 0,
+        ON_ORBIT = None,
+        LAUNCH_COUNTRY = None,
+        MISSION_NAME = None,
+        REMARKS = None,
+    ):
+        self.ID = ID  # type: Optional[str]
+        self.SAT_NO = SAT_NO  # type: int
+        self.ORIG_OBJECT_ID = ORIG_OBJECT_ID  # type: Optional[str]
+        self.DERIVED_FROM = DERIVED_FROM  # type: Optional[str]
+        self.DECLASSIFICATION_DATE = DECLASSIFICATION_DATE  # type: Optional[str]
+        self.DECLASSIFICATION_STRING = DECLASSIFICATION_STRING  # type: Optional[str]
+        self.MSG_CREATE_DATE = MSG_CREATE_DATE  # type: Optional[str]
+        self.LAUNCH_DATE = LAUNCH_DATE  # type: Optional[str]
+        self.OUTCOME = OUTCOME  # type: int
+        self.LAUNCH_FAILURE_CODE = LAUNCH_FAILURE_CODE  # type: Optional[str]
+        self.BE_NUMBER = BE_NUMBER  # type: Optional[str]
+        self.O_SUFFIX = O_SUFFIX  # type: Optional[str]
+        self.LAUNCH_FACILITY_NAME = LAUNCH_FACILITY_NAME  # type: Optional[str]
+        self.LAUNCH_FACILITY_CODE = LAUNCH_FACILITY_CODE  # type: Optional[str]
+        self.LAUNCH_VEHICLE = LAUNCH_VEHICLE  # type: Optional[str]
+        self.LAUNCH_VEHICLE_CONFIG = LAUNCH_VEHICLE_CONFIG  # type: Optional[str]
+        self.TARGET_ORBIT = TARGET_ORBIT  # type: Optional[str]
+        self.OBJECTS_ON_ORBIT = OBJECTS_ON_ORBIT  # type: int
+        self.ON_ORBIT = ON_ORBIT  # type: Optional[str]
+        self.LAUNCH_COUNTRY = LAUNCH_COUNTRY  # type: Optional[str]
+        self.MISSION_NAME = MISSION_NAME  # type: Optional[str]
+        self.REMARKS = REMARKS  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        LNE = LNE()
-        LNE.Init(buf, pos)
-        return cls.InitFromObj(LNE)
+        tmpLne = LNE()
+        tmpLne.Init(buf, pos)
+        return cls.InitFromObj(tmpLne)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -389,9 +413,9 @@ class LNET(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, LNE):
+    def InitFromObj(cls, tmpLne):
         x = LNET()
-        x._UnPack(LNE)
+        x._UnPack(tmpLne)
         return x
 
     # LNET

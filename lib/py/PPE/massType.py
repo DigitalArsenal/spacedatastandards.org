@@ -2,4 +2,6 @@
 
 # namespace: 
 
-# NOTE massType.py does not declare any structs or enums
+class massType(object):
+    DRY = 0
+    WET = 1

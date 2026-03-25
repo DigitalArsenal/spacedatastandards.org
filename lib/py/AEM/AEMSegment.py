@@ -224,6 +224,16 @@ def AEMSegmentStartATTITUDE_DATAVector(builder, numElems):
 def StartATTITUDE_DATAVector(builder, numElems):
     return AEMSegmentStartATTITUDE_DATAVector(builder, numElems)
 
+def AEMSegmentCreateATTITUDE_DATAVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateATTITUDE_DATAVector(builder, data):
+    AEMSegmentCreateATTITUDE_DATAVector(builder, data)
+
 def AEMSegmentEnd(builder):
     return builder.EndObject()
 
@@ -238,25 +248,39 @@ except:
 class AEMSegmentT(object):
 
     # AEMSegmentT
-    def __init__(self):
-        self.OBJECT_NAME = None  # type: str
-        self.OBJECT_ID = None  # type: str
-        self.REF_FRAME_A = None  # type: str
-        self.REF_FRAME_B = None  # type: str
-        self.ATTITUDE_DIR = None  # type: str
-        self.TIME_SYSTEM = None  # type: str
-        self.ATTITUDE_TYPE = None  # type: str
-        self.START_TIME = None  # type: str
-        self.STOP_TIME = None  # type: str
-        self.STEP_SIZE = 0.0  # type: float
-        self.ATTITUDE_COMPONENTS = 7  # type: int
-        self.ATTITUDE_DATA = None  # type: List[float]
+    def __init__(
+        self,
+        OBJECT_NAME = None,
+        OBJECT_ID = None,
+        REF_FRAME_A = None,
+        REF_FRAME_B = None,
+        ATTITUDE_DIR = None,
+        TIME_SYSTEM = None,
+        ATTITUDE_TYPE = None,
+        START_TIME = None,
+        STOP_TIME = None,
+        STEP_SIZE = 0.0,
+        ATTITUDE_COMPONENTS = 7,
+        ATTITUDE_DATA = None,
+    ):
+        self.OBJECT_NAME = OBJECT_NAME  # type: Optional[str]
+        self.OBJECT_ID = OBJECT_ID  # type: Optional[str]
+        self.REF_FRAME_A = REF_FRAME_A  # type: Optional[str]
+        self.REF_FRAME_B = REF_FRAME_B  # type: Optional[str]
+        self.ATTITUDE_DIR = ATTITUDE_DIR  # type: Optional[str]
+        self.TIME_SYSTEM = TIME_SYSTEM  # type: Optional[str]
+        self.ATTITUDE_TYPE = ATTITUDE_TYPE  # type: Optional[str]
+        self.START_TIME = START_TIME  # type: Optional[str]
+        self.STOP_TIME = STOP_TIME  # type: Optional[str]
+        self.STEP_SIZE = STEP_SIZE  # type: float
+        self.ATTITUDE_COMPONENTS = ATTITUDE_COMPONENTS  # type: int
+        self.ATTITUDE_DATA = ATTITUDE_DATA  # type: Optional[List[float]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        aemsegment = AEMSegment()
-        aemsegment.Init(buf, pos)
-        return cls.InitFromObj(aemsegment)
+        tmpAemsegment = AEMSegment()
+        tmpAemsegment.Init(buf, pos)
+        return cls.InitFromObj(tmpAemsegment)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -264,33 +288,33 @@ class AEMSegmentT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, aemsegment):
+    def InitFromObj(cls, tmpAemsegment):
         x = AEMSegmentT()
-        x._UnPack(aemsegment)
+        x._UnPack(tmpAemsegment)
         return x
 
     # AEMSegmentT
-    def _UnPack(self, aemsegment):
-        if aemsegment is None:
+    def _UnPack(self, AEMSegment):
+        if AEMSegment is None:
             return
-        self.OBJECT_NAME = aemsegment.OBJECT_NAME()
-        self.OBJECT_ID = aemsegment.OBJECT_ID()
-        self.REF_FRAME_A = aemsegment.REF_FRAME_A()
-        self.REF_FRAME_B = aemsegment.REF_FRAME_B()
-        self.ATTITUDE_DIR = aemsegment.ATTITUDE_DIR()
-        self.TIME_SYSTEM = aemsegment.TIME_SYSTEM()
-        self.ATTITUDE_TYPE = aemsegment.ATTITUDE_TYPE()
-        self.START_TIME = aemsegment.START_TIME()
-        self.STOP_TIME = aemsegment.STOP_TIME()
-        self.STEP_SIZE = aemsegment.STEP_SIZE()
-        self.ATTITUDE_COMPONENTS = aemsegment.ATTITUDE_COMPONENTS()
-        if not aemsegment.ATTITUDE_DATAIsNone():
+        self.OBJECT_NAME = AEMSegment.OBJECT_NAME()
+        self.OBJECT_ID = AEMSegment.OBJECT_ID()
+        self.REF_FRAME_A = AEMSegment.REF_FRAME_A()
+        self.REF_FRAME_B = AEMSegment.REF_FRAME_B()
+        self.ATTITUDE_DIR = AEMSegment.ATTITUDE_DIR()
+        self.TIME_SYSTEM = AEMSegment.TIME_SYSTEM()
+        self.ATTITUDE_TYPE = AEMSegment.ATTITUDE_TYPE()
+        self.START_TIME = AEMSegment.START_TIME()
+        self.STOP_TIME = AEMSegment.STOP_TIME()
+        self.STEP_SIZE = AEMSegment.STEP_SIZE()
+        self.ATTITUDE_COMPONENTS = AEMSegment.ATTITUDE_COMPONENTS()
+        if not AEMSegment.ATTITUDE_DATAIsNone():
             if np is None:
                 self.ATTITUDE_DATA = []
-                for i in range(aemsegment.ATTITUDE_DATALength()):
-                    self.ATTITUDE_DATA.append(aemsegment.ATTITUDE_DATA(i))
+                for i in range(AEMSegment.ATTITUDE_DATALength()):
+                    self.ATTITUDE_DATA.append(AEMSegment.ATTITUDE_DATA(i))
             else:
-                self.ATTITUDE_DATA = aemsegment.ATTITUDE_DATAAsNumpy()
+                self.ATTITUDE_DATA = AEMSegment.ATTITUDE_DATAAsNumpy()
 
     # AEMSegmentT
     def Pack(self, builder):
@@ -343,5 +367,5 @@ class AEMSegmentT(object):
         AEMSegmentAddATTITUDE_COMPONENTS(builder, self.ATTITUDE_COMPONENTS)
         if self.ATTITUDE_DATA is not None:
             AEMSegmentAddATTITUDE_DATA(builder, ATTITUDE_DATA)
-        aemsegment = AEMSegmentEnd(builder)
-        return aemsegment
+        AEMSegment = AEMSegmentEnd(builder)
+        return AEMSegment

@@ -2,4 +2,95 @@
 
 # namespace: 
 
-# NOTE KMLWait.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# gx:Wait tour primitive
+class KMLWait(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = KMLWait()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsKMLWait(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def KMLWaitBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x4B\x4D\x4C", size_prefixed=size_prefixed)
+
+    # KMLWait
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Duration in seconds
+    # KMLWait
+    def DURATION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+def KMLWaitStart(builder):
+    builder.StartObject(1)
+
+def Start(builder):
+    KMLWaitStart(builder)
+
+def KMLWaitAddDURATION(builder, DURATION):
+    builder.PrependFloat64Slot(0, DURATION, 0.0)
+
+def AddDURATION(builder, DURATION):
+    KMLWaitAddDURATION(builder, DURATION)
+
+def KMLWaitEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return KMLWaitEnd(builder)
+
+
+class KMLWaitT(object):
+
+    # KMLWaitT
+    def __init__(
+        self,
+        DURATION = 0.0,
+    ):
+        self.DURATION = DURATION  # type: float
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpKmlwait = KMLWait()
+        tmpKmlwait.Init(buf, pos)
+        return cls.InitFromObj(tmpKmlwait)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpKmlwait):
+        x = KMLWaitT()
+        x._UnPack(tmpKmlwait)
+        return x
+
+    # KMLWaitT
+    def _UnPack(self, KMLWait):
+        if KMLWait is None:
+            return
+        self.DURATION = KMLWait.DURATION()
+
+    # KMLWaitT
+    def Pack(self, builder):
+        KMLWaitStart(builder)
+        KMLWaitAddDURATION(builder, self.DURATION)
+        KMLWait = KMLWaitEnd(builder)
+        return KMLWait

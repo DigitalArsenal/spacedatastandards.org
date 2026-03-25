@@ -2,4 +2,6 @@
 
 # namespace: 
 
-# NOTE KMLColorMode.py does not declare any structs or enums
+class KMLColorMode(object):
+    NORMAL = 0
+    RANDOM = 1

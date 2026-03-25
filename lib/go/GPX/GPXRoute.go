@@ -51,6 +51,10 @@ func (rcv *GPXRoute) NAME() []byte {
 	return nil
 }
 
+func (rcv *GPXRoute) Name() []byte {
+	return rcv.NAME()
+}
+
 /// Route name
 /// Comment
 func (rcv *GPXRoute) COMMENT() []byte {
@@ -59,6 +63,10 @@ func (rcv *GPXRoute) COMMENT() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *GPXRoute) Comment() []byte {
+	return rcv.COMMENT()
 }
 
 /// Comment
@@ -71,6 +79,10 @@ func (rcv *GPXRoute) DESCRIPTION() []byte {
 	return nil
 }
 
+func (rcv *GPXRoute) Description() []byte {
+	return rcv.DESCRIPTION()
+}
+
 /// Description
 /// Source of data
 func (rcv *GPXRoute) SOURCE() []byte {
@@ -81,6 +93,10 @@ func (rcv *GPXRoute) SOURCE() []byte {
 	return nil
 }
 
+func (rcv *GPXRoute) Source() []byte {
+	return rcv.SOURCE()
+}
+
 /// Source of data
 /// Links to additional information
 func (rcv *GPXRoute) LINKS(obj *GPXLink, j int) bool {
@@ -89,10 +105,17 @@ func (rcv *GPXRoute) LINKS(obj *GPXLink, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(GPXLink)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *GPXRoute) Links(obj *GPXLink, j int) bool {
+	return rcv.LINKS(obj, j)
 }
 
 func (rcv *GPXRoute) LINKSLength() int {
@@ -101,6 +124,10 @@ func (rcv *GPXRoute) LINKSLength() int {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *GPXRoute) LinksLength() int {
+	return rcv.LINKSLength()
 }
 
 /// Links to additional information
@@ -113,9 +140,17 @@ func (rcv *GPXRoute) NUMBER() uint32 {
 	return 0
 }
 
+func (rcv *GPXRoute) Number() uint32 {
+	return rcv.NUMBER()
+}
+
 /// Route number
 func (rcv *GPXRoute) MutateNUMBER(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(14, n)
+}
+
+func (rcv *GPXRoute) MutateNumber(n uint32) bool {
+	return rcv.MutateNUMBER(n)
 }
 
 /// Type/category
@@ -127,6 +162,10 @@ func (rcv *GPXRoute) TYPE() []byte {
 	return nil
 }
 
+func (rcv *GPXRoute) Type() []byte {
+	return rcv.TYPE()
+}
+
 /// Type/category
 /// Route points (ordered waypoints)
 func (rcv *GPXRoute) POINTS(obj *GPXWaypoint, j int) bool {
@@ -135,10 +174,17 @@ func (rcv *GPXRoute) POINTS(obj *GPXWaypoint, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(GPXWaypoint)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *GPXRoute) Points(obj *GPXWaypoint, j int) bool {
+	return rcv.POINTS(obj, j)
 }
 
 func (rcv *GPXRoute) POINTSLength() int {
@@ -149,6 +195,10 @@ func (rcv *GPXRoute) POINTSLength() int {
 	return 0
 }
 
+func (rcv *GPXRoute) PointsLength() int {
+	return rcv.POINTSLength()
+}
+
 /// Route points (ordered waypoints)
 func GPXRouteStart(builder *flatbuffers.Builder) {
 	builder.StartObject(8)
@@ -156,32 +206,62 @@ func GPXRouteStart(builder *flatbuffers.Builder) {
 func GPXRouteAddNAME(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(NAME), 0)
 }
+func GPXRouteAddName(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
+	GPXRouteAddNAME(builder, NAME)
+}
 func GPXRouteAddCOMMENT(builder *flatbuffers.Builder, COMMENT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(COMMENT), 0)
+}
+func GPXRouteAddComment(builder *flatbuffers.Builder, COMMENT flatbuffers.UOffsetT) {
+	GPXRouteAddCOMMENT(builder, COMMENT)
 }
 func GPXRouteAddDESCRIPTION(builder *flatbuffers.Builder, DESCRIPTION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(DESCRIPTION), 0)
 }
+func GPXRouteAddDescription(builder *flatbuffers.Builder, DESCRIPTION flatbuffers.UOffsetT) {
+	GPXRouteAddDESCRIPTION(builder, DESCRIPTION)
+}
 func GPXRouteAddSOURCE(builder *flatbuffers.Builder, SOURCE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(SOURCE), 0)
+}
+func GPXRouteAddSource(builder *flatbuffers.Builder, SOURCE flatbuffers.UOffsetT) {
+	GPXRouteAddSOURCE(builder, SOURCE)
 }
 func GPXRouteAddLINKS(builder *flatbuffers.Builder, LINKS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(LINKS), 0)
 }
+func GPXRouteAddLinks(builder *flatbuffers.Builder, LINKS flatbuffers.UOffsetT) {
+	GPXRouteAddLINKS(builder, LINKS)
+}
 func GPXRouteStartLINKSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func GPXRouteStartLinksVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return GPXRouteStartLINKSVector(builder, numElems)
 }
 func GPXRouteAddNUMBER(builder *flatbuffers.Builder, NUMBER uint32) {
 	builder.PrependUint32Slot(5, NUMBER, 0)
 }
+func GPXRouteAddNumber(builder *flatbuffers.Builder, NUMBER uint32) {
+	GPXRouteAddNUMBER(builder, NUMBER)
+}
 func GPXRouteAddTYPE(builder *flatbuffers.Builder, TYPE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(TYPE), 0)
+}
+func GPXRouteAddType(builder *flatbuffers.Builder, TYPE flatbuffers.UOffsetT) {
+	GPXRouteAddTYPE(builder, TYPE)
 }
 func GPXRouteAddPOINTS(builder *flatbuffers.Builder, POINTS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(POINTS), 0)
 }
+func GPXRouteAddPoints(builder *flatbuffers.Builder, POINTS flatbuffers.UOffsetT) {
+	GPXRouteAddPOINTS(builder, POINTS)
+}
 func GPXRouteStartPOINTSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func GPXRouteStartPointsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return GPXRouteStartPOINTSVector(builder, numElems)
 }
 func GPXRouteEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

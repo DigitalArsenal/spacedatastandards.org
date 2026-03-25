@@ -44,7 +44,7 @@ class RFM extends Table
     /**
      * @return byte
      */
-    public function getREFERENCEFRAMEType()
+    public function getREFERENCE_FRAME_type()
     {
         $o = $this->__offset(4);
         return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : \RFMUnion::NONE;
@@ -90,7 +90,7 @@ class RFM extends Table
     public static function createRFM(FlatBufferBuilder $builder, $REFERENCE_FRAME_type, $REFERENCE_FRAME, $INDEX, $NAME)
     {
         $builder->startObject(4);
-        self::addREFERENCEFRAMEType($builder, $REFERENCE_FRAME_type);
+        self::addREFERENCE_FRAME_type($builder, $REFERENCE_FRAME_type);
         self::addREFERENCE_FRAME($builder, $REFERENCE_FRAME);
         self::addINDEX($builder, $INDEX);
         self::addNAME($builder, $NAME);
@@ -103,9 +103,9 @@ class RFM extends Table
      * @param byte
      * @return void
      */
-    public static function addREFERENCEFRAMEType(FlatBufferBuilder $builder, $rEFERENCEFRAMEType)
+    public static function addREFERENCE_FRAME_type(FlatBufferBuilder $builder, $REFERENCE_FRAME_type)
     {
-        $builder->addByteX(0, $rEFERENCEFRAMEType, 0);
+        $builder->addByteX(0, $REFERENCE_FRAME_type, 0);
     }
 
     public static function addREFERENCE_FRAME(FlatBufferBuilder $builder, $offset)

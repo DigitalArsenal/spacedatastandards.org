@@ -2,4 +2,17 @@
 
 # namespace: 
 
-# NOTE licenseType.py does not declare any structs or enums
+# License type for plugin access
+class licenseType(object):
+    # Evaluation/trial license
+    Trial = 0
+    # Standard commercial license
+    Commercial = 1
+    # Enterprise site license
+    Enterprise = 2
+    # Educational/academic license
+    Educational = 3
+    # Open source project license
+    OpenSource = 4
+    # Internal OrbPro default plugins
+    Internal = 5

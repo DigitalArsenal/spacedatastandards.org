@@ -63,9 +63,17 @@ func (rcv *CLT) PDU_TYPE() cltuPduType {
 	return 0
 }
 
+func (rcv *CLT) PduType() cltuPduType {
+	return rcv.PDU_TYPE()
+}
+
 /// PDU type
 func (rcv *CLT) MutatePDU_TYPE(n cltuPduType) bool {
 	return rcv._tab.MutateInt8Slot(4, int8(n))
+}
+
+func (rcv *CLT) MutatePduType(n cltuPduType) bool {
+	return rcv.MutatePDU_TYPE(n)
 }
 
 /// Initiator identifier
@@ -75,6 +83,10 @@ func (rcv *CLT) INITIATOR_ID() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *CLT) InitiatorId() []byte {
+	return rcv.INITIATOR_ID()
 }
 
 /// Initiator identifier
@@ -87,6 +99,10 @@ func (rcv *CLT) RESPONDER_PORT_ID() []byte {
 	return nil
 }
 
+func (rcv *CLT) ResponderPortId() []byte {
+	return rcv.RESPONDER_PORT_ID()
+}
+
 /// Responder port identifier
 /// Service type
 func (rcv *CLT) SERVICE_TYPE() byte {
@@ -97,9 +113,17 @@ func (rcv *CLT) SERVICE_TYPE() byte {
 	return 0
 }
 
+func (rcv *CLT) ServiceType() byte {
+	return rcv.SERVICE_TYPE()
+}
+
 /// Service type
 func (rcv *CLT) MutateSERVICE_TYPE(n byte) bool {
 	return rcv._tab.MutateByteSlot(10, n)
+}
+
+func (rcv *CLT) MutateServiceType(n byte) bool {
+	return rcv.MutateSERVICE_TYPE(n)
 }
 
 /// Version number
@@ -111,9 +135,17 @@ func (rcv *CLT) VERSION() uint16 {
 	return 0
 }
 
+func (rcv *CLT) Version() uint16 {
+	return rcv.VERSION()
+}
+
 /// Version number
 func (rcv *CLT) MutateVERSION(n uint16) bool {
 	return rcv._tab.MutateUint16Slot(12, n)
+}
+
+func (rcv *CLT) MutateVersion(n uint16) bool {
+	return rcv.MutateVERSION(n)
 }
 
 /// Invoke ID
@@ -125,9 +157,17 @@ func (rcv *CLT) INVOKE_ID() uint32 {
 	return 0
 }
 
+func (rcv *CLT) InvokeId() uint32 {
+	return rcv.INVOKE_ID()
+}
+
 /// Invoke ID
 func (rcv *CLT) MutateINVOKE_ID(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(14, n)
+}
+
+func (rcv *CLT) MutateInvokeId(n uint32) bool {
+	return rcv.MutateINVOKE_ID(n)
 }
 
 /// CLTU data
@@ -140,6 +180,10 @@ func (rcv *CLT) DATA(j int) byte {
 	return 0
 }
 
+func (rcv *CLT) Data(j int) byte {
+	return rcv.DATA(j)
+}
+
 func (rcv *CLT) DATALength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
 	if o != 0 {
@@ -148,12 +192,20 @@ func (rcv *CLT) DATALength() int {
 	return 0
 }
 
+func (rcv *CLT) DataLength() int {
+	return rcv.DATALength()
+}
+
 func (rcv *CLT) DATABytes() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *CLT) DataBytes() []byte {
+	return rcv.DATABytes()
 }
 
 /// CLTU data
@@ -166,32 +218,60 @@ func (rcv *CLT) MutateDATA(j int, n byte) bool {
 	return false
 }
 
+func (rcv *CLT) MutateData(j int, n byte) bool {
+	return rcv.MutateDATA(j, n)
+}
+
 func CLTStart(builder *flatbuffers.Builder) {
 	builder.StartObject(7)
 }
 func CLTAddPDU_TYPE(builder *flatbuffers.Builder, PDU_TYPE cltuPduType) {
 	builder.PrependInt8Slot(0, int8(PDU_TYPE), 0)
 }
+func CLTAddPduType(builder *flatbuffers.Builder, PDU_TYPE cltuPduType) {
+	CLTAddPDU_TYPE(builder, PDU_TYPE)
+}
 func CLTAddINITIATOR_ID(builder *flatbuffers.Builder, INITIATOR_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(INITIATOR_ID), 0)
+}
+func CLTAddInitiatorId(builder *flatbuffers.Builder, INITIATOR_ID flatbuffers.UOffsetT) {
+	CLTAddINITIATOR_ID(builder, INITIATOR_ID)
 }
 func CLTAddRESPONDER_PORT_ID(builder *flatbuffers.Builder, RESPONDER_PORT_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(RESPONDER_PORT_ID), 0)
 }
+func CLTAddResponderPortId(builder *flatbuffers.Builder, RESPONDER_PORT_ID flatbuffers.UOffsetT) {
+	CLTAddRESPONDER_PORT_ID(builder, RESPONDER_PORT_ID)
+}
 func CLTAddSERVICE_TYPE(builder *flatbuffers.Builder, SERVICE_TYPE byte) {
 	builder.PrependByteSlot(3, SERVICE_TYPE, 0)
+}
+func CLTAddServiceType(builder *flatbuffers.Builder, SERVICE_TYPE byte) {
+	CLTAddSERVICE_TYPE(builder, SERVICE_TYPE)
 }
 func CLTAddVERSION(builder *flatbuffers.Builder, VERSION uint16) {
 	builder.PrependUint16Slot(4, VERSION, 0)
 }
+func CLTAddVersion(builder *flatbuffers.Builder, VERSION uint16) {
+	CLTAddVERSION(builder, VERSION)
+}
 func CLTAddINVOKE_ID(builder *flatbuffers.Builder, INVOKE_ID uint32) {
 	builder.PrependUint32Slot(5, INVOKE_ID, 0)
+}
+func CLTAddInvokeId(builder *flatbuffers.Builder, INVOKE_ID uint32) {
+	CLTAddINVOKE_ID(builder, INVOKE_ID)
 }
 func CLTAddDATA(builder *flatbuffers.Builder, DATA flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(DATA), 0)
 }
+func CLTAddData(builder *flatbuffers.Builder, DATA flatbuffers.UOffsetT) {
+	CLTAddDATA(builder, DATA)
+}
 func CLTStartDATAVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(1, numElems, 1)
+}
+func CLTStartDataVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return CLTStartDATAVector(builder, numElems)
 }
 func CLTEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

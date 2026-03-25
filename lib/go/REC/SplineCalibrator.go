@@ -49,10 +49,17 @@ func (rcv *SplineCalibrator) POINTS(obj *SplinePoint, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(SplinePoint)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *SplineCalibrator) Points(obj *SplinePoint, j int) bool {
+	return rcv.POINTS(obj, j)
 }
 
 func (rcv *SplineCalibrator) POINTSLength() int {
@@ -61,6 +68,10 @@ func (rcv *SplineCalibrator) POINTSLength() int {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *SplineCalibrator) PointsLength() int {
+	return rcv.POINTSLength()
 }
 
 /// Spline points ordered by raw value
@@ -73,9 +84,17 @@ func (rcv *SplineCalibrator) EXTRAPOLATE_LOW() bool {
 	return false
 }
 
+func (rcv *SplineCalibrator) ExtrapolateLow() bool {
+	return rcv.EXTRAPOLATE_LOW()
+}
+
 /// Extrapolate below minimum point
 func (rcv *SplineCalibrator) MutateEXTRAPOLATE_LOW(n bool) bool {
 	return rcv._tab.MutateBoolSlot(6, n)
+}
+
+func (rcv *SplineCalibrator) MutateExtrapolateLow(n bool) bool {
+	return rcv.MutateEXTRAPOLATE_LOW(n)
 }
 
 /// Extrapolate above maximum point
@@ -87,9 +106,17 @@ func (rcv *SplineCalibrator) EXTRAPOLATE_HIGH() bool {
 	return false
 }
 
+func (rcv *SplineCalibrator) ExtrapolateHigh() bool {
+	return rcv.EXTRAPOLATE_HIGH()
+}
+
 /// Extrapolate above maximum point
 func (rcv *SplineCalibrator) MutateEXTRAPOLATE_HIGH(n bool) bool {
 	return rcv._tab.MutateBoolSlot(8, n)
+}
+
+func (rcv *SplineCalibrator) MutateExtrapolateHigh(n bool) bool {
+	return rcv.MutateEXTRAPOLATE_HIGH(n)
 }
 
 func SplineCalibratorStart(builder *flatbuffers.Builder) {
@@ -98,14 +125,26 @@ func SplineCalibratorStart(builder *flatbuffers.Builder) {
 func SplineCalibratorAddPOINTS(builder *flatbuffers.Builder, POINTS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(POINTS), 0)
 }
+func SplineCalibratorAddPoints(builder *flatbuffers.Builder, POINTS flatbuffers.UOffsetT) {
+	SplineCalibratorAddPOINTS(builder, POINTS)
+}
 func SplineCalibratorStartPOINTSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func SplineCalibratorStartPointsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return SplineCalibratorStartPOINTSVector(builder, numElems)
 }
 func SplineCalibratorAddEXTRAPOLATE_LOW(builder *flatbuffers.Builder, EXTRAPOLATE_LOW bool) {
 	builder.PrependBoolSlot(1, EXTRAPOLATE_LOW, false)
 }
+func SplineCalibratorAddExtrapolateLow(builder *flatbuffers.Builder, EXTRAPOLATE_LOW bool) {
+	SplineCalibratorAddEXTRAPOLATE_LOW(builder, EXTRAPOLATE_LOW)
+}
 func SplineCalibratorAddEXTRAPOLATE_HIGH(builder *flatbuffers.Builder, EXTRAPOLATE_HIGH bool) {
 	builder.PrependBoolSlot(2, EXTRAPOLATE_HIGH, false)
+}
+func SplineCalibratorAddExtrapolateHigh(builder *flatbuffers.Builder, EXTRAPOLATE_HIGH bool) {
+	SplineCalibratorAddEXTRAPOLATE_HIGH(builder, EXTRAPOLATE_HIGH)
 }
 func SplineCalibratorEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

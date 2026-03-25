@@ -1,5 +1,5 @@
-// Hash: 0000000000000000000000000000000000000000000000000000000000000000
-// Version: 1.0.0
+// Hash: 02c2480a6dbebfb927897c8ef1642e05970835a81a16c64881cef8fdcea0e992
+// Version: 1.0.1
 // -----------------------------------END_HEADER
 include "../RFM/main.fbs";
 include "../TIM/main.fbs";
@@ -61,7 +61,7 @@ enum polynomialBasisType : byte {
 }
 
 /// Anomaly type flag for orbital element records.
-enum anomalyType : byte {
+enum ppeAnomalyType : byte {
   /// True anomaly (geometric angle from periapsis).
   TRUE_ANOMALY,
 
@@ -180,7 +180,7 @@ table PPEOrbitalElementRecord {
   SIZE_SHAPE_TYPE: sizeShapeType = SMA;
 
   /// Anomaly type for the sixth orbital element.
-  ANOMALY_TYPE: anomalyType = TRUE_ANOMALY;
+  ANOMALY_TYPE: ppeAnomalyType = TRUE_ANOMALY;
 
   /// Coefficients for SMA or radius of periapsis (km).
   /// Length must equal NUM_COEFFICIENTS.

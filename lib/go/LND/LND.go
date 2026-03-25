@@ -63,6 +63,10 @@ func (rcv *LND) ID() []byte {
 	return nil
 }
 
+func (rcv *LND) Id() []byte {
+	return rcv.ID()
+}
+
 /// Unique identifier
 /// Detection event identifier
 func (rcv *LND) EVENT_ID() []byte {
@@ -71,6 +75,10 @@ func (rcv *LND) EVENT_ID() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *LND) EventId() []byte {
+	return rcv.EVENT_ID()
 }
 
 /// Detection event identifier
@@ -83,9 +91,17 @@ func (rcv *LND) DETECTION_TYPE() launchDetectionType {
 	return 0
 }
 
+func (rcv *LND) DetectionType() launchDetectionType {
+	return rcv.DETECTION_TYPE()
+}
+
 /// Detection type
 func (rcv *LND) MutateDETECTION_TYPE(n launchDetectionType) bool {
 	return rcv._tab.MutateInt8Slot(8, int8(n))
+}
+
+func (rcv *LND) MutateDetectionType(n launchDetectionType) bool {
+	return rcv.MutateDETECTION_TYPE(n)
 }
 
 /// Detection message type code
@@ -95,6 +111,10 @@ func (rcv *LND) MESSAGE_TYPE() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *LND) MessageType() []byte {
+	return rcv.MESSAGE_TYPE()
 }
 
 /// Detection message type code
@@ -107,6 +127,10 @@ func (rcv *LND) LAUNCH_TIME() []byte {
 	return nil
 }
 
+func (rcv *LND) LaunchTime() []byte {
+	return rcv.LAUNCH_TIME()
+}
+
 /// Time of launch detection (ISO 8601)
 /// Launch site latitude (degrees)
 func (rcv *LND) LAUNCH_LATITUDE() float64 {
@@ -117,9 +141,17 @@ func (rcv *LND) LAUNCH_LATITUDE() float64 {
 	return 0.0
 }
 
+func (rcv *LND) LaunchLatitude() float64 {
+	return rcv.LAUNCH_LATITUDE()
+}
+
 /// Launch site latitude (degrees)
 func (rcv *LND) MutateLAUNCH_LATITUDE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(14, n)
+}
+
+func (rcv *LND) MutateLaunchLatitude(n float64) bool {
+	return rcv.MutateLAUNCH_LATITUDE(n)
 }
 
 /// Launch site longitude (degrees)
@@ -131,9 +163,17 @@ func (rcv *LND) LAUNCH_LONGITUDE() float64 {
 	return 0.0
 }
 
+func (rcv *LND) LaunchLongitude() float64 {
+	return rcv.LAUNCH_LONGITUDE()
+}
+
 /// Launch site longitude (degrees)
 func (rcv *LND) MutateLAUNCH_LONGITUDE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(16, n)
+}
+
+func (rcv *LND) MutateLaunchLongitude(n float64) bool {
+	return rcv.MutateLAUNCH_LONGITUDE(n)
 }
 
 /// Launch azimuth (degrees from north)
@@ -145,9 +185,17 @@ func (rcv *LND) LAUNCH_AZIMUTH() float64 {
 	return 0.0
 }
 
+func (rcv *LND) LaunchAzimuth() float64 {
+	return rcv.LAUNCH_AZIMUTH()
+}
+
 /// Launch azimuth (degrees from north)
 func (rcv *LND) MutateLAUNCH_AZIMUTH(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(18, n)
+}
+
+func (rcv *LND) MutateLaunchAzimuth(n float64) bool {
+	return rcv.MutateLAUNCH_AZIMUTH(n)
 }
 
 /// Estimated RAAN (degrees)
@@ -159,9 +207,17 @@ func (rcv *LND) RAAN() float64 {
 	return 0.0
 }
 
+func (rcv *LND) Raan() float64 {
+	return rcv.RAAN()
+}
+
 /// Estimated RAAN (degrees)
 func (rcv *LND) MutateRAAN(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(20, n)
+}
+
+func (rcv *LND) MutateRaan(n float64) bool {
+	return rcv.MutateRAAN(n)
 }
 
 /// Estimated inclination (degrees)
@@ -173,9 +229,17 @@ func (rcv *LND) INCLINATION() float64 {
 	return 0.0
 }
 
+func (rcv *LND) Inclination() float64 {
+	return rcv.INCLINATION()
+}
+
 /// Estimated inclination (degrees)
 func (rcv *LND) MutateINCLINATION(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(22, n)
+}
+
+func (rcv *LND) MutateInclination(n float64) bool {
+	return rcv.MutateINCLINATION(n)
 }
 
 /// Time of trajectory observation (ISO 8601)
@@ -185,6 +249,10 @@ func (rcv *LND) OBSERVATION_TIME() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *LND) ObservationTime() []byte {
+	return rcv.OBSERVATION_TIME()
 }
 
 /// Time of trajectory observation (ISO 8601)
@@ -197,9 +265,17 @@ func (rcv *LND) OBSERVATION_LATITUDE() float64 {
 	return 0.0
 }
 
+func (rcv *LND) ObservationLatitude() float64 {
+	return rcv.OBSERVATION_LATITUDE()
+}
+
 /// Observation point latitude (degrees)
 func (rcv *LND) MutateOBSERVATION_LATITUDE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(26, n)
+}
+
+func (rcv *LND) MutateObservationLatitude(n float64) bool {
+	return rcv.MutateOBSERVATION_LATITUDE(n)
 }
 
 /// Observation point longitude (degrees)
@@ -211,9 +287,17 @@ func (rcv *LND) OBSERVATION_LONGITUDE() float64 {
 	return 0.0
 }
 
+func (rcv *LND) ObservationLongitude() float64 {
+	return rcv.OBSERVATION_LONGITUDE()
+}
+
 /// Observation point longitude (degrees)
 func (rcv *LND) MutateOBSERVATION_LONGITUDE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(28, n)
+}
+
+func (rcv *LND) MutateObservationLongitude(n float64) bool {
+	return rcv.MutateOBSERVATION_LONGITUDE(n)
 }
 
 /// Observation point altitude (km)
@@ -225,9 +309,17 @@ func (rcv *LND) OBSERVATION_ALTITUDE() float64 {
 	return 0.0
 }
 
+func (rcv *LND) ObservationAltitude() float64 {
+	return rcv.OBSERVATION_ALTITUDE()
+}
+
 /// Observation point altitude (km)
 func (rcv *LND) MutateOBSERVATION_ALTITUDE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(30, n)
+}
+
+func (rcv *LND) MutateObservationAltitude(n float64) bool {
+	return rcv.MutateOBSERVATION_ALTITUDE(n)
 }
 
 /// True if stereo observation (multiple sensors)
@@ -239,9 +331,17 @@ func (rcv *LND) STEREO_FLAG() bool {
 	return false
 }
 
+func (rcv *LND) StereoFlag() bool {
+	return rcv.STEREO_FLAG()
+}
+
 /// True if stereo observation (multiple sensors)
 func (rcv *LND) MutateSTEREO_FLAG(n bool) bool {
 	return rcv._tab.MutateBoolSlot(32, n)
+}
+
+func (rcv *LND) MutateStereoFlag(n bool) bool {
+	return rcv.MutateSTEREO_FLAG(n)
 }
 
 /// True if high zenith angle observation
@@ -253,9 +353,17 @@ func (rcv *LND) HIGH_ZENITH_AZIMUTH() bool {
 	return false
 }
 
+func (rcv *LND) HighZenithAzimuth() bool {
+	return rcv.HIGH_ZENITH_AZIMUTH()
+}
+
 /// True if high zenith angle observation
 func (rcv *LND) MutateHIGH_ZENITH_AZIMUTH(n bool) bool {
 	return rcv._tab.MutateBoolSlot(34, n)
+}
+
+func (rcv *LND) MutateHighZenithAzimuth(n bool) bool {
+	return rcv.MutateHIGH_ZENITH_AZIMUTH(n)
 }
 
 /// Sequence number in detection chain
@@ -267,9 +375,17 @@ func (rcv *LND) SEQUENCE_NUMBER() uint16 {
 	return 0
 }
 
+func (rcv *LND) SequenceNumber() uint16 {
+	return rcv.SEQUENCE_NUMBER()
+}
+
 /// Sequence number in detection chain
 func (rcv *LND) MutateSEQUENCE_NUMBER(n uint16) bool {
 	return rcv._tab.MutateUint16Slot(36, n)
+}
+
+func (rcv *LND) MutateSequenceNumber(n uint16) bool {
+	return rcv.MutateSEQUENCE_NUMBER(n)
 }
 
 /// Launch site identifier
@@ -279,6 +395,10 @@ func (rcv *LND) LAUNCH_SITE_ID() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *LND) LaunchSiteId() []byte {
+	return rcv.LAUNCH_SITE_ID()
 }
 
 /// Launch site identifier
@@ -291,6 +411,10 @@ func (rcv *LND) LAUNCH_VEHICLE() []byte {
 	return nil
 }
 
+func (rcv *LND) LaunchVehicle() []byte {
+	return rcv.LAUNCH_VEHICLE()
+}
+
 /// Launch vehicle type (if identified)
 /// Estimated trajectory type
 func (rcv *LND) TRAJECTORY_TYPE() []byte {
@@ -299,6 +423,10 @@ func (rcv *LND) TRAJECTORY_TYPE() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *LND) TrajectoryType() []byte {
+	return rcv.TRAJECTORY_TYPE()
 }
 
 /// Estimated trajectory type
@@ -311,9 +439,17 @@ func (rcv *LND) CONFIDENCE() float64 {
 	return 0.0
 }
 
+func (rcv *LND) Confidence() float64 {
+	return rcv.CONFIDENCE()
+}
+
 /// Detection confidence (0-1)
 func (rcv *LND) MutateCONFIDENCE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(44, n)
+}
+
+func (rcv *LND) MutateConfidence(n float64) bool {
+	return rcv.MutateCONFIDENCE(n)
 }
 
 /// Event descriptor
@@ -323,6 +459,10 @@ func (rcv *LND) DESCRIPTOR() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *LND) Descriptor() []byte {
+	return rcv.DESCRIPTOR()
 }
 
 /// Event descriptor
@@ -336,12 +476,20 @@ func (rcv *LND) TAGS(j int) []byte {
 	return nil
 }
 
+func (rcv *LND) Tags(j int) []byte {
+	return rcv.TAGS(j)
+}
+
 func (rcv *LND) TAGSLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(48))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *LND) TagsLength() int {
+	return rcv.TAGSLength()
 }
 
 /// Associated tags
@@ -351,74 +499,146 @@ func LNDStart(builder *flatbuffers.Builder) {
 func LNDAddID(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ID), 0)
 }
+func LNDAddId(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
+	LNDAddID(builder, ID)
+}
 func LNDAddEVENT_ID(builder *flatbuffers.Builder, EVENT_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(EVENT_ID), 0)
+}
+func LNDAddEventId(builder *flatbuffers.Builder, EVENT_ID flatbuffers.UOffsetT) {
+	LNDAddEVENT_ID(builder, EVENT_ID)
 }
 func LNDAddDETECTION_TYPE(builder *flatbuffers.Builder, DETECTION_TYPE launchDetectionType) {
 	builder.PrependInt8Slot(2, int8(DETECTION_TYPE), 0)
 }
+func LNDAddDetectionType(builder *flatbuffers.Builder, DETECTION_TYPE launchDetectionType) {
+	LNDAddDETECTION_TYPE(builder, DETECTION_TYPE)
+}
 func LNDAddMESSAGE_TYPE(builder *flatbuffers.Builder, MESSAGE_TYPE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(MESSAGE_TYPE), 0)
+}
+func LNDAddMessageType(builder *flatbuffers.Builder, MESSAGE_TYPE flatbuffers.UOffsetT) {
+	LNDAddMESSAGE_TYPE(builder, MESSAGE_TYPE)
 }
 func LNDAddLAUNCH_TIME(builder *flatbuffers.Builder, LAUNCH_TIME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(LAUNCH_TIME), 0)
 }
+func LNDAddLaunchTime(builder *flatbuffers.Builder, LAUNCH_TIME flatbuffers.UOffsetT) {
+	LNDAddLAUNCH_TIME(builder, LAUNCH_TIME)
+}
 func LNDAddLAUNCH_LATITUDE(builder *flatbuffers.Builder, LAUNCH_LATITUDE float64) {
 	builder.PrependFloat64Slot(5, LAUNCH_LATITUDE, 0.0)
+}
+func LNDAddLaunchLatitude(builder *flatbuffers.Builder, LAUNCH_LATITUDE float64) {
+	LNDAddLAUNCH_LATITUDE(builder, LAUNCH_LATITUDE)
 }
 func LNDAddLAUNCH_LONGITUDE(builder *flatbuffers.Builder, LAUNCH_LONGITUDE float64) {
 	builder.PrependFloat64Slot(6, LAUNCH_LONGITUDE, 0.0)
 }
+func LNDAddLaunchLongitude(builder *flatbuffers.Builder, LAUNCH_LONGITUDE float64) {
+	LNDAddLAUNCH_LONGITUDE(builder, LAUNCH_LONGITUDE)
+}
 func LNDAddLAUNCH_AZIMUTH(builder *flatbuffers.Builder, LAUNCH_AZIMUTH float64) {
 	builder.PrependFloat64Slot(7, LAUNCH_AZIMUTH, 0.0)
+}
+func LNDAddLaunchAzimuth(builder *flatbuffers.Builder, LAUNCH_AZIMUTH float64) {
+	LNDAddLAUNCH_AZIMUTH(builder, LAUNCH_AZIMUTH)
 }
 func LNDAddRAAN(builder *flatbuffers.Builder, RAAN float64) {
 	builder.PrependFloat64Slot(8, RAAN, 0.0)
 }
+func LNDAddRaan(builder *flatbuffers.Builder, RAAN float64) {
+	LNDAddRAAN(builder, RAAN)
+}
 func LNDAddINCLINATION(builder *flatbuffers.Builder, INCLINATION float64) {
 	builder.PrependFloat64Slot(9, INCLINATION, 0.0)
+}
+func LNDAddInclination(builder *flatbuffers.Builder, INCLINATION float64) {
+	LNDAddINCLINATION(builder, INCLINATION)
 }
 func LNDAddOBSERVATION_TIME(builder *flatbuffers.Builder, OBSERVATION_TIME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(OBSERVATION_TIME), 0)
 }
+func LNDAddObservationTime(builder *flatbuffers.Builder, OBSERVATION_TIME flatbuffers.UOffsetT) {
+	LNDAddOBSERVATION_TIME(builder, OBSERVATION_TIME)
+}
 func LNDAddOBSERVATION_LATITUDE(builder *flatbuffers.Builder, OBSERVATION_LATITUDE float64) {
 	builder.PrependFloat64Slot(11, OBSERVATION_LATITUDE, 0.0)
+}
+func LNDAddObservationLatitude(builder *flatbuffers.Builder, OBSERVATION_LATITUDE float64) {
+	LNDAddOBSERVATION_LATITUDE(builder, OBSERVATION_LATITUDE)
 }
 func LNDAddOBSERVATION_LONGITUDE(builder *flatbuffers.Builder, OBSERVATION_LONGITUDE float64) {
 	builder.PrependFloat64Slot(12, OBSERVATION_LONGITUDE, 0.0)
 }
+func LNDAddObservationLongitude(builder *flatbuffers.Builder, OBSERVATION_LONGITUDE float64) {
+	LNDAddOBSERVATION_LONGITUDE(builder, OBSERVATION_LONGITUDE)
+}
 func LNDAddOBSERVATION_ALTITUDE(builder *flatbuffers.Builder, OBSERVATION_ALTITUDE float64) {
 	builder.PrependFloat64Slot(13, OBSERVATION_ALTITUDE, 0.0)
+}
+func LNDAddObservationAltitude(builder *flatbuffers.Builder, OBSERVATION_ALTITUDE float64) {
+	LNDAddOBSERVATION_ALTITUDE(builder, OBSERVATION_ALTITUDE)
 }
 func LNDAddSTEREO_FLAG(builder *flatbuffers.Builder, STEREO_FLAG bool) {
 	builder.PrependBoolSlot(14, STEREO_FLAG, false)
 }
+func LNDAddStereoFlag(builder *flatbuffers.Builder, STEREO_FLAG bool) {
+	LNDAddSTEREO_FLAG(builder, STEREO_FLAG)
+}
 func LNDAddHIGH_ZENITH_AZIMUTH(builder *flatbuffers.Builder, HIGH_ZENITH_AZIMUTH bool) {
 	builder.PrependBoolSlot(15, HIGH_ZENITH_AZIMUTH, false)
+}
+func LNDAddHighZenithAzimuth(builder *flatbuffers.Builder, HIGH_ZENITH_AZIMUTH bool) {
+	LNDAddHIGH_ZENITH_AZIMUTH(builder, HIGH_ZENITH_AZIMUTH)
 }
 func LNDAddSEQUENCE_NUMBER(builder *flatbuffers.Builder, SEQUENCE_NUMBER uint16) {
 	builder.PrependUint16Slot(16, SEQUENCE_NUMBER, 0)
 }
+func LNDAddSequenceNumber(builder *flatbuffers.Builder, SEQUENCE_NUMBER uint16) {
+	LNDAddSEQUENCE_NUMBER(builder, SEQUENCE_NUMBER)
+}
 func LNDAddLAUNCH_SITE_ID(builder *flatbuffers.Builder, LAUNCH_SITE_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(17, flatbuffers.UOffsetT(LAUNCH_SITE_ID), 0)
+}
+func LNDAddLaunchSiteId(builder *flatbuffers.Builder, LAUNCH_SITE_ID flatbuffers.UOffsetT) {
+	LNDAddLAUNCH_SITE_ID(builder, LAUNCH_SITE_ID)
 }
 func LNDAddLAUNCH_VEHICLE(builder *flatbuffers.Builder, LAUNCH_VEHICLE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(18, flatbuffers.UOffsetT(LAUNCH_VEHICLE), 0)
 }
+func LNDAddLaunchVehicle(builder *flatbuffers.Builder, LAUNCH_VEHICLE flatbuffers.UOffsetT) {
+	LNDAddLAUNCH_VEHICLE(builder, LAUNCH_VEHICLE)
+}
 func LNDAddTRAJECTORY_TYPE(builder *flatbuffers.Builder, TRAJECTORY_TYPE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(19, flatbuffers.UOffsetT(TRAJECTORY_TYPE), 0)
+}
+func LNDAddTrajectoryType(builder *flatbuffers.Builder, TRAJECTORY_TYPE flatbuffers.UOffsetT) {
+	LNDAddTRAJECTORY_TYPE(builder, TRAJECTORY_TYPE)
 }
 func LNDAddCONFIDENCE(builder *flatbuffers.Builder, CONFIDENCE float64) {
 	builder.PrependFloat64Slot(20, CONFIDENCE, 0.0)
 }
+func LNDAddConfidence(builder *flatbuffers.Builder, CONFIDENCE float64) {
+	LNDAddCONFIDENCE(builder, CONFIDENCE)
+}
 func LNDAddDESCRIPTOR(builder *flatbuffers.Builder, DESCRIPTOR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(21, flatbuffers.UOffsetT(DESCRIPTOR), 0)
+}
+func LNDAddDescriptor(builder *flatbuffers.Builder, DESCRIPTOR flatbuffers.UOffsetT) {
+	LNDAddDESCRIPTOR(builder, DESCRIPTOR)
 }
 func LNDAddTAGS(builder *flatbuffers.Builder, TAGS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(22, flatbuffers.UOffsetT(TAGS), 0)
 }
+func LNDAddTags(builder *flatbuffers.Builder, TAGS flatbuffers.UOffsetT) {
+	LNDAddTAGS(builder, TAGS)
+}
 func LNDStartTAGSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func LNDStartTagsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return LNDStartTAGSVector(builder, numElems)
 }
 func LNDEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

@@ -2,4 +2,8 @@
 
 # namespace: 
 
-# NOTE aouType.py does not declare any structs or enums
+class aouType(object):
+    CIRCULAR = 0
+    ELLIPTICAL = 1
+    RECTANGULAR = 2
+    NONE = 3

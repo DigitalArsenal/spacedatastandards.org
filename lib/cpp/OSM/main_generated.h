@@ -8,9 +8,9 @@
 
 // Ensure the included flatbuffers.h is the same version as when this file was
 // generated, otherwise it may not be compatible.
-static_assert(FLATBUFFERS_VERSION_MAJOR == 24 &&
-              FLATBUFFERS_VERSION_MINOR == 3 &&
-              FLATBUFFERS_VERSION_REVISION == 25,
+static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
+              FLATBUFFERS_VERSION_MINOR == 12 &&
+              FLATBUFFERS_VERSION_REVISION == 19,
              "Non-compatible flatbuffers version included");
 
 struct OSM;
@@ -51,7 +51,8 @@ struct OSM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   int32_t PASS_DURATION() const {
     return GetField<int32_t>(VT_PASS_DURATION, 0);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<uint8_t>(verifier, VT_IS_STABLE, 1) &&
            VerifyField<int32_t>(verifier, VT_NUM_OBS, 4) &&
@@ -160,14 +161,16 @@ inline bool SizePrefixedOSMBufferHasIdentifier(const void *buf) {
       buf, OSMIdentifier(), true);
 }
 
+template <bool B = false>
 inline bool VerifyOSMBuffer(
-    ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifyBuffer<OSM>(OSMIdentifier());
+    ::flatbuffers::VerifierTemplate<B> &verifier) {
+  return verifier.template VerifyBuffer<OSM>(OSMIdentifier());
 }
 
+template <bool B = false>
 inline bool VerifySizePrefixedOSMBuffer(
-    ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifySizePrefixedBuffer<OSM>(OSMIdentifier());
+    ::flatbuffers::VerifierTemplate<B> &verifier) {
+  return verifier.template VerifySizePrefixedBuffer<OSM>(OSMIdentifier());
 }
 
 inline void FinishOSMBuffer(

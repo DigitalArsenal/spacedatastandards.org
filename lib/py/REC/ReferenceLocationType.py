@@ -2,4 +2,13 @@
 
 # namespace: 
 
-# NOTE ReferenceLocationType.py does not declare any structs or enums
+# Reference location for positioning within containers
+class ReferenceLocationType(object):
+    # Start of the container
+    CONTAINER_START = 0
+    # End of the container
+    CONTAINER_END = 1
+    # End of previous entry
+    PREVIOUS_ENTRY = 2
+    # Start of next entry
+    NEXT_ENTRY = 3

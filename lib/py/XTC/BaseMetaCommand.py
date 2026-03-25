@@ -87,6 +87,12 @@ def BaseMetaCommandStartARGUMENT_ASSIGNMENTSVector(builder, numElems):
 def StartARGUMENT_ASSIGNMENTSVector(builder, numElems):
     return BaseMetaCommandStartARGUMENT_ASSIGNMENTSVector(builder, numElems)
 
+def BaseMetaCommandCreateARGUMENT_ASSIGNMENTSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateARGUMENT_ASSIGNMENTSVector(builder, data):
+    BaseMetaCommandCreateARGUMENT_ASSIGNMENTSVector(builder, data)
+
 def BaseMetaCommandEnd(builder):
     return builder.EndObject()
 
@@ -102,15 +108,19 @@ except:
 class BaseMetaCommandT(object):
 
     # BaseMetaCommandT
-    def __init__(self):
-        self.META_COMMAND_REF = None  # type: str
-        self.ARGUMENT_ASSIGNMENTS = None  # type: List[ArgumentAssignment.ArgumentAssignmentT]
+    def __init__(
+        self,
+        META_COMMAND_REF = None,
+        ARGUMENT_ASSIGNMENTS = None,
+    ):
+        self.META_COMMAND_REF = META_COMMAND_REF  # type: Optional[str]
+        self.ARGUMENT_ASSIGNMENTS = ARGUMENT_ASSIGNMENTS  # type: Optional[List[ArgumentAssignment.ArgumentAssignmentT]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        baseMetaCommand = BaseMetaCommand()
-        baseMetaCommand.Init(buf, pos)
-        return cls.InitFromObj(baseMetaCommand)
+        tmpBaseMetaCommand = BaseMetaCommand()
+        tmpBaseMetaCommand.Init(buf, pos)
+        return cls.InitFromObj(tmpBaseMetaCommand)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -118,23 +128,23 @@ class BaseMetaCommandT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, baseMetaCommand):
+    def InitFromObj(cls, tmpBaseMetaCommand):
         x = BaseMetaCommandT()
-        x._UnPack(baseMetaCommand)
+        x._UnPack(tmpBaseMetaCommand)
         return x
 
     # BaseMetaCommandT
-    def _UnPack(self, baseMetaCommand):
-        if baseMetaCommand is None:
+    def _UnPack(self, BaseMetaCommand):
+        if BaseMetaCommand is None:
             return
-        self.META_COMMAND_REF = baseMetaCommand.META_COMMAND_REF()
-        if not baseMetaCommand.ARGUMENT_ASSIGNMENTSIsNone():
+        self.META_COMMAND_REF = BaseMetaCommand.META_COMMAND_REF()
+        if not BaseMetaCommand.ARGUMENT_ASSIGNMENTSIsNone():
             self.ARGUMENT_ASSIGNMENTS = []
-            for i in range(baseMetaCommand.ARGUMENT_ASSIGNMENTSLength()):
-                if baseMetaCommand.ARGUMENT_ASSIGNMENTS(i) is None:
+            for i in range(BaseMetaCommand.ARGUMENT_ASSIGNMENTSLength()):
+                if BaseMetaCommand.ARGUMENT_ASSIGNMENTS(i) is None:
                     self.ARGUMENT_ASSIGNMENTS.append(None)
                 else:
-                    argumentAssignment_ = ArgumentAssignment.ArgumentAssignmentT.InitFromObj(baseMetaCommand.ARGUMENT_ASSIGNMENTS(i))
+                    argumentAssignment_ = ArgumentAssignment.ArgumentAssignmentT.InitFromObj(BaseMetaCommand.ARGUMENT_ASSIGNMENTS(i))
                     self.ARGUMENT_ASSIGNMENTS.append(argumentAssignment_)
 
     # BaseMetaCommandT
@@ -154,5 +164,5 @@ class BaseMetaCommandT(object):
             BaseMetaCommandAddMETA_COMMAND_REF(builder, META_COMMAND_REF)
         if self.ARGUMENT_ASSIGNMENTS is not None:
             BaseMetaCommandAddARGUMENT_ASSIGNMENTS(builder, ARGUMENT_ASSIGNMENTS)
-        baseMetaCommand = BaseMetaCommandEnd(builder)
-        return baseMetaCommand
+        BaseMetaCommand = BaseMetaCommandEnd(builder)
+        return BaseMetaCommand

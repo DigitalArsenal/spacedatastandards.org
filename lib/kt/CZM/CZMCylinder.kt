@@ -32,7 +32,7 @@ class CZMCylinder : Table() {
     /**
      * Whether the cylinder is displayed
      */
-    val SHOW : Boolean
+    val show : Boolean
         get() {
             val o = __offset(4)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -40,7 +40,7 @@ class CZMCylinder : Table() {
     /**
      * Length in meters
      */
-    val LENGTH : Double
+    val length : Double
         get() {
             val o = __offset(6)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -48,7 +48,7 @@ class CZMCylinder : Table() {
     /**
      * Top radius in meters
      */
-    val TOP_RADIUS : Double
+    val topRadius : Double
         get() {
             val o = __offset(8)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -56,7 +56,7 @@ class CZMCylinder : Table() {
     /**
      * Bottom radius in meters
      */
-    val BOTTOM_RADIUS : Double
+    val bottomRadius : Double
         get() {
             val o = __offset(10)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -64,7 +64,7 @@ class CZMCylinder : Table() {
     /**
      * Height reference
      */
-    val HEIGHT_REFERENCE : String?
+    val heightReference : String?
         get() {
             val o = __offset(12)
             return if (o != 0) {
@@ -73,12 +73,12 @@ class CZMCylinder : Table() {
                 null
             }
         }
-    val HEIGHT_REFERENCEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
-    fun HEIGHT_REFERENCEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
+    val heightReferenceAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(12, 1)
+    fun heightReferenceInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 12, 1)
     /**
      * Fill flag
      */
-    val FILL : Boolean
+    val fill : Boolean
         get() {
             val o = __offset(14)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -86,8 +86,8 @@ class CZMCylinder : Table() {
     /**
      * Surface material
      */
-    val MATERIAL : CZMMaterial? get() = MATERIAL(CZMMaterial())
-    fun MATERIAL(obj: CZMMaterial) : CZMMaterial? {
+    val material : CZMMaterial? get() = material(CZMMaterial())
+    fun material(obj: CZMMaterial) : CZMMaterial? {
         val o = __offset(16)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -98,7 +98,7 @@ class CZMCylinder : Table() {
     /**
      * Outline flag
      */
-    val OUTLINE : Boolean
+    val outline : Boolean
         get() {
             val o = __offset(18)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -106,8 +106,8 @@ class CZMCylinder : Table() {
     /**
      * Outline color
      */
-    val OUTLINE_COLOR : CZMColor? get() = OUTLINE_COLOR(CZMColor())
-    fun OUTLINE_COLOR(obj: CZMColor) : CZMColor? {
+    val outlineColor : CZMColor? get() = outlineColor(CZMColor())
+    fun outlineColor(obj: CZMColor) : CZMColor? {
         val o = __offset(20)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -118,7 +118,7 @@ class CZMCylinder : Table() {
     /**
      * Outline width
      */
-    val OUTLINE_WIDTH : Double
+    val outlineWidth : Double
         get() {
             val o = __offset(22)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -126,7 +126,7 @@ class CZMCylinder : Table() {
     /**
      * Number of vertical lines
      */
-    val NUMBER_OF_VERTICAL_LINES : Int
+    val numberOfVerticalLines : Int
         get() {
             val o = __offset(24)
             return if(o != 0) bb.getInt(o + bb_pos) else 0
@@ -134,7 +134,7 @@ class CZMCylinder : Table() {
     /**
      * Number of slices
      */
-    val SLICES : Int
+    val slices : Int
         get() {
             val o = __offset(26)
             return if(o != 0) bb.getInt(o + bb_pos) else 0
@@ -142,7 +142,7 @@ class CZMCylinder : Table() {
     /**
      * Shadow mode
      */
-    val SHADOWS : String?
+    val shadows : String?
         get() {
             val o = __offset(28)
             return if (o != 0) {
@@ -151,46 +151,46 @@ class CZMCylinder : Table() {
                 null
             }
         }
-    val SHADOWSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(28, 1)
-    fun SHADOWSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 28, 1)
+    val shadowsAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(28, 1)
+    fun shadowsInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 28, 1)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsCZMCylinder(_bb: ByteBuffer): CZMCylinder = getRootAsCZMCylinder(_bb, CZMCylinder())
         fun getRootAsCZMCylinder(_bb: ByteBuffer, obj: CZMCylinder): CZMCylinder {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createCZMCylinder(builder: FlatBufferBuilder, SHOW: Boolean, LENGTH: Double, TOP_RADIUS: Double, BOTTOM_RADIUS: Double, HEIGHT_REFERENCEOffset: Int, FILL: Boolean, MATERIALOffset: Int, OUTLINE: Boolean, OUTLINE_COLOROffset: Int, OUTLINE_WIDTH: Double, NUMBER_OF_VERTICAL_LINES: Int, SLICES: Int, SHADOWSOffset: Int) : Int {
+        fun createCZMCylinder(builder: FlatBufferBuilder, show: Boolean, length: Double, topRadius: Double, bottomRadius: Double, heightReferenceOffset: Int, fill: Boolean, materialOffset: Int, outline: Boolean, outlineColorOffset: Int, outlineWidth: Double, numberOfVerticalLines: Int, slices: Int, shadowsOffset: Int) : Int {
             builder.startTable(13)
-            addOUTLINE_WIDTH(builder, OUTLINE_WIDTH)
-            addBOTTOM_RADIUS(builder, BOTTOM_RADIUS)
-            addTOP_RADIUS(builder, TOP_RADIUS)
-            addLENGTH(builder, LENGTH)
-            addSHADOWS(builder, SHADOWSOffset)
-            addSLICES(builder, SLICES)
-            addNUMBER_OF_VERTICAL_LINES(builder, NUMBER_OF_VERTICAL_LINES)
-            addOUTLINE_COLOR(builder, OUTLINE_COLOROffset)
-            addMATERIAL(builder, MATERIALOffset)
-            addHEIGHT_REFERENCE(builder, HEIGHT_REFERENCEOffset)
-            addOUTLINE(builder, OUTLINE)
-            addFILL(builder, FILL)
-            addSHOW(builder, SHOW)
+            addOUTLINEWIDTH(builder, outlineWidth)
+            addBOTTOMRADIUS(builder, bottomRadius)
+            addTOPRADIUS(builder, topRadius)
+            addLENGTH(builder, length)
+            addSHADOWS(builder, shadowsOffset)
+            addSLICES(builder, slices)
+            addNUMBEROFVERTICALLINES(builder, numberOfVerticalLines)
+            addOUTLINECOLOR(builder, outlineColorOffset)
+            addMATERIAL(builder, materialOffset)
+            addHEIGHTREFERENCE(builder, heightReferenceOffset)
+            addOUTLINE(builder, outline)
+            addFILL(builder, fill)
+            addSHOW(builder, show)
             return endCZMCylinder(builder)
         }
         fun startCZMCylinder(builder: FlatBufferBuilder) = builder.startTable(13)
-        fun addSHOW(builder: FlatBufferBuilder, SHOW: Boolean) = builder.addBoolean(0, SHOW, false)
-        fun addLENGTH(builder: FlatBufferBuilder, LENGTH: Double) = builder.addDouble(1, LENGTH, 0.0)
-        fun addTOP_RADIUS(builder: FlatBufferBuilder, TOP_RADIUS: Double) = builder.addDouble(2, TOP_RADIUS, 0.0)
-        fun addBOTTOM_RADIUS(builder: FlatBufferBuilder, BOTTOM_RADIUS: Double) = builder.addDouble(3, BOTTOM_RADIUS, 0.0)
-        fun addHEIGHT_REFERENCE(builder: FlatBufferBuilder, HEIGHT_REFERENCE: Int) = builder.addOffset(4, HEIGHT_REFERENCE, 0)
-        fun addFILL(builder: FlatBufferBuilder, FILL: Boolean) = builder.addBoolean(5, FILL, false)
-        fun addMATERIAL(builder: FlatBufferBuilder, MATERIAL: Int) = builder.addOffset(6, MATERIAL, 0)
-        fun addOUTLINE(builder: FlatBufferBuilder, OUTLINE: Boolean) = builder.addBoolean(7, OUTLINE, false)
-        fun addOUTLINE_COLOR(builder: FlatBufferBuilder, OUTLINE_COLOR: Int) = builder.addOffset(8, OUTLINE_COLOR, 0)
-        fun addOUTLINE_WIDTH(builder: FlatBufferBuilder, OUTLINE_WIDTH: Double) = builder.addDouble(9, OUTLINE_WIDTH, 0.0)
-        fun addNUMBER_OF_VERTICAL_LINES(builder: FlatBufferBuilder, NUMBER_OF_VERTICAL_LINES: Int) = builder.addInt(10, NUMBER_OF_VERTICAL_LINES, 0)
-        fun addSLICES(builder: FlatBufferBuilder, SLICES: Int) = builder.addInt(11, SLICES, 0)
-        fun addSHADOWS(builder: FlatBufferBuilder, SHADOWS: Int) = builder.addOffset(12, SHADOWS, 0)
+        fun addSHOW(builder: FlatBufferBuilder, show: Boolean) = builder.addBoolean(0, show, false)
+        fun addLENGTH(builder: FlatBufferBuilder, length: Double) = builder.addDouble(1, length, 0.0)
+        fun addTOPRADIUS(builder: FlatBufferBuilder, topRadius: Double) = builder.addDouble(2, topRadius, 0.0)
+        fun addBOTTOMRADIUS(builder: FlatBufferBuilder, bottomRadius: Double) = builder.addDouble(3, bottomRadius, 0.0)
+        fun addHEIGHTREFERENCE(builder: FlatBufferBuilder, heightReference: Int) = builder.addOffset(4, heightReference, 0)
+        fun addFILL(builder: FlatBufferBuilder, fill: Boolean) = builder.addBoolean(5, fill, false)
+        fun addMATERIAL(builder: FlatBufferBuilder, material: Int) = builder.addOffset(6, material, 0)
+        fun addOUTLINE(builder: FlatBufferBuilder, outline: Boolean) = builder.addBoolean(7, outline, false)
+        fun addOUTLINECOLOR(builder: FlatBufferBuilder, outlineColor: Int) = builder.addOffset(8, outlineColor, 0)
+        fun addOUTLINEWIDTH(builder: FlatBufferBuilder, outlineWidth: Double) = builder.addDouble(9, outlineWidth, 0.0)
+        fun addNUMBEROFVERTICALLINES(builder: FlatBufferBuilder, numberOfVerticalLines: Int) = builder.addInt(10, numberOfVerticalLines, 0)
+        fun addSLICES(builder: FlatBufferBuilder, slices: Int) = builder.addInt(11, slices, 0)
+        fun addSHADOWS(builder: FlatBufferBuilder, shadows: Int) = builder.addOffset(12, shadows, 0)
         fun endCZMCylinder(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

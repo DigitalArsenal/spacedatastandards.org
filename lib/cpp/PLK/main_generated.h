@@ -8,9 +8,9 @@
 
 // Ensure the included flatbuffers.h is the same version as when this file was
 // generated, otherwise it may not be compatible.
-static_assert(FLATBUFFERS_VERSION_MAJOR == 24 &&
-              FLATBUFFERS_VERSION_MINOR == 3 &&
-              FLATBUFFERS_VERSION_REVISION == 25,
+static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
+              FLATBUFFERS_VERSION_MINOR == 12 &&
+              FLATBUFFERS_VERSION_REVISION == 19,
              "Non-compatible flatbuffers version included");
 
 struct PLK;
@@ -158,7 +158,8 @@ struct PLK FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::Vector<uint8_t> *SIGNATURE() const {
     return GetPointer<const ::flatbuffers::Vector<uint8_t> *>(VT_SIGNATURE);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffsetRequired(verifier, VT_LICENSE_ID) &&
            verifier.VerifyString(LICENSE_ID()) &&
@@ -378,14 +379,16 @@ inline bool SizePrefixedPLKBufferHasIdentifier(const void *buf) {
       buf, PLKIdentifier(), true);
 }
 
+template <bool B = false>
 inline bool VerifyPLKBuffer(
-    ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifyBuffer<PLK>(PLKIdentifier());
+    ::flatbuffers::VerifierTemplate<B> &verifier) {
+  return verifier.template VerifyBuffer<PLK>(PLKIdentifier());
 }
 
+template <bool B = false>
 inline bool VerifySizePrefixedPLKBuffer(
-    ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifySizePrefixedBuffer<PLK>(PLKIdentifier());
+    ::flatbuffers::VerifierTemplate<B> &verifier) {
+  return verifier.template VerifySizePrefixedBuffer<PLK>(PLKIdentifier());
 }
 
 inline void FinishPLKBuffer(

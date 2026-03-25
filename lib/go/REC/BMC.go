@@ -62,12 +62,20 @@ func (rcv *BMC) ID() []byte {
 	return nil
 }
 
+func (rcv *BMC) Id() []byte {
+	return rcv.ID()
+}
+
 func (rcv *BMC) TYPE() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *BMC) Type() []byte {
+	return rcv.TYPE()
 }
 
 func (rcv *BMC) CONTOUR_IDX() int32 {
@@ -78,8 +86,16 @@ func (rcv *BMC) CONTOUR_IDX() int32 {
 	return 0
 }
 
+func (rcv *BMC) ContourIdx() int32 {
+	return rcv.CONTOUR_IDX()
+}
+
 func (rcv *BMC) MutateCONTOUR_IDX(n int32) bool {
 	return rcv._tab.MutateInt32Slot(8, n)
+}
+
+func (rcv *BMC) MutateContourIdx(n int32) bool {
+	return rcv.MutateCONTOUR_IDX(n)
 }
 
 func (rcv *BMC) GAIN() float64 {
@@ -90,8 +106,16 @@ func (rcv *BMC) GAIN() float64 {
 	return 0.0
 }
 
+func (rcv *BMC) Gain() float64 {
+	return rcv.GAIN()
+}
+
 func (rcv *BMC) MutateGAIN(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(10, n)
+}
+
+func (rcv *BMC) MutateGain(n float64) bool {
+	return rcv.MutateGAIN(n)
 }
 
 func (rcv *BMC) REGION_NAME() []byte {
@@ -102,12 +126,20 @@ func (rcv *BMC) REGION_NAME() []byte {
 	return nil
 }
 
+func (rcv *BMC) RegionName() []byte {
+	return rcv.REGION_NAME()
+}
+
 func (rcv *BMC) GEOGRAPHY() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *BMC) Geography() []byte {
+	return rcv.GEOGRAPHY()
 }
 
 func (rcv *BMC) GEOGRAPHY_TEXT() []byte {
@@ -118,12 +150,20 @@ func (rcv *BMC) GEOGRAPHY_TEXT() []byte {
 	return nil
 }
 
+func (rcv *BMC) GeographyText() []byte {
+	return rcv.GEOGRAPHY_TEXT()
+}
+
 func (rcv *BMC) GEOGRAPHY_JSON() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *BMC) GeographyJson() []byte {
+	return rcv.GEOGRAPHY_JSON()
 }
 
 func (rcv *BMC) GEOGRAPHY_TYPE() []byte {
@@ -134,6 +174,10 @@ func (rcv *BMC) GEOGRAPHY_TYPE() []byte {
 	return nil
 }
 
+func (rcv *BMC) GeographyType() []byte {
+	return rcv.GEOGRAPHY_TYPE()
+}
+
 func (rcv *BMC) GEOGRAPHY_NDIMS() int32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
 	if o != 0 {
@@ -142,8 +186,16 @@ func (rcv *BMC) GEOGRAPHY_NDIMS() int32 {
 	return 0
 }
 
+func (rcv *BMC) GeographyNdims() int32 {
+	return rcv.GEOGRAPHY_NDIMS()
+}
+
 func (rcv *BMC) MutateGEOGRAPHY_NDIMS(n int32) bool {
 	return rcv._tab.MutateInt32Slot(22, n)
+}
+
+func (rcv *BMC) MutateGeographyNdims(n int32) bool {
+	return rcv.MutateGEOGRAPHY_NDIMS(n)
 }
 
 func (rcv *BMC) GEOGRAPHY_SRID() int32 {
@@ -154,8 +206,16 @@ func (rcv *BMC) GEOGRAPHY_SRID() int32 {
 	return 0
 }
 
+func (rcv *BMC) GeographySrid() int32 {
+	return rcv.GEOGRAPHY_SRID()
+}
+
 func (rcv *BMC) MutateGEOGRAPHY_SRID(n int32) bool {
 	return rcv._tab.MutateInt32Slot(24, n)
+}
+
+func (rcv *BMC) MutateGeographySrid(n int32) bool {
+	return rcv.MutateGEOGRAPHY_SRID(n)
 }
 
 func BMCStart(builder *flatbuffers.Builder) {
@@ -164,35 +224,68 @@ func BMCStart(builder *flatbuffers.Builder) {
 func BMCAddID(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ID), 0)
 }
+func BMCAddId(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
+	BMCAddID(builder, ID)
+}
 func BMCAddTYPE(builder *flatbuffers.Builder, TYPE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(TYPE), 0)
+}
+func BMCAddType(builder *flatbuffers.Builder, TYPE flatbuffers.UOffsetT) {
+	BMCAddTYPE(builder, TYPE)
 }
 func BMCAddCONTOUR_IDX(builder *flatbuffers.Builder, CONTOUR_IDX int32) {
 	builder.PrependInt32Slot(2, CONTOUR_IDX, 0)
 }
+func BMCAddContourIdx(builder *flatbuffers.Builder, CONTOUR_IDX int32) {
+	BMCAddCONTOUR_IDX(builder, CONTOUR_IDX)
+}
 func BMCAddGAIN(builder *flatbuffers.Builder, GAIN float64) {
 	builder.PrependFloat64Slot(3, GAIN, 0.0)
+}
+func BMCAddGain(builder *flatbuffers.Builder, GAIN float64) {
+	BMCAddGAIN(builder, GAIN)
 }
 func BMCAddREGION_NAME(builder *flatbuffers.Builder, REGION_NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(REGION_NAME), 0)
 }
+func BMCAddRegionName(builder *flatbuffers.Builder, REGION_NAME flatbuffers.UOffsetT) {
+	BMCAddREGION_NAME(builder, REGION_NAME)
+}
 func BMCAddGEOGRAPHY(builder *flatbuffers.Builder, GEOGRAPHY flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(GEOGRAPHY), 0)
+}
+func BMCAddGeography(builder *flatbuffers.Builder, GEOGRAPHY flatbuffers.UOffsetT) {
+	BMCAddGEOGRAPHY(builder, GEOGRAPHY)
 }
 func BMCAddGEOGRAPHY_TEXT(builder *flatbuffers.Builder, GEOGRAPHY_TEXT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(GEOGRAPHY_TEXT), 0)
 }
+func BMCAddGeographyText(builder *flatbuffers.Builder, GEOGRAPHY_TEXT flatbuffers.UOffsetT) {
+	BMCAddGEOGRAPHY_TEXT(builder, GEOGRAPHY_TEXT)
+}
 func BMCAddGEOGRAPHY_JSON(builder *flatbuffers.Builder, GEOGRAPHY_JSON flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(GEOGRAPHY_JSON), 0)
+}
+func BMCAddGeographyJson(builder *flatbuffers.Builder, GEOGRAPHY_JSON flatbuffers.UOffsetT) {
+	BMCAddGEOGRAPHY_JSON(builder, GEOGRAPHY_JSON)
 }
 func BMCAddGEOGRAPHY_TYPE(builder *flatbuffers.Builder, GEOGRAPHY_TYPE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(GEOGRAPHY_TYPE), 0)
 }
+func BMCAddGeographyType(builder *flatbuffers.Builder, GEOGRAPHY_TYPE flatbuffers.UOffsetT) {
+	BMCAddGEOGRAPHY_TYPE(builder, GEOGRAPHY_TYPE)
+}
 func BMCAddGEOGRAPHY_NDIMS(builder *flatbuffers.Builder, GEOGRAPHY_NDIMS int32) {
 	builder.PrependInt32Slot(9, GEOGRAPHY_NDIMS, 0)
 }
+func BMCAddGeographyNdims(builder *flatbuffers.Builder, GEOGRAPHY_NDIMS int32) {
+	BMCAddGEOGRAPHY_NDIMS(builder, GEOGRAPHY_NDIMS)
+}
 func BMCAddGEOGRAPHY_SRID(builder *flatbuffers.Builder, GEOGRAPHY_SRID int32) {
 	builder.PrependInt32Slot(10, GEOGRAPHY_SRID, 0)
+}
+func BMCAddGeographySrid(builder *flatbuffers.Builder, GEOGRAPHY_SRID int32) {
+	BMCAddGEOGRAPHY_SRID(builder, GEOGRAPHY_SRID)
 }
 func BMCEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

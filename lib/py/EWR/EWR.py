@@ -193,6 +193,12 @@ def EWRStartESM_CONTACTSVector(builder, numElems):
 def StartESM_CONTACTSVector(builder, numElems):
     return EWRStartESM_CONTACTSVector(builder, numElems)
 
+def EWRCreateESM_CONTACTSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateESM_CONTACTSVector(builder, data):
+    EWRCreateESM_CONTACTSVector(builder, data)
+
 def EWRAddACTIVE_JAMMING(builder, ACTIVE_JAMMING):
     builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(ACTIVE_JAMMING), 0)
 
@@ -204,6 +210,12 @@ def EWRStartACTIVE_JAMMINGVector(builder, numElems):
 
 def StartACTIVE_JAMMINGVector(builder, numElems):
     return EWRStartACTIVE_JAMMINGVector(builder, numElems)
+
+def EWRCreateACTIVE_JAMMINGVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateACTIVE_JAMMINGVector(builder, data):
+    EWRCreateACTIVE_JAMMINGVector(builder, data)
 
 def EWRAddCOUNTERMEASURES(builder, COUNTERMEASURES):
     builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(COUNTERMEASURES), 0)
@@ -222,6 +234,12 @@ def EWRStartTHREAT_WARNINGSVector(builder, numElems):
 
 def StartTHREAT_WARNINGSVector(builder, numElems):
     return EWRStartTHREAT_WARNINGSVector(builder, numElems)
+
+def EWRCreateTHREAT_WARNINGSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateTHREAT_WARNINGSVector(builder, data):
+    EWRCreateTHREAT_WARNINGSVector(builder, data)
 
 def EWRAddEMCON_LEVEL(builder, EMCON_LEVEL):
     builder.PrependUint8Slot(9, EMCON_LEVEL, 0)
@@ -249,24 +267,37 @@ except:
 class EWRT(object):
 
     # EWRT
-    def __init__(self):
-        self.SYSTEM_ID = 0  # type: int
-        self.ENTITY_ID = 0  # type: int
-        self.ESM_ACTIVE = False  # type: bool
-        self.ECM_ACTIVE = False  # type: bool
-        self.RWR_ACTIVE = False  # type: bool
-        self.ESM_CONTACTS = None  # type: List[str]
-        self.ACTIVE_JAMMING = None  # type: List[str]
-        self.COUNTERMEASURES = None  # type: str
-        self.THREAT_WARNINGS = None  # type: List[str]
-        self.EMCON_LEVEL = 0  # type: int
-        self.LAST_UPDATE_MS = 0  # type: int
+    def __init__(
+        self,
+        SYSTEM_ID = 0,
+        ENTITY_ID = 0,
+        ESM_ACTIVE = False,
+        ECM_ACTIVE = False,
+        RWR_ACTIVE = False,
+        ESM_CONTACTS = None,
+        ACTIVE_JAMMING = None,
+        COUNTERMEASURES = None,
+        THREAT_WARNINGS = None,
+        EMCON_LEVEL = 0,
+        LAST_UPDATE_MS = 0,
+    ):
+        self.SYSTEM_ID = SYSTEM_ID  # type: int
+        self.ENTITY_ID = ENTITY_ID  # type: int
+        self.ESM_ACTIVE = ESM_ACTIVE  # type: bool
+        self.ECM_ACTIVE = ECM_ACTIVE  # type: bool
+        self.RWR_ACTIVE = RWR_ACTIVE  # type: bool
+        self.ESM_CONTACTS = ESM_CONTACTS  # type: Optional[List[Optional[str]]]
+        self.ACTIVE_JAMMING = ACTIVE_JAMMING  # type: Optional[List[Optional[str]]]
+        self.COUNTERMEASURES = COUNTERMEASURES  # type: Optional[str]
+        self.THREAT_WARNINGS = THREAT_WARNINGS  # type: Optional[List[Optional[str]]]
+        self.EMCON_LEVEL = EMCON_LEVEL  # type: int
+        self.LAST_UPDATE_MS = LAST_UPDATE_MS  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        EWR = EWR()
-        EWR.Init(buf, pos)
-        return cls.InitFromObj(EWR)
+        tmpEwr = EWR()
+        tmpEwr.Init(buf, pos)
+        return cls.InitFromObj(tmpEwr)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -274,9 +305,9 @@ class EWRT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, EWR):
+    def InitFromObj(cls, tmpEwr):
         x = EWRT()
-        x._UnPack(EWR)
+        x._UnPack(tmpEwr)
         return x
 
     # EWRT

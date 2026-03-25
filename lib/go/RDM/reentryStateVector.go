@@ -51,6 +51,10 @@ func (rcv *reentryStateVector) EPOCH() []byte {
 	return nil
 }
 
+func (rcv *reentryStateVector) Epoch() []byte {
+	return rcv.EPOCH()
+}
+
 /// Epoch (ISO 8601)
 /// Reference frame
 func (rcv *reentryStateVector) REF_FRAME() []byte {
@@ -59,6 +63,10 @@ func (rcv *reentryStateVector) REF_FRAME() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *reentryStateVector) RefFrame() []byte {
+	return rcv.REF_FRAME()
 }
 
 /// Reference frame
@@ -113,9 +121,17 @@ func (rcv *reentryStateVector) X_DOT() float64 {
 	return 0.0
 }
 
+func (rcv *reentryStateVector) XDot() float64 {
+	return rcv.X_DOT()
+}
+
 /// Velocity X in km/s
 func (rcv *reentryStateVector) MutateX_DOT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(14, n)
+}
+
+func (rcv *reentryStateVector) MutateXDot(n float64) bool {
+	return rcv.MutateX_DOT(n)
 }
 
 /// Velocity Y in km/s
@@ -127,9 +143,17 @@ func (rcv *reentryStateVector) Y_DOT() float64 {
 	return 0.0
 }
 
+func (rcv *reentryStateVector) YDot() float64 {
+	return rcv.Y_DOT()
+}
+
 /// Velocity Y in km/s
 func (rcv *reentryStateVector) MutateY_DOT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(16, n)
+}
+
+func (rcv *reentryStateVector) MutateYDot(n float64) bool {
+	return rcv.MutateY_DOT(n)
 }
 
 /// Velocity Z in km/s
@@ -141,9 +165,17 @@ func (rcv *reentryStateVector) Z_DOT() float64 {
 	return 0.0
 }
 
+func (rcv *reentryStateVector) ZDot() float64 {
+	return rcv.Z_DOT()
+}
+
 /// Velocity Z in km/s
 func (rcv *reentryStateVector) MutateZ_DOT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(18, n)
+}
+
+func (rcv *reentryStateVector) MutateZDot(n float64) bool {
+	return rcv.MutateZ_DOT(n)
 }
 
 func reentryStateVectorStart(builder *flatbuffers.Builder) {
@@ -152,8 +184,14 @@ func reentryStateVectorStart(builder *flatbuffers.Builder) {
 func reentryStateVectorAddEPOCH(builder *flatbuffers.Builder, EPOCH flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(EPOCH), 0)
 }
+func reentryStateVectorAddEpoch(builder *flatbuffers.Builder, EPOCH flatbuffers.UOffsetT) {
+	reentryStateVectorAddEPOCH(builder, EPOCH)
+}
 func reentryStateVectorAddREF_FRAME(builder *flatbuffers.Builder, REF_FRAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(REF_FRAME), 0)
+}
+func reentryStateVectorAddRefFrame(builder *flatbuffers.Builder, REF_FRAME flatbuffers.UOffsetT) {
+	reentryStateVectorAddREF_FRAME(builder, REF_FRAME)
 }
 func reentryStateVectorAddX(builder *flatbuffers.Builder, X float64) {
 	builder.PrependFloat64Slot(2, X, 0.0)
@@ -167,11 +205,20 @@ func reentryStateVectorAddZ(builder *flatbuffers.Builder, Z float64) {
 func reentryStateVectorAddX_DOT(builder *flatbuffers.Builder, X_DOT float64) {
 	builder.PrependFloat64Slot(5, X_DOT, 0.0)
 }
+func reentryStateVectorAddXDot(builder *flatbuffers.Builder, X_DOT float64) {
+	reentryStateVectorAddX_DOT(builder, X_DOT)
+}
 func reentryStateVectorAddY_DOT(builder *flatbuffers.Builder, Y_DOT float64) {
 	builder.PrependFloat64Slot(6, Y_DOT, 0.0)
 }
+func reentryStateVectorAddYDot(builder *flatbuffers.Builder, Y_DOT float64) {
+	reentryStateVectorAddY_DOT(builder, Y_DOT)
+}
 func reentryStateVectorAddZ_DOT(builder *flatbuffers.Builder, Z_DOT float64) {
 	builder.PrependFloat64Slot(7, Z_DOT, 0.0)
+}
+func reentryStateVectorAddZDot(builder *flatbuffers.Builder, Z_DOT float64) {
+	reentryStateVectorAddZ_DOT(builder, Z_DOT)
 }
 func reentryStateVectorEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

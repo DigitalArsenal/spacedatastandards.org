@@ -2,4 +2,146 @@
 
 # namespace: 
 
-# NOTE GPXTrackSegment.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Track segment (continuous span of track points)
+class GPXTrackSegment(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = GPXTrackSegment()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsGPXTrackSegment(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def GPXTrackSegmentBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x47\x50\x58", size_prefixed=size_prefixed)
+
+    # GPXTrackSegment
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Ordered track points in this segment
+    # GPXTrackSegment
+    def POINTS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from GPXWaypoint import GPXWaypoint
+            obj = GPXWaypoint()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # GPXTrackSegment
+    def POINTSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # GPXTrackSegment
+    def POINTSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        return o == 0
+
+def GPXTrackSegmentStart(builder):
+    builder.StartObject(1)
+
+def Start(builder):
+    GPXTrackSegmentStart(builder)
+
+def GPXTrackSegmentAddPOINTS(builder, POINTS):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(POINTS), 0)
+
+def AddPOINTS(builder, POINTS):
+    GPXTrackSegmentAddPOINTS(builder, POINTS)
+
+def GPXTrackSegmentStartPOINTSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartPOINTSVector(builder, numElems):
+    return GPXTrackSegmentStartPOINTSVector(builder, numElems)
+
+def GPXTrackSegmentCreatePOINTSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreatePOINTSVector(builder, data):
+    GPXTrackSegmentCreatePOINTSVector(builder, data)
+
+def GPXTrackSegmentEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return GPXTrackSegmentEnd(builder)
+
+import GPXWaypoint
+try:
+    from typing import List
+except:
+    pass
+
+class GPXTrackSegmentT(object):
+
+    # GPXTrackSegmentT
+    def __init__(
+        self,
+        POINTS = None,
+    ):
+        self.POINTS = POINTS  # type: Optional[List[GPXWaypoint.GPXWaypointT]]
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpGpxtrackSegment = GPXTrackSegment()
+        tmpGpxtrackSegment.Init(buf, pos)
+        return cls.InitFromObj(tmpGpxtrackSegment)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpGpxtrackSegment):
+        x = GPXTrackSegmentT()
+        x._UnPack(tmpGpxtrackSegment)
+        return x
+
+    # GPXTrackSegmentT
+    def _UnPack(self, GPXTrackSegment):
+        if GPXTrackSegment is None:
+            return
+        if not GPXTrackSegment.POINTSIsNone():
+            self.POINTS = []
+            for i in range(GPXTrackSegment.POINTSLength()):
+                if GPXTrackSegment.POINTS(i) is None:
+                    self.POINTS.append(None)
+                else:
+                    gPXWaypoint_ = GPXWaypoint.GPXWaypointT.InitFromObj(GPXTrackSegment.POINTS(i))
+                    self.POINTS.append(gPXWaypoint_)
+
+    # GPXTrackSegmentT
+    def Pack(self, builder):
+        if self.POINTS is not None:
+            POINTSlist = []
+            for i in range(len(self.POINTS)):
+                POINTSlist.append(self.POINTS[i].Pack(builder))
+            GPXTrackSegmentStartPOINTSVector(builder, len(self.POINTS))
+            for i in reversed(range(len(self.POINTS))):
+                builder.PrependUOffsetTRelative(POINTSlist[i])
+            POINTS = builder.EndVector()
+        GPXTrackSegmentStart(builder)
+        if self.POINTS is not None:
+            GPXTrackSegmentAddPOINTS(builder, POINTS)
+        GPXTrackSegment = GPXTrackSegmentEnd(builder)
+        return GPXTrackSegment

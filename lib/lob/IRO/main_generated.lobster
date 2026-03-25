@@ -221,9 +221,9 @@ def IROCreateWAVELENGTHSVector(b_:flatbuffers.builder, v_:[float]):
     reverse(v_) e_: b_.PrependFloat64(e_)
     return b_.EndVector(v_.length)
 
-def IROStartSPECTRAL_VALUESVector(b_:flatbuffers.builder, n_:int):
+def IROStartSPECTRALVALUESVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(8, n_, 8)
-def IROCreateSPECTRAL_VALUESVector(b_:flatbuffers.builder, v_:[float]):
+def IROCreateSPECTRALVALUESVector(b_:flatbuffers.builder, v_:[float]):
     b_.StartVector(8, v_.length, 8)
     reverse(v_) e_: b_.PrependFloat64(e_)
     return b_.EndVector(v_.length)

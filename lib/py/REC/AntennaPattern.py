@@ -2,4 +2,16 @@
 
 # namespace: 
 
-# NOTE AntennaPattern.py does not declare any structs or enums
+class AntennaPattern(object):
+    ISOTROPIC = 0
+    DIPOLE = 1
+    YAGI = 2
+    PARABOLIC = 3
+    PHASED_ARRAY = 4
+    HORN = 5
+    PATCH = 6
+    HELICAL = 7
+    LOG_PERIODIC = 8
+    OMNIDIRECTIONAL = 9
+    SECTOR = 10
+    CUSTOM_PATTERN = 11

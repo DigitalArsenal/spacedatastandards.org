@@ -51,6 +51,10 @@ func (rcv *gnssSatObs) GNSS_SAT_ID() []byte {
 	return nil
 }
 
+func (rcv *gnssSatObs) GnssSatId() []byte {
+	return rcv.GNSS_SAT_ID()
+}
+
 /// GNSS satellite identifier (e.g., G01, R24, E05, C03)
 /// Constellation
 func (rcv *gnssSatObs) CONSTELLATION() gnssConstellation {
@@ -61,9 +65,17 @@ func (rcv *gnssSatObs) CONSTELLATION() gnssConstellation {
 	return 0
 }
 
+func (rcv *gnssSatObs) Constellation() gnssConstellation {
+	return rcv.CONSTELLATION()
+}
+
 /// Constellation
 func (rcv *gnssSatObs) MutateCONSTELLATION(n gnssConstellation) bool {
 	return rcv._tab.MutateInt8Slot(6, int8(n))
+}
+
+func (rcv *gnssSatObs) MutateConstellation(n gnssConstellation) bool {
+	return rcv.MutateCONSTELLATION(n)
 }
 
 /// Elevation angle in degrees
@@ -75,9 +87,17 @@ func (rcv *gnssSatObs) ELEVATION() float64 {
 	return 0.0
 }
 
+func (rcv *gnssSatObs) Elevation() float64 {
+	return rcv.ELEVATION()
+}
+
 /// Elevation angle in degrees
 func (rcv *gnssSatObs) MutateELEVATION(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(8, n)
+}
+
+func (rcv *gnssSatObs) MutateElevation(n float64) bool {
+	return rcv.MutateELEVATION(n)
 }
 
 /// Azimuth angle in degrees
@@ -89,9 +109,17 @@ func (rcv *gnssSatObs) AZIMUTH() float64 {
 	return 0.0
 }
 
+func (rcv *gnssSatObs) Azimuth() float64 {
+	return rcv.AZIMUTH()
+}
+
 /// Azimuth angle in degrees
 func (rcv *gnssSatObs) MutateAZIMUTH(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(10, n)
+}
+
+func (rcv *gnssSatObs) MutateAzimuth(n float64) bool {
+	return rcv.MutateAZIMUTH(n)
 }
 
 /// Tracking status (0=not tracked, 1=tracking, 2=locked)
@@ -103,9 +131,17 @@ func (rcv *gnssSatObs) TRACKING_STATUS() int32 {
 	return 0
 }
 
+func (rcv *gnssSatObs) TrackingStatus() int32 {
+	return rcv.TRACKING_STATUS()
+}
+
 /// Tracking status (0=not tracked, 1=tracking, 2=locked)
 func (rcv *gnssSatObs) MutateTRACKING_STATUS(n int32) bool {
 	return rcv._tab.MutateInt32Slot(12, n)
+}
+
+func (rcv *gnssSatObs) MutateTrackingStatus(n int32) bool {
+	return rcv.MutateTRACKING_STATUS(n)
 }
 
 /// AGC state
@@ -117,9 +153,17 @@ func (rcv *gnssSatObs) AGC_STATE() int32 {
 	return 0
 }
 
+func (rcv *gnssSatObs) AgcState() int32 {
+	return rcv.AGC_STATE()
+}
+
 /// AGC state
 func (rcv *gnssSatObs) MutateAGC_STATE(n int32) bool {
 	return rcv._tab.MutateInt32Slot(14, n)
+}
+
+func (rcv *gnssSatObs) MutateAgcState(n int32) bool {
+	return rcv.MutateAGC_STATE(n)
 }
 
 /// Observations for this satellite
@@ -129,10 +173,17 @@ func (rcv *gnssSatObs) OBSERVATIONS(obj *gnssObsData, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(gnssObsData)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *gnssSatObs) Observations(obj *gnssObsData, j int) bool {
+	return rcv.OBSERVATIONS(obj, j)
 }
 
 func (rcv *gnssSatObs) OBSERVATIONSLength() int {
@@ -143,6 +194,10 @@ func (rcv *gnssSatObs) OBSERVATIONSLength() int {
 	return 0
 }
 
+func (rcv *gnssSatObs) ObservationsLength() int {
+	return rcv.OBSERVATIONSLength()
+}
+
 /// Observations for this satellite
 func gnssSatObsStart(builder *flatbuffers.Builder) {
 	builder.StartObject(7)
@@ -150,26 +205,50 @@ func gnssSatObsStart(builder *flatbuffers.Builder) {
 func gnssSatObsAddGNSS_SAT_ID(builder *flatbuffers.Builder, GNSS_SAT_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(GNSS_SAT_ID), 0)
 }
+func gnssSatObsAddGnssSatId(builder *flatbuffers.Builder, GNSS_SAT_ID flatbuffers.UOffsetT) {
+	gnssSatObsAddGNSS_SAT_ID(builder, GNSS_SAT_ID)
+}
 func gnssSatObsAddCONSTELLATION(builder *flatbuffers.Builder, CONSTELLATION gnssConstellation) {
 	builder.PrependInt8Slot(1, int8(CONSTELLATION), 0)
+}
+func gnssSatObsAddConstellation(builder *flatbuffers.Builder, CONSTELLATION gnssConstellation) {
+	gnssSatObsAddCONSTELLATION(builder, CONSTELLATION)
 }
 func gnssSatObsAddELEVATION(builder *flatbuffers.Builder, ELEVATION float64) {
 	builder.PrependFloat64Slot(2, ELEVATION, 0.0)
 }
+func gnssSatObsAddElevation(builder *flatbuffers.Builder, ELEVATION float64) {
+	gnssSatObsAddELEVATION(builder, ELEVATION)
+}
 func gnssSatObsAddAZIMUTH(builder *flatbuffers.Builder, AZIMUTH float64) {
 	builder.PrependFloat64Slot(3, AZIMUTH, 0.0)
+}
+func gnssSatObsAddAzimuth(builder *flatbuffers.Builder, AZIMUTH float64) {
+	gnssSatObsAddAZIMUTH(builder, AZIMUTH)
 }
 func gnssSatObsAddTRACKING_STATUS(builder *flatbuffers.Builder, TRACKING_STATUS int32) {
 	builder.PrependInt32Slot(4, TRACKING_STATUS, 0)
 }
+func gnssSatObsAddTrackingStatus(builder *flatbuffers.Builder, TRACKING_STATUS int32) {
+	gnssSatObsAddTRACKING_STATUS(builder, TRACKING_STATUS)
+}
 func gnssSatObsAddAGC_STATE(builder *flatbuffers.Builder, AGC_STATE int32) {
 	builder.PrependInt32Slot(5, AGC_STATE, 0)
+}
+func gnssSatObsAddAgcState(builder *flatbuffers.Builder, AGC_STATE int32) {
+	gnssSatObsAddAGC_STATE(builder, AGC_STATE)
 }
 func gnssSatObsAddOBSERVATIONS(builder *flatbuffers.Builder, OBSERVATIONS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(OBSERVATIONS), 0)
 }
+func gnssSatObsAddObservations(builder *flatbuffers.Builder, OBSERVATIONS flatbuffers.UOffsetT) {
+	gnssSatObsAddOBSERVATIONS(builder, OBSERVATIONS)
+}
 func gnssSatObsStartOBSERVATIONSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func gnssSatObsStartObservationsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return gnssSatObsStartOBSERVATIONSVector(builder, numElems)
 }
 func gnssSatObsEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

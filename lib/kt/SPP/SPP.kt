@@ -32,7 +32,7 @@ class SPP : Table() {
     /**
      * Packet version number
      */
-    val VERSION : UByte
+    val version : UByte
         get() {
             val o = __offset(4)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
@@ -40,7 +40,7 @@ class SPP : Table() {
     /**
      * Packet type (TM or TC)
      */
-    val PACKET_TYPE : Byte
+    val packetType : Byte
         get() {
             val o = __offset(6)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -48,7 +48,7 @@ class SPP : Table() {
     /**
      * Secondary header flag
      */
-    val SEC_HDR_FLAG : Boolean
+    val secHdrFlag : Boolean
         get() {
             val o = __offset(8)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -56,7 +56,7 @@ class SPP : Table() {
     /**
      * Application Process Identifier
      */
-    val APID : UShort
+    val apid : UShort
         get() {
             val o = __offset(10)
             return if(o != 0) bb.getShort(o + bb_pos).toUShort() else 0u
@@ -64,7 +64,7 @@ class SPP : Table() {
     /**
      * Sequence flags (00=continuation, 01=first, 10=last, 11=standalone)
      */
-    val SEQUENCE_FLAGS : UByte
+    val sequenceFlags : UByte
         get() {
             val o = __offset(12)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
@@ -72,7 +72,7 @@ class SPP : Table() {
     /**
      * Sequence count
      */
-    val SEQUENCE_COUNT : UShort
+    val sequenceCount : UShort
         get() {
             val o = __offset(14)
             return if(o != 0) bb.getShort(o + bb_pos).toUShort() else 0u
@@ -80,7 +80,7 @@ class SPP : Table() {
     /**
      * Data length minus 1
      */
-    val DATA_LENGTH : UShort
+    val dataLength : UShort
         get() {
             val o = __offset(16)
             return if(o != 0) bb.getShort(o + bb_pos).toUShort() else 0u
@@ -88,7 +88,7 @@ class SPP : Table() {
     /**
      * Packet data zone
      */
-    fun DATA(j: Int) : UByte {
+    fun data(j: Int) : UByte {
         val o = __offset(18)
         return if (o != 0) {
             bb.get(__vector(o) + j * 1).toUByte()
@@ -96,41 +96,41 @@ class SPP : Table() {
             0u
         }
     }
-    val DATALength : Int
+    val dataLength : Int
         get() {
             val o = __offset(18); return if (o != 0) __vector_len(o) else 0
         }
-    val DATAAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(18, 1)
-    fun DATAInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 18, 1)
+    val dataAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(18, 1)
+    fun dataInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 18, 1)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsSPP(_bb: ByteBuffer): SPP = getRootAsSPP(_bb, SPP())
         fun getRootAsSPP(_bb: ByteBuffer, obj: SPP): SPP {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun SPPBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$SPP")
-        fun createSPP(builder: FlatBufferBuilder, VERSION: UByte, PACKET_TYPE: Byte, SEC_HDR_FLAG: Boolean, APID: UShort, SEQUENCE_FLAGS: UByte, SEQUENCE_COUNT: UShort, DATA_LENGTH: UShort, DATAOffset: Int) : Int {
+        fun createSPP(builder: FlatBufferBuilder, version: UByte, packetType: Byte, secHdrFlag: Boolean, apid: UShort, sequenceFlags: UByte, sequenceCount: UShort, dataLength: UShort, dataOffset: Int) : Int {
             builder.startTable(8)
-            addDATA(builder, DATAOffset)
-            addDATA_LENGTH(builder, DATA_LENGTH)
-            addSEQUENCE_COUNT(builder, SEQUENCE_COUNT)
-            addAPID(builder, APID)
-            addSEQUENCE_FLAGS(builder, SEQUENCE_FLAGS)
-            addSEC_HDR_FLAG(builder, SEC_HDR_FLAG)
-            addPACKET_TYPE(builder, PACKET_TYPE)
-            addVERSION(builder, VERSION)
+            addDATA(builder, dataOffset)
+            addDATALENGTH(builder, dataLength)
+            addSEQUENCECOUNT(builder, sequenceCount)
+            addAPID(builder, apid)
+            addSEQUENCEFLAGS(builder, sequenceFlags)
+            addSECHDRFLAG(builder, secHdrFlag)
+            addPACKETTYPE(builder, packetType)
+            addVERSION(builder, version)
             return endSPP(builder)
         }
         fun startSPP(builder: FlatBufferBuilder) = builder.startTable(8)
-        fun addVERSION(builder: FlatBufferBuilder, VERSION: UByte) = builder.addByte(0, VERSION.toByte(), 0)
-        fun addPACKET_TYPE(builder: FlatBufferBuilder, PACKET_TYPE: Byte) = builder.addByte(1, PACKET_TYPE, 0)
-        fun addSEC_HDR_FLAG(builder: FlatBufferBuilder, SEC_HDR_FLAG: Boolean) = builder.addBoolean(2, SEC_HDR_FLAG, false)
-        fun addAPID(builder: FlatBufferBuilder, APID: UShort) = builder.addShort(3, APID.toShort(), 0)
-        fun addSEQUENCE_FLAGS(builder: FlatBufferBuilder, SEQUENCE_FLAGS: UByte) = builder.addByte(4, SEQUENCE_FLAGS.toByte(), 0)
-        fun addSEQUENCE_COUNT(builder: FlatBufferBuilder, SEQUENCE_COUNT: UShort) = builder.addShort(5, SEQUENCE_COUNT.toShort(), 0)
-        fun addDATA_LENGTH(builder: FlatBufferBuilder, DATA_LENGTH: UShort) = builder.addShort(6, DATA_LENGTH.toShort(), 0)
-        fun addDATA(builder: FlatBufferBuilder, DATA: Int) = builder.addOffset(7, DATA, 0)
+        fun addVERSION(builder: FlatBufferBuilder, version: UByte) = builder.addByte(0, version.toByte(), 0)
+        fun addPACKETTYPE(builder: FlatBufferBuilder, packetType: Byte) = builder.addByte(1, packetType, 0)
+        fun addSECHDRFLAG(builder: FlatBufferBuilder, secHdrFlag: Boolean) = builder.addBoolean(2, secHdrFlag, false)
+        fun addAPID(builder: FlatBufferBuilder, apid: UShort) = builder.addShort(3, apid.toShort(), 0)
+        fun addSEQUENCEFLAGS(builder: FlatBufferBuilder, sequenceFlags: UByte) = builder.addByte(4, sequenceFlags.toByte(), 0)
+        fun addSEQUENCECOUNT(builder: FlatBufferBuilder, sequenceCount: UShort) = builder.addShort(5, sequenceCount.toShort(), 0)
+        fun addDATALENGTH(builder: FlatBufferBuilder, dataLength: UShort) = builder.addShort(6, dataLength.toShort(), 0)
+        fun addDATA(builder: FlatBufferBuilder, data: Int) = builder.addOffset(7, data, 0)
         @kotlin.ExperimentalUnsignedTypes
         fun createDataVector(builder: FlatBufferBuilder, data: UByteArray) : Int {
             builder.startVector(1, data.size, 1)

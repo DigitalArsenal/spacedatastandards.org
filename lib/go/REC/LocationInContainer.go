@@ -51,9 +51,17 @@ func (rcv *LocationInContainer) REFERENCE_LOCATION() ReferenceLocationType {
 	return 2
 }
 
+func (rcv *LocationInContainer) ReferenceLocation() ReferenceLocationType {
+	return rcv.REFERENCE_LOCATION()
+}
+
 /// Reference location type
 func (rcv *LocationInContainer) MutateREFERENCE_LOCATION(n ReferenceLocationType) bool {
 	return rcv._tab.MutateInt8Slot(4, int8(n))
+}
+
+func (rcv *LocationInContainer) MutateReferenceLocation(n ReferenceLocationType) bool {
+	return rcv.MutateREFERENCE_LOCATION(n)
 }
 
 /// Offset in bits from reference location
@@ -65,9 +73,17 @@ func (rcv *LocationInContainer) OFFSET_IN_BITS() int32 {
 	return 0
 }
 
+func (rcv *LocationInContainer) OffsetInBits() int32 {
+	return rcv.OFFSET_IN_BITS()
+}
+
 /// Offset in bits from reference location
 func (rcv *LocationInContainer) MutateOFFSET_IN_BITS(n int32) bool {
 	return rcv._tab.MutateInt32Slot(6, n)
+}
+
+func (rcv *LocationInContainer) MutateOffsetInBits(n int32) bool {
+	return rcv.MutateOFFSET_IN_BITS(n)
 }
 
 func LocationInContainerStart(builder *flatbuffers.Builder) {
@@ -76,8 +92,14 @@ func LocationInContainerStart(builder *flatbuffers.Builder) {
 func LocationInContainerAddREFERENCE_LOCATION(builder *flatbuffers.Builder, REFERENCE_LOCATION ReferenceLocationType) {
 	builder.PrependInt8Slot(0, int8(REFERENCE_LOCATION), 2)
 }
+func LocationInContainerAddReferenceLocation(builder *flatbuffers.Builder, REFERENCE_LOCATION ReferenceLocationType) {
+	LocationInContainerAddREFERENCE_LOCATION(builder, REFERENCE_LOCATION)
+}
 func LocationInContainerAddOFFSET_IN_BITS(builder *flatbuffers.Builder, OFFSET_IN_BITS int32) {
 	builder.PrependInt32Slot(1, OFFSET_IN_BITS, 0)
+}
+func LocationInContainerAddOffsetInBits(builder *flatbuffers.Builder, OFFSET_IN_BITS int32) {
+	LocationInContainerAddOFFSET_IN_BITS(builder, OFFSET_IN_BITS)
 }
 func LocationInContainerEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

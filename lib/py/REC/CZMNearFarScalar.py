@@ -2,4 +2,149 @@
 
 # namespace: 
 
-# NOTE CZMNearFarScalar.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Near/Far scalar for distance-based display
+class CZMNearFarScalar(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = CZMNearFarScalar()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsCZMNearFarScalar(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def CZMNearFarScalarBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x43\x5A\x4D", size_prefixed=size_prefixed)
+
+    # CZMNearFarScalar
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Near distance in meters
+    # CZMNearFarScalar
+    def NEAR_DISTANCE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Value at near distance
+    # CZMNearFarScalar
+    def NEAR_VALUE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Far distance in meters
+    # CZMNearFarScalar
+    def FAR_DISTANCE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Value at far distance
+    # CZMNearFarScalar
+    def FAR_VALUE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+def CZMNearFarScalarStart(builder):
+    builder.StartObject(4)
+
+def Start(builder):
+    CZMNearFarScalarStart(builder)
+
+def CZMNearFarScalarAddNEAR_DISTANCE(builder, NEAR_DISTANCE):
+    builder.PrependFloat64Slot(0, NEAR_DISTANCE, 0.0)
+
+def AddNEAR_DISTANCE(builder, NEAR_DISTANCE):
+    CZMNearFarScalarAddNEAR_DISTANCE(builder, NEAR_DISTANCE)
+
+def CZMNearFarScalarAddNEAR_VALUE(builder, NEAR_VALUE):
+    builder.PrependFloat64Slot(1, NEAR_VALUE, 0.0)
+
+def AddNEAR_VALUE(builder, NEAR_VALUE):
+    CZMNearFarScalarAddNEAR_VALUE(builder, NEAR_VALUE)
+
+def CZMNearFarScalarAddFAR_DISTANCE(builder, FAR_DISTANCE):
+    builder.PrependFloat64Slot(2, FAR_DISTANCE, 0.0)
+
+def AddFAR_DISTANCE(builder, FAR_DISTANCE):
+    CZMNearFarScalarAddFAR_DISTANCE(builder, FAR_DISTANCE)
+
+def CZMNearFarScalarAddFAR_VALUE(builder, FAR_VALUE):
+    builder.PrependFloat64Slot(3, FAR_VALUE, 0.0)
+
+def AddFAR_VALUE(builder, FAR_VALUE):
+    CZMNearFarScalarAddFAR_VALUE(builder, FAR_VALUE)
+
+def CZMNearFarScalarEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return CZMNearFarScalarEnd(builder)
+
+
+class CZMNearFarScalarT(object):
+
+    # CZMNearFarScalarT
+    def __init__(
+        self,
+        NEAR_DISTANCE = 0.0,
+        NEAR_VALUE = 0.0,
+        FAR_DISTANCE = 0.0,
+        FAR_VALUE = 0.0,
+    ):
+        self.NEAR_DISTANCE = NEAR_DISTANCE  # type: float
+        self.NEAR_VALUE = NEAR_VALUE  # type: float
+        self.FAR_DISTANCE = FAR_DISTANCE  # type: float
+        self.FAR_VALUE = FAR_VALUE  # type: float
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpCzmnearFarScalar = CZMNearFarScalar()
+        tmpCzmnearFarScalar.Init(buf, pos)
+        return cls.InitFromObj(tmpCzmnearFarScalar)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpCzmnearFarScalar):
+        x = CZMNearFarScalarT()
+        x._UnPack(tmpCzmnearFarScalar)
+        return x
+
+    # CZMNearFarScalarT
+    def _UnPack(self, CZMNearFarScalar):
+        if CZMNearFarScalar is None:
+            return
+        self.NEAR_DISTANCE = CZMNearFarScalar.NEAR_DISTANCE()
+        self.NEAR_VALUE = CZMNearFarScalar.NEAR_VALUE()
+        self.FAR_DISTANCE = CZMNearFarScalar.FAR_DISTANCE()
+        self.FAR_VALUE = CZMNearFarScalar.FAR_VALUE()
+
+    # CZMNearFarScalarT
+    def Pack(self, builder):
+        CZMNearFarScalarStart(builder)
+        CZMNearFarScalarAddNEAR_DISTANCE(builder, self.NEAR_DISTANCE)
+        CZMNearFarScalarAddNEAR_VALUE(builder, self.NEAR_VALUE)
+        CZMNearFarScalarAddFAR_DISTANCE(builder, self.FAR_DISTANCE)
+        CZMNearFarScalarAddFAR_VALUE(builder, self.FAR_VALUE)
+        CZMNearFarScalar = CZMNearFarScalarEnd(builder)
+        return CZMNearFarScalar

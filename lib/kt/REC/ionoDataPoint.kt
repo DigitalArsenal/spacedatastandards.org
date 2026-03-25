@@ -32,7 +32,7 @@ class ionoDataPoint : Table() {
     /**
      * Observation epoch (ISO 8601)
      */
-    val EPOCH : String?
+    val epoch : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class ionoDataPoint : Table() {
                 null
             }
         }
-    val EPOCHAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun EPOCHInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val epochAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun epochInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Ionospheric layer
      */
-    val LAYER : Byte
+    val layer : Byte
         get() {
             val o = __offset(6)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -54,7 +54,7 @@ class ionoDataPoint : Table() {
     /**
      * Critical frequency in MHz
      */
-    val CRITICAL_FREQ : Double
+    val criticalFreq : Double
         get() {
             val o = __offset(8)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -62,7 +62,7 @@ class ionoDataPoint : Table() {
     /**
      * Virtual height in km
      */
-    val VIRTUAL_HEIGHT : Double
+    val virtualHeight : Double
         get() {
             val o = __offset(10)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -70,7 +70,7 @@ class ionoDataPoint : Table() {
     /**
      * True height in km
      */
-    val TRUE_HEIGHT : Double
+    val trueHeight : Double
         get() {
             val o = __offset(12)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -78,7 +78,7 @@ class ionoDataPoint : Table() {
     /**
      * Peak electron density in electrons/m^3
      */
-    val PEAK_DENSITY : Double
+    val peakDensity : Double
         get() {
             val o = __offset(14)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -86,7 +86,7 @@ class ionoDataPoint : Table() {
     /**
      * Total electron content in TECU
      */
-    val TEC : Double
+    val tec : Double
         get() {
             val o = __offset(16)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -94,39 +94,39 @@ class ionoDataPoint : Table() {
     /**
      * TEC uncertainty in TECU
      */
-    val TEC_UNCERTAINTY : Double
+    val tecUncertainty : Double
         get() {
             val o = __offset(18)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsionoDataPoint(_bb: ByteBuffer): ionoDataPoint = getRootAsionoDataPoint(_bb, ionoDataPoint())
         fun getRootAsionoDataPoint(_bb: ByteBuffer, obj: ionoDataPoint): ionoDataPoint {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createionoDataPoint(builder: FlatBufferBuilder, EPOCHOffset: Int, LAYER: Byte, CRITICAL_FREQ: Double, VIRTUAL_HEIGHT: Double, TRUE_HEIGHT: Double, PEAK_DENSITY: Double, TEC: Double, TEC_UNCERTAINTY: Double) : Int {
+        fun createionoDataPoint(builder: FlatBufferBuilder, epochOffset: Int, layer: Byte, criticalFreq: Double, virtualHeight: Double, trueHeight: Double, peakDensity: Double, tec: Double, tecUncertainty: Double) : Int {
             builder.startTable(8)
-            addTEC_UNCERTAINTY(builder, TEC_UNCERTAINTY)
-            addTEC(builder, TEC)
-            addPEAK_DENSITY(builder, PEAK_DENSITY)
-            addTRUE_HEIGHT(builder, TRUE_HEIGHT)
-            addVIRTUAL_HEIGHT(builder, VIRTUAL_HEIGHT)
-            addCRITICAL_FREQ(builder, CRITICAL_FREQ)
-            addEPOCH(builder, EPOCHOffset)
-            addLAYER(builder, LAYER)
+            addTECUNCERTAINTY(builder, tecUncertainty)
+            addTEC(builder, tec)
+            addPEAKDENSITY(builder, peakDensity)
+            addTRUEHEIGHT(builder, trueHeight)
+            addVIRTUALHEIGHT(builder, virtualHeight)
+            addCRITICALFREQ(builder, criticalFreq)
+            addEPOCH(builder, epochOffset)
+            addLAYER(builder, layer)
             return endionoDataPoint(builder)
         }
         fun startionoDataPoint(builder: FlatBufferBuilder) = builder.startTable(8)
-        fun addEPOCH(builder: FlatBufferBuilder, EPOCH: Int) = builder.addOffset(0, EPOCH, 0)
-        fun addLAYER(builder: FlatBufferBuilder, LAYER: Byte) = builder.addByte(1, LAYER, 0)
-        fun addCRITICAL_FREQ(builder: FlatBufferBuilder, CRITICAL_FREQ: Double) = builder.addDouble(2, CRITICAL_FREQ, 0.0)
-        fun addVIRTUAL_HEIGHT(builder: FlatBufferBuilder, VIRTUAL_HEIGHT: Double) = builder.addDouble(3, VIRTUAL_HEIGHT, 0.0)
-        fun addTRUE_HEIGHT(builder: FlatBufferBuilder, TRUE_HEIGHT: Double) = builder.addDouble(4, TRUE_HEIGHT, 0.0)
-        fun addPEAK_DENSITY(builder: FlatBufferBuilder, PEAK_DENSITY: Double) = builder.addDouble(5, PEAK_DENSITY, 0.0)
-        fun addTEC(builder: FlatBufferBuilder, TEC: Double) = builder.addDouble(6, TEC, 0.0)
-        fun addTEC_UNCERTAINTY(builder: FlatBufferBuilder, TEC_UNCERTAINTY: Double) = builder.addDouble(7, TEC_UNCERTAINTY, 0.0)
+        fun addEPOCH(builder: FlatBufferBuilder, epoch: Int) = builder.addOffset(0, epoch, 0)
+        fun addLAYER(builder: FlatBufferBuilder, layer: Byte) = builder.addByte(1, layer, 0)
+        fun addCRITICALFREQ(builder: FlatBufferBuilder, criticalFreq: Double) = builder.addDouble(2, criticalFreq, 0.0)
+        fun addVIRTUALHEIGHT(builder: FlatBufferBuilder, virtualHeight: Double) = builder.addDouble(3, virtualHeight, 0.0)
+        fun addTRUEHEIGHT(builder: FlatBufferBuilder, trueHeight: Double) = builder.addDouble(4, trueHeight, 0.0)
+        fun addPEAKDENSITY(builder: FlatBufferBuilder, peakDensity: Double) = builder.addDouble(5, peakDensity, 0.0)
+        fun addTEC(builder: FlatBufferBuilder, tec: Double) = builder.addDouble(6, tec, 0.0)
+        fun addTECUNCERTAINTY(builder: FlatBufferBuilder, tecUncertainty: Double) = builder.addDouble(7, tecUncertainty, 0.0)
         fun endionoDataPoint(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

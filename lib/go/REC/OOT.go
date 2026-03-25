@@ -63,6 +63,10 @@ func (rcv *OOT) ID() []byte {
 	return nil
 }
 
+func (rcv *OOT) Id() []byte {
+	return rcv.ID()
+}
+
 /// Unique identifier
 /// Reference to parent on-orbit object
 func (rcv *OOT) ID_ON_ORBIT() []byte {
@@ -71,6 +75,10 @@ func (rcv *OOT) ID_ON_ORBIT() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *OOT) IdOnOrbit() []byte {
+	return rcv.ID_ON_ORBIT()
 }
 
 /// Reference to parent on-orbit object
@@ -83,6 +91,10 @@ func (rcv *OOT) ID_THRUSTER() []byte {
 	return nil
 }
 
+func (rcv *OOT) IdThruster() []byte {
+	return rcv.ID_THRUSTER()
+}
+
 /// Reference to thruster specification
 /// Thruster name or designation
 func (rcv *OOT) NAME() []byte {
@@ -91,6 +103,10 @@ func (rcv *OOT) NAME() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *OOT) Name() []byte {
+	return rcv.NAME()
 }
 
 /// Thruster name or designation
@@ -103,9 +119,17 @@ func (rcv *OOT) TYPE() thrusterType {
 	return 0
 }
 
+func (rcv *OOT) Type() thrusterType {
+	return rcv.TYPE()
+}
+
 /// Thruster type
 func (rcv *OOT) MutateTYPE(n thrusterType) bool {
 	return rcv._tab.MutateInt8Slot(12, int8(n))
+}
+
+func (rcv *OOT) MutateType(n thrusterType) bool {
+	return rcv.MutateTYPE(n)
 }
 
 /// Number of thrusters of this type
@@ -117,9 +141,17 @@ func (rcv *OOT) QUANTITY() uint32 {
 	return 0
 }
 
+func (rcv *OOT) Quantity() uint32 {
+	return rcv.QUANTITY()
+}
+
 /// Number of thrusters of this type
 func (rcv *OOT) MutateQUANTITY(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(14, n)
+}
+
+func (rcv *OOT) MutateQuantity(n uint32) bool {
+	return rcv.MutateQUANTITY(n)
 }
 
 /// Thrust output in Newtons
@@ -131,9 +163,17 @@ func (rcv *OOT) THRUST() float64 {
 	return 0.0
 }
 
+func (rcv *OOT) Thrust() float64 {
+	return rcv.THRUST()
+}
+
 /// Thrust output in Newtons
 func (rcv *OOT) MutateTHRUST(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(16, n)
+}
+
+func (rcv *OOT) MutateThrust(n float64) bool {
+	return rcv.MutateTHRUST(n)
 }
 
 /// Specific impulse in seconds
@@ -145,9 +185,17 @@ func (rcv *OOT) ISP() float64 {
 	return 0.0
 }
 
+func (rcv *OOT) Isp() float64 {
+	return rcv.ISP()
+}
+
 /// Specific impulse in seconds
 func (rcv *OOT) MutateISP(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(18, n)
+}
+
+func (rcv *OOT) MutateIsp(n float64) bool {
+	return rcv.MutateISP(n)
 }
 
 /// Propellant type (e.g., HYDRAZINE, XENON, KRYPTON, MMH_NTO, N2, GN2)
@@ -157,6 +205,10 @@ func (rcv *OOT) PROPELLANT() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *OOT) Propellant() []byte {
+	return rcv.PROPELLANT()
 }
 
 /// Propellant type (e.g., HYDRAZINE, XENON, KRYPTON, MMH_NTO, N2, GN2)
@@ -169,9 +221,17 @@ func (rcv *OOT) PROPELLANT_MASS() float64 {
 	return 0.0
 }
 
+func (rcv *OOT) PropellantMass() float64 {
+	return rcv.PROPELLANT_MASS()
+}
+
 /// Total propellant mass in kg
 func (rcv *OOT) MutatePROPELLANT_MASS(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(22, n)
+}
+
+func (rcv *OOT) MutatePropellantMass(n float64) bool {
+	return rcv.MutatePROPELLANT_MASS(n)
 }
 
 /// Remaining propellant mass in kg
@@ -183,9 +243,17 @@ func (rcv *OOT) PROPELLANT_REMAINING() float64 {
 	return 0.0
 }
 
+func (rcv *OOT) PropellantRemaining() float64 {
+	return rcv.PROPELLANT_REMAINING()
+}
+
 /// Remaining propellant mass in kg
 func (rcv *OOT) MutatePROPELLANT_REMAINING(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(24, n)
+}
+
+func (rcv *OOT) MutatePropellantRemaining(n float64) bool {
+	return rcv.MutatePROPELLANT_REMAINING(n)
 }
 
 /// Total delta-V capability in m/s
@@ -197,9 +265,17 @@ func (rcv *OOT) DELTA_V_TOTAL() float64 {
 	return 0.0
 }
 
+func (rcv *OOT) DeltaVTotal() float64 {
+	return rcv.DELTA_V_TOTAL()
+}
+
 /// Total delta-V capability in m/s
 func (rcv *OOT) MutateDELTA_V_TOTAL(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(26, n)
+}
+
+func (rcv *OOT) MutateDeltaVTotal(n float64) bool {
+	return rcv.MutateDELTA_V_TOTAL(n)
 }
 
 /// Remaining delta-V in m/s
@@ -211,9 +287,17 @@ func (rcv *OOT) DELTA_V_REMAINING() float64 {
 	return 0.0
 }
 
+func (rcv *OOT) DeltaVRemaining() float64 {
+	return rcv.DELTA_V_REMAINING()
+}
+
 /// Remaining delta-V in m/s
 func (rcv *OOT) MutateDELTA_V_REMAINING(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(28, n)
+}
+
+func (rcv *OOT) MutateDeltaVRemaining(n float64) bool {
+	return rcv.MutateDELTA_V_REMAINING(n)
 }
 
 /// Total impulse in Newton-seconds
@@ -225,9 +309,17 @@ func (rcv *OOT) TOTAL_IMPULSE() float64 {
 	return 0.0
 }
 
+func (rcv *OOT) TotalImpulse() float64 {
+	return rcv.TOTAL_IMPULSE()
+}
+
 /// Total impulse in Newton-seconds
 func (rcv *OOT) MutateTOTAL_IMPULSE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(30, n)
+}
+
+func (rcv *OOT) MutateTotalImpulse(n float64) bool {
+	return rcv.MutateTOTAL_IMPULSE(n)
 }
 
 /// Thruster dry mass in kg
@@ -239,9 +331,17 @@ func (rcv *OOT) MASS() float64 {
 	return 0.0
 }
 
+func (rcv *OOT) Mass() float64 {
+	return rcv.MASS()
+}
+
 /// Thruster dry mass in kg
 func (rcv *OOT) MutateMASS(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(32, n)
+}
+
+func (rcv *OOT) MutateMass(n float64) bool {
+	return rcv.MutateMASS(n)
 }
 
 /// Purpose (e.g., ORBIT_RAISING, STATION_KEEPING, ATTITUDE_CONTROL, DEORBIT)
@@ -251,6 +351,10 @@ func (rcv *OOT) PURPOSE() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *OOT) Purpose() []byte {
+	return rcv.PURPOSE()
 }
 
 /// Purpose (e.g., ORBIT_RAISING, STATION_KEEPING, ATTITUDE_CONTROL, DEORBIT)
@@ -263,6 +367,10 @@ func (rcv *OOT) NOTES() []byte {
 	return nil
 }
 
+func (rcv *OOT) Notes() []byte {
+	return rcv.NOTES()
+}
+
 /// Additional notes
 func OOTStart(builder *flatbuffers.Builder) {
 	builder.StartObject(17)
@@ -270,53 +378,104 @@ func OOTStart(builder *flatbuffers.Builder) {
 func OOTAddID(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ID), 0)
 }
+func OOTAddId(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
+	OOTAddID(builder, ID)
+}
 func OOTAddID_ON_ORBIT(builder *flatbuffers.Builder, ID_ON_ORBIT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(ID_ON_ORBIT), 0)
+}
+func OOTAddIdOnOrbit(builder *flatbuffers.Builder, ID_ON_ORBIT flatbuffers.UOffsetT) {
+	OOTAddID_ON_ORBIT(builder, ID_ON_ORBIT)
 }
 func OOTAddID_THRUSTER(builder *flatbuffers.Builder, ID_THRUSTER flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(ID_THRUSTER), 0)
 }
+func OOTAddIdThruster(builder *flatbuffers.Builder, ID_THRUSTER flatbuffers.UOffsetT) {
+	OOTAddID_THRUSTER(builder, ID_THRUSTER)
+}
 func OOTAddNAME(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(NAME), 0)
+}
+func OOTAddName(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
+	OOTAddNAME(builder, NAME)
 }
 func OOTAddTYPE(builder *flatbuffers.Builder, TYPE thrusterType) {
 	builder.PrependInt8Slot(4, int8(TYPE), 0)
 }
+func OOTAddType(builder *flatbuffers.Builder, TYPE thrusterType) {
+	OOTAddTYPE(builder, TYPE)
+}
 func OOTAddQUANTITY(builder *flatbuffers.Builder, QUANTITY uint32) {
 	builder.PrependUint32Slot(5, QUANTITY, 0)
+}
+func OOTAddQuantity(builder *flatbuffers.Builder, QUANTITY uint32) {
+	OOTAddQUANTITY(builder, QUANTITY)
 }
 func OOTAddTHRUST(builder *flatbuffers.Builder, THRUST float64) {
 	builder.PrependFloat64Slot(6, THRUST, 0.0)
 }
+func OOTAddThrust(builder *flatbuffers.Builder, THRUST float64) {
+	OOTAddTHRUST(builder, THRUST)
+}
 func OOTAddISP(builder *flatbuffers.Builder, ISP float64) {
 	builder.PrependFloat64Slot(7, ISP, 0.0)
+}
+func OOTAddIsp(builder *flatbuffers.Builder, ISP float64) {
+	OOTAddISP(builder, ISP)
 }
 func OOTAddPROPELLANT(builder *flatbuffers.Builder, PROPELLANT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(PROPELLANT), 0)
 }
+func OOTAddPropellant(builder *flatbuffers.Builder, PROPELLANT flatbuffers.UOffsetT) {
+	OOTAddPROPELLANT(builder, PROPELLANT)
+}
 func OOTAddPROPELLANT_MASS(builder *flatbuffers.Builder, PROPELLANT_MASS float64) {
 	builder.PrependFloat64Slot(9, PROPELLANT_MASS, 0.0)
+}
+func OOTAddPropellantMass(builder *flatbuffers.Builder, PROPELLANT_MASS float64) {
+	OOTAddPROPELLANT_MASS(builder, PROPELLANT_MASS)
 }
 func OOTAddPROPELLANT_REMAINING(builder *flatbuffers.Builder, PROPELLANT_REMAINING float64) {
 	builder.PrependFloat64Slot(10, PROPELLANT_REMAINING, 0.0)
 }
+func OOTAddPropellantRemaining(builder *flatbuffers.Builder, PROPELLANT_REMAINING float64) {
+	OOTAddPROPELLANT_REMAINING(builder, PROPELLANT_REMAINING)
+}
 func OOTAddDELTA_V_TOTAL(builder *flatbuffers.Builder, DELTA_V_TOTAL float64) {
 	builder.PrependFloat64Slot(11, DELTA_V_TOTAL, 0.0)
+}
+func OOTAddDeltaVTotal(builder *flatbuffers.Builder, DELTA_V_TOTAL float64) {
+	OOTAddDELTA_V_TOTAL(builder, DELTA_V_TOTAL)
 }
 func OOTAddDELTA_V_REMAINING(builder *flatbuffers.Builder, DELTA_V_REMAINING float64) {
 	builder.PrependFloat64Slot(12, DELTA_V_REMAINING, 0.0)
 }
+func OOTAddDeltaVRemaining(builder *flatbuffers.Builder, DELTA_V_REMAINING float64) {
+	OOTAddDELTA_V_REMAINING(builder, DELTA_V_REMAINING)
+}
 func OOTAddTOTAL_IMPULSE(builder *flatbuffers.Builder, TOTAL_IMPULSE float64) {
 	builder.PrependFloat64Slot(13, TOTAL_IMPULSE, 0.0)
+}
+func OOTAddTotalImpulse(builder *flatbuffers.Builder, TOTAL_IMPULSE float64) {
+	OOTAddTOTAL_IMPULSE(builder, TOTAL_IMPULSE)
 }
 func OOTAddMASS(builder *flatbuffers.Builder, MASS float64) {
 	builder.PrependFloat64Slot(14, MASS, 0.0)
 }
+func OOTAddMass(builder *flatbuffers.Builder, MASS float64) {
+	OOTAddMASS(builder, MASS)
+}
 func OOTAddPURPOSE(builder *flatbuffers.Builder, PURPOSE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(15, flatbuffers.UOffsetT(PURPOSE), 0)
 }
+func OOTAddPurpose(builder *flatbuffers.Builder, PURPOSE flatbuffers.UOffsetT) {
+	OOTAddPURPOSE(builder, PURPOSE)
+}
 func OOTAddNOTES(builder *flatbuffers.Builder, NOTES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(16, flatbuffers.UOffsetT(NOTES), 0)
+}
+func OOTAddNotes(builder *flatbuffers.Builder, NOTES flatbuffers.UOffsetT) {
+	OOTAddNOTES(builder, NOTES)
 }
 func OOTEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

@@ -73,6 +73,12 @@ def GJNPolygonRingsStartRINGSVector(builder, numElems):
 def StartRINGSVector(builder, numElems):
     return GJNPolygonRingsStartRINGSVector(builder, numElems)
 
+def GJNPolygonRingsCreateRINGSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateRINGSVector(builder, data):
+    GJNPolygonRingsCreateRINGSVector(builder, data)
+
 def GJNPolygonRingsEnd(builder):
     return builder.EndObject()
 
@@ -88,14 +94,17 @@ except:
 class GJNPolygonRingsT(object):
 
     # GJNPolygonRingsT
-    def __init__(self):
-        self.RINGS = None  # type: List[GJNLinearRing.GJNLinearRingT]
+    def __init__(
+        self,
+        RINGS = None,
+    ):
+        self.RINGS = RINGS  # type: Optional[List[GJNLinearRing.GJNLinearRingT]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        gjnpolygonRings = GJNPolygonRings()
-        gjnpolygonRings.Init(buf, pos)
-        return cls.InitFromObj(gjnpolygonRings)
+        tmpGjnpolygonRings = GJNPolygonRings()
+        tmpGjnpolygonRings.Init(buf, pos)
+        return cls.InitFromObj(tmpGjnpolygonRings)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -103,22 +112,22 @@ class GJNPolygonRingsT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, gjnpolygonRings):
+    def InitFromObj(cls, tmpGjnpolygonRings):
         x = GJNPolygonRingsT()
-        x._UnPack(gjnpolygonRings)
+        x._UnPack(tmpGjnpolygonRings)
         return x
 
     # GJNPolygonRingsT
-    def _UnPack(self, gjnpolygonRings):
-        if gjnpolygonRings is None:
+    def _UnPack(self, GJNPolygonRings):
+        if GJNPolygonRings is None:
             return
-        if not gjnpolygonRings.RINGSIsNone():
+        if not GJNPolygonRings.RINGSIsNone():
             self.RINGS = []
-            for i in range(gjnpolygonRings.RINGSLength()):
-                if gjnpolygonRings.RINGS(i) is None:
+            for i in range(GJNPolygonRings.RINGSLength()):
+                if GJNPolygonRings.RINGS(i) is None:
                     self.RINGS.append(None)
                 else:
-                    gJNLinearRing_ = GJNLinearRing.GJNLinearRingT.InitFromObj(gjnpolygonRings.RINGS(i))
+                    gJNLinearRing_ = GJNLinearRing.GJNLinearRingT.InitFromObj(GJNPolygonRings.RINGS(i))
                     self.RINGS.append(gJNLinearRing_)
 
     # GJNPolygonRingsT
@@ -134,5 +143,5 @@ class GJNPolygonRingsT(object):
         GJNPolygonRingsStart(builder)
         if self.RINGS is not None:
             GJNPolygonRingsAddRINGS(builder, RINGS)
-        gjnpolygonRings = GJNPolygonRingsEnd(builder)
-        return gjnpolygonRings
+        GJNPolygonRings = GJNPolygonRingsEnd(builder)
+        return GJNPolygonRings

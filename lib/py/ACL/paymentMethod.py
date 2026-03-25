@@ -2,4 +2,17 @@
 
 # namespace: 
 
-# NOTE paymentMethod.py does not declare any structs or enums
+# Payment method accepted
+class paymentMethod(object):
+    # Ethereum cryptocurrency
+    Crypto_ETH = 0
+    # Solana cryptocurrency
+    Crypto_SOL = 1
+    # Bitcoin cryptocurrency
+    Crypto_BTC = 2
+    # Internal SDN credits system
+    SDN_Credits = 3
+    # Fiat payment via Stripe
+    Fiat_Stripe = 4
+    # Free/open data
+    Free = 5

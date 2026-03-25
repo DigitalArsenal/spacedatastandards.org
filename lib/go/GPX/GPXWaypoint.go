@@ -51,9 +51,17 @@ func (rcv *GPXWaypoint) LATITUDE() float64 {
 	return 0.0
 }
 
+func (rcv *GPXWaypoint) Latitude() float64 {
+	return rcv.LATITUDE()
+}
+
 /// Latitude in decimal degrees (WGS84)
 func (rcv *GPXWaypoint) MutateLATITUDE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(4, n)
+}
+
+func (rcv *GPXWaypoint) MutateLatitude(n float64) bool {
+	return rcv.MutateLATITUDE(n)
 }
 
 /// Longitude in decimal degrees (WGS84)
@@ -65,9 +73,17 @@ func (rcv *GPXWaypoint) LONGITUDE() float64 {
 	return 0.0
 }
 
+func (rcv *GPXWaypoint) Longitude() float64 {
+	return rcv.LONGITUDE()
+}
+
 /// Longitude in decimal degrees (WGS84)
 func (rcv *GPXWaypoint) MutateLONGITUDE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(6, n)
+}
+
+func (rcv *GPXWaypoint) MutateLongitude(n float64) bool {
+	return rcv.MutateLONGITUDE(n)
 }
 
 /// Elevation in meters above WGS84 ellipsoid
@@ -79,9 +95,17 @@ func (rcv *GPXWaypoint) ELEVATION() float64 {
 	return 0.0
 }
 
+func (rcv *GPXWaypoint) Elevation() float64 {
+	return rcv.ELEVATION()
+}
+
 /// Elevation in meters above WGS84 ellipsoid
 func (rcv *GPXWaypoint) MutateELEVATION(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(8, n)
+}
+
+func (rcv *GPXWaypoint) MutateElevation(n float64) bool {
+	return rcv.MutateELEVATION(n)
 }
 
 /// UTC timestamp (ISO 8601)
@@ -91,6 +115,10 @@ func (rcv *GPXWaypoint) TIME() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *GPXWaypoint) Time() []byte {
+	return rcv.TIME()
 }
 
 /// UTC timestamp (ISO 8601)
@@ -103,9 +131,17 @@ func (rcv *GPXWaypoint) MAGVAR() float64 {
 	return 0.0
 }
 
+func (rcv *GPXWaypoint) Magvar() float64 {
+	return rcv.MAGVAR()
+}
+
 /// Magnetic variation in degrees
 func (rcv *GPXWaypoint) MutateMAGVAR(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(12, n)
+}
+
+func (rcv *GPXWaypoint) MutateMagvar(n float64) bool {
+	return rcv.MutateMAGVAR(n)
 }
 
 /// Height of geoid above WGS84 ellipsoid in meters
@@ -117,9 +153,17 @@ func (rcv *GPXWaypoint) GEOID_HEIGHT() float64 {
 	return 0.0
 }
 
+func (rcv *GPXWaypoint) GeoidHeight() float64 {
+	return rcv.GEOID_HEIGHT()
+}
+
 /// Height of geoid above WGS84 ellipsoid in meters
 func (rcv *GPXWaypoint) MutateGEOID_HEIGHT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(14, n)
+}
+
+func (rcv *GPXWaypoint) MutateGeoidHeight(n float64) bool {
+	return rcv.MutateGEOID_HEIGHT(n)
 }
 
 /// Waypoint name
@@ -129,6 +173,10 @@ func (rcv *GPXWaypoint) NAME() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *GPXWaypoint) Name() []byte {
+	return rcv.NAME()
 }
 
 /// Waypoint name
@@ -141,6 +189,10 @@ func (rcv *GPXWaypoint) COMMENT() []byte {
 	return nil
 }
 
+func (rcv *GPXWaypoint) Comment() []byte {
+	return rcv.COMMENT()
+}
+
 /// Comment
 /// Description
 func (rcv *GPXWaypoint) DESCRIPTION() []byte {
@@ -149,6 +201,10 @@ func (rcv *GPXWaypoint) DESCRIPTION() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *GPXWaypoint) Description() []byte {
+	return rcv.DESCRIPTION()
 }
 
 /// Description
@@ -161,6 +217,10 @@ func (rcv *GPXWaypoint) SOURCE() []byte {
 	return nil
 }
 
+func (rcv *GPXWaypoint) Source() []byte {
+	return rcv.SOURCE()
+}
+
 /// Source of data
 /// Links to additional information
 func (rcv *GPXWaypoint) LINKS(obj *GPXLink, j int) bool {
@@ -169,10 +229,17 @@ func (rcv *GPXWaypoint) LINKS(obj *GPXLink, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(GPXLink)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *GPXWaypoint) Links(obj *GPXLink, j int) bool {
+	return rcv.LINKS(obj, j)
 }
 
 func (rcv *GPXWaypoint) LINKSLength() int {
@@ -181,6 +248,10 @@ func (rcv *GPXWaypoint) LINKSLength() int {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *GPXWaypoint) LinksLength() int {
+	return rcv.LINKSLength()
 }
 
 /// Links to additional information
@@ -193,6 +264,10 @@ func (rcv *GPXWaypoint) SYMBOL() []byte {
 	return nil
 }
 
+func (rcv *GPXWaypoint) Symbol() []byte {
+	return rcv.SYMBOL()
+}
+
 /// Symbol name
 /// Type/category
 func (rcv *GPXWaypoint) TYPE() []byte {
@@ -201,6 +276,10 @@ func (rcv *GPXWaypoint) TYPE() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *GPXWaypoint) Type() []byte {
+	return rcv.TYPE()
 }
 
 /// Type/category
@@ -213,9 +292,17 @@ func (rcv *GPXWaypoint) FIX() GPXFixType {
 	return 0
 }
 
+func (rcv *GPXWaypoint) Fix() GPXFixType {
+	return rcv.FIX()
+}
+
 /// Type of GPS fix
 func (rcv *GPXWaypoint) MutateFIX(n GPXFixType) bool {
 	return rcv._tab.MutateInt8Slot(30, int8(n))
+}
+
+func (rcv *GPXWaypoint) MutateFix(n GPXFixType) bool {
+	return rcv.MutateFIX(n)
 }
 
 /// Number of satellites used for fix
@@ -227,9 +314,17 @@ func (rcv *GPXWaypoint) SAT() uint16 {
 	return 0
 }
 
+func (rcv *GPXWaypoint) Sat() uint16 {
+	return rcv.SAT()
+}
+
 /// Number of satellites used for fix
 func (rcv *GPXWaypoint) MutateSAT(n uint16) bool {
 	return rcv._tab.MutateUint16Slot(32, n)
+}
+
+func (rcv *GPXWaypoint) MutateSat(n uint16) bool {
+	return rcv.MutateSAT(n)
 }
 
 /// Horizontal dilution of precision
@@ -241,9 +336,17 @@ func (rcv *GPXWaypoint) HDOP() float64 {
 	return 0.0
 }
 
+func (rcv *GPXWaypoint) Hdop() float64 {
+	return rcv.HDOP()
+}
+
 /// Horizontal dilution of precision
 func (rcv *GPXWaypoint) MutateHDOP(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(34, n)
+}
+
+func (rcv *GPXWaypoint) MutateHdop(n float64) bool {
+	return rcv.MutateHDOP(n)
 }
 
 /// Vertical dilution of precision
@@ -255,9 +358,17 @@ func (rcv *GPXWaypoint) VDOP() float64 {
 	return 0.0
 }
 
+func (rcv *GPXWaypoint) Vdop() float64 {
+	return rcv.VDOP()
+}
+
 /// Vertical dilution of precision
 func (rcv *GPXWaypoint) MutateVDOP(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(36, n)
+}
+
+func (rcv *GPXWaypoint) MutateVdop(n float64) bool {
+	return rcv.MutateVDOP(n)
 }
 
 /// Position dilution of precision
@@ -269,9 +380,17 @@ func (rcv *GPXWaypoint) PDOP() float64 {
 	return 0.0
 }
 
+func (rcv *GPXWaypoint) Pdop() float64 {
+	return rcv.PDOP()
+}
+
 /// Position dilution of precision
 func (rcv *GPXWaypoint) MutatePDOP(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(38, n)
+}
+
+func (rcv *GPXWaypoint) MutatePdop(n float64) bool {
+	return rcv.MutatePDOP(n)
 }
 
 /// Age of DGPS data in seconds
@@ -283,9 +402,17 @@ func (rcv *GPXWaypoint) AGE_OF_DGPS_DATA() float64 {
 	return 0.0
 }
 
+func (rcv *GPXWaypoint) AgeOfDgpsData() float64 {
+	return rcv.AGE_OF_DGPS_DATA()
+}
+
 /// Age of DGPS data in seconds
 func (rcv *GPXWaypoint) MutateAGE_OF_DGPS_DATA(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(40, n)
+}
+
+func (rcv *GPXWaypoint) MutateAgeOfDgpsData(n float64) bool {
+	return rcv.MutateAGE_OF_DGPS_DATA(n)
 }
 
 /// DGPS station ID
@@ -297,9 +424,17 @@ func (rcv *GPXWaypoint) DGPS_ID() uint16 {
 	return 0
 }
 
+func (rcv *GPXWaypoint) DgpsId() uint16 {
+	return rcv.DGPS_ID()
+}
+
 /// DGPS station ID
 func (rcv *GPXWaypoint) MutateDGPS_ID(n uint16) bool {
 	return rcv._tab.MutateUint16Slot(42, n)
+}
+
+func (rcv *GPXWaypoint) MutateDgpsId(n uint16) bool {
+	return rcv.MutateDGPS_ID(n)
 }
 
 /// Speed in meters per second
@@ -311,9 +446,17 @@ func (rcv *GPXWaypoint) SPEED() float64 {
 	return 0.0
 }
 
+func (rcv *GPXWaypoint) Speed() float64 {
+	return rcv.SPEED()
+}
+
 /// Speed in meters per second
 func (rcv *GPXWaypoint) MutateSPEED(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(44, n)
+}
+
+func (rcv *GPXWaypoint) MutateSpeed(n float64) bool {
+	return rcv.MutateSPEED(n)
 }
 
 /// Course/heading in degrees true
@@ -325,9 +468,17 @@ func (rcv *GPXWaypoint) COURSE() float64 {
 	return 0.0
 }
 
+func (rcv *GPXWaypoint) Course() float64 {
+	return rcv.COURSE()
+}
+
 /// Course/heading in degrees true
 func (rcv *GPXWaypoint) MutateCOURSE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(46, n)
+}
+
+func (rcv *GPXWaypoint) MutateCourse(n float64) bool {
+	return rcv.MutateCOURSE(n)
 }
 
 func GPXWaypointStart(builder *flatbuffers.Builder) {
@@ -336,71 +487,140 @@ func GPXWaypointStart(builder *flatbuffers.Builder) {
 func GPXWaypointAddLATITUDE(builder *flatbuffers.Builder, LATITUDE float64) {
 	builder.PrependFloat64Slot(0, LATITUDE, 0.0)
 }
+func GPXWaypointAddLatitude(builder *flatbuffers.Builder, LATITUDE float64) {
+	GPXWaypointAddLATITUDE(builder, LATITUDE)
+}
 func GPXWaypointAddLONGITUDE(builder *flatbuffers.Builder, LONGITUDE float64) {
 	builder.PrependFloat64Slot(1, LONGITUDE, 0.0)
+}
+func GPXWaypointAddLongitude(builder *flatbuffers.Builder, LONGITUDE float64) {
+	GPXWaypointAddLONGITUDE(builder, LONGITUDE)
 }
 func GPXWaypointAddELEVATION(builder *flatbuffers.Builder, ELEVATION float64) {
 	builder.PrependFloat64Slot(2, ELEVATION, 0.0)
 }
+func GPXWaypointAddElevation(builder *flatbuffers.Builder, ELEVATION float64) {
+	GPXWaypointAddELEVATION(builder, ELEVATION)
+}
 func GPXWaypointAddTIME(builder *flatbuffers.Builder, TIME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(TIME), 0)
+}
+func GPXWaypointAddTime(builder *flatbuffers.Builder, TIME flatbuffers.UOffsetT) {
+	GPXWaypointAddTIME(builder, TIME)
 }
 func GPXWaypointAddMAGVAR(builder *flatbuffers.Builder, MAGVAR float64) {
 	builder.PrependFloat64Slot(4, MAGVAR, 0.0)
 }
+func GPXWaypointAddMagvar(builder *flatbuffers.Builder, MAGVAR float64) {
+	GPXWaypointAddMAGVAR(builder, MAGVAR)
+}
 func GPXWaypointAddGEOID_HEIGHT(builder *flatbuffers.Builder, GEOID_HEIGHT float64) {
 	builder.PrependFloat64Slot(5, GEOID_HEIGHT, 0.0)
+}
+func GPXWaypointAddGeoidHeight(builder *flatbuffers.Builder, GEOID_HEIGHT float64) {
+	GPXWaypointAddGEOID_HEIGHT(builder, GEOID_HEIGHT)
 }
 func GPXWaypointAddNAME(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(NAME), 0)
 }
+func GPXWaypointAddName(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
+	GPXWaypointAddNAME(builder, NAME)
+}
 func GPXWaypointAddCOMMENT(builder *flatbuffers.Builder, COMMENT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(COMMENT), 0)
+}
+func GPXWaypointAddComment(builder *flatbuffers.Builder, COMMENT flatbuffers.UOffsetT) {
+	GPXWaypointAddCOMMENT(builder, COMMENT)
 }
 func GPXWaypointAddDESCRIPTION(builder *flatbuffers.Builder, DESCRIPTION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(DESCRIPTION), 0)
 }
+func GPXWaypointAddDescription(builder *flatbuffers.Builder, DESCRIPTION flatbuffers.UOffsetT) {
+	GPXWaypointAddDESCRIPTION(builder, DESCRIPTION)
+}
 func GPXWaypointAddSOURCE(builder *flatbuffers.Builder, SOURCE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(SOURCE), 0)
+}
+func GPXWaypointAddSource(builder *flatbuffers.Builder, SOURCE flatbuffers.UOffsetT) {
+	GPXWaypointAddSOURCE(builder, SOURCE)
 }
 func GPXWaypointAddLINKS(builder *flatbuffers.Builder, LINKS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(LINKS), 0)
 }
+func GPXWaypointAddLinks(builder *flatbuffers.Builder, LINKS flatbuffers.UOffsetT) {
+	GPXWaypointAddLINKS(builder, LINKS)
+}
 func GPXWaypointStartLINKSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func GPXWaypointStartLinksVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return GPXWaypointStartLINKSVector(builder, numElems)
 }
 func GPXWaypointAddSYMBOL(builder *flatbuffers.Builder, SYMBOL flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(SYMBOL), 0)
 }
+func GPXWaypointAddSymbol(builder *flatbuffers.Builder, SYMBOL flatbuffers.UOffsetT) {
+	GPXWaypointAddSYMBOL(builder, SYMBOL)
+}
 func GPXWaypointAddTYPE(builder *flatbuffers.Builder, TYPE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(12, flatbuffers.UOffsetT(TYPE), 0)
+}
+func GPXWaypointAddType(builder *flatbuffers.Builder, TYPE flatbuffers.UOffsetT) {
+	GPXWaypointAddTYPE(builder, TYPE)
 }
 func GPXWaypointAddFIX(builder *flatbuffers.Builder, FIX GPXFixType) {
 	builder.PrependInt8Slot(13, int8(FIX), 0)
 }
+func GPXWaypointAddFix(builder *flatbuffers.Builder, FIX GPXFixType) {
+	GPXWaypointAddFIX(builder, FIX)
+}
 func GPXWaypointAddSAT(builder *flatbuffers.Builder, SAT uint16) {
 	builder.PrependUint16Slot(14, SAT, 0)
+}
+func GPXWaypointAddSat(builder *flatbuffers.Builder, SAT uint16) {
+	GPXWaypointAddSAT(builder, SAT)
 }
 func GPXWaypointAddHDOP(builder *flatbuffers.Builder, HDOP float64) {
 	builder.PrependFloat64Slot(15, HDOP, 0.0)
 }
+func GPXWaypointAddHdop(builder *flatbuffers.Builder, HDOP float64) {
+	GPXWaypointAddHDOP(builder, HDOP)
+}
 func GPXWaypointAddVDOP(builder *flatbuffers.Builder, VDOP float64) {
 	builder.PrependFloat64Slot(16, VDOP, 0.0)
+}
+func GPXWaypointAddVdop(builder *flatbuffers.Builder, VDOP float64) {
+	GPXWaypointAddVDOP(builder, VDOP)
 }
 func GPXWaypointAddPDOP(builder *flatbuffers.Builder, PDOP float64) {
 	builder.PrependFloat64Slot(17, PDOP, 0.0)
 }
+func GPXWaypointAddPdop(builder *flatbuffers.Builder, PDOP float64) {
+	GPXWaypointAddPDOP(builder, PDOP)
+}
 func GPXWaypointAddAGE_OF_DGPS_DATA(builder *flatbuffers.Builder, AGE_OF_DGPS_DATA float64) {
 	builder.PrependFloat64Slot(18, AGE_OF_DGPS_DATA, 0.0)
+}
+func GPXWaypointAddAgeOfDgpsData(builder *flatbuffers.Builder, AGE_OF_DGPS_DATA float64) {
+	GPXWaypointAddAGE_OF_DGPS_DATA(builder, AGE_OF_DGPS_DATA)
 }
 func GPXWaypointAddDGPS_ID(builder *flatbuffers.Builder, DGPS_ID uint16) {
 	builder.PrependUint16Slot(19, DGPS_ID, 0)
 }
+func GPXWaypointAddDgpsId(builder *flatbuffers.Builder, DGPS_ID uint16) {
+	GPXWaypointAddDGPS_ID(builder, DGPS_ID)
+}
 func GPXWaypointAddSPEED(builder *flatbuffers.Builder, SPEED float64) {
 	builder.PrependFloat64Slot(20, SPEED, 0.0)
 }
+func GPXWaypointAddSpeed(builder *flatbuffers.Builder, SPEED float64) {
+	GPXWaypointAddSPEED(builder, SPEED)
+}
 func GPXWaypointAddCOURSE(builder *flatbuffers.Builder, COURSE float64) {
 	builder.PrependFloat64Slot(21, COURSE, 0.0)
+}
+func GPXWaypointAddCourse(builder *flatbuffers.Builder, COURSE float64) {
+	GPXWaypointAddCOURSE(builder, COURSE)
 }
 func GPXWaypointEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

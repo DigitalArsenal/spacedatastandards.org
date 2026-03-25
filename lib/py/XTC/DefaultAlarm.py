@@ -105,6 +105,12 @@ def DefaultAlarmStartENUMERATION_ALARMSVector(builder, numElems):
 def StartENUMERATION_ALARMSVector(builder, numElems):
     return DefaultAlarmStartENUMERATION_ALARMSVector(builder, numElems)
 
+def DefaultAlarmCreateENUMERATION_ALARMSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateENUMERATION_ALARMSVector(builder, data):
+    DefaultAlarmCreateENUMERATION_ALARMSVector(builder, data)
+
 def DefaultAlarmEnd(builder):
     return builder.EndObject()
 
@@ -121,16 +127,21 @@ except:
 class DefaultAlarmT(object):
 
     # DefaultAlarmT
-    def __init__(self):
-        self.MIN_VIOLATIONS = 0  # type: int
-        self.STATIC_ALARM_RANGES = None  # type: Optional[StaticAlarmRanges.StaticAlarmRangesT]
-        self.ENUMERATION_ALARMS = None  # type: List[EnumerationAlarm.EnumerationAlarmT]
+    def __init__(
+        self,
+        MIN_VIOLATIONS = 0,
+        STATIC_ALARM_RANGES = None,
+        ENUMERATION_ALARMS = None,
+    ):
+        self.MIN_VIOLATIONS = MIN_VIOLATIONS  # type: int
+        self.STATIC_ALARM_RANGES = STATIC_ALARM_RANGES  # type: Optional[StaticAlarmRanges.StaticAlarmRangesT]
+        self.ENUMERATION_ALARMS = ENUMERATION_ALARMS  # type: Optional[List[EnumerationAlarm.EnumerationAlarmT]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        defaultAlarm = DefaultAlarm()
-        defaultAlarm.Init(buf, pos)
-        return cls.InitFromObj(defaultAlarm)
+        tmpDefaultAlarm = DefaultAlarm()
+        tmpDefaultAlarm.Init(buf, pos)
+        return cls.InitFromObj(tmpDefaultAlarm)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -138,25 +149,25 @@ class DefaultAlarmT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, defaultAlarm):
+    def InitFromObj(cls, tmpDefaultAlarm):
         x = DefaultAlarmT()
-        x._UnPack(defaultAlarm)
+        x._UnPack(tmpDefaultAlarm)
         return x
 
     # DefaultAlarmT
-    def _UnPack(self, defaultAlarm):
-        if defaultAlarm is None:
+    def _UnPack(self, DefaultAlarm):
+        if DefaultAlarm is None:
             return
-        self.MIN_VIOLATIONS = defaultAlarm.MIN_VIOLATIONS()
-        if defaultAlarm.STATIC_ALARM_RANGES() is not None:
-            self.STATIC_ALARM_RANGES = StaticAlarmRanges.StaticAlarmRangesT.InitFromObj(defaultAlarm.STATIC_ALARM_RANGES())
-        if not defaultAlarm.ENUMERATION_ALARMSIsNone():
+        self.MIN_VIOLATIONS = DefaultAlarm.MIN_VIOLATIONS()
+        if DefaultAlarm.STATIC_ALARM_RANGES() is not None:
+            self.STATIC_ALARM_RANGES = StaticAlarmRanges.StaticAlarmRangesT.InitFromObj(DefaultAlarm.STATIC_ALARM_RANGES())
+        if not DefaultAlarm.ENUMERATION_ALARMSIsNone():
             self.ENUMERATION_ALARMS = []
-            for i in range(defaultAlarm.ENUMERATION_ALARMSLength()):
-                if defaultAlarm.ENUMERATION_ALARMS(i) is None:
+            for i in range(DefaultAlarm.ENUMERATION_ALARMSLength()):
+                if DefaultAlarm.ENUMERATION_ALARMS(i) is None:
                     self.ENUMERATION_ALARMS.append(None)
                 else:
-                    enumerationAlarm_ = EnumerationAlarm.EnumerationAlarmT.InitFromObj(defaultAlarm.ENUMERATION_ALARMS(i))
+                    enumerationAlarm_ = EnumerationAlarm.EnumerationAlarmT.InitFromObj(DefaultAlarm.ENUMERATION_ALARMS(i))
                     self.ENUMERATION_ALARMS.append(enumerationAlarm_)
 
     # DefaultAlarmT
@@ -177,5 +188,5 @@ class DefaultAlarmT(object):
             DefaultAlarmAddSTATIC_ALARM_RANGES(builder, STATIC_ALARM_RANGES)
         if self.ENUMERATION_ALARMS is not None:
             DefaultAlarmAddENUMERATION_ALARMS(builder, ENUMERATION_ALARMS)
-        defaultAlarm = DefaultAlarmEnd(builder)
-        return defaultAlarm
+        DefaultAlarm = DefaultAlarmEnd(builder)
+        return DefaultAlarm

@@ -62,8 +62,16 @@ func (rcv *NAV) POSITION_X() float64 {
 	return 0.0
 }
 
+func (rcv *NAV) PositionX() float64 {
+	return rcv.POSITION_X()
+}
+
 func (rcv *NAV) MutatePOSITION_X(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(4, n)
+}
+
+func (rcv *NAV) MutatePositionX(n float64) bool {
+	return rcv.MutatePOSITION_X(n)
 }
 
 func (rcv *NAV) POSITION_Y() float64 {
@@ -74,8 +82,16 @@ func (rcv *NAV) POSITION_Y() float64 {
 	return 0.0
 }
 
+func (rcv *NAV) PositionY() float64 {
+	return rcv.POSITION_Y()
+}
+
 func (rcv *NAV) MutatePOSITION_Y(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(6, n)
+}
+
+func (rcv *NAV) MutatePositionY(n float64) bool {
+	return rcv.MutatePOSITION_Y(n)
 }
 
 func (rcv *NAV) POSITION_Z() float64 {
@@ -86,8 +102,16 @@ func (rcv *NAV) POSITION_Z() float64 {
 	return 0.0
 }
 
+func (rcv *NAV) PositionZ() float64 {
+	return rcv.POSITION_Z()
+}
+
 func (rcv *NAV) MutatePOSITION_Z(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(8, n)
+}
+
+func (rcv *NAV) MutatePositionZ(n float64) bool {
+	return rcv.MutatePOSITION_Z(n)
 }
 
 func (rcv *NAV) VELOCITY_X() float64 {
@@ -98,8 +122,16 @@ func (rcv *NAV) VELOCITY_X() float64 {
 	return 0.0
 }
 
+func (rcv *NAV) VelocityX() float64 {
+	return rcv.VELOCITY_X()
+}
+
 func (rcv *NAV) MutateVELOCITY_X(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(10, n)
+}
+
+func (rcv *NAV) MutateVelocityX(n float64) bool {
+	return rcv.MutateVELOCITY_X(n)
 }
 
 func (rcv *NAV) VELOCITY_Y() float64 {
@@ -110,8 +142,16 @@ func (rcv *NAV) VELOCITY_Y() float64 {
 	return 0.0
 }
 
+func (rcv *NAV) VelocityY() float64 {
+	return rcv.VELOCITY_Y()
+}
+
 func (rcv *NAV) MutateVELOCITY_Y(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(12, n)
+}
+
+func (rcv *NAV) MutateVelocityY(n float64) bool {
+	return rcv.MutateVELOCITY_Y(n)
 }
 
 func (rcv *NAV) VELOCITY_Z() float64 {
@@ -122,8 +162,16 @@ func (rcv *NAV) VELOCITY_Z() float64 {
 	return 0.0
 }
 
+func (rcv *NAV) VelocityZ() float64 {
+	return rcv.VELOCITY_Z()
+}
+
 func (rcv *NAV) MutateVELOCITY_Z(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(14, n)
+}
+
+func (rcv *NAV) MutateVelocityZ(n float64) bool {
+	return rcv.MutateVELOCITY_Z(n)
 }
 
 func (rcv *NAV) ATTITUDE_X() float64 {
@@ -134,8 +182,16 @@ func (rcv *NAV) ATTITUDE_X() float64 {
 	return 0.0
 }
 
+func (rcv *NAV) AttitudeX() float64 {
+	return rcv.ATTITUDE_X()
+}
+
 func (rcv *NAV) MutateATTITUDE_X(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(16, n)
+}
+
+func (rcv *NAV) MutateAttitudeX(n float64) bool {
+	return rcv.MutateATTITUDE_X(n)
 }
 
 func (rcv *NAV) ATTITUDE_Y() float64 {
@@ -146,8 +202,16 @@ func (rcv *NAV) ATTITUDE_Y() float64 {
 	return 0.0
 }
 
+func (rcv *NAV) AttitudeY() float64 {
+	return rcv.ATTITUDE_Y()
+}
+
 func (rcv *NAV) MutateATTITUDE_Y(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(18, n)
+}
+
+func (rcv *NAV) MutateAttitudeY(n float64) bool {
+	return rcv.MutateATTITUDE_Y(n)
 }
 
 func (rcv *NAV) ATTITUDE_Z() float64 {
@@ -158,8 +222,16 @@ func (rcv *NAV) ATTITUDE_Z() float64 {
 	return 0.0
 }
 
+func (rcv *NAV) AttitudeZ() float64 {
+	return rcv.ATTITUDE_Z()
+}
+
 func (rcv *NAV) MutateATTITUDE_Z(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(20, n)
+}
+
+func (rcv *NAV) MutateAttitudeZ(n float64) bool {
+	return rcv.MutateATTITUDE_Z(n)
 }
 
 func (rcv *NAV) ATTITUDE_W() float64 {
@@ -170,8 +242,16 @@ func (rcv *NAV) ATTITUDE_W() float64 {
 	return 0.0
 }
 
+func (rcv *NAV) AttitudeW() float64 {
+	return rcv.ATTITUDE_W()
+}
+
 func (rcv *NAV) MutateATTITUDE_W(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(22, n)
+}
+
+func (rcv *NAV) MutateAttitudeW(n float64) bool {
+	return rcv.MutateATTITUDE_W(n)
 }
 
 func (rcv *NAV) OMEGA_X() float64 {
@@ -182,8 +262,16 @@ func (rcv *NAV) OMEGA_X() float64 {
 	return 0.0
 }
 
+func (rcv *NAV) OmegaX() float64 {
+	return rcv.OMEGA_X()
+}
+
 func (rcv *NAV) MutateOMEGA_X(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(24, n)
+}
+
+func (rcv *NAV) MutateOmegaX(n float64) bool {
+	return rcv.MutateOMEGA_X(n)
 }
 
 func (rcv *NAV) OMEGA_Y() float64 {
@@ -194,8 +282,16 @@ func (rcv *NAV) OMEGA_Y() float64 {
 	return 0.0
 }
 
+func (rcv *NAV) OmegaY() float64 {
+	return rcv.OMEGA_Y()
+}
+
 func (rcv *NAV) MutateOMEGA_Y(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(26, n)
+}
+
+func (rcv *NAV) MutateOmegaY(n float64) bool {
+	return rcv.MutateOMEGA_Y(n)
 }
 
 func (rcv *NAV) OMEGA_Z() float64 {
@@ -206,8 +302,16 @@ func (rcv *NAV) OMEGA_Z() float64 {
 	return 0.0
 }
 
+func (rcv *NAV) OmegaZ() float64 {
+	return rcv.OMEGA_Z()
+}
+
 func (rcv *NAV) MutateOMEGA_Z(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(28, n)
+}
+
+func (rcv *NAV) MutateOmegaZ(n float64) bool {
+	return rcv.MutateOMEGA_Z(n)
 }
 
 func (rcv *NAV) SPEED_KNOTS() float32 {
@@ -218,8 +322,16 @@ func (rcv *NAV) SPEED_KNOTS() float32 {
 	return 0.0
 }
 
+func (rcv *NAV) SpeedKnots() float32 {
+	return rcv.SPEED_KNOTS()
+}
+
 func (rcv *NAV) MutateSPEED_KNOTS(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(30, n)
+}
+
+func (rcv *NAV) MutateSpeedKnots(n float32) bool {
+	return rcv.MutateSPEED_KNOTS(n)
 }
 
 func (rcv *NAV) HEADING() float32 {
@@ -230,8 +342,16 @@ func (rcv *NAV) HEADING() float32 {
 	return 0.0
 }
 
+func (rcv *NAV) Heading() float32 {
+	return rcv.HEADING()
+}
+
 func (rcv *NAV) MutateHEADING(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(32, n)
+}
+
+func (rcv *NAV) MutateHeading(n float32) bool {
+	return rcv.MutateHEADING(n)
 }
 
 func (rcv *NAV) COURSE() float32 {
@@ -242,8 +362,16 @@ func (rcv *NAV) COURSE() float32 {
 	return 0.0
 }
 
+func (rcv *NAV) Course() float32 {
+	return rcv.COURSE()
+}
+
 func (rcv *NAV) MutateCOURSE(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(34, n)
+}
+
+func (rcv *NAV) MutateCourse(n float32) bool {
+	return rcv.MutateCOURSE(n)
 }
 
 func (rcv *NAV) RUDDER_ANGLE() float32 {
@@ -254,8 +382,16 @@ func (rcv *NAV) RUDDER_ANGLE() float32 {
 	return 0.0
 }
 
+func (rcv *NAV) RudderAngle() float32 {
+	return rcv.RUDDER_ANGLE()
+}
+
 func (rcv *NAV) MutateRUDDER_ANGLE(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(36, n)
+}
+
+func (rcv *NAV) MutateRudderAngle(n float32) bool {
+	return rcv.MutateRUDDER_ANGLE(n)
 }
 
 func (rcv *NAV) HULL() []byte {
@@ -266,12 +402,20 @@ func (rcv *NAV) HULL() []byte {
 	return nil
 }
 
+func (rcv *NAV) Hull() []byte {
+	return rcv.HULL()
+}
+
 func (rcv *NAV) PROPULSION() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *NAV) Propulsion() []byte {
+	return rcv.PROPULSION()
 }
 
 func (rcv *NAV) DC_STATE() byte {
@@ -282,8 +426,16 @@ func (rcv *NAV) DC_STATE() byte {
 	return 0
 }
 
+func (rcv *NAV) DcState() byte {
+	return rcv.DC_STATE()
+}
+
 func (rcv *NAV) MutateDC_STATE(n byte) bool {
 	return rcv._tab.MutateByteSlot(42, n)
+}
+
+func (rcv *NAV) MutateDcState(n byte) bool {
+	return rcv.MutateDC_STATE(n)
 }
 
 func (rcv *NAV) FIRES_ACTIVE() byte {
@@ -294,8 +446,16 @@ func (rcv *NAV) FIRES_ACTIVE() byte {
 	return 0
 }
 
+func (rcv *NAV) FiresActive() byte {
+	return rcv.FIRES_ACTIVE()
+}
+
 func (rcv *NAV) MutateFIRES_ACTIVE(n byte) bool {
 	return rcv._tab.MutateByteSlot(44, n)
+}
+
+func (rcv *NAV) MutateFiresActive(n byte) bool {
+	return rcv.MutateFIRES_ACTIVE(n)
 }
 
 func (rcv *NAV) FLOODING_ACTIVE() byte {
@@ -306,8 +466,16 @@ func (rcv *NAV) FLOODING_ACTIVE() byte {
 	return 0
 }
 
+func (rcv *NAV) FloodingActive() byte {
+	return rcv.FLOODING_ACTIVE()
+}
+
 func (rcv *NAV) MutateFLOODING_ACTIVE(n byte) bool {
 	return rcv._tab.MutateByteSlot(46, n)
+}
+
+func (rcv *NAV) MutateFloodingActive(n byte) bool {
+	return rcv.MutateFLOODING_ACTIVE(n)
 }
 
 func (rcv *NAV) CREW_CASUALTIES() byte {
@@ -318,8 +486,16 @@ func (rcv *NAV) CREW_CASUALTIES() byte {
 	return 0
 }
 
+func (rcv *NAV) CrewCasualties() byte {
+	return rcv.CREW_CASUALTIES()
+}
+
 func (rcv *NAV) MutateCREW_CASUALTIES(n byte) bool {
 	return rcv._tab.MutateByteSlot(48, n)
+}
+
+func (rcv *NAV) MutateCrewCasualties(n byte) bool {
+	return rcv.MutateCREW_CASUALTIES(n)
 }
 
 func (rcv *NAV) HULL_INTEGRITY() float32 {
@@ -330,8 +506,16 @@ func (rcv *NAV) HULL_INTEGRITY() float32 {
 	return 0.0
 }
 
+func (rcv *NAV) HullIntegrity() float32 {
+	return rcv.HULL_INTEGRITY()
+}
+
 func (rcv *NAV) MutateHULL_INTEGRITY(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(50, n)
+}
+
+func (rcv *NAV) MutateHullIntegrity(n float32) bool {
+	return rcv.MutateHULL_INTEGRITY(n)
 }
 
 func (rcv *NAV) POWER_AVAILABLE() float32 {
@@ -342,8 +526,16 @@ func (rcv *NAV) POWER_AVAILABLE() float32 {
 	return 0.0
 }
 
+func (rcv *NAV) PowerAvailable() float32 {
+	return rcv.POWER_AVAILABLE()
+}
+
 func (rcv *NAV) MutatePOWER_AVAILABLE(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(52, n)
+}
+
+func (rcv *NAV) MutatePowerAvailable(n float32) bool {
+	return rcv.MutatePOWER_AVAILABLE(n)
 }
 
 func (rcv *NAV) WEAPONS_ONLINE() byte {
@@ -354,8 +546,16 @@ func (rcv *NAV) WEAPONS_ONLINE() byte {
 	return 0
 }
 
+func (rcv *NAV) WeaponsOnline() byte {
+	return rcv.WEAPONS_ONLINE()
+}
+
 func (rcv *NAV) MutateWEAPONS_ONLINE(n byte) bool {
 	return rcv._tab.MutateByteSlot(54, n)
+}
+
+func (rcv *NAV) MutateWeaponsOnline(n byte) bool {
+	return rcv.MutateWEAPONS_ONLINE(n)
 }
 
 func (rcv *NAV) SENSORS_ONLINE() byte {
@@ -366,8 +566,16 @@ func (rcv *NAV) SENSORS_ONLINE() byte {
 	return 0
 }
 
+func (rcv *NAV) SensorsOnline() byte {
+	return rcv.SENSORS_ONLINE()
+}
+
 func (rcv *NAV) MutateSENSORS_ONLINE(n byte) bool {
 	return rcv._tab.MutateByteSlot(56, n)
+}
+
+func (rcv *NAV) MutateSensorsOnline(n byte) bool {
+	return rcv.MutateSENSORS_ONLINE(n)
 }
 
 func (rcv *NAV) RESERVED1() uint16 {
@@ -378,8 +586,16 @@ func (rcv *NAV) RESERVED1() uint16 {
 	return 0
 }
 
+func (rcv *NAV) Reserved1() uint16 {
+	return rcv.RESERVED1()
+}
+
 func (rcv *NAV) MutateRESERVED1(n uint16) bool {
 	return rcv._tab.MutateUint16Slot(58, n)
+}
+
+func (rcv *NAV) MutateReserved1(n uint16) bool {
+	return rcv.MutateRESERVED1(n)
 }
 
 func (rcv *NAV) FUEL_REMAINING() float32 {
@@ -390,8 +606,16 @@ func (rcv *NAV) FUEL_REMAINING() float32 {
 	return 0.0
 }
 
+func (rcv *NAV) FuelRemaining() float32 {
+	return rcv.FUEL_REMAINING()
+}
+
 func (rcv *NAV) MutateFUEL_REMAINING(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(60, n)
+}
+
+func (rcv *NAV) MutateFuelRemaining(n float32) bool {
+	return rcv.MutateFUEL_REMAINING(n)
 }
 
 func (rcv *NAV) AMMO_MAIN() uint16 {
@@ -402,8 +626,16 @@ func (rcv *NAV) AMMO_MAIN() uint16 {
 	return 0
 }
 
+func (rcv *NAV) AmmoMain() uint16 {
+	return rcv.AMMO_MAIN()
+}
+
 func (rcv *NAV) MutateAMMO_MAIN(n uint16) bool {
 	return rcv._tab.MutateUint16Slot(62, n)
+}
+
+func (rcv *NAV) MutateAmmoMain(n uint16) bool {
+	return rcv.MutateAMMO_MAIN(n)
 }
 
 func (rcv *NAV) MISSILES_REMAINING() byte {
@@ -414,8 +646,16 @@ func (rcv *NAV) MISSILES_REMAINING() byte {
 	return 0
 }
 
+func (rcv *NAV) MissilesRemaining() byte {
+	return rcv.MISSILES_REMAINING()
+}
+
 func (rcv *NAV) MutateMISSILES_REMAINING(n byte) bool {
 	return rcv._tab.MutateByteSlot(64, n)
+}
+
+func (rcv *NAV) MutateMissilesRemaining(n byte) bool {
+	return rcv.MutateMISSILES_REMAINING(n)
 }
 
 func (rcv *NAV) TORPEDOES_REMAINING() byte {
@@ -426,8 +666,16 @@ func (rcv *NAV) TORPEDOES_REMAINING() byte {
 	return 0
 }
 
+func (rcv *NAV) TorpedoesRemaining() byte {
+	return rcv.TORPEDOES_REMAINING()
+}
+
 func (rcv *NAV) MutateTORPEDOES_REMAINING(n byte) bool {
 	return rcv._tab.MutateByteSlot(66, n)
+}
+
+func (rcv *NAV) MutateTorpedoesRemaining(n byte) bool {
+	return rcv.MutateTORPEDOES_REMAINING(n)
 }
 
 func (rcv *NAV) VESSEL_TYPE() byte {
@@ -438,8 +686,16 @@ func (rcv *NAV) VESSEL_TYPE() byte {
 	return 0
 }
 
+func (rcv *NAV) VesselType() byte {
+	return rcv.VESSEL_TYPE()
+}
+
 func (rcv *NAV) MutateVESSEL_TYPE(n byte) bool {
 	return rcv._tab.MutateByteSlot(68, n)
+}
+
+func (rcv *NAV) MutateVesselType(n byte) bool {
+	return rcv.MutateVESSEL_TYPE(n)
 }
 
 func (rcv *NAV) PROPULSION_TYPE() byte {
@@ -450,8 +706,16 @@ func (rcv *NAV) PROPULSION_TYPE() byte {
 	return 0
 }
 
+func (rcv *NAV) PropulsionType() byte {
+	return rcv.PROPULSION_TYPE()
+}
+
 func (rcv *NAV) MutatePROPULSION_TYPE(n byte) bool {
 	return rcv._tab.MutateByteSlot(70, n)
+}
+
+func (rcv *NAV) MutatePropulsionType(n byte) bool {
+	return rcv.MutatePROPULSION_TYPE(n)
 }
 
 func (rcv *NAV) RESERVED(j int) byte {
@@ -463,6 +727,10 @@ func (rcv *NAV) RESERVED(j int) byte {
 	return 0
 }
 
+func (rcv *NAV) Reserved(j int) byte {
+	return rcv.RESERVED(j)
+}
+
 func (rcv *NAV) RESERVEDLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(72))
 	if o != 0 {
@@ -471,12 +739,20 @@ func (rcv *NAV) RESERVEDLength() int {
 	return 0
 }
 
+func (rcv *NAV) ReservedLength() int {
+	return rcv.RESERVEDLength()
+}
+
 func (rcv *NAV) RESERVEDBytes() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(72))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *NAV) ReservedBytes() []byte {
+	return rcv.RESERVEDBytes()
 }
 
 func (rcv *NAV) MutateRESERVED(j int, n byte) bool {
@@ -488,116 +764,228 @@ func (rcv *NAV) MutateRESERVED(j int, n byte) bool {
 	return false
 }
 
+func (rcv *NAV) MutateReserved(j int, n byte) bool {
+	return rcv.MutateRESERVED(j, n)
+}
+
 func NAVStart(builder *flatbuffers.Builder) {
 	builder.StartObject(35)
 }
 func NAVAddPOSITION_X(builder *flatbuffers.Builder, POSITION_X float64) {
 	builder.PrependFloat64Slot(0, POSITION_X, 0.0)
 }
+func NAVAddPositionX(builder *flatbuffers.Builder, POSITION_X float64) {
+	NAVAddPOSITION_X(builder, POSITION_X)
+}
 func NAVAddPOSITION_Y(builder *flatbuffers.Builder, POSITION_Y float64) {
 	builder.PrependFloat64Slot(1, POSITION_Y, 0.0)
+}
+func NAVAddPositionY(builder *flatbuffers.Builder, POSITION_Y float64) {
+	NAVAddPOSITION_Y(builder, POSITION_Y)
 }
 func NAVAddPOSITION_Z(builder *flatbuffers.Builder, POSITION_Z float64) {
 	builder.PrependFloat64Slot(2, POSITION_Z, 0.0)
 }
+func NAVAddPositionZ(builder *flatbuffers.Builder, POSITION_Z float64) {
+	NAVAddPOSITION_Z(builder, POSITION_Z)
+}
 func NAVAddVELOCITY_X(builder *flatbuffers.Builder, VELOCITY_X float64) {
 	builder.PrependFloat64Slot(3, VELOCITY_X, 0.0)
+}
+func NAVAddVelocityX(builder *flatbuffers.Builder, VELOCITY_X float64) {
+	NAVAddVELOCITY_X(builder, VELOCITY_X)
 }
 func NAVAddVELOCITY_Y(builder *flatbuffers.Builder, VELOCITY_Y float64) {
 	builder.PrependFloat64Slot(4, VELOCITY_Y, 0.0)
 }
+func NAVAddVelocityY(builder *flatbuffers.Builder, VELOCITY_Y float64) {
+	NAVAddVELOCITY_Y(builder, VELOCITY_Y)
+}
 func NAVAddVELOCITY_Z(builder *flatbuffers.Builder, VELOCITY_Z float64) {
 	builder.PrependFloat64Slot(5, VELOCITY_Z, 0.0)
+}
+func NAVAddVelocityZ(builder *flatbuffers.Builder, VELOCITY_Z float64) {
+	NAVAddVELOCITY_Z(builder, VELOCITY_Z)
 }
 func NAVAddATTITUDE_X(builder *flatbuffers.Builder, ATTITUDE_X float64) {
 	builder.PrependFloat64Slot(6, ATTITUDE_X, 0.0)
 }
+func NAVAddAttitudeX(builder *flatbuffers.Builder, ATTITUDE_X float64) {
+	NAVAddATTITUDE_X(builder, ATTITUDE_X)
+}
 func NAVAddATTITUDE_Y(builder *flatbuffers.Builder, ATTITUDE_Y float64) {
 	builder.PrependFloat64Slot(7, ATTITUDE_Y, 0.0)
+}
+func NAVAddAttitudeY(builder *flatbuffers.Builder, ATTITUDE_Y float64) {
+	NAVAddATTITUDE_Y(builder, ATTITUDE_Y)
 }
 func NAVAddATTITUDE_Z(builder *flatbuffers.Builder, ATTITUDE_Z float64) {
 	builder.PrependFloat64Slot(8, ATTITUDE_Z, 0.0)
 }
+func NAVAddAttitudeZ(builder *flatbuffers.Builder, ATTITUDE_Z float64) {
+	NAVAddATTITUDE_Z(builder, ATTITUDE_Z)
+}
 func NAVAddATTITUDE_W(builder *flatbuffers.Builder, ATTITUDE_W float64) {
 	builder.PrependFloat64Slot(9, ATTITUDE_W, 0.0)
+}
+func NAVAddAttitudeW(builder *flatbuffers.Builder, ATTITUDE_W float64) {
+	NAVAddATTITUDE_W(builder, ATTITUDE_W)
 }
 func NAVAddOMEGA_X(builder *flatbuffers.Builder, OMEGA_X float64) {
 	builder.PrependFloat64Slot(10, OMEGA_X, 0.0)
 }
+func NAVAddOmegaX(builder *flatbuffers.Builder, OMEGA_X float64) {
+	NAVAddOMEGA_X(builder, OMEGA_X)
+}
 func NAVAddOMEGA_Y(builder *flatbuffers.Builder, OMEGA_Y float64) {
 	builder.PrependFloat64Slot(11, OMEGA_Y, 0.0)
+}
+func NAVAddOmegaY(builder *flatbuffers.Builder, OMEGA_Y float64) {
+	NAVAddOMEGA_Y(builder, OMEGA_Y)
 }
 func NAVAddOMEGA_Z(builder *flatbuffers.Builder, OMEGA_Z float64) {
 	builder.PrependFloat64Slot(12, OMEGA_Z, 0.0)
 }
+func NAVAddOmegaZ(builder *flatbuffers.Builder, OMEGA_Z float64) {
+	NAVAddOMEGA_Z(builder, OMEGA_Z)
+}
 func NAVAddSPEED_KNOTS(builder *flatbuffers.Builder, SPEED_KNOTS float32) {
 	builder.PrependFloat32Slot(13, SPEED_KNOTS, 0.0)
+}
+func NAVAddSpeedKnots(builder *flatbuffers.Builder, SPEED_KNOTS float32) {
+	NAVAddSPEED_KNOTS(builder, SPEED_KNOTS)
 }
 func NAVAddHEADING(builder *flatbuffers.Builder, HEADING float32) {
 	builder.PrependFloat32Slot(14, HEADING, 0.0)
 }
+func NAVAddHeading(builder *flatbuffers.Builder, HEADING float32) {
+	NAVAddHEADING(builder, HEADING)
+}
 func NAVAddCOURSE(builder *flatbuffers.Builder, COURSE float32) {
 	builder.PrependFloat32Slot(15, COURSE, 0.0)
+}
+func NAVAddCourse(builder *flatbuffers.Builder, COURSE float32) {
+	NAVAddCOURSE(builder, COURSE)
 }
 func NAVAddRUDDER_ANGLE(builder *flatbuffers.Builder, RUDDER_ANGLE float32) {
 	builder.PrependFloat32Slot(16, RUDDER_ANGLE, 0.0)
 }
+func NAVAddRudderAngle(builder *flatbuffers.Builder, RUDDER_ANGLE float32) {
+	NAVAddRUDDER_ANGLE(builder, RUDDER_ANGLE)
+}
 func NAVAddHULL(builder *flatbuffers.Builder, HULL flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(17, flatbuffers.UOffsetT(HULL), 0)
+}
+func NAVAddHull(builder *flatbuffers.Builder, HULL flatbuffers.UOffsetT) {
+	NAVAddHULL(builder, HULL)
 }
 func NAVAddPROPULSION(builder *flatbuffers.Builder, PROPULSION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(18, flatbuffers.UOffsetT(PROPULSION), 0)
 }
+func NAVAddPropulsion(builder *flatbuffers.Builder, PROPULSION flatbuffers.UOffsetT) {
+	NAVAddPROPULSION(builder, PROPULSION)
+}
 func NAVAddDC_STATE(builder *flatbuffers.Builder, DC_STATE byte) {
 	builder.PrependByteSlot(19, DC_STATE, 0)
+}
+func NAVAddDcState(builder *flatbuffers.Builder, DC_STATE byte) {
+	NAVAddDC_STATE(builder, DC_STATE)
 }
 func NAVAddFIRES_ACTIVE(builder *flatbuffers.Builder, FIRES_ACTIVE byte) {
 	builder.PrependByteSlot(20, FIRES_ACTIVE, 0)
 }
+func NAVAddFiresActive(builder *flatbuffers.Builder, FIRES_ACTIVE byte) {
+	NAVAddFIRES_ACTIVE(builder, FIRES_ACTIVE)
+}
 func NAVAddFLOODING_ACTIVE(builder *flatbuffers.Builder, FLOODING_ACTIVE byte) {
 	builder.PrependByteSlot(21, FLOODING_ACTIVE, 0)
+}
+func NAVAddFloodingActive(builder *flatbuffers.Builder, FLOODING_ACTIVE byte) {
+	NAVAddFLOODING_ACTIVE(builder, FLOODING_ACTIVE)
 }
 func NAVAddCREW_CASUALTIES(builder *flatbuffers.Builder, CREW_CASUALTIES byte) {
 	builder.PrependByteSlot(22, CREW_CASUALTIES, 0)
 }
+func NAVAddCrewCasualties(builder *flatbuffers.Builder, CREW_CASUALTIES byte) {
+	NAVAddCREW_CASUALTIES(builder, CREW_CASUALTIES)
+}
 func NAVAddHULL_INTEGRITY(builder *flatbuffers.Builder, HULL_INTEGRITY float32) {
 	builder.PrependFloat32Slot(23, HULL_INTEGRITY, 0.0)
+}
+func NAVAddHullIntegrity(builder *flatbuffers.Builder, HULL_INTEGRITY float32) {
+	NAVAddHULL_INTEGRITY(builder, HULL_INTEGRITY)
 }
 func NAVAddPOWER_AVAILABLE(builder *flatbuffers.Builder, POWER_AVAILABLE float32) {
 	builder.PrependFloat32Slot(24, POWER_AVAILABLE, 0.0)
 }
+func NAVAddPowerAvailable(builder *flatbuffers.Builder, POWER_AVAILABLE float32) {
+	NAVAddPOWER_AVAILABLE(builder, POWER_AVAILABLE)
+}
 func NAVAddWEAPONS_ONLINE(builder *flatbuffers.Builder, WEAPONS_ONLINE byte) {
 	builder.PrependByteSlot(25, WEAPONS_ONLINE, 0)
+}
+func NAVAddWeaponsOnline(builder *flatbuffers.Builder, WEAPONS_ONLINE byte) {
+	NAVAddWEAPONS_ONLINE(builder, WEAPONS_ONLINE)
 }
 func NAVAddSENSORS_ONLINE(builder *flatbuffers.Builder, SENSORS_ONLINE byte) {
 	builder.PrependByteSlot(26, SENSORS_ONLINE, 0)
 }
+func NAVAddSensorsOnline(builder *flatbuffers.Builder, SENSORS_ONLINE byte) {
+	NAVAddSENSORS_ONLINE(builder, SENSORS_ONLINE)
+}
 func NAVAddRESERVED1(builder *flatbuffers.Builder, RESERVED1 uint16) {
 	builder.PrependUint16Slot(27, RESERVED1, 0)
+}
+func NAVAddReserved1(builder *flatbuffers.Builder, RESERVED1 uint16) {
+	NAVAddRESERVED1(builder, RESERVED1)
 }
 func NAVAddFUEL_REMAINING(builder *flatbuffers.Builder, FUEL_REMAINING float32) {
 	builder.PrependFloat32Slot(28, FUEL_REMAINING, 0.0)
 }
+func NAVAddFuelRemaining(builder *flatbuffers.Builder, FUEL_REMAINING float32) {
+	NAVAddFUEL_REMAINING(builder, FUEL_REMAINING)
+}
 func NAVAddAMMO_MAIN(builder *flatbuffers.Builder, AMMO_MAIN uint16) {
 	builder.PrependUint16Slot(29, AMMO_MAIN, 0)
+}
+func NAVAddAmmoMain(builder *flatbuffers.Builder, AMMO_MAIN uint16) {
+	NAVAddAMMO_MAIN(builder, AMMO_MAIN)
 }
 func NAVAddMISSILES_REMAINING(builder *flatbuffers.Builder, MISSILES_REMAINING byte) {
 	builder.PrependByteSlot(30, MISSILES_REMAINING, 0)
 }
+func NAVAddMissilesRemaining(builder *flatbuffers.Builder, MISSILES_REMAINING byte) {
+	NAVAddMISSILES_REMAINING(builder, MISSILES_REMAINING)
+}
 func NAVAddTORPEDOES_REMAINING(builder *flatbuffers.Builder, TORPEDOES_REMAINING byte) {
 	builder.PrependByteSlot(31, TORPEDOES_REMAINING, 0)
+}
+func NAVAddTorpedoesRemaining(builder *flatbuffers.Builder, TORPEDOES_REMAINING byte) {
+	NAVAddTORPEDOES_REMAINING(builder, TORPEDOES_REMAINING)
 }
 func NAVAddVESSEL_TYPE(builder *flatbuffers.Builder, VESSEL_TYPE byte) {
 	builder.PrependByteSlot(32, VESSEL_TYPE, 0)
 }
+func NAVAddVesselType(builder *flatbuffers.Builder, VESSEL_TYPE byte) {
+	NAVAddVESSEL_TYPE(builder, VESSEL_TYPE)
+}
 func NAVAddPROPULSION_TYPE(builder *flatbuffers.Builder, PROPULSION_TYPE byte) {
 	builder.PrependByteSlot(33, PROPULSION_TYPE, 0)
+}
+func NAVAddPropulsionType(builder *flatbuffers.Builder, PROPULSION_TYPE byte) {
+	NAVAddPROPULSION_TYPE(builder, PROPULSION_TYPE)
 }
 func NAVAddRESERVED(builder *flatbuffers.Builder, RESERVED flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(34, flatbuffers.UOffsetT(RESERVED), 0)
 }
+func NAVAddReserved(builder *flatbuffers.Builder, RESERVED flatbuffers.UOffsetT) {
+	NAVAddRESERVED(builder, RESERVED)
+}
 func NAVStartRESERVEDVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(1, numElems, 1)
+}
+func NAVStartReservedVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return NAVStartRESERVEDVector(builder, numElems)
 }
 func NAVEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

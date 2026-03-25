@@ -227,6 +227,12 @@ def KMLModelStartRESOURCE_MAPVector(builder, numElems):
 def StartRESOURCE_MAPVector(builder, numElems):
     return KMLModelStartRESOURCE_MAPVector(builder, numElems)
 
+def KMLModelCreateRESOURCE_MAPVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateRESOURCE_MAPVector(builder, data):
+    KMLModelCreateRESOURCE_MAPVector(builder, data)
+
 def KMLModelEnd(builder):
     return builder.EndObject()
 
@@ -242,25 +248,39 @@ except:
 class KMLModelT(object):
 
     # KMLModelT
-    def __init__(self):
-        self.ALTITUDE_MODE = 0  # type: int
-        self.LOCATION_LON = 0.0  # type: float
-        self.LOCATION_LAT = 0.0  # type: float
-        self.LOCATION_ALT = 0.0  # type: float
-        self.ORIENTATION_HEADING = 0.0  # type: float
-        self.ORIENTATION_TILT = 0.0  # type: float
-        self.ORIENTATION_ROLL = 0.0  # type: float
-        self.SCALE_X = 0.0  # type: float
-        self.SCALE_Y = 0.0  # type: float
-        self.SCALE_Z = 0.0  # type: float
-        self.LINK_HREF = None  # type: str
-        self.RESOURCE_MAP = None  # type: List[KMLResourceMapAlias.KMLResourceMapAliasT]
+    def __init__(
+        self,
+        ALTITUDE_MODE = 0,
+        LOCATION_LON = 0.0,
+        LOCATION_LAT = 0.0,
+        LOCATION_ALT = 0.0,
+        ORIENTATION_HEADING = 0.0,
+        ORIENTATION_TILT = 0.0,
+        ORIENTATION_ROLL = 0.0,
+        SCALE_X = 0.0,
+        SCALE_Y = 0.0,
+        SCALE_Z = 0.0,
+        LINK_HREF = None,
+        RESOURCE_MAP = None,
+    ):
+        self.ALTITUDE_MODE = ALTITUDE_MODE  # type: int
+        self.LOCATION_LON = LOCATION_LON  # type: float
+        self.LOCATION_LAT = LOCATION_LAT  # type: float
+        self.LOCATION_ALT = LOCATION_ALT  # type: float
+        self.ORIENTATION_HEADING = ORIENTATION_HEADING  # type: float
+        self.ORIENTATION_TILT = ORIENTATION_TILT  # type: float
+        self.ORIENTATION_ROLL = ORIENTATION_ROLL  # type: float
+        self.SCALE_X = SCALE_X  # type: float
+        self.SCALE_Y = SCALE_Y  # type: float
+        self.SCALE_Z = SCALE_Z  # type: float
+        self.LINK_HREF = LINK_HREF  # type: Optional[str]
+        self.RESOURCE_MAP = RESOURCE_MAP  # type: Optional[List[KMLResourceMapAlias.KMLResourceMapAliasT]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        kmlmodel = KMLModel()
-        kmlmodel.Init(buf, pos)
-        return cls.InitFromObj(kmlmodel)
+        tmpKmlmodel = KMLModel()
+        tmpKmlmodel.Init(buf, pos)
+        return cls.InitFromObj(tmpKmlmodel)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -268,33 +288,33 @@ class KMLModelT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, kmlmodel):
+    def InitFromObj(cls, tmpKmlmodel):
         x = KMLModelT()
-        x._UnPack(kmlmodel)
+        x._UnPack(tmpKmlmodel)
         return x
 
     # KMLModelT
-    def _UnPack(self, kmlmodel):
-        if kmlmodel is None:
+    def _UnPack(self, KMLModel):
+        if KMLModel is None:
             return
-        self.ALTITUDE_MODE = kmlmodel.ALTITUDE_MODE()
-        self.LOCATION_LON = kmlmodel.LOCATION_LON()
-        self.LOCATION_LAT = kmlmodel.LOCATION_LAT()
-        self.LOCATION_ALT = kmlmodel.LOCATION_ALT()
-        self.ORIENTATION_HEADING = kmlmodel.ORIENTATION_HEADING()
-        self.ORIENTATION_TILT = kmlmodel.ORIENTATION_TILT()
-        self.ORIENTATION_ROLL = kmlmodel.ORIENTATION_ROLL()
-        self.SCALE_X = kmlmodel.SCALE_X()
-        self.SCALE_Y = kmlmodel.SCALE_Y()
-        self.SCALE_Z = kmlmodel.SCALE_Z()
-        self.LINK_HREF = kmlmodel.LINK_HREF()
-        if not kmlmodel.RESOURCE_MAPIsNone():
+        self.ALTITUDE_MODE = KMLModel.ALTITUDE_MODE()
+        self.LOCATION_LON = KMLModel.LOCATION_LON()
+        self.LOCATION_LAT = KMLModel.LOCATION_LAT()
+        self.LOCATION_ALT = KMLModel.LOCATION_ALT()
+        self.ORIENTATION_HEADING = KMLModel.ORIENTATION_HEADING()
+        self.ORIENTATION_TILT = KMLModel.ORIENTATION_TILT()
+        self.ORIENTATION_ROLL = KMLModel.ORIENTATION_ROLL()
+        self.SCALE_X = KMLModel.SCALE_X()
+        self.SCALE_Y = KMLModel.SCALE_Y()
+        self.SCALE_Z = KMLModel.SCALE_Z()
+        self.LINK_HREF = KMLModel.LINK_HREF()
+        if not KMLModel.RESOURCE_MAPIsNone():
             self.RESOURCE_MAP = []
-            for i in range(kmlmodel.RESOURCE_MAPLength()):
-                if kmlmodel.RESOURCE_MAP(i) is None:
+            for i in range(KMLModel.RESOURCE_MAPLength()):
+                if KMLModel.RESOURCE_MAP(i) is None:
                     self.RESOURCE_MAP.append(None)
                 else:
-                    kMLResourceMapAlias_ = KMLResourceMapAlias.KMLResourceMapAliasT.InitFromObj(kmlmodel.RESOURCE_MAP(i))
+                    kMLResourceMapAlias_ = KMLResourceMapAlias.KMLResourceMapAliasT.InitFromObj(KMLModel.RESOURCE_MAP(i))
                     self.RESOURCE_MAP.append(kMLResourceMapAlias_)
 
     # KMLModelT
@@ -324,5 +344,5 @@ class KMLModelT(object):
             KMLModelAddLINK_HREF(builder, LINK_HREF)
         if self.RESOURCE_MAP is not None:
             KMLModelAddRESOURCE_MAP(builder, RESOURCE_MAP)
-        kmlmodel = KMLModelEnd(builder)
-        return kmlmodel
+        KMLModel = KMLModelEnd(builder)
+        return KMLModel

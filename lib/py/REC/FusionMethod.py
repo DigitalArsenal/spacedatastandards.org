@@ -2,4 +2,10 @@
 
 # namespace: 
 
-# NOTE FusionMethod.py does not declare any structs or enums
+class FusionMethod(object):
+    SIMPLE_AVERAGE = 0
+    WEIGHTED_AVERAGE = 1
+    COVARIANCE_INTERSECTION = 2
+    BAR_SHALOM_CAMPO = 3
+    FEDERATED = 4
+    SEQUENTIAL = 5

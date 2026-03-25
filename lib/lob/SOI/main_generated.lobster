@@ -425,9 +425,9 @@ struct SOIBuilder:
     def end():
         return b_.EndObject()
 
-def SOIStartSPECTRAL_FILTERSVector(b_:flatbuffers.builder, n_:int):
+def SOIStartSPECTRALFILTERSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def SOICreateSPECTRAL_FILTERSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def SOICreateSPECTRALFILTERSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
@@ -446,16 +446,16 @@ def SOICreateTAGSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-def SOIStartOPTICAL_SOIOBSERVATION_LISTVector(b_:flatbuffers.builder, n_:int):
+def SOIStartOPTICALSOIOBSERVATIONLISTVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def SOICreateOPTICAL_SOIOBSERVATION_LISTVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def SOICreateOPTICALSOIOBSERVATIONLISTVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-def SOIStartRADAR_SOIOBSERVATION_LISTVector(b_:flatbuffers.builder, n_:int):
+def SOIStartRADARSOIOBSERVATIONLISTVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def SOICreateRADAR_SOIOBSERVATION_LISTVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def SOICreateRADARSOIOBSERVATIONLISTVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)

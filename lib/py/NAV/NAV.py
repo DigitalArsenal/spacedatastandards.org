@@ -516,6 +516,16 @@ def NAVStartRESERVEDVector(builder, numElems):
 def StartRESERVEDVector(builder, numElems):
     return NAVStartRESERVEDVector(builder, numElems)
 
+def NAVCreateRESERVEDVector(builder, data):
+    data = list(data)
+    builder.StartVector(1, len(data), 1)
+    for item in reversed(data):
+        builder.PrependUint8(item)
+    return builder.EndVector()
+
+def CreateRESERVEDVector(builder, data):
+    NAVCreateRESERVEDVector(builder, data)
+
 def NAVEnd(builder):
     return builder.EndObject()
 
@@ -530,48 +540,85 @@ except:
 class NAVT(object):
 
     # NAVT
-    def __init__(self):
-        self.POSITION_X = 0.0  # type: float
-        self.POSITION_Y = 0.0  # type: float
-        self.POSITION_Z = 0.0  # type: float
-        self.VELOCITY_X = 0.0  # type: float
-        self.VELOCITY_Y = 0.0  # type: float
-        self.VELOCITY_Z = 0.0  # type: float
-        self.ATTITUDE_X = 0.0  # type: float
-        self.ATTITUDE_Y = 0.0  # type: float
-        self.ATTITUDE_Z = 0.0  # type: float
-        self.ATTITUDE_W = 0.0  # type: float
-        self.OMEGA_X = 0.0  # type: float
-        self.OMEGA_Y = 0.0  # type: float
-        self.OMEGA_Z = 0.0  # type: float
-        self.SPEED_KNOTS = 0.0  # type: float
-        self.HEADING = 0.0  # type: float
-        self.COURSE = 0.0  # type: float
-        self.RUDDER_ANGLE = 0.0  # type: float
-        self.HULL = None  # type: str
-        self.PROPULSION = None  # type: str
-        self.DC_STATE = 0  # type: int
-        self.FIRES_ACTIVE = 0  # type: int
-        self.FLOODING_ACTIVE = 0  # type: int
-        self.CREW_CASUALTIES = 0  # type: int
-        self.HULL_INTEGRITY = 0.0  # type: float
-        self.POWER_AVAILABLE = 0.0  # type: float
-        self.WEAPONS_ONLINE = 0  # type: int
-        self.SENSORS_ONLINE = 0  # type: int
-        self.RESERVED1 = 0  # type: int
-        self.FUEL_REMAINING = 0.0  # type: float
-        self.AMMO_MAIN = 0  # type: int
-        self.MISSILES_REMAINING = 0  # type: int
-        self.TORPEDOES_REMAINING = 0  # type: int
-        self.VESSEL_TYPE = 0  # type: int
-        self.PROPULSION_TYPE = 0  # type: int
-        self.RESERVED = None  # type: List[int]
+    def __init__(
+        self,
+        POSITION_X = 0.0,
+        POSITION_Y = 0.0,
+        POSITION_Z = 0.0,
+        VELOCITY_X = 0.0,
+        VELOCITY_Y = 0.0,
+        VELOCITY_Z = 0.0,
+        ATTITUDE_X = 0.0,
+        ATTITUDE_Y = 0.0,
+        ATTITUDE_Z = 0.0,
+        ATTITUDE_W = 0.0,
+        OMEGA_X = 0.0,
+        OMEGA_Y = 0.0,
+        OMEGA_Z = 0.0,
+        SPEED_KNOTS = 0.0,
+        HEADING = 0.0,
+        COURSE = 0.0,
+        RUDDER_ANGLE = 0.0,
+        HULL = None,
+        PROPULSION = None,
+        DC_STATE = 0,
+        FIRES_ACTIVE = 0,
+        FLOODING_ACTIVE = 0,
+        CREW_CASUALTIES = 0,
+        HULL_INTEGRITY = 0.0,
+        POWER_AVAILABLE = 0.0,
+        WEAPONS_ONLINE = 0,
+        SENSORS_ONLINE = 0,
+        RESERVED1 = 0,
+        FUEL_REMAINING = 0.0,
+        AMMO_MAIN = 0,
+        MISSILES_REMAINING = 0,
+        TORPEDOES_REMAINING = 0,
+        VESSEL_TYPE = 0,
+        PROPULSION_TYPE = 0,
+        RESERVED = None,
+    ):
+        self.POSITION_X = POSITION_X  # type: float
+        self.POSITION_Y = POSITION_Y  # type: float
+        self.POSITION_Z = POSITION_Z  # type: float
+        self.VELOCITY_X = VELOCITY_X  # type: float
+        self.VELOCITY_Y = VELOCITY_Y  # type: float
+        self.VELOCITY_Z = VELOCITY_Z  # type: float
+        self.ATTITUDE_X = ATTITUDE_X  # type: float
+        self.ATTITUDE_Y = ATTITUDE_Y  # type: float
+        self.ATTITUDE_Z = ATTITUDE_Z  # type: float
+        self.ATTITUDE_W = ATTITUDE_W  # type: float
+        self.OMEGA_X = OMEGA_X  # type: float
+        self.OMEGA_Y = OMEGA_Y  # type: float
+        self.OMEGA_Z = OMEGA_Z  # type: float
+        self.SPEED_KNOTS = SPEED_KNOTS  # type: float
+        self.HEADING = HEADING  # type: float
+        self.COURSE = COURSE  # type: float
+        self.RUDDER_ANGLE = RUDDER_ANGLE  # type: float
+        self.HULL = HULL  # type: Optional[str]
+        self.PROPULSION = PROPULSION  # type: Optional[str]
+        self.DC_STATE = DC_STATE  # type: int
+        self.FIRES_ACTIVE = FIRES_ACTIVE  # type: int
+        self.FLOODING_ACTIVE = FLOODING_ACTIVE  # type: int
+        self.CREW_CASUALTIES = CREW_CASUALTIES  # type: int
+        self.HULL_INTEGRITY = HULL_INTEGRITY  # type: float
+        self.POWER_AVAILABLE = POWER_AVAILABLE  # type: float
+        self.WEAPONS_ONLINE = WEAPONS_ONLINE  # type: int
+        self.SENSORS_ONLINE = SENSORS_ONLINE  # type: int
+        self.RESERVED1 = RESERVED1  # type: int
+        self.FUEL_REMAINING = FUEL_REMAINING  # type: float
+        self.AMMO_MAIN = AMMO_MAIN  # type: int
+        self.MISSILES_REMAINING = MISSILES_REMAINING  # type: int
+        self.TORPEDOES_REMAINING = TORPEDOES_REMAINING  # type: int
+        self.VESSEL_TYPE = VESSEL_TYPE  # type: int
+        self.PROPULSION_TYPE = PROPULSION_TYPE  # type: int
+        self.RESERVED = RESERVED  # type: Optional[List[int]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        NAV = NAV()
-        NAV.Init(buf, pos)
-        return cls.InitFromObj(NAV)
+        tmpNav = NAV()
+        tmpNav.Init(buf, pos)
+        return cls.InitFromObj(tmpNav)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -579,9 +626,9 @@ class NAVT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, NAV):
+    def InitFromObj(cls, tmpNav):
         x = NAVT()
-        x._UnPack(NAV)
+        x._UnPack(tmpNav)
         return x
 
     # NAVT

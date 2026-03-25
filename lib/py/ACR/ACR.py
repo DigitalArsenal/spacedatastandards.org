@@ -396,40 +396,69 @@ def End(builder):
 class ACRT(object):
 
     # ACRT
-    def __init__(self):
-        self.POSITION_X = 0.0  # type: float
-        self.POSITION_Y = 0.0  # type: float
-        self.POSITION_Z = 0.0  # type: float
-        self.VELOCITY_X = 0.0  # type: float
-        self.VELOCITY_Y = 0.0  # type: float
-        self.VELOCITY_Z = 0.0  # type: float
-        self.ATTITUDE_X = 0.0  # type: float
-        self.ATTITUDE_Y = 0.0  # type: float
-        self.ATTITUDE_Z = 0.0  # type: float
-        self.ATTITUDE_W = 0.0  # type: float
-        self.OMEGA_X = 0.0  # type: float
-        self.OMEGA_Y = 0.0  # type: float
-        self.OMEGA_Z = 0.0  # type: float
-        self.MASS = 0.0  # type: float
-        self.CG_X = 0.0  # type: float
-        self.CG_Z = 0.0  # type: float
-        self.AERO = None  # type: str
-        self.CONTROLS = None  # type: str
-        self.ENGINE = None  # type: str
-        self.GEAR_STATE = 0  # type: int
-        self.GEAR_POSITION = 0  # type: int
-        self.FLAP_POSITION = 0  # type: int
-        self.SPEEDBRAKE_POS = 0  # type: int
-        self.FLIGHT_PHASE = 0  # type: int
-        self.AUTOPILOT_MODE = 0  # type: int
-        self.WEIGHT_ON_WHEELS = 0  # type: int
-        self.RESERVED = 0  # type: int
+    def __init__(
+        self,
+        POSITION_X = 0.0,
+        POSITION_Y = 0.0,
+        POSITION_Z = 0.0,
+        VELOCITY_X = 0.0,
+        VELOCITY_Y = 0.0,
+        VELOCITY_Z = 0.0,
+        ATTITUDE_X = 0.0,
+        ATTITUDE_Y = 0.0,
+        ATTITUDE_Z = 0.0,
+        ATTITUDE_W = 0.0,
+        OMEGA_X = 0.0,
+        OMEGA_Y = 0.0,
+        OMEGA_Z = 0.0,
+        MASS = 0.0,
+        CG_X = 0.0,
+        CG_Z = 0.0,
+        AERO = None,
+        CONTROLS = None,
+        ENGINE = None,
+        GEAR_STATE = 0,
+        GEAR_POSITION = 0,
+        FLAP_POSITION = 0,
+        SPEEDBRAKE_POS = 0,
+        FLIGHT_PHASE = 0,
+        AUTOPILOT_MODE = 0,
+        WEIGHT_ON_WHEELS = 0,
+        RESERVED = 0,
+    ):
+        self.POSITION_X = POSITION_X  # type: float
+        self.POSITION_Y = POSITION_Y  # type: float
+        self.POSITION_Z = POSITION_Z  # type: float
+        self.VELOCITY_X = VELOCITY_X  # type: float
+        self.VELOCITY_Y = VELOCITY_Y  # type: float
+        self.VELOCITY_Z = VELOCITY_Z  # type: float
+        self.ATTITUDE_X = ATTITUDE_X  # type: float
+        self.ATTITUDE_Y = ATTITUDE_Y  # type: float
+        self.ATTITUDE_Z = ATTITUDE_Z  # type: float
+        self.ATTITUDE_W = ATTITUDE_W  # type: float
+        self.OMEGA_X = OMEGA_X  # type: float
+        self.OMEGA_Y = OMEGA_Y  # type: float
+        self.OMEGA_Z = OMEGA_Z  # type: float
+        self.MASS = MASS  # type: float
+        self.CG_X = CG_X  # type: float
+        self.CG_Z = CG_Z  # type: float
+        self.AERO = AERO  # type: Optional[str]
+        self.CONTROLS = CONTROLS  # type: Optional[str]
+        self.ENGINE = ENGINE  # type: Optional[str]
+        self.GEAR_STATE = GEAR_STATE  # type: int
+        self.GEAR_POSITION = GEAR_POSITION  # type: int
+        self.FLAP_POSITION = FLAP_POSITION  # type: int
+        self.SPEEDBRAKE_POS = SPEEDBRAKE_POS  # type: int
+        self.FLIGHT_PHASE = FLIGHT_PHASE  # type: int
+        self.AUTOPILOT_MODE = AUTOPILOT_MODE  # type: int
+        self.WEIGHT_ON_WHEELS = WEIGHT_ON_WHEELS  # type: int
+        self.RESERVED = RESERVED  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        ACR = ACR()
-        ACR.Init(buf, pos)
-        return cls.InitFromObj(ACR)
+        tmpAcr = ACR()
+        tmpAcr.Init(buf, pos)
+        return cls.InitFromObj(tmpAcr)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -437,9 +466,9 @@ class ACRT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, ACR):
+    def InitFromObj(cls, tmpAcr):
         x = ACRT()
-        x._UnPack(ACR)
+        x._UnPack(tmpAcr)
         return x
 
     # ACRT

@@ -439,39 +439,67 @@ except:
 class CZMLabelT(object):
 
     # CZMLabelT
-    def __init__(self):
-        self.SHOW = False  # type: bool
-        self.TEXT = None  # type: str
-        self.FONT = None  # type: str
-        self.STYLE = 0  # type: int
-        self.FILL_COLOR = None  # type: Optional[CZMColor.CZMColorT]
-        self.OUTLINE_COLOR = None  # type: Optional[CZMColor.CZMColorT]
-        self.OUTLINE_WIDTH = 0.0  # type: float
-        self.PIXEL_OFFSET_X = 0.0  # type: float
-        self.PIXEL_OFFSET_Y = 0.0  # type: float
-        self.SCALE = 0.0  # type: float
-        self.HORIZONTAL_ORIGIN = 0  # type: int
-        self.VERTICAL_ORIGIN = 0  # type: int
-        self.HEIGHT_REFERENCE = 0  # type: int
-        self.SHOW_BACKGROUND = False  # type: bool
-        self.BACKGROUND_COLOR = None  # type: Optional[CZMColor.CZMColorT]
-        self.BACKGROUND_PADDING_X = 0.0  # type: float
-        self.BACKGROUND_PADDING_Y = 0.0  # type: float
-        self.EYE_OFFSET_X = 0.0  # type: float
-        self.EYE_OFFSET_Y = 0.0  # type: float
-        self.EYE_OFFSET_Z = 0.0  # type: float
-        self.TRANSLUCENCY_BY_DISTANCE = None  # type: Optional[CZMNearFarScalar.CZMNearFarScalarT]
-        self.PIXEL_OFFSET_SCALE_BY_DISTANCE = None  # type: Optional[CZMNearFarScalar.CZMNearFarScalarT]
-        self.SCALE_BY_DISTANCE = None  # type: Optional[CZMNearFarScalar.CZMNearFarScalarT]
-        self.DISTANCE_DISPLAY_CONDITION_NEAR = 0.0  # type: float
-        self.DISTANCE_DISPLAY_CONDITION_FAR = 0.0  # type: float
-        self.DISABLE_DEPTH_TEST_DISTANCE = 0.0  # type: float
+    def __init__(
+        self,
+        SHOW = False,
+        TEXT = None,
+        FONT = None,
+        STYLE = 0,
+        FILL_COLOR = None,
+        OUTLINE_COLOR = None,
+        OUTLINE_WIDTH = 0.0,
+        PIXEL_OFFSET_X = 0.0,
+        PIXEL_OFFSET_Y = 0.0,
+        SCALE = 0.0,
+        HORIZONTAL_ORIGIN = 0,
+        VERTICAL_ORIGIN = 0,
+        HEIGHT_REFERENCE = 0,
+        SHOW_BACKGROUND = False,
+        BACKGROUND_COLOR = None,
+        BACKGROUND_PADDING_X = 0.0,
+        BACKGROUND_PADDING_Y = 0.0,
+        EYE_OFFSET_X = 0.0,
+        EYE_OFFSET_Y = 0.0,
+        EYE_OFFSET_Z = 0.0,
+        TRANSLUCENCY_BY_DISTANCE = None,
+        PIXEL_OFFSET_SCALE_BY_DISTANCE = None,
+        SCALE_BY_DISTANCE = None,
+        DISTANCE_DISPLAY_CONDITION_NEAR = 0.0,
+        DISTANCE_DISPLAY_CONDITION_FAR = 0.0,
+        DISABLE_DEPTH_TEST_DISTANCE = 0.0,
+    ):
+        self.SHOW = SHOW  # type: bool
+        self.TEXT = TEXT  # type: Optional[str]
+        self.FONT = FONT  # type: Optional[str]
+        self.STYLE = STYLE  # type: int
+        self.FILL_COLOR = FILL_COLOR  # type: Optional[CZMColor.CZMColorT]
+        self.OUTLINE_COLOR = OUTLINE_COLOR  # type: Optional[CZMColor.CZMColorT]
+        self.OUTLINE_WIDTH = OUTLINE_WIDTH  # type: float
+        self.PIXEL_OFFSET_X = PIXEL_OFFSET_X  # type: float
+        self.PIXEL_OFFSET_Y = PIXEL_OFFSET_Y  # type: float
+        self.SCALE = SCALE  # type: float
+        self.HORIZONTAL_ORIGIN = HORIZONTAL_ORIGIN  # type: int
+        self.VERTICAL_ORIGIN = VERTICAL_ORIGIN  # type: int
+        self.HEIGHT_REFERENCE = HEIGHT_REFERENCE  # type: int
+        self.SHOW_BACKGROUND = SHOW_BACKGROUND  # type: bool
+        self.BACKGROUND_COLOR = BACKGROUND_COLOR  # type: Optional[CZMColor.CZMColorT]
+        self.BACKGROUND_PADDING_X = BACKGROUND_PADDING_X  # type: float
+        self.BACKGROUND_PADDING_Y = BACKGROUND_PADDING_Y  # type: float
+        self.EYE_OFFSET_X = EYE_OFFSET_X  # type: float
+        self.EYE_OFFSET_Y = EYE_OFFSET_Y  # type: float
+        self.EYE_OFFSET_Z = EYE_OFFSET_Z  # type: float
+        self.TRANSLUCENCY_BY_DISTANCE = TRANSLUCENCY_BY_DISTANCE  # type: Optional[CZMNearFarScalar.CZMNearFarScalarT]
+        self.PIXEL_OFFSET_SCALE_BY_DISTANCE = PIXEL_OFFSET_SCALE_BY_DISTANCE  # type: Optional[CZMNearFarScalar.CZMNearFarScalarT]
+        self.SCALE_BY_DISTANCE = SCALE_BY_DISTANCE  # type: Optional[CZMNearFarScalar.CZMNearFarScalarT]
+        self.DISTANCE_DISPLAY_CONDITION_NEAR = DISTANCE_DISPLAY_CONDITION_NEAR  # type: float
+        self.DISTANCE_DISPLAY_CONDITION_FAR = DISTANCE_DISPLAY_CONDITION_FAR  # type: float
+        self.DISABLE_DEPTH_TEST_DISTANCE = DISABLE_DEPTH_TEST_DISTANCE  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        czmlabel = CZMLabel()
-        czmlabel.Init(buf, pos)
-        return cls.InitFromObj(czmlabel)
+        tmpCzmlabel = CZMLabel()
+        tmpCzmlabel.Init(buf, pos)
+        return cls.InitFromObj(tmpCzmlabel)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -479,47 +507,47 @@ class CZMLabelT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, czmlabel):
+    def InitFromObj(cls, tmpCzmlabel):
         x = CZMLabelT()
-        x._UnPack(czmlabel)
+        x._UnPack(tmpCzmlabel)
         return x
 
     # CZMLabelT
-    def _UnPack(self, czmlabel):
-        if czmlabel is None:
+    def _UnPack(self, CZMLabel):
+        if CZMLabel is None:
             return
-        self.SHOW = czmlabel.SHOW()
-        self.TEXT = czmlabel.TEXT()
-        self.FONT = czmlabel.FONT()
-        self.STYLE = czmlabel.STYLE()
-        if czmlabel.FILL_COLOR() is not None:
-            self.FILL_COLOR = CZMColor.CZMColorT.InitFromObj(czmlabel.FILL_COLOR())
-        if czmlabel.OUTLINE_COLOR() is not None:
-            self.OUTLINE_COLOR = CZMColor.CZMColorT.InitFromObj(czmlabel.OUTLINE_COLOR())
-        self.OUTLINE_WIDTH = czmlabel.OUTLINE_WIDTH()
-        self.PIXEL_OFFSET_X = czmlabel.PIXEL_OFFSET_X()
-        self.PIXEL_OFFSET_Y = czmlabel.PIXEL_OFFSET_Y()
-        self.SCALE = czmlabel.SCALE()
-        self.HORIZONTAL_ORIGIN = czmlabel.HORIZONTAL_ORIGIN()
-        self.VERTICAL_ORIGIN = czmlabel.VERTICAL_ORIGIN()
-        self.HEIGHT_REFERENCE = czmlabel.HEIGHT_REFERENCE()
-        self.SHOW_BACKGROUND = czmlabel.SHOW_BACKGROUND()
-        if czmlabel.BACKGROUND_COLOR() is not None:
-            self.BACKGROUND_COLOR = CZMColor.CZMColorT.InitFromObj(czmlabel.BACKGROUND_COLOR())
-        self.BACKGROUND_PADDING_X = czmlabel.BACKGROUND_PADDING_X()
-        self.BACKGROUND_PADDING_Y = czmlabel.BACKGROUND_PADDING_Y()
-        self.EYE_OFFSET_X = czmlabel.EYE_OFFSET_X()
-        self.EYE_OFFSET_Y = czmlabel.EYE_OFFSET_Y()
-        self.EYE_OFFSET_Z = czmlabel.EYE_OFFSET_Z()
-        if czmlabel.TRANSLUCENCY_BY_DISTANCE() is not None:
-            self.TRANSLUCENCY_BY_DISTANCE = CZMNearFarScalar.CZMNearFarScalarT.InitFromObj(czmlabel.TRANSLUCENCY_BY_DISTANCE())
-        if czmlabel.PIXEL_OFFSET_SCALE_BY_DISTANCE() is not None:
-            self.PIXEL_OFFSET_SCALE_BY_DISTANCE = CZMNearFarScalar.CZMNearFarScalarT.InitFromObj(czmlabel.PIXEL_OFFSET_SCALE_BY_DISTANCE())
-        if czmlabel.SCALE_BY_DISTANCE() is not None:
-            self.SCALE_BY_DISTANCE = CZMNearFarScalar.CZMNearFarScalarT.InitFromObj(czmlabel.SCALE_BY_DISTANCE())
-        self.DISTANCE_DISPLAY_CONDITION_NEAR = czmlabel.DISTANCE_DISPLAY_CONDITION_NEAR()
-        self.DISTANCE_DISPLAY_CONDITION_FAR = czmlabel.DISTANCE_DISPLAY_CONDITION_FAR()
-        self.DISABLE_DEPTH_TEST_DISTANCE = czmlabel.DISABLE_DEPTH_TEST_DISTANCE()
+        self.SHOW = CZMLabel.SHOW()
+        self.TEXT = CZMLabel.TEXT()
+        self.FONT = CZMLabel.FONT()
+        self.STYLE = CZMLabel.STYLE()
+        if CZMLabel.FILL_COLOR() is not None:
+            self.FILL_COLOR = CZMColor.CZMColorT.InitFromObj(CZMLabel.FILL_COLOR())
+        if CZMLabel.OUTLINE_COLOR() is not None:
+            self.OUTLINE_COLOR = CZMColor.CZMColorT.InitFromObj(CZMLabel.OUTLINE_COLOR())
+        self.OUTLINE_WIDTH = CZMLabel.OUTLINE_WIDTH()
+        self.PIXEL_OFFSET_X = CZMLabel.PIXEL_OFFSET_X()
+        self.PIXEL_OFFSET_Y = CZMLabel.PIXEL_OFFSET_Y()
+        self.SCALE = CZMLabel.SCALE()
+        self.HORIZONTAL_ORIGIN = CZMLabel.HORIZONTAL_ORIGIN()
+        self.VERTICAL_ORIGIN = CZMLabel.VERTICAL_ORIGIN()
+        self.HEIGHT_REFERENCE = CZMLabel.HEIGHT_REFERENCE()
+        self.SHOW_BACKGROUND = CZMLabel.SHOW_BACKGROUND()
+        if CZMLabel.BACKGROUND_COLOR() is not None:
+            self.BACKGROUND_COLOR = CZMColor.CZMColorT.InitFromObj(CZMLabel.BACKGROUND_COLOR())
+        self.BACKGROUND_PADDING_X = CZMLabel.BACKGROUND_PADDING_X()
+        self.BACKGROUND_PADDING_Y = CZMLabel.BACKGROUND_PADDING_Y()
+        self.EYE_OFFSET_X = CZMLabel.EYE_OFFSET_X()
+        self.EYE_OFFSET_Y = CZMLabel.EYE_OFFSET_Y()
+        self.EYE_OFFSET_Z = CZMLabel.EYE_OFFSET_Z()
+        if CZMLabel.TRANSLUCENCY_BY_DISTANCE() is not None:
+            self.TRANSLUCENCY_BY_DISTANCE = CZMNearFarScalar.CZMNearFarScalarT.InitFromObj(CZMLabel.TRANSLUCENCY_BY_DISTANCE())
+        if CZMLabel.PIXEL_OFFSET_SCALE_BY_DISTANCE() is not None:
+            self.PIXEL_OFFSET_SCALE_BY_DISTANCE = CZMNearFarScalar.CZMNearFarScalarT.InitFromObj(CZMLabel.PIXEL_OFFSET_SCALE_BY_DISTANCE())
+        if CZMLabel.SCALE_BY_DISTANCE() is not None:
+            self.SCALE_BY_DISTANCE = CZMNearFarScalar.CZMNearFarScalarT.InitFromObj(CZMLabel.SCALE_BY_DISTANCE())
+        self.DISTANCE_DISPLAY_CONDITION_NEAR = CZMLabel.DISTANCE_DISPLAY_CONDITION_NEAR()
+        self.DISTANCE_DISPLAY_CONDITION_FAR = CZMLabel.DISTANCE_DISPLAY_CONDITION_FAR()
+        self.DISABLE_DEPTH_TEST_DISTANCE = CZMLabel.DISABLE_DEPTH_TEST_DISTANCE()
 
     # CZMLabelT
     def Pack(self, builder):
@@ -574,5 +602,5 @@ class CZMLabelT(object):
         CZMLabelAddDISTANCE_DISPLAY_CONDITION_NEAR(builder, self.DISTANCE_DISPLAY_CONDITION_NEAR)
         CZMLabelAddDISTANCE_DISPLAY_CONDITION_FAR(builder, self.DISTANCE_DISPLAY_CONDITION_FAR)
         CZMLabelAddDISABLE_DEPTH_TEST_DISTANCE(builder, self.DISABLE_DEPTH_TEST_DISTANCE)
-        czmlabel = CZMLabelEnd(builder)
-        return czmlabel
+        CZMLabel = CZMLabelEnd(builder)
+        return CZMLabel

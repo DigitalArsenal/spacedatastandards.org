@@ -101,17 +101,23 @@ def End(builder):
 class CZMOrientationT(object):
 
     # CZMOrientationT
-    def __init__(self):
-        self.UNIT_QUATERNION_X = 0.0  # type: float
-        self.UNIT_QUATERNION_Y = 0.0  # type: float
-        self.UNIT_QUATERNION_Z = 0.0  # type: float
-        self.UNIT_QUATERNION_W = 0.0  # type: float
+    def __init__(
+        self,
+        UNIT_QUATERNION_X = 0.0,
+        UNIT_QUATERNION_Y = 0.0,
+        UNIT_QUATERNION_Z = 0.0,
+        UNIT_QUATERNION_W = 0.0,
+    ):
+        self.UNIT_QUATERNION_X = UNIT_QUATERNION_X  # type: float
+        self.UNIT_QUATERNION_Y = UNIT_QUATERNION_Y  # type: float
+        self.UNIT_QUATERNION_Z = UNIT_QUATERNION_Z  # type: float
+        self.UNIT_QUATERNION_W = UNIT_QUATERNION_W  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        czmorientation = CZMOrientation()
-        czmorientation.Init(buf, pos)
-        return cls.InitFromObj(czmorientation)
+        tmpCzmorientation = CZMOrientation()
+        tmpCzmorientation.Init(buf, pos)
+        return cls.InitFromObj(tmpCzmorientation)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -119,19 +125,19 @@ class CZMOrientationT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, czmorientation):
+    def InitFromObj(cls, tmpCzmorientation):
         x = CZMOrientationT()
-        x._UnPack(czmorientation)
+        x._UnPack(tmpCzmorientation)
         return x
 
     # CZMOrientationT
-    def _UnPack(self, czmorientation):
-        if czmorientation is None:
+    def _UnPack(self, CZMOrientation):
+        if CZMOrientation is None:
             return
-        self.UNIT_QUATERNION_X = czmorientation.UNIT_QUATERNION_X()
-        self.UNIT_QUATERNION_Y = czmorientation.UNIT_QUATERNION_Y()
-        self.UNIT_QUATERNION_Z = czmorientation.UNIT_QUATERNION_Z()
-        self.UNIT_QUATERNION_W = czmorientation.UNIT_QUATERNION_W()
+        self.UNIT_QUATERNION_X = CZMOrientation.UNIT_QUATERNION_X()
+        self.UNIT_QUATERNION_Y = CZMOrientation.UNIT_QUATERNION_Y()
+        self.UNIT_QUATERNION_Z = CZMOrientation.UNIT_QUATERNION_Z()
+        self.UNIT_QUATERNION_W = CZMOrientation.UNIT_QUATERNION_W()
 
     # CZMOrientationT
     def Pack(self, builder):
@@ -140,5 +146,5 @@ class CZMOrientationT(object):
         CZMOrientationAddUNIT_QUATERNION_Y(builder, self.UNIT_QUATERNION_Y)
         CZMOrientationAddUNIT_QUATERNION_Z(builder, self.UNIT_QUATERNION_Z)
         CZMOrientationAddUNIT_QUATERNION_W(builder, self.UNIT_QUATERNION_W)
-        czmorientation = CZMOrientationEnd(builder)
-        return czmorientation
+        CZMOrientation = CZMOrientationEnd(builder)
+        return CZMOrientation

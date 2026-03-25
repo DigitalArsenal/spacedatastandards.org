@@ -56,6 +56,10 @@ func (rcv *CZMPolylineGlowMaterial) COLOR(obj *CZMColor) *CZMColor {
 	return nil
 }
 
+func (rcv *CZMPolylineGlowMaterial) Color(obj *CZMColor) *CZMColor {
+	return rcv.COLOR(obj)
+}
+
 /// Glow color
 /// Glow power
 func (rcv *CZMPolylineGlowMaterial) GLOW_POWER() float64 {
@@ -66,9 +70,17 @@ func (rcv *CZMPolylineGlowMaterial) GLOW_POWER() float64 {
 	return 0.0
 }
 
+func (rcv *CZMPolylineGlowMaterial) GlowPower() float64 {
+	return rcv.GLOW_POWER()
+}
+
 /// Glow power
 func (rcv *CZMPolylineGlowMaterial) MutateGLOW_POWER(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(6, n)
+}
+
+func (rcv *CZMPolylineGlowMaterial) MutateGlowPower(n float64) bool {
+	return rcv.MutateGLOW_POWER(n)
 }
 
 /// Taper power
@@ -80,9 +92,17 @@ func (rcv *CZMPolylineGlowMaterial) TAPER_POWER() float64 {
 	return 0.0
 }
 
+func (rcv *CZMPolylineGlowMaterial) TaperPower() float64 {
+	return rcv.TAPER_POWER()
+}
+
 /// Taper power
 func (rcv *CZMPolylineGlowMaterial) MutateTAPER_POWER(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(8, n)
+}
+
+func (rcv *CZMPolylineGlowMaterial) MutateTaperPower(n float64) bool {
+	return rcv.MutateTAPER_POWER(n)
 }
 
 func CZMPolylineGlowMaterialStart(builder *flatbuffers.Builder) {
@@ -91,11 +111,20 @@ func CZMPolylineGlowMaterialStart(builder *flatbuffers.Builder) {
 func CZMPolylineGlowMaterialAddCOLOR(builder *flatbuffers.Builder, COLOR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(COLOR), 0)
 }
+func CZMPolylineGlowMaterialAddColor(builder *flatbuffers.Builder, COLOR flatbuffers.UOffsetT) {
+	CZMPolylineGlowMaterialAddCOLOR(builder, COLOR)
+}
 func CZMPolylineGlowMaterialAddGLOW_POWER(builder *flatbuffers.Builder, GLOW_POWER float64) {
 	builder.PrependFloat64Slot(1, GLOW_POWER, 0.0)
 }
+func CZMPolylineGlowMaterialAddGlowPower(builder *flatbuffers.Builder, GLOW_POWER float64) {
+	CZMPolylineGlowMaterialAddGLOW_POWER(builder, GLOW_POWER)
+}
 func CZMPolylineGlowMaterialAddTAPER_POWER(builder *flatbuffers.Builder, TAPER_POWER float64) {
 	builder.PrependFloat64Slot(2, TAPER_POWER, 0.0)
+}
+func CZMPolylineGlowMaterialAddTaperPower(builder *flatbuffers.Builder, TAPER_POWER float64) {
+	CZMPolylineGlowMaterialAddTAPER_POWER(builder, TAPER_POWER)
 }
 func CZMPolylineGlowMaterialEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

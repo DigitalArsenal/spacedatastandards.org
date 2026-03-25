@@ -308,9 +308,9 @@ struct EPMBuilder:
     def end():
         return b_.EndObject()
 
-def EPMStartALTERNATE_NAMESVector(b_:flatbuffers.builder, n_:int):
+def EPMStartALTERNATENAMESVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def EPMCreateALTERNATE_NAMESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def EPMCreateALTERNATENAMESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
@@ -322,16 +322,16 @@ def EPMCreateKEYSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-def EPMStartMULTIFORMAT_ADDRESSVector(b_:flatbuffers.builder, n_:int):
+def EPMStartMULTIFORMATADDRESSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def EPMCreateMULTIFORMAT_ADDRESSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def EPMCreateMULTIFORMATADDRESSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-def EPMStartCHAIN_PROOFSVector(b_:flatbuffers.builder, n_:int):
+def EPMStartCHAINPROOFSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def EPMCreateCHAIN_PROOFSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def EPMCreateCHAINPROOFSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)

@@ -2,7 +2,7 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export { ARM, ARMT } from './ARM.js';
-export { AmmoType } from './AmmoType.js';
-export { ArmorMaterial } from './ArmorMaterial.js';
-export { PenResult } from './PenResult.js';
+export * from './AmmoType.js';
+export * from './ARM.js';
+export * from './ArmorMaterial.js';
+export * from './PenResult.js';

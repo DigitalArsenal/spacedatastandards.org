@@ -51,6 +51,10 @@ func (rcv *FixedFrameStream) NAME() []byte {
 	return nil
 }
 
+func (rcv *FixedFrameStream) Name() []byte {
+	return rcv.NAME()
+}
+
 /// Stream name
 /// Short description
 func (rcv *FixedFrameStream) SHORT_DESCRIPTION() []byte {
@@ -59,6 +63,10 @@ func (rcv *FixedFrameStream) SHORT_DESCRIPTION() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *FixedFrameStream) ShortDescription() []byte {
+	return rcv.SHORT_DESCRIPTION()
 }
 
 /// Short description
@@ -71,9 +79,17 @@ func (rcv *FixedFrameStream) FRAME_SIZE_IN_BITS() uint32 {
 	return 0
 }
 
+func (rcv *FixedFrameStream) FrameSizeInBits() uint32 {
+	return rcv.FRAME_SIZE_IN_BITS()
+}
+
 /// Frame size in bits
 func (rcv *FixedFrameStream) MutateFRAME_SIZE_IN_BITS(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(8, n)
+}
+
+func (rcv *FixedFrameStream) MutateFrameSizeInBits(n uint32) bool {
+	return rcv.MutateFRAME_SIZE_IN_BITS(n)
 }
 
 /// Sync pattern (hex string)
@@ -85,6 +101,10 @@ func (rcv *FixedFrameStream) SYNC_PATTERN() []byte {
 	return nil
 }
 
+func (rcv *FixedFrameStream) SyncPattern() []byte {
+	return rcv.SYNC_PATTERN()
+}
+
 /// Sync pattern (hex string)
 func FixedFrameStreamStart(builder *flatbuffers.Builder) {
 	builder.StartObject(4)
@@ -92,14 +112,26 @@ func FixedFrameStreamStart(builder *flatbuffers.Builder) {
 func FixedFrameStreamAddNAME(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(NAME), 0)
 }
+func FixedFrameStreamAddName(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
+	FixedFrameStreamAddNAME(builder, NAME)
+}
 func FixedFrameStreamAddSHORT_DESCRIPTION(builder *flatbuffers.Builder, SHORT_DESCRIPTION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(SHORT_DESCRIPTION), 0)
+}
+func FixedFrameStreamAddShortDescription(builder *flatbuffers.Builder, SHORT_DESCRIPTION flatbuffers.UOffsetT) {
+	FixedFrameStreamAddSHORT_DESCRIPTION(builder, SHORT_DESCRIPTION)
 }
 func FixedFrameStreamAddFRAME_SIZE_IN_BITS(builder *flatbuffers.Builder, FRAME_SIZE_IN_BITS uint32) {
 	builder.PrependUint32Slot(2, FRAME_SIZE_IN_BITS, 0)
 }
+func FixedFrameStreamAddFrameSizeInBits(builder *flatbuffers.Builder, FRAME_SIZE_IN_BITS uint32) {
+	FixedFrameStreamAddFRAME_SIZE_IN_BITS(builder, FRAME_SIZE_IN_BITS)
+}
 func FixedFrameStreamAddSYNC_PATTERN(builder *flatbuffers.Builder, SYNC_PATTERN flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(SYNC_PATTERN), 0)
+}
+func FixedFrameStreamAddSyncPattern(builder *flatbuffers.Builder, SYNC_PATTERN flatbuffers.UOffsetT) {
+	FixedFrameStreamAddSYNC_PATTERN(builder, SYNC_PATTERN)
 }
 func FixedFrameStreamEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

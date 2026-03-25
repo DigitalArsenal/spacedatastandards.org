@@ -17,6 +17,7 @@ import fs from 'fs';
 import path from 'path';
 
 const recDir = path.join('lib', 'ts', 'REC');
+const libTsDir = path.join('lib', 'ts');
 
 if (!fs.existsSync(recDir)) {
   console.log('No REC directory found, skipping casing fix.');
@@ -58,6 +59,51 @@ for (const file of fs.readdirSync(recDir)) {
 // Phase 2: Fix all .ts files
 let totalFixed = 0;
 let totalDuplicatesRemoved = 0;
+
+function toBuggyCamelCase(name) {
+  if (!name.includes('_')) return null;
+  const [first, ...rest] = name.split('_');
+  return (
+    first.toLowerCase() +
+    rest
+      .filter(Boolean)
+      .map(part => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase())
+      .join('')
+  );
+}
+
+function fixBrokenObjectApiAccessorCalls(content) {
+  const methodNames = new Set();
+  const methodRegex = /^([A-Za-z_][A-Za-z0-9_]*)\(\):/gm;
+  let match;
+  while ((match = methodRegex.exec(content)) !== null) {
+    methodNames.add(match[1]);
+  }
+
+  let updated = content;
+  for (const methodName of methodNames) {
+    const buggyName = toBuggyCamelCase(methodName);
+    if (!buggyName || buggyName === methodName) {
+      continue;
+    }
+    const callRegex = new RegExp(`\\bthis\\.${buggyName}\\(`, 'g');
+    updated = updated.replace(callRegex, `this.${methodName}(`);
+  }
+  return updated;
+}
+
+function walkTsFiles(rootDir) {
+  const files = [];
+  for (const entry of fs.readdirSync(rootDir, { withFileTypes: true })) {
+    const fullPath = path.join(rootDir, entry.name);
+    if (entry.isDirectory()) {
+      files.push(...walkTsFiles(fullPath));
+    } else if (entry.isFile() && entry.name.endsWith('.ts')) {
+      files.push(fullPath);
+    }
+  }
+  return files;
+}
 
 for (const file of fs.readdirSync(recDir)) {
   if (!file.endsWith('.ts')) continue;
@@ -131,7 +177,17 @@ for (const file of fs.readdirSync(recDir)) {
   }
 }
 
-console.log(`Fixed REC TypeScript: ${totalFixed} references corrected, ${totalDuplicatesRemoved} duplicates removed, ${casingFixes.size} casing mappings found.`);
+let objectApiAccessorFixes = 0;
+for (const filePath of walkTsFiles(libTsDir)) {
+  const original = fs.readFileSync(filePath, 'utf-8');
+  const fixed = fixBrokenObjectApiAccessorCalls(original);
+  if (fixed !== original) {
+    fs.writeFileSync(filePath, fixed);
+    objectApiAccessorFixes++;
+  }
+}
+
+console.log(`Fixed REC TypeScript: ${totalFixed} references corrected, ${totalDuplicatesRemoved} duplicates removed, ${casingFixes.size} casing mappings found, ${objectApiAccessorFixes} object API files patched.`);
 if (casingFixes.size > 0) {
   for (const [from, to] of casingFixes) {
     console.log(`  ${from} -> ${to}`);

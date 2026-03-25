@@ -32,8 +32,8 @@ class GPXTrackSegment : Table() {
     /**
      * Ordered track points in this segment
      */
-    fun POINTS(j: Int) : GPXWaypoint? = POINTS(GPXWaypoint(), j)
-    fun POINTS(obj: GPXWaypoint, j: Int) : GPXWaypoint? {
+    fun points(j: Int) : GPXWaypoint? = points(GPXWaypoint(), j)
+    fun points(obj: GPXWaypoint, j: Int) : GPXWaypoint? {
         val o = __offset(4)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -41,24 +41,24 @@ class GPXTrackSegment : Table() {
             null
         }
     }
-    val POINTSLength : Int
+    val pointsLength : Int
         get() {
             val o = __offset(4); return if (o != 0) __vector_len(o) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsGPXTrackSegment(_bb: ByteBuffer): GPXTrackSegment = getRootAsGPXTrackSegment(_bb, GPXTrackSegment())
         fun getRootAsGPXTrackSegment(_bb: ByteBuffer, obj: GPXTrackSegment): GPXTrackSegment {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createGPXTrackSegment(builder: FlatBufferBuilder, POINTSOffset: Int) : Int {
+        fun createGPXTrackSegment(builder: FlatBufferBuilder, pointsOffset: Int) : Int {
             builder.startTable(1)
-            addPOINTS(builder, POINTSOffset)
+            addPOINTS(builder, pointsOffset)
             return endGPXTrackSegment(builder)
         }
         fun startGPXTrackSegment(builder: FlatBufferBuilder) = builder.startTable(1)
-        fun addPOINTS(builder: FlatBufferBuilder, POINTS: Int) = builder.addOffset(0, POINTS, 0)
+        fun addPOINTS(builder: FlatBufferBuilder, points: Int) = builder.addOffset(0, points, 0)
         fun createPointsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {

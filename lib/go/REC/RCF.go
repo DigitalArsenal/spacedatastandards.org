@@ -63,9 +63,17 @@ func (rcv *RCF) PDU_TYPE() rcfPduType {
 	return 0
 }
 
+func (rcv *RCF) PduType() rcfPduType {
+	return rcv.PDU_TYPE()
+}
+
 /// PDU type
 func (rcv *RCF) MutatePDU_TYPE(n rcfPduType) bool {
 	return rcv._tab.MutateInt8Slot(4, int8(n))
+}
+
+func (rcv *RCF) MutatePduType(n rcfPduType) bool {
+	return rcv.MutatePDU_TYPE(n)
 }
 
 /// Initiator identifier
@@ -75,6 +83,10 @@ func (rcv *RCF) INITIATOR_ID() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *RCF) InitiatorId() []byte {
+	return rcv.INITIATOR_ID()
 }
 
 /// Initiator identifier
@@ -87,6 +99,10 @@ func (rcv *RCF) RESPONDER_PORT_ID() []byte {
 	return nil
 }
 
+func (rcv *RCF) ResponderPortId() []byte {
+	return rcv.RESPONDER_PORT_ID()
+}
+
 /// Responder port identifier
 /// Service type
 func (rcv *RCF) SERVICE_TYPE() byte {
@@ -97,9 +113,17 @@ func (rcv *RCF) SERVICE_TYPE() byte {
 	return 0
 }
 
+func (rcv *RCF) ServiceType() byte {
+	return rcv.SERVICE_TYPE()
+}
+
 /// Service type
 func (rcv *RCF) MutateSERVICE_TYPE(n byte) bool {
 	return rcv._tab.MutateByteSlot(10, n)
+}
+
+func (rcv *RCF) MutateServiceType(n byte) bool {
+	return rcv.MutateSERVICE_TYPE(n)
 }
 
 /// Version number
@@ -111,9 +135,17 @@ func (rcv *RCF) VERSION() uint16 {
 	return 0
 }
 
+func (rcv *RCF) Version() uint16 {
+	return rcv.VERSION()
+}
+
 /// Version number
 func (rcv *RCF) MutateVERSION(n uint16) bool {
 	return rcv._tab.MutateUint16Slot(12, n)
+}
+
+func (rcv *RCF) MutateVersion(n uint16) bool {
+	return rcv.MutateVERSION(n)
 }
 
 /// Invoke ID
@@ -125,9 +157,17 @@ func (rcv *RCF) INVOKE_ID() uint32 {
 	return 0
 }
 
+func (rcv *RCF) InvokeId() uint32 {
+	return rcv.INVOKE_ID()
+}
+
 /// Invoke ID
 func (rcv *RCF) MutateINVOKE_ID(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(14, n)
+}
+
+func (rcv *RCF) MutateInvokeId(n uint32) bool {
+	return rcv.MutateINVOKE_ID(n)
 }
 
 /// Spacecraft ID filter
@@ -139,9 +179,17 @@ func (rcv *RCF) SPACECRAFT_ID() uint16 {
 	return 0
 }
 
+func (rcv *RCF) SpacecraftId() uint16 {
+	return rcv.SPACECRAFT_ID()
+}
+
 /// Spacecraft ID filter
 func (rcv *RCF) MutateSPACECRAFT_ID(n uint16) bool {
 	return rcv._tab.MutateUint16Slot(16, n)
+}
+
+func (rcv *RCF) MutateSpacecraftId(n uint16) bool {
+	return rcv.MutateSPACECRAFT_ID(n)
 }
 
 /// Virtual channel ID filter
@@ -153,9 +201,17 @@ func (rcv *RCF) VIRTUAL_CHANNEL_ID() byte {
 	return 0
 }
 
+func (rcv *RCF) VirtualChannelId() byte {
+	return rcv.VIRTUAL_CHANNEL_ID()
+}
+
 /// Virtual channel ID filter
 func (rcv *RCF) MutateVIRTUAL_CHANNEL_ID(n byte) bool {
 	return rcv._tab.MutateByteSlot(18, n)
+}
+
+func (rcv *RCF) MutateVirtualChannelId(n byte) bool {
+	return rcv.MutateVIRTUAL_CHANNEL_ID(n)
 }
 
 /// Data
@@ -168,6 +224,10 @@ func (rcv *RCF) DATA(j int) byte {
 	return 0
 }
 
+func (rcv *RCF) Data(j int) byte {
+	return rcv.DATA(j)
+}
+
 func (rcv *RCF) DATALength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
 	if o != 0 {
@@ -176,12 +236,20 @@ func (rcv *RCF) DATALength() int {
 	return 0
 }
 
+func (rcv *RCF) DataLength() int {
+	return rcv.DATALength()
+}
+
 func (rcv *RCF) DATABytes() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *RCF) DataBytes() []byte {
+	return rcv.DATABytes()
 }
 
 /// Data
@@ -194,38 +262,72 @@ func (rcv *RCF) MutateDATA(j int, n byte) bool {
 	return false
 }
 
+func (rcv *RCF) MutateData(j int, n byte) bool {
+	return rcv.MutateDATA(j, n)
+}
+
 func RCFStart(builder *flatbuffers.Builder) {
 	builder.StartObject(9)
 }
 func RCFAddPDU_TYPE(builder *flatbuffers.Builder, PDU_TYPE rcfPduType) {
 	builder.PrependInt8Slot(0, int8(PDU_TYPE), 0)
 }
+func RCFAddPduType(builder *flatbuffers.Builder, PDU_TYPE rcfPduType) {
+	RCFAddPDU_TYPE(builder, PDU_TYPE)
+}
 func RCFAddINITIATOR_ID(builder *flatbuffers.Builder, INITIATOR_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(INITIATOR_ID), 0)
+}
+func RCFAddInitiatorId(builder *flatbuffers.Builder, INITIATOR_ID flatbuffers.UOffsetT) {
+	RCFAddINITIATOR_ID(builder, INITIATOR_ID)
 }
 func RCFAddRESPONDER_PORT_ID(builder *flatbuffers.Builder, RESPONDER_PORT_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(RESPONDER_PORT_ID), 0)
 }
+func RCFAddResponderPortId(builder *flatbuffers.Builder, RESPONDER_PORT_ID flatbuffers.UOffsetT) {
+	RCFAddRESPONDER_PORT_ID(builder, RESPONDER_PORT_ID)
+}
 func RCFAddSERVICE_TYPE(builder *flatbuffers.Builder, SERVICE_TYPE byte) {
 	builder.PrependByteSlot(3, SERVICE_TYPE, 0)
+}
+func RCFAddServiceType(builder *flatbuffers.Builder, SERVICE_TYPE byte) {
+	RCFAddSERVICE_TYPE(builder, SERVICE_TYPE)
 }
 func RCFAddVERSION(builder *flatbuffers.Builder, VERSION uint16) {
 	builder.PrependUint16Slot(4, VERSION, 0)
 }
+func RCFAddVersion(builder *flatbuffers.Builder, VERSION uint16) {
+	RCFAddVERSION(builder, VERSION)
+}
 func RCFAddINVOKE_ID(builder *flatbuffers.Builder, INVOKE_ID uint32) {
 	builder.PrependUint32Slot(5, INVOKE_ID, 0)
+}
+func RCFAddInvokeId(builder *flatbuffers.Builder, INVOKE_ID uint32) {
+	RCFAddINVOKE_ID(builder, INVOKE_ID)
 }
 func RCFAddSPACECRAFT_ID(builder *flatbuffers.Builder, SPACECRAFT_ID uint16) {
 	builder.PrependUint16Slot(6, SPACECRAFT_ID, 0)
 }
+func RCFAddSpacecraftId(builder *flatbuffers.Builder, SPACECRAFT_ID uint16) {
+	RCFAddSPACECRAFT_ID(builder, SPACECRAFT_ID)
+}
 func RCFAddVIRTUAL_CHANNEL_ID(builder *flatbuffers.Builder, VIRTUAL_CHANNEL_ID byte) {
 	builder.PrependByteSlot(7, VIRTUAL_CHANNEL_ID, 0)
+}
+func RCFAddVirtualChannelId(builder *flatbuffers.Builder, VIRTUAL_CHANNEL_ID byte) {
+	RCFAddVIRTUAL_CHANNEL_ID(builder, VIRTUAL_CHANNEL_ID)
 }
 func RCFAddDATA(builder *flatbuffers.Builder, DATA flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(DATA), 0)
 }
+func RCFAddData(builder *flatbuffers.Builder, DATA flatbuffers.UOffsetT) {
+	RCFAddDATA(builder, DATA)
+}
 func RCFStartDATAVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(1, numElems, 1)
+}
+func RCFStartDataVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return RCFStartDATAVector(builder, numElems)
 }
 func RCFEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

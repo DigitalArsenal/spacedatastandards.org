@@ -149,6 +149,12 @@ def GJNFeatureStartPROPERTIESVector(builder, numElems):
 def StartPROPERTIESVector(builder, numElems):
     return GJNFeatureStartPROPERTIESVector(builder, numElems)
 
+def GJNFeatureCreatePROPERTIESVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreatePROPERTIESVector(builder, data):
+    GJNFeatureCreatePROPERTIESVector(builder, data)
+
 def GJNFeatureAddNUM_ID(builder, NUM_ID):
     builder.PrependFloat64Slot(3, NUM_ID, 0.0)
 
@@ -196,21 +202,31 @@ except:
 class GJNFeatureT(object):
 
     # GJNFeatureT
-    def __init__(self):
-        self.ID = None  # type: str
-        self.GEOMETRY = None  # type: Optional[GJNGeometry.GJNGeometryT]
-        self.PROPERTIES = None  # type: List[GJNProperty.GJNPropertyT]
-        self.NUM_ID = 0.0  # type: float
-        self.ID_IS_NUMERIC = False  # type: bool
-        self.HAS_GEOMETRY = False  # type: bool
-        self.PROPERTIES_IS_NULL = False  # type: bool
-        self.BBOX = None  # type: Optional[GJNBoundingBox.GJNBoundingBoxT]
+    def __init__(
+        self,
+        ID = None,
+        GEOMETRY = None,
+        PROPERTIES = None,
+        NUM_ID = 0.0,
+        ID_IS_NUMERIC = False,
+        HAS_GEOMETRY = False,
+        PROPERTIES_IS_NULL = False,
+        BBOX = None,
+    ):
+        self.ID = ID  # type: Optional[str]
+        self.GEOMETRY = GEOMETRY  # type: Optional[GJNGeometry.GJNGeometryT]
+        self.PROPERTIES = PROPERTIES  # type: Optional[List[GJNProperty.GJNPropertyT]]
+        self.NUM_ID = NUM_ID  # type: float
+        self.ID_IS_NUMERIC = ID_IS_NUMERIC  # type: bool
+        self.HAS_GEOMETRY = HAS_GEOMETRY  # type: bool
+        self.PROPERTIES_IS_NULL = PROPERTIES_IS_NULL  # type: bool
+        self.BBOX = BBOX  # type: Optional[GJNBoundingBox.GJNBoundingBoxT]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        gjnfeature = GJNFeature()
-        gjnfeature.Init(buf, pos)
-        return cls.InitFromObj(gjnfeature)
+        tmpGjnfeature = GJNFeature()
+        tmpGjnfeature.Init(buf, pos)
+        return cls.InitFromObj(tmpGjnfeature)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -218,32 +234,32 @@ class GJNFeatureT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, gjnfeature):
+    def InitFromObj(cls, tmpGjnfeature):
         x = GJNFeatureT()
-        x._UnPack(gjnfeature)
+        x._UnPack(tmpGjnfeature)
         return x
 
     # GJNFeatureT
-    def _UnPack(self, gjnfeature):
-        if gjnfeature is None:
+    def _UnPack(self, GJNFeature):
+        if GJNFeature is None:
             return
-        self.ID = gjnfeature.ID()
-        if gjnfeature.GEOMETRY() is not None:
-            self.GEOMETRY = GJNGeometry.GJNGeometryT.InitFromObj(gjnfeature.GEOMETRY())
-        if not gjnfeature.PROPERTIESIsNone():
+        self.ID = GJNFeature.ID()
+        if GJNFeature.GEOMETRY() is not None:
+            self.GEOMETRY = GJNGeometry.GJNGeometryT.InitFromObj(GJNFeature.GEOMETRY())
+        if not GJNFeature.PROPERTIESIsNone():
             self.PROPERTIES = []
-            for i in range(gjnfeature.PROPERTIESLength()):
-                if gjnfeature.PROPERTIES(i) is None:
+            for i in range(GJNFeature.PROPERTIESLength()):
+                if GJNFeature.PROPERTIES(i) is None:
                     self.PROPERTIES.append(None)
                 else:
-                    gJNProperty_ = GJNProperty.GJNPropertyT.InitFromObj(gjnfeature.PROPERTIES(i))
+                    gJNProperty_ = GJNProperty.GJNPropertyT.InitFromObj(GJNFeature.PROPERTIES(i))
                     self.PROPERTIES.append(gJNProperty_)
-        self.NUM_ID = gjnfeature.NUM_ID()
-        self.ID_IS_NUMERIC = gjnfeature.ID_IS_NUMERIC()
-        self.HAS_GEOMETRY = gjnfeature.HAS_GEOMETRY()
-        self.PROPERTIES_IS_NULL = gjnfeature.PROPERTIES_IS_NULL()
-        if gjnfeature.BBOX() is not None:
-            self.BBOX = GJNBoundingBox.GJNBoundingBoxT.InitFromObj(gjnfeature.BBOX())
+        self.NUM_ID = GJNFeature.NUM_ID()
+        self.ID_IS_NUMERIC = GJNFeature.ID_IS_NUMERIC()
+        self.HAS_GEOMETRY = GJNFeature.HAS_GEOMETRY()
+        self.PROPERTIES_IS_NULL = GJNFeature.PROPERTIES_IS_NULL()
+        if GJNFeature.BBOX() is not None:
+            self.BBOX = GJNBoundingBox.GJNBoundingBoxT.InitFromObj(GJNFeature.BBOX())
 
     # GJNFeatureT
     def Pack(self, builder):
@@ -274,5 +290,5 @@ class GJNFeatureT(object):
         GJNFeatureAddPROPERTIES_IS_NULL(builder, self.PROPERTIES_IS_NULL)
         if self.BBOX is not None:
             GJNFeatureAddBBOX(builder, BBOX)
-        gjnfeature = GJNFeatureEnd(builder)
-        return gjnfeature
+        GJNFeature = GJNFeatureEnd(builder)
+        return GJNFeature

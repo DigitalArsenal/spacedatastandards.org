@@ -32,7 +32,7 @@ class CelestialFrameWrapper : Table() {
             return if(o != 0) bb.get(o + bb_pos) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsCelestialFrameWrapper(_bb: ByteBuffer): CelestialFrameWrapper = getRootAsCelestialFrameWrapper(_bb, CelestialFrameWrapper())
         fun getRootAsCelestialFrameWrapper(_bb: ByteBuffer, obj: CelestialFrameWrapper): CelestialFrameWrapper {
             _bb.order(ByteOrder.LITTLE_ENDIAN)

@@ -49,10 +49,17 @@ func (rcv *KMLPlaylist) PRIMITIVES(obj *KMLTourPrimitive, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(KMLTourPrimitive)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *KMLPlaylist) Primitives(obj *KMLTourPrimitive, j int) bool {
+	return rcv.PRIMITIVES(obj, j)
 }
 
 func (rcv *KMLPlaylist) PRIMITIVESLength() int {
@@ -63,6 +70,10 @@ func (rcv *KMLPlaylist) PRIMITIVESLength() int {
 	return 0
 }
 
+func (rcv *KMLPlaylist) PrimitivesLength() int {
+	return rcv.PRIMITIVESLength()
+}
+
 /// Tour primitives
 func KMLPlaylistStart(builder *flatbuffers.Builder) {
 	builder.StartObject(1)
@@ -70,8 +81,14 @@ func KMLPlaylistStart(builder *flatbuffers.Builder) {
 func KMLPlaylistAddPRIMITIVES(builder *flatbuffers.Builder, PRIMITIVES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(PRIMITIVES), 0)
 }
+func KMLPlaylistAddPrimitives(builder *flatbuffers.Builder, PRIMITIVES flatbuffers.UOffsetT) {
+	KMLPlaylistAddPRIMITIVES(builder, PRIMITIVES)
+}
 func KMLPlaylistStartPRIMITIVESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func KMLPlaylistStartPrimitivesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return KMLPlaylistStartPRIMITIVESVector(builder, numElems)
 }
 func KMLPlaylistEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

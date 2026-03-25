@@ -928,6 +928,12 @@ def TRKStartSRC_TYPSVector(builder, numElems):
 def StartSRC_TYPSVector(builder, numElems):
     return TRKStartSRC_TYPSVector(builder, numElems)
 
+def TRKCreateSRC_TYPSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateSRC_TYPSVector(builder, data):
+    TRKCreateSRC_TYPSVector(builder, data)
+
 def TRKAddSRC_IDS(builder, SRC_IDS):
     builder.PrependUOffsetTRelativeSlot(36, flatbuffers.number_types.UOffsetTFlags.py_type(SRC_IDS), 0)
 
@@ -939,6 +945,12 @@ def TRKStartSRC_IDSVector(builder, numElems):
 
 def StartSRC_IDSVector(builder, numElems):
     return TRKStartSRC_IDSVector(builder, numElems)
+
+def TRKCreateSRC_IDSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateSRC_IDSVector(builder, data):
+    TRKCreateSRC_IDSVector(builder, data)
 
 def TRKAddCALL_SIGN(builder, CALL_SIGN):
     builder.PrependUOffsetTRelativeSlot(37, flatbuffers.number_types.UOffsetTFlags.py_type(CALL_SIGN), 0)
@@ -1012,6 +1024,12 @@ def TRKStartTAGSVector(builder, numElems):
 def StartTAGSVector(builder, numElems):
     return TRKStartTAGSVector(builder, numElems)
 
+def TRKCreateTAGSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateTAGSVector(builder, data):
+    TRKCreateTAGSVector(builder, data)
+
 def TRKAddTRACK_START_TIME(builder, TRACK_START_TIME):
     builder.PrependUOffsetTRelativeSlot(48, flatbuffers.number_types.UOffsetTFlags.py_type(TRACK_START_TIME), 0)
 
@@ -1042,6 +1060,16 @@ def TRKStartECEF_POSVector(builder, numElems):
 def StartECEF_POSVector(builder, numElems):
     return TRKStartECEF_POSVector(builder, numElems)
 
+def TRKCreateECEF_POSVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateECEF_POSVector(builder, data):
+    TRKCreateECEF_POSVector(builder, data)
+
 def TRKAddECEF_VEL(builder, ECEF_VEL):
     builder.PrependUOffsetTRelativeSlot(52, flatbuffers.number_types.UOffsetTFlags.py_type(ECEF_VEL), 0)
 
@@ -1053,6 +1081,16 @@ def TRKStartECEF_VELVector(builder, numElems):
 
 def StartECEF_VELVector(builder, numElems):
     return TRKStartECEF_VELVector(builder, numElems)
+
+def TRKCreateECEF_VELVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateECEF_VELVector(builder, data):
+    TRKCreateECEF_VELVector(builder, data)
 
 def TRKAddECEF_ACC(builder, ECEF_ACC):
     builder.PrependUOffsetTRelativeSlot(53, flatbuffers.number_types.UOffsetTFlags.py_type(ECEF_ACC), 0)
@@ -1066,6 +1104,16 @@ def TRKStartECEF_ACCVector(builder, numElems):
 def StartECEF_ACCVector(builder, numElems):
     return TRKStartECEF_ACCVector(builder, numElems)
 
+def TRKCreateECEF_ACCVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateECEF_ACCVector(builder, data):
+    TRKCreateECEF_ACCVector(builder, data)
+
 def TRKAddLC_POS(builder, LC_POS):
     builder.PrependUOffsetTRelativeSlot(54, flatbuffers.number_types.UOffsetTFlags.py_type(LC_POS), 0)
 
@@ -1077,6 +1125,16 @@ def TRKStartLC_POSVector(builder, numElems):
 
 def StartLC_POSVector(builder, numElems):
     return TRKStartLC_POSVector(builder, numElems)
+
+def TRKCreateLC_POSVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateLC_POSVector(builder, data):
+    TRKCreateLC_POSVector(builder, data)
 
 def TRKAddLC_VEL(builder, LC_VEL):
     builder.PrependUOffsetTRelativeSlot(55, flatbuffers.number_types.UOffsetTFlags.py_type(LC_VEL), 0)
@@ -1090,6 +1148,16 @@ def TRKStartLC_VELVector(builder, numElems):
 def StartLC_VELVector(builder, numElems):
     return TRKStartLC_VELVector(builder, numElems)
 
+def TRKCreateLC_VELVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateLC_VELVector(builder, data):
+    TRKCreateLC_VELVector(builder, data)
+
 def TRKAddLC_ACC(builder, LC_ACC):
     builder.PrependUOffsetTRelativeSlot(56, flatbuffers.number_types.UOffsetTFlags.py_type(LC_ACC), 0)
 
@@ -1101,6 +1169,16 @@ def TRKStartLC_ACCVector(builder, numElems):
 
 def StartLC_ACCVector(builder, numElems):
     return TRKStartLC_ACCVector(builder, numElems)
+
+def TRKCreateLC_ACCVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateLC_ACCVector(builder, data):
+    TRKCreateLC_ACCVector(builder, data)
 
 def TRKAddCOV(builder, COV):
     builder.PrependUOffsetTRelativeSlot(57, flatbuffers.number_types.UOffsetTFlags.py_type(COV), 0)
@@ -1114,6 +1192,16 @@ def TRKStartCOVVector(builder, numElems):
 def StartCOVVector(builder, numElems):
     return TRKStartCOVVector(builder, numElems)
 
+def TRKCreateCOVVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateCOVVector(builder, data):
+    TRKCreateCOVVector(builder, data)
+
 def TRKAddERR_ELLP(builder, ERR_ELLP):
     builder.PrependUOffsetTRelativeSlot(58, flatbuffers.number_types.UOffsetTFlags.py_type(ERR_ELLP), 0)
 
@@ -1125,6 +1213,16 @@ def TRKStartERR_ELLPVector(builder, numElems):
 
 def StartERR_ELLPVector(builder, numElems):
     return TRKStartERR_ELLPVector(builder, numElems)
+
+def TRKCreateERR_ELLPVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateERR_ELLPVector(builder, data):
+    TRKCreateERR_ELLPVector(builder, data)
 
 def TRKEnd(builder):
     return builder.EndObject()
@@ -1140,72 +1238,133 @@ except:
 class TRKT(object):
 
     # TRKT
-    def __init__(self):
-        self.ID = None  # type: str
-        self.CNTCT = None  # type: str
-        self.MSG_TS = None  # type: str
-        self.MSN_ID = None  # type: str
-        self.ASSET_NAT = None  # type: str
-        self.ASSET = None  # type: str
-        self.SENSOR_ID = None  # type: str
-        self.SEN_QUAL = None  # type: str
-        self.TRK_ID = None  # type: str
-        self.TRK_NUM = None  # type: str
-        self.TRK_STAT = 0  # type: int
-        self.OBJ_NAT = None  # type: str
-        self.OBJ_ID = None  # type: str
-        self.OBJ_TYPE = None  # type: str
-        self.OBJ_SPEC = None  # type: str
-        self.OBJ_PLAT = None  # type: str
-        self.OBJ_ACT = None  # type: str
-        self.MOD_TYPE = None  # type: str
-        self.TRK_ITM_ID = None  # type: str
-        self.TS = None  # type: str
-        self.TRK_QUAL = 0  # type: int
-        self.TRK_PT_TYPE = None  # type: str
-        self.OBJ_IDENT = None  # type: str
-        self.IDENT_CRED = 0  # type: int
-        self.IDENT_REL = 0  # type: int
-        self.IDENT_AMP = None  # type: str
-        self.ENVIRONMENT = 0  # type: int
-        self.ENVIRONMENT_CONF = 0.0  # type: float
-        self.TRK_CONF = 0.0  # type: float
-        self.LAT = 0.0  # type: float
-        self.LON = 0.0  # type: float
-        self.ALT = 0.0  # type: float
-        self.SPD = 0.0  # type: float
-        self.HDNG = 0.0  # type: float
-        self.COURSE = 0.0  # type: float
-        self.SRC_TYPS = None  # type: List[str]
-        self.SRC_IDS = None  # type: List[str]
-        self.CALL_SIGN = None  # type: str
-        self.MULTI_SOURCE = False  # type: bool
-        self.J_SERIES = None  # type: str
-        self.STRENGTH = 0  # type: int
-        self.M1 = 0  # type: int
-        self.M1V = 0  # type: int
-        self.M2 = 0  # type: int
-        self.M2V = 0  # type: int
-        self.M3A = 0  # type: int
-        self.M3AV = 0  # type: int
-        self.TAGS = None  # type: List[str]
-        self.TRACK_START_TIME = None  # type: str
-        self.TRACK_STEP_SIZE = 0.0  # type: float
-        self.TRACK_COMPONENTS = 3  # type: int
-        self.ECEF_POS = None  # type: List[float]
-        self.ECEF_VEL = None  # type: List[float]
-        self.ECEF_ACC = None  # type: List[float]
-        self.LC_POS = None  # type: List[float]
-        self.LC_VEL = None  # type: List[float]
-        self.LC_ACC = None  # type: List[float]
-        self.COV = None  # type: List[float]
-        self.ERR_ELLP = None  # type: List[float]
+    def __init__(
+        self,
+        ID = None,
+        CNTCT = None,
+        MSG_TS = None,
+        MSN_ID = None,
+        ASSET_NAT = None,
+        ASSET = None,
+        SENSOR_ID = None,
+        SEN_QUAL = None,
+        TRK_ID = None,
+        TRK_NUM = None,
+        TRK_STAT = 0,
+        OBJ_NAT = None,
+        OBJ_ID = None,
+        OBJ_TYPE = None,
+        OBJ_SPEC = None,
+        OBJ_PLAT = None,
+        OBJ_ACT = None,
+        MOD_TYPE = None,
+        TRK_ITM_ID = None,
+        TS = None,
+        TRK_QUAL = 0,
+        TRK_PT_TYPE = None,
+        OBJ_IDENT = None,
+        IDENT_CRED = 0,
+        IDENT_REL = 0,
+        IDENT_AMP = None,
+        ENVIRONMENT = 0,
+        ENVIRONMENT_CONF = 0.0,
+        TRK_CONF = 0.0,
+        LAT = 0.0,
+        LON = 0.0,
+        ALT = 0.0,
+        SPD = 0.0,
+        HDNG = 0.0,
+        COURSE = 0.0,
+        SRC_TYPS = None,
+        SRC_IDS = None,
+        CALL_SIGN = None,
+        MULTI_SOURCE = False,
+        J_SERIES = None,
+        STRENGTH = 0,
+        M1 = 0,
+        M1V = 0,
+        M2 = 0,
+        M2V = 0,
+        M3A = 0,
+        M3AV = 0,
+        TAGS = None,
+        TRACK_START_TIME = None,
+        TRACK_STEP_SIZE = 0.0,
+        TRACK_COMPONENTS = 3,
+        ECEF_POS = None,
+        ECEF_VEL = None,
+        ECEF_ACC = None,
+        LC_POS = None,
+        LC_VEL = None,
+        LC_ACC = None,
+        COV = None,
+        ERR_ELLP = None,
+    ):
+        self.ID = ID  # type: Optional[str]
+        self.CNTCT = CNTCT  # type: Optional[str]
+        self.MSG_TS = MSG_TS  # type: Optional[str]
+        self.MSN_ID = MSN_ID  # type: Optional[str]
+        self.ASSET_NAT = ASSET_NAT  # type: Optional[str]
+        self.ASSET = ASSET  # type: Optional[str]
+        self.SENSOR_ID = SENSOR_ID  # type: Optional[str]
+        self.SEN_QUAL = SEN_QUAL  # type: Optional[str]
+        self.TRK_ID = TRK_ID  # type: Optional[str]
+        self.TRK_NUM = TRK_NUM  # type: Optional[str]
+        self.TRK_STAT = TRK_STAT  # type: int
+        self.OBJ_NAT = OBJ_NAT  # type: Optional[str]
+        self.OBJ_ID = OBJ_ID  # type: Optional[str]
+        self.OBJ_TYPE = OBJ_TYPE  # type: Optional[str]
+        self.OBJ_SPEC = OBJ_SPEC  # type: Optional[str]
+        self.OBJ_PLAT = OBJ_PLAT  # type: Optional[str]
+        self.OBJ_ACT = OBJ_ACT  # type: Optional[str]
+        self.MOD_TYPE = MOD_TYPE  # type: Optional[str]
+        self.TRK_ITM_ID = TRK_ITM_ID  # type: Optional[str]
+        self.TS = TS  # type: Optional[str]
+        self.TRK_QUAL = TRK_QUAL  # type: int
+        self.TRK_PT_TYPE = TRK_PT_TYPE  # type: Optional[str]
+        self.OBJ_IDENT = OBJ_IDENT  # type: Optional[str]
+        self.IDENT_CRED = IDENT_CRED  # type: int
+        self.IDENT_REL = IDENT_REL  # type: int
+        self.IDENT_AMP = IDENT_AMP  # type: Optional[str]
+        self.ENVIRONMENT = ENVIRONMENT  # type: int
+        self.ENVIRONMENT_CONF = ENVIRONMENT_CONF  # type: float
+        self.TRK_CONF = TRK_CONF  # type: float
+        self.LAT = LAT  # type: float
+        self.LON = LON  # type: float
+        self.ALT = ALT  # type: float
+        self.SPD = SPD  # type: float
+        self.HDNG = HDNG  # type: float
+        self.COURSE = COURSE  # type: float
+        self.SRC_TYPS = SRC_TYPS  # type: Optional[List[Optional[str]]]
+        self.SRC_IDS = SRC_IDS  # type: Optional[List[Optional[str]]]
+        self.CALL_SIGN = CALL_SIGN  # type: Optional[str]
+        self.MULTI_SOURCE = MULTI_SOURCE  # type: bool
+        self.J_SERIES = J_SERIES  # type: Optional[str]
+        self.STRENGTH = STRENGTH  # type: int
+        self.M1 = M1  # type: int
+        self.M1V = M1V  # type: int
+        self.M2 = M2  # type: int
+        self.M2V = M2V  # type: int
+        self.M3A = M3A  # type: int
+        self.M3AV = M3AV  # type: int
+        self.TAGS = TAGS  # type: Optional[List[Optional[str]]]
+        self.TRACK_START_TIME = TRACK_START_TIME  # type: Optional[str]
+        self.TRACK_STEP_SIZE = TRACK_STEP_SIZE  # type: float
+        self.TRACK_COMPONENTS = TRACK_COMPONENTS  # type: int
+        self.ECEF_POS = ECEF_POS  # type: Optional[List[float]]
+        self.ECEF_VEL = ECEF_VEL  # type: Optional[List[float]]
+        self.ECEF_ACC = ECEF_ACC  # type: Optional[List[float]]
+        self.LC_POS = LC_POS  # type: Optional[List[float]]
+        self.LC_VEL = LC_VEL  # type: Optional[List[float]]
+        self.LC_ACC = LC_ACC  # type: Optional[List[float]]
+        self.COV = COV  # type: Optional[List[float]]
+        self.ERR_ELLP = ERR_ELLP  # type: Optional[List[float]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        TRK = TRK()
-        TRK.Init(buf, pos)
-        return cls.InitFromObj(TRK)
+        tmpTrk = TRK()
+        tmpTrk.Init(buf, pos)
+        return cls.InitFromObj(tmpTrk)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -1213,9 +1372,9 @@ class TRKT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, TRK):
+    def InitFromObj(cls, tmpTrk):
         x = TRKT()
-        x._UnPack(TRK)
+        x._UnPack(tmpTrk)
         return x
 
     # TRKT

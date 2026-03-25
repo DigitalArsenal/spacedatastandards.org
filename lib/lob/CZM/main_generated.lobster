@@ -259,9 +259,9 @@ struct CZMDynIntervalBuilder:
     def end():
         return b_.EndObject()
 
-def CZMDynIntervalStartARRAY_VALUEVector(b_:flatbuffers.builder, n_:int):
+def CZMDynIntervalStartARRAYVALUEVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(8, n_, 8)
-def CZMDynIntervalCreateARRAY_VALUEVector(b_:flatbuffers.builder, v_:[float]):
+def CZMDynIntervalCreateARRAYVALUEVector(b_:flatbuffers.builder, v_:[float]):
     b_.StartVector(8, v_.length, 8)
     reverse(v_) e_: b_.PrependFloat64(e_)
     return b_.EndVector(v_.length)
@@ -1524,16 +1524,16 @@ struct CZMPolylineBuilder:
     def end():
         return b_.EndObject()
 
-def CZMPolylineStartPOSITIONS_CARTOGRAPHIC_DEGREESVector(b_:flatbuffers.builder, n_:int):
+def CZMPolylineStartPOSITIONSCARTOGRAPHICDEGREESVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(8, n_, 8)
-def CZMPolylineCreatePOSITIONS_CARTOGRAPHIC_DEGREESVector(b_:flatbuffers.builder, v_:[float]):
+def CZMPolylineCreatePOSITIONSCARTOGRAPHICDEGREESVector(b_:flatbuffers.builder, v_:[float]):
     b_.StartVector(8, v_.length, 8)
     reverse(v_) e_: b_.PrependFloat64(e_)
     return b_.EndVector(v_.length)
 
-def CZMPolylineStartPOSITIONS_CARTESIANVector(b_:flatbuffers.builder, n_:int):
+def CZMPolylineStartPOSITIONSCARTESIANVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(8, n_, 8)
-def CZMPolylineCreatePOSITIONS_CARTESIANVector(b_:flatbuffers.builder, v_:[float]):
+def CZMPolylineCreatePOSITIONSCARTESIANVector(b_:flatbuffers.builder, v_:[float]):
     b_.StartVector(8, v_.length, 8)
     reverse(v_) e_: b_.PrependFloat64(e_)
     return b_.EndVector(v_.length)
@@ -1698,16 +1698,16 @@ struct CZMPolygonBuilder:
     def end():
         return b_.EndObject()
 
-def CZMPolygonStartPOSITIONS_CARTOGRAPHIC_DEGREESVector(b_:flatbuffers.builder, n_:int):
+def CZMPolygonStartPOSITIONSCARTOGRAPHICDEGREESVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(8, n_, 8)
-def CZMPolygonCreatePOSITIONS_CARTOGRAPHIC_DEGREESVector(b_:flatbuffers.builder, v_:[float]):
+def CZMPolygonCreatePOSITIONSCARTOGRAPHICDEGREESVector(b_:flatbuffers.builder, v_:[float]):
     b_.StartVector(8, v_.length, 8)
     reverse(v_) e_: b_.PrependFloat64(e_)
     return b_.EndVector(v_.length)
 
-def CZMPolygonStartPOSITIONS_CARTESIANVector(b_:flatbuffers.builder, n_:int):
+def CZMPolygonStartPOSITIONSCARTESIANVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(8, n_, 8)
-def CZMPolygonCreatePOSITIONS_CARTESIANVector(b_:flatbuffers.builder, v_:[float]):
+def CZMPolygonCreatePOSITIONSCARTESIANVector(b_:flatbuffers.builder, v_:[float]):
     b_.StartVector(8, v_.length, 8)
     reverse(v_) e_: b_.PrependFloat64(e_)
     return b_.EndVector(v_.length)
@@ -1748,16 +1748,16 @@ struct CZMPolygonHoleBuilder:
     def end():
         return b_.EndObject()
 
-def CZMPolygonHoleStartPOSITIONS_CARTOGRAPHIC_DEGREESVector(b_:flatbuffers.builder, n_:int):
+def CZMPolygonHoleStartPOSITIONSCARTOGRAPHICDEGREESVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(8, n_, 8)
-def CZMPolygonHoleCreatePOSITIONS_CARTOGRAPHIC_DEGREESVector(b_:flatbuffers.builder, v_:[float]):
+def CZMPolygonHoleCreatePOSITIONSCARTOGRAPHICDEGREESVector(b_:flatbuffers.builder, v_:[float]):
     b_.StartVector(8, v_.length, 8)
     reverse(v_) e_: b_.PrependFloat64(e_)
     return b_.EndVector(v_.length)
 
-def CZMPolygonHoleStartPOSITIONS_CARTESIANVector(b_:flatbuffers.builder, n_:int):
+def CZMPolygonHoleStartPOSITIONSCARTESIANVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(8, n_, 8)
-def CZMPolygonHoleCreatePOSITIONS_CARTESIANVector(b_:flatbuffers.builder, v_:[float]):
+def CZMPolygonHoleCreatePOSITIONSCARTESIANVector(b_:flatbuffers.builder, v_:[float]):
     b_.StartVector(8, v_.length, 8)
     reverse(v_) e_: b_.PrependFloat64(e_)
     return b_.EndVector(v_.length)
@@ -2274,16 +2274,16 @@ struct CZMCorridorBuilder:
     def end():
         return b_.EndObject()
 
-def CZMCorridorStartPOSITIONS_CARTOGRAPHIC_DEGREESVector(b_:flatbuffers.builder, n_:int):
+def CZMCorridorStartPOSITIONSCARTOGRAPHICDEGREESVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(8, n_, 8)
-def CZMCorridorCreatePOSITIONS_CARTOGRAPHIC_DEGREESVector(b_:flatbuffers.builder, v_:[float]):
+def CZMCorridorCreatePOSITIONSCARTOGRAPHICDEGREESVector(b_:flatbuffers.builder, v_:[float]):
     b_.StartVector(8, v_.length, 8)
     reverse(v_) e_: b_.PrependFloat64(e_)
     return b_.EndVector(v_.length)
 
-def CZMCorridorStartPOSITIONS_CARTESIANVector(b_:flatbuffers.builder, n_:int):
+def CZMCorridorStartPOSITIONSCARTESIANVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(8, n_, 8)
-def CZMCorridorCreatePOSITIONS_CARTESIANVector(b_:flatbuffers.builder, v_:[float]):
+def CZMCorridorCreatePOSITIONSCARTESIANVector(b_:flatbuffers.builder, v_:[float]):
     b_.StartVector(8, v_.length, 8)
     reverse(v_) e_: b_.PrependFloat64(e_)
     return b_.EndVector(v_.length)
@@ -2615,16 +2615,16 @@ struct CZMPolylineVolumeBuilder:
     def end():
         return b_.EndObject()
 
-def CZMPolylineVolumeStartPOSITIONS_CARTOGRAPHIC_DEGREESVector(b_:flatbuffers.builder, n_:int):
+def CZMPolylineVolumeStartPOSITIONSCARTOGRAPHICDEGREESVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(8, n_, 8)
-def CZMPolylineVolumeCreatePOSITIONS_CARTOGRAPHIC_DEGREESVector(b_:flatbuffers.builder, v_:[float]):
+def CZMPolylineVolumeCreatePOSITIONSCARTOGRAPHICDEGREESVector(b_:flatbuffers.builder, v_:[float]):
     b_.StartVector(8, v_.length, 8)
     reverse(v_) e_: b_.PrependFloat64(e_)
     return b_.EndVector(v_.length)
 
-def CZMPolylineVolumeStartPOSITIONS_CARTESIANVector(b_:flatbuffers.builder, n_:int):
+def CZMPolylineVolumeStartPOSITIONSCARTESIANVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(8, n_, 8)
-def CZMPolylineVolumeCreatePOSITIONS_CARTESIANVector(b_:flatbuffers.builder, v_:[float]):
+def CZMPolylineVolumeCreatePOSITIONSCARTESIANVector(b_:flatbuffers.builder, v_:[float]):
     b_.StartVector(8, v_.length, 8)
     reverse(v_) e_: b_.PrependFloat64(e_)
     return b_.EndVector(v_.length)
@@ -2755,9 +2755,9 @@ struct CZMRectangleBuilder:
     def end():
         return b_.EndObject()
 
-def CZMRectangleStartCOORDINATES_WSEN_DEGREESVector(b_:flatbuffers.builder, n_:int):
+def CZMRectangleStartCOORDINATESWSENDEGREESVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(8, n_, 8)
-def CZMRectangleCreateCOORDINATES_WSEN_DEGREESVector(b_:flatbuffers.builder, v_:[float]):
+def CZMRectangleCreateCOORDINATESWSENDEGREESVector(b_:flatbuffers.builder, v_:[float]):
     b_.StartVector(8, v_.length, 8)
     reverse(v_) e_: b_.PrependFloat64(e_)
     return b_.EndVector(v_.length)
@@ -2888,30 +2888,30 @@ struct CZMWallBuilder:
     def end():
         return b_.EndObject()
 
-def CZMWallStartPOSITIONS_CARTOGRAPHIC_DEGREESVector(b_:flatbuffers.builder, n_:int):
+def CZMWallStartPOSITIONSCARTOGRAPHICDEGREESVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(8, n_, 8)
-def CZMWallCreatePOSITIONS_CARTOGRAPHIC_DEGREESVector(b_:flatbuffers.builder, v_:[float]):
+def CZMWallCreatePOSITIONSCARTOGRAPHICDEGREESVector(b_:flatbuffers.builder, v_:[float]):
     b_.StartVector(8, v_.length, 8)
     reverse(v_) e_: b_.PrependFloat64(e_)
     return b_.EndVector(v_.length)
 
-def CZMWallStartPOSITIONS_CARTESIANVector(b_:flatbuffers.builder, n_:int):
+def CZMWallStartPOSITIONSCARTESIANVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(8, n_, 8)
-def CZMWallCreatePOSITIONS_CARTESIANVector(b_:flatbuffers.builder, v_:[float]):
+def CZMWallCreatePOSITIONSCARTESIANVector(b_:flatbuffers.builder, v_:[float]):
     b_.StartVector(8, v_.length, 8)
     reverse(v_) e_: b_.PrependFloat64(e_)
     return b_.EndVector(v_.length)
 
-def CZMWallStartMINIMUM_HEIGHTSVector(b_:flatbuffers.builder, n_:int):
+def CZMWallStartMINIMUMHEIGHTSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(8, n_, 8)
-def CZMWallCreateMINIMUM_HEIGHTSVector(b_:flatbuffers.builder, v_:[float]):
+def CZMWallCreateMINIMUMHEIGHTSVector(b_:flatbuffers.builder, v_:[float]):
     b_.StartVector(8, v_.length, 8)
     reverse(v_) e_: b_.PrependFloat64(e_)
     return b_.EndVector(v_.length)
 
-def CZMWallStartMAXIMUM_HEIGHTSVector(b_:flatbuffers.builder, n_:int):
+def CZMWallStartMAXIMUMHEIGHTSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(8, n_, 8)
-def CZMWallCreateMAXIMUM_HEIGHTSVector(b_:flatbuffers.builder, v_:[float]):
+def CZMWallCreateMAXIMUMHEIGHTSVector(b_:flatbuffers.builder, v_:[float]):
     b_.StartVector(8, v_.length, 8)
     reverse(v_) e_: b_.PrependFloat64(e_)
     return b_.EndVector(v_.length)
@@ -3181,30 +3181,30 @@ struct CZMPacketBuilder:
     def end():
         return b_.EndObject()
 
-def CZMPacketStartPOSITION_CARTOGRAPHIC_DEGREES_ARRAYVector(b_:flatbuffers.builder, n_:int):
+def CZMPacketStartPOSITIONCARTOGRAPHICDEGREESARRAYVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(8, n_, 8)
-def CZMPacketCreatePOSITION_CARTOGRAPHIC_DEGREES_ARRAYVector(b_:flatbuffers.builder, v_:[float]):
+def CZMPacketCreatePOSITIONCARTOGRAPHICDEGREESARRAYVector(b_:flatbuffers.builder, v_:[float]):
     b_.StartVector(8, v_.length, 8)
     reverse(v_) e_: b_.PrependFloat64(e_)
     return b_.EndVector(v_.length)
 
-def CZMPacketStartPOSITION_CARTESIAN_ARRAYVector(b_:flatbuffers.builder, n_:int):
+def CZMPacketStartPOSITIONCARTESIANARRAYVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(8, n_, 8)
-def CZMPacketCreatePOSITION_CARTESIAN_ARRAYVector(b_:flatbuffers.builder, v_:[float]):
+def CZMPacketCreatePOSITIONCARTESIANARRAYVector(b_:flatbuffers.builder, v_:[float]):
     b_.StartVector(8, v_.length, 8)
     reverse(v_) e_: b_.PrependFloat64(e_)
     return b_.EndVector(v_.length)
 
-def CZMPacketStartORIENTATION_ARRAYVector(b_:flatbuffers.builder, n_:int):
+def CZMPacketStartORIENTATIONARRAYVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(8, n_, 8)
-def CZMPacketCreateORIENTATION_ARRAYVector(b_:flatbuffers.builder, v_:[float]):
+def CZMPacketCreateORIENTATIONARRAYVector(b_:flatbuffers.builder, v_:[float]):
     b_.StartVector(8, v_.length, 8)
     reverse(v_) e_: b_.PrependFloat64(e_)
     return b_.EndVector(v_.length)
 
-def CZMPacketStartDYNAMIC_PROPERTIESVector(b_:flatbuffers.builder, n_:int):
+def CZMPacketStartDYNAMICPROPERTIESVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def CZMPacketCreateDYNAMIC_PROPERTIESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def CZMPacketCreateDYNAMICPROPERTIESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)

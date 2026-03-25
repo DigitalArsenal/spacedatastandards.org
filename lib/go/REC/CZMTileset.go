@@ -51,9 +51,17 @@ func (rcv *CZMTileset) SHOW() bool {
 	return false
 }
 
+func (rcv *CZMTileset) Show() bool {
+	return rcv.SHOW()
+}
+
 /// Whether the tileset is displayed
 func (rcv *CZMTileset) MutateSHOW(n bool) bool {
 	return rcv._tab.MutateBoolSlot(4, n)
+}
+
+func (rcv *CZMTileset) MutateShow(n bool) bool {
+	return rcv.MutateSHOW(n)
 }
 
 /// URI to the tileset
@@ -63,6 +71,10 @@ func (rcv *CZMTileset) URI() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *CZMTileset) Uri() []byte {
+	return rcv.URI()
 }
 
 /// URI to the tileset
@@ -75,9 +87,17 @@ func (rcv *CZMTileset) MAXIMUM_SCREEN_SPACE_ERROR() float64 {
 	return 0.0
 }
 
+func (rcv *CZMTileset) MaximumScreenSpaceError() float64 {
+	return rcv.MAXIMUM_SCREEN_SPACE_ERROR()
+}
+
 /// Maximum screen space error
 func (rcv *CZMTileset) MutateMAXIMUM_SCREEN_SPACE_ERROR(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(8, n)
+}
+
+func (rcv *CZMTileset) MutateMaximumScreenSpaceError(n float64) bool {
+	return rcv.MutateMAXIMUM_SCREEN_SPACE_ERROR(n)
 }
 
 func CZMTilesetStart(builder *flatbuffers.Builder) {
@@ -86,11 +106,20 @@ func CZMTilesetStart(builder *flatbuffers.Builder) {
 func CZMTilesetAddSHOW(builder *flatbuffers.Builder, SHOW bool) {
 	builder.PrependBoolSlot(0, SHOW, false)
 }
+func CZMTilesetAddShow(builder *flatbuffers.Builder, SHOW bool) {
+	CZMTilesetAddSHOW(builder, SHOW)
+}
 func CZMTilesetAddURI(builder *flatbuffers.Builder, URI flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(URI), 0)
 }
+func CZMTilesetAddUri(builder *flatbuffers.Builder, URI flatbuffers.UOffsetT) {
+	CZMTilesetAddURI(builder, URI)
+}
 func CZMTilesetAddMAXIMUM_SCREEN_SPACE_ERROR(builder *flatbuffers.Builder, MAXIMUM_SCREEN_SPACE_ERROR float64) {
 	builder.PrependFloat64Slot(2, MAXIMUM_SCREEN_SPACE_ERROR, 0.0)
+}
+func CZMTilesetAddMaximumScreenSpaceError(builder *flatbuffers.Builder, MAXIMUM_SCREEN_SPACE_ERROR float64) {
+	CZMTilesetAddMAXIMUM_SCREEN_SPACE_ERROR(builder, MAXIMUM_SCREEN_SPACE_ERROR)
 }
 func CZMTilesetEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

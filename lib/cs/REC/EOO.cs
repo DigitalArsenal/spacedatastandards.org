@@ -11,7 +11,7 @@ public struct EOO : IFlatbufferObject
 {
   private Table __p;
   public ByteBuffer ByteBuffer { get { return __p.bb; } }
-  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_24_3_25(); }
+  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_25_12_19(); }
   public static EOO GetRootAsEOO(ByteBuffer _bb) { return GetRootAsEOO(_bb, new EOO()); }
   public static EOO GetRootAsEOO(ByteBuffer _bb, EOO obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
   public static bool EOOBufferHasIdentifier(ByteBuffer _bb) { return Table.__has_identifier(_bb, "$EOO"); }

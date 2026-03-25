@@ -117,6 +117,16 @@ def ionoDensityProfileStartALTITUDESVector(builder, numElems):
 def StartALTITUDESVector(builder, numElems):
     return ionoDensityProfileStartALTITUDESVector(builder, numElems)
 
+def ionoDensityProfileCreateALTITUDESVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateALTITUDESVector(builder, data):
+    ionoDensityProfileCreateALTITUDESVector(builder, data)
+
 def ionoDensityProfileAddDENSITIES(builder, DENSITIES):
     builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(DENSITIES), 0)
 
@@ -128,6 +138,16 @@ def ionoDensityProfileStartDENSITIESVector(builder, numElems):
 
 def StartDENSITIESVector(builder, numElems):
     return ionoDensityProfileStartDENSITIESVector(builder, numElems)
+
+def ionoDensityProfileCreateDENSITIESVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateDENSITIESVector(builder, data):
+    ionoDensityProfileCreateDENSITIESVector(builder, data)
 
 def ionoDensityProfileEnd(builder):
     return builder.EndObject()
@@ -143,16 +163,21 @@ except:
 class ionoDensityProfileT(object):
 
     # ionoDensityProfileT
-    def __init__(self):
-        self.EPOCH = None  # type: str
-        self.ALTITUDES = None  # type: List[float]
-        self.DENSITIES = None  # type: List[float]
+    def __init__(
+        self,
+        EPOCH = None,
+        ALTITUDES = None,
+        DENSITIES = None,
+    ):
+        self.EPOCH = EPOCH  # type: Optional[str]
+        self.ALTITUDES = ALTITUDES  # type: Optional[List[float]]
+        self.DENSITIES = DENSITIES  # type: Optional[List[float]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        ionoDensityProfile = ionoDensityProfile()
-        ionoDensityProfile.Init(buf, pos)
-        return cls.InitFromObj(ionoDensityProfile)
+        tmpIonoDensityProfile = ionoDensityProfile()
+        tmpIonoDensityProfile.Init(buf, pos)
+        return cls.InitFromObj(tmpIonoDensityProfile)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -160,9 +185,9 @@ class ionoDensityProfileT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, ionoDensityProfile):
+    def InitFromObj(cls, tmpIonoDensityProfile):
         x = ionoDensityProfileT()
-        x._UnPack(ionoDensityProfile)
+        x._UnPack(tmpIonoDensityProfile)
         return x
 
     # ionoDensityProfileT

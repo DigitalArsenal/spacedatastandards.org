@@ -100,16 +100,21 @@ except:
 class CZMPolylineOutlineMaterialT(object):
 
     # CZMPolylineOutlineMaterialT
-    def __init__(self):
-        self.COLOR = None  # type: Optional[CZMColor.CZMColorT]
-        self.OUTLINE_COLOR = None  # type: Optional[CZMColor.CZMColorT]
-        self.OUTLINE_WIDTH = 0.0  # type: float
+    def __init__(
+        self,
+        COLOR = None,
+        OUTLINE_COLOR = None,
+        OUTLINE_WIDTH = 0.0,
+    ):
+        self.COLOR = COLOR  # type: Optional[CZMColor.CZMColorT]
+        self.OUTLINE_COLOR = OUTLINE_COLOR  # type: Optional[CZMColor.CZMColorT]
+        self.OUTLINE_WIDTH = OUTLINE_WIDTH  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        czmpolylineOutlineMaterial = CZMPolylineOutlineMaterial()
-        czmpolylineOutlineMaterial.Init(buf, pos)
-        return cls.InitFromObj(czmpolylineOutlineMaterial)
+        tmpCzmpolylineOutlineMaterial = CZMPolylineOutlineMaterial()
+        tmpCzmpolylineOutlineMaterial.Init(buf, pos)
+        return cls.InitFromObj(tmpCzmpolylineOutlineMaterial)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -117,20 +122,20 @@ class CZMPolylineOutlineMaterialT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, czmpolylineOutlineMaterial):
+    def InitFromObj(cls, tmpCzmpolylineOutlineMaterial):
         x = CZMPolylineOutlineMaterialT()
-        x._UnPack(czmpolylineOutlineMaterial)
+        x._UnPack(tmpCzmpolylineOutlineMaterial)
         return x
 
     # CZMPolylineOutlineMaterialT
-    def _UnPack(self, czmpolylineOutlineMaterial):
-        if czmpolylineOutlineMaterial is None:
+    def _UnPack(self, CZMPolylineOutlineMaterial):
+        if CZMPolylineOutlineMaterial is None:
             return
-        if czmpolylineOutlineMaterial.COLOR() is not None:
-            self.COLOR = CZMColor.CZMColorT.InitFromObj(czmpolylineOutlineMaterial.COLOR())
-        if czmpolylineOutlineMaterial.OUTLINE_COLOR() is not None:
-            self.OUTLINE_COLOR = CZMColor.CZMColorT.InitFromObj(czmpolylineOutlineMaterial.OUTLINE_COLOR())
-        self.OUTLINE_WIDTH = czmpolylineOutlineMaterial.OUTLINE_WIDTH()
+        if CZMPolylineOutlineMaterial.COLOR() is not None:
+            self.COLOR = CZMColor.CZMColorT.InitFromObj(CZMPolylineOutlineMaterial.COLOR())
+        if CZMPolylineOutlineMaterial.OUTLINE_COLOR() is not None:
+            self.OUTLINE_COLOR = CZMColor.CZMColorT.InitFromObj(CZMPolylineOutlineMaterial.OUTLINE_COLOR())
+        self.OUTLINE_WIDTH = CZMPolylineOutlineMaterial.OUTLINE_WIDTH()
 
     # CZMPolylineOutlineMaterialT
     def Pack(self, builder):
@@ -144,5 +149,5 @@ class CZMPolylineOutlineMaterialT(object):
         if self.OUTLINE_COLOR is not None:
             CZMPolylineOutlineMaterialAddOUTLINE_COLOR(builder, OUTLINE_COLOR)
         CZMPolylineOutlineMaterialAddOUTLINE_WIDTH(builder, self.OUTLINE_WIDTH)
-        czmpolylineOutlineMaterial = CZMPolylineOutlineMaterialEnd(builder)
-        return czmpolylineOutlineMaterial
+        CZMPolylineOutlineMaterial = CZMPolylineOutlineMaterialEnd(builder)
+        return CZMPolylineOutlineMaterial

@@ -2,9 +2,13 @@
 // swiftlint:disable all
 // swiftformat:disable all
 
+#if canImport(Common)
+import Common
+#endif
+
 import FlatBuffers
 
-public enum JammingType: Int8, Enum, Verifiable {
+public enum JammingType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -28,7 +32,7 @@ public enum JammingType: Int8, Enum, Verifiable {
 }
 
 
-public enum ThreatCategory: Int8, Enum, Verifiable {
+public enum ThreatCategory: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -53,7 +57,7 @@ public enum ThreatCategory: Int8, Enum, Verifiable {
 }
 
 
-public enum ESMFunction: Int8, Enum, Verifiable {
+public enum ESMFunction: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -70,7 +74,7 @@ public enum ESMFunction: Int8, Enum, Verifiable {
 }
 
 
-public enum CountermeasureStatus: Int8, Enum, Verifiable {
+public enum CountermeasureStatus: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -86,7 +90,7 @@ public enum CountermeasureStatus: Int8, Enum, Verifiable {
 }
 
 
-public enum WaveformType: Int8, Enum, Verifiable {
+public enum WaveformType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -107,9 +111,9 @@ public enum WaveformType: Int8, Enum, Verifiable {
 
 
 ///  Electronic Warfare
-public struct EWR: FlatBufferObject, Verifiable {
+public struct EWR: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -139,17 +143,11 @@ public struct EWR: FlatBufferObject, Verifiable {
   public var ESM_ACTIVE: Bool { let o = _accessor.offset(VTOFFSET.ESM_ACTIVE.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   public var ECM_ACTIVE: Bool { let o = _accessor.offset(VTOFFSET.ECM_ACTIVE.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   public var RWR_ACTIVE: Bool { let o = _accessor.offset(VTOFFSET.RWR_ACTIVE.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
-  public var hasEsmContacts: Bool { let o = _accessor.offset(VTOFFSET.ESM_CONTACTS.v); return o == 0 ? false : true }
-  public var ESM_CONTACTSCount: Int32 { let o = _accessor.offset(VTOFFSET.ESM_CONTACTS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func ESM_CONTACTS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.ESM_CONTACTS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
-  public var hasActiveJamming: Bool { let o = _accessor.offset(VTOFFSET.ACTIVE_JAMMING.v); return o == 0 ? false : true }
-  public var ACTIVE_JAMMINGCount: Int32 { let o = _accessor.offset(VTOFFSET.ACTIVE_JAMMING.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func ACTIVE_JAMMING(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.ACTIVE_JAMMING.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  public var ESM_CONTACTS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.ESM_CONTACTS.v, byteSize: 4) }
+  public var ACTIVE_JAMMING: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.ACTIVE_JAMMING.v, byteSize: 4) }
   public var COUNTERMEASURES: String? { let o = _accessor.offset(VTOFFSET.COUNTERMEASURES.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var COUNTERMEASURESSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.COUNTERMEASURES.v) }
-  public var hasThreatWarnings: Bool { let o = _accessor.offset(VTOFFSET.THREAT_WARNINGS.v); return o == 0 ? false : true }
-  public var THREAT_WARNINGSCount: Int32 { let o = _accessor.offset(VTOFFSET.THREAT_WARNINGS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func THREAT_WARNINGS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.THREAT_WARNINGS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  public var THREAT_WARNINGS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.THREAT_WARNINGS.v, byteSize: 4) }
   public var EMCON_LEVEL: UInt8 { let o = _accessor.offset(VTOFFSET.EMCON_LEVEL.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
   public var LAST_UPDATE_MS: Int64 { let o = _accessor.offset(VTOFFSET.LAST_UPDATE_MS.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int64.self, at: o) }
   public static func startEWR(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 11) }

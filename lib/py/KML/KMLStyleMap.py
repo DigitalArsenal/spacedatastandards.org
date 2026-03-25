@@ -87,6 +87,12 @@ def KMLStyleMapStartPAIRSVector(builder, numElems):
 def StartPAIRSVector(builder, numElems):
     return KMLStyleMapStartPAIRSVector(builder, numElems)
 
+def KMLStyleMapCreatePAIRSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreatePAIRSVector(builder, data):
+    KMLStyleMapCreatePAIRSVector(builder, data)
+
 def KMLStyleMapEnd(builder):
     return builder.EndObject()
 
@@ -102,15 +108,19 @@ except:
 class KMLStyleMapT(object):
 
     # KMLStyleMapT
-    def __init__(self):
-        self.ID = None  # type: str
-        self.PAIRS = None  # type: List[KMLStyleMapPair.KMLStyleMapPairT]
+    def __init__(
+        self,
+        ID = None,
+        PAIRS = None,
+    ):
+        self.ID = ID  # type: Optional[str]
+        self.PAIRS = PAIRS  # type: Optional[List[KMLStyleMapPair.KMLStyleMapPairT]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        kmlstyleMap = KMLStyleMap()
-        kmlstyleMap.Init(buf, pos)
-        return cls.InitFromObj(kmlstyleMap)
+        tmpKmlstyleMap = KMLStyleMap()
+        tmpKmlstyleMap.Init(buf, pos)
+        return cls.InitFromObj(tmpKmlstyleMap)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -118,23 +128,23 @@ class KMLStyleMapT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, kmlstyleMap):
+    def InitFromObj(cls, tmpKmlstyleMap):
         x = KMLStyleMapT()
-        x._UnPack(kmlstyleMap)
+        x._UnPack(tmpKmlstyleMap)
         return x
 
     # KMLStyleMapT
-    def _UnPack(self, kmlstyleMap):
-        if kmlstyleMap is None:
+    def _UnPack(self, KMLStyleMap):
+        if KMLStyleMap is None:
             return
-        self.ID = kmlstyleMap.ID()
-        if not kmlstyleMap.PAIRSIsNone():
+        self.ID = KMLStyleMap.ID()
+        if not KMLStyleMap.PAIRSIsNone():
             self.PAIRS = []
-            for i in range(kmlstyleMap.PAIRSLength()):
-                if kmlstyleMap.PAIRS(i) is None:
+            for i in range(KMLStyleMap.PAIRSLength()):
+                if KMLStyleMap.PAIRS(i) is None:
                     self.PAIRS.append(None)
                 else:
-                    kMLStyleMapPair_ = KMLStyleMapPair.KMLStyleMapPairT.InitFromObj(kmlstyleMap.PAIRS(i))
+                    kMLStyleMapPair_ = KMLStyleMapPair.KMLStyleMapPairT.InitFromObj(KMLStyleMap.PAIRS(i))
                     self.PAIRS.append(kMLStyleMapPair_)
 
     # KMLStyleMapT
@@ -154,5 +164,5 @@ class KMLStyleMapT(object):
             KMLStyleMapAddID(builder, ID)
         if self.PAIRS is not None:
             KMLStyleMapAddPAIRS(builder, PAIRS)
-        kmlstyleMap = KMLStyleMapEnd(builder)
-        return kmlstyleMap
+        KMLStyleMap = KMLStyleMapEnd(builder)
+        return KMLStyleMap

@@ -173,6 +173,12 @@ def SequenceContainerStartENTRY_LISTVector(builder, numElems):
 def StartENTRY_LISTVector(builder, numElems):
     return SequenceContainerStartENTRY_LISTVector(builder, numElems)
 
+def SequenceContainerCreateENTRY_LISTVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateENTRY_LISTVector(builder, data):
+    SequenceContainerCreateENTRY_LISTVector(builder, data)
+
 def SequenceContainerAddBASE_CONTAINER(builder, BASE_CONTAINER):
     builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(BASE_CONTAINER), 0)
 
@@ -215,22 +221,33 @@ except:
 class SequenceContainerT(object):
 
     # SequenceContainerT
-    def __init__(self):
-        self.NAME = None  # type: str
-        self.SHORT_DESCRIPTION = None  # type: str
-        self.LONG_DESCRIPTION = None  # type: str
-        self.ABSTRACT = False  # type: bool
-        self.ENTRY_LIST = None  # type: List[ContainerEntry.ContainerEntryT]
-        self.BASE_CONTAINER = None  # type: Optional[BaseContainer.BaseContainerT]
-        self.BINARY_ENCODING = None  # type: Optional[ContainerBinaryEncoding.ContainerBinaryEncodingT]
-        self.RATE_IN_STREAM = None  # type: Optional[RateInStream.RateInStreamT]
-        self.IDLE_PATTERN = None  # type: str
+    def __init__(
+        self,
+        NAME = None,
+        SHORT_DESCRIPTION = None,
+        LONG_DESCRIPTION = None,
+        ABSTRACT = False,
+        ENTRY_LIST = None,
+        BASE_CONTAINER = None,
+        BINARY_ENCODING = None,
+        RATE_IN_STREAM = None,
+        IDLE_PATTERN = None,
+    ):
+        self.NAME = NAME  # type: Optional[str]
+        self.SHORT_DESCRIPTION = SHORT_DESCRIPTION  # type: Optional[str]
+        self.LONG_DESCRIPTION = LONG_DESCRIPTION  # type: Optional[str]
+        self.ABSTRACT = ABSTRACT  # type: bool
+        self.ENTRY_LIST = ENTRY_LIST  # type: Optional[List[ContainerEntry.ContainerEntryT]]
+        self.BASE_CONTAINER = BASE_CONTAINER  # type: Optional[BaseContainer.BaseContainerT]
+        self.BINARY_ENCODING = BINARY_ENCODING  # type: Optional[ContainerBinaryEncoding.ContainerBinaryEncodingT]
+        self.RATE_IN_STREAM = RATE_IN_STREAM  # type: Optional[RateInStream.RateInStreamT]
+        self.IDLE_PATTERN = IDLE_PATTERN  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        sequenceContainer = SequenceContainer()
-        sequenceContainer.Init(buf, pos)
-        return cls.InitFromObj(sequenceContainer)
+        tmpSequenceContainer = SequenceContainer()
+        tmpSequenceContainer.Init(buf, pos)
+        return cls.InitFromObj(tmpSequenceContainer)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -238,34 +255,34 @@ class SequenceContainerT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, sequenceContainer):
+    def InitFromObj(cls, tmpSequenceContainer):
         x = SequenceContainerT()
-        x._UnPack(sequenceContainer)
+        x._UnPack(tmpSequenceContainer)
         return x
 
     # SequenceContainerT
-    def _UnPack(self, sequenceContainer):
-        if sequenceContainer is None:
+    def _UnPack(self, SequenceContainer):
+        if SequenceContainer is None:
             return
-        self.NAME = sequenceContainer.NAME()
-        self.SHORT_DESCRIPTION = sequenceContainer.SHORT_DESCRIPTION()
-        self.LONG_DESCRIPTION = sequenceContainer.LONG_DESCRIPTION()
-        self.ABSTRACT = sequenceContainer.ABSTRACT()
-        if not sequenceContainer.ENTRY_LISTIsNone():
+        self.NAME = SequenceContainer.NAME()
+        self.SHORT_DESCRIPTION = SequenceContainer.SHORT_DESCRIPTION()
+        self.LONG_DESCRIPTION = SequenceContainer.LONG_DESCRIPTION()
+        self.ABSTRACT = SequenceContainer.ABSTRACT()
+        if not SequenceContainer.ENTRY_LISTIsNone():
             self.ENTRY_LIST = []
-            for i in range(sequenceContainer.ENTRY_LISTLength()):
-                if sequenceContainer.ENTRY_LIST(i) is None:
+            for i in range(SequenceContainer.ENTRY_LISTLength()):
+                if SequenceContainer.ENTRY_LIST(i) is None:
                     self.ENTRY_LIST.append(None)
                 else:
-                    containerEntry_ = ContainerEntry.ContainerEntryT.InitFromObj(sequenceContainer.ENTRY_LIST(i))
+                    containerEntry_ = ContainerEntry.ContainerEntryT.InitFromObj(SequenceContainer.ENTRY_LIST(i))
                     self.ENTRY_LIST.append(containerEntry_)
-        if sequenceContainer.BASE_CONTAINER() is not None:
-            self.BASE_CONTAINER = BaseContainer.BaseContainerT.InitFromObj(sequenceContainer.BASE_CONTAINER())
-        if sequenceContainer.BINARY_ENCODING() is not None:
-            self.BINARY_ENCODING = ContainerBinaryEncoding.ContainerBinaryEncodingT.InitFromObj(sequenceContainer.BINARY_ENCODING())
-        if sequenceContainer.RATE_IN_STREAM() is not None:
-            self.RATE_IN_STREAM = RateInStream.RateInStreamT.InitFromObj(sequenceContainer.RATE_IN_STREAM())
-        self.IDLE_PATTERN = sequenceContainer.IDLE_PATTERN()
+        if SequenceContainer.BASE_CONTAINER() is not None:
+            self.BASE_CONTAINER = BaseContainer.BaseContainerT.InitFromObj(SequenceContainer.BASE_CONTAINER())
+        if SequenceContainer.BINARY_ENCODING() is not None:
+            self.BINARY_ENCODING = ContainerBinaryEncoding.ContainerBinaryEncodingT.InitFromObj(SequenceContainer.BINARY_ENCODING())
+        if SequenceContainer.RATE_IN_STREAM() is not None:
+            self.RATE_IN_STREAM = RateInStream.RateInStreamT.InitFromObj(SequenceContainer.RATE_IN_STREAM())
+        self.IDLE_PATTERN = SequenceContainer.IDLE_PATTERN()
 
     # SequenceContainerT
     def Pack(self, builder):
@@ -309,5 +326,5 @@ class SequenceContainerT(object):
             SequenceContainerAddRATE_IN_STREAM(builder, RATE_IN_STREAM)
         if self.IDLE_PATTERN is not None:
             SequenceContainerAddIDLE_PATTERN(builder, IDLE_PATTERN)
-        sequenceContainer = SequenceContainerEnd(builder)
-        return sequenceContainer
+        SequenceContainer = SequenceContainerEnd(builder)
+        return SequenceContainer

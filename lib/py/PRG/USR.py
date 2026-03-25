@@ -79,6 +79,12 @@ def USRStartMESSAGE_TYPESVector(builder, numElems):
 def StartMESSAGE_TYPESVector(builder, numElems):
     return USRStartMESSAGE_TYPESVector(builder, numElems)
 
+def USRCreateMESSAGE_TYPESVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateMESSAGE_TYPESVector(builder, data):
+    USRCreateMESSAGE_TYPESVector(builder, data)
+
 def USREnd(builder):
     return builder.EndObject()
 
@@ -93,15 +99,19 @@ except:
 class USRT(object):
 
     # USRT
-    def __init__(self):
-        self.ID = None  # type: str
-        self.MESSAGE_TYPES = None  # type: List[str]
+    def __init__(
+        self,
+        ID = None,
+        MESSAGE_TYPES = None,
+    ):
+        self.ID = ID  # type: Optional[str]
+        self.MESSAGE_TYPES = MESSAGE_TYPES  # type: Optional[List[Optional[str]]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        USR = USR()
-        USR.Init(buf, pos)
-        return cls.InitFromObj(USR)
+        tmpUsr = USR()
+        tmpUsr.Init(buf, pos)
+        return cls.InitFromObj(tmpUsr)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -109,9 +119,9 @@ class USRT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, USR):
+    def InitFromObj(cls, tmpUsr):
         x = USRT()
-        x._UnPack(USR)
+        x._UnPack(tmpUsr)
         return x
 
     # USRT

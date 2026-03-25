@@ -2,9 +2,13 @@
 // swiftlint:disable all
 // swiftformat:disable all
 
+#if canImport(Common)
+import Common
+#endif
+
 import FlatBuffers
 
-public enum FluxQualifier: Int8, Enum, Verifiable {
+public enum FluxQualifier: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -19,7 +23,7 @@ public enum FluxQualifier: Int8, Enum, Verifiable {
 }
 
 
-public enum F107DataType: Int8, Enum, Verifiable {
+public enum F107DataType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -34,9 +38,9 @@ public enum F107DataType: Int8, Enum, Verifiable {
 
 
 ///  Space Weather Data Record
-public struct SPW: FlatBufferObject, Verifiable {
+public struct SPW: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -283,9 +287,9 @@ public struct SPW: FlatBufferObject, Verifiable {
   }
 }
 
-public struct SPWCOLLECTION: FlatBufferObject, Verifiable {
+public struct SPWCOLLECTION: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -300,9 +304,7 @@ public struct SPWCOLLECTION: FlatBufferObject, Verifiable {
     var p: VOffset { self.rawValue }
   }
 
-  public var hasRecords: Bool { let o = _accessor.offset(VTOFFSET.RECORDS.v); return o == 0 ? false : true }
-  public var RECORDSCount: Int32 { let o = _accessor.offset(VTOFFSET.RECORDS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func RECORDS(at index: Int32) -> SPW? { let o = _accessor.offset(VTOFFSET.RECORDS.v); return o == 0 ? nil : SPW(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var RECORDS: FlatbufferVector<SPW> { return _accessor.vector(at: VTOFFSET.RECORDS.v, byteSize: 4) }
   public static func startSPWCOLLECTION(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 1) }
   public static func addVectorOf(RECORDS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RECORDS, at: VTOFFSET.RECORDS.p) }
   public static func endSPWCOLLECTION(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }

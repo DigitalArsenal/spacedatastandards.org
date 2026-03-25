@@ -51,9 +51,17 @@ func (rcv *KMLTrack) EXTRUDE() bool {
 	return false
 }
 
+func (rcv *KMLTrack) Extrude() bool {
+	return rcv.EXTRUDE()
+}
+
 /// Whether to extrude
 func (rcv *KMLTrack) MutateEXTRUDE(n bool) bool {
 	return rcv._tab.MutateBoolSlot(4, n)
+}
+
+func (rcv *KMLTrack) MutateExtrude(n bool) bool {
+	return rcv.MutateEXTRUDE(n)
 }
 
 /// Whether to tessellate
@@ -65,9 +73,17 @@ func (rcv *KMLTrack) TESSELLATE() bool {
 	return false
 }
 
+func (rcv *KMLTrack) Tessellate() bool {
+	return rcv.TESSELLATE()
+}
+
 /// Whether to tessellate
 func (rcv *KMLTrack) MutateTESSELLATE(n bool) bool {
 	return rcv._tab.MutateBoolSlot(6, n)
+}
+
+func (rcv *KMLTrack) MutateTessellate(n bool) bool {
+	return rcv.MutateTESSELLATE(n)
 }
 
 /// Altitude mode
@@ -79,9 +95,17 @@ func (rcv *KMLTrack) ALTITUDE_MODE() KMLAltitudeMode {
 	return 0
 }
 
+func (rcv *KMLTrack) AltitudeMode() KMLAltitudeMode {
+	return rcv.ALTITUDE_MODE()
+}
+
 /// Altitude mode
 func (rcv *KMLTrack) MutateALTITUDE_MODE(n KMLAltitudeMode) bool {
 	return rcv._tab.MutateInt8Slot(8, int8(n))
+}
+
+func (rcv *KMLTrack) MutateAltitudeMode(n KMLAltitudeMode) bool {
+	return rcv.MutateALTITUDE_MODE(n)
 }
 
 /// Time stamps (ISO 8601)
@@ -94,12 +118,20 @@ func (rcv *KMLTrack) WHEN(j int) []byte {
 	return nil
 }
 
+func (rcv *KMLTrack) When(j int) []byte {
+	return rcv.WHEN(j)
+}
+
 func (rcv *KMLTrack) WHENLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *KMLTrack) WhenLength() int {
+	return rcv.WHENLength()
 }
 
 /// Time stamps (ISO 8601)
@@ -110,10 +142,17 @@ func (rcv *KMLTrack) COORDS(obj *KMLCoordinate, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(KMLCoordinate)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *KMLTrack) Coords(obj *KMLCoordinate, j int) bool {
+	return rcv.COORDS(obj, j)
 }
 
 func (rcv *KMLTrack) COORDSLength() int {
@@ -124,6 +163,10 @@ func (rcv *KMLTrack) COORDSLength() int {
 	return 0
 }
 
+func (rcv *KMLTrack) CoordsLength() int {
+	return rcv.COORDSLength()
+}
+
 /// Coordinates (lon lat alt per entry)
 /// Angles (heading tilt roll per entry)
 func (rcv *KMLTrack) ANGLES(obj *KMLCoordinate, j int) bool {
@@ -132,10 +175,17 @@ func (rcv *KMLTrack) ANGLES(obj *KMLCoordinate, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(KMLCoordinate)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *KMLTrack) Angles(obj *KMLCoordinate, j int) bool {
+	return rcv.ANGLES(obj, j)
 }
 
 func (rcv *KMLTrack) ANGLESLength() int {
@@ -144,6 +194,10 @@ func (rcv *KMLTrack) ANGLESLength() int {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *KMLTrack) AnglesLength() int {
+	return rcv.ANGLESLength()
 }
 
 /// Angles (heading tilt roll per entry)
@@ -161,6 +215,10 @@ func (rcv *KMLTrack) MODEL(obj *KMLModel) *KMLModel {
 	return nil
 }
 
+func (rcv *KMLTrack) Model(obj *KMLModel) *KMLModel {
+	return rcv.MODEL(obj)
+}
+
 /// Model for track visualization
 func KMLTrackStart(builder *flatbuffers.Builder) {
 	builder.StartObject(7)
@@ -168,32 +226,62 @@ func KMLTrackStart(builder *flatbuffers.Builder) {
 func KMLTrackAddEXTRUDE(builder *flatbuffers.Builder, EXTRUDE bool) {
 	builder.PrependBoolSlot(0, EXTRUDE, false)
 }
+func KMLTrackAddExtrude(builder *flatbuffers.Builder, EXTRUDE bool) {
+	KMLTrackAddEXTRUDE(builder, EXTRUDE)
+}
 func KMLTrackAddTESSELLATE(builder *flatbuffers.Builder, TESSELLATE bool) {
 	builder.PrependBoolSlot(1, TESSELLATE, false)
+}
+func KMLTrackAddTessellate(builder *flatbuffers.Builder, TESSELLATE bool) {
+	KMLTrackAddTESSELLATE(builder, TESSELLATE)
 }
 func KMLTrackAddALTITUDE_MODE(builder *flatbuffers.Builder, ALTITUDE_MODE KMLAltitudeMode) {
 	builder.PrependInt8Slot(2, int8(ALTITUDE_MODE), 0)
 }
+func KMLTrackAddAltitudeMode(builder *flatbuffers.Builder, ALTITUDE_MODE KMLAltitudeMode) {
+	KMLTrackAddALTITUDE_MODE(builder, ALTITUDE_MODE)
+}
 func KMLTrackAddWHEN(builder *flatbuffers.Builder, WHEN flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(WHEN), 0)
+}
+func KMLTrackAddWhen(builder *flatbuffers.Builder, WHEN flatbuffers.UOffsetT) {
+	KMLTrackAddWHEN(builder, WHEN)
 }
 func KMLTrackStartWHENVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
+func KMLTrackStartWhenVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return KMLTrackStartWHENVector(builder, numElems)
+}
 func KMLTrackAddCOORDS(builder *flatbuffers.Builder, COORDS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(COORDS), 0)
+}
+func KMLTrackAddCoords(builder *flatbuffers.Builder, COORDS flatbuffers.UOffsetT) {
+	KMLTrackAddCOORDS(builder, COORDS)
 }
 func KMLTrackStartCOORDSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
+func KMLTrackStartCoordsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return KMLTrackStartCOORDSVector(builder, numElems)
+}
 func KMLTrackAddANGLES(builder *flatbuffers.Builder, ANGLES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(ANGLES), 0)
+}
+func KMLTrackAddAngles(builder *flatbuffers.Builder, ANGLES flatbuffers.UOffsetT) {
+	KMLTrackAddANGLES(builder, ANGLES)
 }
 func KMLTrackStartANGLESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
+func KMLTrackStartAnglesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return KMLTrackStartANGLESVector(builder, numElems)
+}
 func KMLTrackAddMODEL(builder *flatbuffers.Builder, MODEL flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(MODEL), 0)
+}
+func KMLTrackAddModel(builder *flatbuffers.Builder, MODEL flatbuffers.UOffsetT) {
+	KMLTrackAddMODEL(builder, MODEL)
 }
 func KMLTrackEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

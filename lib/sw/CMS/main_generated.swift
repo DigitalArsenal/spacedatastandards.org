@@ -2,9 +2,13 @@
 // swiftlint:disable all
 // swiftformat:disable all
 
+#if canImport(Common)
+import Common
+#endif
+
 import FlatBuffers
 
-public enum CmsModulationType: Int8, Enum, Verifiable {
+public enum CmsModulationType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -29,7 +33,7 @@ public enum CmsModulationType: Int8, Enum, Verifiable {
 }
 
 
-public enum encryptionType: Int8, Enum, Verifiable {
+public enum encryptionType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -48,9 +52,9 @@ public enum encryptionType: Int8, Enum, Verifiable {
 
 
 ///  Transponder Channel
-public struct commsChannel: FlatBufferObject, Verifiable {
+public struct commsChannel: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -152,9 +156,9 @@ public struct commsChannel: FlatBufferObject, Verifiable {
 }
 
 ///  Transponder
-public struct commsTransponder: FlatBufferObject, Verifiable {
+public struct commsTransponder: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -211,9 +215,7 @@ public struct commsTransponder: FlatBufferObject, Verifiable {
   ///  Number of channels
   public var NUM_CHANNELS: UInt32 { let o = _accessor.offset(VTOFFSET.NUM_CHANNELS.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  Channels on this transponder
-  public var hasChannels: Bool { let o = _accessor.offset(VTOFFSET.CHANNELS.v); return o == 0 ? false : true }
-  public var CHANNELSCount: Int32 { let o = _accessor.offset(VTOFFSET.CHANNELS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func CHANNELS(at index: Int32) -> commsChannel? { let o = _accessor.offset(VTOFFSET.CHANNELS.v); return o == 0 ? nil : commsChannel(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var CHANNELS: FlatbufferVector<commsChannel> { return _accessor.vector(at: VTOFFSET.CHANNELS.v, byteSize: 4) }
   ///  Polarization (e.g., RHCP, LHCP, LINEAR_H, LINEAR_V)
   public var POLARIZATION: String? { let o = _accessor.offset(VTOFFSET.POLARIZATION.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var POLARIZATIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.POLARIZATION.v) }
@@ -289,9 +291,9 @@ public struct commsTransponder: FlatBufferObject, Verifiable {
 }
 
 ///  Communications Payload
-public struct CMS: FlatBufferObject, Verifiable {
+public struct CMS: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -340,9 +342,7 @@ public struct CMS: FlatBufferObject, Verifiable {
   ///  Number of transponders
   public var NUM_TRANSPONDERS: UInt32 { let o = _accessor.offset(VTOFFSET.NUM_TRANSPONDERS.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  Transponders
-  public var hasTransponders: Bool { let o = _accessor.offset(VTOFFSET.TRANSPONDERS.v); return o == 0 ? false : true }
-  public var TRANSPONDERSCount: Int32 { let o = _accessor.offset(VTOFFSET.TRANSPONDERS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func TRANSPONDERS(at index: Int32) -> commsTransponder? { let o = _accessor.offset(VTOFFSET.TRANSPONDERS.v); return o == 0 ? nil : commsTransponder(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var TRANSPONDERS: FlatbufferVector<commsTransponder> { return _accessor.vector(at: VTOFFSET.TRANSPONDERS.v, byteSize: 4) }
   ///  Total payload power in Watts
   public var TOTAL_POWER: Double { let o = _accessor.offset(VTOFFSET.TOTAL_POWER.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Total payload mass in kg

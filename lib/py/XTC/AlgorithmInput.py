@@ -73,15 +73,19 @@ def End(builder):
 class AlgorithmInputT(object):
 
     # AlgorithmInputT
-    def __init__(self):
-        self.PARAMETER_REF = None  # type: str
-        self.INPUT_NAME = None  # type: str
+    def __init__(
+        self,
+        PARAMETER_REF = None,
+        INPUT_NAME = None,
+    ):
+        self.PARAMETER_REF = PARAMETER_REF  # type: Optional[str]
+        self.INPUT_NAME = INPUT_NAME  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        algorithmInput = AlgorithmInput()
-        algorithmInput.Init(buf, pos)
-        return cls.InitFromObj(algorithmInput)
+        tmpAlgorithmInput = AlgorithmInput()
+        tmpAlgorithmInput.Init(buf, pos)
+        return cls.InitFromObj(tmpAlgorithmInput)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -89,17 +93,17 @@ class AlgorithmInputT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, algorithmInput):
+    def InitFromObj(cls, tmpAlgorithmInput):
         x = AlgorithmInputT()
-        x._UnPack(algorithmInput)
+        x._UnPack(tmpAlgorithmInput)
         return x
 
     # AlgorithmInputT
-    def _UnPack(self, algorithmInput):
-        if algorithmInput is None:
+    def _UnPack(self, AlgorithmInput):
+        if AlgorithmInput is None:
             return
-        self.PARAMETER_REF = algorithmInput.PARAMETER_REF()
-        self.INPUT_NAME = algorithmInput.INPUT_NAME()
+        self.PARAMETER_REF = AlgorithmInput.PARAMETER_REF()
+        self.INPUT_NAME = AlgorithmInput.INPUT_NAME()
 
     # AlgorithmInputT
     def Pack(self, builder):
@@ -112,5 +116,5 @@ class AlgorithmInputT(object):
             AlgorithmInputAddPARAMETER_REF(builder, PARAMETER_REF)
         if self.INPUT_NAME is not None:
             AlgorithmInputAddINPUT_NAME(builder, INPUT_NAME)
-        algorithmInput = AlgorithmInputEnd(builder)
-        return algorithmInput
+        AlgorithmInput = AlgorithmInputEnd(builder)
+        return AlgorithmInput

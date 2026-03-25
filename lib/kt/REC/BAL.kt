@@ -29,7 +29,7 @@ class BAL : Table() {
         __init(_i, _bb)
         return this
     }
-    val COMMAND : String?
+    val command : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -38,9 +38,9 @@ class BAL : Table() {
                 null
             }
         }
-    val COMMANDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun COMMANDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
-    val TRAJECTORY_REQUEST : String?
+    val commandAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun commandInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
+    val trajectoryRequest : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -49,9 +49,9 @@ class BAL : Table() {
                 null
             }
         }
-    val TRAJECTORY_REQUESTAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun TRAJECTORY_REQUESTInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
-    val TABLE_REQUEST : String?
+    val trajectoryRequestAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun trajectoryRequestInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
+    val tableRequest : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -60,9 +60,9 @@ class BAL : Table() {
                 null
             }
         }
-    val TABLE_REQUESTAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun TABLE_REQUESTInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
-    val FIRE_CONTROL : String?
+    val tableRequestAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun tableRequestInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
+    val fireControl : String?
         get() {
             val o = __offset(10)
             return if (o != 0) {
@@ -71,9 +71,9 @@ class BAL : Table() {
                 null
             }
         }
-    val FIRE_CONTROLAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
-    fun FIRE_CONTROLInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
-    val PENETRATION_PROJECTILE : String?
+    val fireControlAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(10, 1)
+    fun fireControlInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 10, 1)
+    val penetrationProjectile : String?
         get() {
             val o = __offset(12)
             return if (o != 0) {
@@ -82,9 +82,9 @@ class BAL : Table() {
                 null
             }
         }
-    val PENETRATION_PROJECTILEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
-    fun PENETRATION_PROJECTILEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
-    val PENETRATION_ARMOR : String?
+    val penetrationProjectileAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(12, 1)
+    fun penetrationProjectileInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 12, 1)
+    val penetrationArmor : String?
         get() {
             val o = __offset(14)
             return if (o != 0) {
@@ -93,47 +93,47 @@ class BAL : Table() {
                 null
             }
         }
-    val PENETRATION_ARMORAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(14, 1)
-    fun PENETRATION_ARMORInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 14, 1)
-    val IMPACT_VELOCITY_MPS : Double
+    val penetrationArmorAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(14, 1)
+    fun penetrationArmorInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 14, 1)
+    val impactVelocityMps : Double
         get() {
             val o = __offset(16)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val IMPACT_ANGLE_DEG : Double
+    val impactAngleDeg : Double
         get() {
             val o = __offset(18)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsBAL(_bb: ByteBuffer): BAL = getRootAsBAL(_bb, BAL())
         fun getRootAsBAL(_bb: ByteBuffer, obj: BAL): BAL {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun BALBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$BAL")
-        fun createBAL(builder: FlatBufferBuilder, COMMANDOffset: Int, TRAJECTORY_REQUESTOffset: Int, TABLE_REQUESTOffset: Int, FIRE_CONTROLOffset: Int, PENETRATION_PROJECTILEOffset: Int, PENETRATION_ARMOROffset: Int, IMPACT_VELOCITY_MPS: Double, IMPACT_ANGLE_DEG: Double) : Int {
+        fun createBAL(builder: FlatBufferBuilder, commandOffset: Int, trajectoryRequestOffset: Int, tableRequestOffset: Int, fireControlOffset: Int, penetrationProjectileOffset: Int, penetrationArmorOffset: Int, impactVelocityMps: Double, impactAngleDeg: Double) : Int {
             builder.startTable(8)
-            addIMPACT_ANGLE_DEG(builder, IMPACT_ANGLE_DEG)
-            addIMPACT_VELOCITY_MPS(builder, IMPACT_VELOCITY_MPS)
-            addPENETRATION_ARMOR(builder, PENETRATION_ARMOROffset)
-            addPENETRATION_PROJECTILE(builder, PENETRATION_PROJECTILEOffset)
-            addFIRE_CONTROL(builder, FIRE_CONTROLOffset)
-            addTABLE_REQUEST(builder, TABLE_REQUESTOffset)
-            addTRAJECTORY_REQUEST(builder, TRAJECTORY_REQUESTOffset)
-            addCOMMAND(builder, COMMANDOffset)
+            addIMPACTANGLEDEG(builder, impactAngleDeg)
+            addIMPACTVELOCITYMPS(builder, impactVelocityMps)
+            addPENETRATIONARMOR(builder, penetrationArmorOffset)
+            addPENETRATIONPROJECTILE(builder, penetrationProjectileOffset)
+            addFIRECONTROL(builder, fireControlOffset)
+            addTABLEREQUEST(builder, tableRequestOffset)
+            addTRAJECTORYREQUEST(builder, trajectoryRequestOffset)
+            addCOMMAND(builder, commandOffset)
             return endBAL(builder)
         }
         fun startBAL(builder: FlatBufferBuilder) = builder.startTable(8)
-        fun addCOMMAND(builder: FlatBufferBuilder, COMMAND: Int) = builder.addOffset(0, COMMAND, 0)
-        fun addTRAJECTORY_REQUEST(builder: FlatBufferBuilder, TRAJECTORY_REQUEST: Int) = builder.addOffset(1, TRAJECTORY_REQUEST, 0)
-        fun addTABLE_REQUEST(builder: FlatBufferBuilder, TABLE_REQUEST: Int) = builder.addOffset(2, TABLE_REQUEST, 0)
-        fun addFIRE_CONTROL(builder: FlatBufferBuilder, FIRE_CONTROL: Int) = builder.addOffset(3, FIRE_CONTROL, 0)
-        fun addPENETRATION_PROJECTILE(builder: FlatBufferBuilder, PENETRATION_PROJECTILE: Int) = builder.addOffset(4, PENETRATION_PROJECTILE, 0)
-        fun addPENETRATION_ARMOR(builder: FlatBufferBuilder, PENETRATION_ARMOR: Int) = builder.addOffset(5, PENETRATION_ARMOR, 0)
-        fun addIMPACT_VELOCITY_MPS(builder: FlatBufferBuilder, IMPACT_VELOCITY_MPS: Double) = builder.addDouble(6, IMPACT_VELOCITY_MPS, 0.0)
-        fun addIMPACT_ANGLE_DEG(builder: FlatBufferBuilder, IMPACT_ANGLE_DEG: Double) = builder.addDouble(7, IMPACT_ANGLE_DEG, 0.0)
+        fun addCOMMAND(builder: FlatBufferBuilder, command: Int) = builder.addOffset(0, command, 0)
+        fun addTRAJECTORYREQUEST(builder: FlatBufferBuilder, trajectoryRequest: Int) = builder.addOffset(1, trajectoryRequest, 0)
+        fun addTABLEREQUEST(builder: FlatBufferBuilder, tableRequest: Int) = builder.addOffset(2, tableRequest, 0)
+        fun addFIRECONTROL(builder: FlatBufferBuilder, fireControl: Int) = builder.addOffset(3, fireControl, 0)
+        fun addPENETRATIONPROJECTILE(builder: FlatBufferBuilder, penetrationProjectile: Int) = builder.addOffset(4, penetrationProjectile, 0)
+        fun addPENETRATIONARMOR(builder: FlatBufferBuilder, penetrationArmor: Int) = builder.addOffset(5, penetrationArmor, 0)
+        fun addIMPACTVELOCITYMPS(builder: FlatBufferBuilder, impactVelocityMps: Double) = builder.addDouble(6, impactVelocityMps, 0.0)
+        fun addIMPACTANGLEDEG(builder: FlatBufferBuilder, impactAngleDeg: Double) = builder.addDouble(7, impactAngleDeg, 0.0)
         fun endBAL(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

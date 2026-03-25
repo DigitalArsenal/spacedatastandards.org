@@ -62,8 +62,16 @@ func (rcv *STV) EPOCH() float64 {
 	return 0.0
 }
 
+func (rcv *STV) Epoch() float64 {
+	return rcv.EPOCH()
+}
+
 func (rcv *STV) MutateEPOCH(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(4, n)
+}
+
+func (rcv *STV) MutateEpoch(n float64) bool {
+	return rcv.MutateEPOCH(n)
 }
 
 func (rcv *STV) POS_X() float64 {
@@ -74,8 +82,16 @@ func (rcv *STV) POS_X() float64 {
 	return 0.0
 }
 
+func (rcv *STV) PosX() float64 {
+	return rcv.POS_X()
+}
+
 func (rcv *STV) MutatePOS_X(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(6, n)
+}
+
+func (rcv *STV) MutatePosX(n float64) bool {
+	return rcv.MutatePOS_X(n)
 }
 
 func (rcv *STV) POS_Y() float64 {
@@ -86,8 +102,16 @@ func (rcv *STV) POS_Y() float64 {
 	return 0.0
 }
 
+func (rcv *STV) PosY() float64 {
+	return rcv.POS_Y()
+}
+
 func (rcv *STV) MutatePOS_Y(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(8, n)
+}
+
+func (rcv *STV) MutatePosY(n float64) bool {
+	return rcv.MutatePOS_Y(n)
 }
 
 func (rcv *STV) POS_Z() float64 {
@@ -98,8 +122,16 @@ func (rcv *STV) POS_Z() float64 {
 	return 0.0
 }
 
+func (rcv *STV) PosZ() float64 {
+	return rcv.POS_Z()
+}
+
 func (rcv *STV) MutatePOS_Z(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(10, n)
+}
+
+func (rcv *STV) MutatePosZ(n float64) bool {
+	return rcv.MutatePOS_Z(n)
 }
 
 func (rcv *STV) VEL_X() float64 {
@@ -110,8 +142,16 @@ func (rcv *STV) VEL_X() float64 {
 	return 0.0
 }
 
+func (rcv *STV) VelX() float64 {
+	return rcv.VEL_X()
+}
+
 func (rcv *STV) MutateVEL_X(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(12, n)
+}
+
+func (rcv *STV) MutateVelX(n float64) bool {
+	return rcv.MutateVEL_X(n)
 }
 
 func (rcv *STV) VEL_Y() float64 {
@@ -122,8 +162,16 @@ func (rcv *STV) VEL_Y() float64 {
 	return 0.0
 }
 
+func (rcv *STV) VelY() float64 {
+	return rcv.VEL_Y()
+}
+
 func (rcv *STV) MutateVEL_Y(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(14, n)
+}
+
+func (rcv *STV) MutateVelY(n float64) bool {
+	return rcv.MutateVEL_Y(n)
 }
 
 func (rcv *STV) VEL_Z() float64 {
@@ -134,8 +182,16 @@ func (rcv *STV) VEL_Z() float64 {
 	return 0.0
 }
 
+func (rcv *STV) VelZ() float64 {
+	return rcv.VEL_Z()
+}
+
 func (rcv *STV) MutateVEL_Z(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(16, n)
+}
+
+func (rcv *STV) MutateVelZ(n float64) bool {
+	return rcv.MutateVEL_Z(n)
 }
 
 func (rcv *STV) REF_FRAME() byte {
@@ -146,8 +202,16 @@ func (rcv *STV) REF_FRAME() byte {
 	return 0
 }
 
+func (rcv *STV) RefFrame() byte {
+	return rcv.REF_FRAME()
+}
+
 func (rcv *STV) MutateREF_FRAME(n byte) bool {
 	return rcv._tab.MutateByteSlot(18, n)
+}
+
+func (rcv *STV) MutateRefFrame(n byte) bool {
+	return rcv.MutateREF_FRAME(n)
 }
 
 func (rcv *STV) FLAGS() byte {
@@ -158,8 +222,16 @@ func (rcv *STV) FLAGS() byte {
 	return 0
 }
 
+func (rcv *STV) Flags() byte {
+	return rcv.FLAGS()
+}
+
 func (rcv *STV) MutateFLAGS(n byte) bool {
 	return rcv._tab.MutateByteSlot(20, n)
+}
+
+func (rcv *STV) MutateFlags(n byte) bool {
+	return rcv.MutateFLAGS(n)
 }
 
 func (rcv *STV) RESERVED(j int) byte {
@@ -171,6 +243,10 @@ func (rcv *STV) RESERVED(j int) byte {
 	return 0
 }
 
+func (rcv *STV) Reserved(j int) byte {
+	return rcv.RESERVED(j)
+}
+
 func (rcv *STV) RESERVEDLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
 	if o != 0 {
@@ -179,12 +255,20 @@ func (rcv *STV) RESERVEDLength() int {
 	return 0
 }
 
+func (rcv *STV) ReservedLength() int {
+	return rcv.RESERVEDLength()
+}
+
 func (rcv *STV) RESERVEDBytes() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *STV) ReservedBytes() []byte {
+	return rcv.RESERVEDBytes()
 }
 
 func (rcv *STV) MutateRESERVED(j int, n byte) bool {
@@ -196,41 +280,78 @@ func (rcv *STV) MutateRESERVED(j int, n byte) bool {
 	return false
 }
 
+func (rcv *STV) MutateReserved(j int, n byte) bool {
+	return rcv.MutateRESERVED(j, n)
+}
+
 func STVStart(builder *flatbuffers.Builder) {
 	builder.StartObject(10)
 }
 func STVAddEPOCH(builder *flatbuffers.Builder, EPOCH float64) {
 	builder.PrependFloat64Slot(0, EPOCH, 0.0)
 }
+func STVAddEpoch(builder *flatbuffers.Builder, EPOCH float64) {
+	STVAddEPOCH(builder, EPOCH)
+}
 func STVAddPOS_X(builder *flatbuffers.Builder, POS_X float64) {
 	builder.PrependFloat64Slot(1, POS_X, 0.0)
+}
+func STVAddPosX(builder *flatbuffers.Builder, POS_X float64) {
+	STVAddPOS_X(builder, POS_X)
 }
 func STVAddPOS_Y(builder *flatbuffers.Builder, POS_Y float64) {
 	builder.PrependFloat64Slot(2, POS_Y, 0.0)
 }
+func STVAddPosY(builder *flatbuffers.Builder, POS_Y float64) {
+	STVAddPOS_Y(builder, POS_Y)
+}
 func STVAddPOS_Z(builder *flatbuffers.Builder, POS_Z float64) {
 	builder.PrependFloat64Slot(3, POS_Z, 0.0)
+}
+func STVAddPosZ(builder *flatbuffers.Builder, POS_Z float64) {
+	STVAddPOS_Z(builder, POS_Z)
 }
 func STVAddVEL_X(builder *flatbuffers.Builder, VEL_X float64) {
 	builder.PrependFloat64Slot(4, VEL_X, 0.0)
 }
+func STVAddVelX(builder *flatbuffers.Builder, VEL_X float64) {
+	STVAddVEL_X(builder, VEL_X)
+}
 func STVAddVEL_Y(builder *flatbuffers.Builder, VEL_Y float64) {
 	builder.PrependFloat64Slot(5, VEL_Y, 0.0)
+}
+func STVAddVelY(builder *flatbuffers.Builder, VEL_Y float64) {
+	STVAddVEL_Y(builder, VEL_Y)
 }
 func STVAddVEL_Z(builder *flatbuffers.Builder, VEL_Z float64) {
 	builder.PrependFloat64Slot(6, VEL_Z, 0.0)
 }
+func STVAddVelZ(builder *flatbuffers.Builder, VEL_Z float64) {
+	STVAddVEL_Z(builder, VEL_Z)
+}
 func STVAddREF_FRAME(builder *flatbuffers.Builder, REF_FRAME byte) {
 	builder.PrependByteSlot(7, REF_FRAME, 0)
+}
+func STVAddRefFrame(builder *flatbuffers.Builder, REF_FRAME byte) {
+	STVAddREF_FRAME(builder, REF_FRAME)
 }
 func STVAddFLAGS(builder *flatbuffers.Builder, FLAGS byte) {
 	builder.PrependByteSlot(8, FLAGS, 0)
 }
+func STVAddFlags(builder *flatbuffers.Builder, FLAGS byte) {
+	STVAddFLAGS(builder, FLAGS)
+}
 func STVAddRESERVED(builder *flatbuffers.Builder, RESERVED flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(RESERVED), 0)
 }
+func STVAddReserved(builder *flatbuffers.Builder, RESERVED flatbuffers.UOffsetT) {
+	STVAddRESERVED(builder, RESERVED)
+}
 func STVStartRESERVEDVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(1, numElems, 1)
+}
+func STVStartReservedVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return STVStartRESERVEDVector(builder, numElems)
 }
 func STVEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

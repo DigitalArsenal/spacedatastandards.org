@@ -50,6 +50,10 @@ func (rcv *CDMObject) COMMENT() []byte {
 	return nil
 }
 
+func (rcv *CDMObject) Comment() []byte {
+	return rcv.COMMENT()
+}
+
 /// A comment
 func (rcv *CDMObject) OBJECT(obj *CAT) *CAT {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
@@ -62,6 +66,10 @@ func (rcv *CDMObject) OBJECT(obj *CAT) *CAT {
 		return obj
 	}
 	return nil
+}
+
+func (rcv *CDMObject) Object(obj *CAT) *CAT {
+	return rcv.OBJECT(obj)
 }
 
 /// Point of Contact
@@ -78,6 +86,10 @@ func (rcv *CDMObject) POC(obj *EPM) *EPM {
 	return nil
 }
 
+func (rcv *CDMObject) Poc(obj *EPM) *EPM {
+	return rcv.POC(obj)
+}
+
 /// Point of Contact
 /// Operator contact position
 func (rcv *CDMObject) OPERATOR_CONTACT_POSITION() []byte {
@@ -86,6 +98,10 @@ func (rcv *CDMObject) OPERATOR_CONTACT_POSITION() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *CDMObject) OperatorContactPosition() []byte {
+	return rcv.OPERATOR_CONTACT_POSITION()
 }
 
 /// Operator contact position
@@ -98,6 +114,10 @@ func (rcv *CDMObject) OPERATOR_ORGANIZATION() []byte {
 	return nil
 }
 
+func (rcv *CDMObject) OperatorOrganization() []byte {
+	return rcv.OPERATOR_ORGANIZATION()
+}
+
 /// Operator organization
 /// Ephemeris name
 func (rcv *CDMObject) EPHEMERIS_NAME() []byte {
@@ -106,6 +126,10 @@ func (rcv *CDMObject) EPHEMERIS_NAME() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *CDMObject) EphemerisName() []byte {
+	return rcv.EPHEMERIS_NAME()
 }
 
 /// Ephemeris name
@@ -118,9 +142,17 @@ func (rcv *CDMObject) COVARIANCE_METHOD() covarianceMethod {
 	return 0
 }
 
+func (rcv *CDMObject) CovarianceMethod() covarianceMethod {
+	return rcv.COVARIANCE_METHOD()
+}
+
 /// Covariance method
 func (rcv *CDMObject) MutateCOVARIANCE_METHOD(n covarianceMethod) bool {
 	return rcv._tab.MutateInt8Slot(16, int8(n))
+}
+
+func (rcv *CDMObject) MutateCovarianceMethod(n covarianceMethod) bool {
+	return rcv.MutateCOVARIANCE_METHOD(n)
 }
 
 /// Reference Frame in which the object position is defined
@@ -137,6 +169,10 @@ func (rcv *CDMObject) REFERENCE_FRAME(obj *RFM) *RFM {
 	return nil
 }
 
+func (rcv *CDMObject) ReferenceFrame(obj *RFM) *RFM {
+	return rcv.REFERENCE_FRAME(obj)
+}
+
 /// Reference Frame in which the object position is defined
 /// Gravity model
 func (rcv *CDMObject) GRAVITY_MODEL() []byte {
@@ -145,6 +181,10 @@ func (rcv *CDMObject) GRAVITY_MODEL() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *CDMObject) GravityModel() []byte {
+	return rcv.GRAVITY_MODEL()
 }
 
 /// Gravity model
@@ -157,6 +197,10 @@ func (rcv *CDMObject) ATMOSPHERIC_MODEL() []byte {
 	return nil
 }
 
+func (rcv *CDMObject) AtmosphericModel() []byte {
+	return rcv.ATMOSPHERIC_MODEL()
+}
+
 /// Atmospheric model
 /// N-body perturbations
 func (rcv *CDMObject) N_BODY_PERTURBATIONS() []byte {
@@ -165,6 +209,10 @@ func (rcv *CDMObject) N_BODY_PERTURBATIONS() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *CDMObject) NBodyPerturbations() []byte {
+	return rcv.N_BODY_PERTURBATIONS()
 }
 
 /// N-body perturbations
@@ -177,9 +225,17 @@ func (rcv *CDMObject) SOLAR_RAD_PRESSURE() bool {
 	return false
 }
 
+func (rcv *CDMObject) SolarRadPressure() bool {
+	return rcv.SOLAR_RAD_PRESSURE()
+}
+
 /// Solar radiation pressure
 func (rcv *CDMObject) MutateSOLAR_RAD_PRESSURE(n bool) bool {
 	return rcv._tab.MutateBoolSlot(26, n)
+}
+
+func (rcv *CDMObject) MutateSolarRadPressure(n bool) bool {
+	return rcv.MutateSOLAR_RAD_PRESSURE(n)
 }
 
 /// Earth tides
@@ -191,9 +247,17 @@ func (rcv *CDMObject) EARTH_TIDES() bool {
 	return false
 }
 
+func (rcv *CDMObject) EarthTides() bool {
+	return rcv.EARTH_TIDES()
+}
+
 /// Earth tides
 func (rcv *CDMObject) MutateEARTH_TIDES(n bool) bool {
 	return rcv._tab.MutateBoolSlot(28, n)
+}
+
+func (rcv *CDMObject) MutateEarthTides(n bool) bool {
+	return rcv.MutateEARTH_TIDES(n)
 }
 
 /// Intrack thrust
@@ -205,9 +269,17 @@ func (rcv *CDMObject) INTRACK_THRUST() bool {
 	return false
 }
 
+func (rcv *CDMObject) IntrackThrust() bool {
+	return rcv.INTRACK_THRUST()
+}
+
 /// Intrack thrust
 func (rcv *CDMObject) MutateINTRACK_THRUST(n bool) bool {
 	return rcv._tab.MutateBoolSlot(30, n)
+}
+
+func (rcv *CDMObject) MutateIntrackThrust(n bool) bool {
+	return rcv.MutateINTRACK_THRUST(n)
 }
 
 /// Time of last observation start
@@ -217,6 +289,10 @@ func (rcv *CDMObject) TIME_LASTOB_START() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *CDMObject) TimeLastobStart() []byte {
+	return rcv.TIME_LASTOB_START()
 }
 
 /// Time of last observation start
@@ -229,6 +305,10 @@ func (rcv *CDMObject) TIME_LASTOB_END() []byte {
 	return nil
 }
 
+func (rcv *CDMObject) TimeLastobEnd() []byte {
+	return rcv.TIME_LASTOB_END()
+}
+
 /// Time of last observation end
 /// Recommended observation data span
 func (rcv *CDMObject) RECOMMENDED_OD_SPAN() float64 {
@@ -239,9 +319,17 @@ func (rcv *CDMObject) RECOMMENDED_OD_SPAN() float64 {
 	return 0.0
 }
 
+func (rcv *CDMObject) RecommendedOdSpan() float64 {
+	return rcv.RECOMMENDED_OD_SPAN()
+}
+
 /// Recommended observation data span
 func (rcv *CDMObject) MutateRECOMMENDED_OD_SPAN(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(36, n)
+}
+
+func (rcv *CDMObject) MutateRecommendedOdSpan(n float64) bool {
+	return rcv.MutateRECOMMENDED_OD_SPAN(n)
 }
 
 /// Actual observation data span
@@ -253,9 +341,17 @@ func (rcv *CDMObject) ACTUAL_OD_SPAN() float64 {
 	return 0.0
 }
 
+func (rcv *CDMObject) ActualOdSpan() float64 {
+	return rcv.ACTUAL_OD_SPAN()
+}
+
 /// Actual observation data span
 func (rcv *CDMObject) MutateACTUAL_OD_SPAN(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(38, n)
+}
+
+func (rcv *CDMObject) MutateActualOdSpan(n float64) bool {
+	return rcv.MutateACTUAL_OD_SPAN(n)
 }
 
 /// Number of observations available
@@ -267,9 +363,17 @@ func (rcv *CDMObject) OBS_AVAILABLE() uint32 {
 	return 0
 }
 
+func (rcv *CDMObject) ObsAvailable() uint32 {
+	return rcv.OBS_AVAILABLE()
+}
+
 /// Number of observations available
 func (rcv *CDMObject) MutateOBS_AVAILABLE(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(40, n)
+}
+
+func (rcv *CDMObject) MutateObsAvailable(n uint32) bool {
+	return rcv.MutateOBS_AVAILABLE(n)
 }
 
 /// Number of observations used
@@ -281,9 +385,17 @@ func (rcv *CDMObject) OBS_USED() uint32 {
 	return 0
 }
 
+func (rcv *CDMObject) ObsUsed() uint32 {
+	return rcv.OBS_USED()
+}
+
 /// Number of observations used
 func (rcv *CDMObject) MutateOBS_USED(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(42, n)
+}
+
+func (rcv *CDMObject) MutateObsUsed(n uint32) bool {
+	return rcv.MutateOBS_USED(n)
 }
 
 /// Number of tracks available
@@ -295,9 +407,17 @@ func (rcv *CDMObject) TRACKS_AVAILABLE() uint32 {
 	return 0
 }
 
+func (rcv *CDMObject) TracksAvailable() uint32 {
+	return rcv.TRACKS_AVAILABLE()
+}
+
 /// Number of tracks available
 func (rcv *CDMObject) MutateTRACKS_AVAILABLE(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(44, n)
+}
+
+func (rcv *CDMObject) MutateTracksAvailable(n uint32) bool {
+	return rcv.MutateTRACKS_AVAILABLE(n)
 }
 
 /// Number of tracks used
@@ -309,9 +429,17 @@ func (rcv *CDMObject) TRACKS_USED() uint32 {
 	return 0
 }
 
+func (rcv *CDMObject) TracksUsed() uint32 {
+	return rcv.TRACKS_USED()
+}
+
 /// Number of tracks used
 func (rcv *CDMObject) MutateTRACKS_USED(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(46, n)
+}
+
+func (rcv *CDMObject) MutateTracksUsed(n uint32) bool {
+	return rcv.MutateTRACKS_USED(n)
 }
 
 /// Residuals accepted
@@ -323,9 +451,17 @@ func (rcv *CDMObject) RESIDUALS_ACCEPTED() float64 {
 	return 0.0
 }
 
+func (rcv *CDMObject) ResidualsAccepted() float64 {
+	return rcv.RESIDUALS_ACCEPTED()
+}
+
 /// Residuals accepted
 func (rcv *CDMObject) MutateRESIDUALS_ACCEPTED(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(48, n)
+}
+
+func (rcv *CDMObject) MutateResidualsAccepted(n float64) bool {
+	return rcv.MutateRESIDUALS_ACCEPTED(n)
 }
 
 /// Weighted root mean square
@@ -337,9 +473,17 @@ func (rcv *CDMObject) WEIGHTED_RMS() float64 {
 	return 0.0
 }
 
+func (rcv *CDMObject) WeightedRms() float64 {
+	return rcv.WEIGHTED_RMS()
+}
+
 /// Weighted root mean square
 func (rcv *CDMObject) MutateWEIGHTED_RMS(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(50, n)
+}
+
+func (rcv *CDMObject) MutateWeightedRms(n float64) bool {
+	return rcv.MutateWEIGHTED_RMS(n)
 }
 
 /// Area of the object
@@ -351,9 +495,17 @@ func (rcv *CDMObject) AREA_PC() float64 {
 	return 0.0
 }
 
+func (rcv *CDMObject) AreaPc() float64 {
+	return rcv.AREA_PC()
+}
+
 /// Area of the object
 func (rcv *CDMObject) MutateAREA_PC(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(52, n)
+}
+
+func (rcv *CDMObject) MutateAreaPc(n float64) bool {
+	return rcv.MutateAREA_PC(n)
 }
 
 /// Area of the object drag
@@ -365,9 +517,17 @@ func (rcv *CDMObject) AREA_DRG() float64 {
 	return 0.0
 }
 
+func (rcv *CDMObject) AreaDrg() float64 {
+	return rcv.AREA_DRG()
+}
+
 /// Area of the object drag
 func (rcv *CDMObject) MutateAREA_DRG(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(54, n)
+}
+
+func (rcv *CDMObject) MutateAreaDrg(n float64) bool {
+	return rcv.MutateAREA_DRG(n)
 }
 
 /// Area of the object solar radiation pressure
@@ -379,9 +539,17 @@ func (rcv *CDMObject) AREA_SRP() float64 {
 	return 0.0
 }
 
+func (rcv *CDMObject) AreaSrp() float64 {
+	return rcv.AREA_SRP()
+}
+
 /// Area of the object solar radiation pressure
 func (rcv *CDMObject) MutateAREA_SRP(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(56, n)
+}
+
+func (rcv *CDMObject) MutateAreaSrp(n float64) bool {
+	return rcv.MutateAREA_SRP(n)
 }
 
 /// Object's area-to-mass ratio
@@ -393,9 +561,17 @@ func (rcv *CDMObject) CR_AREA_OVER_MASS() float64 {
 	return 0.0
 }
 
+func (rcv *CDMObject) CrAreaOverMass() float64 {
+	return rcv.CR_AREA_OVER_MASS()
+}
+
 /// Object's area-to-mass ratio
 func (rcv *CDMObject) MutateCR_AREA_OVER_MASS(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(58, n)
+}
+
+func (rcv *CDMObject) MutateCrAreaOverMass(n float64) bool {
+	return rcv.MutateCR_AREA_OVER_MASS(n)
 }
 
 /// Object's thrust acceleration
@@ -407,9 +583,17 @@ func (rcv *CDMObject) THRUST_ACCELERATION() float64 {
 	return 0.0
 }
 
+func (rcv *CDMObject) ThrustAcceleration() float64 {
+	return rcv.THRUST_ACCELERATION()
+}
+
 /// Object's thrust acceleration
 func (rcv *CDMObject) MutateTHRUST_ACCELERATION(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(60, n)
+}
+
+func (rcv *CDMObject) MutateThrustAcceleration(n float64) bool {
+	return rcv.MutateTHRUST_ACCELERATION(n)
 }
 
 /// Object's solar flux
@@ -421,9 +605,17 @@ func (rcv *CDMObject) SEDR() float64 {
 	return 0.0
 }
 
+func (rcv *CDMObject) Sedr() float64 {
+	return rcv.SEDR()
+}
+
 /// Object's solar flux
 func (rcv *CDMObject) MutateSEDR(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(62, n)
+}
+
+func (rcv *CDMObject) MutateSedr(n float64) bool {
+	return rcv.MutateSEDR(n)
 }
 
 /// X-coordinate of the object's position in RTN coordinates
@@ -477,9 +669,17 @@ func (rcv *CDMObject) X_DOT() float64 {
 	return 0.0
 }
 
+func (rcv *CDMObject) XDot() float64 {
+	return rcv.X_DOT()
+}
+
 /// X-coordinate of the object's position in RTN coordinates
 func (rcv *CDMObject) MutateX_DOT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(70, n)
+}
+
+func (rcv *CDMObject) MutateXDot(n float64) bool {
+	return rcv.MutateX_DOT(n)
 }
 
 /// Y-coordinate of the object's position in RTN
@@ -491,9 +691,17 @@ func (rcv *CDMObject) Y_DOT() float64 {
 	return 0.0
 }
 
+func (rcv *CDMObject) YDot() float64 {
+	return rcv.Y_DOT()
+}
+
 /// Y-coordinate of the object's position in RTN
 func (rcv *CDMObject) MutateY_DOT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(72, n)
+}
+
+func (rcv *CDMObject) MutateYDot(n float64) bool {
+	return rcv.MutateY_DOT(n)
 }
 
 /// Z-coordinate of the object's position in RTN
@@ -505,9 +713,17 @@ func (rcv *CDMObject) Z_DOT() float64 {
 	return 0.0
 }
 
+func (rcv *CDMObject) ZDot() float64 {
+	return rcv.Z_DOT()
+}
+
 /// Z-coordinate of the object's position in RTN
 func (rcv *CDMObject) MutateZ_DOT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(74, n)
+}
+
+func (rcv *CDMObject) MutateZDot(n float64) bool {
+	return rcv.MutateZ_DOT(n)
 }
 
 /// Covariance matrix as flat array (9x9 lower triangular = 45 elements).
@@ -526,12 +742,20 @@ func (rcv *CDMObject) COVARIANCE(j int) float64 {
 	return 0
 }
 
+func (rcv *CDMObject) Covariance(j int) float64 {
+	return rcv.COVARIANCE(j)
+}
+
 func (rcv *CDMObject) COVARIANCELength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(76))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *CDMObject) CovarianceLength() int {
+	return rcv.COVARIANCELength()
 }
 
 /// Covariance matrix as flat array (9x9 lower triangular = 45 elements).
@@ -550,98 +774,192 @@ func (rcv *CDMObject) MutateCOVARIANCE(j int, n float64) bool {
 	return false
 }
 
+func (rcv *CDMObject) MutateCovariance(j int, n float64) bool {
+	return rcv.MutateCOVARIANCE(j, n)
+}
+
 func CDMObjectStart(builder *flatbuffers.Builder) {
 	builder.StartObject(37)
 }
 func CDMObjectAddCOMMENT(builder *flatbuffers.Builder, COMMENT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(COMMENT), 0)
 }
+func CDMObjectAddComment(builder *flatbuffers.Builder, COMMENT flatbuffers.UOffsetT) {
+	CDMObjectAddCOMMENT(builder, COMMENT)
+}
 func CDMObjectAddOBJECT(builder *flatbuffers.Builder, OBJECT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(OBJECT), 0)
+}
+func CDMObjectAddObject(builder *flatbuffers.Builder, OBJECT flatbuffers.UOffsetT) {
+	CDMObjectAddOBJECT(builder, OBJECT)
 }
 func CDMObjectAddPOC(builder *flatbuffers.Builder, POC flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(POC), 0)
 }
+func CDMObjectAddPoc(builder *flatbuffers.Builder, POC flatbuffers.UOffsetT) {
+	CDMObjectAddPOC(builder, POC)
+}
 func CDMObjectAddOPERATOR_CONTACT_POSITION(builder *flatbuffers.Builder, OPERATOR_CONTACT_POSITION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(OPERATOR_CONTACT_POSITION), 0)
+}
+func CDMObjectAddOperatorContactPosition(builder *flatbuffers.Builder, OPERATOR_CONTACT_POSITION flatbuffers.UOffsetT) {
+	CDMObjectAddOPERATOR_CONTACT_POSITION(builder, OPERATOR_CONTACT_POSITION)
 }
 func CDMObjectAddOPERATOR_ORGANIZATION(builder *flatbuffers.Builder, OPERATOR_ORGANIZATION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(OPERATOR_ORGANIZATION), 0)
 }
+func CDMObjectAddOperatorOrganization(builder *flatbuffers.Builder, OPERATOR_ORGANIZATION flatbuffers.UOffsetT) {
+	CDMObjectAddOPERATOR_ORGANIZATION(builder, OPERATOR_ORGANIZATION)
+}
 func CDMObjectAddEPHEMERIS_NAME(builder *flatbuffers.Builder, EPHEMERIS_NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(EPHEMERIS_NAME), 0)
+}
+func CDMObjectAddEphemerisName(builder *flatbuffers.Builder, EPHEMERIS_NAME flatbuffers.UOffsetT) {
+	CDMObjectAddEPHEMERIS_NAME(builder, EPHEMERIS_NAME)
 }
 func CDMObjectAddCOVARIANCE_METHOD(builder *flatbuffers.Builder, COVARIANCE_METHOD covarianceMethod) {
 	builder.PrependInt8Slot(6, int8(COVARIANCE_METHOD), 0)
 }
+func CDMObjectAddCovarianceMethod(builder *flatbuffers.Builder, COVARIANCE_METHOD covarianceMethod) {
+	CDMObjectAddCOVARIANCE_METHOD(builder, COVARIANCE_METHOD)
+}
 func CDMObjectAddREFERENCE_FRAME(builder *flatbuffers.Builder, REFERENCE_FRAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(REFERENCE_FRAME), 0)
+}
+func CDMObjectAddReferenceFrame(builder *flatbuffers.Builder, REFERENCE_FRAME flatbuffers.UOffsetT) {
+	CDMObjectAddREFERENCE_FRAME(builder, REFERENCE_FRAME)
 }
 func CDMObjectAddGRAVITY_MODEL(builder *flatbuffers.Builder, GRAVITY_MODEL flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(GRAVITY_MODEL), 0)
 }
+func CDMObjectAddGravityModel(builder *flatbuffers.Builder, GRAVITY_MODEL flatbuffers.UOffsetT) {
+	CDMObjectAddGRAVITY_MODEL(builder, GRAVITY_MODEL)
+}
 func CDMObjectAddATMOSPHERIC_MODEL(builder *flatbuffers.Builder, ATMOSPHERIC_MODEL flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(ATMOSPHERIC_MODEL), 0)
+}
+func CDMObjectAddAtmosphericModel(builder *flatbuffers.Builder, ATMOSPHERIC_MODEL flatbuffers.UOffsetT) {
+	CDMObjectAddATMOSPHERIC_MODEL(builder, ATMOSPHERIC_MODEL)
 }
 func CDMObjectAddN_BODY_PERTURBATIONS(builder *flatbuffers.Builder, N_BODY_PERTURBATIONS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(N_BODY_PERTURBATIONS), 0)
 }
+func CDMObjectAddNBodyPerturbations(builder *flatbuffers.Builder, N_BODY_PERTURBATIONS flatbuffers.UOffsetT) {
+	CDMObjectAddN_BODY_PERTURBATIONS(builder, N_BODY_PERTURBATIONS)
+}
 func CDMObjectAddSOLAR_RAD_PRESSURE(builder *flatbuffers.Builder, SOLAR_RAD_PRESSURE bool) {
 	builder.PrependBoolSlot(11, SOLAR_RAD_PRESSURE, false)
+}
+func CDMObjectAddSolarRadPressure(builder *flatbuffers.Builder, SOLAR_RAD_PRESSURE bool) {
+	CDMObjectAddSOLAR_RAD_PRESSURE(builder, SOLAR_RAD_PRESSURE)
 }
 func CDMObjectAddEARTH_TIDES(builder *flatbuffers.Builder, EARTH_TIDES bool) {
 	builder.PrependBoolSlot(12, EARTH_TIDES, false)
 }
+func CDMObjectAddEarthTides(builder *flatbuffers.Builder, EARTH_TIDES bool) {
+	CDMObjectAddEARTH_TIDES(builder, EARTH_TIDES)
+}
 func CDMObjectAddINTRACK_THRUST(builder *flatbuffers.Builder, INTRACK_THRUST bool) {
 	builder.PrependBoolSlot(13, INTRACK_THRUST, false)
+}
+func CDMObjectAddIntrackThrust(builder *flatbuffers.Builder, INTRACK_THRUST bool) {
+	CDMObjectAddINTRACK_THRUST(builder, INTRACK_THRUST)
 }
 func CDMObjectAddTIME_LASTOB_START(builder *flatbuffers.Builder, TIME_LASTOB_START flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(14, flatbuffers.UOffsetT(TIME_LASTOB_START), 0)
 }
+func CDMObjectAddTimeLastobStart(builder *flatbuffers.Builder, TIME_LASTOB_START flatbuffers.UOffsetT) {
+	CDMObjectAddTIME_LASTOB_START(builder, TIME_LASTOB_START)
+}
 func CDMObjectAddTIME_LASTOB_END(builder *flatbuffers.Builder, TIME_LASTOB_END flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(15, flatbuffers.UOffsetT(TIME_LASTOB_END), 0)
+}
+func CDMObjectAddTimeLastobEnd(builder *flatbuffers.Builder, TIME_LASTOB_END flatbuffers.UOffsetT) {
+	CDMObjectAddTIME_LASTOB_END(builder, TIME_LASTOB_END)
 }
 func CDMObjectAddRECOMMENDED_OD_SPAN(builder *flatbuffers.Builder, RECOMMENDED_OD_SPAN float64) {
 	builder.PrependFloat64Slot(16, RECOMMENDED_OD_SPAN, 0.0)
 }
+func CDMObjectAddRecommendedOdSpan(builder *flatbuffers.Builder, RECOMMENDED_OD_SPAN float64) {
+	CDMObjectAddRECOMMENDED_OD_SPAN(builder, RECOMMENDED_OD_SPAN)
+}
 func CDMObjectAddACTUAL_OD_SPAN(builder *flatbuffers.Builder, ACTUAL_OD_SPAN float64) {
 	builder.PrependFloat64Slot(17, ACTUAL_OD_SPAN, 0.0)
+}
+func CDMObjectAddActualOdSpan(builder *flatbuffers.Builder, ACTUAL_OD_SPAN float64) {
+	CDMObjectAddACTUAL_OD_SPAN(builder, ACTUAL_OD_SPAN)
 }
 func CDMObjectAddOBS_AVAILABLE(builder *flatbuffers.Builder, OBS_AVAILABLE uint32) {
 	builder.PrependUint32Slot(18, OBS_AVAILABLE, 0)
 }
+func CDMObjectAddObsAvailable(builder *flatbuffers.Builder, OBS_AVAILABLE uint32) {
+	CDMObjectAddOBS_AVAILABLE(builder, OBS_AVAILABLE)
+}
 func CDMObjectAddOBS_USED(builder *flatbuffers.Builder, OBS_USED uint32) {
 	builder.PrependUint32Slot(19, OBS_USED, 0)
+}
+func CDMObjectAddObsUsed(builder *flatbuffers.Builder, OBS_USED uint32) {
+	CDMObjectAddOBS_USED(builder, OBS_USED)
 }
 func CDMObjectAddTRACKS_AVAILABLE(builder *flatbuffers.Builder, TRACKS_AVAILABLE uint32) {
 	builder.PrependUint32Slot(20, TRACKS_AVAILABLE, 0)
 }
+func CDMObjectAddTracksAvailable(builder *flatbuffers.Builder, TRACKS_AVAILABLE uint32) {
+	CDMObjectAddTRACKS_AVAILABLE(builder, TRACKS_AVAILABLE)
+}
 func CDMObjectAddTRACKS_USED(builder *flatbuffers.Builder, TRACKS_USED uint32) {
 	builder.PrependUint32Slot(21, TRACKS_USED, 0)
+}
+func CDMObjectAddTracksUsed(builder *flatbuffers.Builder, TRACKS_USED uint32) {
+	CDMObjectAddTRACKS_USED(builder, TRACKS_USED)
 }
 func CDMObjectAddRESIDUALS_ACCEPTED(builder *flatbuffers.Builder, RESIDUALS_ACCEPTED float64) {
 	builder.PrependFloat64Slot(22, RESIDUALS_ACCEPTED, 0.0)
 }
+func CDMObjectAddResidualsAccepted(builder *flatbuffers.Builder, RESIDUALS_ACCEPTED float64) {
+	CDMObjectAddRESIDUALS_ACCEPTED(builder, RESIDUALS_ACCEPTED)
+}
 func CDMObjectAddWEIGHTED_RMS(builder *flatbuffers.Builder, WEIGHTED_RMS float64) {
 	builder.PrependFloat64Slot(23, WEIGHTED_RMS, 0.0)
+}
+func CDMObjectAddWeightedRms(builder *flatbuffers.Builder, WEIGHTED_RMS float64) {
+	CDMObjectAddWEIGHTED_RMS(builder, WEIGHTED_RMS)
 }
 func CDMObjectAddAREA_PC(builder *flatbuffers.Builder, AREA_PC float64) {
 	builder.PrependFloat64Slot(24, AREA_PC, 0.0)
 }
+func CDMObjectAddAreaPc(builder *flatbuffers.Builder, AREA_PC float64) {
+	CDMObjectAddAREA_PC(builder, AREA_PC)
+}
 func CDMObjectAddAREA_DRG(builder *flatbuffers.Builder, AREA_DRG float64) {
 	builder.PrependFloat64Slot(25, AREA_DRG, 0.0)
+}
+func CDMObjectAddAreaDrg(builder *flatbuffers.Builder, AREA_DRG float64) {
+	CDMObjectAddAREA_DRG(builder, AREA_DRG)
 }
 func CDMObjectAddAREA_SRP(builder *flatbuffers.Builder, AREA_SRP float64) {
 	builder.PrependFloat64Slot(26, AREA_SRP, 0.0)
 }
+func CDMObjectAddAreaSrp(builder *flatbuffers.Builder, AREA_SRP float64) {
+	CDMObjectAddAREA_SRP(builder, AREA_SRP)
+}
 func CDMObjectAddCR_AREA_OVER_MASS(builder *flatbuffers.Builder, CR_AREA_OVER_MASS float64) {
 	builder.PrependFloat64Slot(27, CR_AREA_OVER_MASS, 0.0)
+}
+func CDMObjectAddCrAreaOverMass(builder *flatbuffers.Builder, CR_AREA_OVER_MASS float64) {
+	CDMObjectAddCR_AREA_OVER_MASS(builder, CR_AREA_OVER_MASS)
 }
 func CDMObjectAddTHRUST_ACCELERATION(builder *flatbuffers.Builder, THRUST_ACCELERATION float64) {
 	builder.PrependFloat64Slot(28, THRUST_ACCELERATION, 0.0)
 }
+func CDMObjectAddThrustAcceleration(builder *flatbuffers.Builder, THRUST_ACCELERATION float64) {
+	CDMObjectAddTHRUST_ACCELERATION(builder, THRUST_ACCELERATION)
+}
 func CDMObjectAddSEDR(builder *flatbuffers.Builder, SEDR float64) {
 	builder.PrependFloat64Slot(29, SEDR, 0.0)
+}
+func CDMObjectAddSedr(builder *flatbuffers.Builder, SEDR float64) {
+	CDMObjectAddSEDR(builder, SEDR)
 }
 func CDMObjectAddX(builder *flatbuffers.Builder, X float64) {
 	builder.PrependFloat64Slot(30, X, 0.0)
@@ -655,17 +973,32 @@ func CDMObjectAddZ(builder *flatbuffers.Builder, Z float64) {
 func CDMObjectAddX_DOT(builder *flatbuffers.Builder, X_DOT float64) {
 	builder.PrependFloat64Slot(33, X_DOT, 0.0)
 }
+func CDMObjectAddXDot(builder *flatbuffers.Builder, X_DOT float64) {
+	CDMObjectAddX_DOT(builder, X_DOT)
+}
 func CDMObjectAddY_DOT(builder *flatbuffers.Builder, Y_DOT float64) {
 	builder.PrependFloat64Slot(34, Y_DOT, 0.0)
+}
+func CDMObjectAddYDot(builder *flatbuffers.Builder, Y_DOT float64) {
+	CDMObjectAddY_DOT(builder, Y_DOT)
 }
 func CDMObjectAddZ_DOT(builder *flatbuffers.Builder, Z_DOT float64) {
 	builder.PrependFloat64Slot(35, Z_DOT, 0.0)
 }
+func CDMObjectAddZDot(builder *flatbuffers.Builder, Z_DOT float64) {
+	CDMObjectAddZ_DOT(builder, Z_DOT)
+}
 func CDMObjectAddCOVARIANCE(builder *flatbuffers.Builder, COVARIANCE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(36, flatbuffers.UOffsetT(COVARIANCE), 0)
 }
+func CDMObjectAddCovariance(builder *flatbuffers.Builder, COVARIANCE flatbuffers.UOffsetT) {
+	CDMObjectAddCOVARIANCE(builder, COVARIANCE)
+}
 func CDMObjectStartCOVARIANCEVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(8, numElems, 8)
+}
+func CDMObjectStartCovarianceVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return CDMObjectStartCOVARIANCEVector(builder, numElems)
 }
 func CDMObjectEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

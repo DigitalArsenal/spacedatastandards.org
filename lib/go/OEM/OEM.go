@@ -64,6 +64,10 @@ func (rcv *OEM) CLASSIFICATION() []byte {
 	return nil
 }
 
+func (rcv *OEM) Classification() []byte {
+	return rcv.CLASSIFICATION()
+}
+
 /// OEM Header
 /// Classification marking of the data in IC/CAPCO Portion-marked format.
 /// OEM Version
@@ -75,9 +79,17 @@ func (rcv *OEM) CCSDS_OEM_VERS() float64 {
 	return 0.0
 }
 
+func (rcv *OEM) CcsdsOemVers() float64 {
+	return rcv.CCSDS_OEM_VERS()
+}
+
 /// OEM Version
 func (rcv *OEM) MutateCCSDS_OEM_VERS(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(6, n)
+}
+
+func (rcv *OEM) MutateCcsdsOemVers(n float64) bool {
+	return rcv.MutateCCSDS_OEM_VERS(n)
 }
 
 /// Creation Date
@@ -87,6 +99,10 @@ func (rcv *OEM) CREATION_DATE() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *OEM) CreationDate() []byte {
+	return rcv.CREATION_DATE()
 }
 
 /// Creation Date
@@ -99,6 +115,10 @@ func (rcv *OEM) ORIGINATOR() []byte {
 	return nil
 }
 
+func (rcv *OEM) Originator() []byte {
+	return rcv.ORIGINATOR()
+}
+
 /// Originator
 /// Array of ephemeris data blocks
 func (rcv *OEM) EPHEMERIS_DATA_BLOCK(obj *ephemerisDataBlock, j int) bool {
@@ -107,10 +127,17 @@ func (rcv *OEM) EPHEMERIS_DATA_BLOCK(obj *ephemerisDataBlock, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(ephemerisDataBlock)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *OEM) EphemerisDataBlock(obj *ephemerisDataBlock, j int) bool {
+	return rcv.EPHEMERIS_DATA_BLOCK(obj, j)
 }
 
 func (rcv *OEM) EPHEMERIS_DATA_BLOCKLength() int {
@@ -121,6 +148,10 @@ func (rcv *OEM) EPHEMERIS_DATA_BLOCKLength() int {
 	return 0
 }
 
+func (rcv *OEM) EphemerisDataBlockLength() int {
+	return rcv.EPHEMERIS_DATA_BLOCKLength()
+}
+
 /// Array of ephemeris data blocks
 func OEMStart(builder *flatbuffers.Builder) {
 	builder.StartObject(5)
@@ -128,20 +159,38 @@ func OEMStart(builder *flatbuffers.Builder) {
 func OEMAddCLASSIFICATION(builder *flatbuffers.Builder, CLASSIFICATION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(CLASSIFICATION), 0)
 }
+func OEMAddClassification(builder *flatbuffers.Builder, CLASSIFICATION flatbuffers.UOffsetT) {
+	OEMAddCLASSIFICATION(builder, CLASSIFICATION)
+}
 func OEMAddCCSDS_OEM_VERS(builder *flatbuffers.Builder, CCSDS_OEM_VERS float64) {
 	builder.PrependFloat64Slot(1, CCSDS_OEM_VERS, 0.0)
+}
+func OEMAddCcsdsOemVers(builder *flatbuffers.Builder, CCSDS_OEM_VERS float64) {
+	OEMAddCCSDS_OEM_VERS(builder, CCSDS_OEM_VERS)
 }
 func OEMAddCREATION_DATE(builder *flatbuffers.Builder, CREATION_DATE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(CREATION_DATE), 0)
 }
+func OEMAddCreationDate(builder *flatbuffers.Builder, CREATION_DATE flatbuffers.UOffsetT) {
+	OEMAddCREATION_DATE(builder, CREATION_DATE)
+}
 func OEMAddORIGINATOR(builder *flatbuffers.Builder, ORIGINATOR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(ORIGINATOR), 0)
+}
+func OEMAddOriginator(builder *flatbuffers.Builder, ORIGINATOR flatbuffers.UOffsetT) {
+	OEMAddORIGINATOR(builder, ORIGINATOR)
 }
 func OEMAddEPHEMERIS_DATA_BLOCK(builder *flatbuffers.Builder, EPHEMERIS_DATA_BLOCK flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(EPHEMERIS_DATA_BLOCK), 0)
 }
+func OEMAddEphemerisDataBlock(builder *flatbuffers.Builder, EPHEMERIS_DATA_BLOCK flatbuffers.UOffsetT) {
+	OEMAddEPHEMERIS_DATA_BLOCK(builder, EPHEMERIS_DATA_BLOCK)
+}
 func OEMStartEPHEMERIS_DATA_BLOCKVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func OEMStartEphemerisDataBlockVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return OEMStartEPHEMERIS_DATA_BLOCKVector(builder, numElems)
 }
 func OEMEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

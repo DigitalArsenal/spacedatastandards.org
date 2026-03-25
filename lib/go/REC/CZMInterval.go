@@ -51,12 +51,19 @@ func (rcv *CZMInterval) INTERVAL() []byte {
 	return nil
 }
 
+func (rcv *CZMInterval) Interval() []byte {
+	return rcv.INTERVAL()
+}
+
 /// ISO 8601 interval string (e.g. "2012-03-15T10:00:00Z/2012-03-16T10:00:00Z")
 func CZMIntervalStart(builder *flatbuffers.Builder) {
 	builder.StartObject(1)
 }
 func CZMIntervalAddINTERVAL(builder *flatbuffers.Builder, INTERVAL flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(INTERVAL), 0)
+}
+func CZMIntervalAddInterval(builder *flatbuffers.Builder, INTERVAL flatbuffers.UOffsetT) {
+	CZMIntervalAddINTERVAL(builder, INTERVAL)
 }
 func CZMIntervalEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

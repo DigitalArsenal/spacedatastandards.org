@@ -82,15 +82,19 @@ except:
 class BaseContainerT(object):
 
     # BaseContainerT
-    def __init__(self):
-        self.CONTAINER_REF = None  # type: str
-        self.RESTRICTION_CRITERIA = None  # type: Optional[MatchCriteria.MatchCriteriaT]
+    def __init__(
+        self,
+        CONTAINER_REF = None,
+        RESTRICTION_CRITERIA = None,
+    ):
+        self.CONTAINER_REF = CONTAINER_REF  # type: Optional[str]
+        self.RESTRICTION_CRITERIA = RESTRICTION_CRITERIA  # type: Optional[MatchCriteria.MatchCriteriaT]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        baseContainer = BaseContainer()
-        baseContainer.Init(buf, pos)
-        return cls.InitFromObj(baseContainer)
+        tmpBaseContainer = BaseContainer()
+        tmpBaseContainer.Init(buf, pos)
+        return cls.InitFromObj(tmpBaseContainer)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -98,18 +102,18 @@ class BaseContainerT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, baseContainer):
+    def InitFromObj(cls, tmpBaseContainer):
         x = BaseContainerT()
-        x._UnPack(baseContainer)
+        x._UnPack(tmpBaseContainer)
         return x
 
     # BaseContainerT
-    def _UnPack(self, baseContainer):
-        if baseContainer is None:
+    def _UnPack(self, BaseContainer):
+        if BaseContainer is None:
             return
-        self.CONTAINER_REF = baseContainer.CONTAINER_REF()
-        if baseContainer.RESTRICTION_CRITERIA() is not None:
-            self.RESTRICTION_CRITERIA = MatchCriteria.MatchCriteriaT.InitFromObj(baseContainer.RESTRICTION_CRITERIA())
+        self.CONTAINER_REF = BaseContainer.CONTAINER_REF()
+        if BaseContainer.RESTRICTION_CRITERIA() is not None:
+            self.RESTRICTION_CRITERIA = MatchCriteria.MatchCriteriaT.InitFromObj(BaseContainer.RESTRICTION_CRITERIA())
 
     # BaseContainerT
     def Pack(self, builder):
@@ -122,5 +126,5 @@ class BaseContainerT(object):
             BaseContainerAddCONTAINER_REF(builder, CONTAINER_REF)
         if self.RESTRICTION_CRITERIA is not None:
             BaseContainerAddRESTRICTION_CRITERIA(builder, RESTRICTION_CRITERIA)
-        baseContainer = BaseContainerEnd(builder)
-        return baseContainer
+        BaseContainer = BaseContainerEnd(builder)
+        return BaseContainer

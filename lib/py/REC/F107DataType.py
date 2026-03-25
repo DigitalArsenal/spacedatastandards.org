@@ -2,4 +2,8 @@
 
 # namespace: 
 
-# NOTE F107DataType.py does not declare any structs or enums
+class F107DataType(object):
+    OBS = 0
+    INT = 1
+    PRD = 2
+    PRM = 3

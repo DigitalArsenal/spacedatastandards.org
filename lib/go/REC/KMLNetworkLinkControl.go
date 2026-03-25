@@ -51,9 +51,17 @@ func (rcv *KMLNetworkLinkControl) MIN_REFRESH_PERIOD() float64 {
 	return 0.0
 }
 
+func (rcv *KMLNetworkLinkControl) MinRefreshPeriod() float64 {
+	return rcv.MIN_REFRESH_PERIOD()
+}
+
 /// Minimum refresh period in seconds
 func (rcv *KMLNetworkLinkControl) MutateMIN_REFRESH_PERIOD(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(4, n)
+}
+
+func (rcv *KMLNetworkLinkControl) MutateMinRefreshPeriod(n float64) bool {
+	return rcv.MutateMIN_REFRESH_PERIOD(n)
 }
 
 /// Maximum session length in seconds
@@ -65,9 +73,17 @@ func (rcv *KMLNetworkLinkControl) MAX_SESSION_LENGTH() float64 {
 	return 0.0
 }
 
+func (rcv *KMLNetworkLinkControl) MaxSessionLength() float64 {
+	return rcv.MAX_SESSION_LENGTH()
+}
+
 /// Maximum session length in seconds
 func (rcv *KMLNetworkLinkControl) MutateMAX_SESSION_LENGTH(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(6, n)
+}
+
+func (rcv *KMLNetworkLinkControl) MutateMaxSessionLength(n float64) bool {
+	return rcv.MutateMAX_SESSION_LENGTH(n)
 }
 
 /// Cookie
@@ -77,6 +93,10 @@ func (rcv *KMLNetworkLinkControl) COOKIE() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *KMLNetworkLinkControl) Cookie() []byte {
+	return rcv.COOKIE()
 }
 
 /// Cookie
@@ -89,6 +109,10 @@ func (rcv *KMLNetworkLinkControl) MESSAGE() []byte {
 	return nil
 }
 
+func (rcv *KMLNetworkLinkControl) Message() []byte {
+	return rcv.MESSAGE()
+}
+
 /// Message to display
 /// Link name override
 func (rcv *KMLNetworkLinkControl) LINK_NAME() []byte {
@@ -97,6 +121,10 @@ func (rcv *KMLNetworkLinkControl) LINK_NAME() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *KMLNetworkLinkControl) LinkName() []byte {
+	return rcv.LINK_NAME()
 }
 
 /// Link name override
@@ -109,6 +137,10 @@ func (rcv *KMLNetworkLinkControl) LINK_DESCRIPTION() []byte {
 	return nil
 }
 
+func (rcv *KMLNetworkLinkControl) LinkDescription() []byte {
+	return rcv.LINK_DESCRIPTION()
+}
+
 /// Link description override
 /// Link snippet override
 func (rcv *KMLNetworkLinkControl) LINK_SNIPPET() []byte {
@@ -119,6 +151,10 @@ func (rcv *KMLNetworkLinkControl) LINK_SNIPPET() []byte {
 	return nil
 }
 
+func (rcv *KMLNetworkLinkControl) LinkSnippet() []byte {
+	return rcv.LINK_SNIPPET()
+}
+
 /// Link snippet override
 /// Expiration time (ISO 8601)
 func (rcv *KMLNetworkLinkControl) EXPIRES() []byte {
@@ -127,6 +163,10 @@ func (rcv *KMLNetworkLinkControl) EXPIRES() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *KMLNetworkLinkControl) Expires() []byte {
+	return rcv.EXPIRES()
 }
 
 /// Expiration time (ISO 8601)
@@ -144,6 +184,10 @@ func (rcv *KMLNetworkLinkControl) UPDATE(obj *KMLUpdate) *KMLUpdate {
 	return nil
 }
 
+func (rcv *KMLNetworkLinkControl) Update(obj *KMLUpdate) *KMLUpdate {
+	return rcv.UPDATE(obj)
+}
+
 /// Update
 /// LookAt
 func (rcv *KMLNetworkLinkControl) LOOK_AT(obj *KMLLookAt) *KMLLookAt {
@@ -157,6 +201,10 @@ func (rcv *KMLNetworkLinkControl) LOOK_AT(obj *KMLLookAt) *KMLLookAt {
 		return obj
 	}
 	return nil
+}
+
+func (rcv *KMLNetworkLinkControl) LookAt(obj *KMLLookAt) *KMLLookAt {
+	return rcv.LOOK_AT(obj)
 }
 
 /// LookAt
@@ -174,6 +222,10 @@ func (rcv *KMLNetworkLinkControl) CAMERA(obj *KMLCamera) *KMLCamera {
 	return nil
 }
 
+func (rcv *KMLNetworkLinkControl) Camera(obj *KMLCamera) *KMLCamera {
+	return rcv.CAMERA(obj)
+}
+
 /// Camera
 func KMLNetworkLinkControlStart(builder *flatbuffers.Builder) {
 	builder.StartObject(11)
@@ -181,35 +233,68 @@ func KMLNetworkLinkControlStart(builder *flatbuffers.Builder) {
 func KMLNetworkLinkControlAddMIN_REFRESH_PERIOD(builder *flatbuffers.Builder, MIN_REFRESH_PERIOD float64) {
 	builder.PrependFloat64Slot(0, MIN_REFRESH_PERIOD, 0.0)
 }
+func KMLNetworkLinkControlAddMinRefreshPeriod(builder *flatbuffers.Builder, MIN_REFRESH_PERIOD float64) {
+	KMLNetworkLinkControlAddMIN_REFRESH_PERIOD(builder, MIN_REFRESH_PERIOD)
+}
 func KMLNetworkLinkControlAddMAX_SESSION_LENGTH(builder *flatbuffers.Builder, MAX_SESSION_LENGTH float64) {
 	builder.PrependFloat64Slot(1, MAX_SESSION_LENGTH, 0.0)
+}
+func KMLNetworkLinkControlAddMaxSessionLength(builder *flatbuffers.Builder, MAX_SESSION_LENGTH float64) {
+	KMLNetworkLinkControlAddMAX_SESSION_LENGTH(builder, MAX_SESSION_LENGTH)
 }
 func KMLNetworkLinkControlAddCOOKIE(builder *flatbuffers.Builder, COOKIE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(COOKIE), 0)
 }
+func KMLNetworkLinkControlAddCookie(builder *flatbuffers.Builder, COOKIE flatbuffers.UOffsetT) {
+	KMLNetworkLinkControlAddCOOKIE(builder, COOKIE)
+}
 func KMLNetworkLinkControlAddMESSAGE(builder *flatbuffers.Builder, MESSAGE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(MESSAGE), 0)
+}
+func KMLNetworkLinkControlAddMessage(builder *flatbuffers.Builder, MESSAGE flatbuffers.UOffsetT) {
+	KMLNetworkLinkControlAddMESSAGE(builder, MESSAGE)
 }
 func KMLNetworkLinkControlAddLINK_NAME(builder *flatbuffers.Builder, LINK_NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(LINK_NAME), 0)
 }
+func KMLNetworkLinkControlAddLinkName(builder *flatbuffers.Builder, LINK_NAME flatbuffers.UOffsetT) {
+	KMLNetworkLinkControlAddLINK_NAME(builder, LINK_NAME)
+}
 func KMLNetworkLinkControlAddLINK_DESCRIPTION(builder *flatbuffers.Builder, LINK_DESCRIPTION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(LINK_DESCRIPTION), 0)
+}
+func KMLNetworkLinkControlAddLinkDescription(builder *flatbuffers.Builder, LINK_DESCRIPTION flatbuffers.UOffsetT) {
+	KMLNetworkLinkControlAddLINK_DESCRIPTION(builder, LINK_DESCRIPTION)
 }
 func KMLNetworkLinkControlAddLINK_SNIPPET(builder *flatbuffers.Builder, LINK_SNIPPET flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(LINK_SNIPPET), 0)
 }
+func KMLNetworkLinkControlAddLinkSnippet(builder *flatbuffers.Builder, LINK_SNIPPET flatbuffers.UOffsetT) {
+	KMLNetworkLinkControlAddLINK_SNIPPET(builder, LINK_SNIPPET)
+}
 func KMLNetworkLinkControlAddEXPIRES(builder *flatbuffers.Builder, EXPIRES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(EXPIRES), 0)
+}
+func KMLNetworkLinkControlAddExpires(builder *flatbuffers.Builder, EXPIRES flatbuffers.UOffsetT) {
+	KMLNetworkLinkControlAddEXPIRES(builder, EXPIRES)
 }
 func KMLNetworkLinkControlAddUPDATE(builder *flatbuffers.Builder, UPDATE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(UPDATE), 0)
 }
+func KMLNetworkLinkControlAddUpdate(builder *flatbuffers.Builder, UPDATE flatbuffers.UOffsetT) {
+	KMLNetworkLinkControlAddUPDATE(builder, UPDATE)
+}
 func KMLNetworkLinkControlAddLOOK_AT(builder *flatbuffers.Builder, LOOK_AT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(LOOK_AT), 0)
 }
+func KMLNetworkLinkControlAddLookAt(builder *flatbuffers.Builder, LOOK_AT flatbuffers.UOffsetT) {
+	KMLNetworkLinkControlAddLOOK_AT(builder, LOOK_AT)
+}
 func KMLNetworkLinkControlAddCAMERA(builder *flatbuffers.Builder, CAMERA flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(CAMERA), 0)
+}
+func KMLNetworkLinkControlAddCamera(builder *flatbuffers.Builder, CAMERA flatbuffers.UOffsetT) {
+	KMLNetworkLinkControlAddCAMERA(builder, CAMERA)
 }
 func KMLNetworkLinkControlEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

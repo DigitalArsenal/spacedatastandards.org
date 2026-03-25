@@ -32,7 +32,7 @@ class BinaryParameterType : Table() {
     /**
      * Type name
      */
-    val NAME : String?
+    val name : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class BinaryParameterType : Table() {
                 null
             }
         }
-    val NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val nameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun nameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Short description
      */
-    val SHORT_DESCRIPTION : String?
+    val shortDescription : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -55,12 +55,12 @@ class BinaryParameterType : Table() {
                 null
             }
         }
-    val SHORT_DESCRIPTIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun SHORT_DESCRIPTIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val shortDescriptionAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun shortDescriptionInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * Long description
      */
-    val LONG_DESCRIPTION : String?
+    val longDescription : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -69,13 +69,13 @@ class BinaryParameterType : Table() {
                 null
             }
         }
-    val LONG_DESCRIPTIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun LONG_DESCRIPTIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val longDescriptionAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun longDescriptionInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
     /**
      * Data encoding
      */
-    val DATA_ENCODING : BinaryDataEncoding? get() = DATA_ENCODING(BinaryDataEncoding())
-    fun DATA_ENCODING(obj: BinaryDataEncoding) : BinaryDataEncoding? {
+    val dataEncoding : BinaryDataEncoding? get() = dataEncoding(BinaryDataEncoding())
+    fun dataEncoding(obj: BinaryDataEncoding) : BinaryDataEncoding? {
         val o = __offset(10)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -86,7 +86,7 @@ class BinaryParameterType : Table() {
     /**
      * Initial/default value (hex string)
      */
-    val INITIAL_VALUE : String?
+    val initialValue : String?
         get() {
             val o = __offset(12)
             return if (o != 0) {
@@ -95,30 +95,30 @@ class BinaryParameterType : Table() {
                 null
             }
         }
-    val INITIAL_VALUEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
-    fun INITIAL_VALUEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
+    val initialValueAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(12, 1)
+    fun initialValueInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 12, 1)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsBinaryParameterType(_bb: ByteBuffer): BinaryParameterType = getRootAsBinaryParameterType(_bb, BinaryParameterType())
         fun getRootAsBinaryParameterType(_bb: ByteBuffer, obj: BinaryParameterType): BinaryParameterType {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createBinaryParameterType(builder: FlatBufferBuilder, NAMEOffset: Int, SHORT_DESCRIPTIONOffset: Int, LONG_DESCRIPTIONOffset: Int, DATA_ENCODINGOffset: Int, INITIAL_VALUEOffset: Int) : Int {
+        fun createBinaryParameterType(builder: FlatBufferBuilder, nameOffset: Int, shortDescriptionOffset: Int, longDescriptionOffset: Int, dataEncodingOffset: Int, initialValueOffset: Int) : Int {
             builder.startTable(5)
-            addINITIAL_VALUE(builder, INITIAL_VALUEOffset)
-            addDATA_ENCODING(builder, DATA_ENCODINGOffset)
-            addLONG_DESCRIPTION(builder, LONG_DESCRIPTIONOffset)
-            addSHORT_DESCRIPTION(builder, SHORT_DESCRIPTIONOffset)
-            addNAME(builder, NAMEOffset)
+            addINITIALVALUE(builder, initialValueOffset)
+            addDATAENCODING(builder, dataEncodingOffset)
+            addLONGDESCRIPTION(builder, longDescriptionOffset)
+            addSHORTDESCRIPTION(builder, shortDescriptionOffset)
+            addNAME(builder, nameOffset)
             return endBinaryParameterType(builder)
         }
         fun startBinaryParameterType(builder: FlatBufferBuilder) = builder.startTable(5)
-        fun addNAME(builder: FlatBufferBuilder, NAME: Int) = builder.addOffset(0, NAME, 0)
-        fun addSHORT_DESCRIPTION(builder: FlatBufferBuilder, SHORT_DESCRIPTION: Int) = builder.addOffset(1, SHORT_DESCRIPTION, 0)
-        fun addLONG_DESCRIPTION(builder: FlatBufferBuilder, LONG_DESCRIPTION: Int) = builder.addOffset(2, LONG_DESCRIPTION, 0)
-        fun addDATA_ENCODING(builder: FlatBufferBuilder, DATA_ENCODING: Int) = builder.addOffset(3, DATA_ENCODING, 0)
-        fun addINITIAL_VALUE(builder: FlatBufferBuilder, INITIAL_VALUE: Int) = builder.addOffset(4, INITIAL_VALUE, 0)
+        fun addNAME(builder: FlatBufferBuilder, name: Int) = builder.addOffset(0, name, 0)
+        fun addSHORTDESCRIPTION(builder: FlatBufferBuilder, shortDescription: Int) = builder.addOffset(1, shortDescription, 0)
+        fun addLONGDESCRIPTION(builder: FlatBufferBuilder, longDescription: Int) = builder.addOffset(2, longDescription, 0)
+        fun addDATAENCODING(builder: FlatBufferBuilder, dataEncoding: Int) = builder.addOffset(3, dataEncoding, 0)
+        fun addINITIALVALUE(builder: FlatBufferBuilder, initialValue: Int) = builder.addOffset(4, initialValue, 0)
         fun endBinaryParameterType(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

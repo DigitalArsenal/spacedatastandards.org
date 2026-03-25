@@ -51,9 +51,17 @@ func (rcv *CZMColor) RED() byte {
 	return 0
 }
 
+func (rcv *CZMColor) Red() byte {
+	return rcv.RED()
+}
+
 /// Red component (0-255)
 func (rcv *CZMColor) MutateRED(n byte) bool {
 	return rcv._tab.MutateByteSlot(4, n)
+}
+
+func (rcv *CZMColor) MutateRed(n byte) bool {
+	return rcv.MutateRED(n)
 }
 
 /// Green component (0-255)
@@ -65,9 +73,17 @@ func (rcv *CZMColor) GREEN() byte {
 	return 0
 }
 
+func (rcv *CZMColor) Green() byte {
+	return rcv.GREEN()
+}
+
 /// Green component (0-255)
 func (rcv *CZMColor) MutateGREEN(n byte) bool {
 	return rcv._tab.MutateByteSlot(6, n)
+}
+
+func (rcv *CZMColor) MutateGreen(n byte) bool {
+	return rcv.MutateGREEN(n)
 }
 
 /// Blue component (0-255)
@@ -79,9 +95,17 @@ func (rcv *CZMColor) BLUE() byte {
 	return 0
 }
 
+func (rcv *CZMColor) Blue() byte {
+	return rcv.BLUE()
+}
+
 /// Blue component (0-255)
 func (rcv *CZMColor) MutateBLUE(n byte) bool {
 	return rcv._tab.MutateByteSlot(8, n)
+}
+
+func (rcv *CZMColor) MutateBlue(n byte) bool {
+	return rcv.MutateBLUE(n)
 }
 
 /// Alpha component (0-255)
@@ -93,9 +117,17 @@ func (rcv *CZMColor) ALPHA() byte {
 	return 0
 }
 
+func (rcv *CZMColor) Alpha() byte {
+	return rcv.ALPHA()
+}
+
 /// Alpha component (0-255)
 func (rcv *CZMColor) MutateALPHA(n byte) bool {
 	return rcv._tab.MutateByteSlot(10, n)
+}
+
+func (rcv *CZMColor) MutateAlpha(n byte) bool {
+	return rcv.MutateALPHA(n)
 }
 
 func CZMColorStart(builder *flatbuffers.Builder) {
@@ -104,14 +136,26 @@ func CZMColorStart(builder *flatbuffers.Builder) {
 func CZMColorAddRED(builder *flatbuffers.Builder, RED byte) {
 	builder.PrependByteSlot(0, RED, 0)
 }
+func CZMColorAddRed(builder *flatbuffers.Builder, RED byte) {
+	CZMColorAddRED(builder, RED)
+}
 func CZMColorAddGREEN(builder *flatbuffers.Builder, GREEN byte) {
 	builder.PrependByteSlot(1, GREEN, 0)
+}
+func CZMColorAddGreen(builder *flatbuffers.Builder, GREEN byte) {
+	CZMColorAddGREEN(builder, GREEN)
 }
 func CZMColorAddBLUE(builder *flatbuffers.Builder, BLUE byte) {
 	builder.PrependByteSlot(2, BLUE, 0)
 }
+func CZMColorAddBlue(builder *flatbuffers.Builder, BLUE byte) {
+	CZMColorAddBLUE(builder, BLUE)
+}
 func CZMColorAddALPHA(builder *flatbuffers.Builder, ALPHA byte) {
 	builder.PrependByteSlot(3, ALPHA, 0)
+}
+func CZMColorAddAlpha(builder *flatbuffers.Builder, ALPHA byte) {
+	CZMColorAddALPHA(builder, ALPHA)
 }
 func CZMColorEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

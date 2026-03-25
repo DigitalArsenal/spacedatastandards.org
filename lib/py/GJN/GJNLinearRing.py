@@ -73,6 +73,12 @@ def GJNLinearRingStartPOSITIONSVector(builder, numElems):
 def StartPOSITIONSVector(builder, numElems):
     return GJNLinearRingStartPOSITIONSVector(builder, numElems)
 
+def GJNLinearRingCreatePOSITIONSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreatePOSITIONSVector(builder, data):
+    GJNLinearRingCreatePOSITIONSVector(builder, data)
+
 def GJNLinearRingEnd(builder):
     return builder.EndObject()
 
@@ -88,14 +94,17 @@ except:
 class GJNLinearRingT(object):
 
     # GJNLinearRingT
-    def __init__(self):
-        self.POSITIONS = None  # type: List[GJNPosition.GJNPositionT]
+    def __init__(
+        self,
+        POSITIONS = None,
+    ):
+        self.POSITIONS = POSITIONS  # type: Optional[List[GJNPosition.GJNPositionT]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        gjnlinearRing = GJNLinearRing()
-        gjnlinearRing.Init(buf, pos)
-        return cls.InitFromObj(gjnlinearRing)
+        tmpGjnlinearRing = GJNLinearRing()
+        tmpGjnlinearRing.Init(buf, pos)
+        return cls.InitFromObj(tmpGjnlinearRing)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -103,22 +112,22 @@ class GJNLinearRingT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, gjnlinearRing):
+    def InitFromObj(cls, tmpGjnlinearRing):
         x = GJNLinearRingT()
-        x._UnPack(gjnlinearRing)
+        x._UnPack(tmpGjnlinearRing)
         return x
 
     # GJNLinearRingT
-    def _UnPack(self, gjnlinearRing):
-        if gjnlinearRing is None:
+    def _UnPack(self, GJNLinearRing):
+        if GJNLinearRing is None:
             return
-        if not gjnlinearRing.POSITIONSIsNone():
+        if not GJNLinearRing.POSITIONSIsNone():
             self.POSITIONS = []
-            for i in range(gjnlinearRing.POSITIONSLength()):
-                if gjnlinearRing.POSITIONS(i) is None:
+            for i in range(GJNLinearRing.POSITIONSLength()):
+                if GJNLinearRing.POSITIONS(i) is None:
                     self.POSITIONS.append(None)
                 else:
-                    gJNPosition_ = GJNPosition.GJNPositionT.InitFromObj(gjnlinearRing.POSITIONS(i))
+                    gJNPosition_ = GJNPosition.GJNPositionT.InitFromObj(GJNLinearRing.POSITIONS(i))
                     self.POSITIONS.append(gJNPosition_)
 
     # GJNLinearRingT
@@ -134,5 +143,5 @@ class GJNLinearRingT(object):
         GJNLinearRingStart(builder)
         if self.POSITIONS is not None:
             GJNLinearRingAddPOSITIONS(builder, POSITIONS)
-        gjnlinearRing = GJNLinearRingEnd(builder)
-        return gjnlinearRing
+        GJNLinearRing = GJNLinearRingEnd(builder)
+        return GJNLinearRing

@@ -292,32 +292,53 @@ def End(builder):
 class HELT(object):
 
     # HELT
-    def __init__(self):
-        self.POSITION_X = 0.0  # type: float
-        self.POSITION_Y = 0.0  # type: float
-        self.POSITION_Z = 0.0  # type: float
-        self.VELOCITY_X = 0.0  # type: float
-        self.VELOCITY_Y = 0.0  # type: float
-        self.VELOCITY_Z = 0.0  # type: float
-        self.QUAT_W = 0.0  # type: float
-        self.QUAT_X = 0.0  # type: float
-        self.QUAT_Y = 0.0  # type: float
-        self.QUAT_Z = 0.0  # type: float
-        self.OMEGA_BODY_X = 0.0  # type: float
-        self.OMEGA_BODY_Y = 0.0  # type: float
-        self.OMEGA_BODY_Z = 0.0  # type: float
-        self.MAIN_ROTOR = None  # type: str
-        self.TAIL_ROTOR = None  # type: str
-        self.ENGINE_N1 = 0.0  # type: float
-        self.ENGINE_TORQUE = 0.0  # type: float
-        self.FLAGS = 0  # type: int
-        self.FUEL_REMAINING = 0.0  # type: float
+    def __init__(
+        self,
+        POSITION_X = 0.0,
+        POSITION_Y = 0.0,
+        POSITION_Z = 0.0,
+        VELOCITY_X = 0.0,
+        VELOCITY_Y = 0.0,
+        VELOCITY_Z = 0.0,
+        QUAT_W = 0.0,
+        QUAT_X = 0.0,
+        QUAT_Y = 0.0,
+        QUAT_Z = 0.0,
+        OMEGA_BODY_X = 0.0,
+        OMEGA_BODY_Y = 0.0,
+        OMEGA_BODY_Z = 0.0,
+        MAIN_ROTOR = None,
+        TAIL_ROTOR = None,
+        ENGINE_N1 = 0.0,
+        ENGINE_TORQUE = 0.0,
+        FLAGS = 0,
+        FUEL_REMAINING = 0.0,
+    ):
+        self.POSITION_X = POSITION_X  # type: float
+        self.POSITION_Y = POSITION_Y  # type: float
+        self.POSITION_Z = POSITION_Z  # type: float
+        self.VELOCITY_X = VELOCITY_X  # type: float
+        self.VELOCITY_Y = VELOCITY_Y  # type: float
+        self.VELOCITY_Z = VELOCITY_Z  # type: float
+        self.QUAT_W = QUAT_W  # type: float
+        self.QUAT_X = QUAT_X  # type: float
+        self.QUAT_Y = QUAT_Y  # type: float
+        self.QUAT_Z = QUAT_Z  # type: float
+        self.OMEGA_BODY_X = OMEGA_BODY_X  # type: float
+        self.OMEGA_BODY_Y = OMEGA_BODY_Y  # type: float
+        self.OMEGA_BODY_Z = OMEGA_BODY_Z  # type: float
+        self.MAIN_ROTOR = MAIN_ROTOR  # type: Optional[str]
+        self.TAIL_ROTOR = TAIL_ROTOR  # type: Optional[str]
+        self.ENGINE_N1 = ENGINE_N1  # type: float
+        self.ENGINE_TORQUE = ENGINE_TORQUE  # type: float
+        self.FLAGS = FLAGS  # type: int
+        self.FUEL_REMAINING = FUEL_REMAINING  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        HEL = HEL()
-        HEL.Init(buf, pos)
-        return cls.InitFromObj(HEL)
+        tmpHel = HEL()
+        tmpHel.Init(buf, pos)
+        return cls.InitFromObj(tmpHel)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -325,9 +346,9 @@ class HELT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, HEL):
+    def InitFromObj(cls, tmpHel):
         x = HELT()
-        x._UnPack(HEL)
+        x._UnPack(tmpHel)
         return x
 
     # HELT

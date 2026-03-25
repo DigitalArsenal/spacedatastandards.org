@@ -52,10 +52,10 @@ class Record : Table() {
                 null
             }
         }
-    val standardAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun standardInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val standardAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun standardInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsRecord(_bb: ByteBuffer): Record = getRootAsRecord(_bb, Record())
         fun getRootAsRecord(_bb: ByteBuffer, obj: Record): Record {
             _bb.order(ByteOrder.LITTLE_ENDIAN)

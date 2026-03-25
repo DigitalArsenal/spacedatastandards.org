@@ -56,6 +56,10 @@ func (rcv *CZMMaterial) SOLID_COLOR(obj *CZMSolidColorMaterial) *CZMSolidColorMa
 	return nil
 }
 
+func (rcv *CZMMaterial) SolidColor(obj *CZMSolidColorMaterial) *CZMSolidColorMaterial {
+	return rcv.SOLID_COLOR(obj)
+}
+
 /// Solid color material
 /// Image material
 func (rcv *CZMMaterial) IMAGE(obj *CZMImageMaterial) *CZMImageMaterial {
@@ -69,6 +73,10 @@ func (rcv *CZMMaterial) IMAGE(obj *CZMImageMaterial) *CZMImageMaterial {
 		return obj
 	}
 	return nil
+}
+
+func (rcv *CZMMaterial) Image(obj *CZMImageMaterial) *CZMImageMaterial {
+	return rcv.IMAGE(obj)
 }
 
 /// Image material
@@ -86,6 +94,10 @@ func (rcv *CZMMaterial) GRID(obj *CZMGridMaterial) *CZMGridMaterial {
 	return nil
 }
 
+func (rcv *CZMMaterial) Grid(obj *CZMGridMaterial) *CZMGridMaterial {
+	return rcv.GRID(obj)
+}
+
 /// Grid material
 /// Stripe material
 func (rcv *CZMMaterial) STRIPE(obj *CZMStripeMaterial) *CZMStripeMaterial {
@@ -99,6 +111,10 @@ func (rcv *CZMMaterial) STRIPE(obj *CZMStripeMaterial) *CZMStripeMaterial {
 		return obj
 	}
 	return nil
+}
+
+func (rcv *CZMMaterial) Stripe(obj *CZMStripeMaterial) *CZMStripeMaterial {
+	return rcv.STRIPE(obj)
 }
 
 /// Stripe material
@@ -116,6 +132,10 @@ func (rcv *CZMMaterial) CHECKERBOARD(obj *CZMCheckerboardMaterial) *CZMCheckerbo
 	return nil
 }
 
+func (rcv *CZMMaterial) Checkerboard(obj *CZMCheckerboardMaterial) *CZMCheckerboardMaterial {
+	return rcv.CHECKERBOARD(obj)
+}
+
 /// Checkerboard material
 func CZMMaterialStart(builder *flatbuffers.Builder) {
 	builder.StartObject(5)
@@ -123,17 +143,32 @@ func CZMMaterialStart(builder *flatbuffers.Builder) {
 func CZMMaterialAddSOLID_COLOR(builder *flatbuffers.Builder, SOLID_COLOR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(SOLID_COLOR), 0)
 }
+func CZMMaterialAddSolidColor(builder *flatbuffers.Builder, SOLID_COLOR flatbuffers.UOffsetT) {
+	CZMMaterialAddSOLID_COLOR(builder, SOLID_COLOR)
+}
 func CZMMaterialAddIMAGE(builder *flatbuffers.Builder, IMAGE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(IMAGE), 0)
+}
+func CZMMaterialAddImage(builder *flatbuffers.Builder, IMAGE flatbuffers.UOffsetT) {
+	CZMMaterialAddIMAGE(builder, IMAGE)
 }
 func CZMMaterialAddGRID(builder *flatbuffers.Builder, GRID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(GRID), 0)
 }
+func CZMMaterialAddGrid(builder *flatbuffers.Builder, GRID flatbuffers.UOffsetT) {
+	CZMMaterialAddGRID(builder, GRID)
+}
 func CZMMaterialAddSTRIPE(builder *flatbuffers.Builder, STRIPE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(STRIPE), 0)
 }
+func CZMMaterialAddStripe(builder *flatbuffers.Builder, STRIPE flatbuffers.UOffsetT) {
+	CZMMaterialAddSTRIPE(builder, STRIPE)
+}
 func CZMMaterialAddCHECKERBOARD(builder *flatbuffers.Builder, CHECKERBOARD flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(CHECKERBOARD), 0)
+}
+func CZMMaterialAddCheckerboard(builder *flatbuffers.Builder, CHECKERBOARD flatbuffers.UOffsetT) {
+	CZMMaterialAddCHECKERBOARD(builder, CHECKERBOARD)
 }
 func CZMMaterialEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

@@ -124,18 +124,25 @@ except:
 class BinaryParameterTypeT(object):
 
     # BinaryParameterTypeT
-    def __init__(self):
-        self.NAME = None  # type: str
-        self.SHORT_DESCRIPTION = None  # type: str
-        self.LONG_DESCRIPTION = None  # type: str
-        self.DATA_ENCODING = None  # type: Optional[BinaryDataEncoding.BinaryDataEncodingT]
-        self.INITIAL_VALUE = None  # type: str
+    def __init__(
+        self,
+        NAME = None,
+        SHORT_DESCRIPTION = None,
+        LONG_DESCRIPTION = None,
+        DATA_ENCODING = None,
+        INITIAL_VALUE = None,
+    ):
+        self.NAME = NAME  # type: Optional[str]
+        self.SHORT_DESCRIPTION = SHORT_DESCRIPTION  # type: Optional[str]
+        self.LONG_DESCRIPTION = LONG_DESCRIPTION  # type: Optional[str]
+        self.DATA_ENCODING = DATA_ENCODING  # type: Optional[BinaryDataEncoding.BinaryDataEncodingT]
+        self.INITIAL_VALUE = INITIAL_VALUE  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        binaryParameterType = BinaryParameterType()
-        binaryParameterType.Init(buf, pos)
-        return cls.InitFromObj(binaryParameterType)
+        tmpBinaryParameterType = BinaryParameterType()
+        tmpBinaryParameterType.Init(buf, pos)
+        return cls.InitFromObj(tmpBinaryParameterType)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -143,21 +150,21 @@ class BinaryParameterTypeT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, binaryParameterType):
+    def InitFromObj(cls, tmpBinaryParameterType):
         x = BinaryParameterTypeT()
-        x._UnPack(binaryParameterType)
+        x._UnPack(tmpBinaryParameterType)
         return x
 
     # BinaryParameterTypeT
-    def _UnPack(self, binaryParameterType):
-        if binaryParameterType is None:
+    def _UnPack(self, BinaryParameterType):
+        if BinaryParameterType is None:
             return
-        self.NAME = binaryParameterType.NAME()
-        self.SHORT_DESCRIPTION = binaryParameterType.SHORT_DESCRIPTION()
-        self.LONG_DESCRIPTION = binaryParameterType.LONG_DESCRIPTION()
-        if binaryParameterType.DATA_ENCODING() is not None:
-            self.DATA_ENCODING = BinaryDataEncoding.BinaryDataEncodingT.InitFromObj(binaryParameterType.DATA_ENCODING())
-        self.INITIAL_VALUE = binaryParameterType.INITIAL_VALUE()
+        self.NAME = BinaryParameterType.NAME()
+        self.SHORT_DESCRIPTION = BinaryParameterType.SHORT_DESCRIPTION()
+        self.LONG_DESCRIPTION = BinaryParameterType.LONG_DESCRIPTION()
+        if BinaryParameterType.DATA_ENCODING() is not None:
+            self.DATA_ENCODING = BinaryDataEncoding.BinaryDataEncodingT.InitFromObj(BinaryParameterType.DATA_ENCODING())
+        self.INITIAL_VALUE = BinaryParameterType.INITIAL_VALUE()
 
     # BinaryParameterTypeT
     def Pack(self, builder):
@@ -182,5 +189,5 @@ class BinaryParameterTypeT(object):
             BinaryParameterTypeAddDATA_ENCODING(builder, DATA_ENCODING)
         if self.INITIAL_VALUE is not None:
             BinaryParameterTypeAddINITIAL_VALUE(builder, INITIAL_VALUE)
-        binaryParameterType = BinaryParameterTypeEnd(builder)
-        return binaryParameterType
+        BinaryParameterType = BinaryParameterTypeEnd(builder)
+        return BinaryParameterType

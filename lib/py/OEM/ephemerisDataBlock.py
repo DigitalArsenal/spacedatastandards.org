@@ -129,7 +129,11 @@ class ephemerisDataBlock(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
-    # Recommended interpolation method for ephemeris data (Hermite, Linear, Lagrange, etc.)
+    # Recommended interpolation method for ephemeris data.
+    # Supported methods: Hermite, Linear, Lagrange, Chebyshev.
+    # When set to "Chebyshev", parsers should use POLYNOMIAL_POSITION_RECORDS
+    # for high-fidelity polynomial interpolation instead of interpolating across
+    # discrete state vectors.
     # ephemerisDataBlock
     def INTERPOLATION(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
@@ -253,8 +257,37 @@ class ephemerisDataBlock(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
         return o == 0
 
+    # Optional polynomial position records for high-fidelity interpolation.
+    # Used when INTERPOLATION is "Chebyshev". Each record covers a time segment with
+    # polynomial coefficients for continuous position (and optionally velocity) evaluation.
+    # See PPE schema for record structure and evaluation procedure.
+    # ephemerisDataBlock
+    def POLYNOMIAL_POSITION_RECORDS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from PPEPositionRecord import PPEPositionRecord
+            obj = PPEPositionRecord()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # ephemerisDataBlock
+    def POLYNOMIAL_POSITION_RECORDSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # ephemerisDataBlock
+    def POLYNOMIAL_POSITION_RECORDSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        return o == 0
+
 def ephemerisDataBlockStart(builder):
-    builder.StartObject(18)
+    builder.StartObject(19)
 
 def Start(builder):
     ephemerisDataBlockStart(builder)
@@ -361,6 +394,16 @@ def ephemerisDataBlockStartEPHEMERIS_DATAVector(builder, numElems):
 def StartEPHEMERIS_DATAVector(builder, numElems):
     return ephemerisDataBlockStartEPHEMERIS_DATAVector(builder, numElems)
 
+def ephemerisDataBlockCreateEPHEMERIS_DATAVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateEPHEMERIS_DATAVector(builder, data):
+    ephemerisDataBlockCreateEPHEMERIS_DATAVector(builder, data)
+
 def ephemerisDataBlockAddEPHEMERIS_DATA_LINES(builder, EPHEMERIS_DATA_LINES):
     builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(EPHEMERIS_DATA_LINES), 0)
 
@@ -372,6 +415,12 @@ def ephemerisDataBlockStartEPHEMERIS_DATA_LINESVector(builder, numElems):
 
 def StartEPHEMERIS_DATA_LINESVector(builder, numElems):
     return ephemerisDataBlockStartEPHEMERIS_DATA_LINESVector(builder, numElems)
+
+def ephemerisDataBlockCreateEPHEMERIS_DATA_LINESVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateEPHEMERIS_DATA_LINESVector(builder, data):
+    ephemerisDataBlockCreateEPHEMERIS_DATA_LINESVector(builder, data)
 
 def ephemerisDataBlockAddCOVARIANCE_MATRIX_LINES(builder, COVARIANCE_MATRIX_LINES):
     builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(COVARIANCE_MATRIX_LINES), 0)
@@ -385,6 +434,30 @@ def ephemerisDataBlockStartCOVARIANCE_MATRIX_LINESVector(builder, numElems):
 def StartCOVARIANCE_MATRIX_LINESVector(builder, numElems):
     return ephemerisDataBlockStartCOVARIANCE_MATRIX_LINESVector(builder, numElems)
 
+def ephemerisDataBlockCreateCOVARIANCE_MATRIX_LINESVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateCOVARIANCE_MATRIX_LINESVector(builder, data):
+    ephemerisDataBlockCreateCOVARIANCE_MATRIX_LINESVector(builder, data)
+
+def ephemerisDataBlockAddPOLYNOMIAL_POSITION_RECORDS(builder, POLYNOMIAL_POSITION_RECORDS):
+    builder.PrependUOffsetTRelativeSlot(18, flatbuffers.number_types.UOffsetTFlags.py_type(POLYNOMIAL_POSITION_RECORDS), 0)
+
+def AddPOLYNOMIAL_POSITION_RECORDS(builder, POLYNOMIAL_POSITION_RECORDS):
+    ephemerisDataBlockAddPOLYNOMIAL_POSITION_RECORDS(builder, POLYNOMIAL_POSITION_RECORDS)
+
+def ephemerisDataBlockStartPOLYNOMIAL_POSITION_RECORDSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartPOLYNOMIAL_POSITION_RECORDSVector(builder, numElems):
+    return ephemerisDataBlockStartPOLYNOMIAL_POSITION_RECORDSVector(builder, numElems)
+
+def ephemerisDataBlockCreatePOLYNOMIAL_POSITION_RECORDSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreatePOLYNOMIAL_POSITION_RECORDSVector(builder, data):
+    ephemerisDataBlockCreatePOLYNOMIAL_POSITION_RECORDSVector(builder, data)
+
 def ephemerisDataBlockEnd(builder):
     return builder.EndObject()
 
@@ -392,6 +465,7 @@ def End(builder):
     return ephemerisDataBlockEnd(builder)
 
 import CAT
+import PPEPositionRecord
 import RFM
 import covarianceMatrixLine
 import ephemerisDataLine
@@ -403,31 +477,53 @@ except:
 class ephemerisDataBlockT(object):
 
     # ephemerisDataBlockT
-    def __init__(self):
-        self.COMMENT = None  # type: str
-        self.OBJECT = None  # type: Optional[CAT.CATT]
-        self.CENTER_NAME = None  # type: str
-        self.REFERENCE_FRAME = None  # type: Optional[RFM.RFMT]
-        self.REFERENCE_FRAME_EPOCH = None  # type: str
-        self.COV_REFERENCE_FRAME = None  # type: Optional[RFM.RFMT]
-        self.TIME_SYSTEM = 0  # type: int
-        self.START_TIME = None  # type: str
-        self.USEABLE_START_TIME = None  # type: str
-        self.USEABLE_STOP_TIME = None  # type: str
-        self.STOP_TIME = None  # type: str
-        self.INTERPOLATION = None  # type: str
-        self.INTERPOLATION_DEGREE = 0  # type: int
-        self.STEP_SIZE = 0.0  # type: float
-        self.STATE_VECTOR_SIZE = 6  # type: int
-        self.EPHEMERIS_DATA = None  # type: List[float]
-        self.EPHEMERIS_DATA_LINES = None  # type: List[ephemerisDataLine.ephemerisDataLineT]
-        self.COVARIANCE_MATRIX_LINES = None  # type: List[covarianceMatrixLine.covarianceMatrixLineT]
+    def __init__(
+        self,
+        COMMENT = None,
+        OBJECT = None,
+        CENTER_NAME = None,
+        REFERENCE_FRAME = None,
+        REFERENCE_FRAME_EPOCH = None,
+        COV_REFERENCE_FRAME = None,
+        TIME_SYSTEM = 0,
+        START_TIME = None,
+        USEABLE_START_TIME = None,
+        USEABLE_STOP_TIME = None,
+        STOP_TIME = None,
+        INTERPOLATION = None,
+        INTERPOLATION_DEGREE = 0,
+        STEP_SIZE = 0.0,
+        STATE_VECTOR_SIZE = 6,
+        EPHEMERIS_DATA = None,
+        EPHEMERIS_DATA_LINES = None,
+        COVARIANCE_MATRIX_LINES = None,
+        POLYNOMIAL_POSITION_RECORDS = None,
+    ):
+        self.COMMENT = COMMENT  # type: Optional[str]
+        self.OBJECT = OBJECT  # type: Optional[CAT.CATT]
+        self.CENTER_NAME = CENTER_NAME  # type: Optional[str]
+        self.REFERENCE_FRAME = REFERENCE_FRAME  # type: Optional[RFM.RFMT]
+        self.REFERENCE_FRAME_EPOCH = REFERENCE_FRAME_EPOCH  # type: Optional[str]
+        self.COV_REFERENCE_FRAME = COV_REFERENCE_FRAME  # type: Optional[RFM.RFMT]
+        self.TIME_SYSTEM = TIME_SYSTEM  # type: int
+        self.START_TIME = START_TIME  # type: Optional[str]
+        self.USEABLE_START_TIME = USEABLE_START_TIME  # type: Optional[str]
+        self.USEABLE_STOP_TIME = USEABLE_STOP_TIME  # type: Optional[str]
+        self.STOP_TIME = STOP_TIME  # type: Optional[str]
+        self.INTERPOLATION = INTERPOLATION  # type: Optional[str]
+        self.INTERPOLATION_DEGREE = INTERPOLATION_DEGREE  # type: int
+        self.STEP_SIZE = STEP_SIZE  # type: float
+        self.STATE_VECTOR_SIZE = STATE_VECTOR_SIZE  # type: int
+        self.EPHEMERIS_DATA = EPHEMERIS_DATA  # type: Optional[List[float]]
+        self.EPHEMERIS_DATA_LINES = EPHEMERIS_DATA_LINES  # type: Optional[List[ephemerisDataLine.ephemerisDataLineT]]
+        self.COVARIANCE_MATRIX_LINES = COVARIANCE_MATRIX_LINES  # type: Optional[List[covarianceMatrixLine.covarianceMatrixLineT]]
+        self.POLYNOMIAL_POSITION_RECORDS = POLYNOMIAL_POSITION_RECORDS  # type: Optional[List[PPEPositionRecord.PPEPositionRecordT]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        ephemerisDataBlock = ephemerisDataBlock()
-        ephemerisDataBlock.Init(buf, pos)
-        return cls.InitFromObj(ephemerisDataBlock)
+        tmpEphemerisDataBlock = ephemerisDataBlock()
+        tmpEphemerisDataBlock.Init(buf, pos)
+        return cls.InitFromObj(tmpEphemerisDataBlock)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -435,9 +531,9 @@ class ephemerisDataBlockT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, ephemerisDataBlock):
+    def InitFromObj(cls, tmpEphemerisDataBlock):
         x = ephemerisDataBlockT()
-        x._UnPack(ephemerisDataBlock)
+        x._UnPack(tmpEphemerisDataBlock)
         return x
 
     # ephemerisDataBlockT
@@ -485,6 +581,14 @@ class ephemerisDataBlockT(object):
                 else:
                     covarianceMatrixLine_ = covarianceMatrixLine.covarianceMatrixLineT.InitFromObj(ephemerisDataBlock.COVARIANCE_MATRIX_LINES(i))
                     self.COVARIANCE_MATRIX_LINES.append(covarianceMatrixLine_)
+        if not ephemerisDataBlock.POLYNOMIAL_POSITION_RECORDSIsNone():
+            self.POLYNOMIAL_POSITION_RECORDS = []
+            for i in range(ephemerisDataBlock.POLYNOMIAL_POSITION_RECORDSLength()):
+                if ephemerisDataBlock.POLYNOMIAL_POSITION_RECORDS(i) is None:
+                    self.POLYNOMIAL_POSITION_RECORDS.append(None)
+                else:
+                    pPEPositionRecord_ = PPEPositionRecord.PPEPositionRecordT.InitFromObj(ephemerisDataBlock.POLYNOMIAL_POSITION_RECORDS(i))
+                    self.POLYNOMIAL_POSITION_RECORDS.append(pPEPositionRecord_)
 
     # ephemerisDataBlockT
     def Pack(self, builder):
@@ -534,6 +638,14 @@ class ephemerisDataBlockT(object):
             for i in reversed(range(len(self.COVARIANCE_MATRIX_LINES))):
                 builder.PrependUOffsetTRelative(COVARIANCE_MATRIX_LINESlist[i])
             COVARIANCE_MATRIX_LINES = builder.EndVector()
+        if self.POLYNOMIAL_POSITION_RECORDS is not None:
+            POLYNOMIAL_POSITION_RECORDSlist = []
+            for i in range(len(self.POLYNOMIAL_POSITION_RECORDS)):
+                POLYNOMIAL_POSITION_RECORDSlist.append(self.POLYNOMIAL_POSITION_RECORDS[i].Pack(builder))
+            ephemerisDataBlockStartPOLYNOMIAL_POSITION_RECORDSVector(builder, len(self.POLYNOMIAL_POSITION_RECORDS))
+            for i in reversed(range(len(self.POLYNOMIAL_POSITION_RECORDS))):
+                builder.PrependUOffsetTRelative(POLYNOMIAL_POSITION_RECORDSlist[i])
+            POLYNOMIAL_POSITION_RECORDS = builder.EndVector()
         ephemerisDataBlockStart(builder)
         if self.COMMENT is not None:
             ephemerisDataBlockAddCOMMENT(builder, COMMENT)
@@ -567,5 +679,7 @@ class ephemerisDataBlockT(object):
             ephemerisDataBlockAddEPHEMERIS_DATA_LINES(builder, EPHEMERIS_DATA_LINES)
         if self.COVARIANCE_MATRIX_LINES is not None:
             ephemerisDataBlockAddCOVARIANCE_MATRIX_LINES(builder, COVARIANCE_MATRIX_LINES)
+        if self.POLYNOMIAL_POSITION_RECORDS is not None:
+            ephemerisDataBlockAddPOLYNOMIAL_POSITION_RECORDS(builder, POLYNOMIAL_POSITION_RECORDS)
         ephemerisDataBlock = ephemerisDataBlockEnd(builder)
         return ephemerisDataBlock

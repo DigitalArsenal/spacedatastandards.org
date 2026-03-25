@@ -93,6 +93,7 @@ import { PLD, PLDT } from './PLD.js';
 import { PLG, PLGT } from './PLG.js';
 import { PLK, PLKT } from './PLK.js';
 import { PNM, PNMT } from './PNM.js';
+import { PPE, PPET } from './PPE.js';
 import { PRG, PRGT } from './PRG.js';
 import { PUR, PURT } from './PUR.js';
 import { RAF, RAFT } from './RAF.js';
@@ -159,7 +160,7 @@ static getSizePrefixedRootAsRecord(bb:flatbuffers.ByteBuffer, obj?:Record):Recor
   return (obj || new Record()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 }
 
-valueType():RecordType {
+value_type():RecordType {
   const offset = this.bb!.__offset(this.bb_pos, 4);
   return offset ? this.bb!.readUint8(this.bb_pos + offset) : RecordType.NONE;
 }
@@ -186,8 +187,8 @@ static startRecord(builder:flatbuffers.Builder) {
   builder.startObject(3);
 }
 
-static addValueType(builder:flatbuffers.Builder, valueType:RecordType) {
-  builder.addFieldInt8(0, valueType, RecordType.NONE);
+static addValueType(builder:flatbuffers.Builder, value_type:RecordType) {
+  builder.addFieldInt8(0, value_type, RecordType.NONE);
 }
 
 static addValue(builder:flatbuffers.Builder, valueOffset:flatbuffers.Offset) {
@@ -203,9 +204,9 @@ static endRecord(builder:flatbuffers.Builder):flatbuffers.Offset {
   return offset;
 }
 
-static createRecord(builder:flatbuffers.Builder, valueType:RecordType, valueOffset:flatbuffers.Offset, standardOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createRecord(builder:flatbuffers.Builder, value_type:RecordType, valueOffset:flatbuffers.Offset, standardOffset:flatbuffers.Offset):flatbuffers.Offset {
   Record.startRecord(builder);
-  Record.addValueType(builder, valueType);
+  Record.addValueType(builder, value_type);
   Record.addValue(builder, valueOffset);
   Record.addStandard(builder, standardOffset);
   return Record.endRecord(builder);
@@ -213,9 +214,9 @@ static createRecord(builder:flatbuffers.Builder, valueType:RecordType, valueOffs
 
 unpack(): RecordT {
   return new RecordT(
-    this.valueType(),
+    this.value_type(),
     (() => {
-      const temp = unionToRecordType(this.valueType(), this.value.bind(this));
+      const temp = unionToRecordType(this.value_type(), this.value.bind(this));
       if(temp === null) { return null; }
       return temp.unpack()
   })(),
@@ -225,9 +226,9 @@ unpack(): RecordT {
 
 
 unpackTo(_o: RecordT): void {
-  _o.valueType = this.valueType();
+  _o.value_type = this.value_type();
   _o.value = (() => {
-      const temp = unionToRecordType(this.valueType(), this.value.bind(this));
+      const temp = unionToRecordType(this.value_type(), this.value.bind(this));
       if(temp === null) { return null; }
       return temp.unpack()
   })();
@@ -237,8 +238,8 @@ unpackTo(_o: RecordT): void {
 
 export class RecordT implements flatbuffers.IGeneratedObject {
 constructor(
-  public valueType: RecordType = RecordType.NONE,
-  public value: ACLT|ACMT|ACRT|AEMT|ANIT|AOFT|APMT|ARMT|ASTT|ATDT|ATMT|BALT|BEMT|BMCT|BOVT|BUST|CATT|CDMT|CFPT|CHNT|CLTT|CMST|COMT|COTT|CRDT|CRMT|CSMT|CTRT|CZMT|DFHT|DMGT|DOAT|EMET|ENCT|ENVT|EOOT|EOPT|EPMT|EWRT|FCST|GDIT|GEOT|GJNT|GNOT|GPXT|GRVT|GVHT|HELT|HYPT|IDMT|IONT|IROT|KMLT|LCCT|LDMT|LKST|LNDT|LNET|METT|MFET|MNFT|MNVT|MPET|MSLT|MSTT|MTIT|NAVT|OBDT|OBTT|OCMT|OEMT|OMMT|OOAT|OOBT|OODT|OOET|OOIT|OOLT|OONT|OOST|OOTT|OPMT|OSMT|PCFT|PHYT|PLDT|PLGT|PLKT|PNMT|PRGT|PURT|RAFT|RCFT|RDMT|RDOT|REVT|RFBT|RFET|RFMT|RFOT|ROCT|SART|SCMT|SDLT|SENT|SEOT|SEVT|SITT|SKIT|SNRT|SOIT|SONT|SPPT|SPWT|STFT|STRT|STVT|SWRT|TCFT|TDMT|TIMT|TKGT|TMET|TMFT|TPNT|TRKT|TRNT|VCMT|WPNT|WTHT|XTCT|null = null,
+  public value_type: RecordType = RecordType.NONE,
+  public value: ACLT|ACMT|ACRT|AEMT|ANIT|AOFT|APMT|ARMT|ASTT|ATDT|ATMT|BALT|BEMT|BMCT|BOVT|BUST|CATT|CDMT|CFPT|CHNT|CLTT|CMST|COMT|COTT|CRDT|CRMT|CSMT|CTRT|CZMT|DFHT|DMGT|DOAT|EMET|ENCT|ENVT|EOOT|EOPT|EPMT|EWRT|FCST|GDIT|GEOT|GJNT|GNOT|GPXT|GRVT|GVHT|HELT|HYPT|IDMT|IONT|IROT|KMLT|LCCT|LDMT|LKST|LNDT|LNET|METT|MFET|MNFT|MNVT|MPET|MSLT|MSTT|MTIT|NAVT|OBDT|OBTT|OCMT|OEMT|OMMT|OOAT|OOBT|OODT|OOET|OOIT|OOLT|OONT|OOST|OOTT|OPMT|OSMT|PCFT|PHYT|PLDT|PLGT|PLKT|PNMT|PPET|PRGT|PURT|RAFT|RCFT|RDMT|RDOT|REVT|RFBT|RFET|RFMT|RFOT|ROCT|SART|SCMT|SDLT|SENT|SEOT|SEVT|SITT|SKIT|SNRT|SOIT|SONT|SPPT|SPWT|STFT|STRT|STVT|SWRT|TCFT|TDMT|TIMT|TKGT|TMET|TMFT|TPNT|TRKT|TRNT|VCMT|WPNT|WTHT|XTCT|null = null,
   public standard: string|Uint8Array|null = null
 ){}
 
@@ -248,7 +249,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const standard = (this.standard !== null ? builder.createString(this.standard!) : 0);
 
   return Record.createRecord(builder,
-    this.valueType,
+    this.value_type,
     value,
     standard
   );

@@ -32,8 +32,8 @@ class CommandContainerEntry : Table() {
     /**
      * Argument reference entry
      */
-    val ARGUMENT_REF_ENTRY : ArgumentRefEntry? get() = ARGUMENT_REF_ENTRY(ArgumentRefEntry())
-    fun ARGUMENT_REF_ENTRY(obj: ArgumentRefEntry) : ArgumentRefEntry? {
+    val argumentRefEntry : ArgumentRefEntry? get() = argumentRefEntry(ArgumentRefEntry())
+    fun argumentRefEntry(obj: ArgumentRefEntry) : ArgumentRefEntry? {
         val o = __offset(4)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -44,8 +44,8 @@ class CommandContainerEntry : Table() {
     /**
      * Parameter reference entry
      */
-    val PARAMETER_REF_ENTRY : ParameterRefEntry? get() = PARAMETER_REF_ENTRY(ParameterRefEntry())
-    fun PARAMETER_REF_ENTRY(obj: ParameterRefEntry) : ParameterRefEntry? {
+    val parameterRefEntry : ParameterRefEntry? get() = parameterRefEntry(ParameterRefEntry())
+    fun parameterRefEntry(obj: ParameterRefEntry) : ParameterRefEntry? {
         val o = __offset(6)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -56,8 +56,8 @@ class CommandContainerEntry : Table() {
     /**
      * Fixed value entry
      */
-    val FIXED_VALUE_ENTRY : FixedValueEntry? get() = FIXED_VALUE_ENTRY(FixedValueEntry())
-    fun FIXED_VALUE_ENTRY(obj: FixedValueEntry) : FixedValueEntry? {
+    val fixedValueEntry : FixedValueEntry? get() = fixedValueEntry(FixedValueEntry())
+    fun fixedValueEntry(obj: FixedValueEntry) : FixedValueEntry? {
         val o = __offset(8)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -66,23 +66,23 @@ class CommandContainerEntry : Table() {
         }
     }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsCommandContainerEntry(_bb: ByteBuffer): CommandContainerEntry = getRootAsCommandContainerEntry(_bb, CommandContainerEntry())
         fun getRootAsCommandContainerEntry(_bb: ByteBuffer, obj: CommandContainerEntry): CommandContainerEntry {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createCommandContainerEntry(builder: FlatBufferBuilder, ARGUMENT_REF_ENTRYOffset: Int, PARAMETER_REF_ENTRYOffset: Int, FIXED_VALUE_ENTRYOffset: Int) : Int {
+        fun createCommandContainerEntry(builder: FlatBufferBuilder, argumentRefEntryOffset: Int, parameterRefEntryOffset: Int, fixedValueEntryOffset: Int) : Int {
             builder.startTable(3)
-            addFIXED_VALUE_ENTRY(builder, FIXED_VALUE_ENTRYOffset)
-            addPARAMETER_REF_ENTRY(builder, PARAMETER_REF_ENTRYOffset)
-            addARGUMENT_REF_ENTRY(builder, ARGUMENT_REF_ENTRYOffset)
+            addFIXEDVALUEENTRY(builder, fixedValueEntryOffset)
+            addPARAMETERREFENTRY(builder, parameterRefEntryOffset)
+            addARGUMENTREFENTRY(builder, argumentRefEntryOffset)
             return endCommandContainerEntry(builder)
         }
         fun startCommandContainerEntry(builder: FlatBufferBuilder) = builder.startTable(3)
-        fun addARGUMENT_REF_ENTRY(builder: FlatBufferBuilder, ARGUMENT_REF_ENTRY: Int) = builder.addOffset(0, ARGUMENT_REF_ENTRY, 0)
-        fun addPARAMETER_REF_ENTRY(builder: FlatBufferBuilder, PARAMETER_REF_ENTRY: Int) = builder.addOffset(1, PARAMETER_REF_ENTRY, 0)
-        fun addFIXED_VALUE_ENTRY(builder: FlatBufferBuilder, FIXED_VALUE_ENTRY: Int) = builder.addOffset(2, FIXED_VALUE_ENTRY, 0)
+        fun addARGUMENTREFENTRY(builder: FlatBufferBuilder, argumentRefEntry: Int) = builder.addOffset(0, argumentRefEntry, 0)
+        fun addPARAMETERREFENTRY(builder: FlatBufferBuilder, parameterRefEntry: Int) = builder.addOffset(1, parameterRefEntry, 0)
+        fun addFIXEDVALUEENTRY(builder: FlatBufferBuilder, fixedValueEntry: Int) = builder.addOffset(2, fixedValueEntry, 0)
         fun endCommandContainerEntry(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

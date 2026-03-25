@@ -5,6 +5,7 @@
 import * as flatbuffers from 'flatbuffers';
 
 import { CAT, CATT } from './CAT.js';
+import { PPEPositionRecord, PPEPositionRecordT } from './PPEPositionRecord.js';
 import { RFM, RFMT } from './RFM.js';
 import { covarianceMatrixLine, covarianceMatrixLineT } from './covarianceMatrixLine.js';
 import { ephemerisDataLine, ephemerisDataLineT } from './ephemerisDataLine.js';
@@ -135,7 +136,11 @@ STOP_TIME(optionalEncoding?:any):string|Uint8Array|null {
 }
 
 /**
- * Recommended interpolation method for ephemeris data (Hermite, Linear, Lagrange, etc.)
+ * Recommended interpolation method for ephemeris data.
+ * Supported methods: Hermite, Linear, Lagrange, Chebyshev.
+ * When set to "Chebyshev", parsers should use POLYNOMIAL_POSITION_RECORDS
+ * for high-fidelity polynomial interpolation instead of interpolating across
+ * discrete state vectors.
  */
 INTERPOLATION():string|null
 INTERPOLATION(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
@@ -224,8 +229,24 @@ covarianceMatrixLinesLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Optional polynomial position records for high-fidelity interpolation.
+ * Used when INTERPOLATION is "Chebyshev". Each record covers a time segment with
+ * polynomial coefficients for continuous position (and optionally velocity) evaluation.
+ * See PPE schema for record structure and evaluation procedure.
+ */
+POLYNOMIAL_POSITION_RECORDS(index: number, obj?:PPEPositionRecord):PPEPositionRecord|null {
+  const offset = this.bb!.__offset(this.bb_pos, 40);
+  return offset ? (obj || new PPEPositionRecord()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+}
+
+polynomialPositionRecordsLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 40);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
 static startephemerisDataBlock(builder:flatbuffers.Builder) {
-  builder.startObject(18);
+  builder.startObject(19);
 }
 
 static addComment(builder:flatbuffers.Builder, COMMENTOffset:flatbuffers.Offset) {
@@ -341,6 +362,22 @@ static startCovarianceMatrixLinesVector(builder:flatbuffers.Builder, numElems:nu
   builder.startVector(4, numElems, 4);
 }
 
+static addPolynomialPositionRecords(builder:flatbuffers.Builder, POLYNOMIAL_POSITION_RECORDSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(18, POLYNOMIAL_POSITION_RECORDSOffset, 0);
+}
+
+static createPolynomialPositionRecordsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startPolynomialPositionRecordsVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
 static endephemerisDataBlock(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -366,7 +403,8 @@ unpack(): ephemerisDataBlockT {
     this.STATE_VECTOR_SIZE(),
     this.bb!.createScalarList<number>(this.EPHEMERIS_DATA.bind(this), this.ephemerisDataLength()),
     this.bb!.createObjList<ephemerisDataLine, ephemerisDataLineT>(this.EPHEMERIS_DATA_LINES.bind(this), this.ephemerisDataLinesLength()),
-    this.bb!.createObjList<covarianceMatrixLine, covarianceMatrixLineT>(this.COVARIANCE_MATRIX_LINES.bind(this), this.covarianceMatrixLinesLength())
+    this.bb!.createObjList<covarianceMatrixLine, covarianceMatrixLineT>(this.COVARIANCE_MATRIX_LINES.bind(this), this.covarianceMatrixLinesLength()),
+    this.bb!.createObjList<PPEPositionRecord, PPEPositionRecordT>(this.POLYNOMIAL_POSITION_RECORDS.bind(this), this.polynomialPositionRecordsLength())
   );
 }
 
@@ -390,6 +428,7 @@ unpackTo(_o: ephemerisDataBlockT): void {
   _o.EPHEMERIS_DATA = this.bb!.createScalarList<number>(this.EPHEMERIS_DATA.bind(this), this.ephemerisDataLength());
   _o.EPHEMERIS_DATA_LINES = this.bb!.createObjList<ephemerisDataLine, ephemerisDataLineT>(this.EPHEMERIS_DATA_LINES.bind(this), this.ephemerisDataLinesLength());
   _o.COVARIANCE_MATRIX_LINES = this.bb!.createObjList<covarianceMatrixLine, covarianceMatrixLineT>(this.COVARIANCE_MATRIX_LINES.bind(this), this.covarianceMatrixLinesLength());
+  _o.POLYNOMIAL_POSITION_RECORDS = this.bb!.createObjList<PPEPositionRecord, PPEPositionRecordT>(this.POLYNOMIAL_POSITION_RECORDS.bind(this), this.polynomialPositionRecordsLength());
 }
 }
 
@@ -412,7 +451,8 @@ constructor(
   public STATE_VECTOR_SIZE: number = 6,
   public EPHEMERIS_DATA: (number)[] = [],
   public EPHEMERIS_DATA_LINES: (ephemerisDataLineT)[] = [],
-  public COVARIANCE_MATRIX_LINES: (covarianceMatrixLineT)[] = []
+  public COVARIANCE_MATRIX_LINES: (covarianceMatrixLineT)[] = [],
+  public POLYNOMIAL_POSITION_RECORDS: (PPEPositionRecordT)[] = []
 ){}
 
 
@@ -431,6 +471,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const EPHEMERIS_DATA = ephemerisDataBlock.createEphemerisDataVector(builder, this.EPHEMERIS_DATA);
   const EPHEMERIS_DATA_LINES = ephemerisDataBlock.createEphemerisDataLinesVector(builder, builder.createObjectOffsetList(this.EPHEMERIS_DATA_LINES));
   const COVARIANCE_MATRIX_LINES = ephemerisDataBlock.createCovarianceMatrixLinesVector(builder, builder.createObjectOffsetList(this.COVARIANCE_MATRIX_LINES));
+  const POLYNOMIAL_POSITION_RECORDS = ephemerisDataBlock.createPolynomialPositionRecordsVector(builder, builder.createObjectOffsetList(this.POLYNOMIAL_POSITION_RECORDS));
 
   ephemerisDataBlock.startephemerisDataBlock(builder);
   ephemerisDataBlock.addComment(builder, COMMENT);
@@ -451,6 +492,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   ephemerisDataBlock.addEphemerisData(builder, EPHEMERIS_DATA);
   ephemerisDataBlock.addEphemerisDataLines(builder, EPHEMERIS_DATA_LINES);
   ephemerisDataBlock.addCovarianceMatrixLines(builder, COVARIANCE_MATRIX_LINES);
+  ephemerisDataBlock.addPolynomialPositionRecords(builder, POLYNOMIAL_POSITION_RECORDS);
 
   return ephemerisDataBlock.endephemerisDataBlock(builder);
 }

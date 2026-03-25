@@ -249,6 +249,12 @@ def commsTransponderStartCHANNELSVector(builder, numElems):
 def StartCHANNELSVector(builder, numElems):
     return commsTransponderStartCHANNELSVector(builder, numElems)
 
+def commsTransponderCreateCHANNELSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateCHANNELSVector(builder, data):
+    commsTransponderCreateCHANNELSVector(builder, data)
+
 def commsTransponderAddPOLARIZATION(builder, POLARIZATION):
     builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(POLARIZATION), 0)
 
@@ -270,27 +276,43 @@ except:
 class commsTransponderT(object):
 
     # commsTransponderT
-    def __init__(self):
-        self.TRANSPONDER_ID = None  # type: str
-        self.NAME = None  # type: str
-        self.TYPE = None  # type: str
-        self.BAND = None  # type: str
-        self.UPLINK_FREQ_MIN = 0.0  # type: float
-        self.UPLINK_FREQ_MAX = 0.0  # type: float
-        self.DOWNLINK_FREQ_MIN = 0.0  # type: float
-        self.DOWNLINK_FREQ_MAX = 0.0  # type: float
-        self.EIRP = 0.0  # type: float
-        self.G_OVER_T = 0.0  # type: float
-        self.BANDWIDTH = 0.0  # type: float
-        self.NUM_CHANNELS = 0  # type: int
-        self.CHANNELS = None  # type: List[commsChannel.commsChannelT]
-        self.POLARIZATION = None  # type: str
+    def __init__(
+        self,
+        TRANSPONDER_ID = None,
+        NAME = None,
+        TYPE = None,
+        BAND = None,
+        UPLINK_FREQ_MIN = 0.0,
+        UPLINK_FREQ_MAX = 0.0,
+        DOWNLINK_FREQ_MIN = 0.0,
+        DOWNLINK_FREQ_MAX = 0.0,
+        EIRP = 0.0,
+        G_OVER_T = 0.0,
+        BANDWIDTH = 0.0,
+        NUM_CHANNELS = 0,
+        CHANNELS = None,
+        POLARIZATION = None,
+    ):
+        self.TRANSPONDER_ID = TRANSPONDER_ID  # type: Optional[str]
+        self.NAME = NAME  # type: Optional[str]
+        self.TYPE = TYPE  # type: Optional[str]
+        self.BAND = BAND  # type: Optional[str]
+        self.UPLINK_FREQ_MIN = UPLINK_FREQ_MIN  # type: float
+        self.UPLINK_FREQ_MAX = UPLINK_FREQ_MAX  # type: float
+        self.DOWNLINK_FREQ_MIN = DOWNLINK_FREQ_MIN  # type: float
+        self.DOWNLINK_FREQ_MAX = DOWNLINK_FREQ_MAX  # type: float
+        self.EIRP = EIRP  # type: float
+        self.G_OVER_T = G_OVER_T  # type: float
+        self.BANDWIDTH = BANDWIDTH  # type: float
+        self.NUM_CHANNELS = NUM_CHANNELS  # type: int
+        self.CHANNELS = CHANNELS  # type: Optional[List[commsChannel.commsChannelT]]
+        self.POLARIZATION = POLARIZATION  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        commsTransponder = commsTransponder()
-        commsTransponder.Init(buf, pos)
-        return cls.InitFromObj(commsTransponder)
+        tmpCommsTransponder = commsTransponder()
+        tmpCommsTransponder.Init(buf, pos)
+        return cls.InitFromObj(tmpCommsTransponder)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -298,9 +320,9 @@ class commsTransponderT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, commsTransponder):
+    def InitFromObj(cls, tmpCommsTransponder):
         x = commsTransponderT()
-        x._UnPack(commsTransponder)
+        x._UnPack(tmpCommsTransponder)
         return x
 
     # commsTransponderT

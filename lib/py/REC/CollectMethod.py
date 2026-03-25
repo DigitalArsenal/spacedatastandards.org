@@ -2,4 +2,9 @@
 
 # namespace: 
 
-# NOTE CollectMethod.py does not declare any structs or enums
+# Enumeration for data collection methods
+class CollectMethod(object):
+    SIDEREAL = 0
+    RATE_TRACK = 1
+    FIXED_STARE = 2
+    OTHER = 3

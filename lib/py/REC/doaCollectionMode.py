@@ -2,4 +2,10 @@
 
 # namespace: 
 
-# NOTE doaCollectionMode.py does not declare any structs or enums
+class doaCollectionMode(object):
+    TDOA = 0
+    FDOA = 1
+    TDOA_FDOA = 2
+    AOA = 3
+    COMBINED = 4
+    UNKNOWN = 5

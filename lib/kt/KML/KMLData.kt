@@ -32,7 +32,7 @@ class KMLData : Table() {
     /**
      * Data name
      */
-    val NAME : String?
+    val name : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class KMLData : Table() {
                 null
             }
         }
-    val NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val nameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun nameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Display name
      */
-    val DISPLAY_NAME : String?
+    val displayName : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -55,12 +55,12 @@ class KMLData : Table() {
                 null
             }
         }
-    val DISPLAY_NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun DISPLAY_NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val displayNameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun displayNameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * Data value
      */
-    val VALUE : String?
+    val value : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -69,26 +69,26 @@ class KMLData : Table() {
                 null
             }
         }
-    val VALUEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun VALUEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val valueAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun valueInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsKMLData(_bb: ByteBuffer): KMLData = getRootAsKMLData(_bb, KMLData())
         fun getRootAsKMLData(_bb: ByteBuffer, obj: KMLData): KMLData {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createKMLData(builder: FlatBufferBuilder, NAMEOffset: Int, DISPLAY_NAMEOffset: Int, VALUEOffset: Int) : Int {
+        fun createKMLData(builder: FlatBufferBuilder, nameOffset: Int, displayNameOffset: Int, valueOffset: Int) : Int {
             builder.startTable(3)
-            addVALUE(builder, VALUEOffset)
-            addDISPLAY_NAME(builder, DISPLAY_NAMEOffset)
-            addNAME(builder, NAMEOffset)
+            addVALUE(builder, valueOffset)
+            addDISPLAYNAME(builder, displayNameOffset)
+            addNAME(builder, nameOffset)
             return endKMLData(builder)
         }
         fun startKMLData(builder: FlatBufferBuilder) = builder.startTable(3)
-        fun addNAME(builder: FlatBufferBuilder, NAME: Int) = builder.addOffset(0, NAME, 0)
-        fun addDISPLAY_NAME(builder: FlatBufferBuilder, DISPLAY_NAME: Int) = builder.addOffset(1, DISPLAY_NAME, 0)
-        fun addVALUE(builder: FlatBufferBuilder, VALUE: Int) = builder.addOffset(2, VALUE, 0)
+        fun addNAME(builder: FlatBufferBuilder, name: Int) = builder.addOffset(0, name, 0)
+        fun addDISPLAYNAME(builder: FlatBufferBuilder, displayName: Int) = builder.addOffset(1, displayName, 0)
+        fun addVALUE(builder: FlatBufferBuilder, value: Int) = builder.addOffset(2, value, 0)
         fun endKMLData(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

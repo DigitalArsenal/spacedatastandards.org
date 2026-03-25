@@ -51,9 +51,17 @@ func (rcv *attCovariance) COV_TYPE() attCovType {
 	return 0
 }
 
+func (rcv *attCovariance) CovType() attCovType {
+	return rcv.COV_TYPE()
+}
+
 /// Covariance type
 func (rcv *attCovariance) MutateCOV_TYPE(n attCovType) bool {
 	return rcv._tab.MutateInt8Slot(4, int8(n))
+}
+
+func (rcv *attCovariance) MutateCovType(n attCovType) bool {
+	return rcv.MutateCOV_TYPE(n)
 }
 
 /// Reference frame
@@ -65,6 +73,10 @@ func (rcv *attCovariance) COV_REF_FRAME() []byte {
 	return nil
 }
 
+func (rcv *attCovariance) CovRefFrame() []byte {
+	return rcv.COV_REF_FRAME()
+}
+
 /// Reference frame
 /// Epoch (ISO 8601)
 func (rcv *attCovariance) EPOCH() []byte {
@@ -73,6 +85,10 @@ func (rcv *attCovariance) EPOCH() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *attCovariance) Epoch() []byte {
+	return rcv.EPOCH()
 }
 
 /// Epoch (ISO 8601)
@@ -86,12 +102,20 @@ func (rcv *attCovariance) COV(j int) float64 {
 	return 0
 }
 
+func (rcv *attCovariance) Cov(j int) float64 {
+	return rcv.COV(j)
+}
+
 func (rcv *attCovariance) COVLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *attCovariance) CovLength() int {
+	return rcv.COVLength()
 }
 
 /// Upper-triangular covariance matrix elements (row-major)
@@ -104,23 +128,42 @@ func (rcv *attCovariance) MutateCOV(j int, n float64) bool {
 	return false
 }
 
+func (rcv *attCovariance) MutateCov(j int, n float64) bool {
+	return rcv.MutateCOV(j, n)
+}
+
 func attCovarianceStart(builder *flatbuffers.Builder) {
 	builder.StartObject(4)
 }
 func attCovarianceAddCOV_TYPE(builder *flatbuffers.Builder, COV_TYPE attCovType) {
 	builder.PrependInt8Slot(0, int8(COV_TYPE), 0)
 }
+func attCovarianceAddCovType(builder *flatbuffers.Builder, COV_TYPE attCovType) {
+	attCovarianceAddCOV_TYPE(builder, COV_TYPE)
+}
 func attCovarianceAddCOV_REF_FRAME(builder *flatbuffers.Builder, COV_REF_FRAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(COV_REF_FRAME), 0)
+}
+func attCovarianceAddCovRefFrame(builder *flatbuffers.Builder, COV_REF_FRAME flatbuffers.UOffsetT) {
+	attCovarianceAddCOV_REF_FRAME(builder, COV_REF_FRAME)
 }
 func attCovarianceAddEPOCH(builder *flatbuffers.Builder, EPOCH flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(EPOCH), 0)
 }
+func attCovarianceAddEpoch(builder *flatbuffers.Builder, EPOCH flatbuffers.UOffsetT) {
+	attCovarianceAddEPOCH(builder, EPOCH)
+}
 func attCovarianceAddCOV(builder *flatbuffers.Builder, COV flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(COV), 0)
 }
+func attCovarianceAddCov(builder *flatbuffers.Builder, COV flatbuffers.UOffsetT) {
+	attCovarianceAddCOV(builder, COV)
+}
 func attCovarianceStartCOVVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(8, numElems, 8)
+}
+func attCovarianceStartCovVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return attCovarianceStartCOVVector(builder, numElems)
 }
 func attCovarianceEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

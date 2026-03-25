@@ -63,6 +63,10 @@ func (rcv *REV) REVIEW_ID() []byte {
 	return nil
 }
 
+func (rcv *REV) ReviewId() []byte {
+	return rcv.REVIEW_ID()
+}
+
 /// Unique identifier for this review
 /// ID of the listing being reviewed
 func (rcv *REV) LISTING_ID() []byte {
@@ -71,6 +75,10 @@ func (rcv *REV) LISTING_ID() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *REV) ListingId() []byte {
+	return rcv.LISTING_ID()
 }
 
 /// ID of the listing being reviewed
@@ -83,6 +91,10 @@ func (rcv *REV) REVIEWER_PEER_ID() []byte {
 	return nil
 }
 
+func (rcv *REV) ReviewerPeerId() []byte {
+	return rcv.REVIEWER_PEER_ID()
+}
+
 /// Peer ID of the reviewer
 /// Rating from 1-5 stars
 func (rcv *REV) RATING() byte {
@@ -93,9 +105,17 @@ func (rcv *REV) RATING() byte {
 	return 0
 }
 
+func (rcv *REV) Rating() byte {
+	return rcv.RATING()
+}
+
 /// Rating from 1-5 stars
 func (rcv *REV) MutateRATING(n byte) bool {
 	return rcv._tab.MutateByteSlot(10, n)
+}
+
+func (rcv *REV) MutateRating(n byte) bool {
+	return rcv.MutateRATING(n)
 }
 
 /// Review title
@@ -105,6 +125,10 @@ func (rcv *REV) TITLE() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *REV) Title() []byte {
+	return rcv.TITLE()
 }
 
 /// Review title
@@ -117,6 +141,10 @@ func (rcv *REV) CONTENT() []byte {
 	return nil
 }
 
+func (rcv *REV) Content() []byte {
+	return rcv.CONTENT()
+}
+
 /// Review content/body
 /// ACL grant ID proving purchase (proof of purchase)
 func (rcv *REV) ACL_GRANT_ID() []byte {
@@ -125,6 +153,10 @@ func (rcv *REV) ACL_GRANT_ID() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *REV) AclGrantId() []byte {
+	return rcv.ACL_GRANT_ID()
 }
 
 /// ACL grant ID proving purchase (proof of purchase)
@@ -137,9 +169,17 @@ func (rcv *REV) TIMESTAMP() uint64 {
 	return 0
 }
 
+func (rcv *REV) Timestamp() uint64 {
+	return rcv.TIMESTAMP()
+}
+
 /// Unix timestamp of the review
 func (rcv *REV) MutateTIMESTAMP(n uint64) bool {
 	return rcv._tab.MutateUint64Slot(18, n)
+}
+
+func (rcv *REV) MutateTimestamp(n uint64) bool {
+	return rcv.MutateTIMESTAMP(n)
 }
 
 /// Ed25519 signature from reviewer
@@ -152,6 +192,10 @@ func (rcv *REV) REVIEWER_SIGNATURE(j int) byte {
 	return 0
 }
 
+func (rcv *REV) ReviewerSignature(j int) byte {
+	return rcv.REVIEWER_SIGNATURE(j)
+}
+
 func (rcv *REV) REVIEWER_SIGNATURELength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
 	if o != 0 {
@@ -160,12 +204,20 @@ func (rcv *REV) REVIEWER_SIGNATURELength() int {
 	return 0
 }
 
+func (rcv *REV) ReviewerSignatureLength() int {
+	return rcv.REVIEWER_SIGNATURELength()
+}
+
 func (rcv *REV) REVIEWER_SIGNATUREBytes() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *REV) ReviewerSignatureBytes() []byte {
+	return rcv.REVIEWER_SIGNATUREBytes()
 }
 
 /// Ed25519 signature from reviewer
@@ -178,38 +230,72 @@ func (rcv *REV) MutateREVIEWER_SIGNATURE(j int, n byte) bool {
 	return false
 }
 
+func (rcv *REV) MutateReviewerSignature(j int, n byte) bool {
+	return rcv.MutateREVIEWER_SIGNATURE(j, n)
+}
+
 func REVStart(builder *flatbuffers.Builder) {
 	builder.StartObject(9)
 }
 func REVAddREVIEW_ID(builder *flatbuffers.Builder, REVIEW_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(REVIEW_ID), 0)
 }
+func REVAddReviewId(builder *flatbuffers.Builder, REVIEW_ID flatbuffers.UOffsetT) {
+	REVAddREVIEW_ID(builder, REVIEW_ID)
+}
 func REVAddLISTING_ID(builder *flatbuffers.Builder, LISTING_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(LISTING_ID), 0)
+}
+func REVAddListingId(builder *flatbuffers.Builder, LISTING_ID flatbuffers.UOffsetT) {
+	REVAddLISTING_ID(builder, LISTING_ID)
 }
 func REVAddREVIEWER_PEER_ID(builder *flatbuffers.Builder, REVIEWER_PEER_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(REVIEWER_PEER_ID), 0)
 }
+func REVAddReviewerPeerId(builder *flatbuffers.Builder, REVIEWER_PEER_ID flatbuffers.UOffsetT) {
+	REVAddREVIEWER_PEER_ID(builder, REVIEWER_PEER_ID)
+}
 func REVAddRATING(builder *flatbuffers.Builder, RATING byte) {
 	builder.PrependByteSlot(3, RATING, 0)
+}
+func REVAddRating(builder *flatbuffers.Builder, RATING byte) {
+	REVAddRATING(builder, RATING)
 }
 func REVAddTITLE(builder *flatbuffers.Builder, TITLE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(TITLE), 0)
 }
+func REVAddTitle(builder *flatbuffers.Builder, TITLE flatbuffers.UOffsetT) {
+	REVAddTITLE(builder, TITLE)
+}
 func REVAddCONTENT(builder *flatbuffers.Builder, CONTENT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(CONTENT), 0)
+}
+func REVAddContent(builder *flatbuffers.Builder, CONTENT flatbuffers.UOffsetT) {
+	REVAddCONTENT(builder, CONTENT)
 }
 func REVAddACL_GRANT_ID(builder *flatbuffers.Builder, ACL_GRANT_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(ACL_GRANT_ID), 0)
 }
+func REVAddAclGrantId(builder *flatbuffers.Builder, ACL_GRANT_ID flatbuffers.UOffsetT) {
+	REVAddACL_GRANT_ID(builder, ACL_GRANT_ID)
+}
 func REVAddTIMESTAMP(builder *flatbuffers.Builder, TIMESTAMP uint64) {
 	builder.PrependUint64Slot(7, TIMESTAMP, 0)
+}
+func REVAddTimestamp(builder *flatbuffers.Builder, TIMESTAMP uint64) {
+	REVAddTIMESTAMP(builder, TIMESTAMP)
 }
 func REVAddREVIEWER_SIGNATURE(builder *flatbuffers.Builder, REVIEWER_SIGNATURE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(REVIEWER_SIGNATURE), 0)
 }
+func REVAddReviewerSignature(builder *flatbuffers.Builder, REVIEWER_SIGNATURE flatbuffers.UOffsetT) {
+	REVAddREVIEWER_SIGNATURE(builder, REVIEWER_SIGNATURE)
+}
 func REVStartREVIEWER_SIGNATUREVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(1, numElems, 1)
+}
+func REVStartReviewerSignatureVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return REVStartREVIEWER_SIGNATUREVector(builder, numElems)
 }
 func REVEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

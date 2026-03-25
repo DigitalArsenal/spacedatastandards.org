@@ -2,4 +2,10 @@
 
 # namespace: 
 
-# NOTE PenResult.py does not declare any structs or enums
+class PenResult(object):
+    NO_PENETRATION = 0
+    PARTIAL_PEN = 1
+    FULL_PEN = 2
+    RICOCHET = 3
+    SHATTERED = 4
+    OVER_MATCH = 5

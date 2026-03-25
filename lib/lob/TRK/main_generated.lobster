@@ -408,16 +408,16 @@ struct TRKBuilder:
     def end():
         return b_.EndObject()
 
-def TRKStartSRC_TYPSVector(b_:flatbuffers.builder, n_:int):
+def TRKStartSRCTYPSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def TRKCreateSRC_TYPSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def TRKCreateSRCTYPSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-def TRKStartSRC_IDSVector(b_:flatbuffers.builder, n_:int):
+def TRKStartSRCIDSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def TRKCreateSRC_IDSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def TRKCreateSRCIDSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
@@ -429,44 +429,44 @@ def TRKCreateTAGSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-def TRKStartECEF_POSVector(b_:flatbuffers.builder, n_:int):
+def TRKStartECEFPOSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(8, n_, 8)
-def TRKCreateECEF_POSVector(b_:flatbuffers.builder, v_:[float]):
+def TRKCreateECEFPOSVector(b_:flatbuffers.builder, v_:[float]):
     b_.StartVector(8, v_.length, 8)
     reverse(v_) e_: b_.PrependFloat64(e_)
     return b_.EndVector(v_.length)
 
-def TRKStartECEF_VELVector(b_:flatbuffers.builder, n_:int):
+def TRKStartECEFVELVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(8, n_, 8)
-def TRKCreateECEF_VELVector(b_:flatbuffers.builder, v_:[float]):
+def TRKCreateECEFVELVector(b_:flatbuffers.builder, v_:[float]):
     b_.StartVector(8, v_.length, 8)
     reverse(v_) e_: b_.PrependFloat64(e_)
     return b_.EndVector(v_.length)
 
-def TRKStartECEF_ACCVector(b_:flatbuffers.builder, n_:int):
+def TRKStartECEFACCVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(8, n_, 8)
-def TRKCreateECEF_ACCVector(b_:flatbuffers.builder, v_:[float]):
+def TRKCreateECEFACCVector(b_:flatbuffers.builder, v_:[float]):
     b_.StartVector(8, v_.length, 8)
     reverse(v_) e_: b_.PrependFloat64(e_)
     return b_.EndVector(v_.length)
 
-def TRKStartLC_POSVector(b_:flatbuffers.builder, n_:int):
+def TRKStartLCPOSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(8, n_, 8)
-def TRKCreateLC_POSVector(b_:flatbuffers.builder, v_:[float]):
+def TRKCreateLCPOSVector(b_:flatbuffers.builder, v_:[float]):
     b_.StartVector(8, v_.length, 8)
     reverse(v_) e_: b_.PrependFloat64(e_)
     return b_.EndVector(v_.length)
 
-def TRKStartLC_VELVector(b_:flatbuffers.builder, n_:int):
+def TRKStartLCVELVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(8, n_, 8)
-def TRKCreateLC_VELVector(b_:flatbuffers.builder, v_:[float]):
+def TRKCreateLCVELVector(b_:flatbuffers.builder, v_:[float]):
     b_.StartVector(8, v_.length, 8)
     reverse(v_) e_: b_.PrependFloat64(e_)
     return b_.EndVector(v_.length)
 
-def TRKStartLC_ACCVector(b_:flatbuffers.builder, n_:int):
+def TRKStartLCACCVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(8, n_, 8)
-def TRKCreateLC_ACCVector(b_:flatbuffers.builder, v_:[float]):
+def TRKCreateLCACCVector(b_:flatbuffers.builder, v_:[float]):
     b_.StartVector(8, v_.length, 8)
     reverse(v_) e_: b_.PrependFloat64(e_)
     return b_.EndVector(v_.length)
@@ -478,9 +478,9 @@ def TRKCreateCOVVector(b_:flatbuffers.builder, v_:[float]):
     reverse(v_) e_: b_.PrependFloat64(e_)
     return b_.EndVector(v_.length)
 
-def TRKStartERR_ELLPVector(b_:flatbuffers.builder, n_:int):
+def TRKStartERRELLPVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(8, n_, 8)
-def TRKCreateERR_ELLPVector(b_:flatbuffers.builder, v_:[float]):
+def TRKCreateERRELLPVector(b_:flatbuffers.builder, v_:[float]):
     b_.StartVector(8, v_.length, 8)
     reverse(v_) e_: b_.PrependFloat64(e_)
     return b_.EndVector(v_.length)

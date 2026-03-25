@@ -32,7 +32,7 @@ class GPXRoute : Table() {
     /**
      * Route name
      */
-    val NAME : String?
+    val name : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class GPXRoute : Table() {
                 null
             }
         }
-    val NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val nameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun nameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Comment
      */
-    val COMMENT : String?
+    val comment : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -55,12 +55,12 @@ class GPXRoute : Table() {
                 null
             }
         }
-    val COMMENTAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun COMMENTInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val commentAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun commentInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * Description
      */
-    val DESCRIPTION : String?
+    val description : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -69,12 +69,12 @@ class GPXRoute : Table() {
                 null
             }
         }
-    val DESCRIPTIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun DESCRIPTIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val descriptionAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun descriptionInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
     /**
      * Source of data
      */
-    val SOURCE : String?
+    val source : String?
         get() {
             val o = __offset(10)
             return if (o != 0) {
@@ -83,13 +83,13 @@ class GPXRoute : Table() {
                 null
             }
         }
-    val SOURCEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
-    fun SOURCEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
+    val sourceAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(10, 1)
+    fun sourceInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 10, 1)
     /**
      * Links to additional information
      */
-    fun LINKS(j: Int) : GPXLink? = LINKS(GPXLink(), j)
-    fun LINKS(obj: GPXLink, j: Int) : GPXLink? {
+    fun links(j: Int) : GPXLink? = links(GPXLink(), j)
+    fun links(obj: GPXLink, j: Int) : GPXLink? {
         val o = __offset(12)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -97,14 +97,14 @@ class GPXRoute : Table() {
             null
         }
     }
-    val LINKSLength : Int
+    val linksLength : Int
         get() {
             val o = __offset(12); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Route number
      */
-    val NUMBER : UInt
+    val number : UInt
         get() {
             val o = __offset(14)
             return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
@@ -112,7 +112,7 @@ class GPXRoute : Table() {
     /**
      * Type/category
      */
-    val TYPE : String?
+    val type : String?
         get() {
             val o = __offset(16)
             return if (o != 0) {
@@ -121,13 +121,13 @@ class GPXRoute : Table() {
                 null
             }
         }
-    val TYPEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(16, 1)
-    fun TYPEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 16, 1)
+    val typeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(16, 1)
+    fun typeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 16, 1)
     /**
      * Route points (ordered waypoints)
      */
-    fun POINTS(j: Int) : GPXWaypoint? = POINTS(GPXWaypoint(), j)
-    fun POINTS(obj: GPXWaypoint, j: Int) : GPXWaypoint? {
+    fun points(j: Int) : GPXWaypoint? = points(GPXWaypoint(), j)
+    fun points(obj: GPXWaypoint, j: Int) : GPXWaypoint? {
         val o = __offset(18)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -135,35 +135,35 @@ class GPXRoute : Table() {
             null
         }
     }
-    val POINTSLength : Int
+    val pointsLength : Int
         get() {
             val o = __offset(18); return if (o != 0) __vector_len(o) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsGPXRoute(_bb: ByteBuffer): GPXRoute = getRootAsGPXRoute(_bb, GPXRoute())
         fun getRootAsGPXRoute(_bb: ByteBuffer, obj: GPXRoute): GPXRoute {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createGPXRoute(builder: FlatBufferBuilder, NAMEOffset: Int, COMMENTOffset: Int, DESCRIPTIONOffset: Int, SOURCEOffset: Int, LINKSOffset: Int, NUMBER: UInt, TYPEOffset: Int, POINTSOffset: Int) : Int {
+        fun createGPXRoute(builder: FlatBufferBuilder, nameOffset: Int, commentOffset: Int, descriptionOffset: Int, sourceOffset: Int, linksOffset: Int, number: UInt, typeOffset: Int, pointsOffset: Int) : Int {
             builder.startTable(8)
-            addPOINTS(builder, POINTSOffset)
-            addTYPE(builder, TYPEOffset)
-            addNUMBER(builder, NUMBER)
-            addLINKS(builder, LINKSOffset)
-            addSOURCE(builder, SOURCEOffset)
-            addDESCRIPTION(builder, DESCRIPTIONOffset)
-            addCOMMENT(builder, COMMENTOffset)
-            addNAME(builder, NAMEOffset)
+            addPOINTS(builder, pointsOffset)
+            addTYPE(builder, typeOffset)
+            addNUMBER(builder, number)
+            addLINKS(builder, linksOffset)
+            addSOURCE(builder, sourceOffset)
+            addDESCRIPTION(builder, descriptionOffset)
+            addCOMMENT(builder, commentOffset)
+            addNAME(builder, nameOffset)
             return endGPXRoute(builder)
         }
         fun startGPXRoute(builder: FlatBufferBuilder) = builder.startTable(8)
-        fun addNAME(builder: FlatBufferBuilder, NAME: Int) = builder.addOffset(0, NAME, 0)
-        fun addCOMMENT(builder: FlatBufferBuilder, COMMENT: Int) = builder.addOffset(1, COMMENT, 0)
-        fun addDESCRIPTION(builder: FlatBufferBuilder, DESCRIPTION: Int) = builder.addOffset(2, DESCRIPTION, 0)
-        fun addSOURCE(builder: FlatBufferBuilder, SOURCE: Int) = builder.addOffset(3, SOURCE, 0)
-        fun addLINKS(builder: FlatBufferBuilder, LINKS: Int) = builder.addOffset(4, LINKS, 0)
+        fun addNAME(builder: FlatBufferBuilder, name: Int) = builder.addOffset(0, name, 0)
+        fun addCOMMENT(builder: FlatBufferBuilder, comment: Int) = builder.addOffset(1, comment, 0)
+        fun addDESCRIPTION(builder: FlatBufferBuilder, description: Int) = builder.addOffset(2, description, 0)
+        fun addSOURCE(builder: FlatBufferBuilder, source: Int) = builder.addOffset(3, source, 0)
+        fun addLINKS(builder: FlatBufferBuilder, links: Int) = builder.addOffset(4, links, 0)
         fun createLinksVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -172,9 +172,9 @@ class GPXRoute : Table() {
             return builder.endVector()
         }
         fun startLinksVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addNUMBER(builder: FlatBufferBuilder, NUMBER: UInt) = builder.addInt(5, NUMBER.toInt(), 0)
-        fun addTYPE(builder: FlatBufferBuilder, TYPE: Int) = builder.addOffset(6, TYPE, 0)
-        fun addPOINTS(builder: FlatBufferBuilder, POINTS: Int) = builder.addOffset(7, POINTS, 0)
+        fun addNUMBER(builder: FlatBufferBuilder, number: UInt) = builder.addInt(5, number.toInt(), 0)
+        fun addTYPE(builder: FlatBufferBuilder, type: Int) = builder.addOffset(6, type, 0)
+        fun addPOINTS(builder: FlatBufferBuilder, points: Int) = builder.addOffset(7, points, 0)
         fun createPointsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {

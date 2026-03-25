@@ -32,7 +32,7 @@ class SDL : Table() {
     /**
      * Security Parameter Index
      */
-    val SPI : UShort
+    val spi : UShort
         get() {
             val o = __offset(4)
             return if(o != 0) bb.getShort(o + bb_pos).toUShort() else 0u
@@ -40,7 +40,7 @@ class SDL : Table() {
     /**
      * Initialization vector length in bytes
      */
-    val IV_LENGTH : UByte
+    val ivLength : UByte
         get() {
             val o = __offset(6)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
@@ -48,7 +48,7 @@ class SDL : Table() {
     /**
      * Initialization vector
      */
-    fun IV(j: Int) : UByte {
+    fun iv(j: Int) : UByte {
         val o = __offset(8)
         return if (o != 0) {
             bb.get(__vector(o) + j * 1).toUByte()
@@ -56,16 +56,16 @@ class SDL : Table() {
             0u
         }
     }
-    val IVLength : Int
+    val ivLength : Int
         get() {
             val o = __offset(8); return if (o != 0) __vector_len(o) else 0
         }
-    val IVAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun IVInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val ivAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun ivInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
     /**
      * MAC length in bytes
      */
-    val MAC_LENGTH : UByte
+    val macLength : UByte
         get() {
             val o = __offset(10)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
@@ -73,7 +73,7 @@ class SDL : Table() {
     /**
      * Message authentication code
      */
-    fun MAC(j: Int) : UByte {
+    fun mac(j: Int) : UByte {
         val o = __offset(12)
         return if (o != 0) {
             bb.get(__vector(o) + j * 1).toUByte()
@@ -81,16 +81,16 @@ class SDL : Table() {
             0u
         }
     }
-    val MACLength : Int
+    val macLength : Int
         get() {
             val o = __offset(12); return if (o != 0) __vector_len(o) else 0
         }
-    val MACAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
-    fun MACInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
+    val macAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(12, 1)
+    fun macInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 12, 1)
     /**
      * Pad length
      */
-    val PAD_LENGTH : UByte
+    val padLength : UByte
         get() {
             val o = __offset(14)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
@@ -98,7 +98,7 @@ class SDL : Table() {
     /**
      * Security payload
      */
-    fun PAYLOAD(j: Int) : UByte {
+    fun payload(j: Int) : UByte {
         val o = __offset(16)
         return if (o != 0) {
             bb.get(__vector(o) + j * 1).toUByte()
@@ -106,35 +106,35 @@ class SDL : Table() {
             0u
         }
     }
-    val PAYLOADLength : Int
+    val payloadLength : Int
         get() {
             val o = __offset(16); return if (o != 0) __vector_len(o) else 0
         }
-    val PAYLOADAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(16, 1)
-    fun PAYLOADInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 16, 1)
+    val payloadAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(16, 1)
+    fun payloadInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 16, 1)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsSDL(_bb: ByteBuffer): SDL = getRootAsSDL(_bb, SDL())
         fun getRootAsSDL(_bb: ByteBuffer, obj: SDL): SDL {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun SDLBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$SDL")
-        fun createSDL(builder: FlatBufferBuilder, SPI: UShort, IV_LENGTH: UByte, IVOffset: Int, MAC_LENGTH: UByte, MACOffset: Int, PAD_LENGTH: UByte, PAYLOADOffset: Int) : Int {
+        fun createSDL(builder: FlatBufferBuilder, spi: UShort, ivLength: UByte, ivOffset: Int, macLength: UByte, macOffset: Int, padLength: UByte, payloadOffset: Int) : Int {
             builder.startTable(7)
-            addPAYLOAD(builder, PAYLOADOffset)
-            addMAC(builder, MACOffset)
-            addIV(builder, IVOffset)
-            addSPI(builder, SPI)
-            addPAD_LENGTH(builder, PAD_LENGTH)
-            addMAC_LENGTH(builder, MAC_LENGTH)
-            addIV_LENGTH(builder, IV_LENGTH)
+            addPAYLOAD(builder, payloadOffset)
+            addMAC(builder, macOffset)
+            addIV(builder, ivOffset)
+            addSPI(builder, spi)
+            addPADLENGTH(builder, padLength)
+            addMACLENGTH(builder, macLength)
+            addIVLENGTH(builder, ivLength)
             return endSDL(builder)
         }
         fun startSDL(builder: FlatBufferBuilder) = builder.startTable(7)
-        fun addSPI(builder: FlatBufferBuilder, SPI: UShort) = builder.addShort(0, SPI.toShort(), 0)
-        fun addIV_LENGTH(builder: FlatBufferBuilder, IV_LENGTH: UByte) = builder.addByte(1, IV_LENGTH.toByte(), 0)
-        fun addIV(builder: FlatBufferBuilder, IV: Int) = builder.addOffset(2, IV, 0)
+        fun addSPI(builder: FlatBufferBuilder, spi: UShort) = builder.addShort(0, spi.toShort(), 0)
+        fun addIVLENGTH(builder: FlatBufferBuilder, ivLength: UByte) = builder.addByte(1, ivLength.toByte(), 0)
+        fun addIV(builder: FlatBufferBuilder, iv: Int) = builder.addOffset(2, iv, 0)
         @kotlin.ExperimentalUnsignedTypes
         fun createIvVector(builder: FlatBufferBuilder, data: UByteArray) : Int {
             builder.startVector(1, data.size, 1)
@@ -144,8 +144,8 @@ class SDL : Table() {
             return builder.endVector()
         }
         fun startIvVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(1, numElems, 1)
-        fun addMAC_LENGTH(builder: FlatBufferBuilder, MAC_LENGTH: UByte) = builder.addByte(3, MAC_LENGTH.toByte(), 0)
-        fun addMAC(builder: FlatBufferBuilder, MAC: Int) = builder.addOffset(4, MAC, 0)
+        fun addMACLENGTH(builder: FlatBufferBuilder, macLength: UByte) = builder.addByte(3, macLength.toByte(), 0)
+        fun addMAC(builder: FlatBufferBuilder, mac: Int) = builder.addOffset(4, mac, 0)
         @kotlin.ExperimentalUnsignedTypes
         fun createMacVector(builder: FlatBufferBuilder, data: UByteArray) : Int {
             builder.startVector(1, data.size, 1)
@@ -155,8 +155,8 @@ class SDL : Table() {
             return builder.endVector()
         }
         fun startMacVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(1, numElems, 1)
-        fun addPAD_LENGTH(builder: FlatBufferBuilder, PAD_LENGTH: UByte) = builder.addByte(5, PAD_LENGTH.toByte(), 0)
-        fun addPAYLOAD(builder: FlatBufferBuilder, PAYLOAD: Int) = builder.addOffset(6, PAYLOAD, 0)
+        fun addPADLENGTH(builder: FlatBufferBuilder, padLength: UByte) = builder.addByte(5, padLength.toByte(), 0)
+        fun addPAYLOAD(builder: FlatBufferBuilder, payload: Int) = builder.addOffset(6, payload, 0)
         @kotlin.ExperimentalUnsignedTypes
         fun createPayloadVector(builder: FlatBufferBuilder, data: UByteArray) : Int {
             builder.startVector(1, data.size, 1)

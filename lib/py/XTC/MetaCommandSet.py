@@ -73,6 +73,12 @@ def MetaCommandSetStartMETA_COMMANDSVector(builder, numElems):
 def StartMETA_COMMANDSVector(builder, numElems):
     return MetaCommandSetStartMETA_COMMANDSVector(builder, numElems)
 
+def MetaCommandSetCreateMETA_COMMANDSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateMETA_COMMANDSVector(builder, data):
+    MetaCommandSetCreateMETA_COMMANDSVector(builder, data)
+
 def MetaCommandSetEnd(builder):
     return builder.EndObject()
 
@@ -88,14 +94,17 @@ except:
 class MetaCommandSetT(object):
 
     # MetaCommandSetT
-    def __init__(self):
-        self.META_COMMANDS = None  # type: List[MetaCommand.MetaCommandT]
+    def __init__(
+        self,
+        META_COMMANDS = None,
+    ):
+        self.META_COMMANDS = META_COMMANDS  # type: Optional[List[MetaCommand.MetaCommandT]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        metaCommandSet = MetaCommandSet()
-        metaCommandSet.Init(buf, pos)
-        return cls.InitFromObj(metaCommandSet)
+        tmpMetaCommandSet = MetaCommandSet()
+        tmpMetaCommandSet.Init(buf, pos)
+        return cls.InitFromObj(tmpMetaCommandSet)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -103,22 +112,22 @@ class MetaCommandSetT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, metaCommandSet):
+    def InitFromObj(cls, tmpMetaCommandSet):
         x = MetaCommandSetT()
-        x._UnPack(metaCommandSet)
+        x._UnPack(tmpMetaCommandSet)
         return x
 
     # MetaCommandSetT
-    def _UnPack(self, metaCommandSet):
-        if metaCommandSet is None:
+    def _UnPack(self, MetaCommandSet):
+        if MetaCommandSet is None:
             return
-        if not metaCommandSet.META_COMMANDSIsNone():
+        if not MetaCommandSet.META_COMMANDSIsNone():
             self.META_COMMANDS = []
-            for i in range(metaCommandSet.META_COMMANDSLength()):
-                if metaCommandSet.META_COMMANDS(i) is None:
+            for i in range(MetaCommandSet.META_COMMANDSLength()):
+                if MetaCommandSet.META_COMMANDS(i) is None:
                     self.META_COMMANDS.append(None)
                 else:
-                    metaCommand_ = MetaCommand.MetaCommandT.InitFromObj(metaCommandSet.META_COMMANDS(i))
+                    metaCommand_ = MetaCommand.MetaCommandT.InitFromObj(MetaCommandSet.META_COMMANDS(i))
                     self.META_COMMANDS.append(metaCommand_)
 
     # MetaCommandSetT
@@ -134,5 +143,5 @@ class MetaCommandSetT(object):
         MetaCommandSetStart(builder)
         if self.META_COMMANDS is not None:
             MetaCommandSetAddMETA_COMMANDS(builder, META_COMMANDS)
-        metaCommandSet = MetaCommandSetEnd(builder)
-        return metaCommandSet
+        MetaCommandSet = MetaCommandSetEnd(builder)
+        return MetaCommandSet

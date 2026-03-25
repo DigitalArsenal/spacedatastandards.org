@@ -30,7 +30,7 @@ class Record(object):
         self._tab = flatbuffers.table.Table(buf, pos)
 
     # Record
-    def ValueType(self):
+    def value_type(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
@@ -38,7 +38,7 @@ class Record(object):
 
     # The record data (union of all supported standards)
     # Record
-    def Value(self):
+    def value(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
         if o != 0:
             from flatbuffers.table import Table
@@ -49,7 +49,7 @@ class Record(object):
 
     # Standard identifier (e.g., "OMM", "CDM", "CAT")
     # Record
-    def Standard(self):
+    def standard(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
@@ -61,23 +61,23 @@ def RecordStart(builder):
 def Start(builder):
     RecordStart(builder)
 
-def RecordAddValueType(builder, valueType):
-    builder.PrependUint8Slot(0, valueType, 0)
+def RecordAddvalue_type(builder, value_type):
+    builder.PrependUint8Slot(0, value_type, 0)
 
-def AddValueType(builder, valueType):
-    RecordAddValueType(builder, valueType)
+def Addvalue_type(builder, value_type):
+    RecordAddvalue_type(builder, value_type)
 
-def RecordAddValue(builder, value):
+def RecordAddvalue(builder, value):
     builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(value), 0)
 
-def AddValue(builder, value):
-    RecordAddValue(builder, value)
+def Addvalue(builder, value):
+    RecordAddvalue(builder, value)
 
-def RecordAddStandard(builder, standard):
+def RecordAddstandard(builder, standard):
     builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(standard), 0)
 
-def AddStandard(builder, standard):
-    RecordAddStandard(builder, standard)
+def Addstandard(builder, standard):
+    RecordAddstandard(builder, standard)
 
 def RecordEnd(builder):
     return builder.EndObject()
@@ -174,6 +174,7 @@ import PLD
 import PLG
 import PLK
 import PNM
+import PPE
 import PRG
 import PUR
 import RAF
@@ -225,16 +226,21 @@ except:
 class RecordT(object):
 
     # RecordT
-    def __init__(self):
-        self.valueType = 0  # type: int
-        self.value = None  # type: Union[None, ACL.ACLT, ACM.ACMT, ACR.ACRT, AEM.AEMT, ANI.ANIT, AOF.AOFT, APM.APMT, ARM.ARMT, AST.ASTT, ATD.ATDT, ATM.ATMT, BAL.BALT, BEM.BEMT, BMC.BMCT, BOV.BOVT, BUS.BUST, CAT.CATT, CDM.CDMT, CFP.CFPT, CHN.CHNT, CLT.CLTT, CMS.CMST, COM.COMT, COT.COTT, CRD.CRDT, CRM.CRMT, CSM.CSMT, CTR.CTRT, CZM.CZMT, DFH.DFHT, DMG.DMGT, DOA.DOAT, EME.EMET, ENC.ENCT, ENV.ENVT, EOO.EOOT, EOP.EOPT, EPM.EPMT, EWR.EWRT, FCS.FCST, GDI.GDIT, GEO.GEOT, GJN.GJNT, GNO.GNOT, GPX.GPXT, GRV.GRVT, GVH.GVHT, HEL.HELT, HYP.HYPT, IDM.IDMT, ION.IONT, IRO.IROT, KML.KMLT, LCC.LCCT, LDM.LDMT, LKS.LKST, LND.LNDT, LNE.LNET, MET.METT, MFE.MFET, MNF.MNFT, MNV.MNVT, MPE.MPET, MSL.MSLT, MST.MSTT, MTI.MTIT, NAV.NAVT, OBD.OBDT, OBT.OBTT, OCM.OCMT, OEM.OEMT, OMM.OMMT, OOA.OOAT, OOB.OOBT, OOD.OODT, OOE.OOET, OOI.OOIT, OOL.OOLT, OON.OONT, OOS.OOST, OOT.OOTT, OPM.OPMT, OSM.OSMT, PCF.PCFT, PHY.PHYT, PLD.PLDT, PLG.PLGT, PLK.PLKT, PNM.PNMT, PRG.PRGT, PUR.PURT, RAF.RAFT, RCF.RCFT, RDM.RDMT, RDO.RDOT, REV.REVT, RFB.RFBT, RFE.RFET, RFM.RFMT, RFO.RFOT, ROC.ROCT, SAR.SART, SCM.SCMT, SDL.SDLT, SEN.SENT, SEO.SEOT, SEV.SEVT, SIT.SITT, SKI.SKIT, SNR.SNRT, SOI.SOIT, SON.SONT, SPP.SPPT, SPW.SPWT, STF.STFT, STR.STRT, STV.STVT, SWR.SWRT, TCF.TCFT, TDM.TDMT, TIM.TIMT, TKG.TKGT, TME.TMET, TMF.TMFT, TPN.TPNT, TRK.TRKT, TRN.TRNT, VCM.VCMT, WPN.WPNT, WTH.WTHT, XTC.XTCT]
-        self.standard = None  # type: str
+    def __init__(
+        self,
+        value_type = 0,
+        value = None,
+        standard = None,
+    ):
+        self.value_type = value_type  # type: int
+        self.value = value  # type: Union[None, 'ACL.ACLT', 'ACM.ACMT', 'ACR.ACRT', 'AEM.AEMT', 'ANI.ANIT', 'AOF.AOFT', 'APM.APMT', 'ARM.ARMT', 'AST.ASTT', 'ATD.ATDT', 'ATM.ATMT', 'BAL.BALT', 'BEM.BEMT', 'BMC.BMCT', 'BOV.BOVT', 'BUS.BUST', 'CAT.CATT', 'CDM.CDMT', 'CFP.CFPT', 'CHN.CHNT', 'CLT.CLTT', 'CMS.CMST', 'COM.COMT', 'COT.COTT', 'CRD.CRDT', 'CRM.CRMT', 'CSM.CSMT', 'CTR.CTRT', 'CZM.CZMT', 'DFH.DFHT', 'DMG.DMGT', 'DOA.DOAT', 'EME.EMET', 'ENC.ENCT', 'ENV.ENVT', 'EOO.EOOT', 'EOP.EOPT', 'EPM.EPMT', 'EWR.EWRT', 'FCS.FCST', 'GDI.GDIT', 'GEO.GEOT', 'GJN.GJNT', 'GNO.GNOT', 'GPX.GPXT', 'GRV.GRVT', 'GVH.GVHT', 'HEL.HELT', 'HYP.HYPT', 'IDM.IDMT', 'ION.IONT', 'IRO.IROT', 'KML.KMLT', 'LCC.LCCT', 'LDM.LDMT', 'LKS.LKST', 'LND.LNDT', 'LNE.LNET', 'MET.METT', 'MFE.MFET', 'MNF.MNFT', 'MNV.MNVT', 'MPE.MPET', 'MSL.MSLT', 'MST.MSTT', 'MTI.MTIT', 'NAV.NAVT', 'OBD.OBDT', 'OBT.OBTT', 'OCM.OCMT', 'OEM.OEMT', 'OMM.OMMT', 'OOA.OOAT', 'OOB.OOBT', 'OOD.OODT', 'OOE.OOET', 'OOI.OOIT', 'OOL.OOLT', 'OON.OONT', 'OOS.OOST', 'OOT.OOTT', 'OPM.OPMT', 'OSM.OSMT', 'PCF.PCFT', 'PHY.PHYT', 'PLD.PLDT', 'PLG.PLGT', 'PLK.PLKT', 'PNM.PNMT', 'PPE.PPET', 'PRG.PRGT', 'PUR.PURT', 'RAF.RAFT', 'RCF.RCFT', 'RDM.RDMT', 'RDO.RDOT', 'REV.REVT', 'RFB.RFBT', 'RFE.RFET', 'RFM.RFMT', 'RFO.RFOT', 'ROC.ROCT', 'SAR.SART', 'SCM.SCMT', 'SDL.SDLT', 'SEN.SENT', 'SEO.SEOT', 'SEV.SEVT', 'SIT.SITT', 'SKI.SKIT', 'SNR.SNRT', 'SOI.SOIT', 'SON.SONT', 'SPP.SPPT', 'SPW.SPWT', 'STF.STFT', 'STR.STRT', 'STV.STVT', 'SWR.SWRT', 'TCF.TCFT', 'TDM.TDMT', 'TIM.TIMT', 'TKG.TKGT', 'TME.TMET', 'TMF.TMFT', 'TPN.TPNT', 'TRK.TRKT', 'TRN.TRNT', 'VCM.VCMT', 'WPN.WPNT', 'WTH.WTHT', 'XTC.XTCT']
+        self.standard = standard  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        record = Record()
-        record.Init(buf, pos)
-        return cls.InitFromObj(record)
+        tmpRecord = Record()
+        tmpRecord.Init(buf, pos)
+        return cls.InitFromObj(tmpRecord)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -242,18 +248,18 @@ class RecordT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, record):
+    def InitFromObj(cls, tmpRecord):
         x = RecordT()
-        x._UnPack(record)
+        x._UnPack(tmpRecord)
         return x
 
     # RecordT
-    def _UnPack(self, record):
-        if record is None:
+    def _UnPack(self, Record):
+        if Record is None:
             return
-        self.valueType = record.ValueType()
-        self.value = RecordType.RecordTypeCreator(self.valueType, record.Value())
-        self.standard = record.Standard()
+        self.value_type = Record.value_type()
+        self.value = RecordType.RecordTypeCreator(self.value_type, Record.value())
+        self.standard = Record.standard()
 
     # RecordT
     def Pack(self, builder):
@@ -262,10 +268,10 @@ class RecordT(object):
         if self.standard is not None:
             standard = builder.CreateString(self.standard)
         RecordStart(builder)
-        RecordAddValueType(builder, self.valueType)
+        RecordAddvalue_type(builder, self.value_type)
         if self.value is not None:
-            RecordAddValue(builder, value)
+            RecordAddvalue(builder, value)
         if self.standard is not None:
-            RecordAddStandard(builder, standard)
-        record = RecordEnd(builder)
-        return record
+            RecordAddstandard(builder, standard)
+        Record = RecordEnd(builder)
+        return Record

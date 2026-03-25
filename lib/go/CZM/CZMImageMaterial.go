@@ -51,6 +51,10 @@ func (rcv *CZMImageMaterial) IMAGE() []byte {
 	return nil
 }
 
+func (rcv *CZMImageMaterial) Image() []byte {
+	return rcv.IMAGE()
+}
+
 /// Image URI
 /// Repeat X
 func (rcv *CZMImageMaterial) REPEAT_X() float64 {
@@ -61,9 +65,17 @@ func (rcv *CZMImageMaterial) REPEAT_X() float64 {
 	return 0.0
 }
 
+func (rcv *CZMImageMaterial) RepeatX() float64 {
+	return rcv.REPEAT_X()
+}
+
 /// Repeat X
 func (rcv *CZMImageMaterial) MutateREPEAT_X(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(6, n)
+}
+
+func (rcv *CZMImageMaterial) MutateRepeatX(n float64) bool {
+	return rcv.MutateREPEAT_X(n)
 }
 
 /// Repeat Y
@@ -75,9 +87,17 @@ func (rcv *CZMImageMaterial) REPEAT_Y() float64 {
 	return 0.0
 }
 
+func (rcv *CZMImageMaterial) RepeatY() float64 {
+	return rcv.REPEAT_Y()
+}
+
 /// Repeat Y
 func (rcv *CZMImageMaterial) MutateREPEAT_Y(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(8, n)
+}
+
+func (rcv *CZMImageMaterial) MutateRepeatY(n float64) bool {
+	return rcv.MutateREPEAT_Y(n)
 }
 
 /// Color tint
@@ -94,6 +114,10 @@ func (rcv *CZMImageMaterial) COLOR(obj *CZMColor) *CZMColor {
 	return nil
 }
 
+func (rcv *CZMImageMaterial) Color(obj *CZMColor) *CZMColor {
+	return rcv.COLOR(obj)
+}
+
 /// Color tint
 /// Whether the image has transparency
 func (rcv *CZMImageMaterial) TRANSPARENT() bool {
@@ -104,9 +128,17 @@ func (rcv *CZMImageMaterial) TRANSPARENT() bool {
 	return false
 }
 
+func (rcv *CZMImageMaterial) Transparent() bool {
+	return rcv.TRANSPARENT()
+}
+
 /// Whether the image has transparency
 func (rcv *CZMImageMaterial) MutateTRANSPARENT(n bool) bool {
 	return rcv._tab.MutateBoolSlot(12, n)
+}
+
+func (rcv *CZMImageMaterial) MutateTransparent(n bool) bool {
+	return rcv.MutateTRANSPARENT(n)
 }
 
 func CZMImageMaterialStart(builder *flatbuffers.Builder) {
@@ -115,17 +147,32 @@ func CZMImageMaterialStart(builder *flatbuffers.Builder) {
 func CZMImageMaterialAddIMAGE(builder *flatbuffers.Builder, IMAGE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(IMAGE), 0)
 }
+func CZMImageMaterialAddImage(builder *flatbuffers.Builder, IMAGE flatbuffers.UOffsetT) {
+	CZMImageMaterialAddIMAGE(builder, IMAGE)
+}
 func CZMImageMaterialAddREPEAT_X(builder *flatbuffers.Builder, REPEAT_X float64) {
 	builder.PrependFloat64Slot(1, REPEAT_X, 0.0)
+}
+func CZMImageMaterialAddRepeatX(builder *flatbuffers.Builder, REPEAT_X float64) {
+	CZMImageMaterialAddREPEAT_X(builder, REPEAT_X)
 }
 func CZMImageMaterialAddREPEAT_Y(builder *flatbuffers.Builder, REPEAT_Y float64) {
 	builder.PrependFloat64Slot(2, REPEAT_Y, 0.0)
 }
+func CZMImageMaterialAddRepeatY(builder *flatbuffers.Builder, REPEAT_Y float64) {
+	CZMImageMaterialAddREPEAT_Y(builder, REPEAT_Y)
+}
 func CZMImageMaterialAddCOLOR(builder *flatbuffers.Builder, COLOR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(COLOR), 0)
 }
+func CZMImageMaterialAddColor(builder *flatbuffers.Builder, COLOR flatbuffers.UOffsetT) {
+	CZMImageMaterialAddCOLOR(builder, COLOR)
+}
 func CZMImageMaterialAddTRANSPARENT(builder *flatbuffers.Builder, TRANSPARENT bool) {
 	builder.PrependBoolSlot(4, TRANSPARENT, false)
+}
+func CZMImageMaterialAddTransparent(builder *flatbuffers.Builder, TRANSPARENT bool) {
+	CZMImageMaterialAddTRANSPARENT(builder, TRANSPARENT)
 }
 func CZMImageMaterialEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

@@ -11,7 +11,7 @@ public struct PLG : IFlatbufferObject
 {
   private Table __p;
   public ByteBuffer ByteBuffer { get { return __p.bb; } }
-  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_24_3_25(); }
+  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_25_12_19(); }
   public static PLG GetRootAsPLG(ByteBuffer _bb) { return GetRootAsPLG(_bb, new PLG()); }
   public static PLG GetRootAsPLG(ByteBuffer _bb, PLG obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
   public static bool PLGBufferHasIdentifier(ByteBuffer _bb) { return Table.__has_identifier(_bb, "$PLG"); }

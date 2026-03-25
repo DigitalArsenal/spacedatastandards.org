@@ -32,7 +32,7 @@ class SpacecraftFrameWrapper : Table() {
             return if(o != 0) bb.get(o + bb_pos) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsSpacecraftFrameWrapper(_bb: ByteBuffer): SpacecraftFrameWrapper = getRootAsSpacecraftFrameWrapper(_bb, SpacecraftFrameWrapper())
         fun getRootAsSpacecraftFrameWrapper(_bb: ByteBuffer, obj: SpacecraftFrameWrapper): SpacecraftFrameWrapper {
             _bb.order(ByteOrder.LITTLE_ENDIAN)

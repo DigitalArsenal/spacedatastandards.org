@@ -32,7 +32,7 @@ class Interlock : Table() {
     /**
      * Parameter reference
      */
-    val PARAMETER_REF : String?
+    val parameterRef : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class Interlock : Table() {
                 null
             }
         }
-    val PARAMETER_REFAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun PARAMETER_REFInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val parameterRefAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun parameterRefInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Required value
      */
-    val VALUE : String?
+    val value : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -55,34 +55,34 @@ class Interlock : Table() {
                 null
             }
         }
-    val VALUEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun VALUEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val valueAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun valueInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * Operator for comparison
      */
-    val OPERATOR : Byte
+    val operator : Byte
         get() {
             val o = __offset(8)
             return if(o != 0) bb.get(o + bb_pos) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsInterlock(_bb: ByteBuffer): Interlock = getRootAsInterlock(_bb, Interlock())
         fun getRootAsInterlock(_bb: ByteBuffer, obj: Interlock): Interlock {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createInterlock(builder: FlatBufferBuilder, PARAMETER_REFOffset: Int, VALUEOffset: Int, OPERATOR: Byte) : Int {
+        fun createInterlock(builder: FlatBufferBuilder, parameterRefOffset: Int, valueOffset: Int, operator: Byte) : Int {
             builder.startTable(3)
-            addVALUE(builder, VALUEOffset)
-            addPARAMETER_REF(builder, PARAMETER_REFOffset)
-            addOPERATOR(builder, OPERATOR)
+            addVALUE(builder, valueOffset)
+            addPARAMETERREF(builder, parameterRefOffset)
+            addOPERATOR(builder, operator)
             return endInterlock(builder)
         }
         fun startInterlock(builder: FlatBufferBuilder) = builder.startTable(3)
-        fun addPARAMETER_REF(builder: FlatBufferBuilder, PARAMETER_REF: Int) = builder.addOffset(0, PARAMETER_REF, 0)
-        fun addVALUE(builder: FlatBufferBuilder, VALUE: Int) = builder.addOffset(1, VALUE, 0)
-        fun addOPERATOR(builder: FlatBufferBuilder, OPERATOR: Byte) = builder.addByte(2, OPERATOR, 0)
+        fun addPARAMETERREF(builder: FlatBufferBuilder, parameterRef: Int) = builder.addOffset(0, parameterRef, 0)
+        fun addVALUE(builder: FlatBufferBuilder, value: Int) = builder.addOffset(1, value, 0)
+        fun addOPERATOR(builder: FlatBufferBuilder, operator: Byte) = builder.addByte(2, operator, 0)
         fun endInterlock(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

@@ -63,6 +63,10 @@ func (rcv *ROC) NAME() []byte {
 	return nil
 }
 
+func (rcv *ROC) Name() []byte {
+	return rcv.NAME()
+}
+
 /// Rocket Name
 /// Rocket Family
 func (rcv *ROC) FAMILY() []byte {
@@ -71,6 +75,10 @@ func (rcv *ROC) FAMILY() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *ROC) Family() []byte {
+	return rcv.FAMILY()
 }
 
 /// Rocket Family
@@ -83,6 +91,10 @@ func (rcv *ROC) VARIANT() []byte {
 	return nil
 }
 
+func (rcv *ROC) Variant() []byte {
+	return rcv.VARIANT()
+}
+
 /// Rocket Variant
 /// Stages in the Rocket
 func (rcv *ROC) STAGES(obj *STAGE, j int) bool {
@@ -91,10 +103,17 @@ func (rcv *ROC) STAGES(obj *STAGE, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(STAGE)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *ROC) Stages(obj *STAGE, j int) bool {
+	return rcv.STAGES(obj, j)
 }
 
 func (rcv *ROC) STAGESLength() int {
@@ -105,6 +124,10 @@ func (rcv *ROC) STAGESLength() int {
 	return 0
 }
 
+func (rcv *ROC) StagesLength() int {
+	return rcv.STAGESLength()
+}
+
 /// Stages in the Rocket
 /// Sustainers in the Rocket
 func (rcv *ROC) SUSTAINERS(obj *SUSTAINER, j int) bool {
@@ -113,10 +136,17 @@ func (rcv *ROC) SUSTAINERS(obj *SUSTAINER, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(SUSTAINER)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *ROC) Sustainers(obj *SUSTAINER, j int) bool {
+	return rcv.SUSTAINERS(obj, j)
 }
 
 func (rcv *ROC) SUSTAINERSLength() int {
@@ -127,6 +157,10 @@ func (rcv *ROC) SUSTAINERSLength() int {
 	return 0
 }
 
+func (rcv *ROC) SustainersLength() int {
+	return rcv.SUSTAINERSLength()
+}
+
 /// Sustainers in the Rocket
 func ROCStart(builder *flatbuffers.Builder) {
 	builder.StartObject(5)
@@ -134,23 +168,44 @@ func ROCStart(builder *flatbuffers.Builder) {
 func ROCAddNAME(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(NAME), 0)
 }
+func ROCAddName(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
+	ROCAddNAME(builder, NAME)
+}
 func ROCAddFAMILY(builder *flatbuffers.Builder, FAMILY flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(FAMILY), 0)
+}
+func ROCAddFamily(builder *flatbuffers.Builder, FAMILY flatbuffers.UOffsetT) {
+	ROCAddFAMILY(builder, FAMILY)
 }
 func ROCAddVARIANT(builder *flatbuffers.Builder, VARIANT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(VARIANT), 0)
 }
+func ROCAddVariant(builder *flatbuffers.Builder, VARIANT flatbuffers.UOffsetT) {
+	ROCAddVARIANT(builder, VARIANT)
+}
 func ROCAddSTAGES(builder *flatbuffers.Builder, STAGES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(STAGES), 0)
+}
+func ROCAddStages(builder *flatbuffers.Builder, STAGES flatbuffers.UOffsetT) {
+	ROCAddSTAGES(builder, STAGES)
 }
 func ROCStartSTAGESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
+func ROCStartStagesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return ROCStartSTAGESVector(builder, numElems)
+}
 func ROCAddSUSTAINERS(builder *flatbuffers.Builder, SUSTAINERS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(SUSTAINERS), 0)
 }
+func ROCAddSustainers(builder *flatbuffers.Builder, SUSTAINERS flatbuffers.UOffsetT) {
+	ROCAddSUSTAINERS(builder, SUSTAINERS)
+}
 func ROCStartSUSTAINERSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func ROCStartSustainersVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return ROCStartSUSTAINERSVector(builder, numElems)
 }
 func ROCEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

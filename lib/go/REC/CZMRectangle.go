@@ -51,9 +51,17 @@ func (rcv *CZMRectangle) SHOW() bool {
 	return false
 }
 
+func (rcv *CZMRectangle) Show() bool {
+	return rcv.SHOW()
+}
+
 /// Whether the rectangle is displayed
 func (rcv *CZMRectangle) MutateSHOW(n bool) bool {
 	return rcv._tab.MutateBoolSlot(4, n)
+}
+
+func (rcv *CZMRectangle) MutateShow(n bool) bool {
+	return rcv.MutateSHOW(n)
 }
 
 /// Coordinates [west, south, east, north] in degrees
@@ -66,12 +74,20 @@ func (rcv *CZMRectangle) COORDINATES_WSEN_DEGREES(j int) float64 {
 	return 0
 }
 
+func (rcv *CZMRectangle) CoordinatesWsenDegrees(j int) float64 {
+	return rcv.COORDINATES_WSEN_DEGREES(j)
+}
+
 func (rcv *CZMRectangle) COORDINATES_WSEN_DEGREESLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *CZMRectangle) CoordinatesWsenDegreesLength() int {
+	return rcv.COORDINATES_WSEN_DEGREESLength()
 }
 
 /// Coordinates [west, south, east, north] in degrees
@@ -84,6 +100,10 @@ func (rcv *CZMRectangle) MutateCOORDINATES_WSEN_DEGREES(j int, n float64) bool {
 	return false
 }
 
+func (rcv *CZMRectangle) MutateCoordinatesWsenDegrees(j int, n float64) bool {
+	return rcv.MutateCOORDINATES_WSEN_DEGREES(j, n)
+}
+
 /// Height in meters
 func (rcv *CZMRectangle) HEIGHT() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
@@ -93,9 +113,17 @@ func (rcv *CZMRectangle) HEIGHT() float64 {
 	return 0.0
 }
 
+func (rcv *CZMRectangle) Height() float64 {
+	return rcv.HEIGHT()
+}
+
 /// Height in meters
 func (rcv *CZMRectangle) MutateHEIGHT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(8, n)
+}
+
+func (rcv *CZMRectangle) MutateHeight(n float64) bool {
+	return rcv.MutateHEIGHT(n)
 }
 
 /// Height reference
@@ -105,6 +133,10 @@ func (rcv *CZMRectangle) HEIGHT_REFERENCE() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *CZMRectangle) HeightReference() []byte {
+	return rcv.HEIGHT_REFERENCE()
 }
 
 /// Height reference
@@ -117,9 +149,17 @@ func (rcv *CZMRectangle) EXTRUDED_HEIGHT() float64 {
 	return 0.0
 }
 
+func (rcv *CZMRectangle) ExtrudedHeight() float64 {
+	return rcv.EXTRUDED_HEIGHT()
+}
+
 /// Extruded height
 func (rcv *CZMRectangle) MutateEXTRUDED_HEIGHT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(12, n)
+}
+
+func (rcv *CZMRectangle) MutateExtrudedHeight(n float64) bool {
+	return rcv.MutateEXTRUDED_HEIGHT(n)
 }
 
 /// Extruded height reference
@@ -129,6 +169,10 @@ func (rcv *CZMRectangle) EXTRUDED_HEIGHT_REFERENCE() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *CZMRectangle) ExtrudedHeightReference() []byte {
+	return rcv.EXTRUDED_HEIGHT_REFERENCE()
 }
 
 /// Extruded height reference
@@ -141,9 +185,17 @@ func (rcv *CZMRectangle) ROTATION() float64 {
 	return 0.0
 }
 
+func (rcv *CZMRectangle) Rotation() float64 {
+	return rcv.ROTATION()
+}
+
 /// Rotation in radians
 func (rcv *CZMRectangle) MutateROTATION(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(16, n)
+}
+
+func (rcv *CZMRectangle) MutateRotation(n float64) bool {
+	return rcv.MutateROTATION(n)
 }
 
 /// Texture rotation in radians
@@ -155,9 +207,17 @@ func (rcv *CZMRectangle) ST_ROTATION() float64 {
 	return 0.0
 }
 
+func (rcv *CZMRectangle) StRotation() float64 {
+	return rcv.ST_ROTATION()
+}
+
 /// Texture rotation in radians
 func (rcv *CZMRectangle) MutateST_ROTATION(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(18, n)
+}
+
+func (rcv *CZMRectangle) MutateStRotation(n float64) bool {
+	return rcv.MutateST_ROTATION(n)
 }
 
 /// Granularity in radians
@@ -169,9 +229,17 @@ func (rcv *CZMRectangle) GRANULARITY() float64 {
 	return 0.0
 }
 
+func (rcv *CZMRectangle) Granularity() float64 {
+	return rcv.GRANULARITY()
+}
+
 /// Granularity in radians
 func (rcv *CZMRectangle) MutateGRANULARITY(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(20, n)
+}
+
+func (rcv *CZMRectangle) MutateGranularity(n float64) bool {
+	return rcv.MutateGRANULARITY(n)
 }
 
 /// Fill flag
@@ -183,9 +251,17 @@ func (rcv *CZMRectangle) FILL() bool {
 	return false
 }
 
+func (rcv *CZMRectangle) Fill() bool {
+	return rcv.FILL()
+}
+
 /// Fill flag
 func (rcv *CZMRectangle) MutateFILL(n bool) bool {
 	return rcv._tab.MutateBoolSlot(22, n)
+}
+
+func (rcv *CZMRectangle) MutateFill(n bool) bool {
+	return rcv.MutateFILL(n)
 }
 
 /// Surface material
@@ -202,6 +278,10 @@ func (rcv *CZMRectangle) MATERIAL(obj *CZMMaterial) *CZMMaterial {
 	return nil
 }
 
+func (rcv *CZMRectangle) Material(obj *CZMMaterial) *CZMMaterial {
+	return rcv.MATERIAL(obj)
+}
+
 /// Surface material
 /// Outline flag
 func (rcv *CZMRectangle) OUTLINE() bool {
@@ -212,9 +292,17 @@ func (rcv *CZMRectangle) OUTLINE() bool {
 	return false
 }
 
+func (rcv *CZMRectangle) Outline() bool {
+	return rcv.OUTLINE()
+}
+
 /// Outline flag
 func (rcv *CZMRectangle) MutateOUTLINE(n bool) bool {
 	return rcv._tab.MutateBoolSlot(26, n)
+}
+
+func (rcv *CZMRectangle) MutateOutline(n bool) bool {
+	return rcv.MutateOUTLINE(n)
 }
 
 /// Outline color
@@ -231,6 +319,10 @@ func (rcv *CZMRectangle) OUTLINE_COLOR(obj *CZMColor) *CZMColor {
 	return nil
 }
 
+func (rcv *CZMRectangle) OutlineColor(obj *CZMColor) *CZMColor {
+	return rcv.OUTLINE_COLOR(obj)
+}
+
 /// Outline color
 /// Outline width
 func (rcv *CZMRectangle) OUTLINE_WIDTH() float64 {
@@ -241,9 +333,17 @@ func (rcv *CZMRectangle) OUTLINE_WIDTH() float64 {
 	return 0.0
 }
 
+func (rcv *CZMRectangle) OutlineWidth() float64 {
+	return rcv.OUTLINE_WIDTH()
+}
+
 /// Outline width
 func (rcv *CZMRectangle) MutateOUTLINE_WIDTH(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(30, n)
+}
+
+func (rcv *CZMRectangle) MutateOutlineWidth(n float64) bool {
+	return rcv.MutateOUTLINE_WIDTH(n)
 }
 
 /// Shadow mode
@@ -253,6 +353,10 @@ func (rcv *CZMRectangle) SHADOWS() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *CZMRectangle) Shadows() []byte {
+	return rcv.SHADOWS()
 }
 
 /// Shadow mode
@@ -265,6 +369,10 @@ func (rcv *CZMRectangle) CLASSIFICATION_TYPE() []byte {
 	return nil
 }
 
+func (rcv *CZMRectangle) ClassificationType() []byte {
+	return rcv.CLASSIFICATION_TYPE()
+}
+
 /// Classification type
 /// Z-index for ordering
 func (rcv *CZMRectangle) Z_INDEX() int32 {
@@ -275,9 +383,17 @@ func (rcv *CZMRectangle) Z_INDEX() int32 {
 	return 0
 }
 
+func (rcv *CZMRectangle) ZIndex() int32 {
+	return rcv.Z_INDEX()
+}
+
 /// Z-index for ordering
 func (rcv *CZMRectangle) MutateZ_INDEX(n int32) bool {
 	return rcv._tab.MutateInt32Slot(36, n)
+}
+
+func (rcv *CZMRectangle) MutateZIndex(n int32) bool {
+	return rcv.MutateZ_INDEX(n)
 }
 
 func CZMRectangleStart(builder *flatbuffers.Builder) {
@@ -286,56 +402,110 @@ func CZMRectangleStart(builder *flatbuffers.Builder) {
 func CZMRectangleAddSHOW(builder *flatbuffers.Builder, SHOW bool) {
 	builder.PrependBoolSlot(0, SHOW, false)
 }
+func CZMRectangleAddShow(builder *flatbuffers.Builder, SHOW bool) {
+	CZMRectangleAddSHOW(builder, SHOW)
+}
 func CZMRectangleAddCOORDINATES_WSEN_DEGREES(builder *flatbuffers.Builder, COORDINATES_WSEN_DEGREES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(COORDINATES_WSEN_DEGREES), 0)
+}
+func CZMRectangleAddCoordinatesWsenDegrees(builder *flatbuffers.Builder, COORDINATES_WSEN_DEGREES flatbuffers.UOffsetT) {
+	CZMRectangleAddCOORDINATES_WSEN_DEGREES(builder, COORDINATES_WSEN_DEGREES)
 }
 func CZMRectangleStartCOORDINATES_WSEN_DEGREESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(8, numElems, 8)
 }
+func CZMRectangleStartCoordinatesWsenDegreesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return CZMRectangleStartCOORDINATES_WSEN_DEGREESVector(builder, numElems)
+}
 func CZMRectangleAddHEIGHT(builder *flatbuffers.Builder, HEIGHT float64) {
 	builder.PrependFloat64Slot(2, HEIGHT, 0.0)
+}
+func CZMRectangleAddHeight(builder *flatbuffers.Builder, HEIGHT float64) {
+	CZMRectangleAddHEIGHT(builder, HEIGHT)
 }
 func CZMRectangleAddHEIGHT_REFERENCE(builder *flatbuffers.Builder, HEIGHT_REFERENCE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(HEIGHT_REFERENCE), 0)
 }
+func CZMRectangleAddHeightReference(builder *flatbuffers.Builder, HEIGHT_REFERENCE flatbuffers.UOffsetT) {
+	CZMRectangleAddHEIGHT_REFERENCE(builder, HEIGHT_REFERENCE)
+}
 func CZMRectangleAddEXTRUDED_HEIGHT(builder *flatbuffers.Builder, EXTRUDED_HEIGHT float64) {
 	builder.PrependFloat64Slot(4, EXTRUDED_HEIGHT, 0.0)
+}
+func CZMRectangleAddExtrudedHeight(builder *flatbuffers.Builder, EXTRUDED_HEIGHT float64) {
+	CZMRectangleAddEXTRUDED_HEIGHT(builder, EXTRUDED_HEIGHT)
 }
 func CZMRectangleAddEXTRUDED_HEIGHT_REFERENCE(builder *flatbuffers.Builder, EXTRUDED_HEIGHT_REFERENCE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(EXTRUDED_HEIGHT_REFERENCE), 0)
 }
+func CZMRectangleAddExtrudedHeightReference(builder *flatbuffers.Builder, EXTRUDED_HEIGHT_REFERENCE flatbuffers.UOffsetT) {
+	CZMRectangleAddEXTRUDED_HEIGHT_REFERENCE(builder, EXTRUDED_HEIGHT_REFERENCE)
+}
 func CZMRectangleAddROTATION(builder *flatbuffers.Builder, ROTATION float64) {
 	builder.PrependFloat64Slot(6, ROTATION, 0.0)
+}
+func CZMRectangleAddRotation(builder *flatbuffers.Builder, ROTATION float64) {
+	CZMRectangleAddROTATION(builder, ROTATION)
 }
 func CZMRectangleAddST_ROTATION(builder *flatbuffers.Builder, ST_ROTATION float64) {
 	builder.PrependFloat64Slot(7, ST_ROTATION, 0.0)
 }
+func CZMRectangleAddStRotation(builder *flatbuffers.Builder, ST_ROTATION float64) {
+	CZMRectangleAddST_ROTATION(builder, ST_ROTATION)
+}
 func CZMRectangleAddGRANULARITY(builder *flatbuffers.Builder, GRANULARITY float64) {
 	builder.PrependFloat64Slot(8, GRANULARITY, 0.0)
+}
+func CZMRectangleAddGranularity(builder *flatbuffers.Builder, GRANULARITY float64) {
+	CZMRectangleAddGRANULARITY(builder, GRANULARITY)
 }
 func CZMRectangleAddFILL(builder *flatbuffers.Builder, FILL bool) {
 	builder.PrependBoolSlot(9, FILL, false)
 }
+func CZMRectangleAddFill(builder *flatbuffers.Builder, FILL bool) {
+	CZMRectangleAddFILL(builder, FILL)
+}
 func CZMRectangleAddMATERIAL(builder *flatbuffers.Builder, MATERIAL flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(MATERIAL), 0)
+}
+func CZMRectangleAddMaterial(builder *flatbuffers.Builder, MATERIAL flatbuffers.UOffsetT) {
+	CZMRectangleAddMATERIAL(builder, MATERIAL)
 }
 func CZMRectangleAddOUTLINE(builder *flatbuffers.Builder, OUTLINE bool) {
 	builder.PrependBoolSlot(11, OUTLINE, false)
 }
+func CZMRectangleAddOutline(builder *flatbuffers.Builder, OUTLINE bool) {
+	CZMRectangleAddOUTLINE(builder, OUTLINE)
+}
 func CZMRectangleAddOUTLINE_COLOR(builder *flatbuffers.Builder, OUTLINE_COLOR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(12, flatbuffers.UOffsetT(OUTLINE_COLOR), 0)
+}
+func CZMRectangleAddOutlineColor(builder *flatbuffers.Builder, OUTLINE_COLOR flatbuffers.UOffsetT) {
+	CZMRectangleAddOUTLINE_COLOR(builder, OUTLINE_COLOR)
 }
 func CZMRectangleAddOUTLINE_WIDTH(builder *flatbuffers.Builder, OUTLINE_WIDTH float64) {
 	builder.PrependFloat64Slot(13, OUTLINE_WIDTH, 0.0)
 }
+func CZMRectangleAddOutlineWidth(builder *flatbuffers.Builder, OUTLINE_WIDTH float64) {
+	CZMRectangleAddOUTLINE_WIDTH(builder, OUTLINE_WIDTH)
+}
 func CZMRectangleAddSHADOWS(builder *flatbuffers.Builder, SHADOWS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(14, flatbuffers.UOffsetT(SHADOWS), 0)
+}
+func CZMRectangleAddShadows(builder *flatbuffers.Builder, SHADOWS flatbuffers.UOffsetT) {
+	CZMRectangleAddSHADOWS(builder, SHADOWS)
 }
 func CZMRectangleAddCLASSIFICATION_TYPE(builder *flatbuffers.Builder, CLASSIFICATION_TYPE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(15, flatbuffers.UOffsetT(CLASSIFICATION_TYPE), 0)
 }
+func CZMRectangleAddClassificationType(builder *flatbuffers.Builder, CLASSIFICATION_TYPE flatbuffers.UOffsetT) {
+	CZMRectangleAddCLASSIFICATION_TYPE(builder, CLASSIFICATION_TYPE)
+}
 func CZMRectangleAddZ_INDEX(builder *flatbuffers.Builder, Z_INDEX int32) {
 	builder.PrependInt32Slot(16, Z_INDEX, 0)
+}
+func CZMRectangleAddZIndex(builder *flatbuffers.Builder, Z_INDEX int32) {
+	CZMRectangleAddZ_INDEX(builder, Z_INDEX)
 }
 func CZMRectangleEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

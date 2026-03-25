@@ -124,7 +124,11 @@ class ephemerisDataBlock extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// Recommended interpolation method for ephemeris data (Hermite, Linear, Lagrange, etc.)
+    /// Recommended interpolation method for ephemeris data.
+    /// Supported methods: Hermite, Linear, Lagrange, Chebyshev.
+    /// When set to "Chebyshev", parsers should use POLYNOMIAL_POSITION_RECORDS
+    /// for high-fidelity polynomial interpolation instead of interpolating across
+    /// discrete state vectors.
     public function getINTERPOLATION()
     {
         $o = $this->__offset(26);
@@ -233,22 +237,45 @@ class ephemerisDataBlock extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Optional polynomial position records for high-fidelity interpolation.
+    /// Used when INTERPOLATION is "Chebyshev". Each record covers a time segment with
+    /// polynomial coefficients for continuous position (and optionally velocity) evaluation.
+    /// See PPE schema for record structure and evaluation procedure.
+    /**
+     * @returnVectorOffset
+     */
+    public function getPOLYNOMIAL_POSITION_RECORDS($j)
+    {
+        $o = $this->__offset(40);
+        $obj = new PPEPositionRecord();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPOLYNOMIAL_POSITION_RECORDSLength()
+    {
+        $o = $this->__offset(40);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startephemerisDataBlock(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(18);
+        $builder->StartObject(19);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return ephemerisDataBlock
      */
-    public static function createephemerisDataBlock(FlatBufferBuilder $builder, $COMMENT, $OBJECT, $CENTER_NAME, $REFERENCE_FRAME, $REFERENCE_FRAME_EPOCH, $COV_REFERENCE_FRAME, $TIME_SYSTEM, $START_TIME, $USEABLE_START_TIME, $USEABLE_STOP_TIME, $STOP_TIME, $INTERPOLATION, $INTERPOLATION_DEGREE, $STEP_SIZE, $STATE_VECTOR_SIZE, $EPHEMERIS_DATA, $EPHEMERIS_DATA_LINES, $COVARIANCE_MATRIX_LINES)
+    public static function createephemerisDataBlock(FlatBufferBuilder $builder, $COMMENT, $OBJECT, $CENTER_NAME, $REFERENCE_FRAME, $REFERENCE_FRAME_EPOCH, $COV_REFERENCE_FRAME, $TIME_SYSTEM, $START_TIME, $USEABLE_START_TIME, $USEABLE_STOP_TIME, $STOP_TIME, $INTERPOLATION, $INTERPOLATION_DEGREE, $STEP_SIZE, $STATE_VECTOR_SIZE, $EPHEMERIS_DATA, $EPHEMERIS_DATA_LINES, $COVARIANCE_MATRIX_LINES, $POLYNOMIAL_POSITION_RECORDS)
     {
-        $builder->startObject(18);
+        $builder->startObject(19);
         self::addCOMMENT($builder, $COMMENT);
         self::addOBJECT($builder, $OBJECT);
         self::addCENTER_NAME($builder, $CENTER_NAME);
@@ -267,6 +294,7 @@ class ephemerisDataBlock extends Table
         self::addEPHEMERIS_DATA($builder, $EPHEMERIS_DATA);
         self::addEPHEMERIS_DATA_LINES($builder, $EPHEMERIS_DATA_LINES);
         self::addCOVARIANCE_MATRIX_LINES($builder, $COVARIANCE_MATRIX_LINES);
+        self::addPOLYNOMIAL_POSITION_RECORDS($builder, $POLYNOMIAL_POSITION_RECORDS);
         $o = $builder->endObject();
         return $o;
     }
@@ -519,6 +547,40 @@ class ephemerisDataBlock extends Table
      * @return void
      */
     public static function startCOVARIANCE_MATRIX_LINESVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addPOLYNOMIAL_POSITION_RECORDS(FlatBufferBuilder $builder, $POLYNOMIAL_POSITION_RECORDS)
+    {
+        $builder->addOffsetX(18, $POLYNOMIAL_POSITION_RECORDS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createPOLYNOMIAL_POSITION_RECORDSVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startPOLYNOMIAL_POSITION_RECORDSVector(FlatBufferBuilder $builder, $numElems)
     {
         $builder->startVector(4, $numElems, 4);
     }

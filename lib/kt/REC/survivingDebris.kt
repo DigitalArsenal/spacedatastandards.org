@@ -32,7 +32,7 @@ class survivingDebris : Table() {
     /**
      * Fragment identifier
      */
-    val FRAGMENT_ID : String?
+    val fragmentId : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class survivingDebris : Table() {
                 null
             }
         }
-    val FRAGMENT_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun FRAGMENT_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val fragmentIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun fragmentIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Material type
      */
-    val MATERIAL : String?
+    val material : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -55,12 +55,12 @@ class survivingDebris : Table() {
                 null
             }
         }
-    val MATERIALAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun MATERIALInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val materialAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun materialInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * Fragment mass in kg
      */
-    val MASS : Double
+    val mass : Double
         get() {
             val o = __offset(8)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -68,7 +68,7 @@ class survivingDebris : Table() {
     /**
      * Casualty area in m^2
      */
-    val CASUALTY_AREA : Double
+    val casualtyArea : Double
         get() {
             val o = __offset(10)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -76,33 +76,33 @@ class survivingDebris : Table() {
     /**
      * Survival probability (0.0-1.0)
      */
-    val SURVIVAL_PROBABILITY : Double
+    val survivalProbability : Double
         get() {
             val o = __offset(12)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAssurvivingDebris(_bb: ByteBuffer): survivingDebris = getRootAssurvivingDebris(_bb, survivingDebris())
         fun getRootAssurvivingDebris(_bb: ByteBuffer, obj: survivingDebris): survivingDebris {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createsurvivingDebris(builder: FlatBufferBuilder, FRAGMENT_IDOffset: Int, MATERIALOffset: Int, MASS: Double, CASUALTY_AREA: Double, SURVIVAL_PROBABILITY: Double) : Int {
+        fun createsurvivingDebris(builder: FlatBufferBuilder, fragmentIdOffset: Int, materialOffset: Int, mass: Double, casualtyArea: Double, survivalProbability: Double) : Int {
             builder.startTable(5)
-            addSURVIVAL_PROBABILITY(builder, SURVIVAL_PROBABILITY)
-            addCASUALTY_AREA(builder, CASUALTY_AREA)
-            addMASS(builder, MASS)
-            addMATERIAL(builder, MATERIALOffset)
-            addFRAGMENT_ID(builder, FRAGMENT_IDOffset)
+            addSURVIVALPROBABILITY(builder, survivalProbability)
+            addCASUALTYAREA(builder, casualtyArea)
+            addMASS(builder, mass)
+            addMATERIAL(builder, materialOffset)
+            addFRAGMENTID(builder, fragmentIdOffset)
             return endsurvivingDebris(builder)
         }
         fun startsurvivingDebris(builder: FlatBufferBuilder) = builder.startTable(5)
-        fun addFRAGMENT_ID(builder: FlatBufferBuilder, FRAGMENT_ID: Int) = builder.addOffset(0, FRAGMENT_ID, 0)
-        fun addMATERIAL(builder: FlatBufferBuilder, MATERIAL: Int) = builder.addOffset(1, MATERIAL, 0)
-        fun addMASS(builder: FlatBufferBuilder, MASS: Double) = builder.addDouble(2, MASS, 0.0)
-        fun addCASUALTY_AREA(builder: FlatBufferBuilder, CASUALTY_AREA: Double) = builder.addDouble(3, CASUALTY_AREA, 0.0)
-        fun addSURVIVAL_PROBABILITY(builder: FlatBufferBuilder, SURVIVAL_PROBABILITY: Double) = builder.addDouble(4, SURVIVAL_PROBABILITY, 0.0)
+        fun addFRAGMENTID(builder: FlatBufferBuilder, fragmentId: Int) = builder.addOffset(0, fragmentId, 0)
+        fun addMATERIAL(builder: FlatBufferBuilder, material: Int) = builder.addOffset(1, material, 0)
+        fun addMASS(builder: FlatBufferBuilder, mass: Double) = builder.addDouble(2, mass, 0.0)
+        fun addCASUALTYAREA(builder: FlatBufferBuilder, casualtyArea: Double) = builder.addDouble(3, casualtyArea, 0.0)
+        fun addSURVIVALPROBABILITY(builder: FlatBufferBuilder, survivalProbability: Double) = builder.addDouble(4, survivalProbability, 0.0)
         fun endsurvivingDebris(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

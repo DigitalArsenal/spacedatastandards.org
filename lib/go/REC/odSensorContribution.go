@@ -51,6 +51,10 @@ func (rcv *odSensorContribution) SENSOR_ID() []byte {
 	return nil
 }
 
+func (rcv *odSensorContribution) SensorId() []byte {
+	return rcv.SENSOR_ID()
+}
+
 /// Sensor identifier
 /// Original sensor identifier
 func (rcv *odSensorContribution) ORIG_SENSOR_ID() []byte {
@@ -59,6 +63,10 @@ func (rcv *odSensorContribution) ORIG_SENSOR_ID() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *odSensorContribution) OrigSensorId() []byte {
+	return rcv.ORIG_SENSOR_ID()
 }
 
 /// Original sensor identifier
@@ -71,9 +79,17 @@ func (rcv *odSensorContribution) NUM_ACCEPTED() uint32 {
 	return 0
 }
 
+func (rcv *odSensorContribution) NumAccepted() uint32 {
+	return rcv.NUM_ACCEPTED()
+}
+
 /// Number of accepted observations from this sensor
 func (rcv *odSensorContribution) MutateNUM_ACCEPTED(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(8, n)
+}
+
+func (rcv *odSensorContribution) MutateNumAccepted(n uint32) bool {
+	return rcv.MutateNUM_ACCEPTED(n)
 }
 
 /// Number of rejected observations from this sensor
@@ -85,9 +101,17 @@ func (rcv *odSensorContribution) NUM_REJECTED() uint32 {
 	return 0
 }
 
+func (rcv *odSensorContribution) NumRejected() uint32 {
+	return rcv.NUM_REJECTED()
+}
+
 /// Number of rejected observations from this sensor
 func (rcv *odSensorContribution) MutateNUM_REJECTED(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(10, n)
+}
+
+func (rcv *odSensorContribution) MutateNumRejected(n uint32) bool {
+	return rcv.MutateNUM_REJECTED(n)
 }
 
 /// Weighted RMS for this sensor's observations
@@ -99,9 +123,17 @@ func (rcv *odSensorContribution) WRMS() float64 {
 	return 0.0
 }
 
+func (rcv *odSensorContribution) Wrms() float64 {
+	return rcv.WRMS()
+}
+
 /// Weighted RMS for this sensor's observations
 func (rcv *odSensorContribution) MutateWRMS(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(12, n)
+}
+
+func (rcv *odSensorContribution) MutateWrms(n float64) bool {
+	return rcv.MutateWRMS(n)
 }
 
 /// Observation types from this sensor
@@ -114,12 +146,20 @@ func (rcv *odSensorContribution) OB_TYPES(j int) []byte {
 	return nil
 }
 
+func (rcv *odSensorContribution) ObTypes(j int) []byte {
+	return rcv.OB_TYPES(j)
+}
+
 func (rcv *odSensorContribution) OB_TYPESLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *odSensorContribution) ObTypesLength() int {
+	return rcv.OB_TYPESLength()
 }
 
 /// Observation types from this sensor
@@ -129,23 +169,44 @@ func odSensorContributionStart(builder *flatbuffers.Builder) {
 func odSensorContributionAddSENSOR_ID(builder *flatbuffers.Builder, SENSOR_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(SENSOR_ID), 0)
 }
+func odSensorContributionAddSensorId(builder *flatbuffers.Builder, SENSOR_ID flatbuffers.UOffsetT) {
+	odSensorContributionAddSENSOR_ID(builder, SENSOR_ID)
+}
 func odSensorContributionAddORIG_SENSOR_ID(builder *flatbuffers.Builder, ORIG_SENSOR_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(ORIG_SENSOR_ID), 0)
+}
+func odSensorContributionAddOrigSensorId(builder *flatbuffers.Builder, ORIG_SENSOR_ID flatbuffers.UOffsetT) {
+	odSensorContributionAddORIG_SENSOR_ID(builder, ORIG_SENSOR_ID)
 }
 func odSensorContributionAddNUM_ACCEPTED(builder *flatbuffers.Builder, NUM_ACCEPTED uint32) {
 	builder.PrependUint32Slot(2, NUM_ACCEPTED, 0)
 }
+func odSensorContributionAddNumAccepted(builder *flatbuffers.Builder, NUM_ACCEPTED uint32) {
+	odSensorContributionAddNUM_ACCEPTED(builder, NUM_ACCEPTED)
+}
 func odSensorContributionAddNUM_REJECTED(builder *flatbuffers.Builder, NUM_REJECTED uint32) {
 	builder.PrependUint32Slot(3, NUM_REJECTED, 0)
+}
+func odSensorContributionAddNumRejected(builder *flatbuffers.Builder, NUM_REJECTED uint32) {
+	odSensorContributionAddNUM_REJECTED(builder, NUM_REJECTED)
 }
 func odSensorContributionAddWRMS(builder *flatbuffers.Builder, WRMS float64) {
 	builder.PrependFloat64Slot(4, WRMS, 0.0)
 }
+func odSensorContributionAddWrms(builder *flatbuffers.Builder, WRMS float64) {
+	odSensorContributionAddWRMS(builder, WRMS)
+}
 func odSensorContributionAddOB_TYPES(builder *flatbuffers.Builder, OB_TYPES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(OB_TYPES), 0)
 }
+func odSensorContributionAddObTypes(builder *flatbuffers.Builder, OB_TYPES flatbuffers.UOffsetT) {
+	odSensorContributionAddOB_TYPES(builder, OB_TYPES)
+}
 func odSensorContributionStartOB_TYPESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func odSensorContributionStartObTypesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return odSensorContributionStartOB_TYPESVector(builder, numElems)
 }
 func odSensorContributionEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

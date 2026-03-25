@@ -479,44 +479,77 @@ def End(builder):
 class SPWT(object):
 
     # SPWT
-    def __init__(self):
-        self.DATE = None  # type: str
-        self.BSRN = 0  # type: int
-        self.ND = 0  # type: int
-        self.KP1 = 0  # type: int
-        self.KP2 = 0  # type: int
-        self.KP3 = 0  # type: int
-        self.KP4 = 0  # type: int
-        self.KP5 = 0  # type: int
-        self.KP6 = 0  # type: int
-        self.KP7 = 0  # type: int
-        self.KP8 = 0  # type: int
-        self.KP_SUM = 0  # type: int
-        self.AP1 = 0  # type: int
-        self.AP2 = 0  # type: int
-        self.AP3 = 0  # type: int
-        self.AP4 = 0  # type: int
-        self.AP5 = 0  # type: int
-        self.AP6 = 0  # type: int
-        self.AP7 = 0  # type: int
-        self.AP8 = 0  # type: int
-        self.AP_AVG = 0  # type: int
-        self.CP = 0.0  # type: float
-        self.C9 = 0  # type: int
-        self.ISN = 0  # type: int
-        self.F107_OBS = 0.0  # type: float
-        self.F107_ADJ = 0.0  # type: float
-        self.F107_DATA_TYPE = 0  # type: int
-        self.F107_OBS_CENTER81 = 0.0  # type: float
-        self.F107_OBS_LAST81 = 0.0  # type: float
-        self.F107_ADJ_CENTER81 = 0.0  # type: float
-        self.F107_ADJ_LAST81 = 0.0  # type: float
+    def __init__(
+        self,
+        DATE = None,
+        BSRN = 0,
+        ND = 0,
+        KP1 = 0,
+        KP2 = 0,
+        KP3 = 0,
+        KP4 = 0,
+        KP5 = 0,
+        KP6 = 0,
+        KP7 = 0,
+        KP8 = 0,
+        KP_SUM = 0,
+        AP1 = 0,
+        AP2 = 0,
+        AP3 = 0,
+        AP4 = 0,
+        AP5 = 0,
+        AP6 = 0,
+        AP7 = 0,
+        AP8 = 0,
+        AP_AVG = 0,
+        CP = 0.0,
+        C9 = 0,
+        ISN = 0,
+        F107_OBS = 0.0,
+        F107_ADJ = 0.0,
+        F107_DATA_TYPE = 0,
+        F107_OBS_CENTER81 = 0.0,
+        F107_OBS_LAST81 = 0.0,
+        F107_ADJ_CENTER81 = 0.0,
+        F107_ADJ_LAST81 = 0.0,
+    ):
+        self.DATE = DATE  # type: Optional[str]
+        self.BSRN = BSRN  # type: int
+        self.ND = ND  # type: int
+        self.KP1 = KP1  # type: int
+        self.KP2 = KP2  # type: int
+        self.KP3 = KP3  # type: int
+        self.KP4 = KP4  # type: int
+        self.KP5 = KP5  # type: int
+        self.KP6 = KP6  # type: int
+        self.KP7 = KP7  # type: int
+        self.KP8 = KP8  # type: int
+        self.KP_SUM = KP_SUM  # type: int
+        self.AP1 = AP1  # type: int
+        self.AP2 = AP2  # type: int
+        self.AP3 = AP3  # type: int
+        self.AP4 = AP4  # type: int
+        self.AP5 = AP5  # type: int
+        self.AP6 = AP6  # type: int
+        self.AP7 = AP7  # type: int
+        self.AP8 = AP8  # type: int
+        self.AP_AVG = AP_AVG  # type: int
+        self.CP = CP  # type: float
+        self.C9 = C9  # type: int
+        self.ISN = ISN  # type: int
+        self.F107_OBS = F107_OBS  # type: float
+        self.F107_ADJ = F107_ADJ  # type: float
+        self.F107_DATA_TYPE = F107_DATA_TYPE  # type: int
+        self.F107_OBS_CENTER81 = F107_OBS_CENTER81  # type: float
+        self.F107_OBS_LAST81 = F107_OBS_LAST81  # type: float
+        self.F107_ADJ_CENTER81 = F107_ADJ_CENTER81  # type: float
+        self.F107_ADJ_LAST81 = F107_ADJ_LAST81  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        SPW = SPW()
-        SPW.Init(buf, pos)
-        return cls.InitFromObj(SPW)
+        tmpSpw = SPW()
+        tmpSpw.Init(buf, pos)
+        return cls.InitFromObj(tmpSpw)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -524,9 +557,9 @@ class SPWT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, SPW):
+    def InitFromObj(cls, tmpSpw):
         x = SPWT()
-        x._UnPack(SPW)
+        x._UnPack(tmpSpw)
         return x
 
     # SPWT

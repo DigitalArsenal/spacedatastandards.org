@@ -51,6 +51,10 @@ func (rcv *ionoDataPoint) EPOCH() []byte {
 	return nil
 }
 
+func (rcv *ionoDataPoint) Epoch() []byte {
+	return rcv.EPOCH()
+}
+
 /// Observation epoch (ISO 8601)
 /// Ionospheric layer
 func (rcv *ionoDataPoint) LAYER() ionoLayer {
@@ -61,9 +65,17 @@ func (rcv *ionoDataPoint) LAYER() ionoLayer {
 	return 0
 }
 
+func (rcv *ionoDataPoint) Layer() ionoLayer {
+	return rcv.LAYER()
+}
+
 /// Ionospheric layer
 func (rcv *ionoDataPoint) MutateLAYER(n ionoLayer) bool {
 	return rcv._tab.MutateInt8Slot(6, int8(n))
+}
+
+func (rcv *ionoDataPoint) MutateLayer(n ionoLayer) bool {
+	return rcv.MutateLAYER(n)
 }
 
 /// Critical frequency in MHz
@@ -75,9 +87,17 @@ func (rcv *ionoDataPoint) CRITICAL_FREQ() float64 {
 	return 0.0
 }
 
+func (rcv *ionoDataPoint) CriticalFreq() float64 {
+	return rcv.CRITICAL_FREQ()
+}
+
 /// Critical frequency in MHz
 func (rcv *ionoDataPoint) MutateCRITICAL_FREQ(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(8, n)
+}
+
+func (rcv *ionoDataPoint) MutateCriticalFreq(n float64) bool {
+	return rcv.MutateCRITICAL_FREQ(n)
 }
 
 /// Virtual height in km
@@ -89,9 +109,17 @@ func (rcv *ionoDataPoint) VIRTUAL_HEIGHT() float64 {
 	return 0.0
 }
 
+func (rcv *ionoDataPoint) VirtualHeight() float64 {
+	return rcv.VIRTUAL_HEIGHT()
+}
+
 /// Virtual height in km
 func (rcv *ionoDataPoint) MutateVIRTUAL_HEIGHT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(10, n)
+}
+
+func (rcv *ionoDataPoint) MutateVirtualHeight(n float64) bool {
+	return rcv.MutateVIRTUAL_HEIGHT(n)
 }
 
 /// True height in km
@@ -103,9 +131,17 @@ func (rcv *ionoDataPoint) TRUE_HEIGHT() float64 {
 	return 0.0
 }
 
+func (rcv *ionoDataPoint) TrueHeight() float64 {
+	return rcv.TRUE_HEIGHT()
+}
+
 /// True height in km
 func (rcv *ionoDataPoint) MutateTRUE_HEIGHT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(12, n)
+}
+
+func (rcv *ionoDataPoint) MutateTrueHeight(n float64) bool {
+	return rcv.MutateTRUE_HEIGHT(n)
 }
 
 /// Peak electron density in electrons/m^3
@@ -117,9 +153,17 @@ func (rcv *ionoDataPoint) PEAK_DENSITY() float64 {
 	return 0.0
 }
 
+func (rcv *ionoDataPoint) PeakDensity() float64 {
+	return rcv.PEAK_DENSITY()
+}
+
 /// Peak electron density in electrons/m^3
 func (rcv *ionoDataPoint) MutatePEAK_DENSITY(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(14, n)
+}
+
+func (rcv *ionoDataPoint) MutatePeakDensity(n float64) bool {
+	return rcv.MutatePEAK_DENSITY(n)
 }
 
 /// Total electron content in TECU
@@ -131,9 +175,17 @@ func (rcv *ionoDataPoint) TEC() float64 {
 	return 0.0
 }
 
+func (rcv *ionoDataPoint) Tec() float64 {
+	return rcv.TEC()
+}
+
 /// Total electron content in TECU
 func (rcv *ionoDataPoint) MutateTEC(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(16, n)
+}
+
+func (rcv *ionoDataPoint) MutateTec(n float64) bool {
+	return rcv.MutateTEC(n)
 }
 
 /// TEC uncertainty in TECU
@@ -145,9 +197,17 @@ func (rcv *ionoDataPoint) TEC_UNCERTAINTY() float64 {
 	return 0.0
 }
 
+func (rcv *ionoDataPoint) TecUncertainty() float64 {
+	return rcv.TEC_UNCERTAINTY()
+}
+
 /// TEC uncertainty in TECU
 func (rcv *ionoDataPoint) MutateTEC_UNCERTAINTY(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(18, n)
+}
+
+func (rcv *ionoDataPoint) MutateTecUncertainty(n float64) bool {
+	return rcv.MutateTEC_UNCERTAINTY(n)
 }
 
 func ionoDataPointStart(builder *flatbuffers.Builder) {
@@ -156,26 +216,50 @@ func ionoDataPointStart(builder *flatbuffers.Builder) {
 func ionoDataPointAddEPOCH(builder *flatbuffers.Builder, EPOCH flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(EPOCH), 0)
 }
+func ionoDataPointAddEpoch(builder *flatbuffers.Builder, EPOCH flatbuffers.UOffsetT) {
+	ionoDataPointAddEPOCH(builder, EPOCH)
+}
 func ionoDataPointAddLAYER(builder *flatbuffers.Builder, LAYER ionoLayer) {
 	builder.PrependInt8Slot(1, int8(LAYER), 0)
+}
+func ionoDataPointAddLayer(builder *flatbuffers.Builder, LAYER ionoLayer) {
+	ionoDataPointAddLAYER(builder, LAYER)
 }
 func ionoDataPointAddCRITICAL_FREQ(builder *flatbuffers.Builder, CRITICAL_FREQ float64) {
 	builder.PrependFloat64Slot(2, CRITICAL_FREQ, 0.0)
 }
+func ionoDataPointAddCriticalFreq(builder *flatbuffers.Builder, CRITICAL_FREQ float64) {
+	ionoDataPointAddCRITICAL_FREQ(builder, CRITICAL_FREQ)
+}
 func ionoDataPointAddVIRTUAL_HEIGHT(builder *flatbuffers.Builder, VIRTUAL_HEIGHT float64) {
 	builder.PrependFloat64Slot(3, VIRTUAL_HEIGHT, 0.0)
+}
+func ionoDataPointAddVirtualHeight(builder *flatbuffers.Builder, VIRTUAL_HEIGHT float64) {
+	ionoDataPointAddVIRTUAL_HEIGHT(builder, VIRTUAL_HEIGHT)
 }
 func ionoDataPointAddTRUE_HEIGHT(builder *flatbuffers.Builder, TRUE_HEIGHT float64) {
 	builder.PrependFloat64Slot(4, TRUE_HEIGHT, 0.0)
 }
+func ionoDataPointAddTrueHeight(builder *flatbuffers.Builder, TRUE_HEIGHT float64) {
+	ionoDataPointAddTRUE_HEIGHT(builder, TRUE_HEIGHT)
+}
 func ionoDataPointAddPEAK_DENSITY(builder *flatbuffers.Builder, PEAK_DENSITY float64) {
 	builder.PrependFloat64Slot(5, PEAK_DENSITY, 0.0)
+}
+func ionoDataPointAddPeakDensity(builder *flatbuffers.Builder, PEAK_DENSITY float64) {
+	ionoDataPointAddPEAK_DENSITY(builder, PEAK_DENSITY)
 }
 func ionoDataPointAddTEC(builder *flatbuffers.Builder, TEC float64) {
 	builder.PrependFloat64Slot(6, TEC, 0.0)
 }
+func ionoDataPointAddTec(builder *flatbuffers.Builder, TEC float64) {
+	ionoDataPointAddTEC(builder, TEC)
+}
 func ionoDataPointAddTEC_UNCERTAINTY(builder *flatbuffers.Builder, TEC_UNCERTAINTY float64) {
 	builder.PrependFloat64Slot(7, TEC_UNCERTAINTY, 0.0)
+}
+func ionoDataPointAddTecUncertainty(builder *flatbuffers.Builder, TEC_UNCERTAINTY float64) {
+	ionoDataPointAddTEC_UNCERTAINTY(builder, TEC_UNCERTAINTY)
 }
 func ionoDataPointEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

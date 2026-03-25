@@ -2,10 +2,14 @@
 // swiftlint:disable all
 // swiftformat:disable all
 
+#if canImport(Common)
+import Common
+#endif
+
 import FlatBuffers
 
 ///  License type for plugin access
-public enum licenseType: Int8, Enum, Verifiable {
+public enum licenseType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -30,9 +34,9 @@ public enum licenseType: Int8, Enum, Verifiable {
 ///  Plugin License Key - Issued license for plugin access
 ///  Uses ECIES: both parties derive symmetric key via X25519 ECDH
 ///  Key derivation: X25519(private, peer_public) → HKDF-SHA256 → AES-256-GCM
-public struct PLK: FlatBufferObject, Verifiable {
+public struct PLK: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -82,24 +86,16 @@ public struct PLK: FlatBufferObject, Verifiable {
   public var LICENSEE_PEER_ID: String? { let o = _accessor.offset(VTOFFSET.LICENSEE_PEER_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var LICENSEE_PEER_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LICENSEE_PEER_ID.v) }
   ///  Licensee's X25519 public key (32 bytes)
-  public var hasLicenseePubkey: Bool { let o = _accessor.offset(VTOFFSET.LICENSEE_PUBKEY.v); return o == 0 ? false : true }
-  public var LICENSEE_PUBKEYCount: Int32 { let o = _accessor.offset(VTOFFSET.LICENSEE_PUBKEY.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func LICENSEE_PUBKEY(at index: Int32) -> UInt8 { let o = _accessor.offset(VTOFFSET.LICENSEE_PUBKEY.v); return o == 0 ? 0 : _accessor.directRead(of: UInt8.self, offset: _accessor.vector(at: o) + index * 1) }
-  public var LICENSEE_PUBKEY: [UInt8] { return _accessor.getVector(at: VTOFFSET.LICENSEE_PUBKEY.v) ?? [] }
+  public var LICENSEE_PUBKEY: FlatbufferVector<UInt8> { return _accessor.vector(at: VTOFFSET.LICENSEE_PUBKEY.v, byteSize: 1) }
+  public func withUnsafePointerToLicenseePubkey<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.LICENSEE_PUBKEY.v, body: body) }
   ///  Issuer's X25519 public key (32 bytes)
   ///  Used with licensee's private key to derive shared secret via ECDH
-  public var hasIssuerPubkey: Bool { let o = _accessor.offset(VTOFFSET.ISSUER_PUBKEY.v); return o == 0 ? false : true }
-  public var ISSUER_PUBKEYCount: Int32 { let o = _accessor.offset(VTOFFSET.ISSUER_PUBKEY.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func ISSUER_PUBKEY(at index: Int32) -> UInt8 { let o = _accessor.offset(VTOFFSET.ISSUER_PUBKEY.v); return o == 0 ? 0 : _accessor.directRead(of: UInt8.self, offset: _accessor.vector(at: o) + index * 1) }
-  public var ISSUER_PUBKEY: [UInt8] { return _accessor.getVector(at: VTOFFSET.ISSUER_PUBKEY.v) ?? [] }
+  public var ISSUER_PUBKEY: FlatbufferVector<UInt8> { return _accessor.vector(at: VTOFFSET.ISSUER_PUBKEY.v, byteSize: 1) }
+  public func withUnsafePointerToIssuerPubkey<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.ISSUER_PUBKEY.v, body: body) }
   ///  Domain restrictions (empty = any domain allowed)
-  public var hasAllowedDomains: Bool { let o = _accessor.offset(VTOFFSET.ALLOWED_DOMAINS.v); return o == 0 ? false : true }
-  public var ALLOWED_DOMAINSCount: Int32 { let o = _accessor.offset(VTOFFSET.ALLOWED_DOMAINS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func ALLOWED_DOMAINS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.ALLOWED_DOMAINS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  public var ALLOWED_DOMAINS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.ALLOWED_DOMAINS.v, byteSize: 4) }
   ///  TLD restrictions (e.g., ".gov", ".mil", ".edu")
-  public var hasAllowedTlds: Bool { let o = _accessor.offset(VTOFFSET.ALLOWED_TLDS.v); return o == 0 ? false : true }
-  public var ALLOWED_TLDSCount: Int32 { let o = _accessor.offset(VTOFFSET.ALLOWED_TLDS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func ALLOWED_TLDS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.ALLOWED_TLDS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  public var ALLOWED_TLDS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.ALLOWED_TLDS.v, byteSize: 4) }
   ///  Type of license
   public var LICENSE_TYPE: licenseType { let o = _accessor.offset(VTOFFSET.LICENSE_TYPE.v); return o == 0 ? .trial : licenseType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .trial }
   ///  Maximum concurrent activations (0 = unlimited)
@@ -114,10 +110,8 @@ public struct PLK: FlatBufferObject, Verifiable {
   public var ISSUER_PEER_ID: String? { let o = _accessor.offset(VTOFFSET.ISSUER_PEER_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var ISSUER_PEER_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ISSUER_PEER_ID.v) }
   ///  Ed25519 signature from issuer over all fields (except SIGNATURE)
-  public var hasSignature: Bool { let o = _accessor.offset(VTOFFSET.SIGNATURE.v); return o == 0 ? false : true }
-  public var SIGNATURECount: Int32 { let o = _accessor.offset(VTOFFSET.SIGNATURE.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func SIGNATURE(at index: Int32) -> UInt8 { let o = _accessor.offset(VTOFFSET.SIGNATURE.v); return o == 0 ? 0 : _accessor.directRead(of: UInt8.self, offset: _accessor.vector(at: o) + index * 1) }
-  public var SIGNATURE: [UInt8] { return _accessor.getVector(at: VTOFFSET.SIGNATURE.v) ?? [] }
+  public var SIGNATURE: FlatbufferVector<UInt8> { return _accessor.vector(at: VTOFFSET.SIGNATURE.v, byteSize: 1) }
+  public func withUnsafePointerToSignature<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.SIGNATURE.v, body: body) }
   public static func startPLK(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 17) }
   public static func add(LICENSE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LICENSE_ID, at: VTOFFSET.LICENSE_ID.p) }
   public static func add(PLUGIN_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PLUGIN_ID, at: VTOFFSET.PLUGIN_ID.p) }

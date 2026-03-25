@@ -62,12 +62,20 @@ func (rcv *OPM) CCSDS_OPM_VERS() []byte {
 	return nil
 }
 
+func (rcv *OPM) CcsdsOpmVers() []byte {
+	return rcv.CCSDS_OPM_VERS()
+}
+
 func (rcv *OPM) CREATION_DATE() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *OPM) CreationDate() []byte {
+	return rcv.CREATION_DATE()
 }
 
 func (rcv *OPM) ORIGINATOR() []byte {
@@ -78,12 +86,20 @@ func (rcv *OPM) ORIGINATOR() []byte {
 	return nil
 }
 
+func (rcv *OPM) Originator() []byte {
+	return rcv.ORIGINATOR()
+}
+
 func (rcv *OPM) OBJECT_NAME() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *OPM) ObjectName() []byte {
+	return rcv.OBJECT_NAME()
 }
 
 func (rcv *OPM) OBJECT_ID() []byte {
@@ -94,12 +110,20 @@ func (rcv *OPM) OBJECT_ID() []byte {
 	return nil
 }
 
+func (rcv *OPM) ObjectId() []byte {
+	return rcv.OBJECT_ID()
+}
+
 func (rcv *OPM) CENTER_NAME() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *OPM) CenterName() []byte {
+	return rcv.CENTER_NAME()
 }
 
 func (rcv *OPM) REF_FRAME() []byte {
@@ -110,6 +134,10 @@ func (rcv *OPM) REF_FRAME() []byte {
 	return nil
 }
 
+func (rcv *OPM) RefFrame() []byte {
+	return rcv.REF_FRAME()
+}
+
 func (rcv *OPM) TIME_SYSTEM() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
 	if o != 0 {
@@ -118,12 +146,20 @@ func (rcv *OPM) TIME_SYSTEM() []byte {
 	return nil
 }
 
+func (rcv *OPM) TimeSystem() []byte {
+	return rcv.TIME_SYSTEM()
+}
+
 func (rcv *OPM) EPOCH() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *OPM) Epoch() []byte {
+	return rcv.EPOCH()
 }
 
 func (rcv *OPM) X() float64 {
@@ -170,8 +206,16 @@ func (rcv *OPM) X_DOT() float64 {
 	return 0.0
 }
 
+func (rcv *OPM) XDot() float64 {
+	return rcv.X_DOT()
+}
+
 func (rcv *OPM) MutateX_DOT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(28, n)
+}
+
+func (rcv *OPM) MutateXDot(n float64) bool {
+	return rcv.MutateX_DOT(n)
 }
 
 func (rcv *OPM) Y_DOT() float64 {
@@ -182,8 +226,16 @@ func (rcv *OPM) Y_DOT() float64 {
 	return 0.0
 }
 
+func (rcv *OPM) YDot() float64 {
+	return rcv.Y_DOT()
+}
+
 func (rcv *OPM) MutateY_DOT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(30, n)
+}
+
+func (rcv *OPM) MutateYDot(n float64) bool {
+	return rcv.MutateY_DOT(n)
 }
 
 func (rcv *OPM) Z_DOT() float64 {
@@ -194,8 +246,16 @@ func (rcv *OPM) Z_DOT() float64 {
 	return 0.0
 }
 
+func (rcv *OPM) ZDot() float64 {
+	return rcv.Z_DOT()
+}
+
 func (rcv *OPM) MutateZ_DOT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(32, n)
+}
+
+func (rcv *OPM) MutateZDot(n float64) bool {
+	return rcv.MutateZ_DOT(n)
 }
 
 func (rcv *OPM) SEMI_MAJOR_AXIS() float64 {
@@ -206,8 +266,16 @@ func (rcv *OPM) SEMI_MAJOR_AXIS() float64 {
 	return 0.0
 }
 
+func (rcv *OPM) SemiMajorAxis() float64 {
+	return rcv.SEMI_MAJOR_AXIS()
+}
+
 func (rcv *OPM) MutateSEMI_MAJOR_AXIS(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(34, n)
+}
+
+func (rcv *OPM) MutateSemiMajorAxis(n float64) bool {
+	return rcv.MutateSEMI_MAJOR_AXIS(n)
 }
 
 func (rcv *OPM) ECCENTRICITY() float64 {
@@ -218,8 +286,16 @@ func (rcv *OPM) ECCENTRICITY() float64 {
 	return 0.0
 }
 
+func (rcv *OPM) Eccentricity() float64 {
+	return rcv.ECCENTRICITY()
+}
+
 func (rcv *OPM) MutateECCENTRICITY(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(36, n)
+}
+
+func (rcv *OPM) MutateEccentricity(n float64) bool {
+	return rcv.MutateECCENTRICITY(n)
 }
 
 func (rcv *OPM) INCLINATION() float64 {
@@ -230,8 +306,16 @@ func (rcv *OPM) INCLINATION() float64 {
 	return 0.0
 }
 
+func (rcv *OPM) Inclination() float64 {
+	return rcv.INCLINATION()
+}
+
 func (rcv *OPM) MutateINCLINATION(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(38, n)
+}
+
+func (rcv *OPM) MutateInclination(n float64) bool {
+	return rcv.MutateINCLINATION(n)
 }
 
 func (rcv *OPM) RA_OF_ASC_NODE() float64 {
@@ -242,8 +326,16 @@ func (rcv *OPM) RA_OF_ASC_NODE() float64 {
 	return 0.0
 }
 
+func (rcv *OPM) RaOfAscNode() float64 {
+	return rcv.RA_OF_ASC_NODE()
+}
+
 func (rcv *OPM) MutateRA_OF_ASC_NODE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(40, n)
+}
+
+func (rcv *OPM) MutateRaOfAscNode(n float64) bool {
+	return rcv.MutateRA_OF_ASC_NODE(n)
 }
 
 func (rcv *OPM) ARG_OF_PERICENTER() float64 {
@@ -254,8 +346,16 @@ func (rcv *OPM) ARG_OF_PERICENTER() float64 {
 	return 0.0
 }
 
+func (rcv *OPM) ArgOfPericenter() float64 {
+	return rcv.ARG_OF_PERICENTER()
+}
+
 func (rcv *OPM) MutateARG_OF_PERICENTER(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(42, n)
+}
+
+func (rcv *OPM) MutateArgOfPericenter(n float64) bool {
+	return rcv.MutateARG_OF_PERICENTER(n)
 }
 
 func (rcv *OPM) TRUE_ANOMALY() float64 {
@@ -266,8 +366,16 @@ func (rcv *OPM) TRUE_ANOMALY() float64 {
 	return 0.0
 }
 
+func (rcv *OPM) TrueAnomaly() float64 {
+	return rcv.TRUE_ANOMALY()
+}
+
 func (rcv *OPM) MutateTRUE_ANOMALY(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(44, n)
+}
+
+func (rcv *OPM) MutateTrueAnomaly(n float64) bool {
+	return rcv.MutateTRUE_ANOMALY(n)
 }
 
 func (rcv *OPM) MEAN_ANOMALY() float64 {
@@ -278,8 +386,16 @@ func (rcv *OPM) MEAN_ANOMALY() float64 {
 	return 0.0
 }
 
+func (rcv *OPM) MeanAnomaly() float64 {
+	return rcv.MEAN_ANOMALY()
+}
+
 func (rcv *OPM) MutateMEAN_ANOMALY(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(46, n)
+}
+
+func (rcv *OPM) MutateMeanAnomaly(n float64) bool {
+	return rcv.MutateMEAN_ANOMALY(n)
 }
 
 func (rcv *OPM) GM() float64 {
@@ -290,8 +406,16 @@ func (rcv *OPM) GM() float64 {
 	return 0.0
 }
 
+func (rcv *OPM) Gm() float64 {
+	return rcv.GM()
+}
+
 func (rcv *OPM) MutateGM(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(48, n)
+}
+
+func (rcv *OPM) MutateGm(n float64) bool {
+	return rcv.MutateGM(n)
 }
 
 func (rcv *OPM) MASS() float64 {
@@ -302,8 +426,16 @@ func (rcv *OPM) MASS() float64 {
 	return 0.0
 }
 
+func (rcv *OPM) Mass() float64 {
+	return rcv.MASS()
+}
+
 func (rcv *OPM) MutateMASS(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(50, n)
+}
+
+func (rcv *OPM) MutateMass(n float64) bool {
+	return rcv.MutateMASS(n)
 }
 
 func (rcv *OPM) SOLAR_RAD_AREA() float64 {
@@ -314,8 +446,16 @@ func (rcv *OPM) SOLAR_RAD_AREA() float64 {
 	return 0.0
 }
 
+func (rcv *OPM) SolarRadArea() float64 {
+	return rcv.SOLAR_RAD_AREA()
+}
+
 func (rcv *OPM) MutateSOLAR_RAD_AREA(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(52, n)
+}
+
+func (rcv *OPM) MutateSolarRadArea(n float64) bool {
+	return rcv.MutateSOLAR_RAD_AREA(n)
 }
 
 func (rcv *OPM) SOLAR_RAD_COEFF() float64 {
@@ -326,8 +466,16 @@ func (rcv *OPM) SOLAR_RAD_COEFF() float64 {
 	return 0.0
 }
 
+func (rcv *OPM) SolarRadCoeff() float64 {
+	return rcv.SOLAR_RAD_COEFF()
+}
+
 func (rcv *OPM) MutateSOLAR_RAD_COEFF(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(54, n)
+}
+
+func (rcv *OPM) MutateSolarRadCoeff(n float64) bool {
+	return rcv.MutateSOLAR_RAD_COEFF(n)
 }
 
 func (rcv *OPM) DRAG_AREA() float64 {
@@ -338,8 +486,16 @@ func (rcv *OPM) DRAG_AREA() float64 {
 	return 0.0
 }
 
+func (rcv *OPM) DragArea() float64 {
+	return rcv.DRAG_AREA()
+}
+
 func (rcv *OPM) MutateDRAG_AREA(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(56, n)
+}
+
+func (rcv *OPM) MutateDragArea(n float64) bool {
+	return rcv.MutateDRAG_AREA(n)
 }
 
 func (rcv *OPM) DRAG_COEFF() float64 {
@@ -350,8 +506,16 @@ func (rcv *OPM) DRAG_COEFF() float64 {
 	return 0.0
 }
 
+func (rcv *OPM) DragCoeff() float64 {
+	return rcv.DRAG_COEFF()
+}
+
 func (rcv *OPM) MutateDRAG_COEFF(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(58, n)
+}
+
+func (rcv *OPM) MutateDragCoeff(n float64) bool {
+	return rcv.MutateDRAG_COEFF(n)
 }
 
 func OPMStart(builder *flatbuffers.Builder) {
@@ -360,29 +524,56 @@ func OPMStart(builder *flatbuffers.Builder) {
 func OPMAddCCSDS_OPM_VERS(builder *flatbuffers.Builder, CCSDS_OPM_VERS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(CCSDS_OPM_VERS), 0)
 }
+func OPMAddCcsdsOpmVers(builder *flatbuffers.Builder, CCSDS_OPM_VERS flatbuffers.UOffsetT) {
+	OPMAddCCSDS_OPM_VERS(builder, CCSDS_OPM_VERS)
+}
 func OPMAddCREATION_DATE(builder *flatbuffers.Builder, CREATION_DATE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(CREATION_DATE), 0)
+}
+func OPMAddCreationDate(builder *flatbuffers.Builder, CREATION_DATE flatbuffers.UOffsetT) {
+	OPMAddCREATION_DATE(builder, CREATION_DATE)
 }
 func OPMAddORIGINATOR(builder *flatbuffers.Builder, ORIGINATOR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(ORIGINATOR), 0)
 }
+func OPMAddOriginator(builder *flatbuffers.Builder, ORIGINATOR flatbuffers.UOffsetT) {
+	OPMAddORIGINATOR(builder, ORIGINATOR)
+}
 func OPMAddOBJECT_NAME(builder *flatbuffers.Builder, OBJECT_NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(OBJECT_NAME), 0)
+}
+func OPMAddObjectName(builder *flatbuffers.Builder, OBJECT_NAME flatbuffers.UOffsetT) {
+	OPMAddOBJECT_NAME(builder, OBJECT_NAME)
 }
 func OPMAddOBJECT_ID(builder *flatbuffers.Builder, OBJECT_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(OBJECT_ID), 0)
 }
+func OPMAddObjectId(builder *flatbuffers.Builder, OBJECT_ID flatbuffers.UOffsetT) {
+	OPMAddOBJECT_ID(builder, OBJECT_ID)
+}
 func OPMAddCENTER_NAME(builder *flatbuffers.Builder, CENTER_NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(CENTER_NAME), 0)
+}
+func OPMAddCenterName(builder *flatbuffers.Builder, CENTER_NAME flatbuffers.UOffsetT) {
+	OPMAddCENTER_NAME(builder, CENTER_NAME)
 }
 func OPMAddREF_FRAME(builder *flatbuffers.Builder, REF_FRAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(REF_FRAME), 0)
 }
+func OPMAddRefFrame(builder *flatbuffers.Builder, REF_FRAME flatbuffers.UOffsetT) {
+	OPMAddREF_FRAME(builder, REF_FRAME)
+}
 func OPMAddTIME_SYSTEM(builder *flatbuffers.Builder, TIME_SYSTEM flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(TIME_SYSTEM), 0)
 }
+func OPMAddTimeSystem(builder *flatbuffers.Builder, TIME_SYSTEM flatbuffers.UOffsetT) {
+	OPMAddTIME_SYSTEM(builder, TIME_SYSTEM)
+}
 func OPMAddEPOCH(builder *flatbuffers.Builder, EPOCH flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(EPOCH), 0)
+}
+func OPMAddEpoch(builder *flatbuffers.Builder, EPOCH flatbuffers.UOffsetT) {
+	OPMAddEPOCH(builder, EPOCH)
 }
 func OPMAddX(builder *flatbuffers.Builder, X float64) {
 	builder.PrependFloat64Slot(9, X, 0.0)
@@ -396,50 +587,98 @@ func OPMAddZ(builder *flatbuffers.Builder, Z float64) {
 func OPMAddX_DOT(builder *flatbuffers.Builder, X_DOT float64) {
 	builder.PrependFloat64Slot(12, X_DOT, 0.0)
 }
+func OPMAddXDot(builder *flatbuffers.Builder, X_DOT float64) {
+	OPMAddX_DOT(builder, X_DOT)
+}
 func OPMAddY_DOT(builder *flatbuffers.Builder, Y_DOT float64) {
 	builder.PrependFloat64Slot(13, Y_DOT, 0.0)
+}
+func OPMAddYDot(builder *flatbuffers.Builder, Y_DOT float64) {
+	OPMAddY_DOT(builder, Y_DOT)
 }
 func OPMAddZ_DOT(builder *flatbuffers.Builder, Z_DOT float64) {
 	builder.PrependFloat64Slot(14, Z_DOT, 0.0)
 }
+func OPMAddZDot(builder *flatbuffers.Builder, Z_DOT float64) {
+	OPMAddZ_DOT(builder, Z_DOT)
+}
 func OPMAddSEMI_MAJOR_AXIS(builder *flatbuffers.Builder, SEMI_MAJOR_AXIS float64) {
 	builder.PrependFloat64Slot(15, SEMI_MAJOR_AXIS, 0.0)
+}
+func OPMAddSemiMajorAxis(builder *flatbuffers.Builder, SEMI_MAJOR_AXIS float64) {
+	OPMAddSEMI_MAJOR_AXIS(builder, SEMI_MAJOR_AXIS)
 }
 func OPMAddECCENTRICITY(builder *flatbuffers.Builder, ECCENTRICITY float64) {
 	builder.PrependFloat64Slot(16, ECCENTRICITY, 0.0)
 }
+func OPMAddEccentricity(builder *flatbuffers.Builder, ECCENTRICITY float64) {
+	OPMAddECCENTRICITY(builder, ECCENTRICITY)
+}
 func OPMAddINCLINATION(builder *flatbuffers.Builder, INCLINATION float64) {
 	builder.PrependFloat64Slot(17, INCLINATION, 0.0)
+}
+func OPMAddInclination(builder *flatbuffers.Builder, INCLINATION float64) {
+	OPMAddINCLINATION(builder, INCLINATION)
 }
 func OPMAddRA_OF_ASC_NODE(builder *flatbuffers.Builder, RA_OF_ASC_NODE float64) {
 	builder.PrependFloat64Slot(18, RA_OF_ASC_NODE, 0.0)
 }
+func OPMAddRaOfAscNode(builder *flatbuffers.Builder, RA_OF_ASC_NODE float64) {
+	OPMAddRA_OF_ASC_NODE(builder, RA_OF_ASC_NODE)
+}
 func OPMAddARG_OF_PERICENTER(builder *flatbuffers.Builder, ARG_OF_PERICENTER float64) {
 	builder.PrependFloat64Slot(19, ARG_OF_PERICENTER, 0.0)
+}
+func OPMAddArgOfPericenter(builder *flatbuffers.Builder, ARG_OF_PERICENTER float64) {
+	OPMAddARG_OF_PERICENTER(builder, ARG_OF_PERICENTER)
 }
 func OPMAddTRUE_ANOMALY(builder *flatbuffers.Builder, TRUE_ANOMALY float64) {
 	builder.PrependFloat64Slot(20, TRUE_ANOMALY, 0.0)
 }
+func OPMAddTrueAnomaly(builder *flatbuffers.Builder, TRUE_ANOMALY float64) {
+	OPMAddTRUE_ANOMALY(builder, TRUE_ANOMALY)
+}
 func OPMAddMEAN_ANOMALY(builder *flatbuffers.Builder, MEAN_ANOMALY float64) {
 	builder.PrependFloat64Slot(21, MEAN_ANOMALY, 0.0)
+}
+func OPMAddMeanAnomaly(builder *flatbuffers.Builder, MEAN_ANOMALY float64) {
+	OPMAddMEAN_ANOMALY(builder, MEAN_ANOMALY)
 }
 func OPMAddGM(builder *flatbuffers.Builder, GM float64) {
 	builder.PrependFloat64Slot(22, GM, 0.0)
 }
+func OPMAddGm(builder *flatbuffers.Builder, GM float64) {
+	OPMAddGM(builder, GM)
+}
 func OPMAddMASS(builder *flatbuffers.Builder, MASS float64) {
 	builder.PrependFloat64Slot(23, MASS, 0.0)
+}
+func OPMAddMass(builder *flatbuffers.Builder, MASS float64) {
+	OPMAddMASS(builder, MASS)
 }
 func OPMAddSOLAR_RAD_AREA(builder *flatbuffers.Builder, SOLAR_RAD_AREA float64) {
 	builder.PrependFloat64Slot(24, SOLAR_RAD_AREA, 0.0)
 }
+func OPMAddSolarRadArea(builder *flatbuffers.Builder, SOLAR_RAD_AREA float64) {
+	OPMAddSOLAR_RAD_AREA(builder, SOLAR_RAD_AREA)
+}
 func OPMAddSOLAR_RAD_COEFF(builder *flatbuffers.Builder, SOLAR_RAD_COEFF float64) {
 	builder.PrependFloat64Slot(25, SOLAR_RAD_COEFF, 0.0)
+}
+func OPMAddSolarRadCoeff(builder *flatbuffers.Builder, SOLAR_RAD_COEFF float64) {
+	OPMAddSOLAR_RAD_COEFF(builder, SOLAR_RAD_COEFF)
 }
 func OPMAddDRAG_AREA(builder *flatbuffers.Builder, DRAG_AREA float64) {
 	builder.PrependFloat64Slot(26, DRAG_AREA, 0.0)
 }
+func OPMAddDragArea(builder *flatbuffers.Builder, DRAG_AREA float64) {
+	OPMAddDRAG_AREA(builder, DRAG_AREA)
+}
 func OPMAddDRAG_COEFF(builder *flatbuffers.Builder, DRAG_COEFF float64) {
 	builder.PrependFloat64Slot(27, DRAG_COEFF, 0.0)
+}
+func OPMAddDragCoeff(builder *flatbuffers.Builder, DRAG_COEFF float64) {
+	OPMAddDRAG_COEFF(builder, DRAG_COEFF)
 }
 func OPMEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

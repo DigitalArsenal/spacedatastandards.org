@@ -2,10 +2,14 @@
 // swiftlint:disable all
 // swiftformat:disable all
 
+#if canImport(Common)
+import Common
+#endif
+
 import FlatBuffers
 
 ///  Enumeration of Engine Types
-public enum ENGINE_TYPE: Int8, Enum, Verifiable {
+public enum ENGINE_TYPE: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -22,9 +26,9 @@ public enum ENGINE_TYPE: Int8, Enum, Verifiable {
 
 
 ///  Rocket Configuration
-public struct ROC: FlatBufferObject, Verifiable {
+public struct ROC: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -53,13 +57,9 @@ public struct ROC: FlatBufferObject, Verifiable {
   public var VARIANT: String? { let o = _accessor.offset(VTOFFSET.VARIANT.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var VARIANTSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.VARIANT.v) }
   ///  Stages in the Rocket
-  public var hasStages: Bool { let o = _accessor.offset(VTOFFSET.STAGES.v); return o == 0 ? false : true }
-  public var STAGESCount: Int32 { let o = _accessor.offset(VTOFFSET.STAGES.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func STAGES(at index: Int32) -> STAGE? { let o = _accessor.offset(VTOFFSET.STAGES.v); return o == 0 ? nil : STAGE(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var STAGES: FlatbufferVector<STAGE> { return _accessor.vector(at: VTOFFSET.STAGES.v, byteSize: 4) }
   ///  Sustainers in the Rocket
-  public var hasSustainers: Bool { let o = _accessor.offset(VTOFFSET.SUSTAINERS.v); return o == 0 ? false : true }
-  public var SUSTAINERSCount: Int32 { let o = _accessor.offset(VTOFFSET.SUSTAINERS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func SUSTAINERS(at index: Int32) -> SUSTAINER? { let o = _accessor.offset(VTOFFSET.SUSTAINERS.v); return o == 0 ? nil : SUSTAINER(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var SUSTAINERS: FlatbufferVector<SUSTAINER> { return _accessor.vector(at: VTOFFSET.SUSTAINERS.v, byteSize: 4) }
   public static func startROC(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
   public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
   public static func add(FAMILY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FAMILY, at: VTOFFSET.FAMILY.p) }
@@ -96,9 +96,9 @@ public struct ROC: FlatBufferObject, Verifiable {
 }
 
 ///  Stage Details
-public struct STAGE: FlatBufferObject, Verifiable {
+public struct STAGE: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -120,9 +120,7 @@ public struct STAGE: FlatBufferObject, Verifiable {
   ///  Stage Number
   public var STAGE_NUMBER: Int32 { let o = _accessor.offset(VTOFFSET.STAGE_NUMBER.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
   ///  Engines Used in This Stage
-  public var hasEngines: Bool { let o = _accessor.offset(VTOFFSET.ENGINES.v); return o == 0 ? false : true }
-  public var ENGINESCount: Int32 { let o = _accessor.offset(VTOFFSET.ENGINES.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func ENGINES(at index: Int32) -> ENGINE? { let o = _accessor.offset(VTOFFSET.ENGINES.v); return o == 0 ? nil : ENGINE(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var ENGINES: FlatbufferVector<ENGINE> { return _accessor.vector(at: VTOFFSET.ENGINES.v, byteSize: 4) }
   ///  Fuel Type Used in This Stage
   public var FUEL_TYPE: String? { let o = _accessor.offset(VTOFFSET.FUEL_TYPE.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var FUEL_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.FUEL_TYPE.v) }
@@ -166,9 +164,9 @@ public struct STAGE: FlatBufferObject, Verifiable {
 }
 
 ///  Sustainer Details
-public struct SUSTAINER: FlatBufferObject, Verifiable {
+public struct SUSTAINER: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -220,9 +218,9 @@ public struct SUSTAINER: FlatBufferObject, Verifiable {
 }
 
 ///  Engine Details
-public struct ENGINE: FlatBufferObject, Verifiable {
+public struct ENGINE: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 

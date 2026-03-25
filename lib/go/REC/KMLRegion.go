@@ -56,6 +56,10 @@ func (rcv *KMLRegion) LAT_LON_ALT_BOX(obj *KMLLatLonAltBox) *KMLLatLonAltBox {
 	return nil
 }
 
+func (rcv *KMLRegion) LatLonAltBox(obj *KMLLatLonAltBox) *KMLLatLonAltBox {
+	return rcv.LAT_LON_ALT_BOX(obj)
+}
+
 /// LatLonAltBox
 /// Level of detail
 func (rcv *KMLRegion) LOD(obj *KMLLod) *KMLLod {
@@ -71,6 +75,10 @@ func (rcv *KMLRegion) LOD(obj *KMLLod) *KMLLod {
 	return nil
 }
 
+func (rcv *KMLRegion) Lod(obj *KMLLod) *KMLLod {
+	return rcv.LOD(obj)
+}
+
 /// Level of detail
 func KMLRegionStart(builder *flatbuffers.Builder) {
 	builder.StartObject(2)
@@ -78,8 +86,14 @@ func KMLRegionStart(builder *flatbuffers.Builder) {
 func KMLRegionAddLAT_LON_ALT_BOX(builder *flatbuffers.Builder, LAT_LON_ALT_BOX flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(LAT_LON_ALT_BOX), 0)
 }
+func KMLRegionAddLatLonAltBox(builder *flatbuffers.Builder, LAT_LON_ALT_BOX flatbuffers.UOffsetT) {
+	KMLRegionAddLAT_LON_ALT_BOX(builder, LAT_LON_ALT_BOX)
+}
 func KMLRegionAddLOD(builder *flatbuffers.Builder, LOD flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(LOD), 0)
+}
+func KMLRegionAddLod(builder *flatbuffers.Builder, LOD flatbuffers.UOffsetT) {
+	KMLRegionAddLOD(builder, LOD)
 }
 func KMLRegionEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

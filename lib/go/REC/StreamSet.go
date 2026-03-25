@@ -49,10 +49,17 @@ func (rcv *StreamSet) FIXED_FRAME_STREAMS(obj *FixedFrameStream, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(FixedFrameStream)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *StreamSet) FixedFrameStreams(obj *FixedFrameStream, j int) bool {
+	return rcv.FIXED_FRAME_STREAMS(obj, j)
 }
 
 func (rcv *StreamSet) FIXED_FRAME_STREAMSLength() int {
@@ -63,6 +70,10 @@ func (rcv *StreamSet) FIXED_FRAME_STREAMSLength() int {
 	return 0
 }
 
+func (rcv *StreamSet) FixedFrameStreamsLength() int {
+	return rcv.FIXED_FRAME_STREAMSLength()
+}
+
 /// Fixed frame streams
 /// Variable frame streams
 func (rcv *StreamSet) VARIABLE_FRAME_STREAMS(obj *VariableFrameStream, j int) bool {
@@ -71,10 +82,17 @@ func (rcv *StreamSet) VARIABLE_FRAME_STREAMS(obj *VariableFrameStream, j int) bo
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(VariableFrameStream)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *StreamSet) VariableFrameStreams(obj *VariableFrameStream, j int) bool {
+	return rcv.VARIABLE_FRAME_STREAMS(obj, j)
 }
 
 func (rcv *StreamSet) VARIABLE_FRAME_STREAMSLength() int {
@@ -85,6 +103,10 @@ func (rcv *StreamSet) VARIABLE_FRAME_STREAMSLength() int {
 	return 0
 }
 
+func (rcv *StreamSet) VariableFrameStreamsLength() int {
+	return rcv.VARIABLE_FRAME_STREAMSLength()
+}
+
 /// Variable frame streams
 /// Custom streams
 func (rcv *StreamSet) CUSTOM_STREAMS(obj *CustomStream, j int) bool {
@@ -93,10 +115,17 @@ func (rcv *StreamSet) CUSTOM_STREAMS(obj *CustomStream, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(CustomStream)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *StreamSet) CustomStreams(obj *CustomStream, j int) bool {
+	return rcv.CUSTOM_STREAMS(obj, j)
 }
 
 func (rcv *StreamSet) CUSTOM_STREAMSLength() int {
@@ -107,6 +136,10 @@ func (rcv *StreamSet) CUSTOM_STREAMSLength() int {
 	return 0
 }
 
+func (rcv *StreamSet) CustomStreamsLength() int {
+	return rcv.CUSTOM_STREAMSLength()
+}
+
 /// Custom streams
 func StreamSetStart(builder *flatbuffers.Builder) {
 	builder.StartObject(3)
@@ -114,20 +147,38 @@ func StreamSetStart(builder *flatbuffers.Builder) {
 func StreamSetAddFIXED_FRAME_STREAMS(builder *flatbuffers.Builder, FIXED_FRAME_STREAMS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(FIXED_FRAME_STREAMS), 0)
 }
+func StreamSetAddFixedFrameStreams(builder *flatbuffers.Builder, FIXED_FRAME_STREAMS flatbuffers.UOffsetT) {
+	StreamSetAddFIXED_FRAME_STREAMS(builder, FIXED_FRAME_STREAMS)
+}
 func StreamSetStartFIXED_FRAME_STREAMSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func StreamSetStartFixedFrameStreamsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return StreamSetStartFIXED_FRAME_STREAMSVector(builder, numElems)
 }
 func StreamSetAddVARIABLE_FRAME_STREAMS(builder *flatbuffers.Builder, VARIABLE_FRAME_STREAMS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(VARIABLE_FRAME_STREAMS), 0)
 }
+func StreamSetAddVariableFrameStreams(builder *flatbuffers.Builder, VARIABLE_FRAME_STREAMS flatbuffers.UOffsetT) {
+	StreamSetAddVARIABLE_FRAME_STREAMS(builder, VARIABLE_FRAME_STREAMS)
+}
 func StreamSetStartVARIABLE_FRAME_STREAMSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func StreamSetStartVariableFrameStreamsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return StreamSetStartVARIABLE_FRAME_STREAMSVector(builder, numElems)
 }
 func StreamSetAddCUSTOM_STREAMS(builder *flatbuffers.Builder, CUSTOM_STREAMS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(CUSTOM_STREAMS), 0)
 }
+func StreamSetAddCustomStreams(builder *flatbuffers.Builder, CUSTOM_STREAMS flatbuffers.UOffsetT) {
+	StreamSetAddCUSTOM_STREAMS(builder, CUSTOM_STREAMS)
+}
 func StreamSetStartCUSTOM_STREAMSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func StreamSetStartCustomStreamsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return StreamSetStartCUSTOM_STREAMSVector(builder, numElems)
 }
 func StreamSetEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

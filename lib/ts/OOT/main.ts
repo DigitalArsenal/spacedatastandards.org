@@ -2,5 +2,5 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export { OOT, OOTT } from './OOT.js';
-export { thrusterType } from './thrusterType.js';
+export * from './OOT.js';
+export * from './thrusterType.js';

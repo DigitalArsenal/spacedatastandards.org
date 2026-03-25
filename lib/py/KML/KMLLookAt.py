@@ -143,20 +143,29 @@ def End(builder):
 class KMLLookAtT(object):
 
     # KMLLookAtT
-    def __init__(self):
-        self.LONGITUDE = 0.0  # type: float
-        self.LATITUDE = 0.0  # type: float
-        self.ALTITUDE = 0.0  # type: float
-        self.HEADING = 0.0  # type: float
-        self.TILT = 0.0  # type: float
-        self.RANGE = 0.0  # type: float
-        self.ALTITUDE_MODE = 0  # type: int
+    def __init__(
+        self,
+        LONGITUDE = 0.0,
+        LATITUDE = 0.0,
+        ALTITUDE = 0.0,
+        HEADING = 0.0,
+        TILT = 0.0,
+        RANGE = 0.0,
+        ALTITUDE_MODE = 0,
+    ):
+        self.LONGITUDE = LONGITUDE  # type: float
+        self.LATITUDE = LATITUDE  # type: float
+        self.ALTITUDE = ALTITUDE  # type: float
+        self.HEADING = HEADING  # type: float
+        self.TILT = TILT  # type: float
+        self.RANGE = RANGE  # type: float
+        self.ALTITUDE_MODE = ALTITUDE_MODE  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        kmllookAt = KMLLookAt()
-        kmllookAt.Init(buf, pos)
-        return cls.InitFromObj(kmllookAt)
+        tmpKmllookAt = KMLLookAt()
+        tmpKmllookAt.Init(buf, pos)
+        return cls.InitFromObj(tmpKmllookAt)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -164,22 +173,22 @@ class KMLLookAtT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, kmllookAt):
+    def InitFromObj(cls, tmpKmllookAt):
         x = KMLLookAtT()
-        x._UnPack(kmllookAt)
+        x._UnPack(tmpKmllookAt)
         return x
 
     # KMLLookAtT
-    def _UnPack(self, kmllookAt):
-        if kmllookAt is None:
+    def _UnPack(self, KMLLookAt):
+        if KMLLookAt is None:
             return
-        self.LONGITUDE = kmllookAt.LONGITUDE()
-        self.LATITUDE = kmllookAt.LATITUDE()
-        self.ALTITUDE = kmllookAt.ALTITUDE()
-        self.HEADING = kmllookAt.HEADING()
-        self.TILT = kmllookAt.TILT()
-        self.RANGE = kmllookAt.RANGE()
-        self.ALTITUDE_MODE = kmllookAt.ALTITUDE_MODE()
+        self.LONGITUDE = KMLLookAt.LONGITUDE()
+        self.LATITUDE = KMLLookAt.LATITUDE()
+        self.ALTITUDE = KMLLookAt.ALTITUDE()
+        self.HEADING = KMLLookAt.HEADING()
+        self.TILT = KMLLookAt.TILT()
+        self.RANGE = KMLLookAt.RANGE()
+        self.ALTITUDE_MODE = KMLLookAt.ALTITUDE_MODE()
 
     # KMLLookAtT
     def Pack(self, builder):
@@ -191,5 +200,5 @@ class KMLLookAtT(object):
         KMLLookAtAddTILT(builder, self.TILT)
         KMLLookAtAddRANGE(builder, self.RANGE)
         KMLLookAtAddALTITUDE_MODE(builder, self.ALTITUDE_MODE)
-        kmllookAt = KMLLookAtEnd(builder)
-        return kmllookAt
+        KMLLookAt = KMLLookAtEnd(builder)
+        return KMLLookAt

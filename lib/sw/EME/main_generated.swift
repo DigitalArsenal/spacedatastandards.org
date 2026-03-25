@@ -2,12 +2,16 @@
 // swiftlint:disable all
 // swiftformat:disable all
 
+#if canImport(Common)
+import Common
+#endif
+
 import FlatBuffers
 
 ///  Encrypted Message Envelope
-public struct EME: FlatBufferObject, Verifiable {
+public struct EME: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -33,10 +37,8 @@ public struct EME: FlatBufferObject, Verifiable {
   }
 
   ///  Encrypted data blob, containing the ciphertext of the original plaintext message.
-  public var hasEncryptedBlob: Bool { let o = _accessor.offset(VTOFFSET.ENCRYPTED_BLOB.v); return o == 0 ? false : true }
-  public var ENCRYPTED_BLOBCount: Int32 { let o = _accessor.offset(VTOFFSET.ENCRYPTED_BLOB.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func ENCRYPTED_BLOB(at index: Int32) -> UInt8 { let o = _accessor.offset(VTOFFSET.ENCRYPTED_BLOB.v); return o == 0 ? 0 : _accessor.directRead(of: UInt8.self, offset: _accessor.vector(at: o) + index * 1) }
-  public var ENCRYPTED_BLOB: [UInt8] { return _accessor.getVector(at: VTOFFSET.ENCRYPTED_BLOB.v) ?? [] }
+  public var ENCRYPTED_BLOB: FlatbufferVector<UInt8> { return _accessor.vector(at: VTOFFSET.ENCRYPTED_BLOB.v, byteSize: 1) }
+  public func withUnsafePointerToEncryptedBlob<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.ENCRYPTED_BLOB.v, body: body) }
   ///  Temporary public key used for the encryption session, contributing to the derivation of the shared secret.
   public var EPHEMERAL_PUBLIC_KEY: String? { let o = _accessor.offset(VTOFFSET.EPHEMERAL_PUBLIC_KEY.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var EPHEMERAL_PUBLIC_KEYSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.EPHEMERAL_PUBLIC_KEY.v) }
@@ -44,10 +46,8 @@ public struct EME: FlatBufferObject, Verifiable {
   public var MAC: String? { let o = _accessor.offset(VTOFFSET.MAC.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var MACSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.MAC.v) }
   ///  Random 12-byte nonce starting value. Incremented for each record in the stream to ensure unique nonces.
-  public var hasNonceStart: Bool { let o = _accessor.offset(VTOFFSET.NONCE_START.v); return o == 0 ? false : true }
-  public var NONCE_STARTCount: Int32 { let o = _accessor.offset(VTOFFSET.NONCE_START.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func NONCE_START(at index: Int32) -> UInt8 { let o = _accessor.offset(VTOFFSET.NONCE_START.v); return o == 0 ? 0 : _accessor.directRead(of: UInt8.self, offset: _accessor.vector(at: o) + index * 1) }
-  public var NONCE_START: [UInt8] { return _accessor.getVector(at: VTOFFSET.NONCE_START.v) ?? [] }
+  public var NONCE_START: FlatbufferVector<UInt8> { return _accessor.vector(at: VTOFFSET.NONCE_START.v, byteSize: 1) }
+  public func withUnsafePointerToNonceStart<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.NONCE_START.v, body: body) }
   ///  Additional authentication tag used in some encryption schemes for integrity and authenticity verification.
   public var TAG: String? { let o = _accessor.offset(VTOFFSET.TAG.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var TAGSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TAG.v) }

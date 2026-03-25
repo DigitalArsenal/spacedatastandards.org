@@ -29,7 +29,7 @@ class AEM : Table() {
         __init(_i, _bb)
         return this
     }
-    val CCSDS_AEM_VERS : String?
+    val ccsdsAemVers : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -38,9 +38,9 @@ class AEM : Table() {
                 null
             }
         }
-    val CCSDS_AEM_VERSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun CCSDS_AEM_VERSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
-    val CREATION_DATE : String?
+    val ccsdsAemVersAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun ccsdsAemVersInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
+    val creationDate : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -49,9 +49,9 @@ class AEM : Table() {
                 null
             }
         }
-    val CREATION_DATEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun CREATION_DATEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
-    val ORIGINATOR : String?
+    val creationDateAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun creationDateInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
+    val originator : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -60,10 +60,10 @@ class AEM : Table() {
                 null
             }
         }
-    val ORIGINATORAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun ORIGINATORInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
-    fun SEGMENTS(j: Int) : AEMSegment? = SEGMENTS(AEMSegment(), j)
-    fun SEGMENTS(obj: AEMSegment, j: Int) : AEMSegment? {
+    val originatorAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun originatorInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
+    fun segments(j: Int) : AEMSegment? = segments(AEMSegment(), j)
+    fun segments(obj: AEMSegment, j: Int) : AEMSegment? {
         val o = __offset(10)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -71,31 +71,31 @@ class AEM : Table() {
             null
         }
     }
-    val SEGMENTSLength : Int
+    val segmentsLength : Int
         get() {
             val o = __offset(10); return if (o != 0) __vector_len(o) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsAEM(_bb: ByteBuffer): AEM = getRootAsAEM(_bb, AEM())
         fun getRootAsAEM(_bb: ByteBuffer, obj: AEM): AEM {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun AEMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$AEM")
-        fun createAEM(builder: FlatBufferBuilder, CCSDS_AEM_VERSOffset: Int, CREATION_DATEOffset: Int, ORIGINATOROffset: Int, SEGMENTSOffset: Int) : Int {
+        fun createAEM(builder: FlatBufferBuilder, ccsdsAemVersOffset: Int, creationDateOffset: Int, originatorOffset: Int, segmentsOffset: Int) : Int {
             builder.startTable(4)
-            addSEGMENTS(builder, SEGMENTSOffset)
-            addORIGINATOR(builder, ORIGINATOROffset)
-            addCREATION_DATE(builder, CREATION_DATEOffset)
-            addCCSDS_AEM_VERS(builder, CCSDS_AEM_VERSOffset)
+            addSEGMENTS(builder, segmentsOffset)
+            addORIGINATOR(builder, originatorOffset)
+            addCREATIONDATE(builder, creationDateOffset)
+            addCCSDSAEMVERS(builder, ccsdsAemVersOffset)
             return endAEM(builder)
         }
         fun startAEM(builder: FlatBufferBuilder) = builder.startTable(4)
-        fun addCCSDS_AEM_VERS(builder: FlatBufferBuilder, CCSDS_AEM_VERS: Int) = builder.addOffset(0, CCSDS_AEM_VERS, 0)
-        fun addCREATION_DATE(builder: FlatBufferBuilder, CREATION_DATE: Int) = builder.addOffset(1, CREATION_DATE, 0)
-        fun addORIGINATOR(builder: FlatBufferBuilder, ORIGINATOR: Int) = builder.addOffset(2, ORIGINATOR, 0)
-        fun addSEGMENTS(builder: FlatBufferBuilder, SEGMENTS: Int) = builder.addOffset(3, SEGMENTS, 0)
+        fun addCCSDSAEMVERS(builder: FlatBufferBuilder, ccsdsAemVers: Int) = builder.addOffset(0, ccsdsAemVers, 0)
+        fun addCREATIONDATE(builder: FlatBufferBuilder, creationDate: Int) = builder.addOffset(1, creationDate, 0)
+        fun addORIGINATOR(builder: FlatBufferBuilder, originator: Int) = builder.addOffset(2, originator, 0)
+        fun addSEGMENTS(builder: FlatBufferBuilder, segments: Int) = builder.addOffset(3, segments, 0)
         fun createSegmentsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {

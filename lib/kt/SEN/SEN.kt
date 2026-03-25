@@ -32,7 +32,7 @@ class SEN : Table() {
     /**
      * Unique sensor identifier
      */
-    val ID : String?
+    val id : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class SEN : Table() {
                 null
             }
         }
-    val IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val idAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun idInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Sensor name
      */
-    val NAME : String?
+    val name : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -55,12 +55,12 @@ class SEN : Table() {
                 null
             }
         }
-    val NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val nameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun nameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * Sensor type
      */
-    val TYPE : String?
+    val type : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -69,12 +69,12 @@ class SEN : Table() {
                 null
             }
         }
-    val TYPEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun TYPEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val typeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun typeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
     /**
      * Current operational status
      */
-    val STATUS : Byte
+    val status : Byte
         get() {
             val o = __offset(10)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -82,7 +82,7 @@ class SEN : Table() {
     /**
      * Site identifier
      */
-    val SITE_ID : String?
+    val siteId : String?
         get() {
             val o = __offset(12)
             return if (o != 0) {
@@ -91,12 +91,12 @@ class SEN : Table() {
                 null
             }
         }
-    val SITE_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
-    fun SITE_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
+    val siteIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(12, 1)
+    fun siteIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 12, 1)
     /**
      * Geodetic latitude in degrees
      */
-    val LATITUDE : Double
+    val latitude : Double
         get() {
             val o = __offset(14)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -104,7 +104,7 @@ class SEN : Table() {
     /**
      * Geodetic longitude in degrees
      */
-    val LONGITUDE : Double
+    val longitude : Double
         get() {
             val o = __offset(16)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -112,7 +112,7 @@ class SEN : Table() {
     /**
      * Altitude in meters above WGS-84
      */
-    val ALTITUDE : Double
+    val altitude : Double
         get() {
             val o = __offset(18)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -120,7 +120,7 @@ class SEN : Table() {
     /**
      * Last status update (ISO 8601)
      */
-    val STATUS_TIME : String?
+    val statusTime : String?
         get() {
             val o = __offset(20)
             return if (o != 0) {
@@ -129,13 +129,13 @@ class SEN : Table() {
                 null
             }
         }
-    val STATUS_TIMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(20, 1)
-    fun STATUS_TIMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 20, 1)
+    val statusTimeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(20, 1)
+    fun statusTimeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 20, 1)
     /**
      * Maintenance history
      */
-    fun MAINTENANCE(j: Int) : sensorMaintenanceEvent? = MAINTENANCE(sensorMaintenanceEvent(), j)
-    fun MAINTENANCE(obj: sensorMaintenanceEvent, j: Int) : sensorMaintenanceEvent? {
+    fun maintenance(j: Int) : sensorMaintenanceEvent? = maintenance(sensorMaintenanceEvent(), j)
+    fun maintenance(obj: sensorMaintenanceEvent, j: Int) : sensorMaintenanceEvent? {
         val o = __offset(22)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -143,15 +143,15 @@ class SEN : Table() {
             null
         }
     }
-    val MAINTENANCELength : Int
+    val maintenanceLength : Int
         get() {
             val o = __offset(22); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Observation plans/taskings
      */
-    fun PLANS(j: Int) : sensorPlan? = PLANS(sensorPlan(), j)
-    fun PLANS(obj: sensorPlan, j: Int) : sensorPlan? {
+    fun plans(j: Int) : sensorPlan? = plans(sensorPlan(), j)
+    fun plans(obj: sensorPlan, j: Int) : sensorPlan? {
         val o = __offset(24)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -159,15 +159,15 @@ class SEN : Table() {
             null
         }
     }
-    val PLANSLength : Int
+    val plansLength : Int
         get() {
             val o = __offset(24); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Operational statistics
      */
-    fun STATISTICS(j: Int) : sensorStats? = STATISTICS(sensorStats(), j)
-    fun STATISTICS(obj: sensorStats, j: Int) : sensorStats? {
+    fun statistics(j: Int) : sensorStats? = statistics(sensorStats(), j)
+    fun statistics(obj: sensorStats, j: Int) : sensorStats? {
         val o = __offset(26)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -175,14 +175,14 @@ class SEN : Table() {
             null
         }
     }
-    val STATISTICSLength : Int
+    val statisticsLength : Int
         get() {
             val o = __offset(26); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Additional notes
      */
-    val NOTES : String?
+    val notes : String?
         get() {
             val o = __offset(28)
             return if (o != 0) {
@@ -191,44 +191,44 @@ class SEN : Table() {
                 null
             }
         }
-    val NOTESAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(28, 1)
-    fun NOTESInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 28, 1)
+    val notesAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(28, 1)
+    fun notesInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 28, 1)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsSEN(_bb: ByteBuffer): SEN = getRootAsSEN(_bb, SEN())
         fun getRootAsSEN(_bb: ByteBuffer, obj: SEN): SEN {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun SENBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$SEN")
-        fun createSEN(builder: FlatBufferBuilder, IDOffset: Int, NAMEOffset: Int, TYPEOffset: Int, STATUS: Byte, SITE_IDOffset: Int, LATITUDE: Double, LONGITUDE: Double, ALTITUDE: Double, STATUS_TIMEOffset: Int, MAINTENANCEOffset: Int, PLANSOffset: Int, STATISTICSOffset: Int, NOTESOffset: Int) : Int {
+        fun createSEN(builder: FlatBufferBuilder, idOffset: Int, nameOffset: Int, typeOffset: Int, status: Byte, siteIdOffset: Int, latitude: Double, longitude: Double, altitude: Double, statusTimeOffset: Int, maintenanceOffset: Int, plansOffset: Int, statisticsOffset: Int, notesOffset: Int) : Int {
             builder.startTable(13)
-            addALTITUDE(builder, ALTITUDE)
-            addLONGITUDE(builder, LONGITUDE)
-            addLATITUDE(builder, LATITUDE)
-            addNOTES(builder, NOTESOffset)
-            addSTATISTICS(builder, STATISTICSOffset)
-            addPLANS(builder, PLANSOffset)
-            addMAINTENANCE(builder, MAINTENANCEOffset)
-            addSTATUS_TIME(builder, STATUS_TIMEOffset)
-            addSITE_ID(builder, SITE_IDOffset)
-            addTYPE(builder, TYPEOffset)
-            addNAME(builder, NAMEOffset)
-            addID(builder, IDOffset)
-            addSTATUS(builder, STATUS)
+            addALTITUDE(builder, altitude)
+            addLONGITUDE(builder, longitude)
+            addLATITUDE(builder, latitude)
+            addNOTES(builder, notesOffset)
+            addSTATISTICS(builder, statisticsOffset)
+            addPLANS(builder, plansOffset)
+            addMAINTENANCE(builder, maintenanceOffset)
+            addSTATUSTIME(builder, statusTimeOffset)
+            addSITEID(builder, siteIdOffset)
+            addTYPE(builder, typeOffset)
+            addNAME(builder, nameOffset)
+            addID(builder, idOffset)
+            addSTATUS(builder, status)
             return endSEN(builder)
         }
         fun startSEN(builder: FlatBufferBuilder) = builder.startTable(13)
-        fun addID(builder: FlatBufferBuilder, ID: Int) = builder.addOffset(0, ID, 0)
-        fun addNAME(builder: FlatBufferBuilder, NAME: Int) = builder.addOffset(1, NAME, 0)
-        fun addTYPE(builder: FlatBufferBuilder, TYPE: Int) = builder.addOffset(2, TYPE, 0)
-        fun addSTATUS(builder: FlatBufferBuilder, STATUS: Byte) = builder.addByte(3, STATUS, 0)
-        fun addSITE_ID(builder: FlatBufferBuilder, SITE_ID: Int) = builder.addOffset(4, SITE_ID, 0)
-        fun addLATITUDE(builder: FlatBufferBuilder, LATITUDE: Double) = builder.addDouble(5, LATITUDE, 0.0)
-        fun addLONGITUDE(builder: FlatBufferBuilder, LONGITUDE: Double) = builder.addDouble(6, LONGITUDE, 0.0)
-        fun addALTITUDE(builder: FlatBufferBuilder, ALTITUDE: Double) = builder.addDouble(7, ALTITUDE, 0.0)
-        fun addSTATUS_TIME(builder: FlatBufferBuilder, STATUS_TIME: Int) = builder.addOffset(8, STATUS_TIME, 0)
-        fun addMAINTENANCE(builder: FlatBufferBuilder, MAINTENANCE: Int) = builder.addOffset(9, MAINTENANCE, 0)
+        fun addID(builder: FlatBufferBuilder, id: Int) = builder.addOffset(0, id, 0)
+        fun addNAME(builder: FlatBufferBuilder, name: Int) = builder.addOffset(1, name, 0)
+        fun addTYPE(builder: FlatBufferBuilder, type: Int) = builder.addOffset(2, type, 0)
+        fun addSTATUS(builder: FlatBufferBuilder, status: Byte) = builder.addByte(3, status, 0)
+        fun addSITEID(builder: FlatBufferBuilder, siteId: Int) = builder.addOffset(4, siteId, 0)
+        fun addLATITUDE(builder: FlatBufferBuilder, latitude: Double) = builder.addDouble(5, latitude, 0.0)
+        fun addLONGITUDE(builder: FlatBufferBuilder, longitude: Double) = builder.addDouble(6, longitude, 0.0)
+        fun addALTITUDE(builder: FlatBufferBuilder, altitude: Double) = builder.addDouble(7, altitude, 0.0)
+        fun addSTATUSTIME(builder: FlatBufferBuilder, statusTime: Int) = builder.addOffset(8, statusTime, 0)
+        fun addMAINTENANCE(builder: FlatBufferBuilder, maintenance: Int) = builder.addOffset(9, maintenance, 0)
         fun createMaintenanceVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -237,7 +237,7 @@ class SEN : Table() {
             return builder.endVector()
         }
         fun startMaintenanceVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addPLANS(builder: FlatBufferBuilder, PLANS: Int) = builder.addOffset(10, PLANS, 0)
+        fun addPLANS(builder: FlatBufferBuilder, plans: Int) = builder.addOffset(10, plans, 0)
         fun createPlansVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -246,7 +246,7 @@ class SEN : Table() {
             return builder.endVector()
         }
         fun startPlansVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addSTATISTICS(builder: FlatBufferBuilder, STATISTICS: Int) = builder.addOffset(11, STATISTICS, 0)
+        fun addSTATISTICS(builder: FlatBufferBuilder, statistics: Int) = builder.addOffset(11, statistics, 0)
         fun createStatisticsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -255,7 +255,7 @@ class SEN : Table() {
             return builder.endVector()
         }
         fun startStatisticsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addNOTES(builder: FlatBufferBuilder, NOTES: Int) = builder.addOffset(12, NOTES, 0)
+        fun addNOTES(builder: FlatBufferBuilder, notes: Int) = builder.addOffset(12, notes, 0)
         fun endSEN(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

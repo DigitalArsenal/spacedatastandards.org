@@ -32,7 +32,7 @@ class ION : Table() {
     /**
      * Unique identifier
      */
-    val ID : String?
+    val id : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class ION : Table() {
                 null
             }
         }
-    val IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val idAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun idInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Data source type
      */
-    val SOURCE : Byte
+    val source : Byte
         get() {
             val o = __offset(6)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -54,7 +54,7 @@ class ION : Table() {
     /**
      * Station or sensor identifier
      */
-    val STATION_ID : String?
+    val stationId : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -63,12 +63,12 @@ class ION : Table() {
                 null
             }
         }
-    val STATION_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun STATION_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val stationIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun stationIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
     /**
      * Station name
      */
-    val STATION_NAME : String?
+    val stationName : String?
         get() {
             val o = __offset(10)
             return if (o != 0) {
@@ -77,12 +77,12 @@ class ION : Table() {
                 null
             }
         }
-    val STATION_NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
-    fun STATION_NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
+    val stationNameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(10, 1)
+    fun stationNameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 10, 1)
     /**
      * Station geodetic latitude in degrees
      */
-    val LATITUDE : Double
+    val latitude : Double
         get() {
             val o = __offset(12)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -90,7 +90,7 @@ class ION : Table() {
     /**
      * Station geodetic longitude in degrees
      */
-    val LONGITUDE : Double
+    val longitude : Double
         get() {
             val o = __offset(14)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -98,7 +98,7 @@ class ION : Table() {
     /**
      * Station altitude in meters
      */
-    val ALTITUDE : Double
+    val altitude : Double
         get() {
             val o = __offset(16)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -106,7 +106,7 @@ class ION : Table() {
     /**
      * Observation start time (ISO 8601)
      */
-    val START_TIME : String?
+    val startTime : String?
         get() {
             val o = __offset(18)
             return if (o != 0) {
@@ -115,12 +115,12 @@ class ION : Table() {
                 null
             }
         }
-    val START_TIMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(18, 1)
-    fun START_TIMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 18, 1)
+    val startTimeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(18, 1)
+    fun startTimeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 18, 1)
     /**
      * Observation stop time (ISO 8601)
      */
-    val STOP_TIME : String?
+    val stopTime : String?
         get() {
             val o = __offset(20)
             return if (o != 0) {
@@ -129,12 +129,12 @@ class ION : Table() {
                 null
             }
         }
-    val STOP_TIMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(20, 1)
-    fun STOP_TIMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 20, 1)
+    val stopTimeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(20, 1)
+    fun stopTimeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 20, 1)
     /**
      * foF2 critical frequency in MHz
      */
-    val FOF2 : Double
+    val fof2 : Double
         get() {
             val o = __offset(22)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -142,7 +142,7 @@ class ION : Table() {
     /**
      * foF1 critical frequency in MHz
      */
-    val FOF1 : Double
+    val fof1 : Double
         get() {
             val o = __offset(24)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -150,7 +150,7 @@ class ION : Table() {
     /**
      * foE critical frequency in MHz
      */
-    val FOE : Double
+    val foe : Double
         get() {
             val o = __offset(26)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -158,7 +158,7 @@ class ION : Table() {
     /**
      * foEs sporadic E critical frequency in MHz
      */
-    val FOES : Double
+    val foes : Double
         get() {
             val o = __offset(28)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -166,7 +166,7 @@ class ION : Table() {
     /**
      * hmF2 peak height of F2 layer in km
      */
-    val HMF2 : Double
+    val hmf2 : Double
         get() {
             val o = __offset(30)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -174,7 +174,7 @@ class ION : Table() {
     /**
      * hmF1 peak height of F1 layer in km
      */
-    val HMF1 : Double
+    val hmf1 : Double
         get() {
             val o = __offset(32)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -182,7 +182,7 @@ class ION : Table() {
     /**
      * hmE peak height of E layer in km
      */
-    val HME : Double
+    val hme : Double
         get() {
             val o = __offset(34)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -190,7 +190,7 @@ class ION : Table() {
     /**
      * NmF2 peak density of F2 layer in electrons/m^3
      */
-    val NMF2 : Double
+    val nmf2 : Double
         get() {
             val o = __offset(36)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -198,7 +198,7 @@ class ION : Table() {
     /**
      * Vertical TEC in TECU
      */
-    val VTEC : Double
+    val vtec : Double
         get() {
             val o = __offset(38)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -206,7 +206,7 @@ class ION : Table() {
     /**
      * Slant TEC in TECU
      */
-    val STEC : Double
+    val stec : Double
         get() {
             val o = __offset(40)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -214,7 +214,7 @@ class ION : Table() {
     /**
      * Scintillation index S4
      */
-    val S4 : Double
+    val s4 : Double
         get() {
             val o = __offset(42)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -222,8 +222,8 @@ class ION : Table() {
     /**
      * Observation data points
      */
-    fun DATA_POINTS(j: Int) : ionoDataPoint? = DATA_POINTS(ionoDataPoint(), j)
-    fun DATA_POINTS(obj: ionoDataPoint, j: Int) : ionoDataPoint? {
+    fun dataPoints(j: Int) : ionoDataPoint? = dataPoints(ionoDataPoint(), j)
+    fun dataPoints(obj: ionoDataPoint, j: Int) : ionoDataPoint? {
         val o = __offset(44)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -231,15 +231,15 @@ class ION : Table() {
             null
         }
     }
-    val DATA_POINTSLength : Int
+    val dataPointsLength : Int
         get() {
             val o = __offset(44); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Electron density profiles
      */
-    fun DENSITY_PROFILES(j: Int) : ionoDensityProfile? = DENSITY_PROFILES(ionoDensityProfile(), j)
-    fun DENSITY_PROFILES(obj: ionoDensityProfile, j: Int) : ionoDensityProfile? {
+    fun densityProfiles(j: Int) : ionoDensityProfile? = densityProfiles(ionoDensityProfile(), j)
+    fun densityProfiles(obj: ionoDensityProfile, j: Int) : ionoDensityProfile? {
         val o = __offset(46)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -247,14 +247,14 @@ class ION : Table() {
             null
         }
     }
-    val DENSITY_PROFILESLength : Int
+    val densityProfilesLength : Int
         get() {
             val o = __offset(46); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Data quality indicator (0-9, 9=best)
      */
-    val QUALITY : UByte
+    val quality : UByte
         get() {
             val o = __offset(48)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
@@ -262,7 +262,7 @@ class ION : Table() {
     /**
      * Additional notes
      */
-    val NOTES : String?
+    val notes : String?
         get() {
             val o = __offset(50)
             return if (o != 0) {
@@ -271,66 +271,66 @@ class ION : Table() {
                 null
             }
         }
-    val NOTESAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(50, 1)
-    fun NOTESInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 50, 1)
+    val notesAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(50, 1)
+    fun notesInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 50, 1)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsION(_bb: ByteBuffer): ION = getRootAsION(_bb, ION())
         fun getRootAsION(_bb: ByteBuffer, obj: ION): ION {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun IONBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$ION")
-        fun createION(builder: FlatBufferBuilder, IDOffset: Int, SOURCE: Byte, STATION_IDOffset: Int, STATION_NAMEOffset: Int, LATITUDE: Double, LONGITUDE: Double, ALTITUDE: Double, START_TIMEOffset: Int, STOP_TIMEOffset: Int, FOF2: Double, FOF1: Double, FOE: Double, FOES: Double, HMF2: Double, HMF1: Double, HME: Double, NMF2: Double, VTEC: Double, STEC: Double, S4: Double, DATA_POINTSOffset: Int, DENSITY_PROFILESOffset: Int, QUALITY: UByte, NOTESOffset: Int) : Int {
+        fun createION(builder: FlatBufferBuilder, idOffset: Int, source: Byte, stationIdOffset: Int, stationNameOffset: Int, latitude: Double, longitude: Double, altitude: Double, startTimeOffset: Int, stopTimeOffset: Int, fof2: Double, fof1: Double, foe: Double, foes: Double, hmf2: Double, hmf1: Double, hme: Double, nmf2: Double, vtec: Double, stec: Double, s4: Double, dataPointsOffset: Int, densityProfilesOffset: Int, quality: UByte, notesOffset: Int) : Int {
             builder.startTable(24)
-            addS4(builder, S4)
-            addSTEC(builder, STEC)
-            addVTEC(builder, VTEC)
-            addNMF2(builder, NMF2)
-            addHME(builder, HME)
-            addHMF1(builder, HMF1)
-            addHMF2(builder, HMF2)
-            addFOES(builder, FOES)
-            addFOE(builder, FOE)
-            addFOF1(builder, FOF1)
-            addFOF2(builder, FOF2)
-            addALTITUDE(builder, ALTITUDE)
-            addLONGITUDE(builder, LONGITUDE)
-            addLATITUDE(builder, LATITUDE)
-            addNOTES(builder, NOTESOffset)
-            addDENSITY_PROFILES(builder, DENSITY_PROFILESOffset)
-            addDATA_POINTS(builder, DATA_POINTSOffset)
-            addSTOP_TIME(builder, STOP_TIMEOffset)
-            addSTART_TIME(builder, START_TIMEOffset)
-            addSTATION_NAME(builder, STATION_NAMEOffset)
-            addSTATION_ID(builder, STATION_IDOffset)
-            addID(builder, IDOffset)
-            addQUALITY(builder, QUALITY)
-            addSOURCE(builder, SOURCE)
+            addS4(builder, s4)
+            addSTEC(builder, stec)
+            addVTEC(builder, vtec)
+            addNMF2(builder, nmf2)
+            addHME(builder, hme)
+            addHMF1(builder, hmf1)
+            addHMF2(builder, hmf2)
+            addFOES(builder, foes)
+            addFOE(builder, foe)
+            addFOF1(builder, fof1)
+            addFOF2(builder, fof2)
+            addALTITUDE(builder, altitude)
+            addLONGITUDE(builder, longitude)
+            addLATITUDE(builder, latitude)
+            addNOTES(builder, notesOffset)
+            addDENSITYPROFILES(builder, densityProfilesOffset)
+            addDATAPOINTS(builder, dataPointsOffset)
+            addSTOPTIME(builder, stopTimeOffset)
+            addSTARTTIME(builder, startTimeOffset)
+            addSTATIONNAME(builder, stationNameOffset)
+            addSTATIONID(builder, stationIdOffset)
+            addID(builder, idOffset)
+            addQUALITY(builder, quality)
+            addSOURCE(builder, source)
             return endION(builder)
         }
         fun startION(builder: FlatBufferBuilder) = builder.startTable(24)
-        fun addID(builder: FlatBufferBuilder, ID: Int) = builder.addOffset(0, ID, 0)
-        fun addSOURCE(builder: FlatBufferBuilder, SOURCE: Byte) = builder.addByte(1, SOURCE, 0)
-        fun addSTATION_ID(builder: FlatBufferBuilder, STATION_ID: Int) = builder.addOffset(2, STATION_ID, 0)
-        fun addSTATION_NAME(builder: FlatBufferBuilder, STATION_NAME: Int) = builder.addOffset(3, STATION_NAME, 0)
-        fun addLATITUDE(builder: FlatBufferBuilder, LATITUDE: Double) = builder.addDouble(4, LATITUDE, 0.0)
-        fun addLONGITUDE(builder: FlatBufferBuilder, LONGITUDE: Double) = builder.addDouble(5, LONGITUDE, 0.0)
-        fun addALTITUDE(builder: FlatBufferBuilder, ALTITUDE: Double) = builder.addDouble(6, ALTITUDE, 0.0)
-        fun addSTART_TIME(builder: FlatBufferBuilder, START_TIME: Int) = builder.addOffset(7, START_TIME, 0)
-        fun addSTOP_TIME(builder: FlatBufferBuilder, STOP_TIME: Int) = builder.addOffset(8, STOP_TIME, 0)
-        fun addFOF2(builder: FlatBufferBuilder, FOF2: Double) = builder.addDouble(9, FOF2, 0.0)
-        fun addFOF1(builder: FlatBufferBuilder, FOF1: Double) = builder.addDouble(10, FOF1, 0.0)
-        fun addFOE(builder: FlatBufferBuilder, FOE: Double) = builder.addDouble(11, FOE, 0.0)
-        fun addFOES(builder: FlatBufferBuilder, FOES: Double) = builder.addDouble(12, FOES, 0.0)
-        fun addHMF2(builder: FlatBufferBuilder, HMF2: Double) = builder.addDouble(13, HMF2, 0.0)
-        fun addHMF1(builder: FlatBufferBuilder, HMF1: Double) = builder.addDouble(14, HMF1, 0.0)
-        fun addHME(builder: FlatBufferBuilder, HME: Double) = builder.addDouble(15, HME, 0.0)
-        fun addNMF2(builder: FlatBufferBuilder, NMF2: Double) = builder.addDouble(16, NMF2, 0.0)
-        fun addVTEC(builder: FlatBufferBuilder, VTEC: Double) = builder.addDouble(17, VTEC, 0.0)
-        fun addSTEC(builder: FlatBufferBuilder, STEC: Double) = builder.addDouble(18, STEC, 0.0)
-        fun addS4(builder: FlatBufferBuilder, S4: Double) = builder.addDouble(19, S4, 0.0)
-        fun addDATA_POINTS(builder: FlatBufferBuilder, DATA_POINTS: Int) = builder.addOffset(20, DATA_POINTS, 0)
+        fun addID(builder: FlatBufferBuilder, id: Int) = builder.addOffset(0, id, 0)
+        fun addSOURCE(builder: FlatBufferBuilder, source: Byte) = builder.addByte(1, source, 0)
+        fun addSTATIONID(builder: FlatBufferBuilder, stationId: Int) = builder.addOffset(2, stationId, 0)
+        fun addSTATIONNAME(builder: FlatBufferBuilder, stationName: Int) = builder.addOffset(3, stationName, 0)
+        fun addLATITUDE(builder: FlatBufferBuilder, latitude: Double) = builder.addDouble(4, latitude, 0.0)
+        fun addLONGITUDE(builder: FlatBufferBuilder, longitude: Double) = builder.addDouble(5, longitude, 0.0)
+        fun addALTITUDE(builder: FlatBufferBuilder, altitude: Double) = builder.addDouble(6, altitude, 0.0)
+        fun addSTARTTIME(builder: FlatBufferBuilder, startTime: Int) = builder.addOffset(7, startTime, 0)
+        fun addSTOPTIME(builder: FlatBufferBuilder, stopTime: Int) = builder.addOffset(8, stopTime, 0)
+        fun addFOF2(builder: FlatBufferBuilder, fof2: Double) = builder.addDouble(9, fof2, 0.0)
+        fun addFOF1(builder: FlatBufferBuilder, fof1: Double) = builder.addDouble(10, fof1, 0.0)
+        fun addFOE(builder: FlatBufferBuilder, foe: Double) = builder.addDouble(11, foe, 0.0)
+        fun addFOES(builder: FlatBufferBuilder, foes: Double) = builder.addDouble(12, foes, 0.0)
+        fun addHMF2(builder: FlatBufferBuilder, hmf2: Double) = builder.addDouble(13, hmf2, 0.0)
+        fun addHMF1(builder: FlatBufferBuilder, hmf1: Double) = builder.addDouble(14, hmf1, 0.0)
+        fun addHME(builder: FlatBufferBuilder, hme: Double) = builder.addDouble(15, hme, 0.0)
+        fun addNMF2(builder: FlatBufferBuilder, nmf2: Double) = builder.addDouble(16, nmf2, 0.0)
+        fun addVTEC(builder: FlatBufferBuilder, vtec: Double) = builder.addDouble(17, vtec, 0.0)
+        fun addSTEC(builder: FlatBufferBuilder, stec: Double) = builder.addDouble(18, stec, 0.0)
+        fun addS4(builder: FlatBufferBuilder, s4: Double) = builder.addDouble(19, s4, 0.0)
+        fun addDATAPOINTS(builder: FlatBufferBuilder, dataPoints: Int) = builder.addOffset(20, dataPoints, 0)
         fun createDataPointsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -339,7 +339,7 @@ class ION : Table() {
             return builder.endVector()
         }
         fun startDataPointsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addDENSITY_PROFILES(builder: FlatBufferBuilder, DENSITY_PROFILES: Int) = builder.addOffset(21, DENSITY_PROFILES, 0)
+        fun addDENSITYPROFILES(builder: FlatBufferBuilder, densityProfiles: Int) = builder.addOffset(21, densityProfiles, 0)
         fun createDensityProfilesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -348,8 +348,8 @@ class ION : Table() {
             return builder.endVector()
         }
         fun startDensityProfilesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addQUALITY(builder: FlatBufferBuilder, QUALITY: UByte) = builder.addByte(22, QUALITY.toByte(), 0)
-        fun addNOTES(builder: FlatBufferBuilder, NOTES: Int) = builder.addOffset(23, NOTES, 0)
+        fun addQUALITY(builder: FlatBufferBuilder, quality: UByte) = builder.addByte(22, quality.toByte(), 0)
+        fun addNOTES(builder: FlatBufferBuilder, notes: Int) = builder.addOffset(23, notes, 0)
         fun endION(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

@@ -1,3 +1,3 @@
-export { SPP, SPPT } from './SPP.js';
-export { packetType } from './packetType.js';
+export * from './packetType.js';
+export * from './SPP.js';
 //# sourceMappingURL=main.d.ts.map

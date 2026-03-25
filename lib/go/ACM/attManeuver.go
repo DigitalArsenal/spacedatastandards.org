@@ -51,6 +51,10 @@ func (rcv *attManeuver) MAN_EPOCH_START() []byte {
 	return nil
 }
 
+func (rcv *attManeuver) ManEpochStart() []byte {
+	return rcv.MAN_EPOCH_START()
+}
+
 /// Maneuver epoch start (ISO 8601)
 /// Duration in seconds
 func (rcv *attManeuver) DURATION() float64 {
@@ -61,9 +65,17 @@ func (rcv *attManeuver) DURATION() float64 {
 	return 0.0
 }
 
+func (rcv *attManeuver) Duration() float64 {
+	return rcv.DURATION()
+}
+
 /// Duration in seconds
 func (rcv *attManeuver) MutateDURATION(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(6, n)
+}
+
+func (rcv *attManeuver) MutateDuration(n float64) bool {
+	return rcv.MutateDURATION(n)
 }
 
 /// Reference frame
@@ -73,6 +85,10 @@ func (rcv *attManeuver) REF_FRAME() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *attManeuver) RefFrame() []byte {
+	return rcv.REF_FRAME()
 }
 
 /// Reference frame
@@ -85,9 +101,17 @@ func (rcv *attManeuver) TOR_1() float64 {
 	return 0.0
 }
 
+func (rcv *attManeuver) Tor1() float64 {
+	return rcv.TOR_1()
+}
+
 /// Torque about body X in N*m
 func (rcv *attManeuver) MutateTOR_1(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(10, n)
+}
+
+func (rcv *attManeuver) MutateTor1(n float64) bool {
+	return rcv.MutateTOR_1(n)
 }
 
 /// Torque about body Y in N*m
@@ -99,9 +123,17 @@ func (rcv *attManeuver) TOR_2() float64 {
 	return 0.0
 }
 
+func (rcv *attManeuver) Tor2() float64 {
+	return rcv.TOR_2()
+}
+
 /// Torque about body Y in N*m
 func (rcv *attManeuver) MutateTOR_2(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(12, n)
+}
+
+func (rcv *attManeuver) MutateTor2(n float64) bool {
+	return rcv.MutateTOR_2(n)
 }
 
 /// Torque about body Z in N*m
@@ -113,9 +145,17 @@ func (rcv *attManeuver) TOR_3() float64 {
 	return 0.0
 }
 
+func (rcv *attManeuver) Tor3() float64 {
+	return rcv.TOR_3()
+}
+
 /// Torque about body Z in N*m
 func (rcv *attManeuver) MutateTOR_3(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(14, n)
+}
+
+func (rcv *attManeuver) MutateTor3(n float64) bool {
+	return rcv.MutateTOR_3(n)
 }
 
 func attManeuverStart(builder *flatbuffers.Builder) {
@@ -124,20 +164,38 @@ func attManeuverStart(builder *flatbuffers.Builder) {
 func attManeuverAddMAN_EPOCH_START(builder *flatbuffers.Builder, MAN_EPOCH_START flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(MAN_EPOCH_START), 0)
 }
+func attManeuverAddManEpochStart(builder *flatbuffers.Builder, MAN_EPOCH_START flatbuffers.UOffsetT) {
+	attManeuverAddMAN_EPOCH_START(builder, MAN_EPOCH_START)
+}
 func attManeuverAddDURATION(builder *flatbuffers.Builder, DURATION float64) {
 	builder.PrependFloat64Slot(1, DURATION, 0.0)
+}
+func attManeuverAddDuration(builder *flatbuffers.Builder, DURATION float64) {
+	attManeuverAddDURATION(builder, DURATION)
 }
 func attManeuverAddREF_FRAME(builder *flatbuffers.Builder, REF_FRAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(REF_FRAME), 0)
 }
+func attManeuverAddRefFrame(builder *flatbuffers.Builder, REF_FRAME flatbuffers.UOffsetT) {
+	attManeuverAddREF_FRAME(builder, REF_FRAME)
+}
 func attManeuverAddTOR_1(builder *flatbuffers.Builder, TOR_1 float64) {
 	builder.PrependFloat64Slot(3, TOR_1, 0.0)
+}
+func attManeuverAddTor1(builder *flatbuffers.Builder, TOR_1 float64) {
+	attManeuverAddTOR_1(builder, TOR_1)
 }
 func attManeuverAddTOR_2(builder *flatbuffers.Builder, TOR_2 float64) {
 	builder.PrependFloat64Slot(4, TOR_2, 0.0)
 }
+func attManeuverAddTor2(builder *flatbuffers.Builder, TOR_2 float64) {
+	attManeuverAddTOR_2(builder, TOR_2)
+}
 func attManeuverAddTOR_3(builder *flatbuffers.Builder, TOR_3 float64) {
 	builder.PrependFloat64Slot(5, TOR_3, 0.0)
+}
+func attManeuverAddTor3(builder *flatbuffers.Builder, TOR_3 float64) {
+	attManeuverAddTOR_3(builder, TOR_3)
 }
 func attManeuverEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

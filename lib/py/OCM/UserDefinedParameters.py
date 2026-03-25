@@ -72,15 +72,19 @@ def End(builder):
 class UserDefinedParametersT(object):
 
     # UserDefinedParametersT
-    def __init__(self):
-        self.PARAM_NAME = None  # type: str
-        self.PARAM_VALUE = None  # type: str
+    def __init__(
+        self,
+        PARAM_NAME = None,
+        PARAM_VALUE = None,
+    ):
+        self.PARAM_NAME = PARAM_NAME  # type: Optional[str]
+        self.PARAM_VALUE = PARAM_VALUE  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        userDefinedParameters = UserDefinedParameters()
-        userDefinedParameters.Init(buf, pos)
-        return cls.InitFromObj(userDefinedParameters)
+        tmpUserDefinedParameters = UserDefinedParameters()
+        tmpUserDefinedParameters.Init(buf, pos)
+        return cls.InitFromObj(tmpUserDefinedParameters)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -88,17 +92,17 @@ class UserDefinedParametersT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, userDefinedParameters):
+    def InitFromObj(cls, tmpUserDefinedParameters):
         x = UserDefinedParametersT()
-        x._UnPack(userDefinedParameters)
+        x._UnPack(tmpUserDefinedParameters)
         return x
 
     # UserDefinedParametersT
-    def _UnPack(self, userDefinedParameters):
-        if userDefinedParameters is None:
+    def _UnPack(self, UserDefinedParameters):
+        if UserDefinedParameters is None:
             return
-        self.PARAM_NAME = userDefinedParameters.PARAM_NAME()
-        self.PARAM_VALUE = userDefinedParameters.PARAM_VALUE()
+        self.PARAM_NAME = UserDefinedParameters.PARAM_NAME()
+        self.PARAM_VALUE = UserDefinedParameters.PARAM_VALUE()
 
     # UserDefinedParametersT
     def Pack(self, builder):
@@ -111,5 +115,5 @@ class UserDefinedParametersT(object):
             UserDefinedParametersAddPARAM_NAME(builder, PARAM_NAME)
         if self.PARAM_VALUE is not None:
             UserDefinedParametersAddPARAM_VALUE(builder, PARAM_VALUE)
-        userDefinedParameters = UserDefinedParametersEnd(builder)
-        return userDefinedParameters
+        UserDefinedParameters = UserDefinedParametersEnd(builder)
+        return UserDefinedParameters

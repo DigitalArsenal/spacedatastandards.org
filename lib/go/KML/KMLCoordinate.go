@@ -51,9 +51,17 @@ func (rcv *KMLCoordinate) LONGITUDE() float64 {
 	return 0.0
 }
 
+func (rcv *KMLCoordinate) Longitude() float64 {
+	return rcv.LONGITUDE()
+}
+
 /// Longitude in decimal degrees
 func (rcv *KMLCoordinate) MutateLONGITUDE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(4, n)
+}
+
+func (rcv *KMLCoordinate) MutateLongitude(n float64) bool {
+	return rcv.MutateLONGITUDE(n)
 }
 
 /// Latitude in decimal degrees
@@ -65,9 +73,17 @@ func (rcv *KMLCoordinate) LATITUDE() float64 {
 	return 0.0
 }
 
+func (rcv *KMLCoordinate) Latitude() float64 {
+	return rcv.LATITUDE()
+}
+
 /// Latitude in decimal degrees
 func (rcv *KMLCoordinate) MutateLATITUDE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(6, n)
+}
+
+func (rcv *KMLCoordinate) MutateLatitude(n float64) bool {
+	return rcv.MutateLATITUDE(n)
 }
 
 /// Altitude in meters
@@ -79,9 +95,17 @@ func (rcv *KMLCoordinate) ALTITUDE() float64 {
 	return 0.0
 }
 
+func (rcv *KMLCoordinate) Altitude() float64 {
+	return rcv.ALTITUDE()
+}
+
 /// Altitude in meters
 func (rcv *KMLCoordinate) MutateALTITUDE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(8, n)
+}
+
+func (rcv *KMLCoordinate) MutateAltitude(n float64) bool {
+	return rcv.MutateALTITUDE(n)
 }
 
 func KMLCoordinateStart(builder *flatbuffers.Builder) {
@@ -90,11 +114,20 @@ func KMLCoordinateStart(builder *flatbuffers.Builder) {
 func KMLCoordinateAddLONGITUDE(builder *flatbuffers.Builder, LONGITUDE float64) {
 	builder.PrependFloat64Slot(0, LONGITUDE, 0.0)
 }
+func KMLCoordinateAddLongitude(builder *flatbuffers.Builder, LONGITUDE float64) {
+	KMLCoordinateAddLONGITUDE(builder, LONGITUDE)
+}
 func KMLCoordinateAddLATITUDE(builder *flatbuffers.Builder, LATITUDE float64) {
 	builder.PrependFloat64Slot(1, LATITUDE, 0.0)
 }
+func KMLCoordinateAddLatitude(builder *flatbuffers.Builder, LATITUDE float64) {
+	KMLCoordinateAddLATITUDE(builder, LATITUDE)
+}
 func KMLCoordinateAddALTITUDE(builder *flatbuffers.Builder, ALTITUDE float64) {
 	builder.PrependFloat64Slot(2, ALTITUDE, 0.0)
+}
+func KMLCoordinateAddAltitude(builder *flatbuffers.Builder, ALTITUDE float64) {
+	KMLCoordinateAddALTITUDE(builder, ALTITUDE)
 }
 func KMLCoordinateEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

@@ -56,6 +56,10 @@ func (rcv *KMLPoint) COORDINATES(obj *KMLCoordinate) *KMLCoordinate {
 	return nil
 }
 
+func (rcv *KMLPoint) Coordinates(obj *KMLCoordinate) *KMLCoordinate {
+	return rcv.COORDINATES(obj)
+}
+
 /// Coordinate
 /// Altitude mode
 func (rcv *KMLPoint) ALTITUDE_MODE() KMLAltitudeMode {
@@ -66,9 +70,17 @@ func (rcv *KMLPoint) ALTITUDE_MODE() KMLAltitudeMode {
 	return 0
 }
 
+func (rcv *KMLPoint) AltitudeMode() KMLAltitudeMode {
+	return rcv.ALTITUDE_MODE()
+}
+
 /// Altitude mode
 func (rcv *KMLPoint) MutateALTITUDE_MODE(n KMLAltitudeMode) bool {
 	return rcv._tab.MutateInt8Slot(6, int8(n))
+}
+
+func (rcv *KMLPoint) MutateAltitudeMode(n KMLAltitudeMode) bool {
+	return rcv.MutateALTITUDE_MODE(n)
 }
 
 /// Whether to extrude to ground
@@ -80,9 +92,17 @@ func (rcv *KMLPoint) EXTRUDE() bool {
 	return false
 }
 
+func (rcv *KMLPoint) Extrude() bool {
+	return rcv.EXTRUDE()
+}
+
 /// Whether to extrude to ground
 func (rcv *KMLPoint) MutateEXTRUDE(n bool) bool {
 	return rcv._tab.MutateBoolSlot(8, n)
+}
+
+func (rcv *KMLPoint) MutateExtrude(n bool) bool {
+	return rcv.MutateEXTRUDE(n)
 }
 
 func KMLPointStart(builder *flatbuffers.Builder) {
@@ -91,11 +111,20 @@ func KMLPointStart(builder *flatbuffers.Builder) {
 func KMLPointAddCOORDINATES(builder *flatbuffers.Builder, COORDINATES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(COORDINATES), 0)
 }
+func KMLPointAddCoordinates(builder *flatbuffers.Builder, COORDINATES flatbuffers.UOffsetT) {
+	KMLPointAddCOORDINATES(builder, COORDINATES)
+}
 func KMLPointAddALTITUDE_MODE(builder *flatbuffers.Builder, ALTITUDE_MODE KMLAltitudeMode) {
 	builder.PrependInt8Slot(1, int8(ALTITUDE_MODE), 0)
 }
+func KMLPointAddAltitudeMode(builder *flatbuffers.Builder, ALTITUDE_MODE KMLAltitudeMode) {
+	KMLPointAddALTITUDE_MODE(builder, ALTITUDE_MODE)
+}
 func KMLPointAddEXTRUDE(builder *flatbuffers.Builder, EXTRUDE bool) {
 	builder.PrependBoolSlot(2, EXTRUDE, false)
+}
+func KMLPointAddExtrude(builder *flatbuffers.Builder, EXTRUDE bool) {
+	KMLPointAddEXTRUDE(builder, EXTRUDE)
 }
 func KMLPointEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

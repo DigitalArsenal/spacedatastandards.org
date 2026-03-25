@@ -56,6 +56,10 @@ func (rcv *MatchCriteria) COMPARISON(obj *ParameterComparison) *ParameterCompari
 	return nil
 }
 
+func (rcv *MatchCriteria) Comparison(obj *ParameterComparison) *ParameterComparison {
+	return rcv.COMPARISON(obj)
+}
+
 /// Single comparison
 /// List of comparisons (implicit AND)
 func (rcv *MatchCriteria) COMPARISON_LIST(obj *ParameterComparison, j int) bool {
@@ -64,10 +68,17 @@ func (rcv *MatchCriteria) COMPARISON_LIST(obj *ParameterComparison, j int) bool 
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(ParameterComparison)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *MatchCriteria) ComparisonList(obj *ParameterComparison, j int) bool {
+	return rcv.COMPARISON_LIST(obj, j)
 }
 
 func (rcv *MatchCriteria) COMPARISON_LISTLength() int {
@@ -76,6 +87,10 @@ func (rcv *MatchCriteria) COMPARISON_LISTLength() int {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *MatchCriteria) ComparisonListLength() int {
+	return rcv.COMPARISON_LISTLength()
 }
 
 /// List of comparisons (implicit AND)
@@ -93,6 +108,10 @@ func (rcv *MatchCriteria) BOOLEAN_EXPRESSION(obj *BooleanExpression) *BooleanExp
 	return nil
 }
 
+func (rcv *MatchCriteria) BooleanExpression(obj *BooleanExpression) *BooleanExpression {
+	return rcv.BOOLEAN_EXPRESSION(obj)
+}
+
 /// Boolean expression
 /// Custom algorithm reference
 func (rcv *MatchCriteria) CUSTOM_ALGORITHM() []byte {
@@ -103,6 +122,10 @@ func (rcv *MatchCriteria) CUSTOM_ALGORITHM() []byte {
 	return nil
 }
 
+func (rcv *MatchCriteria) CustomAlgorithm() []byte {
+	return rcv.CUSTOM_ALGORITHM()
+}
+
 /// Custom algorithm reference
 func MatchCriteriaStart(builder *flatbuffers.Builder) {
 	builder.StartObject(4)
@@ -110,17 +133,32 @@ func MatchCriteriaStart(builder *flatbuffers.Builder) {
 func MatchCriteriaAddCOMPARISON(builder *flatbuffers.Builder, COMPARISON flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(COMPARISON), 0)
 }
+func MatchCriteriaAddComparison(builder *flatbuffers.Builder, COMPARISON flatbuffers.UOffsetT) {
+	MatchCriteriaAddCOMPARISON(builder, COMPARISON)
+}
 func MatchCriteriaAddCOMPARISON_LIST(builder *flatbuffers.Builder, COMPARISON_LIST flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(COMPARISON_LIST), 0)
+}
+func MatchCriteriaAddComparisonList(builder *flatbuffers.Builder, COMPARISON_LIST flatbuffers.UOffsetT) {
+	MatchCriteriaAddCOMPARISON_LIST(builder, COMPARISON_LIST)
 }
 func MatchCriteriaStartCOMPARISON_LISTVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
+func MatchCriteriaStartComparisonListVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return MatchCriteriaStartCOMPARISON_LISTVector(builder, numElems)
+}
 func MatchCriteriaAddBOOLEAN_EXPRESSION(builder *flatbuffers.Builder, BOOLEAN_EXPRESSION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(BOOLEAN_EXPRESSION), 0)
 }
+func MatchCriteriaAddBooleanExpression(builder *flatbuffers.Builder, BOOLEAN_EXPRESSION flatbuffers.UOffsetT) {
+	MatchCriteriaAddBOOLEAN_EXPRESSION(builder, BOOLEAN_EXPRESSION)
+}
 func MatchCriteriaAddCUSTOM_ALGORITHM(builder *flatbuffers.Builder, CUSTOM_ALGORITHM flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(CUSTOM_ALGORITHM), 0)
+}
+func MatchCriteriaAddCustomAlgorithm(builder *flatbuffers.Builder, CUSTOM_ALGORITHM flatbuffers.UOffsetT) {
+	MatchCriteriaAddCUSTOM_ALGORITHM(builder, CUSTOM_ALGORITHM)
 }
 func MatchCriteriaEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

@@ -51,6 +51,10 @@ func (rcv *KMLSimpleField) NAME() []byte {
 	return nil
 }
 
+func (rcv *KMLSimpleField) Name() []byte {
+	return rcv.NAME()
+}
+
 /// Field name
 /// Field type (xsd:string, xsd:int, xsd:float, etc.)
 func (rcv *KMLSimpleField) FIELD_TYPE() []byte {
@@ -59,6 +63,10 @@ func (rcv *KMLSimpleField) FIELD_TYPE() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *KMLSimpleField) FieldType() []byte {
+	return rcv.FIELD_TYPE()
 }
 
 /// Field type (xsd:string, xsd:int, xsd:float, etc.)
@@ -71,6 +79,10 @@ func (rcv *KMLSimpleField) DISPLAY_NAME() []byte {
 	return nil
 }
 
+func (rcv *KMLSimpleField) DisplayName() []byte {
+	return rcv.DISPLAY_NAME()
+}
+
 /// Display name
 func KMLSimpleFieldStart(builder *flatbuffers.Builder) {
 	builder.StartObject(3)
@@ -78,11 +90,20 @@ func KMLSimpleFieldStart(builder *flatbuffers.Builder) {
 func KMLSimpleFieldAddNAME(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(NAME), 0)
 }
+func KMLSimpleFieldAddName(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
+	KMLSimpleFieldAddNAME(builder, NAME)
+}
 func KMLSimpleFieldAddFIELD_TYPE(builder *flatbuffers.Builder, FIELD_TYPE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(FIELD_TYPE), 0)
 }
+func KMLSimpleFieldAddFieldType(builder *flatbuffers.Builder, FIELD_TYPE flatbuffers.UOffsetT) {
+	KMLSimpleFieldAddFIELD_TYPE(builder, FIELD_TYPE)
+}
 func KMLSimpleFieldAddDISPLAY_NAME(builder *flatbuffers.Builder, DISPLAY_NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(DISPLAY_NAME), 0)
+}
+func KMLSimpleFieldAddDisplayName(builder *flatbuffers.Builder, DISPLAY_NAME flatbuffers.UOffsetT) {
+	KMLSimpleFieldAddDISPLAY_NAME(builder, DISPLAY_NAME)
 }
 func KMLSimpleFieldEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

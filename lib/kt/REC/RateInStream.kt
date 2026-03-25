@@ -32,7 +32,7 @@ class RateInStream : Table() {
     /**
      * Stream reference
      */
-    val STREAM_REF : String?
+    val streamRef : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class RateInStream : Table() {
                 null
             }
         }
-    val STREAM_REFAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun STREAM_REFInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val streamRefAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun streamRefInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Rate value
      */
-    val RATE : Double
+    val rate : Double
         get() {
             val o = __offset(6)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -54,29 +54,29 @@ class RateInStream : Table() {
     /**
      * Rate basis
      */
-    val BASIS : Byte
+    val basis : Byte
         get() {
             val o = __offset(8)
             return if(o != 0) bb.get(o + bb_pos) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsRateInStream(_bb: ByteBuffer): RateInStream = getRootAsRateInStream(_bb, RateInStream())
         fun getRootAsRateInStream(_bb: ByteBuffer, obj: RateInStream): RateInStream {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createRateInStream(builder: FlatBufferBuilder, STREAM_REFOffset: Int, RATE: Double, BASIS: Byte) : Int {
+        fun createRateInStream(builder: FlatBufferBuilder, streamRefOffset: Int, rate: Double, basis: Byte) : Int {
             builder.startTable(3)
-            addRATE(builder, RATE)
-            addSTREAM_REF(builder, STREAM_REFOffset)
-            addBASIS(builder, BASIS)
+            addRATE(builder, rate)
+            addSTREAMREF(builder, streamRefOffset)
+            addBASIS(builder, basis)
             return endRateInStream(builder)
         }
         fun startRateInStream(builder: FlatBufferBuilder) = builder.startTable(3)
-        fun addSTREAM_REF(builder: FlatBufferBuilder, STREAM_REF: Int) = builder.addOffset(0, STREAM_REF, 0)
-        fun addRATE(builder: FlatBufferBuilder, RATE: Double) = builder.addDouble(1, RATE, 0.0)
-        fun addBASIS(builder: FlatBufferBuilder, BASIS: Byte) = builder.addByte(2, BASIS, 0)
+        fun addSTREAMREF(builder: FlatBufferBuilder, streamRef: Int) = builder.addOffset(0, streamRef, 0)
+        fun addRATE(builder: FlatBufferBuilder, rate: Double) = builder.addDouble(1, rate, 0.0)
+        fun addBASIS(builder: FlatBufferBuilder, basis: Byte) = builder.addByte(2, basis, 0)
         fun endRateInStream(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

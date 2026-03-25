@@ -32,7 +32,7 @@ class ATM : Table() {
     /**
      * Canonical model family
      */
-    val MODEL : Byte
+    val model : Byte
         get() {
             val o = __offset(4)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -40,28 +40,28 @@ class ATM : Table() {
     /**
      * Four-digit year identifying the model version (e.g., 1970, 2008, 2020)
      */
-    val YEAR : Int
+    val year : Int
         get() {
             val o = __offset(6)
             return if(o != 0) bb.getInt(o + bb_pos) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsATM(_bb: ByteBuffer): ATM = getRootAsATM(_bb, ATM())
         fun getRootAsATM(_bb: ByteBuffer, obj: ATM): ATM {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun ATMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$ATM")
-        fun createATM(builder: FlatBufferBuilder, MODEL: Byte, YEAR: Int) : Int {
+        fun createATM(builder: FlatBufferBuilder, model: Byte, year: Int) : Int {
             builder.startTable(2)
-            addYEAR(builder, YEAR)
-            addMODEL(builder, MODEL)
+            addYEAR(builder, year)
+            addMODEL(builder, model)
             return endATM(builder)
         }
         fun startATM(builder: FlatBufferBuilder) = builder.startTable(2)
-        fun addMODEL(builder: FlatBufferBuilder, MODEL: Byte) = builder.addByte(0, MODEL, 0)
-        fun addYEAR(builder: FlatBufferBuilder, YEAR: Int) = builder.addInt(1, YEAR, 0)
+        fun addMODEL(builder: FlatBufferBuilder, model: Byte) = builder.addByte(0, model, 0)
+        fun addYEAR(builder: FlatBufferBuilder, year: Int) = builder.addInt(1, year, 0)
         fun endATM(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

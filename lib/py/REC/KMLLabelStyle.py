@@ -2,4 +2,134 @@
 
 # namespace: 
 
-# NOTE KMLLabelStyle.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Label style
+class KMLLabelStyle(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = KMLLabelStyle()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsKMLLabelStyle(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def KMLLabelStyleBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x4B\x4D\x4C", size_prefixed=size_prefixed)
+
+    # KMLLabelStyle
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # KML color in aabbggrr hex format
+    # KMLLabelStyle
+    def COLOR(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Color mode
+    # KMLLabelStyle
+    def COLOR_MODE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # Scale factor
+    # KMLLabelStyle
+    def SCALE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+def KMLLabelStyleStart(builder):
+    builder.StartObject(3)
+
+def Start(builder):
+    KMLLabelStyleStart(builder)
+
+def KMLLabelStyleAddCOLOR(builder, COLOR):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(COLOR), 0)
+
+def AddCOLOR(builder, COLOR):
+    KMLLabelStyleAddCOLOR(builder, COLOR)
+
+def KMLLabelStyleAddCOLOR_MODE(builder, COLOR_MODE):
+    builder.PrependInt8Slot(1, COLOR_MODE, 0)
+
+def AddCOLOR_MODE(builder, COLOR_MODE):
+    KMLLabelStyleAddCOLOR_MODE(builder, COLOR_MODE)
+
+def KMLLabelStyleAddSCALE(builder, SCALE):
+    builder.PrependFloat64Slot(2, SCALE, 0.0)
+
+def AddSCALE(builder, SCALE):
+    KMLLabelStyleAddSCALE(builder, SCALE)
+
+def KMLLabelStyleEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return KMLLabelStyleEnd(builder)
+
+
+class KMLLabelStyleT(object):
+
+    # KMLLabelStyleT
+    def __init__(
+        self,
+        COLOR = None,
+        COLOR_MODE = 0,
+        SCALE = 0.0,
+    ):
+        self.COLOR = COLOR  # type: Optional[str]
+        self.COLOR_MODE = COLOR_MODE  # type: int
+        self.SCALE = SCALE  # type: float
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpKmllabelStyle = KMLLabelStyle()
+        tmpKmllabelStyle.Init(buf, pos)
+        return cls.InitFromObj(tmpKmllabelStyle)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpKmllabelStyle):
+        x = KMLLabelStyleT()
+        x._UnPack(tmpKmllabelStyle)
+        return x
+
+    # KMLLabelStyleT
+    def _UnPack(self, KMLLabelStyle):
+        if KMLLabelStyle is None:
+            return
+        self.COLOR = KMLLabelStyle.COLOR()
+        self.COLOR_MODE = KMLLabelStyle.COLOR_MODE()
+        self.SCALE = KMLLabelStyle.SCALE()
+
+    # KMLLabelStyleT
+    def Pack(self, builder):
+        if self.COLOR is not None:
+            COLOR = builder.CreateString(self.COLOR)
+        KMLLabelStyleStart(builder)
+        if self.COLOR is not None:
+            KMLLabelStyleAddCOLOR(builder, COLOR)
+        KMLLabelStyleAddCOLOR_MODE(builder, self.COLOR_MODE)
+        KMLLabelStyleAddSCALE(builder, self.SCALE)
+        KMLLabelStyle = KMLLabelStyleEnd(builder)
+        return KMLLabelStyle

@@ -11,7 +11,7 @@ public struct RDM : IFlatbufferObject
 {
   private Table __p;
   public ByteBuffer ByteBuffer { get { return __p.bb; } }
-  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_24_3_25(); }
+  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_25_12_19(); }
   public static RDM GetRootAsRDM(ByteBuffer _bb) { return GetRootAsRDM(_bb, new RDM()); }
   public static RDM GetRootAsRDM(ByteBuffer _bb, RDM obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
   public static bool RDMBufferHasIdentifier(ByteBuffer _bb) { return Table.__has_identifier(_bb, "$RDM"); }

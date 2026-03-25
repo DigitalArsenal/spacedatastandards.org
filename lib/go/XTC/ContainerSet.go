@@ -49,10 +49,17 @@ func (rcv *ContainerSet) CONTAINERS(obj *SequenceContainer, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(SequenceContainer)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *ContainerSet) Containers(obj *SequenceContainer, j int) bool {
+	return rcv.CONTAINERS(obj, j)
 }
 
 func (rcv *ContainerSet) CONTAINERSLength() int {
@@ -63,6 +70,10 @@ func (rcv *ContainerSet) CONTAINERSLength() int {
 	return 0
 }
 
+func (rcv *ContainerSet) ContainersLength() int {
+	return rcv.CONTAINERSLength()
+}
+
 /// Sequence containers
 func ContainerSetStart(builder *flatbuffers.Builder) {
 	builder.StartObject(1)
@@ -70,8 +81,14 @@ func ContainerSetStart(builder *flatbuffers.Builder) {
 func ContainerSetAddCONTAINERS(builder *flatbuffers.Builder, CONTAINERS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(CONTAINERS), 0)
 }
+func ContainerSetAddContainers(builder *flatbuffers.Builder, CONTAINERS flatbuffers.UOffsetT) {
+	ContainerSetAddCONTAINERS(builder, CONTAINERS)
+}
 func ContainerSetStartCONTAINERSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func ContainerSetStartContainersVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return ContainerSetStartCONTAINERSVector(builder, numElems)
 }
 func ContainerSetEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

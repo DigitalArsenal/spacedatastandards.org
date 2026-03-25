@@ -1,4 +1,4 @@
-export { OBD, OBDT } from './OBD.js';
-export { odMethod } from './odMethod.js';
-export { odSensorContribution, odSensorContributionT } from './odSensorContribution.js';
+export * from './OBD.js';
+export * from './odMethod.js';
+export * from './odSensorContribution.js';
 //# sourceMappingURL=main.d.ts.map

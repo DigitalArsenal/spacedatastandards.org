@@ -49,10 +49,17 @@ func (rcv *GPXTrackSegment) POINTS(obj *GPXWaypoint, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(GPXWaypoint)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *GPXTrackSegment) Points(obj *GPXWaypoint, j int) bool {
+	return rcv.POINTS(obj, j)
 }
 
 func (rcv *GPXTrackSegment) POINTSLength() int {
@@ -63,6 +70,10 @@ func (rcv *GPXTrackSegment) POINTSLength() int {
 	return 0
 }
 
+func (rcv *GPXTrackSegment) PointsLength() int {
+	return rcv.POINTSLength()
+}
+
 /// Ordered track points in this segment
 func GPXTrackSegmentStart(builder *flatbuffers.Builder) {
 	builder.StartObject(1)
@@ -70,8 +81,14 @@ func GPXTrackSegmentStart(builder *flatbuffers.Builder) {
 func GPXTrackSegmentAddPOINTS(builder *flatbuffers.Builder, POINTS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(POINTS), 0)
 }
+func GPXTrackSegmentAddPoints(builder *flatbuffers.Builder, POINTS flatbuffers.UOffsetT) {
+	GPXTrackSegmentAddPOINTS(builder, POINTS)
+}
 func GPXTrackSegmentStartPOINTSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func GPXTrackSegmentStartPointsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return GPXTrackSegmentStartPOINTSVector(builder, numElems)
 }
 func GPXTrackSegmentEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

@@ -144,18 +144,25 @@ except:
 class TelemetryMetaDataT(object):
 
     # TelemetryMetaDataT
-    def __init__(self):
-        self.PARAMETER_TYPE_SET = None  # type: Optional[ParameterTypeSet.ParameterTypeSetT]
-        self.PARAMETER_SET = None  # type: Optional[ParameterSet.ParameterSetT]
-        self.CONTAINER_SET = None  # type: Optional[ContainerSet.ContainerSetT]
-        self.ALGORITHM_SET = None  # type: Optional[AlgorithmSet.AlgorithmSetT]
-        self.STREAM_SET = None  # type: Optional[StreamSet.StreamSetT]
+    def __init__(
+        self,
+        PARAMETER_TYPE_SET = None,
+        PARAMETER_SET = None,
+        CONTAINER_SET = None,
+        ALGORITHM_SET = None,
+        STREAM_SET = None,
+    ):
+        self.PARAMETER_TYPE_SET = PARAMETER_TYPE_SET  # type: Optional[ParameterTypeSet.ParameterTypeSetT]
+        self.PARAMETER_SET = PARAMETER_SET  # type: Optional[ParameterSet.ParameterSetT]
+        self.CONTAINER_SET = CONTAINER_SET  # type: Optional[ContainerSet.ContainerSetT]
+        self.ALGORITHM_SET = ALGORITHM_SET  # type: Optional[AlgorithmSet.AlgorithmSetT]
+        self.STREAM_SET = STREAM_SET  # type: Optional[StreamSet.StreamSetT]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        telemetryMetaData = TelemetryMetaData()
-        telemetryMetaData.Init(buf, pos)
-        return cls.InitFromObj(telemetryMetaData)
+        tmpTelemetryMetaData = TelemetryMetaData()
+        tmpTelemetryMetaData.Init(buf, pos)
+        return cls.InitFromObj(tmpTelemetryMetaData)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -163,25 +170,25 @@ class TelemetryMetaDataT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, telemetryMetaData):
+    def InitFromObj(cls, tmpTelemetryMetaData):
         x = TelemetryMetaDataT()
-        x._UnPack(telemetryMetaData)
+        x._UnPack(tmpTelemetryMetaData)
         return x
 
     # TelemetryMetaDataT
-    def _UnPack(self, telemetryMetaData):
-        if telemetryMetaData is None:
+    def _UnPack(self, TelemetryMetaData):
+        if TelemetryMetaData is None:
             return
-        if telemetryMetaData.PARAMETER_TYPE_SET() is not None:
-            self.PARAMETER_TYPE_SET = ParameterTypeSet.ParameterTypeSetT.InitFromObj(telemetryMetaData.PARAMETER_TYPE_SET())
-        if telemetryMetaData.PARAMETER_SET() is not None:
-            self.PARAMETER_SET = ParameterSet.ParameterSetT.InitFromObj(telemetryMetaData.PARAMETER_SET())
-        if telemetryMetaData.CONTAINER_SET() is not None:
-            self.CONTAINER_SET = ContainerSet.ContainerSetT.InitFromObj(telemetryMetaData.CONTAINER_SET())
-        if telemetryMetaData.ALGORITHM_SET() is not None:
-            self.ALGORITHM_SET = AlgorithmSet.AlgorithmSetT.InitFromObj(telemetryMetaData.ALGORITHM_SET())
-        if telemetryMetaData.STREAM_SET() is not None:
-            self.STREAM_SET = StreamSet.StreamSetT.InitFromObj(telemetryMetaData.STREAM_SET())
+        if TelemetryMetaData.PARAMETER_TYPE_SET() is not None:
+            self.PARAMETER_TYPE_SET = ParameterTypeSet.ParameterTypeSetT.InitFromObj(TelemetryMetaData.PARAMETER_TYPE_SET())
+        if TelemetryMetaData.PARAMETER_SET() is not None:
+            self.PARAMETER_SET = ParameterSet.ParameterSetT.InitFromObj(TelemetryMetaData.PARAMETER_SET())
+        if TelemetryMetaData.CONTAINER_SET() is not None:
+            self.CONTAINER_SET = ContainerSet.ContainerSetT.InitFromObj(TelemetryMetaData.CONTAINER_SET())
+        if TelemetryMetaData.ALGORITHM_SET() is not None:
+            self.ALGORITHM_SET = AlgorithmSet.AlgorithmSetT.InitFromObj(TelemetryMetaData.ALGORITHM_SET())
+        if TelemetryMetaData.STREAM_SET() is not None:
+            self.STREAM_SET = StreamSet.StreamSetT.InitFromObj(TelemetryMetaData.STREAM_SET())
 
     # TelemetryMetaDataT
     def Pack(self, builder):
@@ -206,5 +213,5 @@ class TelemetryMetaDataT(object):
             TelemetryMetaDataAddALGORITHM_SET(builder, ALGORITHM_SET)
         if self.STREAM_SET is not None:
             TelemetryMetaDataAddSTREAM_SET(builder, STREAM_SET)
-        telemetryMetaData = TelemetryMetaDataEnd(builder)
-        return telemetryMetaData
+        TelemetryMetaData = TelemetryMetaDataEnd(builder)
+        return TelemetryMetaData

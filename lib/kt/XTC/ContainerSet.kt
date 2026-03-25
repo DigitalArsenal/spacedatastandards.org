@@ -32,8 +32,8 @@ class ContainerSet : Table() {
     /**
      * Sequence containers
      */
-    fun CONTAINERS(j: Int) : SequenceContainer? = CONTAINERS(SequenceContainer(), j)
-    fun CONTAINERS(obj: SequenceContainer, j: Int) : SequenceContainer? {
+    fun containers(j: Int) : SequenceContainer? = containers(SequenceContainer(), j)
+    fun containers(obj: SequenceContainer, j: Int) : SequenceContainer? {
         val o = __offset(4)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -41,24 +41,24 @@ class ContainerSet : Table() {
             null
         }
     }
-    val CONTAINERSLength : Int
+    val containersLength : Int
         get() {
             val o = __offset(4); return if (o != 0) __vector_len(o) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsContainerSet(_bb: ByteBuffer): ContainerSet = getRootAsContainerSet(_bb, ContainerSet())
         fun getRootAsContainerSet(_bb: ByteBuffer, obj: ContainerSet): ContainerSet {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createContainerSet(builder: FlatBufferBuilder, CONTAINERSOffset: Int) : Int {
+        fun createContainerSet(builder: FlatBufferBuilder, containersOffset: Int) : Int {
             builder.startTable(1)
-            addCONTAINERS(builder, CONTAINERSOffset)
+            addCONTAINERS(builder, containersOffset)
             return endContainerSet(builder)
         }
         fun startContainerSet(builder: FlatBufferBuilder) = builder.startTable(1)
-        fun addCONTAINERS(builder: FlatBufferBuilder, CONTAINERS: Int) = builder.addOffset(0, CONTAINERS, 0)
+        fun addCONTAINERS(builder: FlatBufferBuilder, containers: Int) = builder.addOffset(0, containers, 0)
         fun createContainersVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {

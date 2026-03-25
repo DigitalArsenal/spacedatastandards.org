@@ -32,7 +32,7 @@ class GJNProperty : Table() {
     /**
      * Property key
      */
-    val KEY : String?
+    val key : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class GJNProperty : Table() {
                 null
             }
         }
-    val KEYAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun KEYInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val keyAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun keyInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Property value as string
      */
-    val VALUE : String?
+    val value : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -55,12 +55,12 @@ class GJNProperty : Table() {
                 null
             }
         }
-    val VALUEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun VALUEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val valueAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun valueInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * Property value as number (use if numeric)
      */
-    val NUM_VALUE : Double
+    val numValue : Double
         get() {
             val o = __offset(8)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -68,7 +68,7 @@ class GJNProperty : Table() {
     /**
      * True if NUM_VALUE should be used instead of VALUE
      */
-    val IS_NUMERIC : Boolean
+    val isNumeric : Boolean
         get() {
             val o = __offset(10)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -76,7 +76,7 @@ class GJNProperty : Table() {
     /**
      * True if this property value is a boolean
      */
-    val IS_BOOL : Boolean
+    val isBool : Boolean
         get() {
             val o = __offset(12)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -84,7 +84,7 @@ class GJNProperty : Table() {
     /**
      * Boolean value (use when IS_BOOL is true)
      */
-    val BOOL_VALUE : Boolean
+    val boolValue : Boolean
         get() {
             val o = __offset(14)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -92,7 +92,7 @@ class GJNProperty : Table() {
     /**
      * True if this property value is JSON null
      */
-    val IS_NULL : Boolean
+    val isNull : Boolean
         get() {
             val o = __offset(16)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -100,7 +100,7 @@ class GJNProperty : Table() {
     /**
      * Raw JSON string for complex values (objects, arrays)
      */
-    val JSON_VALUE : String?
+    val jsonValue : String?
         get() {
             val o = __offset(18)
             return if (o != 0) {
@@ -109,36 +109,36 @@ class GJNProperty : Table() {
                 null
             }
         }
-    val JSON_VALUEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(18, 1)
-    fun JSON_VALUEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 18, 1)
+    val jsonValueAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(18, 1)
+    fun jsonValueInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 18, 1)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsGJNProperty(_bb: ByteBuffer): GJNProperty = getRootAsGJNProperty(_bb, GJNProperty())
         fun getRootAsGJNProperty(_bb: ByteBuffer, obj: GJNProperty): GJNProperty {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createGJNProperty(builder: FlatBufferBuilder, KEYOffset: Int, VALUEOffset: Int, NUM_VALUE: Double, IS_NUMERIC: Boolean, IS_BOOL: Boolean, BOOL_VALUE: Boolean, IS_NULL: Boolean, JSON_VALUEOffset: Int) : Int {
+        fun createGJNProperty(builder: FlatBufferBuilder, keyOffset: Int, valueOffset: Int, numValue: Double, isNumeric: Boolean, isBool: Boolean, boolValue: Boolean, isNull: Boolean, jsonValueOffset: Int) : Int {
             builder.startTable(8)
-            addNUM_VALUE(builder, NUM_VALUE)
-            addJSON_VALUE(builder, JSON_VALUEOffset)
-            addVALUE(builder, VALUEOffset)
-            addKEY(builder, KEYOffset)
-            addIS_NULL(builder, IS_NULL)
-            addBOOL_VALUE(builder, BOOL_VALUE)
-            addIS_BOOL(builder, IS_BOOL)
-            addIS_NUMERIC(builder, IS_NUMERIC)
+            addNUMVALUE(builder, numValue)
+            addJSONVALUE(builder, jsonValueOffset)
+            addVALUE(builder, valueOffset)
+            addKEY(builder, keyOffset)
+            addISNULL(builder, isNull)
+            addBOOLVALUE(builder, boolValue)
+            addISBOOL(builder, isBool)
+            addISNUMERIC(builder, isNumeric)
             return endGJNProperty(builder)
         }
         fun startGJNProperty(builder: FlatBufferBuilder) = builder.startTable(8)
-        fun addKEY(builder: FlatBufferBuilder, KEY: Int) = builder.addOffset(0, KEY, 0)
-        fun addVALUE(builder: FlatBufferBuilder, VALUE: Int) = builder.addOffset(1, VALUE, 0)
-        fun addNUM_VALUE(builder: FlatBufferBuilder, NUM_VALUE: Double) = builder.addDouble(2, NUM_VALUE, 0.0)
-        fun addIS_NUMERIC(builder: FlatBufferBuilder, IS_NUMERIC: Boolean) = builder.addBoolean(3, IS_NUMERIC, false)
-        fun addIS_BOOL(builder: FlatBufferBuilder, IS_BOOL: Boolean) = builder.addBoolean(4, IS_BOOL, false)
-        fun addBOOL_VALUE(builder: FlatBufferBuilder, BOOL_VALUE: Boolean) = builder.addBoolean(5, BOOL_VALUE, false)
-        fun addIS_NULL(builder: FlatBufferBuilder, IS_NULL: Boolean) = builder.addBoolean(6, IS_NULL, false)
-        fun addJSON_VALUE(builder: FlatBufferBuilder, JSON_VALUE: Int) = builder.addOffset(7, JSON_VALUE, 0)
+        fun addKEY(builder: FlatBufferBuilder, key: Int) = builder.addOffset(0, key, 0)
+        fun addVALUE(builder: FlatBufferBuilder, value: Int) = builder.addOffset(1, value, 0)
+        fun addNUMVALUE(builder: FlatBufferBuilder, numValue: Double) = builder.addDouble(2, numValue, 0.0)
+        fun addISNUMERIC(builder: FlatBufferBuilder, isNumeric: Boolean) = builder.addBoolean(3, isNumeric, false)
+        fun addISBOOL(builder: FlatBufferBuilder, isBool: Boolean) = builder.addBoolean(4, isBool, false)
+        fun addBOOLVALUE(builder: FlatBufferBuilder, boolValue: Boolean) = builder.addBoolean(5, boolValue, false)
+        fun addISNULL(builder: FlatBufferBuilder, isNull: Boolean) = builder.addBoolean(6, isNull, false)
+        fun addJSONVALUE(builder: FlatBufferBuilder, jsonValue: Int) = builder.addOffset(7, jsonValue, 0)
         fun endGJNProperty(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

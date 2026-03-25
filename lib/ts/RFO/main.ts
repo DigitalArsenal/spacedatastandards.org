@@ -2,6 +2,6 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export { RFO, RFOT } from './RFO.js';
-export { rfDetectionStatus } from './rfDetectionStatus.js';
-export { rfObsType } from './rfObsType.js';
+export * from './rfDetectionStatus.js';
+export * from './RFO.js';
+export * from './rfObsType.js';

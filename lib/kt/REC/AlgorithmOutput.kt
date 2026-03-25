@@ -32,7 +32,7 @@ class AlgorithmOutput : Table() {
     /**
      * Parameter reference
      */
-    val PARAMETER_REF : String?
+    val parameterRef : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class AlgorithmOutput : Table() {
                 null
             }
         }
-    val PARAMETER_REFAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun PARAMETER_REFInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val parameterRefAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun parameterRefInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Output name in algorithm
      */
-    val OUTPUT_NAME : String?
+    val outputName : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -55,24 +55,24 @@ class AlgorithmOutput : Table() {
                 null
             }
         }
-    val OUTPUT_NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun OUTPUT_NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val outputNameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun outputNameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsAlgorithmOutput(_bb: ByteBuffer): AlgorithmOutput = getRootAsAlgorithmOutput(_bb, AlgorithmOutput())
         fun getRootAsAlgorithmOutput(_bb: ByteBuffer, obj: AlgorithmOutput): AlgorithmOutput {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createAlgorithmOutput(builder: FlatBufferBuilder, PARAMETER_REFOffset: Int, OUTPUT_NAMEOffset: Int) : Int {
+        fun createAlgorithmOutput(builder: FlatBufferBuilder, parameterRefOffset: Int, outputNameOffset: Int) : Int {
             builder.startTable(2)
-            addOUTPUT_NAME(builder, OUTPUT_NAMEOffset)
-            addPARAMETER_REF(builder, PARAMETER_REFOffset)
+            addOUTPUTNAME(builder, outputNameOffset)
+            addPARAMETERREF(builder, parameterRefOffset)
             return endAlgorithmOutput(builder)
         }
         fun startAlgorithmOutput(builder: FlatBufferBuilder) = builder.startTable(2)
-        fun addPARAMETER_REF(builder: FlatBufferBuilder, PARAMETER_REF: Int) = builder.addOffset(0, PARAMETER_REF, 0)
-        fun addOUTPUT_NAME(builder: FlatBufferBuilder, OUTPUT_NAME: Int) = builder.addOffset(1, OUTPUT_NAME, 0)
+        fun addPARAMETERREF(builder: FlatBufferBuilder, parameterRef: Int) = builder.addOffset(0, parameterRef, 0)
+        fun addOUTPUTNAME(builder: FlatBufferBuilder, outputName: Int) = builder.addOffset(1, outputName, 0)
         fun endAlgorithmOutput(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

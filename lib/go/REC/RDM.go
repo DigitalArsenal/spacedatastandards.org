@@ -63,6 +63,10 @@ func (rcv *RDM) CCSDS_RDM_VERS() []byte {
 	return nil
 }
 
+func (rcv *RDM) CcsdsRdmVers() []byte {
+	return rcv.CCSDS_RDM_VERS()
+}
+
 /// CCSDS RDM version
 /// Message creation date (ISO 8601)
 func (rcv *RDM) CREATION_DATE() []byte {
@@ -71,6 +75,10 @@ func (rcv *RDM) CREATION_DATE() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *RDM) CreationDate() []byte {
+	return rcv.CREATION_DATE()
 }
 
 /// Message creation date (ISO 8601)
@@ -83,6 +91,10 @@ func (rcv *RDM) ORIGINATOR() []byte {
 	return nil
 }
 
+func (rcv *RDM) Originator() []byte {
+	return rcv.ORIGINATOR()
+}
+
 /// Creating organization
 /// Object name
 func (rcv *RDM) OBJECT_NAME() []byte {
@@ -91,6 +103,10 @@ func (rcv *RDM) OBJECT_NAME() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *RDM) ObjectName() []byte {
+	return rcv.OBJECT_NAME()
 }
 
 /// Object name
@@ -103,6 +119,10 @@ func (rcv *RDM) OBJECT_ID() []byte {
 	return nil
 }
 
+func (rcv *RDM) ObjectId() []byte {
+	return rcv.OBJECT_ID()
+}
+
 /// International designator
 /// NORAD catalog number
 func (rcv *RDM) NORAD_CAT_ID() uint32 {
@@ -113,9 +133,17 @@ func (rcv *RDM) NORAD_CAT_ID() uint32 {
 	return 0
 }
 
+func (rcv *RDM) NoradCatId() uint32 {
+	return rcv.NORAD_CAT_ID()
+}
+
 /// NORAD catalog number
 func (rcv *RDM) MutateNORAD_CAT_ID(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(14, n)
+}
+
+func (rcv *RDM) MutateNoradCatId(n uint32) bool {
+	return rcv.MutateNORAD_CAT_ID(n)
 }
 
 /// Object type (PAYLOAD, ROCKET_BODY, DEBRIS, UNKNOWN)
@@ -125,6 +153,10 @@ func (rcv *RDM) OBJECT_TYPE() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *RDM) ObjectType() []byte {
+	return rcv.OBJECT_TYPE()
 }
 
 /// Object type (PAYLOAD, ROCKET_BODY, DEBRIS, UNKNOWN)
@@ -137,9 +169,17 @@ func (rcv *RDM) DISPOSITION() reentryDisposition {
 	return 0
 }
 
+func (rcv *RDM) Disposition() reentryDisposition {
+	return rcv.DISPOSITION()
+}
+
 /// Reentry disposition
 func (rcv *RDM) MutateDISPOSITION(n reentryDisposition) bool {
 	return rcv._tab.MutateInt8Slot(18, int8(n))
+}
+
+func (rcv *RDM) MutateDisposition(n reentryDisposition) bool {
+	return rcv.MutateDISPOSITION(n)
 }
 
 /// Reentry reason
@@ -151,9 +191,17 @@ func (rcv *RDM) REASON() reentryReason {
 	return 0
 }
 
+func (rcv *RDM) Reason() reentryReason {
+	return rcv.REASON()
+}
+
 /// Reentry reason
 func (rcv *RDM) MutateREASON(n reentryReason) bool {
 	return rcv._tab.MutateInt8Slot(20, int8(n))
+}
+
+func (rcv *RDM) MutateReason(n reentryReason) bool {
+	return rcv.MutateREASON(n)
 }
 
 /// Predicted reentry epoch (ISO 8601)
@@ -163,6 +211,10 @@ func (rcv *RDM) REENTRY_EPOCH() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *RDM) ReentryEpoch() []byte {
+	return rcv.REENTRY_EPOCH()
 }
 
 /// Predicted reentry epoch (ISO 8601)
@@ -175,9 +227,17 @@ func (rcv *RDM) REENTRY_EPOCH_UNC() float64 {
 	return 0.0
 }
 
+func (rcv *RDM) ReentryEpochUnc() float64 {
+	return rcv.REENTRY_EPOCH_UNC()
+}
+
 /// Reentry epoch uncertainty window in hours
 func (rcv *RDM) MutateREENTRY_EPOCH_UNC(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(24, n)
+}
+
+func (rcv *RDM) MutateReentryEpochUnc(n float64) bool {
+	return rcv.MutateREENTRY_EPOCH_UNC(n)
 }
 
 /// Reentry latitude in degrees
@@ -189,9 +249,17 @@ func (rcv *RDM) REENTRY_LATITUDE() float64 {
 	return 0.0
 }
 
+func (rcv *RDM) ReentryLatitude() float64 {
+	return rcv.REENTRY_LATITUDE()
+}
+
 /// Reentry latitude in degrees
 func (rcv *RDM) MutateREENTRY_LATITUDE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(26, n)
+}
+
+func (rcv *RDM) MutateReentryLatitude(n float64) bool {
+	return rcv.MutateREENTRY_LATITUDE(n)
 }
 
 /// Reentry longitude in degrees
@@ -203,9 +271,17 @@ func (rcv *RDM) REENTRY_LONGITUDE() float64 {
 	return 0.0
 }
 
+func (rcv *RDM) ReentryLongitude() float64 {
+	return rcv.REENTRY_LONGITUDE()
+}
+
 /// Reentry longitude in degrees
 func (rcv *RDM) MutateREENTRY_LONGITUDE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(28, n)
+}
+
+func (rcv *RDM) MutateReentryLongitude(n float64) bool {
+	return rcv.MutateREENTRY_LONGITUDE(n)
 }
 
 /// Reentry altitude in km
@@ -217,9 +293,17 @@ func (rcv *RDM) REENTRY_ALTITUDE() float64 {
 	return 0.0
 }
 
+func (rcv *RDM) ReentryAltitude() float64 {
+	return rcv.REENTRY_ALTITUDE()
+}
+
 /// Reentry altitude in km
 func (rcv *RDM) MutateREENTRY_ALTITUDE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(30, n)
+}
+
+func (rcv *RDM) MutateReentryAltitude(n float64) bool {
+	return rcv.MutateREENTRY_ALTITUDE(n)
 }
 
 /// Time system
@@ -229,6 +313,10 @@ func (rcv *RDM) TIME_SYSTEM() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *RDM) TimeSystem() []byte {
+	return rcv.TIME_SYSTEM()
 }
 
 /// Time system
@@ -241,6 +329,10 @@ func (rcv *RDM) PREV_PREDICTION_EPOCH() []byte {
 	return nil
 }
 
+func (rcv *RDM) PrevPredictionEpoch() []byte {
+	return rcv.PREV_PREDICTION_EPOCH()
+}
+
 /// Previous predicted reentry epoch for comparison (ISO 8601)
 /// Ballistic coefficient in kg/m^2
 func (rcv *RDM) BALLISTIC_COEFF() float64 {
@@ -251,9 +343,17 @@ func (rcv *RDM) BALLISTIC_COEFF() float64 {
 	return 0.0
 }
 
+func (rcv *RDM) BallisticCoeff() float64 {
+	return rcv.BALLISTIC_COEFF()
+}
+
 /// Ballistic coefficient in kg/m^2
 func (rcv *RDM) MutateBALLISTIC_COEFF(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(36, n)
+}
+
+func (rcv *RDM) MutateBallisticCoeff(n float64) bool {
+	return rcv.MutateBALLISTIC_COEFF(n)
 }
 
 /// Object mass in kg
@@ -265,9 +365,17 @@ func (rcv *RDM) MASS() float64 {
 	return 0.0
 }
 
+func (rcv *RDM) Mass() float64 {
+	return rcv.MASS()
+}
+
 /// Object mass in kg
 func (rcv *RDM) MutateMASS(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(38, n)
+}
+
+func (rcv *RDM) MutateMass(n float64) bool {
+	return rcv.MutateMASS(n)
 }
 
 /// Solar radiation pressure area in m^2
@@ -279,9 +387,17 @@ func (rcv *RDM) SOLAR_RAD_AREA() float64 {
 	return 0.0
 }
 
+func (rcv *RDM) SolarRadArea() float64 {
+	return rcv.SOLAR_RAD_AREA()
+}
+
 /// Solar radiation pressure area in m^2
 func (rcv *RDM) MutateSOLAR_RAD_AREA(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(40, n)
+}
+
+func (rcv *RDM) MutateSolarRadArea(n float64) bool {
+	return rcv.MutateSOLAR_RAD_AREA(n)
 }
 
 /// Drag area in m^2
@@ -293,9 +409,17 @@ func (rcv *RDM) DRAG_AREA() float64 {
 	return 0.0
 }
 
+func (rcv *RDM) DragArea() float64 {
+	return rcv.DRAG_AREA()
+}
+
 /// Drag area in m^2
 func (rcv *RDM) MutateDRAG_AREA(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(42, n)
+}
+
+func (rcv *RDM) MutateDragArea(n float64) bool {
+	return rcv.MutateDRAG_AREA(n)
 }
 
 /// Initial state vector
@@ -312,6 +436,10 @@ func (rcv *RDM) INITIAL_STATE(obj *reentryStateVector) *reentryStateVector {
 	return nil
 }
 
+func (rcv *RDM) InitialState(obj *reentryStateVector) *reentryStateVector {
+	return rcv.INITIAL_STATE(obj)
+}
+
 /// Initial state vector
 /// Ground impact predictions
 func (rcv *RDM) IMPACT_PREDICTIONS(obj *reentryImpact, j int) bool {
@@ -320,10 +448,17 @@ func (rcv *RDM) IMPACT_PREDICTIONS(obj *reentryImpact, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(reentryImpact)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *RDM) ImpactPredictions(obj *reentryImpact, j int) bool {
+	return rcv.IMPACT_PREDICTIONS(obj, j)
 }
 
 func (rcv *RDM) IMPACT_PREDICTIONSLength() int {
@@ -334,6 +469,10 @@ func (rcv *RDM) IMPACT_PREDICTIONSLength() int {
 	return 0
 }
 
+func (rcv *RDM) ImpactPredictionsLength() int {
+	return rcv.IMPACT_PREDICTIONSLength()
+}
+
 /// Ground impact predictions
 /// Predicted surviving debris
 func (rcv *RDM) SURVIVING_DEBRIS(obj *survivingDebris, j int) bool {
@@ -342,10 +481,17 @@ func (rcv *RDM) SURVIVING_DEBRIS(obj *survivingDebris, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(survivingDebris)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *RDM) SurvivingDebris(obj *survivingDebris, j int) bool {
+	return rcv.SURVIVING_DEBRIS(obj, j)
 }
 
 func (rcv *RDM) SURVIVING_DEBRISLength() int {
@@ -354,6 +500,10 @@ func (rcv *RDM) SURVIVING_DEBRISLength() int {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *RDM) SurvivingDebrisLength() int {
+	return rcv.SURVIVING_DEBRISLength()
 }
 
 /// Predicted surviving debris
@@ -366,9 +516,17 @@ func (rcv *RDM) CASUALTY_EXPECTATION() float64 {
 	return 0.0
 }
 
+func (rcv *RDM) CasualtyExpectation() float64 {
+	return rcv.CASUALTY_EXPECTATION()
+}
+
 /// Casualty expectation
 func (rcv *RDM) MutateCASUALTY_EXPECTATION(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(50, n)
+}
+
+func (rcv *RDM) MutateCasualtyExpectation(n float64) bool {
+	return rcv.MutateCASUALTY_EXPECTATION(n)
 }
 
 /// Number of breakup fragments predicted
@@ -380,9 +538,17 @@ func (rcv *RDM) NUM_FRAGMENTS() uint32 {
 	return 0
 }
 
+func (rcv *RDM) NumFragments() uint32 {
+	return rcv.NUM_FRAGMENTS()
+}
+
 /// Number of breakup fragments predicted
 func (rcv *RDM) MutateNUM_FRAGMENTS(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(52, n)
+}
+
+func (rcv *RDM) MutateNumFragments(n uint32) bool {
+	return rcv.MutateNUM_FRAGMENTS(n)
 }
 
 /// Total surviving mass in kg
@@ -394,9 +560,17 @@ func (rcv *RDM) SURVIVING_MASS() float64 {
 	return 0.0
 }
 
+func (rcv *RDM) SurvivingMass() float64 {
+	return rcv.SURVIVING_MASS()
+}
+
 /// Total surviving mass in kg
 func (rcv *RDM) MutateSURVIVING_MASS(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(54, n)
+}
+
+func (rcv *RDM) MutateSurvivingMass(n float64) bool {
+	return rcv.MutateSURVIVING_MASS(n)
 }
 
 /// Additional comments
@@ -408,6 +582,10 @@ func (rcv *RDM) COMMENT() []byte {
 	return nil
 }
 
+func (rcv *RDM) Comment() []byte {
+	return rcv.COMMENT()
+}
+
 /// Additional comments
 func RDMStart(builder *flatbuffers.Builder) {
 	builder.StartObject(27)
@@ -415,89 +593,176 @@ func RDMStart(builder *flatbuffers.Builder) {
 func RDMAddCCSDS_RDM_VERS(builder *flatbuffers.Builder, CCSDS_RDM_VERS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(CCSDS_RDM_VERS), 0)
 }
+func RDMAddCcsdsRdmVers(builder *flatbuffers.Builder, CCSDS_RDM_VERS flatbuffers.UOffsetT) {
+	RDMAddCCSDS_RDM_VERS(builder, CCSDS_RDM_VERS)
+}
 func RDMAddCREATION_DATE(builder *flatbuffers.Builder, CREATION_DATE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(CREATION_DATE), 0)
+}
+func RDMAddCreationDate(builder *flatbuffers.Builder, CREATION_DATE flatbuffers.UOffsetT) {
+	RDMAddCREATION_DATE(builder, CREATION_DATE)
 }
 func RDMAddORIGINATOR(builder *flatbuffers.Builder, ORIGINATOR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(ORIGINATOR), 0)
 }
+func RDMAddOriginator(builder *flatbuffers.Builder, ORIGINATOR flatbuffers.UOffsetT) {
+	RDMAddORIGINATOR(builder, ORIGINATOR)
+}
 func RDMAddOBJECT_NAME(builder *flatbuffers.Builder, OBJECT_NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(OBJECT_NAME), 0)
+}
+func RDMAddObjectName(builder *flatbuffers.Builder, OBJECT_NAME flatbuffers.UOffsetT) {
+	RDMAddOBJECT_NAME(builder, OBJECT_NAME)
 }
 func RDMAddOBJECT_ID(builder *flatbuffers.Builder, OBJECT_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(OBJECT_ID), 0)
 }
+func RDMAddObjectId(builder *flatbuffers.Builder, OBJECT_ID flatbuffers.UOffsetT) {
+	RDMAddOBJECT_ID(builder, OBJECT_ID)
+}
 func RDMAddNORAD_CAT_ID(builder *flatbuffers.Builder, NORAD_CAT_ID uint32) {
 	builder.PrependUint32Slot(5, NORAD_CAT_ID, 0)
+}
+func RDMAddNoradCatId(builder *flatbuffers.Builder, NORAD_CAT_ID uint32) {
+	RDMAddNORAD_CAT_ID(builder, NORAD_CAT_ID)
 }
 func RDMAddOBJECT_TYPE(builder *flatbuffers.Builder, OBJECT_TYPE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(OBJECT_TYPE), 0)
 }
+func RDMAddObjectType(builder *flatbuffers.Builder, OBJECT_TYPE flatbuffers.UOffsetT) {
+	RDMAddOBJECT_TYPE(builder, OBJECT_TYPE)
+}
 func RDMAddDISPOSITION(builder *flatbuffers.Builder, DISPOSITION reentryDisposition) {
 	builder.PrependInt8Slot(7, int8(DISPOSITION), 0)
+}
+func RDMAddDisposition(builder *flatbuffers.Builder, DISPOSITION reentryDisposition) {
+	RDMAddDISPOSITION(builder, DISPOSITION)
 }
 func RDMAddREASON(builder *flatbuffers.Builder, REASON reentryReason) {
 	builder.PrependInt8Slot(8, int8(REASON), 0)
 }
+func RDMAddReason(builder *flatbuffers.Builder, REASON reentryReason) {
+	RDMAddREASON(builder, REASON)
+}
 func RDMAddREENTRY_EPOCH(builder *flatbuffers.Builder, REENTRY_EPOCH flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(REENTRY_EPOCH), 0)
+}
+func RDMAddReentryEpoch(builder *flatbuffers.Builder, REENTRY_EPOCH flatbuffers.UOffsetT) {
+	RDMAddREENTRY_EPOCH(builder, REENTRY_EPOCH)
 }
 func RDMAddREENTRY_EPOCH_UNC(builder *flatbuffers.Builder, REENTRY_EPOCH_UNC float64) {
 	builder.PrependFloat64Slot(10, REENTRY_EPOCH_UNC, 0.0)
 }
+func RDMAddReentryEpochUnc(builder *flatbuffers.Builder, REENTRY_EPOCH_UNC float64) {
+	RDMAddREENTRY_EPOCH_UNC(builder, REENTRY_EPOCH_UNC)
+}
 func RDMAddREENTRY_LATITUDE(builder *flatbuffers.Builder, REENTRY_LATITUDE float64) {
 	builder.PrependFloat64Slot(11, REENTRY_LATITUDE, 0.0)
+}
+func RDMAddReentryLatitude(builder *flatbuffers.Builder, REENTRY_LATITUDE float64) {
+	RDMAddREENTRY_LATITUDE(builder, REENTRY_LATITUDE)
 }
 func RDMAddREENTRY_LONGITUDE(builder *flatbuffers.Builder, REENTRY_LONGITUDE float64) {
 	builder.PrependFloat64Slot(12, REENTRY_LONGITUDE, 0.0)
 }
+func RDMAddReentryLongitude(builder *flatbuffers.Builder, REENTRY_LONGITUDE float64) {
+	RDMAddREENTRY_LONGITUDE(builder, REENTRY_LONGITUDE)
+}
 func RDMAddREENTRY_ALTITUDE(builder *flatbuffers.Builder, REENTRY_ALTITUDE float64) {
 	builder.PrependFloat64Slot(13, REENTRY_ALTITUDE, 0.0)
+}
+func RDMAddReentryAltitude(builder *flatbuffers.Builder, REENTRY_ALTITUDE float64) {
+	RDMAddREENTRY_ALTITUDE(builder, REENTRY_ALTITUDE)
 }
 func RDMAddTIME_SYSTEM(builder *flatbuffers.Builder, TIME_SYSTEM flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(14, flatbuffers.UOffsetT(TIME_SYSTEM), 0)
 }
+func RDMAddTimeSystem(builder *flatbuffers.Builder, TIME_SYSTEM flatbuffers.UOffsetT) {
+	RDMAddTIME_SYSTEM(builder, TIME_SYSTEM)
+}
 func RDMAddPREV_PREDICTION_EPOCH(builder *flatbuffers.Builder, PREV_PREDICTION_EPOCH flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(15, flatbuffers.UOffsetT(PREV_PREDICTION_EPOCH), 0)
+}
+func RDMAddPrevPredictionEpoch(builder *flatbuffers.Builder, PREV_PREDICTION_EPOCH flatbuffers.UOffsetT) {
+	RDMAddPREV_PREDICTION_EPOCH(builder, PREV_PREDICTION_EPOCH)
 }
 func RDMAddBALLISTIC_COEFF(builder *flatbuffers.Builder, BALLISTIC_COEFF float64) {
 	builder.PrependFloat64Slot(16, BALLISTIC_COEFF, 0.0)
 }
+func RDMAddBallisticCoeff(builder *flatbuffers.Builder, BALLISTIC_COEFF float64) {
+	RDMAddBALLISTIC_COEFF(builder, BALLISTIC_COEFF)
+}
 func RDMAddMASS(builder *flatbuffers.Builder, MASS float64) {
 	builder.PrependFloat64Slot(17, MASS, 0.0)
+}
+func RDMAddMass(builder *flatbuffers.Builder, MASS float64) {
+	RDMAddMASS(builder, MASS)
 }
 func RDMAddSOLAR_RAD_AREA(builder *flatbuffers.Builder, SOLAR_RAD_AREA float64) {
 	builder.PrependFloat64Slot(18, SOLAR_RAD_AREA, 0.0)
 }
+func RDMAddSolarRadArea(builder *flatbuffers.Builder, SOLAR_RAD_AREA float64) {
+	RDMAddSOLAR_RAD_AREA(builder, SOLAR_RAD_AREA)
+}
 func RDMAddDRAG_AREA(builder *flatbuffers.Builder, DRAG_AREA float64) {
 	builder.PrependFloat64Slot(19, DRAG_AREA, 0.0)
+}
+func RDMAddDragArea(builder *flatbuffers.Builder, DRAG_AREA float64) {
+	RDMAddDRAG_AREA(builder, DRAG_AREA)
 }
 func RDMAddINITIAL_STATE(builder *flatbuffers.Builder, INITIAL_STATE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(20, flatbuffers.UOffsetT(INITIAL_STATE), 0)
 }
+func RDMAddInitialState(builder *flatbuffers.Builder, INITIAL_STATE flatbuffers.UOffsetT) {
+	RDMAddINITIAL_STATE(builder, INITIAL_STATE)
+}
 func RDMAddIMPACT_PREDICTIONS(builder *flatbuffers.Builder, IMPACT_PREDICTIONS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(21, flatbuffers.UOffsetT(IMPACT_PREDICTIONS), 0)
+}
+func RDMAddImpactPredictions(builder *flatbuffers.Builder, IMPACT_PREDICTIONS flatbuffers.UOffsetT) {
+	RDMAddIMPACT_PREDICTIONS(builder, IMPACT_PREDICTIONS)
 }
 func RDMStartIMPACT_PREDICTIONSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
+func RDMStartImpactPredictionsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return RDMStartIMPACT_PREDICTIONSVector(builder, numElems)
+}
 func RDMAddSURVIVING_DEBRIS(builder *flatbuffers.Builder, SURVIVING_DEBRIS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(22, flatbuffers.UOffsetT(SURVIVING_DEBRIS), 0)
+}
+func RDMAddSurvivingDebris(builder *flatbuffers.Builder, SURVIVING_DEBRIS flatbuffers.UOffsetT) {
+	RDMAddSURVIVING_DEBRIS(builder, SURVIVING_DEBRIS)
 }
 func RDMStartSURVIVING_DEBRISVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
+func RDMStartSurvivingDebrisVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return RDMStartSURVIVING_DEBRISVector(builder, numElems)
+}
 func RDMAddCASUALTY_EXPECTATION(builder *flatbuffers.Builder, CASUALTY_EXPECTATION float64) {
 	builder.PrependFloat64Slot(23, CASUALTY_EXPECTATION, 0.0)
+}
+func RDMAddCasualtyExpectation(builder *flatbuffers.Builder, CASUALTY_EXPECTATION float64) {
+	RDMAddCASUALTY_EXPECTATION(builder, CASUALTY_EXPECTATION)
 }
 func RDMAddNUM_FRAGMENTS(builder *flatbuffers.Builder, NUM_FRAGMENTS uint32) {
 	builder.PrependUint32Slot(24, NUM_FRAGMENTS, 0)
 }
+func RDMAddNumFragments(builder *flatbuffers.Builder, NUM_FRAGMENTS uint32) {
+	RDMAddNUM_FRAGMENTS(builder, NUM_FRAGMENTS)
+}
 func RDMAddSURVIVING_MASS(builder *flatbuffers.Builder, SURVIVING_MASS float64) {
 	builder.PrependFloat64Slot(25, SURVIVING_MASS, 0.0)
 }
+func RDMAddSurvivingMass(builder *flatbuffers.Builder, SURVIVING_MASS float64) {
+	RDMAddSURVIVING_MASS(builder, SURVIVING_MASS)
+}
 func RDMAddCOMMENT(builder *flatbuffers.Builder, COMMENT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(26, flatbuffers.UOffsetT(COMMENT), 0)
+}
+func RDMAddComment(builder *flatbuffers.Builder, COMMENT flatbuffers.UOffsetT) {
+	RDMAddCOMMENT(builder, COMMENT)
 }
 func RDMEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

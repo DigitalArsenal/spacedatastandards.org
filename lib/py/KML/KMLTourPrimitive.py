@@ -144,18 +144,25 @@ except:
 class KMLTourPrimitiveT(object):
 
     # KMLTourPrimitiveT
-    def __init__(self):
-        self.FLY_TO = None  # type: Optional[KMLFlyTo.KMLFlyToT]
-        self.WAIT = None  # type: Optional[KMLWait.KMLWaitT]
-        self.ANIMATED_UPDATE = None  # type: Optional[KMLAnimatedUpdate.KMLAnimatedUpdateT]
-        self.TOUR_CONTROL = None  # type: Optional[KMLTourControl.KMLTourControlT]
-        self.SOUND_CUE = None  # type: Optional[KMLSoundCue.KMLSoundCueT]
+    def __init__(
+        self,
+        FLY_TO = None,
+        WAIT = None,
+        ANIMATED_UPDATE = None,
+        TOUR_CONTROL = None,
+        SOUND_CUE = None,
+    ):
+        self.FLY_TO = FLY_TO  # type: Optional[KMLFlyTo.KMLFlyToT]
+        self.WAIT = WAIT  # type: Optional[KMLWait.KMLWaitT]
+        self.ANIMATED_UPDATE = ANIMATED_UPDATE  # type: Optional[KMLAnimatedUpdate.KMLAnimatedUpdateT]
+        self.TOUR_CONTROL = TOUR_CONTROL  # type: Optional[KMLTourControl.KMLTourControlT]
+        self.SOUND_CUE = SOUND_CUE  # type: Optional[KMLSoundCue.KMLSoundCueT]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        kmltourPrimitive = KMLTourPrimitive()
-        kmltourPrimitive.Init(buf, pos)
-        return cls.InitFromObj(kmltourPrimitive)
+        tmpKmltourPrimitive = KMLTourPrimitive()
+        tmpKmltourPrimitive.Init(buf, pos)
+        return cls.InitFromObj(tmpKmltourPrimitive)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -163,25 +170,25 @@ class KMLTourPrimitiveT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, kmltourPrimitive):
+    def InitFromObj(cls, tmpKmltourPrimitive):
         x = KMLTourPrimitiveT()
-        x._UnPack(kmltourPrimitive)
+        x._UnPack(tmpKmltourPrimitive)
         return x
 
     # KMLTourPrimitiveT
-    def _UnPack(self, kmltourPrimitive):
-        if kmltourPrimitive is None:
+    def _UnPack(self, KMLTourPrimitive):
+        if KMLTourPrimitive is None:
             return
-        if kmltourPrimitive.FLY_TO() is not None:
-            self.FLY_TO = KMLFlyTo.KMLFlyToT.InitFromObj(kmltourPrimitive.FLY_TO())
-        if kmltourPrimitive.WAIT() is not None:
-            self.WAIT = KMLWait.KMLWaitT.InitFromObj(kmltourPrimitive.WAIT())
-        if kmltourPrimitive.ANIMATED_UPDATE() is not None:
-            self.ANIMATED_UPDATE = KMLAnimatedUpdate.KMLAnimatedUpdateT.InitFromObj(kmltourPrimitive.ANIMATED_UPDATE())
-        if kmltourPrimitive.TOUR_CONTROL() is not None:
-            self.TOUR_CONTROL = KMLTourControl.KMLTourControlT.InitFromObj(kmltourPrimitive.TOUR_CONTROL())
-        if kmltourPrimitive.SOUND_CUE() is not None:
-            self.SOUND_CUE = KMLSoundCue.KMLSoundCueT.InitFromObj(kmltourPrimitive.SOUND_CUE())
+        if KMLTourPrimitive.FLY_TO() is not None:
+            self.FLY_TO = KMLFlyTo.KMLFlyToT.InitFromObj(KMLTourPrimitive.FLY_TO())
+        if KMLTourPrimitive.WAIT() is not None:
+            self.WAIT = KMLWait.KMLWaitT.InitFromObj(KMLTourPrimitive.WAIT())
+        if KMLTourPrimitive.ANIMATED_UPDATE() is not None:
+            self.ANIMATED_UPDATE = KMLAnimatedUpdate.KMLAnimatedUpdateT.InitFromObj(KMLTourPrimitive.ANIMATED_UPDATE())
+        if KMLTourPrimitive.TOUR_CONTROL() is not None:
+            self.TOUR_CONTROL = KMLTourControl.KMLTourControlT.InitFromObj(KMLTourPrimitive.TOUR_CONTROL())
+        if KMLTourPrimitive.SOUND_CUE() is not None:
+            self.SOUND_CUE = KMLSoundCue.KMLSoundCueT.InitFromObj(KMLTourPrimitive.SOUND_CUE())
 
     # KMLTourPrimitiveT
     def Pack(self, builder):
@@ -206,5 +213,5 @@ class KMLTourPrimitiveT(object):
             KMLTourPrimitiveAddTOUR_CONTROL(builder, TOUR_CONTROL)
         if self.SOUND_CUE is not None:
             KMLTourPrimitiveAddSOUND_CUE(builder, SOUND_CUE)
-        kmltourPrimitive = KMLTourPrimitiveEnd(builder)
-        return kmltourPrimitive
+        KMLTourPrimitive = KMLTourPrimitiveEnd(builder)
+        return KMLTourPrimitive

@@ -51,9 +51,17 @@ func (rcv *CZMPath) SHOW() bool {
 	return false
 }
 
+func (rcv *CZMPath) Show() bool {
+	return rcv.SHOW()
+}
+
 /// Whether the path is displayed
 func (rcv *CZMPath) MutateSHOW(n bool) bool {
 	return rcv._tab.MutateBoolSlot(4, n)
+}
+
+func (rcv *CZMPath) MutateShow(n bool) bool {
+	return rcv.MutateSHOW(n)
 }
 
 /// Trail time in seconds (how far behind)
@@ -65,9 +73,17 @@ func (rcv *CZMPath) LEAD_TIME() float64 {
 	return 0.0
 }
 
+func (rcv *CZMPath) LeadTime() float64 {
+	return rcv.LEAD_TIME()
+}
+
 /// Trail time in seconds (how far behind)
 func (rcv *CZMPath) MutateLEAD_TIME(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(6, n)
+}
+
+func (rcv *CZMPath) MutateLeadTime(n float64) bool {
+	return rcv.MutateLEAD_TIME(n)
 }
 
 /// Lead time in seconds (how far ahead)
@@ -79,9 +95,17 @@ func (rcv *CZMPath) TRAIL_TIME() float64 {
 	return 0.0
 }
 
+func (rcv *CZMPath) TrailTime() float64 {
+	return rcv.TRAIL_TIME()
+}
+
 /// Lead time in seconds (how far ahead)
 func (rcv *CZMPath) MutateTRAIL_TIME(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(8, n)
+}
+
+func (rcv *CZMPath) MutateTrailTime(n float64) bool {
+	return rcv.MutateTRAIL_TIME(n)
 }
 
 /// Line width in pixels
@@ -93,9 +117,17 @@ func (rcv *CZMPath) WIDTH() float64 {
 	return 0.0
 }
 
+func (rcv *CZMPath) Width() float64 {
+	return rcv.WIDTH()
+}
+
 /// Line width in pixels
 func (rcv *CZMPath) MutateWIDTH(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(10, n)
+}
+
+func (rcv *CZMPath) MutateWidth(n float64) bool {
+	return rcv.MutateWIDTH(n)
 }
 
 /// Path color (legacy solid color)
@@ -112,6 +144,10 @@ func (rcv *CZMPath) COLOR(obj *CZMColor) *CZMColor {
 	return nil
 }
 
+func (rcv *CZMPath) Color(obj *CZMColor) *CZMColor {
+	return rcv.COLOR(obj)
+}
+
 /// Path color (legacy solid color)
 /// Resolution in seconds
 func (rcv *CZMPath) RESOLUTION() float64 {
@@ -122,9 +158,17 @@ func (rcv *CZMPath) RESOLUTION() float64 {
 	return 0.0
 }
 
+func (rcv *CZMPath) Resolution() float64 {
+	return rcv.RESOLUTION()
+}
+
 /// Resolution in seconds
 func (rcv *CZMPath) MutateRESOLUTION(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(14, n)
+}
+
+func (rcv *CZMPath) MutateResolution(n float64) bool {
+	return rcv.MutateRESOLUTION(n)
 }
 
 /// Full polyline material
@@ -141,6 +185,10 @@ func (rcv *CZMPath) MATERIAL(obj *CZMPolylineMaterial) *CZMPolylineMaterial {
 	return nil
 }
 
+func (rcv *CZMPath) Material(obj *CZMPolylineMaterial) *CZMPolylineMaterial {
+	return rcv.MATERIAL(obj)
+}
+
 /// Full polyline material
 func CZMPathStart(builder *flatbuffers.Builder) {
 	builder.StartObject(7)
@@ -148,23 +196,44 @@ func CZMPathStart(builder *flatbuffers.Builder) {
 func CZMPathAddSHOW(builder *flatbuffers.Builder, SHOW bool) {
 	builder.PrependBoolSlot(0, SHOW, false)
 }
+func CZMPathAddShow(builder *flatbuffers.Builder, SHOW bool) {
+	CZMPathAddSHOW(builder, SHOW)
+}
 func CZMPathAddLEAD_TIME(builder *flatbuffers.Builder, LEAD_TIME float64) {
 	builder.PrependFloat64Slot(1, LEAD_TIME, 0.0)
+}
+func CZMPathAddLeadTime(builder *flatbuffers.Builder, LEAD_TIME float64) {
+	CZMPathAddLEAD_TIME(builder, LEAD_TIME)
 }
 func CZMPathAddTRAIL_TIME(builder *flatbuffers.Builder, TRAIL_TIME float64) {
 	builder.PrependFloat64Slot(2, TRAIL_TIME, 0.0)
 }
+func CZMPathAddTrailTime(builder *flatbuffers.Builder, TRAIL_TIME float64) {
+	CZMPathAddTRAIL_TIME(builder, TRAIL_TIME)
+}
 func CZMPathAddWIDTH(builder *flatbuffers.Builder, WIDTH float64) {
 	builder.PrependFloat64Slot(3, WIDTH, 0.0)
+}
+func CZMPathAddWidth(builder *flatbuffers.Builder, WIDTH float64) {
+	CZMPathAddWIDTH(builder, WIDTH)
 }
 func CZMPathAddCOLOR(builder *flatbuffers.Builder, COLOR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(COLOR), 0)
 }
+func CZMPathAddColor(builder *flatbuffers.Builder, COLOR flatbuffers.UOffsetT) {
+	CZMPathAddCOLOR(builder, COLOR)
+}
 func CZMPathAddRESOLUTION(builder *flatbuffers.Builder, RESOLUTION float64) {
 	builder.PrependFloat64Slot(5, RESOLUTION, 0.0)
 }
+func CZMPathAddResolution(builder *flatbuffers.Builder, RESOLUTION float64) {
+	CZMPathAddRESOLUTION(builder, RESOLUTION)
+}
 func CZMPathAddMATERIAL(builder *flatbuffers.Builder, MATERIAL flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(MATERIAL), 0)
+}
+func CZMPathAddMaterial(builder *flatbuffers.Builder, MATERIAL flatbuffers.UOffsetT) {
+	CZMPathAddMATERIAL(builder, MATERIAL)
 }
 func CZMPathEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

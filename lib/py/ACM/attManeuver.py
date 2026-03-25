@@ -129,19 +129,27 @@ def End(builder):
 class attManeuverT(object):
 
     # attManeuverT
-    def __init__(self):
-        self.MAN_EPOCH_START = None  # type: str
-        self.DURATION = 0.0  # type: float
-        self.REF_FRAME = None  # type: str
-        self.TOR_1 = 0.0  # type: float
-        self.TOR_2 = 0.0  # type: float
-        self.TOR_3 = 0.0  # type: float
+    def __init__(
+        self,
+        MAN_EPOCH_START = None,
+        DURATION = 0.0,
+        REF_FRAME = None,
+        TOR_1 = 0.0,
+        TOR_2 = 0.0,
+        TOR_3 = 0.0,
+    ):
+        self.MAN_EPOCH_START = MAN_EPOCH_START  # type: Optional[str]
+        self.DURATION = DURATION  # type: float
+        self.REF_FRAME = REF_FRAME  # type: Optional[str]
+        self.TOR_1 = TOR_1  # type: float
+        self.TOR_2 = TOR_2  # type: float
+        self.TOR_3 = TOR_3  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        attManeuver = attManeuver()
-        attManeuver.Init(buf, pos)
-        return cls.InitFromObj(attManeuver)
+        tmpAttManeuver = attManeuver()
+        tmpAttManeuver.Init(buf, pos)
+        return cls.InitFromObj(tmpAttManeuver)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -149,9 +157,9 @@ class attManeuverT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, attManeuver):
+    def InitFromObj(cls, tmpAttManeuver):
         x = attManeuverT()
-        x._UnPack(attManeuver)
+        x._UnPack(tmpAttManeuver)
         return x
 
     # attManeuverT

@@ -29,7 +29,7 @@ class propagatorConfig : Table() {
         __init(_i, _bb)
         return this
     }
-    val PROPAGATOR_NAME : String?
+    val propagatorName : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -38,14 +38,14 @@ class propagatorConfig : Table() {
                 null
             }
         }
-    val PROPAGATOR_NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun PROPAGATOR_NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
-    val PROPAGATOR_TYPE : Byte
+    val propagatorNameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun propagatorNameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
+    val propagatorType : Byte
         get() {
             val o = __offset(6)
             return if(o != 0) bb.get(o + bb_pos) else 0
         }
-    fun FORCE_MODELS(j: Int) : String? {
+    fun forceModels(j: Int) : String? {
         val o = __offset(8)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
@@ -53,11 +53,11 @@ class propagatorConfig : Table() {
             null
         }
     }
-    val FORCE_MODELSLength : Int
+    val forceModelsLength : Int
         get() {
             val o = __offset(8); return if (o != 0) __vector_len(o) else 0
         }
-    val EPOCH : String?
+    val epoch : String?
         get() {
             val o = __offset(10)
             return if (o != 0) {
@@ -66,14 +66,14 @@ class propagatorConfig : Table() {
                 null
             }
         }
-    val EPOCHAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
-    fun EPOCHInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
-    val TIME_STEP : Double
+    val epochAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(10, 1)
+    fun epochInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 10, 1)
+    val timeStep : Double
         get() {
             val o = __offset(12)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    fun ZONAL_HARMONIC_TERMS(j: Int) : Byte {
+    fun zonalHarmonicTerms(j: Int) : Byte {
         val o = __offset(14)
         return if (o != 0) {
             bb.get(__vector(o) + j * 1)
@@ -81,33 +81,33 @@ class propagatorConfig : Table() {
             0
         }
     }
-    val ZONAL_HARMONIC_TERMSLength : Int
+    val zonalHarmonicTermsLength : Int
         get() {
             val o = __offset(14); return if (o != 0) __vector_len(o) else 0
         }
-    val ZONAL_HARMONIC_TERMSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(14, 1)
-    fun ZONAL_HARMONIC_TERMSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 14, 1)
+    val zonalHarmonicTermsAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(14, 1)
+    fun zonalHarmonicTermsInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 14, 1)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAspropagatorConfig(_bb: ByteBuffer): propagatorConfig = getRootAspropagatorConfig(_bb, propagatorConfig())
         fun getRootAspropagatorConfig(_bb: ByteBuffer, obj: propagatorConfig): propagatorConfig {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createpropagatorConfig(builder: FlatBufferBuilder, PROPAGATOR_NAMEOffset: Int, PROPAGATOR_TYPE: Byte, FORCE_MODELSOffset: Int, EPOCHOffset: Int, TIME_STEP: Double, ZONAL_HARMONIC_TERMSOffset: Int) : Int {
+        fun createpropagatorConfig(builder: FlatBufferBuilder, propagatorNameOffset: Int, propagatorType: Byte, forceModelsOffset: Int, epochOffset: Int, timeStep: Double, zonalHarmonicTermsOffset: Int) : Int {
             builder.startTable(6)
-            addTIME_STEP(builder, TIME_STEP)
-            addZONAL_HARMONIC_TERMS(builder, ZONAL_HARMONIC_TERMSOffset)
-            addEPOCH(builder, EPOCHOffset)
-            addFORCE_MODELS(builder, FORCE_MODELSOffset)
-            addPROPAGATOR_NAME(builder, PROPAGATOR_NAMEOffset)
-            addPROPAGATOR_TYPE(builder, PROPAGATOR_TYPE)
+            addTIMESTEP(builder, timeStep)
+            addZONALHARMONICTERMS(builder, zonalHarmonicTermsOffset)
+            addEPOCH(builder, epochOffset)
+            addFORCEMODELS(builder, forceModelsOffset)
+            addPROPAGATORNAME(builder, propagatorNameOffset)
+            addPROPAGATORTYPE(builder, propagatorType)
             return endpropagatorConfig(builder)
         }
         fun startpropagatorConfig(builder: FlatBufferBuilder) = builder.startTable(6)
-        fun addPROPAGATOR_NAME(builder: FlatBufferBuilder, PROPAGATOR_NAME: Int) = builder.addOffset(0, PROPAGATOR_NAME, 0)
-        fun addPROPAGATOR_TYPE(builder: FlatBufferBuilder, PROPAGATOR_TYPE: Byte) = builder.addByte(1, PROPAGATOR_TYPE, 0)
-        fun addFORCE_MODELS(builder: FlatBufferBuilder, FORCE_MODELS: Int) = builder.addOffset(2, FORCE_MODELS, 0)
+        fun addPROPAGATORNAME(builder: FlatBufferBuilder, propagatorName: Int) = builder.addOffset(0, propagatorName, 0)
+        fun addPROPAGATORTYPE(builder: FlatBufferBuilder, propagatorType: Byte) = builder.addByte(1, propagatorType, 0)
+        fun addFORCEMODELS(builder: FlatBufferBuilder, forceModels: Int) = builder.addOffset(2, forceModels, 0)
         fun createForceModelsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -116,9 +116,9 @@ class propagatorConfig : Table() {
             return builder.endVector()
         }
         fun startForceModelsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addEPOCH(builder: FlatBufferBuilder, EPOCH: Int) = builder.addOffset(3, EPOCH, 0)
-        fun addTIME_STEP(builder: FlatBufferBuilder, TIME_STEP: Double) = builder.addDouble(4, TIME_STEP, 0.0)
-        fun addZONAL_HARMONIC_TERMS(builder: FlatBufferBuilder, ZONAL_HARMONIC_TERMS: Int) = builder.addOffset(5, ZONAL_HARMONIC_TERMS, 0)
+        fun addEPOCH(builder: FlatBufferBuilder, epoch: Int) = builder.addOffset(3, epoch, 0)
+        fun addTIMESTEP(builder: FlatBufferBuilder, timeStep: Double) = builder.addDouble(4, timeStep, 0.0)
+        fun addZONALHARMONICTERMS(builder: FlatBufferBuilder, zonalHarmonicTerms: Int) = builder.addOffset(5, zonalHarmonicTerms, 0)
         fun createZonalHarmonicTermsVector(builder: FlatBufferBuilder, data: ByteArray) : Int {
             builder.startVector(1, data.size, 1)
             for (i in data.size - 1 downTo 0) {

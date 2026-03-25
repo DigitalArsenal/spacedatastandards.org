@@ -2,4 +2,216 @@
 
 # namespace: 
 
-# NOTE CZMDynSampled.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Sampled time-varying data
+class CZMDynSampled(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = CZMDynSampled()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsCZMDynSampled(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def CZMDynSampledBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x43\x5A\x4D", size_prefixed=size_prefixed)
+
+    # CZMDynSampled
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Reference epoch (ISO 8601)
+    # CZMDynSampled
+    def EPOCH(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Value type determines stride through DATA
+    # CZMDynSampled
+    def VALUE_TYPE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # Interleaved [time, value(s), ...] — stride depends on VALUE_TYPE
+    # CZMDynSampled
+    def DATA(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # CZMDynSampled
+    def DATAAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
+
+    # CZMDynSampled
+    def DATALength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # CZMDynSampled
+    def DATAIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        return o == 0
+
+    # Interpolation settings
+    # CZMDynSampled
+    def INTERPOLATION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from CZMInterpolation import CZMInterpolation
+            obj = CZMInterpolation()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+def CZMDynSampledStart(builder):
+    builder.StartObject(4)
+
+def Start(builder):
+    CZMDynSampledStart(builder)
+
+def CZMDynSampledAddEPOCH(builder, EPOCH):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(EPOCH), 0)
+
+def AddEPOCH(builder, EPOCH):
+    CZMDynSampledAddEPOCH(builder, EPOCH)
+
+def CZMDynSampledAddVALUE_TYPE(builder, VALUE_TYPE):
+    builder.PrependInt8Slot(1, VALUE_TYPE, 0)
+
+def AddVALUE_TYPE(builder, VALUE_TYPE):
+    CZMDynSampledAddVALUE_TYPE(builder, VALUE_TYPE)
+
+def CZMDynSampledAddDATA(builder, DATA):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(DATA), 0)
+
+def AddDATA(builder, DATA):
+    CZMDynSampledAddDATA(builder, DATA)
+
+def CZMDynSampledStartDATAVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
+def StartDATAVector(builder, numElems):
+    return CZMDynSampledStartDATAVector(builder, numElems)
+
+def CZMDynSampledCreateDATAVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateDATAVector(builder, data):
+    CZMDynSampledCreateDATAVector(builder, data)
+
+def CZMDynSampledAddINTERPOLATION(builder, INTERPOLATION):
+    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(INTERPOLATION), 0)
+
+def AddINTERPOLATION(builder, INTERPOLATION):
+    CZMDynSampledAddINTERPOLATION(builder, INTERPOLATION)
+
+def CZMDynSampledEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return CZMDynSampledEnd(builder)
+
+import CZMInterpolation
+try:
+    from typing import List, Optional
+except:
+    pass
+
+class CZMDynSampledT(object):
+
+    # CZMDynSampledT
+    def __init__(
+        self,
+        EPOCH = None,
+        VALUE_TYPE = 0,
+        DATA = None,
+        INTERPOLATION = None,
+    ):
+        self.EPOCH = EPOCH  # type: Optional[str]
+        self.VALUE_TYPE = VALUE_TYPE  # type: int
+        self.DATA = DATA  # type: Optional[List[float]]
+        self.INTERPOLATION = INTERPOLATION  # type: Optional[CZMInterpolation.CZMInterpolationT]
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpCzmdynSampled = CZMDynSampled()
+        tmpCzmdynSampled.Init(buf, pos)
+        return cls.InitFromObj(tmpCzmdynSampled)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpCzmdynSampled):
+        x = CZMDynSampledT()
+        x._UnPack(tmpCzmdynSampled)
+        return x
+
+    # CZMDynSampledT
+    def _UnPack(self, CZMDynSampled):
+        if CZMDynSampled is None:
+            return
+        self.EPOCH = CZMDynSampled.EPOCH()
+        self.VALUE_TYPE = CZMDynSampled.VALUE_TYPE()
+        if not CZMDynSampled.DATAIsNone():
+            if np is None:
+                self.DATA = []
+                for i in range(CZMDynSampled.DATALength()):
+                    self.DATA.append(CZMDynSampled.DATA(i))
+            else:
+                self.DATA = CZMDynSampled.DATAAsNumpy()
+        if CZMDynSampled.INTERPOLATION() is not None:
+            self.INTERPOLATION = CZMInterpolation.CZMInterpolationT.InitFromObj(CZMDynSampled.INTERPOLATION())
+
+    # CZMDynSampledT
+    def Pack(self, builder):
+        if self.EPOCH is not None:
+            EPOCH = builder.CreateString(self.EPOCH)
+        if self.DATA is not None:
+            if np is not None and type(self.DATA) is np.ndarray:
+                DATA = builder.CreateNumpyVector(self.DATA)
+            else:
+                CZMDynSampledStartDATAVector(builder, len(self.DATA))
+                for i in reversed(range(len(self.DATA))):
+                    builder.PrependFloat64(self.DATA[i])
+                DATA = builder.EndVector()
+        if self.INTERPOLATION is not None:
+            INTERPOLATION = self.INTERPOLATION.Pack(builder)
+        CZMDynSampledStart(builder)
+        if self.EPOCH is not None:
+            CZMDynSampledAddEPOCH(builder, EPOCH)
+        CZMDynSampledAddVALUE_TYPE(builder, self.VALUE_TYPE)
+        if self.DATA is not None:
+            CZMDynSampledAddDATA(builder, DATA)
+        if self.INTERPOLATION is not None:
+            CZMDynSampledAddINTERPOLATION(builder, INTERPOLATION)
+        CZMDynSampled = CZMDynSampledEnd(builder)
+        return CZMDynSampled

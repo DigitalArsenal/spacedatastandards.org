@@ -49,10 +49,17 @@ func (rcv *MetaCommandSet) META_COMMANDS(obj *MetaCommand, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(MetaCommand)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *MetaCommandSet) MetaCommands(obj *MetaCommand, j int) bool {
+	return rcv.META_COMMANDS(obj, j)
 }
 
 func (rcv *MetaCommandSet) META_COMMANDSLength() int {
@@ -63,6 +70,10 @@ func (rcv *MetaCommandSet) META_COMMANDSLength() int {
 	return 0
 }
 
+func (rcv *MetaCommandSet) MetaCommandsLength() int {
+	return rcv.META_COMMANDSLength()
+}
+
 /// MetaCommands
 func MetaCommandSetStart(builder *flatbuffers.Builder) {
 	builder.StartObject(1)
@@ -70,8 +81,14 @@ func MetaCommandSetStart(builder *flatbuffers.Builder) {
 func MetaCommandSetAddMETA_COMMANDS(builder *flatbuffers.Builder, META_COMMANDS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(META_COMMANDS), 0)
 }
+func MetaCommandSetAddMetaCommands(builder *flatbuffers.Builder, META_COMMANDS flatbuffers.UOffsetT) {
+	MetaCommandSetAddMETA_COMMANDS(builder, META_COMMANDS)
+}
 func MetaCommandSetStartMETA_COMMANDSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func MetaCommandSetStartMetaCommandsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return MetaCommandSetStartMETA_COMMANDSVector(builder, numElems)
 }
 func MetaCommandSetEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

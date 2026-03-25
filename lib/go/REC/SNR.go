@@ -62,8 +62,16 @@ func (rcv *SNR) TYPE() byte {
 	return 0
 }
 
+func (rcv *SNR) Type() byte {
+	return rcv.TYPE()
+}
+
 func (rcv *SNR) MutateTYPE(n byte) bool {
 	return rcv._tab.MutateByteSlot(4, n)
+}
+
+func (rcv *SNR) MutateType(n byte) bool {
+	return rcv.MutateTYPE(n)
 }
 
 func (rcv *SNR) MODE() byte {
@@ -74,8 +82,16 @@ func (rcv *SNR) MODE() byte {
 	return 0
 }
 
+func (rcv *SNR) Mode() byte {
+	return rcv.MODE()
+}
+
 func (rcv *SNR) MutateMODE(n byte) bool {
 	return rcv._tab.MutateByteSlot(6, n)
+}
+
+func (rcv *SNR) MutateMode(n byte) bool {
+	return rcv.MutateMODE(n)
 }
 
 func (rcv *SNR) RESERVED1() uint16 {
@@ -86,8 +102,16 @@ func (rcv *SNR) RESERVED1() uint16 {
 	return 0
 }
 
+func (rcv *SNR) Reserved1() uint16 {
+	return rcv.RESERVED1()
+}
+
 func (rcv *SNR) MutateRESERVED1(n uint16) bool {
 	return rcv._tab.MutateUint16Slot(8, n)
+}
+
+func (rcv *SNR) MutateReserved1(n uint16) bool {
+	return rcv.MutateRESERVED1(n)
 }
 
 func (rcv *SNR) MAX_RANGE() float64 {
@@ -98,8 +122,16 @@ func (rcv *SNR) MAX_RANGE() float64 {
 	return 0.0
 }
 
+func (rcv *SNR) MaxRange() float64 {
+	return rcv.MAX_RANGE()
+}
+
 func (rcv *SNR) MutateMAX_RANGE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(10, n)
+}
+
+func (rcv *SNR) MutateMaxRange(n float64) bool {
+	return rcv.MutateMAX_RANGE(n)
 }
 
 func (rcv *SNR) MIN_RANGE() float64 {
@@ -110,8 +142,16 @@ func (rcv *SNR) MIN_RANGE() float64 {
 	return 0.0
 }
 
+func (rcv *SNR) MinRange() float64 {
+	return rcv.MIN_RANGE()
+}
+
 func (rcv *SNR) MutateMIN_RANGE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(12, n)
+}
+
+func (rcv *SNR) MutateMinRange(n float64) bool {
+	return rcv.MutateMIN_RANGE(n)
 }
 
 func (rcv *SNR) FOV_AZIMUTH() float32 {
@@ -122,8 +162,16 @@ func (rcv *SNR) FOV_AZIMUTH() float32 {
 	return 0.0
 }
 
+func (rcv *SNR) FovAzimuth() float32 {
+	return rcv.FOV_AZIMUTH()
+}
+
 func (rcv *SNR) MutateFOV_AZIMUTH(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(14, n)
+}
+
+func (rcv *SNR) MutateFovAzimuth(n float32) bool {
+	return rcv.MutateFOV_AZIMUTH(n)
 }
 
 func (rcv *SNR) FOV_ELEVATION() float32 {
@@ -134,8 +182,16 @@ func (rcv *SNR) FOV_ELEVATION() float32 {
 	return 0.0
 }
 
+func (rcv *SNR) FovElevation() float32 {
+	return rcv.FOV_ELEVATION()
+}
+
 func (rcv *SNR) MutateFOV_ELEVATION(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(16, n)
+}
+
+func (rcv *SNR) MutateFovElevation(n float32) bool {
+	return rcv.MutateFOV_ELEVATION(n)
 }
 
 func (rcv *SNR) ANGULAR_RESOLUTION() float32 {
@@ -146,8 +202,16 @@ func (rcv *SNR) ANGULAR_RESOLUTION() float32 {
 	return 0.0
 }
 
+func (rcv *SNR) AngularResolution() float32 {
+	return rcv.ANGULAR_RESOLUTION()
+}
+
 func (rcv *SNR) MutateANGULAR_RESOLUTION(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(18, n)
+}
+
+func (rcv *SNR) MutateAngularResolution(n float32) bool {
+	return rcv.MutateANGULAR_RESOLUTION(n)
 }
 
 func (rcv *SNR) RANGE_RESOLUTION() float32 {
@@ -158,8 +222,16 @@ func (rcv *SNR) RANGE_RESOLUTION() float32 {
 	return 0.0
 }
 
+func (rcv *SNR) RangeResolution() float32 {
+	return rcv.RANGE_RESOLUTION()
+}
+
 func (rcv *SNR) MutateRANGE_RESOLUTION(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(20, n)
+}
+
+func (rcv *SNR) MutateRangeResolution(n float32) bool {
+	return rcv.MutateRANGE_RESOLUTION(n)
 }
 
 func (rcv *SNR) UPDATE_RATE() float32 {
@@ -170,8 +242,16 @@ func (rcv *SNR) UPDATE_RATE() float32 {
 	return 0.0
 }
 
+func (rcv *SNR) UpdateRate() float32 {
+	return rcv.UPDATE_RATE()
+}
+
 func (rcv *SNR) MutateUPDATE_RATE(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(22, n)
+}
+
+func (rcv *SNR) MutateUpdateRate(n float32) bool {
+	return rcv.MutateUPDATE_RATE(n)
 }
 
 func (rcv *SNR) DETECTION_THRESHOLD() float32 {
@@ -182,8 +262,16 @@ func (rcv *SNR) DETECTION_THRESHOLD() float32 {
 	return 0.0
 }
 
+func (rcv *SNR) DetectionThreshold() float32 {
+	return rcv.DETECTION_THRESHOLD()
+}
+
 func (rcv *SNR) MutateDETECTION_THRESHOLD(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(24, n)
+}
+
+func (rcv *SNR) MutateDetectionThreshold(n float32) bool {
+	return rcv.MutateDETECTION_THRESHOLD(n)
 }
 
 func (rcv *SNR) AZIMUTH_SCAN_RATE() float32 {
@@ -194,8 +282,16 @@ func (rcv *SNR) AZIMUTH_SCAN_RATE() float32 {
 	return 0.0
 }
 
+func (rcv *SNR) AzimuthScanRate() float32 {
+	return rcv.AZIMUTH_SCAN_RATE()
+}
+
 func (rcv *SNR) MutateAZIMUTH_SCAN_RATE(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(26, n)
+}
+
+func (rcv *SNR) MutateAzimuthScanRate(n float32) bool {
+	return rcv.MutateAZIMUTH_SCAN_RATE(n)
 }
 
 func (rcv *SNR) ELEVATION_SCAN_RATE() float32 {
@@ -206,8 +302,16 @@ func (rcv *SNR) ELEVATION_SCAN_RATE() float32 {
 	return 0.0
 }
 
+func (rcv *SNR) ElevationScanRate() float32 {
+	return rcv.ELEVATION_SCAN_RATE()
+}
+
 func (rcv *SNR) MutateELEVATION_SCAN_RATE(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(28, n)
+}
+
+func (rcv *SNR) MutateElevationScanRate(n float32) bool {
+	return rcv.MutateELEVATION_SCAN_RATE(n)
 }
 
 func (rcv *SNR) POWER() float32 {
@@ -218,8 +322,16 @@ func (rcv *SNR) POWER() float32 {
 	return 0.0
 }
 
+func (rcv *SNR) Power() float32 {
+	return rcv.POWER()
+}
+
 func (rcv *SNR) MutatePOWER(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(30, n)
+}
+
+func (rcv *SNR) MutatePower(n float32) bool {
+	return rcv.MutatePOWER(n)
 }
 
 func (rcv *SNR) FREQUENCY() float32 {
@@ -230,8 +342,16 @@ func (rcv *SNR) FREQUENCY() float32 {
 	return 0.0
 }
 
+func (rcv *SNR) Frequency() float32 {
+	return rcv.FREQUENCY()
+}
+
 func (rcv *SNR) MutateFREQUENCY(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(32, n)
+}
+
+func (rcv *SNR) MutateFrequency(n float32) bool {
+	return rcv.MutateFREQUENCY(n)
 }
 
 func (rcv *SNR) RESERVED(j int) byte {
@@ -243,6 +363,10 @@ func (rcv *SNR) RESERVED(j int) byte {
 	return 0
 }
 
+func (rcv *SNR) Reserved(j int) byte {
+	return rcv.RESERVED(j)
+}
+
 func (rcv *SNR) RESERVEDLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
 	if o != 0 {
@@ -251,12 +375,20 @@ func (rcv *SNR) RESERVEDLength() int {
 	return 0
 }
 
+func (rcv *SNR) ReservedLength() int {
+	return rcv.RESERVEDLength()
+}
+
 func (rcv *SNR) RESERVEDBytes() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *SNR) ReservedBytes() []byte {
+	return rcv.RESERVEDBytes()
 }
 
 func (rcv *SNR) MutateRESERVED(j int, n byte) bool {
@@ -268,59 +400,114 @@ func (rcv *SNR) MutateRESERVED(j int, n byte) bool {
 	return false
 }
 
+func (rcv *SNR) MutateReserved(j int, n byte) bool {
+	return rcv.MutateRESERVED(j, n)
+}
+
 func SNRStart(builder *flatbuffers.Builder) {
 	builder.StartObject(16)
 }
 func SNRAddTYPE(builder *flatbuffers.Builder, TYPE byte) {
 	builder.PrependByteSlot(0, TYPE, 0)
 }
+func SNRAddType(builder *flatbuffers.Builder, TYPE byte) {
+	SNRAddTYPE(builder, TYPE)
+}
 func SNRAddMODE(builder *flatbuffers.Builder, MODE byte) {
 	builder.PrependByteSlot(1, MODE, 0)
+}
+func SNRAddMode(builder *flatbuffers.Builder, MODE byte) {
+	SNRAddMODE(builder, MODE)
 }
 func SNRAddRESERVED1(builder *flatbuffers.Builder, RESERVED1 uint16) {
 	builder.PrependUint16Slot(2, RESERVED1, 0)
 }
+func SNRAddReserved1(builder *flatbuffers.Builder, RESERVED1 uint16) {
+	SNRAddRESERVED1(builder, RESERVED1)
+}
 func SNRAddMAX_RANGE(builder *flatbuffers.Builder, MAX_RANGE float64) {
 	builder.PrependFloat64Slot(3, MAX_RANGE, 0.0)
+}
+func SNRAddMaxRange(builder *flatbuffers.Builder, MAX_RANGE float64) {
+	SNRAddMAX_RANGE(builder, MAX_RANGE)
 }
 func SNRAddMIN_RANGE(builder *flatbuffers.Builder, MIN_RANGE float64) {
 	builder.PrependFloat64Slot(4, MIN_RANGE, 0.0)
 }
+func SNRAddMinRange(builder *flatbuffers.Builder, MIN_RANGE float64) {
+	SNRAddMIN_RANGE(builder, MIN_RANGE)
+}
 func SNRAddFOV_AZIMUTH(builder *flatbuffers.Builder, FOV_AZIMUTH float32) {
 	builder.PrependFloat32Slot(5, FOV_AZIMUTH, 0.0)
+}
+func SNRAddFovAzimuth(builder *flatbuffers.Builder, FOV_AZIMUTH float32) {
+	SNRAddFOV_AZIMUTH(builder, FOV_AZIMUTH)
 }
 func SNRAddFOV_ELEVATION(builder *flatbuffers.Builder, FOV_ELEVATION float32) {
 	builder.PrependFloat32Slot(6, FOV_ELEVATION, 0.0)
 }
+func SNRAddFovElevation(builder *flatbuffers.Builder, FOV_ELEVATION float32) {
+	SNRAddFOV_ELEVATION(builder, FOV_ELEVATION)
+}
 func SNRAddANGULAR_RESOLUTION(builder *flatbuffers.Builder, ANGULAR_RESOLUTION float32) {
 	builder.PrependFloat32Slot(7, ANGULAR_RESOLUTION, 0.0)
+}
+func SNRAddAngularResolution(builder *flatbuffers.Builder, ANGULAR_RESOLUTION float32) {
+	SNRAddANGULAR_RESOLUTION(builder, ANGULAR_RESOLUTION)
 }
 func SNRAddRANGE_RESOLUTION(builder *flatbuffers.Builder, RANGE_RESOLUTION float32) {
 	builder.PrependFloat32Slot(8, RANGE_RESOLUTION, 0.0)
 }
+func SNRAddRangeResolution(builder *flatbuffers.Builder, RANGE_RESOLUTION float32) {
+	SNRAddRANGE_RESOLUTION(builder, RANGE_RESOLUTION)
+}
 func SNRAddUPDATE_RATE(builder *flatbuffers.Builder, UPDATE_RATE float32) {
 	builder.PrependFloat32Slot(9, UPDATE_RATE, 0.0)
+}
+func SNRAddUpdateRate(builder *flatbuffers.Builder, UPDATE_RATE float32) {
+	SNRAddUPDATE_RATE(builder, UPDATE_RATE)
 }
 func SNRAddDETECTION_THRESHOLD(builder *flatbuffers.Builder, DETECTION_THRESHOLD float32) {
 	builder.PrependFloat32Slot(10, DETECTION_THRESHOLD, 0.0)
 }
+func SNRAddDetectionThreshold(builder *flatbuffers.Builder, DETECTION_THRESHOLD float32) {
+	SNRAddDETECTION_THRESHOLD(builder, DETECTION_THRESHOLD)
+}
 func SNRAddAZIMUTH_SCAN_RATE(builder *flatbuffers.Builder, AZIMUTH_SCAN_RATE float32) {
 	builder.PrependFloat32Slot(11, AZIMUTH_SCAN_RATE, 0.0)
+}
+func SNRAddAzimuthScanRate(builder *flatbuffers.Builder, AZIMUTH_SCAN_RATE float32) {
+	SNRAddAZIMUTH_SCAN_RATE(builder, AZIMUTH_SCAN_RATE)
 }
 func SNRAddELEVATION_SCAN_RATE(builder *flatbuffers.Builder, ELEVATION_SCAN_RATE float32) {
 	builder.PrependFloat32Slot(12, ELEVATION_SCAN_RATE, 0.0)
 }
+func SNRAddElevationScanRate(builder *flatbuffers.Builder, ELEVATION_SCAN_RATE float32) {
+	SNRAddELEVATION_SCAN_RATE(builder, ELEVATION_SCAN_RATE)
+}
 func SNRAddPOWER(builder *flatbuffers.Builder, POWER float32) {
 	builder.PrependFloat32Slot(13, POWER, 0.0)
+}
+func SNRAddPower(builder *flatbuffers.Builder, POWER float32) {
+	SNRAddPOWER(builder, POWER)
 }
 func SNRAddFREQUENCY(builder *flatbuffers.Builder, FREQUENCY float32) {
 	builder.PrependFloat32Slot(14, FREQUENCY, 0.0)
 }
+func SNRAddFrequency(builder *flatbuffers.Builder, FREQUENCY float32) {
+	SNRAddFREQUENCY(builder, FREQUENCY)
+}
 func SNRAddRESERVED(builder *flatbuffers.Builder, RESERVED flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(15, flatbuffers.UOffsetT(RESERVED), 0)
 }
+func SNRAddReserved(builder *flatbuffers.Builder, RESERVED flatbuffers.UOffsetT) {
+	SNRAddRESERVED(builder, RESERVED)
+}
 func SNRStartRESERVEDVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(1, numElems, 1)
+}
+func SNRStartReservedVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return SNRStartRESERVEDVector(builder, numElems)
 }
 func SNREnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

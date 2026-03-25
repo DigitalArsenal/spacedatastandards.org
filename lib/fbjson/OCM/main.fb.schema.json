@@ -1,1048 +1,1165 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
-    "AtmosphericModelFamily": {
+    "legacyCountryCode": {
       "type": "string",
       "enum": [
-        "CIRA_XX",
-        "DTM_XX",
-        "GITM",
-        "GOST",
-        "GRAM_XX",
-        "HP",
-        "JAC_HASDM",
-        "JAC_GILL",
-        "JB08",
-        "JR71",
-        "JXX",
-        "MET_XX",
-        "MSIS_86",
-        "MSISE_90",
-        "NRLMSIS00E",
-        "TIECGM",
-        "USSA_XX"
+        "AB",
+        "ABS",
+        "AC",
+        "ALG",
+        "ANG",
+        "ARGN",
+        "ARM",
+        "ASRA",
+        "AUS",
+        "AZER",
+        "BEL",
+        "BELA",
+        "BERM",
+        "BGD",
+        "BHUT",
+        "BOL",
+        "BRAZ",
+        "BUL",
+        "CA",
+        "CHBZ",
+        "CHTU",
+        "CHLE",
+        "CIS",
+        "COL",
+        "CRI",
+        "CZCH",
+        "DEN",
+        "DJI",
+        "ECU",
+        "EGYP",
+        "ESA",
+        "ESRO",
+        "EST",
+        "ETH",
+        "EUME",
+        "EUTE",
+        "FGER",
+        "FIN",
+        "FR",
+        "FRIT",
+        "GER",
+        "GHA",
+        "GLOB",
+        "GREC",
+        "GRSA",
+        "GUAT",
+        "HUN",
+        "IM",
+        "IND",
+        "INDO",
+        "IRAN",
+        "IRAQ",
+        "IRID",
+        "IRL",
+        "ISRA",
+        "ISRO",
+        "ISS",
+        "IT",
+        "ITSO",
+        "JPN",
+        "KAZ",
+        "KEN",
+        "LAOS",
+        "LKA",
+        "LTU",
+        "LUXE",
+        "MA",
+        "MALA",
+        "MCO",
+        "MDA",
+        "MEX",
+        "MMR",
+        "MNG",
+        "MUS",
+        "NATO",
+        "NETH",
+        "NICO",
+        "NIG",
+        "NKOR",
+        "NOR",
+        "NPL",
+        "NZ",
+        "O3B",
+        "ORB",
+        "PAKI",
+        "PERU",
+        "POL",
+        "POR",
+        "PRC",
+        "PRY",
+        "PRES",
+        "QAT",
+        "RASC",
+        "ROC",
+        "ROM",
+        "RP",
+        "RWA",
+        "SAFR",
+        "SAUD",
+        "SDN",
+        "SEAL",
+        "SES",
+        "SGJP",
+        "SING",
+        "SKOR",
+        "SPN",
+        "STCT",
+        "SVN",
+        "SWED",
+        "SWTZ",
+        "TBD",
+        "THAI",
+        "TMMC",
+        "TUN",
+        "TURK",
+        "UAE",
+        "UK",
+        "UKR",
+        "UNK",
+        "URY",
+        "US",
+        "USBZ",
+        "VAT",
+        "VENZ",
+        "VTNM",
+        "ZWE"
       ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
       "x-flatbuffer-enum-values": {
-        "CIRA_XX": {
+        "AB": {
           "value": 0,
-          "description": "OID: 1.3.112.4.57.9.1 COSPAR International Reference Atmosphere Known years: 1965, 1972, 1986, 1990"
+          "description": "Arab Satellite Communications Organization"
         },
-        "DTM_XX": {
+        "ABS": {
           "value": 1,
-          "description": "OID: 1.3.112.4.57.9.2 Drag Temperature Model Known years: 1978, 1994, 2000, 2009, 2012, 2013, 2020"
+          "description": "Asia Broadcast Satellite"
         },
-        "GITM": {
+        "AC": {
           "value": 2,
-          "description": "OID: 1.3.112.4.57.9.3 Global Ionosphere-Thermosphere Model GITM has no specific year versions defined"
+          "description": "Asia Satellite Telecommunications Company (ASIASAT)"
         },
-        "GOST": {
+        "ALG": {
           "value": 3,
-          "description": "OID: 1.3.112.4.57.9.4 GOST atmospheric density model Known version: 2004 (GOST R 25645.166-2004)"
+          "description": "Algeria"
         },
-        "GRAM_XX": {
+        "ANG": {
           "value": 4,
-          "description": "OID: 1.3.112.4.57.9.5 Global Reference Atmospheric Model Known version: 2016"
+          "description": "Angola"
         },
-        "HP": {
+        "ARGN": {
           "value": 5,
-          "description": "OID: 1.3.112.4.57.9.6 Harris-Priester empirical model Known version: 1962"
+          "description": "Argentina"
         },
-        "JAC_HASDM": {
+        "ARM": {
           "value": 6,
-          "description": "OID: 1.3.112.4.57.9.7 Jacchia atmosphere model with HASDM correction overlay Based on Jacchia 1970 with HASDM (DCA) overlay"
+          "description": "Republic of Armenia"
         },
-        "JAC_GILL": {
+        "ASRA": {
           "value": 7,
-          "description": "OID: 1.3.112.4.57.9.8 Jacchia-Gill bi-polynomial interpolation Interpolates Jacchia 1971"
+          "description": "Austria"
         },
-        "JB08": {
+        "AUS": {
           "value": 8,
-          "description": "OID: 1.3.112.4.57.9.9 Jacchia-Bowman empirical model Known versions: 2006 (JB2006), 2008 (JB2008)"
+          "description": "Australia"
         },
-        "JR71": {
+        "AZER": {
           "value": 9,
-          "description": "OID: 1.3.112.4.57.9.10 Jacchia-Roberts analytic model Known version: 1971"
+          "description": "Azerbaijan"
         },
-        "JXX": {
+        "BEL": {
           "value": 10,
-          "description": "OID: 1.3.112.4.57.9.11 Jacchia static diffusion models Known years: 1970, 1971, 1977"
+          "description": "Belgium"
         },
-        "MET_XX": {
+        "BELA": {
           "value": 11,
-          "description": "OID: 1.3.112.4.57.9.12 Marshall Engineering Thermosphere Known version: 2007"
+          "description": "Belarus"
         },
-        "MSIS_86": {
+        "BERM": {
           "value": 12,
-          "description": "OID: 1.3.112.4.57.9.13 MSIS empirical model Known version: 1986"
+          "description": "Bermuda"
         },
-        "MSISE_90": {
+        "BGD": {
           "value": 13,
-          "description": "OID: 1.3.112.4.57.9.14 MSISE empirical model with exosphere extension Known version: 1990"
+          "description": "People's Republic of Bangladesh"
         },
-        "NRLMSIS00E": {
+        "BHUT": {
           "value": 14,
-          "description": "OID: 1.3.112.4.57.9.15 NRLMSISE empirical model Known version: 2000 (NRLMSISE-00E)"
+          "description": "Kingdom of Bhutan"
         },
-        "TIECGM": {
+        "BOL": {
           "value": 15,
-          "description": "OID: 1.3.112.4.57.9.16 Thermosphere-Ionosphere Electrodynamic General Circulation Model Based on TIME-GCM, no version specified"
+          "description": "Bolivia"
         },
-        "USSA_XX": {
+        "BRAZ": {
           "value": 16,
-          "description": "OID: 1.3.112.4.57.9.17 U.S. Standard Atmosphere Known versions: 1962, 1976"
+          "description": "Brazil"
+        },
+        "BUL": {
+          "value": 17,
+          "description": "Bulgaria"
+        },
+        "CA": {
+          "value": 18,
+          "description": "Canada"
+        },
+        "CHBZ": {
+          "value": 19,
+          "description": "China/Brazil"
+        },
+        "CHTU": {
+          "value": 20,
+          "description": "China/Turkey"
+        },
+        "CHLE": {
+          "value": 21,
+          "description": "Chile"
+        },
+        "CIS": {
+          "value": 22,
+          "description": "Commonwealth of Independent States (former USSR)"
+        },
+        "COL": {
+          "value": 23,
+          "description": "Colombia"
+        },
+        "CRI": {
+          "value": 24,
+          "description": "Republic of Costa Rica"
+        },
+        "CZCH": {
+          "value": 25,
+          "description": "Czech Republic (former Czechoslovakia)"
+        },
+        "DEN": {
+          "value": 26,
+          "description": "Denmark"
+        },
+        "DJI": {
+          "value": 27,
+          "description": "Republic of Djibouti"
+        },
+        "ECU": {
+          "value": 28,
+          "description": "Ecuador"
+        },
+        "EGYP": {
+          "value": 29,
+          "description": "Egypt"
+        },
+        "ESA": {
+          "value": 30,
+          "description": "European Space Agency"
+        },
+        "ESRO": {
+          "value": 31,
+          "description": "European Space Research Organization"
+        },
+        "EST": {
+          "value": 32,
+          "description": "Estonia"
+        },
+        "ETH": {
+          "value": 33,
+          "description": "Ethiopia"
+        },
+        "EUME": {
+          "value": 34,
+          "description": "European Organization for the Exploitation of Meteorological Satellites (EUMETSAT)"
+        },
+        "EUTE": {
+          "value": 35,
+          "description": "European Telecommunications Satellite Organization (EUTELSAT)"
+        },
+        "FGER": {
+          "value": 36,
+          "description": "France/Germany"
+        },
+        "FIN": {
+          "value": 37,
+          "description": "Finland"
+        },
+        "FR": {
+          "value": 38,
+          "description": "France"
+        },
+        "FRIT": {
+          "value": 39,
+          "description": "France/Italy"
+        },
+        "GER": {
+          "value": 40,
+          "description": "Germany"
+        },
+        "GHA": {
+          "value": 41,
+          "description": "Republic of Ghana"
+        },
+        "GLOB": {
+          "value": 42,
+          "description": "Globalstar"
+        },
+        "GREC": {
+          "value": 43,
+          "description": "Greece"
+        },
+        "GRSA": {
+          "value": 44,
+          "description": "Greece/Saudi Arabia"
+        },
+        "GUAT": {
+          "value": 45,
+          "description": "Guatemala"
+        },
+        "HUN": {
+          "value": 46,
+          "description": "Hungary"
+        },
+        "IM": {
+          "value": 47,
+          "description": "International Mobile Satellite Organization (INMARSAT)"
+        },
+        "IND": {
+          "value": 48,
+          "description": "India"
+        },
+        "INDO": {
+          "value": 49,
+          "description": "Indonesia"
+        },
+        "IRAN": {
+          "value": 50,
+          "description": "Iran"
+        },
+        "IRAQ": {
+          "value": 51,
+          "description": "Iraq"
+        },
+        "IRID": {
+          "value": 52,
+          "description": "Iridium"
+        },
+        "IRL": {
+          "value": 53,
+          "description": "Ireland"
+        },
+        "ISRA": {
+          "value": 54,
+          "description": "Israel"
+        },
+        "ISRO": {
+          "value": 55,
+          "description": "Indian Space Research Organisation"
+        },
+        "ISS": {
+          "value": 56,
+          "description": "International Space Station"
+        },
+        "IT": {
+          "value": 57,
+          "description": "Italy"
+        },
+        "ITSO": {
+          "value": 58,
+          "description": "International Telecommunications Satellite Organization (INTELSAT)"
+        },
+        "JPN": {
+          "value": 59,
+          "description": "Japan"
+        },
+        "KAZ": {
+          "value": 60,
+          "description": "Kazakhstan"
+        },
+        "KEN": {
+          "value": 61,
+          "description": "Republic of Kenya"
+        },
+        "LAOS": {
+          "value": 62,
+          "description": "Laos"
+        },
+        "LKA": {
+          "value": 63,
+          "description": "Democratic Socialist Republic of Sri Lanka"
+        },
+        "LTU": {
+          "value": 64,
+          "description": "Lithuania"
+        },
+        "LUXE": {
+          "value": 65,
+          "description": "Luxembourg"
+        },
+        "MA": {
+          "value": 66,
+          "description": "Morocco"
+        },
+        "MALA": {
+          "value": 67,
+          "description": "Malaysia"
+        },
+        "MCO": {
+          "value": 68,
+          "description": "Principality of Monaco"
+        },
+        "MDA": {
+          "value": 69,
+          "description": "Republic of Moldova"
+        },
+        "MEX": {
+          "value": 70,
+          "description": "Mexico"
+        },
+        "MMR": {
+          "value": 71,
+          "description": "Republic of the Union of Myanmar"
+        },
+        "MNG": {
+          "value": 72,
+          "description": "Mongolia"
+        },
+        "MUS": {
+          "value": 73,
+          "description": "Mauritius"
+        },
+        "NATO": {
+          "value": 74,
+          "description": "North Atlantic Treaty Organization"
+        },
+        "NETH": {
+          "value": 75,
+          "description": "Netherlands"
+        },
+        "NICO": {
+          "value": 76,
+          "description": "New ICO"
+        },
+        "NIG": {
+          "value": 77,
+          "description": "Nigeria"
+        },
+        "NKOR": {
+          "value": 78,
+          "description": "Democratic People's Republic of Korea"
+        },
+        "NOR": {
+          "value": 79,
+          "description": "Norway"
+        },
+        "NPL": {
+          "value": 80,
+          "description": "Federal Democratic Republic of Nepal"
+        },
+        "NZ": {
+          "value": 81,
+          "description": "New Zealand"
+        },
+        "O3B": {
+          "value": 82,
+          "description": "O3b Networks"
+        },
+        "ORB": {
+          "value": 83,
+          "description": "ORBCOMM"
+        },
+        "PAKI": {
+          "value": 84,
+          "description": "Pakistan"
+        },
+        "PERU": {
+          "value": 85,
+          "description": "Peru"
+        },
+        "POL": {
+          "value": 86,
+          "description": "Poland"
+        },
+        "POR": {
+          "value": 87,
+          "description": "Portugal"
+        },
+        "PRC": {
+          "value": 88,
+          "description": "People's Republic of China"
+        },
+        "PRY": {
+          "value": 89,
+          "description": "Republic of Paraguay"
+        },
+        "PRES": {
+          "value": 90,
+          "description": "People's Republic of China/European Space Agency"
+        },
+        "QAT": {
+          "value": 91,
+          "description": "State of Qatar"
+        },
+        "RASC": {
+          "value": 92,
+          "description": "RascomStar-QAF"
+        },
+        "ROC": {
+          "value": 93,
+          "description": "Taiwan (Republic of China)"
+        },
+        "ROM": {
+          "value": 94,
+          "description": "Romania"
+        },
+        "RP": {
+          "value": 95,
+          "description": "Philippines (Republic of the Philippines)"
+        },
+        "RWA": {
+          "value": 96,
+          "description": "Republic of Rwanda"
+        },
+        "SAFR": {
+          "value": 97,
+          "description": "South Africa"
+        },
+        "SAUD": {
+          "value": 98,
+          "description": "Saudi Arabia"
+        },
+        "SDN": {
+          "value": 99,
+          "description": "Republic of Sudan"
+        },
+        "SEAL": {
+          "value": 100,
+          "description": "Sea Launch"
+        },
+        "SES": {
+          "value": 101,
+          "description": "SES"
+        },
+        "SGJP": {
+          "value": 102,
+          "description": "Singapore/Japan"
+        },
+        "SING": {
+          "value": 103,
+          "description": "Singapore"
+        },
+        "SKOR": {
+          "value": 104,
+          "description": "Republic of Korea"
+        },
+        "SPN": {
+          "value": 105,
+          "description": "Spain"
+        },
+        "STCT": {
+          "value": 106,
+          "description": "Singapore/Taiwan"
+        },
+        "SVN": {
+          "value": 107,
+          "description": "Slovenia"
+        },
+        "SWED": {
+          "value": 108,
+          "description": "Sweden"
+        },
+        "SWTZ": {
+          "value": 109,
+          "description": "Switzerland"
+        },
+        "TBD": {
+          "value": 110,
+          "description": "To Be Determined"
+        },
+        "THAI": {
+          "value": 111,
+          "description": "Thailand"
+        },
+        "TMMC": {
+          "value": 112,
+          "description": "Turkmenistan/Monaco"
+        },
+        "TUN": {
+          "value": 113,
+          "description": "Republic of Tunisia"
+        },
+        "TURK": {
+          "value": 114,
+          "description": "Turkey"
+        },
+        "UAE": {
+          "value": 115,
+          "description": "United Arab Emirates"
+        },
+        "UK": {
+          "value": 116,
+          "description": "United Kingdom"
+        },
+        "UKR": {
+          "value": 117,
+          "description": "Ukraine"
+        },
+        "UNK": {
+          "value": 118,
+          "description": "Unknown"
+        },
+        "URY": {
+          "value": 119,
+          "description": "Uruguay"
+        },
+        "US": {
+          "value": 120,
+          "description": "United States"
+        },
+        "USBZ": {
+          "value": 121,
+          "description": "United States/Brazil"
+        },
+        "VAT": {
+          "value": 122,
+          "description": "Vatican City State"
+        },
+        "VENZ": {
+          "value": 123,
+          "description": "Venezuela"
+        },
+        "VTNM": {
+          "value": 124,
+          "description": "Vietnam"
+        },
+        "ZWE": {
+          "value": 125,
+          "description": "Republic of Zimbabwe"
         }
       }
     },
-    "ATM": {
+    "LCC": {
       "type": "object",
-      "description": "Atmospheric Model Message",
+      "description": "Legacy Country Code",
       "properties": {
-        "MODEL": {
-          "$ref": "#/definitions/AtmosphericModelFamily",
-          "description": "Canonical model family",
+        "OWNER": {
+          "$ref": "#/definitions/legacyCountryCode",
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
           "x-flatbuffer-enum-values": {
-            "CIRA_XX": {
+            "AB": {
               "value": 0,
-              "description": "OID: 1.3.112.4.57.9.1 COSPAR International Reference Atmosphere Known years: 1965, 1972, 1986, 1990"
+              "description": "Arab Satellite Communications Organization"
             },
-            "DTM_XX": {
+            "ABS": {
               "value": 1,
-              "description": "OID: 1.3.112.4.57.9.2 Drag Temperature Model Known years: 1978, 1994, 2000, 2009, 2012, 2013, 2020"
+              "description": "Asia Broadcast Satellite"
             },
-            "GITM": {
+            "AC": {
               "value": 2,
-              "description": "OID: 1.3.112.4.57.9.3 Global Ionosphere-Thermosphere Model GITM has no specific year versions defined"
+              "description": "Asia Satellite Telecommunications Company (ASIASAT)"
             },
-            "GOST": {
+            "ALG": {
               "value": 3,
-              "description": "OID: 1.3.112.4.57.9.4 GOST atmospheric density model Known version: 2004 (GOST R 25645.166-2004)"
+              "description": "Algeria"
             },
-            "GRAM_XX": {
+            "ANG": {
               "value": 4,
-              "description": "OID: 1.3.112.4.57.9.5 Global Reference Atmospheric Model Known version: 2016"
+              "description": "Angola"
             },
-            "HP": {
+            "ARGN": {
               "value": 5,
-              "description": "OID: 1.3.112.4.57.9.6 Harris-Priester empirical model Known version: 1962"
+              "description": "Argentina"
             },
-            "JAC_HASDM": {
+            "ARM": {
               "value": 6,
-              "description": "OID: 1.3.112.4.57.9.7 Jacchia atmosphere model with HASDM correction overlay Based on Jacchia 1970 with HASDM (DCA) overlay"
+              "description": "Republic of Armenia"
             },
-            "JAC_GILL": {
+            "ASRA": {
               "value": 7,
-              "description": "OID: 1.3.112.4.57.9.8 Jacchia-Gill bi-polynomial interpolation Interpolates Jacchia 1971"
+              "description": "Austria"
             },
-            "JB08": {
+            "AUS": {
               "value": 8,
-              "description": "OID: 1.3.112.4.57.9.9 Jacchia-Bowman empirical model Known versions: 2006 (JB2006), 2008 (JB2008)"
+              "description": "Australia"
             },
-            "JR71": {
+            "AZER": {
               "value": 9,
-              "description": "OID: 1.3.112.4.57.9.10 Jacchia-Roberts analytic model Known version: 1971"
+              "description": "Azerbaijan"
             },
-            "JXX": {
+            "BEL": {
               "value": 10,
-              "description": "OID: 1.3.112.4.57.9.11 Jacchia static diffusion models Known years: 1970, 1971, 1977"
+              "description": "Belgium"
             },
-            "MET_XX": {
+            "BELA": {
               "value": 11,
-              "description": "OID: 1.3.112.4.57.9.12 Marshall Engineering Thermosphere Known version: 2007"
+              "description": "Belarus"
             },
-            "MSIS_86": {
+            "BERM": {
               "value": 12,
-              "description": "OID: 1.3.112.4.57.9.13 MSIS empirical model Known version: 1986"
+              "description": "Bermuda"
             },
-            "MSISE_90": {
+            "BGD": {
               "value": 13,
-              "description": "OID: 1.3.112.4.57.9.14 MSISE empirical model with exosphere extension Known version: 1990"
+              "description": "People's Republic of Bangladesh"
             },
-            "NRLMSIS00E": {
+            "BHUT": {
               "value": 14,
-              "description": "OID: 1.3.112.4.57.9.15 NRLMSISE empirical model Known version: 2000 (NRLMSISE-00E)"
+              "description": "Kingdom of Bhutan"
             },
-            "TIECGM": {
+            "BOL": {
               "value": 15,
-              "description": "OID: 1.3.112.4.57.9.16 Thermosphere-Ionosphere Electrodynamic General Circulation Model Based on TIME-GCM, no version specified"
+              "description": "Bolivia"
             },
-            "USSA_XX": {
+            "BRAZ": {
               "value": 16,
-              "description": "OID: 1.3.112.4.57.9.17 U.S. Standard Atmosphere Known versions: 1962, 1976"
+              "description": "Brazil"
+            },
+            "BUL": {
+              "value": 17,
+              "description": "Bulgaria"
+            },
+            "CA": {
+              "value": 18,
+              "description": "Canada"
+            },
+            "CHBZ": {
+              "value": 19,
+              "description": "China/Brazil"
+            },
+            "CHTU": {
+              "value": 20,
+              "description": "China/Turkey"
+            },
+            "CHLE": {
+              "value": 21,
+              "description": "Chile"
+            },
+            "CIS": {
+              "value": 22,
+              "description": "Commonwealth of Independent States (former USSR)"
+            },
+            "COL": {
+              "value": 23,
+              "description": "Colombia"
+            },
+            "CRI": {
+              "value": 24,
+              "description": "Republic of Costa Rica"
+            },
+            "CZCH": {
+              "value": 25,
+              "description": "Czech Republic (former Czechoslovakia)"
+            },
+            "DEN": {
+              "value": 26,
+              "description": "Denmark"
+            },
+            "DJI": {
+              "value": 27,
+              "description": "Republic of Djibouti"
+            },
+            "ECU": {
+              "value": 28,
+              "description": "Ecuador"
+            },
+            "EGYP": {
+              "value": 29,
+              "description": "Egypt"
+            },
+            "ESA": {
+              "value": 30,
+              "description": "European Space Agency"
+            },
+            "ESRO": {
+              "value": 31,
+              "description": "European Space Research Organization"
+            },
+            "EST": {
+              "value": 32,
+              "description": "Estonia"
+            },
+            "ETH": {
+              "value": 33,
+              "description": "Ethiopia"
+            },
+            "EUME": {
+              "value": 34,
+              "description": "European Organization for the Exploitation of Meteorological Satellites (EUMETSAT)"
+            },
+            "EUTE": {
+              "value": 35,
+              "description": "European Telecommunications Satellite Organization (EUTELSAT)"
+            },
+            "FGER": {
+              "value": 36,
+              "description": "France/Germany"
+            },
+            "FIN": {
+              "value": 37,
+              "description": "Finland"
+            },
+            "FR": {
+              "value": 38,
+              "description": "France"
+            },
+            "FRIT": {
+              "value": 39,
+              "description": "France/Italy"
+            },
+            "GER": {
+              "value": 40,
+              "description": "Germany"
+            },
+            "GHA": {
+              "value": 41,
+              "description": "Republic of Ghana"
+            },
+            "GLOB": {
+              "value": 42,
+              "description": "Globalstar"
+            },
+            "GREC": {
+              "value": 43,
+              "description": "Greece"
+            },
+            "GRSA": {
+              "value": 44,
+              "description": "Greece/Saudi Arabia"
+            },
+            "GUAT": {
+              "value": 45,
+              "description": "Guatemala"
+            },
+            "HUN": {
+              "value": 46,
+              "description": "Hungary"
+            },
+            "IM": {
+              "value": 47,
+              "description": "International Mobile Satellite Organization (INMARSAT)"
+            },
+            "IND": {
+              "value": 48,
+              "description": "India"
+            },
+            "INDO": {
+              "value": 49,
+              "description": "Indonesia"
+            },
+            "IRAN": {
+              "value": 50,
+              "description": "Iran"
+            },
+            "IRAQ": {
+              "value": 51,
+              "description": "Iraq"
+            },
+            "IRID": {
+              "value": 52,
+              "description": "Iridium"
+            },
+            "IRL": {
+              "value": 53,
+              "description": "Ireland"
+            },
+            "ISRA": {
+              "value": 54,
+              "description": "Israel"
+            },
+            "ISRO": {
+              "value": 55,
+              "description": "Indian Space Research Organisation"
+            },
+            "ISS": {
+              "value": 56,
+              "description": "International Space Station"
+            },
+            "IT": {
+              "value": 57,
+              "description": "Italy"
+            },
+            "ITSO": {
+              "value": 58,
+              "description": "International Telecommunications Satellite Organization (INTELSAT)"
+            },
+            "JPN": {
+              "value": 59,
+              "description": "Japan"
+            },
+            "KAZ": {
+              "value": 60,
+              "description": "Kazakhstan"
+            },
+            "KEN": {
+              "value": 61,
+              "description": "Republic of Kenya"
+            },
+            "LAOS": {
+              "value": 62,
+              "description": "Laos"
+            },
+            "LKA": {
+              "value": 63,
+              "description": "Democratic Socialist Republic of Sri Lanka"
+            },
+            "LTU": {
+              "value": 64,
+              "description": "Lithuania"
+            },
+            "LUXE": {
+              "value": 65,
+              "description": "Luxembourg"
+            },
+            "MA": {
+              "value": 66,
+              "description": "Morocco"
+            },
+            "MALA": {
+              "value": 67,
+              "description": "Malaysia"
+            },
+            "MCO": {
+              "value": 68,
+              "description": "Principality of Monaco"
+            },
+            "MDA": {
+              "value": 69,
+              "description": "Republic of Moldova"
+            },
+            "MEX": {
+              "value": 70,
+              "description": "Mexico"
+            },
+            "MMR": {
+              "value": 71,
+              "description": "Republic of the Union of Myanmar"
+            },
+            "MNG": {
+              "value": 72,
+              "description": "Mongolia"
+            },
+            "MUS": {
+              "value": 73,
+              "description": "Mauritius"
+            },
+            "NATO": {
+              "value": 74,
+              "description": "North Atlantic Treaty Organization"
+            },
+            "NETH": {
+              "value": 75,
+              "description": "Netherlands"
+            },
+            "NICO": {
+              "value": 76,
+              "description": "New ICO"
+            },
+            "NIG": {
+              "value": 77,
+              "description": "Nigeria"
+            },
+            "NKOR": {
+              "value": 78,
+              "description": "Democratic People's Republic of Korea"
+            },
+            "NOR": {
+              "value": 79,
+              "description": "Norway"
+            },
+            "NPL": {
+              "value": 80,
+              "description": "Federal Democratic Republic of Nepal"
+            },
+            "NZ": {
+              "value": 81,
+              "description": "New Zealand"
+            },
+            "O3B": {
+              "value": 82,
+              "description": "O3b Networks"
+            },
+            "ORB": {
+              "value": 83,
+              "description": "ORBCOMM"
+            },
+            "PAKI": {
+              "value": 84,
+              "description": "Pakistan"
+            },
+            "PERU": {
+              "value": 85,
+              "description": "Peru"
+            },
+            "POL": {
+              "value": 86,
+              "description": "Poland"
+            },
+            "POR": {
+              "value": 87,
+              "description": "Portugal"
+            },
+            "PRC": {
+              "value": 88,
+              "description": "People's Republic of China"
+            },
+            "PRY": {
+              "value": 89,
+              "description": "Republic of Paraguay"
+            },
+            "PRES": {
+              "value": 90,
+              "description": "People's Republic of China/European Space Agency"
+            },
+            "QAT": {
+              "value": 91,
+              "description": "State of Qatar"
+            },
+            "RASC": {
+              "value": 92,
+              "description": "RascomStar-QAF"
+            },
+            "ROC": {
+              "value": 93,
+              "description": "Taiwan (Republic of China)"
+            },
+            "ROM": {
+              "value": 94,
+              "description": "Romania"
+            },
+            "RP": {
+              "value": 95,
+              "description": "Philippines (Republic of the Philippines)"
+            },
+            "RWA": {
+              "value": 96,
+              "description": "Republic of Rwanda"
+            },
+            "SAFR": {
+              "value": 97,
+              "description": "South Africa"
+            },
+            "SAUD": {
+              "value": 98,
+              "description": "Saudi Arabia"
+            },
+            "SDN": {
+              "value": 99,
+              "description": "Republic of Sudan"
+            },
+            "SEAL": {
+              "value": 100,
+              "description": "Sea Launch"
+            },
+            "SES": {
+              "value": 101,
+              "description": "SES"
+            },
+            "SGJP": {
+              "value": 102,
+              "description": "Singapore/Japan"
+            },
+            "SING": {
+              "value": 103,
+              "description": "Singapore"
+            },
+            "SKOR": {
+              "value": 104,
+              "description": "Republic of Korea"
+            },
+            "SPN": {
+              "value": 105,
+              "description": "Spain"
+            },
+            "STCT": {
+              "value": 106,
+              "description": "Singapore/Taiwan"
+            },
+            "SVN": {
+              "value": 107,
+              "description": "Slovenia"
+            },
+            "SWED": {
+              "value": 108,
+              "description": "Sweden"
+            },
+            "SWTZ": {
+              "value": 109,
+              "description": "Switzerland"
+            },
+            "TBD": {
+              "value": 110,
+              "description": "To Be Determined"
+            },
+            "THAI": {
+              "value": 111,
+              "description": "Thailand"
+            },
+            "TMMC": {
+              "value": 112,
+              "description": "Turkmenistan/Monaco"
+            },
+            "TUN": {
+              "value": 113,
+              "description": "Republic of Tunisia"
+            },
+            "TURK": {
+              "value": 114,
+              "description": "Turkey"
+            },
+            "UAE": {
+              "value": 115,
+              "description": "United Arab Emirates"
+            },
+            "UK": {
+              "value": 116,
+              "description": "United Kingdom"
+            },
+            "UKR": {
+              "value": 117,
+              "description": "Ukraine"
+            },
+            "UNK": {
+              "value": 118,
+              "description": "Unknown"
+            },
+            "URY": {
+              "value": 119,
+              "description": "Uruguay"
+            },
+            "US": {
+              "value": 120,
+              "description": "United States"
+            },
+            "USBZ": {
+              "value": 121,
+              "description": "United States/Brazil"
+            },
+            "VAT": {
+              "value": 122,
+              "description": "Vatican City State"
+            },
+            "VENZ": {
+              "value": 123,
+              "description": "Venezuela"
+            },
+            "VTNM": {
+              "value": 124,
+              "description": "Vietnam"
+            },
+            "ZWE": {
+              "value": 125,
+              "description": "Republic of Zimbabwe"
             }
           }
-        },
-        "YEAR": {
-          "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "description": "Four-digit year identifying the model version (e.g., 1970, 2008, 2020)",
-          "x-flatbuffer-type": "int"
-        }
-      },
-      "additionalProperties": false
-    },
-    "Header": {
-      "type": "object",
-      "properties": {
-        "CCSDS_OCM_VERS": {
-          "type": "string",
-          "description": "Format version in the form of 'x.y', where 'y' is incremented for minor changes, and 'x' for major changes.",
-          "x-flatbuffer-type": "string"
-        },
-        "COMMENT": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "Comments (a contiguous set of one or more comment lines may be provided immediately after the version number).",
-          "x-flatbuffer-type": "[string]"
-        },
-        "CLASSIFICATION": {
-          "type": "string",
-          "description": "User-defined free-text message classification/caveats of this OCM.",
-          "x-flatbuffer-type": "string"
-        },
-        "CREATION_DATE": {
-          "type": "string",
-          "description": "File creation date/time in UTC.",
-          "x-flatbuffer-type": "string"
-        },
-        "ORIGINATOR": {
-          "type": "string",
-          "description": "Creating agency or operator.",
-          "x-flatbuffer-type": "string"
-        },
-        "MESSAGE_ID": {
-          "type": "string",
-          "description": "Free-text field containing an ID that uniquely identifies a message from this originator.",
-          "x-flatbuffer-type": "string"
-        }
-      },
-      "additionalProperties": false
-    },
-    "Metadata": {
-      "type": "object",
-      "properties": {
-        "COMMENT": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "Comments in the Metadata section.",
-          "x-flatbuffer-type": "[string]"
-        },
-        "OBJECT_NAME": {
-          "type": "string",
-          "description": "Free-text field containing the name of the object.",
-          "x-flatbuffer-type": "string"
-        },
-        "INTERNATIONAL_DESIGNATOR": {
-          "type": "string",
-          "description": "International designator for the object as assigned by COSPAR.",
-          "x-flatbuffer-type": "string"
-        },
-        "CATALOG_NAME": {
-          "type": "string",
-          "description": "Satellite catalog source from which 'OBJECT_DESIGNATOR' was obtained.",
-          "x-flatbuffer-type": "string"
-        },
-        "OBJECT_DESIGNATOR": {
-          "type": "string",
-          "description": "Unique satellite identification designator from the catalog.",
-          "x-flatbuffer-type": "string"
-        },
-        "ALTERNATE_NAMES": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "Alternate names of this space object.",
-          "x-flatbuffer-type": "[string]"
-        },
-        "ORIGINATOR_POC": {
-          "type": "string",
-          "description": "Originator or programmatic Point-of-Contact (PoC) for OCM.",
-          "x-flatbuffer-type": "string"
-        },
-        "ORIGINATOR_POSITION": {
-          "type": "string",
-          "description": "Contact position of the originator PoC.",
-          "x-flatbuffer-type": "string"
-        },
-        "ORIGINATOR_PHONE": {
-          "type": "string",
-          "description": "Originator PoC phone number.",
-          "x-flatbuffer-type": "string"
-        },
-        "ORIGINATOR_EMAIL": {
-          "type": "string",
-          "description": "Originator PoC email address.",
-          "x-flatbuffer-type": "string"
-        },
-        "ORIGINATOR_ADDRESS": {
-          "type": "string",
-          "description": "Originator's physical address information.",
-          "x-flatbuffer-type": "string"
-        },
-        "TECH_ORG": {
-          "type": "string",
-          "description": "Creating agency or operator for technical contact.",
-          "x-flatbuffer-type": "string"
-        },
-        "TECH_POC": {
-          "type": "string",
-          "description": "Technical Point-of-Contact (PoC) for OCM.",
-          "x-flatbuffer-type": "string"
-        },
-        "TECH_POSITION": {
-          "type": "string",
-          "description": "Contact position of the technical PoC.",
-          "x-flatbuffer-type": "string"
-        },
-        "TECH_PHONE": {
-          "type": "string",
-          "description": "Technical PoC phone number.",
-          "x-flatbuffer-type": "string"
-        },
-        "TECH_EMAIL": {
-          "type": "string",
-          "description": "Technical PoC email address.",
-          "x-flatbuffer-type": "string"
-        },
-        "TECH_ADDRESS": {
-          "type": "string",
-          "description": "Technical PoC physical address information.",
-          "x-flatbuffer-type": "string"
-        },
-        "PREVIOUS_MESSAGE_ID": {
-          "type": "string",
-          "description": "ID that uniquely identifies the previous message from this originator.",
-          "x-flatbuffer-type": "string"
-        },
-        "NEXT_MESSAGE_ID": {
-          "type": "string",
-          "description": "ID that uniquely identifies the next message from this originator.",
-          "x-flatbuffer-type": "string"
-        },
-        "ADM_MSG_LINK": {
-          "type": "string",
-          "description": "Unique identifier of Attitude Data Messages linked to this OCM.",
-          "x-flatbuffer-type": "string"
-        },
-        "CDM_MSG_LINK": {
-          "type": "string",
-          "description": "Unique identifier of Conjunction Data Messages linked to this OCM.",
-          "x-flatbuffer-type": "string"
-        },
-        "PRM_MSG_LINK": {
-          "type": "string",
-          "description": "Unique identifier of Pointing Request Messages linked to this OCM.",
-          "x-flatbuffer-type": "string"
-        },
-        "RDM_MSG_LINK": {
-          "type": "string",
-          "description": "Unique identifier of Reentry Data Messages linked to this OCM.",
-          "x-flatbuffer-type": "string"
-        },
-        "TDM_MSG_LINK": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "List of Tracking Data Messages upon which this orbit determination is based.",
-          "x-flatbuffer-type": "[string]"
-        },
-        "OPERATOR": {
-          "type": "string",
-          "description": "Operator of the space object.",
-          "x-flatbuffer-type": "string"
-        },
-        "OWNER": {
-          "type": "string",
-          "description": "Owner of the space object.",
-          "x-flatbuffer-type": "string"
-        },
-        "COUNTRY": {
-          "type": "string",
-          "description": "Country where the space object owner is based.",
-          "x-flatbuffer-type": "string"
-        },
-        "CONSTELLATION": {
-          "type": "string",
-          "description": "Name of the constellation to which this space object belongs.",
-          "x-flatbuffer-type": "string"
-        },
-        "OBJECT_TYPE": {
-          "type": "string",
-          "description": "Specification of the type of object (e.g., PAYLOAD, ROCKET BODY, DEBRIS).",
-          "x-flatbuffer-type": "string"
-        },
-        "TIME_SYSTEM": {
-          "type": "string",
-          "description": "Time system for all absolute time stamps in this OCM, including EPOCH_TZERO.",
-          "x-flatbuffer-type": "string"
-        },
-        "EPOCH_TZERO": {
-          "type": "string",
-          "description": "Default epoch to which all relative times are referenced in data blocks.",
-          "x-flatbuffer-type": "string"
-        },
-        "OPS_STATUS": {
-          "type": "string",
-          "description": "Specification of the operational status of the space object.",
-          "x-flatbuffer-type": "string"
-        },
-        "ORBIT_CATEGORY": {
-          "type": "string",
-          "description": "Specification of the type of orbit (e.g., GEO, LEO).",
-          "x-flatbuffer-type": "string"
-        },
-        "OCM_DATA_ELEMENTS": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "List of elements of information data blocks included in this message.",
-          "x-flatbuffer-type": "[string]"
-        },
-        "SCLK_OFFSET_AT_EPOCH": {
-          "type": "number",
-          "description": "Number of spacecraft clock counts at EPOCH_TZERO (used if TIME_SYSTEM is SCLK).",
-          "x-flatbuffer-type": "double"
-        },
-        "SCLK_SEC_PER_SI_SEC": {
-          "type": "number",
-          "description": "Number of clock seconds occurring during one SI second (used if TIME_SYSTEM is SCLK).",
-          "x-flatbuffer-type": "double"
-        },
-        "PREVIOUS_MESSAGE_EPOCH": {
-          "type": "string",
-          "description": "Creation epoch of the previous message from this originator.",
-          "x-flatbuffer-type": "string"
-        },
-        "NEXT_MESSAGE_EPOCH": {
-          "type": "string",
-          "description": "Anticipated (or actual) epoch of the next message from this originator.",
-          "x-flatbuffer-type": "string"
-        },
-        "START_TIME": {
-          "type": "string",
-          "description": "Time of the earliest data contained in the OCM.",
-          "x-flatbuffer-type": "string"
-        },
-        "STOP_TIME": {
-          "type": "string",
-          "description": "Time of the latest data contained in the OCM.",
-          "x-flatbuffer-type": "string"
-        },
-        "TIME_SPAN": {
-          "type": "number",
-          "description": "Span of time that the OCM covers, measured in days.",
-          "x-flatbuffer-type": "double"
-        },
-        "TAIMUTC_AT_TZERO": {
-          "type": "number",
-          "description": "Difference (TAI - UTC) in seconds at EPOCH_TZERO.",
-          "x-flatbuffer-type": "double"
-        },
-        "NEXT_LEAP_EPOCH": {
-          "type": "string",
-          "description": "Epoch of next leap second.",
-          "x-flatbuffer-type": "string"
-        },
-        "NEXT_LEAP_TAIMUTC": {
-          "type": "number",
-          "description": "Difference (TAI - UTC) in seconds at NEXT_LEAP_EPOCH.",
-          "x-flatbuffer-type": "double"
-        },
-        "UT1MUTC_AT_TZERO": {
-          "type": "number",
-          "description": "Difference (UT1 - UTC) in seconds at EPOCH_TZERO.",
-          "x-flatbuffer-type": "double"
-        },
-        "EOP_SOURCE": {
-          "type": "string",
-          "description": "Source and version of Earth Orientation Parameters used.",
-          "x-flatbuffer-type": "string"
-        },
-        "INTERP_METHOD_EOP": {
-          "type": "string",
-          "description": "Method used to select or interpolate sequential EOP data.",
-          "x-flatbuffer-type": "string"
-        },
-        "CELESTIAL_SOURCE": {
-          "type": "string",
-          "description": "Source and version of celestial body ephemeris data used.",
-          "x-flatbuffer-type": "string"
-        }
-      },
-      "additionalProperties": false
-    },
-    "StateVector": {
-      "type": "object",
-      "properties": {
-        "EPOCH": {
-          "type": "string",
-          "description": "Epoch of the state vector.",
-          "x-flatbuffer-type": "string"
-        },
-        "X": {
-          "type": "number",
-          "description": "X component of position in the specified reference frame.",
-          "x-flatbuffer-type": "double"
-        },
-        "Y": {
-          "type": "number",
-          "description": "Y component of position.",
-          "x-flatbuffer-type": "double"
-        },
-        "Z": {
-          "type": "number",
-          "description": "Z component of position.",
-          "x-flatbuffer-type": "double"
-        },
-        "X_DOT": {
-          "type": "number",
-          "description": "X component of velocity.",
-          "x-flatbuffer-type": "double"
-        },
-        "Y_DOT": {
-          "type": "number",
-          "description": "Y component of velocity.",
-          "x-flatbuffer-type": "double"
-        },
-        "Z_DOT": {
-          "type": "number",
-          "description": "Z component of velocity.",
-          "x-flatbuffer-type": "double"
-        },
-        "X_DDOT": {
-          "type": "number",
-          "description": "X component of acceleration.",
-          "x-flatbuffer-type": "double"
-        },
-        "Y_DDOT": {
-          "type": "number",
-          "description": "Y component of acceleration.",
-          "x-flatbuffer-type": "double"
-        },
-        "Z_DDOT": {
-          "type": "number",
-          "description": "Z component of acceleration.",
-          "x-flatbuffer-type": "double"
-        }
-      },
-      "additionalProperties": false
-    },
-    "PhysicalProperties": {
-      "type": "object",
-      "properties": {
-        "COMMENT": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "Comments in the Physical Properties section.",
-          "x-flatbuffer-type": "[string]"
-        },
-        "WET_MASS": {
-          "type": "number",
-          "description": "Wet mass of the space object.",
-          "x-flatbuffer-type": "double"
-        },
-        "DRY_MASS": {
-          "type": "number",
-          "description": "Dry mass of the space object.",
-          "x-flatbuffer-type": "double"
-        },
-        "MASS_UNITS": {
-          "type": "string",
-          "description": "Units for mass values.",
-          "x-flatbuffer-type": "string"
-        },
-        "OEB_Q1": {
-          "type": "number",
-          "description": "Quaternion component q1 of orientation from OEB to EME2000.",
-          "x-flatbuffer-type": "double"
-        },
-        "OEB_Q2": {
-          "type": "number",
-          "description": "Quaternion component q2.",
-          "x-flatbuffer-type": "double"
-        },
-        "OEB_Q3": {
-          "type": "number",
-          "description": "Quaternion component q3.",
-          "x-flatbuffer-type": "double"
-        },
-        "OEB_QC": {
-          "type": "number",
-          "description": "Quaternion scalar component qc.",
-          "x-flatbuffer-type": "double"
-        },
-        "OEB_MAX": {
-          "type": "number",
-          "description": "Maximum dimension of the object along OEB frame axes.",
-          "x-flatbuffer-type": "double"
-        },
-        "OEB_INT": {
-          "type": "number",
-          "description": "Intermediate dimension along OEB frame axes.",
-          "x-flatbuffer-type": "double"
-        },
-        "OEB_MIN": {
-          "type": "number",
-          "description": "Minimum dimension of the object along OEB frame axes.",
-          "x-flatbuffer-type": "double"
-        },
-        "AREA_ALONG_OEB_MAX": {
-          "type": "number",
-          "description": "Area along OEB_MAX axis.",
-          "x-flatbuffer-type": "double"
-        },
-        "AREA_ALONG_OEB_INT": {
-          "type": "number",
-          "description": "Area along OEB_INT axis.",
-          "x-flatbuffer-type": "double"
-        },
-        "AREA_ALONG_OEB_MIN": {
-          "type": "number",
-          "description": "Area along OEB_MIN axis.",
-          "x-flatbuffer-type": "double"
-        },
-        "AREA_UNITS": {
-          "type": "string",
-          "description": "Units for area values.",
-          "x-flatbuffer-type": "string"
-        },
-        "DRAG_CONST_AREA": {
-          "type": "number",
-          "description": "Constant area for drag computations.",
-          "x-flatbuffer-type": "double"
-        },
-        "DRAG_COEFF_NOM": {
-          "type": "number",
-          "description": "Nominal drag coefficient.",
-          "x-flatbuffer-type": "double"
-        },
-        "DRAG_UNCERTAINTY": {
-          "type": "number",
-          "description": "Uncertainty in the drag coefficient.",
-          "x-flatbuffer-type": "double"
-        },
-        "SRP_CONST_AREA": {
-          "type": "number",
-          "description": "Constant area for solar radiation pressure computations.",
-          "x-flatbuffer-type": "double"
-        },
-        "SOLAR_RAD_COEFF": {
-          "type": "number",
-          "description": "Nominal solar radiation pressure coefficient.",
-          "x-flatbuffer-type": "double"
-        },
-        "SRP_UNCERTAINTY": {
-          "type": "number",
-          "description": "Uncertainty in the solar radiation pressure coefficient.",
-          "x-flatbuffer-type": "double"
-        }
-      },
-      "additionalProperties": false
-    },
-    "Perturbations": {
-      "type": "object",
-      "properties": {
-        "COMMENT": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "Comments in the Perturbations section.",
-          "x-flatbuffer-type": "[string]"
-        },
-        "ATMOSPHERIC_MODEL": {
-          "$ref": "#/definitions/ATM",
-          "description": "Atmospheric model used.",
-          "x-flatbuffer-type": "ATM"
-        },
-        "GRAVITY_MODEL": {
-          "type": "string",
-          "description": "Gravity model used.",
-          "x-flatbuffer-type": "string"
-        },
-        "GRAVITY_DEGREE": {
-          "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "description": "Degree of the gravity model.",
-          "x-flatbuffer-type": "int"
-        },
-        "GRAVITY_ORDER": {
-          "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "description": "Order of the gravity model.",
-          "x-flatbuffer-type": "int"
-        },
-        "GM": {
-          "type": "number",
-          "description": "Gravitational constant times the mass of the central body.",
-          "x-flatbuffer-type": "double"
-        },
-        "N_BODY_PERTURBATIONS": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "List of celestial bodies included in n-body perturbations.",
-          "x-flatbuffer-type": "[string]"
-        },
-        "OCEAN_TIDES_MODEL": {
-          "type": "string",
-          "description": "Ocean tides model used.",
-          "x-flatbuffer-type": "string"
-        },
-        "SOLID_TIDES_MODEL": {
-          "type": "string",
-          "description": "Solid tides model used.",
-          "x-flatbuffer-type": "string"
-        },
-        "ATMOSPHERIC_TIDES_MODEL": {
-          "type": "string",
-          "description": "Atmospheric tides model used.",
-          "x-flatbuffer-type": "string"
-        },
-        "GEOPOTENTIAL_MODEL": {
-          "type": "string",
-          "description": "Geopotential model used.",
-          "x-flatbuffer-type": "string"
-        },
-        "SOLAR_RAD_PRESSURE": {
-          "type": "string",
-          "description": "Solar radiation pressure model used.",
-          "x-flatbuffer-type": "string"
-        },
-        "ALBEDO": {
-          "type": "string",
-          "description": "Albedo model used.",
-          "x-flatbuffer-type": "string"
-        },
-        "THERMAL": {
-          "type": "string",
-          "description": "Thermal model used.",
-          "x-flatbuffer-type": "string"
-        },
-        "RELATIVITY": {
-          "type": "string",
-          "description": "Relativity model used.",
-          "x-flatbuffer-type": "string"
-        },
-        "ATMOSPHERIC_DRAG": {
-          "type": "string",
-          "description": "Atmospheric drag model used.",
-          "x-flatbuffer-type": "string"
-        },
-        "FIXED_GEOMAG_KP": {
-          "type": "number",
-          "description": "Fixed geomagnetic Kp index used.",
-          "x-flatbuffer-type": "double"
-        },
-        "FIXED_F10P7": {
-          "type": "number",
-          "description": "Fixed F10.7 solar flux value used.",
-          "x-flatbuffer-type": "double"
-        },
-        "FIXED_F10P7_MEAN": {
-          "type": "number",
-          "description": "Fixed mean F10.7 solar flux value used.",
-          "x-flatbuffer-type": "double"
-        }
-      },
-      "additionalProperties": false
-    },
-    "Maneuver": {
-      "type": "object",
-      "properties": {
-        "MAN_ID": {
-          "type": "string",
-          "description": "Unique identifier for the maneuver.",
-          "x-flatbuffer-type": "string"
-        },
-        "MAN_BASIS": {
-          "type": "string",
-          "description": "Basis of the maneuver plan (e.g., planned, predicted, estimated).",
-          "x-flatbuffer-type": "string"
-        },
-        "MAN_DEVICE_ID": {
-          "type": "string",
-          "description": "Identifier of the maneuver device.",
-          "x-flatbuffer-type": "string"
-        },
-        "MAN_PREV_ID": {
-          "type": "string",
-          "description": "Identifier of the previous maneuver.",
-          "x-flatbuffer-type": "string"
-        },
-        "MAN_PURPOSE": {
-          "type": "string",
-          "description": "Purpose of the maneuver.",
-          "x-flatbuffer-type": "string"
-        },
-        "MAN_REF_FRAME": {
-          "type": "string",
-          "description": "Reference frame for the maneuver data.",
-          "x-flatbuffer-type": "string"
-        },
-        "MAN_FRAME_EPOCH": {
-          "type": "string",
-          "description": "Epoch of the maneuver reference frame.",
-          "x-flatbuffer-type": "string"
-        },
-        "MAN_TYPE": {
-          "type": "string",
-          "description": "Type of maneuver (e.g., IMPULSIVE, FINITE).",
-          "x-flatbuffer-type": "string"
-        },
-        "MAN_EPOCH_START": {
-          "type": "string",
-          "description": "Start epoch of the maneuver.",
-          "x-flatbuffer-type": "string"
-        },
-        "MAN_DURATION": {
-          "type": "number",
-          "description": "Duration of the maneuver.",
-          "x-flatbuffer-type": "double"
-        },
-        "MAN_UNITS": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "Units for the maneuver data values.",
-          "x-flatbuffer-type": "[string]"
-        },
-        "DATA": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "Data associated with the maneuver.",
-          "x-flatbuffer-type": "[string]"
-        },
-        "MAN_COMMENT": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "Comments related to the maneuver.",
-          "x-flatbuffer-type": "[string]"
-        }
-      },
-      "additionalProperties": false
-    },
-    "OrbitDetermination": {
-      "type": "object",
-      "properties": {
-        "OD_ID": {
-          "type": "string",
-          "description": "Unique identifier for the orbit determination.",
-          "x-flatbuffer-type": "string"
-        },
-        "OD_PREV_ID": {
-          "type": "string",
-          "description": "Identifier of the previous orbit determination.",
-          "x-flatbuffer-type": "string"
-        },
-        "OD_ALGORITHM": {
-          "type": "string",
-          "description": "Algorithm used for orbit determination.",
-          "x-flatbuffer-type": "string"
-        },
-        "OD_METHOD": {
-          "type": "string",
-          "description": "Method used for orbit determination.",
-          "x-flatbuffer-type": "string"
-        },
-        "OD_EPOCH": {
-          "type": "string",
-          "description": "Epoch of the orbit determination.",
-          "x-flatbuffer-type": "string"
-        },
-        "OD_TIME_TAG": {
-          "type": "string",
-          "description": "Time tag of the orbit determination.",
-          "x-flatbuffer-type": "string"
-        },
-        "OD_PROCESS_NOISE": {
-          "type": "string",
-          "description": "Process noise model used.",
-          "x-flatbuffer-type": "string"
-        },
-        "OD_COV_REDUCTION": {
-          "type": "string",
-          "description": "Covariance reduction techniques used.",
-          "x-flatbuffer-type": "string"
-        },
-        "OD_NOISE_MODELS": {
-          "type": "string",
-          "description": "Noise models used.",
-          "x-flatbuffer-type": "string"
-        },
-        "OD_OBSERVATIONS_TYPE": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "Types of observations used (e.g., RANGE, DOPPLER).",
-          "x-flatbuffer-type": "[string]"
-        },
-        "OD_OBSERVATIONS_USED": {
-          "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "description": "Number of observations used.",
-          "x-flatbuffer-type": "int"
-        },
-        "OD_TRACKS_USED": {
-          "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "description": "Number of tracks used.",
-          "x-flatbuffer-type": "int"
-        },
-        "OD_DATA_WEIGHTING": {
-          "type": "string",
-          "description": "Data weighting scheme used.",
-          "x-flatbuffer-type": "string"
-        },
-        "OD_CONVERGENCE_CRITERIA": {
-          "type": "string",
-          "description": "Convergence criteria used.",
-          "x-flatbuffer-type": "string"
-        },
-        "OD_EST_PARAMETERS": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "Parameters estimated during orbit determination.",
-          "x-flatbuffer-type": "[string]"
-        },
-        "OD_APRIORI_DATA": {
-          "type": "string",
-          "description": "A priori data used for orbit determination.",
-          "x-flatbuffer-type": "string"
-        },
-        "OD_RESIDUALS": {
-          "type": "string",
-          "description": "Residuals from the orbit determination.",
-          "x-flatbuffer-type": "string"
-        }
-      },
-      "additionalProperties": false
-    },
-    "UserDefinedParameters": {
-      "type": "object",
-      "properties": {
-        "PARAM_NAME": {
-          "type": "string",
-          "description": "Name of the user-defined parameter.",
-          "x-flatbuffer-type": "string"
-        },
-        "PARAM_VALUE": {
-          "type": "string",
-          "description": "Value of the user-defined parameter.",
-          "x-flatbuffer-type": "string"
-        }
-      },
-      "additionalProperties": false
-    },
-    "OCM": {
-      "type": "object",
-      "description": "Orbit Comprehensive Message",
-      "properties": {
-        "HEADER": {
-          "$ref": "#/definitions/Header",
-          "description": "Header section of the OCM.",
-          "x-flatbuffer-type": "Header"
-        },
-        "METADATA": {
-          "$ref": "#/definitions/Metadata",
-          "description": "Metadata section of the OCM.",
-          "x-flatbuffer-type": "Metadata"
-        },
-        "TRAJ_TYPE": {
-          "type": "string",
-          "description": "Trajectory type (e.g., PROPAGATED, ESTIMATED).",
-          "x-flatbuffer-type": "string"
-        },
-        "STATE_STEP_SIZE": {
-          "type": "number",
-          "description": "Time interval between state vectors in seconds (required for time-series data).",
-          "x-flatbuffer-type": "double"
-        },
-        "STATE_VECTOR_SIZE": {
-          "type": "integer",
-          "minimum": 0,
-          "maximum": 255,
-          "description": "Number of components per state vector.\n6 = position + velocity (X, Y, Z, X_DOT, Y_DOT, Z_DOT)\n9 = position + velocity + acceleration (adds X_DDOT, Y_DDOT, Z_DDOT)",
-          "x-flatbuffer-type": "uint8"
-        },
-        "STATE_DATA": {
-          "type": "array",
-          "items": {
-            "type": "number"
-          },
-          "description": "State data as row-major array of doubles.\nLayout: [X0, Y0, Z0, X_DOT0, Y_DOT0, Z_DOT0, X1, Y1, Z1, ...]\nTime reconstruction: epoch[i] = METADATA.START_TIME + (i * STATE_STEP_SIZE)\nLength must be divisible by STATE_VECTOR_SIZE.",
-          "x-flatbuffer-type": "[double]"
-        },
-        "COVARIANCE_DATA": {
-          "type": "array",
-          "items": {
-            "type": "number"
-          },
-          "description": "Covariance data as flat array (21 elements per epoch for 6x6 lower triangular).\nTime alignment matches STATE_DATA epochs.",
-          "x-flatbuffer-type": "[double]"
-        },
-        "PHYSICAL_PROPERTIES": {
-          "$ref": "#/definitions/PhysicalProperties",
-          "description": "Physical properties of the space object.",
-          "x-flatbuffer-type": "PhysicalProperties"
-        },
-        "MANEUVER_DATA": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Maneuver"
-          },
-          "description": "Maneuver data.",
-          "x-flatbuffer-type": "[Maneuver]"
-        },
-        "PERTURBATIONS": {
-          "$ref": "#/definitions/Perturbations",
-          "description": "Perturbations parameters used.",
-          "x-flatbuffer-type": "Perturbations"
-        },
-        "ORBIT_DETERMINATION": {
-          "$ref": "#/definitions/OrbitDetermination",
-          "description": "Orbit determination data.",
-          "x-flatbuffer-type": "OrbitDetermination"
-        },
-        "USER_DEFINED_PARAMETERS": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/UserDefinedParameters"
-          },
-          "description": "User-defined parameters and supplemental comments.",
-          "x-flatbuffer-type": "[UserDefinedParameters]"
         }
       },
       "additionalProperties": false
     }
   },
-  "$ref": "#/definitions/OCM",
+  "$ref": "#/definitions/LCC",
   "x-flatbuffer-root-type": "OCM",
   "x-flatbuffer-file-identifier": "$OCM"
 }

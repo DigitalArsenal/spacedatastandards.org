@@ -119,19 +119,27 @@ def End(builder):
 class uvwSigmasT(object):
 
     # uvwSigmasT
-    def __init__(self):
-        self.U_SIGMA = 0.0  # type: float
-        self.V_SIGMA = 0.0  # type: float
-        self.W_SIGMA = 0.0  # type: float
-        self.UD_SIGMA = 0.0  # type: float
-        self.VD_SIGMA = 0.0  # type: float
-        self.WD_SIGMA = 0.0  # type: float
+    def __init__(
+        self,
+        U_SIGMA = 0.0,
+        V_SIGMA = 0.0,
+        W_SIGMA = 0.0,
+        UD_SIGMA = 0.0,
+        VD_SIGMA = 0.0,
+        WD_SIGMA = 0.0,
+    ):
+        self.U_SIGMA = U_SIGMA  # type: float
+        self.V_SIGMA = V_SIGMA  # type: float
+        self.W_SIGMA = W_SIGMA  # type: float
+        self.UD_SIGMA = UD_SIGMA  # type: float
+        self.VD_SIGMA = VD_SIGMA  # type: float
+        self.WD_SIGMA = WD_SIGMA  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        uvwSigmas = uvwSigmas()
-        uvwSigmas.Init(buf, pos)
-        return cls.InitFromObj(uvwSigmas)
+        tmpUvwSigmas = uvwSigmas()
+        tmpUvwSigmas.Init(buf, pos)
+        return cls.InitFromObj(tmpUvwSigmas)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -139,9 +147,9 @@ class uvwSigmasT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, uvwSigmas):
+    def InitFromObj(cls, tmpUvwSigmas):
         x = uvwSigmasT()
-        x._UnPack(uvwSigmas)
+        x._UnPack(tmpUvwSigmas)
         return x
 
     # uvwSigmasT

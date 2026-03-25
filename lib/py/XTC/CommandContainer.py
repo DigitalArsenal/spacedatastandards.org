@@ -99,6 +99,12 @@ def CommandContainerStartENTRY_LISTVector(builder, numElems):
 def StartENTRY_LISTVector(builder, numElems):
     return CommandContainerStartENTRY_LISTVector(builder, numElems)
 
+def CommandContainerCreateENTRY_LISTVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateENTRY_LISTVector(builder, data):
+    CommandContainerCreateENTRY_LISTVector(builder, data)
+
 def CommandContainerAddBASE_CONTAINER(builder, BASE_CONTAINER):
     builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(BASE_CONTAINER), 0)
 
@@ -121,16 +127,21 @@ except:
 class CommandContainerT(object):
 
     # CommandContainerT
-    def __init__(self):
-        self.NAME = None  # type: str
-        self.ENTRY_LIST = None  # type: List[CommandContainerEntry.CommandContainerEntryT]
-        self.BASE_CONTAINER = None  # type: Optional[BaseContainer.BaseContainerT]
+    def __init__(
+        self,
+        NAME = None,
+        ENTRY_LIST = None,
+        BASE_CONTAINER = None,
+    ):
+        self.NAME = NAME  # type: Optional[str]
+        self.ENTRY_LIST = ENTRY_LIST  # type: Optional[List[CommandContainerEntry.CommandContainerEntryT]]
+        self.BASE_CONTAINER = BASE_CONTAINER  # type: Optional[BaseContainer.BaseContainerT]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        commandContainer = CommandContainer()
-        commandContainer.Init(buf, pos)
-        return cls.InitFromObj(commandContainer)
+        tmpCommandContainer = CommandContainer()
+        tmpCommandContainer.Init(buf, pos)
+        return cls.InitFromObj(tmpCommandContainer)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -138,26 +149,26 @@ class CommandContainerT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, commandContainer):
+    def InitFromObj(cls, tmpCommandContainer):
         x = CommandContainerT()
-        x._UnPack(commandContainer)
+        x._UnPack(tmpCommandContainer)
         return x
 
     # CommandContainerT
-    def _UnPack(self, commandContainer):
-        if commandContainer is None:
+    def _UnPack(self, CommandContainer):
+        if CommandContainer is None:
             return
-        self.NAME = commandContainer.NAME()
-        if not commandContainer.ENTRY_LISTIsNone():
+        self.NAME = CommandContainer.NAME()
+        if not CommandContainer.ENTRY_LISTIsNone():
             self.ENTRY_LIST = []
-            for i in range(commandContainer.ENTRY_LISTLength()):
-                if commandContainer.ENTRY_LIST(i) is None:
+            for i in range(CommandContainer.ENTRY_LISTLength()):
+                if CommandContainer.ENTRY_LIST(i) is None:
                     self.ENTRY_LIST.append(None)
                 else:
-                    commandContainerEntry_ = CommandContainerEntry.CommandContainerEntryT.InitFromObj(commandContainer.ENTRY_LIST(i))
+                    commandContainerEntry_ = CommandContainerEntry.CommandContainerEntryT.InitFromObj(CommandContainer.ENTRY_LIST(i))
                     self.ENTRY_LIST.append(commandContainerEntry_)
-        if commandContainer.BASE_CONTAINER() is not None:
-            self.BASE_CONTAINER = BaseContainer.BaseContainerT.InitFromObj(commandContainer.BASE_CONTAINER())
+        if CommandContainer.BASE_CONTAINER() is not None:
+            self.BASE_CONTAINER = BaseContainer.BaseContainerT.InitFromObj(CommandContainer.BASE_CONTAINER())
 
     # CommandContainerT
     def Pack(self, builder):
@@ -180,5 +191,5 @@ class CommandContainerT(object):
             CommandContainerAddENTRY_LIST(builder, ENTRY_LIST)
         if self.BASE_CONTAINER is not None:
             CommandContainerAddBASE_CONTAINER(builder, BASE_CONTAINER)
-        commandContainer = CommandContainerEnd(builder)
-        return commandContainer
+        CommandContainer = CommandContainerEnd(builder)
+        return CommandContainer

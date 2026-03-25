@@ -2,4 +2,964 @@
 
 # namespace: 
 
-# NOTE KMLFolder.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Folder container
+class KMLFolder(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = KMLFolder()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsKMLFolder(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def KMLFolderBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x4B\x4D\x4C", size_prefixed=size_prefixed)
+
+    # KMLFolder
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Folder name
+    # KMLFolder
+    def NAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Description
+    # KMLFolder
+    def DESCRIPTION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Visibility flag
+    # KMLFolder
+    def VISIBILITY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # Whether folder is open in tree view
+    # KMLFolder
+    def OPEN(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # Placemarks in this folder
+    # KMLFolder
+    def PLACEMARKS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from KMLPlacemark import KMLPlacemark
+            obj = KMLPlacemark()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # KMLFolder
+    def PLACEMARKSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # KMLFolder
+    def PLACEMARKSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        return o == 0
+
+    # Sub-folders
+    # KMLFolder
+    def FOLDERS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from KMLFolder import KMLFolder
+            obj = KMLFolder()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # KMLFolder
+    def FOLDERSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # KMLFolder
+    def FOLDERSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        return o == 0
+
+    # Network links
+    # KMLFolder
+    def NETWORK_LINKS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from KMLNetworkLink import KMLNetworkLink
+            obj = KMLNetworkLink()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # KMLFolder
+    def NETWORK_LINKSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # KMLFolder
+    def NETWORK_LINKSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        return o == 0
+
+    # Ground overlays
+    # KMLFolder
+    def GROUND_OVERLAYS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from KMLGroundOverlay import KMLGroundOverlay
+            obj = KMLGroundOverlay()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # KMLFolder
+    def GROUND_OVERLAYSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # KMLFolder
+    def GROUND_OVERLAYSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        return o == 0
+
+    # Shared styles
+    # KMLFolder
+    def STYLES(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from KMLStyle import KMLStyle
+            obj = KMLStyle()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # KMLFolder
+    def STYLESLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # KMLFolder
+    def STYLESIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        return o == 0
+
+    # Style maps
+    # KMLFolder
+    def STYLE_MAPS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from KMLStyleMap import KMLStyleMap
+            obj = KMLStyleMap()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # KMLFolder
+    def STYLE_MAPSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # KMLFolder
+    def STYLE_MAPSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        return o == 0
+
+    # Screen overlays
+    # KMLFolder
+    def SCREEN_OVERLAYS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from KMLScreenOverlay import KMLScreenOverlay
+            obj = KMLScreenOverlay()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # KMLFolder
+    def SCREEN_OVERLAYSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # KMLFolder
+    def SCREEN_OVERLAYSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        return o == 0
+
+    # Photo overlays
+    # KMLFolder
+    def PHOTO_OVERLAYS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from KMLPhotoOverlay import KMLPhotoOverlay
+            obj = KMLPhotoOverlay()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # KMLFolder
+    def PHOTO_OVERLAYSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # KMLFolder
+    def PHOTO_OVERLAYSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        return o == 0
+
+    # Tours
+    # KMLFolder
+    def TOURS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from KMLTour import KMLTour
+            obj = KMLTour()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # KMLFolder
+    def TOURSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # KMLFolder
+    def TOURSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        return o == 0
+
+    # Style URL reference
+    # KMLFolder
+    def STYLE_URL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Region
+    # KMLFolder
+    def REGION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from KMLRegion import KMLRegion
+            obj = KMLRegion()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Extended data
+    # KMLFolder
+    def EXTENDED_DATA(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from KMLData import KMLData
+            obj = KMLData()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # KMLFolder
+    def EXTENDED_DATALength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # KMLFolder
+    def EXTENDED_DATAIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        return o == 0
+
+    # LookAt viewpoint
+    # KMLFolder
+    def LOOK_AT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from KMLLookAt import KMLLookAt
+            obj = KMLLookAt()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Camera viewpoint
+    # KMLFolder
+    def CAMERA(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from KMLCamera import KMLCamera
+            obj = KMLCamera()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # TimeSpan
+    # KMLFolder
+    def TIME_SPAN(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from KMLTimeSpan import KMLTimeSpan
+            obj = KMLTimeSpan()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # TimeStamp
+    # KMLFolder
+    def TIME_STAMP(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from KMLTimeStamp import KMLTimeStamp
+            obj = KMLTimeStamp()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+def KMLFolderStart(builder):
+    builder.StartObject(20)
+
+def Start(builder):
+    KMLFolderStart(builder)
+
+def KMLFolderAddNAME(builder, NAME):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(NAME), 0)
+
+def AddNAME(builder, NAME):
+    KMLFolderAddNAME(builder, NAME)
+
+def KMLFolderAddDESCRIPTION(builder, DESCRIPTION):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(DESCRIPTION), 0)
+
+def AddDESCRIPTION(builder, DESCRIPTION):
+    KMLFolderAddDESCRIPTION(builder, DESCRIPTION)
+
+def KMLFolderAddVISIBILITY(builder, VISIBILITY):
+    builder.PrependBoolSlot(2, VISIBILITY, 0)
+
+def AddVISIBILITY(builder, VISIBILITY):
+    KMLFolderAddVISIBILITY(builder, VISIBILITY)
+
+def KMLFolderAddOPEN(builder, OPEN):
+    builder.PrependBoolSlot(3, OPEN, 0)
+
+def AddOPEN(builder, OPEN):
+    KMLFolderAddOPEN(builder, OPEN)
+
+def KMLFolderAddPLACEMARKS(builder, PLACEMARKS):
+    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(PLACEMARKS), 0)
+
+def AddPLACEMARKS(builder, PLACEMARKS):
+    KMLFolderAddPLACEMARKS(builder, PLACEMARKS)
+
+def KMLFolderStartPLACEMARKSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartPLACEMARKSVector(builder, numElems):
+    return KMLFolderStartPLACEMARKSVector(builder, numElems)
+
+def KMLFolderCreatePLACEMARKSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreatePLACEMARKSVector(builder, data):
+    KMLFolderCreatePLACEMARKSVector(builder, data)
+
+def KMLFolderAddFOLDERS(builder, FOLDERS):
+    builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(FOLDERS), 0)
+
+def AddFOLDERS(builder, FOLDERS):
+    KMLFolderAddFOLDERS(builder, FOLDERS)
+
+def KMLFolderStartFOLDERSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartFOLDERSVector(builder, numElems):
+    return KMLFolderStartFOLDERSVector(builder, numElems)
+
+def KMLFolderCreateFOLDERSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateFOLDERSVector(builder, data):
+    KMLFolderCreateFOLDERSVector(builder, data)
+
+def KMLFolderAddNETWORK_LINKS(builder, NETWORK_LINKS):
+    builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(NETWORK_LINKS), 0)
+
+def AddNETWORK_LINKS(builder, NETWORK_LINKS):
+    KMLFolderAddNETWORK_LINKS(builder, NETWORK_LINKS)
+
+def KMLFolderStartNETWORK_LINKSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartNETWORK_LINKSVector(builder, numElems):
+    return KMLFolderStartNETWORK_LINKSVector(builder, numElems)
+
+def KMLFolderCreateNETWORK_LINKSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateNETWORK_LINKSVector(builder, data):
+    KMLFolderCreateNETWORK_LINKSVector(builder, data)
+
+def KMLFolderAddGROUND_OVERLAYS(builder, GROUND_OVERLAYS):
+    builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(GROUND_OVERLAYS), 0)
+
+def AddGROUND_OVERLAYS(builder, GROUND_OVERLAYS):
+    KMLFolderAddGROUND_OVERLAYS(builder, GROUND_OVERLAYS)
+
+def KMLFolderStartGROUND_OVERLAYSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartGROUND_OVERLAYSVector(builder, numElems):
+    return KMLFolderStartGROUND_OVERLAYSVector(builder, numElems)
+
+def KMLFolderCreateGROUND_OVERLAYSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateGROUND_OVERLAYSVector(builder, data):
+    KMLFolderCreateGROUND_OVERLAYSVector(builder, data)
+
+def KMLFolderAddSTYLES(builder, STYLES):
+    builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(STYLES), 0)
+
+def AddSTYLES(builder, STYLES):
+    KMLFolderAddSTYLES(builder, STYLES)
+
+def KMLFolderStartSTYLESVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartSTYLESVector(builder, numElems):
+    return KMLFolderStartSTYLESVector(builder, numElems)
+
+def KMLFolderCreateSTYLESVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateSTYLESVector(builder, data):
+    KMLFolderCreateSTYLESVector(builder, data)
+
+def KMLFolderAddSTYLE_MAPS(builder, STYLE_MAPS):
+    builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(STYLE_MAPS), 0)
+
+def AddSTYLE_MAPS(builder, STYLE_MAPS):
+    KMLFolderAddSTYLE_MAPS(builder, STYLE_MAPS)
+
+def KMLFolderStartSTYLE_MAPSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartSTYLE_MAPSVector(builder, numElems):
+    return KMLFolderStartSTYLE_MAPSVector(builder, numElems)
+
+def KMLFolderCreateSTYLE_MAPSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateSTYLE_MAPSVector(builder, data):
+    KMLFolderCreateSTYLE_MAPSVector(builder, data)
+
+def KMLFolderAddSCREEN_OVERLAYS(builder, SCREEN_OVERLAYS):
+    builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(SCREEN_OVERLAYS), 0)
+
+def AddSCREEN_OVERLAYS(builder, SCREEN_OVERLAYS):
+    KMLFolderAddSCREEN_OVERLAYS(builder, SCREEN_OVERLAYS)
+
+def KMLFolderStartSCREEN_OVERLAYSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartSCREEN_OVERLAYSVector(builder, numElems):
+    return KMLFolderStartSCREEN_OVERLAYSVector(builder, numElems)
+
+def KMLFolderCreateSCREEN_OVERLAYSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateSCREEN_OVERLAYSVector(builder, data):
+    KMLFolderCreateSCREEN_OVERLAYSVector(builder, data)
+
+def KMLFolderAddPHOTO_OVERLAYS(builder, PHOTO_OVERLAYS):
+    builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(PHOTO_OVERLAYS), 0)
+
+def AddPHOTO_OVERLAYS(builder, PHOTO_OVERLAYS):
+    KMLFolderAddPHOTO_OVERLAYS(builder, PHOTO_OVERLAYS)
+
+def KMLFolderStartPHOTO_OVERLAYSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartPHOTO_OVERLAYSVector(builder, numElems):
+    return KMLFolderStartPHOTO_OVERLAYSVector(builder, numElems)
+
+def KMLFolderCreatePHOTO_OVERLAYSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreatePHOTO_OVERLAYSVector(builder, data):
+    KMLFolderCreatePHOTO_OVERLAYSVector(builder, data)
+
+def KMLFolderAddTOURS(builder, TOURS):
+    builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(TOURS), 0)
+
+def AddTOURS(builder, TOURS):
+    KMLFolderAddTOURS(builder, TOURS)
+
+def KMLFolderStartTOURSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartTOURSVector(builder, numElems):
+    return KMLFolderStartTOURSVector(builder, numElems)
+
+def KMLFolderCreateTOURSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateTOURSVector(builder, data):
+    KMLFolderCreateTOURSVector(builder, data)
+
+def KMLFolderAddSTYLE_URL(builder, STYLE_URL):
+    builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(STYLE_URL), 0)
+
+def AddSTYLE_URL(builder, STYLE_URL):
+    KMLFolderAddSTYLE_URL(builder, STYLE_URL)
+
+def KMLFolderAddREGION(builder, REGION):
+    builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(REGION), 0)
+
+def AddREGION(builder, REGION):
+    KMLFolderAddREGION(builder, REGION)
+
+def KMLFolderAddEXTENDED_DATA(builder, EXTENDED_DATA):
+    builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(EXTENDED_DATA), 0)
+
+def AddEXTENDED_DATA(builder, EXTENDED_DATA):
+    KMLFolderAddEXTENDED_DATA(builder, EXTENDED_DATA)
+
+def KMLFolderStartEXTENDED_DATAVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartEXTENDED_DATAVector(builder, numElems):
+    return KMLFolderStartEXTENDED_DATAVector(builder, numElems)
+
+def KMLFolderCreateEXTENDED_DATAVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateEXTENDED_DATAVector(builder, data):
+    KMLFolderCreateEXTENDED_DATAVector(builder, data)
+
+def KMLFolderAddLOOK_AT(builder, LOOK_AT):
+    builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(LOOK_AT), 0)
+
+def AddLOOK_AT(builder, LOOK_AT):
+    KMLFolderAddLOOK_AT(builder, LOOK_AT)
+
+def KMLFolderAddCAMERA(builder, CAMERA):
+    builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(CAMERA), 0)
+
+def AddCAMERA(builder, CAMERA):
+    KMLFolderAddCAMERA(builder, CAMERA)
+
+def KMLFolderAddTIME_SPAN(builder, TIME_SPAN):
+    builder.PrependUOffsetTRelativeSlot(18, flatbuffers.number_types.UOffsetTFlags.py_type(TIME_SPAN), 0)
+
+def AddTIME_SPAN(builder, TIME_SPAN):
+    KMLFolderAddTIME_SPAN(builder, TIME_SPAN)
+
+def KMLFolderAddTIME_STAMP(builder, TIME_STAMP):
+    builder.PrependUOffsetTRelativeSlot(19, flatbuffers.number_types.UOffsetTFlags.py_type(TIME_STAMP), 0)
+
+def AddTIME_STAMP(builder, TIME_STAMP):
+    KMLFolderAddTIME_STAMP(builder, TIME_STAMP)
+
+def KMLFolderEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return KMLFolderEnd(builder)
+
+import KMLCamera
+import KMLData
+import KMLGroundOverlay
+import KMLLookAt
+import KMLNetworkLink
+import KMLPhotoOverlay
+import KMLPlacemark
+import KMLRegion
+import KMLScreenOverlay
+import KMLStyle
+import KMLStyleMap
+import KMLTimeSpan
+import KMLTimeStamp
+import KMLTour
+try:
+    from typing import List, Optional
+except:
+    pass
+
+class KMLFolderT(object):
+
+    # KMLFolderT
+    def __init__(
+        self,
+        NAME = None,
+        DESCRIPTION = None,
+        VISIBILITY = False,
+        OPEN = False,
+        PLACEMARKS = None,
+        FOLDERS = None,
+        NETWORK_LINKS = None,
+        GROUND_OVERLAYS = None,
+        STYLES = None,
+        STYLE_MAPS = None,
+        SCREEN_OVERLAYS = None,
+        PHOTO_OVERLAYS = None,
+        TOURS = None,
+        STYLE_URL = None,
+        REGION = None,
+        EXTENDED_DATA = None,
+        LOOK_AT = None,
+        CAMERA = None,
+        TIME_SPAN = None,
+        TIME_STAMP = None,
+    ):
+        self.NAME = NAME  # type: Optional[str]
+        self.DESCRIPTION = DESCRIPTION  # type: Optional[str]
+        self.VISIBILITY = VISIBILITY  # type: bool
+        self.OPEN = OPEN  # type: bool
+        self.PLACEMARKS = PLACEMARKS  # type: Optional[List[KMLPlacemark.KMLPlacemarkT]]
+        self.FOLDERS = FOLDERS  # type: Optional[List[KMLFolder.KMLFolderT]]
+        self.NETWORK_LINKS = NETWORK_LINKS  # type: Optional[List[KMLNetworkLink.KMLNetworkLinkT]]
+        self.GROUND_OVERLAYS = GROUND_OVERLAYS  # type: Optional[List[KMLGroundOverlay.KMLGroundOverlayT]]
+        self.STYLES = STYLES  # type: Optional[List[KMLStyle.KMLStyleT]]
+        self.STYLE_MAPS = STYLE_MAPS  # type: Optional[List[KMLStyleMap.KMLStyleMapT]]
+        self.SCREEN_OVERLAYS = SCREEN_OVERLAYS  # type: Optional[List[KMLScreenOverlay.KMLScreenOverlayT]]
+        self.PHOTO_OVERLAYS = PHOTO_OVERLAYS  # type: Optional[List[KMLPhotoOverlay.KMLPhotoOverlayT]]
+        self.TOURS = TOURS  # type: Optional[List[KMLTour.KMLTourT]]
+        self.STYLE_URL = STYLE_URL  # type: Optional[str]
+        self.REGION = REGION  # type: Optional[KMLRegion.KMLRegionT]
+        self.EXTENDED_DATA = EXTENDED_DATA  # type: Optional[List[KMLData.KMLDataT]]
+        self.LOOK_AT = LOOK_AT  # type: Optional[KMLLookAt.KMLLookAtT]
+        self.CAMERA = CAMERA  # type: Optional[KMLCamera.KMLCameraT]
+        self.TIME_SPAN = TIME_SPAN  # type: Optional[KMLTimeSpan.KMLTimeSpanT]
+        self.TIME_STAMP = TIME_STAMP  # type: Optional[KMLTimeStamp.KMLTimeStampT]
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpKmlfolder = KMLFolder()
+        tmpKmlfolder.Init(buf, pos)
+        return cls.InitFromObj(tmpKmlfolder)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpKmlfolder):
+        x = KMLFolderT()
+        x._UnPack(tmpKmlfolder)
+        return x
+
+    # KMLFolderT
+    def _UnPack(self, KMLFolder):
+        if KMLFolder is None:
+            return
+        self.NAME = KMLFolder.NAME()
+        self.DESCRIPTION = KMLFolder.DESCRIPTION()
+        self.VISIBILITY = KMLFolder.VISIBILITY()
+        self.OPEN = KMLFolder.OPEN()
+        if not KMLFolder.PLACEMARKSIsNone():
+            self.PLACEMARKS = []
+            for i in range(KMLFolder.PLACEMARKSLength()):
+                if KMLFolder.PLACEMARKS(i) is None:
+                    self.PLACEMARKS.append(None)
+                else:
+                    kMLPlacemark_ = KMLPlacemark.KMLPlacemarkT.InitFromObj(KMLFolder.PLACEMARKS(i))
+                    self.PLACEMARKS.append(kMLPlacemark_)
+        if not KMLFolder.FOLDERSIsNone():
+            self.FOLDERS = []
+            for i in range(KMLFolder.FOLDERSLength()):
+                if KMLFolder.FOLDERS(i) is None:
+                    self.FOLDERS.append(None)
+                else:
+                    kMLFolder_ = KMLFolder.KMLFolderT.InitFromObj(KMLFolder.FOLDERS(i))
+                    self.FOLDERS.append(kMLFolder_)
+        if not KMLFolder.NETWORK_LINKSIsNone():
+            self.NETWORK_LINKS = []
+            for i in range(KMLFolder.NETWORK_LINKSLength()):
+                if KMLFolder.NETWORK_LINKS(i) is None:
+                    self.NETWORK_LINKS.append(None)
+                else:
+                    kMLNetworkLink_ = KMLNetworkLink.KMLNetworkLinkT.InitFromObj(KMLFolder.NETWORK_LINKS(i))
+                    self.NETWORK_LINKS.append(kMLNetworkLink_)
+        if not KMLFolder.GROUND_OVERLAYSIsNone():
+            self.GROUND_OVERLAYS = []
+            for i in range(KMLFolder.GROUND_OVERLAYSLength()):
+                if KMLFolder.GROUND_OVERLAYS(i) is None:
+                    self.GROUND_OVERLAYS.append(None)
+                else:
+                    kMLGroundOverlay_ = KMLGroundOverlay.KMLGroundOverlayT.InitFromObj(KMLFolder.GROUND_OVERLAYS(i))
+                    self.GROUND_OVERLAYS.append(kMLGroundOverlay_)
+        if not KMLFolder.STYLESIsNone():
+            self.STYLES = []
+            for i in range(KMLFolder.STYLESLength()):
+                if KMLFolder.STYLES(i) is None:
+                    self.STYLES.append(None)
+                else:
+                    kMLStyle_ = KMLStyle.KMLStyleT.InitFromObj(KMLFolder.STYLES(i))
+                    self.STYLES.append(kMLStyle_)
+        if not KMLFolder.STYLE_MAPSIsNone():
+            self.STYLE_MAPS = []
+            for i in range(KMLFolder.STYLE_MAPSLength()):
+                if KMLFolder.STYLE_MAPS(i) is None:
+                    self.STYLE_MAPS.append(None)
+                else:
+                    kMLStyleMap_ = KMLStyleMap.KMLStyleMapT.InitFromObj(KMLFolder.STYLE_MAPS(i))
+                    self.STYLE_MAPS.append(kMLStyleMap_)
+        if not KMLFolder.SCREEN_OVERLAYSIsNone():
+            self.SCREEN_OVERLAYS = []
+            for i in range(KMLFolder.SCREEN_OVERLAYSLength()):
+                if KMLFolder.SCREEN_OVERLAYS(i) is None:
+                    self.SCREEN_OVERLAYS.append(None)
+                else:
+                    kMLScreenOverlay_ = KMLScreenOverlay.KMLScreenOverlayT.InitFromObj(KMLFolder.SCREEN_OVERLAYS(i))
+                    self.SCREEN_OVERLAYS.append(kMLScreenOverlay_)
+        if not KMLFolder.PHOTO_OVERLAYSIsNone():
+            self.PHOTO_OVERLAYS = []
+            for i in range(KMLFolder.PHOTO_OVERLAYSLength()):
+                if KMLFolder.PHOTO_OVERLAYS(i) is None:
+                    self.PHOTO_OVERLAYS.append(None)
+                else:
+                    kMLPhotoOverlay_ = KMLPhotoOverlay.KMLPhotoOverlayT.InitFromObj(KMLFolder.PHOTO_OVERLAYS(i))
+                    self.PHOTO_OVERLAYS.append(kMLPhotoOverlay_)
+        if not KMLFolder.TOURSIsNone():
+            self.TOURS = []
+            for i in range(KMLFolder.TOURSLength()):
+                if KMLFolder.TOURS(i) is None:
+                    self.TOURS.append(None)
+                else:
+                    kMLTour_ = KMLTour.KMLTourT.InitFromObj(KMLFolder.TOURS(i))
+                    self.TOURS.append(kMLTour_)
+        self.STYLE_URL = KMLFolder.STYLE_URL()
+        if KMLFolder.REGION() is not None:
+            self.REGION = KMLRegion.KMLRegionT.InitFromObj(KMLFolder.REGION())
+        if not KMLFolder.EXTENDED_DATAIsNone():
+            self.EXTENDED_DATA = []
+            for i in range(KMLFolder.EXTENDED_DATALength()):
+                if KMLFolder.EXTENDED_DATA(i) is None:
+                    self.EXTENDED_DATA.append(None)
+                else:
+                    kMLData_ = KMLData.KMLDataT.InitFromObj(KMLFolder.EXTENDED_DATA(i))
+                    self.EXTENDED_DATA.append(kMLData_)
+        if KMLFolder.LOOK_AT() is not None:
+            self.LOOK_AT = KMLLookAt.KMLLookAtT.InitFromObj(KMLFolder.LOOK_AT())
+        if KMLFolder.CAMERA() is not None:
+            self.CAMERA = KMLCamera.KMLCameraT.InitFromObj(KMLFolder.CAMERA())
+        if KMLFolder.TIME_SPAN() is not None:
+            self.TIME_SPAN = KMLTimeSpan.KMLTimeSpanT.InitFromObj(KMLFolder.TIME_SPAN())
+        if KMLFolder.TIME_STAMP() is not None:
+            self.TIME_STAMP = KMLTimeStamp.KMLTimeStampT.InitFromObj(KMLFolder.TIME_STAMP())
+
+    # KMLFolderT
+    def Pack(self, builder):
+        if self.NAME is not None:
+            NAME = builder.CreateString(self.NAME)
+        if self.DESCRIPTION is not None:
+            DESCRIPTION = builder.CreateString(self.DESCRIPTION)
+        if self.PLACEMARKS is not None:
+            PLACEMARKSlist = []
+            for i in range(len(self.PLACEMARKS)):
+                PLACEMARKSlist.append(self.PLACEMARKS[i].Pack(builder))
+            KMLFolderStartPLACEMARKSVector(builder, len(self.PLACEMARKS))
+            for i in reversed(range(len(self.PLACEMARKS))):
+                builder.PrependUOffsetTRelative(PLACEMARKSlist[i])
+            PLACEMARKS = builder.EndVector()
+        if self.FOLDERS is not None:
+            FOLDERSlist = []
+            for i in range(len(self.FOLDERS)):
+                FOLDERSlist.append(self.FOLDERS[i].Pack(builder))
+            KMLFolderStartFOLDERSVector(builder, len(self.FOLDERS))
+            for i in reversed(range(len(self.FOLDERS))):
+                builder.PrependUOffsetTRelative(FOLDERSlist[i])
+            FOLDERS = builder.EndVector()
+        if self.NETWORK_LINKS is not None:
+            NETWORK_LINKSlist = []
+            for i in range(len(self.NETWORK_LINKS)):
+                NETWORK_LINKSlist.append(self.NETWORK_LINKS[i].Pack(builder))
+            KMLFolderStartNETWORK_LINKSVector(builder, len(self.NETWORK_LINKS))
+            for i in reversed(range(len(self.NETWORK_LINKS))):
+                builder.PrependUOffsetTRelative(NETWORK_LINKSlist[i])
+            NETWORK_LINKS = builder.EndVector()
+        if self.GROUND_OVERLAYS is not None:
+            GROUND_OVERLAYSlist = []
+            for i in range(len(self.GROUND_OVERLAYS)):
+                GROUND_OVERLAYSlist.append(self.GROUND_OVERLAYS[i].Pack(builder))
+            KMLFolderStartGROUND_OVERLAYSVector(builder, len(self.GROUND_OVERLAYS))
+            for i in reversed(range(len(self.GROUND_OVERLAYS))):
+                builder.PrependUOffsetTRelative(GROUND_OVERLAYSlist[i])
+            GROUND_OVERLAYS = builder.EndVector()
+        if self.STYLES is not None:
+            STYLESlist = []
+            for i in range(len(self.STYLES)):
+                STYLESlist.append(self.STYLES[i].Pack(builder))
+            KMLFolderStartSTYLESVector(builder, len(self.STYLES))
+            for i in reversed(range(len(self.STYLES))):
+                builder.PrependUOffsetTRelative(STYLESlist[i])
+            STYLES = builder.EndVector()
+        if self.STYLE_MAPS is not None:
+            STYLE_MAPSlist = []
+            for i in range(len(self.STYLE_MAPS)):
+                STYLE_MAPSlist.append(self.STYLE_MAPS[i].Pack(builder))
+            KMLFolderStartSTYLE_MAPSVector(builder, len(self.STYLE_MAPS))
+            for i in reversed(range(len(self.STYLE_MAPS))):
+                builder.PrependUOffsetTRelative(STYLE_MAPSlist[i])
+            STYLE_MAPS = builder.EndVector()
+        if self.SCREEN_OVERLAYS is not None:
+            SCREEN_OVERLAYSlist = []
+            for i in range(len(self.SCREEN_OVERLAYS)):
+                SCREEN_OVERLAYSlist.append(self.SCREEN_OVERLAYS[i].Pack(builder))
+            KMLFolderStartSCREEN_OVERLAYSVector(builder, len(self.SCREEN_OVERLAYS))
+            for i in reversed(range(len(self.SCREEN_OVERLAYS))):
+                builder.PrependUOffsetTRelative(SCREEN_OVERLAYSlist[i])
+            SCREEN_OVERLAYS = builder.EndVector()
+        if self.PHOTO_OVERLAYS is not None:
+            PHOTO_OVERLAYSlist = []
+            for i in range(len(self.PHOTO_OVERLAYS)):
+                PHOTO_OVERLAYSlist.append(self.PHOTO_OVERLAYS[i].Pack(builder))
+            KMLFolderStartPHOTO_OVERLAYSVector(builder, len(self.PHOTO_OVERLAYS))
+            for i in reversed(range(len(self.PHOTO_OVERLAYS))):
+                builder.PrependUOffsetTRelative(PHOTO_OVERLAYSlist[i])
+            PHOTO_OVERLAYS = builder.EndVector()
+        if self.TOURS is not None:
+            TOURSlist = []
+            for i in range(len(self.TOURS)):
+                TOURSlist.append(self.TOURS[i].Pack(builder))
+            KMLFolderStartTOURSVector(builder, len(self.TOURS))
+            for i in reversed(range(len(self.TOURS))):
+                builder.PrependUOffsetTRelative(TOURSlist[i])
+            TOURS = builder.EndVector()
+        if self.STYLE_URL is not None:
+            STYLE_URL = builder.CreateString(self.STYLE_URL)
+        if self.REGION is not None:
+            REGION = self.REGION.Pack(builder)
+        if self.EXTENDED_DATA is not None:
+            EXTENDED_DATAlist = []
+            for i in range(len(self.EXTENDED_DATA)):
+                EXTENDED_DATAlist.append(self.EXTENDED_DATA[i].Pack(builder))
+            KMLFolderStartEXTENDED_DATAVector(builder, len(self.EXTENDED_DATA))
+            for i in reversed(range(len(self.EXTENDED_DATA))):
+                builder.PrependUOffsetTRelative(EXTENDED_DATAlist[i])
+            EXTENDED_DATA = builder.EndVector()
+        if self.LOOK_AT is not None:
+            LOOK_AT = self.LOOK_AT.Pack(builder)
+        if self.CAMERA is not None:
+            CAMERA = self.CAMERA.Pack(builder)
+        if self.TIME_SPAN is not None:
+            TIME_SPAN = self.TIME_SPAN.Pack(builder)
+        if self.TIME_STAMP is not None:
+            TIME_STAMP = self.TIME_STAMP.Pack(builder)
+        KMLFolderStart(builder)
+        if self.NAME is not None:
+            KMLFolderAddNAME(builder, NAME)
+        if self.DESCRIPTION is not None:
+            KMLFolderAddDESCRIPTION(builder, DESCRIPTION)
+        KMLFolderAddVISIBILITY(builder, self.VISIBILITY)
+        KMLFolderAddOPEN(builder, self.OPEN)
+        if self.PLACEMARKS is not None:
+            KMLFolderAddPLACEMARKS(builder, PLACEMARKS)
+        if self.FOLDERS is not None:
+            KMLFolderAddFOLDERS(builder, FOLDERS)
+        if self.NETWORK_LINKS is not None:
+            KMLFolderAddNETWORK_LINKS(builder, NETWORK_LINKS)
+        if self.GROUND_OVERLAYS is not None:
+            KMLFolderAddGROUND_OVERLAYS(builder, GROUND_OVERLAYS)
+        if self.STYLES is not None:
+            KMLFolderAddSTYLES(builder, STYLES)
+        if self.STYLE_MAPS is not None:
+            KMLFolderAddSTYLE_MAPS(builder, STYLE_MAPS)
+        if self.SCREEN_OVERLAYS is not None:
+            KMLFolderAddSCREEN_OVERLAYS(builder, SCREEN_OVERLAYS)
+        if self.PHOTO_OVERLAYS is not None:
+            KMLFolderAddPHOTO_OVERLAYS(builder, PHOTO_OVERLAYS)
+        if self.TOURS is not None:
+            KMLFolderAddTOURS(builder, TOURS)
+        if self.STYLE_URL is not None:
+            KMLFolderAddSTYLE_URL(builder, STYLE_URL)
+        if self.REGION is not None:
+            KMLFolderAddREGION(builder, REGION)
+        if self.EXTENDED_DATA is not None:
+            KMLFolderAddEXTENDED_DATA(builder, EXTENDED_DATA)
+        if self.LOOK_AT is not None:
+            KMLFolderAddLOOK_AT(builder, LOOK_AT)
+        if self.CAMERA is not None:
+            KMLFolderAddCAMERA(builder, CAMERA)
+        if self.TIME_SPAN is not None:
+            KMLFolderAddTIME_SPAN(builder, TIME_SPAN)
+        if self.TIME_STAMP is not None:
+            KMLFolderAddTIME_STAMP(builder, TIME_STAMP)
+        KMLFolder = KMLFolderEnd(builder)
+        return KMLFolder

@@ -32,7 +32,7 @@ class Unit : Table() {
     /**
      * Unit description (e.g., "meters per second")
      */
-    val DESCRIPTION : String?
+    val description : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class Unit : Table() {
                 null
             }
         }
-    val DESCRIPTIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun DESCRIPTIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val descriptionAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun descriptionInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Unit symbol (e.g., "m/s")
      */
-    val SYMBOL : String?
+    val symbol : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -55,12 +55,12 @@ class Unit : Table() {
                 null
             }
         }
-    val SYMBOLAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun SYMBOLInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val symbolAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun symbolInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * Power/exponent for this unit
      */
-    val POWER : Double
+    val power : Double
         get() {
             val o = __offset(8)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -68,31 +68,31 @@ class Unit : Table() {
     /**
      * Factor multiplier
      */
-    val FACTOR : Double
+    val factor : Double
         get() {
             val o = __offset(10)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsUnit(_bb: ByteBuffer): Unit = getRootAsUnit(_bb, Unit())
         fun getRootAsUnit(_bb: ByteBuffer, obj: Unit): Unit {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createUnit(builder: FlatBufferBuilder, DESCRIPTIONOffset: Int, SYMBOLOffset: Int, POWER: Double, FACTOR: Double) : Int {
+        fun createUnit(builder: FlatBufferBuilder, descriptionOffset: Int, symbolOffset: Int, power: Double, factor: Double) : Int {
             builder.startTable(4)
-            addFACTOR(builder, FACTOR)
-            addPOWER(builder, POWER)
-            addSYMBOL(builder, SYMBOLOffset)
-            addDESCRIPTION(builder, DESCRIPTIONOffset)
+            addFACTOR(builder, factor)
+            addPOWER(builder, power)
+            addSYMBOL(builder, symbolOffset)
+            addDESCRIPTION(builder, descriptionOffset)
             return endUnit(builder)
         }
         fun startUnit(builder: FlatBufferBuilder) = builder.startTable(4)
-        fun addDESCRIPTION(builder: FlatBufferBuilder, DESCRIPTION: Int) = builder.addOffset(0, DESCRIPTION, 0)
-        fun addSYMBOL(builder: FlatBufferBuilder, SYMBOL: Int) = builder.addOffset(1, SYMBOL, 0)
-        fun addPOWER(builder: FlatBufferBuilder, POWER: Double) = builder.addDouble(2, POWER, 0.0)
-        fun addFACTOR(builder: FlatBufferBuilder, FACTOR: Double) = builder.addDouble(3, FACTOR, 0.0)
+        fun addDESCRIPTION(builder: FlatBufferBuilder, description: Int) = builder.addOffset(0, description, 0)
+        fun addSYMBOL(builder: FlatBufferBuilder, symbol: Int) = builder.addOffset(1, symbol, 0)
+        fun addPOWER(builder: FlatBufferBuilder, power: Double) = builder.addDouble(2, power, 0.0)
+        fun addFACTOR(builder: FlatBufferBuilder, factor: Double) = builder.addDouble(3, factor, 0.0)
         fun endUnit(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

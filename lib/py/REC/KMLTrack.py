@@ -2,4 +2,346 @@
 
 # namespace: 
 
-# NOTE KMLTrack.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# gx:Track — time-stamped position track
+class KMLTrack(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = KMLTrack()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsKMLTrack(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def KMLTrackBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x4B\x4D\x4C", size_prefixed=size_prefixed)
+
+    # KMLTrack
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Whether to extrude
+    # KMLTrack
+    def EXTRUDE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # Whether to tessellate
+    # KMLTrack
+    def TESSELLATE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # Altitude mode
+    # KMLTrack
+    def ALTITUDE_MODE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # Time stamps (ISO 8601)
+    # KMLTrack
+    def WHEN(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
+        return ""
+
+    # KMLTrack
+    def WHENLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # KMLTrack
+    def WHENIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        return o == 0
+
+    # Coordinates (lon lat alt per entry)
+    # KMLTrack
+    def COORDS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from KMLCoordinate import KMLCoordinate
+            obj = KMLCoordinate()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # KMLTrack
+    def COORDSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # KMLTrack
+    def COORDSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        return o == 0
+
+    # Angles (heading tilt roll per entry)
+    # KMLTrack
+    def ANGLES(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from KMLCoordinate import KMLCoordinate
+            obj = KMLCoordinate()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # KMLTrack
+    def ANGLESLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # KMLTrack
+    def ANGLESIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        return o == 0
+
+    # Model for track visualization
+    # KMLTrack
+    def MODEL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from KMLModel import KMLModel
+            obj = KMLModel()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+def KMLTrackStart(builder):
+    builder.StartObject(7)
+
+def Start(builder):
+    KMLTrackStart(builder)
+
+def KMLTrackAddEXTRUDE(builder, EXTRUDE):
+    builder.PrependBoolSlot(0, EXTRUDE, 0)
+
+def AddEXTRUDE(builder, EXTRUDE):
+    KMLTrackAddEXTRUDE(builder, EXTRUDE)
+
+def KMLTrackAddTESSELLATE(builder, TESSELLATE):
+    builder.PrependBoolSlot(1, TESSELLATE, 0)
+
+def AddTESSELLATE(builder, TESSELLATE):
+    KMLTrackAddTESSELLATE(builder, TESSELLATE)
+
+def KMLTrackAddALTITUDE_MODE(builder, ALTITUDE_MODE):
+    builder.PrependInt8Slot(2, ALTITUDE_MODE, 0)
+
+def AddALTITUDE_MODE(builder, ALTITUDE_MODE):
+    KMLTrackAddALTITUDE_MODE(builder, ALTITUDE_MODE)
+
+def KMLTrackAddWHEN(builder, WHEN):
+    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(WHEN), 0)
+
+def AddWHEN(builder, WHEN):
+    KMLTrackAddWHEN(builder, WHEN)
+
+def KMLTrackStartWHENVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartWHENVector(builder, numElems):
+    return KMLTrackStartWHENVector(builder, numElems)
+
+def KMLTrackCreateWHENVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateWHENVector(builder, data):
+    KMLTrackCreateWHENVector(builder, data)
+
+def KMLTrackAddCOORDS(builder, COORDS):
+    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(COORDS), 0)
+
+def AddCOORDS(builder, COORDS):
+    KMLTrackAddCOORDS(builder, COORDS)
+
+def KMLTrackStartCOORDSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartCOORDSVector(builder, numElems):
+    return KMLTrackStartCOORDSVector(builder, numElems)
+
+def KMLTrackCreateCOORDSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateCOORDSVector(builder, data):
+    KMLTrackCreateCOORDSVector(builder, data)
+
+def KMLTrackAddANGLES(builder, ANGLES):
+    builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(ANGLES), 0)
+
+def AddANGLES(builder, ANGLES):
+    KMLTrackAddANGLES(builder, ANGLES)
+
+def KMLTrackStartANGLESVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartANGLESVector(builder, numElems):
+    return KMLTrackStartANGLESVector(builder, numElems)
+
+def KMLTrackCreateANGLESVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateANGLESVector(builder, data):
+    KMLTrackCreateANGLESVector(builder, data)
+
+def KMLTrackAddMODEL(builder, MODEL):
+    builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(MODEL), 0)
+
+def AddMODEL(builder, MODEL):
+    KMLTrackAddMODEL(builder, MODEL)
+
+def KMLTrackEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return KMLTrackEnd(builder)
+
+import KMLCoordinate
+import KMLModel
+try:
+    from typing import List, Optional
+except:
+    pass
+
+class KMLTrackT(object):
+
+    # KMLTrackT
+    def __init__(
+        self,
+        EXTRUDE = False,
+        TESSELLATE = False,
+        ALTITUDE_MODE = 0,
+        WHEN = None,
+        COORDS = None,
+        ANGLES = None,
+        MODEL = None,
+    ):
+        self.EXTRUDE = EXTRUDE  # type: bool
+        self.TESSELLATE = TESSELLATE  # type: bool
+        self.ALTITUDE_MODE = ALTITUDE_MODE  # type: int
+        self.WHEN = WHEN  # type: Optional[List[Optional[str]]]
+        self.COORDS = COORDS  # type: Optional[List[KMLCoordinate.KMLCoordinateT]]
+        self.ANGLES = ANGLES  # type: Optional[List[KMLCoordinate.KMLCoordinateT]]
+        self.MODEL = MODEL  # type: Optional[KMLModel.KMLModelT]
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpKmltrack = KMLTrack()
+        tmpKmltrack.Init(buf, pos)
+        return cls.InitFromObj(tmpKmltrack)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpKmltrack):
+        x = KMLTrackT()
+        x._UnPack(tmpKmltrack)
+        return x
+
+    # KMLTrackT
+    def _UnPack(self, KMLTrack):
+        if KMLTrack is None:
+            return
+        self.EXTRUDE = KMLTrack.EXTRUDE()
+        self.TESSELLATE = KMLTrack.TESSELLATE()
+        self.ALTITUDE_MODE = KMLTrack.ALTITUDE_MODE()
+        if not KMLTrack.WHENIsNone():
+            self.WHEN = []
+            for i in range(KMLTrack.WHENLength()):
+                self.WHEN.append(KMLTrack.WHEN(i))
+        if not KMLTrack.COORDSIsNone():
+            self.COORDS = []
+            for i in range(KMLTrack.COORDSLength()):
+                if KMLTrack.COORDS(i) is None:
+                    self.COORDS.append(None)
+                else:
+                    kMLCoordinate_ = KMLCoordinate.KMLCoordinateT.InitFromObj(KMLTrack.COORDS(i))
+                    self.COORDS.append(kMLCoordinate_)
+        if not KMLTrack.ANGLESIsNone():
+            self.ANGLES = []
+            for i in range(KMLTrack.ANGLESLength()):
+                if KMLTrack.ANGLES(i) is None:
+                    self.ANGLES.append(None)
+                else:
+                    kMLCoordinate_ = KMLCoordinate.KMLCoordinateT.InitFromObj(KMLTrack.ANGLES(i))
+                    self.ANGLES.append(kMLCoordinate_)
+        if KMLTrack.MODEL() is not None:
+            self.MODEL = KMLModel.KMLModelT.InitFromObj(KMLTrack.MODEL())
+
+    # KMLTrackT
+    def Pack(self, builder):
+        if self.WHEN is not None:
+            WHENlist = []
+            for i in range(len(self.WHEN)):
+                WHENlist.append(builder.CreateString(self.WHEN[i]))
+            KMLTrackStartWHENVector(builder, len(self.WHEN))
+            for i in reversed(range(len(self.WHEN))):
+                builder.PrependUOffsetTRelative(WHENlist[i])
+            WHEN = builder.EndVector()
+        if self.COORDS is not None:
+            COORDSlist = []
+            for i in range(len(self.COORDS)):
+                COORDSlist.append(self.COORDS[i].Pack(builder))
+            KMLTrackStartCOORDSVector(builder, len(self.COORDS))
+            for i in reversed(range(len(self.COORDS))):
+                builder.PrependUOffsetTRelative(COORDSlist[i])
+            COORDS = builder.EndVector()
+        if self.ANGLES is not None:
+            ANGLESlist = []
+            for i in range(len(self.ANGLES)):
+                ANGLESlist.append(self.ANGLES[i].Pack(builder))
+            KMLTrackStartANGLESVector(builder, len(self.ANGLES))
+            for i in reversed(range(len(self.ANGLES))):
+                builder.PrependUOffsetTRelative(ANGLESlist[i])
+            ANGLES = builder.EndVector()
+        if self.MODEL is not None:
+            MODEL = self.MODEL.Pack(builder)
+        KMLTrackStart(builder)
+        KMLTrackAddEXTRUDE(builder, self.EXTRUDE)
+        KMLTrackAddTESSELLATE(builder, self.TESSELLATE)
+        KMLTrackAddALTITUDE_MODE(builder, self.ALTITUDE_MODE)
+        if self.WHEN is not None:
+            KMLTrackAddWHEN(builder, WHEN)
+        if self.COORDS is not None:
+            KMLTrackAddCOORDS(builder, COORDS)
+        if self.ANGLES is not None:
+            KMLTrackAddANGLES(builder, ANGLES)
+        if self.MODEL is not None:
+            KMLTrackAddMODEL(builder, MODEL)
+        KMLTrack = KMLTrackEnd(builder)
+        return KMLTrack

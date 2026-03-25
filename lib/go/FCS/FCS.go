@@ -62,8 +62,16 @@ func (rcv *FCS) MODE() byte {
 	return 0
 }
 
+func (rcv *FCS) Mode() byte {
+	return rcv.MODE()
+}
+
 func (rcv *FCS) MutateMODE(n byte) bool {
 	return rcv._tab.MutateByteSlot(4, n)
+}
+
+func (rcv *FCS) MutateMode(n byte) bool {
+	return rcv.MutateMODE(n)
 }
 
 func (rcv *FCS) LEAD_METHOD() byte {
@@ -74,8 +82,16 @@ func (rcv *FCS) LEAD_METHOD() byte {
 	return 0
 }
 
+func (rcv *FCS) LeadMethod() byte {
+	return rcv.LEAD_METHOD()
+}
+
 func (rcv *FCS) MutateLEAD_METHOD(n byte) bool {
 	return rcv._tab.MutateByteSlot(6, n)
+}
+
+func (rcv *FCS) MutateLeadMethod(n byte) bool {
+	return rcv.MutateLEAD_METHOD(n)
 }
 
 func (rcv *FCS) RANGEFINDER_TYPE() byte {
@@ -86,8 +102,16 @@ func (rcv *FCS) RANGEFINDER_TYPE() byte {
 	return 0
 }
 
+func (rcv *FCS) RangefinderType() byte {
+	return rcv.RANGEFINDER_TYPE()
+}
+
 func (rcv *FCS) MutateRANGEFINDER_TYPE(n byte) bool {
 	return rcv._tab.MutateByteSlot(8, n)
+}
+
+func (rcv *FCS) MutateRangefinderType(n byte) bool {
+	return rcv.MutateRANGEFINDER_TYPE(n)
 }
 
 func (rcv *FCS) AMMO_SELECTED() byte {
@@ -98,8 +122,16 @@ func (rcv *FCS) AMMO_SELECTED() byte {
 	return 0
 }
 
+func (rcv *FCS) AmmoSelected() byte {
+	return rcv.AMMO_SELECTED()
+}
+
 func (rcv *FCS) MutateAMMO_SELECTED(n byte) bool {
 	return rcv._tab.MutateByteSlot(10, n)
+}
+
+func (rcv *FCS) MutateAmmoSelected(n byte) bool {
+	return rcv.MutateAMMO_SELECTED(n)
 }
 
 func (rcv *FCS) TARGET() []byte {
@@ -110,12 +142,20 @@ func (rcv *FCS) TARGET() []byte {
 	return nil
 }
 
+func (rcv *FCS) Target() []byte {
+	return rcv.TARGET()
+}
+
 func (rcv *FCS) SOLUTION() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *FCS) Solution() []byte {
+	return rcv.SOLUTION()
 }
 
 func (rcv *FCS) LAST_RANGE() float64 {
@@ -126,8 +166,16 @@ func (rcv *FCS) LAST_RANGE() float64 {
 	return 0.0
 }
 
+func (rcv *FCS) LastRange() float64 {
+	return rcv.LAST_RANGE()
+}
+
 func (rcv *FCS) MutateLAST_RANGE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(16, n)
+}
+
+func (rcv *FCS) MutateLastRange(n float64) bool {
+	return rcv.MutateLAST_RANGE(n)
 }
 
 func (rcv *FCS) RANGE_RATE() float64 {
@@ -138,8 +186,16 @@ func (rcv *FCS) RANGE_RATE() float64 {
 	return 0.0
 }
 
+func (rcv *FCS) RangeRate() float64 {
+	return rcv.RANGE_RATE()
+}
+
 func (rcv *FCS) MutateRANGE_RATE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(18, n)
+}
+
+func (rcv *FCS) MutateRangeRate(n float64) bool {
+	return rcv.MutateRANGE_RATE(n)
 }
 
 func (rcv *FCS) ROUNDS_REMAINING() uint16 {
@@ -150,8 +206,16 @@ func (rcv *FCS) ROUNDS_REMAINING() uint16 {
 	return 0
 }
 
+func (rcv *FCS) RoundsRemaining() uint16 {
+	return rcv.ROUNDS_REMAINING()
+}
+
 func (rcv *FCS) MutateROUNDS_REMAINING(n uint16) bool {
 	return rcv._tab.MutateUint16Slot(20, n)
+}
+
+func (rcv *FCS) MutateRoundsRemaining(n uint16) bool {
+	return rcv.MutateROUNDS_REMAINING(n)
 }
 
 func (rcv *FCS) TEMPERATURE() float32 {
@@ -162,8 +226,16 @@ func (rcv *FCS) TEMPERATURE() float32 {
 	return 0.0
 }
 
+func (rcv *FCS) Temperature() float32 {
+	return rcv.TEMPERATURE()
+}
+
 func (rcv *FCS) MutateTEMPERATURE(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(22, n)
+}
+
+func (rcv *FCS) MutateTemperature(n float32) bool {
+	return rcv.MutateTEMPERATURE(n)
 }
 
 func (rcv *FCS) RESERVED(j int) byte {
@@ -175,6 +247,10 @@ func (rcv *FCS) RESERVED(j int) byte {
 	return 0
 }
 
+func (rcv *FCS) Reserved(j int) byte {
+	return rcv.RESERVED(j)
+}
+
 func (rcv *FCS) RESERVEDLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
 	if o != 0 {
@@ -183,12 +259,20 @@ func (rcv *FCS) RESERVEDLength() int {
 	return 0
 }
 
+func (rcv *FCS) ReservedLength() int {
+	return rcv.RESERVEDLength()
+}
+
 func (rcv *FCS) RESERVEDBytes() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *FCS) ReservedBytes() []byte {
+	return rcv.RESERVEDBytes()
 }
 
 func (rcv *FCS) MutateRESERVED(j int, n byte) bool {
@@ -200,44 +284,84 @@ func (rcv *FCS) MutateRESERVED(j int, n byte) bool {
 	return false
 }
 
+func (rcv *FCS) MutateReserved(j int, n byte) bool {
+	return rcv.MutateRESERVED(j, n)
+}
+
 func FCSStart(builder *flatbuffers.Builder) {
 	builder.StartObject(11)
 }
 func FCSAddMODE(builder *flatbuffers.Builder, MODE byte) {
 	builder.PrependByteSlot(0, MODE, 0)
 }
+func FCSAddMode(builder *flatbuffers.Builder, MODE byte) {
+	FCSAddMODE(builder, MODE)
+}
 func FCSAddLEAD_METHOD(builder *flatbuffers.Builder, LEAD_METHOD byte) {
 	builder.PrependByteSlot(1, LEAD_METHOD, 0)
+}
+func FCSAddLeadMethod(builder *flatbuffers.Builder, LEAD_METHOD byte) {
+	FCSAddLEAD_METHOD(builder, LEAD_METHOD)
 }
 func FCSAddRANGEFINDER_TYPE(builder *flatbuffers.Builder, RANGEFINDER_TYPE byte) {
 	builder.PrependByteSlot(2, RANGEFINDER_TYPE, 0)
 }
+func FCSAddRangefinderType(builder *flatbuffers.Builder, RANGEFINDER_TYPE byte) {
+	FCSAddRANGEFINDER_TYPE(builder, RANGEFINDER_TYPE)
+}
 func FCSAddAMMO_SELECTED(builder *flatbuffers.Builder, AMMO_SELECTED byte) {
 	builder.PrependByteSlot(3, AMMO_SELECTED, 0)
+}
+func FCSAddAmmoSelected(builder *flatbuffers.Builder, AMMO_SELECTED byte) {
+	FCSAddAMMO_SELECTED(builder, AMMO_SELECTED)
 }
 func FCSAddTARGET(builder *flatbuffers.Builder, TARGET flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(TARGET), 0)
 }
+func FCSAddTarget(builder *flatbuffers.Builder, TARGET flatbuffers.UOffsetT) {
+	FCSAddTARGET(builder, TARGET)
+}
 func FCSAddSOLUTION(builder *flatbuffers.Builder, SOLUTION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(SOLUTION), 0)
+}
+func FCSAddSolution(builder *flatbuffers.Builder, SOLUTION flatbuffers.UOffsetT) {
+	FCSAddSOLUTION(builder, SOLUTION)
 }
 func FCSAddLAST_RANGE(builder *flatbuffers.Builder, LAST_RANGE float64) {
 	builder.PrependFloat64Slot(6, LAST_RANGE, 0.0)
 }
+func FCSAddLastRange(builder *flatbuffers.Builder, LAST_RANGE float64) {
+	FCSAddLAST_RANGE(builder, LAST_RANGE)
+}
 func FCSAddRANGE_RATE(builder *flatbuffers.Builder, RANGE_RATE float64) {
 	builder.PrependFloat64Slot(7, RANGE_RATE, 0.0)
+}
+func FCSAddRangeRate(builder *flatbuffers.Builder, RANGE_RATE float64) {
+	FCSAddRANGE_RATE(builder, RANGE_RATE)
 }
 func FCSAddROUNDS_REMAINING(builder *flatbuffers.Builder, ROUNDS_REMAINING uint16) {
 	builder.PrependUint16Slot(8, ROUNDS_REMAINING, 0)
 }
+func FCSAddRoundsRemaining(builder *flatbuffers.Builder, ROUNDS_REMAINING uint16) {
+	FCSAddROUNDS_REMAINING(builder, ROUNDS_REMAINING)
+}
 func FCSAddTEMPERATURE(builder *flatbuffers.Builder, TEMPERATURE float32) {
 	builder.PrependFloat32Slot(9, TEMPERATURE, 0.0)
+}
+func FCSAddTemperature(builder *flatbuffers.Builder, TEMPERATURE float32) {
+	FCSAddTEMPERATURE(builder, TEMPERATURE)
 }
 func FCSAddRESERVED(builder *flatbuffers.Builder, RESERVED flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(RESERVED), 0)
 }
+func FCSAddReserved(builder *flatbuffers.Builder, RESERVED flatbuffers.UOffsetT) {
+	FCSAddRESERVED(builder, RESERVED)
+}
 func FCSStartRESERVEDVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(1, numElems, 1)
+}
+func FCSStartReservedVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return FCSStartRESERVEDVector(builder, numElems)
 }
 func FCSEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

@@ -832,6 +832,12 @@ def SOIStartSPECTRAL_FILTERSVector(builder, numElems):
 def StartSPECTRAL_FILTERSVector(builder, numElems):
     return SOIStartSPECTRAL_FILTERSVector(builder, numElems)
 
+def SOICreateSPECTRAL_FILTERSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateSPECTRAL_FILTERSVector(builder, data):
+    SOICreateSPECTRAL_FILTERSVector(builder, data)
+
 def SOIAddGAIN(builder, GAIN):
     builder.PrependFloat64Slot(37, GAIN, 0.0)
 
@@ -970,6 +976,12 @@ def SOIStartCALIBRATIONSVector(builder, numElems):
 def StartCALIBRATIONSVector(builder, numElems):
     return SOIStartCALIBRATIONSVector(builder, numElems)
 
+def SOICreateCALIBRATIONSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateCALIBRATIONSVector(builder, data):
+    SOICreateCALIBRATIONSVector(builder, data)
+
 def SOIAddTAGS(builder, TAGS):
     builder.PrependUOffsetTRelativeSlot(59, flatbuffers.number_types.UOffsetTFlags.py_type(TAGS), 0)
 
@@ -981,6 +993,12 @@ def SOIStartTAGSVector(builder, numElems):
 
 def StartTAGSVector(builder, numElems):
     return SOIStartTAGSVector(builder, numElems)
+
+def SOICreateTAGSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateTAGSVector(builder, data):
+    SOICreateTAGSVector(builder, data)
 
 def SOIAddTRANSACTION_ID(builder, TRANSACTION_ID):
     builder.PrependUOffsetTRelativeSlot(60, flatbuffers.number_types.UOffsetTFlags.py_type(TRANSACTION_ID), 0)
@@ -1000,6 +1018,12 @@ def SOIStartOPTICAL_SOIOBSERVATION_LISTVector(builder, numElems):
 def StartOPTICAL_SOIOBSERVATION_LISTVector(builder, numElems):
     return SOIStartOPTICAL_SOIOBSERVATION_LISTVector(builder, numElems)
 
+def SOICreateOPTICAL_SOIOBSERVATION_LISTVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateOPTICAL_SOIOBSERVATION_LISTVector(builder, data):
+    SOICreateOPTICAL_SOIOBSERVATION_LISTVector(builder, data)
+
 def SOIAddRADAR_SOIOBSERVATION_LIST(builder, RADAR_SOIOBSERVATION_LIST):
     builder.PrependUOffsetTRelativeSlot(62, flatbuffers.number_types.UOffsetTFlags.py_type(RADAR_SOIOBSERVATION_LIST), 0)
 
@@ -1011,6 +1035,12 @@ def SOIStartRADAR_SOIOBSERVATION_LISTVector(builder, numElems):
 
 def StartRADAR_SOIOBSERVATION_LISTVector(builder, numElems):
     return SOIStartRADAR_SOIOBSERVATION_LISTVector(builder, numElems)
+
+def SOICreateRADAR_SOIOBSERVATION_LISTVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateRADAR_SOIOBSERVATION_LISTVector(builder, data):
+    SOICreateRADAR_SOIOBSERVATION_LISTVector(builder, data)
 
 def SOIEnd(builder):
     return builder.EndObject()
@@ -1026,76 +1056,141 @@ except:
 class SOIT(object):
 
     # SOIT
-    def __init__(self):
-        self.ID = None  # type: str
-        self.MSG_CREATE_DATE = None  # type: str
-        self.ID_SENSOR = None  # type: str
-        self.ORIG_SENSOR_ID = None  # type: str
-        self.SENSOR_AS_ID = None  # type: str
-        self.SAT_NO = 0  # type: int
-        self.ORIG_OBJECT_ID = None  # type: str
-        self.SATELLITE_NAME = None  # type: str
-        self.UCT = False  # type: bool
-        self.SENLAT = 0.0  # type: float
-        self.SENLON = 0.0  # type: float
-        self.SENALT = 0.0  # type: float
-        self.SENX = 0.0  # type: float
-        self.SENY = 0.0  # type: float
-        self.SENZ = 0.0  # type: float
-        self.SENVELX = 0.0  # type: float
-        self.SENVELY = 0.0  # type: float
-        self.SENVELZ = 0.0  # type: float
-        self.SEN_REFERENCE_FRAME = None  # type: str
-        self.OBS_TYPE = 0  # type: int
-        self.COLLECTION_MODE = 0  # type: int
-        self.START_TIME = None  # type: str
-        self.END_TIME = None  # type: str
-        self.NUM_OBS = 0  # type: int
-        self.REFERENCE_FRAME = None  # type: str
-        self.POLAR_ANGLE_START = 0.0  # type: float
-        self.POLAR_ANGLE_END = 0.0  # type: float
-        self.LOS_DECLINATION_START = 0.0  # type: float
-        self.LOS_DECLINATION_END = 0.0  # type: float
-        self.POINTING_ANGLE_AZ_START = 0.0  # type: float
-        self.POINTING_ANGLE_AZ_END = 0.0  # type: float
-        self.POINTING_ANGLE_EL_START = 0.0  # type: float
-        self.POINTING_ANGLE_EL_END = 0.0  # type: float
-        self.PIXEL_ARRAY_WIDTH = 0  # type: int
-        self.PIXEL_ARRAY_HEIGHT = 0  # type: int
-        self.NUM_SPECTRAL_FILTERS = 0  # type: int
-        self.SPECTRAL_FILTERS = None  # type: List[str]
-        self.GAIN = 0.0  # type: float
-        self.BINNING_HORIZ = 0  # type: int
-        self.BINNING_VERT = 0  # type: int
-        self.SOLAR_MAG = 0.0  # type: float
-        self.PIXEL_MIN = 0  # type: int
-        self.PIXEL_MAX = 0  # type: int
-        self.SOFTWARE_VERSION = None  # type: str
-        self.STAR_CAT_NAME = None  # type: str
-        self.CORR_QUALITY = 0.0  # type: float
-        self.CALIBRATION_TYPE = 0  # type: int
-        self.VALID_CALIBRATIONS = None  # type: str
-        self.PERCENT_SAT_THRESHOLD = 0.0  # type: float
-        self.CHANGE_DETECTED = False  # type: bool
-        self.PERIODICITY_CHANGE_DETECTED = False  # type: bool
-        self.BRIGHTNESS_VARIANCE_CHANGE_DETECTED = False  # type: bool
-        self.SOLAR_PHASE_ANGLE_BRIGHTNESS_CHANGE_DETECTED = False  # type: bool
-        self.CHANGE_CONF = None  # type: str
-        self.COLLECTION_DENSITY_CONF = None  # type: str
-        self.PERIODICITY_SAMPLING_CONF = None  # type: str
-        self.PERIODICITY_DETECTION_CONF = None  # type: str
-        self.COLLECTION_ID = None  # type: str
-        self.CALIBRATIONS = None  # type: List[str]
-        self.TAGS = None  # type: List[str]
-        self.TRANSACTION_ID = None  # type: str
-        self.OPTICAL_SOIOBSERVATION_LIST = None  # type: List[str]
-        self.RADAR_SOIOBSERVATION_LIST = None  # type: List[str]
+    def __init__(
+        self,
+        ID = None,
+        MSG_CREATE_DATE = None,
+        ID_SENSOR = None,
+        ORIG_SENSOR_ID = None,
+        SENSOR_AS_ID = None,
+        SAT_NO = 0,
+        ORIG_OBJECT_ID = None,
+        SATELLITE_NAME = None,
+        UCT = False,
+        SENLAT = 0.0,
+        SENLON = 0.0,
+        SENALT = 0.0,
+        SENX = 0.0,
+        SENY = 0.0,
+        SENZ = 0.0,
+        SENVELX = 0.0,
+        SENVELY = 0.0,
+        SENVELZ = 0.0,
+        SEN_REFERENCE_FRAME = None,
+        OBS_TYPE = 0,
+        COLLECTION_MODE = 0,
+        START_TIME = None,
+        END_TIME = None,
+        NUM_OBS = 0,
+        REFERENCE_FRAME = None,
+        POLAR_ANGLE_START = 0.0,
+        POLAR_ANGLE_END = 0.0,
+        LOS_DECLINATION_START = 0.0,
+        LOS_DECLINATION_END = 0.0,
+        POINTING_ANGLE_AZ_START = 0.0,
+        POINTING_ANGLE_AZ_END = 0.0,
+        POINTING_ANGLE_EL_START = 0.0,
+        POINTING_ANGLE_EL_END = 0.0,
+        PIXEL_ARRAY_WIDTH = 0,
+        PIXEL_ARRAY_HEIGHT = 0,
+        NUM_SPECTRAL_FILTERS = 0,
+        SPECTRAL_FILTERS = None,
+        GAIN = 0.0,
+        BINNING_HORIZ = 0,
+        BINNING_VERT = 0,
+        SOLAR_MAG = 0.0,
+        PIXEL_MIN = 0,
+        PIXEL_MAX = 0,
+        SOFTWARE_VERSION = None,
+        STAR_CAT_NAME = None,
+        CORR_QUALITY = 0.0,
+        CALIBRATION_TYPE = 0,
+        VALID_CALIBRATIONS = None,
+        PERCENT_SAT_THRESHOLD = 0.0,
+        CHANGE_DETECTED = False,
+        PERIODICITY_CHANGE_DETECTED = False,
+        BRIGHTNESS_VARIANCE_CHANGE_DETECTED = False,
+        SOLAR_PHASE_ANGLE_BRIGHTNESS_CHANGE_DETECTED = False,
+        CHANGE_CONF = None,
+        COLLECTION_DENSITY_CONF = None,
+        PERIODICITY_SAMPLING_CONF = None,
+        PERIODICITY_DETECTION_CONF = None,
+        COLLECTION_ID = None,
+        CALIBRATIONS = None,
+        TAGS = None,
+        TRANSACTION_ID = None,
+        OPTICAL_SOIOBSERVATION_LIST = None,
+        RADAR_SOIOBSERVATION_LIST = None,
+    ):
+        self.ID = ID  # type: Optional[str]
+        self.MSG_CREATE_DATE = MSG_CREATE_DATE  # type: Optional[str]
+        self.ID_SENSOR = ID_SENSOR  # type: Optional[str]
+        self.ORIG_SENSOR_ID = ORIG_SENSOR_ID  # type: Optional[str]
+        self.SENSOR_AS_ID = SENSOR_AS_ID  # type: Optional[str]
+        self.SAT_NO = SAT_NO  # type: int
+        self.ORIG_OBJECT_ID = ORIG_OBJECT_ID  # type: Optional[str]
+        self.SATELLITE_NAME = SATELLITE_NAME  # type: Optional[str]
+        self.UCT = UCT  # type: bool
+        self.SENLAT = SENLAT  # type: float
+        self.SENLON = SENLON  # type: float
+        self.SENALT = SENALT  # type: float
+        self.SENX = SENX  # type: float
+        self.SENY = SENY  # type: float
+        self.SENZ = SENZ  # type: float
+        self.SENVELX = SENVELX  # type: float
+        self.SENVELY = SENVELY  # type: float
+        self.SENVELZ = SENVELZ  # type: float
+        self.SEN_REFERENCE_FRAME = SEN_REFERENCE_FRAME  # type: Optional[str]
+        self.OBS_TYPE = OBS_TYPE  # type: int
+        self.COLLECTION_MODE = COLLECTION_MODE  # type: int
+        self.START_TIME = START_TIME  # type: Optional[str]
+        self.END_TIME = END_TIME  # type: Optional[str]
+        self.NUM_OBS = NUM_OBS  # type: int
+        self.REFERENCE_FRAME = REFERENCE_FRAME  # type: Optional[str]
+        self.POLAR_ANGLE_START = POLAR_ANGLE_START  # type: float
+        self.POLAR_ANGLE_END = POLAR_ANGLE_END  # type: float
+        self.LOS_DECLINATION_START = LOS_DECLINATION_START  # type: float
+        self.LOS_DECLINATION_END = LOS_DECLINATION_END  # type: float
+        self.POINTING_ANGLE_AZ_START = POINTING_ANGLE_AZ_START  # type: float
+        self.POINTING_ANGLE_AZ_END = POINTING_ANGLE_AZ_END  # type: float
+        self.POINTING_ANGLE_EL_START = POINTING_ANGLE_EL_START  # type: float
+        self.POINTING_ANGLE_EL_END = POINTING_ANGLE_EL_END  # type: float
+        self.PIXEL_ARRAY_WIDTH = PIXEL_ARRAY_WIDTH  # type: int
+        self.PIXEL_ARRAY_HEIGHT = PIXEL_ARRAY_HEIGHT  # type: int
+        self.NUM_SPECTRAL_FILTERS = NUM_SPECTRAL_FILTERS  # type: int
+        self.SPECTRAL_FILTERS = SPECTRAL_FILTERS  # type: Optional[List[Optional[str]]]
+        self.GAIN = GAIN  # type: float
+        self.BINNING_HORIZ = BINNING_HORIZ  # type: int
+        self.BINNING_VERT = BINNING_VERT  # type: int
+        self.SOLAR_MAG = SOLAR_MAG  # type: float
+        self.PIXEL_MIN = PIXEL_MIN  # type: int
+        self.PIXEL_MAX = PIXEL_MAX  # type: int
+        self.SOFTWARE_VERSION = SOFTWARE_VERSION  # type: Optional[str]
+        self.STAR_CAT_NAME = STAR_CAT_NAME  # type: Optional[str]
+        self.CORR_QUALITY = CORR_QUALITY  # type: float
+        self.CALIBRATION_TYPE = CALIBRATION_TYPE  # type: int
+        self.VALID_CALIBRATIONS = VALID_CALIBRATIONS  # type: Optional[str]
+        self.PERCENT_SAT_THRESHOLD = PERCENT_SAT_THRESHOLD  # type: float
+        self.CHANGE_DETECTED = CHANGE_DETECTED  # type: bool
+        self.PERIODICITY_CHANGE_DETECTED = PERIODICITY_CHANGE_DETECTED  # type: bool
+        self.BRIGHTNESS_VARIANCE_CHANGE_DETECTED = BRIGHTNESS_VARIANCE_CHANGE_DETECTED  # type: bool
+        self.SOLAR_PHASE_ANGLE_BRIGHTNESS_CHANGE_DETECTED = SOLAR_PHASE_ANGLE_BRIGHTNESS_CHANGE_DETECTED  # type: bool
+        self.CHANGE_CONF = CHANGE_CONF  # type: Optional[str]
+        self.COLLECTION_DENSITY_CONF = COLLECTION_DENSITY_CONF  # type: Optional[str]
+        self.PERIODICITY_SAMPLING_CONF = PERIODICITY_SAMPLING_CONF  # type: Optional[str]
+        self.PERIODICITY_DETECTION_CONF = PERIODICITY_DETECTION_CONF  # type: Optional[str]
+        self.COLLECTION_ID = COLLECTION_ID  # type: Optional[str]
+        self.CALIBRATIONS = CALIBRATIONS  # type: Optional[List[Optional[str]]]
+        self.TAGS = TAGS  # type: Optional[List[Optional[str]]]
+        self.TRANSACTION_ID = TRANSACTION_ID  # type: Optional[str]
+        self.OPTICAL_SOIOBSERVATION_LIST = OPTICAL_SOIOBSERVATION_LIST  # type: Optional[List[Optional[str]]]
+        self.RADAR_SOIOBSERVATION_LIST = RADAR_SOIOBSERVATION_LIST  # type: Optional[List[Optional[str]]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        SOI = SOI()
-        SOI.Init(buf, pos)
-        return cls.InitFromObj(SOI)
+        tmpSoi = SOI()
+        tmpSoi.Init(buf, pos)
+        return cls.InitFromObj(tmpSoi)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -1103,9 +1198,9 @@ class SOIT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, SOI):
+    def InitFromObj(cls, tmpSoi):
         x = SOIT()
-        x._UnPack(SOI)
+        x._UnPack(tmpSoi)
         return x
 
     # SOIT

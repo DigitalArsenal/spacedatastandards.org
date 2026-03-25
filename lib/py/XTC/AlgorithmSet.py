@@ -99,6 +99,12 @@ def AlgorithmSetStartCUSTOM_ALGORITHMSVector(builder, numElems):
 def StartCUSTOM_ALGORITHMSVector(builder, numElems):
     return AlgorithmSetStartCUSTOM_ALGORITHMSVector(builder, numElems)
 
+def AlgorithmSetCreateCUSTOM_ALGORITHMSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateCUSTOM_ALGORITHMSVector(builder, data):
+    AlgorithmSetCreateCUSTOM_ALGORITHMSVector(builder, data)
+
 def AlgorithmSetAddMATH_ALGORITHMS(builder, MATH_ALGORITHMS):
     builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(MATH_ALGORITHMS), 0)
 
@@ -110,6 +116,12 @@ def AlgorithmSetStartMATH_ALGORITHMSVector(builder, numElems):
 
 def StartMATH_ALGORITHMSVector(builder, numElems):
     return AlgorithmSetStartMATH_ALGORITHMSVector(builder, numElems)
+
+def AlgorithmSetCreateMATH_ALGORITHMSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateMATH_ALGORITHMSVector(builder, data):
+    AlgorithmSetCreateMATH_ALGORITHMSVector(builder, data)
 
 def AlgorithmSetEnd(builder):
     return builder.EndObject()
@@ -127,15 +139,19 @@ except:
 class AlgorithmSetT(object):
 
     # AlgorithmSetT
-    def __init__(self):
-        self.CUSTOM_ALGORITHMS = None  # type: List[CustomAlgorithm.CustomAlgorithmT]
-        self.MATH_ALGORITHMS = None  # type: List[MathAlgorithm.MathAlgorithmT]
+    def __init__(
+        self,
+        CUSTOM_ALGORITHMS = None,
+        MATH_ALGORITHMS = None,
+    ):
+        self.CUSTOM_ALGORITHMS = CUSTOM_ALGORITHMS  # type: Optional[List[CustomAlgorithm.CustomAlgorithmT]]
+        self.MATH_ALGORITHMS = MATH_ALGORITHMS  # type: Optional[List[MathAlgorithm.MathAlgorithmT]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        algorithmSet = AlgorithmSet()
-        algorithmSet.Init(buf, pos)
-        return cls.InitFromObj(algorithmSet)
+        tmpAlgorithmSet = AlgorithmSet()
+        tmpAlgorithmSet.Init(buf, pos)
+        return cls.InitFromObj(tmpAlgorithmSet)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -143,30 +159,30 @@ class AlgorithmSetT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, algorithmSet):
+    def InitFromObj(cls, tmpAlgorithmSet):
         x = AlgorithmSetT()
-        x._UnPack(algorithmSet)
+        x._UnPack(tmpAlgorithmSet)
         return x
 
     # AlgorithmSetT
-    def _UnPack(self, algorithmSet):
-        if algorithmSet is None:
+    def _UnPack(self, AlgorithmSet):
+        if AlgorithmSet is None:
             return
-        if not algorithmSet.CUSTOM_ALGORITHMSIsNone():
+        if not AlgorithmSet.CUSTOM_ALGORITHMSIsNone():
             self.CUSTOM_ALGORITHMS = []
-            for i in range(algorithmSet.CUSTOM_ALGORITHMSLength()):
-                if algorithmSet.CUSTOM_ALGORITHMS(i) is None:
+            for i in range(AlgorithmSet.CUSTOM_ALGORITHMSLength()):
+                if AlgorithmSet.CUSTOM_ALGORITHMS(i) is None:
                     self.CUSTOM_ALGORITHMS.append(None)
                 else:
-                    customAlgorithm_ = CustomAlgorithm.CustomAlgorithmT.InitFromObj(algorithmSet.CUSTOM_ALGORITHMS(i))
+                    customAlgorithm_ = CustomAlgorithm.CustomAlgorithmT.InitFromObj(AlgorithmSet.CUSTOM_ALGORITHMS(i))
                     self.CUSTOM_ALGORITHMS.append(customAlgorithm_)
-        if not algorithmSet.MATH_ALGORITHMSIsNone():
+        if not AlgorithmSet.MATH_ALGORITHMSIsNone():
             self.MATH_ALGORITHMS = []
-            for i in range(algorithmSet.MATH_ALGORITHMSLength()):
-                if algorithmSet.MATH_ALGORITHMS(i) is None:
+            for i in range(AlgorithmSet.MATH_ALGORITHMSLength()):
+                if AlgorithmSet.MATH_ALGORITHMS(i) is None:
                     self.MATH_ALGORITHMS.append(None)
                 else:
-                    mathAlgorithm_ = MathAlgorithm.MathAlgorithmT.InitFromObj(algorithmSet.MATH_ALGORITHMS(i))
+                    mathAlgorithm_ = MathAlgorithm.MathAlgorithmT.InitFromObj(AlgorithmSet.MATH_ALGORITHMS(i))
                     self.MATH_ALGORITHMS.append(mathAlgorithm_)
 
     # AlgorithmSetT
@@ -192,5 +208,5 @@ class AlgorithmSetT(object):
             AlgorithmSetAddCUSTOM_ALGORITHMS(builder, CUSTOM_ALGORITHMS)
         if self.MATH_ALGORITHMS is not None:
             AlgorithmSetAddMATH_ALGORITHMS(builder, MATH_ALGORITHMS)
-        algorithmSet = AlgorithmSetEnd(builder)
-        return algorithmSet
+        AlgorithmSet = AlgorithmSetEnd(builder)
+        return AlgorithmSet

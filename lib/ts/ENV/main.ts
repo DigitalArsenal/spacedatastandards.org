@@ -2,7 +2,7 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export { AtmosphereModel } from './AtmosphereModel.js';
-export { ENV, ENVT } from './ENV.js';
-export { TerrainType } from './TerrainType.js';
-export { WeatherCondition } from './WeatherCondition.js';
+export * from './AtmosphereModel.js';
+export * from './ENV.js';
+export * from './TerrainType.js';
+export * from './WeatherCondition.js';

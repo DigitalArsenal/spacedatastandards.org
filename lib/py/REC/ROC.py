@@ -2,4 +2,274 @@
 
 # namespace: 
 
-# NOTE ROC.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Rocket Configuration
+class ROC(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = ROC()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsROC(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def ROCBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x52\x4F\x43", size_prefixed=size_prefixed)
+
+    # ROC
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Rocket Name
+    # ROC
+    def NAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Rocket Family
+    # ROC
+    def FAMILY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Rocket Variant
+    # ROC
+    def VARIANT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Stages in the Rocket
+    # ROC
+    def STAGES(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from STAGE import STAGE
+            obj = STAGE()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # ROC
+    def STAGESLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # ROC
+    def STAGESIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        return o == 0
+
+    # Sustainers in the Rocket
+    # ROC
+    def SUSTAINERS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from SUSTAINER import SUSTAINER
+            obj = SUSTAINER()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # ROC
+    def SUSTAINERSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # ROC
+    def SUSTAINERSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        return o == 0
+
+def ROCStart(builder):
+    builder.StartObject(5)
+
+def Start(builder):
+    ROCStart(builder)
+
+def ROCAddNAME(builder, NAME):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(NAME), 0)
+
+def AddNAME(builder, NAME):
+    ROCAddNAME(builder, NAME)
+
+def ROCAddFAMILY(builder, FAMILY):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(FAMILY), 0)
+
+def AddFAMILY(builder, FAMILY):
+    ROCAddFAMILY(builder, FAMILY)
+
+def ROCAddVARIANT(builder, VARIANT):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(VARIANT), 0)
+
+def AddVARIANT(builder, VARIANT):
+    ROCAddVARIANT(builder, VARIANT)
+
+def ROCAddSTAGES(builder, STAGES):
+    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(STAGES), 0)
+
+def AddSTAGES(builder, STAGES):
+    ROCAddSTAGES(builder, STAGES)
+
+def ROCStartSTAGESVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartSTAGESVector(builder, numElems):
+    return ROCStartSTAGESVector(builder, numElems)
+
+def ROCCreateSTAGESVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateSTAGESVector(builder, data):
+    ROCCreateSTAGESVector(builder, data)
+
+def ROCAddSUSTAINERS(builder, SUSTAINERS):
+    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(SUSTAINERS), 0)
+
+def AddSUSTAINERS(builder, SUSTAINERS):
+    ROCAddSUSTAINERS(builder, SUSTAINERS)
+
+def ROCStartSUSTAINERSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartSUSTAINERSVector(builder, numElems):
+    return ROCStartSUSTAINERSVector(builder, numElems)
+
+def ROCCreateSUSTAINERSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateSUSTAINERSVector(builder, data):
+    ROCCreateSUSTAINERSVector(builder, data)
+
+def ROCEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return ROCEnd(builder)
+
+import STAGE
+import SUSTAINER
+try:
+    from typing import List
+except:
+    pass
+
+class ROCT(object):
+
+    # ROCT
+    def __init__(
+        self,
+        NAME = None,
+        FAMILY = None,
+        VARIANT = None,
+        STAGES = None,
+        SUSTAINERS = None,
+    ):
+        self.NAME = NAME  # type: Optional[str]
+        self.FAMILY = FAMILY  # type: Optional[str]
+        self.VARIANT = VARIANT  # type: Optional[str]
+        self.STAGES = STAGES  # type: Optional[List[STAGE.STAGET]]
+        self.SUSTAINERS = SUSTAINERS  # type: Optional[List[SUSTAINER.SUSTAINERT]]
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpRoc = ROC()
+        tmpRoc.Init(buf, pos)
+        return cls.InitFromObj(tmpRoc)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpRoc):
+        x = ROCT()
+        x._UnPack(tmpRoc)
+        return x
+
+    # ROCT
+    def _UnPack(self, ROC):
+        if ROC is None:
+            return
+        self.NAME = ROC.NAME()
+        self.FAMILY = ROC.FAMILY()
+        self.VARIANT = ROC.VARIANT()
+        if not ROC.STAGESIsNone():
+            self.STAGES = []
+            for i in range(ROC.STAGESLength()):
+                if ROC.STAGES(i) is None:
+                    self.STAGES.append(None)
+                else:
+                    sTAGE_ = STAGE.STAGET.InitFromObj(ROC.STAGES(i))
+                    self.STAGES.append(sTAGE_)
+        if not ROC.SUSTAINERSIsNone():
+            self.SUSTAINERS = []
+            for i in range(ROC.SUSTAINERSLength()):
+                if ROC.SUSTAINERS(i) is None:
+                    self.SUSTAINERS.append(None)
+                else:
+                    sUSTAINER_ = SUSTAINER.SUSTAINERT.InitFromObj(ROC.SUSTAINERS(i))
+                    self.SUSTAINERS.append(sUSTAINER_)
+
+    # ROCT
+    def Pack(self, builder):
+        if self.NAME is not None:
+            NAME = builder.CreateString(self.NAME)
+        if self.FAMILY is not None:
+            FAMILY = builder.CreateString(self.FAMILY)
+        if self.VARIANT is not None:
+            VARIANT = builder.CreateString(self.VARIANT)
+        if self.STAGES is not None:
+            STAGESlist = []
+            for i in range(len(self.STAGES)):
+                STAGESlist.append(self.STAGES[i].Pack(builder))
+            ROCStartSTAGESVector(builder, len(self.STAGES))
+            for i in reversed(range(len(self.STAGES))):
+                builder.PrependUOffsetTRelative(STAGESlist[i])
+            STAGES = builder.EndVector()
+        if self.SUSTAINERS is not None:
+            SUSTAINERSlist = []
+            for i in range(len(self.SUSTAINERS)):
+                SUSTAINERSlist.append(self.SUSTAINERS[i].Pack(builder))
+            ROCStartSUSTAINERSVector(builder, len(self.SUSTAINERS))
+            for i in reversed(range(len(self.SUSTAINERS))):
+                builder.PrependUOffsetTRelative(SUSTAINERSlist[i])
+            SUSTAINERS = builder.EndVector()
+        ROCStart(builder)
+        if self.NAME is not None:
+            ROCAddNAME(builder, NAME)
+        if self.FAMILY is not None:
+            ROCAddFAMILY(builder, FAMILY)
+        if self.VARIANT is not None:
+            ROCAddVARIANT(builder, VARIANT)
+        if self.STAGES is not None:
+            ROCAddSTAGES(builder, STAGES)
+        if self.SUSTAINERS is not None:
+            ROCAddSUSTAINERS(builder, SUSTAINERS)
+        ROC = ROCEnd(builder)
+        return ROC

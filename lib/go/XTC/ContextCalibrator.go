@@ -56,6 +56,10 @@ func (rcv *ContextCalibrator) MATCH_CRITERIA(obj *MatchCriteria) *MatchCriteria 
 	return nil
 }
 
+func (rcv *ContextCalibrator) MatchCriteria(obj *MatchCriteria) *MatchCriteria {
+	return rcv.MATCH_CRITERIA(obj)
+}
+
 /// Match criteria for selecting this calibrator
 /// Polynomial calibrator (if used)
 func (rcv *ContextCalibrator) POLYNOMIAL(obj *PolynomialCalibrator) *PolynomialCalibrator {
@@ -69,6 +73,10 @@ func (rcv *ContextCalibrator) POLYNOMIAL(obj *PolynomialCalibrator) *PolynomialC
 		return obj
 	}
 	return nil
+}
+
+func (rcv *ContextCalibrator) Polynomial(obj *PolynomialCalibrator) *PolynomialCalibrator {
+	return rcv.POLYNOMIAL(obj)
 }
 
 /// Polynomial calibrator (if used)
@@ -86,6 +94,10 @@ func (rcv *ContextCalibrator) SPLINE(obj *SplineCalibrator) *SplineCalibrator {
 	return nil
 }
 
+func (rcv *ContextCalibrator) Spline(obj *SplineCalibrator) *SplineCalibrator {
+	return rcv.SPLINE(obj)
+}
+
 /// Spline calibrator (if used)
 /// Math operation calibrator (if used)
 func (rcv *ContextCalibrator) MATH_OPERATION(obj *MathOperation) *MathOperation {
@@ -101,6 +113,10 @@ func (rcv *ContextCalibrator) MATH_OPERATION(obj *MathOperation) *MathOperation 
 	return nil
 }
 
+func (rcv *ContextCalibrator) MathOperation(obj *MathOperation) *MathOperation {
+	return rcv.MATH_OPERATION(obj)
+}
+
 /// Math operation calibrator (if used)
 func ContextCalibratorStart(builder *flatbuffers.Builder) {
 	builder.StartObject(4)
@@ -108,14 +124,26 @@ func ContextCalibratorStart(builder *flatbuffers.Builder) {
 func ContextCalibratorAddMATCH_CRITERIA(builder *flatbuffers.Builder, MATCH_CRITERIA flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(MATCH_CRITERIA), 0)
 }
+func ContextCalibratorAddMatchCriteria(builder *flatbuffers.Builder, MATCH_CRITERIA flatbuffers.UOffsetT) {
+	ContextCalibratorAddMATCH_CRITERIA(builder, MATCH_CRITERIA)
+}
 func ContextCalibratorAddPOLYNOMIAL(builder *flatbuffers.Builder, POLYNOMIAL flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(POLYNOMIAL), 0)
+}
+func ContextCalibratorAddPolynomial(builder *flatbuffers.Builder, POLYNOMIAL flatbuffers.UOffsetT) {
+	ContextCalibratorAddPOLYNOMIAL(builder, POLYNOMIAL)
 }
 func ContextCalibratorAddSPLINE(builder *flatbuffers.Builder, SPLINE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(SPLINE), 0)
 }
+func ContextCalibratorAddSpline(builder *flatbuffers.Builder, SPLINE flatbuffers.UOffsetT) {
+	ContextCalibratorAddSPLINE(builder, SPLINE)
+}
 func ContextCalibratorAddMATH_OPERATION(builder *flatbuffers.Builder, MATH_OPERATION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(MATH_OPERATION), 0)
+}
+func ContextCalibratorAddMathOperation(builder *flatbuffers.Builder, MATH_OPERATION flatbuffers.UOffsetT) {
+	ContextCalibratorAddMATH_OPERATION(builder, MATH_OPERATION)
 }
 func ContextCalibratorEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

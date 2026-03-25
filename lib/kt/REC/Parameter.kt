@@ -32,7 +32,7 @@ class Parameter : Table() {
     /**
      * Parameter name
      */
-    val NAME : String?
+    val name : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class Parameter : Table() {
                 null
             }
         }
-    val NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val nameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun nameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Reference to parameter type
      */
-    val PARAMETER_TYPE_REF : String?
+    val parameterTypeRef : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -55,12 +55,12 @@ class Parameter : Table() {
                 null
             }
         }
-    val PARAMETER_TYPE_REFAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun PARAMETER_TYPE_REFInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val parameterTypeRefAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun parameterTypeRefInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * Short description
      */
-    val SHORT_DESCRIPTION : String?
+    val shortDescription : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -69,12 +69,12 @@ class Parameter : Table() {
                 null
             }
         }
-    val SHORT_DESCRIPTIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun SHORT_DESCRIPTIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val shortDescriptionAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun shortDescriptionInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
     /**
      * Long description
      */
-    val LONG_DESCRIPTION : String?
+    val longDescription : String?
         get() {
             val o = __offset(10)
             return if (o != 0) {
@@ -83,13 +83,13 @@ class Parameter : Table() {
                 null
             }
         }
-    val LONG_DESCRIPTIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
-    fun LONG_DESCRIPTIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
+    val longDescriptionAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(10, 1)
+    fun longDescriptionInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 10, 1)
     /**
      * Parameter properties
      */
-    val PROPERTIES : ParameterProperties? get() = PROPERTIES(ParameterProperties())
-    fun PROPERTIES(obj: ParameterProperties) : ParameterProperties? {
+    val properties : ParameterProperties? get() = properties(ParameterProperties())
+    fun properties(obj: ParameterProperties) : ParameterProperties? {
         val o = __offset(12)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -100,7 +100,7 @@ class Parameter : Table() {
     /**
      * Physical address mapping
      */
-    val PHYSICAL_ADDRESS : String?
+    val physicalAddress : String?
         get() {
             val o = __offset(14)
             return if (o != 0) {
@@ -109,12 +109,12 @@ class Parameter : Table() {
                 null
             }
         }
-    val PHYSICAL_ADDRESSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(14, 1)
-    fun PHYSICAL_ADDRESSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 14, 1)
+    val physicalAddressAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(14, 1)
+    fun physicalAddressInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 14, 1)
     /**
      * Initial/default value
      */
-    val INITIAL_VALUE : String?
+    val initialValue : String?
         get() {
             val o = __offset(16)
             return if (o != 0) {
@@ -123,34 +123,34 @@ class Parameter : Table() {
                 null
             }
         }
-    val INITIAL_VALUEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(16, 1)
-    fun INITIAL_VALUEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 16, 1)
+    val initialValueAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(16, 1)
+    fun initialValueInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 16, 1)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsParameter(_bb: ByteBuffer): Parameter = getRootAsParameter(_bb, Parameter())
         fun getRootAsParameter(_bb: ByteBuffer, obj: Parameter): Parameter {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createParameter(builder: FlatBufferBuilder, NAMEOffset: Int, PARAMETER_TYPE_REFOffset: Int, SHORT_DESCRIPTIONOffset: Int, LONG_DESCRIPTIONOffset: Int, PROPERTIESOffset: Int, PHYSICAL_ADDRESSOffset: Int, INITIAL_VALUEOffset: Int) : Int {
+        fun createParameter(builder: FlatBufferBuilder, nameOffset: Int, parameterTypeRefOffset: Int, shortDescriptionOffset: Int, longDescriptionOffset: Int, propertiesOffset: Int, physicalAddressOffset: Int, initialValueOffset: Int) : Int {
             builder.startTable(7)
-            addINITIAL_VALUE(builder, INITIAL_VALUEOffset)
-            addPHYSICAL_ADDRESS(builder, PHYSICAL_ADDRESSOffset)
-            addPROPERTIES(builder, PROPERTIESOffset)
-            addLONG_DESCRIPTION(builder, LONG_DESCRIPTIONOffset)
-            addSHORT_DESCRIPTION(builder, SHORT_DESCRIPTIONOffset)
-            addPARAMETER_TYPE_REF(builder, PARAMETER_TYPE_REFOffset)
-            addNAME(builder, NAMEOffset)
+            addINITIALVALUE(builder, initialValueOffset)
+            addPHYSICALADDRESS(builder, physicalAddressOffset)
+            addPROPERTIES(builder, propertiesOffset)
+            addLONGDESCRIPTION(builder, longDescriptionOffset)
+            addSHORTDESCRIPTION(builder, shortDescriptionOffset)
+            addPARAMETERTYPEREF(builder, parameterTypeRefOffset)
+            addNAME(builder, nameOffset)
             return endParameter(builder)
         }
         fun startParameter(builder: FlatBufferBuilder) = builder.startTable(7)
-        fun addNAME(builder: FlatBufferBuilder, NAME: Int) = builder.addOffset(0, NAME, 0)
-        fun addPARAMETER_TYPE_REF(builder: FlatBufferBuilder, PARAMETER_TYPE_REF: Int) = builder.addOffset(1, PARAMETER_TYPE_REF, 0)
-        fun addSHORT_DESCRIPTION(builder: FlatBufferBuilder, SHORT_DESCRIPTION: Int) = builder.addOffset(2, SHORT_DESCRIPTION, 0)
-        fun addLONG_DESCRIPTION(builder: FlatBufferBuilder, LONG_DESCRIPTION: Int) = builder.addOffset(3, LONG_DESCRIPTION, 0)
-        fun addPROPERTIES(builder: FlatBufferBuilder, PROPERTIES: Int) = builder.addOffset(4, PROPERTIES, 0)
-        fun addPHYSICAL_ADDRESS(builder: FlatBufferBuilder, PHYSICAL_ADDRESS: Int) = builder.addOffset(5, PHYSICAL_ADDRESS, 0)
-        fun addINITIAL_VALUE(builder: FlatBufferBuilder, INITIAL_VALUE: Int) = builder.addOffset(6, INITIAL_VALUE, 0)
+        fun addNAME(builder: FlatBufferBuilder, name: Int) = builder.addOffset(0, name, 0)
+        fun addPARAMETERTYPEREF(builder: FlatBufferBuilder, parameterTypeRef: Int) = builder.addOffset(1, parameterTypeRef, 0)
+        fun addSHORTDESCRIPTION(builder: FlatBufferBuilder, shortDescription: Int) = builder.addOffset(2, shortDescription, 0)
+        fun addLONGDESCRIPTION(builder: FlatBufferBuilder, longDescription: Int) = builder.addOffset(3, longDescription, 0)
+        fun addPROPERTIES(builder: FlatBufferBuilder, properties: Int) = builder.addOffset(4, properties, 0)
+        fun addPHYSICALADDRESS(builder: FlatBufferBuilder, physicalAddress: Int) = builder.addOffset(5, physicalAddress, 0)
+        fun addINITIALVALUE(builder: FlatBufferBuilder, initialValue: Int) = builder.addOffset(6, initialValue, 0)
         fun endParameter(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

@@ -189,7 +189,7 @@ unpack(): SPPT {
     this.SEQUENCE_FLAGS(),
     this.SEQUENCE_COUNT(),
     this.DATA_LENGTH(),
-    this.bb!.createScalarList<number>(this.DATA.bind(this), this.dataLength())
+    this.bb!.createScalarList<number>(this.DATA.bind(this), this.DATA_LENGTH())
   );
 }
 
@@ -202,7 +202,7 @@ unpackTo(_o: SPPT): void {
   _o.SEQUENCE_FLAGS = this.SEQUENCE_FLAGS();
   _o.SEQUENCE_COUNT = this.SEQUENCE_COUNT();
   _o.DATA_LENGTH = this.DATA_LENGTH();
-  _o.DATA = this.bb!.createScalarList<number>(this.DATA.bind(this), this.dataLength());
+  _o.DATA = this.bb!.createScalarList<number>(this.DATA.bind(this), this.DATA_LENGTH());
 }
 }
 

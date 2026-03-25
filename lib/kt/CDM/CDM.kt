@@ -32,7 +32,7 @@ class CDM : Table() {
     /**
      * The version of the CCSDS CDM standard used
      */
-    val CCSDS_CDM_VERS : Double
+    val ccsdsCdmVers : Double
         get() {
             val o = __offset(4)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -40,7 +40,7 @@ class CDM : Table() {
     /**
      * The date the CDM message was created
      */
-    val CREATION_DATE : String?
+    val creationDate : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -49,12 +49,12 @@ class CDM : Table() {
                 null
             }
         }
-    val CREATION_DATEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun CREATION_DATEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val creationDateAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun creationDateInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * The originator of the CDM message
      */
-    val ORIGINATOR : String?
+    val originator : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -63,12 +63,12 @@ class CDM : Table() {
                 null
             }
         }
-    val ORIGINATORAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun ORIGINATORInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val originatorAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun originatorInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
     /**
      * The intended recipient of the CDM message
      */
-    val MESSAGE_FOR : String?
+    val messageFor : String?
         get() {
             val o = __offset(10)
             return if (o != 0) {
@@ -77,12 +77,12 @@ class CDM : Table() {
                 null
             }
         }
-    val MESSAGE_FORAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
-    fun MESSAGE_FORInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
+    val messageForAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(10, 1)
+    fun messageForInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 10, 1)
     /**
      * A unique identifier for the CDM message
      */
-    val MESSAGE_ID : String?
+    val messageId : String?
         get() {
             val o = __offset(12)
             return if (o != 0) {
@@ -91,12 +91,12 @@ class CDM : Table() {
                 null
             }
         }
-    val MESSAGE_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
-    fun MESSAGE_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
+    val messageIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(12, 1)
+    fun messageIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 12, 1)
     /**
      * Time of closest approach
      */
-    val TCA : String?
+    val tca : String?
         get() {
             val o = __offset(14)
             return if (o != 0) {
@@ -105,12 +105,12 @@ class CDM : Table() {
                 null
             }
         }
-    val TCAAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(14, 1)
-    fun TCAInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 14, 1)
+    val tcaAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(14, 1)
+    fun tcaInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 14, 1)
     /**
      * The miss distance between the two objects
      */
-    val MISS_DISTANCE : Double
+    val missDistance : Double
         get() {
             val o = __offset(16)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -118,7 +118,7 @@ class CDM : Table() {
     /**
      * The relative speed between the two objects
      */
-    val RELATIVE_SPEED : Double
+    val relativeSpeed : Double
         get() {
             val o = __offset(18)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -126,7 +126,7 @@ class CDM : Table() {
     /**
      * The relative position R component
      */
-    val RELATIVE_POSITION_R : Double
+    val relativePositionR : Double
         get() {
             val o = __offset(20)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -134,7 +134,7 @@ class CDM : Table() {
     /**
      * The relative position T component
      */
-    val RELATIVE_POSITION_T : Double
+    val relativePositionT : Double
         get() {
             val o = __offset(22)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -142,7 +142,7 @@ class CDM : Table() {
     /**
      * The relative position N component
      */
-    val RELATIVE_POSITION_N : Double
+    val relativePositionN : Double
         get() {
             val o = __offset(24)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -150,7 +150,7 @@ class CDM : Table() {
     /**
      * The relative velocity R component
      */
-    val RELATIVE_VELOCITY_R : Double
+    val relativeVelocityR : Double
         get() {
             val o = __offset(26)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -158,7 +158,7 @@ class CDM : Table() {
     /**
      * The relative velocity T component
      */
-    val RELATIVE_VELOCITY_T : Double
+    val relativeVelocityT : Double
         get() {
             val o = __offset(28)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -166,7 +166,7 @@ class CDM : Table() {
     /**
      * The relative velocity N component
      */
-    val RELATIVE_VELOCITY_N : Double
+    val relativeVelocityN : Double
         get() {
             val o = __offset(30)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -174,7 +174,7 @@ class CDM : Table() {
     /**
      * The start time of the screening period
      */
-    val START_SCREEN_PERIOD : String?
+    val startScreenPeriod : String?
         get() {
             val o = __offset(32)
             return if (o != 0) {
@@ -183,12 +183,12 @@ class CDM : Table() {
                 null
             }
         }
-    val START_SCREEN_PERIODAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(32, 1)
-    fun START_SCREEN_PERIODInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 32, 1)
+    val startScreenPeriodAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(32, 1)
+    fun startScreenPeriodInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 32, 1)
     /**
      * The end time of the screening period
      */
-    val STOP_SCREEN_PERIOD : String?
+    val stopScreenPeriod : String?
         get() {
             val o = __offset(34)
             return if (o != 0) {
@@ -197,13 +197,13 @@ class CDM : Table() {
                 null
             }
         }
-    val STOP_SCREEN_PERIODAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(34, 1)
-    fun STOP_SCREEN_PERIODInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 34, 1)
+    val stopScreenPeriodAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(34, 1)
+    fun stopScreenPeriodInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 34, 1)
     /**
      * The reference frame for the screening volume
      */
-    val SCREEN_VOLUME_FRAME : RFM? get() = SCREEN_VOLUME_FRAME(RFM())
-    fun SCREEN_VOLUME_FRAME(obj: RFM) : RFM? {
+    val screenVolumeFrame : RFM? get() = screenVolumeFrame(RFM())
+    fun screenVolumeFrame(obj: RFM) : RFM? {
         val o = __offset(36)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -214,7 +214,7 @@ class CDM : Table() {
     /**
      * The shape of the screening volume
      */
-    val SCREEN_VOLUME_SHAPE : Byte
+    val screenVolumeShape : Byte
         get() {
             val o = __offset(38)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -222,7 +222,7 @@ class CDM : Table() {
     /**
      * The X dimension of the screening volume
      */
-    val SCREEN_VOLUME_X : Double
+    val screenVolumeX : Double
         get() {
             val o = __offset(40)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -230,7 +230,7 @@ class CDM : Table() {
     /**
      * The Y dimension of the screening volume
      */
-    val SCREEN_VOLUME_Y : Double
+    val screenVolumeY : Double
         get() {
             val o = __offset(42)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -238,7 +238,7 @@ class CDM : Table() {
     /**
      * The Z dimension of the screening volume
      */
-    val SCREEN_VOLUME_Z : Double
+    val screenVolumeZ : Double
         get() {
             val o = __offset(44)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -246,7 +246,7 @@ class CDM : Table() {
     /**
      * The time the objects entered the screening volume
      */
-    val SCREEN_ENTRY_TIME : String?
+    val screenEntryTime : String?
         get() {
             val o = __offset(46)
             return if (o != 0) {
@@ -255,12 +255,12 @@ class CDM : Table() {
                 null
             }
         }
-    val SCREEN_ENTRY_TIMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(46, 1)
-    fun SCREEN_ENTRY_TIMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 46, 1)
+    val screenEntryTimeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(46, 1)
+    fun screenEntryTimeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 46, 1)
     /**
      * The time the objects exited the screening volume
      */
-    val SCREEN_EXIT_TIME : String?
+    val screenExitTime : String?
         get() {
             val o = __offset(48)
             return if (o != 0) {
@@ -269,12 +269,12 @@ class CDM : Table() {
                 null
             }
         }
-    val SCREEN_EXIT_TIMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(48, 1)
-    fun SCREEN_EXIT_TIMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 48, 1)
+    val screenExitTimeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(48, 1)
+    fun screenExitTimeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 48, 1)
     /**
      * The probability of collision between the two objects
      */
-    val COLLISION_PROBABILITY : Double
+    val collisionProbability : Double
         get() {
             val o = __offset(50)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -282,7 +282,7 @@ class CDM : Table() {
     /**
      * The method used to calculate the collision probability
      */
-    val COLLISION_PROBABILITY_METHOD : String?
+    val collisionProbabilityMethod : String?
         get() {
             val o = __offset(52)
             return if (o != 0) {
@@ -291,13 +291,13 @@ class CDM : Table() {
                 null
             }
         }
-    val COLLISION_PROBABILITY_METHODAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(52, 1)
-    fun COLLISION_PROBABILITY_METHODInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 52, 1)
+    val collisionProbabilityMethodAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(52, 1)
+    fun collisionProbabilityMethodInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 52, 1)
     /**
      * The first object in the CDM message
      */
-    val OBJECT1 : CDMObject? get() = OBJECT1(CDMObject())
-    fun OBJECT1(obj: CDMObject) : CDMObject? {
+    val object1 : CDMObject? get() = object1(CDMObject())
+    fun object1(obj: CDMObject) : CDMObject? {
         val o = __offset(54)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -308,8 +308,8 @@ class CDM : Table() {
     /**
      * The second object in the CDM message
      */
-    val OBJECT2 : CDMObject? get() = OBJECT2(CDMObject())
-    fun OBJECT2(obj: CDMObject) : CDMObject? {
+    val object2 : CDMObject? get() = object2(CDMObject())
+    fun object2(obj: CDMObject) : CDMObject? {
         val o = __offset(56)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -320,8 +320,8 @@ class CDM : Table() {
     /**
      * Data Source for the positional information for Object 1
      */
-    val OBJECT1_DATASOURCE : PNM? get() = OBJECT1_DATASOURCE(PNM())
-    fun OBJECT1_DATASOURCE(obj: PNM) : PNM? {
+    val object1Datasource : PNM? get() = object1Datasource(PNM())
+    fun object1Datasource(obj: PNM) : PNM? {
         val o = __offset(58)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -332,8 +332,8 @@ class CDM : Table() {
     /**
      * Data Source for the positional information for Object 2
      */
-    val OBJECT2_DATASOURCE : PNM? get() = OBJECT2_DATASOURCE(PNM())
-    fun OBJECT2_DATASOURCE(obj: PNM) : PNM? {
+    val object2Datasource : PNM? get() = object2Datasource(PNM())
+    fun object2Datasource(obj: PNM) : PNM? {
         val o = __offset(60)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -342,76 +342,76 @@ class CDM : Table() {
         }
     }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsCDM(_bb: ByteBuffer): CDM = getRootAsCDM(_bb, CDM())
         fun getRootAsCDM(_bb: ByteBuffer, obj: CDM): CDM {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun CDMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$CDM")
-        fun createCDM(builder: FlatBufferBuilder, CCSDS_CDM_VERS: Double, CREATION_DATEOffset: Int, ORIGINATOROffset: Int, MESSAGE_FOROffset: Int, MESSAGE_IDOffset: Int, TCAOffset: Int, MISS_DISTANCE: Double, RELATIVE_SPEED: Double, RELATIVE_POSITION_R: Double, RELATIVE_POSITION_T: Double, RELATIVE_POSITION_N: Double, RELATIVE_VELOCITY_R: Double, RELATIVE_VELOCITY_T: Double, RELATIVE_VELOCITY_N: Double, START_SCREEN_PERIODOffset: Int, STOP_SCREEN_PERIODOffset: Int, SCREEN_VOLUME_FRAMEOffset: Int, SCREEN_VOLUME_SHAPE: Byte, SCREEN_VOLUME_X: Double, SCREEN_VOLUME_Y: Double, SCREEN_VOLUME_Z: Double, SCREEN_ENTRY_TIMEOffset: Int, SCREEN_EXIT_TIMEOffset: Int, COLLISION_PROBABILITY: Double, COLLISION_PROBABILITY_METHODOffset: Int, OBJECT1Offset: Int, OBJECT2Offset: Int, OBJECT1_DATASOURCEOffset: Int, OBJECT2_DATASOURCEOffset: Int) : Int {
+        fun createCDM(builder: FlatBufferBuilder, ccsdsCdmVers: Double, creationDateOffset: Int, originatorOffset: Int, messageForOffset: Int, messageIdOffset: Int, tcaOffset: Int, missDistance: Double, relativeSpeed: Double, relativePositionR: Double, relativePositionT: Double, relativePositionN: Double, relativeVelocityR: Double, relativeVelocityT: Double, relativeVelocityN: Double, startScreenPeriodOffset: Int, stopScreenPeriodOffset: Int, screenVolumeFrameOffset: Int, screenVolumeShape: Byte, screenVolumeX: Double, screenVolumeY: Double, screenVolumeZ: Double, screenEntryTimeOffset: Int, screenExitTimeOffset: Int, collisionProbability: Double, collisionProbabilityMethodOffset: Int, object1Offset: Int, object2Offset: Int, object1DatasourceOffset: Int, object2DatasourceOffset: Int) : Int {
             builder.startTable(29)
-            addCOLLISION_PROBABILITY(builder, COLLISION_PROBABILITY)
-            addSCREEN_VOLUME_Z(builder, SCREEN_VOLUME_Z)
-            addSCREEN_VOLUME_Y(builder, SCREEN_VOLUME_Y)
-            addSCREEN_VOLUME_X(builder, SCREEN_VOLUME_X)
-            addRELATIVE_VELOCITY_N(builder, RELATIVE_VELOCITY_N)
-            addRELATIVE_VELOCITY_T(builder, RELATIVE_VELOCITY_T)
-            addRELATIVE_VELOCITY_R(builder, RELATIVE_VELOCITY_R)
-            addRELATIVE_POSITION_N(builder, RELATIVE_POSITION_N)
-            addRELATIVE_POSITION_T(builder, RELATIVE_POSITION_T)
-            addRELATIVE_POSITION_R(builder, RELATIVE_POSITION_R)
-            addRELATIVE_SPEED(builder, RELATIVE_SPEED)
-            addMISS_DISTANCE(builder, MISS_DISTANCE)
-            addCCSDS_CDM_VERS(builder, CCSDS_CDM_VERS)
-            addOBJECT2_DATASOURCE(builder, OBJECT2_DATASOURCEOffset)
-            addOBJECT1_DATASOURCE(builder, OBJECT1_DATASOURCEOffset)
-            addOBJECT2(builder, OBJECT2Offset)
-            addOBJECT1(builder, OBJECT1Offset)
-            addCOLLISION_PROBABILITY_METHOD(builder, COLLISION_PROBABILITY_METHODOffset)
-            addSCREEN_EXIT_TIME(builder, SCREEN_EXIT_TIMEOffset)
-            addSCREEN_ENTRY_TIME(builder, SCREEN_ENTRY_TIMEOffset)
-            addSCREEN_VOLUME_FRAME(builder, SCREEN_VOLUME_FRAMEOffset)
-            addSTOP_SCREEN_PERIOD(builder, STOP_SCREEN_PERIODOffset)
-            addSTART_SCREEN_PERIOD(builder, START_SCREEN_PERIODOffset)
-            addTCA(builder, TCAOffset)
-            addMESSAGE_ID(builder, MESSAGE_IDOffset)
-            addMESSAGE_FOR(builder, MESSAGE_FOROffset)
-            addORIGINATOR(builder, ORIGINATOROffset)
-            addCREATION_DATE(builder, CREATION_DATEOffset)
-            addSCREEN_VOLUME_SHAPE(builder, SCREEN_VOLUME_SHAPE)
+            addCOLLISIONPROBABILITY(builder, collisionProbability)
+            addSCREENVOLUMEZ(builder, screenVolumeZ)
+            addSCREENVOLUMEY(builder, screenVolumeY)
+            addSCREENVOLUMEX(builder, screenVolumeX)
+            addRELATIVEVELOCITYN(builder, relativeVelocityN)
+            addRELATIVEVELOCITYT(builder, relativeVelocityT)
+            addRELATIVEVELOCITYR(builder, relativeVelocityR)
+            addRELATIVEPOSITIONN(builder, relativePositionN)
+            addRELATIVEPOSITIONT(builder, relativePositionT)
+            addRELATIVEPOSITIONR(builder, relativePositionR)
+            addRELATIVESPEED(builder, relativeSpeed)
+            addMISSDISTANCE(builder, missDistance)
+            addCCSDSCDMVERS(builder, ccsdsCdmVers)
+            addOBJECT2DATASOURCE(builder, object2DatasourceOffset)
+            addOBJECT1DATASOURCE(builder, object1DatasourceOffset)
+            addOBJECT2(builder, object2Offset)
+            addOBJECT1(builder, object1Offset)
+            addCOLLISIONPROBABILITYMETHOD(builder, collisionProbabilityMethodOffset)
+            addSCREENEXITTIME(builder, screenExitTimeOffset)
+            addSCREENENTRYTIME(builder, screenEntryTimeOffset)
+            addSCREENVOLUMEFRAME(builder, screenVolumeFrameOffset)
+            addSTOPSCREENPERIOD(builder, stopScreenPeriodOffset)
+            addSTARTSCREENPERIOD(builder, startScreenPeriodOffset)
+            addTCA(builder, tcaOffset)
+            addMESSAGEID(builder, messageIdOffset)
+            addMESSAGEFOR(builder, messageForOffset)
+            addORIGINATOR(builder, originatorOffset)
+            addCREATIONDATE(builder, creationDateOffset)
+            addSCREENVOLUMESHAPE(builder, screenVolumeShape)
             return endCDM(builder)
         }
         fun startCDM(builder: FlatBufferBuilder) = builder.startTable(29)
-        fun addCCSDS_CDM_VERS(builder: FlatBufferBuilder, CCSDS_CDM_VERS: Double) = builder.addDouble(0, CCSDS_CDM_VERS, 0.0)
-        fun addCREATION_DATE(builder: FlatBufferBuilder, CREATION_DATE: Int) = builder.addOffset(1, CREATION_DATE, 0)
-        fun addORIGINATOR(builder: FlatBufferBuilder, ORIGINATOR: Int) = builder.addOffset(2, ORIGINATOR, 0)
-        fun addMESSAGE_FOR(builder: FlatBufferBuilder, MESSAGE_FOR: Int) = builder.addOffset(3, MESSAGE_FOR, 0)
-        fun addMESSAGE_ID(builder: FlatBufferBuilder, MESSAGE_ID: Int) = builder.addOffset(4, MESSAGE_ID, 0)
-        fun addTCA(builder: FlatBufferBuilder, TCA: Int) = builder.addOffset(5, TCA, 0)
-        fun addMISS_DISTANCE(builder: FlatBufferBuilder, MISS_DISTANCE: Double) = builder.addDouble(6, MISS_DISTANCE, 0.0)
-        fun addRELATIVE_SPEED(builder: FlatBufferBuilder, RELATIVE_SPEED: Double) = builder.addDouble(7, RELATIVE_SPEED, 0.0)
-        fun addRELATIVE_POSITION_R(builder: FlatBufferBuilder, RELATIVE_POSITION_R: Double) = builder.addDouble(8, RELATIVE_POSITION_R, 0.0)
-        fun addRELATIVE_POSITION_T(builder: FlatBufferBuilder, RELATIVE_POSITION_T: Double) = builder.addDouble(9, RELATIVE_POSITION_T, 0.0)
-        fun addRELATIVE_POSITION_N(builder: FlatBufferBuilder, RELATIVE_POSITION_N: Double) = builder.addDouble(10, RELATIVE_POSITION_N, 0.0)
-        fun addRELATIVE_VELOCITY_R(builder: FlatBufferBuilder, RELATIVE_VELOCITY_R: Double) = builder.addDouble(11, RELATIVE_VELOCITY_R, 0.0)
-        fun addRELATIVE_VELOCITY_T(builder: FlatBufferBuilder, RELATIVE_VELOCITY_T: Double) = builder.addDouble(12, RELATIVE_VELOCITY_T, 0.0)
-        fun addRELATIVE_VELOCITY_N(builder: FlatBufferBuilder, RELATIVE_VELOCITY_N: Double) = builder.addDouble(13, RELATIVE_VELOCITY_N, 0.0)
-        fun addSTART_SCREEN_PERIOD(builder: FlatBufferBuilder, START_SCREEN_PERIOD: Int) = builder.addOffset(14, START_SCREEN_PERIOD, 0)
-        fun addSTOP_SCREEN_PERIOD(builder: FlatBufferBuilder, STOP_SCREEN_PERIOD: Int) = builder.addOffset(15, STOP_SCREEN_PERIOD, 0)
-        fun addSCREEN_VOLUME_FRAME(builder: FlatBufferBuilder, SCREEN_VOLUME_FRAME: Int) = builder.addOffset(16, SCREEN_VOLUME_FRAME, 0)
-        fun addSCREEN_VOLUME_SHAPE(builder: FlatBufferBuilder, SCREEN_VOLUME_SHAPE: Byte) = builder.addByte(17, SCREEN_VOLUME_SHAPE, 0)
-        fun addSCREEN_VOLUME_X(builder: FlatBufferBuilder, SCREEN_VOLUME_X: Double) = builder.addDouble(18, SCREEN_VOLUME_X, 0.0)
-        fun addSCREEN_VOLUME_Y(builder: FlatBufferBuilder, SCREEN_VOLUME_Y: Double) = builder.addDouble(19, SCREEN_VOLUME_Y, 0.0)
-        fun addSCREEN_VOLUME_Z(builder: FlatBufferBuilder, SCREEN_VOLUME_Z: Double) = builder.addDouble(20, SCREEN_VOLUME_Z, 0.0)
-        fun addSCREEN_ENTRY_TIME(builder: FlatBufferBuilder, SCREEN_ENTRY_TIME: Int) = builder.addOffset(21, SCREEN_ENTRY_TIME, 0)
-        fun addSCREEN_EXIT_TIME(builder: FlatBufferBuilder, SCREEN_EXIT_TIME: Int) = builder.addOffset(22, SCREEN_EXIT_TIME, 0)
-        fun addCOLLISION_PROBABILITY(builder: FlatBufferBuilder, COLLISION_PROBABILITY: Double) = builder.addDouble(23, COLLISION_PROBABILITY, 0.0)
-        fun addCOLLISION_PROBABILITY_METHOD(builder: FlatBufferBuilder, COLLISION_PROBABILITY_METHOD: Int) = builder.addOffset(24, COLLISION_PROBABILITY_METHOD, 0)
-        fun addOBJECT1(builder: FlatBufferBuilder, OBJECT1: Int) = builder.addOffset(25, OBJECT1, 0)
-        fun addOBJECT2(builder: FlatBufferBuilder, OBJECT2: Int) = builder.addOffset(26, OBJECT2, 0)
-        fun addOBJECT1_DATASOURCE(builder: FlatBufferBuilder, OBJECT1_DATASOURCE: Int) = builder.addOffset(27, OBJECT1_DATASOURCE, 0)
-        fun addOBJECT2_DATASOURCE(builder: FlatBufferBuilder, OBJECT2_DATASOURCE: Int) = builder.addOffset(28, OBJECT2_DATASOURCE, 0)
+        fun addCCSDSCDMVERS(builder: FlatBufferBuilder, ccsdsCdmVers: Double) = builder.addDouble(0, ccsdsCdmVers, 0.0)
+        fun addCREATIONDATE(builder: FlatBufferBuilder, creationDate: Int) = builder.addOffset(1, creationDate, 0)
+        fun addORIGINATOR(builder: FlatBufferBuilder, originator: Int) = builder.addOffset(2, originator, 0)
+        fun addMESSAGEFOR(builder: FlatBufferBuilder, messageFor: Int) = builder.addOffset(3, messageFor, 0)
+        fun addMESSAGEID(builder: FlatBufferBuilder, messageId: Int) = builder.addOffset(4, messageId, 0)
+        fun addTCA(builder: FlatBufferBuilder, tca: Int) = builder.addOffset(5, tca, 0)
+        fun addMISSDISTANCE(builder: FlatBufferBuilder, missDistance: Double) = builder.addDouble(6, missDistance, 0.0)
+        fun addRELATIVESPEED(builder: FlatBufferBuilder, relativeSpeed: Double) = builder.addDouble(7, relativeSpeed, 0.0)
+        fun addRELATIVEPOSITIONR(builder: FlatBufferBuilder, relativePositionR: Double) = builder.addDouble(8, relativePositionR, 0.0)
+        fun addRELATIVEPOSITIONT(builder: FlatBufferBuilder, relativePositionT: Double) = builder.addDouble(9, relativePositionT, 0.0)
+        fun addRELATIVEPOSITIONN(builder: FlatBufferBuilder, relativePositionN: Double) = builder.addDouble(10, relativePositionN, 0.0)
+        fun addRELATIVEVELOCITYR(builder: FlatBufferBuilder, relativeVelocityR: Double) = builder.addDouble(11, relativeVelocityR, 0.0)
+        fun addRELATIVEVELOCITYT(builder: FlatBufferBuilder, relativeVelocityT: Double) = builder.addDouble(12, relativeVelocityT, 0.0)
+        fun addRELATIVEVELOCITYN(builder: FlatBufferBuilder, relativeVelocityN: Double) = builder.addDouble(13, relativeVelocityN, 0.0)
+        fun addSTARTSCREENPERIOD(builder: FlatBufferBuilder, startScreenPeriod: Int) = builder.addOffset(14, startScreenPeriod, 0)
+        fun addSTOPSCREENPERIOD(builder: FlatBufferBuilder, stopScreenPeriod: Int) = builder.addOffset(15, stopScreenPeriod, 0)
+        fun addSCREENVOLUMEFRAME(builder: FlatBufferBuilder, screenVolumeFrame: Int) = builder.addOffset(16, screenVolumeFrame, 0)
+        fun addSCREENVOLUMESHAPE(builder: FlatBufferBuilder, screenVolumeShape: Byte) = builder.addByte(17, screenVolumeShape, 0)
+        fun addSCREENVOLUMEX(builder: FlatBufferBuilder, screenVolumeX: Double) = builder.addDouble(18, screenVolumeX, 0.0)
+        fun addSCREENVOLUMEY(builder: FlatBufferBuilder, screenVolumeY: Double) = builder.addDouble(19, screenVolumeY, 0.0)
+        fun addSCREENVOLUMEZ(builder: FlatBufferBuilder, screenVolumeZ: Double) = builder.addDouble(20, screenVolumeZ, 0.0)
+        fun addSCREENENTRYTIME(builder: FlatBufferBuilder, screenEntryTime: Int) = builder.addOffset(21, screenEntryTime, 0)
+        fun addSCREENEXITTIME(builder: FlatBufferBuilder, screenExitTime: Int) = builder.addOffset(22, screenExitTime, 0)
+        fun addCOLLISIONPROBABILITY(builder: FlatBufferBuilder, collisionProbability: Double) = builder.addDouble(23, collisionProbability, 0.0)
+        fun addCOLLISIONPROBABILITYMETHOD(builder: FlatBufferBuilder, collisionProbabilityMethod: Int) = builder.addOffset(24, collisionProbabilityMethod, 0)
+        fun addOBJECT1(builder: FlatBufferBuilder, object1: Int) = builder.addOffset(25, object1, 0)
+        fun addOBJECT2(builder: FlatBufferBuilder, object2: Int) = builder.addOffset(26, object2, 0)
+        fun addOBJECT1DATASOURCE(builder: FlatBufferBuilder, object1Datasource: Int) = builder.addOffset(27, object1Datasource, 0)
+        fun addOBJECT2DATASOURCE(builder: FlatBufferBuilder, object2Datasource: Int) = builder.addOffset(28, object2Datasource, 0)
         fun endCDM(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

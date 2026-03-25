@@ -621,6 +621,16 @@ def OOIStartDELTA_VSVector(builder, numElems):
 def StartDELTA_VSVector(builder, numElems):
     return OOIStartDELTA_VSVector(builder, numElems)
 
+def OOICreateDELTA_VSVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateDELTA_VSVector(builder, data):
+    OOICreateDELTA_VSVector(builder, data)
+
 def OOIAddDELTA_TS(builder, DELTA_TS):
     builder.PrependUOffsetTRelativeSlot(35, flatbuffers.number_types.UOffsetTFlags.py_type(DELTA_TS), 0)
 
@@ -632,6 +642,16 @@ def OOIStartDELTA_TSVector(builder, numElems):
 
 def StartDELTA_TSVector(builder, numElems):
     return OOIStartDELTA_TSVector(builder, numElems)
+
+def OOICreateDELTA_TSVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateDELTA_TSVector(builder, data):
+    OOICreateDELTA_TSVector(builder, data)
 
 def OOIAddAFFECTED_OBJECTS(builder, AFFECTED_OBJECTS):
     builder.PrependUOffsetTRelativeSlot(36, flatbuffers.number_types.UOffsetTFlags.py_type(AFFECTED_OBJECTS), 0)
@@ -645,6 +665,12 @@ def OOIStartAFFECTED_OBJECTSVector(builder, numElems):
 def StartAFFECTED_OBJECTSVector(builder, numElems):
     return OOIStartAFFECTED_OBJECTSVector(builder, numElems)
 
+def OOICreateAFFECTED_OBJECTSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateAFFECTED_OBJECTSVector(builder, data):
+    OOICreateAFFECTED_OBJECTSVector(builder, data)
+
 def OOIAddMANIFOLDS(builder, MANIFOLDS):
     builder.PrependUOffsetTRelativeSlot(37, flatbuffers.number_types.UOffsetTFlags.py_type(MANIFOLDS), 0)
 
@@ -656,6 +682,12 @@ def OOIStartMANIFOLDSVector(builder, numElems):
 
 def StartMANIFOLDSVector(builder, numElems):
     return OOIStartMANIFOLDSVector(builder, numElems)
+
+def OOICreateMANIFOLDSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateMANIFOLDSVector(builder, data):
+    OOICreateMANIFOLDSVector(builder, data)
 
 def OOIEnd(builder):
     return builder.EndObject()
@@ -671,51 +703,91 @@ except:
 class OOIT(object):
 
     # OOIT
-    def __init__(self):
-        self.ID = None  # type: str
-        self.SAT_NO = 0  # type: int
-        self.NAME = None  # type: str
-        self.ON_ORBIT = None  # type: str
-        self.STATUS = 0  # type: int
-        self.STATUS_DATE = None  # type: str
-        self.PRIORITY = 0  # type: int
-        self.DESCRIPTION = None  # type: str
-        self.SENSOR_TASKING_START_TIME = None  # type: str
-        self.SENSOR_TASKING_STOP_TIME = None  # type: str
-        self.LAST_OB_TIME = None  # type: str
-        self.MISSED_OB_TIME = None  # type: str
-        self.SV_EPOCH = None  # type: str
-        self.X = 0.0  # type: float
-        self.Y = 0.0  # type: float
-        self.Z = 0.0  # type: float
-        self.XVEL = 0.0  # type: float
-        self.YVEL = 0.0  # type: float
-        self.ZVEL = 0.0  # type: float
-        self.ELSET_EPOCH = None  # type: str
-        self.MEAN_MOTION = 0.0  # type: float
-        self.ECCENTRICITY = 0.0  # type: float
-        self.INCLINATION = 0.0  # type: float
-        self.RAAN = 0.0  # type: float
-        self.ARG_OF_PERIGEE = 0.0  # type: float
-        self.MEAN_ANOMALY = 0.0  # type: float
-        self.REV_NO = 0  # type: int
-        self.B_STAR = 0.0  # type: float
-        self.MEAN_MOTION_DOT = 0.0  # type: float
-        self.MEAN_MOTION_DDOT = 0.0  # type: float
-        self.SEMI_MAJOR_AXIS = 0.0  # type: float
-        self.PERIOD = 0.0  # type: float
-        self.APOGEE = 0.0  # type: float
-        self.PERIGEE = 0.0  # type: float
-        self.DELTA_VS = None  # type: List[float]
-        self.DELTA_TS = None  # type: List[float]
-        self.AFFECTED_OBJECTS = None  # type: List[str]
-        self.MANIFOLDS = None  # type: List[str]
+    def __init__(
+        self,
+        ID = None,
+        SAT_NO = 0,
+        NAME = None,
+        ON_ORBIT = None,
+        STATUS = 0,
+        STATUS_DATE = None,
+        PRIORITY = 0,
+        DESCRIPTION = None,
+        SENSOR_TASKING_START_TIME = None,
+        SENSOR_TASKING_STOP_TIME = None,
+        LAST_OB_TIME = None,
+        MISSED_OB_TIME = None,
+        SV_EPOCH = None,
+        X = 0.0,
+        Y = 0.0,
+        Z = 0.0,
+        XVEL = 0.0,
+        YVEL = 0.0,
+        ZVEL = 0.0,
+        ELSET_EPOCH = None,
+        MEAN_MOTION = 0.0,
+        ECCENTRICITY = 0.0,
+        INCLINATION = 0.0,
+        RAAN = 0.0,
+        ARG_OF_PERIGEE = 0.0,
+        MEAN_ANOMALY = 0.0,
+        REV_NO = 0,
+        B_STAR = 0.0,
+        MEAN_MOTION_DOT = 0.0,
+        MEAN_MOTION_DDOT = 0.0,
+        SEMI_MAJOR_AXIS = 0.0,
+        PERIOD = 0.0,
+        APOGEE = 0.0,
+        PERIGEE = 0.0,
+        DELTA_VS = None,
+        DELTA_TS = None,
+        AFFECTED_OBJECTS = None,
+        MANIFOLDS = None,
+    ):
+        self.ID = ID  # type: Optional[str]
+        self.SAT_NO = SAT_NO  # type: int
+        self.NAME = NAME  # type: Optional[str]
+        self.ON_ORBIT = ON_ORBIT  # type: Optional[str]
+        self.STATUS = STATUS  # type: int
+        self.STATUS_DATE = STATUS_DATE  # type: Optional[str]
+        self.PRIORITY = PRIORITY  # type: int
+        self.DESCRIPTION = DESCRIPTION  # type: Optional[str]
+        self.SENSOR_TASKING_START_TIME = SENSOR_TASKING_START_TIME  # type: Optional[str]
+        self.SENSOR_TASKING_STOP_TIME = SENSOR_TASKING_STOP_TIME  # type: Optional[str]
+        self.LAST_OB_TIME = LAST_OB_TIME  # type: Optional[str]
+        self.MISSED_OB_TIME = MISSED_OB_TIME  # type: Optional[str]
+        self.SV_EPOCH = SV_EPOCH  # type: Optional[str]
+        self.X = X  # type: float
+        self.Y = Y  # type: float
+        self.Z = Z  # type: float
+        self.XVEL = XVEL  # type: float
+        self.YVEL = YVEL  # type: float
+        self.ZVEL = ZVEL  # type: float
+        self.ELSET_EPOCH = ELSET_EPOCH  # type: Optional[str]
+        self.MEAN_MOTION = MEAN_MOTION  # type: float
+        self.ECCENTRICITY = ECCENTRICITY  # type: float
+        self.INCLINATION = INCLINATION  # type: float
+        self.RAAN = RAAN  # type: float
+        self.ARG_OF_PERIGEE = ARG_OF_PERIGEE  # type: float
+        self.MEAN_ANOMALY = MEAN_ANOMALY  # type: float
+        self.REV_NO = REV_NO  # type: int
+        self.B_STAR = B_STAR  # type: float
+        self.MEAN_MOTION_DOT = MEAN_MOTION_DOT  # type: float
+        self.MEAN_MOTION_DDOT = MEAN_MOTION_DDOT  # type: float
+        self.SEMI_MAJOR_AXIS = SEMI_MAJOR_AXIS  # type: float
+        self.PERIOD = PERIOD  # type: float
+        self.APOGEE = APOGEE  # type: float
+        self.PERIGEE = PERIGEE  # type: float
+        self.DELTA_VS = DELTA_VS  # type: Optional[List[float]]
+        self.DELTA_TS = DELTA_TS  # type: Optional[List[float]]
+        self.AFFECTED_OBJECTS = AFFECTED_OBJECTS  # type: Optional[List[Optional[str]]]
+        self.MANIFOLDS = MANIFOLDS  # type: Optional[List[Optional[str]]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        OOI = OOI()
-        OOI.Init(buf, pos)
-        return cls.InitFromObj(OOI)
+        tmpOoi = OOI()
+        tmpOoi.Init(buf, pos)
+        return cls.InitFromObj(tmpOoi)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -723,9 +795,9 @@ class OOIT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, OOI):
+    def InitFromObj(cls, tmpOoi):
         x = OOIT()
-        x._UnPack(OOI)
+        x._UnPack(tmpOoi)
         return x
 
     # OOIT

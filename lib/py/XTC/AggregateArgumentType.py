@@ -115,6 +115,12 @@ def AggregateArgumentTypeStartMEMBERSVector(builder, numElems):
 def StartMEMBERSVector(builder, numElems):
     return AggregateArgumentTypeStartMEMBERSVector(builder, numElems)
 
+def AggregateArgumentTypeCreateMEMBERSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateMEMBERSVector(builder, data):
+    AggregateArgumentTypeCreateMEMBERSVector(builder, data)
+
 def AggregateArgumentTypeEnd(builder):
     return builder.EndObject()
 
@@ -130,17 +136,23 @@ except:
 class AggregateArgumentTypeT(object):
 
     # AggregateArgumentTypeT
-    def __init__(self):
-        self.NAME = None  # type: str
-        self.SHORT_DESCRIPTION = None  # type: str
-        self.LONG_DESCRIPTION = None  # type: str
-        self.MEMBERS = None  # type: List[AggregateMember.AggregateMemberT]
+    def __init__(
+        self,
+        NAME = None,
+        SHORT_DESCRIPTION = None,
+        LONG_DESCRIPTION = None,
+        MEMBERS = None,
+    ):
+        self.NAME = NAME  # type: Optional[str]
+        self.SHORT_DESCRIPTION = SHORT_DESCRIPTION  # type: Optional[str]
+        self.LONG_DESCRIPTION = LONG_DESCRIPTION  # type: Optional[str]
+        self.MEMBERS = MEMBERS  # type: Optional[List[AggregateMember.AggregateMemberT]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        aggregateArgumentType = AggregateArgumentType()
-        aggregateArgumentType.Init(buf, pos)
-        return cls.InitFromObj(aggregateArgumentType)
+        tmpAggregateArgumentType = AggregateArgumentType()
+        tmpAggregateArgumentType.Init(buf, pos)
+        return cls.InitFromObj(tmpAggregateArgumentType)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -148,25 +160,25 @@ class AggregateArgumentTypeT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, aggregateArgumentType):
+    def InitFromObj(cls, tmpAggregateArgumentType):
         x = AggregateArgumentTypeT()
-        x._UnPack(aggregateArgumentType)
+        x._UnPack(tmpAggregateArgumentType)
         return x
 
     # AggregateArgumentTypeT
-    def _UnPack(self, aggregateArgumentType):
-        if aggregateArgumentType is None:
+    def _UnPack(self, AggregateArgumentType):
+        if AggregateArgumentType is None:
             return
-        self.NAME = aggregateArgumentType.NAME()
-        self.SHORT_DESCRIPTION = aggregateArgumentType.SHORT_DESCRIPTION()
-        self.LONG_DESCRIPTION = aggregateArgumentType.LONG_DESCRIPTION()
-        if not aggregateArgumentType.MEMBERSIsNone():
+        self.NAME = AggregateArgumentType.NAME()
+        self.SHORT_DESCRIPTION = AggregateArgumentType.SHORT_DESCRIPTION()
+        self.LONG_DESCRIPTION = AggregateArgumentType.LONG_DESCRIPTION()
+        if not AggregateArgumentType.MEMBERSIsNone():
             self.MEMBERS = []
-            for i in range(aggregateArgumentType.MEMBERSLength()):
-                if aggregateArgumentType.MEMBERS(i) is None:
+            for i in range(AggregateArgumentType.MEMBERSLength()):
+                if AggregateArgumentType.MEMBERS(i) is None:
                     self.MEMBERS.append(None)
                 else:
-                    aggregateMember_ = AggregateMember.AggregateMemberT.InitFromObj(aggregateArgumentType.MEMBERS(i))
+                    aggregateMember_ = AggregateMember.AggregateMemberT.InitFromObj(AggregateArgumentType.MEMBERS(i))
                     self.MEMBERS.append(aggregateMember_)
 
     # AggregateArgumentTypeT
@@ -194,5 +206,5 @@ class AggregateArgumentTypeT(object):
             AggregateArgumentTypeAddLONG_DESCRIPTION(builder, LONG_DESCRIPTION)
         if self.MEMBERS is not None:
             AggregateArgumentTypeAddMEMBERS(builder, MEMBERS)
-        aggregateArgumentType = AggregateArgumentTypeEnd(builder)
-        return aggregateArgumentType
+        AggregateArgumentType = AggregateArgumentTypeEnd(builder)
+        return AggregateArgumentType

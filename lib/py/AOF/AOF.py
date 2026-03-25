@@ -237,6 +237,16 @@ def AOFStartINSERT_ZONEVector(builder, numElems):
 def StartINSERT_ZONEVector(builder, numElems):
     return AOFStartINSERT_ZONEVector(builder, numElems)
 
+def AOFCreateINSERT_ZONEVector(builder, data):
+    data = list(data)
+    builder.StartVector(1, len(data), 1)
+    for item in reversed(data):
+        builder.PrependUint8(item)
+    return builder.EndVector()
+
+def CreateINSERT_ZONEVector(builder, data):
+    AOFCreateINSERT_ZONEVector(builder, data)
+
 def AOFAddDATA(builder, DATA):
     builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(DATA), 0)
 
@@ -249,6 +259,16 @@ def AOFStartDATAVector(builder, numElems):
 def StartDATAVector(builder, numElems):
     return AOFStartDATAVector(builder, numElems)
 
+def AOFCreateDATAVector(builder, data):
+    data = list(data)
+    builder.StartVector(1, len(data), 1)
+    for item in reversed(data):
+        builder.PrependUint8(item)
+    return builder.EndVector()
+
+def CreateDATAVector(builder, data):
+    AOFCreateDATAVector(builder, data)
+
 def AOFAddOCF(builder, OCF):
     builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(OCF), 0)
 
@@ -260,6 +280,16 @@ def AOFStartOCFVector(builder, numElems):
 
 def StartOCFVector(builder, numElems):
     return AOFStartOCFVector(builder, numElems)
+
+def AOFCreateOCFVector(builder, data):
+    data = list(data)
+    builder.StartVector(1, len(data), 1)
+    for item in reversed(data):
+        builder.PrependUint8(item)
+    return builder.EndVector()
+
+def CreateOCFVector(builder, data):
+    AOFCreateOCFVector(builder, data)
 
 def AOFAddFECF(builder, FECF):
     builder.PrependUint16Slot(10, FECF, 0)
@@ -281,24 +311,37 @@ except:
 class AOFT(object):
 
     # AOFT
-    def __init__(self):
-        self.VERSION = 0  # type: int
-        self.SPACECRAFT_ID = 0  # type: int
-        self.VIRTUAL_CHANNEL_ID = 0  # type: int
-        self.VIRTUAL_FRAME_COUNT = 0  # type: int
-        self.REPLAY_FLAG = False  # type: bool
-        self.VC_FRAME_COUNT_USAGE = False  # type: bool
-        self.VC_FRAME_COUNT_CYCLE = 0  # type: int
-        self.INSERT_ZONE = None  # type: List[int]
-        self.DATA = None  # type: List[int]
-        self.OCF = None  # type: List[int]
-        self.FECF = 0  # type: int
+    def __init__(
+        self,
+        VERSION = 0,
+        SPACECRAFT_ID = 0,
+        VIRTUAL_CHANNEL_ID = 0,
+        VIRTUAL_FRAME_COUNT = 0,
+        REPLAY_FLAG = False,
+        VC_FRAME_COUNT_USAGE = False,
+        VC_FRAME_COUNT_CYCLE = 0,
+        INSERT_ZONE = None,
+        DATA = None,
+        OCF = None,
+        FECF = 0,
+    ):
+        self.VERSION = VERSION  # type: int
+        self.SPACECRAFT_ID = SPACECRAFT_ID  # type: int
+        self.VIRTUAL_CHANNEL_ID = VIRTUAL_CHANNEL_ID  # type: int
+        self.VIRTUAL_FRAME_COUNT = VIRTUAL_FRAME_COUNT  # type: int
+        self.REPLAY_FLAG = REPLAY_FLAG  # type: bool
+        self.VC_FRAME_COUNT_USAGE = VC_FRAME_COUNT_USAGE  # type: bool
+        self.VC_FRAME_COUNT_CYCLE = VC_FRAME_COUNT_CYCLE  # type: int
+        self.INSERT_ZONE = INSERT_ZONE  # type: Optional[List[int]]
+        self.DATA = DATA  # type: Optional[List[int]]
+        self.OCF = OCF  # type: Optional[List[int]]
+        self.FECF = FECF  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        AOF = AOF()
-        AOF.Init(buf, pos)
-        return cls.InitFromObj(AOF)
+        tmpAof = AOF()
+        tmpAof.Init(buf, pos)
+        return cls.InitFromObj(tmpAof)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -306,9 +349,9 @@ class AOFT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, AOF):
+    def InitFromObj(cls, tmpAof):
         x = AOFT()
-        x._UnPack(AOF)
+        x._UnPack(tmpAof)
         return x
 
     # AOFT

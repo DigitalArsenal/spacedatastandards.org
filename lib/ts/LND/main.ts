@@ -2,5 +2,5 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export { LND, LNDT } from './LND.js';
-export { launchDetectionType } from './launchDetectionType.js';
+export * from './launchDetectionType.js';
+export * from './LND.js';

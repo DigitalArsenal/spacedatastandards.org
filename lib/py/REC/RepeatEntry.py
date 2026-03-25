@@ -2,4 +2,134 @@
 
 # namespace: 
 
-# NOTE RepeatEntry.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Repeat entry specification
+class RepeatEntry(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = RepeatEntry()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsRepeatEntry(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def RepeatEntryBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x58\x54\x43", size_prefixed=size_prefixed)
+
+    # RepeatEntry
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Fixed repeat count
+    # RepeatEntry
+    def COUNT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+        return 0
+
+    # Dynamic count from parameter reference
+    # RepeatEntry
+    def COUNT_PARAMETER_REF(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Offset in bits between repetitions
+    # RepeatEntry
+    def OFFSET_IN_BITS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+def RepeatEntryStart(builder):
+    builder.StartObject(3)
+
+def Start(builder):
+    RepeatEntryStart(builder)
+
+def RepeatEntryAddCOUNT(builder, COUNT):
+    builder.PrependUint32Slot(0, COUNT, 0)
+
+def AddCOUNT(builder, COUNT):
+    RepeatEntryAddCOUNT(builder, COUNT)
+
+def RepeatEntryAddCOUNT_PARAMETER_REF(builder, COUNT_PARAMETER_REF):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(COUNT_PARAMETER_REF), 0)
+
+def AddCOUNT_PARAMETER_REF(builder, COUNT_PARAMETER_REF):
+    RepeatEntryAddCOUNT_PARAMETER_REF(builder, COUNT_PARAMETER_REF)
+
+def RepeatEntryAddOFFSET_IN_BITS(builder, OFFSET_IN_BITS):
+    builder.PrependInt32Slot(2, OFFSET_IN_BITS, 0)
+
+def AddOFFSET_IN_BITS(builder, OFFSET_IN_BITS):
+    RepeatEntryAddOFFSET_IN_BITS(builder, OFFSET_IN_BITS)
+
+def RepeatEntryEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return RepeatEntryEnd(builder)
+
+
+class RepeatEntryT(object):
+
+    # RepeatEntryT
+    def __init__(
+        self,
+        COUNT = 0,
+        COUNT_PARAMETER_REF = None,
+        OFFSET_IN_BITS = 0,
+    ):
+        self.COUNT = COUNT  # type: int
+        self.COUNT_PARAMETER_REF = COUNT_PARAMETER_REF  # type: Optional[str]
+        self.OFFSET_IN_BITS = OFFSET_IN_BITS  # type: int
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpRepeatEntry = RepeatEntry()
+        tmpRepeatEntry.Init(buf, pos)
+        return cls.InitFromObj(tmpRepeatEntry)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpRepeatEntry):
+        x = RepeatEntryT()
+        x._UnPack(tmpRepeatEntry)
+        return x
+
+    # RepeatEntryT
+    def _UnPack(self, RepeatEntry):
+        if RepeatEntry is None:
+            return
+        self.COUNT = RepeatEntry.COUNT()
+        self.COUNT_PARAMETER_REF = RepeatEntry.COUNT_PARAMETER_REF()
+        self.OFFSET_IN_BITS = RepeatEntry.OFFSET_IN_BITS()
+
+    # RepeatEntryT
+    def Pack(self, builder):
+        if self.COUNT_PARAMETER_REF is not None:
+            COUNT_PARAMETER_REF = builder.CreateString(self.COUNT_PARAMETER_REF)
+        RepeatEntryStart(builder)
+        RepeatEntryAddCOUNT(builder, self.COUNT)
+        if self.COUNT_PARAMETER_REF is not None:
+            RepeatEntryAddCOUNT_PARAMETER_REF(builder, COUNT_PARAMETER_REF)
+        RepeatEntryAddOFFSET_IN_BITS(builder, self.OFFSET_IN_BITS)
+        RepeatEntry = RepeatEntryEnd(builder)
+        return RepeatEntry

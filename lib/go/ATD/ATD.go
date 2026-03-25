@@ -63,6 +63,10 @@ func (rcv *ATD) ID() []byte {
 	return nil
 }
 
+func (rcv *ATD) Id() []byte {
+	return rcv.ID()
+}
+
 /// Unique identifier
 /// Attitude set identifier (groups time-series points)
 func (rcv *ATD) AS_ID() []byte {
@@ -71,6 +75,10 @@ func (rcv *ATD) AS_ID() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *ATD) AsId() []byte {
+	return rcv.AS_ID()
 }
 
 /// Attitude set identifier (groups time-series points)
@@ -83,9 +91,17 @@ func (rcv *ATD) SAT_NO() uint32 {
 	return 0
 }
 
+func (rcv *ATD) SatNo() uint32 {
+	return rcv.SAT_NO()
+}
+
 /// Satellite catalog number
 func (rcv *ATD) MutateSAT_NO(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(8, n)
+}
+
+func (rcv *ATD) MutateSatNo(n uint32) bool {
+	return rcv.MutateSAT_NO(n)
 }
 
 /// International designator
@@ -95,6 +111,10 @@ func (rcv *ATD) ORIG_OBJECT_ID() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *ATD) OrigObjectId() []byte {
+	return rcv.ORIG_OBJECT_ID()
 }
 
 /// International designator
@@ -107,6 +127,10 @@ func (rcv *ATD) EPOCH() []byte {
 	return nil
 }
 
+func (rcv *ATD) Epoch() []byte {
+	return rcv.EPOCH()
+}
+
 /// Observation epoch (ISO 8601)
 /// Attitude representation used
 func (rcv *ATD) REPRESENTATION() attRepresentation {
@@ -117,9 +141,17 @@ func (rcv *ATD) REPRESENTATION() attRepresentation {
 	return 0
 }
 
+func (rcv *ATD) Representation() attRepresentation {
+	return rcv.REPRESENTATION()
+}
+
 /// Attitude representation used
 func (rcv *ATD) MutateREPRESENTATION(n attRepresentation) bool {
 	return rcv._tab.MutateInt8Slot(14, int8(n))
+}
+
+func (rcv *ATD) MutateRepresentation(n attRepresentation) bool {
+	return rcv.MutateREPRESENTATION(n)
 }
 
 /// Motion characterization
@@ -131,9 +163,17 @@ func (rcv *ATD) MOTION_TYPE() attMotionType {
 	return 0
 }
 
+func (rcv *ATD) MotionType() attMotionType {
+	return rcv.MOTION_TYPE()
+}
+
 /// Motion characterization
 func (rcv *ATD) MutateMOTION_TYPE(n attMotionType) bool {
 	return rcv._tab.MutateInt8Slot(16, int8(n))
+}
+
+func (rcv *ATD) MutateMotionType(n attMotionType) bool {
+	return rcv.MutateMOTION_TYPE(n)
 }
 
 /// Quaternion scalar component (q0 or qc)
@@ -145,9 +185,17 @@ func (rcv *ATD) QC() float64 {
 	return 0.0
 }
 
+func (rcv *ATD) Qc() float64 {
+	return rcv.QC()
+}
+
 /// Quaternion scalar component (q0 or qc)
 func (rcv *ATD) MutateQC(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(18, n)
+}
+
+func (rcv *ATD) MutateQc(n float64) bool {
+	return rcv.MutateQC(n)
 }
 
 /// Quaternion vector component 1
@@ -201,9 +249,17 @@ func (rcv *ATD) QC_DOT() float64 {
 	return 0.0
 }
 
+func (rcv *ATD) QcDot() float64 {
+	return rcv.QC_DOT()
+}
+
 /// Quaternion scalar rate (rad/s)
 func (rcv *ATD) MutateQC_DOT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(26, n)
+}
+
+func (rcv *ATD) MutateQcDot(n float64) bool {
+	return rcv.MutateQC_DOT(n)
 }
 
 /// Quaternion vector rate 1 (rad/s)
@@ -215,9 +271,17 @@ func (rcv *ATD) Q1_DOT() float64 {
 	return 0.0
 }
 
+func (rcv *ATD) Q1Dot() float64 {
+	return rcv.Q1_DOT()
+}
+
 /// Quaternion vector rate 1 (rad/s)
 func (rcv *ATD) MutateQ1_DOT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(28, n)
+}
+
+func (rcv *ATD) MutateQ1Dot(n float64) bool {
+	return rcv.MutateQ1_DOT(n)
 }
 
 /// Quaternion vector rate 2 (rad/s)
@@ -229,9 +293,17 @@ func (rcv *ATD) Q2_DOT() float64 {
 	return 0.0
 }
 
+func (rcv *ATD) Q2Dot() float64 {
+	return rcv.Q2_DOT()
+}
+
 /// Quaternion vector rate 2 (rad/s)
 func (rcv *ATD) MutateQ2_DOT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(30, n)
+}
+
+func (rcv *ATD) MutateQ2Dot(n float64) bool {
+	return rcv.MutateQ2_DOT(n)
 }
 
 /// Quaternion vector rate 3 (rad/s)
@@ -243,9 +315,17 @@ func (rcv *ATD) Q3_DOT() float64 {
 	return 0.0
 }
 
+func (rcv *ATD) Q3Dot() float64 {
+	return rcv.Q3_DOT()
+}
+
 /// Quaternion vector rate 3 (rad/s)
 func (rcv *ATD) MutateQ3_DOT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(32, n)
+}
+
+func (rcv *ATD) MutateQ3Dot(n float64) bool {
+	return rcv.MutateQ3_DOT(n)
 }
 
 /// Euler angle X (degrees)
@@ -257,9 +337,17 @@ func (rcv *ATD) X_ANGLE() float64 {
 	return 0.0
 }
 
+func (rcv *ATD) XAngle() float64 {
+	return rcv.X_ANGLE()
+}
+
 /// Euler angle X (degrees)
 func (rcv *ATD) MutateX_ANGLE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(34, n)
+}
+
+func (rcv *ATD) MutateXAngle(n float64) bool {
+	return rcv.MutateX_ANGLE(n)
 }
 
 /// Euler angle Y (degrees)
@@ -271,9 +359,17 @@ func (rcv *ATD) Y_ANGLE() float64 {
 	return 0.0
 }
 
+func (rcv *ATD) YAngle() float64 {
+	return rcv.Y_ANGLE()
+}
+
 /// Euler angle Y (degrees)
 func (rcv *ATD) MutateY_ANGLE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(36, n)
+}
+
+func (rcv *ATD) MutateYAngle(n float64) bool {
+	return rcv.MutateY_ANGLE(n)
 }
 
 /// Euler angle Z (degrees)
@@ -285,9 +381,17 @@ func (rcv *ATD) Z_ANGLE() float64 {
 	return 0.0
 }
 
+func (rcv *ATD) ZAngle() float64 {
+	return rcv.Z_ANGLE()
+}
+
 /// Euler angle Z (degrees)
 func (rcv *ATD) MutateZ_ANGLE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(38, n)
+}
+
+func (rcv *ATD) MutateZAngle(n float64) bool {
+	return rcv.MutateZ_ANGLE(n)
 }
 
 /// Angular rate about X (deg/s)
@@ -299,9 +403,17 @@ func (rcv *ATD) X_RATE() float64 {
 	return 0.0
 }
 
+func (rcv *ATD) XRate() float64 {
+	return rcv.X_RATE()
+}
+
 /// Angular rate about X (deg/s)
 func (rcv *ATD) MutateX_RATE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(40, n)
+}
+
+func (rcv *ATD) MutateXRate(n float64) bool {
+	return rcv.MutateX_RATE(n)
 }
 
 /// Angular rate about Y (deg/s)
@@ -313,9 +425,17 @@ func (rcv *ATD) Y_RATE() float64 {
 	return 0.0
 }
 
+func (rcv *ATD) YRate() float64 {
+	return rcv.Y_RATE()
+}
+
 /// Angular rate about Y (deg/s)
 func (rcv *ATD) MutateY_RATE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(42, n)
+}
+
+func (rcv *ATD) MutateYRate(n float64) bool {
+	return rcv.MutateY_RATE(n)
 }
 
 /// Angular rate about Z (deg/s)
@@ -327,9 +447,17 @@ func (rcv *ATD) Z_RATE() float64 {
 	return 0.0
 }
 
+func (rcv *ATD) ZRate() float64 {
+	return rcv.Z_RATE()
+}
+
 /// Angular rate about Z (deg/s)
 func (rcv *ATD) MutateZ_RATE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(44, n)
+}
+
+func (rcv *ATD) MutateZRate(n float64) bool {
+	return rcv.MutateZ_RATE(n)
 }
 
 /// Right ascension of spin axis (degrees)
@@ -341,9 +469,17 @@ func (rcv *ATD) RA() float64 {
 	return 0.0
 }
 
+func (rcv *ATD) Ra() float64 {
+	return rcv.RA()
+}
+
 /// Right ascension of spin axis (degrees)
 func (rcv *ATD) MutateRA(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(46, n)
+}
+
+func (rcv *ATD) MutateRa(n float64) bool {
+	return rcv.MutateRA(n)
 }
 
 /// Declination of spin axis (degrees)
@@ -355,9 +491,17 @@ func (rcv *ATD) DECLINATION() float64 {
 	return 0.0
 }
 
+func (rcv *ATD) Declination() float64 {
+	return rcv.DECLINATION()
+}
+
 /// Declination of spin axis (degrees)
 func (rcv *ATD) MutateDECLINATION(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(48, n)
+}
+
+func (rcv *ATD) MutateDeclination(n float64) bool {
+	return rcv.MutateDECLINATION(n)
 }
 
 /// Coning half-angle (degrees)
@@ -369,9 +513,17 @@ func (rcv *ATD) CONING_ANGLE() float64 {
 	return 0.0
 }
 
+func (rcv *ATD) ConingAngle() float64 {
+	return rcv.CONING_ANGLE()
+}
+
 /// Coning half-angle (degrees)
 func (rcv *ATD) MutateCONING_ANGLE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(50, n)
+}
+
+func (rcv *ATD) MutateConingAngle(n float64) bool {
+	return rcv.MutateCONING_ANGLE(n)
 }
 
 /// Precession period (seconds)
@@ -383,9 +535,17 @@ func (rcv *ATD) PREC_PERIOD() float64 {
 	return 0.0
 }
 
+func (rcv *ATD) PrecPeriod() float64 {
+	return rcv.PREC_PERIOD()
+}
+
 /// Precession period (seconds)
 func (rcv *ATD) MutatePREC_PERIOD(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(52, n)
+}
+
+func (rcv *ATD) MutatePrecPeriod(n float64) bool {
+	return rcv.MutatePREC_PERIOD(n)
 }
 
 /// Spin period (seconds)
@@ -397,9 +557,17 @@ func (rcv *ATD) SPIN_PERIOD() float64 {
 	return 0.0
 }
 
+func (rcv *ATD) SpinPeriod() float64 {
+	return rcv.SPIN_PERIOD()
+}
+
 /// Spin period (seconds)
 func (rcv *ATD) MutateSPIN_PERIOD(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(54, n)
+}
+
+func (rcv *ATD) MutateSpinPeriod(n float64) bool {
+	return rcv.MutateSPIN_PERIOD(n)
 }
 
 /// Attitude uncertainty (degrees, 1-sigma)
@@ -411,9 +579,17 @@ func (rcv *ATD) ATTITUDE_UNC() float64 {
 	return 0.0
 }
 
+func (rcv *ATD) AttitudeUnc() float64 {
+	return rcv.ATTITUDE_UNC()
+}
+
 /// Attitude uncertainty (degrees, 1-sigma)
 func (rcv *ATD) MutateATTITUDE_UNC(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(56, n)
+}
+
+func (rcv *ATD) MutateAttitudeUnc(n float64) bool {
+	return rcv.MutateATTITUDE_UNC(n)
 }
 
 /// Rate uncertainty (deg/s, 1-sigma)
@@ -425,9 +601,17 @@ func (rcv *ATD) RATE_UNC() float64 {
 	return 0.0
 }
 
+func (rcv *ATD) RateUnc() float64 {
+	return rcv.RATE_UNC()
+}
+
 /// Rate uncertainty (deg/s, 1-sigma)
 func (rcv *ATD) MutateRATE_UNC(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(58, n)
+}
+
+func (rcv *ATD) MutateRateUnc(n float64) bool {
+	return rcv.MutateRATE_UNC(n)
 }
 
 /// Data quality (0-9, 9=best)
@@ -439,9 +623,17 @@ func (rcv *ATD) QUALITY() byte {
 	return 0
 }
 
+func (rcv *ATD) Quality() byte {
+	return rcv.QUALITY()
+}
+
 /// Data quality (0-9, 9=best)
 func (rcv *ATD) MutateQUALITY(n byte) bool {
 	return rcv._tab.MutateByteSlot(60, n)
+}
+
+func (rcv *ATD) MutateQuality(n byte) bool {
+	return rcv.MutateQUALITY(n)
 }
 
 /// Reference frame for attitude
@@ -451,6 +643,10 @@ func (rcv *ATD) REF_FRAME() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *ATD) RefFrame() []byte {
+	return rcv.REF_FRAME()
 }
 
 /// Reference frame for attitude
@@ -463,6 +659,10 @@ func (rcv *ATD) SENSOR_ID() []byte {
 	return nil
 }
 
+func (rcv *ATD) SensorId() []byte {
+	return rcv.SENSOR_ID()
+}
+
 /// Sensor identifier providing the observation
 func ATDStart(builder *flatbuffers.Builder) {
 	builder.StartObject(31)
@@ -470,26 +670,50 @@ func ATDStart(builder *flatbuffers.Builder) {
 func ATDAddID(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ID), 0)
 }
+func ATDAddId(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
+	ATDAddID(builder, ID)
+}
 func ATDAddAS_ID(builder *flatbuffers.Builder, AS_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(AS_ID), 0)
+}
+func ATDAddAsId(builder *flatbuffers.Builder, AS_ID flatbuffers.UOffsetT) {
+	ATDAddAS_ID(builder, AS_ID)
 }
 func ATDAddSAT_NO(builder *flatbuffers.Builder, SAT_NO uint32) {
 	builder.PrependUint32Slot(2, SAT_NO, 0)
 }
+func ATDAddSatNo(builder *flatbuffers.Builder, SAT_NO uint32) {
+	ATDAddSAT_NO(builder, SAT_NO)
+}
 func ATDAddORIG_OBJECT_ID(builder *flatbuffers.Builder, ORIG_OBJECT_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(ORIG_OBJECT_ID), 0)
+}
+func ATDAddOrigObjectId(builder *flatbuffers.Builder, ORIG_OBJECT_ID flatbuffers.UOffsetT) {
+	ATDAddORIG_OBJECT_ID(builder, ORIG_OBJECT_ID)
 }
 func ATDAddEPOCH(builder *flatbuffers.Builder, EPOCH flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(EPOCH), 0)
 }
+func ATDAddEpoch(builder *flatbuffers.Builder, EPOCH flatbuffers.UOffsetT) {
+	ATDAddEPOCH(builder, EPOCH)
+}
 func ATDAddREPRESENTATION(builder *flatbuffers.Builder, REPRESENTATION attRepresentation) {
 	builder.PrependInt8Slot(5, int8(REPRESENTATION), 0)
+}
+func ATDAddRepresentation(builder *flatbuffers.Builder, REPRESENTATION attRepresentation) {
+	ATDAddREPRESENTATION(builder, REPRESENTATION)
 }
 func ATDAddMOTION_TYPE(builder *flatbuffers.Builder, MOTION_TYPE attMotionType) {
 	builder.PrependInt8Slot(6, int8(MOTION_TYPE), 0)
 }
+func ATDAddMotionType(builder *flatbuffers.Builder, MOTION_TYPE attMotionType) {
+	ATDAddMOTION_TYPE(builder, MOTION_TYPE)
+}
 func ATDAddQC(builder *flatbuffers.Builder, QC float64) {
 	builder.PrependFloat64Slot(7, QC, 0.0)
+}
+func ATDAddQc(builder *flatbuffers.Builder, QC float64) {
+	ATDAddQC(builder, QC)
 }
 func ATDAddQ1(builder *flatbuffers.Builder, Q1 float64) {
 	builder.PrependFloat64Slot(8, Q1, 0.0)
@@ -503,62 +727,122 @@ func ATDAddQ3(builder *flatbuffers.Builder, Q3 float64) {
 func ATDAddQC_DOT(builder *flatbuffers.Builder, QC_DOT float64) {
 	builder.PrependFloat64Slot(11, QC_DOT, 0.0)
 }
+func ATDAddQcDot(builder *flatbuffers.Builder, QC_DOT float64) {
+	ATDAddQC_DOT(builder, QC_DOT)
+}
 func ATDAddQ1_DOT(builder *flatbuffers.Builder, Q1_DOT float64) {
 	builder.PrependFloat64Slot(12, Q1_DOT, 0.0)
+}
+func ATDAddQ1Dot(builder *flatbuffers.Builder, Q1_DOT float64) {
+	ATDAddQ1_DOT(builder, Q1_DOT)
 }
 func ATDAddQ2_DOT(builder *flatbuffers.Builder, Q2_DOT float64) {
 	builder.PrependFloat64Slot(13, Q2_DOT, 0.0)
 }
+func ATDAddQ2Dot(builder *flatbuffers.Builder, Q2_DOT float64) {
+	ATDAddQ2_DOT(builder, Q2_DOT)
+}
 func ATDAddQ3_DOT(builder *flatbuffers.Builder, Q3_DOT float64) {
 	builder.PrependFloat64Slot(14, Q3_DOT, 0.0)
+}
+func ATDAddQ3Dot(builder *flatbuffers.Builder, Q3_DOT float64) {
+	ATDAddQ3_DOT(builder, Q3_DOT)
 }
 func ATDAddX_ANGLE(builder *flatbuffers.Builder, X_ANGLE float64) {
 	builder.PrependFloat64Slot(15, X_ANGLE, 0.0)
 }
+func ATDAddXAngle(builder *flatbuffers.Builder, X_ANGLE float64) {
+	ATDAddX_ANGLE(builder, X_ANGLE)
+}
 func ATDAddY_ANGLE(builder *flatbuffers.Builder, Y_ANGLE float64) {
 	builder.PrependFloat64Slot(16, Y_ANGLE, 0.0)
+}
+func ATDAddYAngle(builder *flatbuffers.Builder, Y_ANGLE float64) {
+	ATDAddY_ANGLE(builder, Y_ANGLE)
 }
 func ATDAddZ_ANGLE(builder *flatbuffers.Builder, Z_ANGLE float64) {
 	builder.PrependFloat64Slot(17, Z_ANGLE, 0.0)
 }
+func ATDAddZAngle(builder *flatbuffers.Builder, Z_ANGLE float64) {
+	ATDAddZ_ANGLE(builder, Z_ANGLE)
+}
 func ATDAddX_RATE(builder *flatbuffers.Builder, X_RATE float64) {
 	builder.PrependFloat64Slot(18, X_RATE, 0.0)
+}
+func ATDAddXRate(builder *flatbuffers.Builder, X_RATE float64) {
+	ATDAddX_RATE(builder, X_RATE)
 }
 func ATDAddY_RATE(builder *flatbuffers.Builder, Y_RATE float64) {
 	builder.PrependFloat64Slot(19, Y_RATE, 0.0)
 }
+func ATDAddYRate(builder *flatbuffers.Builder, Y_RATE float64) {
+	ATDAddY_RATE(builder, Y_RATE)
+}
 func ATDAddZ_RATE(builder *flatbuffers.Builder, Z_RATE float64) {
 	builder.PrependFloat64Slot(20, Z_RATE, 0.0)
+}
+func ATDAddZRate(builder *flatbuffers.Builder, Z_RATE float64) {
+	ATDAddZ_RATE(builder, Z_RATE)
 }
 func ATDAddRA(builder *flatbuffers.Builder, RA float64) {
 	builder.PrependFloat64Slot(21, RA, 0.0)
 }
+func ATDAddRa(builder *flatbuffers.Builder, RA float64) {
+	ATDAddRA(builder, RA)
+}
 func ATDAddDECLINATION(builder *flatbuffers.Builder, DECLINATION float64) {
 	builder.PrependFloat64Slot(22, DECLINATION, 0.0)
+}
+func ATDAddDeclination(builder *flatbuffers.Builder, DECLINATION float64) {
+	ATDAddDECLINATION(builder, DECLINATION)
 }
 func ATDAddCONING_ANGLE(builder *flatbuffers.Builder, CONING_ANGLE float64) {
 	builder.PrependFloat64Slot(23, CONING_ANGLE, 0.0)
 }
+func ATDAddConingAngle(builder *flatbuffers.Builder, CONING_ANGLE float64) {
+	ATDAddCONING_ANGLE(builder, CONING_ANGLE)
+}
 func ATDAddPREC_PERIOD(builder *flatbuffers.Builder, PREC_PERIOD float64) {
 	builder.PrependFloat64Slot(24, PREC_PERIOD, 0.0)
+}
+func ATDAddPrecPeriod(builder *flatbuffers.Builder, PREC_PERIOD float64) {
+	ATDAddPREC_PERIOD(builder, PREC_PERIOD)
 }
 func ATDAddSPIN_PERIOD(builder *flatbuffers.Builder, SPIN_PERIOD float64) {
 	builder.PrependFloat64Slot(25, SPIN_PERIOD, 0.0)
 }
+func ATDAddSpinPeriod(builder *flatbuffers.Builder, SPIN_PERIOD float64) {
+	ATDAddSPIN_PERIOD(builder, SPIN_PERIOD)
+}
 func ATDAddATTITUDE_UNC(builder *flatbuffers.Builder, ATTITUDE_UNC float64) {
 	builder.PrependFloat64Slot(26, ATTITUDE_UNC, 0.0)
+}
+func ATDAddAttitudeUnc(builder *flatbuffers.Builder, ATTITUDE_UNC float64) {
+	ATDAddATTITUDE_UNC(builder, ATTITUDE_UNC)
 }
 func ATDAddRATE_UNC(builder *flatbuffers.Builder, RATE_UNC float64) {
 	builder.PrependFloat64Slot(27, RATE_UNC, 0.0)
 }
+func ATDAddRateUnc(builder *flatbuffers.Builder, RATE_UNC float64) {
+	ATDAddRATE_UNC(builder, RATE_UNC)
+}
 func ATDAddQUALITY(builder *flatbuffers.Builder, QUALITY byte) {
 	builder.PrependByteSlot(28, QUALITY, 0)
+}
+func ATDAddQuality(builder *flatbuffers.Builder, QUALITY byte) {
+	ATDAddQUALITY(builder, QUALITY)
 }
 func ATDAddREF_FRAME(builder *flatbuffers.Builder, REF_FRAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(29, flatbuffers.UOffsetT(REF_FRAME), 0)
 }
+func ATDAddRefFrame(builder *flatbuffers.Builder, REF_FRAME flatbuffers.UOffsetT) {
+	ATDAddREF_FRAME(builder, REF_FRAME)
+}
 func ATDAddSENSOR_ID(builder *flatbuffers.Builder, SENSOR_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(30, flatbuffers.UOffsetT(SENSOR_ID), 0)
+}
+func ATDAddSensorId(builder *flatbuffers.Builder, SENSOR_ID flatbuffers.UOffsetT) {
+	ATDAddSENSOR_ID(builder, SENSOR_ID)
 }
 func ATDEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

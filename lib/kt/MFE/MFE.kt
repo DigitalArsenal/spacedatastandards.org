@@ -29,7 +29,7 @@ class MFE : Table() {
         __init(_i, _bb)
         return this
     }
-    val ID : String?
+    val id : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -38,14 +38,14 @@ class MFE : Table() {
                 null
             }
         }
-    val IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
-    val TMP_SAT_NO : Int
+    val idAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun idInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
+    val tmpSatNo : Int
         get() {
             val o = __offset(6)
             return if(o != 0) bb.getInt(o + bb_pos) else 0
         }
-    val EPOCH : String?
+    val epoch : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -54,79 +54,79 @@ class MFE : Table() {
                 null
             }
         }
-    val EPOCHAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun EPOCHInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
-    val MEAN_MOTION : Double
+    val epochAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun epochInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
+    val meanMotion : Double
         get() {
             val o = __offset(10)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val ECCENTRICITY : Double
+    val eccentricity : Double
         get() {
             val o = __offset(12)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val INCLINATION : Double
+    val inclination : Double
         get() {
             val o = __offset(14)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val RAAN : Double
+    val raan : Double
         get() {
             val o = __offset(16)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val ARG_OF_PERIGEE : Double
+    val argOfPerigee : Double
         get() {
             val o = __offset(18)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val MEAN_ANOMALY : Double
+    val meanAnomaly : Double
         get() {
             val o = __offset(20)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val REV_NO : Int
+    val revNo : Int
         get() {
             val o = __offset(22)
             return if(o != 0) bb.getInt(o + bb_pos) else 0
         }
-    val B_STAR : Double
+    val bStar : Double
         get() {
             val o = __offset(24)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val MEAN_MOTION_DOT : Double
+    val meanMotionDot : Double
         get() {
             val o = __offset(26)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val MEAN_MOTION_DDOT : Double
+    val meanMotionDdot : Double
         get() {
             val o = __offset(28)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val SEMI_MAJOR_AXIS : Double
+    val semiMajorAxis : Double
         get() {
             val o = __offset(30)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val PERIOD : Double
+    val period : Double
         get() {
             val o = __offset(32)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val APOGEE : Double
+    val apogee : Double
         get() {
             val o = __offset(34)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val PERIGEE : Double
+    val perigee : Double
         get() {
             val o = __offset(36)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val LINE1 : String?
+    val line1 : String?
         get() {
             val o = __offset(38)
             return if (o != 0) {
@@ -135,9 +135,9 @@ class MFE : Table() {
                 null
             }
         }
-    val LINE1AsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(38, 1)
-    fun LINE1InByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 38, 1)
-    val LINE2 : String?
+    val line1AsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(38, 1)
+    fun line1InByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 38, 1)
+    val line2 : String?
         get() {
             val o = __offset(40)
             return if (o != 0) {
@@ -146,59 +146,59 @@ class MFE : Table() {
                 null
             }
         }
-    val LINE2AsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(40, 1)
-    fun LINE2InByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 40, 1)
+    val line2AsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(40, 1)
+    fun line2InByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 40, 1)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsMFE(_bb: ByteBuffer): MFE = getRootAsMFE(_bb, MFE())
         fun getRootAsMFE(_bb: ByteBuffer, obj: MFE): MFE {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun MFEBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$MFE")
-        fun createMFE(builder: FlatBufferBuilder, IDOffset: Int, TMP_SAT_NO: Int, EPOCHOffset: Int, MEAN_MOTION: Double, ECCENTRICITY: Double, INCLINATION: Double, RAAN: Double, ARG_OF_PERIGEE: Double, MEAN_ANOMALY: Double, REV_NO: Int, B_STAR: Double, MEAN_MOTION_DOT: Double, MEAN_MOTION_DDOT: Double, SEMI_MAJOR_AXIS: Double, PERIOD: Double, APOGEE: Double, PERIGEE: Double, LINE1Offset: Int, LINE2Offset: Int) : Int {
+        fun createMFE(builder: FlatBufferBuilder, idOffset: Int, tmpSatNo: Int, epochOffset: Int, meanMotion: Double, eccentricity: Double, inclination: Double, raan: Double, argOfPerigee: Double, meanAnomaly: Double, revNo: Int, bStar: Double, meanMotionDot: Double, meanMotionDdot: Double, semiMajorAxis: Double, period: Double, apogee: Double, perigee: Double, line1Offset: Int, line2Offset: Int) : Int {
             builder.startTable(19)
-            addPERIGEE(builder, PERIGEE)
-            addAPOGEE(builder, APOGEE)
-            addPERIOD(builder, PERIOD)
-            addSEMI_MAJOR_AXIS(builder, SEMI_MAJOR_AXIS)
-            addMEAN_MOTION_DDOT(builder, MEAN_MOTION_DDOT)
-            addMEAN_MOTION_DOT(builder, MEAN_MOTION_DOT)
-            addB_STAR(builder, B_STAR)
-            addMEAN_ANOMALY(builder, MEAN_ANOMALY)
-            addARG_OF_PERIGEE(builder, ARG_OF_PERIGEE)
-            addRAAN(builder, RAAN)
-            addINCLINATION(builder, INCLINATION)
-            addECCENTRICITY(builder, ECCENTRICITY)
-            addMEAN_MOTION(builder, MEAN_MOTION)
-            addLINE2(builder, LINE2Offset)
-            addLINE1(builder, LINE1Offset)
-            addREV_NO(builder, REV_NO)
-            addEPOCH(builder, EPOCHOffset)
-            addTMP_SAT_NO(builder, TMP_SAT_NO)
-            addID(builder, IDOffset)
+            addPERIGEE(builder, perigee)
+            addAPOGEE(builder, apogee)
+            addPERIOD(builder, period)
+            addSEMIMAJORAXIS(builder, semiMajorAxis)
+            addMEANMOTIONDDOT(builder, meanMotionDdot)
+            addMEANMOTIONDOT(builder, meanMotionDot)
+            addBSTAR(builder, bStar)
+            addMEANANOMALY(builder, meanAnomaly)
+            addARGOFPERIGEE(builder, argOfPerigee)
+            addRAAN(builder, raan)
+            addINCLINATION(builder, inclination)
+            addECCENTRICITY(builder, eccentricity)
+            addMEANMOTION(builder, meanMotion)
+            addLINE2(builder, line2Offset)
+            addLINE1(builder, line1Offset)
+            addREVNO(builder, revNo)
+            addEPOCH(builder, epochOffset)
+            addTMPSATNO(builder, tmpSatNo)
+            addID(builder, idOffset)
             return endMFE(builder)
         }
         fun startMFE(builder: FlatBufferBuilder) = builder.startTable(19)
-        fun addID(builder: FlatBufferBuilder, ID: Int) = builder.addOffset(0, ID, 0)
-        fun addTMP_SAT_NO(builder: FlatBufferBuilder, TMP_SAT_NO: Int) = builder.addInt(1, TMP_SAT_NO, 0)
-        fun addEPOCH(builder: FlatBufferBuilder, EPOCH: Int) = builder.addOffset(2, EPOCH, 0)
-        fun addMEAN_MOTION(builder: FlatBufferBuilder, MEAN_MOTION: Double) = builder.addDouble(3, MEAN_MOTION, 0.0)
-        fun addECCENTRICITY(builder: FlatBufferBuilder, ECCENTRICITY: Double) = builder.addDouble(4, ECCENTRICITY, 0.0)
-        fun addINCLINATION(builder: FlatBufferBuilder, INCLINATION: Double) = builder.addDouble(5, INCLINATION, 0.0)
-        fun addRAAN(builder: FlatBufferBuilder, RAAN: Double) = builder.addDouble(6, RAAN, 0.0)
-        fun addARG_OF_PERIGEE(builder: FlatBufferBuilder, ARG_OF_PERIGEE: Double) = builder.addDouble(7, ARG_OF_PERIGEE, 0.0)
-        fun addMEAN_ANOMALY(builder: FlatBufferBuilder, MEAN_ANOMALY: Double) = builder.addDouble(8, MEAN_ANOMALY, 0.0)
-        fun addREV_NO(builder: FlatBufferBuilder, REV_NO: Int) = builder.addInt(9, REV_NO, 0)
-        fun addB_STAR(builder: FlatBufferBuilder, B_STAR: Double) = builder.addDouble(10, B_STAR, 0.0)
-        fun addMEAN_MOTION_DOT(builder: FlatBufferBuilder, MEAN_MOTION_DOT: Double) = builder.addDouble(11, MEAN_MOTION_DOT, 0.0)
-        fun addMEAN_MOTION_DDOT(builder: FlatBufferBuilder, MEAN_MOTION_DDOT: Double) = builder.addDouble(12, MEAN_MOTION_DDOT, 0.0)
-        fun addSEMI_MAJOR_AXIS(builder: FlatBufferBuilder, SEMI_MAJOR_AXIS: Double) = builder.addDouble(13, SEMI_MAJOR_AXIS, 0.0)
-        fun addPERIOD(builder: FlatBufferBuilder, PERIOD: Double) = builder.addDouble(14, PERIOD, 0.0)
-        fun addAPOGEE(builder: FlatBufferBuilder, APOGEE: Double) = builder.addDouble(15, APOGEE, 0.0)
-        fun addPERIGEE(builder: FlatBufferBuilder, PERIGEE: Double) = builder.addDouble(16, PERIGEE, 0.0)
-        fun addLINE1(builder: FlatBufferBuilder, LINE1: Int) = builder.addOffset(17, LINE1, 0)
-        fun addLINE2(builder: FlatBufferBuilder, LINE2: Int) = builder.addOffset(18, LINE2, 0)
+        fun addID(builder: FlatBufferBuilder, id: Int) = builder.addOffset(0, id, 0)
+        fun addTMPSATNO(builder: FlatBufferBuilder, tmpSatNo: Int) = builder.addInt(1, tmpSatNo, 0)
+        fun addEPOCH(builder: FlatBufferBuilder, epoch: Int) = builder.addOffset(2, epoch, 0)
+        fun addMEANMOTION(builder: FlatBufferBuilder, meanMotion: Double) = builder.addDouble(3, meanMotion, 0.0)
+        fun addECCENTRICITY(builder: FlatBufferBuilder, eccentricity: Double) = builder.addDouble(4, eccentricity, 0.0)
+        fun addINCLINATION(builder: FlatBufferBuilder, inclination: Double) = builder.addDouble(5, inclination, 0.0)
+        fun addRAAN(builder: FlatBufferBuilder, raan: Double) = builder.addDouble(6, raan, 0.0)
+        fun addARGOFPERIGEE(builder: FlatBufferBuilder, argOfPerigee: Double) = builder.addDouble(7, argOfPerigee, 0.0)
+        fun addMEANANOMALY(builder: FlatBufferBuilder, meanAnomaly: Double) = builder.addDouble(8, meanAnomaly, 0.0)
+        fun addREVNO(builder: FlatBufferBuilder, revNo: Int) = builder.addInt(9, revNo, 0)
+        fun addBSTAR(builder: FlatBufferBuilder, bStar: Double) = builder.addDouble(10, bStar, 0.0)
+        fun addMEANMOTIONDOT(builder: FlatBufferBuilder, meanMotionDot: Double) = builder.addDouble(11, meanMotionDot, 0.0)
+        fun addMEANMOTIONDDOT(builder: FlatBufferBuilder, meanMotionDdot: Double) = builder.addDouble(12, meanMotionDdot, 0.0)
+        fun addSEMIMAJORAXIS(builder: FlatBufferBuilder, semiMajorAxis: Double) = builder.addDouble(13, semiMajorAxis, 0.0)
+        fun addPERIOD(builder: FlatBufferBuilder, period: Double) = builder.addDouble(14, period, 0.0)
+        fun addAPOGEE(builder: FlatBufferBuilder, apogee: Double) = builder.addDouble(15, apogee, 0.0)
+        fun addPERIGEE(builder: FlatBufferBuilder, perigee: Double) = builder.addDouble(16, perigee, 0.0)
+        fun addLINE1(builder: FlatBufferBuilder, line1: Int) = builder.addOffset(17, line1, 0)
+        fun addLINE2(builder: FlatBufferBuilder, line2: Int) = builder.addOffset(18, line2, 0)
         fun endMFE(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

@@ -2,4 +2,209 @@
 
 # namespace: 
 
-# NOTE AggregateParameterType.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Aggregate parameter type (structure)
+class AggregateParameterType(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = AggregateParameterType()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsAggregateParameterType(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def AggregateParameterTypeBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x58\x54\x43", size_prefixed=size_prefixed)
+
+    # AggregateParameterType
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Type name
+    # AggregateParameterType
+    def NAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Short description
+    # AggregateParameterType
+    def SHORT_DESCRIPTION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Long description
+    # AggregateParameterType
+    def LONG_DESCRIPTION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Member list
+    # AggregateParameterType
+    def MEMBERS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from AggregateMember import AggregateMember
+            obj = AggregateMember()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # AggregateParameterType
+    def MEMBERSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # AggregateParameterType
+    def MEMBERSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        return o == 0
+
+def AggregateParameterTypeStart(builder):
+    builder.StartObject(4)
+
+def Start(builder):
+    AggregateParameterTypeStart(builder)
+
+def AggregateParameterTypeAddNAME(builder, NAME):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(NAME), 0)
+
+def AddNAME(builder, NAME):
+    AggregateParameterTypeAddNAME(builder, NAME)
+
+def AggregateParameterTypeAddSHORT_DESCRIPTION(builder, SHORT_DESCRIPTION):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(SHORT_DESCRIPTION), 0)
+
+def AddSHORT_DESCRIPTION(builder, SHORT_DESCRIPTION):
+    AggregateParameterTypeAddSHORT_DESCRIPTION(builder, SHORT_DESCRIPTION)
+
+def AggregateParameterTypeAddLONG_DESCRIPTION(builder, LONG_DESCRIPTION):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(LONG_DESCRIPTION), 0)
+
+def AddLONG_DESCRIPTION(builder, LONG_DESCRIPTION):
+    AggregateParameterTypeAddLONG_DESCRIPTION(builder, LONG_DESCRIPTION)
+
+def AggregateParameterTypeAddMEMBERS(builder, MEMBERS):
+    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(MEMBERS), 0)
+
+def AddMEMBERS(builder, MEMBERS):
+    AggregateParameterTypeAddMEMBERS(builder, MEMBERS)
+
+def AggregateParameterTypeStartMEMBERSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartMEMBERSVector(builder, numElems):
+    return AggregateParameterTypeStartMEMBERSVector(builder, numElems)
+
+def AggregateParameterTypeCreateMEMBERSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateMEMBERSVector(builder, data):
+    AggregateParameterTypeCreateMEMBERSVector(builder, data)
+
+def AggregateParameterTypeEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return AggregateParameterTypeEnd(builder)
+
+import AggregateMember
+try:
+    from typing import List
+except:
+    pass
+
+class AggregateParameterTypeT(object):
+
+    # AggregateParameterTypeT
+    def __init__(
+        self,
+        NAME = None,
+        SHORT_DESCRIPTION = None,
+        LONG_DESCRIPTION = None,
+        MEMBERS = None,
+    ):
+        self.NAME = NAME  # type: Optional[str]
+        self.SHORT_DESCRIPTION = SHORT_DESCRIPTION  # type: Optional[str]
+        self.LONG_DESCRIPTION = LONG_DESCRIPTION  # type: Optional[str]
+        self.MEMBERS = MEMBERS  # type: Optional[List[AggregateMember.AggregateMemberT]]
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpAggregateParameterType = AggregateParameterType()
+        tmpAggregateParameterType.Init(buf, pos)
+        return cls.InitFromObj(tmpAggregateParameterType)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpAggregateParameterType):
+        x = AggregateParameterTypeT()
+        x._UnPack(tmpAggregateParameterType)
+        return x
+
+    # AggregateParameterTypeT
+    def _UnPack(self, AggregateParameterType):
+        if AggregateParameterType is None:
+            return
+        self.NAME = AggregateParameterType.NAME()
+        self.SHORT_DESCRIPTION = AggregateParameterType.SHORT_DESCRIPTION()
+        self.LONG_DESCRIPTION = AggregateParameterType.LONG_DESCRIPTION()
+        if not AggregateParameterType.MEMBERSIsNone():
+            self.MEMBERS = []
+            for i in range(AggregateParameterType.MEMBERSLength()):
+                if AggregateParameterType.MEMBERS(i) is None:
+                    self.MEMBERS.append(None)
+                else:
+                    aggregateMember_ = AggregateMember.AggregateMemberT.InitFromObj(AggregateParameterType.MEMBERS(i))
+                    self.MEMBERS.append(aggregateMember_)
+
+    # AggregateParameterTypeT
+    def Pack(self, builder):
+        if self.NAME is not None:
+            NAME = builder.CreateString(self.NAME)
+        if self.SHORT_DESCRIPTION is not None:
+            SHORT_DESCRIPTION = builder.CreateString(self.SHORT_DESCRIPTION)
+        if self.LONG_DESCRIPTION is not None:
+            LONG_DESCRIPTION = builder.CreateString(self.LONG_DESCRIPTION)
+        if self.MEMBERS is not None:
+            MEMBERSlist = []
+            for i in range(len(self.MEMBERS)):
+                MEMBERSlist.append(self.MEMBERS[i].Pack(builder))
+            AggregateParameterTypeStartMEMBERSVector(builder, len(self.MEMBERS))
+            for i in reversed(range(len(self.MEMBERS))):
+                builder.PrependUOffsetTRelative(MEMBERSlist[i])
+            MEMBERS = builder.EndVector()
+        AggregateParameterTypeStart(builder)
+        if self.NAME is not None:
+            AggregateParameterTypeAddNAME(builder, NAME)
+        if self.SHORT_DESCRIPTION is not None:
+            AggregateParameterTypeAddSHORT_DESCRIPTION(builder, SHORT_DESCRIPTION)
+        if self.LONG_DESCRIPTION is not None:
+            AggregateParameterTypeAddLONG_DESCRIPTION(builder, LONG_DESCRIPTION)
+        if self.MEMBERS is not None:
+            AggregateParameterTypeAddMEMBERS(builder, MEMBERS)
+        AggregateParameterType = AggregateParameterTypeEnd(builder)
+        return AggregateParameterType

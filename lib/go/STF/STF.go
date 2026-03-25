@@ -63,6 +63,10 @@ func (rcv *STF) LISTING_ID() []byte {
 	return nil
 }
 
+func (rcv *STF) ListingId() []byte {
+	return rcv.LISTING_ID()
+}
+
 /// Unique identifier for the listing
 /// Peer ID of the data provider
 func (rcv *STF) PROVIDER_PEER_ID() []byte {
@@ -71,6 +75,10 @@ func (rcv *STF) PROVIDER_PEER_ID() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *STF) ProviderPeerId() []byte {
+	return rcv.PROVIDER_PEER_ID()
 }
 
 /// Peer ID of the data provider
@@ -83,6 +91,10 @@ func (rcv *STF) PROVIDER_EPM_CID() []byte {
 	return nil
 }
 
+func (rcv *STF) ProviderEpmCid() []byte {
+	return rcv.PROVIDER_EPM_CID()
+}
+
 /// IPFS CID of provider's EPM (Entity Profile Message)
 /// Title of the data listing
 func (rcv *STF) TITLE() []byte {
@@ -93,6 +105,10 @@ func (rcv *STF) TITLE() []byte {
 	return nil
 }
 
+func (rcv *STF) Title() []byte {
+	return rcv.TITLE()
+}
+
 /// Title of the data listing
 /// Detailed description of the data offering
 func (rcv *STF) DESCRIPTION() []byte {
@@ -101,6 +117,10 @@ func (rcv *STF) DESCRIPTION() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *STF) Description() []byte {
+	return rcv.DESCRIPTION()
 }
 
 /// Detailed description of the data offering
@@ -114,12 +134,20 @@ func (rcv *STF) DATA_TYPES(j int) []byte {
 	return nil
 }
 
+func (rcv *STF) DataTypes(j int) []byte {
+	return rcv.DATA_TYPES(j)
+}
+
 func (rcv *STF) DATA_TYPESLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *STF) DataTypesLength() int {
+	return rcv.DATA_TYPESLength()
 }
 
 /// SDS data types offered, e.g., ["OMM", "CDM", "TLE"]
@@ -137,6 +165,10 @@ func (rcv *STF) COVERAGE(obj *DataCoverage) *DataCoverage {
 	return nil
 }
 
+func (rcv *STF) Coverage(obj *DataCoverage) *DataCoverage {
+	return rcv.COVERAGE(obj)
+}
+
 /// Coverage information (spatial and temporal)
 /// IPFS CID of sample data
 func (rcv *STF) SAMPLE_CID() []byte {
@@ -145,6 +177,10 @@ func (rcv *STF) SAMPLE_CID() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *STF) SampleCid() []byte {
+	return rcv.SAMPLE_CID()
 }
 
 /// IPFS CID of sample data
@@ -157,9 +193,17 @@ func (rcv *STF) ACCESS_TYPE() accessType {
 	return 0
 }
 
+func (rcv *STF) AccessType() accessType {
+	return rcv.ACCESS_TYPE()
+}
+
 /// Type of access offered
 func (rcv *STF) MutateACCESS_TYPE(n accessType) bool {
 	return rcv._tab.MutateInt8Slot(20, int8(n))
+}
+
+func (rcv *STF) MutateAccessType(n accessType) bool {
+	return rcv.MutateACCESS_TYPE(n)
 }
 
 /// Whether encryption is required for data delivery
@@ -171,9 +215,17 @@ func (rcv *STF) ENCRYPTION_REQUIRED() bool {
 	return false
 }
 
+func (rcv *STF) EncryptionRequired() bool {
+	return rcv.ENCRYPTION_REQUIRED()
+}
+
 /// Whether encryption is required for data delivery
 func (rcv *STF) MutateENCRYPTION_REQUIRED(n bool) bool {
 	return rcv._tab.MutateBoolSlot(22, n)
+}
+
+func (rcv *STF) MutateEncryptionRequired(n bool) bool {
+	return rcv.MutateENCRYPTION_REQUIRED(n)
 }
 
 /// Available pricing tiers
@@ -183,10 +235,17 @@ func (rcv *STF) PRICING(obj *PricingTier, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(PricingTier)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *STF) Pricing(obj *PricingTier, j int) bool {
+	return rcv.PRICING(obj, j)
 }
 
 func (rcv *STF) PRICINGLength() int {
@@ -195,6 +254,10 @@ func (rcv *STF) PRICINGLength() int {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *STF) PricingLength() int {
+	return rcv.PRICINGLength()
 }
 
 /// Available pricing tiers
@@ -208,12 +271,20 @@ func (rcv *STF) ACCEPTED_PAYMENTS(j int) paymentMethod {
 	return 0
 }
 
+func (rcv *STF) AcceptedPayments(j int) paymentMethod {
+	return rcv.ACCEPTED_PAYMENTS(j)
+}
+
 func (rcv *STF) ACCEPTED_PAYMENTSLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *STF) AcceptedPaymentsLength() int {
+	return rcv.ACCEPTED_PAYMENTSLength()
 }
 
 /// Payment methods accepted
@@ -226,6 +297,10 @@ func (rcv *STF) MutateACCEPTED_PAYMENTS(j int, n paymentMethod) bool {
 	return false
 }
 
+func (rcv *STF) MutateAcceptedPayments(j int, n paymentMethod) bool {
+	return rcv.MutateACCEPTED_PAYMENTS(j, n)
+}
+
 /// Unix timestamp when listing was created
 func (rcv *STF) CREATED_AT() uint64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
@@ -235,9 +310,17 @@ func (rcv *STF) CREATED_AT() uint64 {
 	return 0
 }
 
+func (rcv *STF) CreatedAt() uint64 {
+	return rcv.CREATED_AT()
+}
+
 /// Unix timestamp when listing was created
 func (rcv *STF) MutateCREATED_AT(n uint64) bool {
 	return rcv._tab.MutateUint64Slot(28, n)
+}
+
+func (rcv *STF) MutateCreatedAt(n uint64) bool {
+	return rcv.MutateCREATED_AT(n)
 }
 
 /// Unix timestamp when listing was last updated
@@ -249,9 +332,17 @@ func (rcv *STF) UPDATED_AT() uint64 {
 	return 0
 }
 
+func (rcv *STF) UpdatedAt() uint64 {
+	return rcv.UPDATED_AT()
+}
+
 /// Unix timestamp when listing was last updated
 func (rcv *STF) MutateUPDATED_AT(n uint64) bool {
 	return rcv._tab.MutateUint64Slot(30, n)
+}
+
+func (rcv *STF) MutateUpdatedAt(n uint64) bool {
+	return rcv.MutateUPDATED_AT(n)
 }
 
 /// Whether the listing is currently active
@@ -263,9 +354,17 @@ func (rcv *STF) ACTIVE() bool {
 	return false
 }
 
+func (rcv *STF) Active() bool {
+	return rcv.ACTIVE()
+}
+
 /// Whether the listing is currently active
 func (rcv *STF) MutateACTIVE(n bool) bool {
 	return rcv._tab.MutateBoolSlot(32, n)
+}
+
+func (rcv *STF) MutateActive(n bool) bool {
+	return rcv.MutateACTIVE(n)
 }
 
 /// Ed25519 signature from provider
@@ -278,6 +377,10 @@ func (rcv *STF) SIGNATURE(j int) byte {
 	return 0
 }
 
+func (rcv *STF) Signature(j int) byte {
+	return rcv.SIGNATURE(j)
+}
+
 func (rcv *STF) SIGNATURELength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
 	if o != 0 {
@@ -286,12 +389,20 @@ func (rcv *STF) SIGNATURELength() int {
 	return 0
 }
 
+func (rcv *STF) SignatureLength() int {
+	return rcv.SIGNATURELength()
+}
+
 func (rcv *STF) SIGNATUREBytes() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *STF) SignatureBytes() []byte {
+	return rcv.SIGNATUREBytes()
 }
 
 /// Ed25519 signature from provider
@@ -304,68 +415,132 @@ func (rcv *STF) MutateSIGNATURE(j int, n byte) bool {
 	return false
 }
 
+func (rcv *STF) MutateSignature(j int, n byte) bool {
+	return rcv.MutateSIGNATURE(j, n)
+}
+
 func STFStart(builder *flatbuffers.Builder) {
 	builder.StartObject(16)
 }
 func STFAddLISTING_ID(builder *flatbuffers.Builder, LISTING_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(LISTING_ID), 0)
 }
+func STFAddListingId(builder *flatbuffers.Builder, LISTING_ID flatbuffers.UOffsetT) {
+	STFAddLISTING_ID(builder, LISTING_ID)
+}
 func STFAddPROVIDER_PEER_ID(builder *flatbuffers.Builder, PROVIDER_PEER_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(PROVIDER_PEER_ID), 0)
+}
+func STFAddProviderPeerId(builder *flatbuffers.Builder, PROVIDER_PEER_ID flatbuffers.UOffsetT) {
+	STFAddPROVIDER_PEER_ID(builder, PROVIDER_PEER_ID)
 }
 func STFAddPROVIDER_EPM_CID(builder *flatbuffers.Builder, PROVIDER_EPM_CID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(PROVIDER_EPM_CID), 0)
 }
+func STFAddProviderEpmCid(builder *flatbuffers.Builder, PROVIDER_EPM_CID flatbuffers.UOffsetT) {
+	STFAddPROVIDER_EPM_CID(builder, PROVIDER_EPM_CID)
+}
 func STFAddTITLE(builder *flatbuffers.Builder, TITLE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(TITLE), 0)
+}
+func STFAddTitle(builder *flatbuffers.Builder, TITLE flatbuffers.UOffsetT) {
+	STFAddTITLE(builder, TITLE)
 }
 func STFAddDESCRIPTION(builder *flatbuffers.Builder, DESCRIPTION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(DESCRIPTION), 0)
 }
+func STFAddDescription(builder *flatbuffers.Builder, DESCRIPTION flatbuffers.UOffsetT) {
+	STFAddDESCRIPTION(builder, DESCRIPTION)
+}
 func STFAddDATA_TYPES(builder *flatbuffers.Builder, DATA_TYPES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(DATA_TYPES), 0)
+}
+func STFAddDataTypes(builder *flatbuffers.Builder, DATA_TYPES flatbuffers.UOffsetT) {
+	STFAddDATA_TYPES(builder, DATA_TYPES)
 }
 func STFStartDATA_TYPESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
+func STFStartDataTypesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return STFStartDATA_TYPESVector(builder, numElems)
+}
 func STFAddCOVERAGE(builder *flatbuffers.Builder, COVERAGE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(COVERAGE), 0)
+}
+func STFAddCoverage(builder *flatbuffers.Builder, COVERAGE flatbuffers.UOffsetT) {
+	STFAddCOVERAGE(builder, COVERAGE)
 }
 func STFAddSAMPLE_CID(builder *flatbuffers.Builder, SAMPLE_CID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(SAMPLE_CID), 0)
 }
+func STFAddSampleCid(builder *flatbuffers.Builder, SAMPLE_CID flatbuffers.UOffsetT) {
+	STFAddSAMPLE_CID(builder, SAMPLE_CID)
+}
 func STFAddACCESS_TYPE(builder *flatbuffers.Builder, ACCESS_TYPE accessType) {
 	builder.PrependInt8Slot(8, int8(ACCESS_TYPE), 0)
+}
+func STFAddAccessType(builder *flatbuffers.Builder, ACCESS_TYPE accessType) {
+	STFAddACCESS_TYPE(builder, ACCESS_TYPE)
 }
 func STFAddENCRYPTION_REQUIRED(builder *flatbuffers.Builder, ENCRYPTION_REQUIRED bool) {
 	builder.PrependBoolSlot(9, ENCRYPTION_REQUIRED, false)
 }
+func STFAddEncryptionRequired(builder *flatbuffers.Builder, ENCRYPTION_REQUIRED bool) {
+	STFAddENCRYPTION_REQUIRED(builder, ENCRYPTION_REQUIRED)
+}
 func STFAddPRICING(builder *flatbuffers.Builder, PRICING flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(PRICING), 0)
+}
+func STFAddPricing(builder *flatbuffers.Builder, PRICING flatbuffers.UOffsetT) {
+	STFAddPRICING(builder, PRICING)
 }
 func STFStartPRICINGVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
+func STFStartPricingVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return STFStartPRICINGVector(builder, numElems)
+}
 func STFAddACCEPTED_PAYMENTS(builder *flatbuffers.Builder, ACCEPTED_PAYMENTS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(ACCEPTED_PAYMENTS), 0)
+}
+func STFAddAcceptedPayments(builder *flatbuffers.Builder, ACCEPTED_PAYMENTS flatbuffers.UOffsetT) {
+	STFAddACCEPTED_PAYMENTS(builder, ACCEPTED_PAYMENTS)
 }
 func STFStartACCEPTED_PAYMENTSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(1, numElems, 1)
 }
+func STFStartAcceptedPaymentsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return STFStartACCEPTED_PAYMENTSVector(builder, numElems)
+}
 func STFAddCREATED_AT(builder *flatbuffers.Builder, CREATED_AT uint64) {
 	builder.PrependUint64Slot(12, CREATED_AT, 0)
+}
+func STFAddCreatedAt(builder *flatbuffers.Builder, CREATED_AT uint64) {
+	STFAddCREATED_AT(builder, CREATED_AT)
 }
 func STFAddUPDATED_AT(builder *flatbuffers.Builder, UPDATED_AT uint64) {
 	builder.PrependUint64Slot(13, UPDATED_AT, 0)
 }
+func STFAddUpdatedAt(builder *flatbuffers.Builder, UPDATED_AT uint64) {
+	STFAddUPDATED_AT(builder, UPDATED_AT)
+}
 func STFAddACTIVE(builder *flatbuffers.Builder, ACTIVE bool) {
 	builder.PrependBoolSlot(14, ACTIVE, false)
+}
+func STFAddActive(builder *flatbuffers.Builder, ACTIVE bool) {
+	STFAddACTIVE(builder, ACTIVE)
 }
 func STFAddSIGNATURE(builder *flatbuffers.Builder, SIGNATURE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(15, flatbuffers.UOffsetT(SIGNATURE), 0)
 }
+func STFAddSignature(builder *flatbuffers.Builder, SIGNATURE flatbuffers.UOffsetT) {
+	STFAddSIGNATURE(builder, SIGNATURE)
+}
 func STFStartSIGNATUREVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(1, numElems, 1)
+}
+func STFStartSignatureVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return STFStartSIGNATUREVector(builder, numElems)
 }
 func STFEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

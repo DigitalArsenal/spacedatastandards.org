@@ -115,6 +115,16 @@ def CZMDynSampledStartDATAVector(builder, numElems):
 def StartDATAVector(builder, numElems):
     return CZMDynSampledStartDATAVector(builder, numElems)
 
+def CZMDynSampledCreateDATAVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateDATAVector(builder, data):
+    CZMDynSampledCreateDATAVector(builder, data)
+
 def CZMDynSampledAddINTERPOLATION(builder, INTERPOLATION):
     builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(INTERPOLATION), 0)
 
@@ -136,17 +146,23 @@ except:
 class CZMDynSampledT(object):
 
     # CZMDynSampledT
-    def __init__(self):
-        self.EPOCH = None  # type: str
-        self.VALUE_TYPE = 0  # type: int
-        self.DATA = None  # type: List[float]
-        self.INTERPOLATION = None  # type: Optional[CZMInterpolation.CZMInterpolationT]
+    def __init__(
+        self,
+        EPOCH = None,
+        VALUE_TYPE = 0,
+        DATA = None,
+        INTERPOLATION = None,
+    ):
+        self.EPOCH = EPOCH  # type: Optional[str]
+        self.VALUE_TYPE = VALUE_TYPE  # type: int
+        self.DATA = DATA  # type: Optional[List[float]]
+        self.INTERPOLATION = INTERPOLATION  # type: Optional[CZMInterpolation.CZMInterpolationT]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        czmdynSampled = CZMDynSampled()
-        czmdynSampled.Init(buf, pos)
-        return cls.InitFromObj(czmdynSampled)
+        tmpCzmdynSampled = CZMDynSampled()
+        tmpCzmdynSampled.Init(buf, pos)
+        return cls.InitFromObj(tmpCzmdynSampled)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -154,26 +170,26 @@ class CZMDynSampledT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, czmdynSampled):
+    def InitFromObj(cls, tmpCzmdynSampled):
         x = CZMDynSampledT()
-        x._UnPack(czmdynSampled)
+        x._UnPack(tmpCzmdynSampled)
         return x
 
     # CZMDynSampledT
-    def _UnPack(self, czmdynSampled):
-        if czmdynSampled is None:
+    def _UnPack(self, CZMDynSampled):
+        if CZMDynSampled is None:
             return
-        self.EPOCH = czmdynSampled.EPOCH()
-        self.VALUE_TYPE = czmdynSampled.VALUE_TYPE()
-        if not czmdynSampled.DATAIsNone():
+        self.EPOCH = CZMDynSampled.EPOCH()
+        self.VALUE_TYPE = CZMDynSampled.VALUE_TYPE()
+        if not CZMDynSampled.DATAIsNone():
             if np is None:
                 self.DATA = []
-                for i in range(czmdynSampled.DATALength()):
-                    self.DATA.append(czmdynSampled.DATA(i))
+                for i in range(CZMDynSampled.DATALength()):
+                    self.DATA.append(CZMDynSampled.DATA(i))
             else:
-                self.DATA = czmdynSampled.DATAAsNumpy()
-        if czmdynSampled.INTERPOLATION() is not None:
-            self.INTERPOLATION = CZMInterpolation.CZMInterpolationT.InitFromObj(czmdynSampled.INTERPOLATION())
+                self.DATA = CZMDynSampled.DATAAsNumpy()
+        if CZMDynSampled.INTERPOLATION() is not None:
+            self.INTERPOLATION = CZMInterpolation.CZMInterpolationT.InitFromObj(CZMDynSampled.INTERPOLATION())
 
     # CZMDynSampledT
     def Pack(self, builder):
@@ -197,5 +213,5 @@ class CZMDynSampledT(object):
             CZMDynSampledAddDATA(builder, DATA)
         if self.INTERPOLATION is not None:
             CZMDynSampledAddINTERPOLATION(builder, INTERPOLATION)
-        czmdynSampled = CZMDynSampledEnd(builder)
-        return czmdynSampled
+        CZMDynSampled = CZMDynSampledEnd(builder)
+        return CZMDynSampled

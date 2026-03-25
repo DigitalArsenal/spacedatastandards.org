@@ -2,4 +2,10 @@
 
 # namespace: 
 
-# NOTE trackEnvironment.py does not declare any structs or enums
+class trackEnvironment(object):
+    SPACE = 0
+    AIR = 1
+    SURFACE = 2
+    SUBSURFACE = 3
+    LAND = 4
+    UNKNOWN = 5

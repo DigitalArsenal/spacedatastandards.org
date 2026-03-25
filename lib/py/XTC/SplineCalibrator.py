@@ -89,6 +89,12 @@ def SplineCalibratorStartPOINTSVector(builder, numElems):
 def StartPOINTSVector(builder, numElems):
     return SplineCalibratorStartPOINTSVector(builder, numElems)
 
+def SplineCalibratorCreatePOINTSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreatePOINTSVector(builder, data):
+    SplineCalibratorCreatePOINTSVector(builder, data)
+
 def SplineCalibratorAddEXTRAPOLATE_LOW(builder, EXTRAPOLATE_LOW):
     builder.PrependBoolSlot(1, EXTRAPOLATE_LOW, 0)
 
@@ -116,16 +122,21 @@ except:
 class SplineCalibratorT(object):
 
     # SplineCalibratorT
-    def __init__(self):
-        self.POINTS = None  # type: List[SplinePoint.SplinePointT]
-        self.EXTRAPOLATE_LOW = False  # type: bool
-        self.EXTRAPOLATE_HIGH = False  # type: bool
+    def __init__(
+        self,
+        POINTS = None,
+        EXTRAPOLATE_LOW = False,
+        EXTRAPOLATE_HIGH = False,
+    ):
+        self.POINTS = POINTS  # type: Optional[List[SplinePoint.SplinePointT]]
+        self.EXTRAPOLATE_LOW = EXTRAPOLATE_LOW  # type: bool
+        self.EXTRAPOLATE_HIGH = EXTRAPOLATE_HIGH  # type: bool
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        splineCalibrator = SplineCalibrator()
-        splineCalibrator.Init(buf, pos)
-        return cls.InitFromObj(splineCalibrator)
+        tmpSplineCalibrator = SplineCalibrator()
+        tmpSplineCalibrator.Init(buf, pos)
+        return cls.InitFromObj(tmpSplineCalibrator)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -133,25 +144,25 @@ class SplineCalibratorT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, splineCalibrator):
+    def InitFromObj(cls, tmpSplineCalibrator):
         x = SplineCalibratorT()
-        x._UnPack(splineCalibrator)
+        x._UnPack(tmpSplineCalibrator)
         return x
 
     # SplineCalibratorT
-    def _UnPack(self, splineCalibrator):
-        if splineCalibrator is None:
+    def _UnPack(self, SplineCalibrator):
+        if SplineCalibrator is None:
             return
-        if not splineCalibrator.POINTSIsNone():
+        if not SplineCalibrator.POINTSIsNone():
             self.POINTS = []
-            for i in range(splineCalibrator.POINTSLength()):
-                if splineCalibrator.POINTS(i) is None:
+            for i in range(SplineCalibrator.POINTSLength()):
+                if SplineCalibrator.POINTS(i) is None:
                     self.POINTS.append(None)
                 else:
-                    splinePoint_ = SplinePoint.SplinePointT.InitFromObj(splineCalibrator.POINTS(i))
+                    splinePoint_ = SplinePoint.SplinePointT.InitFromObj(SplineCalibrator.POINTS(i))
                     self.POINTS.append(splinePoint_)
-        self.EXTRAPOLATE_LOW = splineCalibrator.EXTRAPOLATE_LOW()
-        self.EXTRAPOLATE_HIGH = splineCalibrator.EXTRAPOLATE_HIGH()
+        self.EXTRAPOLATE_LOW = SplineCalibrator.EXTRAPOLATE_LOW()
+        self.EXTRAPOLATE_HIGH = SplineCalibrator.EXTRAPOLATE_HIGH()
 
     # SplineCalibratorT
     def Pack(self, builder):
@@ -168,5 +179,5 @@ class SplineCalibratorT(object):
             SplineCalibratorAddPOINTS(builder, POINTS)
         SplineCalibratorAddEXTRAPOLATE_LOW(builder, self.EXTRAPOLATE_LOW)
         SplineCalibratorAddEXTRAPOLATE_HIGH(builder, self.EXTRAPOLATE_HIGH)
-        splineCalibrator = SplineCalibratorEnd(builder)
-        return splineCalibrator
+        SplineCalibrator = SplineCalibratorEnd(builder)
+        return SplineCalibrator

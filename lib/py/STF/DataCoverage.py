@@ -87,15 +87,19 @@ except:
 class DataCoverageT(object):
 
     # DataCoverageT
-    def __init__(self):
-        self.SPATIAL = None  # type: Optional[SpatialCoverage.SpatialCoverageT]
-        self.TEMPORAL = None  # type: Optional[TemporalCoverage.TemporalCoverageT]
+    def __init__(
+        self,
+        SPATIAL = None,
+        TEMPORAL = None,
+    ):
+        self.SPATIAL = SPATIAL  # type: Optional[SpatialCoverage.SpatialCoverageT]
+        self.TEMPORAL = TEMPORAL  # type: Optional[TemporalCoverage.TemporalCoverageT]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        dataCoverage = DataCoverage()
-        dataCoverage.Init(buf, pos)
-        return cls.InitFromObj(dataCoverage)
+        tmpDataCoverage = DataCoverage()
+        tmpDataCoverage.Init(buf, pos)
+        return cls.InitFromObj(tmpDataCoverage)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -103,19 +107,19 @@ class DataCoverageT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, dataCoverage):
+    def InitFromObj(cls, tmpDataCoverage):
         x = DataCoverageT()
-        x._UnPack(dataCoverage)
+        x._UnPack(tmpDataCoverage)
         return x
 
     # DataCoverageT
-    def _UnPack(self, dataCoverage):
-        if dataCoverage is None:
+    def _UnPack(self, DataCoverage):
+        if DataCoverage is None:
             return
-        if dataCoverage.SPATIAL() is not None:
-            self.SPATIAL = SpatialCoverage.SpatialCoverageT.InitFromObj(dataCoverage.SPATIAL())
-        if dataCoverage.TEMPORAL() is not None:
-            self.TEMPORAL = TemporalCoverage.TemporalCoverageT.InitFromObj(dataCoverage.TEMPORAL())
+        if DataCoverage.SPATIAL() is not None:
+            self.SPATIAL = SpatialCoverage.SpatialCoverageT.InitFromObj(DataCoverage.SPATIAL())
+        if DataCoverage.TEMPORAL() is not None:
+            self.TEMPORAL = TemporalCoverage.TemporalCoverageT.InitFromObj(DataCoverage.TEMPORAL())
 
     # DataCoverageT
     def Pack(self, builder):
@@ -128,5 +132,5 @@ class DataCoverageT(object):
             DataCoverageAddSPATIAL(builder, SPATIAL)
         if self.TEMPORAL is not None:
             DataCoverageAddTEMPORAL(builder, TEMPORAL)
-        dataCoverage = DataCoverageEnd(builder)
-        return dataCoverage
+        DataCoverage = DataCoverageEnd(builder)
+        return DataCoverage

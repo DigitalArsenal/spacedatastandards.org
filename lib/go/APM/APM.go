@@ -62,12 +62,20 @@ func (rcv *APM) CCSDS_APM_VERS() []byte {
 	return nil
 }
 
+func (rcv *APM) CcsdsApmVers() []byte {
+	return rcv.CCSDS_APM_VERS()
+}
+
 func (rcv *APM) CREATION_DATE() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *APM) CreationDate() []byte {
+	return rcv.CREATION_DATE()
 }
 
 func (rcv *APM) ORIGINATOR() []byte {
@@ -78,12 +86,20 @@ func (rcv *APM) ORIGINATOR() []byte {
 	return nil
 }
 
+func (rcv *APM) Originator() []byte {
+	return rcv.ORIGINATOR()
+}
+
 func (rcv *APM) OBJECT_NAME() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *APM) ObjectName() []byte {
+	return rcv.OBJECT_NAME()
 }
 
 func (rcv *APM) OBJECT_ID() []byte {
@@ -94,12 +110,20 @@ func (rcv *APM) OBJECT_ID() []byte {
 	return nil
 }
 
+func (rcv *APM) ObjectId() []byte {
+	return rcv.OBJECT_ID()
+}
+
 func (rcv *APM) EPOCH() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *APM) Epoch() []byte {
+	return rcv.EPOCH()
 }
 
 func (rcv *APM) Q1() float64 {
@@ -146,8 +170,16 @@ func (rcv *APM) QC() float64 {
 	return 0.0
 }
 
+func (rcv *APM) Qc() float64 {
+	return rcv.QC()
+}
+
 func (rcv *APM) MutateQC(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(22, n)
+}
+
+func (rcv *APM) MutateQc(n float64) bool {
+	return rcv.MutateQC(n)
 }
 
 func APMStart(builder *flatbuffers.Builder) {
@@ -156,20 +188,38 @@ func APMStart(builder *flatbuffers.Builder) {
 func APMAddCCSDS_APM_VERS(builder *flatbuffers.Builder, CCSDS_APM_VERS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(CCSDS_APM_VERS), 0)
 }
+func APMAddCcsdsApmVers(builder *flatbuffers.Builder, CCSDS_APM_VERS flatbuffers.UOffsetT) {
+	APMAddCCSDS_APM_VERS(builder, CCSDS_APM_VERS)
+}
 func APMAddCREATION_DATE(builder *flatbuffers.Builder, CREATION_DATE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(CREATION_DATE), 0)
+}
+func APMAddCreationDate(builder *flatbuffers.Builder, CREATION_DATE flatbuffers.UOffsetT) {
+	APMAddCREATION_DATE(builder, CREATION_DATE)
 }
 func APMAddORIGINATOR(builder *flatbuffers.Builder, ORIGINATOR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(ORIGINATOR), 0)
 }
+func APMAddOriginator(builder *flatbuffers.Builder, ORIGINATOR flatbuffers.UOffsetT) {
+	APMAddORIGINATOR(builder, ORIGINATOR)
+}
 func APMAddOBJECT_NAME(builder *flatbuffers.Builder, OBJECT_NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(OBJECT_NAME), 0)
+}
+func APMAddObjectName(builder *flatbuffers.Builder, OBJECT_NAME flatbuffers.UOffsetT) {
+	APMAddOBJECT_NAME(builder, OBJECT_NAME)
 }
 func APMAddOBJECT_ID(builder *flatbuffers.Builder, OBJECT_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(OBJECT_ID), 0)
 }
+func APMAddObjectId(builder *flatbuffers.Builder, OBJECT_ID flatbuffers.UOffsetT) {
+	APMAddOBJECT_ID(builder, OBJECT_ID)
+}
 func APMAddEPOCH(builder *flatbuffers.Builder, EPOCH flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(EPOCH), 0)
+}
+func APMAddEpoch(builder *flatbuffers.Builder, EPOCH flatbuffers.UOffsetT) {
+	APMAddEPOCH(builder, EPOCH)
 }
 func APMAddQ1(builder *flatbuffers.Builder, Q1 float64) {
 	builder.PrependFloat64Slot(6, Q1, 0.0)
@@ -182,6 +232,9 @@ func APMAddQ3(builder *flatbuffers.Builder, Q3 float64) {
 }
 func APMAddQC(builder *flatbuffers.Builder, QC float64) {
 	builder.PrependFloat64Slot(9, QC, 0.0)
+}
+func APMAddQc(builder *flatbuffers.Builder, QC float64) {
+	APMAddQC(builder, QC)
 }
 func APMEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

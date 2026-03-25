@@ -224,30 +224,30 @@ struct OODBuilder:
     def end():
         return b_.EndObject()
 
-def OODStartMISSION_TYPESVector(b_:flatbuffers.builder, n_:int):
+def OODStartMISSIONTYPESVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def OODCreateMISSION_TYPESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def OODCreateMISSIONTYPESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-def OODStartDEP_NAMESVector(b_:flatbuffers.builder, n_:int):
+def OODStartDEPNAMESVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def OODCreateDEP_NAMESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def OODCreateDEPNAMESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-def OODStartDEP_EST_MASSESVector(b_:flatbuffers.builder, n_:int):
+def OODStartDEPESTMASSESVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def OODCreateDEP_EST_MASSESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def OODCreateDEPESTMASSESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-def OODStartDEP_MASS_UNCSVector(b_:flatbuffers.builder, n_:int):
+def OODStartDEPMASSUNCSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def OODCreateDEP_MASS_UNCSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def OODCreateDEPMASSUNCSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)

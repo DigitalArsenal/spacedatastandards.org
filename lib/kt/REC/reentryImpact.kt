@@ -32,7 +32,7 @@ class reentryImpact : Table() {
     /**
      * Predicted impact epoch (ISO 8601)
      */
-    val IMPACT_EPOCH : String?
+    val impactEpoch : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class reentryImpact : Table() {
                 null
             }
         }
-    val IMPACT_EPOCHAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun IMPACT_EPOCHInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val impactEpochAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun impactEpochInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Epoch uncertainty window in seconds
      */
-    val EPOCH_UNCERTAINTY : Double
+    val epochUncertainty : Double
         get() {
             val o = __offset(6)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -54,7 +54,7 @@ class reentryImpact : Table() {
     /**
      * Impact latitude in degrees
      */
-    val LATITUDE : Double
+    val latitude : Double
         get() {
             val o = __offset(8)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -62,7 +62,7 @@ class reentryImpact : Table() {
     /**
      * Impact longitude in degrees
      */
-    val LONGITUDE : Double
+    val longitude : Double
         get() {
             val o = __offset(10)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -70,7 +70,7 @@ class reentryImpact : Table() {
     /**
      * Along-track uncertainty in km
      */
-    val ALONG_TRACK_UNC : Double
+    val alongTrackUnc : Double
         get() {
             val o = __offset(12)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -78,7 +78,7 @@ class reentryImpact : Table() {
     /**
      * Cross-track uncertainty in km
      */
-    val CROSS_TRACK_UNC : Double
+    val crossTrackUnc : Double
         get() {
             val o = __offset(14)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -86,37 +86,37 @@ class reentryImpact : Table() {
     /**
      * Impact probability (0.0-1.0)
      */
-    val IMPACT_PROBABILITY : Double
+    val impactProbability : Double
         get() {
             val o = __offset(16)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsreentryImpact(_bb: ByteBuffer): reentryImpact = getRootAsreentryImpact(_bb, reentryImpact())
         fun getRootAsreentryImpact(_bb: ByteBuffer, obj: reentryImpact): reentryImpact {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createreentryImpact(builder: FlatBufferBuilder, IMPACT_EPOCHOffset: Int, EPOCH_UNCERTAINTY: Double, LATITUDE: Double, LONGITUDE: Double, ALONG_TRACK_UNC: Double, CROSS_TRACK_UNC: Double, IMPACT_PROBABILITY: Double) : Int {
+        fun createreentryImpact(builder: FlatBufferBuilder, impactEpochOffset: Int, epochUncertainty: Double, latitude: Double, longitude: Double, alongTrackUnc: Double, crossTrackUnc: Double, impactProbability: Double) : Int {
             builder.startTable(7)
-            addIMPACT_PROBABILITY(builder, IMPACT_PROBABILITY)
-            addCROSS_TRACK_UNC(builder, CROSS_TRACK_UNC)
-            addALONG_TRACK_UNC(builder, ALONG_TRACK_UNC)
-            addLONGITUDE(builder, LONGITUDE)
-            addLATITUDE(builder, LATITUDE)
-            addEPOCH_UNCERTAINTY(builder, EPOCH_UNCERTAINTY)
-            addIMPACT_EPOCH(builder, IMPACT_EPOCHOffset)
+            addIMPACTPROBABILITY(builder, impactProbability)
+            addCROSSTRACKUNC(builder, crossTrackUnc)
+            addALONGTRACKUNC(builder, alongTrackUnc)
+            addLONGITUDE(builder, longitude)
+            addLATITUDE(builder, latitude)
+            addEPOCHUNCERTAINTY(builder, epochUncertainty)
+            addIMPACTEPOCH(builder, impactEpochOffset)
             return endreentryImpact(builder)
         }
         fun startreentryImpact(builder: FlatBufferBuilder) = builder.startTable(7)
-        fun addIMPACT_EPOCH(builder: FlatBufferBuilder, IMPACT_EPOCH: Int) = builder.addOffset(0, IMPACT_EPOCH, 0)
-        fun addEPOCH_UNCERTAINTY(builder: FlatBufferBuilder, EPOCH_UNCERTAINTY: Double) = builder.addDouble(1, EPOCH_UNCERTAINTY, 0.0)
-        fun addLATITUDE(builder: FlatBufferBuilder, LATITUDE: Double) = builder.addDouble(2, LATITUDE, 0.0)
-        fun addLONGITUDE(builder: FlatBufferBuilder, LONGITUDE: Double) = builder.addDouble(3, LONGITUDE, 0.0)
-        fun addALONG_TRACK_UNC(builder: FlatBufferBuilder, ALONG_TRACK_UNC: Double) = builder.addDouble(4, ALONG_TRACK_UNC, 0.0)
-        fun addCROSS_TRACK_UNC(builder: FlatBufferBuilder, CROSS_TRACK_UNC: Double) = builder.addDouble(5, CROSS_TRACK_UNC, 0.0)
-        fun addIMPACT_PROBABILITY(builder: FlatBufferBuilder, IMPACT_PROBABILITY: Double) = builder.addDouble(6, IMPACT_PROBABILITY, 0.0)
+        fun addIMPACTEPOCH(builder: FlatBufferBuilder, impactEpoch: Int) = builder.addOffset(0, impactEpoch, 0)
+        fun addEPOCHUNCERTAINTY(builder: FlatBufferBuilder, epochUncertainty: Double) = builder.addDouble(1, epochUncertainty, 0.0)
+        fun addLATITUDE(builder: FlatBufferBuilder, latitude: Double) = builder.addDouble(2, latitude, 0.0)
+        fun addLONGITUDE(builder: FlatBufferBuilder, longitude: Double) = builder.addDouble(3, longitude, 0.0)
+        fun addALONGTRACKUNC(builder: FlatBufferBuilder, alongTrackUnc: Double) = builder.addDouble(4, alongTrackUnc, 0.0)
+        fun addCROSSTRACKUNC(builder: FlatBufferBuilder, crossTrackUnc: Double) = builder.addDouble(5, crossTrackUnc, 0.0)
+        fun addIMPACTPROBABILITY(builder: FlatBufferBuilder, impactProbability: Double) = builder.addDouble(6, impactProbability, 0.0)
         fun endreentryImpact(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

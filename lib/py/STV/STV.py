@@ -191,6 +191,16 @@ def STVStartRESERVEDVector(builder, numElems):
 def StartRESERVEDVector(builder, numElems):
     return STVStartRESERVEDVector(builder, numElems)
 
+def STVCreateRESERVEDVector(builder, data):
+    data = list(data)
+    builder.StartVector(1, len(data), 1)
+    for item in reversed(data):
+        builder.PrependUint8(item)
+    return builder.EndVector()
+
+def CreateRESERVEDVector(builder, data):
+    STVCreateRESERVEDVector(builder, data)
+
 def STVEnd(builder):
     return builder.EndObject()
 
@@ -205,23 +215,35 @@ except:
 class STVT(object):
 
     # STVT
-    def __init__(self):
-        self.EPOCH = 0.0  # type: float
-        self.POS_X = 0.0  # type: float
-        self.POS_Y = 0.0  # type: float
-        self.POS_Z = 0.0  # type: float
-        self.VEL_X = 0.0  # type: float
-        self.VEL_Y = 0.0  # type: float
-        self.VEL_Z = 0.0  # type: float
-        self.REF_FRAME = 0  # type: int
-        self.FLAGS = 0  # type: int
-        self.RESERVED = None  # type: List[int]
+    def __init__(
+        self,
+        EPOCH = 0.0,
+        POS_X = 0.0,
+        POS_Y = 0.0,
+        POS_Z = 0.0,
+        VEL_X = 0.0,
+        VEL_Y = 0.0,
+        VEL_Z = 0.0,
+        REF_FRAME = 0,
+        FLAGS = 0,
+        RESERVED = None,
+    ):
+        self.EPOCH = EPOCH  # type: float
+        self.POS_X = POS_X  # type: float
+        self.POS_Y = POS_Y  # type: float
+        self.POS_Z = POS_Z  # type: float
+        self.VEL_X = VEL_X  # type: float
+        self.VEL_Y = VEL_Y  # type: float
+        self.VEL_Z = VEL_Z  # type: float
+        self.REF_FRAME = REF_FRAME  # type: int
+        self.FLAGS = FLAGS  # type: int
+        self.RESERVED = RESERVED  # type: Optional[List[int]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        STV = STV()
-        STV.Init(buf, pos)
-        return cls.InitFromObj(STV)
+        tmpStv = STV()
+        tmpStv.Init(buf, pos)
+        return cls.InitFromObj(tmpStv)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -229,9 +251,9 @@ class STVT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, STV):
+    def InitFromObj(cls, tmpStv):
         x = STVT()
-        x._UnPack(STV)
+        x._UnPack(tmpStv)
         return x
 
     # STVT

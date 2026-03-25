@@ -11,7 +11,7 @@ public struct CommandSignificance : IFlatbufferObject
 {
   private Table __p;
   public ByteBuffer ByteBuffer { get { return __p.bb; } }
-  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_24_3_25(); }
+  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_25_12_19(); }
   public static CommandSignificance GetRootAsCommandSignificance(ByteBuffer _bb) { return GetRootAsCommandSignificance(_bb, new CommandSignificance()); }
   public static CommandSignificance GetRootAsCommandSignificance(ByteBuffer _bb, CommandSignificance obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }

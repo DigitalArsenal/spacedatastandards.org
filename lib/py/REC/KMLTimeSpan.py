@@ -2,4 +2,119 @@
 
 # namespace: 
 
-# NOTE KMLTimeSpan.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# TimeSpan
+class KMLTimeSpan(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = KMLTimeSpan()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsKMLTimeSpan(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def KMLTimeSpanBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x4B\x4D\x4C", size_prefixed=size_prefixed)
+
+    # KMLTimeSpan
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Begin time (ISO 8601)
+    # KMLTimeSpan
+    def BEGIN(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # End time (ISO 8601)
+    # KMLTimeSpan
+    def END(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+def KMLTimeSpanStart(builder):
+    builder.StartObject(2)
+
+def Start(builder):
+    KMLTimeSpanStart(builder)
+
+def KMLTimeSpanAddBEGIN(builder, BEGIN):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(BEGIN), 0)
+
+def AddBEGIN(builder, BEGIN):
+    KMLTimeSpanAddBEGIN(builder, BEGIN)
+
+def KMLTimeSpanAddEND(builder, END):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(END), 0)
+
+def AddEND(builder, END):
+    KMLTimeSpanAddEND(builder, END)
+
+def KMLTimeSpanEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return KMLTimeSpanEnd(builder)
+
+
+class KMLTimeSpanT(object):
+
+    # KMLTimeSpanT
+    def __init__(
+        self,
+        BEGIN = None,
+        END = None,
+    ):
+        self.BEGIN = BEGIN  # type: Optional[str]
+        self.END = END  # type: Optional[str]
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpKmltimeSpan = KMLTimeSpan()
+        tmpKmltimeSpan.Init(buf, pos)
+        return cls.InitFromObj(tmpKmltimeSpan)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpKmltimeSpan):
+        x = KMLTimeSpanT()
+        x._UnPack(tmpKmltimeSpan)
+        return x
+
+    # KMLTimeSpanT
+    def _UnPack(self, KMLTimeSpan):
+        if KMLTimeSpan is None:
+            return
+        self.BEGIN = KMLTimeSpan.BEGIN()
+        self.END = KMLTimeSpan.END()
+
+    # KMLTimeSpanT
+    def Pack(self, builder):
+        if self.BEGIN is not None:
+            BEGIN = builder.CreateString(self.BEGIN)
+        if self.END is not None:
+            END = builder.CreateString(self.END)
+        KMLTimeSpanStart(builder)
+        if self.BEGIN is not None:
+            KMLTimeSpanAddBEGIN(builder, BEGIN)
+        if self.END is not None:
+            KMLTimeSpanAddEND(builder, END)
+        KMLTimeSpan = KMLTimeSpanEnd(builder)
+        return KMLTimeSpan

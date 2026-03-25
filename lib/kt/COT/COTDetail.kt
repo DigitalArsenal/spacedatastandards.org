@@ -32,7 +32,7 @@ class COTDetail : Table() {
     /**
      * Contact callsign
      */
-    val CALLSIGN : String?
+    val callsign : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class COTDetail : Table() {
                 null
             }
         }
-    val CALLSIGNAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun CALLSIGNInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val callsignAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun callsignInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Contact endpoint (e.g. IP:port)
      */
-    val ENDPOINT : String?
+    val endpoint : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -55,12 +55,12 @@ class COTDetail : Table() {
                 null
             }
         }
-    val ENDPOINTAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun ENDPOINTInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val endpointAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun endpointInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * Contact phone number
      */
-    val PHONE : String?
+    val phone : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -69,12 +69,12 @@ class COTDetail : Table() {
                 null
             }
         }
-    val PHONEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun PHONEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val phoneAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun phoneInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
     /**
      * Track course in degrees true
      */
-    val COURSE : Double
+    val course : Double
         get() {
             val o = __offset(10)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -82,7 +82,7 @@ class COTDetail : Table() {
     /**
      * Track speed in m/s
      */
-    val SPEED : Double
+    val speed : Double
         get() {
             val o = __offset(12)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -90,7 +90,7 @@ class COTDetail : Table() {
     /**
      * Group name/team
      */
-    val GROUP_NAME : String?
+    val groupName : String?
         get() {
             val o = __offset(14)
             return if (o != 0) {
@@ -99,12 +99,12 @@ class COTDetail : Table() {
                 null
             }
         }
-    val GROUP_NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(14, 1)
-    fun GROUP_NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 14, 1)
+    val groupNameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(14, 1)
+    fun groupNameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 14, 1)
     /**
      * Group role
      */
-    val GROUP_ROLE : String?
+    val groupRole : String?
         get() {
             val o = __offset(16)
             return if (o != 0) {
@@ -113,12 +113,12 @@ class COTDetail : Table() {
                 null
             }
         }
-    val GROUP_ROLEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(16, 1)
-    fun GROUP_ROLEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 16, 1)
+    val groupRoleAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(16, 1)
+    fun groupRoleInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 16, 1)
     /**
      * Status (battery percentage, etc.)
      */
-    val STATUS_BATTERY : Double
+    val statusBattery : Double
         get() {
             val o = __offset(18)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -126,7 +126,7 @@ class COTDetail : Table() {
     /**
      * Status readiness
      */
-    val STATUS_READINESS : Boolean
+    val statusReadiness : Boolean
         get() {
             val o = __offset(20)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -134,7 +134,7 @@ class COTDetail : Table() {
     /**
      * Precision location source
      */
-    val PREC_LOCATION_SOURCE : String?
+    val precLocationSource : String?
         get() {
             val o = __offset(22)
             return if (o != 0) {
@@ -143,12 +143,12 @@ class COTDetail : Table() {
                 null
             }
         }
-    val PREC_LOCATION_SOURCEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(22, 1)
-    fun PREC_LOCATION_SOURCEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 22, 1)
+    val precLocationSourceAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(22, 1)
+    fun precLocationSourceInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 22, 1)
     /**
      * Precision location altitude source
      */
-    val PREC_ALTSRC : String?
+    val precAltsrc : String?
         get() {
             val o = __offset(24)
             return if (o != 0) {
@@ -157,12 +157,12 @@ class COTDetail : Table() {
                 null
             }
         }
-    val PREC_ALTSRCAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(24, 1)
-    fun PREC_ALTSRCInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 24, 1)
+    val precAltsrcAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(24, 1)
+    fun precAltsrcInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 24, 1)
     /**
      * UID of the device
      */
-    val UID_DROID : String?
+    val uidDroid : String?
         get() {
             val o = __offset(26)
             return if (o != 0) {
@@ -171,12 +171,12 @@ class COTDetail : Table() {
                 null
             }
         }
-    val UID_DROIDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(26, 1)
-    fun UID_DROIDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 26, 1)
+    val uidDroidAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(26, 1)
+    fun uidDroidInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 26, 1)
     /**
      * Remarks text
      */
-    val REMARKS : String?
+    val remarks : String?
         get() {
             val o = __offset(28)
             return if (o != 0) {
@@ -185,12 +185,12 @@ class COTDetail : Table() {
                 null
             }
         }
-    val REMARKSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(28, 1)
-    fun REMARKSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 28, 1)
+    val remarksAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(28, 1)
+    fun remarksInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 28, 1)
     /**
      * Remarks source
      */
-    val REMARKS_SOURCE : String?
+    val remarksSource : String?
         get() {
             val o = __offset(30)
             return if (o != 0) {
@@ -199,12 +199,12 @@ class COTDetail : Table() {
                 null
             }
         }
-    val REMARKS_SOURCEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(30, 1)
-    fun REMARKS_SOURCEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 30, 1)
+    val remarksSourceAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(30, 1)
+    fun remarksSourceInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 30, 1)
     /**
      * Remarks timestamp (ISO 8601)
      */
-    val REMARKS_TIME : String?
+    val remarksTime : String?
         get() {
             val o = __offset(32)
             return if (o != 0) {
@@ -213,12 +213,12 @@ class COTDetail : Table() {
                 null
             }
         }
-    val REMARKS_TIMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(32, 1)
-    fun REMARKS_TIMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 32, 1)
+    val remarksTimeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(32, 1)
+    fun remarksTimeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 32, 1)
     /**
      * Link UID (for related events)
      */
-    val LINK_UID : String?
+    val linkUid : String?
         get() {
             val o = __offset(34)
             return if (o != 0) {
@@ -227,12 +227,12 @@ class COTDetail : Table() {
                 null
             }
         }
-    val LINK_UIDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(34, 1)
-    fun LINK_UIDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 34, 1)
+    val linkUidAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(34, 1)
+    fun linkUidInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 34, 1)
     /**
      * Link type
      */
-    val LINK_TYPE : String?
+    val linkType : String?
         get() {
             val o = __offset(36)
             return if (o != 0) {
@@ -241,12 +241,12 @@ class COTDetail : Table() {
                 null
             }
         }
-    val LINK_TYPEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(36, 1)
-    fun LINK_TYPEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 36, 1)
+    val linkTypeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(36, 1)
+    fun linkTypeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 36, 1)
     /**
      * Link relation
      */
-    val LINK_RELATION : String?
+    val linkRelation : String?
         get() {
             val o = __offset(38)
             return if (o != 0) {
@@ -255,12 +255,12 @@ class COTDetail : Table() {
                 null
             }
         }
-    val LINK_RELATIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(38, 1)
-    fun LINK_RELATIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 38, 1)
+    val linkRelationAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(38, 1)
+    fun linkRelationInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 38, 1)
     /**
      * Color in ARGB integer format
      */
-    val COLOR : Int
+    val color : Int
         get() {
             val o = __offset(40)
             return if(o != 0) bb.getInt(o + bb_pos) else 0
@@ -268,7 +268,7 @@ class COTDetail : Table() {
     /**
      * Stroke weight for drawing
      */
-    val STROKE_WEIGHT : Double
+    val strokeWeight : Double
         get() {
             val o = __offset(42)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -276,7 +276,7 @@ class COTDetail : Table() {
     /**
      * Fill color in ARGB integer format
      */
-    val FILL_COLOR : Int
+    val fillColor : Int
         get() {
             val o = __offset(44)
             return if(o != 0) bb.getInt(o + bb_pos) else 0
@@ -284,7 +284,7 @@ class COTDetail : Table() {
     /**
      * Labeled flag
      */
-    val LABELLED : Boolean
+    val labelled : Boolean
         get() {
             val o = __offset(46)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -292,7 +292,7 @@ class COTDetail : Table() {
     /**
      * Archive flag
      */
-    val ARCHIVE : Boolean
+    val archive : Boolean
         get() {
             val o = __offset(48)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -300,7 +300,7 @@ class COTDetail : Table() {
     /**
      * Raw XML detail content (for extensions not covered above)
      */
-    val RAW_XML : String?
+    val rawXml : String?
         get() {
             val o = __offset(50)
             return if (o != 0) {
@@ -309,68 +309,68 @@ class COTDetail : Table() {
                 null
             }
         }
-    val RAW_XMLAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(50, 1)
-    fun RAW_XMLInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 50, 1)
+    val rawXmlAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(50, 1)
+    fun rawXmlInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 50, 1)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsCOTDetail(_bb: ByteBuffer): COTDetail = getRootAsCOTDetail(_bb, COTDetail())
         fun getRootAsCOTDetail(_bb: ByteBuffer, obj: COTDetail): COTDetail {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createCOTDetail(builder: FlatBufferBuilder, CALLSIGNOffset: Int, ENDPOINTOffset: Int, PHONEOffset: Int, COURSE: Double, SPEED: Double, GROUP_NAMEOffset: Int, GROUP_ROLEOffset: Int, STATUS_BATTERY: Double, STATUS_READINESS: Boolean, PREC_LOCATION_SOURCEOffset: Int, PREC_ALTSRCOffset: Int, UID_DROIDOffset: Int, REMARKSOffset: Int, REMARKS_SOURCEOffset: Int, REMARKS_TIMEOffset: Int, LINK_UIDOffset: Int, LINK_TYPEOffset: Int, LINK_RELATIONOffset: Int, COLOR: Int, STROKE_WEIGHT: Double, FILL_COLOR: Int, LABELLED: Boolean, ARCHIVE: Boolean, RAW_XMLOffset: Int) : Int {
+        fun createCOTDetail(builder: FlatBufferBuilder, callsignOffset: Int, endpointOffset: Int, phoneOffset: Int, course: Double, speed: Double, groupNameOffset: Int, groupRoleOffset: Int, statusBattery: Double, statusReadiness: Boolean, precLocationSourceOffset: Int, precAltsrcOffset: Int, uidDroidOffset: Int, remarksOffset: Int, remarksSourceOffset: Int, remarksTimeOffset: Int, linkUidOffset: Int, linkTypeOffset: Int, linkRelationOffset: Int, color: Int, strokeWeight: Double, fillColor: Int, labelled: Boolean, archive: Boolean, rawXmlOffset: Int) : Int {
             builder.startTable(24)
-            addSTROKE_WEIGHT(builder, STROKE_WEIGHT)
-            addSTATUS_BATTERY(builder, STATUS_BATTERY)
-            addSPEED(builder, SPEED)
-            addCOURSE(builder, COURSE)
-            addRAW_XML(builder, RAW_XMLOffset)
-            addFILL_COLOR(builder, FILL_COLOR)
-            addCOLOR(builder, COLOR)
-            addLINK_RELATION(builder, LINK_RELATIONOffset)
-            addLINK_TYPE(builder, LINK_TYPEOffset)
-            addLINK_UID(builder, LINK_UIDOffset)
-            addREMARKS_TIME(builder, REMARKS_TIMEOffset)
-            addREMARKS_SOURCE(builder, REMARKS_SOURCEOffset)
-            addREMARKS(builder, REMARKSOffset)
-            addUID_DROID(builder, UID_DROIDOffset)
-            addPREC_ALTSRC(builder, PREC_ALTSRCOffset)
-            addPREC_LOCATION_SOURCE(builder, PREC_LOCATION_SOURCEOffset)
-            addGROUP_ROLE(builder, GROUP_ROLEOffset)
-            addGROUP_NAME(builder, GROUP_NAMEOffset)
-            addPHONE(builder, PHONEOffset)
-            addENDPOINT(builder, ENDPOINTOffset)
-            addCALLSIGN(builder, CALLSIGNOffset)
-            addARCHIVE(builder, ARCHIVE)
-            addLABELLED(builder, LABELLED)
-            addSTATUS_READINESS(builder, STATUS_READINESS)
+            addSTROKEWEIGHT(builder, strokeWeight)
+            addSTATUSBATTERY(builder, statusBattery)
+            addSPEED(builder, speed)
+            addCOURSE(builder, course)
+            addRAWXML(builder, rawXmlOffset)
+            addFILLCOLOR(builder, fillColor)
+            addCOLOR(builder, color)
+            addLINKRELATION(builder, linkRelationOffset)
+            addLINKTYPE(builder, linkTypeOffset)
+            addLINKUID(builder, linkUidOffset)
+            addREMARKSTIME(builder, remarksTimeOffset)
+            addREMARKSSOURCE(builder, remarksSourceOffset)
+            addREMARKS(builder, remarksOffset)
+            addUIDDROID(builder, uidDroidOffset)
+            addPRECALTSRC(builder, precAltsrcOffset)
+            addPRECLOCATIONSOURCE(builder, precLocationSourceOffset)
+            addGROUPROLE(builder, groupRoleOffset)
+            addGROUPNAME(builder, groupNameOffset)
+            addPHONE(builder, phoneOffset)
+            addENDPOINT(builder, endpointOffset)
+            addCALLSIGN(builder, callsignOffset)
+            addARCHIVE(builder, archive)
+            addLABELLED(builder, labelled)
+            addSTATUSREADINESS(builder, statusReadiness)
             return endCOTDetail(builder)
         }
         fun startCOTDetail(builder: FlatBufferBuilder) = builder.startTable(24)
-        fun addCALLSIGN(builder: FlatBufferBuilder, CALLSIGN: Int) = builder.addOffset(0, CALLSIGN, 0)
-        fun addENDPOINT(builder: FlatBufferBuilder, ENDPOINT: Int) = builder.addOffset(1, ENDPOINT, 0)
-        fun addPHONE(builder: FlatBufferBuilder, PHONE: Int) = builder.addOffset(2, PHONE, 0)
-        fun addCOURSE(builder: FlatBufferBuilder, COURSE: Double) = builder.addDouble(3, COURSE, 0.0)
-        fun addSPEED(builder: FlatBufferBuilder, SPEED: Double) = builder.addDouble(4, SPEED, 0.0)
-        fun addGROUP_NAME(builder: FlatBufferBuilder, GROUP_NAME: Int) = builder.addOffset(5, GROUP_NAME, 0)
-        fun addGROUP_ROLE(builder: FlatBufferBuilder, GROUP_ROLE: Int) = builder.addOffset(6, GROUP_ROLE, 0)
-        fun addSTATUS_BATTERY(builder: FlatBufferBuilder, STATUS_BATTERY: Double) = builder.addDouble(7, STATUS_BATTERY, 0.0)
-        fun addSTATUS_READINESS(builder: FlatBufferBuilder, STATUS_READINESS: Boolean) = builder.addBoolean(8, STATUS_READINESS, false)
-        fun addPREC_LOCATION_SOURCE(builder: FlatBufferBuilder, PREC_LOCATION_SOURCE: Int) = builder.addOffset(9, PREC_LOCATION_SOURCE, 0)
-        fun addPREC_ALTSRC(builder: FlatBufferBuilder, PREC_ALTSRC: Int) = builder.addOffset(10, PREC_ALTSRC, 0)
-        fun addUID_DROID(builder: FlatBufferBuilder, UID_DROID: Int) = builder.addOffset(11, UID_DROID, 0)
-        fun addREMARKS(builder: FlatBufferBuilder, REMARKS: Int) = builder.addOffset(12, REMARKS, 0)
-        fun addREMARKS_SOURCE(builder: FlatBufferBuilder, REMARKS_SOURCE: Int) = builder.addOffset(13, REMARKS_SOURCE, 0)
-        fun addREMARKS_TIME(builder: FlatBufferBuilder, REMARKS_TIME: Int) = builder.addOffset(14, REMARKS_TIME, 0)
-        fun addLINK_UID(builder: FlatBufferBuilder, LINK_UID: Int) = builder.addOffset(15, LINK_UID, 0)
-        fun addLINK_TYPE(builder: FlatBufferBuilder, LINK_TYPE: Int) = builder.addOffset(16, LINK_TYPE, 0)
-        fun addLINK_RELATION(builder: FlatBufferBuilder, LINK_RELATION: Int) = builder.addOffset(17, LINK_RELATION, 0)
-        fun addCOLOR(builder: FlatBufferBuilder, COLOR: Int) = builder.addInt(18, COLOR, 0)
-        fun addSTROKE_WEIGHT(builder: FlatBufferBuilder, STROKE_WEIGHT: Double) = builder.addDouble(19, STROKE_WEIGHT, 0.0)
-        fun addFILL_COLOR(builder: FlatBufferBuilder, FILL_COLOR: Int) = builder.addInt(20, FILL_COLOR, 0)
-        fun addLABELLED(builder: FlatBufferBuilder, LABELLED: Boolean) = builder.addBoolean(21, LABELLED, false)
-        fun addARCHIVE(builder: FlatBufferBuilder, ARCHIVE: Boolean) = builder.addBoolean(22, ARCHIVE, false)
-        fun addRAW_XML(builder: FlatBufferBuilder, RAW_XML: Int) = builder.addOffset(23, RAW_XML, 0)
+        fun addCALLSIGN(builder: FlatBufferBuilder, callsign: Int) = builder.addOffset(0, callsign, 0)
+        fun addENDPOINT(builder: FlatBufferBuilder, endpoint: Int) = builder.addOffset(1, endpoint, 0)
+        fun addPHONE(builder: FlatBufferBuilder, phone: Int) = builder.addOffset(2, phone, 0)
+        fun addCOURSE(builder: FlatBufferBuilder, course: Double) = builder.addDouble(3, course, 0.0)
+        fun addSPEED(builder: FlatBufferBuilder, speed: Double) = builder.addDouble(4, speed, 0.0)
+        fun addGROUPNAME(builder: FlatBufferBuilder, groupName: Int) = builder.addOffset(5, groupName, 0)
+        fun addGROUPROLE(builder: FlatBufferBuilder, groupRole: Int) = builder.addOffset(6, groupRole, 0)
+        fun addSTATUSBATTERY(builder: FlatBufferBuilder, statusBattery: Double) = builder.addDouble(7, statusBattery, 0.0)
+        fun addSTATUSREADINESS(builder: FlatBufferBuilder, statusReadiness: Boolean) = builder.addBoolean(8, statusReadiness, false)
+        fun addPRECLOCATIONSOURCE(builder: FlatBufferBuilder, precLocationSource: Int) = builder.addOffset(9, precLocationSource, 0)
+        fun addPRECALTSRC(builder: FlatBufferBuilder, precAltsrc: Int) = builder.addOffset(10, precAltsrc, 0)
+        fun addUIDDROID(builder: FlatBufferBuilder, uidDroid: Int) = builder.addOffset(11, uidDroid, 0)
+        fun addREMARKS(builder: FlatBufferBuilder, remarks: Int) = builder.addOffset(12, remarks, 0)
+        fun addREMARKSSOURCE(builder: FlatBufferBuilder, remarksSource: Int) = builder.addOffset(13, remarksSource, 0)
+        fun addREMARKSTIME(builder: FlatBufferBuilder, remarksTime: Int) = builder.addOffset(14, remarksTime, 0)
+        fun addLINKUID(builder: FlatBufferBuilder, linkUid: Int) = builder.addOffset(15, linkUid, 0)
+        fun addLINKTYPE(builder: FlatBufferBuilder, linkType: Int) = builder.addOffset(16, linkType, 0)
+        fun addLINKRELATION(builder: FlatBufferBuilder, linkRelation: Int) = builder.addOffset(17, linkRelation, 0)
+        fun addCOLOR(builder: FlatBufferBuilder, color: Int) = builder.addInt(18, color, 0)
+        fun addSTROKEWEIGHT(builder: FlatBufferBuilder, strokeWeight: Double) = builder.addDouble(19, strokeWeight, 0.0)
+        fun addFILLCOLOR(builder: FlatBufferBuilder, fillColor: Int) = builder.addInt(20, fillColor, 0)
+        fun addLABELLED(builder: FlatBufferBuilder, labelled: Boolean) = builder.addBoolean(21, labelled, false)
+        fun addARCHIVE(builder: FlatBufferBuilder, archive: Boolean) = builder.addBoolean(22, archive, false)
+        fun addRAWXML(builder: FlatBufferBuilder, rawXml: Int) = builder.addOffset(23, rawXml, 0)
         fun endCOTDetail(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

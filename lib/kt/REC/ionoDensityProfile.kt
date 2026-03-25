@@ -32,7 +32,7 @@ class ionoDensityProfile : Table() {
     /**
      * Observation epoch (ISO 8601)
      */
-    val EPOCH : String?
+    val epoch : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class ionoDensityProfile : Table() {
                 null
             }
         }
-    val EPOCHAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun EPOCHInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val epochAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun epochInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Altitudes in km
      */
-    fun ALTITUDES(j: Int) : Double {
+    fun altitudes(j: Int) : Double {
         val o = __offset(6)
         return if (o != 0) {
             bb.getDouble(__vector(o) + j * 8)
@@ -54,16 +54,16 @@ class ionoDensityProfile : Table() {
             0.0
         }
     }
-    val ALTITUDESLength : Int
+    val altitudesLength : Int
         get() {
             val o = __offset(6); return if (o != 0) __vector_len(o) else 0
         }
-    val ALTITUDESAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 8)
-    fun ALTITUDESInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 8)
+    val altitudesAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 8)
+    fun altitudesInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 8)
     /**
      * Electron densities at each altitude in electrons/m^3
      */
-    fun DENSITIES(j: Int) : Double {
+    fun densities(j: Int) : Double {
         val o = __offset(8)
         return if (o != 0) {
             bb.getDouble(__vector(o) + j * 8)
@@ -71,29 +71,29 @@ class ionoDensityProfile : Table() {
             0.0
         }
     }
-    val DENSITIESLength : Int
+    val densitiesLength : Int
         get() {
             val o = __offset(8); return if (o != 0) __vector_len(o) else 0
         }
-    val DENSITIESAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 8)
-    fun DENSITIESInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 8)
+    val densitiesAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 8)
+    fun densitiesInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 8)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsionoDensityProfile(_bb: ByteBuffer): ionoDensityProfile = getRootAsionoDensityProfile(_bb, ionoDensityProfile())
         fun getRootAsionoDensityProfile(_bb: ByteBuffer, obj: ionoDensityProfile): ionoDensityProfile {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createionoDensityProfile(builder: FlatBufferBuilder, EPOCHOffset: Int, ALTITUDESOffset: Int, DENSITIESOffset: Int) : Int {
+        fun createionoDensityProfile(builder: FlatBufferBuilder, epochOffset: Int, altitudesOffset: Int, densitiesOffset: Int) : Int {
             builder.startTable(3)
-            addDENSITIES(builder, DENSITIESOffset)
-            addALTITUDES(builder, ALTITUDESOffset)
-            addEPOCH(builder, EPOCHOffset)
+            addDENSITIES(builder, densitiesOffset)
+            addALTITUDES(builder, altitudesOffset)
+            addEPOCH(builder, epochOffset)
             return endionoDensityProfile(builder)
         }
         fun startionoDensityProfile(builder: FlatBufferBuilder) = builder.startTable(3)
-        fun addEPOCH(builder: FlatBufferBuilder, EPOCH: Int) = builder.addOffset(0, EPOCH, 0)
-        fun addALTITUDES(builder: FlatBufferBuilder, ALTITUDES: Int) = builder.addOffset(1, ALTITUDES, 0)
+        fun addEPOCH(builder: FlatBufferBuilder, epoch: Int) = builder.addOffset(0, epoch, 0)
+        fun addALTITUDES(builder: FlatBufferBuilder, altitudes: Int) = builder.addOffset(1, altitudes, 0)
         fun createAltitudesVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
             builder.startVector(8, data.size, 8)
             for (i in data.size - 1 downTo 0) {
@@ -102,7 +102,7 @@ class ionoDensityProfile : Table() {
             return builder.endVector()
         }
         fun startAltitudesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
-        fun addDENSITIES(builder: FlatBufferBuilder, DENSITIES: Int) = builder.addOffset(2, DENSITIES, 0)
+        fun addDENSITIES(builder: FlatBufferBuilder, densities: Int) = builder.addOffset(2, densities, 0)
         fun createDensitiesVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
             builder.startVector(8, data.size, 8)
             for (i in data.size - 1 downTo 0) {

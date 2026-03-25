@@ -37,7 +37,7 @@ class PPE : Table() {
     /**
      * Plain-text comments.
      */
-    fun COMMENT(j: Int) : String? {
+    fun comment(j: Int) : String? {
         val o = __offset(4)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
@@ -45,15 +45,15 @@ class PPE : Table() {
             null
         }
     }
-    val COMMENTLength : Int
+    val commentLength : Int
         get() {
             val o = __offset(4); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Space object identification.
      */
-    val OBJECT : CAT? get() = OBJECT(CAT())
-    fun OBJECT(obj: CAT) : CAT? {
+    val object : CAT? get() = object(CAT())
+    fun object(obj: CAT) : CAT? {
         val o = __offset(6)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -64,7 +64,7 @@ class PPE : Table() {
     /**
      * Origin of the reference frame (e.g., EARTH, MOON, MARS).
      */
-    val CENTER_NAME : String?
+    val centerName : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -73,13 +73,13 @@ class PPE : Table() {
                 null
             }
         }
-    val CENTER_NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun CENTER_NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val centerNameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun centerNameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
     /**
      * Reference frame for position/velocity coefficients.
      */
-    val REFERENCE_FRAME : RFM? get() = REFERENCE_FRAME(RFM())
-    fun REFERENCE_FRAME(obj: RFM) : RFM? {
+    val referenceFrame : RFM? get() = referenceFrame(RFM())
+    fun referenceFrame(obj: RFM) : RFM? {
         val o = __offset(10)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -90,7 +90,7 @@ class PPE : Table() {
     /**
      * Time system used for all epochs in this message.
      */
-    val TIME_SYSTEM : Byte
+    val timeSystem : Byte
         get() {
             val o = __offset(12)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -98,7 +98,7 @@ class PPE : Table() {
     /**
      * Start of the total time span covered by this ephemeris (ISO 8601).
      */
-    val START_TIME : String?
+    val startTime : String?
         get() {
             val o = __offset(14)
             return if (o != 0) {
@@ -107,12 +107,12 @@ class PPE : Table() {
                 null
             }
         }
-    val START_TIMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(14, 1)
-    fun START_TIMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 14, 1)
+    val startTimeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(14, 1)
+    fun startTimeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 14, 1)
     /**
      * End of the total time span covered by this ephemeris (ISO 8601).
      */
-    val STOP_TIME : String?
+    val stopTime : String?
         get() {
             val o = __offset(16)
             return if (o != 0) {
@@ -121,13 +121,13 @@ class PPE : Table() {
                 null
             }
         }
-    val STOP_TIMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(16, 1)
-    fun STOP_TIMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 16, 1)
+    val stopTimeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(16, 1)
+    fun stopTimeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 16, 1)
     /**
      * Default polynomial basis type for all records in this message.
      * Individual records may override this with their own BASIS_TYPE field.
      */
-    val DEFAULT_BASIS_TYPE : Byte
+    val defaultBasisType : Byte
         get() {
             val o = __offset(18)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -136,8 +136,8 @@ class PPE : Table() {
      * Array of position polynomial records.
      * Each record covers a time segment; together they span [START_TIME, STOP_TIME].
      */
-    fun POSITION_RECORDS(j: Int) : PPEPositionRecord? = POSITION_RECORDS(PPEPositionRecord(), j)
-    fun POSITION_RECORDS(obj: PPEPositionRecord, j: Int) : PPEPositionRecord? {
+    fun positionRecords(j: Int) : PPEPositionRecord? = positionRecords(PPEPositionRecord(), j)
+    fun positionRecords(obj: PPEPositionRecord, j: Int) : PPEPositionRecord? {
         val o = __offset(20)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -145,7 +145,7 @@ class PPE : Table() {
             null
         }
     }
-    val POSITION_RECORDSLength : Int
+    val positionRecordsLength : Int
         get() {
             val o = __offset(20); return if (o != 0) __vector_len(o) else 0
         }
@@ -153,8 +153,8 @@ class PPE : Table() {
      * Array of orbital element polynomial records.
      * Each record covers a time segment; together they span [START_TIME, STOP_TIME].
      */
-    fun ORBITAL_ELEMENT_RECORDS(j: Int) : PPEOrbitalElementRecord? = ORBITAL_ELEMENT_RECORDS(PPEOrbitalElementRecord(), j)
-    fun ORBITAL_ELEMENT_RECORDS(obj: PPEOrbitalElementRecord, j: Int) : PPEOrbitalElementRecord? {
+    fun orbitalElementRecords(j: Int) : PPEOrbitalElementRecord? = orbitalElementRecords(PPEOrbitalElementRecord(), j)
+    fun orbitalElementRecords(obj: PPEOrbitalElementRecord, j: Int) : PPEOrbitalElementRecord? {
         val o = __offset(22)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -162,14 +162,14 @@ class PPE : Table() {
             null
         }
     }
-    val ORBITAL_ELEMENT_RECORDSLength : Int
+    val orbitalElementRecordsLength : Int
         get() {
             val o = __offset(22); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Generating ephemeris source (e.g., "JPL DE440", "HPOP v2.1", "Basilisk chebyPosEphem").
      */
-    val EPHEMERIS_SOURCE : String?
+    val ephemerisSource : String?
         get() {
             val o = __offset(24)
             return if (o != 0) {
@@ -178,13 +178,13 @@ class PPE : Table() {
                 null
             }
         }
-    val EPHEMERIS_SOURCEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(24, 1)
-    fun EPHEMERIS_SOURCEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 24, 1)
+    val ephemerisSourceAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(24, 1)
+    fun ephemerisSourceInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 24, 1)
     /**
      * Fit span in seconds used to generate each polynomial segment.
      * Informational; actual spans are in individual records.
      */
-    val NOMINAL_SEGMENT_SPAN : Double
+    val nominalSegmentSpan : Double
         get() {
             val o = __offset(26)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -193,38 +193,38 @@ class PPE : Table() {
      * Nominal number of coefficients per segment.
      * Informational; actual counts are in individual records.
      */
-    val NOMINAL_NUM_COEFFICIENTS : UShort
+    val nominalNumCoefficients : UShort
         get() {
             val o = __offset(28)
             return if(o != 0) bb.getShort(o + bb_pos).toUShort() else 0u
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsPPE(_bb: ByteBuffer): PPE = getRootAsPPE(_bb, PPE())
         fun getRootAsPPE(_bb: ByteBuffer, obj: PPE): PPE {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun PPEBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$PPE")
-        fun createPPE(builder: FlatBufferBuilder, COMMENTOffset: Int, OBJECTOffset: Int, CENTER_NAMEOffset: Int, REFERENCE_FRAMEOffset: Int, TIME_SYSTEM: Byte, START_TIMEOffset: Int, STOP_TIMEOffset: Int, DEFAULT_BASIS_TYPE: Byte, POSITION_RECORDSOffset: Int, ORBITAL_ELEMENT_RECORDSOffset: Int, EPHEMERIS_SOURCEOffset: Int, NOMINAL_SEGMENT_SPAN: Double, NOMINAL_NUM_COEFFICIENTS: UShort) : Int {
+        fun createPPE(builder: FlatBufferBuilder, commentOffset: Int, objectOffset: Int, centerNameOffset: Int, referenceFrameOffset: Int, timeSystem: Byte, startTimeOffset: Int, stopTimeOffset: Int, defaultBasisType: Byte, positionRecordsOffset: Int, orbitalElementRecordsOffset: Int, ephemerisSourceOffset: Int, nominalSegmentSpan: Double, nominalNumCoefficients: UShort) : Int {
             builder.startTable(13)
-            addNOMINAL_SEGMENT_SPAN(builder, NOMINAL_SEGMENT_SPAN)
-            addEPHEMERIS_SOURCE(builder, EPHEMERIS_SOURCEOffset)
-            addORBITAL_ELEMENT_RECORDS(builder, ORBITAL_ELEMENT_RECORDSOffset)
-            addPOSITION_RECORDS(builder, POSITION_RECORDSOffset)
-            addSTOP_TIME(builder, STOP_TIMEOffset)
-            addSTART_TIME(builder, START_TIMEOffset)
-            addREFERENCE_FRAME(builder, REFERENCE_FRAMEOffset)
-            addCENTER_NAME(builder, CENTER_NAMEOffset)
-            addOBJECT(builder, OBJECTOffset)
-            addCOMMENT(builder, COMMENTOffset)
-            addNOMINAL_NUM_COEFFICIENTS(builder, NOMINAL_NUM_COEFFICIENTS)
-            addDEFAULT_BASIS_TYPE(builder, DEFAULT_BASIS_TYPE)
-            addTIME_SYSTEM(builder, TIME_SYSTEM)
+            addNOMINALSEGMENTSPAN(builder, nominalSegmentSpan)
+            addEPHEMERISSOURCE(builder, ephemerisSourceOffset)
+            addORBITALELEMENTRECORDS(builder, orbitalElementRecordsOffset)
+            addPOSITIONRECORDS(builder, positionRecordsOffset)
+            addSTOPTIME(builder, stopTimeOffset)
+            addSTARTTIME(builder, startTimeOffset)
+            addREFERENCEFRAME(builder, referenceFrameOffset)
+            addCENTERNAME(builder, centerNameOffset)
+            addOBJECT(builder, objectOffset)
+            addCOMMENT(builder, commentOffset)
+            addNOMINALNUMCOEFFICIENTS(builder, nominalNumCoefficients)
+            addDEFAULTBASISTYPE(builder, defaultBasisType)
+            addTIMESYSTEM(builder, timeSystem)
             return endPPE(builder)
         }
         fun startPPE(builder: FlatBufferBuilder) = builder.startTable(13)
-        fun addCOMMENT(builder: FlatBufferBuilder, COMMENT: Int) = builder.addOffset(0, COMMENT, 0)
+        fun addCOMMENT(builder: FlatBufferBuilder, comment: Int) = builder.addOffset(0, comment, 0)
         fun createCommentVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -233,14 +233,14 @@ class PPE : Table() {
             return builder.endVector()
         }
         fun startCommentVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addOBJECT(builder: FlatBufferBuilder, OBJECT: Int) = builder.addOffset(1, OBJECT, 0)
-        fun addCENTER_NAME(builder: FlatBufferBuilder, CENTER_NAME: Int) = builder.addOffset(2, CENTER_NAME, 0)
-        fun addREFERENCE_FRAME(builder: FlatBufferBuilder, REFERENCE_FRAME: Int) = builder.addOffset(3, REFERENCE_FRAME, 0)
-        fun addTIME_SYSTEM(builder: FlatBufferBuilder, TIME_SYSTEM: Byte) = builder.addByte(4, TIME_SYSTEM, 0)
-        fun addSTART_TIME(builder: FlatBufferBuilder, START_TIME: Int) = builder.addOffset(5, START_TIME, 0)
-        fun addSTOP_TIME(builder: FlatBufferBuilder, STOP_TIME: Int) = builder.addOffset(6, STOP_TIME, 0)
-        fun addDEFAULT_BASIS_TYPE(builder: FlatBufferBuilder, DEFAULT_BASIS_TYPE: Byte) = builder.addByte(7, DEFAULT_BASIS_TYPE, 0)
-        fun addPOSITION_RECORDS(builder: FlatBufferBuilder, POSITION_RECORDS: Int) = builder.addOffset(8, POSITION_RECORDS, 0)
+        fun addOBJECT(builder: FlatBufferBuilder, object: Int) = builder.addOffset(1, object, 0)
+        fun addCENTERNAME(builder: FlatBufferBuilder, centerName: Int) = builder.addOffset(2, centerName, 0)
+        fun addREFERENCEFRAME(builder: FlatBufferBuilder, referenceFrame: Int) = builder.addOffset(3, referenceFrame, 0)
+        fun addTIMESYSTEM(builder: FlatBufferBuilder, timeSystem: Byte) = builder.addByte(4, timeSystem, 0)
+        fun addSTARTTIME(builder: FlatBufferBuilder, startTime: Int) = builder.addOffset(5, startTime, 0)
+        fun addSTOPTIME(builder: FlatBufferBuilder, stopTime: Int) = builder.addOffset(6, stopTime, 0)
+        fun addDEFAULTBASISTYPE(builder: FlatBufferBuilder, defaultBasisType: Byte) = builder.addByte(7, defaultBasisType, 0)
+        fun addPOSITIONRECORDS(builder: FlatBufferBuilder, positionRecords: Int) = builder.addOffset(8, positionRecords, 0)
         fun createPositionRecordsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -249,7 +249,7 @@ class PPE : Table() {
             return builder.endVector()
         }
         fun startPositionRecordsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addORBITAL_ELEMENT_RECORDS(builder: FlatBufferBuilder, ORBITAL_ELEMENT_RECORDS: Int) = builder.addOffset(9, ORBITAL_ELEMENT_RECORDS, 0)
+        fun addORBITALELEMENTRECORDS(builder: FlatBufferBuilder, orbitalElementRecords: Int) = builder.addOffset(9, orbitalElementRecords, 0)
         fun createOrbitalElementRecordsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -258,9 +258,9 @@ class PPE : Table() {
             return builder.endVector()
         }
         fun startOrbitalElementRecordsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addEPHEMERIS_SOURCE(builder: FlatBufferBuilder, EPHEMERIS_SOURCE: Int) = builder.addOffset(10, EPHEMERIS_SOURCE, 0)
-        fun addNOMINAL_SEGMENT_SPAN(builder: FlatBufferBuilder, NOMINAL_SEGMENT_SPAN: Double) = builder.addDouble(11, NOMINAL_SEGMENT_SPAN, 0.0)
-        fun addNOMINAL_NUM_COEFFICIENTS(builder: FlatBufferBuilder, NOMINAL_NUM_COEFFICIENTS: UShort) = builder.addShort(12, NOMINAL_NUM_COEFFICIENTS.toShort(), 0)
+        fun addEPHEMERISSOURCE(builder: FlatBufferBuilder, ephemerisSource: Int) = builder.addOffset(10, ephemerisSource, 0)
+        fun addNOMINALSEGMENTSPAN(builder: FlatBufferBuilder, nominalSegmentSpan: Double) = builder.addDouble(11, nominalSegmentSpan, 0.0)
+        fun addNOMINALNUMCOEFFICIENTS(builder: FlatBufferBuilder, nominalNumCoefficients: UShort) = builder.addShort(12, nominalNumCoefficients.toShort(), 0)
         fun endPPE(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

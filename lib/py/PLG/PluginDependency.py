@@ -87,16 +87,21 @@ def End(builder):
 class PluginDependencyT(object):
 
     # PluginDependencyT
-    def __init__(self):
-        self.PLUGIN_ID = None  # type: str
-        self.MIN_VERSION = None  # type: str
-        self.MAX_VERSION = None  # type: str
+    def __init__(
+        self,
+        PLUGIN_ID = None,
+        MIN_VERSION = None,
+        MAX_VERSION = None,
+    ):
+        self.PLUGIN_ID = PLUGIN_ID  # type: Optional[str]
+        self.MIN_VERSION = MIN_VERSION  # type: Optional[str]
+        self.MAX_VERSION = MAX_VERSION  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        pluginDependency = PluginDependency()
-        pluginDependency.Init(buf, pos)
-        return cls.InitFromObj(pluginDependency)
+        tmpPluginDependency = PluginDependency()
+        tmpPluginDependency.Init(buf, pos)
+        return cls.InitFromObj(tmpPluginDependency)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -104,18 +109,18 @@ class PluginDependencyT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, pluginDependency):
+    def InitFromObj(cls, tmpPluginDependency):
         x = PluginDependencyT()
-        x._UnPack(pluginDependency)
+        x._UnPack(tmpPluginDependency)
         return x
 
     # PluginDependencyT
-    def _UnPack(self, pluginDependency):
-        if pluginDependency is None:
+    def _UnPack(self, PluginDependency):
+        if PluginDependency is None:
             return
-        self.PLUGIN_ID = pluginDependency.PLUGIN_ID()
-        self.MIN_VERSION = pluginDependency.MIN_VERSION()
-        self.MAX_VERSION = pluginDependency.MAX_VERSION()
+        self.PLUGIN_ID = PluginDependency.PLUGIN_ID()
+        self.MIN_VERSION = PluginDependency.MIN_VERSION()
+        self.MAX_VERSION = PluginDependency.MAX_VERSION()
 
     # PluginDependencyT
     def Pack(self, builder):
@@ -132,5 +137,5 @@ class PluginDependencyT(object):
             PluginDependencyAddMIN_VERSION(builder, MIN_VERSION)
         if self.MAX_VERSION is not None:
             PluginDependencyAddMAX_VERSION(builder, MAX_VERSION)
-        pluginDependency = PluginDependencyEnd(builder)
-        return pluginDependency
+        PluginDependency = PluginDependencyEnd(builder)
+        return PluginDependency

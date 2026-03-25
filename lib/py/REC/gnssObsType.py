@@ -2,4 +2,9 @@
 
 # namespace: 
 
-# NOTE gnssObsType.py does not declare any structs or enums
+class gnssObsType(object):
+    PSEUDORANGE = 0
+    CARRIER_PHASE = 1
+    DOPPLER = 2
+    SNR = 3
+    RAW_IF = 4

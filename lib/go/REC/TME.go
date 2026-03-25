@@ -62,12 +62,20 @@ func (rcv *TME) COMMAND() []byte {
 	return nil
 }
 
+func (rcv *TME) Command() []byte {
+	return rcv.COMMAND()
+}
+
 func (rcv *TME) CONVERSION_REQUEST() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *TME) ConversionRequest() []byte {
+	return rcv.CONVERSION_REQUEST()
 }
 
 func (rcv *TME) LEAP_SECOND_QUERY() []byte {
@@ -78,12 +86,20 @@ func (rcv *TME) LEAP_SECOND_QUERY() []byte {
 	return nil
 }
 
+func (rcv *TME) LeapSecondQuery() []byte {
+	return rcv.LEAP_SECOND_QUERY()
+}
+
 func (rcv *TME) EOP_QUERY() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *TME) EopQuery() []byte {
+	return rcv.EOP_QUERY()
 }
 
 func (rcv *TME) SIDEREAL_QUERY() []byte {
@@ -94,12 +110,20 @@ func (rcv *TME) SIDEREAL_QUERY() []byte {
 	return nil
 }
 
+func (rcv *TME) SiderealQuery() []byte {
+	return rcv.SIDEREAL_QUERY()
+}
+
 func (rcv *TME) INTERVAL_REQUEST() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *TME) IntervalRequest() []byte {
+	return rcv.INTERVAL_REQUEST()
 }
 
 func (rcv *TME) SOLAR_POSITION_QUERY() []byte {
@@ -110,12 +134,20 @@ func (rcv *TME) SOLAR_POSITION_QUERY() []byte {
 	return nil
 }
 
+func (rcv *TME) SolarPositionQuery() []byte {
+	return rcv.SOLAR_POSITION_QUERY()
+}
+
 func (rcv *TME) LUNAR_POSITION_QUERY() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *TME) LunarPositionQuery() []byte {
+	return rcv.LUNAR_POSITION_QUERY()
 }
 
 func (rcv *TME) SUNRISE_SUNSET_QUERY(j int) float64 {
@@ -127,12 +159,20 @@ func (rcv *TME) SUNRISE_SUNSET_QUERY(j int) float64 {
 	return 0
 }
 
+func (rcv *TME) SunriseSunsetQuery(j int) float64 {
+	return rcv.SUNRISE_SUNSET_QUERY(j)
+}
+
 func (rcv *TME) SUNRISE_SUNSET_QUERYLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *TME) SunriseSunsetQueryLength() int {
+	return rcv.SUNRISE_SUNSET_QUERYLength()
 }
 
 func (rcv *TME) MutateSUNRISE_SUNSET_QUERY(j int, n float64) bool {
@@ -144,6 +184,10 @@ func (rcv *TME) MutateSUNRISE_SUNSET_QUERY(j int, n float64) bool {
 	return false
 }
 
+func (rcv *TME) MutateSunriseSunsetQuery(j int, n float64) bool {
+	return rcv.MutateSUNRISE_SUNSET_QUERY(j, n)
+}
+
 func (rcv *TME) CLOCK_PROPAGATION() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
 	if o != 0 {
@@ -152,41 +196,78 @@ func (rcv *TME) CLOCK_PROPAGATION() []byte {
 	return nil
 }
 
+func (rcv *TME) ClockPropagation() []byte {
+	return rcv.CLOCK_PROPAGATION()
+}
+
 func TMEStart(builder *flatbuffers.Builder) {
 	builder.StartObject(10)
 }
 func TMEAddCOMMAND(builder *flatbuffers.Builder, COMMAND flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(COMMAND), 0)
 }
+func TMEAddCommand(builder *flatbuffers.Builder, COMMAND flatbuffers.UOffsetT) {
+	TMEAddCOMMAND(builder, COMMAND)
+}
 func TMEAddCONVERSION_REQUEST(builder *flatbuffers.Builder, CONVERSION_REQUEST flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(CONVERSION_REQUEST), 0)
+}
+func TMEAddConversionRequest(builder *flatbuffers.Builder, CONVERSION_REQUEST flatbuffers.UOffsetT) {
+	TMEAddCONVERSION_REQUEST(builder, CONVERSION_REQUEST)
 }
 func TMEAddLEAP_SECOND_QUERY(builder *flatbuffers.Builder, LEAP_SECOND_QUERY flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(LEAP_SECOND_QUERY), 0)
 }
+func TMEAddLeapSecondQuery(builder *flatbuffers.Builder, LEAP_SECOND_QUERY flatbuffers.UOffsetT) {
+	TMEAddLEAP_SECOND_QUERY(builder, LEAP_SECOND_QUERY)
+}
 func TMEAddEOP_QUERY(builder *flatbuffers.Builder, EOP_QUERY flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(EOP_QUERY), 0)
+}
+func TMEAddEopQuery(builder *flatbuffers.Builder, EOP_QUERY flatbuffers.UOffsetT) {
+	TMEAddEOP_QUERY(builder, EOP_QUERY)
 }
 func TMEAddSIDEREAL_QUERY(builder *flatbuffers.Builder, SIDEREAL_QUERY flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(SIDEREAL_QUERY), 0)
 }
+func TMEAddSiderealQuery(builder *flatbuffers.Builder, SIDEREAL_QUERY flatbuffers.UOffsetT) {
+	TMEAddSIDEREAL_QUERY(builder, SIDEREAL_QUERY)
+}
 func TMEAddINTERVAL_REQUEST(builder *flatbuffers.Builder, INTERVAL_REQUEST flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(INTERVAL_REQUEST), 0)
+}
+func TMEAddIntervalRequest(builder *flatbuffers.Builder, INTERVAL_REQUEST flatbuffers.UOffsetT) {
+	TMEAddINTERVAL_REQUEST(builder, INTERVAL_REQUEST)
 }
 func TMEAddSOLAR_POSITION_QUERY(builder *flatbuffers.Builder, SOLAR_POSITION_QUERY flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(SOLAR_POSITION_QUERY), 0)
 }
+func TMEAddSolarPositionQuery(builder *flatbuffers.Builder, SOLAR_POSITION_QUERY flatbuffers.UOffsetT) {
+	TMEAddSOLAR_POSITION_QUERY(builder, SOLAR_POSITION_QUERY)
+}
 func TMEAddLUNAR_POSITION_QUERY(builder *flatbuffers.Builder, LUNAR_POSITION_QUERY flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(LUNAR_POSITION_QUERY), 0)
+}
+func TMEAddLunarPositionQuery(builder *flatbuffers.Builder, LUNAR_POSITION_QUERY flatbuffers.UOffsetT) {
+	TMEAddLUNAR_POSITION_QUERY(builder, LUNAR_POSITION_QUERY)
 }
 func TMEAddSUNRISE_SUNSET_QUERY(builder *flatbuffers.Builder, SUNRISE_SUNSET_QUERY flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(SUNRISE_SUNSET_QUERY), 0)
 }
+func TMEAddSunriseSunsetQuery(builder *flatbuffers.Builder, SUNRISE_SUNSET_QUERY flatbuffers.UOffsetT) {
+	TMEAddSUNRISE_SUNSET_QUERY(builder, SUNRISE_SUNSET_QUERY)
+}
 func TMEStartSUNRISE_SUNSET_QUERYVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(8, numElems, 8)
 }
+func TMEStartSunriseSunsetQueryVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return TMEStartSUNRISE_SUNSET_QUERYVector(builder, numElems)
+}
 func TMEAddCLOCK_PROPAGATION(builder *flatbuffers.Builder, CLOCK_PROPAGATION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(CLOCK_PROPAGATION), 0)
+}
+func TMEAddClockPropagation(builder *flatbuffers.Builder, CLOCK_PROPAGATION flatbuffers.UOffsetT) {
+	TMEAddCLOCK_PROPAGATION(builder, CLOCK_PROPAGATION)
 }
 func TMEEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

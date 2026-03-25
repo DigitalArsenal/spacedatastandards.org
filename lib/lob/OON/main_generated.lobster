@@ -137,9 +137,9 @@ def OONCreateBATTERIESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-def OONStartSOLAR_ARRAYSVector(b_:flatbuffers.builder, n_:int):
+def OONStartSOLARARRAYSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def OONCreateSOLAR_ARRAYSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def OONCreateSOLARARRAYSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
@@ -151,16 +151,16 @@ def OONCreateTHRUSTERSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-def OONStartONORBIT_DETAILSVector(b_:flatbuffers.builder, n_:int):
+def OONStartONORBITDETAILSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def OONCreateONORBIT_DETAILSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def OONCreateONORBITDETAILSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-def OONStartENTITY_COLLECTIONVector(b_:flatbuffers.builder, n_:int):
+def OONStartENTITYCOLLECTIONVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def OONCreateENTITY_COLLECTIONVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def OONCreateENTITYCOLLECTIONVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)

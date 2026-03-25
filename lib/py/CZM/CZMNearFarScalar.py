@@ -101,17 +101,23 @@ def End(builder):
 class CZMNearFarScalarT(object):
 
     # CZMNearFarScalarT
-    def __init__(self):
-        self.NEAR_DISTANCE = 0.0  # type: float
-        self.NEAR_VALUE = 0.0  # type: float
-        self.FAR_DISTANCE = 0.0  # type: float
-        self.FAR_VALUE = 0.0  # type: float
+    def __init__(
+        self,
+        NEAR_DISTANCE = 0.0,
+        NEAR_VALUE = 0.0,
+        FAR_DISTANCE = 0.0,
+        FAR_VALUE = 0.0,
+    ):
+        self.NEAR_DISTANCE = NEAR_DISTANCE  # type: float
+        self.NEAR_VALUE = NEAR_VALUE  # type: float
+        self.FAR_DISTANCE = FAR_DISTANCE  # type: float
+        self.FAR_VALUE = FAR_VALUE  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        czmnearFarScalar = CZMNearFarScalar()
-        czmnearFarScalar.Init(buf, pos)
-        return cls.InitFromObj(czmnearFarScalar)
+        tmpCzmnearFarScalar = CZMNearFarScalar()
+        tmpCzmnearFarScalar.Init(buf, pos)
+        return cls.InitFromObj(tmpCzmnearFarScalar)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -119,19 +125,19 @@ class CZMNearFarScalarT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, czmnearFarScalar):
+    def InitFromObj(cls, tmpCzmnearFarScalar):
         x = CZMNearFarScalarT()
-        x._UnPack(czmnearFarScalar)
+        x._UnPack(tmpCzmnearFarScalar)
         return x
 
     # CZMNearFarScalarT
-    def _UnPack(self, czmnearFarScalar):
-        if czmnearFarScalar is None:
+    def _UnPack(self, CZMNearFarScalar):
+        if CZMNearFarScalar is None:
             return
-        self.NEAR_DISTANCE = czmnearFarScalar.NEAR_DISTANCE()
-        self.NEAR_VALUE = czmnearFarScalar.NEAR_VALUE()
-        self.FAR_DISTANCE = czmnearFarScalar.FAR_DISTANCE()
-        self.FAR_VALUE = czmnearFarScalar.FAR_VALUE()
+        self.NEAR_DISTANCE = CZMNearFarScalar.NEAR_DISTANCE()
+        self.NEAR_VALUE = CZMNearFarScalar.NEAR_VALUE()
+        self.FAR_DISTANCE = CZMNearFarScalar.FAR_DISTANCE()
+        self.FAR_VALUE = CZMNearFarScalar.FAR_VALUE()
 
     # CZMNearFarScalarT
     def Pack(self, builder):
@@ -140,5 +146,5 @@ class CZMNearFarScalarT(object):
         CZMNearFarScalarAddNEAR_VALUE(builder, self.NEAR_VALUE)
         CZMNearFarScalarAddFAR_DISTANCE(builder, self.FAR_DISTANCE)
         CZMNearFarScalarAddFAR_VALUE(builder, self.FAR_VALUE)
-        czmnearFarScalar = CZMNearFarScalarEnd(builder)
-        return czmnearFarScalar
+        CZMNearFarScalar = CZMNearFarScalarEnd(builder)
+        return CZMNearFarScalar

@@ -2,9 +2,13 @@
 // swiftlint:disable all
 // swiftformat:disable all
 
+#if canImport(Common)
+import Common
+#endif
+
 import FlatBuffers
 
-public enum soiCollectionMode: Int8, Enum, Verifiable {
+public enum soiCollectionMode: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -20,7 +24,7 @@ public enum soiCollectionMode: Int8, Enum, Verifiable {
 }
 
 
-public enum soiObsType: Int8, Enum, Verifiable {
+public enum soiObsType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -33,7 +37,7 @@ public enum soiObsType: Int8, Enum, Verifiable {
 }
 
 
-public enum soiCalibrationType: Int8, Enum, Verifiable {
+public enum soiCalibrationType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -50,9 +54,9 @@ public enum soiCalibrationType: Int8, Enum, Verifiable {
 
 
 ///  Space Object Identification Observation Set
-public struct SOI: FlatBufferObject, Verifiable {
+public struct SOI: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -213,9 +217,7 @@ public struct SOI: FlatBufferObject, Verifiable {
   ///  Number of spectral filters used
   public var NUM_SPECTRAL_FILTERS: UInt8 { let o = _accessor.offset(VTOFFSET.NUM_SPECTRAL_FILTERS.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
   ///  Spectral filter identifiers
-  public var hasSpectralFilters: Bool { let o = _accessor.offset(VTOFFSET.SPECTRAL_FILTERS.v); return o == 0 ? false : true }
-  public var SPECTRAL_FILTERSCount: Int32 { let o = _accessor.offset(VTOFFSET.SPECTRAL_FILTERS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func SPECTRAL_FILTERS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.SPECTRAL_FILTERS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  public var SPECTRAL_FILTERS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.SPECTRAL_FILTERS.v, byteSize: 4) }
   ///  Detector gain setting
   public var GAIN: Double { let o = _accessor.offset(VTOFFSET.GAIN.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Horizontal binning factor
@@ -267,24 +269,16 @@ public struct SOI: FlatBufferObject, Verifiable {
   public var COLLECTION_ID: String? { let o = _accessor.offset(VTOFFSET.COLLECTION_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var COLLECTION_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.COLLECTION_ID.v) }
   ///  Calibration record references
-  public var hasCalibrations: Bool { let o = _accessor.offset(VTOFFSET.CALIBRATIONS.v); return o == 0 ? false : true }
-  public var CALIBRATIONSCount: Int32 { let o = _accessor.offset(VTOFFSET.CALIBRATIONS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func CALIBRATIONS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.CALIBRATIONS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  public var CALIBRATIONS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.CALIBRATIONS.v, byteSize: 4) }
   ///  Associated tags
-  public var hasTags: Bool { let o = _accessor.offset(VTOFFSET.TAGS.v); return o == 0 ? false : true }
-  public var TAGSCount: Int32 { let o = _accessor.offset(VTOFFSET.TAGS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func TAGS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.TAGS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  public var TAGS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.TAGS.v, byteSize: 4) }
   ///  Transaction identifier
   public var TRANSACTION_ID: String? { let o = _accessor.offset(VTOFFSET.TRANSACTION_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var TRANSACTION_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TRANSACTION_ID.v) }
   ///  Optical SOI observation references
-  public var hasOpticalSoiobservationList: Bool { let o = _accessor.offset(VTOFFSET.OPTICAL_SOIOBSERVATION_LIST.v); return o == 0 ? false : true }
-  public var OPTICAL_SOIOBSERVATION_LISTCount: Int32 { let o = _accessor.offset(VTOFFSET.OPTICAL_SOIOBSERVATION_LIST.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func OPTICAL_SOIOBSERVATION_LIST(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.OPTICAL_SOIOBSERVATION_LIST.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  public var OPTICAL_SOIOBSERVATION_LIST: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.OPTICAL_SOIOBSERVATION_LIST.v, byteSize: 4) }
   ///  Radar SOI observation references
-  public var hasRadarSoiobservationList: Bool { let o = _accessor.offset(VTOFFSET.RADAR_SOIOBSERVATION_LIST.v); return o == 0 ? false : true }
-  public var RADAR_SOIOBSERVATION_LISTCount: Int32 { let o = _accessor.offset(VTOFFSET.RADAR_SOIOBSERVATION_LIST.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func RADAR_SOIOBSERVATION_LIST(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.RADAR_SOIOBSERVATION_LIST.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  public var RADAR_SOIOBSERVATION_LIST: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.RADAR_SOIOBSERVATION_LIST.v, byteSize: 4) }
   public static func startSOI(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 63) }
   public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VTOFFSET.ID.p) }
   public static func add(MSG_CREATE_DATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MSG_CREATE_DATE, at: VTOFFSET.MSG_CREATE_DATE.p) }

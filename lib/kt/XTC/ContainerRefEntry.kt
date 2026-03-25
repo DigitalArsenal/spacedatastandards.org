@@ -32,7 +32,7 @@ class ContainerRefEntry : Table() {
     /**
      * Container reference path
      */
-    val CONTAINER_REF : String?
+    val containerRef : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,13 +41,13 @@ class ContainerRefEntry : Table() {
                 null
             }
         }
-    val CONTAINER_REFAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun CONTAINER_REFInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val containerRefAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun containerRefInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Location in container
      */
-    val LOCATION : LocationInContainer? get() = LOCATION(LocationInContainer())
-    fun LOCATION(obj: LocationInContainer) : LocationInContainer? {
+    val location : LocationInContainer? get() = location(LocationInContainer())
+    fun location(obj: LocationInContainer) : LocationInContainer? {
         val o = __offset(6)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -58,8 +58,8 @@ class ContainerRefEntry : Table() {
     /**
      * Repeat specification
      */
-    val REPEAT : RepeatEntry? get() = REPEAT(RepeatEntry())
-    fun REPEAT(obj: RepeatEntry) : RepeatEntry? {
+    val repeat : RepeatEntry? get() = repeat(RepeatEntry())
+    fun repeat(obj: RepeatEntry) : RepeatEntry? {
         val o = __offset(8)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -70,8 +70,8 @@ class ContainerRefEntry : Table() {
     /**
      * Include condition
      */
-    val INCLUDE_CONDITION : MatchCriteria? get() = INCLUDE_CONDITION(MatchCriteria())
-    fun INCLUDE_CONDITION(obj: MatchCriteria) : MatchCriteria? {
+    val includeCondition : MatchCriteria? get() = includeCondition(MatchCriteria())
+    fun includeCondition(obj: MatchCriteria) : MatchCriteria? {
         val o = __offset(10)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -80,25 +80,25 @@ class ContainerRefEntry : Table() {
         }
     }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsContainerRefEntry(_bb: ByteBuffer): ContainerRefEntry = getRootAsContainerRefEntry(_bb, ContainerRefEntry())
         fun getRootAsContainerRefEntry(_bb: ByteBuffer, obj: ContainerRefEntry): ContainerRefEntry {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createContainerRefEntry(builder: FlatBufferBuilder, CONTAINER_REFOffset: Int, LOCATIONOffset: Int, REPEATOffset: Int, INCLUDE_CONDITIONOffset: Int) : Int {
+        fun createContainerRefEntry(builder: FlatBufferBuilder, containerRefOffset: Int, locationOffset: Int, repeatOffset: Int, includeConditionOffset: Int) : Int {
             builder.startTable(4)
-            addINCLUDE_CONDITION(builder, INCLUDE_CONDITIONOffset)
-            addREPEAT(builder, REPEATOffset)
-            addLOCATION(builder, LOCATIONOffset)
-            addCONTAINER_REF(builder, CONTAINER_REFOffset)
+            addINCLUDECONDITION(builder, includeConditionOffset)
+            addREPEAT(builder, repeatOffset)
+            addLOCATION(builder, locationOffset)
+            addCONTAINERREF(builder, containerRefOffset)
             return endContainerRefEntry(builder)
         }
         fun startContainerRefEntry(builder: FlatBufferBuilder) = builder.startTable(4)
-        fun addCONTAINER_REF(builder: FlatBufferBuilder, CONTAINER_REF: Int) = builder.addOffset(0, CONTAINER_REF, 0)
-        fun addLOCATION(builder: FlatBufferBuilder, LOCATION: Int) = builder.addOffset(1, LOCATION, 0)
-        fun addREPEAT(builder: FlatBufferBuilder, REPEAT: Int) = builder.addOffset(2, REPEAT, 0)
-        fun addINCLUDE_CONDITION(builder: FlatBufferBuilder, INCLUDE_CONDITION: Int) = builder.addOffset(3, INCLUDE_CONDITION, 0)
+        fun addCONTAINERREF(builder: FlatBufferBuilder, containerRef: Int) = builder.addOffset(0, containerRef, 0)
+        fun addLOCATION(builder: FlatBufferBuilder, location: Int) = builder.addOffset(1, location, 0)
+        fun addREPEAT(builder: FlatBufferBuilder, repeat: Int) = builder.addOffset(2, repeat, 0)
+        fun addINCLUDECONDITION(builder: FlatBufferBuilder, includeCondition: Int) = builder.addOffset(3, includeCondition, 0)
         fun endContainerRefEntry(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

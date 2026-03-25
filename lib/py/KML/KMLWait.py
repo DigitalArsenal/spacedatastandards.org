@@ -59,14 +59,17 @@ def End(builder):
 class KMLWaitT(object):
 
     # KMLWaitT
-    def __init__(self):
-        self.DURATION = 0.0  # type: float
+    def __init__(
+        self,
+        DURATION = 0.0,
+    ):
+        self.DURATION = DURATION  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        kmlwait = KMLWait()
-        kmlwait.Init(buf, pos)
-        return cls.InitFromObj(kmlwait)
+        tmpKmlwait = KMLWait()
+        tmpKmlwait.Init(buf, pos)
+        return cls.InitFromObj(tmpKmlwait)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -74,20 +77,20 @@ class KMLWaitT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, kmlwait):
+    def InitFromObj(cls, tmpKmlwait):
         x = KMLWaitT()
-        x._UnPack(kmlwait)
+        x._UnPack(tmpKmlwait)
         return x
 
     # KMLWaitT
-    def _UnPack(self, kmlwait):
-        if kmlwait is None:
+    def _UnPack(self, KMLWait):
+        if KMLWait is None:
             return
-        self.DURATION = kmlwait.DURATION()
+        self.DURATION = KMLWait.DURATION()
 
     # KMLWaitT
     def Pack(self, builder):
         KMLWaitStart(builder)
         KMLWaitAddDURATION(builder, self.DURATION)
-        kmlwait = KMLWaitEnd(builder)
-        return kmlwait
+        KMLWait = KMLWaitEnd(builder)
+        return KMLWait

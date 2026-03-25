@@ -32,8 +32,8 @@ class GJNLinearRing : Table() {
     /**
      * Ordered positions forming the ring
      */
-    fun POSITIONS(j: Int) : GJNPosition? = POSITIONS(GJNPosition(), j)
-    fun POSITIONS(obj: GJNPosition, j: Int) : GJNPosition? {
+    fun positions(j: Int) : GJNPosition? = positions(GJNPosition(), j)
+    fun positions(obj: GJNPosition, j: Int) : GJNPosition? {
         val o = __offset(4)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -41,24 +41,24 @@ class GJNLinearRing : Table() {
             null
         }
     }
-    val POSITIONSLength : Int
+    val positionsLength : Int
         get() {
             val o = __offset(4); return if (o != 0) __vector_len(o) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsGJNLinearRing(_bb: ByteBuffer): GJNLinearRing = getRootAsGJNLinearRing(_bb, GJNLinearRing())
         fun getRootAsGJNLinearRing(_bb: ByteBuffer, obj: GJNLinearRing): GJNLinearRing {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createGJNLinearRing(builder: FlatBufferBuilder, POSITIONSOffset: Int) : Int {
+        fun createGJNLinearRing(builder: FlatBufferBuilder, positionsOffset: Int) : Int {
             builder.startTable(1)
-            addPOSITIONS(builder, POSITIONSOffset)
+            addPOSITIONS(builder, positionsOffset)
             return endGJNLinearRing(builder)
         }
         fun startGJNLinearRing(builder: FlatBufferBuilder) = builder.startTable(1)
-        fun addPOSITIONS(builder: FlatBufferBuilder, POSITIONS: Int) = builder.addOffset(0, POSITIONS, 0)
+        fun addPOSITIONS(builder: FlatBufferBuilder, positions: Int) = builder.addOffset(0, positions, 0)
         fun createPositionsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {

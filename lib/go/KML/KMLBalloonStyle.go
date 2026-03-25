@@ -51,6 +51,10 @@ func (rcv *KMLBalloonStyle) BG_COLOR() []byte {
 	return nil
 }
 
+func (rcv *KMLBalloonStyle) BgColor() []byte {
+	return rcv.BG_COLOR()
+}
+
 /// Background color in aabbggrr hex format
 /// Text color in aabbggrr hex format
 func (rcv *KMLBalloonStyle) TEXT_COLOR() []byte {
@@ -59,6 +63,10 @@ func (rcv *KMLBalloonStyle) TEXT_COLOR() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *KMLBalloonStyle) TextColor() []byte {
+	return rcv.TEXT_COLOR()
 }
 
 /// Text color in aabbggrr hex format
@@ -71,6 +79,10 @@ func (rcv *KMLBalloonStyle) TEXT() []byte {
 	return nil
 }
 
+func (rcv *KMLBalloonStyle) Text() []byte {
+	return rcv.TEXT()
+}
+
 /// Balloon text template (supports $[name], $[description])
 /// Display mode
 func (rcv *KMLBalloonStyle) DISPLAY_MODE() KMLDisplayMode {
@@ -81,9 +93,17 @@ func (rcv *KMLBalloonStyle) DISPLAY_MODE() KMLDisplayMode {
 	return 0
 }
 
+func (rcv *KMLBalloonStyle) DisplayMode() KMLDisplayMode {
+	return rcv.DISPLAY_MODE()
+}
+
 /// Display mode
 func (rcv *KMLBalloonStyle) MutateDISPLAY_MODE(n KMLDisplayMode) bool {
 	return rcv._tab.MutateInt8Slot(10, int8(n))
+}
+
+func (rcv *KMLBalloonStyle) MutateDisplayMode(n KMLDisplayMode) bool {
+	return rcv.MutateDISPLAY_MODE(n)
 }
 
 func KMLBalloonStyleStart(builder *flatbuffers.Builder) {
@@ -92,14 +112,26 @@ func KMLBalloonStyleStart(builder *flatbuffers.Builder) {
 func KMLBalloonStyleAddBG_COLOR(builder *flatbuffers.Builder, BG_COLOR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(BG_COLOR), 0)
 }
+func KMLBalloonStyleAddBgColor(builder *flatbuffers.Builder, BG_COLOR flatbuffers.UOffsetT) {
+	KMLBalloonStyleAddBG_COLOR(builder, BG_COLOR)
+}
 func KMLBalloonStyleAddTEXT_COLOR(builder *flatbuffers.Builder, TEXT_COLOR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(TEXT_COLOR), 0)
+}
+func KMLBalloonStyleAddTextColor(builder *flatbuffers.Builder, TEXT_COLOR flatbuffers.UOffsetT) {
+	KMLBalloonStyleAddTEXT_COLOR(builder, TEXT_COLOR)
 }
 func KMLBalloonStyleAddTEXT(builder *flatbuffers.Builder, TEXT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(TEXT), 0)
 }
+func KMLBalloonStyleAddText(builder *flatbuffers.Builder, TEXT flatbuffers.UOffsetT) {
+	KMLBalloonStyleAddTEXT(builder, TEXT)
+}
 func KMLBalloonStyleAddDISPLAY_MODE(builder *flatbuffers.Builder, DISPLAY_MODE KMLDisplayMode) {
 	builder.PrependInt8Slot(3, int8(DISPLAY_MODE), 0)
+}
+func KMLBalloonStyleAddDisplayMode(builder *flatbuffers.Builder, DISPLAY_MODE KMLDisplayMode) {
+	KMLBalloonStyleAddDISPLAY_MODE(builder, DISPLAY_MODE)
 }
 func KMLBalloonStyleEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

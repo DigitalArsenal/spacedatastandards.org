@@ -1,5 +1,5 @@
-export { ARM, ARMT } from './ARM.js';
-export { AmmoType } from './AmmoType.js';
-export { ArmorMaterial } from './ArmorMaterial.js';
-export { PenResult } from './PenResult.js';
+export * from './AmmoType.js';
+export * from './ARM.js';
+export * from './ArmorMaterial.js';
+export * from './PenResult.js';
 //# sourceMappingURL=main.d.ts.map

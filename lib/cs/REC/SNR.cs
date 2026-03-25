@@ -11,7 +11,7 @@ public struct SNR : IFlatbufferObject
 {
   private Table __p;
   public ByteBuffer ByteBuffer { get { return __p.bb; } }
-  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_24_3_25(); }
+  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_25_12_19(); }
   public static SNR GetRootAsSNR(ByteBuffer _bb) { return GetRootAsSNR(_bb, new SNR()); }
   public static SNR GetRootAsSNR(ByteBuffer _bb, SNR obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
   public static bool SNRBufferHasIdentifier(ByteBuffer _bb) { return Table.__has_identifier(_bb, "$SNR"); }

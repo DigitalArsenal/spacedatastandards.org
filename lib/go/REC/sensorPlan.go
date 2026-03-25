@@ -51,6 +51,10 @@ func (rcv *sensorPlan) START_TIME() []byte {
 	return nil
 }
 
+func (rcv *sensorPlan) StartTime() []byte {
+	return rcv.START_TIME()
+}
+
 /// Plan start time (ISO 8601)
 /// Plan end time (ISO 8601)
 func (rcv *sensorPlan) END_TIME() []byte {
@@ -59,6 +63,10 @@ func (rcv *sensorPlan) END_TIME() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *sensorPlan) EndTime() []byte {
+	return rcv.END_TIME()
 }
 
 /// Plan end time (ISO 8601)
@@ -71,6 +79,10 @@ func (rcv *sensorPlan) TARGET_ID() []byte {
 	return nil
 }
 
+func (rcv *sensorPlan) TargetId() []byte {
+	return rcv.TARGET_ID()
+}
+
 /// Target satellite number or designator
 /// Priority level (1=highest)
 func (rcv *sensorPlan) PRIORITY() byte {
@@ -81,9 +93,17 @@ func (rcv *sensorPlan) PRIORITY() byte {
 	return 0
 }
 
+func (rcv *sensorPlan) Priority() byte {
+	return rcv.PRIORITY()
+}
+
 /// Priority level (1=highest)
 func (rcv *sensorPlan) MutatePRIORITY(n byte) bool {
 	return rcv._tab.MutateByteSlot(10, n)
+}
+
+func (rcv *sensorPlan) MutatePriority(n byte) bool {
+	return rcv.MutatePRIORITY(n)
 }
 
 /// Requested observation mode
@@ -93,6 +113,10 @@ func (rcv *sensorPlan) MODE() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *sensorPlan) Mode() []byte {
+	return rcv.MODE()
 }
 
 /// Requested observation mode
@@ -105,9 +129,17 @@ func (rcv *sensorPlan) MIN_ELEVATION() float64 {
 	return 0.0
 }
 
+func (rcv *sensorPlan) MinElevation() float64 {
+	return rcv.MIN_ELEVATION()
+}
+
 /// Minimum elevation in degrees
 func (rcv *sensorPlan) MutateMIN_ELEVATION(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(14, n)
+}
+
+func (rcv *sensorPlan) MutateMinElevation(n float64) bool {
+	return rcv.MutateMIN_ELEVATION(n)
 }
 
 /// Maximum range in km
@@ -119,9 +151,17 @@ func (rcv *sensorPlan) MAX_RANGE() float64 {
 	return 0.0
 }
 
+func (rcv *sensorPlan) MaxRange() float64 {
+	return rcv.MAX_RANGE()
+}
+
 /// Maximum range in km
 func (rcv *sensorPlan) MutateMAX_RANGE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(16, n)
+}
+
+func (rcv *sensorPlan) MutateMaxRange(n float64) bool {
+	return rcv.MutateMAX_RANGE(n)
 }
 
 func sensorPlanStart(builder *flatbuffers.Builder) {
@@ -130,23 +170,44 @@ func sensorPlanStart(builder *flatbuffers.Builder) {
 func sensorPlanAddSTART_TIME(builder *flatbuffers.Builder, START_TIME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(START_TIME), 0)
 }
+func sensorPlanAddStartTime(builder *flatbuffers.Builder, START_TIME flatbuffers.UOffsetT) {
+	sensorPlanAddSTART_TIME(builder, START_TIME)
+}
 func sensorPlanAddEND_TIME(builder *flatbuffers.Builder, END_TIME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(END_TIME), 0)
+}
+func sensorPlanAddEndTime(builder *flatbuffers.Builder, END_TIME flatbuffers.UOffsetT) {
+	sensorPlanAddEND_TIME(builder, END_TIME)
 }
 func sensorPlanAddTARGET_ID(builder *flatbuffers.Builder, TARGET_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(TARGET_ID), 0)
 }
+func sensorPlanAddTargetId(builder *flatbuffers.Builder, TARGET_ID flatbuffers.UOffsetT) {
+	sensorPlanAddTARGET_ID(builder, TARGET_ID)
+}
 func sensorPlanAddPRIORITY(builder *flatbuffers.Builder, PRIORITY byte) {
 	builder.PrependByteSlot(3, PRIORITY, 0)
+}
+func sensorPlanAddPriority(builder *flatbuffers.Builder, PRIORITY byte) {
+	sensorPlanAddPRIORITY(builder, PRIORITY)
 }
 func sensorPlanAddMODE(builder *flatbuffers.Builder, MODE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(MODE), 0)
 }
+func sensorPlanAddMode(builder *flatbuffers.Builder, MODE flatbuffers.UOffsetT) {
+	sensorPlanAddMODE(builder, MODE)
+}
 func sensorPlanAddMIN_ELEVATION(builder *flatbuffers.Builder, MIN_ELEVATION float64) {
 	builder.PrependFloat64Slot(5, MIN_ELEVATION, 0.0)
 }
+func sensorPlanAddMinElevation(builder *flatbuffers.Builder, MIN_ELEVATION float64) {
+	sensorPlanAddMIN_ELEVATION(builder, MIN_ELEVATION)
+}
 func sensorPlanAddMAX_RANGE(builder *flatbuffers.Builder, MAX_RANGE float64) {
 	builder.PrependFloat64Slot(6, MAX_RANGE, 0.0)
+}
+func sensorPlanAddMaxRange(builder *flatbuffers.Builder, MAX_RANGE float64) {
+	sensorPlanAddMAX_RANGE(builder, MAX_RANGE)
 }
 func sensorPlanEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

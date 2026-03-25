@@ -51,6 +51,10 @@ func (rcv *ArgumentAssignment) ARGUMENT_NAME() []byte {
 	return nil
 }
 
+func (rcv *ArgumentAssignment) ArgumentName() []byte {
+	return rcv.ARGUMENT_NAME()
+}
+
 /// Argument name
 /// Assigned value
 func (rcv *ArgumentAssignment) VALUE() []byte {
@@ -61,6 +65,10 @@ func (rcv *ArgumentAssignment) VALUE() []byte {
 	return nil
 }
 
+func (rcv *ArgumentAssignment) Value() []byte {
+	return rcv.VALUE()
+}
+
 /// Assigned value
 func ArgumentAssignmentStart(builder *flatbuffers.Builder) {
 	builder.StartObject(2)
@@ -68,8 +76,14 @@ func ArgumentAssignmentStart(builder *flatbuffers.Builder) {
 func ArgumentAssignmentAddARGUMENT_NAME(builder *flatbuffers.Builder, ARGUMENT_NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ARGUMENT_NAME), 0)
 }
+func ArgumentAssignmentAddArgumentName(builder *flatbuffers.Builder, ARGUMENT_NAME flatbuffers.UOffsetT) {
+	ArgumentAssignmentAddARGUMENT_NAME(builder, ARGUMENT_NAME)
+}
 func ArgumentAssignmentAddVALUE(builder *flatbuffers.Builder, VALUE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(VALUE), 0)
+}
+func ArgumentAssignmentAddValue(builder *flatbuffers.Builder, VALUE flatbuffers.UOffsetT) {
+	ArgumentAssignmentAddVALUE(builder, VALUE)
 }
 func ArgumentAssignmentEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

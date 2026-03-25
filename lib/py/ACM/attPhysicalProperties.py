@@ -241,27 +241,43 @@ def End(builder):
 class attPhysicalPropertiesT(object):
 
     # attPhysicalPropertiesT
-    def __init__(self):
-        self.DRAG_COEFF = 0.0  # type: float
-        self.WET_MASS = 0.0  # type: float
-        self.DRY_MASS = 0.0  # type: float
-        self.CP_REF_FRAME = None  # type: str
-        self.CP_X = 0.0  # type: float
-        self.CP_Y = 0.0  # type: float
-        self.CP_Z = 0.0  # type: float
-        self.INERTIA_REF_FRAME = None  # type: str
-        self.IXX = 0.0  # type: float
-        self.IYY = 0.0  # type: float
-        self.IZZ = 0.0  # type: float
-        self.IXY = 0.0  # type: float
-        self.IXZ = 0.0  # type: float
-        self.IYZ = 0.0  # type: float
+    def __init__(
+        self,
+        DRAG_COEFF = 0.0,
+        WET_MASS = 0.0,
+        DRY_MASS = 0.0,
+        CP_REF_FRAME = None,
+        CP_X = 0.0,
+        CP_Y = 0.0,
+        CP_Z = 0.0,
+        INERTIA_REF_FRAME = None,
+        IXX = 0.0,
+        IYY = 0.0,
+        IZZ = 0.0,
+        IXY = 0.0,
+        IXZ = 0.0,
+        IYZ = 0.0,
+    ):
+        self.DRAG_COEFF = DRAG_COEFF  # type: float
+        self.WET_MASS = WET_MASS  # type: float
+        self.DRY_MASS = DRY_MASS  # type: float
+        self.CP_REF_FRAME = CP_REF_FRAME  # type: Optional[str]
+        self.CP_X = CP_X  # type: float
+        self.CP_Y = CP_Y  # type: float
+        self.CP_Z = CP_Z  # type: float
+        self.INERTIA_REF_FRAME = INERTIA_REF_FRAME  # type: Optional[str]
+        self.IXX = IXX  # type: float
+        self.IYY = IYY  # type: float
+        self.IZZ = IZZ  # type: float
+        self.IXY = IXY  # type: float
+        self.IXZ = IXZ  # type: float
+        self.IYZ = IYZ  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        attPhysicalProperties = attPhysicalProperties()
-        attPhysicalProperties.Init(buf, pos)
-        return cls.InitFromObj(attPhysicalProperties)
+        tmpAttPhysicalProperties = attPhysicalProperties()
+        tmpAttPhysicalProperties.Init(buf, pos)
+        return cls.InitFromObj(tmpAttPhysicalProperties)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -269,9 +285,9 @@ class attPhysicalPropertiesT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, attPhysicalProperties):
+    def InitFromObj(cls, tmpAttPhysicalProperties):
         x = attPhysicalPropertiesT()
-        x._UnPack(attPhysicalProperties)
+        x._UnPack(tmpAttPhysicalProperties)
         return x
 
     # attPhysicalPropertiesT

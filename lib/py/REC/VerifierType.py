@@ -2,4 +2,13 @@
 
 # namespace: 
 
-# NOTE VerifierType.py does not declare any structs or enums
+# Verifier type for command verification
+class VerifierType(object):
+    # Execution started
+    START = 0
+    # Progress update
+    PROGRESS = 1
+    # Execution complete
+    COMPLETE = 2
+    # Command failed
+    FAILED = 3

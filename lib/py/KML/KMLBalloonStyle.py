@@ -101,17 +101,23 @@ def End(builder):
 class KMLBalloonStyleT(object):
 
     # KMLBalloonStyleT
-    def __init__(self):
-        self.BG_COLOR = None  # type: str
-        self.TEXT_COLOR = None  # type: str
-        self.TEXT = None  # type: str
-        self.DISPLAY_MODE = 0  # type: int
+    def __init__(
+        self,
+        BG_COLOR = None,
+        TEXT_COLOR = None,
+        TEXT = None,
+        DISPLAY_MODE = 0,
+    ):
+        self.BG_COLOR = BG_COLOR  # type: Optional[str]
+        self.TEXT_COLOR = TEXT_COLOR  # type: Optional[str]
+        self.TEXT = TEXT  # type: Optional[str]
+        self.DISPLAY_MODE = DISPLAY_MODE  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        kmlballoonStyle = KMLBalloonStyle()
-        kmlballoonStyle.Init(buf, pos)
-        return cls.InitFromObj(kmlballoonStyle)
+        tmpKmlballoonStyle = KMLBalloonStyle()
+        tmpKmlballoonStyle.Init(buf, pos)
+        return cls.InitFromObj(tmpKmlballoonStyle)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -119,19 +125,19 @@ class KMLBalloonStyleT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, kmlballoonStyle):
+    def InitFromObj(cls, tmpKmlballoonStyle):
         x = KMLBalloonStyleT()
-        x._UnPack(kmlballoonStyle)
+        x._UnPack(tmpKmlballoonStyle)
         return x
 
     # KMLBalloonStyleT
-    def _UnPack(self, kmlballoonStyle):
-        if kmlballoonStyle is None:
+    def _UnPack(self, KMLBalloonStyle):
+        if KMLBalloonStyle is None:
             return
-        self.BG_COLOR = kmlballoonStyle.BG_COLOR()
-        self.TEXT_COLOR = kmlballoonStyle.TEXT_COLOR()
-        self.TEXT = kmlballoonStyle.TEXT()
-        self.DISPLAY_MODE = kmlballoonStyle.DISPLAY_MODE()
+        self.BG_COLOR = KMLBalloonStyle.BG_COLOR()
+        self.TEXT_COLOR = KMLBalloonStyle.TEXT_COLOR()
+        self.TEXT = KMLBalloonStyle.TEXT()
+        self.DISPLAY_MODE = KMLBalloonStyle.DISPLAY_MODE()
 
     # KMLBalloonStyleT
     def Pack(self, builder):
@@ -149,5 +155,5 @@ class KMLBalloonStyleT(object):
         if self.TEXT is not None:
             KMLBalloonStyleAddTEXT(builder, TEXT)
         KMLBalloonStyleAddDISPLAY_MODE(builder, self.DISPLAY_MODE)
-        kmlballoonStyle = KMLBalloonStyleEnd(builder)
-        return kmlballoonStyle
+        KMLBalloonStyle = KMLBalloonStyleEnd(builder)
+        return KMLBalloonStyle

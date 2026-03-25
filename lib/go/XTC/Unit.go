@@ -51,6 +51,10 @@ func (rcv *Unit) DESCRIPTION() []byte {
 	return nil
 }
 
+func (rcv *Unit) Description() []byte {
+	return rcv.DESCRIPTION()
+}
+
 /// Unit description (e.g., "meters per second")
 /// Unit symbol (e.g., "m/s")
 func (rcv *Unit) SYMBOL() []byte {
@@ -59,6 +63,10 @@ func (rcv *Unit) SYMBOL() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *Unit) Symbol() []byte {
+	return rcv.SYMBOL()
 }
 
 /// Unit symbol (e.g., "m/s")
@@ -71,9 +79,17 @@ func (rcv *Unit) POWER() float64 {
 	return 0.0
 }
 
+func (rcv *Unit) Power() float64 {
+	return rcv.POWER()
+}
+
 /// Power/exponent for this unit
 func (rcv *Unit) MutatePOWER(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(8, n)
+}
+
+func (rcv *Unit) MutatePower(n float64) bool {
+	return rcv.MutatePOWER(n)
 }
 
 /// Factor multiplier
@@ -85,9 +101,17 @@ func (rcv *Unit) FACTOR() float64 {
 	return 0.0
 }
 
+func (rcv *Unit) Factor() float64 {
+	return rcv.FACTOR()
+}
+
 /// Factor multiplier
 func (rcv *Unit) MutateFACTOR(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(10, n)
+}
+
+func (rcv *Unit) MutateFactor(n float64) bool {
+	return rcv.MutateFACTOR(n)
 }
 
 func UnitStart(builder *flatbuffers.Builder) {
@@ -96,14 +120,26 @@ func UnitStart(builder *flatbuffers.Builder) {
 func UnitAddDESCRIPTION(builder *flatbuffers.Builder, DESCRIPTION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(DESCRIPTION), 0)
 }
+func UnitAddDescription(builder *flatbuffers.Builder, DESCRIPTION flatbuffers.UOffsetT) {
+	UnitAddDESCRIPTION(builder, DESCRIPTION)
+}
 func UnitAddSYMBOL(builder *flatbuffers.Builder, SYMBOL flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(SYMBOL), 0)
+}
+func UnitAddSymbol(builder *flatbuffers.Builder, SYMBOL flatbuffers.UOffsetT) {
+	UnitAddSYMBOL(builder, SYMBOL)
 }
 func UnitAddPOWER(builder *flatbuffers.Builder, POWER float64) {
 	builder.PrependFloat64Slot(2, POWER, 0.0)
 }
+func UnitAddPower(builder *flatbuffers.Builder, POWER float64) {
+	UnitAddPOWER(builder, POWER)
+}
 func UnitAddFACTOR(builder *flatbuffers.Builder, FACTOR float64) {
 	builder.PrependFloat64Slot(3, FACTOR, 0.0)
+}
+func UnitAddFactor(builder *flatbuffers.Builder, FACTOR float64) {
+	UnitAddFACTOR(builder, FACTOR)
 }
 func UnitEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

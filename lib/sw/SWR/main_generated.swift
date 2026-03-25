@@ -2,12 +2,16 @@
 // swiftlint:disable all
 // swiftformat:disable all
 
+#if canImport(Common)
+import Common
+#endif
+
 import FlatBuffers
 
 ///  Short-Wave Infrared Observation
-public struct SWR: FlatBufferObject, Verifiable {
+public struct SWR: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -66,25 +70,17 @@ public struct SWR: FlatBufferObject, Verifiable {
   public var BAD_WAVE: String? { let o = _accessor.offset(VTOFFSET.BAD_WAVE.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var BAD_WAVESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.BAD_WAVE.v) }
   ///  Measured wavelengths (micrometers)
-  public var hasWavelengths: Bool { let o = _accessor.offset(VTOFFSET.WAVELENGTHS.v); return o == 0 ? false : true }
-  public var WAVELENGTHSCount: Int32 { let o = _accessor.offset(VTOFFSET.WAVELENGTHS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func WAVELENGTHS(at index: Int32) -> Double { let o = _accessor.offset(VTOFFSET.WAVELENGTHS.v); return o == 0 ? 0 : _accessor.directRead(of: Double.self, offset: _accessor.vector(at: o) + index * 8) }
-  public var WAVELENGTHS: [Double] { return _accessor.getVector(at: VTOFFSET.WAVELENGTHS.v) ?? [] }
+  public var WAVELENGTHS: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.WAVELENGTHS.v, byteSize: 8) }
+  public func withUnsafePointerToWavelengths<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.WAVELENGTHS.v, body: body) }
   ///  Absolute flux values (W/m^2/um)
-  public var hasAbsFluxes: Bool { let o = _accessor.offset(VTOFFSET.ABS_FLUXES.v); return o == 0 ? false : true }
-  public var ABS_FLUXESCount: Int32 { let o = _accessor.offset(VTOFFSET.ABS_FLUXES.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func ABS_FLUXES(at index: Int32) -> Double { let o = _accessor.offset(VTOFFSET.ABS_FLUXES.v); return o == 0 ? 0 : _accessor.directRead(of: Double.self, offset: _accessor.vector(at: o) + index * 8) }
-  public var ABS_FLUXES: [Double] { return _accessor.getVector(at: VTOFFSET.ABS_FLUXES.v) ?? [] }
+  public var ABS_FLUXES: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.ABS_FLUXES.v, byteSize: 8) }
+  public func withUnsafePointerToAbsFluxes<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.ABS_FLUXES.v, body: body) }
   ///  Ratio reference wavelengths (micrometers)
-  public var hasRatioWavelengths: Bool { let o = _accessor.offset(VTOFFSET.RATIO_WAVELENGTHS.v); return o == 0 ? false : true }
-  public var RATIO_WAVELENGTHSCount: Int32 { let o = _accessor.offset(VTOFFSET.RATIO_WAVELENGTHS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func RATIO_WAVELENGTHS(at index: Int32) -> Double { let o = _accessor.offset(VTOFFSET.RATIO_WAVELENGTHS.v); return o == 0 ? 0 : _accessor.directRead(of: Double.self, offset: _accessor.vector(at: o) + index * 8) }
-  public var RATIO_WAVELENGTHS: [Double] { return _accessor.getVector(at: VTOFFSET.RATIO_WAVELENGTHS.v) ?? [] }
+  public var RATIO_WAVELENGTHS: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.RATIO_WAVELENGTHS.v, byteSize: 8) }
+  public func withUnsafePointerToRatioWavelengths<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.RATIO_WAVELENGTHS.v, body: body) }
   ///  Flux ratios (normalized)
-  public var hasFluxRatios: Bool { let o = _accessor.offset(VTOFFSET.FLUX_RATIOS.v); return o == 0 ? false : true }
-  public var FLUX_RATIOSCount: Int32 { let o = _accessor.offset(VTOFFSET.FLUX_RATIOS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func FLUX_RATIOS(at index: Int32) -> Double { let o = _accessor.offset(VTOFFSET.FLUX_RATIOS.v); return o == 0 ? 0 : _accessor.directRead(of: Double.self, offset: _accessor.vector(at: o) + index * 8) }
-  public var FLUX_RATIOS: [Double] { return _accessor.getVector(at: VTOFFSET.FLUX_RATIOS.v) ?? [] }
+  public var FLUX_RATIOS: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.FLUX_RATIOS.v, byteSize: 8) }
+  public func withUnsafePointerToFluxRatios<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.FLUX_RATIOS.v, body: body) }
   ///  Effective temperature (Kelvin)
   public var TEMPERATURE: Double { let o = _accessor.offset(VTOFFSET.TEMPERATURE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Signal-to-noise ratio

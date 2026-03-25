@@ -139,23 +139,23 @@ struct EWRBuilder:
     def end():
         return b_.EndObject()
 
-def EWRStartESM_CONTACTSVector(b_:flatbuffers.builder, n_:int):
+def EWRStartESMCONTACTSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def EWRCreateESM_CONTACTSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def EWRCreateESMCONTACTSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-def EWRStartACTIVE_JAMMINGVector(b_:flatbuffers.builder, n_:int):
+def EWRStartACTIVEJAMMINGVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def EWRCreateACTIVE_JAMMINGVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def EWRCreateACTIVEJAMMINGVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-def EWRStartTHREAT_WARNINGSVector(b_:flatbuffers.builder, n_:int):
+def EWRStartTHREATWARNINGSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def EWRCreateTHREAT_WARNINGSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def EWRCreateTHREATWARNINGSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)

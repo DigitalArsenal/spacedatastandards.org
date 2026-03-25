@@ -8,9 +8,9 @@
 
 // Ensure the included flatbuffers.h is the same version as when this file was
 // generated, otherwise it may not be compatible.
-static_assert(FLATBUFFERS_VERSION_MAJOR == 24 &&
-              FLATBUFFERS_VERSION_MINOR == 3 &&
-              FLATBUFFERS_VERSION_REVISION == 25,
+static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
+              FLATBUFFERS_VERSION_MINOR == 12 &&
+              FLATBUFFERS_VERSION_REVISION == 19,
              "Non-compatible flatbuffers version included");
 
 struct KMLCoordinate;
@@ -557,7 +557,8 @@ struct KMLCoordinate FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   double ALTITUDE() const {
     return GetField<double>(VT_ALTITUDE, 0.0);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<double>(verifier, VT_LONGITUDE, 8) &&
            VerifyField<double>(verifier, VT_LATITUDE, 8) &&
@@ -642,7 +643,8 @@ struct KMLLookAt FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   KMLAltitudeMode ALTITUDE_MODE() const {
     return static_cast<KMLAltitudeMode>(GetField<int8_t>(VT_ALTITUDE_MODE, 0));
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<double>(verifier, VT_LONGITUDE, 8) &&
            VerifyField<double>(verifier, VT_LATITUDE, 8) &&
@@ -751,7 +753,8 @@ struct KMLCamera FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   KMLAltitudeMode ALTITUDE_MODE() const {
     return static_cast<KMLAltitudeMode>(GetField<int8_t>(VT_ALTITUDE_MODE, 0));
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<double>(verifier, VT_LONGITUDE, 8) &&
            VerifyField<double>(verifier, VT_LATITUDE, 8) &&
@@ -870,7 +873,8 @@ struct KMLIconStyle FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   KMLUnits HOTSPOT_Y_UNITS() const {
     return static_cast<KMLUnits>(GetField<int8_t>(VT_HOTSPOT_Y_UNITS, 0));
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_COLOR) &&
            verifier.VerifyString(COLOR()) &&
@@ -1019,7 +1023,8 @@ struct KMLLineStyle FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   bool GX_LABEL_VISIBILITY() const {
     return GetField<uint8_t>(VT_GX_LABEL_VISIBILITY, 0) != 0;
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_COLOR) &&
            verifier.VerifyString(COLOR()) &&
@@ -1137,7 +1142,8 @@ struct KMLPolyStyle FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   bool OUTLINE() const {
     return GetField<uint8_t>(VT_OUTLINE, 0) != 0;
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_COLOR) &&
            verifier.VerifyString(COLOR()) &&
@@ -1224,7 +1230,8 @@ struct KMLLabelStyle FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   double SCALE() const {
     return GetField<double>(VT_SCALE, 0.0);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_COLOR) &&
            verifier.VerifyString(COLOR()) &&
@@ -1308,7 +1315,8 @@ struct KMLBalloonStyle FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   KMLDisplayMode DISPLAY_MODE() const {
     return static_cast<KMLDisplayMode>(GetField<int8_t>(VT_DISPLAY_MODE, 0));
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_BG_COLOR) &&
            verifier.VerifyString(BG_COLOR()) &&
@@ -1394,7 +1402,8 @@ struct KMLItemIcon FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *HREF() const {
     return GetPointer<const ::flatbuffers::String *>(VT_HREF);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_STATE) &&
            verifier.VerifyString(STATE()) &&
@@ -1472,7 +1481,8 @@ struct KMLListStyle FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   int32_t MAX_SNIPPET_LINES() const {
     return GetField<int32_t>(VT_MAX_SNIPPET_LINES, 0);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<int8_t>(verifier, VT_LIST_ITEM_TYPE, 1) &&
            VerifyOffset(verifier, VT_BG_COLOR) &&
@@ -1582,7 +1592,8 @@ struct KMLStyle FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const KMLListStyle *LIST_STYLE() const {
     return GetPointer<const KMLListStyle *>(VT_LIST_STYLE);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_ID) &&
            verifier.VerifyString(ID()) &&
@@ -1694,7 +1705,8 @@ struct KMLStyleMapPair FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *STYLE_URL() const {
     return GetPointer<const ::flatbuffers::String *>(VT_STYLE_URL);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<int8_t>(verifier, VT_STATE, 1) &&
            VerifyOffset(verifier, VT_STYLE_URL) &&
@@ -1760,7 +1772,8 @@ struct KMLStyleMap FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::Vector<::flatbuffers::Offset<KMLStyleMapPair>> *PAIRS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<KMLStyleMapPair>> *>(VT_PAIRS);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_ID) &&
            verifier.VerifyString(ID()) &&
@@ -1834,7 +1847,8 @@ struct KMLPoint FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   bool EXTRUDE() const {
     return GetField<uint8_t>(VT_EXTRUDE, 0) != 0;
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_COORDINATES) &&
            verifier.VerifyTable(COORDINATES()) &&
@@ -1910,7 +1924,8 @@ struct KMLLineString FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   int32_t GX_DRAW_ORDER() const {
     return GetField<int32_t>(VT_GX_DRAW_ORDER, 0);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_COORDINATES) &&
            verifier.VerifyVector(COORDINATES()) &&
@@ -2011,7 +2026,8 @@ struct KMLLinearRing FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   KMLAltitudeMode ALTITUDE_MODE() const {
     return static_cast<KMLAltitudeMode>(GetField<int8_t>(VT_ALTITUDE_MODE, 0));
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_COORDINATES) &&
            verifier.VerifyVector(COORDINATES()) &&
@@ -2109,7 +2125,8 @@ struct KMLPolygon FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   bool TESSELLATE() const {
     return GetField<uint8_t>(VT_TESSELLATE, 0) != 0;
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_OUTER_BOUNDARY) &&
            verifier.VerifyTable(OUTER_BOUNDARY()) &&
@@ -2201,7 +2218,8 @@ struct KMLResourceMapAlias FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Tabl
   const ::flatbuffers::String *SOURCE_HREF() const {
     return GetPointer<const ::flatbuffers::String *>(VT_SOURCE_HREF);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_TARGET_HREF) &&
            verifier.VerifyString(TARGET_HREF()) &&
@@ -2319,7 +2337,8 @@ struct KMLModel FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::Vector<::flatbuffers::Offset<KMLResourceMapAlias>> *RESOURCE_MAP() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<KMLResourceMapAlias>> *>(VT_RESOURCE_MAP);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<int8_t>(verifier, VT_ALTITUDE_MODE, 1) &&
            VerifyField<double>(verifier, VT_LOCATION_LON, 8) &&
@@ -2493,7 +2512,8 @@ struct KMLTrack FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const KMLModel *MODEL() const {
     return GetPointer<const KMLModel *>(VT_MODEL);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<uint8_t>(verifier, VT_EXTRUDE, 1) &&
            VerifyField<uint8_t>(verifier, VT_TESSELLATE, 1) &&
@@ -2612,7 +2632,8 @@ struct KMLMultiTrack FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::Vector<::flatbuffers::Offset<KMLTrack>> *TRACKS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<KMLTrack>> *>(VT_TRACKS);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<int8_t>(verifier, VT_ALTITUDE_MODE, 1) &&
            VerifyField<uint8_t>(verifier, VT_INTERPOLATE, 1) &&
@@ -2717,7 +2738,8 @@ struct KMLMultiGeometry FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::Vector<::flatbuffers::Offset<KMLMultiTrack>> *MULTI_TRACKS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<KMLMultiTrack>> *>(VT_MULTI_TRACKS);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_POINTS) &&
            verifier.VerifyVector(POINTS()) &&
@@ -2853,7 +2875,8 @@ struct KMLTimeSpan FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *END() const {
     return GetPointer<const ::flatbuffers::String *>(VT_END);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_BEGIN) &&
            verifier.VerifyString(BEGIN()) &&
@@ -2916,7 +2939,8 @@ struct KMLTimeStamp FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *WHEN() const {
     return GetPointer<const ::flatbuffers::String *>(VT_WHEN);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_WHEN) &&
            verifier.VerifyString(WHEN()) &&
@@ -2979,7 +3003,8 @@ struct KMLData FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *VALUE() const {
     return GetPointer<const ::flatbuffers::String *>(VT_VALUE);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_NAME) &&
            verifier.VerifyString(NAME()) &&
@@ -3062,7 +3087,8 @@ struct KMLSimpleField FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *DISPLAY_NAME() const {
     return GetPointer<const ::flatbuffers::String *>(VT_DISPLAY_NAME);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_NAME) &&
            verifier.VerifyString(NAME()) &&
@@ -3145,7 +3171,8 @@ struct KMLSchema FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::Vector<::flatbuffers::Offset<KMLSimpleField>> *SIMPLE_FIELDS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<KMLSimpleField>> *>(VT_SIMPLE_FIELDS);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_NAME) &&
            verifier.VerifyString(NAME()) &&
@@ -3224,7 +3251,8 @@ struct KMLSimpleData FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *VALUE() const {
     return GetPointer<const ::flatbuffers::String *>(VT_VALUE);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_NAME) &&
            verifier.VerifyString(NAME()) &&
@@ -3292,7 +3320,8 @@ struct KMLSchemaData FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::Vector<::flatbuffers::Offset<KMLSimpleData>> *SIMPLE_DATA() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<KMLSimpleData>> *>(VT_SIMPLE_DATA);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_SCHEMA_URL) &&
            verifier.VerifyString(SCHEMA_URL()) &&
@@ -3356,7 +3385,8 @@ struct KMLLatLonQuad FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::Vector<::flatbuffers::Offset<KMLCoordinate>> *COORDINATES() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<KMLCoordinate>> *>(VT_COORDINATES);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_COORDINATES) &&
            verifier.VerifyVector(COORDINATES()) &&
@@ -3415,7 +3445,8 @@ struct KMLRegion FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const KMLLod *LOD() const {
     return GetPointer<const KMLLod *>(VT_LOD);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_LAT_LON_ALT_BOX) &&
            verifier.VerifyTable(LAT_LON_ALT_BOX()) &&
@@ -3496,7 +3527,8 @@ struct KMLLatLonAltBox FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   KMLAltitudeMode ALTITUDE_MODE() const {
     return static_cast<KMLAltitudeMode>(GetField<int8_t>(VT_ALTITUDE_MODE, 0));
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<double>(verifier, VT_NORTH, 8) &&
            VerifyField<double>(verifier, VT_SOUTH, 8) &&
@@ -3590,7 +3622,8 @@ struct KMLLod FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   double MAX_FADE_EXTENT() const {
     return GetField<double>(VT_MAX_FADE_EXTENT, 0.0);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<double>(verifier, VT_MIN_LOD_PIXELS, 8) &&
            VerifyField<double>(verifier, VT_MAX_LOD_PIXELS, 8) &&
@@ -3686,7 +3719,8 @@ struct KMLLink FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *HTTP_QUERY() const {
     return GetPointer<const ::flatbuffers::String *>(VT_HTTP_QUERY);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_HREF) &&
            verifier.VerifyString(HREF()) &&
@@ -3819,7 +3853,8 @@ struct KMLViewVolume FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   double NEAR() const {
     return GetField<double>(VT_NEAR, 0.0);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<double>(verifier, VT_LEFT_FOV, 8) &&
            VerifyField<double>(verifier, VT_RIGHT_FOV, 8) &&
@@ -3901,7 +3936,8 @@ struct KMLImagePyramid FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   KMLGridOrigin GRID_ORIGIN() const {
     return static_cast<KMLGridOrigin>(GetField<int8_t>(VT_GRID_ORIGIN, 0));
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<int32_t>(verifier, VT_TILE_SIZE, 4) &&
            VerifyField<int32_t>(verifier, VT_MAX_WIDTH, 4) &&
@@ -4017,7 +4053,8 @@ struct KMLNetworkLink FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const KMLLink *LINK() const {
     return GetPointer<const KMLLink *>(VT_LINK);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_NAME) &&
            verifier.VerifyString(NAME()) &&
@@ -4273,7 +4310,8 @@ struct KMLScreenOverlay FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   double ROTATION() const {
     return GetField<double>(VT_ROTATION, 0.0);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_NAME) &&
            verifier.VerifyString(NAME()) &&
@@ -4558,7 +4596,8 @@ struct KMLPhotoOverlay FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   KMLShape SHAPE() const {
     return static_cast<KMLShape>(GetField<int8_t>(VT_SHAPE, 0));
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_NAME) &&
            verifier.VerifyString(NAME()) &&
@@ -4780,7 +4819,8 @@ struct KMLGroundOverlay FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const KMLRegion *REGION() const {
     return GetPointer<const KMLRegion *>(VT_REGION);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_NAME) &&
            verifier.VerifyString(NAME()) &&
@@ -4986,7 +5026,8 @@ struct KMLUpdate FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *DELETE_KML() const {
     return GetPointer<const ::flatbuffers::String *>(VT_DELETE_KML);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_TARGET_HREF) &&
            verifier.VerifyString(TARGET_HREF()) &&
@@ -5119,7 +5160,8 @@ struct KMLNetworkLinkControl FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Ta
   const KMLCamera *CAMERA() const {
     return GetPointer<const KMLCamera *>(VT_CAMERA);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<double>(verifier, VT_MIN_REFRESH_PERIOD, 8) &&
            VerifyField<double>(verifier, VT_MAX_SESSION_LENGTH, 8) &&
@@ -5280,7 +5322,8 @@ struct KMLFlyTo FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const KMLCamera *CAMERA() const {
     return GetPointer<const KMLCamera *>(VT_CAMERA);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<double>(verifier, VT_DURATION, 8) &&
            VerifyField<int8_t>(verifier, VT_FLY_TO_MODE, 1) &&
@@ -5343,7 +5386,8 @@ struct KMLWait FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   double DURATION() const {
     return GetField<double>(VT_DURATION, 0.0);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<double>(verifier, VT_DURATION, 8) &&
            verifier.EndTable();
@@ -5396,7 +5440,8 @@ struct KMLAnimatedUpdate FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table 
   const KMLUpdate *UPDATE() const {
     return GetPointer<const KMLUpdate *>(VT_UPDATE);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<double>(verifier, VT_DURATION, 8) &&
            VerifyField<double>(verifier, VT_DELAYED_START, 8) &&
@@ -5452,7 +5497,8 @@ struct KMLTourControl FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *PLAY_MODE() const {
     return GetPointer<const ::flatbuffers::String *>(VT_PLAY_MODE);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_PLAY_MODE) &&
            verifier.VerifyString(PLAY_MODE()) &&
@@ -5510,7 +5556,8 @@ struct KMLSoundCue FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   double DELAYED_START() const {
     return GetField<double>(VT_DELAYED_START, 0.0);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_HREF) &&
            verifier.VerifyString(HREF()) &&
@@ -5591,7 +5638,8 @@ struct KMLTourPrimitive FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const KMLSoundCue *SOUND_CUE() const {
     return GetPointer<const KMLSoundCue *>(VT_SOUND_CUE);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_FLY_TO) &&
            verifier.VerifyTable(FLY_TO()) &&
@@ -5663,7 +5711,8 @@ struct KMLPlaylist FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::Vector<::flatbuffers::Offset<KMLTourPrimitive>> *PRIMITIVES() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<KMLTourPrimitive>> *>(VT_PRIMITIVES);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_PRIMITIVES) &&
            verifier.VerifyVector(PRIMITIVES()) &&
@@ -5732,7 +5781,8 @@ struct KMLTour FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const KMLPlaylist *PLAYLIST() const {
     return GetPointer<const KMLPlaylist *>(VT_PLAYLIST);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_NAME) &&
            verifier.VerifyString(NAME()) &&
@@ -5927,7 +5977,8 @@ struct KMLPlacemark FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const KMLStyleMap *STYLE_MAP() const {
     return GetPointer<const KMLStyleMap *>(VT_STYLE_MAP);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_NAME) &&
            verifier.VerifyString(NAME()) &&
@@ -6286,7 +6337,8 @@ struct KMLFolder FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const KMLTimeStamp *TIME_STAMP() const {
     return GetPointer<const KMLTimeStamp *>(VT_TIME_STAMP);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_NAME) &&
            verifier.VerifyString(NAME()) &&
@@ -6600,7 +6652,8 @@ struct KML FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const KMLNetworkLinkControl *NETWORK_LINK_CONTROL() const {
     return GetPointer<const KMLNetworkLinkControl *>(VT_NETWORK_LINK_CONTROL);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_NAME) &&
            verifier.VerifyString(NAME()) &&
@@ -6810,14 +6863,16 @@ inline bool SizePrefixedKMLBufferHasIdentifier(const void *buf) {
       buf, KMLIdentifier(), true);
 }
 
+template <bool B = false>
 inline bool VerifyKMLBuffer(
-    ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifyBuffer<KML>(KMLIdentifier());
+    ::flatbuffers::VerifierTemplate<B> &verifier) {
+  return verifier.template VerifyBuffer<KML>(KMLIdentifier());
 }
 
+template <bool B = false>
 inline bool VerifySizePrefixedKMLBuffer(
-    ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifySizePrefixedBuffer<KML>(KMLIdentifier());
+    ::flatbuffers::VerifierTemplate<B> &verifier) {
+  return verifier.template VerifySizePrefixedBuffer<KML>(KMLIdentifier());
 }
 
 inline void FinishKMLBuffer(

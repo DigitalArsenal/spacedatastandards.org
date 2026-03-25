@@ -32,7 +32,7 @@ class CZMStripeMaterial : Table() {
     /**
      * Stripe orientation
      */
-    val ORIENTATION : String?
+    val orientation : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,13 +41,13 @@ class CZMStripeMaterial : Table() {
                 null
             }
         }
-    val ORIENTATIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun ORIENTATIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val orientationAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun orientationInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Even color
      */
-    val EVEN_COLOR : CZMColor? get() = EVEN_COLOR(CZMColor())
-    fun EVEN_COLOR(obj: CZMColor) : CZMColor? {
+    val evenColor : CZMColor? get() = evenColor(CZMColor())
+    fun evenColor(obj: CZMColor) : CZMColor? {
         val o = __offset(6)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -58,8 +58,8 @@ class CZMStripeMaterial : Table() {
     /**
      * Odd color
      */
-    val ODD_COLOR : CZMColor? get() = ODD_COLOR(CZMColor())
-    fun ODD_COLOR(obj: CZMColor) : CZMColor? {
+    val oddColor : CZMColor? get() = oddColor(CZMColor())
+    fun oddColor(obj: CZMColor) : CZMColor? {
         val o = __offset(8)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -70,7 +70,7 @@ class CZMStripeMaterial : Table() {
     /**
      * Offset
      */
-    val OFFSET : Double
+    val offset : Double
         get() {
             val o = __offset(10)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -78,33 +78,33 @@ class CZMStripeMaterial : Table() {
     /**
      * Number of times to repeat
      */
-    val REPEAT_COUNT : Double
+    val repeatCount : Double
         get() {
             val o = __offset(12)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsCZMStripeMaterial(_bb: ByteBuffer): CZMStripeMaterial = getRootAsCZMStripeMaterial(_bb, CZMStripeMaterial())
         fun getRootAsCZMStripeMaterial(_bb: ByteBuffer, obj: CZMStripeMaterial): CZMStripeMaterial {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createCZMStripeMaterial(builder: FlatBufferBuilder, ORIENTATIONOffset: Int, EVEN_COLOROffset: Int, ODD_COLOROffset: Int, OFFSET: Double, REPEAT_COUNT: Double) : Int {
+        fun createCZMStripeMaterial(builder: FlatBufferBuilder, orientationOffset: Int, evenColorOffset: Int, oddColorOffset: Int, offset: Double, repeatCount: Double) : Int {
             builder.startTable(5)
-            addREPEAT_COUNT(builder, REPEAT_COUNT)
-            addOFFSET(builder, OFFSET)
-            addODD_COLOR(builder, ODD_COLOROffset)
-            addEVEN_COLOR(builder, EVEN_COLOROffset)
-            addORIENTATION(builder, ORIENTATIONOffset)
+            addREPEATCOUNT(builder, repeatCount)
+            addOFFSET(builder, offset)
+            addODDCOLOR(builder, oddColorOffset)
+            addEVENCOLOR(builder, evenColorOffset)
+            addORIENTATION(builder, orientationOffset)
             return endCZMStripeMaterial(builder)
         }
         fun startCZMStripeMaterial(builder: FlatBufferBuilder) = builder.startTable(5)
-        fun addORIENTATION(builder: FlatBufferBuilder, ORIENTATION: Int) = builder.addOffset(0, ORIENTATION, 0)
-        fun addEVEN_COLOR(builder: FlatBufferBuilder, EVEN_COLOR: Int) = builder.addOffset(1, EVEN_COLOR, 0)
-        fun addODD_COLOR(builder: FlatBufferBuilder, ODD_COLOR: Int) = builder.addOffset(2, ODD_COLOR, 0)
-        fun addOFFSET(builder: FlatBufferBuilder, OFFSET: Double) = builder.addDouble(3, OFFSET, 0.0)
-        fun addREPEAT_COUNT(builder: FlatBufferBuilder, REPEAT_COUNT: Double) = builder.addDouble(4, REPEAT_COUNT, 0.0)
+        fun addORIENTATION(builder: FlatBufferBuilder, orientation: Int) = builder.addOffset(0, orientation, 0)
+        fun addEVENCOLOR(builder: FlatBufferBuilder, evenColor: Int) = builder.addOffset(1, evenColor, 0)
+        fun addODDCOLOR(builder: FlatBufferBuilder, oddColor: Int) = builder.addOffset(2, oddColor, 0)
+        fun addOFFSET(builder: FlatBufferBuilder, offset: Double) = builder.addDouble(3, offset, 0.0)
+        fun addREPEATCOUNT(builder: FlatBufferBuilder, repeatCount: Double) = builder.addDouble(4, repeatCount, 0.0)
         fun endCZMStripeMaterial(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

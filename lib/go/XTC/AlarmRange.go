@@ -51,9 +51,17 @@ func (rcv *AlarmRange) MIN_INCLUSIVE() float64 {
 	return 0.0
 }
 
+func (rcv *AlarmRange) MinInclusive() float64 {
+	return rcv.MIN_INCLUSIVE()
+}
+
 /// Minimum value (inclusive)
 func (rcv *AlarmRange) MutateMIN_INCLUSIVE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(4, n)
+}
+
+func (rcv *AlarmRange) MutateMinInclusive(n float64) bool {
+	return rcv.MutateMIN_INCLUSIVE(n)
 }
 
 /// Maximum value (inclusive)
@@ -65,9 +73,17 @@ func (rcv *AlarmRange) MAX_INCLUSIVE() float64 {
 	return 0.0
 }
 
+func (rcv *AlarmRange) MaxInclusive() float64 {
+	return rcv.MAX_INCLUSIVE()
+}
+
 /// Maximum value (inclusive)
 func (rcv *AlarmRange) MutateMAX_INCLUSIVE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(6, n)
+}
+
+func (rcv *AlarmRange) MutateMaxInclusive(n float64) bool {
+	return rcv.MutateMAX_INCLUSIVE(n)
 }
 
 /// Minimum value (exclusive)
@@ -79,9 +95,17 @@ func (rcv *AlarmRange) MIN_EXCLUSIVE() float64 {
 	return 0.0
 }
 
+func (rcv *AlarmRange) MinExclusive() float64 {
+	return rcv.MIN_EXCLUSIVE()
+}
+
 /// Minimum value (exclusive)
 func (rcv *AlarmRange) MutateMIN_EXCLUSIVE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(8, n)
+}
+
+func (rcv *AlarmRange) MutateMinExclusive(n float64) bool {
+	return rcv.MutateMIN_EXCLUSIVE(n)
 }
 
 /// Maximum value (exclusive)
@@ -93,9 +117,17 @@ func (rcv *AlarmRange) MAX_EXCLUSIVE() float64 {
 	return 0.0
 }
 
+func (rcv *AlarmRange) MaxExclusive() float64 {
+	return rcv.MAX_EXCLUSIVE()
+}
+
 /// Maximum value (exclusive)
 func (rcv *AlarmRange) MutateMAX_EXCLUSIVE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(10, n)
+}
+
+func (rcv *AlarmRange) MutateMaxExclusive(n float64) bool {
+	return rcv.MutateMAX_EXCLUSIVE(n)
 }
 
 func AlarmRangeStart(builder *flatbuffers.Builder) {
@@ -104,14 +136,26 @@ func AlarmRangeStart(builder *flatbuffers.Builder) {
 func AlarmRangeAddMIN_INCLUSIVE(builder *flatbuffers.Builder, MIN_INCLUSIVE float64) {
 	builder.PrependFloat64Slot(0, MIN_INCLUSIVE, 0.0)
 }
+func AlarmRangeAddMinInclusive(builder *flatbuffers.Builder, MIN_INCLUSIVE float64) {
+	AlarmRangeAddMIN_INCLUSIVE(builder, MIN_INCLUSIVE)
+}
 func AlarmRangeAddMAX_INCLUSIVE(builder *flatbuffers.Builder, MAX_INCLUSIVE float64) {
 	builder.PrependFloat64Slot(1, MAX_INCLUSIVE, 0.0)
+}
+func AlarmRangeAddMaxInclusive(builder *flatbuffers.Builder, MAX_INCLUSIVE float64) {
+	AlarmRangeAddMAX_INCLUSIVE(builder, MAX_INCLUSIVE)
 }
 func AlarmRangeAddMIN_EXCLUSIVE(builder *flatbuffers.Builder, MIN_EXCLUSIVE float64) {
 	builder.PrependFloat64Slot(2, MIN_EXCLUSIVE, 0.0)
 }
+func AlarmRangeAddMinExclusive(builder *flatbuffers.Builder, MIN_EXCLUSIVE float64) {
+	AlarmRangeAddMIN_EXCLUSIVE(builder, MIN_EXCLUSIVE)
+}
 func AlarmRangeAddMAX_EXCLUSIVE(builder *flatbuffers.Builder, MAX_EXCLUSIVE float64) {
 	builder.PrependFloat64Slot(3, MAX_EXCLUSIVE, 0.0)
+}
+func AlarmRangeAddMaxExclusive(builder *flatbuffers.Builder, MAX_EXCLUSIVE float64) {
+	AlarmRangeAddMAX_EXCLUSIVE(builder, MAX_EXCLUSIVE)
 }
 func AlarmRangeEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

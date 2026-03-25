@@ -8,9 +8,12 @@ import { Header, HeaderT } from './Header.js';
 import { Maneuver, ManeuverT } from './Maneuver.js';
 import { Metadata, MetadataT } from './Metadata.js';
 import { OrbitDetermination, OrbitDeterminationT } from './OrbitDetermination.js';
+import { PPEOrbitalElementRecord, PPEOrbitalElementRecordT } from './PPEOrbitalElementRecord.js';
+import { PPEPositionRecord, PPEPositionRecordT } from './PPEPositionRecord.js';
 import { Perturbations, PerturbationsT } from './Perturbations.js';
 import { PhysicalProperties, PhysicalPropertiesT } from './PhysicalProperties.js';
 import { UserDefinedParameters, UserDefinedParametersT } from './UserDefinedParameters.js';
+import { trajectoryType } from './trajectoryType.js';
 
 
 /**
@@ -55,12 +58,24 @@ METADATA(obj?:Metadata):Metadata|null {
 }
 
 /**
- * Trajectory type (e.g., PROPAGATED, ESTIMATED).
+ * Trajectory state representation type.
+ * Determines how orbit state data is parameterized in this message.
+ * For CARTESIAN_PV/CARTESIAN_PVA, use STATE_DATA array.
+ * For POLYNOMIAL_POS/POLYNOMIAL_OE, use the corresponding polynomial record arrays.
  */
-TRAJ_TYPE():string|null
-TRAJ_TYPE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-TRAJ_TYPE(optionalEncoding?:any):string|Uint8Array|null {
+TRAJ_TYPE():trajectoryType {
   const offset = this.bb!.__offset(this.bb_pos, 8);
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : trajectoryType.CARTESIAN_PV;
+}
+
+/**
+ * Legacy trajectory type string for backward compatibility and extended types
+ * (e.g., "PROPAGATED", "ESTIMATED", "FILTERED").
+ */
+TRAJ_TYPE_DESCRIPTION():string|null
+TRAJ_TYPE_DESCRIPTION(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+TRAJ_TYPE_DESCRIPTION(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 10);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
@@ -68,7 +83,7 @@ TRAJ_TYPE(optionalEncoding?:any):string|Uint8Array|null {
  * Time interval between state vectors in seconds (required for time-series data).
  */
 STATE_STEP_SIZE():number {
-  const offset = this.bb!.__offset(this.bb_pos, 10);
+  const offset = this.bb!.__offset(this.bb_pos, 12);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
@@ -78,7 +93,7 @@ STATE_STEP_SIZE():number {
  * 9 = position + velocity + acceleration (adds X_DDOT, Y_DDOT, Z_DDOT)
  */
 STATE_VECTOR_SIZE():number {
-  const offset = this.bb!.__offset(this.bb_pos, 12);
+  const offset = this.bb!.__offset(this.bb_pos, 14);
   return offset ? this.bb!.readUint8(this.bb_pos + offset) : 6;
 }
 
@@ -89,17 +104,17 @@ STATE_VECTOR_SIZE():number {
  * Length must be divisible by STATE_VECTOR_SIZE.
  */
 STATE_DATA(index: number):number|null {
-  const offset = this.bb!.__offset(this.bb_pos, 14);
+  const offset = this.bb!.__offset(this.bb_pos, 16);
   return offset ? this.bb!.readFloat64(this.bb!.__vector(this.bb_pos + offset) + index * 8) : 0;
 }
 
 stateDataLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 14);
+  const offset = this.bb!.__offset(this.bb_pos, 16);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
 stateDataArray():Float64Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 14);
+  const offset = this.bb!.__offset(this.bb_pos, 16);
   return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
 }
 
@@ -108,25 +123,57 @@ stateDataArray():Float64Array|null {
  * Time alignment matches STATE_DATA epochs.
  */
 COVARIANCE_DATA(index: number):number|null {
-  const offset = this.bb!.__offset(this.bb_pos, 16);
+  const offset = this.bb!.__offset(this.bb_pos, 18);
   return offset ? this.bb!.readFloat64(this.bb!.__vector(this.bb_pos + offset) + index * 8) : 0;
 }
 
 covarianceDataLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 16);
+  const offset = this.bb!.__offset(this.bb_pos, 18);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
 covarianceDataArray():Float64Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 16);
+  const offset = this.bb!.__offset(this.bb_pos, 18);
   return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
+/**
+ * Polynomial position records.
+ * Used when TRAJ_TYPE is POLYNOMIAL_POS. Each record covers a time segment
+ * with polynomial coefficients for X, Y, Z position (and optionally velocity).
+ * See PPE schema for record structure and evaluation procedure.
+ */
+POLYNOMIAL_POSITION_RECORDS(index: number, obj?:PPEPositionRecord):PPEPositionRecord|null {
+  const offset = this.bb!.__offset(this.bb_pos, 20);
+  return offset ? (obj || new PPEPositionRecord()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+}
+
+polynomialPositionRecordsLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 20);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Polynomial orbital element records.
+ * Used when TRAJ_TYPE is POLYNOMIAL_OE. Each record covers a time segment
+ * with polynomial coefficients for classical orbital elements.
+ * See PPE schema for record structure and evaluation procedure.
+ */
+POLYNOMIAL_OE_RECORDS(index: number, obj?:PPEOrbitalElementRecord):PPEOrbitalElementRecord|null {
+  const offset = this.bb!.__offset(this.bb_pos, 22);
+  return offset ? (obj || new PPEOrbitalElementRecord()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+}
+
+polynomialOeRecordsLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 22);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
 /**
  * Physical properties of the space object.
  */
 PHYSICAL_PROPERTIES(obj?:PhysicalProperties):PhysicalProperties|null {
-  const offset = this.bb!.__offset(this.bb_pos, 18);
+  const offset = this.bb!.__offset(this.bb_pos, 24);
   return offset ? (obj || new PhysicalProperties()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
@@ -134,12 +181,12 @@ PHYSICAL_PROPERTIES(obj?:PhysicalProperties):PhysicalProperties|null {
  * Maneuver data.
  */
 MANEUVER_DATA(index: number, obj?:Maneuver):Maneuver|null {
-  const offset = this.bb!.__offset(this.bb_pos, 20);
+  const offset = this.bb!.__offset(this.bb_pos, 26);
   return offset ? (obj || new Maneuver()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
 }
 
 maneuverDataLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 20);
+  const offset = this.bb!.__offset(this.bb_pos, 26);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
@@ -147,7 +194,7 @@ maneuverDataLength():number {
  * Perturbations parameters used.
  */
 PERTURBATIONS(obj?:Perturbations):Perturbations|null {
-  const offset = this.bb!.__offset(this.bb_pos, 22);
+  const offset = this.bb!.__offset(this.bb_pos, 28);
   return offset ? (obj || new Perturbations()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
@@ -155,7 +202,7 @@ PERTURBATIONS(obj?:Perturbations):Perturbations|null {
  * Orbit determination data.
  */
 ORBIT_DETERMINATION(obj?:OrbitDetermination):OrbitDetermination|null {
-  const offset = this.bb!.__offset(this.bb_pos, 24);
+  const offset = this.bb!.__offset(this.bb_pos, 30);
   return offset ? (obj || new OrbitDetermination()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
@@ -163,17 +210,17 @@ ORBIT_DETERMINATION(obj?:OrbitDetermination):OrbitDetermination|null {
  * User-defined parameters and supplemental comments.
  */
 USER_DEFINED_PARAMETERS(index: number, obj?:UserDefinedParameters):UserDefinedParameters|null {
-  const offset = this.bb!.__offset(this.bb_pos, 26);
+  const offset = this.bb!.__offset(this.bb_pos, 32);
   return offset ? (obj || new UserDefinedParameters()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
 }
 
 userDefinedParametersLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 26);
+  const offset = this.bb!.__offset(this.bb_pos, 32);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
 static startOCM(builder:flatbuffers.Builder) {
-  builder.startObject(12);
+  builder.startObject(15);
 }
 
 static addHeader(builder:flatbuffers.Builder, HEADEROffset:flatbuffers.Offset) {
@@ -184,20 +231,24 @@ static addMetadata(builder:flatbuffers.Builder, METADATAOffset:flatbuffers.Offse
   builder.addFieldOffset(1, METADATAOffset, 0);
 }
 
-static addTrajType(builder:flatbuffers.Builder, TRAJ_TYPEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(2, TRAJ_TYPEOffset, 0);
+static addTrajType(builder:flatbuffers.Builder, TRAJ_TYPE:trajectoryType) {
+  builder.addFieldInt8(2, TRAJ_TYPE, trajectoryType.CARTESIAN_PV);
+}
+
+static addTrajTypeDescription(builder:flatbuffers.Builder, TRAJ_TYPE_DESCRIPTIONOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(3, TRAJ_TYPE_DESCRIPTIONOffset, 0);
 }
 
 static addStateStepSize(builder:flatbuffers.Builder, STATE_STEP_SIZE:number) {
-  builder.addFieldFloat64(3, STATE_STEP_SIZE, 0.0);
+  builder.addFieldFloat64(4, STATE_STEP_SIZE, 0.0);
 }
 
 static addStateVectorSize(builder:flatbuffers.Builder, STATE_VECTOR_SIZE:number) {
-  builder.addFieldInt8(4, STATE_VECTOR_SIZE, 6);
+  builder.addFieldInt8(5, STATE_VECTOR_SIZE, 6);
 }
 
 static addStateData(builder:flatbuffers.Builder, STATE_DATAOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(5, STATE_DATAOffset, 0);
+  builder.addFieldOffset(6, STATE_DATAOffset, 0);
 }
 
 static createStateDataVector(builder:flatbuffers.Builder, data:number[]|Float64Array):flatbuffers.Offset;
@@ -218,7 +269,7 @@ static startStateDataVector(builder:flatbuffers.Builder, numElems:number) {
 }
 
 static addCovarianceData(builder:flatbuffers.Builder, COVARIANCE_DATAOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(6, COVARIANCE_DATAOffset, 0);
+  builder.addFieldOffset(7, COVARIANCE_DATAOffset, 0);
 }
 
 static createCovarianceDataVector(builder:flatbuffers.Builder, data:number[]|Float64Array):flatbuffers.Offset;
@@ -238,12 +289,44 @@ static startCovarianceDataVector(builder:flatbuffers.Builder, numElems:number) {
   builder.startVector(8, numElems, 8);
 }
 
+static addPolynomialPositionRecords(builder:flatbuffers.Builder, POLYNOMIAL_POSITION_RECORDSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(8, POLYNOMIAL_POSITION_RECORDSOffset, 0);
+}
+
+static createPolynomialPositionRecordsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startPolynomialPositionRecordsVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
+static addPolynomialOeRecords(builder:flatbuffers.Builder, POLYNOMIAL_OE_RECORDSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(9, POLYNOMIAL_OE_RECORDSOffset, 0);
+}
+
+static createPolynomialOeRecordsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startPolynomialOeRecordsVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
 static addPhysicalProperties(builder:flatbuffers.Builder, PHYSICAL_PROPERTIESOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(7, PHYSICAL_PROPERTIESOffset, 0);
+  builder.addFieldOffset(10, PHYSICAL_PROPERTIESOffset, 0);
 }
 
 static addManeuverData(builder:flatbuffers.Builder, MANEUVER_DATAOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(8, MANEUVER_DATAOffset, 0);
+  builder.addFieldOffset(11, MANEUVER_DATAOffset, 0);
 }
 
 static createManeuverDataVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
@@ -259,15 +342,15 @@ static startManeuverDataVector(builder:flatbuffers.Builder, numElems:number) {
 }
 
 static addPerturbations(builder:flatbuffers.Builder, PERTURBATIONSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(9, PERTURBATIONSOffset, 0);
+  builder.addFieldOffset(12, PERTURBATIONSOffset, 0);
 }
 
 static addOrbitDetermination(builder:flatbuffers.Builder, ORBIT_DETERMINATIONOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(10, ORBIT_DETERMINATIONOffset, 0);
+  builder.addFieldOffset(13, ORBIT_DETERMINATIONOffset, 0);
 }
 
 static addUserDefinedParameters(builder:flatbuffers.Builder, USER_DEFINED_PARAMETERSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(11, USER_DEFINED_PARAMETERSOffset, 0);
+  builder.addFieldOffset(14, USER_DEFINED_PARAMETERSOffset, 0);
 }
 
 static createUserDefinedParametersVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
@@ -301,10 +384,13 @@ unpack(): OCMT {
     (this.HEADER() !== null ? this.HEADER()!.unpack() : null),
     (this.METADATA() !== null ? this.METADATA()!.unpack() : null),
     this.TRAJ_TYPE(),
+    this.TRAJ_TYPE_DESCRIPTION(),
     this.STATE_STEP_SIZE(),
     this.STATE_VECTOR_SIZE(),
     this.bb!.createScalarList<number>(this.STATE_DATA.bind(this), this.stateDataLength()),
     this.bb!.createScalarList<number>(this.COVARIANCE_DATA.bind(this), this.covarianceDataLength()),
+    this.bb!.createObjList<PPEPositionRecord, PPEPositionRecordT>(this.POLYNOMIAL_POSITION_RECORDS.bind(this), this.polynomialPositionRecordsLength()),
+    this.bb!.createObjList<PPEOrbitalElementRecord, PPEOrbitalElementRecordT>(this.POLYNOMIAL_OE_RECORDS.bind(this), this.polynomialOeRecordsLength()),
     (this.PHYSICAL_PROPERTIES() !== null ? this.PHYSICAL_PROPERTIES()!.unpack() : null),
     this.bb!.createObjList<Maneuver, ManeuverT>(this.MANEUVER_DATA.bind(this), this.maneuverDataLength()),
     (this.PERTURBATIONS() !== null ? this.PERTURBATIONS()!.unpack() : null),
@@ -318,10 +404,13 @@ unpackTo(_o: OCMT): void {
   _o.HEADER = (this.HEADER() !== null ? this.HEADER()!.unpack() : null);
   _o.METADATA = (this.METADATA() !== null ? this.METADATA()!.unpack() : null);
   _o.TRAJ_TYPE = this.TRAJ_TYPE();
+  _o.TRAJ_TYPE_DESCRIPTION = this.TRAJ_TYPE_DESCRIPTION();
   _o.STATE_STEP_SIZE = this.STATE_STEP_SIZE();
   _o.STATE_VECTOR_SIZE = this.STATE_VECTOR_SIZE();
   _o.STATE_DATA = this.bb!.createScalarList<number>(this.STATE_DATA.bind(this), this.stateDataLength());
   _o.COVARIANCE_DATA = this.bb!.createScalarList<number>(this.COVARIANCE_DATA.bind(this), this.covarianceDataLength());
+  _o.POLYNOMIAL_POSITION_RECORDS = this.bb!.createObjList<PPEPositionRecord, PPEPositionRecordT>(this.POLYNOMIAL_POSITION_RECORDS.bind(this), this.polynomialPositionRecordsLength());
+  _o.POLYNOMIAL_OE_RECORDS = this.bb!.createObjList<PPEOrbitalElementRecord, PPEOrbitalElementRecordT>(this.POLYNOMIAL_OE_RECORDS.bind(this), this.polynomialOeRecordsLength());
   _o.PHYSICAL_PROPERTIES = (this.PHYSICAL_PROPERTIES() !== null ? this.PHYSICAL_PROPERTIES()!.unpack() : null);
   _o.MANEUVER_DATA = this.bb!.createObjList<Maneuver, ManeuverT>(this.MANEUVER_DATA.bind(this), this.maneuverDataLength());
   _o.PERTURBATIONS = (this.PERTURBATIONS() !== null ? this.PERTURBATIONS()!.unpack() : null);
@@ -334,11 +423,14 @@ export class OCMT implements flatbuffers.IGeneratedObject {
 constructor(
   public HEADER: HeaderT|null = null,
   public METADATA: MetadataT|null = null,
-  public TRAJ_TYPE: string|Uint8Array|null = null,
+  public TRAJ_TYPE: trajectoryType = trajectoryType.CARTESIAN_PV,
+  public TRAJ_TYPE_DESCRIPTION: string|Uint8Array|null = null,
   public STATE_STEP_SIZE: number = 0.0,
   public STATE_VECTOR_SIZE: number = 6,
   public STATE_DATA: (number)[] = [],
   public COVARIANCE_DATA: (number)[] = [],
+  public POLYNOMIAL_POSITION_RECORDS: (PPEPositionRecordT)[] = [],
+  public POLYNOMIAL_OE_RECORDS: (PPEOrbitalElementRecordT)[] = [],
   public PHYSICAL_PROPERTIES: PhysicalPropertiesT|null = null,
   public MANEUVER_DATA: (ManeuverT)[] = [],
   public PERTURBATIONS: PerturbationsT|null = null,
@@ -350,9 +442,11 @@ constructor(
 pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const HEADER = (this.HEADER !== null ? this.HEADER!.pack(builder) : 0);
   const METADATA = (this.METADATA !== null ? this.METADATA!.pack(builder) : 0);
-  const TRAJ_TYPE = (this.TRAJ_TYPE !== null ? builder.createString(this.TRAJ_TYPE!) : 0);
+  const TRAJ_TYPE_DESCRIPTION = (this.TRAJ_TYPE_DESCRIPTION !== null ? builder.createString(this.TRAJ_TYPE_DESCRIPTION!) : 0);
   const STATE_DATA = OCM.createStateDataVector(builder, this.STATE_DATA);
   const COVARIANCE_DATA = OCM.createCovarianceDataVector(builder, this.COVARIANCE_DATA);
+  const POLYNOMIAL_POSITION_RECORDS = OCM.createPolynomialPositionRecordsVector(builder, builder.createObjectOffsetList(this.POLYNOMIAL_POSITION_RECORDS));
+  const POLYNOMIAL_OE_RECORDS = OCM.createPolynomialOeRecordsVector(builder, builder.createObjectOffsetList(this.POLYNOMIAL_OE_RECORDS));
   const PHYSICAL_PROPERTIES = (this.PHYSICAL_PROPERTIES !== null ? this.PHYSICAL_PROPERTIES!.pack(builder) : 0);
   const MANEUVER_DATA = OCM.createManeuverDataVector(builder, builder.createObjectOffsetList(this.MANEUVER_DATA));
   const PERTURBATIONS = (this.PERTURBATIONS !== null ? this.PERTURBATIONS!.pack(builder) : 0);
@@ -362,11 +456,14 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   OCM.startOCM(builder);
   OCM.addHeader(builder, HEADER);
   OCM.addMetadata(builder, METADATA);
-  OCM.addTrajType(builder, TRAJ_TYPE);
+  OCM.addTrajType(builder, this.TRAJ_TYPE);
+  OCM.addTrajTypeDescription(builder, TRAJ_TYPE_DESCRIPTION);
   OCM.addStateStepSize(builder, this.STATE_STEP_SIZE);
   OCM.addStateVectorSize(builder, this.STATE_VECTOR_SIZE);
   OCM.addStateData(builder, STATE_DATA);
   OCM.addCovarianceData(builder, COVARIANCE_DATA);
+  OCM.addPolynomialPositionRecords(builder, POLYNOMIAL_POSITION_RECORDS);
+  OCM.addPolynomialOeRecords(builder, POLYNOMIAL_OE_RECORDS);
   OCM.addPhysicalProperties(builder, PHYSICAL_PROPERTIES);
   OCM.addManeuverData(builder, MANEUVER_DATA);
   OCM.addPerturbations(builder, PERTURBATIONS);

@@ -51,6 +51,10 @@ func (rcv *FloatParameterType) NAME() []byte {
 	return nil
 }
 
+func (rcv *FloatParameterType) Name() []byte {
+	return rcv.NAME()
+}
+
 /// Type name
 /// Short description
 func (rcv *FloatParameterType) SHORT_DESCRIPTION() []byte {
@@ -59,6 +63,10 @@ func (rcv *FloatParameterType) SHORT_DESCRIPTION() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *FloatParameterType) ShortDescription() []byte {
+	return rcv.SHORT_DESCRIPTION()
 }
 
 /// Short description
@@ -71,6 +79,10 @@ func (rcv *FloatParameterType) LONG_DESCRIPTION() []byte {
 	return nil
 }
 
+func (rcv *FloatParameterType) LongDescription() []byte {
+	return rcv.LONG_DESCRIPTION()
+}
+
 /// Long description
 /// Units
 func (rcv *FloatParameterType) UNITS(obj *Unit, j int) bool {
@@ -79,10 +91,17 @@ func (rcv *FloatParameterType) UNITS(obj *Unit, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(Unit)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *FloatParameterType) Units(obj *Unit, j int) bool {
+	return rcv.UNITS(obj, j)
 }
 
 func (rcv *FloatParameterType) UNITSLength() int {
@@ -91,6 +110,10 @@ func (rcv *FloatParameterType) UNITSLength() int {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *FloatParameterType) UnitsLength() int {
+	return rcv.UNITSLength()
 }
 
 /// Units
@@ -108,6 +131,10 @@ func (rcv *FloatParameterType) DATA_ENCODING(obj *FloatDataEncoding) *FloatDataE
 	return nil
 }
 
+func (rcv *FloatParameterType) DataEncoding(obj *FloatDataEncoding) *FloatDataEncoding {
+	return rcv.DATA_ENCODING(obj)
+}
+
 /// Data encoding
 /// Default alarm
 func (rcv *FloatParameterType) DEFAULT_ALARM(obj *DefaultAlarm) *DefaultAlarm {
@@ -123,6 +150,10 @@ func (rcv *FloatParameterType) DEFAULT_ALARM(obj *DefaultAlarm) *DefaultAlarm {
 	return nil
 }
 
+func (rcv *FloatParameterType) DefaultAlarm(obj *DefaultAlarm) *DefaultAlarm {
+	return rcv.DEFAULT_ALARM(obj)
+}
+
 /// Default alarm
 /// Context alarms
 func (rcv *FloatParameterType) CONTEXT_ALARMS(obj *ContextAlarm, j int) bool {
@@ -131,10 +162,17 @@ func (rcv *FloatParameterType) CONTEXT_ALARMS(obj *ContextAlarm, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(ContextAlarm)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *FloatParameterType) ContextAlarms(obj *ContextAlarm, j int) bool {
+	return rcv.CONTEXT_ALARMS(obj, j)
 }
 
 func (rcv *FloatParameterType) CONTEXT_ALARMSLength() int {
@@ -143,6 +181,10 @@ func (rcv *FloatParameterType) CONTEXT_ALARMSLength() int {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *FloatParameterType) ContextAlarmsLength() int {
+	return rcv.CONTEXT_ALARMSLength()
 }
 
 /// Context alarms
@@ -155,9 +197,17 @@ func (rcv *FloatParameterType) VALID_MIN() float64 {
 	return 0.0
 }
 
+func (rcv *FloatParameterType) ValidMin() float64 {
+	return rcv.VALID_MIN()
+}
+
 /// Minimum valid value
 func (rcv *FloatParameterType) MutateVALID_MIN(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(18, n)
+}
+
+func (rcv *FloatParameterType) MutateValidMin(n float64) bool {
+	return rcv.MutateVALID_MIN(n)
 }
 
 /// Maximum valid value
@@ -169,9 +219,17 @@ func (rcv *FloatParameterType) VALID_MAX() float64 {
 	return 0.0
 }
 
+func (rcv *FloatParameterType) ValidMax() float64 {
+	return rcv.VALID_MAX()
+}
+
 /// Maximum valid value
 func (rcv *FloatParameterType) MutateVALID_MAX(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(20, n)
+}
+
+func (rcv *FloatParameterType) MutateValidMax(n float64) bool {
+	return rcv.MutateVALID_MAX(n)
 }
 
 /// Size in bits (32 or 64)
@@ -183,9 +241,17 @@ func (rcv *FloatParameterType) SIZE_IN_BITS() uint16 {
 	return 0
 }
 
+func (rcv *FloatParameterType) SizeInBits() uint16 {
+	return rcv.SIZE_IN_BITS()
+}
+
 /// Size in bits (32 or 64)
 func (rcv *FloatParameterType) MutateSIZE_IN_BITS(n uint16) bool {
 	return rcv._tab.MutateUint16Slot(22, n)
+}
+
+func (rcv *FloatParameterType) MutateSizeInBits(n uint16) bool {
+	return rcv.MutateSIZE_IN_BITS(n)
 }
 
 /// Initial/default value
@@ -197,9 +263,17 @@ func (rcv *FloatParameterType) INITIAL_VALUE() float64 {
 	return 0.0
 }
 
+func (rcv *FloatParameterType) InitialValue() float64 {
+	return rcv.INITIAL_VALUE()
+}
+
 /// Initial/default value
 func (rcv *FloatParameterType) MutateINITIAL_VALUE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(24, n)
+}
+
+func (rcv *FloatParameterType) MutateInitialValue(n float64) bool {
+	return rcv.MutateINITIAL_VALUE(n)
 }
 
 func FloatParameterTypeStart(builder *flatbuffers.Builder) {
@@ -208,41 +282,80 @@ func FloatParameterTypeStart(builder *flatbuffers.Builder) {
 func FloatParameterTypeAddNAME(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(NAME), 0)
 }
+func FloatParameterTypeAddName(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
+	FloatParameterTypeAddNAME(builder, NAME)
+}
 func FloatParameterTypeAddSHORT_DESCRIPTION(builder *flatbuffers.Builder, SHORT_DESCRIPTION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(SHORT_DESCRIPTION), 0)
+}
+func FloatParameterTypeAddShortDescription(builder *flatbuffers.Builder, SHORT_DESCRIPTION flatbuffers.UOffsetT) {
+	FloatParameterTypeAddSHORT_DESCRIPTION(builder, SHORT_DESCRIPTION)
 }
 func FloatParameterTypeAddLONG_DESCRIPTION(builder *flatbuffers.Builder, LONG_DESCRIPTION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(LONG_DESCRIPTION), 0)
 }
+func FloatParameterTypeAddLongDescription(builder *flatbuffers.Builder, LONG_DESCRIPTION flatbuffers.UOffsetT) {
+	FloatParameterTypeAddLONG_DESCRIPTION(builder, LONG_DESCRIPTION)
+}
 func FloatParameterTypeAddUNITS(builder *flatbuffers.Builder, UNITS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(UNITS), 0)
+}
+func FloatParameterTypeAddUnits(builder *flatbuffers.Builder, UNITS flatbuffers.UOffsetT) {
+	FloatParameterTypeAddUNITS(builder, UNITS)
 }
 func FloatParameterTypeStartUNITSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
+func FloatParameterTypeStartUnitsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return FloatParameterTypeStartUNITSVector(builder, numElems)
+}
 func FloatParameterTypeAddDATA_ENCODING(builder *flatbuffers.Builder, DATA_ENCODING flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(DATA_ENCODING), 0)
+}
+func FloatParameterTypeAddDataEncoding(builder *flatbuffers.Builder, DATA_ENCODING flatbuffers.UOffsetT) {
+	FloatParameterTypeAddDATA_ENCODING(builder, DATA_ENCODING)
 }
 func FloatParameterTypeAddDEFAULT_ALARM(builder *flatbuffers.Builder, DEFAULT_ALARM flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(DEFAULT_ALARM), 0)
 }
+func FloatParameterTypeAddDefaultAlarm(builder *flatbuffers.Builder, DEFAULT_ALARM flatbuffers.UOffsetT) {
+	FloatParameterTypeAddDEFAULT_ALARM(builder, DEFAULT_ALARM)
+}
 func FloatParameterTypeAddCONTEXT_ALARMS(builder *flatbuffers.Builder, CONTEXT_ALARMS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(CONTEXT_ALARMS), 0)
+}
+func FloatParameterTypeAddContextAlarms(builder *flatbuffers.Builder, CONTEXT_ALARMS flatbuffers.UOffsetT) {
+	FloatParameterTypeAddCONTEXT_ALARMS(builder, CONTEXT_ALARMS)
 }
 func FloatParameterTypeStartCONTEXT_ALARMSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
+func FloatParameterTypeStartContextAlarmsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return FloatParameterTypeStartCONTEXT_ALARMSVector(builder, numElems)
+}
 func FloatParameterTypeAddVALID_MIN(builder *flatbuffers.Builder, VALID_MIN float64) {
 	builder.PrependFloat64Slot(7, VALID_MIN, 0.0)
+}
+func FloatParameterTypeAddValidMin(builder *flatbuffers.Builder, VALID_MIN float64) {
+	FloatParameterTypeAddVALID_MIN(builder, VALID_MIN)
 }
 func FloatParameterTypeAddVALID_MAX(builder *flatbuffers.Builder, VALID_MAX float64) {
 	builder.PrependFloat64Slot(8, VALID_MAX, 0.0)
 }
+func FloatParameterTypeAddValidMax(builder *flatbuffers.Builder, VALID_MAX float64) {
+	FloatParameterTypeAddVALID_MAX(builder, VALID_MAX)
+}
 func FloatParameterTypeAddSIZE_IN_BITS(builder *flatbuffers.Builder, SIZE_IN_BITS uint16) {
 	builder.PrependUint16Slot(9, SIZE_IN_BITS, 0)
 }
+func FloatParameterTypeAddSizeInBits(builder *flatbuffers.Builder, SIZE_IN_BITS uint16) {
+	FloatParameterTypeAddSIZE_IN_BITS(builder, SIZE_IN_BITS)
+}
 func FloatParameterTypeAddINITIAL_VALUE(builder *flatbuffers.Builder, INITIAL_VALUE float64) {
 	builder.PrependFloat64Slot(10, INITIAL_VALUE, 0.0)
+}
+func FloatParameterTypeAddInitialValue(builder *flatbuffers.Builder, INITIAL_VALUE float64) {
+	FloatParameterTypeAddINITIAL_VALUE(builder, INITIAL_VALUE)
 }
 func FloatParameterTypeEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

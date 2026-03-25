@@ -197,6 +197,12 @@ def FloatParameterTypeStartUNITSVector(builder, numElems):
 def StartUNITSVector(builder, numElems):
     return FloatParameterTypeStartUNITSVector(builder, numElems)
 
+def FloatParameterTypeCreateUNITSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateUNITSVector(builder, data):
+    FloatParameterTypeCreateUNITSVector(builder, data)
+
 def FloatParameterTypeAddDATA_ENCODING(builder, DATA_ENCODING):
     builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(DATA_ENCODING), 0)
 
@@ -220,6 +226,12 @@ def FloatParameterTypeStartCONTEXT_ALARMSVector(builder, numElems):
 
 def StartCONTEXT_ALARMSVector(builder, numElems):
     return FloatParameterTypeStartCONTEXT_ALARMSVector(builder, numElems)
+
+def FloatParameterTypeCreateCONTEXT_ALARMSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateCONTEXT_ALARMSVector(builder, data):
+    FloatParameterTypeCreateCONTEXT_ALARMSVector(builder, data)
 
 def FloatParameterTypeAddVALID_MIN(builder, VALID_MIN):
     builder.PrependFloat64Slot(7, VALID_MIN, 0.0)
@@ -263,24 +275,37 @@ except:
 class FloatParameterTypeT(object):
 
     # FloatParameterTypeT
-    def __init__(self):
-        self.NAME = None  # type: str
-        self.SHORT_DESCRIPTION = None  # type: str
-        self.LONG_DESCRIPTION = None  # type: str
-        self.UNITS = None  # type: List[Unit.UnitT]
-        self.DATA_ENCODING = None  # type: Optional[FloatDataEncoding.FloatDataEncodingT]
-        self.DEFAULT_ALARM = None  # type: Optional[DefaultAlarm.DefaultAlarmT]
-        self.CONTEXT_ALARMS = None  # type: List[ContextAlarm.ContextAlarmT]
-        self.VALID_MIN = 0.0  # type: float
-        self.VALID_MAX = 0.0  # type: float
-        self.SIZE_IN_BITS = 0  # type: int
-        self.INITIAL_VALUE = 0.0  # type: float
+    def __init__(
+        self,
+        NAME = None,
+        SHORT_DESCRIPTION = None,
+        LONG_DESCRIPTION = None,
+        UNITS = None,
+        DATA_ENCODING = None,
+        DEFAULT_ALARM = None,
+        CONTEXT_ALARMS = None,
+        VALID_MIN = 0.0,
+        VALID_MAX = 0.0,
+        SIZE_IN_BITS = 0,
+        INITIAL_VALUE = 0.0,
+    ):
+        self.NAME = NAME  # type: Optional[str]
+        self.SHORT_DESCRIPTION = SHORT_DESCRIPTION  # type: Optional[str]
+        self.LONG_DESCRIPTION = LONG_DESCRIPTION  # type: Optional[str]
+        self.UNITS = UNITS  # type: Optional[List[Unit.UnitT]]
+        self.DATA_ENCODING = DATA_ENCODING  # type: Optional[FloatDataEncoding.FloatDataEncodingT]
+        self.DEFAULT_ALARM = DEFAULT_ALARM  # type: Optional[DefaultAlarm.DefaultAlarmT]
+        self.CONTEXT_ALARMS = CONTEXT_ALARMS  # type: Optional[List[ContextAlarm.ContextAlarmT]]
+        self.VALID_MIN = VALID_MIN  # type: float
+        self.VALID_MAX = VALID_MAX  # type: float
+        self.SIZE_IN_BITS = SIZE_IN_BITS  # type: int
+        self.INITIAL_VALUE = INITIAL_VALUE  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        floatParameterType = FloatParameterType()
-        floatParameterType.Init(buf, pos)
-        return cls.InitFromObj(floatParameterType)
+        tmpFloatParameterType = FloatParameterType()
+        tmpFloatParameterType.Init(buf, pos)
+        return cls.InitFromObj(tmpFloatParameterType)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -288,42 +313,42 @@ class FloatParameterTypeT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, floatParameterType):
+    def InitFromObj(cls, tmpFloatParameterType):
         x = FloatParameterTypeT()
-        x._UnPack(floatParameterType)
+        x._UnPack(tmpFloatParameterType)
         return x
 
     # FloatParameterTypeT
-    def _UnPack(self, floatParameterType):
-        if floatParameterType is None:
+    def _UnPack(self, FloatParameterType):
+        if FloatParameterType is None:
             return
-        self.NAME = floatParameterType.NAME()
-        self.SHORT_DESCRIPTION = floatParameterType.SHORT_DESCRIPTION()
-        self.LONG_DESCRIPTION = floatParameterType.LONG_DESCRIPTION()
-        if not floatParameterType.UNITSIsNone():
+        self.NAME = FloatParameterType.NAME()
+        self.SHORT_DESCRIPTION = FloatParameterType.SHORT_DESCRIPTION()
+        self.LONG_DESCRIPTION = FloatParameterType.LONG_DESCRIPTION()
+        if not FloatParameterType.UNITSIsNone():
             self.UNITS = []
-            for i in range(floatParameterType.UNITSLength()):
-                if floatParameterType.UNITS(i) is None:
+            for i in range(FloatParameterType.UNITSLength()):
+                if FloatParameterType.UNITS(i) is None:
                     self.UNITS.append(None)
                 else:
-                    unit_ = Unit.UnitT.InitFromObj(floatParameterType.UNITS(i))
+                    unit_ = Unit.UnitT.InitFromObj(FloatParameterType.UNITS(i))
                     self.UNITS.append(unit_)
-        if floatParameterType.DATA_ENCODING() is not None:
-            self.DATA_ENCODING = FloatDataEncoding.FloatDataEncodingT.InitFromObj(floatParameterType.DATA_ENCODING())
-        if floatParameterType.DEFAULT_ALARM() is not None:
-            self.DEFAULT_ALARM = DefaultAlarm.DefaultAlarmT.InitFromObj(floatParameterType.DEFAULT_ALARM())
-        if not floatParameterType.CONTEXT_ALARMSIsNone():
+        if FloatParameterType.DATA_ENCODING() is not None:
+            self.DATA_ENCODING = FloatDataEncoding.FloatDataEncodingT.InitFromObj(FloatParameterType.DATA_ENCODING())
+        if FloatParameterType.DEFAULT_ALARM() is not None:
+            self.DEFAULT_ALARM = DefaultAlarm.DefaultAlarmT.InitFromObj(FloatParameterType.DEFAULT_ALARM())
+        if not FloatParameterType.CONTEXT_ALARMSIsNone():
             self.CONTEXT_ALARMS = []
-            for i in range(floatParameterType.CONTEXT_ALARMSLength()):
-                if floatParameterType.CONTEXT_ALARMS(i) is None:
+            for i in range(FloatParameterType.CONTEXT_ALARMSLength()):
+                if FloatParameterType.CONTEXT_ALARMS(i) is None:
                     self.CONTEXT_ALARMS.append(None)
                 else:
-                    contextAlarm_ = ContextAlarm.ContextAlarmT.InitFromObj(floatParameterType.CONTEXT_ALARMS(i))
+                    contextAlarm_ = ContextAlarm.ContextAlarmT.InitFromObj(FloatParameterType.CONTEXT_ALARMS(i))
                     self.CONTEXT_ALARMS.append(contextAlarm_)
-        self.VALID_MIN = floatParameterType.VALID_MIN()
-        self.VALID_MAX = floatParameterType.VALID_MAX()
-        self.SIZE_IN_BITS = floatParameterType.SIZE_IN_BITS()
-        self.INITIAL_VALUE = floatParameterType.INITIAL_VALUE()
+        self.VALID_MIN = FloatParameterType.VALID_MIN()
+        self.VALID_MAX = FloatParameterType.VALID_MAX()
+        self.SIZE_IN_BITS = FloatParameterType.SIZE_IN_BITS()
+        self.INITIAL_VALUE = FloatParameterType.INITIAL_VALUE()
 
     # FloatParameterTypeT
     def Pack(self, builder):
@@ -372,5 +397,5 @@ class FloatParameterTypeT(object):
         FloatParameterTypeAddVALID_MAX(builder, self.VALID_MAX)
         FloatParameterTypeAddSIZE_IN_BITS(builder, self.SIZE_IN_BITS)
         FloatParameterTypeAddINITIAL_VALUE(builder, self.INITIAL_VALUE)
-        floatParameterType = FloatParameterTypeEnd(builder)
-        return floatParameterType
+        FloatParameterType = FloatParameterTypeEnd(builder)
+        return FloatParameterType

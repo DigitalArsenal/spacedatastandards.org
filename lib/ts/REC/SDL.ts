@@ -214,9 +214,9 @@ unpack(): SDLT {
   return new SDLT(
     this.SPI(),
     this.IV_LENGTH(),
-    this.bb!.createScalarList<number>(this.IV.bind(this), this.ivLength()),
+    this.bb!.createScalarList<number>(this.IV.bind(this), this.IV_LENGTH()),
     this.MAC_LENGTH(),
-    this.bb!.createScalarList<number>(this.MAC.bind(this), this.macLength()),
+    this.bb!.createScalarList<number>(this.MAC.bind(this), this.MAC_LENGTH()),
     this.PAD_LENGTH(),
     this.bb!.createScalarList<number>(this.PAYLOAD.bind(this), this.payloadLength())
   );
@@ -226,9 +226,9 @@ unpack(): SDLT {
 unpackTo(_o: SDLT): void {
   _o.SPI = this.SPI();
   _o.IV_LENGTH = this.IV_LENGTH();
-  _o.IV = this.bb!.createScalarList<number>(this.IV.bind(this), this.ivLength());
+  _o.IV = this.bb!.createScalarList<number>(this.IV.bind(this), this.IV_LENGTH());
   _o.MAC_LENGTH = this.MAC_LENGTH();
-  _o.MAC = this.bb!.createScalarList<number>(this.MAC.bind(this), this.macLength());
+  _o.MAC = this.bb!.createScalarList<number>(this.MAC.bind(this), this.MAC_LENGTH());
   _o.PAD_LENGTH = this.PAD_LENGTH();
   _o.PAYLOAD = this.bb!.createScalarList<number>(this.PAYLOAD.bind(this), this.payloadLength());
 }

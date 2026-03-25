@@ -143,20 +143,29 @@ def End(builder):
 class KMLLatLonAltBoxT(object):
 
     # KMLLatLonAltBoxT
-    def __init__(self):
-        self.NORTH = 0.0  # type: float
-        self.SOUTH = 0.0  # type: float
-        self.EAST = 0.0  # type: float
-        self.WEST = 0.0  # type: float
-        self.MIN_ALTITUDE = 0.0  # type: float
-        self.MAX_ALTITUDE = 0.0  # type: float
-        self.ALTITUDE_MODE = 0  # type: int
+    def __init__(
+        self,
+        NORTH = 0.0,
+        SOUTH = 0.0,
+        EAST = 0.0,
+        WEST = 0.0,
+        MIN_ALTITUDE = 0.0,
+        MAX_ALTITUDE = 0.0,
+        ALTITUDE_MODE = 0,
+    ):
+        self.NORTH = NORTH  # type: float
+        self.SOUTH = SOUTH  # type: float
+        self.EAST = EAST  # type: float
+        self.WEST = WEST  # type: float
+        self.MIN_ALTITUDE = MIN_ALTITUDE  # type: float
+        self.MAX_ALTITUDE = MAX_ALTITUDE  # type: float
+        self.ALTITUDE_MODE = ALTITUDE_MODE  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        kmllatLonAltBox = KMLLatLonAltBox()
-        kmllatLonAltBox.Init(buf, pos)
-        return cls.InitFromObj(kmllatLonAltBox)
+        tmpKmllatLonAltBox = KMLLatLonAltBox()
+        tmpKmllatLonAltBox.Init(buf, pos)
+        return cls.InitFromObj(tmpKmllatLonAltBox)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -164,22 +173,22 @@ class KMLLatLonAltBoxT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, kmllatLonAltBox):
+    def InitFromObj(cls, tmpKmllatLonAltBox):
         x = KMLLatLonAltBoxT()
-        x._UnPack(kmllatLonAltBox)
+        x._UnPack(tmpKmllatLonAltBox)
         return x
 
     # KMLLatLonAltBoxT
-    def _UnPack(self, kmllatLonAltBox):
-        if kmllatLonAltBox is None:
+    def _UnPack(self, KMLLatLonAltBox):
+        if KMLLatLonAltBox is None:
             return
-        self.NORTH = kmllatLonAltBox.NORTH()
-        self.SOUTH = kmllatLonAltBox.SOUTH()
-        self.EAST = kmllatLonAltBox.EAST()
-        self.WEST = kmllatLonAltBox.WEST()
-        self.MIN_ALTITUDE = kmllatLonAltBox.MIN_ALTITUDE()
-        self.MAX_ALTITUDE = kmllatLonAltBox.MAX_ALTITUDE()
-        self.ALTITUDE_MODE = kmllatLonAltBox.ALTITUDE_MODE()
+        self.NORTH = KMLLatLonAltBox.NORTH()
+        self.SOUTH = KMLLatLonAltBox.SOUTH()
+        self.EAST = KMLLatLonAltBox.EAST()
+        self.WEST = KMLLatLonAltBox.WEST()
+        self.MIN_ALTITUDE = KMLLatLonAltBox.MIN_ALTITUDE()
+        self.MAX_ALTITUDE = KMLLatLonAltBox.MAX_ALTITUDE()
+        self.ALTITUDE_MODE = KMLLatLonAltBox.ALTITUDE_MODE()
 
     # KMLLatLonAltBoxT
     def Pack(self, builder):
@@ -191,5 +200,5 @@ class KMLLatLonAltBoxT(object):
         KMLLatLonAltBoxAddMIN_ALTITUDE(builder, self.MIN_ALTITUDE)
         KMLLatLonAltBoxAddMAX_ALTITUDE(builder, self.MAX_ALTITUDE)
         KMLLatLonAltBoxAddALTITUDE_MODE(builder, self.ALTITUDE_MODE)
-        kmllatLonAltBox = KMLLatLonAltBoxEnd(builder)
-        return kmllatLonAltBox
+        KMLLatLonAltBox = KMLLatLonAltBoxEnd(builder)
+        return KMLLatLonAltBox

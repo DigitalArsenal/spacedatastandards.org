@@ -8,9 +8,9 @@
 
 // Ensure the included flatbuffers.h is the same version as when this file was
 // generated, otherwise it may not be compatible.
-static_assert(FLATBUFFERS_VERSION_MAJOR == 24 &&
-              FLATBUFFERS_VERSION_MINOR == 3 &&
-              FLATBUFFERS_VERSION_REVISION == 25,
+static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
+              FLATBUFFERS_VERSION_MINOR == 12 &&
+              FLATBUFFERS_VERSION_REVISION == 19,
              "Non-compatible flatbuffers version included");
 
 struct IntegerDataEncoding;
@@ -944,7 +944,8 @@ struct IntegerDataEncoding FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Tabl
   const ::flatbuffers::Vector<::flatbuffers::Offset<ContextCalibrator>> *CONTEXT_CALIBRATOR_LIST() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<ContextCalibrator>> *>(VT_CONTEXT_CALIBRATOR_LIST);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<uint16_t>(verifier, VT_SIZE_IN_BITS, 2) &&
            VerifyField<int8_t>(verifier, VT_BYTE_ORDER, 1) &&
@@ -1052,7 +1053,8 @@ struct FloatDataEncoding FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table 
   const ::flatbuffers::Vector<::flatbuffers::Offset<ContextCalibrator>> *CONTEXT_CALIBRATOR_LIST() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<ContextCalibrator>> *>(VT_CONTEXT_CALIBRATOR_LIST);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<uint16_t>(verifier, VT_SIZE_IN_BITS, 2) &&
            VerifyField<int8_t>(verifier, VT_BYTE_ORDER, 1) &&
@@ -1165,7 +1167,8 @@ struct StringDataEncoding FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table
   uint8_t LEADING_SIZE_BITS() const {
     return GetField<uint8_t>(VT_LEADING_SIZE_BITS, 0);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<int8_t>(verifier, VT_ENCODING, 1) &&
            VerifyField<int8_t>(verifier, VT_SIZE_TYPE, 1) &&
@@ -1248,7 +1251,8 @@ struct BinaryDataEncoding FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table
   uint8_t LEADING_SIZE_BITS() const {
     return GetField<uint8_t>(VT_LEADING_SIZE_BITS, 0);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<uint16_t>(verifier, VT_SIZE_IN_BITS, 2) &&
            VerifyField<uint16_t>(verifier, VT_MAX_SIZE_IN_BITS, 2) &&
@@ -1303,7 +1307,8 @@ struct PolynomialCalibrator FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Tab
   const ::flatbuffers::Vector<double> *COEFFICIENTS() const {
     return GetPointer<const ::flatbuffers::Vector<double> *>(VT_COEFFICIENTS);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_COEFFICIENTS) &&
            verifier.VerifyVector(COEFFICIENTS()) &&
@@ -1361,7 +1366,8 @@ struct SplinePoint FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   double CALIBRATED() const {
     return GetField<double>(VT_CALIBRATED, 0.0);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<double>(verifier, VT_RAW, 8) &&
            VerifyField<double>(verifier, VT_CALIBRATED, 8) &&
@@ -1420,7 +1426,8 @@ struct SplineCalibrator FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   bool EXTRAPOLATE_HIGH() const {
     return GetField<uint8_t>(VT_EXTRAPOLATE_HIGH, 0) != 0;
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_POINTS) &&
            verifier.VerifyVector(POINTS()) &&
@@ -1490,7 +1497,8 @@ struct MathOperation FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *RPN_EXPRESSION() const {
     return GetPointer<const ::flatbuffers::String *>(VT_RPN_EXPRESSION);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_RPN_EXPRESSION) &&
            verifier.VerifyString(RPN_EXPRESSION()) &&
@@ -1558,7 +1566,8 @@ struct ContextCalibrator FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table 
   const MathOperation *MATH_OPERATION() const {
     return GetPointer<const MathOperation *>(VT_MATH_OPERATION);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_MATCH_CRITERIA) &&
            verifier.VerifyTable(MATCH_CRITERIA()) &&
@@ -1638,7 +1647,8 @@ struct AlarmRange FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   double MAX_EXCLUSIVE() const {
     return GetField<double>(VT_MAX_EXCLUSIVE, 0.0);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<double>(verifier, VT_MIN_INCLUSIVE, 8) &&
            VerifyField<double>(verifier, VT_MAX_INCLUSIVE, 8) &&
@@ -1719,7 +1729,8 @@ struct StaticAlarmRanges FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table 
   const AlarmRange *SEVERE_RANGE() const {
     return GetPointer<const AlarmRange *>(VT_SEVERE_RANGE);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_WATCH_RANGE) &&
            verifier.VerifyTable(WATCH_RANGE()) &&
@@ -1796,7 +1807,8 @@ struct EnumerationAlarm FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   AlarmSeverityType ALARM_LEVEL() const {
     return static_cast<AlarmSeverityType>(GetField<int8_t>(VT_ALARM_LEVEL, 0));
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_LABEL) &&
            verifier.VerifyString(LABEL()) &&
@@ -1867,7 +1879,8 @@ struct DefaultAlarm FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::Vector<::flatbuffers::Offset<EnumerationAlarm>> *ENUMERATION_ALARMS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<EnumerationAlarm>> *>(VT_ENUMERATION_ALARMS);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<uint16_t>(verifier, VT_MIN_VIOLATIONS, 2) &&
            VerifyOffset(verifier, VT_STATIC_ALARM_RANGES) &&
@@ -1943,7 +1956,8 @@ struct ContextAlarm FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const DefaultAlarm *ALARM() const {
     return GetPointer<const DefaultAlarm *>(VT_ALARM);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_MATCH_CRITERIA) &&
            verifier.VerifyTable(MATCH_CRITERIA()) &&
@@ -2009,7 +2023,8 @@ struct ParameterComparison FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Tabl
   bool USE_CALIBRATED_VALUE() const {
     return GetField<uint8_t>(VT_USE_CALIBRATED_VALUE, 1) != 0;
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_PARAMETER_REF) &&
            verifier.VerifyString(PARAMETER_REF()) &&
@@ -2098,7 +2113,8 @@ struct BooleanExpression FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table 
   const ::flatbuffers::Vector<::flatbuffers::Offset<BooleanExpression>> *EXPRESSIONS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<BooleanExpression>> *>(VT_EXPRESSIONS);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<int8_t>(verifier, VT_OPERATOR, 1) &&
            VerifyOffset(verifier, VT_CONDITIONS) &&
@@ -2186,7 +2202,8 @@ struct MatchCriteria FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *CUSTOM_ALGORITHM() const {
     return GetPointer<const ::flatbuffers::String *>(VT_CUSTOM_ALGORITHM);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_COMPARISON) &&
            verifier.VerifyTable(COMPARISON()) &&
@@ -2283,7 +2300,8 @@ struct Unit FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   double FACTOR() const {
     return GetField<double>(VT_FACTOR, 0.0);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_DESCRIPTION) &&
            verifier.VerifyString(DESCRIPTION()) &&
@@ -2377,7 +2395,8 @@ struct EnumerationValue FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *DESCRIPTION() const {
     return GetPointer<const ::flatbuffers::String *>(VT_DESCRIPTION);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_LABEL) &&
            verifier.VerifyString(LABEL()) &&
@@ -2511,7 +2530,8 @@ struct IntegerParameterType FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Tab
   int64_t INITIAL_VALUE() const {
     return GetField<int64_t>(VT_INITIAL_VALUE, 0);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_NAME) &&
            verifier.VerifyString(NAME()) &&
@@ -2714,7 +2734,8 @@ struct FloatParameterType FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table
   double INITIAL_VALUE() const {
     return GetField<double>(VT_INITIAL_VALUE, 0.0);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_NAME) &&
            verifier.VerifyString(NAME()) &&
@@ -2894,7 +2915,8 @@ struct StringParameterType FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Tabl
   const ::flatbuffers::String *RESTRICTION_PATTERN() const {
     return GetPointer<const ::flatbuffers::String *>(VT_RESTRICTION_PATTERN);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_NAME) &&
            verifier.VerifyString(NAME()) &&
@@ -3046,7 +3068,8 @@ struct BooleanParameterType FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Tab
   bool INITIAL_VALUE() const {
     return GetField<uint8_t>(VT_INITIAL_VALUE, 0) != 0;
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_NAME) &&
            verifier.VerifyString(NAME()) &&
@@ -3191,7 +3214,8 @@ struct EnumeratedParameterType FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::
   const ::flatbuffers::String *INITIAL_VALUE() const {
     return GetPointer<const ::flatbuffers::String *>(VT_INITIAL_VALUE);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_NAME) &&
            verifier.VerifyString(NAME()) &&
@@ -3334,7 +3358,8 @@ struct BinaryParameterType FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Tabl
   const ::flatbuffers::String *INITIAL_VALUE() const {
     return GetPointer<const ::flatbuffers::String *>(VT_INITIAL_VALUE);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_NAME) &&
            verifier.VerifyString(NAME()) &&
@@ -3471,7 +3496,8 @@ struct AbsoluteTimeParameterType FLATBUFFERS_FINAL_CLASS : private ::flatbuffers
   const ::flatbuffers::Vector<::flatbuffers::Offset<ContextAlarm>> *CONTEXT_ALARMS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<ContextAlarm>> *>(VT_CONTEXT_ALARMS);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_NAME) &&
            verifier.VerifyString(NAME()) &&
@@ -3637,7 +3663,8 @@ struct RelativeTimeParameterType FLATBUFFERS_FINAL_CLASS : private ::flatbuffers
   const ::flatbuffers::Vector<::flatbuffers::Offset<ContextAlarm>> *CONTEXT_ALARMS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<ContextAlarm>> *>(VT_CONTEXT_ALARMS);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_NAME) &&
            verifier.VerifyString(NAME()) &&
@@ -3755,7 +3782,8 @@ struct ArrayDimension FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *SIZE_PARAMETER_REF() const {
     return GetPointer<const ::flatbuffers::String *>(VT_SIZE_PARAMETER_REF);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<uint32_t>(verifier, VT_SIZE, 4) &&
            VerifyOffset(verifier, VT_SIZE_PARAMETER_REF) &&
@@ -3836,7 +3864,8 @@ struct ArrayParameterType FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table
   const ::flatbuffers::Vector<::flatbuffers::Offset<ArrayDimension>> *DIMENSIONS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<ArrayDimension>> *>(VT_DIMENSIONS);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_NAME) &&
            verifier.VerifyString(NAME()) &&
@@ -3940,7 +3969,8 @@ struct AggregateMember FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *SHORT_DESCRIPTION() const {
     return GetPointer<const ::flatbuffers::String *>(VT_SHORT_DESCRIPTION);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_NAME) &&
            verifier.VerifyString(NAME()) &&
@@ -4028,7 +4058,8 @@ struct AggregateParameterType FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::T
   const ::flatbuffers::Vector<::flatbuffers::Offset<AggregateMember>> *MEMBERS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<AggregateMember>> *>(VT_MEMBERS);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_NAME) &&
            verifier.VerifyString(NAME()) &&
@@ -4157,7 +4188,8 @@ struct ParameterTypeSet FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::Vector<::flatbuffers::Offset<AggregateParameterType>> *AGGREGATE_TYPES() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<AggregateParameterType>> *>(VT_AGGREGATE_TYPES);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_INTEGER_TYPES) &&
            verifier.VerifyVector(INTEGER_TYPES()) &&
@@ -4325,7 +4357,8 @@ struct ParameterProperties FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Tabl
   const MatchCriteria *VALIDITY_CONDITION() const {
     return GetPointer<const MatchCriteria *>(VT_VALIDITY_CONDITION);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<int8_t>(verifier, VT_DATA_SOURCE, 1) &&
            VerifyField<uint8_t>(verifier, VT_READ_ONLY, 1) &&
@@ -4433,7 +4466,8 @@ struct Parameter FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *INITIAL_VALUE() const {
     return GetPointer<const ::flatbuffers::String *>(VT_INITIAL_VALUE);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_NAME) &&
            verifier.VerifyString(NAME()) &&
@@ -4545,7 +4579,8 @@ struct ParameterSet FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::Vector<::flatbuffers::Offset<Parameter>> *PARAMETERS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<Parameter>> *>(VT_PARAMETERS);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_PARAMETERS) &&
            verifier.VerifyVector(PARAMETERS()) &&
@@ -4604,7 +4639,8 @@ struct LocationInContainer FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Tabl
   int32_t OFFSET_IN_BITS() const {
     return GetField<int32_t>(VT_OFFSET_IN_BITS, 0);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<int8_t>(verifier, VT_REFERENCE_LOCATION, 1) &&
            VerifyField<int32_t>(verifier, VT_OFFSET_IN_BITS, 4) &&
@@ -4663,7 +4699,8 @@ struct RepeatEntry FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   int32_t OFFSET_IN_BITS() const {
     return GetField<int32_t>(VT_OFFSET_IN_BITS, 0);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<uint32_t>(verifier, VT_COUNT, 4) &&
            VerifyOffset(verifier, VT_COUNT_PARAMETER_REF) &&
@@ -4752,7 +4789,8 @@ struct ParameterRefEntry FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table 
   const ::flatbuffers::String *SHORT_DESCRIPTION() const {
     return GetPointer<const ::flatbuffers::String *>(VT_SHORT_DESCRIPTION);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_PARAMETER_REF) &&
            verifier.VerifyString(PARAMETER_REF()) &&
@@ -4857,7 +4895,8 @@ struct ContainerRefEntry FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table 
   const MatchCriteria *INCLUDE_CONDITION() const {
     return GetPointer<const MatchCriteria *>(VT_INCLUDE_CONDITION);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_CONTAINER_REF) &&
            verifier.VerifyString(CONTAINER_REF()) &&
@@ -4952,7 +4991,8 @@ struct FixedValueEntry FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const LocationInContainer *LOCATION() const {
     return GetPointer<const LocationInContainer *>(VT_LOCATION);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_BINARY_VALUE) &&
            verifier.VerifyString(BINARY_VALUE()) &&
@@ -5047,7 +5087,8 @@ struct ArrayParameterRefEntry FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::T
   uint32_t LAST_INDEX() const {
     return GetField<uint32_t>(VT_LAST_INDEX, 0);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_PARAMETER_REF) &&
            verifier.VerifyString(PARAMETER_REF()) &&
@@ -5140,7 +5181,8 @@ struct ContainerEntry FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ArrayParameterRefEntry *ARRAY_PARAMETER_REF_ENTRY() const {
     return GetPointer<const ArrayParameterRefEntry *>(VT_ARRAY_PARAMETER_REF_ENTRY);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_PARAMETER_REF_ENTRY) &&
            verifier.VerifyTable(PARAMETER_REF_ENTRY()) &&
@@ -5210,7 +5252,8 @@ struct BaseContainer FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const MatchCriteria *RESTRICTION_CRITERIA() const {
     return GetPointer<const MatchCriteria *>(VT_RESTRICTION_CRITERIA);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_CONTAINER_REF) &&
            verifier.VerifyString(CONTAINER_REF()) &&
@@ -5282,7 +5325,8 @@ struct RateInStream FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   RateBasisType BASIS() const {
     return static_cast<RateBasisType>(GetField<int8_t>(VT_BASIS, 0));
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_STREAM_REF) &&
            verifier.VerifyString(STREAM_REF()) &&
@@ -5361,7 +5405,8 @@ struct ContainerBinaryEncoding FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::
   uint32_t SIZE_IN_BITS() const {
     return GetField<uint32_t>(VT_SIZE_IN_BITS, 0);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<int8_t>(verifier, VT_ERROR_DETECTION, 1) &&
            VerifyOffset(verifier, VT_CRC_POLYNOMIAL) &&
@@ -5470,7 +5515,8 @@ struct SequenceContainer FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table 
   const ::flatbuffers::String *IDLE_PATTERN() const {
     return GetPointer<const ::flatbuffers::String *>(VT_IDLE_PATTERN);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_NAME) &&
            verifier.VerifyString(NAME()) &&
@@ -5599,7 +5645,8 @@ struct ContainerSet FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::Vector<::flatbuffers::Offset<SequenceContainer>> *CONTAINERS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<SequenceContainer>> *>(VT_CONTAINERS);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_CONTAINERS) &&
            verifier.VerifyVector(CONTAINERS()) &&
@@ -5658,7 +5705,8 @@ struct AlgorithmInput FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *INPUT_NAME() const {
     return GetPointer<const ::flatbuffers::String *>(VT_INPUT_NAME);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_PARAMETER_REF) &&
            verifier.VerifyString(PARAMETER_REF()) &&
@@ -5726,7 +5774,8 @@ struct AlgorithmOutput FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *OUTPUT_NAME() const {
     return GetPointer<const ::flatbuffers::String *>(VT_OUTPUT_NAME);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_PARAMETER_REF) &&
            verifier.VerifyString(PARAMETER_REF()) &&
@@ -5799,7 +5848,8 @@ struct AlgorithmTrigger FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   double RATE() const {
     return GetField<double>(VT_RATE, 0.0);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_PARAMETER_REF) &&
            verifier.VerifyString(PARAMETER_REF()) &&
@@ -5910,7 +5960,8 @@ struct CustomAlgorithm FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::Vector<::flatbuffers::Offset<AlgorithmTrigger>> *TRIGGERS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<AlgorithmTrigger>> *>(VT_TRIGGERS);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_NAME) &&
            verifier.VerifyString(NAME()) &&
@@ -6066,7 +6117,8 @@ struct MathAlgorithm FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::Vector<::flatbuffers::Offset<AlgorithmTrigger>> *TRIGGERS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<AlgorithmTrigger>> *>(VT_TRIGGERS);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_NAME) &&
            verifier.VerifyString(NAME()) &&
@@ -6165,7 +6217,8 @@ struct AlgorithmSet FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::Vector<::flatbuffers::Offset<MathAlgorithm>> *MATH_ALGORITHMS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<MathAlgorithm>> *>(VT_MATH_ALGORITHMS);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_CUSTOM_ALGORITHMS) &&
            verifier.VerifyVector(CUSTOM_ALGORITHMS()) &&
@@ -6275,7 +6328,8 @@ struct IntegerArgumentType FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Tabl
   int64_t INITIAL_VALUE() const {
     return GetField<int64_t>(VT_INITIAL_VALUE, 0);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_NAME) &&
            verifier.VerifyString(NAME()) &&
@@ -6448,7 +6502,8 @@ struct FloatArgumentType FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table 
   double INITIAL_VALUE() const {
     return GetField<double>(VT_INITIAL_VALUE, 0.0);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_NAME) &&
            verifier.VerifyString(NAME()) &&
@@ -6598,7 +6653,8 @@ struct StringArgumentType FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table
   const ::flatbuffers::String *RESTRICTION_PATTERN() const {
     return GetPointer<const ::flatbuffers::String *>(VT_RESTRICTION_PATTERN);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_NAME) &&
            verifier.VerifyString(NAME()) &&
@@ -6730,7 +6786,8 @@ struct BooleanArgumentType FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Tabl
   bool INITIAL_VALUE() const {
     return GetField<uint8_t>(VT_INITIAL_VALUE, 0) != 0;
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_NAME) &&
            verifier.VerifyString(NAME()) &&
@@ -6865,7 +6922,8 @@ struct EnumeratedArgumentType FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::T
   const ::flatbuffers::String *INITIAL_VALUE() const {
     return GetPointer<const ::flatbuffers::String *>(VT_INITIAL_VALUE);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_NAME) &&
            verifier.VerifyString(NAME()) &&
@@ -6988,7 +7046,8 @@ struct BinaryArgumentType FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table
   const ::flatbuffers::String *INITIAL_VALUE() const {
     return GetPointer<const ::flatbuffers::String *>(VT_INITIAL_VALUE);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_NAME) &&
            verifier.VerifyString(NAME()) &&
@@ -7095,7 +7154,8 @@ struct AggregateArgumentType FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Ta
   const ::flatbuffers::Vector<::flatbuffers::Offset<AggregateMember>> *MEMBERS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<AggregateMember>> *>(VT_MEMBERS);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_NAME) &&
            verifier.VerifyString(NAME()) &&
@@ -7209,7 +7269,8 @@ struct ArgumentTypeSet FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::Vector<::flatbuffers::Offset<AggregateArgumentType>> *AGGREGATE_TYPES() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<AggregateArgumentType>> *>(VT_AGGREGATE_TYPES);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_INTEGER_TYPES) &&
            verifier.VerifyVector(INTEGER_TYPES()) &&
@@ -7349,7 +7410,8 @@ struct Argument FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *INITIAL_VALUE() const {
     return GetPointer<const ::flatbuffers::String *>(VT_INITIAL_VALUE);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_NAME) &&
            verifier.VerifyString(NAME()) &&
@@ -7452,7 +7514,8 @@ struct ArgumentRefEntry FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *SHORT_DESCRIPTION() const {
     return GetPointer<const ::flatbuffers::String *>(VT_SHORT_DESCRIPTION);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_ARGUMENT_REF) &&
            verifier.VerifyString(ARGUMENT_REF()) &&
@@ -7534,7 +7597,8 @@ struct CommandContainerEntry FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Ta
   const FixedValueEntry *FIXED_VALUE_ENTRY() const {
     return GetPointer<const FixedValueEntry *>(VT_FIXED_VALUE_ENTRY);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_ARGUMENT_REF_ENTRY) &&
            verifier.VerifyTable(ARGUMENT_REF_ENTRY()) &&
@@ -7602,7 +7666,8 @@ struct CommandContainer FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const BaseContainer *BASE_CONTAINER() const {
     return GetPointer<const BaseContainer *>(VT_BASE_CONTAINER);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_NAME) &&
            verifier.VerifyString(NAME()) &&
@@ -7705,7 +7770,8 @@ struct CommandVerifier FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   TimeWindowRefType TIME_WINDOW_REF() const {
     return static_cast<TimeWindowRefType>(GetField<int8_t>(VT_TIME_WINDOW_REF, 0));
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_NAME) &&
            verifier.VerifyString(NAME()) &&
@@ -7814,7 +7880,8 @@ struct CommandSignificance FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Tabl
   const ::flatbuffers::String *REASON_FOR_WARNING() const {
     return GetPointer<const ::flatbuffers::String *>(VT_REASON_FOR_WARNING);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<uint8_t>(verifier, VT_CONSEQUENCE_LEVEL, 1) &&
            VerifyOffset(verifier, VT_REASON_FOR_WARNING) &&
@@ -7880,7 +7947,8 @@ struct BaseMetaCommand FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::Vector<::flatbuffers::Offset<ArgumentAssignment>> *ARGUMENT_ASSIGNMENTS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<ArgumentAssignment>> *>(VT_ARGUMENT_ASSIGNMENTS);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_META_COMMAND_REF) &&
            verifier.VerifyString(META_COMMAND_REF()) &&
@@ -7949,7 +8017,8 @@ struct ArgumentAssignment FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table
   const ::flatbuffers::String *VALUE() const {
     return GetPointer<const ::flatbuffers::String *>(VT_VALUE);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_ARGUMENT_NAME) &&
            verifier.VerifyString(ARGUMENT_NAME()) &&
@@ -8022,7 +8091,8 @@ struct Interlock FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   ComparisonOperator OPERATOR() const {
     return static_cast<ComparisonOperator>(GetField<int8_t>(VT_OPERATOR, 0));
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_PARAMETER_REF) &&
            verifier.VerifyString(PARAMETER_REF()) &&
@@ -8143,7 +8213,8 @@ struct MetaCommand FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const CommandSignificance *DEFAULT_SIGNIFICANCE() const {
     return GetPointer<const CommandSignificance *>(VT_DEFAULT_SIGNIFICANCE);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_NAME) &&
            verifier.VerifyString(NAME()) &&
@@ -8293,7 +8364,8 @@ struct MetaCommandSet FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::Vector<::flatbuffers::Offset<MetaCommand>> *META_COMMANDS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<MetaCommand>> *>(VT_META_COMMANDS);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_META_COMMANDS) &&
            verifier.VerifyVector(META_COMMANDS()) &&
@@ -8362,7 +8434,8 @@ struct FixedFrameStream FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *SYNC_PATTERN() const {
     return GetPointer<const ::flatbuffers::String *>(VT_SYNC_PATTERN);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_NAME) &&
            verifier.VerifyString(NAME()) &&
@@ -8468,7 +8541,8 @@ struct VariableFrameStream FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Tabl
   uint16_t SIZE_FIELD_SIZE() const {
     return GetField<uint16_t>(VT_SIZE_FIELD_SIZE, 0);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_NAME) &&
            verifier.VerifyString(NAME()) &&
@@ -8573,7 +8647,8 @@ struct CustomStream FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *ALGORITHM_REF() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ALGORITHM_REF);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_NAME) &&
            verifier.VerifyString(NAME()) &&
@@ -8656,7 +8731,8 @@ struct StreamSet FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::Vector<::flatbuffers::Offset<CustomStream>> *CUSTOM_STREAMS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<CustomStream>> *>(VT_CUSTOM_STREAMS);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_FIXED_FRAME_STREAMS) &&
            verifier.VerifyVector(FIXED_FRAME_STREAMS()) &&
@@ -8752,7 +8828,8 @@ struct Service FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *COMMAND_REFS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_COMMAND_REFS);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_NAME) &&
            verifier.VerifyString(NAME()) &&
@@ -8847,7 +8924,8 @@ struct ServiceSet FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::Vector<::flatbuffers::Offset<Service>> *SERVICES() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<Service>> *>(VT_SERVICES);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_SERVICES) &&
            verifier.VerifyVector(SERVICES()) &&
@@ -8926,7 +9004,8 @@ struct XTCHeader FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *NOTES() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_NOTES);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_VERSION) &&
            verifier.VerifyString(VERSION()) &&
@@ -9050,7 +9129,8 @@ struct TelemetryMetaData FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table 
   const StreamSet *STREAM_SET() const {
     return GetPointer<const StreamSet *>(VT_STREAM_SET);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_PARAMETER_TYPE_SET) &&
            verifier.VerifyTable(PARAMETER_TYPE_SET()) &&
@@ -9152,7 +9232,8 @@ struct CommandMetaData FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const StreamSet *STREAM_SET() const {
     return GetPointer<const StreamSet *>(VT_STREAM_SET);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_ARGUMENT_TYPE_SET) &&
            verifier.VerifyTable(ARGUMENT_TYPE_SET()) &&
@@ -9281,7 +9362,8 @@ struct XTC FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::Vector<::flatbuffers::Offset<XTC>> *CHILD_SYSTEMS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<XTC>> *>(VT_CHILD_SYSTEMS);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_NAME) &&
            verifier.VerifyString(NAME()) &&
@@ -9423,14 +9505,16 @@ inline bool SizePrefixedXTCBufferHasIdentifier(const void *buf) {
       buf, XTCIdentifier(), true);
 }
 
+template <bool B = false>
 inline bool VerifyXTCBuffer(
-    ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifyBuffer<XTC>(XTCIdentifier());
+    ::flatbuffers::VerifierTemplate<B> &verifier) {
+  return verifier.template VerifyBuffer<XTC>(XTCIdentifier());
 }
 
+template <bool B = false>
 inline bool VerifySizePrefixedXTCBuffer(
-    ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifySizePrefixedBuffer<XTC>(XTCIdentifier());
+    ::flatbuffers::VerifierTemplate<B> &verifier) {
+  return verifier.template VerifySizePrefixedBuffer<XTC>(XTCIdentifier());
 }
 
 inline void FinishXTCBuffer(

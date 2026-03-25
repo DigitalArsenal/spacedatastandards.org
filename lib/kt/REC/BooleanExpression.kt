@@ -32,7 +32,7 @@ class BooleanExpression : Table() {
     /**
      * Boolean operator
      */
-    val OPERATOR : Byte
+    val operator : Byte
         get() {
             val o = __offset(4)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -40,8 +40,8 @@ class BooleanExpression : Table() {
     /**
      * Comparison conditions
      */
-    fun CONDITIONS(j: Int) : ParameterComparison? = CONDITIONS(ParameterComparison(), j)
-    fun CONDITIONS(obj: ParameterComparison, j: Int) : ParameterComparison? {
+    fun conditions(j: Int) : ParameterComparison? = conditions(ParameterComparison(), j)
+    fun conditions(obj: ParameterComparison, j: Int) : ParameterComparison? {
         val o = __offset(6)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -49,15 +49,15 @@ class BooleanExpression : Table() {
             null
         }
     }
-    val CONDITIONSLength : Int
+    val conditionsLength : Int
         get() {
             val o = __offset(6); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Nested expressions
      */
-    fun EXPRESSIONS(j: Int) : BooleanExpression? = EXPRESSIONS(BooleanExpression(), j)
-    fun EXPRESSIONS(obj: BooleanExpression, j: Int) : BooleanExpression? {
+    fun expressions(j: Int) : BooleanExpression? = expressions(BooleanExpression(), j)
+    fun expressions(obj: BooleanExpression, j: Int) : BooleanExpression? {
         val o = __offset(8)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -65,27 +65,27 @@ class BooleanExpression : Table() {
             null
         }
     }
-    val EXPRESSIONSLength : Int
+    val expressionsLength : Int
         get() {
             val o = __offset(8); return if (o != 0) __vector_len(o) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsBooleanExpression(_bb: ByteBuffer): BooleanExpression = getRootAsBooleanExpression(_bb, BooleanExpression())
         fun getRootAsBooleanExpression(_bb: ByteBuffer, obj: BooleanExpression): BooleanExpression {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createBooleanExpression(builder: FlatBufferBuilder, OPERATOR: Byte, CONDITIONSOffset: Int, EXPRESSIONSOffset: Int) : Int {
+        fun createBooleanExpression(builder: FlatBufferBuilder, operator: Byte, conditionsOffset: Int, expressionsOffset: Int) : Int {
             builder.startTable(3)
-            addEXPRESSIONS(builder, EXPRESSIONSOffset)
-            addCONDITIONS(builder, CONDITIONSOffset)
-            addOPERATOR(builder, OPERATOR)
+            addEXPRESSIONS(builder, expressionsOffset)
+            addCONDITIONS(builder, conditionsOffset)
+            addOPERATOR(builder, operator)
             return endBooleanExpression(builder)
         }
         fun startBooleanExpression(builder: FlatBufferBuilder) = builder.startTable(3)
-        fun addOPERATOR(builder: FlatBufferBuilder, OPERATOR: Byte) = builder.addByte(0, OPERATOR, 0)
-        fun addCONDITIONS(builder: FlatBufferBuilder, CONDITIONS: Int) = builder.addOffset(1, CONDITIONS, 0)
+        fun addOPERATOR(builder: FlatBufferBuilder, operator: Byte) = builder.addByte(0, operator, 0)
+        fun addCONDITIONS(builder: FlatBufferBuilder, conditions: Int) = builder.addOffset(1, conditions, 0)
         fun createConditionsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -94,7 +94,7 @@ class BooleanExpression : Table() {
             return builder.endVector()
         }
         fun startConditionsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addEXPRESSIONS(builder: FlatBufferBuilder, EXPRESSIONS: Int) = builder.addOffset(2, EXPRESSIONS, 0)
+        fun addEXPRESSIONS(builder: FlatBufferBuilder, expressions: Int) = builder.addOffset(2, expressions, 0)
         fun createExpressionsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {

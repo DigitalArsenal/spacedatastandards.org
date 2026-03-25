@@ -50,6 +50,10 @@ func (rcv *Maneuver) MAN_ID() []byte {
 	return nil
 }
 
+func (rcv *Maneuver) ManId() []byte {
+	return rcv.MAN_ID()
+}
+
 /// Unique identifier for the maneuver.
 /// Basis of the maneuver plan (e.g., planned, predicted, estimated).
 func (rcv *Maneuver) MAN_BASIS() []byte {
@@ -58,6 +62,10 @@ func (rcv *Maneuver) MAN_BASIS() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *Maneuver) ManBasis() []byte {
+	return rcv.MAN_BASIS()
 }
 
 /// Basis of the maneuver plan (e.g., planned, predicted, estimated).
@@ -70,6 +78,10 @@ func (rcv *Maneuver) MAN_DEVICE_ID() []byte {
 	return nil
 }
 
+func (rcv *Maneuver) ManDeviceId() []byte {
+	return rcv.MAN_DEVICE_ID()
+}
+
 /// Identifier of the maneuver device.
 /// Identifier of the previous maneuver.
 func (rcv *Maneuver) MAN_PREV_ID() []byte {
@@ -78,6 +90,10 @@ func (rcv *Maneuver) MAN_PREV_ID() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *Maneuver) ManPrevId() []byte {
+	return rcv.MAN_PREV_ID()
 }
 
 /// Identifier of the previous maneuver.
@@ -90,6 +106,10 @@ func (rcv *Maneuver) MAN_PURPOSE() []byte {
 	return nil
 }
 
+func (rcv *Maneuver) ManPurpose() []byte {
+	return rcv.MAN_PURPOSE()
+}
+
 /// Purpose of the maneuver.
 /// Reference frame for the maneuver data.
 func (rcv *Maneuver) MAN_REF_FRAME() []byte {
@@ -98,6 +118,10 @@ func (rcv *Maneuver) MAN_REF_FRAME() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *Maneuver) ManRefFrame() []byte {
+	return rcv.MAN_REF_FRAME()
 }
 
 /// Reference frame for the maneuver data.
@@ -110,6 +134,10 @@ func (rcv *Maneuver) MAN_FRAME_EPOCH() []byte {
 	return nil
 }
 
+func (rcv *Maneuver) ManFrameEpoch() []byte {
+	return rcv.MAN_FRAME_EPOCH()
+}
+
 /// Epoch of the maneuver reference frame.
 /// Type of maneuver (e.g., IMPULSIVE, FINITE).
 func (rcv *Maneuver) MAN_TYPE() []byte {
@@ -118,6 +146,10 @@ func (rcv *Maneuver) MAN_TYPE() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *Maneuver) ManType() []byte {
+	return rcv.MAN_TYPE()
 }
 
 /// Type of maneuver (e.g., IMPULSIVE, FINITE).
@@ -130,6 +162,10 @@ func (rcv *Maneuver) MAN_EPOCH_START() []byte {
 	return nil
 }
 
+func (rcv *Maneuver) ManEpochStart() []byte {
+	return rcv.MAN_EPOCH_START()
+}
+
 /// Start epoch of the maneuver.
 /// Duration of the maneuver.
 func (rcv *Maneuver) MAN_DURATION() float64 {
@@ -140,9 +176,17 @@ func (rcv *Maneuver) MAN_DURATION() float64 {
 	return 0.0
 }
 
+func (rcv *Maneuver) ManDuration() float64 {
+	return rcv.MAN_DURATION()
+}
+
 /// Duration of the maneuver.
 func (rcv *Maneuver) MutateMAN_DURATION(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(22, n)
+}
+
+func (rcv *Maneuver) MutateManDuration(n float64) bool {
+	return rcv.MutateMAN_DURATION(n)
 }
 
 /// Units for the maneuver data values.
@@ -155,12 +199,20 @@ func (rcv *Maneuver) MAN_UNITS(j int) []byte {
 	return nil
 }
 
+func (rcv *Maneuver) ManUnits(j int) []byte {
+	return rcv.MAN_UNITS(j)
+}
+
 func (rcv *Maneuver) MAN_UNITSLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *Maneuver) ManUnitsLength() int {
+	return rcv.MAN_UNITSLength()
 }
 
 /// Units for the maneuver data values.
@@ -174,12 +226,20 @@ func (rcv *Maneuver) DATA(j int) []byte {
 	return nil
 }
 
+func (rcv *Maneuver) Data(j int) []byte {
+	return rcv.DATA(j)
+}
+
 func (rcv *Maneuver) DATALength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *Maneuver) DataLength() int {
+	return rcv.DATALength()
 }
 
 /// Data associated with the maneuver.
@@ -193,12 +253,20 @@ func (rcv *Maneuver) MAN_COMMENT(j int) []byte {
 	return nil
 }
 
+func (rcv *Maneuver) ManComment(j int) []byte {
+	return rcv.MAN_COMMENT(j)
+}
+
 func (rcv *Maneuver) MAN_COMMENTLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *Maneuver) ManCommentLength() int {
+	return rcv.MAN_COMMENTLength()
 }
 
 /// Comments related to the maneuver.
@@ -208,50 +276,98 @@ func ManeuverStart(builder *flatbuffers.Builder) {
 func ManeuverAddMAN_ID(builder *flatbuffers.Builder, MAN_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(MAN_ID), 0)
 }
+func ManeuverAddManId(builder *flatbuffers.Builder, MAN_ID flatbuffers.UOffsetT) {
+	ManeuverAddMAN_ID(builder, MAN_ID)
+}
 func ManeuverAddMAN_BASIS(builder *flatbuffers.Builder, MAN_BASIS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(MAN_BASIS), 0)
+}
+func ManeuverAddManBasis(builder *flatbuffers.Builder, MAN_BASIS flatbuffers.UOffsetT) {
+	ManeuverAddMAN_BASIS(builder, MAN_BASIS)
 }
 func ManeuverAddMAN_DEVICE_ID(builder *flatbuffers.Builder, MAN_DEVICE_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(MAN_DEVICE_ID), 0)
 }
+func ManeuverAddManDeviceId(builder *flatbuffers.Builder, MAN_DEVICE_ID flatbuffers.UOffsetT) {
+	ManeuverAddMAN_DEVICE_ID(builder, MAN_DEVICE_ID)
+}
 func ManeuverAddMAN_PREV_ID(builder *flatbuffers.Builder, MAN_PREV_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(MAN_PREV_ID), 0)
+}
+func ManeuverAddManPrevId(builder *flatbuffers.Builder, MAN_PREV_ID flatbuffers.UOffsetT) {
+	ManeuverAddMAN_PREV_ID(builder, MAN_PREV_ID)
 }
 func ManeuverAddMAN_PURPOSE(builder *flatbuffers.Builder, MAN_PURPOSE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(MAN_PURPOSE), 0)
 }
+func ManeuverAddManPurpose(builder *flatbuffers.Builder, MAN_PURPOSE flatbuffers.UOffsetT) {
+	ManeuverAddMAN_PURPOSE(builder, MAN_PURPOSE)
+}
 func ManeuverAddMAN_REF_FRAME(builder *flatbuffers.Builder, MAN_REF_FRAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(MAN_REF_FRAME), 0)
+}
+func ManeuverAddManRefFrame(builder *flatbuffers.Builder, MAN_REF_FRAME flatbuffers.UOffsetT) {
+	ManeuverAddMAN_REF_FRAME(builder, MAN_REF_FRAME)
 }
 func ManeuverAddMAN_FRAME_EPOCH(builder *flatbuffers.Builder, MAN_FRAME_EPOCH flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(MAN_FRAME_EPOCH), 0)
 }
+func ManeuverAddManFrameEpoch(builder *flatbuffers.Builder, MAN_FRAME_EPOCH flatbuffers.UOffsetT) {
+	ManeuverAddMAN_FRAME_EPOCH(builder, MAN_FRAME_EPOCH)
+}
 func ManeuverAddMAN_TYPE(builder *flatbuffers.Builder, MAN_TYPE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(MAN_TYPE), 0)
+}
+func ManeuverAddManType(builder *flatbuffers.Builder, MAN_TYPE flatbuffers.UOffsetT) {
+	ManeuverAddMAN_TYPE(builder, MAN_TYPE)
 }
 func ManeuverAddMAN_EPOCH_START(builder *flatbuffers.Builder, MAN_EPOCH_START flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(MAN_EPOCH_START), 0)
 }
+func ManeuverAddManEpochStart(builder *flatbuffers.Builder, MAN_EPOCH_START flatbuffers.UOffsetT) {
+	ManeuverAddMAN_EPOCH_START(builder, MAN_EPOCH_START)
+}
 func ManeuverAddMAN_DURATION(builder *flatbuffers.Builder, MAN_DURATION float64) {
 	builder.PrependFloat64Slot(9, MAN_DURATION, 0.0)
+}
+func ManeuverAddManDuration(builder *flatbuffers.Builder, MAN_DURATION float64) {
+	ManeuverAddMAN_DURATION(builder, MAN_DURATION)
 }
 func ManeuverAddMAN_UNITS(builder *flatbuffers.Builder, MAN_UNITS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(MAN_UNITS), 0)
 }
+func ManeuverAddManUnits(builder *flatbuffers.Builder, MAN_UNITS flatbuffers.UOffsetT) {
+	ManeuverAddMAN_UNITS(builder, MAN_UNITS)
+}
 func ManeuverStartMAN_UNITSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func ManeuverStartManUnitsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return ManeuverStartMAN_UNITSVector(builder, numElems)
 }
 func ManeuverAddDATA(builder *flatbuffers.Builder, DATA flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(DATA), 0)
 }
+func ManeuverAddData(builder *flatbuffers.Builder, DATA flatbuffers.UOffsetT) {
+	ManeuverAddDATA(builder, DATA)
+}
 func ManeuverStartDATAVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func ManeuverStartDataVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return ManeuverStartDATAVector(builder, numElems)
 }
 func ManeuverAddMAN_COMMENT(builder *flatbuffers.Builder, MAN_COMMENT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(12, flatbuffers.UOffsetT(MAN_COMMENT), 0)
 }
+func ManeuverAddManComment(builder *flatbuffers.Builder, MAN_COMMENT flatbuffers.UOffsetT) {
+	ManeuverAddMAN_COMMENT(builder, MAN_COMMENT)
+}
 func ManeuverStartMAN_COMMENTVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func ManeuverStartManCommentVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return ManeuverStartMAN_COMMENTVector(builder, numElems)
 }
 func ManeuverEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

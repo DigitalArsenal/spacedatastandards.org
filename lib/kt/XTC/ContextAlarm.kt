@@ -32,8 +32,8 @@ class ContextAlarm : Table() {
     /**
      * Match criteria for this alarm context
      */
-    val MATCH_CRITERIA : MatchCriteria? get() = MATCH_CRITERIA(MatchCriteria())
-    fun MATCH_CRITERIA(obj: MatchCriteria) : MatchCriteria? {
+    val matchCriteria : MatchCriteria? get() = matchCriteria(MatchCriteria())
+    fun matchCriteria(obj: MatchCriteria) : MatchCriteria? {
         val o = __offset(4)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -44,8 +44,8 @@ class ContextAlarm : Table() {
     /**
      * Alarm definition for this context
      */
-    val ALARM : DefaultAlarm? get() = ALARM(DefaultAlarm())
-    fun ALARM(obj: DefaultAlarm) : DefaultAlarm? {
+    val alarm : DefaultAlarm? get() = alarm(DefaultAlarm())
+    fun alarm(obj: DefaultAlarm) : DefaultAlarm? {
         val o = __offset(6)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -54,21 +54,21 @@ class ContextAlarm : Table() {
         }
     }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsContextAlarm(_bb: ByteBuffer): ContextAlarm = getRootAsContextAlarm(_bb, ContextAlarm())
         fun getRootAsContextAlarm(_bb: ByteBuffer, obj: ContextAlarm): ContextAlarm {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createContextAlarm(builder: FlatBufferBuilder, MATCH_CRITERIAOffset: Int, ALARMOffset: Int) : Int {
+        fun createContextAlarm(builder: FlatBufferBuilder, matchCriteriaOffset: Int, alarmOffset: Int) : Int {
             builder.startTable(2)
-            addALARM(builder, ALARMOffset)
-            addMATCH_CRITERIA(builder, MATCH_CRITERIAOffset)
+            addALARM(builder, alarmOffset)
+            addMATCHCRITERIA(builder, matchCriteriaOffset)
             return endContextAlarm(builder)
         }
         fun startContextAlarm(builder: FlatBufferBuilder) = builder.startTable(2)
-        fun addMATCH_CRITERIA(builder: FlatBufferBuilder, MATCH_CRITERIA: Int) = builder.addOffset(0, MATCH_CRITERIA, 0)
-        fun addALARM(builder: FlatBufferBuilder, ALARM: Int) = builder.addOffset(1, ALARM, 0)
+        fun addMATCHCRITERIA(builder: FlatBufferBuilder, matchCriteria: Int) = builder.addOffset(0, matchCriteria, 0)
+        fun addALARM(builder: FlatBufferBuilder, alarm: Int) = builder.addOffset(1, alarm, 0)
         fun endContextAlarm(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

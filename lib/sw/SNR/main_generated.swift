@@ -2,9 +2,13 @@
 // swiftlint:disable all
 // swiftformat:disable all
 
+#if canImport(Common)
+import Common
+#endif
+
 import FlatBuffers
 
-public enum SensorType: Int8, Enum, Verifiable {
+public enum SensorType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -30,7 +34,7 @@ public enum SensorType: Int8, Enum, Verifiable {
 }
 
 
-public enum SensorMode: Int8, Enum, Verifiable {
+public enum SensorMode: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -48,7 +52,7 @@ public enum SensorMode: Int8, Enum, Verifiable {
 }
 
 
-public enum TrackQuality: Int8, Enum, Verifiable {
+public enum TrackQuality: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -65,9 +69,9 @@ public enum TrackQuality: Int8, Enum, Verifiable {
 
 
 ///  Sensor Systems
-public struct SNR: FlatBufferObject, Verifiable {
+public struct SNR: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -112,10 +116,8 @@ public struct SNR: FlatBufferObject, Verifiable {
   public var ELEVATION_SCAN_RATE: Float32 { let o = _accessor.offset(VTOFFSET.ELEVATION_SCAN_RATE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
   public var POWER: Float32 { let o = _accessor.offset(VTOFFSET.POWER.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
   public var FREQUENCY: Float32 { let o = _accessor.offset(VTOFFSET.FREQUENCY.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
-  public var hasReserved: Bool { let o = _accessor.offset(VTOFFSET.RESERVED.v); return o == 0 ? false : true }
-  public var RESERVEDCount: Int32 { let o = _accessor.offset(VTOFFSET.RESERVED.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func RESERVED(at index: Int32) -> UInt8 { let o = _accessor.offset(VTOFFSET.RESERVED.v); return o == 0 ? 0 : _accessor.directRead(of: UInt8.self, offset: _accessor.vector(at: o) + index * 1) }
-  public var RESERVED: [UInt8] { return _accessor.getVector(at: VTOFFSET.RESERVED.v) ?? [] }
+  public var RESERVED: FlatbufferVector<UInt8> { return _accessor.vector(at: VTOFFSET.RESERVED.v, byteSize: 1) }
+  public func withUnsafePointerToReserved<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.RESERVED.v, body: body) }
   public static func startSNR(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 16) }
   public static func add(TYPE: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TYPE, def: 0, at: VTOFFSET.TYPE.p) }
   public static func add(MODE: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MODE, def: 0, at: VTOFFSET.MODE.p) }

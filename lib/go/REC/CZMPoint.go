@@ -51,9 +51,17 @@ func (rcv *CZMPoint) SHOW() bool {
 	return false
 }
 
+func (rcv *CZMPoint) Show() bool {
+	return rcv.SHOW()
+}
+
 /// Whether the point is displayed
 func (rcv *CZMPoint) MutateSHOW(n bool) bool {
 	return rcv._tab.MutateBoolSlot(4, n)
+}
+
+func (rcv *CZMPoint) MutateShow(n bool) bool {
+	return rcv.MutateSHOW(n)
 }
 
 /// Point color
@@ -68,6 +76,10 @@ func (rcv *CZMPoint) COLOR(obj *CZMColor) *CZMColor {
 		return obj
 	}
 	return nil
+}
+
+func (rcv *CZMPoint) Color(obj *CZMColor) *CZMColor {
+	return rcv.COLOR(obj)
 }
 
 /// Point color
@@ -85,6 +97,10 @@ func (rcv *CZMPoint) OUTLINE_COLOR(obj *CZMColor) *CZMColor {
 	return nil
 }
 
+func (rcv *CZMPoint) OutlineColor(obj *CZMColor) *CZMColor {
+	return rcv.OUTLINE_COLOR(obj)
+}
+
 /// Outline color
 /// Outline width in pixels
 func (rcv *CZMPoint) OUTLINE_WIDTH() float64 {
@@ -95,9 +111,17 @@ func (rcv *CZMPoint) OUTLINE_WIDTH() float64 {
 	return 0.0
 }
 
+func (rcv *CZMPoint) OutlineWidth() float64 {
+	return rcv.OUTLINE_WIDTH()
+}
+
 /// Outline width in pixels
 func (rcv *CZMPoint) MutateOUTLINE_WIDTH(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(10, n)
+}
+
+func (rcv *CZMPoint) MutateOutlineWidth(n float64) bool {
+	return rcv.MutateOUTLINE_WIDTH(n)
 }
 
 /// Pixel size
@@ -109,9 +133,17 @@ func (rcv *CZMPoint) PIXEL_SIZE() float64 {
 	return 0.0
 }
 
+func (rcv *CZMPoint) PixelSize() float64 {
+	return rcv.PIXEL_SIZE()
+}
+
 /// Pixel size
 func (rcv *CZMPoint) MutatePIXEL_SIZE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(12, n)
+}
+
+func (rcv *CZMPoint) MutatePixelSize(n float64) bool {
+	return rcv.MutatePIXEL_SIZE(n)
 }
 
 /// Height reference
@@ -123,9 +155,17 @@ func (rcv *CZMPoint) HEIGHT_REFERENCE() CZMHeightReference {
 	return 0
 }
 
+func (rcv *CZMPoint) HeightReference() CZMHeightReference {
+	return rcv.HEIGHT_REFERENCE()
+}
+
 /// Height reference
 func (rcv *CZMPoint) MutateHEIGHT_REFERENCE(n CZMHeightReference) bool {
 	return rcv._tab.MutateInt8Slot(14, int8(n))
+}
+
+func (rcv *CZMPoint) MutateHeightReference(n CZMHeightReference) bool {
+	return rcv.MutateHEIGHT_REFERENCE(n)
 }
 
 /// Scale by distance
@@ -140,6 +180,10 @@ func (rcv *CZMPoint) SCALE_BY_DISTANCE(obj *CZMNearFarScalar) *CZMNearFarScalar 
 		return obj
 	}
 	return nil
+}
+
+func (rcv *CZMPoint) ScaleByDistance(obj *CZMNearFarScalar) *CZMNearFarScalar {
+	return rcv.SCALE_BY_DISTANCE(obj)
 }
 
 /// Scale by distance
@@ -157,6 +201,10 @@ func (rcv *CZMPoint) TRANSLUCENCY_BY_DISTANCE(obj *CZMNearFarScalar) *CZMNearFar
 	return nil
 }
 
+func (rcv *CZMPoint) TranslucencyByDistance(obj *CZMNearFarScalar) *CZMNearFarScalar {
+	return rcv.TRANSLUCENCY_BY_DISTANCE(obj)
+}
+
 /// Translucency by distance
 /// Distance display condition near
 func (rcv *CZMPoint) DISTANCE_DISPLAY_CONDITION_NEAR() float64 {
@@ -167,9 +215,17 @@ func (rcv *CZMPoint) DISTANCE_DISPLAY_CONDITION_NEAR() float64 {
 	return 0.0
 }
 
+func (rcv *CZMPoint) DistanceDisplayConditionNear() float64 {
+	return rcv.DISTANCE_DISPLAY_CONDITION_NEAR()
+}
+
 /// Distance display condition near
 func (rcv *CZMPoint) MutateDISTANCE_DISPLAY_CONDITION_NEAR(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(20, n)
+}
+
+func (rcv *CZMPoint) MutateDistanceDisplayConditionNear(n float64) bool {
+	return rcv.MutateDISTANCE_DISPLAY_CONDITION_NEAR(n)
 }
 
 /// Distance display condition far
@@ -181,9 +237,17 @@ func (rcv *CZMPoint) DISTANCE_DISPLAY_CONDITION_FAR() float64 {
 	return 0.0
 }
 
+func (rcv *CZMPoint) DistanceDisplayConditionFar() float64 {
+	return rcv.DISTANCE_DISPLAY_CONDITION_FAR()
+}
+
 /// Distance display condition far
 func (rcv *CZMPoint) MutateDISTANCE_DISPLAY_CONDITION_FAR(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(22, n)
+}
+
+func (rcv *CZMPoint) MutateDistanceDisplayConditionFar(n float64) bool {
+	return rcv.MutateDISTANCE_DISPLAY_CONDITION_FAR(n)
 }
 
 /// Disable depth test distance
@@ -195,9 +259,17 @@ func (rcv *CZMPoint) DISABLE_DEPTH_TEST_DISTANCE() float64 {
 	return 0.0
 }
 
+func (rcv *CZMPoint) DisableDepthTestDistance() float64 {
+	return rcv.DISABLE_DEPTH_TEST_DISTANCE()
+}
+
 /// Disable depth test distance
 func (rcv *CZMPoint) MutateDISABLE_DEPTH_TEST_DISTANCE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(24, n)
+}
+
+func (rcv *CZMPoint) MutateDisableDepthTestDistance(n float64) bool {
+	return rcv.MutateDISABLE_DEPTH_TEST_DISTANCE(n)
 }
 
 func CZMPointStart(builder *flatbuffers.Builder) {
@@ -206,35 +278,68 @@ func CZMPointStart(builder *flatbuffers.Builder) {
 func CZMPointAddSHOW(builder *flatbuffers.Builder, SHOW bool) {
 	builder.PrependBoolSlot(0, SHOW, false)
 }
+func CZMPointAddShow(builder *flatbuffers.Builder, SHOW bool) {
+	CZMPointAddSHOW(builder, SHOW)
+}
 func CZMPointAddCOLOR(builder *flatbuffers.Builder, COLOR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(COLOR), 0)
+}
+func CZMPointAddColor(builder *flatbuffers.Builder, COLOR flatbuffers.UOffsetT) {
+	CZMPointAddCOLOR(builder, COLOR)
 }
 func CZMPointAddOUTLINE_COLOR(builder *flatbuffers.Builder, OUTLINE_COLOR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(OUTLINE_COLOR), 0)
 }
+func CZMPointAddOutlineColor(builder *flatbuffers.Builder, OUTLINE_COLOR flatbuffers.UOffsetT) {
+	CZMPointAddOUTLINE_COLOR(builder, OUTLINE_COLOR)
+}
 func CZMPointAddOUTLINE_WIDTH(builder *flatbuffers.Builder, OUTLINE_WIDTH float64) {
 	builder.PrependFloat64Slot(3, OUTLINE_WIDTH, 0.0)
+}
+func CZMPointAddOutlineWidth(builder *flatbuffers.Builder, OUTLINE_WIDTH float64) {
+	CZMPointAddOUTLINE_WIDTH(builder, OUTLINE_WIDTH)
 }
 func CZMPointAddPIXEL_SIZE(builder *flatbuffers.Builder, PIXEL_SIZE float64) {
 	builder.PrependFloat64Slot(4, PIXEL_SIZE, 0.0)
 }
+func CZMPointAddPixelSize(builder *flatbuffers.Builder, PIXEL_SIZE float64) {
+	CZMPointAddPIXEL_SIZE(builder, PIXEL_SIZE)
+}
 func CZMPointAddHEIGHT_REFERENCE(builder *flatbuffers.Builder, HEIGHT_REFERENCE CZMHeightReference) {
 	builder.PrependInt8Slot(5, int8(HEIGHT_REFERENCE), 0)
+}
+func CZMPointAddHeightReference(builder *flatbuffers.Builder, HEIGHT_REFERENCE CZMHeightReference) {
+	CZMPointAddHEIGHT_REFERENCE(builder, HEIGHT_REFERENCE)
 }
 func CZMPointAddSCALE_BY_DISTANCE(builder *flatbuffers.Builder, SCALE_BY_DISTANCE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(SCALE_BY_DISTANCE), 0)
 }
+func CZMPointAddScaleByDistance(builder *flatbuffers.Builder, SCALE_BY_DISTANCE flatbuffers.UOffsetT) {
+	CZMPointAddSCALE_BY_DISTANCE(builder, SCALE_BY_DISTANCE)
+}
 func CZMPointAddTRANSLUCENCY_BY_DISTANCE(builder *flatbuffers.Builder, TRANSLUCENCY_BY_DISTANCE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(TRANSLUCENCY_BY_DISTANCE), 0)
+}
+func CZMPointAddTranslucencyByDistance(builder *flatbuffers.Builder, TRANSLUCENCY_BY_DISTANCE flatbuffers.UOffsetT) {
+	CZMPointAddTRANSLUCENCY_BY_DISTANCE(builder, TRANSLUCENCY_BY_DISTANCE)
 }
 func CZMPointAddDISTANCE_DISPLAY_CONDITION_NEAR(builder *flatbuffers.Builder, DISTANCE_DISPLAY_CONDITION_NEAR float64) {
 	builder.PrependFloat64Slot(8, DISTANCE_DISPLAY_CONDITION_NEAR, 0.0)
 }
+func CZMPointAddDistanceDisplayConditionNear(builder *flatbuffers.Builder, DISTANCE_DISPLAY_CONDITION_NEAR float64) {
+	CZMPointAddDISTANCE_DISPLAY_CONDITION_NEAR(builder, DISTANCE_DISPLAY_CONDITION_NEAR)
+}
 func CZMPointAddDISTANCE_DISPLAY_CONDITION_FAR(builder *flatbuffers.Builder, DISTANCE_DISPLAY_CONDITION_FAR float64) {
 	builder.PrependFloat64Slot(9, DISTANCE_DISPLAY_CONDITION_FAR, 0.0)
 }
+func CZMPointAddDistanceDisplayConditionFar(builder *flatbuffers.Builder, DISTANCE_DISPLAY_CONDITION_FAR float64) {
+	CZMPointAddDISTANCE_DISPLAY_CONDITION_FAR(builder, DISTANCE_DISPLAY_CONDITION_FAR)
+}
 func CZMPointAddDISABLE_DEPTH_TEST_DISTANCE(builder *flatbuffers.Builder, DISABLE_DEPTH_TEST_DISTANCE float64) {
 	builder.PrependFloat64Slot(10, DISABLE_DEPTH_TEST_DISTANCE, 0.0)
+}
+func CZMPointAddDisableDepthTestDistance(builder *flatbuffers.Builder, DISABLE_DEPTH_TEST_DISTANCE float64) {
+	CZMPointAddDISABLE_DEPTH_TEST_DISTANCE(builder, DISABLE_DEPTH_TEST_DISTANCE)
 }
 func CZMPointEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

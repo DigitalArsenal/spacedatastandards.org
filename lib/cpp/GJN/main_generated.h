@@ -8,9 +8,9 @@
 
 // Ensure the included flatbuffers.h is the same version as when this file was
 // generated, otherwise it may not be compatible.
-static_assert(FLATBUFFERS_VERSION_MAJOR == 24 &&
-              FLATBUFFERS_VERSION_MINOR == 3 &&
-              FLATBUFFERS_VERSION_REVISION == 25,
+static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
+              FLATBUFFERS_VERSION_MINOR == 12 &&
+              FLATBUFFERS_VERSION_REVISION == 19,
              "Non-compatible flatbuffers version included");
 
 struct GJNPosition;
@@ -107,7 +107,8 @@ struct GJNPosition FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   bool HAS_ALTITUDE() const {
     return GetField<uint8_t>(VT_HAS_ALTITUDE, 0) != 0;
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<double>(verifier, VT_LONGITUDE, 8) &&
            VerifyField<double>(verifier, VT_LATITUDE, 8) &&
@@ -168,7 +169,8 @@ struct GJNLinearRing FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::Vector<::flatbuffers::Offset<GJNPosition>> *POSITIONS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<GJNPosition>> *>(VT_POSITIONS);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_POSITIONS) &&
            verifier.VerifyVector(POSITIONS()) &&
@@ -222,7 +224,8 @@ struct GJNPolygonRings FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::Vector<::flatbuffers::Offset<GJNLinearRing>> *RINGS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<GJNLinearRing>> *>(VT_RINGS);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_RINGS) &&
            verifier.VerifyVector(RINGS()) &&
@@ -306,7 +309,8 @@ struct GJNGeometry FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const GJNBoundingBox *BBOX() const {
     return GetPointer<const GJNBoundingBox *>(VT_BBOX);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<int8_t>(verifier, VT_TYPE, 1) &&
            VerifyOffset(verifier, VT_POINT) &&
@@ -454,7 +458,8 @@ struct GJNProperty FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *JSON_VALUE() const {
     return GetPointer<const ::flatbuffers::String *>(VT_JSON_VALUE);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_KEY) &&
            verifier.VerifyString(KEY()) &&
@@ -602,7 +607,8 @@ struct GJNFeature FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const GJNBoundingBox *BBOX() const {
     return GetPointer<const GJNBoundingBox *>(VT_BBOX);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_ID) &&
            verifier.VerifyString(ID()) &&
@@ -746,7 +752,8 @@ struct GJNBoundingBox FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   bool HAS_ALTITUDE() const {
     return GetField<uint8_t>(VT_HAS_ALTITUDE, 0) != 0;
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<double>(verifier, VT_WEST, 8) &&
            VerifyField<double>(verifier, VT_SOUTH, 8) &&
@@ -830,7 +837,8 @@ struct GJN FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const GJNBoundingBox *BBOX() const {
     return GetPointer<const GJNBoundingBox *>(VT_BBOX);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_FEATURES) &&
            verifier.VerifyVector(FEATURES()) &&
@@ -905,14 +913,16 @@ inline bool SizePrefixedGJNBufferHasIdentifier(const void *buf) {
       buf, GJNIdentifier(), true);
 }
 
+template <bool B = false>
 inline bool VerifyGJNBuffer(
-    ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifyBuffer<GJN>(GJNIdentifier());
+    ::flatbuffers::VerifierTemplate<B> &verifier) {
+  return verifier.template VerifyBuffer<GJN>(GJNIdentifier());
 }
 
+template <bool B = false>
 inline bool VerifySizePrefixedGJNBuffer(
-    ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifySizePrefixedBuffer<GJN>(GJNIdentifier());
+    ::flatbuffers::VerifierTemplate<B> &verifier) {
+  return verifier.template VerifySizePrefixedBuffer<GJN>(GJNIdentifier());
 }
 
 inline void FinishGJNBuffer(

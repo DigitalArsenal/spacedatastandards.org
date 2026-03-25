@@ -32,7 +32,7 @@ class ContainerBinaryEncoding : Table() {
     /**
      * Error detection type
      */
-    val ERROR_DETECTION : Byte
+    val errorDetection : Byte
         get() {
             val o = __offset(4)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -40,7 +40,7 @@ class ContainerBinaryEncoding : Table() {
     /**
      * CRC polynomial (for CRC error detection)
      */
-    val CRC_POLYNOMIAL : String?
+    val crcPolynomial : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -49,34 +49,34 @@ class ContainerBinaryEncoding : Table() {
                 null
             }
         }
-    val CRC_POLYNOMIALAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun CRC_POLYNOMIALInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val crcPolynomialAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun crcPolynomialInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * Size in bits
      */
-    val SIZE_IN_BITS : UInt
+    val sizeInBits : UInt
         get() {
             val o = __offset(8)
             return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsContainerBinaryEncoding(_bb: ByteBuffer): ContainerBinaryEncoding = getRootAsContainerBinaryEncoding(_bb, ContainerBinaryEncoding())
         fun getRootAsContainerBinaryEncoding(_bb: ByteBuffer, obj: ContainerBinaryEncoding): ContainerBinaryEncoding {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createContainerBinaryEncoding(builder: FlatBufferBuilder, ERROR_DETECTION: Byte, CRC_POLYNOMIALOffset: Int, SIZE_IN_BITS: UInt) : Int {
+        fun createContainerBinaryEncoding(builder: FlatBufferBuilder, errorDetection: Byte, crcPolynomialOffset: Int, sizeInBits: UInt) : Int {
             builder.startTable(3)
-            addSIZE_IN_BITS(builder, SIZE_IN_BITS)
-            addCRC_POLYNOMIAL(builder, CRC_POLYNOMIALOffset)
-            addERROR_DETECTION(builder, ERROR_DETECTION)
+            addSIZEINBITS(builder, sizeInBits)
+            addCRCPOLYNOMIAL(builder, crcPolynomialOffset)
+            addERRORDETECTION(builder, errorDetection)
             return endContainerBinaryEncoding(builder)
         }
         fun startContainerBinaryEncoding(builder: FlatBufferBuilder) = builder.startTable(3)
-        fun addERROR_DETECTION(builder: FlatBufferBuilder, ERROR_DETECTION: Byte) = builder.addByte(0, ERROR_DETECTION, 0)
-        fun addCRC_POLYNOMIAL(builder: FlatBufferBuilder, CRC_POLYNOMIAL: Int) = builder.addOffset(1, CRC_POLYNOMIAL, 0)
-        fun addSIZE_IN_BITS(builder: FlatBufferBuilder, SIZE_IN_BITS: UInt) = builder.addInt(2, SIZE_IN_BITS.toInt(), 0)
+        fun addERRORDETECTION(builder: FlatBufferBuilder, errorDetection: Byte) = builder.addByte(0, errorDetection, 0)
+        fun addCRCPOLYNOMIAL(builder: FlatBufferBuilder, crcPolynomial: Int) = builder.addOffset(1, crcPolynomial, 0)
+        fun addSIZEINBITS(builder: FlatBufferBuilder, sizeInBits: UInt) = builder.addInt(2, sizeInBits.toInt(), 0)
         fun endContainerBinaryEncoding(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

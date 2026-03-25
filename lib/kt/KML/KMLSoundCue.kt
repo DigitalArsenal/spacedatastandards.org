@@ -32,7 +32,7 @@ class KMLSoundCue : Table() {
     /**
      * Audio file URL
      */
-    val HREF : String?
+    val href : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,32 +41,32 @@ class KMLSoundCue : Table() {
                 null
             }
         }
-    val HREFAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun HREFInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val hrefAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun hrefInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Delayed start in seconds
      */
-    val DELAYED_START : Double
+    val delayedStart : Double
         get() {
             val o = __offset(6)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsKMLSoundCue(_bb: ByteBuffer): KMLSoundCue = getRootAsKMLSoundCue(_bb, KMLSoundCue())
         fun getRootAsKMLSoundCue(_bb: ByteBuffer, obj: KMLSoundCue): KMLSoundCue {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createKMLSoundCue(builder: FlatBufferBuilder, HREFOffset: Int, DELAYED_START: Double) : Int {
+        fun createKMLSoundCue(builder: FlatBufferBuilder, hrefOffset: Int, delayedStart: Double) : Int {
             builder.startTable(2)
-            addDELAYED_START(builder, DELAYED_START)
-            addHREF(builder, HREFOffset)
+            addDELAYEDSTART(builder, delayedStart)
+            addHREF(builder, hrefOffset)
             return endKMLSoundCue(builder)
         }
         fun startKMLSoundCue(builder: FlatBufferBuilder) = builder.startTable(2)
-        fun addHREF(builder: FlatBufferBuilder, HREF: Int) = builder.addOffset(0, HREF, 0)
-        fun addDELAYED_START(builder: FlatBufferBuilder, DELAYED_START: Double) = builder.addDouble(1, DELAYED_START, 0.0)
+        fun addHREF(builder: FlatBufferBuilder, href: Int) = builder.addOffset(0, href, 0)
+        fun addDELAYEDSTART(builder: FlatBufferBuilder, delayedStart: Double) = builder.addDouble(1, delayedStart, 0.0)
         fun endKMLSoundCue(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

@@ -51,9 +51,17 @@ func (rcv *GJNBoundingBox) WEST() float64 {
 	return 0.0
 }
 
+func (rcv *GJNBoundingBox) West() float64 {
+	return rcv.WEST()
+}
+
 /// Western longitude
 func (rcv *GJNBoundingBox) MutateWEST(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(4, n)
+}
+
+func (rcv *GJNBoundingBox) MutateWest(n float64) bool {
+	return rcv.MutateWEST(n)
 }
 
 /// Southern latitude
@@ -65,9 +73,17 @@ func (rcv *GJNBoundingBox) SOUTH() float64 {
 	return 0.0
 }
 
+func (rcv *GJNBoundingBox) South() float64 {
+	return rcv.SOUTH()
+}
+
 /// Southern latitude
 func (rcv *GJNBoundingBox) MutateSOUTH(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(6, n)
+}
+
+func (rcv *GJNBoundingBox) MutateSouth(n float64) bool {
+	return rcv.MutateSOUTH(n)
 }
 
 /// Eastern longitude
@@ -79,9 +95,17 @@ func (rcv *GJNBoundingBox) EAST() float64 {
 	return 0.0
 }
 
+func (rcv *GJNBoundingBox) East() float64 {
+	return rcv.EAST()
+}
+
 /// Eastern longitude
 func (rcv *GJNBoundingBox) MutateEAST(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(8, n)
+}
+
+func (rcv *GJNBoundingBox) MutateEast(n float64) bool {
+	return rcv.MutateEAST(n)
 }
 
 /// Northern latitude
@@ -93,9 +117,17 @@ func (rcv *GJNBoundingBox) NORTH() float64 {
 	return 0.0
 }
 
+func (rcv *GJNBoundingBox) North() float64 {
+	return rcv.NORTH()
+}
+
 /// Northern latitude
 func (rcv *GJNBoundingBox) MutateNORTH(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(10, n)
+}
+
+func (rcv *GJNBoundingBox) MutateNorth(n float64) bool {
+	return rcv.MutateNORTH(n)
 }
 
 /// Minimum altitude (optional)
@@ -107,9 +139,17 @@ func (rcv *GJNBoundingBox) MIN_ALTITUDE() float64 {
 	return 0.0
 }
 
+func (rcv *GJNBoundingBox) MinAltitude() float64 {
+	return rcv.MIN_ALTITUDE()
+}
+
 /// Minimum altitude (optional)
 func (rcv *GJNBoundingBox) MutateMIN_ALTITUDE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(12, n)
+}
+
+func (rcv *GJNBoundingBox) MutateMinAltitude(n float64) bool {
+	return rcv.MutateMIN_ALTITUDE(n)
 }
 
 /// Maximum altitude (optional)
@@ -121,9 +161,17 @@ func (rcv *GJNBoundingBox) MAX_ALTITUDE() float64 {
 	return 0.0
 }
 
+func (rcv *GJNBoundingBox) MaxAltitude() float64 {
+	return rcv.MAX_ALTITUDE()
+}
+
 /// Maximum altitude (optional)
 func (rcv *GJNBoundingBox) MutateMAX_ALTITUDE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(14, n)
+}
+
+func (rcv *GJNBoundingBox) MutateMaxAltitude(n float64) bool {
+	return rcv.MutateMAX_ALTITUDE(n)
 }
 
 /// True if the bbox includes altitude (6 values vs 4)
@@ -135,9 +183,17 @@ func (rcv *GJNBoundingBox) HAS_ALTITUDE() bool {
 	return false
 }
 
+func (rcv *GJNBoundingBox) HasAltitude() bool {
+	return rcv.HAS_ALTITUDE()
+}
+
 /// True if the bbox includes altitude (6 values vs 4)
 func (rcv *GJNBoundingBox) MutateHAS_ALTITUDE(n bool) bool {
 	return rcv._tab.MutateBoolSlot(16, n)
+}
+
+func (rcv *GJNBoundingBox) MutateHasAltitude(n bool) bool {
+	return rcv.MutateHAS_ALTITUDE(n)
 }
 
 func GJNBoundingBoxStart(builder *flatbuffers.Builder) {
@@ -146,23 +202,44 @@ func GJNBoundingBoxStart(builder *flatbuffers.Builder) {
 func GJNBoundingBoxAddWEST(builder *flatbuffers.Builder, WEST float64) {
 	builder.PrependFloat64Slot(0, WEST, 0.0)
 }
+func GJNBoundingBoxAddWest(builder *flatbuffers.Builder, WEST float64) {
+	GJNBoundingBoxAddWEST(builder, WEST)
+}
 func GJNBoundingBoxAddSOUTH(builder *flatbuffers.Builder, SOUTH float64) {
 	builder.PrependFloat64Slot(1, SOUTH, 0.0)
+}
+func GJNBoundingBoxAddSouth(builder *flatbuffers.Builder, SOUTH float64) {
+	GJNBoundingBoxAddSOUTH(builder, SOUTH)
 }
 func GJNBoundingBoxAddEAST(builder *flatbuffers.Builder, EAST float64) {
 	builder.PrependFloat64Slot(2, EAST, 0.0)
 }
+func GJNBoundingBoxAddEast(builder *flatbuffers.Builder, EAST float64) {
+	GJNBoundingBoxAddEAST(builder, EAST)
+}
 func GJNBoundingBoxAddNORTH(builder *flatbuffers.Builder, NORTH float64) {
 	builder.PrependFloat64Slot(3, NORTH, 0.0)
+}
+func GJNBoundingBoxAddNorth(builder *flatbuffers.Builder, NORTH float64) {
+	GJNBoundingBoxAddNORTH(builder, NORTH)
 }
 func GJNBoundingBoxAddMIN_ALTITUDE(builder *flatbuffers.Builder, MIN_ALTITUDE float64) {
 	builder.PrependFloat64Slot(4, MIN_ALTITUDE, 0.0)
 }
+func GJNBoundingBoxAddMinAltitude(builder *flatbuffers.Builder, MIN_ALTITUDE float64) {
+	GJNBoundingBoxAddMIN_ALTITUDE(builder, MIN_ALTITUDE)
+}
 func GJNBoundingBoxAddMAX_ALTITUDE(builder *flatbuffers.Builder, MAX_ALTITUDE float64) {
 	builder.PrependFloat64Slot(5, MAX_ALTITUDE, 0.0)
 }
+func GJNBoundingBoxAddMaxAltitude(builder *flatbuffers.Builder, MAX_ALTITUDE float64) {
+	GJNBoundingBoxAddMAX_ALTITUDE(builder, MAX_ALTITUDE)
+}
 func GJNBoundingBoxAddHAS_ALTITUDE(builder *flatbuffers.Builder, HAS_ALTITUDE bool) {
 	builder.PrependBoolSlot(6, HAS_ALTITUDE, false)
+}
+func GJNBoundingBoxAddHasAltitude(builder *flatbuffers.Builder, HAS_ALTITUDE bool) {
+	GJNBoundingBoxAddHAS_ALTITUDE(builder, HAS_ALTITUDE)
 }
 func GJNBoundingBoxEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

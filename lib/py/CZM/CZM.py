@@ -171,6 +171,12 @@ def CZMStartPACKETSVector(builder, numElems):
 def StartPACKETSVector(builder, numElems):
     return CZMStartPACKETSVector(builder, numElems)
 
+def CZMCreatePACKETSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreatePACKETSVector(builder, data):
+    CZMCreatePACKETSVector(builder, data)
+
 def CZMEnd(builder):
     return builder.EndObject()
 
@@ -186,21 +192,31 @@ except:
 class CZMT(object):
 
     # CZMT
-    def __init__(self):
-        self.NAME = None  # type: str
-        self.VERSION = None  # type: str
-        self.CLOCK_CURRENT_TIME = None  # type: str
-        self.CLOCK_INTERVAL = None  # type: str
-        self.CLOCK_MULTIPLIER = 0.0  # type: float
-        self.CLOCK_RANGE = None  # type: str
-        self.CLOCK_STEP = None  # type: str
-        self.PACKETS = None  # type: List[CZMPacket.CZMPacketT]
+    def __init__(
+        self,
+        NAME = None,
+        VERSION = None,
+        CLOCK_CURRENT_TIME = None,
+        CLOCK_INTERVAL = None,
+        CLOCK_MULTIPLIER = 0.0,
+        CLOCK_RANGE = None,
+        CLOCK_STEP = None,
+        PACKETS = None,
+    ):
+        self.NAME = NAME  # type: Optional[str]
+        self.VERSION = VERSION  # type: Optional[str]
+        self.CLOCK_CURRENT_TIME = CLOCK_CURRENT_TIME  # type: Optional[str]
+        self.CLOCK_INTERVAL = CLOCK_INTERVAL  # type: Optional[str]
+        self.CLOCK_MULTIPLIER = CLOCK_MULTIPLIER  # type: float
+        self.CLOCK_RANGE = CLOCK_RANGE  # type: Optional[str]
+        self.CLOCK_STEP = CLOCK_STEP  # type: Optional[str]
+        self.PACKETS = PACKETS  # type: Optional[List[CZMPacket.CZMPacketT]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        CZM = CZM()
-        CZM.Init(buf, pos)
-        return cls.InitFromObj(CZM)
+        tmpCzm = CZM()
+        tmpCzm.Init(buf, pos)
+        return cls.InitFromObj(tmpCzm)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -208,9 +224,9 @@ class CZMT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, CZM):
+    def InitFromObj(cls, tmpCzm):
         x = CZMT()
-        x._UnPack(CZM)
+        x._UnPack(tmpCzm)
         return x
 
     # CZMT

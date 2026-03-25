@@ -32,8 +32,8 @@ class ParameterSet : Table() {
     /**
      * Parameters
      */
-    fun PARAMETERS(j: Int) : Parameter? = PARAMETERS(Parameter(), j)
-    fun PARAMETERS(obj: Parameter, j: Int) : Parameter? {
+    fun parameters(j: Int) : Parameter? = parameters(Parameter(), j)
+    fun parameters(obj: Parameter, j: Int) : Parameter? {
         val o = __offset(4)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -41,24 +41,24 @@ class ParameterSet : Table() {
             null
         }
     }
-    val PARAMETERSLength : Int
+    val parametersLength : Int
         get() {
             val o = __offset(4); return if (o != 0) __vector_len(o) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsParameterSet(_bb: ByteBuffer): ParameterSet = getRootAsParameterSet(_bb, ParameterSet())
         fun getRootAsParameterSet(_bb: ByteBuffer, obj: ParameterSet): ParameterSet {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createParameterSet(builder: FlatBufferBuilder, PARAMETERSOffset: Int) : Int {
+        fun createParameterSet(builder: FlatBufferBuilder, parametersOffset: Int) : Int {
             builder.startTable(1)
-            addPARAMETERS(builder, PARAMETERSOffset)
+            addPARAMETERS(builder, parametersOffset)
             return endParameterSet(builder)
         }
         fun startParameterSet(builder: FlatBufferBuilder) = builder.startTable(1)
-        fun addPARAMETERS(builder: FlatBufferBuilder, PARAMETERS: Int) = builder.addOffset(0, PARAMETERS, 0)
+        fun addPARAMETERS(builder: FlatBufferBuilder, parameters: Int) = builder.addOffset(0, parameters, 0)
         fun createParametersVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {

@@ -32,8 +32,8 @@ class StaticAlarmRanges : Table() {
     /**
      * Watch range
      */
-    val WATCH_RANGE : AlarmRange? get() = WATCH_RANGE(AlarmRange())
-    fun WATCH_RANGE(obj: AlarmRange) : AlarmRange? {
+    val watchRange : AlarmRange? get() = watchRange(AlarmRange())
+    fun watchRange(obj: AlarmRange) : AlarmRange? {
         val o = __offset(4)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -44,8 +44,8 @@ class StaticAlarmRanges : Table() {
     /**
      * Warning range
      */
-    val WARNING_RANGE : AlarmRange? get() = WARNING_RANGE(AlarmRange())
-    fun WARNING_RANGE(obj: AlarmRange) : AlarmRange? {
+    val warningRange : AlarmRange? get() = warningRange(AlarmRange())
+    fun warningRange(obj: AlarmRange) : AlarmRange? {
         val o = __offset(6)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -56,8 +56,8 @@ class StaticAlarmRanges : Table() {
     /**
      * Distress range
      */
-    val DISTRESS_RANGE : AlarmRange? get() = DISTRESS_RANGE(AlarmRange())
-    fun DISTRESS_RANGE(obj: AlarmRange) : AlarmRange? {
+    val distressRange : AlarmRange? get() = distressRange(AlarmRange())
+    fun distressRange(obj: AlarmRange) : AlarmRange? {
         val o = __offset(8)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -68,8 +68,8 @@ class StaticAlarmRanges : Table() {
     /**
      * Critical range
      */
-    val CRITICAL_RANGE : AlarmRange? get() = CRITICAL_RANGE(AlarmRange())
-    fun CRITICAL_RANGE(obj: AlarmRange) : AlarmRange? {
+    val criticalRange : AlarmRange? get() = criticalRange(AlarmRange())
+    fun criticalRange(obj: AlarmRange) : AlarmRange? {
         val o = __offset(10)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -80,8 +80,8 @@ class StaticAlarmRanges : Table() {
     /**
      * Severe range
      */
-    val SEVERE_RANGE : AlarmRange? get() = SEVERE_RANGE(AlarmRange())
-    fun SEVERE_RANGE(obj: AlarmRange) : AlarmRange? {
+    val severeRange : AlarmRange? get() = severeRange(AlarmRange())
+    fun severeRange(obj: AlarmRange) : AlarmRange? {
         val o = __offset(12)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -90,27 +90,27 @@ class StaticAlarmRanges : Table() {
         }
     }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsStaticAlarmRanges(_bb: ByteBuffer): StaticAlarmRanges = getRootAsStaticAlarmRanges(_bb, StaticAlarmRanges())
         fun getRootAsStaticAlarmRanges(_bb: ByteBuffer, obj: StaticAlarmRanges): StaticAlarmRanges {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createStaticAlarmRanges(builder: FlatBufferBuilder, WATCH_RANGEOffset: Int, WARNING_RANGEOffset: Int, DISTRESS_RANGEOffset: Int, CRITICAL_RANGEOffset: Int, SEVERE_RANGEOffset: Int) : Int {
+        fun createStaticAlarmRanges(builder: FlatBufferBuilder, watchRangeOffset: Int, warningRangeOffset: Int, distressRangeOffset: Int, criticalRangeOffset: Int, severeRangeOffset: Int) : Int {
             builder.startTable(5)
-            addSEVERE_RANGE(builder, SEVERE_RANGEOffset)
-            addCRITICAL_RANGE(builder, CRITICAL_RANGEOffset)
-            addDISTRESS_RANGE(builder, DISTRESS_RANGEOffset)
-            addWARNING_RANGE(builder, WARNING_RANGEOffset)
-            addWATCH_RANGE(builder, WATCH_RANGEOffset)
+            addSEVERERANGE(builder, severeRangeOffset)
+            addCRITICALRANGE(builder, criticalRangeOffset)
+            addDISTRESSRANGE(builder, distressRangeOffset)
+            addWARNINGRANGE(builder, warningRangeOffset)
+            addWATCHRANGE(builder, watchRangeOffset)
             return endStaticAlarmRanges(builder)
         }
         fun startStaticAlarmRanges(builder: FlatBufferBuilder) = builder.startTable(5)
-        fun addWATCH_RANGE(builder: FlatBufferBuilder, WATCH_RANGE: Int) = builder.addOffset(0, WATCH_RANGE, 0)
-        fun addWARNING_RANGE(builder: FlatBufferBuilder, WARNING_RANGE: Int) = builder.addOffset(1, WARNING_RANGE, 0)
-        fun addDISTRESS_RANGE(builder: FlatBufferBuilder, DISTRESS_RANGE: Int) = builder.addOffset(2, DISTRESS_RANGE, 0)
-        fun addCRITICAL_RANGE(builder: FlatBufferBuilder, CRITICAL_RANGE: Int) = builder.addOffset(3, CRITICAL_RANGE, 0)
-        fun addSEVERE_RANGE(builder: FlatBufferBuilder, SEVERE_RANGE: Int) = builder.addOffset(4, SEVERE_RANGE, 0)
+        fun addWATCHRANGE(builder: FlatBufferBuilder, watchRange: Int) = builder.addOffset(0, watchRange, 0)
+        fun addWARNINGRANGE(builder: FlatBufferBuilder, warningRange: Int) = builder.addOffset(1, warningRange, 0)
+        fun addDISTRESSRANGE(builder: FlatBufferBuilder, distressRange: Int) = builder.addOffset(2, distressRange, 0)
+        fun addCRITICALRANGE(builder: FlatBufferBuilder, criticalRange: Int) = builder.addOffset(3, criticalRange, 0)
+        fun addSEVERERANGE(builder: FlatBufferBuilder, severeRange: Int) = builder.addOffset(4, severeRange, 0)
         fun endStaticAlarmRanges(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

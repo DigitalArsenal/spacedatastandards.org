@@ -32,7 +32,7 @@ class KMLLod : Table() {
     /**
      * Minimum LOD pixels
      */
-    val MIN_LOD_PIXELS : Double
+    val minLodPixels : Double
         get() {
             val o = __offset(4)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -40,7 +40,7 @@ class KMLLod : Table() {
     /**
      * Maximum LOD pixels (-1 = infinite)
      */
-    val MAX_LOD_PIXELS : Double
+    val maxLodPixels : Double
         get() {
             val o = __offset(6)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -48,7 +48,7 @@ class KMLLod : Table() {
     /**
      * Minimum fade extent
      */
-    val MIN_FADE_EXTENT : Double
+    val minFadeExtent : Double
         get() {
             val o = __offset(8)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -56,31 +56,31 @@ class KMLLod : Table() {
     /**
      * Maximum fade extent
      */
-    val MAX_FADE_EXTENT : Double
+    val maxFadeExtent : Double
         get() {
             val o = __offset(10)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsKMLLod(_bb: ByteBuffer): KMLLod = getRootAsKMLLod(_bb, KMLLod())
         fun getRootAsKMLLod(_bb: ByteBuffer, obj: KMLLod): KMLLod {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createKMLLod(builder: FlatBufferBuilder, MIN_LOD_PIXELS: Double, MAX_LOD_PIXELS: Double, MIN_FADE_EXTENT: Double, MAX_FADE_EXTENT: Double) : Int {
+        fun createKMLLod(builder: FlatBufferBuilder, minLodPixels: Double, maxLodPixels: Double, minFadeExtent: Double, maxFadeExtent: Double) : Int {
             builder.startTable(4)
-            addMAX_FADE_EXTENT(builder, MAX_FADE_EXTENT)
-            addMIN_FADE_EXTENT(builder, MIN_FADE_EXTENT)
-            addMAX_LOD_PIXELS(builder, MAX_LOD_PIXELS)
-            addMIN_LOD_PIXELS(builder, MIN_LOD_PIXELS)
+            addMAXFADEEXTENT(builder, maxFadeExtent)
+            addMINFADEEXTENT(builder, minFadeExtent)
+            addMAXLODPIXELS(builder, maxLodPixels)
+            addMINLODPIXELS(builder, minLodPixels)
             return endKMLLod(builder)
         }
         fun startKMLLod(builder: FlatBufferBuilder) = builder.startTable(4)
-        fun addMIN_LOD_PIXELS(builder: FlatBufferBuilder, MIN_LOD_PIXELS: Double) = builder.addDouble(0, MIN_LOD_PIXELS, 0.0)
-        fun addMAX_LOD_PIXELS(builder: FlatBufferBuilder, MAX_LOD_PIXELS: Double) = builder.addDouble(1, MAX_LOD_PIXELS, 0.0)
-        fun addMIN_FADE_EXTENT(builder: FlatBufferBuilder, MIN_FADE_EXTENT: Double) = builder.addDouble(2, MIN_FADE_EXTENT, 0.0)
-        fun addMAX_FADE_EXTENT(builder: FlatBufferBuilder, MAX_FADE_EXTENT: Double) = builder.addDouble(3, MAX_FADE_EXTENT, 0.0)
+        fun addMINLODPIXELS(builder: FlatBufferBuilder, minLodPixels: Double) = builder.addDouble(0, minLodPixels, 0.0)
+        fun addMAXLODPIXELS(builder: FlatBufferBuilder, maxLodPixels: Double) = builder.addDouble(1, maxLodPixels, 0.0)
+        fun addMINFADEEXTENT(builder: FlatBufferBuilder, minFadeExtent: Double) = builder.addDouble(2, minFadeExtent, 0.0)
+        fun addMAXFADEEXTENT(builder: FlatBufferBuilder, maxFadeExtent: Double) = builder.addDouble(3, maxFadeExtent, 0.0)
         fun endKMLLod(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

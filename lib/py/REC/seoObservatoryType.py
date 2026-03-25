@@ -2,4 +2,11 @@
 
 # namespace: 
 
-# NOTE seoObservatoryType.py does not declare any structs or enums
+class seoObservatoryType(object):
+    GROUND = 0
+    LEO = 1
+    GEO = 2
+    L1 = 3
+    L2 = 4
+    INTERPLANETARY = 5
+    SOLAR = 6

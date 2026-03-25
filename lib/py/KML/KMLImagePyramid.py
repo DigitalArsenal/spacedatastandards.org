@@ -101,17 +101,23 @@ def End(builder):
 class KMLImagePyramidT(object):
 
     # KMLImagePyramidT
-    def __init__(self):
-        self.TILE_SIZE = 0  # type: int
-        self.MAX_WIDTH = 0  # type: int
-        self.MAX_HEIGHT = 0  # type: int
-        self.GRID_ORIGIN = 0  # type: int
+    def __init__(
+        self,
+        TILE_SIZE = 0,
+        MAX_WIDTH = 0,
+        MAX_HEIGHT = 0,
+        GRID_ORIGIN = 0,
+    ):
+        self.TILE_SIZE = TILE_SIZE  # type: int
+        self.MAX_WIDTH = MAX_WIDTH  # type: int
+        self.MAX_HEIGHT = MAX_HEIGHT  # type: int
+        self.GRID_ORIGIN = GRID_ORIGIN  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        kmlimagePyramid = KMLImagePyramid()
-        kmlimagePyramid.Init(buf, pos)
-        return cls.InitFromObj(kmlimagePyramid)
+        tmpKmlimagePyramid = KMLImagePyramid()
+        tmpKmlimagePyramid.Init(buf, pos)
+        return cls.InitFromObj(tmpKmlimagePyramid)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -119,19 +125,19 @@ class KMLImagePyramidT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, kmlimagePyramid):
+    def InitFromObj(cls, tmpKmlimagePyramid):
         x = KMLImagePyramidT()
-        x._UnPack(kmlimagePyramid)
+        x._UnPack(tmpKmlimagePyramid)
         return x
 
     # KMLImagePyramidT
-    def _UnPack(self, kmlimagePyramid):
-        if kmlimagePyramid is None:
+    def _UnPack(self, KMLImagePyramid):
+        if KMLImagePyramid is None:
             return
-        self.TILE_SIZE = kmlimagePyramid.TILE_SIZE()
-        self.MAX_WIDTH = kmlimagePyramid.MAX_WIDTH()
-        self.MAX_HEIGHT = kmlimagePyramid.MAX_HEIGHT()
-        self.GRID_ORIGIN = kmlimagePyramid.GRID_ORIGIN()
+        self.TILE_SIZE = KMLImagePyramid.TILE_SIZE()
+        self.MAX_WIDTH = KMLImagePyramid.MAX_WIDTH()
+        self.MAX_HEIGHT = KMLImagePyramid.MAX_HEIGHT()
+        self.GRID_ORIGIN = KMLImagePyramid.GRID_ORIGIN()
 
     # KMLImagePyramidT
     def Pack(self, builder):
@@ -140,5 +146,5 @@ class KMLImagePyramidT(object):
         KMLImagePyramidAddMAX_WIDTH(builder, self.MAX_WIDTH)
         KMLImagePyramidAddMAX_HEIGHT(builder, self.MAX_HEIGHT)
         KMLImagePyramidAddGRID_ORIGIN(builder, self.GRID_ORIGIN)
-        kmlimagePyramid = KMLImagePyramidEnd(builder)
-        return kmlimagePyramid
+        KMLImagePyramid = KMLImagePyramidEnd(builder)
+        return KMLImagePyramid

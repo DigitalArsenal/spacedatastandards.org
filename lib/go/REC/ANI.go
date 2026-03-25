@@ -63,6 +63,10 @@ func (rcv *ANI) ID() []byte {
 	return nil
 }
 
+func (rcv *ANI) Id() []byte {
+	return rcv.ID()
+}
+
 /// Unique identifier
 /// Reference to source imagery (e.g., SKI, GDI, EOO)
 func (rcv *ANI) SOURCE_ID() []byte {
@@ -71,6 +75,10 @@ func (rcv *ANI) SOURCE_ID() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *ANI) SourceId() []byte {
+	return rcv.SOURCE_ID()
 }
 
 /// Reference to source imagery (e.g., SKI, GDI, EOO)
@@ -83,6 +91,10 @@ func (rcv *ANI) SOURCE_TYPE() []byte {
 	return nil
 }
 
+func (rcv *ANI) SourceType() []byte {
+	return rcv.SOURCE_TYPE()
+}
+
 /// Source imagery type
 /// Analytic product type
 func (rcv *ANI) ANALYTIC_TYPE() analyticType {
@@ -93,9 +105,17 @@ func (rcv *ANI) ANALYTIC_TYPE() analyticType {
 	return 0
 }
 
+func (rcv *ANI) AnalyticType() analyticType {
+	return rcv.ANALYTIC_TYPE()
+}
+
 /// Analytic product type
 func (rcv *ANI) MutateANALYTIC_TYPE(n analyticType) bool {
 	return rcv._tab.MutateInt8Slot(10, int8(n))
+}
+
+func (rcv *ANI) MutateAnalyticType(n analyticType) bool {
+	return rcv.MutateANALYTIC_TYPE(n)
 }
 
 /// Processing algorithm or pipeline name
@@ -105,6 +125,10 @@ func (rcv *ANI) ALGORITHM() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *ANI) Algorithm() []byte {
+	return rcv.ALGORITHM()
 }
 
 /// Processing algorithm or pipeline name
@@ -117,6 +141,10 @@ func (rcv *ANI) ALGORITHM_VERSION() []byte {
 	return nil
 }
 
+func (rcv *ANI) AlgorithmVersion() []byte {
+	return rcv.ALGORITHM_VERSION()
+}
+
 /// Algorithm version
 /// Processing epoch (ISO 8601)
 func (rcv *ANI) PROCESSING_TIME() []byte {
@@ -125,6 +153,10 @@ func (rcv *ANI) PROCESSING_TIME() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *ANI) ProcessingTime() []byte {
+	return rcv.PROCESSING_TIME()
 }
 
 /// Processing epoch (ISO 8601)
@@ -137,6 +169,10 @@ func (rcv *ANI) OBS_TIME() []byte {
 	return nil
 }
 
+func (rcv *ANI) ObsTime() []byte {
+	return rcv.OBS_TIME()
+}
+
 /// Original observation epoch (ISO 8601)
 /// Target satellite number (if applicable)
 func (rcv *ANI) SAT_NO() uint32 {
@@ -147,9 +183,17 @@ func (rcv *ANI) SAT_NO() uint32 {
 	return 0
 }
 
+func (rcv *ANI) SatNo() uint32 {
+	return rcv.SAT_NO()
+}
+
 /// Target satellite number (if applicable)
 func (rcv *ANI) MutateSAT_NO(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(20, n)
+}
+
+func (rcv *ANI) MutateSatNo(n uint32) bool {
+	return rcv.MutateSAT_NO(n)
 }
 
 /// Target object designator
@@ -159,6 +203,10 @@ func (rcv *ANI) OBJECT_DESIGNATOR() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *ANI) ObjectDesignator() []byte {
+	return rcv.OBJECT_DESIGNATOR()
 }
 
 /// Target object designator
@@ -171,9 +219,17 @@ func (rcv *ANI) RA() float64 {
 	return 0.0
 }
 
+func (rcv *ANI) Ra() float64 {
+	return rcv.RA()
+}
+
 /// Center right ascension in degrees
 func (rcv *ANI) MutateRA(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(24, n)
+}
+
+func (rcv *ANI) MutateRa(n float64) bool {
+	return rcv.MutateRA(n)
 }
 
 /// Center declination in degrees
@@ -185,9 +241,17 @@ func (rcv *ANI) DEC() float64 {
 	return 0.0
 }
 
+func (rcv *ANI) Dec() float64 {
+	return rcv.DEC()
+}
+
 /// Center declination in degrees
 func (rcv *ANI) MutateDEC(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(26, n)
+}
+
+func (rcv *ANI) MutateDec(n float64) bool {
+	return rcv.MutateDEC(n)
 }
 
 /// Field of view in degrees
@@ -199,9 +263,17 @@ func (rcv *ANI) FOV() float64 {
 	return 0.0
 }
 
+func (rcv *ANI) Fov() float64 {
+	return rcv.FOV()
+}
+
 /// Field of view in degrees
 func (rcv *ANI) MutateFOV(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(28, n)
+}
+
+func (rcv *ANI) MutateFov(n float64) bool {
+	return rcv.MutateFOV(n)
 }
 
 /// Visual magnitude estimate
@@ -213,9 +285,17 @@ func (rcv *ANI) VISUAL_MAG() float64 {
 	return 0.0
 }
 
+func (rcv *ANI) VisualMag() float64 {
+	return rcv.VISUAL_MAG()
+}
+
 /// Visual magnitude estimate
 func (rcv *ANI) MutateVISUAL_MAG(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(30, n)
+}
+
+func (rcv *ANI) MutateVisualMag(n float64) bool {
+	return rcv.MutateVISUAL_MAG(n)
 }
 
 /// Magnitude uncertainty
@@ -227,9 +307,17 @@ func (rcv *ANI) MAG_UNCERTAINTY() float64 {
 	return 0.0
 }
 
+func (rcv *ANI) MagUncertainty() float64 {
+	return rcv.MAG_UNCERTAINTY()
+}
+
 /// Magnitude uncertainty
 func (rcv *ANI) MutateMAG_UNCERTAINTY(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(32, n)
+}
+
+func (rcv *ANI) MutateMagUncertainty(n float64) bool {
+	return rcv.MutateMAG_UNCERTAINTY(n)
 }
 
 /// Detected object count
@@ -241,9 +329,17 @@ func (rcv *ANI) OBJECT_COUNT() uint32 {
 	return 0
 }
 
+func (rcv *ANI) ObjectCount() uint32 {
+	return rcv.OBJECT_COUNT()
+}
+
 /// Detected object count
 func (rcv *ANI) MutateOBJECT_COUNT(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(34, n)
+}
+
+func (rcv *ANI) MutateObjectCount(n uint32) bool {
+	return rcv.MutateOBJECT_COUNT(n)
 }
 
 /// Classification labels
@@ -256,12 +352,20 @@ func (rcv *ANI) LABELS(j int) []byte {
 	return nil
 }
 
+func (rcv *ANI) Labels(j int) []byte {
+	return rcv.LABELS(j)
+}
+
 func (rcv *ANI) LABELSLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *ANI) LabelsLength() int {
+	return rcv.LABELSLength()
 }
 
 /// Classification labels
@@ -275,12 +379,20 @@ func (rcv *ANI) CONFIDENCE(j int) float64 {
 	return 0
 }
 
+func (rcv *ANI) Confidence(j int) float64 {
+	return rcv.CONFIDENCE(j)
+}
+
 func (rcv *ANI) CONFIDENCELength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *ANI) ConfidenceLength() int {
+	return rcv.CONFIDENCELength()
 }
 
 /// Classification confidence scores (0.0-1.0)
@@ -293,6 +405,10 @@ func (rcv *ANI) MutateCONFIDENCE(j int, n float64) bool {
 	return false
 }
 
+func (rcv *ANI) MutateConfidence(j int, n float64) bool {
+	return rcv.MutateCONFIDENCE(j, n)
+}
+
 /// Feature vector or extracted parameters
 func (rcv *ANI) FEATURES(j int) float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
@@ -303,12 +419,20 @@ func (rcv *ANI) FEATURES(j int) float64 {
 	return 0
 }
 
+func (rcv *ANI) Features(j int) float64 {
+	return rcv.FEATURES(j)
+}
+
 func (rcv *ANI) FEATURESLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *ANI) FeaturesLength() int {
+	return rcv.FEATURESLength()
 }
 
 /// Feature vector or extracted parameters
@@ -321,6 +445,10 @@ func (rcv *ANI) MutateFEATURES(j int, n float64) bool {
 	return false
 }
 
+func (rcv *ANI) MutateFeatures(j int, n float64) bool {
+	return rcv.MutateFEATURES(j, n)
+}
+
 /// Quality score (0.0-1.0)
 func (rcv *ANI) QUALITY() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(42))
@@ -330,9 +458,17 @@ func (rcv *ANI) QUALITY() float64 {
 	return 0.0
 }
 
+func (rcv *ANI) Quality() float64 {
+	return rcv.QUALITY()
+}
+
 /// Quality score (0.0-1.0)
 func (rcv *ANI) MutateQUALITY(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(42, n)
+}
+
+func (rcv *ANI) MutateQuality(n float64) bool {
+	return rcv.MutateQUALITY(n)
 }
 
 /// Additional notes
@@ -344,6 +480,10 @@ func (rcv *ANI) NOTES() []byte {
 	return nil
 }
 
+func (rcv *ANI) Notes() []byte {
+	return rcv.NOTES()
+}
+
 /// Additional notes
 func ANIStart(builder *flatbuffers.Builder) {
 	builder.StartObject(21)
@@ -351,74 +491,146 @@ func ANIStart(builder *flatbuffers.Builder) {
 func ANIAddID(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ID), 0)
 }
+func ANIAddId(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
+	ANIAddID(builder, ID)
+}
 func ANIAddSOURCE_ID(builder *flatbuffers.Builder, SOURCE_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(SOURCE_ID), 0)
+}
+func ANIAddSourceId(builder *flatbuffers.Builder, SOURCE_ID flatbuffers.UOffsetT) {
+	ANIAddSOURCE_ID(builder, SOURCE_ID)
 }
 func ANIAddSOURCE_TYPE(builder *flatbuffers.Builder, SOURCE_TYPE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(SOURCE_TYPE), 0)
 }
+func ANIAddSourceType(builder *flatbuffers.Builder, SOURCE_TYPE flatbuffers.UOffsetT) {
+	ANIAddSOURCE_TYPE(builder, SOURCE_TYPE)
+}
 func ANIAddANALYTIC_TYPE(builder *flatbuffers.Builder, ANALYTIC_TYPE analyticType) {
 	builder.PrependInt8Slot(3, int8(ANALYTIC_TYPE), 0)
+}
+func ANIAddAnalyticType(builder *flatbuffers.Builder, ANALYTIC_TYPE analyticType) {
+	ANIAddANALYTIC_TYPE(builder, ANALYTIC_TYPE)
 }
 func ANIAddALGORITHM(builder *flatbuffers.Builder, ALGORITHM flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(ALGORITHM), 0)
 }
+func ANIAddAlgorithm(builder *flatbuffers.Builder, ALGORITHM flatbuffers.UOffsetT) {
+	ANIAddALGORITHM(builder, ALGORITHM)
+}
 func ANIAddALGORITHM_VERSION(builder *flatbuffers.Builder, ALGORITHM_VERSION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(ALGORITHM_VERSION), 0)
+}
+func ANIAddAlgorithmVersion(builder *flatbuffers.Builder, ALGORITHM_VERSION flatbuffers.UOffsetT) {
+	ANIAddALGORITHM_VERSION(builder, ALGORITHM_VERSION)
 }
 func ANIAddPROCESSING_TIME(builder *flatbuffers.Builder, PROCESSING_TIME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(PROCESSING_TIME), 0)
 }
+func ANIAddProcessingTime(builder *flatbuffers.Builder, PROCESSING_TIME flatbuffers.UOffsetT) {
+	ANIAddPROCESSING_TIME(builder, PROCESSING_TIME)
+}
 func ANIAddOBS_TIME(builder *flatbuffers.Builder, OBS_TIME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(OBS_TIME), 0)
+}
+func ANIAddObsTime(builder *flatbuffers.Builder, OBS_TIME flatbuffers.UOffsetT) {
+	ANIAddOBS_TIME(builder, OBS_TIME)
 }
 func ANIAddSAT_NO(builder *flatbuffers.Builder, SAT_NO uint32) {
 	builder.PrependUint32Slot(8, SAT_NO, 0)
 }
+func ANIAddSatNo(builder *flatbuffers.Builder, SAT_NO uint32) {
+	ANIAddSAT_NO(builder, SAT_NO)
+}
 func ANIAddOBJECT_DESIGNATOR(builder *flatbuffers.Builder, OBJECT_DESIGNATOR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(OBJECT_DESIGNATOR), 0)
+}
+func ANIAddObjectDesignator(builder *flatbuffers.Builder, OBJECT_DESIGNATOR flatbuffers.UOffsetT) {
+	ANIAddOBJECT_DESIGNATOR(builder, OBJECT_DESIGNATOR)
 }
 func ANIAddRA(builder *flatbuffers.Builder, RA float64) {
 	builder.PrependFloat64Slot(10, RA, 0.0)
 }
+func ANIAddRa(builder *flatbuffers.Builder, RA float64) {
+	ANIAddRA(builder, RA)
+}
 func ANIAddDEC(builder *flatbuffers.Builder, DEC float64) {
 	builder.PrependFloat64Slot(11, DEC, 0.0)
+}
+func ANIAddDec(builder *flatbuffers.Builder, DEC float64) {
+	ANIAddDEC(builder, DEC)
 }
 func ANIAddFOV(builder *flatbuffers.Builder, FOV float64) {
 	builder.PrependFloat64Slot(12, FOV, 0.0)
 }
+func ANIAddFov(builder *flatbuffers.Builder, FOV float64) {
+	ANIAddFOV(builder, FOV)
+}
 func ANIAddVISUAL_MAG(builder *flatbuffers.Builder, VISUAL_MAG float64) {
 	builder.PrependFloat64Slot(13, VISUAL_MAG, 0.0)
+}
+func ANIAddVisualMag(builder *flatbuffers.Builder, VISUAL_MAG float64) {
+	ANIAddVISUAL_MAG(builder, VISUAL_MAG)
 }
 func ANIAddMAG_UNCERTAINTY(builder *flatbuffers.Builder, MAG_UNCERTAINTY float64) {
 	builder.PrependFloat64Slot(14, MAG_UNCERTAINTY, 0.0)
 }
+func ANIAddMagUncertainty(builder *flatbuffers.Builder, MAG_UNCERTAINTY float64) {
+	ANIAddMAG_UNCERTAINTY(builder, MAG_UNCERTAINTY)
+}
 func ANIAddOBJECT_COUNT(builder *flatbuffers.Builder, OBJECT_COUNT uint32) {
 	builder.PrependUint32Slot(15, OBJECT_COUNT, 0)
+}
+func ANIAddObjectCount(builder *flatbuffers.Builder, OBJECT_COUNT uint32) {
+	ANIAddOBJECT_COUNT(builder, OBJECT_COUNT)
 }
 func ANIAddLABELS(builder *flatbuffers.Builder, LABELS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(16, flatbuffers.UOffsetT(LABELS), 0)
 }
+func ANIAddLabels(builder *flatbuffers.Builder, LABELS flatbuffers.UOffsetT) {
+	ANIAddLABELS(builder, LABELS)
+}
 func ANIStartLABELSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func ANIStartLabelsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return ANIStartLABELSVector(builder, numElems)
 }
 func ANIAddCONFIDENCE(builder *flatbuffers.Builder, CONFIDENCE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(17, flatbuffers.UOffsetT(CONFIDENCE), 0)
 }
+func ANIAddConfidence(builder *flatbuffers.Builder, CONFIDENCE flatbuffers.UOffsetT) {
+	ANIAddCONFIDENCE(builder, CONFIDENCE)
+}
 func ANIStartCONFIDENCEVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(8, numElems, 8)
+}
+func ANIStartConfidenceVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return ANIStartCONFIDENCEVector(builder, numElems)
 }
 func ANIAddFEATURES(builder *flatbuffers.Builder, FEATURES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(18, flatbuffers.UOffsetT(FEATURES), 0)
 }
+func ANIAddFeatures(builder *flatbuffers.Builder, FEATURES flatbuffers.UOffsetT) {
+	ANIAddFEATURES(builder, FEATURES)
+}
 func ANIStartFEATURESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(8, numElems, 8)
+}
+func ANIStartFeaturesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return ANIStartFEATURESVector(builder, numElems)
 }
 func ANIAddQUALITY(builder *flatbuffers.Builder, QUALITY float64) {
 	builder.PrependFloat64Slot(19, QUALITY, 0.0)
 }
+func ANIAddQuality(builder *flatbuffers.Builder, QUALITY float64) {
+	ANIAddQUALITY(builder, QUALITY)
+}
 func ANIAddNOTES(builder *flatbuffers.Builder, NOTES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(20, flatbuffers.UOffsetT(NOTES), 0)
+}
+func ANIAddNotes(builder *flatbuffers.Builder, NOTES flatbuffers.UOffsetT) {
+	ANIAddNOTES(builder, NOTES)
 }
 func ANIEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

@@ -51,9 +51,17 @@ func (rcv *KMLImagePyramid) TILE_SIZE() int32 {
 	return 0
 }
 
+func (rcv *KMLImagePyramid) TileSize() int32 {
+	return rcv.TILE_SIZE()
+}
+
 /// Tile size in pixels
 func (rcv *KMLImagePyramid) MutateTILE_SIZE(n int32) bool {
 	return rcv._tab.MutateInt32Slot(4, n)
+}
+
+func (rcv *KMLImagePyramid) MutateTileSize(n int32) bool {
+	return rcv.MutateTILE_SIZE(n)
 }
 
 /// Maximum image width
@@ -65,9 +73,17 @@ func (rcv *KMLImagePyramid) MAX_WIDTH() int32 {
 	return 0
 }
 
+func (rcv *KMLImagePyramid) MaxWidth() int32 {
+	return rcv.MAX_WIDTH()
+}
+
 /// Maximum image width
 func (rcv *KMLImagePyramid) MutateMAX_WIDTH(n int32) bool {
 	return rcv._tab.MutateInt32Slot(6, n)
+}
+
+func (rcv *KMLImagePyramid) MutateMaxWidth(n int32) bool {
+	return rcv.MutateMAX_WIDTH(n)
 }
 
 /// Maximum image height
@@ -79,9 +95,17 @@ func (rcv *KMLImagePyramid) MAX_HEIGHT() int32 {
 	return 0
 }
 
+func (rcv *KMLImagePyramid) MaxHeight() int32 {
+	return rcv.MAX_HEIGHT()
+}
+
 /// Maximum image height
 func (rcv *KMLImagePyramid) MutateMAX_HEIGHT(n int32) bool {
 	return rcv._tab.MutateInt32Slot(8, n)
+}
+
+func (rcv *KMLImagePyramid) MutateMaxHeight(n int32) bool {
+	return rcv.MutateMAX_HEIGHT(n)
 }
 
 /// Grid origin
@@ -93,9 +117,17 @@ func (rcv *KMLImagePyramid) GRID_ORIGIN() KMLGridOrigin {
 	return 0
 }
 
+func (rcv *KMLImagePyramid) GridOrigin() KMLGridOrigin {
+	return rcv.GRID_ORIGIN()
+}
+
 /// Grid origin
 func (rcv *KMLImagePyramid) MutateGRID_ORIGIN(n KMLGridOrigin) bool {
 	return rcv._tab.MutateInt8Slot(10, int8(n))
+}
+
+func (rcv *KMLImagePyramid) MutateGridOrigin(n KMLGridOrigin) bool {
+	return rcv.MutateGRID_ORIGIN(n)
 }
 
 func KMLImagePyramidStart(builder *flatbuffers.Builder) {
@@ -104,14 +136,26 @@ func KMLImagePyramidStart(builder *flatbuffers.Builder) {
 func KMLImagePyramidAddTILE_SIZE(builder *flatbuffers.Builder, TILE_SIZE int32) {
 	builder.PrependInt32Slot(0, TILE_SIZE, 0)
 }
+func KMLImagePyramidAddTileSize(builder *flatbuffers.Builder, TILE_SIZE int32) {
+	KMLImagePyramidAddTILE_SIZE(builder, TILE_SIZE)
+}
 func KMLImagePyramidAddMAX_WIDTH(builder *flatbuffers.Builder, MAX_WIDTH int32) {
 	builder.PrependInt32Slot(1, MAX_WIDTH, 0)
+}
+func KMLImagePyramidAddMaxWidth(builder *flatbuffers.Builder, MAX_WIDTH int32) {
+	KMLImagePyramidAddMAX_WIDTH(builder, MAX_WIDTH)
 }
 func KMLImagePyramidAddMAX_HEIGHT(builder *flatbuffers.Builder, MAX_HEIGHT int32) {
 	builder.PrependInt32Slot(2, MAX_HEIGHT, 0)
 }
+func KMLImagePyramidAddMaxHeight(builder *flatbuffers.Builder, MAX_HEIGHT int32) {
+	KMLImagePyramidAddMAX_HEIGHT(builder, MAX_HEIGHT)
+}
 func KMLImagePyramidAddGRID_ORIGIN(builder *flatbuffers.Builder, GRID_ORIGIN KMLGridOrigin) {
 	builder.PrependInt8Slot(3, int8(GRID_ORIGIN), 0)
+}
+func KMLImagePyramidAddGridOrigin(builder *flatbuffers.Builder, GRID_ORIGIN KMLGridOrigin) {
+	KMLImagePyramidAddGRID_ORIGIN(builder, GRID_ORIGIN)
 }
 func KMLImagePyramidEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

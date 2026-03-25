@@ -113,6 +113,12 @@ def CZMDynamicPropertyStartINTERVALSVector(builder, numElems):
 def StartINTERVALSVector(builder, numElems):
     return CZMDynamicPropertyStartINTERVALSVector(builder, numElems)
 
+def CZMDynamicPropertyCreateINTERVALSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateINTERVALSVector(builder, data):
+    CZMDynamicPropertyCreateINTERVALSVector(builder, data)
+
 def CZMDynamicPropertyAddREFERENCE(builder, REFERENCE):
     builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(REFERENCE), 0)
 
@@ -135,17 +141,23 @@ except:
 class CZMDynamicPropertyT(object):
 
     # CZMDynamicPropertyT
-    def __init__(self):
-        self.NAME = None  # type: str
-        self.SAMPLED = None  # type: Optional[CZMDynSampled.CZMDynSampledT]
-        self.INTERVALS = None  # type: List[CZMDynInterval.CZMDynIntervalT]
-        self.REFERENCE = None  # type: str
+    def __init__(
+        self,
+        NAME = None,
+        SAMPLED = None,
+        INTERVALS = None,
+        REFERENCE = None,
+    ):
+        self.NAME = NAME  # type: Optional[str]
+        self.SAMPLED = SAMPLED  # type: Optional[CZMDynSampled.CZMDynSampledT]
+        self.INTERVALS = INTERVALS  # type: Optional[List[CZMDynInterval.CZMDynIntervalT]]
+        self.REFERENCE = REFERENCE  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        czmdynamicProperty = CZMDynamicProperty()
-        czmdynamicProperty.Init(buf, pos)
-        return cls.InitFromObj(czmdynamicProperty)
+        tmpCzmdynamicProperty = CZMDynamicProperty()
+        tmpCzmdynamicProperty.Init(buf, pos)
+        return cls.InitFromObj(tmpCzmdynamicProperty)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -153,27 +165,27 @@ class CZMDynamicPropertyT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, czmdynamicProperty):
+    def InitFromObj(cls, tmpCzmdynamicProperty):
         x = CZMDynamicPropertyT()
-        x._UnPack(czmdynamicProperty)
+        x._UnPack(tmpCzmdynamicProperty)
         return x
 
     # CZMDynamicPropertyT
-    def _UnPack(self, czmdynamicProperty):
-        if czmdynamicProperty is None:
+    def _UnPack(self, CZMDynamicProperty):
+        if CZMDynamicProperty is None:
             return
-        self.NAME = czmdynamicProperty.NAME()
-        if czmdynamicProperty.SAMPLED() is not None:
-            self.SAMPLED = CZMDynSampled.CZMDynSampledT.InitFromObj(czmdynamicProperty.SAMPLED())
-        if not czmdynamicProperty.INTERVALSIsNone():
+        self.NAME = CZMDynamicProperty.NAME()
+        if CZMDynamicProperty.SAMPLED() is not None:
+            self.SAMPLED = CZMDynSampled.CZMDynSampledT.InitFromObj(CZMDynamicProperty.SAMPLED())
+        if not CZMDynamicProperty.INTERVALSIsNone():
             self.INTERVALS = []
-            for i in range(czmdynamicProperty.INTERVALSLength()):
-                if czmdynamicProperty.INTERVALS(i) is None:
+            for i in range(CZMDynamicProperty.INTERVALSLength()):
+                if CZMDynamicProperty.INTERVALS(i) is None:
                     self.INTERVALS.append(None)
                 else:
-                    cZMDynInterval_ = CZMDynInterval.CZMDynIntervalT.InitFromObj(czmdynamicProperty.INTERVALS(i))
+                    cZMDynInterval_ = CZMDynInterval.CZMDynIntervalT.InitFromObj(CZMDynamicProperty.INTERVALS(i))
                     self.INTERVALS.append(cZMDynInterval_)
-        self.REFERENCE = czmdynamicProperty.REFERENCE()
+        self.REFERENCE = CZMDynamicProperty.REFERENCE()
 
     # CZMDynamicPropertyT
     def Pack(self, builder):
@@ -200,5 +212,5 @@ class CZMDynamicPropertyT(object):
             CZMDynamicPropertyAddINTERVALS(builder, INTERVALS)
         if self.REFERENCE is not None:
             CZMDynamicPropertyAddREFERENCE(builder, REFERENCE)
-        czmdynamicProperty = CZMDynamicPropertyEnd(builder)
-        return czmdynamicProperty
+        CZMDynamicProperty = CZMDynamicPropertyEnd(builder)
+        return CZMDynamicProperty

@@ -2,4 +2,7 @@
 
 # namespace: 
 
-# NOTE CZMCornerType.py does not declare any structs or enums
+class CZMCornerType(object):
+    ROUNDED = 0
+    MITERED = 1
+    BEVELED = 2

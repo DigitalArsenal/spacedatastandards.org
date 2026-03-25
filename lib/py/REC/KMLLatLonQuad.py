@@ -2,4 +2,146 @@
 
 # namespace: 
 
-# NOTE KMLLatLonQuad.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# LatLonQuad — four corner coordinates for ground overlay
+class KMLLatLonQuad(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = KMLLatLonQuad()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsKMLLatLonQuad(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def KMLLatLonQuadBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x4B\x4D\x4C", size_prefixed=size_prefixed)
+
+    # KMLLatLonQuad
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Four corner coordinates
+    # KMLLatLonQuad
+    def COORDINATES(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from KMLCoordinate import KMLCoordinate
+            obj = KMLCoordinate()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # KMLLatLonQuad
+    def COORDINATESLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # KMLLatLonQuad
+    def COORDINATESIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        return o == 0
+
+def KMLLatLonQuadStart(builder):
+    builder.StartObject(1)
+
+def Start(builder):
+    KMLLatLonQuadStart(builder)
+
+def KMLLatLonQuadAddCOORDINATES(builder, COORDINATES):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(COORDINATES), 0)
+
+def AddCOORDINATES(builder, COORDINATES):
+    KMLLatLonQuadAddCOORDINATES(builder, COORDINATES)
+
+def KMLLatLonQuadStartCOORDINATESVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartCOORDINATESVector(builder, numElems):
+    return KMLLatLonQuadStartCOORDINATESVector(builder, numElems)
+
+def KMLLatLonQuadCreateCOORDINATESVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateCOORDINATESVector(builder, data):
+    KMLLatLonQuadCreateCOORDINATESVector(builder, data)
+
+def KMLLatLonQuadEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return KMLLatLonQuadEnd(builder)
+
+import KMLCoordinate
+try:
+    from typing import List
+except:
+    pass
+
+class KMLLatLonQuadT(object):
+
+    # KMLLatLonQuadT
+    def __init__(
+        self,
+        COORDINATES = None,
+    ):
+        self.COORDINATES = COORDINATES  # type: Optional[List[KMLCoordinate.KMLCoordinateT]]
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpKmllatLonQuad = KMLLatLonQuad()
+        tmpKmllatLonQuad.Init(buf, pos)
+        return cls.InitFromObj(tmpKmllatLonQuad)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpKmllatLonQuad):
+        x = KMLLatLonQuadT()
+        x._UnPack(tmpKmllatLonQuad)
+        return x
+
+    # KMLLatLonQuadT
+    def _UnPack(self, KMLLatLonQuad):
+        if KMLLatLonQuad is None:
+            return
+        if not KMLLatLonQuad.COORDINATESIsNone():
+            self.COORDINATES = []
+            for i in range(KMLLatLonQuad.COORDINATESLength()):
+                if KMLLatLonQuad.COORDINATES(i) is None:
+                    self.COORDINATES.append(None)
+                else:
+                    kMLCoordinate_ = KMLCoordinate.KMLCoordinateT.InitFromObj(KMLLatLonQuad.COORDINATES(i))
+                    self.COORDINATES.append(kMLCoordinate_)
+
+    # KMLLatLonQuadT
+    def Pack(self, builder):
+        if self.COORDINATES is not None:
+            COORDINATESlist = []
+            for i in range(len(self.COORDINATES)):
+                COORDINATESlist.append(self.COORDINATES[i].Pack(builder))
+            KMLLatLonQuadStartCOORDINATESVector(builder, len(self.COORDINATES))
+            for i in reversed(range(len(self.COORDINATES))):
+                builder.PrependUOffsetTRelative(COORDINATESlist[i])
+            COORDINATES = builder.EndVector()
+        KMLLatLonQuadStart(builder)
+        if self.COORDINATES is not None:
+            KMLLatLonQuadAddCOORDINATES(builder, COORDINATES)
+        KMLLatLonQuad = KMLLatLonQuadEnd(builder)
+        return KMLLatLonQuad

@@ -113,6 +113,12 @@ def BooleanExpressionStartCONDITIONSVector(builder, numElems):
 def StartCONDITIONSVector(builder, numElems):
     return BooleanExpressionStartCONDITIONSVector(builder, numElems)
 
+def BooleanExpressionCreateCONDITIONSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateCONDITIONSVector(builder, data):
+    BooleanExpressionCreateCONDITIONSVector(builder, data)
+
 def BooleanExpressionAddEXPRESSIONS(builder, EXPRESSIONS):
     builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(EXPRESSIONS), 0)
 
@@ -124,6 +130,12 @@ def BooleanExpressionStartEXPRESSIONSVector(builder, numElems):
 
 def StartEXPRESSIONSVector(builder, numElems):
     return BooleanExpressionStartEXPRESSIONSVector(builder, numElems)
+
+def BooleanExpressionCreateEXPRESSIONSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateEXPRESSIONSVector(builder, data):
+    BooleanExpressionCreateEXPRESSIONSVector(builder, data)
 
 def BooleanExpressionEnd(builder):
     return builder.EndObject()
@@ -140,16 +152,21 @@ except:
 class BooleanExpressionT(object):
 
     # BooleanExpressionT
-    def __init__(self):
-        self.OPERATOR = 0  # type: int
-        self.CONDITIONS = None  # type: List[ParameterComparison.ParameterComparisonT]
-        self.EXPRESSIONS = None  # type: List[BooleanExpression.BooleanExpressionT]
+    def __init__(
+        self,
+        OPERATOR = 0,
+        CONDITIONS = None,
+        EXPRESSIONS = None,
+    ):
+        self.OPERATOR = OPERATOR  # type: int
+        self.CONDITIONS = CONDITIONS  # type: Optional[List[ParameterComparison.ParameterComparisonT]]
+        self.EXPRESSIONS = EXPRESSIONS  # type: Optional[List[BooleanExpression.BooleanExpressionT]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        booleanExpression = BooleanExpression()
-        booleanExpression.Init(buf, pos)
-        return cls.InitFromObj(booleanExpression)
+        tmpBooleanExpression = BooleanExpression()
+        tmpBooleanExpression.Init(buf, pos)
+        return cls.InitFromObj(tmpBooleanExpression)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -157,31 +174,31 @@ class BooleanExpressionT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, booleanExpression):
+    def InitFromObj(cls, tmpBooleanExpression):
         x = BooleanExpressionT()
-        x._UnPack(booleanExpression)
+        x._UnPack(tmpBooleanExpression)
         return x
 
     # BooleanExpressionT
-    def _UnPack(self, booleanExpression):
-        if booleanExpression is None:
+    def _UnPack(self, BooleanExpression):
+        if BooleanExpression is None:
             return
-        self.OPERATOR = booleanExpression.OPERATOR()
-        if not booleanExpression.CONDITIONSIsNone():
+        self.OPERATOR = BooleanExpression.OPERATOR()
+        if not BooleanExpression.CONDITIONSIsNone():
             self.CONDITIONS = []
-            for i in range(booleanExpression.CONDITIONSLength()):
-                if booleanExpression.CONDITIONS(i) is None:
+            for i in range(BooleanExpression.CONDITIONSLength()):
+                if BooleanExpression.CONDITIONS(i) is None:
                     self.CONDITIONS.append(None)
                 else:
-                    parameterComparison_ = ParameterComparison.ParameterComparisonT.InitFromObj(booleanExpression.CONDITIONS(i))
+                    parameterComparison_ = ParameterComparison.ParameterComparisonT.InitFromObj(BooleanExpression.CONDITIONS(i))
                     self.CONDITIONS.append(parameterComparison_)
-        if not booleanExpression.EXPRESSIONSIsNone():
+        if not BooleanExpression.EXPRESSIONSIsNone():
             self.EXPRESSIONS = []
-            for i in range(booleanExpression.EXPRESSIONSLength()):
-                if booleanExpression.EXPRESSIONS(i) is None:
+            for i in range(BooleanExpression.EXPRESSIONSLength()):
+                if BooleanExpression.EXPRESSIONS(i) is None:
                     self.EXPRESSIONS.append(None)
                 else:
-                    booleanExpression_ = BooleanExpression.BooleanExpressionT.InitFromObj(booleanExpression.EXPRESSIONS(i))
+                    booleanExpression_ = BooleanExpression.BooleanExpressionT.InitFromObj(BooleanExpression.EXPRESSIONS(i))
                     self.EXPRESSIONS.append(booleanExpression_)
 
     # BooleanExpressionT
@@ -208,5 +225,5 @@ class BooleanExpressionT(object):
             BooleanExpressionAddCONDITIONS(builder, CONDITIONS)
         if self.EXPRESSIONS is not None:
             BooleanExpressionAddEXPRESSIONS(builder, EXPRESSIONS)
-        booleanExpression = BooleanExpressionEnd(builder)
-        return booleanExpression
+        BooleanExpression = BooleanExpressionEnd(builder)
+        return BooleanExpression

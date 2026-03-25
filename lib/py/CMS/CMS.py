@@ -227,6 +227,12 @@ def CMSStartTRANSPONDERSVector(builder, numElems):
 def StartTRANSPONDERSVector(builder, numElems):
     return CMSStartTRANSPONDERSVector(builder, numElems)
 
+def CMSCreateTRANSPONDERSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateTRANSPONDERSVector(builder, data):
+    CMSCreateTRANSPONDERSVector(builder, data)
+
 def CMSAddTOTAL_POWER(builder, TOTAL_POWER):
     builder.PrependFloat64Slot(8, TOTAL_POWER, 0.0)
 
@@ -284,28 +290,45 @@ except:
 class CMST(object):
 
     # CMST
-    def __init__(self):
-        self.ID = None  # type: str
-        self.ID_ENTITY = None  # type: str
-        self.NAME = None  # type: str
-        self.DESCRIPTION = None  # type: str
-        self.ENTITY = None  # type: str
-        self.SAT_NO = 0  # type: int
-        self.NUM_TRANSPONDERS = 0  # type: int
-        self.TRANSPONDERS = None  # type: List[commsTransponder.commsTransponderT]
-        self.TOTAL_POWER = 0.0  # type: float
-        self.TOTAL_MASS = 0.0  # type: float
-        self.TOTAL_BANDWIDTH = 0.0  # type: float
-        self.MISSION = None  # type: str
-        self.COVERAGE = None  # type: str
-        self.DESIGN_LIFE = 0.0  # type: float
-        self.NOTES = None  # type: str
+    def __init__(
+        self,
+        ID = None,
+        ID_ENTITY = None,
+        NAME = None,
+        DESCRIPTION = None,
+        ENTITY = None,
+        SAT_NO = 0,
+        NUM_TRANSPONDERS = 0,
+        TRANSPONDERS = None,
+        TOTAL_POWER = 0.0,
+        TOTAL_MASS = 0.0,
+        TOTAL_BANDWIDTH = 0.0,
+        MISSION = None,
+        COVERAGE = None,
+        DESIGN_LIFE = 0.0,
+        NOTES = None,
+    ):
+        self.ID = ID  # type: Optional[str]
+        self.ID_ENTITY = ID_ENTITY  # type: Optional[str]
+        self.NAME = NAME  # type: Optional[str]
+        self.DESCRIPTION = DESCRIPTION  # type: Optional[str]
+        self.ENTITY = ENTITY  # type: Optional[str]
+        self.SAT_NO = SAT_NO  # type: int
+        self.NUM_TRANSPONDERS = NUM_TRANSPONDERS  # type: int
+        self.TRANSPONDERS = TRANSPONDERS  # type: Optional[List[commsTransponder.commsTransponderT]]
+        self.TOTAL_POWER = TOTAL_POWER  # type: float
+        self.TOTAL_MASS = TOTAL_MASS  # type: float
+        self.TOTAL_BANDWIDTH = TOTAL_BANDWIDTH  # type: float
+        self.MISSION = MISSION  # type: Optional[str]
+        self.COVERAGE = COVERAGE  # type: Optional[str]
+        self.DESIGN_LIFE = DESIGN_LIFE  # type: float
+        self.NOTES = NOTES  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        CMS = CMS()
-        CMS.Init(buf, pos)
-        return cls.InitFromObj(CMS)
+        tmpCms = CMS()
+        tmpCms.Init(buf, pos)
+        return cls.InitFromObj(tmpCms)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -313,9 +336,9 @@ class CMST(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, CMS):
+    def InitFromObj(cls, tmpCms):
         x = CMST()
-        x._UnPack(CMS)
+        x._UnPack(tmpCms)
         return x
 
     # CMST

@@ -29,7 +29,7 @@ class AST : Table() {
         __init(_i, _bb)
         return this
     }
-    val COMMAND : String?
+    val command : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -38,9 +38,9 @@ class AST : Table() {
                 null
             }
         }
-    val COMMANDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun COMMANDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
-    val PROPAGATION_REQUEST : String?
+    val commandAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun commandInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
+    val propagationRequest : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -49,9 +49,9 @@ class AST : Table() {
                 null
             }
         }
-    val PROPAGATION_REQUESTAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun PROPAGATION_REQUESTInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
-    val TLE : String?
+    val propagationRequestAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun propagationRequestInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
+    val tle : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -60,9 +60,9 @@ class AST : Table() {
                 null
             }
         }
-    val TLEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun TLEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
-    val INITIAL_ELEMENTS : String?
+    val tleAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun tleInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
+    val initialElements : String?
         get() {
             val o = __offset(10)
             return if (o != 0) {
@@ -71,9 +71,9 @@ class AST : Table() {
                 null
             }
         }
-    val INITIAL_ELEMENTSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
-    fun INITIAL_ELEMENTSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
-    val INITIAL_STATE : String?
+    val initialElementsAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(10, 1)
+    fun initialElementsInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 10, 1)
+    val initialState : String?
         get() {
             val o = __offset(12)
             return if (o != 0) {
@@ -82,14 +82,14 @@ class AST : Table() {
                 null
             }
         }
-    val INITIAL_STATEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
-    fun INITIAL_STATEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
-    val EPOCH_MS : Long
+    val initialStateAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(12, 1)
+    fun initialStateInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 12, 1)
+    val epochMs : Long
         get() {
             val o = __offset(14)
             return if(o != 0) bb.getLong(o + bb_pos) else 0L
         }
-    val MANEUVER_PLAN : String?
+    val maneuverPlan : String?
         get() {
             val o = __offset(16)
             return if (o != 0) {
@@ -98,9 +98,9 @@ class AST : Table() {
                 null
             }
         }
-    val MANEUVER_PLANAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(16, 1)
-    fun MANEUVER_PLANInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 16, 1)
-    val CONJUNCTION_PRIMARY : String?
+    val maneuverPlanAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(16, 1)
+    fun maneuverPlanInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 16, 1)
+    val conjunctionPrimary : String?
         get() {
             val o = __offset(18)
             return if (o != 0) {
@@ -109,9 +109,9 @@ class AST : Table() {
                 null
             }
         }
-    val CONJUNCTION_PRIMARYAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(18, 1)
-    fun CONJUNCTION_PRIMARYInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 18, 1)
-    val CONJUNCTION_SECONDARY : String?
+    val conjunctionPrimaryAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(18, 1)
+    fun conjunctionPrimaryInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 18, 1)
+    val conjunctionSecondary : String?
         get() {
             val o = __offset(20)
             return if (o != 0) {
@@ -120,9 +120,9 @@ class AST : Table() {
                 null
             }
         }
-    val CONJUNCTION_SECONDARYAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(20, 1)
-    fun CONJUNCTION_SECONDARYInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 20, 1)
-    fun OBSERVATIONS(j: Int) : String? {
+    val conjunctionSecondaryAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(20, 1)
+    fun conjunctionSecondaryInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 20, 1)
+    fun observations(j: Int) : String? {
         val o = __offset(22)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
@@ -130,11 +130,11 @@ class AST : Table() {
             null
         }
     }
-    val OBSERVATIONSLength : Int
+    val observationsLength : Int
         get() {
             val o = __offset(22); return if (o != 0) __vector_len(o) else 0
         }
-    val OD_CONFIG : String?
+    val odConfig : String?
         get() {
             val o = __offset(24)
             return if (o != 0) {
@@ -143,9 +143,9 @@ class AST : Table() {
                 null
             }
         }
-    val OD_CONFIGAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(24, 1)
-    fun OD_CONFIGInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 24, 1)
-    val GROUND_STATION : String?
+    val odConfigAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(24, 1)
+    fun odConfigInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 24, 1)
+    val groundStation : String?
         get() {
             val o = __offset(26)
             return if (o != 0) {
@@ -154,9 +154,9 @@ class AST : Table() {
                 null
             }
         }
-    val GROUND_STATIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(26, 1)
-    fun GROUND_STATIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 26, 1)
-    val FORMATION_CONFIG : String?
+    val groundStationAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(26, 1)
+    fun groundStationInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 26, 1)
+    val formationConfig : String?
         get() {
             val o = __offset(28)
             return if (o != 0) {
@@ -165,9 +165,9 @@ class AST : Table() {
                 null
             }
         }
-    val FORMATION_CONFIGAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(28, 1)
-    fun FORMATION_CONFIGInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 28, 1)
-    val TARGET_ELEMENTS : String?
+    val formationConfigAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(28, 1)
+    fun formationConfigInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 28, 1)
+    val targetElements : String?
         get() {
             val o = __offset(30)
             return if (o != 0) {
@@ -176,45 +176,45 @@ class AST : Table() {
                 null
             }
         }
-    val TARGET_ELEMENTSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(30, 1)
-    fun TARGET_ELEMENTSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 30, 1)
+    val targetElementsAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(30, 1)
+    fun targetElementsInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 30, 1)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsAST(_bb: ByteBuffer): AST = getRootAsAST(_bb, AST())
         fun getRootAsAST(_bb: ByteBuffer, obj: AST): AST {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun ASTBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$AST")
-        fun createAST(builder: FlatBufferBuilder, COMMANDOffset: Int, PROPAGATION_REQUESTOffset: Int, TLEOffset: Int, INITIAL_ELEMENTSOffset: Int, INITIAL_STATEOffset: Int, EPOCH_MS: Long, MANEUVER_PLANOffset: Int, CONJUNCTION_PRIMARYOffset: Int, CONJUNCTION_SECONDARYOffset: Int, OBSERVATIONSOffset: Int, OD_CONFIGOffset: Int, GROUND_STATIONOffset: Int, FORMATION_CONFIGOffset: Int, TARGET_ELEMENTSOffset: Int) : Int {
+        fun createAST(builder: FlatBufferBuilder, commandOffset: Int, propagationRequestOffset: Int, tleOffset: Int, initialElementsOffset: Int, initialStateOffset: Int, epochMs: Long, maneuverPlanOffset: Int, conjunctionPrimaryOffset: Int, conjunctionSecondaryOffset: Int, observationsOffset: Int, odConfigOffset: Int, groundStationOffset: Int, formationConfigOffset: Int, targetElementsOffset: Int) : Int {
             builder.startTable(14)
-            addEPOCH_MS(builder, EPOCH_MS)
-            addTARGET_ELEMENTS(builder, TARGET_ELEMENTSOffset)
-            addFORMATION_CONFIG(builder, FORMATION_CONFIGOffset)
-            addGROUND_STATION(builder, GROUND_STATIONOffset)
-            addOD_CONFIG(builder, OD_CONFIGOffset)
-            addOBSERVATIONS(builder, OBSERVATIONSOffset)
-            addCONJUNCTION_SECONDARY(builder, CONJUNCTION_SECONDARYOffset)
-            addCONJUNCTION_PRIMARY(builder, CONJUNCTION_PRIMARYOffset)
-            addMANEUVER_PLAN(builder, MANEUVER_PLANOffset)
-            addINITIAL_STATE(builder, INITIAL_STATEOffset)
-            addINITIAL_ELEMENTS(builder, INITIAL_ELEMENTSOffset)
-            addTLE(builder, TLEOffset)
-            addPROPAGATION_REQUEST(builder, PROPAGATION_REQUESTOffset)
-            addCOMMAND(builder, COMMANDOffset)
+            addEPOCHMS(builder, epochMs)
+            addTARGETELEMENTS(builder, targetElementsOffset)
+            addFORMATIONCONFIG(builder, formationConfigOffset)
+            addGROUNDSTATION(builder, groundStationOffset)
+            addODCONFIG(builder, odConfigOffset)
+            addOBSERVATIONS(builder, observationsOffset)
+            addCONJUNCTIONSECONDARY(builder, conjunctionSecondaryOffset)
+            addCONJUNCTIONPRIMARY(builder, conjunctionPrimaryOffset)
+            addMANEUVERPLAN(builder, maneuverPlanOffset)
+            addINITIALSTATE(builder, initialStateOffset)
+            addINITIALELEMENTS(builder, initialElementsOffset)
+            addTLE(builder, tleOffset)
+            addPROPAGATIONREQUEST(builder, propagationRequestOffset)
+            addCOMMAND(builder, commandOffset)
             return endAST(builder)
         }
         fun startAST(builder: FlatBufferBuilder) = builder.startTable(14)
-        fun addCOMMAND(builder: FlatBufferBuilder, COMMAND: Int) = builder.addOffset(0, COMMAND, 0)
-        fun addPROPAGATION_REQUEST(builder: FlatBufferBuilder, PROPAGATION_REQUEST: Int) = builder.addOffset(1, PROPAGATION_REQUEST, 0)
-        fun addTLE(builder: FlatBufferBuilder, TLE: Int) = builder.addOffset(2, TLE, 0)
-        fun addINITIAL_ELEMENTS(builder: FlatBufferBuilder, INITIAL_ELEMENTS: Int) = builder.addOffset(3, INITIAL_ELEMENTS, 0)
-        fun addINITIAL_STATE(builder: FlatBufferBuilder, INITIAL_STATE: Int) = builder.addOffset(4, INITIAL_STATE, 0)
-        fun addEPOCH_MS(builder: FlatBufferBuilder, EPOCH_MS: Long) = builder.addLong(5, EPOCH_MS, 0L)
-        fun addMANEUVER_PLAN(builder: FlatBufferBuilder, MANEUVER_PLAN: Int) = builder.addOffset(6, MANEUVER_PLAN, 0)
-        fun addCONJUNCTION_PRIMARY(builder: FlatBufferBuilder, CONJUNCTION_PRIMARY: Int) = builder.addOffset(7, CONJUNCTION_PRIMARY, 0)
-        fun addCONJUNCTION_SECONDARY(builder: FlatBufferBuilder, CONJUNCTION_SECONDARY: Int) = builder.addOffset(8, CONJUNCTION_SECONDARY, 0)
-        fun addOBSERVATIONS(builder: FlatBufferBuilder, OBSERVATIONS: Int) = builder.addOffset(9, OBSERVATIONS, 0)
+        fun addCOMMAND(builder: FlatBufferBuilder, command: Int) = builder.addOffset(0, command, 0)
+        fun addPROPAGATIONREQUEST(builder: FlatBufferBuilder, propagationRequest: Int) = builder.addOffset(1, propagationRequest, 0)
+        fun addTLE(builder: FlatBufferBuilder, tle: Int) = builder.addOffset(2, tle, 0)
+        fun addINITIALELEMENTS(builder: FlatBufferBuilder, initialElements: Int) = builder.addOffset(3, initialElements, 0)
+        fun addINITIALSTATE(builder: FlatBufferBuilder, initialState: Int) = builder.addOffset(4, initialState, 0)
+        fun addEPOCHMS(builder: FlatBufferBuilder, epochMs: Long) = builder.addLong(5, epochMs, 0L)
+        fun addMANEUVERPLAN(builder: FlatBufferBuilder, maneuverPlan: Int) = builder.addOffset(6, maneuverPlan, 0)
+        fun addCONJUNCTIONPRIMARY(builder: FlatBufferBuilder, conjunctionPrimary: Int) = builder.addOffset(7, conjunctionPrimary, 0)
+        fun addCONJUNCTIONSECONDARY(builder: FlatBufferBuilder, conjunctionSecondary: Int) = builder.addOffset(8, conjunctionSecondary, 0)
+        fun addOBSERVATIONS(builder: FlatBufferBuilder, observations: Int) = builder.addOffset(9, observations, 0)
         fun createObservationsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -223,10 +223,10 @@ class AST : Table() {
             return builder.endVector()
         }
         fun startObservationsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addOD_CONFIG(builder: FlatBufferBuilder, OD_CONFIG: Int) = builder.addOffset(10, OD_CONFIG, 0)
-        fun addGROUND_STATION(builder: FlatBufferBuilder, GROUND_STATION: Int) = builder.addOffset(11, GROUND_STATION, 0)
-        fun addFORMATION_CONFIG(builder: FlatBufferBuilder, FORMATION_CONFIG: Int) = builder.addOffset(12, FORMATION_CONFIG, 0)
-        fun addTARGET_ELEMENTS(builder: FlatBufferBuilder, TARGET_ELEMENTS: Int) = builder.addOffset(13, TARGET_ELEMENTS, 0)
+        fun addODCONFIG(builder: FlatBufferBuilder, odConfig: Int) = builder.addOffset(10, odConfig, 0)
+        fun addGROUNDSTATION(builder: FlatBufferBuilder, groundStation: Int) = builder.addOffset(11, groundStation, 0)
+        fun addFORMATIONCONFIG(builder: FlatBufferBuilder, formationConfig: Int) = builder.addOffset(12, formationConfig, 0)
+        fun addTARGETELEMENTS(builder: FlatBufferBuilder, targetElements: Int) = builder.addOffset(13, targetElements, 0)
         fun endAST(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

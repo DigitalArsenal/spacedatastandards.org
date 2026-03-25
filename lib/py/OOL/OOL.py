@@ -106,6 +106,12 @@ def OOLStartONORBITSVector(builder, numElems):
 def StartONORBITSVector(builder, numElems):
     return OOLStartONORBITSVector(builder, numElems)
 
+def OOLCreateONORBITSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateONORBITSVector(builder, data):
+    OOLCreateONORBITSVector(builder, data)
+
 def OOLEnd(builder):
     return builder.EndObject()
 
@@ -120,17 +126,23 @@ except:
 class OOLT(object):
 
     # OOLT
-    def __init__(self):
-        self.ID = None  # type: str
-        self.NAME = None  # type: str
-        self.DESCRIPTION = None  # type: str
-        self.ONORBITS = None  # type: List[str]
+    def __init__(
+        self,
+        ID = None,
+        NAME = None,
+        DESCRIPTION = None,
+        ONORBITS = None,
+    ):
+        self.ID = ID  # type: Optional[str]
+        self.NAME = NAME  # type: Optional[str]
+        self.DESCRIPTION = DESCRIPTION  # type: Optional[str]
+        self.ONORBITS = ONORBITS  # type: Optional[List[Optional[str]]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        OOL = OOL()
-        OOL.Init(buf, pos)
-        return cls.InitFromObj(OOL)
+        tmpOol = OOL()
+        tmpOol.Init(buf, pos)
+        return cls.InitFromObj(tmpOol)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -138,9 +150,9 @@ class OOLT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, OOL):
+    def InitFromObj(cls, tmpOol):
         x = OOLT()
-        x._UnPack(OOL)
+        x._UnPack(tmpOol)
         return x
 
     # OOLT

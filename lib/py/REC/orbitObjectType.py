@@ -2,4 +2,9 @@
 
 # namespace: 
 
-# NOTE orbitObjectType.py does not declare any structs or enums
+class orbitObjectType(object):
+    PAYLOAD = 0
+    ROCKET_BODY = 1
+    DEBRIS = 2
+    TBA = 3
+    UNKNOWN = 4

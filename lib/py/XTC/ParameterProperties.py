@@ -110,17 +110,23 @@ except:
 class ParameterPropertiesT(object):
 
     # ParameterPropertiesT
-    def __init__(self):
-        self.DATA_SOURCE = 0  # type: int
-        self.READ_ONLY = True  # type: bool
-        self.SYSTEM_NAME = None  # type: str
-        self.VALIDITY_CONDITION = None  # type: Optional[MatchCriteria.MatchCriteriaT]
+    def __init__(
+        self,
+        DATA_SOURCE = 0,
+        READ_ONLY = True,
+        SYSTEM_NAME = None,
+        VALIDITY_CONDITION = None,
+    ):
+        self.DATA_SOURCE = DATA_SOURCE  # type: int
+        self.READ_ONLY = READ_ONLY  # type: bool
+        self.SYSTEM_NAME = SYSTEM_NAME  # type: Optional[str]
+        self.VALIDITY_CONDITION = VALIDITY_CONDITION  # type: Optional[MatchCriteria.MatchCriteriaT]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        parameterProperties = ParameterProperties()
-        parameterProperties.Init(buf, pos)
-        return cls.InitFromObj(parameterProperties)
+        tmpParameterProperties = ParameterProperties()
+        tmpParameterProperties.Init(buf, pos)
+        return cls.InitFromObj(tmpParameterProperties)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -128,20 +134,20 @@ class ParameterPropertiesT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, parameterProperties):
+    def InitFromObj(cls, tmpParameterProperties):
         x = ParameterPropertiesT()
-        x._UnPack(parameterProperties)
+        x._UnPack(tmpParameterProperties)
         return x
 
     # ParameterPropertiesT
-    def _UnPack(self, parameterProperties):
-        if parameterProperties is None:
+    def _UnPack(self, ParameterProperties):
+        if ParameterProperties is None:
             return
-        self.DATA_SOURCE = parameterProperties.DATA_SOURCE()
-        self.READ_ONLY = parameterProperties.READ_ONLY()
-        self.SYSTEM_NAME = parameterProperties.SYSTEM_NAME()
-        if parameterProperties.VALIDITY_CONDITION() is not None:
-            self.VALIDITY_CONDITION = MatchCriteria.MatchCriteriaT.InitFromObj(parameterProperties.VALIDITY_CONDITION())
+        self.DATA_SOURCE = ParameterProperties.DATA_SOURCE()
+        self.READ_ONLY = ParameterProperties.READ_ONLY()
+        self.SYSTEM_NAME = ParameterProperties.SYSTEM_NAME()
+        if ParameterProperties.VALIDITY_CONDITION() is not None:
+            self.VALIDITY_CONDITION = MatchCriteria.MatchCriteriaT.InitFromObj(ParameterProperties.VALIDITY_CONDITION())
 
     # ParameterPropertiesT
     def Pack(self, builder):
@@ -156,5 +162,5 @@ class ParameterPropertiesT(object):
             ParameterPropertiesAddSYSTEM_NAME(builder, SYSTEM_NAME)
         if self.VALIDITY_CONDITION is not None:
             ParameterPropertiesAddVALIDITY_CONDITION(builder, VALIDITY_CONDITION)
-        parameterProperties = ParameterPropertiesEnd(builder)
-        return parameterProperties
+        ParameterProperties = ParameterPropertiesEnd(builder)
+        return ParameterProperties

@@ -63,9 +63,17 @@ func (rcv *SDL) SPI() uint16 {
 	return 0
 }
 
+func (rcv *SDL) Spi() uint16 {
+	return rcv.SPI()
+}
+
 /// Security Parameter Index
 func (rcv *SDL) MutateSPI(n uint16) bool {
 	return rcv._tab.MutateUint16Slot(4, n)
+}
+
+func (rcv *SDL) MutateSpi(n uint16) bool {
+	return rcv.MutateSPI(n)
 }
 
 /// Initialization vector length in bytes
@@ -77,9 +85,17 @@ func (rcv *SDL) IV_LENGTH() byte {
 	return 0
 }
 
+func (rcv *SDL) IvLength() byte {
+	return rcv.IV_LENGTH()
+}
+
 /// Initialization vector length in bytes
 func (rcv *SDL) MutateIV_LENGTH(n byte) bool {
 	return rcv._tab.MutateByteSlot(6, n)
+}
+
+func (rcv *SDL) MutateIvLength(n byte) bool {
+	return rcv.MutateIV_LENGTH(n)
 }
 
 /// Initialization vector
@@ -92,6 +108,10 @@ func (rcv *SDL) IV(j int) byte {
 	return 0
 }
 
+func (rcv *SDL) Iv(j int) byte {
+	return rcv.IV(j)
+}
+
 func (rcv *SDL) IVLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
@@ -100,12 +120,20 @@ func (rcv *SDL) IVLength() int {
 	return 0
 }
 
+func (rcv *SDL) IvLength() int {
+	return rcv.IVLength()
+}
+
 func (rcv *SDL) IVBytes() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *SDL) IvBytes() []byte {
+	return rcv.IVBytes()
 }
 
 /// Initialization vector
@@ -118,6 +146,10 @@ func (rcv *SDL) MutateIV(j int, n byte) bool {
 	return false
 }
 
+func (rcv *SDL) MutateIv(j int, n byte) bool {
+	return rcv.MutateIV(j, n)
+}
+
 /// MAC length in bytes
 func (rcv *SDL) MAC_LENGTH() byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
@@ -127,9 +159,17 @@ func (rcv *SDL) MAC_LENGTH() byte {
 	return 0
 }
 
+func (rcv *SDL) MacLength() byte {
+	return rcv.MAC_LENGTH()
+}
+
 /// MAC length in bytes
 func (rcv *SDL) MutateMAC_LENGTH(n byte) bool {
 	return rcv._tab.MutateByteSlot(10, n)
+}
+
+func (rcv *SDL) MutateMacLength(n byte) bool {
+	return rcv.MutateMAC_LENGTH(n)
 }
 
 /// Message authentication code
@@ -142,6 +182,10 @@ func (rcv *SDL) MAC(j int) byte {
 	return 0
 }
 
+func (rcv *SDL) Mac(j int) byte {
+	return rcv.MAC(j)
+}
+
 func (rcv *SDL) MACLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
@@ -150,12 +194,20 @@ func (rcv *SDL) MACLength() int {
 	return 0
 }
 
+func (rcv *SDL) MacLength() int {
+	return rcv.MACLength()
+}
+
 func (rcv *SDL) MACBytes() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *SDL) MacBytes() []byte {
+	return rcv.MACBytes()
 }
 
 /// Message authentication code
@@ -168,6 +220,10 @@ func (rcv *SDL) MutateMAC(j int, n byte) bool {
 	return false
 }
 
+func (rcv *SDL) MutateMac(j int, n byte) bool {
+	return rcv.MutateMAC(j, n)
+}
+
 /// Pad length
 func (rcv *SDL) PAD_LENGTH() byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
@@ -177,9 +233,17 @@ func (rcv *SDL) PAD_LENGTH() byte {
 	return 0
 }
 
+func (rcv *SDL) PadLength() byte {
+	return rcv.PAD_LENGTH()
+}
+
 /// Pad length
 func (rcv *SDL) MutatePAD_LENGTH(n byte) bool {
 	return rcv._tab.MutateByteSlot(14, n)
+}
+
+func (rcv *SDL) MutatePadLength(n byte) bool {
+	return rcv.MutatePAD_LENGTH(n)
 }
 
 /// Security payload
@@ -192,6 +256,10 @@ func (rcv *SDL) PAYLOAD(j int) byte {
 	return 0
 }
 
+func (rcv *SDL) Payload(j int) byte {
+	return rcv.PAYLOAD(j)
+}
+
 func (rcv *SDL) PAYLOADLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
 	if o != 0 {
@@ -200,12 +268,20 @@ func (rcv *SDL) PAYLOADLength() int {
 	return 0
 }
 
+func (rcv *SDL) PayloadLength() int {
+	return rcv.PAYLOADLength()
+}
+
 func (rcv *SDL) PAYLOADBytes() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *SDL) PayloadBytes() []byte {
+	return rcv.PAYLOADBytes()
 }
 
 /// Security payload
@@ -218,38 +294,72 @@ func (rcv *SDL) MutatePAYLOAD(j int, n byte) bool {
 	return false
 }
 
+func (rcv *SDL) MutatePayload(j int, n byte) bool {
+	return rcv.MutatePAYLOAD(j, n)
+}
+
 func SDLStart(builder *flatbuffers.Builder) {
 	builder.StartObject(7)
 }
 func SDLAddSPI(builder *flatbuffers.Builder, SPI uint16) {
 	builder.PrependUint16Slot(0, SPI, 0)
 }
+func SDLAddSpi(builder *flatbuffers.Builder, SPI uint16) {
+	SDLAddSPI(builder, SPI)
+}
 func SDLAddIV_LENGTH(builder *flatbuffers.Builder, IV_LENGTH byte) {
 	builder.PrependByteSlot(1, IV_LENGTH, 0)
+}
+func SDLAddIvLength(builder *flatbuffers.Builder, IV_LENGTH byte) {
+	SDLAddIV_LENGTH(builder, IV_LENGTH)
 }
 func SDLAddIV(builder *flatbuffers.Builder, IV flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(IV), 0)
 }
+func SDLAddIv(builder *flatbuffers.Builder, IV flatbuffers.UOffsetT) {
+	SDLAddIV(builder, IV)
+}
 func SDLStartIVVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(1, numElems, 1)
+}
+func SDLStartIvVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return SDLStartIVVector(builder, numElems)
 }
 func SDLAddMAC_LENGTH(builder *flatbuffers.Builder, MAC_LENGTH byte) {
 	builder.PrependByteSlot(3, MAC_LENGTH, 0)
 }
+func SDLAddMacLength(builder *flatbuffers.Builder, MAC_LENGTH byte) {
+	SDLAddMAC_LENGTH(builder, MAC_LENGTH)
+}
 func SDLAddMAC(builder *flatbuffers.Builder, MAC flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(MAC), 0)
+}
+func SDLAddMac(builder *flatbuffers.Builder, MAC flatbuffers.UOffsetT) {
+	SDLAddMAC(builder, MAC)
 }
 func SDLStartMACVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(1, numElems, 1)
 }
+func SDLStartMacVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return SDLStartMACVector(builder, numElems)
+}
 func SDLAddPAD_LENGTH(builder *flatbuffers.Builder, PAD_LENGTH byte) {
 	builder.PrependByteSlot(5, PAD_LENGTH, 0)
+}
+func SDLAddPadLength(builder *flatbuffers.Builder, PAD_LENGTH byte) {
+	SDLAddPAD_LENGTH(builder, PAD_LENGTH)
 }
 func SDLAddPAYLOAD(builder *flatbuffers.Builder, PAYLOAD flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(PAYLOAD), 0)
 }
+func SDLAddPayload(builder *flatbuffers.Builder, PAYLOAD flatbuffers.UOffsetT) {
+	SDLAddPAYLOAD(builder, PAYLOAD)
+}
 func SDLStartPAYLOADVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(1, numElems, 1)
+}
+func SDLStartPayloadVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return SDLStartPAYLOADVector(builder, numElems)
 }
 func SDLEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

@@ -2,4 +2,9 @@
 
 # namespace: 
 
-# NOTE FluxQualifier.py does not declare any structs or enums
+class FluxQualifier(object):
+    OBSERVED = 0
+    BURST_ADJUSTED = 1
+    INTERPOLATED_EXTRAPOLATED = 2
+    NO_OBSERVATION = 3
+    CELESTRAK_INTERPOLATED = 4

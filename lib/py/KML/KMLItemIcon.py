@@ -73,15 +73,19 @@ def End(builder):
 class KMLItemIconT(object):
 
     # KMLItemIconT
-    def __init__(self):
-        self.STATE = None  # type: str
-        self.HREF = None  # type: str
+    def __init__(
+        self,
+        STATE = None,
+        HREF = None,
+    ):
+        self.STATE = STATE  # type: Optional[str]
+        self.HREF = HREF  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        kmlitemIcon = KMLItemIcon()
-        kmlitemIcon.Init(buf, pos)
-        return cls.InitFromObj(kmlitemIcon)
+        tmpKmlitemIcon = KMLItemIcon()
+        tmpKmlitemIcon.Init(buf, pos)
+        return cls.InitFromObj(tmpKmlitemIcon)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -89,17 +93,17 @@ class KMLItemIconT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, kmlitemIcon):
+    def InitFromObj(cls, tmpKmlitemIcon):
         x = KMLItemIconT()
-        x._UnPack(kmlitemIcon)
+        x._UnPack(tmpKmlitemIcon)
         return x
 
     # KMLItemIconT
-    def _UnPack(self, kmlitemIcon):
-        if kmlitemIcon is None:
+    def _UnPack(self, KMLItemIcon):
+        if KMLItemIcon is None:
             return
-        self.STATE = kmlitemIcon.STATE()
-        self.HREF = kmlitemIcon.HREF()
+        self.STATE = KMLItemIcon.STATE()
+        self.HREF = KMLItemIcon.HREF()
 
     # KMLItemIconT
     def Pack(self, builder):
@@ -112,5 +116,5 @@ class KMLItemIconT(object):
             KMLItemIconAddSTATE(builder, STATE)
         if self.HREF is not None:
             KMLItemIconAddHREF(builder, HREF)
-        kmlitemIcon = KMLItemIconEnd(builder)
-        return kmlitemIcon
+        KMLItemIcon = KMLItemIconEnd(builder)
+        return KMLItemIcon

@@ -1,2 +1,2 @@
-export { MFE, MFET } from './MFE.js';
+export * from './MFE.js';
 //# sourceMappingURL=main.d.ts.map

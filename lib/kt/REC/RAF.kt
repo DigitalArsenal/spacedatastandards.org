@@ -32,7 +32,7 @@ class RAF : Table() {
     /**
      * PDU type
      */
-    val PDU_TYPE : Byte
+    val pduType : Byte
         get() {
             val o = __offset(4)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -40,7 +40,7 @@ class RAF : Table() {
     /**
      * Initiator identifier
      */
-    val INITIATOR_ID : String?
+    val initiatorId : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -49,12 +49,12 @@ class RAF : Table() {
                 null
             }
         }
-    val INITIATOR_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun INITIATOR_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val initiatorIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun initiatorIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * Responder port identifier
      */
-    val RESPONDER_PORT_ID : String?
+    val responderPortId : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -63,12 +63,12 @@ class RAF : Table() {
                 null
             }
         }
-    val RESPONDER_PORT_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun RESPONDER_PORT_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val responderPortIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun responderPortIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
     /**
      * Service type
      */
-    val SERVICE_TYPE : UByte
+    val serviceType : UByte
         get() {
             val o = __offset(10)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
@@ -76,7 +76,7 @@ class RAF : Table() {
     /**
      * Version number
      */
-    val VERSION : UShort
+    val version : UShort
         get() {
             val o = __offset(12)
             return if(o != 0) bb.getShort(o + bb_pos).toUShort() else 0u
@@ -84,7 +84,7 @@ class RAF : Table() {
     /**
      * Invoke ID
      */
-    val INVOKE_ID : UInt
+    val invokeId : UInt
         get() {
             val o = __offset(14)
             return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
@@ -92,7 +92,7 @@ class RAF : Table() {
     /**
      * Frame quality
      */
-    val FRAME_QUALITY : UByte
+    val frameQuality : UByte
         get() {
             val o = __offset(16)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
@@ -100,7 +100,7 @@ class RAF : Table() {
     /**
      * Data
      */
-    fun DATA(j: Int) : UByte {
+    fun data(j: Int) : UByte {
         val o = __offset(18)
         return if (o != 0) {
             bb.get(__vector(o) + j * 1).toUByte()
@@ -108,41 +108,41 @@ class RAF : Table() {
             0u
         }
     }
-    val DATALength : Int
+    val dataLength : Int
         get() {
             val o = __offset(18); return if (o != 0) __vector_len(o) else 0
         }
-    val DATAAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(18, 1)
-    fun DATAInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 18, 1)
+    val dataAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(18, 1)
+    fun dataInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 18, 1)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsRAF(_bb: ByteBuffer): RAF = getRootAsRAF(_bb, RAF())
         fun getRootAsRAF(_bb: ByteBuffer, obj: RAF): RAF {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun RAFBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$RAF")
-        fun createRAF(builder: FlatBufferBuilder, PDU_TYPE: Byte, INITIATOR_IDOffset: Int, RESPONDER_PORT_IDOffset: Int, SERVICE_TYPE: UByte, VERSION: UShort, INVOKE_ID: UInt, FRAME_QUALITY: UByte, DATAOffset: Int) : Int {
+        fun createRAF(builder: FlatBufferBuilder, pduType: Byte, initiatorIdOffset: Int, responderPortIdOffset: Int, serviceType: UByte, version: UShort, invokeId: UInt, frameQuality: UByte, dataOffset: Int) : Int {
             builder.startTable(8)
-            addDATA(builder, DATAOffset)
-            addINVOKE_ID(builder, INVOKE_ID)
-            addRESPONDER_PORT_ID(builder, RESPONDER_PORT_IDOffset)
-            addINITIATOR_ID(builder, INITIATOR_IDOffset)
-            addVERSION(builder, VERSION)
-            addFRAME_QUALITY(builder, FRAME_QUALITY)
-            addSERVICE_TYPE(builder, SERVICE_TYPE)
-            addPDU_TYPE(builder, PDU_TYPE)
+            addDATA(builder, dataOffset)
+            addINVOKEID(builder, invokeId)
+            addRESPONDERPORTID(builder, responderPortIdOffset)
+            addINITIATORID(builder, initiatorIdOffset)
+            addVERSION(builder, version)
+            addFRAMEQUALITY(builder, frameQuality)
+            addSERVICETYPE(builder, serviceType)
+            addPDUTYPE(builder, pduType)
             return endRAF(builder)
         }
         fun startRAF(builder: FlatBufferBuilder) = builder.startTable(8)
-        fun addPDU_TYPE(builder: FlatBufferBuilder, PDU_TYPE: Byte) = builder.addByte(0, PDU_TYPE, 0)
-        fun addINITIATOR_ID(builder: FlatBufferBuilder, INITIATOR_ID: Int) = builder.addOffset(1, INITIATOR_ID, 0)
-        fun addRESPONDER_PORT_ID(builder: FlatBufferBuilder, RESPONDER_PORT_ID: Int) = builder.addOffset(2, RESPONDER_PORT_ID, 0)
-        fun addSERVICE_TYPE(builder: FlatBufferBuilder, SERVICE_TYPE: UByte) = builder.addByte(3, SERVICE_TYPE.toByte(), 0)
-        fun addVERSION(builder: FlatBufferBuilder, VERSION: UShort) = builder.addShort(4, VERSION.toShort(), 0)
-        fun addINVOKE_ID(builder: FlatBufferBuilder, INVOKE_ID: UInt) = builder.addInt(5, INVOKE_ID.toInt(), 0)
-        fun addFRAME_QUALITY(builder: FlatBufferBuilder, FRAME_QUALITY: UByte) = builder.addByte(6, FRAME_QUALITY.toByte(), 0)
-        fun addDATA(builder: FlatBufferBuilder, DATA: Int) = builder.addOffset(7, DATA, 0)
+        fun addPDUTYPE(builder: FlatBufferBuilder, pduType: Byte) = builder.addByte(0, pduType, 0)
+        fun addINITIATORID(builder: FlatBufferBuilder, initiatorId: Int) = builder.addOffset(1, initiatorId, 0)
+        fun addRESPONDERPORTID(builder: FlatBufferBuilder, responderPortId: Int) = builder.addOffset(2, responderPortId, 0)
+        fun addSERVICETYPE(builder: FlatBufferBuilder, serviceType: UByte) = builder.addByte(3, serviceType.toByte(), 0)
+        fun addVERSION(builder: FlatBufferBuilder, version: UShort) = builder.addShort(4, version.toShort(), 0)
+        fun addINVOKEID(builder: FlatBufferBuilder, invokeId: UInt) = builder.addInt(5, invokeId.toInt(), 0)
+        fun addFRAMEQUALITY(builder: FlatBufferBuilder, frameQuality: UByte) = builder.addByte(6, frameQuality.toByte(), 0)
+        fun addDATA(builder: FlatBufferBuilder, data: Int) = builder.addOffset(7, data, 0)
         @kotlin.ExperimentalUnsignedTypes
         fun createDataVector(builder: FlatBufferBuilder, data: UByteArray) : Int {
             builder.startVector(1, data.size, 1)

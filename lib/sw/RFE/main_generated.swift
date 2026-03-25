@@ -2,9 +2,13 @@
 // swiftlint:disable all
 // swiftformat:disable all
 
+#if canImport(Common)
+import Common
+#endif
+
 import FlatBuffers
 
-public enum emitterType: Int8, Enum, Verifiable {
+public enum emitterType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -24,7 +28,7 @@ public enum emitterType: Int8, Enum, Verifiable {
 }
 
 
-public enum signalModulation: Int8, Enum, Verifiable {
+public enum signalModulation: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -48,9 +52,9 @@ public enum signalModulation: Int8, Enum, Verifiable {
 
 
 ///  RF Emitter Detail Record
-public struct rfEmitterDetail: FlatBufferObject, Verifiable {
+public struct rfEmitterDetail: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -187,9 +191,9 @@ public struct rfEmitterDetail: FlatBufferObject, Verifiable {
 }
 
 ///  RF Emitter
-public struct RFE: FlatBufferObject, Verifiable {
+public struct RFE: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -268,9 +272,7 @@ public struct RFE: FlatBufferObject, Verifiable {
   ///  Number of operating modes
   public var NUM_MODES: UInt32 { let o = _accessor.offset(VTOFFSET.NUM_MODES.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  Emitter operating mode details
-  public var hasRfEmitterDetails: Bool { let o = _accessor.offset(VTOFFSET.RF_EMITTER_DETAILS.v); return o == 0 ? false : true }
-  public var RF_EMITTER_DETAILSCount: Int32 { let o = _accessor.offset(VTOFFSET.RF_EMITTER_DETAILS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func RF_EMITTER_DETAILS(at index: Int32) -> rfEmitterDetail? { let o = _accessor.offset(VTOFFSET.RF_EMITTER_DETAILS.v); return o == 0 ? nil : rfEmitterDetail(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var RF_EMITTER_DETAILS: FlatbufferVector<rfEmitterDetail> { return _accessor.vector(at: VTOFFSET.RF_EMITTER_DETAILS.v, byteSize: 4) }
   ///  Threat level assessment
   public var THREAT_LEVEL: String? { let o = _accessor.offset(VTOFFSET.THREAT_LEVEL.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var THREAT_LEVELSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.THREAT_LEVEL.v) }

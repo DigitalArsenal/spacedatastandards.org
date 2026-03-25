@@ -51,9 +51,17 @@ func (rcv *CZMEllipsoid) SHOW() bool {
 	return false
 }
 
+func (rcv *CZMEllipsoid) Show() bool {
+	return rcv.SHOW()
+}
+
 /// Whether the ellipsoid is displayed
 func (rcv *CZMEllipsoid) MutateSHOW(n bool) bool {
 	return rcv._tab.MutateBoolSlot(4, n)
+}
+
+func (rcv *CZMEllipsoid) MutateShow(n bool) bool {
+	return rcv.MutateSHOW(n)
 }
 
 /// X radius in meters
@@ -65,9 +73,17 @@ func (rcv *CZMEllipsoid) RADII_X() float64 {
 	return 0.0
 }
 
+func (rcv *CZMEllipsoid) RadiiX() float64 {
+	return rcv.RADII_X()
+}
+
 /// X radius in meters
 func (rcv *CZMEllipsoid) MutateRADII_X(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(6, n)
+}
+
+func (rcv *CZMEllipsoid) MutateRadiiX(n float64) bool {
+	return rcv.MutateRADII_X(n)
 }
 
 /// Y radius in meters
@@ -79,9 +95,17 @@ func (rcv *CZMEllipsoid) RADII_Y() float64 {
 	return 0.0
 }
 
+func (rcv *CZMEllipsoid) RadiiY() float64 {
+	return rcv.RADII_Y()
+}
+
 /// Y radius in meters
 func (rcv *CZMEllipsoid) MutateRADII_Y(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(8, n)
+}
+
+func (rcv *CZMEllipsoid) MutateRadiiY(n float64) bool {
+	return rcv.MutateRADII_Y(n)
 }
 
 /// Z radius in meters
@@ -93,9 +117,17 @@ func (rcv *CZMEllipsoid) RADII_Z() float64 {
 	return 0.0
 }
 
+func (rcv *CZMEllipsoid) RadiiZ() float64 {
+	return rcv.RADII_Z()
+}
+
 /// Z radius in meters
 func (rcv *CZMEllipsoid) MutateRADII_Z(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(10, n)
+}
+
+func (rcv *CZMEllipsoid) MutateRadiiZ(n float64) bool {
+	return rcv.MutateRADII_Z(n)
 }
 
 /// Inner X radius
@@ -107,9 +139,17 @@ func (rcv *CZMEllipsoid) INNER_RADII_X() float64 {
 	return 0.0
 }
 
+func (rcv *CZMEllipsoid) InnerRadiiX() float64 {
+	return rcv.INNER_RADII_X()
+}
+
 /// Inner X radius
 func (rcv *CZMEllipsoid) MutateINNER_RADII_X(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(12, n)
+}
+
+func (rcv *CZMEllipsoid) MutateInnerRadiiX(n float64) bool {
+	return rcv.MutateINNER_RADII_X(n)
 }
 
 /// Inner Y radius
@@ -121,9 +161,17 @@ func (rcv *CZMEllipsoid) INNER_RADII_Y() float64 {
 	return 0.0
 }
 
+func (rcv *CZMEllipsoid) InnerRadiiY() float64 {
+	return rcv.INNER_RADII_Y()
+}
+
 /// Inner Y radius
 func (rcv *CZMEllipsoid) MutateINNER_RADII_Y(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(14, n)
+}
+
+func (rcv *CZMEllipsoid) MutateInnerRadiiY(n float64) bool {
+	return rcv.MutateINNER_RADII_Y(n)
 }
 
 /// Inner Z radius
@@ -135,9 +183,17 @@ func (rcv *CZMEllipsoid) INNER_RADII_Z() float64 {
 	return 0.0
 }
 
+func (rcv *CZMEllipsoid) InnerRadiiZ() float64 {
+	return rcv.INNER_RADII_Z()
+}
+
 /// Inner Z radius
 func (rcv *CZMEllipsoid) MutateINNER_RADII_Z(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(16, n)
+}
+
+func (rcv *CZMEllipsoid) MutateInnerRadiiZ(n float64) bool {
+	return rcv.MutateINNER_RADII_Z(n)
 }
 
 /// Minimum clock angle in radians
@@ -149,9 +205,17 @@ func (rcv *CZMEllipsoid) MINIMUM_CLOCK() float64 {
 	return 0.0
 }
 
+func (rcv *CZMEllipsoid) MinimumClock() float64 {
+	return rcv.MINIMUM_CLOCK()
+}
+
 /// Minimum clock angle in radians
 func (rcv *CZMEllipsoid) MutateMINIMUM_CLOCK(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(18, n)
+}
+
+func (rcv *CZMEllipsoid) MutateMinimumClock(n float64) bool {
+	return rcv.MutateMINIMUM_CLOCK(n)
 }
 
 /// Maximum clock angle in radians
@@ -163,9 +227,17 @@ func (rcv *CZMEllipsoid) MAXIMUM_CLOCK() float64 {
 	return 0.0
 }
 
+func (rcv *CZMEllipsoid) MaximumClock() float64 {
+	return rcv.MAXIMUM_CLOCK()
+}
+
 /// Maximum clock angle in radians
 func (rcv *CZMEllipsoid) MutateMAXIMUM_CLOCK(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(20, n)
+}
+
+func (rcv *CZMEllipsoid) MutateMaximumClock(n float64) bool {
+	return rcv.MutateMAXIMUM_CLOCK(n)
 }
 
 /// Minimum cone angle in radians
@@ -177,9 +249,17 @@ func (rcv *CZMEllipsoid) MINIMUM_CONE() float64 {
 	return 0.0
 }
 
+func (rcv *CZMEllipsoid) MinimumCone() float64 {
+	return rcv.MINIMUM_CONE()
+}
+
 /// Minimum cone angle in radians
 func (rcv *CZMEllipsoid) MutateMINIMUM_CONE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(22, n)
+}
+
+func (rcv *CZMEllipsoid) MutateMinimumCone(n float64) bool {
+	return rcv.MutateMINIMUM_CONE(n)
 }
 
 /// Maximum cone angle in radians
@@ -191,9 +271,17 @@ func (rcv *CZMEllipsoid) MAXIMUM_CONE() float64 {
 	return 0.0
 }
 
+func (rcv *CZMEllipsoid) MaximumCone() float64 {
+	return rcv.MAXIMUM_CONE()
+}
+
 /// Maximum cone angle in radians
 func (rcv *CZMEllipsoid) MutateMAXIMUM_CONE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(24, n)
+}
+
+func (rcv *CZMEllipsoid) MutateMaximumCone(n float64) bool {
+	return rcv.MutateMAXIMUM_CONE(n)
 }
 
 /// Height reference
@@ -203,6 +291,10 @@ func (rcv *CZMEllipsoid) HEIGHT_REFERENCE() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *CZMEllipsoid) HeightReference() []byte {
+	return rcv.HEIGHT_REFERENCE()
 }
 
 /// Height reference
@@ -215,9 +307,17 @@ func (rcv *CZMEllipsoid) FILL() bool {
 	return false
 }
 
+func (rcv *CZMEllipsoid) Fill() bool {
+	return rcv.FILL()
+}
+
 /// Fill flag
 func (rcv *CZMEllipsoid) MutateFILL(n bool) bool {
 	return rcv._tab.MutateBoolSlot(28, n)
+}
+
+func (rcv *CZMEllipsoid) MutateFill(n bool) bool {
+	return rcv.MutateFILL(n)
 }
 
 /// Surface material
@@ -234,6 +334,10 @@ func (rcv *CZMEllipsoid) MATERIAL(obj *CZMMaterial) *CZMMaterial {
 	return nil
 }
 
+func (rcv *CZMEllipsoid) Material(obj *CZMMaterial) *CZMMaterial {
+	return rcv.MATERIAL(obj)
+}
+
 /// Surface material
 /// Outline flag
 func (rcv *CZMEllipsoid) OUTLINE() bool {
@@ -244,9 +348,17 @@ func (rcv *CZMEllipsoid) OUTLINE() bool {
 	return false
 }
 
+func (rcv *CZMEllipsoid) Outline() bool {
+	return rcv.OUTLINE()
+}
+
 /// Outline flag
 func (rcv *CZMEllipsoid) MutateOUTLINE(n bool) bool {
 	return rcv._tab.MutateBoolSlot(32, n)
+}
+
+func (rcv *CZMEllipsoid) MutateOutline(n bool) bool {
+	return rcv.MutateOUTLINE(n)
 }
 
 /// Outline color
@@ -263,6 +375,10 @@ func (rcv *CZMEllipsoid) OUTLINE_COLOR(obj *CZMColor) *CZMColor {
 	return nil
 }
 
+func (rcv *CZMEllipsoid) OutlineColor(obj *CZMColor) *CZMColor {
+	return rcv.OUTLINE_COLOR(obj)
+}
+
 /// Outline color
 /// Outline width
 func (rcv *CZMEllipsoid) OUTLINE_WIDTH() float64 {
@@ -273,9 +389,17 @@ func (rcv *CZMEllipsoid) OUTLINE_WIDTH() float64 {
 	return 0.0
 }
 
+func (rcv *CZMEllipsoid) OutlineWidth() float64 {
+	return rcv.OUTLINE_WIDTH()
+}
+
 /// Outline width
 func (rcv *CZMEllipsoid) MutateOUTLINE_WIDTH(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(36, n)
+}
+
+func (rcv *CZMEllipsoid) MutateOutlineWidth(n float64) bool {
+	return rcv.MutateOUTLINE_WIDTH(n)
 }
 
 /// Stack partitions
@@ -287,9 +411,17 @@ func (rcv *CZMEllipsoid) STACK_PARTITIONS() int32 {
 	return 0
 }
 
+func (rcv *CZMEllipsoid) StackPartitions() int32 {
+	return rcv.STACK_PARTITIONS()
+}
+
 /// Stack partitions
 func (rcv *CZMEllipsoid) MutateSTACK_PARTITIONS(n int32) bool {
 	return rcv._tab.MutateInt32Slot(38, n)
+}
+
+func (rcv *CZMEllipsoid) MutateStackPartitions(n int32) bool {
+	return rcv.MutateSTACK_PARTITIONS(n)
 }
 
 /// Slice partitions
@@ -301,9 +433,17 @@ func (rcv *CZMEllipsoid) SLICE_PARTITIONS() int32 {
 	return 0
 }
 
+func (rcv *CZMEllipsoid) SlicePartitions() int32 {
+	return rcv.SLICE_PARTITIONS()
+}
+
 /// Slice partitions
 func (rcv *CZMEllipsoid) MutateSLICE_PARTITIONS(n int32) bool {
 	return rcv._tab.MutateInt32Slot(40, n)
+}
+
+func (rcv *CZMEllipsoid) MutateSlicePartitions(n int32) bool {
+	return rcv.MutateSLICE_PARTITIONS(n)
 }
 
 /// Subdivisions
@@ -315,9 +455,17 @@ func (rcv *CZMEllipsoid) SUBDIVISIONS() int32 {
 	return 0
 }
 
+func (rcv *CZMEllipsoid) Subdivisions() int32 {
+	return rcv.SUBDIVISIONS()
+}
+
 /// Subdivisions
 func (rcv *CZMEllipsoid) MutateSUBDIVISIONS(n int32) bool {
 	return rcv._tab.MutateInt32Slot(42, n)
+}
+
+func (rcv *CZMEllipsoid) MutateSubdivisions(n int32) bool {
+	return rcv.MutateSUBDIVISIONS(n)
 }
 
 /// Shadow mode
@@ -329,6 +477,10 @@ func (rcv *CZMEllipsoid) SHADOWS() []byte {
 	return nil
 }
 
+func (rcv *CZMEllipsoid) Shadows() []byte {
+	return rcv.SHADOWS()
+}
+
 /// Shadow mode
 func CZMEllipsoidStart(builder *flatbuffers.Builder) {
 	builder.StartObject(21)
@@ -336,65 +488,128 @@ func CZMEllipsoidStart(builder *flatbuffers.Builder) {
 func CZMEllipsoidAddSHOW(builder *flatbuffers.Builder, SHOW bool) {
 	builder.PrependBoolSlot(0, SHOW, false)
 }
+func CZMEllipsoidAddShow(builder *flatbuffers.Builder, SHOW bool) {
+	CZMEllipsoidAddSHOW(builder, SHOW)
+}
 func CZMEllipsoidAddRADII_X(builder *flatbuffers.Builder, RADII_X float64) {
 	builder.PrependFloat64Slot(1, RADII_X, 0.0)
+}
+func CZMEllipsoidAddRadiiX(builder *flatbuffers.Builder, RADII_X float64) {
+	CZMEllipsoidAddRADII_X(builder, RADII_X)
 }
 func CZMEllipsoidAddRADII_Y(builder *flatbuffers.Builder, RADII_Y float64) {
 	builder.PrependFloat64Slot(2, RADII_Y, 0.0)
 }
+func CZMEllipsoidAddRadiiY(builder *flatbuffers.Builder, RADII_Y float64) {
+	CZMEllipsoidAddRADII_Y(builder, RADII_Y)
+}
 func CZMEllipsoidAddRADII_Z(builder *flatbuffers.Builder, RADII_Z float64) {
 	builder.PrependFloat64Slot(3, RADII_Z, 0.0)
+}
+func CZMEllipsoidAddRadiiZ(builder *flatbuffers.Builder, RADII_Z float64) {
+	CZMEllipsoidAddRADII_Z(builder, RADII_Z)
 }
 func CZMEllipsoidAddINNER_RADII_X(builder *flatbuffers.Builder, INNER_RADII_X float64) {
 	builder.PrependFloat64Slot(4, INNER_RADII_X, 0.0)
 }
+func CZMEllipsoidAddInnerRadiiX(builder *flatbuffers.Builder, INNER_RADII_X float64) {
+	CZMEllipsoidAddINNER_RADII_X(builder, INNER_RADII_X)
+}
 func CZMEllipsoidAddINNER_RADII_Y(builder *flatbuffers.Builder, INNER_RADII_Y float64) {
 	builder.PrependFloat64Slot(5, INNER_RADII_Y, 0.0)
+}
+func CZMEllipsoidAddInnerRadiiY(builder *flatbuffers.Builder, INNER_RADII_Y float64) {
+	CZMEllipsoidAddINNER_RADII_Y(builder, INNER_RADII_Y)
 }
 func CZMEllipsoidAddINNER_RADII_Z(builder *flatbuffers.Builder, INNER_RADII_Z float64) {
 	builder.PrependFloat64Slot(6, INNER_RADII_Z, 0.0)
 }
+func CZMEllipsoidAddInnerRadiiZ(builder *flatbuffers.Builder, INNER_RADII_Z float64) {
+	CZMEllipsoidAddINNER_RADII_Z(builder, INNER_RADII_Z)
+}
 func CZMEllipsoidAddMINIMUM_CLOCK(builder *flatbuffers.Builder, MINIMUM_CLOCK float64) {
 	builder.PrependFloat64Slot(7, MINIMUM_CLOCK, 0.0)
+}
+func CZMEllipsoidAddMinimumClock(builder *flatbuffers.Builder, MINIMUM_CLOCK float64) {
+	CZMEllipsoidAddMINIMUM_CLOCK(builder, MINIMUM_CLOCK)
 }
 func CZMEllipsoidAddMAXIMUM_CLOCK(builder *flatbuffers.Builder, MAXIMUM_CLOCK float64) {
 	builder.PrependFloat64Slot(8, MAXIMUM_CLOCK, 0.0)
 }
+func CZMEllipsoidAddMaximumClock(builder *flatbuffers.Builder, MAXIMUM_CLOCK float64) {
+	CZMEllipsoidAddMAXIMUM_CLOCK(builder, MAXIMUM_CLOCK)
+}
 func CZMEllipsoidAddMINIMUM_CONE(builder *flatbuffers.Builder, MINIMUM_CONE float64) {
 	builder.PrependFloat64Slot(9, MINIMUM_CONE, 0.0)
+}
+func CZMEllipsoidAddMinimumCone(builder *flatbuffers.Builder, MINIMUM_CONE float64) {
+	CZMEllipsoidAddMINIMUM_CONE(builder, MINIMUM_CONE)
 }
 func CZMEllipsoidAddMAXIMUM_CONE(builder *flatbuffers.Builder, MAXIMUM_CONE float64) {
 	builder.PrependFloat64Slot(10, MAXIMUM_CONE, 0.0)
 }
+func CZMEllipsoidAddMaximumCone(builder *flatbuffers.Builder, MAXIMUM_CONE float64) {
+	CZMEllipsoidAddMAXIMUM_CONE(builder, MAXIMUM_CONE)
+}
 func CZMEllipsoidAddHEIGHT_REFERENCE(builder *flatbuffers.Builder, HEIGHT_REFERENCE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(HEIGHT_REFERENCE), 0)
+}
+func CZMEllipsoidAddHeightReference(builder *flatbuffers.Builder, HEIGHT_REFERENCE flatbuffers.UOffsetT) {
+	CZMEllipsoidAddHEIGHT_REFERENCE(builder, HEIGHT_REFERENCE)
 }
 func CZMEllipsoidAddFILL(builder *flatbuffers.Builder, FILL bool) {
 	builder.PrependBoolSlot(12, FILL, false)
 }
+func CZMEllipsoidAddFill(builder *flatbuffers.Builder, FILL bool) {
+	CZMEllipsoidAddFILL(builder, FILL)
+}
 func CZMEllipsoidAddMATERIAL(builder *flatbuffers.Builder, MATERIAL flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(13, flatbuffers.UOffsetT(MATERIAL), 0)
+}
+func CZMEllipsoidAddMaterial(builder *flatbuffers.Builder, MATERIAL flatbuffers.UOffsetT) {
+	CZMEllipsoidAddMATERIAL(builder, MATERIAL)
 }
 func CZMEllipsoidAddOUTLINE(builder *flatbuffers.Builder, OUTLINE bool) {
 	builder.PrependBoolSlot(14, OUTLINE, false)
 }
+func CZMEllipsoidAddOutline(builder *flatbuffers.Builder, OUTLINE bool) {
+	CZMEllipsoidAddOUTLINE(builder, OUTLINE)
+}
 func CZMEllipsoidAddOUTLINE_COLOR(builder *flatbuffers.Builder, OUTLINE_COLOR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(15, flatbuffers.UOffsetT(OUTLINE_COLOR), 0)
+}
+func CZMEllipsoidAddOutlineColor(builder *flatbuffers.Builder, OUTLINE_COLOR flatbuffers.UOffsetT) {
+	CZMEllipsoidAddOUTLINE_COLOR(builder, OUTLINE_COLOR)
 }
 func CZMEllipsoidAddOUTLINE_WIDTH(builder *flatbuffers.Builder, OUTLINE_WIDTH float64) {
 	builder.PrependFloat64Slot(16, OUTLINE_WIDTH, 0.0)
 }
+func CZMEllipsoidAddOutlineWidth(builder *flatbuffers.Builder, OUTLINE_WIDTH float64) {
+	CZMEllipsoidAddOUTLINE_WIDTH(builder, OUTLINE_WIDTH)
+}
 func CZMEllipsoidAddSTACK_PARTITIONS(builder *flatbuffers.Builder, STACK_PARTITIONS int32) {
 	builder.PrependInt32Slot(17, STACK_PARTITIONS, 0)
+}
+func CZMEllipsoidAddStackPartitions(builder *flatbuffers.Builder, STACK_PARTITIONS int32) {
+	CZMEllipsoidAddSTACK_PARTITIONS(builder, STACK_PARTITIONS)
 }
 func CZMEllipsoidAddSLICE_PARTITIONS(builder *flatbuffers.Builder, SLICE_PARTITIONS int32) {
 	builder.PrependInt32Slot(18, SLICE_PARTITIONS, 0)
 }
+func CZMEllipsoidAddSlicePartitions(builder *flatbuffers.Builder, SLICE_PARTITIONS int32) {
+	CZMEllipsoidAddSLICE_PARTITIONS(builder, SLICE_PARTITIONS)
+}
 func CZMEllipsoidAddSUBDIVISIONS(builder *flatbuffers.Builder, SUBDIVISIONS int32) {
 	builder.PrependInt32Slot(19, SUBDIVISIONS, 0)
 }
+func CZMEllipsoidAddSubdivisions(builder *flatbuffers.Builder, SUBDIVISIONS int32) {
+	CZMEllipsoidAddSUBDIVISIONS(builder, SUBDIVISIONS)
+}
 func CZMEllipsoidAddSHADOWS(builder *flatbuffers.Builder, SHADOWS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(20, flatbuffers.UOffsetT(SHADOWS), 0)
+}
+func CZMEllipsoidAddShadows(builder *flatbuffers.Builder, SHADOWS flatbuffers.UOffsetT) {
+	CZMEllipsoidAddSHADOWS(builder, SHADOWS)
 }
 func CZMEllipsoidEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

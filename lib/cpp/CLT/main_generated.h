@@ -8,9 +8,9 @@
 
 // Ensure the included flatbuffers.h is the same version as when this file was
 // generated, otherwise it may not be compatible.
-static_assert(FLATBUFFERS_VERSION_MAJOR == 24 &&
-              FLATBUFFERS_VERSION_MINOR == 3 &&
-              FLATBUFFERS_VERSION_REVISION == 25,
+static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
+              FLATBUFFERS_VERSION_MINOR == 12 &&
+              FLATBUFFERS_VERSION_REVISION == 19,
              "Non-compatible flatbuffers version included");
 
 struct CLT;
@@ -113,7 +113,8 @@ struct CLT FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::Vector<uint8_t> *DATA() const {
     return GetPointer<const ::flatbuffers::Vector<uint8_t> *>(VT_DATA);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<int8_t>(verifier, VT_PDU_TYPE, 1) &&
            VerifyOffset(verifier, VT_INITIATOR_ID) &&
@@ -230,14 +231,16 @@ inline bool SizePrefixedCLTBufferHasIdentifier(const void *buf) {
       buf, CLTIdentifier(), true);
 }
 
+template <bool B = false>
 inline bool VerifyCLTBuffer(
-    ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifyBuffer<CLT>(CLTIdentifier());
+    ::flatbuffers::VerifierTemplate<B> &verifier) {
+  return verifier.template VerifyBuffer<CLT>(CLTIdentifier());
 }
 
+template <bool B = false>
 inline bool VerifySizePrefixedCLTBuffer(
-    ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifySizePrefixedBuffer<CLT>(CLTIdentifier());
+    ::flatbuffers::VerifierTemplate<B> &verifier) {
+  return verifier.template VerifySizePrefixedBuffer<CLT>(CLTIdentifier());
 }
 
 inline void FinishCLTBuffer(

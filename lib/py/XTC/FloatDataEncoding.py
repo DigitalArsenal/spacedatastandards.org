@@ -129,6 +129,12 @@ def FloatDataEncodingStartCONTEXT_CALIBRATOR_LISTVector(builder, numElems):
 def StartCONTEXT_CALIBRATOR_LISTVector(builder, numElems):
     return FloatDataEncodingStartCONTEXT_CALIBRATOR_LISTVector(builder, numElems)
 
+def FloatDataEncodingCreateCONTEXT_CALIBRATOR_LISTVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateCONTEXT_CALIBRATOR_LISTVector(builder, data):
+    FloatDataEncodingCreateCONTEXT_CALIBRATOR_LISTVector(builder, data)
+
 def FloatDataEncodingEnd(builder):
     return builder.EndObject()
 
@@ -144,18 +150,25 @@ except:
 class FloatDataEncodingT(object):
 
     # FloatDataEncodingT
-    def __init__(self):
-        self.SIZE_IN_BITS = 0  # type: int
-        self.BYTE_ORDER = 0  # type: int
-        self.ENCODING = 0  # type: int
-        self.DEFAULT_CALIBRATOR = None  # type: str
-        self.CONTEXT_CALIBRATOR_LIST = None  # type: List[ContextCalibrator.ContextCalibratorT]
+    def __init__(
+        self,
+        SIZE_IN_BITS = 0,
+        BYTE_ORDER = 0,
+        ENCODING = 0,
+        DEFAULT_CALIBRATOR = None,
+        CONTEXT_CALIBRATOR_LIST = None,
+    ):
+        self.SIZE_IN_BITS = SIZE_IN_BITS  # type: int
+        self.BYTE_ORDER = BYTE_ORDER  # type: int
+        self.ENCODING = ENCODING  # type: int
+        self.DEFAULT_CALIBRATOR = DEFAULT_CALIBRATOR  # type: Optional[str]
+        self.CONTEXT_CALIBRATOR_LIST = CONTEXT_CALIBRATOR_LIST  # type: Optional[List[ContextCalibrator.ContextCalibratorT]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        floatDataEncoding = FloatDataEncoding()
-        floatDataEncoding.Init(buf, pos)
-        return cls.InitFromObj(floatDataEncoding)
+        tmpFloatDataEncoding = FloatDataEncoding()
+        tmpFloatDataEncoding.Init(buf, pos)
+        return cls.InitFromObj(tmpFloatDataEncoding)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -163,26 +176,26 @@ class FloatDataEncodingT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, floatDataEncoding):
+    def InitFromObj(cls, tmpFloatDataEncoding):
         x = FloatDataEncodingT()
-        x._UnPack(floatDataEncoding)
+        x._UnPack(tmpFloatDataEncoding)
         return x
 
     # FloatDataEncodingT
-    def _UnPack(self, floatDataEncoding):
-        if floatDataEncoding is None:
+    def _UnPack(self, FloatDataEncoding):
+        if FloatDataEncoding is None:
             return
-        self.SIZE_IN_BITS = floatDataEncoding.SIZE_IN_BITS()
-        self.BYTE_ORDER = floatDataEncoding.BYTE_ORDER()
-        self.ENCODING = floatDataEncoding.ENCODING()
-        self.DEFAULT_CALIBRATOR = floatDataEncoding.DEFAULT_CALIBRATOR()
-        if not floatDataEncoding.CONTEXT_CALIBRATOR_LISTIsNone():
+        self.SIZE_IN_BITS = FloatDataEncoding.SIZE_IN_BITS()
+        self.BYTE_ORDER = FloatDataEncoding.BYTE_ORDER()
+        self.ENCODING = FloatDataEncoding.ENCODING()
+        self.DEFAULT_CALIBRATOR = FloatDataEncoding.DEFAULT_CALIBRATOR()
+        if not FloatDataEncoding.CONTEXT_CALIBRATOR_LISTIsNone():
             self.CONTEXT_CALIBRATOR_LIST = []
-            for i in range(floatDataEncoding.CONTEXT_CALIBRATOR_LISTLength()):
-                if floatDataEncoding.CONTEXT_CALIBRATOR_LIST(i) is None:
+            for i in range(FloatDataEncoding.CONTEXT_CALIBRATOR_LISTLength()):
+                if FloatDataEncoding.CONTEXT_CALIBRATOR_LIST(i) is None:
                     self.CONTEXT_CALIBRATOR_LIST.append(None)
                 else:
-                    contextCalibrator_ = ContextCalibrator.ContextCalibratorT.InitFromObj(floatDataEncoding.CONTEXT_CALIBRATOR_LIST(i))
+                    contextCalibrator_ = ContextCalibrator.ContextCalibratorT.InitFromObj(FloatDataEncoding.CONTEXT_CALIBRATOR_LIST(i))
                     self.CONTEXT_CALIBRATOR_LIST.append(contextCalibrator_)
 
     # FloatDataEncodingT
@@ -205,5 +218,5 @@ class FloatDataEncodingT(object):
             FloatDataEncodingAddDEFAULT_CALIBRATOR(builder, DEFAULT_CALIBRATOR)
         if self.CONTEXT_CALIBRATOR_LIST is not None:
             FloatDataEncodingAddCONTEXT_CALIBRATOR_LIST(builder, CONTEXT_CALIBRATOR_LIST)
-        floatDataEncoding = FloatDataEncodingEnd(builder)
-        return floatDataEncoding
+        FloatDataEncoding = FloatDataEncodingEnd(builder)
+        return FloatDataEncoding

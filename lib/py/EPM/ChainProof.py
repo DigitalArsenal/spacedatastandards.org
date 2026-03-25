@@ -157,21 +157,31 @@ def End(builder):
 class ChainProofT(object):
 
     # ChainProofT
-    def __init__(self):
-        self.CHAIN = None  # type: str
-        self.ADDRESS = None  # type: str
-        self.PUBLIC_KEY = None  # type: str
-        self.KEY_PATH = None  # type: str
-        self.SIGNATURE = None  # type: str
-        self.SIGNED_PAYLOAD = None  # type: str
-        self.ALGORITHM = None  # type: str
-        self.ENCODING = None  # type: str
+    def __init__(
+        self,
+        CHAIN = None,
+        ADDRESS = None,
+        PUBLIC_KEY = None,
+        KEY_PATH = None,
+        SIGNATURE = None,
+        SIGNED_PAYLOAD = None,
+        ALGORITHM = None,
+        ENCODING = None,
+    ):
+        self.CHAIN = CHAIN  # type: Optional[str]
+        self.ADDRESS = ADDRESS  # type: Optional[str]
+        self.PUBLIC_KEY = PUBLIC_KEY  # type: Optional[str]
+        self.KEY_PATH = KEY_PATH  # type: Optional[str]
+        self.SIGNATURE = SIGNATURE  # type: Optional[str]
+        self.SIGNED_PAYLOAD = SIGNED_PAYLOAD  # type: Optional[str]
+        self.ALGORITHM = ALGORITHM  # type: Optional[str]
+        self.ENCODING = ENCODING  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        chainProof = ChainProof()
-        chainProof.Init(buf, pos)
-        return cls.InitFromObj(chainProof)
+        tmpChainProof = ChainProof()
+        tmpChainProof.Init(buf, pos)
+        return cls.InitFromObj(tmpChainProof)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -179,23 +189,23 @@ class ChainProofT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, chainProof):
+    def InitFromObj(cls, tmpChainProof):
         x = ChainProofT()
-        x._UnPack(chainProof)
+        x._UnPack(tmpChainProof)
         return x
 
     # ChainProofT
-    def _UnPack(self, chainProof):
-        if chainProof is None:
+    def _UnPack(self, ChainProof):
+        if ChainProof is None:
             return
-        self.CHAIN = chainProof.CHAIN()
-        self.ADDRESS = chainProof.ADDRESS()
-        self.PUBLIC_KEY = chainProof.PUBLIC_KEY()
-        self.KEY_PATH = chainProof.KEY_PATH()
-        self.SIGNATURE = chainProof.SIGNATURE()
-        self.SIGNED_PAYLOAD = chainProof.SIGNED_PAYLOAD()
-        self.ALGORITHM = chainProof.ALGORITHM()
-        self.ENCODING = chainProof.ENCODING()
+        self.CHAIN = ChainProof.CHAIN()
+        self.ADDRESS = ChainProof.ADDRESS()
+        self.PUBLIC_KEY = ChainProof.PUBLIC_KEY()
+        self.KEY_PATH = ChainProof.KEY_PATH()
+        self.SIGNATURE = ChainProof.SIGNATURE()
+        self.SIGNED_PAYLOAD = ChainProof.SIGNED_PAYLOAD()
+        self.ALGORITHM = ChainProof.ALGORITHM()
+        self.ENCODING = ChainProof.ENCODING()
 
     # ChainProofT
     def Pack(self, builder):
@@ -232,5 +242,5 @@ class ChainProofT(object):
             ChainProofAddALGORITHM(builder, ALGORITHM)
         if self.ENCODING is not None:
             ChainProofAddENCODING(builder, ENCODING)
-        chainProof = ChainProofEnd(builder)
-        return chainProof
+        ChainProof = ChainProofEnd(builder)
+        return ChainProof

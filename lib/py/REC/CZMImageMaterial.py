@@ -2,4 +2,183 @@
 
 # namespace: 
 
-# NOTE CZMImageMaterial.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Image material
+class CZMImageMaterial(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = CZMImageMaterial()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsCZMImageMaterial(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def CZMImageMaterialBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x43\x5A\x4D", size_prefixed=size_prefixed)
+
+    # CZMImageMaterial
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Image URI
+    # CZMImageMaterial
+    def IMAGE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Repeat X
+    # CZMImageMaterial
+    def REPEAT_X(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Repeat Y
+    # CZMImageMaterial
+    def REPEAT_Y(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Color tint
+    # CZMImageMaterial
+    def COLOR(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from CZMColor import CZMColor
+            obj = CZMColor()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Whether the image has transparency
+    # CZMImageMaterial
+    def TRANSPARENT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+def CZMImageMaterialStart(builder):
+    builder.StartObject(5)
+
+def Start(builder):
+    CZMImageMaterialStart(builder)
+
+def CZMImageMaterialAddIMAGE(builder, IMAGE):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(IMAGE), 0)
+
+def AddIMAGE(builder, IMAGE):
+    CZMImageMaterialAddIMAGE(builder, IMAGE)
+
+def CZMImageMaterialAddREPEAT_X(builder, REPEAT_X):
+    builder.PrependFloat64Slot(1, REPEAT_X, 0.0)
+
+def AddREPEAT_X(builder, REPEAT_X):
+    CZMImageMaterialAddREPEAT_X(builder, REPEAT_X)
+
+def CZMImageMaterialAddREPEAT_Y(builder, REPEAT_Y):
+    builder.PrependFloat64Slot(2, REPEAT_Y, 0.0)
+
+def AddREPEAT_Y(builder, REPEAT_Y):
+    CZMImageMaterialAddREPEAT_Y(builder, REPEAT_Y)
+
+def CZMImageMaterialAddCOLOR(builder, COLOR):
+    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(COLOR), 0)
+
+def AddCOLOR(builder, COLOR):
+    CZMImageMaterialAddCOLOR(builder, COLOR)
+
+def CZMImageMaterialAddTRANSPARENT(builder, TRANSPARENT):
+    builder.PrependBoolSlot(4, TRANSPARENT, 0)
+
+def AddTRANSPARENT(builder, TRANSPARENT):
+    CZMImageMaterialAddTRANSPARENT(builder, TRANSPARENT)
+
+def CZMImageMaterialEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return CZMImageMaterialEnd(builder)
+
+import CZMColor
+try:
+    from typing import Optional
+except:
+    pass
+
+class CZMImageMaterialT(object):
+
+    # CZMImageMaterialT
+    def __init__(
+        self,
+        IMAGE = None,
+        REPEAT_X = 0.0,
+        REPEAT_Y = 0.0,
+        COLOR = None,
+        TRANSPARENT = False,
+    ):
+        self.IMAGE = IMAGE  # type: Optional[str]
+        self.REPEAT_X = REPEAT_X  # type: float
+        self.REPEAT_Y = REPEAT_Y  # type: float
+        self.COLOR = COLOR  # type: Optional[CZMColor.CZMColorT]
+        self.TRANSPARENT = TRANSPARENT  # type: bool
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpCzmimageMaterial = CZMImageMaterial()
+        tmpCzmimageMaterial.Init(buf, pos)
+        return cls.InitFromObj(tmpCzmimageMaterial)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpCzmimageMaterial):
+        x = CZMImageMaterialT()
+        x._UnPack(tmpCzmimageMaterial)
+        return x
+
+    # CZMImageMaterialT
+    def _UnPack(self, CZMImageMaterial):
+        if CZMImageMaterial is None:
+            return
+        self.IMAGE = CZMImageMaterial.IMAGE()
+        self.REPEAT_X = CZMImageMaterial.REPEAT_X()
+        self.REPEAT_Y = CZMImageMaterial.REPEAT_Y()
+        if CZMImageMaterial.COLOR() is not None:
+            self.COLOR = CZMColor.CZMColorT.InitFromObj(CZMImageMaterial.COLOR())
+        self.TRANSPARENT = CZMImageMaterial.TRANSPARENT()
+
+    # CZMImageMaterialT
+    def Pack(self, builder):
+        if self.IMAGE is not None:
+            IMAGE = builder.CreateString(self.IMAGE)
+        if self.COLOR is not None:
+            COLOR = self.COLOR.Pack(builder)
+        CZMImageMaterialStart(builder)
+        if self.IMAGE is not None:
+            CZMImageMaterialAddIMAGE(builder, IMAGE)
+        CZMImageMaterialAddREPEAT_X(builder, self.REPEAT_X)
+        CZMImageMaterialAddREPEAT_Y(builder, self.REPEAT_Y)
+        if self.COLOR is not None:
+            CZMImageMaterialAddCOLOR(builder, COLOR)
+        CZMImageMaterialAddTRANSPARENT(builder, self.TRANSPARENT)
+        CZMImageMaterial = CZMImageMaterialEnd(builder)
+        return CZMImageMaterial

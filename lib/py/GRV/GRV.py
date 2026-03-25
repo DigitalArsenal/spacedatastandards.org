@@ -188,24 +188,37 @@ def End(builder):
 class GRVT(object):
 
     # GRVT
-    def __init__(self):
-        self.MODEL_TYPE = 2  # type: int
-        self.MODEL_NAME = 2  # type: int
-        self.CENTRAL_BODY = 0  # type: int
-        self.MAX_DEGREE = 70  # type: int
-        self.MAX_ORDER = 70  # type: int
-        self.INCLUDE_SUN = True  # type: bool
-        self.INCLUDE_MOON = True  # type: bool
-        self.INCLUDE_PLANETS = False  # type: bool
-        self.SOLID_TIDES = False  # type: bool
-        self.OCEAN_TIDES = False  # type: bool
-        self.POLE_TIDES = False  # type: bool
+    def __init__(
+        self,
+        MODEL_TYPE = 2,
+        MODEL_NAME = 2,
+        CENTRAL_BODY = 0,
+        MAX_DEGREE = 70,
+        MAX_ORDER = 70,
+        INCLUDE_SUN = True,
+        INCLUDE_MOON = True,
+        INCLUDE_PLANETS = False,
+        SOLID_TIDES = False,
+        OCEAN_TIDES = False,
+        POLE_TIDES = False,
+    ):
+        self.MODEL_TYPE = MODEL_TYPE  # type: int
+        self.MODEL_NAME = MODEL_NAME  # type: int
+        self.CENTRAL_BODY = CENTRAL_BODY  # type: int
+        self.MAX_DEGREE = MAX_DEGREE  # type: int
+        self.MAX_ORDER = MAX_ORDER  # type: int
+        self.INCLUDE_SUN = INCLUDE_SUN  # type: bool
+        self.INCLUDE_MOON = INCLUDE_MOON  # type: bool
+        self.INCLUDE_PLANETS = INCLUDE_PLANETS  # type: bool
+        self.SOLID_TIDES = SOLID_TIDES  # type: bool
+        self.OCEAN_TIDES = OCEAN_TIDES  # type: bool
+        self.POLE_TIDES = POLE_TIDES  # type: bool
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        GRV = GRV()
-        GRV.Init(buf, pos)
-        return cls.InitFromObj(GRV)
+        tmpGrv = GRV()
+        tmpGrv.Init(buf, pos)
+        return cls.InitFromObj(tmpGrv)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -213,9 +226,9 @@ class GRVT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, GRV):
+    def InitFromObj(cls, tmpGrv):
         x = GRVT()
-        x._UnPack(GRV)
+        x._UnPack(tmpGrv)
         return x
 
     # GRVT

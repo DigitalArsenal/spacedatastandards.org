@@ -32,8 +32,8 @@ class ParameterTypeSet : Table() {
     /**
      * Integer parameter types
      */
-    fun INTEGER_TYPES(j: Int) : IntegerParameterType? = INTEGER_TYPES(IntegerParameterType(), j)
-    fun INTEGER_TYPES(obj: IntegerParameterType, j: Int) : IntegerParameterType? {
+    fun integerTypes(j: Int) : IntegerParameterType? = integerTypes(IntegerParameterType(), j)
+    fun integerTypes(obj: IntegerParameterType, j: Int) : IntegerParameterType? {
         val o = __offset(4)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -41,15 +41,15 @@ class ParameterTypeSet : Table() {
             null
         }
     }
-    val INTEGER_TYPESLength : Int
+    val integerTypesLength : Int
         get() {
             val o = __offset(4); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Float parameter types
      */
-    fun FLOAT_TYPES(j: Int) : FloatParameterType? = FLOAT_TYPES(FloatParameterType(), j)
-    fun FLOAT_TYPES(obj: FloatParameterType, j: Int) : FloatParameterType? {
+    fun floatTypes(j: Int) : FloatParameterType? = floatTypes(FloatParameterType(), j)
+    fun floatTypes(obj: FloatParameterType, j: Int) : FloatParameterType? {
         val o = __offset(6)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -57,15 +57,15 @@ class ParameterTypeSet : Table() {
             null
         }
     }
-    val FLOAT_TYPESLength : Int
+    val floatTypesLength : Int
         get() {
             val o = __offset(6); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * String parameter types
      */
-    fun STRING_TYPES(j: Int) : StringParameterType? = STRING_TYPES(StringParameterType(), j)
-    fun STRING_TYPES(obj: StringParameterType, j: Int) : StringParameterType? {
+    fun stringTypes(j: Int) : StringParameterType? = stringTypes(StringParameterType(), j)
+    fun stringTypes(obj: StringParameterType, j: Int) : StringParameterType? {
         val o = __offset(8)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -73,15 +73,15 @@ class ParameterTypeSet : Table() {
             null
         }
     }
-    val STRING_TYPESLength : Int
+    val stringTypesLength : Int
         get() {
             val o = __offset(8); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Boolean parameter types
      */
-    fun BOOLEAN_TYPES(j: Int) : BooleanParameterType? = BOOLEAN_TYPES(BooleanParameterType(), j)
-    fun BOOLEAN_TYPES(obj: BooleanParameterType, j: Int) : BooleanParameterType? {
+    fun booleanTypes(j: Int) : BooleanParameterType? = booleanTypes(BooleanParameterType(), j)
+    fun booleanTypes(obj: BooleanParameterType, j: Int) : BooleanParameterType? {
         val o = __offset(10)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -89,15 +89,15 @@ class ParameterTypeSet : Table() {
             null
         }
     }
-    val BOOLEAN_TYPESLength : Int
+    val booleanTypesLength : Int
         get() {
             val o = __offset(10); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Enumerated parameter types
      */
-    fun ENUMERATED_TYPES(j: Int) : EnumeratedParameterType? = ENUMERATED_TYPES(EnumeratedParameterType(), j)
-    fun ENUMERATED_TYPES(obj: EnumeratedParameterType, j: Int) : EnumeratedParameterType? {
+    fun enumeratedTypes(j: Int) : EnumeratedParameterType? = enumeratedTypes(EnumeratedParameterType(), j)
+    fun enumeratedTypes(obj: EnumeratedParameterType, j: Int) : EnumeratedParameterType? {
         val o = __offset(12)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -105,15 +105,15 @@ class ParameterTypeSet : Table() {
             null
         }
     }
-    val ENUMERATED_TYPESLength : Int
+    val enumeratedTypesLength : Int
         get() {
             val o = __offset(12); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Binary parameter types
      */
-    fun BINARY_TYPES(j: Int) : BinaryParameterType? = BINARY_TYPES(BinaryParameterType(), j)
-    fun BINARY_TYPES(obj: BinaryParameterType, j: Int) : BinaryParameterType? {
+    fun binaryTypes(j: Int) : BinaryParameterType? = binaryTypes(BinaryParameterType(), j)
+    fun binaryTypes(obj: BinaryParameterType, j: Int) : BinaryParameterType? {
         val o = __offset(14)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -121,15 +121,15 @@ class ParameterTypeSet : Table() {
             null
         }
     }
-    val BINARY_TYPESLength : Int
+    val binaryTypesLength : Int
         get() {
             val o = __offset(14); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Absolute time parameter types
      */
-    fun ABSOLUTE_TIME_TYPES(j: Int) : AbsoluteTimeParameterType? = ABSOLUTE_TIME_TYPES(AbsoluteTimeParameterType(), j)
-    fun ABSOLUTE_TIME_TYPES(obj: AbsoluteTimeParameterType, j: Int) : AbsoluteTimeParameterType? {
+    fun absoluteTimeTypes(j: Int) : AbsoluteTimeParameterType? = absoluteTimeTypes(AbsoluteTimeParameterType(), j)
+    fun absoluteTimeTypes(obj: AbsoluteTimeParameterType, j: Int) : AbsoluteTimeParameterType? {
         val o = __offset(16)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -137,15 +137,15 @@ class ParameterTypeSet : Table() {
             null
         }
     }
-    val ABSOLUTE_TIME_TYPESLength : Int
+    val absoluteTimeTypesLength : Int
         get() {
             val o = __offset(16); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Relative time parameter types
      */
-    fun RELATIVE_TIME_TYPES(j: Int) : RelativeTimeParameterType? = RELATIVE_TIME_TYPES(RelativeTimeParameterType(), j)
-    fun RELATIVE_TIME_TYPES(obj: RelativeTimeParameterType, j: Int) : RelativeTimeParameterType? {
+    fun relativeTimeTypes(j: Int) : RelativeTimeParameterType? = relativeTimeTypes(RelativeTimeParameterType(), j)
+    fun relativeTimeTypes(obj: RelativeTimeParameterType, j: Int) : RelativeTimeParameterType? {
         val o = __offset(18)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -153,15 +153,15 @@ class ParameterTypeSet : Table() {
             null
         }
     }
-    val RELATIVE_TIME_TYPESLength : Int
+    val relativeTimeTypesLength : Int
         get() {
             val o = __offset(18); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Array parameter types
      */
-    fun ARRAY_TYPES(j: Int) : ArrayParameterType? = ARRAY_TYPES(ArrayParameterType(), j)
-    fun ARRAY_TYPES(obj: ArrayParameterType, j: Int) : ArrayParameterType? {
+    fun arrayTypes(j: Int) : ArrayParameterType? = arrayTypes(ArrayParameterType(), j)
+    fun arrayTypes(obj: ArrayParameterType, j: Int) : ArrayParameterType? {
         val o = __offset(20)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -169,15 +169,15 @@ class ParameterTypeSet : Table() {
             null
         }
     }
-    val ARRAY_TYPESLength : Int
+    val arrayTypesLength : Int
         get() {
             val o = __offset(20); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Aggregate parameter types
      */
-    fun AGGREGATE_TYPES(j: Int) : AggregateParameterType? = AGGREGATE_TYPES(AggregateParameterType(), j)
-    fun AGGREGATE_TYPES(obj: AggregateParameterType, j: Int) : AggregateParameterType? {
+    fun aggregateTypes(j: Int) : AggregateParameterType? = aggregateTypes(AggregateParameterType(), j)
+    fun aggregateTypes(obj: AggregateParameterType, j: Int) : AggregateParameterType? {
         val o = __offset(22)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -185,33 +185,33 @@ class ParameterTypeSet : Table() {
             null
         }
     }
-    val AGGREGATE_TYPESLength : Int
+    val aggregateTypesLength : Int
         get() {
             val o = __offset(22); return if (o != 0) __vector_len(o) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsParameterTypeSet(_bb: ByteBuffer): ParameterTypeSet = getRootAsParameterTypeSet(_bb, ParameterTypeSet())
         fun getRootAsParameterTypeSet(_bb: ByteBuffer, obj: ParameterTypeSet): ParameterTypeSet {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createParameterTypeSet(builder: FlatBufferBuilder, INTEGER_TYPESOffset: Int, FLOAT_TYPESOffset: Int, STRING_TYPESOffset: Int, BOOLEAN_TYPESOffset: Int, ENUMERATED_TYPESOffset: Int, BINARY_TYPESOffset: Int, ABSOLUTE_TIME_TYPESOffset: Int, RELATIVE_TIME_TYPESOffset: Int, ARRAY_TYPESOffset: Int, AGGREGATE_TYPESOffset: Int) : Int {
+        fun createParameterTypeSet(builder: FlatBufferBuilder, integerTypesOffset: Int, floatTypesOffset: Int, stringTypesOffset: Int, booleanTypesOffset: Int, enumeratedTypesOffset: Int, binaryTypesOffset: Int, absoluteTimeTypesOffset: Int, relativeTimeTypesOffset: Int, arrayTypesOffset: Int, aggregateTypesOffset: Int) : Int {
             builder.startTable(10)
-            addAGGREGATE_TYPES(builder, AGGREGATE_TYPESOffset)
-            addARRAY_TYPES(builder, ARRAY_TYPESOffset)
-            addRELATIVE_TIME_TYPES(builder, RELATIVE_TIME_TYPESOffset)
-            addABSOLUTE_TIME_TYPES(builder, ABSOLUTE_TIME_TYPESOffset)
-            addBINARY_TYPES(builder, BINARY_TYPESOffset)
-            addENUMERATED_TYPES(builder, ENUMERATED_TYPESOffset)
-            addBOOLEAN_TYPES(builder, BOOLEAN_TYPESOffset)
-            addSTRING_TYPES(builder, STRING_TYPESOffset)
-            addFLOAT_TYPES(builder, FLOAT_TYPESOffset)
-            addINTEGER_TYPES(builder, INTEGER_TYPESOffset)
+            addAGGREGATETYPES(builder, aggregateTypesOffset)
+            addARRAYTYPES(builder, arrayTypesOffset)
+            addRELATIVETIMETYPES(builder, relativeTimeTypesOffset)
+            addABSOLUTETIMETYPES(builder, absoluteTimeTypesOffset)
+            addBINARYTYPES(builder, binaryTypesOffset)
+            addENUMERATEDTYPES(builder, enumeratedTypesOffset)
+            addBOOLEANTYPES(builder, booleanTypesOffset)
+            addSTRINGTYPES(builder, stringTypesOffset)
+            addFLOATTYPES(builder, floatTypesOffset)
+            addINTEGERTYPES(builder, integerTypesOffset)
             return endParameterTypeSet(builder)
         }
         fun startParameterTypeSet(builder: FlatBufferBuilder) = builder.startTable(10)
-        fun addINTEGER_TYPES(builder: FlatBufferBuilder, INTEGER_TYPES: Int) = builder.addOffset(0, INTEGER_TYPES, 0)
+        fun addINTEGERTYPES(builder: FlatBufferBuilder, integerTypes: Int) = builder.addOffset(0, integerTypes, 0)
         fun createIntegerTypesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -220,7 +220,7 @@ class ParameterTypeSet : Table() {
             return builder.endVector()
         }
         fun startIntegerTypesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addFLOAT_TYPES(builder: FlatBufferBuilder, FLOAT_TYPES: Int) = builder.addOffset(1, FLOAT_TYPES, 0)
+        fun addFLOATTYPES(builder: FlatBufferBuilder, floatTypes: Int) = builder.addOffset(1, floatTypes, 0)
         fun createFloatTypesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -229,7 +229,7 @@ class ParameterTypeSet : Table() {
             return builder.endVector()
         }
         fun startFloatTypesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addSTRING_TYPES(builder: FlatBufferBuilder, STRING_TYPES: Int) = builder.addOffset(2, STRING_TYPES, 0)
+        fun addSTRINGTYPES(builder: FlatBufferBuilder, stringTypes: Int) = builder.addOffset(2, stringTypes, 0)
         fun createStringTypesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -238,7 +238,7 @@ class ParameterTypeSet : Table() {
             return builder.endVector()
         }
         fun startStringTypesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addBOOLEAN_TYPES(builder: FlatBufferBuilder, BOOLEAN_TYPES: Int) = builder.addOffset(3, BOOLEAN_TYPES, 0)
+        fun addBOOLEANTYPES(builder: FlatBufferBuilder, booleanTypes: Int) = builder.addOffset(3, booleanTypes, 0)
         fun createBooleanTypesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -247,7 +247,7 @@ class ParameterTypeSet : Table() {
             return builder.endVector()
         }
         fun startBooleanTypesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addENUMERATED_TYPES(builder: FlatBufferBuilder, ENUMERATED_TYPES: Int) = builder.addOffset(4, ENUMERATED_TYPES, 0)
+        fun addENUMERATEDTYPES(builder: FlatBufferBuilder, enumeratedTypes: Int) = builder.addOffset(4, enumeratedTypes, 0)
         fun createEnumeratedTypesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -256,7 +256,7 @@ class ParameterTypeSet : Table() {
             return builder.endVector()
         }
         fun startEnumeratedTypesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addBINARY_TYPES(builder: FlatBufferBuilder, BINARY_TYPES: Int) = builder.addOffset(5, BINARY_TYPES, 0)
+        fun addBINARYTYPES(builder: FlatBufferBuilder, binaryTypes: Int) = builder.addOffset(5, binaryTypes, 0)
         fun createBinaryTypesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -265,7 +265,7 @@ class ParameterTypeSet : Table() {
             return builder.endVector()
         }
         fun startBinaryTypesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addABSOLUTE_TIME_TYPES(builder: FlatBufferBuilder, ABSOLUTE_TIME_TYPES: Int) = builder.addOffset(6, ABSOLUTE_TIME_TYPES, 0)
+        fun addABSOLUTETIMETYPES(builder: FlatBufferBuilder, absoluteTimeTypes: Int) = builder.addOffset(6, absoluteTimeTypes, 0)
         fun createAbsoluteTimeTypesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -274,7 +274,7 @@ class ParameterTypeSet : Table() {
             return builder.endVector()
         }
         fun startAbsoluteTimeTypesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addRELATIVE_TIME_TYPES(builder: FlatBufferBuilder, RELATIVE_TIME_TYPES: Int) = builder.addOffset(7, RELATIVE_TIME_TYPES, 0)
+        fun addRELATIVETIMETYPES(builder: FlatBufferBuilder, relativeTimeTypes: Int) = builder.addOffset(7, relativeTimeTypes, 0)
         fun createRelativeTimeTypesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -283,7 +283,7 @@ class ParameterTypeSet : Table() {
             return builder.endVector()
         }
         fun startRelativeTimeTypesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addARRAY_TYPES(builder: FlatBufferBuilder, ARRAY_TYPES: Int) = builder.addOffset(8, ARRAY_TYPES, 0)
+        fun addARRAYTYPES(builder: FlatBufferBuilder, arrayTypes: Int) = builder.addOffset(8, arrayTypes, 0)
         fun createArrayTypesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -292,7 +292,7 @@ class ParameterTypeSet : Table() {
             return builder.endVector()
         }
         fun startArrayTypesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addAGGREGATE_TYPES(builder: FlatBufferBuilder, AGGREGATE_TYPES: Int) = builder.addOffset(9, AGGREGATE_TYPES, 0)
+        fun addAGGREGATETYPES(builder: FlatBufferBuilder, aggregateTypes: Int) = builder.addOffset(9, aggregateTypes, 0)
         fun createAggregateTypesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {

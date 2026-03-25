@@ -29,7 +29,7 @@ class CDMObject : Table() {
     /**
      * A comment
      */
-    val COMMENT : String?
+    val comment : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -38,10 +38,10 @@ class CDMObject : Table() {
                 null
             }
         }
-    val COMMENTAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun COMMENTInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
-    val OBJECT : CAT? get() = OBJECT(CAT())
-    fun OBJECT(obj: CAT) : CAT? {
+    val commentAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun commentInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
+    val object : CAT? get() = object(CAT())
+    fun object(obj: CAT) : CAT? {
         val o = __offset(6)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -52,8 +52,8 @@ class CDMObject : Table() {
     /**
      * Point of Contact
      */
-    val POC : EPM? get() = POC(EPM())
-    fun POC(obj: EPM) : EPM? {
+    val poc : EPM? get() = poc(EPM())
+    fun poc(obj: EPM) : EPM? {
         val o = __offset(8)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -64,7 +64,7 @@ class CDMObject : Table() {
     /**
      * Operator contact position
      */
-    val OPERATOR_CONTACT_POSITION : String?
+    val operatorContactPosition : String?
         get() {
             val o = __offset(10)
             return if (o != 0) {
@@ -73,12 +73,12 @@ class CDMObject : Table() {
                 null
             }
         }
-    val OPERATOR_CONTACT_POSITIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
-    fun OPERATOR_CONTACT_POSITIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
+    val operatorContactPositionAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(10, 1)
+    fun operatorContactPositionInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 10, 1)
     /**
      * Operator organization
      */
-    val OPERATOR_ORGANIZATION : String?
+    val operatorOrganization : String?
         get() {
             val o = __offset(12)
             return if (o != 0) {
@@ -87,12 +87,12 @@ class CDMObject : Table() {
                 null
             }
         }
-    val OPERATOR_ORGANIZATIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
-    fun OPERATOR_ORGANIZATIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
+    val operatorOrganizationAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(12, 1)
+    fun operatorOrganizationInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 12, 1)
     /**
      * Ephemeris name
      */
-    val EPHEMERIS_NAME : String?
+    val ephemerisName : String?
         get() {
             val o = __offset(14)
             return if (o != 0) {
@@ -101,12 +101,12 @@ class CDMObject : Table() {
                 null
             }
         }
-    val EPHEMERIS_NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(14, 1)
-    fun EPHEMERIS_NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 14, 1)
+    val ephemerisNameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(14, 1)
+    fun ephemerisNameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 14, 1)
     /**
      * Covariance method
      */
-    val COVARIANCE_METHOD : Byte
+    val covarianceMethod : Byte
         get() {
             val o = __offset(16)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -114,8 +114,8 @@ class CDMObject : Table() {
     /**
      * Reference Frame in which the object position is defined
      */
-    val REFERENCE_FRAME : RFM? get() = REFERENCE_FRAME(RFM())
-    fun REFERENCE_FRAME(obj: RFM) : RFM? {
+    val referenceFrame : RFM? get() = referenceFrame(RFM())
+    fun referenceFrame(obj: RFM) : RFM? {
         val o = __offset(18)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -126,7 +126,7 @@ class CDMObject : Table() {
     /**
      * Gravity model
      */
-    val GRAVITY_MODEL : String?
+    val gravityModel : String?
         get() {
             val o = __offset(20)
             return if (o != 0) {
@@ -135,12 +135,12 @@ class CDMObject : Table() {
                 null
             }
         }
-    val GRAVITY_MODELAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(20, 1)
-    fun GRAVITY_MODELInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 20, 1)
+    val gravityModelAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(20, 1)
+    fun gravityModelInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 20, 1)
     /**
      * Atmospheric model
      */
-    val ATMOSPHERIC_MODEL : String?
+    val atmosphericModel : String?
         get() {
             val o = __offset(22)
             return if (o != 0) {
@@ -149,12 +149,12 @@ class CDMObject : Table() {
                 null
             }
         }
-    val ATMOSPHERIC_MODELAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(22, 1)
-    fun ATMOSPHERIC_MODELInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 22, 1)
+    val atmosphericModelAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(22, 1)
+    fun atmosphericModelInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 22, 1)
     /**
      * N-body perturbations
      */
-    val N_BODY_PERTURBATIONS : String?
+    val nBodyPerturbations : String?
         get() {
             val o = __offset(24)
             return if (o != 0) {
@@ -163,12 +163,12 @@ class CDMObject : Table() {
                 null
             }
         }
-    val N_BODY_PERTURBATIONSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(24, 1)
-    fun N_BODY_PERTURBATIONSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 24, 1)
+    val nBodyPerturbationsAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(24, 1)
+    fun nBodyPerturbationsInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 24, 1)
     /**
      * Solar radiation pressure
      */
-    val SOLAR_RAD_PRESSURE : Boolean
+    val solarRadPressure : Boolean
         get() {
             val o = __offset(26)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -176,7 +176,7 @@ class CDMObject : Table() {
     /**
      * Earth tides
      */
-    val EARTH_TIDES : Boolean
+    val earthTides : Boolean
         get() {
             val o = __offset(28)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -184,7 +184,7 @@ class CDMObject : Table() {
     /**
      * Intrack thrust
      */
-    val INTRACK_THRUST : Boolean
+    val intrackThrust : Boolean
         get() {
             val o = __offset(30)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -192,7 +192,7 @@ class CDMObject : Table() {
     /**
      * Time of last observation start
      */
-    val TIME_LASTOB_START : String?
+    val timeLastobStart : String?
         get() {
             val o = __offset(32)
             return if (o != 0) {
@@ -201,12 +201,12 @@ class CDMObject : Table() {
                 null
             }
         }
-    val TIME_LASTOB_STARTAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(32, 1)
-    fun TIME_LASTOB_STARTInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 32, 1)
+    val timeLastobStartAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(32, 1)
+    fun timeLastobStartInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 32, 1)
     /**
      * Time of last observation end
      */
-    val TIME_LASTOB_END : String?
+    val timeLastobEnd : String?
         get() {
             val o = __offset(34)
             return if (o != 0) {
@@ -215,12 +215,12 @@ class CDMObject : Table() {
                 null
             }
         }
-    val TIME_LASTOB_ENDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(34, 1)
-    fun TIME_LASTOB_ENDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 34, 1)
+    val timeLastobEndAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(34, 1)
+    fun timeLastobEndInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 34, 1)
     /**
      * Recommended observation data span
      */
-    val RECOMMENDED_OD_SPAN : Double
+    val recommendedOdSpan : Double
         get() {
             val o = __offset(36)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -228,7 +228,7 @@ class CDMObject : Table() {
     /**
      * Actual observation data span
      */
-    val ACTUAL_OD_SPAN : Double
+    val actualOdSpan : Double
         get() {
             val o = __offset(38)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -236,7 +236,7 @@ class CDMObject : Table() {
     /**
      * Number of observations available
      */
-    val OBS_AVAILABLE : UInt
+    val obsAvailable : UInt
         get() {
             val o = __offset(40)
             return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
@@ -244,7 +244,7 @@ class CDMObject : Table() {
     /**
      * Number of observations used
      */
-    val OBS_USED : UInt
+    val obsUsed : UInt
         get() {
             val o = __offset(42)
             return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
@@ -252,7 +252,7 @@ class CDMObject : Table() {
     /**
      * Number of tracks available
      */
-    val TRACKS_AVAILABLE : UInt
+    val tracksAvailable : UInt
         get() {
             val o = __offset(44)
             return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
@@ -260,7 +260,7 @@ class CDMObject : Table() {
     /**
      * Number of tracks used
      */
-    val TRACKS_USED : UInt
+    val tracksUsed : UInt
         get() {
             val o = __offset(46)
             return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
@@ -268,7 +268,7 @@ class CDMObject : Table() {
     /**
      * Residuals accepted
      */
-    val RESIDUALS_ACCEPTED : Double
+    val residualsAccepted : Double
         get() {
             val o = __offset(48)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -276,7 +276,7 @@ class CDMObject : Table() {
     /**
      * Weighted root mean square
      */
-    val WEIGHTED_RMS : Double
+    val weightedRms : Double
         get() {
             val o = __offset(50)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -284,7 +284,7 @@ class CDMObject : Table() {
     /**
      * Area of the object
      */
-    val AREA_PC : Double
+    val areaPc : Double
         get() {
             val o = __offset(52)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -292,7 +292,7 @@ class CDMObject : Table() {
     /**
      * Area of the object drag
      */
-    val AREA_DRG : Double
+    val areaDrg : Double
         get() {
             val o = __offset(54)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -300,7 +300,7 @@ class CDMObject : Table() {
     /**
      * Area of the object solar radiation pressure
      */
-    val AREA_SRP : Double
+    val areaSrp : Double
         get() {
             val o = __offset(56)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -308,7 +308,7 @@ class CDMObject : Table() {
     /**
      * Object's area-to-mass ratio
      */
-    val CR_AREA_OVER_MASS : Double
+    val crAreaOverMass : Double
         get() {
             val o = __offset(58)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -316,7 +316,7 @@ class CDMObject : Table() {
     /**
      * Object's thrust acceleration
      */
-    val THRUST_ACCELERATION : Double
+    val thrustAcceleration : Double
         get() {
             val o = __offset(60)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -324,7 +324,7 @@ class CDMObject : Table() {
     /**
      * Object's solar flux
      */
-    val SEDR : Double
+    val sedr : Double
         get() {
             val o = __offset(62)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -332,7 +332,7 @@ class CDMObject : Table() {
     /**
      * X-coordinate of the object's position in RTN coordinates
      */
-    val X : Double
+    val x : Double
         get() {
             val o = __offset(64)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -340,7 +340,7 @@ class CDMObject : Table() {
     /**
      * Y-coordinate of the object's position in RTN
      */
-    val Y : Double
+    val y : Double
         get() {
             val o = __offset(66)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -348,7 +348,7 @@ class CDMObject : Table() {
     /**
      * Z-coordinate of the object's position in RTN
      */
-    val Z : Double
+    val z : Double
         get() {
             val o = __offset(68)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -356,7 +356,7 @@ class CDMObject : Table() {
     /**
      * X-coordinate of the object's position in RTN coordinates
      */
-    val X_DOT : Double
+    val xDot : Double
         get() {
             val o = __offset(70)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -364,7 +364,7 @@ class CDMObject : Table() {
     /**
      * Y-coordinate of the object's position in RTN
      */
-    val Y_DOT : Double
+    val yDot : Double
         get() {
             val o = __offset(72)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -372,7 +372,7 @@ class CDMObject : Table() {
     /**
      * Z-coordinate of the object's position in RTN
      */
-    val Z_DOT : Double
+    val zDot : Double
         get() {
             val o = __offset(74)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -386,7 +386,7 @@ class CDMObject : Table() {
      *         CSRP_R, CSRP_T, CSRP_N, CSRP_RDOT, CSRP_TDOT, CSRP_NDOT, CSRP_DRG, CSRP_SRP,
      *         CTHR_R, CTHR_T, CTHR_N, CTHR_RDOT, CTHR_TDOT, CTHR_NDOT, CTHR_DRG, CTHR_SRP, CTHR_THR]
      */
-    fun COVARIANCE(j: Int) : Double {
+    fun covariance(j: Int) : Double {
         val o = __offset(76)
         return if (o != 0) {
             bb.getDouble(__vector(o) + j * 8)
@@ -394,98 +394,98 @@ class CDMObject : Table() {
             0.0
         }
     }
-    val COVARIANCELength : Int
+    val covarianceLength : Int
         get() {
             val o = __offset(76); return if (o != 0) __vector_len(o) else 0
         }
-    val COVARIANCEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(76, 8)
-    fun COVARIANCEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 76, 8)
+    val covarianceAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(76, 8)
+    fun covarianceInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 76, 8)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsCDMObject(_bb: ByteBuffer): CDMObject = getRootAsCDMObject(_bb, CDMObject())
         fun getRootAsCDMObject(_bb: ByteBuffer, obj: CDMObject): CDMObject {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createCDMObject(builder: FlatBufferBuilder, COMMENTOffset: Int, OBJECTOffset: Int, POCOffset: Int, OPERATOR_CONTACT_POSITIONOffset: Int, OPERATOR_ORGANIZATIONOffset: Int, EPHEMERIS_NAMEOffset: Int, COVARIANCE_METHOD: Byte, REFERENCE_FRAMEOffset: Int, GRAVITY_MODELOffset: Int, ATMOSPHERIC_MODELOffset: Int, N_BODY_PERTURBATIONSOffset: Int, SOLAR_RAD_PRESSURE: Boolean, EARTH_TIDES: Boolean, INTRACK_THRUST: Boolean, TIME_LASTOB_STARTOffset: Int, TIME_LASTOB_ENDOffset: Int, RECOMMENDED_OD_SPAN: Double, ACTUAL_OD_SPAN: Double, OBS_AVAILABLE: UInt, OBS_USED: UInt, TRACKS_AVAILABLE: UInt, TRACKS_USED: UInt, RESIDUALS_ACCEPTED: Double, WEIGHTED_RMS: Double, AREA_PC: Double, AREA_DRG: Double, AREA_SRP: Double, CR_AREA_OVER_MASS: Double, THRUST_ACCELERATION: Double, SEDR: Double, X: Double, Y: Double, Z: Double, X_DOT: Double, Y_DOT: Double, Z_DOT: Double, COVARIANCEOffset: Int) : Int {
+        fun createCDMObject(builder: FlatBufferBuilder, commentOffset: Int, objectOffset: Int, pocOffset: Int, operatorContactPositionOffset: Int, operatorOrganizationOffset: Int, ephemerisNameOffset: Int, covarianceMethod: Byte, referenceFrameOffset: Int, gravityModelOffset: Int, atmosphericModelOffset: Int, nBodyPerturbationsOffset: Int, solarRadPressure: Boolean, earthTides: Boolean, intrackThrust: Boolean, timeLastobStartOffset: Int, timeLastobEndOffset: Int, recommendedOdSpan: Double, actualOdSpan: Double, obsAvailable: UInt, obsUsed: UInt, tracksAvailable: UInt, tracksUsed: UInt, residualsAccepted: Double, weightedRms: Double, areaPc: Double, areaDrg: Double, areaSrp: Double, crAreaOverMass: Double, thrustAcceleration: Double, sedr: Double, x: Double, y: Double, z: Double, xDot: Double, yDot: Double, zDot: Double, covarianceOffset: Int) : Int {
             builder.startTable(37)
-            addZ_DOT(builder, Z_DOT)
-            addY_DOT(builder, Y_DOT)
-            addX_DOT(builder, X_DOT)
-            addZ(builder, Z)
-            addY(builder, Y)
-            addX(builder, X)
-            addSEDR(builder, SEDR)
-            addTHRUST_ACCELERATION(builder, THRUST_ACCELERATION)
-            addCR_AREA_OVER_MASS(builder, CR_AREA_OVER_MASS)
-            addAREA_SRP(builder, AREA_SRP)
-            addAREA_DRG(builder, AREA_DRG)
-            addAREA_PC(builder, AREA_PC)
-            addWEIGHTED_RMS(builder, WEIGHTED_RMS)
-            addRESIDUALS_ACCEPTED(builder, RESIDUALS_ACCEPTED)
-            addACTUAL_OD_SPAN(builder, ACTUAL_OD_SPAN)
-            addRECOMMENDED_OD_SPAN(builder, RECOMMENDED_OD_SPAN)
-            addCOVARIANCE(builder, COVARIANCEOffset)
-            addTRACKS_USED(builder, TRACKS_USED)
-            addTRACKS_AVAILABLE(builder, TRACKS_AVAILABLE)
-            addOBS_USED(builder, OBS_USED)
-            addOBS_AVAILABLE(builder, OBS_AVAILABLE)
-            addTIME_LASTOB_END(builder, TIME_LASTOB_ENDOffset)
-            addTIME_LASTOB_START(builder, TIME_LASTOB_STARTOffset)
-            addN_BODY_PERTURBATIONS(builder, N_BODY_PERTURBATIONSOffset)
-            addATMOSPHERIC_MODEL(builder, ATMOSPHERIC_MODELOffset)
-            addGRAVITY_MODEL(builder, GRAVITY_MODELOffset)
-            addREFERENCE_FRAME(builder, REFERENCE_FRAMEOffset)
-            addEPHEMERIS_NAME(builder, EPHEMERIS_NAMEOffset)
-            addOPERATOR_ORGANIZATION(builder, OPERATOR_ORGANIZATIONOffset)
-            addOPERATOR_CONTACT_POSITION(builder, OPERATOR_CONTACT_POSITIONOffset)
-            addPOC(builder, POCOffset)
-            addOBJECT(builder, OBJECTOffset)
-            addCOMMENT(builder, COMMENTOffset)
-            addINTRACK_THRUST(builder, INTRACK_THRUST)
-            addEARTH_TIDES(builder, EARTH_TIDES)
-            addSOLAR_RAD_PRESSURE(builder, SOLAR_RAD_PRESSURE)
-            addCOVARIANCE_METHOD(builder, COVARIANCE_METHOD)
+            addZDOT(builder, zDot)
+            addYDOT(builder, yDot)
+            addXDOT(builder, xDot)
+            addZ(builder, z)
+            addY(builder, y)
+            addX(builder, x)
+            addSEDR(builder, sedr)
+            addTHRUSTACCELERATION(builder, thrustAcceleration)
+            addCRAREAOVERMASS(builder, crAreaOverMass)
+            addAREASRP(builder, areaSrp)
+            addAREADRG(builder, areaDrg)
+            addAREAPC(builder, areaPc)
+            addWEIGHTEDRMS(builder, weightedRms)
+            addRESIDUALSACCEPTED(builder, residualsAccepted)
+            addACTUALODSPAN(builder, actualOdSpan)
+            addRECOMMENDEDODSPAN(builder, recommendedOdSpan)
+            addCOVARIANCE(builder, covarianceOffset)
+            addTRACKSUSED(builder, tracksUsed)
+            addTRACKSAVAILABLE(builder, tracksAvailable)
+            addOBSUSED(builder, obsUsed)
+            addOBSAVAILABLE(builder, obsAvailable)
+            addTIMELASTOBEND(builder, timeLastobEndOffset)
+            addTIMELASTOBSTART(builder, timeLastobStartOffset)
+            addNBODYPERTURBATIONS(builder, nBodyPerturbationsOffset)
+            addATMOSPHERICMODEL(builder, atmosphericModelOffset)
+            addGRAVITYMODEL(builder, gravityModelOffset)
+            addREFERENCEFRAME(builder, referenceFrameOffset)
+            addEPHEMERISNAME(builder, ephemerisNameOffset)
+            addOPERATORORGANIZATION(builder, operatorOrganizationOffset)
+            addOPERATORCONTACTPOSITION(builder, operatorContactPositionOffset)
+            addPOC(builder, pocOffset)
+            addOBJECT(builder, objectOffset)
+            addCOMMENT(builder, commentOffset)
+            addINTRACKTHRUST(builder, intrackThrust)
+            addEARTHTIDES(builder, earthTides)
+            addSOLARRADPRESSURE(builder, solarRadPressure)
+            addCOVARIANCEMETHOD(builder, covarianceMethod)
             return endCDMObject(builder)
         }
         fun startCDMObject(builder: FlatBufferBuilder) = builder.startTable(37)
-        fun addCOMMENT(builder: FlatBufferBuilder, COMMENT: Int) = builder.addOffset(0, COMMENT, 0)
-        fun addOBJECT(builder: FlatBufferBuilder, OBJECT: Int) = builder.addOffset(1, OBJECT, 0)
-        fun addPOC(builder: FlatBufferBuilder, POC: Int) = builder.addOffset(2, POC, 0)
-        fun addOPERATOR_CONTACT_POSITION(builder: FlatBufferBuilder, OPERATOR_CONTACT_POSITION: Int) = builder.addOffset(3, OPERATOR_CONTACT_POSITION, 0)
-        fun addOPERATOR_ORGANIZATION(builder: FlatBufferBuilder, OPERATOR_ORGANIZATION: Int) = builder.addOffset(4, OPERATOR_ORGANIZATION, 0)
-        fun addEPHEMERIS_NAME(builder: FlatBufferBuilder, EPHEMERIS_NAME: Int) = builder.addOffset(5, EPHEMERIS_NAME, 0)
-        fun addCOVARIANCE_METHOD(builder: FlatBufferBuilder, COVARIANCE_METHOD: Byte) = builder.addByte(6, COVARIANCE_METHOD, 0)
-        fun addREFERENCE_FRAME(builder: FlatBufferBuilder, REFERENCE_FRAME: Int) = builder.addOffset(7, REFERENCE_FRAME, 0)
-        fun addGRAVITY_MODEL(builder: FlatBufferBuilder, GRAVITY_MODEL: Int) = builder.addOffset(8, GRAVITY_MODEL, 0)
-        fun addATMOSPHERIC_MODEL(builder: FlatBufferBuilder, ATMOSPHERIC_MODEL: Int) = builder.addOffset(9, ATMOSPHERIC_MODEL, 0)
-        fun addN_BODY_PERTURBATIONS(builder: FlatBufferBuilder, N_BODY_PERTURBATIONS: Int) = builder.addOffset(10, N_BODY_PERTURBATIONS, 0)
-        fun addSOLAR_RAD_PRESSURE(builder: FlatBufferBuilder, SOLAR_RAD_PRESSURE: Boolean) = builder.addBoolean(11, SOLAR_RAD_PRESSURE, false)
-        fun addEARTH_TIDES(builder: FlatBufferBuilder, EARTH_TIDES: Boolean) = builder.addBoolean(12, EARTH_TIDES, false)
-        fun addINTRACK_THRUST(builder: FlatBufferBuilder, INTRACK_THRUST: Boolean) = builder.addBoolean(13, INTRACK_THRUST, false)
-        fun addTIME_LASTOB_START(builder: FlatBufferBuilder, TIME_LASTOB_START: Int) = builder.addOffset(14, TIME_LASTOB_START, 0)
-        fun addTIME_LASTOB_END(builder: FlatBufferBuilder, TIME_LASTOB_END: Int) = builder.addOffset(15, TIME_LASTOB_END, 0)
-        fun addRECOMMENDED_OD_SPAN(builder: FlatBufferBuilder, RECOMMENDED_OD_SPAN: Double) = builder.addDouble(16, RECOMMENDED_OD_SPAN, 0.0)
-        fun addACTUAL_OD_SPAN(builder: FlatBufferBuilder, ACTUAL_OD_SPAN: Double) = builder.addDouble(17, ACTUAL_OD_SPAN, 0.0)
-        fun addOBS_AVAILABLE(builder: FlatBufferBuilder, OBS_AVAILABLE: UInt) = builder.addInt(18, OBS_AVAILABLE.toInt(), 0)
-        fun addOBS_USED(builder: FlatBufferBuilder, OBS_USED: UInt) = builder.addInt(19, OBS_USED.toInt(), 0)
-        fun addTRACKS_AVAILABLE(builder: FlatBufferBuilder, TRACKS_AVAILABLE: UInt) = builder.addInt(20, TRACKS_AVAILABLE.toInt(), 0)
-        fun addTRACKS_USED(builder: FlatBufferBuilder, TRACKS_USED: UInt) = builder.addInt(21, TRACKS_USED.toInt(), 0)
-        fun addRESIDUALS_ACCEPTED(builder: FlatBufferBuilder, RESIDUALS_ACCEPTED: Double) = builder.addDouble(22, RESIDUALS_ACCEPTED, 0.0)
-        fun addWEIGHTED_RMS(builder: FlatBufferBuilder, WEIGHTED_RMS: Double) = builder.addDouble(23, WEIGHTED_RMS, 0.0)
-        fun addAREA_PC(builder: FlatBufferBuilder, AREA_PC: Double) = builder.addDouble(24, AREA_PC, 0.0)
-        fun addAREA_DRG(builder: FlatBufferBuilder, AREA_DRG: Double) = builder.addDouble(25, AREA_DRG, 0.0)
-        fun addAREA_SRP(builder: FlatBufferBuilder, AREA_SRP: Double) = builder.addDouble(26, AREA_SRP, 0.0)
-        fun addCR_AREA_OVER_MASS(builder: FlatBufferBuilder, CR_AREA_OVER_MASS: Double) = builder.addDouble(27, CR_AREA_OVER_MASS, 0.0)
-        fun addTHRUST_ACCELERATION(builder: FlatBufferBuilder, THRUST_ACCELERATION: Double) = builder.addDouble(28, THRUST_ACCELERATION, 0.0)
-        fun addSEDR(builder: FlatBufferBuilder, SEDR: Double) = builder.addDouble(29, SEDR, 0.0)
-        fun addX(builder: FlatBufferBuilder, X: Double) = builder.addDouble(30, X, 0.0)
-        fun addY(builder: FlatBufferBuilder, Y: Double) = builder.addDouble(31, Y, 0.0)
-        fun addZ(builder: FlatBufferBuilder, Z: Double) = builder.addDouble(32, Z, 0.0)
-        fun addX_DOT(builder: FlatBufferBuilder, X_DOT: Double) = builder.addDouble(33, X_DOT, 0.0)
-        fun addY_DOT(builder: FlatBufferBuilder, Y_DOT: Double) = builder.addDouble(34, Y_DOT, 0.0)
-        fun addZ_DOT(builder: FlatBufferBuilder, Z_DOT: Double) = builder.addDouble(35, Z_DOT, 0.0)
-        fun addCOVARIANCE(builder: FlatBufferBuilder, COVARIANCE: Int) = builder.addOffset(36, COVARIANCE, 0)
+        fun addCOMMENT(builder: FlatBufferBuilder, comment: Int) = builder.addOffset(0, comment, 0)
+        fun addOBJECT(builder: FlatBufferBuilder, object: Int) = builder.addOffset(1, object, 0)
+        fun addPOC(builder: FlatBufferBuilder, poc: Int) = builder.addOffset(2, poc, 0)
+        fun addOPERATORCONTACTPOSITION(builder: FlatBufferBuilder, operatorContactPosition: Int) = builder.addOffset(3, operatorContactPosition, 0)
+        fun addOPERATORORGANIZATION(builder: FlatBufferBuilder, operatorOrganization: Int) = builder.addOffset(4, operatorOrganization, 0)
+        fun addEPHEMERISNAME(builder: FlatBufferBuilder, ephemerisName: Int) = builder.addOffset(5, ephemerisName, 0)
+        fun addCOVARIANCEMETHOD(builder: FlatBufferBuilder, covarianceMethod: Byte) = builder.addByte(6, covarianceMethod, 0)
+        fun addREFERENCEFRAME(builder: FlatBufferBuilder, referenceFrame: Int) = builder.addOffset(7, referenceFrame, 0)
+        fun addGRAVITYMODEL(builder: FlatBufferBuilder, gravityModel: Int) = builder.addOffset(8, gravityModel, 0)
+        fun addATMOSPHERICMODEL(builder: FlatBufferBuilder, atmosphericModel: Int) = builder.addOffset(9, atmosphericModel, 0)
+        fun addNBODYPERTURBATIONS(builder: FlatBufferBuilder, nBodyPerturbations: Int) = builder.addOffset(10, nBodyPerturbations, 0)
+        fun addSOLARRADPRESSURE(builder: FlatBufferBuilder, solarRadPressure: Boolean) = builder.addBoolean(11, solarRadPressure, false)
+        fun addEARTHTIDES(builder: FlatBufferBuilder, earthTides: Boolean) = builder.addBoolean(12, earthTides, false)
+        fun addINTRACKTHRUST(builder: FlatBufferBuilder, intrackThrust: Boolean) = builder.addBoolean(13, intrackThrust, false)
+        fun addTIMELASTOBSTART(builder: FlatBufferBuilder, timeLastobStart: Int) = builder.addOffset(14, timeLastobStart, 0)
+        fun addTIMELASTOBEND(builder: FlatBufferBuilder, timeLastobEnd: Int) = builder.addOffset(15, timeLastobEnd, 0)
+        fun addRECOMMENDEDODSPAN(builder: FlatBufferBuilder, recommendedOdSpan: Double) = builder.addDouble(16, recommendedOdSpan, 0.0)
+        fun addACTUALODSPAN(builder: FlatBufferBuilder, actualOdSpan: Double) = builder.addDouble(17, actualOdSpan, 0.0)
+        fun addOBSAVAILABLE(builder: FlatBufferBuilder, obsAvailable: UInt) = builder.addInt(18, obsAvailable.toInt(), 0)
+        fun addOBSUSED(builder: FlatBufferBuilder, obsUsed: UInt) = builder.addInt(19, obsUsed.toInt(), 0)
+        fun addTRACKSAVAILABLE(builder: FlatBufferBuilder, tracksAvailable: UInt) = builder.addInt(20, tracksAvailable.toInt(), 0)
+        fun addTRACKSUSED(builder: FlatBufferBuilder, tracksUsed: UInt) = builder.addInt(21, tracksUsed.toInt(), 0)
+        fun addRESIDUALSACCEPTED(builder: FlatBufferBuilder, residualsAccepted: Double) = builder.addDouble(22, residualsAccepted, 0.0)
+        fun addWEIGHTEDRMS(builder: FlatBufferBuilder, weightedRms: Double) = builder.addDouble(23, weightedRms, 0.0)
+        fun addAREAPC(builder: FlatBufferBuilder, areaPc: Double) = builder.addDouble(24, areaPc, 0.0)
+        fun addAREADRG(builder: FlatBufferBuilder, areaDrg: Double) = builder.addDouble(25, areaDrg, 0.0)
+        fun addAREASRP(builder: FlatBufferBuilder, areaSrp: Double) = builder.addDouble(26, areaSrp, 0.0)
+        fun addCRAREAOVERMASS(builder: FlatBufferBuilder, crAreaOverMass: Double) = builder.addDouble(27, crAreaOverMass, 0.0)
+        fun addTHRUSTACCELERATION(builder: FlatBufferBuilder, thrustAcceleration: Double) = builder.addDouble(28, thrustAcceleration, 0.0)
+        fun addSEDR(builder: FlatBufferBuilder, sedr: Double) = builder.addDouble(29, sedr, 0.0)
+        fun addX(builder: FlatBufferBuilder, x: Double) = builder.addDouble(30, x, 0.0)
+        fun addY(builder: FlatBufferBuilder, y: Double) = builder.addDouble(31, y, 0.0)
+        fun addZ(builder: FlatBufferBuilder, z: Double) = builder.addDouble(32, z, 0.0)
+        fun addXDOT(builder: FlatBufferBuilder, xDot: Double) = builder.addDouble(33, xDot, 0.0)
+        fun addYDOT(builder: FlatBufferBuilder, yDot: Double) = builder.addDouble(34, yDot, 0.0)
+        fun addZDOT(builder: FlatBufferBuilder, zDot: Double) = builder.addDouble(35, zDot, 0.0)
+        fun addCOVARIANCE(builder: FlatBufferBuilder, covariance: Int) = builder.addOffset(36, covariance, 0)
         fun createCovarianceVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
             builder.startVector(8, data.size, 8)
             for (i in data.size - 1 downTo 0) {

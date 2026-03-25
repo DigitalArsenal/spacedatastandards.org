@@ -32,7 +32,7 @@ class CZMDistanceDisplayCondition : Table() {
     /**
      * Near distance in meters
      */
-    val NEAR_DISTANCE : Double
+    val nearDistance : Double
         get() {
             val o = __offset(4)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -40,27 +40,27 @@ class CZMDistanceDisplayCondition : Table() {
     /**
      * Far distance in meters
      */
-    val FAR_DISTANCE : Double
+    val farDistance : Double
         get() {
             val o = __offset(6)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsCZMDistanceDisplayCondition(_bb: ByteBuffer): CZMDistanceDisplayCondition = getRootAsCZMDistanceDisplayCondition(_bb, CZMDistanceDisplayCondition())
         fun getRootAsCZMDistanceDisplayCondition(_bb: ByteBuffer, obj: CZMDistanceDisplayCondition): CZMDistanceDisplayCondition {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createCZMDistanceDisplayCondition(builder: FlatBufferBuilder, NEAR_DISTANCE: Double, FAR_DISTANCE: Double) : Int {
+        fun createCZMDistanceDisplayCondition(builder: FlatBufferBuilder, nearDistance: Double, farDistance: Double) : Int {
             builder.startTable(2)
-            addFAR_DISTANCE(builder, FAR_DISTANCE)
-            addNEAR_DISTANCE(builder, NEAR_DISTANCE)
+            addFARDISTANCE(builder, farDistance)
+            addNEARDISTANCE(builder, nearDistance)
             return endCZMDistanceDisplayCondition(builder)
         }
         fun startCZMDistanceDisplayCondition(builder: FlatBufferBuilder) = builder.startTable(2)
-        fun addNEAR_DISTANCE(builder: FlatBufferBuilder, NEAR_DISTANCE: Double) = builder.addDouble(0, NEAR_DISTANCE, 0.0)
-        fun addFAR_DISTANCE(builder: FlatBufferBuilder, FAR_DISTANCE: Double) = builder.addDouble(1, FAR_DISTANCE, 0.0)
+        fun addNEARDISTANCE(builder: FlatBufferBuilder, nearDistance: Double) = builder.addDouble(0, nearDistance, 0.0)
+        fun addFARDISTANCE(builder: FlatBufferBuilder, farDistance: Double) = builder.addDouble(1, farDistance, 0.0)
         fun endCZMDistanceDisplayCondition(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

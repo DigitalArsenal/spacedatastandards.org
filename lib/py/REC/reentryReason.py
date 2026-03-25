@@ -2,4 +2,10 @@
 
 # namespace: 
 
-# NOTE reentryReason.py does not declare any structs or enums
+class reentryReason(object):
+    NATURAL_DECAY = 0
+    COMMANDED_DEORBIT = 1
+    PROPULSION_FAILURE = 2
+    COLLISION = 3
+    FRAGMENTATION = 4
+    UNKNOWN = 5

@@ -2,4 +2,6 @@
 
 # namespace: 
 
-# NOTE KMLFlyToMode.py does not declare any structs or enums
+class KMLFlyToMode(object):
+    BOUNCE = 0
+    SMOOTH = 1

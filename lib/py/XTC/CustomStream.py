@@ -87,16 +87,21 @@ def End(builder):
 class CustomStreamT(object):
 
     # CustomStreamT
-    def __init__(self):
-        self.NAME = None  # type: str
-        self.SHORT_DESCRIPTION = None  # type: str
-        self.ALGORITHM_REF = None  # type: str
+    def __init__(
+        self,
+        NAME = None,
+        SHORT_DESCRIPTION = None,
+        ALGORITHM_REF = None,
+    ):
+        self.NAME = NAME  # type: Optional[str]
+        self.SHORT_DESCRIPTION = SHORT_DESCRIPTION  # type: Optional[str]
+        self.ALGORITHM_REF = ALGORITHM_REF  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        customStream = CustomStream()
-        customStream.Init(buf, pos)
-        return cls.InitFromObj(customStream)
+        tmpCustomStream = CustomStream()
+        tmpCustomStream.Init(buf, pos)
+        return cls.InitFromObj(tmpCustomStream)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -104,18 +109,18 @@ class CustomStreamT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, customStream):
+    def InitFromObj(cls, tmpCustomStream):
         x = CustomStreamT()
-        x._UnPack(customStream)
+        x._UnPack(tmpCustomStream)
         return x
 
     # CustomStreamT
-    def _UnPack(self, customStream):
-        if customStream is None:
+    def _UnPack(self, CustomStream):
+        if CustomStream is None:
             return
-        self.NAME = customStream.NAME()
-        self.SHORT_DESCRIPTION = customStream.SHORT_DESCRIPTION()
-        self.ALGORITHM_REF = customStream.ALGORITHM_REF()
+        self.NAME = CustomStream.NAME()
+        self.SHORT_DESCRIPTION = CustomStream.SHORT_DESCRIPTION()
+        self.ALGORITHM_REF = CustomStream.ALGORITHM_REF()
 
     # CustomStreamT
     def Pack(self, builder):
@@ -132,5 +137,5 @@ class CustomStreamT(object):
             CustomStreamAddSHORT_DESCRIPTION(builder, SHORT_DESCRIPTION)
         if self.ALGORITHM_REF is not None:
             CustomStreamAddALGORITHM_REF(builder, ALGORITHM_REF)
-        customStream = CustomStreamEnd(builder)
-        return customStream
+        CustomStream = CustomStreamEnd(builder)
+        return CustomStream

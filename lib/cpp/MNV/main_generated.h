@@ -8,9 +8,9 @@
 
 // Ensure the included flatbuffers.h is the same version as when this file was
 // generated, otherwise it may not be compatible.
-static_assert(FLATBUFFERS_VERSION_MAJOR == 24 &&
-              FLATBUFFERS_VERSION_MINOR == 3 &&
-              FLATBUFFERS_VERSION_REVISION == 25,
+static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
+              FLATBUFFERS_VERSION_MINOR == 12 &&
+              FLATBUFFERS_VERSION_REVISION == 19,
              "Non-compatible flatbuffers version included");
 
 struct mnvOrbitalState;
@@ -243,7 +243,8 @@ struct mnvOrbitalState FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   double SIGMA_W() const {
     return GetField<double>(VT_SIGMA_W, 0.0);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_ID_ELSET) &&
            verifier.VerifyString(ID_ELSET()) &&
@@ -706,7 +707,8 @@ struct MNV FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *TRANSACTION_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_TRANSACTION_ID);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_ID) &&
            verifier.VerifyString(ID()) &&
@@ -1170,14 +1172,16 @@ inline bool SizePrefixedMNVBufferHasIdentifier(const void *buf) {
       buf, MNVIdentifier(), true);
 }
 
+template <bool B = false>
 inline bool VerifyMNVBuffer(
-    ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifyBuffer<MNV>(MNVIdentifier());
+    ::flatbuffers::VerifierTemplate<B> &verifier) {
+  return verifier.template VerifyBuffer<MNV>(MNVIdentifier());
 }
 
+template <bool B = false>
 inline bool VerifySizePrefixedMNVBuffer(
-    ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifySizePrefixedBuffer<MNV>(MNVIdentifier());
+    ::flatbuffers::VerifierTemplate<B> &verifier) {
+  return verifier.template VerifySizePrefixedBuffer<MNV>(MNVIdentifier());
 }
 
 inline void FinishMNVBuffer(

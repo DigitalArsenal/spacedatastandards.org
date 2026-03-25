@@ -2,4 +2,155 @@
 
 # namespace: 
 
-# NOTE ParameterComparison.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Parameter comparison for match criteria
+class ParameterComparison(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = ParameterComparison()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsParameterComparison(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def ParameterComparisonBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x58\x54\x43", size_prefixed=size_prefixed)
+
+    # ParameterComparison
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Parameter reference path
+    # ParameterComparison
+    def PARAMETER_REF(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Comparison operator
+    # ParameterComparison
+    def OPERATOR(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # Value to compare against
+    # ParameterComparison
+    def VALUE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Use calibrated value (true) or raw value (false)
+    # ParameterComparison
+    def USE_CALIBRATED_VALUE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return True
+
+def ParameterComparisonStart(builder):
+    builder.StartObject(4)
+
+def Start(builder):
+    ParameterComparisonStart(builder)
+
+def ParameterComparisonAddPARAMETER_REF(builder, PARAMETER_REF):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(PARAMETER_REF), 0)
+
+def AddPARAMETER_REF(builder, PARAMETER_REF):
+    ParameterComparisonAddPARAMETER_REF(builder, PARAMETER_REF)
+
+def ParameterComparisonAddOPERATOR(builder, OPERATOR):
+    builder.PrependInt8Slot(1, OPERATOR, 0)
+
+def AddOPERATOR(builder, OPERATOR):
+    ParameterComparisonAddOPERATOR(builder, OPERATOR)
+
+def ParameterComparisonAddVALUE(builder, VALUE):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(VALUE), 0)
+
+def AddVALUE(builder, VALUE):
+    ParameterComparisonAddVALUE(builder, VALUE)
+
+def ParameterComparisonAddUSE_CALIBRATED_VALUE(builder, USE_CALIBRATED_VALUE):
+    builder.PrependBoolSlot(3, USE_CALIBRATED_VALUE, 1)
+
+def AddUSE_CALIBRATED_VALUE(builder, USE_CALIBRATED_VALUE):
+    ParameterComparisonAddUSE_CALIBRATED_VALUE(builder, USE_CALIBRATED_VALUE)
+
+def ParameterComparisonEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return ParameterComparisonEnd(builder)
+
+
+class ParameterComparisonT(object):
+
+    # ParameterComparisonT
+    def __init__(
+        self,
+        PARAMETER_REF = None,
+        OPERATOR = 0,
+        VALUE = None,
+        USE_CALIBRATED_VALUE = True,
+    ):
+        self.PARAMETER_REF = PARAMETER_REF  # type: Optional[str]
+        self.OPERATOR = OPERATOR  # type: int
+        self.VALUE = VALUE  # type: Optional[str]
+        self.USE_CALIBRATED_VALUE = USE_CALIBRATED_VALUE  # type: bool
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpParameterComparison = ParameterComparison()
+        tmpParameterComparison.Init(buf, pos)
+        return cls.InitFromObj(tmpParameterComparison)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpParameterComparison):
+        x = ParameterComparisonT()
+        x._UnPack(tmpParameterComparison)
+        return x
+
+    # ParameterComparisonT
+    def _UnPack(self, ParameterComparison):
+        if ParameterComparison is None:
+            return
+        self.PARAMETER_REF = ParameterComparison.PARAMETER_REF()
+        self.OPERATOR = ParameterComparison.OPERATOR()
+        self.VALUE = ParameterComparison.VALUE()
+        self.USE_CALIBRATED_VALUE = ParameterComparison.USE_CALIBRATED_VALUE()
+
+    # ParameterComparisonT
+    def Pack(self, builder):
+        if self.PARAMETER_REF is not None:
+            PARAMETER_REF = builder.CreateString(self.PARAMETER_REF)
+        if self.VALUE is not None:
+            VALUE = builder.CreateString(self.VALUE)
+        ParameterComparisonStart(builder)
+        if self.PARAMETER_REF is not None:
+            ParameterComparisonAddPARAMETER_REF(builder, PARAMETER_REF)
+        ParameterComparisonAddOPERATOR(builder, self.OPERATOR)
+        if self.VALUE is not None:
+            ParameterComparisonAddVALUE(builder, VALUE)
+        ParameterComparisonAddUSE_CALIBRATED_VALUE(builder, self.USE_CALIBRATED_VALUE)
+        ParameterComparison = ParameterComparisonEnd(builder)
+        return ParameterComparison

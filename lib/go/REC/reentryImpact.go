@@ -51,6 +51,10 @@ func (rcv *reentryImpact) IMPACT_EPOCH() []byte {
 	return nil
 }
 
+func (rcv *reentryImpact) ImpactEpoch() []byte {
+	return rcv.IMPACT_EPOCH()
+}
+
 /// Predicted impact epoch (ISO 8601)
 /// Epoch uncertainty window in seconds
 func (rcv *reentryImpact) EPOCH_UNCERTAINTY() float64 {
@@ -61,9 +65,17 @@ func (rcv *reentryImpact) EPOCH_UNCERTAINTY() float64 {
 	return 0.0
 }
 
+func (rcv *reentryImpact) EpochUncertainty() float64 {
+	return rcv.EPOCH_UNCERTAINTY()
+}
+
 /// Epoch uncertainty window in seconds
 func (rcv *reentryImpact) MutateEPOCH_UNCERTAINTY(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(6, n)
+}
+
+func (rcv *reentryImpact) MutateEpochUncertainty(n float64) bool {
+	return rcv.MutateEPOCH_UNCERTAINTY(n)
 }
 
 /// Impact latitude in degrees
@@ -75,9 +87,17 @@ func (rcv *reentryImpact) LATITUDE() float64 {
 	return 0.0
 }
 
+func (rcv *reentryImpact) Latitude() float64 {
+	return rcv.LATITUDE()
+}
+
 /// Impact latitude in degrees
 func (rcv *reentryImpact) MutateLATITUDE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(8, n)
+}
+
+func (rcv *reentryImpact) MutateLatitude(n float64) bool {
+	return rcv.MutateLATITUDE(n)
 }
 
 /// Impact longitude in degrees
@@ -89,9 +109,17 @@ func (rcv *reentryImpact) LONGITUDE() float64 {
 	return 0.0
 }
 
+func (rcv *reentryImpact) Longitude() float64 {
+	return rcv.LONGITUDE()
+}
+
 /// Impact longitude in degrees
 func (rcv *reentryImpact) MutateLONGITUDE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(10, n)
+}
+
+func (rcv *reentryImpact) MutateLongitude(n float64) bool {
+	return rcv.MutateLONGITUDE(n)
 }
 
 /// Along-track uncertainty in km
@@ -103,9 +131,17 @@ func (rcv *reentryImpact) ALONG_TRACK_UNC() float64 {
 	return 0.0
 }
 
+func (rcv *reentryImpact) AlongTrackUnc() float64 {
+	return rcv.ALONG_TRACK_UNC()
+}
+
 /// Along-track uncertainty in km
 func (rcv *reentryImpact) MutateALONG_TRACK_UNC(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(12, n)
+}
+
+func (rcv *reentryImpact) MutateAlongTrackUnc(n float64) bool {
+	return rcv.MutateALONG_TRACK_UNC(n)
 }
 
 /// Cross-track uncertainty in km
@@ -117,9 +153,17 @@ func (rcv *reentryImpact) CROSS_TRACK_UNC() float64 {
 	return 0.0
 }
 
+func (rcv *reentryImpact) CrossTrackUnc() float64 {
+	return rcv.CROSS_TRACK_UNC()
+}
+
 /// Cross-track uncertainty in km
 func (rcv *reentryImpact) MutateCROSS_TRACK_UNC(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(14, n)
+}
+
+func (rcv *reentryImpact) MutateCrossTrackUnc(n float64) bool {
+	return rcv.MutateCROSS_TRACK_UNC(n)
 }
 
 /// Impact probability (0.0-1.0)
@@ -131,9 +175,17 @@ func (rcv *reentryImpact) IMPACT_PROBABILITY() float64 {
 	return 0.0
 }
 
+func (rcv *reentryImpact) ImpactProbability() float64 {
+	return rcv.IMPACT_PROBABILITY()
+}
+
 /// Impact probability (0.0-1.0)
 func (rcv *reentryImpact) MutateIMPACT_PROBABILITY(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(16, n)
+}
+
+func (rcv *reentryImpact) MutateImpactProbability(n float64) bool {
+	return rcv.MutateIMPACT_PROBABILITY(n)
 }
 
 func reentryImpactStart(builder *flatbuffers.Builder) {
@@ -142,23 +194,44 @@ func reentryImpactStart(builder *flatbuffers.Builder) {
 func reentryImpactAddIMPACT_EPOCH(builder *flatbuffers.Builder, IMPACT_EPOCH flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(IMPACT_EPOCH), 0)
 }
+func reentryImpactAddImpactEpoch(builder *flatbuffers.Builder, IMPACT_EPOCH flatbuffers.UOffsetT) {
+	reentryImpactAddIMPACT_EPOCH(builder, IMPACT_EPOCH)
+}
 func reentryImpactAddEPOCH_UNCERTAINTY(builder *flatbuffers.Builder, EPOCH_UNCERTAINTY float64) {
 	builder.PrependFloat64Slot(1, EPOCH_UNCERTAINTY, 0.0)
+}
+func reentryImpactAddEpochUncertainty(builder *flatbuffers.Builder, EPOCH_UNCERTAINTY float64) {
+	reentryImpactAddEPOCH_UNCERTAINTY(builder, EPOCH_UNCERTAINTY)
 }
 func reentryImpactAddLATITUDE(builder *flatbuffers.Builder, LATITUDE float64) {
 	builder.PrependFloat64Slot(2, LATITUDE, 0.0)
 }
+func reentryImpactAddLatitude(builder *flatbuffers.Builder, LATITUDE float64) {
+	reentryImpactAddLATITUDE(builder, LATITUDE)
+}
 func reentryImpactAddLONGITUDE(builder *flatbuffers.Builder, LONGITUDE float64) {
 	builder.PrependFloat64Slot(3, LONGITUDE, 0.0)
+}
+func reentryImpactAddLongitude(builder *flatbuffers.Builder, LONGITUDE float64) {
+	reentryImpactAddLONGITUDE(builder, LONGITUDE)
 }
 func reentryImpactAddALONG_TRACK_UNC(builder *flatbuffers.Builder, ALONG_TRACK_UNC float64) {
 	builder.PrependFloat64Slot(4, ALONG_TRACK_UNC, 0.0)
 }
+func reentryImpactAddAlongTrackUnc(builder *flatbuffers.Builder, ALONG_TRACK_UNC float64) {
+	reentryImpactAddALONG_TRACK_UNC(builder, ALONG_TRACK_UNC)
+}
 func reentryImpactAddCROSS_TRACK_UNC(builder *flatbuffers.Builder, CROSS_TRACK_UNC float64) {
 	builder.PrependFloat64Slot(5, CROSS_TRACK_UNC, 0.0)
 }
+func reentryImpactAddCrossTrackUnc(builder *flatbuffers.Builder, CROSS_TRACK_UNC float64) {
+	reentryImpactAddCROSS_TRACK_UNC(builder, CROSS_TRACK_UNC)
+}
 func reentryImpactAddIMPACT_PROBABILITY(builder *flatbuffers.Builder, IMPACT_PROBABILITY float64) {
 	builder.PrependFloat64Slot(6, IMPACT_PROBABILITY, 0.0)
+}
+func reentryImpactAddImpactProbability(builder *flatbuffers.Builder, IMPACT_PROBABILITY float64) {
+	reentryImpactAddIMPACT_PROBABILITY(builder, IMPACT_PROBABILITY)
 }
 func reentryImpactEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

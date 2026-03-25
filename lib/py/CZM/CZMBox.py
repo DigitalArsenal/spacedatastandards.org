@@ -241,26 +241,41 @@ except:
 class CZMBoxT(object):
 
     # CZMBoxT
-    def __init__(self):
-        self.SHOW = False  # type: bool
-        self.DIMENSIONS_X = 0.0  # type: float
-        self.DIMENSIONS_Y = 0.0  # type: float
-        self.DIMENSIONS_Z = 0.0  # type: float
-        self.HEIGHT_REFERENCE = None  # type: str
-        self.FILL = False  # type: bool
-        self.MATERIAL = None  # type: Optional[CZMMaterial.CZMMaterialT]
-        self.OUTLINE = False  # type: bool
-        self.OUTLINE_COLOR = None  # type: Optional[CZMColor.CZMColorT]
-        self.OUTLINE_WIDTH = 0.0  # type: float
-        self.SHADOWS = None  # type: str
-        self.DISTANCE_DISPLAY_CONDITION_NEAR = 0.0  # type: float
-        self.DISTANCE_DISPLAY_CONDITION_FAR = 0.0  # type: float
+    def __init__(
+        self,
+        SHOW = False,
+        DIMENSIONS_X = 0.0,
+        DIMENSIONS_Y = 0.0,
+        DIMENSIONS_Z = 0.0,
+        HEIGHT_REFERENCE = None,
+        FILL = False,
+        MATERIAL = None,
+        OUTLINE = False,
+        OUTLINE_COLOR = None,
+        OUTLINE_WIDTH = 0.0,
+        SHADOWS = None,
+        DISTANCE_DISPLAY_CONDITION_NEAR = 0.0,
+        DISTANCE_DISPLAY_CONDITION_FAR = 0.0,
+    ):
+        self.SHOW = SHOW  # type: bool
+        self.DIMENSIONS_X = DIMENSIONS_X  # type: float
+        self.DIMENSIONS_Y = DIMENSIONS_Y  # type: float
+        self.DIMENSIONS_Z = DIMENSIONS_Z  # type: float
+        self.HEIGHT_REFERENCE = HEIGHT_REFERENCE  # type: Optional[str]
+        self.FILL = FILL  # type: bool
+        self.MATERIAL = MATERIAL  # type: Optional[CZMMaterial.CZMMaterialT]
+        self.OUTLINE = OUTLINE  # type: bool
+        self.OUTLINE_COLOR = OUTLINE_COLOR  # type: Optional[CZMColor.CZMColorT]
+        self.OUTLINE_WIDTH = OUTLINE_WIDTH  # type: float
+        self.SHADOWS = SHADOWS  # type: Optional[str]
+        self.DISTANCE_DISPLAY_CONDITION_NEAR = DISTANCE_DISPLAY_CONDITION_NEAR  # type: float
+        self.DISTANCE_DISPLAY_CONDITION_FAR = DISTANCE_DISPLAY_CONDITION_FAR  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        czmbox = CZMBox()
-        czmbox.Init(buf, pos)
-        return cls.InitFromObj(czmbox)
+        tmpCzmbox = CZMBox()
+        tmpCzmbox.Init(buf, pos)
+        return cls.InitFromObj(tmpCzmbox)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -268,30 +283,30 @@ class CZMBoxT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, czmbox):
+    def InitFromObj(cls, tmpCzmbox):
         x = CZMBoxT()
-        x._UnPack(czmbox)
+        x._UnPack(tmpCzmbox)
         return x
 
     # CZMBoxT
-    def _UnPack(self, czmbox):
-        if czmbox is None:
+    def _UnPack(self, CZMBox):
+        if CZMBox is None:
             return
-        self.SHOW = czmbox.SHOW()
-        self.DIMENSIONS_X = czmbox.DIMENSIONS_X()
-        self.DIMENSIONS_Y = czmbox.DIMENSIONS_Y()
-        self.DIMENSIONS_Z = czmbox.DIMENSIONS_Z()
-        self.HEIGHT_REFERENCE = czmbox.HEIGHT_REFERENCE()
-        self.FILL = czmbox.FILL()
-        if czmbox.MATERIAL() is not None:
-            self.MATERIAL = CZMMaterial.CZMMaterialT.InitFromObj(czmbox.MATERIAL())
-        self.OUTLINE = czmbox.OUTLINE()
-        if czmbox.OUTLINE_COLOR() is not None:
-            self.OUTLINE_COLOR = CZMColor.CZMColorT.InitFromObj(czmbox.OUTLINE_COLOR())
-        self.OUTLINE_WIDTH = czmbox.OUTLINE_WIDTH()
-        self.SHADOWS = czmbox.SHADOWS()
-        self.DISTANCE_DISPLAY_CONDITION_NEAR = czmbox.DISTANCE_DISPLAY_CONDITION_NEAR()
-        self.DISTANCE_DISPLAY_CONDITION_FAR = czmbox.DISTANCE_DISPLAY_CONDITION_FAR()
+        self.SHOW = CZMBox.SHOW()
+        self.DIMENSIONS_X = CZMBox.DIMENSIONS_X()
+        self.DIMENSIONS_Y = CZMBox.DIMENSIONS_Y()
+        self.DIMENSIONS_Z = CZMBox.DIMENSIONS_Z()
+        self.HEIGHT_REFERENCE = CZMBox.HEIGHT_REFERENCE()
+        self.FILL = CZMBox.FILL()
+        if CZMBox.MATERIAL() is not None:
+            self.MATERIAL = CZMMaterial.CZMMaterialT.InitFromObj(CZMBox.MATERIAL())
+        self.OUTLINE = CZMBox.OUTLINE()
+        if CZMBox.OUTLINE_COLOR() is not None:
+            self.OUTLINE_COLOR = CZMColor.CZMColorT.InitFromObj(CZMBox.OUTLINE_COLOR())
+        self.OUTLINE_WIDTH = CZMBox.OUTLINE_WIDTH()
+        self.SHADOWS = CZMBox.SHADOWS()
+        self.DISTANCE_DISPLAY_CONDITION_NEAR = CZMBox.DISTANCE_DISPLAY_CONDITION_NEAR()
+        self.DISTANCE_DISPLAY_CONDITION_FAR = CZMBox.DISTANCE_DISPLAY_CONDITION_FAR()
 
     # CZMBoxT
     def Pack(self, builder):
@@ -321,5 +336,5 @@ class CZMBoxT(object):
             CZMBoxAddSHADOWS(builder, SHADOWS)
         CZMBoxAddDISTANCE_DISPLAY_CONDITION_NEAR(builder, self.DISTANCE_DISPLAY_CONDITION_NEAR)
         CZMBoxAddDISTANCE_DISPLAY_CONDITION_FAR(builder, self.DISTANCE_DISPLAY_CONDITION_FAR)
-        czmbox = CZMBoxEnd(builder)
-        return czmbox
+        CZMBox = CZMBoxEnd(builder)
+        return CZMBox

@@ -87,15 +87,19 @@ except:
 class KMLRegionT(object):
 
     # KMLRegionT
-    def __init__(self):
-        self.LAT_LON_ALT_BOX = None  # type: Optional[KMLLatLonAltBox.KMLLatLonAltBoxT]
-        self.LOD = None  # type: Optional[KMLLod.KMLLodT]
+    def __init__(
+        self,
+        LAT_LON_ALT_BOX = None,
+        LOD = None,
+    ):
+        self.LAT_LON_ALT_BOX = LAT_LON_ALT_BOX  # type: Optional[KMLLatLonAltBox.KMLLatLonAltBoxT]
+        self.LOD = LOD  # type: Optional[KMLLod.KMLLodT]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        kmlregion = KMLRegion()
-        kmlregion.Init(buf, pos)
-        return cls.InitFromObj(kmlregion)
+        tmpKmlregion = KMLRegion()
+        tmpKmlregion.Init(buf, pos)
+        return cls.InitFromObj(tmpKmlregion)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -103,19 +107,19 @@ class KMLRegionT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, kmlregion):
+    def InitFromObj(cls, tmpKmlregion):
         x = KMLRegionT()
-        x._UnPack(kmlregion)
+        x._UnPack(tmpKmlregion)
         return x
 
     # KMLRegionT
-    def _UnPack(self, kmlregion):
-        if kmlregion is None:
+    def _UnPack(self, KMLRegion):
+        if KMLRegion is None:
             return
-        if kmlregion.LAT_LON_ALT_BOX() is not None:
-            self.LAT_LON_ALT_BOX = KMLLatLonAltBox.KMLLatLonAltBoxT.InitFromObj(kmlregion.LAT_LON_ALT_BOX())
-        if kmlregion.LOD() is not None:
-            self.LOD = KMLLod.KMLLodT.InitFromObj(kmlregion.LOD())
+        if KMLRegion.LAT_LON_ALT_BOX() is not None:
+            self.LAT_LON_ALT_BOX = KMLLatLonAltBox.KMLLatLonAltBoxT.InitFromObj(KMLRegion.LAT_LON_ALT_BOX())
+        if KMLRegion.LOD() is not None:
+            self.LOD = KMLLod.KMLLodT.InitFromObj(KMLRegion.LOD())
 
     # KMLRegionT
     def Pack(self, builder):
@@ -128,5 +132,5 @@ class KMLRegionT(object):
             KMLRegionAddLAT_LON_ALT_BOX(builder, LAT_LON_ALT_BOX)
         if self.LOD is not None:
             KMLRegionAddLOD(builder, LOD)
-        kmlregion = KMLRegionEnd(builder)
-        return kmlregion
+        KMLRegion = KMLRegionEnd(builder)
+        return KMLRegion

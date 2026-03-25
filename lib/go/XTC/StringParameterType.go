@@ -51,6 +51,10 @@ func (rcv *StringParameterType) NAME() []byte {
 	return nil
 }
 
+func (rcv *StringParameterType) Name() []byte {
+	return rcv.NAME()
+}
+
 /// Type name
 /// Short description
 func (rcv *StringParameterType) SHORT_DESCRIPTION() []byte {
@@ -61,6 +65,10 @@ func (rcv *StringParameterType) SHORT_DESCRIPTION() []byte {
 	return nil
 }
 
+func (rcv *StringParameterType) ShortDescription() []byte {
+	return rcv.SHORT_DESCRIPTION()
+}
+
 /// Short description
 /// Long description
 func (rcv *StringParameterType) LONG_DESCRIPTION() []byte {
@@ -69,6 +77,10 @@ func (rcv *StringParameterType) LONG_DESCRIPTION() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *StringParameterType) LongDescription() []byte {
+	return rcv.LONG_DESCRIPTION()
 }
 
 /// Long description
@@ -86,6 +98,10 @@ func (rcv *StringParameterType) DATA_ENCODING(obj *StringDataEncoding) *StringDa
 	return nil
 }
 
+func (rcv *StringParameterType) DataEncoding(obj *StringDataEncoding) *StringDataEncoding {
+	return rcv.DATA_ENCODING(obj)
+}
+
 /// Data encoding
 /// Default alarm
 func (rcv *StringParameterType) DEFAULT_ALARM(obj *DefaultAlarm) *DefaultAlarm {
@@ -101,6 +117,10 @@ func (rcv *StringParameterType) DEFAULT_ALARM(obj *DefaultAlarm) *DefaultAlarm {
 	return nil
 }
 
+func (rcv *StringParameterType) DefaultAlarm(obj *DefaultAlarm) *DefaultAlarm {
+	return rcv.DEFAULT_ALARM(obj)
+}
+
 /// Default alarm
 /// Context alarms
 func (rcv *StringParameterType) CONTEXT_ALARMS(obj *ContextAlarm, j int) bool {
@@ -109,10 +129,17 @@ func (rcv *StringParameterType) CONTEXT_ALARMS(obj *ContextAlarm, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(ContextAlarm)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *StringParameterType) ContextAlarms(obj *ContextAlarm, j int) bool {
+	return rcv.CONTEXT_ALARMS(obj, j)
 }
 
 func (rcv *StringParameterType) CONTEXT_ALARMSLength() int {
@@ -121,6 +148,10 @@ func (rcv *StringParameterType) CONTEXT_ALARMSLength() int {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *StringParameterType) ContextAlarmsLength() int {
+	return rcv.CONTEXT_ALARMSLength()
 }
 
 /// Context alarms
@@ -133,6 +164,10 @@ func (rcv *StringParameterType) INITIAL_VALUE() []byte {
 	return nil
 }
 
+func (rcv *StringParameterType) InitialValue() []byte {
+	return rcv.INITIAL_VALUE()
+}
+
 /// Initial/default value
 /// Restriction pattern (regex)
 func (rcv *StringParameterType) RESTRICTION_PATTERN() []byte {
@@ -143,6 +178,10 @@ func (rcv *StringParameterType) RESTRICTION_PATTERN() []byte {
 	return nil
 }
 
+func (rcv *StringParameterType) RestrictionPattern() []byte {
+	return rcv.RESTRICTION_PATTERN()
+}
+
 /// Restriction pattern (regex)
 func StringParameterTypeStart(builder *flatbuffers.Builder) {
 	builder.StartObject(8)
@@ -150,29 +189,56 @@ func StringParameterTypeStart(builder *flatbuffers.Builder) {
 func StringParameterTypeAddNAME(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(NAME), 0)
 }
+func StringParameterTypeAddName(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
+	StringParameterTypeAddNAME(builder, NAME)
+}
 func StringParameterTypeAddSHORT_DESCRIPTION(builder *flatbuffers.Builder, SHORT_DESCRIPTION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(SHORT_DESCRIPTION), 0)
+}
+func StringParameterTypeAddShortDescription(builder *flatbuffers.Builder, SHORT_DESCRIPTION flatbuffers.UOffsetT) {
+	StringParameterTypeAddSHORT_DESCRIPTION(builder, SHORT_DESCRIPTION)
 }
 func StringParameterTypeAddLONG_DESCRIPTION(builder *flatbuffers.Builder, LONG_DESCRIPTION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(LONG_DESCRIPTION), 0)
 }
+func StringParameterTypeAddLongDescription(builder *flatbuffers.Builder, LONG_DESCRIPTION flatbuffers.UOffsetT) {
+	StringParameterTypeAddLONG_DESCRIPTION(builder, LONG_DESCRIPTION)
+}
 func StringParameterTypeAddDATA_ENCODING(builder *flatbuffers.Builder, DATA_ENCODING flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(DATA_ENCODING), 0)
+}
+func StringParameterTypeAddDataEncoding(builder *flatbuffers.Builder, DATA_ENCODING flatbuffers.UOffsetT) {
+	StringParameterTypeAddDATA_ENCODING(builder, DATA_ENCODING)
 }
 func StringParameterTypeAddDEFAULT_ALARM(builder *flatbuffers.Builder, DEFAULT_ALARM flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(DEFAULT_ALARM), 0)
 }
+func StringParameterTypeAddDefaultAlarm(builder *flatbuffers.Builder, DEFAULT_ALARM flatbuffers.UOffsetT) {
+	StringParameterTypeAddDEFAULT_ALARM(builder, DEFAULT_ALARM)
+}
 func StringParameterTypeAddCONTEXT_ALARMS(builder *flatbuffers.Builder, CONTEXT_ALARMS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(CONTEXT_ALARMS), 0)
+}
+func StringParameterTypeAddContextAlarms(builder *flatbuffers.Builder, CONTEXT_ALARMS flatbuffers.UOffsetT) {
+	StringParameterTypeAddCONTEXT_ALARMS(builder, CONTEXT_ALARMS)
 }
 func StringParameterTypeStartCONTEXT_ALARMSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
+func StringParameterTypeStartContextAlarmsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return StringParameterTypeStartCONTEXT_ALARMSVector(builder, numElems)
+}
 func StringParameterTypeAddINITIAL_VALUE(builder *flatbuffers.Builder, INITIAL_VALUE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(INITIAL_VALUE), 0)
 }
+func StringParameterTypeAddInitialValue(builder *flatbuffers.Builder, INITIAL_VALUE flatbuffers.UOffsetT) {
+	StringParameterTypeAddINITIAL_VALUE(builder, INITIAL_VALUE)
+}
 func StringParameterTypeAddRESTRICTION_PATTERN(builder *flatbuffers.Builder, RESTRICTION_PATTERN flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(RESTRICTION_PATTERN), 0)
+}
+func StringParameterTypeAddRestrictionPattern(builder *flatbuffers.Builder, RESTRICTION_PATTERN flatbuffers.UOffsetT) {
+	StringParameterTypeAddRESTRICTION_PATTERN(builder, RESTRICTION_PATTERN)
 }
 func StringParameterTypeEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

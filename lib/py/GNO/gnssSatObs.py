@@ -157,6 +157,12 @@ def gnssSatObsStartOBSERVATIONSVector(builder, numElems):
 def StartOBSERVATIONSVector(builder, numElems):
     return gnssSatObsStartOBSERVATIONSVector(builder, numElems)
 
+def gnssSatObsCreateOBSERVATIONSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateOBSERVATIONSVector(builder, data):
+    gnssSatObsCreateOBSERVATIONSVector(builder, data)
+
 def gnssSatObsEnd(builder):
     return builder.EndObject()
 
@@ -172,20 +178,29 @@ except:
 class gnssSatObsT(object):
 
     # gnssSatObsT
-    def __init__(self):
-        self.GNSS_SAT_ID = None  # type: str
-        self.CONSTELLATION = 0  # type: int
-        self.ELEVATION = 0.0  # type: float
-        self.AZIMUTH = 0.0  # type: float
-        self.TRACKING_STATUS = 0  # type: int
-        self.AGC_STATE = 0  # type: int
-        self.OBSERVATIONS = None  # type: List[gnssObsData.gnssObsDataT]
+    def __init__(
+        self,
+        GNSS_SAT_ID = None,
+        CONSTELLATION = 0,
+        ELEVATION = 0.0,
+        AZIMUTH = 0.0,
+        TRACKING_STATUS = 0,
+        AGC_STATE = 0,
+        OBSERVATIONS = None,
+    ):
+        self.GNSS_SAT_ID = GNSS_SAT_ID  # type: Optional[str]
+        self.CONSTELLATION = CONSTELLATION  # type: int
+        self.ELEVATION = ELEVATION  # type: float
+        self.AZIMUTH = AZIMUTH  # type: float
+        self.TRACKING_STATUS = TRACKING_STATUS  # type: int
+        self.AGC_STATE = AGC_STATE  # type: int
+        self.OBSERVATIONS = OBSERVATIONS  # type: Optional[List[gnssObsData.gnssObsDataT]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        gnssSatObs = gnssSatObs()
-        gnssSatObs.Init(buf, pos)
-        return cls.InitFromObj(gnssSatObs)
+        tmpGnssSatObs = gnssSatObs()
+        tmpGnssSatObs.Init(buf, pos)
+        return cls.InitFromObj(tmpGnssSatObs)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -193,9 +208,9 @@ class gnssSatObsT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, gnssSatObs):
+    def InitFromObj(cls, tmpGnssSatObs):
         x = gnssSatObsT()
-        x._UnPack(gnssSatObs)
+        x._UnPack(tmpGnssSatObs)
         return x
 
     # gnssSatObsT

@@ -32,7 +32,7 @@ class AOF : Table() {
     /**
      * Transfer frame version
      */
-    val VERSION : UByte
+    val version : UByte
         get() {
             val o = __offset(4)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
@@ -40,7 +40,7 @@ class AOF : Table() {
     /**
      * Spacecraft identifier
      */
-    val SPACECRAFT_ID : UShort
+    val spacecraftId : UShort
         get() {
             val o = __offset(6)
             return if(o != 0) bb.getShort(o + bb_pos).toUShort() else 0u
@@ -48,7 +48,7 @@ class AOF : Table() {
     /**
      * Virtual channel identifier
      */
-    val VIRTUAL_CHANNEL_ID : UByte
+    val virtualChannelId : UByte
         get() {
             val o = __offset(8)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
@@ -56,7 +56,7 @@ class AOF : Table() {
     /**
      * Virtual channel frame count
      */
-    val VIRTUAL_FRAME_COUNT : UInt
+    val virtualFrameCount : UInt
         get() {
             val o = __offset(10)
             return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
@@ -64,7 +64,7 @@ class AOF : Table() {
     /**
      * Replay flag
      */
-    val REPLAY_FLAG : Boolean
+    val replayFlag : Boolean
         get() {
             val o = __offset(12)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -72,7 +72,7 @@ class AOF : Table() {
     /**
      * VC frame count usage flag
      */
-    val VC_FRAME_COUNT_USAGE : Boolean
+    val vcFrameCountUsage : Boolean
         get() {
             val o = __offset(14)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -80,7 +80,7 @@ class AOF : Table() {
     /**
      * VC frame count cycle
      */
-    val VC_FRAME_COUNT_CYCLE : UByte
+    val vcFrameCountCycle : UByte
         get() {
             val o = __offset(16)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
@@ -88,7 +88,7 @@ class AOF : Table() {
     /**
      * Insert zone
      */
-    fun INSERT_ZONE(j: Int) : UByte {
+    fun insertZone(j: Int) : UByte {
         val o = __offset(18)
         return if (o != 0) {
             bb.get(__vector(o) + j * 1).toUByte()
@@ -96,16 +96,16 @@ class AOF : Table() {
             0u
         }
     }
-    val INSERT_ZONELength : Int
+    val insertZoneLength : Int
         get() {
             val o = __offset(18); return if (o != 0) __vector_len(o) else 0
         }
-    val INSERT_ZONEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(18, 1)
-    fun INSERT_ZONEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 18, 1)
+    val insertZoneAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(18, 1)
+    fun insertZoneInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 18, 1)
     /**
      * Data field
      */
-    fun DATA(j: Int) : UByte {
+    fun data(j: Int) : UByte {
         val o = __offset(20)
         return if (o != 0) {
             bb.get(__vector(o) + j * 1).toUByte()
@@ -113,16 +113,16 @@ class AOF : Table() {
             0u
         }
     }
-    val DATALength : Int
+    val dataLength : Int
         get() {
             val o = __offset(20); return if (o != 0) __vector_len(o) else 0
         }
-    val DATAAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(20, 1)
-    fun DATAInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 20, 1)
+    val dataAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(20, 1)
+    fun dataInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 20, 1)
     /**
      * Operational control field
      */
-    fun OCF(j: Int) : UByte {
+    fun ocf(j: Int) : UByte {
         val o = __offset(22)
         return if (o != 0) {
             bb.get(__vector(o) + j * 1).toUByte()
@@ -130,52 +130,52 @@ class AOF : Table() {
             0u
         }
     }
-    val OCFLength : Int
+    val ocfLength : Int
         get() {
             val o = __offset(22); return if (o != 0) __vector_len(o) else 0
         }
-    val OCFAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(22, 1)
-    fun OCFInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 22, 1)
+    val ocfAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(22, 1)
+    fun ocfInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 22, 1)
     /**
      * Frame error control field
      */
-    val FECF : UShort
+    val fecf : UShort
         get() {
             val o = __offset(24)
             return if(o != 0) bb.getShort(o + bb_pos).toUShort() else 0u
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsAOF(_bb: ByteBuffer): AOF = getRootAsAOF(_bb, AOF())
         fun getRootAsAOF(_bb: ByteBuffer, obj: AOF): AOF {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun AOFBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$AOF")
-        fun createAOF(builder: FlatBufferBuilder, VERSION: UByte, SPACECRAFT_ID: UShort, VIRTUAL_CHANNEL_ID: UByte, VIRTUAL_FRAME_COUNT: UInt, REPLAY_FLAG: Boolean, VC_FRAME_COUNT_USAGE: Boolean, VC_FRAME_COUNT_CYCLE: UByte, INSERT_ZONEOffset: Int, DATAOffset: Int, OCFOffset: Int, FECF: UShort) : Int {
+        fun createAOF(builder: FlatBufferBuilder, version: UByte, spacecraftId: UShort, virtualChannelId: UByte, virtualFrameCount: UInt, replayFlag: Boolean, vcFrameCountUsage: Boolean, vcFrameCountCycle: UByte, insertZoneOffset: Int, dataOffset: Int, ocfOffset: Int, fecf: UShort) : Int {
             builder.startTable(11)
-            addOCF(builder, OCFOffset)
-            addDATA(builder, DATAOffset)
-            addINSERT_ZONE(builder, INSERT_ZONEOffset)
-            addVIRTUAL_FRAME_COUNT(builder, VIRTUAL_FRAME_COUNT)
-            addFECF(builder, FECF)
-            addSPACECRAFT_ID(builder, SPACECRAFT_ID)
-            addVC_FRAME_COUNT_CYCLE(builder, VC_FRAME_COUNT_CYCLE)
-            addVC_FRAME_COUNT_USAGE(builder, VC_FRAME_COUNT_USAGE)
-            addREPLAY_FLAG(builder, REPLAY_FLAG)
-            addVIRTUAL_CHANNEL_ID(builder, VIRTUAL_CHANNEL_ID)
-            addVERSION(builder, VERSION)
+            addOCF(builder, ocfOffset)
+            addDATA(builder, dataOffset)
+            addINSERTZONE(builder, insertZoneOffset)
+            addVIRTUALFRAMECOUNT(builder, virtualFrameCount)
+            addFECF(builder, fecf)
+            addSPACECRAFTID(builder, spacecraftId)
+            addVCFRAMECOUNTCYCLE(builder, vcFrameCountCycle)
+            addVCFRAMECOUNTUSAGE(builder, vcFrameCountUsage)
+            addREPLAYFLAG(builder, replayFlag)
+            addVIRTUALCHANNELID(builder, virtualChannelId)
+            addVERSION(builder, version)
             return endAOF(builder)
         }
         fun startAOF(builder: FlatBufferBuilder) = builder.startTable(11)
-        fun addVERSION(builder: FlatBufferBuilder, VERSION: UByte) = builder.addByte(0, VERSION.toByte(), 0)
-        fun addSPACECRAFT_ID(builder: FlatBufferBuilder, SPACECRAFT_ID: UShort) = builder.addShort(1, SPACECRAFT_ID.toShort(), 0)
-        fun addVIRTUAL_CHANNEL_ID(builder: FlatBufferBuilder, VIRTUAL_CHANNEL_ID: UByte) = builder.addByte(2, VIRTUAL_CHANNEL_ID.toByte(), 0)
-        fun addVIRTUAL_FRAME_COUNT(builder: FlatBufferBuilder, VIRTUAL_FRAME_COUNT: UInt) = builder.addInt(3, VIRTUAL_FRAME_COUNT.toInt(), 0)
-        fun addREPLAY_FLAG(builder: FlatBufferBuilder, REPLAY_FLAG: Boolean) = builder.addBoolean(4, REPLAY_FLAG, false)
-        fun addVC_FRAME_COUNT_USAGE(builder: FlatBufferBuilder, VC_FRAME_COUNT_USAGE: Boolean) = builder.addBoolean(5, VC_FRAME_COUNT_USAGE, false)
-        fun addVC_FRAME_COUNT_CYCLE(builder: FlatBufferBuilder, VC_FRAME_COUNT_CYCLE: UByte) = builder.addByte(6, VC_FRAME_COUNT_CYCLE.toByte(), 0)
-        fun addINSERT_ZONE(builder: FlatBufferBuilder, INSERT_ZONE: Int) = builder.addOffset(7, INSERT_ZONE, 0)
+        fun addVERSION(builder: FlatBufferBuilder, version: UByte) = builder.addByte(0, version.toByte(), 0)
+        fun addSPACECRAFTID(builder: FlatBufferBuilder, spacecraftId: UShort) = builder.addShort(1, spacecraftId.toShort(), 0)
+        fun addVIRTUALCHANNELID(builder: FlatBufferBuilder, virtualChannelId: UByte) = builder.addByte(2, virtualChannelId.toByte(), 0)
+        fun addVIRTUALFRAMECOUNT(builder: FlatBufferBuilder, virtualFrameCount: UInt) = builder.addInt(3, virtualFrameCount.toInt(), 0)
+        fun addREPLAYFLAG(builder: FlatBufferBuilder, replayFlag: Boolean) = builder.addBoolean(4, replayFlag, false)
+        fun addVCFRAMECOUNTUSAGE(builder: FlatBufferBuilder, vcFrameCountUsage: Boolean) = builder.addBoolean(5, vcFrameCountUsage, false)
+        fun addVCFRAMECOUNTCYCLE(builder: FlatBufferBuilder, vcFrameCountCycle: UByte) = builder.addByte(6, vcFrameCountCycle.toByte(), 0)
+        fun addINSERTZONE(builder: FlatBufferBuilder, insertZone: Int) = builder.addOffset(7, insertZone, 0)
         @kotlin.ExperimentalUnsignedTypes
         fun createInsertZoneVector(builder: FlatBufferBuilder, data: UByteArray) : Int {
             builder.startVector(1, data.size, 1)
@@ -185,7 +185,7 @@ class AOF : Table() {
             return builder.endVector()
         }
         fun startInsertZoneVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(1, numElems, 1)
-        fun addDATA(builder: FlatBufferBuilder, DATA: Int) = builder.addOffset(8, DATA, 0)
+        fun addDATA(builder: FlatBufferBuilder, data: Int) = builder.addOffset(8, data, 0)
         @kotlin.ExperimentalUnsignedTypes
         fun createDataVector(builder: FlatBufferBuilder, data: UByteArray) : Int {
             builder.startVector(1, data.size, 1)
@@ -195,7 +195,7 @@ class AOF : Table() {
             return builder.endVector()
         }
         fun startDataVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(1, numElems, 1)
-        fun addOCF(builder: FlatBufferBuilder, OCF: Int) = builder.addOffset(9, OCF, 0)
+        fun addOCF(builder: FlatBufferBuilder, ocf: Int) = builder.addOffset(9, ocf, 0)
         @kotlin.ExperimentalUnsignedTypes
         fun createOcfVector(builder: FlatBufferBuilder, data: UByteArray) : Int {
             builder.startVector(1, data.size, 1)
@@ -205,7 +205,7 @@ class AOF : Table() {
             return builder.endVector()
         }
         fun startOcfVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(1, numElems, 1)
-        fun addFECF(builder: FlatBufferBuilder, FECF: UShort) = builder.addShort(10, FECF.toShort(), 0)
+        fun addFECF(builder: FlatBufferBuilder, fecf: UShort) = builder.addShort(10, fecf.toShort(), 0)
         fun endAOF(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

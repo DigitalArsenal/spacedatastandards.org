@@ -2,4 +2,10 @@
 
 # namespace: 
 
-# NOTE BusStabilizationType.py does not declare any structs or enums
+class BusStabilizationType(object):
+    THREE_AXIS = 0
+    SPIN = 1
+    GRAVITY_GRADIENT = 2
+    MAGNETIC = 3
+    DUAL_SPIN = 4
+    NONE = 5

@@ -51,6 +51,10 @@ func (rcv *CZMPacket) ID() []byte {
 	return nil
 }
 
+func (rcv *CZMPacket) Id() []byte {
+	return rcv.ID()
+}
+
 /// Unique identifier for this object
 /// Human-readable name
 func (rcv *CZMPacket) NAME() []byte {
@@ -59,6 +63,10 @@ func (rcv *CZMPacket) NAME() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *CZMPacket) Name() []byte {
+	return rcv.NAME()
 }
 
 /// Human-readable name
@@ -71,6 +79,10 @@ func (rcv *CZMPacket) PARENT() []byte {
 	return nil
 }
 
+func (rcv *CZMPacket) Parent() []byte {
+	return rcv.PARENT()
+}
+
 /// Parent packet ID
 /// Description (HTML allowed)
 func (rcv *CZMPacket) DESCRIPTION() []byte {
@@ -81,6 +93,10 @@ func (rcv *CZMPacket) DESCRIPTION() []byte {
 	return nil
 }
 
+func (rcv *CZMPacket) Description() []byte {
+	return rcv.DESCRIPTION()
+}
+
 /// Description (HTML allowed)
 /// Availability interval (ISO 8601 interval)
 func (rcv *CZMPacket) AVAILABILITY() []byte {
@@ -89,6 +105,10 @@ func (rcv *CZMPacket) AVAILABILITY() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *CZMPacket) Availability() []byte {
+	return rcv.AVAILABILITY()
 }
 
 /// Availability interval (ISO 8601 interval)
@@ -106,6 +126,10 @@ func (rcv *CZMPacket) POSITION_CARTOGRAPHIC_DEGREES(obj *CZMCartographicDegrees)
 	return nil
 }
 
+func (rcv *CZMPacket) PositionCartographicDegrees(obj *CZMCartographicDegrees) *CZMCartographicDegrees {
+	return rcv.POSITION_CARTOGRAPHIC_DEGREES(obj)
+}
+
 /// Position as cartographic degrees
 /// Position as Cartesian
 func (rcv *CZMPacket) POSITION_CARTESIAN(obj *CZMCartesian) *CZMCartesian {
@@ -121,6 +145,10 @@ func (rcv *CZMPacket) POSITION_CARTESIAN(obj *CZMCartesian) *CZMCartesian {
 	return nil
 }
 
+func (rcv *CZMPacket) PositionCartesian(obj *CZMCartesian) *CZMCartesian {
+	return rcv.POSITION_CARTESIAN(obj)
+}
+
 /// Position as Cartesian
 /// Time-tagged positions [time, lon, lat, height, time, lon, lat, height, ...]
 func (rcv *CZMPacket) POSITION_EPOCH() []byte {
@@ -129,6 +157,10 @@ func (rcv *CZMPacket) POSITION_EPOCH() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *CZMPacket) PositionEpoch() []byte {
+	return rcv.POSITION_EPOCH()
 }
 
 /// Time-tagged positions [time, lon, lat, height, time, lon, lat, height, ...]
@@ -142,12 +174,20 @@ func (rcv *CZMPacket) POSITION_CARTOGRAPHIC_DEGREES_ARRAY(j int) float64 {
 	return 0
 }
 
+func (rcv *CZMPacket) PositionCartographicDegreesArray(j int) float64 {
+	return rcv.POSITION_CARTOGRAPHIC_DEGREES_ARRAY(j)
+}
+
 func (rcv *CZMPacket) POSITION_CARTOGRAPHIC_DEGREES_ARRAYLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *CZMPacket) PositionCartographicDegreesArrayLength() int {
+	return rcv.POSITION_CARTOGRAPHIC_DEGREES_ARRAYLength()
 }
 
 /// Time-tagged cartographic degree values
@@ -160,6 +200,10 @@ func (rcv *CZMPacket) MutatePOSITION_CARTOGRAPHIC_DEGREES_ARRAY(j int, n float64
 	return false
 }
 
+func (rcv *CZMPacket) MutatePositionCartographicDegreesArray(j int, n float64) bool {
+	return rcv.MutatePOSITION_CARTOGRAPHIC_DEGREES_ARRAY(j, n)
+}
+
 /// Time-tagged Cartesian values
 func (rcv *CZMPacket) POSITION_CARTESIAN_ARRAY(j int) float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
@@ -170,12 +214,20 @@ func (rcv *CZMPacket) POSITION_CARTESIAN_ARRAY(j int) float64 {
 	return 0
 }
 
+func (rcv *CZMPacket) PositionCartesianArray(j int) float64 {
+	return rcv.POSITION_CARTESIAN_ARRAY(j)
+}
+
 func (rcv *CZMPacket) POSITION_CARTESIAN_ARRAYLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *CZMPacket) PositionCartesianArrayLength() int {
+	return rcv.POSITION_CARTESIAN_ARRAYLength()
 }
 
 /// Time-tagged Cartesian values
@@ -186,6 +238,10 @@ func (rcv *CZMPacket) MutatePOSITION_CARTESIAN_ARRAY(j int, n float64) bool {
 		return rcv._tab.MutateFloat64(a+flatbuffers.UOffsetT(j*8), n)
 	}
 	return false
+}
+
+func (rcv *CZMPacket) MutatePositionCartesianArray(j int, n float64) bool {
+	return rcv.MutatePOSITION_CARTESIAN_ARRAY(j, n)
 }
 
 /// Billboard properties
@@ -200,6 +256,10 @@ func (rcv *CZMPacket) BILLBOARD(obj *CZMBillboard) *CZMBillboard {
 		return obj
 	}
 	return nil
+}
+
+func (rcv *CZMPacket) Billboard(obj *CZMBillboard) *CZMBillboard {
+	return rcv.BILLBOARD(obj)
 }
 
 /// Billboard properties
@@ -217,6 +277,10 @@ func (rcv *CZMPacket) LABEL(obj *CZMLabel) *CZMLabel {
 	return nil
 }
 
+func (rcv *CZMPacket) Label(obj *CZMLabel) *CZMLabel {
+	return rcv.LABEL(obj)
+}
+
 /// Label properties
 /// Point properties
 func (rcv *CZMPacket) POINT(obj *CZMPoint) *CZMPoint {
@@ -230,6 +294,10 @@ func (rcv *CZMPacket) POINT(obj *CZMPoint) *CZMPoint {
 		return obj
 	}
 	return nil
+}
+
+func (rcv *CZMPacket) Point(obj *CZMPoint) *CZMPoint {
+	return rcv.POINT(obj)
 }
 
 /// Point properties
@@ -247,6 +315,10 @@ func (rcv *CZMPacket) POLYLINE(obj *CZMPolyline) *CZMPolyline {
 	return nil
 }
 
+func (rcv *CZMPacket) Polyline(obj *CZMPolyline) *CZMPolyline {
+	return rcv.POLYLINE(obj)
+}
+
 /// Polyline properties
 /// Polygon properties
 func (rcv *CZMPacket) POLYGON(obj *CZMPolygon) *CZMPolygon {
@@ -260,6 +332,10 @@ func (rcv *CZMPacket) POLYGON(obj *CZMPolygon) *CZMPolygon {
 		return obj
 	}
 	return nil
+}
+
+func (rcv *CZMPacket) Polygon(obj *CZMPolygon) *CZMPolygon {
+	return rcv.POLYGON(obj)
 }
 
 /// Polygon properties
@@ -277,6 +353,10 @@ func (rcv *CZMPacket) MODEL(obj *CZMModel) *CZMModel {
 	return nil
 }
 
+func (rcv *CZMPacket) Model(obj *CZMModel) *CZMModel {
+	return rcv.MODEL(obj)
+}
+
 /// Model properties
 /// Path properties
 func (rcv *CZMPacket) PATH(obj *CZMPath) *CZMPath {
@@ -290,6 +370,10 @@ func (rcv *CZMPacket) PATH(obj *CZMPath) *CZMPath {
 		return obj
 	}
 	return nil
+}
+
+func (rcv *CZMPacket) Path(obj *CZMPath) *CZMPath {
+	return rcv.PATH(obj)
 }
 
 /// Path properties
@@ -307,6 +391,10 @@ func (rcv *CZMPacket) ELLIPSE(obj *CZMEllipse) *CZMEllipse {
 	return nil
 }
 
+func (rcv *CZMPacket) Ellipse(obj *CZMEllipse) *CZMEllipse {
+	return rcv.ELLIPSE(obj)
+}
+
 /// Ellipse properties
 /// Orientation (quaternion)
 func (rcv *CZMPacket) ORIENTATION(obj *CZMOrientation) *CZMOrientation {
@@ -320,6 +408,10 @@ func (rcv *CZMPacket) ORIENTATION(obj *CZMOrientation) *CZMOrientation {
 		return obj
 	}
 	return nil
+}
+
+func (rcv *CZMPacket) Orientation(obj *CZMOrientation) *CZMOrientation {
+	return rcv.ORIENTATION(obj)
 }
 
 /// Orientation (quaternion)
@@ -337,6 +429,10 @@ func (rcv *CZMPacket) VIEW_FROM(obj *CZMViewFrom) *CZMViewFrom {
 	return nil
 }
 
+func (rcv *CZMPacket) ViewFrom(obj *CZMViewFrom) *CZMViewFrom {
+	return rcv.VIEW_FROM(obj)
+}
+
 /// Suggested camera offset
 /// Whether to delete this object
 func (rcv *CZMPacket) DELETE() bool {
@@ -347,9 +443,17 @@ func (rcv *CZMPacket) DELETE() bool {
 	return false
 }
 
+func (rcv *CZMPacket) Delete() bool {
+	return rcv.DELETE()
+}
+
 /// Whether to delete this object
 func (rcv *CZMPacket) MutateDELETE(n bool) bool {
 	return rcv._tab.MutateBoolSlot(44, n)
+}
+
+func (rcv *CZMPacket) MutateDelete(n bool) bool {
+	return rcv.MutateDELETE(n)
 }
 
 /// Box properties
@@ -364,6 +468,10 @@ func (rcv *CZMPacket) BOX(obj *CZMBox) *CZMBox {
 		return obj
 	}
 	return nil
+}
+
+func (rcv *CZMPacket) Box(obj *CZMBox) *CZMBox {
+	return rcv.BOX(obj)
 }
 
 /// Box properties
@@ -381,6 +489,10 @@ func (rcv *CZMPacket) CORRIDOR(obj *CZMCorridor) *CZMCorridor {
 	return nil
 }
 
+func (rcv *CZMPacket) Corridor(obj *CZMCorridor) *CZMCorridor {
+	return rcv.CORRIDOR(obj)
+}
+
 /// Corridor properties
 /// Cylinder properties
 func (rcv *CZMPacket) CYLINDER(obj *CZMCylinder) *CZMCylinder {
@@ -394,6 +506,10 @@ func (rcv *CZMPacket) CYLINDER(obj *CZMCylinder) *CZMCylinder {
 		return obj
 	}
 	return nil
+}
+
+func (rcv *CZMPacket) Cylinder(obj *CZMCylinder) *CZMCylinder {
+	return rcv.CYLINDER(obj)
 }
 
 /// Cylinder properties
@@ -411,6 +527,10 @@ func (rcv *CZMPacket) ELLIPSOID(obj *CZMEllipsoid) *CZMEllipsoid {
 	return nil
 }
 
+func (rcv *CZMPacket) Ellipsoid(obj *CZMEllipsoid) *CZMEllipsoid {
+	return rcv.ELLIPSOID(obj)
+}
+
 /// Ellipsoid properties
 /// Polyline volume properties
 func (rcv *CZMPacket) POLYLINE_VOLUME(obj *CZMPolylineVolume) *CZMPolylineVolume {
@@ -424,6 +544,10 @@ func (rcv *CZMPacket) POLYLINE_VOLUME(obj *CZMPolylineVolume) *CZMPolylineVolume
 		return obj
 	}
 	return nil
+}
+
+func (rcv *CZMPacket) PolylineVolume(obj *CZMPolylineVolume) *CZMPolylineVolume {
+	return rcv.POLYLINE_VOLUME(obj)
 }
 
 /// Polyline volume properties
@@ -441,6 +565,10 @@ func (rcv *CZMPacket) RECTANGLE(obj *CZMRectangle) *CZMRectangle {
 	return nil
 }
 
+func (rcv *CZMPacket) Rectangle(obj *CZMRectangle) *CZMRectangle {
+	return rcv.RECTANGLE(obj)
+}
+
 /// Rectangle properties
 /// 3D Tileset properties
 func (rcv *CZMPacket) TILESET(obj *CZMTileset) *CZMTileset {
@@ -454,6 +582,10 @@ func (rcv *CZMPacket) TILESET(obj *CZMTileset) *CZMTileset {
 		return obj
 	}
 	return nil
+}
+
+func (rcv *CZMPacket) Tileset(obj *CZMTileset) *CZMTileset {
+	return rcv.TILESET(obj)
 }
 
 /// 3D Tileset properties
@@ -471,6 +603,10 @@ func (rcv *CZMPacket) WALL(obj *CZMWall) *CZMWall {
 	return nil
 }
 
+func (rcv *CZMPacket) Wall(obj *CZMWall) *CZMWall {
+	return rcv.WALL(obj)
+}
+
 /// Wall properties
 /// Position interpolation settings
 func (rcv *CZMPacket) POSITION_INTERPOLATION(obj *CZMInterpolation) *CZMInterpolation {
@@ -486,6 +622,10 @@ func (rcv *CZMPacket) POSITION_INTERPOLATION(obj *CZMInterpolation) *CZMInterpol
 	return nil
 }
 
+func (rcv *CZMPacket) PositionInterpolation(obj *CZMInterpolation) *CZMInterpolation {
+	return rcv.POSITION_INTERPOLATION(obj)
+}
+
 /// Position interpolation settings
 /// Position reference frame (FIXED or INERTIAL)
 func (rcv *CZMPacket) POSITION_REFERENCE_FRAME() []byte {
@@ -494,6 +634,10 @@ func (rcv *CZMPacket) POSITION_REFERENCE_FRAME() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *CZMPacket) PositionReferenceFrame() []byte {
+	return rcv.POSITION_REFERENCE_FRAME()
 }
 
 /// Position reference frame (FIXED or INERTIAL)
@@ -506,6 +650,10 @@ func (rcv *CZMPacket) POSITION_REFERENCE() []byte {
 	return nil
 }
 
+func (rcv *CZMPacket) PositionReference() []byte {
+	return rcv.POSITION_REFERENCE()
+}
+
 /// Position reference to another entity
 /// Orientation epoch (ISO 8601)
 func (rcv *CZMPacket) ORIENTATION_EPOCH() []byte {
@@ -514,6 +662,10 @@ func (rcv *CZMPacket) ORIENTATION_EPOCH() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *CZMPacket) OrientationEpoch() []byte {
+	return rcv.ORIENTATION_EPOCH()
 }
 
 /// Orientation epoch (ISO 8601)
@@ -527,12 +679,20 @@ func (rcv *CZMPacket) ORIENTATION_ARRAY(j int) float64 {
 	return 0
 }
 
+func (rcv *CZMPacket) OrientationArray(j int) float64 {
+	return rcv.ORIENTATION_ARRAY(j)
+}
+
 func (rcv *CZMPacket) ORIENTATION_ARRAYLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(70))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *CZMPacket) OrientationArrayLength() int {
+	return rcv.ORIENTATION_ARRAYLength()
 }
 
 /// Orientation sampled data [t, x, y, z, w, t, x, y, z, w, ...]
@@ -543,6 +703,10 @@ func (rcv *CZMPacket) MutateORIENTATION_ARRAY(j int, n float64) bool {
 		return rcv._tab.MutateFloat64(a+flatbuffers.UOffsetT(j*8), n)
 	}
 	return false
+}
+
+func (rcv *CZMPacket) MutateOrientationArray(j int, n float64) bool {
+	return rcv.MutateORIENTATION_ARRAY(j, n)
 }
 
 /// Orientation interpolation settings
@@ -559,6 +723,10 @@ func (rcv *CZMPacket) ORIENTATION_INTERPOLATION(obj *CZMInterpolation) *CZMInter
 	return nil
 }
 
+func (rcv *CZMPacket) OrientationInterpolation(obj *CZMInterpolation) *CZMInterpolation {
+	return rcv.ORIENTATION_INTERPOLATION(obj)
+}
+
 /// Orientation interpolation settings
 /// Orientation reference to another entity
 func (rcv *CZMPacket) ORIENTATION_REFERENCE() []byte {
@@ -569,6 +737,10 @@ func (rcv *CZMPacket) ORIENTATION_REFERENCE() []byte {
 	return nil
 }
 
+func (rcv *CZMPacket) OrientationReference() []byte {
+	return rcv.ORIENTATION_REFERENCE()
+}
+
 /// Orientation reference to another entity
 /// Generic bag for all time-dynamic (non-static) properties
 func (rcv *CZMPacket) DYNAMIC_PROPERTIES(obj *CZMDynamicProperty, j int) bool {
@@ -577,10 +749,17 @@ func (rcv *CZMPacket) DYNAMIC_PROPERTIES(obj *CZMDynamicProperty, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(CZMDynamicProperty)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *CZMPacket) DynamicProperties(obj *CZMDynamicProperty, j int) bool {
+	return rcv.DYNAMIC_PROPERTIES(obj, j)
 }
 
 func (rcv *CZMPacket) DYNAMIC_PROPERTIESLength() int {
@@ -591,6 +770,10 @@ func (rcv *CZMPacket) DYNAMIC_PROPERTIESLength() int {
 	return 0
 }
 
+func (rcv *CZMPacket) DynamicPropertiesLength() int {
+	return rcv.DYNAMIC_PROPERTIESLength()
+}
+
 /// Generic bag for all time-dynamic (non-static) properties
 func CZMPacketStart(builder *flatbuffers.Builder) {
 	builder.StartObject(37)
@@ -598,125 +781,248 @@ func CZMPacketStart(builder *flatbuffers.Builder) {
 func CZMPacketAddID(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ID), 0)
 }
+func CZMPacketAddId(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
+	CZMPacketAddID(builder, ID)
+}
 func CZMPacketAddNAME(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(NAME), 0)
+}
+func CZMPacketAddName(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
+	CZMPacketAddNAME(builder, NAME)
 }
 func CZMPacketAddPARENT(builder *flatbuffers.Builder, PARENT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(PARENT), 0)
 }
+func CZMPacketAddParent(builder *flatbuffers.Builder, PARENT flatbuffers.UOffsetT) {
+	CZMPacketAddPARENT(builder, PARENT)
+}
 func CZMPacketAddDESCRIPTION(builder *flatbuffers.Builder, DESCRIPTION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(DESCRIPTION), 0)
+}
+func CZMPacketAddDescription(builder *flatbuffers.Builder, DESCRIPTION flatbuffers.UOffsetT) {
+	CZMPacketAddDESCRIPTION(builder, DESCRIPTION)
 }
 func CZMPacketAddAVAILABILITY(builder *flatbuffers.Builder, AVAILABILITY flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(AVAILABILITY), 0)
 }
+func CZMPacketAddAvailability(builder *flatbuffers.Builder, AVAILABILITY flatbuffers.UOffsetT) {
+	CZMPacketAddAVAILABILITY(builder, AVAILABILITY)
+}
 func CZMPacketAddPOSITION_CARTOGRAPHIC_DEGREES(builder *flatbuffers.Builder, POSITION_CARTOGRAPHIC_DEGREES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(POSITION_CARTOGRAPHIC_DEGREES), 0)
+}
+func CZMPacketAddPositionCartographicDegrees(builder *flatbuffers.Builder, POSITION_CARTOGRAPHIC_DEGREES flatbuffers.UOffsetT) {
+	CZMPacketAddPOSITION_CARTOGRAPHIC_DEGREES(builder, POSITION_CARTOGRAPHIC_DEGREES)
 }
 func CZMPacketAddPOSITION_CARTESIAN(builder *flatbuffers.Builder, POSITION_CARTESIAN flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(POSITION_CARTESIAN), 0)
 }
+func CZMPacketAddPositionCartesian(builder *flatbuffers.Builder, POSITION_CARTESIAN flatbuffers.UOffsetT) {
+	CZMPacketAddPOSITION_CARTESIAN(builder, POSITION_CARTESIAN)
+}
 func CZMPacketAddPOSITION_EPOCH(builder *flatbuffers.Builder, POSITION_EPOCH flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(POSITION_EPOCH), 0)
+}
+func CZMPacketAddPositionEpoch(builder *flatbuffers.Builder, POSITION_EPOCH flatbuffers.UOffsetT) {
+	CZMPacketAddPOSITION_EPOCH(builder, POSITION_EPOCH)
 }
 func CZMPacketAddPOSITION_CARTOGRAPHIC_DEGREES_ARRAY(builder *flatbuffers.Builder, POSITION_CARTOGRAPHIC_DEGREES_ARRAY flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(POSITION_CARTOGRAPHIC_DEGREES_ARRAY), 0)
 }
+func CZMPacketAddPositionCartographicDegreesArray(builder *flatbuffers.Builder, POSITION_CARTOGRAPHIC_DEGREES_ARRAY flatbuffers.UOffsetT) {
+	CZMPacketAddPOSITION_CARTOGRAPHIC_DEGREES_ARRAY(builder, POSITION_CARTOGRAPHIC_DEGREES_ARRAY)
+}
 func CZMPacketStartPOSITION_CARTOGRAPHIC_DEGREES_ARRAYVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(8, numElems, 8)
+}
+func CZMPacketStartPositionCartographicDegreesArrayVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return CZMPacketStartPOSITION_CARTOGRAPHIC_DEGREES_ARRAYVector(builder, numElems)
 }
 func CZMPacketAddPOSITION_CARTESIAN_ARRAY(builder *flatbuffers.Builder, POSITION_CARTESIAN_ARRAY flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(POSITION_CARTESIAN_ARRAY), 0)
 }
+func CZMPacketAddPositionCartesianArray(builder *flatbuffers.Builder, POSITION_CARTESIAN_ARRAY flatbuffers.UOffsetT) {
+	CZMPacketAddPOSITION_CARTESIAN_ARRAY(builder, POSITION_CARTESIAN_ARRAY)
+}
 func CZMPacketStartPOSITION_CARTESIAN_ARRAYVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(8, numElems, 8)
+}
+func CZMPacketStartPositionCartesianArrayVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return CZMPacketStartPOSITION_CARTESIAN_ARRAYVector(builder, numElems)
 }
 func CZMPacketAddBILLBOARD(builder *flatbuffers.Builder, BILLBOARD flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(BILLBOARD), 0)
 }
+func CZMPacketAddBillboard(builder *flatbuffers.Builder, BILLBOARD flatbuffers.UOffsetT) {
+	CZMPacketAddBILLBOARD(builder, BILLBOARD)
+}
 func CZMPacketAddLABEL(builder *flatbuffers.Builder, LABEL flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(LABEL), 0)
+}
+func CZMPacketAddLabel(builder *flatbuffers.Builder, LABEL flatbuffers.UOffsetT) {
+	CZMPacketAddLABEL(builder, LABEL)
 }
 func CZMPacketAddPOINT(builder *flatbuffers.Builder, POINT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(12, flatbuffers.UOffsetT(POINT), 0)
 }
+func CZMPacketAddPoint(builder *flatbuffers.Builder, POINT flatbuffers.UOffsetT) {
+	CZMPacketAddPOINT(builder, POINT)
+}
 func CZMPacketAddPOLYLINE(builder *flatbuffers.Builder, POLYLINE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(13, flatbuffers.UOffsetT(POLYLINE), 0)
+}
+func CZMPacketAddPolyline(builder *flatbuffers.Builder, POLYLINE flatbuffers.UOffsetT) {
+	CZMPacketAddPOLYLINE(builder, POLYLINE)
 }
 func CZMPacketAddPOLYGON(builder *flatbuffers.Builder, POLYGON flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(14, flatbuffers.UOffsetT(POLYGON), 0)
 }
+func CZMPacketAddPolygon(builder *flatbuffers.Builder, POLYGON flatbuffers.UOffsetT) {
+	CZMPacketAddPOLYGON(builder, POLYGON)
+}
 func CZMPacketAddMODEL(builder *flatbuffers.Builder, MODEL flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(15, flatbuffers.UOffsetT(MODEL), 0)
+}
+func CZMPacketAddModel(builder *flatbuffers.Builder, MODEL flatbuffers.UOffsetT) {
+	CZMPacketAddMODEL(builder, MODEL)
 }
 func CZMPacketAddPATH(builder *flatbuffers.Builder, PATH flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(16, flatbuffers.UOffsetT(PATH), 0)
 }
+func CZMPacketAddPath(builder *flatbuffers.Builder, PATH flatbuffers.UOffsetT) {
+	CZMPacketAddPATH(builder, PATH)
+}
 func CZMPacketAddELLIPSE(builder *flatbuffers.Builder, ELLIPSE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(17, flatbuffers.UOffsetT(ELLIPSE), 0)
+}
+func CZMPacketAddEllipse(builder *flatbuffers.Builder, ELLIPSE flatbuffers.UOffsetT) {
+	CZMPacketAddELLIPSE(builder, ELLIPSE)
 }
 func CZMPacketAddORIENTATION(builder *flatbuffers.Builder, ORIENTATION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(18, flatbuffers.UOffsetT(ORIENTATION), 0)
 }
+func CZMPacketAddOrientation(builder *flatbuffers.Builder, ORIENTATION flatbuffers.UOffsetT) {
+	CZMPacketAddORIENTATION(builder, ORIENTATION)
+}
 func CZMPacketAddVIEW_FROM(builder *flatbuffers.Builder, VIEW_FROM flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(19, flatbuffers.UOffsetT(VIEW_FROM), 0)
+}
+func CZMPacketAddViewFrom(builder *flatbuffers.Builder, VIEW_FROM flatbuffers.UOffsetT) {
+	CZMPacketAddVIEW_FROM(builder, VIEW_FROM)
 }
 func CZMPacketAddDELETE(builder *flatbuffers.Builder, DELETE bool) {
 	builder.PrependBoolSlot(20, DELETE, false)
 }
+func CZMPacketAddDelete(builder *flatbuffers.Builder, DELETE bool) {
+	CZMPacketAddDELETE(builder, DELETE)
+}
 func CZMPacketAddBOX(builder *flatbuffers.Builder, BOX flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(21, flatbuffers.UOffsetT(BOX), 0)
+}
+func CZMPacketAddBox(builder *flatbuffers.Builder, BOX flatbuffers.UOffsetT) {
+	CZMPacketAddBOX(builder, BOX)
 }
 func CZMPacketAddCORRIDOR(builder *flatbuffers.Builder, CORRIDOR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(22, flatbuffers.UOffsetT(CORRIDOR), 0)
 }
+func CZMPacketAddCorridor(builder *flatbuffers.Builder, CORRIDOR flatbuffers.UOffsetT) {
+	CZMPacketAddCORRIDOR(builder, CORRIDOR)
+}
 func CZMPacketAddCYLINDER(builder *flatbuffers.Builder, CYLINDER flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(23, flatbuffers.UOffsetT(CYLINDER), 0)
+}
+func CZMPacketAddCylinder(builder *flatbuffers.Builder, CYLINDER flatbuffers.UOffsetT) {
+	CZMPacketAddCYLINDER(builder, CYLINDER)
 }
 func CZMPacketAddELLIPSOID(builder *flatbuffers.Builder, ELLIPSOID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(24, flatbuffers.UOffsetT(ELLIPSOID), 0)
 }
+func CZMPacketAddEllipsoid(builder *flatbuffers.Builder, ELLIPSOID flatbuffers.UOffsetT) {
+	CZMPacketAddELLIPSOID(builder, ELLIPSOID)
+}
 func CZMPacketAddPOLYLINE_VOLUME(builder *flatbuffers.Builder, POLYLINE_VOLUME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(25, flatbuffers.UOffsetT(POLYLINE_VOLUME), 0)
+}
+func CZMPacketAddPolylineVolume(builder *flatbuffers.Builder, POLYLINE_VOLUME flatbuffers.UOffsetT) {
+	CZMPacketAddPOLYLINE_VOLUME(builder, POLYLINE_VOLUME)
 }
 func CZMPacketAddRECTANGLE(builder *flatbuffers.Builder, RECTANGLE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(26, flatbuffers.UOffsetT(RECTANGLE), 0)
 }
+func CZMPacketAddRectangle(builder *flatbuffers.Builder, RECTANGLE flatbuffers.UOffsetT) {
+	CZMPacketAddRECTANGLE(builder, RECTANGLE)
+}
 func CZMPacketAddTILESET(builder *flatbuffers.Builder, TILESET flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(27, flatbuffers.UOffsetT(TILESET), 0)
+}
+func CZMPacketAddTileset(builder *flatbuffers.Builder, TILESET flatbuffers.UOffsetT) {
+	CZMPacketAddTILESET(builder, TILESET)
 }
 func CZMPacketAddWALL(builder *flatbuffers.Builder, WALL flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(28, flatbuffers.UOffsetT(WALL), 0)
 }
+func CZMPacketAddWall(builder *flatbuffers.Builder, WALL flatbuffers.UOffsetT) {
+	CZMPacketAddWALL(builder, WALL)
+}
 func CZMPacketAddPOSITION_INTERPOLATION(builder *flatbuffers.Builder, POSITION_INTERPOLATION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(29, flatbuffers.UOffsetT(POSITION_INTERPOLATION), 0)
+}
+func CZMPacketAddPositionInterpolation(builder *flatbuffers.Builder, POSITION_INTERPOLATION flatbuffers.UOffsetT) {
+	CZMPacketAddPOSITION_INTERPOLATION(builder, POSITION_INTERPOLATION)
 }
 func CZMPacketAddPOSITION_REFERENCE_FRAME(builder *flatbuffers.Builder, POSITION_REFERENCE_FRAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(30, flatbuffers.UOffsetT(POSITION_REFERENCE_FRAME), 0)
 }
+func CZMPacketAddPositionReferenceFrame(builder *flatbuffers.Builder, POSITION_REFERENCE_FRAME flatbuffers.UOffsetT) {
+	CZMPacketAddPOSITION_REFERENCE_FRAME(builder, POSITION_REFERENCE_FRAME)
+}
 func CZMPacketAddPOSITION_REFERENCE(builder *flatbuffers.Builder, POSITION_REFERENCE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(31, flatbuffers.UOffsetT(POSITION_REFERENCE), 0)
+}
+func CZMPacketAddPositionReference(builder *flatbuffers.Builder, POSITION_REFERENCE flatbuffers.UOffsetT) {
+	CZMPacketAddPOSITION_REFERENCE(builder, POSITION_REFERENCE)
 }
 func CZMPacketAddORIENTATION_EPOCH(builder *flatbuffers.Builder, ORIENTATION_EPOCH flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(32, flatbuffers.UOffsetT(ORIENTATION_EPOCH), 0)
 }
+func CZMPacketAddOrientationEpoch(builder *flatbuffers.Builder, ORIENTATION_EPOCH flatbuffers.UOffsetT) {
+	CZMPacketAddORIENTATION_EPOCH(builder, ORIENTATION_EPOCH)
+}
 func CZMPacketAddORIENTATION_ARRAY(builder *flatbuffers.Builder, ORIENTATION_ARRAY flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(33, flatbuffers.UOffsetT(ORIENTATION_ARRAY), 0)
+}
+func CZMPacketAddOrientationArray(builder *flatbuffers.Builder, ORIENTATION_ARRAY flatbuffers.UOffsetT) {
+	CZMPacketAddORIENTATION_ARRAY(builder, ORIENTATION_ARRAY)
 }
 func CZMPacketStartORIENTATION_ARRAYVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(8, numElems, 8)
 }
+func CZMPacketStartOrientationArrayVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return CZMPacketStartORIENTATION_ARRAYVector(builder, numElems)
+}
 func CZMPacketAddORIENTATION_INTERPOLATION(builder *flatbuffers.Builder, ORIENTATION_INTERPOLATION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(34, flatbuffers.UOffsetT(ORIENTATION_INTERPOLATION), 0)
+}
+func CZMPacketAddOrientationInterpolation(builder *flatbuffers.Builder, ORIENTATION_INTERPOLATION flatbuffers.UOffsetT) {
+	CZMPacketAddORIENTATION_INTERPOLATION(builder, ORIENTATION_INTERPOLATION)
 }
 func CZMPacketAddORIENTATION_REFERENCE(builder *flatbuffers.Builder, ORIENTATION_REFERENCE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(35, flatbuffers.UOffsetT(ORIENTATION_REFERENCE), 0)
 }
+func CZMPacketAddOrientationReference(builder *flatbuffers.Builder, ORIENTATION_REFERENCE flatbuffers.UOffsetT) {
+	CZMPacketAddORIENTATION_REFERENCE(builder, ORIENTATION_REFERENCE)
+}
 func CZMPacketAddDYNAMIC_PROPERTIES(builder *flatbuffers.Builder, DYNAMIC_PROPERTIES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(36, flatbuffers.UOffsetT(DYNAMIC_PROPERTIES), 0)
 }
+func CZMPacketAddDynamicProperties(builder *flatbuffers.Builder, DYNAMIC_PROPERTIES flatbuffers.UOffsetT) {
+	CZMPacketAddDYNAMIC_PROPERTIES(builder, DYNAMIC_PROPERTIES)
+}
 func CZMPacketStartDYNAMIC_PROPERTIESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func CZMPacketStartDynamicPropertiesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return CZMPacketStartDYNAMIC_PROPERTIESVector(builder, numElems)
 }
 func CZMPacketEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

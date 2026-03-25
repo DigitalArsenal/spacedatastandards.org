@@ -2,4 +2,254 @@
 
 # namespace: 
 
-# NOTE Service.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Service definition
+class Service(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = Service()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsService(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def ServiceBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x58\x54\x43", size_prefixed=size_prefixed)
+
+    # Service
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Service name
+    # Service
+    def NAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Short description
+    # Service
+    def SHORT_DESCRIPTION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Long description
+    # Service
+    def LONG_DESCRIPTION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Container references provided by this service
+    # Service
+    def CONTAINER_REFS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
+        return ""
+
+    # Service
+    def CONTAINER_REFSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # Service
+    def CONTAINER_REFSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        return o == 0
+
+    # Command references accepted by this service
+    # Service
+    def COMMAND_REFS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
+        return ""
+
+    # Service
+    def COMMAND_REFSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # Service
+    def COMMAND_REFSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        return o == 0
+
+def ServiceStart(builder):
+    builder.StartObject(5)
+
+def Start(builder):
+    ServiceStart(builder)
+
+def ServiceAddNAME(builder, NAME):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(NAME), 0)
+
+def AddNAME(builder, NAME):
+    ServiceAddNAME(builder, NAME)
+
+def ServiceAddSHORT_DESCRIPTION(builder, SHORT_DESCRIPTION):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(SHORT_DESCRIPTION), 0)
+
+def AddSHORT_DESCRIPTION(builder, SHORT_DESCRIPTION):
+    ServiceAddSHORT_DESCRIPTION(builder, SHORT_DESCRIPTION)
+
+def ServiceAddLONG_DESCRIPTION(builder, LONG_DESCRIPTION):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(LONG_DESCRIPTION), 0)
+
+def AddLONG_DESCRIPTION(builder, LONG_DESCRIPTION):
+    ServiceAddLONG_DESCRIPTION(builder, LONG_DESCRIPTION)
+
+def ServiceAddCONTAINER_REFS(builder, CONTAINER_REFS):
+    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(CONTAINER_REFS), 0)
+
+def AddCONTAINER_REFS(builder, CONTAINER_REFS):
+    ServiceAddCONTAINER_REFS(builder, CONTAINER_REFS)
+
+def ServiceStartCONTAINER_REFSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartCONTAINER_REFSVector(builder, numElems):
+    return ServiceStartCONTAINER_REFSVector(builder, numElems)
+
+def ServiceCreateCONTAINER_REFSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateCONTAINER_REFSVector(builder, data):
+    ServiceCreateCONTAINER_REFSVector(builder, data)
+
+def ServiceAddCOMMAND_REFS(builder, COMMAND_REFS):
+    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(COMMAND_REFS), 0)
+
+def AddCOMMAND_REFS(builder, COMMAND_REFS):
+    ServiceAddCOMMAND_REFS(builder, COMMAND_REFS)
+
+def ServiceStartCOMMAND_REFSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartCOMMAND_REFSVector(builder, numElems):
+    return ServiceStartCOMMAND_REFSVector(builder, numElems)
+
+def ServiceCreateCOMMAND_REFSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateCOMMAND_REFSVector(builder, data):
+    ServiceCreateCOMMAND_REFSVector(builder, data)
+
+def ServiceEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return ServiceEnd(builder)
+
+try:
+    from typing import List
+except:
+    pass
+
+class ServiceT(object):
+
+    # ServiceT
+    def __init__(
+        self,
+        NAME = None,
+        SHORT_DESCRIPTION = None,
+        LONG_DESCRIPTION = None,
+        CONTAINER_REFS = None,
+        COMMAND_REFS = None,
+    ):
+        self.NAME = NAME  # type: Optional[str]
+        self.SHORT_DESCRIPTION = SHORT_DESCRIPTION  # type: Optional[str]
+        self.LONG_DESCRIPTION = LONG_DESCRIPTION  # type: Optional[str]
+        self.CONTAINER_REFS = CONTAINER_REFS  # type: Optional[List[Optional[str]]]
+        self.COMMAND_REFS = COMMAND_REFS  # type: Optional[List[Optional[str]]]
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpService = Service()
+        tmpService.Init(buf, pos)
+        return cls.InitFromObj(tmpService)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpService):
+        x = ServiceT()
+        x._UnPack(tmpService)
+        return x
+
+    # ServiceT
+    def _UnPack(self, Service):
+        if Service is None:
+            return
+        self.NAME = Service.NAME()
+        self.SHORT_DESCRIPTION = Service.SHORT_DESCRIPTION()
+        self.LONG_DESCRIPTION = Service.LONG_DESCRIPTION()
+        if not Service.CONTAINER_REFSIsNone():
+            self.CONTAINER_REFS = []
+            for i in range(Service.CONTAINER_REFSLength()):
+                self.CONTAINER_REFS.append(Service.CONTAINER_REFS(i))
+        if not Service.COMMAND_REFSIsNone():
+            self.COMMAND_REFS = []
+            for i in range(Service.COMMAND_REFSLength()):
+                self.COMMAND_REFS.append(Service.COMMAND_REFS(i))
+
+    # ServiceT
+    def Pack(self, builder):
+        if self.NAME is not None:
+            NAME = builder.CreateString(self.NAME)
+        if self.SHORT_DESCRIPTION is not None:
+            SHORT_DESCRIPTION = builder.CreateString(self.SHORT_DESCRIPTION)
+        if self.LONG_DESCRIPTION is not None:
+            LONG_DESCRIPTION = builder.CreateString(self.LONG_DESCRIPTION)
+        if self.CONTAINER_REFS is not None:
+            CONTAINER_REFSlist = []
+            for i in range(len(self.CONTAINER_REFS)):
+                CONTAINER_REFSlist.append(builder.CreateString(self.CONTAINER_REFS[i]))
+            ServiceStartCONTAINER_REFSVector(builder, len(self.CONTAINER_REFS))
+            for i in reversed(range(len(self.CONTAINER_REFS))):
+                builder.PrependUOffsetTRelative(CONTAINER_REFSlist[i])
+            CONTAINER_REFS = builder.EndVector()
+        if self.COMMAND_REFS is not None:
+            COMMAND_REFSlist = []
+            for i in range(len(self.COMMAND_REFS)):
+                COMMAND_REFSlist.append(builder.CreateString(self.COMMAND_REFS[i]))
+            ServiceStartCOMMAND_REFSVector(builder, len(self.COMMAND_REFS))
+            for i in reversed(range(len(self.COMMAND_REFS))):
+                builder.PrependUOffsetTRelative(COMMAND_REFSlist[i])
+            COMMAND_REFS = builder.EndVector()
+        ServiceStart(builder)
+        if self.NAME is not None:
+            ServiceAddNAME(builder, NAME)
+        if self.SHORT_DESCRIPTION is not None:
+            ServiceAddSHORT_DESCRIPTION(builder, SHORT_DESCRIPTION)
+        if self.LONG_DESCRIPTION is not None:
+            ServiceAddLONG_DESCRIPTION(builder, LONG_DESCRIPTION)
+        if self.CONTAINER_REFS is not None:
+            ServiceAddCONTAINER_REFS(builder, CONTAINER_REFS)
+        if self.COMMAND_REFS is not None:
+            ServiceAddCOMMAND_REFS(builder, COMMAND_REFS)
+        Service = ServiceEnd(builder)
+        return Service

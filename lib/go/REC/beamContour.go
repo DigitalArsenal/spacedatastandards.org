@@ -51,6 +51,10 @@ func (rcv *beamContour) CONTOUR_ID() []byte {
 	return nil
 }
 
+func (rcv *beamContour) ContourId() []byte {
+	return rcv.CONTOUR_ID()
+}
+
 /// Contour level identifier
 /// Gain level in dBi
 func (rcv *beamContour) GAIN_LEVEL() float64 {
@@ -61,9 +65,17 @@ func (rcv *beamContour) GAIN_LEVEL() float64 {
 	return 0.0
 }
 
+func (rcv *beamContour) GainLevel() float64 {
+	return rcv.GAIN_LEVEL()
+}
+
 /// Gain level in dBi
 func (rcv *beamContour) MutateGAIN_LEVEL(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(6, n)
+}
+
+func (rcv *beamContour) MutateGainLevel(n float64) bool {
+	return rcv.MutateGAIN_LEVEL(n)
 }
 
 /// Contour boundary points
@@ -73,10 +85,17 @@ func (rcv *beamContour) POINTS(obj *beamContourPoint, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(beamContourPoint)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *beamContour) Points(obj *beamContourPoint, j int) bool {
+	return rcv.POINTS(obj, j)
 }
 
 func (rcv *beamContour) POINTSLength() int {
@@ -87,6 +106,10 @@ func (rcv *beamContour) POINTSLength() int {
 	return 0
 }
 
+func (rcv *beamContour) PointsLength() int {
+	return rcv.POINTSLength()
+}
+
 /// Contour boundary points
 func beamContourStart(builder *flatbuffers.Builder) {
 	builder.StartObject(3)
@@ -94,14 +117,26 @@ func beamContourStart(builder *flatbuffers.Builder) {
 func beamContourAddCONTOUR_ID(builder *flatbuffers.Builder, CONTOUR_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(CONTOUR_ID), 0)
 }
+func beamContourAddContourId(builder *flatbuffers.Builder, CONTOUR_ID flatbuffers.UOffsetT) {
+	beamContourAddCONTOUR_ID(builder, CONTOUR_ID)
+}
 func beamContourAddGAIN_LEVEL(builder *flatbuffers.Builder, GAIN_LEVEL float64) {
 	builder.PrependFloat64Slot(1, GAIN_LEVEL, 0.0)
+}
+func beamContourAddGainLevel(builder *flatbuffers.Builder, GAIN_LEVEL float64) {
+	beamContourAddGAIN_LEVEL(builder, GAIN_LEVEL)
 }
 func beamContourAddPOINTS(builder *flatbuffers.Builder, POINTS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(POINTS), 0)
 }
+func beamContourAddPoints(builder *flatbuffers.Builder, POINTS flatbuffers.UOffsetT) {
+	beamContourAddPOINTS(builder, POINTS)
+}
 func beamContourStartPOINTSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func beamContourStartPointsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return beamContourStartPOINTSVector(builder, numElems)
 }
 func beamContourEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

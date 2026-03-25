@@ -87,16 +87,21 @@ def End(builder):
 class beamContourPointT(object):
 
     # beamContourPointT
-    def __init__(self):
-        self.LATITUDE = 0.0  # type: float
-        self.LONGITUDE = 0.0  # type: float
-        self.GAIN = 0.0  # type: float
+    def __init__(
+        self,
+        LATITUDE = 0.0,
+        LONGITUDE = 0.0,
+        GAIN = 0.0,
+    ):
+        self.LATITUDE = LATITUDE  # type: float
+        self.LONGITUDE = LONGITUDE  # type: float
+        self.GAIN = GAIN  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        beamContourPoint = beamContourPoint()
-        beamContourPoint.Init(buf, pos)
-        return cls.InitFromObj(beamContourPoint)
+        tmpBeamContourPoint = beamContourPoint()
+        tmpBeamContourPoint.Init(buf, pos)
+        return cls.InitFromObj(tmpBeamContourPoint)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -104,9 +109,9 @@ class beamContourPointT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, beamContourPoint):
+    def InitFromObj(cls, tmpBeamContourPoint):
         x = beamContourPointT()
-        x._UnPack(beamContourPoint)
+        x._UnPack(tmpBeamContourPoint)
         return x
 
     # beamContourPointT

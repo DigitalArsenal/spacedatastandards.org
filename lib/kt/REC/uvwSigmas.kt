@@ -29,60 +29,60 @@ class uvwSigmas : Table() {
         __init(_i, _bb)
         return this
     }
-    val U_SIGMA : Double
+    val uSigma : Double
         get() {
             val o = __offset(4)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val V_SIGMA : Double
+    val vSigma : Double
         get() {
             val o = __offset(6)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val W_SIGMA : Double
+    val wSigma : Double
         get() {
             val o = __offset(8)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val UD_SIGMA : Double
+    val udSigma : Double
         get() {
             val o = __offset(10)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val VD_SIGMA : Double
+    val vdSigma : Double
         get() {
             val o = __offset(12)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val WD_SIGMA : Double
+    val wdSigma : Double
         get() {
             val o = __offset(14)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsuvwSigmas(_bb: ByteBuffer): uvwSigmas = getRootAsuvwSigmas(_bb, uvwSigmas())
         fun getRootAsuvwSigmas(_bb: ByteBuffer, obj: uvwSigmas): uvwSigmas {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createuvwSigmas(builder: FlatBufferBuilder, U_SIGMA: Double, V_SIGMA: Double, W_SIGMA: Double, UD_SIGMA: Double, VD_SIGMA: Double, WD_SIGMA: Double) : Int {
+        fun createuvwSigmas(builder: FlatBufferBuilder, uSigma: Double, vSigma: Double, wSigma: Double, udSigma: Double, vdSigma: Double, wdSigma: Double) : Int {
             builder.startTable(6)
-            addWD_SIGMA(builder, WD_SIGMA)
-            addVD_SIGMA(builder, VD_SIGMA)
-            addUD_SIGMA(builder, UD_SIGMA)
-            addW_SIGMA(builder, W_SIGMA)
-            addV_SIGMA(builder, V_SIGMA)
-            addU_SIGMA(builder, U_SIGMA)
+            addWDSIGMA(builder, wdSigma)
+            addVDSIGMA(builder, vdSigma)
+            addUDSIGMA(builder, udSigma)
+            addWSIGMA(builder, wSigma)
+            addVSIGMA(builder, vSigma)
+            addUSIGMA(builder, uSigma)
             return enduvwSigmas(builder)
         }
         fun startuvwSigmas(builder: FlatBufferBuilder) = builder.startTable(6)
-        fun addU_SIGMA(builder: FlatBufferBuilder, U_SIGMA: Double) = builder.addDouble(0, U_SIGMA, 0.0)
-        fun addV_SIGMA(builder: FlatBufferBuilder, V_SIGMA: Double) = builder.addDouble(1, V_SIGMA, 0.0)
-        fun addW_SIGMA(builder: FlatBufferBuilder, W_SIGMA: Double) = builder.addDouble(2, W_SIGMA, 0.0)
-        fun addUD_SIGMA(builder: FlatBufferBuilder, UD_SIGMA: Double) = builder.addDouble(3, UD_SIGMA, 0.0)
-        fun addVD_SIGMA(builder: FlatBufferBuilder, VD_SIGMA: Double) = builder.addDouble(4, VD_SIGMA, 0.0)
-        fun addWD_SIGMA(builder: FlatBufferBuilder, WD_SIGMA: Double) = builder.addDouble(5, WD_SIGMA, 0.0)
+        fun addUSIGMA(builder: FlatBufferBuilder, uSigma: Double) = builder.addDouble(0, uSigma, 0.0)
+        fun addVSIGMA(builder: FlatBufferBuilder, vSigma: Double) = builder.addDouble(1, vSigma, 0.0)
+        fun addWSIGMA(builder: FlatBufferBuilder, wSigma: Double) = builder.addDouble(2, wSigma, 0.0)
+        fun addUDSIGMA(builder: FlatBufferBuilder, udSigma: Double) = builder.addDouble(3, udSigma, 0.0)
+        fun addVDSIGMA(builder: FlatBufferBuilder, vdSigma: Double) = builder.addDouble(4, vdSigma, 0.0)
+        fun addWDSIGMA(builder: FlatBufferBuilder, wdSigma: Double) = builder.addDouble(5, wdSigma, 0.0)
         fun enduvwSigmas(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

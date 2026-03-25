@@ -478,42 +478,73 @@ except:
 class CDMT(object):
 
     # CDMT
-    def __init__(self):
-        self.CCSDS_CDM_VERS = 0.0  # type: float
-        self.CREATION_DATE = None  # type: str
-        self.ORIGINATOR = None  # type: str
-        self.MESSAGE_FOR = None  # type: str
-        self.MESSAGE_ID = None  # type: str
-        self.TCA = None  # type: str
-        self.MISS_DISTANCE = 0.0  # type: float
-        self.RELATIVE_SPEED = 0.0  # type: float
-        self.RELATIVE_POSITION_R = 0.0  # type: float
-        self.RELATIVE_POSITION_T = 0.0  # type: float
-        self.RELATIVE_POSITION_N = 0.0  # type: float
-        self.RELATIVE_VELOCITY_R = 0.0  # type: float
-        self.RELATIVE_VELOCITY_T = 0.0  # type: float
-        self.RELATIVE_VELOCITY_N = 0.0  # type: float
-        self.START_SCREEN_PERIOD = None  # type: str
-        self.STOP_SCREEN_PERIOD = None  # type: str
-        self.SCREEN_VOLUME_FRAME = None  # type: Optional[RFM.RFMT]
-        self.SCREEN_VOLUME_SHAPE = 0  # type: int
-        self.SCREEN_VOLUME_X = 0.0  # type: float
-        self.SCREEN_VOLUME_Y = 0.0  # type: float
-        self.SCREEN_VOLUME_Z = 0.0  # type: float
-        self.SCREEN_ENTRY_TIME = None  # type: str
-        self.SCREEN_EXIT_TIME = None  # type: str
-        self.COLLISION_PROBABILITY = 0.0  # type: float
-        self.COLLISION_PROBABILITY_METHOD = None  # type: str
-        self.OBJECT1 = None  # type: Optional[CDMObject.CDMObjectT]
-        self.OBJECT2 = None  # type: Optional[CDMObject.CDMObjectT]
-        self.OBJECT1_DATASOURCE = None  # type: Optional[PNM.PNMT]
-        self.OBJECT2_DATASOURCE = None  # type: Optional[PNM.PNMT]
+    def __init__(
+        self,
+        CCSDS_CDM_VERS = 0.0,
+        CREATION_DATE = None,
+        ORIGINATOR = None,
+        MESSAGE_FOR = None,
+        MESSAGE_ID = None,
+        TCA = None,
+        MISS_DISTANCE = 0.0,
+        RELATIVE_SPEED = 0.0,
+        RELATIVE_POSITION_R = 0.0,
+        RELATIVE_POSITION_T = 0.0,
+        RELATIVE_POSITION_N = 0.0,
+        RELATIVE_VELOCITY_R = 0.0,
+        RELATIVE_VELOCITY_T = 0.0,
+        RELATIVE_VELOCITY_N = 0.0,
+        START_SCREEN_PERIOD = None,
+        STOP_SCREEN_PERIOD = None,
+        SCREEN_VOLUME_FRAME = None,
+        SCREEN_VOLUME_SHAPE = 0,
+        SCREEN_VOLUME_X = 0.0,
+        SCREEN_VOLUME_Y = 0.0,
+        SCREEN_VOLUME_Z = 0.0,
+        SCREEN_ENTRY_TIME = None,
+        SCREEN_EXIT_TIME = None,
+        COLLISION_PROBABILITY = 0.0,
+        COLLISION_PROBABILITY_METHOD = None,
+        OBJECT1 = None,
+        OBJECT2 = None,
+        OBJECT1_DATASOURCE = None,
+        OBJECT2_DATASOURCE = None,
+    ):
+        self.CCSDS_CDM_VERS = CCSDS_CDM_VERS  # type: float
+        self.CREATION_DATE = CREATION_DATE  # type: Optional[str]
+        self.ORIGINATOR = ORIGINATOR  # type: Optional[str]
+        self.MESSAGE_FOR = MESSAGE_FOR  # type: Optional[str]
+        self.MESSAGE_ID = MESSAGE_ID  # type: Optional[str]
+        self.TCA = TCA  # type: Optional[str]
+        self.MISS_DISTANCE = MISS_DISTANCE  # type: float
+        self.RELATIVE_SPEED = RELATIVE_SPEED  # type: float
+        self.RELATIVE_POSITION_R = RELATIVE_POSITION_R  # type: float
+        self.RELATIVE_POSITION_T = RELATIVE_POSITION_T  # type: float
+        self.RELATIVE_POSITION_N = RELATIVE_POSITION_N  # type: float
+        self.RELATIVE_VELOCITY_R = RELATIVE_VELOCITY_R  # type: float
+        self.RELATIVE_VELOCITY_T = RELATIVE_VELOCITY_T  # type: float
+        self.RELATIVE_VELOCITY_N = RELATIVE_VELOCITY_N  # type: float
+        self.START_SCREEN_PERIOD = START_SCREEN_PERIOD  # type: Optional[str]
+        self.STOP_SCREEN_PERIOD = STOP_SCREEN_PERIOD  # type: Optional[str]
+        self.SCREEN_VOLUME_FRAME = SCREEN_VOLUME_FRAME  # type: Optional[RFM.RFMT]
+        self.SCREEN_VOLUME_SHAPE = SCREEN_VOLUME_SHAPE  # type: int
+        self.SCREEN_VOLUME_X = SCREEN_VOLUME_X  # type: float
+        self.SCREEN_VOLUME_Y = SCREEN_VOLUME_Y  # type: float
+        self.SCREEN_VOLUME_Z = SCREEN_VOLUME_Z  # type: float
+        self.SCREEN_ENTRY_TIME = SCREEN_ENTRY_TIME  # type: Optional[str]
+        self.SCREEN_EXIT_TIME = SCREEN_EXIT_TIME  # type: Optional[str]
+        self.COLLISION_PROBABILITY = COLLISION_PROBABILITY  # type: float
+        self.COLLISION_PROBABILITY_METHOD = COLLISION_PROBABILITY_METHOD  # type: Optional[str]
+        self.OBJECT1 = OBJECT1  # type: Optional[CDMObject.CDMObjectT]
+        self.OBJECT2 = OBJECT2  # type: Optional[CDMObject.CDMObjectT]
+        self.OBJECT1_DATASOURCE = OBJECT1_DATASOURCE  # type: Optional[PNM.PNMT]
+        self.OBJECT2_DATASOURCE = OBJECT2_DATASOURCE  # type: Optional[PNM.PNMT]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        CDM = CDM()
-        CDM.Init(buf, pos)
-        return cls.InitFromObj(CDM)
+        tmpCdm = CDM()
+        tmpCdm.Init(buf, pos)
+        return cls.InitFromObj(tmpCdm)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -521,9 +552,9 @@ class CDMT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, CDM):
+    def InitFromObj(cls, tmpCdm):
         x = CDMT()
-        x._UnPack(CDM)
+        x._UnPack(tmpCdm)
         return x
 
     # CDMT

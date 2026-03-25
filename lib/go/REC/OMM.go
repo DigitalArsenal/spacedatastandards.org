@@ -63,9 +63,17 @@ func (rcv *OMM) CCSDS_OMM_VERS() float64 {
 	return 0.0
 }
 
+func (rcv *OMM) CcsdsOmmVers() float64 {
+	return rcv.CCSDS_OMM_VERS()
+}
+
 /// CCSDS OMM Version
 func (rcv *OMM) MutateCCSDS_OMM_VERS(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(4, n)
+}
+
+func (rcv *OMM) MutateCcsdsOmmVers(n float64) bool {
+	return rcv.MutateCCSDS_OMM_VERS(n)
 }
 
 /// Creation Date (ISO 8601 UTC format)
@@ -75,6 +83,10 @@ func (rcv *OMM) CREATION_DATE() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *OMM) CreationDate() []byte {
+	return rcv.CREATION_DATE()
 }
 
 /// Creation Date (ISO 8601 UTC format)
@@ -87,6 +99,10 @@ func (rcv *OMM) ORIGINATOR() []byte {
 	return nil
 }
 
+func (rcv *OMM) Originator() []byte {
+	return rcv.ORIGINATOR()
+}
+
 /// Originator
 /// Satellite Name(s)
 func (rcv *OMM) OBJECT_NAME() []byte {
@@ -95,6 +111,10 @@ func (rcv *OMM) OBJECT_NAME() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *OMM) ObjectName() []byte {
+	return rcv.OBJECT_NAME()
 }
 
 /// Satellite Name(s)
@@ -107,6 +127,10 @@ func (rcv *OMM) OBJECT_ID() []byte {
 	return nil
 }
 
+func (rcv *OMM) ObjectId() []byte {
+	return rcv.OBJECT_ID()
+}
+
 /// International Designator (YYYY-NNNAAA)
 /// Center Name (e.g. EARTH, MARS)
 func (rcv *OMM) CENTER_NAME() []byte {
@@ -115,6 +139,10 @@ func (rcv *OMM) CENTER_NAME() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *OMM) CenterName() []byte {
+	return rcv.CENTER_NAME()
 }
 
 /// Center Name (e.g. EARTH, MARS)
@@ -133,6 +161,10 @@ func (rcv *OMM) REFERENCE_FRAME(obj *RFM) *RFM {
 	return nil
 }
 
+func (rcv *OMM) ReferenceFrame(obj *RFM) *RFM {
+	return rcv.REFERENCE_FRAME(obj)
+}
+
 /// Reference Frame
 /// Typically TEMEOFDATE
 /// Reference Frame Epoch (ISO 8601 UTC format)
@@ -142,6 +174,10 @@ func (rcv *OMM) REFERENCE_FRAME_EPOCH() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *OMM) ReferenceFrameEpoch() []byte {
+	return rcv.REFERENCE_FRAME_EPOCH()
 }
 
 /// Reference Frame Epoch (ISO 8601 UTC format)
@@ -154,9 +190,17 @@ func (rcv *OMM) TIME_SYSTEM() timeSystem {
 	return 11
 }
 
+func (rcv *OMM) TimeSystem() timeSystem {
+	return rcv.TIME_SYSTEM()
+}
+
 /// Time System [M, UTC]
 func (rcv *OMM) MutateTIME_SYSTEM(n timeSystem) bool {
 	return rcv._tab.MutateInt8Slot(20, int8(n))
+}
+
+func (rcv *OMM) MutateTimeSystem(n timeSystem) bool {
+	return rcv.MutateTIME_SYSTEM(n)
 }
 
 /// Mean Element Theory
@@ -168,9 +212,17 @@ func (rcv *OMM) MEAN_ELEMENT_THEORY() meanElementTheory {
 	return 0
 }
 
+func (rcv *OMM) MeanElementTheory() meanElementTheory {
+	return rcv.MEAN_ELEMENT_THEORY()
+}
+
 /// Mean Element Theory
 func (rcv *OMM) MutateMEAN_ELEMENT_THEORY(n meanElementTheory) bool {
 	return rcv._tab.MutateInt8Slot(22, int8(n))
+}
+
+func (rcv *OMM) MutateMeanElementTheory(n meanElementTheory) bool {
+	return rcv.MutateMEAN_ELEMENT_THEORY(n)
 }
 
 /// COMMENT (O)
@@ -180,6 +232,10 @@ func (rcv *OMM) COMMENT() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *OMM) Comment() []byte {
+	return rcv.COMMENT()
 }
 
 /// COMMENT (O)
@@ -192,6 +248,10 @@ func (rcv *OMM) EPOCH() []byte {
 	return nil
 }
 
+func (rcv *OMM) Epoch() []byte {
+	return rcv.EPOCH()
+}
+
 /// EPOCH of Mean Keplerian elements (ISO 8601 UTC format)
 /// Semi-major axis in km or Mean Motion in rev/day
 func (rcv *OMM) SEMI_MAJOR_AXIS() float64 {
@@ -202,9 +262,17 @@ func (rcv *OMM) SEMI_MAJOR_AXIS() float64 {
 	return 0.0
 }
 
+func (rcv *OMM) SemiMajorAxis() float64 {
+	return rcv.SEMI_MAJOR_AXIS()
+}
+
 /// Semi-major axis in km or Mean Motion in rev/day
 func (rcv *OMM) MutateSEMI_MAJOR_AXIS(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(28, n)
+}
+
+func (rcv *OMM) MutateSemiMajorAxis(n float64) bool {
+	return rcv.MutateSEMI_MAJOR_AXIS(n)
 }
 
 /// Mean motion in rev/day if MEAN_ELEMENT_THEORY=SGP/SGP4 else unused
@@ -216,9 +284,17 @@ func (rcv *OMM) MEAN_MOTION() float64 {
 	return 0.0
 }
 
+func (rcv *OMM) MeanMotion() float64 {
+	return rcv.MEAN_MOTION()
+}
+
 /// Mean motion in rev/day if MEAN_ELEMENT_THEORY=SGP/SGP4 else unused
 func (rcv *OMM) MutateMEAN_MOTION(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(30, n)
+}
+
+func (rcv *OMM) MutateMeanMotion(n float64) bool {
+	return rcv.MutateMEAN_MOTION(n)
 }
 
 /// Eccentricity (unitless)
@@ -230,9 +306,17 @@ func (rcv *OMM) ECCENTRICITY() float64 {
 	return 0.0
 }
 
+func (rcv *OMM) Eccentricity() float64 {
+	return rcv.ECCENTRICITY()
+}
+
 /// Eccentricity (unitless)
 func (rcv *OMM) MutateECCENTRICITY(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(32, n)
+}
+
+func (rcv *OMM) MutateEccentricity(n float64) bool {
+	return rcv.MutateECCENTRICITY(n)
 }
 
 /// Inclination in degrees
@@ -244,9 +328,17 @@ func (rcv *OMM) INCLINATION() float64 {
 	return 0.0
 }
 
+func (rcv *OMM) Inclination() float64 {
+	return rcv.INCLINATION()
+}
+
 /// Inclination in degrees
 func (rcv *OMM) MutateINCLINATION(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(34, n)
+}
+
+func (rcv *OMM) MutateInclination(n float64) bool {
+	return rcv.MutateINCLINATION(n)
 }
 
 /// RA_OF_ASC_NODE in degrees
@@ -258,9 +350,17 @@ func (rcv *OMM) RA_OF_ASC_NODE() float64 {
 	return 0.0
 }
 
+func (rcv *OMM) RaOfAscNode() float64 {
+	return rcv.RA_OF_ASC_NODE()
+}
+
 /// RA_OF_ASC_NODE in degrees
 func (rcv *OMM) MutateRA_OF_ASC_NODE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(36, n)
+}
+
+func (rcv *OMM) MutateRaOfAscNode(n float64) bool {
+	return rcv.MutateRA_OF_ASC_NODE(n)
 }
 
 /// ARG_OF_PERICENTER in degrees
@@ -272,9 +372,17 @@ func (rcv *OMM) ARG_OF_PERICENTER() float64 {
 	return 0.0
 }
 
+func (rcv *OMM) ArgOfPericenter() float64 {
+	return rcv.ARG_OF_PERICENTER()
+}
+
 /// ARG_OF_PERICENTER in degrees
 func (rcv *OMM) MutateARG_OF_PERICENTER(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(38, n)
+}
+
+func (rcv *OMM) MutateArgOfPericenter(n float64) bool {
+	return rcv.MutateARG_OF_PERICENTER(n)
 }
 
 /// MEAN_ANOMALY in degrees
@@ -286,9 +394,17 @@ func (rcv *OMM) MEAN_ANOMALY() float64 {
 	return 0.0
 }
 
+func (rcv *OMM) MeanAnomaly() float64 {
+	return rcv.MEAN_ANOMALY()
+}
+
 /// MEAN_ANOMALY in degrees
 func (rcv *OMM) MutateMEAN_ANOMALY(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(40, n)
+}
+
+func (rcv *OMM) MutateMeanAnomaly(n float64) bool {
+	return rcv.MutateMEAN_ANOMALY(n)
 }
 
 /// GM in km**3/s**2
@@ -300,9 +416,17 @@ func (rcv *OMM) GM() float64 {
 	return 0.0
 }
 
+func (rcv *OMM) Gm() float64 {
+	return rcv.GM()
+}
+
 /// GM in km**3/s**2
 func (rcv *OMM) MutateGM(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(42, n)
+}
+
+func (rcv *OMM) MutateGm(n float64) bool {
+	return rcv.MutateGM(n)
 }
 
 /// MASS in kg
@@ -314,9 +438,17 @@ func (rcv *OMM) MASS() float64 {
 	return 0.0
 }
 
+func (rcv *OMM) Mass() float64 {
+	return rcv.MASS()
+}
+
 /// MASS in kg
 func (rcv *OMM) MutateMASS(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(44, n)
+}
+
+func (rcv *OMM) MutateMass(n float64) bool {
+	return rcv.MutateMASS(n)
 }
 
 /// SOLAR_RAD_AREA in m**2
@@ -328,9 +460,17 @@ func (rcv *OMM) SOLAR_RAD_AREA() float64 {
 	return 0.0
 }
 
+func (rcv *OMM) SolarRadArea() float64 {
+	return rcv.SOLAR_RAD_AREA()
+}
+
 /// SOLAR_RAD_AREA in m**2
 func (rcv *OMM) MutateSOLAR_RAD_AREA(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(46, n)
+}
+
+func (rcv *OMM) MutateSolarRadArea(n float64) bool {
+	return rcv.MutateSOLAR_RAD_AREA(n)
 }
 
 /// SOLAR_RAD_COEFF (unitless)
@@ -342,9 +482,17 @@ func (rcv *OMM) SOLAR_RAD_COEFF() float64 {
 	return 0.0
 }
 
+func (rcv *OMM) SolarRadCoeff() float64 {
+	return rcv.SOLAR_RAD_COEFF()
+}
+
 /// SOLAR_RAD_COEFF (unitless)
 func (rcv *OMM) MutateSOLAR_RAD_COEFF(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(48, n)
+}
+
+func (rcv *OMM) MutateSolarRadCoeff(n float64) bool {
+	return rcv.MutateSOLAR_RAD_COEFF(n)
 }
 
 /// DRAG_AREA in m**2
@@ -356,9 +504,17 @@ func (rcv *OMM) DRAG_AREA() float64 {
 	return 0.0
 }
 
+func (rcv *OMM) DragArea() float64 {
+	return rcv.DRAG_AREA()
+}
+
 /// DRAG_AREA in m**2
 func (rcv *OMM) MutateDRAG_AREA(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(50, n)
+}
+
+func (rcv *OMM) MutateDragArea(n float64) bool {
+	return rcv.MutateDRAG_AREA(n)
 }
 
 /// DRAG_COEFF (unitless)
@@ -370,9 +526,17 @@ func (rcv *OMM) DRAG_COEFF() float64 {
 	return 0.0
 }
 
+func (rcv *OMM) DragCoeff() float64 {
+	return rcv.DRAG_COEFF()
+}
+
 /// DRAG_COEFF (unitless)
 func (rcv *OMM) MutateDRAG_COEFF(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(52, n)
+}
+
+func (rcv *OMM) MutateDragCoeff(n float64) bool {
+	return rcv.MutateDRAG_COEFF(n)
 }
 
 /// TLE Related Parameters (Only if MEAN_ELEMENT_THEORY=SGP/SGP4)
@@ -385,10 +549,18 @@ func (rcv *OMM) EPHEMERIS_TYPE() ephemerisType {
 	return 1
 }
 
+func (rcv *OMM) EphemerisType() ephemerisType {
+	return rcv.EPHEMERIS_TYPE()
+}
+
 /// TLE Related Parameters (Only if MEAN_ELEMENT_THEORY=SGP/SGP4)
 /// EPHEMERIS_TYPE Default=0
 func (rcv *OMM) MutateEPHEMERIS_TYPE(n ephemerisType) bool {
 	return rcv._tab.MutateInt8Slot(54, int8(n))
+}
+
+func (rcv *OMM) MutateEphemerisType(n ephemerisType) bool {
+	return rcv.MutateEPHEMERIS_TYPE(n)
 }
 
 /// CLASSIFICATION_TYPE Default=U
@@ -398,6 +570,10 @@ func (rcv *OMM) CLASSIFICATION_TYPE() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *OMM) ClassificationType() []byte {
+	return rcv.CLASSIFICATION_TYPE()
 }
 
 /// CLASSIFICATION_TYPE Default=U
@@ -410,9 +586,17 @@ func (rcv *OMM) NORAD_CAT_ID() uint32 {
 	return 0
 }
 
+func (rcv *OMM) NoradCatId() uint32 {
+	return rcv.NORAD_CAT_ID()
+}
+
 /// NORAD_CAT_ID (integer) [O if SGP/SGP4]
 func (rcv *OMM) MutateNORAD_CAT_ID(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(58, n)
+}
+
+func (rcv *OMM) MutateNoradCatId(n uint32) bool {
+	return rcv.MutateNORAD_CAT_ID(n)
 }
 
 /// ELEMENT_SET_NO [O if SGP/SGP4]
@@ -424,9 +608,17 @@ func (rcv *OMM) ELEMENT_SET_NO() uint32 {
 	return 0
 }
 
+func (rcv *OMM) ElementSetNo() uint32 {
+	return rcv.ELEMENT_SET_NO()
+}
+
 /// ELEMENT_SET_NO [O if SGP/SGP4]
 func (rcv *OMM) MutateELEMENT_SET_NO(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(60, n)
+}
+
+func (rcv *OMM) MutateElementSetNo(n uint32) bool {
+	return rcv.MutateELEMENT_SET_NO(n)
 }
 
 /// REV_AT_EPOCH [O if SGP/SGP4]
@@ -438,9 +630,17 @@ func (rcv *OMM) REV_AT_EPOCH() float64 {
 	return 0.0
 }
 
+func (rcv *OMM) RevAtEpoch() float64 {
+	return rcv.REV_AT_EPOCH()
+}
+
 /// REV_AT_EPOCH [O if SGP/SGP4]
 func (rcv *OMM) MutateREV_AT_EPOCH(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(62, n)
+}
+
+func (rcv *OMM) MutateRevAtEpoch(n float64) bool {
+	return rcv.MutateREV_AT_EPOCH(n)
 }
 
 /// BSTAR in 1/Earth radii or BTERM in m**2/kg depending on MEAN_ELEMENT_THEORY [C]
@@ -452,9 +652,17 @@ func (rcv *OMM) BSTAR() float64 {
 	return 0.0
 }
 
+func (rcv *OMM) Bstar() float64 {
+	return rcv.BSTAR()
+}
+
 /// BSTAR in 1/Earth radii or BTERM in m**2/kg depending on MEAN_ELEMENT_THEORY [C]
 func (rcv *OMM) MutateBSTAR(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(64, n)
+}
+
+func (rcv *OMM) MutateBstar(n float64) bool {
+	return rcv.MutateBSTAR(n)
 }
 
 /// MEAN_MOTION_DOT in rev/day**2 [C if SGP or PPT3]
@@ -466,9 +674,17 @@ func (rcv *OMM) MEAN_MOTION_DOT() float64 {
 	return 0.0
 }
 
+func (rcv *OMM) MeanMotionDot() float64 {
+	return rcv.MEAN_MOTION_DOT()
+}
+
 /// MEAN_MOTION_DOT in rev/day**2 [C if SGP or PPT3]
 func (rcv *OMM) MutateMEAN_MOTION_DOT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(66, n)
+}
+
+func (rcv *OMM) MutateMeanMotionDot(n float64) bool {
+	return rcv.MutateMEAN_MOTION_DOT(n)
 }
 
 /// MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]
@@ -480,9 +696,17 @@ func (rcv *OMM) MEAN_MOTION_DDOT() float64 {
 	return 0.0
 }
 
+func (rcv *OMM) MeanMotionDdot() float64 {
+	return rcv.MEAN_MOTION_DDOT()
+}
+
 /// MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]
 func (rcv *OMM) MutateMEAN_MOTION_DDOT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(68, n)
+}
+
+func (rcv *OMM) MutateMeanMotionDdot(n float64) bool {
+	return rcv.MutateMEAN_MOTION_DDOT(n)
 }
 
 /// Position/Velocity Covariance Matrix (6x6 Lower Triangular) [C if any covariance provided]
@@ -499,6 +723,10 @@ func (rcv *OMM) COV_REFERENCE_FRAME(obj *RFM) *RFM {
 		return obj
 	}
 	return nil
+}
+
+func (rcv *OMM) CovReferenceFrame(obj *RFM) *RFM {
+	return rcv.COV_REFERENCE_FRAME(obj)
 }
 
 /// Position/Velocity Covariance Matrix (6x6 Lower Triangular) [C if any covariance provided]
@@ -519,12 +747,20 @@ func (rcv *OMM) COVARIANCE(j int) float64 {
 	return 0
 }
 
+func (rcv *OMM) Covariance(j int) float64 {
+	return rcv.COVARIANCE(j)
+}
+
 func (rcv *OMM) COVARIANCELength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(72))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *OMM) CovarianceLength() int {
+	return rcv.COVARIANCELength()
 }
 
 /// Covariance matrix as flat array (6x6 lower triangular = 21 elements).
@@ -542,6 +778,10 @@ func (rcv *OMM) MutateCOVARIANCE(j int, n float64) bool {
 	return false
 }
 
+func (rcv *OMM) MutateCovariance(j int, n float64) bool {
+	return rcv.MutateCOVARIANCE(j, n)
+}
+
 /// USER_DEFINED_BIP_0044_TYPE [O, units per ICD]
 func (rcv *OMM) USER_DEFINED_BIP_0044_TYPE() uint32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(74))
@@ -551,9 +791,17 @@ func (rcv *OMM) USER_DEFINED_BIP_0044_TYPE() uint32 {
 	return 0
 }
 
+func (rcv *OMM) UserDefinedBip0044Type() uint32 {
+	return rcv.USER_DEFINED_BIP_0044_TYPE()
+}
+
 /// USER_DEFINED_BIP_0044_TYPE [O, units per ICD]
 func (rcv *OMM) MutateUSER_DEFINED_BIP_0044_TYPE(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(74, n)
+}
+
+func (rcv *OMM) MutateUserDefinedBip0044Type(n uint32) bool {
+	return rcv.MutateUSER_DEFINED_BIP_0044_TYPE(n)
 }
 
 /// USER_DEFINED_OBJECT_DESIGNATOR [O, units per ICD]
@@ -563,6 +811,10 @@ func (rcv *OMM) USER_DEFINED_OBJECT_DESIGNATOR() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *OMM) UserDefinedObjectDesignator() []byte {
+	return rcv.USER_DEFINED_OBJECT_DESIGNATOR()
 }
 
 /// USER_DEFINED_OBJECT_DESIGNATOR [O, units per ICD]
@@ -575,6 +827,10 @@ func (rcv *OMM) USER_DEFINED_EARTH_MODEL() []byte {
 	return nil
 }
 
+func (rcv *OMM) UserDefinedEarthModel() []byte {
+	return rcv.USER_DEFINED_EARTH_MODEL()
+}
+
 /// USER_DEFINED_EARTH_MODEL [O, units per ICD]
 /// USER_DEFINED_EPOCH_TIMESTAMP [O, units per ICD]
 func (rcv *OMM) USER_DEFINED_EPOCH_TIMESTAMP() float64 {
@@ -585,9 +841,17 @@ func (rcv *OMM) USER_DEFINED_EPOCH_TIMESTAMP() float64 {
 	return 0.0
 }
 
+func (rcv *OMM) UserDefinedEpochTimestamp() float64 {
+	return rcv.USER_DEFINED_EPOCH_TIMESTAMP()
+}
+
 /// USER_DEFINED_EPOCH_TIMESTAMP [O, units per ICD]
 func (rcv *OMM) MutateUSER_DEFINED_EPOCH_TIMESTAMP(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(80, n)
+}
+
+func (rcv *OMM) MutateUserDefinedEpochTimestamp(n float64) bool {
+	return rcv.MutateUSER_DEFINED_EPOCH_TIMESTAMP(n)
 }
 
 /// USER_DEFINED_MICROSECONDS [O, units per ICD]
@@ -599,9 +863,17 @@ func (rcv *OMM) USER_DEFINED_MICROSECONDS() float64 {
 	return 0.0
 }
 
+func (rcv *OMM) UserDefinedMicroseconds() float64 {
+	return rcv.USER_DEFINED_MICROSECONDS()
+}
+
 /// USER_DEFINED_MICROSECONDS [O, units per ICD]
 func (rcv *OMM) MutateUSER_DEFINED_MICROSECONDS(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(82, n)
+}
+
+func (rcv *OMM) MutateUserDefinedMicroseconds(n float64) bool {
+	return rcv.MutateUSER_DEFINED_MICROSECONDS(n)
 }
 
 func OMMStart(builder *flatbuffers.Builder) {
@@ -610,125 +882,248 @@ func OMMStart(builder *flatbuffers.Builder) {
 func OMMAddCCSDS_OMM_VERS(builder *flatbuffers.Builder, CCSDS_OMM_VERS float64) {
 	builder.PrependFloat64Slot(0, CCSDS_OMM_VERS, 0.0)
 }
+func OMMAddCcsdsOmmVers(builder *flatbuffers.Builder, CCSDS_OMM_VERS float64) {
+	OMMAddCCSDS_OMM_VERS(builder, CCSDS_OMM_VERS)
+}
 func OMMAddCREATION_DATE(builder *flatbuffers.Builder, CREATION_DATE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(CREATION_DATE), 0)
+}
+func OMMAddCreationDate(builder *flatbuffers.Builder, CREATION_DATE flatbuffers.UOffsetT) {
+	OMMAddCREATION_DATE(builder, CREATION_DATE)
 }
 func OMMAddORIGINATOR(builder *flatbuffers.Builder, ORIGINATOR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(ORIGINATOR), 0)
 }
+func OMMAddOriginator(builder *flatbuffers.Builder, ORIGINATOR flatbuffers.UOffsetT) {
+	OMMAddORIGINATOR(builder, ORIGINATOR)
+}
 func OMMAddOBJECT_NAME(builder *flatbuffers.Builder, OBJECT_NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(OBJECT_NAME), 0)
+}
+func OMMAddObjectName(builder *flatbuffers.Builder, OBJECT_NAME flatbuffers.UOffsetT) {
+	OMMAddOBJECT_NAME(builder, OBJECT_NAME)
 }
 func OMMAddOBJECT_ID(builder *flatbuffers.Builder, OBJECT_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(OBJECT_ID), 0)
 }
+func OMMAddObjectId(builder *flatbuffers.Builder, OBJECT_ID flatbuffers.UOffsetT) {
+	OMMAddOBJECT_ID(builder, OBJECT_ID)
+}
 func OMMAddCENTER_NAME(builder *flatbuffers.Builder, CENTER_NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(CENTER_NAME), 0)
+}
+func OMMAddCenterName(builder *flatbuffers.Builder, CENTER_NAME flatbuffers.UOffsetT) {
+	OMMAddCENTER_NAME(builder, CENTER_NAME)
 }
 func OMMAddREFERENCE_FRAME(builder *flatbuffers.Builder, REFERENCE_FRAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(REFERENCE_FRAME), 0)
 }
+func OMMAddReferenceFrame(builder *flatbuffers.Builder, REFERENCE_FRAME flatbuffers.UOffsetT) {
+	OMMAddREFERENCE_FRAME(builder, REFERENCE_FRAME)
+}
 func OMMAddREFERENCE_FRAME_EPOCH(builder *flatbuffers.Builder, REFERENCE_FRAME_EPOCH flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(REFERENCE_FRAME_EPOCH), 0)
+}
+func OMMAddReferenceFrameEpoch(builder *flatbuffers.Builder, REFERENCE_FRAME_EPOCH flatbuffers.UOffsetT) {
+	OMMAddREFERENCE_FRAME_EPOCH(builder, REFERENCE_FRAME_EPOCH)
 }
 func OMMAddTIME_SYSTEM(builder *flatbuffers.Builder, TIME_SYSTEM timeSystem) {
 	builder.PrependInt8Slot(8, int8(TIME_SYSTEM), 11)
 }
+func OMMAddTimeSystem(builder *flatbuffers.Builder, TIME_SYSTEM timeSystem) {
+	OMMAddTIME_SYSTEM(builder, TIME_SYSTEM)
+}
 func OMMAddMEAN_ELEMENT_THEORY(builder *flatbuffers.Builder, MEAN_ELEMENT_THEORY meanElementTheory) {
 	builder.PrependInt8Slot(9, int8(MEAN_ELEMENT_THEORY), 0)
+}
+func OMMAddMeanElementTheory(builder *flatbuffers.Builder, MEAN_ELEMENT_THEORY meanElementTheory) {
+	OMMAddMEAN_ELEMENT_THEORY(builder, MEAN_ELEMENT_THEORY)
 }
 func OMMAddCOMMENT(builder *flatbuffers.Builder, COMMENT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(COMMENT), 0)
 }
+func OMMAddComment(builder *flatbuffers.Builder, COMMENT flatbuffers.UOffsetT) {
+	OMMAddCOMMENT(builder, COMMENT)
+}
 func OMMAddEPOCH(builder *flatbuffers.Builder, EPOCH flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(EPOCH), 0)
+}
+func OMMAddEpoch(builder *flatbuffers.Builder, EPOCH flatbuffers.UOffsetT) {
+	OMMAddEPOCH(builder, EPOCH)
 }
 func OMMAddSEMI_MAJOR_AXIS(builder *flatbuffers.Builder, SEMI_MAJOR_AXIS float64) {
 	builder.PrependFloat64Slot(12, SEMI_MAJOR_AXIS, 0.0)
 }
+func OMMAddSemiMajorAxis(builder *flatbuffers.Builder, SEMI_MAJOR_AXIS float64) {
+	OMMAddSEMI_MAJOR_AXIS(builder, SEMI_MAJOR_AXIS)
+}
 func OMMAddMEAN_MOTION(builder *flatbuffers.Builder, MEAN_MOTION float64) {
 	builder.PrependFloat64Slot(13, MEAN_MOTION, 0.0)
+}
+func OMMAddMeanMotion(builder *flatbuffers.Builder, MEAN_MOTION float64) {
+	OMMAddMEAN_MOTION(builder, MEAN_MOTION)
 }
 func OMMAddECCENTRICITY(builder *flatbuffers.Builder, ECCENTRICITY float64) {
 	builder.PrependFloat64Slot(14, ECCENTRICITY, 0.0)
 }
+func OMMAddEccentricity(builder *flatbuffers.Builder, ECCENTRICITY float64) {
+	OMMAddECCENTRICITY(builder, ECCENTRICITY)
+}
 func OMMAddINCLINATION(builder *flatbuffers.Builder, INCLINATION float64) {
 	builder.PrependFloat64Slot(15, INCLINATION, 0.0)
+}
+func OMMAddInclination(builder *flatbuffers.Builder, INCLINATION float64) {
+	OMMAddINCLINATION(builder, INCLINATION)
 }
 func OMMAddRA_OF_ASC_NODE(builder *flatbuffers.Builder, RA_OF_ASC_NODE float64) {
 	builder.PrependFloat64Slot(16, RA_OF_ASC_NODE, 0.0)
 }
+func OMMAddRaOfAscNode(builder *flatbuffers.Builder, RA_OF_ASC_NODE float64) {
+	OMMAddRA_OF_ASC_NODE(builder, RA_OF_ASC_NODE)
+}
 func OMMAddARG_OF_PERICENTER(builder *flatbuffers.Builder, ARG_OF_PERICENTER float64) {
 	builder.PrependFloat64Slot(17, ARG_OF_PERICENTER, 0.0)
+}
+func OMMAddArgOfPericenter(builder *flatbuffers.Builder, ARG_OF_PERICENTER float64) {
+	OMMAddARG_OF_PERICENTER(builder, ARG_OF_PERICENTER)
 }
 func OMMAddMEAN_ANOMALY(builder *flatbuffers.Builder, MEAN_ANOMALY float64) {
 	builder.PrependFloat64Slot(18, MEAN_ANOMALY, 0.0)
 }
+func OMMAddMeanAnomaly(builder *flatbuffers.Builder, MEAN_ANOMALY float64) {
+	OMMAddMEAN_ANOMALY(builder, MEAN_ANOMALY)
+}
 func OMMAddGM(builder *flatbuffers.Builder, GM float64) {
 	builder.PrependFloat64Slot(19, GM, 0.0)
+}
+func OMMAddGm(builder *flatbuffers.Builder, GM float64) {
+	OMMAddGM(builder, GM)
 }
 func OMMAddMASS(builder *flatbuffers.Builder, MASS float64) {
 	builder.PrependFloat64Slot(20, MASS, 0.0)
 }
+func OMMAddMass(builder *flatbuffers.Builder, MASS float64) {
+	OMMAddMASS(builder, MASS)
+}
 func OMMAddSOLAR_RAD_AREA(builder *flatbuffers.Builder, SOLAR_RAD_AREA float64) {
 	builder.PrependFloat64Slot(21, SOLAR_RAD_AREA, 0.0)
+}
+func OMMAddSolarRadArea(builder *flatbuffers.Builder, SOLAR_RAD_AREA float64) {
+	OMMAddSOLAR_RAD_AREA(builder, SOLAR_RAD_AREA)
 }
 func OMMAddSOLAR_RAD_COEFF(builder *flatbuffers.Builder, SOLAR_RAD_COEFF float64) {
 	builder.PrependFloat64Slot(22, SOLAR_RAD_COEFF, 0.0)
 }
+func OMMAddSolarRadCoeff(builder *flatbuffers.Builder, SOLAR_RAD_COEFF float64) {
+	OMMAddSOLAR_RAD_COEFF(builder, SOLAR_RAD_COEFF)
+}
 func OMMAddDRAG_AREA(builder *flatbuffers.Builder, DRAG_AREA float64) {
 	builder.PrependFloat64Slot(23, DRAG_AREA, 0.0)
+}
+func OMMAddDragArea(builder *flatbuffers.Builder, DRAG_AREA float64) {
+	OMMAddDRAG_AREA(builder, DRAG_AREA)
 }
 func OMMAddDRAG_COEFF(builder *flatbuffers.Builder, DRAG_COEFF float64) {
 	builder.PrependFloat64Slot(24, DRAG_COEFF, 0.0)
 }
+func OMMAddDragCoeff(builder *flatbuffers.Builder, DRAG_COEFF float64) {
+	OMMAddDRAG_COEFF(builder, DRAG_COEFF)
+}
 func OMMAddEPHEMERIS_TYPE(builder *flatbuffers.Builder, EPHEMERIS_TYPE ephemerisType) {
 	builder.PrependInt8Slot(25, int8(EPHEMERIS_TYPE), 1)
+}
+func OMMAddEphemerisType(builder *flatbuffers.Builder, EPHEMERIS_TYPE ephemerisType) {
+	OMMAddEPHEMERIS_TYPE(builder, EPHEMERIS_TYPE)
 }
 func OMMAddCLASSIFICATION_TYPE(builder *flatbuffers.Builder, CLASSIFICATION_TYPE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(26, flatbuffers.UOffsetT(CLASSIFICATION_TYPE), 0)
 }
+func OMMAddClassificationType(builder *flatbuffers.Builder, CLASSIFICATION_TYPE flatbuffers.UOffsetT) {
+	OMMAddCLASSIFICATION_TYPE(builder, CLASSIFICATION_TYPE)
+}
 func OMMAddNORAD_CAT_ID(builder *flatbuffers.Builder, NORAD_CAT_ID uint32) {
 	builder.PrependUint32Slot(27, NORAD_CAT_ID, 0)
+}
+func OMMAddNoradCatId(builder *flatbuffers.Builder, NORAD_CAT_ID uint32) {
+	OMMAddNORAD_CAT_ID(builder, NORAD_CAT_ID)
 }
 func OMMAddELEMENT_SET_NO(builder *flatbuffers.Builder, ELEMENT_SET_NO uint32) {
 	builder.PrependUint32Slot(28, ELEMENT_SET_NO, 0)
 }
+func OMMAddElementSetNo(builder *flatbuffers.Builder, ELEMENT_SET_NO uint32) {
+	OMMAddELEMENT_SET_NO(builder, ELEMENT_SET_NO)
+}
 func OMMAddREV_AT_EPOCH(builder *flatbuffers.Builder, REV_AT_EPOCH float64) {
 	builder.PrependFloat64Slot(29, REV_AT_EPOCH, 0.0)
+}
+func OMMAddRevAtEpoch(builder *flatbuffers.Builder, REV_AT_EPOCH float64) {
+	OMMAddREV_AT_EPOCH(builder, REV_AT_EPOCH)
 }
 func OMMAddBSTAR(builder *flatbuffers.Builder, BSTAR float64) {
 	builder.PrependFloat64Slot(30, BSTAR, 0.0)
 }
+func OMMAddBstar(builder *flatbuffers.Builder, BSTAR float64) {
+	OMMAddBSTAR(builder, BSTAR)
+}
 func OMMAddMEAN_MOTION_DOT(builder *flatbuffers.Builder, MEAN_MOTION_DOT float64) {
 	builder.PrependFloat64Slot(31, MEAN_MOTION_DOT, 0.0)
+}
+func OMMAddMeanMotionDot(builder *flatbuffers.Builder, MEAN_MOTION_DOT float64) {
+	OMMAddMEAN_MOTION_DOT(builder, MEAN_MOTION_DOT)
 }
 func OMMAddMEAN_MOTION_DDOT(builder *flatbuffers.Builder, MEAN_MOTION_DDOT float64) {
 	builder.PrependFloat64Slot(32, MEAN_MOTION_DDOT, 0.0)
 }
+func OMMAddMeanMotionDdot(builder *flatbuffers.Builder, MEAN_MOTION_DDOT float64) {
+	OMMAddMEAN_MOTION_DDOT(builder, MEAN_MOTION_DDOT)
+}
 func OMMAddCOV_REFERENCE_FRAME(builder *flatbuffers.Builder, COV_REFERENCE_FRAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(33, flatbuffers.UOffsetT(COV_REFERENCE_FRAME), 0)
+}
+func OMMAddCovReferenceFrame(builder *flatbuffers.Builder, COV_REFERENCE_FRAME flatbuffers.UOffsetT) {
+	OMMAddCOV_REFERENCE_FRAME(builder, COV_REFERENCE_FRAME)
 }
 func OMMAddCOVARIANCE(builder *flatbuffers.Builder, COVARIANCE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(34, flatbuffers.UOffsetT(COVARIANCE), 0)
 }
+func OMMAddCovariance(builder *flatbuffers.Builder, COVARIANCE flatbuffers.UOffsetT) {
+	OMMAddCOVARIANCE(builder, COVARIANCE)
+}
 func OMMStartCOVARIANCEVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(8, numElems, 8)
+}
+func OMMStartCovarianceVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return OMMStartCOVARIANCEVector(builder, numElems)
 }
 func OMMAddUSER_DEFINED_BIP_0044_TYPE(builder *flatbuffers.Builder, USER_DEFINED_BIP_0044_TYPE uint32) {
 	builder.PrependUint32Slot(35, USER_DEFINED_BIP_0044_TYPE, 0)
 }
+func OMMAddUserDefinedBip0044Type(builder *flatbuffers.Builder, USER_DEFINED_BIP_0044_TYPE uint32) {
+	OMMAddUSER_DEFINED_BIP_0044_TYPE(builder, USER_DEFINED_BIP_0044_TYPE)
+}
 func OMMAddUSER_DEFINED_OBJECT_DESIGNATOR(builder *flatbuffers.Builder, USER_DEFINED_OBJECT_DESIGNATOR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(36, flatbuffers.UOffsetT(USER_DEFINED_OBJECT_DESIGNATOR), 0)
+}
+func OMMAddUserDefinedObjectDesignator(builder *flatbuffers.Builder, USER_DEFINED_OBJECT_DESIGNATOR flatbuffers.UOffsetT) {
+	OMMAddUSER_DEFINED_OBJECT_DESIGNATOR(builder, USER_DEFINED_OBJECT_DESIGNATOR)
 }
 func OMMAddUSER_DEFINED_EARTH_MODEL(builder *flatbuffers.Builder, USER_DEFINED_EARTH_MODEL flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(37, flatbuffers.UOffsetT(USER_DEFINED_EARTH_MODEL), 0)
 }
+func OMMAddUserDefinedEarthModel(builder *flatbuffers.Builder, USER_DEFINED_EARTH_MODEL flatbuffers.UOffsetT) {
+	OMMAddUSER_DEFINED_EARTH_MODEL(builder, USER_DEFINED_EARTH_MODEL)
+}
 func OMMAddUSER_DEFINED_EPOCH_TIMESTAMP(builder *flatbuffers.Builder, USER_DEFINED_EPOCH_TIMESTAMP float64) {
 	builder.PrependFloat64Slot(38, USER_DEFINED_EPOCH_TIMESTAMP, 0.0)
 }
+func OMMAddUserDefinedEpochTimestamp(builder *flatbuffers.Builder, USER_DEFINED_EPOCH_TIMESTAMP float64) {
+	OMMAddUSER_DEFINED_EPOCH_TIMESTAMP(builder, USER_DEFINED_EPOCH_TIMESTAMP)
+}
 func OMMAddUSER_DEFINED_MICROSECONDS(builder *flatbuffers.Builder, USER_DEFINED_MICROSECONDS float64) {
 	builder.PrependFloat64Slot(39, USER_DEFINED_MICROSECONDS, 0.0)
+}
+func OMMAddUserDefinedMicroseconds(builder *flatbuffers.Builder, USER_DEFINED_MICROSECONDS float64) {
+	OMMAddUSER_DEFINED_MICROSECONDS(builder, USER_DEFINED_MICROSECONDS)
 }
 func OMMEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

@@ -32,7 +32,7 @@ class KMLFolder : Table() {
     /**
      * Folder name
      */
-    val NAME : String?
+    val name : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class KMLFolder : Table() {
                 null
             }
         }
-    val NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val nameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun nameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Description
      */
-    val DESCRIPTION : String?
+    val description : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -55,12 +55,12 @@ class KMLFolder : Table() {
                 null
             }
         }
-    val DESCRIPTIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun DESCRIPTIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val descriptionAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun descriptionInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * Visibility flag
      */
-    val VISIBILITY : Boolean
+    val visibility : Boolean
         get() {
             val o = __offset(8)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -68,7 +68,7 @@ class KMLFolder : Table() {
     /**
      * Whether folder is open in tree view
      */
-    val OPEN : Boolean
+    val open : Boolean
         get() {
             val o = __offset(10)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -76,8 +76,8 @@ class KMLFolder : Table() {
     /**
      * Placemarks in this folder
      */
-    fun PLACEMARKS(j: Int) : KMLPlacemark? = PLACEMARKS(KMLPlacemark(), j)
-    fun PLACEMARKS(obj: KMLPlacemark, j: Int) : KMLPlacemark? {
+    fun placemarks(j: Int) : KMLPlacemark? = placemarks(KMLPlacemark(), j)
+    fun placemarks(obj: KMLPlacemark, j: Int) : KMLPlacemark? {
         val o = __offset(12)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -85,15 +85,15 @@ class KMLFolder : Table() {
             null
         }
     }
-    val PLACEMARKSLength : Int
+    val placemarksLength : Int
         get() {
             val o = __offset(12); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Sub-folders
      */
-    fun FOLDERS(j: Int) : KMLFolder? = FOLDERS(KMLFolder(), j)
-    fun FOLDERS(obj: KMLFolder, j: Int) : KMLFolder? {
+    fun folders(j: Int) : KMLFolder? = folders(KMLFolder(), j)
+    fun folders(obj: KMLFolder, j: Int) : KMLFolder? {
         val o = __offset(14)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -101,15 +101,15 @@ class KMLFolder : Table() {
             null
         }
     }
-    val FOLDERSLength : Int
+    val foldersLength : Int
         get() {
             val o = __offset(14); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Network links
      */
-    fun NETWORK_LINKS(j: Int) : KMLNetworkLink? = NETWORK_LINKS(KMLNetworkLink(), j)
-    fun NETWORK_LINKS(obj: KMLNetworkLink, j: Int) : KMLNetworkLink? {
+    fun networkLinks(j: Int) : KMLNetworkLink? = networkLinks(KMLNetworkLink(), j)
+    fun networkLinks(obj: KMLNetworkLink, j: Int) : KMLNetworkLink? {
         val o = __offset(16)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -117,15 +117,15 @@ class KMLFolder : Table() {
             null
         }
     }
-    val NETWORK_LINKSLength : Int
+    val networkLinksLength : Int
         get() {
             val o = __offset(16); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Ground overlays
      */
-    fun GROUND_OVERLAYS(j: Int) : KMLGroundOverlay? = GROUND_OVERLAYS(KMLGroundOverlay(), j)
-    fun GROUND_OVERLAYS(obj: KMLGroundOverlay, j: Int) : KMLGroundOverlay? {
+    fun groundOverlays(j: Int) : KMLGroundOverlay? = groundOverlays(KMLGroundOverlay(), j)
+    fun groundOverlays(obj: KMLGroundOverlay, j: Int) : KMLGroundOverlay? {
         val o = __offset(18)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -133,15 +133,15 @@ class KMLFolder : Table() {
             null
         }
     }
-    val GROUND_OVERLAYSLength : Int
+    val groundOverlaysLength : Int
         get() {
             val o = __offset(18); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Shared styles
      */
-    fun STYLES(j: Int) : KMLStyle? = STYLES(KMLStyle(), j)
-    fun STYLES(obj: KMLStyle, j: Int) : KMLStyle? {
+    fun styles(j: Int) : KMLStyle? = styles(KMLStyle(), j)
+    fun styles(obj: KMLStyle, j: Int) : KMLStyle? {
         val o = __offset(20)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -149,15 +149,15 @@ class KMLFolder : Table() {
             null
         }
     }
-    val STYLESLength : Int
+    val stylesLength : Int
         get() {
             val o = __offset(20); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Style maps
      */
-    fun STYLE_MAPS(j: Int) : KMLStyleMap? = STYLE_MAPS(KMLStyleMap(), j)
-    fun STYLE_MAPS(obj: KMLStyleMap, j: Int) : KMLStyleMap? {
+    fun styleMaps(j: Int) : KMLStyleMap? = styleMaps(KMLStyleMap(), j)
+    fun styleMaps(obj: KMLStyleMap, j: Int) : KMLStyleMap? {
         val o = __offset(22)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -165,15 +165,15 @@ class KMLFolder : Table() {
             null
         }
     }
-    val STYLE_MAPSLength : Int
+    val styleMapsLength : Int
         get() {
             val o = __offset(22); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Screen overlays
      */
-    fun SCREEN_OVERLAYS(j: Int) : KMLScreenOverlay? = SCREEN_OVERLAYS(KMLScreenOverlay(), j)
-    fun SCREEN_OVERLAYS(obj: KMLScreenOverlay, j: Int) : KMLScreenOverlay? {
+    fun screenOverlays(j: Int) : KMLScreenOverlay? = screenOverlays(KMLScreenOverlay(), j)
+    fun screenOverlays(obj: KMLScreenOverlay, j: Int) : KMLScreenOverlay? {
         val o = __offset(24)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -181,15 +181,15 @@ class KMLFolder : Table() {
             null
         }
     }
-    val SCREEN_OVERLAYSLength : Int
+    val screenOverlaysLength : Int
         get() {
             val o = __offset(24); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Photo overlays
      */
-    fun PHOTO_OVERLAYS(j: Int) : KMLPhotoOverlay? = PHOTO_OVERLAYS(KMLPhotoOverlay(), j)
-    fun PHOTO_OVERLAYS(obj: KMLPhotoOverlay, j: Int) : KMLPhotoOverlay? {
+    fun photoOverlays(j: Int) : KMLPhotoOverlay? = photoOverlays(KMLPhotoOverlay(), j)
+    fun photoOverlays(obj: KMLPhotoOverlay, j: Int) : KMLPhotoOverlay? {
         val o = __offset(26)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -197,15 +197,15 @@ class KMLFolder : Table() {
             null
         }
     }
-    val PHOTO_OVERLAYSLength : Int
+    val photoOverlaysLength : Int
         get() {
             val o = __offset(26); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Tours
      */
-    fun TOURS(j: Int) : KMLTour? = TOURS(KMLTour(), j)
-    fun TOURS(obj: KMLTour, j: Int) : KMLTour? {
+    fun tours(j: Int) : KMLTour? = tours(KMLTour(), j)
+    fun tours(obj: KMLTour, j: Int) : KMLTour? {
         val o = __offset(28)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -213,14 +213,14 @@ class KMLFolder : Table() {
             null
         }
     }
-    val TOURSLength : Int
+    val toursLength : Int
         get() {
             val o = __offset(28); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Style URL reference
      */
-    val STYLE_URL : String?
+    val styleUrl : String?
         get() {
             val o = __offset(30)
             return if (o != 0) {
@@ -229,13 +229,13 @@ class KMLFolder : Table() {
                 null
             }
         }
-    val STYLE_URLAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(30, 1)
-    fun STYLE_URLInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 30, 1)
+    val styleUrlAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(30, 1)
+    fun styleUrlInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 30, 1)
     /**
      * Region
      */
-    val REGION : KMLRegion? get() = REGION(KMLRegion())
-    fun REGION(obj: KMLRegion) : KMLRegion? {
+    val region : KMLRegion? get() = region(KMLRegion())
+    fun region(obj: KMLRegion) : KMLRegion? {
         val o = __offset(32)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -246,8 +246,8 @@ class KMLFolder : Table() {
     /**
      * Extended data
      */
-    fun EXTENDED_DATA(j: Int) : KMLData? = EXTENDED_DATA(KMLData(), j)
-    fun EXTENDED_DATA(obj: KMLData, j: Int) : KMLData? {
+    fun extendedData(j: Int) : KMLData? = extendedData(KMLData(), j)
+    fun extendedData(obj: KMLData, j: Int) : KMLData? {
         val o = __offset(34)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -255,15 +255,15 @@ class KMLFolder : Table() {
             null
         }
     }
-    val EXTENDED_DATALength : Int
+    val extendedDataLength : Int
         get() {
             val o = __offset(34); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * LookAt viewpoint
      */
-    val LOOK_AT : KMLLookAt? get() = LOOK_AT(KMLLookAt())
-    fun LOOK_AT(obj: KMLLookAt) : KMLLookAt? {
+    val lookAt : KMLLookAt? get() = lookAt(KMLLookAt())
+    fun lookAt(obj: KMLLookAt) : KMLLookAt? {
         val o = __offset(36)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -274,8 +274,8 @@ class KMLFolder : Table() {
     /**
      * Camera viewpoint
      */
-    val CAMERA : KMLCamera? get() = CAMERA(KMLCamera())
-    fun CAMERA(obj: KMLCamera) : KMLCamera? {
+    val camera : KMLCamera? get() = camera(KMLCamera())
+    fun camera(obj: KMLCamera) : KMLCamera? {
         val o = __offset(38)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -286,8 +286,8 @@ class KMLFolder : Table() {
     /**
      * TimeSpan
      */
-    val TIME_SPAN : KMLTimeSpan? get() = TIME_SPAN(KMLTimeSpan())
-    fun TIME_SPAN(obj: KMLTimeSpan) : KMLTimeSpan? {
+    val timeSpan : KMLTimeSpan? get() = timeSpan(KMLTimeSpan())
+    fun timeSpan(obj: KMLTimeSpan) : KMLTimeSpan? {
         val o = __offset(40)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -298,8 +298,8 @@ class KMLFolder : Table() {
     /**
      * TimeStamp
      */
-    val TIME_STAMP : KMLTimeStamp? get() = TIME_STAMP(KMLTimeStamp())
-    fun TIME_STAMP(obj: KMLTimeStamp) : KMLTimeStamp? {
+    val timeStamp : KMLTimeStamp? get() = timeStamp(KMLTimeStamp())
+    fun timeStamp(obj: KMLTimeStamp) : KMLTimeStamp? {
         val o = __offset(42)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -308,42 +308,42 @@ class KMLFolder : Table() {
         }
     }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsKMLFolder(_bb: ByteBuffer): KMLFolder = getRootAsKMLFolder(_bb, KMLFolder())
         fun getRootAsKMLFolder(_bb: ByteBuffer, obj: KMLFolder): KMLFolder {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createKMLFolder(builder: FlatBufferBuilder, NAMEOffset: Int, DESCRIPTIONOffset: Int, VISIBILITY: Boolean, OPEN: Boolean, PLACEMARKSOffset: Int, FOLDERSOffset: Int, NETWORK_LINKSOffset: Int, GROUND_OVERLAYSOffset: Int, STYLESOffset: Int, STYLE_MAPSOffset: Int, SCREEN_OVERLAYSOffset: Int, PHOTO_OVERLAYSOffset: Int, TOURSOffset: Int, STYLE_URLOffset: Int, REGIONOffset: Int, EXTENDED_DATAOffset: Int, LOOK_ATOffset: Int, CAMERAOffset: Int, TIME_SPANOffset: Int, TIME_STAMPOffset: Int) : Int {
+        fun createKMLFolder(builder: FlatBufferBuilder, nameOffset: Int, descriptionOffset: Int, visibility: Boolean, open: Boolean, placemarksOffset: Int, foldersOffset: Int, networkLinksOffset: Int, groundOverlaysOffset: Int, stylesOffset: Int, styleMapsOffset: Int, screenOverlaysOffset: Int, photoOverlaysOffset: Int, toursOffset: Int, styleUrlOffset: Int, regionOffset: Int, extendedDataOffset: Int, lookAtOffset: Int, cameraOffset: Int, timeSpanOffset: Int, timeStampOffset: Int) : Int {
             builder.startTable(20)
-            addTIME_STAMP(builder, TIME_STAMPOffset)
-            addTIME_SPAN(builder, TIME_SPANOffset)
-            addCAMERA(builder, CAMERAOffset)
-            addLOOK_AT(builder, LOOK_ATOffset)
-            addEXTENDED_DATA(builder, EXTENDED_DATAOffset)
-            addREGION(builder, REGIONOffset)
-            addSTYLE_URL(builder, STYLE_URLOffset)
-            addTOURS(builder, TOURSOffset)
-            addPHOTO_OVERLAYS(builder, PHOTO_OVERLAYSOffset)
-            addSCREEN_OVERLAYS(builder, SCREEN_OVERLAYSOffset)
-            addSTYLE_MAPS(builder, STYLE_MAPSOffset)
-            addSTYLES(builder, STYLESOffset)
-            addGROUND_OVERLAYS(builder, GROUND_OVERLAYSOffset)
-            addNETWORK_LINKS(builder, NETWORK_LINKSOffset)
-            addFOLDERS(builder, FOLDERSOffset)
-            addPLACEMARKS(builder, PLACEMARKSOffset)
-            addDESCRIPTION(builder, DESCRIPTIONOffset)
-            addNAME(builder, NAMEOffset)
-            addOPEN(builder, OPEN)
-            addVISIBILITY(builder, VISIBILITY)
+            addTIMESTAMP(builder, timeStampOffset)
+            addTIMESPAN(builder, timeSpanOffset)
+            addCAMERA(builder, cameraOffset)
+            addLOOKAT(builder, lookAtOffset)
+            addEXTENDEDDATA(builder, extendedDataOffset)
+            addREGION(builder, regionOffset)
+            addSTYLEURL(builder, styleUrlOffset)
+            addTOURS(builder, toursOffset)
+            addPHOTOOVERLAYS(builder, photoOverlaysOffset)
+            addSCREENOVERLAYS(builder, screenOverlaysOffset)
+            addSTYLEMAPS(builder, styleMapsOffset)
+            addSTYLES(builder, stylesOffset)
+            addGROUNDOVERLAYS(builder, groundOverlaysOffset)
+            addNETWORKLINKS(builder, networkLinksOffset)
+            addFOLDERS(builder, foldersOffset)
+            addPLACEMARKS(builder, placemarksOffset)
+            addDESCRIPTION(builder, descriptionOffset)
+            addNAME(builder, nameOffset)
+            addOPEN(builder, open)
+            addVISIBILITY(builder, visibility)
             return endKMLFolder(builder)
         }
         fun startKMLFolder(builder: FlatBufferBuilder) = builder.startTable(20)
-        fun addNAME(builder: FlatBufferBuilder, NAME: Int) = builder.addOffset(0, NAME, 0)
-        fun addDESCRIPTION(builder: FlatBufferBuilder, DESCRIPTION: Int) = builder.addOffset(1, DESCRIPTION, 0)
-        fun addVISIBILITY(builder: FlatBufferBuilder, VISIBILITY: Boolean) = builder.addBoolean(2, VISIBILITY, false)
-        fun addOPEN(builder: FlatBufferBuilder, OPEN: Boolean) = builder.addBoolean(3, OPEN, false)
-        fun addPLACEMARKS(builder: FlatBufferBuilder, PLACEMARKS: Int) = builder.addOffset(4, PLACEMARKS, 0)
+        fun addNAME(builder: FlatBufferBuilder, name: Int) = builder.addOffset(0, name, 0)
+        fun addDESCRIPTION(builder: FlatBufferBuilder, description: Int) = builder.addOffset(1, description, 0)
+        fun addVISIBILITY(builder: FlatBufferBuilder, visibility: Boolean) = builder.addBoolean(2, visibility, false)
+        fun addOPEN(builder: FlatBufferBuilder, open: Boolean) = builder.addBoolean(3, open, false)
+        fun addPLACEMARKS(builder: FlatBufferBuilder, placemarks: Int) = builder.addOffset(4, placemarks, 0)
         fun createPlacemarksVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -352,7 +352,7 @@ class KMLFolder : Table() {
             return builder.endVector()
         }
         fun startPlacemarksVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addFOLDERS(builder: FlatBufferBuilder, FOLDERS: Int) = builder.addOffset(5, FOLDERS, 0)
+        fun addFOLDERS(builder: FlatBufferBuilder, folders: Int) = builder.addOffset(5, folders, 0)
         fun createFoldersVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -361,7 +361,7 @@ class KMLFolder : Table() {
             return builder.endVector()
         }
         fun startFoldersVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addNETWORK_LINKS(builder: FlatBufferBuilder, NETWORK_LINKS: Int) = builder.addOffset(6, NETWORK_LINKS, 0)
+        fun addNETWORKLINKS(builder: FlatBufferBuilder, networkLinks: Int) = builder.addOffset(6, networkLinks, 0)
         fun createNetworkLinksVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -370,7 +370,7 @@ class KMLFolder : Table() {
             return builder.endVector()
         }
         fun startNetworkLinksVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addGROUND_OVERLAYS(builder: FlatBufferBuilder, GROUND_OVERLAYS: Int) = builder.addOffset(7, GROUND_OVERLAYS, 0)
+        fun addGROUNDOVERLAYS(builder: FlatBufferBuilder, groundOverlays: Int) = builder.addOffset(7, groundOverlays, 0)
         fun createGroundOverlaysVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -379,7 +379,7 @@ class KMLFolder : Table() {
             return builder.endVector()
         }
         fun startGroundOverlaysVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addSTYLES(builder: FlatBufferBuilder, STYLES: Int) = builder.addOffset(8, STYLES, 0)
+        fun addSTYLES(builder: FlatBufferBuilder, styles: Int) = builder.addOffset(8, styles, 0)
         fun createStylesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -388,7 +388,7 @@ class KMLFolder : Table() {
             return builder.endVector()
         }
         fun startStylesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addSTYLE_MAPS(builder: FlatBufferBuilder, STYLE_MAPS: Int) = builder.addOffset(9, STYLE_MAPS, 0)
+        fun addSTYLEMAPS(builder: FlatBufferBuilder, styleMaps: Int) = builder.addOffset(9, styleMaps, 0)
         fun createStyleMapsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -397,7 +397,7 @@ class KMLFolder : Table() {
             return builder.endVector()
         }
         fun startStyleMapsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addSCREEN_OVERLAYS(builder: FlatBufferBuilder, SCREEN_OVERLAYS: Int) = builder.addOffset(10, SCREEN_OVERLAYS, 0)
+        fun addSCREENOVERLAYS(builder: FlatBufferBuilder, screenOverlays: Int) = builder.addOffset(10, screenOverlays, 0)
         fun createScreenOverlaysVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -406,7 +406,7 @@ class KMLFolder : Table() {
             return builder.endVector()
         }
         fun startScreenOverlaysVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addPHOTO_OVERLAYS(builder: FlatBufferBuilder, PHOTO_OVERLAYS: Int) = builder.addOffset(11, PHOTO_OVERLAYS, 0)
+        fun addPHOTOOVERLAYS(builder: FlatBufferBuilder, photoOverlays: Int) = builder.addOffset(11, photoOverlays, 0)
         fun createPhotoOverlaysVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -415,7 +415,7 @@ class KMLFolder : Table() {
             return builder.endVector()
         }
         fun startPhotoOverlaysVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addTOURS(builder: FlatBufferBuilder, TOURS: Int) = builder.addOffset(12, TOURS, 0)
+        fun addTOURS(builder: FlatBufferBuilder, tours: Int) = builder.addOffset(12, tours, 0)
         fun createToursVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -424,9 +424,9 @@ class KMLFolder : Table() {
             return builder.endVector()
         }
         fun startToursVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addSTYLE_URL(builder: FlatBufferBuilder, STYLE_URL: Int) = builder.addOffset(13, STYLE_URL, 0)
-        fun addREGION(builder: FlatBufferBuilder, REGION: Int) = builder.addOffset(14, REGION, 0)
-        fun addEXTENDED_DATA(builder: FlatBufferBuilder, EXTENDED_DATA: Int) = builder.addOffset(15, EXTENDED_DATA, 0)
+        fun addSTYLEURL(builder: FlatBufferBuilder, styleUrl: Int) = builder.addOffset(13, styleUrl, 0)
+        fun addREGION(builder: FlatBufferBuilder, region: Int) = builder.addOffset(14, region, 0)
+        fun addEXTENDEDDATA(builder: FlatBufferBuilder, extendedData: Int) = builder.addOffset(15, extendedData, 0)
         fun createExtendedDataVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -435,10 +435,10 @@ class KMLFolder : Table() {
             return builder.endVector()
         }
         fun startExtendedDataVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addLOOK_AT(builder: FlatBufferBuilder, LOOK_AT: Int) = builder.addOffset(16, LOOK_AT, 0)
-        fun addCAMERA(builder: FlatBufferBuilder, CAMERA: Int) = builder.addOffset(17, CAMERA, 0)
-        fun addTIME_SPAN(builder: FlatBufferBuilder, TIME_SPAN: Int) = builder.addOffset(18, TIME_SPAN, 0)
-        fun addTIME_STAMP(builder: FlatBufferBuilder, TIME_STAMP: Int) = builder.addOffset(19, TIME_STAMP, 0)
+        fun addLOOKAT(builder: FlatBufferBuilder, lookAt: Int) = builder.addOffset(16, lookAt, 0)
+        fun addCAMERA(builder: FlatBufferBuilder, camera: Int) = builder.addOffset(17, camera, 0)
+        fun addTIMESPAN(builder: FlatBufferBuilder, timeSpan: Int) = builder.addOffset(18, timeSpan, 0)
+        fun addTIMESTAMP(builder: FlatBufferBuilder, timeStamp: Int) = builder.addOffset(19, timeStamp, 0)
         fun endKMLFolder(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

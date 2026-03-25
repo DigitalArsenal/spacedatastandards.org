@@ -51,6 +51,10 @@ func (rcv *CustomStream) NAME() []byte {
 	return nil
 }
 
+func (rcv *CustomStream) Name() []byte {
+	return rcv.NAME()
+}
+
 /// Stream name
 /// Short description
 func (rcv *CustomStream) SHORT_DESCRIPTION() []byte {
@@ -59,6 +63,10 @@ func (rcv *CustomStream) SHORT_DESCRIPTION() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *CustomStream) ShortDescription() []byte {
+	return rcv.SHORT_DESCRIPTION()
 }
 
 /// Short description
@@ -71,6 +79,10 @@ func (rcv *CustomStream) ALGORITHM_REF() []byte {
 	return nil
 }
 
+func (rcv *CustomStream) AlgorithmRef() []byte {
+	return rcv.ALGORITHM_REF()
+}
+
 /// Algorithm reference for parsing
 func CustomStreamStart(builder *flatbuffers.Builder) {
 	builder.StartObject(3)
@@ -78,11 +90,20 @@ func CustomStreamStart(builder *flatbuffers.Builder) {
 func CustomStreamAddNAME(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(NAME), 0)
 }
+func CustomStreamAddName(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
+	CustomStreamAddNAME(builder, NAME)
+}
 func CustomStreamAddSHORT_DESCRIPTION(builder *flatbuffers.Builder, SHORT_DESCRIPTION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(SHORT_DESCRIPTION), 0)
 }
+func CustomStreamAddShortDescription(builder *flatbuffers.Builder, SHORT_DESCRIPTION flatbuffers.UOffsetT) {
+	CustomStreamAddSHORT_DESCRIPTION(builder, SHORT_DESCRIPTION)
+}
 func CustomStreamAddALGORITHM_REF(builder *flatbuffers.Builder, ALGORITHM_REF flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(ALGORITHM_REF), 0)
+}
+func CustomStreamAddAlgorithmRef(builder *flatbuffers.Builder, ALGORITHM_REF flatbuffers.UOffsetT) {
+	CustomStreamAddALGORITHM_REF(builder, ALGORITHM_REF)
 }
 func CustomStreamEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

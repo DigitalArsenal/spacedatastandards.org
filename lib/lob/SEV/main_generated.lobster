@@ -58,9 +58,9 @@ struct SEVBuilder:
     def end():
         return b_.EndObject()
 
-def SEVStartOB_ARRAYVector(b_:flatbuffers.builder, n_:int):
+def SEVStartOBARRAYVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def SEVCreateOB_ARRAYVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def SEVCreateOBARRAYVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)

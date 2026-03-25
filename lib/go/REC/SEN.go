@@ -63,6 +63,10 @@ func (rcv *SEN) ID() []byte {
 	return nil
 }
 
+func (rcv *SEN) Id() []byte {
+	return rcv.ID()
+}
+
 /// Unique sensor identifier
 /// Sensor name
 func (rcv *SEN) NAME() []byte {
@@ -71,6 +75,10 @@ func (rcv *SEN) NAME() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *SEN) Name() []byte {
+	return rcv.NAME()
 }
 
 /// Sensor name
@@ -83,6 +91,10 @@ func (rcv *SEN) TYPE() []byte {
 	return nil
 }
 
+func (rcv *SEN) Type() []byte {
+	return rcv.TYPE()
+}
+
 /// Sensor type
 /// Current operational status
 func (rcv *SEN) STATUS() sensorStatus {
@@ -93,9 +105,17 @@ func (rcv *SEN) STATUS() sensorStatus {
 	return 0
 }
 
+func (rcv *SEN) Status() sensorStatus {
+	return rcv.STATUS()
+}
+
 /// Current operational status
 func (rcv *SEN) MutateSTATUS(n sensorStatus) bool {
 	return rcv._tab.MutateInt8Slot(10, int8(n))
+}
+
+func (rcv *SEN) MutateStatus(n sensorStatus) bool {
+	return rcv.MutateSTATUS(n)
 }
 
 /// Site identifier
@@ -105,6 +125,10 @@ func (rcv *SEN) SITE_ID() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *SEN) SiteId() []byte {
+	return rcv.SITE_ID()
 }
 
 /// Site identifier
@@ -117,9 +141,17 @@ func (rcv *SEN) LATITUDE() float64 {
 	return 0.0
 }
 
+func (rcv *SEN) Latitude() float64 {
+	return rcv.LATITUDE()
+}
+
 /// Geodetic latitude in degrees
 func (rcv *SEN) MutateLATITUDE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(14, n)
+}
+
+func (rcv *SEN) MutateLatitude(n float64) bool {
+	return rcv.MutateLATITUDE(n)
 }
 
 /// Geodetic longitude in degrees
@@ -131,9 +163,17 @@ func (rcv *SEN) LONGITUDE() float64 {
 	return 0.0
 }
 
+func (rcv *SEN) Longitude() float64 {
+	return rcv.LONGITUDE()
+}
+
 /// Geodetic longitude in degrees
 func (rcv *SEN) MutateLONGITUDE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(16, n)
+}
+
+func (rcv *SEN) MutateLongitude(n float64) bool {
+	return rcv.MutateLONGITUDE(n)
 }
 
 /// Altitude in meters above WGS-84
@@ -145,9 +185,17 @@ func (rcv *SEN) ALTITUDE() float64 {
 	return 0.0
 }
 
+func (rcv *SEN) Altitude() float64 {
+	return rcv.ALTITUDE()
+}
+
 /// Altitude in meters above WGS-84
 func (rcv *SEN) MutateALTITUDE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(18, n)
+}
+
+func (rcv *SEN) MutateAltitude(n float64) bool {
+	return rcv.MutateALTITUDE(n)
 }
 
 /// Last status update (ISO 8601)
@@ -159,6 +207,10 @@ func (rcv *SEN) STATUS_TIME() []byte {
 	return nil
 }
 
+func (rcv *SEN) StatusTime() []byte {
+	return rcv.STATUS_TIME()
+}
+
 /// Last status update (ISO 8601)
 /// Maintenance history
 func (rcv *SEN) MAINTENANCE(obj *sensorMaintenanceEvent, j int) bool {
@@ -167,10 +219,17 @@ func (rcv *SEN) MAINTENANCE(obj *sensorMaintenanceEvent, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(sensorMaintenanceEvent)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *SEN) Maintenance(obj *sensorMaintenanceEvent, j int) bool {
+	return rcv.MAINTENANCE(obj, j)
 }
 
 func (rcv *SEN) MAINTENANCELength() int {
@@ -181,6 +240,10 @@ func (rcv *SEN) MAINTENANCELength() int {
 	return 0
 }
 
+func (rcv *SEN) MaintenanceLength() int {
+	return rcv.MAINTENANCELength()
+}
+
 /// Maintenance history
 /// Observation plans/taskings
 func (rcv *SEN) PLANS(obj *sensorPlan, j int) bool {
@@ -189,10 +252,17 @@ func (rcv *SEN) PLANS(obj *sensorPlan, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(sensorPlan)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *SEN) Plans(obj *sensorPlan, j int) bool {
+	return rcv.PLANS(obj, j)
 }
 
 func (rcv *SEN) PLANSLength() int {
@@ -203,6 +273,10 @@ func (rcv *SEN) PLANSLength() int {
 	return 0
 }
 
+func (rcv *SEN) PlansLength() int {
+	return rcv.PLANSLength()
+}
+
 /// Observation plans/taskings
 /// Operational statistics
 func (rcv *SEN) STATISTICS(obj *sensorStats, j int) bool {
@@ -211,10 +285,17 @@ func (rcv *SEN) STATISTICS(obj *sensorStats, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(sensorStats)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *SEN) Statistics(obj *sensorStats, j int) bool {
+	return rcv.STATISTICS(obj, j)
 }
 
 func (rcv *SEN) STATISTICSLength() int {
@@ -223,6 +304,10 @@ func (rcv *SEN) STATISTICSLength() int {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *SEN) StatisticsLength() int {
+	return rcv.STATISTICSLength()
 }
 
 /// Operational statistics
@@ -235,6 +320,10 @@ func (rcv *SEN) NOTES() []byte {
 	return nil
 }
 
+func (rcv *SEN) Notes() []byte {
+	return rcv.NOTES()
+}
+
 /// Additional notes
 func SENStart(builder *flatbuffers.Builder) {
 	builder.StartObject(13)
@@ -242,50 +331,98 @@ func SENStart(builder *flatbuffers.Builder) {
 func SENAddID(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ID), 0)
 }
+func SENAddId(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
+	SENAddID(builder, ID)
+}
 func SENAddNAME(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(NAME), 0)
+}
+func SENAddName(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
+	SENAddNAME(builder, NAME)
 }
 func SENAddTYPE(builder *flatbuffers.Builder, TYPE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(TYPE), 0)
 }
+func SENAddType(builder *flatbuffers.Builder, TYPE flatbuffers.UOffsetT) {
+	SENAddTYPE(builder, TYPE)
+}
 func SENAddSTATUS(builder *flatbuffers.Builder, STATUS sensorStatus) {
 	builder.PrependInt8Slot(3, int8(STATUS), 0)
+}
+func SENAddStatus(builder *flatbuffers.Builder, STATUS sensorStatus) {
+	SENAddSTATUS(builder, STATUS)
 }
 func SENAddSITE_ID(builder *flatbuffers.Builder, SITE_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(SITE_ID), 0)
 }
+func SENAddSiteId(builder *flatbuffers.Builder, SITE_ID flatbuffers.UOffsetT) {
+	SENAddSITE_ID(builder, SITE_ID)
+}
 func SENAddLATITUDE(builder *flatbuffers.Builder, LATITUDE float64) {
 	builder.PrependFloat64Slot(5, LATITUDE, 0.0)
+}
+func SENAddLatitude(builder *flatbuffers.Builder, LATITUDE float64) {
+	SENAddLATITUDE(builder, LATITUDE)
 }
 func SENAddLONGITUDE(builder *flatbuffers.Builder, LONGITUDE float64) {
 	builder.PrependFloat64Slot(6, LONGITUDE, 0.0)
 }
+func SENAddLongitude(builder *flatbuffers.Builder, LONGITUDE float64) {
+	SENAddLONGITUDE(builder, LONGITUDE)
+}
 func SENAddALTITUDE(builder *flatbuffers.Builder, ALTITUDE float64) {
 	builder.PrependFloat64Slot(7, ALTITUDE, 0.0)
+}
+func SENAddAltitude(builder *flatbuffers.Builder, ALTITUDE float64) {
+	SENAddALTITUDE(builder, ALTITUDE)
 }
 func SENAddSTATUS_TIME(builder *flatbuffers.Builder, STATUS_TIME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(STATUS_TIME), 0)
 }
+func SENAddStatusTime(builder *flatbuffers.Builder, STATUS_TIME flatbuffers.UOffsetT) {
+	SENAddSTATUS_TIME(builder, STATUS_TIME)
+}
 func SENAddMAINTENANCE(builder *flatbuffers.Builder, MAINTENANCE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(MAINTENANCE), 0)
+}
+func SENAddMaintenance(builder *flatbuffers.Builder, MAINTENANCE flatbuffers.UOffsetT) {
+	SENAddMAINTENANCE(builder, MAINTENANCE)
 }
 func SENStartMAINTENANCEVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
+func SENStartMaintenanceVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return SENStartMAINTENANCEVector(builder, numElems)
+}
 func SENAddPLANS(builder *flatbuffers.Builder, PLANS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(PLANS), 0)
+}
+func SENAddPlans(builder *flatbuffers.Builder, PLANS flatbuffers.UOffsetT) {
+	SENAddPLANS(builder, PLANS)
 }
 func SENStartPLANSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
+func SENStartPlansVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return SENStartPLANSVector(builder, numElems)
+}
 func SENAddSTATISTICS(builder *flatbuffers.Builder, STATISTICS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(STATISTICS), 0)
+}
+func SENAddStatistics(builder *flatbuffers.Builder, STATISTICS flatbuffers.UOffsetT) {
+	SENAddSTATISTICS(builder, STATISTICS)
 }
 func SENStartSTATISTICSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
+func SENStartStatisticsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return SENStartSTATISTICSVector(builder, numElems)
+}
 func SENAddNOTES(builder *flatbuffers.Builder, NOTES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(12, flatbuffers.UOffsetT(NOTES), 0)
+}
+func SENAddNotes(builder *flatbuffers.Builder, NOTES flatbuffers.UOffsetT) {
+	SENAddNOTES(builder, NOTES)
 }
 func SENEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

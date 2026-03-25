@@ -63,6 +63,10 @@ func (rcv *MPE) ENTITY_ID() []byte {
 	return nil
 }
 
+func (rcv *MPE) EntityId() []byte {
+	return rcv.ENTITY_ID()
+}
+
 /// Unique ID as a String [no units]
 /// Epoch of Mean Keplerian elements (UNIX timestamp) [numeric seconds since 1970-01-01T00:00:00 UTC]
 func (rcv *MPE) EPOCH() float64 {
@@ -73,9 +77,17 @@ func (rcv *MPE) EPOCH() float64 {
 	return 0.0
 }
 
+func (rcv *MPE) Epoch() float64 {
+	return rcv.EPOCH()
+}
+
 /// Epoch of Mean Keplerian elements (UNIX timestamp) [numeric seconds since 1970-01-01T00:00:00 UTC]
 func (rcv *MPE) MutateEPOCH(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(6, n)
+}
+
+func (rcv *MPE) MutateEpoch(n float64) bool {
+	return rcv.MutateEPOCH(n)
 }
 
 /// Mean motion in rev/day [M if chosen to represent orbit size for SGP/SGP4 elements]
@@ -87,9 +99,17 @@ func (rcv *MPE) MEAN_MOTION() float64 {
 	return 0.0
 }
 
+func (rcv *MPE) MeanMotion() float64 {
+	return rcv.MEAN_MOTION()
+}
+
 /// Mean motion in rev/day [M if chosen to represent orbit size for SGP/SGP4 elements]
 func (rcv *MPE) MutateMEAN_MOTION(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(8, n)
+}
+
+func (rcv *MPE) MutateMeanMotion(n float64) bool {
+	return rcv.MutateMEAN_MOTION(n)
 }
 
 /// Eccentricity (unitless)
@@ -101,9 +121,17 @@ func (rcv *MPE) ECCENTRICITY() float64 {
 	return 0.0
 }
 
+func (rcv *MPE) Eccentricity() float64 {
+	return rcv.ECCENTRICITY()
+}
+
 /// Eccentricity (unitless)
 func (rcv *MPE) MutateECCENTRICITY(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(10, n)
+}
+
+func (rcv *MPE) MutateEccentricity(n float64) bool {
+	return rcv.MutateECCENTRICITY(n)
 }
 
 /// Inclination in degrees
@@ -115,9 +143,17 @@ func (rcv *MPE) INCLINATION() float64 {
 	return 0.0
 }
 
+func (rcv *MPE) Inclination() float64 {
+	return rcv.INCLINATION()
+}
+
 /// Inclination in degrees
 func (rcv *MPE) MutateINCLINATION(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(12, n)
+}
+
+func (rcv *MPE) MutateInclination(n float64) bool {
+	return rcv.MutateINCLINATION(n)
 }
 
 /// Right ascension of ascending node in degrees
@@ -129,9 +165,17 @@ func (rcv *MPE) RA_OF_ASC_NODE() float64 {
 	return 0.0
 }
 
+func (rcv *MPE) RaOfAscNode() float64 {
+	return rcv.RA_OF_ASC_NODE()
+}
+
 /// Right ascension of ascending node in degrees
 func (rcv *MPE) MutateRA_OF_ASC_NODE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(14, n)
+}
+
+func (rcv *MPE) MutateRaOfAscNode(n float64) bool {
+	return rcv.MutateRA_OF_ASC_NODE(n)
 }
 
 /// Argument of pericenter in degrees
@@ -143,9 +187,17 @@ func (rcv *MPE) ARG_OF_PERICENTER() float64 {
 	return 0.0
 }
 
+func (rcv *MPE) ArgOfPericenter() float64 {
+	return rcv.ARG_OF_PERICENTER()
+}
+
 /// Argument of pericenter in degrees
 func (rcv *MPE) MutateARG_OF_PERICENTER(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(16, n)
+}
+
+func (rcv *MPE) MutateArgOfPericenter(n float64) bool {
+	return rcv.MutateARG_OF_PERICENTER(n)
 }
 
 /// Mean anomaly in degrees
@@ -157,9 +209,17 @@ func (rcv *MPE) MEAN_ANOMALY() float64 {
 	return 0.0
 }
 
+func (rcv *MPE) MeanAnomaly() float64 {
+	return rcv.MEAN_ANOMALY()
+}
+
 /// Mean anomaly in degrees
 func (rcv *MPE) MutateMEAN_ANOMALY(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(18, n)
+}
+
+func (rcv *MPE) MutateMeanAnomaly(n float64) bool {
+	return rcv.MutateMEAN_ANOMALY(n)
 }
 
 /// SGP/SGP4 drag-like coefficient (BSTAR) in units of 1/[Earth radii]
@@ -171,9 +231,17 @@ func (rcv *MPE) BSTAR() float64 {
 	return 0.0
 }
 
+func (rcv *MPE) Bstar() float64 {
+	return rcv.BSTAR()
+}
+
 /// SGP/SGP4 drag-like coefficient (BSTAR) in units of 1/[Earth radii]
 func (rcv *MPE) MutateBSTAR(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(20, n)
+}
+
+func (rcv *MPE) MutateBstar(n float64) bool {
+	return rcv.MutateBSTAR(n)
 }
 
 /// Description of the Mean Element Theory (SGP4, DSST, USM)
@@ -185,9 +253,17 @@ func (rcv *MPE) MEAN_ELEMENT_THEORY() meanElementTheory {
 	return 0
 }
 
+func (rcv *MPE) MeanElementTheory() meanElementTheory {
+	return rcv.MEAN_ELEMENT_THEORY()
+}
+
 /// Description of the Mean Element Theory (SGP4, DSST, USM)
 func (rcv *MPE) MutateMEAN_ELEMENT_THEORY(n meanElementTheory) bool {
 	return rcv._tab.MutateInt8Slot(22, int8(n))
+}
+
+func (rcv *MPE) MutateMeanElementTheory(n meanElementTheory) bool {
+	return rcv.MutateMEAN_ELEMENT_THEORY(n)
 }
 
 func MPEStart(builder *flatbuffers.Builder) {
@@ -196,32 +272,62 @@ func MPEStart(builder *flatbuffers.Builder) {
 func MPEAddENTITY_ID(builder *flatbuffers.Builder, ENTITY_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ENTITY_ID), 0)
 }
+func MPEAddEntityId(builder *flatbuffers.Builder, ENTITY_ID flatbuffers.UOffsetT) {
+	MPEAddENTITY_ID(builder, ENTITY_ID)
+}
 func MPEAddEPOCH(builder *flatbuffers.Builder, EPOCH float64) {
 	builder.PrependFloat64Slot(1, EPOCH, 0.0)
+}
+func MPEAddEpoch(builder *flatbuffers.Builder, EPOCH float64) {
+	MPEAddEPOCH(builder, EPOCH)
 }
 func MPEAddMEAN_MOTION(builder *flatbuffers.Builder, MEAN_MOTION float64) {
 	builder.PrependFloat64Slot(2, MEAN_MOTION, 0.0)
 }
+func MPEAddMeanMotion(builder *flatbuffers.Builder, MEAN_MOTION float64) {
+	MPEAddMEAN_MOTION(builder, MEAN_MOTION)
+}
 func MPEAddECCENTRICITY(builder *flatbuffers.Builder, ECCENTRICITY float64) {
 	builder.PrependFloat64Slot(3, ECCENTRICITY, 0.0)
+}
+func MPEAddEccentricity(builder *flatbuffers.Builder, ECCENTRICITY float64) {
+	MPEAddECCENTRICITY(builder, ECCENTRICITY)
 }
 func MPEAddINCLINATION(builder *flatbuffers.Builder, INCLINATION float64) {
 	builder.PrependFloat64Slot(4, INCLINATION, 0.0)
 }
+func MPEAddInclination(builder *flatbuffers.Builder, INCLINATION float64) {
+	MPEAddINCLINATION(builder, INCLINATION)
+}
 func MPEAddRA_OF_ASC_NODE(builder *flatbuffers.Builder, RA_OF_ASC_NODE float64) {
 	builder.PrependFloat64Slot(5, RA_OF_ASC_NODE, 0.0)
+}
+func MPEAddRaOfAscNode(builder *flatbuffers.Builder, RA_OF_ASC_NODE float64) {
+	MPEAddRA_OF_ASC_NODE(builder, RA_OF_ASC_NODE)
 }
 func MPEAddARG_OF_PERICENTER(builder *flatbuffers.Builder, ARG_OF_PERICENTER float64) {
 	builder.PrependFloat64Slot(6, ARG_OF_PERICENTER, 0.0)
 }
+func MPEAddArgOfPericenter(builder *flatbuffers.Builder, ARG_OF_PERICENTER float64) {
+	MPEAddARG_OF_PERICENTER(builder, ARG_OF_PERICENTER)
+}
 func MPEAddMEAN_ANOMALY(builder *flatbuffers.Builder, MEAN_ANOMALY float64) {
 	builder.PrependFloat64Slot(7, MEAN_ANOMALY, 0.0)
+}
+func MPEAddMeanAnomaly(builder *flatbuffers.Builder, MEAN_ANOMALY float64) {
+	MPEAddMEAN_ANOMALY(builder, MEAN_ANOMALY)
 }
 func MPEAddBSTAR(builder *flatbuffers.Builder, BSTAR float64) {
 	builder.PrependFloat64Slot(8, BSTAR, 0.0)
 }
+func MPEAddBstar(builder *flatbuffers.Builder, BSTAR float64) {
+	MPEAddBSTAR(builder, BSTAR)
+}
 func MPEAddMEAN_ELEMENT_THEORY(builder *flatbuffers.Builder, MEAN_ELEMENT_THEORY meanElementTheory) {
 	builder.PrependInt8Slot(9, int8(MEAN_ELEMENT_THEORY), 0)
+}
+func MPEAddMeanElementTheory(builder *flatbuffers.Builder, MEAN_ELEMENT_THEORY meanElementTheory) {
+	MPEAddMEAN_ELEMENT_THEORY(builder, MEAN_ELEMENT_THEORY)
 }
 func MPEEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

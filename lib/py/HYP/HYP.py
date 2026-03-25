@@ -223,6 +223,12 @@ def HYPStartCAT_IDSVector(builder, numElems):
 def StartCAT_IDSVector(builder, numElems):
     return HYPStartCAT_IDSVector(builder, numElems)
 
+def HYPCreateCAT_IDSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateCAT_IDSVector(builder, data):
+    HYPCreateCAT_IDSVector(builder, data)
+
 def HYPAddSIT_IDS(builder, SIT_IDS):
     builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(SIT_IDS), 0)
 
@@ -234,6 +240,12 @@ def HYPStartSIT_IDSVector(builder, numElems):
 
 def StartSIT_IDSVector(builder, numElems):
     return HYPStartSIT_IDSVector(builder, numElems)
+
+def HYPCreateSIT_IDSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateSIT_IDSVector(builder, data):
+    HYPCreateSIT_IDSVector(builder, data)
 
 def HYPAddNAME(builder, NAME):
     builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(NAME), 0)
@@ -259,6 +271,12 @@ def HYPStartROW_INDICATORSVector(builder, numElems):
 def StartROW_INDICATORSVector(builder, numElems):
     return HYPStartROW_INDICATORSVector(builder, numElems)
 
+def HYPCreateROW_INDICATORSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateROW_INDICATORSVector(builder, data):
+    HYPCreateROW_INDICATORSVector(builder, data)
+
 def HYPAddCOL_INDICATORS(builder, COL_INDICATORS):
     builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(COL_INDICATORS), 0)
 
@@ -270,6 +288,12 @@ def HYPStartCOL_INDICATORSVector(builder, numElems):
 
 def StartCOL_INDICATORSVector(builder, numElems):
     return HYPStartCOL_INDICATORSVector(builder, numElems)
+
+def HYPCreateCOL_INDICATORSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateCOL_INDICATORSVector(builder, data):
+    HYPCreateCOL_INDICATORSVector(builder, data)
 
 def HYPAddMATRIX(builder, MATRIX):
     builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(MATRIX), 0)
@@ -283,6 +307,16 @@ def HYPStartMATRIXVector(builder, numElems):
 def StartMATRIXVector(builder, numElems):
     return HYPStartMATRIXVector(builder, numElems)
 
+def HYPCreateMATRIXVector(builder, data):
+    data = list(data)
+    builder.StartVector(1, len(data), 1)
+    for item in reversed(data):
+        builder.PrependBool(item)
+    return builder.EndVector()
+
+def CreateMATRIXVector(builder, data):
+    HYPCreateMATRIXVector(builder, data)
+
 def HYPAddSCORE(builder, SCORE):
     builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(SCORE), 0)
 
@@ -294,6 +328,12 @@ def HYPStartSCOREVector(builder, numElems):
 
 def StartSCOREVector(builder, numElems):
     return HYPStartSCOREVector(builder, numElems)
+
+def HYPCreateSCOREVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateSCOREVector(builder, data):
+    HYPCreateSCOREVector(builder, data)
 
 def HYPAddANALYSIS_METHOD(builder, ANALYSIS_METHOD):
     builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(ANALYSIS_METHOD), 0)
@@ -328,24 +368,37 @@ except:
 class HYPT(object):
 
     # HYPT
-    def __init__(self):
-        self.CAT_IDS = None  # type: List[str]
-        self.SIT_IDS = None  # type: List[str]
-        self.NAME = None  # type: str
-        self.CATEGORY = None  # type: str
-        self.ROW_INDICATORS = None  # type: List[str]
-        self.COL_INDICATORS = None  # type: List[str]
-        self.MATRIX = None  # type: List[bool]
-        self.SCORE = None  # type: List[Score.ScoreT]
-        self.ANALYSIS_METHOD = None  # type: str
-        self.EVENT_START_TIME = None  # type: str
-        self.EVENT_END_TIME = None  # type: str
+    def __init__(
+        self,
+        CAT_IDS = None,
+        SIT_IDS = None,
+        NAME = None,
+        CATEGORY = None,
+        ROW_INDICATORS = None,
+        COL_INDICATORS = None,
+        MATRIX = None,
+        SCORE = None,
+        ANALYSIS_METHOD = None,
+        EVENT_START_TIME = None,
+        EVENT_END_TIME = None,
+    ):
+        self.CAT_IDS = CAT_IDS  # type: Optional[List[Optional[str]]]
+        self.SIT_IDS = SIT_IDS  # type: Optional[List[Optional[str]]]
+        self.NAME = NAME  # type: Optional[str]
+        self.CATEGORY = CATEGORY  # type: Optional[str]
+        self.ROW_INDICATORS = ROW_INDICATORS  # type: Optional[List[Optional[str]]]
+        self.COL_INDICATORS = COL_INDICATORS  # type: Optional[List[Optional[str]]]
+        self.MATRIX = MATRIX  # type: Optional[List[bool]]
+        self.SCORE = SCORE  # type: Optional[List[Score.ScoreT]]
+        self.ANALYSIS_METHOD = ANALYSIS_METHOD  # type: Optional[str]
+        self.EVENT_START_TIME = EVENT_START_TIME  # type: Optional[str]
+        self.EVENT_END_TIME = EVENT_END_TIME  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        HYP = HYP()
-        HYP.Init(buf, pos)
-        return cls.InitFromObj(HYP)
+        tmpHyp = HYP()
+        tmpHyp.Init(buf, pos)
+        return cls.InitFromObj(tmpHyp)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -353,9 +406,9 @@ class HYPT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, HYP):
+    def InitFromObj(cls, tmpHyp):
         x = HYPT()
-        x._UnPack(HYP)
+        x._UnPack(tmpHyp)
         return x
 
     # HYPT

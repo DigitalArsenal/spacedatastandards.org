@@ -2,4 +2,653 @@
 
 # namespace: 
 
-# NOTE ATD.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Attitude Data Point
+class ATD(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = ATD()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsATD(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def ATDBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x41\x54\x44", size_prefixed=size_prefixed)
+
+    # ATD
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Unique identifier
+    # ATD
+    def ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Attitude set identifier (groups time-series points)
+    # ATD
+    def AS_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Satellite catalog number
+    # ATD
+    def SAT_NO(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+        return 0
+
+    # International designator
+    # ATD
+    def ORIG_OBJECT_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Observation epoch (ISO 8601)
+    # ATD
+    def EPOCH(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Attitude representation used
+    # ATD
+    def REPRESENTATION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # Motion characterization
+    # ATD
+    def MOTION_TYPE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # Quaternion scalar component (q0 or qc)
+    # ATD
+    def QC(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Quaternion vector component 1
+    # ATD
+    def Q1(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Quaternion vector component 2
+    # ATD
+    def Q2(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Quaternion vector component 3
+    # ATD
+    def Q3(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Quaternion scalar rate (rad/s)
+    # ATD
+    def QC_DOT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Quaternion vector rate 1 (rad/s)
+    # ATD
+    def Q1_DOT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Quaternion vector rate 2 (rad/s)
+    # ATD
+    def Q2_DOT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Quaternion vector rate 3 (rad/s)
+    # ATD
+    def Q3_DOT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Euler angle X (degrees)
+    # ATD
+    def X_ANGLE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Euler angle Y (degrees)
+    # ATD
+    def Y_ANGLE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Euler angle Z (degrees)
+    # ATD
+    def Z_ANGLE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Angular rate about X (deg/s)
+    # ATD
+    def X_RATE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Angular rate about Y (deg/s)
+    # ATD
+    def Y_RATE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Angular rate about Z (deg/s)
+    # ATD
+    def Z_RATE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Right ascension of spin axis (degrees)
+    # ATD
+    def RA(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Declination of spin axis (degrees)
+    # ATD
+    def DECLINATION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Coning half-angle (degrees)
+    # ATD
+    def CONING_ANGLE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Precession period (seconds)
+    # ATD
+    def PREC_PERIOD(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(52))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Spin period (seconds)
+    # ATD
+    def SPIN_PERIOD(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(54))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Attitude uncertainty (degrees, 1-sigma)
+    # ATD
+    def ATTITUDE_UNC(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(56))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Rate uncertainty (deg/s, 1-sigma)
+    # ATD
+    def RATE_UNC(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Data quality (0-9, 9=best)
+    # ATD
+    def QUALITY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
+        return 0
+
+    # Reference frame for attitude
+    # ATD
+    def REF_FRAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(62))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Sensor identifier providing the observation
+    # ATD
+    def SENSOR_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(64))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+def ATDStart(builder):
+    builder.StartObject(31)
+
+def Start(builder):
+    ATDStart(builder)
+
+def ATDAddID(builder, ID):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(ID), 0)
+
+def AddID(builder, ID):
+    ATDAddID(builder, ID)
+
+def ATDAddAS_ID(builder, AS_ID):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(AS_ID), 0)
+
+def AddAS_ID(builder, AS_ID):
+    ATDAddAS_ID(builder, AS_ID)
+
+def ATDAddSAT_NO(builder, SAT_NO):
+    builder.PrependUint32Slot(2, SAT_NO, 0)
+
+def AddSAT_NO(builder, SAT_NO):
+    ATDAddSAT_NO(builder, SAT_NO)
+
+def ATDAddORIG_OBJECT_ID(builder, ORIG_OBJECT_ID):
+    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(ORIG_OBJECT_ID), 0)
+
+def AddORIG_OBJECT_ID(builder, ORIG_OBJECT_ID):
+    ATDAddORIG_OBJECT_ID(builder, ORIG_OBJECT_ID)
+
+def ATDAddEPOCH(builder, EPOCH):
+    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(EPOCH), 0)
+
+def AddEPOCH(builder, EPOCH):
+    ATDAddEPOCH(builder, EPOCH)
+
+def ATDAddREPRESENTATION(builder, REPRESENTATION):
+    builder.PrependInt8Slot(5, REPRESENTATION, 0)
+
+def AddREPRESENTATION(builder, REPRESENTATION):
+    ATDAddREPRESENTATION(builder, REPRESENTATION)
+
+def ATDAddMOTION_TYPE(builder, MOTION_TYPE):
+    builder.PrependInt8Slot(6, MOTION_TYPE, 0)
+
+def AddMOTION_TYPE(builder, MOTION_TYPE):
+    ATDAddMOTION_TYPE(builder, MOTION_TYPE)
+
+def ATDAddQC(builder, QC):
+    builder.PrependFloat64Slot(7, QC, 0.0)
+
+def AddQC(builder, QC):
+    ATDAddQC(builder, QC)
+
+def ATDAddQ1(builder, Q1):
+    builder.PrependFloat64Slot(8, Q1, 0.0)
+
+def AddQ1(builder, Q1):
+    ATDAddQ1(builder, Q1)
+
+def ATDAddQ2(builder, Q2):
+    builder.PrependFloat64Slot(9, Q2, 0.0)
+
+def AddQ2(builder, Q2):
+    ATDAddQ2(builder, Q2)
+
+def ATDAddQ3(builder, Q3):
+    builder.PrependFloat64Slot(10, Q3, 0.0)
+
+def AddQ3(builder, Q3):
+    ATDAddQ3(builder, Q3)
+
+def ATDAddQC_DOT(builder, QC_DOT):
+    builder.PrependFloat64Slot(11, QC_DOT, 0.0)
+
+def AddQC_DOT(builder, QC_DOT):
+    ATDAddQC_DOT(builder, QC_DOT)
+
+def ATDAddQ1_DOT(builder, Q1_DOT):
+    builder.PrependFloat64Slot(12, Q1_DOT, 0.0)
+
+def AddQ1_DOT(builder, Q1_DOT):
+    ATDAddQ1_DOT(builder, Q1_DOT)
+
+def ATDAddQ2_DOT(builder, Q2_DOT):
+    builder.PrependFloat64Slot(13, Q2_DOT, 0.0)
+
+def AddQ2_DOT(builder, Q2_DOT):
+    ATDAddQ2_DOT(builder, Q2_DOT)
+
+def ATDAddQ3_DOT(builder, Q3_DOT):
+    builder.PrependFloat64Slot(14, Q3_DOT, 0.0)
+
+def AddQ3_DOT(builder, Q3_DOT):
+    ATDAddQ3_DOT(builder, Q3_DOT)
+
+def ATDAddX_ANGLE(builder, X_ANGLE):
+    builder.PrependFloat64Slot(15, X_ANGLE, 0.0)
+
+def AddX_ANGLE(builder, X_ANGLE):
+    ATDAddX_ANGLE(builder, X_ANGLE)
+
+def ATDAddY_ANGLE(builder, Y_ANGLE):
+    builder.PrependFloat64Slot(16, Y_ANGLE, 0.0)
+
+def AddY_ANGLE(builder, Y_ANGLE):
+    ATDAddY_ANGLE(builder, Y_ANGLE)
+
+def ATDAddZ_ANGLE(builder, Z_ANGLE):
+    builder.PrependFloat64Slot(17, Z_ANGLE, 0.0)
+
+def AddZ_ANGLE(builder, Z_ANGLE):
+    ATDAddZ_ANGLE(builder, Z_ANGLE)
+
+def ATDAddX_RATE(builder, X_RATE):
+    builder.PrependFloat64Slot(18, X_RATE, 0.0)
+
+def AddX_RATE(builder, X_RATE):
+    ATDAddX_RATE(builder, X_RATE)
+
+def ATDAddY_RATE(builder, Y_RATE):
+    builder.PrependFloat64Slot(19, Y_RATE, 0.0)
+
+def AddY_RATE(builder, Y_RATE):
+    ATDAddY_RATE(builder, Y_RATE)
+
+def ATDAddZ_RATE(builder, Z_RATE):
+    builder.PrependFloat64Slot(20, Z_RATE, 0.0)
+
+def AddZ_RATE(builder, Z_RATE):
+    ATDAddZ_RATE(builder, Z_RATE)
+
+def ATDAddRA(builder, RA):
+    builder.PrependFloat64Slot(21, RA, 0.0)
+
+def AddRA(builder, RA):
+    ATDAddRA(builder, RA)
+
+def ATDAddDECLINATION(builder, DECLINATION):
+    builder.PrependFloat64Slot(22, DECLINATION, 0.0)
+
+def AddDECLINATION(builder, DECLINATION):
+    ATDAddDECLINATION(builder, DECLINATION)
+
+def ATDAddCONING_ANGLE(builder, CONING_ANGLE):
+    builder.PrependFloat64Slot(23, CONING_ANGLE, 0.0)
+
+def AddCONING_ANGLE(builder, CONING_ANGLE):
+    ATDAddCONING_ANGLE(builder, CONING_ANGLE)
+
+def ATDAddPREC_PERIOD(builder, PREC_PERIOD):
+    builder.PrependFloat64Slot(24, PREC_PERIOD, 0.0)
+
+def AddPREC_PERIOD(builder, PREC_PERIOD):
+    ATDAddPREC_PERIOD(builder, PREC_PERIOD)
+
+def ATDAddSPIN_PERIOD(builder, SPIN_PERIOD):
+    builder.PrependFloat64Slot(25, SPIN_PERIOD, 0.0)
+
+def AddSPIN_PERIOD(builder, SPIN_PERIOD):
+    ATDAddSPIN_PERIOD(builder, SPIN_PERIOD)
+
+def ATDAddATTITUDE_UNC(builder, ATTITUDE_UNC):
+    builder.PrependFloat64Slot(26, ATTITUDE_UNC, 0.0)
+
+def AddATTITUDE_UNC(builder, ATTITUDE_UNC):
+    ATDAddATTITUDE_UNC(builder, ATTITUDE_UNC)
+
+def ATDAddRATE_UNC(builder, RATE_UNC):
+    builder.PrependFloat64Slot(27, RATE_UNC, 0.0)
+
+def AddRATE_UNC(builder, RATE_UNC):
+    ATDAddRATE_UNC(builder, RATE_UNC)
+
+def ATDAddQUALITY(builder, QUALITY):
+    builder.PrependUint8Slot(28, QUALITY, 0)
+
+def AddQUALITY(builder, QUALITY):
+    ATDAddQUALITY(builder, QUALITY)
+
+def ATDAddREF_FRAME(builder, REF_FRAME):
+    builder.PrependUOffsetTRelativeSlot(29, flatbuffers.number_types.UOffsetTFlags.py_type(REF_FRAME), 0)
+
+def AddREF_FRAME(builder, REF_FRAME):
+    ATDAddREF_FRAME(builder, REF_FRAME)
+
+def ATDAddSENSOR_ID(builder, SENSOR_ID):
+    builder.PrependUOffsetTRelativeSlot(30, flatbuffers.number_types.UOffsetTFlags.py_type(SENSOR_ID), 0)
+
+def AddSENSOR_ID(builder, SENSOR_ID):
+    ATDAddSENSOR_ID(builder, SENSOR_ID)
+
+def ATDEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return ATDEnd(builder)
+
+
+class ATDT(object):
+
+    # ATDT
+    def __init__(
+        self,
+        ID = None,
+        AS_ID = None,
+        SAT_NO = 0,
+        ORIG_OBJECT_ID = None,
+        EPOCH = None,
+        REPRESENTATION = 0,
+        MOTION_TYPE = 0,
+        QC = 0.0,
+        Q1 = 0.0,
+        Q2 = 0.0,
+        Q3 = 0.0,
+        QC_DOT = 0.0,
+        Q1_DOT = 0.0,
+        Q2_DOT = 0.0,
+        Q3_DOT = 0.0,
+        X_ANGLE = 0.0,
+        Y_ANGLE = 0.0,
+        Z_ANGLE = 0.0,
+        X_RATE = 0.0,
+        Y_RATE = 0.0,
+        Z_RATE = 0.0,
+        RA = 0.0,
+        DECLINATION = 0.0,
+        CONING_ANGLE = 0.0,
+        PREC_PERIOD = 0.0,
+        SPIN_PERIOD = 0.0,
+        ATTITUDE_UNC = 0.0,
+        RATE_UNC = 0.0,
+        QUALITY = 0,
+        REF_FRAME = None,
+        SENSOR_ID = None,
+    ):
+        self.ID = ID  # type: Optional[str]
+        self.AS_ID = AS_ID  # type: Optional[str]
+        self.SAT_NO = SAT_NO  # type: int
+        self.ORIG_OBJECT_ID = ORIG_OBJECT_ID  # type: Optional[str]
+        self.EPOCH = EPOCH  # type: Optional[str]
+        self.REPRESENTATION = REPRESENTATION  # type: int
+        self.MOTION_TYPE = MOTION_TYPE  # type: int
+        self.QC = QC  # type: float
+        self.Q1 = Q1  # type: float
+        self.Q2 = Q2  # type: float
+        self.Q3 = Q3  # type: float
+        self.QC_DOT = QC_DOT  # type: float
+        self.Q1_DOT = Q1_DOT  # type: float
+        self.Q2_DOT = Q2_DOT  # type: float
+        self.Q3_DOT = Q3_DOT  # type: float
+        self.X_ANGLE = X_ANGLE  # type: float
+        self.Y_ANGLE = Y_ANGLE  # type: float
+        self.Z_ANGLE = Z_ANGLE  # type: float
+        self.X_RATE = X_RATE  # type: float
+        self.Y_RATE = Y_RATE  # type: float
+        self.Z_RATE = Z_RATE  # type: float
+        self.RA = RA  # type: float
+        self.DECLINATION = DECLINATION  # type: float
+        self.CONING_ANGLE = CONING_ANGLE  # type: float
+        self.PREC_PERIOD = PREC_PERIOD  # type: float
+        self.SPIN_PERIOD = SPIN_PERIOD  # type: float
+        self.ATTITUDE_UNC = ATTITUDE_UNC  # type: float
+        self.RATE_UNC = RATE_UNC  # type: float
+        self.QUALITY = QUALITY  # type: int
+        self.REF_FRAME = REF_FRAME  # type: Optional[str]
+        self.SENSOR_ID = SENSOR_ID  # type: Optional[str]
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpAtd = ATD()
+        tmpAtd.Init(buf, pos)
+        return cls.InitFromObj(tmpAtd)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpAtd):
+        x = ATDT()
+        x._UnPack(tmpAtd)
+        return x
+
+    # ATDT
+    def _UnPack(self, ATD):
+        if ATD is None:
+            return
+        self.ID = ATD.ID()
+        self.AS_ID = ATD.AS_ID()
+        self.SAT_NO = ATD.SAT_NO()
+        self.ORIG_OBJECT_ID = ATD.ORIG_OBJECT_ID()
+        self.EPOCH = ATD.EPOCH()
+        self.REPRESENTATION = ATD.REPRESENTATION()
+        self.MOTION_TYPE = ATD.MOTION_TYPE()
+        self.QC = ATD.QC()
+        self.Q1 = ATD.Q1()
+        self.Q2 = ATD.Q2()
+        self.Q3 = ATD.Q3()
+        self.QC_DOT = ATD.QC_DOT()
+        self.Q1_DOT = ATD.Q1_DOT()
+        self.Q2_DOT = ATD.Q2_DOT()
+        self.Q3_DOT = ATD.Q3_DOT()
+        self.X_ANGLE = ATD.X_ANGLE()
+        self.Y_ANGLE = ATD.Y_ANGLE()
+        self.Z_ANGLE = ATD.Z_ANGLE()
+        self.X_RATE = ATD.X_RATE()
+        self.Y_RATE = ATD.Y_RATE()
+        self.Z_RATE = ATD.Z_RATE()
+        self.RA = ATD.RA()
+        self.DECLINATION = ATD.DECLINATION()
+        self.CONING_ANGLE = ATD.CONING_ANGLE()
+        self.PREC_PERIOD = ATD.PREC_PERIOD()
+        self.SPIN_PERIOD = ATD.SPIN_PERIOD()
+        self.ATTITUDE_UNC = ATD.ATTITUDE_UNC()
+        self.RATE_UNC = ATD.RATE_UNC()
+        self.QUALITY = ATD.QUALITY()
+        self.REF_FRAME = ATD.REF_FRAME()
+        self.SENSOR_ID = ATD.SENSOR_ID()
+
+    # ATDT
+    def Pack(self, builder):
+        if self.ID is not None:
+            ID = builder.CreateString(self.ID)
+        if self.AS_ID is not None:
+            AS_ID = builder.CreateString(self.AS_ID)
+        if self.ORIG_OBJECT_ID is not None:
+            ORIG_OBJECT_ID = builder.CreateString(self.ORIG_OBJECT_ID)
+        if self.EPOCH is not None:
+            EPOCH = builder.CreateString(self.EPOCH)
+        if self.REF_FRAME is not None:
+            REF_FRAME = builder.CreateString(self.REF_FRAME)
+        if self.SENSOR_ID is not None:
+            SENSOR_ID = builder.CreateString(self.SENSOR_ID)
+        ATDStart(builder)
+        if self.ID is not None:
+            ATDAddID(builder, ID)
+        if self.AS_ID is not None:
+            ATDAddAS_ID(builder, AS_ID)
+        ATDAddSAT_NO(builder, self.SAT_NO)
+        if self.ORIG_OBJECT_ID is not None:
+            ATDAddORIG_OBJECT_ID(builder, ORIG_OBJECT_ID)
+        if self.EPOCH is not None:
+            ATDAddEPOCH(builder, EPOCH)
+        ATDAddREPRESENTATION(builder, self.REPRESENTATION)
+        ATDAddMOTION_TYPE(builder, self.MOTION_TYPE)
+        ATDAddQC(builder, self.QC)
+        ATDAddQ1(builder, self.Q1)
+        ATDAddQ2(builder, self.Q2)
+        ATDAddQ3(builder, self.Q3)
+        ATDAddQC_DOT(builder, self.QC_DOT)
+        ATDAddQ1_DOT(builder, self.Q1_DOT)
+        ATDAddQ2_DOT(builder, self.Q2_DOT)
+        ATDAddQ3_DOT(builder, self.Q3_DOT)
+        ATDAddX_ANGLE(builder, self.X_ANGLE)
+        ATDAddY_ANGLE(builder, self.Y_ANGLE)
+        ATDAddZ_ANGLE(builder, self.Z_ANGLE)
+        ATDAddX_RATE(builder, self.X_RATE)
+        ATDAddY_RATE(builder, self.Y_RATE)
+        ATDAddZ_RATE(builder, self.Z_RATE)
+        ATDAddRA(builder, self.RA)
+        ATDAddDECLINATION(builder, self.DECLINATION)
+        ATDAddCONING_ANGLE(builder, self.CONING_ANGLE)
+        ATDAddPREC_PERIOD(builder, self.PREC_PERIOD)
+        ATDAddSPIN_PERIOD(builder, self.SPIN_PERIOD)
+        ATDAddATTITUDE_UNC(builder, self.ATTITUDE_UNC)
+        ATDAddRATE_UNC(builder, self.RATE_UNC)
+        ATDAddQUALITY(builder, self.QUALITY)
+        if self.REF_FRAME is not None:
+            ATDAddREF_FRAME(builder, REF_FRAME)
+        if self.SENSOR_ID is not None:
+            ATDAddSENSOR_ID(builder, SENSOR_ID)
+        ATD = ATDEnd(builder)
+        return ATD

@@ -96,16 +96,21 @@ except:
 class KMLPointT(object):
 
     # KMLPointT
-    def __init__(self):
-        self.COORDINATES = None  # type: Optional[KMLCoordinate.KMLCoordinateT]
-        self.ALTITUDE_MODE = 0  # type: int
-        self.EXTRUDE = False  # type: bool
+    def __init__(
+        self,
+        COORDINATES = None,
+        ALTITUDE_MODE = 0,
+        EXTRUDE = False,
+    ):
+        self.COORDINATES = COORDINATES  # type: Optional[KMLCoordinate.KMLCoordinateT]
+        self.ALTITUDE_MODE = ALTITUDE_MODE  # type: int
+        self.EXTRUDE = EXTRUDE  # type: bool
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        kmlpoint = KMLPoint()
-        kmlpoint.Init(buf, pos)
-        return cls.InitFromObj(kmlpoint)
+        tmpKmlpoint = KMLPoint()
+        tmpKmlpoint.Init(buf, pos)
+        return cls.InitFromObj(tmpKmlpoint)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -113,19 +118,19 @@ class KMLPointT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, kmlpoint):
+    def InitFromObj(cls, tmpKmlpoint):
         x = KMLPointT()
-        x._UnPack(kmlpoint)
+        x._UnPack(tmpKmlpoint)
         return x
 
     # KMLPointT
-    def _UnPack(self, kmlpoint):
-        if kmlpoint is None:
+    def _UnPack(self, KMLPoint):
+        if KMLPoint is None:
             return
-        if kmlpoint.COORDINATES() is not None:
-            self.COORDINATES = KMLCoordinate.KMLCoordinateT.InitFromObj(kmlpoint.COORDINATES())
-        self.ALTITUDE_MODE = kmlpoint.ALTITUDE_MODE()
-        self.EXTRUDE = kmlpoint.EXTRUDE()
+        if KMLPoint.COORDINATES() is not None:
+            self.COORDINATES = KMLCoordinate.KMLCoordinateT.InitFromObj(KMLPoint.COORDINATES())
+        self.ALTITUDE_MODE = KMLPoint.ALTITUDE_MODE()
+        self.EXTRUDE = KMLPoint.EXTRUDE()
 
     # KMLPointT
     def Pack(self, builder):
@@ -136,5 +141,5 @@ class KMLPointT(object):
             KMLPointAddCOORDINATES(builder, COORDINATES)
         KMLPointAddALTITUDE_MODE(builder, self.ALTITUDE_MODE)
         KMLPointAddEXTRUDE(builder, self.EXTRUDE)
-        kmlpoint = KMLPointEnd(builder)
-        return kmlpoint
+        KMLPoint = KMLPointEnd(builder)
+        return KMLPoint

@@ -2,4 +2,9 @@
 
 # namespace: 
 
-# NOTE launchOutcome.py does not declare any structs or enums
+class launchOutcome(object):
+    SUCCESS = 0
+    PARTIAL_SUCCESS = 1
+    FAILURE = 2
+    IN_PROGRESS = 3
+    UNKNOWN = 4

@@ -32,7 +32,7 @@ class OOB : Table() {
     /**
      * Unique identifier
      */
-    val ID : String?
+    val id : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class OOB : Table() {
                 null
             }
         }
-    val IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val idAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun idInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Reference to parent on-orbit object
      */
-    val ID_ON_ORBIT : String?
+    val idOnOrbit : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -55,12 +55,12 @@ class OOB : Table() {
                 null
             }
         }
-    val ID_ON_ORBITAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun ID_ON_ORBITInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val idOnOrbitAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun idOnOrbitInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * Reference to battery specification
      */
-    val ID_BATTERY : String?
+    val idBattery : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -69,12 +69,12 @@ class OOB : Table() {
                 null
             }
         }
-    val ID_BATTERYAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun ID_BATTERYInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val idBatteryAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun idBatteryInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
     /**
      * Battery name or designation
      */
-    val NAME : String?
+    val name : String?
         get() {
             val o = __offset(10)
             return if (o != 0) {
@@ -83,12 +83,12 @@ class OOB : Table() {
                 null
             }
         }
-    val NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
-    fun NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
+    val nameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(10, 1)
+    fun nameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 10, 1)
     /**
      * Battery chemistry (e.g., LI_ION, NICD, NIMH, LIPO, SILVER_ZINC)
      */
-    val CHEMISTRY : String?
+    val chemistry : String?
         get() {
             val o = __offset(12)
             return if (o != 0) {
@@ -97,12 +97,12 @@ class OOB : Table() {
                 null
             }
         }
-    val CHEMISTRYAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
-    fun CHEMISTRYInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
+    val chemistryAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(12, 1)
+    fun chemistryInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 12, 1)
     /**
      * Number of batteries of this type
      */
-    val QUANTITY : UInt
+    val quantity : UInt
         get() {
             val o = __offset(14)
             return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
@@ -110,7 +110,7 @@ class OOB : Table() {
     /**
      * Nominal voltage in Volts
      */
-    val VOLTAGE : Double
+    val voltage : Double
         get() {
             val o = __offset(16)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -118,7 +118,7 @@ class OOB : Table() {
     /**
      * Capacity in Amp-hours
      */
-    val CAPACITY_AH : Double
+    val capacityAh : Double
         get() {
             val o = __offset(18)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -126,7 +126,7 @@ class OOB : Table() {
     /**
      * Energy capacity in Watt-hours
      */
-    val ENERGY_WH : Double
+    val energyWh : Double
         get() {
             val o = __offset(20)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -134,7 +134,7 @@ class OOB : Table() {
     /**
      * Maximum depth of discharge as fraction (0.0-1.0)
      */
-    val MAX_DOD : Double
+    val maxDod : Double
         get() {
             val o = __offset(22)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -142,7 +142,7 @@ class OOB : Table() {
     /**
      * Number of charge/discharge cycles rated
      */
-    val CYCLE_LIFE : UInt
+    val cycleLife : UInt
         get() {
             val o = __offset(24)
             return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
@@ -150,7 +150,7 @@ class OOB : Table() {
     /**
      * Battery mass in kg
      */
-    val MASS : Double
+    val mass : Double
         get() {
             val o = __offset(26)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -158,7 +158,7 @@ class OOB : Table() {
     /**
      * Current state of health as fraction (0.0-1.0)
      */
-    val STATE_OF_HEALTH : Double
+    val stateOfHealth : Double
         get() {
             val o = __offset(28)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -166,7 +166,7 @@ class OOB : Table() {
     /**
      * Additional notes
      */
-    val NOTES : String?
+    val notes : String?
         get() {
             val o = __offset(30)
             return if (o != 0) {
@@ -175,49 +175,49 @@ class OOB : Table() {
                 null
             }
         }
-    val NOTESAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(30, 1)
-    fun NOTESInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 30, 1)
+    val notesAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(30, 1)
+    fun notesInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 30, 1)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsOOB(_bb: ByteBuffer): OOB = getRootAsOOB(_bb, OOB())
         fun getRootAsOOB(_bb: ByteBuffer, obj: OOB): OOB {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun OOBBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$OOB")
-        fun createOOB(builder: FlatBufferBuilder, IDOffset: Int, ID_ON_ORBITOffset: Int, ID_BATTERYOffset: Int, NAMEOffset: Int, CHEMISTRYOffset: Int, QUANTITY: UInt, VOLTAGE: Double, CAPACITY_AH: Double, ENERGY_WH: Double, MAX_DOD: Double, CYCLE_LIFE: UInt, MASS: Double, STATE_OF_HEALTH: Double, NOTESOffset: Int) : Int {
+        fun createOOB(builder: FlatBufferBuilder, idOffset: Int, idOnOrbitOffset: Int, idBatteryOffset: Int, nameOffset: Int, chemistryOffset: Int, quantity: UInt, voltage: Double, capacityAh: Double, energyWh: Double, maxDod: Double, cycleLife: UInt, mass: Double, stateOfHealth: Double, notesOffset: Int) : Int {
             builder.startTable(14)
-            addSTATE_OF_HEALTH(builder, STATE_OF_HEALTH)
-            addMASS(builder, MASS)
-            addMAX_DOD(builder, MAX_DOD)
-            addENERGY_WH(builder, ENERGY_WH)
-            addCAPACITY_AH(builder, CAPACITY_AH)
-            addVOLTAGE(builder, VOLTAGE)
-            addNOTES(builder, NOTESOffset)
-            addCYCLE_LIFE(builder, CYCLE_LIFE)
-            addQUANTITY(builder, QUANTITY)
-            addCHEMISTRY(builder, CHEMISTRYOffset)
-            addNAME(builder, NAMEOffset)
-            addID_BATTERY(builder, ID_BATTERYOffset)
-            addID_ON_ORBIT(builder, ID_ON_ORBITOffset)
-            addID(builder, IDOffset)
+            addSTATEOFHEALTH(builder, stateOfHealth)
+            addMASS(builder, mass)
+            addMAXDOD(builder, maxDod)
+            addENERGYWH(builder, energyWh)
+            addCAPACITYAH(builder, capacityAh)
+            addVOLTAGE(builder, voltage)
+            addNOTES(builder, notesOffset)
+            addCYCLELIFE(builder, cycleLife)
+            addQUANTITY(builder, quantity)
+            addCHEMISTRY(builder, chemistryOffset)
+            addNAME(builder, nameOffset)
+            addIDBATTERY(builder, idBatteryOffset)
+            addIDONORBIT(builder, idOnOrbitOffset)
+            addID(builder, idOffset)
             return endOOB(builder)
         }
         fun startOOB(builder: FlatBufferBuilder) = builder.startTable(14)
-        fun addID(builder: FlatBufferBuilder, ID: Int) = builder.addOffset(0, ID, 0)
-        fun addID_ON_ORBIT(builder: FlatBufferBuilder, ID_ON_ORBIT: Int) = builder.addOffset(1, ID_ON_ORBIT, 0)
-        fun addID_BATTERY(builder: FlatBufferBuilder, ID_BATTERY: Int) = builder.addOffset(2, ID_BATTERY, 0)
-        fun addNAME(builder: FlatBufferBuilder, NAME: Int) = builder.addOffset(3, NAME, 0)
-        fun addCHEMISTRY(builder: FlatBufferBuilder, CHEMISTRY: Int) = builder.addOffset(4, CHEMISTRY, 0)
-        fun addQUANTITY(builder: FlatBufferBuilder, QUANTITY: UInt) = builder.addInt(5, QUANTITY.toInt(), 0)
-        fun addVOLTAGE(builder: FlatBufferBuilder, VOLTAGE: Double) = builder.addDouble(6, VOLTAGE, 0.0)
-        fun addCAPACITY_AH(builder: FlatBufferBuilder, CAPACITY_AH: Double) = builder.addDouble(7, CAPACITY_AH, 0.0)
-        fun addENERGY_WH(builder: FlatBufferBuilder, ENERGY_WH: Double) = builder.addDouble(8, ENERGY_WH, 0.0)
-        fun addMAX_DOD(builder: FlatBufferBuilder, MAX_DOD: Double) = builder.addDouble(9, MAX_DOD, 0.0)
-        fun addCYCLE_LIFE(builder: FlatBufferBuilder, CYCLE_LIFE: UInt) = builder.addInt(10, CYCLE_LIFE.toInt(), 0)
-        fun addMASS(builder: FlatBufferBuilder, MASS: Double) = builder.addDouble(11, MASS, 0.0)
-        fun addSTATE_OF_HEALTH(builder: FlatBufferBuilder, STATE_OF_HEALTH: Double) = builder.addDouble(12, STATE_OF_HEALTH, 0.0)
-        fun addNOTES(builder: FlatBufferBuilder, NOTES: Int) = builder.addOffset(13, NOTES, 0)
+        fun addID(builder: FlatBufferBuilder, id: Int) = builder.addOffset(0, id, 0)
+        fun addIDONORBIT(builder: FlatBufferBuilder, idOnOrbit: Int) = builder.addOffset(1, idOnOrbit, 0)
+        fun addIDBATTERY(builder: FlatBufferBuilder, idBattery: Int) = builder.addOffset(2, idBattery, 0)
+        fun addNAME(builder: FlatBufferBuilder, name: Int) = builder.addOffset(3, name, 0)
+        fun addCHEMISTRY(builder: FlatBufferBuilder, chemistry: Int) = builder.addOffset(4, chemistry, 0)
+        fun addQUANTITY(builder: FlatBufferBuilder, quantity: UInt) = builder.addInt(5, quantity.toInt(), 0)
+        fun addVOLTAGE(builder: FlatBufferBuilder, voltage: Double) = builder.addDouble(6, voltage, 0.0)
+        fun addCAPACITYAH(builder: FlatBufferBuilder, capacityAh: Double) = builder.addDouble(7, capacityAh, 0.0)
+        fun addENERGYWH(builder: FlatBufferBuilder, energyWh: Double) = builder.addDouble(8, energyWh, 0.0)
+        fun addMAXDOD(builder: FlatBufferBuilder, maxDod: Double) = builder.addDouble(9, maxDod, 0.0)
+        fun addCYCLELIFE(builder: FlatBufferBuilder, cycleLife: UInt) = builder.addInt(10, cycleLife.toInt(), 0)
+        fun addMASS(builder: FlatBufferBuilder, mass: Double) = builder.addDouble(11, mass, 0.0)
+        fun addSTATEOFHEALTH(builder: FlatBufferBuilder, stateOfHealth: Double) = builder.addDouble(12, stateOfHealth, 0.0)
+        fun addNOTES(builder: FlatBufferBuilder, notes: Int) = builder.addOffset(13, notes, 0)
         fun endOOB(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

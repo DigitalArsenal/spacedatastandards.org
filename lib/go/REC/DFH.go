@@ -63,6 +63,10 @@ func (rcv *DFH) ID() []byte {
 	return nil
 }
 
+func (rcv *DFH) Id() []byte {
+	return rcv.ID()
+}
+
 /// Unique identifier
 /// Satellite number
 func (rcv *DFH) SAT_NO() uint32 {
@@ -73,9 +77,17 @@ func (rcv *DFH) SAT_NO() uint32 {
 	return 0
 }
 
+func (rcv *DFH) SatNo() uint32 {
+	return rcv.SAT_NO()
+}
+
 /// Satellite number
 func (rcv *DFH) MutateSAT_NO(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(6, n)
+}
+
+func (rcv *DFH) MutateSatNo(n uint32) bool {
+	return rcv.MutateSAT_NO(n)
 }
 
 /// Object designator
@@ -85,6 +97,10 @@ func (rcv *DFH) OBJECT_DESIGNATOR() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *DFH) ObjectDesignator() []byte {
+	return rcv.OBJECT_DESIGNATOR()
 }
 
 /// Object designator
@@ -97,6 +113,10 @@ func (rcv *DFH) OBJECT_NAME() []byte {
 	return nil
 }
 
+func (rcv *DFH) ObjectName() []byte {
+	return rcv.OBJECT_NAME()
+}
+
 /// Object common name
 /// History start time (ISO 8601)
 func (rcv *DFH) START_TIME() []byte {
@@ -105,6 +125,10 @@ func (rcv *DFH) START_TIME() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *DFH) StartTime() []byte {
+	return rcv.START_TIME()
 }
 
 /// History start time (ISO 8601)
@@ -117,6 +141,10 @@ func (rcv *DFH) END_TIME() []byte {
 	return nil
 }
 
+func (rcv *DFH) EndTime() []byte {
+	return rcv.END_TIME()
+}
+
 /// History end time (ISO 8601)
 /// Current effective until date (ISO 8601)
 func (rcv *DFH) EFFECTIVE_UNTIL() []byte {
@@ -125,6 +153,10 @@ func (rcv *DFH) EFFECTIVE_UNTIL() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *DFH) EffectiveUntil() []byte {
+	return rcv.EFFECTIVE_UNTIL()
 }
 
 /// Current effective until date (ISO 8601)
@@ -137,9 +169,17 @@ func (rcv *DFH) DRIFT_RATE() float64 {
 	return 0.0
 }
 
+func (rcv *DFH) DriftRate() float64 {
+	return rcv.DRIFT_RATE()
+}
+
 /// Current drift rate in degrees/day
 func (rcv *DFH) MutateDRIFT_RATE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(18, n)
+}
+
+func (rcv *DFH) MutateDriftRate(n float64) bool {
+	return rcv.MutateDRIFT_RATE(n)
 }
 
 /// Current mean longitude in degrees East
@@ -151,9 +191,17 @@ func (rcv *DFH) MEAN_LONGITUDE() float64 {
 	return 0.0
 }
 
+func (rcv *DFH) MeanLongitude() float64 {
+	return rcv.MEAN_LONGITUDE()
+}
+
 /// Current mean longitude in degrees East
 func (rcv *DFH) MutateMEAN_LONGITUDE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(20, n)
+}
+
+func (rcv *DFH) MutateMeanLongitude(n float64) bool {
+	return rcv.MutateMEAN_LONGITUDE(n)
 }
 
 /// Longitude slot center in degrees East (if station-keeping)
@@ -165,9 +213,17 @@ func (rcv *DFH) SLOT_CENTER() float64 {
 	return 0.0
 }
 
+func (rcv *DFH) SlotCenter() float64 {
+	return rcv.SLOT_CENTER()
+}
+
 /// Longitude slot center in degrees East (if station-keeping)
 func (rcv *DFH) MutateSLOT_CENTER(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(22, n)
+}
+
+func (rcv *DFH) MutateSlotCenter(n float64) bool {
+	return rcv.MutateSLOT_CENTER(n)
 }
 
 /// Longitude slot half-width in degrees
@@ -179,9 +235,17 @@ func (rcv *DFH) SLOT_HALF_WIDTH() float64 {
 	return 0.0
 }
 
+func (rcv *DFH) SlotHalfWidth() float64 {
+	return rcv.SLOT_HALF_WIDTH()
+}
+
 /// Longitude slot half-width in degrees
 func (rcv *DFH) MutateSLOT_HALF_WIDTH(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(24, n)
+}
+
+func (rcv *DFH) MutateSlotHalfWidth(n float64) bool {
+	return rcv.MutateSLOT_HALF_WIDTH(n)
 }
 
 /// Whether object is actively station-keeping
@@ -193,9 +257,17 @@ func (rcv *DFH) STATION_KEEPING() bool {
 	return false
 }
 
+func (rcv *DFH) StationKeeping() bool {
+	return rcv.STATION_KEEPING()
+}
+
 /// Whether object is actively station-keeping
 func (rcv *DFH) MutateSTATION_KEEPING(n bool) bool {
 	return rcv._tab.MutateBoolSlot(26, n)
+}
+
+func (rcv *DFH) MutateStationKeeping(n bool) bool {
+	return rcv.MutateSTATION_KEEPING(n)
 }
 
 /// Historical drift records
@@ -205,10 +277,17 @@ func (rcv *DFH) RECORDS(obj *driftRecord, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(driftRecord)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *DFH) Records(obj *driftRecord, j int) bool {
+	return rcv.RECORDS(obj, j)
 }
 
 func (rcv *DFH) RECORDSLength() int {
@@ -217,6 +296,10 @@ func (rcv *DFH) RECORDSLength() int {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *DFH) RecordsLength() int {
+	return rcv.RECORDSLength()
 }
 
 /// Historical drift records
@@ -229,9 +312,17 @@ func (rcv *DFH) NUM_RECORDS() uint32 {
 	return 0
 }
 
+func (rcv *DFH) NumRecords() uint32 {
+	return rcv.NUM_RECORDS()
+}
+
 /// Number of records in history
 func (rcv *DFH) MutateNUM_RECORDS(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(30, n)
+}
+
+func (rcv *DFH) MutateNumRecords(n uint32) bool {
+	return rcv.MutateNUM_RECORDS(n)
 }
 
 /// Additional notes
@@ -243,6 +334,10 @@ func (rcv *DFH) NOTES() []byte {
 	return nil
 }
 
+func (rcv *DFH) Notes() []byte {
+	return rcv.NOTES()
+}
+
 /// Additional notes
 func DFHStart(builder *flatbuffers.Builder) {
 	builder.StartObject(15)
@@ -250,50 +345,98 @@ func DFHStart(builder *flatbuffers.Builder) {
 func DFHAddID(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ID), 0)
 }
+func DFHAddId(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
+	DFHAddID(builder, ID)
+}
 func DFHAddSAT_NO(builder *flatbuffers.Builder, SAT_NO uint32) {
 	builder.PrependUint32Slot(1, SAT_NO, 0)
+}
+func DFHAddSatNo(builder *flatbuffers.Builder, SAT_NO uint32) {
+	DFHAddSAT_NO(builder, SAT_NO)
 }
 func DFHAddOBJECT_DESIGNATOR(builder *flatbuffers.Builder, OBJECT_DESIGNATOR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(OBJECT_DESIGNATOR), 0)
 }
+func DFHAddObjectDesignator(builder *flatbuffers.Builder, OBJECT_DESIGNATOR flatbuffers.UOffsetT) {
+	DFHAddOBJECT_DESIGNATOR(builder, OBJECT_DESIGNATOR)
+}
 func DFHAddOBJECT_NAME(builder *flatbuffers.Builder, OBJECT_NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(OBJECT_NAME), 0)
+}
+func DFHAddObjectName(builder *flatbuffers.Builder, OBJECT_NAME flatbuffers.UOffsetT) {
+	DFHAddOBJECT_NAME(builder, OBJECT_NAME)
 }
 func DFHAddSTART_TIME(builder *flatbuffers.Builder, START_TIME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(START_TIME), 0)
 }
+func DFHAddStartTime(builder *flatbuffers.Builder, START_TIME flatbuffers.UOffsetT) {
+	DFHAddSTART_TIME(builder, START_TIME)
+}
 func DFHAddEND_TIME(builder *flatbuffers.Builder, END_TIME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(END_TIME), 0)
+}
+func DFHAddEndTime(builder *flatbuffers.Builder, END_TIME flatbuffers.UOffsetT) {
+	DFHAddEND_TIME(builder, END_TIME)
 }
 func DFHAddEFFECTIVE_UNTIL(builder *flatbuffers.Builder, EFFECTIVE_UNTIL flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(EFFECTIVE_UNTIL), 0)
 }
+func DFHAddEffectiveUntil(builder *flatbuffers.Builder, EFFECTIVE_UNTIL flatbuffers.UOffsetT) {
+	DFHAddEFFECTIVE_UNTIL(builder, EFFECTIVE_UNTIL)
+}
 func DFHAddDRIFT_RATE(builder *flatbuffers.Builder, DRIFT_RATE float64) {
 	builder.PrependFloat64Slot(7, DRIFT_RATE, 0.0)
+}
+func DFHAddDriftRate(builder *flatbuffers.Builder, DRIFT_RATE float64) {
+	DFHAddDRIFT_RATE(builder, DRIFT_RATE)
 }
 func DFHAddMEAN_LONGITUDE(builder *flatbuffers.Builder, MEAN_LONGITUDE float64) {
 	builder.PrependFloat64Slot(8, MEAN_LONGITUDE, 0.0)
 }
+func DFHAddMeanLongitude(builder *flatbuffers.Builder, MEAN_LONGITUDE float64) {
+	DFHAddMEAN_LONGITUDE(builder, MEAN_LONGITUDE)
+}
 func DFHAddSLOT_CENTER(builder *flatbuffers.Builder, SLOT_CENTER float64) {
 	builder.PrependFloat64Slot(9, SLOT_CENTER, 0.0)
+}
+func DFHAddSlotCenter(builder *flatbuffers.Builder, SLOT_CENTER float64) {
+	DFHAddSLOT_CENTER(builder, SLOT_CENTER)
 }
 func DFHAddSLOT_HALF_WIDTH(builder *flatbuffers.Builder, SLOT_HALF_WIDTH float64) {
 	builder.PrependFloat64Slot(10, SLOT_HALF_WIDTH, 0.0)
 }
+func DFHAddSlotHalfWidth(builder *flatbuffers.Builder, SLOT_HALF_WIDTH float64) {
+	DFHAddSLOT_HALF_WIDTH(builder, SLOT_HALF_WIDTH)
+}
 func DFHAddSTATION_KEEPING(builder *flatbuffers.Builder, STATION_KEEPING bool) {
 	builder.PrependBoolSlot(11, STATION_KEEPING, false)
+}
+func DFHAddStationKeeping(builder *flatbuffers.Builder, STATION_KEEPING bool) {
+	DFHAddSTATION_KEEPING(builder, STATION_KEEPING)
 }
 func DFHAddRECORDS(builder *flatbuffers.Builder, RECORDS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(12, flatbuffers.UOffsetT(RECORDS), 0)
 }
+func DFHAddRecords(builder *flatbuffers.Builder, RECORDS flatbuffers.UOffsetT) {
+	DFHAddRECORDS(builder, RECORDS)
+}
 func DFHStartRECORDSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func DFHStartRecordsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return DFHStartRECORDSVector(builder, numElems)
 }
 func DFHAddNUM_RECORDS(builder *flatbuffers.Builder, NUM_RECORDS uint32) {
 	builder.PrependUint32Slot(13, NUM_RECORDS, 0)
 }
+func DFHAddNumRecords(builder *flatbuffers.Builder, NUM_RECORDS uint32) {
+	DFHAddNUM_RECORDS(builder, NUM_RECORDS)
+}
 func DFHAddNOTES(builder *flatbuffers.Builder, NOTES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(14, flatbuffers.UOffsetT(NOTES), 0)
+}
+func DFHAddNotes(builder *flatbuffers.Builder, NOTES flatbuffers.UOffsetT) {
+	DFHAddNOTES(builder, NOTES)
 }
 func DFHEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

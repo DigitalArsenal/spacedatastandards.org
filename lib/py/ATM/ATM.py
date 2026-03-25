@@ -73,15 +73,19 @@ def End(builder):
 class ATMT(object):
 
     # ATMT
-    def __init__(self):
-        self.MODEL = 0  # type: int
-        self.YEAR = 0  # type: int
+    def __init__(
+        self,
+        MODEL = 0,
+        YEAR = 0,
+    ):
+        self.MODEL = MODEL  # type: int
+        self.YEAR = YEAR  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        ATM = ATM()
-        ATM.Init(buf, pos)
-        return cls.InitFromObj(ATM)
+        tmpAtm = ATM()
+        tmpAtm.Init(buf, pos)
+        return cls.InitFromObj(tmpAtm)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -89,9 +93,9 @@ class ATMT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, ATM):
+    def InitFromObj(cls, tmpAtm):
         x = ATMT()
-        x._UnPack(ATM)
+        x._UnPack(tmpAtm)
         return x
 
     # ATMT

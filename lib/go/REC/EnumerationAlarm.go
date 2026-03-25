@@ -51,6 +51,10 @@ func (rcv *EnumerationAlarm) LABEL() []byte {
 	return nil
 }
 
+func (rcv *EnumerationAlarm) Label() []byte {
+	return rcv.LABEL()
+}
+
 /// Enumerated value label
 /// Alarm level for this value
 func (rcv *EnumerationAlarm) ALARM_LEVEL() AlarmSeverityType {
@@ -61,9 +65,17 @@ func (rcv *EnumerationAlarm) ALARM_LEVEL() AlarmSeverityType {
 	return 0
 }
 
+func (rcv *EnumerationAlarm) AlarmLevel() AlarmSeverityType {
+	return rcv.ALARM_LEVEL()
+}
+
 /// Alarm level for this value
 func (rcv *EnumerationAlarm) MutateALARM_LEVEL(n AlarmSeverityType) bool {
 	return rcv._tab.MutateInt8Slot(6, int8(n))
+}
+
+func (rcv *EnumerationAlarm) MutateAlarmLevel(n AlarmSeverityType) bool {
+	return rcv.MutateALARM_LEVEL(n)
 }
 
 func EnumerationAlarmStart(builder *flatbuffers.Builder) {
@@ -72,8 +84,14 @@ func EnumerationAlarmStart(builder *flatbuffers.Builder) {
 func EnumerationAlarmAddLABEL(builder *flatbuffers.Builder, LABEL flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(LABEL), 0)
 }
+func EnumerationAlarmAddLabel(builder *flatbuffers.Builder, LABEL flatbuffers.UOffsetT) {
+	EnumerationAlarmAddLABEL(builder, LABEL)
+}
 func EnumerationAlarmAddALARM_LEVEL(builder *flatbuffers.Builder, ALARM_LEVEL AlarmSeverityType) {
 	builder.PrependInt8Slot(1, int8(ALARM_LEVEL), 0)
+}
+func EnumerationAlarmAddAlarmLevel(builder *flatbuffers.Builder, ALARM_LEVEL AlarmSeverityType) {
+	EnumerationAlarmAddALARM_LEVEL(builder, ALARM_LEVEL)
 }
 func EnumerationAlarmEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

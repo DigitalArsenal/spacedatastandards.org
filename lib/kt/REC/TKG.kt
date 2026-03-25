@@ -29,7 +29,7 @@ class TKG : Table() {
         __init(_i, _bb)
         return this
     }
-    val COMMAND : String?
+    val command : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -38,9 +38,9 @@ class TKG : Table() {
                 null
             }
         }
-    val COMMANDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun COMMANDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
-    val FILTER_CONFIG : String?
+    val commandAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun commandInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
+    val filterConfig : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -49,9 +49,9 @@ class TKG : Table() {
                 null
             }
         }
-    val FILTER_CONFIGAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun FILTER_CONFIGInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
-    val IMM_CONFIG : String?
+    val filterConfigAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun filterConfigInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
+    val immConfig : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -60,9 +60,9 @@ class TKG : Table() {
                 null
             }
         }
-    val IMM_CONFIGAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun IMM_CONFIGInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
-    val MHT_CONFIG : String?
+    val immConfigAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun immConfigInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
+    val mhtConfig : String?
         get() {
             val o = __offset(10)
             return if (o != 0) {
@@ -71,9 +71,9 @@ class TKG : Table() {
                 null
             }
         }
-    val MHT_CONFIGAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
-    fun MHT_CONFIGInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
-    val JPDA_CONFIG : String?
+    val mhtConfigAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(10, 1)
+    fun mhtConfigInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 10, 1)
+    val jpdaConfig : String?
         get() {
             val o = __offset(12)
             return if (o != 0) {
@@ -82,9 +82,9 @@ class TKG : Table() {
                 null
             }
         }
-    val JPDA_CONFIGAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
-    fun JPDA_CONFIGInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
-    val FUSION_CONFIG : String?
+    val jpdaConfigAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(12, 1)
+    fun jpdaConfigInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 12, 1)
+    val fusionConfig : String?
         get() {
             val o = __offset(14)
             return if (o != 0) {
@@ -93,9 +93,9 @@ class TKG : Table() {
                 null
             }
         }
-    val FUSION_CONFIGAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(14, 1)
-    fun FUSION_CONFIGInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 14, 1)
-    val MEASUREMENTS : String?
+    val fusionConfigAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(14, 1)
+    fun fusionConfigInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 14, 1)
+    val measurements : String?
         get() {
             val o = __offset(16)
             return if (o != 0) {
@@ -104,9 +104,9 @@ class TKG : Table() {
                 null
             }
         }
-    val MEASUREMENTSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(16, 1)
-    fun MEASUREMENTSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 16, 1)
-    val INITIAL_STATE : String?
+    val measurementsAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(16, 1)
+    fun measurementsInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 16, 1)
+    val initialState : String?
         get() {
             val o = __offset(18)
             return if (o != 0) {
@@ -115,9 +115,9 @@ class TKG : Table() {
                 null
             }
         }
-    val INITIAL_STATEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(18, 1)
-    fun INITIAL_STATEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 18, 1)
-    val TRACK_TO_UPDATE : String?
+    val initialStateAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(18, 1)
+    fun initialStateInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 18, 1)
+    val trackToUpdate : String?
         get() {
             val o = __offset(20)
             return if (o != 0) {
@@ -126,9 +126,9 @@ class TKG : Table() {
                 null
             }
         }
-    val TRACK_TO_UPDATEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(20, 1)
-    fun TRACK_TO_UPDATEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 20, 1)
-    fun TRACKS_TO_CORRELATE(j: Int) : String? {
+    val trackToUpdateAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(20, 1)
+    fun trackToUpdateInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 20, 1)
+    fun tracksToCorrelate(j: Int) : String? {
         val o = __offset(22)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
@@ -136,43 +136,43 @@ class TKG : Table() {
             null
         }
     }
-    val TRACKS_TO_CORRELATELength : Int
+    val tracksToCorrelateLength : Int
         get() {
             val o = __offset(22); return if (o != 0) __vector_len(o) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsTKG(_bb: ByteBuffer): TKG = getRootAsTKG(_bb, TKG())
         fun getRootAsTKG(_bb: ByteBuffer, obj: TKG): TKG {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun TKGBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$TKG")
-        fun createTKG(builder: FlatBufferBuilder, COMMANDOffset: Int, FILTER_CONFIGOffset: Int, IMM_CONFIGOffset: Int, MHT_CONFIGOffset: Int, JPDA_CONFIGOffset: Int, FUSION_CONFIGOffset: Int, MEASUREMENTSOffset: Int, INITIAL_STATEOffset: Int, TRACK_TO_UPDATEOffset: Int, TRACKS_TO_CORRELATEOffset: Int) : Int {
+        fun createTKG(builder: FlatBufferBuilder, commandOffset: Int, filterConfigOffset: Int, immConfigOffset: Int, mhtConfigOffset: Int, jpdaConfigOffset: Int, fusionConfigOffset: Int, measurementsOffset: Int, initialStateOffset: Int, trackToUpdateOffset: Int, tracksToCorrelateOffset: Int) : Int {
             builder.startTable(10)
-            addTRACKS_TO_CORRELATE(builder, TRACKS_TO_CORRELATEOffset)
-            addTRACK_TO_UPDATE(builder, TRACK_TO_UPDATEOffset)
-            addINITIAL_STATE(builder, INITIAL_STATEOffset)
-            addMEASUREMENTS(builder, MEASUREMENTSOffset)
-            addFUSION_CONFIG(builder, FUSION_CONFIGOffset)
-            addJPDA_CONFIG(builder, JPDA_CONFIGOffset)
-            addMHT_CONFIG(builder, MHT_CONFIGOffset)
-            addIMM_CONFIG(builder, IMM_CONFIGOffset)
-            addFILTER_CONFIG(builder, FILTER_CONFIGOffset)
-            addCOMMAND(builder, COMMANDOffset)
+            addTRACKSTOCORRELATE(builder, tracksToCorrelateOffset)
+            addTRACKTOUPDATE(builder, trackToUpdateOffset)
+            addINITIALSTATE(builder, initialStateOffset)
+            addMEASUREMENTS(builder, measurementsOffset)
+            addFUSIONCONFIG(builder, fusionConfigOffset)
+            addJPDACONFIG(builder, jpdaConfigOffset)
+            addMHTCONFIG(builder, mhtConfigOffset)
+            addIMMCONFIG(builder, immConfigOffset)
+            addFILTERCONFIG(builder, filterConfigOffset)
+            addCOMMAND(builder, commandOffset)
             return endTKG(builder)
         }
         fun startTKG(builder: FlatBufferBuilder) = builder.startTable(10)
-        fun addCOMMAND(builder: FlatBufferBuilder, COMMAND: Int) = builder.addOffset(0, COMMAND, 0)
-        fun addFILTER_CONFIG(builder: FlatBufferBuilder, FILTER_CONFIG: Int) = builder.addOffset(1, FILTER_CONFIG, 0)
-        fun addIMM_CONFIG(builder: FlatBufferBuilder, IMM_CONFIG: Int) = builder.addOffset(2, IMM_CONFIG, 0)
-        fun addMHT_CONFIG(builder: FlatBufferBuilder, MHT_CONFIG: Int) = builder.addOffset(3, MHT_CONFIG, 0)
-        fun addJPDA_CONFIG(builder: FlatBufferBuilder, JPDA_CONFIG: Int) = builder.addOffset(4, JPDA_CONFIG, 0)
-        fun addFUSION_CONFIG(builder: FlatBufferBuilder, FUSION_CONFIG: Int) = builder.addOffset(5, FUSION_CONFIG, 0)
-        fun addMEASUREMENTS(builder: FlatBufferBuilder, MEASUREMENTS: Int) = builder.addOffset(6, MEASUREMENTS, 0)
-        fun addINITIAL_STATE(builder: FlatBufferBuilder, INITIAL_STATE: Int) = builder.addOffset(7, INITIAL_STATE, 0)
-        fun addTRACK_TO_UPDATE(builder: FlatBufferBuilder, TRACK_TO_UPDATE: Int) = builder.addOffset(8, TRACK_TO_UPDATE, 0)
-        fun addTRACKS_TO_CORRELATE(builder: FlatBufferBuilder, TRACKS_TO_CORRELATE: Int) = builder.addOffset(9, TRACKS_TO_CORRELATE, 0)
+        fun addCOMMAND(builder: FlatBufferBuilder, command: Int) = builder.addOffset(0, command, 0)
+        fun addFILTERCONFIG(builder: FlatBufferBuilder, filterConfig: Int) = builder.addOffset(1, filterConfig, 0)
+        fun addIMMCONFIG(builder: FlatBufferBuilder, immConfig: Int) = builder.addOffset(2, immConfig, 0)
+        fun addMHTCONFIG(builder: FlatBufferBuilder, mhtConfig: Int) = builder.addOffset(3, mhtConfig, 0)
+        fun addJPDACONFIG(builder: FlatBufferBuilder, jpdaConfig: Int) = builder.addOffset(4, jpdaConfig, 0)
+        fun addFUSIONCONFIG(builder: FlatBufferBuilder, fusionConfig: Int) = builder.addOffset(5, fusionConfig, 0)
+        fun addMEASUREMENTS(builder: FlatBufferBuilder, measurements: Int) = builder.addOffset(6, measurements, 0)
+        fun addINITIALSTATE(builder: FlatBufferBuilder, initialState: Int) = builder.addOffset(7, initialState, 0)
+        fun addTRACKTOUPDATE(builder: FlatBufferBuilder, trackToUpdate: Int) = builder.addOffset(8, trackToUpdate, 0)
+        fun addTRACKSTOCORRELATE(builder: FlatBufferBuilder, tracksToCorrelate: Int) = builder.addOffset(9, tracksToCorrelate, 0)
         fun createTracksToCorrelateVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {

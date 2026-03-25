@@ -32,49 +32,49 @@ class ACL : Table() {
     /**
      * Unique identifier for this grant
      */
-    val GRANT_ID : String
+    val grantId : String
         get() {
             val o = __offset(4)
             return if (o != 0) {
                 __string(o + bb_pos)
             } else {
-                throw AssertionError("No value for (required) field GRANT_ID")
+                throw AssertionError("No value for (required) field grantId")
             }
         }
-    val GRANT_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun GRANT_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val grantIdAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
+    fun grantIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * ID of the listing this grant applies to
      */
-    val LISTING_ID : String
+    val listingId : String
         get() {
             val o = __offset(6)
             return if (o != 0) {
                 __string(o + bb_pos)
             } else {
-                throw AssertionError("No value for (required) field LISTING_ID")
+                throw AssertionError("No value for (required) field listingId")
             }
         }
-    val LISTING_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun LISTING_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val listingIdAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
+    fun listingIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * Peer ID of the buyer/grantee
      */
-    val BUYER_PEER_ID : String
+    val buyerPeerId : String
         get() {
             val o = __offset(8)
             return if (o != 0) {
                 __string(o + bb_pos)
             } else {
-                throw AssertionError("No value for (required) field BUYER_PEER_ID")
+                throw AssertionError("No value for (required) field buyerPeerId")
             }
         }
-    val BUYER_PEER_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun BUYER_PEER_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val buyerPeerIdAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
+    fun buyerPeerIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
     /**
      * Buyer's encryption public key for encrypted delivery
      */
-    fun BUYER_ENCRYPTION_PUBKEY(j: Int) : UByte {
+    fun buyerEncryptionPubkey(j: Int) : UByte {
         val o = __offset(10)
         return if (o != 0) {
             bb.get(__vector(o) + j * 1).toUByte()
@@ -82,16 +82,16 @@ class ACL : Table() {
             0u
         }
     }
-    val BUYER_ENCRYPTION_PUBKEYLength : Int
+    val buyerEncryptionPubkeyLength : Int
         get() {
             val o = __offset(10); return if (o != 0) __vector_len(o) else 0
         }
-    val BUYER_ENCRYPTION_PUBKEYAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
-    fun BUYER_ENCRYPTION_PUBKEYInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
+    val buyerEncryptionPubkeyAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(10, 1)
+    fun buyerEncryptionPubkeyInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 10, 1)
     /**
      * Type of access granted
      */
-    val ACCESS_TYPE : Byte
+    val accessType : Byte
         get() {
             val o = __offset(12)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -99,7 +99,7 @@ class ACL : Table() {
     /**
      * Name of the pricing tier purchased
      */
-    val TIER_NAME : String?
+    val tierName : String?
         get() {
             val o = __offset(14)
             return if (o != 0) {
@@ -108,12 +108,12 @@ class ACL : Table() {
                 null
             }
         }
-    val TIER_NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(14, 1)
-    fun TIER_NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 14, 1)
+    val tierNameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(14, 1)
+    fun tierNameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 14, 1)
     /**
      * Unix timestamp when access was granted
      */
-    val GRANTED_AT : ULong
+    val grantedAt : ULong
         get() {
             val o = __offset(16)
             return if(o != 0) bb.getLong(o + bb_pos).toULong() else 0UL
@@ -121,7 +121,7 @@ class ACL : Table() {
     /**
      * Unix timestamp when access expires (0 = never expires)
      */
-    val EXPIRES_AT : ULong
+    val expiresAt : ULong
         get() {
             val o = __offset(18)
             return if(o != 0) bb.getLong(o + bb_pos).toULong() else 0UL
@@ -129,7 +129,7 @@ class ACL : Table() {
     /**
      * Transaction hash or reference proving payment
      */
-    val PAYMENT_TX_HASH : String?
+    val paymentTxHash : String?
         get() {
             val o = __offset(20)
             return if (o != 0) {
@@ -138,12 +138,12 @@ class ACL : Table() {
                 null
             }
         }
-    val PAYMENT_TX_HASHAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(20, 1)
-    fun PAYMENT_TX_HASHInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 20, 1)
+    val paymentTxHashAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(20, 1)
+    fun paymentTxHashInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 20, 1)
     /**
      * Payment method used
      */
-    val PAYMENT_METHOD : Byte
+    val paymentMethod : Byte
         get() {
             val o = __offset(22)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -151,7 +151,7 @@ class ACL : Table() {
     /**
      * Ed25519 signature from provider
      */
-    fun PROVIDER_SIGNATURE(j: Int) : UByte {
+    fun providerSignature(j: Int) : UByte {
         val o = __offset(24)
         return if (o != 0) {
             bb.get(__vector(o) + j * 1).toUByte()
@@ -159,40 +159,40 @@ class ACL : Table() {
             0u
         }
     }
-    val PROVIDER_SIGNATURELength : Int
+    val providerSignatureLength : Int
         get() {
             val o = __offset(24); return if (o != 0) __vector_len(o) else 0
         }
-    val PROVIDER_SIGNATUREAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(24, 1)
-    fun PROVIDER_SIGNATUREInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 24, 1)
+    val providerSignatureAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(24, 1)
+    fun providerSignatureInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 24, 1)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsACL(_bb: ByteBuffer): ACL = getRootAsACL(_bb, ACL())
         fun getRootAsACL(_bb: ByteBuffer, obj: ACL): ACL {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun ACLBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$ACL")
-        fun createACL(builder: FlatBufferBuilder, GRANT_IDOffset: Int, LISTING_IDOffset: Int, BUYER_PEER_IDOffset: Int, BUYER_ENCRYPTION_PUBKEYOffset: Int, ACCESS_TYPE: Byte, TIER_NAMEOffset: Int, GRANTED_AT: ULong, EXPIRES_AT: ULong, PAYMENT_TX_HASHOffset: Int, PAYMENT_METHOD: Byte, PROVIDER_SIGNATUREOffset: Int) : Int {
+        fun createACL(builder: FlatBufferBuilder, grantIdOffset: Int, listingIdOffset: Int, buyerPeerIdOffset: Int, buyerEncryptionPubkeyOffset: Int, accessType: Byte, tierNameOffset: Int, grantedAt: ULong, expiresAt: ULong, paymentTxHashOffset: Int, paymentMethod: Byte, providerSignatureOffset: Int) : Int {
             builder.startTable(11)
-            addEXPIRES_AT(builder, EXPIRES_AT)
-            addGRANTED_AT(builder, GRANTED_AT)
-            addPROVIDER_SIGNATURE(builder, PROVIDER_SIGNATUREOffset)
-            addPAYMENT_TX_HASH(builder, PAYMENT_TX_HASHOffset)
-            addTIER_NAME(builder, TIER_NAMEOffset)
-            addBUYER_ENCRYPTION_PUBKEY(builder, BUYER_ENCRYPTION_PUBKEYOffset)
-            addBUYER_PEER_ID(builder, BUYER_PEER_IDOffset)
-            addLISTING_ID(builder, LISTING_IDOffset)
-            addGRANT_ID(builder, GRANT_IDOffset)
-            addPAYMENT_METHOD(builder, PAYMENT_METHOD)
-            addACCESS_TYPE(builder, ACCESS_TYPE)
+            addEXPIRESAT(builder, expiresAt)
+            addGRANTEDAT(builder, grantedAt)
+            addPROVIDERSIGNATURE(builder, providerSignatureOffset)
+            addPAYMENTTXHASH(builder, paymentTxHashOffset)
+            addTIERNAME(builder, tierNameOffset)
+            addBUYERENCRYPTIONPUBKEY(builder, buyerEncryptionPubkeyOffset)
+            addBUYERPEERID(builder, buyerPeerIdOffset)
+            addLISTINGID(builder, listingIdOffset)
+            addGRANTID(builder, grantIdOffset)
+            addPAYMENTMETHOD(builder, paymentMethod)
+            addACCESSTYPE(builder, accessType)
             return endACL(builder)
         }
         fun startACL(builder: FlatBufferBuilder) = builder.startTable(11)
-        fun addGRANT_ID(builder: FlatBufferBuilder, GRANT_ID: Int) = builder.addOffset(0, GRANT_ID, 0)
-        fun addLISTING_ID(builder: FlatBufferBuilder, LISTING_ID: Int) = builder.addOffset(1, LISTING_ID, 0)
-        fun addBUYER_PEER_ID(builder: FlatBufferBuilder, BUYER_PEER_ID: Int) = builder.addOffset(2, BUYER_PEER_ID, 0)
-        fun addBUYER_ENCRYPTION_PUBKEY(builder: FlatBufferBuilder, BUYER_ENCRYPTION_PUBKEY: Int) = builder.addOffset(3, BUYER_ENCRYPTION_PUBKEY, 0)
+        fun addGRANTID(builder: FlatBufferBuilder, grantId: Int) = builder.addOffset(0, grantId, 0)
+        fun addLISTINGID(builder: FlatBufferBuilder, listingId: Int) = builder.addOffset(1, listingId, 0)
+        fun addBUYERPEERID(builder: FlatBufferBuilder, buyerPeerId: Int) = builder.addOffset(2, buyerPeerId, 0)
+        fun addBUYERENCRYPTIONPUBKEY(builder: FlatBufferBuilder, buyerEncryptionPubkey: Int) = builder.addOffset(3, buyerEncryptionPubkey, 0)
         @kotlin.ExperimentalUnsignedTypes
         fun createBuyerEncryptionPubkeyVector(builder: FlatBufferBuilder, data: UByteArray) : Int {
             builder.startVector(1, data.size, 1)
@@ -202,13 +202,13 @@ class ACL : Table() {
             return builder.endVector()
         }
         fun startBuyerEncryptionPubkeyVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(1, numElems, 1)
-        fun addACCESS_TYPE(builder: FlatBufferBuilder, ACCESS_TYPE: Byte) = builder.addByte(4, ACCESS_TYPE, 0)
-        fun addTIER_NAME(builder: FlatBufferBuilder, TIER_NAME: Int) = builder.addOffset(5, TIER_NAME, 0)
-        fun addGRANTED_AT(builder: FlatBufferBuilder, GRANTED_AT: ULong) = builder.addLong(6, GRANTED_AT.toLong(), 0)
-        fun addEXPIRES_AT(builder: FlatBufferBuilder, EXPIRES_AT: ULong) = builder.addLong(7, EXPIRES_AT.toLong(), 0)
-        fun addPAYMENT_TX_HASH(builder: FlatBufferBuilder, PAYMENT_TX_HASH: Int) = builder.addOffset(8, PAYMENT_TX_HASH, 0)
-        fun addPAYMENT_METHOD(builder: FlatBufferBuilder, PAYMENT_METHOD: Byte) = builder.addByte(9, PAYMENT_METHOD, 0)
-        fun addPROVIDER_SIGNATURE(builder: FlatBufferBuilder, PROVIDER_SIGNATURE: Int) = builder.addOffset(10, PROVIDER_SIGNATURE, 0)
+        fun addACCESSTYPE(builder: FlatBufferBuilder, accessType: Byte) = builder.addByte(4, accessType, 0)
+        fun addTIERNAME(builder: FlatBufferBuilder, tierName: Int) = builder.addOffset(5, tierName, 0)
+        fun addGRANTEDAT(builder: FlatBufferBuilder, grantedAt: ULong) = builder.addLong(6, grantedAt.toLong(), 0)
+        fun addEXPIRESAT(builder: FlatBufferBuilder, expiresAt: ULong) = builder.addLong(7, expiresAt.toLong(), 0)
+        fun addPAYMENTTXHASH(builder: FlatBufferBuilder, paymentTxHash: Int) = builder.addOffset(8, paymentTxHash, 0)
+        fun addPAYMENTMETHOD(builder: FlatBufferBuilder, paymentMethod: Byte) = builder.addByte(9, paymentMethod, 0)
+        fun addPROVIDERSIGNATURE(builder: FlatBufferBuilder, providerSignature: Int) = builder.addOffset(10, providerSignature, 0)
         @kotlin.ExperimentalUnsignedTypes
         fun createProviderSignatureVector(builder: FlatBufferBuilder, data: UByteArray) : Int {
             builder.startVector(1, data.size, 1)

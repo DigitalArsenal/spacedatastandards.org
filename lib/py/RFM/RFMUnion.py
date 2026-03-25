@@ -9,7 +9,7 @@ class RFMUnion(object):
     OrbitFrameWrapper = 3
     CustomFrameWrapper = 4
 
-def RfmunionCreator(unionType, table):
+def RFMUnionCreator(unionType, table):
     from flatbuffers.table import Table
     if not isinstance(table, Table):
         return None

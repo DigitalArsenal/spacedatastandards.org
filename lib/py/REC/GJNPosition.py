@@ -2,4 +2,149 @@
 
 # namespace: 
 
-# NOTE GJNPosition.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# A single position (longitude, latitude, optional altitude)
+class GJNPosition(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = GJNPosition()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsGJNPosition(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def GJNPositionBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x47\x4A\x4E", size_prefixed=size_prefixed)
+
+    # GJNPosition
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Longitude in decimal degrees (WGS84)
+    # GJNPosition
+    def LONGITUDE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Latitude in decimal degrees (WGS84)
+    # GJNPosition
+    def LATITUDE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Altitude in meters above WGS84 ellipsoid (optional)
+    # GJNPosition
+    def ALTITUDE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # True if altitude was explicitly provided (distinguishes 0 from absent)
+    # GJNPosition
+    def HAS_ALTITUDE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+def GJNPositionStart(builder):
+    builder.StartObject(4)
+
+def Start(builder):
+    GJNPositionStart(builder)
+
+def GJNPositionAddLONGITUDE(builder, LONGITUDE):
+    builder.PrependFloat64Slot(0, LONGITUDE, 0.0)
+
+def AddLONGITUDE(builder, LONGITUDE):
+    GJNPositionAddLONGITUDE(builder, LONGITUDE)
+
+def GJNPositionAddLATITUDE(builder, LATITUDE):
+    builder.PrependFloat64Slot(1, LATITUDE, 0.0)
+
+def AddLATITUDE(builder, LATITUDE):
+    GJNPositionAddLATITUDE(builder, LATITUDE)
+
+def GJNPositionAddALTITUDE(builder, ALTITUDE):
+    builder.PrependFloat64Slot(2, ALTITUDE, 0.0)
+
+def AddALTITUDE(builder, ALTITUDE):
+    GJNPositionAddALTITUDE(builder, ALTITUDE)
+
+def GJNPositionAddHAS_ALTITUDE(builder, HAS_ALTITUDE):
+    builder.PrependBoolSlot(3, HAS_ALTITUDE, 0)
+
+def AddHAS_ALTITUDE(builder, HAS_ALTITUDE):
+    GJNPositionAddHAS_ALTITUDE(builder, HAS_ALTITUDE)
+
+def GJNPositionEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return GJNPositionEnd(builder)
+
+
+class GJNPositionT(object):
+
+    # GJNPositionT
+    def __init__(
+        self,
+        LONGITUDE = 0.0,
+        LATITUDE = 0.0,
+        ALTITUDE = 0.0,
+        HAS_ALTITUDE = False,
+    ):
+        self.LONGITUDE = LONGITUDE  # type: float
+        self.LATITUDE = LATITUDE  # type: float
+        self.ALTITUDE = ALTITUDE  # type: float
+        self.HAS_ALTITUDE = HAS_ALTITUDE  # type: bool
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpGjnposition = GJNPosition()
+        tmpGjnposition.Init(buf, pos)
+        return cls.InitFromObj(tmpGjnposition)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpGjnposition):
+        x = GJNPositionT()
+        x._UnPack(tmpGjnposition)
+        return x
+
+    # GJNPositionT
+    def _UnPack(self, GJNPosition):
+        if GJNPosition is None:
+            return
+        self.LONGITUDE = GJNPosition.LONGITUDE()
+        self.LATITUDE = GJNPosition.LATITUDE()
+        self.ALTITUDE = GJNPosition.ALTITUDE()
+        self.HAS_ALTITUDE = GJNPosition.HAS_ALTITUDE()
+
+    # GJNPositionT
+    def Pack(self, builder):
+        GJNPositionStart(builder)
+        GJNPositionAddLONGITUDE(builder, self.LONGITUDE)
+        GJNPositionAddLATITUDE(builder, self.LATITUDE)
+        GJNPositionAddALTITUDE(builder, self.ALTITUDE)
+        GJNPositionAddHAS_ALTITUDE(builder, self.HAS_ALTITUDE)
+        GJNPosition = GJNPositionEnd(builder)
+        return GJNPosition

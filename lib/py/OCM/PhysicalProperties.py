@@ -227,6 +227,12 @@ def PhysicalPropertiesStartCOMMENTVector(builder, numElems):
 def StartCOMMENTVector(builder, numElems):
     return PhysicalPropertiesStartCOMMENTVector(builder, numElems)
 
+def PhysicalPropertiesCreateCOMMENTVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateCOMMENTVector(builder, data):
+    PhysicalPropertiesCreateCOMMENTVector(builder, data)
+
 def PhysicalPropertiesAddWET_MASS(builder, WET_MASS):
     builder.PrependFloat64Slot(1, WET_MASS, 0.0)
 
@@ -361,34 +367,57 @@ except:
 class PhysicalPropertiesT(object):
 
     # PhysicalPropertiesT
-    def __init__(self):
-        self.COMMENT = None  # type: List[str]
-        self.WET_MASS = 0.0  # type: float
-        self.DRY_MASS = 0.0  # type: float
-        self.MASS_UNITS = None  # type: str
-        self.OEB_Q1 = 0.0  # type: float
-        self.OEB_Q2 = 0.0  # type: float
-        self.OEB_Q3 = 0.0  # type: float
-        self.OEB_QC = 0.0  # type: float
-        self.OEB_MAX = 0.0  # type: float
-        self.OEB_INT = 0.0  # type: float
-        self.OEB_MIN = 0.0  # type: float
-        self.AREA_ALONG_OEB_MAX = 0.0  # type: float
-        self.AREA_ALONG_OEB_INT = 0.0  # type: float
-        self.AREA_ALONG_OEB_MIN = 0.0  # type: float
-        self.AREA_UNITS = None  # type: str
-        self.DRAG_CONST_AREA = 0.0  # type: float
-        self.DRAG_COEFF_NOM = 0.0  # type: float
-        self.DRAG_UNCERTAINTY = 0.0  # type: float
-        self.SRP_CONST_AREA = 0.0  # type: float
-        self.SOLAR_RAD_COEFF = 0.0  # type: float
-        self.SRP_UNCERTAINTY = 0.0  # type: float
+    def __init__(
+        self,
+        COMMENT = None,
+        WET_MASS = 0.0,
+        DRY_MASS = 0.0,
+        MASS_UNITS = None,
+        OEB_Q1 = 0.0,
+        OEB_Q2 = 0.0,
+        OEB_Q3 = 0.0,
+        OEB_QC = 0.0,
+        OEB_MAX = 0.0,
+        OEB_INT = 0.0,
+        OEB_MIN = 0.0,
+        AREA_ALONG_OEB_MAX = 0.0,
+        AREA_ALONG_OEB_INT = 0.0,
+        AREA_ALONG_OEB_MIN = 0.0,
+        AREA_UNITS = None,
+        DRAG_CONST_AREA = 0.0,
+        DRAG_COEFF_NOM = 0.0,
+        DRAG_UNCERTAINTY = 0.0,
+        SRP_CONST_AREA = 0.0,
+        SOLAR_RAD_COEFF = 0.0,
+        SRP_UNCERTAINTY = 0.0,
+    ):
+        self.COMMENT = COMMENT  # type: Optional[List[Optional[str]]]
+        self.WET_MASS = WET_MASS  # type: float
+        self.DRY_MASS = DRY_MASS  # type: float
+        self.MASS_UNITS = MASS_UNITS  # type: Optional[str]
+        self.OEB_Q1 = OEB_Q1  # type: float
+        self.OEB_Q2 = OEB_Q2  # type: float
+        self.OEB_Q3 = OEB_Q3  # type: float
+        self.OEB_QC = OEB_QC  # type: float
+        self.OEB_MAX = OEB_MAX  # type: float
+        self.OEB_INT = OEB_INT  # type: float
+        self.OEB_MIN = OEB_MIN  # type: float
+        self.AREA_ALONG_OEB_MAX = AREA_ALONG_OEB_MAX  # type: float
+        self.AREA_ALONG_OEB_INT = AREA_ALONG_OEB_INT  # type: float
+        self.AREA_ALONG_OEB_MIN = AREA_ALONG_OEB_MIN  # type: float
+        self.AREA_UNITS = AREA_UNITS  # type: Optional[str]
+        self.DRAG_CONST_AREA = DRAG_CONST_AREA  # type: float
+        self.DRAG_COEFF_NOM = DRAG_COEFF_NOM  # type: float
+        self.DRAG_UNCERTAINTY = DRAG_UNCERTAINTY  # type: float
+        self.SRP_CONST_AREA = SRP_CONST_AREA  # type: float
+        self.SOLAR_RAD_COEFF = SOLAR_RAD_COEFF  # type: float
+        self.SRP_UNCERTAINTY = SRP_UNCERTAINTY  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        physicalProperties = PhysicalProperties()
-        physicalProperties.Init(buf, pos)
-        return cls.InitFromObj(physicalProperties)
+        tmpPhysicalProperties = PhysicalProperties()
+        tmpPhysicalProperties.Init(buf, pos)
+        return cls.InitFromObj(tmpPhysicalProperties)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -396,39 +425,39 @@ class PhysicalPropertiesT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, physicalProperties):
+    def InitFromObj(cls, tmpPhysicalProperties):
         x = PhysicalPropertiesT()
-        x._UnPack(physicalProperties)
+        x._UnPack(tmpPhysicalProperties)
         return x
 
     # PhysicalPropertiesT
-    def _UnPack(self, physicalProperties):
-        if physicalProperties is None:
+    def _UnPack(self, PhysicalProperties):
+        if PhysicalProperties is None:
             return
-        if not physicalProperties.COMMENTIsNone():
+        if not PhysicalProperties.COMMENTIsNone():
             self.COMMENT = []
-            for i in range(physicalProperties.COMMENTLength()):
-                self.COMMENT.append(physicalProperties.COMMENT(i))
-        self.WET_MASS = physicalProperties.WET_MASS()
-        self.DRY_MASS = physicalProperties.DRY_MASS()
-        self.MASS_UNITS = physicalProperties.MASS_UNITS()
-        self.OEB_Q1 = physicalProperties.OEB_Q1()
-        self.OEB_Q2 = physicalProperties.OEB_Q2()
-        self.OEB_Q3 = physicalProperties.OEB_Q3()
-        self.OEB_QC = physicalProperties.OEB_QC()
-        self.OEB_MAX = physicalProperties.OEB_MAX()
-        self.OEB_INT = physicalProperties.OEB_INT()
-        self.OEB_MIN = physicalProperties.OEB_MIN()
-        self.AREA_ALONG_OEB_MAX = physicalProperties.AREA_ALONG_OEB_MAX()
-        self.AREA_ALONG_OEB_INT = physicalProperties.AREA_ALONG_OEB_INT()
-        self.AREA_ALONG_OEB_MIN = physicalProperties.AREA_ALONG_OEB_MIN()
-        self.AREA_UNITS = physicalProperties.AREA_UNITS()
-        self.DRAG_CONST_AREA = physicalProperties.DRAG_CONST_AREA()
-        self.DRAG_COEFF_NOM = physicalProperties.DRAG_COEFF_NOM()
-        self.DRAG_UNCERTAINTY = physicalProperties.DRAG_UNCERTAINTY()
-        self.SRP_CONST_AREA = physicalProperties.SRP_CONST_AREA()
-        self.SOLAR_RAD_COEFF = physicalProperties.SOLAR_RAD_COEFF()
-        self.SRP_UNCERTAINTY = physicalProperties.SRP_UNCERTAINTY()
+            for i in range(PhysicalProperties.COMMENTLength()):
+                self.COMMENT.append(PhysicalProperties.COMMENT(i))
+        self.WET_MASS = PhysicalProperties.WET_MASS()
+        self.DRY_MASS = PhysicalProperties.DRY_MASS()
+        self.MASS_UNITS = PhysicalProperties.MASS_UNITS()
+        self.OEB_Q1 = PhysicalProperties.OEB_Q1()
+        self.OEB_Q2 = PhysicalProperties.OEB_Q2()
+        self.OEB_Q3 = PhysicalProperties.OEB_Q3()
+        self.OEB_QC = PhysicalProperties.OEB_QC()
+        self.OEB_MAX = PhysicalProperties.OEB_MAX()
+        self.OEB_INT = PhysicalProperties.OEB_INT()
+        self.OEB_MIN = PhysicalProperties.OEB_MIN()
+        self.AREA_ALONG_OEB_MAX = PhysicalProperties.AREA_ALONG_OEB_MAX()
+        self.AREA_ALONG_OEB_INT = PhysicalProperties.AREA_ALONG_OEB_INT()
+        self.AREA_ALONG_OEB_MIN = PhysicalProperties.AREA_ALONG_OEB_MIN()
+        self.AREA_UNITS = PhysicalProperties.AREA_UNITS()
+        self.DRAG_CONST_AREA = PhysicalProperties.DRAG_CONST_AREA()
+        self.DRAG_COEFF_NOM = PhysicalProperties.DRAG_COEFF_NOM()
+        self.DRAG_UNCERTAINTY = PhysicalProperties.DRAG_UNCERTAINTY()
+        self.SRP_CONST_AREA = PhysicalProperties.SRP_CONST_AREA()
+        self.SOLAR_RAD_COEFF = PhysicalProperties.SOLAR_RAD_COEFF()
+        self.SRP_UNCERTAINTY = PhysicalProperties.SRP_UNCERTAINTY()
 
     # PhysicalPropertiesT
     def Pack(self, builder):
@@ -469,5 +498,5 @@ class PhysicalPropertiesT(object):
         PhysicalPropertiesAddSRP_CONST_AREA(builder, self.SRP_CONST_AREA)
         PhysicalPropertiesAddSOLAR_RAD_COEFF(builder, self.SOLAR_RAD_COEFF)
         PhysicalPropertiesAddSRP_UNCERTAINTY(builder, self.SRP_UNCERTAINTY)
-        physicalProperties = PhysicalPropertiesEnd(builder)
-        return physicalProperties
+        PhysicalProperties = PhysicalPropertiesEnd(builder)
+        return PhysicalProperties

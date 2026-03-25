@@ -51,6 +51,10 @@ func (rcv *CZMDynamicProperty) NAME() []byte {
 	return nil
 }
 
+func (rcv *CZMDynamicProperty) Name() []byte {
+	return rcv.NAME()
+}
+
 /// Dotted path name, e.g. "billboard.scale", "point.color"
 /// Sampled data (when property uses epoch + data array)
 func (rcv *CZMDynamicProperty) SAMPLED(obj *CZMDynSampled) *CZMDynSampled {
@@ -66,6 +70,10 @@ func (rcv *CZMDynamicProperty) SAMPLED(obj *CZMDynSampled) *CZMDynSampled {
 	return nil
 }
 
+func (rcv *CZMDynamicProperty) Sampled(obj *CZMDynSampled) *CZMDynSampled {
+	return rcv.SAMPLED(obj)
+}
+
 /// Sampled data (when property uses epoch + data array)
 /// Interval-based values
 func (rcv *CZMDynamicProperty) INTERVALS(obj *CZMDynInterval, j int) bool {
@@ -74,10 +82,17 @@ func (rcv *CZMDynamicProperty) INTERVALS(obj *CZMDynInterval, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(CZMDynInterval)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *CZMDynamicProperty) Intervals(obj *CZMDynInterval, j int) bool {
+	return rcv.INTERVALS(obj, j)
 }
 
 func (rcv *CZMDynamicProperty) INTERVALSLength() int {
@@ -86,6 +101,10 @@ func (rcv *CZMDynamicProperty) INTERVALSLength() int {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *CZMDynamicProperty) IntervalsLength() int {
+	return rcv.INTERVALSLength()
 }
 
 /// Interval-based values
@@ -98,6 +117,10 @@ func (rcv *CZMDynamicProperty) REFERENCE() []byte {
 	return nil
 }
 
+func (rcv *CZMDynamicProperty) Reference() []byte {
+	return rcv.REFERENCE()
+}
+
 /// Reference to another entity's property
 func CZMDynamicPropertyStart(builder *flatbuffers.Builder) {
 	builder.StartObject(4)
@@ -105,17 +128,32 @@ func CZMDynamicPropertyStart(builder *flatbuffers.Builder) {
 func CZMDynamicPropertyAddNAME(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(NAME), 0)
 }
+func CZMDynamicPropertyAddName(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
+	CZMDynamicPropertyAddNAME(builder, NAME)
+}
 func CZMDynamicPropertyAddSAMPLED(builder *flatbuffers.Builder, SAMPLED flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(SAMPLED), 0)
+}
+func CZMDynamicPropertyAddSampled(builder *flatbuffers.Builder, SAMPLED flatbuffers.UOffsetT) {
+	CZMDynamicPropertyAddSAMPLED(builder, SAMPLED)
 }
 func CZMDynamicPropertyAddINTERVALS(builder *flatbuffers.Builder, INTERVALS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(INTERVALS), 0)
 }
+func CZMDynamicPropertyAddIntervals(builder *flatbuffers.Builder, INTERVALS flatbuffers.UOffsetT) {
+	CZMDynamicPropertyAddINTERVALS(builder, INTERVALS)
+}
 func CZMDynamicPropertyStartINTERVALSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
+func CZMDynamicPropertyStartIntervalsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return CZMDynamicPropertyStartINTERVALSVector(builder, numElems)
+}
 func CZMDynamicPropertyAddREFERENCE(builder *flatbuffers.Builder, REFERENCE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(REFERENCE), 0)
+}
+func CZMDynamicPropertyAddReference(builder *flatbuffers.Builder, REFERENCE flatbuffers.UOffsetT) {
+	CZMDynamicPropertyAddREFERENCE(builder, REFERENCE)
 }
 func CZMDynamicPropertyEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

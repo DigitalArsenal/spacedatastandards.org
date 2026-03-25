@@ -297,30 +297,49 @@ except:
 class KMLGroundOverlayT(object):
 
     # KMLGroundOverlayT
-    def __init__(self):
-        self.NAME = None  # type: str
-        self.DESCRIPTION = None  # type: str
-        self.VISIBILITY = False  # type: bool
-        self.OPEN = False  # type: bool
-        self.ICON_HREF = None  # type: str
-        self.COLOR = None  # type: str
-        self.NORTH = 0.0  # type: float
-        self.SOUTH = 0.0  # type: float
-        self.EAST = 0.0  # type: float
-        self.WEST = 0.0  # type: float
-        self.ROTATION = 0.0  # type: float
-        self.ALTITUDE = 0.0  # type: float
-        self.ALTITUDE_MODE = 0  # type: int
-        self.DRAW_ORDER = 0  # type: int
-        self.LAT_LON_QUAD = None  # type: Optional[KMLLatLonQuad.KMLLatLonQuadT]
-        self.STYLE_URL = None  # type: str
-        self.REGION = None  # type: Optional[KMLRegion.KMLRegionT]
+    def __init__(
+        self,
+        NAME = None,
+        DESCRIPTION = None,
+        VISIBILITY = False,
+        OPEN = False,
+        ICON_HREF = None,
+        COLOR = None,
+        NORTH = 0.0,
+        SOUTH = 0.0,
+        EAST = 0.0,
+        WEST = 0.0,
+        ROTATION = 0.0,
+        ALTITUDE = 0.0,
+        ALTITUDE_MODE = 0,
+        DRAW_ORDER = 0,
+        LAT_LON_QUAD = None,
+        STYLE_URL = None,
+        REGION = None,
+    ):
+        self.NAME = NAME  # type: Optional[str]
+        self.DESCRIPTION = DESCRIPTION  # type: Optional[str]
+        self.VISIBILITY = VISIBILITY  # type: bool
+        self.OPEN = OPEN  # type: bool
+        self.ICON_HREF = ICON_HREF  # type: Optional[str]
+        self.COLOR = COLOR  # type: Optional[str]
+        self.NORTH = NORTH  # type: float
+        self.SOUTH = SOUTH  # type: float
+        self.EAST = EAST  # type: float
+        self.WEST = WEST  # type: float
+        self.ROTATION = ROTATION  # type: float
+        self.ALTITUDE = ALTITUDE  # type: float
+        self.ALTITUDE_MODE = ALTITUDE_MODE  # type: int
+        self.DRAW_ORDER = DRAW_ORDER  # type: int
+        self.LAT_LON_QUAD = LAT_LON_QUAD  # type: Optional[KMLLatLonQuad.KMLLatLonQuadT]
+        self.STYLE_URL = STYLE_URL  # type: Optional[str]
+        self.REGION = REGION  # type: Optional[KMLRegion.KMLRegionT]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        kmlgroundOverlay = KMLGroundOverlay()
-        kmlgroundOverlay.Init(buf, pos)
-        return cls.InitFromObj(kmlgroundOverlay)
+        tmpKmlgroundOverlay = KMLGroundOverlay()
+        tmpKmlgroundOverlay.Init(buf, pos)
+        return cls.InitFromObj(tmpKmlgroundOverlay)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -328,34 +347,34 @@ class KMLGroundOverlayT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, kmlgroundOverlay):
+    def InitFromObj(cls, tmpKmlgroundOverlay):
         x = KMLGroundOverlayT()
-        x._UnPack(kmlgroundOverlay)
+        x._UnPack(tmpKmlgroundOverlay)
         return x
 
     # KMLGroundOverlayT
-    def _UnPack(self, kmlgroundOverlay):
-        if kmlgroundOverlay is None:
+    def _UnPack(self, KMLGroundOverlay):
+        if KMLGroundOverlay is None:
             return
-        self.NAME = kmlgroundOverlay.NAME()
-        self.DESCRIPTION = kmlgroundOverlay.DESCRIPTION()
-        self.VISIBILITY = kmlgroundOverlay.VISIBILITY()
-        self.OPEN = kmlgroundOverlay.OPEN()
-        self.ICON_HREF = kmlgroundOverlay.ICON_HREF()
-        self.COLOR = kmlgroundOverlay.COLOR()
-        self.NORTH = kmlgroundOverlay.NORTH()
-        self.SOUTH = kmlgroundOverlay.SOUTH()
-        self.EAST = kmlgroundOverlay.EAST()
-        self.WEST = kmlgroundOverlay.WEST()
-        self.ROTATION = kmlgroundOverlay.ROTATION()
-        self.ALTITUDE = kmlgroundOverlay.ALTITUDE()
-        self.ALTITUDE_MODE = kmlgroundOverlay.ALTITUDE_MODE()
-        self.DRAW_ORDER = kmlgroundOverlay.DRAW_ORDER()
-        if kmlgroundOverlay.LAT_LON_QUAD() is not None:
-            self.LAT_LON_QUAD = KMLLatLonQuad.KMLLatLonQuadT.InitFromObj(kmlgroundOverlay.LAT_LON_QUAD())
-        self.STYLE_URL = kmlgroundOverlay.STYLE_URL()
-        if kmlgroundOverlay.REGION() is not None:
-            self.REGION = KMLRegion.KMLRegionT.InitFromObj(kmlgroundOverlay.REGION())
+        self.NAME = KMLGroundOverlay.NAME()
+        self.DESCRIPTION = KMLGroundOverlay.DESCRIPTION()
+        self.VISIBILITY = KMLGroundOverlay.VISIBILITY()
+        self.OPEN = KMLGroundOverlay.OPEN()
+        self.ICON_HREF = KMLGroundOverlay.ICON_HREF()
+        self.COLOR = KMLGroundOverlay.COLOR()
+        self.NORTH = KMLGroundOverlay.NORTH()
+        self.SOUTH = KMLGroundOverlay.SOUTH()
+        self.EAST = KMLGroundOverlay.EAST()
+        self.WEST = KMLGroundOverlay.WEST()
+        self.ROTATION = KMLGroundOverlay.ROTATION()
+        self.ALTITUDE = KMLGroundOverlay.ALTITUDE()
+        self.ALTITUDE_MODE = KMLGroundOverlay.ALTITUDE_MODE()
+        self.DRAW_ORDER = KMLGroundOverlay.DRAW_ORDER()
+        if KMLGroundOverlay.LAT_LON_QUAD() is not None:
+            self.LAT_LON_QUAD = KMLLatLonQuad.KMLLatLonQuadT.InitFromObj(KMLGroundOverlay.LAT_LON_QUAD())
+        self.STYLE_URL = KMLGroundOverlay.STYLE_URL()
+        if KMLGroundOverlay.REGION() is not None:
+            self.REGION = KMLRegion.KMLRegionT.InitFromObj(KMLGroundOverlay.REGION())
 
     # KMLGroundOverlayT
     def Pack(self, builder):
@@ -398,5 +417,5 @@ class KMLGroundOverlayT(object):
             KMLGroundOverlayAddSTYLE_URL(builder, STYLE_URL)
         if self.REGION is not None:
             KMLGroundOverlayAddREGION(builder, REGION)
-        kmlgroundOverlay = KMLGroundOverlayEnd(builder)
-        return kmlgroundOverlay
+        KMLGroundOverlay = KMLGroundOverlayEnd(builder)
+        return KMLGroundOverlay

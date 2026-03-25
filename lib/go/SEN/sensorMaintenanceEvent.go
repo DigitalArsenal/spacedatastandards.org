@@ -51,6 +51,10 @@ func (rcv *sensorMaintenanceEvent) START_TIME() []byte {
 	return nil
 }
 
+func (rcv *sensorMaintenanceEvent) StartTime() []byte {
+	return rcv.START_TIME()
+}
+
 /// Maintenance start time (ISO 8601)
 /// Maintenance end time (ISO 8601)
 func (rcv *sensorMaintenanceEvent) END_TIME() []byte {
@@ -59,6 +63,10 @@ func (rcv *sensorMaintenanceEvent) END_TIME() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *sensorMaintenanceEvent) EndTime() []byte {
+	return rcv.END_TIME()
 }
 
 /// Maintenance end time (ISO 8601)
@@ -71,9 +79,17 @@ func (rcv *sensorMaintenanceEvent) TYPE() maintenanceType {
 	return 0
 }
 
+func (rcv *sensorMaintenanceEvent) Type() maintenanceType {
+	return rcv.TYPE()
+}
+
 /// Type of maintenance
 func (rcv *sensorMaintenanceEvent) MutateTYPE(n maintenanceType) bool {
 	return rcv._tab.MutateInt8Slot(8, int8(n))
+}
+
+func (rcv *sensorMaintenanceEvent) MutateType(n maintenanceType) bool {
+	return rcv.MutateTYPE(n)
 }
 
 /// Description of maintenance performed
@@ -83,6 +99,10 @@ func (rcv *sensorMaintenanceEvent) DESCRIPTION() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *sensorMaintenanceEvent) Description() []byte {
+	return rcv.DESCRIPTION()
 }
 
 /// Description of maintenance performed
@@ -96,12 +116,20 @@ func (rcv *sensorMaintenanceEvent) COMPONENTS(j int) []byte {
 	return nil
 }
 
+func (rcv *sensorMaintenanceEvent) Components(j int) []byte {
+	return rcv.COMPONENTS(j)
+}
+
 func (rcv *sensorMaintenanceEvent) COMPONENTSLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *sensorMaintenanceEvent) ComponentsLength() int {
+	return rcv.COMPONENTSLength()
 }
 
 /// Components affected
@@ -111,20 +139,38 @@ func sensorMaintenanceEventStart(builder *flatbuffers.Builder) {
 func sensorMaintenanceEventAddSTART_TIME(builder *flatbuffers.Builder, START_TIME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(START_TIME), 0)
 }
+func sensorMaintenanceEventAddStartTime(builder *flatbuffers.Builder, START_TIME flatbuffers.UOffsetT) {
+	sensorMaintenanceEventAddSTART_TIME(builder, START_TIME)
+}
 func sensorMaintenanceEventAddEND_TIME(builder *flatbuffers.Builder, END_TIME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(END_TIME), 0)
+}
+func sensorMaintenanceEventAddEndTime(builder *flatbuffers.Builder, END_TIME flatbuffers.UOffsetT) {
+	sensorMaintenanceEventAddEND_TIME(builder, END_TIME)
 }
 func sensorMaintenanceEventAddTYPE(builder *flatbuffers.Builder, TYPE maintenanceType) {
 	builder.PrependInt8Slot(2, int8(TYPE), 0)
 }
+func sensorMaintenanceEventAddType(builder *flatbuffers.Builder, TYPE maintenanceType) {
+	sensorMaintenanceEventAddTYPE(builder, TYPE)
+}
 func sensorMaintenanceEventAddDESCRIPTION(builder *flatbuffers.Builder, DESCRIPTION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(DESCRIPTION), 0)
+}
+func sensorMaintenanceEventAddDescription(builder *flatbuffers.Builder, DESCRIPTION flatbuffers.UOffsetT) {
+	sensorMaintenanceEventAddDESCRIPTION(builder, DESCRIPTION)
 }
 func sensorMaintenanceEventAddCOMPONENTS(builder *flatbuffers.Builder, COMPONENTS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(COMPONENTS), 0)
 }
+func sensorMaintenanceEventAddComponents(builder *flatbuffers.Builder, COMPONENTS flatbuffers.UOffsetT) {
+	sensorMaintenanceEventAddCOMPONENTS(builder, COMPONENTS)
+}
 func sensorMaintenanceEventStartCOMPONENTSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func sensorMaintenanceEventStartComponentsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return sensorMaintenanceEventStartCOMPONENTSVector(builder, numElems)
 }
 func sensorMaintenanceEventEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

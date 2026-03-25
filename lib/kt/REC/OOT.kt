@@ -32,7 +32,7 @@ class OOT : Table() {
     /**
      * Unique identifier
      */
-    val ID : String?
+    val id : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class OOT : Table() {
                 null
             }
         }
-    val IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val idAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun idInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Reference to parent on-orbit object
      */
-    val ID_ON_ORBIT : String?
+    val idOnOrbit : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -55,12 +55,12 @@ class OOT : Table() {
                 null
             }
         }
-    val ID_ON_ORBITAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun ID_ON_ORBITInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val idOnOrbitAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun idOnOrbitInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * Reference to thruster specification
      */
-    val ID_THRUSTER : String?
+    val idThruster : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -69,12 +69,12 @@ class OOT : Table() {
                 null
             }
         }
-    val ID_THRUSTERAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun ID_THRUSTERInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val idThrusterAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun idThrusterInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
     /**
      * Thruster name or designation
      */
-    val NAME : String?
+    val name : String?
         get() {
             val o = __offset(10)
             return if (o != 0) {
@@ -83,12 +83,12 @@ class OOT : Table() {
                 null
             }
         }
-    val NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
-    fun NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
+    val nameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(10, 1)
+    fun nameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 10, 1)
     /**
      * Thruster type
      */
-    val TYPE : Byte
+    val type : Byte
         get() {
             val o = __offset(12)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -96,7 +96,7 @@ class OOT : Table() {
     /**
      * Number of thrusters of this type
      */
-    val QUANTITY : UInt
+    val quantity : UInt
         get() {
             val o = __offset(14)
             return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
@@ -104,7 +104,7 @@ class OOT : Table() {
     /**
      * Thrust output in Newtons
      */
-    val THRUST : Double
+    val thrust : Double
         get() {
             val o = __offset(16)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -112,7 +112,7 @@ class OOT : Table() {
     /**
      * Specific impulse in seconds
      */
-    val ISP : Double
+    val isp : Double
         get() {
             val o = __offset(18)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -120,7 +120,7 @@ class OOT : Table() {
     /**
      * Propellant type (e.g., HYDRAZINE, XENON, KRYPTON, MMH_NTO, N2, GN2)
      */
-    val PROPELLANT : String?
+    val propellant : String?
         get() {
             val o = __offset(20)
             return if (o != 0) {
@@ -129,12 +129,12 @@ class OOT : Table() {
                 null
             }
         }
-    val PROPELLANTAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(20, 1)
-    fun PROPELLANTInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 20, 1)
+    val propellantAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(20, 1)
+    fun propellantInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 20, 1)
     /**
      * Total propellant mass in kg
      */
-    val PROPELLANT_MASS : Double
+    val propellantMass : Double
         get() {
             val o = __offset(22)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -142,7 +142,7 @@ class OOT : Table() {
     /**
      * Remaining propellant mass in kg
      */
-    val PROPELLANT_REMAINING : Double
+    val propellantRemaining : Double
         get() {
             val o = __offset(24)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -150,7 +150,7 @@ class OOT : Table() {
     /**
      * Total delta-V capability in m/s
      */
-    val DELTA_V_TOTAL : Double
+    val deltaVTotal : Double
         get() {
             val o = __offset(26)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -158,7 +158,7 @@ class OOT : Table() {
     /**
      * Remaining delta-V in m/s
      */
-    val DELTA_V_REMAINING : Double
+    val deltaVRemaining : Double
         get() {
             val o = __offset(28)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -166,7 +166,7 @@ class OOT : Table() {
     /**
      * Total impulse in Newton-seconds
      */
-    val TOTAL_IMPULSE : Double
+    val totalImpulse : Double
         get() {
             val o = __offset(30)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -174,7 +174,7 @@ class OOT : Table() {
     /**
      * Thruster dry mass in kg
      */
-    val MASS : Double
+    val mass : Double
         get() {
             val o = __offset(32)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -182,7 +182,7 @@ class OOT : Table() {
     /**
      * Purpose (e.g., ORBIT_RAISING, STATION_KEEPING, ATTITUDE_CONTROL, DEORBIT)
      */
-    val PURPOSE : String?
+    val purpose : String?
         get() {
             val o = __offset(34)
             return if (o != 0) {
@@ -191,12 +191,12 @@ class OOT : Table() {
                 null
             }
         }
-    val PURPOSEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(34, 1)
-    fun PURPOSEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 34, 1)
+    val purposeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(34, 1)
+    fun purposeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 34, 1)
     /**
      * Additional notes
      */
-    val NOTES : String?
+    val notes : String?
         get() {
             val o = __offset(36)
             return if (o != 0) {
@@ -205,55 +205,55 @@ class OOT : Table() {
                 null
             }
         }
-    val NOTESAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(36, 1)
-    fun NOTESInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 36, 1)
+    val notesAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(36, 1)
+    fun notesInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 36, 1)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsOOT(_bb: ByteBuffer): OOT = getRootAsOOT(_bb, OOT())
         fun getRootAsOOT(_bb: ByteBuffer, obj: OOT): OOT {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun OOTBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$OOT")
-        fun createOOT(builder: FlatBufferBuilder, IDOffset: Int, ID_ON_ORBITOffset: Int, ID_THRUSTEROffset: Int, NAMEOffset: Int, TYPE: Byte, QUANTITY: UInt, THRUST: Double, ISP: Double, PROPELLANTOffset: Int, PROPELLANT_MASS: Double, PROPELLANT_REMAINING: Double, DELTA_V_TOTAL: Double, DELTA_V_REMAINING: Double, TOTAL_IMPULSE: Double, MASS: Double, PURPOSEOffset: Int, NOTESOffset: Int) : Int {
+        fun createOOT(builder: FlatBufferBuilder, idOffset: Int, idOnOrbitOffset: Int, idThrusterOffset: Int, nameOffset: Int, type: Byte, quantity: UInt, thrust: Double, isp: Double, propellantOffset: Int, propellantMass: Double, propellantRemaining: Double, deltaVTotal: Double, deltaVRemaining: Double, totalImpulse: Double, mass: Double, purposeOffset: Int, notesOffset: Int) : Int {
             builder.startTable(17)
-            addMASS(builder, MASS)
-            addTOTAL_IMPULSE(builder, TOTAL_IMPULSE)
-            addDELTA_V_REMAINING(builder, DELTA_V_REMAINING)
-            addDELTA_V_TOTAL(builder, DELTA_V_TOTAL)
-            addPROPELLANT_REMAINING(builder, PROPELLANT_REMAINING)
-            addPROPELLANT_MASS(builder, PROPELLANT_MASS)
-            addISP(builder, ISP)
-            addTHRUST(builder, THRUST)
-            addNOTES(builder, NOTESOffset)
-            addPURPOSE(builder, PURPOSEOffset)
-            addPROPELLANT(builder, PROPELLANTOffset)
-            addQUANTITY(builder, QUANTITY)
-            addNAME(builder, NAMEOffset)
-            addID_THRUSTER(builder, ID_THRUSTEROffset)
-            addID_ON_ORBIT(builder, ID_ON_ORBITOffset)
-            addID(builder, IDOffset)
-            addTYPE(builder, TYPE)
+            addMASS(builder, mass)
+            addTOTALIMPULSE(builder, totalImpulse)
+            addDELTAVREMAINING(builder, deltaVRemaining)
+            addDELTAVTOTAL(builder, deltaVTotal)
+            addPROPELLANTREMAINING(builder, propellantRemaining)
+            addPROPELLANTMASS(builder, propellantMass)
+            addISP(builder, isp)
+            addTHRUST(builder, thrust)
+            addNOTES(builder, notesOffset)
+            addPURPOSE(builder, purposeOffset)
+            addPROPELLANT(builder, propellantOffset)
+            addQUANTITY(builder, quantity)
+            addNAME(builder, nameOffset)
+            addIDTHRUSTER(builder, idThrusterOffset)
+            addIDONORBIT(builder, idOnOrbitOffset)
+            addID(builder, idOffset)
+            addTYPE(builder, type)
             return endOOT(builder)
         }
         fun startOOT(builder: FlatBufferBuilder) = builder.startTable(17)
-        fun addID(builder: FlatBufferBuilder, ID: Int) = builder.addOffset(0, ID, 0)
-        fun addID_ON_ORBIT(builder: FlatBufferBuilder, ID_ON_ORBIT: Int) = builder.addOffset(1, ID_ON_ORBIT, 0)
-        fun addID_THRUSTER(builder: FlatBufferBuilder, ID_THRUSTER: Int) = builder.addOffset(2, ID_THRUSTER, 0)
-        fun addNAME(builder: FlatBufferBuilder, NAME: Int) = builder.addOffset(3, NAME, 0)
-        fun addTYPE(builder: FlatBufferBuilder, TYPE: Byte) = builder.addByte(4, TYPE, 0)
-        fun addQUANTITY(builder: FlatBufferBuilder, QUANTITY: UInt) = builder.addInt(5, QUANTITY.toInt(), 0)
-        fun addTHRUST(builder: FlatBufferBuilder, THRUST: Double) = builder.addDouble(6, THRUST, 0.0)
-        fun addISP(builder: FlatBufferBuilder, ISP: Double) = builder.addDouble(7, ISP, 0.0)
-        fun addPROPELLANT(builder: FlatBufferBuilder, PROPELLANT: Int) = builder.addOffset(8, PROPELLANT, 0)
-        fun addPROPELLANT_MASS(builder: FlatBufferBuilder, PROPELLANT_MASS: Double) = builder.addDouble(9, PROPELLANT_MASS, 0.0)
-        fun addPROPELLANT_REMAINING(builder: FlatBufferBuilder, PROPELLANT_REMAINING: Double) = builder.addDouble(10, PROPELLANT_REMAINING, 0.0)
-        fun addDELTA_V_TOTAL(builder: FlatBufferBuilder, DELTA_V_TOTAL: Double) = builder.addDouble(11, DELTA_V_TOTAL, 0.0)
-        fun addDELTA_V_REMAINING(builder: FlatBufferBuilder, DELTA_V_REMAINING: Double) = builder.addDouble(12, DELTA_V_REMAINING, 0.0)
-        fun addTOTAL_IMPULSE(builder: FlatBufferBuilder, TOTAL_IMPULSE: Double) = builder.addDouble(13, TOTAL_IMPULSE, 0.0)
-        fun addMASS(builder: FlatBufferBuilder, MASS: Double) = builder.addDouble(14, MASS, 0.0)
-        fun addPURPOSE(builder: FlatBufferBuilder, PURPOSE: Int) = builder.addOffset(15, PURPOSE, 0)
-        fun addNOTES(builder: FlatBufferBuilder, NOTES: Int) = builder.addOffset(16, NOTES, 0)
+        fun addID(builder: FlatBufferBuilder, id: Int) = builder.addOffset(0, id, 0)
+        fun addIDONORBIT(builder: FlatBufferBuilder, idOnOrbit: Int) = builder.addOffset(1, idOnOrbit, 0)
+        fun addIDTHRUSTER(builder: FlatBufferBuilder, idThruster: Int) = builder.addOffset(2, idThruster, 0)
+        fun addNAME(builder: FlatBufferBuilder, name: Int) = builder.addOffset(3, name, 0)
+        fun addTYPE(builder: FlatBufferBuilder, type: Byte) = builder.addByte(4, type, 0)
+        fun addQUANTITY(builder: FlatBufferBuilder, quantity: UInt) = builder.addInt(5, quantity.toInt(), 0)
+        fun addTHRUST(builder: FlatBufferBuilder, thrust: Double) = builder.addDouble(6, thrust, 0.0)
+        fun addISP(builder: FlatBufferBuilder, isp: Double) = builder.addDouble(7, isp, 0.0)
+        fun addPROPELLANT(builder: FlatBufferBuilder, propellant: Int) = builder.addOffset(8, propellant, 0)
+        fun addPROPELLANTMASS(builder: FlatBufferBuilder, propellantMass: Double) = builder.addDouble(9, propellantMass, 0.0)
+        fun addPROPELLANTREMAINING(builder: FlatBufferBuilder, propellantRemaining: Double) = builder.addDouble(10, propellantRemaining, 0.0)
+        fun addDELTAVTOTAL(builder: FlatBufferBuilder, deltaVTotal: Double) = builder.addDouble(11, deltaVTotal, 0.0)
+        fun addDELTAVREMAINING(builder: FlatBufferBuilder, deltaVRemaining: Double) = builder.addDouble(12, deltaVRemaining, 0.0)
+        fun addTOTALIMPULSE(builder: FlatBufferBuilder, totalImpulse: Double) = builder.addDouble(13, totalImpulse, 0.0)
+        fun addMASS(builder: FlatBufferBuilder, mass: Double) = builder.addDouble(14, mass, 0.0)
+        fun addPURPOSE(builder: FlatBufferBuilder, purpose: Int) = builder.addOffset(15, purpose, 0)
+        fun addNOTES(builder: FlatBufferBuilder, notes: Int) = builder.addOffset(16, notes, 0)
         fun endOOT(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

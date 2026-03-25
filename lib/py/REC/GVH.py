@@ -2,4 +2,571 @@
 
 # namespace: 
 
-# NOTE GVH.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Ground Vehicles
+class GVH(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = GVH()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsGVH(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def GVHBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x47\x56\x48", size_prefixed=size_prefixed)
+
+    # GVH
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # GVH
+    def POSITION_X(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # GVH
+    def POSITION_Y(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # GVH
+    def POSITION_Z(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # GVH
+    def VELOCITY_X(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # GVH
+    def VELOCITY_Y(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # GVH
+    def VELOCITY_Z(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # GVH
+    def ATTITUDE_X(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # GVH
+    def ATTITUDE_Y(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # GVH
+    def ATTITUDE_Z(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # GVH
+    def ATTITUDE_W(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # GVH
+    def OMEGA_X(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # GVH
+    def OMEGA_Y(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # GVH
+    def OMEGA_Z(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # GVH
+    def SPEED(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # GVH
+    def HEADING(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # GVH
+    def LATERAL_G(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # GVH
+    def LONGITUDINAL_G(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # GVH
+    def TURRET(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # GVH
+    def DRIVETRAIN(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # GVH
+    def SUSPENSION_LF(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # GVH
+    def SUSPENSION_RF(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # GVH
+    def SUSPENSION_LR(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # GVH
+    def SUSPENSION_RR(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # GVH
+    def VEHICLE_TYPE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
+        return 0
+
+    # GVH
+    def DRIVE_TYPE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(52))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
+        return 0
+
+    # GVH
+    def ENGINE_RUNNING(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(54))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
+        return 0
+
+    # GVH
+    def LIGHTS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(56))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
+        return 0
+
+    # GVH
+    def FUEL_LEVEL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+def GVHStart(builder):
+    builder.StartObject(28)
+
+def Start(builder):
+    GVHStart(builder)
+
+def GVHAddPOSITION_X(builder, POSITION_X):
+    builder.PrependFloat64Slot(0, POSITION_X, 0.0)
+
+def AddPOSITION_X(builder, POSITION_X):
+    GVHAddPOSITION_X(builder, POSITION_X)
+
+def GVHAddPOSITION_Y(builder, POSITION_Y):
+    builder.PrependFloat64Slot(1, POSITION_Y, 0.0)
+
+def AddPOSITION_Y(builder, POSITION_Y):
+    GVHAddPOSITION_Y(builder, POSITION_Y)
+
+def GVHAddPOSITION_Z(builder, POSITION_Z):
+    builder.PrependFloat64Slot(2, POSITION_Z, 0.0)
+
+def AddPOSITION_Z(builder, POSITION_Z):
+    GVHAddPOSITION_Z(builder, POSITION_Z)
+
+def GVHAddVELOCITY_X(builder, VELOCITY_X):
+    builder.PrependFloat64Slot(3, VELOCITY_X, 0.0)
+
+def AddVELOCITY_X(builder, VELOCITY_X):
+    GVHAddVELOCITY_X(builder, VELOCITY_X)
+
+def GVHAddVELOCITY_Y(builder, VELOCITY_Y):
+    builder.PrependFloat64Slot(4, VELOCITY_Y, 0.0)
+
+def AddVELOCITY_Y(builder, VELOCITY_Y):
+    GVHAddVELOCITY_Y(builder, VELOCITY_Y)
+
+def GVHAddVELOCITY_Z(builder, VELOCITY_Z):
+    builder.PrependFloat64Slot(5, VELOCITY_Z, 0.0)
+
+def AddVELOCITY_Z(builder, VELOCITY_Z):
+    GVHAddVELOCITY_Z(builder, VELOCITY_Z)
+
+def GVHAddATTITUDE_X(builder, ATTITUDE_X):
+    builder.PrependFloat64Slot(6, ATTITUDE_X, 0.0)
+
+def AddATTITUDE_X(builder, ATTITUDE_X):
+    GVHAddATTITUDE_X(builder, ATTITUDE_X)
+
+def GVHAddATTITUDE_Y(builder, ATTITUDE_Y):
+    builder.PrependFloat64Slot(7, ATTITUDE_Y, 0.0)
+
+def AddATTITUDE_Y(builder, ATTITUDE_Y):
+    GVHAddATTITUDE_Y(builder, ATTITUDE_Y)
+
+def GVHAddATTITUDE_Z(builder, ATTITUDE_Z):
+    builder.PrependFloat64Slot(8, ATTITUDE_Z, 0.0)
+
+def AddATTITUDE_Z(builder, ATTITUDE_Z):
+    GVHAddATTITUDE_Z(builder, ATTITUDE_Z)
+
+def GVHAddATTITUDE_W(builder, ATTITUDE_W):
+    builder.PrependFloat64Slot(9, ATTITUDE_W, 0.0)
+
+def AddATTITUDE_W(builder, ATTITUDE_W):
+    GVHAddATTITUDE_W(builder, ATTITUDE_W)
+
+def GVHAddOMEGA_X(builder, OMEGA_X):
+    builder.PrependFloat64Slot(10, OMEGA_X, 0.0)
+
+def AddOMEGA_X(builder, OMEGA_X):
+    GVHAddOMEGA_X(builder, OMEGA_X)
+
+def GVHAddOMEGA_Y(builder, OMEGA_Y):
+    builder.PrependFloat64Slot(11, OMEGA_Y, 0.0)
+
+def AddOMEGA_Y(builder, OMEGA_Y):
+    GVHAddOMEGA_Y(builder, OMEGA_Y)
+
+def GVHAddOMEGA_Z(builder, OMEGA_Z):
+    builder.PrependFloat64Slot(12, OMEGA_Z, 0.0)
+
+def AddOMEGA_Z(builder, OMEGA_Z):
+    GVHAddOMEGA_Z(builder, OMEGA_Z)
+
+def GVHAddSPEED(builder, SPEED):
+    builder.PrependFloat32Slot(13, SPEED, 0.0)
+
+def AddSPEED(builder, SPEED):
+    GVHAddSPEED(builder, SPEED)
+
+def GVHAddHEADING(builder, HEADING):
+    builder.PrependFloat32Slot(14, HEADING, 0.0)
+
+def AddHEADING(builder, HEADING):
+    GVHAddHEADING(builder, HEADING)
+
+def GVHAddLATERAL_G(builder, LATERAL_G):
+    builder.PrependFloat32Slot(15, LATERAL_G, 0.0)
+
+def AddLATERAL_G(builder, LATERAL_G):
+    GVHAddLATERAL_G(builder, LATERAL_G)
+
+def GVHAddLONGITUDINAL_G(builder, LONGITUDINAL_G):
+    builder.PrependFloat32Slot(16, LONGITUDINAL_G, 0.0)
+
+def AddLONGITUDINAL_G(builder, LONGITUDINAL_G):
+    GVHAddLONGITUDINAL_G(builder, LONGITUDINAL_G)
+
+def GVHAddTURRET(builder, TURRET):
+    builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(TURRET), 0)
+
+def AddTURRET(builder, TURRET):
+    GVHAddTURRET(builder, TURRET)
+
+def GVHAddDRIVETRAIN(builder, DRIVETRAIN):
+    builder.PrependUOffsetTRelativeSlot(18, flatbuffers.number_types.UOffsetTFlags.py_type(DRIVETRAIN), 0)
+
+def AddDRIVETRAIN(builder, DRIVETRAIN):
+    GVHAddDRIVETRAIN(builder, DRIVETRAIN)
+
+def GVHAddSUSPENSION_LF(builder, SUSPENSION_LF):
+    builder.PrependUOffsetTRelativeSlot(19, flatbuffers.number_types.UOffsetTFlags.py_type(SUSPENSION_LF), 0)
+
+def AddSUSPENSION_LF(builder, SUSPENSION_LF):
+    GVHAddSUSPENSION_LF(builder, SUSPENSION_LF)
+
+def GVHAddSUSPENSION_RF(builder, SUSPENSION_RF):
+    builder.PrependUOffsetTRelativeSlot(20, flatbuffers.number_types.UOffsetTFlags.py_type(SUSPENSION_RF), 0)
+
+def AddSUSPENSION_RF(builder, SUSPENSION_RF):
+    GVHAddSUSPENSION_RF(builder, SUSPENSION_RF)
+
+def GVHAddSUSPENSION_LR(builder, SUSPENSION_LR):
+    builder.PrependUOffsetTRelativeSlot(21, flatbuffers.number_types.UOffsetTFlags.py_type(SUSPENSION_LR), 0)
+
+def AddSUSPENSION_LR(builder, SUSPENSION_LR):
+    GVHAddSUSPENSION_LR(builder, SUSPENSION_LR)
+
+def GVHAddSUSPENSION_RR(builder, SUSPENSION_RR):
+    builder.PrependUOffsetTRelativeSlot(22, flatbuffers.number_types.UOffsetTFlags.py_type(SUSPENSION_RR), 0)
+
+def AddSUSPENSION_RR(builder, SUSPENSION_RR):
+    GVHAddSUSPENSION_RR(builder, SUSPENSION_RR)
+
+def GVHAddVEHICLE_TYPE(builder, VEHICLE_TYPE):
+    builder.PrependUint8Slot(23, VEHICLE_TYPE, 0)
+
+def AddVEHICLE_TYPE(builder, VEHICLE_TYPE):
+    GVHAddVEHICLE_TYPE(builder, VEHICLE_TYPE)
+
+def GVHAddDRIVE_TYPE(builder, DRIVE_TYPE):
+    builder.PrependUint8Slot(24, DRIVE_TYPE, 0)
+
+def AddDRIVE_TYPE(builder, DRIVE_TYPE):
+    GVHAddDRIVE_TYPE(builder, DRIVE_TYPE)
+
+def GVHAddENGINE_RUNNING(builder, ENGINE_RUNNING):
+    builder.PrependUint8Slot(25, ENGINE_RUNNING, 0)
+
+def AddENGINE_RUNNING(builder, ENGINE_RUNNING):
+    GVHAddENGINE_RUNNING(builder, ENGINE_RUNNING)
+
+def GVHAddLIGHTS(builder, LIGHTS):
+    builder.PrependUint8Slot(26, LIGHTS, 0)
+
+def AddLIGHTS(builder, LIGHTS):
+    GVHAddLIGHTS(builder, LIGHTS)
+
+def GVHAddFUEL_LEVEL(builder, FUEL_LEVEL):
+    builder.PrependFloat32Slot(27, FUEL_LEVEL, 0.0)
+
+def AddFUEL_LEVEL(builder, FUEL_LEVEL):
+    GVHAddFUEL_LEVEL(builder, FUEL_LEVEL)
+
+def GVHEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return GVHEnd(builder)
+
+
+class GVHT(object):
+
+    # GVHT
+    def __init__(
+        self,
+        POSITION_X = 0.0,
+        POSITION_Y = 0.0,
+        POSITION_Z = 0.0,
+        VELOCITY_X = 0.0,
+        VELOCITY_Y = 0.0,
+        VELOCITY_Z = 0.0,
+        ATTITUDE_X = 0.0,
+        ATTITUDE_Y = 0.0,
+        ATTITUDE_Z = 0.0,
+        ATTITUDE_W = 0.0,
+        OMEGA_X = 0.0,
+        OMEGA_Y = 0.0,
+        OMEGA_Z = 0.0,
+        SPEED = 0.0,
+        HEADING = 0.0,
+        LATERAL_G = 0.0,
+        LONGITUDINAL_G = 0.0,
+        TURRET = None,
+        DRIVETRAIN = None,
+        SUSPENSION_LF = None,
+        SUSPENSION_RF = None,
+        SUSPENSION_LR = None,
+        SUSPENSION_RR = None,
+        VEHICLE_TYPE = 0,
+        DRIVE_TYPE = 0,
+        ENGINE_RUNNING = 0,
+        LIGHTS = 0,
+        FUEL_LEVEL = 0.0,
+    ):
+        self.POSITION_X = POSITION_X  # type: float
+        self.POSITION_Y = POSITION_Y  # type: float
+        self.POSITION_Z = POSITION_Z  # type: float
+        self.VELOCITY_X = VELOCITY_X  # type: float
+        self.VELOCITY_Y = VELOCITY_Y  # type: float
+        self.VELOCITY_Z = VELOCITY_Z  # type: float
+        self.ATTITUDE_X = ATTITUDE_X  # type: float
+        self.ATTITUDE_Y = ATTITUDE_Y  # type: float
+        self.ATTITUDE_Z = ATTITUDE_Z  # type: float
+        self.ATTITUDE_W = ATTITUDE_W  # type: float
+        self.OMEGA_X = OMEGA_X  # type: float
+        self.OMEGA_Y = OMEGA_Y  # type: float
+        self.OMEGA_Z = OMEGA_Z  # type: float
+        self.SPEED = SPEED  # type: float
+        self.HEADING = HEADING  # type: float
+        self.LATERAL_G = LATERAL_G  # type: float
+        self.LONGITUDINAL_G = LONGITUDINAL_G  # type: float
+        self.TURRET = TURRET  # type: Optional[str]
+        self.DRIVETRAIN = DRIVETRAIN  # type: Optional[str]
+        self.SUSPENSION_LF = SUSPENSION_LF  # type: Optional[str]
+        self.SUSPENSION_RF = SUSPENSION_RF  # type: Optional[str]
+        self.SUSPENSION_LR = SUSPENSION_LR  # type: Optional[str]
+        self.SUSPENSION_RR = SUSPENSION_RR  # type: Optional[str]
+        self.VEHICLE_TYPE = VEHICLE_TYPE  # type: int
+        self.DRIVE_TYPE = DRIVE_TYPE  # type: int
+        self.ENGINE_RUNNING = ENGINE_RUNNING  # type: int
+        self.LIGHTS = LIGHTS  # type: int
+        self.FUEL_LEVEL = FUEL_LEVEL  # type: float
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpGvh = GVH()
+        tmpGvh.Init(buf, pos)
+        return cls.InitFromObj(tmpGvh)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpGvh):
+        x = GVHT()
+        x._UnPack(tmpGvh)
+        return x
+
+    # GVHT
+    def _UnPack(self, GVH):
+        if GVH is None:
+            return
+        self.POSITION_X = GVH.POSITION_X()
+        self.POSITION_Y = GVH.POSITION_Y()
+        self.POSITION_Z = GVH.POSITION_Z()
+        self.VELOCITY_X = GVH.VELOCITY_X()
+        self.VELOCITY_Y = GVH.VELOCITY_Y()
+        self.VELOCITY_Z = GVH.VELOCITY_Z()
+        self.ATTITUDE_X = GVH.ATTITUDE_X()
+        self.ATTITUDE_Y = GVH.ATTITUDE_Y()
+        self.ATTITUDE_Z = GVH.ATTITUDE_Z()
+        self.ATTITUDE_W = GVH.ATTITUDE_W()
+        self.OMEGA_X = GVH.OMEGA_X()
+        self.OMEGA_Y = GVH.OMEGA_Y()
+        self.OMEGA_Z = GVH.OMEGA_Z()
+        self.SPEED = GVH.SPEED()
+        self.HEADING = GVH.HEADING()
+        self.LATERAL_G = GVH.LATERAL_G()
+        self.LONGITUDINAL_G = GVH.LONGITUDINAL_G()
+        self.TURRET = GVH.TURRET()
+        self.DRIVETRAIN = GVH.DRIVETRAIN()
+        self.SUSPENSION_LF = GVH.SUSPENSION_LF()
+        self.SUSPENSION_RF = GVH.SUSPENSION_RF()
+        self.SUSPENSION_LR = GVH.SUSPENSION_LR()
+        self.SUSPENSION_RR = GVH.SUSPENSION_RR()
+        self.VEHICLE_TYPE = GVH.VEHICLE_TYPE()
+        self.DRIVE_TYPE = GVH.DRIVE_TYPE()
+        self.ENGINE_RUNNING = GVH.ENGINE_RUNNING()
+        self.LIGHTS = GVH.LIGHTS()
+        self.FUEL_LEVEL = GVH.FUEL_LEVEL()
+
+    # GVHT
+    def Pack(self, builder):
+        if self.TURRET is not None:
+            TURRET = builder.CreateString(self.TURRET)
+        if self.DRIVETRAIN is not None:
+            DRIVETRAIN = builder.CreateString(self.DRIVETRAIN)
+        if self.SUSPENSION_LF is not None:
+            SUSPENSION_LF = builder.CreateString(self.SUSPENSION_LF)
+        if self.SUSPENSION_RF is not None:
+            SUSPENSION_RF = builder.CreateString(self.SUSPENSION_RF)
+        if self.SUSPENSION_LR is not None:
+            SUSPENSION_LR = builder.CreateString(self.SUSPENSION_LR)
+        if self.SUSPENSION_RR is not None:
+            SUSPENSION_RR = builder.CreateString(self.SUSPENSION_RR)
+        GVHStart(builder)
+        GVHAddPOSITION_X(builder, self.POSITION_X)
+        GVHAddPOSITION_Y(builder, self.POSITION_Y)
+        GVHAddPOSITION_Z(builder, self.POSITION_Z)
+        GVHAddVELOCITY_X(builder, self.VELOCITY_X)
+        GVHAddVELOCITY_Y(builder, self.VELOCITY_Y)
+        GVHAddVELOCITY_Z(builder, self.VELOCITY_Z)
+        GVHAddATTITUDE_X(builder, self.ATTITUDE_X)
+        GVHAddATTITUDE_Y(builder, self.ATTITUDE_Y)
+        GVHAddATTITUDE_Z(builder, self.ATTITUDE_Z)
+        GVHAddATTITUDE_W(builder, self.ATTITUDE_W)
+        GVHAddOMEGA_X(builder, self.OMEGA_X)
+        GVHAddOMEGA_Y(builder, self.OMEGA_Y)
+        GVHAddOMEGA_Z(builder, self.OMEGA_Z)
+        GVHAddSPEED(builder, self.SPEED)
+        GVHAddHEADING(builder, self.HEADING)
+        GVHAddLATERAL_G(builder, self.LATERAL_G)
+        GVHAddLONGITUDINAL_G(builder, self.LONGITUDINAL_G)
+        if self.TURRET is not None:
+            GVHAddTURRET(builder, TURRET)
+        if self.DRIVETRAIN is not None:
+            GVHAddDRIVETRAIN(builder, DRIVETRAIN)
+        if self.SUSPENSION_LF is not None:
+            GVHAddSUSPENSION_LF(builder, SUSPENSION_LF)
+        if self.SUSPENSION_RF is not None:
+            GVHAddSUSPENSION_RF(builder, SUSPENSION_RF)
+        if self.SUSPENSION_LR is not None:
+            GVHAddSUSPENSION_LR(builder, SUSPENSION_LR)
+        if self.SUSPENSION_RR is not None:
+            GVHAddSUSPENSION_RR(builder, SUSPENSION_RR)
+        GVHAddVEHICLE_TYPE(builder, self.VEHICLE_TYPE)
+        GVHAddDRIVE_TYPE(builder, self.DRIVE_TYPE)
+        GVHAddENGINE_RUNNING(builder, self.ENGINE_RUNNING)
+        GVHAddLIGHTS(builder, self.LIGHTS)
+        GVHAddFUEL_LEVEL(builder, self.FUEL_LEVEL)
+        GVH = GVHEnd(builder)
+        return GVH

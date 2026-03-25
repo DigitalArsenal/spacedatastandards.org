@@ -32,7 +32,7 @@ class KMLUpdate : Table() {
     /**
      * Target href
      */
-    val TARGET_HREF : String?
+    val targetHref : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class KMLUpdate : Table() {
                 null
             }
         }
-    val TARGET_HREFAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun TARGET_HREFInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val targetHrefAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun targetHrefInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Change KML (raw)
      */
-    val CHANGE_KML : String?
+    val changeKml : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -55,12 +55,12 @@ class KMLUpdate : Table() {
                 null
             }
         }
-    val CHANGE_KMLAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun CHANGE_KMLInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val changeKmlAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun changeKmlInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * Create KML (raw)
      */
-    val CREATE_KML : String?
+    val createKml : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -69,12 +69,12 @@ class KMLUpdate : Table() {
                 null
             }
         }
-    val CREATE_KMLAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun CREATE_KMLInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val createKmlAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun createKmlInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
     /**
      * Delete KML (raw)
      */
-    val DELETE_KML : String?
+    val deleteKml : String?
         get() {
             val o = __offset(10)
             return if (o != 0) {
@@ -83,28 +83,28 @@ class KMLUpdate : Table() {
                 null
             }
         }
-    val DELETE_KMLAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
-    fun DELETE_KMLInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
+    val deleteKmlAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(10, 1)
+    fun deleteKmlInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 10, 1)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsKMLUpdate(_bb: ByteBuffer): KMLUpdate = getRootAsKMLUpdate(_bb, KMLUpdate())
         fun getRootAsKMLUpdate(_bb: ByteBuffer, obj: KMLUpdate): KMLUpdate {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createKMLUpdate(builder: FlatBufferBuilder, TARGET_HREFOffset: Int, CHANGE_KMLOffset: Int, CREATE_KMLOffset: Int, DELETE_KMLOffset: Int) : Int {
+        fun createKMLUpdate(builder: FlatBufferBuilder, targetHrefOffset: Int, changeKmlOffset: Int, createKmlOffset: Int, deleteKmlOffset: Int) : Int {
             builder.startTable(4)
-            addDELETE_KML(builder, DELETE_KMLOffset)
-            addCREATE_KML(builder, CREATE_KMLOffset)
-            addCHANGE_KML(builder, CHANGE_KMLOffset)
-            addTARGET_HREF(builder, TARGET_HREFOffset)
+            addDELETEKML(builder, deleteKmlOffset)
+            addCREATEKML(builder, createKmlOffset)
+            addCHANGEKML(builder, changeKmlOffset)
+            addTARGETHREF(builder, targetHrefOffset)
             return endKMLUpdate(builder)
         }
         fun startKMLUpdate(builder: FlatBufferBuilder) = builder.startTable(4)
-        fun addTARGET_HREF(builder: FlatBufferBuilder, TARGET_HREF: Int) = builder.addOffset(0, TARGET_HREF, 0)
-        fun addCHANGE_KML(builder: FlatBufferBuilder, CHANGE_KML: Int) = builder.addOffset(1, CHANGE_KML, 0)
-        fun addCREATE_KML(builder: FlatBufferBuilder, CREATE_KML: Int) = builder.addOffset(2, CREATE_KML, 0)
-        fun addDELETE_KML(builder: FlatBufferBuilder, DELETE_KML: Int) = builder.addOffset(3, DELETE_KML, 0)
+        fun addTARGETHREF(builder: FlatBufferBuilder, targetHref: Int) = builder.addOffset(0, targetHref, 0)
+        fun addCHANGEKML(builder: FlatBufferBuilder, changeKml: Int) = builder.addOffset(1, changeKml, 0)
+        fun addCREATEKML(builder: FlatBufferBuilder, createKml: Int) = builder.addOffset(2, createKml, 0)
+        fun addDELETEKML(builder: FlatBufferBuilder, deleteKml: Int) = builder.addOffset(3, deleteKml, 0)
         fun endKMLUpdate(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

@@ -32,7 +32,7 @@ class KMLListStyle : Table() {
     /**
      * List item type
      */
-    val LIST_ITEM_TYPE : Byte
+    val listItemType : Byte
         get() {
             val o = __offset(4)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -40,7 +40,7 @@ class KMLListStyle : Table() {
     /**
      * Background color
      */
-    val BG_COLOR : String?
+    val bgColor : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -49,13 +49,13 @@ class KMLListStyle : Table() {
                 null
             }
         }
-    val BG_COLORAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun BG_COLORInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val bgColorAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun bgColorInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * Item icons
      */
-    fun ITEM_ICONS(j: Int) : KMLItemIcon? = ITEM_ICONS(KMLItemIcon(), j)
-    fun ITEM_ICONS(obj: KMLItemIcon, j: Int) : KMLItemIcon? {
+    fun itemIcons(j: Int) : KMLItemIcon? = itemIcons(KMLItemIcon(), j)
+    fun itemIcons(obj: KMLItemIcon, j: Int) : KMLItemIcon? {
         val o = __offset(8)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -63,37 +63,37 @@ class KMLListStyle : Table() {
             null
         }
     }
-    val ITEM_ICONSLength : Int
+    val itemIconsLength : Int
         get() {
             val o = __offset(8); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Maximum snippet lines
      */
-    val MAX_SNIPPET_LINES : Int
+    val maxSnippetLines : Int
         get() {
             val o = __offset(10)
             return if(o != 0) bb.getInt(o + bb_pos) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsKMLListStyle(_bb: ByteBuffer): KMLListStyle = getRootAsKMLListStyle(_bb, KMLListStyle())
         fun getRootAsKMLListStyle(_bb: ByteBuffer, obj: KMLListStyle): KMLListStyle {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createKMLListStyle(builder: FlatBufferBuilder, LIST_ITEM_TYPE: Byte, BG_COLOROffset: Int, ITEM_ICONSOffset: Int, MAX_SNIPPET_LINES: Int) : Int {
+        fun createKMLListStyle(builder: FlatBufferBuilder, listItemType: Byte, bgColorOffset: Int, itemIconsOffset: Int, maxSnippetLines: Int) : Int {
             builder.startTable(4)
-            addMAX_SNIPPET_LINES(builder, MAX_SNIPPET_LINES)
-            addITEM_ICONS(builder, ITEM_ICONSOffset)
-            addBG_COLOR(builder, BG_COLOROffset)
-            addLIST_ITEM_TYPE(builder, LIST_ITEM_TYPE)
+            addMAXSNIPPETLINES(builder, maxSnippetLines)
+            addITEMICONS(builder, itemIconsOffset)
+            addBGCOLOR(builder, bgColorOffset)
+            addLISTITEMTYPE(builder, listItemType)
             return endKMLListStyle(builder)
         }
         fun startKMLListStyle(builder: FlatBufferBuilder) = builder.startTable(4)
-        fun addLIST_ITEM_TYPE(builder: FlatBufferBuilder, LIST_ITEM_TYPE: Byte) = builder.addByte(0, LIST_ITEM_TYPE, 0)
-        fun addBG_COLOR(builder: FlatBufferBuilder, BG_COLOR: Int) = builder.addOffset(1, BG_COLOR, 0)
-        fun addITEM_ICONS(builder: FlatBufferBuilder, ITEM_ICONS: Int) = builder.addOffset(2, ITEM_ICONS, 0)
+        fun addLISTITEMTYPE(builder: FlatBufferBuilder, listItemType: Byte) = builder.addByte(0, listItemType, 0)
+        fun addBGCOLOR(builder: FlatBufferBuilder, bgColor: Int) = builder.addOffset(1, bgColor, 0)
+        fun addITEMICONS(builder: FlatBufferBuilder, itemIcons: Int) = builder.addOffset(2, itemIcons, 0)
         fun createItemIconsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -102,7 +102,7 @@ class KMLListStyle : Table() {
             return builder.endVector()
         }
         fun startItemIconsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addMAX_SNIPPET_LINES(builder: FlatBufferBuilder, MAX_SNIPPET_LINES: Int) = builder.addInt(3, MAX_SNIPPET_LINES, 0)
+        fun addMAXSNIPPETLINES(builder: FlatBufferBuilder, maxSnippetLines: Int) = builder.addInt(3, maxSnippetLines, 0)
         fun endKMLListStyle(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

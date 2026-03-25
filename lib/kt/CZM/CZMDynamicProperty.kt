@@ -32,7 +32,7 @@ class CZMDynamicProperty : Table() {
     /**
      * Dotted path name, e.g. "billboard.scale", "point.color"
      */
-    val NAME : String?
+    val name : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,13 +41,13 @@ class CZMDynamicProperty : Table() {
                 null
             }
         }
-    val NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val nameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun nameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Sampled data (when property uses epoch + data array)
      */
-    val SAMPLED : CZMDynSampled? get() = SAMPLED(CZMDynSampled())
-    fun SAMPLED(obj: CZMDynSampled) : CZMDynSampled? {
+    val sampled : CZMDynSampled? get() = sampled(CZMDynSampled())
+    fun sampled(obj: CZMDynSampled) : CZMDynSampled? {
         val o = __offset(6)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -58,8 +58,8 @@ class CZMDynamicProperty : Table() {
     /**
      * Interval-based values
      */
-    fun INTERVALS(j: Int) : CZMDynInterval? = INTERVALS(CZMDynInterval(), j)
-    fun INTERVALS(obj: CZMDynInterval, j: Int) : CZMDynInterval? {
+    fun intervals(j: Int) : CZMDynInterval? = intervals(CZMDynInterval(), j)
+    fun intervals(obj: CZMDynInterval, j: Int) : CZMDynInterval? {
         val o = __offset(8)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -67,14 +67,14 @@ class CZMDynamicProperty : Table() {
             null
         }
     }
-    val INTERVALSLength : Int
+    val intervalsLength : Int
         get() {
             val o = __offset(8); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Reference to another entity's property
      */
-    val REFERENCE : String?
+    val reference : String?
         get() {
             val o = __offset(10)
             return if (o != 0) {
@@ -83,27 +83,27 @@ class CZMDynamicProperty : Table() {
                 null
             }
         }
-    val REFERENCEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
-    fun REFERENCEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
+    val referenceAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(10, 1)
+    fun referenceInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 10, 1)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsCZMDynamicProperty(_bb: ByteBuffer): CZMDynamicProperty = getRootAsCZMDynamicProperty(_bb, CZMDynamicProperty())
         fun getRootAsCZMDynamicProperty(_bb: ByteBuffer, obj: CZMDynamicProperty): CZMDynamicProperty {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createCZMDynamicProperty(builder: FlatBufferBuilder, NAMEOffset: Int, SAMPLEDOffset: Int, INTERVALSOffset: Int, REFERENCEOffset: Int) : Int {
+        fun createCZMDynamicProperty(builder: FlatBufferBuilder, nameOffset: Int, sampledOffset: Int, intervalsOffset: Int, referenceOffset: Int) : Int {
             builder.startTable(4)
-            addREFERENCE(builder, REFERENCEOffset)
-            addINTERVALS(builder, INTERVALSOffset)
-            addSAMPLED(builder, SAMPLEDOffset)
-            addNAME(builder, NAMEOffset)
+            addREFERENCE(builder, referenceOffset)
+            addINTERVALS(builder, intervalsOffset)
+            addSAMPLED(builder, sampledOffset)
+            addNAME(builder, nameOffset)
             return endCZMDynamicProperty(builder)
         }
         fun startCZMDynamicProperty(builder: FlatBufferBuilder) = builder.startTable(4)
-        fun addNAME(builder: FlatBufferBuilder, NAME: Int) = builder.addOffset(0, NAME, 0)
-        fun addSAMPLED(builder: FlatBufferBuilder, SAMPLED: Int) = builder.addOffset(1, SAMPLED, 0)
-        fun addINTERVALS(builder: FlatBufferBuilder, INTERVALS: Int) = builder.addOffset(2, INTERVALS, 0)
+        fun addNAME(builder: FlatBufferBuilder, name: Int) = builder.addOffset(0, name, 0)
+        fun addSAMPLED(builder: FlatBufferBuilder, sampled: Int) = builder.addOffset(1, sampled, 0)
+        fun addINTERVALS(builder: FlatBufferBuilder, intervals: Int) = builder.addOffset(2, intervals, 0)
         fun createIntervalsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -112,7 +112,7 @@ class CZMDynamicProperty : Table() {
             return builder.endVector()
         }
         fun startIntervalsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addREFERENCE(builder: FlatBufferBuilder, REFERENCE: Int) = builder.addOffset(3, REFERENCE, 0)
+        fun addREFERENCE(builder: FlatBufferBuilder, reference: Int) = builder.addOffset(3, reference, 0)
         fun endCZMDynamicProperty(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

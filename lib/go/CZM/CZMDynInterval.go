@@ -51,6 +51,10 @@ func (rcv *CZMDynInterval) INTERVAL() []byte {
 	return nil
 }
 
+func (rcv *CZMDynInterval) Interval() []byte {
+	return rcv.INTERVAL()
+}
+
 /// ISO 8601 interval string
 /// Value type
 func (rcv *CZMDynInterval) VALUE_TYPE() CZMDynValueType {
@@ -61,9 +65,17 @@ func (rcv *CZMDynInterval) VALUE_TYPE() CZMDynValueType {
 	return 0
 }
 
+func (rcv *CZMDynInterval) ValueType() CZMDynValueType {
+	return rcv.VALUE_TYPE()
+}
+
 /// Value type
 func (rcv *CZMDynInterval) MutateVALUE_TYPE(n CZMDynValueType) bool {
 	return rcv._tab.MutateInt8Slot(6, int8(n))
+}
+
+func (rcv *CZMDynInterval) MutateValueType(n CZMDynValueType) bool {
+	return rcv.MutateVALUE_TYPE(n)
 }
 
 /// Numeric value (when VALUE_TYPE is NUMBER)
@@ -75,9 +87,17 @@ func (rcv *CZMDynInterval) NUMBER_VALUE() float64 {
 	return 0.0
 }
 
+func (rcv *CZMDynInterval) NumberValue() float64 {
+	return rcv.NUMBER_VALUE()
+}
+
 /// Numeric value (when VALUE_TYPE is NUMBER)
 func (rcv *CZMDynInterval) MutateNUMBER_VALUE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(8, n)
+}
+
+func (rcv *CZMDynInterval) MutateNumberValue(n float64) bool {
+	return rcv.MutateNUMBER_VALUE(n)
 }
 
 /// Boolean value (when VALUE_TYPE is BOOLEAN)
@@ -89,9 +109,17 @@ func (rcv *CZMDynInterval) BOOLEAN_VALUE() bool {
 	return false
 }
 
+func (rcv *CZMDynInterval) BooleanValue() bool {
+	return rcv.BOOLEAN_VALUE()
+}
+
 /// Boolean value (when VALUE_TYPE is BOOLEAN)
 func (rcv *CZMDynInterval) MutateBOOLEAN_VALUE(n bool) bool {
 	return rcv._tab.MutateBoolSlot(10, n)
+}
+
+func (rcv *CZMDynInterval) MutateBooleanValue(n bool) bool {
+	return rcv.MutateBOOLEAN_VALUE(n)
 }
 
 /// String value (when VALUE_TYPE is STRING)
@@ -101,6 +129,10 @@ func (rcv *CZMDynInterval) STRING_VALUE() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *CZMDynInterval) StringValue() []byte {
+	return rcv.STRING_VALUE()
 }
 
 /// String value (when VALUE_TYPE is STRING)
@@ -118,6 +150,10 @@ func (rcv *CZMDynInterval) COLOR_VALUE(obj *CZMColor) *CZMColor {
 	return nil
 }
 
+func (rcv *CZMDynInterval) ColorValue(obj *CZMColor) *CZMColor {
+	return rcv.COLOR_VALUE(obj)
+}
+
 /// Color value (when VALUE_TYPE is COLOR)
 /// Array value for cartesian/nearFarScalar types
 func (rcv *CZMDynInterval) ARRAY_VALUE(j int) float64 {
@@ -129,12 +165,20 @@ func (rcv *CZMDynInterval) ARRAY_VALUE(j int) float64 {
 	return 0
 }
 
+func (rcv *CZMDynInterval) ArrayValue(j int) float64 {
+	return rcv.ARRAY_VALUE(j)
+}
+
 func (rcv *CZMDynInterval) ARRAY_VALUELength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *CZMDynInterval) ArrayValueLength() int {
+	return rcv.ARRAY_VALUELength()
 }
 
 /// Array value for cartesian/nearFarScalar types
@@ -147,32 +191,60 @@ func (rcv *CZMDynInterval) MutateARRAY_VALUE(j int, n float64) bool {
 	return false
 }
 
+func (rcv *CZMDynInterval) MutateArrayValue(j int, n float64) bool {
+	return rcv.MutateARRAY_VALUE(j, n)
+}
+
 func CZMDynIntervalStart(builder *flatbuffers.Builder) {
 	builder.StartObject(7)
 }
 func CZMDynIntervalAddINTERVAL(builder *flatbuffers.Builder, INTERVAL flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(INTERVAL), 0)
 }
+func CZMDynIntervalAddInterval(builder *flatbuffers.Builder, INTERVAL flatbuffers.UOffsetT) {
+	CZMDynIntervalAddINTERVAL(builder, INTERVAL)
+}
 func CZMDynIntervalAddVALUE_TYPE(builder *flatbuffers.Builder, VALUE_TYPE CZMDynValueType) {
 	builder.PrependInt8Slot(1, int8(VALUE_TYPE), 0)
+}
+func CZMDynIntervalAddValueType(builder *flatbuffers.Builder, VALUE_TYPE CZMDynValueType) {
+	CZMDynIntervalAddVALUE_TYPE(builder, VALUE_TYPE)
 }
 func CZMDynIntervalAddNUMBER_VALUE(builder *flatbuffers.Builder, NUMBER_VALUE float64) {
 	builder.PrependFloat64Slot(2, NUMBER_VALUE, 0.0)
 }
+func CZMDynIntervalAddNumberValue(builder *flatbuffers.Builder, NUMBER_VALUE float64) {
+	CZMDynIntervalAddNUMBER_VALUE(builder, NUMBER_VALUE)
+}
 func CZMDynIntervalAddBOOLEAN_VALUE(builder *flatbuffers.Builder, BOOLEAN_VALUE bool) {
 	builder.PrependBoolSlot(3, BOOLEAN_VALUE, false)
+}
+func CZMDynIntervalAddBooleanValue(builder *flatbuffers.Builder, BOOLEAN_VALUE bool) {
+	CZMDynIntervalAddBOOLEAN_VALUE(builder, BOOLEAN_VALUE)
 }
 func CZMDynIntervalAddSTRING_VALUE(builder *flatbuffers.Builder, STRING_VALUE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(STRING_VALUE), 0)
 }
+func CZMDynIntervalAddStringValue(builder *flatbuffers.Builder, STRING_VALUE flatbuffers.UOffsetT) {
+	CZMDynIntervalAddSTRING_VALUE(builder, STRING_VALUE)
+}
 func CZMDynIntervalAddCOLOR_VALUE(builder *flatbuffers.Builder, COLOR_VALUE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(COLOR_VALUE), 0)
+}
+func CZMDynIntervalAddColorValue(builder *flatbuffers.Builder, COLOR_VALUE flatbuffers.UOffsetT) {
+	CZMDynIntervalAddCOLOR_VALUE(builder, COLOR_VALUE)
 }
 func CZMDynIntervalAddARRAY_VALUE(builder *flatbuffers.Builder, ARRAY_VALUE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(ARRAY_VALUE), 0)
 }
+func CZMDynIntervalAddArrayValue(builder *flatbuffers.Builder, ARRAY_VALUE flatbuffers.UOffsetT) {
+	CZMDynIntervalAddARRAY_VALUE(builder, ARRAY_VALUE)
+}
 func CZMDynIntervalStartARRAY_VALUEVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(8, numElems, 8)
+}
+func CZMDynIntervalStartArrayValueVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return CZMDynIntervalStartARRAY_VALUEVector(builder, numElems)
 }
 func CZMDynIntervalEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

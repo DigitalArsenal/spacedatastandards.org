@@ -2,4 +2,212 @@
 
 # namespace: 
 
-# NOTE StaticAlarmRanges.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Static numeric alarm levels
+class StaticAlarmRanges(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = StaticAlarmRanges()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsStaticAlarmRanges(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def StaticAlarmRangesBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x58\x54\x43", size_prefixed=size_prefixed)
+
+    # StaticAlarmRanges
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Watch range
+    # StaticAlarmRanges
+    def WATCH_RANGE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from AlarmRange import AlarmRange
+            obj = AlarmRange()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Warning range
+    # StaticAlarmRanges
+    def WARNING_RANGE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from AlarmRange import AlarmRange
+            obj = AlarmRange()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Distress range
+    # StaticAlarmRanges
+    def DISTRESS_RANGE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from AlarmRange import AlarmRange
+            obj = AlarmRange()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Critical range
+    # StaticAlarmRanges
+    def CRITICAL_RANGE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from AlarmRange import AlarmRange
+            obj = AlarmRange()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Severe range
+    # StaticAlarmRanges
+    def SEVERE_RANGE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from AlarmRange import AlarmRange
+            obj = AlarmRange()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+def StaticAlarmRangesStart(builder):
+    builder.StartObject(5)
+
+def Start(builder):
+    StaticAlarmRangesStart(builder)
+
+def StaticAlarmRangesAddWATCH_RANGE(builder, WATCH_RANGE):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(WATCH_RANGE), 0)
+
+def AddWATCH_RANGE(builder, WATCH_RANGE):
+    StaticAlarmRangesAddWATCH_RANGE(builder, WATCH_RANGE)
+
+def StaticAlarmRangesAddWARNING_RANGE(builder, WARNING_RANGE):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(WARNING_RANGE), 0)
+
+def AddWARNING_RANGE(builder, WARNING_RANGE):
+    StaticAlarmRangesAddWARNING_RANGE(builder, WARNING_RANGE)
+
+def StaticAlarmRangesAddDISTRESS_RANGE(builder, DISTRESS_RANGE):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(DISTRESS_RANGE), 0)
+
+def AddDISTRESS_RANGE(builder, DISTRESS_RANGE):
+    StaticAlarmRangesAddDISTRESS_RANGE(builder, DISTRESS_RANGE)
+
+def StaticAlarmRangesAddCRITICAL_RANGE(builder, CRITICAL_RANGE):
+    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(CRITICAL_RANGE), 0)
+
+def AddCRITICAL_RANGE(builder, CRITICAL_RANGE):
+    StaticAlarmRangesAddCRITICAL_RANGE(builder, CRITICAL_RANGE)
+
+def StaticAlarmRangesAddSEVERE_RANGE(builder, SEVERE_RANGE):
+    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(SEVERE_RANGE), 0)
+
+def AddSEVERE_RANGE(builder, SEVERE_RANGE):
+    StaticAlarmRangesAddSEVERE_RANGE(builder, SEVERE_RANGE)
+
+def StaticAlarmRangesEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return StaticAlarmRangesEnd(builder)
+
+import AlarmRange
+try:
+    from typing import Optional
+except:
+    pass
+
+class StaticAlarmRangesT(object):
+
+    # StaticAlarmRangesT
+    def __init__(
+        self,
+        WATCH_RANGE = None,
+        WARNING_RANGE = None,
+        DISTRESS_RANGE = None,
+        CRITICAL_RANGE = None,
+        SEVERE_RANGE = None,
+    ):
+        self.WATCH_RANGE = WATCH_RANGE  # type: Optional[AlarmRange.AlarmRangeT]
+        self.WARNING_RANGE = WARNING_RANGE  # type: Optional[AlarmRange.AlarmRangeT]
+        self.DISTRESS_RANGE = DISTRESS_RANGE  # type: Optional[AlarmRange.AlarmRangeT]
+        self.CRITICAL_RANGE = CRITICAL_RANGE  # type: Optional[AlarmRange.AlarmRangeT]
+        self.SEVERE_RANGE = SEVERE_RANGE  # type: Optional[AlarmRange.AlarmRangeT]
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpStaticAlarmRanges = StaticAlarmRanges()
+        tmpStaticAlarmRanges.Init(buf, pos)
+        return cls.InitFromObj(tmpStaticAlarmRanges)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpStaticAlarmRanges):
+        x = StaticAlarmRangesT()
+        x._UnPack(tmpStaticAlarmRanges)
+        return x
+
+    # StaticAlarmRangesT
+    def _UnPack(self, StaticAlarmRanges):
+        if StaticAlarmRanges is None:
+            return
+        if StaticAlarmRanges.WATCH_RANGE() is not None:
+            self.WATCH_RANGE = AlarmRange.AlarmRangeT.InitFromObj(StaticAlarmRanges.WATCH_RANGE())
+        if StaticAlarmRanges.WARNING_RANGE() is not None:
+            self.WARNING_RANGE = AlarmRange.AlarmRangeT.InitFromObj(StaticAlarmRanges.WARNING_RANGE())
+        if StaticAlarmRanges.DISTRESS_RANGE() is not None:
+            self.DISTRESS_RANGE = AlarmRange.AlarmRangeT.InitFromObj(StaticAlarmRanges.DISTRESS_RANGE())
+        if StaticAlarmRanges.CRITICAL_RANGE() is not None:
+            self.CRITICAL_RANGE = AlarmRange.AlarmRangeT.InitFromObj(StaticAlarmRanges.CRITICAL_RANGE())
+        if StaticAlarmRanges.SEVERE_RANGE() is not None:
+            self.SEVERE_RANGE = AlarmRange.AlarmRangeT.InitFromObj(StaticAlarmRanges.SEVERE_RANGE())
+
+    # StaticAlarmRangesT
+    def Pack(self, builder):
+        if self.WATCH_RANGE is not None:
+            WATCH_RANGE = self.WATCH_RANGE.Pack(builder)
+        if self.WARNING_RANGE is not None:
+            WARNING_RANGE = self.WARNING_RANGE.Pack(builder)
+        if self.DISTRESS_RANGE is not None:
+            DISTRESS_RANGE = self.DISTRESS_RANGE.Pack(builder)
+        if self.CRITICAL_RANGE is not None:
+            CRITICAL_RANGE = self.CRITICAL_RANGE.Pack(builder)
+        if self.SEVERE_RANGE is not None:
+            SEVERE_RANGE = self.SEVERE_RANGE.Pack(builder)
+        StaticAlarmRangesStart(builder)
+        if self.WATCH_RANGE is not None:
+            StaticAlarmRangesAddWATCH_RANGE(builder, WATCH_RANGE)
+        if self.WARNING_RANGE is not None:
+            StaticAlarmRangesAddWARNING_RANGE(builder, WARNING_RANGE)
+        if self.DISTRESS_RANGE is not None:
+            StaticAlarmRangesAddDISTRESS_RANGE(builder, DISTRESS_RANGE)
+        if self.CRITICAL_RANGE is not None:
+            StaticAlarmRangesAddCRITICAL_RANGE(builder, CRITICAL_RANGE)
+        if self.SEVERE_RANGE is not None:
+            StaticAlarmRangesAddSEVERE_RANGE(builder, SEVERE_RANGE)
+        StaticAlarmRanges = StaticAlarmRangesEnd(builder)
+        return StaticAlarmRanges

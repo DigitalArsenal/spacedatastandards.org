@@ -32,7 +32,7 @@ class OOI : Table() {
     /**
      * Unique identifier
      */
-    val ID : String?
+    val id : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class OOI : Table() {
                 null
             }
         }
-    val IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val idAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun idInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Satellite catalog number
      */
-    val SAT_NO : UInt
+    val satNo : UInt
         get() {
             val o = __offset(6)
             return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
@@ -54,7 +54,7 @@ class OOI : Table() {
     /**
      * Object name or designator
      */
-    val NAME : String?
+    val name : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -63,12 +63,12 @@ class OOI : Table() {
                 null
             }
         }
-    val NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val nameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun nameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
     /**
      * On-orbit reference
      */
-    val ON_ORBIT : String?
+    val onOrbit : String?
         get() {
             val o = __offset(10)
             return if (o != 0) {
@@ -77,12 +77,12 @@ class OOI : Table() {
                 null
             }
         }
-    val ON_ORBITAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
-    fun ON_ORBITInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
+    val onOrbitAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(10, 1)
+    fun onOrbitInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 10, 1)
     /**
      * Tasking status
      */
-    val STATUS : Byte
+    val status : Byte
         get() {
             val o = __offset(12)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -90,7 +90,7 @@ class OOI : Table() {
     /**
      * Status update date (ISO 8601)
      */
-    val STATUS_DATE : String?
+    val statusDate : String?
         get() {
             val o = __offset(14)
             return if (o != 0) {
@@ -99,12 +99,12 @@ class OOI : Table() {
                 null
             }
         }
-    val STATUS_DATEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(14, 1)
-    fun STATUS_DATEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 14, 1)
+    val statusDateAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(14, 1)
+    fun statusDateInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 14, 1)
     /**
      * Collection priority
      */
-    val PRIORITY : Byte
+    val priority : Byte
         get() {
             val o = __offset(16)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -112,7 +112,7 @@ class OOI : Table() {
     /**
      * Description of why object is of interest
      */
-    val DESCRIPTION : String?
+    val description : String?
         get() {
             val o = __offset(18)
             return if (o != 0) {
@@ -121,12 +121,12 @@ class OOI : Table() {
                 null
             }
         }
-    val DESCRIPTIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(18, 1)
-    fun DESCRIPTIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 18, 1)
+    val descriptionAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(18, 1)
+    fun descriptionInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 18, 1)
     /**
      * Sensor tasking start time (ISO 8601)
      */
-    val SENSOR_TASKING_START_TIME : String?
+    val sensorTaskingStartTime : String?
         get() {
             val o = __offset(20)
             return if (o != 0) {
@@ -135,12 +135,12 @@ class OOI : Table() {
                 null
             }
         }
-    val SENSOR_TASKING_START_TIMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(20, 1)
-    fun SENSOR_TASKING_START_TIMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 20, 1)
+    val sensorTaskingStartTimeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(20, 1)
+    fun sensorTaskingStartTimeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 20, 1)
     /**
      * Sensor tasking stop time (ISO 8601)
      */
-    val SENSOR_TASKING_STOP_TIME : String?
+    val sensorTaskingStopTime : String?
         get() {
             val o = __offset(22)
             return if (o != 0) {
@@ -149,12 +149,12 @@ class OOI : Table() {
                 null
             }
         }
-    val SENSOR_TASKING_STOP_TIMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(22, 1)
-    fun SENSOR_TASKING_STOP_TIMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 22, 1)
+    val sensorTaskingStopTimeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(22, 1)
+    fun sensorTaskingStopTimeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 22, 1)
     /**
      * Last observation time (ISO 8601)
      */
-    val LAST_OB_TIME : String?
+    val lastObTime : String?
         get() {
             val o = __offset(24)
             return if (o != 0) {
@@ -163,12 +163,12 @@ class OOI : Table() {
                 null
             }
         }
-    val LAST_OB_TIMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(24, 1)
-    fun LAST_OB_TIMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 24, 1)
+    val lastObTimeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(24, 1)
+    fun lastObTimeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 24, 1)
     /**
      * Last missed observation time (ISO 8601)
      */
-    val MISSED_OB_TIME : String?
+    val missedObTime : String?
         get() {
             val o = __offset(26)
             return if (o != 0) {
@@ -177,12 +177,12 @@ class OOI : Table() {
                 null
             }
         }
-    val MISSED_OB_TIMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(26, 1)
-    fun MISSED_OB_TIMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 26, 1)
+    val missedObTimeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(26, 1)
+    fun missedObTimeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 26, 1)
     /**
      * State vector epoch (ISO 8601)
      */
-    val SV_EPOCH : String?
+    val svEpoch : String?
         get() {
             val o = __offset(28)
             return if (o != 0) {
@@ -191,12 +191,12 @@ class OOI : Table() {
                 null
             }
         }
-    val SV_EPOCHAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(28, 1)
-    fun SV_EPOCHInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 28, 1)
+    val svEpochAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(28, 1)
+    fun svEpochInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 28, 1)
     /**
      * Position X (km, TEME)
      */
-    val X : Double
+    val x : Double
         get() {
             val o = __offset(30)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -204,7 +204,7 @@ class OOI : Table() {
     /**
      * Position Y (km, TEME)
      */
-    val Y : Double
+    val y : Double
         get() {
             val o = __offset(32)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -212,7 +212,7 @@ class OOI : Table() {
     /**
      * Position Z (km, TEME)
      */
-    val Z : Double
+    val z : Double
         get() {
             val o = __offset(34)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -220,7 +220,7 @@ class OOI : Table() {
     /**
      * Velocity X (km/s, TEME)
      */
-    val XVEL : Double
+    val xvel : Double
         get() {
             val o = __offset(36)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -228,7 +228,7 @@ class OOI : Table() {
     /**
      * Velocity Y (km/s, TEME)
      */
-    val YVEL : Double
+    val yvel : Double
         get() {
             val o = __offset(38)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -236,7 +236,7 @@ class OOI : Table() {
     /**
      * Velocity Z (km/s, TEME)
      */
-    val ZVEL : Double
+    val zvel : Double
         get() {
             val o = __offset(40)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -244,7 +244,7 @@ class OOI : Table() {
     /**
      * Element set epoch (ISO 8601)
      */
-    val ELSET_EPOCH : String?
+    val elsetEpoch : String?
         get() {
             val o = __offset(42)
             return if (o != 0) {
@@ -253,12 +253,12 @@ class OOI : Table() {
                 null
             }
         }
-    val ELSET_EPOCHAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(42, 1)
-    fun ELSET_EPOCHInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 42, 1)
+    val elsetEpochAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(42, 1)
+    fun elsetEpochInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 42, 1)
     /**
      * Mean motion (rev/day)
      */
-    val MEAN_MOTION : Double
+    val meanMotion : Double
         get() {
             val o = __offset(44)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -266,7 +266,7 @@ class OOI : Table() {
     /**
      * Eccentricity
      */
-    val ECCENTRICITY : Double
+    val eccentricity : Double
         get() {
             val o = __offset(46)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -274,7 +274,7 @@ class OOI : Table() {
     /**
      * Inclination (degrees)
      */
-    val INCLINATION : Double
+    val inclination : Double
         get() {
             val o = __offset(48)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -282,7 +282,7 @@ class OOI : Table() {
     /**
      * Right ascension of ascending node (degrees)
      */
-    val RAAN : Double
+    val raan : Double
         get() {
             val o = __offset(50)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -290,7 +290,7 @@ class OOI : Table() {
     /**
      * Argument of perigee (degrees)
      */
-    val ARG_OF_PERIGEE : Double
+    val argOfPerigee : Double
         get() {
             val o = __offset(52)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -298,7 +298,7 @@ class OOI : Table() {
     /**
      * Mean anomaly (degrees)
      */
-    val MEAN_ANOMALY : Double
+    val meanAnomaly : Double
         get() {
             val o = __offset(54)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -306,7 +306,7 @@ class OOI : Table() {
     /**
      * Revolution number at epoch
      */
-    val REV_NO : UInt
+    val revNo : UInt
         get() {
             val o = __offset(56)
             return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
@@ -314,7 +314,7 @@ class OOI : Table() {
     /**
      * BSTAR drag term (1/Earth radii)
      */
-    val B_STAR : Double
+    val bStar : Double
         get() {
             val o = __offset(58)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -322,7 +322,7 @@ class OOI : Table() {
     /**
      * Mean motion first derivative (rev/day^2)
      */
-    val MEAN_MOTION_DOT : Double
+    val meanMotionDot : Double
         get() {
             val o = __offset(60)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -330,7 +330,7 @@ class OOI : Table() {
     /**
      * Mean motion second derivative (rev/day^3)
      */
-    val MEAN_MOTION_DDOT : Double
+    val meanMotionDdot : Double
         get() {
             val o = __offset(62)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -338,7 +338,7 @@ class OOI : Table() {
     /**
      * Semi-major axis (km)
      */
-    val SEMI_MAJOR_AXIS : Double
+    val semiMajorAxis : Double
         get() {
             val o = __offset(64)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -346,7 +346,7 @@ class OOI : Table() {
     /**
      * Orbital period (minutes)
      */
-    val PERIOD : Double
+    val period : Double
         get() {
             val o = __offset(66)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -354,7 +354,7 @@ class OOI : Table() {
     /**
      * Apogee altitude (km)
      */
-    val APOGEE : Double
+    val apogee : Double
         get() {
             val o = __offset(68)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -362,7 +362,7 @@ class OOI : Table() {
     /**
      * Perigee altitude (km)
      */
-    val PERIGEE : Double
+    val perigee : Double
         get() {
             val o = __offset(70)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -370,7 +370,7 @@ class OOI : Table() {
     /**
      * Delta-V estimates for maneuver hypotheses (m/s)
      */
-    fun DELTA_VS(j: Int) : Double {
+    fun deltaVs(j: Int) : Double {
         val o = __offset(72)
         return if (o != 0) {
             bb.getDouble(__vector(o) + j * 8)
@@ -378,16 +378,16 @@ class OOI : Table() {
             0.0
         }
     }
-    val DELTA_VSLength : Int
+    val deltaVsLength : Int
         get() {
             val o = __offset(72); return if (o != 0) __vector_len(o) else 0
         }
-    val DELTA_VSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(72, 8)
-    fun DELTA_VSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 72, 8)
+    val deltaVsAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(72, 8)
+    fun deltaVsInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 72, 8)
     /**
      * Delta-T estimates for maneuver timing (seconds)
      */
-    fun DELTA_TS(j: Int) : Double {
+    fun deltaTs(j: Int) : Double {
         val o = __offset(74)
         return if (o != 0) {
             bb.getDouble(__vector(o) + j * 8)
@@ -395,16 +395,16 @@ class OOI : Table() {
             0.0
         }
     }
-    val DELTA_TSLength : Int
+    val deltaTsLength : Int
         get() {
             val o = __offset(74); return if (o != 0) __vector_len(o) else 0
         }
-    val DELTA_TSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(74, 8)
-    fun DELTA_TSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 74, 8)
+    val deltaTsAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(74, 8)
+    fun deltaTsInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 74, 8)
     /**
      * Other affected satellite catalog numbers
      */
-    fun AFFECTED_OBJECTS(j: Int) : String? {
+    fun affectedObjects(j: Int) : String? {
         val o = __offset(76)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
@@ -412,14 +412,14 @@ class OOI : Table() {
             null
         }
     }
-    val AFFECTED_OBJECTSLength : Int
+    val affectedObjectsLength : Int
         get() {
             val o = __offset(76); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Associated orbit manifold identifiers
      */
-    fun MANIFOLDS(j: Int) : String? {
+    fun manifolds(j: Int) : String? {
         val o = __offset(78)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
@@ -427,96 +427,96 @@ class OOI : Table() {
             null
         }
     }
-    val MANIFOLDSLength : Int
+    val manifoldsLength : Int
         get() {
             val o = __offset(78); return if (o != 0) __vector_len(o) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsOOI(_bb: ByteBuffer): OOI = getRootAsOOI(_bb, OOI())
         fun getRootAsOOI(_bb: ByteBuffer, obj: OOI): OOI {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun OOIBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$OOI")
-        fun createOOI(builder: FlatBufferBuilder, IDOffset: Int, SAT_NO: UInt, NAMEOffset: Int, ON_ORBITOffset: Int, STATUS: Byte, STATUS_DATEOffset: Int, PRIORITY: Byte, DESCRIPTIONOffset: Int, SENSOR_TASKING_START_TIMEOffset: Int, SENSOR_TASKING_STOP_TIMEOffset: Int, LAST_OB_TIMEOffset: Int, MISSED_OB_TIMEOffset: Int, SV_EPOCHOffset: Int, X: Double, Y: Double, Z: Double, XVEL: Double, YVEL: Double, ZVEL: Double, ELSET_EPOCHOffset: Int, MEAN_MOTION: Double, ECCENTRICITY: Double, INCLINATION: Double, RAAN: Double, ARG_OF_PERIGEE: Double, MEAN_ANOMALY: Double, REV_NO: UInt, B_STAR: Double, MEAN_MOTION_DOT: Double, MEAN_MOTION_DDOT: Double, SEMI_MAJOR_AXIS: Double, PERIOD: Double, APOGEE: Double, PERIGEE: Double, DELTA_VSOffset: Int, DELTA_TSOffset: Int, AFFECTED_OBJECTSOffset: Int, MANIFOLDSOffset: Int) : Int {
+        fun createOOI(builder: FlatBufferBuilder, idOffset: Int, satNo: UInt, nameOffset: Int, onOrbitOffset: Int, status: Byte, statusDateOffset: Int, priority: Byte, descriptionOffset: Int, sensorTaskingStartTimeOffset: Int, sensorTaskingStopTimeOffset: Int, lastObTimeOffset: Int, missedObTimeOffset: Int, svEpochOffset: Int, x: Double, y: Double, z: Double, xvel: Double, yvel: Double, zvel: Double, elsetEpochOffset: Int, meanMotion: Double, eccentricity: Double, inclination: Double, raan: Double, argOfPerigee: Double, meanAnomaly: Double, revNo: UInt, bStar: Double, meanMotionDot: Double, meanMotionDdot: Double, semiMajorAxis: Double, period: Double, apogee: Double, perigee: Double, deltaVsOffset: Int, deltaTsOffset: Int, affectedObjectsOffset: Int, manifoldsOffset: Int) : Int {
             builder.startTable(38)
-            addPERIGEE(builder, PERIGEE)
-            addAPOGEE(builder, APOGEE)
-            addPERIOD(builder, PERIOD)
-            addSEMI_MAJOR_AXIS(builder, SEMI_MAJOR_AXIS)
-            addMEAN_MOTION_DDOT(builder, MEAN_MOTION_DDOT)
-            addMEAN_MOTION_DOT(builder, MEAN_MOTION_DOT)
-            addB_STAR(builder, B_STAR)
-            addMEAN_ANOMALY(builder, MEAN_ANOMALY)
-            addARG_OF_PERIGEE(builder, ARG_OF_PERIGEE)
-            addRAAN(builder, RAAN)
-            addINCLINATION(builder, INCLINATION)
-            addECCENTRICITY(builder, ECCENTRICITY)
-            addMEAN_MOTION(builder, MEAN_MOTION)
-            addZVEL(builder, ZVEL)
-            addYVEL(builder, YVEL)
-            addXVEL(builder, XVEL)
-            addZ(builder, Z)
-            addY(builder, Y)
-            addX(builder, X)
-            addMANIFOLDS(builder, MANIFOLDSOffset)
-            addAFFECTED_OBJECTS(builder, AFFECTED_OBJECTSOffset)
-            addDELTA_TS(builder, DELTA_TSOffset)
-            addDELTA_VS(builder, DELTA_VSOffset)
-            addREV_NO(builder, REV_NO)
-            addELSET_EPOCH(builder, ELSET_EPOCHOffset)
-            addSV_EPOCH(builder, SV_EPOCHOffset)
-            addMISSED_OB_TIME(builder, MISSED_OB_TIMEOffset)
-            addLAST_OB_TIME(builder, LAST_OB_TIMEOffset)
-            addSENSOR_TASKING_STOP_TIME(builder, SENSOR_TASKING_STOP_TIMEOffset)
-            addSENSOR_TASKING_START_TIME(builder, SENSOR_TASKING_START_TIMEOffset)
-            addDESCRIPTION(builder, DESCRIPTIONOffset)
-            addSTATUS_DATE(builder, STATUS_DATEOffset)
-            addON_ORBIT(builder, ON_ORBITOffset)
-            addNAME(builder, NAMEOffset)
-            addSAT_NO(builder, SAT_NO)
-            addID(builder, IDOffset)
-            addPRIORITY(builder, PRIORITY)
-            addSTATUS(builder, STATUS)
+            addPERIGEE(builder, perigee)
+            addAPOGEE(builder, apogee)
+            addPERIOD(builder, period)
+            addSEMIMAJORAXIS(builder, semiMajorAxis)
+            addMEANMOTIONDDOT(builder, meanMotionDdot)
+            addMEANMOTIONDOT(builder, meanMotionDot)
+            addBSTAR(builder, bStar)
+            addMEANANOMALY(builder, meanAnomaly)
+            addARGOFPERIGEE(builder, argOfPerigee)
+            addRAAN(builder, raan)
+            addINCLINATION(builder, inclination)
+            addECCENTRICITY(builder, eccentricity)
+            addMEANMOTION(builder, meanMotion)
+            addZVEL(builder, zvel)
+            addYVEL(builder, yvel)
+            addXVEL(builder, xvel)
+            addZ(builder, z)
+            addY(builder, y)
+            addX(builder, x)
+            addMANIFOLDS(builder, manifoldsOffset)
+            addAFFECTEDOBJECTS(builder, affectedObjectsOffset)
+            addDELTATS(builder, deltaTsOffset)
+            addDELTAVS(builder, deltaVsOffset)
+            addREVNO(builder, revNo)
+            addELSETEPOCH(builder, elsetEpochOffset)
+            addSVEPOCH(builder, svEpochOffset)
+            addMISSEDOBTIME(builder, missedObTimeOffset)
+            addLASTOBTIME(builder, lastObTimeOffset)
+            addSENSORTASKINGSTOPTIME(builder, sensorTaskingStopTimeOffset)
+            addSENSORTASKINGSTARTTIME(builder, sensorTaskingStartTimeOffset)
+            addDESCRIPTION(builder, descriptionOffset)
+            addSTATUSDATE(builder, statusDateOffset)
+            addONORBIT(builder, onOrbitOffset)
+            addNAME(builder, nameOffset)
+            addSATNO(builder, satNo)
+            addID(builder, idOffset)
+            addPRIORITY(builder, priority)
+            addSTATUS(builder, status)
             return endOOI(builder)
         }
         fun startOOI(builder: FlatBufferBuilder) = builder.startTable(38)
-        fun addID(builder: FlatBufferBuilder, ID: Int) = builder.addOffset(0, ID, 0)
-        fun addSAT_NO(builder: FlatBufferBuilder, SAT_NO: UInt) = builder.addInt(1, SAT_NO.toInt(), 0)
-        fun addNAME(builder: FlatBufferBuilder, NAME: Int) = builder.addOffset(2, NAME, 0)
-        fun addON_ORBIT(builder: FlatBufferBuilder, ON_ORBIT: Int) = builder.addOffset(3, ON_ORBIT, 0)
-        fun addSTATUS(builder: FlatBufferBuilder, STATUS: Byte) = builder.addByte(4, STATUS, 0)
-        fun addSTATUS_DATE(builder: FlatBufferBuilder, STATUS_DATE: Int) = builder.addOffset(5, STATUS_DATE, 0)
-        fun addPRIORITY(builder: FlatBufferBuilder, PRIORITY: Byte) = builder.addByte(6, PRIORITY, 0)
-        fun addDESCRIPTION(builder: FlatBufferBuilder, DESCRIPTION: Int) = builder.addOffset(7, DESCRIPTION, 0)
-        fun addSENSOR_TASKING_START_TIME(builder: FlatBufferBuilder, SENSOR_TASKING_START_TIME: Int) = builder.addOffset(8, SENSOR_TASKING_START_TIME, 0)
-        fun addSENSOR_TASKING_STOP_TIME(builder: FlatBufferBuilder, SENSOR_TASKING_STOP_TIME: Int) = builder.addOffset(9, SENSOR_TASKING_STOP_TIME, 0)
-        fun addLAST_OB_TIME(builder: FlatBufferBuilder, LAST_OB_TIME: Int) = builder.addOffset(10, LAST_OB_TIME, 0)
-        fun addMISSED_OB_TIME(builder: FlatBufferBuilder, MISSED_OB_TIME: Int) = builder.addOffset(11, MISSED_OB_TIME, 0)
-        fun addSV_EPOCH(builder: FlatBufferBuilder, SV_EPOCH: Int) = builder.addOffset(12, SV_EPOCH, 0)
-        fun addX(builder: FlatBufferBuilder, X: Double) = builder.addDouble(13, X, 0.0)
-        fun addY(builder: FlatBufferBuilder, Y: Double) = builder.addDouble(14, Y, 0.0)
-        fun addZ(builder: FlatBufferBuilder, Z: Double) = builder.addDouble(15, Z, 0.0)
-        fun addXVEL(builder: FlatBufferBuilder, XVEL: Double) = builder.addDouble(16, XVEL, 0.0)
-        fun addYVEL(builder: FlatBufferBuilder, YVEL: Double) = builder.addDouble(17, YVEL, 0.0)
-        fun addZVEL(builder: FlatBufferBuilder, ZVEL: Double) = builder.addDouble(18, ZVEL, 0.0)
-        fun addELSET_EPOCH(builder: FlatBufferBuilder, ELSET_EPOCH: Int) = builder.addOffset(19, ELSET_EPOCH, 0)
-        fun addMEAN_MOTION(builder: FlatBufferBuilder, MEAN_MOTION: Double) = builder.addDouble(20, MEAN_MOTION, 0.0)
-        fun addECCENTRICITY(builder: FlatBufferBuilder, ECCENTRICITY: Double) = builder.addDouble(21, ECCENTRICITY, 0.0)
-        fun addINCLINATION(builder: FlatBufferBuilder, INCLINATION: Double) = builder.addDouble(22, INCLINATION, 0.0)
-        fun addRAAN(builder: FlatBufferBuilder, RAAN: Double) = builder.addDouble(23, RAAN, 0.0)
-        fun addARG_OF_PERIGEE(builder: FlatBufferBuilder, ARG_OF_PERIGEE: Double) = builder.addDouble(24, ARG_OF_PERIGEE, 0.0)
-        fun addMEAN_ANOMALY(builder: FlatBufferBuilder, MEAN_ANOMALY: Double) = builder.addDouble(25, MEAN_ANOMALY, 0.0)
-        fun addREV_NO(builder: FlatBufferBuilder, REV_NO: UInt) = builder.addInt(26, REV_NO.toInt(), 0)
-        fun addB_STAR(builder: FlatBufferBuilder, B_STAR: Double) = builder.addDouble(27, B_STAR, 0.0)
-        fun addMEAN_MOTION_DOT(builder: FlatBufferBuilder, MEAN_MOTION_DOT: Double) = builder.addDouble(28, MEAN_MOTION_DOT, 0.0)
-        fun addMEAN_MOTION_DDOT(builder: FlatBufferBuilder, MEAN_MOTION_DDOT: Double) = builder.addDouble(29, MEAN_MOTION_DDOT, 0.0)
-        fun addSEMI_MAJOR_AXIS(builder: FlatBufferBuilder, SEMI_MAJOR_AXIS: Double) = builder.addDouble(30, SEMI_MAJOR_AXIS, 0.0)
-        fun addPERIOD(builder: FlatBufferBuilder, PERIOD: Double) = builder.addDouble(31, PERIOD, 0.0)
-        fun addAPOGEE(builder: FlatBufferBuilder, APOGEE: Double) = builder.addDouble(32, APOGEE, 0.0)
-        fun addPERIGEE(builder: FlatBufferBuilder, PERIGEE: Double) = builder.addDouble(33, PERIGEE, 0.0)
-        fun addDELTA_VS(builder: FlatBufferBuilder, DELTA_VS: Int) = builder.addOffset(34, DELTA_VS, 0)
+        fun addID(builder: FlatBufferBuilder, id: Int) = builder.addOffset(0, id, 0)
+        fun addSATNO(builder: FlatBufferBuilder, satNo: UInt) = builder.addInt(1, satNo.toInt(), 0)
+        fun addNAME(builder: FlatBufferBuilder, name: Int) = builder.addOffset(2, name, 0)
+        fun addONORBIT(builder: FlatBufferBuilder, onOrbit: Int) = builder.addOffset(3, onOrbit, 0)
+        fun addSTATUS(builder: FlatBufferBuilder, status: Byte) = builder.addByte(4, status, 0)
+        fun addSTATUSDATE(builder: FlatBufferBuilder, statusDate: Int) = builder.addOffset(5, statusDate, 0)
+        fun addPRIORITY(builder: FlatBufferBuilder, priority: Byte) = builder.addByte(6, priority, 0)
+        fun addDESCRIPTION(builder: FlatBufferBuilder, description: Int) = builder.addOffset(7, description, 0)
+        fun addSENSORTASKINGSTARTTIME(builder: FlatBufferBuilder, sensorTaskingStartTime: Int) = builder.addOffset(8, sensorTaskingStartTime, 0)
+        fun addSENSORTASKINGSTOPTIME(builder: FlatBufferBuilder, sensorTaskingStopTime: Int) = builder.addOffset(9, sensorTaskingStopTime, 0)
+        fun addLASTOBTIME(builder: FlatBufferBuilder, lastObTime: Int) = builder.addOffset(10, lastObTime, 0)
+        fun addMISSEDOBTIME(builder: FlatBufferBuilder, missedObTime: Int) = builder.addOffset(11, missedObTime, 0)
+        fun addSVEPOCH(builder: FlatBufferBuilder, svEpoch: Int) = builder.addOffset(12, svEpoch, 0)
+        fun addX(builder: FlatBufferBuilder, x: Double) = builder.addDouble(13, x, 0.0)
+        fun addY(builder: FlatBufferBuilder, y: Double) = builder.addDouble(14, y, 0.0)
+        fun addZ(builder: FlatBufferBuilder, z: Double) = builder.addDouble(15, z, 0.0)
+        fun addXVEL(builder: FlatBufferBuilder, xvel: Double) = builder.addDouble(16, xvel, 0.0)
+        fun addYVEL(builder: FlatBufferBuilder, yvel: Double) = builder.addDouble(17, yvel, 0.0)
+        fun addZVEL(builder: FlatBufferBuilder, zvel: Double) = builder.addDouble(18, zvel, 0.0)
+        fun addELSETEPOCH(builder: FlatBufferBuilder, elsetEpoch: Int) = builder.addOffset(19, elsetEpoch, 0)
+        fun addMEANMOTION(builder: FlatBufferBuilder, meanMotion: Double) = builder.addDouble(20, meanMotion, 0.0)
+        fun addECCENTRICITY(builder: FlatBufferBuilder, eccentricity: Double) = builder.addDouble(21, eccentricity, 0.0)
+        fun addINCLINATION(builder: FlatBufferBuilder, inclination: Double) = builder.addDouble(22, inclination, 0.0)
+        fun addRAAN(builder: FlatBufferBuilder, raan: Double) = builder.addDouble(23, raan, 0.0)
+        fun addARGOFPERIGEE(builder: FlatBufferBuilder, argOfPerigee: Double) = builder.addDouble(24, argOfPerigee, 0.0)
+        fun addMEANANOMALY(builder: FlatBufferBuilder, meanAnomaly: Double) = builder.addDouble(25, meanAnomaly, 0.0)
+        fun addREVNO(builder: FlatBufferBuilder, revNo: UInt) = builder.addInt(26, revNo.toInt(), 0)
+        fun addBSTAR(builder: FlatBufferBuilder, bStar: Double) = builder.addDouble(27, bStar, 0.0)
+        fun addMEANMOTIONDOT(builder: FlatBufferBuilder, meanMotionDot: Double) = builder.addDouble(28, meanMotionDot, 0.0)
+        fun addMEANMOTIONDDOT(builder: FlatBufferBuilder, meanMotionDdot: Double) = builder.addDouble(29, meanMotionDdot, 0.0)
+        fun addSEMIMAJORAXIS(builder: FlatBufferBuilder, semiMajorAxis: Double) = builder.addDouble(30, semiMajorAxis, 0.0)
+        fun addPERIOD(builder: FlatBufferBuilder, period: Double) = builder.addDouble(31, period, 0.0)
+        fun addAPOGEE(builder: FlatBufferBuilder, apogee: Double) = builder.addDouble(32, apogee, 0.0)
+        fun addPERIGEE(builder: FlatBufferBuilder, perigee: Double) = builder.addDouble(33, perigee, 0.0)
+        fun addDELTAVS(builder: FlatBufferBuilder, deltaVs: Int) = builder.addOffset(34, deltaVs, 0)
         fun createDeltaVsVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
             builder.startVector(8, data.size, 8)
             for (i in data.size - 1 downTo 0) {
@@ -525,7 +525,7 @@ class OOI : Table() {
             return builder.endVector()
         }
         fun startDeltaVsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
-        fun addDELTA_TS(builder: FlatBufferBuilder, DELTA_TS: Int) = builder.addOffset(35, DELTA_TS, 0)
+        fun addDELTATS(builder: FlatBufferBuilder, deltaTs: Int) = builder.addOffset(35, deltaTs, 0)
         fun createDeltaTsVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
             builder.startVector(8, data.size, 8)
             for (i in data.size - 1 downTo 0) {
@@ -534,7 +534,7 @@ class OOI : Table() {
             return builder.endVector()
         }
         fun startDeltaTsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
-        fun addAFFECTED_OBJECTS(builder: FlatBufferBuilder, AFFECTED_OBJECTS: Int) = builder.addOffset(36, AFFECTED_OBJECTS, 0)
+        fun addAFFECTEDOBJECTS(builder: FlatBufferBuilder, affectedObjects: Int) = builder.addOffset(36, affectedObjects, 0)
         fun createAffectedObjectsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -543,7 +543,7 @@ class OOI : Table() {
             return builder.endVector()
         }
         fun startAffectedObjectsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addMANIFOLDS(builder: FlatBufferBuilder, MANIFOLDS: Int) = builder.addOffset(37, MANIFOLDS, 0)
+        fun addMANIFOLDS(builder: FlatBufferBuilder, manifolds: Int) = builder.addOffset(37, manifolds, 0)
         fun createManifoldsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {

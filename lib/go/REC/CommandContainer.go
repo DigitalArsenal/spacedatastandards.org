@@ -51,6 +51,10 @@ func (rcv *CommandContainer) NAME() []byte {
 	return nil
 }
 
+func (rcv *CommandContainer) Name() []byte {
+	return rcv.NAME()
+}
+
 /// Container name
 /// Entry list
 func (rcv *CommandContainer) ENTRY_LIST(obj *CommandContainerEntry, j int) bool {
@@ -59,10 +63,17 @@ func (rcv *CommandContainer) ENTRY_LIST(obj *CommandContainerEntry, j int) bool 
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(CommandContainerEntry)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *CommandContainer) EntryList(obj *CommandContainerEntry, j int) bool {
+	return rcv.ENTRY_LIST(obj, j)
 }
 
 func (rcv *CommandContainer) ENTRY_LISTLength() int {
@@ -71,6 +82,10 @@ func (rcv *CommandContainer) ENTRY_LISTLength() int {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *CommandContainer) EntryListLength() int {
+	return rcv.ENTRY_LISTLength()
 }
 
 /// Entry list
@@ -88,6 +103,10 @@ func (rcv *CommandContainer) BASE_CONTAINER(obj *BaseContainer) *BaseContainer {
 	return nil
 }
 
+func (rcv *CommandContainer) BaseContainer(obj *BaseContainer) *BaseContainer {
+	return rcv.BASE_CONTAINER(obj)
+}
+
 /// Base container reference
 func CommandContainerStart(builder *flatbuffers.Builder) {
 	builder.StartObject(3)
@@ -95,14 +114,26 @@ func CommandContainerStart(builder *flatbuffers.Builder) {
 func CommandContainerAddNAME(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(NAME), 0)
 }
+func CommandContainerAddName(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
+	CommandContainerAddNAME(builder, NAME)
+}
 func CommandContainerAddENTRY_LIST(builder *flatbuffers.Builder, ENTRY_LIST flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(ENTRY_LIST), 0)
+}
+func CommandContainerAddEntryList(builder *flatbuffers.Builder, ENTRY_LIST flatbuffers.UOffsetT) {
+	CommandContainerAddENTRY_LIST(builder, ENTRY_LIST)
 }
 func CommandContainerStartENTRY_LISTVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
+func CommandContainerStartEntryListVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return CommandContainerStartENTRY_LISTVector(builder, numElems)
+}
 func CommandContainerAddBASE_CONTAINER(builder *flatbuffers.Builder, BASE_CONTAINER flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(BASE_CONTAINER), 0)
+}
+func CommandContainerAddBaseContainer(builder *flatbuffers.Builder, BASE_CONTAINER flatbuffers.UOffsetT) {
+	CommandContainerAddBASE_CONTAINER(builder, BASE_CONTAINER)
 }
 func CommandContainerEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

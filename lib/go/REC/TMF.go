@@ -63,9 +63,17 @@ func (rcv *TMF) VERSION() byte {
 	return 0
 }
 
+func (rcv *TMF) Version() byte {
+	return rcv.VERSION()
+}
+
 /// Transfer frame version
 func (rcv *TMF) MutateVERSION(n byte) bool {
 	return rcv._tab.MutateByteSlot(4, n)
+}
+
+func (rcv *TMF) MutateVersion(n byte) bool {
+	return rcv.MutateVERSION(n)
 }
 
 /// Spacecraft identifier
@@ -77,9 +85,17 @@ func (rcv *TMF) SPACECRAFT_ID() uint16 {
 	return 0
 }
 
+func (rcv *TMF) SpacecraftId() uint16 {
+	return rcv.SPACECRAFT_ID()
+}
+
 /// Spacecraft identifier
 func (rcv *TMF) MutateSPACECRAFT_ID(n uint16) bool {
 	return rcv._tab.MutateUint16Slot(6, n)
+}
+
+func (rcv *TMF) MutateSpacecraftId(n uint16) bool {
+	return rcv.MutateSPACECRAFT_ID(n)
 }
 
 /// Virtual channel identifier
@@ -91,9 +107,17 @@ func (rcv *TMF) VIRTUAL_CHANNEL_ID() byte {
 	return 0
 }
 
+func (rcv *TMF) VirtualChannelId() byte {
+	return rcv.VIRTUAL_CHANNEL_ID()
+}
+
 /// Virtual channel identifier
 func (rcv *TMF) MutateVIRTUAL_CHANNEL_ID(n byte) bool {
 	return rcv._tab.MutateByteSlot(8, n)
+}
+
+func (rcv *TMF) MutateVirtualChannelId(n byte) bool {
+	return rcv.MutateVIRTUAL_CHANNEL_ID(n)
 }
 
 /// Operational control field flag
@@ -105,9 +129,17 @@ func (rcv *TMF) OCF_FLAG() bool {
 	return false
 }
 
+func (rcv *TMF) OcfFlag() bool {
+	return rcv.OCF_FLAG()
+}
+
 /// Operational control field flag
 func (rcv *TMF) MutateOCF_FLAG(n bool) bool {
 	return rcv._tab.MutateBoolSlot(10, n)
+}
+
+func (rcv *TMF) MutateOcfFlag(n bool) bool {
+	return rcv.MutateOCF_FLAG(n)
 }
 
 /// Master channel frame count
@@ -119,9 +151,17 @@ func (rcv *TMF) MASTER_FRAME_COUNT() byte {
 	return 0
 }
 
+func (rcv *TMF) MasterFrameCount() byte {
+	return rcv.MASTER_FRAME_COUNT()
+}
+
 /// Master channel frame count
 func (rcv *TMF) MutateMASTER_FRAME_COUNT(n byte) bool {
 	return rcv._tab.MutateByteSlot(12, n)
+}
+
+func (rcv *TMF) MutateMasterFrameCount(n byte) bool {
+	return rcv.MutateMASTER_FRAME_COUNT(n)
 }
 
 /// Virtual channel frame count
@@ -133,9 +173,17 @@ func (rcv *TMF) VIRTUAL_FRAME_COUNT() byte {
 	return 0
 }
 
+func (rcv *TMF) VirtualFrameCount() byte {
+	return rcv.VIRTUAL_FRAME_COUNT()
+}
+
 /// Virtual channel frame count
 func (rcv *TMF) MutateVIRTUAL_FRAME_COUNT(n byte) bool {
 	return rcv._tab.MutateByteSlot(14, n)
+}
+
+func (rcv *TMF) MutateVirtualFrameCount(n byte) bool {
+	return rcv.MutateVIRTUAL_FRAME_COUNT(n)
 }
 
 /// Secondary header flag
@@ -147,9 +195,17 @@ func (rcv *TMF) SEC_HDR_FLAG() bool {
 	return false
 }
 
+func (rcv *TMF) SecHdrFlag() bool {
+	return rcv.SEC_HDR_FLAG()
+}
+
 /// Secondary header flag
 func (rcv *TMF) MutateSEC_HDR_FLAG(n bool) bool {
 	return rcv._tab.MutateBoolSlot(16, n)
+}
+
+func (rcv *TMF) MutateSecHdrFlag(n bool) bool {
+	return rcv.MutateSEC_HDR_FLAG(n)
 }
 
 /// Synchronization flag
@@ -161,9 +217,17 @@ func (rcv *TMF) SYNCH_FLAG() bool {
 	return false
 }
 
+func (rcv *TMF) SynchFlag() bool {
+	return rcv.SYNCH_FLAG()
+}
+
 /// Synchronization flag
 func (rcv *TMF) MutateSYNCH_FLAG(n bool) bool {
 	return rcv._tab.MutateBoolSlot(18, n)
+}
+
+func (rcv *TMF) MutateSynchFlag(n bool) bool {
+	return rcv.MutateSYNCH_FLAG(n)
 }
 
 /// Packet order flag
@@ -175,9 +239,17 @@ func (rcv *TMF) PACKET_ORDER_FLAG() bool {
 	return false
 }
 
+func (rcv *TMF) PacketOrderFlag() bool {
+	return rcv.PACKET_ORDER_FLAG()
+}
+
 /// Packet order flag
 func (rcv *TMF) MutatePACKET_ORDER_FLAG(n bool) bool {
 	return rcv._tab.MutateBoolSlot(20, n)
+}
+
+func (rcv *TMF) MutatePacketOrderFlag(n bool) bool {
+	return rcv.MutatePACKET_ORDER_FLAG(n)
 }
 
 /// Segment length identifier
@@ -189,9 +261,17 @@ func (rcv *TMF) SEGMENT_LENGTH_ID() byte {
 	return 0
 }
 
+func (rcv *TMF) SegmentLengthId() byte {
+	return rcv.SEGMENT_LENGTH_ID()
+}
+
 /// Segment length identifier
 func (rcv *TMF) MutateSEGMENT_LENGTH_ID(n byte) bool {
 	return rcv._tab.MutateByteSlot(22, n)
+}
+
+func (rcv *TMF) MutateSegmentLengthId(n byte) bool {
+	return rcv.MutateSEGMENT_LENGTH_ID(n)
 }
 
 /// First header pointer
@@ -203,9 +283,17 @@ func (rcv *TMF) FIRST_HDR_POINTER() uint16 {
 	return 0
 }
 
+func (rcv *TMF) FirstHdrPointer() uint16 {
+	return rcv.FIRST_HDR_POINTER()
+}
+
 /// First header pointer
 func (rcv *TMF) MutateFIRST_HDR_POINTER(n uint16) bool {
 	return rcv._tab.MutateUint16Slot(24, n)
+}
+
+func (rcv *TMF) MutateFirstHdrPointer(n uint16) bool {
+	return rcv.MutateFIRST_HDR_POINTER(n)
 }
 
 /// Data field
@@ -218,6 +306,10 @@ func (rcv *TMF) DATA(j int) byte {
 	return 0
 }
 
+func (rcv *TMF) Data(j int) byte {
+	return rcv.DATA(j)
+}
+
 func (rcv *TMF) DATALength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
 	if o != 0 {
@@ -226,12 +318,20 @@ func (rcv *TMF) DATALength() int {
 	return 0
 }
 
+func (rcv *TMF) DataLength() int {
+	return rcv.DATALength()
+}
+
 func (rcv *TMF) DATABytes() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *TMF) DataBytes() []byte {
+	return rcv.DATABytes()
 }
 
 /// Data field
@@ -244,6 +344,10 @@ func (rcv *TMF) MutateDATA(j int, n byte) bool {
 	return false
 }
 
+func (rcv *TMF) MutateData(j int, n byte) bool {
+	return rcv.MutateDATA(j, n)
+}
+
 /// Operational control field
 func (rcv *TMF) OCF(j int) byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
@@ -254,6 +358,10 @@ func (rcv *TMF) OCF(j int) byte {
 	return 0
 }
 
+func (rcv *TMF) Ocf(j int) byte {
+	return rcv.OCF(j)
+}
+
 func (rcv *TMF) OCFLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
 	if o != 0 {
@@ -262,12 +370,20 @@ func (rcv *TMF) OCFLength() int {
 	return 0
 }
 
+func (rcv *TMF) OcfLength() int {
+	return rcv.OCFLength()
+}
+
 func (rcv *TMF) OCFBytes() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *TMF) OcfBytes() []byte {
+	return rcv.OCFBytes()
 }
 
 /// Operational control field
@@ -280,6 +396,10 @@ func (rcv *TMF) MutateOCF(j int, n byte) bool {
 	return false
 }
 
+func (rcv *TMF) MutateOcf(j int, n byte) bool {
+	return rcv.MutateOCF(j, n)
+}
+
 /// Frame error control field
 func (rcv *TMF) FECF() uint16 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
@@ -289,9 +409,17 @@ func (rcv *TMF) FECF() uint16 {
 	return 0
 }
 
+func (rcv *TMF) Fecf() uint16 {
+	return rcv.FECF()
+}
+
 /// Frame error control field
 func (rcv *TMF) MutateFECF(n uint16) bool {
 	return rcv._tab.MutateUint16Slot(30, n)
+}
+
+func (rcv *TMF) MutateFecf(n uint16) bool {
+	return rcv.MutateFECF(n)
 }
 
 func TMFStart(builder *flatbuffers.Builder) {
@@ -300,50 +428,98 @@ func TMFStart(builder *flatbuffers.Builder) {
 func TMFAddVERSION(builder *flatbuffers.Builder, VERSION byte) {
 	builder.PrependByteSlot(0, VERSION, 0)
 }
+func TMFAddVersion(builder *flatbuffers.Builder, VERSION byte) {
+	TMFAddVERSION(builder, VERSION)
+}
 func TMFAddSPACECRAFT_ID(builder *flatbuffers.Builder, SPACECRAFT_ID uint16) {
 	builder.PrependUint16Slot(1, SPACECRAFT_ID, 0)
+}
+func TMFAddSpacecraftId(builder *flatbuffers.Builder, SPACECRAFT_ID uint16) {
+	TMFAddSPACECRAFT_ID(builder, SPACECRAFT_ID)
 }
 func TMFAddVIRTUAL_CHANNEL_ID(builder *flatbuffers.Builder, VIRTUAL_CHANNEL_ID byte) {
 	builder.PrependByteSlot(2, VIRTUAL_CHANNEL_ID, 0)
 }
+func TMFAddVirtualChannelId(builder *flatbuffers.Builder, VIRTUAL_CHANNEL_ID byte) {
+	TMFAddVIRTUAL_CHANNEL_ID(builder, VIRTUAL_CHANNEL_ID)
+}
 func TMFAddOCF_FLAG(builder *flatbuffers.Builder, OCF_FLAG bool) {
 	builder.PrependBoolSlot(3, OCF_FLAG, false)
+}
+func TMFAddOcfFlag(builder *flatbuffers.Builder, OCF_FLAG bool) {
+	TMFAddOCF_FLAG(builder, OCF_FLAG)
 }
 func TMFAddMASTER_FRAME_COUNT(builder *flatbuffers.Builder, MASTER_FRAME_COUNT byte) {
 	builder.PrependByteSlot(4, MASTER_FRAME_COUNT, 0)
 }
+func TMFAddMasterFrameCount(builder *flatbuffers.Builder, MASTER_FRAME_COUNT byte) {
+	TMFAddMASTER_FRAME_COUNT(builder, MASTER_FRAME_COUNT)
+}
 func TMFAddVIRTUAL_FRAME_COUNT(builder *flatbuffers.Builder, VIRTUAL_FRAME_COUNT byte) {
 	builder.PrependByteSlot(5, VIRTUAL_FRAME_COUNT, 0)
+}
+func TMFAddVirtualFrameCount(builder *flatbuffers.Builder, VIRTUAL_FRAME_COUNT byte) {
+	TMFAddVIRTUAL_FRAME_COUNT(builder, VIRTUAL_FRAME_COUNT)
 }
 func TMFAddSEC_HDR_FLAG(builder *flatbuffers.Builder, SEC_HDR_FLAG bool) {
 	builder.PrependBoolSlot(6, SEC_HDR_FLAG, false)
 }
+func TMFAddSecHdrFlag(builder *flatbuffers.Builder, SEC_HDR_FLAG bool) {
+	TMFAddSEC_HDR_FLAG(builder, SEC_HDR_FLAG)
+}
 func TMFAddSYNCH_FLAG(builder *flatbuffers.Builder, SYNCH_FLAG bool) {
 	builder.PrependBoolSlot(7, SYNCH_FLAG, false)
+}
+func TMFAddSynchFlag(builder *flatbuffers.Builder, SYNCH_FLAG bool) {
+	TMFAddSYNCH_FLAG(builder, SYNCH_FLAG)
 }
 func TMFAddPACKET_ORDER_FLAG(builder *flatbuffers.Builder, PACKET_ORDER_FLAG bool) {
 	builder.PrependBoolSlot(8, PACKET_ORDER_FLAG, false)
 }
+func TMFAddPacketOrderFlag(builder *flatbuffers.Builder, PACKET_ORDER_FLAG bool) {
+	TMFAddPACKET_ORDER_FLAG(builder, PACKET_ORDER_FLAG)
+}
 func TMFAddSEGMENT_LENGTH_ID(builder *flatbuffers.Builder, SEGMENT_LENGTH_ID byte) {
 	builder.PrependByteSlot(9, SEGMENT_LENGTH_ID, 0)
+}
+func TMFAddSegmentLengthId(builder *flatbuffers.Builder, SEGMENT_LENGTH_ID byte) {
+	TMFAddSEGMENT_LENGTH_ID(builder, SEGMENT_LENGTH_ID)
 }
 func TMFAddFIRST_HDR_POINTER(builder *flatbuffers.Builder, FIRST_HDR_POINTER uint16) {
 	builder.PrependUint16Slot(10, FIRST_HDR_POINTER, 0)
 }
+func TMFAddFirstHdrPointer(builder *flatbuffers.Builder, FIRST_HDR_POINTER uint16) {
+	TMFAddFIRST_HDR_POINTER(builder, FIRST_HDR_POINTER)
+}
 func TMFAddDATA(builder *flatbuffers.Builder, DATA flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(DATA), 0)
+}
+func TMFAddData(builder *flatbuffers.Builder, DATA flatbuffers.UOffsetT) {
+	TMFAddDATA(builder, DATA)
 }
 func TMFStartDATAVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(1, numElems, 1)
 }
+func TMFStartDataVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return TMFStartDATAVector(builder, numElems)
+}
 func TMFAddOCF(builder *flatbuffers.Builder, OCF flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(12, flatbuffers.UOffsetT(OCF), 0)
+}
+func TMFAddOcf(builder *flatbuffers.Builder, OCF flatbuffers.UOffsetT) {
+	TMFAddOCF(builder, OCF)
 }
 func TMFStartOCFVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(1, numElems, 1)
 }
+func TMFStartOcfVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return TMFStartOCFVector(builder, numElems)
+}
 func TMFAddFECF(builder *flatbuffers.Builder, FECF uint16) {
 	builder.PrependUint16Slot(13, FECF, 0)
+}
+func TMFAddFecf(builder *flatbuffers.Builder, FECF uint16) {
+	TMFAddFECF(builder, FECF)
 }
 func TMFEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

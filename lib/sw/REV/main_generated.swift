@@ -2,12 +2,16 @@
 // swiftlint:disable all
 // swiftformat:disable all
 
+#if canImport(Common)
+import Common
+#endif
+
 import FlatBuffers
 
 ///  Review - User review of a storefront listing
-public struct REV: FlatBufferObject, Verifiable {
+public struct REV: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -53,10 +57,8 @@ public struct REV: FlatBufferObject, Verifiable {
   ///  Unix timestamp of the review
   public var TIMESTAMP: UInt64 { let o = _accessor.offset(VTOFFSET.TIMESTAMP.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
   ///  Ed25519 signature from reviewer
-  public var hasReviewerSignature: Bool { let o = _accessor.offset(VTOFFSET.REVIEWER_SIGNATURE.v); return o == 0 ? false : true }
-  public var REVIEWER_SIGNATURECount: Int32 { let o = _accessor.offset(VTOFFSET.REVIEWER_SIGNATURE.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func REVIEWER_SIGNATURE(at index: Int32) -> UInt8 { let o = _accessor.offset(VTOFFSET.REVIEWER_SIGNATURE.v); return o == 0 ? 0 : _accessor.directRead(of: UInt8.self, offset: _accessor.vector(at: o) + index * 1) }
-  public var REVIEWER_SIGNATURE: [UInt8] { return _accessor.getVector(at: VTOFFSET.REVIEWER_SIGNATURE.v) ?? [] }
+  public var REVIEWER_SIGNATURE: FlatbufferVector<UInt8> { return _accessor.vector(at: VTOFFSET.REVIEWER_SIGNATURE.v, byteSize: 1) }
+  public func withUnsafePointerToReviewerSignature<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.REVIEWER_SIGNATURE.v, body: body) }
   public static func startREV(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 9) }
   public static func add(REVIEW_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REVIEW_ID, at: VTOFFSET.REVIEW_ID.p) }
   public static func add(LISTING_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LISTING_ID, at: VTOFFSET.LISTING_ID.p) }

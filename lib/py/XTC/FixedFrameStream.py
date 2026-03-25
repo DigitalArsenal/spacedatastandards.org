@@ -101,17 +101,23 @@ def End(builder):
 class FixedFrameStreamT(object):
 
     # FixedFrameStreamT
-    def __init__(self):
-        self.NAME = None  # type: str
-        self.SHORT_DESCRIPTION = None  # type: str
-        self.FRAME_SIZE_IN_BITS = 0  # type: int
-        self.SYNC_PATTERN = None  # type: str
+    def __init__(
+        self,
+        NAME = None,
+        SHORT_DESCRIPTION = None,
+        FRAME_SIZE_IN_BITS = 0,
+        SYNC_PATTERN = None,
+    ):
+        self.NAME = NAME  # type: Optional[str]
+        self.SHORT_DESCRIPTION = SHORT_DESCRIPTION  # type: Optional[str]
+        self.FRAME_SIZE_IN_BITS = FRAME_SIZE_IN_BITS  # type: int
+        self.SYNC_PATTERN = SYNC_PATTERN  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        fixedFrameStream = FixedFrameStream()
-        fixedFrameStream.Init(buf, pos)
-        return cls.InitFromObj(fixedFrameStream)
+        tmpFixedFrameStream = FixedFrameStream()
+        tmpFixedFrameStream.Init(buf, pos)
+        return cls.InitFromObj(tmpFixedFrameStream)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -119,19 +125,19 @@ class FixedFrameStreamT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, fixedFrameStream):
+    def InitFromObj(cls, tmpFixedFrameStream):
         x = FixedFrameStreamT()
-        x._UnPack(fixedFrameStream)
+        x._UnPack(tmpFixedFrameStream)
         return x
 
     # FixedFrameStreamT
-    def _UnPack(self, fixedFrameStream):
-        if fixedFrameStream is None:
+    def _UnPack(self, FixedFrameStream):
+        if FixedFrameStream is None:
             return
-        self.NAME = fixedFrameStream.NAME()
-        self.SHORT_DESCRIPTION = fixedFrameStream.SHORT_DESCRIPTION()
-        self.FRAME_SIZE_IN_BITS = fixedFrameStream.FRAME_SIZE_IN_BITS()
-        self.SYNC_PATTERN = fixedFrameStream.SYNC_PATTERN()
+        self.NAME = FixedFrameStream.NAME()
+        self.SHORT_DESCRIPTION = FixedFrameStream.SHORT_DESCRIPTION()
+        self.FRAME_SIZE_IN_BITS = FixedFrameStream.FRAME_SIZE_IN_BITS()
+        self.SYNC_PATTERN = FixedFrameStream.SYNC_PATTERN()
 
     # FixedFrameStreamT
     def Pack(self, builder):
@@ -149,5 +155,5 @@ class FixedFrameStreamT(object):
         FixedFrameStreamAddFRAME_SIZE_IN_BITS(builder, self.FRAME_SIZE_IN_BITS)
         if self.SYNC_PATTERN is not None:
             FixedFrameStreamAddSYNC_PATTERN(builder, SYNC_PATTERN)
-        fixedFrameStream = FixedFrameStreamEnd(builder)
-        return fixedFrameStream
+        FixedFrameStream = FixedFrameStreamEnd(builder)
+        return FixedFrameStream

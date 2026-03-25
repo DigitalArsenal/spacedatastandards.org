@@ -2,4 +2,167 @@
 
 # namespace: 
 
-# NOTE KMLSchemaData.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Schema data reference
+class KMLSchemaData(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = KMLSchemaData()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsKMLSchemaData(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def KMLSchemaDataBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x4B\x4D\x4C", size_prefixed=size_prefixed)
+
+    # KMLSchemaData
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Schema URL reference
+    # KMLSchemaData
+    def SCHEMA_URL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Simple data values
+    # KMLSchemaData
+    def SIMPLE_DATA(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from KMLSimpleData import KMLSimpleData
+            obj = KMLSimpleData()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # KMLSchemaData
+    def SIMPLE_DATALength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # KMLSchemaData
+    def SIMPLE_DATAIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        return o == 0
+
+def KMLSchemaDataStart(builder):
+    builder.StartObject(2)
+
+def Start(builder):
+    KMLSchemaDataStart(builder)
+
+def KMLSchemaDataAddSCHEMA_URL(builder, SCHEMA_URL):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(SCHEMA_URL), 0)
+
+def AddSCHEMA_URL(builder, SCHEMA_URL):
+    KMLSchemaDataAddSCHEMA_URL(builder, SCHEMA_URL)
+
+def KMLSchemaDataAddSIMPLE_DATA(builder, SIMPLE_DATA):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(SIMPLE_DATA), 0)
+
+def AddSIMPLE_DATA(builder, SIMPLE_DATA):
+    KMLSchemaDataAddSIMPLE_DATA(builder, SIMPLE_DATA)
+
+def KMLSchemaDataStartSIMPLE_DATAVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartSIMPLE_DATAVector(builder, numElems):
+    return KMLSchemaDataStartSIMPLE_DATAVector(builder, numElems)
+
+def KMLSchemaDataCreateSIMPLE_DATAVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateSIMPLE_DATAVector(builder, data):
+    KMLSchemaDataCreateSIMPLE_DATAVector(builder, data)
+
+def KMLSchemaDataEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return KMLSchemaDataEnd(builder)
+
+import KMLSimpleData
+try:
+    from typing import List
+except:
+    pass
+
+class KMLSchemaDataT(object):
+
+    # KMLSchemaDataT
+    def __init__(
+        self,
+        SCHEMA_URL = None,
+        SIMPLE_DATA = None,
+    ):
+        self.SCHEMA_URL = SCHEMA_URL  # type: Optional[str]
+        self.SIMPLE_DATA = SIMPLE_DATA  # type: Optional[List[KMLSimpleData.KMLSimpleDataT]]
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpKmlschemaData = KMLSchemaData()
+        tmpKmlschemaData.Init(buf, pos)
+        return cls.InitFromObj(tmpKmlschemaData)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpKmlschemaData):
+        x = KMLSchemaDataT()
+        x._UnPack(tmpKmlschemaData)
+        return x
+
+    # KMLSchemaDataT
+    def _UnPack(self, KMLSchemaData):
+        if KMLSchemaData is None:
+            return
+        self.SCHEMA_URL = KMLSchemaData.SCHEMA_URL()
+        if not KMLSchemaData.SIMPLE_DATAIsNone():
+            self.SIMPLE_DATA = []
+            for i in range(KMLSchemaData.SIMPLE_DATALength()):
+                if KMLSchemaData.SIMPLE_DATA(i) is None:
+                    self.SIMPLE_DATA.append(None)
+                else:
+                    kMLSimpleData_ = KMLSimpleData.KMLSimpleDataT.InitFromObj(KMLSchemaData.SIMPLE_DATA(i))
+                    self.SIMPLE_DATA.append(kMLSimpleData_)
+
+    # KMLSchemaDataT
+    def Pack(self, builder):
+        if self.SCHEMA_URL is not None:
+            SCHEMA_URL = builder.CreateString(self.SCHEMA_URL)
+        if self.SIMPLE_DATA is not None:
+            SIMPLE_DATAlist = []
+            for i in range(len(self.SIMPLE_DATA)):
+                SIMPLE_DATAlist.append(self.SIMPLE_DATA[i].Pack(builder))
+            KMLSchemaDataStartSIMPLE_DATAVector(builder, len(self.SIMPLE_DATA))
+            for i in reversed(range(len(self.SIMPLE_DATA))):
+                builder.PrependUOffsetTRelative(SIMPLE_DATAlist[i])
+            SIMPLE_DATA = builder.EndVector()
+        KMLSchemaDataStart(builder)
+        if self.SCHEMA_URL is not None:
+            KMLSchemaDataAddSCHEMA_URL(builder, SCHEMA_URL)
+        if self.SIMPLE_DATA is not None:
+            KMLSchemaDataAddSIMPLE_DATA(builder, SIMPLE_DATA)
+        KMLSchemaData = KMLSchemaDataEnd(builder)
+        return KMLSchemaData

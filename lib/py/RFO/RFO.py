@@ -1090,6 +1090,12 @@ def RFOStartTAGSVector(builder, numElems):
 def StartTAGSVector(builder, numElems):
     return RFOStartTAGSVector(builder, numElems)
 
+def RFOCreateTAGSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateTAGSVector(builder, data):
+    RFOCreateTAGSVector(builder, data)
+
 def RFOEnd(builder):
     return builder.EndObject()
 
@@ -1104,87 +1110,163 @@ except:
 class RFOT(object):
 
     # RFOT
-    def __init__(self):
-        self.ID = None  # type: str
-        self.OB_TIME = None  # type: str
-        self.ID_SENSOR = None  # type: str
-        self.ORIG_SENSOR_ID = None  # type: str
-        self.OBS_TYPE = 0  # type: int
-        self.SAT_NO = 0  # type: int
-        self.ORIG_OBJECT_ID = None  # type: str
-        self.ON_ORBIT = None  # type: str
-        self.UCT = False  # type: bool
-        self.TASK_ID = None  # type: str
-        self.TRANSACTION_ID = None  # type: str
-        self.TRACK_ID = None  # type: str
-        self.TRANSPONDER = None  # type: str
-        self.DETECTION_STATUS = 0  # type: int
-        self.AZIMUTH = 0.0  # type: float
-        self.AZIMUTH_UNC = 0.0  # type: float
-        self.AZIMUTH_RATE = 0.0  # type: float
-        self.ELEVATION = 0.0  # type: float
-        self.ELEVATION_UNC = 0.0  # type: float
-        self.ELEVATION_RATE = 0.0  # type: float
-        self.RANGE = 0.0  # type: float
-        self.RANGE_UNC = 0.0  # type: float
-        self.RANGE_RATE = 0.0  # type: float
-        self.RANGE_RATE_UNC = 0.0  # type: float
-        self.TRACK_RANGE = 0.0  # type: float
-        self.SENLAT = 0.0  # type: float
-        self.SENLON = 0.0  # type: float
-        self.SENALT = 0.0  # type: float
-        self.ELNOT = None  # type: str
-        self.ANTENNA_NAME = None  # type: str
-        self.COLLECTION_MODE = None  # type: str
-        self.FREQUENCY = 0.0  # type: float
-        self.NOMINAL_FREQUENCY = 0.0  # type: float
-        self.START_FREQUENCY = 0.0  # type: float
-        self.END_FREQUENCY = 0.0  # type: float
-        self.FREQUENCY_SHIFT = 0.0  # type: float
-        self.BANDWIDTH = 0.0  # type: float
-        self.NOMINAL_BANDWIDTH = 0.0  # type: float
-        self.RESOLUTION_BANDWIDTH = 0.0  # type: float
-        self.VIDEO_BANDWIDTH = 0.0  # type: float
-        self.RELATIVE_CARRIER_POWER = 0.0  # type: float
-        self.SPECTRUM_ANALYZER_POWER = 0.0  # type: float
-        self.RELATIVE_NOISE_FLOOR = 0.0  # type: float
-        self.REFERENCE_LEVEL = 0.0  # type: float
-        self.NOISE_PWR_DENSITY = 0.0  # type: float
-        self.PGRI = 0.0  # type: float
-        self.EIRP = 0.0  # type: float
-        self.NOMINAL_EIRP = 0.0  # type: float
-        self.MIN_PSD = 0.0  # type: float
-        self.MAX_PSD = 0.0  # type: float
-        self.SNR = 0.0  # type: float
-        self.NOMINAL_SNR = 0.0  # type: float
-        self.POWER_OVER_NOISE = 0.0  # type: float
-        self.NOMINAL_POWER_OVER_NOISE = 0.0  # type: float
-        self.POLARITY = 0.0  # type: float
-        self.POLARITY_TYPE = None  # type: str
-        self.CHANNEL = 0  # type: int
-        self.BAUD_RATE = 0.0  # type: float
-        self.SYMBOL_TO_NOISE_RATIO = 0.0  # type: float
-        self.BIT_ERROR_RATE = 0.0  # type: float
-        self.PEAK = False  # type: bool
-        self.INCOMING = False  # type: bool
-        self.SWITCH_POINT = 0  # type: int
-        self.CONFIDENCE = 0.0  # type: float
-        self.CARRIER_STANDARD = None  # type: str
-        self.MODULATION = None  # type: str
-        self.INNER_CODING_RATE = 0  # type: int
-        self.OUTER_CODING_RATE = 0  # type: int
-        self.TRANSMIT_FILTER_TYPE = None  # type: str
-        self.TRANSMIT_FILTER_ROLL_OFF = 0.0  # type: float
-        self.RAW_FILE_URI = None  # type: str
-        self.DESCRIPTOR = None  # type: str
-        self.URL = None  # type: str
-        self.TAGS = None  # type: List[str]
+    def __init__(
+        self,
+        ID = None,
+        OB_TIME = None,
+        ID_SENSOR = None,
+        ORIG_SENSOR_ID = None,
+        OBS_TYPE = 0,
+        SAT_NO = 0,
+        ORIG_OBJECT_ID = None,
+        ON_ORBIT = None,
+        UCT = False,
+        TASK_ID = None,
+        TRANSACTION_ID = None,
+        TRACK_ID = None,
+        TRANSPONDER = None,
+        DETECTION_STATUS = 0,
+        AZIMUTH = 0.0,
+        AZIMUTH_UNC = 0.0,
+        AZIMUTH_RATE = 0.0,
+        ELEVATION = 0.0,
+        ELEVATION_UNC = 0.0,
+        ELEVATION_RATE = 0.0,
+        RANGE = 0.0,
+        RANGE_UNC = 0.0,
+        RANGE_RATE = 0.0,
+        RANGE_RATE_UNC = 0.0,
+        TRACK_RANGE = 0.0,
+        SENLAT = 0.0,
+        SENLON = 0.0,
+        SENALT = 0.0,
+        ELNOT = None,
+        ANTENNA_NAME = None,
+        COLLECTION_MODE = None,
+        FREQUENCY = 0.0,
+        NOMINAL_FREQUENCY = 0.0,
+        START_FREQUENCY = 0.0,
+        END_FREQUENCY = 0.0,
+        FREQUENCY_SHIFT = 0.0,
+        BANDWIDTH = 0.0,
+        NOMINAL_BANDWIDTH = 0.0,
+        RESOLUTION_BANDWIDTH = 0.0,
+        VIDEO_BANDWIDTH = 0.0,
+        RELATIVE_CARRIER_POWER = 0.0,
+        SPECTRUM_ANALYZER_POWER = 0.0,
+        RELATIVE_NOISE_FLOOR = 0.0,
+        REFERENCE_LEVEL = 0.0,
+        NOISE_PWR_DENSITY = 0.0,
+        PGRI = 0.0,
+        EIRP = 0.0,
+        NOMINAL_EIRP = 0.0,
+        MIN_PSD = 0.0,
+        MAX_PSD = 0.0,
+        SNR = 0.0,
+        NOMINAL_SNR = 0.0,
+        POWER_OVER_NOISE = 0.0,
+        NOMINAL_POWER_OVER_NOISE = 0.0,
+        POLARITY = 0.0,
+        POLARITY_TYPE = None,
+        CHANNEL = 0,
+        BAUD_RATE = 0.0,
+        SYMBOL_TO_NOISE_RATIO = 0.0,
+        BIT_ERROR_RATE = 0.0,
+        PEAK = False,
+        INCOMING = False,
+        SWITCH_POINT = 0,
+        CONFIDENCE = 0.0,
+        CARRIER_STANDARD = None,
+        MODULATION = None,
+        INNER_CODING_RATE = 0,
+        OUTER_CODING_RATE = 0,
+        TRANSMIT_FILTER_TYPE = None,
+        TRANSMIT_FILTER_ROLL_OFF = 0.0,
+        RAW_FILE_URI = None,
+        DESCRIPTOR = None,
+        URL = None,
+        TAGS = None,
+    ):
+        self.ID = ID  # type: Optional[str]
+        self.OB_TIME = OB_TIME  # type: Optional[str]
+        self.ID_SENSOR = ID_SENSOR  # type: Optional[str]
+        self.ORIG_SENSOR_ID = ORIG_SENSOR_ID  # type: Optional[str]
+        self.OBS_TYPE = OBS_TYPE  # type: int
+        self.SAT_NO = SAT_NO  # type: int
+        self.ORIG_OBJECT_ID = ORIG_OBJECT_ID  # type: Optional[str]
+        self.ON_ORBIT = ON_ORBIT  # type: Optional[str]
+        self.UCT = UCT  # type: bool
+        self.TASK_ID = TASK_ID  # type: Optional[str]
+        self.TRANSACTION_ID = TRANSACTION_ID  # type: Optional[str]
+        self.TRACK_ID = TRACK_ID  # type: Optional[str]
+        self.TRANSPONDER = TRANSPONDER  # type: Optional[str]
+        self.DETECTION_STATUS = DETECTION_STATUS  # type: int
+        self.AZIMUTH = AZIMUTH  # type: float
+        self.AZIMUTH_UNC = AZIMUTH_UNC  # type: float
+        self.AZIMUTH_RATE = AZIMUTH_RATE  # type: float
+        self.ELEVATION = ELEVATION  # type: float
+        self.ELEVATION_UNC = ELEVATION_UNC  # type: float
+        self.ELEVATION_RATE = ELEVATION_RATE  # type: float
+        self.RANGE = RANGE  # type: float
+        self.RANGE_UNC = RANGE_UNC  # type: float
+        self.RANGE_RATE = RANGE_RATE  # type: float
+        self.RANGE_RATE_UNC = RANGE_RATE_UNC  # type: float
+        self.TRACK_RANGE = TRACK_RANGE  # type: float
+        self.SENLAT = SENLAT  # type: float
+        self.SENLON = SENLON  # type: float
+        self.SENALT = SENALT  # type: float
+        self.ELNOT = ELNOT  # type: Optional[str]
+        self.ANTENNA_NAME = ANTENNA_NAME  # type: Optional[str]
+        self.COLLECTION_MODE = COLLECTION_MODE  # type: Optional[str]
+        self.FREQUENCY = FREQUENCY  # type: float
+        self.NOMINAL_FREQUENCY = NOMINAL_FREQUENCY  # type: float
+        self.START_FREQUENCY = START_FREQUENCY  # type: float
+        self.END_FREQUENCY = END_FREQUENCY  # type: float
+        self.FREQUENCY_SHIFT = FREQUENCY_SHIFT  # type: float
+        self.BANDWIDTH = BANDWIDTH  # type: float
+        self.NOMINAL_BANDWIDTH = NOMINAL_BANDWIDTH  # type: float
+        self.RESOLUTION_BANDWIDTH = RESOLUTION_BANDWIDTH  # type: float
+        self.VIDEO_BANDWIDTH = VIDEO_BANDWIDTH  # type: float
+        self.RELATIVE_CARRIER_POWER = RELATIVE_CARRIER_POWER  # type: float
+        self.SPECTRUM_ANALYZER_POWER = SPECTRUM_ANALYZER_POWER  # type: float
+        self.RELATIVE_NOISE_FLOOR = RELATIVE_NOISE_FLOOR  # type: float
+        self.REFERENCE_LEVEL = REFERENCE_LEVEL  # type: float
+        self.NOISE_PWR_DENSITY = NOISE_PWR_DENSITY  # type: float
+        self.PGRI = PGRI  # type: float
+        self.EIRP = EIRP  # type: float
+        self.NOMINAL_EIRP = NOMINAL_EIRP  # type: float
+        self.MIN_PSD = MIN_PSD  # type: float
+        self.MAX_PSD = MAX_PSD  # type: float
+        self.SNR = SNR  # type: float
+        self.NOMINAL_SNR = NOMINAL_SNR  # type: float
+        self.POWER_OVER_NOISE = POWER_OVER_NOISE  # type: float
+        self.NOMINAL_POWER_OVER_NOISE = NOMINAL_POWER_OVER_NOISE  # type: float
+        self.POLARITY = POLARITY  # type: float
+        self.POLARITY_TYPE = POLARITY_TYPE  # type: Optional[str]
+        self.CHANNEL = CHANNEL  # type: int
+        self.BAUD_RATE = BAUD_RATE  # type: float
+        self.SYMBOL_TO_NOISE_RATIO = SYMBOL_TO_NOISE_RATIO  # type: float
+        self.BIT_ERROR_RATE = BIT_ERROR_RATE  # type: float
+        self.PEAK = PEAK  # type: bool
+        self.INCOMING = INCOMING  # type: bool
+        self.SWITCH_POINT = SWITCH_POINT  # type: int
+        self.CONFIDENCE = CONFIDENCE  # type: float
+        self.CARRIER_STANDARD = CARRIER_STANDARD  # type: Optional[str]
+        self.MODULATION = MODULATION  # type: Optional[str]
+        self.INNER_CODING_RATE = INNER_CODING_RATE  # type: int
+        self.OUTER_CODING_RATE = OUTER_CODING_RATE  # type: int
+        self.TRANSMIT_FILTER_TYPE = TRANSMIT_FILTER_TYPE  # type: Optional[str]
+        self.TRANSMIT_FILTER_ROLL_OFF = TRANSMIT_FILTER_ROLL_OFF  # type: float
+        self.RAW_FILE_URI = RAW_FILE_URI  # type: Optional[str]
+        self.DESCRIPTOR = DESCRIPTOR  # type: Optional[str]
+        self.URL = URL  # type: Optional[str]
+        self.TAGS = TAGS  # type: Optional[List[Optional[str]]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        RFO = RFO()
-        RFO.Init(buf, pos)
-        return cls.InitFromObj(RFO)
+        tmpRfo = RFO()
+        tmpRfo.Init(buf, pos)
+        return cls.InitFromObj(tmpRfo)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -1192,9 +1274,9 @@ class RFOT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, RFO):
+    def InitFromObj(cls, tmpRfo):
         x = RFOT()
-        x._UnPack(RFO)
+        x._UnPack(tmpRfo)
         return x
 
     # RFOT

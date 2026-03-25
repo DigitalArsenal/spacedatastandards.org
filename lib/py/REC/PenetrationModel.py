@@ -2,4 +2,9 @@
 
 # namespace: 
 
-# NOTE PenetrationModel.py does not declare any structs or enums
+class PenetrationModel(object):
+    DE_MARRE = 0
+    THOR = 1
+    ODERMATT = 2
+    ANDERSON = 3
+    BRL = 4

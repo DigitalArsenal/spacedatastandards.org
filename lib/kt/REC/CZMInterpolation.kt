@@ -32,7 +32,7 @@ class CZMInterpolation : Table() {
     /**
      * Algorithm: LINEAR, LAGRANGE, HERMITE
      */
-    val ALGORITHM : String?
+    val algorithm : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,32 +41,32 @@ class CZMInterpolation : Table() {
                 null
             }
         }
-    val ALGORITHMAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun ALGORITHMInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val algorithmAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun algorithmInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Polynomial degree (1=linear, 5=typical Lagrange)
      */
-    val DEGREE : Int
+    val degree : Int
         get() {
             val o = __offset(6)
             return if(o != 0) bb.getInt(o + bb_pos) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsCZMInterpolation(_bb: ByteBuffer): CZMInterpolation = getRootAsCZMInterpolation(_bb, CZMInterpolation())
         fun getRootAsCZMInterpolation(_bb: ByteBuffer, obj: CZMInterpolation): CZMInterpolation {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createCZMInterpolation(builder: FlatBufferBuilder, ALGORITHMOffset: Int, DEGREE: Int) : Int {
+        fun createCZMInterpolation(builder: FlatBufferBuilder, algorithmOffset: Int, degree: Int) : Int {
             builder.startTable(2)
-            addDEGREE(builder, DEGREE)
-            addALGORITHM(builder, ALGORITHMOffset)
+            addDEGREE(builder, degree)
+            addALGORITHM(builder, algorithmOffset)
             return endCZMInterpolation(builder)
         }
         fun startCZMInterpolation(builder: FlatBufferBuilder) = builder.startTable(2)
-        fun addALGORITHM(builder: FlatBufferBuilder, ALGORITHM: Int) = builder.addOffset(0, ALGORITHM, 0)
-        fun addDEGREE(builder: FlatBufferBuilder, DEGREE: Int) = builder.addInt(1, DEGREE, 0)
+        fun addALGORITHM(builder: FlatBufferBuilder, algorithm: Int) = builder.addOffset(0, algorithm, 0)
+        fun addDEGREE(builder: FlatBufferBuilder, degree: Int) = builder.addInt(1, degree, 0)
         fun endCZMInterpolation(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

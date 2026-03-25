@@ -375,35 +375,59 @@ except:
 class CZMBillboardT(object):
 
     # CZMBillboardT
-    def __init__(self):
-        self.SHOW = False  # type: bool
-        self.IMAGE = None  # type: str
-        self.SCALE = 0.0  # type: float
-        self.COLOR = None  # type: Optional[CZMColor.CZMColorT]
-        self.HEIGHT_REFERENCE = 0  # type: int
-        self.PIXEL_OFFSET_X = 0.0  # type: float
-        self.PIXEL_OFFSET_Y = 0.0  # type: float
-        self.HORIZONTAL_ORIGIN = 0  # type: int
-        self.VERTICAL_ORIGIN = 0  # type: int
-        self.TRANSLUCENCY_BY_DISTANCE = None  # type: Optional[CZMNearFarScalar.CZMNearFarScalarT]
-        self.ROTATION = 0.0  # type: float
-        self.SIZE_IN_METERS = False  # type: bool
-        self.WIDTH = 0.0  # type: float
-        self.HEIGHT = 0.0  # type: float
-        self.EYE_OFFSET_X = 0.0  # type: float
-        self.EYE_OFFSET_Y = 0.0  # type: float
-        self.EYE_OFFSET_Z = 0.0  # type: float
-        self.SCALE_BY_DISTANCE = None  # type: Optional[CZMNearFarScalar.CZMNearFarScalarT]
-        self.PIXEL_OFFSET_SCALE_BY_DISTANCE = None  # type: Optional[CZMNearFarScalar.CZMNearFarScalarT]
-        self.DISTANCE_DISPLAY_CONDITION_NEAR = 0.0  # type: float
-        self.DISTANCE_DISPLAY_CONDITION_FAR = 0.0  # type: float
-        self.DISABLE_DEPTH_TEST_DISTANCE = 0.0  # type: float
+    def __init__(
+        self,
+        SHOW = False,
+        IMAGE = None,
+        SCALE = 0.0,
+        COLOR = None,
+        HEIGHT_REFERENCE = 0,
+        PIXEL_OFFSET_X = 0.0,
+        PIXEL_OFFSET_Y = 0.0,
+        HORIZONTAL_ORIGIN = 0,
+        VERTICAL_ORIGIN = 0,
+        TRANSLUCENCY_BY_DISTANCE = None,
+        ROTATION = 0.0,
+        SIZE_IN_METERS = False,
+        WIDTH = 0.0,
+        HEIGHT = 0.0,
+        EYE_OFFSET_X = 0.0,
+        EYE_OFFSET_Y = 0.0,
+        EYE_OFFSET_Z = 0.0,
+        SCALE_BY_DISTANCE = None,
+        PIXEL_OFFSET_SCALE_BY_DISTANCE = None,
+        DISTANCE_DISPLAY_CONDITION_NEAR = 0.0,
+        DISTANCE_DISPLAY_CONDITION_FAR = 0.0,
+        DISABLE_DEPTH_TEST_DISTANCE = 0.0,
+    ):
+        self.SHOW = SHOW  # type: bool
+        self.IMAGE = IMAGE  # type: Optional[str]
+        self.SCALE = SCALE  # type: float
+        self.COLOR = COLOR  # type: Optional[CZMColor.CZMColorT]
+        self.HEIGHT_REFERENCE = HEIGHT_REFERENCE  # type: int
+        self.PIXEL_OFFSET_X = PIXEL_OFFSET_X  # type: float
+        self.PIXEL_OFFSET_Y = PIXEL_OFFSET_Y  # type: float
+        self.HORIZONTAL_ORIGIN = HORIZONTAL_ORIGIN  # type: int
+        self.VERTICAL_ORIGIN = VERTICAL_ORIGIN  # type: int
+        self.TRANSLUCENCY_BY_DISTANCE = TRANSLUCENCY_BY_DISTANCE  # type: Optional[CZMNearFarScalar.CZMNearFarScalarT]
+        self.ROTATION = ROTATION  # type: float
+        self.SIZE_IN_METERS = SIZE_IN_METERS  # type: bool
+        self.WIDTH = WIDTH  # type: float
+        self.HEIGHT = HEIGHT  # type: float
+        self.EYE_OFFSET_X = EYE_OFFSET_X  # type: float
+        self.EYE_OFFSET_Y = EYE_OFFSET_Y  # type: float
+        self.EYE_OFFSET_Z = EYE_OFFSET_Z  # type: float
+        self.SCALE_BY_DISTANCE = SCALE_BY_DISTANCE  # type: Optional[CZMNearFarScalar.CZMNearFarScalarT]
+        self.PIXEL_OFFSET_SCALE_BY_DISTANCE = PIXEL_OFFSET_SCALE_BY_DISTANCE  # type: Optional[CZMNearFarScalar.CZMNearFarScalarT]
+        self.DISTANCE_DISPLAY_CONDITION_NEAR = DISTANCE_DISPLAY_CONDITION_NEAR  # type: float
+        self.DISTANCE_DISPLAY_CONDITION_FAR = DISTANCE_DISPLAY_CONDITION_FAR  # type: float
+        self.DISABLE_DEPTH_TEST_DISTANCE = DISABLE_DEPTH_TEST_DISTANCE  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        czmbillboard = CZMBillboard()
-        czmbillboard.Init(buf, pos)
-        return cls.InitFromObj(czmbillboard)
+        tmpCzmbillboard = CZMBillboard()
+        tmpCzmbillboard.Init(buf, pos)
+        return cls.InitFromObj(tmpCzmbillboard)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -411,41 +435,41 @@ class CZMBillboardT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, czmbillboard):
+    def InitFromObj(cls, tmpCzmbillboard):
         x = CZMBillboardT()
-        x._UnPack(czmbillboard)
+        x._UnPack(tmpCzmbillboard)
         return x
 
     # CZMBillboardT
-    def _UnPack(self, czmbillboard):
-        if czmbillboard is None:
+    def _UnPack(self, CZMBillboard):
+        if CZMBillboard is None:
             return
-        self.SHOW = czmbillboard.SHOW()
-        self.IMAGE = czmbillboard.IMAGE()
-        self.SCALE = czmbillboard.SCALE()
-        if czmbillboard.COLOR() is not None:
-            self.COLOR = CZMColor.CZMColorT.InitFromObj(czmbillboard.COLOR())
-        self.HEIGHT_REFERENCE = czmbillboard.HEIGHT_REFERENCE()
-        self.PIXEL_OFFSET_X = czmbillboard.PIXEL_OFFSET_X()
-        self.PIXEL_OFFSET_Y = czmbillboard.PIXEL_OFFSET_Y()
-        self.HORIZONTAL_ORIGIN = czmbillboard.HORIZONTAL_ORIGIN()
-        self.VERTICAL_ORIGIN = czmbillboard.VERTICAL_ORIGIN()
-        if czmbillboard.TRANSLUCENCY_BY_DISTANCE() is not None:
-            self.TRANSLUCENCY_BY_DISTANCE = CZMNearFarScalar.CZMNearFarScalarT.InitFromObj(czmbillboard.TRANSLUCENCY_BY_DISTANCE())
-        self.ROTATION = czmbillboard.ROTATION()
-        self.SIZE_IN_METERS = czmbillboard.SIZE_IN_METERS()
-        self.WIDTH = czmbillboard.WIDTH()
-        self.HEIGHT = czmbillboard.HEIGHT()
-        self.EYE_OFFSET_X = czmbillboard.EYE_OFFSET_X()
-        self.EYE_OFFSET_Y = czmbillboard.EYE_OFFSET_Y()
-        self.EYE_OFFSET_Z = czmbillboard.EYE_OFFSET_Z()
-        if czmbillboard.SCALE_BY_DISTANCE() is not None:
-            self.SCALE_BY_DISTANCE = CZMNearFarScalar.CZMNearFarScalarT.InitFromObj(czmbillboard.SCALE_BY_DISTANCE())
-        if czmbillboard.PIXEL_OFFSET_SCALE_BY_DISTANCE() is not None:
-            self.PIXEL_OFFSET_SCALE_BY_DISTANCE = CZMNearFarScalar.CZMNearFarScalarT.InitFromObj(czmbillboard.PIXEL_OFFSET_SCALE_BY_DISTANCE())
-        self.DISTANCE_DISPLAY_CONDITION_NEAR = czmbillboard.DISTANCE_DISPLAY_CONDITION_NEAR()
-        self.DISTANCE_DISPLAY_CONDITION_FAR = czmbillboard.DISTANCE_DISPLAY_CONDITION_FAR()
-        self.DISABLE_DEPTH_TEST_DISTANCE = czmbillboard.DISABLE_DEPTH_TEST_DISTANCE()
+        self.SHOW = CZMBillboard.SHOW()
+        self.IMAGE = CZMBillboard.IMAGE()
+        self.SCALE = CZMBillboard.SCALE()
+        if CZMBillboard.COLOR() is not None:
+            self.COLOR = CZMColor.CZMColorT.InitFromObj(CZMBillboard.COLOR())
+        self.HEIGHT_REFERENCE = CZMBillboard.HEIGHT_REFERENCE()
+        self.PIXEL_OFFSET_X = CZMBillboard.PIXEL_OFFSET_X()
+        self.PIXEL_OFFSET_Y = CZMBillboard.PIXEL_OFFSET_Y()
+        self.HORIZONTAL_ORIGIN = CZMBillboard.HORIZONTAL_ORIGIN()
+        self.VERTICAL_ORIGIN = CZMBillboard.VERTICAL_ORIGIN()
+        if CZMBillboard.TRANSLUCENCY_BY_DISTANCE() is not None:
+            self.TRANSLUCENCY_BY_DISTANCE = CZMNearFarScalar.CZMNearFarScalarT.InitFromObj(CZMBillboard.TRANSLUCENCY_BY_DISTANCE())
+        self.ROTATION = CZMBillboard.ROTATION()
+        self.SIZE_IN_METERS = CZMBillboard.SIZE_IN_METERS()
+        self.WIDTH = CZMBillboard.WIDTH()
+        self.HEIGHT = CZMBillboard.HEIGHT()
+        self.EYE_OFFSET_X = CZMBillboard.EYE_OFFSET_X()
+        self.EYE_OFFSET_Y = CZMBillboard.EYE_OFFSET_Y()
+        self.EYE_OFFSET_Z = CZMBillboard.EYE_OFFSET_Z()
+        if CZMBillboard.SCALE_BY_DISTANCE() is not None:
+            self.SCALE_BY_DISTANCE = CZMNearFarScalar.CZMNearFarScalarT.InitFromObj(CZMBillboard.SCALE_BY_DISTANCE())
+        if CZMBillboard.PIXEL_OFFSET_SCALE_BY_DISTANCE() is not None:
+            self.PIXEL_OFFSET_SCALE_BY_DISTANCE = CZMNearFarScalar.CZMNearFarScalarT.InitFromObj(CZMBillboard.PIXEL_OFFSET_SCALE_BY_DISTANCE())
+        self.DISTANCE_DISPLAY_CONDITION_NEAR = CZMBillboard.DISTANCE_DISPLAY_CONDITION_NEAR()
+        self.DISTANCE_DISPLAY_CONDITION_FAR = CZMBillboard.DISTANCE_DISPLAY_CONDITION_FAR()
+        self.DISABLE_DEPTH_TEST_DISTANCE = CZMBillboard.DISABLE_DEPTH_TEST_DISTANCE()
 
     # CZMBillboardT
     def Pack(self, builder):
@@ -487,5 +511,5 @@ class CZMBillboardT(object):
         CZMBillboardAddDISTANCE_DISPLAY_CONDITION_NEAR(builder, self.DISTANCE_DISPLAY_CONDITION_NEAR)
         CZMBillboardAddDISTANCE_DISPLAY_CONDITION_FAR(builder, self.DISTANCE_DISPLAY_CONDITION_FAR)
         CZMBillboardAddDISABLE_DEPTH_TEST_DISTANCE(builder, self.DISABLE_DEPTH_TEST_DISTANCE)
-        czmbillboard = CZMBillboardEnd(builder)
-        return czmbillboard
+        CZMBillboard = CZMBillboardEnd(builder)
+        return CZMBillboard

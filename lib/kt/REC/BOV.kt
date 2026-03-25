@@ -29,37 +29,37 @@ class BOV : Table() {
         __init(_i, _bb)
         return this
     }
-    val E_COORDINATE : Double
+    val eCoordinate : Double
         get() {
             val o = __offset(4)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val F_COORDINATE : Double
+    val fCoordinate : Double
         get() {
             val o = __offset(6)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val G_COORDINATE : Double
+    val gCoordinate : Double
         get() {
             val o = __offset(8)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val E_DOT : Double
+    val eDot : Double
         get() {
             val o = __offset(10)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val F_DOT : Double
+    val fDot : Double
         get() {
             val o = __offset(12)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val G_DOT : Double
+    val gDot : Double
         get() {
             val o = __offset(14)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val EPOCH : String?
+    val epoch : String?
         get() {
             val o = __offset(16)
             return if (o != 0) {
@@ -68,42 +68,42 @@ class BOV : Table() {
                 null
             }
         }
-    val EPOCHAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(16, 1)
-    fun EPOCHInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 16, 1)
-    val TIME_FROM_LAUNCH : Double
+    val epochAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(16, 1)
+    fun epochInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 16, 1)
+    val timeFromLaunch : Double
         get() {
             val o = __offset(18)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsBOV(_bb: ByteBuffer): BOV = getRootAsBOV(_bb, BOV())
         fun getRootAsBOV(_bb: ByteBuffer, obj: BOV): BOV {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun BOVBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$BOV")
-        fun createBOV(builder: FlatBufferBuilder, E_COORDINATE: Double, F_COORDINATE: Double, G_COORDINATE: Double, E_DOT: Double, F_DOT: Double, G_DOT: Double, EPOCHOffset: Int, TIME_FROM_LAUNCH: Double) : Int {
+        fun createBOV(builder: FlatBufferBuilder, eCoordinate: Double, fCoordinate: Double, gCoordinate: Double, eDot: Double, fDot: Double, gDot: Double, epochOffset: Int, timeFromLaunch: Double) : Int {
             builder.startTable(8)
-            addTIME_FROM_LAUNCH(builder, TIME_FROM_LAUNCH)
-            addG_DOT(builder, G_DOT)
-            addF_DOT(builder, F_DOT)
-            addE_DOT(builder, E_DOT)
-            addG_COORDINATE(builder, G_COORDINATE)
-            addF_COORDINATE(builder, F_COORDINATE)
-            addE_COORDINATE(builder, E_COORDINATE)
-            addEPOCH(builder, EPOCHOffset)
+            addTIMEFROMLAUNCH(builder, timeFromLaunch)
+            addGDOT(builder, gDot)
+            addFDOT(builder, fDot)
+            addEDOT(builder, eDot)
+            addGCOORDINATE(builder, gCoordinate)
+            addFCOORDINATE(builder, fCoordinate)
+            addECOORDINATE(builder, eCoordinate)
+            addEPOCH(builder, epochOffset)
             return endBOV(builder)
         }
         fun startBOV(builder: FlatBufferBuilder) = builder.startTable(8)
-        fun addE_COORDINATE(builder: FlatBufferBuilder, E_COORDINATE: Double) = builder.addDouble(0, E_COORDINATE, 0.0)
-        fun addF_COORDINATE(builder: FlatBufferBuilder, F_COORDINATE: Double) = builder.addDouble(1, F_COORDINATE, 0.0)
-        fun addG_COORDINATE(builder: FlatBufferBuilder, G_COORDINATE: Double) = builder.addDouble(2, G_COORDINATE, 0.0)
-        fun addE_DOT(builder: FlatBufferBuilder, E_DOT: Double) = builder.addDouble(3, E_DOT, 0.0)
-        fun addF_DOT(builder: FlatBufferBuilder, F_DOT: Double) = builder.addDouble(4, F_DOT, 0.0)
-        fun addG_DOT(builder: FlatBufferBuilder, G_DOT: Double) = builder.addDouble(5, G_DOT, 0.0)
-        fun addEPOCH(builder: FlatBufferBuilder, EPOCH: Int) = builder.addOffset(6, EPOCH, 0)
-        fun addTIME_FROM_LAUNCH(builder: FlatBufferBuilder, TIME_FROM_LAUNCH: Double) = builder.addDouble(7, TIME_FROM_LAUNCH, 0.0)
+        fun addECOORDINATE(builder: FlatBufferBuilder, eCoordinate: Double) = builder.addDouble(0, eCoordinate, 0.0)
+        fun addFCOORDINATE(builder: FlatBufferBuilder, fCoordinate: Double) = builder.addDouble(1, fCoordinate, 0.0)
+        fun addGCOORDINATE(builder: FlatBufferBuilder, gCoordinate: Double) = builder.addDouble(2, gCoordinate, 0.0)
+        fun addEDOT(builder: FlatBufferBuilder, eDot: Double) = builder.addDouble(3, eDot, 0.0)
+        fun addFDOT(builder: FlatBufferBuilder, fDot: Double) = builder.addDouble(4, fDot, 0.0)
+        fun addGDOT(builder: FlatBufferBuilder, gDot: Double) = builder.addDouble(5, gDot, 0.0)
+        fun addEPOCH(builder: FlatBufferBuilder, epoch: Int) = builder.addOffset(6, epoch, 0)
+        fun addTIMEFROMLAUNCH(builder: FlatBufferBuilder, timeFromLaunch: Double) = builder.addDouble(7, timeFromLaunch, 0.0)
         fun endBOV(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

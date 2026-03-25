@@ -59,14 +59,17 @@ def End(builder):
 class KMLTimeStampT(object):
 
     # KMLTimeStampT
-    def __init__(self):
-        self.WHEN = None  # type: str
+    def __init__(
+        self,
+        WHEN = None,
+    ):
+        self.WHEN = WHEN  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        kmltimeStamp = KMLTimeStamp()
-        kmltimeStamp.Init(buf, pos)
-        return cls.InitFromObj(kmltimeStamp)
+        tmpKmltimeStamp = KMLTimeStamp()
+        tmpKmltimeStamp.Init(buf, pos)
+        return cls.InitFromObj(tmpKmltimeStamp)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -74,16 +77,16 @@ class KMLTimeStampT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, kmltimeStamp):
+    def InitFromObj(cls, tmpKmltimeStamp):
         x = KMLTimeStampT()
-        x._UnPack(kmltimeStamp)
+        x._UnPack(tmpKmltimeStamp)
         return x
 
     # KMLTimeStampT
-    def _UnPack(self, kmltimeStamp):
-        if kmltimeStamp is None:
+    def _UnPack(self, KMLTimeStamp):
+        if KMLTimeStamp is None:
             return
-        self.WHEN = kmltimeStamp.WHEN()
+        self.WHEN = KMLTimeStamp.WHEN()
 
     # KMLTimeStampT
     def Pack(self, builder):
@@ -92,5 +95,5 @@ class KMLTimeStampT(object):
         KMLTimeStampStart(builder)
         if self.WHEN is not None:
             KMLTimeStampAddWHEN(builder, WHEN)
-        kmltimeStamp = KMLTimeStampEnd(builder)
-        return kmltimeStamp
+        KMLTimeStamp = KMLTimeStampEnd(builder)
+        return KMLTimeStamp

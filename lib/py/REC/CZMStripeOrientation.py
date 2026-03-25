@@ -2,4 +2,6 @@
 
 # namespace: 
 
-# NOTE CZMStripeOrientation.py does not declare any structs or enums
+class CZMStripeOrientation(object):
+    HORIZONTAL = 0
+    VERTICAL = 1

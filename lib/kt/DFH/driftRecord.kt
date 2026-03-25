@@ -32,7 +32,7 @@ class driftRecord : Table() {
     /**
      * Epoch of drift measurement (ISO 8601)
      */
-    val EPOCH : String?
+    val epoch : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class driftRecord : Table() {
                 null
             }
         }
-    val EPOCHAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun EPOCHInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val epochAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun epochInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Longitude drift rate in degrees/day
      */
-    val DRIFT_RATE : Double
+    val driftRate : Double
         get() {
             val o = __offset(6)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -54,7 +54,7 @@ class driftRecord : Table() {
     /**
      * Mean longitude in degrees East
      */
-    val MEAN_LONGITUDE : Double
+    val meanLongitude : Double
         get() {
             val o = __offset(8)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -62,7 +62,7 @@ class driftRecord : Table() {
     /**
      * Longitude oscillation amplitude in degrees
      */
-    val LONGITUDE_AMPLITUDE : Double
+    val longitudeAmplitude : Double
         get() {
             val o = __offset(10)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -70,7 +70,7 @@ class driftRecord : Table() {
     /**
      * Eccentricity
      */
-    val ECCENTRICITY : Double
+    val eccentricity : Double
         get() {
             val o = __offset(12)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -78,35 +78,35 @@ class driftRecord : Table() {
     /**
      * Inclination in degrees
      */
-    val INCLINATION : Double
+    val inclination : Double
         get() {
             val o = __offset(14)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsdriftRecord(_bb: ByteBuffer): driftRecord = getRootAsdriftRecord(_bb, driftRecord())
         fun getRootAsdriftRecord(_bb: ByteBuffer, obj: driftRecord): driftRecord {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createdriftRecord(builder: FlatBufferBuilder, EPOCHOffset: Int, DRIFT_RATE: Double, MEAN_LONGITUDE: Double, LONGITUDE_AMPLITUDE: Double, ECCENTRICITY: Double, INCLINATION: Double) : Int {
+        fun createdriftRecord(builder: FlatBufferBuilder, epochOffset: Int, driftRate: Double, meanLongitude: Double, longitudeAmplitude: Double, eccentricity: Double, inclination: Double) : Int {
             builder.startTable(6)
-            addINCLINATION(builder, INCLINATION)
-            addECCENTRICITY(builder, ECCENTRICITY)
-            addLONGITUDE_AMPLITUDE(builder, LONGITUDE_AMPLITUDE)
-            addMEAN_LONGITUDE(builder, MEAN_LONGITUDE)
-            addDRIFT_RATE(builder, DRIFT_RATE)
-            addEPOCH(builder, EPOCHOffset)
+            addINCLINATION(builder, inclination)
+            addECCENTRICITY(builder, eccentricity)
+            addLONGITUDEAMPLITUDE(builder, longitudeAmplitude)
+            addMEANLONGITUDE(builder, meanLongitude)
+            addDRIFTRATE(builder, driftRate)
+            addEPOCH(builder, epochOffset)
             return enddriftRecord(builder)
         }
         fun startdriftRecord(builder: FlatBufferBuilder) = builder.startTable(6)
-        fun addEPOCH(builder: FlatBufferBuilder, EPOCH: Int) = builder.addOffset(0, EPOCH, 0)
-        fun addDRIFT_RATE(builder: FlatBufferBuilder, DRIFT_RATE: Double) = builder.addDouble(1, DRIFT_RATE, 0.0)
-        fun addMEAN_LONGITUDE(builder: FlatBufferBuilder, MEAN_LONGITUDE: Double) = builder.addDouble(2, MEAN_LONGITUDE, 0.0)
-        fun addLONGITUDE_AMPLITUDE(builder: FlatBufferBuilder, LONGITUDE_AMPLITUDE: Double) = builder.addDouble(3, LONGITUDE_AMPLITUDE, 0.0)
-        fun addECCENTRICITY(builder: FlatBufferBuilder, ECCENTRICITY: Double) = builder.addDouble(4, ECCENTRICITY, 0.0)
-        fun addINCLINATION(builder: FlatBufferBuilder, INCLINATION: Double) = builder.addDouble(5, INCLINATION, 0.0)
+        fun addEPOCH(builder: FlatBufferBuilder, epoch: Int) = builder.addOffset(0, epoch, 0)
+        fun addDRIFTRATE(builder: FlatBufferBuilder, driftRate: Double) = builder.addDouble(1, driftRate, 0.0)
+        fun addMEANLONGITUDE(builder: FlatBufferBuilder, meanLongitude: Double) = builder.addDouble(2, meanLongitude, 0.0)
+        fun addLONGITUDEAMPLITUDE(builder: FlatBufferBuilder, longitudeAmplitude: Double) = builder.addDouble(3, longitudeAmplitude, 0.0)
+        fun addECCENTRICITY(builder: FlatBufferBuilder, eccentricity: Double) = builder.addDouble(4, eccentricity, 0.0)
+        fun addINCLINATION(builder: FlatBufferBuilder, inclination: Double) = builder.addDouble(5, inclination, 0.0)
         fun enddriftRecord(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

@@ -110,17 +110,23 @@ except:
 class ArrayParameterRefEntryT(object):
 
     # ArrayParameterRefEntryT
-    def __init__(self):
-        self.PARAMETER_REF = None  # type: str
-        self.LOCATION = None  # type: Optional[LocationInContainer.LocationInContainerT]
-        self.FIRST_INDEX = 0  # type: int
-        self.LAST_INDEX = 0  # type: int
+    def __init__(
+        self,
+        PARAMETER_REF = None,
+        LOCATION = None,
+        FIRST_INDEX = 0,
+        LAST_INDEX = 0,
+    ):
+        self.PARAMETER_REF = PARAMETER_REF  # type: Optional[str]
+        self.LOCATION = LOCATION  # type: Optional[LocationInContainer.LocationInContainerT]
+        self.FIRST_INDEX = FIRST_INDEX  # type: int
+        self.LAST_INDEX = LAST_INDEX  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        arrayParameterRefEntry = ArrayParameterRefEntry()
-        arrayParameterRefEntry.Init(buf, pos)
-        return cls.InitFromObj(arrayParameterRefEntry)
+        tmpArrayParameterRefEntry = ArrayParameterRefEntry()
+        tmpArrayParameterRefEntry.Init(buf, pos)
+        return cls.InitFromObj(tmpArrayParameterRefEntry)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -128,20 +134,20 @@ class ArrayParameterRefEntryT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, arrayParameterRefEntry):
+    def InitFromObj(cls, tmpArrayParameterRefEntry):
         x = ArrayParameterRefEntryT()
-        x._UnPack(arrayParameterRefEntry)
+        x._UnPack(tmpArrayParameterRefEntry)
         return x
 
     # ArrayParameterRefEntryT
-    def _UnPack(self, arrayParameterRefEntry):
-        if arrayParameterRefEntry is None:
+    def _UnPack(self, ArrayParameterRefEntry):
+        if ArrayParameterRefEntry is None:
             return
-        self.PARAMETER_REF = arrayParameterRefEntry.PARAMETER_REF()
-        if arrayParameterRefEntry.LOCATION() is not None:
-            self.LOCATION = LocationInContainer.LocationInContainerT.InitFromObj(arrayParameterRefEntry.LOCATION())
-        self.FIRST_INDEX = arrayParameterRefEntry.FIRST_INDEX()
-        self.LAST_INDEX = arrayParameterRefEntry.LAST_INDEX()
+        self.PARAMETER_REF = ArrayParameterRefEntry.PARAMETER_REF()
+        if ArrayParameterRefEntry.LOCATION() is not None:
+            self.LOCATION = LocationInContainer.LocationInContainerT.InitFromObj(ArrayParameterRefEntry.LOCATION())
+        self.FIRST_INDEX = ArrayParameterRefEntry.FIRST_INDEX()
+        self.LAST_INDEX = ArrayParameterRefEntry.LAST_INDEX()
 
     # ArrayParameterRefEntryT
     def Pack(self, builder):
@@ -156,5 +162,5 @@ class ArrayParameterRefEntryT(object):
             ArrayParameterRefEntryAddLOCATION(builder, LOCATION)
         ArrayParameterRefEntryAddFIRST_INDEX(builder, self.FIRST_INDEX)
         ArrayParameterRefEntryAddLAST_INDEX(builder, self.LAST_INDEX)
-        arrayParameterRefEntry = ArrayParameterRefEntryEnd(builder)
-        return arrayParameterRefEntry
+        ArrayParameterRefEntry = ArrayParameterRefEntryEnd(builder)
+        return ArrayParameterRefEntry

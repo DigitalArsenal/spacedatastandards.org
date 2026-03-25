@@ -75,6 +75,16 @@ def PolynomialCalibratorStartCOEFFICIENTSVector(builder, numElems):
 def StartCOEFFICIENTSVector(builder, numElems):
     return PolynomialCalibratorStartCOEFFICIENTSVector(builder, numElems)
 
+def PolynomialCalibratorCreateCOEFFICIENTSVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateCOEFFICIENTSVector(builder, data):
+    PolynomialCalibratorCreateCOEFFICIENTSVector(builder, data)
+
 def PolynomialCalibratorEnd(builder):
     return builder.EndObject()
 
@@ -89,14 +99,17 @@ except:
 class PolynomialCalibratorT(object):
 
     # PolynomialCalibratorT
-    def __init__(self):
-        self.COEFFICIENTS = None  # type: List[float]
+    def __init__(
+        self,
+        COEFFICIENTS = None,
+    ):
+        self.COEFFICIENTS = COEFFICIENTS  # type: Optional[List[float]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        polynomialCalibrator = PolynomialCalibrator()
-        polynomialCalibrator.Init(buf, pos)
-        return cls.InitFromObj(polynomialCalibrator)
+        tmpPolynomialCalibrator = PolynomialCalibrator()
+        tmpPolynomialCalibrator.Init(buf, pos)
+        return cls.InitFromObj(tmpPolynomialCalibrator)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -104,22 +117,22 @@ class PolynomialCalibratorT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, polynomialCalibrator):
+    def InitFromObj(cls, tmpPolynomialCalibrator):
         x = PolynomialCalibratorT()
-        x._UnPack(polynomialCalibrator)
+        x._UnPack(tmpPolynomialCalibrator)
         return x
 
     # PolynomialCalibratorT
-    def _UnPack(self, polynomialCalibrator):
-        if polynomialCalibrator is None:
+    def _UnPack(self, PolynomialCalibrator):
+        if PolynomialCalibrator is None:
             return
-        if not polynomialCalibrator.COEFFICIENTSIsNone():
+        if not PolynomialCalibrator.COEFFICIENTSIsNone():
             if np is None:
                 self.COEFFICIENTS = []
-                for i in range(polynomialCalibrator.COEFFICIENTSLength()):
-                    self.COEFFICIENTS.append(polynomialCalibrator.COEFFICIENTS(i))
+                for i in range(PolynomialCalibrator.COEFFICIENTSLength()):
+                    self.COEFFICIENTS.append(PolynomialCalibrator.COEFFICIENTS(i))
             else:
-                self.COEFFICIENTS = polynomialCalibrator.COEFFICIENTSAsNumpy()
+                self.COEFFICIENTS = PolynomialCalibrator.COEFFICIENTSAsNumpy()
 
     # PolynomialCalibratorT
     def Pack(self, builder):
@@ -134,5 +147,5 @@ class PolynomialCalibratorT(object):
         PolynomialCalibratorStart(builder)
         if self.COEFFICIENTS is not None:
             PolynomialCalibratorAddCOEFFICIENTS(builder, COEFFICIENTS)
-        polynomialCalibrator = PolynomialCalibratorEnd(builder)
-        return polynomialCalibrator
+        PolynomialCalibrator = PolynomialCalibratorEnd(builder)
+        return PolynomialCalibrator

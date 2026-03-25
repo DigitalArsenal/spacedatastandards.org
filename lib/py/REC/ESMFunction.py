@@ -2,4 +2,11 @@
 
 # namespace: 
 
-# NOTE ESMFunction.py does not declare any structs or enums
+class ESMFunction(object):
+    SEARCH = 0
+    CLASSIFICATION = 1
+    IDENTIFICATION = 2
+    DIRECTION_FINDING = 3
+    LOCATION = 4
+    RECORDING = 5
+    SITUATIONAL_AWARENESS = 6

@@ -2,4 +2,11 @@
 
 # namespace: 
 
-# NOTE STVReferenceFrame.py does not declare any structs or enums
+class STVReferenceFrame(object):
+    GCRF = 0
+    ITRF = 1
+    EME2000 = 2
+    TEME = 3
+    ICRF = 4
+    MOON_CI = 5
+    MARS_CI = 6

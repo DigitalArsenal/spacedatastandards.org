@@ -51,6 +51,10 @@ func (rcv *KMLTimeSpan) BEGIN() []byte {
 	return nil
 }
 
+func (rcv *KMLTimeSpan) Begin() []byte {
+	return rcv.BEGIN()
+}
+
 /// Begin time (ISO 8601)
 /// End time (ISO 8601)
 func (rcv *KMLTimeSpan) END() []byte {
@@ -61,6 +65,10 @@ func (rcv *KMLTimeSpan) END() []byte {
 	return nil
 }
 
+func (rcv *KMLTimeSpan) End() []byte {
+	return rcv.END()
+}
+
 /// End time (ISO 8601)
 func KMLTimeSpanStart(builder *flatbuffers.Builder) {
 	builder.StartObject(2)
@@ -68,8 +76,14 @@ func KMLTimeSpanStart(builder *flatbuffers.Builder) {
 func KMLTimeSpanAddBEGIN(builder *flatbuffers.Builder, BEGIN flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(BEGIN), 0)
 }
+func KMLTimeSpanAddBegin(builder *flatbuffers.Builder, BEGIN flatbuffers.UOffsetT) {
+	KMLTimeSpanAddBEGIN(builder, BEGIN)
+}
 func KMLTimeSpanAddEND(builder *flatbuffers.Builder, END flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(END), 0)
+}
+func KMLTimeSpanAddEnd(builder *flatbuffers.Builder, END flatbuffers.UOffsetT) {
+	KMLTimeSpanAddEND(builder, END)
 }
 func KMLTimeSpanEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

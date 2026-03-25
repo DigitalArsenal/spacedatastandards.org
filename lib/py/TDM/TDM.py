@@ -857,6 +857,12 @@ def TDMStartCOMMENTVector(builder, numElems):
 def StartCOMMENTVector(builder, numElems):
     return TDMStartCOMMENTVector(builder, numElems)
 
+def TDMCreateCOMMENTVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateCOMMENTVector(builder, data):
+    TDMCreateCOMMENTVector(builder, data)
+
 def TDMAddCREATION_DATE(builder, CREATION_DATE):
     builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(CREATION_DATE), 0)
 
@@ -1013,6 +1019,16 @@ def TDMStartRECEIVE_FREQVector(builder, numElems):
 def StartRECEIVE_FREQVector(builder, numElems):
     return TDMStartRECEIVE_FREQVector(builder, numElems)
 
+def TDMCreateRECEIVE_FREQVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateRECEIVE_FREQVector(builder, data):
+    TDMCreateRECEIVE_FREQVector(builder, data)
+
 def TDMAddDATA_STOP(builder, DATA_STOP):
     builder.PrependUOffsetTRelativeSlot(39, flatbuffers.number_types.UOffsetTFlags.py_type(DATA_STOP), 0)
 
@@ -1043,6 +1059,16 @@ def TDMStartANGLE_1Vector(builder, numElems):
 def StartANGLE_1Vector(builder, numElems):
     return TDMStartANGLE_1Vector(builder, numElems)
 
+def TDMCreateANGLE_1Vector(builder, data):
+    data = list(data)
+    builder.StartVector(4, len(data), 4)
+    for item in reversed(data):
+        builder.PrependFloat32(item)
+    return builder.EndVector()
+
+def CreateANGLE_1Vector(builder, data):
+    TDMCreateANGLE_1Vector(builder, data)
+
 def TDMAddANGLE_2(builder, ANGLE_2):
     builder.PrependUOffsetTRelativeSlot(43, flatbuffers.number_types.UOffsetTFlags.py_type(ANGLE_2), 0)
 
@@ -1054,6 +1080,16 @@ def TDMStartANGLE_2Vector(builder, numElems):
 
 def StartANGLE_2Vector(builder, numElems):
     return TDMStartANGLE_2Vector(builder, numElems)
+
+def TDMCreateANGLE_2Vector(builder, data):
+    data = list(data)
+    builder.StartVector(4, len(data), 4)
+    for item in reversed(data):
+        builder.PrependFloat32(item)
+    return builder.EndVector()
+
+def CreateANGLE_2Vector(builder, data):
+    TDMCreateANGLE_2Vector(builder, data)
 
 def TDMAddANGLE_UNCERTAINTY_1(builder, ANGLE_UNCERTAINTY_1):
     builder.PrependFloat32Slot(44, ANGLE_UNCERTAINTY_1, 0.0)
@@ -1121,6 +1157,16 @@ def TDMStartTROPO_DRYVector(builder, numElems):
 def StartTROPO_DRYVector(builder, numElems):
     return TDMStartTROPO_DRYVector(builder, numElems)
 
+def TDMCreateTROPO_DRYVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateTROPO_DRYVector(builder, data):
+    TDMCreateTROPO_DRYVector(builder, data)
+
 def TDMAddTROPO_WET(builder, TROPO_WET):
     builder.PrependUOffsetTRelativeSlot(54, flatbuffers.number_types.UOffsetTFlags.py_type(TROPO_WET), 0)
 
@@ -1132,6 +1178,16 @@ def TDMStartTROPO_WETVector(builder, numElems):
 
 def StartTROPO_WETVector(builder, numElems):
     return TDMStartTROPO_WETVector(builder, numElems)
+
+def TDMCreateTROPO_WETVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateTROPO_WETVector(builder, data):
+    TDMCreateTROPO_WETVector(builder, data)
 
 def TDMAddSTEC(builder, STEC):
     builder.PrependUOffsetTRelativeSlot(55, flatbuffers.number_types.UOffsetTFlags.py_type(STEC), 0)
@@ -1145,6 +1201,16 @@ def TDMStartSTECVector(builder, numElems):
 def StartSTECVector(builder, numElems):
     return TDMStartSTECVector(builder, numElems)
 
+def TDMCreateSTECVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateSTECVector(builder, data):
+    TDMCreateSTECVector(builder, data)
+
 def TDMAddPRESSURE(builder, PRESSURE):
     builder.PrependUOffsetTRelativeSlot(56, flatbuffers.number_types.UOffsetTFlags.py_type(PRESSURE), 0)
 
@@ -1156,6 +1222,16 @@ def TDMStartPRESSUREVector(builder, numElems):
 
 def StartPRESSUREVector(builder, numElems):
     return TDMStartPRESSUREVector(builder, numElems)
+
+def TDMCreatePRESSUREVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreatePRESSUREVector(builder, data):
+    TDMCreatePRESSUREVector(builder, data)
 
 def TDMAddRHUMIDITY(builder, RHUMIDITY):
     builder.PrependUOffsetTRelativeSlot(57, flatbuffers.number_types.UOffsetTFlags.py_type(RHUMIDITY), 0)
@@ -1169,6 +1245,16 @@ def TDMStartRHUMIDITYVector(builder, numElems):
 def StartRHUMIDITYVector(builder, numElems):
     return TDMStartRHUMIDITYVector(builder, numElems)
 
+def TDMCreateRHUMIDITYVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateRHUMIDITYVector(builder, data):
+    TDMCreateRHUMIDITYVector(builder, data)
+
 def TDMAddTEMPERATURE(builder, TEMPERATURE):
     builder.PrependUOffsetTRelativeSlot(58, flatbuffers.number_types.UOffsetTFlags.py_type(TEMPERATURE), 0)
 
@@ -1180,6 +1266,16 @@ def TDMStartTEMPERATUREVector(builder, numElems):
 
 def StartTEMPERATUREVector(builder, numElems):
     return TDMStartTEMPERATUREVector(builder, numElems)
+
+def TDMCreateTEMPERATUREVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateTEMPERATUREVector(builder, data):
+    TDMCreateTEMPERATUREVector(builder, data)
 
 def TDMAddCLOCK_BIAS(builder, CLOCK_BIAS):
     builder.PrependUOffsetTRelativeSlot(59, flatbuffers.number_types.UOffsetTFlags.py_type(CLOCK_BIAS), 0)
@@ -1193,6 +1289,16 @@ def TDMStartCLOCK_BIASVector(builder, numElems):
 def StartCLOCK_BIASVector(builder, numElems):
     return TDMStartCLOCK_BIASVector(builder, numElems)
 
+def TDMCreateCLOCK_BIASVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateCLOCK_BIASVector(builder, data):
+    TDMCreateCLOCK_BIASVector(builder, data)
+
 def TDMAddCLOCK_DRIFT(builder, CLOCK_DRIFT):
     builder.PrependUOffsetTRelativeSlot(60, flatbuffers.number_types.UOffsetTFlags.py_type(CLOCK_DRIFT), 0)
 
@@ -1204,6 +1310,16 @@ def TDMStartCLOCK_DRIFTVector(builder, numElems):
 
 def StartCLOCK_DRIFTVector(builder, numElems):
     return TDMStartCLOCK_DRIFTVector(builder, numElems)
+
+def TDMCreateCLOCK_DRIFTVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateCLOCK_DRIFTVector(builder, data):
+    TDMCreateCLOCK_DRIFTVector(builder, data)
 
 def TDMEnd(builder):
     return builder.EndObject()
@@ -1220,74 +1336,137 @@ except:
 class TDMT(object):
 
     # TDMT
-    def __init__(self):
-        self.OBSERVER_ID = None  # type: str
-        self.OBSERVER_X = 0.0  # type: float
-        self.OBSERVER_Y = 0.0  # type: float
-        self.OBSERVER_Z = 0.0  # type: float
-        self.OBSERVER_VX = 0.0  # type: float
-        self.OBSERVER_VY = 0.0  # type: float
-        self.OBSERVER_VZ = 0.0  # type: float
-        self.OBSERVER_POSITION_REFERENCE_FRAME = None  # type: Optional[RFM.RFMT]
-        self.OBS_REFERENCE_FRAME = None  # type: Optional[RFM.RFMT]
-        self.EPOCH = None  # type: str
-        self.OBSERVATION_STEP_SIZE = 0.0  # type: float
-        self.OBSERVATION_START_TIME = None  # type: str
-        self.CCSDS_TDM_VERS = None  # type: str
-        self.COMMENT = None  # type: List[str]
-        self.CREATION_DATE = None  # type: str
-        self.ORIGINATOR = None  # type: str
-        self.META_START = None  # type: str
-        self.TIME_SYSTEM = None  # type: str
-        self.START_TIME = None  # type: str
-        self.STOP_TIME = None  # type: str
-        self.PARTICIPANT_1 = None  # type: str
-        self.PARTICIPANT_2 = None  # type: str
-        self.PARTICIPANT_3 = None  # type: str
-        self.PARTICIPANT_4 = None  # type: str
-        self.PARTICIPANT_5 = None  # type: str
-        self.MODE = None  # type: str
-        self.PATH_1 = 0  # type: int
-        self.PATH_2 = 0  # type: int
-        self.TRANSMIT_BAND = None  # type: str
-        self.RECEIVE_BAND = None  # type: str
-        self.INTEGRATION_INTERVAL = 0.0  # type: float
-        self.INTEGRATION_REF = None  # type: str
-        self.RECEIVE_DELAY_2 = 0.0  # type: float
-        self.RECEIVE_DELAY_3 = 0.0  # type: float
-        self.DATA_QUALITY = None  # type: str
-        self.META_STOP = None  # type: str
-        self.DATA_START = None  # type: str
-        self.TRANSMIT_FREQ_1 = 0.0  # type: float
-        self.RECEIVE_FREQ = None  # type: List[float]
-        self.DATA_STOP = None  # type: str
-        self.TIMETAG_REF = None  # type: str
-        self.ANGLE_TYPE = None  # type: str
-        self.ANGLE_1 = None  # type: List[float]
-        self.ANGLE_2 = None  # type: List[float]
-        self.ANGLE_UNCERTAINTY_1 = 0.0  # type: float
-        self.ANGLE_UNCERTAINTY_2 = 0.0  # type: float
-        self.RANGE_RATE = 0.0  # type: float
-        self.RANGE_UNCERTAINTY = 0.0  # type: float
-        self.RANGE_MODE = None  # type: str
-        self.RANGE_MODULUS = 0.0  # type: float
-        self.CORRECTION_ANGLE_1 = 0.0  # type: float
-        self.CORRECTION_ANGLE_2 = 0.0  # type: float
-        self.CORRECTIONS_APPLIED = None  # type: str
-        self.TROPO_DRY = None  # type: List[float]
-        self.TROPO_WET = None  # type: List[float]
-        self.STEC = None  # type: List[float]
-        self.PRESSURE = None  # type: List[float]
-        self.RHUMIDITY = None  # type: List[float]
-        self.TEMPERATURE = None  # type: List[float]
-        self.CLOCK_BIAS = None  # type: List[float]
-        self.CLOCK_DRIFT = None  # type: List[float]
+    def __init__(
+        self,
+        OBSERVER_ID = None,
+        OBSERVER_X = 0.0,
+        OBSERVER_Y = 0.0,
+        OBSERVER_Z = 0.0,
+        OBSERVER_VX = 0.0,
+        OBSERVER_VY = 0.0,
+        OBSERVER_VZ = 0.0,
+        OBSERVER_POSITION_REFERENCE_FRAME = None,
+        OBS_REFERENCE_FRAME = None,
+        EPOCH = None,
+        OBSERVATION_STEP_SIZE = 0.0,
+        OBSERVATION_START_TIME = None,
+        CCSDS_TDM_VERS = None,
+        COMMENT = None,
+        CREATION_DATE = None,
+        ORIGINATOR = None,
+        META_START = None,
+        TIME_SYSTEM = None,
+        START_TIME = None,
+        STOP_TIME = None,
+        PARTICIPANT_1 = None,
+        PARTICIPANT_2 = None,
+        PARTICIPANT_3 = None,
+        PARTICIPANT_4 = None,
+        PARTICIPANT_5 = None,
+        MODE = None,
+        PATH_1 = 0,
+        PATH_2 = 0,
+        TRANSMIT_BAND = None,
+        RECEIVE_BAND = None,
+        INTEGRATION_INTERVAL = 0.0,
+        INTEGRATION_REF = None,
+        RECEIVE_DELAY_2 = 0.0,
+        RECEIVE_DELAY_3 = 0.0,
+        DATA_QUALITY = None,
+        META_STOP = None,
+        DATA_START = None,
+        TRANSMIT_FREQ_1 = 0.0,
+        RECEIVE_FREQ = None,
+        DATA_STOP = None,
+        TIMETAG_REF = None,
+        ANGLE_TYPE = None,
+        ANGLE_1 = None,
+        ANGLE_2 = None,
+        ANGLE_UNCERTAINTY_1 = 0.0,
+        ANGLE_UNCERTAINTY_2 = 0.0,
+        RANGE_RATE = 0.0,
+        RANGE_UNCERTAINTY = 0.0,
+        RANGE_MODE = None,
+        RANGE_MODULUS = 0.0,
+        CORRECTION_ANGLE_1 = 0.0,
+        CORRECTION_ANGLE_2 = 0.0,
+        CORRECTIONS_APPLIED = None,
+        TROPO_DRY = None,
+        TROPO_WET = None,
+        STEC = None,
+        PRESSURE = None,
+        RHUMIDITY = None,
+        TEMPERATURE = None,
+        CLOCK_BIAS = None,
+        CLOCK_DRIFT = None,
+    ):
+        self.OBSERVER_ID = OBSERVER_ID  # type: Optional[str]
+        self.OBSERVER_X = OBSERVER_X  # type: float
+        self.OBSERVER_Y = OBSERVER_Y  # type: float
+        self.OBSERVER_Z = OBSERVER_Z  # type: float
+        self.OBSERVER_VX = OBSERVER_VX  # type: float
+        self.OBSERVER_VY = OBSERVER_VY  # type: float
+        self.OBSERVER_VZ = OBSERVER_VZ  # type: float
+        self.OBSERVER_POSITION_REFERENCE_FRAME = OBSERVER_POSITION_REFERENCE_FRAME  # type: Optional[RFM.RFMT]
+        self.OBS_REFERENCE_FRAME = OBS_REFERENCE_FRAME  # type: Optional[RFM.RFMT]
+        self.EPOCH = EPOCH  # type: Optional[str]
+        self.OBSERVATION_STEP_SIZE = OBSERVATION_STEP_SIZE  # type: float
+        self.OBSERVATION_START_TIME = OBSERVATION_START_TIME  # type: Optional[str]
+        self.CCSDS_TDM_VERS = CCSDS_TDM_VERS  # type: Optional[str]
+        self.COMMENT = COMMENT  # type: Optional[List[Optional[str]]]
+        self.CREATION_DATE = CREATION_DATE  # type: Optional[str]
+        self.ORIGINATOR = ORIGINATOR  # type: Optional[str]
+        self.META_START = META_START  # type: Optional[str]
+        self.TIME_SYSTEM = TIME_SYSTEM  # type: Optional[str]
+        self.START_TIME = START_TIME  # type: Optional[str]
+        self.STOP_TIME = STOP_TIME  # type: Optional[str]
+        self.PARTICIPANT_1 = PARTICIPANT_1  # type: Optional[str]
+        self.PARTICIPANT_2 = PARTICIPANT_2  # type: Optional[str]
+        self.PARTICIPANT_3 = PARTICIPANT_3  # type: Optional[str]
+        self.PARTICIPANT_4 = PARTICIPANT_4  # type: Optional[str]
+        self.PARTICIPANT_5 = PARTICIPANT_5  # type: Optional[str]
+        self.MODE = MODE  # type: Optional[str]
+        self.PATH_1 = PATH_1  # type: int
+        self.PATH_2 = PATH_2  # type: int
+        self.TRANSMIT_BAND = TRANSMIT_BAND  # type: Optional[str]
+        self.RECEIVE_BAND = RECEIVE_BAND  # type: Optional[str]
+        self.INTEGRATION_INTERVAL = INTEGRATION_INTERVAL  # type: float
+        self.INTEGRATION_REF = INTEGRATION_REF  # type: Optional[str]
+        self.RECEIVE_DELAY_2 = RECEIVE_DELAY_2  # type: float
+        self.RECEIVE_DELAY_3 = RECEIVE_DELAY_3  # type: float
+        self.DATA_QUALITY = DATA_QUALITY  # type: Optional[str]
+        self.META_STOP = META_STOP  # type: Optional[str]
+        self.DATA_START = DATA_START  # type: Optional[str]
+        self.TRANSMIT_FREQ_1 = TRANSMIT_FREQ_1  # type: float
+        self.RECEIVE_FREQ = RECEIVE_FREQ  # type: Optional[List[float]]
+        self.DATA_STOP = DATA_STOP  # type: Optional[str]
+        self.TIMETAG_REF = TIMETAG_REF  # type: Optional[str]
+        self.ANGLE_TYPE = ANGLE_TYPE  # type: Optional[str]
+        self.ANGLE_1 = ANGLE_1  # type: Optional[List[float]]
+        self.ANGLE_2 = ANGLE_2  # type: Optional[List[float]]
+        self.ANGLE_UNCERTAINTY_1 = ANGLE_UNCERTAINTY_1  # type: float
+        self.ANGLE_UNCERTAINTY_2 = ANGLE_UNCERTAINTY_2  # type: float
+        self.RANGE_RATE = RANGE_RATE  # type: float
+        self.RANGE_UNCERTAINTY = RANGE_UNCERTAINTY  # type: float
+        self.RANGE_MODE = RANGE_MODE  # type: Optional[str]
+        self.RANGE_MODULUS = RANGE_MODULUS  # type: float
+        self.CORRECTION_ANGLE_1 = CORRECTION_ANGLE_1  # type: float
+        self.CORRECTION_ANGLE_2 = CORRECTION_ANGLE_2  # type: float
+        self.CORRECTIONS_APPLIED = CORRECTIONS_APPLIED  # type: Optional[str]
+        self.TROPO_DRY = TROPO_DRY  # type: Optional[List[float]]
+        self.TROPO_WET = TROPO_WET  # type: Optional[List[float]]
+        self.STEC = STEC  # type: Optional[List[float]]
+        self.PRESSURE = PRESSURE  # type: Optional[List[float]]
+        self.RHUMIDITY = RHUMIDITY  # type: Optional[List[float]]
+        self.TEMPERATURE = TEMPERATURE  # type: Optional[List[float]]
+        self.CLOCK_BIAS = CLOCK_BIAS  # type: Optional[List[float]]
+        self.CLOCK_DRIFT = CLOCK_DRIFT  # type: Optional[List[float]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        TDM = TDM()
-        TDM.Init(buf, pos)
-        return cls.InitFromObj(TDM)
+        tmpTdm = TDM()
+        tmpTdm.Init(buf, pos)
+        return cls.InitFromObj(tmpTdm)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -1295,9 +1474,9 @@ class TDMT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, TDM):
+    def InitFromObj(cls, tmpTdm):
         x = TDMT()
-        x._UnPack(TDM)
+        x._UnPack(tmpTdm)
         return x
 
     # TDMT

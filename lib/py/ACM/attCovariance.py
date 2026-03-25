@@ -117,6 +117,16 @@ def attCovarianceStartCOVVector(builder, numElems):
 def StartCOVVector(builder, numElems):
     return attCovarianceStartCOVVector(builder, numElems)
 
+def attCovarianceCreateCOVVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateCOVVector(builder, data):
+    attCovarianceCreateCOVVector(builder, data)
+
 def attCovarianceEnd(builder):
     return builder.EndObject()
 
@@ -131,17 +141,23 @@ except:
 class attCovarianceT(object):
 
     # attCovarianceT
-    def __init__(self):
-        self.COV_TYPE = 0  # type: int
-        self.COV_REF_FRAME = None  # type: str
-        self.EPOCH = None  # type: str
-        self.COV = None  # type: List[float]
+    def __init__(
+        self,
+        COV_TYPE = 0,
+        COV_REF_FRAME = None,
+        EPOCH = None,
+        COV = None,
+    ):
+        self.COV_TYPE = COV_TYPE  # type: int
+        self.COV_REF_FRAME = COV_REF_FRAME  # type: Optional[str]
+        self.EPOCH = EPOCH  # type: Optional[str]
+        self.COV = COV  # type: Optional[List[float]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        attCovariance = attCovariance()
-        attCovariance.Init(buf, pos)
-        return cls.InitFromObj(attCovariance)
+        tmpAttCovariance = attCovariance()
+        tmpAttCovariance.Init(buf, pos)
+        return cls.InitFromObj(tmpAttCovariance)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -149,9 +165,9 @@ class attCovarianceT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, attCovariance):
+    def InitFromObj(cls, tmpAttCovariance):
         x = attCovarianceT()
-        x._UnPack(attCovariance)
+        x._UnPack(tmpAttCovariance)
         return x
 
     # attCovarianceT

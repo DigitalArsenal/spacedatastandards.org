@@ -11,7 +11,7 @@ public struct CAT : IFlatbufferObject
 {
   private Table __p;
   public ByteBuffer ByteBuffer { get { return __p.bb; } }
-  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_24_3_25(); }
+  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_25_12_19(); }
   public static CAT GetRootAsCAT(ByteBuffer _bb) { return GetRootAsCAT(_bb, new CAT()); }
   public static CAT GetRootAsCAT(ByteBuffer _bb, CAT obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
   public static bool CATBufferHasIdentifier(ByteBuffer _bb) { return Table.__has_identifier(_bb, "$CAT"); }

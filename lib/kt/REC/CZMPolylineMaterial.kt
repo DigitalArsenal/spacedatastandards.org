@@ -32,8 +32,8 @@ class CZMPolylineMaterial : Table() {
     /**
      * Solid color material
      */
-    val SOLID_COLOR : CZMSolidColorMaterial? get() = SOLID_COLOR(CZMSolidColorMaterial())
-    fun SOLID_COLOR(obj: CZMSolidColorMaterial) : CZMSolidColorMaterial? {
+    val solidColor : CZMSolidColorMaterial? get() = solidColor(CZMSolidColorMaterial())
+    fun solidColor(obj: CZMSolidColorMaterial) : CZMSolidColorMaterial? {
         val o = __offset(4)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -44,8 +44,8 @@ class CZMPolylineMaterial : Table() {
     /**
      * Polyline outline material
      */
-    val POLYLINE_OUTLINE : CZMPolylineOutlineMaterial? get() = POLYLINE_OUTLINE(CZMPolylineOutlineMaterial())
-    fun POLYLINE_OUTLINE(obj: CZMPolylineOutlineMaterial) : CZMPolylineOutlineMaterial? {
+    val polylineOutline : CZMPolylineOutlineMaterial? get() = polylineOutline(CZMPolylineOutlineMaterial())
+    fun polylineOutline(obj: CZMPolylineOutlineMaterial) : CZMPolylineOutlineMaterial? {
         val o = __offset(6)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -56,8 +56,8 @@ class CZMPolylineMaterial : Table() {
     /**
      * Polyline arrow material
      */
-    val POLYLINE_ARROW : CZMPolylineArrowMaterial? get() = POLYLINE_ARROW(CZMPolylineArrowMaterial())
-    fun POLYLINE_ARROW(obj: CZMPolylineArrowMaterial) : CZMPolylineArrowMaterial? {
+    val polylineArrow : CZMPolylineArrowMaterial? get() = polylineArrow(CZMPolylineArrowMaterial())
+    fun polylineArrow(obj: CZMPolylineArrowMaterial) : CZMPolylineArrowMaterial? {
         val o = __offset(8)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -68,8 +68,8 @@ class CZMPolylineMaterial : Table() {
     /**
      * Polyline dash material
      */
-    val POLYLINE_DASH : CZMPolylineDashMaterial? get() = POLYLINE_DASH(CZMPolylineDashMaterial())
-    fun POLYLINE_DASH(obj: CZMPolylineDashMaterial) : CZMPolylineDashMaterial? {
+    val polylineDash : CZMPolylineDashMaterial? get() = polylineDash(CZMPolylineDashMaterial())
+    fun polylineDash(obj: CZMPolylineDashMaterial) : CZMPolylineDashMaterial? {
         val o = __offset(10)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -80,8 +80,8 @@ class CZMPolylineMaterial : Table() {
     /**
      * Polyline glow material
      */
-    val POLYLINE_GLOW : CZMPolylineGlowMaterial? get() = POLYLINE_GLOW(CZMPolylineGlowMaterial())
-    fun POLYLINE_GLOW(obj: CZMPolylineGlowMaterial) : CZMPolylineGlowMaterial? {
+    val polylineGlow : CZMPolylineGlowMaterial? get() = polylineGlow(CZMPolylineGlowMaterial())
+    fun polylineGlow(obj: CZMPolylineGlowMaterial) : CZMPolylineGlowMaterial? {
         val o = __offset(12)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -90,27 +90,27 @@ class CZMPolylineMaterial : Table() {
         }
     }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsCZMPolylineMaterial(_bb: ByteBuffer): CZMPolylineMaterial = getRootAsCZMPolylineMaterial(_bb, CZMPolylineMaterial())
         fun getRootAsCZMPolylineMaterial(_bb: ByteBuffer, obj: CZMPolylineMaterial): CZMPolylineMaterial {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createCZMPolylineMaterial(builder: FlatBufferBuilder, SOLID_COLOROffset: Int, POLYLINE_OUTLINEOffset: Int, POLYLINE_ARROWOffset: Int, POLYLINE_DASHOffset: Int, POLYLINE_GLOWOffset: Int) : Int {
+        fun createCZMPolylineMaterial(builder: FlatBufferBuilder, solidColorOffset: Int, polylineOutlineOffset: Int, polylineArrowOffset: Int, polylineDashOffset: Int, polylineGlowOffset: Int) : Int {
             builder.startTable(5)
-            addPOLYLINE_GLOW(builder, POLYLINE_GLOWOffset)
-            addPOLYLINE_DASH(builder, POLYLINE_DASHOffset)
-            addPOLYLINE_ARROW(builder, POLYLINE_ARROWOffset)
-            addPOLYLINE_OUTLINE(builder, POLYLINE_OUTLINEOffset)
-            addSOLID_COLOR(builder, SOLID_COLOROffset)
+            addPOLYLINEGLOW(builder, polylineGlowOffset)
+            addPOLYLINEDASH(builder, polylineDashOffset)
+            addPOLYLINEARROW(builder, polylineArrowOffset)
+            addPOLYLINEOUTLINE(builder, polylineOutlineOffset)
+            addSOLIDCOLOR(builder, solidColorOffset)
             return endCZMPolylineMaterial(builder)
         }
         fun startCZMPolylineMaterial(builder: FlatBufferBuilder) = builder.startTable(5)
-        fun addSOLID_COLOR(builder: FlatBufferBuilder, SOLID_COLOR: Int) = builder.addOffset(0, SOLID_COLOR, 0)
-        fun addPOLYLINE_OUTLINE(builder: FlatBufferBuilder, POLYLINE_OUTLINE: Int) = builder.addOffset(1, POLYLINE_OUTLINE, 0)
-        fun addPOLYLINE_ARROW(builder: FlatBufferBuilder, POLYLINE_ARROW: Int) = builder.addOffset(2, POLYLINE_ARROW, 0)
-        fun addPOLYLINE_DASH(builder: FlatBufferBuilder, POLYLINE_DASH: Int) = builder.addOffset(3, POLYLINE_DASH, 0)
-        fun addPOLYLINE_GLOW(builder: FlatBufferBuilder, POLYLINE_GLOW: Int) = builder.addOffset(4, POLYLINE_GLOW, 0)
+        fun addSOLIDCOLOR(builder: FlatBufferBuilder, solidColor: Int) = builder.addOffset(0, solidColor, 0)
+        fun addPOLYLINEOUTLINE(builder: FlatBufferBuilder, polylineOutline: Int) = builder.addOffset(1, polylineOutline, 0)
+        fun addPOLYLINEARROW(builder: FlatBufferBuilder, polylineArrow: Int) = builder.addOffset(2, polylineArrow, 0)
+        fun addPOLYLINEDASH(builder: FlatBufferBuilder, polylineDash: Int) = builder.addOffset(3, polylineDash, 0)
+        fun addPOLYLINEGLOW(builder: FlatBufferBuilder, polylineGlow: Int) = builder.addOffset(4, polylineGlow, 0)
         fun endCZMPolylineMaterial(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

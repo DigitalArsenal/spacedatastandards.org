@@ -1,8 +1,8 @@
-export { DataCoverage, DataCoverageT } from './DataCoverage.js';
-export { PricingTier, PricingTierT } from './PricingTier.js';
-export { STF, STFT } from './STF.js';
-export { SpatialCoverage, SpatialCoverageT } from './SpatialCoverage.js';
-export { TemporalCoverage, TemporalCoverageT } from './TemporalCoverage.js';
-export { accessType } from './accessType.js';
-export { paymentMethod } from './paymentMethod.js';
+export * from './accessType.js';
+export * from './DataCoverage.js';
+export * from './paymentMethod.js';
+export * from './PricingTier.js';
+export * from './SpatialCoverage.js';
+export * from './STF.js';
+export * from './TemporalCoverage.js';
 //# sourceMappingURL=main.d.ts.map

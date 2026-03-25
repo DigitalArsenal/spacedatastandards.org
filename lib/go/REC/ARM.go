@@ -62,8 +62,16 @@ func (rcv *ARM) THICKNESS() float64 {
 	return 0.0
 }
 
+func (rcv *ARM) Thickness() float64 {
+	return rcv.THICKNESS()
+}
+
 func (rcv *ARM) MutateTHICKNESS(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(4, n)
+}
+
+func (rcv *ARM) MutateThickness(n float64) bool {
+	return rcv.MutateTHICKNESS(n)
 }
 
 func (rcv *ARM) ANGLE() float64 {
@@ -74,8 +82,16 @@ func (rcv *ARM) ANGLE() float64 {
 	return 0.0
 }
 
+func (rcv *ARM) Angle() float64 {
+	return rcv.ANGLE()
+}
+
 func (rcv *ARM) MutateANGLE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(6, n)
+}
+
+func (rcv *ARM) MutateAngle(n float64) bool {
+	return rcv.MutateANGLE(n)
 }
 
 func (rcv *ARM) MATERIAL() byte {
@@ -86,8 +102,16 @@ func (rcv *ARM) MATERIAL() byte {
 	return 0
 }
 
+func (rcv *ARM) Material() byte {
+	return rcv.MATERIAL()
+}
+
 func (rcv *ARM) MutateMATERIAL(n byte) bool {
 	return rcv._tab.MutateByteSlot(8, n)
+}
+
+func (rcv *ARM) MutateMaterial(n byte) bool {
+	return rcv.MutateMATERIAL(n)
 }
 
 func (rcv *ARM) HARDNESS() byte {
@@ -98,8 +122,16 @@ func (rcv *ARM) HARDNESS() byte {
 	return 0
 }
 
+func (rcv *ARM) Hardness() byte {
+	return rcv.HARDNESS()
+}
+
 func (rcv *ARM) MutateHARDNESS(n byte) bool {
 	return rcv._tab.MutateByteSlot(10, n)
+}
+
+func (rcv *ARM) MutateHardness(n byte) bool {
+	return rcv.MutateHARDNESS(n)
 }
 
 func (rcv *ARM) QUALITY() byte {
@@ -110,8 +142,16 @@ func (rcv *ARM) QUALITY() byte {
 	return 0
 }
 
+func (rcv *ARM) Quality() byte {
+	return rcv.QUALITY()
+}
+
 func (rcv *ARM) MutateQUALITY(n byte) bool {
 	return rcv._tab.MutateByteSlot(12, n)
+}
+
+func (rcv *ARM) MutateQuality(n byte) bool {
+	return rcv.MutateQUALITY(n)
 }
 
 func (rcv *ARM) ERA_TYPE() byte {
@@ -122,8 +162,16 @@ func (rcv *ARM) ERA_TYPE() byte {
 	return 0
 }
 
+func (rcv *ARM) EraType() byte {
+	return rcv.ERA_TYPE()
+}
+
 func (rcv *ARM) MutateERA_TYPE(n byte) bool {
 	return rcv._tab.MutateByteSlot(14, n)
+}
+
+func (rcv *ARM) MutateEraType(n byte) bool {
+	return rcv.MutateERA_TYPE(n)
 }
 
 func (rcv *ARM) ERA_EFFECTIVENESS() float32 {
@@ -134,8 +182,16 @@ func (rcv *ARM) ERA_EFFECTIVENESS() float32 {
 	return 0.0
 }
 
+func (rcv *ARM) EraEffectiveness() float32 {
+	return rcv.ERA_EFFECTIVENESS()
+}
+
 func (rcv *ARM) MutateERA_EFFECTIVENESS(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(16, n)
+}
+
+func (rcv *ARM) MutateEraEffectiveness(n float32) bool {
+	return rcv.MutateERA_EFFECTIVENESS(n)
 }
 
 func (rcv *ARM) ERA_VS_KE() float32 {
@@ -146,8 +202,16 @@ func (rcv *ARM) ERA_VS_KE() float32 {
 	return 0.0
 }
 
+func (rcv *ARM) EraVsKe() float32 {
+	return rcv.ERA_VS_KE()
+}
+
 func (rcv *ARM) MutateERA_VS_KE(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(18, n)
+}
+
+func (rcv *ARM) MutateEraVsKe(n float32) bool {
+	return rcv.MutateERA_VS_KE(n)
 }
 
 func (rcv *ARM) RHA_EQUIVALENT() float32 {
@@ -158,8 +222,16 @@ func (rcv *ARM) RHA_EQUIVALENT() float32 {
 	return 0.0
 }
 
+func (rcv *ARM) RhaEquivalent() float32 {
+	return rcv.RHA_EQUIVALENT()
+}
+
 func (rcv *ARM) MutateRHA_EQUIVALENT(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(20, n)
+}
+
+func (rcv *ARM) MutateRhaEquivalent(n float32) bool {
+	return rcv.MutateRHA_EQUIVALENT(n)
 }
 
 func (rcv *ARM) NORMAL_X() float64 {
@@ -170,8 +242,16 @@ func (rcv *ARM) NORMAL_X() float64 {
 	return 0.0
 }
 
+func (rcv *ARM) NormalX() float64 {
+	return rcv.NORMAL_X()
+}
+
 func (rcv *ARM) MutateNORMAL_X(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(22, n)
+}
+
+func (rcv *ARM) MutateNormalX(n float64) bool {
+	return rcv.MutateNORMAL_X(n)
 }
 
 func (rcv *ARM) NORMAL_Y() float64 {
@@ -182,8 +262,16 @@ func (rcv *ARM) NORMAL_Y() float64 {
 	return 0.0
 }
 
+func (rcv *ARM) NormalY() float64 {
+	return rcv.NORMAL_Y()
+}
+
 func (rcv *ARM) MutateNORMAL_Y(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(24, n)
+}
+
+func (rcv *ARM) MutateNormalY(n float64) bool {
+	return rcv.MutateNORMAL_Y(n)
 }
 
 func (rcv *ARM) NORMAL_Z() float64 {
@@ -194,8 +282,16 @@ func (rcv *ARM) NORMAL_Z() float64 {
 	return 0.0
 }
 
+func (rcv *ARM) NormalZ() float64 {
+	return rcv.NORMAL_Z()
+}
+
 func (rcv *ARM) MutateNORMAL_Z(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(26, n)
+}
+
+func (rcv *ARM) MutateNormalZ(n float64) bool {
+	return rcv.MutateNORMAL_Z(n)
 }
 
 func (rcv *ARM) RESERVED(j int) byte {
@@ -207,6 +303,10 @@ func (rcv *ARM) RESERVED(j int) byte {
 	return 0
 }
 
+func (rcv *ARM) Reserved(j int) byte {
+	return rcv.RESERVED(j)
+}
+
 func (rcv *ARM) RESERVEDLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
 	if o != 0 {
@@ -215,12 +315,20 @@ func (rcv *ARM) RESERVEDLength() int {
 	return 0
 }
 
+func (rcv *ARM) ReservedLength() int {
+	return rcv.RESERVEDLength()
+}
+
 func (rcv *ARM) RESERVEDBytes() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *ARM) ReservedBytes() []byte {
+	return rcv.RESERVEDBytes()
 }
 
 func (rcv *ARM) MutateRESERVED(j int, n byte) bool {
@@ -232,50 +340,96 @@ func (rcv *ARM) MutateRESERVED(j int, n byte) bool {
 	return false
 }
 
+func (rcv *ARM) MutateReserved(j int, n byte) bool {
+	return rcv.MutateRESERVED(j, n)
+}
+
 func ARMStart(builder *flatbuffers.Builder) {
 	builder.StartObject(13)
 }
 func ARMAddTHICKNESS(builder *flatbuffers.Builder, THICKNESS float64) {
 	builder.PrependFloat64Slot(0, THICKNESS, 0.0)
 }
+func ARMAddThickness(builder *flatbuffers.Builder, THICKNESS float64) {
+	ARMAddTHICKNESS(builder, THICKNESS)
+}
 func ARMAddANGLE(builder *flatbuffers.Builder, ANGLE float64) {
 	builder.PrependFloat64Slot(1, ANGLE, 0.0)
+}
+func ARMAddAngle(builder *flatbuffers.Builder, ANGLE float64) {
+	ARMAddANGLE(builder, ANGLE)
 }
 func ARMAddMATERIAL(builder *flatbuffers.Builder, MATERIAL byte) {
 	builder.PrependByteSlot(2, MATERIAL, 0)
 }
+func ARMAddMaterial(builder *flatbuffers.Builder, MATERIAL byte) {
+	ARMAddMATERIAL(builder, MATERIAL)
+}
 func ARMAddHARDNESS(builder *flatbuffers.Builder, HARDNESS byte) {
 	builder.PrependByteSlot(3, HARDNESS, 0)
+}
+func ARMAddHardness(builder *flatbuffers.Builder, HARDNESS byte) {
+	ARMAddHARDNESS(builder, HARDNESS)
 }
 func ARMAddQUALITY(builder *flatbuffers.Builder, QUALITY byte) {
 	builder.PrependByteSlot(4, QUALITY, 0)
 }
+func ARMAddQuality(builder *flatbuffers.Builder, QUALITY byte) {
+	ARMAddQUALITY(builder, QUALITY)
+}
 func ARMAddERA_TYPE(builder *flatbuffers.Builder, ERA_TYPE byte) {
 	builder.PrependByteSlot(5, ERA_TYPE, 0)
+}
+func ARMAddEraType(builder *flatbuffers.Builder, ERA_TYPE byte) {
+	ARMAddERA_TYPE(builder, ERA_TYPE)
 }
 func ARMAddERA_EFFECTIVENESS(builder *flatbuffers.Builder, ERA_EFFECTIVENESS float32) {
 	builder.PrependFloat32Slot(6, ERA_EFFECTIVENESS, 0.0)
 }
+func ARMAddEraEffectiveness(builder *flatbuffers.Builder, ERA_EFFECTIVENESS float32) {
+	ARMAddERA_EFFECTIVENESS(builder, ERA_EFFECTIVENESS)
+}
 func ARMAddERA_VS_KE(builder *flatbuffers.Builder, ERA_VS_KE float32) {
 	builder.PrependFloat32Slot(7, ERA_VS_KE, 0.0)
+}
+func ARMAddEraVsKe(builder *flatbuffers.Builder, ERA_VS_KE float32) {
+	ARMAddERA_VS_KE(builder, ERA_VS_KE)
 }
 func ARMAddRHA_EQUIVALENT(builder *flatbuffers.Builder, RHA_EQUIVALENT float32) {
 	builder.PrependFloat32Slot(8, RHA_EQUIVALENT, 0.0)
 }
+func ARMAddRhaEquivalent(builder *flatbuffers.Builder, RHA_EQUIVALENT float32) {
+	ARMAddRHA_EQUIVALENT(builder, RHA_EQUIVALENT)
+}
 func ARMAddNORMAL_X(builder *flatbuffers.Builder, NORMAL_X float64) {
 	builder.PrependFloat64Slot(9, NORMAL_X, 0.0)
+}
+func ARMAddNormalX(builder *flatbuffers.Builder, NORMAL_X float64) {
+	ARMAddNORMAL_X(builder, NORMAL_X)
 }
 func ARMAddNORMAL_Y(builder *flatbuffers.Builder, NORMAL_Y float64) {
 	builder.PrependFloat64Slot(10, NORMAL_Y, 0.0)
 }
+func ARMAddNormalY(builder *flatbuffers.Builder, NORMAL_Y float64) {
+	ARMAddNORMAL_Y(builder, NORMAL_Y)
+}
 func ARMAddNORMAL_Z(builder *flatbuffers.Builder, NORMAL_Z float64) {
 	builder.PrependFloat64Slot(11, NORMAL_Z, 0.0)
+}
+func ARMAddNormalZ(builder *flatbuffers.Builder, NORMAL_Z float64) {
+	ARMAddNORMAL_Z(builder, NORMAL_Z)
 }
 func ARMAddRESERVED(builder *flatbuffers.Builder, RESERVED flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(12, flatbuffers.UOffsetT(RESERVED), 0)
 }
+func ARMAddReserved(builder *flatbuffers.Builder, RESERVED flatbuffers.UOffsetT) {
+	ARMAddRESERVED(builder, RESERVED)
+}
 func ARMStartRESERVEDVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(1, numElems, 1)
+}
+func ARMStartReservedVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return ARMStartRESERVEDVector(builder, numElems)
 }
 func ARMEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

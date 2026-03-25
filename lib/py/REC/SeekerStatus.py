@@ -2,4 +2,11 @@
 
 # namespace: 
 
-# NOTE SeekerStatus.py does not declare any structs or enums
+class SeekerStatus(object):
+    OFF = 0
+    CAGED = 1
+    UNCAGED = 2
+    ACQUIRING = 3
+    TRACKING = 4
+    MEMORY = 5
+    JAMMED = 6

@@ -2,4 +2,10 @@
 
 # namespace: 
 
-# NOTE TrkTrackStatus.py does not declare any structs or enums
+class TrkTrackStatus(object):
+    ACTIVE = 0
+    DROPPED = 1
+    TENTATIVE = 2
+    CONFIRMED = 3
+    COASTED = 4
+    DEAD = 5

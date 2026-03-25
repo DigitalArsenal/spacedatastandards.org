@@ -2,4 +2,10 @@
 
 # namespace: 
 
-# NOTE Ellipsoid.py does not declare any structs or enums
+class Ellipsoid(object):
+    WGS84 = 0
+    GRS80 = 1
+    WGS72 = 2
+    SPHERE = 3
+    MOON = 4
+    MARS = 5

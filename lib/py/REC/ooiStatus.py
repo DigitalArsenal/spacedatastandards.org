@@ -2,4 +2,10 @@
 
 # namespace: 
 
-# NOTE ooiStatus.py does not declare any structs or enums
+class ooiStatus(object):
+    ACTIVE = 0
+    PENDING = 1
+    CLOSED = 2
+    MONITORING = 3
+    URGENT = 4
+    ARCHIVED = 5

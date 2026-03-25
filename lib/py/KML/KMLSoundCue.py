@@ -73,15 +73,19 @@ def End(builder):
 class KMLSoundCueT(object):
 
     # KMLSoundCueT
-    def __init__(self):
-        self.HREF = None  # type: str
-        self.DELAYED_START = 0.0  # type: float
+    def __init__(
+        self,
+        HREF = None,
+        DELAYED_START = 0.0,
+    ):
+        self.HREF = HREF  # type: Optional[str]
+        self.DELAYED_START = DELAYED_START  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        kmlsoundCue = KMLSoundCue()
-        kmlsoundCue.Init(buf, pos)
-        return cls.InitFromObj(kmlsoundCue)
+        tmpKmlsoundCue = KMLSoundCue()
+        tmpKmlsoundCue.Init(buf, pos)
+        return cls.InitFromObj(tmpKmlsoundCue)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -89,17 +93,17 @@ class KMLSoundCueT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, kmlsoundCue):
+    def InitFromObj(cls, tmpKmlsoundCue):
         x = KMLSoundCueT()
-        x._UnPack(kmlsoundCue)
+        x._UnPack(tmpKmlsoundCue)
         return x
 
     # KMLSoundCueT
-    def _UnPack(self, kmlsoundCue):
-        if kmlsoundCue is None:
+    def _UnPack(self, KMLSoundCue):
+        if KMLSoundCue is None:
             return
-        self.HREF = kmlsoundCue.HREF()
-        self.DELAYED_START = kmlsoundCue.DELAYED_START()
+        self.HREF = KMLSoundCue.HREF()
+        self.DELAYED_START = KMLSoundCue.DELAYED_START()
 
     # KMLSoundCueT
     def Pack(self, builder):
@@ -109,5 +113,5 @@ class KMLSoundCueT(object):
         if self.HREF is not None:
             KMLSoundCueAddHREF(builder, HREF)
         KMLSoundCueAddDELAYED_START(builder, self.DELAYED_START)
-        kmlsoundCue = KMLSoundCueEnd(builder)
-        return kmlsoundCue
+        KMLSoundCue = KMLSoundCueEnd(builder)
+        return KMLSoundCue

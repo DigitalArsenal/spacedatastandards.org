@@ -101,17 +101,23 @@ def End(builder):
 class StokesParametersT(object):
 
     # StokesParametersT
-    def __init__(self):
-        self.I = 0.0  # type: float
-        self.Q = 0.0  # type: float
-        self.U = 0.0  # type: float
-        self.V = 0.0  # type: float
+    def __init__(
+        self,
+        I = 0.0,
+        Q = 0.0,
+        U = 0.0,
+        V = 0.0,
+    ):
+        self.I = I  # type: float
+        self.Q = Q  # type: float
+        self.U = U  # type: float
+        self.V = V  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        stokesParameters = StokesParameters()
-        stokesParameters.Init(buf, pos)
-        return cls.InitFromObj(stokesParameters)
+        tmpStokesParameters = StokesParameters()
+        tmpStokesParameters.Init(buf, pos)
+        return cls.InitFromObj(tmpStokesParameters)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -119,19 +125,19 @@ class StokesParametersT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, stokesParameters):
+    def InitFromObj(cls, tmpStokesParameters):
         x = StokesParametersT()
-        x._UnPack(stokesParameters)
+        x._UnPack(tmpStokesParameters)
         return x
 
     # StokesParametersT
-    def _UnPack(self, stokesParameters):
-        if stokesParameters is None:
+    def _UnPack(self, StokesParameters):
+        if StokesParameters is None:
             return
-        self.I = stokesParameters.I()
-        self.Q = stokesParameters.Q()
-        self.U = stokesParameters.U()
-        self.V = stokesParameters.V()
+        self.I = StokesParameters.I()
+        self.Q = StokesParameters.Q()
+        self.U = StokesParameters.U()
+        self.V = StokesParameters.V()
 
     # StokesParametersT
     def Pack(self, builder):
@@ -140,5 +146,5 @@ class StokesParametersT(object):
         StokesParametersAddQ(builder, self.Q)
         StokesParametersAddU(builder, self.U)
         StokesParametersAddV(builder, self.V)
-        stokesParameters = StokesParametersEnd(builder)
-        return stokesParameters
+        StokesParameters = StokesParametersEnd(builder)
+        return StokesParameters

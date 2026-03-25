@@ -2,9 +2,13 @@
 // swiftlint:disable all
 // swiftformat:disable all
 
+#if canImport(Common)
+import Common
+#endif
+
 import FlatBuffers
 
-public enum attitudeStateType: Int8, Enum, Verifiable {
+public enum attitudeStateType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -18,7 +22,7 @@ public enum attitudeStateType: Int8, Enum, Verifiable {
 }
 
 
-public enum attCovType: Int8, Enum, Verifiable {
+public enum attCovType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -32,7 +36,7 @@ public enum attCovType: Int8, Enum, Verifiable {
 }
 
 
-public enum maneuverableFlag: Int8, Enum, Verifiable {
+public enum maneuverableFlag: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -46,9 +50,9 @@ public enum maneuverableFlag: Int8, Enum, Verifiable {
 
 
 ///  Attitude State Data
-public struct attitudeState: FlatBufferObject, Verifiable {
+public struct attitudeState: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -244,9 +248,9 @@ public struct attitudeState: FlatBufferObject, Verifiable {
 }
 
 ///  Attitude Physical Characteristics
-public struct attPhysicalProperties: FlatBufferObject, Verifiable {
+public struct attPhysicalProperties: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -376,9 +380,9 @@ public struct attPhysicalProperties: FlatBufferObject, Verifiable {
 }
 
 ///  Attitude Covariance
-public struct attCovariance: FlatBufferObject, Verifiable {
+public struct attCovariance: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -405,10 +409,8 @@ public struct attCovariance: FlatBufferObject, Verifiable {
   public var EPOCH: String? { let o = _accessor.offset(VTOFFSET.EPOCH.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.EPOCH.v) }
   ///  Upper-triangular covariance matrix elements (row-major)
-  public var hasCov: Bool { let o = _accessor.offset(VTOFFSET.COV.v); return o == 0 ? false : true }
-  public var COVCount: Int32 { let o = _accessor.offset(VTOFFSET.COV.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func COV(at index: Int32) -> Double { let o = _accessor.offset(VTOFFSET.COV.v); return o == 0 ? 0 : _accessor.directRead(of: Double.self, offset: _accessor.vector(at: o) + index * 8) }
-  public var COV: [Double] { return _accessor.getVector(at: VTOFFSET.COV.v) ?? [] }
+  public var COV: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.COV.v, byteSize: 8) }
+  public func withUnsafePointerToCov<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.COV.v, body: body) }
   public static func startattCovariance(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
   public static func add(COV_TYPE: attCovType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COV_TYPE.rawValue, def: 0, at: VTOFFSET.COV_TYPE.p) }
   public static func add(COV_REF_FRAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COV_REF_FRAME, at: VTOFFSET.COV_REF_FRAME.p) }
@@ -441,9 +443,9 @@ public struct attCovariance: FlatBufferObject, Verifiable {
 }
 
 ///  Attitude Maneuver
-public struct attManeuver: FlatBufferObject, Verifiable {
+public struct attManeuver: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -517,9 +519,9 @@ public struct attManeuver: FlatBufferObject, Verifiable {
 }
 
 ///  Attitude Comprehensive Message
-public struct ACM: FlatBufferObject, Verifiable {
+public struct ACM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -572,19 +574,13 @@ public struct ACM: FlatBufferObject, Verifiable {
   public var TIME_SYSTEM: String? { let o = _accessor.offset(VTOFFSET.TIME_SYSTEM.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var TIME_SYSTEMSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TIME_SYSTEM.v) }
   ///  Attitude states
-  public var hasAttStates: Bool { let o = _accessor.offset(VTOFFSET.ATT_STATES.v); return o == 0 ? false : true }
-  public var ATT_STATESCount: Int32 { let o = _accessor.offset(VTOFFSET.ATT_STATES.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func ATT_STATES(at index: Int32) -> attitudeState? { let o = _accessor.offset(VTOFFSET.ATT_STATES.v); return o == 0 ? nil : attitudeState(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var ATT_STATES: FlatbufferVector<attitudeState> { return _accessor.vector(at: VTOFFSET.ATT_STATES.v, byteSize: 4) }
   ///  Physical properties
-  public var PHYS_PROPERTIES: attPhysicalProperties? { let o = _accessor.offset(VTOFFSET.PHYS_PROPERTIES.v); return o == 0 ? nil : attPhysicalProperties(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public var PHYS_PROPERTIES: attPhysicalProperties? { let o = _accessor.offset(VTOFFSET.PHYS_PROPERTIES.v); return o == 0 ? nil : attPhysicalProperties(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Attitude covariance data
-  public var hasCovData: Bool { let o = _accessor.offset(VTOFFSET.COV_DATA.v); return o == 0 ? false : true }
-  public var COV_DATACount: Int32 { let o = _accessor.offset(VTOFFSET.COV_DATA.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func COV_DATA(at index: Int32) -> attCovariance? { let o = _accessor.offset(VTOFFSET.COV_DATA.v); return o == 0 ? nil : attCovariance(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var COV_DATA: FlatbufferVector<attCovariance> { return _accessor.vector(at: VTOFFSET.COV_DATA.v, byteSize: 4) }
   ///  Attitude maneuvers
-  public var hasManeuvers: Bool { let o = _accessor.offset(VTOFFSET.MANEUVERS.v); return o == 0 ? false : true }
-  public var MANEUVERSCount: Int32 { let o = _accessor.offset(VTOFFSET.MANEUVERS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func MANEUVERS(at index: Int32) -> attManeuver? { let o = _accessor.offset(VTOFFSET.MANEUVERS.v); return o == 0 ? nil : attManeuver(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var MANEUVERS: FlatbufferVector<attManeuver> { return _accessor.vector(at: VTOFFSET.MANEUVERS.v, byteSize: 4) }
   ///  Maneuverability status
   public var MANEUVERABLE: maneuverableFlag { let o = _accessor.offset(VTOFFSET.MANEUVERABLE.v); return o == 0 ? .yes : maneuverableFlag(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .yes }
   ///  Additional comments

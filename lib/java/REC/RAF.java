@@ -12,7 +12,6 @@ import com.google.flatbuffers.LongVector;
 import com.google.flatbuffers.ShortVector;
 import com.google.flatbuffers.StringVector;
 import com.google.flatbuffers.Struct;
-import com.google.flatbuffers.Table;
 import com.google.flatbuffers.UnionVector;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -21,8 +20,8 @@ import java.nio.ByteOrder;
  * Return All Frames Service (CCSDS 913.1-B-2)
  */
 @SuppressWarnings("unused")
-public final class RAF extends Table {
-  public static void ValidateVersion() { Constants.FLATBUFFERS_24_3_25(); }
+public final class RAF extends com.google.flatbuffers.Table {
+  public static void ValidateVersion() { Constants.FLATBUFFERS_25_12_19(); }
   public static RAF getRootAsRAF(ByteBuffer _bb) { return getRootAsRAF(_bb, new RAF()); }
   public static RAF getRootAsRAF(ByteBuffer _bb, RAF obj) { _bb.order(ByteOrder.LITTLE_ENDIAN); return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb)); }
   public static boolean RAFBufferHasIdentifier(ByteBuffer _bb) { return __has_identifier(_bb, "$RAF"); }

@@ -55,12 +55,16 @@ func (rcv *REC) Table() flatbuffers.Table {
 }
 
 /// Schema version identifier
-func (rcv *REC) Version() []byte {
+func (rcv *REC) version() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *REC) Version() []byte {
+	return rcv.version()
 }
 
 /// Schema version identifier
@@ -71,10 +75,17 @@ func (rcv *REC) RECORDS(obj *Record, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(Record)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *REC) Records(obj *Record, j int) bool {
+	return rcv.RECORDS(obj, j)
 }
 
 func (rcv *REC) RECORDSLength() int {
@@ -85,18 +96,31 @@ func (rcv *REC) RECORDSLength() int {
 	return 0
 }
 
+func (rcv *REC) RecordsLength() int {
+	return rcv.RECORDSLength()
+}
+
 /// Array of heterogeneous records from any supported standard
 func RECStart(builder *flatbuffers.Builder) {
 	builder.StartObject(2)
 }
-func RECAddVersion(builder *flatbuffers.Builder, version flatbuffers.UOffsetT) {
+func RECAddversion(builder *flatbuffers.Builder, version flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(version), 0)
+}
+func RECAddVersion(builder *flatbuffers.Builder, version flatbuffers.UOffsetT) {
+	RECAddversion(builder, version)
 }
 func RECAddRECORDS(builder *flatbuffers.Builder, RECORDS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(RECORDS), 0)
 }
+func RECAddRecords(builder *flatbuffers.Builder, RECORDS flatbuffers.UOffsetT) {
+	RECAddRECORDS(builder, RECORDS)
+}
 func RECStartRECORDSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func RECStartRecordsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return RECStartRECORDSVector(builder, numElems)
 }
 func RECEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

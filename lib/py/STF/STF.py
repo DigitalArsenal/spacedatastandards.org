@@ -280,6 +280,12 @@ def STFStartDATA_TYPESVector(builder, numElems):
 def StartDATA_TYPESVector(builder, numElems):
     return STFStartDATA_TYPESVector(builder, numElems)
 
+def STFCreateDATA_TYPESVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateDATA_TYPESVector(builder, data):
+    STFCreateDATA_TYPESVector(builder, data)
+
 def STFAddCOVERAGE(builder, COVERAGE):
     builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(COVERAGE), 0)
 
@@ -316,6 +322,12 @@ def STFStartPRICINGVector(builder, numElems):
 def StartPRICINGVector(builder, numElems):
     return STFStartPRICINGVector(builder, numElems)
 
+def STFCreatePRICINGVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreatePRICINGVector(builder, data):
+    STFCreatePRICINGVector(builder, data)
+
 def STFAddACCEPTED_PAYMENTS(builder, ACCEPTED_PAYMENTS):
     builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(ACCEPTED_PAYMENTS), 0)
 
@@ -327,6 +339,16 @@ def STFStartACCEPTED_PAYMENTSVector(builder, numElems):
 
 def StartACCEPTED_PAYMENTSVector(builder, numElems):
     return STFStartACCEPTED_PAYMENTSVector(builder, numElems)
+
+def STFCreateACCEPTED_PAYMENTSVector(builder, data):
+    data = list(data)
+    builder.StartVector(1, len(data), 1)
+    for item in reversed(data):
+        builder.PrependInt8(item)
+    return builder.EndVector()
+
+def CreateACCEPTED_PAYMENTSVector(builder, data):
+    STFCreateACCEPTED_PAYMENTSVector(builder, data)
 
 def STFAddCREATED_AT(builder, CREATED_AT):
     builder.PrependUint64Slot(12, CREATED_AT, 0)
@@ -358,6 +380,16 @@ def STFStartSIGNATUREVector(builder, numElems):
 def StartSIGNATUREVector(builder, numElems):
     return STFStartSIGNATUREVector(builder, numElems)
 
+def STFCreateSIGNATUREVector(builder, data):
+    data = list(data)
+    builder.StartVector(1, len(data), 1)
+    for item in reversed(data):
+        builder.PrependUint8(item)
+    return builder.EndVector()
+
+def CreateSIGNATUREVector(builder, data):
+    STFCreateSIGNATUREVector(builder, data)
+
 def STFEnd(builder):
     return builder.EndObject()
 
@@ -374,29 +406,47 @@ except:
 class STFT(object):
 
     # STFT
-    def __init__(self):
-        self.LISTING_ID = None  # type: str
-        self.PROVIDER_PEER_ID = None  # type: str
-        self.PROVIDER_EPM_CID = None  # type: str
-        self.TITLE = None  # type: str
-        self.DESCRIPTION = None  # type: str
-        self.DATA_TYPES = None  # type: List[str]
-        self.COVERAGE = None  # type: Optional[DataCoverage.DataCoverageT]
-        self.SAMPLE_CID = None  # type: str
-        self.ACCESS_TYPE = 0  # type: int
-        self.ENCRYPTION_REQUIRED = False  # type: bool
-        self.PRICING = None  # type: List[PricingTier.PricingTierT]
-        self.ACCEPTED_PAYMENTS = None  # type: List[int]
-        self.CREATED_AT = 0  # type: int
-        self.UPDATED_AT = 0  # type: int
-        self.ACTIVE = False  # type: bool
-        self.SIGNATURE = None  # type: List[int]
+    def __init__(
+        self,
+        LISTING_ID = None,
+        PROVIDER_PEER_ID = None,
+        PROVIDER_EPM_CID = None,
+        TITLE = None,
+        DESCRIPTION = None,
+        DATA_TYPES = None,
+        COVERAGE = None,
+        SAMPLE_CID = None,
+        ACCESS_TYPE = 0,
+        ENCRYPTION_REQUIRED = False,
+        PRICING = None,
+        ACCEPTED_PAYMENTS = None,
+        CREATED_AT = 0,
+        UPDATED_AT = 0,
+        ACTIVE = False,
+        SIGNATURE = None,
+    ):
+        self.LISTING_ID = LISTING_ID  # type: Optional[str]
+        self.PROVIDER_PEER_ID = PROVIDER_PEER_ID  # type: Optional[str]
+        self.PROVIDER_EPM_CID = PROVIDER_EPM_CID  # type: Optional[str]
+        self.TITLE = TITLE  # type: Optional[str]
+        self.DESCRIPTION = DESCRIPTION  # type: Optional[str]
+        self.DATA_TYPES = DATA_TYPES  # type: Optional[List[Optional[str]]]
+        self.COVERAGE = COVERAGE  # type: Optional[DataCoverage.DataCoverageT]
+        self.SAMPLE_CID = SAMPLE_CID  # type: Optional[str]
+        self.ACCESS_TYPE = ACCESS_TYPE  # type: int
+        self.ENCRYPTION_REQUIRED = ENCRYPTION_REQUIRED  # type: bool
+        self.PRICING = PRICING  # type: Optional[List[PricingTier.PricingTierT]]
+        self.ACCEPTED_PAYMENTS = ACCEPTED_PAYMENTS  # type: Optional[List[int]]
+        self.CREATED_AT = CREATED_AT  # type: int
+        self.UPDATED_AT = UPDATED_AT  # type: int
+        self.ACTIVE = ACTIVE  # type: bool
+        self.SIGNATURE = SIGNATURE  # type: Optional[List[int]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        STF = STF()
-        STF.Init(buf, pos)
-        return cls.InitFromObj(STF)
+        tmpStf = STF()
+        tmpStf.Init(buf, pos)
+        return cls.InitFromObj(tmpStf)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -404,9 +454,9 @@ class STFT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, STF):
+    def InitFromObj(cls, tmpStf):
         x = STFT()
-        x._UnPack(STF)
+        x._UnPack(tmpStf)
         return x
 
     # STFT

@@ -2,4 +2,7 @@
 
 # namespace: 
 
-# NOTE maneuverableFlag.py does not declare any structs or enums
+class maneuverableFlag(object):
+    YES = 0
+    NO = 1
+    UNKNOWN = 2

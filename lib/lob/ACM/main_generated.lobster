@@ -475,16 +475,16 @@ struct ACMBuilder:
     def end():
         return b_.EndObject()
 
-def ACMStartATT_STATESVector(b_:flatbuffers.builder, n_:int):
+def ACMStartATTSTATESVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def ACMCreateATT_STATESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def ACMCreateATTSTATESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-def ACMStartCOV_DATAVector(b_:flatbuffers.builder, n_:int):
+def ACMStartCOVDATAVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def ACMCreateCOV_DATAVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def ACMCreateCOVDATAVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)

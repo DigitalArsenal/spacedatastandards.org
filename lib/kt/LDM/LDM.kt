@@ -32,8 +32,8 @@ class LDM : Table() {
     /**
      * Launch Site Information
      */
-    val SITE : SIT? get() = SITE(SIT())
-    fun SITE(obj: SIT) : SIT? {
+    val site : SIT? get() = site(SIT())
+    fun site(obj: SIT) : SIT? {
         val o = __offset(4)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -44,7 +44,7 @@ class LDM : Table() {
     /**
      * Azimuth at Launch (in Degrees)
      */
-    val AZIMUTH : Float
+    val azimuth : Float
         get() {
             val o = __offset(6)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
@@ -52,7 +52,7 @@ class LDM : Table() {
     /**
      * References for Launch Data
      */
-    val REFERENCES : String?
+    val references : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -61,12 +61,12 @@ class LDM : Table() {
                 null
             }
         }
-    val REFERENCESAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun REFERENCESInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val referencesAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun referencesInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
     /**
      * Launching Agency Name
      */
-    val AGENCY_NAME : String?
+    val agencyName : String?
         get() {
             val o = __offset(10)
             return if (o != 0) {
@@ -75,13 +75,13 @@ class LDM : Table() {
                 null
             }
         }
-    val AGENCY_NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
-    fun AGENCY_NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
+    val agencyNameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(10, 1)
+    fun agencyNameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 10, 1)
     /**
      * Points of Contact for Launch
      */
-    fun POINTS_OF_CONTACT(j: Int) : EPM? = POINTS_OF_CONTACT(EPM(), j)
-    fun POINTS_OF_CONTACT(obj: EPM, j: Int) : EPM? {
+    fun pointsOfContact(j: Int) : EPM? = pointsOfContact(EPM(), j)
+    fun pointsOfContact(obj: EPM, j: Int) : EPM? {
         val o = __offset(12)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -89,15 +89,15 @@ class LDM : Table() {
             null
         }
     }
-    val POINTS_OF_CONTACTLength : Int
+    val pointsOfContactLength : Int
         get() {
             val o = __offset(12); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Operations Points of Contact for Launch
      */
-    fun OPERATIONS_POINTS_OF_CONTACT(j: Int) : EPM? = OPERATIONS_POINTS_OF_CONTACT(EPM(), j)
-    fun OPERATIONS_POINTS_OF_CONTACT(obj: EPM, j: Int) : EPM? {
+    fun operationsPointsOfContact(j: Int) : EPM? = operationsPointsOfContact(EPM(), j)
+    fun operationsPointsOfContact(obj: EPM, j: Int) : EPM? {
         val o = __offset(14)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -105,14 +105,14 @@ class LDM : Table() {
             null
         }
     }
-    val OPERATIONS_POINTS_OF_CONTACTLength : Int
+    val operationsPointsOfContactLength : Int
         get() {
             val o = __offset(14); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Net Launch Time (UTC Format)
      */
-    val NET : String?
+    val net : String?
         get() {
             val o = __offset(16)
             return if (o != 0) {
@@ -121,13 +121,13 @@ class LDM : Table() {
                 null
             }
         }
-    val NETAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(16, 1)
-    fun NETInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 16, 1)
+    val netAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(16, 1)
+    fun netInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 16, 1)
     /**
      * Rocket Configuration Details
      */
-    val ROCKET_CONFIGURATION : ROC? get() = ROCKET_CONFIGURATION(ROC())
-    fun ROCKET_CONFIGURATION(obj: ROC) : ROC? {
+    val rocketConfiguration : ROC? get() = rocketConfiguration(ROC())
+    fun rocketConfiguration(obj: ROC) : ROC? {
         val o = __offset(18)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -138,7 +138,7 @@ class LDM : Table() {
     /**
      * Mission Name
      */
-    val MISSION_NAME : String?
+    val missionName : String?
         get() {
             val o = __offset(20)
             return if (o != 0) {
@@ -147,12 +147,12 @@ class LDM : Table() {
                 null
             }
         }
-    val MISSION_NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(20, 1)
-    fun MISSION_NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 20, 1)
+    val missionNameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(20, 1)
+    fun missionNameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 20, 1)
     /**
      * Description of the Mission
      */
-    val MISSION_DESCRIPTION : String?
+    val missionDescription : String?
         get() {
             val o = __offset(22)
             return if (o != 0) {
@@ -161,12 +161,12 @@ class LDM : Table() {
                 null
             }
         }
-    val MISSION_DESCRIPTIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(22, 1)
-    fun MISSION_DESCRIPTIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 22, 1)
+    val missionDescriptionAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(22, 1)
+    fun missionDescriptionInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 22, 1)
     /**
      * Type of the Mission (e.g., Test Flight, Satellite Deployment)
      */
-    val MISSION_TYPE : String?
+    val missionType : String?
         get() {
             val o = __offset(24)
             return if (o != 0) {
@@ -175,12 +175,12 @@ class LDM : Table() {
                 null
             }
         }
-    val MISSION_TYPEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(24, 1)
-    fun MISSION_TYPEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 24, 1)
+    val missionTypeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(24, 1)
+    fun missionTypeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 24, 1)
     /**
      * Target Orbit Type (e.g., LEO, GEO)
      */
-    val ORBIT_TYPE : String?
+    val orbitType : String?
         get() {
             val o = __offset(26)
             return if (o != 0) {
@@ -189,12 +189,12 @@ class LDM : Table() {
                 null
             }
         }
-    val ORBIT_TYPEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(26, 1)
-    fun ORBIT_TYPEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 26, 1)
+    val orbitTypeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(26, 1)
+    fun orbitTypeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 26, 1)
     /**
      * Weather and Environmental Conditions at Launch
      */
-    val WEATHER_CONDITIONS : String?
+    val weatherConditions : String?
         get() {
             val o = __offset(28)
             return if (o != 0) {
@@ -203,12 +203,12 @@ class LDM : Table() {
                 null
             }
         }
-    val WEATHER_CONDITIONSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(28, 1)
-    fun WEATHER_CONDITIONSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 28, 1)
+    val weatherConditionsAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(28, 1)
+    fun weatherConditionsInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 28, 1)
     /**
      * Launch Outcome and Status (e.g., Successful, Failed)
      */
-    val LAUNCH_STATUS : String?
+    val launchStatus : String?
         get() {
             val o = __offset(30)
             return if (o != 0) {
@@ -217,12 +217,12 @@ class LDM : Table() {
                 null
             }
         }
-    val LAUNCH_STATUSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(30, 1)
-    fun LAUNCH_STATUSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 30, 1)
+    val launchStatusAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(30, 1)
+    fun launchStatusInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 30, 1)
     /**
      * Webcast URL for the Launch
      */
-    val WEBCAST_URL : String?
+    val webcastUrl : String?
         get() {
             val o = __offset(32)
             return if (o != 0) {
@@ -231,12 +231,12 @@ class LDM : Table() {
                 null
             }
         }
-    val WEBCAST_URLAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(32, 1)
-    fun WEBCAST_URLInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 32, 1)
+    val webcastUrlAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(32, 1)
+    fun webcastUrlInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 32, 1)
     /**
      * Media Links Related to the Launch
      */
-    fun MEDIA_LINKS(j: Int) : String? {
+    fun mediaLinks(j: Int) : String? {
         val o = __offset(34)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
@@ -244,14 +244,14 @@ class LDM : Table() {
             null
         }
     }
-    val MEDIA_LINKSLength : Int
+    val mediaLinksLength : Int
         get() {
             val o = __offset(34); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Earliest Possible Launch Times
      */
-    fun EARLIEST_LAUNCH_TIMES(j: Int) : String? {
+    fun earliestLaunchTimes(j: Int) : String? {
         val o = __offset(36)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
@@ -259,14 +259,14 @@ class LDM : Table() {
             null
         }
     }
-    val EARLIEST_LAUNCH_TIMESLength : Int
+    val earliestLaunchTimesLength : Int
         get() {
             val o = __offset(36); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Latest Possible Launch Times
      */
-    fun LATEST_LAUNCH_TIMES(j: Int) : String? {
+    fun latestLaunchTimes(j: Int) : String? {
         val o = __offset(38)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
@@ -274,14 +274,14 @@ class LDM : Table() {
             null
         }
     }
-    val LATEST_LAUNCH_TIMESLength : Int
+    val latestLaunchTimesLength : Int
         get() {
             val o = __offset(38); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Launch Collision Avoidance Information
      */
-    fun LCOLA_WINDOW_CLOSURES(j: Int) : String? {
+    fun lcolaWindowClosures(j: Int) : String? {
         val o = __offset(40)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
@@ -289,15 +289,15 @@ class LDM : Table() {
             null
         }
     }
-    val LCOLA_WINDOW_CLOSURESLength : Int
+    val lcolaWindowClosuresLength : Int
         get() {
             val o = __offset(40); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Payload Information (Catalog Entities)
      */
-    fun OBJECTS(j: Int) : CAT? = OBJECTS(CAT(), j)
-    fun OBJECTS(obj: CAT, j: Int) : CAT? {
+    fun objects(j: Int) : CAT? = objects(CAT(), j)
+    fun objects(obj: CAT, j: Int) : CAT? {
         val o = __offset(42)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -305,14 +305,14 @@ class LDM : Table() {
             null
         }
     }
-    val OBJECTSLength : Int
+    val objectsLength : Int
         get() {
             val o = __offset(42); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Tracking and Collision Avoidance Requirements
      */
-    fun TRACKING_REQUIREMENTS(j: Int) : String? {
+    fun trackingRequirements(j: Int) : String? {
         val o = __offset(44)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
@@ -320,14 +320,14 @@ class LDM : Table() {
             null
         }
     }
-    val TRACKING_REQUIREMENTSLength : Int
+    val trackingRequirementsLength : Int
         get() {
             val o = __offset(44); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Duration of Collision Avoidance Screen (in Seconds)
      */
-    val COLA_SCREEN_DURATION : String?
+    val colaScreenDuration : String?
         get() {
             val o = __offset(46)
             return if (o != 0) {
@@ -336,12 +336,12 @@ class LDM : Table() {
                 null
             }
         }
-    val COLA_SCREEN_DURATIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(46, 1)
-    fun COLA_SCREEN_DURATIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 46, 1)
+    val colaScreenDurationAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(46, 1)
+    fun colaScreenDurationInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 46, 1)
     /**
      * Probability of Collision Threshold (Percentage)
      */
-    val PROBABILITY_OF_COLLISION_THRESHOLD : String?
+    val probabilityOfCollisionThreshold : String?
         get() {
             val o = __offset(48)
             return if (o != 0) {
@@ -350,12 +350,12 @@ class LDM : Table() {
                 null
             }
         }
-    val PROBABILITY_OF_COLLISION_THRESHOLDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(48, 1)
-    fun PROBABILITY_OF_COLLISION_THRESHOLDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 48, 1)
+    val probabilityOfCollisionThresholdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(48, 1)
+    fun probabilityOfCollisionThresholdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 48, 1)
     /**
      * Number of Required Collision Avoidance Runs
      */
-    val COLA_RUNS_REQUIRED : String?
+    val colaRunsRequired : String?
         get() {
             val o = __offset(50)
             return if (o != 0) {
@@ -364,13 +364,13 @@ class LDM : Table() {
                 null
             }
         }
-    val COLA_RUNS_REQUIREDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(50, 1)
-    fun COLA_RUNS_REQUIREDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 50, 1)
+    val colaRunsRequiredAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(50, 1)
+    fun colaRunsRequiredInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 50, 1)
     /**
      * Points of Contact for Collision Avoidance
      */
-    fun COLA_POINTS_OF_CONTACT(j: Int) : EPM? = COLA_POINTS_OF_CONTACT(EPM(), j)
-    fun COLA_POINTS_OF_CONTACT(obj: EPM, j: Int) : EPM? {
+    fun colaPointsOfContact(j: Int) : EPM? = colaPointsOfContact(EPM(), j)
+    fun colaPointsOfContact(obj: EPM, j: Int) : EPM? {
         val o = __offset(52)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -378,14 +378,14 @@ class LDM : Table() {
             null
         }
     }
-    val COLA_POINTS_OF_CONTACTLength : Int
+    val colaPointsOfContactLength : Int
         get() {
             val o = __offset(52); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Orbital Parameters of the Launch
      */
-    fun ORBITAL_PARAMETERS(j: Int) : String? {
+    fun orbitalParameters(j: Int) : String? {
         val o = __offset(54)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
@@ -393,15 +393,15 @@ class LDM : Table() {
             null
         }
     }
-    val ORBITAL_PARAMETERSLength : Int
+    val orbitalParametersLength : Int
         get() {
             val o = __offset(54); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Burn Out Vectors for the Launch
      */
-    fun BURN_OUT_VECTORS(j: Int) : BOV? = BURN_OUT_VECTORS(BOV(), j)
-    fun BURN_OUT_VECTORS(obj: BOV, j: Int) : BOV? {
+    fun burnOutVectors(j: Int) : BOV? = burnOutVectors(BOV(), j)
+    fun burnOutVectors(obj: BOV, j: Int) : BOV? {
         val o = __offset(56)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -409,55 +409,55 @@ class LDM : Table() {
             null
         }
     }
-    val BURN_OUT_VECTORSLength : Int
+    val burnOutVectorsLength : Int
         get() {
             val o = __offset(56); return if (o != 0) __vector_len(o) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsLDM(_bb: ByteBuffer): LDM = getRootAsLDM(_bb, LDM())
         fun getRootAsLDM(_bb: ByteBuffer, obj: LDM): LDM {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun LDMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$LDM")
-        fun createLDM(builder: FlatBufferBuilder, SITEOffset: Int, AZIMUTH: Float, REFERENCESOffset: Int, AGENCY_NAMEOffset: Int, POINTS_OF_CONTACTOffset: Int, OPERATIONS_POINTS_OF_CONTACTOffset: Int, NETOffset: Int, ROCKET_CONFIGURATIONOffset: Int, MISSION_NAMEOffset: Int, MISSION_DESCRIPTIONOffset: Int, MISSION_TYPEOffset: Int, ORBIT_TYPEOffset: Int, WEATHER_CONDITIONSOffset: Int, LAUNCH_STATUSOffset: Int, WEBCAST_URLOffset: Int, MEDIA_LINKSOffset: Int, EARLIEST_LAUNCH_TIMESOffset: Int, LATEST_LAUNCH_TIMESOffset: Int, LCOLA_WINDOW_CLOSURESOffset: Int, OBJECTSOffset: Int, TRACKING_REQUIREMENTSOffset: Int, COLA_SCREEN_DURATIONOffset: Int, PROBABILITY_OF_COLLISION_THRESHOLDOffset: Int, COLA_RUNS_REQUIREDOffset: Int, COLA_POINTS_OF_CONTACTOffset: Int, ORBITAL_PARAMETERSOffset: Int, BURN_OUT_VECTORSOffset: Int) : Int {
+        fun createLDM(builder: FlatBufferBuilder, siteOffset: Int, azimuth: Float, referencesOffset: Int, agencyNameOffset: Int, pointsOfContactOffset: Int, operationsPointsOfContactOffset: Int, netOffset: Int, rocketConfigurationOffset: Int, missionNameOffset: Int, missionDescriptionOffset: Int, missionTypeOffset: Int, orbitTypeOffset: Int, weatherConditionsOffset: Int, launchStatusOffset: Int, webcastUrlOffset: Int, mediaLinksOffset: Int, earliestLaunchTimesOffset: Int, latestLaunchTimesOffset: Int, lcolaWindowClosuresOffset: Int, objectsOffset: Int, trackingRequirementsOffset: Int, colaScreenDurationOffset: Int, probabilityOfCollisionThresholdOffset: Int, colaRunsRequiredOffset: Int, colaPointsOfContactOffset: Int, orbitalParametersOffset: Int, burnOutVectorsOffset: Int) : Int {
             builder.startTable(27)
-            addBURN_OUT_VECTORS(builder, BURN_OUT_VECTORSOffset)
-            addORBITAL_PARAMETERS(builder, ORBITAL_PARAMETERSOffset)
-            addCOLA_POINTS_OF_CONTACT(builder, COLA_POINTS_OF_CONTACTOffset)
-            addCOLA_RUNS_REQUIRED(builder, COLA_RUNS_REQUIREDOffset)
-            addPROBABILITY_OF_COLLISION_THRESHOLD(builder, PROBABILITY_OF_COLLISION_THRESHOLDOffset)
-            addCOLA_SCREEN_DURATION(builder, COLA_SCREEN_DURATIONOffset)
-            addTRACKING_REQUIREMENTS(builder, TRACKING_REQUIREMENTSOffset)
-            addOBJECTS(builder, OBJECTSOffset)
-            addLCOLA_WINDOW_CLOSURES(builder, LCOLA_WINDOW_CLOSURESOffset)
-            addLATEST_LAUNCH_TIMES(builder, LATEST_LAUNCH_TIMESOffset)
-            addEARLIEST_LAUNCH_TIMES(builder, EARLIEST_LAUNCH_TIMESOffset)
-            addMEDIA_LINKS(builder, MEDIA_LINKSOffset)
-            addWEBCAST_URL(builder, WEBCAST_URLOffset)
-            addLAUNCH_STATUS(builder, LAUNCH_STATUSOffset)
-            addWEATHER_CONDITIONS(builder, WEATHER_CONDITIONSOffset)
-            addORBIT_TYPE(builder, ORBIT_TYPEOffset)
-            addMISSION_TYPE(builder, MISSION_TYPEOffset)
-            addMISSION_DESCRIPTION(builder, MISSION_DESCRIPTIONOffset)
-            addMISSION_NAME(builder, MISSION_NAMEOffset)
-            addROCKET_CONFIGURATION(builder, ROCKET_CONFIGURATIONOffset)
-            addNET(builder, NETOffset)
-            addOPERATIONS_POINTS_OF_CONTACT(builder, OPERATIONS_POINTS_OF_CONTACTOffset)
-            addPOINTS_OF_CONTACT(builder, POINTS_OF_CONTACTOffset)
-            addAGENCY_NAME(builder, AGENCY_NAMEOffset)
-            addREFERENCES(builder, REFERENCESOffset)
-            addAZIMUTH(builder, AZIMUTH)
-            addSITE(builder, SITEOffset)
+            addBURNOUTVECTORS(builder, burnOutVectorsOffset)
+            addORBITALPARAMETERS(builder, orbitalParametersOffset)
+            addCOLAPOINTSOFCONTACT(builder, colaPointsOfContactOffset)
+            addCOLARUNSREQUIRED(builder, colaRunsRequiredOffset)
+            addPROBABILITYOFCOLLISIONTHRESHOLD(builder, probabilityOfCollisionThresholdOffset)
+            addCOLASCREENDURATION(builder, colaScreenDurationOffset)
+            addTRACKINGREQUIREMENTS(builder, trackingRequirementsOffset)
+            addOBJECTS(builder, objectsOffset)
+            addLCOLAWINDOWCLOSURES(builder, lcolaWindowClosuresOffset)
+            addLATESTLAUNCHTIMES(builder, latestLaunchTimesOffset)
+            addEARLIESTLAUNCHTIMES(builder, earliestLaunchTimesOffset)
+            addMEDIALINKS(builder, mediaLinksOffset)
+            addWEBCASTURL(builder, webcastUrlOffset)
+            addLAUNCHSTATUS(builder, launchStatusOffset)
+            addWEATHERCONDITIONS(builder, weatherConditionsOffset)
+            addORBITTYPE(builder, orbitTypeOffset)
+            addMISSIONTYPE(builder, missionTypeOffset)
+            addMISSIONDESCRIPTION(builder, missionDescriptionOffset)
+            addMISSIONNAME(builder, missionNameOffset)
+            addROCKETCONFIGURATION(builder, rocketConfigurationOffset)
+            addNET(builder, netOffset)
+            addOPERATIONSPOINTSOFCONTACT(builder, operationsPointsOfContactOffset)
+            addPOINTSOFCONTACT(builder, pointsOfContactOffset)
+            addAGENCYNAME(builder, agencyNameOffset)
+            addREFERENCES(builder, referencesOffset)
+            addAZIMUTH(builder, azimuth)
+            addSITE(builder, siteOffset)
             return endLDM(builder)
         }
         fun startLDM(builder: FlatBufferBuilder) = builder.startTable(27)
-        fun addSITE(builder: FlatBufferBuilder, SITE: Int) = builder.addOffset(0, SITE, 0)
-        fun addAZIMUTH(builder: FlatBufferBuilder, AZIMUTH: Float) = builder.addFloat(1, AZIMUTH, 0.0)
-        fun addREFERENCES(builder: FlatBufferBuilder, REFERENCES: Int) = builder.addOffset(2, REFERENCES, 0)
-        fun addAGENCY_NAME(builder: FlatBufferBuilder, AGENCY_NAME: Int) = builder.addOffset(3, AGENCY_NAME, 0)
-        fun addPOINTS_OF_CONTACT(builder: FlatBufferBuilder, POINTS_OF_CONTACT: Int) = builder.addOffset(4, POINTS_OF_CONTACT, 0)
+        fun addSITE(builder: FlatBufferBuilder, site: Int) = builder.addOffset(0, site, 0)
+        fun addAZIMUTH(builder: FlatBufferBuilder, azimuth: Float) = builder.addFloat(1, azimuth, 0.0)
+        fun addREFERENCES(builder: FlatBufferBuilder, references: Int) = builder.addOffset(2, references, 0)
+        fun addAGENCYNAME(builder: FlatBufferBuilder, agencyName: Int) = builder.addOffset(3, agencyName, 0)
+        fun addPOINTSOFCONTACT(builder: FlatBufferBuilder, pointsOfContact: Int) = builder.addOffset(4, pointsOfContact, 0)
         fun createPointsOfContactVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -466,7 +466,7 @@ class LDM : Table() {
             return builder.endVector()
         }
         fun startPointsOfContactVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addOPERATIONS_POINTS_OF_CONTACT(builder: FlatBufferBuilder, OPERATIONS_POINTS_OF_CONTACT: Int) = builder.addOffset(5, OPERATIONS_POINTS_OF_CONTACT, 0)
+        fun addOPERATIONSPOINTSOFCONTACT(builder: FlatBufferBuilder, operationsPointsOfContact: Int) = builder.addOffset(5, operationsPointsOfContact, 0)
         fun createOperationsPointsOfContactVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -475,16 +475,16 @@ class LDM : Table() {
             return builder.endVector()
         }
         fun startOperationsPointsOfContactVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addNET(builder: FlatBufferBuilder, NET: Int) = builder.addOffset(6, NET, 0)
-        fun addROCKET_CONFIGURATION(builder: FlatBufferBuilder, ROCKET_CONFIGURATION: Int) = builder.addOffset(7, ROCKET_CONFIGURATION, 0)
-        fun addMISSION_NAME(builder: FlatBufferBuilder, MISSION_NAME: Int) = builder.addOffset(8, MISSION_NAME, 0)
-        fun addMISSION_DESCRIPTION(builder: FlatBufferBuilder, MISSION_DESCRIPTION: Int) = builder.addOffset(9, MISSION_DESCRIPTION, 0)
-        fun addMISSION_TYPE(builder: FlatBufferBuilder, MISSION_TYPE: Int) = builder.addOffset(10, MISSION_TYPE, 0)
-        fun addORBIT_TYPE(builder: FlatBufferBuilder, ORBIT_TYPE: Int) = builder.addOffset(11, ORBIT_TYPE, 0)
-        fun addWEATHER_CONDITIONS(builder: FlatBufferBuilder, WEATHER_CONDITIONS: Int) = builder.addOffset(12, WEATHER_CONDITIONS, 0)
-        fun addLAUNCH_STATUS(builder: FlatBufferBuilder, LAUNCH_STATUS: Int) = builder.addOffset(13, LAUNCH_STATUS, 0)
-        fun addWEBCAST_URL(builder: FlatBufferBuilder, WEBCAST_URL: Int) = builder.addOffset(14, WEBCAST_URL, 0)
-        fun addMEDIA_LINKS(builder: FlatBufferBuilder, MEDIA_LINKS: Int) = builder.addOffset(15, MEDIA_LINKS, 0)
+        fun addNET(builder: FlatBufferBuilder, net: Int) = builder.addOffset(6, net, 0)
+        fun addROCKETCONFIGURATION(builder: FlatBufferBuilder, rocketConfiguration: Int) = builder.addOffset(7, rocketConfiguration, 0)
+        fun addMISSIONNAME(builder: FlatBufferBuilder, missionName: Int) = builder.addOffset(8, missionName, 0)
+        fun addMISSIONDESCRIPTION(builder: FlatBufferBuilder, missionDescription: Int) = builder.addOffset(9, missionDescription, 0)
+        fun addMISSIONTYPE(builder: FlatBufferBuilder, missionType: Int) = builder.addOffset(10, missionType, 0)
+        fun addORBITTYPE(builder: FlatBufferBuilder, orbitType: Int) = builder.addOffset(11, orbitType, 0)
+        fun addWEATHERCONDITIONS(builder: FlatBufferBuilder, weatherConditions: Int) = builder.addOffset(12, weatherConditions, 0)
+        fun addLAUNCHSTATUS(builder: FlatBufferBuilder, launchStatus: Int) = builder.addOffset(13, launchStatus, 0)
+        fun addWEBCASTURL(builder: FlatBufferBuilder, webcastUrl: Int) = builder.addOffset(14, webcastUrl, 0)
+        fun addMEDIALINKS(builder: FlatBufferBuilder, mediaLinks: Int) = builder.addOffset(15, mediaLinks, 0)
         fun createMediaLinksVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -493,7 +493,7 @@ class LDM : Table() {
             return builder.endVector()
         }
         fun startMediaLinksVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addEARLIEST_LAUNCH_TIMES(builder: FlatBufferBuilder, EARLIEST_LAUNCH_TIMES: Int) = builder.addOffset(16, EARLIEST_LAUNCH_TIMES, 0)
+        fun addEARLIESTLAUNCHTIMES(builder: FlatBufferBuilder, earliestLaunchTimes: Int) = builder.addOffset(16, earliestLaunchTimes, 0)
         fun createEarliestLaunchTimesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -502,7 +502,7 @@ class LDM : Table() {
             return builder.endVector()
         }
         fun startEarliestLaunchTimesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addLATEST_LAUNCH_TIMES(builder: FlatBufferBuilder, LATEST_LAUNCH_TIMES: Int) = builder.addOffset(17, LATEST_LAUNCH_TIMES, 0)
+        fun addLATESTLAUNCHTIMES(builder: FlatBufferBuilder, latestLaunchTimes: Int) = builder.addOffset(17, latestLaunchTimes, 0)
         fun createLatestLaunchTimesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -511,7 +511,7 @@ class LDM : Table() {
             return builder.endVector()
         }
         fun startLatestLaunchTimesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addLCOLA_WINDOW_CLOSURES(builder: FlatBufferBuilder, LCOLA_WINDOW_CLOSURES: Int) = builder.addOffset(18, LCOLA_WINDOW_CLOSURES, 0)
+        fun addLCOLAWINDOWCLOSURES(builder: FlatBufferBuilder, lcolaWindowClosures: Int) = builder.addOffset(18, lcolaWindowClosures, 0)
         fun createLcolaWindowClosuresVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -520,7 +520,7 @@ class LDM : Table() {
             return builder.endVector()
         }
         fun startLcolaWindowClosuresVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addOBJECTS(builder: FlatBufferBuilder, OBJECTS: Int) = builder.addOffset(19, OBJECTS, 0)
+        fun addOBJECTS(builder: FlatBufferBuilder, objects: Int) = builder.addOffset(19, objects, 0)
         fun createObjectsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -529,7 +529,7 @@ class LDM : Table() {
             return builder.endVector()
         }
         fun startObjectsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addTRACKING_REQUIREMENTS(builder: FlatBufferBuilder, TRACKING_REQUIREMENTS: Int) = builder.addOffset(20, TRACKING_REQUIREMENTS, 0)
+        fun addTRACKINGREQUIREMENTS(builder: FlatBufferBuilder, trackingRequirements: Int) = builder.addOffset(20, trackingRequirements, 0)
         fun createTrackingRequirementsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -538,10 +538,10 @@ class LDM : Table() {
             return builder.endVector()
         }
         fun startTrackingRequirementsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addCOLA_SCREEN_DURATION(builder: FlatBufferBuilder, COLA_SCREEN_DURATION: Int) = builder.addOffset(21, COLA_SCREEN_DURATION, 0)
-        fun addPROBABILITY_OF_COLLISION_THRESHOLD(builder: FlatBufferBuilder, PROBABILITY_OF_COLLISION_THRESHOLD: Int) = builder.addOffset(22, PROBABILITY_OF_COLLISION_THRESHOLD, 0)
-        fun addCOLA_RUNS_REQUIRED(builder: FlatBufferBuilder, COLA_RUNS_REQUIRED: Int) = builder.addOffset(23, COLA_RUNS_REQUIRED, 0)
-        fun addCOLA_POINTS_OF_CONTACT(builder: FlatBufferBuilder, COLA_POINTS_OF_CONTACT: Int) = builder.addOffset(24, COLA_POINTS_OF_CONTACT, 0)
+        fun addCOLASCREENDURATION(builder: FlatBufferBuilder, colaScreenDuration: Int) = builder.addOffset(21, colaScreenDuration, 0)
+        fun addPROBABILITYOFCOLLISIONTHRESHOLD(builder: FlatBufferBuilder, probabilityOfCollisionThreshold: Int) = builder.addOffset(22, probabilityOfCollisionThreshold, 0)
+        fun addCOLARUNSREQUIRED(builder: FlatBufferBuilder, colaRunsRequired: Int) = builder.addOffset(23, colaRunsRequired, 0)
+        fun addCOLAPOINTSOFCONTACT(builder: FlatBufferBuilder, colaPointsOfContact: Int) = builder.addOffset(24, colaPointsOfContact, 0)
         fun createColaPointsOfContactVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -550,7 +550,7 @@ class LDM : Table() {
             return builder.endVector()
         }
         fun startColaPointsOfContactVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addORBITAL_PARAMETERS(builder: FlatBufferBuilder, ORBITAL_PARAMETERS: Int) = builder.addOffset(25, ORBITAL_PARAMETERS, 0)
+        fun addORBITALPARAMETERS(builder: FlatBufferBuilder, orbitalParameters: Int) = builder.addOffset(25, orbitalParameters, 0)
         fun createOrbitalParametersVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -559,7 +559,7 @@ class LDM : Table() {
             return builder.endVector()
         }
         fun startOrbitalParametersVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addBURN_OUT_VECTORS(builder: FlatBufferBuilder, BURN_OUT_VECTORS: Int) = builder.addOffset(26, BURN_OUT_VECTORS, 0)
+        fun addBURNOUTVECTORS(builder: FlatBufferBuilder, burnOutVectors: Int) = builder.addOffset(26, burnOutVectors, 0)
         fun createBurnOutVectorsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {

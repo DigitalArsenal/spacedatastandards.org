@@ -11,7 +11,7 @@ public struct OBD : IFlatbufferObject
 {
   private Table __p;
   public ByteBuffer ByteBuffer { get { return __p.bb; } }
-  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_24_3_25(); }
+  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_25_12_19(); }
   public static OBD GetRootAsOBD(ByteBuffer _bb) { return GetRootAsOBD(_bb, new OBD()); }
   public static OBD GetRootAsOBD(ByteBuffer _bb, OBD obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
   public static bool OBDBufferHasIdentifier(ByteBuffer _bb) { return Table.__has_identifier(_bb, "$OBD"); }

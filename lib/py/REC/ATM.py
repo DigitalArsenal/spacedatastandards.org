@@ -2,4 +2,113 @@
 
 # namespace: 
 
-# NOTE ATM.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Atmospheric Model Message
+class ATM(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = ATM()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsATM(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def ATMBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x41\x54\x4D", size_prefixed=size_prefixed)
+
+    # ATM
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Canonical model family
+    # ATM
+    def MODEL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # Four-digit year identifying the model version (e.g., 1970, 2008, 2020)
+    # ATM
+    def YEAR(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+def ATMStart(builder):
+    builder.StartObject(2)
+
+def Start(builder):
+    ATMStart(builder)
+
+def ATMAddMODEL(builder, MODEL):
+    builder.PrependInt8Slot(0, MODEL, 0)
+
+def AddMODEL(builder, MODEL):
+    ATMAddMODEL(builder, MODEL)
+
+def ATMAddYEAR(builder, YEAR):
+    builder.PrependInt32Slot(1, YEAR, 0)
+
+def AddYEAR(builder, YEAR):
+    ATMAddYEAR(builder, YEAR)
+
+def ATMEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return ATMEnd(builder)
+
+
+class ATMT(object):
+
+    # ATMT
+    def __init__(
+        self,
+        MODEL = 0,
+        YEAR = 0,
+    ):
+        self.MODEL = MODEL  # type: int
+        self.YEAR = YEAR  # type: int
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpAtm = ATM()
+        tmpAtm.Init(buf, pos)
+        return cls.InitFromObj(tmpAtm)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpAtm):
+        x = ATMT()
+        x._UnPack(tmpAtm)
+        return x
+
+    # ATMT
+    def _UnPack(self, ATM):
+        if ATM is None:
+            return
+        self.MODEL = ATM.MODEL()
+        self.YEAR = ATM.YEAR()
+
+    # ATMT
+    def Pack(self, builder):
+        ATMStart(builder)
+        ATMAddMODEL(builder, self.MODEL)
+        ATMAddYEAR(builder, self.YEAR)
+        ATM = ATMEnd(builder)
+        return ATM

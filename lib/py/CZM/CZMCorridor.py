@@ -245,6 +245,16 @@ def CZMCorridorStartPOSITIONS_CARTOGRAPHIC_DEGREESVector(builder, numElems):
 def StartPOSITIONS_CARTOGRAPHIC_DEGREESVector(builder, numElems):
     return CZMCorridorStartPOSITIONS_CARTOGRAPHIC_DEGREESVector(builder, numElems)
 
+def CZMCorridorCreatePOSITIONS_CARTOGRAPHIC_DEGREESVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreatePOSITIONS_CARTOGRAPHIC_DEGREESVector(builder, data):
+    CZMCorridorCreatePOSITIONS_CARTOGRAPHIC_DEGREESVector(builder, data)
+
 def CZMCorridorAddPOSITIONS_CARTESIAN(builder, POSITIONS_CARTESIAN):
     builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(POSITIONS_CARTESIAN), 0)
 
@@ -256,6 +266,16 @@ def CZMCorridorStartPOSITIONS_CARTESIANVector(builder, numElems):
 
 def StartPOSITIONS_CARTESIANVector(builder, numElems):
     return CZMCorridorStartPOSITIONS_CARTESIANVector(builder, numElems)
+
+def CZMCorridorCreatePOSITIONS_CARTESIANVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreatePOSITIONS_CARTESIANVector(builder, data):
+    CZMCorridorCreatePOSITIONS_CARTESIANVector(builder, data)
 
 def CZMCorridorAddWIDTH(builder, WIDTH):
     builder.PrependFloat64Slot(3, WIDTH, 0.0)
@@ -363,31 +383,51 @@ except:
 class CZMCorridorT(object):
 
     # CZMCorridorT
-    def __init__(self):
-        self.SHOW = False  # type: bool
-        self.POSITIONS_CARTOGRAPHIC_DEGREES = None  # type: List[float]
-        self.POSITIONS_CARTESIAN = None  # type: List[float]
-        self.WIDTH = 0.0  # type: float
-        self.HEIGHT = 0.0  # type: float
-        self.HEIGHT_REFERENCE = None  # type: str
-        self.EXTRUDED_HEIGHT = 0.0  # type: float
-        self.EXTRUDED_HEIGHT_REFERENCE = None  # type: str
-        self.CORNER_TYPE = None  # type: str
-        self.GRANULARITY = 0.0  # type: float
-        self.FILL = False  # type: bool
-        self.MATERIAL = None  # type: Optional[CZMMaterial.CZMMaterialT]
-        self.OUTLINE = False  # type: bool
-        self.OUTLINE_COLOR = None  # type: Optional[CZMColor.CZMColorT]
-        self.OUTLINE_WIDTH = 0.0  # type: float
-        self.SHADOWS = None  # type: str
-        self.CLASSIFICATION_TYPE = None  # type: str
-        self.Z_INDEX = 0  # type: int
+    def __init__(
+        self,
+        SHOW = False,
+        POSITIONS_CARTOGRAPHIC_DEGREES = None,
+        POSITIONS_CARTESIAN = None,
+        WIDTH = 0.0,
+        HEIGHT = 0.0,
+        HEIGHT_REFERENCE = None,
+        EXTRUDED_HEIGHT = 0.0,
+        EXTRUDED_HEIGHT_REFERENCE = None,
+        CORNER_TYPE = None,
+        GRANULARITY = 0.0,
+        FILL = False,
+        MATERIAL = None,
+        OUTLINE = False,
+        OUTLINE_COLOR = None,
+        OUTLINE_WIDTH = 0.0,
+        SHADOWS = None,
+        CLASSIFICATION_TYPE = None,
+        Z_INDEX = 0,
+    ):
+        self.SHOW = SHOW  # type: bool
+        self.POSITIONS_CARTOGRAPHIC_DEGREES = POSITIONS_CARTOGRAPHIC_DEGREES  # type: Optional[List[float]]
+        self.POSITIONS_CARTESIAN = POSITIONS_CARTESIAN  # type: Optional[List[float]]
+        self.WIDTH = WIDTH  # type: float
+        self.HEIGHT = HEIGHT  # type: float
+        self.HEIGHT_REFERENCE = HEIGHT_REFERENCE  # type: Optional[str]
+        self.EXTRUDED_HEIGHT = EXTRUDED_HEIGHT  # type: float
+        self.EXTRUDED_HEIGHT_REFERENCE = EXTRUDED_HEIGHT_REFERENCE  # type: Optional[str]
+        self.CORNER_TYPE = CORNER_TYPE  # type: Optional[str]
+        self.GRANULARITY = GRANULARITY  # type: float
+        self.FILL = FILL  # type: bool
+        self.MATERIAL = MATERIAL  # type: Optional[CZMMaterial.CZMMaterialT]
+        self.OUTLINE = OUTLINE  # type: bool
+        self.OUTLINE_COLOR = OUTLINE_COLOR  # type: Optional[CZMColor.CZMColorT]
+        self.OUTLINE_WIDTH = OUTLINE_WIDTH  # type: float
+        self.SHADOWS = SHADOWS  # type: Optional[str]
+        self.CLASSIFICATION_TYPE = CLASSIFICATION_TYPE  # type: Optional[str]
+        self.Z_INDEX = Z_INDEX  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        czmcorridor = CZMCorridor()
-        czmcorridor.Init(buf, pos)
-        return cls.InitFromObj(czmcorridor)
+        tmpCzmcorridor = CZMCorridor()
+        tmpCzmcorridor.Init(buf, pos)
+        return cls.InitFromObj(tmpCzmcorridor)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -395,47 +435,47 @@ class CZMCorridorT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, czmcorridor):
+    def InitFromObj(cls, tmpCzmcorridor):
         x = CZMCorridorT()
-        x._UnPack(czmcorridor)
+        x._UnPack(tmpCzmcorridor)
         return x
 
     # CZMCorridorT
-    def _UnPack(self, czmcorridor):
-        if czmcorridor is None:
+    def _UnPack(self, CZMCorridor):
+        if CZMCorridor is None:
             return
-        self.SHOW = czmcorridor.SHOW()
-        if not czmcorridor.POSITIONS_CARTOGRAPHIC_DEGREESIsNone():
+        self.SHOW = CZMCorridor.SHOW()
+        if not CZMCorridor.POSITIONS_CARTOGRAPHIC_DEGREESIsNone():
             if np is None:
                 self.POSITIONS_CARTOGRAPHIC_DEGREES = []
-                for i in range(czmcorridor.POSITIONS_CARTOGRAPHIC_DEGREESLength()):
-                    self.POSITIONS_CARTOGRAPHIC_DEGREES.append(czmcorridor.POSITIONS_CARTOGRAPHIC_DEGREES(i))
+                for i in range(CZMCorridor.POSITIONS_CARTOGRAPHIC_DEGREESLength()):
+                    self.POSITIONS_CARTOGRAPHIC_DEGREES.append(CZMCorridor.POSITIONS_CARTOGRAPHIC_DEGREES(i))
             else:
-                self.POSITIONS_CARTOGRAPHIC_DEGREES = czmcorridor.POSITIONS_CARTOGRAPHIC_DEGREESAsNumpy()
-        if not czmcorridor.POSITIONS_CARTESIANIsNone():
+                self.POSITIONS_CARTOGRAPHIC_DEGREES = CZMCorridor.POSITIONS_CARTOGRAPHIC_DEGREESAsNumpy()
+        if not CZMCorridor.POSITIONS_CARTESIANIsNone():
             if np is None:
                 self.POSITIONS_CARTESIAN = []
-                for i in range(czmcorridor.POSITIONS_CARTESIANLength()):
-                    self.POSITIONS_CARTESIAN.append(czmcorridor.POSITIONS_CARTESIAN(i))
+                for i in range(CZMCorridor.POSITIONS_CARTESIANLength()):
+                    self.POSITIONS_CARTESIAN.append(CZMCorridor.POSITIONS_CARTESIAN(i))
             else:
-                self.POSITIONS_CARTESIAN = czmcorridor.POSITIONS_CARTESIANAsNumpy()
-        self.WIDTH = czmcorridor.WIDTH()
-        self.HEIGHT = czmcorridor.HEIGHT()
-        self.HEIGHT_REFERENCE = czmcorridor.HEIGHT_REFERENCE()
-        self.EXTRUDED_HEIGHT = czmcorridor.EXTRUDED_HEIGHT()
-        self.EXTRUDED_HEIGHT_REFERENCE = czmcorridor.EXTRUDED_HEIGHT_REFERENCE()
-        self.CORNER_TYPE = czmcorridor.CORNER_TYPE()
-        self.GRANULARITY = czmcorridor.GRANULARITY()
-        self.FILL = czmcorridor.FILL()
-        if czmcorridor.MATERIAL() is not None:
-            self.MATERIAL = CZMMaterial.CZMMaterialT.InitFromObj(czmcorridor.MATERIAL())
-        self.OUTLINE = czmcorridor.OUTLINE()
-        if czmcorridor.OUTLINE_COLOR() is not None:
-            self.OUTLINE_COLOR = CZMColor.CZMColorT.InitFromObj(czmcorridor.OUTLINE_COLOR())
-        self.OUTLINE_WIDTH = czmcorridor.OUTLINE_WIDTH()
-        self.SHADOWS = czmcorridor.SHADOWS()
-        self.CLASSIFICATION_TYPE = czmcorridor.CLASSIFICATION_TYPE()
-        self.Z_INDEX = czmcorridor.Z_INDEX()
+                self.POSITIONS_CARTESIAN = CZMCorridor.POSITIONS_CARTESIANAsNumpy()
+        self.WIDTH = CZMCorridor.WIDTH()
+        self.HEIGHT = CZMCorridor.HEIGHT()
+        self.HEIGHT_REFERENCE = CZMCorridor.HEIGHT_REFERENCE()
+        self.EXTRUDED_HEIGHT = CZMCorridor.EXTRUDED_HEIGHT()
+        self.EXTRUDED_HEIGHT_REFERENCE = CZMCorridor.EXTRUDED_HEIGHT_REFERENCE()
+        self.CORNER_TYPE = CZMCorridor.CORNER_TYPE()
+        self.GRANULARITY = CZMCorridor.GRANULARITY()
+        self.FILL = CZMCorridor.FILL()
+        if CZMCorridor.MATERIAL() is not None:
+            self.MATERIAL = CZMMaterial.CZMMaterialT.InitFromObj(CZMCorridor.MATERIAL())
+        self.OUTLINE = CZMCorridor.OUTLINE()
+        if CZMCorridor.OUTLINE_COLOR() is not None:
+            self.OUTLINE_COLOR = CZMColor.CZMColorT.InitFromObj(CZMCorridor.OUTLINE_COLOR())
+        self.OUTLINE_WIDTH = CZMCorridor.OUTLINE_WIDTH()
+        self.SHADOWS = CZMCorridor.SHADOWS()
+        self.CLASSIFICATION_TYPE = CZMCorridor.CLASSIFICATION_TYPE()
+        self.Z_INDEX = CZMCorridor.Z_INDEX()
 
     # CZMCorridorT
     def Pack(self, builder):
@@ -497,5 +537,5 @@ class CZMCorridorT(object):
         if self.CLASSIFICATION_TYPE is not None:
             CZMCorridorAddCLASSIFICATION_TYPE(builder, CLASSIFICATION_TYPE)
         CZMCorridorAddZ_INDEX(builder, self.Z_INDEX)
-        czmcorridor = CZMCorridorEnd(builder)
-        return czmcorridor
+        CZMCorridor = CZMCorridorEnd(builder)
+        return CZMCorridor

@@ -2,9 +2,13 @@
 // swiftlint:disable all
 // swiftformat:disable all
 
+#if canImport(Common)
+import Common
+#endif
+
 import FlatBuffers
 
-public enum manifoldStatus: Int8, Enum, Verifiable {
+public enum manifoldStatus: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -20,9 +24,9 @@ public enum manifoldStatus: Int8, Enum, Verifiable {
 
 
 ///  Manifold Element Set
-public struct manifoldElset: FlatBufferObject, Verifiable {
+public struct manifoldElset: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -165,9 +169,9 @@ public struct manifoldElset: FlatBufferObject, Verifiable {
 }
 
 ///  Orbit Manifold
-public struct MNF: FlatBufferObject, Verifiable {
+public struct MNF: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -241,9 +245,7 @@ public struct MNF: FlatBufferObject, Verifiable {
   ///  Total number of manifold elements
   public var NUM_ELEMENTS: UInt32 { let o = _accessor.offset(VTOFFSET.NUM_ELEMENTS.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  Theoretical element sets
-  public var hasElements: Bool { let o = _accessor.offset(VTOFFSET.ELEMENTS.v); return o == 0 ? false : true }
-  public var ELEMENTSCount: Int32 { let o = _accessor.offset(VTOFFSET.ELEMENTS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func ELEMENTS(at index: Int32) -> manifoldElset? { let o = _accessor.offset(VTOFFSET.ELEMENTS.v); return o == 0 ? nil : manifoldElset(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var ELEMENTS: FlatbufferVector<manifoldElset> { return _accessor.vector(at: VTOFFSET.ELEMENTS.v, byteSize: 4) }
   ///  Correlated catalog object ID (if matched)
   public var CORRELATED_ID: String? { let o = _accessor.offset(VTOFFSET.CORRELATED_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var CORRELATED_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CORRELATED_ID.v) }

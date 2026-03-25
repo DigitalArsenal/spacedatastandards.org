@@ -62,12 +62,20 @@ func (rcv *AEM) CCSDS_AEM_VERS() []byte {
 	return nil
 }
 
+func (rcv *AEM) CcsdsAemVers() []byte {
+	return rcv.CCSDS_AEM_VERS()
+}
+
 func (rcv *AEM) CREATION_DATE() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *AEM) CreationDate() []byte {
+	return rcv.CREATION_DATE()
 }
 
 func (rcv *AEM) ORIGINATOR() []byte {
@@ -78,16 +86,27 @@ func (rcv *AEM) ORIGINATOR() []byte {
 	return nil
 }
 
+func (rcv *AEM) Originator() []byte {
+	return rcv.ORIGINATOR()
+}
+
 func (rcv *AEM) SEGMENTS(obj *AEMSegment, j int) bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(AEMSegment)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *AEM) Segments(obj *AEMSegment, j int) bool {
+	return rcv.SEGMENTS(obj, j)
 }
 
 func (rcv *AEM) SEGMENTSLength() int {
@@ -98,23 +117,42 @@ func (rcv *AEM) SEGMENTSLength() int {
 	return 0
 }
 
+func (rcv *AEM) SegmentsLength() int {
+	return rcv.SEGMENTSLength()
+}
+
 func AEMStart(builder *flatbuffers.Builder) {
 	builder.StartObject(4)
 }
 func AEMAddCCSDS_AEM_VERS(builder *flatbuffers.Builder, CCSDS_AEM_VERS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(CCSDS_AEM_VERS), 0)
 }
+func AEMAddCcsdsAemVers(builder *flatbuffers.Builder, CCSDS_AEM_VERS flatbuffers.UOffsetT) {
+	AEMAddCCSDS_AEM_VERS(builder, CCSDS_AEM_VERS)
+}
 func AEMAddCREATION_DATE(builder *flatbuffers.Builder, CREATION_DATE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(CREATION_DATE), 0)
+}
+func AEMAddCreationDate(builder *flatbuffers.Builder, CREATION_DATE flatbuffers.UOffsetT) {
+	AEMAddCREATION_DATE(builder, CREATION_DATE)
 }
 func AEMAddORIGINATOR(builder *flatbuffers.Builder, ORIGINATOR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(ORIGINATOR), 0)
 }
+func AEMAddOriginator(builder *flatbuffers.Builder, ORIGINATOR flatbuffers.UOffsetT) {
+	AEMAddORIGINATOR(builder, ORIGINATOR)
+}
 func AEMAddSEGMENTS(builder *flatbuffers.Builder, SEGMENTS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(SEGMENTS), 0)
 }
+func AEMAddSegments(builder *flatbuffers.Builder, SEGMENTS flatbuffers.UOffsetT) {
+	AEMAddSEGMENTS(builder, SEGMENTS)
+}
 func AEMStartSEGMENTSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func AEMStartSegmentsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return AEMStartSEGMENTSVector(builder, numElems)
 }
 func AEMEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

@@ -1,3 +1,3 @@
-export { STV, STVT } from './STV.js';
-export { STVReferenceFrame } from './STVReferenceFrame.js';
+export * from './STV.js';
+export * from './STVReferenceFrame.js';
 //# sourceMappingURL=main.d.ts.map

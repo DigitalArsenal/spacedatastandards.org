@@ -63,6 +63,10 @@ func (rcv *OOS) ID() []byte {
 	return nil
 }
 
+func (rcv *OOS) Id() []byte {
+	return rcv.ID()
+}
+
 /// Unique identifier
 /// Reference to parent on-orbit object
 func (rcv *OOS) ID_ON_ORBIT() []byte {
@@ -71,6 +75,10 @@ func (rcv *OOS) ID_ON_ORBIT() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *OOS) IdOnOrbit() []byte {
+	return rcv.ID_ON_ORBIT()
 }
 
 /// Reference to parent on-orbit object
@@ -83,6 +91,10 @@ func (rcv *OOS) ID_SOLAR_ARRAY() []byte {
 	return nil
 }
 
+func (rcv *OOS) IdSolarArray() []byte {
+	return rcv.ID_SOLAR_ARRAY()
+}
+
 /// Reference to solar array specification
 /// Solar array name or designation
 func (rcv *OOS) NAME() []byte {
@@ -91,6 +103,10 @@ func (rcv *OOS) NAME() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *OOS) Name() []byte {
+	return rcv.NAME()
 }
 
 /// Solar array name or designation
@@ -103,6 +119,10 @@ func (rcv *OOS) CELL_TYPE() []byte {
 	return nil
 }
 
+func (rcv *OOS) CellType() []byte {
+	return rcv.CELL_TYPE()
+}
+
 /// Solar cell type (e.g., SILICON, GAAS, MULTI_JUNCTION, THIN_FILM, PEROVSKITE)
 /// Number of solar arrays of this type
 func (rcv *OOS) QUANTITY() uint32 {
@@ -113,9 +133,17 @@ func (rcv *OOS) QUANTITY() uint32 {
 	return 0
 }
 
+func (rcv *OOS) Quantity() uint32 {
+	return rcv.QUANTITY()
+}
+
 /// Number of solar arrays of this type
 func (rcv *OOS) MutateQUANTITY(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(14, n)
+}
+
+func (rcv *OOS) MutateQuantity(n uint32) bool {
+	return rcv.MutateQUANTITY(n)
 }
 
 /// Total array area in square meters
@@ -127,9 +155,17 @@ func (rcv *OOS) AREA() float64 {
 	return 0.0
 }
 
+func (rcv *OOS) Area() float64 {
+	return rcv.AREA()
+}
+
 /// Total array area in square meters
 func (rcv *OOS) MutateAREA(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(16, n)
+}
+
+func (rcv *OOS) MutateArea(n float64) bool {
+	return rcv.MutateAREA(n)
 }
 
 /// Beginning of life power output in Watts
@@ -141,9 +177,17 @@ func (rcv *OOS) POWER_BOL() float64 {
 	return 0.0
 }
 
+func (rcv *OOS) PowerBol() float64 {
+	return rcv.POWER_BOL()
+}
+
 /// Beginning of life power output in Watts
 func (rcv *OOS) MutatePOWER_BOL(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(18, n)
+}
+
+func (rcv *OOS) MutatePowerBol(n float64) bool {
+	return rcv.MutatePOWER_BOL(n)
 }
 
 /// End of life power output in Watts
@@ -155,9 +199,17 @@ func (rcv *OOS) POWER_EOL() float64 {
 	return 0.0
 }
 
+func (rcv *OOS) PowerEol() float64 {
+	return rcv.POWER_EOL()
+}
+
 /// End of life power output in Watts
 func (rcv *OOS) MutatePOWER_EOL(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(20, n)
+}
+
+func (rcv *OOS) MutatePowerEol(n float64) bool {
+	return rcv.MutatePOWER_EOL(n)
 }
 
 /// Conversion efficiency as fraction (0.0-1.0)
@@ -169,9 +221,17 @@ func (rcv *OOS) EFFICIENCY() float64 {
 	return 0.0
 }
 
+func (rcv *OOS) Efficiency() float64 {
+	return rcv.EFFICIENCY()
+}
+
 /// Conversion efficiency as fraction (0.0-1.0)
 func (rcv *OOS) MutateEFFICIENCY(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(22, n)
+}
+
+func (rcv *OOS) MutateEfficiency(n float64) bool {
+	return rcv.MutateEFFICIENCY(n)
 }
 
 /// Degradation rate per year as fraction
@@ -183,9 +243,17 @@ func (rcv *OOS) DEGRADATION_RATE() float64 {
 	return 0.0
 }
 
+func (rcv *OOS) DegradationRate() float64 {
+	return rcv.DEGRADATION_RATE()
+}
+
 /// Degradation rate per year as fraction
 func (rcv *OOS) MutateDEGRADATION_RATE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(24, n)
+}
+
+func (rcv *OOS) MutateDegradationRate(n float64) bool {
+	return rcv.MutateDEGRADATION_RATE(n)
 }
 
 /// Number of panels per array
@@ -197,9 +265,17 @@ func (rcv *OOS) NUM_PANELS() uint32 {
 	return 0
 }
 
+func (rcv *OOS) NumPanels() uint32 {
+	return rcv.NUM_PANELS()
+}
+
 /// Number of panels per array
 func (rcv *OOS) MutateNUM_PANELS(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(26, n)
+}
+
+func (rcv *OOS) MutateNumPanels(n uint32) bool {
+	return rcv.MutateNUM_PANELS(n)
 }
 
 /// Whether the array is deployable
@@ -211,9 +287,17 @@ func (rcv *OOS) DEPLOYABLE() bool {
 	return false
 }
 
+func (rcv *OOS) Deployable() bool {
+	return rcv.DEPLOYABLE()
+}
+
 /// Whether the array is deployable
 func (rcv *OOS) MutateDEPLOYABLE(n bool) bool {
 	return rcv._tab.MutateBoolSlot(28, n)
+}
+
+func (rcv *OOS) MutateDeployable(n bool) bool {
+	return rcv.MutateDEPLOYABLE(n)
 }
 
 /// Whether the array is articulable/tracking
@@ -225,9 +309,17 @@ func (rcv *OOS) TRACKING() bool {
 	return false
 }
 
+func (rcv *OOS) Tracking() bool {
+	return rcv.TRACKING()
+}
+
 /// Whether the array is articulable/tracking
 func (rcv *OOS) MutateTRACKING(n bool) bool {
 	return rcv._tab.MutateBoolSlot(30, n)
+}
+
+func (rcv *OOS) MutateTracking(n bool) bool {
+	return rcv.MutateTRACKING(n)
 }
 
 /// Array mass in kg
@@ -239,9 +331,17 @@ func (rcv *OOS) MASS() float64 {
 	return 0.0
 }
 
+func (rcv *OOS) Mass() float64 {
+	return rcv.MASS()
+}
+
 /// Array mass in kg
 func (rcv *OOS) MutateMASS(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(32, n)
+}
+
+func (rcv *OOS) MutateMass(n float64) bool {
+	return rcv.MutateMASS(n)
 }
 
 /// Additional notes
@@ -253,6 +353,10 @@ func (rcv *OOS) NOTES() []byte {
 	return nil
 }
 
+func (rcv *OOS) Notes() []byte {
+	return rcv.NOTES()
+}
+
 /// Additional notes
 func OOSStart(builder *flatbuffers.Builder) {
 	builder.StartObject(16)
@@ -260,50 +364,98 @@ func OOSStart(builder *flatbuffers.Builder) {
 func OOSAddID(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ID), 0)
 }
+func OOSAddId(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
+	OOSAddID(builder, ID)
+}
 func OOSAddID_ON_ORBIT(builder *flatbuffers.Builder, ID_ON_ORBIT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(ID_ON_ORBIT), 0)
+}
+func OOSAddIdOnOrbit(builder *flatbuffers.Builder, ID_ON_ORBIT flatbuffers.UOffsetT) {
+	OOSAddID_ON_ORBIT(builder, ID_ON_ORBIT)
 }
 func OOSAddID_SOLAR_ARRAY(builder *flatbuffers.Builder, ID_SOLAR_ARRAY flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(ID_SOLAR_ARRAY), 0)
 }
+func OOSAddIdSolarArray(builder *flatbuffers.Builder, ID_SOLAR_ARRAY flatbuffers.UOffsetT) {
+	OOSAddID_SOLAR_ARRAY(builder, ID_SOLAR_ARRAY)
+}
 func OOSAddNAME(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(NAME), 0)
+}
+func OOSAddName(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
+	OOSAddNAME(builder, NAME)
 }
 func OOSAddCELL_TYPE(builder *flatbuffers.Builder, CELL_TYPE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(CELL_TYPE), 0)
 }
+func OOSAddCellType(builder *flatbuffers.Builder, CELL_TYPE flatbuffers.UOffsetT) {
+	OOSAddCELL_TYPE(builder, CELL_TYPE)
+}
 func OOSAddQUANTITY(builder *flatbuffers.Builder, QUANTITY uint32) {
 	builder.PrependUint32Slot(5, QUANTITY, 0)
+}
+func OOSAddQuantity(builder *flatbuffers.Builder, QUANTITY uint32) {
+	OOSAddQUANTITY(builder, QUANTITY)
 }
 func OOSAddAREA(builder *flatbuffers.Builder, AREA float64) {
 	builder.PrependFloat64Slot(6, AREA, 0.0)
 }
+func OOSAddArea(builder *flatbuffers.Builder, AREA float64) {
+	OOSAddAREA(builder, AREA)
+}
 func OOSAddPOWER_BOL(builder *flatbuffers.Builder, POWER_BOL float64) {
 	builder.PrependFloat64Slot(7, POWER_BOL, 0.0)
+}
+func OOSAddPowerBol(builder *flatbuffers.Builder, POWER_BOL float64) {
+	OOSAddPOWER_BOL(builder, POWER_BOL)
 }
 func OOSAddPOWER_EOL(builder *flatbuffers.Builder, POWER_EOL float64) {
 	builder.PrependFloat64Slot(8, POWER_EOL, 0.0)
 }
+func OOSAddPowerEol(builder *flatbuffers.Builder, POWER_EOL float64) {
+	OOSAddPOWER_EOL(builder, POWER_EOL)
+}
 func OOSAddEFFICIENCY(builder *flatbuffers.Builder, EFFICIENCY float64) {
 	builder.PrependFloat64Slot(9, EFFICIENCY, 0.0)
+}
+func OOSAddEfficiency(builder *flatbuffers.Builder, EFFICIENCY float64) {
+	OOSAddEFFICIENCY(builder, EFFICIENCY)
 }
 func OOSAddDEGRADATION_RATE(builder *flatbuffers.Builder, DEGRADATION_RATE float64) {
 	builder.PrependFloat64Slot(10, DEGRADATION_RATE, 0.0)
 }
+func OOSAddDegradationRate(builder *flatbuffers.Builder, DEGRADATION_RATE float64) {
+	OOSAddDEGRADATION_RATE(builder, DEGRADATION_RATE)
+}
 func OOSAddNUM_PANELS(builder *flatbuffers.Builder, NUM_PANELS uint32) {
 	builder.PrependUint32Slot(11, NUM_PANELS, 0)
+}
+func OOSAddNumPanels(builder *flatbuffers.Builder, NUM_PANELS uint32) {
+	OOSAddNUM_PANELS(builder, NUM_PANELS)
 }
 func OOSAddDEPLOYABLE(builder *flatbuffers.Builder, DEPLOYABLE bool) {
 	builder.PrependBoolSlot(12, DEPLOYABLE, false)
 }
+func OOSAddDeployable(builder *flatbuffers.Builder, DEPLOYABLE bool) {
+	OOSAddDEPLOYABLE(builder, DEPLOYABLE)
+}
 func OOSAddTRACKING(builder *flatbuffers.Builder, TRACKING bool) {
 	builder.PrependBoolSlot(13, TRACKING, false)
+}
+func OOSAddTracking(builder *flatbuffers.Builder, TRACKING bool) {
+	OOSAddTRACKING(builder, TRACKING)
 }
 func OOSAddMASS(builder *flatbuffers.Builder, MASS float64) {
 	builder.PrependFloat64Slot(14, MASS, 0.0)
 }
+func OOSAddMass(builder *flatbuffers.Builder, MASS float64) {
+	OOSAddMASS(builder, MASS)
+}
 func OOSAddNOTES(builder *flatbuffers.Builder, NOTES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(15, flatbuffers.UOffsetT(NOTES), 0)
+}
+func OOSAddNotes(builder *flatbuffers.Builder, NOTES flatbuffers.UOffsetT) {
+	OOSAddNOTES(builder, NOTES)
 }
 func OOSEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

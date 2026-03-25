@@ -32,7 +32,7 @@ class LocationInContainer : Table() {
     /**
      * Reference location type
      */
-    val REFERENCE_LOCATION : Byte
+    val referenceLocation : Byte
         get() {
             val o = __offset(4)
             return if(o != 0) bb.get(o + bb_pos) else 2
@@ -40,27 +40,27 @@ class LocationInContainer : Table() {
     /**
      * Offset in bits from reference location
      */
-    val OFFSET_IN_BITS : Int
+    val offsetInBits : Int
         get() {
             val o = __offset(6)
             return if(o != 0) bb.getInt(o + bb_pos) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsLocationInContainer(_bb: ByteBuffer): LocationInContainer = getRootAsLocationInContainer(_bb, LocationInContainer())
         fun getRootAsLocationInContainer(_bb: ByteBuffer, obj: LocationInContainer): LocationInContainer {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createLocationInContainer(builder: FlatBufferBuilder, REFERENCE_LOCATION: Byte, OFFSET_IN_BITS: Int) : Int {
+        fun createLocationInContainer(builder: FlatBufferBuilder, referenceLocation: Byte, offsetInBits: Int) : Int {
             builder.startTable(2)
-            addOFFSET_IN_BITS(builder, OFFSET_IN_BITS)
-            addREFERENCE_LOCATION(builder, REFERENCE_LOCATION)
+            addOFFSETINBITS(builder, offsetInBits)
+            addREFERENCELOCATION(builder, referenceLocation)
             return endLocationInContainer(builder)
         }
         fun startLocationInContainer(builder: FlatBufferBuilder) = builder.startTable(2)
-        fun addREFERENCE_LOCATION(builder: FlatBufferBuilder, REFERENCE_LOCATION: Byte) = builder.addByte(0, REFERENCE_LOCATION, 2)
-        fun addOFFSET_IN_BITS(builder: FlatBufferBuilder, OFFSET_IN_BITS: Int) = builder.addInt(1, OFFSET_IN_BITS, 0)
+        fun addREFERENCELOCATION(builder: FlatBufferBuilder, referenceLocation: Byte) = builder.addByte(0, referenceLocation, 2)
+        fun addOFFSETINBITS(builder: FlatBufferBuilder, offsetInBits: Int) = builder.addInt(1, offsetInBits, 0)
         fun endLocationInContainer(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

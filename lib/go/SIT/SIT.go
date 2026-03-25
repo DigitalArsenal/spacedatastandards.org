@@ -63,6 +63,10 @@ func (rcv *SIT) ID() []byte {
 	return nil
 }
 
+func (rcv *SIT) Id() []byte {
+	return rcv.ID()
+}
+
 /// Unique identifier for the site, BE_NUMBER
 /// Name of the site
 func (rcv *SIT) NAME() []byte {
@@ -71,6 +75,10 @@ func (rcv *SIT) NAME() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *SIT) Name() []byte {
+	return rcv.NAME()
 }
 
 /// Name of the site
@@ -83,6 +91,10 @@ func (rcv *SIT) ABBREVIATION() []byte {
 	return nil
 }
 
+func (rcv *SIT) Abbreviation() []byte {
+	return rcv.ABBREVIATION()
+}
+
 /// Abbreviation
 /// Site type as defined in SiteType enum
 func (rcv *SIT) SITE_TYPE() SiteType {
@@ -93,9 +105,17 @@ func (rcv *SIT) SITE_TYPE() SiteType {
 	return 0
 }
 
+func (rcv *SIT) SiteType() SiteType {
+	return rcv.SITE_TYPE()
+}
+
 /// Site type as defined in SiteType enum
 func (rcv *SIT) MutateSITE_TYPE(n SiteType) bool {
 	return rcv._tab.MutateInt8Slot(10, int8(n))
+}
+
+func (rcv *SIT) MutateSiteType(n SiteType) bool {
+	return rcv.MutateSITE_TYPE(n)
 }
 
 /// Site type CATCODE
@@ -105,6 +125,10 @@ func (rcv *SIT) CATCODE() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *SIT) Catcode() []byte {
+	return rcv.CATCODE()
 }
 
 /// Site type CATCODE
@@ -117,6 +141,10 @@ func (rcv *SIT) NETWORK() []byte {
 	return nil
 }
 
+func (rcv *SIT) Network() []byte {
+	return rcv.NETWORK()
+}
+
 /// Network identifier
 /// Latitude of the site
 func (rcv *SIT) LATITUDE() float32 {
@@ -127,9 +155,17 @@ func (rcv *SIT) LATITUDE() float32 {
 	return 0.0
 }
 
+func (rcv *SIT) Latitude() float32 {
+	return rcv.LATITUDE()
+}
+
 /// Latitude of the site
 func (rcv *SIT) MutateLATITUDE(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(16, n)
+}
+
+func (rcv *SIT) MutateLatitude(n float32) bool {
+	return rcv.MutateLATITUDE(n)
 }
 
 /// Longitude of the site
@@ -141,9 +177,17 @@ func (rcv *SIT) LONGITUDE() float32 {
 	return 0.0
 }
 
+func (rcv *SIT) Longitude() float32 {
+	return rcv.LONGITUDE()
+}
+
 /// Longitude of the site
 func (rcv *SIT) MutateLONGITUDE(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(18, n)
+}
+
+func (rcv *SIT) MutateLongitude(n float32) bool {
+	return rcv.MutateLONGITUDE(n)
 }
 
 /// Altitude of the site
@@ -155,9 +199,17 @@ func (rcv *SIT) ALTITUDE() float32 {
 	return 0.0
 }
 
+func (rcv *SIT) Altitude() float32 {
+	return rcv.ALTITUDE()
+}
+
 /// Altitude of the site
 func (rcv *SIT) MutateALTITUDE(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(20, n)
+}
+
+func (rcv *SIT) MutateAltitude(n float32) bool {
+	return rcv.MutateALTITUDE(n)
 }
 
 /// Geometry of the site
@@ -174,6 +226,10 @@ func (rcv *SIT) GEOMETRY(obj *Geometry) *Geometry {
 	return nil
 }
 
+func (rcv *SIT) Geometry(obj *Geometry) *Geometry {
+	return rcv.GEOMETRY(obj)
+}
+
 /// Geometry of the site
 /// Center point geometry coordinates
 func (rcv *SIT) CENTER_POINT_GEOMETRY(j int) float32 {
@@ -185,12 +241,20 @@ func (rcv *SIT) CENTER_POINT_GEOMETRY(j int) float32 {
 	return 0
 }
 
+func (rcv *SIT) CenterPointGeometry(j int) float32 {
+	return rcv.CENTER_POINT_GEOMETRY(j)
+}
+
 func (rcv *SIT) CENTER_POINT_GEOMETRYLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *SIT) CenterPointGeometryLength() int {
+	return rcv.CENTER_POINT_GEOMETRYLength()
 }
 
 /// Center point geometry coordinates
@@ -203,6 +267,10 @@ func (rcv *SIT) MutateCENTER_POINT_GEOMETRY(j int, n float32) bool {
 	return false
 }
 
+func (rcv *SIT) MutateCenterPointGeometry(j int, n float32) bool {
+	return rcv.MutateCENTER_POINT_GEOMETRY(j, n)
+}
+
 /// Classification marking of the site
 func (rcv *SIT) CLASSIFICATION() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
@@ -210,6 +278,10 @@ func (rcv *SIT) CLASSIFICATION() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *SIT) Classification() []byte {
+	return rcv.CLASSIFICATION()
 }
 
 /// Classification marking of the site
@@ -222,6 +294,10 @@ func (rcv *SIT) CTR_ID() []byte {
 	return nil
 }
 
+func (rcv *SIT) CtrId() []byte {
+	return rcv.CTR_ID()
+}
+
 /// CTR ISO 3166 Numeric code as string
 /// Identifier of the user who created the site data
 func (rcv *SIT) CREATED_BY() []byte {
@@ -230,6 +306,10 @@ func (rcv *SIT) CREATED_BY() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *SIT) CreatedBy() []byte {
+	return rcv.CREATED_BY()
 }
 
 /// Identifier of the user who created the site data
@@ -242,6 +322,10 @@ func (rcv *SIT) DESCRIPTION() []byte {
 	return nil
 }
 
+func (rcv *SIT) Description() []byte {
+	return rcv.DESCRIPTION()
+}
+
 /// Description of the site
 /// URL for the 3D model of the site
 func (rcv *SIT) MODEL_URL() []byte {
@@ -250,6 +334,10 @@ func (rcv *SIT) MODEL_URL() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *SIT) ModelUrl() []byte {
+	return rcv.MODEL_URL()
 }
 
 /// URL for the 3D model of the site
@@ -262,6 +350,10 @@ func (rcv *SIT) SOURCE() []byte {
 	return nil
 }
 
+func (rcv *SIT) Source() []byte {
+	return rcv.SOURCE()
+}
+
 /// Source of the site data
 /// Indicates if the site is taskable
 func (rcv *SIT) TASKABLE() bool {
@@ -272,9 +364,17 @@ func (rcv *SIT) TASKABLE() bool {
 	return false
 }
 
+func (rcv *SIT) Taskable() bool {
+	return rcv.TASKABLE()
+}
+
 /// Indicates if the site is taskable
 func (rcv *SIT) MutateTASKABLE(n bool) bool {
 	return rcv._tab.MutateBoolSlot(38, n)
+}
+
+func (rcv *SIT) MutateTaskable(n bool) bool {
+	return rcv.MutateTASKABLE(n)
 }
 
 /// Operational status of the site (e.g., active, inactive, under construction)
@@ -284,6 +384,10 @@ func (rcv *SIT) OPERATIONAL_STATUS() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *SIT) OperationalStatus() []byte {
+	return rcv.OPERATIONAL_STATUS()
 }
 
 /// Operational status of the site (e.g., active, inactive, under construction)
@@ -296,6 +400,10 @@ func (rcv *SIT) ESTABLISHMENT_DATE() []byte {
 	return nil
 }
 
+func (rcv *SIT) EstablishmentDate() []byte {
+	return rcv.ESTABLISHMENT_DATE()
+}
+
 /// Date of establishment
 /// Contact information for the site
 func (rcv *SIT) CONTACT_INFO() []byte {
@@ -304,6 +412,10 @@ func (rcv *SIT) CONTACT_INFO() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *SIT) ContactInfo() []byte {
+	return rcv.CONTACT_INFO()
 }
 
 /// Contact information for the site
@@ -316,6 +428,10 @@ func (rcv *SIT) ENVIRONMENTAL_IMPACT() []byte {
 	return nil
 }
 
+func (rcv *SIT) EnvironmentalImpact() []byte {
+	return rcv.ENVIRONMENTAL_IMPACT()
+}
+
 /// Environmental impact or considerations
 /// Accessibility and infrastructure details
 func (rcv *SIT) ACCESSIBILITY_INFRA() []byte {
@@ -326,6 +442,10 @@ func (rcv *SIT) ACCESSIBILITY_INFRA() []byte {
 	return nil
 }
 
+func (rcv *SIT) AccessibilityInfra() []byte {
+	return rcv.ACCESSIBILITY_INFRA()
+}
+
 /// Accessibility and infrastructure details
 /// Vector of Integrated Devices (IDM)
 func (rcv *SIT) INTEGRATED_DEVICES(obj *IDM, j int) bool {
@@ -334,10 +454,17 @@ func (rcv *SIT) INTEGRATED_DEVICES(obj *IDM, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(IDM)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *SIT) IntegratedDevices(obj *IDM, j int) bool {
+	return rcv.INTEGRATED_DEVICES(obj, j)
 }
 
 func (rcv *SIT) INTEGRATED_DEVICESLength() int {
@@ -348,6 +475,10 @@ func (rcv *SIT) INTEGRATED_DEVICESLength() int {
 	return 0
 }
 
+func (rcv *SIT) IntegratedDevicesLength() int {
+	return rcv.INTEGRATED_DEVICESLength()
+}
+
 /// Vector of Integrated Devices (IDM)
 func SITStart(builder *flatbuffers.Builder) {
 	builder.StartObject(24)
@@ -355,80 +486,158 @@ func SITStart(builder *flatbuffers.Builder) {
 func SITAddID(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ID), 0)
 }
+func SITAddId(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
+	SITAddID(builder, ID)
+}
 func SITAddNAME(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(NAME), 0)
+}
+func SITAddName(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
+	SITAddNAME(builder, NAME)
 }
 func SITAddABBREVIATION(builder *flatbuffers.Builder, ABBREVIATION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(ABBREVIATION), 0)
 }
+func SITAddAbbreviation(builder *flatbuffers.Builder, ABBREVIATION flatbuffers.UOffsetT) {
+	SITAddABBREVIATION(builder, ABBREVIATION)
+}
 func SITAddSITE_TYPE(builder *flatbuffers.Builder, SITE_TYPE SiteType) {
 	builder.PrependInt8Slot(3, int8(SITE_TYPE), 0)
+}
+func SITAddSiteType(builder *flatbuffers.Builder, SITE_TYPE SiteType) {
+	SITAddSITE_TYPE(builder, SITE_TYPE)
 }
 func SITAddCATCODE(builder *flatbuffers.Builder, CATCODE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(CATCODE), 0)
 }
+func SITAddCatcode(builder *flatbuffers.Builder, CATCODE flatbuffers.UOffsetT) {
+	SITAddCATCODE(builder, CATCODE)
+}
 func SITAddNETWORK(builder *flatbuffers.Builder, NETWORK flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(NETWORK), 0)
+}
+func SITAddNetwork(builder *flatbuffers.Builder, NETWORK flatbuffers.UOffsetT) {
+	SITAddNETWORK(builder, NETWORK)
 }
 func SITAddLATITUDE(builder *flatbuffers.Builder, LATITUDE float32) {
 	builder.PrependFloat32Slot(6, LATITUDE, 0.0)
 }
+func SITAddLatitude(builder *flatbuffers.Builder, LATITUDE float32) {
+	SITAddLATITUDE(builder, LATITUDE)
+}
 func SITAddLONGITUDE(builder *flatbuffers.Builder, LONGITUDE float32) {
 	builder.PrependFloat32Slot(7, LONGITUDE, 0.0)
+}
+func SITAddLongitude(builder *flatbuffers.Builder, LONGITUDE float32) {
+	SITAddLONGITUDE(builder, LONGITUDE)
 }
 func SITAddALTITUDE(builder *flatbuffers.Builder, ALTITUDE float32) {
 	builder.PrependFloat32Slot(8, ALTITUDE, 0.0)
 }
+func SITAddAltitude(builder *flatbuffers.Builder, ALTITUDE float32) {
+	SITAddALTITUDE(builder, ALTITUDE)
+}
 func SITAddGEOMETRY(builder *flatbuffers.Builder, GEOMETRY flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(GEOMETRY), 0)
+}
+func SITAddGeometry(builder *flatbuffers.Builder, GEOMETRY flatbuffers.UOffsetT) {
+	SITAddGEOMETRY(builder, GEOMETRY)
 }
 func SITAddCENTER_POINT_GEOMETRY(builder *flatbuffers.Builder, CENTER_POINT_GEOMETRY flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(CENTER_POINT_GEOMETRY), 0)
 }
+func SITAddCenterPointGeometry(builder *flatbuffers.Builder, CENTER_POINT_GEOMETRY flatbuffers.UOffsetT) {
+	SITAddCENTER_POINT_GEOMETRY(builder, CENTER_POINT_GEOMETRY)
+}
 func SITStartCENTER_POINT_GEOMETRYVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func SITStartCenterPointGeometryVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return SITStartCENTER_POINT_GEOMETRYVector(builder, numElems)
 }
 func SITAddCLASSIFICATION(builder *flatbuffers.Builder, CLASSIFICATION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(CLASSIFICATION), 0)
 }
+func SITAddClassification(builder *flatbuffers.Builder, CLASSIFICATION flatbuffers.UOffsetT) {
+	SITAddCLASSIFICATION(builder, CLASSIFICATION)
+}
 func SITAddCTR_ID(builder *flatbuffers.Builder, CTR_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(12, flatbuffers.UOffsetT(CTR_ID), 0)
+}
+func SITAddCtrId(builder *flatbuffers.Builder, CTR_ID flatbuffers.UOffsetT) {
+	SITAddCTR_ID(builder, CTR_ID)
 }
 func SITAddCREATED_BY(builder *flatbuffers.Builder, CREATED_BY flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(13, flatbuffers.UOffsetT(CREATED_BY), 0)
 }
+func SITAddCreatedBy(builder *flatbuffers.Builder, CREATED_BY flatbuffers.UOffsetT) {
+	SITAddCREATED_BY(builder, CREATED_BY)
+}
 func SITAddDESCRIPTION(builder *flatbuffers.Builder, DESCRIPTION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(14, flatbuffers.UOffsetT(DESCRIPTION), 0)
+}
+func SITAddDescription(builder *flatbuffers.Builder, DESCRIPTION flatbuffers.UOffsetT) {
+	SITAddDESCRIPTION(builder, DESCRIPTION)
 }
 func SITAddMODEL_URL(builder *flatbuffers.Builder, MODEL_URL flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(15, flatbuffers.UOffsetT(MODEL_URL), 0)
 }
+func SITAddModelUrl(builder *flatbuffers.Builder, MODEL_URL flatbuffers.UOffsetT) {
+	SITAddMODEL_URL(builder, MODEL_URL)
+}
 func SITAddSOURCE(builder *flatbuffers.Builder, SOURCE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(16, flatbuffers.UOffsetT(SOURCE), 0)
+}
+func SITAddSource(builder *flatbuffers.Builder, SOURCE flatbuffers.UOffsetT) {
+	SITAddSOURCE(builder, SOURCE)
 }
 func SITAddTASKABLE(builder *flatbuffers.Builder, TASKABLE bool) {
 	builder.PrependBoolSlot(17, TASKABLE, false)
 }
+func SITAddTaskable(builder *flatbuffers.Builder, TASKABLE bool) {
+	SITAddTASKABLE(builder, TASKABLE)
+}
 func SITAddOPERATIONAL_STATUS(builder *flatbuffers.Builder, OPERATIONAL_STATUS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(18, flatbuffers.UOffsetT(OPERATIONAL_STATUS), 0)
+}
+func SITAddOperationalStatus(builder *flatbuffers.Builder, OPERATIONAL_STATUS flatbuffers.UOffsetT) {
+	SITAddOPERATIONAL_STATUS(builder, OPERATIONAL_STATUS)
 }
 func SITAddESTABLISHMENT_DATE(builder *flatbuffers.Builder, ESTABLISHMENT_DATE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(19, flatbuffers.UOffsetT(ESTABLISHMENT_DATE), 0)
 }
+func SITAddEstablishmentDate(builder *flatbuffers.Builder, ESTABLISHMENT_DATE flatbuffers.UOffsetT) {
+	SITAddESTABLISHMENT_DATE(builder, ESTABLISHMENT_DATE)
+}
 func SITAddCONTACT_INFO(builder *flatbuffers.Builder, CONTACT_INFO flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(20, flatbuffers.UOffsetT(CONTACT_INFO), 0)
+}
+func SITAddContactInfo(builder *flatbuffers.Builder, CONTACT_INFO flatbuffers.UOffsetT) {
+	SITAddCONTACT_INFO(builder, CONTACT_INFO)
 }
 func SITAddENVIRONMENTAL_IMPACT(builder *flatbuffers.Builder, ENVIRONMENTAL_IMPACT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(21, flatbuffers.UOffsetT(ENVIRONMENTAL_IMPACT), 0)
 }
+func SITAddEnvironmentalImpact(builder *flatbuffers.Builder, ENVIRONMENTAL_IMPACT flatbuffers.UOffsetT) {
+	SITAddENVIRONMENTAL_IMPACT(builder, ENVIRONMENTAL_IMPACT)
+}
 func SITAddACCESSIBILITY_INFRA(builder *flatbuffers.Builder, ACCESSIBILITY_INFRA flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(22, flatbuffers.UOffsetT(ACCESSIBILITY_INFRA), 0)
+}
+func SITAddAccessibilityInfra(builder *flatbuffers.Builder, ACCESSIBILITY_INFRA flatbuffers.UOffsetT) {
+	SITAddACCESSIBILITY_INFRA(builder, ACCESSIBILITY_INFRA)
 }
 func SITAddINTEGRATED_DEVICES(builder *flatbuffers.Builder, INTEGRATED_DEVICES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(23, flatbuffers.UOffsetT(INTEGRATED_DEVICES), 0)
 }
+func SITAddIntegratedDevices(builder *flatbuffers.Builder, INTEGRATED_DEVICES flatbuffers.UOffsetT) {
+	SITAddINTEGRATED_DEVICES(builder, INTEGRATED_DEVICES)
+}
 func SITStartINTEGRATED_DEVICESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func SITStartIntegratedDevicesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return SITStartINTEGRATED_DEVICESVector(builder, numElems)
 }
 func SITEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

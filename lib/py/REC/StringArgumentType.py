@@ -2,4 +2,213 @@
 
 # namespace: 
 
-# NOTE StringArgumentType.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# String argument type
+class StringArgumentType(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = StringArgumentType()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsStringArgumentType(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def StringArgumentTypeBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x58\x54\x43", size_prefixed=size_prefixed)
+
+    # StringArgumentType
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Type name
+    # StringArgumentType
+    def NAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Short description
+    # StringArgumentType
+    def SHORT_DESCRIPTION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Long description
+    # StringArgumentType
+    def LONG_DESCRIPTION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Data encoding
+    # StringArgumentType
+    def DATA_ENCODING(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from StringDataEncoding import StringDataEncoding
+            obj = StringDataEncoding()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Initial/default value
+    # StringArgumentType
+    def INITIAL_VALUE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Restriction pattern (regex)
+    # StringArgumentType
+    def RESTRICTION_PATTERN(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+def StringArgumentTypeStart(builder):
+    builder.StartObject(6)
+
+def Start(builder):
+    StringArgumentTypeStart(builder)
+
+def StringArgumentTypeAddNAME(builder, NAME):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(NAME), 0)
+
+def AddNAME(builder, NAME):
+    StringArgumentTypeAddNAME(builder, NAME)
+
+def StringArgumentTypeAddSHORT_DESCRIPTION(builder, SHORT_DESCRIPTION):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(SHORT_DESCRIPTION), 0)
+
+def AddSHORT_DESCRIPTION(builder, SHORT_DESCRIPTION):
+    StringArgumentTypeAddSHORT_DESCRIPTION(builder, SHORT_DESCRIPTION)
+
+def StringArgumentTypeAddLONG_DESCRIPTION(builder, LONG_DESCRIPTION):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(LONG_DESCRIPTION), 0)
+
+def AddLONG_DESCRIPTION(builder, LONG_DESCRIPTION):
+    StringArgumentTypeAddLONG_DESCRIPTION(builder, LONG_DESCRIPTION)
+
+def StringArgumentTypeAddDATA_ENCODING(builder, DATA_ENCODING):
+    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(DATA_ENCODING), 0)
+
+def AddDATA_ENCODING(builder, DATA_ENCODING):
+    StringArgumentTypeAddDATA_ENCODING(builder, DATA_ENCODING)
+
+def StringArgumentTypeAddINITIAL_VALUE(builder, INITIAL_VALUE):
+    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(INITIAL_VALUE), 0)
+
+def AddINITIAL_VALUE(builder, INITIAL_VALUE):
+    StringArgumentTypeAddINITIAL_VALUE(builder, INITIAL_VALUE)
+
+def StringArgumentTypeAddRESTRICTION_PATTERN(builder, RESTRICTION_PATTERN):
+    builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(RESTRICTION_PATTERN), 0)
+
+def AddRESTRICTION_PATTERN(builder, RESTRICTION_PATTERN):
+    StringArgumentTypeAddRESTRICTION_PATTERN(builder, RESTRICTION_PATTERN)
+
+def StringArgumentTypeEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return StringArgumentTypeEnd(builder)
+
+import StringDataEncoding
+try:
+    from typing import Optional
+except:
+    pass
+
+class StringArgumentTypeT(object):
+
+    # StringArgumentTypeT
+    def __init__(
+        self,
+        NAME = None,
+        SHORT_DESCRIPTION = None,
+        LONG_DESCRIPTION = None,
+        DATA_ENCODING = None,
+        INITIAL_VALUE = None,
+        RESTRICTION_PATTERN = None,
+    ):
+        self.NAME = NAME  # type: Optional[str]
+        self.SHORT_DESCRIPTION = SHORT_DESCRIPTION  # type: Optional[str]
+        self.LONG_DESCRIPTION = LONG_DESCRIPTION  # type: Optional[str]
+        self.DATA_ENCODING = DATA_ENCODING  # type: Optional[StringDataEncoding.StringDataEncodingT]
+        self.INITIAL_VALUE = INITIAL_VALUE  # type: Optional[str]
+        self.RESTRICTION_PATTERN = RESTRICTION_PATTERN  # type: Optional[str]
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpStringArgumentType = StringArgumentType()
+        tmpStringArgumentType.Init(buf, pos)
+        return cls.InitFromObj(tmpStringArgumentType)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpStringArgumentType):
+        x = StringArgumentTypeT()
+        x._UnPack(tmpStringArgumentType)
+        return x
+
+    # StringArgumentTypeT
+    def _UnPack(self, StringArgumentType):
+        if StringArgumentType is None:
+            return
+        self.NAME = StringArgumentType.NAME()
+        self.SHORT_DESCRIPTION = StringArgumentType.SHORT_DESCRIPTION()
+        self.LONG_DESCRIPTION = StringArgumentType.LONG_DESCRIPTION()
+        if StringArgumentType.DATA_ENCODING() is not None:
+            self.DATA_ENCODING = StringDataEncoding.StringDataEncodingT.InitFromObj(StringArgumentType.DATA_ENCODING())
+        self.INITIAL_VALUE = StringArgumentType.INITIAL_VALUE()
+        self.RESTRICTION_PATTERN = StringArgumentType.RESTRICTION_PATTERN()
+
+    # StringArgumentTypeT
+    def Pack(self, builder):
+        if self.NAME is not None:
+            NAME = builder.CreateString(self.NAME)
+        if self.SHORT_DESCRIPTION is not None:
+            SHORT_DESCRIPTION = builder.CreateString(self.SHORT_DESCRIPTION)
+        if self.LONG_DESCRIPTION is not None:
+            LONG_DESCRIPTION = builder.CreateString(self.LONG_DESCRIPTION)
+        if self.DATA_ENCODING is not None:
+            DATA_ENCODING = self.DATA_ENCODING.Pack(builder)
+        if self.INITIAL_VALUE is not None:
+            INITIAL_VALUE = builder.CreateString(self.INITIAL_VALUE)
+        if self.RESTRICTION_PATTERN is not None:
+            RESTRICTION_PATTERN = builder.CreateString(self.RESTRICTION_PATTERN)
+        StringArgumentTypeStart(builder)
+        if self.NAME is not None:
+            StringArgumentTypeAddNAME(builder, NAME)
+        if self.SHORT_DESCRIPTION is not None:
+            StringArgumentTypeAddSHORT_DESCRIPTION(builder, SHORT_DESCRIPTION)
+        if self.LONG_DESCRIPTION is not None:
+            StringArgumentTypeAddLONG_DESCRIPTION(builder, LONG_DESCRIPTION)
+        if self.DATA_ENCODING is not None:
+            StringArgumentTypeAddDATA_ENCODING(builder, DATA_ENCODING)
+        if self.INITIAL_VALUE is not None:
+            StringArgumentTypeAddINITIAL_VALUE(builder, INITIAL_VALUE)
+        if self.RESTRICTION_PATTERN is not None:
+            StringArgumentTypeAddRESTRICTION_PATTERN(builder, RESTRICTION_PATTERN)
+        StringArgumentType = StringArgumentTypeEnd(builder)
+        return StringArgumentType

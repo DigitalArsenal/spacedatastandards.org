@@ -2,4 +2,8 @@
 
 # namespace: 
 
-# NOTE mtiStandard.py does not declare any structs or enums
+class mtiStandard(object):
+    STANAG_4607 = 0
+    STANAG_4545 = 1
+    CUSTOM = 2
+    UNKNOWN = 3

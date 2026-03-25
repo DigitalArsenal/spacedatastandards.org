@@ -291,6 +291,12 @@ def BEMStartBEAM_CONTOURSVector(builder, numElems):
 def StartBEAM_CONTOURSVector(builder, numElems):
     return BEMStartBEAM_CONTOURSVector(builder, numElems)
 
+def BEMCreateBEAM_CONTOURSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateBEAM_CONTOURSVector(builder, data):
+    BEMCreateBEAM_CONTOURSVector(builder, data)
+
 def BEMAddNOTES(builder, NOTES):
     builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(NOTES), 0)
 
@@ -312,30 +318,49 @@ except:
 class BEMT(object):
 
     # BEMT
-    def __init__(self):
-        self.ID = None  # type: str
-        self.BEAM_NAME = None  # type: str
-        self.ID_ENTITY = None  # type: str
-        self.ID_ANTENNA = None  # type: str
-        self.TYPE = 0  # type: int
-        self.POLARIZATION = 0  # type: int
-        self.PEAK_GAIN = 0.0  # type: float
-        self.EOC_GAIN = 0.0  # type: float
-        self.CENTER_LATITUDE = 0.0  # type: float
-        self.CENTER_LONGITUDE = 0.0  # type: float
-        self.BEAMWIDTH = 0.0  # type: float
-        self.FREQUENCY = 0.0  # type: float
-        self.EIRP = 0.0  # type: float
-        self.G_OVER_T = 0.0  # type: float
-        self.FOOTPRINT_AREA = 0.0  # type: float
-        self.BEAM_CONTOURS = None  # type: List[beamContour.beamContourT]
-        self.NOTES = None  # type: str
+    def __init__(
+        self,
+        ID = None,
+        BEAM_NAME = None,
+        ID_ENTITY = None,
+        ID_ANTENNA = None,
+        TYPE = 0,
+        POLARIZATION = 0,
+        PEAK_GAIN = 0.0,
+        EOC_GAIN = 0.0,
+        CENTER_LATITUDE = 0.0,
+        CENTER_LONGITUDE = 0.0,
+        BEAMWIDTH = 0.0,
+        FREQUENCY = 0.0,
+        EIRP = 0.0,
+        G_OVER_T = 0.0,
+        FOOTPRINT_AREA = 0.0,
+        BEAM_CONTOURS = None,
+        NOTES = None,
+    ):
+        self.ID = ID  # type: Optional[str]
+        self.BEAM_NAME = BEAM_NAME  # type: Optional[str]
+        self.ID_ENTITY = ID_ENTITY  # type: Optional[str]
+        self.ID_ANTENNA = ID_ANTENNA  # type: Optional[str]
+        self.TYPE = TYPE  # type: int
+        self.POLARIZATION = POLARIZATION  # type: int
+        self.PEAK_GAIN = PEAK_GAIN  # type: float
+        self.EOC_GAIN = EOC_GAIN  # type: float
+        self.CENTER_LATITUDE = CENTER_LATITUDE  # type: float
+        self.CENTER_LONGITUDE = CENTER_LONGITUDE  # type: float
+        self.BEAMWIDTH = BEAMWIDTH  # type: float
+        self.FREQUENCY = FREQUENCY  # type: float
+        self.EIRP = EIRP  # type: float
+        self.G_OVER_T = G_OVER_T  # type: float
+        self.FOOTPRINT_AREA = FOOTPRINT_AREA  # type: float
+        self.BEAM_CONTOURS = BEAM_CONTOURS  # type: Optional[List[beamContour.beamContourT]]
+        self.NOTES = NOTES  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        BEM = BEM()
-        BEM.Init(buf, pos)
-        return cls.InitFromObj(BEM)
+        tmpBem = BEM()
+        tmpBem.Init(buf, pos)
+        return cls.InitFromObj(tmpBem)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -343,9 +368,9 @@ class BEMT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, BEM):
+    def InitFromObj(cls, tmpBem):
         x = BEMT()
-        x._UnPack(BEM)
+        x._UnPack(tmpBem)
         return x
 
     # BEMT

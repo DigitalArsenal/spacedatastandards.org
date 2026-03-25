@@ -73,6 +73,12 @@ def ServiceSetStartSERVICESVector(builder, numElems):
 def StartSERVICESVector(builder, numElems):
     return ServiceSetStartSERVICESVector(builder, numElems)
 
+def ServiceSetCreateSERVICESVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateSERVICESVector(builder, data):
+    ServiceSetCreateSERVICESVector(builder, data)
+
 def ServiceSetEnd(builder):
     return builder.EndObject()
 
@@ -88,14 +94,17 @@ except:
 class ServiceSetT(object):
 
     # ServiceSetT
-    def __init__(self):
-        self.SERVICES = None  # type: List[Service.ServiceT]
+    def __init__(
+        self,
+        SERVICES = None,
+    ):
+        self.SERVICES = SERVICES  # type: Optional[List[Service.ServiceT]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        serviceSet = ServiceSet()
-        serviceSet.Init(buf, pos)
-        return cls.InitFromObj(serviceSet)
+        tmpServiceSet = ServiceSet()
+        tmpServiceSet.Init(buf, pos)
+        return cls.InitFromObj(tmpServiceSet)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -103,22 +112,22 @@ class ServiceSetT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, serviceSet):
+    def InitFromObj(cls, tmpServiceSet):
         x = ServiceSetT()
-        x._UnPack(serviceSet)
+        x._UnPack(tmpServiceSet)
         return x
 
     # ServiceSetT
-    def _UnPack(self, serviceSet):
-        if serviceSet is None:
+    def _UnPack(self, ServiceSet):
+        if ServiceSet is None:
             return
-        if not serviceSet.SERVICESIsNone():
+        if not ServiceSet.SERVICESIsNone():
             self.SERVICES = []
-            for i in range(serviceSet.SERVICESLength()):
-                if serviceSet.SERVICES(i) is None:
+            for i in range(ServiceSet.SERVICESLength()):
+                if ServiceSet.SERVICES(i) is None:
                     self.SERVICES.append(None)
                 else:
-                    service_ = Service.ServiceT.InitFromObj(serviceSet.SERVICES(i))
+                    service_ = Service.ServiceT.InitFromObj(ServiceSet.SERVICES(i))
                     self.SERVICES.append(service_)
 
     # ServiceSetT
@@ -134,5 +143,5 @@ class ServiceSetT(object):
         ServiceSetStart(builder)
         if self.SERVICES is not None:
             ServiceSetAddSERVICES(builder, SERVICES)
-        serviceSet = ServiceSetEnd(builder)
-        return serviceSet
+        ServiceSet = ServiceSetEnd(builder)
+        return ServiceSet

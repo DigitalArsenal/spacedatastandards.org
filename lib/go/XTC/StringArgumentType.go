@@ -51,6 +51,10 @@ func (rcv *StringArgumentType) NAME() []byte {
 	return nil
 }
 
+func (rcv *StringArgumentType) Name() []byte {
+	return rcv.NAME()
+}
+
 /// Type name
 /// Short description
 func (rcv *StringArgumentType) SHORT_DESCRIPTION() []byte {
@@ -61,6 +65,10 @@ func (rcv *StringArgumentType) SHORT_DESCRIPTION() []byte {
 	return nil
 }
 
+func (rcv *StringArgumentType) ShortDescription() []byte {
+	return rcv.SHORT_DESCRIPTION()
+}
+
 /// Short description
 /// Long description
 func (rcv *StringArgumentType) LONG_DESCRIPTION() []byte {
@@ -69,6 +77,10 @@ func (rcv *StringArgumentType) LONG_DESCRIPTION() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *StringArgumentType) LongDescription() []byte {
+	return rcv.LONG_DESCRIPTION()
 }
 
 /// Long description
@@ -86,6 +98,10 @@ func (rcv *StringArgumentType) DATA_ENCODING(obj *StringDataEncoding) *StringDat
 	return nil
 }
 
+func (rcv *StringArgumentType) DataEncoding(obj *StringDataEncoding) *StringDataEncoding {
+	return rcv.DATA_ENCODING(obj)
+}
+
 /// Data encoding
 /// Initial/default value
 func (rcv *StringArgumentType) INITIAL_VALUE() []byte {
@@ -94,6 +110,10 @@ func (rcv *StringArgumentType) INITIAL_VALUE() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *StringArgumentType) InitialValue() []byte {
+	return rcv.INITIAL_VALUE()
 }
 
 /// Initial/default value
@@ -106,6 +126,10 @@ func (rcv *StringArgumentType) RESTRICTION_PATTERN() []byte {
 	return nil
 }
 
+func (rcv *StringArgumentType) RestrictionPattern() []byte {
+	return rcv.RESTRICTION_PATTERN()
+}
+
 /// Restriction pattern (regex)
 func StringArgumentTypeStart(builder *flatbuffers.Builder) {
 	builder.StartObject(6)
@@ -113,20 +137,38 @@ func StringArgumentTypeStart(builder *flatbuffers.Builder) {
 func StringArgumentTypeAddNAME(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(NAME), 0)
 }
+func StringArgumentTypeAddName(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
+	StringArgumentTypeAddNAME(builder, NAME)
+}
 func StringArgumentTypeAddSHORT_DESCRIPTION(builder *flatbuffers.Builder, SHORT_DESCRIPTION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(SHORT_DESCRIPTION), 0)
+}
+func StringArgumentTypeAddShortDescription(builder *flatbuffers.Builder, SHORT_DESCRIPTION flatbuffers.UOffsetT) {
+	StringArgumentTypeAddSHORT_DESCRIPTION(builder, SHORT_DESCRIPTION)
 }
 func StringArgumentTypeAddLONG_DESCRIPTION(builder *flatbuffers.Builder, LONG_DESCRIPTION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(LONG_DESCRIPTION), 0)
 }
+func StringArgumentTypeAddLongDescription(builder *flatbuffers.Builder, LONG_DESCRIPTION flatbuffers.UOffsetT) {
+	StringArgumentTypeAddLONG_DESCRIPTION(builder, LONG_DESCRIPTION)
+}
 func StringArgumentTypeAddDATA_ENCODING(builder *flatbuffers.Builder, DATA_ENCODING flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(DATA_ENCODING), 0)
+}
+func StringArgumentTypeAddDataEncoding(builder *flatbuffers.Builder, DATA_ENCODING flatbuffers.UOffsetT) {
+	StringArgumentTypeAddDATA_ENCODING(builder, DATA_ENCODING)
 }
 func StringArgumentTypeAddINITIAL_VALUE(builder *flatbuffers.Builder, INITIAL_VALUE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(INITIAL_VALUE), 0)
 }
+func StringArgumentTypeAddInitialValue(builder *flatbuffers.Builder, INITIAL_VALUE flatbuffers.UOffsetT) {
+	StringArgumentTypeAddINITIAL_VALUE(builder, INITIAL_VALUE)
+}
 func StringArgumentTypeAddRESTRICTION_PATTERN(builder *flatbuffers.Builder, RESTRICTION_PATTERN flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(RESTRICTION_PATTERN), 0)
+}
+func StringArgumentTypeAddRestrictionPattern(builder *flatbuffers.Builder, RESTRICTION_PATTERN flatbuffers.UOffsetT) {
+	StringArgumentTypeAddRESTRICTION_PATTERN(builder, RESTRICTION_PATTERN)
 }
 func StringArgumentTypeEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

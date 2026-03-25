@@ -101,17 +101,23 @@ def End(builder):
 class GJNPositionT(object):
 
     # GJNPositionT
-    def __init__(self):
-        self.LONGITUDE = 0.0  # type: float
-        self.LATITUDE = 0.0  # type: float
-        self.ALTITUDE = 0.0  # type: float
-        self.HAS_ALTITUDE = False  # type: bool
+    def __init__(
+        self,
+        LONGITUDE = 0.0,
+        LATITUDE = 0.0,
+        ALTITUDE = 0.0,
+        HAS_ALTITUDE = False,
+    ):
+        self.LONGITUDE = LONGITUDE  # type: float
+        self.LATITUDE = LATITUDE  # type: float
+        self.ALTITUDE = ALTITUDE  # type: float
+        self.HAS_ALTITUDE = HAS_ALTITUDE  # type: bool
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        gjnposition = GJNPosition()
-        gjnposition.Init(buf, pos)
-        return cls.InitFromObj(gjnposition)
+        tmpGjnposition = GJNPosition()
+        tmpGjnposition.Init(buf, pos)
+        return cls.InitFromObj(tmpGjnposition)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -119,19 +125,19 @@ class GJNPositionT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, gjnposition):
+    def InitFromObj(cls, tmpGjnposition):
         x = GJNPositionT()
-        x._UnPack(gjnposition)
+        x._UnPack(tmpGjnposition)
         return x
 
     # GJNPositionT
-    def _UnPack(self, gjnposition):
-        if gjnposition is None:
+    def _UnPack(self, GJNPosition):
+        if GJNPosition is None:
             return
-        self.LONGITUDE = gjnposition.LONGITUDE()
-        self.LATITUDE = gjnposition.LATITUDE()
-        self.ALTITUDE = gjnposition.ALTITUDE()
-        self.HAS_ALTITUDE = gjnposition.HAS_ALTITUDE()
+        self.LONGITUDE = GJNPosition.LONGITUDE()
+        self.LATITUDE = GJNPosition.LATITUDE()
+        self.ALTITUDE = GJNPosition.ALTITUDE()
+        self.HAS_ALTITUDE = GJNPosition.HAS_ALTITUDE()
 
     # GJNPositionT
     def Pack(self, builder):
@@ -140,5 +146,5 @@ class GJNPositionT(object):
         GJNPositionAddLATITUDE(builder, self.LATITUDE)
         GJNPositionAddALTITUDE(builder, self.ALTITUDE)
         GJNPositionAddHAS_ALTITUDE(builder, self.HAS_ALTITUDE)
-        gjnposition = GJNPositionEnd(builder)
-        return gjnposition
+        GJNPosition = GJNPositionEnd(builder)
+        return GJNPosition

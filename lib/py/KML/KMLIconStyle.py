@@ -171,22 +171,33 @@ def End(builder):
 class KMLIconStyleT(object):
 
     # KMLIconStyleT
-    def __init__(self):
-        self.COLOR = None  # type: str
-        self.COLOR_MODE = 0  # type: int
-        self.SCALE = 0.0  # type: float
-        self.HEADING = 0.0  # type: float
-        self.ICON_HREF = None  # type: str
-        self.HOTSPOT_X = 0.0  # type: float
-        self.HOTSPOT_Y = 0.0  # type: float
-        self.HOTSPOT_X_UNITS = 0  # type: int
-        self.HOTSPOT_Y_UNITS = 0  # type: int
+    def __init__(
+        self,
+        COLOR = None,
+        COLOR_MODE = 0,
+        SCALE = 0.0,
+        HEADING = 0.0,
+        ICON_HREF = None,
+        HOTSPOT_X = 0.0,
+        HOTSPOT_Y = 0.0,
+        HOTSPOT_X_UNITS = 0,
+        HOTSPOT_Y_UNITS = 0,
+    ):
+        self.COLOR = COLOR  # type: Optional[str]
+        self.COLOR_MODE = COLOR_MODE  # type: int
+        self.SCALE = SCALE  # type: float
+        self.HEADING = HEADING  # type: float
+        self.ICON_HREF = ICON_HREF  # type: Optional[str]
+        self.HOTSPOT_X = HOTSPOT_X  # type: float
+        self.HOTSPOT_Y = HOTSPOT_Y  # type: float
+        self.HOTSPOT_X_UNITS = HOTSPOT_X_UNITS  # type: int
+        self.HOTSPOT_Y_UNITS = HOTSPOT_Y_UNITS  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        kmliconStyle = KMLIconStyle()
-        kmliconStyle.Init(buf, pos)
-        return cls.InitFromObj(kmliconStyle)
+        tmpKmliconStyle = KMLIconStyle()
+        tmpKmliconStyle.Init(buf, pos)
+        return cls.InitFromObj(tmpKmliconStyle)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -194,24 +205,24 @@ class KMLIconStyleT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, kmliconStyle):
+    def InitFromObj(cls, tmpKmliconStyle):
         x = KMLIconStyleT()
-        x._UnPack(kmliconStyle)
+        x._UnPack(tmpKmliconStyle)
         return x
 
     # KMLIconStyleT
-    def _UnPack(self, kmliconStyle):
-        if kmliconStyle is None:
+    def _UnPack(self, KMLIconStyle):
+        if KMLIconStyle is None:
             return
-        self.COLOR = kmliconStyle.COLOR()
-        self.COLOR_MODE = kmliconStyle.COLOR_MODE()
-        self.SCALE = kmliconStyle.SCALE()
-        self.HEADING = kmliconStyle.HEADING()
-        self.ICON_HREF = kmliconStyle.ICON_HREF()
-        self.HOTSPOT_X = kmliconStyle.HOTSPOT_X()
-        self.HOTSPOT_Y = kmliconStyle.HOTSPOT_Y()
-        self.HOTSPOT_X_UNITS = kmliconStyle.HOTSPOT_X_UNITS()
-        self.HOTSPOT_Y_UNITS = kmliconStyle.HOTSPOT_Y_UNITS()
+        self.COLOR = KMLIconStyle.COLOR()
+        self.COLOR_MODE = KMLIconStyle.COLOR_MODE()
+        self.SCALE = KMLIconStyle.SCALE()
+        self.HEADING = KMLIconStyle.HEADING()
+        self.ICON_HREF = KMLIconStyle.ICON_HREF()
+        self.HOTSPOT_X = KMLIconStyle.HOTSPOT_X()
+        self.HOTSPOT_Y = KMLIconStyle.HOTSPOT_Y()
+        self.HOTSPOT_X_UNITS = KMLIconStyle.HOTSPOT_X_UNITS()
+        self.HOTSPOT_Y_UNITS = KMLIconStyle.HOTSPOT_Y_UNITS()
 
     # KMLIconStyleT
     def Pack(self, builder):
@@ -231,5 +242,5 @@ class KMLIconStyleT(object):
         KMLIconStyleAddHOTSPOT_Y(builder, self.HOTSPOT_Y)
         KMLIconStyleAddHOTSPOT_X_UNITS(builder, self.HOTSPOT_X_UNITS)
         KMLIconStyleAddHOTSPOT_Y_UNITS(builder, self.HOTSPOT_Y_UNITS)
-        kmliconStyle = KMLIconStyleEnd(builder)
-        return kmliconStyle
+        KMLIconStyle = KMLIconStyleEnd(builder)
+        return KMLIconStyle

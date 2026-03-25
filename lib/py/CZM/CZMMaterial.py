@@ -144,18 +144,25 @@ except:
 class CZMMaterialT(object):
 
     # CZMMaterialT
-    def __init__(self):
-        self.SOLID_COLOR = None  # type: Optional[CZMSolidColorMaterial.CZMSolidColorMaterialT]
-        self.IMAGE = None  # type: Optional[CZMImageMaterial.CZMImageMaterialT]
-        self.GRID = None  # type: Optional[CZMGridMaterial.CZMGridMaterialT]
-        self.STRIPE = None  # type: Optional[CZMStripeMaterial.CZMStripeMaterialT]
-        self.CHECKERBOARD = None  # type: Optional[CZMCheckerboardMaterial.CZMCheckerboardMaterialT]
+    def __init__(
+        self,
+        SOLID_COLOR = None,
+        IMAGE = None,
+        GRID = None,
+        STRIPE = None,
+        CHECKERBOARD = None,
+    ):
+        self.SOLID_COLOR = SOLID_COLOR  # type: Optional[CZMSolidColorMaterial.CZMSolidColorMaterialT]
+        self.IMAGE = IMAGE  # type: Optional[CZMImageMaterial.CZMImageMaterialT]
+        self.GRID = GRID  # type: Optional[CZMGridMaterial.CZMGridMaterialT]
+        self.STRIPE = STRIPE  # type: Optional[CZMStripeMaterial.CZMStripeMaterialT]
+        self.CHECKERBOARD = CHECKERBOARD  # type: Optional[CZMCheckerboardMaterial.CZMCheckerboardMaterialT]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        czmmaterial = CZMMaterial()
-        czmmaterial.Init(buf, pos)
-        return cls.InitFromObj(czmmaterial)
+        tmpCzmmaterial = CZMMaterial()
+        tmpCzmmaterial.Init(buf, pos)
+        return cls.InitFromObj(tmpCzmmaterial)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -163,25 +170,25 @@ class CZMMaterialT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, czmmaterial):
+    def InitFromObj(cls, tmpCzmmaterial):
         x = CZMMaterialT()
-        x._UnPack(czmmaterial)
+        x._UnPack(tmpCzmmaterial)
         return x
 
     # CZMMaterialT
-    def _UnPack(self, czmmaterial):
-        if czmmaterial is None:
+    def _UnPack(self, CZMMaterial):
+        if CZMMaterial is None:
             return
-        if czmmaterial.SOLID_COLOR() is not None:
-            self.SOLID_COLOR = CZMSolidColorMaterial.CZMSolidColorMaterialT.InitFromObj(czmmaterial.SOLID_COLOR())
-        if czmmaterial.IMAGE() is not None:
-            self.IMAGE = CZMImageMaterial.CZMImageMaterialT.InitFromObj(czmmaterial.IMAGE())
-        if czmmaterial.GRID() is not None:
-            self.GRID = CZMGridMaterial.CZMGridMaterialT.InitFromObj(czmmaterial.GRID())
-        if czmmaterial.STRIPE() is not None:
-            self.STRIPE = CZMStripeMaterial.CZMStripeMaterialT.InitFromObj(czmmaterial.STRIPE())
-        if czmmaterial.CHECKERBOARD() is not None:
-            self.CHECKERBOARD = CZMCheckerboardMaterial.CZMCheckerboardMaterialT.InitFromObj(czmmaterial.CHECKERBOARD())
+        if CZMMaterial.SOLID_COLOR() is not None:
+            self.SOLID_COLOR = CZMSolidColorMaterial.CZMSolidColorMaterialT.InitFromObj(CZMMaterial.SOLID_COLOR())
+        if CZMMaterial.IMAGE() is not None:
+            self.IMAGE = CZMImageMaterial.CZMImageMaterialT.InitFromObj(CZMMaterial.IMAGE())
+        if CZMMaterial.GRID() is not None:
+            self.GRID = CZMGridMaterial.CZMGridMaterialT.InitFromObj(CZMMaterial.GRID())
+        if CZMMaterial.STRIPE() is not None:
+            self.STRIPE = CZMStripeMaterial.CZMStripeMaterialT.InitFromObj(CZMMaterial.STRIPE())
+        if CZMMaterial.CHECKERBOARD() is not None:
+            self.CHECKERBOARD = CZMCheckerboardMaterial.CZMCheckerboardMaterialT.InitFromObj(CZMMaterial.CHECKERBOARD())
 
     # CZMMaterialT
     def Pack(self, builder):
@@ -206,5 +213,5 @@ class CZMMaterialT(object):
             CZMMaterialAddSTRIPE(builder, STRIPE)
         if self.CHECKERBOARD is not None:
             CZMMaterialAddCHECKERBOARD(builder, CHECKERBOARD)
-        czmmaterial = CZMMaterialEnd(builder)
-        return czmmaterial
+        CZMMaterial = CZMMaterialEnd(builder)
+        return CZMMaterial

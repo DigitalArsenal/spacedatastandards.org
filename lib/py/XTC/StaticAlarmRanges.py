@@ -140,18 +140,25 @@ except:
 class StaticAlarmRangesT(object):
 
     # StaticAlarmRangesT
-    def __init__(self):
-        self.WATCH_RANGE = None  # type: Optional[AlarmRange.AlarmRangeT]
-        self.WARNING_RANGE = None  # type: Optional[AlarmRange.AlarmRangeT]
-        self.DISTRESS_RANGE = None  # type: Optional[AlarmRange.AlarmRangeT]
-        self.CRITICAL_RANGE = None  # type: Optional[AlarmRange.AlarmRangeT]
-        self.SEVERE_RANGE = None  # type: Optional[AlarmRange.AlarmRangeT]
+    def __init__(
+        self,
+        WATCH_RANGE = None,
+        WARNING_RANGE = None,
+        DISTRESS_RANGE = None,
+        CRITICAL_RANGE = None,
+        SEVERE_RANGE = None,
+    ):
+        self.WATCH_RANGE = WATCH_RANGE  # type: Optional[AlarmRange.AlarmRangeT]
+        self.WARNING_RANGE = WARNING_RANGE  # type: Optional[AlarmRange.AlarmRangeT]
+        self.DISTRESS_RANGE = DISTRESS_RANGE  # type: Optional[AlarmRange.AlarmRangeT]
+        self.CRITICAL_RANGE = CRITICAL_RANGE  # type: Optional[AlarmRange.AlarmRangeT]
+        self.SEVERE_RANGE = SEVERE_RANGE  # type: Optional[AlarmRange.AlarmRangeT]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        staticAlarmRanges = StaticAlarmRanges()
-        staticAlarmRanges.Init(buf, pos)
-        return cls.InitFromObj(staticAlarmRanges)
+        tmpStaticAlarmRanges = StaticAlarmRanges()
+        tmpStaticAlarmRanges.Init(buf, pos)
+        return cls.InitFromObj(tmpStaticAlarmRanges)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -159,25 +166,25 @@ class StaticAlarmRangesT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, staticAlarmRanges):
+    def InitFromObj(cls, tmpStaticAlarmRanges):
         x = StaticAlarmRangesT()
-        x._UnPack(staticAlarmRanges)
+        x._UnPack(tmpStaticAlarmRanges)
         return x
 
     # StaticAlarmRangesT
-    def _UnPack(self, staticAlarmRanges):
-        if staticAlarmRanges is None:
+    def _UnPack(self, StaticAlarmRanges):
+        if StaticAlarmRanges is None:
             return
-        if staticAlarmRanges.WATCH_RANGE() is not None:
-            self.WATCH_RANGE = AlarmRange.AlarmRangeT.InitFromObj(staticAlarmRanges.WATCH_RANGE())
-        if staticAlarmRanges.WARNING_RANGE() is not None:
-            self.WARNING_RANGE = AlarmRange.AlarmRangeT.InitFromObj(staticAlarmRanges.WARNING_RANGE())
-        if staticAlarmRanges.DISTRESS_RANGE() is not None:
-            self.DISTRESS_RANGE = AlarmRange.AlarmRangeT.InitFromObj(staticAlarmRanges.DISTRESS_RANGE())
-        if staticAlarmRanges.CRITICAL_RANGE() is not None:
-            self.CRITICAL_RANGE = AlarmRange.AlarmRangeT.InitFromObj(staticAlarmRanges.CRITICAL_RANGE())
-        if staticAlarmRanges.SEVERE_RANGE() is not None:
-            self.SEVERE_RANGE = AlarmRange.AlarmRangeT.InitFromObj(staticAlarmRanges.SEVERE_RANGE())
+        if StaticAlarmRanges.WATCH_RANGE() is not None:
+            self.WATCH_RANGE = AlarmRange.AlarmRangeT.InitFromObj(StaticAlarmRanges.WATCH_RANGE())
+        if StaticAlarmRanges.WARNING_RANGE() is not None:
+            self.WARNING_RANGE = AlarmRange.AlarmRangeT.InitFromObj(StaticAlarmRanges.WARNING_RANGE())
+        if StaticAlarmRanges.DISTRESS_RANGE() is not None:
+            self.DISTRESS_RANGE = AlarmRange.AlarmRangeT.InitFromObj(StaticAlarmRanges.DISTRESS_RANGE())
+        if StaticAlarmRanges.CRITICAL_RANGE() is not None:
+            self.CRITICAL_RANGE = AlarmRange.AlarmRangeT.InitFromObj(StaticAlarmRanges.CRITICAL_RANGE())
+        if StaticAlarmRanges.SEVERE_RANGE() is not None:
+            self.SEVERE_RANGE = AlarmRange.AlarmRangeT.InitFromObj(StaticAlarmRanges.SEVERE_RANGE())
 
     # StaticAlarmRangesT
     def Pack(self, builder):
@@ -202,5 +209,5 @@ class StaticAlarmRangesT(object):
             StaticAlarmRangesAddCRITICAL_RANGE(builder, CRITICAL_RANGE)
         if self.SEVERE_RANGE is not None:
             StaticAlarmRangesAddSEVERE_RANGE(builder, SEVERE_RANGE)
-        staticAlarmRanges = StaticAlarmRangesEnd(builder)
-        return staticAlarmRanges
+        StaticAlarmRanges = StaticAlarmRangesEnd(builder)
+        return StaticAlarmRanges

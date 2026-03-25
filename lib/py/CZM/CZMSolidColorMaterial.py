@@ -68,14 +68,17 @@ except:
 class CZMSolidColorMaterialT(object):
 
     # CZMSolidColorMaterialT
-    def __init__(self):
-        self.COLOR = None  # type: Optional[CZMColor.CZMColorT]
+    def __init__(
+        self,
+        COLOR = None,
+    ):
+        self.COLOR = COLOR  # type: Optional[CZMColor.CZMColorT]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        czmsolidColorMaterial = CZMSolidColorMaterial()
-        czmsolidColorMaterial.Init(buf, pos)
-        return cls.InitFromObj(czmsolidColorMaterial)
+        tmpCzmsolidColorMaterial = CZMSolidColorMaterial()
+        tmpCzmsolidColorMaterial.Init(buf, pos)
+        return cls.InitFromObj(tmpCzmsolidColorMaterial)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -83,17 +86,17 @@ class CZMSolidColorMaterialT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, czmsolidColorMaterial):
+    def InitFromObj(cls, tmpCzmsolidColorMaterial):
         x = CZMSolidColorMaterialT()
-        x._UnPack(czmsolidColorMaterial)
+        x._UnPack(tmpCzmsolidColorMaterial)
         return x
 
     # CZMSolidColorMaterialT
-    def _UnPack(self, czmsolidColorMaterial):
-        if czmsolidColorMaterial is None:
+    def _UnPack(self, CZMSolidColorMaterial):
+        if CZMSolidColorMaterial is None:
             return
-        if czmsolidColorMaterial.COLOR() is not None:
-            self.COLOR = CZMColor.CZMColorT.InitFromObj(czmsolidColorMaterial.COLOR())
+        if CZMSolidColorMaterial.COLOR() is not None:
+            self.COLOR = CZMColor.CZMColorT.InitFromObj(CZMSolidColorMaterial.COLOR())
 
     # CZMSolidColorMaterialT
     def Pack(self, builder):
@@ -102,5 +105,5 @@ class CZMSolidColorMaterialT(object):
         CZMSolidColorMaterialStart(builder)
         if self.COLOR is not None:
             CZMSolidColorMaterialAddCOLOR(builder, COLOR)
-        czmsolidColorMaterial = CZMSolidColorMaterialEnd(builder)
-        return czmsolidColorMaterial
+        CZMSolidColorMaterial = CZMSolidColorMaterialEnd(builder)
+        return CZMSolidColorMaterial

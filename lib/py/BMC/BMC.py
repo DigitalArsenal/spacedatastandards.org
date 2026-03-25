@@ -188,24 +188,37 @@ def End(builder):
 class BMCT(object):
 
     # BMCT
-    def __init__(self):
-        self.ID = None  # type: str
-        self.TYPE = None  # type: str
-        self.CONTOUR_IDX = 0  # type: int
-        self.GAIN = 0.0  # type: float
-        self.REGION_NAME = None  # type: str
-        self.GEOGRAPHY = None  # type: str
-        self.GEOGRAPHY_TEXT = None  # type: str
-        self.GEOGRAPHY_JSON = None  # type: str
-        self.GEOGRAPHY_TYPE = None  # type: str
-        self.GEOGRAPHY_NDIMS = 0  # type: int
-        self.GEOGRAPHY_SRID = 0  # type: int
+    def __init__(
+        self,
+        ID = None,
+        TYPE = None,
+        CONTOUR_IDX = 0,
+        GAIN = 0.0,
+        REGION_NAME = None,
+        GEOGRAPHY = None,
+        GEOGRAPHY_TEXT = None,
+        GEOGRAPHY_JSON = None,
+        GEOGRAPHY_TYPE = None,
+        GEOGRAPHY_NDIMS = 0,
+        GEOGRAPHY_SRID = 0,
+    ):
+        self.ID = ID  # type: Optional[str]
+        self.TYPE = TYPE  # type: Optional[str]
+        self.CONTOUR_IDX = CONTOUR_IDX  # type: int
+        self.GAIN = GAIN  # type: float
+        self.REGION_NAME = REGION_NAME  # type: Optional[str]
+        self.GEOGRAPHY = GEOGRAPHY  # type: Optional[str]
+        self.GEOGRAPHY_TEXT = GEOGRAPHY_TEXT  # type: Optional[str]
+        self.GEOGRAPHY_JSON = GEOGRAPHY_JSON  # type: Optional[str]
+        self.GEOGRAPHY_TYPE = GEOGRAPHY_TYPE  # type: Optional[str]
+        self.GEOGRAPHY_NDIMS = GEOGRAPHY_NDIMS  # type: int
+        self.GEOGRAPHY_SRID = GEOGRAPHY_SRID  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        BMC = BMC()
-        BMC.Init(buf, pos)
-        return cls.InitFromObj(BMC)
+        tmpBmc = BMC()
+        tmpBmc.Init(buf, pos)
+        return cls.InitFromObj(tmpBmc)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -213,9 +226,9 @@ class BMCT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, BMC):
+    def InitFromObj(cls, tmpBmc):
         x = BMCT()
-        x._UnPack(BMC)
+        x._UnPack(tmpBmc)
         return x
 
     # BMCT

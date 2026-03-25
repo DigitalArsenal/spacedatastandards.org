@@ -174,6 +174,12 @@ def KMLTrackStartWHENVector(builder, numElems):
 def StartWHENVector(builder, numElems):
     return KMLTrackStartWHENVector(builder, numElems)
 
+def KMLTrackCreateWHENVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateWHENVector(builder, data):
+    KMLTrackCreateWHENVector(builder, data)
+
 def KMLTrackAddCOORDS(builder, COORDS):
     builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(COORDS), 0)
 
@@ -186,6 +192,12 @@ def KMLTrackStartCOORDSVector(builder, numElems):
 def StartCOORDSVector(builder, numElems):
     return KMLTrackStartCOORDSVector(builder, numElems)
 
+def KMLTrackCreateCOORDSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateCOORDSVector(builder, data):
+    KMLTrackCreateCOORDSVector(builder, data)
+
 def KMLTrackAddANGLES(builder, ANGLES):
     builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(ANGLES), 0)
 
@@ -197,6 +209,12 @@ def KMLTrackStartANGLESVector(builder, numElems):
 
 def StartANGLESVector(builder, numElems):
     return KMLTrackStartANGLESVector(builder, numElems)
+
+def KMLTrackCreateANGLESVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateANGLESVector(builder, data):
+    KMLTrackCreateANGLESVector(builder, data)
 
 def KMLTrackAddMODEL(builder, MODEL):
     builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(MODEL), 0)
@@ -220,20 +238,29 @@ except:
 class KMLTrackT(object):
 
     # KMLTrackT
-    def __init__(self):
-        self.EXTRUDE = False  # type: bool
-        self.TESSELLATE = False  # type: bool
-        self.ALTITUDE_MODE = 0  # type: int
-        self.WHEN = None  # type: List[str]
-        self.COORDS = None  # type: List[KMLCoordinate.KMLCoordinateT]
-        self.ANGLES = None  # type: List[KMLCoordinate.KMLCoordinateT]
-        self.MODEL = None  # type: Optional[KMLModel.KMLModelT]
+    def __init__(
+        self,
+        EXTRUDE = False,
+        TESSELLATE = False,
+        ALTITUDE_MODE = 0,
+        WHEN = None,
+        COORDS = None,
+        ANGLES = None,
+        MODEL = None,
+    ):
+        self.EXTRUDE = EXTRUDE  # type: bool
+        self.TESSELLATE = TESSELLATE  # type: bool
+        self.ALTITUDE_MODE = ALTITUDE_MODE  # type: int
+        self.WHEN = WHEN  # type: Optional[List[Optional[str]]]
+        self.COORDS = COORDS  # type: Optional[List[KMLCoordinate.KMLCoordinateT]]
+        self.ANGLES = ANGLES  # type: Optional[List[KMLCoordinate.KMLCoordinateT]]
+        self.MODEL = MODEL  # type: Optional[KMLModel.KMLModelT]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        kmltrack = KMLTrack()
-        kmltrack.Init(buf, pos)
-        return cls.InitFromObj(kmltrack)
+        tmpKmltrack = KMLTrack()
+        tmpKmltrack.Init(buf, pos)
+        return cls.InitFromObj(tmpKmltrack)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -241,40 +268,40 @@ class KMLTrackT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, kmltrack):
+    def InitFromObj(cls, tmpKmltrack):
         x = KMLTrackT()
-        x._UnPack(kmltrack)
+        x._UnPack(tmpKmltrack)
         return x
 
     # KMLTrackT
-    def _UnPack(self, kmltrack):
-        if kmltrack is None:
+    def _UnPack(self, KMLTrack):
+        if KMLTrack is None:
             return
-        self.EXTRUDE = kmltrack.EXTRUDE()
-        self.TESSELLATE = kmltrack.TESSELLATE()
-        self.ALTITUDE_MODE = kmltrack.ALTITUDE_MODE()
-        if not kmltrack.WHENIsNone():
+        self.EXTRUDE = KMLTrack.EXTRUDE()
+        self.TESSELLATE = KMLTrack.TESSELLATE()
+        self.ALTITUDE_MODE = KMLTrack.ALTITUDE_MODE()
+        if not KMLTrack.WHENIsNone():
             self.WHEN = []
-            for i in range(kmltrack.WHENLength()):
-                self.WHEN.append(kmltrack.WHEN(i))
-        if not kmltrack.COORDSIsNone():
+            for i in range(KMLTrack.WHENLength()):
+                self.WHEN.append(KMLTrack.WHEN(i))
+        if not KMLTrack.COORDSIsNone():
             self.COORDS = []
-            for i in range(kmltrack.COORDSLength()):
-                if kmltrack.COORDS(i) is None:
+            for i in range(KMLTrack.COORDSLength()):
+                if KMLTrack.COORDS(i) is None:
                     self.COORDS.append(None)
                 else:
-                    kMLCoordinate_ = KMLCoordinate.KMLCoordinateT.InitFromObj(kmltrack.COORDS(i))
+                    kMLCoordinate_ = KMLCoordinate.KMLCoordinateT.InitFromObj(KMLTrack.COORDS(i))
                     self.COORDS.append(kMLCoordinate_)
-        if not kmltrack.ANGLESIsNone():
+        if not KMLTrack.ANGLESIsNone():
             self.ANGLES = []
-            for i in range(kmltrack.ANGLESLength()):
-                if kmltrack.ANGLES(i) is None:
+            for i in range(KMLTrack.ANGLESLength()):
+                if KMLTrack.ANGLES(i) is None:
                     self.ANGLES.append(None)
                 else:
-                    kMLCoordinate_ = KMLCoordinate.KMLCoordinateT.InitFromObj(kmltrack.ANGLES(i))
+                    kMLCoordinate_ = KMLCoordinate.KMLCoordinateT.InitFromObj(KMLTrack.ANGLES(i))
                     self.ANGLES.append(kMLCoordinate_)
-        if kmltrack.MODEL() is not None:
-            self.MODEL = KMLModel.KMLModelT.InitFromObj(kmltrack.MODEL())
+        if KMLTrack.MODEL() is not None:
+            self.MODEL = KMLModel.KMLModelT.InitFromObj(KMLTrack.MODEL())
 
     # KMLTrackT
     def Pack(self, builder):
@@ -316,5 +343,5 @@ class KMLTrackT(object):
             KMLTrackAddANGLES(builder, ANGLES)
         if self.MODEL is not None:
             KMLTrackAddMODEL(builder, MODEL)
-        kmltrack = KMLTrackEnd(builder)
-        return kmltrack
+        KMLTrack = KMLTrackEnd(builder)
+        return KMLTrack

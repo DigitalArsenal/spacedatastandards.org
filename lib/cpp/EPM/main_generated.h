@@ -8,9 +8,9 @@
 
 // Ensure the included flatbuffers.h is the same version as when this file was
 // generated, otherwise it may not be compatible.
-static_assert(FLATBUFFERS_VERSION_MAJOR == 24 &&
-              FLATBUFFERS_VERSION_MINOR == 3 &&
-              FLATBUFFERS_VERSION_REVISION == 25,
+static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
+              FLATBUFFERS_VERSION_MINOR == 12 &&
+              FLATBUFFERS_VERSION_REVISION == 19,
              "Non-compatible flatbuffers version included");
 
 struct CryptoKey;
@@ -95,7 +95,8 @@ struct CryptoKey FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   KeyType KEY_TYPE() const {
     return static_cast<KeyType>(GetField<int8_t>(VT_KEY_TYPE, 0));
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_PUBLIC_KEY) &&
            verifier.VerifyString(PUBLIC_KEY()) &&
@@ -231,7 +232,8 @@ struct Address FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *POST_OFFICE_BOX_NUMBER() const {
     return GetPointer<const ::flatbuffers::String *>(VT_POST_OFFICE_BOX_NUMBER);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_COUNTRY) &&
            verifier.VerifyString(COUNTRY()) &&
@@ -369,7 +371,8 @@ struct ChainProof FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *ENCODING() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ENCODING);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_CHAIN) &&
            verifier.VerifyString(CHAIN()) &&
@@ -577,7 +580,8 @@ struct EPM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::Vector<::flatbuffers::Offset<ChainProof>> *CHAIN_PROOFS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<ChainProof>> *>(VT_CHAIN_PROOFS);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_DN) &&
            verifier.VerifyString(DN()) &&
@@ -813,14 +817,16 @@ inline bool SizePrefixedEPMBufferHasIdentifier(const void *buf) {
       buf, EPMIdentifier(), true);
 }
 
+template <bool B = false>
 inline bool VerifyEPMBuffer(
-    ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifyBuffer<EPM>(EPMIdentifier());
+    ::flatbuffers::VerifierTemplate<B> &verifier) {
+  return verifier.template VerifyBuffer<EPM>(EPMIdentifier());
 }
 
+template <bool B = false>
 inline bool VerifySizePrefixedEPMBuffer(
-    ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifySizePrefixedBuffer<EPM>(EPMIdentifier());
+    ::flatbuffers::VerifierTemplate<B> &verifier) {
+  return verifier.template VerifySizePrefixedBuffer<EPM>(EPMIdentifier());
 }
 
 inline void FinishEPMBuffer(

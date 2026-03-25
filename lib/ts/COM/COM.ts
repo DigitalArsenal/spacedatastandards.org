@@ -104,7 +104,7 @@ connectedNodesArray():Uint32Array|null {
 
 ACTIVE_LINKS(index: number):DataLinkType|null {
   const offset = this.bb!.__offset(this.bb_pos, 28);
-  return offset ? this.bb!.readInt8(this.bb!.__vector(this.bb_pos + offset) + index) : 0;
+  return offset ? this.bb!.readInt8(this.bb!.__vector(this.bb_pos + offset) + index) : null;
 }
 
 activeLinksLength():number {

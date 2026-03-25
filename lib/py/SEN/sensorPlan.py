@@ -143,20 +143,29 @@ def End(builder):
 class sensorPlanT(object):
 
     # sensorPlanT
-    def __init__(self):
-        self.START_TIME = None  # type: str
-        self.END_TIME = None  # type: str
-        self.TARGET_ID = None  # type: str
-        self.PRIORITY = 0  # type: int
-        self.MODE = None  # type: str
-        self.MIN_ELEVATION = 0.0  # type: float
-        self.MAX_RANGE = 0.0  # type: float
+    def __init__(
+        self,
+        START_TIME = None,
+        END_TIME = None,
+        TARGET_ID = None,
+        PRIORITY = 0,
+        MODE = None,
+        MIN_ELEVATION = 0.0,
+        MAX_RANGE = 0.0,
+    ):
+        self.START_TIME = START_TIME  # type: Optional[str]
+        self.END_TIME = END_TIME  # type: Optional[str]
+        self.TARGET_ID = TARGET_ID  # type: Optional[str]
+        self.PRIORITY = PRIORITY  # type: int
+        self.MODE = MODE  # type: Optional[str]
+        self.MIN_ELEVATION = MIN_ELEVATION  # type: float
+        self.MAX_RANGE = MAX_RANGE  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        sensorPlan = sensorPlan()
-        sensorPlan.Init(buf, pos)
-        return cls.InitFromObj(sensorPlan)
+        tmpSensorPlan = sensorPlan()
+        tmpSensorPlan.Init(buf, pos)
+        return cls.InitFromObj(tmpSensorPlan)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -164,9 +173,9 @@ class sensorPlanT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, sensorPlan):
+    def InitFromObj(cls, tmpSensorPlan):
         x = sensorPlanT()
-        x._UnPack(sensorPlan)
+        x._UnPack(tmpSensorPlan)
         return x
 
     # sensorPlanT

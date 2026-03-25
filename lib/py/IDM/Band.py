@@ -82,15 +82,19 @@ except:
 class BandT(object):
 
     # BandT
-    def __init__(self):
-        self.NAME = None  # type: str
-        self.FREQUENCY_RANGE = None  # type: Optional[FrequencyRange.FrequencyRangeT]
+    def __init__(
+        self,
+        NAME = None,
+        FREQUENCY_RANGE = None,
+    ):
+        self.NAME = NAME  # type: Optional[str]
+        self.FREQUENCY_RANGE = FREQUENCY_RANGE  # type: Optional[FrequencyRange.FrequencyRangeT]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        band = Band()
-        band.Init(buf, pos)
-        return cls.InitFromObj(band)
+        tmpBand = Band()
+        tmpBand.Init(buf, pos)
+        return cls.InitFromObj(tmpBand)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -98,18 +102,18 @@ class BandT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, band):
+    def InitFromObj(cls, tmpBand):
         x = BandT()
-        x._UnPack(band)
+        x._UnPack(tmpBand)
         return x
 
     # BandT
-    def _UnPack(self, band):
-        if band is None:
+    def _UnPack(self, Band):
+        if Band is None:
             return
-        self.NAME = band.NAME()
-        if band.FREQUENCY_RANGE() is not None:
-            self.FREQUENCY_RANGE = FrequencyRange.FrequencyRangeT.InitFromObj(band.FREQUENCY_RANGE())
+        self.NAME = Band.NAME()
+        if Band.FREQUENCY_RANGE() is not None:
+            self.FREQUENCY_RANGE = FrequencyRange.FrequencyRangeT.InitFromObj(Band.FREQUENCY_RANGE())
 
     # BandT
     def Pack(self, builder):
@@ -122,5 +126,5 @@ class BandT(object):
             BandAddNAME(builder, NAME)
         if self.FREQUENCY_RANGE is not None:
             BandAddFREQUENCY_RANGE(builder, FREQUENCY_RANGE)
-        band = BandEnd(builder)
-        return band
+        Band = BandEnd(builder)
+        return Band

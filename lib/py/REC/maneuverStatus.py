@@ -2,4 +2,11 @@
 
 # namespace: 
 
-# NOTE maneuverStatus.py does not declare any structs or enums
+class maneuverStatus(object):
+    DETECTED = 0
+    CONFIRMED = 1
+    PREDICTED = 2
+    PLANNED = 3
+    EXECUTED = 4
+    CANCELLED = 5
+    UNKNOWN = 6

@@ -31,7 +31,7 @@ class SCHEMA_STANDARD(object):
 
     # Unique identifier for the standard
     # SCHEMA_STANDARD
-    def Key(self):
+    def key(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
@@ -39,7 +39,7 @@ class SCHEMA_STANDARD(object):
 
     # IDL
     # SCHEMA_STANDARD
-    def Idl(self):
+    def idl(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
@@ -47,7 +47,7 @@ class SCHEMA_STANDARD(object):
 
     # List Of File Paths
     # SCHEMA_STANDARD
-    def Files(self, j):
+    def files(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
         if o != 0:
             a = self._tab.Vector(o)
@@ -55,14 +55,14 @@ class SCHEMA_STANDARD(object):
         return ""
 
     # SCHEMA_STANDARD
-    def FilesLength(self):
+    def filesLength(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # SCHEMA_STANDARD
-    def FilesIsNone(self):
+    def filesIsNone(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
         return o == 0
 
@@ -72,29 +72,35 @@ def SCHEMA_STANDARDStart(builder):
 def Start(builder):
     SCHEMA_STANDARDStart(builder)
 
-def SCHEMA_STANDARDAddKey(builder, key):
+def SCHEMA_STANDARDAddkey(builder, key):
     builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(key), 0)
 
-def AddKey(builder, key):
-    SCHEMA_STANDARDAddKey(builder, key)
+def Addkey(builder, key):
+    SCHEMA_STANDARDAddkey(builder, key)
 
-def SCHEMA_STANDARDAddIdl(builder, idl):
+def SCHEMA_STANDARDAddidl(builder, idl):
     builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(idl), 0)
 
-def AddIdl(builder, idl):
-    SCHEMA_STANDARDAddIdl(builder, idl)
+def Addidl(builder, idl):
+    SCHEMA_STANDARDAddidl(builder, idl)
 
-def SCHEMA_STANDARDAddFiles(builder, files):
+def SCHEMA_STANDARDAddfiles(builder, files):
     builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(files), 0)
 
-def AddFiles(builder, files):
-    SCHEMA_STANDARDAddFiles(builder, files)
+def Addfiles(builder, files):
+    SCHEMA_STANDARDAddfiles(builder, files)
 
-def SCHEMA_STANDARDStartFilesVector(builder, numElems):
+def SCHEMA_STANDARDStartfilesVector(builder, numElems):
     return builder.StartVector(4, numElems, 4)
 
-def StartFilesVector(builder, numElems):
-    return SCHEMA_STANDARDStartFilesVector(builder, numElems)
+def StartfilesVector(builder, numElems):
+    return SCHEMA_STANDARDStartfilesVector(builder, numElems)
+
+def SCHEMA_STANDARDCreatefilesVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreatefilesVector(builder, data):
+    SCHEMA_STANDARDCreatefilesVector(builder, data)
 
 def SCHEMA_STANDARDEnd(builder):
     return builder.EndObject()
@@ -110,16 +116,21 @@ except:
 class SCHEMA_STANDARDT(object):
 
     # SCHEMA_STANDARDT
-    def __init__(self):
-        self.key = None  # type: str
-        self.idl = None  # type: str
-        self.files = None  # type: List[str]
+    def __init__(
+        self,
+        key = None,
+        idl = None,
+        files = None,
+    ):
+        self.key = key  # type: Optional[str]
+        self.idl = idl  # type: Optional[str]
+        self.files = files  # type: Optional[List[Optional[str]]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        SCHEMA_STANDARD = SCHEMA_STANDARD()
-        SCHEMA_STANDARD.Init(buf, pos)
-        return cls.InitFromObj(SCHEMA_STANDARD)
+        tmpSchemaStandard = SCHEMA_STANDARD()
+        tmpSchemaStandard.Init(buf, pos)
+        return cls.InitFromObj(tmpSchemaStandard)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -127,21 +138,21 @@ class SCHEMA_STANDARDT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, SCHEMA_STANDARD):
+    def InitFromObj(cls, tmpSchemaStandard):
         x = SCHEMA_STANDARDT()
-        x._UnPack(SCHEMA_STANDARD)
+        x._UnPack(tmpSchemaStandard)
         return x
 
     # SCHEMA_STANDARDT
     def _UnPack(self, SCHEMA_STANDARD):
         if SCHEMA_STANDARD is None:
             return
-        self.key = SCHEMA_STANDARD.Key()
-        self.idl = SCHEMA_STANDARD.Idl()
-        if not SCHEMA_STANDARD.FilesIsNone():
+        self.key = SCHEMA_STANDARD.key()
+        self.idl = SCHEMA_STANDARD.idl()
+        if not SCHEMA_STANDARD.filesIsNone():
             self.files = []
-            for i in range(SCHEMA_STANDARD.FilesLength()):
-                self.files.append(SCHEMA_STANDARD.Files(i))
+            for i in range(SCHEMA_STANDARD.filesLength()):
+                self.files.append(SCHEMA_STANDARD.files(i))
 
     # SCHEMA_STANDARDT
     def Pack(self, builder):
@@ -153,16 +164,16 @@ class SCHEMA_STANDARDT(object):
             fileslist = []
             for i in range(len(self.files)):
                 fileslist.append(builder.CreateString(self.files[i]))
-            SCHEMA_STANDARDStartFilesVector(builder, len(self.files))
+            SCHEMA_STANDARDStartfilesVector(builder, len(self.files))
             for i in reversed(range(len(self.files))):
                 builder.PrependUOffsetTRelative(fileslist[i])
             files = builder.EndVector()
         SCHEMA_STANDARDStart(builder)
         if self.key is not None:
-            SCHEMA_STANDARDAddKey(builder, key)
+            SCHEMA_STANDARDAddkey(builder, key)
         if self.idl is not None:
-            SCHEMA_STANDARDAddIdl(builder, idl)
+            SCHEMA_STANDARDAddidl(builder, idl)
         if self.files is not None:
-            SCHEMA_STANDARDAddFiles(builder, files)
+            SCHEMA_STANDARDAddfiles(builder, files)
         SCHEMA_STANDARD = SCHEMA_STANDARDEnd(builder)
         return SCHEMA_STANDARD

@@ -63,9 +63,17 @@ func (rcv *ATM) MODEL() AtmosphericModelFamily {
 	return 0
 }
 
+func (rcv *ATM) Model() AtmosphericModelFamily {
+	return rcv.MODEL()
+}
+
 /// Canonical model family
 func (rcv *ATM) MutateMODEL(n AtmosphericModelFamily) bool {
 	return rcv._tab.MutateInt8Slot(4, int8(n))
+}
+
+func (rcv *ATM) MutateModel(n AtmosphericModelFamily) bool {
+	return rcv.MutateMODEL(n)
 }
 
 /// Four-digit year identifying the model version (e.g., 1970, 2008, 2020)
@@ -77,9 +85,17 @@ func (rcv *ATM) YEAR() int32 {
 	return 0
 }
 
+func (rcv *ATM) Year() int32 {
+	return rcv.YEAR()
+}
+
 /// Four-digit year identifying the model version (e.g., 1970, 2008, 2020)
 func (rcv *ATM) MutateYEAR(n int32) bool {
 	return rcv._tab.MutateInt32Slot(6, n)
+}
+
+func (rcv *ATM) MutateYear(n int32) bool {
+	return rcv.MutateYEAR(n)
 }
 
 func ATMStart(builder *flatbuffers.Builder) {
@@ -88,8 +104,14 @@ func ATMStart(builder *flatbuffers.Builder) {
 func ATMAddMODEL(builder *flatbuffers.Builder, MODEL AtmosphericModelFamily) {
 	builder.PrependInt8Slot(0, int8(MODEL), 0)
 }
+func ATMAddModel(builder *flatbuffers.Builder, MODEL AtmosphericModelFamily) {
+	ATMAddMODEL(builder, MODEL)
+}
 func ATMAddYEAR(builder *flatbuffers.Builder, YEAR int32) {
 	builder.PrependInt32Slot(1, YEAR, 0)
+}
+func ATMAddYear(builder *flatbuffers.Builder, YEAR int32) {
+	ATMAddYEAR(builder, YEAR)
 }
 func ATMEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

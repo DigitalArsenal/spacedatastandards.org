@@ -2,4 +2,188 @@
 
 # namespace: 
 
-# NOTE KMLSchema.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Schema definition
+class KMLSchema(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = KMLSchema()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsKMLSchema(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def KMLSchemaBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x4B\x4D\x4C", size_prefixed=size_prefixed)
+
+    # KMLSchema
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Schema name
+    # KMLSchema
+    def NAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Schema ID
+    # KMLSchema
+    def ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Simple field definitions
+    # KMLSchema
+    def SIMPLE_FIELDS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from KMLSimpleField import KMLSimpleField
+            obj = KMLSimpleField()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # KMLSchema
+    def SIMPLE_FIELDSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # KMLSchema
+    def SIMPLE_FIELDSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        return o == 0
+
+def KMLSchemaStart(builder):
+    builder.StartObject(3)
+
+def Start(builder):
+    KMLSchemaStart(builder)
+
+def KMLSchemaAddNAME(builder, NAME):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(NAME), 0)
+
+def AddNAME(builder, NAME):
+    KMLSchemaAddNAME(builder, NAME)
+
+def KMLSchemaAddID(builder, ID):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(ID), 0)
+
+def AddID(builder, ID):
+    KMLSchemaAddID(builder, ID)
+
+def KMLSchemaAddSIMPLE_FIELDS(builder, SIMPLE_FIELDS):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(SIMPLE_FIELDS), 0)
+
+def AddSIMPLE_FIELDS(builder, SIMPLE_FIELDS):
+    KMLSchemaAddSIMPLE_FIELDS(builder, SIMPLE_FIELDS)
+
+def KMLSchemaStartSIMPLE_FIELDSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartSIMPLE_FIELDSVector(builder, numElems):
+    return KMLSchemaStartSIMPLE_FIELDSVector(builder, numElems)
+
+def KMLSchemaCreateSIMPLE_FIELDSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateSIMPLE_FIELDSVector(builder, data):
+    KMLSchemaCreateSIMPLE_FIELDSVector(builder, data)
+
+def KMLSchemaEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return KMLSchemaEnd(builder)
+
+import KMLSimpleField
+try:
+    from typing import List
+except:
+    pass
+
+class KMLSchemaT(object):
+
+    # KMLSchemaT
+    def __init__(
+        self,
+        NAME = None,
+        ID = None,
+        SIMPLE_FIELDS = None,
+    ):
+        self.NAME = NAME  # type: Optional[str]
+        self.ID = ID  # type: Optional[str]
+        self.SIMPLE_FIELDS = SIMPLE_FIELDS  # type: Optional[List[KMLSimpleField.KMLSimpleFieldT]]
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpKmlschema = KMLSchema()
+        tmpKmlschema.Init(buf, pos)
+        return cls.InitFromObj(tmpKmlschema)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpKmlschema):
+        x = KMLSchemaT()
+        x._UnPack(tmpKmlschema)
+        return x
+
+    # KMLSchemaT
+    def _UnPack(self, KMLSchema):
+        if KMLSchema is None:
+            return
+        self.NAME = KMLSchema.NAME()
+        self.ID = KMLSchema.ID()
+        if not KMLSchema.SIMPLE_FIELDSIsNone():
+            self.SIMPLE_FIELDS = []
+            for i in range(KMLSchema.SIMPLE_FIELDSLength()):
+                if KMLSchema.SIMPLE_FIELDS(i) is None:
+                    self.SIMPLE_FIELDS.append(None)
+                else:
+                    kMLSimpleField_ = KMLSimpleField.KMLSimpleFieldT.InitFromObj(KMLSchema.SIMPLE_FIELDS(i))
+                    self.SIMPLE_FIELDS.append(kMLSimpleField_)
+
+    # KMLSchemaT
+    def Pack(self, builder):
+        if self.NAME is not None:
+            NAME = builder.CreateString(self.NAME)
+        if self.ID is not None:
+            ID = builder.CreateString(self.ID)
+        if self.SIMPLE_FIELDS is not None:
+            SIMPLE_FIELDSlist = []
+            for i in range(len(self.SIMPLE_FIELDS)):
+                SIMPLE_FIELDSlist.append(self.SIMPLE_FIELDS[i].Pack(builder))
+            KMLSchemaStartSIMPLE_FIELDSVector(builder, len(self.SIMPLE_FIELDS))
+            for i in reversed(range(len(self.SIMPLE_FIELDS))):
+                builder.PrependUOffsetTRelative(SIMPLE_FIELDSlist[i])
+            SIMPLE_FIELDS = builder.EndVector()
+        KMLSchemaStart(builder)
+        if self.NAME is not None:
+            KMLSchemaAddNAME(builder, NAME)
+        if self.ID is not None:
+            KMLSchemaAddID(builder, ID)
+        if self.SIMPLE_FIELDS is not None:
+            KMLSchemaAddSIMPLE_FIELDS(builder, SIMPLE_FIELDS)
+        KMLSchema = KMLSchemaEnd(builder)
+        return KMLSchema

@@ -2,4 +2,144 @@
 
 # namespace: 
 
-# NOTE KMLAnimatedUpdate.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# gx:AnimatedUpdate tour primitive
+class KMLAnimatedUpdate(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = KMLAnimatedUpdate()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsKMLAnimatedUpdate(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def KMLAnimatedUpdateBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x4B\x4D\x4C", size_prefixed=size_prefixed)
+
+    # KMLAnimatedUpdate
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Duration in seconds
+    # KMLAnimatedUpdate
+    def DURATION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Delayed start in seconds
+    # KMLAnimatedUpdate
+    def DELAYED_START(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Update
+    # KMLAnimatedUpdate
+    def UPDATE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from KMLUpdate import KMLUpdate
+            obj = KMLUpdate()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+def KMLAnimatedUpdateStart(builder):
+    builder.StartObject(3)
+
+def Start(builder):
+    KMLAnimatedUpdateStart(builder)
+
+def KMLAnimatedUpdateAddDURATION(builder, DURATION):
+    builder.PrependFloat64Slot(0, DURATION, 0.0)
+
+def AddDURATION(builder, DURATION):
+    KMLAnimatedUpdateAddDURATION(builder, DURATION)
+
+def KMLAnimatedUpdateAddDELAYED_START(builder, DELAYED_START):
+    builder.PrependFloat64Slot(1, DELAYED_START, 0.0)
+
+def AddDELAYED_START(builder, DELAYED_START):
+    KMLAnimatedUpdateAddDELAYED_START(builder, DELAYED_START)
+
+def KMLAnimatedUpdateAddUPDATE(builder, UPDATE):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(UPDATE), 0)
+
+def AddUPDATE(builder, UPDATE):
+    KMLAnimatedUpdateAddUPDATE(builder, UPDATE)
+
+def KMLAnimatedUpdateEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return KMLAnimatedUpdateEnd(builder)
+
+import KMLUpdate
+try:
+    from typing import Optional
+except:
+    pass
+
+class KMLAnimatedUpdateT(object):
+
+    # KMLAnimatedUpdateT
+    def __init__(
+        self,
+        DURATION = 0.0,
+        DELAYED_START = 0.0,
+        UPDATE = None,
+    ):
+        self.DURATION = DURATION  # type: float
+        self.DELAYED_START = DELAYED_START  # type: float
+        self.UPDATE = UPDATE  # type: Optional[KMLUpdate.KMLUpdateT]
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpKmlanimatedUpdate = KMLAnimatedUpdate()
+        tmpKmlanimatedUpdate.Init(buf, pos)
+        return cls.InitFromObj(tmpKmlanimatedUpdate)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpKmlanimatedUpdate):
+        x = KMLAnimatedUpdateT()
+        x._UnPack(tmpKmlanimatedUpdate)
+        return x
+
+    # KMLAnimatedUpdateT
+    def _UnPack(self, KMLAnimatedUpdate):
+        if KMLAnimatedUpdate is None:
+            return
+        self.DURATION = KMLAnimatedUpdate.DURATION()
+        self.DELAYED_START = KMLAnimatedUpdate.DELAYED_START()
+        if KMLAnimatedUpdate.UPDATE() is not None:
+            self.UPDATE = KMLUpdate.KMLUpdateT.InitFromObj(KMLAnimatedUpdate.UPDATE())
+
+    # KMLAnimatedUpdateT
+    def Pack(self, builder):
+        if self.UPDATE is not None:
+            UPDATE = self.UPDATE.Pack(builder)
+        KMLAnimatedUpdateStart(builder)
+        KMLAnimatedUpdateAddDURATION(builder, self.DURATION)
+        KMLAnimatedUpdateAddDELAYED_START(builder, self.DELAYED_START)
+        if self.UPDATE is not None:
+            KMLAnimatedUpdateAddUPDATE(builder, UPDATE)
+        KMLAnimatedUpdate = KMLAnimatedUpdateEnd(builder)
+        return KMLAnimatedUpdate

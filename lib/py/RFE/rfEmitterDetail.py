@@ -255,28 +255,45 @@ def End(builder):
 class rfEmitterDetailT(object):
 
     # rfEmitterDetailT
-    def __init__(self):
-        self.MODE_NAME = None  # type: str
-        self.FREQUENCY = 0.0  # type: float
-        self.FREQ_MIN = 0.0  # type: float
-        self.FREQ_MAX = 0.0  # type: float
-        self.PRI = 0.0  # type: float
-        self.PRI_MIN = 0.0  # type: float
-        self.PRI_MAX = 0.0  # type: float
-        self.PULSE_WIDTH = 0.0  # type: float
-        self.PW_MIN = 0.0  # type: float
-        self.PW_MAX = 0.0  # type: float
-        self.SCAN_PERIOD = 0.0  # type: float
-        self.ERP = 0.0  # type: float
-        self.MODULATION = 0  # type: int
-        self.ANTENNA_PATTERN = None  # type: str
-        self.BEAMWIDTH = 0.0  # type: float
+    def __init__(
+        self,
+        MODE_NAME = None,
+        FREQUENCY = 0.0,
+        FREQ_MIN = 0.0,
+        FREQ_MAX = 0.0,
+        PRI = 0.0,
+        PRI_MIN = 0.0,
+        PRI_MAX = 0.0,
+        PULSE_WIDTH = 0.0,
+        PW_MIN = 0.0,
+        PW_MAX = 0.0,
+        SCAN_PERIOD = 0.0,
+        ERP = 0.0,
+        MODULATION = 0,
+        ANTENNA_PATTERN = None,
+        BEAMWIDTH = 0.0,
+    ):
+        self.MODE_NAME = MODE_NAME  # type: Optional[str]
+        self.FREQUENCY = FREQUENCY  # type: float
+        self.FREQ_MIN = FREQ_MIN  # type: float
+        self.FREQ_MAX = FREQ_MAX  # type: float
+        self.PRI = PRI  # type: float
+        self.PRI_MIN = PRI_MIN  # type: float
+        self.PRI_MAX = PRI_MAX  # type: float
+        self.PULSE_WIDTH = PULSE_WIDTH  # type: float
+        self.PW_MIN = PW_MIN  # type: float
+        self.PW_MAX = PW_MAX  # type: float
+        self.SCAN_PERIOD = SCAN_PERIOD  # type: float
+        self.ERP = ERP  # type: float
+        self.MODULATION = MODULATION  # type: int
+        self.ANTENNA_PATTERN = ANTENNA_PATTERN  # type: Optional[str]
+        self.BEAMWIDTH = BEAMWIDTH  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        rfEmitterDetail = rfEmitterDetail()
-        rfEmitterDetail.Init(buf, pos)
-        return cls.InitFromObj(rfEmitterDetail)
+        tmpRfEmitterDetail = rfEmitterDetail()
+        tmpRfEmitterDetail.Init(buf, pos)
+        return cls.InitFromObj(tmpRfEmitterDetail)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -284,9 +301,9 @@ class rfEmitterDetailT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, rfEmitterDetail):
+    def InitFromObj(cls, tmpRfEmitterDetail):
         x = rfEmitterDetailT()
-        x._UnPack(rfEmitterDetail)
+        x._UnPack(tmpRfEmitterDetail)
         return x
 
     # rfEmitterDetailT

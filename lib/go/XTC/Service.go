@@ -51,6 +51,10 @@ func (rcv *Service) NAME() []byte {
 	return nil
 }
 
+func (rcv *Service) Name() []byte {
+	return rcv.NAME()
+}
+
 /// Service name
 /// Short description
 func (rcv *Service) SHORT_DESCRIPTION() []byte {
@@ -61,6 +65,10 @@ func (rcv *Service) SHORT_DESCRIPTION() []byte {
 	return nil
 }
 
+func (rcv *Service) ShortDescription() []byte {
+	return rcv.SHORT_DESCRIPTION()
+}
+
 /// Short description
 /// Long description
 func (rcv *Service) LONG_DESCRIPTION() []byte {
@@ -69,6 +77,10 @@ func (rcv *Service) LONG_DESCRIPTION() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *Service) LongDescription() []byte {
+	return rcv.LONG_DESCRIPTION()
 }
 
 /// Long description
@@ -82,12 +94,20 @@ func (rcv *Service) CONTAINER_REFS(j int) []byte {
 	return nil
 }
 
+func (rcv *Service) ContainerRefs(j int) []byte {
+	return rcv.CONTAINER_REFS(j)
+}
+
 func (rcv *Service) CONTAINER_REFSLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *Service) ContainerRefsLength() int {
+	return rcv.CONTAINER_REFSLength()
 }
 
 /// Container references provided by this service
@@ -101,12 +121,20 @@ func (rcv *Service) COMMAND_REFS(j int) []byte {
 	return nil
 }
 
+func (rcv *Service) CommandRefs(j int) []byte {
+	return rcv.COMMAND_REFS(j)
+}
+
 func (rcv *Service) COMMAND_REFSLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *Service) CommandRefsLength() int {
+	return rcv.COMMAND_REFSLength()
 }
 
 /// Command references accepted by this service
@@ -116,23 +144,44 @@ func ServiceStart(builder *flatbuffers.Builder) {
 func ServiceAddNAME(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(NAME), 0)
 }
+func ServiceAddName(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
+	ServiceAddNAME(builder, NAME)
+}
 func ServiceAddSHORT_DESCRIPTION(builder *flatbuffers.Builder, SHORT_DESCRIPTION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(SHORT_DESCRIPTION), 0)
+}
+func ServiceAddShortDescription(builder *flatbuffers.Builder, SHORT_DESCRIPTION flatbuffers.UOffsetT) {
+	ServiceAddSHORT_DESCRIPTION(builder, SHORT_DESCRIPTION)
 }
 func ServiceAddLONG_DESCRIPTION(builder *flatbuffers.Builder, LONG_DESCRIPTION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(LONG_DESCRIPTION), 0)
 }
+func ServiceAddLongDescription(builder *flatbuffers.Builder, LONG_DESCRIPTION flatbuffers.UOffsetT) {
+	ServiceAddLONG_DESCRIPTION(builder, LONG_DESCRIPTION)
+}
 func ServiceAddCONTAINER_REFS(builder *flatbuffers.Builder, CONTAINER_REFS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(CONTAINER_REFS), 0)
+}
+func ServiceAddContainerRefs(builder *flatbuffers.Builder, CONTAINER_REFS flatbuffers.UOffsetT) {
+	ServiceAddCONTAINER_REFS(builder, CONTAINER_REFS)
 }
 func ServiceStartCONTAINER_REFSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
+func ServiceStartContainerRefsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return ServiceStartCONTAINER_REFSVector(builder, numElems)
+}
 func ServiceAddCOMMAND_REFS(builder *flatbuffers.Builder, COMMAND_REFS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(COMMAND_REFS), 0)
 }
+func ServiceAddCommandRefs(builder *flatbuffers.Builder, COMMAND_REFS flatbuffers.UOffsetT) {
+	ServiceAddCOMMAND_REFS(builder, COMMAND_REFS)
+}
 func ServiceStartCOMMAND_REFSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func ServiceStartCommandRefsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return ServiceStartCOMMAND_REFSVector(builder, numElems)
 }
 func ServiceEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

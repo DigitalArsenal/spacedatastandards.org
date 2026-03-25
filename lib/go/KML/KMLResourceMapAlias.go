@@ -51,6 +51,10 @@ func (rcv *KMLResourceMapAlias) TARGET_HREF() []byte {
 	return nil
 }
 
+func (rcv *KMLResourceMapAlias) TargetHref() []byte {
+	return rcv.TARGET_HREF()
+}
+
 /// Target href
 /// Source href
 func (rcv *KMLResourceMapAlias) SOURCE_HREF() []byte {
@@ -61,6 +65,10 @@ func (rcv *KMLResourceMapAlias) SOURCE_HREF() []byte {
 	return nil
 }
 
+func (rcv *KMLResourceMapAlias) SourceHref() []byte {
+	return rcv.SOURCE_HREF()
+}
+
 /// Source href
 func KMLResourceMapAliasStart(builder *flatbuffers.Builder) {
 	builder.StartObject(2)
@@ -68,8 +76,14 @@ func KMLResourceMapAliasStart(builder *flatbuffers.Builder) {
 func KMLResourceMapAliasAddTARGET_HREF(builder *flatbuffers.Builder, TARGET_HREF flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(TARGET_HREF), 0)
 }
+func KMLResourceMapAliasAddTargetHref(builder *flatbuffers.Builder, TARGET_HREF flatbuffers.UOffsetT) {
+	KMLResourceMapAliasAddTARGET_HREF(builder, TARGET_HREF)
+}
 func KMLResourceMapAliasAddSOURCE_HREF(builder *flatbuffers.Builder, SOURCE_HREF flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(SOURCE_HREF), 0)
+}
+func KMLResourceMapAliasAddSourceHref(builder *flatbuffers.Builder, SOURCE_HREF flatbuffers.UOffsetT) {
+	KMLResourceMapAliasAddSOURCE_HREF(builder, SOURCE_HREF)
 }
 func KMLResourceMapAliasEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

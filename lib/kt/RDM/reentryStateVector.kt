@@ -32,7 +32,7 @@ class reentryStateVector : Table() {
     /**
      * Epoch (ISO 8601)
      */
-    val EPOCH : String?
+    val epoch : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class reentryStateVector : Table() {
                 null
             }
         }
-    val EPOCHAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun EPOCHInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val epochAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun epochInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Reference frame
      */
-    val REF_FRAME : String?
+    val refFrame : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -55,12 +55,12 @@ class reentryStateVector : Table() {
                 null
             }
         }
-    val REF_FRAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun REF_FRAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val refFrameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun refFrameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * Position X in km
      */
-    val X : Double
+    val x : Double
         get() {
             val o = __offset(8)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -68,7 +68,7 @@ class reentryStateVector : Table() {
     /**
      * Position Y in km
      */
-    val Y : Double
+    val y : Double
         get() {
             val o = __offset(10)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -76,7 +76,7 @@ class reentryStateVector : Table() {
     /**
      * Position Z in km
      */
-    val Z : Double
+    val z : Double
         get() {
             val o = __offset(12)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -84,7 +84,7 @@ class reentryStateVector : Table() {
     /**
      * Velocity X in km/s
      */
-    val X_DOT : Double
+    val xDot : Double
         get() {
             val o = __offset(14)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -92,7 +92,7 @@ class reentryStateVector : Table() {
     /**
      * Velocity Y in km/s
      */
-    val Y_DOT : Double
+    val yDot : Double
         get() {
             val o = __offset(16)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -100,39 +100,39 @@ class reentryStateVector : Table() {
     /**
      * Velocity Z in km/s
      */
-    val Z_DOT : Double
+    val zDot : Double
         get() {
             val o = __offset(18)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsreentryStateVector(_bb: ByteBuffer): reentryStateVector = getRootAsreentryStateVector(_bb, reentryStateVector())
         fun getRootAsreentryStateVector(_bb: ByteBuffer, obj: reentryStateVector): reentryStateVector {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createreentryStateVector(builder: FlatBufferBuilder, EPOCHOffset: Int, REF_FRAMEOffset: Int, X: Double, Y: Double, Z: Double, X_DOT: Double, Y_DOT: Double, Z_DOT: Double) : Int {
+        fun createreentryStateVector(builder: FlatBufferBuilder, epochOffset: Int, refFrameOffset: Int, x: Double, y: Double, z: Double, xDot: Double, yDot: Double, zDot: Double) : Int {
             builder.startTable(8)
-            addZ_DOT(builder, Z_DOT)
-            addY_DOT(builder, Y_DOT)
-            addX_DOT(builder, X_DOT)
-            addZ(builder, Z)
-            addY(builder, Y)
-            addX(builder, X)
-            addREF_FRAME(builder, REF_FRAMEOffset)
-            addEPOCH(builder, EPOCHOffset)
+            addZDOT(builder, zDot)
+            addYDOT(builder, yDot)
+            addXDOT(builder, xDot)
+            addZ(builder, z)
+            addY(builder, y)
+            addX(builder, x)
+            addREFFRAME(builder, refFrameOffset)
+            addEPOCH(builder, epochOffset)
             return endreentryStateVector(builder)
         }
         fun startreentryStateVector(builder: FlatBufferBuilder) = builder.startTable(8)
-        fun addEPOCH(builder: FlatBufferBuilder, EPOCH: Int) = builder.addOffset(0, EPOCH, 0)
-        fun addREF_FRAME(builder: FlatBufferBuilder, REF_FRAME: Int) = builder.addOffset(1, REF_FRAME, 0)
-        fun addX(builder: FlatBufferBuilder, X: Double) = builder.addDouble(2, X, 0.0)
-        fun addY(builder: FlatBufferBuilder, Y: Double) = builder.addDouble(3, Y, 0.0)
-        fun addZ(builder: FlatBufferBuilder, Z: Double) = builder.addDouble(4, Z, 0.0)
-        fun addX_DOT(builder: FlatBufferBuilder, X_DOT: Double) = builder.addDouble(5, X_DOT, 0.0)
-        fun addY_DOT(builder: FlatBufferBuilder, Y_DOT: Double) = builder.addDouble(6, Y_DOT, 0.0)
-        fun addZ_DOT(builder: FlatBufferBuilder, Z_DOT: Double) = builder.addDouble(7, Z_DOT, 0.0)
+        fun addEPOCH(builder: FlatBufferBuilder, epoch: Int) = builder.addOffset(0, epoch, 0)
+        fun addREFFRAME(builder: FlatBufferBuilder, refFrame: Int) = builder.addOffset(1, refFrame, 0)
+        fun addX(builder: FlatBufferBuilder, x: Double) = builder.addDouble(2, x, 0.0)
+        fun addY(builder: FlatBufferBuilder, y: Double) = builder.addDouble(3, y, 0.0)
+        fun addZ(builder: FlatBufferBuilder, z: Double) = builder.addDouble(4, z, 0.0)
+        fun addXDOT(builder: FlatBufferBuilder, xDot: Double) = builder.addDouble(5, xDot, 0.0)
+        fun addYDOT(builder: FlatBufferBuilder, yDot: Double) = builder.addDouble(6, yDot, 0.0)
+        fun addZDOT(builder: FlatBufferBuilder, zDot: Double) = builder.addDouble(7, zDot, 0.0)
         fun endreentryStateVector(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

@@ -1,3 +1,3 @@
-export { MET, METT } from './MET.js';
-export { meanElementTheory } from './meanElementTheory.js';
+export * from './meanElementTheory.js';
+export * from './MET.js';
 //# sourceMappingURL=main.d.ts.map

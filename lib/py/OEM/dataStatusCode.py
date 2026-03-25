@@ -2,4 +2,12 @@
 
 # namespace: 
 
-# NOTE dataStatusCode.py does not declare any structs or enums
+class dataStatusCode(object):
+    # NCE
+    NO_CURRENT_ELEMENTS = 0
+    # NIE
+    NO_INITIAL_ELEMENTS = 1
+    # NEA
+    NO_ELEMENTS_AVAILABLE = 2
+    # OK
+    OK = 3

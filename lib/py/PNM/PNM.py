@@ -185,22 +185,33 @@ def End(builder):
 class PNMT(object):
 
     # PNMT
-    def __init__(self):
-        self.MULTIFORMAT_ADDRESS = None  # type: str
-        self.PUBLISH_TIMESTAMP = None  # type: str
-        self.CID = None  # type: str
-        self.FILE_NAME = None  # type: str
-        self.FILE_ID = None  # type: str
-        self.SIGNATURE = None  # type: str
-        self.TIMESTAMP_SIGNATURE = None  # type: str
-        self.SIGNATURE_TYPE = None  # type: str
-        self.TIMESTAMP_SIGNATURE_TYPE = None  # type: str
+    def __init__(
+        self,
+        MULTIFORMAT_ADDRESS = None,
+        PUBLISH_TIMESTAMP = None,
+        CID = None,
+        FILE_NAME = None,
+        FILE_ID = None,
+        SIGNATURE = None,
+        TIMESTAMP_SIGNATURE = None,
+        SIGNATURE_TYPE = None,
+        TIMESTAMP_SIGNATURE_TYPE = None,
+    ):
+        self.MULTIFORMAT_ADDRESS = MULTIFORMAT_ADDRESS  # type: Optional[str]
+        self.PUBLISH_TIMESTAMP = PUBLISH_TIMESTAMP  # type: Optional[str]
+        self.CID = CID  # type: Optional[str]
+        self.FILE_NAME = FILE_NAME  # type: Optional[str]
+        self.FILE_ID = FILE_ID  # type: Optional[str]
+        self.SIGNATURE = SIGNATURE  # type: Optional[str]
+        self.TIMESTAMP_SIGNATURE = TIMESTAMP_SIGNATURE  # type: Optional[str]
+        self.SIGNATURE_TYPE = SIGNATURE_TYPE  # type: Optional[str]
+        self.TIMESTAMP_SIGNATURE_TYPE = TIMESTAMP_SIGNATURE_TYPE  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        PNM = PNM()
-        PNM.Init(buf, pos)
-        return cls.InitFromObj(PNM)
+        tmpPnm = PNM()
+        tmpPnm.Init(buf, pos)
+        return cls.InitFromObj(tmpPnm)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -208,9 +219,9 @@ class PNMT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, PNM):
+    def InitFromObj(cls, tmpPnm):
         x = PNMT()
-        x._UnPack(PNM)
+        x._UnPack(tmpPnm)
         return x
 
     # PNMT

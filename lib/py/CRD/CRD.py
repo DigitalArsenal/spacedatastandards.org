@@ -178,6 +178,16 @@ def CRDStartRESERVEDVector(builder, numElems):
 def StartRESERVEDVector(builder, numElems):
     return CRDStartRESERVEDVector(builder, numElems)
 
+def CRDCreateRESERVEDVector(builder, data):
+    data = list(data)
+    builder.StartVector(1, len(data), 1)
+    for item in reversed(data):
+        builder.PrependUint8(item)
+    return builder.EndVector()
+
+def CreateRESERVEDVector(builder, data):
+    CRDCreateRESERVEDVector(builder, data)
+
 def CRDEnd(builder):
     return builder.EndObject()
 
@@ -192,22 +202,33 @@ except:
 class CRDT(object):
 
     # CRDT
-    def __init__(self):
-        self.X = 0.0  # type: float
-        self.Y = 0.0  # type: float
-        self.Z = 0.0  # type: float
-        self.VX = 0.0  # type: float
-        self.VY = 0.0  # type: float
-        self.VZ = 0.0  # type: float
-        self.FRAME = 0  # type: int
-        self.ELLIPSOID = 0  # type: int
-        self.RESERVED = None  # type: List[int]
+    def __init__(
+        self,
+        X = 0.0,
+        Y = 0.0,
+        Z = 0.0,
+        VX = 0.0,
+        VY = 0.0,
+        VZ = 0.0,
+        FRAME = 0,
+        ELLIPSOID = 0,
+        RESERVED = None,
+    ):
+        self.X = X  # type: float
+        self.Y = Y  # type: float
+        self.Z = Z  # type: float
+        self.VX = VX  # type: float
+        self.VY = VY  # type: float
+        self.VZ = VZ  # type: float
+        self.FRAME = FRAME  # type: int
+        self.ELLIPSOID = ELLIPSOID  # type: int
+        self.RESERVED = RESERVED  # type: Optional[List[int]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        CRD = CRD()
-        CRD.Init(buf, pos)
-        return cls.InitFromObj(CRD)
+        tmpCrd = CRD()
+        tmpCrd.Init(buf, pos)
+        return cls.InitFromObj(tmpCrd)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -215,9 +236,9 @@ class CRDT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, CRD):
+    def InitFromObj(cls, tmpCrd):
         x = CRDT()
-        x._UnPack(CRD)
+        x._UnPack(tmpCrd)
         return x
 
     # CRDT

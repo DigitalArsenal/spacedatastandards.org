@@ -56,12 +56,19 @@ func (rcv *CZMPolylineArrowMaterial) COLOR(obj *CZMColor) *CZMColor {
 	return nil
 }
 
+func (rcv *CZMPolylineArrowMaterial) Color(obj *CZMColor) *CZMColor {
+	return rcv.COLOR(obj)
+}
+
 /// Arrow color
 func CZMPolylineArrowMaterialStart(builder *flatbuffers.Builder) {
 	builder.StartObject(1)
 }
 func CZMPolylineArrowMaterialAddCOLOR(builder *flatbuffers.Builder, COLOR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(COLOR), 0)
+}
+func CZMPolylineArrowMaterialAddColor(builder *flatbuffers.Builder, COLOR flatbuffers.UOffsetT) {
+	CZMPolylineArrowMaterialAddCOLOR(builder, COLOR)
 }
 func CZMPolylineArrowMaterialEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

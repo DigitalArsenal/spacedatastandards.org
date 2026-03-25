@@ -51,9 +51,17 @@ func (rcv *CZMWall) SHOW() bool {
 	return false
 }
 
+func (rcv *CZMWall) Show() bool {
+	return rcv.SHOW()
+}
+
 /// Whether the wall is displayed
 func (rcv *CZMWall) MutateSHOW(n bool) bool {
 	return rcv._tab.MutateBoolSlot(4, n)
+}
+
+func (rcv *CZMWall) MutateShow(n bool) bool {
+	return rcv.MutateSHOW(n)
 }
 
 /// Positions as cartographic degrees
@@ -66,12 +74,20 @@ func (rcv *CZMWall) POSITIONS_CARTOGRAPHIC_DEGREES(j int) float64 {
 	return 0
 }
 
+func (rcv *CZMWall) PositionsCartographicDegrees(j int) float64 {
+	return rcv.POSITIONS_CARTOGRAPHIC_DEGREES(j)
+}
+
 func (rcv *CZMWall) POSITIONS_CARTOGRAPHIC_DEGREESLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *CZMWall) PositionsCartographicDegreesLength() int {
+	return rcv.POSITIONS_CARTOGRAPHIC_DEGREESLength()
 }
 
 /// Positions as cartographic degrees
@@ -84,6 +100,10 @@ func (rcv *CZMWall) MutatePOSITIONS_CARTOGRAPHIC_DEGREES(j int, n float64) bool 
 	return false
 }
 
+func (rcv *CZMWall) MutatePositionsCartographicDegrees(j int, n float64) bool {
+	return rcv.MutatePOSITIONS_CARTOGRAPHIC_DEGREES(j, n)
+}
+
 /// Positions as Cartesian
 func (rcv *CZMWall) POSITIONS_CARTESIAN(j int) float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
@@ -94,12 +114,20 @@ func (rcv *CZMWall) POSITIONS_CARTESIAN(j int) float64 {
 	return 0
 }
 
+func (rcv *CZMWall) PositionsCartesian(j int) float64 {
+	return rcv.POSITIONS_CARTESIAN(j)
+}
+
 func (rcv *CZMWall) POSITIONS_CARTESIANLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *CZMWall) PositionsCartesianLength() int {
+	return rcv.POSITIONS_CARTESIANLength()
 }
 
 /// Positions as Cartesian
@@ -112,6 +140,10 @@ func (rcv *CZMWall) MutatePOSITIONS_CARTESIAN(j int, n float64) bool {
 	return false
 }
 
+func (rcv *CZMWall) MutatePositionsCartesian(j int, n float64) bool {
+	return rcv.MutatePOSITIONS_CARTESIAN(j, n)
+}
+
 /// Minimum heights per position
 func (rcv *CZMWall) MINIMUM_HEIGHTS(j int) float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
@@ -122,12 +154,20 @@ func (rcv *CZMWall) MINIMUM_HEIGHTS(j int) float64 {
 	return 0
 }
 
+func (rcv *CZMWall) MinimumHeights(j int) float64 {
+	return rcv.MINIMUM_HEIGHTS(j)
+}
+
 func (rcv *CZMWall) MINIMUM_HEIGHTSLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *CZMWall) MinimumHeightsLength() int {
+	return rcv.MINIMUM_HEIGHTSLength()
 }
 
 /// Minimum heights per position
@@ -140,6 +180,10 @@ func (rcv *CZMWall) MutateMINIMUM_HEIGHTS(j int, n float64) bool {
 	return false
 }
 
+func (rcv *CZMWall) MutateMinimumHeights(j int, n float64) bool {
+	return rcv.MutateMINIMUM_HEIGHTS(j, n)
+}
+
 /// Maximum heights per position
 func (rcv *CZMWall) MAXIMUM_HEIGHTS(j int) float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
@@ -150,12 +194,20 @@ func (rcv *CZMWall) MAXIMUM_HEIGHTS(j int) float64 {
 	return 0
 }
 
+func (rcv *CZMWall) MaximumHeights(j int) float64 {
+	return rcv.MAXIMUM_HEIGHTS(j)
+}
+
 func (rcv *CZMWall) MAXIMUM_HEIGHTSLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *CZMWall) MaximumHeightsLength() int {
+	return rcv.MAXIMUM_HEIGHTSLength()
 }
 
 /// Maximum heights per position
@@ -168,6 +220,10 @@ func (rcv *CZMWall) MutateMAXIMUM_HEIGHTS(j int, n float64) bool {
 	return false
 }
 
+func (rcv *CZMWall) MutateMaximumHeights(j int, n float64) bool {
+	return rcv.MutateMAXIMUM_HEIGHTS(j, n)
+}
+
 /// Granularity in radians
 func (rcv *CZMWall) GRANULARITY() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
@@ -177,9 +233,17 @@ func (rcv *CZMWall) GRANULARITY() float64 {
 	return 0.0
 }
 
+func (rcv *CZMWall) Granularity() float64 {
+	return rcv.GRANULARITY()
+}
+
 /// Granularity in radians
 func (rcv *CZMWall) MutateGRANULARITY(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(14, n)
+}
+
+func (rcv *CZMWall) MutateGranularity(n float64) bool {
+	return rcv.MutateGRANULARITY(n)
 }
 
 /// Fill flag
@@ -191,9 +255,17 @@ func (rcv *CZMWall) FILL() bool {
 	return false
 }
 
+func (rcv *CZMWall) Fill() bool {
+	return rcv.FILL()
+}
+
 /// Fill flag
 func (rcv *CZMWall) MutateFILL(n bool) bool {
 	return rcv._tab.MutateBoolSlot(16, n)
+}
+
+func (rcv *CZMWall) MutateFill(n bool) bool {
+	return rcv.MutateFILL(n)
 }
 
 /// Surface material
@@ -210,6 +282,10 @@ func (rcv *CZMWall) MATERIAL(obj *CZMMaterial) *CZMMaterial {
 	return nil
 }
 
+func (rcv *CZMWall) Material(obj *CZMMaterial) *CZMMaterial {
+	return rcv.MATERIAL(obj)
+}
+
 /// Surface material
 /// Outline flag
 func (rcv *CZMWall) OUTLINE() bool {
@@ -220,9 +296,17 @@ func (rcv *CZMWall) OUTLINE() bool {
 	return false
 }
 
+func (rcv *CZMWall) Outline() bool {
+	return rcv.OUTLINE()
+}
+
 /// Outline flag
 func (rcv *CZMWall) MutateOUTLINE(n bool) bool {
 	return rcv._tab.MutateBoolSlot(20, n)
+}
+
+func (rcv *CZMWall) MutateOutline(n bool) bool {
+	return rcv.MutateOUTLINE(n)
 }
 
 /// Outline color
@@ -239,6 +323,10 @@ func (rcv *CZMWall) OUTLINE_COLOR(obj *CZMColor) *CZMColor {
 	return nil
 }
 
+func (rcv *CZMWall) OutlineColor(obj *CZMColor) *CZMColor {
+	return rcv.OUTLINE_COLOR(obj)
+}
+
 /// Outline color
 /// Outline width
 func (rcv *CZMWall) OUTLINE_WIDTH() float64 {
@@ -249,9 +337,17 @@ func (rcv *CZMWall) OUTLINE_WIDTH() float64 {
 	return 0.0
 }
 
+func (rcv *CZMWall) OutlineWidth() float64 {
+	return rcv.OUTLINE_WIDTH()
+}
+
 /// Outline width
 func (rcv *CZMWall) MutateOUTLINE_WIDTH(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(24, n)
+}
+
+func (rcv *CZMWall) MutateOutlineWidth(n float64) bool {
+	return rcv.MutateOUTLINE_WIDTH(n)
 }
 
 /// Shadow mode
@@ -263,6 +359,10 @@ func (rcv *CZMWall) SHADOWS() []byte {
 	return nil
 }
 
+func (rcv *CZMWall) Shadows() []byte {
+	return rcv.SHADOWS()
+}
+
 /// Shadow mode
 func CZMWallStart(builder *flatbuffers.Builder) {
 	builder.StartObject(12)
@@ -270,50 +370,98 @@ func CZMWallStart(builder *flatbuffers.Builder) {
 func CZMWallAddSHOW(builder *flatbuffers.Builder, SHOW bool) {
 	builder.PrependBoolSlot(0, SHOW, false)
 }
+func CZMWallAddShow(builder *flatbuffers.Builder, SHOW bool) {
+	CZMWallAddSHOW(builder, SHOW)
+}
 func CZMWallAddPOSITIONS_CARTOGRAPHIC_DEGREES(builder *flatbuffers.Builder, POSITIONS_CARTOGRAPHIC_DEGREES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(POSITIONS_CARTOGRAPHIC_DEGREES), 0)
+}
+func CZMWallAddPositionsCartographicDegrees(builder *flatbuffers.Builder, POSITIONS_CARTOGRAPHIC_DEGREES flatbuffers.UOffsetT) {
+	CZMWallAddPOSITIONS_CARTOGRAPHIC_DEGREES(builder, POSITIONS_CARTOGRAPHIC_DEGREES)
 }
 func CZMWallStartPOSITIONS_CARTOGRAPHIC_DEGREESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(8, numElems, 8)
 }
+func CZMWallStartPositionsCartographicDegreesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return CZMWallStartPOSITIONS_CARTOGRAPHIC_DEGREESVector(builder, numElems)
+}
 func CZMWallAddPOSITIONS_CARTESIAN(builder *flatbuffers.Builder, POSITIONS_CARTESIAN flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(POSITIONS_CARTESIAN), 0)
+}
+func CZMWallAddPositionsCartesian(builder *flatbuffers.Builder, POSITIONS_CARTESIAN flatbuffers.UOffsetT) {
+	CZMWallAddPOSITIONS_CARTESIAN(builder, POSITIONS_CARTESIAN)
 }
 func CZMWallStartPOSITIONS_CARTESIANVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(8, numElems, 8)
 }
+func CZMWallStartPositionsCartesianVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return CZMWallStartPOSITIONS_CARTESIANVector(builder, numElems)
+}
 func CZMWallAddMINIMUM_HEIGHTS(builder *flatbuffers.Builder, MINIMUM_HEIGHTS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(MINIMUM_HEIGHTS), 0)
+}
+func CZMWallAddMinimumHeights(builder *flatbuffers.Builder, MINIMUM_HEIGHTS flatbuffers.UOffsetT) {
+	CZMWallAddMINIMUM_HEIGHTS(builder, MINIMUM_HEIGHTS)
 }
 func CZMWallStartMINIMUM_HEIGHTSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(8, numElems, 8)
 }
+func CZMWallStartMinimumHeightsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return CZMWallStartMINIMUM_HEIGHTSVector(builder, numElems)
+}
 func CZMWallAddMAXIMUM_HEIGHTS(builder *flatbuffers.Builder, MAXIMUM_HEIGHTS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(MAXIMUM_HEIGHTS), 0)
+}
+func CZMWallAddMaximumHeights(builder *flatbuffers.Builder, MAXIMUM_HEIGHTS flatbuffers.UOffsetT) {
+	CZMWallAddMAXIMUM_HEIGHTS(builder, MAXIMUM_HEIGHTS)
 }
 func CZMWallStartMAXIMUM_HEIGHTSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(8, numElems, 8)
 }
+func CZMWallStartMaximumHeightsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return CZMWallStartMAXIMUM_HEIGHTSVector(builder, numElems)
+}
 func CZMWallAddGRANULARITY(builder *flatbuffers.Builder, GRANULARITY float64) {
 	builder.PrependFloat64Slot(5, GRANULARITY, 0.0)
+}
+func CZMWallAddGranularity(builder *flatbuffers.Builder, GRANULARITY float64) {
+	CZMWallAddGRANULARITY(builder, GRANULARITY)
 }
 func CZMWallAddFILL(builder *flatbuffers.Builder, FILL bool) {
 	builder.PrependBoolSlot(6, FILL, false)
 }
+func CZMWallAddFill(builder *flatbuffers.Builder, FILL bool) {
+	CZMWallAddFILL(builder, FILL)
+}
 func CZMWallAddMATERIAL(builder *flatbuffers.Builder, MATERIAL flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(MATERIAL), 0)
+}
+func CZMWallAddMaterial(builder *flatbuffers.Builder, MATERIAL flatbuffers.UOffsetT) {
+	CZMWallAddMATERIAL(builder, MATERIAL)
 }
 func CZMWallAddOUTLINE(builder *flatbuffers.Builder, OUTLINE bool) {
 	builder.PrependBoolSlot(8, OUTLINE, false)
 }
+func CZMWallAddOutline(builder *flatbuffers.Builder, OUTLINE bool) {
+	CZMWallAddOUTLINE(builder, OUTLINE)
+}
 func CZMWallAddOUTLINE_COLOR(builder *flatbuffers.Builder, OUTLINE_COLOR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(OUTLINE_COLOR), 0)
+}
+func CZMWallAddOutlineColor(builder *flatbuffers.Builder, OUTLINE_COLOR flatbuffers.UOffsetT) {
+	CZMWallAddOUTLINE_COLOR(builder, OUTLINE_COLOR)
 }
 func CZMWallAddOUTLINE_WIDTH(builder *flatbuffers.Builder, OUTLINE_WIDTH float64) {
 	builder.PrependFloat64Slot(10, OUTLINE_WIDTH, 0.0)
 }
+func CZMWallAddOutlineWidth(builder *flatbuffers.Builder, OUTLINE_WIDTH float64) {
+	CZMWallAddOUTLINE_WIDTH(builder, OUTLINE_WIDTH)
+}
 func CZMWallAddSHADOWS(builder *flatbuffers.Builder, SHADOWS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(SHADOWS), 0)
+}
+func CZMWallAddShadows(builder *flatbuffers.Builder, SHADOWS flatbuffers.UOffsetT) {
+	CZMWallAddSHADOWS(builder, SHADOWS)
 }
 func CZMWallEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

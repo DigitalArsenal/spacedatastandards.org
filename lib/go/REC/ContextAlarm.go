@@ -56,6 +56,10 @@ func (rcv *ContextAlarm) MATCH_CRITERIA(obj *MatchCriteria) *MatchCriteria {
 	return nil
 }
 
+func (rcv *ContextAlarm) MatchCriteria(obj *MatchCriteria) *MatchCriteria {
+	return rcv.MATCH_CRITERIA(obj)
+}
+
 /// Match criteria for this alarm context
 /// Alarm definition for this context
 func (rcv *ContextAlarm) ALARM(obj *DefaultAlarm) *DefaultAlarm {
@@ -71,6 +75,10 @@ func (rcv *ContextAlarm) ALARM(obj *DefaultAlarm) *DefaultAlarm {
 	return nil
 }
 
+func (rcv *ContextAlarm) Alarm(obj *DefaultAlarm) *DefaultAlarm {
+	return rcv.ALARM(obj)
+}
+
 /// Alarm definition for this context
 func ContextAlarmStart(builder *flatbuffers.Builder) {
 	builder.StartObject(2)
@@ -78,8 +86,14 @@ func ContextAlarmStart(builder *flatbuffers.Builder) {
 func ContextAlarmAddMATCH_CRITERIA(builder *flatbuffers.Builder, MATCH_CRITERIA flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(MATCH_CRITERIA), 0)
 }
+func ContextAlarmAddMatchCriteria(builder *flatbuffers.Builder, MATCH_CRITERIA flatbuffers.UOffsetT) {
+	ContextAlarmAddMATCH_CRITERIA(builder, MATCH_CRITERIA)
+}
 func ContextAlarmAddALARM(builder *flatbuffers.Builder, ALARM flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(ALARM), 0)
+}
+func ContextAlarmAddAlarm(builder *flatbuffers.Builder, ALARM flatbuffers.UOffsetT) {
+	ContextAlarmAddALARM(builder, ALARM)
 }
 func ContextAlarmEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

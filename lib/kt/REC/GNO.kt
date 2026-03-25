@@ -32,7 +32,7 @@ class GNO : Table() {
     /**
      * Unique identifier
      */
-    val ID : String?
+    val id : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class GNO : Table() {
                 null
             }
         }
-    val IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val idAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun idInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Receiver identifier
      */
-    val RECEIVER_ID : String?
+    val receiverId : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -55,12 +55,12 @@ class GNO : Table() {
                 null
             }
         }
-    val RECEIVER_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun RECEIVER_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val receiverIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun receiverIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * Receiver type/model
      */
-    val RECEIVER_TYPE : String?
+    val receiverType : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -69,12 +69,12 @@ class GNO : Table() {
                 null
             }
         }
-    val RECEIVER_TYPEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun RECEIVER_TYPEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val receiverTypeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun receiverTypeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
     /**
      * Antenna identifier
      */
-    val ANTENNA_ID : String?
+    val antennaId : String?
         get() {
             val o = __offset(10)
             return if (o != 0) {
@@ -83,12 +83,12 @@ class GNO : Table() {
                 null
             }
         }
-    val ANTENNA_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
-    fun ANTENNA_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
+    val antennaIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(10, 1)
+    fun antennaIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 10, 1)
     /**
      * Antenna type/model
      */
-    val ANTENNA_TYPE : String?
+    val antennaType : String?
         get() {
             val o = __offset(12)
             return if (o != 0) {
@@ -97,12 +97,12 @@ class GNO : Table() {
                 null
             }
         }
-    val ANTENNA_TYPEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
-    fun ANTENNA_TYPEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
+    val antennaTypeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(12, 1)
+    fun antennaTypeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 12, 1)
     /**
      * Receiver firmware version
      */
-    val FIRMWARE_VERSION : String?
+    val firmwareVersion : String?
         get() {
             val o = __offset(14)
             return if (o != 0) {
@@ -111,12 +111,12 @@ class GNO : Table() {
                 null
             }
         }
-    val FIRMWARE_VERSIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(14, 1)
-    fun FIRMWARE_VERSIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 14, 1)
+    val firmwareVersionAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(14, 1)
+    fun firmwareVersionInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 14, 1)
     /**
      * Observation epoch (ISO 8601)
      */
-    val EPOCH : String?
+    val epoch : String?
         get() {
             val o = __offset(16)
             return if (o != 0) {
@@ -125,12 +125,12 @@ class GNO : Table() {
                 null
             }
         }
-    val EPOCHAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(16, 1)
-    fun EPOCHInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 16, 1)
+    val epochAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(16, 1)
+    fun epochInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 16, 1)
     /**
      * Receiver clock offset in seconds
      */
-    val CLOCK_OFFSET : Double
+    val clockOffset : Double
         get() {
             val o = __offset(18)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -138,7 +138,7 @@ class GNO : Table() {
     /**
      * Receiver clock drift in seconds/second
      */
-    val CLOCK_DRIFT : Double
+    val clockDrift : Double
         get() {
             val o = __offset(20)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -146,7 +146,7 @@ class GNO : Table() {
     /**
      * Receiver geodetic latitude in degrees
      */
-    val LATITUDE : Double
+    val latitude : Double
         get() {
             val o = __offset(22)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -154,7 +154,7 @@ class GNO : Table() {
     /**
      * Receiver geodetic longitude in degrees
      */
-    val LONGITUDE : Double
+    val longitude : Double
         get() {
             val o = __offset(24)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -162,7 +162,7 @@ class GNO : Table() {
     /**
      * Receiver altitude in meters above WGS-84
      */
-    val ALTITUDE : Double
+    val altitude : Double
         get() {
             val o = __offset(26)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -170,7 +170,7 @@ class GNO : Table() {
     /**
      * Approximate position X in meters (ECEF)
      */
-    val APPROX_X : Double
+    val approxX : Double
         get() {
             val o = __offset(28)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -178,7 +178,7 @@ class GNO : Table() {
     /**
      * Approximate position Y in meters (ECEF)
      */
-    val APPROX_Y : Double
+    val approxY : Double
         get() {
             val o = __offset(30)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -186,7 +186,7 @@ class GNO : Table() {
     /**
      * Approximate position Z in meters (ECEF)
      */
-    val APPROX_Z : Double
+    val approxZ : Double
         get() {
             val o = __offset(32)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -194,7 +194,7 @@ class GNO : Table() {
     /**
      * Observation interval in seconds
      */
-    val INTERVAL : Double
+    val interval : Double
         get() {
             val o = __offset(34)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -202,7 +202,7 @@ class GNO : Table() {
     /**
      * Number of satellites observed
      */
-    val NUM_SATS : UInt
+    val numSats : UInt
         get() {
             val o = __offset(36)
             return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
@@ -210,7 +210,7 @@ class GNO : Table() {
     /**
      * PDOP
      */
-    val PDOP : Double
+    val pdop : Double
         get() {
             val o = __offset(38)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -218,7 +218,7 @@ class GNO : Table() {
     /**
      * HDOP
      */
-    val HDOP : Double
+    val hdop : Double
         get() {
             val o = __offset(40)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -226,7 +226,7 @@ class GNO : Table() {
     /**
      * VDOP
      */
-    val VDOP : Double
+    val vdop : Double
         get() {
             val o = __offset(42)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -234,8 +234,8 @@ class GNO : Table() {
     /**
      * Satellite observations
      */
-    fun SAT_OBS(j: Int) : gnssSatObs? = SAT_OBS(gnssSatObs(), j)
-    fun SAT_OBS(obj: gnssSatObs, j: Int) : gnssSatObs? {
+    fun satObs(j: Int) : gnssSatObs? = satObs(gnssSatObs(), j)
+    fun satObs(obj: gnssSatObs, j: Int) : gnssSatObs? {
         val o = __offset(44)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -243,14 +243,14 @@ class GNO : Table() {
             null
         }
     }
-    val SAT_OBSLength : Int
+    val satObsLength : Int
         get() {
             val o = __offset(44); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Observation code set identifiers
      */
-    fun OBS_CODE_SET(j: Int) : String? {
+    fun obsCodeSet(j: Int) : String? {
         val o = __offset(46)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
@@ -258,14 +258,14 @@ class GNO : Table() {
             null
         }
     }
-    val OBS_CODE_SETLength : Int
+    val obsCodeSetLength : Int
         get() {
             val o = __offset(46); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Additional notes
      */
-    val NOTES : String?
+    val notes : String?
         get() {
             val o = __offset(48)
             return if (o != 0) {
@@ -274,65 +274,65 @@ class GNO : Table() {
                 null
             }
         }
-    val NOTESAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(48, 1)
-    fun NOTESInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 48, 1)
+    val notesAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(48, 1)
+    fun notesInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 48, 1)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsGNO(_bb: ByteBuffer): GNO = getRootAsGNO(_bb, GNO())
         fun getRootAsGNO(_bb: ByteBuffer, obj: GNO): GNO {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun GNOBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$GNO")
-        fun createGNO(builder: FlatBufferBuilder, IDOffset: Int, RECEIVER_IDOffset: Int, RECEIVER_TYPEOffset: Int, ANTENNA_IDOffset: Int, ANTENNA_TYPEOffset: Int, FIRMWARE_VERSIONOffset: Int, EPOCHOffset: Int, CLOCK_OFFSET: Double, CLOCK_DRIFT: Double, LATITUDE: Double, LONGITUDE: Double, ALTITUDE: Double, APPROX_X: Double, APPROX_Y: Double, APPROX_Z: Double, INTERVAL: Double, NUM_SATS: UInt, PDOP: Double, HDOP: Double, VDOP: Double, SAT_OBSOffset: Int, OBS_CODE_SETOffset: Int, NOTESOffset: Int) : Int {
+        fun createGNO(builder: FlatBufferBuilder, idOffset: Int, receiverIdOffset: Int, receiverTypeOffset: Int, antennaIdOffset: Int, antennaTypeOffset: Int, firmwareVersionOffset: Int, epochOffset: Int, clockOffset: Double, clockDrift: Double, latitude: Double, longitude: Double, altitude: Double, approxX: Double, approxY: Double, approxZ: Double, interval: Double, numSats: UInt, pdop: Double, hdop: Double, vdop: Double, satObsOffset: Int, obsCodeSetOffset: Int, notesOffset: Int) : Int {
             builder.startTable(23)
-            addVDOP(builder, VDOP)
-            addHDOP(builder, HDOP)
-            addPDOP(builder, PDOP)
-            addINTERVAL(builder, INTERVAL)
-            addAPPROX_Z(builder, APPROX_Z)
-            addAPPROX_Y(builder, APPROX_Y)
-            addAPPROX_X(builder, APPROX_X)
-            addALTITUDE(builder, ALTITUDE)
-            addLONGITUDE(builder, LONGITUDE)
-            addLATITUDE(builder, LATITUDE)
-            addCLOCK_DRIFT(builder, CLOCK_DRIFT)
-            addCLOCK_OFFSET(builder, CLOCK_OFFSET)
-            addNOTES(builder, NOTESOffset)
-            addOBS_CODE_SET(builder, OBS_CODE_SETOffset)
-            addSAT_OBS(builder, SAT_OBSOffset)
-            addNUM_SATS(builder, NUM_SATS)
-            addEPOCH(builder, EPOCHOffset)
-            addFIRMWARE_VERSION(builder, FIRMWARE_VERSIONOffset)
-            addANTENNA_TYPE(builder, ANTENNA_TYPEOffset)
-            addANTENNA_ID(builder, ANTENNA_IDOffset)
-            addRECEIVER_TYPE(builder, RECEIVER_TYPEOffset)
-            addRECEIVER_ID(builder, RECEIVER_IDOffset)
-            addID(builder, IDOffset)
+            addVDOP(builder, vdop)
+            addHDOP(builder, hdop)
+            addPDOP(builder, pdop)
+            addINTERVAL(builder, interval)
+            addAPPROXZ(builder, approxZ)
+            addAPPROXY(builder, approxY)
+            addAPPROXX(builder, approxX)
+            addALTITUDE(builder, altitude)
+            addLONGITUDE(builder, longitude)
+            addLATITUDE(builder, latitude)
+            addCLOCKDRIFT(builder, clockDrift)
+            addCLOCKOFFSET(builder, clockOffset)
+            addNOTES(builder, notesOffset)
+            addOBSCODESET(builder, obsCodeSetOffset)
+            addSATOBS(builder, satObsOffset)
+            addNUMSATS(builder, numSats)
+            addEPOCH(builder, epochOffset)
+            addFIRMWAREVERSION(builder, firmwareVersionOffset)
+            addANTENNATYPE(builder, antennaTypeOffset)
+            addANTENNAID(builder, antennaIdOffset)
+            addRECEIVERTYPE(builder, receiverTypeOffset)
+            addRECEIVERID(builder, receiverIdOffset)
+            addID(builder, idOffset)
             return endGNO(builder)
         }
         fun startGNO(builder: FlatBufferBuilder) = builder.startTable(23)
-        fun addID(builder: FlatBufferBuilder, ID: Int) = builder.addOffset(0, ID, 0)
-        fun addRECEIVER_ID(builder: FlatBufferBuilder, RECEIVER_ID: Int) = builder.addOffset(1, RECEIVER_ID, 0)
-        fun addRECEIVER_TYPE(builder: FlatBufferBuilder, RECEIVER_TYPE: Int) = builder.addOffset(2, RECEIVER_TYPE, 0)
-        fun addANTENNA_ID(builder: FlatBufferBuilder, ANTENNA_ID: Int) = builder.addOffset(3, ANTENNA_ID, 0)
-        fun addANTENNA_TYPE(builder: FlatBufferBuilder, ANTENNA_TYPE: Int) = builder.addOffset(4, ANTENNA_TYPE, 0)
-        fun addFIRMWARE_VERSION(builder: FlatBufferBuilder, FIRMWARE_VERSION: Int) = builder.addOffset(5, FIRMWARE_VERSION, 0)
-        fun addEPOCH(builder: FlatBufferBuilder, EPOCH: Int) = builder.addOffset(6, EPOCH, 0)
-        fun addCLOCK_OFFSET(builder: FlatBufferBuilder, CLOCK_OFFSET: Double) = builder.addDouble(7, CLOCK_OFFSET, 0.0)
-        fun addCLOCK_DRIFT(builder: FlatBufferBuilder, CLOCK_DRIFT: Double) = builder.addDouble(8, CLOCK_DRIFT, 0.0)
-        fun addLATITUDE(builder: FlatBufferBuilder, LATITUDE: Double) = builder.addDouble(9, LATITUDE, 0.0)
-        fun addLONGITUDE(builder: FlatBufferBuilder, LONGITUDE: Double) = builder.addDouble(10, LONGITUDE, 0.0)
-        fun addALTITUDE(builder: FlatBufferBuilder, ALTITUDE: Double) = builder.addDouble(11, ALTITUDE, 0.0)
-        fun addAPPROX_X(builder: FlatBufferBuilder, APPROX_X: Double) = builder.addDouble(12, APPROX_X, 0.0)
-        fun addAPPROX_Y(builder: FlatBufferBuilder, APPROX_Y: Double) = builder.addDouble(13, APPROX_Y, 0.0)
-        fun addAPPROX_Z(builder: FlatBufferBuilder, APPROX_Z: Double) = builder.addDouble(14, APPROX_Z, 0.0)
-        fun addINTERVAL(builder: FlatBufferBuilder, INTERVAL: Double) = builder.addDouble(15, INTERVAL, 0.0)
-        fun addNUM_SATS(builder: FlatBufferBuilder, NUM_SATS: UInt) = builder.addInt(16, NUM_SATS.toInt(), 0)
-        fun addPDOP(builder: FlatBufferBuilder, PDOP: Double) = builder.addDouble(17, PDOP, 0.0)
-        fun addHDOP(builder: FlatBufferBuilder, HDOP: Double) = builder.addDouble(18, HDOP, 0.0)
-        fun addVDOP(builder: FlatBufferBuilder, VDOP: Double) = builder.addDouble(19, VDOP, 0.0)
-        fun addSAT_OBS(builder: FlatBufferBuilder, SAT_OBS: Int) = builder.addOffset(20, SAT_OBS, 0)
+        fun addID(builder: FlatBufferBuilder, id: Int) = builder.addOffset(0, id, 0)
+        fun addRECEIVERID(builder: FlatBufferBuilder, receiverId: Int) = builder.addOffset(1, receiverId, 0)
+        fun addRECEIVERTYPE(builder: FlatBufferBuilder, receiverType: Int) = builder.addOffset(2, receiverType, 0)
+        fun addANTENNAID(builder: FlatBufferBuilder, antennaId: Int) = builder.addOffset(3, antennaId, 0)
+        fun addANTENNATYPE(builder: FlatBufferBuilder, antennaType: Int) = builder.addOffset(4, antennaType, 0)
+        fun addFIRMWAREVERSION(builder: FlatBufferBuilder, firmwareVersion: Int) = builder.addOffset(5, firmwareVersion, 0)
+        fun addEPOCH(builder: FlatBufferBuilder, epoch: Int) = builder.addOffset(6, epoch, 0)
+        fun addCLOCKOFFSET(builder: FlatBufferBuilder, clockOffset: Double) = builder.addDouble(7, clockOffset, 0.0)
+        fun addCLOCKDRIFT(builder: FlatBufferBuilder, clockDrift: Double) = builder.addDouble(8, clockDrift, 0.0)
+        fun addLATITUDE(builder: FlatBufferBuilder, latitude: Double) = builder.addDouble(9, latitude, 0.0)
+        fun addLONGITUDE(builder: FlatBufferBuilder, longitude: Double) = builder.addDouble(10, longitude, 0.0)
+        fun addALTITUDE(builder: FlatBufferBuilder, altitude: Double) = builder.addDouble(11, altitude, 0.0)
+        fun addAPPROXX(builder: FlatBufferBuilder, approxX: Double) = builder.addDouble(12, approxX, 0.0)
+        fun addAPPROXY(builder: FlatBufferBuilder, approxY: Double) = builder.addDouble(13, approxY, 0.0)
+        fun addAPPROXZ(builder: FlatBufferBuilder, approxZ: Double) = builder.addDouble(14, approxZ, 0.0)
+        fun addINTERVAL(builder: FlatBufferBuilder, interval: Double) = builder.addDouble(15, interval, 0.0)
+        fun addNUMSATS(builder: FlatBufferBuilder, numSats: UInt) = builder.addInt(16, numSats.toInt(), 0)
+        fun addPDOP(builder: FlatBufferBuilder, pdop: Double) = builder.addDouble(17, pdop, 0.0)
+        fun addHDOP(builder: FlatBufferBuilder, hdop: Double) = builder.addDouble(18, hdop, 0.0)
+        fun addVDOP(builder: FlatBufferBuilder, vdop: Double) = builder.addDouble(19, vdop, 0.0)
+        fun addSATOBS(builder: FlatBufferBuilder, satObs: Int) = builder.addOffset(20, satObs, 0)
         fun createSatObsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -341,7 +341,7 @@ class GNO : Table() {
             return builder.endVector()
         }
         fun startSatObsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addOBS_CODE_SET(builder: FlatBufferBuilder, OBS_CODE_SET: Int) = builder.addOffset(21, OBS_CODE_SET, 0)
+        fun addOBSCODESET(builder: FlatBufferBuilder, obsCodeSet: Int) = builder.addOffset(21, obsCodeSet, 0)
         fun createObsCodeSetVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -350,7 +350,7 @@ class GNO : Table() {
             return builder.endVector()
         }
         fun startObsCodeSetVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addNOTES(builder: FlatBufferBuilder, NOTES: Int) = builder.addOffset(22, NOTES, 0)
+        fun addNOTES(builder: FlatBufferBuilder, notes: Int) = builder.addOffset(22, notes, 0)
         fun endGNO(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

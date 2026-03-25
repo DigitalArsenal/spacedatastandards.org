@@ -2,6 +2,6 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export { IRO, IROT } from './IRO.js';
-export { irBand } from './irBand.js';
-export { irDetectionType } from './irDetectionType.js';
+export * from './irBand.js';
+export * from './irDetectionType.js';
+export * from './IRO.js';

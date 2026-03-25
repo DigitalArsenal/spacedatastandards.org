@@ -286,16 +286,16 @@ struct GNOBuilder:
     def end():
         return b_.EndObject()
 
-def GNOStartSAT_OBSVector(b_:flatbuffers.builder, n_:int):
+def GNOStartSATOBSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def GNOCreateSAT_OBSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def GNOCreateSATOBSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-def GNOStartOBS_CODE_SETVector(b_:flatbuffers.builder, n_:int):
+def GNOStartOBSCODESETVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def GNOCreateOBS_CODE_SETVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def GNOCreateOBSCODESETVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)

@@ -4,8 +4,8 @@
 
 import * as flatbuffers from 'flatbuffers';
 
-import { anomalyType } from './anomalyType.js';
 import { polynomialBasisType } from './polynomialBasisType.js';
+import { ppeAnomalyType } from './ppeAnomalyType.js';
 import { sizeShapeType } from './sizeShapeType.js';
 
 
@@ -85,9 +85,9 @@ SIZE_SHAPE_TYPE():sizeShapeType {
 /**
  * Anomaly type for the sixth orbital element.
  */
-ANOMALY_TYPE():anomalyType {
+ANOMALY_TYPE():ppeAnomalyType {
   const offset = this.bb!.__offset(this.bb_pos, 14);
-  return offset ? this.bb!.readInt8(this.bb_pos + offset) : anomalyType.TRUE_ANOMALY;
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : ppeAnomalyType.TRUE_ANOMALY;
 }
 
 /**
@@ -245,8 +245,8 @@ static addSizeShapeType(builder:flatbuffers.Builder, SIZE_SHAPE_TYPE:sizeShapeTy
   builder.addFieldInt8(4, SIZE_SHAPE_TYPE, sizeShapeType.SMA);
 }
 
-static addAnomalyType(builder:flatbuffers.Builder, ANOMALY_TYPE:anomalyType) {
-  builder.addFieldInt8(5, ANOMALY_TYPE, anomalyType.TRUE_ANOMALY);
+static addAnomalyType(builder:flatbuffers.Builder, ANOMALY_TYPE:ppeAnomalyType) {
+  builder.addFieldInt8(5, ANOMALY_TYPE, ppeAnomalyType.TRUE_ANOMALY);
 }
 
 static addCoeffSizeShape(builder:flatbuffers.Builder, COEFF_SIZE_SHAPEOffset:flatbuffers.Offset) {
@@ -395,7 +395,7 @@ static endPPEOrbitalElementRecord(builder:flatbuffers.Builder):flatbuffers.Offse
   return offset;
 }
 
-static createPPEOrbitalElementRecord(builder:flatbuffers.Builder, EPOCH_MIDOffset:flatbuffers.Offset, EPOCH_HALF_SPAN:number, NUM_COEFFICIENTS:number, BASIS_TYPE:polynomialBasisType, SIZE_SHAPE_TYPE:sizeShapeType, ANOMALY_TYPE:anomalyType, COEFF_SIZE_SHAPEOffset:flatbuffers.Offset, COEFF_ECCENTRICITYOffset:flatbuffers.Offset, COEFF_INCLINATIONOffset:flatbuffers.Offset, COEFF_RAANOffset:flatbuffers.Offset, COEFF_ARG_PERIAPSISOffset:flatbuffers.Offset, COEFF_ANOMALYOffset:flatbuffers.Offset, MAX_ELEMENT_RESIDUAL:number, RMS_ELEMENT_RESIDUAL:number):flatbuffers.Offset {
+static createPPEOrbitalElementRecord(builder:flatbuffers.Builder, EPOCH_MIDOffset:flatbuffers.Offset, EPOCH_HALF_SPAN:number, NUM_COEFFICIENTS:number, BASIS_TYPE:polynomialBasisType, SIZE_SHAPE_TYPE:sizeShapeType, ANOMALY_TYPE:ppeAnomalyType, COEFF_SIZE_SHAPEOffset:flatbuffers.Offset, COEFF_ECCENTRICITYOffset:flatbuffers.Offset, COEFF_INCLINATIONOffset:flatbuffers.Offset, COEFF_RAANOffset:flatbuffers.Offset, COEFF_ARG_PERIAPSISOffset:flatbuffers.Offset, COEFF_ANOMALYOffset:flatbuffers.Offset, MAX_ELEMENT_RESIDUAL:number, RMS_ELEMENT_RESIDUAL:number):flatbuffers.Offset {
   PPEOrbitalElementRecord.startPPEOrbitalElementRecord(builder);
   PPEOrbitalElementRecord.addEpochMid(builder, EPOCH_MIDOffset);
   PPEOrbitalElementRecord.addEpochHalfSpan(builder, EPOCH_HALF_SPAN);
@@ -459,7 +459,7 @@ constructor(
   public NUM_COEFFICIENTS: number = 0,
   public BASIS_TYPE: polynomialBasisType = polynomialBasisType.CHEBYSHEV,
   public SIZE_SHAPE_TYPE: sizeShapeType = sizeShapeType.SMA,
-  public ANOMALY_TYPE: anomalyType = anomalyType.TRUE_ANOMALY,
+  public ANOMALY_TYPE: ppeAnomalyType = ppeAnomalyType.TRUE_ANOMALY,
   public COEFF_SIZE_SHAPE: (number)[] = [],
   public COEFF_ECCENTRICITY: (number)[] = [],
   public COEFF_INCLINATION: (number)[] = [],

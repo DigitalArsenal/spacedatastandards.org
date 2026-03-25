@@ -125,17 +125,23 @@ except:
 class ContextCalibratorT(object):
 
     # ContextCalibratorT
-    def __init__(self):
-        self.MATCH_CRITERIA = None  # type: Optional[MatchCriteria.MatchCriteriaT]
-        self.POLYNOMIAL = None  # type: Optional[PolynomialCalibrator.PolynomialCalibratorT]
-        self.SPLINE = None  # type: Optional[SplineCalibrator.SplineCalibratorT]
-        self.MATH_OPERATION = None  # type: Optional[MathOperation.MathOperationT]
+    def __init__(
+        self,
+        MATCH_CRITERIA = None,
+        POLYNOMIAL = None,
+        SPLINE = None,
+        MATH_OPERATION = None,
+    ):
+        self.MATCH_CRITERIA = MATCH_CRITERIA  # type: Optional[MatchCriteria.MatchCriteriaT]
+        self.POLYNOMIAL = POLYNOMIAL  # type: Optional[PolynomialCalibrator.PolynomialCalibratorT]
+        self.SPLINE = SPLINE  # type: Optional[SplineCalibrator.SplineCalibratorT]
+        self.MATH_OPERATION = MATH_OPERATION  # type: Optional[MathOperation.MathOperationT]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        contextCalibrator = ContextCalibrator()
-        contextCalibrator.Init(buf, pos)
-        return cls.InitFromObj(contextCalibrator)
+        tmpContextCalibrator = ContextCalibrator()
+        tmpContextCalibrator.Init(buf, pos)
+        return cls.InitFromObj(tmpContextCalibrator)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -143,23 +149,23 @@ class ContextCalibratorT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, contextCalibrator):
+    def InitFromObj(cls, tmpContextCalibrator):
         x = ContextCalibratorT()
-        x._UnPack(contextCalibrator)
+        x._UnPack(tmpContextCalibrator)
         return x
 
     # ContextCalibratorT
-    def _UnPack(self, contextCalibrator):
-        if contextCalibrator is None:
+    def _UnPack(self, ContextCalibrator):
+        if ContextCalibrator is None:
             return
-        if contextCalibrator.MATCH_CRITERIA() is not None:
-            self.MATCH_CRITERIA = MatchCriteria.MatchCriteriaT.InitFromObj(contextCalibrator.MATCH_CRITERIA())
-        if contextCalibrator.POLYNOMIAL() is not None:
-            self.POLYNOMIAL = PolynomialCalibrator.PolynomialCalibratorT.InitFromObj(contextCalibrator.POLYNOMIAL())
-        if contextCalibrator.SPLINE() is not None:
-            self.SPLINE = SplineCalibrator.SplineCalibratorT.InitFromObj(contextCalibrator.SPLINE())
-        if contextCalibrator.MATH_OPERATION() is not None:
-            self.MATH_OPERATION = MathOperation.MathOperationT.InitFromObj(contextCalibrator.MATH_OPERATION())
+        if ContextCalibrator.MATCH_CRITERIA() is not None:
+            self.MATCH_CRITERIA = MatchCriteria.MatchCriteriaT.InitFromObj(ContextCalibrator.MATCH_CRITERIA())
+        if ContextCalibrator.POLYNOMIAL() is not None:
+            self.POLYNOMIAL = PolynomialCalibrator.PolynomialCalibratorT.InitFromObj(ContextCalibrator.POLYNOMIAL())
+        if ContextCalibrator.SPLINE() is not None:
+            self.SPLINE = SplineCalibrator.SplineCalibratorT.InitFromObj(ContextCalibrator.SPLINE())
+        if ContextCalibrator.MATH_OPERATION() is not None:
+            self.MATH_OPERATION = MathOperation.MathOperationT.InitFromObj(ContextCalibrator.MATH_OPERATION())
 
     # ContextCalibratorT
     def Pack(self, builder):
@@ -180,5 +186,5 @@ class ContextCalibratorT(object):
             ContextCalibratorAddSPLINE(builder, SPLINE)
         if self.MATH_OPERATION is not None:
             ContextCalibratorAddMATH_OPERATION(builder, MATH_OPERATION)
-        contextCalibrator = ContextCalibratorEnd(builder)
-        return contextCalibrator
+        ContextCalibrator = ContextCalibratorEnd(builder)
+        return ContextCalibrator

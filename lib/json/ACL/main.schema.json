@@ -168,59 +168,7 @@
       },
       "required" : ["LISTING_ID", "PROVIDER_PEER_ID", "TITLE"],
       "additionalProperties" : false
-    },
-    "ACL" : {
-      "type" : "object",
-      "description" : "Access Control Grant - Permission to access purchased data",
-      "properties" : {
-        "GRANT_ID" : {
-                "type" : "string",
-                "description" : "Unique identifier for this grant"
-              },
-        "LISTING_ID" : {
-                "type" : "string",
-                "description" : "ID of the listing this grant applies to"
-              },
-        "BUYER_PEER_ID" : {
-                "type" : "string",
-                "description" : "Peer ID of the buyer/grantee"
-              },
-        "BUYER_ENCRYPTION_PUBKEY" : {
-                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
-                "description" : "Buyer's encryption public key for encrypted delivery"
-              },
-        "ACCESS_TYPE" : {
-                "$ref" : "#/definitions/accessType",
-                "description" : "Type of access granted"
-              },
-        "TIER_NAME" : {
-                "type" : "string",
-                "description" : "Name of the pricing tier purchased"
-              },
-        "GRANTED_AT" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
-                "description" : "Unix timestamp when access was granted"
-              },
-        "EXPIRES_AT" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
-                "description" : "Unix timestamp when access expires (0 = never expires)"
-              },
-        "PAYMENT_TX_HASH" : {
-                "type" : "string",
-                "description" : "Transaction hash or reference proving payment"
-              },
-        "PAYMENT_METHOD" : {
-                "$ref" : "#/definitions/paymentMethod",
-                "description" : "Payment method used"
-              },
-        "PROVIDER_SIGNATURE" : {
-                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
-                "description" : "Ed25519 signature from provider"
-              }
-      },
-      "required" : ["GRANT_ID", "LISTING_ID", "BUYER_PEER_ID"],
-      "additionalProperties" : false
     }
   },
-  "$ref" : "#/definitions/ACL"
+  "$ref" : "#/definitions/STF"
 }

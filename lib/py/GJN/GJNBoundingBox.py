@@ -143,20 +143,29 @@ def End(builder):
 class GJNBoundingBoxT(object):
 
     # GJNBoundingBoxT
-    def __init__(self):
-        self.WEST = 0.0  # type: float
-        self.SOUTH = 0.0  # type: float
-        self.EAST = 0.0  # type: float
-        self.NORTH = 0.0  # type: float
-        self.MIN_ALTITUDE = 0.0  # type: float
-        self.MAX_ALTITUDE = 0.0  # type: float
-        self.HAS_ALTITUDE = False  # type: bool
+    def __init__(
+        self,
+        WEST = 0.0,
+        SOUTH = 0.0,
+        EAST = 0.0,
+        NORTH = 0.0,
+        MIN_ALTITUDE = 0.0,
+        MAX_ALTITUDE = 0.0,
+        HAS_ALTITUDE = False,
+    ):
+        self.WEST = WEST  # type: float
+        self.SOUTH = SOUTH  # type: float
+        self.EAST = EAST  # type: float
+        self.NORTH = NORTH  # type: float
+        self.MIN_ALTITUDE = MIN_ALTITUDE  # type: float
+        self.MAX_ALTITUDE = MAX_ALTITUDE  # type: float
+        self.HAS_ALTITUDE = HAS_ALTITUDE  # type: bool
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        gjnboundingBox = GJNBoundingBox()
-        gjnboundingBox.Init(buf, pos)
-        return cls.InitFromObj(gjnboundingBox)
+        tmpGjnboundingBox = GJNBoundingBox()
+        tmpGjnboundingBox.Init(buf, pos)
+        return cls.InitFromObj(tmpGjnboundingBox)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -164,22 +173,22 @@ class GJNBoundingBoxT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, gjnboundingBox):
+    def InitFromObj(cls, tmpGjnboundingBox):
         x = GJNBoundingBoxT()
-        x._UnPack(gjnboundingBox)
+        x._UnPack(tmpGjnboundingBox)
         return x
 
     # GJNBoundingBoxT
-    def _UnPack(self, gjnboundingBox):
-        if gjnboundingBox is None:
+    def _UnPack(self, GJNBoundingBox):
+        if GJNBoundingBox is None:
             return
-        self.WEST = gjnboundingBox.WEST()
-        self.SOUTH = gjnboundingBox.SOUTH()
-        self.EAST = gjnboundingBox.EAST()
-        self.NORTH = gjnboundingBox.NORTH()
-        self.MIN_ALTITUDE = gjnboundingBox.MIN_ALTITUDE()
-        self.MAX_ALTITUDE = gjnboundingBox.MAX_ALTITUDE()
-        self.HAS_ALTITUDE = gjnboundingBox.HAS_ALTITUDE()
+        self.WEST = GJNBoundingBox.WEST()
+        self.SOUTH = GJNBoundingBox.SOUTH()
+        self.EAST = GJNBoundingBox.EAST()
+        self.NORTH = GJNBoundingBox.NORTH()
+        self.MIN_ALTITUDE = GJNBoundingBox.MIN_ALTITUDE()
+        self.MAX_ALTITUDE = GJNBoundingBox.MAX_ALTITUDE()
+        self.HAS_ALTITUDE = GJNBoundingBox.HAS_ALTITUDE()
 
     # GJNBoundingBoxT
     def Pack(self, builder):
@@ -191,5 +200,5 @@ class GJNBoundingBoxT(object):
         GJNBoundingBoxAddMIN_ALTITUDE(builder, self.MIN_ALTITUDE)
         GJNBoundingBoxAddMAX_ALTITUDE(builder, self.MAX_ALTITUDE)
         GJNBoundingBoxAddHAS_ALTITUDE(builder, self.HAS_ALTITUDE)
-        gjnboundingBox = GJNBoundingBoxEnd(builder)
-        return gjnboundingBox
+        GJNBoundingBox = GJNBoundingBoxEnd(builder)
+        return GJNBoundingBox

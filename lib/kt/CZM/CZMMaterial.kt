@@ -32,8 +32,8 @@ class CZMMaterial : Table() {
     /**
      * Solid color material
      */
-    val SOLID_COLOR : CZMSolidColorMaterial? get() = SOLID_COLOR(CZMSolidColorMaterial())
-    fun SOLID_COLOR(obj: CZMSolidColorMaterial) : CZMSolidColorMaterial? {
+    val solidColor : CZMSolidColorMaterial? get() = solidColor(CZMSolidColorMaterial())
+    fun solidColor(obj: CZMSolidColorMaterial) : CZMSolidColorMaterial? {
         val o = __offset(4)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -44,8 +44,8 @@ class CZMMaterial : Table() {
     /**
      * Image material
      */
-    val IMAGE : CZMImageMaterial? get() = IMAGE(CZMImageMaterial())
-    fun IMAGE(obj: CZMImageMaterial) : CZMImageMaterial? {
+    val image : CZMImageMaterial? get() = image(CZMImageMaterial())
+    fun image(obj: CZMImageMaterial) : CZMImageMaterial? {
         val o = __offset(6)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -56,8 +56,8 @@ class CZMMaterial : Table() {
     /**
      * Grid material
      */
-    val GRID : CZMGridMaterial? get() = GRID(CZMGridMaterial())
-    fun GRID(obj: CZMGridMaterial) : CZMGridMaterial? {
+    val grid : CZMGridMaterial? get() = grid(CZMGridMaterial())
+    fun grid(obj: CZMGridMaterial) : CZMGridMaterial? {
         val o = __offset(8)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -68,8 +68,8 @@ class CZMMaterial : Table() {
     /**
      * Stripe material
      */
-    val STRIPE : CZMStripeMaterial? get() = STRIPE(CZMStripeMaterial())
-    fun STRIPE(obj: CZMStripeMaterial) : CZMStripeMaterial? {
+    val stripe : CZMStripeMaterial? get() = stripe(CZMStripeMaterial())
+    fun stripe(obj: CZMStripeMaterial) : CZMStripeMaterial? {
         val o = __offset(10)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -80,8 +80,8 @@ class CZMMaterial : Table() {
     /**
      * Checkerboard material
      */
-    val CHECKERBOARD : CZMCheckerboardMaterial? get() = CHECKERBOARD(CZMCheckerboardMaterial())
-    fun CHECKERBOARD(obj: CZMCheckerboardMaterial) : CZMCheckerboardMaterial? {
+    val checkerboard : CZMCheckerboardMaterial? get() = checkerboard(CZMCheckerboardMaterial())
+    fun checkerboard(obj: CZMCheckerboardMaterial) : CZMCheckerboardMaterial? {
         val o = __offset(12)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -90,27 +90,27 @@ class CZMMaterial : Table() {
         }
     }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsCZMMaterial(_bb: ByteBuffer): CZMMaterial = getRootAsCZMMaterial(_bb, CZMMaterial())
         fun getRootAsCZMMaterial(_bb: ByteBuffer, obj: CZMMaterial): CZMMaterial {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createCZMMaterial(builder: FlatBufferBuilder, SOLID_COLOROffset: Int, IMAGEOffset: Int, GRIDOffset: Int, STRIPEOffset: Int, CHECKERBOARDOffset: Int) : Int {
+        fun createCZMMaterial(builder: FlatBufferBuilder, solidColorOffset: Int, imageOffset: Int, gridOffset: Int, stripeOffset: Int, checkerboardOffset: Int) : Int {
             builder.startTable(5)
-            addCHECKERBOARD(builder, CHECKERBOARDOffset)
-            addSTRIPE(builder, STRIPEOffset)
-            addGRID(builder, GRIDOffset)
-            addIMAGE(builder, IMAGEOffset)
-            addSOLID_COLOR(builder, SOLID_COLOROffset)
+            addCHECKERBOARD(builder, checkerboardOffset)
+            addSTRIPE(builder, stripeOffset)
+            addGRID(builder, gridOffset)
+            addIMAGE(builder, imageOffset)
+            addSOLIDCOLOR(builder, solidColorOffset)
             return endCZMMaterial(builder)
         }
         fun startCZMMaterial(builder: FlatBufferBuilder) = builder.startTable(5)
-        fun addSOLID_COLOR(builder: FlatBufferBuilder, SOLID_COLOR: Int) = builder.addOffset(0, SOLID_COLOR, 0)
-        fun addIMAGE(builder: FlatBufferBuilder, IMAGE: Int) = builder.addOffset(1, IMAGE, 0)
-        fun addGRID(builder: FlatBufferBuilder, GRID: Int) = builder.addOffset(2, GRID, 0)
-        fun addSTRIPE(builder: FlatBufferBuilder, STRIPE: Int) = builder.addOffset(3, STRIPE, 0)
-        fun addCHECKERBOARD(builder: FlatBufferBuilder, CHECKERBOARD: Int) = builder.addOffset(4, CHECKERBOARD, 0)
+        fun addSOLIDCOLOR(builder: FlatBufferBuilder, solidColor: Int) = builder.addOffset(0, solidColor, 0)
+        fun addIMAGE(builder: FlatBufferBuilder, image: Int) = builder.addOffset(1, image, 0)
+        fun addGRID(builder: FlatBufferBuilder, grid: Int) = builder.addOffset(2, grid, 0)
+        fun addSTRIPE(builder: FlatBufferBuilder, stripe: Int) = builder.addOffset(3, stripe, 0)
+        fun addCHECKERBOARD(builder: FlatBufferBuilder, checkerboard: Int) = builder.addOffset(4, checkerboard, 0)
         fun endCZMMaterial(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

@@ -2,4 +2,119 @@
 
 # namespace: 
 
-# NOTE AlgorithmOutput.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Algorithm output binding
+class AlgorithmOutput(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = AlgorithmOutput()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsAlgorithmOutput(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def AlgorithmOutputBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x58\x54\x43", size_prefixed=size_prefixed)
+
+    # AlgorithmOutput
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Parameter reference
+    # AlgorithmOutput
+    def PARAMETER_REF(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Output name in algorithm
+    # AlgorithmOutput
+    def OUTPUT_NAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+def AlgorithmOutputStart(builder):
+    builder.StartObject(2)
+
+def Start(builder):
+    AlgorithmOutputStart(builder)
+
+def AlgorithmOutputAddPARAMETER_REF(builder, PARAMETER_REF):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(PARAMETER_REF), 0)
+
+def AddPARAMETER_REF(builder, PARAMETER_REF):
+    AlgorithmOutputAddPARAMETER_REF(builder, PARAMETER_REF)
+
+def AlgorithmOutputAddOUTPUT_NAME(builder, OUTPUT_NAME):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(OUTPUT_NAME), 0)
+
+def AddOUTPUT_NAME(builder, OUTPUT_NAME):
+    AlgorithmOutputAddOUTPUT_NAME(builder, OUTPUT_NAME)
+
+def AlgorithmOutputEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return AlgorithmOutputEnd(builder)
+
+
+class AlgorithmOutputT(object):
+
+    # AlgorithmOutputT
+    def __init__(
+        self,
+        PARAMETER_REF = None,
+        OUTPUT_NAME = None,
+    ):
+        self.PARAMETER_REF = PARAMETER_REF  # type: Optional[str]
+        self.OUTPUT_NAME = OUTPUT_NAME  # type: Optional[str]
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpAlgorithmOutput = AlgorithmOutput()
+        tmpAlgorithmOutput.Init(buf, pos)
+        return cls.InitFromObj(tmpAlgorithmOutput)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpAlgorithmOutput):
+        x = AlgorithmOutputT()
+        x._UnPack(tmpAlgorithmOutput)
+        return x
+
+    # AlgorithmOutputT
+    def _UnPack(self, AlgorithmOutput):
+        if AlgorithmOutput is None:
+            return
+        self.PARAMETER_REF = AlgorithmOutput.PARAMETER_REF()
+        self.OUTPUT_NAME = AlgorithmOutput.OUTPUT_NAME()
+
+    # AlgorithmOutputT
+    def Pack(self, builder):
+        if self.PARAMETER_REF is not None:
+            PARAMETER_REF = builder.CreateString(self.PARAMETER_REF)
+        if self.OUTPUT_NAME is not None:
+            OUTPUT_NAME = builder.CreateString(self.OUTPUT_NAME)
+        AlgorithmOutputStart(builder)
+        if self.PARAMETER_REF is not None:
+            AlgorithmOutputAddPARAMETER_REF(builder, PARAMETER_REF)
+        if self.OUTPUT_NAME is not None:
+            AlgorithmOutputAddOUTPUT_NAME(builder, OUTPUT_NAME)
+        AlgorithmOutput = AlgorithmOutputEnd(builder)
+        return AlgorithmOutput

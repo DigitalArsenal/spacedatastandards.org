@@ -343,6 +343,12 @@ def GPXStartLINKSVector(builder, numElems):
 def StartLINKSVector(builder, numElems):
     return GPXStartLINKSVector(builder, numElems)
 
+def GPXCreateLINKSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateLINKSVector(builder, data):
+    GPXCreateLINKSVector(builder, data)
+
 def GPXAddTIME(builder, TIME):
     builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(TIME), 0)
 
@@ -391,6 +397,12 @@ def GPXStartWAYPOINTSVector(builder, numElems):
 def StartWAYPOINTSVector(builder, numElems):
     return GPXStartWAYPOINTSVector(builder, numElems)
 
+def GPXCreateWAYPOINTSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateWAYPOINTSVector(builder, data):
+    GPXCreateWAYPOINTSVector(builder, data)
+
 def GPXAddROUTES(builder, ROUTES):
     builder.PrependUOffsetTRelativeSlot(18, flatbuffers.number_types.UOffsetTFlags.py_type(ROUTES), 0)
 
@@ -403,6 +415,12 @@ def GPXStartROUTESVector(builder, numElems):
 def StartROUTESVector(builder, numElems):
     return GPXStartROUTESVector(builder, numElems)
 
+def GPXCreateROUTESVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateROUTESVector(builder, data):
+    GPXCreateROUTESVector(builder, data)
+
 def GPXAddTRACKS(builder, TRACKS):
     builder.PrependUOffsetTRelativeSlot(19, flatbuffers.number_types.UOffsetTFlags.py_type(TRACKS), 0)
 
@@ -414,6 +432,12 @@ def GPXStartTRACKSVector(builder, numElems):
 
 def StartTRACKSVector(builder, numElems):
     return GPXStartTRACKSVector(builder, numElems)
+
+def GPXCreateTRACKSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateTRACKSVector(builder, data):
+    GPXCreateTRACKSVector(builder, data)
 
 def GPXEnd(builder):
     return builder.EndObject()
@@ -433,33 +457,55 @@ except:
 class GPXT(object):
 
     # GPXT
-    def __init__(self):
-        self.VERSION = None  # type: str
-        self.CREATOR = None  # type: str
-        self.NAME = None  # type: str
-        self.DESCRIPTION = None  # type: str
-        self.AUTHOR_NAME = None  # type: str
-        self.AUTHOR_EMAIL = None  # type: str
-        self.AUTHOR_LINK = None  # type: Optional[GPXLink.GPXLinkT]
-        self.COPYRIGHT_AUTHOR = None  # type: str
-        self.COPYRIGHT_YEAR = None  # type: str
-        self.COPYRIGHT_LICENSE = None  # type: str
-        self.LINKS = None  # type: List[GPXLink.GPXLinkT]
-        self.TIME = None  # type: str
-        self.KEYWORDS = None  # type: str
-        self.BOUNDS_MIN_LAT = 0.0  # type: float
-        self.BOUNDS_MIN_LON = 0.0  # type: float
-        self.BOUNDS_MAX_LAT = 0.0  # type: float
-        self.BOUNDS_MAX_LON = 0.0  # type: float
-        self.WAYPOINTS = None  # type: List[GPXWaypoint.GPXWaypointT]
-        self.ROUTES = None  # type: List[GPXRoute.GPXRouteT]
-        self.TRACKS = None  # type: List[GPXTrack.GPXTrackT]
+    def __init__(
+        self,
+        VERSION = None,
+        CREATOR = None,
+        NAME = None,
+        DESCRIPTION = None,
+        AUTHOR_NAME = None,
+        AUTHOR_EMAIL = None,
+        AUTHOR_LINK = None,
+        COPYRIGHT_AUTHOR = None,
+        COPYRIGHT_YEAR = None,
+        COPYRIGHT_LICENSE = None,
+        LINKS = None,
+        TIME = None,
+        KEYWORDS = None,
+        BOUNDS_MIN_LAT = 0.0,
+        BOUNDS_MIN_LON = 0.0,
+        BOUNDS_MAX_LAT = 0.0,
+        BOUNDS_MAX_LON = 0.0,
+        WAYPOINTS = None,
+        ROUTES = None,
+        TRACKS = None,
+    ):
+        self.VERSION = VERSION  # type: Optional[str]
+        self.CREATOR = CREATOR  # type: Optional[str]
+        self.NAME = NAME  # type: Optional[str]
+        self.DESCRIPTION = DESCRIPTION  # type: Optional[str]
+        self.AUTHOR_NAME = AUTHOR_NAME  # type: Optional[str]
+        self.AUTHOR_EMAIL = AUTHOR_EMAIL  # type: Optional[str]
+        self.AUTHOR_LINK = AUTHOR_LINK  # type: Optional[GPXLink.GPXLinkT]
+        self.COPYRIGHT_AUTHOR = COPYRIGHT_AUTHOR  # type: Optional[str]
+        self.COPYRIGHT_YEAR = COPYRIGHT_YEAR  # type: Optional[str]
+        self.COPYRIGHT_LICENSE = COPYRIGHT_LICENSE  # type: Optional[str]
+        self.LINKS = LINKS  # type: Optional[List[GPXLink.GPXLinkT]]
+        self.TIME = TIME  # type: Optional[str]
+        self.KEYWORDS = KEYWORDS  # type: Optional[str]
+        self.BOUNDS_MIN_LAT = BOUNDS_MIN_LAT  # type: float
+        self.BOUNDS_MIN_LON = BOUNDS_MIN_LON  # type: float
+        self.BOUNDS_MAX_LAT = BOUNDS_MAX_LAT  # type: float
+        self.BOUNDS_MAX_LON = BOUNDS_MAX_LON  # type: float
+        self.WAYPOINTS = WAYPOINTS  # type: Optional[List[GPXWaypoint.GPXWaypointT]]
+        self.ROUTES = ROUTES  # type: Optional[List[GPXRoute.GPXRouteT]]
+        self.TRACKS = TRACKS  # type: Optional[List[GPXTrack.GPXTrackT]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        GPX = GPX()
-        GPX.Init(buf, pos)
-        return cls.InitFromObj(GPX)
+        tmpGpx = GPX()
+        tmpGpx.Init(buf, pos)
+        return cls.InitFromObj(tmpGpx)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -467,9 +513,9 @@ class GPXT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, GPX):
+    def InitFromObj(cls, tmpGpx):
         x = GPXT()
-        x._UnPack(GPX)
+        x._UnPack(tmpGpx)
         return x
 
     # GPXT

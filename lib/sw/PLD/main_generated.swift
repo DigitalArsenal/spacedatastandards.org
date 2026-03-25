@@ -2,84 +2,554 @@
 // swiftlint:disable all
 // swiftformat:disable all
 
+#if canImport(Common)
+import Common
+#endif
+
 import FlatBuffers
 
-///  Payload Information
-public struct PLD: FlatBufferObject, Verifiable {
+///  Different types of polarization in EMT
+public enum PolarizationType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  case linear = 0
+  case circular = 1
+  case elliptical = 2
+  case unpolarized = 3
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  public static var max: PolarizationType { return .unpolarized }
+  public static var min: PolarizationType { return .linear }
+}
+
+
+///  Simple polarization types
+public enum SimplePolarization: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  case vertical = 0
+  case horizontal = 1
+  case leftHandCircular = 2
+  case rightHandCircular = 3
+
+  public static var max: SimplePolarization { return .rightHandCircular }
+  public static var min: SimplePolarization { return .vertical }
+}
+
+
+///  Enum for the mode of data (real, simulated, synthetic)
+public enum DataMode: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  ///  Data collected during an exercise scenario.
+  case exercise = 0
+  ///  Data collected from real-world observations.
+  case real = 1
+  ///  Data generated through simulation.
+  case simulated = 2
+  ///  Data collected for testing purposes.
+  case test = 3
+
+  public static var max: DataMode { return .test }
+  public static var min: DataMode { return .exercise }
+}
+
+
+public enum DeviceType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  ///  Basic or undefined sensor type
+  case unknown = 0
+  ///  General optical sensors
+  case optical = 1
+  ///  Detects infrared radiation
+  case infraredSensor = 2
+  ///  Sensitive to ultraviolet light
+  case ultravioletSensor = 3
+  ///  For X-ray detection
+  case xRaySensor = 4
+  ///  For gamma-ray detection
+  case gammaRaySensor = 5
+  ///  Basic radar systems
+  case radar = 6
+  ///  Advanced radar with phased array technology
+  case phasedArrayRadar = 7
+  ///  For high-resolution imaging
+  case syntheticApertureRadar = 8
+  ///  For astronomical observations using bistatic setup
+  case bistaticRadioTelescope = 9
+  ///  For radio astronomy
+  case radioTelescope = 10
+  ///  For atmospheric studies
+  case atmosphericSensor = 11
+  ///  For observing space weather phenomena
+  case spaceWeatherSensor = 12
+  ///  General environmental monitoring
+  case environmentalSensor = 13
+  ///  For measuring seismic activities
+  case seismicSensor = 14
+  ///  For gravity measurements
+  case gravimetricSensor = 15
+  ///  For magnetic field detection
+  case magneticSensor = 16
+  ///  For electromagnetic field analysis
+  case electromagneticSensor = 17
+  ///  For temperature and heat detection
+  case thermalSensor = 18
+  ///  For detecting chemicals and substances
+  case chemicalSensor = 19
+  ///  For biological research and detection
+  case biologicalSensor = 20
+  ///  For detecting ionizing radiation
+  case radiationSensor = 21
+  ///  For detecting subatomic particles
+  case particleDetector = 22
+  ///  Light Detection and Ranging
+  case lidar = 23
+  ///  Sound Navigation and Ranging
+  case sonar = 24
+  ///  General telescopes for astronomical observations
+  case telescope = 25
+  ///  For spectral analysis
+  case spectroscopicSensor = 26
+  ///  For measuring light intensity
+  case photometricSensor = 27
+  ///  For analyzing polarization of light
+  case polarimetricSensor = 28
+  ///  For detailed imaging using interference
+  case interferometricSensor = 29
+  ///  Capturing image data at multiple wavelengths
+  case multispectralSensor = 30
+  ///  Advanced imaging across many spectral bands
+  case hyperspectralSensor = 31
+  ///  For Global Positioning System reception
+  case gpsReceiver = 32
+  ///  Standard radio communication device
+  case radioCommunications = 33
+  ///  Advanced laser communication system
+  case laserCommunications = 34
+  ///  Satellite communication system
+  case satelliteCommunications = 35
+  ///  Device for laser-based experiments and measurements
+  case laserInstrument = 36
+  ///  Radio frequency analysis and measurement device
+  case rfAnalyzer = 37
+  ///  Device for ionospheric research
+  case ionosphericSensor = 38
+  ///  Device for laser-based imaging
+  case laserImaging = 39
+  ///  Advanced optical telescope
+  case opticalTelescope = 40
+  ///  Device for high-resolution optical observations
+  case highResolutionOptical = 41
+  case radio = 42
+  ///  Microwave communication device
+  case microwaveTransmitter = 43
+  ///  Device for radio frequency monitoring
+  case rfMonitor = 44
+  ///  High-frequency radio communication device
+  case hfRadioCommunications = 45
+
+  public static var max: DeviceType { return .hfRadioCommunications }
+  public static var min: DeviceType { return .unknown }
+}
+
+
+///  Frequency range with lower and upper limits
+public struct FrequencyRange: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$PLD" } 
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PLD.id, addPrefix: prefix) }
+  public static var id: String { "$IDM" } 
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: FrequencyRange.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private enum VTOFFSET: VOffset {
-    case PAYLOAD_DURATION = 4
-    case MASS_AT_LAUNCH = 6
-    case DIMENSIONS = 8
-    case SOLAR_ARRAY_AREA = 10
-    case SOLAR_ARRAY_DIMENSIONS = 12
-    case NOMINAL_OPERATIONAL_LIFETIME = 14
-    case INSTRUMENTS = 16
+    case LOWER = 4
+    case UPPER = 6
     var v: Int32 { Int32(self.rawValue) }
     var p: VOffset { self.rawValue }
   }
 
-  public var PAYLOAD_DURATION: String? { let o = _accessor.offset(VTOFFSET.PAYLOAD_DURATION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var PAYLOAD_DURATIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.PAYLOAD_DURATION.v) }
-  public var MASS_AT_LAUNCH: Float32 { let o = _accessor.offset(VTOFFSET.MASS_AT_LAUNCH.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
-  public var DIMENSIONS: String? { let o = _accessor.offset(VTOFFSET.DIMENSIONS.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var DIMENSIONSSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.DIMENSIONS.v) }
-  public var SOLAR_ARRAY_AREA: Float32 { let o = _accessor.offset(VTOFFSET.SOLAR_ARRAY_AREA.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
-  public var SOLAR_ARRAY_DIMENSIONS: String? { let o = _accessor.offset(VTOFFSET.SOLAR_ARRAY_DIMENSIONS.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SOLAR_ARRAY_DIMENSIONSSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SOLAR_ARRAY_DIMENSIONS.v) }
-  public var NOMINAL_OPERATIONAL_LIFETIME: String? { let o = _accessor.offset(VTOFFSET.NOMINAL_OPERATIONAL_LIFETIME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NOMINAL_OPERATIONAL_LIFETIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NOMINAL_OPERATIONAL_LIFETIME.v) }
-  public var hasInstruments: Bool { let o = _accessor.offset(VTOFFSET.INSTRUMENTS.v); return o == 0 ? false : true }
-  public var INSTRUMENTSCount: Int32 { let o = _accessor.offset(VTOFFSET.INSTRUMENTS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func INSTRUMENTS(at index: Int32) -> IDM? { let o = _accessor.offset(VTOFFSET.INSTRUMENTS.v); return o == 0 ? nil : IDM(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
-  public static func startPLD(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 7) }
-  public static func add(PAYLOAD_DURATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PAYLOAD_DURATION, at: VTOFFSET.PAYLOAD_DURATION.p) }
-  public static func add(MASS_AT_LAUNCH: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MASS_AT_LAUNCH, def: 0.0, at: VTOFFSET.MASS_AT_LAUNCH.p) }
-  public static func add(DIMENSIONS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DIMENSIONS, at: VTOFFSET.DIMENSIONS.p) }
-  public static func add(SOLAR_ARRAY_AREA: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SOLAR_ARRAY_AREA, def: 0.0, at: VTOFFSET.SOLAR_ARRAY_AREA.p) }
-  public static func add(SOLAR_ARRAY_DIMENSIONS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOLAR_ARRAY_DIMENSIONS, at: VTOFFSET.SOLAR_ARRAY_DIMENSIONS.p) }
-  public static func add(NOMINAL_OPERATIONAL_LIFETIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NOMINAL_OPERATIONAL_LIFETIME, at: VTOFFSET.NOMINAL_OPERATIONAL_LIFETIME.p) }
-  public static func addVectorOf(INSTRUMENTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INSTRUMENTS, at: VTOFFSET.INSTRUMENTS.p) }
-  public static func endPLD(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createPLD(
+  ///  Lower frequency in MHz
+  public var LOWER: Double { let o = _accessor.offset(VTOFFSET.LOWER.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Upper frequency in MHz
+  public var UPPER: Double { let o = _accessor.offset(VTOFFSET.UPPER.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public static func startFrequencyRange(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 2) }
+  public static func add(LOWER: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LOWER, def: 0.0, at: VTOFFSET.LOWER.p) }
+  public static func add(UPPER: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: UPPER, def: 0.0, at: VTOFFSET.UPPER.p) }
+  public static func endFrequencyRange(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createFrequencyRange(
     _ fbb: inout FlatBufferBuilder,
-    PAYLOAD_DURATIONOffset PAYLOAD_DURATION: Offset = Offset(),
-    MASS_AT_LAUNCH: Float32 = 0.0,
-    DIMENSIONSOffset DIMENSIONS: Offset = Offset(),
-    SOLAR_ARRAY_AREA: Float32 = 0.0,
-    SOLAR_ARRAY_DIMENSIONSOffset SOLAR_ARRAY_DIMENSIONS: Offset = Offset(),
-    NOMINAL_OPERATIONAL_LIFETIMEOffset NOMINAL_OPERATIONAL_LIFETIME: Offset = Offset(),
-    INSTRUMENTSVectorOffset INSTRUMENTS: Offset = Offset()
+    LOWER: Double = 0.0,
+    UPPER: Double = 0.0
   ) -> Offset {
-    let __start = PLD.startPLD(&fbb)
-    PLD.add(PAYLOAD_DURATION: PAYLOAD_DURATION, &fbb)
-    PLD.add(MASS_AT_LAUNCH: MASS_AT_LAUNCH, &fbb)
-    PLD.add(DIMENSIONS: DIMENSIONS, &fbb)
-    PLD.add(SOLAR_ARRAY_AREA: SOLAR_ARRAY_AREA, &fbb)
-    PLD.add(SOLAR_ARRAY_DIMENSIONS: SOLAR_ARRAY_DIMENSIONS, &fbb)
-    PLD.add(NOMINAL_OPERATIONAL_LIFETIME: NOMINAL_OPERATIONAL_LIFETIME, &fbb)
-    PLD.addVectorOf(INSTRUMENTS: INSTRUMENTS, &fbb)
-    return PLD.endPLD(&fbb, start: __start)
+    let __start = FrequencyRange.startFrequencyRange(&fbb)
+    FrequencyRange.add(LOWER: LOWER, &fbb)
+    FrequencyRange.add(UPPER: UPPER, &fbb)
+    return FrequencyRange.endFrequencyRange(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.PAYLOAD_DURATION.p, fieldName: "PAYLOAD_DURATION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.MASS_AT_LAUNCH.p, fieldName: "MASS_AT_LAUNCH", required: false, type: Float32.self)
-    try _v.visit(field: VTOFFSET.DIMENSIONS.p, fieldName: "DIMENSIONS", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SOLAR_ARRAY_AREA.p, fieldName: "SOLAR_ARRAY_AREA", required: false, type: Float32.self)
-    try _v.visit(field: VTOFFSET.SOLAR_ARRAY_DIMENSIONS.p, fieldName: "SOLAR_ARRAY_DIMENSIONS", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.NOMINAL_OPERATIONAL_LIFETIME.p, fieldName: "NOMINAL_OPERATIONAL_LIFETIME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.INSTRUMENTS.p, fieldName: "INSTRUMENTS", required: false, type: ForwardOffset<Vector<ForwardOffset<IDM>, IDM>>.self)
+    try _v.visit(field: VTOFFSET.LOWER.p, fieldName: "LOWER", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.UPPER.p, fieldName: "UPPER", required: false, type: Double.self)
+    _v.finish()
+  }
+}
+
+///  Stokes parameters, representing different aspects of polarization
+public struct StokesParameters: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$IDM" } 
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: StokesParameters.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private enum VTOFFSET: VOffset {
+    case I = 4
+    case Q = 6
+    case U = 8
+    case V = 10
+    var v: Int32 { Int32(self.rawValue) }
+    var p: VOffset { self.rawValue }
+  }
+
+  ///  Intensity
+  public var I: Double { let o = _accessor.offset(VTOFFSET.I.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Linear polarization
+  public var Q: Double { let o = _accessor.offset(VTOFFSET.Q.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Another linear polarization, orthogonal to Q
+  public var U: Double { let o = _accessor.offset(VTOFFSET.U.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Circular polarization
+  public var V: Double { let o = _accessor.offset(VTOFFSET.V.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public static func startStokesParameters(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
+  public static func add(I: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: I, def: 0.0, at: VTOFFSET.I.p) }
+  public static func add(Q: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Q, def: 0.0, at: VTOFFSET.Q.p) }
+  public static func add(U: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: U, def: 0.0, at: VTOFFSET.U.p) }
+  public static func add(V: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: V, def: 0.0, at: VTOFFSET.V.p) }
+  public static func endStokesParameters(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createStokesParameters(
+    _ fbb: inout FlatBufferBuilder,
+    I: Double = 0.0,
+    Q: Double = 0.0,
+    U: Double = 0.0,
+    V: Double = 0.0
+  ) -> Offset {
+    let __start = StokesParameters.startStokesParameters(&fbb)
+    StokesParameters.add(I: I, &fbb)
+    StokesParameters.add(Q: Q, &fbb)
+    StokesParameters.add(U: U, &fbb)
+    StokesParameters.add(V: V, &fbb)
+    return StokesParameters.endStokesParameters(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VTOFFSET.I.p, fieldName: "I", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.Q.p, fieldName: "Q", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.U.p, fieldName: "U", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.V.p, fieldName: "V", required: false, type: Double.self)
+    _v.finish()
+  }
+}
+
+///  Table representing a frequency band with a name and frequency range
+public struct Band: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$IDM" } 
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: Band.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private enum VTOFFSET: VOffset {
+    case NAME = 4
+    case FREQUENCY_RANGE = 6
+    var v: Int32 { Int32(self.rawValue) }
+    var p: VOffset { self.rawValue }
+  }
+
+  ///  Name of the band
+  public var NAME: String? { let o = _accessor.offset(VTOFFSET.NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NAME.v) }
+  ///  Frequency range of the band
+  public var FREQUENCY_RANGE: FrequencyRange? { let o = _accessor.offset(VTOFFSET.FREQUENCY_RANGE.v); return o == 0 ? nil : FrequencyRange(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public static func startBand(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 2) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
+  public static func add(FREQUENCY_RANGE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FREQUENCY_RANGE, at: VTOFFSET.FREQUENCY_RANGE.p) }
+  public static func endBand(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createBand(
+    _ fbb: inout FlatBufferBuilder,
+    NAMEOffset NAME: Offset = Offset(),
+    FREQUENCY_RANGEOffset FREQUENCY_RANGE: Offset = Offset()
+  ) -> Offset {
+    let __start = Band.startBand(&fbb)
+    Band.add(NAME: NAME, &fbb)
+    Band.add(FREQUENCY_RANGE: FREQUENCY_RANGE, &fbb)
+    return Band.endBand(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VTOFFSET.NAME.p, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.FREQUENCY_RANGE.p, fieldName: "FREQUENCY_RANGE", required: false, type: ForwardOffset<FrequencyRange>.self)
+    _v.finish()
+  }
+}
+
+///  Integrated Device Message
+public struct IDM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$IDM" } 
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: IDM.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private enum VTOFFSET: VOffset {
+    case ID = 4
+    case NAME = 6
+    case DATA_MODE = 8
+    case UPLINK = 10
+    case DOWNLINK = 12
+    case BEACON = 14
+    case BAND = 16
+    case POLARIZATION_TYPE = 18
+    case SIMPLE_POLARIZATION = 20
+    case STOKES_PARAMETERS = 22
+    case POWER_REQUIRED = 24
+    case POWER_TYPE = 26
+    case TRANSMIT = 28
+    case RECEIVE = 30
+    case SENSOR_TYPE = 32
+    case SOURCE = 34
+    case LAST_OB_TIME = 36
+    case LOWER_LEFT_ELEVATION_LIMIT = 38
+    case UPPER_LEFT_AZIMUTH_LIMIT = 40
+    case LOWER_RIGHT_ELEVATION_LIMIT = 42
+    case LOWER_LEFT_AZIMUTH_LIMIT = 44
+    case UPPER_RIGHT_ELEVATION_LIMIT = 46
+    case UPPER_RIGHT_AZIMUTH_LIMIT = 48
+    case LOWER_RIGHT_AZIMUTH_LIMIT = 50
+    case UPPER_LEFT_ELEVATION_LIMIT = 52
+    case RIGHT_GEO_BELT_LIMIT = 54
+    case LEFT_GEO_BELT_LIMIT = 56
+    case MAGNITUDE_LIMIT = 58
+    case TASKABLE = 60
+    var v: Int32 { Int32(self.rawValue) }
+    var p: VOffset { self.rawValue }
+  }
+
+  ///  Unique identifier for the EMT
+  public var ID: String? { let o = _accessor.offset(VTOFFSET.ID.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ID.v) }
+  ///  Name of the EMT
+  public var NAME: String? { let o = _accessor.offset(VTOFFSET.NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NAME.v) }
+  ///  Mode of the data (real, simulated, synthetic)
+  public var DATA_MODE: DataMode { let o = _accessor.offset(VTOFFSET.DATA_MODE.v); return o == 0 ? .exercise : DataMode(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .exercise }
+  ///  Uplink frequency range
+  public var UPLINK: FrequencyRange? { let o = _accessor.offset(VTOFFSET.UPLINK.v); return o == 0 ? nil : FrequencyRange(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Downlink frequency range
+  public var DOWNLINK: FrequencyRange? { let o = _accessor.offset(VTOFFSET.DOWNLINK.v); return o == 0 ? nil : FrequencyRange(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Beacon frequency range
+  public var BEACON: FrequencyRange? { let o = _accessor.offset(VTOFFSET.BEACON.v); return o == 0 ? nil : FrequencyRange(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Bands associated with the EMT
+  public var BAND: FlatbufferVector<Band> { return _accessor.vector(at: VTOFFSET.BAND.v, byteSize: 4) }
+  ///  Type of polarization used
+  public var POLARIZATION_TYPE: PolarizationType { let o = _accessor.offset(VTOFFSET.POLARIZATION_TYPE.v); return o == 0 ? .linear : PolarizationType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .linear }
+  ///  Simple polarization configuration
+  public var SIMPLE_POLARIZATION: SimplePolarization { let o = _accessor.offset(VTOFFSET.SIMPLE_POLARIZATION.v); return o == 0 ? .vertical : SimplePolarization(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .vertical }
+  ///  Stokes parameters for polarization characterization
+  public var STOKES_PARAMETERS: StokesParameters? { let o = _accessor.offset(VTOFFSET.STOKES_PARAMETERS.v); return o == 0 ? nil : StokesParameters(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Power required in Watts
+  public var POWER_REQUIRED: Double { let o = _accessor.offset(VTOFFSET.POWER_REQUIRED.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Type of power (eg. AC or DC)
+  public var POWER_TYPE: String? { let o = _accessor.offset(VTOFFSET.POWER_TYPE.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var POWER_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.POWER_TYPE.v) }
+  ///  Indicates if the EMT can transmit
+  public var TRANSMIT: Bool { let o = _accessor.offset(VTOFFSET.TRANSMIT.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Indicates if the EMT can receive
+  public var RECEIVE: Bool { let o = _accessor.offset(VTOFFSET.RECEIVE.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Type of the sensor
+  public var SENSOR_TYPE: DeviceType { let o = _accessor.offset(VTOFFSET.SENSOR_TYPE.v); return o == 0 ? .unknown : DeviceType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unknown }
+  ///  Source of the data
+  public var SOURCE: String? { let o = _accessor.offset(VTOFFSET.SOURCE.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SOURCESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SOURCE.v) }
+  ///  Timestamp of the last observation
+  public var LAST_OB_TIME: String? { let o = _accessor.offset(VTOFFSET.LAST_OB_TIME.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LAST_OB_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LAST_OB_TIME.v) }
+  ///  Lower left elevation limit
+  public var LOWER_LEFT_ELEVATION_LIMIT: Double { let o = _accessor.offset(VTOFFSET.LOWER_LEFT_ELEVATION_LIMIT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Upper left azimuth limit
+  public var UPPER_LEFT_AZIMUTH_LIMIT: Double { let o = _accessor.offset(VTOFFSET.UPPER_LEFT_AZIMUTH_LIMIT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Lower right elevation limit
+  public var LOWER_RIGHT_ELEVATION_LIMIT: Double { let o = _accessor.offset(VTOFFSET.LOWER_RIGHT_ELEVATION_LIMIT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Lower left azimuth limit
+  public var LOWER_LEFT_AZIMUTH_LIMIT: Double { let o = _accessor.offset(VTOFFSET.LOWER_LEFT_AZIMUTH_LIMIT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Upper right elevation limit
+  public var UPPER_RIGHT_ELEVATION_LIMIT: Double { let o = _accessor.offset(VTOFFSET.UPPER_RIGHT_ELEVATION_LIMIT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Upper right azimuth limit
+  public var UPPER_RIGHT_AZIMUTH_LIMIT: Double { let o = _accessor.offset(VTOFFSET.UPPER_RIGHT_AZIMUTH_LIMIT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Lower right azimuth limit
+  public var LOWER_RIGHT_AZIMUTH_LIMIT: Double { let o = _accessor.offset(VTOFFSET.LOWER_RIGHT_AZIMUTH_LIMIT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Upper left elevation limit
+  public var UPPER_LEFT_ELEVATION_LIMIT: Double { let o = _accessor.offset(VTOFFSET.UPPER_LEFT_ELEVATION_LIMIT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Right geostationary belt limit
+  public var RIGHT_GEO_BELT_LIMIT: Double { let o = _accessor.offset(VTOFFSET.RIGHT_GEO_BELT_LIMIT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Left geostationary belt limit
+  public var LEFT_GEO_BELT_LIMIT: Double { let o = _accessor.offset(VTOFFSET.LEFT_GEO_BELT_LIMIT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Magnitude limit of the sensor
+  public var MAGNITUDE_LIMIT: Double { let o = _accessor.offset(VTOFFSET.MAGNITUDE_LIMIT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Indicates if the site is taskable
+  public var TASKABLE: Bool { let o = _accessor.offset(VTOFFSET.TASKABLE.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public static func startIDM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 29) }
+  public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VTOFFSET.ID.p) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
+  public static func add(DATA_MODE: DataMode, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DATA_MODE.rawValue, def: 0, at: VTOFFSET.DATA_MODE.p) }
+  public static func add(UPLINK: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: UPLINK, at: VTOFFSET.UPLINK.p) }
+  public static func add(DOWNLINK: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DOWNLINK, at: VTOFFSET.DOWNLINK.p) }
+  public static func add(BEACON: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BEACON, at: VTOFFSET.BEACON.p) }
+  public static func addVectorOf(BAND: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BAND, at: VTOFFSET.BAND.p) }
+  public static func add(POLARIZATION_TYPE: PolarizationType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POLARIZATION_TYPE.rawValue, def: 0, at: VTOFFSET.POLARIZATION_TYPE.p) }
+  public static func add(SIMPLE_POLARIZATION: SimplePolarization, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SIMPLE_POLARIZATION.rawValue, def: 0, at: VTOFFSET.SIMPLE_POLARIZATION.p) }
+  public static func add(STOKES_PARAMETERS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STOKES_PARAMETERS, at: VTOFFSET.STOKES_PARAMETERS.p) }
+  public static func add(POWER_REQUIRED: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POWER_REQUIRED, def: 0.0, at: VTOFFSET.POWER_REQUIRED.p) }
+  public static func add(POWER_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POWER_TYPE, at: VTOFFSET.POWER_TYPE.p) }
+  public static func add(TRANSMIT: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TRANSMIT, def: false,
+   at: VTOFFSET.TRANSMIT.p) }
+  public static func add(RECEIVE: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RECEIVE, def: false,
+   at: VTOFFSET.RECEIVE.p) }
+  public static func add(SENSOR_TYPE: DeviceType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENSOR_TYPE.rawValue, def: 0, at: VTOFFSET.SENSOR_TYPE.p) }
+  public static func add(SOURCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE, at: VTOFFSET.SOURCE.p) }
+  public static func add(LAST_OB_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LAST_OB_TIME, at: VTOFFSET.LAST_OB_TIME.p) }
+  public static func add(LOWER_LEFT_ELEVATION_LIMIT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LOWER_LEFT_ELEVATION_LIMIT, def: 0.0, at: VTOFFSET.LOWER_LEFT_ELEVATION_LIMIT.p) }
+  public static func add(UPPER_LEFT_AZIMUTH_LIMIT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: UPPER_LEFT_AZIMUTH_LIMIT, def: 0.0, at: VTOFFSET.UPPER_LEFT_AZIMUTH_LIMIT.p) }
+  public static func add(LOWER_RIGHT_ELEVATION_LIMIT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LOWER_RIGHT_ELEVATION_LIMIT, def: 0.0, at: VTOFFSET.LOWER_RIGHT_ELEVATION_LIMIT.p) }
+  public static func add(LOWER_LEFT_AZIMUTH_LIMIT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LOWER_LEFT_AZIMUTH_LIMIT, def: 0.0, at: VTOFFSET.LOWER_LEFT_AZIMUTH_LIMIT.p) }
+  public static func add(UPPER_RIGHT_ELEVATION_LIMIT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: UPPER_RIGHT_ELEVATION_LIMIT, def: 0.0, at: VTOFFSET.UPPER_RIGHT_ELEVATION_LIMIT.p) }
+  public static func add(UPPER_RIGHT_AZIMUTH_LIMIT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: UPPER_RIGHT_AZIMUTH_LIMIT, def: 0.0, at: VTOFFSET.UPPER_RIGHT_AZIMUTH_LIMIT.p) }
+  public static func add(LOWER_RIGHT_AZIMUTH_LIMIT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LOWER_RIGHT_AZIMUTH_LIMIT, def: 0.0, at: VTOFFSET.LOWER_RIGHT_AZIMUTH_LIMIT.p) }
+  public static func add(UPPER_LEFT_ELEVATION_LIMIT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: UPPER_LEFT_ELEVATION_LIMIT, def: 0.0, at: VTOFFSET.UPPER_LEFT_ELEVATION_LIMIT.p) }
+  public static func add(RIGHT_GEO_BELT_LIMIT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RIGHT_GEO_BELT_LIMIT, def: 0.0, at: VTOFFSET.RIGHT_GEO_BELT_LIMIT.p) }
+  public static func add(LEFT_GEO_BELT_LIMIT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LEFT_GEO_BELT_LIMIT, def: 0.0, at: VTOFFSET.LEFT_GEO_BELT_LIMIT.p) }
+  public static func add(MAGNITUDE_LIMIT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAGNITUDE_LIMIT, def: 0.0, at: VTOFFSET.MAGNITUDE_LIMIT.p) }
+  public static func add(TASKABLE: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TASKABLE, def: false,
+   at: VTOFFSET.TASKABLE.p) }
+  public static func endIDM(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createIDM(
+    _ fbb: inout FlatBufferBuilder,
+    IDOffset ID: Offset = Offset(),
+    NAMEOffset NAME: Offset = Offset(),
+    DATA_MODE: DataMode = .exercise,
+    UPLINKOffset UPLINK: Offset = Offset(),
+    DOWNLINKOffset DOWNLINK: Offset = Offset(),
+    BEACONOffset BEACON: Offset = Offset(),
+    BANDVectorOffset BAND: Offset = Offset(),
+    POLARIZATION_TYPE: PolarizationType = .linear,
+    SIMPLE_POLARIZATION: SimplePolarization = .vertical,
+    STOKES_PARAMETERSOffset STOKES_PARAMETERS: Offset = Offset(),
+    POWER_REQUIRED: Double = 0.0,
+    POWER_TYPEOffset POWER_TYPE: Offset = Offset(),
+    TRANSMIT: Bool = false,
+    RECEIVE: Bool = false,
+    SENSOR_TYPE: DeviceType = .unknown,
+    SOURCEOffset SOURCE: Offset = Offset(),
+    LAST_OB_TIMEOffset LAST_OB_TIME: Offset = Offset(),
+    LOWER_LEFT_ELEVATION_LIMIT: Double = 0.0,
+    UPPER_LEFT_AZIMUTH_LIMIT: Double = 0.0,
+    LOWER_RIGHT_ELEVATION_LIMIT: Double = 0.0,
+    LOWER_LEFT_AZIMUTH_LIMIT: Double = 0.0,
+    UPPER_RIGHT_ELEVATION_LIMIT: Double = 0.0,
+    UPPER_RIGHT_AZIMUTH_LIMIT: Double = 0.0,
+    LOWER_RIGHT_AZIMUTH_LIMIT: Double = 0.0,
+    UPPER_LEFT_ELEVATION_LIMIT: Double = 0.0,
+    RIGHT_GEO_BELT_LIMIT: Double = 0.0,
+    LEFT_GEO_BELT_LIMIT: Double = 0.0,
+    MAGNITUDE_LIMIT: Double = 0.0,
+    TASKABLE: Bool = false
+  ) -> Offset {
+    let __start = IDM.startIDM(&fbb)
+    IDM.add(ID: ID, &fbb)
+    IDM.add(NAME: NAME, &fbb)
+    IDM.add(DATA_MODE: DATA_MODE, &fbb)
+    IDM.add(UPLINK: UPLINK, &fbb)
+    IDM.add(DOWNLINK: DOWNLINK, &fbb)
+    IDM.add(BEACON: BEACON, &fbb)
+    IDM.addVectorOf(BAND: BAND, &fbb)
+    IDM.add(POLARIZATION_TYPE: POLARIZATION_TYPE, &fbb)
+    IDM.add(SIMPLE_POLARIZATION: SIMPLE_POLARIZATION, &fbb)
+    IDM.add(STOKES_PARAMETERS: STOKES_PARAMETERS, &fbb)
+    IDM.add(POWER_REQUIRED: POWER_REQUIRED, &fbb)
+    IDM.add(POWER_TYPE: POWER_TYPE, &fbb)
+    IDM.add(TRANSMIT: TRANSMIT, &fbb)
+    IDM.add(RECEIVE: RECEIVE, &fbb)
+    IDM.add(SENSOR_TYPE: SENSOR_TYPE, &fbb)
+    IDM.add(SOURCE: SOURCE, &fbb)
+    IDM.add(LAST_OB_TIME: LAST_OB_TIME, &fbb)
+    IDM.add(LOWER_LEFT_ELEVATION_LIMIT: LOWER_LEFT_ELEVATION_LIMIT, &fbb)
+    IDM.add(UPPER_LEFT_AZIMUTH_LIMIT: UPPER_LEFT_AZIMUTH_LIMIT, &fbb)
+    IDM.add(LOWER_RIGHT_ELEVATION_LIMIT: LOWER_RIGHT_ELEVATION_LIMIT, &fbb)
+    IDM.add(LOWER_LEFT_AZIMUTH_LIMIT: LOWER_LEFT_AZIMUTH_LIMIT, &fbb)
+    IDM.add(UPPER_RIGHT_ELEVATION_LIMIT: UPPER_RIGHT_ELEVATION_LIMIT, &fbb)
+    IDM.add(UPPER_RIGHT_AZIMUTH_LIMIT: UPPER_RIGHT_AZIMUTH_LIMIT, &fbb)
+    IDM.add(LOWER_RIGHT_AZIMUTH_LIMIT: LOWER_RIGHT_AZIMUTH_LIMIT, &fbb)
+    IDM.add(UPPER_LEFT_ELEVATION_LIMIT: UPPER_LEFT_ELEVATION_LIMIT, &fbb)
+    IDM.add(RIGHT_GEO_BELT_LIMIT: RIGHT_GEO_BELT_LIMIT, &fbb)
+    IDM.add(LEFT_GEO_BELT_LIMIT: LEFT_GEO_BELT_LIMIT, &fbb)
+    IDM.add(MAGNITUDE_LIMIT: MAGNITUDE_LIMIT, &fbb)
+    IDM.add(TASKABLE: TASKABLE, &fbb)
+    return IDM.endIDM(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VTOFFSET.ID.p, fieldName: "ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.NAME.p, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.DATA_MODE.p, fieldName: "DATA_MODE", required: false, type: DataMode.self)
+    try _v.visit(field: VTOFFSET.UPLINK.p, fieldName: "UPLINK", required: false, type: ForwardOffset<FrequencyRange>.self)
+    try _v.visit(field: VTOFFSET.DOWNLINK.p, fieldName: "DOWNLINK", required: false, type: ForwardOffset<FrequencyRange>.self)
+    try _v.visit(field: VTOFFSET.BEACON.p, fieldName: "BEACON", required: false, type: ForwardOffset<FrequencyRange>.self)
+    try _v.visit(field: VTOFFSET.BAND.p, fieldName: "BAND", required: false, type: ForwardOffset<Vector<ForwardOffset<Band>, Band>>.self)
+    try _v.visit(field: VTOFFSET.POLARIZATION_TYPE.p, fieldName: "POLARIZATION_TYPE", required: false, type: PolarizationType.self)
+    try _v.visit(field: VTOFFSET.SIMPLE_POLARIZATION.p, fieldName: "SIMPLE_POLARIZATION", required: false, type: SimplePolarization.self)
+    try _v.visit(field: VTOFFSET.STOKES_PARAMETERS.p, fieldName: "STOKES_PARAMETERS", required: false, type: ForwardOffset<StokesParameters>.self)
+    try _v.visit(field: VTOFFSET.POWER_REQUIRED.p, fieldName: "POWER_REQUIRED", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.POWER_TYPE.p, fieldName: "POWER_TYPE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.TRANSMIT.p, fieldName: "TRANSMIT", required: false, type: Bool.self)
+    try _v.visit(field: VTOFFSET.RECEIVE.p, fieldName: "RECEIVE", required: false, type: Bool.self)
+    try _v.visit(field: VTOFFSET.SENSOR_TYPE.p, fieldName: "SENSOR_TYPE", required: false, type: DeviceType.self)
+    try _v.visit(field: VTOFFSET.SOURCE.p, fieldName: "SOURCE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.LAST_OB_TIME.p, fieldName: "LAST_OB_TIME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.LOWER_LEFT_ELEVATION_LIMIT.p, fieldName: "LOWER_LEFT_ELEVATION_LIMIT", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.UPPER_LEFT_AZIMUTH_LIMIT.p, fieldName: "UPPER_LEFT_AZIMUTH_LIMIT", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.LOWER_RIGHT_ELEVATION_LIMIT.p, fieldName: "LOWER_RIGHT_ELEVATION_LIMIT", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.LOWER_LEFT_AZIMUTH_LIMIT.p, fieldName: "LOWER_LEFT_AZIMUTH_LIMIT", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.UPPER_RIGHT_ELEVATION_LIMIT.p, fieldName: "UPPER_RIGHT_ELEVATION_LIMIT", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.UPPER_RIGHT_AZIMUTH_LIMIT.p, fieldName: "UPPER_RIGHT_AZIMUTH_LIMIT", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.LOWER_RIGHT_AZIMUTH_LIMIT.p, fieldName: "LOWER_RIGHT_AZIMUTH_LIMIT", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.UPPER_LEFT_ELEVATION_LIMIT.p, fieldName: "UPPER_LEFT_ELEVATION_LIMIT", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.RIGHT_GEO_BELT_LIMIT.p, fieldName: "RIGHT_GEO_BELT_LIMIT", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.LEFT_GEO_BELT_LIMIT.p, fieldName: "LEFT_GEO_BELT_LIMIT", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.MAGNITUDE_LIMIT.p, fieldName: "MAGNITUDE_LIMIT", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.TASKABLE.p, fieldName: "TASKABLE", required: false, type: Bool.self)
     _v.finish()
   }
 }

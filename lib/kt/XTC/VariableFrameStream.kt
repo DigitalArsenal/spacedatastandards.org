@@ -32,7 +32,7 @@ class VariableFrameStream : Table() {
     /**
      * Stream name
      */
-    val NAME : String?
+    val name : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class VariableFrameStream : Table() {
                 null
             }
         }
-    val NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val nameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun nameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Short description
      */
-    val SHORT_DESCRIPTION : String?
+    val shortDescription : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -55,12 +55,12 @@ class VariableFrameStream : Table() {
                 null
             }
         }
-    val SHORT_DESCRIPTIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun SHORT_DESCRIPTIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val shortDescriptionAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun shortDescriptionInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * Minimum frame size in bits
      */
-    val MIN_FRAME_SIZE_IN_BITS : UInt
+    val minFrameSizeInBits : UInt
         get() {
             val o = __offset(8)
             return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
@@ -68,7 +68,7 @@ class VariableFrameStream : Table() {
     /**
      * Maximum frame size in bits
      */
-    val MAX_FRAME_SIZE_IN_BITS : UInt
+    val maxFrameSizeInBits : UInt
         get() {
             val o = __offset(10)
             return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
@@ -76,7 +76,7 @@ class VariableFrameStream : Table() {
     /**
      * Size field location in bits
      */
-    val SIZE_FIELD_OFFSET : UInt
+    val sizeFieldOffset : UInt
         get() {
             val o = __offset(12)
             return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
@@ -84,35 +84,35 @@ class VariableFrameStream : Table() {
     /**
      * Size field size in bits
      */
-    val SIZE_FIELD_SIZE : UShort
+    val sizeFieldSize : UShort
         get() {
             val o = __offset(14)
             return if(o != 0) bb.getShort(o + bb_pos).toUShort() else 0u
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsVariableFrameStream(_bb: ByteBuffer): VariableFrameStream = getRootAsVariableFrameStream(_bb, VariableFrameStream())
         fun getRootAsVariableFrameStream(_bb: ByteBuffer, obj: VariableFrameStream): VariableFrameStream {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createVariableFrameStream(builder: FlatBufferBuilder, NAMEOffset: Int, SHORT_DESCRIPTIONOffset: Int, MIN_FRAME_SIZE_IN_BITS: UInt, MAX_FRAME_SIZE_IN_BITS: UInt, SIZE_FIELD_OFFSET: UInt, SIZE_FIELD_SIZE: UShort) : Int {
+        fun createVariableFrameStream(builder: FlatBufferBuilder, nameOffset: Int, shortDescriptionOffset: Int, minFrameSizeInBits: UInt, maxFrameSizeInBits: UInt, sizeFieldOffset: UInt, sizeFieldSize: UShort) : Int {
             builder.startTable(6)
-            addSIZE_FIELD_OFFSET(builder, SIZE_FIELD_OFFSET)
-            addMAX_FRAME_SIZE_IN_BITS(builder, MAX_FRAME_SIZE_IN_BITS)
-            addMIN_FRAME_SIZE_IN_BITS(builder, MIN_FRAME_SIZE_IN_BITS)
-            addSHORT_DESCRIPTION(builder, SHORT_DESCRIPTIONOffset)
-            addNAME(builder, NAMEOffset)
-            addSIZE_FIELD_SIZE(builder, SIZE_FIELD_SIZE)
+            addSIZEFIELDOFFSET(builder, sizeFieldOffset)
+            addMAXFRAMESIZEINBITS(builder, maxFrameSizeInBits)
+            addMINFRAMESIZEINBITS(builder, minFrameSizeInBits)
+            addSHORTDESCRIPTION(builder, shortDescriptionOffset)
+            addNAME(builder, nameOffset)
+            addSIZEFIELDSIZE(builder, sizeFieldSize)
             return endVariableFrameStream(builder)
         }
         fun startVariableFrameStream(builder: FlatBufferBuilder) = builder.startTable(6)
-        fun addNAME(builder: FlatBufferBuilder, NAME: Int) = builder.addOffset(0, NAME, 0)
-        fun addSHORT_DESCRIPTION(builder: FlatBufferBuilder, SHORT_DESCRIPTION: Int) = builder.addOffset(1, SHORT_DESCRIPTION, 0)
-        fun addMIN_FRAME_SIZE_IN_BITS(builder: FlatBufferBuilder, MIN_FRAME_SIZE_IN_BITS: UInt) = builder.addInt(2, MIN_FRAME_SIZE_IN_BITS.toInt(), 0)
-        fun addMAX_FRAME_SIZE_IN_BITS(builder: FlatBufferBuilder, MAX_FRAME_SIZE_IN_BITS: UInt) = builder.addInt(3, MAX_FRAME_SIZE_IN_BITS.toInt(), 0)
-        fun addSIZE_FIELD_OFFSET(builder: FlatBufferBuilder, SIZE_FIELD_OFFSET: UInt) = builder.addInt(4, SIZE_FIELD_OFFSET.toInt(), 0)
-        fun addSIZE_FIELD_SIZE(builder: FlatBufferBuilder, SIZE_FIELD_SIZE: UShort) = builder.addShort(5, SIZE_FIELD_SIZE.toShort(), 0)
+        fun addNAME(builder: FlatBufferBuilder, name: Int) = builder.addOffset(0, name, 0)
+        fun addSHORTDESCRIPTION(builder: FlatBufferBuilder, shortDescription: Int) = builder.addOffset(1, shortDescription, 0)
+        fun addMINFRAMESIZEINBITS(builder: FlatBufferBuilder, minFrameSizeInBits: UInt) = builder.addInt(2, minFrameSizeInBits.toInt(), 0)
+        fun addMAXFRAMESIZEINBITS(builder: FlatBufferBuilder, maxFrameSizeInBits: UInt) = builder.addInt(3, maxFrameSizeInBits.toInt(), 0)
+        fun addSIZEFIELDOFFSET(builder: FlatBufferBuilder, sizeFieldOffset: UInt) = builder.addInt(4, sizeFieldOffset.toInt(), 0)
+        fun addSIZEFIELDSIZE(builder: FlatBufferBuilder, sizeFieldSize: UShort) = builder.addShort(5, sizeFieldSize.toShort(), 0)
         fun endVariableFrameStream(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

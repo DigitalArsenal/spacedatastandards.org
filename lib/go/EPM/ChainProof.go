@@ -51,6 +51,10 @@ func (rcv *ChainProof) CHAIN() []byte {
 	return nil
 }
 
+func (rcv *ChainProof) Chain() []byte {
+	return rcv.CHAIN()
+}
+
 /// Chain identifier (e.g., "bitcoin", "ethereum", "solana")
 /// Derived blockchain address
 func (rcv *ChainProof) ADDRESS() []byte {
@@ -59,6 +63,10 @@ func (rcv *ChainProof) ADDRESS() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *ChainProof) Address() []byte {
+	return rcv.ADDRESS()
 }
 
 /// Derived blockchain address
@@ -71,6 +79,10 @@ func (rcv *ChainProof) PUBLIC_KEY() []byte {
 	return nil
 }
 
+func (rcv *ChainProof) PublicKey() []byte {
+	return rcv.PUBLIC_KEY()
+}
+
 /// Public key for this chain (hex-encoded)
 /// BIP-44 derivation path (e.g., "m/44'/0'/0'/0/0")
 func (rcv *ChainProof) KEY_PATH() []byte {
@@ -79,6 +91,10 @@ func (rcv *ChainProof) KEY_PATH() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *ChainProof) KeyPath() []byte {
+	return rcv.KEY_PATH()
 }
 
 /// BIP-44 derivation path (e.g., "m/44'/0'/0'/0/0")
@@ -91,6 +107,10 @@ func (rcv *ChainProof) SIGNATURE() []byte {
 	return nil
 }
 
+func (rcv *ChainProof) Signature() []byte {
+	return rcv.SIGNATURE()
+}
+
 /// Signature over the attestation payload (hex-encoded)
 /// The canonical payload that was signed (hex-encoded)
 func (rcv *ChainProof) SIGNED_PAYLOAD() []byte {
@@ -99,6 +119,10 @@ func (rcv *ChainProof) SIGNED_PAYLOAD() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *ChainProof) SignedPayload() []byte {
+	return rcv.SIGNED_PAYLOAD()
 }
 
 /// The canonical payload that was signed (hex-encoded)
@@ -111,6 +135,10 @@ func (rcv *ChainProof) ALGORITHM() []byte {
 	return nil
 }
 
+func (rcv *ChainProof) Algorithm() []byte {
+	return rcv.ALGORITHM()
+}
+
 /// Signature algorithm (e.g., "secp256k1-compact-bitcoin", "secp256k1-compact-ethereum", "ed25519")
 /// Signature encoding format (e.g., "compact", "raw-ed25519")
 func (rcv *ChainProof) ENCODING() []byte {
@@ -121,6 +149,10 @@ func (rcv *ChainProof) ENCODING() []byte {
 	return nil
 }
 
+func (rcv *ChainProof) Encoding() []byte {
+	return rcv.ENCODING()
+}
+
 /// Signature encoding format (e.g., "compact", "raw-ed25519")
 func ChainProofStart(builder *flatbuffers.Builder) {
 	builder.StartObject(8)
@@ -128,26 +160,50 @@ func ChainProofStart(builder *flatbuffers.Builder) {
 func ChainProofAddCHAIN(builder *flatbuffers.Builder, CHAIN flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(CHAIN), 0)
 }
+func ChainProofAddChain(builder *flatbuffers.Builder, CHAIN flatbuffers.UOffsetT) {
+	ChainProofAddCHAIN(builder, CHAIN)
+}
 func ChainProofAddADDRESS(builder *flatbuffers.Builder, ADDRESS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(ADDRESS), 0)
+}
+func ChainProofAddAddress(builder *flatbuffers.Builder, ADDRESS flatbuffers.UOffsetT) {
+	ChainProofAddADDRESS(builder, ADDRESS)
 }
 func ChainProofAddPUBLIC_KEY(builder *flatbuffers.Builder, PUBLIC_KEY flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(PUBLIC_KEY), 0)
 }
+func ChainProofAddPublicKey(builder *flatbuffers.Builder, PUBLIC_KEY flatbuffers.UOffsetT) {
+	ChainProofAddPUBLIC_KEY(builder, PUBLIC_KEY)
+}
 func ChainProofAddKEY_PATH(builder *flatbuffers.Builder, KEY_PATH flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(KEY_PATH), 0)
+}
+func ChainProofAddKeyPath(builder *flatbuffers.Builder, KEY_PATH flatbuffers.UOffsetT) {
+	ChainProofAddKEY_PATH(builder, KEY_PATH)
 }
 func ChainProofAddSIGNATURE(builder *flatbuffers.Builder, SIGNATURE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(SIGNATURE), 0)
 }
+func ChainProofAddSignature(builder *flatbuffers.Builder, SIGNATURE flatbuffers.UOffsetT) {
+	ChainProofAddSIGNATURE(builder, SIGNATURE)
+}
 func ChainProofAddSIGNED_PAYLOAD(builder *flatbuffers.Builder, SIGNED_PAYLOAD flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(SIGNED_PAYLOAD), 0)
+}
+func ChainProofAddSignedPayload(builder *flatbuffers.Builder, SIGNED_PAYLOAD flatbuffers.UOffsetT) {
+	ChainProofAddSIGNED_PAYLOAD(builder, SIGNED_PAYLOAD)
 }
 func ChainProofAddALGORITHM(builder *flatbuffers.Builder, ALGORITHM flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(ALGORITHM), 0)
 }
+func ChainProofAddAlgorithm(builder *flatbuffers.Builder, ALGORITHM flatbuffers.UOffsetT) {
+	ChainProofAddALGORITHM(builder, ALGORITHM)
+}
 func ChainProofAddENCODING(builder *flatbuffers.Builder, ENCODING flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(ENCODING), 0)
+}
+func ChainProofAddEncoding(builder *flatbuffers.Builder, ENCODING flatbuffers.UOffsetT) {
+	ChainProofAddENCODING(builder, ENCODING)
 }
 func ChainProofEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

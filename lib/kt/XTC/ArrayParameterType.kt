@@ -32,7 +32,7 @@ class ArrayParameterType : Table() {
     /**
      * Type name
      */
-    val NAME : String?
+    val name : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class ArrayParameterType : Table() {
                 null
             }
         }
-    val NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val nameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun nameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Short description
      */
-    val SHORT_DESCRIPTION : String?
+    val shortDescription : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -55,12 +55,12 @@ class ArrayParameterType : Table() {
                 null
             }
         }
-    val SHORT_DESCRIPTIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun SHORT_DESCRIPTIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val shortDescriptionAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun shortDescriptionInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * Long description
      */
-    val LONG_DESCRIPTION : String?
+    val longDescription : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -69,12 +69,12 @@ class ArrayParameterType : Table() {
                 null
             }
         }
-    val LONG_DESCRIPTIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun LONG_DESCRIPTIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val longDescriptionAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun longDescriptionInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
     /**
      * Reference to the array element type
      */
-    val ARRAY_TYPE_REF : String?
+    val arrayTypeRef : String?
         get() {
             val o = __offset(10)
             return if (o != 0) {
@@ -83,13 +83,13 @@ class ArrayParameterType : Table() {
                 null
             }
         }
-    val ARRAY_TYPE_REFAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
-    fun ARRAY_TYPE_REFInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
+    val arrayTypeRefAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(10, 1)
+    fun arrayTypeRefInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 10, 1)
     /**
      * Dimension list
      */
-    fun DIMENSIONS(j: Int) : ArrayDimension? = DIMENSIONS(ArrayDimension(), j)
-    fun DIMENSIONS(obj: ArrayDimension, j: Int) : ArrayDimension? {
+    fun dimensions(j: Int) : ArrayDimension? = dimensions(ArrayDimension(), j)
+    fun dimensions(obj: ArrayDimension, j: Int) : ArrayDimension? {
         val o = __offset(12)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -97,32 +97,32 @@ class ArrayParameterType : Table() {
             null
         }
     }
-    val DIMENSIONSLength : Int
+    val dimensionsLength : Int
         get() {
             val o = __offset(12); return if (o != 0) __vector_len(o) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsArrayParameterType(_bb: ByteBuffer): ArrayParameterType = getRootAsArrayParameterType(_bb, ArrayParameterType())
         fun getRootAsArrayParameterType(_bb: ByteBuffer, obj: ArrayParameterType): ArrayParameterType {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createArrayParameterType(builder: FlatBufferBuilder, NAMEOffset: Int, SHORT_DESCRIPTIONOffset: Int, LONG_DESCRIPTIONOffset: Int, ARRAY_TYPE_REFOffset: Int, DIMENSIONSOffset: Int) : Int {
+        fun createArrayParameterType(builder: FlatBufferBuilder, nameOffset: Int, shortDescriptionOffset: Int, longDescriptionOffset: Int, arrayTypeRefOffset: Int, dimensionsOffset: Int) : Int {
             builder.startTable(5)
-            addDIMENSIONS(builder, DIMENSIONSOffset)
-            addARRAY_TYPE_REF(builder, ARRAY_TYPE_REFOffset)
-            addLONG_DESCRIPTION(builder, LONG_DESCRIPTIONOffset)
-            addSHORT_DESCRIPTION(builder, SHORT_DESCRIPTIONOffset)
-            addNAME(builder, NAMEOffset)
+            addDIMENSIONS(builder, dimensionsOffset)
+            addARRAYTYPEREF(builder, arrayTypeRefOffset)
+            addLONGDESCRIPTION(builder, longDescriptionOffset)
+            addSHORTDESCRIPTION(builder, shortDescriptionOffset)
+            addNAME(builder, nameOffset)
             return endArrayParameterType(builder)
         }
         fun startArrayParameterType(builder: FlatBufferBuilder) = builder.startTable(5)
-        fun addNAME(builder: FlatBufferBuilder, NAME: Int) = builder.addOffset(0, NAME, 0)
-        fun addSHORT_DESCRIPTION(builder: FlatBufferBuilder, SHORT_DESCRIPTION: Int) = builder.addOffset(1, SHORT_DESCRIPTION, 0)
-        fun addLONG_DESCRIPTION(builder: FlatBufferBuilder, LONG_DESCRIPTION: Int) = builder.addOffset(2, LONG_DESCRIPTION, 0)
-        fun addARRAY_TYPE_REF(builder: FlatBufferBuilder, ARRAY_TYPE_REF: Int) = builder.addOffset(3, ARRAY_TYPE_REF, 0)
-        fun addDIMENSIONS(builder: FlatBufferBuilder, DIMENSIONS: Int) = builder.addOffset(4, DIMENSIONS, 0)
+        fun addNAME(builder: FlatBufferBuilder, name: Int) = builder.addOffset(0, name, 0)
+        fun addSHORTDESCRIPTION(builder: FlatBufferBuilder, shortDescription: Int) = builder.addOffset(1, shortDescription, 0)
+        fun addLONGDESCRIPTION(builder: FlatBufferBuilder, longDescription: Int) = builder.addOffset(2, longDescription, 0)
+        fun addARRAYTYPEREF(builder: FlatBufferBuilder, arrayTypeRef: Int) = builder.addOffset(3, arrayTypeRef, 0)
+        fun addDIMENSIONS(builder: FlatBufferBuilder, dimensions: Int) = builder.addOffset(4, dimensions, 0)
         fun createDimensionsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {

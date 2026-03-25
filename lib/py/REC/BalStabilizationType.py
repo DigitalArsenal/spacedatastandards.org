@@ -2,4 +2,7 @@
 
 # namespace: 
 
-# NOTE BalStabilizationType.py does not declare any structs or enums
+class BalStabilizationType(object):
+    SPIN = 0
+    FIN = 1
+    DUAL = 2

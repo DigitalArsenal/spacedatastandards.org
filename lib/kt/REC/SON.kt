@@ -29,7 +29,7 @@ class SON : Table() {
         __init(_i, _bb)
         return this
     }
-    val COMMAND : String?
+    val command : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -38,9 +38,9 @@ class SON : Table() {
                 null
             }
         }
-    val COMMANDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun COMMANDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
-    val ACTIVE_CONFIG : String?
+    val commandAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun commandInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
+    val activeConfig : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -49,9 +49,9 @@ class SON : Table() {
                 null
             }
         }
-    val ACTIVE_CONFIGAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun ACTIVE_CONFIGInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
-    val PASSIVE_CONFIG : String?
+    val activeConfigAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun activeConfigInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
+    val passiveConfig : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -60,9 +60,9 @@ class SON : Table() {
                 null
             }
         }
-    val PASSIVE_CONFIGAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun PASSIVE_CONFIGInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
-    val TL_REQUEST : String?
+    val passiveConfigAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun passiveConfigInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
+    val tlRequest : String?
         get() {
             val o = __offset(10)
             return if (o != 0) {
@@ -71,9 +71,9 @@ class SON : Table() {
                 null
             }
         }
-    val TL_REQUESTAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
-    fun TL_REQUESTInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
-    val ENVIRONMENT : String?
+    val tlRequestAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(10, 1)
+    fun tlRequestInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 10, 1)
+    val environment : String?
         get() {
             val o = __offset(12)
             return if (o != 0) {
@@ -82,9 +82,9 @@ class SON : Table() {
                 null
             }
         }
-    val ENVIRONMENTAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
-    fun ENVIRONMENTInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
-    val TARGET_SIGNATURE : String?
+    val environmentAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(12, 1)
+    fun environmentInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 12, 1)
+    val targetSignature : String?
         get() {
             val o = __offset(14)
             return if (o != 0) {
@@ -93,9 +93,9 @@ class SON : Table() {
                 null
             }
         }
-    val TARGET_SIGNATUREAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(14, 1)
-    fun TARGET_SIGNATUREInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 14, 1)
-    val TMA_INPUT : String?
+    val targetSignatureAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(14, 1)
+    fun targetSignatureInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 14, 1)
+    val tmaInput : String?
         get() {
             val o = __offset(16)
             return if (o != 0) {
@@ -104,9 +104,9 @@ class SON : Table() {
                 null
             }
         }
-    val TMA_INPUTAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(16, 1)
-    fun TMA_INPUTInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 16, 1)
-    val TORPEDO_SEEKER : String?
+    val tmaInputAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(16, 1)
+    fun tmaInputInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 16, 1)
+    val torpedoSeeker : String?
         get() {
             val o = __offset(18)
             return if (o != 0) {
@@ -115,37 +115,37 @@ class SON : Table() {
                 null
             }
         }
-    val TORPEDO_SEEKERAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(18, 1)
-    fun TORPEDO_SEEKERInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 18, 1)
+    val torpedoSeekerAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(18, 1)
+    fun torpedoSeekerInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 18, 1)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsSON(_bb: ByteBuffer): SON = getRootAsSON(_bb, SON())
         fun getRootAsSON(_bb: ByteBuffer, obj: SON): SON {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun SONBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$SON")
-        fun createSON(builder: FlatBufferBuilder, COMMANDOffset: Int, ACTIVE_CONFIGOffset: Int, PASSIVE_CONFIGOffset: Int, TL_REQUESTOffset: Int, ENVIRONMENTOffset: Int, TARGET_SIGNATUREOffset: Int, TMA_INPUTOffset: Int, TORPEDO_SEEKEROffset: Int) : Int {
+        fun createSON(builder: FlatBufferBuilder, commandOffset: Int, activeConfigOffset: Int, passiveConfigOffset: Int, tlRequestOffset: Int, environmentOffset: Int, targetSignatureOffset: Int, tmaInputOffset: Int, torpedoSeekerOffset: Int) : Int {
             builder.startTable(8)
-            addTORPEDO_SEEKER(builder, TORPEDO_SEEKEROffset)
-            addTMA_INPUT(builder, TMA_INPUTOffset)
-            addTARGET_SIGNATURE(builder, TARGET_SIGNATUREOffset)
-            addENVIRONMENT(builder, ENVIRONMENTOffset)
-            addTL_REQUEST(builder, TL_REQUESTOffset)
-            addPASSIVE_CONFIG(builder, PASSIVE_CONFIGOffset)
-            addACTIVE_CONFIG(builder, ACTIVE_CONFIGOffset)
-            addCOMMAND(builder, COMMANDOffset)
+            addTORPEDOSEEKER(builder, torpedoSeekerOffset)
+            addTMAINPUT(builder, tmaInputOffset)
+            addTARGETSIGNATURE(builder, targetSignatureOffset)
+            addENVIRONMENT(builder, environmentOffset)
+            addTLREQUEST(builder, tlRequestOffset)
+            addPASSIVECONFIG(builder, passiveConfigOffset)
+            addACTIVECONFIG(builder, activeConfigOffset)
+            addCOMMAND(builder, commandOffset)
             return endSON(builder)
         }
         fun startSON(builder: FlatBufferBuilder) = builder.startTable(8)
-        fun addCOMMAND(builder: FlatBufferBuilder, COMMAND: Int) = builder.addOffset(0, COMMAND, 0)
-        fun addACTIVE_CONFIG(builder: FlatBufferBuilder, ACTIVE_CONFIG: Int) = builder.addOffset(1, ACTIVE_CONFIG, 0)
-        fun addPASSIVE_CONFIG(builder: FlatBufferBuilder, PASSIVE_CONFIG: Int) = builder.addOffset(2, PASSIVE_CONFIG, 0)
-        fun addTL_REQUEST(builder: FlatBufferBuilder, TL_REQUEST: Int) = builder.addOffset(3, TL_REQUEST, 0)
-        fun addENVIRONMENT(builder: FlatBufferBuilder, ENVIRONMENT: Int) = builder.addOffset(4, ENVIRONMENT, 0)
-        fun addTARGET_SIGNATURE(builder: FlatBufferBuilder, TARGET_SIGNATURE: Int) = builder.addOffset(5, TARGET_SIGNATURE, 0)
-        fun addTMA_INPUT(builder: FlatBufferBuilder, TMA_INPUT: Int) = builder.addOffset(6, TMA_INPUT, 0)
-        fun addTORPEDO_SEEKER(builder: FlatBufferBuilder, TORPEDO_SEEKER: Int) = builder.addOffset(7, TORPEDO_SEEKER, 0)
+        fun addCOMMAND(builder: FlatBufferBuilder, command: Int) = builder.addOffset(0, command, 0)
+        fun addACTIVECONFIG(builder: FlatBufferBuilder, activeConfig: Int) = builder.addOffset(1, activeConfig, 0)
+        fun addPASSIVECONFIG(builder: FlatBufferBuilder, passiveConfig: Int) = builder.addOffset(2, passiveConfig, 0)
+        fun addTLREQUEST(builder: FlatBufferBuilder, tlRequest: Int) = builder.addOffset(3, tlRequest, 0)
+        fun addENVIRONMENT(builder: FlatBufferBuilder, environment: Int) = builder.addOffset(4, environment, 0)
+        fun addTARGETSIGNATURE(builder: FlatBufferBuilder, targetSignature: Int) = builder.addOffset(5, targetSignature, 0)
+        fun addTMAINPUT(builder: FlatBufferBuilder, tmaInput: Int) = builder.addOffset(6, tmaInput, 0)
+        fun addTORPEDOSEEKER(builder: FlatBufferBuilder, torpedoSeeker: Int) = builder.addOffset(7, torpedoSeeker, 0)
         fun endSON(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

@@ -367,36 +367,61 @@ def End(builder):
 class KMLScreenOverlayT(object):
 
     # KMLScreenOverlayT
-    def __init__(self):
-        self.NAME = None  # type: str
-        self.DESCRIPTION = None  # type: str
-        self.VISIBILITY = False  # type: bool
-        self.ICON_HREF = None  # type: str
-        self.COLOR = None  # type: str
-        self.DRAW_ORDER = 0  # type: int
-        self.OVERLAY_XY_X = 0.0  # type: float
-        self.OVERLAY_XY_Y = 0.0  # type: float
-        self.OVERLAY_XY_XUNITS = 0  # type: int
-        self.OVERLAY_XY_YUNITS = 0  # type: int
-        self.SCREEN_XY_X = 0.0  # type: float
-        self.SCREEN_XY_Y = 0.0  # type: float
-        self.SCREEN_XY_XUNITS = 0  # type: int
-        self.SCREEN_XY_YUNITS = 0  # type: int
-        self.ROTATION_XY_X = 0.0  # type: float
-        self.ROTATION_XY_Y = 0.0  # type: float
-        self.ROTATION_XY_XUNITS = 0  # type: int
-        self.ROTATION_XY_YUNITS = 0  # type: int
-        self.SIZE_X = 0.0  # type: float
-        self.SIZE_Y = 0.0  # type: float
-        self.SIZE_XUNITS = 0  # type: int
-        self.SIZE_YUNITS = 0  # type: int
-        self.ROTATION = 0.0  # type: float
+    def __init__(
+        self,
+        NAME = None,
+        DESCRIPTION = None,
+        VISIBILITY = False,
+        ICON_HREF = None,
+        COLOR = None,
+        DRAW_ORDER = 0,
+        OVERLAY_XY_X = 0.0,
+        OVERLAY_XY_Y = 0.0,
+        OVERLAY_XY_XUNITS = 0,
+        OVERLAY_XY_YUNITS = 0,
+        SCREEN_XY_X = 0.0,
+        SCREEN_XY_Y = 0.0,
+        SCREEN_XY_XUNITS = 0,
+        SCREEN_XY_YUNITS = 0,
+        ROTATION_XY_X = 0.0,
+        ROTATION_XY_Y = 0.0,
+        ROTATION_XY_XUNITS = 0,
+        ROTATION_XY_YUNITS = 0,
+        SIZE_X = 0.0,
+        SIZE_Y = 0.0,
+        SIZE_XUNITS = 0,
+        SIZE_YUNITS = 0,
+        ROTATION = 0.0,
+    ):
+        self.NAME = NAME  # type: Optional[str]
+        self.DESCRIPTION = DESCRIPTION  # type: Optional[str]
+        self.VISIBILITY = VISIBILITY  # type: bool
+        self.ICON_HREF = ICON_HREF  # type: Optional[str]
+        self.COLOR = COLOR  # type: Optional[str]
+        self.DRAW_ORDER = DRAW_ORDER  # type: int
+        self.OVERLAY_XY_X = OVERLAY_XY_X  # type: float
+        self.OVERLAY_XY_Y = OVERLAY_XY_Y  # type: float
+        self.OVERLAY_XY_XUNITS = OVERLAY_XY_XUNITS  # type: int
+        self.OVERLAY_XY_YUNITS = OVERLAY_XY_YUNITS  # type: int
+        self.SCREEN_XY_X = SCREEN_XY_X  # type: float
+        self.SCREEN_XY_Y = SCREEN_XY_Y  # type: float
+        self.SCREEN_XY_XUNITS = SCREEN_XY_XUNITS  # type: int
+        self.SCREEN_XY_YUNITS = SCREEN_XY_YUNITS  # type: int
+        self.ROTATION_XY_X = ROTATION_XY_X  # type: float
+        self.ROTATION_XY_Y = ROTATION_XY_Y  # type: float
+        self.ROTATION_XY_XUNITS = ROTATION_XY_XUNITS  # type: int
+        self.ROTATION_XY_YUNITS = ROTATION_XY_YUNITS  # type: int
+        self.SIZE_X = SIZE_X  # type: float
+        self.SIZE_Y = SIZE_Y  # type: float
+        self.SIZE_XUNITS = SIZE_XUNITS  # type: int
+        self.SIZE_YUNITS = SIZE_YUNITS  # type: int
+        self.ROTATION = ROTATION  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        kmlscreenOverlay = KMLScreenOverlay()
-        kmlscreenOverlay.Init(buf, pos)
-        return cls.InitFromObj(kmlscreenOverlay)
+        tmpKmlscreenOverlay = KMLScreenOverlay()
+        tmpKmlscreenOverlay.Init(buf, pos)
+        return cls.InitFromObj(tmpKmlscreenOverlay)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -404,38 +429,38 @@ class KMLScreenOverlayT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, kmlscreenOverlay):
+    def InitFromObj(cls, tmpKmlscreenOverlay):
         x = KMLScreenOverlayT()
-        x._UnPack(kmlscreenOverlay)
+        x._UnPack(tmpKmlscreenOverlay)
         return x
 
     # KMLScreenOverlayT
-    def _UnPack(self, kmlscreenOverlay):
-        if kmlscreenOverlay is None:
+    def _UnPack(self, KMLScreenOverlay):
+        if KMLScreenOverlay is None:
             return
-        self.NAME = kmlscreenOverlay.NAME()
-        self.DESCRIPTION = kmlscreenOverlay.DESCRIPTION()
-        self.VISIBILITY = kmlscreenOverlay.VISIBILITY()
-        self.ICON_HREF = kmlscreenOverlay.ICON_HREF()
-        self.COLOR = kmlscreenOverlay.COLOR()
-        self.DRAW_ORDER = kmlscreenOverlay.DRAW_ORDER()
-        self.OVERLAY_XY_X = kmlscreenOverlay.OVERLAY_XY_X()
-        self.OVERLAY_XY_Y = kmlscreenOverlay.OVERLAY_XY_Y()
-        self.OVERLAY_XY_XUNITS = kmlscreenOverlay.OVERLAY_XY_XUNITS()
-        self.OVERLAY_XY_YUNITS = kmlscreenOverlay.OVERLAY_XY_YUNITS()
-        self.SCREEN_XY_X = kmlscreenOverlay.SCREEN_XY_X()
-        self.SCREEN_XY_Y = kmlscreenOverlay.SCREEN_XY_Y()
-        self.SCREEN_XY_XUNITS = kmlscreenOverlay.SCREEN_XY_XUNITS()
-        self.SCREEN_XY_YUNITS = kmlscreenOverlay.SCREEN_XY_YUNITS()
-        self.ROTATION_XY_X = kmlscreenOverlay.ROTATION_XY_X()
-        self.ROTATION_XY_Y = kmlscreenOverlay.ROTATION_XY_Y()
-        self.ROTATION_XY_XUNITS = kmlscreenOverlay.ROTATION_XY_XUNITS()
-        self.ROTATION_XY_YUNITS = kmlscreenOverlay.ROTATION_XY_YUNITS()
-        self.SIZE_X = kmlscreenOverlay.SIZE_X()
-        self.SIZE_Y = kmlscreenOverlay.SIZE_Y()
-        self.SIZE_XUNITS = kmlscreenOverlay.SIZE_XUNITS()
-        self.SIZE_YUNITS = kmlscreenOverlay.SIZE_YUNITS()
-        self.ROTATION = kmlscreenOverlay.ROTATION()
+        self.NAME = KMLScreenOverlay.NAME()
+        self.DESCRIPTION = KMLScreenOverlay.DESCRIPTION()
+        self.VISIBILITY = KMLScreenOverlay.VISIBILITY()
+        self.ICON_HREF = KMLScreenOverlay.ICON_HREF()
+        self.COLOR = KMLScreenOverlay.COLOR()
+        self.DRAW_ORDER = KMLScreenOverlay.DRAW_ORDER()
+        self.OVERLAY_XY_X = KMLScreenOverlay.OVERLAY_XY_X()
+        self.OVERLAY_XY_Y = KMLScreenOverlay.OVERLAY_XY_Y()
+        self.OVERLAY_XY_XUNITS = KMLScreenOverlay.OVERLAY_XY_XUNITS()
+        self.OVERLAY_XY_YUNITS = KMLScreenOverlay.OVERLAY_XY_YUNITS()
+        self.SCREEN_XY_X = KMLScreenOverlay.SCREEN_XY_X()
+        self.SCREEN_XY_Y = KMLScreenOverlay.SCREEN_XY_Y()
+        self.SCREEN_XY_XUNITS = KMLScreenOverlay.SCREEN_XY_XUNITS()
+        self.SCREEN_XY_YUNITS = KMLScreenOverlay.SCREEN_XY_YUNITS()
+        self.ROTATION_XY_X = KMLScreenOverlay.ROTATION_XY_X()
+        self.ROTATION_XY_Y = KMLScreenOverlay.ROTATION_XY_Y()
+        self.ROTATION_XY_XUNITS = KMLScreenOverlay.ROTATION_XY_XUNITS()
+        self.ROTATION_XY_YUNITS = KMLScreenOverlay.ROTATION_XY_YUNITS()
+        self.SIZE_X = KMLScreenOverlay.SIZE_X()
+        self.SIZE_Y = KMLScreenOverlay.SIZE_Y()
+        self.SIZE_XUNITS = KMLScreenOverlay.SIZE_XUNITS()
+        self.SIZE_YUNITS = KMLScreenOverlay.SIZE_YUNITS()
+        self.ROTATION = KMLScreenOverlay.ROTATION()
 
     # KMLScreenOverlayT
     def Pack(self, builder):
@@ -475,5 +500,5 @@ class KMLScreenOverlayT(object):
         KMLScreenOverlayAddSIZE_XUNITS(builder, self.SIZE_XUNITS)
         KMLScreenOverlayAddSIZE_YUNITS(builder, self.SIZE_YUNITS)
         KMLScreenOverlayAddROTATION(builder, self.ROTATION)
-        kmlscreenOverlay = KMLScreenOverlayEnd(builder)
-        return kmlscreenOverlay
+        KMLScreenOverlay = KMLScreenOverlayEnd(builder)
+        return KMLScreenOverlay

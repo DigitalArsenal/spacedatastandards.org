@@ -51,9 +51,17 @@ func (rcv *attitudeState) ATT_TYPE() attitudeStateType {
 	return 0
 }
 
+func (rcv *attitudeState) AttType() attitudeStateType {
+	return rcv.ATT_TYPE()
+}
+
 /// Attitude state type
 func (rcv *attitudeState) MutateATT_TYPE(n attitudeStateType) bool {
 	return rcv._tab.MutateInt8Slot(4, int8(n))
+}
+
+func (rcv *attitudeState) MutateAttType(n attitudeStateType) bool {
+	return rcv.MutateATT_TYPE(n)
 }
 
 /// Reference frame A
@@ -63,6 +71,10 @@ func (rcv *attitudeState) REF_FRAME_A() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *attitudeState) RefFrameA() []byte {
+	return rcv.REF_FRAME_A()
 }
 
 /// Reference frame A
@@ -75,6 +87,10 @@ func (rcv *attitudeState) REF_FRAME_B() []byte {
 	return nil
 }
 
+func (rcv *attitudeState) RefFrameB() []byte {
+	return rcv.REF_FRAME_B()
+}
+
 /// Reference frame B
 /// Attitude direction (A2B or B2A)
 func (rcv *attitudeState) ATT_DIR() []byte {
@@ -85,6 +101,10 @@ func (rcv *attitudeState) ATT_DIR() []byte {
 	return nil
 }
 
+func (rcv *attitudeState) AttDir() []byte {
+	return rcv.ATT_DIR()
+}
+
 /// Attitude direction (A2B or B2A)
 /// Epoch (ISO 8601)
 func (rcv *attitudeState) EPOCH() []byte {
@@ -93,6 +113,10 @@ func (rcv *attitudeState) EPOCH() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *attitudeState) Epoch() []byte {
+	return rcv.EPOCH()
 }
 
 /// Epoch (ISO 8601)
@@ -147,9 +171,17 @@ func (rcv *attitudeState) QC() float64 {
 	return 0.0
 }
 
+func (rcv *attitudeState) Qc() float64 {
+	return rcv.QC()
+}
+
 /// Quaternion vector component k
 func (rcv *attitudeState) MutateQC(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(20, n)
+}
+
+func (rcv *attitudeState) MutateQc(n float64) bool {
+	return rcv.MutateQC(n)
 }
 
 /// Euler angle X in degrees
@@ -161,9 +193,17 @@ func (rcv *attitudeState) ANGLE_1() float64 {
 	return 0.0
 }
 
+func (rcv *attitudeState) Angle1() float64 {
+	return rcv.ANGLE_1()
+}
+
 /// Euler angle X in degrees
 func (rcv *attitudeState) MutateANGLE_1(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(22, n)
+}
+
+func (rcv *attitudeState) MutateAngle1(n float64) bool {
+	return rcv.MutateANGLE_1(n)
 }
 
 /// Euler angle Y in degrees
@@ -175,9 +215,17 @@ func (rcv *attitudeState) ANGLE_2() float64 {
 	return 0.0
 }
 
+func (rcv *attitudeState) Angle2() float64 {
+	return rcv.ANGLE_2()
+}
+
 /// Euler angle Y in degrees
 func (rcv *attitudeState) MutateANGLE_2(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(24, n)
+}
+
+func (rcv *attitudeState) MutateAngle2(n float64) bool {
+	return rcv.MutateANGLE_2(n)
 }
 
 /// Euler angle Z in degrees
@@ -189,9 +237,17 @@ func (rcv *attitudeState) ANGLE_3() float64 {
 	return 0.0
 }
 
+func (rcv *attitudeState) Angle3() float64 {
+	return rcv.ANGLE_3()
+}
+
 /// Euler angle Z in degrees
 func (rcv *attitudeState) MutateANGLE_3(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(26, n)
+}
+
+func (rcv *attitudeState) MutateAngle3(n float64) bool {
+	return rcv.MutateANGLE_3(n)
 }
 
 /// Euler rotation sequence (e.g., 321, 313)
@@ -201,6 +257,10 @@ func (rcv *attitudeState) EULER_ROT_SEQ() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *attitudeState) EulerRotSeq() []byte {
+	return rcv.EULER_ROT_SEQ()
 }
 
 /// Euler rotation sequence (e.g., 321, 313)
@@ -213,9 +273,17 @@ func (rcv *attitudeState) ANGVEL_X() float64 {
 	return 0.0
 }
 
+func (rcv *attitudeState) AngvelX() float64 {
+	return rcv.ANGVEL_X()
+}
+
 /// Angular velocity X in deg/s
 func (rcv *attitudeState) MutateANGVEL_X(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(30, n)
+}
+
+func (rcv *attitudeState) MutateAngvelX(n float64) bool {
+	return rcv.MutateANGVEL_X(n)
 }
 
 /// Angular velocity Y in deg/s
@@ -227,9 +295,17 @@ func (rcv *attitudeState) ANGVEL_Y() float64 {
 	return 0.0
 }
 
+func (rcv *attitudeState) AngvelY() float64 {
+	return rcv.ANGVEL_Y()
+}
+
 /// Angular velocity Y in deg/s
 func (rcv *attitudeState) MutateANGVEL_Y(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(32, n)
+}
+
+func (rcv *attitudeState) MutateAngvelY(n float64) bool {
+	return rcv.MutateANGVEL_Y(n)
 }
 
 /// Angular velocity Z in deg/s
@@ -241,9 +317,17 @@ func (rcv *attitudeState) ANGVEL_Z() float64 {
 	return 0.0
 }
 
+func (rcv *attitudeState) AngvelZ() float64 {
+	return rcv.ANGVEL_Z()
+}
+
 /// Angular velocity Z in deg/s
 func (rcv *attitudeState) MutateANGVEL_Z(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(34, n)
+}
+
+func (rcv *attitudeState) MutateAngvelZ(n float64) bool {
+	return rcv.MutateANGVEL_Z(n)
 }
 
 /// Spin alpha in degrees
@@ -255,9 +339,17 @@ func (rcv *attitudeState) SPIN_ALPHA() float64 {
 	return 0.0
 }
 
+func (rcv *attitudeState) SpinAlpha() float64 {
+	return rcv.SPIN_ALPHA()
+}
+
 /// Spin alpha in degrees
 func (rcv *attitudeState) MutateSPIN_ALPHA(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(36, n)
+}
+
+func (rcv *attitudeState) MutateSpinAlpha(n float64) bool {
+	return rcv.MutateSPIN_ALPHA(n)
 }
 
 /// Spin delta in degrees
@@ -269,9 +361,17 @@ func (rcv *attitudeState) SPIN_DELTA() float64 {
 	return 0.0
 }
 
+func (rcv *attitudeState) SpinDelta() float64 {
+	return rcv.SPIN_DELTA()
+}
+
 /// Spin delta in degrees
 func (rcv *attitudeState) MutateSPIN_DELTA(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(38, n)
+}
+
+func (rcv *attitudeState) MutateSpinDelta(n float64) bool {
+	return rcv.MutateSPIN_DELTA(n)
 }
 
 /// Spin angle in degrees
@@ -283,9 +383,17 @@ func (rcv *attitudeState) SPIN_ANGLE() float64 {
 	return 0.0
 }
 
+func (rcv *attitudeState) SpinAngle() float64 {
+	return rcv.SPIN_ANGLE()
+}
+
 /// Spin angle in degrees
 func (rcv *attitudeState) MutateSPIN_ANGLE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(40, n)
+}
+
+func (rcv *attitudeState) MutateSpinAngle(n float64) bool {
+	return rcv.MutateSPIN_ANGLE(n)
 }
 
 /// Spin angle velocity in deg/s
@@ -297,9 +405,17 @@ func (rcv *attitudeState) SPIN_ANGLE_VEL() float64 {
 	return 0.0
 }
 
+func (rcv *attitudeState) SpinAngleVel() float64 {
+	return rcv.SPIN_ANGLE_VEL()
+}
+
 /// Spin angle velocity in deg/s
 func (rcv *attitudeState) MutateSPIN_ANGLE_VEL(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(42, n)
+}
+
+func (rcv *attitudeState) MutateSpinAngleVel(n float64) bool {
+	return rcv.MutateSPIN_ANGLE_VEL(n)
 }
 
 /// Nutation angle in degrees
@@ -311,9 +427,17 @@ func (rcv *attitudeState) NUTATION() float64 {
 	return 0.0
 }
 
+func (rcv *attitudeState) Nutation() float64 {
+	return rcv.NUTATION()
+}
+
 /// Nutation angle in degrees
 func (rcv *attitudeState) MutateNUTATION(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(44, n)
+}
+
+func (rcv *attitudeState) MutateNutation(n float64) bool {
+	return rcv.MutateNUTATION(n)
 }
 
 /// Nutation period in seconds
@@ -325,9 +449,17 @@ func (rcv *attitudeState) NUTATION_PERIOD() float64 {
 	return 0.0
 }
 
+func (rcv *attitudeState) NutationPeriod() float64 {
+	return rcv.NUTATION_PERIOD()
+}
+
 /// Nutation period in seconds
 func (rcv *attitudeState) MutateNUTATION_PERIOD(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(46, n)
+}
+
+func (rcv *attitudeState) MutateNutationPeriod(n float64) bool {
+	return rcv.MutateNUTATION_PERIOD(n)
 }
 
 /// Nutation phase in degrees
@@ -339,9 +471,17 @@ func (rcv *attitudeState) NUTATION_PHASE() float64 {
 	return 0.0
 }
 
+func (rcv *attitudeState) NutationPhase() float64 {
+	return rcv.NUTATION_PHASE()
+}
+
 /// Nutation phase in degrees
 func (rcv *attitudeState) MutateNUTATION_PHASE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(48, n)
+}
+
+func (rcv *attitudeState) MutateNutationPhase(n float64) bool {
+	return rcv.MutateNUTATION_PHASE(n)
 }
 
 func attitudeStateStart(builder *flatbuffers.Builder) {
@@ -350,17 +490,32 @@ func attitudeStateStart(builder *flatbuffers.Builder) {
 func attitudeStateAddATT_TYPE(builder *flatbuffers.Builder, ATT_TYPE attitudeStateType) {
 	builder.PrependInt8Slot(0, int8(ATT_TYPE), 0)
 }
+func attitudeStateAddAttType(builder *flatbuffers.Builder, ATT_TYPE attitudeStateType) {
+	attitudeStateAddATT_TYPE(builder, ATT_TYPE)
+}
 func attitudeStateAddREF_FRAME_A(builder *flatbuffers.Builder, REF_FRAME_A flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(REF_FRAME_A), 0)
+}
+func attitudeStateAddRefFrameA(builder *flatbuffers.Builder, REF_FRAME_A flatbuffers.UOffsetT) {
+	attitudeStateAddREF_FRAME_A(builder, REF_FRAME_A)
 }
 func attitudeStateAddREF_FRAME_B(builder *flatbuffers.Builder, REF_FRAME_B flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(REF_FRAME_B), 0)
 }
+func attitudeStateAddRefFrameB(builder *flatbuffers.Builder, REF_FRAME_B flatbuffers.UOffsetT) {
+	attitudeStateAddREF_FRAME_B(builder, REF_FRAME_B)
+}
 func attitudeStateAddATT_DIR(builder *flatbuffers.Builder, ATT_DIR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(ATT_DIR), 0)
 }
+func attitudeStateAddAttDir(builder *flatbuffers.Builder, ATT_DIR flatbuffers.UOffsetT) {
+	attitudeStateAddATT_DIR(builder, ATT_DIR)
+}
 func attitudeStateAddEPOCH(builder *flatbuffers.Builder, EPOCH flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(EPOCH), 0)
+}
+func attitudeStateAddEpoch(builder *flatbuffers.Builder, EPOCH flatbuffers.UOffsetT) {
+	attitudeStateAddEPOCH(builder, EPOCH)
 }
 func attitudeStateAddQ1(builder *flatbuffers.Builder, Q1 float64) {
 	builder.PrependFloat64Slot(5, Q1, 0.0)
@@ -374,47 +529,92 @@ func attitudeStateAddQ3(builder *flatbuffers.Builder, Q3 float64) {
 func attitudeStateAddQC(builder *flatbuffers.Builder, QC float64) {
 	builder.PrependFloat64Slot(8, QC, 0.0)
 }
+func attitudeStateAddQc(builder *flatbuffers.Builder, QC float64) {
+	attitudeStateAddQC(builder, QC)
+}
 func attitudeStateAddANGLE_1(builder *flatbuffers.Builder, ANGLE_1 float64) {
 	builder.PrependFloat64Slot(9, ANGLE_1, 0.0)
+}
+func attitudeStateAddAngle1(builder *flatbuffers.Builder, ANGLE_1 float64) {
+	attitudeStateAddANGLE_1(builder, ANGLE_1)
 }
 func attitudeStateAddANGLE_2(builder *flatbuffers.Builder, ANGLE_2 float64) {
 	builder.PrependFloat64Slot(10, ANGLE_2, 0.0)
 }
+func attitudeStateAddAngle2(builder *flatbuffers.Builder, ANGLE_2 float64) {
+	attitudeStateAddANGLE_2(builder, ANGLE_2)
+}
 func attitudeStateAddANGLE_3(builder *flatbuffers.Builder, ANGLE_3 float64) {
 	builder.PrependFloat64Slot(11, ANGLE_3, 0.0)
+}
+func attitudeStateAddAngle3(builder *flatbuffers.Builder, ANGLE_3 float64) {
+	attitudeStateAddANGLE_3(builder, ANGLE_3)
 }
 func attitudeStateAddEULER_ROT_SEQ(builder *flatbuffers.Builder, EULER_ROT_SEQ flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(12, flatbuffers.UOffsetT(EULER_ROT_SEQ), 0)
 }
+func attitudeStateAddEulerRotSeq(builder *flatbuffers.Builder, EULER_ROT_SEQ flatbuffers.UOffsetT) {
+	attitudeStateAddEULER_ROT_SEQ(builder, EULER_ROT_SEQ)
+}
 func attitudeStateAddANGVEL_X(builder *flatbuffers.Builder, ANGVEL_X float64) {
 	builder.PrependFloat64Slot(13, ANGVEL_X, 0.0)
+}
+func attitudeStateAddAngvelX(builder *flatbuffers.Builder, ANGVEL_X float64) {
+	attitudeStateAddANGVEL_X(builder, ANGVEL_X)
 }
 func attitudeStateAddANGVEL_Y(builder *flatbuffers.Builder, ANGVEL_Y float64) {
 	builder.PrependFloat64Slot(14, ANGVEL_Y, 0.0)
 }
+func attitudeStateAddAngvelY(builder *flatbuffers.Builder, ANGVEL_Y float64) {
+	attitudeStateAddANGVEL_Y(builder, ANGVEL_Y)
+}
 func attitudeStateAddANGVEL_Z(builder *flatbuffers.Builder, ANGVEL_Z float64) {
 	builder.PrependFloat64Slot(15, ANGVEL_Z, 0.0)
+}
+func attitudeStateAddAngvelZ(builder *flatbuffers.Builder, ANGVEL_Z float64) {
+	attitudeStateAddANGVEL_Z(builder, ANGVEL_Z)
 }
 func attitudeStateAddSPIN_ALPHA(builder *flatbuffers.Builder, SPIN_ALPHA float64) {
 	builder.PrependFloat64Slot(16, SPIN_ALPHA, 0.0)
 }
+func attitudeStateAddSpinAlpha(builder *flatbuffers.Builder, SPIN_ALPHA float64) {
+	attitudeStateAddSPIN_ALPHA(builder, SPIN_ALPHA)
+}
 func attitudeStateAddSPIN_DELTA(builder *flatbuffers.Builder, SPIN_DELTA float64) {
 	builder.PrependFloat64Slot(17, SPIN_DELTA, 0.0)
+}
+func attitudeStateAddSpinDelta(builder *flatbuffers.Builder, SPIN_DELTA float64) {
+	attitudeStateAddSPIN_DELTA(builder, SPIN_DELTA)
 }
 func attitudeStateAddSPIN_ANGLE(builder *flatbuffers.Builder, SPIN_ANGLE float64) {
 	builder.PrependFloat64Slot(18, SPIN_ANGLE, 0.0)
 }
+func attitudeStateAddSpinAngle(builder *flatbuffers.Builder, SPIN_ANGLE float64) {
+	attitudeStateAddSPIN_ANGLE(builder, SPIN_ANGLE)
+}
 func attitudeStateAddSPIN_ANGLE_VEL(builder *flatbuffers.Builder, SPIN_ANGLE_VEL float64) {
 	builder.PrependFloat64Slot(19, SPIN_ANGLE_VEL, 0.0)
+}
+func attitudeStateAddSpinAngleVel(builder *flatbuffers.Builder, SPIN_ANGLE_VEL float64) {
+	attitudeStateAddSPIN_ANGLE_VEL(builder, SPIN_ANGLE_VEL)
 }
 func attitudeStateAddNUTATION(builder *flatbuffers.Builder, NUTATION float64) {
 	builder.PrependFloat64Slot(20, NUTATION, 0.0)
 }
+func attitudeStateAddNutation(builder *flatbuffers.Builder, NUTATION float64) {
+	attitudeStateAddNUTATION(builder, NUTATION)
+}
 func attitudeStateAddNUTATION_PERIOD(builder *flatbuffers.Builder, NUTATION_PERIOD float64) {
 	builder.PrependFloat64Slot(21, NUTATION_PERIOD, 0.0)
 }
+func attitudeStateAddNutationPeriod(builder *flatbuffers.Builder, NUTATION_PERIOD float64) {
+	attitudeStateAddNUTATION_PERIOD(builder, NUTATION_PERIOD)
+}
 func attitudeStateAddNUTATION_PHASE(builder *flatbuffers.Builder, NUTATION_PHASE float64) {
 	builder.PrependFloat64Slot(22, NUTATION_PHASE, 0.0)
+}
+func attitudeStateAddNutationPhase(builder *flatbuffers.Builder, NUTATION_PHASE float64) {
+	attitudeStateAddNUTATION_PHASE(builder, NUTATION_PHASE)
 }
 func attitudeStateEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

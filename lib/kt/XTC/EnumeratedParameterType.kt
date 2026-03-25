@@ -32,7 +32,7 @@ class EnumeratedParameterType : Table() {
     /**
      * Type name
      */
-    val NAME : String?
+    val name : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class EnumeratedParameterType : Table() {
                 null
             }
         }
-    val NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val nameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun nameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Short description
      */
-    val SHORT_DESCRIPTION : String?
+    val shortDescription : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -55,12 +55,12 @@ class EnumeratedParameterType : Table() {
                 null
             }
         }
-    val SHORT_DESCRIPTIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun SHORT_DESCRIPTIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val shortDescriptionAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun shortDescriptionInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * Long description
      */
-    val LONG_DESCRIPTION : String?
+    val longDescription : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -69,13 +69,13 @@ class EnumeratedParameterType : Table() {
                 null
             }
         }
-    val LONG_DESCRIPTIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun LONG_DESCRIPTIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val longDescriptionAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun longDescriptionInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
     /**
      * Data encoding
      */
-    val DATA_ENCODING : IntegerDataEncoding? get() = DATA_ENCODING(IntegerDataEncoding())
-    fun DATA_ENCODING(obj: IntegerDataEncoding) : IntegerDataEncoding? {
+    val dataEncoding : IntegerDataEncoding? get() = dataEncoding(IntegerDataEncoding())
+    fun dataEncoding(obj: IntegerDataEncoding) : IntegerDataEncoding? {
         val o = __offset(10)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -86,8 +86,8 @@ class EnumeratedParameterType : Table() {
     /**
      * Default alarm
      */
-    val DEFAULT_ALARM : DefaultAlarm? get() = DEFAULT_ALARM(DefaultAlarm())
-    fun DEFAULT_ALARM(obj: DefaultAlarm) : DefaultAlarm? {
+    val defaultAlarm : DefaultAlarm? get() = defaultAlarm(DefaultAlarm())
+    fun defaultAlarm(obj: DefaultAlarm) : DefaultAlarm? {
         val o = __offset(12)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -98,8 +98,8 @@ class EnumeratedParameterType : Table() {
     /**
      * Context alarms
      */
-    fun CONTEXT_ALARMS(j: Int) : ContextAlarm? = CONTEXT_ALARMS(ContextAlarm(), j)
-    fun CONTEXT_ALARMS(obj: ContextAlarm, j: Int) : ContextAlarm? {
+    fun contextAlarms(j: Int) : ContextAlarm? = contextAlarms(ContextAlarm(), j)
+    fun contextAlarms(obj: ContextAlarm, j: Int) : ContextAlarm? {
         val o = __offset(14)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -107,15 +107,15 @@ class EnumeratedParameterType : Table() {
             null
         }
     }
-    val CONTEXT_ALARMSLength : Int
+    val contextAlarmsLength : Int
         get() {
             val o = __offset(14); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Enumeration values list
      */
-    fun ENUMERATION_LIST(j: Int) : EnumerationValue? = ENUMERATION_LIST(EnumerationValue(), j)
-    fun ENUMERATION_LIST(obj: EnumerationValue, j: Int) : EnumerationValue? {
+    fun enumerationList(j: Int) : EnumerationValue? = enumerationList(EnumerationValue(), j)
+    fun enumerationList(obj: EnumerationValue, j: Int) : EnumerationValue? {
         val o = __offset(16)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -123,14 +123,14 @@ class EnumeratedParameterType : Table() {
             null
         }
     }
-    val ENUMERATION_LISTLength : Int
+    val enumerationListLength : Int
         get() {
             val o = __offset(16); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Initial/default value label
      */
-    val INITIAL_VALUE : String?
+    val initialValue : String?
         get() {
             val o = __offset(18)
             return if (o != 0) {
@@ -139,34 +139,34 @@ class EnumeratedParameterType : Table() {
                 null
             }
         }
-    val INITIAL_VALUEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(18, 1)
-    fun INITIAL_VALUEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 18, 1)
+    val initialValueAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(18, 1)
+    fun initialValueInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 18, 1)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsEnumeratedParameterType(_bb: ByteBuffer): EnumeratedParameterType = getRootAsEnumeratedParameterType(_bb, EnumeratedParameterType())
         fun getRootAsEnumeratedParameterType(_bb: ByteBuffer, obj: EnumeratedParameterType): EnumeratedParameterType {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createEnumeratedParameterType(builder: FlatBufferBuilder, NAMEOffset: Int, SHORT_DESCRIPTIONOffset: Int, LONG_DESCRIPTIONOffset: Int, DATA_ENCODINGOffset: Int, DEFAULT_ALARMOffset: Int, CONTEXT_ALARMSOffset: Int, ENUMERATION_LISTOffset: Int, INITIAL_VALUEOffset: Int) : Int {
+        fun createEnumeratedParameterType(builder: FlatBufferBuilder, nameOffset: Int, shortDescriptionOffset: Int, longDescriptionOffset: Int, dataEncodingOffset: Int, defaultAlarmOffset: Int, contextAlarmsOffset: Int, enumerationListOffset: Int, initialValueOffset: Int) : Int {
             builder.startTable(8)
-            addINITIAL_VALUE(builder, INITIAL_VALUEOffset)
-            addENUMERATION_LIST(builder, ENUMERATION_LISTOffset)
-            addCONTEXT_ALARMS(builder, CONTEXT_ALARMSOffset)
-            addDEFAULT_ALARM(builder, DEFAULT_ALARMOffset)
-            addDATA_ENCODING(builder, DATA_ENCODINGOffset)
-            addLONG_DESCRIPTION(builder, LONG_DESCRIPTIONOffset)
-            addSHORT_DESCRIPTION(builder, SHORT_DESCRIPTIONOffset)
-            addNAME(builder, NAMEOffset)
+            addINITIALVALUE(builder, initialValueOffset)
+            addENUMERATIONLIST(builder, enumerationListOffset)
+            addCONTEXTALARMS(builder, contextAlarmsOffset)
+            addDEFAULTALARM(builder, defaultAlarmOffset)
+            addDATAENCODING(builder, dataEncodingOffset)
+            addLONGDESCRIPTION(builder, longDescriptionOffset)
+            addSHORTDESCRIPTION(builder, shortDescriptionOffset)
+            addNAME(builder, nameOffset)
             return endEnumeratedParameterType(builder)
         }
         fun startEnumeratedParameterType(builder: FlatBufferBuilder) = builder.startTable(8)
-        fun addNAME(builder: FlatBufferBuilder, NAME: Int) = builder.addOffset(0, NAME, 0)
-        fun addSHORT_DESCRIPTION(builder: FlatBufferBuilder, SHORT_DESCRIPTION: Int) = builder.addOffset(1, SHORT_DESCRIPTION, 0)
-        fun addLONG_DESCRIPTION(builder: FlatBufferBuilder, LONG_DESCRIPTION: Int) = builder.addOffset(2, LONG_DESCRIPTION, 0)
-        fun addDATA_ENCODING(builder: FlatBufferBuilder, DATA_ENCODING: Int) = builder.addOffset(3, DATA_ENCODING, 0)
-        fun addDEFAULT_ALARM(builder: FlatBufferBuilder, DEFAULT_ALARM: Int) = builder.addOffset(4, DEFAULT_ALARM, 0)
-        fun addCONTEXT_ALARMS(builder: FlatBufferBuilder, CONTEXT_ALARMS: Int) = builder.addOffset(5, CONTEXT_ALARMS, 0)
+        fun addNAME(builder: FlatBufferBuilder, name: Int) = builder.addOffset(0, name, 0)
+        fun addSHORTDESCRIPTION(builder: FlatBufferBuilder, shortDescription: Int) = builder.addOffset(1, shortDescription, 0)
+        fun addLONGDESCRIPTION(builder: FlatBufferBuilder, longDescription: Int) = builder.addOffset(2, longDescription, 0)
+        fun addDATAENCODING(builder: FlatBufferBuilder, dataEncoding: Int) = builder.addOffset(3, dataEncoding, 0)
+        fun addDEFAULTALARM(builder: FlatBufferBuilder, defaultAlarm: Int) = builder.addOffset(4, defaultAlarm, 0)
+        fun addCONTEXTALARMS(builder: FlatBufferBuilder, contextAlarms: Int) = builder.addOffset(5, contextAlarms, 0)
         fun createContextAlarmsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -175,7 +175,7 @@ class EnumeratedParameterType : Table() {
             return builder.endVector()
         }
         fun startContextAlarmsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addENUMERATION_LIST(builder: FlatBufferBuilder, ENUMERATION_LIST: Int) = builder.addOffset(6, ENUMERATION_LIST, 0)
+        fun addENUMERATIONLIST(builder: FlatBufferBuilder, enumerationList: Int) = builder.addOffset(6, enumerationList, 0)
         fun createEnumerationListVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -184,7 +184,7 @@ class EnumeratedParameterType : Table() {
             return builder.endVector()
         }
         fun startEnumerationListVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addINITIAL_VALUE(builder: FlatBufferBuilder, INITIAL_VALUE: Int) = builder.addOffset(7, INITIAL_VALUE, 0)
+        fun addINITIALVALUE(builder: FlatBufferBuilder, initialValue: Int) = builder.addOffset(7, initialValue, 0)
         fun endEnumeratedParameterType(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

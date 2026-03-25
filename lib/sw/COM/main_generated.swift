@@ -2,9 +2,13 @@
 // swiftlint:disable all
 // swiftformat:disable all
 
+#if canImport(Common)
+import Common
+#endif
+
 import FlatBuffers
 
-public enum ComModulationType: Int8, Enum, Verifiable {
+public enum ComModulationType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -29,7 +33,7 @@ public enum ComModulationType: Int8, Enum, Verifiable {
 }
 
 
-public enum BandType: Int8, Enum, Verifiable {
+public enum BandType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -52,7 +56,7 @@ public enum BandType: Int8, Enum, Verifiable {
 }
 
 
-public enum PropagationModel: Int8, Enum, Verifiable {
+public enum PropagationModel: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -75,7 +79,7 @@ public enum PropagationModel: Int8, Enum, Verifiable {
 }
 
 
-public enum DataLinkType: Int8, Enum, Verifiable {
+public enum DataLinkType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -100,7 +104,7 @@ public enum DataLinkType: Int8, Enum, Verifiable {
 }
 
 
-public enum AntennaPattern: Int8, Enum, Verifiable {
+public enum AntennaPattern: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -123,9 +127,9 @@ public enum AntennaPattern: Int8, Enum, Verifiable {
 
 
 ///  Communications Systems
-public struct COM: FlatBufferObject, Verifiable {
+public struct COM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -164,13 +168,9 @@ public struct COM: FlatBufferObject, Verifiable {
   public var MESSAGES_RECEIVED: UInt64 { let o = _accessor.offset(VTOFFSET.MESSAGES_RECEIVED.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
   public var BYTES_SENT: UInt64 { let o = _accessor.offset(VTOFFSET.BYTES_SENT.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
   public var BYTES_RECEIVED: UInt64 { let o = _accessor.offset(VTOFFSET.BYTES_RECEIVED.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
-  public var hasConnectedNodes: Bool { let o = _accessor.offset(VTOFFSET.CONNECTED_NODES.v); return o == 0 ? false : true }
-  public var CONNECTED_NODESCount: Int32 { let o = _accessor.offset(VTOFFSET.CONNECTED_NODES.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func CONNECTED_NODES(at index: Int32) -> UInt32 { let o = _accessor.offset(VTOFFSET.CONNECTED_NODES.v); return o == 0 ? 0 : _accessor.directRead(of: UInt32.self, offset: _accessor.vector(at: o) + index * 4) }
-  public var CONNECTED_NODES: [UInt32] { return _accessor.getVector(at: VTOFFSET.CONNECTED_NODES.v) ?? [] }
-  public var hasActiveLinks: Bool { let o = _accessor.offset(VTOFFSET.ACTIVE_LINKS.v); return o == 0 ? false : true }
-  public var ACTIVE_LINKSCount: Int32 { let o = _accessor.offset(VTOFFSET.ACTIVE_LINKS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func ACTIVE_LINKS(at index: Int32) -> DataLinkType? { let o = _accessor.offset(VTOFFSET.ACTIVE_LINKS.v); return o == 0 ? DataLinkType.link16 : DataLinkType(rawValue: _accessor.directRead(of: Int8.self, offset: _accessor.vector(at: o) + index * 1)) }
+  public var CONNECTED_NODES: FlatbufferVector<UInt32> { return _accessor.vector(at: VTOFFSET.CONNECTED_NODES.v, byteSize: 4) }
+  public func withUnsafePointerToConnectedNodes<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.CONNECTED_NODES.v, body: body) }
+  public var ACTIVE_LINKS: FlatbufferVector<DataLinkType> { return _accessor.vector(at: VTOFFSET.ACTIVE_LINKS.v, byteSize: 1) }
   public var LAST_UPDATE_MS: Int64 { let o = _accessor.offset(VTOFFSET.LAST_UPDATE_MS.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int64.self, at: o) }
   public static func startCOM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 14) }
   public static func add(SYSTEM_ID: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SYSTEM_ID, def: 0, at: VTOFFSET.SYSTEM_ID.p) }

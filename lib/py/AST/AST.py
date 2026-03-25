@@ -212,6 +212,12 @@ def ASTStartOBSERVATIONSVector(builder, numElems):
 def StartOBSERVATIONSVector(builder, numElems):
     return ASTStartOBSERVATIONSVector(builder, numElems)
 
+def ASTCreateOBSERVATIONSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateOBSERVATIONSVector(builder, data):
+    ASTCreateOBSERVATIONSVector(builder, data)
+
 def ASTAddOD_CONFIG(builder, OD_CONFIG):
     builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(OD_CONFIG), 0)
 
@@ -250,27 +256,43 @@ except:
 class ASTT(object):
 
     # ASTT
-    def __init__(self):
-        self.COMMAND = None  # type: str
-        self.PROPAGATION_REQUEST = None  # type: str
-        self.TLE = None  # type: str
-        self.INITIAL_ELEMENTS = None  # type: str
-        self.INITIAL_STATE = None  # type: str
-        self.EPOCH_MS = 0  # type: int
-        self.MANEUVER_PLAN = None  # type: str
-        self.CONJUNCTION_PRIMARY = None  # type: str
-        self.CONJUNCTION_SECONDARY = None  # type: str
-        self.OBSERVATIONS = None  # type: List[str]
-        self.OD_CONFIG = None  # type: str
-        self.GROUND_STATION = None  # type: str
-        self.FORMATION_CONFIG = None  # type: str
-        self.TARGET_ELEMENTS = None  # type: str
+    def __init__(
+        self,
+        COMMAND = None,
+        PROPAGATION_REQUEST = None,
+        TLE = None,
+        INITIAL_ELEMENTS = None,
+        INITIAL_STATE = None,
+        EPOCH_MS = 0,
+        MANEUVER_PLAN = None,
+        CONJUNCTION_PRIMARY = None,
+        CONJUNCTION_SECONDARY = None,
+        OBSERVATIONS = None,
+        OD_CONFIG = None,
+        GROUND_STATION = None,
+        FORMATION_CONFIG = None,
+        TARGET_ELEMENTS = None,
+    ):
+        self.COMMAND = COMMAND  # type: Optional[str]
+        self.PROPAGATION_REQUEST = PROPAGATION_REQUEST  # type: Optional[str]
+        self.TLE = TLE  # type: Optional[str]
+        self.INITIAL_ELEMENTS = INITIAL_ELEMENTS  # type: Optional[str]
+        self.INITIAL_STATE = INITIAL_STATE  # type: Optional[str]
+        self.EPOCH_MS = EPOCH_MS  # type: int
+        self.MANEUVER_PLAN = MANEUVER_PLAN  # type: Optional[str]
+        self.CONJUNCTION_PRIMARY = CONJUNCTION_PRIMARY  # type: Optional[str]
+        self.CONJUNCTION_SECONDARY = CONJUNCTION_SECONDARY  # type: Optional[str]
+        self.OBSERVATIONS = OBSERVATIONS  # type: Optional[List[Optional[str]]]
+        self.OD_CONFIG = OD_CONFIG  # type: Optional[str]
+        self.GROUND_STATION = GROUND_STATION  # type: Optional[str]
+        self.FORMATION_CONFIG = FORMATION_CONFIG  # type: Optional[str]
+        self.TARGET_ELEMENTS = TARGET_ELEMENTS  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        AST = AST()
-        AST.Init(buf, pos)
-        return cls.InitFromObj(AST)
+        tmpAst = AST()
+        tmpAst.Init(buf, pos)
+        return cls.InitFromObj(tmpAst)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -278,9 +300,9 @@ class ASTT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, AST):
+    def InitFromObj(cls, tmpAst):
         x = ASTT()
-        x._UnPack(AST)
+        x._UnPack(tmpAst)
         return x
 
     # ASTT

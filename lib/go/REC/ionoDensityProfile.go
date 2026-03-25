@@ -51,6 +51,10 @@ func (rcv *ionoDensityProfile) EPOCH() []byte {
 	return nil
 }
 
+func (rcv *ionoDensityProfile) Epoch() []byte {
+	return rcv.EPOCH()
+}
+
 /// Observation epoch (ISO 8601)
 /// Altitudes in km
 func (rcv *ionoDensityProfile) ALTITUDES(j int) float64 {
@@ -62,12 +66,20 @@ func (rcv *ionoDensityProfile) ALTITUDES(j int) float64 {
 	return 0
 }
 
+func (rcv *ionoDensityProfile) Altitudes(j int) float64 {
+	return rcv.ALTITUDES(j)
+}
+
 func (rcv *ionoDensityProfile) ALTITUDESLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *ionoDensityProfile) AltitudesLength() int {
+	return rcv.ALTITUDESLength()
 }
 
 /// Altitudes in km
@@ -80,6 +92,10 @@ func (rcv *ionoDensityProfile) MutateALTITUDES(j int, n float64) bool {
 	return false
 }
 
+func (rcv *ionoDensityProfile) MutateAltitudes(j int, n float64) bool {
+	return rcv.MutateALTITUDES(j, n)
+}
+
 /// Electron densities at each altitude in electrons/m^3
 func (rcv *ionoDensityProfile) DENSITIES(j int) float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
@@ -90,12 +106,20 @@ func (rcv *ionoDensityProfile) DENSITIES(j int) float64 {
 	return 0
 }
 
+func (rcv *ionoDensityProfile) Densities(j int) float64 {
+	return rcv.DENSITIES(j)
+}
+
 func (rcv *ionoDensityProfile) DENSITIESLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *ionoDensityProfile) DensitiesLength() int {
+	return rcv.DENSITIESLength()
 }
 
 /// Electron densities at each altitude in electrons/m^3
@@ -108,23 +132,42 @@ func (rcv *ionoDensityProfile) MutateDENSITIES(j int, n float64) bool {
 	return false
 }
 
+func (rcv *ionoDensityProfile) MutateDensities(j int, n float64) bool {
+	return rcv.MutateDENSITIES(j, n)
+}
+
 func ionoDensityProfileStart(builder *flatbuffers.Builder) {
 	builder.StartObject(3)
 }
 func ionoDensityProfileAddEPOCH(builder *flatbuffers.Builder, EPOCH flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(EPOCH), 0)
 }
+func ionoDensityProfileAddEpoch(builder *flatbuffers.Builder, EPOCH flatbuffers.UOffsetT) {
+	ionoDensityProfileAddEPOCH(builder, EPOCH)
+}
 func ionoDensityProfileAddALTITUDES(builder *flatbuffers.Builder, ALTITUDES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(ALTITUDES), 0)
+}
+func ionoDensityProfileAddAltitudes(builder *flatbuffers.Builder, ALTITUDES flatbuffers.UOffsetT) {
+	ionoDensityProfileAddALTITUDES(builder, ALTITUDES)
 }
 func ionoDensityProfileStartALTITUDESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(8, numElems, 8)
 }
+func ionoDensityProfileStartAltitudesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return ionoDensityProfileStartALTITUDESVector(builder, numElems)
+}
 func ionoDensityProfileAddDENSITIES(builder *flatbuffers.Builder, DENSITIES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(DENSITIES), 0)
 }
+func ionoDensityProfileAddDensities(builder *flatbuffers.Builder, DENSITIES flatbuffers.UOffsetT) {
+	ionoDensityProfileAddDENSITIES(builder, DENSITIES)
+}
 func ionoDensityProfileStartDENSITIESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(8, numElems, 8)
+}
+func ionoDensityProfileStartDensitiesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return ionoDensityProfileStartDENSITIESVector(builder, numElems)
 }
 func ionoDensityProfileEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

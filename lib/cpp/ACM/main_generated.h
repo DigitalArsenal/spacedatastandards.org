@@ -8,9 +8,9 @@
 
 // Ensure the included flatbuffers.h is the same version as when this file was
 // generated, otherwise it may not be compatible.
-static_assert(FLATBUFFERS_VERSION_MAJOR == 24 &&
-              FLATBUFFERS_VERSION_MINOR == 3 &&
-              FLATBUFFERS_VERSION_REVISION == 25,
+static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
+              FLATBUFFERS_VERSION_MINOR == 12 &&
+              FLATBUFFERS_VERSION_REVISION == 19,
              "Non-compatible flatbuffers version included");
 
 struct attitudeState;
@@ -253,7 +253,8 @@ struct attitudeState FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   double NUTATION_PHASE() const {
     return GetField<double>(VT_NUTATION_PHASE, 0.0);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<int8_t>(verifier, VT_ATT_TYPE, 1) &&
            VerifyOffset(verifier, VT_REF_FRAME_A) &&
@@ -555,7 +556,8 @@ struct attPhysicalProperties FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Ta
   double IYZ() const {
     return GetField<double>(VT_IYZ, 0.0);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<double>(verifier, VT_DRAG_COEFF, 8) &&
            VerifyField<double>(verifier, VT_WET_MASS, 8) &&
@@ -729,7 +731,8 @@ struct attCovariance FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::Vector<double> *COV() const {
     return GetPointer<const ::flatbuffers::Vector<double> *>(VT_COV);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<int8_t>(verifier, VT_COV_TYPE, 1) &&
            VerifyOffset(verifier, VT_COV_REF_FRAME) &&
@@ -835,7 +838,8 @@ struct attManeuver FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   double TOR_3() const {
     return GetField<double>(VT_TOR_3, 0.0);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_MAN_EPOCH_START) &&
            verifier.VerifyString(MAN_EPOCH_START()) &&
@@ -995,7 +999,8 @@ struct ACM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *COMMENT() const {
     return GetPointer<const ::flatbuffers::String *>(VT_COMMENT);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_CCSDS_ACM_VERS) &&
            verifier.VerifyString(CCSDS_ACM_VERS()) &&
@@ -1190,14 +1195,16 @@ inline bool SizePrefixedACMBufferHasIdentifier(const void *buf) {
       buf, ACMIdentifier(), true);
 }
 
+template <bool B = false>
 inline bool VerifyACMBuffer(
-    ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifyBuffer<ACM>(ACMIdentifier());
+    ::flatbuffers::VerifierTemplate<B> &verifier) {
+  return verifier.template VerifyBuffer<ACM>(ACMIdentifier());
 }
 
+template <bool B = false>
 inline bool VerifySizePrefixedACMBuffer(
-    ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifySizePrefixedBuffer<ACM>(ACMIdentifier());
+    ::flatbuffers::VerifierTemplate<B> &verifier) {
+  return verifier.template VerifySizePrefixedBuffer<ACM>(ACMIdentifier());
 }
 
 inline void FinishACMBuffer(

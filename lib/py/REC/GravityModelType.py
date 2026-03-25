@@ -2,4 +2,10 @@
 
 # namespace: 
 
-# NOTE GravityModelType.py does not declare any structs or enums
+class GravityModelType(object):
+    POINT_MASS = 0
+    J2_ONLY = 1
+    J2_J4 = 2
+    J2_J6 = 3
+    SPHERICAL_HARMONICS = 4
+    CUSTOM = 5

@@ -73,15 +73,19 @@ def End(builder):
 class KMLSimpleDataT(object):
 
     # KMLSimpleDataT
-    def __init__(self):
-        self.NAME = None  # type: str
-        self.VALUE = None  # type: str
+    def __init__(
+        self,
+        NAME = None,
+        VALUE = None,
+    ):
+        self.NAME = NAME  # type: Optional[str]
+        self.VALUE = VALUE  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        kmlsimpleData = KMLSimpleData()
-        kmlsimpleData.Init(buf, pos)
-        return cls.InitFromObj(kmlsimpleData)
+        tmpKmlsimpleData = KMLSimpleData()
+        tmpKmlsimpleData.Init(buf, pos)
+        return cls.InitFromObj(tmpKmlsimpleData)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -89,17 +93,17 @@ class KMLSimpleDataT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, kmlsimpleData):
+    def InitFromObj(cls, tmpKmlsimpleData):
         x = KMLSimpleDataT()
-        x._UnPack(kmlsimpleData)
+        x._UnPack(tmpKmlsimpleData)
         return x
 
     # KMLSimpleDataT
-    def _UnPack(self, kmlsimpleData):
-        if kmlsimpleData is None:
+    def _UnPack(self, KMLSimpleData):
+        if KMLSimpleData is None:
             return
-        self.NAME = kmlsimpleData.NAME()
-        self.VALUE = kmlsimpleData.VALUE()
+        self.NAME = KMLSimpleData.NAME()
+        self.VALUE = KMLSimpleData.VALUE()
 
     # KMLSimpleDataT
     def Pack(self, builder):
@@ -112,5 +116,5 @@ class KMLSimpleDataT(object):
             KMLSimpleDataAddNAME(builder, NAME)
         if self.VALUE is not None:
             KMLSimpleDataAddVALUE(builder, VALUE)
-        kmlsimpleData = KMLSimpleDataEnd(builder)
-        return kmlsimpleData
+        KMLSimpleData = KMLSimpleDataEnd(builder)
+        return KMLSimpleData

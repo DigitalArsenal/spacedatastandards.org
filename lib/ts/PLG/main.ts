@@ -2,8 +2,8 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export { EntryFunction, EntryFunctionT } from './EntryFunction.js';
-export { PLG, PLGT } from './PLG.js';
-export { PluginCapability, PluginCapabilityT } from './PluginCapability.js';
-export { PluginDependency, PluginDependencyT } from './PluginDependency.js';
-export { pluginType } from './pluginType.js';
+export * from './EntryFunction.js';
+export * from './PLG.js';
+export * from './PluginCapability.js';
+export * from './PluginDependency.js';
+export * from './pluginType.js';

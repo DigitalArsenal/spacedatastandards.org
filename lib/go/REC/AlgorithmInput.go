@@ -51,6 +51,10 @@ func (rcv *AlgorithmInput) PARAMETER_REF() []byte {
 	return nil
 }
 
+func (rcv *AlgorithmInput) ParameterRef() []byte {
+	return rcv.PARAMETER_REF()
+}
+
 /// Parameter reference
 /// Input name in algorithm
 func (rcv *AlgorithmInput) INPUT_NAME() []byte {
@@ -61,6 +65,10 @@ func (rcv *AlgorithmInput) INPUT_NAME() []byte {
 	return nil
 }
 
+func (rcv *AlgorithmInput) InputName() []byte {
+	return rcv.INPUT_NAME()
+}
+
 /// Input name in algorithm
 func AlgorithmInputStart(builder *flatbuffers.Builder) {
 	builder.StartObject(2)
@@ -68,8 +76,14 @@ func AlgorithmInputStart(builder *flatbuffers.Builder) {
 func AlgorithmInputAddPARAMETER_REF(builder *flatbuffers.Builder, PARAMETER_REF flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(PARAMETER_REF), 0)
 }
+func AlgorithmInputAddParameterRef(builder *flatbuffers.Builder, PARAMETER_REF flatbuffers.UOffsetT) {
+	AlgorithmInputAddPARAMETER_REF(builder, PARAMETER_REF)
+}
 func AlgorithmInputAddINPUT_NAME(builder *flatbuffers.Builder, INPUT_NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(INPUT_NAME), 0)
+}
+func AlgorithmInputAddInputName(builder *flatbuffers.Builder, INPUT_NAME flatbuffers.UOffsetT) {
+	AlgorithmInputAddINPUT_NAME(builder, INPUT_NAME)
 }
 func AlgorithmInputEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

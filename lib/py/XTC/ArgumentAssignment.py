@@ -73,15 +73,19 @@ def End(builder):
 class ArgumentAssignmentT(object):
 
     # ArgumentAssignmentT
-    def __init__(self):
-        self.ARGUMENT_NAME = None  # type: str
-        self.VALUE = None  # type: str
+    def __init__(
+        self,
+        ARGUMENT_NAME = None,
+        VALUE = None,
+    ):
+        self.ARGUMENT_NAME = ARGUMENT_NAME  # type: Optional[str]
+        self.VALUE = VALUE  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        argumentAssignment = ArgumentAssignment()
-        argumentAssignment.Init(buf, pos)
-        return cls.InitFromObj(argumentAssignment)
+        tmpArgumentAssignment = ArgumentAssignment()
+        tmpArgumentAssignment.Init(buf, pos)
+        return cls.InitFromObj(tmpArgumentAssignment)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -89,17 +93,17 @@ class ArgumentAssignmentT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, argumentAssignment):
+    def InitFromObj(cls, tmpArgumentAssignment):
         x = ArgumentAssignmentT()
-        x._UnPack(argumentAssignment)
+        x._UnPack(tmpArgumentAssignment)
         return x
 
     # ArgumentAssignmentT
-    def _UnPack(self, argumentAssignment):
-        if argumentAssignment is None:
+    def _UnPack(self, ArgumentAssignment):
+        if ArgumentAssignment is None:
             return
-        self.ARGUMENT_NAME = argumentAssignment.ARGUMENT_NAME()
-        self.VALUE = argumentAssignment.VALUE()
+        self.ARGUMENT_NAME = ArgumentAssignment.ARGUMENT_NAME()
+        self.VALUE = ArgumentAssignment.VALUE()
 
     # ArgumentAssignmentT
     def Pack(self, builder):
@@ -112,5 +116,5 @@ class ArgumentAssignmentT(object):
             ArgumentAssignmentAddARGUMENT_NAME(builder, ARGUMENT_NAME)
         if self.VALUE is not None:
             ArgumentAssignmentAddVALUE(builder, VALUE)
-        argumentAssignment = ArgumentAssignmentEnd(builder)
-        return argumentAssignment
+        ArgumentAssignment = ArgumentAssignmentEnd(builder)
+        return ArgumentAssignment

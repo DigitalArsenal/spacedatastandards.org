@@ -2,9 +2,13 @@
 // swiftlint:disable all
 // swiftformat:disable all
 
+#if canImport(Common)
+import Common
+#endif
+
 import FlatBuffers
 
-public enum packetType: Int8, Enum, Verifiable {
+public enum packetType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -17,9 +21,9 @@ public enum packetType: Int8, Enum, Verifiable {
 
 
 ///  Space Packet Protocol (CCSDS 133.0-B-1)
-public struct SPP: FlatBufferObject, Verifiable {
+public struct SPP: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -56,10 +60,8 @@ public struct SPP: FlatBufferObject, Verifiable {
   ///  Data length minus 1
   public var DATA_LENGTH: UInt16 { let o = _accessor.offset(VTOFFSET.DATA_LENGTH.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
   ///  Packet data zone
-  public var hasData: Bool { let o = _accessor.offset(VTOFFSET.DATA.v); return o == 0 ? false : true }
-  public var DATACount: Int32 { let o = _accessor.offset(VTOFFSET.DATA.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func DATA(at index: Int32) -> UInt8 { let o = _accessor.offset(VTOFFSET.DATA.v); return o == 0 ? 0 : _accessor.directRead(of: UInt8.self, offset: _accessor.vector(at: o) + index * 1) }
-  public var DATA: [UInt8] { return _accessor.getVector(at: VTOFFSET.DATA.v) ?? [] }
+  public var DATA: FlatbufferVector<UInt8> { return _accessor.vector(at: VTOFFSET.DATA.v, byteSize: 1) }
+  public func withUnsafePointerToData<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.DATA.v, body: body) }
   public static func startSPP(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 8) }
   public static func add(VERSION: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VERSION, def: 0, at: VTOFFSET.VERSION.p) }
   public static func add(PACKET_TYPE: packetType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PACKET_TYPE.rawValue, def: 0, at: VTOFFSET.PACKET_TYPE.p) }

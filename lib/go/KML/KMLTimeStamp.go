@@ -51,12 +51,19 @@ func (rcv *KMLTimeStamp) WHEN() []byte {
 	return nil
 }
 
+func (rcv *KMLTimeStamp) When() []byte {
+	return rcv.WHEN()
+}
+
 /// Time (ISO 8601)
 func KMLTimeStampStart(builder *flatbuffers.Builder) {
 	builder.StartObject(1)
 }
 func KMLTimeStampAddWHEN(builder *flatbuffers.Builder, WHEN flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(WHEN), 0)
+}
+func KMLTimeStampAddWhen(builder *flatbuffers.Builder, WHEN flatbuffers.UOffsetT) {
+	KMLTimeStampAddWHEN(builder, WHEN)
 }
 func KMLTimeStampEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

@@ -62,8 +62,16 @@ func (rcv *COM) SYSTEM_ID() uint32 {
 	return 0
 }
 
+func (rcv *COM) SystemId() uint32 {
+	return rcv.SYSTEM_ID()
+}
+
 func (rcv *COM) MutateSYSTEM_ID(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(4, n)
+}
+
+func (rcv *COM) MutateSystemId(n uint32) bool {
+	return rcv.MutateSYSTEM_ID(n)
 }
 
 func (rcv *COM) ENTITY_ID() uint32 {
@@ -74,8 +82,16 @@ func (rcv *COM) ENTITY_ID() uint32 {
 	return 0
 }
 
+func (rcv *COM) EntityId() uint32 {
+	return rcv.ENTITY_ID()
+}
+
 func (rcv *COM) MutateENTITY_ID(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(6, n)
+}
+
+func (rcv *COM) MutateEntityId(n uint32) bool {
+	return rcv.MutateENTITY_ID(n)
 }
 
 func (rcv *COM) IS_TRANSMITTING() bool {
@@ -86,8 +102,16 @@ func (rcv *COM) IS_TRANSMITTING() bool {
 	return false
 }
 
+func (rcv *COM) IsTransmitting() bool {
+	return rcv.IS_TRANSMITTING()
+}
+
 func (rcv *COM) MutateIS_TRANSMITTING(n bool) bool {
 	return rcv._tab.MutateBoolSlot(8, n)
+}
+
+func (rcv *COM) MutateIsTransmitting(n bool) bool {
+	return rcv.MutateIS_TRANSMITTING(n)
 }
 
 func (rcv *COM) IS_RECEIVING() bool {
@@ -98,8 +122,16 @@ func (rcv *COM) IS_RECEIVING() bool {
 	return false
 }
 
+func (rcv *COM) IsReceiving() bool {
+	return rcv.IS_RECEIVING()
+}
+
 func (rcv *COM) MutateIS_RECEIVING(n bool) bool {
 	return rcv._tab.MutateBoolSlot(10, n)
+}
+
+func (rcv *COM) MutateIsReceiving(n bool) bool {
+	return rcv.MutateIS_RECEIVING(n)
 }
 
 func (rcv *COM) CURRENT_FREQUENCY_HZ() float64 {
@@ -110,8 +142,16 @@ func (rcv *COM) CURRENT_FREQUENCY_HZ() float64 {
 	return 0.0
 }
 
+func (rcv *COM) CurrentFrequencyHz() float64 {
+	return rcv.CURRENT_FREQUENCY_HZ()
+}
+
 func (rcv *COM) MutateCURRENT_FREQUENCY_HZ(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(12, n)
+}
+
+func (rcv *COM) MutateCurrentFrequencyHz(n float64) bool {
+	return rcv.MutateCURRENT_FREQUENCY_HZ(n)
 }
 
 func (rcv *COM) CURRENT_POWER_WATTS() float64 {
@@ -122,8 +162,16 @@ func (rcv *COM) CURRENT_POWER_WATTS() float64 {
 	return 0.0
 }
 
+func (rcv *COM) CurrentPowerWatts() float64 {
+	return rcv.CURRENT_POWER_WATTS()
+}
+
 func (rcv *COM) MutateCURRENT_POWER_WATTS(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(14, n)
+}
+
+func (rcv *COM) MutateCurrentPowerWatts(n float64) bool {
+	return rcv.MutateCURRENT_POWER_WATTS(n)
 }
 
 func (rcv *COM) CURRENT_DATA_RATE_BPS() float64 {
@@ -134,8 +182,16 @@ func (rcv *COM) CURRENT_DATA_RATE_BPS() float64 {
 	return 0.0
 }
 
+func (rcv *COM) CurrentDataRateBps() float64 {
+	return rcv.CURRENT_DATA_RATE_BPS()
+}
+
 func (rcv *COM) MutateCURRENT_DATA_RATE_BPS(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(16, n)
+}
+
+func (rcv *COM) MutateCurrentDataRateBps(n float64) bool {
+	return rcv.MutateCURRENT_DATA_RATE_BPS(n)
 }
 
 func (rcv *COM) MESSAGES_SENT() uint64 {
@@ -146,8 +202,16 @@ func (rcv *COM) MESSAGES_SENT() uint64 {
 	return 0
 }
 
+func (rcv *COM) MessagesSent() uint64 {
+	return rcv.MESSAGES_SENT()
+}
+
 func (rcv *COM) MutateMESSAGES_SENT(n uint64) bool {
 	return rcv._tab.MutateUint64Slot(18, n)
+}
+
+func (rcv *COM) MutateMessagesSent(n uint64) bool {
+	return rcv.MutateMESSAGES_SENT(n)
 }
 
 func (rcv *COM) MESSAGES_RECEIVED() uint64 {
@@ -158,8 +222,16 @@ func (rcv *COM) MESSAGES_RECEIVED() uint64 {
 	return 0
 }
 
+func (rcv *COM) MessagesReceived() uint64 {
+	return rcv.MESSAGES_RECEIVED()
+}
+
 func (rcv *COM) MutateMESSAGES_RECEIVED(n uint64) bool {
 	return rcv._tab.MutateUint64Slot(20, n)
+}
+
+func (rcv *COM) MutateMessagesReceived(n uint64) bool {
+	return rcv.MutateMESSAGES_RECEIVED(n)
 }
 
 func (rcv *COM) BYTES_SENT() uint64 {
@@ -170,8 +242,16 @@ func (rcv *COM) BYTES_SENT() uint64 {
 	return 0
 }
 
+func (rcv *COM) BytesSent() uint64 {
+	return rcv.BYTES_SENT()
+}
+
 func (rcv *COM) MutateBYTES_SENT(n uint64) bool {
 	return rcv._tab.MutateUint64Slot(22, n)
+}
+
+func (rcv *COM) MutateBytesSent(n uint64) bool {
+	return rcv.MutateBYTES_SENT(n)
 }
 
 func (rcv *COM) BYTES_RECEIVED() uint64 {
@@ -182,8 +262,16 @@ func (rcv *COM) BYTES_RECEIVED() uint64 {
 	return 0
 }
 
+func (rcv *COM) BytesReceived() uint64 {
+	return rcv.BYTES_RECEIVED()
+}
+
 func (rcv *COM) MutateBYTES_RECEIVED(n uint64) bool {
 	return rcv._tab.MutateUint64Slot(24, n)
+}
+
+func (rcv *COM) MutateBytesReceived(n uint64) bool {
+	return rcv.MutateBYTES_RECEIVED(n)
 }
 
 func (rcv *COM) CONNECTED_NODES(j int) uint32 {
@@ -195,12 +283,20 @@ func (rcv *COM) CONNECTED_NODES(j int) uint32 {
 	return 0
 }
 
+func (rcv *COM) ConnectedNodes(j int) uint32 {
+	return rcv.CONNECTED_NODES(j)
+}
+
 func (rcv *COM) CONNECTED_NODESLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *COM) ConnectedNodesLength() int {
+	return rcv.CONNECTED_NODESLength()
 }
 
 func (rcv *COM) MutateCONNECTED_NODES(j int, n uint32) bool {
@@ -212,6 +308,10 @@ func (rcv *COM) MutateCONNECTED_NODES(j int, n uint32) bool {
 	return false
 }
 
+func (rcv *COM) MutateConnectedNodes(j int, n uint32) bool {
+	return rcv.MutateCONNECTED_NODES(j, n)
+}
+
 func (rcv *COM) ACTIVE_LINKS(j int) DataLinkType {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
 	if o != 0 {
@@ -221,12 +321,20 @@ func (rcv *COM) ACTIVE_LINKS(j int) DataLinkType {
 	return 0
 }
 
+func (rcv *COM) ActiveLinks(j int) DataLinkType {
+	return rcv.ACTIVE_LINKS(j)
+}
+
 func (rcv *COM) ACTIVE_LINKSLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *COM) ActiveLinksLength() int {
+	return rcv.ACTIVE_LINKSLength()
 }
 
 func (rcv *COM) MutateACTIVE_LINKS(j int, n DataLinkType) bool {
@@ -238,6 +346,10 @@ func (rcv *COM) MutateACTIVE_LINKS(j int, n DataLinkType) bool {
 	return false
 }
 
+func (rcv *COM) MutateActiveLinks(j int, n DataLinkType) bool {
+	return rcv.MutateACTIVE_LINKS(j, n)
+}
+
 func (rcv *COM) LAST_UPDATE_MS() int64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
 	if o != 0 {
@@ -246,8 +358,16 @@ func (rcv *COM) LAST_UPDATE_MS() int64 {
 	return 0
 }
 
+func (rcv *COM) LastUpdateMs() int64 {
+	return rcv.LAST_UPDATE_MS()
+}
+
 func (rcv *COM) MutateLAST_UPDATE_MS(n int64) bool {
 	return rcv._tab.MutateInt64Slot(30, n)
+}
+
+func (rcv *COM) MutateLastUpdateMs(n int64) bool {
+	return rcv.MutateLAST_UPDATE_MS(n)
 }
 
 func COMStart(builder *flatbuffers.Builder) {
@@ -256,50 +376,98 @@ func COMStart(builder *flatbuffers.Builder) {
 func COMAddSYSTEM_ID(builder *flatbuffers.Builder, SYSTEM_ID uint32) {
 	builder.PrependUint32Slot(0, SYSTEM_ID, 0)
 }
+func COMAddSystemId(builder *flatbuffers.Builder, SYSTEM_ID uint32) {
+	COMAddSYSTEM_ID(builder, SYSTEM_ID)
+}
 func COMAddENTITY_ID(builder *flatbuffers.Builder, ENTITY_ID uint32) {
 	builder.PrependUint32Slot(1, ENTITY_ID, 0)
+}
+func COMAddEntityId(builder *flatbuffers.Builder, ENTITY_ID uint32) {
+	COMAddENTITY_ID(builder, ENTITY_ID)
 }
 func COMAddIS_TRANSMITTING(builder *flatbuffers.Builder, IS_TRANSMITTING bool) {
 	builder.PrependBoolSlot(2, IS_TRANSMITTING, false)
 }
+func COMAddIsTransmitting(builder *flatbuffers.Builder, IS_TRANSMITTING bool) {
+	COMAddIS_TRANSMITTING(builder, IS_TRANSMITTING)
+}
 func COMAddIS_RECEIVING(builder *flatbuffers.Builder, IS_RECEIVING bool) {
 	builder.PrependBoolSlot(3, IS_RECEIVING, false)
+}
+func COMAddIsReceiving(builder *flatbuffers.Builder, IS_RECEIVING bool) {
+	COMAddIS_RECEIVING(builder, IS_RECEIVING)
 }
 func COMAddCURRENT_FREQUENCY_HZ(builder *flatbuffers.Builder, CURRENT_FREQUENCY_HZ float64) {
 	builder.PrependFloat64Slot(4, CURRENT_FREQUENCY_HZ, 0.0)
 }
+func COMAddCurrentFrequencyHz(builder *flatbuffers.Builder, CURRENT_FREQUENCY_HZ float64) {
+	COMAddCURRENT_FREQUENCY_HZ(builder, CURRENT_FREQUENCY_HZ)
+}
 func COMAddCURRENT_POWER_WATTS(builder *flatbuffers.Builder, CURRENT_POWER_WATTS float64) {
 	builder.PrependFloat64Slot(5, CURRENT_POWER_WATTS, 0.0)
+}
+func COMAddCurrentPowerWatts(builder *flatbuffers.Builder, CURRENT_POWER_WATTS float64) {
+	COMAddCURRENT_POWER_WATTS(builder, CURRENT_POWER_WATTS)
 }
 func COMAddCURRENT_DATA_RATE_BPS(builder *flatbuffers.Builder, CURRENT_DATA_RATE_BPS float64) {
 	builder.PrependFloat64Slot(6, CURRENT_DATA_RATE_BPS, 0.0)
 }
+func COMAddCurrentDataRateBps(builder *flatbuffers.Builder, CURRENT_DATA_RATE_BPS float64) {
+	COMAddCURRENT_DATA_RATE_BPS(builder, CURRENT_DATA_RATE_BPS)
+}
 func COMAddMESSAGES_SENT(builder *flatbuffers.Builder, MESSAGES_SENT uint64) {
 	builder.PrependUint64Slot(7, MESSAGES_SENT, 0)
+}
+func COMAddMessagesSent(builder *flatbuffers.Builder, MESSAGES_SENT uint64) {
+	COMAddMESSAGES_SENT(builder, MESSAGES_SENT)
 }
 func COMAddMESSAGES_RECEIVED(builder *flatbuffers.Builder, MESSAGES_RECEIVED uint64) {
 	builder.PrependUint64Slot(8, MESSAGES_RECEIVED, 0)
 }
+func COMAddMessagesReceived(builder *flatbuffers.Builder, MESSAGES_RECEIVED uint64) {
+	COMAddMESSAGES_RECEIVED(builder, MESSAGES_RECEIVED)
+}
 func COMAddBYTES_SENT(builder *flatbuffers.Builder, BYTES_SENT uint64) {
 	builder.PrependUint64Slot(9, BYTES_SENT, 0)
+}
+func COMAddBytesSent(builder *flatbuffers.Builder, BYTES_SENT uint64) {
+	COMAddBYTES_SENT(builder, BYTES_SENT)
 }
 func COMAddBYTES_RECEIVED(builder *flatbuffers.Builder, BYTES_RECEIVED uint64) {
 	builder.PrependUint64Slot(10, BYTES_RECEIVED, 0)
 }
+func COMAddBytesReceived(builder *flatbuffers.Builder, BYTES_RECEIVED uint64) {
+	COMAddBYTES_RECEIVED(builder, BYTES_RECEIVED)
+}
 func COMAddCONNECTED_NODES(builder *flatbuffers.Builder, CONNECTED_NODES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(CONNECTED_NODES), 0)
+}
+func COMAddConnectedNodes(builder *flatbuffers.Builder, CONNECTED_NODES flatbuffers.UOffsetT) {
+	COMAddCONNECTED_NODES(builder, CONNECTED_NODES)
 }
 func COMStartCONNECTED_NODESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
+func COMStartConnectedNodesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return COMStartCONNECTED_NODESVector(builder, numElems)
+}
 func COMAddACTIVE_LINKS(builder *flatbuffers.Builder, ACTIVE_LINKS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(12, flatbuffers.UOffsetT(ACTIVE_LINKS), 0)
+}
+func COMAddActiveLinks(builder *flatbuffers.Builder, ACTIVE_LINKS flatbuffers.UOffsetT) {
+	COMAddACTIVE_LINKS(builder, ACTIVE_LINKS)
 }
 func COMStartACTIVE_LINKSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(1, numElems, 1)
 }
+func COMStartActiveLinksVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return COMStartACTIVE_LINKSVector(builder, numElems)
+}
 func COMAddLAST_UPDATE_MS(builder *flatbuffers.Builder, LAST_UPDATE_MS int64) {
 	builder.PrependInt64Slot(13, LAST_UPDATE_MS, 0)
+}
+func COMAddLastUpdateMs(builder *flatbuffers.Builder, LAST_UPDATE_MS int64) {
+	COMAddLAST_UPDATE_MS(builder, LAST_UPDATE_MS)
 }
 func COMEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

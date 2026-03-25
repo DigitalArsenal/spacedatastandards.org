@@ -782,6 +782,12 @@ def RDOStartTAGSVector(builder, numElems):
 def StartTAGSVector(builder, numElems):
     return RDOStartTAGSVector(builder, numElems)
 
+def RDOCreateTAGSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateTAGSVector(builder, data):
+    RDOCreateTAGSVector(builder, data)
+
 def RDOEnd(builder):
     return builder.EndObject()
 
@@ -796,65 +802,119 @@ except:
 class RDOT(object):
 
     # RDOT
-    def __init__(self):
-        self.ID = None  # type: str
-        self.OB_TIME = None  # type: str
-        self.ID_SENSOR = None  # type: str
-        self.ORIG_SENSOR_ID = None  # type: str
-        self.SAT_NO = 0  # type: int
-        self.ORIG_OBJECT_ID = None  # type: str
-        self.ON_ORBIT = None  # type: str
-        self.UCT = False  # type: bool
-        self.OBS_TYPE = 0  # type: int
-        self.TASK_ID = None  # type: str
-        self.TRANSACTION_ID = None  # type: str
-        self.TRACK_ID = None  # type: str
-        self.OB_POSITION = None  # type: str
-        self.SEN_REFERENCE_FRAME = None  # type: str
-        self.AZIMUTH = 0.0  # type: float
-        self.AZIMUTH_UNC = 0.0  # type: float
-        self.AZIMUTH_BIAS = 0.0  # type: float
-        self.AZIMUTH_RATE = 0.0  # type: float
-        self.ELEVATION = 0.0  # type: float
-        self.ELEVATION_UNC = 0.0  # type: float
-        self.ELEVATION_BIAS = 0.0  # type: float
-        self.ELEVATION_RATE = 0.0  # type: float
-        self.RANGE = 0.0  # type: float
-        self.RANGE_UNC = 0.0  # type: float
-        self.RANGE_BIAS = 0.0  # type: float
-        self.RANGE_RATE = 0.0  # type: float
-        self.RANGE_RATE_UNC = 0.0  # type: float
-        self.RANGE_ACCEL = 0.0  # type: float
-        self.RANGE_ACCEL_UNC = 0.0  # type: float
-        self.DOPPLER = 0.0  # type: float
-        self.DOPPLER_UNC = 0.0  # type: float
-        self.RA = 0.0  # type: float
-        self.DECLINATION = 0.0  # type: float
-        self.X = 0.0  # type: float
-        self.Y = 0.0  # type: float
-        self.Z = 0.0  # type: float
-        self.XVEL = 0.0  # type: float
-        self.YVEL = 0.0  # type: float
-        self.ZVEL = 0.0  # type: float
-        self.SENX = 0.0  # type: float
-        self.SENY = 0.0  # type: float
-        self.SENZ = 0.0  # type: float
-        self.RCS = 0.0  # type: float
-        self.RCS_UNC = 0.0  # type: float
-        self.ORTHOGONAL_RCS = 0.0  # type: float
-        self.ORTHOGONAL_RCS_UNC = 0.0  # type: float
-        self.SNR = 0.0  # type: float
-        self.BEAM = 0.0  # type: float
-        self.TIMING_BIAS = 0.0  # type: float
-        self.RAW_FILE_URI = None  # type: str
-        self.DESCRIPTOR = None  # type: str
-        self.TAGS = None  # type: List[str]
+    def __init__(
+        self,
+        ID = None,
+        OB_TIME = None,
+        ID_SENSOR = None,
+        ORIG_SENSOR_ID = None,
+        SAT_NO = 0,
+        ORIG_OBJECT_ID = None,
+        ON_ORBIT = None,
+        UCT = False,
+        OBS_TYPE = 0,
+        TASK_ID = None,
+        TRANSACTION_ID = None,
+        TRACK_ID = None,
+        OB_POSITION = None,
+        SEN_REFERENCE_FRAME = None,
+        AZIMUTH = 0.0,
+        AZIMUTH_UNC = 0.0,
+        AZIMUTH_BIAS = 0.0,
+        AZIMUTH_RATE = 0.0,
+        ELEVATION = 0.0,
+        ELEVATION_UNC = 0.0,
+        ELEVATION_BIAS = 0.0,
+        ELEVATION_RATE = 0.0,
+        RANGE = 0.0,
+        RANGE_UNC = 0.0,
+        RANGE_BIAS = 0.0,
+        RANGE_RATE = 0.0,
+        RANGE_RATE_UNC = 0.0,
+        RANGE_ACCEL = 0.0,
+        RANGE_ACCEL_UNC = 0.0,
+        DOPPLER = 0.0,
+        DOPPLER_UNC = 0.0,
+        RA = 0.0,
+        DECLINATION = 0.0,
+        X = 0.0,
+        Y = 0.0,
+        Z = 0.0,
+        XVEL = 0.0,
+        YVEL = 0.0,
+        ZVEL = 0.0,
+        SENX = 0.0,
+        SENY = 0.0,
+        SENZ = 0.0,
+        RCS = 0.0,
+        RCS_UNC = 0.0,
+        ORTHOGONAL_RCS = 0.0,
+        ORTHOGONAL_RCS_UNC = 0.0,
+        SNR = 0.0,
+        BEAM = 0.0,
+        TIMING_BIAS = 0.0,
+        RAW_FILE_URI = None,
+        DESCRIPTOR = None,
+        TAGS = None,
+    ):
+        self.ID = ID  # type: Optional[str]
+        self.OB_TIME = OB_TIME  # type: Optional[str]
+        self.ID_SENSOR = ID_SENSOR  # type: Optional[str]
+        self.ORIG_SENSOR_ID = ORIG_SENSOR_ID  # type: Optional[str]
+        self.SAT_NO = SAT_NO  # type: int
+        self.ORIG_OBJECT_ID = ORIG_OBJECT_ID  # type: Optional[str]
+        self.ON_ORBIT = ON_ORBIT  # type: Optional[str]
+        self.UCT = UCT  # type: bool
+        self.OBS_TYPE = OBS_TYPE  # type: int
+        self.TASK_ID = TASK_ID  # type: Optional[str]
+        self.TRANSACTION_ID = TRANSACTION_ID  # type: Optional[str]
+        self.TRACK_ID = TRACK_ID  # type: Optional[str]
+        self.OB_POSITION = OB_POSITION  # type: Optional[str]
+        self.SEN_REFERENCE_FRAME = SEN_REFERENCE_FRAME  # type: Optional[str]
+        self.AZIMUTH = AZIMUTH  # type: float
+        self.AZIMUTH_UNC = AZIMUTH_UNC  # type: float
+        self.AZIMUTH_BIAS = AZIMUTH_BIAS  # type: float
+        self.AZIMUTH_RATE = AZIMUTH_RATE  # type: float
+        self.ELEVATION = ELEVATION  # type: float
+        self.ELEVATION_UNC = ELEVATION_UNC  # type: float
+        self.ELEVATION_BIAS = ELEVATION_BIAS  # type: float
+        self.ELEVATION_RATE = ELEVATION_RATE  # type: float
+        self.RANGE = RANGE  # type: float
+        self.RANGE_UNC = RANGE_UNC  # type: float
+        self.RANGE_BIAS = RANGE_BIAS  # type: float
+        self.RANGE_RATE = RANGE_RATE  # type: float
+        self.RANGE_RATE_UNC = RANGE_RATE_UNC  # type: float
+        self.RANGE_ACCEL = RANGE_ACCEL  # type: float
+        self.RANGE_ACCEL_UNC = RANGE_ACCEL_UNC  # type: float
+        self.DOPPLER = DOPPLER  # type: float
+        self.DOPPLER_UNC = DOPPLER_UNC  # type: float
+        self.RA = RA  # type: float
+        self.DECLINATION = DECLINATION  # type: float
+        self.X = X  # type: float
+        self.Y = Y  # type: float
+        self.Z = Z  # type: float
+        self.XVEL = XVEL  # type: float
+        self.YVEL = YVEL  # type: float
+        self.ZVEL = ZVEL  # type: float
+        self.SENX = SENX  # type: float
+        self.SENY = SENY  # type: float
+        self.SENZ = SENZ  # type: float
+        self.RCS = RCS  # type: float
+        self.RCS_UNC = RCS_UNC  # type: float
+        self.ORTHOGONAL_RCS = ORTHOGONAL_RCS  # type: float
+        self.ORTHOGONAL_RCS_UNC = ORTHOGONAL_RCS_UNC  # type: float
+        self.SNR = SNR  # type: float
+        self.BEAM = BEAM  # type: float
+        self.TIMING_BIAS = TIMING_BIAS  # type: float
+        self.RAW_FILE_URI = RAW_FILE_URI  # type: Optional[str]
+        self.DESCRIPTOR = DESCRIPTOR  # type: Optional[str]
+        self.TAGS = TAGS  # type: Optional[List[Optional[str]]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        RDO = RDO()
-        RDO.Init(buf, pos)
-        return cls.InitFromObj(RDO)
+        tmpRdo = RDO()
+        tmpRdo.Init(buf, pos)
+        return cls.InitFromObj(tmpRdo)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -862,9 +922,9 @@ class RDOT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, RDO):
+    def InitFromObj(cls, tmpRdo):
         x = RDOT()
-        x._UnPack(RDO)
+        x._UnPack(tmpRdo)
         return x
 
     # RDOT

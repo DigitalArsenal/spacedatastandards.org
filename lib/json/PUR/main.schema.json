@@ -168,67 +168,7 @@
       },
       "required" : ["LISTING_ID", "PROVIDER_PEER_ID", "TITLE"],
       "additionalProperties" : false
-    },
-    "PUR" : {
-      "type" : "object",
-      "description" : "Purchase Request - Request to purchase data from a storefront listing",
-      "properties" : {
-        "REQUEST_ID" : {
-                "type" : "string",
-                "description" : "Unique identifier for this purchase request"
-              },
-        "LISTING_ID" : {
-                "type" : "string",
-                "description" : "ID of the listing being purchased"
-              },
-        "TIER_NAME" : {
-                "type" : "string",
-                "description" : "Name of the pricing tier selected"
-              },
-        "BUYER_PEER_ID" : {
-                "type" : "string",
-                "description" : "Peer ID of the buyer"
-              },
-        "BUYER_ENCRYPTION_PUBKEY" : {
-                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
-                "description" : "Buyer's encryption public key for encrypted delivery"
-              },
-        "PAYMENT_METHOD" : {
-                "$ref" : "#/definitions/paymentMethod",
-                "description" : "Payment method used"
-              },
-        "PAYMENT_AMOUNT" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
-                "description" : "Payment amount in smallest unit"
-              },
-        "PAYMENT_CURRENCY" : {
-                "type" : "string",
-                "description" : "Currency of payment"
-              },
-        "PAYMENT_TX_HASH" : {
-                "type" : "string",
-                "description" : "Transaction hash for cryptocurrency payments"
-              },
-        "PAYMENT_CHAIN" : {
-                "type" : "string",
-                "description" : "Blockchain network: \"ethereum\", \"solana\", \"bitcoin\""
-              },
-        "PAYMENT_REFERENCE" : {
-                "type" : "string",
-                "description" : "Reference ID for credit/fiat payments"
-              },
-        "BUYER_SIGNATURE" : {
-                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
-                "description" : "Ed25519 signature from buyer"
-              },
-        "TIMESTAMP" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
-                "description" : "Unix timestamp of the request"
-              }
-      },
-      "required" : ["REQUEST_ID", "LISTING_ID", "TIER_NAME", "BUYER_PEER_ID"],
-      "additionalProperties" : false
     }
   },
-  "$ref" : "#/definitions/PUR"
+  "$ref" : "#/definitions/STF"
 }

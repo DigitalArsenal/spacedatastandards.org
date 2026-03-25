@@ -32,7 +32,7 @@ class KMLItemIcon : Table() {
     /**
      * State (open, closed, error, fetching0-2)
      */
-    val STATE : String?
+    val state : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class KMLItemIcon : Table() {
                 null
             }
         }
-    val STATEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun STATEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val stateAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun stateInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Icon URL
      */
-    val HREF : String?
+    val href : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -55,24 +55,24 @@ class KMLItemIcon : Table() {
                 null
             }
         }
-    val HREFAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun HREFInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val hrefAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun hrefInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsKMLItemIcon(_bb: ByteBuffer): KMLItemIcon = getRootAsKMLItemIcon(_bb, KMLItemIcon())
         fun getRootAsKMLItemIcon(_bb: ByteBuffer, obj: KMLItemIcon): KMLItemIcon {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createKMLItemIcon(builder: FlatBufferBuilder, STATEOffset: Int, HREFOffset: Int) : Int {
+        fun createKMLItemIcon(builder: FlatBufferBuilder, stateOffset: Int, hrefOffset: Int) : Int {
             builder.startTable(2)
-            addHREF(builder, HREFOffset)
-            addSTATE(builder, STATEOffset)
+            addHREF(builder, hrefOffset)
+            addSTATE(builder, stateOffset)
             return endKMLItemIcon(builder)
         }
         fun startKMLItemIcon(builder: FlatBufferBuilder) = builder.startTable(2)
-        fun addSTATE(builder: FlatBufferBuilder, STATE: Int) = builder.addOffset(0, STATE, 0)
-        fun addHREF(builder: FlatBufferBuilder, HREF: Int) = builder.addOffset(1, HREF, 0)
+        fun addSTATE(builder: FlatBufferBuilder, state: Int) = builder.addOffset(0, state, 0)
+        fun addHREF(builder: FlatBufferBuilder, href: Int) = builder.addOffset(1, href, 0)
         fun endKMLItemIcon(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

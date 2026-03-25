@@ -32,7 +32,7 @@ class KMLTour : Table() {
     /**
      * Tour name
      */
-    val NAME : String?
+    val name : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class KMLTour : Table() {
                 null
             }
         }
-    val NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val nameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun nameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Description
      */
-    val DESCRIPTION : String?
+    val description : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -55,12 +55,12 @@ class KMLTour : Table() {
                 null
             }
         }
-    val DESCRIPTIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun DESCRIPTIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val descriptionAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun descriptionInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * Visibility
      */
-    val VISIBILITY : Boolean
+    val visibility : Boolean
         get() {
             val o = __offset(8)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -68,8 +68,8 @@ class KMLTour : Table() {
     /**
      * Playlist
      */
-    val PLAYLIST : KMLPlaylist? get() = PLAYLIST(KMLPlaylist())
-    fun PLAYLIST(obj: KMLPlaylist) : KMLPlaylist? {
+    val playlist : KMLPlaylist? get() = playlist(KMLPlaylist())
+    fun playlist(obj: KMLPlaylist) : KMLPlaylist? {
         val o = __offset(10)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -78,25 +78,25 @@ class KMLTour : Table() {
         }
     }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsKMLTour(_bb: ByteBuffer): KMLTour = getRootAsKMLTour(_bb, KMLTour())
         fun getRootAsKMLTour(_bb: ByteBuffer, obj: KMLTour): KMLTour {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createKMLTour(builder: FlatBufferBuilder, NAMEOffset: Int, DESCRIPTIONOffset: Int, VISIBILITY: Boolean, PLAYLISTOffset: Int) : Int {
+        fun createKMLTour(builder: FlatBufferBuilder, nameOffset: Int, descriptionOffset: Int, visibility: Boolean, playlistOffset: Int) : Int {
             builder.startTable(4)
-            addPLAYLIST(builder, PLAYLISTOffset)
-            addDESCRIPTION(builder, DESCRIPTIONOffset)
-            addNAME(builder, NAMEOffset)
-            addVISIBILITY(builder, VISIBILITY)
+            addPLAYLIST(builder, playlistOffset)
+            addDESCRIPTION(builder, descriptionOffset)
+            addNAME(builder, nameOffset)
+            addVISIBILITY(builder, visibility)
             return endKMLTour(builder)
         }
         fun startKMLTour(builder: FlatBufferBuilder) = builder.startTable(4)
-        fun addNAME(builder: FlatBufferBuilder, NAME: Int) = builder.addOffset(0, NAME, 0)
-        fun addDESCRIPTION(builder: FlatBufferBuilder, DESCRIPTION: Int) = builder.addOffset(1, DESCRIPTION, 0)
-        fun addVISIBILITY(builder: FlatBufferBuilder, VISIBILITY: Boolean) = builder.addBoolean(2, VISIBILITY, false)
-        fun addPLAYLIST(builder: FlatBufferBuilder, PLAYLIST: Int) = builder.addOffset(3, PLAYLIST, 0)
+        fun addNAME(builder: FlatBufferBuilder, name: Int) = builder.addOffset(0, name, 0)
+        fun addDESCRIPTION(builder: FlatBufferBuilder, description: Int) = builder.addOffset(1, description, 0)
+        fun addVISIBILITY(builder: FlatBufferBuilder, visibility: Boolean) = builder.addBoolean(2, visibility, false)
+        fun addPLAYLIST(builder: FlatBufferBuilder, playlist: Int) = builder.addOffset(3, playlist, 0)
         fun endKMLTour(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

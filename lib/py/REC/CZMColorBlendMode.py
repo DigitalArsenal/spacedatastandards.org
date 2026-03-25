@@ -2,4 +2,7 @@
 
 # namespace: 
 
-# NOTE CZMColorBlendMode.py does not declare any structs or enums
+class CZMColorBlendMode(object):
+    HIGHLIGHT = 0
+    REPLACE = 1
+    MIX = 2

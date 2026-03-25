@@ -32,7 +32,7 @@ class TMF : Table() {
     /**
      * Transfer frame version
      */
-    val VERSION : UByte
+    val version : UByte
         get() {
             val o = __offset(4)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
@@ -40,7 +40,7 @@ class TMF : Table() {
     /**
      * Spacecraft identifier
      */
-    val SPACECRAFT_ID : UShort
+    val spacecraftId : UShort
         get() {
             val o = __offset(6)
             return if(o != 0) bb.getShort(o + bb_pos).toUShort() else 0u
@@ -48,7 +48,7 @@ class TMF : Table() {
     /**
      * Virtual channel identifier
      */
-    val VIRTUAL_CHANNEL_ID : UByte
+    val virtualChannelId : UByte
         get() {
             val o = __offset(8)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
@@ -56,7 +56,7 @@ class TMF : Table() {
     /**
      * Operational control field flag
      */
-    val OCF_FLAG : Boolean
+    val ocfFlag : Boolean
         get() {
             val o = __offset(10)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -64,7 +64,7 @@ class TMF : Table() {
     /**
      * Master channel frame count
      */
-    val MASTER_FRAME_COUNT : UByte
+    val masterFrameCount : UByte
         get() {
             val o = __offset(12)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
@@ -72,7 +72,7 @@ class TMF : Table() {
     /**
      * Virtual channel frame count
      */
-    val VIRTUAL_FRAME_COUNT : UByte
+    val virtualFrameCount : UByte
         get() {
             val o = __offset(14)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
@@ -80,7 +80,7 @@ class TMF : Table() {
     /**
      * Secondary header flag
      */
-    val SEC_HDR_FLAG : Boolean
+    val secHdrFlag : Boolean
         get() {
             val o = __offset(16)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -88,7 +88,7 @@ class TMF : Table() {
     /**
      * Synchronization flag
      */
-    val SYNCH_FLAG : Boolean
+    val synchFlag : Boolean
         get() {
             val o = __offset(18)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -96,7 +96,7 @@ class TMF : Table() {
     /**
      * Packet order flag
      */
-    val PACKET_ORDER_FLAG : Boolean
+    val packetOrderFlag : Boolean
         get() {
             val o = __offset(20)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -104,7 +104,7 @@ class TMF : Table() {
     /**
      * Segment length identifier
      */
-    val SEGMENT_LENGTH_ID : UByte
+    val segmentLengthId : UByte
         get() {
             val o = __offset(22)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
@@ -112,7 +112,7 @@ class TMF : Table() {
     /**
      * First header pointer
      */
-    val FIRST_HDR_POINTER : UShort
+    val firstHdrPointer : UShort
         get() {
             val o = __offset(24)
             return if(o != 0) bb.getShort(o + bb_pos).toUShort() else 0u
@@ -120,7 +120,7 @@ class TMF : Table() {
     /**
      * Data field
      */
-    fun DATA(j: Int) : UByte {
+    fun data(j: Int) : UByte {
         val o = __offset(26)
         return if (o != 0) {
             bb.get(__vector(o) + j * 1).toUByte()
@@ -128,16 +128,16 @@ class TMF : Table() {
             0u
         }
     }
-    val DATALength : Int
+    val dataLength : Int
         get() {
             val o = __offset(26); return if (o != 0) __vector_len(o) else 0
         }
-    val DATAAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(26, 1)
-    fun DATAInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 26, 1)
+    val dataAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(26, 1)
+    fun dataInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 26, 1)
     /**
      * Operational control field
      */
-    fun OCF(j: Int) : UByte {
+    fun ocf(j: Int) : UByte {
         val o = __offset(28)
         return if (o != 0) {
             bb.get(__vector(o) + j * 1).toUByte()
@@ -145,59 +145,59 @@ class TMF : Table() {
             0u
         }
     }
-    val OCFLength : Int
+    val ocfLength : Int
         get() {
             val o = __offset(28); return if (o != 0) __vector_len(o) else 0
         }
-    val OCFAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(28, 1)
-    fun OCFInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 28, 1)
+    val ocfAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(28, 1)
+    fun ocfInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 28, 1)
     /**
      * Frame error control field
      */
-    val FECF : UShort
+    val fecf : UShort
         get() {
             val o = __offset(30)
             return if(o != 0) bb.getShort(o + bb_pos).toUShort() else 0u
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsTMF(_bb: ByteBuffer): TMF = getRootAsTMF(_bb, TMF())
         fun getRootAsTMF(_bb: ByteBuffer, obj: TMF): TMF {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun TMFBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$TMF")
-        fun createTMF(builder: FlatBufferBuilder, VERSION: UByte, SPACECRAFT_ID: UShort, VIRTUAL_CHANNEL_ID: UByte, OCF_FLAG: Boolean, MASTER_FRAME_COUNT: UByte, VIRTUAL_FRAME_COUNT: UByte, SEC_HDR_FLAG: Boolean, SYNCH_FLAG: Boolean, PACKET_ORDER_FLAG: Boolean, SEGMENT_LENGTH_ID: UByte, FIRST_HDR_POINTER: UShort, DATAOffset: Int, OCFOffset: Int, FECF: UShort) : Int {
+        fun createTMF(builder: FlatBufferBuilder, version: UByte, spacecraftId: UShort, virtualChannelId: UByte, ocfFlag: Boolean, masterFrameCount: UByte, virtualFrameCount: UByte, secHdrFlag: Boolean, synchFlag: Boolean, packetOrderFlag: Boolean, segmentLengthId: UByte, firstHdrPointer: UShort, dataOffset: Int, ocfOffset: Int, fecf: UShort) : Int {
             builder.startTable(14)
-            addOCF(builder, OCFOffset)
-            addDATA(builder, DATAOffset)
-            addFECF(builder, FECF)
-            addFIRST_HDR_POINTER(builder, FIRST_HDR_POINTER)
-            addSPACECRAFT_ID(builder, SPACECRAFT_ID)
-            addSEGMENT_LENGTH_ID(builder, SEGMENT_LENGTH_ID)
-            addPACKET_ORDER_FLAG(builder, PACKET_ORDER_FLAG)
-            addSYNCH_FLAG(builder, SYNCH_FLAG)
-            addSEC_HDR_FLAG(builder, SEC_HDR_FLAG)
-            addVIRTUAL_FRAME_COUNT(builder, VIRTUAL_FRAME_COUNT)
-            addMASTER_FRAME_COUNT(builder, MASTER_FRAME_COUNT)
-            addOCF_FLAG(builder, OCF_FLAG)
-            addVIRTUAL_CHANNEL_ID(builder, VIRTUAL_CHANNEL_ID)
-            addVERSION(builder, VERSION)
+            addOCF(builder, ocfOffset)
+            addDATA(builder, dataOffset)
+            addFECF(builder, fecf)
+            addFIRSTHDRPOINTER(builder, firstHdrPointer)
+            addSPACECRAFTID(builder, spacecraftId)
+            addSEGMENTLENGTHID(builder, segmentLengthId)
+            addPACKETORDERFLAG(builder, packetOrderFlag)
+            addSYNCHFLAG(builder, synchFlag)
+            addSECHDRFLAG(builder, secHdrFlag)
+            addVIRTUALFRAMECOUNT(builder, virtualFrameCount)
+            addMASTERFRAMECOUNT(builder, masterFrameCount)
+            addOCFFLAG(builder, ocfFlag)
+            addVIRTUALCHANNELID(builder, virtualChannelId)
+            addVERSION(builder, version)
             return endTMF(builder)
         }
         fun startTMF(builder: FlatBufferBuilder) = builder.startTable(14)
-        fun addVERSION(builder: FlatBufferBuilder, VERSION: UByte) = builder.addByte(0, VERSION.toByte(), 0)
-        fun addSPACECRAFT_ID(builder: FlatBufferBuilder, SPACECRAFT_ID: UShort) = builder.addShort(1, SPACECRAFT_ID.toShort(), 0)
-        fun addVIRTUAL_CHANNEL_ID(builder: FlatBufferBuilder, VIRTUAL_CHANNEL_ID: UByte) = builder.addByte(2, VIRTUAL_CHANNEL_ID.toByte(), 0)
-        fun addOCF_FLAG(builder: FlatBufferBuilder, OCF_FLAG: Boolean) = builder.addBoolean(3, OCF_FLAG, false)
-        fun addMASTER_FRAME_COUNT(builder: FlatBufferBuilder, MASTER_FRAME_COUNT: UByte) = builder.addByte(4, MASTER_FRAME_COUNT.toByte(), 0)
-        fun addVIRTUAL_FRAME_COUNT(builder: FlatBufferBuilder, VIRTUAL_FRAME_COUNT: UByte) = builder.addByte(5, VIRTUAL_FRAME_COUNT.toByte(), 0)
-        fun addSEC_HDR_FLAG(builder: FlatBufferBuilder, SEC_HDR_FLAG: Boolean) = builder.addBoolean(6, SEC_HDR_FLAG, false)
-        fun addSYNCH_FLAG(builder: FlatBufferBuilder, SYNCH_FLAG: Boolean) = builder.addBoolean(7, SYNCH_FLAG, false)
-        fun addPACKET_ORDER_FLAG(builder: FlatBufferBuilder, PACKET_ORDER_FLAG: Boolean) = builder.addBoolean(8, PACKET_ORDER_FLAG, false)
-        fun addSEGMENT_LENGTH_ID(builder: FlatBufferBuilder, SEGMENT_LENGTH_ID: UByte) = builder.addByte(9, SEGMENT_LENGTH_ID.toByte(), 0)
-        fun addFIRST_HDR_POINTER(builder: FlatBufferBuilder, FIRST_HDR_POINTER: UShort) = builder.addShort(10, FIRST_HDR_POINTER.toShort(), 0)
-        fun addDATA(builder: FlatBufferBuilder, DATA: Int) = builder.addOffset(11, DATA, 0)
+        fun addVERSION(builder: FlatBufferBuilder, version: UByte) = builder.addByte(0, version.toByte(), 0)
+        fun addSPACECRAFTID(builder: FlatBufferBuilder, spacecraftId: UShort) = builder.addShort(1, spacecraftId.toShort(), 0)
+        fun addVIRTUALCHANNELID(builder: FlatBufferBuilder, virtualChannelId: UByte) = builder.addByte(2, virtualChannelId.toByte(), 0)
+        fun addOCFFLAG(builder: FlatBufferBuilder, ocfFlag: Boolean) = builder.addBoolean(3, ocfFlag, false)
+        fun addMASTERFRAMECOUNT(builder: FlatBufferBuilder, masterFrameCount: UByte) = builder.addByte(4, masterFrameCount.toByte(), 0)
+        fun addVIRTUALFRAMECOUNT(builder: FlatBufferBuilder, virtualFrameCount: UByte) = builder.addByte(5, virtualFrameCount.toByte(), 0)
+        fun addSECHDRFLAG(builder: FlatBufferBuilder, secHdrFlag: Boolean) = builder.addBoolean(6, secHdrFlag, false)
+        fun addSYNCHFLAG(builder: FlatBufferBuilder, synchFlag: Boolean) = builder.addBoolean(7, synchFlag, false)
+        fun addPACKETORDERFLAG(builder: FlatBufferBuilder, packetOrderFlag: Boolean) = builder.addBoolean(8, packetOrderFlag, false)
+        fun addSEGMENTLENGTHID(builder: FlatBufferBuilder, segmentLengthId: UByte) = builder.addByte(9, segmentLengthId.toByte(), 0)
+        fun addFIRSTHDRPOINTER(builder: FlatBufferBuilder, firstHdrPointer: UShort) = builder.addShort(10, firstHdrPointer.toShort(), 0)
+        fun addDATA(builder: FlatBufferBuilder, data: Int) = builder.addOffset(11, data, 0)
         @kotlin.ExperimentalUnsignedTypes
         fun createDataVector(builder: FlatBufferBuilder, data: UByteArray) : Int {
             builder.startVector(1, data.size, 1)
@@ -207,7 +207,7 @@ class TMF : Table() {
             return builder.endVector()
         }
         fun startDataVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(1, numElems, 1)
-        fun addOCF(builder: FlatBufferBuilder, OCF: Int) = builder.addOffset(12, OCF, 0)
+        fun addOCF(builder: FlatBufferBuilder, ocf: Int) = builder.addOffset(12, ocf, 0)
         @kotlin.ExperimentalUnsignedTypes
         fun createOcfVector(builder: FlatBufferBuilder, data: UByteArray) : Int {
             builder.startVector(1, data.size, 1)
@@ -217,7 +217,7 @@ class TMF : Table() {
             return builder.endVector()
         }
         fun startOcfVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(1, numElems, 1)
-        fun addFECF(builder: FlatBufferBuilder, FECF: UShort) = builder.addShort(13, FECF.toShort(), 0)
+        fun addFECF(builder: FlatBufferBuilder, fecf: UShort) = builder.addShort(13, fecf.toShort(), 0)
         fun endTMF(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

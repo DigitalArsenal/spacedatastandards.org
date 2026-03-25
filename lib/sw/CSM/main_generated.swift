@@ -2,99 +2,308 @@
 // swiftlint:disable all
 // swiftformat:disable all
 
+#if canImport(Common)
+import Common
+#endif
+
 import FlatBuffers
 
-///  Conjunction Summary Message
-public struct CSM: FlatBufferObject, Verifiable {
+public enum legacyCountryCode: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  ///  Arab Satellite Communications Organization
+  case ab = 0
+  ///  Asia Broadcast Satellite
+  case abs = 1
+  ///  Asia Satellite Telecommunications Company (ASIASAT)
+  case ac = 2
+  ///  Algeria
+  case alg = 3
+  ///  Angola
+  case ang = 4
+  ///  Argentina
+  case argn = 5
+  ///  Republic of Armenia
+  case arm = 6
+  ///  Austria
+  case asra = 7
+  ///  Australia
+  case aus = 8
+  ///  Azerbaijan
+  case azer = 9
+  ///  Belgium
+  case bel = 10
+  ///  Belarus
+  case bela = 11
+  ///  Bermuda
+  case berm = 12
+  ///  People's Republic of Bangladesh
+  case bgd = 13
+  ///  Kingdom of Bhutan
+  case bhut = 14
+  ///  Bolivia
+  case bol = 15
+  ///  Brazil
+  case braz = 16
+  ///  Bulgaria
+  case bul = 17
+  ///  Canada
+  case ca = 18
+  ///  China/Brazil
+  case chbz = 19
+  ///  China/Turkey
+  case chtu = 20
+  ///  Chile
+  case chle = 21
+  ///  Commonwealth of Independent States (former USSR)
+  case cis = 22
+  ///  Colombia
+  case col = 23
+  ///  Republic of Costa Rica
+  case cri = 24
+  ///  Czech Republic (former Czechoslovakia)
+  case czch = 25
+  ///  Denmark
+  case den = 26
+  ///  Republic of Djibouti
+  case dji = 27
+  ///  Ecuador
+  case ecu = 28
+  ///  Egypt
+  case egyp = 29
+  ///  European Space Agency
+  case esa = 30
+  ///  European Space Research Organization
+  case esro = 31
+  ///  Estonia
+  case est = 32
+  ///  Ethiopia
+  case eth = 33
+  ///  European Organization for the Exploitation of Meteorological Satellites (EUMETSAT)
+  case eume = 34
+  ///  European Telecommunications Satellite Organization (EUTELSAT)
+  case eute = 35
+  ///  France/Germany
+  case fger = 36
+  ///  Finland
+  case fin = 37
+  ///  France
+  case fr = 38
+  ///  France/Italy
+  case frit = 39
+  ///  Germany
+  case ger = 40
+  ///  Republic of Ghana
+  case gha = 41
+  ///  Globalstar
+  case glob = 42
+  ///  Greece
+  case grec = 43
+  ///  Greece/Saudi Arabia
+  case grsa = 44
+  ///  Guatemala
+  case guat = 45
+  ///  Hungary
+  case hun = 46
+  ///  International Mobile Satellite Organization (INMARSAT)
+  case im = 47
+  ///  India
+  case ind = 48
+  ///  Indonesia
+  case indo = 49
+  ///  Iran
+  case iran = 50
+  ///  Iraq
+  case iraq = 51
+  ///  Iridium
+  case irid = 52
+  ///  Ireland
+  case irl = 53
+  ///  Israel
+  case isra = 54
+  ///  Indian Space Research Organisation
+  case isro = 55
+  ///  International Space Station
+  case iss = 56
+  ///  Italy
+  case it = 57
+  ///  International Telecommunications Satellite Organization (INTELSAT)
+  case itso = 58
+  ///  Japan
+  case jpn = 59
+  ///  Kazakhstan
+  case kaz = 60
+  ///  Republic of Kenya
+  case ken = 61
+  ///  Laos
+  case laos = 62
+  ///  Democratic Socialist Republic of Sri Lanka
+  case lka = 63
+  ///  Lithuania
+  case ltu = 64
+  ///  Luxembourg
+  case luxe = 65
+  ///  Morocco
+  case ma = 66
+  ///  Malaysia
+  case mala = 67
+  ///  Principality of Monaco
+  case mco = 68
+  ///  Republic of Moldova
+  case mda = 69
+  ///  Mexico
+  case mex = 70
+  ///  Republic of the Union of Myanmar
+  case mmr = 71
+  ///  Mongolia
+  case mng = 72
+  ///  Mauritius
+  case mus = 73
+  ///  North Atlantic Treaty Organization
+  case nato = 74
+  ///  Netherlands
+  case neth = 75
+  ///  New ICO
+  case nico = 76
+  ///  Nigeria
+  case nig = 77
+  ///  Democratic People's Republic of Korea
+  case nkor = 78
+  ///  Norway
+  case nor = 79
+  ///  Federal Democratic Republic of Nepal
+  case npl = 80
+  ///  New Zealand
+  case nz = 81
+  ///  O3b Networks
+  case o3b = 82
+  ///  ORBCOMM
+  case orb = 83
+  ///  Pakistan
+  case paki = 84
+  ///  Peru
+  case peru = 85
+  ///  Poland
+  case pol = 86
+  ///  Portugal
+  case por = 87
+  ///  People's Republic of China
+  case prc = 88
+  ///  Republic of Paraguay
+  case pry = 89
+  ///  People's Republic of China/European Space Agency
+  case pres = 90
+  ///  State of Qatar
+  case qat = 91
+  ///  RascomStar-QAF
+  case rasc = 92
+  ///  Taiwan (Republic of China)
+  case roc = 93
+  ///  Romania
+  case rom = 94
+  ///  Philippines (Republic of the Philippines)
+  case rp = 95
+  ///  Republic of Rwanda
+  case rwa = 96
+  ///  South Africa
+  case safr = 97
+  ///  Saudi Arabia
+  case saud = 98
+  ///  Republic of Sudan
+  case sdn = 99
+  ///  Sea Launch
+  case seal = 100
+  ///  SES
+  case ses = 101
+  ///  Singapore/Japan
+  case sgjp = 102
+  ///  Singapore
+  case sing = 103
+  ///  Republic of Korea
+  case skor = 104
+  ///  Spain
+  case spn = 105
+  ///  Singapore/Taiwan
+  case stct = 106
+  ///  Slovenia
+  case svn = 107
+  ///  Sweden
+  case swed = 108
+  ///  Switzerland
+  case swtz = 109
+  ///  To Be Determined
+  case tbd = 110
+  ///  Thailand
+  case thai = 111
+  ///  Turkmenistan/Monaco
+  case tmmc = 112
+  ///  Republic of Tunisia
+  case tun = 113
+  ///  Turkey
+  case turk = 114
+  ///  United Arab Emirates
+  case uae = 115
+  ///  United Kingdom
+  case uk = 116
+  ///  Ukraine
+  case ukr = 117
+  ///  Unknown
+  case unk = 118
+  ///  Uruguay
+  case ury = 119
+  ///  United States
+  case us = 120
+  ///  United States/Brazil
+  case usbz = 121
+  ///  Vatican City State
+  case vat = 122
+  ///  Venezuela
+  case venz = 123
+  ///  Vietnam
+  case vtnm = 124
+  ///  Republic of Zimbabwe
+  case zwe = 125
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  public static var max: legacyCountryCode { return .zwe }
+  public static var min: legacyCountryCode { return .ab }
+}
+
+
+///  Legacy Country Code
+public struct LCC: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$CSM" } 
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: CSM.id, addPrefix: prefix) }
+  public static var id: String { "$LCC" } 
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: LCC.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private enum VTOFFSET: VOffset {
-    case OBJECT_1 = 4
-    case DSE_1 = 6
-    case OBJECT_2 = 8
-    case DSE_2 = 10
-    case TCA = 12
-    case TCA_RANGE = 14
-    case TCA_RELATIVE_SPEED = 16
-    case MAX_PROB = 18
-    case DILUTION = 20
+    case OWNER = 4
     var v: Int32 { Int32(self.rawValue) }
     var p: VOffset { self.rawValue }
   }
 
-  ///  Satellite name for the first object
-  public var OBJECT_1: CAT? { let o = _accessor.offset(VTOFFSET.OBJECT_1.v); return o == 0 ? nil : CAT(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
-  ///  Days since epoch for the first object
-  public var DSE_1: Double { let o = _accessor.offset(VTOFFSET.DSE_1.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Satellite name for the second object
-  public var OBJECT_2: CAT? { let o = _accessor.offset(VTOFFSET.OBJECT_2.v); return o == 0 ? nil : CAT(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
-  ///  Days since epoch for the second object
-  public var DSE_2: Double { let o = _accessor.offset(VTOFFSET.DSE_2.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Time of closest approach as a Unix timestamp
-  public var TCA: Double { let o = _accessor.offset(VTOFFSET.TCA.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  The distance or range between the two objects at TCA
-  public var TCA_RANGE: Double { let o = _accessor.offset(VTOFFSET.TCA_RANGE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  The magnitude of the relative velocity at TCA
-  public var TCA_RELATIVE_SPEED: Double { let o = _accessor.offset(VTOFFSET.TCA_RELATIVE_SPEED.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Maximum probability
-  public var MAX_PROB: Double { let o = _accessor.offset(VTOFFSET.MAX_PROB.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Standard deviation that produces the maximum probability
-  public var DILUTION: Double { let o = _accessor.offset(VTOFFSET.DILUTION.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public static func startCSM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 9) }
-  public static func add(OBJECT_1: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_1, at: VTOFFSET.OBJECT_1.p) }
-  public static func add(DSE_1: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DSE_1, def: 0.0, at: VTOFFSET.DSE_1.p) }
-  public static func add(OBJECT_2: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_2, at: VTOFFSET.OBJECT_2.p) }
-  public static func add(DSE_2: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DSE_2, def: 0.0, at: VTOFFSET.DSE_2.p) }
-  public static func add(TCA: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TCA, def: 0.0, at: VTOFFSET.TCA.p) }
-  public static func add(TCA_RANGE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TCA_RANGE, def: 0.0, at: VTOFFSET.TCA_RANGE.p) }
-  public static func add(TCA_RELATIVE_SPEED: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TCA_RELATIVE_SPEED, def: 0.0, at: VTOFFSET.TCA_RELATIVE_SPEED.p) }
-  public static func add(MAX_PROB: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_PROB, def: 0.0, at: VTOFFSET.MAX_PROB.p) }
-  public static func add(DILUTION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DILUTION, def: 0.0, at: VTOFFSET.DILUTION.p) }
-  public static func endCSM(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createCSM(
+  public var OWNER: legacyCountryCode { let o = _accessor.offset(VTOFFSET.OWNER.v); return o == 0 ? .ab : legacyCountryCode(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .ab }
+  public static func startLCC(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 1) }
+  public static func add(OWNER: legacyCountryCode, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OWNER.rawValue, def: 0, at: VTOFFSET.OWNER.p) }
+  public static func endLCC(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createLCC(
     _ fbb: inout FlatBufferBuilder,
-    OBJECT_1Offset OBJECT_1: Offset = Offset(),
-    DSE_1: Double = 0.0,
-    OBJECT_2Offset OBJECT_2: Offset = Offset(),
-    DSE_2: Double = 0.0,
-    TCA: Double = 0.0,
-    TCA_RANGE: Double = 0.0,
-    TCA_RELATIVE_SPEED: Double = 0.0,
-    MAX_PROB: Double = 0.0,
-    DILUTION: Double = 0.0
+    OWNER: legacyCountryCode = .ab
   ) -> Offset {
-    let __start = CSM.startCSM(&fbb)
-    CSM.add(OBJECT_1: OBJECT_1, &fbb)
-    CSM.add(DSE_1: DSE_1, &fbb)
-    CSM.add(OBJECT_2: OBJECT_2, &fbb)
-    CSM.add(DSE_2: DSE_2, &fbb)
-    CSM.add(TCA: TCA, &fbb)
-    CSM.add(TCA_RANGE: TCA_RANGE, &fbb)
-    CSM.add(TCA_RELATIVE_SPEED: TCA_RELATIVE_SPEED, &fbb)
-    CSM.add(MAX_PROB: MAX_PROB, &fbb)
-    CSM.add(DILUTION: DILUTION, &fbb)
-    return CSM.endCSM(&fbb, start: __start)
+    let __start = LCC.startLCC(&fbb)
+    LCC.add(OWNER: OWNER, &fbb)
+    return LCC.endLCC(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.OBJECT_1.p, fieldName: "OBJECT_1", required: false, type: ForwardOffset<CAT>.self)
-    try _v.visit(field: VTOFFSET.DSE_1.p, fieldName: "DSE_1", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.OBJECT_2.p, fieldName: "OBJECT_2", required: false, type: ForwardOffset<CAT>.self)
-    try _v.visit(field: VTOFFSET.DSE_2.p, fieldName: "DSE_2", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.TCA.p, fieldName: "TCA", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.TCA_RANGE.p, fieldName: "TCA_RANGE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.TCA_RELATIVE_SPEED.p, fieldName: "TCA_RELATIVE_SPEED", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.MAX_PROB.p, fieldName: "MAX_PROB", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.DILUTION.p, fieldName: "DILUTION", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.OWNER.p, fieldName: "OWNER", required: false, type: legacyCountryCode.self)
     _v.finish()
   }
 }

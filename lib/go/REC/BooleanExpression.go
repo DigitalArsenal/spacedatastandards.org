@@ -51,9 +51,17 @@ func (rcv *BooleanExpression) OPERATOR() BooleanOperatorType {
 	return 0
 }
 
+func (rcv *BooleanExpression) Operator() BooleanOperatorType {
+	return rcv.OPERATOR()
+}
+
 /// Boolean operator
 func (rcv *BooleanExpression) MutateOPERATOR(n BooleanOperatorType) bool {
 	return rcv._tab.MutateInt8Slot(4, int8(n))
+}
+
+func (rcv *BooleanExpression) MutateOperator(n BooleanOperatorType) bool {
+	return rcv.MutateOPERATOR(n)
 }
 
 /// Comparison conditions
@@ -63,10 +71,17 @@ func (rcv *BooleanExpression) CONDITIONS(obj *ParameterComparison, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(ParameterComparison)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *BooleanExpression) Conditions(obj *ParameterComparison, j int) bool {
+	return rcv.CONDITIONS(obj, j)
 }
 
 func (rcv *BooleanExpression) CONDITIONSLength() int {
@@ -77,6 +92,10 @@ func (rcv *BooleanExpression) CONDITIONSLength() int {
 	return 0
 }
 
+func (rcv *BooleanExpression) ConditionsLength() int {
+	return rcv.CONDITIONSLength()
+}
+
 /// Comparison conditions
 /// Nested expressions
 func (rcv *BooleanExpression) EXPRESSIONS(obj *BooleanExpression, j int) bool {
@@ -85,10 +104,17 @@ func (rcv *BooleanExpression) EXPRESSIONS(obj *BooleanExpression, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(BooleanExpression)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *BooleanExpression) Expressions(obj *BooleanExpression, j int) bool {
+	return rcv.EXPRESSIONS(obj, j)
 }
 
 func (rcv *BooleanExpression) EXPRESSIONSLength() int {
@@ -99,6 +125,10 @@ func (rcv *BooleanExpression) EXPRESSIONSLength() int {
 	return 0
 }
 
+func (rcv *BooleanExpression) ExpressionsLength() int {
+	return rcv.EXPRESSIONSLength()
+}
+
 /// Nested expressions
 func BooleanExpressionStart(builder *flatbuffers.Builder) {
 	builder.StartObject(3)
@@ -106,17 +136,32 @@ func BooleanExpressionStart(builder *flatbuffers.Builder) {
 func BooleanExpressionAddOPERATOR(builder *flatbuffers.Builder, OPERATOR BooleanOperatorType) {
 	builder.PrependInt8Slot(0, int8(OPERATOR), 0)
 }
+func BooleanExpressionAddOperator(builder *flatbuffers.Builder, OPERATOR BooleanOperatorType) {
+	BooleanExpressionAddOPERATOR(builder, OPERATOR)
+}
 func BooleanExpressionAddCONDITIONS(builder *flatbuffers.Builder, CONDITIONS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(CONDITIONS), 0)
+}
+func BooleanExpressionAddConditions(builder *flatbuffers.Builder, CONDITIONS flatbuffers.UOffsetT) {
+	BooleanExpressionAddCONDITIONS(builder, CONDITIONS)
 }
 func BooleanExpressionStartCONDITIONSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
+func BooleanExpressionStartConditionsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return BooleanExpressionStartCONDITIONSVector(builder, numElems)
+}
 func BooleanExpressionAddEXPRESSIONS(builder *flatbuffers.Builder, EXPRESSIONS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(EXPRESSIONS), 0)
 }
+func BooleanExpressionAddExpressions(builder *flatbuffers.Builder, EXPRESSIONS flatbuffers.UOffsetT) {
+	BooleanExpressionAddEXPRESSIONS(builder, EXPRESSIONS)
+}
 func BooleanExpressionStartEXPRESSIONSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func BooleanExpressionStartExpressionsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return BooleanExpressionStartEXPRESSIONSVector(builder, numElems)
 }
 func BooleanExpressionEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

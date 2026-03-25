@@ -29,7 +29,7 @@ class SpacecraftFrameWrapper(object):
         self._tab = flatbuffers.table.Table(buf, pos)
 
     # SpacecraftFrameWrapper
-    def Frame(self):
+    def frame(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
@@ -41,11 +41,11 @@ def SpacecraftFrameWrapperStart(builder):
 def Start(builder):
     SpacecraftFrameWrapperStart(builder)
 
-def SpacecraftFrameWrapperAddFrame(builder, frame):
+def SpacecraftFrameWrapperAddframe(builder, frame):
     builder.PrependInt8Slot(0, frame, 0)
 
-def AddFrame(builder, frame):
-    SpacecraftFrameWrapperAddFrame(builder, frame)
+def Addframe(builder, frame):
+    SpacecraftFrameWrapperAddframe(builder, frame)
 
 def SpacecraftFrameWrapperEnd(builder):
     return builder.EndObject()
@@ -57,14 +57,17 @@ def End(builder):
 class SpacecraftFrameWrapperT(object):
 
     # SpacecraftFrameWrapperT
-    def __init__(self):
-        self.frame = 0  # type: int
+    def __init__(
+        self,
+        frame = 0,
+    ):
+        self.frame = frame  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        spacecraftFrameWrapper = SpacecraftFrameWrapper()
-        spacecraftFrameWrapper.Init(buf, pos)
-        return cls.InitFromObj(spacecraftFrameWrapper)
+        tmpSpacecraftFrameWrapper = SpacecraftFrameWrapper()
+        tmpSpacecraftFrameWrapper.Init(buf, pos)
+        return cls.InitFromObj(tmpSpacecraftFrameWrapper)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -72,20 +75,20 @@ class SpacecraftFrameWrapperT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, spacecraftFrameWrapper):
+    def InitFromObj(cls, tmpSpacecraftFrameWrapper):
         x = SpacecraftFrameWrapperT()
-        x._UnPack(spacecraftFrameWrapper)
+        x._UnPack(tmpSpacecraftFrameWrapper)
         return x
 
     # SpacecraftFrameWrapperT
-    def _UnPack(self, spacecraftFrameWrapper):
-        if spacecraftFrameWrapper is None:
+    def _UnPack(self, SpacecraftFrameWrapper):
+        if SpacecraftFrameWrapper is None:
             return
-        self.frame = spacecraftFrameWrapper.Frame()
+        self.frame = SpacecraftFrameWrapper.frame()
 
     # SpacecraftFrameWrapperT
     def Pack(self, builder):
         SpacecraftFrameWrapperStart(builder)
-        SpacecraftFrameWrapperAddFrame(builder, self.frame)
-        spacecraftFrameWrapper = SpacecraftFrameWrapperEnd(builder)
-        return spacecraftFrameWrapper
+        SpacecraftFrameWrapperAddframe(builder, self.frame)
+        SpacecraftFrameWrapper = SpacecraftFrameWrapperEnd(builder)
+        return SpacecraftFrameWrapper

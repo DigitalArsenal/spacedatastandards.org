@@ -8,9 +8,9 @@
 
 // Ensure the included flatbuffers.h is the same version as when this file was
 // generated, otherwise it may not be compatible.
-static_assert(FLATBUFFERS_VERSION_MAJOR == 24 &&
-              FLATBUFFERS_VERSION_MINOR == 3 &&
-              FLATBUFFERS_VERSION_REVISION == 25,
+static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
+              FLATBUFFERS_VERSION_MINOR == 12 &&
+              FLATBUFFERS_VERSION_REVISION == 19,
              "Non-compatible flatbuffers version included");
 
 struct SWR;
@@ -111,7 +111,8 @@ struct SWR FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   uint8_t QUALITY() const {
     return GetField<uint8_t>(VT_QUALITY, 0);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_ID) &&
            verifier.VerifyString(ID()) &&
@@ -330,14 +331,16 @@ inline bool SizePrefixedSWRBufferHasIdentifier(const void *buf) {
       buf, SWRIdentifier(), true);
 }
 
+template <bool B = false>
 inline bool VerifySWRBuffer(
-    ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifyBuffer<SWR>(SWRIdentifier());
+    ::flatbuffers::VerifierTemplate<B> &verifier) {
+  return verifier.template VerifyBuffer<SWR>(SWRIdentifier());
 }
 
+template <bool B = false>
 inline bool VerifySizePrefixedSWRBuffer(
-    ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifySizePrefixedBuffer<SWR>(SWRIdentifier());
+    ::flatbuffers::VerifierTemplate<B> &verifier) {
+  return verifier.template VerifySizePrefixedBuffer<SWR>(SWRIdentifier());
 }
 
 inline void FinishSWRBuffer(

@@ -101,6 +101,12 @@ def beamContourStartPOINTSVector(builder, numElems):
 def StartPOINTSVector(builder, numElems):
     return beamContourStartPOINTSVector(builder, numElems)
 
+def beamContourCreatePOINTSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreatePOINTSVector(builder, data):
+    beamContourCreatePOINTSVector(builder, data)
+
 def beamContourEnd(builder):
     return builder.EndObject()
 
@@ -116,16 +122,21 @@ except:
 class beamContourT(object):
 
     # beamContourT
-    def __init__(self):
-        self.CONTOUR_ID = None  # type: str
-        self.GAIN_LEVEL = 0.0  # type: float
-        self.POINTS = None  # type: List[beamContourPoint.beamContourPointT]
+    def __init__(
+        self,
+        CONTOUR_ID = None,
+        GAIN_LEVEL = 0.0,
+        POINTS = None,
+    ):
+        self.CONTOUR_ID = CONTOUR_ID  # type: Optional[str]
+        self.GAIN_LEVEL = GAIN_LEVEL  # type: float
+        self.POINTS = POINTS  # type: Optional[List[beamContourPoint.beamContourPointT]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        beamContour = beamContour()
-        beamContour.Init(buf, pos)
-        return cls.InitFromObj(beamContour)
+        tmpBeamContour = beamContour()
+        tmpBeamContour.Init(buf, pos)
+        return cls.InitFromObj(tmpBeamContour)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -133,9 +144,9 @@ class beamContourT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, beamContour):
+    def InitFromObj(cls, tmpBeamContour):
         x = beamContourT()
-        x._UnPack(beamContour)
+        x._UnPack(tmpBeamContour)
         return x
 
     # beamContourT

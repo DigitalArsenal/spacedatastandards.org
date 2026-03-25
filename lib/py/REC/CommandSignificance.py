@@ -2,4 +2,116 @@
 
 # namespace: 
 
-# NOTE CommandSignificance.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Significance of command execution
+class CommandSignificance(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = CommandSignificance()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsCommandSignificance(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def CommandSignificanceBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x58\x54\x43", size_prefixed=size_prefixed)
+
+    # CommandSignificance
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Consequence level (1=lowest, higher=more severe)
+    # CommandSignificance
+    def CONSEQUENCE_LEVEL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
+        return 0
+
+    # Reason for significance
+    # CommandSignificance
+    def REASON_FOR_WARNING(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+def CommandSignificanceStart(builder):
+    builder.StartObject(2)
+
+def Start(builder):
+    CommandSignificanceStart(builder)
+
+def CommandSignificanceAddCONSEQUENCE_LEVEL(builder, CONSEQUENCE_LEVEL):
+    builder.PrependUint8Slot(0, CONSEQUENCE_LEVEL, 0)
+
+def AddCONSEQUENCE_LEVEL(builder, CONSEQUENCE_LEVEL):
+    CommandSignificanceAddCONSEQUENCE_LEVEL(builder, CONSEQUENCE_LEVEL)
+
+def CommandSignificanceAddREASON_FOR_WARNING(builder, REASON_FOR_WARNING):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(REASON_FOR_WARNING), 0)
+
+def AddREASON_FOR_WARNING(builder, REASON_FOR_WARNING):
+    CommandSignificanceAddREASON_FOR_WARNING(builder, REASON_FOR_WARNING)
+
+def CommandSignificanceEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return CommandSignificanceEnd(builder)
+
+
+class CommandSignificanceT(object):
+
+    # CommandSignificanceT
+    def __init__(
+        self,
+        CONSEQUENCE_LEVEL = 0,
+        REASON_FOR_WARNING = None,
+    ):
+        self.CONSEQUENCE_LEVEL = CONSEQUENCE_LEVEL  # type: int
+        self.REASON_FOR_WARNING = REASON_FOR_WARNING  # type: Optional[str]
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpCommandSignificance = CommandSignificance()
+        tmpCommandSignificance.Init(buf, pos)
+        return cls.InitFromObj(tmpCommandSignificance)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpCommandSignificance):
+        x = CommandSignificanceT()
+        x._UnPack(tmpCommandSignificance)
+        return x
+
+    # CommandSignificanceT
+    def _UnPack(self, CommandSignificance):
+        if CommandSignificance is None:
+            return
+        self.CONSEQUENCE_LEVEL = CommandSignificance.CONSEQUENCE_LEVEL()
+        self.REASON_FOR_WARNING = CommandSignificance.REASON_FOR_WARNING()
+
+    # CommandSignificanceT
+    def Pack(self, builder):
+        if self.REASON_FOR_WARNING is not None:
+            REASON_FOR_WARNING = builder.CreateString(self.REASON_FOR_WARNING)
+        CommandSignificanceStart(builder)
+        CommandSignificanceAddCONSEQUENCE_LEVEL(builder, self.CONSEQUENCE_LEVEL)
+        if self.REASON_FOR_WARNING is not None:
+            CommandSignificanceAddREASON_FOR_WARNING(builder, REASON_FOR_WARNING)
+        CommandSignificance = CommandSignificanceEnd(builder)
+        return CommandSignificance

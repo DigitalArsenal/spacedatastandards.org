@@ -32,7 +32,7 @@ class OSM : Table() {
     /**
      * Indicates whether the observation is stable or not
      */
-    val IS_STABLE : Boolean
+    val isStable : Boolean
         get() {
             val o = __offset(4)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -40,7 +40,7 @@ class OSM : Table() {
     /**
      * The number of observations
      */
-    val NUM_OBS : Int
+    val numObs : Int
         get() {
             val o = __offset(6)
             return if(o != 0) bb.getInt(o + bb_pos) else 0
@@ -48,7 +48,7 @@ class OSM : Table() {
     /**
      * Unique identifier for the object being observed
      */
-    val OBJECT_ID : String?
+    val objectId : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -57,12 +57,12 @@ class OSM : Table() {
                 null
             }
         }
-    val OBJECT_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun OBJECT_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val objectIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun objectIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
     /**
      * Identifier of the sensor
      */
-    val ID_SENSOR : String?
+    val idSensor : String?
         get() {
             val o = __offset(10)
             return if (o != 0) {
@@ -71,12 +71,12 @@ class OSM : Table() {
                 null
             }
         }
-    val ID_SENSORAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
-    fun ID_SENSORInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
+    val idSensorAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(10, 1)
+    fun idSensorInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 10, 1)
     /**
      * Timestamp of data creation
      */
-    val PASS_START : String?
+    val passStart : String?
         get() {
             val o = __offset(12)
             return if (o != 0) {
@@ -85,41 +85,41 @@ class OSM : Table() {
                 null
             }
         }
-    val PASS_STARTAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
-    fun PASS_STARTInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
+    val passStartAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(12, 1)
+    fun passStartInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 12, 1)
     /**
      * Duration of the observation pass in seconds
      */
-    val PASS_DURATION : Int
+    val passDuration : Int
         get() {
             val o = __offset(14)
             return if(o != 0) bb.getInt(o + bb_pos) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsOSM(_bb: ByteBuffer): OSM = getRootAsOSM(_bb, OSM())
         fun getRootAsOSM(_bb: ByteBuffer, obj: OSM): OSM {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun OSMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$OSM")
-        fun createOSM(builder: FlatBufferBuilder, IS_STABLE: Boolean, NUM_OBS: Int, OBJECT_IDOffset: Int, ID_SENSOROffset: Int, PASS_STARTOffset: Int, PASS_DURATION: Int) : Int {
+        fun createOSM(builder: FlatBufferBuilder, isStable: Boolean, numObs: Int, objectIdOffset: Int, idSensorOffset: Int, passStartOffset: Int, passDuration: Int) : Int {
             builder.startTable(6)
-            addPASS_DURATION(builder, PASS_DURATION)
-            addPASS_START(builder, PASS_STARTOffset)
-            addID_SENSOR(builder, ID_SENSOROffset)
-            addOBJECT_ID(builder, OBJECT_IDOffset)
-            addNUM_OBS(builder, NUM_OBS)
-            addIS_STABLE(builder, IS_STABLE)
+            addPASSDURATION(builder, passDuration)
+            addPASSSTART(builder, passStartOffset)
+            addIDSENSOR(builder, idSensorOffset)
+            addOBJECTID(builder, objectIdOffset)
+            addNUMOBS(builder, numObs)
+            addISSTABLE(builder, isStable)
             return endOSM(builder)
         }
         fun startOSM(builder: FlatBufferBuilder) = builder.startTable(6)
-        fun addIS_STABLE(builder: FlatBufferBuilder, IS_STABLE: Boolean) = builder.addBoolean(0, IS_STABLE, false)
-        fun addNUM_OBS(builder: FlatBufferBuilder, NUM_OBS: Int) = builder.addInt(1, NUM_OBS, 0)
-        fun addOBJECT_ID(builder: FlatBufferBuilder, OBJECT_ID: Int) = builder.addOffset(2, OBJECT_ID, 0)
-        fun addID_SENSOR(builder: FlatBufferBuilder, ID_SENSOR: Int) = builder.addOffset(3, ID_SENSOR, 0)
-        fun addPASS_START(builder: FlatBufferBuilder, PASS_START: Int) = builder.addOffset(4, PASS_START, 0)
-        fun addPASS_DURATION(builder: FlatBufferBuilder, PASS_DURATION: Int) = builder.addInt(5, PASS_DURATION, 0)
+        fun addISSTABLE(builder: FlatBufferBuilder, isStable: Boolean) = builder.addBoolean(0, isStable, false)
+        fun addNUMOBS(builder: FlatBufferBuilder, numObs: Int) = builder.addInt(1, numObs, 0)
+        fun addOBJECTID(builder: FlatBufferBuilder, objectId: Int) = builder.addOffset(2, objectId, 0)
+        fun addIDSENSOR(builder: FlatBufferBuilder, idSensor: Int) = builder.addOffset(3, idSensor, 0)
+        fun addPASSSTART(builder: FlatBufferBuilder, passStart: Int) = builder.addOffset(4, passStart, 0)
+        fun addPASSDURATION(builder: FlatBufferBuilder, passDuration: Int) = builder.addInt(5, passDuration, 0)
         fun endOSM(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

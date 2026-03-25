@@ -51,9 +51,17 @@ func (rcv *CZMCylinder) SHOW() bool {
 	return false
 }
 
+func (rcv *CZMCylinder) Show() bool {
+	return rcv.SHOW()
+}
+
 /// Whether the cylinder is displayed
 func (rcv *CZMCylinder) MutateSHOW(n bool) bool {
 	return rcv._tab.MutateBoolSlot(4, n)
+}
+
+func (rcv *CZMCylinder) MutateShow(n bool) bool {
+	return rcv.MutateSHOW(n)
 }
 
 /// Length in meters
@@ -65,9 +73,17 @@ func (rcv *CZMCylinder) LENGTH() float64 {
 	return 0.0
 }
 
+func (rcv *CZMCylinder) Length() float64 {
+	return rcv.LENGTH()
+}
+
 /// Length in meters
 func (rcv *CZMCylinder) MutateLENGTH(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(6, n)
+}
+
+func (rcv *CZMCylinder) MutateLength(n float64) bool {
+	return rcv.MutateLENGTH(n)
 }
 
 /// Top radius in meters
@@ -79,9 +95,17 @@ func (rcv *CZMCylinder) TOP_RADIUS() float64 {
 	return 0.0
 }
 
+func (rcv *CZMCylinder) TopRadius() float64 {
+	return rcv.TOP_RADIUS()
+}
+
 /// Top radius in meters
 func (rcv *CZMCylinder) MutateTOP_RADIUS(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(8, n)
+}
+
+func (rcv *CZMCylinder) MutateTopRadius(n float64) bool {
+	return rcv.MutateTOP_RADIUS(n)
 }
 
 /// Bottom radius in meters
@@ -93,9 +117,17 @@ func (rcv *CZMCylinder) BOTTOM_RADIUS() float64 {
 	return 0.0
 }
 
+func (rcv *CZMCylinder) BottomRadius() float64 {
+	return rcv.BOTTOM_RADIUS()
+}
+
 /// Bottom radius in meters
 func (rcv *CZMCylinder) MutateBOTTOM_RADIUS(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(10, n)
+}
+
+func (rcv *CZMCylinder) MutateBottomRadius(n float64) bool {
+	return rcv.MutateBOTTOM_RADIUS(n)
 }
 
 /// Height reference
@@ -105,6 +137,10 @@ func (rcv *CZMCylinder) HEIGHT_REFERENCE() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *CZMCylinder) HeightReference() []byte {
+	return rcv.HEIGHT_REFERENCE()
 }
 
 /// Height reference
@@ -117,9 +153,17 @@ func (rcv *CZMCylinder) FILL() bool {
 	return false
 }
 
+func (rcv *CZMCylinder) Fill() bool {
+	return rcv.FILL()
+}
+
 /// Fill flag
 func (rcv *CZMCylinder) MutateFILL(n bool) bool {
 	return rcv._tab.MutateBoolSlot(14, n)
+}
+
+func (rcv *CZMCylinder) MutateFill(n bool) bool {
+	return rcv.MutateFILL(n)
 }
 
 /// Surface material
@@ -136,6 +180,10 @@ func (rcv *CZMCylinder) MATERIAL(obj *CZMMaterial) *CZMMaterial {
 	return nil
 }
 
+func (rcv *CZMCylinder) Material(obj *CZMMaterial) *CZMMaterial {
+	return rcv.MATERIAL(obj)
+}
+
 /// Surface material
 /// Outline flag
 func (rcv *CZMCylinder) OUTLINE() bool {
@@ -146,9 +194,17 @@ func (rcv *CZMCylinder) OUTLINE() bool {
 	return false
 }
 
+func (rcv *CZMCylinder) Outline() bool {
+	return rcv.OUTLINE()
+}
+
 /// Outline flag
 func (rcv *CZMCylinder) MutateOUTLINE(n bool) bool {
 	return rcv._tab.MutateBoolSlot(18, n)
+}
+
+func (rcv *CZMCylinder) MutateOutline(n bool) bool {
+	return rcv.MutateOUTLINE(n)
 }
 
 /// Outline color
@@ -165,6 +221,10 @@ func (rcv *CZMCylinder) OUTLINE_COLOR(obj *CZMColor) *CZMColor {
 	return nil
 }
 
+func (rcv *CZMCylinder) OutlineColor(obj *CZMColor) *CZMColor {
+	return rcv.OUTLINE_COLOR(obj)
+}
+
 /// Outline color
 /// Outline width
 func (rcv *CZMCylinder) OUTLINE_WIDTH() float64 {
@@ -175,9 +235,17 @@ func (rcv *CZMCylinder) OUTLINE_WIDTH() float64 {
 	return 0.0
 }
 
+func (rcv *CZMCylinder) OutlineWidth() float64 {
+	return rcv.OUTLINE_WIDTH()
+}
+
 /// Outline width
 func (rcv *CZMCylinder) MutateOUTLINE_WIDTH(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(22, n)
+}
+
+func (rcv *CZMCylinder) MutateOutlineWidth(n float64) bool {
+	return rcv.MutateOUTLINE_WIDTH(n)
 }
 
 /// Number of vertical lines
@@ -189,9 +257,17 @@ func (rcv *CZMCylinder) NUMBER_OF_VERTICAL_LINES() int32 {
 	return 0
 }
 
+func (rcv *CZMCylinder) NumberOfVerticalLines() int32 {
+	return rcv.NUMBER_OF_VERTICAL_LINES()
+}
+
 /// Number of vertical lines
 func (rcv *CZMCylinder) MutateNUMBER_OF_VERTICAL_LINES(n int32) bool {
 	return rcv._tab.MutateInt32Slot(24, n)
+}
+
+func (rcv *CZMCylinder) MutateNumberOfVerticalLines(n int32) bool {
+	return rcv.MutateNUMBER_OF_VERTICAL_LINES(n)
 }
 
 /// Number of slices
@@ -203,9 +279,17 @@ func (rcv *CZMCylinder) SLICES() int32 {
 	return 0
 }
 
+func (rcv *CZMCylinder) Slices() int32 {
+	return rcv.SLICES()
+}
+
 /// Number of slices
 func (rcv *CZMCylinder) MutateSLICES(n int32) bool {
 	return rcv._tab.MutateInt32Slot(26, n)
+}
+
+func (rcv *CZMCylinder) MutateSlices(n int32) bool {
+	return rcv.MutateSLICES(n)
 }
 
 /// Shadow mode
@@ -217,6 +301,10 @@ func (rcv *CZMCylinder) SHADOWS() []byte {
 	return nil
 }
 
+func (rcv *CZMCylinder) Shadows() []byte {
+	return rcv.SHADOWS()
+}
+
 /// Shadow mode
 func CZMCylinderStart(builder *flatbuffers.Builder) {
 	builder.StartObject(13)
@@ -224,41 +312,80 @@ func CZMCylinderStart(builder *flatbuffers.Builder) {
 func CZMCylinderAddSHOW(builder *flatbuffers.Builder, SHOW bool) {
 	builder.PrependBoolSlot(0, SHOW, false)
 }
+func CZMCylinderAddShow(builder *flatbuffers.Builder, SHOW bool) {
+	CZMCylinderAddSHOW(builder, SHOW)
+}
 func CZMCylinderAddLENGTH(builder *flatbuffers.Builder, LENGTH float64) {
 	builder.PrependFloat64Slot(1, LENGTH, 0.0)
+}
+func CZMCylinderAddLength(builder *flatbuffers.Builder, LENGTH float64) {
+	CZMCylinderAddLENGTH(builder, LENGTH)
 }
 func CZMCylinderAddTOP_RADIUS(builder *flatbuffers.Builder, TOP_RADIUS float64) {
 	builder.PrependFloat64Slot(2, TOP_RADIUS, 0.0)
 }
+func CZMCylinderAddTopRadius(builder *flatbuffers.Builder, TOP_RADIUS float64) {
+	CZMCylinderAddTOP_RADIUS(builder, TOP_RADIUS)
+}
 func CZMCylinderAddBOTTOM_RADIUS(builder *flatbuffers.Builder, BOTTOM_RADIUS float64) {
 	builder.PrependFloat64Slot(3, BOTTOM_RADIUS, 0.0)
+}
+func CZMCylinderAddBottomRadius(builder *flatbuffers.Builder, BOTTOM_RADIUS float64) {
+	CZMCylinderAddBOTTOM_RADIUS(builder, BOTTOM_RADIUS)
 }
 func CZMCylinderAddHEIGHT_REFERENCE(builder *flatbuffers.Builder, HEIGHT_REFERENCE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(HEIGHT_REFERENCE), 0)
 }
+func CZMCylinderAddHeightReference(builder *flatbuffers.Builder, HEIGHT_REFERENCE flatbuffers.UOffsetT) {
+	CZMCylinderAddHEIGHT_REFERENCE(builder, HEIGHT_REFERENCE)
+}
 func CZMCylinderAddFILL(builder *flatbuffers.Builder, FILL bool) {
 	builder.PrependBoolSlot(5, FILL, false)
+}
+func CZMCylinderAddFill(builder *flatbuffers.Builder, FILL bool) {
+	CZMCylinderAddFILL(builder, FILL)
 }
 func CZMCylinderAddMATERIAL(builder *flatbuffers.Builder, MATERIAL flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(MATERIAL), 0)
 }
+func CZMCylinderAddMaterial(builder *flatbuffers.Builder, MATERIAL flatbuffers.UOffsetT) {
+	CZMCylinderAddMATERIAL(builder, MATERIAL)
+}
 func CZMCylinderAddOUTLINE(builder *flatbuffers.Builder, OUTLINE bool) {
 	builder.PrependBoolSlot(7, OUTLINE, false)
+}
+func CZMCylinderAddOutline(builder *flatbuffers.Builder, OUTLINE bool) {
+	CZMCylinderAddOUTLINE(builder, OUTLINE)
 }
 func CZMCylinderAddOUTLINE_COLOR(builder *flatbuffers.Builder, OUTLINE_COLOR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(OUTLINE_COLOR), 0)
 }
+func CZMCylinderAddOutlineColor(builder *flatbuffers.Builder, OUTLINE_COLOR flatbuffers.UOffsetT) {
+	CZMCylinderAddOUTLINE_COLOR(builder, OUTLINE_COLOR)
+}
 func CZMCylinderAddOUTLINE_WIDTH(builder *flatbuffers.Builder, OUTLINE_WIDTH float64) {
 	builder.PrependFloat64Slot(9, OUTLINE_WIDTH, 0.0)
+}
+func CZMCylinderAddOutlineWidth(builder *flatbuffers.Builder, OUTLINE_WIDTH float64) {
+	CZMCylinderAddOUTLINE_WIDTH(builder, OUTLINE_WIDTH)
 }
 func CZMCylinderAddNUMBER_OF_VERTICAL_LINES(builder *flatbuffers.Builder, NUMBER_OF_VERTICAL_LINES int32) {
 	builder.PrependInt32Slot(10, NUMBER_OF_VERTICAL_LINES, 0)
 }
+func CZMCylinderAddNumberOfVerticalLines(builder *flatbuffers.Builder, NUMBER_OF_VERTICAL_LINES int32) {
+	CZMCylinderAddNUMBER_OF_VERTICAL_LINES(builder, NUMBER_OF_VERTICAL_LINES)
+}
 func CZMCylinderAddSLICES(builder *flatbuffers.Builder, SLICES int32) {
 	builder.PrependInt32Slot(11, SLICES, 0)
 }
+func CZMCylinderAddSlices(builder *flatbuffers.Builder, SLICES int32) {
+	CZMCylinderAddSLICES(builder, SLICES)
+}
 func CZMCylinderAddSHADOWS(builder *flatbuffers.Builder, SHADOWS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(12, flatbuffers.UOffsetT(SHADOWS), 0)
+}
+func CZMCylinderAddShadows(builder *flatbuffers.Builder, SHADOWS flatbuffers.UOffsetT) {
+	CZMCylinderAddSHADOWS(builder, SHADOWS)
 }
 func CZMCylinderEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

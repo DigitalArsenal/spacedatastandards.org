@@ -51,6 +51,10 @@ func (rcv *ParameterRefEntry) PARAMETER_REF() []byte {
 	return nil
 }
 
+func (rcv *ParameterRefEntry) ParameterRef() []byte {
+	return rcv.PARAMETER_REF()
+}
+
 /// Parameter reference path
 /// Location in container
 func (rcv *ParameterRefEntry) LOCATION(obj *LocationInContainer) *LocationInContainer {
@@ -64,6 +68,10 @@ func (rcv *ParameterRefEntry) LOCATION(obj *LocationInContainer) *LocationInCont
 		return obj
 	}
 	return nil
+}
+
+func (rcv *ParameterRefEntry) Location(obj *LocationInContainer) *LocationInContainer {
+	return rcv.LOCATION(obj)
 }
 
 /// Location in container
@@ -81,6 +89,10 @@ func (rcv *ParameterRefEntry) REPEAT(obj *RepeatEntry) *RepeatEntry {
 	return nil
 }
 
+func (rcv *ParameterRefEntry) Repeat(obj *RepeatEntry) *RepeatEntry {
+	return rcv.REPEAT(obj)
+}
+
 /// Repeat specification
 /// Include condition
 func (rcv *ParameterRefEntry) INCLUDE_CONDITION(obj *MatchCriteria) *MatchCriteria {
@@ -96,6 +108,10 @@ func (rcv *ParameterRefEntry) INCLUDE_CONDITION(obj *MatchCriteria) *MatchCriter
 	return nil
 }
 
+func (rcv *ParameterRefEntry) IncludeCondition(obj *MatchCriteria) *MatchCriteria {
+	return rcv.INCLUDE_CONDITION(obj)
+}
+
 /// Include condition
 /// Short description
 func (rcv *ParameterRefEntry) SHORT_DESCRIPTION() []byte {
@@ -106,6 +122,10 @@ func (rcv *ParameterRefEntry) SHORT_DESCRIPTION() []byte {
 	return nil
 }
 
+func (rcv *ParameterRefEntry) ShortDescription() []byte {
+	return rcv.SHORT_DESCRIPTION()
+}
+
 /// Short description
 func ParameterRefEntryStart(builder *flatbuffers.Builder) {
 	builder.StartObject(5)
@@ -113,17 +133,32 @@ func ParameterRefEntryStart(builder *flatbuffers.Builder) {
 func ParameterRefEntryAddPARAMETER_REF(builder *flatbuffers.Builder, PARAMETER_REF flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(PARAMETER_REF), 0)
 }
+func ParameterRefEntryAddParameterRef(builder *flatbuffers.Builder, PARAMETER_REF flatbuffers.UOffsetT) {
+	ParameterRefEntryAddPARAMETER_REF(builder, PARAMETER_REF)
+}
 func ParameterRefEntryAddLOCATION(builder *flatbuffers.Builder, LOCATION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(LOCATION), 0)
+}
+func ParameterRefEntryAddLocation(builder *flatbuffers.Builder, LOCATION flatbuffers.UOffsetT) {
+	ParameterRefEntryAddLOCATION(builder, LOCATION)
 }
 func ParameterRefEntryAddREPEAT(builder *flatbuffers.Builder, REPEAT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(REPEAT), 0)
 }
+func ParameterRefEntryAddRepeat(builder *flatbuffers.Builder, REPEAT flatbuffers.UOffsetT) {
+	ParameterRefEntryAddREPEAT(builder, REPEAT)
+}
 func ParameterRefEntryAddINCLUDE_CONDITION(builder *flatbuffers.Builder, INCLUDE_CONDITION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(INCLUDE_CONDITION), 0)
 }
+func ParameterRefEntryAddIncludeCondition(builder *flatbuffers.Builder, INCLUDE_CONDITION flatbuffers.UOffsetT) {
+	ParameterRefEntryAddINCLUDE_CONDITION(builder, INCLUDE_CONDITION)
+}
 func ParameterRefEntryAddSHORT_DESCRIPTION(builder *flatbuffers.Builder, SHORT_DESCRIPTION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(SHORT_DESCRIPTION), 0)
+}
+func ParameterRefEntryAddShortDescription(builder *flatbuffers.Builder, SHORT_DESCRIPTION flatbuffers.UOffsetT) {
+	ParameterRefEntryAddSHORT_DESCRIPTION(builder, SHORT_DESCRIPTION)
 }
 func ParameterRefEntryEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

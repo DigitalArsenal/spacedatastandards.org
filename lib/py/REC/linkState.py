@@ -2,4 +2,10 @@
 
 # namespace: 
 
-# NOTE linkState.py does not declare any structs or enums
+class linkState(object):
+    ESTABLISHED = 0
+    DEGRADED = 1
+    INTERRUPTED = 2
+    PLANNED = 3
+    TERMINATED = 4
+    UNKNOWN = 5

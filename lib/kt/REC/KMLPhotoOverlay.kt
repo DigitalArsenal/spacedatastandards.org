@@ -32,7 +32,7 @@ class KMLPhotoOverlay : Table() {
     /**
      * Name
      */
-    val NAME : String?
+    val name : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class KMLPhotoOverlay : Table() {
                 null
             }
         }
-    val NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val nameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun nameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Description
      */
-    val DESCRIPTION : String?
+    val description : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -55,12 +55,12 @@ class KMLPhotoOverlay : Table() {
                 null
             }
         }
-    val DESCRIPTIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun DESCRIPTIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val descriptionAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun descriptionInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * Visibility
      */
-    val VISIBILITY : Boolean
+    val visibility : Boolean
         get() {
             val o = __offset(8)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -68,7 +68,7 @@ class KMLPhotoOverlay : Table() {
     /**
      * Icon/image URL
      */
-    val ICON_HREF : String?
+    val iconHref : String?
         get() {
             val o = __offset(10)
             return if (o != 0) {
@@ -77,12 +77,12 @@ class KMLPhotoOverlay : Table() {
                 null
             }
         }
-    val ICON_HREFAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
-    fun ICON_HREFInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
+    val iconHrefAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(10, 1)
+    fun iconHrefInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 10, 1)
     /**
      * Color
      */
-    val COLOR : String?
+    val color : String?
         get() {
             val o = __offset(12)
             return if (o != 0) {
@@ -91,12 +91,12 @@ class KMLPhotoOverlay : Table() {
                 null
             }
         }
-    val COLORAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
-    fun COLORInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
+    val colorAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(12, 1)
+    fun colorInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 12, 1)
     /**
      * Draw order
      */
-    val DRAW_ORDER : Int
+    val drawOrder : Int
         get() {
             val o = __offset(14)
             return if(o != 0) bb.getInt(o + bb_pos) else 0
@@ -104,7 +104,7 @@ class KMLPhotoOverlay : Table() {
     /**
      * Rotation
      */
-    val ROTATION : Double
+    val rotation : Double
         get() {
             val o = __offset(16)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -112,8 +112,8 @@ class KMLPhotoOverlay : Table() {
     /**
      * View volume
      */
-    val VIEW_VOLUME : KMLViewVolume? get() = VIEW_VOLUME(KMLViewVolume())
-    fun VIEW_VOLUME(obj: KMLViewVolume) : KMLViewVolume? {
+    val viewVolume : KMLViewVolume? get() = viewVolume(KMLViewVolume())
+    fun viewVolume(obj: KMLViewVolume) : KMLViewVolume? {
         val o = __offset(18)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -124,8 +124,8 @@ class KMLPhotoOverlay : Table() {
     /**
      * Image pyramid
      */
-    val IMAGE_PYRAMID : KMLImagePyramid? get() = IMAGE_PYRAMID(KMLImagePyramid())
-    fun IMAGE_PYRAMID(obj: KMLImagePyramid) : KMLImagePyramid? {
+    val imagePyramid : KMLImagePyramid? get() = imagePyramid(KMLImagePyramid())
+    fun imagePyramid(obj: KMLImagePyramid) : KMLImagePyramid? {
         val o = __offset(20)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -136,8 +136,8 @@ class KMLPhotoOverlay : Table() {
     /**
      * Point for position
      */
-    val POINT : KMLPoint? get() = POINT(KMLPoint())
-    fun POINT(obj: KMLPoint) : KMLPoint? {
+    val point : KMLPoint? get() = point(KMLPoint())
+    fun point(obj: KMLPoint) : KMLPoint? {
         val o = __offset(22)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -148,45 +148,45 @@ class KMLPhotoOverlay : Table() {
     /**
      * Shape
      */
-    val SHAPE : Byte
+    val shape : Byte
         get() {
             val o = __offset(24)
             return if(o != 0) bb.get(o + bb_pos) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsKMLPhotoOverlay(_bb: ByteBuffer): KMLPhotoOverlay = getRootAsKMLPhotoOverlay(_bb, KMLPhotoOverlay())
         fun getRootAsKMLPhotoOverlay(_bb: ByteBuffer, obj: KMLPhotoOverlay): KMLPhotoOverlay {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createKMLPhotoOverlay(builder: FlatBufferBuilder, NAMEOffset: Int, DESCRIPTIONOffset: Int, VISIBILITY: Boolean, ICON_HREFOffset: Int, COLOROffset: Int, DRAW_ORDER: Int, ROTATION: Double, VIEW_VOLUMEOffset: Int, IMAGE_PYRAMIDOffset: Int, POINTOffset: Int, SHAPE: Byte) : Int {
+        fun createKMLPhotoOverlay(builder: FlatBufferBuilder, nameOffset: Int, descriptionOffset: Int, visibility: Boolean, iconHrefOffset: Int, colorOffset: Int, drawOrder: Int, rotation: Double, viewVolumeOffset: Int, imagePyramidOffset: Int, pointOffset: Int, shape: Byte) : Int {
             builder.startTable(11)
-            addROTATION(builder, ROTATION)
-            addPOINT(builder, POINTOffset)
-            addIMAGE_PYRAMID(builder, IMAGE_PYRAMIDOffset)
-            addVIEW_VOLUME(builder, VIEW_VOLUMEOffset)
-            addDRAW_ORDER(builder, DRAW_ORDER)
-            addCOLOR(builder, COLOROffset)
-            addICON_HREF(builder, ICON_HREFOffset)
-            addDESCRIPTION(builder, DESCRIPTIONOffset)
-            addNAME(builder, NAMEOffset)
-            addSHAPE(builder, SHAPE)
-            addVISIBILITY(builder, VISIBILITY)
+            addROTATION(builder, rotation)
+            addPOINT(builder, pointOffset)
+            addIMAGEPYRAMID(builder, imagePyramidOffset)
+            addVIEWVOLUME(builder, viewVolumeOffset)
+            addDRAWORDER(builder, drawOrder)
+            addCOLOR(builder, colorOffset)
+            addICONHREF(builder, iconHrefOffset)
+            addDESCRIPTION(builder, descriptionOffset)
+            addNAME(builder, nameOffset)
+            addSHAPE(builder, shape)
+            addVISIBILITY(builder, visibility)
             return endKMLPhotoOverlay(builder)
         }
         fun startKMLPhotoOverlay(builder: FlatBufferBuilder) = builder.startTable(11)
-        fun addNAME(builder: FlatBufferBuilder, NAME: Int) = builder.addOffset(0, NAME, 0)
-        fun addDESCRIPTION(builder: FlatBufferBuilder, DESCRIPTION: Int) = builder.addOffset(1, DESCRIPTION, 0)
-        fun addVISIBILITY(builder: FlatBufferBuilder, VISIBILITY: Boolean) = builder.addBoolean(2, VISIBILITY, false)
-        fun addICON_HREF(builder: FlatBufferBuilder, ICON_HREF: Int) = builder.addOffset(3, ICON_HREF, 0)
-        fun addCOLOR(builder: FlatBufferBuilder, COLOR: Int) = builder.addOffset(4, COLOR, 0)
-        fun addDRAW_ORDER(builder: FlatBufferBuilder, DRAW_ORDER: Int) = builder.addInt(5, DRAW_ORDER, 0)
-        fun addROTATION(builder: FlatBufferBuilder, ROTATION: Double) = builder.addDouble(6, ROTATION, 0.0)
-        fun addVIEW_VOLUME(builder: FlatBufferBuilder, VIEW_VOLUME: Int) = builder.addOffset(7, VIEW_VOLUME, 0)
-        fun addIMAGE_PYRAMID(builder: FlatBufferBuilder, IMAGE_PYRAMID: Int) = builder.addOffset(8, IMAGE_PYRAMID, 0)
-        fun addPOINT(builder: FlatBufferBuilder, POINT: Int) = builder.addOffset(9, POINT, 0)
-        fun addSHAPE(builder: FlatBufferBuilder, SHAPE: Byte) = builder.addByte(10, SHAPE, 0)
+        fun addNAME(builder: FlatBufferBuilder, name: Int) = builder.addOffset(0, name, 0)
+        fun addDESCRIPTION(builder: FlatBufferBuilder, description: Int) = builder.addOffset(1, description, 0)
+        fun addVISIBILITY(builder: FlatBufferBuilder, visibility: Boolean) = builder.addBoolean(2, visibility, false)
+        fun addICONHREF(builder: FlatBufferBuilder, iconHref: Int) = builder.addOffset(3, iconHref, 0)
+        fun addCOLOR(builder: FlatBufferBuilder, color: Int) = builder.addOffset(4, color, 0)
+        fun addDRAWORDER(builder: FlatBufferBuilder, drawOrder: Int) = builder.addInt(5, drawOrder, 0)
+        fun addROTATION(builder: FlatBufferBuilder, rotation: Double) = builder.addDouble(6, rotation, 0.0)
+        fun addVIEWVOLUME(builder: FlatBufferBuilder, viewVolume: Int) = builder.addOffset(7, viewVolume, 0)
+        fun addIMAGEPYRAMID(builder: FlatBufferBuilder, imagePyramid: Int) = builder.addOffset(8, imagePyramid, 0)
+        fun addPOINT(builder: FlatBufferBuilder, point: Int) = builder.addOffset(9, point, 0)
+        fun addSHAPE(builder: FlatBufferBuilder, shape: Byte) = builder.addByte(10, shape, 0)
         fun endKMLPhotoOverlay(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

@@ -49,6 +49,10 @@ func (rcv *Score) NORAD_CAT_ID() []byte {
 	return nil
 }
 
+func (rcv *Score) NoradCatId() []byte {
+	return rcv.NORAD_CAT_ID()
+}
+
 func (rcv *Score) TYPE() ScoreType {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
@@ -57,8 +61,16 @@ func (rcv *Score) TYPE() ScoreType {
 	return 0
 }
 
+func (rcv *Score) Type() ScoreType {
+	return rcv.TYPE()
+}
+
 func (rcv *Score) MutateTYPE(n ScoreType) bool {
 	return rcv._tab.MutateInt8Slot(6, int8(n))
+}
+
+func (rcv *Score) MutateType(n ScoreType) bool {
+	return rcv.MutateTYPE(n)
 }
 
 func (rcv *Score) TAG() []byte {
@@ -69,6 +81,10 @@ func (rcv *Score) TAG() []byte {
 	return nil
 }
 
+func (rcv *Score) Tag() []byte {
+	return rcv.TAG()
+}
+
 func (rcv *Score) SCORE() float32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
@@ -77,8 +93,16 @@ func (rcv *Score) SCORE() float32 {
 	return 0.0
 }
 
+func (rcv *Score) Score() float32 {
+	return rcv.SCORE()
+}
+
 func (rcv *Score) MutateSCORE(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(10, n)
+}
+
+func (rcv *Score) MutateScore(n float32) bool {
+	return rcv.MutateSCORE(n)
 }
 
 func ScoreStart(builder *flatbuffers.Builder) {
@@ -87,14 +111,26 @@ func ScoreStart(builder *flatbuffers.Builder) {
 func ScoreAddNORAD_CAT_ID(builder *flatbuffers.Builder, NORAD_CAT_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(NORAD_CAT_ID), 0)
 }
+func ScoreAddNoradCatId(builder *flatbuffers.Builder, NORAD_CAT_ID flatbuffers.UOffsetT) {
+	ScoreAddNORAD_CAT_ID(builder, NORAD_CAT_ID)
+}
 func ScoreAddTYPE(builder *flatbuffers.Builder, TYPE ScoreType) {
 	builder.PrependInt8Slot(1, int8(TYPE), 0)
+}
+func ScoreAddType(builder *flatbuffers.Builder, TYPE ScoreType) {
+	ScoreAddTYPE(builder, TYPE)
 }
 func ScoreAddTAG(builder *flatbuffers.Builder, TAG flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(TAG), 0)
 }
+func ScoreAddTag(builder *flatbuffers.Builder, TAG flatbuffers.UOffsetT) {
+	ScoreAddTAG(builder, TAG)
+}
 func ScoreAddSCORE(builder *flatbuffers.Builder, SCORE float32) {
 	builder.PrependFloat32Slot(3, SCORE, 0.0)
+}
+func ScoreAddScore(builder *flatbuffers.Builder, SCORE float32) {
+	ScoreAddSCORE(builder, SCORE)
 }
 func ScoreEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

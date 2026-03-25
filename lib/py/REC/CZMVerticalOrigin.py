@@ -2,4 +2,8 @@
 
 # namespace: 
 
-# NOTE CZMVerticalOrigin.py does not declare any structs or enums
+class CZMVerticalOrigin(object):
+    BASELINE = 0
+    BOTTOM = 1
+    CENTER = 2
+    TOP = 3

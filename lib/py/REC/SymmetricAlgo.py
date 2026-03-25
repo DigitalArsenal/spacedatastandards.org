@@ -2,4 +2,6 @@
 
 # namespace: 
 
-# NOTE SymmetricAlgo.py does not declare any structs or enums
+# Symmetric encryption algorithm
+class SymmetricAlgo(object):
+    AES_256_CTR = 0

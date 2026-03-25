@@ -271,6 +271,16 @@ def CFPStartDATAVector(builder, numElems):
 def StartDATAVector(builder, numElems):
     return CFPStartDATAVector(builder, numElems)
 
+def CFPCreateDATAVector(builder, data):
+    data = list(data)
+    builder.StartVector(1, len(data), 1)
+    for item in reversed(data):
+        builder.PrependUint8(item)
+    return builder.EndVector()
+
+def CreateDATAVector(builder, data):
+    CFPCreateDATAVector(builder, data)
+
 def CFPEnd(builder):
     return builder.EndObject()
 
@@ -285,28 +295,45 @@ except:
 class CFPT(object):
 
     # CFPT
-    def __init__(self):
-        self.VERSION = 0  # type: int
-        self.PDU_TYPE = 0  # type: int
-        self.DIRECTION = 0  # type: int
-        self.TRANSMISSION_MODE = 0  # type: int
-        self.CRC_FLAG = False  # type: bool
-        self.LARGE_FILE_FLAG = False  # type: bool
-        self.DATA_FIELD_LENGTH = 0  # type: int
-        self.SOURCE_ENTITY_ID = 0  # type: int
-        self.TRANSACTION_SEQ_NUM = 0  # type: int
-        self.DESTINATION_ENTITY_ID = 0  # type: int
-        self.CHECKSUM_TYPE = 0  # type: int
-        self.FILE_SIZE = 0  # type: int
-        self.SOURCE_FILENAME = None  # type: str
-        self.DESTINATION_FILENAME = None  # type: str
-        self.DATA = None  # type: List[int]
+    def __init__(
+        self,
+        VERSION = 0,
+        PDU_TYPE = 0,
+        DIRECTION = 0,
+        TRANSMISSION_MODE = 0,
+        CRC_FLAG = False,
+        LARGE_FILE_FLAG = False,
+        DATA_FIELD_LENGTH = 0,
+        SOURCE_ENTITY_ID = 0,
+        TRANSACTION_SEQ_NUM = 0,
+        DESTINATION_ENTITY_ID = 0,
+        CHECKSUM_TYPE = 0,
+        FILE_SIZE = 0,
+        SOURCE_FILENAME = None,
+        DESTINATION_FILENAME = None,
+        DATA = None,
+    ):
+        self.VERSION = VERSION  # type: int
+        self.PDU_TYPE = PDU_TYPE  # type: int
+        self.DIRECTION = DIRECTION  # type: int
+        self.TRANSMISSION_MODE = TRANSMISSION_MODE  # type: int
+        self.CRC_FLAG = CRC_FLAG  # type: bool
+        self.LARGE_FILE_FLAG = LARGE_FILE_FLAG  # type: bool
+        self.DATA_FIELD_LENGTH = DATA_FIELD_LENGTH  # type: int
+        self.SOURCE_ENTITY_ID = SOURCE_ENTITY_ID  # type: int
+        self.TRANSACTION_SEQ_NUM = TRANSACTION_SEQ_NUM  # type: int
+        self.DESTINATION_ENTITY_ID = DESTINATION_ENTITY_ID  # type: int
+        self.CHECKSUM_TYPE = CHECKSUM_TYPE  # type: int
+        self.FILE_SIZE = FILE_SIZE  # type: int
+        self.SOURCE_FILENAME = SOURCE_FILENAME  # type: Optional[str]
+        self.DESTINATION_FILENAME = DESTINATION_FILENAME  # type: Optional[str]
+        self.DATA = DATA  # type: Optional[List[int]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        CFP = CFP()
-        CFP.Init(buf, pos)
-        return cls.InitFromObj(CFP)
+        tmpCfp = CFP()
+        tmpCfp.Init(buf, pos)
+        return cls.InitFromObj(tmpCfp)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -314,9 +341,9 @@ class CFPT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, CFP):
+    def InitFromObj(cls, tmpCfp):
         x = CFPT()
-        x._UnPack(CFP)
+        x._UnPack(tmpCfp)
         return x
 
     # CFPT

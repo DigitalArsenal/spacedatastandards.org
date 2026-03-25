@@ -2,4 +2,7 @@
 
 # namespace: 
 
-# NOTE KMLRefreshMode.py does not declare any structs or enums
+class KMLRefreshMode(object):
+    ON_CHANGE = 0
+    ON_INTERVAL = 1
+    ON_EXPIRE = 2

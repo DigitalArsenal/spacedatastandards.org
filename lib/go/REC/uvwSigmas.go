@@ -50,8 +50,16 @@ func (rcv *uvwSigmas) U_SIGMA() float64 {
 	return 0.0
 }
 
+func (rcv *uvwSigmas) USigma() float64 {
+	return rcv.U_SIGMA()
+}
+
 func (rcv *uvwSigmas) MutateU_SIGMA(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(4, n)
+}
+
+func (rcv *uvwSigmas) MutateUSigma(n float64) bool {
+	return rcv.MutateU_SIGMA(n)
 }
 
 func (rcv *uvwSigmas) V_SIGMA() float64 {
@@ -62,8 +70,16 @@ func (rcv *uvwSigmas) V_SIGMA() float64 {
 	return 0.0
 }
 
+func (rcv *uvwSigmas) VSigma() float64 {
+	return rcv.V_SIGMA()
+}
+
 func (rcv *uvwSigmas) MutateV_SIGMA(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(6, n)
+}
+
+func (rcv *uvwSigmas) MutateVSigma(n float64) bool {
+	return rcv.MutateV_SIGMA(n)
 }
 
 func (rcv *uvwSigmas) W_SIGMA() float64 {
@@ -74,8 +90,16 @@ func (rcv *uvwSigmas) W_SIGMA() float64 {
 	return 0.0
 }
 
+func (rcv *uvwSigmas) WSigma() float64 {
+	return rcv.W_SIGMA()
+}
+
 func (rcv *uvwSigmas) MutateW_SIGMA(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(8, n)
+}
+
+func (rcv *uvwSigmas) MutateWSigma(n float64) bool {
+	return rcv.MutateW_SIGMA(n)
 }
 
 func (rcv *uvwSigmas) UD_SIGMA() float64 {
@@ -86,8 +110,16 @@ func (rcv *uvwSigmas) UD_SIGMA() float64 {
 	return 0.0
 }
 
+func (rcv *uvwSigmas) UdSigma() float64 {
+	return rcv.UD_SIGMA()
+}
+
 func (rcv *uvwSigmas) MutateUD_SIGMA(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(10, n)
+}
+
+func (rcv *uvwSigmas) MutateUdSigma(n float64) bool {
+	return rcv.MutateUD_SIGMA(n)
 }
 
 func (rcv *uvwSigmas) VD_SIGMA() float64 {
@@ -98,8 +130,16 @@ func (rcv *uvwSigmas) VD_SIGMA() float64 {
 	return 0.0
 }
 
+func (rcv *uvwSigmas) VdSigma() float64 {
+	return rcv.VD_SIGMA()
+}
+
 func (rcv *uvwSigmas) MutateVD_SIGMA(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(12, n)
+}
+
+func (rcv *uvwSigmas) MutateVdSigma(n float64) bool {
+	return rcv.MutateVD_SIGMA(n)
 }
 
 func (rcv *uvwSigmas) WD_SIGMA() float64 {
@@ -110,8 +150,16 @@ func (rcv *uvwSigmas) WD_SIGMA() float64 {
 	return 0.0
 }
 
+func (rcv *uvwSigmas) WdSigma() float64 {
+	return rcv.WD_SIGMA()
+}
+
 func (rcv *uvwSigmas) MutateWD_SIGMA(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(14, n)
+}
+
+func (rcv *uvwSigmas) MutateWdSigma(n float64) bool {
+	return rcv.MutateWD_SIGMA(n)
 }
 
 func uvwSigmasStart(builder *flatbuffers.Builder) {
@@ -120,20 +168,38 @@ func uvwSigmasStart(builder *flatbuffers.Builder) {
 func uvwSigmasAddU_SIGMA(builder *flatbuffers.Builder, U_SIGMA float64) {
 	builder.PrependFloat64Slot(0, U_SIGMA, 0.0)
 }
+func uvwSigmasAddUSigma(builder *flatbuffers.Builder, U_SIGMA float64) {
+	uvwSigmasAddU_SIGMA(builder, U_SIGMA)
+}
 func uvwSigmasAddV_SIGMA(builder *flatbuffers.Builder, V_SIGMA float64) {
 	builder.PrependFloat64Slot(1, V_SIGMA, 0.0)
+}
+func uvwSigmasAddVSigma(builder *flatbuffers.Builder, V_SIGMA float64) {
+	uvwSigmasAddV_SIGMA(builder, V_SIGMA)
 }
 func uvwSigmasAddW_SIGMA(builder *flatbuffers.Builder, W_SIGMA float64) {
 	builder.PrependFloat64Slot(2, W_SIGMA, 0.0)
 }
+func uvwSigmasAddWSigma(builder *flatbuffers.Builder, W_SIGMA float64) {
+	uvwSigmasAddW_SIGMA(builder, W_SIGMA)
+}
 func uvwSigmasAddUD_SIGMA(builder *flatbuffers.Builder, UD_SIGMA float64) {
 	builder.PrependFloat64Slot(3, UD_SIGMA, 0.0)
+}
+func uvwSigmasAddUdSigma(builder *flatbuffers.Builder, UD_SIGMA float64) {
+	uvwSigmasAddUD_SIGMA(builder, UD_SIGMA)
 }
 func uvwSigmasAddVD_SIGMA(builder *flatbuffers.Builder, VD_SIGMA float64) {
 	builder.PrependFloat64Slot(4, VD_SIGMA, 0.0)
 }
+func uvwSigmasAddVdSigma(builder *flatbuffers.Builder, VD_SIGMA float64) {
+	uvwSigmasAddVD_SIGMA(builder, VD_SIGMA)
+}
 func uvwSigmasAddWD_SIGMA(builder *flatbuffers.Builder, WD_SIGMA float64) {
 	builder.PrependFloat64Slot(5, WD_SIGMA, 0.0)
+}
+func uvwSigmasAddWdSigma(builder *flatbuffers.Builder, WD_SIGMA float64) {
+	uvwSigmasAddWD_SIGMA(builder, WD_SIGMA)
 }
 func uvwSigmasEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

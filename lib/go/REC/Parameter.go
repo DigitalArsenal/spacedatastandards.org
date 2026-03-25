@@ -51,6 +51,10 @@ func (rcv *Parameter) NAME() []byte {
 	return nil
 }
 
+func (rcv *Parameter) Name() []byte {
+	return rcv.NAME()
+}
+
 /// Parameter name
 /// Reference to parameter type
 func (rcv *Parameter) PARAMETER_TYPE_REF() []byte {
@@ -59,6 +63,10 @@ func (rcv *Parameter) PARAMETER_TYPE_REF() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *Parameter) ParameterTypeRef() []byte {
+	return rcv.PARAMETER_TYPE_REF()
 }
 
 /// Reference to parameter type
@@ -71,6 +79,10 @@ func (rcv *Parameter) SHORT_DESCRIPTION() []byte {
 	return nil
 }
 
+func (rcv *Parameter) ShortDescription() []byte {
+	return rcv.SHORT_DESCRIPTION()
+}
+
 /// Short description
 /// Long description
 func (rcv *Parameter) LONG_DESCRIPTION() []byte {
@@ -79,6 +91,10 @@ func (rcv *Parameter) LONG_DESCRIPTION() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *Parameter) LongDescription() []byte {
+	return rcv.LONG_DESCRIPTION()
 }
 
 /// Long description
@@ -96,6 +112,10 @@ func (rcv *Parameter) PROPERTIES(obj *ParameterProperties) *ParameterProperties 
 	return nil
 }
 
+func (rcv *Parameter) Properties(obj *ParameterProperties) *ParameterProperties {
+	return rcv.PROPERTIES(obj)
+}
+
 /// Parameter properties
 /// Physical address mapping
 func (rcv *Parameter) PHYSICAL_ADDRESS() []byte {
@@ -104,6 +124,10 @@ func (rcv *Parameter) PHYSICAL_ADDRESS() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *Parameter) PhysicalAddress() []byte {
+	return rcv.PHYSICAL_ADDRESS()
 }
 
 /// Physical address mapping
@@ -116,6 +140,10 @@ func (rcv *Parameter) INITIAL_VALUE() []byte {
 	return nil
 }
 
+func (rcv *Parameter) InitialValue() []byte {
+	return rcv.INITIAL_VALUE()
+}
+
 /// Initial/default value
 func ParameterStart(builder *flatbuffers.Builder) {
 	builder.StartObject(7)
@@ -123,23 +151,44 @@ func ParameterStart(builder *flatbuffers.Builder) {
 func ParameterAddNAME(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(NAME), 0)
 }
+func ParameterAddName(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
+	ParameterAddNAME(builder, NAME)
+}
 func ParameterAddPARAMETER_TYPE_REF(builder *flatbuffers.Builder, PARAMETER_TYPE_REF flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(PARAMETER_TYPE_REF), 0)
+}
+func ParameterAddParameterTypeRef(builder *flatbuffers.Builder, PARAMETER_TYPE_REF flatbuffers.UOffsetT) {
+	ParameterAddPARAMETER_TYPE_REF(builder, PARAMETER_TYPE_REF)
 }
 func ParameterAddSHORT_DESCRIPTION(builder *flatbuffers.Builder, SHORT_DESCRIPTION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(SHORT_DESCRIPTION), 0)
 }
+func ParameterAddShortDescription(builder *flatbuffers.Builder, SHORT_DESCRIPTION flatbuffers.UOffsetT) {
+	ParameterAddSHORT_DESCRIPTION(builder, SHORT_DESCRIPTION)
+}
 func ParameterAddLONG_DESCRIPTION(builder *flatbuffers.Builder, LONG_DESCRIPTION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(LONG_DESCRIPTION), 0)
+}
+func ParameterAddLongDescription(builder *flatbuffers.Builder, LONG_DESCRIPTION flatbuffers.UOffsetT) {
+	ParameterAddLONG_DESCRIPTION(builder, LONG_DESCRIPTION)
 }
 func ParameterAddPROPERTIES(builder *flatbuffers.Builder, PROPERTIES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(PROPERTIES), 0)
 }
+func ParameterAddProperties(builder *flatbuffers.Builder, PROPERTIES flatbuffers.UOffsetT) {
+	ParameterAddPROPERTIES(builder, PROPERTIES)
+}
 func ParameterAddPHYSICAL_ADDRESS(builder *flatbuffers.Builder, PHYSICAL_ADDRESS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(PHYSICAL_ADDRESS), 0)
 }
+func ParameterAddPhysicalAddress(builder *flatbuffers.Builder, PHYSICAL_ADDRESS flatbuffers.UOffsetT) {
+	ParameterAddPHYSICAL_ADDRESS(builder, PHYSICAL_ADDRESS)
+}
 func ParameterAddINITIAL_VALUE(builder *flatbuffers.Builder, INITIAL_VALUE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(INITIAL_VALUE), 0)
+}
+func ParameterAddInitialValue(builder *flatbuffers.Builder, INITIAL_VALUE flatbuffers.UOffsetT) {
+	ParameterAddINITIAL_VALUE(builder, INITIAL_VALUE)
 }
 func ParameterEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

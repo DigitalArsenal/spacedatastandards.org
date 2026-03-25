@@ -2,4 +2,219 @@
 
 # namespace: 
 
-# NOTE CZMPolygonHole.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Polygon hole position list
+class CZMPolygonHole(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = CZMPolygonHole()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsCZMPolygonHole(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def CZMPolygonHoleBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x43\x5A\x4D", size_prefixed=size_prefixed)
+
+    # CZMPolygonHole
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Positions as cartographic degrees [lon, lat, height, ...]
+    # CZMPolygonHole
+    def POSITIONS_CARTOGRAPHIC_DEGREES(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # CZMPolygonHole
+    def POSITIONS_CARTOGRAPHIC_DEGREESAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
+
+    # CZMPolygonHole
+    def POSITIONS_CARTOGRAPHIC_DEGREESLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # CZMPolygonHole
+    def POSITIONS_CARTOGRAPHIC_DEGREESIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        return o == 0
+
+    # Positions as Cartesian [X, Y, Z, ...]
+    # CZMPolygonHole
+    def POSITIONS_CARTESIAN(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # CZMPolygonHole
+    def POSITIONS_CARTESIANAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
+
+    # CZMPolygonHole
+    def POSITIONS_CARTESIANLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # CZMPolygonHole
+    def POSITIONS_CARTESIANIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        return o == 0
+
+def CZMPolygonHoleStart(builder):
+    builder.StartObject(2)
+
+def Start(builder):
+    CZMPolygonHoleStart(builder)
+
+def CZMPolygonHoleAddPOSITIONS_CARTOGRAPHIC_DEGREES(builder, POSITIONS_CARTOGRAPHIC_DEGREES):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(POSITIONS_CARTOGRAPHIC_DEGREES), 0)
+
+def AddPOSITIONS_CARTOGRAPHIC_DEGREES(builder, POSITIONS_CARTOGRAPHIC_DEGREES):
+    CZMPolygonHoleAddPOSITIONS_CARTOGRAPHIC_DEGREES(builder, POSITIONS_CARTOGRAPHIC_DEGREES)
+
+def CZMPolygonHoleStartPOSITIONS_CARTOGRAPHIC_DEGREESVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
+def StartPOSITIONS_CARTOGRAPHIC_DEGREESVector(builder, numElems):
+    return CZMPolygonHoleStartPOSITIONS_CARTOGRAPHIC_DEGREESVector(builder, numElems)
+
+def CZMPolygonHoleCreatePOSITIONS_CARTOGRAPHIC_DEGREESVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreatePOSITIONS_CARTOGRAPHIC_DEGREESVector(builder, data):
+    CZMPolygonHoleCreatePOSITIONS_CARTOGRAPHIC_DEGREESVector(builder, data)
+
+def CZMPolygonHoleAddPOSITIONS_CARTESIAN(builder, POSITIONS_CARTESIAN):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(POSITIONS_CARTESIAN), 0)
+
+def AddPOSITIONS_CARTESIAN(builder, POSITIONS_CARTESIAN):
+    CZMPolygonHoleAddPOSITIONS_CARTESIAN(builder, POSITIONS_CARTESIAN)
+
+def CZMPolygonHoleStartPOSITIONS_CARTESIANVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
+def StartPOSITIONS_CARTESIANVector(builder, numElems):
+    return CZMPolygonHoleStartPOSITIONS_CARTESIANVector(builder, numElems)
+
+def CZMPolygonHoleCreatePOSITIONS_CARTESIANVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreatePOSITIONS_CARTESIANVector(builder, data):
+    CZMPolygonHoleCreatePOSITIONS_CARTESIANVector(builder, data)
+
+def CZMPolygonHoleEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return CZMPolygonHoleEnd(builder)
+
+try:
+    from typing import List
+except:
+    pass
+
+class CZMPolygonHoleT(object):
+
+    # CZMPolygonHoleT
+    def __init__(
+        self,
+        POSITIONS_CARTOGRAPHIC_DEGREES = None,
+        POSITIONS_CARTESIAN = None,
+    ):
+        self.POSITIONS_CARTOGRAPHIC_DEGREES = POSITIONS_CARTOGRAPHIC_DEGREES  # type: Optional[List[float]]
+        self.POSITIONS_CARTESIAN = POSITIONS_CARTESIAN  # type: Optional[List[float]]
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpCzmpolygonHole = CZMPolygonHole()
+        tmpCzmpolygonHole.Init(buf, pos)
+        return cls.InitFromObj(tmpCzmpolygonHole)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpCzmpolygonHole):
+        x = CZMPolygonHoleT()
+        x._UnPack(tmpCzmpolygonHole)
+        return x
+
+    # CZMPolygonHoleT
+    def _UnPack(self, CZMPolygonHole):
+        if CZMPolygonHole is None:
+            return
+        if not CZMPolygonHole.POSITIONS_CARTOGRAPHIC_DEGREESIsNone():
+            if np is None:
+                self.POSITIONS_CARTOGRAPHIC_DEGREES = []
+                for i in range(CZMPolygonHole.POSITIONS_CARTOGRAPHIC_DEGREESLength()):
+                    self.POSITIONS_CARTOGRAPHIC_DEGREES.append(CZMPolygonHole.POSITIONS_CARTOGRAPHIC_DEGREES(i))
+            else:
+                self.POSITIONS_CARTOGRAPHIC_DEGREES = CZMPolygonHole.POSITIONS_CARTOGRAPHIC_DEGREESAsNumpy()
+        if not CZMPolygonHole.POSITIONS_CARTESIANIsNone():
+            if np is None:
+                self.POSITIONS_CARTESIAN = []
+                for i in range(CZMPolygonHole.POSITIONS_CARTESIANLength()):
+                    self.POSITIONS_CARTESIAN.append(CZMPolygonHole.POSITIONS_CARTESIAN(i))
+            else:
+                self.POSITIONS_CARTESIAN = CZMPolygonHole.POSITIONS_CARTESIANAsNumpy()
+
+    # CZMPolygonHoleT
+    def Pack(self, builder):
+        if self.POSITIONS_CARTOGRAPHIC_DEGREES is not None:
+            if np is not None and type(self.POSITIONS_CARTOGRAPHIC_DEGREES) is np.ndarray:
+                POSITIONS_CARTOGRAPHIC_DEGREES = builder.CreateNumpyVector(self.POSITIONS_CARTOGRAPHIC_DEGREES)
+            else:
+                CZMPolygonHoleStartPOSITIONS_CARTOGRAPHIC_DEGREESVector(builder, len(self.POSITIONS_CARTOGRAPHIC_DEGREES))
+                for i in reversed(range(len(self.POSITIONS_CARTOGRAPHIC_DEGREES))):
+                    builder.PrependFloat64(self.POSITIONS_CARTOGRAPHIC_DEGREES[i])
+                POSITIONS_CARTOGRAPHIC_DEGREES = builder.EndVector()
+        if self.POSITIONS_CARTESIAN is not None:
+            if np is not None and type(self.POSITIONS_CARTESIAN) is np.ndarray:
+                POSITIONS_CARTESIAN = builder.CreateNumpyVector(self.POSITIONS_CARTESIAN)
+            else:
+                CZMPolygonHoleStartPOSITIONS_CARTESIANVector(builder, len(self.POSITIONS_CARTESIAN))
+                for i in reversed(range(len(self.POSITIONS_CARTESIAN))):
+                    builder.PrependFloat64(self.POSITIONS_CARTESIAN[i])
+                POSITIONS_CARTESIAN = builder.EndVector()
+        CZMPolygonHoleStart(builder)
+        if self.POSITIONS_CARTOGRAPHIC_DEGREES is not None:
+            CZMPolygonHoleAddPOSITIONS_CARTOGRAPHIC_DEGREES(builder, POSITIONS_CARTOGRAPHIC_DEGREES)
+        if self.POSITIONS_CARTESIAN is not None:
+            CZMPolygonHoleAddPOSITIONS_CARTESIAN(builder, POSITIONS_CARTESIAN)
+        CZMPolygonHole = CZMPolygonHoleEnd(builder)
+        return CZMPolygonHole

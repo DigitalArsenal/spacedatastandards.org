@@ -1,2 +1,2 @@
-export { PNM, PNMT } from './PNM.js';
+export * from './PNM.js';
 //# sourceMappingURL=main.d.ts.map

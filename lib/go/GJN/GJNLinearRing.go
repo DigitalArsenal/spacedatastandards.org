@@ -49,10 +49,17 @@ func (rcv *GJNLinearRing) POSITIONS(obj *GJNPosition, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(GJNPosition)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *GJNLinearRing) Positions(obj *GJNPosition, j int) bool {
+	return rcv.POSITIONS(obj, j)
 }
 
 func (rcv *GJNLinearRing) POSITIONSLength() int {
@@ -63,6 +70,10 @@ func (rcv *GJNLinearRing) POSITIONSLength() int {
 	return 0
 }
 
+func (rcv *GJNLinearRing) PositionsLength() int {
+	return rcv.POSITIONSLength()
+}
+
 /// Ordered positions forming the ring
 func GJNLinearRingStart(builder *flatbuffers.Builder) {
 	builder.StartObject(1)
@@ -70,8 +81,14 @@ func GJNLinearRingStart(builder *flatbuffers.Builder) {
 func GJNLinearRingAddPOSITIONS(builder *flatbuffers.Builder, POSITIONS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(POSITIONS), 0)
 }
+func GJNLinearRingAddPositions(builder *flatbuffers.Builder, POSITIONS flatbuffers.UOffsetT) {
+	GJNLinearRingAddPOSITIONS(builder, POSITIONS)
+}
 func GJNLinearRingStartPOSITIONSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func GJNLinearRingStartPositionsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return GJNLinearRingStartPOSITIONSVector(builder, numElems)
 }
 func GJNLinearRingEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

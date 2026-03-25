@@ -1,6 +1,6 @@
 {
     "name": "spacedatastandards.org",
-    "version": "1.79.0+1773945434393",
+    "version": "1.80.0+1774447939949",
     "type": "module",
     "description": "space data standards framework based on ccsds standards and google flatbuffers",
     "main": "index.js",
@@ -102,11 +102,12 @@
         "deploy": "npm run build && git add -A && git commit -m 'updates' && git push origin main && npm run publish:js",
         "publish:js": "npm publish",
         "start": "node index.js",
-        "build": "python ./scripts/createREC.py && python ./scripts/generateSource.py && python ./scripts/generateVersion.py && npm run build:js && python ./scripts/generateArchives.py && python ./scripts/generateJSONIndex.py && python ./scripts/generateFBJsonSchema.py && python ./scripts/generateGoModule.py && node ./scripts/generateSchemaEmbeddings.js && npm run build:website",
-        "build:mac": "python3 ./scripts/createREC.py && python3 ./scripts/generateSource.py && python3 ./scripts/generateVersion.py && npm run build:js && python3 ./scripts/generateArchives.py && python3 ./scripts/generateJSONIndex.py && python3 ./scripts/generateFBJsonSchema.py && python3 ./scripts/generateGoModule.py && node ./scripts/generateSchemaEmbeddings.js && npm run build:website",
+        "build:flatbuffers": "node ./scripts/createREC.mjs && node ./scripts/generateSource.mjs",
+        "build": "npm run build:flatbuffers && python ./scripts/generateVersion.py && npm run build:js && npm run build:wasm && python ./scripts/generateArchives.py && python ./scripts/generateJSONIndex.py && python ./scripts/generateFBJsonSchema.py && python ./scripts/generateGoModule.py && node ./scripts/generateSchemaEmbeddings.js && npm run build:website",
+        "build:mac": "npm run build:flatbuffers && python3 ./scripts/generateVersion.py && npm run build:js && npm run build:wasm && python3 ./scripts/generateArchives.py && python3 ./scripts/generateJSONIndex.py && python3 ./scripts/generateFBJsonSchema.py && python3 ./scripts/generateGoModule.py && node ./scripts/generateSchemaEmbeddings.js && npm run build:website",
         "build:website": "npm --prefix website run build",
         "build:js": "rm -rf ./lib/js && mkdir -p ./lib/js && node ./scripts/createTSIndex.js && node ./scripts/fixTSCasing.js && tsc && mv ./lib/js/ts/* ./lib/js && rm -R ./lib/js/ts && find ./lib/js -type f -name '*.ts' ! -name '*.d.ts' -delete && python3 ./scripts/generatePackageJSON.py",
-        "build:wasm": "mkdir -p src/cpp/build && cd src/cpp/build && emcmake cmake .. && emmake make && cd ../../.. && cp dist/sds_parsers.js dist/sds_parsers.wasm wasm/node/",
+        "build:wasm": "node ./scripts/buildWasm.mjs",
         "dev": "npm --prefix website run dev",
         "dev:static": "npx serve . -l 8601",
         "prepare": "husky"
@@ -128,10 +129,11 @@
         "buffer": "^6.0.3",
         "esbuild": "^0.20.2",
         "flatbuffers": "^25.9.23",
-        "flatc-wasm": "^26.1.29",
+        "flatc-wasm": "25.12.19-wasm.43",
         "flatsql": "^0.3.9",
         "hd-wallet-ui": "^1.2.6",
-        "hd-wallet-wasm": "^1.2.6"
+        "hd-wallet-wasm": "^1.2.6",
+        "sdn-emception": "1.0.0"
     },
     "devDependencies": {
         "@faker-js/faker": "^8.4.1",

@@ -51,6 +51,10 @@ func (rcv *EnumeratedParameterType) NAME() []byte {
 	return nil
 }
 
+func (rcv *EnumeratedParameterType) Name() []byte {
+	return rcv.NAME()
+}
+
 /// Type name
 /// Short description
 func (rcv *EnumeratedParameterType) SHORT_DESCRIPTION() []byte {
@@ -61,6 +65,10 @@ func (rcv *EnumeratedParameterType) SHORT_DESCRIPTION() []byte {
 	return nil
 }
 
+func (rcv *EnumeratedParameterType) ShortDescription() []byte {
+	return rcv.SHORT_DESCRIPTION()
+}
+
 /// Short description
 /// Long description
 func (rcv *EnumeratedParameterType) LONG_DESCRIPTION() []byte {
@@ -69,6 +77,10 @@ func (rcv *EnumeratedParameterType) LONG_DESCRIPTION() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *EnumeratedParameterType) LongDescription() []byte {
+	return rcv.LONG_DESCRIPTION()
 }
 
 /// Long description
@@ -86,6 +98,10 @@ func (rcv *EnumeratedParameterType) DATA_ENCODING(obj *IntegerDataEncoding) *Int
 	return nil
 }
 
+func (rcv *EnumeratedParameterType) DataEncoding(obj *IntegerDataEncoding) *IntegerDataEncoding {
+	return rcv.DATA_ENCODING(obj)
+}
+
 /// Data encoding
 /// Default alarm
 func (rcv *EnumeratedParameterType) DEFAULT_ALARM(obj *DefaultAlarm) *DefaultAlarm {
@@ -101,6 +117,10 @@ func (rcv *EnumeratedParameterType) DEFAULT_ALARM(obj *DefaultAlarm) *DefaultAla
 	return nil
 }
 
+func (rcv *EnumeratedParameterType) DefaultAlarm(obj *DefaultAlarm) *DefaultAlarm {
+	return rcv.DEFAULT_ALARM(obj)
+}
+
 /// Default alarm
 /// Context alarms
 func (rcv *EnumeratedParameterType) CONTEXT_ALARMS(obj *ContextAlarm, j int) bool {
@@ -109,10 +129,17 @@ func (rcv *EnumeratedParameterType) CONTEXT_ALARMS(obj *ContextAlarm, j int) boo
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(ContextAlarm)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *EnumeratedParameterType) ContextAlarms(obj *ContextAlarm, j int) bool {
+	return rcv.CONTEXT_ALARMS(obj, j)
 }
 
 func (rcv *EnumeratedParameterType) CONTEXT_ALARMSLength() int {
@@ -123,6 +150,10 @@ func (rcv *EnumeratedParameterType) CONTEXT_ALARMSLength() int {
 	return 0
 }
 
+func (rcv *EnumeratedParameterType) ContextAlarmsLength() int {
+	return rcv.CONTEXT_ALARMSLength()
+}
+
 /// Context alarms
 /// Enumeration values list
 func (rcv *EnumeratedParameterType) ENUMERATION_LIST(obj *EnumerationValue, j int) bool {
@@ -131,10 +162,17 @@ func (rcv *EnumeratedParameterType) ENUMERATION_LIST(obj *EnumerationValue, j in
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(EnumerationValue)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *EnumeratedParameterType) EnumerationList(obj *EnumerationValue, j int) bool {
+	return rcv.ENUMERATION_LIST(obj, j)
 }
 
 func (rcv *EnumeratedParameterType) ENUMERATION_LISTLength() int {
@@ -143,6 +181,10 @@ func (rcv *EnumeratedParameterType) ENUMERATION_LISTLength() int {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *EnumeratedParameterType) EnumerationListLength() int {
+	return rcv.ENUMERATION_LISTLength()
 }
 
 /// Enumeration values list
@@ -155,6 +197,10 @@ func (rcv *EnumeratedParameterType) INITIAL_VALUE() []byte {
 	return nil
 }
 
+func (rcv *EnumeratedParameterType) InitialValue() []byte {
+	return rcv.INITIAL_VALUE()
+}
+
 /// Initial/default value label
 func EnumeratedParameterTypeStart(builder *flatbuffers.Builder) {
 	builder.StartObject(8)
@@ -162,32 +208,62 @@ func EnumeratedParameterTypeStart(builder *flatbuffers.Builder) {
 func EnumeratedParameterTypeAddNAME(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(NAME), 0)
 }
+func EnumeratedParameterTypeAddName(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
+	EnumeratedParameterTypeAddNAME(builder, NAME)
+}
 func EnumeratedParameterTypeAddSHORT_DESCRIPTION(builder *flatbuffers.Builder, SHORT_DESCRIPTION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(SHORT_DESCRIPTION), 0)
+}
+func EnumeratedParameterTypeAddShortDescription(builder *flatbuffers.Builder, SHORT_DESCRIPTION flatbuffers.UOffsetT) {
+	EnumeratedParameterTypeAddSHORT_DESCRIPTION(builder, SHORT_DESCRIPTION)
 }
 func EnumeratedParameterTypeAddLONG_DESCRIPTION(builder *flatbuffers.Builder, LONG_DESCRIPTION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(LONG_DESCRIPTION), 0)
 }
+func EnumeratedParameterTypeAddLongDescription(builder *flatbuffers.Builder, LONG_DESCRIPTION flatbuffers.UOffsetT) {
+	EnumeratedParameterTypeAddLONG_DESCRIPTION(builder, LONG_DESCRIPTION)
+}
 func EnumeratedParameterTypeAddDATA_ENCODING(builder *flatbuffers.Builder, DATA_ENCODING flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(DATA_ENCODING), 0)
+}
+func EnumeratedParameterTypeAddDataEncoding(builder *flatbuffers.Builder, DATA_ENCODING flatbuffers.UOffsetT) {
+	EnumeratedParameterTypeAddDATA_ENCODING(builder, DATA_ENCODING)
 }
 func EnumeratedParameterTypeAddDEFAULT_ALARM(builder *flatbuffers.Builder, DEFAULT_ALARM flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(DEFAULT_ALARM), 0)
 }
+func EnumeratedParameterTypeAddDefaultAlarm(builder *flatbuffers.Builder, DEFAULT_ALARM flatbuffers.UOffsetT) {
+	EnumeratedParameterTypeAddDEFAULT_ALARM(builder, DEFAULT_ALARM)
+}
 func EnumeratedParameterTypeAddCONTEXT_ALARMS(builder *flatbuffers.Builder, CONTEXT_ALARMS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(CONTEXT_ALARMS), 0)
+}
+func EnumeratedParameterTypeAddContextAlarms(builder *flatbuffers.Builder, CONTEXT_ALARMS flatbuffers.UOffsetT) {
+	EnumeratedParameterTypeAddCONTEXT_ALARMS(builder, CONTEXT_ALARMS)
 }
 func EnumeratedParameterTypeStartCONTEXT_ALARMSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
+func EnumeratedParameterTypeStartContextAlarmsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return EnumeratedParameterTypeStartCONTEXT_ALARMSVector(builder, numElems)
+}
 func EnumeratedParameterTypeAddENUMERATION_LIST(builder *flatbuffers.Builder, ENUMERATION_LIST flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(ENUMERATION_LIST), 0)
+}
+func EnumeratedParameterTypeAddEnumerationList(builder *flatbuffers.Builder, ENUMERATION_LIST flatbuffers.UOffsetT) {
+	EnumeratedParameterTypeAddENUMERATION_LIST(builder, ENUMERATION_LIST)
 }
 func EnumeratedParameterTypeStartENUMERATION_LISTVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
+func EnumeratedParameterTypeStartEnumerationListVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return EnumeratedParameterTypeStartENUMERATION_LISTVector(builder, numElems)
+}
 func EnumeratedParameterTypeAddINITIAL_VALUE(builder *flatbuffers.Builder, INITIAL_VALUE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(INITIAL_VALUE), 0)
+}
+func EnumeratedParameterTypeAddInitialValue(builder *flatbuffers.Builder, INITIAL_VALUE flatbuffers.UOffsetT) {
+	EnumeratedParameterTypeAddINITIAL_VALUE(builder, INITIAL_VALUE)
 }
 func EnumeratedParameterTypeEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

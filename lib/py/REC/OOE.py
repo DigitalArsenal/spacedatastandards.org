@@ -2,4 +2,959 @@
 
 # namespace: 
 
-# NOTE OOE.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# On-Orbit Event
+class OOE(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = OOE()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsOOE(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def OOEBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x4F\x4F\x45", size_prefixed=size_prefixed)
+
+    # OOE
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Unique identifier
+    # OOE
+    def ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Satellite catalog number
+    # OOE
+    def SAT_NO(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+        return 0
+
+    # International designator
+    # OOE
+    def ORIG_OBJECT_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Source record this was derived from
+    # OOE
+    def DERIVED_FROM(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Classification date (ISO 8601)
+    # OOE
+    def DECLASSIFICATION_DATE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Classification marking
+    # OOE
+    def DECLASSIFICATION_STRING(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Event time (ISO 8601)
+    # OOE
+    def EVENT_TIME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Notes on event time accuracy
+    # OOE
+    def EVENT_TIME_NOTES(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Event category
+    # OOE
+    def CATEGORY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # Event result/outcome
+    # OOE
+    def RESULT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # Event type detail
+    # OOE
+    def EVENT_TYPE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Operator organization identifier
+    # OOE
+    def OPERATOR_ORG_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Owner organization identifier
+    # OOE
+    def OWNER_ORG_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Lessee organization identifier
+    # OOE
+    def LESSEE_ORG_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Operated on behalf of organization
+    # OOE
+    def OPERATED_ON_BEHALF_OF_ORG_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # GEO longitude at event time (degrees east)
+    # OOE
+    def GEO_POSITION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Orbital plane slot
+    # OOE
+    def PLANE_SLOT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Orbital plane number
+    # OOE
+    def PLANE_NUMBER(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Position status at event time
+    # OOE
+    def POSITION_STATUS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Time until expected recovery (ISO 8601)
+    # OOE
+    def UNTIL_TIME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Official loss date (ISO 8601)
+    # OOE
+    def OFFICIAL_LOSS_DATE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Financial loss amount (USD)
+    # OOE
+    def NET_AMOUNT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Root cause description
+    # OOE
+    def UNDERLYING_CAUSE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Capability loss fraction (0-1)
+    # OOE
+    def CAPABILITY_LOSS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Capacity loss fraction (0-1)
+    # OOE
+    def CAPACITY_LOSS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(52))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Insurance loss amount (USD)
+    # OOE
+    def INSURANCE_LOSS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(54))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Third-party insurance loss (USD)
+    # OOE
+    def THIRD_PARTY_INSURANCE_LOSS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(56))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Number of personnel injured
+    # OOE
+    def INJURED(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint16Flags, o + self._tab.Pos)
+        return 0
+
+    # Number of fatalities
+    # OOE
+    def KILLED(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint16Flags, o + self._tab.Pos)
+        return 0
+
+    # Spacecraft age at event (years)
+    # OOE
+    def AGE_AT_EVENT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(62))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Design life remaining at event (years)
+    # OOE
+    def LIFE_LOST(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(64))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Flight phase achieved
+    # OOE
+    def ACHIEVED_FLIGHT_PHASE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(66))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Flight phase at occurrence
+    # OOE
+    def OCCURRENCE_FLIGHT_PHASE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(68))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Stage at fault
+    # OOE
+    def STAGE_AT_FAULT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(70))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Equipment at fault
+    # OOE
+    def EQUIPMENT_AT_FAULT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(72))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Equipment type at fault
+    # OOE
+    def EQUIPMENT_TYPE_AT_FAULT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(74))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Equipment part at fault
+    # OOE
+    def EQUIPMENT_PART_AT_FAULT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(76))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Consequential equipment failure
+    # OOE
+    def CONSEQUENTIAL_EQUIPMENT_FAILURE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(78))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # True if orbit is inclined
+    # OOE
+    def INCLINED(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(80))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # Event description
+    # OOE
+    def DESCRIPTION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(82))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Additional remarks
+    # OOE
+    def REMARKS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(84))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Object status after event
+    # OOE
+    def OBJECT_STATUS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(86))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Satellite position after event
+    # OOE
+    def SATELLITE_POSITION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(88))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # On-orbit reference
+    # OOE
+    def ON_ORBIT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(90))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+def OOEStart(builder):
+    builder.StartObject(44)
+
+def Start(builder):
+    OOEStart(builder)
+
+def OOEAddID(builder, ID):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(ID), 0)
+
+def AddID(builder, ID):
+    OOEAddID(builder, ID)
+
+def OOEAddSAT_NO(builder, SAT_NO):
+    builder.PrependUint32Slot(1, SAT_NO, 0)
+
+def AddSAT_NO(builder, SAT_NO):
+    OOEAddSAT_NO(builder, SAT_NO)
+
+def OOEAddORIG_OBJECT_ID(builder, ORIG_OBJECT_ID):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(ORIG_OBJECT_ID), 0)
+
+def AddORIG_OBJECT_ID(builder, ORIG_OBJECT_ID):
+    OOEAddORIG_OBJECT_ID(builder, ORIG_OBJECT_ID)
+
+def OOEAddDERIVED_FROM(builder, DERIVED_FROM):
+    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(DERIVED_FROM), 0)
+
+def AddDERIVED_FROM(builder, DERIVED_FROM):
+    OOEAddDERIVED_FROM(builder, DERIVED_FROM)
+
+def OOEAddDECLASSIFICATION_DATE(builder, DECLASSIFICATION_DATE):
+    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(DECLASSIFICATION_DATE), 0)
+
+def AddDECLASSIFICATION_DATE(builder, DECLASSIFICATION_DATE):
+    OOEAddDECLASSIFICATION_DATE(builder, DECLASSIFICATION_DATE)
+
+def OOEAddDECLASSIFICATION_STRING(builder, DECLASSIFICATION_STRING):
+    builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(DECLASSIFICATION_STRING), 0)
+
+def AddDECLASSIFICATION_STRING(builder, DECLASSIFICATION_STRING):
+    OOEAddDECLASSIFICATION_STRING(builder, DECLASSIFICATION_STRING)
+
+def OOEAddEVENT_TIME(builder, EVENT_TIME):
+    builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(EVENT_TIME), 0)
+
+def AddEVENT_TIME(builder, EVENT_TIME):
+    OOEAddEVENT_TIME(builder, EVENT_TIME)
+
+def OOEAddEVENT_TIME_NOTES(builder, EVENT_TIME_NOTES):
+    builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(EVENT_TIME_NOTES), 0)
+
+def AddEVENT_TIME_NOTES(builder, EVENT_TIME_NOTES):
+    OOEAddEVENT_TIME_NOTES(builder, EVENT_TIME_NOTES)
+
+def OOEAddCATEGORY(builder, CATEGORY):
+    builder.PrependInt8Slot(8, CATEGORY, 0)
+
+def AddCATEGORY(builder, CATEGORY):
+    OOEAddCATEGORY(builder, CATEGORY)
+
+def OOEAddRESULT(builder, RESULT):
+    builder.PrependInt8Slot(9, RESULT, 0)
+
+def AddRESULT(builder, RESULT):
+    OOEAddRESULT(builder, RESULT)
+
+def OOEAddEVENT_TYPE(builder, EVENT_TYPE):
+    builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(EVENT_TYPE), 0)
+
+def AddEVENT_TYPE(builder, EVENT_TYPE):
+    OOEAddEVENT_TYPE(builder, EVENT_TYPE)
+
+def OOEAddOPERATOR_ORG_ID(builder, OPERATOR_ORG_ID):
+    builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(OPERATOR_ORG_ID), 0)
+
+def AddOPERATOR_ORG_ID(builder, OPERATOR_ORG_ID):
+    OOEAddOPERATOR_ORG_ID(builder, OPERATOR_ORG_ID)
+
+def OOEAddOWNER_ORG_ID(builder, OWNER_ORG_ID):
+    builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(OWNER_ORG_ID), 0)
+
+def AddOWNER_ORG_ID(builder, OWNER_ORG_ID):
+    OOEAddOWNER_ORG_ID(builder, OWNER_ORG_ID)
+
+def OOEAddLESSEE_ORG_ID(builder, LESSEE_ORG_ID):
+    builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(LESSEE_ORG_ID), 0)
+
+def AddLESSEE_ORG_ID(builder, LESSEE_ORG_ID):
+    OOEAddLESSEE_ORG_ID(builder, LESSEE_ORG_ID)
+
+def OOEAddOPERATED_ON_BEHALF_OF_ORG_ID(builder, OPERATED_ON_BEHALF_OF_ORG_ID):
+    builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(OPERATED_ON_BEHALF_OF_ORG_ID), 0)
+
+def AddOPERATED_ON_BEHALF_OF_ORG_ID(builder, OPERATED_ON_BEHALF_OF_ORG_ID):
+    OOEAddOPERATED_ON_BEHALF_OF_ORG_ID(builder, OPERATED_ON_BEHALF_OF_ORG_ID)
+
+def OOEAddGEO_POSITION(builder, GEO_POSITION):
+    builder.PrependFloat64Slot(15, GEO_POSITION, 0.0)
+
+def AddGEO_POSITION(builder, GEO_POSITION):
+    OOEAddGEO_POSITION(builder, GEO_POSITION)
+
+def OOEAddPLANE_SLOT(builder, PLANE_SLOT):
+    builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(PLANE_SLOT), 0)
+
+def AddPLANE_SLOT(builder, PLANE_SLOT):
+    OOEAddPLANE_SLOT(builder, PLANE_SLOT)
+
+def OOEAddPLANE_NUMBER(builder, PLANE_NUMBER):
+    builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(PLANE_NUMBER), 0)
+
+def AddPLANE_NUMBER(builder, PLANE_NUMBER):
+    OOEAddPLANE_NUMBER(builder, PLANE_NUMBER)
+
+def OOEAddPOSITION_STATUS(builder, POSITION_STATUS):
+    builder.PrependUOffsetTRelativeSlot(18, flatbuffers.number_types.UOffsetTFlags.py_type(POSITION_STATUS), 0)
+
+def AddPOSITION_STATUS(builder, POSITION_STATUS):
+    OOEAddPOSITION_STATUS(builder, POSITION_STATUS)
+
+def OOEAddUNTIL_TIME(builder, UNTIL_TIME):
+    builder.PrependUOffsetTRelativeSlot(19, flatbuffers.number_types.UOffsetTFlags.py_type(UNTIL_TIME), 0)
+
+def AddUNTIL_TIME(builder, UNTIL_TIME):
+    OOEAddUNTIL_TIME(builder, UNTIL_TIME)
+
+def OOEAddOFFICIAL_LOSS_DATE(builder, OFFICIAL_LOSS_DATE):
+    builder.PrependUOffsetTRelativeSlot(20, flatbuffers.number_types.UOffsetTFlags.py_type(OFFICIAL_LOSS_DATE), 0)
+
+def AddOFFICIAL_LOSS_DATE(builder, OFFICIAL_LOSS_DATE):
+    OOEAddOFFICIAL_LOSS_DATE(builder, OFFICIAL_LOSS_DATE)
+
+def OOEAddNET_AMOUNT(builder, NET_AMOUNT):
+    builder.PrependFloat64Slot(21, NET_AMOUNT, 0.0)
+
+def AddNET_AMOUNT(builder, NET_AMOUNT):
+    OOEAddNET_AMOUNT(builder, NET_AMOUNT)
+
+def OOEAddUNDERLYING_CAUSE(builder, UNDERLYING_CAUSE):
+    builder.PrependUOffsetTRelativeSlot(22, flatbuffers.number_types.UOffsetTFlags.py_type(UNDERLYING_CAUSE), 0)
+
+def AddUNDERLYING_CAUSE(builder, UNDERLYING_CAUSE):
+    OOEAddUNDERLYING_CAUSE(builder, UNDERLYING_CAUSE)
+
+def OOEAddCAPABILITY_LOSS(builder, CAPABILITY_LOSS):
+    builder.PrependFloat64Slot(23, CAPABILITY_LOSS, 0.0)
+
+def AddCAPABILITY_LOSS(builder, CAPABILITY_LOSS):
+    OOEAddCAPABILITY_LOSS(builder, CAPABILITY_LOSS)
+
+def OOEAddCAPACITY_LOSS(builder, CAPACITY_LOSS):
+    builder.PrependFloat64Slot(24, CAPACITY_LOSS, 0.0)
+
+def AddCAPACITY_LOSS(builder, CAPACITY_LOSS):
+    OOEAddCAPACITY_LOSS(builder, CAPACITY_LOSS)
+
+def OOEAddINSURANCE_LOSS(builder, INSURANCE_LOSS):
+    builder.PrependFloat64Slot(25, INSURANCE_LOSS, 0.0)
+
+def AddINSURANCE_LOSS(builder, INSURANCE_LOSS):
+    OOEAddINSURANCE_LOSS(builder, INSURANCE_LOSS)
+
+def OOEAddTHIRD_PARTY_INSURANCE_LOSS(builder, THIRD_PARTY_INSURANCE_LOSS):
+    builder.PrependFloat64Slot(26, THIRD_PARTY_INSURANCE_LOSS, 0.0)
+
+def AddTHIRD_PARTY_INSURANCE_LOSS(builder, THIRD_PARTY_INSURANCE_LOSS):
+    OOEAddTHIRD_PARTY_INSURANCE_LOSS(builder, THIRD_PARTY_INSURANCE_LOSS)
+
+def OOEAddINJURED(builder, INJURED):
+    builder.PrependUint16Slot(27, INJURED, 0)
+
+def AddINJURED(builder, INJURED):
+    OOEAddINJURED(builder, INJURED)
+
+def OOEAddKILLED(builder, KILLED):
+    builder.PrependUint16Slot(28, KILLED, 0)
+
+def AddKILLED(builder, KILLED):
+    OOEAddKILLED(builder, KILLED)
+
+def OOEAddAGE_AT_EVENT(builder, AGE_AT_EVENT):
+    builder.PrependFloat64Slot(29, AGE_AT_EVENT, 0.0)
+
+def AddAGE_AT_EVENT(builder, AGE_AT_EVENT):
+    OOEAddAGE_AT_EVENT(builder, AGE_AT_EVENT)
+
+def OOEAddLIFE_LOST(builder, LIFE_LOST):
+    builder.PrependFloat64Slot(30, LIFE_LOST, 0.0)
+
+def AddLIFE_LOST(builder, LIFE_LOST):
+    OOEAddLIFE_LOST(builder, LIFE_LOST)
+
+def OOEAddACHIEVED_FLIGHT_PHASE(builder, ACHIEVED_FLIGHT_PHASE):
+    builder.PrependUOffsetTRelativeSlot(31, flatbuffers.number_types.UOffsetTFlags.py_type(ACHIEVED_FLIGHT_PHASE), 0)
+
+def AddACHIEVED_FLIGHT_PHASE(builder, ACHIEVED_FLIGHT_PHASE):
+    OOEAddACHIEVED_FLIGHT_PHASE(builder, ACHIEVED_FLIGHT_PHASE)
+
+def OOEAddOCCURRENCE_FLIGHT_PHASE(builder, OCCURRENCE_FLIGHT_PHASE):
+    builder.PrependUOffsetTRelativeSlot(32, flatbuffers.number_types.UOffsetTFlags.py_type(OCCURRENCE_FLIGHT_PHASE), 0)
+
+def AddOCCURRENCE_FLIGHT_PHASE(builder, OCCURRENCE_FLIGHT_PHASE):
+    OOEAddOCCURRENCE_FLIGHT_PHASE(builder, OCCURRENCE_FLIGHT_PHASE)
+
+def OOEAddSTAGE_AT_FAULT(builder, STAGE_AT_FAULT):
+    builder.PrependUOffsetTRelativeSlot(33, flatbuffers.number_types.UOffsetTFlags.py_type(STAGE_AT_FAULT), 0)
+
+def AddSTAGE_AT_FAULT(builder, STAGE_AT_FAULT):
+    OOEAddSTAGE_AT_FAULT(builder, STAGE_AT_FAULT)
+
+def OOEAddEQUIPMENT_AT_FAULT(builder, EQUIPMENT_AT_FAULT):
+    builder.PrependUOffsetTRelativeSlot(34, flatbuffers.number_types.UOffsetTFlags.py_type(EQUIPMENT_AT_FAULT), 0)
+
+def AddEQUIPMENT_AT_FAULT(builder, EQUIPMENT_AT_FAULT):
+    OOEAddEQUIPMENT_AT_FAULT(builder, EQUIPMENT_AT_FAULT)
+
+def OOEAddEQUIPMENT_TYPE_AT_FAULT(builder, EQUIPMENT_TYPE_AT_FAULT):
+    builder.PrependUOffsetTRelativeSlot(35, flatbuffers.number_types.UOffsetTFlags.py_type(EQUIPMENT_TYPE_AT_FAULT), 0)
+
+def AddEQUIPMENT_TYPE_AT_FAULT(builder, EQUIPMENT_TYPE_AT_FAULT):
+    OOEAddEQUIPMENT_TYPE_AT_FAULT(builder, EQUIPMENT_TYPE_AT_FAULT)
+
+def OOEAddEQUIPMENT_PART_AT_FAULT(builder, EQUIPMENT_PART_AT_FAULT):
+    builder.PrependUOffsetTRelativeSlot(36, flatbuffers.number_types.UOffsetTFlags.py_type(EQUIPMENT_PART_AT_FAULT), 0)
+
+def AddEQUIPMENT_PART_AT_FAULT(builder, EQUIPMENT_PART_AT_FAULT):
+    OOEAddEQUIPMENT_PART_AT_FAULT(builder, EQUIPMENT_PART_AT_FAULT)
+
+def OOEAddCONSEQUENTIAL_EQUIPMENT_FAILURE(builder, CONSEQUENTIAL_EQUIPMENT_FAILURE):
+    builder.PrependUOffsetTRelativeSlot(37, flatbuffers.number_types.UOffsetTFlags.py_type(CONSEQUENTIAL_EQUIPMENT_FAILURE), 0)
+
+def AddCONSEQUENTIAL_EQUIPMENT_FAILURE(builder, CONSEQUENTIAL_EQUIPMENT_FAILURE):
+    OOEAddCONSEQUENTIAL_EQUIPMENT_FAILURE(builder, CONSEQUENTIAL_EQUIPMENT_FAILURE)
+
+def OOEAddINCLINED(builder, INCLINED):
+    builder.PrependBoolSlot(38, INCLINED, 0)
+
+def AddINCLINED(builder, INCLINED):
+    OOEAddINCLINED(builder, INCLINED)
+
+def OOEAddDESCRIPTION(builder, DESCRIPTION):
+    builder.PrependUOffsetTRelativeSlot(39, flatbuffers.number_types.UOffsetTFlags.py_type(DESCRIPTION), 0)
+
+def AddDESCRIPTION(builder, DESCRIPTION):
+    OOEAddDESCRIPTION(builder, DESCRIPTION)
+
+def OOEAddREMARKS(builder, REMARKS):
+    builder.PrependUOffsetTRelativeSlot(40, flatbuffers.number_types.UOffsetTFlags.py_type(REMARKS), 0)
+
+def AddREMARKS(builder, REMARKS):
+    OOEAddREMARKS(builder, REMARKS)
+
+def OOEAddOBJECT_STATUS(builder, OBJECT_STATUS):
+    builder.PrependUOffsetTRelativeSlot(41, flatbuffers.number_types.UOffsetTFlags.py_type(OBJECT_STATUS), 0)
+
+def AddOBJECT_STATUS(builder, OBJECT_STATUS):
+    OOEAddOBJECT_STATUS(builder, OBJECT_STATUS)
+
+def OOEAddSATELLITE_POSITION(builder, SATELLITE_POSITION):
+    builder.PrependUOffsetTRelativeSlot(42, flatbuffers.number_types.UOffsetTFlags.py_type(SATELLITE_POSITION), 0)
+
+def AddSATELLITE_POSITION(builder, SATELLITE_POSITION):
+    OOEAddSATELLITE_POSITION(builder, SATELLITE_POSITION)
+
+def OOEAddON_ORBIT(builder, ON_ORBIT):
+    builder.PrependUOffsetTRelativeSlot(43, flatbuffers.number_types.UOffsetTFlags.py_type(ON_ORBIT), 0)
+
+def AddON_ORBIT(builder, ON_ORBIT):
+    OOEAddON_ORBIT(builder, ON_ORBIT)
+
+def OOEEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return OOEEnd(builder)
+
+
+class OOET(object):
+
+    # OOET
+    def __init__(
+        self,
+        ID = None,
+        SAT_NO = 0,
+        ORIG_OBJECT_ID = None,
+        DERIVED_FROM = None,
+        DECLASSIFICATION_DATE = None,
+        DECLASSIFICATION_STRING = None,
+        EVENT_TIME = None,
+        EVENT_TIME_NOTES = None,
+        CATEGORY = 0,
+        RESULT = 0,
+        EVENT_TYPE = None,
+        OPERATOR_ORG_ID = None,
+        OWNER_ORG_ID = None,
+        LESSEE_ORG_ID = None,
+        OPERATED_ON_BEHALF_OF_ORG_ID = None,
+        GEO_POSITION = 0.0,
+        PLANE_SLOT = None,
+        PLANE_NUMBER = None,
+        POSITION_STATUS = None,
+        UNTIL_TIME = None,
+        OFFICIAL_LOSS_DATE = None,
+        NET_AMOUNT = 0.0,
+        UNDERLYING_CAUSE = None,
+        CAPABILITY_LOSS = 0.0,
+        CAPACITY_LOSS = 0.0,
+        INSURANCE_LOSS = 0.0,
+        THIRD_PARTY_INSURANCE_LOSS = 0.0,
+        INJURED = 0,
+        KILLED = 0,
+        AGE_AT_EVENT = 0.0,
+        LIFE_LOST = 0.0,
+        ACHIEVED_FLIGHT_PHASE = None,
+        OCCURRENCE_FLIGHT_PHASE = None,
+        STAGE_AT_FAULT = None,
+        EQUIPMENT_AT_FAULT = None,
+        EQUIPMENT_TYPE_AT_FAULT = None,
+        EQUIPMENT_PART_AT_FAULT = None,
+        CONSEQUENTIAL_EQUIPMENT_FAILURE = None,
+        INCLINED = False,
+        DESCRIPTION = None,
+        REMARKS = None,
+        OBJECT_STATUS = None,
+        SATELLITE_POSITION = None,
+        ON_ORBIT = None,
+    ):
+        self.ID = ID  # type: Optional[str]
+        self.SAT_NO = SAT_NO  # type: int
+        self.ORIG_OBJECT_ID = ORIG_OBJECT_ID  # type: Optional[str]
+        self.DERIVED_FROM = DERIVED_FROM  # type: Optional[str]
+        self.DECLASSIFICATION_DATE = DECLASSIFICATION_DATE  # type: Optional[str]
+        self.DECLASSIFICATION_STRING = DECLASSIFICATION_STRING  # type: Optional[str]
+        self.EVENT_TIME = EVENT_TIME  # type: Optional[str]
+        self.EVENT_TIME_NOTES = EVENT_TIME_NOTES  # type: Optional[str]
+        self.CATEGORY = CATEGORY  # type: int
+        self.RESULT = RESULT  # type: int
+        self.EVENT_TYPE = EVENT_TYPE  # type: Optional[str]
+        self.OPERATOR_ORG_ID = OPERATOR_ORG_ID  # type: Optional[str]
+        self.OWNER_ORG_ID = OWNER_ORG_ID  # type: Optional[str]
+        self.LESSEE_ORG_ID = LESSEE_ORG_ID  # type: Optional[str]
+        self.OPERATED_ON_BEHALF_OF_ORG_ID = OPERATED_ON_BEHALF_OF_ORG_ID  # type: Optional[str]
+        self.GEO_POSITION = GEO_POSITION  # type: float
+        self.PLANE_SLOT = PLANE_SLOT  # type: Optional[str]
+        self.PLANE_NUMBER = PLANE_NUMBER  # type: Optional[str]
+        self.POSITION_STATUS = POSITION_STATUS  # type: Optional[str]
+        self.UNTIL_TIME = UNTIL_TIME  # type: Optional[str]
+        self.OFFICIAL_LOSS_DATE = OFFICIAL_LOSS_DATE  # type: Optional[str]
+        self.NET_AMOUNT = NET_AMOUNT  # type: float
+        self.UNDERLYING_CAUSE = UNDERLYING_CAUSE  # type: Optional[str]
+        self.CAPABILITY_LOSS = CAPABILITY_LOSS  # type: float
+        self.CAPACITY_LOSS = CAPACITY_LOSS  # type: float
+        self.INSURANCE_LOSS = INSURANCE_LOSS  # type: float
+        self.THIRD_PARTY_INSURANCE_LOSS = THIRD_PARTY_INSURANCE_LOSS  # type: float
+        self.INJURED = INJURED  # type: int
+        self.KILLED = KILLED  # type: int
+        self.AGE_AT_EVENT = AGE_AT_EVENT  # type: float
+        self.LIFE_LOST = LIFE_LOST  # type: float
+        self.ACHIEVED_FLIGHT_PHASE = ACHIEVED_FLIGHT_PHASE  # type: Optional[str]
+        self.OCCURRENCE_FLIGHT_PHASE = OCCURRENCE_FLIGHT_PHASE  # type: Optional[str]
+        self.STAGE_AT_FAULT = STAGE_AT_FAULT  # type: Optional[str]
+        self.EQUIPMENT_AT_FAULT = EQUIPMENT_AT_FAULT  # type: Optional[str]
+        self.EQUIPMENT_TYPE_AT_FAULT = EQUIPMENT_TYPE_AT_FAULT  # type: Optional[str]
+        self.EQUIPMENT_PART_AT_FAULT = EQUIPMENT_PART_AT_FAULT  # type: Optional[str]
+        self.CONSEQUENTIAL_EQUIPMENT_FAILURE = CONSEQUENTIAL_EQUIPMENT_FAILURE  # type: Optional[str]
+        self.INCLINED = INCLINED  # type: bool
+        self.DESCRIPTION = DESCRIPTION  # type: Optional[str]
+        self.REMARKS = REMARKS  # type: Optional[str]
+        self.OBJECT_STATUS = OBJECT_STATUS  # type: Optional[str]
+        self.SATELLITE_POSITION = SATELLITE_POSITION  # type: Optional[str]
+        self.ON_ORBIT = ON_ORBIT  # type: Optional[str]
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpOoe = OOE()
+        tmpOoe.Init(buf, pos)
+        return cls.InitFromObj(tmpOoe)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpOoe):
+        x = OOET()
+        x._UnPack(tmpOoe)
+        return x
+
+    # OOET
+    def _UnPack(self, OOE):
+        if OOE is None:
+            return
+        self.ID = OOE.ID()
+        self.SAT_NO = OOE.SAT_NO()
+        self.ORIG_OBJECT_ID = OOE.ORIG_OBJECT_ID()
+        self.DERIVED_FROM = OOE.DERIVED_FROM()
+        self.DECLASSIFICATION_DATE = OOE.DECLASSIFICATION_DATE()
+        self.DECLASSIFICATION_STRING = OOE.DECLASSIFICATION_STRING()
+        self.EVENT_TIME = OOE.EVENT_TIME()
+        self.EVENT_TIME_NOTES = OOE.EVENT_TIME_NOTES()
+        self.CATEGORY = OOE.CATEGORY()
+        self.RESULT = OOE.RESULT()
+        self.EVENT_TYPE = OOE.EVENT_TYPE()
+        self.OPERATOR_ORG_ID = OOE.OPERATOR_ORG_ID()
+        self.OWNER_ORG_ID = OOE.OWNER_ORG_ID()
+        self.LESSEE_ORG_ID = OOE.LESSEE_ORG_ID()
+        self.OPERATED_ON_BEHALF_OF_ORG_ID = OOE.OPERATED_ON_BEHALF_OF_ORG_ID()
+        self.GEO_POSITION = OOE.GEO_POSITION()
+        self.PLANE_SLOT = OOE.PLANE_SLOT()
+        self.PLANE_NUMBER = OOE.PLANE_NUMBER()
+        self.POSITION_STATUS = OOE.POSITION_STATUS()
+        self.UNTIL_TIME = OOE.UNTIL_TIME()
+        self.OFFICIAL_LOSS_DATE = OOE.OFFICIAL_LOSS_DATE()
+        self.NET_AMOUNT = OOE.NET_AMOUNT()
+        self.UNDERLYING_CAUSE = OOE.UNDERLYING_CAUSE()
+        self.CAPABILITY_LOSS = OOE.CAPABILITY_LOSS()
+        self.CAPACITY_LOSS = OOE.CAPACITY_LOSS()
+        self.INSURANCE_LOSS = OOE.INSURANCE_LOSS()
+        self.THIRD_PARTY_INSURANCE_LOSS = OOE.THIRD_PARTY_INSURANCE_LOSS()
+        self.INJURED = OOE.INJURED()
+        self.KILLED = OOE.KILLED()
+        self.AGE_AT_EVENT = OOE.AGE_AT_EVENT()
+        self.LIFE_LOST = OOE.LIFE_LOST()
+        self.ACHIEVED_FLIGHT_PHASE = OOE.ACHIEVED_FLIGHT_PHASE()
+        self.OCCURRENCE_FLIGHT_PHASE = OOE.OCCURRENCE_FLIGHT_PHASE()
+        self.STAGE_AT_FAULT = OOE.STAGE_AT_FAULT()
+        self.EQUIPMENT_AT_FAULT = OOE.EQUIPMENT_AT_FAULT()
+        self.EQUIPMENT_TYPE_AT_FAULT = OOE.EQUIPMENT_TYPE_AT_FAULT()
+        self.EQUIPMENT_PART_AT_FAULT = OOE.EQUIPMENT_PART_AT_FAULT()
+        self.CONSEQUENTIAL_EQUIPMENT_FAILURE = OOE.CONSEQUENTIAL_EQUIPMENT_FAILURE()
+        self.INCLINED = OOE.INCLINED()
+        self.DESCRIPTION = OOE.DESCRIPTION()
+        self.REMARKS = OOE.REMARKS()
+        self.OBJECT_STATUS = OOE.OBJECT_STATUS()
+        self.SATELLITE_POSITION = OOE.SATELLITE_POSITION()
+        self.ON_ORBIT = OOE.ON_ORBIT()
+
+    # OOET
+    def Pack(self, builder):
+        if self.ID is not None:
+            ID = builder.CreateString(self.ID)
+        if self.ORIG_OBJECT_ID is not None:
+            ORIG_OBJECT_ID = builder.CreateString(self.ORIG_OBJECT_ID)
+        if self.DERIVED_FROM is not None:
+            DERIVED_FROM = builder.CreateString(self.DERIVED_FROM)
+        if self.DECLASSIFICATION_DATE is not None:
+            DECLASSIFICATION_DATE = builder.CreateString(self.DECLASSIFICATION_DATE)
+        if self.DECLASSIFICATION_STRING is not None:
+            DECLASSIFICATION_STRING = builder.CreateString(self.DECLASSIFICATION_STRING)
+        if self.EVENT_TIME is not None:
+            EVENT_TIME = builder.CreateString(self.EVENT_TIME)
+        if self.EVENT_TIME_NOTES is not None:
+            EVENT_TIME_NOTES = builder.CreateString(self.EVENT_TIME_NOTES)
+        if self.EVENT_TYPE is not None:
+            EVENT_TYPE = builder.CreateString(self.EVENT_TYPE)
+        if self.OPERATOR_ORG_ID is not None:
+            OPERATOR_ORG_ID = builder.CreateString(self.OPERATOR_ORG_ID)
+        if self.OWNER_ORG_ID is not None:
+            OWNER_ORG_ID = builder.CreateString(self.OWNER_ORG_ID)
+        if self.LESSEE_ORG_ID is not None:
+            LESSEE_ORG_ID = builder.CreateString(self.LESSEE_ORG_ID)
+        if self.OPERATED_ON_BEHALF_OF_ORG_ID is not None:
+            OPERATED_ON_BEHALF_OF_ORG_ID = builder.CreateString(self.OPERATED_ON_BEHALF_OF_ORG_ID)
+        if self.PLANE_SLOT is not None:
+            PLANE_SLOT = builder.CreateString(self.PLANE_SLOT)
+        if self.PLANE_NUMBER is not None:
+            PLANE_NUMBER = builder.CreateString(self.PLANE_NUMBER)
+        if self.POSITION_STATUS is not None:
+            POSITION_STATUS = builder.CreateString(self.POSITION_STATUS)
+        if self.UNTIL_TIME is not None:
+            UNTIL_TIME = builder.CreateString(self.UNTIL_TIME)
+        if self.OFFICIAL_LOSS_DATE is not None:
+            OFFICIAL_LOSS_DATE = builder.CreateString(self.OFFICIAL_LOSS_DATE)
+        if self.UNDERLYING_CAUSE is not None:
+            UNDERLYING_CAUSE = builder.CreateString(self.UNDERLYING_CAUSE)
+        if self.ACHIEVED_FLIGHT_PHASE is not None:
+            ACHIEVED_FLIGHT_PHASE = builder.CreateString(self.ACHIEVED_FLIGHT_PHASE)
+        if self.OCCURRENCE_FLIGHT_PHASE is not None:
+            OCCURRENCE_FLIGHT_PHASE = builder.CreateString(self.OCCURRENCE_FLIGHT_PHASE)
+        if self.STAGE_AT_FAULT is not None:
+            STAGE_AT_FAULT = builder.CreateString(self.STAGE_AT_FAULT)
+        if self.EQUIPMENT_AT_FAULT is not None:
+            EQUIPMENT_AT_FAULT = builder.CreateString(self.EQUIPMENT_AT_FAULT)
+        if self.EQUIPMENT_TYPE_AT_FAULT is not None:
+            EQUIPMENT_TYPE_AT_FAULT = builder.CreateString(self.EQUIPMENT_TYPE_AT_FAULT)
+        if self.EQUIPMENT_PART_AT_FAULT is not None:
+            EQUIPMENT_PART_AT_FAULT = builder.CreateString(self.EQUIPMENT_PART_AT_FAULT)
+        if self.CONSEQUENTIAL_EQUIPMENT_FAILURE is not None:
+            CONSEQUENTIAL_EQUIPMENT_FAILURE = builder.CreateString(self.CONSEQUENTIAL_EQUIPMENT_FAILURE)
+        if self.DESCRIPTION is not None:
+            DESCRIPTION = builder.CreateString(self.DESCRIPTION)
+        if self.REMARKS is not None:
+            REMARKS = builder.CreateString(self.REMARKS)
+        if self.OBJECT_STATUS is not None:
+            OBJECT_STATUS = builder.CreateString(self.OBJECT_STATUS)
+        if self.SATELLITE_POSITION is not None:
+            SATELLITE_POSITION = builder.CreateString(self.SATELLITE_POSITION)
+        if self.ON_ORBIT is not None:
+            ON_ORBIT = builder.CreateString(self.ON_ORBIT)
+        OOEStart(builder)
+        if self.ID is not None:
+            OOEAddID(builder, ID)
+        OOEAddSAT_NO(builder, self.SAT_NO)
+        if self.ORIG_OBJECT_ID is not None:
+            OOEAddORIG_OBJECT_ID(builder, ORIG_OBJECT_ID)
+        if self.DERIVED_FROM is not None:
+            OOEAddDERIVED_FROM(builder, DERIVED_FROM)
+        if self.DECLASSIFICATION_DATE is not None:
+            OOEAddDECLASSIFICATION_DATE(builder, DECLASSIFICATION_DATE)
+        if self.DECLASSIFICATION_STRING is not None:
+            OOEAddDECLASSIFICATION_STRING(builder, DECLASSIFICATION_STRING)
+        if self.EVENT_TIME is not None:
+            OOEAddEVENT_TIME(builder, EVENT_TIME)
+        if self.EVENT_TIME_NOTES is not None:
+            OOEAddEVENT_TIME_NOTES(builder, EVENT_TIME_NOTES)
+        OOEAddCATEGORY(builder, self.CATEGORY)
+        OOEAddRESULT(builder, self.RESULT)
+        if self.EVENT_TYPE is not None:
+            OOEAddEVENT_TYPE(builder, EVENT_TYPE)
+        if self.OPERATOR_ORG_ID is not None:
+            OOEAddOPERATOR_ORG_ID(builder, OPERATOR_ORG_ID)
+        if self.OWNER_ORG_ID is not None:
+            OOEAddOWNER_ORG_ID(builder, OWNER_ORG_ID)
+        if self.LESSEE_ORG_ID is not None:
+            OOEAddLESSEE_ORG_ID(builder, LESSEE_ORG_ID)
+        if self.OPERATED_ON_BEHALF_OF_ORG_ID is not None:
+            OOEAddOPERATED_ON_BEHALF_OF_ORG_ID(builder, OPERATED_ON_BEHALF_OF_ORG_ID)
+        OOEAddGEO_POSITION(builder, self.GEO_POSITION)
+        if self.PLANE_SLOT is not None:
+            OOEAddPLANE_SLOT(builder, PLANE_SLOT)
+        if self.PLANE_NUMBER is not None:
+            OOEAddPLANE_NUMBER(builder, PLANE_NUMBER)
+        if self.POSITION_STATUS is not None:
+            OOEAddPOSITION_STATUS(builder, POSITION_STATUS)
+        if self.UNTIL_TIME is not None:
+            OOEAddUNTIL_TIME(builder, UNTIL_TIME)
+        if self.OFFICIAL_LOSS_DATE is not None:
+            OOEAddOFFICIAL_LOSS_DATE(builder, OFFICIAL_LOSS_DATE)
+        OOEAddNET_AMOUNT(builder, self.NET_AMOUNT)
+        if self.UNDERLYING_CAUSE is not None:
+            OOEAddUNDERLYING_CAUSE(builder, UNDERLYING_CAUSE)
+        OOEAddCAPABILITY_LOSS(builder, self.CAPABILITY_LOSS)
+        OOEAddCAPACITY_LOSS(builder, self.CAPACITY_LOSS)
+        OOEAddINSURANCE_LOSS(builder, self.INSURANCE_LOSS)
+        OOEAddTHIRD_PARTY_INSURANCE_LOSS(builder, self.THIRD_PARTY_INSURANCE_LOSS)
+        OOEAddINJURED(builder, self.INJURED)
+        OOEAddKILLED(builder, self.KILLED)
+        OOEAddAGE_AT_EVENT(builder, self.AGE_AT_EVENT)
+        OOEAddLIFE_LOST(builder, self.LIFE_LOST)
+        if self.ACHIEVED_FLIGHT_PHASE is not None:
+            OOEAddACHIEVED_FLIGHT_PHASE(builder, ACHIEVED_FLIGHT_PHASE)
+        if self.OCCURRENCE_FLIGHT_PHASE is not None:
+            OOEAddOCCURRENCE_FLIGHT_PHASE(builder, OCCURRENCE_FLIGHT_PHASE)
+        if self.STAGE_AT_FAULT is not None:
+            OOEAddSTAGE_AT_FAULT(builder, STAGE_AT_FAULT)
+        if self.EQUIPMENT_AT_FAULT is not None:
+            OOEAddEQUIPMENT_AT_FAULT(builder, EQUIPMENT_AT_FAULT)
+        if self.EQUIPMENT_TYPE_AT_FAULT is not None:
+            OOEAddEQUIPMENT_TYPE_AT_FAULT(builder, EQUIPMENT_TYPE_AT_FAULT)
+        if self.EQUIPMENT_PART_AT_FAULT is not None:
+            OOEAddEQUIPMENT_PART_AT_FAULT(builder, EQUIPMENT_PART_AT_FAULT)
+        if self.CONSEQUENTIAL_EQUIPMENT_FAILURE is not None:
+            OOEAddCONSEQUENTIAL_EQUIPMENT_FAILURE(builder, CONSEQUENTIAL_EQUIPMENT_FAILURE)
+        OOEAddINCLINED(builder, self.INCLINED)
+        if self.DESCRIPTION is not None:
+            OOEAddDESCRIPTION(builder, DESCRIPTION)
+        if self.REMARKS is not None:
+            OOEAddREMARKS(builder, REMARKS)
+        if self.OBJECT_STATUS is not None:
+            OOEAddOBJECT_STATUS(builder, OBJECT_STATUS)
+        if self.SATELLITE_POSITION is not None:
+            OOEAddSATELLITE_POSITION(builder, SATELLITE_POSITION)
+        if self.ON_ORBIT is not None:
+            OOEAddON_ORBIT(builder, ON_ORBIT)
+        OOE = OOEEnd(builder)
+        return OOE

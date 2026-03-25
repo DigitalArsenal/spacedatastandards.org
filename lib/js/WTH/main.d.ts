@@ -1,2 +1,2 @@
-export { WTH, WTHT } from './WTH.js';
+export * from './WTH.js';
 //# sourceMappingURL=main.d.ts.map

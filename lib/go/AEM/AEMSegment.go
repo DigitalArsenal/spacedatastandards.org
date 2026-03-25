@@ -49,12 +49,20 @@ func (rcv *AEMSegment) OBJECT_NAME() []byte {
 	return nil
 }
 
+func (rcv *AEMSegment) ObjectName() []byte {
+	return rcv.OBJECT_NAME()
+}
+
 func (rcv *AEMSegment) OBJECT_ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *AEMSegment) ObjectId() []byte {
+	return rcv.OBJECT_ID()
 }
 
 func (rcv *AEMSegment) REF_FRAME_A() []byte {
@@ -65,12 +73,20 @@ func (rcv *AEMSegment) REF_FRAME_A() []byte {
 	return nil
 }
 
+func (rcv *AEMSegment) RefFrameA() []byte {
+	return rcv.REF_FRAME_A()
+}
+
 func (rcv *AEMSegment) REF_FRAME_B() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *AEMSegment) RefFrameB() []byte {
+	return rcv.REF_FRAME_B()
 }
 
 func (rcv *AEMSegment) ATTITUDE_DIR() []byte {
@@ -81,12 +97,20 @@ func (rcv *AEMSegment) ATTITUDE_DIR() []byte {
 	return nil
 }
 
+func (rcv *AEMSegment) AttitudeDir() []byte {
+	return rcv.ATTITUDE_DIR()
+}
+
 func (rcv *AEMSegment) TIME_SYSTEM() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *AEMSegment) TimeSystem() []byte {
+	return rcv.TIME_SYSTEM()
 }
 
 func (rcv *AEMSegment) ATTITUDE_TYPE() []byte {
@@ -97,6 +121,10 @@ func (rcv *AEMSegment) ATTITUDE_TYPE() []byte {
 	return nil
 }
 
+func (rcv *AEMSegment) AttitudeType() []byte {
+	return rcv.ATTITUDE_TYPE()
+}
+
 func (rcv *AEMSegment) START_TIME() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
 	if o != 0 {
@@ -105,12 +133,20 @@ func (rcv *AEMSegment) START_TIME() []byte {
 	return nil
 }
 
+func (rcv *AEMSegment) StartTime() []byte {
+	return rcv.START_TIME()
+}
+
 func (rcv *AEMSegment) STOP_TIME() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *AEMSegment) StopTime() []byte {
+	return rcv.STOP_TIME()
 }
 
 /// Time interval between attitude states in seconds (required).
@@ -122,9 +158,17 @@ func (rcv *AEMSegment) STEP_SIZE() float64 {
 	return 0.0
 }
 
+func (rcv *AEMSegment) StepSize() float64 {
+	return rcv.STEP_SIZE()
+}
+
 /// Time interval between attitude states in seconds (required).
 func (rcv *AEMSegment) MutateSTEP_SIZE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(22, n)
+}
+
+func (rcv *AEMSegment) MutateStepSize(n float64) bool {
+	return rcv.MutateSTEP_SIZE(n)
 }
 
 /// Number of components per attitude state.
@@ -138,11 +182,19 @@ func (rcv *AEMSegment) ATTITUDE_COMPONENTS() byte {
 	return 7
 }
 
+func (rcv *AEMSegment) AttitudeComponents() byte {
+	return rcv.ATTITUDE_COMPONENTS()
+}
+
 /// Number of components per attitude state.
 /// 7 = quaternion + angular rates (Q1, Q2, Q3, QC, RATE_X, RATE_Y, RATE_Z)
 /// 4 = quaternion only (Q1, Q2, Q3, QC)
 func (rcv *AEMSegment) MutateATTITUDE_COMPONENTS(n byte) bool {
 	return rcv._tab.MutateByteSlot(24, n)
+}
+
+func (rcv *AEMSegment) MutateAttitudeComponents(n byte) bool {
+	return rcv.MutateATTITUDE_COMPONENTS(n)
 }
 
 /// Attitude data as row-major array of doubles.
@@ -158,12 +210,20 @@ func (rcv *AEMSegment) ATTITUDE_DATA(j int) float64 {
 	return 0
 }
 
+func (rcv *AEMSegment) AttitudeData(j int) float64 {
+	return rcv.ATTITUDE_DATA(j)
+}
+
 func (rcv *AEMSegment) ATTITUDE_DATALength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *AEMSegment) AttitudeDataLength() int {
+	return rcv.ATTITUDE_DATALength()
 }
 
 /// Attitude data as row-major array of doubles.
@@ -179,47 +239,90 @@ func (rcv *AEMSegment) MutateATTITUDE_DATA(j int, n float64) bool {
 	return false
 }
 
+func (rcv *AEMSegment) MutateAttitudeData(j int, n float64) bool {
+	return rcv.MutateATTITUDE_DATA(j, n)
+}
+
 func AEMSegmentStart(builder *flatbuffers.Builder) {
 	builder.StartObject(12)
 }
 func AEMSegmentAddOBJECT_NAME(builder *flatbuffers.Builder, OBJECT_NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(OBJECT_NAME), 0)
 }
+func AEMSegmentAddObjectName(builder *flatbuffers.Builder, OBJECT_NAME flatbuffers.UOffsetT) {
+	AEMSegmentAddOBJECT_NAME(builder, OBJECT_NAME)
+}
 func AEMSegmentAddOBJECT_ID(builder *flatbuffers.Builder, OBJECT_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(OBJECT_ID), 0)
+}
+func AEMSegmentAddObjectId(builder *flatbuffers.Builder, OBJECT_ID flatbuffers.UOffsetT) {
+	AEMSegmentAddOBJECT_ID(builder, OBJECT_ID)
 }
 func AEMSegmentAddREF_FRAME_A(builder *flatbuffers.Builder, REF_FRAME_A flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(REF_FRAME_A), 0)
 }
+func AEMSegmentAddRefFrameA(builder *flatbuffers.Builder, REF_FRAME_A flatbuffers.UOffsetT) {
+	AEMSegmentAddREF_FRAME_A(builder, REF_FRAME_A)
+}
 func AEMSegmentAddREF_FRAME_B(builder *flatbuffers.Builder, REF_FRAME_B flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(REF_FRAME_B), 0)
+}
+func AEMSegmentAddRefFrameB(builder *flatbuffers.Builder, REF_FRAME_B flatbuffers.UOffsetT) {
+	AEMSegmentAddREF_FRAME_B(builder, REF_FRAME_B)
 }
 func AEMSegmentAddATTITUDE_DIR(builder *flatbuffers.Builder, ATTITUDE_DIR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(ATTITUDE_DIR), 0)
 }
+func AEMSegmentAddAttitudeDir(builder *flatbuffers.Builder, ATTITUDE_DIR flatbuffers.UOffsetT) {
+	AEMSegmentAddATTITUDE_DIR(builder, ATTITUDE_DIR)
+}
 func AEMSegmentAddTIME_SYSTEM(builder *flatbuffers.Builder, TIME_SYSTEM flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(TIME_SYSTEM), 0)
+}
+func AEMSegmentAddTimeSystem(builder *flatbuffers.Builder, TIME_SYSTEM flatbuffers.UOffsetT) {
+	AEMSegmentAddTIME_SYSTEM(builder, TIME_SYSTEM)
 }
 func AEMSegmentAddATTITUDE_TYPE(builder *flatbuffers.Builder, ATTITUDE_TYPE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(ATTITUDE_TYPE), 0)
 }
+func AEMSegmentAddAttitudeType(builder *flatbuffers.Builder, ATTITUDE_TYPE flatbuffers.UOffsetT) {
+	AEMSegmentAddATTITUDE_TYPE(builder, ATTITUDE_TYPE)
+}
 func AEMSegmentAddSTART_TIME(builder *flatbuffers.Builder, START_TIME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(START_TIME), 0)
+}
+func AEMSegmentAddStartTime(builder *flatbuffers.Builder, START_TIME flatbuffers.UOffsetT) {
+	AEMSegmentAddSTART_TIME(builder, START_TIME)
 }
 func AEMSegmentAddSTOP_TIME(builder *flatbuffers.Builder, STOP_TIME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(STOP_TIME), 0)
 }
+func AEMSegmentAddStopTime(builder *flatbuffers.Builder, STOP_TIME flatbuffers.UOffsetT) {
+	AEMSegmentAddSTOP_TIME(builder, STOP_TIME)
+}
 func AEMSegmentAddSTEP_SIZE(builder *flatbuffers.Builder, STEP_SIZE float64) {
 	builder.PrependFloat64Slot(9, STEP_SIZE, 0.0)
+}
+func AEMSegmentAddStepSize(builder *flatbuffers.Builder, STEP_SIZE float64) {
+	AEMSegmentAddSTEP_SIZE(builder, STEP_SIZE)
 }
 func AEMSegmentAddATTITUDE_COMPONENTS(builder *flatbuffers.Builder, ATTITUDE_COMPONENTS byte) {
 	builder.PrependByteSlot(10, ATTITUDE_COMPONENTS, 7)
 }
+func AEMSegmentAddAttitudeComponents(builder *flatbuffers.Builder, ATTITUDE_COMPONENTS byte) {
+	AEMSegmentAddATTITUDE_COMPONENTS(builder, ATTITUDE_COMPONENTS)
+}
 func AEMSegmentAddATTITUDE_DATA(builder *flatbuffers.Builder, ATTITUDE_DATA flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(ATTITUDE_DATA), 0)
 }
+func AEMSegmentAddAttitudeData(builder *flatbuffers.Builder, ATTITUDE_DATA flatbuffers.UOffsetT) {
+	AEMSegmentAddATTITUDE_DATA(builder, ATTITUDE_DATA)
+}
 func AEMSegmentStartATTITUDE_DATAVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(8, numElems, 8)
+}
+func AEMSegmentStartAttitudeDataVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return AEMSegmentStartATTITUDE_DATAVector(builder, numElems)
 }
 func AEMSegmentEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

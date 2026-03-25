@@ -2,4 +2,468 @@
 
 # namespace: 
 
-# NOTE CZMRectangle.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Rectangle (cartographic rectangle)
+class CZMRectangle(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = CZMRectangle()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsCZMRectangle(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def CZMRectangleBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x43\x5A\x4D", size_prefixed=size_prefixed)
+
+    # CZMRectangle
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Whether the rectangle is displayed
+    # CZMRectangle
+    def SHOW(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # Coordinates [west, south, east, north] in degrees
+    # CZMRectangle
+    def COORDINATES_WSEN_DEGREES(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # CZMRectangle
+    def COORDINATES_WSEN_DEGREESAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
+
+    # CZMRectangle
+    def COORDINATES_WSEN_DEGREESLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # CZMRectangle
+    def COORDINATES_WSEN_DEGREESIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        return o == 0
+
+    # Height in meters
+    # CZMRectangle
+    def HEIGHT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Height reference
+    # CZMRectangle
+    def HEIGHT_REFERENCE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Extruded height
+    # CZMRectangle
+    def EXTRUDED_HEIGHT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Extruded height reference
+    # CZMRectangle
+    def EXTRUDED_HEIGHT_REFERENCE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Rotation in radians
+    # CZMRectangle
+    def ROTATION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Texture rotation in radians
+    # CZMRectangle
+    def ST_ROTATION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Granularity in radians
+    # CZMRectangle
+    def GRANULARITY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Fill flag
+    # CZMRectangle
+    def FILL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # Surface material
+    # CZMRectangle
+    def MATERIAL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from CZMMaterial import CZMMaterial
+            obj = CZMMaterial()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Outline flag
+    # CZMRectangle
+    def OUTLINE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # Outline color
+    # CZMRectangle
+    def OUTLINE_COLOR(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from CZMColor import CZMColor
+            obj = CZMColor()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Outline width
+    # CZMRectangle
+    def OUTLINE_WIDTH(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Shadow mode
+    # CZMRectangle
+    def SHADOWS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Classification type
+    # CZMRectangle
+    def CLASSIFICATION_TYPE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Z-index for ordering
+    # CZMRectangle
+    def Z_INDEX(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+def CZMRectangleStart(builder):
+    builder.StartObject(17)
+
+def Start(builder):
+    CZMRectangleStart(builder)
+
+def CZMRectangleAddSHOW(builder, SHOW):
+    builder.PrependBoolSlot(0, SHOW, 0)
+
+def AddSHOW(builder, SHOW):
+    CZMRectangleAddSHOW(builder, SHOW)
+
+def CZMRectangleAddCOORDINATES_WSEN_DEGREES(builder, COORDINATES_WSEN_DEGREES):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(COORDINATES_WSEN_DEGREES), 0)
+
+def AddCOORDINATES_WSEN_DEGREES(builder, COORDINATES_WSEN_DEGREES):
+    CZMRectangleAddCOORDINATES_WSEN_DEGREES(builder, COORDINATES_WSEN_DEGREES)
+
+def CZMRectangleStartCOORDINATES_WSEN_DEGREESVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
+def StartCOORDINATES_WSEN_DEGREESVector(builder, numElems):
+    return CZMRectangleStartCOORDINATES_WSEN_DEGREESVector(builder, numElems)
+
+def CZMRectangleCreateCOORDINATES_WSEN_DEGREESVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateCOORDINATES_WSEN_DEGREESVector(builder, data):
+    CZMRectangleCreateCOORDINATES_WSEN_DEGREESVector(builder, data)
+
+def CZMRectangleAddHEIGHT(builder, HEIGHT):
+    builder.PrependFloat64Slot(2, HEIGHT, 0.0)
+
+def AddHEIGHT(builder, HEIGHT):
+    CZMRectangleAddHEIGHT(builder, HEIGHT)
+
+def CZMRectangleAddHEIGHT_REFERENCE(builder, HEIGHT_REFERENCE):
+    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(HEIGHT_REFERENCE), 0)
+
+def AddHEIGHT_REFERENCE(builder, HEIGHT_REFERENCE):
+    CZMRectangleAddHEIGHT_REFERENCE(builder, HEIGHT_REFERENCE)
+
+def CZMRectangleAddEXTRUDED_HEIGHT(builder, EXTRUDED_HEIGHT):
+    builder.PrependFloat64Slot(4, EXTRUDED_HEIGHT, 0.0)
+
+def AddEXTRUDED_HEIGHT(builder, EXTRUDED_HEIGHT):
+    CZMRectangleAddEXTRUDED_HEIGHT(builder, EXTRUDED_HEIGHT)
+
+def CZMRectangleAddEXTRUDED_HEIGHT_REFERENCE(builder, EXTRUDED_HEIGHT_REFERENCE):
+    builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(EXTRUDED_HEIGHT_REFERENCE), 0)
+
+def AddEXTRUDED_HEIGHT_REFERENCE(builder, EXTRUDED_HEIGHT_REFERENCE):
+    CZMRectangleAddEXTRUDED_HEIGHT_REFERENCE(builder, EXTRUDED_HEIGHT_REFERENCE)
+
+def CZMRectangleAddROTATION(builder, ROTATION):
+    builder.PrependFloat64Slot(6, ROTATION, 0.0)
+
+def AddROTATION(builder, ROTATION):
+    CZMRectangleAddROTATION(builder, ROTATION)
+
+def CZMRectangleAddST_ROTATION(builder, ST_ROTATION):
+    builder.PrependFloat64Slot(7, ST_ROTATION, 0.0)
+
+def AddST_ROTATION(builder, ST_ROTATION):
+    CZMRectangleAddST_ROTATION(builder, ST_ROTATION)
+
+def CZMRectangleAddGRANULARITY(builder, GRANULARITY):
+    builder.PrependFloat64Slot(8, GRANULARITY, 0.0)
+
+def AddGRANULARITY(builder, GRANULARITY):
+    CZMRectangleAddGRANULARITY(builder, GRANULARITY)
+
+def CZMRectangleAddFILL(builder, FILL):
+    builder.PrependBoolSlot(9, FILL, 0)
+
+def AddFILL(builder, FILL):
+    CZMRectangleAddFILL(builder, FILL)
+
+def CZMRectangleAddMATERIAL(builder, MATERIAL):
+    builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(MATERIAL), 0)
+
+def AddMATERIAL(builder, MATERIAL):
+    CZMRectangleAddMATERIAL(builder, MATERIAL)
+
+def CZMRectangleAddOUTLINE(builder, OUTLINE):
+    builder.PrependBoolSlot(11, OUTLINE, 0)
+
+def AddOUTLINE(builder, OUTLINE):
+    CZMRectangleAddOUTLINE(builder, OUTLINE)
+
+def CZMRectangleAddOUTLINE_COLOR(builder, OUTLINE_COLOR):
+    builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(OUTLINE_COLOR), 0)
+
+def AddOUTLINE_COLOR(builder, OUTLINE_COLOR):
+    CZMRectangleAddOUTLINE_COLOR(builder, OUTLINE_COLOR)
+
+def CZMRectangleAddOUTLINE_WIDTH(builder, OUTLINE_WIDTH):
+    builder.PrependFloat64Slot(13, OUTLINE_WIDTH, 0.0)
+
+def AddOUTLINE_WIDTH(builder, OUTLINE_WIDTH):
+    CZMRectangleAddOUTLINE_WIDTH(builder, OUTLINE_WIDTH)
+
+def CZMRectangleAddSHADOWS(builder, SHADOWS):
+    builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(SHADOWS), 0)
+
+def AddSHADOWS(builder, SHADOWS):
+    CZMRectangleAddSHADOWS(builder, SHADOWS)
+
+def CZMRectangleAddCLASSIFICATION_TYPE(builder, CLASSIFICATION_TYPE):
+    builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(CLASSIFICATION_TYPE), 0)
+
+def AddCLASSIFICATION_TYPE(builder, CLASSIFICATION_TYPE):
+    CZMRectangleAddCLASSIFICATION_TYPE(builder, CLASSIFICATION_TYPE)
+
+def CZMRectangleAddZ_INDEX(builder, Z_INDEX):
+    builder.PrependInt32Slot(16, Z_INDEX, 0)
+
+def AddZ_INDEX(builder, Z_INDEX):
+    CZMRectangleAddZ_INDEX(builder, Z_INDEX)
+
+def CZMRectangleEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return CZMRectangleEnd(builder)
+
+import CZMColor
+import CZMMaterial
+try:
+    from typing import List, Optional
+except:
+    pass
+
+class CZMRectangleT(object):
+
+    # CZMRectangleT
+    def __init__(
+        self,
+        SHOW = False,
+        COORDINATES_WSEN_DEGREES = None,
+        HEIGHT = 0.0,
+        HEIGHT_REFERENCE = None,
+        EXTRUDED_HEIGHT = 0.0,
+        EXTRUDED_HEIGHT_REFERENCE = None,
+        ROTATION = 0.0,
+        ST_ROTATION = 0.0,
+        GRANULARITY = 0.0,
+        FILL = False,
+        MATERIAL = None,
+        OUTLINE = False,
+        OUTLINE_COLOR = None,
+        OUTLINE_WIDTH = 0.0,
+        SHADOWS = None,
+        CLASSIFICATION_TYPE = None,
+        Z_INDEX = 0,
+    ):
+        self.SHOW = SHOW  # type: bool
+        self.COORDINATES_WSEN_DEGREES = COORDINATES_WSEN_DEGREES  # type: Optional[List[float]]
+        self.HEIGHT = HEIGHT  # type: float
+        self.HEIGHT_REFERENCE = HEIGHT_REFERENCE  # type: Optional[str]
+        self.EXTRUDED_HEIGHT = EXTRUDED_HEIGHT  # type: float
+        self.EXTRUDED_HEIGHT_REFERENCE = EXTRUDED_HEIGHT_REFERENCE  # type: Optional[str]
+        self.ROTATION = ROTATION  # type: float
+        self.ST_ROTATION = ST_ROTATION  # type: float
+        self.GRANULARITY = GRANULARITY  # type: float
+        self.FILL = FILL  # type: bool
+        self.MATERIAL = MATERIAL  # type: Optional[CZMMaterial.CZMMaterialT]
+        self.OUTLINE = OUTLINE  # type: bool
+        self.OUTLINE_COLOR = OUTLINE_COLOR  # type: Optional[CZMColor.CZMColorT]
+        self.OUTLINE_WIDTH = OUTLINE_WIDTH  # type: float
+        self.SHADOWS = SHADOWS  # type: Optional[str]
+        self.CLASSIFICATION_TYPE = CLASSIFICATION_TYPE  # type: Optional[str]
+        self.Z_INDEX = Z_INDEX  # type: int
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpCzmrectangle = CZMRectangle()
+        tmpCzmrectangle.Init(buf, pos)
+        return cls.InitFromObj(tmpCzmrectangle)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpCzmrectangle):
+        x = CZMRectangleT()
+        x._UnPack(tmpCzmrectangle)
+        return x
+
+    # CZMRectangleT
+    def _UnPack(self, CZMRectangle):
+        if CZMRectangle is None:
+            return
+        self.SHOW = CZMRectangle.SHOW()
+        if not CZMRectangle.COORDINATES_WSEN_DEGREESIsNone():
+            if np is None:
+                self.COORDINATES_WSEN_DEGREES = []
+                for i in range(CZMRectangle.COORDINATES_WSEN_DEGREESLength()):
+                    self.COORDINATES_WSEN_DEGREES.append(CZMRectangle.COORDINATES_WSEN_DEGREES(i))
+            else:
+                self.COORDINATES_WSEN_DEGREES = CZMRectangle.COORDINATES_WSEN_DEGREESAsNumpy()
+        self.HEIGHT = CZMRectangle.HEIGHT()
+        self.HEIGHT_REFERENCE = CZMRectangle.HEIGHT_REFERENCE()
+        self.EXTRUDED_HEIGHT = CZMRectangle.EXTRUDED_HEIGHT()
+        self.EXTRUDED_HEIGHT_REFERENCE = CZMRectangle.EXTRUDED_HEIGHT_REFERENCE()
+        self.ROTATION = CZMRectangle.ROTATION()
+        self.ST_ROTATION = CZMRectangle.ST_ROTATION()
+        self.GRANULARITY = CZMRectangle.GRANULARITY()
+        self.FILL = CZMRectangle.FILL()
+        if CZMRectangle.MATERIAL() is not None:
+            self.MATERIAL = CZMMaterial.CZMMaterialT.InitFromObj(CZMRectangle.MATERIAL())
+        self.OUTLINE = CZMRectangle.OUTLINE()
+        if CZMRectangle.OUTLINE_COLOR() is not None:
+            self.OUTLINE_COLOR = CZMColor.CZMColorT.InitFromObj(CZMRectangle.OUTLINE_COLOR())
+        self.OUTLINE_WIDTH = CZMRectangle.OUTLINE_WIDTH()
+        self.SHADOWS = CZMRectangle.SHADOWS()
+        self.CLASSIFICATION_TYPE = CZMRectangle.CLASSIFICATION_TYPE()
+        self.Z_INDEX = CZMRectangle.Z_INDEX()
+
+    # CZMRectangleT
+    def Pack(self, builder):
+        if self.COORDINATES_WSEN_DEGREES is not None:
+            if np is not None and type(self.COORDINATES_WSEN_DEGREES) is np.ndarray:
+                COORDINATES_WSEN_DEGREES = builder.CreateNumpyVector(self.COORDINATES_WSEN_DEGREES)
+            else:
+                CZMRectangleStartCOORDINATES_WSEN_DEGREESVector(builder, len(self.COORDINATES_WSEN_DEGREES))
+                for i in reversed(range(len(self.COORDINATES_WSEN_DEGREES))):
+                    builder.PrependFloat64(self.COORDINATES_WSEN_DEGREES[i])
+                COORDINATES_WSEN_DEGREES = builder.EndVector()
+        if self.HEIGHT_REFERENCE is not None:
+            HEIGHT_REFERENCE = builder.CreateString(self.HEIGHT_REFERENCE)
+        if self.EXTRUDED_HEIGHT_REFERENCE is not None:
+            EXTRUDED_HEIGHT_REFERENCE = builder.CreateString(self.EXTRUDED_HEIGHT_REFERENCE)
+        if self.MATERIAL is not None:
+            MATERIAL = self.MATERIAL.Pack(builder)
+        if self.OUTLINE_COLOR is not None:
+            OUTLINE_COLOR = self.OUTLINE_COLOR.Pack(builder)
+        if self.SHADOWS is not None:
+            SHADOWS = builder.CreateString(self.SHADOWS)
+        if self.CLASSIFICATION_TYPE is not None:
+            CLASSIFICATION_TYPE = builder.CreateString(self.CLASSIFICATION_TYPE)
+        CZMRectangleStart(builder)
+        CZMRectangleAddSHOW(builder, self.SHOW)
+        if self.COORDINATES_WSEN_DEGREES is not None:
+            CZMRectangleAddCOORDINATES_WSEN_DEGREES(builder, COORDINATES_WSEN_DEGREES)
+        CZMRectangleAddHEIGHT(builder, self.HEIGHT)
+        if self.HEIGHT_REFERENCE is not None:
+            CZMRectangleAddHEIGHT_REFERENCE(builder, HEIGHT_REFERENCE)
+        CZMRectangleAddEXTRUDED_HEIGHT(builder, self.EXTRUDED_HEIGHT)
+        if self.EXTRUDED_HEIGHT_REFERENCE is not None:
+            CZMRectangleAddEXTRUDED_HEIGHT_REFERENCE(builder, EXTRUDED_HEIGHT_REFERENCE)
+        CZMRectangleAddROTATION(builder, self.ROTATION)
+        CZMRectangleAddST_ROTATION(builder, self.ST_ROTATION)
+        CZMRectangleAddGRANULARITY(builder, self.GRANULARITY)
+        CZMRectangleAddFILL(builder, self.FILL)
+        if self.MATERIAL is not None:
+            CZMRectangleAddMATERIAL(builder, MATERIAL)
+        CZMRectangleAddOUTLINE(builder, self.OUTLINE)
+        if self.OUTLINE_COLOR is not None:
+            CZMRectangleAddOUTLINE_COLOR(builder, OUTLINE_COLOR)
+        CZMRectangleAddOUTLINE_WIDTH(builder, self.OUTLINE_WIDTH)
+        if self.SHADOWS is not None:
+            CZMRectangleAddSHADOWS(builder, SHADOWS)
+        if self.CLASSIFICATION_TYPE is not None:
+            CZMRectangleAddCLASSIFICATION_TYPE(builder, CLASSIFICATION_TYPE)
+        CZMRectangleAddZ_INDEX(builder, self.Z_INDEX)
+        CZMRectangle = CZMRectangleEnd(builder)
+        return CZMRectangle

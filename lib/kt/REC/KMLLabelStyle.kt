@@ -32,7 +32,7 @@ class KMLLabelStyle : Table() {
     /**
      * KML color in aabbggrr hex format
      */
-    val COLOR : String?
+    val color : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class KMLLabelStyle : Table() {
                 null
             }
         }
-    val COLORAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun COLORInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val colorAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun colorInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Color mode
      */
-    val COLOR_MODE : Byte
+    val colorMode : Byte
         get() {
             val o = __offset(6)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -54,29 +54,29 @@ class KMLLabelStyle : Table() {
     /**
      * Scale factor
      */
-    val SCALE : Double
+    val scale : Double
         get() {
             val o = __offset(8)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsKMLLabelStyle(_bb: ByteBuffer): KMLLabelStyle = getRootAsKMLLabelStyle(_bb, KMLLabelStyle())
         fun getRootAsKMLLabelStyle(_bb: ByteBuffer, obj: KMLLabelStyle): KMLLabelStyle {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createKMLLabelStyle(builder: FlatBufferBuilder, COLOROffset: Int, COLOR_MODE: Byte, SCALE: Double) : Int {
+        fun createKMLLabelStyle(builder: FlatBufferBuilder, colorOffset: Int, colorMode: Byte, scale: Double) : Int {
             builder.startTable(3)
-            addSCALE(builder, SCALE)
-            addCOLOR(builder, COLOROffset)
-            addCOLOR_MODE(builder, COLOR_MODE)
+            addSCALE(builder, scale)
+            addCOLOR(builder, colorOffset)
+            addCOLORMODE(builder, colorMode)
             return endKMLLabelStyle(builder)
         }
         fun startKMLLabelStyle(builder: FlatBufferBuilder) = builder.startTable(3)
-        fun addCOLOR(builder: FlatBufferBuilder, COLOR: Int) = builder.addOffset(0, COLOR, 0)
-        fun addCOLOR_MODE(builder: FlatBufferBuilder, COLOR_MODE: Byte) = builder.addByte(1, COLOR_MODE, 0)
-        fun addSCALE(builder: FlatBufferBuilder, SCALE: Double) = builder.addDouble(2, SCALE, 0.0)
+        fun addCOLOR(builder: FlatBufferBuilder, color: Int) = builder.addOffset(0, color, 0)
+        fun addCOLORMODE(builder: FlatBufferBuilder, colorMode: Byte) = builder.addByte(1, colorMode, 0)
+        fun addSCALE(builder: FlatBufferBuilder, scale: Double) = builder.addDouble(2, scale, 0.0)
         fun endKMLLabelStyle(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

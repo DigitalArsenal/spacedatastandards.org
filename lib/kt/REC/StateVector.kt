@@ -29,7 +29,7 @@ class StateVector : Table() {
     /**
      * Epoch of the state vector.
      */
-    val EPOCH : String?
+    val epoch : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -38,12 +38,12 @@ class StateVector : Table() {
                 null
             }
         }
-    val EPOCHAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun EPOCHInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val epochAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun epochInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * X component of position in the specified reference frame.
      */
-    val X : Double
+    val x : Double
         get() {
             val o = __offset(6)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -51,7 +51,7 @@ class StateVector : Table() {
     /**
      * Y component of position.
      */
-    val Y : Double
+    val y : Double
         get() {
             val o = __offset(8)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -59,7 +59,7 @@ class StateVector : Table() {
     /**
      * Z component of position.
      */
-    val Z : Double
+    val z : Double
         get() {
             val o = __offset(10)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -67,7 +67,7 @@ class StateVector : Table() {
     /**
      * X component of velocity.
      */
-    val X_DOT : Double
+    val xDot : Double
         get() {
             val o = __offset(12)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -75,7 +75,7 @@ class StateVector : Table() {
     /**
      * Y component of velocity.
      */
-    val Y_DOT : Double
+    val yDot : Double
         get() {
             val o = __offset(14)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -83,7 +83,7 @@ class StateVector : Table() {
     /**
      * Z component of velocity.
      */
-    val Z_DOT : Double
+    val zDot : Double
         get() {
             val o = __offset(16)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -91,7 +91,7 @@ class StateVector : Table() {
     /**
      * X component of acceleration.
      */
-    val X_DDOT : Double
+    val xDdot : Double
         get() {
             val o = __offset(18)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -99,7 +99,7 @@ class StateVector : Table() {
     /**
      * Y component of acceleration.
      */
-    val Y_DDOT : Double
+    val yDdot : Double
         get() {
             val o = __offset(20)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -107,43 +107,43 @@ class StateVector : Table() {
     /**
      * Z component of acceleration.
      */
-    val Z_DDOT : Double
+    val zDdot : Double
         get() {
             val o = __offset(22)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsStateVector(_bb: ByteBuffer): StateVector = getRootAsStateVector(_bb, StateVector())
         fun getRootAsStateVector(_bb: ByteBuffer, obj: StateVector): StateVector {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createStateVector(builder: FlatBufferBuilder, EPOCHOffset: Int, X: Double, Y: Double, Z: Double, X_DOT: Double, Y_DOT: Double, Z_DOT: Double, X_DDOT: Double, Y_DDOT: Double, Z_DDOT: Double) : Int {
+        fun createStateVector(builder: FlatBufferBuilder, epochOffset: Int, x: Double, y: Double, z: Double, xDot: Double, yDot: Double, zDot: Double, xDdot: Double, yDdot: Double, zDdot: Double) : Int {
             builder.startTable(10)
-            addZ_DDOT(builder, Z_DDOT)
-            addY_DDOT(builder, Y_DDOT)
-            addX_DDOT(builder, X_DDOT)
-            addZ_DOT(builder, Z_DOT)
-            addY_DOT(builder, Y_DOT)
-            addX_DOT(builder, X_DOT)
-            addZ(builder, Z)
-            addY(builder, Y)
-            addX(builder, X)
-            addEPOCH(builder, EPOCHOffset)
+            addZDDOT(builder, zDdot)
+            addYDDOT(builder, yDdot)
+            addXDDOT(builder, xDdot)
+            addZDOT(builder, zDot)
+            addYDOT(builder, yDot)
+            addXDOT(builder, xDot)
+            addZ(builder, z)
+            addY(builder, y)
+            addX(builder, x)
+            addEPOCH(builder, epochOffset)
             return endStateVector(builder)
         }
         fun startStateVector(builder: FlatBufferBuilder) = builder.startTable(10)
-        fun addEPOCH(builder: FlatBufferBuilder, EPOCH: Int) = builder.addOffset(0, EPOCH, 0)
-        fun addX(builder: FlatBufferBuilder, X: Double) = builder.addDouble(1, X, 0.0)
-        fun addY(builder: FlatBufferBuilder, Y: Double) = builder.addDouble(2, Y, 0.0)
-        fun addZ(builder: FlatBufferBuilder, Z: Double) = builder.addDouble(3, Z, 0.0)
-        fun addX_DOT(builder: FlatBufferBuilder, X_DOT: Double) = builder.addDouble(4, X_DOT, 0.0)
-        fun addY_DOT(builder: FlatBufferBuilder, Y_DOT: Double) = builder.addDouble(5, Y_DOT, 0.0)
-        fun addZ_DOT(builder: FlatBufferBuilder, Z_DOT: Double) = builder.addDouble(6, Z_DOT, 0.0)
-        fun addX_DDOT(builder: FlatBufferBuilder, X_DDOT: Double) = builder.addDouble(7, X_DDOT, 0.0)
-        fun addY_DDOT(builder: FlatBufferBuilder, Y_DDOT: Double) = builder.addDouble(8, Y_DDOT, 0.0)
-        fun addZ_DDOT(builder: FlatBufferBuilder, Z_DDOT: Double) = builder.addDouble(9, Z_DDOT, 0.0)
+        fun addEPOCH(builder: FlatBufferBuilder, epoch: Int) = builder.addOffset(0, epoch, 0)
+        fun addX(builder: FlatBufferBuilder, x: Double) = builder.addDouble(1, x, 0.0)
+        fun addY(builder: FlatBufferBuilder, y: Double) = builder.addDouble(2, y, 0.0)
+        fun addZ(builder: FlatBufferBuilder, z: Double) = builder.addDouble(3, z, 0.0)
+        fun addXDOT(builder: FlatBufferBuilder, xDot: Double) = builder.addDouble(4, xDot, 0.0)
+        fun addYDOT(builder: FlatBufferBuilder, yDot: Double) = builder.addDouble(5, yDot, 0.0)
+        fun addZDOT(builder: FlatBufferBuilder, zDot: Double) = builder.addDouble(6, zDot, 0.0)
+        fun addXDDOT(builder: FlatBufferBuilder, xDdot: Double) = builder.addDouble(7, xDdot, 0.0)
+        fun addYDDOT(builder: FlatBufferBuilder, yDdot: Double) = builder.addDouble(8, yDdot, 0.0)
+        fun addZDDOT(builder: FlatBufferBuilder, zDdot: Double) = builder.addDouble(9, zDdot, 0.0)
         fun endStateVector(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

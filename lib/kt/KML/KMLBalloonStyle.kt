@@ -32,7 +32,7 @@ class KMLBalloonStyle : Table() {
     /**
      * Background color in aabbggrr hex format
      */
-    val BG_COLOR : String?
+    val bgColor : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class KMLBalloonStyle : Table() {
                 null
             }
         }
-    val BG_COLORAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun BG_COLORInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val bgColorAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun bgColorInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Text color in aabbggrr hex format
      */
-    val TEXT_COLOR : String?
+    val textColor : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -55,12 +55,12 @@ class KMLBalloonStyle : Table() {
                 null
             }
         }
-    val TEXT_COLORAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun TEXT_COLORInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val textColorAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun textColorInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * Balloon text template (supports $[name], $[description])
      */
-    val TEXT : String?
+    val text : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -69,36 +69,36 @@ class KMLBalloonStyle : Table() {
                 null
             }
         }
-    val TEXTAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun TEXTInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val textAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun textInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
     /**
      * Display mode
      */
-    val DISPLAY_MODE : Byte
+    val displayMode : Byte
         get() {
             val o = __offset(10)
             return if(o != 0) bb.get(o + bb_pos) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsKMLBalloonStyle(_bb: ByteBuffer): KMLBalloonStyle = getRootAsKMLBalloonStyle(_bb, KMLBalloonStyle())
         fun getRootAsKMLBalloonStyle(_bb: ByteBuffer, obj: KMLBalloonStyle): KMLBalloonStyle {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createKMLBalloonStyle(builder: FlatBufferBuilder, BG_COLOROffset: Int, TEXT_COLOROffset: Int, TEXTOffset: Int, DISPLAY_MODE: Byte) : Int {
+        fun createKMLBalloonStyle(builder: FlatBufferBuilder, bgColorOffset: Int, textColorOffset: Int, textOffset: Int, displayMode: Byte) : Int {
             builder.startTable(4)
-            addTEXT(builder, TEXTOffset)
-            addTEXT_COLOR(builder, TEXT_COLOROffset)
-            addBG_COLOR(builder, BG_COLOROffset)
-            addDISPLAY_MODE(builder, DISPLAY_MODE)
+            addTEXT(builder, textOffset)
+            addTEXTCOLOR(builder, textColorOffset)
+            addBGCOLOR(builder, bgColorOffset)
+            addDISPLAYMODE(builder, displayMode)
             return endKMLBalloonStyle(builder)
         }
         fun startKMLBalloonStyle(builder: FlatBufferBuilder) = builder.startTable(4)
-        fun addBG_COLOR(builder: FlatBufferBuilder, BG_COLOR: Int) = builder.addOffset(0, BG_COLOR, 0)
-        fun addTEXT_COLOR(builder: FlatBufferBuilder, TEXT_COLOR: Int) = builder.addOffset(1, TEXT_COLOR, 0)
-        fun addTEXT(builder: FlatBufferBuilder, TEXT: Int) = builder.addOffset(2, TEXT, 0)
-        fun addDISPLAY_MODE(builder: FlatBufferBuilder, DISPLAY_MODE: Byte) = builder.addByte(3, DISPLAY_MODE, 0)
+        fun addBGCOLOR(builder: FlatBufferBuilder, bgColor: Int) = builder.addOffset(0, bgColor, 0)
+        fun addTEXTCOLOR(builder: FlatBufferBuilder, textColor: Int) = builder.addOffset(1, textColor, 0)
+        fun addTEXT(builder: FlatBufferBuilder, text: Int) = builder.addOffset(2, text, 0)
+        fun addDISPLAYMODE(builder: FlatBufferBuilder, displayMode: Byte) = builder.addByte(3, displayMode, 0)
         fun endKMLBalloonStyle(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

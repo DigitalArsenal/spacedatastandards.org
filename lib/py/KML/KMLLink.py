@@ -157,21 +157,31 @@ def End(builder):
 class KMLLinkT(object):
 
     # KMLLinkT
-    def __init__(self):
-        self.HREF = None  # type: str
-        self.REFRESH_MODE = 0  # type: int
-        self.REFRESH_INTERVAL = 0.0  # type: float
-        self.VIEW_REFRESH_MODE = 0  # type: int
-        self.VIEW_REFRESH_TIME = 0.0  # type: float
-        self.VIEW_BOUND_SCALE = 0.0  # type: float
-        self.VIEW_FORMAT = None  # type: str
-        self.HTTP_QUERY = None  # type: str
+    def __init__(
+        self,
+        HREF = None,
+        REFRESH_MODE = 0,
+        REFRESH_INTERVAL = 0.0,
+        VIEW_REFRESH_MODE = 0,
+        VIEW_REFRESH_TIME = 0.0,
+        VIEW_BOUND_SCALE = 0.0,
+        VIEW_FORMAT = None,
+        HTTP_QUERY = None,
+    ):
+        self.HREF = HREF  # type: Optional[str]
+        self.REFRESH_MODE = REFRESH_MODE  # type: int
+        self.REFRESH_INTERVAL = REFRESH_INTERVAL  # type: float
+        self.VIEW_REFRESH_MODE = VIEW_REFRESH_MODE  # type: int
+        self.VIEW_REFRESH_TIME = VIEW_REFRESH_TIME  # type: float
+        self.VIEW_BOUND_SCALE = VIEW_BOUND_SCALE  # type: float
+        self.VIEW_FORMAT = VIEW_FORMAT  # type: Optional[str]
+        self.HTTP_QUERY = HTTP_QUERY  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        kmllink = KMLLink()
-        kmllink.Init(buf, pos)
-        return cls.InitFromObj(kmllink)
+        tmpKmllink = KMLLink()
+        tmpKmllink.Init(buf, pos)
+        return cls.InitFromObj(tmpKmllink)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -179,23 +189,23 @@ class KMLLinkT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, kmllink):
+    def InitFromObj(cls, tmpKmllink):
         x = KMLLinkT()
-        x._UnPack(kmllink)
+        x._UnPack(tmpKmllink)
         return x
 
     # KMLLinkT
-    def _UnPack(self, kmllink):
-        if kmllink is None:
+    def _UnPack(self, KMLLink):
+        if KMLLink is None:
             return
-        self.HREF = kmllink.HREF()
-        self.REFRESH_MODE = kmllink.REFRESH_MODE()
-        self.REFRESH_INTERVAL = kmllink.REFRESH_INTERVAL()
-        self.VIEW_REFRESH_MODE = kmllink.VIEW_REFRESH_MODE()
-        self.VIEW_REFRESH_TIME = kmllink.VIEW_REFRESH_TIME()
-        self.VIEW_BOUND_SCALE = kmllink.VIEW_BOUND_SCALE()
-        self.VIEW_FORMAT = kmllink.VIEW_FORMAT()
-        self.HTTP_QUERY = kmllink.HTTP_QUERY()
+        self.HREF = KMLLink.HREF()
+        self.REFRESH_MODE = KMLLink.REFRESH_MODE()
+        self.REFRESH_INTERVAL = KMLLink.REFRESH_INTERVAL()
+        self.VIEW_REFRESH_MODE = KMLLink.VIEW_REFRESH_MODE()
+        self.VIEW_REFRESH_TIME = KMLLink.VIEW_REFRESH_TIME()
+        self.VIEW_BOUND_SCALE = KMLLink.VIEW_BOUND_SCALE()
+        self.VIEW_FORMAT = KMLLink.VIEW_FORMAT()
+        self.HTTP_QUERY = KMLLink.HTTP_QUERY()
 
     # KMLLinkT
     def Pack(self, builder):
@@ -217,5 +227,5 @@ class KMLLinkT(object):
             KMLLinkAddVIEW_FORMAT(builder, VIEW_FORMAT)
         if self.HTTP_QUERY is not None:
             KMLLinkAddHTTP_QUERY(builder, HTTP_QUERY)
-        kmllink = KMLLinkEnd(builder)
-        return kmllink
+        KMLLink = KMLLinkEnd(builder)
+        return KMLLink

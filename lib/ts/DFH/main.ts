@@ -2,5 +2,5 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export { DFH, DFHT } from './DFH.js';
-export { driftRecord, driftRecordT } from './driftRecord.js';
+export * from './DFH.js';
+export * from './driftRecord.js';

@@ -29,7 +29,7 @@ class OOL : Table() {
         __init(_i, _bb)
         return this
     }
-    val ID : String?
+    val id : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -38,9 +38,9 @@ class OOL : Table() {
                 null
             }
         }
-    val IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
-    val NAME : String?
+    val idAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun idInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
+    val name : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -49,9 +49,9 @@ class OOL : Table() {
                 null
             }
         }
-    val NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
-    val DESCRIPTION : String?
+    val nameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun nameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
+    val description : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -60,9 +60,9 @@ class OOL : Table() {
                 null
             }
         }
-    val DESCRIPTIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun DESCRIPTIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
-    fun ONORBITS(j: Int) : String? {
+    val descriptionAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun descriptionInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
+    fun onorbits(j: Int) : String? {
         val o = __offset(10)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
@@ -70,31 +70,31 @@ class OOL : Table() {
             null
         }
     }
-    val ONORBITSLength : Int
+    val onorbitsLength : Int
         get() {
             val o = __offset(10); return if (o != 0) __vector_len(o) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsOOL(_bb: ByteBuffer): OOL = getRootAsOOL(_bb, OOL())
         fun getRootAsOOL(_bb: ByteBuffer, obj: OOL): OOL {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun OOLBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$OOL")
-        fun createOOL(builder: FlatBufferBuilder, IDOffset: Int, NAMEOffset: Int, DESCRIPTIONOffset: Int, ONORBITSOffset: Int) : Int {
+        fun createOOL(builder: FlatBufferBuilder, idOffset: Int, nameOffset: Int, descriptionOffset: Int, onorbitsOffset: Int) : Int {
             builder.startTable(4)
-            addONORBITS(builder, ONORBITSOffset)
-            addDESCRIPTION(builder, DESCRIPTIONOffset)
-            addNAME(builder, NAMEOffset)
-            addID(builder, IDOffset)
+            addONORBITS(builder, onorbitsOffset)
+            addDESCRIPTION(builder, descriptionOffset)
+            addNAME(builder, nameOffset)
+            addID(builder, idOffset)
             return endOOL(builder)
         }
         fun startOOL(builder: FlatBufferBuilder) = builder.startTable(4)
-        fun addID(builder: FlatBufferBuilder, ID: Int) = builder.addOffset(0, ID, 0)
-        fun addNAME(builder: FlatBufferBuilder, NAME: Int) = builder.addOffset(1, NAME, 0)
-        fun addDESCRIPTION(builder: FlatBufferBuilder, DESCRIPTION: Int) = builder.addOffset(2, DESCRIPTION, 0)
-        fun addONORBITS(builder: FlatBufferBuilder, ONORBITS: Int) = builder.addOffset(3, ONORBITS, 0)
+        fun addID(builder: FlatBufferBuilder, id: Int) = builder.addOffset(0, id, 0)
+        fun addNAME(builder: FlatBufferBuilder, name: Int) = builder.addOffset(1, name, 0)
+        fun addDESCRIPTION(builder: FlatBufferBuilder, description: Int) = builder.addOffset(2, description, 0)
+        fun addONORBITS(builder: FlatBufferBuilder, onorbits: Int) = builder.addOffset(3, onorbits, 0)
         fun createOnorbitsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {

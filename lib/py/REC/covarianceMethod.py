@@ -2,4 +2,6 @@
 
 # namespace: 
 
-# NOTE covarianceMethod.py does not declare any structs or enums
+class covarianceMethod(object):
+    CALCULATED = 0
+    DEFAULT = 1

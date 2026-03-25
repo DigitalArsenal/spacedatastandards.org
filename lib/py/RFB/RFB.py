@@ -269,29 +269,47 @@ def End(builder):
 class RFBT(object):
 
     # RFBT
-    def __init__(self):
-        self.ID = None  # type: str
-        self.ID_ENTITY = None  # type: str
-        self.NAME = None  # type: str
-        self.BAND = 0  # type: int
-        self.MODE = None  # type: str
-        self.PURPOSE = None  # type: str
-        self.FREQ_MIN = 0.0  # type: float
-        self.FREQ_MAX = 0.0  # type: float
-        self.CENTER_FREQ = 0.0  # type: float
-        self.BANDWIDTH = 0.0  # type: float
-        self.PEAK_GAIN = 0.0  # type: float
-        self.EDGE_GAIN = 0.0  # type: float
-        self.BEAMWIDTH = 0.0  # type: float
-        self.POLARIZATION = 0  # type: int
-        self.ERP = 0.0  # type: float
-        self.EIRP = 0.0  # type: float
+    def __init__(
+        self,
+        ID = None,
+        ID_ENTITY = None,
+        NAME = None,
+        BAND = 0,
+        MODE = None,
+        PURPOSE = None,
+        FREQ_MIN = 0.0,
+        FREQ_MAX = 0.0,
+        CENTER_FREQ = 0.0,
+        BANDWIDTH = 0.0,
+        PEAK_GAIN = 0.0,
+        EDGE_GAIN = 0.0,
+        BEAMWIDTH = 0.0,
+        POLARIZATION = 0,
+        ERP = 0.0,
+        EIRP = 0.0,
+    ):
+        self.ID = ID  # type: Optional[str]
+        self.ID_ENTITY = ID_ENTITY  # type: Optional[str]
+        self.NAME = NAME  # type: Optional[str]
+        self.BAND = BAND  # type: int
+        self.MODE = MODE  # type: Optional[str]
+        self.PURPOSE = PURPOSE  # type: Optional[str]
+        self.FREQ_MIN = FREQ_MIN  # type: float
+        self.FREQ_MAX = FREQ_MAX  # type: float
+        self.CENTER_FREQ = CENTER_FREQ  # type: float
+        self.BANDWIDTH = BANDWIDTH  # type: float
+        self.PEAK_GAIN = PEAK_GAIN  # type: float
+        self.EDGE_GAIN = EDGE_GAIN  # type: float
+        self.BEAMWIDTH = BEAMWIDTH  # type: float
+        self.POLARIZATION = POLARIZATION  # type: int
+        self.ERP = ERP  # type: float
+        self.EIRP = EIRP  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        RFB = RFB()
-        RFB.Init(buf, pos)
-        return cls.InitFromObj(RFB)
+        tmpRfb = RFB()
+        tmpRfb.Init(buf, pos)
+        return cls.InitFromObj(tmpRfb)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -299,9 +317,9 @@ class RFBT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, RFB):
+    def InitFromObj(cls, tmpRfb):
         x = RFBT()
-        x._UnPack(RFB)
+        x._UnPack(tmpRfb)
         return x
 
     # RFBT

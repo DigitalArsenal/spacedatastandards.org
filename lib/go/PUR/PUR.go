@@ -63,6 +63,10 @@ func (rcv *PUR) REQUEST_ID() []byte {
 	return nil
 }
 
+func (rcv *PUR) RequestId() []byte {
+	return rcv.REQUEST_ID()
+}
+
 /// Unique identifier for this purchase request
 /// ID of the listing being purchased
 func (rcv *PUR) LISTING_ID() []byte {
@@ -71,6 +75,10 @@ func (rcv *PUR) LISTING_ID() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *PUR) ListingId() []byte {
+	return rcv.LISTING_ID()
 }
 
 /// ID of the listing being purchased
@@ -83,6 +91,10 @@ func (rcv *PUR) TIER_NAME() []byte {
 	return nil
 }
 
+func (rcv *PUR) TierName() []byte {
+	return rcv.TIER_NAME()
+}
+
 /// Name of the pricing tier selected
 /// Peer ID of the buyer
 func (rcv *PUR) BUYER_PEER_ID() []byte {
@@ -91,6 +103,10 @@ func (rcv *PUR) BUYER_PEER_ID() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *PUR) BuyerPeerId() []byte {
+	return rcv.BUYER_PEER_ID()
 }
 
 /// Peer ID of the buyer
@@ -104,6 +120,10 @@ func (rcv *PUR) BUYER_ENCRYPTION_PUBKEY(j int) byte {
 	return 0
 }
 
+func (rcv *PUR) BuyerEncryptionPubkey(j int) byte {
+	return rcv.BUYER_ENCRYPTION_PUBKEY(j)
+}
+
 func (rcv *PUR) BUYER_ENCRYPTION_PUBKEYLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
@@ -112,12 +132,20 @@ func (rcv *PUR) BUYER_ENCRYPTION_PUBKEYLength() int {
 	return 0
 }
 
+func (rcv *PUR) BuyerEncryptionPubkeyLength() int {
+	return rcv.BUYER_ENCRYPTION_PUBKEYLength()
+}
+
 func (rcv *PUR) BUYER_ENCRYPTION_PUBKEYBytes() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *PUR) BuyerEncryptionPubkeyBytes() []byte {
+	return rcv.BUYER_ENCRYPTION_PUBKEYBytes()
 }
 
 /// Buyer's encryption public key for encrypted delivery
@@ -130,6 +158,10 @@ func (rcv *PUR) MutateBUYER_ENCRYPTION_PUBKEY(j int, n byte) bool {
 	return false
 }
 
+func (rcv *PUR) MutateBuyerEncryptionPubkey(j int, n byte) bool {
+	return rcv.MutateBUYER_ENCRYPTION_PUBKEY(j, n)
+}
+
 /// Payment method used
 func (rcv *PUR) PAYMENT_METHOD() paymentMethod {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
@@ -139,9 +171,17 @@ func (rcv *PUR) PAYMENT_METHOD() paymentMethod {
 	return 0
 }
 
+func (rcv *PUR) PaymentMethod() paymentMethod {
+	return rcv.PAYMENT_METHOD()
+}
+
 /// Payment method used
 func (rcv *PUR) MutatePAYMENT_METHOD(n paymentMethod) bool {
 	return rcv._tab.MutateInt8Slot(14, int8(n))
+}
+
+func (rcv *PUR) MutatePaymentMethod(n paymentMethod) bool {
+	return rcv.MutatePAYMENT_METHOD(n)
 }
 
 /// Payment amount in smallest unit
@@ -153,9 +193,17 @@ func (rcv *PUR) PAYMENT_AMOUNT() uint64 {
 	return 0
 }
 
+func (rcv *PUR) PaymentAmount() uint64 {
+	return rcv.PAYMENT_AMOUNT()
+}
+
 /// Payment amount in smallest unit
 func (rcv *PUR) MutatePAYMENT_AMOUNT(n uint64) bool {
 	return rcv._tab.MutateUint64Slot(16, n)
+}
+
+func (rcv *PUR) MutatePaymentAmount(n uint64) bool {
+	return rcv.MutatePAYMENT_AMOUNT(n)
 }
 
 /// Currency of payment
@@ -165,6 +213,10 @@ func (rcv *PUR) PAYMENT_CURRENCY() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *PUR) PaymentCurrency() []byte {
+	return rcv.PAYMENT_CURRENCY()
 }
 
 /// Currency of payment
@@ -177,6 +229,10 @@ func (rcv *PUR) PAYMENT_TX_HASH() []byte {
 	return nil
 }
 
+func (rcv *PUR) PaymentTxHash() []byte {
+	return rcv.PAYMENT_TX_HASH()
+}
+
 /// Transaction hash for cryptocurrency payments
 /// Blockchain network: "ethereum", "solana", "bitcoin"
 func (rcv *PUR) PAYMENT_CHAIN() []byte {
@@ -187,6 +243,10 @@ func (rcv *PUR) PAYMENT_CHAIN() []byte {
 	return nil
 }
 
+func (rcv *PUR) PaymentChain() []byte {
+	return rcv.PAYMENT_CHAIN()
+}
+
 /// Blockchain network: "ethereum", "solana", "bitcoin"
 /// Reference ID for credit/fiat payments
 func (rcv *PUR) PAYMENT_REFERENCE() []byte {
@@ -195,6 +255,10 @@ func (rcv *PUR) PAYMENT_REFERENCE() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *PUR) PaymentReference() []byte {
+	return rcv.PAYMENT_REFERENCE()
 }
 
 /// Reference ID for credit/fiat payments
@@ -208,6 +272,10 @@ func (rcv *PUR) BUYER_SIGNATURE(j int) byte {
 	return 0
 }
 
+func (rcv *PUR) BuyerSignature(j int) byte {
+	return rcv.BUYER_SIGNATURE(j)
+}
+
 func (rcv *PUR) BUYER_SIGNATURELength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
 	if o != 0 {
@@ -216,12 +284,20 @@ func (rcv *PUR) BUYER_SIGNATURELength() int {
 	return 0
 }
 
+func (rcv *PUR) BuyerSignatureLength() int {
+	return rcv.BUYER_SIGNATURELength()
+}
+
 func (rcv *PUR) BUYER_SIGNATUREBytes() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *PUR) BuyerSignatureBytes() []byte {
+	return rcv.BUYER_SIGNATUREBytes()
 }
 
 /// Ed25519 signature from buyer
@@ -234,6 +310,10 @@ func (rcv *PUR) MutateBUYER_SIGNATURE(j int, n byte) bool {
 	return false
 }
 
+func (rcv *PUR) MutateBuyerSignature(j int, n byte) bool {
+	return rcv.MutateBUYER_SIGNATURE(j, n)
+}
+
 /// Unix timestamp of the request
 func (rcv *PUR) TIMESTAMP() uint64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
@@ -243,9 +323,17 @@ func (rcv *PUR) TIMESTAMP() uint64 {
 	return 0
 }
 
+func (rcv *PUR) Timestamp() uint64 {
+	return rcv.TIMESTAMP()
+}
+
 /// Unix timestamp of the request
 func (rcv *PUR) MutateTIMESTAMP(n uint64) bool {
 	return rcv._tab.MutateUint64Slot(28, n)
+}
+
+func (rcv *PUR) MutateTimestamp(n uint64) bool {
+	return rcv.MutateTIMESTAMP(n)
 }
 
 func PURStart(builder *flatbuffers.Builder) {
@@ -254,47 +342,92 @@ func PURStart(builder *flatbuffers.Builder) {
 func PURAddREQUEST_ID(builder *flatbuffers.Builder, REQUEST_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(REQUEST_ID), 0)
 }
+func PURAddRequestId(builder *flatbuffers.Builder, REQUEST_ID flatbuffers.UOffsetT) {
+	PURAddREQUEST_ID(builder, REQUEST_ID)
+}
 func PURAddLISTING_ID(builder *flatbuffers.Builder, LISTING_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(LISTING_ID), 0)
+}
+func PURAddListingId(builder *flatbuffers.Builder, LISTING_ID flatbuffers.UOffsetT) {
+	PURAddLISTING_ID(builder, LISTING_ID)
 }
 func PURAddTIER_NAME(builder *flatbuffers.Builder, TIER_NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(TIER_NAME), 0)
 }
+func PURAddTierName(builder *flatbuffers.Builder, TIER_NAME flatbuffers.UOffsetT) {
+	PURAddTIER_NAME(builder, TIER_NAME)
+}
 func PURAddBUYER_PEER_ID(builder *flatbuffers.Builder, BUYER_PEER_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(BUYER_PEER_ID), 0)
+}
+func PURAddBuyerPeerId(builder *flatbuffers.Builder, BUYER_PEER_ID flatbuffers.UOffsetT) {
+	PURAddBUYER_PEER_ID(builder, BUYER_PEER_ID)
 }
 func PURAddBUYER_ENCRYPTION_PUBKEY(builder *flatbuffers.Builder, BUYER_ENCRYPTION_PUBKEY flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(BUYER_ENCRYPTION_PUBKEY), 0)
 }
+func PURAddBuyerEncryptionPubkey(builder *flatbuffers.Builder, BUYER_ENCRYPTION_PUBKEY flatbuffers.UOffsetT) {
+	PURAddBUYER_ENCRYPTION_PUBKEY(builder, BUYER_ENCRYPTION_PUBKEY)
+}
 func PURStartBUYER_ENCRYPTION_PUBKEYVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(1, numElems, 1)
+}
+func PURStartBuyerEncryptionPubkeyVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return PURStartBUYER_ENCRYPTION_PUBKEYVector(builder, numElems)
 }
 func PURAddPAYMENT_METHOD(builder *flatbuffers.Builder, PAYMENT_METHOD paymentMethod) {
 	builder.PrependInt8Slot(5, int8(PAYMENT_METHOD), 0)
 }
+func PURAddPaymentMethod(builder *flatbuffers.Builder, PAYMENT_METHOD paymentMethod) {
+	PURAddPAYMENT_METHOD(builder, PAYMENT_METHOD)
+}
 func PURAddPAYMENT_AMOUNT(builder *flatbuffers.Builder, PAYMENT_AMOUNT uint64) {
 	builder.PrependUint64Slot(6, PAYMENT_AMOUNT, 0)
+}
+func PURAddPaymentAmount(builder *flatbuffers.Builder, PAYMENT_AMOUNT uint64) {
+	PURAddPAYMENT_AMOUNT(builder, PAYMENT_AMOUNT)
 }
 func PURAddPAYMENT_CURRENCY(builder *flatbuffers.Builder, PAYMENT_CURRENCY flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(PAYMENT_CURRENCY), 0)
 }
+func PURAddPaymentCurrency(builder *flatbuffers.Builder, PAYMENT_CURRENCY flatbuffers.UOffsetT) {
+	PURAddPAYMENT_CURRENCY(builder, PAYMENT_CURRENCY)
+}
 func PURAddPAYMENT_TX_HASH(builder *flatbuffers.Builder, PAYMENT_TX_HASH flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(PAYMENT_TX_HASH), 0)
+}
+func PURAddPaymentTxHash(builder *flatbuffers.Builder, PAYMENT_TX_HASH flatbuffers.UOffsetT) {
+	PURAddPAYMENT_TX_HASH(builder, PAYMENT_TX_HASH)
 }
 func PURAddPAYMENT_CHAIN(builder *flatbuffers.Builder, PAYMENT_CHAIN flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(PAYMENT_CHAIN), 0)
 }
+func PURAddPaymentChain(builder *flatbuffers.Builder, PAYMENT_CHAIN flatbuffers.UOffsetT) {
+	PURAddPAYMENT_CHAIN(builder, PAYMENT_CHAIN)
+}
 func PURAddPAYMENT_REFERENCE(builder *flatbuffers.Builder, PAYMENT_REFERENCE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(PAYMENT_REFERENCE), 0)
+}
+func PURAddPaymentReference(builder *flatbuffers.Builder, PAYMENT_REFERENCE flatbuffers.UOffsetT) {
+	PURAddPAYMENT_REFERENCE(builder, PAYMENT_REFERENCE)
 }
 func PURAddBUYER_SIGNATURE(builder *flatbuffers.Builder, BUYER_SIGNATURE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(BUYER_SIGNATURE), 0)
 }
+func PURAddBuyerSignature(builder *flatbuffers.Builder, BUYER_SIGNATURE flatbuffers.UOffsetT) {
+	PURAddBUYER_SIGNATURE(builder, BUYER_SIGNATURE)
+}
 func PURStartBUYER_SIGNATUREVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(1, numElems, 1)
 }
+func PURStartBuyerSignatureVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return PURStartBUYER_SIGNATUREVector(builder, numElems)
+}
 func PURAddTIMESTAMP(builder *flatbuffers.Builder, TIMESTAMP uint64) {
 	builder.PrependUint64Slot(12, TIMESTAMP, 0)
+}
+func PURAddTimestamp(builder *flatbuffers.Builder, TIMESTAMP uint64) {
+	PURAddTIMESTAMP(builder, TIMESTAMP)
 }
 func PUREnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

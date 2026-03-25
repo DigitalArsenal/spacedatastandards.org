@@ -88,9 +88,9 @@ struct AOFBuilder:
     def end():
         return b_.EndObject()
 
-def AOFStartINSERT_ZONEVector(b_:flatbuffers.builder, n_:int):
+def AOFStartINSERTZONEVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(1, n_, 1)
-def AOFCreateINSERT_ZONEVector(b_:flatbuffers.builder, v_:[int]):
+def AOFCreateINSERTZONEVector(b_:flatbuffers.builder, v_:[int]):
     b_.StartVector(1, v_.length, 1)
     reverse(v_) e_: b_.PrependUint8(e_)
     return b_.EndVector(v_.length)

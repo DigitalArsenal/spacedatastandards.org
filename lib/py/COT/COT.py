@@ -228,25 +228,39 @@ except:
 class COTT(object):
 
     # COTT
-    def __init__(self):
-        self.VERSION = None  # type: str
-        self.UID = None  # type: str
-        self.TYPE = None  # type: str
-        self.HOW = 0  # type: int
-        self.TIME = None  # type: str
-        self.START = None  # type: str
-        self.STALE = None  # type: str
-        self.ACCESS = None  # type: str
-        self.QOS = None  # type: str
-        self.OPEX = None  # type: str
-        self.POINT = None  # type: Optional[COTPoint.COTPointT]
-        self.DETAIL = None  # type: Optional[COTDetail.COTDetailT]
+    def __init__(
+        self,
+        VERSION = None,
+        UID = None,
+        TYPE = None,
+        HOW = 0,
+        TIME = None,
+        START = None,
+        STALE = None,
+        ACCESS = None,
+        QOS = None,
+        OPEX = None,
+        POINT = None,
+        DETAIL = None,
+    ):
+        self.VERSION = VERSION  # type: Optional[str]
+        self.UID = UID  # type: Optional[str]
+        self.TYPE = TYPE  # type: Optional[str]
+        self.HOW = HOW  # type: int
+        self.TIME = TIME  # type: Optional[str]
+        self.START = START  # type: Optional[str]
+        self.STALE = STALE  # type: Optional[str]
+        self.ACCESS = ACCESS  # type: Optional[str]
+        self.QOS = QOS  # type: Optional[str]
+        self.OPEX = OPEX  # type: Optional[str]
+        self.POINT = POINT  # type: Optional[COTPoint.COTPointT]
+        self.DETAIL = DETAIL  # type: Optional[COTDetail.COTDetailT]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        COT = COT()
-        COT.Init(buf, pos)
-        return cls.InitFromObj(COT)
+        tmpCot = COT()
+        tmpCot.Init(buf, pos)
+        return cls.InitFromObj(tmpCot)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -254,9 +268,9 @@ class COTT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, COT):
+    def InitFromObj(cls, tmpCot):
         x = COTT()
-        x._UnPack(COT)
+        x._UnPack(tmpCot)
         return x
 
     # COTT

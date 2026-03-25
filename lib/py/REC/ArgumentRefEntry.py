@@ -2,4 +2,150 @@
 
 # namespace: 
 
-# NOTE ArgumentRefEntry.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Argument reference entry in command container
+class ArgumentRefEntry(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = ArgumentRefEntry()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsArgumentRefEntry(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def ArgumentRefEntryBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x58\x54\x43", size_prefixed=size_prefixed)
+
+    # ArgumentRefEntry
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Argument reference
+    # ArgumentRefEntry
+    def ARGUMENT_REF(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Location in container
+    # ArgumentRefEntry
+    def LOCATION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from LocationInContainer import LocationInContainer
+            obj = LocationInContainer()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Short description
+    # ArgumentRefEntry
+    def SHORT_DESCRIPTION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+def ArgumentRefEntryStart(builder):
+    builder.StartObject(3)
+
+def Start(builder):
+    ArgumentRefEntryStart(builder)
+
+def ArgumentRefEntryAddARGUMENT_REF(builder, ARGUMENT_REF):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(ARGUMENT_REF), 0)
+
+def AddARGUMENT_REF(builder, ARGUMENT_REF):
+    ArgumentRefEntryAddARGUMENT_REF(builder, ARGUMENT_REF)
+
+def ArgumentRefEntryAddLOCATION(builder, LOCATION):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(LOCATION), 0)
+
+def AddLOCATION(builder, LOCATION):
+    ArgumentRefEntryAddLOCATION(builder, LOCATION)
+
+def ArgumentRefEntryAddSHORT_DESCRIPTION(builder, SHORT_DESCRIPTION):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(SHORT_DESCRIPTION), 0)
+
+def AddSHORT_DESCRIPTION(builder, SHORT_DESCRIPTION):
+    ArgumentRefEntryAddSHORT_DESCRIPTION(builder, SHORT_DESCRIPTION)
+
+def ArgumentRefEntryEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return ArgumentRefEntryEnd(builder)
+
+import LocationInContainer
+try:
+    from typing import Optional
+except:
+    pass
+
+class ArgumentRefEntryT(object):
+
+    # ArgumentRefEntryT
+    def __init__(
+        self,
+        ARGUMENT_REF = None,
+        LOCATION = None,
+        SHORT_DESCRIPTION = None,
+    ):
+        self.ARGUMENT_REF = ARGUMENT_REF  # type: Optional[str]
+        self.LOCATION = LOCATION  # type: Optional[LocationInContainer.LocationInContainerT]
+        self.SHORT_DESCRIPTION = SHORT_DESCRIPTION  # type: Optional[str]
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpArgumentRefEntry = ArgumentRefEntry()
+        tmpArgumentRefEntry.Init(buf, pos)
+        return cls.InitFromObj(tmpArgumentRefEntry)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpArgumentRefEntry):
+        x = ArgumentRefEntryT()
+        x._UnPack(tmpArgumentRefEntry)
+        return x
+
+    # ArgumentRefEntryT
+    def _UnPack(self, ArgumentRefEntry):
+        if ArgumentRefEntry is None:
+            return
+        self.ARGUMENT_REF = ArgumentRefEntry.ARGUMENT_REF()
+        if ArgumentRefEntry.LOCATION() is not None:
+            self.LOCATION = LocationInContainer.LocationInContainerT.InitFromObj(ArgumentRefEntry.LOCATION())
+        self.SHORT_DESCRIPTION = ArgumentRefEntry.SHORT_DESCRIPTION()
+
+    # ArgumentRefEntryT
+    def Pack(self, builder):
+        if self.ARGUMENT_REF is not None:
+            ARGUMENT_REF = builder.CreateString(self.ARGUMENT_REF)
+        if self.LOCATION is not None:
+            LOCATION = self.LOCATION.Pack(builder)
+        if self.SHORT_DESCRIPTION is not None:
+            SHORT_DESCRIPTION = builder.CreateString(self.SHORT_DESCRIPTION)
+        ArgumentRefEntryStart(builder)
+        if self.ARGUMENT_REF is not None:
+            ArgumentRefEntryAddARGUMENT_REF(builder, ARGUMENT_REF)
+        if self.LOCATION is not None:
+            ArgumentRefEntryAddLOCATION(builder, LOCATION)
+        if self.SHORT_DESCRIPTION is not None:
+            ArgumentRefEntryAddSHORT_DESCRIPTION(builder, SHORT_DESCRIPTION)
+        ArgumentRefEntry = ArgumentRefEntryEnd(builder)
+        return ArgumentRefEntry

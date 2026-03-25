@@ -327,6 +327,12 @@ def MNFStartELEMENTSVector(builder, numElems):
 def StartELEMENTSVector(builder, numElems):
     return MNFStartELEMENTSVector(builder, numElems)
 
+def MNFCreateELEMENTSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateELEMENTSVector(builder, data):
+    MNFCreateELEMENTSVector(builder, data)
+
 def MNFAddCORRELATED_ID(builder, CORRELATED_ID):
     builder.PrependUOffsetTRelativeSlot(18, flatbuffers.number_types.UOffsetTFlags.py_type(CORRELATED_ID), 0)
 
@@ -354,33 +360,55 @@ except:
 class MNFT(object):
 
     # MNFT
-    def __init__(self):
-        self.ID = None  # type: str
-        self.SAT_NO = 0  # type: int
-        self.OBJECT_DESIGNATOR = None  # type: str
-        self.STATUS = 0  # type: int
-        self.EVENT_EPOCH = None  # type: str
-        self.SOURCE = None  # type: str
-        self.REF_FRAME = None  # type: str
-        self.ORIG_SEMI_MAJOR_AXIS = 0.0  # type: float
-        self.ORIG_ECCENTRICITY = 0.0  # type: float
-        self.ORIG_INCLINATION = 0.0  # type: float
-        self.DELTA_V_MIN = 0.0  # type: float
-        self.DELTA_V_MAX = 0.0  # type: float
-        self.DELTA_V_STEP = 0.0  # type: float
-        self.DELTA_T_MIN = 0.0  # type: float
-        self.DELTA_T_MAX = 0.0  # type: float
-        self.DELTA_T_STEP = 0.0  # type: float
-        self.NUM_ELEMENTS = 0  # type: int
-        self.ELEMENTS = None  # type: List[manifoldElset.manifoldElsetT]
-        self.CORRELATED_ID = None  # type: str
-        self.NOTES = None  # type: str
+    def __init__(
+        self,
+        ID = None,
+        SAT_NO = 0,
+        OBJECT_DESIGNATOR = None,
+        STATUS = 0,
+        EVENT_EPOCH = None,
+        SOURCE = None,
+        REF_FRAME = None,
+        ORIG_SEMI_MAJOR_AXIS = 0.0,
+        ORIG_ECCENTRICITY = 0.0,
+        ORIG_INCLINATION = 0.0,
+        DELTA_V_MIN = 0.0,
+        DELTA_V_MAX = 0.0,
+        DELTA_V_STEP = 0.0,
+        DELTA_T_MIN = 0.0,
+        DELTA_T_MAX = 0.0,
+        DELTA_T_STEP = 0.0,
+        NUM_ELEMENTS = 0,
+        ELEMENTS = None,
+        CORRELATED_ID = None,
+        NOTES = None,
+    ):
+        self.ID = ID  # type: Optional[str]
+        self.SAT_NO = SAT_NO  # type: int
+        self.OBJECT_DESIGNATOR = OBJECT_DESIGNATOR  # type: Optional[str]
+        self.STATUS = STATUS  # type: int
+        self.EVENT_EPOCH = EVENT_EPOCH  # type: Optional[str]
+        self.SOURCE = SOURCE  # type: Optional[str]
+        self.REF_FRAME = REF_FRAME  # type: Optional[str]
+        self.ORIG_SEMI_MAJOR_AXIS = ORIG_SEMI_MAJOR_AXIS  # type: float
+        self.ORIG_ECCENTRICITY = ORIG_ECCENTRICITY  # type: float
+        self.ORIG_INCLINATION = ORIG_INCLINATION  # type: float
+        self.DELTA_V_MIN = DELTA_V_MIN  # type: float
+        self.DELTA_V_MAX = DELTA_V_MAX  # type: float
+        self.DELTA_V_STEP = DELTA_V_STEP  # type: float
+        self.DELTA_T_MIN = DELTA_T_MIN  # type: float
+        self.DELTA_T_MAX = DELTA_T_MAX  # type: float
+        self.DELTA_T_STEP = DELTA_T_STEP  # type: float
+        self.NUM_ELEMENTS = NUM_ELEMENTS  # type: int
+        self.ELEMENTS = ELEMENTS  # type: Optional[List[manifoldElset.manifoldElsetT]]
+        self.CORRELATED_ID = CORRELATED_ID  # type: Optional[str]
+        self.NOTES = NOTES  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        MNF = MNF()
-        MNF.Init(buf, pos)
-        return cls.InitFromObj(MNF)
+        tmpMnf = MNF()
+        tmpMnf.Init(buf, pos)
+        return cls.InitFromObj(tmpMnf)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -388,9 +416,9 @@ class MNFT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, MNF):
+    def InitFromObj(cls, tmpMnf):
         x = MNFT()
-        x._UnPack(MNF)
+        x._UnPack(tmpMnf)
         return x
 
     # MNFT

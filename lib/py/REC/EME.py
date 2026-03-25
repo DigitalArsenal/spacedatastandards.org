@@ -2,4 +2,408 @@
 
 # namespace: 
 
-# NOTE EME.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Encrypted Message Envelope
+class EME(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = EME()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsEME(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def EMEBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x45\x4D\x45", size_prefixed=size_prefixed)
+
+    # EME
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Encrypted data blob, containing the ciphertext of the original plaintext message.
+    # EME
+    def ENCRYPTED_BLOB(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 1))
+        return 0
+
+    # EME
+    def ENCRYPTED_BLOBAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Uint8Flags, o)
+        return 0
+
+    # EME
+    def ENCRYPTED_BLOBLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # EME
+    def ENCRYPTED_BLOBIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        return o == 0
+
+    # Temporary public key used for the encryption session, contributing to the derivation of the shared secret.
+    # EME
+    def EPHEMERAL_PUBLIC_KEY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Message Authentication Code to verify the integrity and authenticity of the encrypted message.
+    # EME
+    def MAC(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Random 12-byte nonce starting value. Incremented for each record in the stream to ensure unique nonces.
+    # EME
+    def NONCE_START(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 1))
+        return 0
+
+    # EME
+    def NONCE_STARTAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Uint8Flags, o)
+        return 0
+
+    # EME
+    def NONCE_STARTLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # EME
+    def NONCE_STARTIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        return o == 0
+
+    # Additional authentication tag used in some encryption schemes for integrity and authenticity verification.
+    # EME
+    def TAG(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Initialization vector used to introduce randomness in the encryption process, enhancing security.
+    # EME
+    def IV(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Cryptographic salt used in key derivation (e.g. HKDF) to ensure unique key material per session.
+    # EME
+    def SALT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Identifier for the public key used, aiding in recipient key management and message decryption.
+    # EME
+    def PUBLIC_KEY_IDENTIFIER(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Specifies the set of cryptographic algorithms used in the encryption process.
+    # EME
+    def CIPHER_SUITE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Parameters for the Key Derivation Function, guiding the process of deriving keys from the shared secret.
+    # EME
+    def KDF_PARAMETERS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Parameters defining specific settings for the encryption algorithm, such as block size or operation mode.
+    # EME
+    def ENCRYPTION_ALGORITHM_PARAMETERS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+def EMEStart(builder):
+    builder.StartObject(11)
+
+def Start(builder):
+    EMEStart(builder)
+
+def EMEAddENCRYPTED_BLOB(builder, ENCRYPTED_BLOB):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(ENCRYPTED_BLOB), 0)
+
+def AddENCRYPTED_BLOB(builder, ENCRYPTED_BLOB):
+    EMEAddENCRYPTED_BLOB(builder, ENCRYPTED_BLOB)
+
+def EMEStartENCRYPTED_BLOBVector(builder, numElems):
+    return builder.StartVector(1, numElems, 1)
+
+def StartENCRYPTED_BLOBVector(builder, numElems):
+    return EMEStartENCRYPTED_BLOBVector(builder, numElems)
+
+def EMECreateENCRYPTED_BLOBVector(builder, data):
+    data = list(data)
+    builder.StartVector(1, len(data), 1)
+    for item in reversed(data):
+        builder.PrependUint8(item)
+    return builder.EndVector()
+
+def CreateENCRYPTED_BLOBVector(builder, data):
+    EMECreateENCRYPTED_BLOBVector(builder, data)
+
+def EMEAddEPHEMERAL_PUBLIC_KEY(builder, EPHEMERAL_PUBLIC_KEY):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(EPHEMERAL_PUBLIC_KEY), 0)
+
+def AddEPHEMERAL_PUBLIC_KEY(builder, EPHEMERAL_PUBLIC_KEY):
+    EMEAddEPHEMERAL_PUBLIC_KEY(builder, EPHEMERAL_PUBLIC_KEY)
+
+def EMEAddMAC(builder, MAC):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(MAC), 0)
+
+def AddMAC(builder, MAC):
+    EMEAddMAC(builder, MAC)
+
+def EMEAddNONCE_START(builder, NONCE_START):
+    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(NONCE_START), 0)
+
+def AddNONCE_START(builder, NONCE_START):
+    EMEAddNONCE_START(builder, NONCE_START)
+
+def EMEStartNONCE_STARTVector(builder, numElems):
+    return builder.StartVector(1, numElems, 1)
+
+def StartNONCE_STARTVector(builder, numElems):
+    return EMEStartNONCE_STARTVector(builder, numElems)
+
+def EMECreateNONCE_STARTVector(builder, data):
+    data = list(data)
+    builder.StartVector(1, len(data), 1)
+    for item in reversed(data):
+        builder.PrependUint8(item)
+    return builder.EndVector()
+
+def CreateNONCE_STARTVector(builder, data):
+    EMECreateNONCE_STARTVector(builder, data)
+
+def EMEAddTAG(builder, TAG):
+    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(TAG), 0)
+
+def AddTAG(builder, TAG):
+    EMEAddTAG(builder, TAG)
+
+def EMEAddIV(builder, IV):
+    builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(IV), 0)
+
+def AddIV(builder, IV):
+    EMEAddIV(builder, IV)
+
+def EMEAddSALT(builder, SALT):
+    builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(SALT), 0)
+
+def AddSALT(builder, SALT):
+    EMEAddSALT(builder, SALT)
+
+def EMEAddPUBLIC_KEY_IDENTIFIER(builder, PUBLIC_KEY_IDENTIFIER):
+    builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(PUBLIC_KEY_IDENTIFIER), 0)
+
+def AddPUBLIC_KEY_IDENTIFIER(builder, PUBLIC_KEY_IDENTIFIER):
+    EMEAddPUBLIC_KEY_IDENTIFIER(builder, PUBLIC_KEY_IDENTIFIER)
+
+def EMEAddCIPHER_SUITE(builder, CIPHER_SUITE):
+    builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(CIPHER_SUITE), 0)
+
+def AddCIPHER_SUITE(builder, CIPHER_SUITE):
+    EMEAddCIPHER_SUITE(builder, CIPHER_SUITE)
+
+def EMEAddKDF_PARAMETERS(builder, KDF_PARAMETERS):
+    builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(KDF_PARAMETERS), 0)
+
+def AddKDF_PARAMETERS(builder, KDF_PARAMETERS):
+    EMEAddKDF_PARAMETERS(builder, KDF_PARAMETERS)
+
+def EMEAddENCRYPTION_ALGORITHM_PARAMETERS(builder, ENCRYPTION_ALGORITHM_PARAMETERS):
+    builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(ENCRYPTION_ALGORITHM_PARAMETERS), 0)
+
+def AddENCRYPTION_ALGORITHM_PARAMETERS(builder, ENCRYPTION_ALGORITHM_PARAMETERS):
+    EMEAddENCRYPTION_ALGORITHM_PARAMETERS(builder, ENCRYPTION_ALGORITHM_PARAMETERS)
+
+def EMEEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return EMEEnd(builder)
+
+try:
+    from typing import List
+except:
+    pass
+
+class EMET(object):
+
+    # EMET
+    def __init__(
+        self,
+        ENCRYPTED_BLOB = None,
+        EPHEMERAL_PUBLIC_KEY = None,
+        MAC = None,
+        NONCE_START = None,
+        TAG = None,
+        IV = None,
+        SALT = None,
+        PUBLIC_KEY_IDENTIFIER = None,
+        CIPHER_SUITE = None,
+        KDF_PARAMETERS = None,
+        ENCRYPTION_ALGORITHM_PARAMETERS = None,
+    ):
+        self.ENCRYPTED_BLOB = ENCRYPTED_BLOB  # type: Optional[List[int]]
+        self.EPHEMERAL_PUBLIC_KEY = EPHEMERAL_PUBLIC_KEY  # type: Optional[str]
+        self.MAC = MAC  # type: Optional[str]
+        self.NONCE_START = NONCE_START  # type: Optional[List[int]]
+        self.TAG = TAG  # type: Optional[str]
+        self.IV = IV  # type: Optional[str]
+        self.SALT = SALT  # type: Optional[str]
+        self.PUBLIC_KEY_IDENTIFIER = PUBLIC_KEY_IDENTIFIER  # type: Optional[str]
+        self.CIPHER_SUITE = CIPHER_SUITE  # type: Optional[str]
+        self.KDF_PARAMETERS = KDF_PARAMETERS  # type: Optional[str]
+        self.ENCRYPTION_ALGORITHM_PARAMETERS = ENCRYPTION_ALGORITHM_PARAMETERS  # type: Optional[str]
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpEme = EME()
+        tmpEme.Init(buf, pos)
+        return cls.InitFromObj(tmpEme)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpEme):
+        x = EMET()
+        x._UnPack(tmpEme)
+        return x
+
+    # EMET
+    def _UnPack(self, EME):
+        if EME is None:
+            return
+        if not EME.ENCRYPTED_BLOBIsNone():
+            if np is None:
+                self.ENCRYPTED_BLOB = []
+                for i in range(EME.ENCRYPTED_BLOBLength()):
+                    self.ENCRYPTED_BLOB.append(EME.ENCRYPTED_BLOB(i))
+            else:
+                self.ENCRYPTED_BLOB = EME.ENCRYPTED_BLOBAsNumpy()
+        self.EPHEMERAL_PUBLIC_KEY = EME.EPHEMERAL_PUBLIC_KEY()
+        self.MAC = EME.MAC()
+        if not EME.NONCE_STARTIsNone():
+            if np is None:
+                self.NONCE_START = []
+                for i in range(EME.NONCE_STARTLength()):
+                    self.NONCE_START.append(EME.NONCE_START(i))
+            else:
+                self.NONCE_START = EME.NONCE_STARTAsNumpy()
+        self.TAG = EME.TAG()
+        self.IV = EME.IV()
+        self.SALT = EME.SALT()
+        self.PUBLIC_KEY_IDENTIFIER = EME.PUBLIC_KEY_IDENTIFIER()
+        self.CIPHER_SUITE = EME.CIPHER_SUITE()
+        self.KDF_PARAMETERS = EME.KDF_PARAMETERS()
+        self.ENCRYPTION_ALGORITHM_PARAMETERS = EME.ENCRYPTION_ALGORITHM_PARAMETERS()
+
+    # EMET
+    def Pack(self, builder):
+        if self.ENCRYPTED_BLOB is not None:
+            if np is not None and type(self.ENCRYPTED_BLOB) is np.ndarray:
+                ENCRYPTED_BLOB = builder.CreateNumpyVector(self.ENCRYPTED_BLOB)
+            else:
+                EMEStartENCRYPTED_BLOBVector(builder, len(self.ENCRYPTED_BLOB))
+                for i in reversed(range(len(self.ENCRYPTED_BLOB))):
+                    builder.PrependUint8(self.ENCRYPTED_BLOB[i])
+                ENCRYPTED_BLOB = builder.EndVector()
+        if self.EPHEMERAL_PUBLIC_KEY is not None:
+            EPHEMERAL_PUBLIC_KEY = builder.CreateString(self.EPHEMERAL_PUBLIC_KEY)
+        if self.MAC is not None:
+            MAC = builder.CreateString(self.MAC)
+        if self.NONCE_START is not None:
+            if np is not None and type(self.NONCE_START) is np.ndarray:
+                NONCE_START = builder.CreateNumpyVector(self.NONCE_START)
+            else:
+                EMEStartNONCE_STARTVector(builder, len(self.NONCE_START))
+                for i in reversed(range(len(self.NONCE_START))):
+                    builder.PrependUint8(self.NONCE_START[i])
+                NONCE_START = builder.EndVector()
+        if self.TAG is not None:
+            TAG = builder.CreateString(self.TAG)
+        if self.IV is not None:
+            IV = builder.CreateString(self.IV)
+        if self.SALT is not None:
+            SALT = builder.CreateString(self.SALT)
+        if self.PUBLIC_KEY_IDENTIFIER is not None:
+            PUBLIC_KEY_IDENTIFIER = builder.CreateString(self.PUBLIC_KEY_IDENTIFIER)
+        if self.CIPHER_SUITE is not None:
+            CIPHER_SUITE = builder.CreateString(self.CIPHER_SUITE)
+        if self.KDF_PARAMETERS is not None:
+            KDF_PARAMETERS = builder.CreateString(self.KDF_PARAMETERS)
+        if self.ENCRYPTION_ALGORITHM_PARAMETERS is not None:
+            ENCRYPTION_ALGORITHM_PARAMETERS = builder.CreateString(self.ENCRYPTION_ALGORITHM_PARAMETERS)
+        EMEStart(builder)
+        if self.ENCRYPTED_BLOB is not None:
+            EMEAddENCRYPTED_BLOB(builder, ENCRYPTED_BLOB)
+        if self.EPHEMERAL_PUBLIC_KEY is not None:
+            EMEAddEPHEMERAL_PUBLIC_KEY(builder, EPHEMERAL_PUBLIC_KEY)
+        if self.MAC is not None:
+            EMEAddMAC(builder, MAC)
+        if self.NONCE_START is not None:
+            EMEAddNONCE_START(builder, NONCE_START)
+        if self.TAG is not None:
+            EMEAddTAG(builder, TAG)
+        if self.IV is not None:
+            EMEAddIV(builder, IV)
+        if self.SALT is not None:
+            EMEAddSALT(builder, SALT)
+        if self.PUBLIC_KEY_IDENTIFIER is not None:
+            EMEAddPUBLIC_KEY_IDENTIFIER(builder, PUBLIC_KEY_IDENTIFIER)
+        if self.CIPHER_SUITE is not None:
+            EMEAddCIPHER_SUITE(builder, CIPHER_SUITE)
+        if self.KDF_PARAMETERS is not None:
+            EMEAddKDF_PARAMETERS(builder, KDF_PARAMETERS)
+        if self.ENCRYPTION_ALGORITHM_PARAMETERS is not None:
+            EMEAddENCRYPTION_ALGORITHM_PARAMETERS(builder, ENCRYPTION_ALGORITHM_PARAMETERS)
+        EME = EMEEnd(builder)
+        return EME

@@ -32,7 +32,7 @@ class HYP : Table() {
     /**
      * Space Objects Involved
      */
-    fun CAT_IDS(j: Int) : String? {
+    fun catIds(j: Int) : String? {
         val o = __offset(4)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
@@ -40,14 +40,14 @@ class HYP : Table() {
             null
         }
     }
-    val CAT_IDSLength : Int
+    val catIdsLength : Int
         get() {
             val o = __offset(4); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Space Objects Involved
      */
-    fun SIT_IDS(j: Int) : String? {
+    fun sitIds(j: Int) : String? {
         val o = __offset(6)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
@@ -55,14 +55,14 @@ class HYP : Table() {
             null
         }
     }
-    val SIT_IDSLength : Int
+    val sitIdsLength : Int
         get() {
             val o = __offset(6); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Name of the hypothesis
      */
-    val NAME : String?
+    val name : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -71,12 +71,12 @@ class HYP : Table() {
                 null
             }
         }
-    val NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val nameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun nameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
     /**
      * Category of the hypothesis
      */
-    val CATEGORY : String?
+    val category : String?
         get() {
             val o = __offset(10)
             return if (o != 0) {
@@ -85,12 +85,12 @@ class HYP : Table() {
                 null
             }
         }
-    val CATEGORYAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
-    fun CATEGORYInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
+    val categoryAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(10, 1)
+    fun categoryInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 10, 1)
     /**
      * Row indicators for the hypothesis matrix
      */
-    fun ROW_INDICATORS(j: Int) : String? {
+    fun rowIndicators(j: Int) : String? {
         val o = __offset(12)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
@@ -98,14 +98,14 @@ class HYP : Table() {
             null
         }
     }
-    val ROW_INDICATORSLength : Int
+    val rowIndicatorsLength : Int
         get() {
             val o = __offset(12); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Column indicators for the hypothesis matrix
      */
-    fun COL_INDICATORS(j: Int) : String? {
+    fun colIndicators(j: Int) : String? {
         val o = __offset(14)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
@@ -113,14 +113,14 @@ class HYP : Table() {
             null
         }
     }
-    val COL_INDICATORSLength : Int
+    val colIndicatorsLength : Int
         get() {
             val o = __offset(14); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Matrix data as a boolean array in row major format; if overflow, adds additional rows
      */
-    fun MATRIX(j: Int) : Boolean {
+    fun matrix(j: Int) : Boolean {
         val o = __offset(16)
         return if (o != 0) {
             0.toByte() != bb.get(__vector(o) + j * 1)
@@ -128,17 +128,17 @@ class HYP : Table() {
             false
         }
     }
-    val MATRIXLength : Int
+    val matrixLength : Int
         get() {
             val o = __offset(16); return if (o != 0) __vector_len(o) else 0
         }
-    val MATRIXAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(16, 1)
-    fun MATRIXInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 16, 1)
+    val matrixAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(16, 1)
+    fun matrixInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 16, 1)
     /**
      * Scores for objects
      */
-    fun SCORE(j: Int) : Score? = SCORE(Score(), j)
-    fun SCORE(obj: Score, j: Int) : Score? {
+    fun score(j: Int) : Score? = score(Score(), j)
+    fun score(obj: Score, j: Int) : Score? {
         val o = __offset(18)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -146,14 +146,14 @@ class HYP : Table() {
             null
         }
     }
-    val SCORELength : Int
+    val scoreLength : Int
         get() {
             val o = __offset(18); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Analysis methodology used to form the hypothesis
      */
-    val ANALYSIS_METHOD : String?
+    val analysisMethod : String?
         get() {
             val o = __offset(20)
             return if (o != 0) {
@@ -162,9 +162,9 @@ class HYP : Table() {
                 null
             }
         }
-    val ANALYSIS_METHODAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(20, 1)
-    fun ANALYSIS_METHODInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 20, 1)
-    val EVENT_START_TIME : String?
+    val analysisMethodAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(20, 1)
+    fun analysisMethodInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 20, 1)
+    val eventStartTime : String?
         get() {
             val o = __offset(22)
             return if (o != 0) {
@@ -173,9 +173,9 @@ class HYP : Table() {
                 null
             }
         }
-    val EVENT_START_TIMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(22, 1)
-    fun EVENT_START_TIMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 22, 1)
-    val EVENT_END_TIME : String?
+    val eventStartTimeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(22, 1)
+    fun eventStartTimeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 22, 1)
+    val eventEndTime : String?
         get() {
             val o = __offset(24)
             return if (o != 0) {
@@ -184,33 +184,33 @@ class HYP : Table() {
                 null
             }
         }
-    val EVENT_END_TIMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(24, 1)
-    fun EVENT_END_TIMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 24, 1)
+    val eventEndTimeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(24, 1)
+    fun eventEndTimeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 24, 1)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsHYP(_bb: ByteBuffer): HYP = getRootAsHYP(_bb, HYP())
         fun getRootAsHYP(_bb: ByteBuffer, obj: HYP): HYP {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun HYPBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$HYP")
-        fun createHYP(builder: FlatBufferBuilder, CAT_IDSOffset: Int, SIT_IDSOffset: Int, NAMEOffset: Int, CATEGORYOffset: Int, ROW_INDICATORSOffset: Int, COL_INDICATORSOffset: Int, MATRIXOffset: Int, SCOREOffset: Int, ANALYSIS_METHODOffset: Int, EVENT_START_TIMEOffset: Int, EVENT_END_TIMEOffset: Int) : Int {
+        fun createHYP(builder: FlatBufferBuilder, catIdsOffset: Int, sitIdsOffset: Int, nameOffset: Int, categoryOffset: Int, rowIndicatorsOffset: Int, colIndicatorsOffset: Int, matrixOffset: Int, scoreOffset: Int, analysisMethodOffset: Int, eventStartTimeOffset: Int, eventEndTimeOffset: Int) : Int {
             builder.startTable(11)
-            addEVENT_END_TIME(builder, EVENT_END_TIMEOffset)
-            addEVENT_START_TIME(builder, EVENT_START_TIMEOffset)
-            addANALYSIS_METHOD(builder, ANALYSIS_METHODOffset)
-            addSCORE(builder, SCOREOffset)
-            addMATRIX(builder, MATRIXOffset)
-            addCOL_INDICATORS(builder, COL_INDICATORSOffset)
-            addROW_INDICATORS(builder, ROW_INDICATORSOffset)
-            addCATEGORY(builder, CATEGORYOffset)
-            addNAME(builder, NAMEOffset)
-            addSIT_IDS(builder, SIT_IDSOffset)
-            addCAT_IDS(builder, CAT_IDSOffset)
+            addEVENTENDTIME(builder, eventEndTimeOffset)
+            addEVENTSTARTTIME(builder, eventStartTimeOffset)
+            addANALYSISMETHOD(builder, analysisMethodOffset)
+            addSCORE(builder, scoreOffset)
+            addMATRIX(builder, matrixOffset)
+            addCOLINDICATORS(builder, colIndicatorsOffset)
+            addROWINDICATORS(builder, rowIndicatorsOffset)
+            addCATEGORY(builder, categoryOffset)
+            addNAME(builder, nameOffset)
+            addSITIDS(builder, sitIdsOffset)
+            addCATIDS(builder, catIdsOffset)
             return endHYP(builder)
         }
         fun startHYP(builder: FlatBufferBuilder) = builder.startTable(11)
-        fun addCAT_IDS(builder: FlatBufferBuilder, CAT_IDS: Int) = builder.addOffset(0, CAT_IDS, 0)
+        fun addCATIDS(builder: FlatBufferBuilder, catIds: Int) = builder.addOffset(0, catIds, 0)
         fun createCatIdsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -219,7 +219,7 @@ class HYP : Table() {
             return builder.endVector()
         }
         fun startCatIdsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addSIT_IDS(builder: FlatBufferBuilder, SIT_IDS: Int) = builder.addOffset(1, SIT_IDS, 0)
+        fun addSITIDS(builder: FlatBufferBuilder, sitIds: Int) = builder.addOffset(1, sitIds, 0)
         fun createSitIdsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -228,9 +228,9 @@ class HYP : Table() {
             return builder.endVector()
         }
         fun startSitIdsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addNAME(builder: FlatBufferBuilder, NAME: Int) = builder.addOffset(2, NAME, 0)
-        fun addCATEGORY(builder: FlatBufferBuilder, CATEGORY: Int) = builder.addOffset(3, CATEGORY, 0)
-        fun addROW_INDICATORS(builder: FlatBufferBuilder, ROW_INDICATORS: Int) = builder.addOffset(4, ROW_INDICATORS, 0)
+        fun addNAME(builder: FlatBufferBuilder, name: Int) = builder.addOffset(2, name, 0)
+        fun addCATEGORY(builder: FlatBufferBuilder, category: Int) = builder.addOffset(3, category, 0)
+        fun addROWINDICATORS(builder: FlatBufferBuilder, rowIndicators: Int) = builder.addOffset(4, rowIndicators, 0)
         fun createRowIndicatorsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -239,7 +239,7 @@ class HYP : Table() {
             return builder.endVector()
         }
         fun startRowIndicatorsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addCOL_INDICATORS(builder: FlatBufferBuilder, COL_INDICATORS: Int) = builder.addOffset(5, COL_INDICATORS, 0)
+        fun addCOLINDICATORS(builder: FlatBufferBuilder, colIndicators: Int) = builder.addOffset(5, colIndicators, 0)
         fun createColIndicatorsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -248,7 +248,7 @@ class HYP : Table() {
             return builder.endVector()
         }
         fun startColIndicatorsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addMATRIX(builder: FlatBufferBuilder, MATRIX: Int) = builder.addOffset(6, MATRIX, 0)
+        fun addMATRIX(builder: FlatBufferBuilder, matrix: Int) = builder.addOffset(6, matrix, 0)
         fun createMatrixVector(builder: FlatBufferBuilder, data: BooleanArray) : Int {
             builder.startVector(1, data.size, 1)
             for (i in data.size - 1 downTo 0) {
@@ -257,7 +257,7 @@ class HYP : Table() {
             return builder.endVector()
         }
         fun startMatrixVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(1, numElems, 1)
-        fun addSCORE(builder: FlatBufferBuilder, SCORE: Int) = builder.addOffset(7, SCORE, 0)
+        fun addSCORE(builder: FlatBufferBuilder, score: Int) = builder.addOffset(7, score, 0)
         fun createScoreVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -266,9 +266,9 @@ class HYP : Table() {
             return builder.endVector()
         }
         fun startScoreVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addANALYSIS_METHOD(builder: FlatBufferBuilder, ANALYSIS_METHOD: Int) = builder.addOffset(8, ANALYSIS_METHOD, 0)
-        fun addEVENT_START_TIME(builder: FlatBufferBuilder, EVENT_START_TIME: Int) = builder.addOffset(9, EVENT_START_TIME, 0)
-        fun addEVENT_END_TIME(builder: FlatBufferBuilder, EVENT_END_TIME: Int) = builder.addOffset(10, EVENT_END_TIME, 0)
+        fun addANALYSISMETHOD(builder: FlatBufferBuilder, analysisMethod: Int) = builder.addOffset(8, analysisMethod, 0)
+        fun addEVENTSTARTTIME(builder: FlatBufferBuilder, eventStartTime: Int) = builder.addOffset(9, eventStartTime, 0)
+        fun addEVENTENDTIME(builder: FlatBufferBuilder, eventEndTime: Int) = builder.addOffset(10, eventEndTime, 0)
         fun endHYP(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

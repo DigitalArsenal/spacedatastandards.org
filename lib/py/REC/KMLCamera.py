@@ -2,4 +2,203 @@
 
 # namespace: 
 
-# NOTE KMLCamera.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Camera viewpoint
+class KMLCamera(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = KMLCamera()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsKMLCamera(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def KMLCameraBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x4B\x4D\x4C", size_prefixed=size_prefixed)
+
+    # KMLCamera
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Camera longitude
+    # KMLCamera
+    def LONGITUDE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Camera latitude
+    # KMLCamera
+    def LATITUDE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Camera altitude
+    # KMLCamera
+    def ALTITUDE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Heading in degrees (0=North)
+    # KMLCamera
+    def HEADING(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Tilt in degrees from vertical
+    # KMLCamera
+    def TILT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Roll in degrees
+    # KMLCamera
+    def ROLL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Altitude mode
+    # KMLCamera
+    def ALTITUDE_MODE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+def KMLCameraStart(builder):
+    builder.StartObject(7)
+
+def Start(builder):
+    KMLCameraStart(builder)
+
+def KMLCameraAddLONGITUDE(builder, LONGITUDE):
+    builder.PrependFloat64Slot(0, LONGITUDE, 0.0)
+
+def AddLONGITUDE(builder, LONGITUDE):
+    KMLCameraAddLONGITUDE(builder, LONGITUDE)
+
+def KMLCameraAddLATITUDE(builder, LATITUDE):
+    builder.PrependFloat64Slot(1, LATITUDE, 0.0)
+
+def AddLATITUDE(builder, LATITUDE):
+    KMLCameraAddLATITUDE(builder, LATITUDE)
+
+def KMLCameraAddALTITUDE(builder, ALTITUDE):
+    builder.PrependFloat64Slot(2, ALTITUDE, 0.0)
+
+def AddALTITUDE(builder, ALTITUDE):
+    KMLCameraAddALTITUDE(builder, ALTITUDE)
+
+def KMLCameraAddHEADING(builder, HEADING):
+    builder.PrependFloat64Slot(3, HEADING, 0.0)
+
+def AddHEADING(builder, HEADING):
+    KMLCameraAddHEADING(builder, HEADING)
+
+def KMLCameraAddTILT(builder, TILT):
+    builder.PrependFloat64Slot(4, TILT, 0.0)
+
+def AddTILT(builder, TILT):
+    KMLCameraAddTILT(builder, TILT)
+
+def KMLCameraAddROLL(builder, ROLL):
+    builder.PrependFloat64Slot(5, ROLL, 0.0)
+
+def AddROLL(builder, ROLL):
+    KMLCameraAddROLL(builder, ROLL)
+
+def KMLCameraAddALTITUDE_MODE(builder, ALTITUDE_MODE):
+    builder.PrependInt8Slot(6, ALTITUDE_MODE, 0)
+
+def AddALTITUDE_MODE(builder, ALTITUDE_MODE):
+    KMLCameraAddALTITUDE_MODE(builder, ALTITUDE_MODE)
+
+def KMLCameraEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return KMLCameraEnd(builder)
+
+
+class KMLCameraT(object):
+
+    # KMLCameraT
+    def __init__(
+        self,
+        LONGITUDE = 0.0,
+        LATITUDE = 0.0,
+        ALTITUDE = 0.0,
+        HEADING = 0.0,
+        TILT = 0.0,
+        ROLL = 0.0,
+        ALTITUDE_MODE = 0,
+    ):
+        self.LONGITUDE = LONGITUDE  # type: float
+        self.LATITUDE = LATITUDE  # type: float
+        self.ALTITUDE = ALTITUDE  # type: float
+        self.HEADING = HEADING  # type: float
+        self.TILT = TILT  # type: float
+        self.ROLL = ROLL  # type: float
+        self.ALTITUDE_MODE = ALTITUDE_MODE  # type: int
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpKmlcamera = KMLCamera()
+        tmpKmlcamera.Init(buf, pos)
+        return cls.InitFromObj(tmpKmlcamera)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpKmlcamera):
+        x = KMLCameraT()
+        x._UnPack(tmpKmlcamera)
+        return x
+
+    # KMLCameraT
+    def _UnPack(self, KMLCamera):
+        if KMLCamera is None:
+            return
+        self.LONGITUDE = KMLCamera.LONGITUDE()
+        self.LATITUDE = KMLCamera.LATITUDE()
+        self.ALTITUDE = KMLCamera.ALTITUDE()
+        self.HEADING = KMLCamera.HEADING()
+        self.TILT = KMLCamera.TILT()
+        self.ROLL = KMLCamera.ROLL()
+        self.ALTITUDE_MODE = KMLCamera.ALTITUDE_MODE()
+
+    # KMLCameraT
+    def Pack(self, builder):
+        KMLCameraStart(builder)
+        KMLCameraAddLONGITUDE(builder, self.LONGITUDE)
+        KMLCameraAddLATITUDE(builder, self.LATITUDE)
+        KMLCameraAddALTITUDE(builder, self.ALTITUDE)
+        KMLCameraAddHEADING(builder, self.HEADING)
+        KMLCameraAddTILT(builder, self.TILT)
+        KMLCameraAddROLL(builder, self.ROLL)
+        KMLCameraAddALTITUDE_MODE(builder, self.ALTITUDE_MODE)
+        KMLCamera = KMLCameraEnd(builder)
+        return KMLCamera

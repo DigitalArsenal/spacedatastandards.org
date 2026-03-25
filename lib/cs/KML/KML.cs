@@ -11,7 +11,7 @@ public struct KML : IFlatbufferObject
 {
   private Table __p;
   public ByteBuffer ByteBuffer { get { return __p.bb; } }
-  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_24_3_25(); }
+  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_25_12_19(); }
   public static KML GetRootAsKML(ByteBuffer _bb) { return GetRootAsKML(_bb, new KML()); }
   public static KML GetRootAsKML(ByteBuffer _bb, KML obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
   public static bool KMLBufferHasIdentifier(ByteBuffer _bb) { return Table.__has_identifier(_bb, "$KML"); }

@@ -51,6 +51,10 @@ func (rcv *BinaryParameterType) NAME() []byte {
 	return nil
 }
 
+func (rcv *BinaryParameterType) Name() []byte {
+	return rcv.NAME()
+}
+
 /// Type name
 /// Short description
 func (rcv *BinaryParameterType) SHORT_DESCRIPTION() []byte {
@@ -61,6 +65,10 @@ func (rcv *BinaryParameterType) SHORT_DESCRIPTION() []byte {
 	return nil
 }
 
+func (rcv *BinaryParameterType) ShortDescription() []byte {
+	return rcv.SHORT_DESCRIPTION()
+}
+
 /// Short description
 /// Long description
 func (rcv *BinaryParameterType) LONG_DESCRIPTION() []byte {
@@ -69,6 +77,10 @@ func (rcv *BinaryParameterType) LONG_DESCRIPTION() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *BinaryParameterType) LongDescription() []byte {
+	return rcv.LONG_DESCRIPTION()
 }
 
 /// Long description
@@ -86,6 +98,10 @@ func (rcv *BinaryParameterType) DATA_ENCODING(obj *BinaryDataEncoding) *BinaryDa
 	return nil
 }
 
+func (rcv *BinaryParameterType) DataEncoding(obj *BinaryDataEncoding) *BinaryDataEncoding {
+	return rcv.DATA_ENCODING(obj)
+}
+
 /// Data encoding
 /// Initial/default value (hex string)
 func (rcv *BinaryParameterType) INITIAL_VALUE() []byte {
@@ -96,6 +112,10 @@ func (rcv *BinaryParameterType) INITIAL_VALUE() []byte {
 	return nil
 }
 
+func (rcv *BinaryParameterType) InitialValue() []byte {
+	return rcv.INITIAL_VALUE()
+}
+
 /// Initial/default value (hex string)
 func BinaryParameterTypeStart(builder *flatbuffers.Builder) {
 	builder.StartObject(5)
@@ -103,17 +123,32 @@ func BinaryParameterTypeStart(builder *flatbuffers.Builder) {
 func BinaryParameterTypeAddNAME(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(NAME), 0)
 }
+func BinaryParameterTypeAddName(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
+	BinaryParameterTypeAddNAME(builder, NAME)
+}
 func BinaryParameterTypeAddSHORT_DESCRIPTION(builder *flatbuffers.Builder, SHORT_DESCRIPTION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(SHORT_DESCRIPTION), 0)
+}
+func BinaryParameterTypeAddShortDescription(builder *flatbuffers.Builder, SHORT_DESCRIPTION flatbuffers.UOffsetT) {
+	BinaryParameterTypeAddSHORT_DESCRIPTION(builder, SHORT_DESCRIPTION)
 }
 func BinaryParameterTypeAddLONG_DESCRIPTION(builder *flatbuffers.Builder, LONG_DESCRIPTION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(LONG_DESCRIPTION), 0)
 }
+func BinaryParameterTypeAddLongDescription(builder *flatbuffers.Builder, LONG_DESCRIPTION flatbuffers.UOffsetT) {
+	BinaryParameterTypeAddLONG_DESCRIPTION(builder, LONG_DESCRIPTION)
+}
 func BinaryParameterTypeAddDATA_ENCODING(builder *flatbuffers.Builder, DATA_ENCODING flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(DATA_ENCODING), 0)
 }
+func BinaryParameterTypeAddDataEncoding(builder *flatbuffers.Builder, DATA_ENCODING flatbuffers.UOffsetT) {
+	BinaryParameterTypeAddDATA_ENCODING(builder, DATA_ENCODING)
+}
 func BinaryParameterTypeAddINITIAL_VALUE(builder *flatbuffers.Builder, INITIAL_VALUE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(INITIAL_VALUE), 0)
+}
+func BinaryParameterTypeAddInitialValue(builder *flatbuffers.Builder, INITIAL_VALUE flatbuffers.UOffsetT) {
+	BinaryParameterTypeAddINITIAL_VALUE(builder, INITIAL_VALUE)
 }
 func BinaryParameterTypeEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

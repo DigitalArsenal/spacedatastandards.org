@@ -2,5 +2,5 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export { ATM, ATMT } from './ATM.js';
-export { AtmosphericModelFamily } from './AtmosphericModelFamily.js';
+export * from './ATM.js';
+export * from './AtmosphericModelFamily.js';

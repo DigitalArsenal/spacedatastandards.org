@@ -152,20 +152,29 @@ except:
 class CommandVerifierT(object):
 
     # CommandVerifierT
-    def __init__(self):
-        self.NAME = None  # type: str
-        self.VERIFIER_TYPE = 0  # type: int
-        self.CONDITION = None  # type: Optional[MatchCriteria.MatchCriteriaT]
-        self.CONTAINER_REF = None  # type: str
-        self.TIME_WINDOW_START = 0.0  # type: float
-        self.TIME_WINDOW_STOP = 0.0  # type: float
-        self.TIME_WINDOW_REF = 0  # type: int
+    def __init__(
+        self,
+        NAME = None,
+        VERIFIER_TYPE = 0,
+        CONDITION = None,
+        CONTAINER_REF = None,
+        TIME_WINDOW_START = 0.0,
+        TIME_WINDOW_STOP = 0.0,
+        TIME_WINDOW_REF = 0,
+    ):
+        self.NAME = NAME  # type: Optional[str]
+        self.VERIFIER_TYPE = VERIFIER_TYPE  # type: int
+        self.CONDITION = CONDITION  # type: Optional[MatchCriteria.MatchCriteriaT]
+        self.CONTAINER_REF = CONTAINER_REF  # type: Optional[str]
+        self.TIME_WINDOW_START = TIME_WINDOW_START  # type: float
+        self.TIME_WINDOW_STOP = TIME_WINDOW_STOP  # type: float
+        self.TIME_WINDOW_REF = TIME_WINDOW_REF  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        commandVerifier = CommandVerifier()
-        commandVerifier.Init(buf, pos)
-        return cls.InitFromObj(commandVerifier)
+        tmpCommandVerifier = CommandVerifier()
+        tmpCommandVerifier.Init(buf, pos)
+        return cls.InitFromObj(tmpCommandVerifier)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -173,23 +182,23 @@ class CommandVerifierT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, commandVerifier):
+    def InitFromObj(cls, tmpCommandVerifier):
         x = CommandVerifierT()
-        x._UnPack(commandVerifier)
+        x._UnPack(tmpCommandVerifier)
         return x
 
     # CommandVerifierT
-    def _UnPack(self, commandVerifier):
-        if commandVerifier is None:
+    def _UnPack(self, CommandVerifier):
+        if CommandVerifier is None:
             return
-        self.NAME = commandVerifier.NAME()
-        self.VERIFIER_TYPE = commandVerifier.VERIFIER_TYPE()
-        if commandVerifier.CONDITION() is not None:
-            self.CONDITION = MatchCriteria.MatchCriteriaT.InitFromObj(commandVerifier.CONDITION())
-        self.CONTAINER_REF = commandVerifier.CONTAINER_REF()
-        self.TIME_WINDOW_START = commandVerifier.TIME_WINDOW_START()
-        self.TIME_WINDOW_STOP = commandVerifier.TIME_WINDOW_STOP()
-        self.TIME_WINDOW_REF = commandVerifier.TIME_WINDOW_REF()
+        self.NAME = CommandVerifier.NAME()
+        self.VERIFIER_TYPE = CommandVerifier.VERIFIER_TYPE()
+        if CommandVerifier.CONDITION() is not None:
+            self.CONDITION = MatchCriteria.MatchCriteriaT.InitFromObj(CommandVerifier.CONDITION())
+        self.CONTAINER_REF = CommandVerifier.CONTAINER_REF()
+        self.TIME_WINDOW_START = CommandVerifier.TIME_WINDOW_START()
+        self.TIME_WINDOW_STOP = CommandVerifier.TIME_WINDOW_STOP()
+        self.TIME_WINDOW_REF = CommandVerifier.TIME_WINDOW_REF()
 
     # CommandVerifierT
     def Pack(self, builder):
@@ -210,5 +219,5 @@ class CommandVerifierT(object):
         CommandVerifierAddTIME_WINDOW_START(builder, self.TIME_WINDOW_START)
         CommandVerifierAddTIME_WINDOW_STOP(builder, self.TIME_WINDOW_STOP)
         CommandVerifierAddTIME_WINDOW_REF(builder, self.TIME_WINDOW_REF)
-        commandVerifier = CommandVerifierEnd(builder)
-        return commandVerifier
+        CommandVerifier = CommandVerifierEnd(builder)
+        return CommandVerifier

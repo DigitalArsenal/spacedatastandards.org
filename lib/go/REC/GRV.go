@@ -62,8 +62,16 @@ func (rcv *GRV) MODEL_TYPE() GravityModelType {
 	return 2
 }
 
+func (rcv *GRV) ModelType() GravityModelType {
+	return rcv.MODEL_TYPE()
+}
+
 func (rcv *GRV) MutateMODEL_TYPE(n GravityModelType) bool {
 	return rcv._tab.MutateInt8Slot(4, int8(n))
+}
+
+func (rcv *GRV) MutateModelType(n GravityModelType) bool {
+	return rcv.MutateMODEL_TYPE(n)
 }
 
 func (rcv *GRV) MODEL_NAME() GravityModelName {
@@ -74,8 +82,16 @@ func (rcv *GRV) MODEL_NAME() GravityModelName {
 	return 2
 }
 
+func (rcv *GRV) ModelName() GravityModelName {
+	return rcv.MODEL_NAME()
+}
+
 func (rcv *GRV) MutateMODEL_NAME(n GravityModelName) bool {
 	return rcv._tab.MutateInt8Slot(6, int8(n))
+}
+
+func (rcv *GRV) MutateModelName(n GravityModelName) bool {
+	return rcv.MutateMODEL_NAME(n)
 }
 
 func (rcv *GRV) CENTRAL_BODY() CentralBody {
@@ -86,8 +102,16 @@ func (rcv *GRV) CENTRAL_BODY() CentralBody {
 	return 0
 }
 
+func (rcv *GRV) CentralBody() CentralBody {
+	return rcv.CENTRAL_BODY()
+}
+
 func (rcv *GRV) MutateCENTRAL_BODY(n CentralBody) bool {
 	return rcv._tab.MutateInt8Slot(8, int8(n))
+}
+
+func (rcv *GRV) MutateCentralBody(n CentralBody) bool {
+	return rcv.MutateCENTRAL_BODY(n)
 }
 
 func (rcv *GRV) MAX_DEGREE() uint16 {
@@ -98,8 +122,16 @@ func (rcv *GRV) MAX_DEGREE() uint16 {
 	return 70
 }
 
+func (rcv *GRV) MaxDegree() uint16 {
+	return rcv.MAX_DEGREE()
+}
+
 func (rcv *GRV) MutateMAX_DEGREE(n uint16) bool {
 	return rcv._tab.MutateUint16Slot(10, n)
+}
+
+func (rcv *GRV) MutateMaxDegree(n uint16) bool {
+	return rcv.MutateMAX_DEGREE(n)
 }
 
 func (rcv *GRV) MAX_ORDER() uint16 {
@@ -110,8 +142,16 @@ func (rcv *GRV) MAX_ORDER() uint16 {
 	return 70
 }
 
+func (rcv *GRV) MaxOrder() uint16 {
+	return rcv.MAX_ORDER()
+}
+
 func (rcv *GRV) MutateMAX_ORDER(n uint16) bool {
 	return rcv._tab.MutateUint16Slot(12, n)
+}
+
+func (rcv *GRV) MutateMaxOrder(n uint16) bool {
+	return rcv.MutateMAX_ORDER(n)
 }
 
 func (rcv *GRV) INCLUDE_SUN() bool {
@@ -122,8 +162,16 @@ func (rcv *GRV) INCLUDE_SUN() bool {
 	return true
 }
 
+func (rcv *GRV) IncludeSun() bool {
+	return rcv.INCLUDE_SUN()
+}
+
 func (rcv *GRV) MutateINCLUDE_SUN(n bool) bool {
 	return rcv._tab.MutateBoolSlot(14, n)
+}
+
+func (rcv *GRV) MutateIncludeSun(n bool) bool {
+	return rcv.MutateINCLUDE_SUN(n)
 }
 
 func (rcv *GRV) INCLUDE_MOON() bool {
@@ -134,8 +182,16 @@ func (rcv *GRV) INCLUDE_MOON() bool {
 	return true
 }
 
+func (rcv *GRV) IncludeMoon() bool {
+	return rcv.INCLUDE_MOON()
+}
+
 func (rcv *GRV) MutateINCLUDE_MOON(n bool) bool {
 	return rcv._tab.MutateBoolSlot(16, n)
+}
+
+func (rcv *GRV) MutateIncludeMoon(n bool) bool {
+	return rcv.MutateINCLUDE_MOON(n)
 }
 
 func (rcv *GRV) INCLUDE_PLANETS() bool {
@@ -146,8 +202,16 @@ func (rcv *GRV) INCLUDE_PLANETS() bool {
 	return false
 }
 
+func (rcv *GRV) IncludePlanets() bool {
+	return rcv.INCLUDE_PLANETS()
+}
+
 func (rcv *GRV) MutateINCLUDE_PLANETS(n bool) bool {
 	return rcv._tab.MutateBoolSlot(18, n)
+}
+
+func (rcv *GRV) MutateIncludePlanets(n bool) bool {
+	return rcv.MutateINCLUDE_PLANETS(n)
 }
 
 func (rcv *GRV) SOLID_TIDES() bool {
@@ -158,8 +222,16 @@ func (rcv *GRV) SOLID_TIDES() bool {
 	return false
 }
 
+func (rcv *GRV) SolidTides() bool {
+	return rcv.SOLID_TIDES()
+}
+
 func (rcv *GRV) MutateSOLID_TIDES(n bool) bool {
 	return rcv._tab.MutateBoolSlot(20, n)
+}
+
+func (rcv *GRV) MutateSolidTides(n bool) bool {
+	return rcv.MutateSOLID_TIDES(n)
 }
 
 func (rcv *GRV) OCEAN_TIDES() bool {
@@ -170,8 +242,16 @@ func (rcv *GRV) OCEAN_TIDES() bool {
 	return false
 }
 
+func (rcv *GRV) OceanTides() bool {
+	return rcv.OCEAN_TIDES()
+}
+
 func (rcv *GRV) MutateOCEAN_TIDES(n bool) bool {
 	return rcv._tab.MutateBoolSlot(22, n)
+}
+
+func (rcv *GRV) MutateOceanTides(n bool) bool {
+	return rcv.MutateOCEAN_TIDES(n)
 }
 
 func (rcv *GRV) POLE_TIDES() bool {
@@ -182,8 +262,16 @@ func (rcv *GRV) POLE_TIDES() bool {
 	return false
 }
 
+func (rcv *GRV) PoleTides() bool {
+	return rcv.POLE_TIDES()
+}
+
 func (rcv *GRV) MutatePOLE_TIDES(n bool) bool {
 	return rcv._tab.MutateBoolSlot(24, n)
+}
+
+func (rcv *GRV) MutatePoleTides(n bool) bool {
+	return rcv.MutatePOLE_TIDES(n)
 }
 
 func GRVStart(builder *flatbuffers.Builder) {
@@ -192,35 +280,68 @@ func GRVStart(builder *flatbuffers.Builder) {
 func GRVAddMODEL_TYPE(builder *flatbuffers.Builder, MODEL_TYPE GravityModelType) {
 	builder.PrependInt8Slot(0, int8(MODEL_TYPE), 2)
 }
+func GRVAddModelType(builder *flatbuffers.Builder, MODEL_TYPE GravityModelType) {
+	GRVAddMODEL_TYPE(builder, MODEL_TYPE)
+}
 func GRVAddMODEL_NAME(builder *flatbuffers.Builder, MODEL_NAME GravityModelName) {
 	builder.PrependInt8Slot(1, int8(MODEL_NAME), 2)
+}
+func GRVAddModelName(builder *flatbuffers.Builder, MODEL_NAME GravityModelName) {
+	GRVAddMODEL_NAME(builder, MODEL_NAME)
 }
 func GRVAddCENTRAL_BODY(builder *flatbuffers.Builder, CENTRAL_BODY CentralBody) {
 	builder.PrependInt8Slot(2, int8(CENTRAL_BODY), 0)
 }
+func GRVAddCentralBody(builder *flatbuffers.Builder, CENTRAL_BODY CentralBody) {
+	GRVAddCENTRAL_BODY(builder, CENTRAL_BODY)
+}
 func GRVAddMAX_DEGREE(builder *flatbuffers.Builder, MAX_DEGREE uint16) {
 	builder.PrependUint16Slot(3, MAX_DEGREE, 70)
+}
+func GRVAddMaxDegree(builder *flatbuffers.Builder, MAX_DEGREE uint16) {
+	GRVAddMAX_DEGREE(builder, MAX_DEGREE)
 }
 func GRVAddMAX_ORDER(builder *flatbuffers.Builder, MAX_ORDER uint16) {
 	builder.PrependUint16Slot(4, MAX_ORDER, 70)
 }
+func GRVAddMaxOrder(builder *flatbuffers.Builder, MAX_ORDER uint16) {
+	GRVAddMAX_ORDER(builder, MAX_ORDER)
+}
 func GRVAddINCLUDE_SUN(builder *flatbuffers.Builder, INCLUDE_SUN bool) {
 	builder.PrependBoolSlot(5, INCLUDE_SUN, true)
+}
+func GRVAddIncludeSun(builder *flatbuffers.Builder, INCLUDE_SUN bool) {
+	GRVAddINCLUDE_SUN(builder, INCLUDE_SUN)
 }
 func GRVAddINCLUDE_MOON(builder *flatbuffers.Builder, INCLUDE_MOON bool) {
 	builder.PrependBoolSlot(6, INCLUDE_MOON, true)
 }
+func GRVAddIncludeMoon(builder *flatbuffers.Builder, INCLUDE_MOON bool) {
+	GRVAddINCLUDE_MOON(builder, INCLUDE_MOON)
+}
 func GRVAddINCLUDE_PLANETS(builder *flatbuffers.Builder, INCLUDE_PLANETS bool) {
 	builder.PrependBoolSlot(7, INCLUDE_PLANETS, false)
+}
+func GRVAddIncludePlanets(builder *flatbuffers.Builder, INCLUDE_PLANETS bool) {
+	GRVAddINCLUDE_PLANETS(builder, INCLUDE_PLANETS)
 }
 func GRVAddSOLID_TIDES(builder *flatbuffers.Builder, SOLID_TIDES bool) {
 	builder.PrependBoolSlot(8, SOLID_TIDES, false)
 }
+func GRVAddSolidTides(builder *flatbuffers.Builder, SOLID_TIDES bool) {
+	GRVAddSOLID_TIDES(builder, SOLID_TIDES)
+}
 func GRVAddOCEAN_TIDES(builder *flatbuffers.Builder, OCEAN_TIDES bool) {
 	builder.PrependBoolSlot(9, OCEAN_TIDES, false)
 }
+func GRVAddOceanTides(builder *flatbuffers.Builder, OCEAN_TIDES bool) {
+	GRVAddOCEAN_TIDES(builder, OCEAN_TIDES)
+}
 func GRVAddPOLE_TIDES(builder *flatbuffers.Builder, POLE_TIDES bool) {
 	builder.PrependBoolSlot(10, POLE_TIDES, false)
+}
+func GRVAddPoleTides(builder *flatbuffers.Builder, POLE_TIDES bool) {
+	GRVAddPOLE_TIDES(builder, POLE_TIDES)
 }
 func GRVEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

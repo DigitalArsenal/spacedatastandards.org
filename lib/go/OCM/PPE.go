@@ -69,12 +69,20 @@ func (rcv *PPE) COMMENT(j int) []byte {
 	return nil
 }
 
+func (rcv *PPE) Comment(j int) []byte {
+	return rcv.COMMENT(j)
+}
+
 func (rcv *PPE) COMMENTLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *PPE) CommentLength() int {
+	return rcv.COMMENTLength()
 }
 
 /// Plain-text comments.
@@ -92,6 +100,10 @@ func (rcv *PPE) OBJECT(obj *CAT) *CAT {
 	return nil
 }
 
+func (rcv *PPE) Object(obj *CAT) *CAT {
+	return rcv.OBJECT(obj)
+}
+
 /// Space object identification.
 /// Origin of the reference frame (e.g., EARTH, MOON, MARS).
 func (rcv *PPE) CENTER_NAME() []byte {
@@ -100,6 +112,10 @@ func (rcv *PPE) CENTER_NAME() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *PPE) CenterName() []byte {
+	return rcv.CENTER_NAME()
 }
 
 /// Origin of the reference frame (e.g., EARTH, MOON, MARS).
@@ -117,6 +133,10 @@ func (rcv *PPE) REFERENCE_FRAME(obj *RFM) *RFM {
 	return nil
 }
 
+func (rcv *PPE) ReferenceFrame(obj *RFM) *RFM {
+	return rcv.REFERENCE_FRAME(obj)
+}
+
 /// Reference frame for position/velocity coefficients.
 /// Time system used for all epochs in this message.
 func (rcv *PPE) TIME_SYSTEM() timeSystem {
@@ -127,9 +147,17 @@ func (rcv *PPE) TIME_SYSTEM() timeSystem {
 	return 0
 }
 
+func (rcv *PPE) TimeSystem() timeSystem {
+	return rcv.TIME_SYSTEM()
+}
+
 /// Time system used for all epochs in this message.
 func (rcv *PPE) MutateTIME_SYSTEM(n timeSystem) bool {
 	return rcv._tab.MutateInt8Slot(12, int8(n))
+}
+
+func (rcv *PPE) MutateTimeSystem(n timeSystem) bool {
+	return rcv.MutateTIME_SYSTEM(n)
 }
 
 /// Start of the total time span covered by this ephemeris (ISO 8601).
@@ -141,6 +169,10 @@ func (rcv *PPE) START_TIME() []byte {
 	return nil
 }
 
+func (rcv *PPE) StartTime() []byte {
+	return rcv.START_TIME()
+}
+
 /// Start of the total time span covered by this ephemeris (ISO 8601).
 /// End of the total time span covered by this ephemeris (ISO 8601).
 func (rcv *PPE) STOP_TIME() []byte {
@@ -149,6 +181,10 @@ func (rcv *PPE) STOP_TIME() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *PPE) StopTime() []byte {
+	return rcv.STOP_TIME()
 }
 
 /// End of the total time span covered by this ephemeris (ISO 8601).
@@ -162,10 +198,18 @@ func (rcv *PPE) DEFAULT_BASIS_TYPE() polynomialBasisType {
 	return 0
 }
 
+func (rcv *PPE) DefaultBasisType() polynomialBasisType {
+	return rcv.DEFAULT_BASIS_TYPE()
+}
+
 /// Default polynomial basis type for all records in this message.
 /// Individual records may override this with their own BASIS_TYPE field.
 func (rcv *PPE) MutateDEFAULT_BASIS_TYPE(n polynomialBasisType) bool {
 	return rcv._tab.MutateInt8Slot(18, int8(n))
+}
+
+func (rcv *PPE) MutateDefaultBasisType(n polynomialBasisType) bool {
+	return rcv.MutateDEFAULT_BASIS_TYPE(n)
 }
 
 /// Array of position polynomial records.
@@ -176,10 +220,17 @@ func (rcv *PPE) POSITION_RECORDS(obj *PPEPositionRecord, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(PPEPositionRecord)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *PPE) PositionRecords(obj *PPEPositionRecord, j int) bool {
+	return rcv.POSITION_RECORDS(obj, j)
 }
 
 func (rcv *PPE) POSITION_RECORDSLength() int {
@@ -188,6 +239,10 @@ func (rcv *PPE) POSITION_RECORDSLength() int {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *PPE) PositionRecordsLength() int {
+	return rcv.POSITION_RECORDSLength()
 }
 
 /// Array of position polynomial records.
@@ -200,10 +255,17 @@ func (rcv *PPE) ORBITAL_ELEMENT_RECORDS(obj *PPEOrbitalElementRecord, j int) boo
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(PPEOrbitalElementRecord)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *PPE) OrbitalElementRecords(obj *PPEOrbitalElementRecord, j int) bool {
+	return rcv.ORBITAL_ELEMENT_RECORDS(obj, j)
 }
 
 func (rcv *PPE) ORBITAL_ELEMENT_RECORDSLength() int {
@@ -212,6 +274,10 @@ func (rcv *PPE) ORBITAL_ELEMENT_RECORDSLength() int {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *PPE) OrbitalElementRecordsLength() int {
+	return rcv.ORBITAL_ELEMENT_RECORDSLength()
 }
 
 /// Array of orbital element polynomial records.
@@ -225,6 +291,10 @@ func (rcv *PPE) EPHEMERIS_SOURCE() []byte {
 	return nil
 }
 
+func (rcv *PPE) EphemerisSource() []byte {
+	return rcv.EPHEMERIS_SOURCE()
+}
+
 /// Generating ephemeris source (e.g., "JPL DE440", "HPOP v2.1", "Basilisk chebyPosEphem").
 /// Fit span in seconds used to generate each polynomial segment.
 /// Informational; actual spans are in individual records.
@@ -236,10 +306,18 @@ func (rcv *PPE) NOMINAL_SEGMENT_SPAN() float64 {
 	return 0.0
 }
 
+func (rcv *PPE) NominalSegmentSpan() float64 {
+	return rcv.NOMINAL_SEGMENT_SPAN()
+}
+
 /// Fit span in seconds used to generate each polynomial segment.
 /// Informational; actual spans are in individual records.
 func (rcv *PPE) MutateNOMINAL_SEGMENT_SPAN(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(26, n)
+}
+
+func (rcv *PPE) MutateNominalSegmentSpan(n float64) bool {
+	return rcv.MutateNOMINAL_SEGMENT_SPAN(n)
 }
 
 /// Nominal number of coefficients per segment.
@@ -252,10 +330,18 @@ func (rcv *PPE) NOMINAL_NUM_COEFFICIENTS() uint16 {
 	return 0
 }
 
+func (rcv *PPE) NominalNumCoefficients() uint16 {
+	return rcv.NOMINAL_NUM_COEFFICIENTS()
+}
+
 /// Nominal number of coefficients per segment.
 /// Informational; actual counts are in individual records.
 func (rcv *PPE) MutateNOMINAL_NUM_COEFFICIENTS(n uint16) bool {
 	return rcv._tab.MutateUint16Slot(28, n)
+}
+
+func (rcv *PPE) MutateNominalNumCoefficients(n uint16) bool {
+	return rcv.MutateNOMINAL_NUM_COEFFICIENTS(n)
 }
 
 func PPEStart(builder *flatbuffers.Builder) {
@@ -264,50 +350,98 @@ func PPEStart(builder *flatbuffers.Builder) {
 func PPEAddCOMMENT(builder *flatbuffers.Builder, COMMENT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(COMMENT), 0)
 }
+func PPEAddComment(builder *flatbuffers.Builder, COMMENT flatbuffers.UOffsetT) {
+	PPEAddCOMMENT(builder, COMMENT)
+}
 func PPEStartCOMMENTVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func PPEStartCommentVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return PPEStartCOMMENTVector(builder, numElems)
 }
 func PPEAddOBJECT(builder *flatbuffers.Builder, OBJECT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(OBJECT), 0)
 }
+func PPEAddObject(builder *flatbuffers.Builder, OBJECT flatbuffers.UOffsetT) {
+	PPEAddOBJECT(builder, OBJECT)
+}
 func PPEAddCENTER_NAME(builder *flatbuffers.Builder, CENTER_NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(CENTER_NAME), 0)
+}
+func PPEAddCenterName(builder *flatbuffers.Builder, CENTER_NAME flatbuffers.UOffsetT) {
+	PPEAddCENTER_NAME(builder, CENTER_NAME)
 }
 func PPEAddREFERENCE_FRAME(builder *flatbuffers.Builder, REFERENCE_FRAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(REFERENCE_FRAME), 0)
 }
+func PPEAddReferenceFrame(builder *flatbuffers.Builder, REFERENCE_FRAME flatbuffers.UOffsetT) {
+	PPEAddREFERENCE_FRAME(builder, REFERENCE_FRAME)
+}
 func PPEAddTIME_SYSTEM(builder *flatbuffers.Builder, TIME_SYSTEM timeSystem) {
 	builder.PrependInt8Slot(4, int8(TIME_SYSTEM), 0)
+}
+func PPEAddTimeSystem(builder *flatbuffers.Builder, TIME_SYSTEM timeSystem) {
+	PPEAddTIME_SYSTEM(builder, TIME_SYSTEM)
 }
 func PPEAddSTART_TIME(builder *flatbuffers.Builder, START_TIME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(START_TIME), 0)
 }
+func PPEAddStartTime(builder *flatbuffers.Builder, START_TIME flatbuffers.UOffsetT) {
+	PPEAddSTART_TIME(builder, START_TIME)
+}
 func PPEAddSTOP_TIME(builder *flatbuffers.Builder, STOP_TIME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(STOP_TIME), 0)
+}
+func PPEAddStopTime(builder *flatbuffers.Builder, STOP_TIME flatbuffers.UOffsetT) {
+	PPEAddSTOP_TIME(builder, STOP_TIME)
 }
 func PPEAddDEFAULT_BASIS_TYPE(builder *flatbuffers.Builder, DEFAULT_BASIS_TYPE polynomialBasisType) {
 	builder.PrependInt8Slot(7, int8(DEFAULT_BASIS_TYPE), 0)
 }
+func PPEAddDefaultBasisType(builder *flatbuffers.Builder, DEFAULT_BASIS_TYPE polynomialBasisType) {
+	PPEAddDEFAULT_BASIS_TYPE(builder, DEFAULT_BASIS_TYPE)
+}
 func PPEAddPOSITION_RECORDS(builder *flatbuffers.Builder, POSITION_RECORDS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(POSITION_RECORDS), 0)
+}
+func PPEAddPositionRecords(builder *flatbuffers.Builder, POSITION_RECORDS flatbuffers.UOffsetT) {
+	PPEAddPOSITION_RECORDS(builder, POSITION_RECORDS)
 }
 func PPEStartPOSITION_RECORDSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
+func PPEStartPositionRecordsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return PPEStartPOSITION_RECORDSVector(builder, numElems)
+}
 func PPEAddORBITAL_ELEMENT_RECORDS(builder *flatbuffers.Builder, ORBITAL_ELEMENT_RECORDS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(ORBITAL_ELEMENT_RECORDS), 0)
+}
+func PPEAddOrbitalElementRecords(builder *flatbuffers.Builder, ORBITAL_ELEMENT_RECORDS flatbuffers.UOffsetT) {
+	PPEAddORBITAL_ELEMENT_RECORDS(builder, ORBITAL_ELEMENT_RECORDS)
 }
 func PPEStartORBITAL_ELEMENT_RECORDSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
+func PPEStartOrbitalElementRecordsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return PPEStartORBITAL_ELEMENT_RECORDSVector(builder, numElems)
+}
 func PPEAddEPHEMERIS_SOURCE(builder *flatbuffers.Builder, EPHEMERIS_SOURCE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(EPHEMERIS_SOURCE), 0)
+}
+func PPEAddEphemerisSource(builder *flatbuffers.Builder, EPHEMERIS_SOURCE flatbuffers.UOffsetT) {
+	PPEAddEPHEMERIS_SOURCE(builder, EPHEMERIS_SOURCE)
 }
 func PPEAddNOMINAL_SEGMENT_SPAN(builder *flatbuffers.Builder, NOMINAL_SEGMENT_SPAN float64) {
 	builder.PrependFloat64Slot(11, NOMINAL_SEGMENT_SPAN, 0.0)
 }
+func PPEAddNominalSegmentSpan(builder *flatbuffers.Builder, NOMINAL_SEGMENT_SPAN float64) {
+	PPEAddNOMINAL_SEGMENT_SPAN(builder, NOMINAL_SEGMENT_SPAN)
+}
 func PPEAddNOMINAL_NUM_COEFFICIENTS(builder *flatbuffers.Builder, NOMINAL_NUM_COEFFICIENTS uint16) {
 	builder.PrependUint16Slot(12, NOMINAL_NUM_COEFFICIENTS, 0)
+}
+func PPEAddNominalNumCoefficients(builder *flatbuffers.Builder, NOMINAL_NUM_COEFFICIENTS uint16) {
+	PPEAddNOMINAL_NUM_COEFFICIENTS(builder, NOMINAL_NUM_COEFFICIENTS)
 }
 func PPEEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

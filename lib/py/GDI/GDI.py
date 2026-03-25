@@ -335,6 +335,12 @@ def GDIStartTAGSVector(builder, numElems):
 def StartTAGSVector(builder, numElems):
     return GDIStartTAGSVector(builder, numElems)
 
+def GDICreateTAGSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateTAGSVector(builder, data):
+    GDICreateTAGSVector(builder, data)
+
 def GDIAddKEYWORDS(builder, KEYWORDS):
     builder.PrependUOffsetTRelativeSlot(18, flatbuffers.number_types.UOffsetTFlags.py_type(KEYWORDS), 0)
 
@@ -346,6 +352,12 @@ def GDIStartKEYWORDSVector(builder, numElems):
 
 def StartKEYWORDSVector(builder, numElems):
     return GDIStartKEYWORDSVector(builder, numElems)
+
+def GDICreateKEYWORDSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateKEYWORDSVector(builder, data):
+    GDICreateKEYWORDSVector(builder, data)
 
 def GDIAddNOTES(builder, NOTES):
     builder.PrependUOffsetTRelativeSlot(19, flatbuffers.number_types.UOffsetTFlags.py_type(NOTES), 0)
@@ -367,33 +379,55 @@ except:
 class GDIT(object):
 
     # GDIT
-    def __init__(self):
-        self.ID = None  # type: str
-        self.ID_SENSOR = None  # type: str
-        self.ORIG_SENSOR_ID = None  # type: str
-        self.IMAGE_TIME = None  # type: str
-        self.FILENAME = None  # type: str
-        self.FORMAT = 0  # type: int
-        self.FILESIZE = 0  # type: int
-        self.CHECKSUM_VALUE = None  # type: str
-        self.REGION_GEO_JSON = None  # type: str
-        self.REGION_TEXT = None  # type: str
-        self.REGION = None  # type: str
-        self.REGION_TYPE = None  # type: str
-        self.REGION_NDIMS = 0  # type: int
-        self.REGION_SRID = 0  # type: int
-        self.SUBJECT_ID = None  # type: str
-        self.NAME = None  # type: str
-        self.TRANSACTION_ID = None  # type: str
-        self.TAGS = None  # type: List[str]
-        self.KEYWORDS = None  # type: List[str]
-        self.NOTES = None  # type: str
+    def __init__(
+        self,
+        ID = None,
+        ID_SENSOR = None,
+        ORIG_SENSOR_ID = None,
+        IMAGE_TIME = None,
+        FILENAME = None,
+        FORMAT = 0,
+        FILESIZE = 0,
+        CHECKSUM_VALUE = None,
+        REGION_GEO_JSON = None,
+        REGION_TEXT = None,
+        REGION = None,
+        REGION_TYPE = None,
+        REGION_NDIMS = 0,
+        REGION_SRID = 0,
+        SUBJECT_ID = None,
+        NAME = None,
+        TRANSACTION_ID = None,
+        TAGS = None,
+        KEYWORDS = None,
+        NOTES = None,
+    ):
+        self.ID = ID  # type: Optional[str]
+        self.ID_SENSOR = ID_SENSOR  # type: Optional[str]
+        self.ORIG_SENSOR_ID = ORIG_SENSOR_ID  # type: Optional[str]
+        self.IMAGE_TIME = IMAGE_TIME  # type: Optional[str]
+        self.FILENAME = FILENAME  # type: Optional[str]
+        self.FORMAT = FORMAT  # type: int
+        self.FILESIZE = FILESIZE  # type: int
+        self.CHECKSUM_VALUE = CHECKSUM_VALUE  # type: Optional[str]
+        self.REGION_GEO_JSON = REGION_GEO_JSON  # type: Optional[str]
+        self.REGION_TEXT = REGION_TEXT  # type: Optional[str]
+        self.REGION = REGION  # type: Optional[str]
+        self.REGION_TYPE = REGION_TYPE  # type: Optional[str]
+        self.REGION_NDIMS = REGION_NDIMS  # type: int
+        self.REGION_SRID = REGION_SRID  # type: int
+        self.SUBJECT_ID = SUBJECT_ID  # type: Optional[str]
+        self.NAME = NAME  # type: Optional[str]
+        self.TRANSACTION_ID = TRANSACTION_ID  # type: Optional[str]
+        self.TAGS = TAGS  # type: Optional[List[Optional[str]]]
+        self.KEYWORDS = KEYWORDS  # type: Optional[List[Optional[str]]]
+        self.NOTES = NOTES  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        GDI = GDI()
-        GDI.Init(buf, pos)
-        return cls.InitFromObj(GDI)
+        tmpGdi = GDI()
+        tmpGdi.Init(buf, pos)
+        return cls.InitFromObj(tmpGdi)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -401,9 +435,9 @@ class GDIT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, GDI):
+    def InitFromObj(cls, tmpGdi):
         x = GDIT()
-        x._UnPack(GDI)
+        x._UnPack(tmpGdi)
         return x
 
     # GDIT

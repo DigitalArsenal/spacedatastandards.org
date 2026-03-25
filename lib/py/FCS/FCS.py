@@ -204,6 +204,16 @@ def FCSStartRESERVEDVector(builder, numElems):
 def StartRESERVEDVector(builder, numElems):
     return FCSStartRESERVEDVector(builder, numElems)
 
+def FCSCreateRESERVEDVector(builder, data):
+    data = list(data)
+    builder.StartVector(1, len(data), 1)
+    for item in reversed(data):
+        builder.PrependUint8(item)
+    return builder.EndVector()
+
+def CreateRESERVEDVector(builder, data):
+    FCSCreateRESERVEDVector(builder, data)
+
 def FCSEnd(builder):
     return builder.EndObject()
 
@@ -218,24 +228,37 @@ except:
 class FCST(object):
 
     # FCST
-    def __init__(self):
-        self.MODE = 0  # type: int
-        self.LEAD_METHOD = 0  # type: int
-        self.RANGEFINDER_TYPE = 0  # type: int
-        self.AMMO_SELECTED = 0  # type: int
-        self.TARGET = None  # type: str
-        self.SOLUTION = None  # type: str
-        self.LAST_RANGE = 0.0  # type: float
-        self.RANGE_RATE = 0.0  # type: float
-        self.ROUNDS_REMAINING = 0  # type: int
-        self.TEMPERATURE = 0.0  # type: float
-        self.RESERVED = None  # type: List[int]
+    def __init__(
+        self,
+        MODE = 0,
+        LEAD_METHOD = 0,
+        RANGEFINDER_TYPE = 0,
+        AMMO_SELECTED = 0,
+        TARGET = None,
+        SOLUTION = None,
+        LAST_RANGE = 0.0,
+        RANGE_RATE = 0.0,
+        ROUNDS_REMAINING = 0,
+        TEMPERATURE = 0.0,
+        RESERVED = None,
+    ):
+        self.MODE = MODE  # type: int
+        self.LEAD_METHOD = LEAD_METHOD  # type: int
+        self.RANGEFINDER_TYPE = RANGEFINDER_TYPE  # type: int
+        self.AMMO_SELECTED = AMMO_SELECTED  # type: int
+        self.TARGET = TARGET  # type: Optional[str]
+        self.SOLUTION = SOLUTION  # type: Optional[str]
+        self.LAST_RANGE = LAST_RANGE  # type: float
+        self.RANGE_RATE = RANGE_RATE  # type: float
+        self.ROUNDS_REMAINING = ROUNDS_REMAINING  # type: int
+        self.TEMPERATURE = TEMPERATURE  # type: float
+        self.RESERVED = RESERVED  # type: Optional[List[int]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        FCS = FCS()
-        FCS.Init(buf, pos)
-        return cls.InitFromObj(FCS)
+        tmpFcs = FCS()
+        tmpFcs.Init(buf, pos)
+        return cls.InitFromObj(tmpFcs)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -243,9 +266,9 @@ class FCST(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, FCS):
+    def InitFromObj(cls, tmpFcs):
         x = FCST()
-        x._UnPack(FCS)
+        x._UnPack(tmpFcs)
         return x
 
     # FCST

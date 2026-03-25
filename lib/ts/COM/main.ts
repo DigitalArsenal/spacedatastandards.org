@@ -2,9 +2,9 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export { AntennaPattern } from './AntennaPattern.js';
-export { BandType } from './BandType.js';
-export { COM, COMT } from './COM.js';
-export { ComModulationType } from './ComModulationType.js';
-export { DataLinkType } from './DataLinkType.js';
-export { PropagationModel } from './PropagationModel.js';
+export * from './AntennaPattern.js';
+export * from './BandType.js';
+export * from './COM.js';
+export * from './ComModulationType.js';
+export * from './DataLinkType.js';
+export * from './PropagationModel.js';

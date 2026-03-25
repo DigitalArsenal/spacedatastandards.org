@@ -63,6 +63,10 @@ func (rcv *COT) VERSION() []byte {
 	return nil
 }
 
+func (rcv *COT) Version() []byte {
+	return rcv.VERSION()
+}
+
 /// Schema version
 /// Globally unique event identifier
 func (rcv *COT) UID() []byte {
@@ -71,6 +75,10 @@ func (rcv *COT) UID() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *COT) Uid() []byte {
+	return rcv.UID()
 }
 
 /// Globally unique event identifier
@@ -84,6 +92,10 @@ func (rcv *COT) TYPE() []byte {
 	return nil
 }
 
+func (rcv *COT) Type() []byte {
+	return rcv.TYPE()
+}
+
 /// CoT event type (dot-delimited MIL-STD-2525/APP-6 hierarchy)
 /// e.g. "a-f-G-U-C" = atom, friend, Ground, Unit, Combat
 /// How the event was generated (e.g. "m-g" = machine GPS)
@@ -95,9 +107,17 @@ func (rcv *COT) HOW() COTHowType {
 	return 0
 }
 
+func (rcv *COT) How() COTHowType {
+	return rcv.HOW()
+}
+
 /// How the event was generated (e.g. "m-g" = machine GPS)
 func (rcv *COT) MutateHOW(n COTHowType) bool {
 	return rcv._tab.MutateInt8Slot(10, int8(n))
+}
+
+func (rcv *COT) MutateHow(n COTHowType) bool {
+	return rcv.MutateHOW(n)
 }
 
 /// Time the event was generated (ISO 8601)
@@ -107,6 +127,10 @@ func (rcv *COT) TIME() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *COT) Time() []byte {
+	return rcv.TIME()
 }
 
 /// Time the event was generated (ISO 8601)
@@ -119,6 +143,10 @@ func (rcv *COT) START() []byte {
 	return nil
 }
 
+func (rcv *COT) Start() []byte {
+	return rcv.START()
+}
+
 /// Time the event information was valid (ISO 8601)
 /// Time the event information is no longer valid (ISO 8601)
 func (rcv *COT) STALE() []byte {
@@ -127,6 +155,10 @@ func (rcv *COT) STALE() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *COT) Stale() []byte {
+	return rcv.STALE()
 }
 
 /// Time the event information is no longer valid (ISO 8601)
@@ -139,6 +171,10 @@ func (rcv *COT) ACCESS() []byte {
 	return nil
 }
 
+func (rcv *COT) Access() []byte {
+	return rcv.ACCESS()
+}
+
 /// Access control marking
 /// Quality of service
 func (rcv *COT) QOS() []byte {
@@ -149,6 +185,10 @@ func (rcv *COT) QOS() []byte {
 	return nil
 }
 
+func (rcv *COT) Qos() []byte {
+	return rcv.QOS()
+}
+
 /// Quality of service
 /// Operational status
 func (rcv *COT) OPEX() []byte {
@@ -157,6 +197,10 @@ func (rcv *COT) OPEX() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *COT) Opex() []byte {
+	return rcv.OPEX()
 }
 
 /// Operational status
@@ -174,6 +218,10 @@ func (rcv *COT) POINT(obj *COTPoint) *COTPoint {
 	return nil
 }
 
+func (rcv *COT) Point(obj *COTPoint) *COTPoint {
+	return rcv.POINT(obj)
+}
+
 /// Point location
 /// Detailed event information
 func (rcv *COT) DETAIL(obj *COTDetail) *COTDetail {
@@ -189,6 +237,10 @@ func (rcv *COT) DETAIL(obj *COTDetail) *COTDetail {
 	return nil
 }
 
+func (rcv *COT) Detail(obj *COTDetail) *COTDetail {
+	return rcv.DETAIL(obj)
+}
+
 /// Detailed event information
 func COTStart(builder *flatbuffers.Builder) {
 	builder.StartObject(12)
@@ -196,38 +248,74 @@ func COTStart(builder *flatbuffers.Builder) {
 func COTAddVERSION(builder *flatbuffers.Builder, VERSION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(VERSION), 0)
 }
+func COTAddVersion(builder *flatbuffers.Builder, VERSION flatbuffers.UOffsetT) {
+	COTAddVERSION(builder, VERSION)
+}
 func COTAddUID(builder *flatbuffers.Builder, UID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(UID), 0)
+}
+func COTAddUid(builder *flatbuffers.Builder, UID flatbuffers.UOffsetT) {
+	COTAddUID(builder, UID)
 }
 func COTAddTYPE(builder *flatbuffers.Builder, TYPE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(TYPE), 0)
 }
+func COTAddType(builder *flatbuffers.Builder, TYPE flatbuffers.UOffsetT) {
+	COTAddTYPE(builder, TYPE)
+}
 func COTAddHOW(builder *flatbuffers.Builder, HOW COTHowType) {
 	builder.PrependInt8Slot(3, int8(HOW), 0)
+}
+func COTAddHow(builder *flatbuffers.Builder, HOW COTHowType) {
+	COTAddHOW(builder, HOW)
 }
 func COTAddTIME(builder *flatbuffers.Builder, TIME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(TIME), 0)
 }
+func COTAddTime(builder *flatbuffers.Builder, TIME flatbuffers.UOffsetT) {
+	COTAddTIME(builder, TIME)
+}
 func COTAddSTART(builder *flatbuffers.Builder, START flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(START), 0)
+}
+func COTAddStart(builder *flatbuffers.Builder, START flatbuffers.UOffsetT) {
+	COTAddSTART(builder, START)
 }
 func COTAddSTALE(builder *flatbuffers.Builder, STALE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(STALE), 0)
 }
+func COTAddStale(builder *flatbuffers.Builder, STALE flatbuffers.UOffsetT) {
+	COTAddSTALE(builder, STALE)
+}
 func COTAddACCESS(builder *flatbuffers.Builder, ACCESS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(ACCESS), 0)
+}
+func COTAddAccess(builder *flatbuffers.Builder, ACCESS flatbuffers.UOffsetT) {
+	COTAddACCESS(builder, ACCESS)
 }
 func COTAddQOS(builder *flatbuffers.Builder, QOS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(QOS), 0)
 }
+func COTAddQos(builder *flatbuffers.Builder, QOS flatbuffers.UOffsetT) {
+	COTAddQOS(builder, QOS)
+}
 func COTAddOPEX(builder *flatbuffers.Builder, OPEX flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(OPEX), 0)
+}
+func COTAddOpex(builder *flatbuffers.Builder, OPEX flatbuffers.UOffsetT) {
+	COTAddOPEX(builder, OPEX)
 }
 func COTAddPOINT(builder *flatbuffers.Builder, POINT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(POINT), 0)
 }
+func COTAddPoint(builder *flatbuffers.Builder, POINT flatbuffers.UOffsetT) {
+	COTAddPOINT(builder, POINT)
+}
 func COTAddDETAIL(builder *flatbuffers.Builder, DETAIL flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(DETAIL), 0)
+}
+func COTAddDetail(builder *flatbuffers.Builder, DETAIL flatbuffers.UOffsetT) {
+	COTAddDETAIL(builder, DETAIL)
 }
 func COTEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

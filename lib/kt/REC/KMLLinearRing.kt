@@ -32,8 +32,8 @@ class KMLLinearRing : Table() {
     /**
      * Coordinates (first = last to close the ring)
      */
-    fun COORDINATES(j: Int) : KMLCoordinate? = COORDINATES(KMLCoordinate(), j)
-    fun COORDINATES(obj: KMLCoordinate, j: Int) : KMLCoordinate? {
+    fun coordinates(j: Int) : KMLCoordinate? = coordinates(KMLCoordinate(), j)
+    fun coordinates(obj: KMLCoordinate, j: Int) : KMLCoordinate? {
         val o = __offset(4)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -41,14 +41,14 @@ class KMLLinearRing : Table() {
             null
         }
     }
-    val COORDINATESLength : Int
+    val coordinatesLength : Int
         get() {
             val o = __offset(4); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Whether to extrude to ground
      */
-    val EXTRUDE : Boolean
+    val extrude : Boolean
         get() {
             val o = __offset(6)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -56,7 +56,7 @@ class KMLLinearRing : Table() {
     /**
      * Whether to tessellate
      */
-    val TESSELLATE : Boolean
+    val tessellate : Boolean
         get() {
             val o = __offset(8)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -64,28 +64,28 @@ class KMLLinearRing : Table() {
     /**
      * Altitude mode
      */
-    val ALTITUDE_MODE : Byte
+    val altitudeMode : Byte
         get() {
             val o = __offset(10)
             return if(o != 0) bb.get(o + bb_pos) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsKMLLinearRing(_bb: ByteBuffer): KMLLinearRing = getRootAsKMLLinearRing(_bb, KMLLinearRing())
         fun getRootAsKMLLinearRing(_bb: ByteBuffer, obj: KMLLinearRing): KMLLinearRing {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createKMLLinearRing(builder: FlatBufferBuilder, COORDINATESOffset: Int, EXTRUDE: Boolean, TESSELLATE: Boolean, ALTITUDE_MODE: Byte) : Int {
+        fun createKMLLinearRing(builder: FlatBufferBuilder, coordinatesOffset: Int, extrude: Boolean, tessellate: Boolean, altitudeMode: Byte) : Int {
             builder.startTable(4)
-            addCOORDINATES(builder, COORDINATESOffset)
-            addALTITUDE_MODE(builder, ALTITUDE_MODE)
-            addTESSELLATE(builder, TESSELLATE)
-            addEXTRUDE(builder, EXTRUDE)
+            addCOORDINATES(builder, coordinatesOffset)
+            addALTITUDEMODE(builder, altitudeMode)
+            addTESSELLATE(builder, tessellate)
+            addEXTRUDE(builder, extrude)
             return endKMLLinearRing(builder)
         }
         fun startKMLLinearRing(builder: FlatBufferBuilder) = builder.startTable(4)
-        fun addCOORDINATES(builder: FlatBufferBuilder, COORDINATES: Int) = builder.addOffset(0, COORDINATES, 0)
+        fun addCOORDINATES(builder: FlatBufferBuilder, coordinates: Int) = builder.addOffset(0, coordinates, 0)
         fun createCoordinatesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -94,9 +94,9 @@ class KMLLinearRing : Table() {
             return builder.endVector()
         }
         fun startCoordinatesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addEXTRUDE(builder: FlatBufferBuilder, EXTRUDE: Boolean) = builder.addBoolean(1, EXTRUDE, false)
-        fun addTESSELLATE(builder: FlatBufferBuilder, TESSELLATE: Boolean) = builder.addBoolean(2, TESSELLATE, false)
-        fun addALTITUDE_MODE(builder: FlatBufferBuilder, ALTITUDE_MODE: Byte) = builder.addByte(3, ALTITUDE_MODE, 0)
+        fun addEXTRUDE(builder: FlatBufferBuilder, extrude: Boolean) = builder.addBoolean(1, extrude, false)
+        fun addTESSELLATE(builder: FlatBufferBuilder, tessellate: Boolean) = builder.addBoolean(2, tessellate, false)
+        fun addALTITUDEMODE(builder: FlatBufferBuilder, altitudeMode: Byte) = builder.addByte(3, altitudeMode, 0)
         fun endKMLLinearRing(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

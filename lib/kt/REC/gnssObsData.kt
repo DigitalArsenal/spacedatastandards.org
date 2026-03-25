@@ -32,7 +32,7 @@ class gnssObsData : Table() {
     /**
      * Signal type code (e.g., L1C, L2P, L5Q, E1B)
      */
-    val SIGNAL : String?
+    val signal : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class gnssObsData : Table() {
                 null
             }
         }
-    val SIGNALAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun SIGNALInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val signalAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun signalInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Observation type
      */
-    val OBS_TYPE : Byte
+    val obsType : Byte
         get() {
             val o = __offset(6)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -54,7 +54,7 @@ class gnssObsData : Table() {
     /**
      * Observation value (units depend on type: m, cycles, Hz, dB-Hz)
      */
-    val VALUE : Double
+    val value : Double
         get() {
             val o = __offset(8)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -62,7 +62,7 @@ class gnssObsData : Table() {
     /**
      * Loss of lock indicator
      */
-    val LLI : UByte
+    val lli : UByte
         get() {
             val o = __offset(10)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
@@ -70,33 +70,33 @@ class gnssObsData : Table() {
     /**
      * Signal strength indicator (1-9)
      */
-    val SSI : UByte
+    val ssi : UByte
         get() {
             val o = __offset(12)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsgnssObsData(_bb: ByteBuffer): gnssObsData = getRootAsgnssObsData(_bb, gnssObsData())
         fun getRootAsgnssObsData(_bb: ByteBuffer, obj: gnssObsData): gnssObsData {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun creategnssObsData(builder: FlatBufferBuilder, SIGNALOffset: Int, OBS_TYPE: Byte, VALUE: Double, LLI: UByte, SSI: UByte) : Int {
+        fun creategnssObsData(builder: FlatBufferBuilder, signalOffset: Int, obsType: Byte, value: Double, lli: UByte, ssi: UByte) : Int {
             builder.startTable(5)
-            addVALUE(builder, VALUE)
-            addSIGNAL(builder, SIGNALOffset)
-            addSSI(builder, SSI)
-            addLLI(builder, LLI)
-            addOBS_TYPE(builder, OBS_TYPE)
+            addVALUE(builder, value)
+            addSIGNAL(builder, signalOffset)
+            addSSI(builder, ssi)
+            addLLI(builder, lli)
+            addOBSTYPE(builder, obsType)
             return endgnssObsData(builder)
         }
         fun startgnssObsData(builder: FlatBufferBuilder) = builder.startTable(5)
-        fun addSIGNAL(builder: FlatBufferBuilder, SIGNAL: Int) = builder.addOffset(0, SIGNAL, 0)
-        fun addOBS_TYPE(builder: FlatBufferBuilder, OBS_TYPE: Byte) = builder.addByte(1, OBS_TYPE, 0)
-        fun addVALUE(builder: FlatBufferBuilder, VALUE: Double) = builder.addDouble(2, VALUE, 0.0)
-        fun addLLI(builder: FlatBufferBuilder, LLI: UByte) = builder.addByte(3, LLI.toByte(), 0)
-        fun addSSI(builder: FlatBufferBuilder, SSI: UByte) = builder.addByte(4, SSI.toByte(), 0)
+        fun addSIGNAL(builder: FlatBufferBuilder, signal: Int) = builder.addOffset(0, signal, 0)
+        fun addOBSTYPE(builder: FlatBufferBuilder, obsType: Byte) = builder.addByte(1, obsType, 0)
+        fun addVALUE(builder: FlatBufferBuilder, value: Double) = builder.addDouble(2, value, 0.0)
+        fun addLLI(builder: FlatBufferBuilder, lli: UByte) = builder.addByte(3, lli.toByte(), 0)
+        fun addSSI(builder: FlatBufferBuilder, ssi: UByte) = builder.addByte(4, ssi.toByte(), 0)
         fun endgnssObsData(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

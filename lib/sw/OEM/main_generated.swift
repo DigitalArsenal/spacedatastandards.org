@@ -2,309 +2,390 @@
 // swiftlint:disable all
 // swiftformat:disable all
 
+#if canImport(Common)
+import Common
+#endif
+
 import FlatBuffers
 
-///  A single ephemeris data line (for non-uniform time steps only)
-///  Use this format when time intervals between states are irregular.
-///  For uniform time steps, use the compact EPHEMERIS_DATA array instead.
-public struct ephemerisDataLine: FlatBufferObject, Verifiable {
+///  Polynomial basis type for coefficient interpretation.
+///  Determines how the coefficient arrays are evaluated.
+public enum polynomialBasisType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  ///  Chebyshev polynomials of the first kind T_n(x).
+  ///  Most common for ephemeris fitting due to minimax approximation properties.
+  case chebyshev = 0
+  ///  Legendre polynomials P_n(x).
+  ///  Orthogonal on [-1, 1] with unit weight function.
+  case legendre = 1
+  ///  Hermite interpolating polynomials.
+  ///  Matches both function values and derivatives at nodes.
+  case hermite = 2
+  ///  Lagrange interpolating polynomials.
+  ///  Exact interpolation through specified nodes.
+  case lagrange = 3
+  ///  Standard power series (monomial basis): c0 + c1*x + c2*x^2 + ...
+  case powerSeries = 4
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  public static var max: polynomialBasisType { return .powerSeries }
+  public static var min: polynomialBasisType { return .chebyshev }
+}
+
+
+///  Anomaly type flag for orbital element records.
+public enum ppeAnomalyType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  ///  True anomaly (geometric angle from periapsis).
+  case trueAnomaly = 0
+  ///  Mean anomaly (linear in time for Keplerian motion).
+  case meanAnomaly = 1
+  ///  Eccentric anomaly (auxiliary angle in the Kepler equation).
+  case eccentricAnomaly = 2
+
+  public static var max: ppeAnomalyType { return .eccentricAnomaly }
+  public static var min: ppeAnomalyType { return .trueAnomaly }
+}
+
+
+///  Orbital element parameterization for the first element (size/shape).
+public enum sizeShapeType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  ///  Semi-major axis (km). Standard for elliptical orbits.
+  case sma = 0
+  ///  Radius of periapsis (km). Preferred for hyperbolic orbits.
+  case rPeriapsis = 1
+
+  public static var max: sizeShapeType { return .rPeriapsis }
+  public static var min: sizeShapeType { return .sma }
+}
+
+
+///  A single time-segment record of polynomial coefficients for Cartesian position
+///  (and optionally velocity). Coefficients are stored per axis.
+/// 
+///  To evaluate position at time t within this record's validity window:
+///    1. Compute normalized time: tau = (t - EPOCH_MID) / EPOCH_HALF_SPAN
+///       where tau is in [-1, +1].
+///    2. Evaluate the polynomial basis of degree (NUM_COEFFICIENTS - 1) using
+///       the coefficients for each axis.
+/// 
+///  Velocity coefficients, if present, follow the same evaluation procedure.
+///  If HAS_VELOCITY_COEFFICIENTS is false, velocity can be obtained by
+///  analytically differentiating the position polynomial.
+public struct PPEPositionRecord: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$OEM" } 
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: ephemerisDataLine.id, addPrefix: prefix) }
+  public static var id: String { "$PPE" } 
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PPEPositionRecord.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private enum VTOFFSET: VOffset {
-    case EPOCH = 4
-    case X = 6
-    case Y = 8
-    case Z = 10
-    case X_DOT = 12
-    case Y_DOT = 14
-    case Z_DOT = 16
-    case X_DDOT = 18
-    case Y_DDOT = 20
-    case Z_DDOT = 22
+    case EPOCH_MID = 4
+    case EPOCH_HALF_SPAN = 6
+    case NUM_COEFFICIENTS = 8
+    case BASIS_TYPE = 10
+    case POS_COEFF_X = 12
+    case POS_COEFF_Y = 14
+    case POS_COEFF_Z = 16
+    case HAS_VELOCITY_COEFFICIENTS = 18
+    case VEL_COEFF_X = 20
+    case VEL_COEFF_Y = 22
+    case VEL_COEFF_Z = 24
+    case MAX_POSITION_RESIDUAL = 26
+    case RMS_POSITION_RESIDUAL = 28
     var v: Int32 { Int32(self.rawValue) }
     var p: VOffset { self.rawValue }
   }
 
-  ///  Epoch time, in ISO 8601 UTC format (required for non-uniform steps)
-  public var EPOCH: String? { let o = _accessor.offset(VTOFFSET.EPOCH.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.EPOCH.v) }
-  ///  Position vector X-component km
-  public var X: Double { let o = _accessor.offset(VTOFFSET.X.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Position vector Y-component km
-  public var Y: Double { let o = _accessor.offset(VTOFFSET.Y.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Position vector Z-component km
-  public var Z: Double { let o = _accessor.offset(VTOFFSET.Z.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Velocity vector X-component km/s
-  public var X_DOT: Double { let o = _accessor.offset(VTOFFSET.X_DOT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Velocity vector Y-component km/s
-  public var Y_DOT: Double { let o = _accessor.offset(VTOFFSET.Y_DOT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Velocity vector Z-component km/s
-  public var Z_DOT: Double { let o = _accessor.offset(VTOFFSET.Z_DOT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Optional: Acceleration vector X-component km/s²
-  public var X_DDOT: Double { let o = _accessor.offset(VTOFFSET.X_DDOT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Optional: Acceleration vector Y-component km/s²
-  public var Y_DDOT: Double { let o = _accessor.offset(VTOFFSET.Y_DDOT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Optional: Acceleration vector Z-component km/s²
-  public var Z_DDOT: Double { let o = _accessor.offset(VTOFFSET.Z_DDOT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public static func startephemerisDataLine(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 10) }
-  public static func add(EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPOCH, at: VTOFFSET.EPOCH.p) }
-  public static func add(X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: X, def: 0.0, at: VTOFFSET.X.p) }
-  public static func add(Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Y, def: 0.0, at: VTOFFSET.Y.p) }
-  public static func add(Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Z, def: 0.0, at: VTOFFSET.Z.p) }
-  public static func add(X_DOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: X_DOT, def: 0.0, at: VTOFFSET.X_DOT.p) }
-  public static func add(Y_DOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Y_DOT, def: 0.0, at: VTOFFSET.Y_DOT.p) }
-  public static func add(Z_DOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Z_DOT, def: 0.0, at: VTOFFSET.Z_DOT.p) }
-  public static func add(X_DDOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: X_DDOT, def: 0.0, at: VTOFFSET.X_DDOT.p) }
-  public static func add(Y_DDOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Y_DDOT, def: 0.0, at: VTOFFSET.Y_DDOT.p) }
-  public static func add(Z_DDOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Z_DDOT, def: 0.0, at: VTOFFSET.Z_DDOT.p) }
-  public static func endephemerisDataLine(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createephemerisDataLine(
+  ///  Midpoint epoch of this record's validity window (ISO 8601 UTC or TDB).
+  ///  Together with EPOCH_HALF_SPAN, defines the time interval:
+  ///    [EPOCH_MID - EPOCH_HALF_SPAN, EPOCH_MID + EPOCH_HALF_SPAN]
+  public var EPOCH_MID: String! { let o = _accessor.offset(VTOFFSET.EPOCH_MID.v); return _accessor.string(at: o) }
+  public var EPOCH_MIDSegmentArray: [UInt8]! { return _accessor.getVector(at: VTOFFSET.EPOCH_MID.v) }
+  ///  Half-span of the validity window in seconds.
+  ///  The full span is 2 * EPOCH_HALF_SPAN seconds centered on EPOCH_MID.
+  public var EPOCH_HALF_SPAN: Double { let o = _accessor.offset(VTOFFSET.EPOCH_HALF_SPAN.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Number of polynomial coefficients per axis.
+  ///  The polynomial degree is (NUM_COEFFICIENTS - 1).
+  ///  Typical values: 8-32 for high-fidelity ephemeris fits.
+  public var NUM_COEFFICIENTS: UInt16 { let o = _accessor.offset(VTOFFSET.NUM_COEFFICIENTS.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  ///  Polynomial basis type for interpreting the coefficient arrays.
+  public var BASIS_TYPE: polynomialBasisType { let o = _accessor.offset(VTOFFSET.BASIS_TYPE.v); return o == 0 ? .chebyshev : polynomialBasisType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .chebyshev }
+  ///  Position coefficients for X-axis (km).
+  ///  Length must equal NUM_COEFFICIENTS. Ordered c0, c1, ..., c_{N-1}.
+  public var POS_COEFF_X: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.POS_COEFF_X.v, byteSize: 8) }
+  public func withUnsafePointerToPosCoeffX<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.POS_COEFF_X.v, body: body) }
+  ///  Position coefficients for Y-axis (km).
+  ///  Length must equal NUM_COEFFICIENTS.
+  public var POS_COEFF_Y: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.POS_COEFF_Y.v, byteSize: 8) }
+  public func withUnsafePointerToPosCoeffY<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.POS_COEFF_Y.v, body: body) }
+  ///  Position coefficients for Z-axis (km).
+  ///  Length must equal NUM_COEFFICIENTS.
+  public var POS_COEFF_Z: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.POS_COEFF_Z.v, byteSize: 8) }
+  public func withUnsafePointerToPosCoeffZ<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.POS_COEFF_Z.v, body: body) }
+  ///  Whether explicit velocity coefficients are provided.
+  ///  If false, velocity should be derived by differentiating the position polynomial.
+  public var HAS_VELOCITY_COEFFICIENTS: Bool { let o = _accessor.offset(VTOFFSET.HAS_VELOCITY_COEFFICIENTS.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Velocity coefficients for X-axis (km/s). Optional.
+  ///  Length must equal NUM_COEFFICIENTS if present.
+  public var VEL_COEFF_X: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.VEL_COEFF_X.v, byteSize: 8) }
+  public func withUnsafePointerToVelCoeffX<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.VEL_COEFF_X.v, body: body) }
+  ///  Velocity coefficients for Y-axis (km/s). Optional.
+  public var VEL_COEFF_Y: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.VEL_COEFF_Y.v, byteSize: 8) }
+  public func withUnsafePointerToVelCoeffY<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.VEL_COEFF_Y.v, body: body) }
+  ///  Velocity coefficients for Z-axis (km/s). Optional.
+  public var VEL_COEFF_Z: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.VEL_COEFF_Z.v, byteSize: 8) }
+  public func withUnsafePointerToVelCoeffZ<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.VEL_COEFF_Z.v, body: body) }
+  ///  Maximum position fit residual over this segment (km). Optional quality metric.
+  public var MAX_POSITION_RESIDUAL: Double { let o = _accessor.offset(VTOFFSET.MAX_POSITION_RESIDUAL.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  RMS position fit residual over this segment (km). Optional quality metric.
+  public var RMS_POSITION_RESIDUAL: Double { let o = _accessor.offset(VTOFFSET.RMS_POSITION_RESIDUAL.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public static func startPPEPositionRecord(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 13) }
+  public static func add(EPOCH_MID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPOCH_MID, at: VTOFFSET.EPOCH_MID.p) }
+  public static func add(EPOCH_HALF_SPAN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EPOCH_HALF_SPAN, def: 0.0, at: VTOFFSET.EPOCH_HALF_SPAN.p) }
+  public static func add(NUM_COEFFICIENTS: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NUM_COEFFICIENTS, def: 0, at: VTOFFSET.NUM_COEFFICIENTS.p) }
+  public static func add(BASIS_TYPE: polynomialBasisType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BASIS_TYPE.rawValue, def: 0, at: VTOFFSET.BASIS_TYPE.p) }
+  public static func addVectorOf(POS_COEFF_X: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POS_COEFF_X, at: VTOFFSET.POS_COEFF_X.p) }
+  public static func addVectorOf(POS_COEFF_Y: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POS_COEFF_Y, at: VTOFFSET.POS_COEFF_Y.p) }
+  public static func addVectorOf(POS_COEFF_Z: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POS_COEFF_Z, at: VTOFFSET.POS_COEFF_Z.p) }
+  public static func add(HAS_VELOCITY_COEFFICIENTS: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_VELOCITY_COEFFICIENTS, def: false,
+   at: VTOFFSET.HAS_VELOCITY_COEFFICIENTS.p) }
+  public static func addVectorOf(VEL_COEFF_X: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VEL_COEFF_X, at: VTOFFSET.VEL_COEFF_X.p) }
+  public static func addVectorOf(VEL_COEFF_Y: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VEL_COEFF_Y, at: VTOFFSET.VEL_COEFF_Y.p) }
+  public static func addVectorOf(VEL_COEFF_Z: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VEL_COEFF_Z, at: VTOFFSET.VEL_COEFF_Z.p) }
+  public static func add(MAX_POSITION_RESIDUAL: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_POSITION_RESIDUAL, def: 0.0, at: VTOFFSET.MAX_POSITION_RESIDUAL.p) }
+  public static func add(RMS_POSITION_RESIDUAL: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RMS_POSITION_RESIDUAL, def: 0.0, at: VTOFFSET.RMS_POSITION_RESIDUAL.p) }
+  public static func endPPEPositionRecord(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4, 12, 14, 16]); return end }
+  public static func createPPEPositionRecord(
     _ fbb: inout FlatBufferBuilder,
-    EPOCHOffset EPOCH: Offset = Offset(),
-    X: Double = 0.0,
-    Y: Double = 0.0,
-    Z: Double = 0.0,
-    X_DOT: Double = 0.0,
-    Y_DOT: Double = 0.0,
-    Z_DOT: Double = 0.0,
-    X_DDOT: Double = 0.0,
-    Y_DDOT: Double = 0.0,
-    Z_DDOT: Double = 0.0
+    EPOCH_MIDOffset EPOCH_MID: Offset,
+    EPOCH_HALF_SPAN: Double = 0.0,
+    NUM_COEFFICIENTS: UInt16 = 0,
+    BASIS_TYPE: polynomialBasisType = .chebyshev,
+    POS_COEFF_XVectorOffset POS_COEFF_X: Offset,
+    POS_COEFF_YVectorOffset POS_COEFF_Y: Offset,
+    POS_COEFF_ZVectorOffset POS_COEFF_Z: Offset,
+    HAS_VELOCITY_COEFFICIENTS: Bool = false,
+    VEL_COEFF_XVectorOffset VEL_COEFF_X: Offset = Offset(),
+    VEL_COEFF_YVectorOffset VEL_COEFF_Y: Offset = Offset(),
+    VEL_COEFF_ZVectorOffset VEL_COEFF_Z: Offset = Offset(),
+    MAX_POSITION_RESIDUAL: Double = 0.0,
+    RMS_POSITION_RESIDUAL: Double = 0.0
   ) -> Offset {
-    let __start = ephemerisDataLine.startephemerisDataLine(&fbb)
-    ephemerisDataLine.add(EPOCH: EPOCH, &fbb)
-    ephemerisDataLine.add(X: X, &fbb)
-    ephemerisDataLine.add(Y: Y, &fbb)
-    ephemerisDataLine.add(Z: Z, &fbb)
-    ephemerisDataLine.add(X_DOT: X_DOT, &fbb)
-    ephemerisDataLine.add(Y_DOT: Y_DOT, &fbb)
-    ephemerisDataLine.add(Z_DOT: Z_DOT, &fbb)
-    ephemerisDataLine.add(X_DDOT: X_DDOT, &fbb)
-    ephemerisDataLine.add(Y_DDOT: Y_DDOT, &fbb)
-    ephemerisDataLine.add(Z_DDOT: Z_DDOT, &fbb)
-    return ephemerisDataLine.endephemerisDataLine(&fbb, start: __start)
+    let __start = PPEPositionRecord.startPPEPositionRecord(&fbb)
+    PPEPositionRecord.add(EPOCH_MID: EPOCH_MID, &fbb)
+    PPEPositionRecord.add(EPOCH_HALF_SPAN: EPOCH_HALF_SPAN, &fbb)
+    PPEPositionRecord.add(NUM_COEFFICIENTS: NUM_COEFFICIENTS, &fbb)
+    PPEPositionRecord.add(BASIS_TYPE: BASIS_TYPE, &fbb)
+    PPEPositionRecord.addVectorOf(POS_COEFF_X: POS_COEFF_X, &fbb)
+    PPEPositionRecord.addVectorOf(POS_COEFF_Y: POS_COEFF_Y, &fbb)
+    PPEPositionRecord.addVectorOf(POS_COEFF_Z: POS_COEFF_Z, &fbb)
+    PPEPositionRecord.add(HAS_VELOCITY_COEFFICIENTS: HAS_VELOCITY_COEFFICIENTS, &fbb)
+    PPEPositionRecord.addVectorOf(VEL_COEFF_X: VEL_COEFF_X, &fbb)
+    PPEPositionRecord.addVectorOf(VEL_COEFF_Y: VEL_COEFF_Y, &fbb)
+    PPEPositionRecord.addVectorOf(VEL_COEFF_Z: VEL_COEFF_Z, &fbb)
+    PPEPositionRecord.add(MAX_POSITION_RESIDUAL: MAX_POSITION_RESIDUAL, &fbb)
+    PPEPositionRecord.add(RMS_POSITION_RESIDUAL: RMS_POSITION_RESIDUAL, &fbb)
+    return PPEPositionRecord.endPPEPositionRecord(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.EPOCH.p, fieldName: "EPOCH", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.X.p, fieldName: "X", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.Y.p, fieldName: "Y", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.Z.p, fieldName: "Z", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.X_DOT.p, fieldName: "X_DOT", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.Y_DOT.p, fieldName: "Y_DOT", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.Z_DOT.p, fieldName: "Z_DOT", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.X_DDOT.p, fieldName: "X_DDOT", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.Y_DDOT.p, fieldName: "Y_DDOT", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.Z_DDOT.p, fieldName: "Z_DDOT", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.EPOCH_MID.p, fieldName: "EPOCH_MID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.EPOCH_HALF_SPAN.p, fieldName: "EPOCH_HALF_SPAN", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.NUM_COEFFICIENTS.p, fieldName: "NUM_COEFFICIENTS", required: false, type: UInt16.self)
+    try _v.visit(field: VTOFFSET.BASIS_TYPE.p, fieldName: "BASIS_TYPE", required: false, type: polynomialBasisType.self)
+    try _v.visit(field: VTOFFSET.POS_COEFF_X.p, fieldName: "POS_COEFF_X", required: true, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VTOFFSET.POS_COEFF_Y.p, fieldName: "POS_COEFF_Y", required: true, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VTOFFSET.POS_COEFF_Z.p, fieldName: "POS_COEFF_Z", required: true, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VTOFFSET.HAS_VELOCITY_COEFFICIENTS.p, fieldName: "HAS_VELOCITY_COEFFICIENTS", required: false, type: Bool.self)
+    try _v.visit(field: VTOFFSET.VEL_COEFF_X.p, fieldName: "VEL_COEFF_X", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VTOFFSET.VEL_COEFF_Y.p, fieldName: "VEL_COEFF_Y", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VTOFFSET.VEL_COEFF_Z.p, fieldName: "VEL_COEFF_Z", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VTOFFSET.MAX_POSITION_RESIDUAL.p, fieldName: "MAX_POSITION_RESIDUAL", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.RMS_POSITION_RESIDUAL.p, fieldName: "RMS_POSITION_RESIDUAL", required: false, type: Double.self)
     _v.finish()
   }
 }
 
-///  Position/Velocity Covariance Matrix Line
-public struct covarianceMatrixLine: FlatBufferObject, Verifiable {
+///  A single time-segment record of polynomial coefficients for classical orbital elements.
+/// 
+///  The six classical elements are:
+///    1. SMA or R_PERIAPSIS (size/shape) — see SIZE_SHAPE_TYPE
+///    2. Eccentricity (dimensionless)
+///    3. Inclination (degrees)
+///    4. Right Ascension of Ascending Node / RAAN (degrees)
+///    5. Argument of Periapsis (degrees)
+///    6. Anomaly (degrees) — see ANOMALY_TYPE
+/// 
+///  Evaluation follows the same normalized-time procedure as PPEPositionRecord.
+public struct PPEOrbitalElementRecord: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$OEM" } 
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: covarianceMatrixLine.id, addPrefix: prefix) }
+  public static var id: String { "$PPE" } 
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PPEOrbitalElementRecord.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private enum VTOFFSET: VOffset {
-    case EPOCH = 4
-    case CX_X = 6
-    case CY_X = 8
-    case CY_Y = 10
-    case CZ_X = 12
-    case CZ_Y = 14
-    case CZ_Z = 16
-    case CX_DOT_X = 18
-    case CX_DOT_Y = 20
-    case CX_DOT_Z = 22
-    case CX_DOT_X_DOT = 24
-    case CY_DOT_X = 26
-    case CY_DOT_Y = 28
-    case CY_DOT_Z = 30
-    case CY_DOT_X_DOT = 32
-    case CY_DOT_Y_DOT = 34
-    case CZ_DOT_X = 36
-    case CZ_DOT_Y = 38
-    case CZ_DOT_Z = 40
-    case CZ_DOT_X_DOT = 42
-    case CZ_DOT_Y_DOT = 44
-    case CZ_DOT_Z_DOT = 46
+    case EPOCH_MID = 4
+    case EPOCH_HALF_SPAN = 6
+    case NUM_COEFFICIENTS = 8
+    case BASIS_TYPE = 10
+    case SIZE_SHAPE_TYPE = 12
+    case ANOMALY_TYPE = 14
+    case COEFF_SIZE_SHAPE = 16
+    case COEFF_ECCENTRICITY = 18
+    case COEFF_INCLINATION = 20
+    case COEFF_RAAN = 22
+    case COEFF_ARG_PERIAPSIS = 24
+    case COEFF_ANOMALY = 26
+    case MAX_ELEMENT_RESIDUAL = 28
+    case RMS_ELEMENT_RESIDUAL = 30
     var v: Int32 { Int32(self.rawValue) }
     var p: VOffset { self.rawValue }
   }
 
-  ///  Epoch
-  public var EPOCH: String? { let o = _accessor.offset(VTOFFSET.EPOCH.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.EPOCH.v) }
-  ///  Covariance matrix [1,1] km**2
-  public var CX_X: Double { let o = _accessor.offset(VTOFFSET.CX_X.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Covariance matrix [2,1] km**2
-  public var CY_X: Double { let o = _accessor.offset(VTOFFSET.CY_X.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Covariance matrix [2,2] km**2
-  public var CY_Y: Double { let o = _accessor.offset(VTOFFSET.CY_Y.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Covariance matrix [3,1] km**2
-  public var CZ_X: Double { let o = _accessor.offset(VTOFFSET.CZ_X.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Covariance matrix [3,2] km**2
-  public var CZ_Y: Double { let o = _accessor.offset(VTOFFSET.CZ_Y.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Covariance matrix [3,3] km**2
-  public var CZ_Z: Double { let o = _accessor.offset(VTOFFSET.CZ_Z.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Covariance matrix [4,1] km**2/s
-  public var CX_DOT_X: Double { let o = _accessor.offset(VTOFFSET.CX_DOT_X.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Covariance matrix [4,2] km**2/s
-  public var CX_DOT_Y: Double { let o = _accessor.offset(VTOFFSET.CX_DOT_Y.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Covariance matrix [4,3] km**2/s
-  public var CX_DOT_Z: Double { let o = _accessor.offset(VTOFFSET.CX_DOT_Z.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Covariance matrix [4,4] km**2/s**2
-  public var CX_DOT_X_DOT: Double { let o = _accessor.offset(VTOFFSET.CX_DOT_X_DOT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Covariance matrix [5,1] km**2/s
-  public var CY_DOT_X: Double { let o = _accessor.offset(VTOFFSET.CY_DOT_X.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Covariance matrix [5,2] km**2/s
-  public var CY_DOT_Y: Double { let o = _accessor.offset(VTOFFSET.CY_DOT_Y.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Covariance matrix [5,3] km**2/s
-  public var CY_DOT_Z: Double { let o = _accessor.offset(VTOFFSET.CY_DOT_Z.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Covariance matrix [5,4] km**2/s**2
-  public var CY_DOT_X_DOT: Double { let o = _accessor.offset(VTOFFSET.CY_DOT_X_DOT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Covariance matrix [5,5] km**2/s**2
-  public var CY_DOT_Y_DOT: Double { let o = _accessor.offset(VTOFFSET.CY_DOT_Y_DOT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Covariance matrix [6,1] km**2/s
-  public var CZ_DOT_X: Double { let o = _accessor.offset(VTOFFSET.CZ_DOT_X.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Covariance matrix [6,2] km**2/s
-  public var CZ_DOT_Y: Double { let o = _accessor.offset(VTOFFSET.CZ_DOT_Y.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Covariance matrix [6,3] km**2/s
-  public var CZ_DOT_Z: Double { let o = _accessor.offset(VTOFFSET.CZ_DOT_Z.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Covariance matrix [6,4] km**2/s**2
-  public var CZ_DOT_X_DOT: Double { let o = _accessor.offset(VTOFFSET.CZ_DOT_X_DOT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Covariance matrix [6,5] km**2/s**2
-  public var CZ_DOT_Y_DOT: Double { let o = _accessor.offset(VTOFFSET.CZ_DOT_Y_DOT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Covariance matrix [6,6] km**2/s**2
-  public var CZ_DOT_Z_DOT: Double { let o = _accessor.offset(VTOFFSET.CZ_DOT_Z_DOT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public static func startcovarianceMatrixLine(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 22) }
-  public static func add(EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPOCH, at: VTOFFSET.EPOCH.p) }
-  public static func add(CX_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CX_X, def: 0.0, at: VTOFFSET.CX_X.p) }
-  public static func add(CY_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CY_X, def: 0.0, at: VTOFFSET.CY_X.p) }
-  public static func add(CY_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CY_Y, def: 0.0, at: VTOFFSET.CY_Y.p) }
-  public static func add(CZ_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CZ_X, def: 0.0, at: VTOFFSET.CZ_X.p) }
-  public static func add(CZ_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CZ_Y, def: 0.0, at: VTOFFSET.CZ_Y.p) }
-  public static func add(CZ_Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CZ_Z, def: 0.0, at: VTOFFSET.CZ_Z.p) }
-  public static func add(CX_DOT_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CX_DOT_X, def: 0.0, at: VTOFFSET.CX_DOT_X.p) }
-  public static func add(CX_DOT_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CX_DOT_Y, def: 0.0, at: VTOFFSET.CX_DOT_Y.p) }
-  public static func add(CX_DOT_Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CX_DOT_Z, def: 0.0, at: VTOFFSET.CX_DOT_Z.p) }
-  public static func add(CX_DOT_X_DOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CX_DOT_X_DOT, def: 0.0, at: VTOFFSET.CX_DOT_X_DOT.p) }
-  public static func add(CY_DOT_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CY_DOT_X, def: 0.0, at: VTOFFSET.CY_DOT_X.p) }
-  public static func add(CY_DOT_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CY_DOT_Y, def: 0.0, at: VTOFFSET.CY_DOT_Y.p) }
-  public static func add(CY_DOT_Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CY_DOT_Z, def: 0.0, at: VTOFFSET.CY_DOT_Z.p) }
-  public static func add(CY_DOT_X_DOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CY_DOT_X_DOT, def: 0.0, at: VTOFFSET.CY_DOT_X_DOT.p) }
-  public static func add(CY_DOT_Y_DOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CY_DOT_Y_DOT, def: 0.0, at: VTOFFSET.CY_DOT_Y_DOT.p) }
-  public static func add(CZ_DOT_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CZ_DOT_X, def: 0.0, at: VTOFFSET.CZ_DOT_X.p) }
-  public static func add(CZ_DOT_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CZ_DOT_Y, def: 0.0, at: VTOFFSET.CZ_DOT_Y.p) }
-  public static func add(CZ_DOT_Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CZ_DOT_Z, def: 0.0, at: VTOFFSET.CZ_DOT_Z.p) }
-  public static func add(CZ_DOT_X_DOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CZ_DOT_X_DOT, def: 0.0, at: VTOFFSET.CZ_DOT_X_DOT.p) }
-  public static func add(CZ_DOT_Y_DOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CZ_DOT_Y_DOT, def: 0.0, at: VTOFFSET.CZ_DOT_Y_DOT.p) }
-  public static func add(CZ_DOT_Z_DOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CZ_DOT_Z_DOT, def: 0.0, at: VTOFFSET.CZ_DOT_Z_DOT.p) }
-  public static func endcovarianceMatrixLine(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createcovarianceMatrixLine(
+  ///  Midpoint epoch of this record's validity window (ISO 8601 UTC or TDB).
+  public var EPOCH_MID: String! { let o = _accessor.offset(VTOFFSET.EPOCH_MID.v); return _accessor.string(at: o) }
+  public var EPOCH_MIDSegmentArray: [UInt8]! { return _accessor.getVector(at: VTOFFSET.EPOCH_MID.v) }
+  ///  Half-span of the validity window in seconds.
+  public var EPOCH_HALF_SPAN: Double { let o = _accessor.offset(VTOFFSET.EPOCH_HALF_SPAN.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Number of polynomial coefficients per element.
+  public var NUM_COEFFICIENTS: UInt16 { let o = _accessor.offset(VTOFFSET.NUM_COEFFICIENTS.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  ///  Polynomial basis type for interpreting the coefficient arrays.
+  public var BASIS_TYPE: polynomialBasisType { let o = _accessor.offset(VTOFFSET.BASIS_TYPE.v); return o == 0 ? .chebyshev : polynomialBasisType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .chebyshev }
+  ///  Parameterization of the first orbital element (SMA vs R_PERIAPSIS).
+  public var SIZE_SHAPE_TYPE: sizeShapeType { let o = _accessor.offset(VTOFFSET.SIZE_SHAPE_TYPE.v); return o == 0 ? .sma : sizeShapeType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .sma }
+  ///  Anomaly type for the sixth orbital element.
+  public var ANOMALY_TYPE: ppeAnomalyType { let o = _accessor.offset(VTOFFSET.ANOMALY_TYPE.v); return o == 0 ? .trueAnomaly : ppeAnomalyType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .trueAnomaly }
+  ///  Coefficients for SMA or radius of periapsis (km).
+  ///  Length must equal NUM_COEFFICIENTS.
+  public var COEFF_SIZE_SHAPE: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.COEFF_SIZE_SHAPE.v, byteSize: 8) }
+  public func withUnsafePointerToCoeffSizeShape<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.COEFF_SIZE_SHAPE.v, body: body) }
+  ///  Coefficients for eccentricity (dimensionless).
+  ///  Length must equal NUM_COEFFICIENTS.
+  public var COEFF_ECCENTRICITY: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.COEFF_ECCENTRICITY.v, byteSize: 8) }
+  public func withUnsafePointerToCoeffEccentricity<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.COEFF_ECCENTRICITY.v, body: body) }
+  ///  Coefficients for inclination (degrees).
+  ///  Length must equal NUM_COEFFICIENTS.
+  public var COEFF_INCLINATION: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.COEFF_INCLINATION.v, byteSize: 8) }
+  public func withUnsafePointerToCoeffInclination<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.COEFF_INCLINATION.v, body: body) }
+  ///  Coefficients for RAAN (degrees).
+  ///  Length must equal NUM_COEFFICIENTS.
+  public var COEFF_RAAN: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.COEFF_RAAN.v, byteSize: 8) }
+  public func withUnsafePointerToCoeffRaan<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.COEFF_RAAN.v, body: body) }
+  ///  Coefficients for argument of periapsis (degrees).
+  ///  Length must equal NUM_COEFFICIENTS.
+  public var COEFF_ARG_PERIAPSIS: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.COEFF_ARG_PERIAPSIS.v, byteSize: 8) }
+  public func withUnsafePointerToCoeffArgPeriapsis<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.COEFF_ARG_PERIAPSIS.v, body: body) }
+  ///  Coefficients for anomaly (degrees). See ANOMALY_TYPE for interpretation.
+  ///  Length must equal NUM_COEFFICIENTS.
+  public var COEFF_ANOMALY: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.COEFF_ANOMALY.v, byteSize: 8) }
+  public func withUnsafePointerToCoeffAnomaly<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.COEFF_ANOMALY.v, body: body) }
+  ///  Maximum element fit residual over this segment. Optional quality metric.
+  ///  Units depend on the element (km for SMA, degrees for angles, dimensionless for ecc).
+  public var MAX_ELEMENT_RESIDUAL: Double { let o = _accessor.offset(VTOFFSET.MAX_ELEMENT_RESIDUAL.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  RMS element fit residual over this segment. Optional quality metric.
+  public var RMS_ELEMENT_RESIDUAL: Double { let o = _accessor.offset(VTOFFSET.RMS_ELEMENT_RESIDUAL.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public static func startPPEOrbitalElementRecord(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 14) }
+  public static func add(EPOCH_MID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPOCH_MID, at: VTOFFSET.EPOCH_MID.p) }
+  public static func add(EPOCH_HALF_SPAN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EPOCH_HALF_SPAN, def: 0.0, at: VTOFFSET.EPOCH_HALF_SPAN.p) }
+  public static func add(NUM_COEFFICIENTS: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NUM_COEFFICIENTS, def: 0, at: VTOFFSET.NUM_COEFFICIENTS.p) }
+  public static func add(BASIS_TYPE: polynomialBasisType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BASIS_TYPE.rawValue, def: 0, at: VTOFFSET.BASIS_TYPE.p) }
+  public static func add(SIZE_SHAPE_TYPE: sizeShapeType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SIZE_SHAPE_TYPE.rawValue, def: 0, at: VTOFFSET.SIZE_SHAPE_TYPE.p) }
+  public static func add(ANOMALY_TYPE: ppeAnomalyType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ANOMALY_TYPE.rawValue, def: 0, at: VTOFFSET.ANOMALY_TYPE.p) }
+  public static func addVectorOf(COEFF_SIZE_SHAPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COEFF_SIZE_SHAPE, at: VTOFFSET.COEFF_SIZE_SHAPE.p) }
+  public static func addVectorOf(COEFF_ECCENTRICITY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COEFF_ECCENTRICITY, at: VTOFFSET.COEFF_ECCENTRICITY.p) }
+  public static func addVectorOf(COEFF_INCLINATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COEFF_INCLINATION, at: VTOFFSET.COEFF_INCLINATION.p) }
+  public static func addVectorOf(COEFF_RAAN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COEFF_RAAN, at: VTOFFSET.COEFF_RAAN.p) }
+  public static func addVectorOf(COEFF_ARG_PERIAPSIS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COEFF_ARG_PERIAPSIS, at: VTOFFSET.COEFF_ARG_PERIAPSIS.p) }
+  public static func addVectorOf(COEFF_ANOMALY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COEFF_ANOMALY, at: VTOFFSET.COEFF_ANOMALY.p) }
+  public static func add(MAX_ELEMENT_RESIDUAL: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_ELEMENT_RESIDUAL, def: 0.0, at: VTOFFSET.MAX_ELEMENT_RESIDUAL.p) }
+  public static func add(RMS_ELEMENT_RESIDUAL: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RMS_ELEMENT_RESIDUAL, def: 0.0, at: VTOFFSET.RMS_ELEMENT_RESIDUAL.p) }
+  public static func endPPEOrbitalElementRecord(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4, 16, 18, 20, 22, 24, 26]); return end }
+  public static func createPPEOrbitalElementRecord(
     _ fbb: inout FlatBufferBuilder,
-    EPOCHOffset EPOCH: Offset = Offset(),
-    CX_X: Double = 0.0,
-    CY_X: Double = 0.0,
-    CY_Y: Double = 0.0,
-    CZ_X: Double = 0.0,
-    CZ_Y: Double = 0.0,
-    CZ_Z: Double = 0.0,
-    CX_DOT_X: Double = 0.0,
-    CX_DOT_Y: Double = 0.0,
-    CX_DOT_Z: Double = 0.0,
-    CX_DOT_X_DOT: Double = 0.0,
-    CY_DOT_X: Double = 0.0,
-    CY_DOT_Y: Double = 0.0,
-    CY_DOT_Z: Double = 0.0,
-    CY_DOT_X_DOT: Double = 0.0,
-    CY_DOT_Y_DOT: Double = 0.0,
-    CZ_DOT_X: Double = 0.0,
-    CZ_DOT_Y: Double = 0.0,
-    CZ_DOT_Z: Double = 0.0,
-    CZ_DOT_X_DOT: Double = 0.0,
-    CZ_DOT_Y_DOT: Double = 0.0,
-    CZ_DOT_Z_DOT: Double = 0.0
+    EPOCH_MIDOffset EPOCH_MID: Offset,
+    EPOCH_HALF_SPAN: Double = 0.0,
+    NUM_COEFFICIENTS: UInt16 = 0,
+    BASIS_TYPE: polynomialBasisType = .chebyshev,
+    SIZE_SHAPE_TYPE: sizeShapeType = .sma,
+    ANOMALY_TYPE: ppeAnomalyType = .trueAnomaly,
+    COEFF_SIZE_SHAPEVectorOffset COEFF_SIZE_SHAPE: Offset,
+    COEFF_ECCENTRICITYVectorOffset COEFF_ECCENTRICITY: Offset,
+    COEFF_INCLINATIONVectorOffset COEFF_INCLINATION: Offset,
+    COEFF_RAANVectorOffset COEFF_RAAN: Offset,
+    COEFF_ARG_PERIAPSISVectorOffset COEFF_ARG_PERIAPSIS: Offset,
+    COEFF_ANOMALYVectorOffset COEFF_ANOMALY: Offset,
+    MAX_ELEMENT_RESIDUAL: Double = 0.0,
+    RMS_ELEMENT_RESIDUAL: Double = 0.0
   ) -> Offset {
-    let __start = covarianceMatrixLine.startcovarianceMatrixLine(&fbb)
-    covarianceMatrixLine.add(EPOCH: EPOCH, &fbb)
-    covarianceMatrixLine.add(CX_X: CX_X, &fbb)
-    covarianceMatrixLine.add(CY_X: CY_X, &fbb)
-    covarianceMatrixLine.add(CY_Y: CY_Y, &fbb)
-    covarianceMatrixLine.add(CZ_X: CZ_X, &fbb)
-    covarianceMatrixLine.add(CZ_Y: CZ_Y, &fbb)
-    covarianceMatrixLine.add(CZ_Z: CZ_Z, &fbb)
-    covarianceMatrixLine.add(CX_DOT_X: CX_DOT_X, &fbb)
-    covarianceMatrixLine.add(CX_DOT_Y: CX_DOT_Y, &fbb)
-    covarianceMatrixLine.add(CX_DOT_Z: CX_DOT_Z, &fbb)
-    covarianceMatrixLine.add(CX_DOT_X_DOT: CX_DOT_X_DOT, &fbb)
-    covarianceMatrixLine.add(CY_DOT_X: CY_DOT_X, &fbb)
-    covarianceMatrixLine.add(CY_DOT_Y: CY_DOT_Y, &fbb)
-    covarianceMatrixLine.add(CY_DOT_Z: CY_DOT_Z, &fbb)
-    covarianceMatrixLine.add(CY_DOT_X_DOT: CY_DOT_X_DOT, &fbb)
-    covarianceMatrixLine.add(CY_DOT_Y_DOT: CY_DOT_Y_DOT, &fbb)
-    covarianceMatrixLine.add(CZ_DOT_X: CZ_DOT_X, &fbb)
-    covarianceMatrixLine.add(CZ_DOT_Y: CZ_DOT_Y, &fbb)
-    covarianceMatrixLine.add(CZ_DOT_Z: CZ_DOT_Z, &fbb)
-    covarianceMatrixLine.add(CZ_DOT_X_DOT: CZ_DOT_X_DOT, &fbb)
-    covarianceMatrixLine.add(CZ_DOT_Y_DOT: CZ_DOT_Y_DOT, &fbb)
-    covarianceMatrixLine.add(CZ_DOT_Z_DOT: CZ_DOT_Z_DOT, &fbb)
-    return covarianceMatrixLine.endcovarianceMatrixLine(&fbb, start: __start)
+    let __start = PPEOrbitalElementRecord.startPPEOrbitalElementRecord(&fbb)
+    PPEOrbitalElementRecord.add(EPOCH_MID: EPOCH_MID, &fbb)
+    PPEOrbitalElementRecord.add(EPOCH_HALF_SPAN: EPOCH_HALF_SPAN, &fbb)
+    PPEOrbitalElementRecord.add(NUM_COEFFICIENTS: NUM_COEFFICIENTS, &fbb)
+    PPEOrbitalElementRecord.add(BASIS_TYPE: BASIS_TYPE, &fbb)
+    PPEOrbitalElementRecord.add(SIZE_SHAPE_TYPE: SIZE_SHAPE_TYPE, &fbb)
+    PPEOrbitalElementRecord.add(ANOMALY_TYPE: ANOMALY_TYPE, &fbb)
+    PPEOrbitalElementRecord.addVectorOf(COEFF_SIZE_SHAPE: COEFF_SIZE_SHAPE, &fbb)
+    PPEOrbitalElementRecord.addVectorOf(COEFF_ECCENTRICITY: COEFF_ECCENTRICITY, &fbb)
+    PPEOrbitalElementRecord.addVectorOf(COEFF_INCLINATION: COEFF_INCLINATION, &fbb)
+    PPEOrbitalElementRecord.addVectorOf(COEFF_RAAN: COEFF_RAAN, &fbb)
+    PPEOrbitalElementRecord.addVectorOf(COEFF_ARG_PERIAPSIS: COEFF_ARG_PERIAPSIS, &fbb)
+    PPEOrbitalElementRecord.addVectorOf(COEFF_ANOMALY: COEFF_ANOMALY, &fbb)
+    PPEOrbitalElementRecord.add(MAX_ELEMENT_RESIDUAL: MAX_ELEMENT_RESIDUAL, &fbb)
+    PPEOrbitalElementRecord.add(RMS_ELEMENT_RESIDUAL: RMS_ELEMENT_RESIDUAL, &fbb)
+    return PPEOrbitalElementRecord.endPPEOrbitalElementRecord(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.EPOCH.p, fieldName: "EPOCH", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.CX_X.p, fieldName: "CX_X", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CY_X.p, fieldName: "CY_X", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CY_Y.p, fieldName: "CY_Y", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CZ_X.p, fieldName: "CZ_X", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CZ_Y.p, fieldName: "CZ_Y", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CZ_Z.p, fieldName: "CZ_Z", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CX_DOT_X.p, fieldName: "CX_DOT_X", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CX_DOT_Y.p, fieldName: "CX_DOT_Y", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CX_DOT_Z.p, fieldName: "CX_DOT_Z", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CX_DOT_X_DOT.p, fieldName: "CX_DOT_X_DOT", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CY_DOT_X.p, fieldName: "CY_DOT_X", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CY_DOT_Y.p, fieldName: "CY_DOT_Y", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CY_DOT_Z.p, fieldName: "CY_DOT_Z", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CY_DOT_X_DOT.p, fieldName: "CY_DOT_X_DOT", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CY_DOT_Y_DOT.p, fieldName: "CY_DOT_Y_DOT", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CZ_DOT_X.p, fieldName: "CZ_DOT_X", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CZ_DOT_Y.p, fieldName: "CZ_DOT_Y", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CZ_DOT_Z.p, fieldName: "CZ_DOT_Z", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CZ_DOT_X_DOT.p, fieldName: "CZ_DOT_X_DOT", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CZ_DOT_Y_DOT.p, fieldName: "CZ_DOT_Y_DOT", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CZ_DOT_Z_DOT.p, fieldName: "CZ_DOT_Z_DOT", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.EPOCH_MID.p, fieldName: "EPOCH_MID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.EPOCH_HALF_SPAN.p, fieldName: "EPOCH_HALF_SPAN", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.NUM_COEFFICIENTS.p, fieldName: "NUM_COEFFICIENTS", required: false, type: UInt16.self)
+    try _v.visit(field: VTOFFSET.BASIS_TYPE.p, fieldName: "BASIS_TYPE", required: false, type: polynomialBasisType.self)
+    try _v.visit(field: VTOFFSET.SIZE_SHAPE_TYPE.p, fieldName: "SIZE_SHAPE_TYPE", required: false, type: sizeShapeType.self)
+    try _v.visit(field: VTOFFSET.ANOMALY_TYPE.p, fieldName: "ANOMALY_TYPE", required: false, type: ppeAnomalyType.self)
+    try _v.visit(field: VTOFFSET.COEFF_SIZE_SHAPE.p, fieldName: "COEFF_SIZE_SHAPE", required: true, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VTOFFSET.COEFF_ECCENTRICITY.p, fieldName: "COEFF_ECCENTRICITY", required: true, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VTOFFSET.COEFF_INCLINATION.p, fieldName: "COEFF_INCLINATION", required: true, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VTOFFSET.COEFF_RAAN.p, fieldName: "COEFF_RAAN", required: true, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VTOFFSET.COEFF_ARG_PERIAPSIS.p, fieldName: "COEFF_ARG_PERIAPSIS", required: true, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VTOFFSET.COEFF_ANOMALY.p, fieldName: "COEFF_ANOMALY", required: true, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VTOFFSET.MAX_ELEMENT_RESIDUAL.p, fieldName: "MAX_ELEMENT_RESIDUAL", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.RMS_ELEMENT_RESIDUAL.p, fieldName: "RMS_ELEMENT_RESIDUAL", required: false, type: Double.self)
     _v.finish()
   }
 }
 
-///  OEM Ephemeris Data Block
-public struct ephemerisDataBlock: FlatBufferObject, Verifiable {
+///  Polynomial Ephemeris — top-level message containing metadata and
+///  one or more polynomial coefficient records for a single space object.
+/// 
+///  A PPE message may contain position records, orbital element records, or both.
+///  Records should be ordered chronologically by EPOCH_MID and should collectively
+///  cover the time span [START_TIME, STOP_TIME] without gaps.
+public struct PPE: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$OEM" } 
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: ephemerisDataBlock.id, addPrefix: prefix) }
+  public static var id: String { "$PPE" } 
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PPE.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
@@ -313,243 +394,117 @@ public struct ephemerisDataBlock: FlatBufferObject, Verifiable {
     case OBJECT = 6
     case CENTER_NAME = 8
     case REFERENCE_FRAME = 10
-    case REFERENCE_FRAME_EPOCH = 12
-    case COV_REFERENCE_FRAME = 14
-    case TIME_SYSTEM = 16
-    case START_TIME = 18
-    case USEABLE_START_TIME = 20
-    case USEABLE_STOP_TIME = 22
-    case STOP_TIME = 24
-    case INTERPOLATION = 26
-    case INTERPOLATION_DEGREE = 28
-    case STEP_SIZE = 30
-    case STATE_VECTOR_SIZE = 32
-    case EPHEMERIS_DATA = 34
-    case EPHEMERIS_DATA_LINES = 36
-    case COVARIANCE_MATRIX_LINES = 38
+    case TIME_SYSTEM = 12
+    case START_TIME = 14
+    case STOP_TIME = 16
+    case DEFAULT_BASIS_TYPE = 18
+    case POSITION_RECORDS = 20
+    case ORBITAL_ELEMENT_RECORDS = 22
+    case EPHEMERIS_SOURCE = 24
+    case NOMINAL_SEGMENT_SPAN = 26
+    case NOMINAL_NUM_COEFFICIENTS = 28
     var v: Int32 { Int32(self.rawValue) }
     var p: VOffset { self.rawValue }
   }
 
-  ///  Plain-Text Comment
-  public var COMMENT: String? { let o = _accessor.offset(VTOFFSET.COMMENT.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var COMMENTSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.COMMENT.v) }
-  ///  Satellite name for the first object
-  public var OBJECT: CAT? { let o = _accessor.offset(VTOFFSET.OBJECT.v); return o == 0 ? nil : CAT(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
-  ///  Origin of reference frame (EARTH, MARS, MOON, etc.)
+  ///  Plain-text comments.
+  public var COMMENT: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.COMMENT.v, byteSize: 4) }
+  ///  Space object identification.
+  public var OBJECT: CAT? { let o = _accessor.offset(VTOFFSET.OBJECT.v); return o == 0 ? nil : CAT(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Origin of the reference frame (e.g., EARTH, MOON, MARS).
   public var CENTER_NAME: String? { let o = _accessor.offset(VTOFFSET.CENTER_NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var CENTER_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CENTER_NAME.v) }
-  ///  Name of the reference frame (TEME, EME2000, etc.)
-  public var REFERENCE_FRAME: RFM? { let o = _accessor.offset(VTOFFSET.REFERENCE_FRAME.v); return o == 0 ? nil : RFM(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
-  ///  Epoch of reference frame, if not intrinsic to the definition of the reference frame
-  public var REFERENCE_FRAME_EPOCH: String? { let o = _accessor.offset(VTOFFSET.REFERENCE_FRAME_EPOCH.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var REFERENCE_FRAME_EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.REFERENCE_FRAME_EPOCH.v) }
-  ///  Reference frame for the covariance matrix
-  public var COV_REFERENCE_FRAME: RFM? { let o = _accessor.offset(VTOFFSET.COV_REFERENCE_FRAME.v); return o == 0 ? nil : RFM(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
-  ///  Time system used for the orbit state and covariance matrix. (UTC)
+  ///  Reference frame for position/velocity coefficients.
+  public var REFERENCE_FRAME: RFM? { let o = _accessor.offset(VTOFFSET.REFERENCE_FRAME.v); return o == 0 ? nil : RFM(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Time system used for all epochs in this message.
   public var TIME_SYSTEM: timeSystem { let o = _accessor.offset(VTOFFSET.TIME_SYSTEM.v); return o == 0 ? .gmst : timeSystem(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .gmst }
-  ///  Start of TOTAL time span covered by ephemeris data and covariance data (ISO 8601)
+  ///  Start of the total time span covered by this ephemeris (ISO 8601).
   public var START_TIME: String? { let o = _accessor.offset(VTOFFSET.START_TIME.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var START_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.START_TIME.v) }
-  ///  Optional start USEABLE time span covered by ephemeris data (ISO 8601)
-  public var USEABLE_START_TIME: String? { let o = _accessor.offset(VTOFFSET.USEABLE_START_TIME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var USEABLE_START_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.USEABLE_START_TIME.v) }
-  ///  Optional end of USEABLE time span covered by ephemeris data (ISO 8601)
-  public var USEABLE_STOP_TIME: String? { let o = _accessor.offset(VTOFFSET.USEABLE_STOP_TIME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var USEABLE_STOP_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.USEABLE_STOP_TIME.v) }
-  ///  End of TOTAL time span covered by ephemeris data and covariance data (ISO 8601)
+  ///  End of the total time span covered by this ephemeris (ISO 8601).
   public var STOP_TIME: String? { let o = _accessor.offset(VTOFFSET.STOP_TIME.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var STOP_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.STOP_TIME.v) }
-  ///  Recommended interpolation method for ephemeris data (Hermite, Linear, Lagrange, etc.)
-  public var INTERPOLATION: String? { let o = _accessor.offset(VTOFFSET.INTERPOLATION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var INTERPOLATIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.INTERPOLATION.v) }
-  ///  Recommended interpolation degree for ephemeris data
-  public var INTERPOLATION_DEGREE: UInt32 { let o = _accessor.offset(VTOFFSET.INTERPOLATION_DEGREE.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
-  ///  Time interval between ephemeris states in seconds.
-  ///  If > 0: Use compact EPHEMERIS_DATA array (times are implicit).
-  ///  If 0 or omitted: Use EPHEMERIS_DATA_LINES with explicit epochs.
-  public var STEP_SIZE: Double { let o = _accessor.offset(VTOFFSET.STEP_SIZE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Number of components per state vector in EPHEMERIS_DATA array.
-  ///  6 = position + velocity (X, Y, Z, X_DOT, Y_DOT, Z_DOT)
-  ///  9 = position + velocity + acceleration (adds X_DDOT, Y_DDOT, Z_DDOT)
-  ///  Only used when STEP_SIZE > 0. Default is 6.
-  public var STATE_VECTOR_SIZE: UInt8 { let o = _accessor.offset(VTOFFSET.STATE_VECTOR_SIZE.v); return o == 0 ? 6 : _accessor.readBuffer(of: UInt8.self, at: o) }
-  ///  Compact ephemeris data as row-major array of doubles.
-  ///  Only used when STEP_SIZE > 0.
-  ///  Layout: [x0,y0,z0,xdot0,ydot0,zdot0, x1,y1,z1,xdot1,ydot1,zdot1, ...]
-  ///  Units: position in km, velocity in km/s, acceleration in km/s²
-  ///  Length must be divisible by STATE_VECTOR_SIZE.
-  ///  Number of states = length(EPHEMERIS_DATA) / STATE_VECTOR_SIZE
-  public var hasEphemerisData: Bool { let o = _accessor.offset(VTOFFSET.EPHEMERIS_DATA.v); return o == 0 ? false : true }
-  public var EPHEMERIS_DATACount: Int32 { let o = _accessor.offset(VTOFFSET.EPHEMERIS_DATA.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func EPHEMERIS_DATA(at index: Int32) -> Double { let o = _accessor.offset(VTOFFSET.EPHEMERIS_DATA.v); return o == 0 ? 0 : _accessor.directRead(of: Double.self, offset: _accessor.vector(at: o) + index * 8) }
-  public var EPHEMERIS_DATA: [Double] { return _accessor.getVector(at: VTOFFSET.EPHEMERIS_DATA.v) ?? [] }
-  ///  Array of ephemeris data lines with explicit epochs.
-  ///  Only used when STEP_SIZE == 0 or omitted (non-uniform time steps).
-  ///  Each line contains its own EPOCH timestamp.
-  public var hasEphemerisDataLines: Bool { let o = _accessor.offset(VTOFFSET.EPHEMERIS_DATA_LINES.v); return o == 0 ? false : true }
-  public var EPHEMERIS_DATA_LINESCount: Int32 { let o = _accessor.offset(VTOFFSET.EPHEMERIS_DATA_LINES.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func EPHEMERIS_DATA_LINES(at index: Int32) -> ephemerisDataLine? { let o = _accessor.offset(VTOFFSET.EPHEMERIS_DATA_LINES.v); return o == 0 ? nil : ephemerisDataLine(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
-  ///  Array of covariance matrix lines (optional)
-  public var hasCovarianceMatrixLines: Bool { let o = _accessor.offset(VTOFFSET.COVARIANCE_MATRIX_LINES.v); return o == 0 ? false : true }
-  public var COVARIANCE_MATRIX_LINESCount: Int32 { let o = _accessor.offset(VTOFFSET.COVARIANCE_MATRIX_LINES.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func COVARIANCE_MATRIX_LINES(at index: Int32) -> covarianceMatrixLine? { let o = _accessor.offset(VTOFFSET.COVARIANCE_MATRIX_LINES.v); return o == 0 ? nil : covarianceMatrixLine(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
-  public static func startephemerisDataBlock(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 18) }
-  public static func add(COMMENT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMMENT, at: VTOFFSET.COMMENT.p) }
+  ///  Default polynomial basis type for all records in this message.
+  ///  Individual records may override this with their own BASIS_TYPE field.
+  public var DEFAULT_BASIS_TYPE: polynomialBasisType { let o = _accessor.offset(VTOFFSET.DEFAULT_BASIS_TYPE.v); return o == 0 ? .chebyshev : polynomialBasisType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .chebyshev }
+  ///  Array of position polynomial records.
+  ///  Each record covers a time segment; together they span [START_TIME, STOP_TIME].
+  public var POSITION_RECORDS: FlatbufferVector<PPEPositionRecord> { return _accessor.vector(at: VTOFFSET.POSITION_RECORDS.v, byteSize: 4) }
+  ///  Array of orbital element polynomial records.
+  ///  Each record covers a time segment; together they span [START_TIME, STOP_TIME].
+  public var ORBITAL_ELEMENT_RECORDS: FlatbufferVector<PPEOrbitalElementRecord> { return _accessor.vector(at: VTOFFSET.ORBITAL_ELEMENT_RECORDS.v, byteSize: 4) }
+  ///  Generating ephemeris source (e.g., "JPL DE440", "HPOP v2.1", "Basilisk chebyPosEphem").
+  public var EPHEMERIS_SOURCE: String? { let o = _accessor.offset(VTOFFSET.EPHEMERIS_SOURCE.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var EPHEMERIS_SOURCESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.EPHEMERIS_SOURCE.v) }
+  ///  Fit span in seconds used to generate each polynomial segment.
+  ///  Informational; actual spans are in individual records.
+  public var NOMINAL_SEGMENT_SPAN: Double { let o = _accessor.offset(VTOFFSET.NOMINAL_SEGMENT_SPAN.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Nominal number of coefficients per segment.
+  ///  Informational; actual counts are in individual records.
+  public var NOMINAL_NUM_COEFFICIENTS: UInt16 { let o = _accessor.offset(VTOFFSET.NOMINAL_NUM_COEFFICIENTS.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  public static func startPPE(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 13) }
+  public static func addVectorOf(COMMENT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMMENT, at: VTOFFSET.COMMENT.p) }
   public static func add(OBJECT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT, at: VTOFFSET.OBJECT.p) }
   public static func add(CENTER_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CENTER_NAME, at: VTOFFSET.CENTER_NAME.p) }
   public static func add(REFERENCE_FRAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REFERENCE_FRAME, at: VTOFFSET.REFERENCE_FRAME.p) }
-  public static func add(REFERENCE_FRAME_EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REFERENCE_FRAME_EPOCH, at: VTOFFSET.REFERENCE_FRAME_EPOCH.p) }
-  public static func add(COV_REFERENCE_FRAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COV_REFERENCE_FRAME, at: VTOFFSET.COV_REFERENCE_FRAME.p) }
   public static func add(TIME_SYSTEM: timeSystem, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TIME_SYSTEM.rawValue, def: 0, at: VTOFFSET.TIME_SYSTEM.p) }
   public static func add(START_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: START_TIME, at: VTOFFSET.START_TIME.p) }
-  public static func add(USEABLE_START_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: USEABLE_START_TIME, at: VTOFFSET.USEABLE_START_TIME.p) }
-  public static func add(USEABLE_STOP_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: USEABLE_STOP_TIME, at: VTOFFSET.USEABLE_STOP_TIME.p) }
   public static func add(STOP_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STOP_TIME, at: VTOFFSET.STOP_TIME.p) }
-  public static func add(INTERPOLATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INTERPOLATION, at: VTOFFSET.INTERPOLATION.p) }
-  public static func add(INTERPOLATION_DEGREE: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INTERPOLATION_DEGREE, def: 0, at: VTOFFSET.INTERPOLATION_DEGREE.p) }
-  public static func add(STEP_SIZE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STEP_SIZE, def: 0.0, at: VTOFFSET.STEP_SIZE.p) }
-  public static func add(STATE_VECTOR_SIZE: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STATE_VECTOR_SIZE, def: 6, at: VTOFFSET.STATE_VECTOR_SIZE.p) }
-  public static func addVectorOf(EPHEMERIS_DATA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPHEMERIS_DATA, at: VTOFFSET.EPHEMERIS_DATA.p) }
-  public static func addVectorOf(EPHEMERIS_DATA_LINES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPHEMERIS_DATA_LINES, at: VTOFFSET.EPHEMERIS_DATA_LINES.p) }
-  public static func addVectorOf(COVARIANCE_MATRIX_LINES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COVARIANCE_MATRIX_LINES, at: VTOFFSET.COVARIANCE_MATRIX_LINES.p) }
-  public static func endephemerisDataBlock(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createephemerisDataBlock(
+  public static func add(DEFAULT_BASIS_TYPE: polynomialBasisType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DEFAULT_BASIS_TYPE.rawValue, def: 0, at: VTOFFSET.DEFAULT_BASIS_TYPE.p) }
+  public static func addVectorOf(POSITION_RECORDS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POSITION_RECORDS, at: VTOFFSET.POSITION_RECORDS.p) }
+  public static func addVectorOf(ORBITAL_ELEMENT_RECORDS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORBITAL_ELEMENT_RECORDS, at: VTOFFSET.ORBITAL_ELEMENT_RECORDS.p) }
+  public static func add(EPHEMERIS_SOURCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPHEMERIS_SOURCE, at: VTOFFSET.EPHEMERIS_SOURCE.p) }
+  public static func add(NOMINAL_SEGMENT_SPAN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NOMINAL_SEGMENT_SPAN, def: 0.0, at: VTOFFSET.NOMINAL_SEGMENT_SPAN.p) }
+  public static func add(NOMINAL_NUM_COEFFICIENTS: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NOMINAL_NUM_COEFFICIENTS, def: 0, at: VTOFFSET.NOMINAL_NUM_COEFFICIENTS.p) }
+  public static func endPPE(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createPPE(
     _ fbb: inout FlatBufferBuilder,
-    COMMENTOffset COMMENT: Offset = Offset(),
+    COMMENTVectorOffset COMMENT: Offset = Offset(),
     OBJECTOffset OBJECT: Offset = Offset(),
     CENTER_NAMEOffset CENTER_NAME: Offset = Offset(),
     REFERENCE_FRAMEOffset REFERENCE_FRAME: Offset = Offset(),
-    REFERENCE_FRAME_EPOCHOffset REFERENCE_FRAME_EPOCH: Offset = Offset(),
-    COV_REFERENCE_FRAMEOffset COV_REFERENCE_FRAME: Offset = Offset(),
     TIME_SYSTEM: timeSystem = .gmst,
     START_TIMEOffset START_TIME: Offset = Offset(),
-    USEABLE_START_TIMEOffset USEABLE_START_TIME: Offset = Offset(),
-    USEABLE_STOP_TIMEOffset USEABLE_STOP_TIME: Offset = Offset(),
     STOP_TIMEOffset STOP_TIME: Offset = Offset(),
-    INTERPOLATIONOffset INTERPOLATION: Offset = Offset(),
-    INTERPOLATION_DEGREE: UInt32 = 0,
-    STEP_SIZE: Double = 0.0,
-    STATE_VECTOR_SIZE: UInt8 = 6,
-    EPHEMERIS_DATAVectorOffset EPHEMERIS_DATA: Offset = Offset(),
-    EPHEMERIS_DATA_LINESVectorOffset EPHEMERIS_DATA_LINES: Offset = Offset(),
-    COVARIANCE_MATRIX_LINESVectorOffset COVARIANCE_MATRIX_LINES: Offset = Offset()
+    DEFAULT_BASIS_TYPE: polynomialBasisType = .chebyshev,
+    POSITION_RECORDSVectorOffset POSITION_RECORDS: Offset = Offset(),
+    ORBITAL_ELEMENT_RECORDSVectorOffset ORBITAL_ELEMENT_RECORDS: Offset = Offset(),
+    EPHEMERIS_SOURCEOffset EPHEMERIS_SOURCE: Offset = Offset(),
+    NOMINAL_SEGMENT_SPAN: Double = 0.0,
+    NOMINAL_NUM_COEFFICIENTS: UInt16 = 0
   ) -> Offset {
-    let __start = ephemerisDataBlock.startephemerisDataBlock(&fbb)
-    ephemerisDataBlock.add(COMMENT: COMMENT, &fbb)
-    ephemerisDataBlock.add(OBJECT: OBJECT, &fbb)
-    ephemerisDataBlock.add(CENTER_NAME: CENTER_NAME, &fbb)
-    ephemerisDataBlock.add(REFERENCE_FRAME: REFERENCE_FRAME, &fbb)
-    ephemerisDataBlock.add(REFERENCE_FRAME_EPOCH: REFERENCE_FRAME_EPOCH, &fbb)
-    ephemerisDataBlock.add(COV_REFERENCE_FRAME: COV_REFERENCE_FRAME, &fbb)
-    ephemerisDataBlock.add(TIME_SYSTEM: TIME_SYSTEM, &fbb)
-    ephemerisDataBlock.add(START_TIME: START_TIME, &fbb)
-    ephemerisDataBlock.add(USEABLE_START_TIME: USEABLE_START_TIME, &fbb)
-    ephemerisDataBlock.add(USEABLE_STOP_TIME: USEABLE_STOP_TIME, &fbb)
-    ephemerisDataBlock.add(STOP_TIME: STOP_TIME, &fbb)
-    ephemerisDataBlock.add(INTERPOLATION: INTERPOLATION, &fbb)
-    ephemerisDataBlock.add(INTERPOLATION_DEGREE: INTERPOLATION_DEGREE, &fbb)
-    ephemerisDataBlock.add(STEP_SIZE: STEP_SIZE, &fbb)
-    ephemerisDataBlock.add(STATE_VECTOR_SIZE: STATE_VECTOR_SIZE, &fbb)
-    ephemerisDataBlock.addVectorOf(EPHEMERIS_DATA: EPHEMERIS_DATA, &fbb)
-    ephemerisDataBlock.addVectorOf(EPHEMERIS_DATA_LINES: EPHEMERIS_DATA_LINES, &fbb)
-    ephemerisDataBlock.addVectorOf(COVARIANCE_MATRIX_LINES: COVARIANCE_MATRIX_LINES, &fbb)
-    return ephemerisDataBlock.endephemerisDataBlock(&fbb, start: __start)
+    let __start = PPE.startPPE(&fbb)
+    PPE.addVectorOf(COMMENT: COMMENT, &fbb)
+    PPE.add(OBJECT: OBJECT, &fbb)
+    PPE.add(CENTER_NAME: CENTER_NAME, &fbb)
+    PPE.add(REFERENCE_FRAME: REFERENCE_FRAME, &fbb)
+    PPE.add(TIME_SYSTEM: TIME_SYSTEM, &fbb)
+    PPE.add(START_TIME: START_TIME, &fbb)
+    PPE.add(STOP_TIME: STOP_TIME, &fbb)
+    PPE.add(DEFAULT_BASIS_TYPE: DEFAULT_BASIS_TYPE, &fbb)
+    PPE.addVectorOf(POSITION_RECORDS: POSITION_RECORDS, &fbb)
+    PPE.addVectorOf(ORBITAL_ELEMENT_RECORDS: ORBITAL_ELEMENT_RECORDS, &fbb)
+    PPE.add(EPHEMERIS_SOURCE: EPHEMERIS_SOURCE, &fbb)
+    PPE.add(NOMINAL_SEGMENT_SPAN: NOMINAL_SEGMENT_SPAN, &fbb)
+    PPE.add(NOMINAL_NUM_COEFFICIENTS: NOMINAL_NUM_COEFFICIENTS, &fbb)
+    return PPE.endPPE(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.COMMENT.p, fieldName: "COMMENT", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.COMMENT.p, fieldName: "COMMENT", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
     try _v.visit(field: VTOFFSET.OBJECT.p, fieldName: "OBJECT", required: false, type: ForwardOffset<CAT>.self)
     try _v.visit(field: VTOFFSET.CENTER_NAME.p, fieldName: "CENTER_NAME", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.REFERENCE_FRAME.p, fieldName: "REFERENCE_FRAME", required: false, type: ForwardOffset<RFM>.self)
-    try _v.visit(field: VTOFFSET.REFERENCE_FRAME_EPOCH.p, fieldName: "REFERENCE_FRAME_EPOCH", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.COV_REFERENCE_FRAME.p, fieldName: "COV_REFERENCE_FRAME", required: false, type: ForwardOffset<RFM>.self)
     try _v.visit(field: VTOFFSET.TIME_SYSTEM.p, fieldName: "TIME_SYSTEM", required: false, type: timeSystem.self)
     try _v.visit(field: VTOFFSET.START_TIME.p, fieldName: "START_TIME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.USEABLE_START_TIME.p, fieldName: "USEABLE_START_TIME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.USEABLE_STOP_TIME.p, fieldName: "USEABLE_STOP_TIME", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.STOP_TIME.p, fieldName: "STOP_TIME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.INTERPOLATION.p, fieldName: "INTERPOLATION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.INTERPOLATION_DEGREE.p, fieldName: "INTERPOLATION_DEGREE", required: false, type: UInt32.self)
-    try _v.visit(field: VTOFFSET.STEP_SIZE.p, fieldName: "STEP_SIZE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.STATE_VECTOR_SIZE.p, fieldName: "STATE_VECTOR_SIZE", required: false, type: UInt8.self)
-    try _v.visit(field: VTOFFSET.EPHEMERIS_DATA.p, fieldName: "EPHEMERIS_DATA", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
-    try _v.visit(field: VTOFFSET.EPHEMERIS_DATA_LINES.p, fieldName: "EPHEMERIS_DATA_LINES", required: false, type: ForwardOffset<Vector<ForwardOffset<ephemerisDataLine>, ephemerisDataLine>>.self)
-    try _v.visit(field: VTOFFSET.COVARIANCE_MATRIX_LINES.p, fieldName: "COVARIANCE_MATRIX_LINES", required: false, type: ForwardOffset<Vector<ForwardOffset<covarianceMatrixLine>, covarianceMatrixLine>>.self)
-    _v.finish()
-  }
-}
-
-///  Orbit Ephemeris Message
-public struct OEM: FlatBufferObject, Verifiable {
-
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
-  public var __buffer: ByteBuffer! { return _accessor.bb }
-  private var _accessor: Table
-
-  public static var id: String { "$OEM" } 
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: OEM.id, addPrefix: prefix) }
-  private init(_ t: Table) { _accessor = t }
-  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
-
-  private enum VTOFFSET: VOffset {
-    case CLASSIFICATION = 4
-    case CCSDS_OEM_VERS = 6
-    case CREATION_DATE = 8
-    case ORIGINATOR = 10
-    case EPHEMERIS_DATA_BLOCK = 12
-    var v: Int32 { Int32(self.rawValue) }
-    var p: VOffset { self.rawValue }
-  }
-
-  ///  OEM Header
-  ///  Classification marking of the data in IC/CAPCO Portion-marked format.
-  public var CLASSIFICATION: String? { let o = _accessor.offset(VTOFFSET.CLASSIFICATION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var CLASSIFICATIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CLASSIFICATION.v) }
-  ///  OEM Version
-  public var CCSDS_OEM_VERS: Double { let o = _accessor.offset(VTOFFSET.CCSDS_OEM_VERS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Creation Date
-  public var CREATION_DATE: String? { let o = _accessor.offset(VTOFFSET.CREATION_DATE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var CREATION_DATESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CREATION_DATE.v) }
-  ///  Originator
-  public var ORIGINATOR: String? { let o = _accessor.offset(VTOFFSET.ORIGINATOR.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ORIGINATORSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ORIGINATOR.v) }
-  ///  Array of ephemeris data blocks
-  public var hasEphemerisDataBlock: Bool { let o = _accessor.offset(VTOFFSET.EPHEMERIS_DATA_BLOCK.v); return o == 0 ? false : true }
-  public var EPHEMERIS_DATA_BLOCKCount: Int32 { let o = _accessor.offset(VTOFFSET.EPHEMERIS_DATA_BLOCK.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func EPHEMERIS_DATA_BLOCK(at index: Int32) -> ephemerisDataBlock? { let o = _accessor.offset(VTOFFSET.EPHEMERIS_DATA_BLOCK.v); return o == 0 ? nil : ephemerisDataBlock(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
-  public static func startOEM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
-  public static func add(CLASSIFICATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CLASSIFICATION, at: VTOFFSET.CLASSIFICATION.p) }
-  public static func add(CCSDS_OEM_VERS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CCSDS_OEM_VERS, def: 0.0, at: VTOFFSET.CCSDS_OEM_VERS.p) }
-  public static func add(CREATION_DATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CREATION_DATE, at: VTOFFSET.CREATION_DATE.p) }
-  public static func add(ORIGINATOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIGINATOR, at: VTOFFSET.ORIGINATOR.p) }
-  public static func addVectorOf(EPHEMERIS_DATA_BLOCK: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPHEMERIS_DATA_BLOCK, at: VTOFFSET.EPHEMERIS_DATA_BLOCK.p) }
-  public static func endOEM(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createOEM(
-    _ fbb: inout FlatBufferBuilder,
-    CLASSIFICATIONOffset CLASSIFICATION: Offset = Offset(),
-    CCSDS_OEM_VERS: Double = 0.0,
-    CREATION_DATEOffset CREATION_DATE: Offset = Offset(),
-    ORIGINATOROffset ORIGINATOR: Offset = Offset(),
-    EPHEMERIS_DATA_BLOCKVectorOffset EPHEMERIS_DATA_BLOCK: Offset = Offset()
-  ) -> Offset {
-    let __start = OEM.startOEM(&fbb)
-    OEM.add(CLASSIFICATION: CLASSIFICATION, &fbb)
-    OEM.add(CCSDS_OEM_VERS: CCSDS_OEM_VERS, &fbb)
-    OEM.add(CREATION_DATE: CREATION_DATE, &fbb)
-    OEM.add(ORIGINATOR: ORIGINATOR, &fbb)
-    OEM.addVectorOf(EPHEMERIS_DATA_BLOCK: EPHEMERIS_DATA_BLOCK, &fbb)
-    return OEM.endOEM(&fbb, start: __start)
-  }
-
-  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
-    var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VTOFFSET.CLASSIFICATION.p, fieldName: "CLASSIFICATION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.CCSDS_OEM_VERS.p, fieldName: "CCSDS_OEM_VERS", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.CREATION_DATE.p, fieldName: "CREATION_DATE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ORIGINATOR.p, fieldName: "ORIGINATOR", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.EPHEMERIS_DATA_BLOCK.p, fieldName: "EPHEMERIS_DATA_BLOCK", required: false, type: ForwardOffset<Vector<ForwardOffset<ephemerisDataBlock>, ephemerisDataBlock>>.self)
+    try _v.visit(field: VTOFFSET.DEFAULT_BASIS_TYPE.p, fieldName: "DEFAULT_BASIS_TYPE", required: false, type: polynomialBasisType.self)
+    try _v.visit(field: VTOFFSET.POSITION_RECORDS.p, fieldName: "POSITION_RECORDS", required: false, type: ForwardOffset<Vector<ForwardOffset<PPEPositionRecord>, PPEPositionRecord>>.self)
+    try _v.visit(field: VTOFFSET.ORBITAL_ELEMENT_RECORDS.p, fieldName: "ORBITAL_ELEMENT_RECORDS", required: false, type: ForwardOffset<Vector<ForwardOffset<PPEOrbitalElementRecord>, PPEOrbitalElementRecord>>.self)
+    try _v.visit(field: VTOFFSET.EPHEMERIS_SOURCE.p, fieldName: "EPHEMERIS_SOURCE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.NOMINAL_SEGMENT_SPAN.p, fieldName: "NOMINAL_SEGMENT_SPAN", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.NOMINAL_NUM_COEFFICIENTS.p, fieldName: "NOMINAL_NUM_COEFFICIENTS", required: false, type: UInt16.self)
     _v.finish()
   }
 }

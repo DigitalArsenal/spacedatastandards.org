@@ -2,4 +2,171 @@
 
 # namespace: 
 
-# NOTE KMLFlyTo.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# gx:FlyTo tour primitive
+class KMLFlyTo(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = KMLFlyTo()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsKMLFlyTo(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def KMLFlyToBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x4B\x4D\x4C", size_prefixed=size_prefixed)
+
+    # KMLFlyTo
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Duration in seconds
+    # KMLFlyTo
+    def DURATION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Fly-to mode
+    # KMLFlyTo
+    def FLY_TO_MODE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # LookAt viewpoint
+    # KMLFlyTo
+    def LOOK_AT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from KMLLookAt import KMLLookAt
+            obj = KMLLookAt()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Camera viewpoint
+    # KMLFlyTo
+    def CAMERA(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from KMLCamera import KMLCamera
+            obj = KMLCamera()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+def KMLFlyToStart(builder):
+    builder.StartObject(4)
+
+def Start(builder):
+    KMLFlyToStart(builder)
+
+def KMLFlyToAddDURATION(builder, DURATION):
+    builder.PrependFloat64Slot(0, DURATION, 0.0)
+
+def AddDURATION(builder, DURATION):
+    KMLFlyToAddDURATION(builder, DURATION)
+
+def KMLFlyToAddFLY_TO_MODE(builder, FLY_TO_MODE):
+    builder.PrependInt8Slot(1, FLY_TO_MODE, 0)
+
+def AddFLY_TO_MODE(builder, FLY_TO_MODE):
+    KMLFlyToAddFLY_TO_MODE(builder, FLY_TO_MODE)
+
+def KMLFlyToAddLOOK_AT(builder, LOOK_AT):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(LOOK_AT), 0)
+
+def AddLOOK_AT(builder, LOOK_AT):
+    KMLFlyToAddLOOK_AT(builder, LOOK_AT)
+
+def KMLFlyToAddCAMERA(builder, CAMERA):
+    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(CAMERA), 0)
+
+def AddCAMERA(builder, CAMERA):
+    KMLFlyToAddCAMERA(builder, CAMERA)
+
+def KMLFlyToEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return KMLFlyToEnd(builder)
+
+import KMLCamera
+import KMLLookAt
+try:
+    from typing import Optional
+except:
+    pass
+
+class KMLFlyToT(object):
+
+    # KMLFlyToT
+    def __init__(
+        self,
+        DURATION = 0.0,
+        FLY_TO_MODE = 0,
+        LOOK_AT = None,
+        CAMERA = None,
+    ):
+        self.DURATION = DURATION  # type: float
+        self.FLY_TO_MODE = FLY_TO_MODE  # type: int
+        self.LOOK_AT = LOOK_AT  # type: Optional[KMLLookAt.KMLLookAtT]
+        self.CAMERA = CAMERA  # type: Optional[KMLCamera.KMLCameraT]
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpKmlflyTo = KMLFlyTo()
+        tmpKmlflyTo.Init(buf, pos)
+        return cls.InitFromObj(tmpKmlflyTo)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpKmlflyTo):
+        x = KMLFlyToT()
+        x._UnPack(tmpKmlflyTo)
+        return x
+
+    # KMLFlyToT
+    def _UnPack(self, KMLFlyTo):
+        if KMLFlyTo is None:
+            return
+        self.DURATION = KMLFlyTo.DURATION()
+        self.FLY_TO_MODE = KMLFlyTo.FLY_TO_MODE()
+        if KMLFlyTo.LOOK_AT() is not None:
+            self.LOOK_AT = KMLLookAt.KMLLookAtT.InitFromObj(KMLFlyTo.LOOK_AT())
+        if KMLFlyTo.CAMERA() is not None:
+            self.CAMERA = KMLCamera.KMLCameraT.InitFromObj(KMLFlyTo.CAMERA())
+
+    # KMLFlyToT
+    def Pack(self, builder):
+        if self.LOOK_AT is not None:
+            LOOK_AT = self.LOOK_AT.Pack(builder)
+        if self.CAMERA is not None:
+            CAMERA = self.CAMERA.Pack(builder)
+        KMLFlyToStart(builder)
+        KMLFlyToAddDURATION(builder, self.DURATION)
+        KMLFlyToAddFLY_TO_MODE(builder, self.FLY_TO_MODE)
+        if self.LOOK_AT is not None:
+            KMLFlyToAddLOOK_AT(builder, LOOK_AT)
+        if self.CAMERA is not None:
+            KMLFlyToAddCAMERA(builder, CAMERA)
+        KMLFlyTo = KMLFlyToEnd(builder)
+        return KMLFlyTo

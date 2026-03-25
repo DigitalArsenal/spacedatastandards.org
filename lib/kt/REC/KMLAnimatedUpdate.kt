@@ -32,7 +32,7 @@ class KMLAnimatedUpdate : Table() {
     /**
      * Duration in seconds
      */
-    val DURATION : Double
+    val duration : Double
         get() {
             val o = __offset(4)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -40,7 +40,7 @@ class KMLAnimatedUpdate : Table() {
     /**
      * Delayed start in seconds
      */
-    val DELAYED_START : Double
+    val delayedStart : Double
         get() {
             val o = __offset(6)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -48,8 +48,8 @@ class KMLAnimatedUpdate : Table() {
     /**
      * Update
      */
-    val UPDATE : KMLUpdate? get() = UPDATE(KMLUpdate())
-    fun UPDATE(obj: KMLUpdate) : KMLUpdate? {
+    val update : KMLUpdate? get() = update(KMLUpdate())
+    fun update(obj: KMLUpdate) : KMLUpdate? {
         val o = __offset(8)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -58,23 +58,23 @@ class KMLAnimatedUpdate : Table() {
         }
     }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsKMLAnimatedUpdate(_bb: ByteBuffer): KMLAnimatedUpdate = getRootAsKMLAnimatedUpdate(_bb, KMLAnimatedUpdate())
         fun getRootAsKMLAnimatedUpdate(_bb: ByteBuffer, obj: KMLAnimatedUpdate): KMLAnimatedUpdate {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createKMLAnimatedUpdate(builder: FlatBufferBuilder, DURATION: Double, DELAYED_START: Double, UPDATEOffset: Int) : Int {
+        fun createKMLAnimatedUpdate(builder: FlatBufferBuilder, duration: Double, delayedStart: Double, updateOffset: Int) : Int {
             builder.startTable(3)
-            addDELAYED_START(builder, DELAYED_START)
-            addDURATION(builder, DURATION)
-            addUPDATE(builder, UPDATEOffset)
+            addDELAYEDSTART(builder, delayedStart)
+            addDURATION(builder, duration)
+            addUPDATE(builder, updateOffset)
             return endKMLAnimatedUpdate(builder)
         }
         fun startKMLAnimatedUpdate(builder: FlatBufferBuilder) = builder.startTable(3)
-        fun addDURATION(builder: FlatBufferBuilder, DURATION: Double) = builder.addDouble(0, DURATION, 0.0)
-        fun addDELAYED_START(builder: FlatBufferBuilder, DELAYED_START: Double) = builder.addDouble(1, DELAYED_START, 0.0)
-        fun addUPDATE(builder: FlatBufferBuilder, UPDATE: Int) = builder.addOffset(2, UPDATE, 0)
+        fun addDURATION(builder: FlatBufferBuilder, duration: Double) = builder.addDouble(0, duration, 0.0)
+        fun addDELAYEDSTART(builder: FlatBufferBuilder, delayedStart: Double) = builder.addDouble(1, delayedStart, 0.0)
+        fun addUPDATE(builder: FlatBufferBuilder, update: Int) = builder.addOffset(2, update, 0)
         fun endKMLAnimatedUpdate(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

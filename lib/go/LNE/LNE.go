@@ -63,6 +63,10 @@ func (rcv *LNE) ID() []byte {
 	return nil
 }
 
+func (rcv *LNE) Id() []byte {
+	return rcv.ID()
+}
+
 /// Unique identifier
 /// Satellite catalog number of launched object
 func (rcv *LNE) SAT_NO() uint32 {
@@ -73,9 +77,17 @@ func (rcv *LNE) SAT_NO() uint32 {
 	return 0
 }
 
+func (rcv *LNE) SatNo() uint32 {
+	return rcv.SAT_NO()
+}
+
 /// Satellite catalog number of launched object
 func (rcv *LNE) MutateSAT_NO(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(6, n)
+}
+
+func (rcv *LNE) MutateSatNo(n uint32) bool {
+	return rcv.MutateSAT_NO(n)
 }
 
 /// International designator (YYYY-NNNP)
@@ -85,6 +97,10 @@ func (rcv *LNE) ORIG_OBJECT_ID() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *LNE) OrigObjectId() []byte {
+	return rcv.ORIG_OBJECT_ID()
 }
 
 /// International designator (YYYY-NNNP)
@@ -97,6 +113,10 @@ func (rcv *LNE) DERIVED_FROM() []byte {
 	return nil
 }
 
+func (rcv *LNE) DerivedFrom() []byte {
+	return rcv.DERIVED_FROM()
+}
+
 /// Source record this event was derived from
 /// Classification date (ISO 8601)
 func (rcv *LNE) DECLASSIFICATION_DATE() []byte {
@@ -105,6 +125,10 @@ func (rcv *LNE) DECLASSIFICATION_DATE() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *LNE) DeclassificationDate() []byte {
+	return rcv.DECLASSIFICATION_DATE()
 }
 
 /// Classification date (ISO 8601)
@@ -117,6 +141,10 @@ func (rcv *LNE) DECLASSIFICATION_STRING() []byte {
 	return nil
 }
 
+func (rcv *LNE) DeclassificationString() []byte {
+	return rcv.DECLASSIFICATION_STRING()
+}
+
 /// Classification marking
 /// Message creation time (ISO 8601)
 func (rcv *LNE) MSG_CREATE_DATE() []byte {
@@ -125,6 +153,10 @@ func (rcv *LNE) MSG_CREATE_DATE() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *LNE) MsgCreateDate() []byte {
+	return rcv.MSG_CREATE_DATE()
 }
 
 /// Message creation time (ISO 8601)
@@ -137,6 +169,10 @@ func (rcv *LNE) LAUNCH_DATE() []byte {
 	return nil
 }
 
+func (rcv *LNE) LaunchDate() []byte {
+	return rcv.LAUNCH_DATE()
+}
+
 /// Launch date and time (ISO 8601)
 /// Launch outcome
 func (rcv *LNE) OUTCOME() launchOutcome {
@@ -147,9 +183,17 @@ func (rcv *LNE) OUTCOME() launchOutcome {
 	return 0
 }
 
+func (rcv *LNE) Outcome() launchOutcome {
+	return rcv.OUTCOME()
+}
+
 /// Launch outcome
 func (rcv *LNE) MutateOUTCOME(n launchOutcome) bool {
 	return rcv._tab.MutateInt8Slot(20, int8(n))
+}
+
+func (rcv *LNE) MutateOutcome(n launchOutcome) bool {
+	return rcv.MutateOUTCOME(n)
 }
 
 /// Launch failure code (if applicable)
@@ -159,6 +203,10 @@ func (rcv *LNE) LAUNCH_FAILURE_CODE() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *LNE) LaunchFailureCode() []byte {
+	return rcv.LAUNCH_FAILURE_CODE()
 }
 
 /// Launch failure code (if applicable)
@@ -171,6 +219,10 @@ func (rcv *LNE) BE_NUMBER() []byte {
 	return nil
 }
 
+func (rcv *LNE) BeNumber() []byte {
+	return rcv.BE_NUMBER()
+}
+
 /// Basic encyclopedia number
 /// Object suffix identifier
 func (rcv *LNE) O_SUFFIX() []byte {
@@ -179,6 +231,10 @@ func (rcv *LNE) O_SUFFIX() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *LNE) OSuffix() []byte {
+	return rcv.O_SUFFIX()
 }
 
 /// Object suffix identifier
@@ -191,6 +247,10 @@ func (rcv *LNE) LAUNCH_FACILITY_NAME() []byte {
 	return nil
 }
 
+func (rcv *LNE) LaunchFacilityName() []byte {
+	return rcv.LAUNCH_FACILITY_NAME()
+}
+
 /// Launch facility name
 /// Launch facility code
 func (rcv *LNE) LAUNCH_FACILITY_CODE() []byte {
@@ -199,6 +259,10 @@ func (rcv *LNE) LAUNCH_FACILITY_CODE() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *LNE) LaunchFacilityCode() []byte {
+	return rcv.LAUNCH_FACILITY_CODE()
 }
 
 /// Launch facility code
@@ -211,6 +275,10 @@ func (rcv *LNE) LAUNCH_VEHICLE() []byte {
 	return nil
 }
 
+func (rcv *LNE) LaunchVehicle() []byte {
+	return rcv.LAUNCH_VEHICLE()
+}
+
 /// Launch vehicle type
 /// Launch vehicle configuration
 func (rcv *LNE) LAUNCH_VEHICLE_CONFIG() []byte {
@@ -219,6 +287,10 @@ func (rcv *LNE) LAUNCH_VEHICLE_CONFIG() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *LNE) LaunchVehicleConfig() []byte {
+	return rcv.LAUNCH_VEHICLE_CONFIG()
 }
 
 /// Launch vehicle configuration
@@ -231,6 +303,10 @@ func (rcv *LNE) TARGET_ORBIT() []byte {
 	return nil
 }
 
+func (rcv *LNE) TargetOrbit() []byte {
+	return rcv.TARGET_ORBIT()
+}
+
 /// Target orbit type (LEO, MEO, GEO, HEO, SSO, etc.)
 /// Number of objects placed on orbit
 func (rcv *LNE) OBJECTS_ON_ORBIT() uint16 {
@@ -241,9 +317,17 @@ func (rcv *LNE) OBJECTS_ON_ORBIT() uint16 {
 	return 0
 }
 
+func (rcv *LNE) ObjectsOnOrbit() uint16 {
+	return rcv.OBJECTS_ON_ORBIT()
+}
+
 /// Number of objects placed on orbit
 func (rcv *LNE) MutateOBJECTS_ON_ORBIT(n uint16) bool {
 	return rcv._tab.MutateUint16Slot(38, n)
+}
+
+func (rcv *LNE) MutateObjectsOnOrbit(n uint16) bool {
+	return rcv.MutateOBJECTS_ON_ORBIT(n)
 }
 
 /// On-orbit reference identifier
@@ -253,6 +337,10 @@ func (rcv *LNE) ON_ORBIT() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *LNE) OnOrbit() []byte {
+	return rcv.ON_ORBIT()
 }
 
 /// On-orbit reference identifier
@@ -265,6 +353,10 @@ func (rcv *LNE) LAUNCH_COUNTRY() []byte {
 	return nil
 }
 
+func (rcv *LNE) LaunchCountry() []byte {
+	return rcv.LAUNCH_COUNTRY()
+}
+
 /// Launch country or operator
 /// Mission name or payload description
 func (rcv *LNE) MISSION_NAME() []byte {
@@ -273,6 +365,10 @@ func (rcv *LNE) MISSION_NAME() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *LNE) MissionName() []byte {
+	return rcv.MISSION_NAME()
 }
 
 /// Mission name or payload description
@@ -285,6 +381,10 @@ func (rcv *LNE) REMARKS() []byte {
 	return nil
 }
 
+func (rcv *LNE) Remarks() []byte {
+	return rcv.REMARKS()
+}
+
 /// Additional remarks
 func LNEStart(builder *flatbuffers.Builder) {
 	builder.StartObject(22)
@@ -292,68 +392,134 @@ func LNEStart(builder *flatbuffers.Builder) {
 func LNEAddID(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ID), 0)
 }
+func LNEAddId(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
+	LNEAddID(builder, ID)
+}
 func LNEAddSAT_NO(builder *flatbuffers.Builder, SAT_NO uint32) {
 	builder.PrependUint32Slot(1, SAT_NO, 0)
+}
+func LNEAddSatNo(builder *flatbuffers.Builder, SAT_NO uint32) {
+	LNEAddSAT_NO(builder, SAT_NO)
 }
 func LNEAddORIG_OBJECT_ID(builder *flatbuffers.Builder, ORIG_OBJECT_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(ORIG_OBJECT_ID), 0)
 }
+func LNEAddOrigObjectId(builder *flatbuffers.Builder, ORIG_OBJECT_ID flatbuffers.UOffsetT) {
+	LNEAddORIG_OBJECT_ID(builder, ORIG_OBJECT_ID)
+}
 func LNEAddDERIVED_FROM(builder *flatbuffers.Builder, DERIVED_FROM flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(DERIVED_FROM), 0)
+}
+func LNEAddDerivedFrom(builder *flatbuffers.Builder, DERIVED_FROM flatbuffers.UOffsetT) {
+	LNEAddDERIVED_FROM(builder, DERIVED_FROM)
 }
 func LNEAddDECLASSIFICATION_DATE(builder *flatbuffers.Builder, DECLASSIFICATION_DATE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(DECLASSIFICATION_DATE), 0)
 }
+func LNEAddDeclassificationDate(builder *flatbuffers.Builder, DECLASSIFICATION_DATE flatbuffers.UOffsetT) {
+	LNEAddDECLASSIFICATION_DATE(builder, DECLASSIFICATION_DATE)
+}
 func LNEAddDECLASSIFICATION_STRING(builder *flatbuffers.Builder, DECLASSIFICATION_STRING flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(DECLASSIFICATION_STRING), 0)
+}
+func LNEAddDeclassificationString(builder *flatbuffers.Builder, DECLASSIFICATION_STRING flatbuffers.UOffsetT) {
+	LNEAddDECLASSIFICATION_STRING(builder, DECLASSIFICATION_STRING)
 }
 func LNEAddMSG_CREATE_DATE(builder *flatbuffers.Builder, MSG_CREATE_DATE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(MSG_CREATE_DATE), 0)
 }
+func LNEAddMsgCreateDate(builder *flatbuffers.Builder, MSG_CREATE_DATE flatbuffers.UOffsetT) {
+	LNEAddMSG_CREATE_DATE(builder, MSG_CREATE_DATE)
+}
 func LNEAddLAUNCH_DATE(builder *flatbuffers.Builder, LAUNCH_DATE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(LAUNCH_DATE), 0)
+}
+func LNEAddLaunchDate(builder *flatbuffers.Builder, LAUNCH_DATE flatbuffers.UOffsetT) {
+	LNEAddLAUNCH_DATE(builder, LAUNCH_DATE)
 }
 func LNEAddOUTCOME(builder *flatbuffers.Builder, OUTCOME launchOutcome) {
 	builder.PrependInt8Slot(8, int8(OUTCOME), 0)
 }
+func LNEAddOutcome(builder *flatbuffers.Builder, OUTCOME launchOutcome) {
+	LNEAddOUTCOME(builder, OUTCOME)
+}
 func LNEAddLAUNCH_FAILURE_CODE(builder *flatbuffers.Builder, LAUNCH_FAILURE_CODE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(LAUNCH_FAILURE_CODE), 0)
+}
+func LNEAddLaunchFailureCode(builder *flatbuffers.Builder, LAUNCH_FAILURE_CODE flatbuffers.UOffsetT) {
+	LNEAddLAUNCH_FAILURE_CODE(builder, LAUNCH_FAILURE_CODE)
 }
 func LNEAddBE_NUMBER(builder *flatbuffers.Builder, BE_NUMBER flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(BE_NUMBER), 0)
 }
+func LNEAddBeNumber(builder *flatbuffers.Builder, BE_NUMBER flatbuffers.UOffsetT) {
+	LNEAddBE_NUMBER(builder, BE_NUMBER)
+}
 func LNEAddO_SUFFIX(builder *flatbuffers.Builder, O_SUFFIX flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(O_SUFFIX), 0)
+}
+func LNEAddOSuffix(builder *flatbuffers.Builder, O_SUFFIX flatbuffers.UOffsetT) {
+	LNEAddO_SUFFIX(builder, O_SUFFIX)
 }
 func LNEAddLAUNCH_FACILITY_NAME(builder *flatbuffers.Builder, LAUNCH_FACILITY_NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(12, flatbuffers.UOffsetT(LAUNCH_FACILITY_NAME), 0)
 }
+func LNEAddLaunchFacilityName(builder *flatbuffers.Builder, LAUNCH_FACILITY_NAME flatbuffers.UOffsetT) {
+	LNEAddLAUNCH_FACILITY_NAME(builder, LAUNCH_FACILITY_NAME)
+}
 func LNEAddLAUNCH_FACILITY_CODE(builder *flatbuffers.Builder, LAUNCH_FACILITY_CODE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(13, flatbuffers.UOffsetT(LAUNCH_FACILITY_CODE), 0)
+}
+func LNEAddLaunchFacilityCode(builder *flatbuffers.Builder, LAUNCH_FACILITY_CODE flatbuffers.UOffsetT) {
+	LNEAddLAUNCH_FACILITY_CODE(builder, LAUNCH_FACILITY_CODE)
 }
 func LNEAddLAUNCH_VEHICLE(builder *flatbuffers.Builder, LAUNCH_VEHICLE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(14, flatbuffers.UOffsetT(LAUNCH_VEHICLE), 0)
 }
+func LNEAddLaunchVehicle(builder *flatbuffers.Builder, LAUNCH_VEHICLE flatbuffers.UOffsetT) {
+	LNEAddLAUNCH_VEHICLE(builder, LAUNCH_VEHICLE)
+}
 func LNEAddLAUNCH_VEHICLE_CONFIG(builder *flatbuffers.Builder, LAUNCH_VEHICLE_CONFIG flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(15, flatbuffers.UOffsetT(LAUNCH_VEHICLE_CONFIG), 0)
+}
+func LNEAddLaunchVehicleConfig(builder *flatbuffers.Builder, LAUNCH_VEHICLE_CONFIG flatbuffers.UOffsetT) {
+	LNEAddLAUNCH_VEHICLE_CONFIG(builder, LAUNCH_VEHICLE_CONFIG)
 }
 func LNEAddTARGET_ORBIT(builder *flatbuffers.Builder, TARGET_ORBIT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(16, flatbuffers.UOffsetT(TARGET_ORBIT), 0)
 }
+func LNEAddTargetOrbit(builder *flatbuffers.Builder, TARGET_ORBIT flatbuffers.UOffsetT) {
+	LNEAddTARGET_ORBIT(builder, TARGET_ORBIT)
+}
 func LNEAddOBJECTS_ON_ORBIT(builder *flatbuffers.Builder, OBJECTS_ON_ORBIT uint16) {
 	builder.PrependUint16Slot(17, OBJECTS_ON_ORBIT, 0)
+}
+func LNEAddObjectsOnOrbit(builder *flatbuffers.Builder, OBJECTS_ON_ORBIT uint16) {
+	LNEAddOBJECTS_ON_ORBIT(builder, OBJECTS_ON_ORBIT)
 }
 func LNEAddON_ORBIT(builder *flatbuffers.Builder, ON_ORBIT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(18, flatbuffers.UOffsetT(ON_ORBIT), 0)
 }
+func LNEAddOnOrbit(builder *flatbuffers.Builder, ON_ORBIT flatbuffers.UOffsetT) {
+	LNEAddON_ORBIT(builder, ON_ORBIT)
+}
 func LNEAddLAUNCH_COUNTRY(builder *flatbuffers.Builder, LAUNCH_COUNTRY flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(19, flatbuffers.UOffsetT(LAUNCH_COUNTRY), 0)
+}
+func LNEAddLaunchCountry(builder *flatbuffers.Builder, LAUNCH_COUNTRY flatbuffers.UOffsetT) {
+	LNEAddLAUNCH_COUNTRY(builder, LAUNCH_COUNTRY)
 }
 func LNEAddMISSION_NAME(builder *flatbuffers.Builder, MISSION_NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(20, flatbuffers.UOffsetT(MISSION_NAME), 0)
 }
+func LNEAddMissionName(builder *flatbuffers.Builder, MISSION_NAME flatbuffers.UOffsetT) {
+	LNEAddMISSION_NAME(builder, MISSION_NAME)
+}
 func LNEAddREMARKS(builder *flatbuffers.Builder, REMARKS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(21, flatbuffers.UOffsetT(REMARKS), 0)
+}
+func LNEAddRemarks(builder *flatbuffers.Builder, REMARKS flatbuffers.UOffsetT) {
+	LNEAddREMARKS(builder, REMARKS)
 }
 func LNEEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

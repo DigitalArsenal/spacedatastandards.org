@@ -66,9 +66,9 @@ struct odSensorContributionBuilder:
     def end():
         return b_.EndObject()
 
-def odSensorContributionStartOB_TYPESVector(b_:flatbuffers.builder, n_:int):
+def odSensorContributionStartOBTYPESVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def odSensorContributionCreateOB_TYPESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def odSensorContributionCreateOBTYPESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
@@ -331,30 +331,30 @@ def OBDCreateSENSORSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-def OBDStartACCEPTED_OB_TYPSVector(b_:flatbuffers.builder, n_:int):
+def OBDStartACCEPTEDOBTYPSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def OBDCreateACCEPTED_OB_TYPSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def OBDCreateACCEPTEDOBTYPSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-def OBDStartACCEPTED_OB_IDSVector(b_:flatbuffers.builder, n_:int):
+def OBDStartACCEPTEDOBIDSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def OBDCreateACCEPTED_OB_IDSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def OBDCreateACCEPTEDOBIDSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-def OBDStartREJECTED_OB_TYPSVector(b_:flatbuffers.builder, n_:int):
+def OBDStartREJECTEDOBTYPSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def OBDCreateREJECTED_OB_TYPSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def OBDCreateREJECTEDOBTYPSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-def OBDStartREJECTED_OB_IDSVector(b_:flatbuffers.builder, n_:int):
+def OBDStartREJECTEDOBIDSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def OBDCreateREJECTED_OB_IDSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def OBDCreateREJECTEDOBIDSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)

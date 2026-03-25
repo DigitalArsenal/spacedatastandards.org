@@ -2,4 +2,7 @@
 
 # namespace: 
 
-# NOTE CZMLabelStyle.py does not declare any structs or enums
+class CZMLabelStyle(object):
+    FILL = 0
+    OUTLINE = 1
+    FILL_AND_OUTLINE = 2

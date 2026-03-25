@@ -12,7 +12,6 @@ import com.google.flatbuffers.LongVector;
 import com.google.flatbuffers.ShortVector;
 import com.google.flatbuffers.StringVector;
 import com.google.flatbuffers.Struct;
-import com.google.flatbuffers.Table;
 import com.google.flatbuffers.UnionVector;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -21,23 +20,23 @@ import java.nio.ByteOrder;
  * Reference Frame Message
  */
 @SuppressWarnings("unused")
-public final class RFM extends Table {
-  public static void ValidateVersion() { Constants.FLATBUFFERS_24_3_25(); }
+public final class RFM extends com.google.flatbuffers.Table {
+  public static void ValidateVersion() { Constants.FLATBUFFERS_25_12_19(); }
   public static RFM getRootAsRFM(ByteBuffer _bb) { return getRootAsRFM(_bb, new RFM()); }
   public static RFM getRootAsRFM(ByteBuffer _bb, RFM obj) { _bb.order(ByteOrder.LITTLE_ENDIAN); return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb)); }
   public static boolean RFMBufferHasIdentifier(ByteBuffer _bb) { return __has_identifier(_bb, "$RFM"); }
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public RFM __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
-  public byte referenceFrameType() { int o = __offset(4); return o != 0 ? bb.get(o + bb_pos) : 0; }
-  public Table REFERENCE_FRAME(Table obj) { int o = __offset(6); return o != 0 ? __union(obj, o + bb_pos) : null; }
+  public byte REFERENCE_FRAME_type() { int o = __offset(4); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  public com.google.flatbuffers.Table REFERENCE_FRAME(com.google.flatbuffers.Table obj) { int o = __offset(6); return o != 0 ? __union(obj, o + bb_pos) : null; }
   public int INDEX() { int o = __offset(8); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
   public String NAME() { int o = __offset(10); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer NAMEAsByteBuffer() { return __vector_as_bytebuffer(10, 1); }
   public ByteBuffer NAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 10, 1); }
 
   public static int createRFM(FlatBufferBuilder builder,
-      byte referenceFrameType,
+      byte REFERENCE_FRAME_type,
       int REFERENCE_FRAMEOffset,
       int INDEX,
       int NAMEOffset) {
@@ -45,12 +44,12 @@ public final class RFM extends Table {
     RFM.addName(builder, NAMEOffset);
     RFM.addIndex(builder, INDEX);
     RFM.addReferenceFrame(builder, REFERENCE_FRAMEOffset);
-    RFM.addReferenceFrameType(builder, referenceFrameType);
+    RFM.addReferenceFrameType(builder, REFERENCE_FRAME_type);
     return RFM.endRFM(builder);
   }
 
   public static void startRFM(FlatBufferBuilder builder) { builder.startTable(4); }
-  public static void addReferenceFrameType(FlatBufferBuilder builder, byte referenceFrameType) { builder.addByte(0, referenceFrameType, 0); }
+  public static void addReferenceFrameType(FlatBufferBuilder builder, byte REFERENCE_FRAME_type) { builder.addByte(0, REFERENCE_FRAME_type, 0); }
   public static void addReferenceFrame(FlatBufferBuilder builder, int REFERENCE_FRAMEOffset) { builder.addOffset(1, REFERENCE_FRAMEOffset, 0); }
   public static void addIndex(FlatBufferBuilder builder, int INDEX) { builder.addInt(2, INDEX, 0); }
   public static void addName(FlatBufferBuilder builder, int NAMEOffset) { builder.addOffset(3, NAMEOffset, 0); }

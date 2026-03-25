@@ -51,6 +51,10 @@ func (rcv *GJNProperty) KEY() []byte {
 	return nil
 }
 
+func (rcv *GJNProperty) Key() []byte {
+	return rcv.KEY()
+}
+
 /// Property key
 /// Property value as string
 func (rcv *GJNProperty) VALUE() []byte {
@@ -59,6 +63,10 @@ func (rcv *GJNProperty) VALUE() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *GJNProperty) Value() []byte {
+	return rcv.VALUE()
 }
 
 /// Property value as string
@@ -71,9 +79,17 @@ func (rcv *GJNProperty) NUM_VALUE() float64 {
 	return 0.0
 }
 
+func (rcv *GJNProperty) NumValue() float64 {
+	return rcv.NUM_VALUE()
+}
+
 /// Property value as number (use if numeric)
 func (rcv *GJNProperty) MutateNUM_VALUE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(8, n)
+}
+
+func (rcv *GJNProperty) MutateNumValue(n float64) bool {
+	return rcv.MutateNUM_VALUE(n)
 }
 
 /// True if NUM_VALUE should be used instead of VALUE
@@ -85,9 +101,17 @@ func (rcv *GJNProperty) IS_NUMERIC() bool {
 	return false
 }
 
+func (rcv *GJNProperty) IsNumeric() bool {
+	return rcv.IS_NUMERIC()
+}
+
 /// True if NUM_VALUE should be used instead of VALUE
 func (rcv *GJNProperty) MutateIS_NUMERIC(n bool) bool {
 	return rcv._tab.MutateBoolSlot(10, n)
+}
+
+func (rcv *GJNProperty) MutateIsNumeric(n bool) bool {
+	return rcv.MutateIS_NUMERIC(n)
 }
 
 /// True if this property value is a boolean
@@ -99,9 +123,17 @@ func (rcv *GJNProperty) IS_BOOL() bool {
 	return false
 }
 
+func (rcv *GJNProperty) IsBool() bool {
+	return rcv.IS_BOOL()
+}
+
 /// True if this property value is a boolean
 func (rcv *GJNProperty) MutateIS_BOOL(n bool) bool {
 	return rcv._tab.MutateBoolSlot(12, n)
+}
+
+func (rcv *GJNProperty) MutateIsBool(n bool) bool {
+	return rcv.MutateIS_BOOL(n)
 }
 
 /// Boolean value (use when IS_BOOL is true)
@@ -113,9 +145,17 @@ func (rcv *GJNProperty) BOOL_VALUE() bool {
 	return false
 }
 
+func (rcv *GJNProperty) BoolValue() bool {
+	return rcv.BOOL_VALUE()
+}
+
 /// Boolean value (use when IS_BOOL is true)
 func (rcv *GJNProperty) MutateBOOL_VALUE(n bool) bool {
 	return rcv._tab.MutateBoolSlot(14, n)
+}
+
+func (rcv *GJNProperty) MutateBoolValue(n bool) bool {
+	return rcv.MutateBOOL_VALUE(n)
 }
 
 /// True if this property value is JSON null
@@ -127,9 +167,17 @@ func (rcv *GJNProperty) IS_NULL() bool {
 	return false
 }
 
+func (rcv *GJNProperty) IsNull() bool {
+	return rcv.IS_NULL()
+}
+
 /// True if this property value is JSON null
 func (rcv *GJNProperty) MutateIS_NULL(n bool) bool {
 	return rcv._tab.MutateBoolSlot(16, n)
+}
+
+func (rcv *GJNProperty) MutateIsNull(n bool) bool {
+	return rcv.MutateIS_NULL(n)
 }
 
 /// Raw JSON string for complex values (objects, arrays)
@@ -141,6 +189,10 @@ func (rcv *GJNProperty) JSON_VALUE() []byte {
 	return nil
 }
 
+func (rcv *GJNProperty) JsonValue() []byte {
+	return rcv.JSON_VALUE()
+}
+
 /// Raw JSON string for complex values (objects, arrays)
 func GJNPropertyStart(builder *flatbuffers.Builder) {
 	builder.StartObject(8)
@@ -148,26 +200,50 @@ func GJNPropertyStart(builder *flatbuffers.Builder) {
 func GJNPropertyAddKEY(builder *flatbuffers.Builder, KEY flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(KEY), 0)
 }
+func GJNPropertyAddKey(builder *flatbuffers.Builder, KEY flatbuffers.UOffsetT) {
+	GJNPropertyAddKEY(builder, KEY)
+}
 func GJNPropertyAddVALUE(builder *flatbuffers.Builder, VALUE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(VALUE), 0)
+}
+func GJNPropertyAddValue(builder *flatbuffers.Builder, VALUE flatbuffers.UOffsetT) {
+	GJNPropertyAddVALUE(builder, VALUE)
 }
 func GJNPropertyAddNUM_VALUE(builder *flatbuffers.Builder, NUM_VALUE float64) {
 	builder.PrependFloat64Slot(2, NUM_VALUE, 0.0)
 }
+func GJNPropertyAddNumValue(builder *flatbuffers.Builder, NUM_VALUE float64) {
+	GJNPropertyAddNUM_VALUE(builder, NUM_VALUE)
+}
 func GJNPropertyAddIS_NUMERIC(builder *flatbuffers.Builder, IS_NUMERIC bool) {
 	builder.PrependBoolSlot(3, IS_NUMERIC, false)
+}
+func GJNPropertyAddIsNumeric(builder *flatbuffers.Builder, IS_NUMERIC bool) {
+	GJNPropertyAddIS_NUMERIC(builder, IS_NUMERIC)
 }
 func GJNPropertyAddIS_BOOL(builder *flatbuffers.Builder, IS_BOOL bool) {
 	builder.PrependBoolSlot(4, IS_BOOL, false)
 }
+func GJNPropertyAddIsBool(builder *flatbuffers.Builder, IS_BOOL bool) {
+	GJNPropertyAddIS_BOOL(builder, IS_BOOL)
+}
 func GJNPropertyAddBOOL_VALUE(builder *flatbuffers.Builder, BOOL_VALUE bool) {
 	builder.PrependBoolSlot(5, BOOL_VALUE, false)
+}
+func GJNPropertyAddBoolValue(builder *flatbuffers.Builder, BOOL_VALUE bool) {
+	GJNPropertyAddBOOL_VALUE(builder, BOOL_VALUE)
 }
 func GJNPropertyAddIS_NULL(builder *flatbuffers.Builder, IS_NULL bool) {
 	builder.PrependBoolSlot(6, IS_NULL, false)
 }
+func GJNPropertyAddIsNull(builder *flatbuffers.Builder, IS_NULL bool) {
+	GJNPropertyAddIS_NULL(builder, IS_NULL)
+}
 func GJNPropertyAddJSON_VALUE(builder *flatbuffers.Builder, JSON_VALUE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(JSON_VALUE), 0)
+}
+func GJNPropertyAddJsonValue(builder *flatbuffers.Builder, JSON_VALUE flatbuffers.UOffsetT) {
+	GJNPropertyAddJSON_VALUE(builder, JSON_VALUE)
 }
 func GJNPropertyEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

@@ -131,9 +131,9 @@ struct EntryFunctionBuilder:
     def end():
         return b_.EndObject()
 
-def EntryFunctionStartINPUT_SCHEMASVector(b_:flatbuffers.builder, n_:int):
+def EntryFunctionStartINPUTSCHEMASVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def EntryFunctionCreateINPUT_SCHEMASVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def EntryFunctionCreateINPUTSCHEMASVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
@@ -303,23 +303,23 @@ struct PLGBuilder:
     def end():
         return b_.EndObject()
 
-def PLGStartWASM_HASHVector(b_:flatbuffers.builder, n_:int):
+def PLGStartWASMHASHVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(1, n_, 1)
-def PLGCreateWASM_HASHVector(b_:flatbuffers.builder, v_:[int]):
+def PLGCreateWASMHASHVector(b_:flatbuffers.builder, v_:[int]):
     b_.StartVector(1, v_.length, 1)
     reverse(v_) e_: b_.PrependUint8(e_)
     return b_.EndVector(v_.length)
 
-def PLGStartENTRY_FUNCTIONSVector(b_:flatbuffers.builder, n_:int):
+def PLGStartENTRYFUNCTIONSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def PLGCreateENTRY_FUNCTIONSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def PLGCreateENTRYFUNCTIONSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-def PLGStartREQUIRED_SCHEMASVector(b_:flatbuffers.builder, n_:int):
+def PLGStartREQUIREDSCHEMASVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def PLGCreateREQUIRED_SCHEMASVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def PLGCreateREQUIREDSCHEMASVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
@@ -338,9 +338,9 @@ def PLGCreateCAPABILITIESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset])
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-def PLGStartMIN_PERMISSIONSVector(b_:flatbuffers.builder, n_:int):
+def PLGStartMINPERMISSIONSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def PLGCreateMIN_PERMISSIONSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def PLGCreateMINPERMISSIONSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)

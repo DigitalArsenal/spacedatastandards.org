@@ -32,7 +32,7 @@ class RelativeTimeParameterType : Table() {
     /**
      * Type name
      */
-    val NAME : String?
+    val name : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class RelativeTimeParameterType : Table() {
                 null
             }
         }
-    val NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val nameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun nameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Short description
      */
-    val SHORT_DESCRIPTION : String?
+    val shortDescription : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -55,12 +55,12 @@ class RelativeTimeParameterType : Table() {
                 null
             }
         }
-    val SHORT_DESCRIPTIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun SHORT_DESCRIPTIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val shortDescriptionAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun shortDescriptionInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * Long description
      */
-    val LONG_DESCRIPTION : String?
+    val longDescription : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -69,13 +69,13 @@ class RelativeTimeParameterType : Table() {
                 null
             }
         }
-    val LONG_DESCRIPTIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun LONG_DESCRIPTIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val longDescriptionAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun longDescriptionInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
     /**
      * Units
      */
-    fun UNITS(j: Int) : Unit? = UNITS(Unit(), j)
-    fun UNITS(obj: Unit, j: Int) : Unit? {
+    fun units(j: Int) : Unit? = units(Unit(), j)
+    fun units(obj: Unit, j: Int) : Unit? {
         val o = __offset(10)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -83,15 +83,15 @@ class RelativeTimeParameterType : Table() {
             null
         }
     }
-    val UNITSLength : Int
+    val unitsLength : Int
         get() {
             val o = __offset(10); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Data encoding
      */
-    val DATA_ENCODING : IntegerDataEncoding? get() = DATA_ENCODING(IntegerDataEncoding())
-    fun DATA_ENCODING(obj: IntegerDataEncoding) : IntegerDataEncoding? {
+    val dataEncoding : IntegerDataEncoding? get() = dataEncoding(IntegerDataEncoding())
+    fun dataEncoding(obj: IntegerDataEncoding) : IntegerDataEncoding? {
         val o = __offset(12)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -102,8 +102,8 @@ class RelativeTimeParameterType : Table() {
     /**
      * Default alarm
      */
-    val DEFAULT_ALARM : DefaultAlarm? get() = DEFAULT_ALARM(DefaultAlarm())
-    fun DEFAULT_ALARM(obj: DefaultAlarm) : DefaultAlarm? {
+    val defaultAlarm : DefaultAlarm? get() = defaultAlarm(DefaultAlarm())
+    fun defaultAlarm(obj: DefaultAlarm) : DefaultAlarm? {
         val o = __offset(14)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -114,8 +114,8 @@ class RelativeTimeParameterType : Table() {
     /**
      * Context alarms
      */
-    fun CONTEXT_ALARMS(j: Int) : ContextAlarm? = CONTEXT_ALARMS(ContextAlarm(), j)
-    fun CONTEXT_ALARMS(obj: ContextAlarm, j: Int) : ContextAlarm? {
+    fun contextAlarms(j: Int) : ContextAlarm? = contextAlarms(ContextAlarm(), j)
+    fun contextAlarms(obj: ContextAlarm, j: Int) : ContextAlarm? {
         val o = __offset(16)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -123,33 +123,33 @@ class RelativeTimeParameterType : Table() {
             null
         }
     }
-    val CONTEXT_ALARMSLength : Int
+    val contextAlarmsLength : Int
         get() {
             val o = __offset(16); return if (o != 0) __vector_len(o) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsRelativeTimeParameterType(_bb: ByteBuffer): RelativeTimeParameterType = getRootAsRelativeTimeParameterType(_bb, RelativeTimeParameterType())
         fun getRootAsRelativeTimeParameterType(_bb: ByteBuffer, obj: RelativeTimeParameterType): RelativeTimeParameterType {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createRelativeTimeParameterType(builder: FlatBufferBuilder, NAMEOffset: Int, SHORT_DESCRIPTIONOffset: Int, LONG_DESCRIPTIONOffset: Int, UNITSOffset: Int, DATA_ENCODINGOffset: Int, DEFAULT_ALARMOffset: Int, CONTEXT_ALARMSOffset: Int) : Int {
+        fun createRelativeTimeParameterType(builder: FlatBufferBuilder, nameOffset: Int, shortDescriptionOffset: Int, longDescriptionOffset: Int, unitsOffset: Int, dataEncodingOffset: Int, defaultAlarmOffset: Int, contextAlarmsOffset: Int) : Int {
             builder.startTable(7)
-            addCONTEXT_ALARMS(builder, CONTEXT_ALARMSOffset)
-            addDEFAULT_ALARM(builder, DEFAULT_ALARMOffset)
-            addDATA_ENCODING(builder, DATA_ENCODINGOffset)
-            addUNITS(builder, UNITSOffset)
-            addLONG_DESCRIPTION(builder, LONG_DESCRIPTIONOffset)
-            addSHORT_DESCRIPTION(builder, SHORT_DESCRIPTIONOffset)
-            addNAME(builder, NAMEOffset)
+            addCONTEXTALARMS(builder, contextAlarmsOffset)
+            addDEFAULTALARM(builder, defaultAlarmOffset)
+            addDATAENCODING(builder, dataEncodingOffset)
+            addUNITS(builder, unitsOffset)
+            addLONGDESCRIPTION(builder, longDescriptionOffset)
+            addSHORTDESCRIPTION(builder, shortDescriptionOffset)
+            addNAME(builder, nameOffset)
             return endRelativeTimeParameterType(builder)
         }
         fun startRelativeTimeParameterType(builder: FlatBufferBuilder) = builder.startTable(7)
-        fun addNAME(builder: FlatBufferBuilder, NAME: Int) = builder.addOffset(0, NAME, 0)
-        fun addSHORT_DESCRIPTION(builder: FlatBufferBuilder, SHORT_DESCRIPTION: Int) = builder.addOffset(1, SHORT_DESCRIPTION, 0)
-        fun addLONG_DESCRIPTION(builder: FlatBufferBuilder, LONG_DESCRIPTION: Int) = builder.addOffset(2, LONG_DESCRIPTION, 0)
-        fun addUNITS(builder: FlatBufferBuilder, UNITS: Int) = builder.addOffset(3, UNITS, 0)
+        fun addNAME(builder: FlatBufferBuilder, name: Int) = builder.addOffset(0, name, 0)
+        fun addSHORTDESCRIPTION(builder: FlatBufferBuilder, shortDescription: Int) = builder.addOffset(1, shortDescription, 0)
+        fun addLONGDESCRIPTION(builder: FlatBufferBuilder, longDescription: Int) = builder.addOffset(2, longDescription, 0)
+        fun addUNITS(builder: FlatBufferBuilder, units: Int) = builder.addOffset(3, units, 0)
         fun createUnitsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -158,9 +158,9 @@ class RelativeTimeParameterType : Table() {
             return builder.endVector()
         }
         fun startUnitsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addDATA_ENCODING(builder: FlatBufferBuilder, DATA_ENCODING: Int) = builder.addOffset(4, DATA_ENCODING, 0)
-        fun addDEFAULT_ALARM(builder: FlatBufferBuilder, DEFAULT_ALARM: Int) = builder.addOffset(5, DEFAULT_ALARM, 0)
-        fun addCONTEXT_ALARMS(builder: FlatBufferBuilder, CONTEXT_ALARMS: Int) = builder.addOffset(6, CONTEXT_ALARMS, 0)
+        fun addDATAENCODING(builder: FlatBufferBuilder, dataEncoding: Int) = builder.addOffset(4, dataEncoding, 0)
+        fun addDEFAULTALARM(builder: FlatBufferBuilder, defaultAlarm: Int) = builder.addOffset(5, defaultAlarm, 0)
+        fun addCONTEXTALARMS(builder: FlatBufferBuilder, contextAlarms: Int) = builder.addOffset(6, contextAlarms, 0)
         fun createContextAlarmsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {

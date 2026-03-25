@@ -51,6 +51,10 @@ func (rcv *PluginDependency) PLUGIN_ID() []byte {
 	return nil
 }
 
+func (rcv *PluginDependency) PluginId() []byte {
+	return rcv.PLUGIN_ID()
+}
+
 /// Plugin ID of the dependency
 /// Minimum version required (semver)
 func (rcv *PluginDependency) MIN_VERSION() []byte {
@@ -59,6 +63,10 @@ func (rcv *PluginDependency) MIN_VERSION() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *PluginDependency) MinVersion() []byte {
+	return rcv.MIN_VERSION()
 }
 
 /// Minimum version required (semver)
@@ -71,6 +79,10 @@ func (rcv *PluginDependency) MAX_VERSION() []byte {
 	return nil
 }
 
+func (rcv *PluginDependency) MaxVersion() []byte {
+	return rcv.MAX_VERSION()
+}
+
 /// Maximum version allowed (optional)
 func PluginDependencyStart(builder *flatbuffers.Builder) {
 	builder.StartObject(3)
@@ -78,11 +90,20 @@ func PluginDependencyStart(builder *flatbuffers.Builder) {
 func PluginDependencyAddPLUGIN_ID(builder *flatbuffers.Builder, PLUGIN_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(PLUGIN_ID), 0)
 }
+func PluginDependencyAddPluginId(builder *flatbuffers.Builder, PLUGIN_ID flatbuffers.UOffsetT) {
+	PluginDependencyAddPLUGIN_ID(builder, PLUGIN_ID)
+}
 func PluginDependencyAddMIN_VERSION(builder *flatbuffers.Builder, MIN_VERSION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(MIN_VERSION), 0)
 }
+func PluginDependencyAddMinVersion(builder *flatbuffers.Builder, MIN_VERSION flatbuffers.UOffsetT) {
+	PluginDependencyAddMIN_VERSION(builder, MIN_VERSION)
+}
 func PluginDependencyAddMAX_VERSION(builder *flatbuffers.Builder, MAX_VERSION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(MAX_VERSION), 0)
+}
+func PluginDependencyAddMaxVersion(builder *flatbuffers.Builder, MAX_VERSION flatbuffers.UOffsetT) {
+	PluginDependencyAddMAX_VERSION(builder, MAX_VERSION)
 }
 func PluginDependencyEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

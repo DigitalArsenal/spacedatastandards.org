@@ -2,4 +2,339 @@
 
 # namespace: 
 
-# NOTE CZMBox.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Box (rectangular cuboid)
+class CZMBox(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = CZMBox()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsCZMBox(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def CZMBoxBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x43\x5A\x4D", size_prefixed=size_prefixed)
+
+    # CZMBox
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Whether the box is displayed
+    # CZMBox
+    def SHOW(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # Width (X) in meters
+    # CZMBox
+    def DIMENSIONS_X(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Depth (Y) in meters
+    # CZMBox
+    def DIMENSIONS_Y(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Height (Z) in meters
+    # CZMBox
+    def DIMENSIONS_Z(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Height reference
+    # CZMBox
+    def HEIGHT_REFERENCE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Fill flag
+    # CZMBox
+    def FILL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # Surface material
+    # CZMBox
+    def MATERIAL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from CZMMaterial import CZMMaterial
+            obj = CZMMaterial()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Outline flag
+    # CZMBox
+    def OUTLINE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # Outline color
+    # CZMBox
+    def OUTLINE_COLOR(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from CZMColor import CZMColor
+            obj = CZMColor()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Outline width
+    # CZMBox
+    def OUTLINE_WIDTH(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Shadow mode
+    # CZMBox
+    def SHADOWS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Distance display condition near
+    # CZMBox
+    def DISTANCE_DISPLAY_CONDITION_NEAR(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Distance display condition far
+    # CZMBox
+    def DISTANCE_DISPLAY_CONDITION_FAR(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+def CZMBoxStart(builder):
+    builder.StartObject(13)
+
+def Start(builder):
+    CZMBoxStart(builder)
+
+def CZMBoxAddSHOW(builder, SHOW):
+    builder.PrependBoolSlot(0, SHOW, 0)
+
+def AddSHOW(builder, SHOW):
+    CZMBoxAddSHOW(builder, SHOW)
+
+def CZMBoxAddDIMENSIONS_X(builder, DIMENSIONS_X):
+    builder.PrependFloat64Slot(1, DIMENSIONS_X, 0.0)
+
+def AddDIMENSIONS_X(builder, DIMENSIONS_X):
+    CZMBoxAddDIMENSIONS_X(builder, DIMENSIONS_X)
+
+def CZMBoxAddDIMENSIONS_Y(builder, DIMENSIONS_Y):
+    builder.PrependFloat64Slot(2, DIMENSIONS_Y, 0.0)
+
+def AddDIMENSIONS_Y(builder, DIMENSIONS_Y):
+    CZMBoxAddDIMENSIONS_Y(builder, DIMENSIONS_Y)
+
+def CZMBoxAddDIMENSIONS_Z(builder, DIMENSIONS_Z):
+    builder.PrependFloat64Slot(3, DIMENSIONS_Z, 0.0)
+
+def AddDIMENSIONS_Z(builder, DIMENSIONS_Z):
+    CZMBoxAddDIMENSIONS_Z(builder, DIMENSIONS_Z)
+
+def CZMBoxAddHEIGHT_REFERENCE(builder, HEIGHT_REFERENCE):
+    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(HEIGHT_REFERENCE), 0)
+
+def AddHEIGHT_REFERENCE(builder, HEIGHT_REFERENCE):
+    CZMBoxAddHEIGHT_REFERENCE(builder, HEIGHT_REFERENCE)
+
+def CZMBoxAddFILL(builder, FILL):
+    builder.PrependBoolSlot(5, FILL, 0)
+
+def AddFILL(builder, FILL):
+    CZMBoxAddFILL(builder, FILL)
+
+def CZMBoxAddMATERIAL(builder, MATERIAL):
+    builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(MATERIAL), 0)
+
+def AddMATERIAL(builder, MATERIAL):
+    CZMBoxAddMATERIAL(builder, MATERIAL)
+
+def CZMBoxAddOUTLINE(builder, OUTLINE):
+    builder.PrependBoolSlot(7, OUTLINE, 0)
+
+def AddOUTLINE(builder, OUTLINE):
+    CZMBoxAddOUTLINE(builder, OUTLINE)
+
+def CZMBoxAddOUTLINE_COLOR(builder, OUTLINE_COLOR):
+    builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(OUTLINE_COLOR), 0)
+
+def AddOUTLINE_COLOR(builder, OUTLINE_COLOR):
+    CZMBoxAddOUTLINE_COLOR(builder, OUTLINE_COLOR)
+
+def CZMBoxAddOUTLINE_WIDTH(builder, OUTLINE_WIDTH):
+    builder.PrependFloat64Slot(9, OUTLINE_WIDTH, 0.0)
+
+def AddOUTLINE_WIDTH(builder, OUTLINE_WIDTH):
+    CZMBoxAddOUTLINE_WIDTH(builder, OUTLINE_WIDTH)
+
+def CZMBoxAddSHADOWS(builder, SHADOWS):
+    builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(SHADOWS), 0)
+
+def AddSHADOWS(builder, SHADOWS):
+    CZMBoxAddSHADOWS(builder, SHADOWS)
+
+def CZMBoxAddDISTANCE_DISPLAY_CONDITION_NEAR(builder, DISTANCE_DISPLAY_CONDITION_NEAR):
+    builder.PrependFloat64Slot(11, DISTANCE_DISPLAY_CONDITION_NEAR, 0.0)
+
+def AddDISTANCE_DISPLAY_CONDITION_NEAR(builder, DISTANCE_DISPLAY_CONDITION_NEAR):
+    CZMBoxAddDISTANCE_DISPLAY_CONDITION_NEAR(builder, DISTANCE_DISPLAY_CONDITION_NEAR)
+
+def CZMBoxAddDISTANCE_DISPLAY_CONDITION_FAR(builder, DISTANCE_DISPLAY_CONDITION_FAR):
+    builder.PrependFloat64Slot(12, DISTANCE_DISPLAY_CONDITION_FAR, 0.0)
+
+def AddDISTANCE_DISPLAY_CONDITION_FAR(builder, DISTANCE_DISPLAY_CONDITION_FAR):
+    CZMBoxAddDISTANCE_DISPLAY_CONDITION_FAR(builder, DISTANCE_DISPLAY_CONDITION_FAR)
+
+def CZMBoxEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return CZMBoxEnd(builder)
+
+import CZMColor
+import CZMMaterial
+try:
+    from typing import Optional
+except:
+    pass
+
+class CZMBoxT(object):
+
+    # CZMBoxT
+    def __init__(
+        self,
+        SHOW = False,
+        DIMENSIONS_X = 0.0,
+        DIMENSIONS_Y = 0.0,
+        DIMENSIONS_Z = 0.0,
+        HEIGHT_REFERENCE = None,
+        FILL = False,
+        MATERIAL = None,
+        OUTLINE = False,
+        OUTLINE_COLOR = None,
+        OUTLINE_WIDTH = 0.0,
+        SHADOWS = None,
+        DISTANCE_DISPLAY_CONDITION_NEAR = 0.0,
+        DISTANCE_DISPLAY_CONDITION_FAR = 0.0,
+    ):
+        self.SHOW = SHOW  # type: bool
+        self.DIMENSIONS_X = DIMENSIONS_X  # type: float
+        self.DIMENSIONS_Y = DIMENSIONS_Y  # type: float
+        self.DIMENSIONS_Z = DIMENSIONS_Z  # type: float
+        self.HEIGHT_REFERENCE = HEIGHT_REFERENCE  # type: Optional[str]
+        self.FILL = FILL  # type: bool
+        self.MATERIAL = MATERIAL  # type: Optional[CZMMaterial.CZMMaterialT]
+        self.OUTLINE = OUTLINE  # type: bool
+        self.OUTLINE_COLOR = OUTLINE_COLOR  # type: Optional[CZMColor.CZMColorT]
+        self.OUTLINE_WIDTH = OUTLINE_WIDTH  # type: float
+        self.SHADOWS = SHADOWS  # type: Optional[str]
+        self.DISTANCE_DISPLAY_CONDITION_NEAR = DISTANCE_DISPLAY_CONDITION_NEAR  # type: float
+        self.DISTANCE_DISPLAY_CONDITION_FAR = DISTANCE_DISPLAY_CONDITION_FAR  # type: float
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpCzmbox = CZMBox()
+        tmpCzmbox.Init(buf, pos)
+        return cls.InitFromObj(tmpCzmbox)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpCzmbox):
+        x = CZMBoxT()
+        x._UnPack(tmpCzmbox)
+        return x
+
+    # CZMBoxT
+    def _UnPack(self, CZMBox):
+        if CZMBox is None:
+            return
+        self.SHOW = CZMBox.SHOW()
+        self.DIMENSIONS_X = CZMBox.DIMENSIONS_X()
+        self.DIMENSIONS_Y = CZMBox.DIMENSIONS_Y()
+        self.DIMENSIONS_Z = CZMBox.DIMENSIONS_Z()
+        self.HEIGHT_REFERENCE = CZMBox.HEIGHT_REFERENCE()
+        self.FILL = CZMBox.FILL()
+        if CZMBox.MATERIAL() is not None:
+            self.MATERIAL = CZMMaterial.CZMMaterialT.InitFromObj(CZMBox.MATERIAL())
+        self.OUTLINE = CZMBox.OUTLINE()
+        if CZMBox.OUTLINE_COLOR() is not None:
+            self.OUTLINE_COLOR = CZMColor.CZMColorT.InitFromObj(CZMBox.OUTLINE_COLOR())
+        self.OUTLINE_WIDTH = CZMBox.OUTLINE_WIDTH()
+        self.SHADOWS = CZMBox.SHADOWS()
+        self.DISTANCE_DISPLAY_CONDITION_NEAR = CZMBox.DISTANCE_DISPLAY_CONDITION_NEAR()
+        self.DISTANCE_DISPLAY_CONDITION_FAR = CZMBox.DISTANCE_DISPLAY_CONDITION_FAR()
+
+    # CZMBoxT
+    def Pack(self, builder):
+        if self.HEIGHT_REFERENCE is not None:
+            HEIGHT_REFERENCE = builder.CreateString(self.HEIGHT_REFERENCE)
+        if self.MATERIAL is not None:
+            MATERIAL = self.MATERIAL.Pack(builder)
+        if self.OUTLINE_COLOR is not None:
+            OUTLINE_COLOR = self.OUTLINE_COLOR.Pack(builder)
+        if self.SHADOWS is not None:
+            SHADOWS = builder.CreateString(self.SHADOWS)
+        CZMBoxStart(builder)
+        CZMBoxAddSHOW(builder, self.SHOW)
+        CZMBoxAddDIMENSIONS_X(builder, self.DIMENSIONS_X)
+        CZMBoxAddDIMENSIONS_Y(builder, self.DIMENSIONS_Y)
+        CZMBoxAddDIMENSIONS_Z(builder, self.DIMENSIONS_Z)
+        if self.HEIGHT_REFERENCE is not None:
+            CZMBoxAddHEIGHT_REFERENCE(builder, HEIGHT_REFERENCE)
+        CZMBoxAddFILL(builder, self.FILL)
+        if self.MATERIAL is not None:
+            CZMBoxAddMATERIAL(builder, MATERIAL)
+        CZMBoxAddOUTLINE(builder, self.OUTLINE)
+        if self.OUTLINE_COLOR is not None:
+            CZMBoxAddOUTLINE_COLOR(builder, OUTLINE_COLOR)
+        CZMBoxAddOUTLINE_WIDTH(builder, self.OUTLINE_WIDTH)
+        if self.SHADOWS is not None:
+            CZMBoxAddSHADOWS(builder, SHADOWS)
+        CZMBoxAddDISTANCE_DISPLAY_CONDITION_NEAR(builder, self.DISTANCE_DISPLAY_CONDITION_NEAR)
+        CZMBoxAddDISTANCE_DISPLAY_CONDITION_FAR(builder, self.DISTANCE_DISPLAY_CONDITION_FAR)
+        CZMBox = CZMBoxEnd(builder)
+        return CZMBox

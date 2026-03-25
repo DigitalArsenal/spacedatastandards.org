@@ -2,4 +2,98 @@
 
 # namespace: 
 
-# NOTE KMLTourControl.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# gx:TourControl tour primitive
+class KMLTourControl(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = KMLTourControl()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsKMLTourControl(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def KMLTourControlBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x4B\x4D\x4C", size_prefixed=size_prefixed)
+
+    # KMLTourControl
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Play mode (pause)
+    # KMLTourControl
+    def PLAY_MODE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+def KMLTourControlStart(builder):
+    builder.StartObject(1)
+
+def Start(builder):
+    KMLTourControlStart(builder)
+
+def KMLTourControlAddPLAY_MODE(builder, PLAY_MODE):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(PLAY_MODE), 0)
+
+def AddPLAY_MODE(builder, PLAY_MODE):
+    KMLTourControlAddPLAY_MODE(builder, PLAY_MODE)
+
+def KMLTourControlEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return KMLTourControlEnd(builder)
+
+
+class KMLTourControlT(object):
+
+    # KMLTourControlT
+    def __init__(
+        self,
+        PLAY_MODE = None,
+    ):
+        self.PLAY_MODE = PLAY_MODE  # type: Optional[str]
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpKmltourControl = KMLTourControl()
+        tmpKmltourControl.Init(buf, pos)
+        return cls.InitFromObj(tmpKmltourControl)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpKmltourControl):
+        x = KMLTourControlT()
+        x._UnPack(tmpKmltourControl)
+        return x
+
+    # KMLTourControlT
+    def _UnPack(self, KMLTourControl):
+        if KMLTourControl is None:
+            return
+        self.PLAY_MODE = KMLTourControl.PLAY_MODE()
+
+    # KMLTourControlT
+    def Pack(self, builder):
+        if self.PLAY_MODE is not None:
+            PLAY_MODE = builder.CreateString(self.PLAY_MODE)
+        KMLTourControlStart(builder)
+        if self.PLAY_MODE is not None:
+            KMLTourControlAddPLAY_MODE(builder, PLAY_MODE)
+        KMLTourControl = KMLTourControlEnd(builder)
+        return KMLTourControl

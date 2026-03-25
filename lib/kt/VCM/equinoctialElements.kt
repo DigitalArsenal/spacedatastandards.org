@@ -29,60 +29,60 @@ class equinoctialElements : Table() {
         __init(_i, _bb)
         return this
     }
-    val AF : Double
+    val af : Double
         get() {
             val o = __offset(4)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val AG : Double
+    val ag : Double
         get() {
             val o = __offset(6)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val L : Double
+    val l : Double
         get() {
             val o = __offset(8)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val N : Double
+    val n : Double
         get() {
             val o = __offset(10)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val CHI : Double
+    val chi : Double
         get() {
             val o = __offset(12)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val PSI : Double
+    val psi : Double
         get() {
             val o = __offset(14)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsequinoctialElements(_bb: ByteBuffer): equinoctialElements = getRootAsequinoctialElements(_bb, equinoctialElements())
         fun getRootAsequinoctialElements(_bb: ByteBuffer, obj: equinoctialElements): equinoctialElements {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createequinoctialElements(builder: FlatBufferBuilder, AF: Double, AG: Double, L: Double, N: Double, CHI: Double, PSI: Double) : Int {
+        fun createequinoctialElements(builder: FlatBufferBuilder, af: Double, ag: Double, l: Double, n: Double, chi: Double, psi: Double) : Int {
             builder.startTable(6)
-            addPSI(builder, PSI)
-            addCHI(builder, CHI)
-            addN(builder, N)
-            addL(builder, L)
-            addAG(builder, AG)
-            addAF(builder, AF)
+            addPSI(builder, psi)
+            addCHI(builder, chi)
+            addN(builder, n)
+            addL(builder, l)
+            addAG(builder, ag)
+            addAF(builder, af)
             return endequinoctialElements(builder)
         }
         fun startequinoctialElements(builder: FlatBufferBuilder) = builder.startTable(6)
-        fun addAF(builder: FlatBufferBuilder, AF: Double) = builder.addDouble(0, AF, 0.0)
-        fun addAG(builder: FlatBufferBuilder, AG: Double) = builder.addDouble(1, AG, 0.0)
-        fun addL(builder: FlatBufferBuilder, L: Double) = builder.addDouble(2, L, 0.0)
-        fun addN(builder: FlatBufferBuilder, N: Double) = builder.addDouble(3, N, 0.0)
-        fun addCHI(builder: FlatBufferBuilder, CHI: Double) = builder.addDouble(4, CHI, 0.0)
-        fun addPSI(builder: FlatBufferBuilder, PSI: Double) = builder.addDouble(5, PSI, 0.0)
+        fun addAF(builder: FlatBufferBuilder, af: Double) = builder.addDouble(0, af, 0.0)
+        fun addAG(builder: FlatBufferBuilder, ag: Double) = builder.addDouble(1, ag, 0.0)
+        fun addL(builder: FlatBufferBuilder, l: Double) = builder.addDouble(2, l, 0.0)
+        fun addN(builder: FlatBufferBuilder, n: Double) = builder.addDouble(3, n, 0.0)
+        fun addCHI(builder: FlatBufferBuilder, chi: Double) = builder.addDouble(4, chi, 0.0)
+        fun addPSI(builder: FlatBufferBuilder, psi: Double) = builder.addDouble(5, psi, 0.0)
         fun endequinoctialElements(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

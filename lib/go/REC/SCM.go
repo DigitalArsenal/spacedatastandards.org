@@ -55,12 +55,16 @@ func (rcv *SCM) Table() flatbuffers.Table {
 }
 
 /// Version of Space Data Standards
-func (rcv *SCM) Version() []byte {
+func (rcv *SCM) version() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *SCM) Version() []byte {
+	return rcv.version()
 }
 
 /// Version of Space Data Standards
@@ -71,10 +75,17 @@ func (rcv *SCM) RECORDS(obj *SCHEMA_STANDARD, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(SCHEMA_STANDARD)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *SCM) Records(obj *SCHEMA_STANDARD, j int) bool {
+	return rcv.RECORDS(obj, j)
 }
 
 func (rcv *SCM) RECORDSLength() int {
@@ -85,18 +96,31 @@ func (rcv *SCM) RECORDSLength() int {
 	return 0
 }
 
+func (rcv *SCM) RecordsLength() int {
+	return rcv.RECORDSLength()
+}
+
 /// Standards Dictionary
 func SCMStart(builder *flatbuffers.Builder) {
 	builder.StartObject(2)
 }
-func SCMAddVersion(builder *flatbuffers.Builder, version flatbuffers.UOffsetT) {
+func SCMAddversion(builder *flatbuffers.Builder, version flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(version), 0)
+}
+func SCMAddVersion(builder *flatbuffers.Builder, version flatbuffers.UOffsetT) {
+	SCMAddversion(builder, version)
 }
 func SCMAddRECORDS(builder *flatbuffers.Builder, RECORDS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(RECORDS), 0)
 }
+func SCMAddRecords(builder *flatbuffers.Builder, RECORDS flatbuffers.UOffsetT) {
+	SCMAddRECORDS(builder, RECORDS)
+}
 func SCMStartRECORDSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func SCMStartRecordsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return SCMStartRECORDSVector(builder, numElems)
 }
 func SCMEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

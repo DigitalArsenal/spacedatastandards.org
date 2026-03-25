@@ -87,16 +87,21 @@ def End(builder):
 class AlgorithmTriggerT(object):
 
     # AlgorithmTriggerT
-    def __init__(self):
-        self.PARAMETER_REF = None  # type: str
-        self.CONTAINER_REF = None  # type: str
-        self.RATE = 0.0  # type: float
+    def __init__(
+        self,
+        PARAMETER_REF = None,
+        CONTAINER_REF = None,
+        RATE = 0.0,
+    ):
+        self.PARAMETER_REF = PARAMETER_REF  # type: Optional[str]
+        self.CONTAINER_REF = CONTAINER_REF  # type: Optional[str]
+        self.RATE = RATE  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        algorithmTrigger = AlgorithmTrigger()
-        algorithmTrigger.Init(buf, pos)
-        return cls.InitFromObj(algorithmTrigger)
+        tmpAlgorithmTrigger = AlgorithmTrigger()
+        tmpAlgorithmTrigger.Init(buf, pos)
+        return cls.InitFromObj(tmpAlgorithmTrigger)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -104,18 +109,18 @@ class AlgorithmTriggerT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, algorithmTrigger):
+    def InitFromObj(cls, tmpAlgorithmTrigger):
         x = AlgorithmTriggerT()
-        x._UnPack(algorithmTrigger)
+        x._UnPack(tmpAlgorithmTrigger)
         return x
 
     # AlgorithmTriggerT
-    def _UnPack(self, algorithmTrigger):
-        if algorithmTrigger is None:
+    def _UnPack(self, AlgorithmTrigger):
+        if AlgorithmTrigger is None:
             return
-        self.PARAMETER_REF = algorithmTrigger.PARAMETER_REF()
-        self.CONTAINER_REF = algorithmTrigger.CONTAINER_REF()
-        self.RATE = algorithmTrigger.RATE()
+        self.PARAMETER_REF = AlgorithmTrigger.PARAMETER_REF()
+        self.CONTAINER_REF = AlgorithmTrigger.CONTAINER_REF()
+        self.RATE = AlgorithmTrigger.RATE()
 
     # AlgorithmTriggerT
     def Pack(self, builder):
@@ -129,5 +134,5 @@ class AlgorithmTriggerT(object):
         if self.CONTAINER_REF is not None:
             AlgorithmTriggerAddCONTAINER_REF(builder, CONTAINER_REF)
         AlgorithmTriggerAddRATE(builder, self.RATE)
-        algorithmTrigger = AlgorithmTriggerEnd(builder)
-        return algorithmTrigger
+        AlgorithmTrigger = AlgorithmTriggerEnd(builder)
+        return AlgorithmTrigger

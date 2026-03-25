@@ -296,16 +296,16 @@ struct IONBuilder:
     def end():
         return b_.EndObject()
 
-def IONStartDATA_POINTSVector(b_:flatbuffers.builder, n_:int):
+def IONStartDATAPOINTSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def IONCreateDATA_POINTSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def IONCreateDATAPOINTSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-def IONStartDENSITY_PROFILESVector(b_:flatbuffers.builder, n_:int):
+def IONStartDENSITYPROFILESVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def IONCreateDENSITY_PROFILESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def IONCreateDENSITYPROFILESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)

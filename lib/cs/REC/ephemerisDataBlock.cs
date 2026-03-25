@@ -11,7 +11,7 @@ public struct ephemerisDataBlock : IFlatbufferObject
 {
   private Table __p;
   public ByteBuffer ByteBuffer { get { return __p.bb; } }
-  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_24_3_25(); }
+  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_25_12_19(); }
   public static ephemerisDataBlock GetRootAsephemerisDataBlock(ByteBuffer _bb) { return GetRootAsephemerisDataBlock(_bb, new ephemerisDataBlock()); }
   public static ephemerisDataBlock GetRootAsephemerisDataBlock(ByteBuffer _bb, ephemerisDataBlock obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
@@ -81,7 +81,11 @@ public struct ephemerisDataBlock : IFlatbufferObject
   public ArraySegment<byte>? GetSTOP_TIMEBytes() { return __p.__vector_as_arraysegment(24); }
 #endif
   public byte[] GetSTOP_TIMEArray() { return __p.__vector_as_array<byte>(24); }
-  /// Recommended interpolation method for ephemeris data (Hermite, Linear, Lagrange, etc.)
+  /// Recommended interpolation method for ephemeris data.
+  /// Supported methods: Hermite, Linear, Lagrange, Chebyshev.
+  /// When set to "Chebyshev", parsers should use POLYNOMIAL_POSITION_RECORDS
+  /// for high-fidelity polynomial interpolation instead of interpolating across
+  /// discrete state vectors.
   public string INTERPOLATION { get { int o = __p.__offset(26); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetINTERPOLATIONBytes() { return __p.__vector_as_span<byte>(26, 1); }
@@ -122,6 +126,12 @@ public struct ephemerisDataBlock : IFlatbufferObject
   /// Array of covariance matrix lines (optional)
   public covarianceMatrixLine? COVARIANCE_MATRIX_LINES(int j) { int o = __p.__offset(38); return o != 0 ? (covarianceMatrixLine?)(new covarianceMatrixLine()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
   public int COVARIANCE_MATRIX_LINESLength { get { int o = __p.__offset(38); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Optional polynomial position records for high-fidelity interpolation.
+  /// Used when INTERPOLATION is "Chebyshev". Each record covers a time segment with
+  /// polynomial coefficients for continuous position (and optionally velocity) evaluation.
+  /// See PPE schema for record structure and evaluation procedure.
+  public PPEPositionRecord? POLYNOMIAL_POSITION_RECORDS(int j) { int o = __p.__offset(40); return o != 0 ? (PPEPositionRecord?)(new PPEPositionRecord()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int POLYNOMIAL_POSITION_RECORDSLength { get { int o = __p.__offset(40); return o != 0 ? __p.__vector_len(o) : 0; } }
 
   public static Offset<ephemerisDataBlock> CreateephemerisDataBlock(FlatBufferBuilder builder,
       StringOffset COMMENTOffset = default(StringOffset),
@@ -141,9 +151,11 @@ public struct ephemerisDataBlock : IFlatbufferObject
       byte STATE_VECTOR_SIZE = 6,
       VectorOffset EPHEMERIS_DATAOffset = default(VectorOffset),
       VectorOffset EPHEMERIS_DATA_LINESOffset = default(VectorOffset),
-      VectorOffset COVARIANCE_MATRIX_LINESOffset = default(VectorOffset)) {
-    builder.StartTable(18);
+      VectorOffset COVARIANCE_MATRIX_LINESOffset = default(VectorOffset),
+      VectorOffset POLYNOMIAL_POSITION_RECORDSOffset = default(VectorOffset)) {
+    builder.StartTable(19);
     ephemerisDataBlock.AddSTEP_SIZE(builder, STEP_SIZE);
+    ephemerisDataBlock.AddPOLYNOMIAL_POSITION_RECORDS(builder, POLYNOMIAL_POSITION_RECORDSOffset);
     ephemerisDataBlock.AddCOVARIANCE_MATRIX_LINES(builder, COVARIANCE_MATRIX_LINESOffset);
     ephemerisDataBlock.AddEPHEMERIS_DATA_LINES(builder, EPHEMERIS_DATA_LINESOffset);
     ephemerisDataBlock.AddEPHEMERIS_DATA(builder, EPHEMERIS_DATAOffset);
@@ -164,7 +176,7 @@ public struct ephemerisDataBlock : IFlatbufferObject
     return ephemerisDataBlock.EndephemerisDataBlock(builder);
   }
 
-  public static void StartephemerisDataBlock(FlatBufferBuilder builder) { builder.StartTable(18); }
+  public static void StartephemerisDataBlock(FlatBufferBuilder builder) { builder.StartTable(19); }
   public static void AddCOMMENT(FlatBufferBuilder builder, StringOffset COMMENTOffset) { builder.AddOffset(0, COMMENTOffset.Value, 0); }
   public static void AddOBJECT(FlatBufferBuilder builder, Offset<CAT> OBJECTOffset) { builder.AddOffset(1, OBJECTOffset.Value, 0); }
   public static void AddCENTER_NAME(FlatBufferBuilder builder, StringOffset CENTER_NAMEOffset) { builder.AddOffset(2, CENTER_NAMEOffset.Value, 0); }
@@ -198,6 +210,12 @@ public struct ephemerisDataBlock : IFlatbufferObject
   public static VectorOffset CreateCOVARIANCE_MATRIX_LINESVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<covarianceMatrixLine>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateCOVARIANCE_MATRIX_LINESVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<covarianceMatrixLine>>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartCOVARIANCE_MATRIX_LINESVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddPOLYNOMIAL_POSITION_RECORDS(FlatBufferBuilder builder, VectorOffset POLYNOMIAL_POSITION_RECORDSOffset) { builder.AddOffset(18, POLYNOMIAL_POSITION_RECORDSOffset.Value, 0); }
+  public static VectorOffset CreatePOLYNOMIAL_POSITION_RECORDSVector(FlatBufferBuilder builder, Offset<PPEPositionRecord>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreatePOLYNOMIAL_POSITION_RECORDSVectorBlock(FlatBufferBuilder builder, Offset<PPEPositionRecord>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreatePOLYNOMIAL_POSITION_RECORDSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<PPEPositionRecord>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreatePOLYNOMIAL_POSITION_RECORDSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<PPEPositionRecord>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartPOLYNOMIAL_POSITION_RECORDSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static Offset<ephemerisDataBlock> EndephemerisDataBlock(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<ephemerisDataBlock>(o);
@@ -229,6 +247,8 @@ public struct ephemerisDataBlock : IFlatbufferObject
     for (var _j = 0; _j < this.EPHEMERIS_DATA_LINESLength; ++_j) {_o.EPHEMERIS_DATA_LINES.Add(this.EPHEMERIS_DATA_LINES(_j).HasValue ? this.EPHEMERIS_DATA_LINES(_j).Value.UnPack() : null);}
     _o.COVARIANCE_MATRIX_LINES = new List<covarianceMatrixLineT>();
     for (var _j = 0; _j < this.COVARIANCE_MATRIX_LINESLength; ++_j) {_o.COVARIANCE_MATRIX_LINES.Add(this.COVARIANCE_MATRIX_LINES(_j).HasValue ? this.COVARIANCE_MATRIX_LINES(_j).Value.UnPack() : null);}
+    _o.POLYNOMIAL_POSITION_RECORDS = new List<PPEPositionRecordT>();
+    for (var _j = 0; _j < this.POLYNOMIAL_POSITION_RECORDSLength; ++_j) {_o.POLYNOMIAL_POSITION_RECORDS.Add(this.POLYNOMIAL_POSITION_RECORDS(_j).HasValue ? this.POLYNOMIAL_POSITION_RECORDS(_j).Value.UnPack() : null);}
   }
   public static Offset<ephemerisDataBlock> Pack(FlatBufferBuilder builder, ephemerisDataBlockT _o) {
     if (_o == null) return default(Offset<ephemerisDataBlock>);
@@ -260,6 +280,12 @@ public struct ephemerisDataBlock : IFlatbufferObject
       for (var _j = 0; _j < __COVARIANCE_MATRIX_LINES.Length; ++_j) { __COVARIANCE_MATRIX_LINES[_j] = covarianceMatrixLine.Pack(builder, _o.COVARIANCE_MATRIX_LINES[_j]); }
       _COVARIANCE_MATRIX_LINES = CreateCOVARIANCE_MATRIX_LINESVector(builder, __COVARIANCE_MATRIX_LINES);
     }
+    var _POLYNOMIAL_POSITION_RECORDS = default(VectorOffset);
+    if (_o.POLYNOMIAL_POSITION_RECORDS != null) {
+      var __POLYNOMIAL_POSITION_RECORDS = new Offset<PPEPositionRecord>[_o.POLYNOMIAL_POSITION_RECORDS.Count];
+      for (var _j = 0; _j < __POLYNOMIAL_POSITION_RECORDS.Length; ++_j) { __POLYNOMIAL_POSITION_RECORDS[_j] = PPEPositionRecord.Pack(builder, _o.POLYNOMIAL_POSITION_RECORDS[_j]); }
+      _POLYNOMIAL_POSITION_RECORDS = CreatePOLYNOMIAL_POSITION_RECORDSVector(builder, __POLYNOMIAL_POSITION_RECORDS);
+    }
     return CreateephemerisDataBlock(
       builder,
       _COMMENT,
@@ -279,7 +305,8 @@ public struct ephemerisDataBlock : IFlatbufferObject
       _o.STATE_VECTOR_SIZE,
       _EPHEMERIS_DATA,
       _EPHEMERIS_DATA_LINES,
-      _COVARIANCE_MATRIX_LINES);
+      _COVARIANCE_MATRIX_LINES,
+      _POLYNOMIAL_POSITION_RECORDS);
   }
 }
 
@@ -303,6 +330,7 @@ public class ephemerisDataBlockT
   public List<double> EPHEMERIS_DATA { get; set; }
   public List<ephemerisDataLineT> EPHEMERIS_DATA_LINES { get; set; }
   public List<covarianceMatrixLineT> COVARIANCE_MATRIX_LINES { get; set; }
+  public List<PPEPositionRecordT> POLYNOMIAL_POSITION_RECORDS { get; set; }
 
   public ephemerisDataBlockT() {
     this.COMMENT = null;
@@ -323,6 +351,7 @@ public class ephemerisDataBlockT
     this.EPHEMERIS_DATA = null;
     this.EPHEMERIS_DATA_LINES = null;
     this.COVARIANCE_MATRIX_LINES = null;
+    this.POLYNOMIAL_POSITION_RECORDS = null;
   }
 }
 
@@ -350,6 +379,7 @@ static public class ephemerisDataBlockVerify
       && verifier.VerifyVectorOfData(tablePos, 34 /*EPHEMERIS_DATA*/, 8 /*double*/, false)
       && verifier.VerifyVectorOfTables(tablePos, 36 /*EPHEMERIS_DATA_LINES*/, ephemerisDataLineVerify.Verify, false)
       && verifier.VerifyVectorOfTables(tablePos, 38 /*COVARIANCE_MATRIX_LINES*/, covarianceMatrixLineVerify.Verify, false)
+      && verifier.VerifyVectorOfTables(tablePos, 40 /*POLYNOMIAL_POSITION_RECORDS*/, PPEPositionRecordVerify.Verify, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

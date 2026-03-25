@@ -51,9 +51,17 @@ func (rcv *COTPoint) LATITUDE() float64 {
 	return 0.0
 }
 
+func (rcv *COTPoint) Latitude() float64 {
+	return rcv.LATITUDE()
+}
+
 /// Latitude in decimal degrees (WGS84)
 func (rcv *COTPoint) MutateLATITUDE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(4, n)
+}
+
+func (rcv *COTPoint) MutateLatitude(n float64) bool {
+	return rcv.MutateLATITUDE(n)
 }
 
 /// Longitude in decimal degrees (WGS84)
@@ -65,9 +73,17 @@ func (rcv *COTPoint) LONGITUDE() float64 {
 	return 0.0
 }
 
+func (rcv *COTPoint) Longitude() float64 {
+	return rcv.LONGITUDE()
+}
+
 /// Longitude in decimal degrees (WGS84)
 func (rcv *COTPoint) MutateLONGITUDE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(6, n)
+}
+
+func (rcv *COTPoint) MutateLongitude(n float64) bool {
+	return rcv.MutateLONGITUDE(n)
 }
 
 /// Height above WGS84 ellipsoid in meters
@@ -79,9 +95,17 @@ func (rcv *COTPoint) HAE() float64 {
 	return 0.0
 }
 
+func (rcv *COTPoint) Hae() float64 {
+	return rcv.HAE()
+}
+
 /// Height above WGS84 ellipsoid in meters
 func (rcv *COTPoint) MutateHAE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(8, n)
+}
+
+func (rcv *COTPoint) MutateHae(n float64) bool {
+	return rcv.MutateHAE(n)
 }
 
 /// Circular error in meters (95% confidence)
@@ -93,9 +117,17 @@ func (rcv *COTPoint) CE() float64 {
 	return 0.0
 }
 
+func (rcv *COTPoint) Ce() float64 {
+	return rcv.CE()
+}
+
 /// Circular error in meters (95% confidence)
 func (rcv *COTPoint) MutateCE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(10, n)
+}
+
+func (rcv *COTPoint) MutateCe(n float64) bool {
+	return rcv.MutateCE(n)
 }
 
 /// Linear error (vertical) in meters (95% confidence)
@@ -107,9 +139,17 @@ func (rcv *COTPoint) LE() float64 {
 	return 0.0
 }
 
+func (rcv *COTPoint) Le() float64 {
+	return rcv.LE()
+}
+
 /// Linear error (vertical) in meters (95% confidence)
 func (rcv *COTPoint) MutateLE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(12, n)
+}
+
+func (rcv *COTPoint) MutateLe(n float64) bool {
+	return rcv.MutateLE(n)
 }
 
 func COTPointStart(builder *flatbuffers.Builder) {
@@ -118,17 +158,32 @@ func COTPointStart(builder *flatbuffers.Builder) {
 func COTPointAddLATITUDE(builder *flatbuffers.Builder, LATITUDE float64) {
 	builder.PrependFloat64Slot(0, LATITUDE, 0.0)
 }
+func COTPointAddLatitude(builder *flatbuffers.Builder, LATITUDE float64) {
+	COTPointAddLATITUDE(builder, LATITUDE)
+}
 func COTPointAddLONGITUDE(builder *flatbuffers.Builder, LONGITUDE float64) {
 	builder.PrependFloat64Slot(1, LONGITUDE, 0.0)
+}
+func COTPointAddLongitude(builder *flatbuffers.Builder, LONGITUDE float64) {
+	COTPointAddLONGITUDE(builder, LONGITUDE)
 }
 func COTPointAddHAE(builder *flatbuffers.Builder, HAE float64) {
 	builder.PrependFloat64Slot(2, HAE, 0.0)
 }
+func COTPointAddHae(builder *flatbuffers.Builder, HAE float64) {
+	COTPointAddHAE(builder, HAE)
+}
 func COTPointAddCE(builder *flatbuffers.Builder, CE float64) {
 	builder.PrependFloat64Slot(3, CE, 0.0)
 }
+func COTPointAddCe(builder *flatbuffers.Builder, CE float64) {
+	COTPointAddCE(builder, CE)
+}
 func COTPointAddLE(builder *flatbuffers.Builder, LE float64) {
 	builder.PrependFloat64Slot(4, LE, 0.0)
+}
+func COTPointAddLe(builder *flatbuffers.Builder, LE float64) {
+	COTPointAddLE(builder, LE)
 }
 func COTPointEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

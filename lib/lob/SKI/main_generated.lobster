@@ -278,16 +278,16 @@ struct SKIBuilder:
     def end():
         return b_.EndObject()
 
-def SKIStartSEN_QUATVector(b_:flatbuffers.builder, n_:int):
+def SKIStartSENQUATVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(8, n_, 8)
-def SKICreateSEN_QUATVector(b_:flatbuffers.builder, v_:[float]):
+def SKICreateSENQUATVector(b_:flatbuffers.builder, v_:[float]):
     b_.StartVector(8, v_.length, 8)
     reverse(v_) e_: b_.PrependFloat64(e_)
     return b_.EndVector(v_.length)
 
-def SKIStartSEN_QUAT_DOTVector(b_:flatbuffers.builder, n_:int):
+def SKIStartSENQUATDOTVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(8, n_, 8)
-def SKICreateSEN_QUAT_DOTVector(b_:flatbuffers.builder, v_:[float]):
+def SKICreateSENQUATDOTVector(b_:flatbuffers.builder, v_:[float]):
     b_.StartVector(8, v_.length, 8)
     reverse(v_) e_: b_.PrependFloat64(e_)
     return b_.EndVector(v_.length)
@@ -299,9 +299,9 @@ def SKICreateTAGSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-def SKIStartEO_OBSERVATIONSVector(b_:flatbuffers.builder, n_:int):
+def SKIStartEOOBSERVATIONSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def SKICreateEO_OBSERVATIONSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def SKICreateEOOBSERVATIONSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)

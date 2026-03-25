@@ -2,9 +2,13 @@
 // swiftlint:disable all
 // swiftformat:disable all
 
+#if canImport(Common)
+import Common
+#endif
+
 import FlatBuffers
 
-public enum IntegrationMethod: Int8, Enum, Verifiable {
+public enum IntegrationMethod: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -24,7 +28,7 @@ public enum IntegrationMethod: Int8, Enum, Verifiable {
 }
 
 
-public enum CollisionShape: Int8, Enum, Verifiable {
+public enum CollisionShape: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -42,7 +46,7 @@ public enum CollisionShape: Int8, Enum, Verifiable {
 }
 
 
-public enum MaterialType: Int8, Enum, Verifiable {
+public enum MaterialType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -63,7 +67,7 @@ public enum MaterialType: Int8, Enum, Verifiable {
 }
 
 
-public enum ForceType: Int8, Enum, Verifiable {
+public enum ForceType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -85,9 +89,9 @@ public enum ForceType: Int8, Enum, Verifiable {
 
 
 ///  Physics and Rigid Body Dynamics
-public struct PHY: FlatBufferObject, Verifiable {
+public struct PHY: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 

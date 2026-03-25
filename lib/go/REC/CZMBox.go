@@ -51,9 +51,17 @@ func (rcv *CZMBox) SHOW() bool {
 	return false
 }
 
+func (rcv *CZMBox) Show() bool {
+	return rcv.SHOW()
+}
+
 /// Whether the box is displayed
 func (rcv *CZMBox) MutateSHOW(n bool) bool {
 	return rcv._tab.MutateBoolSlot(4, n)
+}
+
+func (rcv *CZMBox) MutateShow(n bool) bool {
+	return rcv.MutateSHOW(n)
 }
 
 /// Width (X) in meters
@@ -65,9 +73,17 @@ func (rcv *CZMBox) DIMENSIONS_X() float64 {
 	return 0.0
 }
 
+func (rcv *CZMBox) DimensionsX() float64 {
+	return rcv.DIMENSIONS_X()
+}
+
 /// Width (X) in meters
 func (rcv *CZMBox) MutateDIMENSIONS_X(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(6, n)
+}
+
+func (rcv *CZMBox) MutateDimensionsX(n float64) bool {
+	return rcv.MutateDIMENSIONS_X(n)
 }
 
 /// Depth (Y) in meters
@@ -79,9 +95,17 @@ func (rcv *CZMBox) DIMENSIONS_Y() float64 {
 	return 0.0
 }
 
+func (rcv *CZMBox) DimensionsY() float64 {
+	return rcv.DIMENSIONS_Y()
+}
+
 /// Depth (Y) in meters
 func (rcv *CZMBox) MutateDIMENSIONS_Y(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(8, n)
+}
+
+func (rcv *CZMBox) MutateDimensionsY(n float64) bool {
+	return rcv.MutateDIMENSIONS_Y(n)
 }
 
 /// Height (Z) in meters
@@ -93,9 +117,17 @@ func (rcv *CZMBox) DIMENSIONS_Z() float64 {
 	return 0.0
 }
 
+func (rcv *CZMBox) DimensionsZ() float64 {
+	return rcv.DIMENSIONS_Z()
+}
+
 /// Height (Z) in meters
 func (rcv *CZMBox) MutateDIMENSIONS_Z(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(10, n)
+}
+
+func (rcv *CZMBox) MutateDimensionsZ(n float64) bool {
+	return rcv.MutateDIMENSIONS_Z(n)
 }
 
 /// Height reference
@@ -105,6 +137,10 @@ func (rcv *CZMBox) HEIGHT_REFERENCE() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *CZMBox) HeightReference() []byte {
+	return rcv.HEIGHT_REFERENCE()
 }
 
 /// Height reference
@@ -117,9 +153,17 @@ func (rcv *CZMBox) FILL() bool {
 	return false
 }
 
+func (rcv *CZMBox) Fill() bool {
+	return rcv.FILL()
+}
+
 /// Fill flag
 func (rcv *CZMBox) MutateFILL(n bool) bool {
 	return rcv._tab.MutateBoolSlot(14, n)
+}
+
+func (rcv *CZMBox) MutateFill(n bool) bool {
+	return rcv.MutateFILL(n)
 }
 
 /// Surface material
@@ -136,6 +180,10 @@ func (rcv *CZMBox) MATERIAL(obj *CZMMaterial) *CZMMaterial {
 	return nil
 }
 
+func (rcv *CZMBox) Material(obj *CZMMaterial) *CZMMaterial {
+	return rcv.MATERIAL(obj)
+}
+
 /// Surface material
 /// Outline flag
 func (rcv *CZMBox) OUTLINE() bool {
@@ -146,9 +194,17 @@ func (rcv *CZMBox) OUTLINE() bool {
 	return false
 }
 
+func (rcv *CZMBox) Outline() bool {
+	return rcv.OUTLINE()
+}
+
 /// Outline flag
 func (rcv *CZMBox) MutateOUTLINE(n bool) bool {
 	return rcv._tab.MutateBoolSlot(18, n)
+}
+
+func (rcv *CZMBox) MutateOutline(n bool) bool {
+	return rcv.MutateOUTLINE(n)
 }
 
 /// Outline color
@@ -165,6 +221,10 @@ func (rcv *CZMBox) OUTLINE_COLOR(obj *CZMColor) *CZMColor {
 	return nil
 }
 
+func (rcv *CZMBox) OutlineColor(obj *CZMColor) *CZMColor {
+	return rcv.OUTLINE_COLOR(obj)
+}
+
 /// Outline color
 /// Outline width
 func (rcv *CZMBox) OUTLINE_WIDTH() float64 {
@@ -175,9 +235,17 @@ func (rcv *CZMBox) OUTLINE_WIDTH() float64 {
 	return 0.0
 }
 
+func (rcv *CZMBox) OutlineWidth() float64 {
+	return rcv.OUTLINE_WIDTH()
+}
+
 /// Outline width
 func (rcv *CZMBox) MutateOUTLINE_WIDTH(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(22, n)
+}
+
+func (rcv *CZMBox) MutateOutlineWidth(n float64) bool {
+	return rcv.MutateOUTLINE_WIDTH(n)
 }
 
 /// Shadow mode
@@ -187,6 +255,10 @@ func (rcv *CZMBox) SHADOWS() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *CZMBox) Shadows() []byte {
+	return rcv.SHADOWS()
 }
 
 /// Shadow mode
@@ -199,9 +271,17 @@ func (rcv *CZMBox) DISTANCE_DISPLAY_CONDITION_NEAR() float64 {
 	return 0.0
 }
 
+func (rcv *CZMBox) DistanceDisplayConditionNear() float64 {
+	return rcv.DISTANCE_DISPLAY_CONDITION_NEAR()
+}
+
 /// Distance display condition near
 func (rcv *CZMBox) MutateDISTANCE_DISPLAY_CONDITION_NEAR(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(26, n)
+}
+
+func (rcv *CZMBox) MutateDistanceDisplayConditionNear(n float64) bool {
+	return rcv.MutateDISTANCE_DISPLAY_CONDITION_NEAR(n)
 }
 
 /// Distance display condition far
@@ -213,9 +293,17 @@ func (rcv *CZMBox) DISTANCE_DISPLAY_CONDITION_FAR() float64 {
 	return 0.0
 }
 
+func (rcv *CZMBox) DistanceDisplayConditionFar() float64 {
+	return rcv.DISTANCE_DISPLAY_CONDITION_FAR()
+}
+
 /// Distance display condition far
 func (rcv *CZMBox) MutateDISTANCE_DISPLAY_CONDITION_FAR(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(28, n)
+}
+
+func (rcv *CZMBox) MutateDistanceDisplayConditionFar(n float64) bool {
+	return rcv.MutateDISTANCE_DISPLAY_CONDITION_FAR(n)
 }
 
 func CZMBoxStart(builder *flatbuffers.Builder) {
@@ -224,41 +312,80 @@ func CZMBoxStart(builder *flatbuffers.Builder) {
 func CZMBoxAddSHOW(builder *flatbuffers.Builder, SHOW bool) {
 	builder.PrependBoolSlot(0, SHOW, false)
 }
+func CZMBoxAddShow(builder *flatbuffers.Builder, SHOW bool) {
+	CZMBoxAddSHOW(builder, SHOW)
+}
 func CZMBoxAddDIMENSIONS_X(builder *flatbuffers.Builder, DIMENSIONS_X float64) {
 	builder.PrependFloat64Slot(1, DIMENSIONS_X, 0.0)
+}
+func CZMBoxAddDimensionsX(builder *flatbuffers.Builder, DIMENSIONS_X float64) {
+	CZMBoxAddDIMENSIONS_X(builder, DIMENSIONS_X)
 }
 func CZMBoxAddDIMENSIONS_Y(builder *flatbuffers.Builder, DIMENSIONS_Y float64) {
 	builder.PrependFloat64Slot(2, DIMENSIONS_Y, 0.0)
 }
+func CZMBoxAddDimensionsY(builder *flatbuffers.Builder, DIMENSIONS_Y float64) {
+	CZMBoxAddDIMENSIONS_Y(builder, DIMENSIONS_Y)
+}
 func CZMBoxAddDIMENSIONS_Z(builder *flatbuffers.Builder, DIMENSIONS_Z float64) {
 	builder.PrependFloat64Slot(3, DIMENSIONS_Z, 0.0)
+}
+func CZMBoxAddDimensionsZ(builder *flatbuffers.Builder, DIMENSIONS_Z float64) {
+	CZMBoxAddDIMENSIONS_Z(builder, DIMENSIONS_Z)
 }
 func CZMBoxAddHEIGHT_REFERENCE(builder *flatbuffers.Builder, HEIGHT_REFERENCE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(HEIGHT_REFERENCE), 0)
 }
+func CZMBoxAddHeightReference(builder *flatbuffers.Builder, HEIGHT_REFERENCE flatbuffers.UOffsetT) {
+	CZMBoxAddHEIGHT_REFERENCE(builder, HEIGHT_REFERENCE)
+}
 func CZMBoxAddFILL(builder *flatbuffers.Builder, FILL bool) {
 	builder.PrependBoolSlot(5, FILL, false)
+}
+func CZMBoxAddFill(builder *flatbuffers.Builder, FILL bool) {
+	CZMBoxAddFILL(builder, FILL)
 }
 func CZMBoxAddMATERIAL(builder *flatbuffers.Builder, MATERIAL flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(MATERIAL), 0)
 }
+func CZMBoxAddMaterial(builder *flatbuffers.Builder, MATERIAL flatbuffers.UOffsetT) {
+	CZMBoxAddMATERIAL(builder, MATERIAL)
+}
 func CZMBoxAddOUTLINE(builder *flatbuffers.Builder, OUTLINE bool) {
 	builder.PrependBoolSlot(7, OUTLINE, false)
+}
+func CZMBoxAddOutline(builder *flatbuffers.Builder, OUTLINE bool) {
+	CZMBoxAddOUTLINE(builder, OUTLINE)
 }
 func CZMBoxAddOUTLINE_COLOR(builder *flatbuffers.Builder, OUTLINE_COLOR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(OUTLINE_COLOR), 0)
 }
+func CZMBoxAddOutlineColor(builder *flatbuffers.Builder, OUTLINE_COLOR flatbuffers.UOffsetT) {
+	CZMBoxAddOUTLINE_COLOR(builder, OUTLINE_COLOR)
+}
 func CZMBoxAddOUTLINE_WIDTH(builder *flatbuffers.Builder, OUTLINE_WIDTH float64) {
 	builder.PrependFloat64Slot(9, OUTLINE_WIDTH, 0.0)
+}
+func CZMBoxAddOutlineWidth(builder *flatbuffers.Builder, OUTLINE_WIDTH float64) {
+	CZMBoxAddOUTLINE_WIDTH(builder, OUTLINE_WIDTH)
 }
 func CZMBoxAddSHADOWS(builder *flatbuffers.Builder, SHADOWS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(SHADOWS), 0)
 }
+func CZMBoxAddShadows(builder *flatbuffers.Builder, SHADOWS flatbuffers.UOffsetT) {
+	CZMBoxAddSHADOWS(builder, SHADOWS)
+}
 func CZMBoxAddDISTANCE_DISPLAY_CONDITION_NEAR(builder *flatbuffers.Builder, DISTANCE_DISPLAY_CONDITION_NEAR float64) {
 	builder.PrependFloat64Slot(11, DISTANCE_DISPLAY_CONDITION_NEAR, 0.0)
 }
+func CZMBoxAddDistanceDisplayConditionNear(builder *flatbuffers.Builder, DISTANCE_DISPLAY_CONDITION_NEAR float64) {
+	CZMBoxAddDISTANCE_DISPLAY_CONDITION_NEAR(builder, DISTANCE_DISPLAY_CONDITION_NEAR)
+}
 func CZMBoxAddDISTANCE_DISPLAY_CONDITION_FAR(builder *flatbuffers.Builder, DISTANCE_DISPLAY_CONDITION_FAR float64) {
 	builder.PrependFloat64Slot(12, DISTANCE_DISPLAY_CONDITION_FAR, 0.0)
+}
+func CZMBoxAddDistanceDisplayConditionFar(builder *flatbuffers.Builder, DISTANCE_DISPLAY_CONDITION_FAR float64) {
+	CZMBoxAddDISTANCE_DISPLAY_CONDITION_FAR(builder, DISTANCE_DISPLAY_CONDITION_FAR)
 }
 func CZMBoxEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

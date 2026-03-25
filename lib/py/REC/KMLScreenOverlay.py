@@ -2,4 +2,503 @@
 
 # namespace: 
 
-# NOTE KMLScreenOverlay.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Screen overlay
+class KMLScreenOverlay(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = KMLScreenOverlay()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsKMLScreenOverlay(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def KMLScreenOverlayBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x4B\x4D\x4C", size_prefixed=size_prefixed)
+
+    # KMLScreenOverlay
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Name
+    # KMLScreenOverlay
+    def NAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Description
+    # KMLScreenOverlay
+    def DESCRIPTION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Visibility
+    # KMLScreenOverlay
+    def VISIBILITY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # Icon/image URL
+    # KMLScreenOverlay
+    def ICON_HREF(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Color
+    # KMLScreenOverlay
+    def COLOR(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Draw order
+    # KMLScreenOverlay
+    def DRAW_ORDER(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # Overlay X position
+    # KMLScreenOverlay
+    def OVERLAY_XY_X(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Overlay Y position
+    # KMLScreenOverlay
+    def OVERLAY_XY_Y(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Overlay X units
+    # KMLScreenOverlay
+    def OVERLAY_XY_XUNITS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # Overlay Y units
+    # KMLScreenOverlay
+    def OVERLAY_XY_YUNITS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # Screen X position
+    # KMLScreenOverlay
+    def SCREEN_XY_X(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Screen Y position
+    # KMLScreenOverlay
+    def SCREEN_XY_Y(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Screen X units
+    # KMLScreenOverlay
+    def SCREEN_XY_XUNITS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # Screen Y units
+    # KMLScreenOverlay
+    def SCREEN_XY_YUNITS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # Rotation X
+    # KMLScreenOverlay
+    def ROTATION_XY_X(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Rotation Y
+    # KMLScreenOverlay
+    def ROTATION_XY_Y(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Rotation X units
+    # KMLScreenOverlay
+    def ROTATION_XY_XUNITS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # Rotation Y units
+    # KMLScreenOverlay
+    def ROTATION_XY_YUNITS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # Size X
+    # KMLScreenOverlay
+    def SIZE_X(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Size Y
+    # KMLScreenOverlay
+    def SIZE_Y(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Size X units
+    # KMLScreenOverlay
+    def SIZE_XUNITS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # Size Y units
+    # KMLScreenOverlay
+    def SIZE_YUNITS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # Rotation in degrees
+    # KMLScreenOverlay
+    def ROTATION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+def KMLScreenOverlayStart(builder):
+    builder.StartObject(23)
+
+def Start(builder):
+    KMLScreenOverlayStart(builder)
+
+def KMLScreenOverlayAddNAME(builder, NAME):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(NAME), 0)
+
+def AddNAME(builder, NAME):
+    KMLScreenOverlayAddNAME(builder, NAME)
+
+def KMLScreenOverlayAddDESCRIPTION(builder, DESCRIPTION):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(DESCRIPTION), 0)
+
+def AddDESCRIPTION(builder, DESCRIPTION):
+    KMLScreenOverlayAddDESCRIPTION(builder, DESCRIPTION)
+
+def KMLScreenOverlayAddVISIBILITY(builder, VISIBILITY):
+    builder.PrependBoolSlot(2, VISIBILITY, 0)
+
+def AddVISIBILITY(builder, VISIBILITY):
+    KMLScreenOverlayAddVISIBILITY(builder, VISIBILITY)
+
+def KMLScreenOverlayAddICON_HREF(builder, ICON_HREF):
+    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(ICON_HREF), 0)
+
+def AddICON_HREF(builder, ICON_HREF):
+    KMLScreenOverlayAddICON_HREF(builder, ICON_HREF)
+
+def KMLScreenOverlayAddCOLOR(builder, COLOR):
+    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(COLOR), 0)
+
+def AddCOLOR(builder, COLOR):
+    KMLScreenOverlayAddCOLOR(builder, COLOR)
+
+def KMLScreenOverlayAddDRAW_ORDER(builder, DRAW_ORDER):
+    builder.PrependInt32Slot(5, DRAW_ORDER, 0)
+
+def AddDRAW_ORDER(builder, DRAW_ORDER):
+    KMLScreenOverlayAddDRAW_ORDER(builder, DRAW_ORDER)
+
+def KMLScreenOverlayAddOVERLAY_XY_X(builder, OVERLAY_XY_X):
+    builder.PrependFloat64Slot(6, OVERLAY_XY_X, 0.0)
+
+def AddOVERLAY_XY_X(builder, OVERLAY_XY_X):
+    KMLScreenOverlayAddOVERLAY_XY_X(builder, OVERLAY_XY_X)
+
+def KMLScreenOverlayAddOVERLAY_XY_Y(builder, OVERLAY_XY_Y):
+    builder.PrependFloat64Slot(7, OVERLAY_XY_Y, 0.0)
+
+def AddOVERLAY_XY_Y(builder, OVERLAY_XY_Y):
+    KMLScreenOverlayAddOVERLAY_XY_Y(builder, OVERLAY_XY_Y)
+
+def KMLScreenOverlayAddOVERLAY_XY_XUNITS(builder, OVERLAY_XY_XUNITS):
+    builder.PrependInt8Slot(8, OVERLAY_XY_XUNITS, 0)
+
+def AddOVERLAY_XY_XUNITS(builder, OVERLAY_XY_XUNITS):
+    KMLScreenOverlayAddOVERLAY_XY_XUNITS(builder, OVERLAY_XY_XUNITS)
+
+def KMLScreenOverlayAddOVERLAY_XY_YUNITS(builder, OVERLAY_XY_YUNITS):
+    builder.PrependInt8Slot(9, OVERLAY_XY_YUNITS, 0)
+
+def AddOVERLAY_XY_YUNITS(builder, OVERLAY_XY_YUNITS):
+    KMLScreenOverlayAddOVERLAY_XY_YUNITS(builder, OVERLAY_XY_YUNITS)
+
+def KMLScreenOverlayAddSCREEN_XY_X(builder, SCREEN_XY_X):
+    builder.PrependFloat64Slot(10, SCREEN_XY_X, 0.0)
+
+def AddSCREEN_XY_X(builder, SCREEN_XY_X):
+    KMLScreenOverlayAddSCREEN_XY_X(builder, SCREEN_XY_X)
+
+def KMLScreenOverlayAddSCREEN_XY_Y(builder, SCREEN_XY_Y):
+    builder.PrependFloat64Slot(11, SCREEN_XY_Y, 0.0)
+
+def AddSCREEN_XY_Y(builder, SCREEN_XY_Y):
+    KMLScreenOverlayAddSCREEN_XY_Y(builder, SCREEN_XY_Y)
+
+def KMLScreenOverlayAddSCREEN_XY_XUNITS(builder, SCREEN_XY_XUNITS):
+    builder.PrependInt8Slot(12, SCREEN_XY_XUNITS, 0)
+
+def AddSCREEN_XY_XUNITS(builder, SCREEN_XY_XUNITS):
+    KMLScreenOverlayAddSCREEN_XY_XUNITS(builder, SCREEN_XY_XUNITS)
+
+def KMLScreenOverlayAddSCREEN_XY_YUNITS(builder, SCREEN_XY_YUNITS):
+    builder.PrependInt8Slot(13, SCREEN_XY_YUNITS, 0)
+
+def AddSCREEN_XY_YUNITS(builder, SCREEN_XY_YUNITS):
+    KMLScreenOverlayAddSCREEN_XY_YUNITS(builder, SCREEN_XY_YUNITS)
+
+def KMLScreenOverlayAddROTATION_XY_X(builder, ROTATION_XY_X):
+    builder.PrependFloat64Slot(14, ROTATION_XY_X, 0.0)
+
+def AddROTATION_XY_X(builder, ROTATION_XY_X):
+    KMLScreenOverlayAddROTATION_XY_X(builder, ROTATION_XY_X)
+
+def KMLScreenOverlayAddROTATION_XY_Y(builder, ROTATION_XY_Y):
+    builder.PrependFloat64Slot(15, ROTATION_XY_Y, 0.0)
+
+def AddROTATION_XY_Y(builder, ROTATION_XY_Y):
+    KMLScreenOverlayAddROTATION_XY_Y(builder, ROTATION_XY_Y)
+
+def KMLScreenOverlayAddROTATION_XY_XUNITS(builder, ROTATION_XY_XUNITS):
+    builder.PrependInt8Slot(16, ROTATION_XY_XUNITS, 0)
+
+def AddROTATION_XY_XUNITS(builder, ROTATION_XY_XUNITS):
+    KMLScreenOverlayAddROTATION_XY_XUNITS(builder, ROTATION_XY_XUNITS)
+
+def KMLScreenOverlayAddROTATION_XY_YUNITS(builder, ROTATION_XY_YUNITS):
+    builder.PrependInt8Slot(17, ROTATION_XY_YUNITS, 0)
+
+def AddROTATION_XY_YUNITS(builder, ROTATION_XY_YUNITS):
+    KMLScreenOverlayAddROTATION_XY_YUNITS(builder, ROTATION_XY_YUNITS)
+
+def KMLScreenOverlayAddSIZE_X(builder, SIZE_X):
+    builder.PrependFloat64Slot(18, SIZE_X, 0.0)
+
+def AddSIZE_X(builder, SIZE_X):
+    KMLScreenOverlayAddSIZE_X(builder, SIZE_X)
+
+def KMLScreenOverlayAddSIZE_Y(builder, SIZE_Y):
+    builder.PrependFloat64Slot(19, SIZE_Y, 0.0)
+
+def AddSIZE_Y(builder, SIZE_Y):
+    KMLScreenOverlayAddSIZE_Y(builder, SIZE_Y)
+
+def KMLScreenOverlayAddSIZE_XUNITS(builder, SIZE_XUNITS):
+    builder.PrependInt8Slot(20, SIZE_XUNITS, 0)
+
+def AddSIZE_XUNITS(builder, SIZE_XUNITS):
+    KMLScreenOverlayAddSIZE_XUNITS(builder, SIZE_XUNITS)
+
+def KMLScreenOverlayAddSIZE_YUNITS(builder, SIZE_YUNITS):
+    builder.PrependInt8Slot(21, SIZE_YUNITS, 0)
+
+def AddSIZE_YUNITS(builder, SIZE_YUNITS):
+    KMLScreenOverlayAddSIZE_YUNITS(builder, SIZE_YUNITS)
+
+def KMLScreenOverlayAddROTATION(builder, ROTATION):
+    builder.PrependFloat64Slot(22, ROTATION, 0.0)
+
+def AddROTATION(builder, ROTATION):
+    KMLScreenOverlayAddROTATION(builder, ROTATION)
+
+def KMLScreenOverlayEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return KMLScreenOverlayEnd(builder)
+
+
+class KMLScreenOverlayT(object):
+
+    # KMLScreenOverlayT
+    def __init__(
+        self,
+        NAME = None,
+        DESCRIPTION = None,
+        VISIBILITY = False,
+        ICON_HREF = None,
+        COLOR = None,
+        DRAW_ORDER = 0,
+        OVERLAY_XY_X = 0.0,
+        OVERLAY_XY_Y = 0.0,
+        OVERLAY_XY_XUNITS = 0,
+        OVERLAY_XY_YUNITS = 0,
+        SCREEN_XY_X = 0.0,
+        SCREEN_XY_Y = 0.0,
+        SCREEN_XY_XUNITS = 0,
+        SCREEN_XY_YUNITS = 0,
+        ROTATION_XY_X = 0.0,
+        ROTATION_XY_Y = 0.0,
+        ROTATION_XY_XUNITS = 0,
+        ROTATION_XY_YUNITS = 0,
+        SIZE_X = 0.0,
+        SIZE_Y = 0.0,
+        SIZE_XUNITS = 0,
+        SIZE_YUNITS = 0,
+        ROTATION = 0.0,
+    ):
+        self.NAME = NAME  # type: Optional[str]
+        self.DESCRIPTION = DESCRIPTION  # type: Optional[str]
+        self.VISIBILITY = VISIBILITY  # type: bool
+        self.ICON_HREF = ICON_HREF  # type: Optional[str]
+        self.COLOR = COLOR  # type: Optional[str]
+        self.DRAW_ORDER = DRAW_ORDER  # type: int
+        self.OVERLAY_XY_X = OVERLAY_XY_X  # type: float
+        self.OVERLAY_XY_Y = OVERLAY_XY_Y  # type: float
+        self.OVERLAY_XY_XUNITS = OVERLAY_XY_XUNITS  # type: int
+        self.OVERLAY_XY_YUNITS = OVERLAY_XY_YUNITS  # type: int
+        self.SCREEN_XY_X = SCREEN_XY_X  # type: float
+        self.SCREEN_XY_Y = SCREEN_XY_Y  # type: float
+        self.SCREEN_XY_XUNITS = SCREEN_XY_XUNITS  # type: int
+        self.SCREEN_XY_YUNITS = SCREEN_XY_YUNITS  # type: int
+        self.ROTATION_XY_X = ROTATION_XY_X  # type: float
+        self.ROTATION_XY_Y = ROTATION_XY_Y  # type: float
+        self.ROTATION_XY_XUNITS = ROTATION_XY_XUNITS  # type: int
+        self.ROTATION_XY_YUNITS = ROTATION_XY_YUNITS  # type: int
+        self.SIZE_X = SIZE_X  # type: float
+        self.SIZE_Y = SIZE_Y  # type: float
+        self.SIZE_XUNITS = SIZE_XUNITS  # type: int
+        self.SIZE_YUNITS = SIZE_YUNITS  # type: int
+        self.ROTATION = ROTATION  # type: float
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpKmlscreenOverlay = KMLScreenOverlay()
+        tmpKmlscreenOverlay.Init(buf, pos)
+        return cls.InitFromObj(tmpKmlscreenOverlay)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpKmlscreenOverlay):
+        x = KMLScreenOverlayT()
+        x._UnPack(tmpKmlscreenOverlay)
+        return x
+
+    # KMLScreenOverlayT
+    def _UnPack(self, KMLScreenOverlay):
+        if KMLScreenOverlay is None:
+            return
+        self.NAME = KMLScreenOverlay.NAME()
+        self.DESCRIPTION = KMLScreenOverlay.DESCRIPTION()
+        self.VISIBILITY = KMLScreenOverlay.VISIBILITY()
+        self.ICON_HREF = KMLScreenOverlay.ICON_HREF()
+        self.COLOR = KMLScreenOverlay.COLOR()
+        self.DRAW_ORDER = KMLScreenOverlay.DRAW_ORDER()
+        self.OVERLAY_XY_X = KMLScreenOverlay.OVERLAY_XY_X()
+        self.OVERLAY_XY_Y = KMLScreenOverlay.OVERLAY_XY_Y()
+        self.OVERLAY_XY_XUNITS = KMLScreenOverlay.OVERLAY_XY_XUNITS()
+        self.OVERLAY_XY_YUNITS = KMLScreenOverlay.OVERLAY_XY_YUNITS()
+        self.SCREEN_XY_X = KMLScreenOverlay.SCREEN_XY_X()
+        self.SCREEN_XY_Y = KMLScreenOverlay.SCREEN_XY_Y()
+        self.SCREEN_XY_XUNITS = KMLScreenOverlay.SCREEN_XY_XUNITS()
+        self.SCREEN_XY_YUNITS = KMLScreenOverlay.SCREEN_XY_YUNITS()
+        self.ROTATION_XY_X = KMLScreenOverlay.ROTATION_XY_X()
+        self.ROTATION_XY_Y = KMLScreenOverlay.ROTATION_XY_Y()
+        self.ROTATION_XY_XUNITS = KMLScreenOverlay.ROTATION_XY_XUNITS()
+        self.ROTATION_XY_YUNITS = KMLScreenOverlay.ROTATION_XY_YUNITS()
+        self.SIZE_X = KMLScreenOverlay.SIZE_X()
+        self.SIZE_Y = KMLScreenOverlay.SIZE_Y()
+        self.SIZE_XUNITS = KMLScreenOverlay.SIZE_XUNITS()
+        self.SIZE_YUNITS = KMLScreenOverlay.SIZE_YUNITS()
+        self.ROTATION = KMLScreenOverlay.ROTATION()
+
+    # KMLScreenOverlayT
+    def Pack(self, builder):
+        if self.NAME is not None:
+            NAME = builder.CreateString(self.NAME)
+        if self.DESCRIPTION is not None:
+            DESCRIPTION = builder.CreateString(self.DESCRIPTION)
+        if self.ICON_HREF is not None:
+            ICON_HREF = builder.CreateString(self.ICON_HREF)
+        if self.COLOR is not None:
+            COLOR = builder.CreateString(self.COLOR)
+        KMLScreenOverlayStart(builder)
+        if self.NAME is not None:
+            KMLScreenOverlayAddNAME(builder, NAME)
+        if self.DESCRIPTION is not None:
+            KMLScreenOverlayAddDESCRIPTION(builder, DESCRIPTION)
+        KMLScreenOverlayAddVISIBILITY(builder, self.VISIBILITY)
+        if self.ICON_HREF is not None:
+            KMLScreenOverlayAddICON_HREF(builder, ICON_HREF)
+        if self.COLOR is not None:
+            KMLScreenOverlayAddCOLOR(builder, COLOR)
+        KMLScreenOverlayAddDRAW_ORDER(builder, self.DRAW_ORDER)
+        KMLScreenOverlayAddOVERLAY_XY_X(builder, self.OVERLAY_XY_X)
+        KMLScreenOverlayAddOVERLAY_XY_Y(builder, self.OVERLAY_XY_Y)
+        KMLScreenOverlayAddOVERLAY_XY_XUNITS(builder, self.OVERLAY_XY_XUNITS)
+        KMLScreenOverlayAddOVERLAY_XY_YUNITS(builder, self.OVERLAY_XY_YUNITS)
+        KMLScreenOverlayAddSCREEN_XY_X(builder, self.SCREEN_XY_X)
+        KMLScreenOverlayAddSCREEN_XY_Y(builder, self.SCREEN_XY_Y)
+        KMLScreenOverlayAddSCREEN_XY_XUNITS(builder, self.SCREEN_XY_XUNITS)
+        KMLScreenOverlayAddSCREEN_XY_YUNITS(builder, self.SCREEN_XY_YUNITS)
+        KMLScreenOverlayAddROTATION_XY_X(builder, self.ROTATION_XY_X)
+        KMLScreenOverlayAddROTATION_XY_Y(builder, self.ROTATION_XY_Y)
+        KMLScreenOverlayAddROTATION_XY_XUNITS(builder, self.ROTATION_XY_XUNITS)
+        KMLScreenOverlayAddROTATION_XY_YUNITS(builder, self.ROTATION_XY_YUNITS)
+        KMLScreenOverlayAddSIZE_X(builder, self.SIZE_X)
+        KMLScreenOverlayAddSIZE_Y(builder, self.SIZE_Y)
+        KMLScreenOverlayAddSIZE_XUNITS(builder, self.SIZE_XUNITS)
+        KMLScreenOverlayAddSIZE_YUNITS(builder, self.SIZE_YUNITS)
+        KMLScreenOverlayAddROTATION(builder, self.ROTATION)
+        KMLScreenOverlay = KMLScreenOverlayEnd(builder)
+        return KMLScreenOverlay

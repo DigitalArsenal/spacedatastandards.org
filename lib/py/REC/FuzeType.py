@@ -2,4 +2,12 @@
 
 # namespace: 
 
-# NOTE FuzeType.py does not declare any structs or enums
+class FuzeType(object):
+    CONTACT = 0
+    DELAY = 1
+    TIMED = 2
+    PROXIMITY = 3
+    AIRBURST = 4
+    MAGNETIC = 5
+    PRESSURE = 6
+    SEISMIC = 7

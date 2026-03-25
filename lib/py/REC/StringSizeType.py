@@ -2,4 +2,11 @@
 
 # namespace: 
 
-# NOTE StringSizeType.py does not declare any structs or enums
+# String size specification type
+class StringSizeType(object):
+    # Fixed length string
+    FIXED = 0
+    # Variable with leading count
+    LEADING_SIZE = 1
+    # Variable with termination character
+    TERMINATION_CHAR = 2

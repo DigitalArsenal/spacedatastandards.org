@@ -63,6 +63,10 @@ func (rcv *KML) NAME() []byte {
 	return nil
 }
 
+func (rcv *KML) Name() []byte {
+	return rcv.NAME()
+}
+
 /// Document name
 /// Document description
 func (rcv *KML) DESCRIPTION() []byte {
@@ -71,6 +75,10 @@ func (rcv *KML) DESCRIPTION() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *KML) Description() []byte {
+	return rcv.DESCRIPTION()
 }
 
 /// Document description
@@ -83,9 +91,17 @@ func (rcv *KML) VISIBILITY() bool {
 	return false
 }
 
+func (rcv *KML) Visibility() bool {
+	return rcv.VISIBILITY()
+}
+
 /// Whether document is visible
 func (rcv *KML) MutateVISIBILITY(n bool) bool {
 	return rcv._tab.MutateBoolSlot(8, n)
+}
+
+func (rcv *KML) MutateVisibility(n bool) bool {
+	return rcv.MutateVISIBILITY(n)
 }
 
 /// Whether document is open in tree view
@@ -97,9 +113,17 @@ func (rcv *KML) OPEN() bool {
 	return false
 }
 
+func (rcv *KML) Open() bool {
+	return rcv.OPEN()
+}
+
 /// Whether document is open in tree view
 func (rcv *KML) MutateOPEN(n bool) bool {
 	return rcv._tab.MutateBoolSlot(10, n)
+}
+
+func (rcv *KML) MutateOpen(n bool) bool {
+	return rcv.MutateOPEN(n)
 }
 
 /// Shared styles
@@ -109,10 +133,17 @@ func (rcv *KML) STYLES(obj *KMLStyle, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(KMLStyle)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *KML) Styles(obj *KMLStyle, j int) bool {
+	return rcv.STYLES(obj, j)
 }
 
 func (rcv *KML) STYLESLength() int {
@@ -123,6 +154,10 @@ func (rcv *KML) STYLESLength() int {
 	return 0
 }
 
+func (rcv *KML) StylesLength() int {
+	return rcv.STYLESLength()
+}
+
 /// Shared styles
 /// Style maps
 func (rcv *KML) STYLE_MAPS(obj *KMLStyleMap, j int) bool {
@@ -131,10 +166,17 @@ func (rcv *KML) STYLE_MAPS(obj *KMLStyleMap, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(KMLStyleMap)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *KML) StyleMaps(obj *KMLStyleMap, j int) bool {
+	return rcv.STYLE_MAPS(obj, j)
 }
 
 func (rcv *KML) STYLE_MAPSLength() int {
@@ -145,6 +187,10 @@ func (rcv *KML) STYLE_MAPSLength() int {
 	return 0
 }
 
+func (rcv *KML) StyleMapsLength() int {
+	return rcv.STYLE_MAPSLength()
+}
+
 /// Style maps
 /// Top-level placemarks
 func (rcv *KML) PLACEMARKS(obj *KMLPlacemark, j int) bool {
@@ -153,10 +199,17 @@ func (rcv *KML) PLACEMARKS(obj *KMLPlacemark, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(KMLPlacemark)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *KML) Placemarks(obj *KMLPlacemark, j int) bool {
+	return rcv.PLACEMARKS(obj, j)
 }
 
 func (rcv *KML) PLACEMARKSLength() int {
@@ -167,6 +220,10 @@ func (rcv *KML) PLACEMARKSLength() int {
 	return 0
 }
 
+func (rcv *KML) PlacemarksLength() int {
+	return rcv.PLACEMARKSLength()
+}
+
 /// Top-level placemarks
 /// Top-level folders
 func (rcv *KML) FOLDERS(obj *KMLFolder, j int) bool {
@@ -175,10 +232,17 @@ func (rcv *KML) FOLDERS(obj *KMLFolder, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(KMLFolder)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *KML) Folders(obj *KMLFolder, j int) bool {
+	return rcv.FOLDERS(obj, j)
 }
 
 func (rcv *KML) FOLDERSLength() int {
@@ -189,6 +253,10 @@ func (rcv *KML) FOLDERSLength() int {
 	return 0
 }
 
+func (rcv *KML) FoldersLength() int {
+	return rcv.FOLDERSLength()
+}
+
 /// Top-level folders
 /// Network links
 func (rcv *KML) NETWORK_LINKS(obj *KMLNetworkLink, j int) bool {
@@ -197,10 +265,17 @@ func (rcv *KML) NETWORK_LINKS(obj *KMLNetworkLink, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(KMLNetworkLink)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *KML) NetworkLinks(obj *KMLNetworkLink, j int) bool {
+	return rcv.NETWORK_LINKS(obj, j)
 }
 
 func (rcv *KML) NETWORK_LINKSLength() int {
@@ -211,6 +286,10 @@ func (rcv *KML) NETWORK_LINKSLength() int {
 	return 0
 }
 
+func (rcv *KML) NetworkLinksLength() int {
+	return rcv.NETWORK_LINKSLength()
+}
+
 /// Network links
 /// Ground overlays
 func (rcv *KML) GROUND_OVERLAYS(obj *KMLGroundOverlay, j int) bool {
@@ -219,10 +298,17 @@ func (rcv *KML) GROUND_OVERLAYS(obj *KMLGroundOverlay, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(KMLGroundOverlay)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *KML) GroundOverlays(obj *KMLGroundOverlay, j int) bool {
+	return rcv.GROUND_OVERLAYS(obj, j)
 }
 
 func (rcv *KML) GROUND_OVERLAYSLength() int {
@@ -233,6 +319,10 @@ func (rcv *KML) GROUND_OVERLAYSLength() int {
 	return 0
 }
 
+func (rcv *KML) GroundOverlaysLength() int {
+	return rcv.GROUND_OVERLAYSLength()
+}
+
 /// Ground overlays
 /// Schemas
 func (rcv *KML) SCHEMAS(obj *KMLSchema, j int) bool {
@@ -241,10 +331,17 @@ func (rcv *KML) SCHEMAS(obj *KMLSchema, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(KMLSchema)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *KML) Schemas(obj *KMLSchema, j int) bool {
+	return rcv.SCHEMAS(obj, j)
 }
 
 func (rcv *KML) SCHEMASLength() int {
@@ -255,6 +352,10 @@ func (rcv *KML) SCHEMASLength() int {
 	return 0
 }
 
+func (rcv *KML) SchemasLength() int {
+	return rcv.SCHEMASLength()
+}
+
 /// Schemas
 /// Screen overlays
 func (rcv *KML) SCREEN_OVERLAYS(obj *KMLScreenOverlay, j int) bool {
@@ -263,10 +364,17 @@ func (rcv *KML) SCREEN_OVERLAYS(obj *KMLScreenOverlay, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(KMLScreenOverlay)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *KML) ScreenOverlays(obj *KMLScreenOverlay, j int) bool {
+	return rcv.SCREEN_OVERLAYS(obj, j)
 }
 
 func (rcv *KML) SCREEN_OVERLAYSLength() int {
@@ -277,6 +385,10 @@ func (rcv *KML) SCREEN_OVERLAYSLength() int {
 	return 0
 }
 
+func (rcv *KML) ScreenOverlaysLength() int {
+	return rcv.SCREEN_OVERLAYSLength()
+}
+
 /// Screen overlays
 /// Photo overlays
 func (rcv *KML) PHOTO_OVERLAYS(obj *KMLPhotoOverlay, j int) bool {
@@ -285,10 +397,17 @@ func (rcv *KML) PHOTO_OVERLAYS(obj *KMLPhotoOverlay, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(KMLPhotoOverlay)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *KML) PhotoOverlays(obj *KMLPhotoOverlay, j int) bool {
+	return rcv.PHOTO_OVERLAYS(obj, j)
 }
 
 func (rcv *KML) PHOTO_OVERLAYSLength() int {
@@ -299,6 +418,10 @@ func (rcv *KML) PHOTO_OVERLAYSLength() int {
 	return 0
 }
 
+func (rcv *KML) PhotoOverlaysLength() int {
+	return rcv.PHOTO_OVERLAYSLength()
+}
+
 /// Photo overlays
 /// Tours
 func (rcv *KML) TOURS(obj *KMLTour, j int) bool {
@@ -307,10 +430,17 @@ func (rcv *KML) TOURS(obj *KMLTour, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(KMLTour)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *KML) Tours(obj *KMLTour, j int) bool {
+	return rcv.TOURS(obj, j)
 }
 
 func (rcv *KML) TOURSLength() int {
@@ -319,6 +449,10 @@ func (rcv *KML) TOURSLength() int {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *KML) ToursLength() int {
+	return rcv.TOURSLength()
 }
 
 /// Tours
@@ -336,6 +470,10 @@ func (rcv *KML) NETWORK_LINK_CONTROL(obj *KMLNetworkLinkControl) *KMLNetworkLink
 	return nil
 }
 
+func (rcv *KML) NetworkLinkControl(obj *KMLNetworkLinkControl) *KMLNetworkLinkControl {
+	return rcv.NETWORK_LINK_CONTROL(obj)
+}
+
 /// NetworkLinkControl
 func KMLStart(builder *flatbuffers.Builder) {
 	builder.StartObject(15)
@@ -343,77 +481,152 @@ func KMLStart(builder *flatbuffers.Builder) {
 func KMLAddNAME(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(NAME), 0)
 }
+func KMLAddName(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
+	KMLAddNAME(builder, NAME)
+}
 func KMLAddDESCRIPTION(builder *flatbuffers.Builder, DESCRIPTION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(DESCRIPTION), 0)
+}
+func KMLAddDescription(builder *flatbuffers.Builder, DESCRIPTION flatbuffers.UOffsetT) {
+	KMLAddDESCRIPTION(builder, DESCRIPTION)
 }
 func KMLAddVISIBILITY(builder *flatbuffers.Builder, VISIBILITY bool) {
 	builder.PrependBoolSlot(2, VISIBILITY, false)
 }
+func KMLAddVisibility(builder *flatbuffers.Builder, VISIBILITY bool) {
+	KMLAddVISIBILITY(builder, VISIBILITY)
+}
 func KMLAddOPEN(builder *flatbuffers.Builder, OPEN bool) {
 	builder.PrependBoolSlot(3, OPEN, false)
+}
+func KMLAddOpen(builder *flatbuffers.Builder, OPEN bool) {
+	KMLAddOPEN(builder, OPEN)
 }
 func KMLAddSTYLES(builder *flatbuffers.Builder, STYLES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(STYLES), 0)
 }
+func KMLAddStyles(builder *flatbuffers.Builder, STYLES flatbuffers.UOffsetT) {
+	KMLAddSTYLES(builder, STYLES)
+}
 func KMLStartSTYLESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func KMLStartStylesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return KMLStartSTYLESVector(builder, numElems)
 }
 func KMLAddSTYLE_MAPS(builder *flatbuffers.Builder, STYLE_MAPS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(STYLE_MAPS), 0)
 }
+func KMLAddStyleMaps(builder *flatbuffers.Builder, STYLE_MAPS flatbuffers.UOffsetT) {
+	KMLAddSTYLE_MAPS(builder, STYLE_MAPS)
+}
 func KMLStartSTYLE_MAPSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func KMLStartStyleMapsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return KMLStartSTYLE_MAPSVector(builder, numElems)
 }
 func KMLAddPLACEMARKS(builder *flatbuffers.Builder, PLACEMARKS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(PLACEMARKS), 0)
 }
+func KMLAddPlacemarks(builder *flatbuffers.Builder, PLACEMARKS flatbuffers.UOffsetT) {
+	KMLAddPLACEMARKS(builder, PLACEMARKS)
+}
 func KMLStartPLACEMARKSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func KMLStartPlacemarksVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return KMLStartPLACEMARKSVector(builder, numElems)
 }
 func KMLAddFOLDERS(builder *flatbuffers.Builder, FOLDERS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(FOLDERS), 0)
 }
+func KMLAddFolders(builder *flatbuffers.Builder, FOLDERS flatbuffers.UOffsetT) {
+	KMLAddFOLDERS(builder, FOLDERS)
+}
 func KMLStartFOLDERSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func KMLStartFoldersVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return KMLStartFOLDERSVector(builder, numElems)
 }
 func KMLAddNETWORK_LINKS(builder *flatbuffers.Builder, NETWORK_LINKS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(NETWORK_LINKS), 0)
 }
+func KMLAddNetworkLinks(builder *flatbuffers.Builder, NETWORK_LINKS flatbuffers.UOffsetT) {
+	KMLAddNETWORK_LINKS(builder, NETWORK_LINKS)
+}
 func KMLStartNETWORK_LINKSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func KMLStartNetworkLinksVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return KMLStartNETWORK_LINKSVector(builder, numElems)
 }
 func KMLAddGROUND_OVERLAYS(builder *flatbuffers.Builder, GROUND_OVERLAYS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(GROUND_OVERLAYS), 0)
 }
+func KMLAddGroundOverlays(builder *flatbuffers.Builder, GROUND_OVERLAYS flatbuffers.UOffsetT) {
+	KMLAddGROUND_OVERLAYS(builder, GROUND_OVERLAYS)
+}
 func KMLStartGROUND_OVERLAYSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func KMLStartGroundOverlaysVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return KMLStartGROUND_OVERLAYSVector(builder, numElems)
 }
 func KMLAddSCHEMAS(builder *flatbuffers.Builder, SCHEMAS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(SCHEMAS), 0)
 }
+func KMLAddSchemas(builder *flatbuffers.Builder, SCHEMAS flatbuffers.UOffsetT) {
+	KMLAddSCHEMAS(builder, SCHEMAS)
+}
 func KMLStartSCHEMASVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func KMLStartSchemasVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return KMLStartSCHEMASVector(builder, numElems)
 }
 func KMLAddSCREEN_OVERLAYS(builder *flatbuffers.Builder, SCREEN_OVERLAYS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(SCREEN_OVERLAYS), 0)
 }
+func KMLAddScreenOverlays(builder *flatbuffers.Builder, SCREEN_OVERLAYS flatbuffers.UOffsetT) {
+	KMLAddSCREEN_OVERLAYS(builder, SCREEN_OVERLAYS)
+}
 func KMLStartSCREEN_OVERLAYSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func KMLStartScreenOverlaysVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return KMLStartSCREEN_OVERLAYSVector(builder, numElems)
 }
 func KMLAddPHOTO_OVERLAYS(builder *flatbuffers.Builder, PHOTO_OVERLAYS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(12, flatbuffers.UOffsetT(PHOTO_OVERLAYS), 0)
 }
+func KMLAddPhotoOverlays(builder *flatbuffers.Builder, PHOTO_OVERLAYS flatbuffers.UOffsetT) {
+	KMLAddPHOTO_OVERLAYS(builder, PHOTO_OVERLAYS)
+}
 func KMLStartPHOTO_OVERLAYSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func KMLStartPhotoOverlaysVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return KMLStartPHOTO_OVERLAYSVector(builder, numElems)
 }
 func KMLAddTOURS(builder *flatbuffers.Builder, TOURS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(13, flatbuffers.UOffsetT(TOURS), 0)
 }
+func KMLAddTours(builder *flatbuffers.Builder, TOURS flatbuffers.UOffsetT) {
+	KMLAddTOURS(builder, TOURS)
+}
 func KMLStartTOURSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
+func KMLStartToursVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return KMLStartTOURSVector(builder, numElems)
+}
 func KMLAddNETWORK_LINK_CONTROL(builder *flatbuffers.Builder, NETWORK_LINK_CONTROL flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(14, flatbuffers.UOffsetT(NETWORK_LINK_CONTROL), 0)
+}
+func KMLAddNetworkLinkControl(builder *flatbuffers.Builder, NETWORK_LINK_CONTROL flatbuffers.UOffsetT) {
+	KMLAddNETWORK_LINK_CONTROL(builder, NETWORK_LINK_CONTROL)
 }
 func KMLEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

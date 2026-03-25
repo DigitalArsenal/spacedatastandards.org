@@ -57,10 +57,24 @@ class OCM extends Table
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
-    /// Trajectory type (e.g., PROPAGATED, ESTIMATED).
+    /// Trajectory state representation type.
+    /// Determines how orbit state data is parameterized in this message.
+    /// For CARTESIAN_PV/CARTESIAN_PVA, use STATE_DATA array.
+    /// For POLYNOMIAL_POS/POLYNOMIAL_OE, use the corresponding polynomial record arrays.
+    /**
+     * @return sbyte
+     */
     public function getTRAJ_TYPE()
     {
         $o = $this->__offset(8);
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \trajectoryType::CARTESIAN_PV;
+    }
+
+    /// Legacy trajectory type string for backward compatibility and extended types
+    /// (e.g., "PROPAGATED", "ESTIMATED", "FILTERED").
+    public function getTRAJ_TYPE_DESCRIPTION()
+    {
+        $o = $this->__offset(10);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
@@ -70,7 +84,7 @@ class OCM extends Table
      */
     public function getSTATE_STEP_SIZE()
     {
-        $o = $this->__offset(10);
+        $o = $this->__offset(12);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -82,7 +96,7 @@ class OCM extends Table
      */
     public function getSTATE_VECTOR_SIZE()
     {
-        $o = $this->__offset(12);
+        $o = $this->__offset(14);
         return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : 6;
     }
 
@@ -96,7 +110,7 @@ class OCM extends Table
      */
     public function getSTATE_DATA($j)
     {
-        $o = $this->__offset(14);
+        $o = $this->__offset(16);
         return $o != 0 ? $this->bb->getDouble($this->__vector($o) + $j * 8) : 0;
     }
 
@@ -105,7 +119,7 @@ class OCM extends Table
      */
     public function getSTATE_DATALength()
     {
-        $o = $this->__offset(14);
+        $o = $this->__offset(16);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
@@ -117,7 +131,7 @@ class OCM extends Table
      */
     public function getCOVARIANCE_DATA($j)
     {
-        $o = $this->__offset(16);
+        $o = $this->__offset(18);
         return $o != 0 ? $this->bb->getDouble($this->__vector($o) + $j * 8) : 0;
     }
 
@@ -126,7 +140,53 @@ class OCM extends Table
      */
     public function getCOVARIANCE_DATALength()
     {
-        $o = $this->__offset(16);
+        $o = $this->__offset(18);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Polynomial position records.
+    /// Used when TRAJ_TYPE is POLYNOMIAL_POS. Each record covers a time segment
+    /// with polynomial coefficients for X, Y, Z position (and optionally velocity).
+    /// See PPE schema for record structure and evaluation procedure.
+    /**
+     * @returnVectorOffset
+     */
+    public function getPOLYNOMIAL_POSITION_RECORDS($j)
+    {
+        $o = $this->__offset(20);
+        $obj = new PPEPositionRecord();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPOLYNOMIAL_POSITION_RECORDSLength()
+    {
+        $o = $this->__offset(20);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Polynomial orbital element records.
+    /// Used when TRAJ_TYPE is POLYNOMIAL_OE. Each record covers a time segment
+    /// with polynomial coefficients for classical orbital elements.
+    /// See PPE schema for record structure and evaluation procedure.
+    /**
+     * @returnVectorOffset
+     */
+    public function getPOLYNOMIAL_OE_RECORDS($j)
+    {
+        $o = $this->__offset(22);
+        $obj = new PPEOrbitalElementRecord();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPOLYNOMIAL_OE_RECORDSLength()
+    {
+        $o = $this->__offset(22);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
@@ -134,7 +194,7 @@ class OCM extends Table
     public function getPHYSICAL_PROPERTIES()
     {
         $obj = new PhysicalProperties();
-        $o = $this->__offset(18);
+        $o = $this->__offset(24);
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
@@ -144,7 +204,7 @@ class OCM extends Table
      */
     public function getMANEUVER_DATA($j)
     {
-        $o = $this->__offset(20);
+        $o = $this->__offset(26);
         $obj = new Maneuver();
         return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
     }
@@ -154,7 +214,7 @@ class OCM extends Table
      */
     public function getMANEUVER_DATALength()
     {
-        $o = $this->__offset(20);
+        $o = $this->__offset(26);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
@@ -162,7 +222,7 @@ class OCM extends Table
     public function getPERTURBATIONS()
     {
         $obj = new Perturbations();
-        $o = $this->__offset(22);
+        $o = $this->__offset(28);
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
@@ -170,7 +230,7 @@ class OCM extends Table
     public function getORBIT_DETERMINATION()
     {
         $obj = new OrbitDetermination();
-        $o = $this->__offset(24);
+        $o = $this->__offset(30);
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
@@ -180,7 +240,7 @@ class OCM extends Table
      */
     public function getUSER_DEFINED_PARAMETERS($j)
     {
-        $o = $this->__offset(26);
+        $o = $this->__offset(32);
         $obj = new UserDefinedParameters();
         return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
     }
@@ -190,7 +250,7 @@ class OCM extends Table
      */
     public function getUSER_DEFINED_PARAMETERSLength()
     {
-        $o = $this->__offset(26);
+        $o = $this->__offset(32);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
@@ -200,23 +260,26 @@ class OCM extends Table
      */
     public static function startOCM(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(12);
+        $builder->StartObject(15);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return OCM
      */
-    public static function createOCM(FlatBufferBuilder $builder, $HEADER, $METADATA, $TRAJ_TYPE, $STATE_STEP_SIZE, $STATE_VECTOR_SIZE, $STATE_DATA, $COVARIANCE_DATA, $PHYSICAL_PROPERTIES, $MANEUVER_DATA, $PERTURBATIONS, $ORBIT_DETERMINATION, $USER_DEFINED_PARAMETERS)
+    public static function createOCM(FlatBufferBuilder $builder, $HEADER, $METADATA, $TRAJ_TYPE, $TRAJ_TYPE_DESCRIPTION, $STATE_STEP_SIZE, $STATE_VECTOR_SIZE, $STATE_DATA, $COVARIANCE_DATA, $POLYNOMIAL_POSITION_RECORDS, $POLYNOMIAL_OE_RECORDS, $PHYSICAL_PROPERTIES, $MANEUVER_DATA, $PERTURBATIONS, $ORBIT_DETERMINATION, $USER_DEFINED_PARAMETERS)
     {
-        $builder->startObject(12);
+        $builder->startObject(15);
         self::addHEADER($builder, $HEADER);
         self::addMETADATA($builder, $METADATA);
         self::addTRAJ_TYPE($builder, $TRAJ_TYPE);
+        self::addTRAJ_TYPE_DESCRIPTION($builder, $TRAJ_TYPE_DESCRIPTION);
         self::addSTATE_STEP_SIZE($builder, $STATE_STEP_SIZE);
         self::addSTATE_VECTOR_SIZE($builder, $STATE_VECTOR_SIZE);
         self::addSTATE_DATA($builder, $STATE_DATA);
         self::addCOVARIANCE_DATA($builder, $COVARIANCE_DATA);
+        self::addPOLYNOMIAL_POSITION_RECORDS($builder, $POLYNOMIAL_POSITION_RECORDS);
+        self::addPOLYNOMIAL_OE_RECORDS($builder, $POLYNOMIAL_OE_RECORDS);
         self::addPHYSICAL_PROPERTIES($builder, $PHYSICAL_PROPERTIES);
         self::addMANEUVER_DATA($builder, $MANEUVER_DATA);
         self::addPERTURBATIONS($builder, $PERTURBATIONS);
@@ -248,12 +311,22 @@ class OCM extends Table
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param StringOffset
+     * @param sbyte
      * @return void
      */
     public static function addTRAJ_TYPE(FlatBufferBuilder $builder, $TRAJ_TYPE)
     {
-        $builder->addOffsetX(2, $TRAJ_TYPE, 0);
+        $builder->addSbyteX(2, $TRAJ_TYPE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addTRAJ_TYPE_DESCRIPTION(FlatBufferBuilder $builder, $TRAJ_TYPE_DESCRIPTION)
+    {
+        $builder->addOffsetX(3, $TRAJ_TYPE_DESCRIPTION, 0);
     }
 
     /**
@@ -263,7 +336,7 @@ class OCM extends Table
      */
     public static function addSTATE_STEP_SIZE(FlatBufferBuilder $builder, $STATE_STEP_SIZE)
     {
-        $builder->addDoubleX(3, $STATE_STEP_SIZE, 0.0);
+        $builder->addDoubleX(4, $STATE_STEP_SIZE, 0.0);
     }
 
     /**
@@ -273,7 +346,7 @@ class OCM extends Table
      */
     public static function addSTATE_VECTOR_SIZE(FlatBufferBuilder $builder, $STATE_VECTOR_SIZE)
     {
-        $builder->addByteX(4, $STATE_VECTOR_SIZE, 6);
+        $builder->addByteX(5, $STATE_VECTOR_SIZE, 6);
     }
 
     /**
@@ -283,7 +356,7 @@ class OCM extends Table
      */
     public static function addSTATE_DATA(FlatBufferBuilder $builder, $STATE_DATA)
     {
-        $builder->addOffsetX(5, $STATE_DATA, 0);
+        $builder->addOffsetX(6, $STATE_DATA, 0);
     }
 
     /**
@@ -317,7 +390,7 @@ class OCM extends Table
      */
     public static function addCOVARIANCE_DATA(FlatBufferBuilder $builder, $COVARIANCE_DATA)
     {
-        $builder->addOffsetX(6, $COVARIANCE_DATA, 0);
+        $builder->addOffsetX(7, $COVARIANCE_DATA, 0);
     }
 
     /**
@@ -349,9 +422,77 @@ class OCM extends Table
      * @param VectorOffset
      * @return void
      */
+    public static function addPOLYNOMIAL_POSITION_RECORDS(FlatBufferBuilder $builder, $POLYNOMIAL_POSITION_RECORDS)
+    {
+        $builder->addOffsetX(8, $POLYNOMIAL_POSITION_RECORDS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createPOLYNOMIAL_POSITION_RECORDSVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startPOLYNOMIAL_POSITION_RECORDSVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addPOLYNOMIAL_OE_RECORDS(FlatBufferBuilder $builder, $POLYNOMIAL_OE_RECORDS)
+    {
+        $builder->addOffsetX(9, $POLYNOMIAL_OE_RECORDS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createPOLYNOMIAL_OE_RECORDSVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startPOLYNOMIAL_OE_RECORDSVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
     public static function addPHYSICAL_PROPERTIES(FlatBufferBuilder $builder, $PHYSICAL_PROPERTIES)
     {
-        $builder->addOffsetX(7, $PHYSICAL_PROPERTIES, 0);
+        $builder->addOffsetX(10, $PHYSICAL_PROPERTIES, 0);
     }
 
     /**
@@ -361,7 +502,7 @@ class OCM extends Table
      */
     public static function addMANEUVER_DATA(FlatBufferBuilder $builder, $MANEUVER_DATA)
     {
-        $builder->addOffsetX(8, $MANEUVER_DATA, 0);
+        $builder->addOffsetX(11, $MANEUVER_DATA, 0);
     }
 
     /**
@@ -395,7 +536,7 @@ class OCM extends Table
      */
     public static function addPERTURBATIONS(FlatBufferBuilder $builder, $PERTURBATIONS)
     {
-        $builder->addOffsetX(9, $PERTURBATIONS, 0);
+        $builder->addOffsetX(12, $PERTURBATIONS, 0);
     }
 
     /**
@@ -405,7 +546,7 @@ class OCM extends Table
      */
     public static function addORBIT_DETERMINATION(FlatBufferBuilder $builder, $ORBIT_DETERMINATION)
     {
-        $builder->addOffsetX(10, $ORBIT_DETERMINATION, 0);
+        $builder->addOffsetX(13, $ORBIT_DETERMINATION, 0);
     }
 
     /**
@@ -415,7 +556,7 @@ class OCM extends Table
      */
     public static function addUSER_DEFINED_PARAMETERS(FlatBufferBuilder $builder, $USER_DEFINED_PARAMETERS)
     {
-        $builder->addOffsetX(11, $USER_DEFINED_PARAMETERS, 0);
+        $builder->addOffsetX(14, $USER_DEFINED_PARAMETERS, 0);
     }
 
     /**

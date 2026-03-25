@@ -2,4 +2,167 @@
 
 # namespace: 
 
-# NOTE KMLViewVolume.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# ViewVolume for PhotoOverlay
+class KMLViewVolume(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = KMLViewVolume()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsKMLViewVolume(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def KMLViewVolumeBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x4B\x4D\x4C", size_prefixed=size_prefixed)
+
+    # KMLViewVolume
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Left field of view angle
+    # KMLViewVolume
+    def LEFT_FOV(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Right field of view angle
+    # KMLViewVolume
+    def RIGHT_FOV(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Bottom field of view angle
+    # KMLViewVolume
+    def BOTTOM_FOV(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Top field of view angle
+    # KMLViewVolume
+    def TOP_FOV(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Near clipping plane
+    # KMLViewVolume
+    def NEAR(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+def KMLViewVolumeStart(builder):
+    builder.StartObject(5)
+
+def Start(builder):
+    KMLViewVolumeStart(builder)
+
+def KMLViewVolumeAddLEFT_FOV(builder, LEFT_FOV):
+    builder.PrependFloat64Slot(0, LEFT_FOV, 0.0)
+
+def AddLEFT_FOV(builder, LEFT_FOV):
+    KMLViewVolumeAddLEFT_FOV(builder, LEFT_FOV)
+
+def KMLViewVolumeAddRIGHT_FOV(builder, RIGHT_FOV):
+    builder.PrependFloat64Slot(1, RIGHT_FOV, 0.0)
+
+def AddRIGHT_FOV(builder, RIGHT_FOV):
+    KMLViewVolumeAddRIGHT_FOV(builder, RIGHT_FOV)
+
+def KMLViewVolumeAddBOTTOM_FOV(builder, BOTTOM_FOV):
+    builder.PrependFloat64Slot(2, BOTTOM_FOV, 0.0)
+
+def AddBOTTOM_FOV(builder, BOTTOM_FOV):
+    KMLViewVolumeAddBOTTOM_FOV(builder, BOTTOM_FOV)
+
+def KMLViewVolumeAddTOP_FOV(builder, TOP_FOV):
+    builder.PrependFloat64Slot(3, TOP_FOV, 0.0)
+
+def AddTOP_FOV(builder, TOP_FOV):
+    KMLViewVolumeAddTOP_FOV(builder, TOP_FOV)
+
+def KMLViewVolumeAddNEAR(builder, NEAR):
+    builder.PrependFloat64Slot(4, NEAR, 0.0)
+
+def AddNEAR(builder, NEAR):
+    KMLViewVolumeAddNEAR(builder, NEAR)
+
+def KMLViewVolumeEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return KMLViewVolumeEnd(builder)
+
+
+class KMLViewVolumeT(object):
+
+    # KMLViewVolumeT
+    def __init__(
+        self,
+        LEFT_FOV = 0.0,
+        RIGHT_FOV = 0.0,
+        BOTTOM_FOV = 0.0,
+        TOP_FOV = 0.0,
+        NEAR = 0.0,
+    ):
+        self.LEFT_FOV = LEFT_FOV  # type: float
+        self.RIGHT_FOV = RIGHT_FOV  # type: float
+        self.BOTTOM_FOV = BOTTOM_FOV  # type: float
+        self.TOP_FOV = TOP_FOV  # type: float
+        self.NEAR = NEAR  # type: float
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpKmlviewVolume = KMLViewVolume()
+        tmpKmlviewVolume.Init(buf, pos)
+        return cls.InitFromObj(tmpKmlviewVolume)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpKmlviewVolume):
+        x = KMLViewVolumeT()
+        x._UnPack(tmpKmlviewVolume)
+        return x
+
+    # KMLViewVolumeT
+    def _UnPack(self, KMLViewVolume):
+        if KMLViewVolume is None:
+            return
+        self.LEFT_FOV = KMLViewVolume.LEFT_FOV()
+        self.RIGHT_FOV = KMLViewVolume.RIGHT_FOV()
+        self.BOTTOM_FOV = KMLViewVolume.BOTTOM_FOV()
+        self.TOP_FOV = KMLViewVolume.TOP_FOV()
+        self.NEAR = KMLViewVolume.NEAR()
+
+    # KMLViewVolumeT
+    def Pack(self, builder):
+        KMLViewVolumeStart(builder)
+        KMLViewVolumeAddLEFT_FOV(builder, self.LEFT_FOV)
+        KMLViewVolumeAddRIGHT_FOV(builder, self.RIGHT_FOV)
+        KMLViewVolumeAddBOTTOM_FOV(builder, self.BOTTOM_FOV)
+        KMLViewVolumeAddTOP_FOV(builder, self.TOP_FOV)
+        KMLViewVolumeAddNEAR(builder, self.NEAR)
+        KMLViewVolume = KMLViewVolumeEnd(builder)
+        return KMLViewVolume

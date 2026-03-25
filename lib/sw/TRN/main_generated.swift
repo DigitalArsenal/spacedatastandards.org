@@ -2,9 +2,13 @@
 // swiftlint:disable all
 // swiftformat:disable all
 
+#if canImport(Common)
+import Common
+#endif
+
 import FlatBuffers
 
-public enum TerrainDataSource: Int8, Enum, Verifiable {
+public enum TerrainDataSource: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -22,7 +26,7 @@ public enum TerrainDataSource: Int8, Enum, Verifiable {
 }
 
 
-public enum LandCoverType: Int8, Enum, Verifiable {
+public enum LandCoverType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -49,7 +53,7 @@ public enum LandCoverType: Int8, Enum, Verifiable {
 }
 
 
-public enum TerrainInterpolation: Int8, Enum, Verifiable {
+public enum TerrainInterpolation: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -64,9 +68,9 @@ public enum TerrainInterpolation: Int8, Enum, Verifiable {
 
 
 ///  Terrain Models
-public struct TRN: FlatBufferObject, Verifiable {
+public struct TRN: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -85,9 +89,7 @@ public struct TRN: FlatBufferObject, Verifiable {
     var p: VOffset { self.rawValue }
   }
 
-  public var hasSources: Bool { let o = _accessor.offset(VTOFFSET.SOURCES.v); return o == 0 ? false : true }
-  public var SOURCESCount: Int32 { let o = _accessor.offset(VTOFFSET.SOURCES.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func SOURCES(at index: Int32) -> TerrainDataSource? { let o = _accessor.offset(VTOFFSET.SOURCES.v); return o == 0 ? TerrainDataSource.srtm : TerrainDataSource(rawValue: _accessor.directRead(of: Int8.self, offset: _accessor.vector(at: o) + index * 1)) }
+  public var SOURCES: FlatbufferVector<TerrainDataSource> { return _accessor.vector(at: VTOFFSET.SOURCES.v, byteSize: 1) }
   public var INTERPOLATION: TerrainInterpolation { let o = _accessor.offset(VTOFFSET.INTERPOLATION.v); return o == 0 ? .bilinear : TerrainInterpolation(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .bilinear }
   public var CACHE_ENABLED: Bool { let o = _accessor.offset(VTOFFSET.CACHE_ENABLED.v); return o == 0 ? true : _accessor.readBuffer(of: Bool.self, at: o) }
   public var MAX_CACHE_TILES: UInt16 { let o = _accessor.offset(VTOFFSET.MAX_CACHE_TILES.v); return o == 0 ? 100 : _accessor.readBuffer(of: UInt16.self, at: o) }

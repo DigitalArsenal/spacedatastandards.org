@@ -51,6 +51,10 @@ func (rcv *AlgorithmTrigger) PARAMETER_REF() []byte {
 	return nil
 }
 
+func (rcv *AlgorithmTrigger) ParameterRef() []byte {
+	return rcv.PARAMETER_REF()
+}
+
 /// Trigger on parameter update
 /// Trigger on container reception
 func (rcv *AlgorithmTrigger) CONTAINER_REF() []byte {
@@ -59,6 +63,10 @@ func (rcv *AlgorithmTrigger) CONTAINER_REF() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *AlgorithmTrigger) ContainerRef() []byte {
+	return rcv.CONTAINER_REF()
 }
 
 /// Trigger on container reception
@@ -71,9 +79,17 @@ func (rcv *AlgorithmTrigger) RATE() float64 {
 	return 0.0
 }
 
+func (rcv *AlgorithmTrigger) Rate() float64 {
+	return rcv.RATE()
+}
+
 /// Trigger rate (per second)
 func (rcv *AlgorithmTrigger) MutateRATE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(8, n)
+}
+
+func (rcv *AlgorithmTrigger) MutateRate(n float64) bool {
+	return rcv.MutateRATE(n)
 }
 
 func AlgorithmTriggerStart(builder *flatbuffers.Builder) {
@@ -82,11 +98,20 @@ func AlgorithmTriggerStart(builder *flatbuffers.Builder) {
 func AlgorithmTriggerAddPARAMETER_REF(builder *flatbuffers.Builder, PARAMETER_REF flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(PARAMETER_REF), 0)
 }
+func AlgorithmTriggerAddParameterRef(builder *flatbuffers.Builder, PARAMETER_REF flatbuffers.UOffsetT) {
+	AlgorithmTriggerAddPARAMETER_REF(builder, PARAMETER_REF)
+}
 func AlgorithmTriggerAddCONTAINER_REF(builder *flatbuffers.Builder, CONTAINER_REF flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(CONTAINER_REF), 0)
 }
+func AlgorithmTriggerAddContainerRef(builder *flatbuffers.Builder, CONTAINER_REF flatbuffers.UOffsetT) {
+	AlgorithmTriggerAddCONTAINER_REF(builder, CONTAINER_REF)
+}
 func AlgorithmTriggerAddRATE(builder *flatbuffers.Builder, RATE float64) {
 	builder.PrependFloat64Slot(2, RATE, 0.0)
+}
+func AlgorithmTriggerAddRate(builder *flatbuffers.Builder, RATE float64) {
+	AlgorithmTriggerAddRATE(builder, RATE)
 }
 func AlgorithmTriggerEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

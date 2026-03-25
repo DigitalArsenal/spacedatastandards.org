@@ -32,8 +32,8 @@ class CZMPolylineOutlineMaterial : Table() {
     /**
      * Line color
      */
-    val COLOR : CZMColor? get() = COLOR(CZMColor())
-    fun COLOR(obj: CZMColor) : CZMColor? {
+    val color : CZMColor? get() = color(CZMColor())
+    fun color(obj: CZMColor) : CZMColor? {
         val o = __offset(4)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -44,8 +44,8 @@ class CZMPolylineOutlineMaterial : Table() {
     /**
      * Outline color
      */
-    val OUTLINE_COLOR : CZMColor? get() = OUTLINE_COLOR(CZMColor())
-    fun OUTLINE_COLOR(obj: CZMColor) : CZMColor? {
+    val outlineColor : CZMColor? get() = outlineColor(CZMColor())
+    fun outlineColor(obj: CZMColor) : CZMColor? {
         val o = __offset(6)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -56,29 +56,29 @@ class CZMPolylineOutlineMaterial : Table() {
     /**
      * Outline width
      */
-    val OUTLINE_WIDTH : Double
+    val outlineWidth : Double
         get() {
             val o = __offset(8)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsCZMPolylineOutlineMaterial(_bb: ByteBuffer): CZMPolylineOutlineMaterial = getRootAsCZMPolylineOutlineMaterial(_bb, CZMPolylineOutlineMaterial())
         fun getRootAsCZMPolylineOutlineMaterial(_bb: ByteBuffer, obj: CZMPolylineOutlineMaterial): CZMPolylineOutlineMaterial {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createCZMPolylineOutlineMaterial(builder: FlatBufferBuilder, COLOROffset: Int, OUTLINE_COLOROffset: Int, OUTLINE_WIDTH: Double) : Int {
+        fun createCZMPolylineOutlineMaterial(builder: FlatBufferBuilder, colorOffset: Int, outlineColorOffset: Int, outlineWidth: Double) : Int {
             builder.startTable(3)
-            addOUTLINE_WIDTH(builder, OUTLINE_WIDTH)
-            addOUTLINE_COLOR(builder, OUTLINE_COLOROffset)
-            addCOLOR(builder, COLOROffset)
+            addOUTLINEWIDTH(builder, outlineWidth)
+            addOUTLINECOLOR(builder, outlineColorOffset)
+            addCOLOR(builder, colorOffset)
             return endCZMPolylineOutlineMaterial(builder)
         }
         fun startCZMPolylineOutlineMaterial(builder: FlatBufferBuilder) = builder.startTable(3)
-        fun addCOLOR(builder: FlatBufferBuilder, COLOR: Int) = builder.addOffset(0, COLOR, 0)
-        fun addOUTLINE_COLOR(builder: FlatBufferBuilder, OUTLINE_COLOR: Int) = builder.addOffset(1, OUTLINE_COLOR, 0)
-        fun addOUTLINE_WIDTH(builder: FlatBufferBuilder, OUTLINE_WIDTH: Double) = builder.addDouble(2, OUTLINE_WIDTH, 0.0)
+        fun addCOLOR(builder: FlatBufferBuilder, color: Int) = builder.addOffset(0, color, 0)
+        fun addOUTLINECOLOR(builder: FlatBufferBuilder, outlineColor: Int) = builder.addOffset(1, outlineColor, 0)
+        fun addOUTLINEWIDTH(builder: FlatBufferBuilder, outlineWidth: Double) = builder.addDouble(2, outlineWidth, 0.0)
         fun endCZMPolylineOutlineMaterial(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

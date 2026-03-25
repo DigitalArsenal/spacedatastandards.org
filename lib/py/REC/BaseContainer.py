@@ -2,4 +2,129 @@
 
 # namespace: 
 
-# NOTE BaseContainer.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Base container reference with restriction
+class BaseContainer(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = BaseContainer()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsBaseContainer(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def BaseContainerBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x58\x54\x43", size_prefixed=size_prefixed)
+
+    # BaseContainer
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Container reference path
+    # BaseContainer
+    def CONTAINER_REF(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Restriction criteria
+    # BaseContainer
+    def RESTRICTION_CRITERIA(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from MatchCriteria import MatchCriteria
+            obj = MatchCriteria()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+def BaseContainerStart(builder):
+    builder.StartObject(2)
+
+def Start(builder):
+    BaseContainerStart(builder)
+
+def BaseContainerAddCONTAINER_REF(builder, CONTAINER_REF):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(CONTAINER_REF), 0)
+
+def AddCONTAINER_REF(builder, CONTAINER_REF):
+    BaseContainerAddCONTAINER_REF(builder, CONTAINER_REF)
+
+def BaseContainerAddRESTRICTION_CRITERIA(builder, RESTRICTION_CRITERIA):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(RESTRICTION_CRITERIA), 0)
+
+def AddRESTRICTION_CRITERIA(builder, RESTRICTION_CRITERIA):
+    BaseContainerAddRESTRICTION_CRITERIA(builder, RESTRICTION_CRITERIA)
+
+def BaseContainerEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return BaseContainerEnd(builder)
+
+import MatchCriteria
+try:
+    from typing import Optional
+except:
+    pass
+
+class BaseContainerT(object):
+
+    # BaseContainerT
+    def __init__(
+        self,
+        CONTAINER_REF = None,
+        RESTRICTION_CRITERIA = None,
+    ):
+        self.CONTAINER_REF = CONTAINER_REF  # type: Optional[str]
+        self.RESTRICTION_CRITERIA = RESTRICTION_CRITERIA  # type: Optional[MatchCriteria.MatchCriteriaT]
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpBaseContainer = BaseContainer()
+        tmpBaseContainer.Init(buf, pos)
+        return cls.InitFromObj(tmpBaseContainer)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpBaseContainer):
+        x = BaseContainerT()
+        x._UnPack(tmpBaseContainer)
+        return x
+
+    # BaseContainerT
+    def _UnPack(self, BaseContainer):
+        if BaseContainer is None:
+            return
+        self.CONTAINER_REF = BaseContainer.CONTAINER_REF()
+        if BaseContainer.RESTRICTION_CRITERIA() is not None:
+            self.RESTRICTION_CRITERIA = MatchCriteria.MatchCriteriaT.InitFromObj(BaseContainer.RESTRICTION_CRITERIA())
+
+    # BaseContainerT
+    def Pack(self, builder):
+        if self.CONTAINER_REF is not None:
+            CONTAINER_REF = builder.CreateString(self.CONTAINER_REF)
+        if self.RESTRICTION_CRITERIA is not None:
+            RESTRICTION_CRITERIA = self.RESTRICTION_CRITERIA.Pack(builder)
+        BaseContainerStart(builder)
+        if self.CONTAINER_REF is not None:
+            BaseContainerAddCONTAINER_REF(builder, CONTAINER_REF)
+        if self.RESTRICTION_CRITERIA is not None:
+            BaseContainerAddRESTRICTION_CRITERIA(builder, RESTRICTION_CRITERIA)
+        BaseContainer = BaseContainerEnd(builder)
+        return BaseContainer

@@ -63,6 +63,10 @@ func (rcv *CAT) OBJECT_NAME() []byte {
 	return nil
 }
 
+func (rcv *CAT) ObjectName() []byte {
+	return rcv.OBJECT_NAME()
+}
+
 /// Satellite Name(s)
 /// International Designator (YYYY-NNNAAA)
 func (rcv *CAT) OBJECT_ID() []byte {
@@ -71,6 +75,10 @@ func (rcv *CAT) OBJECT_ID() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *CAT) ObjectId() []byte {
+	return rcv.OBJECT_ID()
 }
 
 /// International Designator (YYYY-NNNAAA)
@@ -83,9 +91,17 @@ func (rcv *CAT) NORAD_CAT_ID() uint32 {
 	return 0
 }
 
+func (rcv *CAT) NoradCatId() uint32 {
+	return rcv.NORAD_CAT_ID()
+}
+
 /// NORAD Catalog Number
 func (rcv *CAT) MutateNORAD_CAT_ID(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(8, n)
+}
+
+func (rcv *CAT) MutateNoradCatId(n uint32) bool {
+	return rcv.MutateNORAD_CAT_ID(n)
 }
 
 /// Object type (Payload, Rocket body, Debris, Unknown)
@@ -97,9 +113,17 @@ func (rcv *CAT) OBJECT_TYPE() objectType {
 	return 3
 }
 
+func (rcv *CAT) ObjectType() objectType {
+	return rcv.OBJECT_TYPE()
+}
+
 /// Object type (Payload, Rocket body, Debris, Unknown)
 func (rcv *CAT) MutateOBJECT_TYPE(n objectType) bool {
 	return rcv._tab.MutateInt8Slot(10, int8(n))
+}
+
+func (rcv *CAT) MutateObjectType(n objectType) bool {
+	return rcv.MutateOBJECT_TYPE(n)
 }
 
 /// Operational Status Code
@@ -111,9 +135,17 @@ func (rcv *CAT) OPS_STATUS_CODE() opsStatusCode {
 	return 7
 }
 
+func (rcv *CAT) OpsStatusCode() opsStatusCode {
+	return rcv.OPS_STATUS_CODE()
+}
+
 /// Operational Status Code
 func (rcv *CAT) MutateOPS_STATUS_CODE(n opsStatusCode) bool {
 	return rcv._tab.MutateInt8Slot(12, int8(n))
+}
+
+func (rcv *CAT) MutateOpsStatusCode(n opsStatusCode) bool {
+	return rcv.MutateOPS_STATUS_CODE(n)
 }
 
 /// Ownership, typically country or company
@@ -125,9 +157,17 @@ func (rcv *CAT) OWNER() legacyCountryCode {
 	return 0
 }
 
+func (rcv *CAT) Owner() legacyCountryCode {
+	return rcv.OWNER()
+}
+
 /// Ownership, typically country or company
 func (rcv *CAT) MutateOWNER(n legacyCountryCode) bool {
 	return rcv._tab.MutateInt8Slot(14, int8(n))
+}
+
+func (rcv *CAT) MutateOwner(n legacyCountryCode) bool {
+	return rcv.MutateOWNER(n)
 }
 
 /// Launch Date [year-month-day] (ISO 8601)
@@ -137,6 +177,10 @@ func (rcv *CAT) LAUNCH_DATE() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *CAT) LaunchDate() []byte {
+	return rcv.LAUNCH_DATE()
 }
 
 /// Launch Date [year-month-day] (ISO 8601)
@@ -149,6 +193,10 @@ func (rcv *CAT) LAUNCH_SITE() []byte {
 	return nil
 }
 
+func (rcv *CAT) LaunchSite() []byte {
+	return rcv.LAUNCH_SITE()
+}
+
 /// Launch Site
 /// Decay Date, if applicable [year-month-day] (ISO 8601)
 func (rcv *CAT) DECAY_DATE() []byte {
@@ -157,6 +205,10 @@ func (rcv *CAT) DECAY_DATE() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *CAT) DecayDate() []byte {
+	return rcv.DECAY_DATE()
 }
 
 /// Decay Date, if applicable [year-month-day] (ISO 8601)
@@ -169,9 +221,17 @@ func (rcv *CAT) PERIOD() float64 {
 	return 0.0
 }
 
+func (rcv *CAT) Period() float64 {
+	return rcv.PERIOD()
+}
+
 /// Orbital period [minutes]
 func (rcv *CAT) MutatePERIOD(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(22, n)
+}
+
+func (rcv *CAT) MutatePeriod(n float64) bool {
+	return rcv.MutatePERIOD(n)
 }
 
 /// Inclination [degrees]
@@ -183,9 +243,17 @@ func (rcv *CAT) INCLINATION() float64 {
 	return 0.0
 }
 
+func (rcv *CAT) Inclination() float64 {
+	return rcv.INCLINATION()
+}
+
 /// Inclination [degrees]
 func (rcv *CAT) MutateINCLINATION(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(24, n)
+}
+
+func (rcv *CAT) MutateInclination(n float64) bool {
+	return rcv.MutateINCLINATION(n)
 }
 
 /// Apogee Altitude [kilometers]
@@ -197,9 +265,17 @@ func (rcv *CAT) APOGEE() float64 {
 	return 0.0
 }
 
+func (rcv *CAT) Apogee() float64 {
+	return rcv.APOGEE()
+}
+
 /// Apogee Altitude [kilometers]
 func (rcv *CAT) MutateAPOGEE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(26, n)
+}
+
+func (rcv *CAT) MutateApogee(n float64) bool {
+	return rcv.MutateAPOGEE(n)
 }
 
 /// Perigee Altitude [kilometers]
@@ -211,9 +287,17 @@ func (rcv *CAT) PERIGEE() float64 {
 	return 0.0
 }
 
+func (rcv *CAT) Perigee() float64 {
+	return rcv.PERIGEE()
+}
+
 /// Perigee Altitude [kilometers]
 func (rcv *CAT) MutatePERIGEE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(28, n)
+}
+
+func (rcv *CAT) MutatePerigee(n float64) bool {
+	return rcv.MutatePERIGEE(n)
 }
 
 /// Radar Cross Section [meters2]; blank if no data available
@@ -225,9 +309,17 @@ func (rcv *CAT) RCS() float64 {
 	return 0.0
 }
 
+func (rcv *CAT) Rcs() float64 {
+	return rcv.RCS()
+}
+
 /// Radar Cross Section [meters2]; blank if no data available
 func (rcv *CAT) MutateRCS(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(30, n)
+}
+
+func (rcv *CAT) MutateRcs(n float64) bool {
+	return rcv.MutateRCS(n)
 }
 
 /// Data status code; blank otherwise
@@ -239,9 +331,17 @@ func (rcv *CAT) DATA_STATUS_CODE() dataStatusCode {
 	return 0
 }
 
+func (rcv *CAT) DataStatusCode() dataStatusCode {
+	return rcv.DATA_STATUS_CODE()
+}
+
 /// Data status code; blank otherwise
 func (rcv *CAT) MutateDATA_STATUS_CODE(n dataStatusCode) bool {
 	return rcv._tab.MutateInt8Slot(32, int8(n))
+}
+
+func (rcv *CAT) MutateDataStatusCode(n dataStatusCode) bool {
+	return rcv.MutateDATA_STATUS_CODE(n)
 }
 
 /// Orbit center
@@ -251,6 +351,10 @@ func (rcv *CAT) ORBIT_CENTER() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *CAT) OrbitCenter() []byte {
+	return rcv.ORBIT_CENTER()
 }
 
 /// Orbit center
@@ -263,9 +367,17 @@ func (rcv *CAT) ORBIT_TYPE() orbitType {
 	return 0
 }
 
+func (rcv *CAT) OrbitType() orbitType {
+	return rcv.ORBIT_TYPE()
+}
+
 /// Orbit type (Orbit, Landing, Impact, Docked to RSO, roundtrip)
 func (rcv *CAT) MutateORBIT_TYPE(n orbitType) bool {
 	return rcv._tab.MutateInt8Slot(36, int8(n))
+}
+
+func (rcv *CAT) MutateOrbitType(n orbitType) bool {
+	return rcv.MutateORBIT_TYPE(n)
 }
 
 /// Deployment Date [year-month-day] (ISO 8601)
@@ -275,6 +387,10 @@ func (rcv *CAT) DEPLOYMENT_DATE() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *CAT) DeploymentDate() []byte {
+	return rcv.DEPLOYMENT_DATE()
 }
 
 /// Deployment Date [year-month-day] (ISO 8601)
@@ -287,9 +403,17 @@ func (rcv *CAT) MANEUVERABLE() bool {
 	return false
 }
 
+func (rcv *CAT) Maneuverable() bool {
+	return rcv.MANEUVERABLE()
+}
+
 /// Indicates if the object is maneuverable
 func (rcv *CAT) MutateMANEUVERABLE(n bool) bool {
 	return rcv._tab.MutateBoolSlot(40, n)
+}
+
+func (rcv *CAT) MutateManeuverable(n bool) bool {
+	return rcv.MutateMANEUVERABLE(n)
 }
 
 /// Size [meters]; blank if no data available
@@ -301,9 +425,17 @@ func (rcv *CAT) SIZE() float64 {
 	return 0.0
 }
 
+func (rcv *CAT) Size() float64 {
+	return rcv.SIZE()
+}
+
 /// Size [meters]; blank if no data available
 func (rcv *CAT) MutateSIZE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(42, n)
+}
+
+func (rcv *CAT) MutateSize(n float64) bool {
+	return rcv.MutateSIZE(n)
 }
 
 /// Mass [kilograms]; blank if no data available
@@ -315,9 +447,17 @@ func (rcv *CAT) MASS() float64 {
 	return 0.0
 }
 
+func (rcv *CAT) Mass() float64 {
+	return rcv.MASS()
+}
+
 /// Mass [kilograms]; blank if no data available
 func (rcv *CAT) MutateMASS(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(44, n)
+}
+
+func (rcv *CAT) MutateMass(n float64) bool {
+	return rcv.MutateMASS(n)
 }
 
 /// Mass type (Dry, Wet)
@@ -329,9 +469,17 @@ func (rcv *CAT) MASS_TYPE() massType {
 	return 0
 }
 
+func (rcv *CAT) MassType() massType {
+	return rcv.MASS_TYPE()
+}
+
 /// Mass type (Dry, Wet)
 func (rcv *CAT) MutateMASS_TYPE(n massType) bool {
 	return rcv._tab.MutateInt8Slot(46, int8(n))
+}
+
+func (rcv *CAT) MutateMassType(n massType) bool {
+	return rcv.MutateMASS_TYPE(n)
 }
 
 /// Vector of PAYLOADS
@@ -341,10 +489,17 @@ func (rcv *CAT) PAYLOADS(obj *PLD, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(PLD)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *CAT) Payloads(obj *PLD, j int) bool {
+	return rcv.PAYLOADS(obj, j)
 }
 
 func (rcv *CAT) PAYLOADSLength() int {
@@ -355,6 +510,10 @@ func (rcv *CAT) PAYLOADSLength() int {
 	return 0
 }
 
+func (rcv *CAT) PayloadsLength() int {
+	return rcv.PAYLOADSLength()
+}
+
 /// Vector of PAYLOADS
 func CATStart(builder *flatbuffers.Builder) {
 	builder.StartObject(23)
@@ -362,74 +521,146 @@ func CATStart(builder *flatbuffers.Builder) {
 func CATAddOBJECT_NAME(builder *flatbuffers.Builder, OBJECT_NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(OBJECT_NAME), 0)
 }
+func CATAddObjectName(builder *flatbuffers.Builder, OBJECT_NAME flatbuffers.UOffsetT) {
+	CATAddOBJECT_NAME(builder, OBJECT_NAME)
+}
 func CATAddOBJECT_ID(builder *flatbuffers.Builder, OBJECT_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(OBJECT_ID), 0)
+}
+func CATAddObjectId(builder *flatbuffers.Builder, OBJECT_ID flatbuffers.UOffsetT) {
+	CATAddOBJECT_ID(builder, OBJECT_ID)
 }
 func CATAddNORAD_CAT_ID(builder *flatbuffers.Builder, NORAD_CAT_ID uint32) {
 	builder.PrependUint32Slot(2, NORAD_CAT_ID, 0)
 }
+func CATAddNoradCatId(builder *flatbuffers.Builder, NORAD_CAT_ID uint32) {
+	CATAddNORAD_CAT_ID(builder, NORAD_CAT_ID)
+}
 func CATAddOBJECT_TYPE(builder *flatbuffers.Builder, OBJECT_TYPE objectType) {
 	builder.PrependInt8Slot(3, int8(OBJECT_TYPE), 3)
+}
+func CATAddObjectType(builder *flatbuffers.Builder, OBJECT_TYPE objectType) {
+	CATAddOBJECT_TYPE(builder, OBJECT_TYPE)
 }
 func CATAddOPS_STATUS_CODE(builder *flatbuffers.Builder, OPS_STATUS_CODE opsStatusCode) {
 	builder.PrependInt8Slot(4, int8(OPS_STATUS_CODE), 7)
 }
+func CATAddOpsStatusCode(builder *flatbuffers.Builder, OPS_STATUS_CODE opsStatusCode) {
+	CATAddOPS_STATUS_CODE(builder, OPS_STATUS_CODE)
+}
 func CATAddOWNER(builder *flatbuffers.Builder, OWNER legacyCountryCode) {
 	builder.PrependInt8Slot(5, int8(OWNER), 0)
+}
+func CATAddOwner(builder *flatbuffers.Builder, OWNER legacyCountryCode) {
+	CATAddOWNER(builder, OWNER)
 }
 func CATAddLAUNCH_DATE(builder *flatbuffers.Builder, LAUNCH_DATE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(LAUNCH_DATE), 0)
 }
+func CATAddLaunchDate(builder *flatbuffers.Builder, LAUNCH_DATE flatbuffers.UOffsetT) {
+	CATAddLAUNCH_DATE(builder, LAUNCH_DATE)
+}
 func CATAddLAUNCH_SITE(builder *flatbuffers.Builder, LAUNCH_SITE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(LAUNCH_SITE), 0)
+}
+func CATAddLaunchSite(builder *flatbuffers.Builder, LAUNCH_SITE flatbuffers.UOffsetT) {
+	CATAddLAUNCH_SITE(builder, LAUNCH_SITE)
 }
 func CATAddDECAY_DATE(builder *flatbuffers.Builder, DECAY_DATE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(DECAY_DATE), 0)
 }
+func CATAddDecayDate(builder *flatbuffers.Builder, DECAY_DATE flatbuffers.UOffsetT) {
+	CATAddDECAY_DATE(builder, DECAY_DATE)
+}
 func CATAddPERIOD(builder *flatbuffers.Builder, PERIOD float64) {
 	builder.PrependFloat64Slot(9, PERIOD, 0.0)
+}
+func CATAddPeriod(builder *flatbuffers.Builder, PERIOD float64) {
+	CATAddPERIOD(builder, PERIOD)
 }
 func CATAddINCLINATION(builder *flatbuffers.Builder, INCLINATION float64) {
 	builder.PrependFloat64Slot(10, INCLINATION, 0.0)
 }
+func CATAddInclination(builder *flatbuffers.Builder, INCLINATION float64) {
+	CATAddINCLINATION(builder, INCLINATION)
+}
 func CATAddAPOGEE(builder *flatbuffers.Builder, APOGEE float64) {
 	builder.PrependFloat64Slot(11, APOGEE, 0.0)
+}
+func CATAddApogee(builder *flatbuffers.Builder, APOGEE float64) {
+	CATAddAPOGEE(builder, APOGEE)
 }
 func CATAddPERIGEE(builder *flatbuffers.Builder, PERIGEE float64) {
 	builder.PrependFloat64Slot(12, PERIGEE, 0.0)
 }
+func CATAddPerigee(builder *flatbuffers.Builder, PERIGEE float64) {
+	CATAddPERIGEE(builder, PERIGEE)
+}
 func CATAddRCS(builder *flatbuffers.Builder, RCS float64) {
 	builder.PrependFloat64Slot(13, RCS, 0.0)
+}
+func CATAddRcs(builder *flatbuffers.Builder, RCS float64) {
+	CATAddRCS(builder, RCS)
 }
 func CATAddDATA_STATUS_CODE(builder *flatbuffers.Builder, DATA_STATUS_CODE dataStatusCode) {
 	builder.PrependInt8Slot(14, int8(DATA_STATUS_CODE), 0)
 }
+func CATAddDataStatusCode(builder *flatbuffers.Builder, DATA_STATUS_CODE dataStatusCode) {
+	CATAddDATA_STATUS_CODE(builder, DATA_STATUS_CODE)
+}
 func CATAddORBIT_CENTER(builder *flatbuffers.Builder, ORBIT_CENTER flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(15, flatbuffers.UOffsetT(ORBIT_CENTER), 0)
+}
+func CATAddOrbitCenter(builder *flatbuffers.Builder, ORBIT_CENTER flatbuffers.UOffsetT) {
+	CATAddORBIT_CENTER(builder, ORBIT_CENTER)
 }
 func CATAddORBIT_TYPE(builder *flatbuffers.Builder, ORBIT_TYPE orbitType) {
 	builder.PrependInt8Slot(16, int8(ORBIT_TYPE), 0)
 }
+func CATAddOrbitType(builder *flatbuffers.Builder, ORBIT_TYPE orbitType) {
+	CATAddORBIT_TYPE(builder, ORBIT_TYPE)
+}
 func CATAddDEPLOYMENT_DATE(builder *flatbuffers.Builder, DEPLOYMENT_DATE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(17, flatbuffers.UOffsetT(DEPLOYMENT_DATE), 0)
+}
+func CATAddDeploymentDate(builder *flatbuffers.Builder, DEPLOYMENT_DATE flatbuffers.UOffsetT) {
+	CATAddDEPLOYMENT_DATE(builder, DEPLOYMENT_DATE)
 }
 func CATAddMANEUVERABLE(builder *flatbuffers.Builder, MANEUVERABLE bool) {
 	builder.PrependBoolSlot(18, MANEUVERABLE, false)
 }
+func CATAddManeuverable(builder *flatbuffers.Builder, MANEUVERABLE bool) {
+	CATAddMANEUVERABLE(builder, MANEUVERABLE)
+}
 func CATAddSIZE(builder *flatbuffers.Builder, SIZE float64) {
 	builder.PrependFloat64Slot(19, SIZE, 0.0)
+}
+func CATAddSize(builder *flatbuffers.Builder, SIZE float64) {
+	CATAddSIZE(builder, SIZE)
 }
 func CATAddMASS(builder *flatbuffers.Builder, MASS float64) {
 	builder.PrependFloat64Slot(20, MASS, 0.0)
 }
+func CATAddMass(builder *flatbuffers.Builder, MASS float64) {
+	CATAddMASS(builder, MASS)
+}
 func CATAddMASS_TYPE(builder *flatbuffers.Builder, MASS_TYPE massType) {
 	builder.PrependInt8Slot(21, int8(MASS_TYPE), 0)
+}
+func CATAddMassType(builder *flatbuffers.Builder, MASS_TYPE massType) {
+	CATAddMASS_TYPE(builder, MASS_TYPE)
 }
 func CATAddPAYLOADS(builder *flatbuffers.Builder, PAYLOADS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(22, flatbuffers.UOffsetT(PAYLOADS), 0)
 }
+func CATAddPayloads(builder *flatbuffers.Builder, PAYLOADS flatbuffers.UOffsetT) {
+	CATAddPAYLOADS(builder, PAYLOADS)
+}
 func CATStartPAYLOADSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func CATStartPayloadsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return CATStartPAYLOADSVector(builder, numElems)
 }
 func CATEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

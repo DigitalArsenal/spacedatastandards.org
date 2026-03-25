@@ -2,4 +2,290 @@
 
 # namespace: 
 
-# NOTE CZM.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# CZML Document
+class CZM(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = CZM()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsCZM(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def CZMBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x43\x5A\x4D", size_prefixed=size_prefixed)
+
+    # CZM
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Document-level name
+    # CZM
+    def NAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Document-level version
+    # CZM
+    def VERSION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Clock settings - current time (ISO 8601)
+    # CZM
+    def CLOCK_CURRENT_TIME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Clock settings - interval (ISO 8601 interval)
+    # CZM
+    def CLOCK_INTERVAL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Clock settings - multiplier
+    # CZM
+    def CLOCK_MULTIPLIER(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Clock range
+    # CZM
+    def CLOCK_RANGE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Clock step
+    # CZM
+    def CLOCK_STEP(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # All packets in the document
+    # CZM
+    def PACKETS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from CZMPacket import CZMPacket
+            obj = CZMPacket()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # CZM
+    def PACKETSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # CZM
+    def PACKETSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        return o == 0
+
+def CZMStart(builder):
+    builder.StartObject(8)
+
+def Start(builder):
+    CZMStart(builder)
+
+def CZMAddNAME(builder, NAME):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(NAME), 0)
+
+def AddNAME(builder, NAME):
+    CZMAddNAME(builder, NAME)
+
+def CZMAddVERSION(builder, VERSION):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(VERSION), 0)
+
+def AddVERSION(builder, VERSION):
+    CZMAddVERSION(builder, VERSION)
+
+def CZMAddCLOCK_CURRENT_TIME(builder, CLOCK_CURRENT_TIME):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(CLOCK_CURRENT_TIME), 0)
+
+def AddCLOCK_CURRENT_TIME(builder, CLOCK_CURRENT_TIME):
+    CZMAddCLOCK_CURRENT_TIME(builder, CLOCK_CURRENT_TIME)
+
+def CZMAddCLOCK_INTERVAL(builder, CLOCK_INTERVAL):
+    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(CLOCK_INTERVAL), 0)
+
+def AddCLOCK_INTERVAL(builder, CLOCK_INTERVAL):
+    CZMAddCLOCK_INTERVAL(builder, CLOCK_INTERVAL)
+
+def CZMAddCLOCK_MULTIPLIER(builder, CLOCK_MULTIPLIER):
+    builder.PrependFloat64Slot(4, CLOCK_MULTIPLIER, 0.0)
+
+def AddCLOCK_MULTIPLIER(builder, CLOCK_MULTIPLIER):
+    CZMAddCLOCK_MULTIPLIER(builder, CLOCK_MULTIPLIER)
+
+def CZMAddCLOCK_RANGE(builder, CLOCK_RANGE):
+    builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(CLOCK_RANGE), 0)
+
+def AddCLOCK_RANGE(builder, CLOCK_RANGE):
+    CZMAddCLOCK_RANGE(builder, CLOCK_RANGE)
+
+def CZMAddCLOCK_STEP(builder, CLOCK_STEP):
+    builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(CLOCK_STEP), 0)
+
+def AddCLOCK_STEP(builder, CLOCK_STEP):
+    CZMAddCLOCK_STEP(builder, CLOCK_STEP)
+
+def CZMAddPACKETS(builder, PACKETS):
+    builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(PACKETS), 0)
+
+def AddPACKETS(builder, PACKETS):
+    CZMAddPACKETS(builder, PACKETS)
+
+def CZMStartPACKETSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartPACKETSVector(builder, numElems):
+    return CZMStartPACKETSVector(builder, numElems)
+
+def CZMCreatePACKETSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreatePACKETSVector(builder, data):
+    CZMCreatePACKETSVector(builder, data)
+
+def CZMEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return CZMEnd(builder)
+
+import CZMPacket
+try:
+    from typing import List
+except:
+    pass
+
+class CZMT(object):
+
+    # CZMT
+    def __init__(
+        self,
+        NAME = None,
+        VERSION = None,
+        CLOCK_CURRENT_TIME = None,
+        CLOCK_INTERVAL = None,
+        CLOCK_MULTIPLIER = 0.0,
+        CLOCK_RANGE = None,
+        CLOCK_STEP = None,
+        PACKETS = None,
+    ):
+        self.NAME = NAME  # type: Optional[str]
+        self.VERSION = VERSION  # type: Optional[str]
+        self.CLOCK_CURRENT_TIME = CLOCK_CURRENT_TIME  # type: Optional[str]
+        self.CLOCK_INTERVAL = CLOCK_INTERVAL  # type: Optional[str]
+        self.CLOCK_MULTIPLIER = CLOCK_MULTIPLIER  # type: float
+        self.CLOCK_RANGE = CLOCK_RANGE  # type: Optional[str]
+        self.CLOCK_STEP = CLOCK_STEP  # type: Optional[str]
+        self.PACKETS = PACKETS  # type: Optional[List[CZMPacket.CZMPacketT]]
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpCzm = CZM()
+        tmpCzm.Init(buf, pos)
+        return cls.InitFromObj(tmpCzm)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpCzm):
+        x = CZMT()
+        x._UnPack(tmpCzm)
+        return x
+
+    # CZMT
+    def _UnPack(self, CZM):
+        if CZM is None:
+            return
+        self.NAME = CZM.NAME()
+        self.VERSION = CZM.VERSION()
+        self.CLOCK_CURRENT_TIME = CZM.CLOCK_CURRENT_TIME()
+        self.CLOCK_INTERVAL = CZM.CLOCK_INTERVAL()
+        self.CLOCK_MULTIPLIER = CZM.CLOCK_MULTIPLIER()
+        self.CLOCK_RANGE = CZM.CLOCK_RANGE()
+        self.CLOCK_STEP = CZM.CLOCK_STEP()
+        if not CZM.PACKETSIsNone():
+            self.PACKETS = []
+            for i in range(CZM.PACKETSLength()):
+                if CZM.PACKETS(i) is None:
+                    self.PACKETS.append(None)
+                else:
+                    cZMPacket_ = CZMPacket.CZMPacketT.InitFromObj(CZM.PACKETS(i))
+                    self.PACKETS.append(cZMPacket_)
+
+    # CZMT
+    def Pack(self, builder):
+        if self.NAME is not None:
+            NAME = builder.CreateString(self.NAME)
+        if self.VERSION is not None:
+            VERSION = builder.CreateString(self.VERSION)
+        if self.CLOCK_CURRENT_TIME is not None:
+            CLOCK_CURRENT_TIME = builder.CreateString(self.CLOCK_CURRENT_TIME)
+        if self.CLOCK_INTERVAL is not None:
+            CLOCK_INTERVAL = builder.CreateString(self.CLOCK_INTERVAL)
+        if self.CLOCK_RANGE is not None:
+            CLOCK_RANGE = builder.CreateString(self.CLOCK_RANGE)
+        if self.CLOCK_STEP is not None:
+            CLOCK_STEP = builder.CreateString(self.CLOCK_STEP)
+        if self.PACKETS is not None:
+            PACKETSlist = []
+            for i in range(len(self.PACKETS)):
+                PACKETSlist.append(self.PACKETS[i].Pack(builder))
+            CZMStartPACKETSVector(builder, len(self.PACKETS))
+            for i in reversed(range(len(self.PACKETS))):
+                builder.PrependUOffsetTRelative(PACKETSlist[i])
+            PACKETS = builder.EndVector()
+        CZMStart(builder)
+        if self.NAME is not None:
+            CZMAddNAME(builder, NAME)
+        if self.VERSION is not None:
+            CZMAddVERSION(builder, VERSION)
+        if self.CLOCK_CURRENT_TIME is not None:
+            CZMAddCLOCK_CURRENT_TIME(builder, CLOCK_CURRENT_TIME)
+        if self.CLOCK_INTERVAL is not None:
+            CZMAddCLOCK_INTERVAL(builder, CLOCK_INTERVAL)
+        CZMAddCLOCK_MULTIPLIER(builder, self.CLOCK_MULTIPLIER)
+        if self.CLOCK_RANGE is not None:
+            CZMAddCLOCK_RANGE(builder, CLOCK_RANGE)
+        if self.CLOCK_STEP is not None:
+            CZMAddCLOCK_STEP(builder, CLOCK_STEP)
+        if self.PACKETS is not None:
+            CZMAddPACKETS(builder, PACKETS)
+        CZM = CZMEnd(builder)
+        return CZM

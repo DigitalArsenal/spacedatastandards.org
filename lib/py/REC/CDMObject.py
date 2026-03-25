@@ -2,4 +2,856 @@
 
 # namespace: 
 
-# NOTE CDMObject.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+class CDMObject(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = CDMObject()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsCDMObject(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def CDMObjectBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x43\x44\x4D", size_prefixed=size_prefixed)
+
+    # CDMObject
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # A comment
+    # CDMObject
+    def COMMENT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # CDMObject
+    def OBJECT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from CAT import CAT
+            obj = CAT()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Point of Contact
+    # CDMObject
+    def POC(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from EPM import EPM
+            obj = EPM()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Operator contact position
+    # CDMObject
+    def OPERATOR_CONTACT_POSITION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Operator organization
+    # CDMObject
+    def OPERATOR_ORGANIZATION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Ephemeris name
+    # CDMObject
+    def EPHEMERIS_NAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Covariance method
+    # CDMObject
+    def COVARIANCE_METHOD(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # Reference Frame in which the object position is defined
+    # CDMObject
+    def REFERENCE_FRAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from RFM import RFM
+            obj = RFM()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Gravity model
+    # CDMObject
+    def GRAVITY_MODEL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Atmospheric model
+    # CDMObject
+    def ATMOSPHERIC_MODEL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # N-body perturbations
+    # CDMObject
+    def N_BODY_PERTURBATIONS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Solar radiation pressure
+    # CDMObject
+    def SOLAR_RAD_PRESSURE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # Earth tides
+    # CDMObject
+    def EARTH_TIDES(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # Intrack thrust
+    # CDMObject
+    def INTRACK_THRUST(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # Time of last observation start
+    # CDMObject
+    def TIME_LASTOB_START(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Time of last observation end
+    # CDMObject
+    def TIME_LASTOB_END(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Recommended observation data span
+    # CDMObject
+    def RECOMMENDED_OD_SPAN(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Actual observation data span
+    # CDMObject
+    def ACTUAL_OD_SPAN(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Number of observations available
+    # CDMObject
+    def OBS_AVAILABLE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+        return 0
+
+    # Number of observations used
+    # CDMObject
+    def OBS_USED(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+        return 0
+
+    # Number of tracks available
+    # CDMObject
+    def TRACKS_AVAILABLE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+        return 0
+
+    # Number of tracks used
+    # CDMObject
+    def TRACKS_USED(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+        return 0
+
+    # Residuals accepted
+    # CDMObject
+    def RESIDUALS_ACCEPTED(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Weighted root mean square
+    # CDMObject
+    def WEIGHTED_RMS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Area of the object
+    # CDMObject
+    def AREA_PC(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(52))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Area of the object drag
+    # CDMObject
+    def AREA_DRG(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(54))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Area of the object solar radiation pressure
+    # CDMObject
+    def AREA_SRP(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(56))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Object's area-to-mass ratio
+    # CDMObject
+    def CR_AREA_OVER_MASS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Object's thrust acceleration
+    # CDMObject
+    def THRUST_ACCELERATION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Object's solar flux
+    # CDMObject
+    def SEDR(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(62))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # X-coordinate of the object's position in RTN coordinates
+    # CDMObject
+    def X(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(64))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Y-coordinate of the object's position in RTN
+    # CDMObject
+    def Y(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(66))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Z-coordinate of the object's position in RTN
+    # CDMObject
+    def Z(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(68))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # X-coordinate of the object's position in RTN coordinates
+    # CDMObject
+    def X_DOT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(70))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Y-coordinate of the object's position in RTN
+    # CDMObject
+    def Y_DOT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(72))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Z-coordinate of the object's position in RTN
+    # CDMObject
+    def Z_DOT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(74))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Covariance matrix as flat array (9x9 lower triangular = 45 elements).
+    # Order: [CR_R, CT_R, CT_T, CN_R, CN_T, CN_N, CRDOT_R, CRDOT_T, CRDOT_N, CRDOT_RDOT,
+    #         CTDOT_R, CTDOT_T, CTDOT_N, CTDOT_RDOT, CTDOT_TDOT,
+    #         CNDOT_R, CNDOT_T, CNDOT_N, CNDOT_RDOT, CNDOT_TDOT, CNDOT_NDOT,
+    #         CDRG_R, CDRG_T, CDRG_N, CDRG_RDOT, CDRG_TDOT, CDRG_NDOT, CDRG_DRG,
+    #         CSRP_R, CSRP_T, CSRP_N, CSRP_RDOT, CSRP_TDOT, CSRP_NDOT, CSRP_DRG, CSRP_SRP,
+    #         CTHR_R, CTHR_T, CTHR_N, CTHR_RDOT, CTHR_TDOT, CTHR_NDOT, CTHR_DRG, CTHR_SRP, CTHR_THR]
+    # CDMObject
+    def COVARIANCE(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(76))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # CDMObject
+    def COVARIANCEAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(76))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
+
+    # CDMObject
+    def COVARIANCELength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(76))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # CDMObject
+    def COVARIANCEIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(76))
+        return o == 0
+
+def CDMObjectStart(builder):
+    builder.StartObject(37)
+
+def Start(builder):
+    CDMObjectStart(builder)
+
+def CDMObjectAddCOMMENT(builder, COMMENT):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(COMMENT), 0)
+
+def AddCOMMENT(builder, COMMENT):
+    CDMObjectAddCOMMENT(builder, COMMENT)
+
+def CDMObjectAddOBJECT(builder, OBJECT):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(OBJECT), 0)
+
+def AddOBJECT(builder, OBJECT):
+    CDMObjectAddOBJECT(builder, OBJECT)
+
+def CDMObjectAddPOC(builder, POC):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(POC), 0)
+
+def AddPOC(builder, POC):
+    CDMObjectAddPOC(builder, POC)
+
+def CDMObjectAddOPERATOR_CONTACT_POSITION(builder, OPERATOR_CONTACT_POSITION):
+    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(OPERATOR_CONTACT_POSITION), 0)
+
+def AddOPERATOR_CONTACT_POSITION(builder, OPERATOR_CONTACT_POSITION):
+    CDMObjectAddOPERATOR_CONTACT_POSITION(builder, OPERATOR_CONTACT_POSITION)
+
+def CDMObjectAddOPERATOR_ORGANIZATION(builder, OPERATOR_ORGANIZATION):
+    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(OPERATOR_ORGANIZATION), 0)
+
+def AddOPERATOR_ORGANIZATION(builder, OPERATOR_ORGANIZATION):
+    CDMObjectAddOPERATOR_ORGANIZATION(builder, OPERATOR_ORGANIZATION)
+
+def CDMObjectAddEPHEMERIS_NAME(builder, EPHEMERIS_NAME):
+    builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(EPHEMERIS_NAME), 0)
+
+def AddEPHEMERIS_NAME(builder, EPHEMERIS_NAME):
+    CDMObjectAddEPHEMERIS_NAME(builder, EPHEMERIS_NAME)
+
+def CDMObjectAddCOVARIANCE_METHOD(builder, COVARIANCE_METHOD):
+    builder.PrependInt8Slot(6, COVARIANCE_METHOD, 0)
+
+def AddCOVARIANCE_METHOD(builder, COVARIANCE_METHOD):
+    CDMObjectAddCOVARIANCE_METHOD(builder, COVARIANCE_METHOD)
+
+def CDMObjectAddREFERENCE_FRAME(builder, REFERENCE_FRAME):
+    builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(REFERENCE_FRAME), 0)
+
+def AddREFERENCE_FRAME(builder, REFERENCE_FRAME):
+    CDMObjectAddREFERENCE_FRAME(builder, REFERENCE_FRAME)
+
+def CDMObjectAddGRAVITY_MODEL(builder, GRAVITY_MODEL):
+    builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(GRAVITY_MODEL), 0)
+
+def AddGRAVITY_MODEL(builder, GRAVITY_MODEL):
+    CDMObjectAddGRAVITY_MODEL(builder, GRAVITY_MODEL)
+
+def CDMObjectAddATMOSPHERIC_MODEL(builder, ATMOSPHERIC_MODEL):
+    builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(ATMOSPHERIC_MODEL), 0)
+
+def AddATMOSPHERIC_MODEL(builder, ATMOSPHERIC_MODEL):
+    CDMObjectAddATMOSPHERIC_MODEL(builder, ATMOSPHERIC_MODEL)
+
+def CDMObjectAddN_BODY_PERTURBATIONS(builder, N_BODY_PERTURBATIONS):
+    builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(N_BODY_PERTURBATIONS), 0)
+
+def AddN_BODY_PERTURBATIONS(builder, N_BODY_PERTURBATIONS):
+    CDMObjectAddN_BODY_PERTURBATIONS(builder, N_BODY_PERTURBATIONS)
+
+def CDMObjectAddSOLAR_RAD_PRESSURE(builder, SOLAR_RAD_PRESSURE):
+    builder.PrependBoolSlot(11, SOLAR_RAD_PRESSURE, 0)
+
+def AddSOLAR_RAD_PRESSURE(builder, SOLAR_RAD_PRESSURE):
+    CDMObjectAddSOLAR_RAD_PRESSURE(builder, SOLAR_RAD_PRESSURE)
+
+def CDMObjectAddEARTH_TIDES(builder, EARTH_TIDES):
+    builder.PrependBoolSlot(12, EARTH_TIDES, 0)
+
+def AddEARTH_TIDES(builder, EARTH_TIDES):
+    CDMObjectAddEARTH_TIDES(builder, EARTH_TIDES)
+
+def CDMObjectAddINTRACK_THRUST(builder, INTRACK_THRUST):
+    builder.PrependBoolSlot(13, INTRACK_THRUST, 0)
+
+def AddINTRACK_THRUST(builder, INTRACK_THRUST):
+    CDMObjectAddINTRACK_THRUST(builder, INTRACK_THRUST)
+
+def CDMObjectAddTIME_LASTOB_START(builder, TIME_LASTOB_START):
+    builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(TIME_LASTOB_START), 0)
+
+def AddTIME_LASTOB_START(builder, TIME_LASTOB_START):
+    CDMObjectAddTIME_LASTOB_START(builder, TIME_LASTOB_START)
+
+def CDMObjectAddTIME_LASTOB_END(builder, TIME_LASTOB_END):
+    builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(TIME_LASTOB_END), 0)
+
+def AddTIME_LASTOB_END(builder, TIME_LASTOB_END):
+    CDMObjectAddTIME_LASTOB_END(builder, TIME_LASTOB_END)
+
+def CDMObjectAddRECOMMENDED_OD_SPAN(builder, RECOMMENDED_OD_SPAN):
+    builder.PrependFloat64Slot(16, RECOMMENDED_OD_SPAN, 0.0)
+
+def AddRECOMMENDED_OD_SPAN(builder, RECOMMENDED_OD_SPAN):
+    CDMObjectAddRECOMMENDED_OD_SPAN(builder, RECOMMENDED_OD_SPAN)
+
+def CDMObjectAddACTUAL_OD_SPAN(builder, ACTUAL_OD_SPAN):
+    builder.PrependFloat64Slot(17, ACTUAL_OD_SPAN, 0.0)
+
+def AddACTUAL_OD_SPAN(builder, ACTUAL_OD_SPAN):
+    CDMObjectAddACTUAL_OD_SPAN(builder, ACTUAL_OD_SPAN)
+
+def CDMObjectAddOBS_AVAILABLE(builder, OBS_AVAILABLE):
+    builder.PrependUint32Slot(18, OBS_AVAILABLE, 0)
+
+def AddOBS_AVAILABLE(builder, OBS_AVAILABLE):
+    CDMObjectAddOBS_AVAILABLE(builder, OBS_AVAILABLE)
+
+def CDMObjectAddOBS_USED(builder, OBS_USED):
+    builder.PrependUint32Slot(19, OBS_USED, 0)
+
+def AddOBS_USED(builder, OBS_USED):
+    CDMObjectAddOBS_USED(builder, OBS_USED)
+
+def CDMObjectAddTRACKS_AVAILABLE(builder, TRACKS_AVAILABLE):
+    builder.PrependUint32Slot(20, TRACKS_AVAILABLE, 0)
+
+def AddTRACKS_AVAILABLE(builder, TRACKS_AVAILABLE):
+    CDMObjectAddTRACKS_AVAILABLE(builder, TRACKS_AVAILABLE)
+
+def CDMObjectAddTRACKS_USED(builder, TRACKS_USED):
+    builder.PrependUint32Slot(21, TRACKS_USED, 0)
+
+def AddTRACKS_USED(builder, TRACKS_USED):
+    CDMObjectAddTRACKS_USED(builder, TRACKS_USED)
+
+def CDMObjectAddRESIDUALS_ACCEPTED(builder, RESIDUALS_ACCEPTED):
+    builder.PrependFloat64Slot(22, RESIDUALS_ACCEPTED, 0.0)
+
+def AddRESIDUALS_ACCEPTED(builder, RESIDUALS_ACCEPTED):
+    CDMObjectAddRESIDUALS_ACCEPTED(builder, RESIDUALS_ACCEPTED)
+
+def CDMObjectAddWEIGHTED_RMS(builder, WEIGHTED_RMS):
+    builder.PrependFloat64Slot(23, WEIGHTED_RMS, 0.0)
+
+def AddWEIGHTED_RMS(builder, WEIGHTED_RMS):
+    CDMObjectAddWEIGHTED_RMS(builder, WEIGHTED_RMS)
+
+def CDMObjectAddAREA_PC(builder, AREA_PC):
+    builder.PrependFloat64Slot(24, AREA_PC, 0.0)
+
+def AddAREA_PC(builder, AREA_PC):
+    CDMObjectAddAREA_PC(builder, AREA_PC)
+
+def CDMObjectAddAREA_DRG(builder, AREA_DRG):
+    builder.PrependFloat64Slot(25, AREA_DRG, 0.0)
+
+def AddAREA_DRG(builder, AREA_DRG):
+    CDMObjectAddAREA_DRG(builder, AREA_DRG)
+
+def CDMObjectAddAREA_SRP(builder, AREA_SRP):
+    builder.PrependFloat64Slot(26, AREA_SRP, 0.0)
+
+def AddAREA_SRP(builder, AREA_SRP):
+    CDMObjectAddAREA_SRP(builder, AREA_SRP)
+
+def CDMObjectAddCR_AREA_OVER_MASS(builder, CR_AREA_OVER_MASS):
+    builder.PrependFloat64Slot(27, CR_AREA_OVER_MASS, 0.0)
+
+def AddCR_AREA_OVER_MASS(builder, CR_AREA_OVER_MASS):
+    CDMObjectAddCR_AREA_OVER_MASS(builder, CR_AREA_OVER_MASS)
+
+def CDMObjectAddTHRUST_ACCELERATION(builder, THRUST_ACCELERATION):
+    builder.PrependFloat64Slot(28, THRUST_ACCELERATION, 0.0)
+
+def AddTHRUST_ACCELERATION(builder, THRUST_ACCELERATION):
+    CDMObjectAddTHRUST_ACCELERATION(builder, THRUST_ACCELERATION)
+
+def CDMObjectAddSEDR(builder, SEDR):
+    builder.PrependFloat64Slot(29, SEDR, 0.0)
+
+def AddSEDR(builder, SEDR):
+    CDMObjectAddSEDR(builder, SEDR)
+
+def CDMObjectAddX(builder, X):
+    builder.PrependFloat64Slot(30, X, 0.0)
+
+def AddX(builder, X):
+    CDMObjectAddX(builder, X)
+
+def CDMObjectAddY(builder, Y):
+    builder.PrependFloat64Slot(31, Y, 0.0)
+
+def AddY(builder, Y):
+    CDMObjectAddY(builder, Y)
+
+def CDMObjectAddZ(builder, Z):
+    builder.PrependFloat64Slot(32, Z, 0.0)
+
+def AddZ(builder, Z):
+    CDMObjectAddZ(builder, Z)
+
+def CDMObjectAddX_DOT(builder, X_DOT):
+    builder.PrependFloat64Slot(33, X_DOT, 0.0)
+
+def AddX_DOT(builder, X_DOT):
+    CDMObjectAddX_DOT(builder, X_DOT)
+
+def CDMObjectAddY_DOT(builder, Y_DOT):
+    builder.PrependFloat64Slot(34, Y_DOT, 0.0)
+
+def AddY_DOT(builder, Y_DOT):
+    CDMObjectAddY_DOT(builder, Y_DOT)
+
+def CDMObjectAddZ_DOT(builder, Z_DOT):
+    builder.PrependFloat64Slot(35, Z_DOT, 0.0)
+
+def AddZ_DOT(builder, Z_DOT):
+    CDMObjectAddZ_DOT(builder, Z_DOT)
+
+def CDMObjectAddCOVARIANCE(builder, COVARIANCE):
+    builder.PrependUOffsetTRelativeSlot(36, flatbuffers.number_types.UOffsetTFlags.py_type(COVARIANCE), 0)
+
+def AddCOVARIANCE(builder, COVARIANCE):
+    CDMObjectAddCOVARIANCE(builder, COVARIANCE)
+
+def CDMObjectStartCOVARIANCEVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
+def StartCOVARIANCEVector(builder, numElems):
+    return CDMObjectStartCOVARIANCEVector(builder, numElems)
+
+def CDMObjectCreateCOVARIANCEVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateCOVARIANCEVector(builder, data):
+    CDMObjectCreateCOVARIANCEVector(builder, data)
+
+def CDMObjectEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return CDMObjectEnd(builder)
+
+import CAT
+import EPM
+import RFM
+try:
+    from typing import List, Optional
+except:
+    pass
+
+class CDMObjectT(object):
+
+    # CDMObjectT
+    def __init__(
+        self,
+        COMMENT = None,
+        OBJECT = None,
+        POC = None,
+        OPERATOR_CONTACT_POSITION = None,
+        OPERATOR_ORGANIZATION = None,
+        EPHEMERIS_NAME = None,
+        COVARIANCE_METHOD = 0,
+        REFERENCE_FRAME = None,
+        GRAVITY_MODEL = None,
+        ATMOSPHERIC_MODEL = None,
+        N_BODY_PERTURBATIONS = None,
+        SOLAR_RAD_PRESSURE = False,
+        EARTH_TIDES = False,
+        INTRACK_THRUST = False,
+        TIME_LASTOB_START = None,
+        TIME_LASTOB_END = None,
+        RECOMMENDED_OD_SPAN = 0.0,
+        ACTUAL_OD_SPAN = 0.0,
+        OBS_AVAILABLE = 0,
+        OBS_USED = 0,
+        TRACKS_AVAILABLE = 0,
+        TRACKS_USED = 0,
+        RESIDUALS_ACCEPTED = 0.0,
+        WEIGHTED_RMS = 0.0,
+        AREA_PC = 0.0,
+        AREA_DRG = 0.0,
+        AREA_SRP = 0.0,
+        CR_AREA_OVER_MASS = 0.0,
+        THRUST_ACCELERATION = 0.0,
+        SEDR = 0.0,
+        X = 0.0,
+        Y = 0.0,
+        Z = 0.0,
+        X_DOT = 0.0,
+        Y_DOT = 0.0,
+        Z_DOT = 0.0,
+        COVARIANCE = None,
+    ):
+        self.COMMENT = COMMENT  # type: Optional[str]
+        self.OBJECT = OBJECT  # type: Optional[CAT.CATT]
+        self.POC = POC  # type: Optional[EPM.EPMT]
+        self.OPERATOR_CONTACT_POSITION = OPERATOR_CONTACT_POSITION  # type: Optional[str]
+        self.OPERATOR_ORGANIZATION = OPERATOR_ORGANIZATION  # type: Optional[str]
+        self.EPHEMERIS_NAME = EPHEMERIS_NAME  # type: Optional[str]
+        self.COVARIANCE_METHOD = COVARIANCE_METHOD  # type: int
+        self.REFERENCE_FRAME = REFERENCE_FRAME  # type: Optional[RFM.RFMT]
+        self.GRAVITY_MODEL = GRAVITY_MODEL  # type: Optional[str]
+        self.ATMOSPHERIC_MODEL = ATMOSPHERIC_MODEL  # type: Optional[str]
+        self.N_BODY_PERTURBATIONS = N_BODY_PERTURBATIONS  # type: Optional[str]
+        self.SOLAR_RAD_PRESSURE = SOLAR_RAD_PRESSURE  # type: bool
+        self.EARTH_TIDES = EARTH_TIDES  # type: bool
+        self.INTRACK_THRUST = INTRACK_THRUST  # type: bool
+        self.TIME_LASTOB_START = TIME_LASTOB_START  # type: Optional[str]
+        self.TIME_LASTOB_END = TIME_LASTOB_END  # type: Optional[str]
+        self.RECOMMENDED_OD_SPAN = RECOMMENDED_OD_SPAN  # type: float
+        self.ACTUAL_OD_SPAN = ACTUAL_OD_SPAN  # type: float
+        self.OBS_AVAILABLE = OBS_AVAILABLE  # type: int
+        self.OBS_USED = OBS_USED  # type: int
+        self.TRACKS_AVAILABLE = TRACKS_AVAILABLE  # type: int
+        self.TRACKS_USED = TRACKS_USED  # type: int
+        self.RESIDUALS_ACCEPTED = RESIDUALS_ACCEPTED  # type: float
+        self.WEIGHTED_RMS = WEIGHTED_RMS  # type: float
+        self.AREA_PC = AREA_PC  # type: float
+        self.AREA_DRG = AREA_DRG  # type: float
+        self.AREA_SRP = AREA_SRP  # type: float
+        self.CR_AREA_OVER_MASS = CR_AREA_OVER_MASS  # type: float
+        self.THRUST_ACCELERATION = THRUST_ACCELERATION  # type: float
+        self.SEDR = SEDR  # type: float
+        self.X = X  # type: float
+        self.Y = Y  # type: float
+        self.Z = Z  # type: float
+        self.X_DOT = X_DOT  # type: float
+        self.Y_DOT = Y_DOT  # type: float
+        self.Z_DOT = Z_DOT  # type: float
+        self.COVARIANCE = COVARIANCE  # type: Optional[List[float]]
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpCdmobject = CDMObject()
+        tmpCdmobject.Init(buf, pos)
+        return cls.InitFromObj(tmpCdmobject)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpCdmobject):
+        x = CDMObjectT()
+        x._UnPack(tmpCdmobject)
+        return x
+
+    # CDMObjectT
+    def _UnPack(self, CDMObject):
+        if CDMObject is None:
+            return
+        self.COMMENT = CDMObject.COMMENT()
+        if CDMObject.OBJECT() is not None:
+            self.OBJECT = CAT.CATT.InitFromObj(CDMObject.OBJECT())
+        if CDMObject.POC() is not None:
+            self.POC = EPM.EPMT.InitFromObj(CDMObject.POC())
+        self.OPERATOR_CONTACT_POSITION = CDMObject.OPERATOR_CONTACT_POSITION()
+        self.OPERATOR_ORGANIZATION = CDMObject.OPERATOR_ORGANIZATION()
+        self.EPHEMERIS_NAME = CDMObject.EPHEMERIS_NAME()
+        self.COVARIANCE_METHOD = CDMObject.COVARIANCE_METHOD()
+        if CDMObject.REFERENCE_FRAME() is not None:
+            self.REFERENCE_FRAME = RFM.RFMT.InitFromObj(CDMObject.REFERENCE_FRAME())
+        self.GRAVITY_MODEL = CDMObject.GRAVITY_MODEL()
+        self.ATMOSPHERIC_MODEL = CDMObject.ATMOSPHERIC_MODEL()
+        self.N_BODY_PERTURBATIONS = CDMObject.N_BODY_PERTURBATIONS()
+        self.SOLAR_RAD_PRESSURE = CDMObject.SOLAR_RAD_PRESSURE()
+        self.EARTH_TIDES = CDMObject.EARTH_TIDES()
+        self.INTRACK_THRUST = CDMObject.INTRACK_THRUST()
+        self.TIME_LASTOB_START = CDMObject.TIME_LASTOB_START()
+        self.TIME_LASTOB_END = CDMObject.TIME_LASTOB_END()
+        self.RECOMMENDED_OD_SPAN = CDMObject.RECOMMENDED_OD_SPAN()
+        self.ACTUAL_OD_SPAN = CDMObject.ACTUAL_OD_SPAN()
+        self.OBS_AVAILABLE = CDMObject.OBS_AVAILABLE()
+        self.OBS_USED = CDMObject.OBS_USED()
+        self.TRACKS_AVAILABLE = CDMObject.TRACKS_AVAILABLE()
+        self.TRACKS_USED = CDMObject.TRACKS_USED()
+        self.RESIDUALS_ACCEPTED = CDMObject.RESIDUALS_ACCEPTED()
+        self.WEIGHTED_RMS = CDMObject.WEIGHTED_RMS()
+        self.AREA_PC = CDMObject.AREA_PC()
+        self.AREA_DRG = CDMObject.AREA_DRG()
+        self.AREA_SRP = CDMObject.AREA_SRP()
+        self.CR_AREA_OVER_MASS = CDMObject.CR_AREA_OVER_MASS()
+        self.THRUST_ACCELERATION = CDMObject.THRUST_ACCELERATION()
+        self.SEDR = CDMObject.SEDR()
+        self.X = CDMObject.X()
+        self.Y = CDMObject.Y()
+        self.Z = CDMObject.Z()
+        self.X_DOT = CDMObject.X_DOT()
+        self.Y_DOT = CDMObject.Y_DOT()
+        self.Z_DOT = CDMObject.Z_DOT()
+        if not CDMObject.COVARIANCEIsNone():
+            if np is None:
+                self.COVARIANCE = []
+                for i in range(CDMObject.COVARIANCELength()):
+                    self.COVARIANCE.append(CDMObject.COVARIANCE(i))
+            else:
+                self.COVARIANCE = CDMObject.COVARIANCEAsNumpy()
+
+    # CDMObjectT
+    def Pack(self, builder):
+        if self.COMMENT is not None:
+            COMMENT = builder.CreateString(self.COMMENT)
+        if self.OBJECT is not None:
+            OBJECT = self.OBJECT.Pack(builder)
+        if self.POC is not None:
+            POC = self.POC.Pack(builder)
+        if self.OPERATOR_CONTACT_POSITION is not None:
+            OPERATOR_CONTACT_POSITION = builder.CreateString(self.OPERATOR_CONTACT_POSITION)
+        if self.OPERATOR_ORGANIZATION is not None:
+            OPERATOR_ORGANIZATION = builder.CreateString(self.OPERATOR_ORGANIZATION)
+        if self.EPHEMERIS_NAME is not None:
+            EPHEMERIS_NAME = builder.CreateString(self.EPHEMERIS_NAME)
+        if self.REFERENCE_FRAME is not None:
+            REFERENCE_FRAME = self.REFERENCE_FRAME.Pack(builder)
+        if self.GRAVITY_MODEL is not None:
+            GRAVITY_MODEL = builder.CreateString(self.GRAVITY_MODEL)
+        if self.ATMOSPHERIC_MODEL is not None:
+            ATMOSPHERIC_MODEL = builder.CreateString(self.ATMOSPHERIC_MODEL)
+        if self.N_BODY_PERTURBATIONS is not None:
+            N_BODY_PERTURBATIONS = builder.CreateString(self.N_BODY_PERTURBATIONS)
+        if self.TIME_LASTOB_START is not None:
+            TIME_LASTOB_START = builder.CreateString(self.TIME_LASTOB_START)
+        if self.TIME_LASTOB_END is not None:
+            TIME_LASTOB_END = builder.CreateString(self.TIME_LASTOB_END)
+        if self.COVARIANCE is not None:
+            if np is not None and type(self.COVARIANCE) is np.ndarray:
+                COVARIANCE = builder.CreateNumpyVector(self.COVARIANCE)
+            else:
+                CDMObjectStartCOVARIANCEVector(builder, len(self.COVARIANCE))
+                for i in reversed(range(len(self.COVARIANCE))):
+                    builder.PrependFloat64(self.COVARIANCE[i])
+                COVARIANCE = builder.EndVector()
+        CDMObjectStart(builder)
+        if self.COMMENT is not None:
+            CDMObjectAddCOMMENT(builder, COMMENT)
+        if self.OBJECT is not None:
+            CDMObjectAddOBJECT(builder, OBJECT)
+        if self.POC is not None:
+            CDMObjectAddPOC(builder, POC)
+        if self.OPERATOR_CONTACT_POSITION is not None:
+            CDMObjectAddOPERATOR_CONTACT_POSITION(builder, OPERATOR_CONTACT_POSITION)
+        if self.OPERATOR_ORGANIZATION is not None:
+            CDMObjectAddOPERATOR_ORGANIZATION(builder, OPERATOR_ORGANIZATION)
+        if self.EPHEMERIS_NAME is not None:
+            CDMObjectAddEPHEMERIS_NAME(builder, EPHEMERIS_NAME)
+        CDMObjectAddCOVARIANCE_METHOD(builder, self.COVARIANCE_METHOD)
+        if self.REFERENCE_FRAME is not None:
+            CDMObjectAddREFERENCE_FRAME(builder, REFERENCE_FRAME)
+        if self.GRAVITY_MODEL is not None:
+            CDMObjectAddGRAVITY_MODEL(builder, GRAVITY_MODEL)
+        if self.ATMOSPHERIC_MODEL is not None:
+            CDMObjectAddATMOSPHERIC_MODEL(builder, ATMOSPHERIC_MODEL)
+        if self.N_BODY_PERTURBATIONS is not None:
+            CDMObjectAddN_BODY_PERTURBATIONS(builder, N_BODY_PERTURBATIONS)
+        CDMObjectAddSOLAR_RAD_PRESSURE(builder, self.SOLAR_RAD_PRESSURE)
+        CDMObjectAddEARTH_TIDES(builder, self.EARTH_TIDES)
+        CDMObjectAddINTRACK_THRUST(builder, self.INTRACK_THRUST)
+        if self.TIME_LASTOB_START is not None:
+            CDMObjectAddTIME_LASTOB_START(builder, TIME_LASTOB_START)
+        if self.TIME_LASTOB_END is not None:
+            CDMObjectAddTIME_LASTOB_END(builder, TIME_LASTOB_END)
+        CDMObjectAddRECOMMENDED_OD_SPAN(builder, self.RECOMMENDED_OD_SPAN)
+        CDMObjectAddACTUAL_OD_SPAN(builder, self.ACTUAL_OD_SPAN)
+        CDMObjectAddOBS_AVAILABLE(builder, self.OBS_AVAILABLE)
+        CDMObjectAddOBS_USED(builder, self.OBS_USED)
+        CDMObjectAddTRACKS_AVAILABLE(builder, self.TRACKS_AVAILABLE)
+        CDMObjectAddTRACKS_USED(builder, self.TRACKS_USED)
+        CDMObjectAddRESIDUALS_ACCEPTED(builder, self.RESIDUALS_ACCEPTED)
+        CDMObjectAddWEIGHTED_RMS(builder, self.WEIGHTED_RMS)
+        CDMObjectAddAREA_PC(builder, self.AREA_PC)
+        CDMObjectAddAREA_DRG(builder, self.AREA_DRG)
+        CDMObjectAddAREA_SRP(builder, self.AREA_SRP)
+        CDMObjectAddCR_AREA_OVER_MASS(builder, self.CR_AREA_OVER_MASS)
+        CDMObjectAddTHRUST_ACCELERATION(builder, self.THRUST_ACCELERATION)
+        CDMObjectAddSEDR(builder, self.SEDR)
+        CDMObjectAddX(builder, self.X)
+        CDMObjectAddY(builder, self.Y)
+        CDMObjectAddZ(builder, self.Z)
+        CDMObjectAddX_DOT(builder, self.X_DOT)
+        CDMObjectAddY_DOT(builder, self.Y_DOT)
+        CDMObjectAddZ_DOT(builder, self.Z_DOT)
+        if self.COVARIANCE is not None:
+            CDMObjectAddCOVARIANCE(builder, COVARIANCE)
+        CDMObject = CDMObjectEnd(builder)
+        return CDMObject

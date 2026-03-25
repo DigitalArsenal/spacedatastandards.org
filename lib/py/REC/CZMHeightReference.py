@@ -2,4 +2,7 @@
 
 # namespace: 
 
-# NOTE CZMHeightReference.py does not declare any structs or enums
+class CZMHeightReference(object):
+    NONE = 0
+    CLAMP_TO_GROUND = 1
+    RELATIVE_TO_GROUND = 2

@@ -2,4 +2,12 @@
 
 # namespace: 
 
-# NOTE SensorMode.py does not declare any structs or enums
+class SensorMode(object):
+    OFF = 0
+    STANDBY = 1
+    SEARCH = 2
+    ACQUISITION = 3
+    TRACK = 4
+    TRACK_WHILE_SCAN = 5
+    DESIGNATE = 6
+    JAMMED = 7

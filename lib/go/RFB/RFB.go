@@ -63,6 +63,10 @@ func (rcv *RFB) ID() []byte {
 	return nil
 }
 
+func (rcv *RFB) Id() []byte {
+	return rcv.ID()
+}
+
 /// Unique identifier
 /// Parent entity identifier
 func (rcv *RFB) ID_ENTITY() []byte {
@@ -71,6 +75,10 @@ func (rcv *RFB) ID_ENTITY() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *RFB) IdEntity() []byte {
+	return rcv.ID_ENTITY()
 }
 
 /// Parent entity identifier
@@ -83,6 +91,10 @@ func (rcv *RFB) NAME() []byte {
 	return nil
 }
 
+func (rcv *RFB) Name() []byte {
+	return rcv.NAME()
+}
+
 /// Band name or designation
 /// RF band designation
 func (rcv *RFB) BAND() rfBandDesignation {
@@ -93,9 +105,17 @@ func (rcv *RFB) BAND() rfBandDesignation {
 	return 0
 }
 
+func (rcv *RFB) Band() rfBandDesignation {
+	return rcv.BAND()
+}
+
 /// RF band designation
 func (rcv *RFB) MutateBAND(n rfBandDesignation) bool {
 	return rcv._tab.MutateInt8Slot(10, int8(n))
+}
+
+func (rcv *RFB) MutateBand(n rfBandDesignation) bool {
+	return rcv.MutateBAND(n)
 }
 
 /// Operating mode
@@ -105,6 +125,10 @@ func (rcv *RFB) MODE() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *RFB) Mode() []byte {
+	return rcv.MODE()
 }
 
 /// Operating mode
@@ -117,6 +141,10 @@ func (rcv *RFB) PURPOSE() []byte {
 	return nil
 }
 
+func (rcv *RFB) Purpose() []byte {
+	return rcv.PURPOSE()
+}
+
 /// Band purpose (e.g., TT&C, PAYLOAD, BEACON)
 /// Minimum frequency (MHz)
 func (rcv *RFB) FREQ_MIN() float64 {
@@ -127,9 +155,17 @@ func (rcv *RFB) FREQ_MIN() float64 {
 	return 0.0
 }
 
+func (rcv *RFB) FreqMin() float64 {
+	return rcv.FREQ_MIN()
+}
+
 /// Minimum frequency (MHz)
 func (rcv *RFB) MutateFREQ_MIN(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(16, n)
+}
+
+func (rcv *RFB) MutateFreqMin(n float64) bool {
+	return rcv.MutateFREQ_MIN(n)
 }
 
 /// Maximum frequency (MHz)
@@ -141,9 +177,17 @@ func (rcv *RFB) FREQ_MAX() float64 {
 	return 0.0
 }
 
+func (rcv *RFB) FreqMax() float64 {
+	return rcv.FREQ_MAX()
+}
+
 /// Maximum frequency (MHz)
 func (rcv *RFB) MutateFREQ_MAX(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(18, n)
+}
+
+func (rcv *RFB) MutateFreqMax(n float64) bool {
+	return rcv.MutateFREQ_MAX(n)
 }
 
 /// Center frequency (MHz)
@@ -155,9 +199,17 @@ func (rcv *RFB) CENTER_FREQ() float64 {
 	return 0.0
 }
 
+func (rcv *RFB) CenterFreq() float64 {
+	return rcv.CENTER_FREQ()
+}
+
 /// Center frequency (MHz)
 func (rcv *RFB) MutateCENTER_FREQ(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(20, n)
+}
+
+func (rcv *RFB) MutateCenterFreq(n float64) bool {
+	return rcv.MutateCENTER_FREQ(n)
 }
 
 /// Bandwidth (MHz)
@@ -169,9 +221,17 @@ func (rcv *RFB) BANDWIDTH() float64 {
 	return 0.0
 }
 
+func (rcv *RFB) Bandwidth() float64 {
+	return rcv.BANDWIDTH()
+}
+
 /// Bandwidth (MHz)
 func (rcv *RFB) MutateBANDWIDTH(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(22, n)
+}
+
+func (rcv *RFB) MutateBandwidth(n float64) bool {
+	return rcv.MutateBANDWIDTH(n)
 }
 
 /// Peak antenna gain (dBi)
@@ -183,9 +243,17 @@ func (rcv *RFB) PEAK_GAIN() float64 {
 	return 0.0
 }
 
+func (rcv *RFB) PeakGain() float64 {
+	return rcv.PEAK_GAIN()
+}
+
 /// Peak antenna gain (dBi)
 func (rcv *RFB) MutatePEAK_GAIN(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(24, n)
+}
+
+func (rcv *RFB) MutatePeakGain(n float64) bool {
+	return rcv.MutatePEAK_GAIN(n)
 }
 
 /// Edge-of-coverage gain (dBi)
@@ -197,9 +265,17 @@ func (rcv *RFB) EDGE_GAIN() float64 {
 	return 0.0
 }
 
+func (rcv *RFB) EdgeGain() float64 {
+	return rcv.EDGE_GAIN()
+}
+
 /// Edge-of-coverage gain (dBi)
 func (rcv *RFB) MutateEDGE_GAIN(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(26, n)
+}
+
+func (rcv *RFB) MutateEdgeGain(n float64) bool {
+	return rcv.MutateEDGE_GAIN(n)
 }
 
 /// Antenna beamwidth (degrees)
@@ -211,9 +287,17 @@ func (rcv *RFB) BEAMWIDTH() float64 {
 	return 0.0
 }
 
+func (rcv *RFB) Beamwidth() float64 {
+	return rcv.BEAMWIDTH()
+}
+
 /// Antenna beamwidth (degrees)
 func (rcv *RFB) MutateBEAMWIDTH(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(28, n)
+}
+
+func (rcv *RFB) MutateBeamwidth(n float64) bool {
+	return rcv.MutateBEAMWIDTH(n)
 }
 
 /// Polarization
@@ -225,9 +309,17 @@ func (rcv *RFB) POLARIZATION() rfPolarization {
 	return 0
 }
 
+func (rcv *RFB) Polarization() rfPolarization {
+	return rcv.POLARIZATION()
+}
+
 /// Polarization
 func (rcv *RFB) MutatePOLARIZATION(n rfPolarization) bool {
 	return rcv._tab.MutateInt8Slot(30, int8(n))
+}
+
+func (rcv *RFB) MutatePolarization(n rfPolarization) bool {
+	return rcv.MutatePOLARIZATION(n)
 }
 
 /// Effective radiated power (dBW)
@@ -239,9 +331,17 @@ func (rcv *RFB) ERP() float64 {
 	return 0.0
 }
 
+func (rcv *RFB) Erp() float64 {
+	return rcv.ERP()
+}
+
 /// Effective radiated power (dBW)
 func (rcv *RFB) MutateERP(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(32, n)
+}
+
+func (rcv *RFB) MutateErp(n float64) bool {
+	return rcv.MutateERP(n)
 }
 
 /// Effective isotropic radiated power (dBW)
@@ -253,9 +353,17 @@ func (rcv *RFB) EIRP() float64 {
 	return 0.0
 }
 
+func (rcv *RFB) Eirp() float64 {
+	return rcv.EIRP()
+}
+
 /// Effective isotropic radiated power (dBW)
 func (rcv *RFB) MutateEIRP(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(34, n)
+}
+
+func (rcv *RFB) MutateEirp(n float64) bool {
+	return rcv.MutateEIRP(n)
 }
 
 func RFBStart(builder *flatbuffers.Builder) {
@@ -264,50 +372,98 @@ func RFBStart(builder *flatbuffers.Builder) {
 func RFBAddID(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ID), 0)
 }
+func RFBAddId(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
+	RFBAddID(builder, ID)
+}
 func RFBAddID_ENTITY(builder *flatbuffers.Builder, ID_ENTITY flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(ID_ENTITY), 0)
+}
+func RFBAddIdEntity(builder *flatbuffers.Builder, ID_ENTITY flatbuffers.UOffsetT) {
+	RFBAddID_ENTITY(builder, ID_ENTITY)
 }
 func RFBAddNAME(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(NAME), 0)
 }
+func RFBAddName(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
+	RFBAddNAME(builder, NAME)
+}
 func RFBAddBAND(builder *flatbuffers.Builder, BAND rfBandDesignation) {
 	builder.PrependInt8Slot(3, int8(BAND), 0)
+}
+func RFBAddBand(builder *flatbuffers.Builder, BAND rfBandDesignation) {
+	RFBAddBAND(builder, BAND)
 }
 func RFBAddMODE(builder *flatbuffers.Builder, MODE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(MODE), 0)
 }
+func RFBAddMode(builder *flatbuffers.Builder, MODE flatbuffers.UOffsetT) {
+	RFBAddMODE(builder, MODE)
+}
 func RFBAddPURPOSE(builder *flatbuffers.Builder, PURPOSE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(PURPOSE), 0)
+}
+func RFBAddPurpose(builder *flatbuffers.Builder, PURPOSE flatbuffers.UOffsetT) {
+	RFBAddPURPOSE(builder, PURPOSE)
 }
 func RFBAddFREQ_MIN(builder *flatbuffers.Builder, FREQ_MIN float64) {
 	builder.PrependFloat64Slot(6, FREQ_MIN, 0.0)
 }
+func RFBAddFreqMin(builder *flatbuffers.Builder, FREQ_MIN float64) {
+	RFBAddFREQ_MIN(builder, FREQ_MIN)
+}
 func RFBAddFREQ_MAX(builder *flatbuffers.Builder, FREQ_MAX float64) {
 	builder.PrependFloat64Slot(7, FREQ_MAX, 0.0)
+}
+func RFBAddFreqMax(builder *flatbuffers.Builder, FREQ_MAX float64) {
+	RFBAddFREQ_MAX(builder, FREQ_MAX)
 }
 func RFBAddCENTER_FREQ(builder *flatbuffers.Builder, CENTER_FREQ float64) {
 	builder.PrependFloat64Slot(8, CENTER_FREQ, 0.0)
 }
+func RFBAddCenterFreq(builder *flatbuffers.Builder, CENTER_FREQ float64) {
+	RFBAddCENTER_FREQ(builder, CENTER_FREQ)
+}
 func RFBAddBANDWIDTH(builder *flatbuffers.Builder, BANDWIDTH float64) {
 	builder.PrependFloat64Slot(9, BANDWIDTH, 0.0)
+}
+func RFBAddBandwidth(builder *flatbuffers.Builder, BANDWIDTH float64) {
+	RFBAddBANDWIDTH(builder, BANDWIDTH)
 }
 func RFBAddPEAK_GAIN(builder *flatbuffers.Builder, PEAK_GAIN float64) {
 	builder.PrependFloat64Slot(10, PEAK_GAIN, 0.0)
 }
+func RFBAddPeakGain(builder *flatbuffers.Builder, PEAK_GAIN float64) {
+	RFBAddPEAK_GAIN(builder, PEAK_GAIN)
+}
 func RFBAddEDGE_GAIN(builder *flatbuffers.Builder, EDGE_GAIN float64) {
 	builder.PrependFloat64Slot(11, EDGE_GAIN, 0.0)
+}
+func RFBAddEdgeGain(builder *flatbuffers.Builder, EDGE_GAIN float64) {
+	RFBAddEDGE_GAIN(builder, EDGE_GAIN)
 }
 func RFBAddBEAMWIDTH(builder *flatbuffers.Builder, BEAMWIDTH float64) {
 	builder.PrependFloat64Slot(12, BEAMWIDTH, 0.0)
 }
+func RFBAddBeamwidth(builder *flatbuffers.Builder, BEAMWIDTH float64) {
+	RFBAddBEAMWIDTH(builder, BEAMWIDTH)
+}
 func RFBAddPOLARIZATION(builder *flatbuffers.Builder, POLARIZATION rfPolarization) {
 	builder.PrependInt8Slot(13, int8(POLARIZATION), 0)
+}
+func RFBAddPolarization(builder *flatbuffers.Builder, POLARIZATION rfPolarization) {
+	RFBAddPOLARIZATION(builder, POLARIZATION)
 }
 func RFBAddERP(builder *flatbuffers.Builder, ERP float64) {
 	builder.PrependFloat64Slot(14, ERP, 0.0)
 }
+func RFBAddErp(builder *flatbuffers.Builder, ERP float64) {
+	RFBAddERP(builder, ERP)
+}
 func RFBAddEIRP(builder *flatbuffers.Builder, EIRP float64) {
 	builder.PrependFloat64Slot(15, EIRP, 0.0)
+}
+func RFBAddEirp(builder *flatbuffers.Builder, EIRP float64) {
+	RFBAddEIRP(builder, EIRP)
 }
 func RFBEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

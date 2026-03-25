@@ -2,4 +2,563 @@
 
 # namespace: 
 
-# NOTE CAT.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Catalog Entity Message
+class CAT(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = CAT()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsCAT(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def CATBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x43\x41\x54", size_prefixed=size_prefixed)
+
+    # CAT
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Satellite Name(s)
+    # CAT
+    def OBJECT_NAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # International Designator (YYYY-NNNAAA)
+    # CAT
+    def OBJECT_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # NORAD Catalog Number
+    # CAT
+    def NORAD_CAT_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+        return 0
+
+    # Object type (Payload, Rocket body, Debris, Unknown)
+    # CAT
+    def OBJECT_TYPE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 3
+
+    # Operational Status Code
+    # CAT
+    def OPS_STATUS_CODE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 7
+
+    # Ownership, typically country or company
+    # CAT
+    def OWNER(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # Launch Date [year-month-day] (ISO 8601)
+    # CAT
+    def LAUNCH_DATE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Launch Site
+    # CAT
+    def LAUNCH_SITE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Decay Date, if applicable [year-month-day] (ISO 8601)
+    # CAT
+    def DECAY_DATE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Orbital period [minutes]
+    # CAT
+    def PERIOD(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Inclination [degrees]
+    # CAT
+    def INCLINATION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Apogee Altitude [kilometers]
+    # CAT
+    def APOGEE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Perigee Altitude [kilometers]
+    # CAT
+    def PERIGEE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Radar Cross Section [meters2]; blank if no data available
+    # CAT
+    def RCS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Data status code; blank otherwise
+    # CAT
+    def DATA_STATUS_CODE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # Orbit center
+    # CAT
+    def ORBIT_CENTER(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Orbit type (Orbit, Landing, Impact, Docked to RSO, roundtrip)
+    # CAT
+    def ORBIT_TYPE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # Deployment Date [year-month-day] (ISO 8601)
+    # CAT
+    def DEPLOYMENT_DATE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Indicates if the object is maneuverable
+    # CAT
+    def MANEUVERABLE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # Size [meters]; blank if no data available
+    # CAT
+    def SIZE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Mass [kilograms]; blank if no data available
+    # CAT
+    def MASS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Mass type (Dry, Wet)
+    # CAT
+    def MASS_TYPE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # Vector of PAYLOADS
+    # CAT
+    def PAYLOADS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from PLD import PLD
+            obj = PLD()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # CAT
+    def PAYLOADSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # CAT
+    def PAYLOADSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
+        return o == 0
+
+def CATStart(builder):
+    builder.StartObject(23)
+
+def Start(builder):
+    CATStart(builder)
+
+def CATAddOBJECT_NAME(builder, OBJECT_NAME):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(OBJECT_NAME), 0)
+
+def AddOBJECT_NAME(builder, OBJECT_NAME):
+    CATAddOBJECT_NAME(builder, OBJECT_NAME)
+
+def CATAddOBJECT_ID(builder, OBJECT_ID):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(OBJECT_ID), 0)
+
+def AddOBJECT_ID(builder, OBJECT_ID):
+    CATAddOBJECT_ID(builder, OBJECT_ID)
+
+def CATAddNORAD_CAT_ID(builder, NORAD_CAT_ID):
+    builder.PrependUint32Slot(2, NORAD_CAT_ID, 0)
+
+def AddNORAD_CAT_ID(builder, NORAD_CAT_ID):
+    CATAddNORAD_CAT_ID(builder, NORAD_CAT_ID)
+
+def CATAddOBJECT_TYPE(builder, OBJECT_TYPE):
+    builder.PrependInt8Slot(3, OBJECT_TYPE, 3)
+
+def AddOBJECT_TYPE(builder, OBJECT_TYPE):
+    CATAddOBJECT_TYPE(builder, OBJECT_TYPE)
+
+def CATAddOPS_STATUS_CODE(builder, OPS_STATUS_CODE):
+    builder.PrependInt8Slot(4, OPS_STATUS_CODE, 7)
+
+def AddOPS_STATUS_CODE(builder, OPS_STATUS_CODE):
+    CATAddOPS_STATUS_CODE(builder, OPS_STATUS_CODE)
+
+def CATAddOWNER(builder, OWNER):
+    builder.PrependInt8Slot(5, OWNER, 0)
+
+def AddOWNER(builder, OWNER):
+    CATAddOWNER(builder, OWNER)
+
+def CATAddLAUNCH_DATE(builder, LAUNCH_DATE):
+    builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(LAUNCH_DATE), 0)
+
+def AddLAUNCH_DATE(builder, LAUNCH_DATE):
+    CATAddLAUNCH_DATE(builder, LAUNCH_DATE)
+
+def CATAddLAUNCH_SITE(builder, LAUNCH_SITE):
+    builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(LAUNCH_SITE), 0)
+
+def AddLAUNCH_SITE(builder, LAUNCH_SITE):
+    CATAddLAUNCH_SITE(builder, LAUNCH_SITE)
+
+def CATAddDECAY_DATE(builder, DECAY_DATE):
+    builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(DECAY_DATE), 0)
+
+def AddDECAY_DATE(builder, DECAY_DATE):
+    CATAddDECAY_DATE(builder, DECAY_DATE)
+
+def CATAddPERIOD(builder, PERIOD):
+    builder.PrependFloat64Slot(9, PERIOD, 0.0)
+
+def AddPERIOD(builder, PERIOD):
+    CATAddPERIOD(builder, PERIOD)
+
+def CATAddINCLINATION(builder, INCLINATION):
+    builder.PrependFloat64Slot(10, INCLINATION, 0.0)
+
+def AddINCLINATION(builder, INCLINATION):
+    CATAddINCLINATION(builder, INCLINATION)
+
+def CATAddAPOGEE(builder, APOGEE):
+    builder.PrependFloat64Slot(11, APOGEE, 0.0)
+
+def AddAPOGEE(builder, APOGEE):
+    CATAddAPOGEE(builder, APOGEE)
+
+def CATAddPERIGEE(builder, PERIGEE):
+    builder.PrependFloat64Slot(12, PERIGEE, 0.0)
+
+def AddPERIGEE(builder, PERIGEE):
+    CATAddPERIGEE(builder, PERIGEE)
+
+def CATAddRCS(builder, RCS):
+    builder.PrependFloat64Slot(13, RCS, 0.0)
+
+def AddRCS(builder, RCS):
+    CATAddRCS(builder, RCS)
+
+def CATAddDATA_STATUS_CODE(builder, DATA_STATUS_CODE):
+    builder.PrependInt8Slot(14, DATA_STATUS_CODE, 0)
+
+def AddDATA_STATUS_CODE(builder, DATA_STATUS_CODE):
+    CATAddDATA_STATUS_CODE(builder, DATA_STATUS_CODE)
+
+def CATAddORBIT_CENTER(builder, ORBIT_CENTER):
+    builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(ORBIT_CENTER), 0)
+
+def AddORBIT_CENTER(builder, ORBIT_CENTER):
+    CATAddORBIT_CENTER(builder, ORBIT_CENTER)
+
+def CATAddORBIT_TYPE(builder, ORBIT_TYPE):
+    builder.PrependInt8Slot(16, ORBIT_TYPE, 0)
+
+def AddORBIT_TYPE(builder, ORBIT_TYPE):
+    CATAddORBIT_TYPE(builder, ORBIT_TYPE)
+
+def CATAddDEPLOYMENT_DATE(builder, DEPLOYMENT_DATE):
+    builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(DEPLOYMENT_DATE), 0)
+
+def AddDEPLOYMENT_DATE(builder, DEPLOYMENT_DATE):
+    CATAddDEPLOYMENT_DATE(builder, DEPLOYMENT_DATE)
+
+def CATAddMANEUVERABLE(builder, MANEUVERABLE):
+    builder.PrependBoolSlot(18, MANEUVERABLE, 0)
+
+def AddMANEUVERABLE(builder, MANEUVERABLE):
+    CATAddMANEUVERABLE(builder, MANEUVERABLE)
+
+def CATAddSIZE(builder, SIZE):
+    builder.PrependFloat64Slot(19, SIZE, 0.0)
+
+def AddSIZE(builder, SIZE):
+    CATAddSIZE(builder, SIZE)
+
+def CATAddMASS(builder, MASS):
+    builder.PrependFloat64Slot(20, MASS, 0.0)
+
+def AddMASS(builder, MASS):
+    CATAddMASS(builder, MASS)
+
+def CATAddMASS_TYPE(builder, MASS_TYPE):
+    builder.PrependInt8Slot(21, MASS_TYPE, 0)
+
+def AddMASS_TYPE(builder, MASS_TYPE):
+    CATAddMASS_TYPE(builder, MASS_TYPE)
+
+def CATAddPAYLOADS(builder, PAYLOADS):
+    builder.PrependUOffsetTRelativeSlot(22, flatbuffers.number_types.UOffsetTFlags.py_type(PAYLOADS), 0)
+
+def AddPAYLOADS(builder, PAYLOADS):
+    CATAddPAYLOADS(builder, PAYLOADS)
+
+def CATStartPAYLOADSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartPAYLOADSVector(builder, numElems):
+    return CATStartPAYLOADSVector(builder, numElems)
+
+def CATCreatePAYLOADSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreatePAYLOADSVector(builder, data):
+    CATCreatePAYLOADSVector(builder, data)
+
+def CATEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return CATEnd(builder)
+
+import PLD
+try:
+    from typing import List
+except:
+    pass
+
+class CATT(object):
+
+    # CATT
+    def __init__(
+        self,
+        OBJECT_NAME = None,
+        OBJECT_ID = None,
+        NORAD_CAT_ID = 0,
+        OBJECT_TYPE = 3,
+        OPS_STATUS_CODE = 7,
+        OWNER = 0,
+        LAUNCH_DATE = None,
+        LAUNCH_SITE = None,
+        DECAY_DATE = None,
+        PERIOD = 0.0,
+        INCLINATION = 0.0,
+        APOGEE = 0.0,
+        PERIGEE = 0.0,
+        RCS = 0.0,
+        DATA_STATUS_CODE = 0,
+        ORBIT_CENTER = None,
+        ORBIT_TYPE = 0,
+        DEPLOYMENT_DATE = None,
+        MANEUVERABLE = False,
+        SIZE = 0.0,
+        MASS = 0.0,
+        MASS_TYPE = 0,
+        PAYLOADS = None,
+    ):
+        self.OBJECT_NAME = OBJECT_NAME  # type: Optional[str]
+        self.OBJECT_ID = OBJECT_ID  # type: Optional[str]
+        self.NORAD_CAT_ID = NORAD_CAT_ID  # type: int
+        self.OBJECT_TYPE = OBJECT_TYPE  # type: int
+        self.OPS_STATUS_CODE = OPS_STATUS_CODE  # type: int
+        self.OWNER = OWNER  # type: int
+        self.LAUNCH_DATE = LAUNCH_DATE  # type: Optional[str]
+        self.LAUNCH_SITE = LAUNCH_SITE  # type: Optional[str]
+        self.DECAY_DATE = DECAY_DATE  # type: Optional[str]
+        self.PERIOD = PERIOD  # type: float
+        self.INCLINATION = INCLINATION  # type: float
+        self.APOGEE = APOGEE  # type: float
+        self.PERIGEE = PERIGEE  # type: float
+        self.RCS = RCS  # type: float
+        self.DATA_STATUS_CODE = DATA_STATUS_CODE  # type: int
+        self.ORBIT_CENTER = ORBIT_CENTER  # type: Optional[str]
+        self.ORBIT_TYPE = ORBIT_TYPE  # type: int
+        self.DEPLOYMENT_DATE = DEPLOYMENT_DATE  # type: Optional[str]
+        self.MANEUVERABLE = MANEUVERABLE  # type: bool
+        self.SIZE = SIZE  # type: float
+        self.MASS = MASS  # type: float
+        self.MASS_TYPE = MASS_TYPE  # type: int
+        self.PAYLOADS = PAYLOADS  # type: Optional[List[PLD.PLDT]]
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpCat = CAT()
+        tmpCat.Init(buf, pos)
+        return cls.InitFromObj(tmpCat)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpCat):
+        x = CATT()
+        x._UnPack(tmpCat)
+        return x
+
+    # CATT
+    def _UnPack(self, CAT):
+        if CAT is None:
+            return
+        self.OBJECT_NAME = CAT.OBJECT_NAME()
+        self.OBJECT_ID = CAT.OBJECT_ID()
+        self.NORAD_CAT_ID = CAT.NORAD_CAT_ID()
+        self.OBJECT_TYPE = CAT.OBJECT_TYPE()
+        self.OPS_STATUS_CODE = CAT.OPS_STATUS_CODE()
+        self.OWNER = CAT.OWNER()
+        self.LAUNCH_DATE = CAT.LAUNCH_DATE()
+        self.LAUNCH_SITE = CAT.LAUNCH_SITE()
+        self.DECAY_DATE = CAT.DECAY_DATE()
+        self.PERIOD = CAT.PERIOD()
+        self.INCLINATION = CAT.INCLINATION()
+        self.APOGEE = CAT.APOGEE()
+        self.PERIGEE = CAT.PERIGEE()
+        self.RCS = CAT.RCS()
+        self.DATA_STATUS_CODE = CAT.DATA_STATUS_CODE()
+        self.ORBIT_CENTER = CAT.ORBIT_CENTER()
+        self.ORBIT_TYPE = CAT.ORBIT_TYPE()
+        self.DEPLOYMENT_DATE = CAT.DEPLOYMENT_DATE()
+        self.MANEUVERABLE = CAT.MANEUVERABLE()
+        self.SIZE = CAT.SIZE()
+        self.MASS = CAT.MASS()
+        self.MASS_TYPE = CAT.MASS_TYPE()
+        if not CAT.PAYLOADSIsNone():
+            self.PAYLOADS = []
+            for i in range(CAT.PAYLOADSLength()):
+                if CAT.PAYLOADS(i) is None:
+                    self.PAYLOADS.append(None)
+                else:
+                    pLD_ = PLD.PLDT.InitFromObj(CAT.PAYLOADS(i))
+                    self.PAYLOADS.append(pLD_)
+
+    # CATT
+    def Pack(self, builder):
+        if self.OBJECT_NAME is not None:
+            OBJECT_NAME = builder.CreateString(self.OBJECT_NAME)
+        if self.OBJECT_ID is not None:
+            OBJECT_ID = builder.CreateString(self.OBJECT_ID)
+        if self.LAUNCH_DATE is not None:
+            LAUNCH_DATE = builder.CreateString(self.LAUNCH_DATE)
+        if self.LAUNCH_SITE is not None:
+            LAUNCH_SITE = builder.CreateString(self.LAUNCH_SITE)
+        if self.DECAY_DATE is not None:
+            DECAY_DATE = builder.CreateString(self.DECAY_DATE)
+        if self.ORBIT_CENTER is not None:
+            ORBIT_CENTER = builder.CreateString(self.ORBIT_CENTER)
+        if self.DEPLOYMENT_DATE is not None:
+            DEPLOYMENT_DATE = builder.CreateString(self.DEPLOYMENT_DATE)
+        if self.PAYLOADS is not None:
+            PAYLOADSlist = []
+            for i in range(len(self.PAYLOADS)):
+                PAYLOADSlist.append(self.PAYLOADS[i].Pack(builder))
+            CATStartPAYLOADSVector(builder, len(self.PAYLOADS))
+            for i in reversed(range(len(self.PAYLOADS))):
+                builder.PrependUOffsetTRelative(PAYLOADSlist[i])
+            PAYLOADS = builder.EndVector()
+        CATStart(builder)
+        if self.OBJECT_NAME is not None:
+            CATAddOBJECT_NAME(builder, OBJECT_NAME)
+        if self.OBJECT_ID is not None:
+            CATAddOBJECT_ID(builder, OBJECT_ID)
+        CATAddNORAD_CAT_ID(builder, self.NORAD_CAT_ID)
+        CATAddOBJECT_TYPE(builder, self.OBJECT_TYPE)
+        CATAddOPS_STATUS_CODE(builder, self.OPS_STATUS_CODE)
+        CATAddOWNER(builder, self.OWNER)
+        if self.LAUNCH_DATE is not None:
+            CATAddLAUNCH_DATE(builder, LAUNCH_DATE)
+        if self.LAUNCH_SITE is not None:
+            CATAddLAUNCH_SITE(builder, LAUNCH_SITE)
+        if self.DECAY_DATE is not None:
+            CATAddDECAY_DATE(builder, DECAY_DATE)
+        CATAddPERIOD(builder, self.PERIOD)
+        CATAddINCLINATION(builder, self.INCLINATION)
+        CATAddAPOGEE(builder, self.APOGEE)
+        CATAddPERIGEE(builder, self.PERIGEE)
+        CATAddRCS(builder, self.RCS)
+        CATAddDATA_STATUS_CODE(builder, self.DATA_STATUS_CODE)
+        if self.ORBIT_CENTER is not None:
+            CATAddORBIT_CENTER(builder, ORBIT_CENTER)
+        CATAddORBIT_TYPE(builder, self.ORBIT_TYPE)
+        if self.DEPLOYMENT_DATE is not None:
+            CATAddDEPLOYMENT_DATE(builder, DEPLOYMENT_DATE)
+        CATAddMANEUVERABLE(builder, self.MANEUVERABLE)
+        CATAddSIZE(builder, self.SIZE)
+        CATAddMASS(builder, self.MASS)
+        CATAddMASS_TYPE(builder, self.MASS_TYPE)
+        if self.PAYLOADS is not None:
+            CATAddPAYLOADS(builder, PAYLOADS)
+        CAT = CATEnd(builder)
+        return CAT

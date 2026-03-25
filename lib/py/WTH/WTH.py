@@ -634,6 +634,16 @@ def WTHStartSIG_PWRSVector(builder, numElems):
 def StartSIG_PWRSVector(builder, numElems):
     return WTHStartSIG_PWRSVector(builder, numElems)
 
+def WTHCreateSIG_PWRSVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateSIG_PWRSVector(builder, data):
+    WTHCreateSIG_PWRSVector(builder, data)
+
 def WTHAddNOISE_LVLS(builder, NOISE_LVLS):
     builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(NOISE_LVLS), 0)
 
@@ -645,6 +655,16 @@ def WTHStartNOISE_LVLSVector(builder, numElems):
 
 def StartNOISE_LVLSVector(builder, numElems):
     return WTHStartNOISE_LVLSVector(builder, numElems)
+
+def WTHCreateNOISE_LVLSVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateNOISE_LVLSVector(builder, data):
+    WTHCreateNOISE_LVLSVector(builder, data)
 
 def WTHAddSPEC_WIDTHS(builder, SPEC_WIDTHS):
     builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(SPEC_WIDTHS), 0)
@@ -658,6 +678,16 @@ def WTHStartSPEC_WIDTHSVector(builder, numElems):
 def StartSPEC_WIDTHSVector(builder, numElems):
     return WTHStartSPEC_WIDTHSVector(builder, numElems)
 
+def WTHCreateSPEC_WIDTHSVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateSPEC_WIDTHSVector(builder, data):
+    WTHCreateSPEC_WIDTHSVector(builder, data)
+
 def WTHAddFIRST_GUESS_AVGS(builder, FIRST_GUESS_AVGS):
     builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(FIRST_GUESS_AVGS), 0)
 
@@ -669,6 +699,16 @@ def WTHStartFIRST_GUESS_AVGSVector(builder, numElems):
 
 def StartFIRST_GUESS_AVGSVector(builder, numElems):
     return WTHStartFIRST_GUESS_AVGSVector(builder, numElems)
+
+def WTHCreateFIRST_GUESS_AVGSVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateFIRST_GUESS_AVGSVector(builder, data):
+    WTHCreateFIRST_GUESS_AVGSVector(builder, data)
 
 def WTHAddTD_AVG_SAMPLE_NUMS(builder, TD_AVG_SAMPLE_NUMS):
     builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(TD_AVG_SAMPLE_NUMS), 0)
@@ -682,6 +722,16 @@ def WTHStartTD_AVG_SAMPLE_NUMSVector(builder, numElems):
 def StartTD_AVG_SAMPLE_NUMSVector(builder, numElems):
     return WTHStartTD_AVG_SAMPLE_NUMSVector(builder, numElems)
 
+def WTHCreateTD_AVG_SAMPLE_NUMSVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateTD_AVG_SAMPLE_NUMSVector(builder, data):
+    WTHCreateTD_AVG_SAMPLE_NUMSVector(builder, data)
+
 def WTHAddCO_INTEGS(builder, CO_INTEGS):
     builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(CO_INTEGS), 0)
 
@@ -693,6 +743,16 @@ def WTHStartCO_INTEGSVector(builder, numElems):
 
 def StartCO_INTEGSVector(builder, numElems):
     return WTHStartCO_INTEGSVector(builder, numElems)
+
+def WTHCreateCO_INTEGSVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateCO_INTEGSVector(builder, data):
+    WTHCreateCO_INTEGSVector(builder, data)
 
 def WTHAddSPEC_AVGS(builder, SPEC_AVGS):
     builder.PrependUOffsetTRelativeSlot(18, flatbuffers.number_types.UOffsetTFlags.py_type(SPEC_AVGS), 0)
@@ -706,6 +766,16 @@ def WTHStartSPEC_AVGSVector(builder, numElems):
 def StartSPEC_AVGSVector(builder, numElems):
     return WTHStartSPEC_AVGSVector(builder, numElems)
 
+def WTHCreateSPEC_AVGSVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateSPEC_AVGSVector(builder, data):
+    WTHCreateSPEC_AVGSVector(builder, data)
+
 def WTHAddINTERPULSE_PERIODS(builder, INTERPULSE_PERIODS):
     builder.PrependUOffsetTRelativeSlot(19, flatbuffers.number_types.UOffsetTFlags.py_type(INTERPULSE_PERIODS), 0)
 
@@ -717,6 +787,16 @@ def WTHStartINTERPULSE_PERIODSVector(builder, numElems):
 
 def StartINTERPULSE_PERIODSVector(builder, numElems):
     return WTHStartINTERPULSE_PERIODSVector(builder, numElems)
+
+def WTHCreateINTERPULSE_PERIODSVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateINTERPULSE_PERIODSVector(builder, data):
+    WTHCreateINTERPULSE_PERIODSVector(builder, data)
 
 def WTHAddDOPP_VELS(builder, DOPP_VELS):
     builder.PrependUOffsetTRelativeSlot(20, flatbuffers.number_types.UOffsetTFlags.py_type(DOPP_VELS), 0)
@@ -730,6 +810,16 @@ def WTHStartDOPP_VELSVector(builder, numElems):
 def StartDOPP_VELSVector(builder, numElems):
     return WTHStartDOPP_VELSVector(builder, numElems)
 
+def WTHCreateDOPP_VELSVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateDOPP_VELSVector(builder, data):
+    WTHCreateDOPP_VELSVector(builder, data)
+
 def WTHAddCONS_RECS(builder, CONS_RECS):
     builder.PrependUOffsetTRelativeSlot(21, flatbuffers.number_types.UOffsetTFlags.py_type(CONS_RECS), 0)
 
@@ -742,6 +832,16 @@ def WTHStartCONS_RECSVector(builder, numElems):
 def StartCONS_RECSVector(builder, numElems):
     return WTHStartCONS_RECSVector(builder, numElems)
 
+def WTHCreateCONS_RECSVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateCONS_RECSVector(builder, data):
+    WTHCreateCONS_RECSVector(builder, data)
+
 def WTHAddSNRS(builder, SNRS):
     builder.PrependUOffsetTRelativeSlot(22, flatbuffers.number_types.UOffsetTFlags.py_type(SNRS), 0)
 
@@ -753,6 +853,16 @@ def WTHStartSNRSVector(builder, numElems):
 
 def StartSNRSVector(builder, numElems):
     return WTHStartSNRSVector(builder, numElems)
+
+def WTHCreateSNRSVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateSNRSVector(builder, data):
+    WTHCreateSNRSVector(builder, data)
 
 def WTHAddSIG_STRENGTH(builder, SIG_STRENGTH):
     builder.PrependFloat64Slot(23, SIG_STRENGTH, 0.0)
@@ -796,6 +906,12 @@ def WTHStartLIGHT_DET_SENSORSVector(builder, numElems):
 def StartLIGHT_DET_SENSORSVector(builder, numElems):
     return WTHStartLIGHT_DET_SENSORSVector(builder, numElems)
 
+def WTHCreateLIGHT_DET_SENSORSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateLIGHT_DET_SENSORSVector(builder, data):
+    WTHCreateLIGHT_DET_SENSORSVector(builder, data)
+
 def WTHAddPOS_CONFIDENCE(builder, POS_CONFIDENCE):
     builder.PrependFloat64Slot(29, POS_CONFIDENCE, 0.0)
 
@@ -814,6 +930,12 @@ def WTHStartSRC_TYPSVector(builder, numElems):
 def StartSRC_TYPSVector(builder, numElems):
     return WTHStartSRC_TYPSVector(builder, numElems)
 
+def WTHCreateSRC_TYPSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateSRC_TYPSVector(builder, data):
+    WTHCreateSRC_TYPSVector(builder, data)
+
 def WTHAddSRC_IDS(builder, SRC_IDS):
     builder.PrependUOffsetTRelativeSlot(31, flatbuffers.number_types.UOffsetTFlags.py_type(SRC_IDS), 0)
 
@@ -825,6 +947,12 @@ def WTHStartSRC_IDSVector(builder, numElems):
 
 def StartSRC_IDSVector(builder, numElems):
     return WTHStartSRC_IDSVector(builder, numElems)
+
+def WTHCreateSRC_IDSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateSRC_IDSVector(builder, data):
+    WTHCreateSRC_IDSVector(builder, data)
 
 def WTHEnd(builder):
     return builder.EndObject()
@@ -840,45 +968,79 @@ except:
 class WTHT(object):
 
     # WTHT
-    def __init__(self):
-        self.ID = None  # type: str
-        self.ID_SENSOR = None  # type: str
-        self.ORIG_SENSOR_ID = None  # type: str
-        self.OB_TIME = None  # type: str
-        self.FILE_CREATION = None  # type: str
-        self.QC_VALUE = 0  # type: int
-        self.TERM_ALT = 0.0  # type: float
-        self.AVG_TX_PWR = 0.0  # type: float
-        self.AVG_REF_PWR = 0.0  # type: float
-        self.SECTOR_NUM = 0  # type: int
-        self.NUM_ELEMENTS = 0  # type: int
-        self.CHECKSUM = 0  # type: int
-        self.SIG_PWRS = None  # type: List[float]
-        self.NOISE_LVLS = None  # type: List[float]
-        self.SPEC_WIDTHS = None  # type: List[float]
-        self.FIRST_GUESS_AVGS = None  # type: List[float]
-        self.TD_AVG_SAMPLE_NUMS = None  # type: List[float]
-        self.CO_INTEGS = None  # type: List[float]
-        self.SPEC_AVGS = None  # type: List[float]
-        self.INTERPULSE_PERIODS = None  # type: List[float]
-        self.DOPP_VELS = None  # type: List[float]
-        self.CONS_RECS = None  # type: List[float]
-        self.SNRS = None  # type: List[float]
-        self.SIG_STRENGTH = 0.0  # type: float
-        self.SEMI_MAJOR_AXIS = 0.0  # type: float
-        self.SEMI_MINOR_AXIS = 0.0  # type: float
-        self.ANGLE_ORIENTATION = 0.0  # type: float
-        self.LIGHT_EVENT_NUM = 0  # type: int
-        self.LIGHT_DET_SENSORS = None  # type: List[str]
-        self.POS_CONFIDENCE = 0.0  # type: float
-        self.SRC_TYPS = None  # type: List[str]
-        self.SRC_IDS = None  # type: List[str]
+    def __init__(
+        self,
+        ID = None,
+        ID_SENSOR = None,
+        ORIG_SENSOR_ID = None,
+        OB_TIME = None,
+        FILE_CREATION = None,
+        QC_VALUE = 0,
+        TERM_ALT = 0.0,
+        AVG_TX_PWR = 0.0,
+        AVG_REF_PWR = 0.0,
+        SECTOR_NUM = 0,
+        NUM_ELEMENTS = 0,
+        CHECKSUM = 0,
+        SIG_PWRS = None,
+        NOISE_LVLS = None,
+        SPEC_WIDTHS = None,
+        FIRST_GUESS_AVGS = None,
+        TD_AVG_SAMPLE_NUMS = None,
+        CO_INTEGS = None,
+        SPEC_AVGS = None,
+        INTERPULSE_PERIODS = None,
+        DOPP_VELS = None,
+        CONS_RECS = None,
+        SNRS = None,
+        SIG_STRENGTH = 0.0,
+        SEMI_MAJOR_AXIS = 0.0,
+        SEMI_MINOR_AXIS = 0.0,
+        ANGLE_ORIENTATION = 0.0,
+        LIGHT_EVENT_NUM = 0,
+        LIGHT_DET_SENSORS = None,
+        POS_CONFIDENCE = 0.0,
+        SRC_TYPS = None,
+        SRC_IDS = None,
+    ):
+        self.ID = ID  # type: Optional[str]
+        self.ID_SENSOR = ID_SENSOR  # type: Optional[str]
+        self.ORIG_SENSOR_ID = ORIG_SENSOR_ID  # type: Optional[str]
+        self.OB_TIME = OB_TIME  # type: Optional[str]
+        self.FILE_CREATION = FILE_CREATION  # type: Optional[str]
+        self.QC_VALUE = QC_VALUE  # type: int
+        self.TERM_ALT = TERM_ALT  # type: float
+        self.AVG_TX_PWR = AVG_TX_PWR  # type: float
+        self.AVG_REF_PWR = AVG_REF_PWR  # type: float
+        self.SECTOR_NUM = SECTOR_NUM  # type: int
+        self.NUM_ELEMENTS = NUM_ELEMENTS  # type: int
+        self.CHECKSUM = CHECKSUM  # type: int
+        self.SIG_PWRS = SIG_PWRS  # type: Optional[List[float]]
+        self.NOISE_LVLS = NOISE_LVLS  # type: Optional[List[float]]
+        self.SPEC_WIDTHS = SPEC_WIDTHS  # type: Optional[List[float]]
+        self.FIRST_GUESS_AVGS = FIRST_GUESS_AVGS  # type: Optional[List[float]]
+        self.TD_AVG_SAMPLE_NUMS = TD_AVG_SAMPLE_NUMS  # type: Optional[List[float]]
+        self.CO_INTEGS = CO_INTEGS  # type: Optional[List[float]]
+        self.SPEC_AVGS = SPEC_AVGS  # type: Optional[List[float]]
+        self.INTERPULSE_PERIODS = INTERPULSE_PERIODS  # type: Optional[List[float]]
+        self.DOPP_VELS = DOPP_VELS  # type: Optional[List[float]]
+        self.CONS_RECS = CONS_RECS  # type: Optional[List[float]]
+        self.SNRS = SNRS  # type: Optional[List[float]]
+        self.SIG_STRENGTH = SIG_STRENGTH  # type: float
+        self.SEMI_MAJOR_AXIS = SEMI_MAJOR_AXIS  # type: float
+        self.SEMI_MINOR_AXIS = SEMI_MINOR_AXIS  # type: float
+        self.ANGLE_ORIENTATION = ANGLE_ORIENTATION  # type: float
+        self.LIGHT_EVENT_NUM = LIGHT_EVENT_NUM  # type: int
+        self.LIGHT_DET_SENSORS = LIGHT_DET_SENSORS  # type: Optional[List[Optional[str]]]
+        self.POS_CONFIDENCE = POS_CONFIDENCE  # type: float
+        self.SRC_TYPS = SRC_TYPS  # type: Optional[List[Optional[str]]]
+        self.SRC_IDS = SRC_IDS  # type: Optional[List[Optional[str]]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        WTH = WTH()
-        WTH.Init(buf, pos)
-        return cls.InitFromObj(WTH)
+        tmpWth = WTH()
+        tmpWth.Init(buf, pos)
+        return cls.InitFromObj(tmpWth)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -886,9 +1048,9 @@ class WTHT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, WTH):
+    def InitFromObj(cls, tmpWth):
         x = WTHT()
-        x._UnPack(WTH)
+        x._UnPack(tmpWth)
         return x
 
     # WTHT

@@ -2,4 +2,14 @@
 
 # namespace: 
 
-# NOTE ReferenceFrame.py does not declare any structs or enums
+class ReferenceFrame(object):
+    ECI_J2000 = 0
+    ECEF = 1
+    TEME = 2
+    GCRF = 3
+    ITRF = 4
+    RIC = 5
+    VNC = 6
+    NTW = 7
+    SEZ = 8
+    LVLH = 9

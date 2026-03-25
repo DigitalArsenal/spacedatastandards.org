@@ -32,7 +32,7 @@ class KMLSimpleData : Table() {
     /**
      * Field name
      */
-    val NAME : String?
+    val name : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class KMLSimpleData : Table() {
                 null
             }
         }
-    val NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val nameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun nameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Field value
      */
-    val VALUE : String?
+    val value : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -55,24 +55,24 @@ class KMLSimpleData : Table() {
                 null
             }
         }
-    val VALUEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun VALUEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val valueAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun valueInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsKMLSimpleData(_bb: ByteBuffer): KMLSimpleData = getRootAsKMLSimpleData(_bb, KMLSimpleData())
         fun getRootAsKMLSimpleData(_bb: ByteBuffer, obj: KMLSimpleData): KMLSimpleData {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createKMLSimpleData(builder: FlatBufferBuilder, NAMEOffset: Int, VALUEOffset: Int) : Int {
+        fun createKMLSimpleData(builder: FlatBufferBuilder, nameOffset: Int, valueOffset: Int) : Int {
             builder.startTable(2)
-            addVALUE(builder, VALUEOffset)
-            addNAME(builder, NAMEOffset)
+            addVALUE(builder, valueOffset)
+            addNAME(builder, nameOffset)
             return endKMLSimpleData(builder)
         }
         fun startKMLSimpleData(builder: FlatBufferBuilder) = builder.startTable(2)
-        fun addNAME(builder: FlatBufferBuilder, NAME: Int) = builder.addOffset(0, NAME, 0)
-        fun addVALUE(builder: FlatBufferBuilder, VALUE: Int) = builder.addOffset(1, VALUE, 0)
+        fun addNAME(builder: FlatBufferBuilder, name: Int) = builder.addOffset(0, name, 0)
+        fun addVALUE(builder: FlatBufferBuilder, value: Int) = builder.addOffset(1, value, 0)
         fun endKMLSimpleData(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

@@ -42,21 +42,21 @@ class PPEOrbitalElementRecord : Table() {
     /**
      * Midpoint epoch of this record's validity window (ISO 8601 UTC or TDB).
      */
-    val EPOCH_MID : String
+    val epochMid : String
         get() {
             val o = __offset(4)
             return if (o != 0) {
                 __string(o + bb_pos)
             } else {
-                throw AssertionError("No value for (required) field EPOCH_MID")
+                throw AssertionError("No value for (required) field epochMid")
             }
         }
-    val EPOCH_MIDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun EPOCH_MIDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val epochMidAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
+    fun epochMidInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Half-span of the validity window in seconds.
      */
-    val EPOCH_HALF_SPAN : Double
+    val epochHalfSpan : Double
         get() {
             val o = __offset(6)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -64,7 +64,7 @@ class PPEOrbitalElementRecord : Table() {
     /**
      * Number of polynomial coefficients per element.
      */
-    val NUM_COEFFICIENTS : UShort
+    val numCoefficients : UShort
         get() {
             val o = __offset(8)
             return if(o != 0) bb.getShort(o + bb_pos).toUShort() else 0u
@@ -72,7 +72,7 @@ class PPEOrbitalElementRecord : Table() {
     /**
      * Polynomial basis type for interpreting the coefficient arrays.
      */
-    val BASIS_TYPE : Byte
+    val basisType : Byte
         get() {
             val o = __offset(10)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -80,7 +80,7 @@ class PPEOrbitalElementRecord : Table() {
     /**
      * Parameterization of the first orbital element (SMA vs R_PERIAPSIS).
      */
-    val SIZE_SHAPE_TYPE : Byte
+    val sizeShapeType : Byte
         get() {
             val o = __offset(12)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -88,7 +88,7 @@ class PPEOrbitalElementRecord : Table() {
     /**
      * Anomaly type for the sixth orbital element.
      */
-    val ANOMALY_TYPE : Byte
+    val anomalyType : Byte
         get() {
             val o = __offset(14)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -97,115 +97,115 @@ class PPEOrbitalElementRecord : Table() {
      * Coefficients for SMA or radius of periapsis (km).
      * Length must equal NUM_COEFFICIENTS.
      */
-    fun COEFF_SIZE_SHAPE(j: Int) : Double {
+    fun coeffSizeShape(j: Int) : Double {
         val o = __offset(16)
         return if (o != 0) {
             bb.getDouble(__vector(o) + j * 8)
         } else {
-            throw IndexOutOfBoundsException("Index out of range: $j, vector COEFF_SIZE_SHAPE is empty")
+            throw IndexOutOfBoundsException("Index out of range: $j, vector coeffSizeShape is empty")
         }
     }
-    val COEFF_SIZE_SHAPELength : Int
+    val coeffSizeShapeLength : Int
         get() {
             val o = __offset(16); return if (o != 0) __vector_len(o) else 0
         }
-    val COEFF_SIZE_SHAPEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(16, 8)
-    fun COEFF_SIZE_SHAPEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 16, 8)
+    val coeffSizeShapeAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(16, 8)
+    fun coeffSizeShapeInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 16, 8)
     /**
      * Coefficients for eccentricity (dimensionless).
      * Length must equal NUM_COEFFICIENTS.
      */
-    fun COEFF_ECCENTRICITY(j: Int) : Double {
+    fun coeffEccentricity(j: Int) : Double {
         val o = __offset(18)
         return if (o != 0) {
             bb.getDouble(__vector(o) + j * 8)
         } else {
-            throw IndexOutOfBoundsException("Index out of range: $j, vector COEFF_ECCENTRICITY is empty")
+            throw IndexOutOfBoundsException("Index out of range: $j, vector coeffEccentricity is empty")
         }
     }
-    val COEFF_ECCENTRICITYLength : Int
+    val coeffEccentricityLength : Int
         get() {
             val o = __offset(18); return if (o != 0) __vector_len(o) else 0
         }
-    val COEFF_ECCENTRICITYAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(18, 8)
-    fun COEFF_ECCENTRICITYInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 18, 8)
+    val coeffEccentricityAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(18, 8)
+    fun coeffEccentricityInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 18, 8)
     /**
      * Coefficients for inclination (degrees).
      * Length must equal NUM_COEFFICIENTS.
      */
-    fun COEFF_INCLINATION(j: Int) : Double {
+    fun coeffInclination(j: Int) : Double {
         val o = __offset(20)
         return if (o != 0) {
             bb.getDouble(__vector(o) + j * 8)
         } else {
-            throw IndexOutOfBoundsException("Index out of range: $j, vector COEFF_INCLINATION is empty")
+            throw IndexOutOfBoundsException("Index out of range: $j, vector coeffInclination is empty")
         }
     }
-    val COEFF_INCLINATIONLength : Int
+    val coeffInclinationLength : Int
         get() {
             val o = __offset(20); return if (o != 0) __vector_len(o) else 0
         }
-    val COEFF_INCLINATIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(20, 8)
-    fun COEFF_INCLINATIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 20, 8)
+    val coeffInclinationAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(20, 8)
+    fun coeffInclinationInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 20, 8)
     /**
      * Coefficients for RAAN (degrees).
      * Length must equal NUM_COEFFICIENTS.
      */
-    fun COEFF_RAAN(j: Int) : Double {
+    fun coeffRaan(j: Int) : Double {
         val o = __offset(22)
         return if (o != 0) {
             bb.getDouble(__vector(o) + j * 8)
         } else {
-            throw IndexOutOfBoundsException("Index out of range: $j, vector COEFF_RAAN is empty")
+            throw IndexOutOfBoundsException("Index out of range: $j, vector coeffRaan is empty")
         }
     }
-    val COEFF_RAANLength : Int
+    val coeffRaanLength : Int
         get() {
             val o = __offset(22); return if (o != 0) __vector_len(o) else 0
         }
-    val COEFF_RAANAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(22, 8)
-    fun COEFF_RAANInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 22, 8)
+    val coeffRaanAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(22, 8)
+    fun coeffRaanInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 22, 8)
     /**
      * Coefficients for argument of periapsis (degrees).
      * Length must equal NUM_COEFFICIENTS.
      */
-    fun COEFF_ARG_PERIAPSIS(j: Int) : Double {
+    fun coeffArgPeriapsis(j: Int) : Double {
         val o = __offset(24)
         return if (o != 0) {
             bb.getDouble(__vector(o) + j * 8)
         } else {
-            throw IndexOutOfBoundsException("Index out of range: $j, vector COEFF_ARG_PERIAPSIS is empty")
+            throw IndexOutOfBoundsException("Index out of range: $j, vector coeffArgPeriapsis is empty")
         }
     }
-    val COEFF_ARG_PERIAPSISLength : Int
+    val coeffArgPeriapsisLength : Int
         get() {
             val o = __offset(24); return if (o != 0) __vector_len(o) else 0
         }
-    val COEFF_ARG_PERIAPSISAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(24, 8)
-    fun COEFF_ARG_PERIAPSISInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 24, 8)
+    val coeffArgPeriapsisAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(24, 8)
+    fun coeffArgPeriapsisInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 24, 8)
     /**
      * Coefficients for anomaly (degrees). See ANOMALY_TYPE for interpretation.
      * Length must equal NUM_COEFFICIENTS.
      */
-    fun COEFF_ANOMALY(j: Int) : Double {
+    fun coeffAnomaly(j: Int) : Double {
         val o = __offset(26)
         return if (o != 0) {
             bb.getDouble(__vector(o) + j * 8)
         } else {
-            throw IndexOutOfBoundsException("Index out of range: $j, vector COEFF_ANOMALY is empty")
+            throw IndexOutOfBoundsException("Index out of range: $j, vector coeffAnomaly is empty")
         }
     }
-    val COEFF_ANOMALYLength : Int
+    val coeffAnomalyLength : Int
         get() {
             val o = __offset(26); return if (o != 0) __vector_len(o) else 0
         }
-    val COEFF_ANOMALYAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(26, 8)
-    fun COEFF_ANOMALYInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 26, 8)
+    val coeffAnomalyAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(26, 8)
+    fun coeffAnomalyInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 26, 8)
     /**
      * Maximum element fit residual over this segment. Optional quality metric.
      * Units depend on the element (km for SMA, degrees for angles, dimensionless for ecc).
      */
-    val MAX_ELEMENT_RESIDUAL : Double
+    val maxElementResidual : Double
         get() {
             val o = __offset(28)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -213,44 +213,44 @@ class PPEOrbitalElementRecord : Table() {
     /**
      * RMS element fit residual over this segment. Optional quality metric.
      */
-    val RMS_ELEMENT_RESIDUAL : Double
+    val rmsElementResidual : Double
         get() {
             val o = __offset(30)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsPPEOrbitalElementRecord(_bb: ByteBuffer): PPEOrbitalElementRecord = getRootAsPPEOrbitalElementRecord(_bb, PPEOrbitalElementRecord())
         fun getRootAsPPEOrbitalElementRecord(_bb: ByteBuffer, obj: PPEOrbitalElementRecord): PPEOrbitalElementRecord {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createPPEOrbitalElementRecord(builder: FlatBufferBuilder, EPOCH_MIDOffset: Int, EPOCH_HALF_SPAN: Double, NUM_COEFFICIENTS: UShort, BASIS_TYPE: Byte, SIZE_SHAPE_TYPE: Byte, ANOMALY_TYPE: Byte, COEFF_SIZE_SHAPEOffset: Int, COEFF_ECCENTRICITYOffset: Int, COEFF_INCLINATIONOffset: Int, COEFF_RAANOffset: Int, COEFF_ARG_PERIAPSISOffset: Int, COEFF_ANOMALYOffset: Int, MAX_ELEMENT_RESIDUAL: Double, RMS_ELEMENT_RESIDUAL: Double) : Int {
+        fun createPPEOrbitalElementRecord(builder: FlatBufferBuilder, epochMidOffset: Int, epochHalfSpan: Double, numCoefficients: UShort, basisType: Byte, sizeShapeType: Byte, anomalyType: Byte, coeffSizeShapeOffset: Int, coeffEccentricityOffset: Int, coeffInclinationOffset: Int, coeffRaanOffset: Int, coeffArgPeriapsisOffset: Int, coeffAnomalyOffset: Int, maxElementResidual: Double, rmsElementResidual: Double) : Int {
             builder.startTable(14)
-            addRMS_ELEMENT_RESIDUAL(builder, RMS_ELEMENT_RESIDUAL)
-            addMAX_ELEMENT_RESIDUAL(builder, MAX_ELEMENT_RESIDUAL)
-            addEPOCH_HALF_SPAN(builder, EPOCH_HALF_SPAN)
-            addCOEFF_ANOMALY(builder, COEFF_ANOMALYOffset)
-            addCOEFF_ARG_PERIAPSIS(builder, COEFF_ARG_PERIAPSISOffset)
-            addCOEFF_RAAN(builder, COEFF_RAANOffset)
-            addCOEFF_INCLINATION(builder, COEFF_INCLINATIONOffset)
-            addCOEFF_ECCENTRICITY(builder, COEFF_ECCENTRICITYOffset)
-            addCOEFF_SIZE_SHAPE(builder, COEFF_SIZE_SHAPEOffset)
-            addEPOCH_MID(builder, EPOCH_MIDOffset)
-            addNUM_COEFFICIENTS(builder, NUM_COEFFICIENTS)
-            addANOMALY_TYPE(builder, ANOMALY_TYPE)
-            addSIZE_SHAPE_TYPE(builder, SIZE_SHAPE_TYPE)
-            addBASIS_TYPE(builder, BASIS_TYPE)
+            addRMSELEMENTRESIDUAL(builder, rmsElementResidual)
+            addMAXELEMENTRESIDUAL(builder, maxElementResidual)
+            addEPOCHHALFSPAN(builder, epochHalfSpan)
+            addCOEFFANOMALY(builder, coeffAnomalyOffset)
+            addCOEFFARGPERIAPSIS(builder, coeffArgPeriapsisOffset)
+            addCOEFFRAAN(builder, coeffRaanOffset)
+            addCOEFFINCLINATION(builder, coeffInclinationOffset)
+            addCOEFFECCENTRICITY(builder, coeffEccentricityOffset)
+            addCOEFFSIZESHAPE(builder, coeffSizeShapeOffset)
+            addEPOCHMID(builder, epochMidOffset)
+            addNUMCOEFFICIENTS(builder, numCoefficients)
+            addANOMALYTYPE(builder, anomalyType)
+            addSIZESHAPETYPE(builder, sizeShapeType)
+            addBASISTYPE(builder, basisType)
             return endPPEOrbitalElementRecord(builder)
         }
         fun startPPEOrbitalElementRecord(builder: FlatBufferBuilder) = builder.startTable(14)
-        fun addEPOCH_MID(builder: FlatBufferBuilder, EPOCH_MID: Int) = builder.addOffset(0, EPOCH_MID, 0)
-        fun addEPOCH_HALF_SPAN(builder: FlatBufferBuilder, EPOCH_HALF_SPAN: Double) = builder.addDouble(1, EPOCH_HALF_SPAN, 0.0)
-        fun addNUM_COEFFICIENTS(builder: FlatBufferBuilder, NUM_COEFFICIENTS: UShort) = builder.addShort(2, NUM_COEFFICIENTS.toShort(), 0)
-        fun addBASIS_TYPE(builder: FlatBufferBuilder, BASIS_TYPE: Byte) = builder.addByte(3, BASIS_TYPE, 0)
-        fun addSIZE_SHAPE_TYPE(builder: FlatBufferBuilder, SIZE_SHAPE_TYPE: Byte) = builder.addByte(4, SIZE_SHAPE_TYPE, 0)
-        fun addANOMALY_TYPE(builder: FlatBufferBuilder, ANOMALY_TYPE: Byte) = builder.addByte(5, ANOMALY_TYPE, 0)
-        fun addCOEFF_SIZE_SHAPE(builder: FlatBufferBuilder, COEFF_SIZE_SHAPE: Int) = builder.addOffset(6, COEFF_SIZE_SHAPE, 0)
+        fun addEPOCHMID(builder: FlatBufferBuilder, epochMid: Int) = builder.addOffset(0, epochMid, 0)
+        fun addEPOCHHALFSPAN(builder: FlatBufferBuilder, epochHalfSpan: Double) = builder.addDouble(1, epochHalfSpan, 0.0)
+        fun addNUMCOEFFICIENTS(builder: FlatBufferBuilder, numCoefficients: UShort) = builder.addShort(2, numCoefficients.toShort(), 0)
+        fun addBASISTYPE(builder: FlatBufferBuilder, basisType: Byte) = builder.addByte(3, basisType, 0)
+        fun addSIZESHAPETYPE(builder: FlatBufferBuilder, sizeShapeType: Byte) = builder.addByte(4, sizeShapeType, 0)
+        fun addANOMALYTYPE(builder: FlatBufferBuilder, anomalyType: Byte) = builder.addByte(5, anomalyType, 0)
+        fun addCOEFFSIZESHAPE(builder: FlatBufferBuilder, coeffSizeShape: Int) = builder.addOffset(6, coeffSizeShape, 0)
         fun createCoeffSizeShapeVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
             builder.startVector(8, data.size, 8)
             for (i in data.size - 1 downTo 0) {
@@ -259,7 +259,7 @@ class PPEOrbitalElementRecord : Table() {
             return builder.endVector()
         }
         fun startCoeffSizeShapeVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
-        fun addCOEFF_ECCENTRICITY(builder: FlatBufferBuilder, COEFF_ECCENTRICITY: Int) = builder.addOffset(7, COEFF_ECCENTRICITY, 0)
+        fun addCOEFFECCENTRICITY(builder: FlatBufferBuilder, coeffEccentricity: Int) = builder.addOffset(7, coeffEccentricity, 0)
         fun createCoeffEccentricityVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
             builder.startVector(8, data.size, 8)
             for (i in data.size - 1 downTo 0) {
@@ -268,7 +268,7 @@ class PPEOrbitalElementRecord : Table() {
             return builder.endVector()
         }
         fun startCoeffEccentricityVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
-        fun addCOEFF_INCLINATION(builder: FlatBufferBuilder, COEFF_INCLINATION: Int) = builder.addOffset(8, COEFF_INCLINATION, 0)
+        fun addCOEFFINCLINATION(builder: FlatBufferBuilder, coeffInclination: Int) = builder.addOffset(8, coeffInclination, 0)
         fun createCoeffInclinationVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
             builder.startVector(8, data.size, 8)
             for (i in data.size - 1 downTo 0) {
@@ -277,7 +277,7 @@ class PPEOrbitalElementRecord : Table() {
             return builder.endVector()
         }
         fun startCoeffInclinationVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
-        fun addCOEFF_RAAN(builder: FlatBufferBuilder, COEFF_RAAN: Int) = builder.addOffset(9, COEFF_RAAN, 0)
+        fun addCOEFFRAAN(builder: FlatBufferBuilder, coeffRaan: Int) = builder.addOffset(9, coeffRaan, 0)
         fun createCoeffRaanVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
             builder.startVector(8, data.size, 8)
             for (i in data.size - 1 downTo 0) {
@@ -286,7 +286,7 @@ class PPEOrbitalElementRecord : Table() {
             return builder.endVector()
         }
         fun startCoeffRaanVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
-        fun addCOEFF_ARG_PERIAPSIS(builder: FlatBufferBuilder, COEFF_ARG_PERIAPSIS: Int) = builder.addOffset(10, COEFF_ARG_PERIAPSIS, 0)
+        fun addCOEFFARGPERIAPSIS(builder: FlatBufferBuilder, coeffArgPeriapsis: Int) = builder.addOffset(10, coeffArgPeriapsis, 0)
         fun createCoeffArgPeriapsisVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
             builder.startVector(8, data.size, 8)
             for (i in data.size - 1 downTo 0) {
@@ -295,7 +295,7 @@ class PPEOrbitalElementRecord : Table() {
             return builder.endVector()
         }
         fun startCoeffArgPeriapsisVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
-        fun addCOEFF_ANOMALY(builder: FlatBufferBuilder, COEFF_ANOMALY: Int) = builder.addOffset(11, COEFF_ANOMALY, 0)
+        fun addCOEFFANOMALY(builder: FlatBufferBuilder, coeffAnomaly: Int) = builder.addOffset(11, coeffAnomaly, 0)
         fun createCoeffAnomalyVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
             builder.startVector(8, data.size, 8)
             for (i in data.size - 1 downTo 0) {
@@ -304,8 +304,8 @@ class PPEOrbitalElementRecord : Table() {
             return builder.endVector()
         }
         fun startCoeffAnomalyVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
-        fun addMAX_ELEMENT_RESIDUAL(builder: FlatBufferBuilder, MAX_ELEMENT_RESIDUAL: Double) = builder.addDouble(12, MAX_ELEMENT_RESIDUAL, 0.0)
-        fun addRMS_ELEMENT_RESIDUAL(builder: FlatBufferBuilder, RMS_ELEMENT_RESIDUAL: Double) = builder.addDouble(13, RMS_ELEMENT_RESIDUAL, 0.0)
+        fun addMAXELEMENTRESIDUAL(builder: FlatBufferBuilder, maxElementResidual: Double) = builder.addDouble(12, maxElementResidual, 0.0)
+        fun addRMSELEMENTRESIDUAL(builder: FlatBufferBuilder, rmsElementResidual: Double) = builder.addDouble(13, rmsElementResidual, 0.0)
         fun endPPEOrbitalElementRecord(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
                 builder.required(o, 4)

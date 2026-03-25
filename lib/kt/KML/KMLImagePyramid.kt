@@ -32,7 +32,7 @@ class KMLImagePyramid : Table() {
     /**
      * Tile size in pixels
      */
-    val TILE_SIZE : Int
+    val tileSize : Int
         get() {
             val o = __offset(4)
             return if(o != 0) bb.getInt(o + bb_pos) else 0
@@ -40,7 +40,7 @@ class KMLImagePyramid : Table() {
     /**
      * Maximum image width
      */
-    val MAX_WIDTH : Int
+    val maxWidth : Int
         get() {
             val o = __offset(6)
             return if(o != 0) bb.getInt(o + bb_pos) else 0
@@ -48,7 +48,7 @@ class KMLImagePyramid : Table() {
     /**
      * Maximum image height
      */
-    val MAX_HEIGHT : Int
+    val maxHeight : Int
         get() {
             val o = __offset(8)
             return if(o != 0) bb.getInt(o + bb_pos) else 0
@@ -56,31 +56,31 @@ class KMLImagePyramid : Table() {
     /**
      * Grid origin
      */
-    val GRID_ORIGIN : Byte
+    val gridOrigin : Byte
         get() {
             val o = __offset(10)
             return if(o != 0) bb.get(o + bb_pos) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsKMLImagePyramid(_bb: ByteBuffer): KMLImagePyramid = getRootAsKMLImagePyramid(_bb, KMLImagePyramid())
         fun getRootAsKMLImagePyramid(_bb: ByteBuffer, obj: KMLImagePyramid): KMLImagePyramid {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createKMLImagePyramid(builder: FlatBufferBuilder, TILE_SIZE: Int, MAX_WIDTH: Int, MAX_HEIGHT: Int, GRID_ORIGIN: Byte) : Int {
+        fun createKMLImagePyramid(builder: FlatBufferBuilder, tileSize: Int, maxWidth: Int, maxHeight: Int, gridOrigin: Byte) : Int {
             builder.startTable(4)
-            addMAX_HEIGHT(builder, MAX_HEIGHT)
-            addMAX_WIDTH(builder, MAX_WIDTH)
-            addTILE_SIZE(builder, TILE_SIZE)
-            addGRID_ORIGIN(builder, GRID_ORIGIN)
+            addMAXHEIGHT(builder, maxHeight)
+            addMAXWIDTH(builder, maxWidth)
+            addTILESIZE(builder, tileSize)
+            addGRIDORIGIN(builder, gridOrigin)
             return endKMLImagePyramid(builder)
         }
         fun startKMLImagePyramid(builder: FlatBufferBuilder) = builder.startTable(4)
-        fun addTILE_SIZE(builder: FlatBufferBuilder, TILE_SIZE: Int) = builder.addInt(0, TILE_SIZE, 0)
-        fun addMAX_WIDTH(builder: FlatBufferBuilder, MAX_WIDTH: Int) = builder.addInt(1, MAX_WIDTH, 0)
-        fun addMAX_HEIGHT(builder: FlatBufferBuilder, MAX_HEIGHT: Int) = builder.addInt(2, MAX_HEIGHT, 0)
-        fun addGRID_ORIGIN(builder: FlatBufferBuilder, GRID_ORIGIN: Byte) = builder.addByte(3, GRID_ORIGIN, 0)
+        fun addTILESIZE(builder: FlatBufferBuilder, tileSize: Int) = builder.addInt(0, tileSize, 0)
+        fun addMAXWIDTH(builder: FlatBufferBuilder, maxWidth: Int) = builder.addInt(1, maxWidth, 0)
+        fun addMAXHEIGHT(builder: FlatBufferBuilder, maxHeight: Int) = builder.addInt(2, maxHeight, 0)
+        fun addGRIDORIGIN(builder: FlatBufferBuilder, gridOrigin: Byte) = builder.addByte(3, gridOrigin, 0)
         fun endKMLImagePyramid(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

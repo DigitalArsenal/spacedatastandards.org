@@ -51,6 +51,10 @@ func (rcv *Argument) NAME() []byte {
 	return nil
 }
 
+func (rcv *Argument) Name() []byte {
+	return rcv.NAME()
+}
+
 /// Argument name
 /// Reference to argument type
 func (rcv *Argument) ARGUMENT_TYPE_REF() []byte {
@@ -59,6 +63,10 @@ func (rcv *Argument) ARGUMENT_TYPE_REF() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *Argument) ArgumentTypeRef() []byte {
+	return rcv.ARGUMENT_TYPE_REF()
 }
 
 /// Reference to argument type
@@ -71,6 +79,10 @@ func (rcv *Argument) SHORT_DESCRIPTION() []byte {
 	return nil
 }
 
+func (rcv *Argument) ShortDescription() []byte {
+	return rcv.SHORT_DESCRIPTION()
+}
+
 /// Short description
 /// Long description
 func (rcv *Argument) LONG_DESCRIPTION() []byte {
@@ -79,6 +91,10 @@ func (rcv *Argument) LONG_DESCRIPTION() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *Argument) LongDescription() []byte {
+	return rcv.LONG_DESCRIPTION()
 }
 
 /// Long description
@@ -91,6 +107,10 @@ func (rcv *Argument) INITIAL_VALUE() []byte {
 	return nil
 }
 
+func (rcv *Argument) InitialValue() []byte {
+	return rcv.INITIAL_VALUE()
+}
+
 /// Initial/default value
 func ArgumentStart(builder *flatbuffers.Builder) {
 	builder.StartObject(5)
@@ -98,17 +118,32 @@ func ArgumentStart(builder *flatbuffers.Builder) {
 func ArgumentAddNAME(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(NAME), 0)
 }
+func ArgumentAddName(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
+	ArgumentAddNAME(builder, NAME)
+}
 func ArgumentAddARGUMENT_TYPE_REF(builder *flatbuffers.Builder, ARGUMENT_TYPE_REF flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(ARGUMENT_TYPE_REF), 0)
+}
+func ArgumentAddArgumentTypeRef(builder *flatbuffers.Builder, ARGUMENT_TYPE_REF flatbuffers.UOffsetT) {
+	ArgumentAddARGUMENT_TYPE_REF(builder, ARGUMENT_TYPE_REF)
 }
 func ArgumentAddSHORT_DESCRIPTION(builder *flatbuffers.Builder, SHORT_DESCRIPTION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(SHORT_DESCRIPTION), 0)
 }
+func ArgumentAddShortDescription(builder *flatbuffers.Builder, SHORT_DESCRIPTION flatbuffers.UOffsetT) {
+	ArgumentAddSHORT_DESCRIPTION(builder, SHORT_DESCRIPTION)
+}
 func ArgumentAddLONG_DESCRIPTION(builder *flatbuffers.Builder, LONG_DESCRIPTION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(LONG_DESCRIPTION), 0)
 }
+func ArgumentAddLongDescription(builder *flatbuffers.Builder, LONG_DESCRIPTION flatbuffers.UOffsetT) {
+	ArgumentAddLONG_DESCRIPTION(builder, LONG_DESCRIPTION)
+}
 func ArgumentAddINITIAL_VALUE(builder *flatbuffers.Builder, INITIAL_VALUE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(INITIAL_VALUE), 0)
+}
+func ArgumentAddInitialValue(builder *flatbuffers.Builder, INITIAL_VALUE flatbuffers.UOffsetT) {
+	ArgumentAddINITIAL_VALUE(builder, INITIAL_VALUE)
 }
 func ArgumentEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

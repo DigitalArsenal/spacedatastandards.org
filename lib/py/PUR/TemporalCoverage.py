@@ -2,4 +2,158 @@
 
 # namespace: 
 
-# NOTE TemporalCoverage.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Temporal coverage definition
+class TemporalCoverage(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = TemporalCoverage()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsTemporalCoverage(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def TemporalCoverageBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x53\x54\x46", size_prefixed=size_prefixed)
+
+    # TemporalCoverage
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Start epoch in ISO 8601 format
+    # TemporalCoverage
+    def START_EPOCH(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # End epoch in ISO 8601 format
+    # TemporalCoverage
+    def END_EPOCH(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Update frequency: "realtime", "hourly", "daily"
+    # TemporalCoverage
+    def UPDATE_FREQUENCY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Days of historical data available
+    # TemporalCoverage
+    def HISTORICAL_DEPTH(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+        return 0
+
+def TemporalCoverageStart(builder):
+    builder.StartObject(4)
+
+def Start(builder):
+    TemporalCoverageStart(builder)
+
+def TemporalCoverageAddSTART_EPOCH(builder, START_EPOCH):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(START_EPOCH), 0)
+
+def AddSTART_EPOCH(builder, START_EPOCH):
+    TemporalCoverageAddSTART_EPOCH(builder, START_EPOCH)
+
+def TemporalCoverageAddEND_EPOCH(builder, END_EPOCH):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(END_EPOCH), 0)
+
+def AddEND_EPOCH(builder, END_EPOCH):
+    TemporalCoverageAddEND_EPOCH(builder, END_EPOCH)
+
+def TemporalCoverageAddUPDATE_FREQUENCY(builder, UPDATE_FREQUENCY):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(UPDATE_FREQUENCY), 0)
+
+def AddUPDATE_FREQUENCY(builder, UPDATE_FREQUENCY):
+    TemporalCoverageAddUPDATE_FREQUENCY(builder, UPDATE_FREQUENCY)
+
+def TemporalCoverageAddHISTORICAL_DEPTH(builder, HISTORICAL_DEPTH):
+    builder.PrependUint32Slot(3, HISTORICAL_DEPTH, 0)
+
+def AddHISTORICAL_DEPTH(builder, HISTORICAL_DEPTH):
+    TemporalCoverageAddHISTORICAL_DEPTH(builder, HISTORICAL_DEPTH)
+
+def TemporalCoverageEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return TemporalCoverageEnd(builder)
+
+
+class TemporalCoverageT(object):
+
+    # TemporalCoverageT
+    def __init__(
+        self,
+        START_EPOCH = None,
+        END_EPOCH = None,
+        UPDATE_FREQUENCY = None,
+        HISTORICAL_DEPTH = 0,
+    ):
+        self.START_EPOCH = START_EPOCH  # type: Optional[str]
+        self.END_EPOCH = END_EPOCH  # type: Optional[str]
+        self.UPDATE_FREQUENCY = UPDATE_FREQUENCY  # type: Optional[str]
+        self.HISTORICAL_DEPTH = HISTORICAL_DEPTH  # type: int
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpTemporalCoverage = TemporalCoverage()
+        tmpTemporalCoverage.Init(buf, pos)
+        return cls.InitFromObj(tmpTemporalCoverage)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpTemporalCoverage):
+        x = TemporalCoverageT()
+        x._UnPack(tmpTemporalCoverage)
+        return x
+
+    # TemporalCoverageT
+    def _UnPack(self, TemporalCoverage):
+        if TemporalCoverage is None:
+            return
+        self.START_EPOCH = TemporalCoverage.START_EPOCH()
+        self.END_EPOCH = TemporalCoverage.END_EPOCH()
+        self.UPDATE_FREQUENCY = TemporalCoverage.UPDATE_FREQUENCY()
+        self.HISTORICAL_DEPTH = TemporalCoverage.HISTORICAL_DEPTH()
+
+    # TemporalCoverageT
+    def Pack(self, builder):
+        if self.START_EPOCH is not None:
+            START_EPOCH = builder.CreateString(self.START_EPOCH)
+        if self.END_EPOCH is not None:
+            END_EPOCH = builder.CreateString(self.END_EPOCH)
+        if self.UPDATE_FREQUENCY is not None:
+            UPDATE_FREQUENCY = builder.CreateString(self.UPDATE_FREQUENCY)
+        TemporalCoverageStart(builder)
+        if self.START_EPOCH is not None:
+            TemporalCoverageAddSTART_EPOCH(builder, START_EPOCH)
+        if self.END_EPOCH is not None:
+            TemporalCoverageAddEND_EPOCH(builder, END_EPOCH)
+        if self.UPDATE_FREQUENCY is not None:
+            TemporalCoverageAddUPDATE_FREQUENCY(builder, UPDATE_FREQUENCY)
+        TemporalCoverageAddHISTORICAL_DEPTH(builder, self.HISTORICAL_DEPTH)
+        TemporalCoverage = TemporalCoverageEnd(builder)
+        return TemporalCoverage

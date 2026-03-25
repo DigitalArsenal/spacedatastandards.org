@@ -101,17 +101,23 @@ def End(builder):
 class CZMColorT(object):
 
     # CZMColorT
-    def __init__(self):
-        self.RED = 0  # type: int
-        self.GREEN = 0  # type: int
-        self.BLUE = 0  # type: int
-        self.ALPHA = 0  # type: int
+    def __init__(
+        self,
+        RED = 0,
+        GREEN = 0,
+        BLUE = 0,
+        ALPHA = 0,
+    ):
+        self.RED = RED  # type: int
+        self.GREEN = GREEN  # type: int
+        self.BLUE = BLUE  # type: int
+        self.ALPHA = ALPHA  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        czmcolor = CZMColor()
-        czmcolor.Init(buf, pos)
-        return cls.InitFromObj(czmcolor)
+        tmpCzmcolor = CZMColor()
+        tmpCzmcolor.Init(buf, pos)
+        return cls.InitFromObj(tmpCzmcolor)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -119,19 +125,19 @@ class CZMColorT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, czmcolor):
+    def InitFromObj(cls, tmpCzmcolor):
         x = CZMColorT()
-        x._UnPack(czmcolor)
+        x._UnPack(tmpCzmcolor)
         return x
 
     # CZMColorT
-    def _UnPack(self, czmcolor):
-        if czmcolor is None:
+    def _UnPack(self, CZMColor):
+        if CZMColor is None:
             return
-        self.RED = czmcolor.RED()
-        self.GREEN = czmcolor.GREEN()
-        self.BLUE = czmcolor.BLUE()
-        self.ALPHA = czmcolor.ALPHA()
+        self.RED = CZMColor.RED()
+        self.GREEN = CZMColor.GREEN()
+        self.BLUE = CZMColor.BLUE()
+        self.ALPHA = CZMColor.ALPHA()
 
     # CZMColorT
     def Pack(self, builder):
@@ -140,5 +146,5 @@ class CZMColorT(object):
         CZMColorAddGREEN(builder, self.GREEN)
         CZMColorAddBLUE(builder, self.BLUE)
         CZMColorAddALPHA(builder, self.ALPHA)
-        czmcolor = CZMColorEnd(builder)
-        return czmcolor
+        CZMColor = CZMColorEnd(builder)
+        return CZMColor

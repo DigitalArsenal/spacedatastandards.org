@@ -51,9 +51,17 @@ func (rcv *CommandSignificance) CONSEQUENCE_LEVEL() byte {
 	return 0
 }
 
+func (rcv *CommandSignificance) ConsequenceLevel() byte {
+	return rcv.CONSEQUENCE_LEVEL()
+}
+
 /// Consequence level (1=lowest, higher=more severe)
 func (rcv *CommandSignificance) MutateCONSEQUENCE_LEVEL(n byte) bool {
 	return rcv._tab.MutateByteSlot(4, n)
+}
+
+func (rcv *CommandSignificance) MutateConsequenceLevel(n byte) bool {
+	return rcv.MutateCONSEQUENCE_LEVEL(n)
 }
 
 /// Reason for significance
@@ -65,6 +73,10 @@ func (rcv *CommandSignificance) REASON_FOR_WARNING() []byte {
 	return nil
 }
 
+func (rcv *CommandSignificance) ReasonForWarning() []byte {
+	return rcv.REASON_FOR_WARNING()
+}
+
 /// Reason for significance
 func CommandSignificanceStart(builder *flatbuffers.Builder) {
 	builder.StartObject(2)
@@ -72,8 +84,14 @@ func CommandSignificanceStart(builder *flatbuffers.Builder) {
 func CommandSignificanceAddCONSEQUENCE_LEVEL(builder *flatbuffers.Builder, CONSEQUENCE_LEVEL byte) {
 	builder.PrependByteSlot(0, CONSEQUENCE_LEVEL, 0)
 }
+func CommandSignificanceAddConsequenceLevel(builder *flatbuffers.Builder, CONSEQUENCE_LEVEL byte) {
+	CommandSignificanceAddCONSEQUENCE_LEVEL(builder, CONSEQUENCE_LEVEL)
+}
 func CommandSignificanceAddREASON_FOR_WARNING(builder *flatbuffers.Builder, REASON_FOR_WARNING flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(REASON_FOR_WARNING), 0)
+}
+func CommandSignificanceAddReasonForWarning(builder *flatbuffers.Builder, REASON_FOR_WARNING flatbuffers.UOffsetT) {
+	CommandSignificanceAddREASON_FOR_WARNING(builder, REASON_FOR_WARNING)
 }
 func CommandSignificanceEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

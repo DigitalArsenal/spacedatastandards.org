@@ -32,8 +32,8 @@ class CZMGridMaterial : Table() {
     /**
      * Grid line color
      */
-    val COLOR : CZMColor? get() = COLOR(CZMColor())
-    fun COLOR(obj: CZMColor) : CZMColor? {
+    val color : CZMColor? get() = color(CZMColor())
+    fun color(obj: CZMColor) : CZMColor? {
         val o = __offset(4)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -44,7 +44,7 @@ class CZMGridMaterial : Table() {
     /**
      * Cell alpha
      */
-    val CELL_ALPHA : Double
+    val cellAlpha : Double
         get() {
             val o = __offset(6)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -52,7 +52,7 @@ class CZMGridMaterial : Table() {
     /**
      * Number of grid lines along X
      */
-    val LINE_COUNT_X : Double
+    val lineCountX : Double
         get() {
             val o = __offset(8)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -60,7 +60,7 @@ class CZMGridMaterial : Table() {
     /**
      * Number of grid lines along Y
      */
-    val LINE_COUNT_Y : Double
+    val lineCountY : Double
         get() {
             val o = __offset(10)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -68,7 +68,7 @@ class CZMGridMaterial : Table() {
     /**
      * Thickness of grid lines along X
      */
-    val LINE_THICKNESS_X : Double
+    val lineThicknessX : Double
         get() {
             val o = __offset(12)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -76,7 +76,7 @@ class CZMGridMaterial : Table() {
     /**
      * Thickness of grid lines along Y
      */
-    val LINE_THICKNESS_Y : Double
+    val lineThicknessY : Double
         get() {
             val o = __offset(14)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -84,7 +84,7 @@ class CZMGridMaterial : Table() {
     /**
      * Offset of grid lines along X
      */
-    val LINE_OFFSET_X : Double
+    val lineOffsetX : Double
         get() {
             val o = __offset(16)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -92,39 +92,39 @@ class CZMGridMaterial : Table() {
     /**
      * Offset of grid lines along Y
      */
-    val LINE_OFFSET_Y : Double
+    val lineOffsetY : Double
         get() {
             val o = __offset(18)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsCZMGridMaterial(_bb: ByteBuffer): CZMGridMaterial = getRootAsCZMGridMaterial(_bb, CZMGridMaterial())
         fun getRootAsCZMGridMaterial(_bb: ByteBuffer, obj: CZMGridMaterial): CZMGridMaterial {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createCZMGridMaterial(builder: FlatBufferBuilder, COLOROffset: Int, CELL_ALPHA: Double, LINE_COUNT_X: Double, LINE_COUNT_Y: Double, LINE_THICKNESS_X: Double, LINE_THICKNESS_Y: Double, LINE_OFFSET_X: Double, LINE_OFFSET_Y: Double) : Int {
+        fun createCZMGridMaterial(builder: FlatBufferBuilder, colorOffset: Int, cellAlpha: Double, lineCountX: Double, lineCountY: Double, lineThicknessX: Double, lineThicknessY: Double, lineOffsetX: Double, lineOffsetY: Double) : Int {
             builder.startTable(8)
-            addLINE_OFFSET_Y(builder, LINE_OFFSET_Y)
-            addLINE_OFFSET_X(builder, LINE_OFFSET_X)
-            addLINE_THICKNESS_Y(builder, LINE_THICKNESS_Y)
-            addLINE_THICKNESS_X(builder, LINE_THICKNESS_X)
-            addLINE_COUNT_Y(builder, LINE_COUNT_Y)
-            addLINE_COUNT_X(builder, LINE_COUNT_X)
-            addCELL_ALPHA(builder, CELL_ALPHA)
-            addCOLOR(builder, COLOROffset)
+            addLINEOFFSETY(builder, lineOffsetY)
+            addLINEOFFSETX(builder, lineOffsetX)
+            addLINETHICKNESSY(builder, lineThicknessY)
+            addLINETHICKNESSX(builder, lineThicknessX)
+            addLINECOUNTY(builder, lineCountY)
+            addLINECOUNTX(builder, lineCountX)
+            addCELLALPHA(builder, cellAlpha)
+            addCOLOR(builder, colorOffset)
             return endCZMGridMaterial(builder)
         }
         fun startCZMGridMaterial(builder: FlatBufferBuilder) = builder.startTable(8)
-        fun addCOLOR(builder: FlatBufferBuilder, COLOR: Int) = builder.addOffset(0, COLOR, 0)
-        fun addCELL_ALPHA(builder: FlatBufferBuilder, CELL_ALPHA: Double) = builder.addDouble(1, CELL_ALPHA, 0.0)
-        fun addLINE_COUNT_X(builder: FlatBufferBuilder, LINE_COUNT_X: Double) = builder.addDouble(2, LINE_COUNT_X, 0.0)
-        fun addLINE_COUNT_Y(builder: FlatBufferBuilder, LINE_COUNT_Y: Double) = builder.addDouble(3, LINE_COUNT_Y, 0.0)
-        fun addLINE_THICKNESS_X(builder: FlatBufferBuilder, LINE_THICKNESS_X: Double) = builder.addDouble(4, LINE_THICKNESS_X, 0.0)
-        fun addLINE_THICKNESS_Y(builder: FlatBufferBuilder, LINE_THICKNESS_Y: Double) = builder.addDouble(5, LINE_THICKNESS_Y, 0.0)
-        fun addLINE_OFFSET_X(builder: FlatBufferBuilder, LINE_OFFSET_X: Double) = builder.addDouble(6, LINE_OFFSET_X, 0.0)
-        fun addLINE_OFFSET_Y(builder: FlatBufferBuilder, LINE_OFFSET_Y: Double) = builder.addDouble(7, LINE_OFFSET_Y, 0.0)
+        fun addCOLOR(builder: FlatBufferBuilder, color: Int) = builder.addOffset(0, color, 0)
+        fun addCELLALPHA(builder: FlatBufferBuilder, cellAlpha: Double) = builder.addDouble(1, cellAlpha, 0.0)
+        fun addLINECOUNTX(builder: FlatBufferBuilder, lineCountX: Double) = builder.addDouble(2, lineCountX, 0.0)
+        fun addLINECOUNTY(builder: FlatBufferBuilder, lineCountY: Double) = builder.addDouble(3, lineCountY, 0.0)
+        fun addLINETHICKNESSX(builder: FlatBufferBuilder, lineThicknessX: Double) = builder.addDouble(4, lineThicknessX, 0.0)
+        fun addLINETHICKNESSY(builder: FlatBufferBuilder, lineThicknessY: Double) = builder.addDouble(5, lineThicknessY, 0.0)
+        fun addLINEOFFSETX(builder: FlatBufferBuilder, lineOffsetX: Double) = builder.addDouble(6, lineOffsetX, 0.0)
+        fun addLINEOFFSETY(builder: FlatBufferBuilder, lineOffsetY: Double) = builder.addDouble(7, lineOffsetY, 0.0)
         fun endCZMGridMaterial(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

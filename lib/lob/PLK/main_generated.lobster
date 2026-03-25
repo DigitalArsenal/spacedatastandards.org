@@ -146,30 +146,30 @@ struct PLKBuilder:
     def end():
         return b_.EndObject()
 
-def PLKStartLICENSEE_PUBKEYVector(b_:flatbuffers.builder, n_:int):
+def PLKStartLICENSEEPUBKEYVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(1, n_, 1)
-def PLKCreateLICENSEE_PUBKEYVector(b_:flatbuffers.builder, v_:[int]):
+def PLKCreateLICENSEEPUBKEYVector(b_:flatbuffers.builder, v_:[int]):
     b_.StartVector(1, v_.length, 1)
     reverse(v_) e_: b_.PrependUint8(e_)
     return b_.EndVector(v_.length)
 
-def PLKStartISSUER_PUBKEYVector(b_:flatbuffers.builder, n_:int):
+def PLKStartISSUERPUBKEYVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(1, n_, 1)
-def PLKCreateISSUER_PUBKEYVector(b_:flatbuffers.builder, v_:[int]):
+def PLKCreateISSUERPUBKEYVector(b_:flatbuffers.builder, v_:[int]):
     b_.StartVector(1, v_.length, 1)
     reverse(v_) e_: b_.PrependUint8(e_)
     return b_.EndVector(v_.length)
 
-def PLKStartALLOWED_DOMAINSVector(b_:flatbuffers.builder, n_:int):
+def PLKStartALLOWEDDOMAINSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def PLKCreateALLOWED_DOMAINSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def PLKCreateALLOWEDDOMAINSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-def PLKStartALLOWED_TLDSVector(b_:flatbuffers.builder, n_:int):
+def PLKStartALLOWEDTLDSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
-def PLKCreateALLOWED_TLDSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+def PLKCreateALLOWEDTLDSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)

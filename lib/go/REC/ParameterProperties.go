@@ -51,9 +51,17 @@ func (rcv *ParameterProperties) DATA_SOURCE() DataSourceType {
 	return 0
 }
 
+func (rcv *ParameterProperties) DataSource() DataSourceType {
+	return rcv.DATA_SOURCE()
+}
+
 /// Data source type
 func (rcv *ParameterProperties) MutateDATA_SOURCE(n DataSourceType) bool {
 	return rcv._tab.MutateInt8Slot(4, int8(n))
+}
+
+func (rcv *ParameterProperties) MutateDataSource(n DataSourceType) bool {
+	return rcv.MutateDATA_SOURCE(n)
 }
 
 /// Read-only parameter
@@ -65,9 +73,17 @@ func (rcv *ParameterProperties) READ_ONLY() bool {
 	return true
 }
 
+func (rcv *ParameterProperties) ReadOnly() bool {
+	return rcv.READ_ONLY()
+}
+
 /// Read-only parameter
 func (rcv *ParameterProperties) MutateREAD_ONLY(n bool) bool {
 	return rcv._tab.MutateBoolSlot(6, n)
+}
+
+func (rcv *ParameterProperties) MutateReadOnly(n bool) bool {
+	return rcv.MutateREAD_ONLY(n)
 }
 
 /// System/subsystem name
@@ -77,6 +93,10 @@ func (rcv *ParameterProperties) SYSTEM_NAME() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *ParameterProperties) SystemName() []byte {
+	return rcv.SYSTEM_NAME()
 }
 
 /// System/subsystem name
@@ -94,6 +114,10 @@ func (rcv *ParameterProperties) VALIDITY_CONDITION(obj *MatchCriteria) *MatchCri
 	return nil
 }
 
+func (rcv *ParameterProperties) ValidityCondition(obj *MatchCriteria) *MatchCriteria {
+	return rcv.VALIDITY_CONDITION(obj)
+}
+
 /// Validity condition
 func ParameterPropertiesStart(builder *flatbuffers.Builder) {
 	builder.StartObject(4)
@@ -101,14 +125,26 @@ func ParameterPropertiesStart(builder *flatbuffers.Builder) {
 func ParameterPropertiesAddDATA_SOURCE(builder *flatbuffers.Builder, DATA_SOURCE DataSourceType) {
 	builder.PrependInt8Slot(0, int8(DATA_SOURCE), 0)
 }
+func ParameterPropertiesAddDataSource(builder *flatbuffers.Builder, DATA_SOURCE DataSourceType) {
+	ParameterPropertiesAddDATA_SOURCE(builder, DATA_SOURCE)
+}
 func ParameterPropertiesAddREAD_ONLY(builder *flatbuffers.Builder, READ_ONLY bool) {
 	builder.PrependBoolSlot(1, READ_ONLY, true)
+}
+func ParameterPropertiesAddReadOnly(builder *flatbuffers.Builder, READ_ONLY bool) {
+	ParameterPropertiesAddREAD_ONLY(builder, READ_ONLY)
 }
 func ParameterPropertiesAddSYSTEM_NAME(builder *flatbuffers.Builder, SYSTEM_NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(SYSTEM_NAME), 0)
 }
+func ParameterPropertiesAddSystemName(builder *flatbuffers.Builder, SYSTEM_NAME flatbuffers.UOffsetT) {
+	ParameterPropertiesAddSYSTEM_NAME(builder, SYSTEM_NAME)
+}
 func ParameterPropertiesAddVALIDITY_CONDITION(builder *flatbuffers.Builder, VALIDITY_CONDITION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(VALIDITY_CONDITION), 0)
+}
+func ParameterPropertiesAddValidityCondition(builder *flatbuffers.Builder, VALIDITY_CONDITION flatbuffers.UOffsetT) {
+	ParameterPropertiesAddVALIDITY_CONDITION(builder, VALIDITY_CONDITION)
 }
 func ParameterPropertiesEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

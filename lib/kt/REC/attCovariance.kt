@@ -32,7 +32,7 @@ class attCovariance : Table() {
     /**
      * Covariance type
      */
-    val COV_TYPE : Byte
+    val covType : Byte
         get() {
             val o = __offset(4)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -40,7 +40,7 @@ class attCovariance : Table() {
     /**
      * Reference frame
      */
-    val COV_REF_FRAME : String?
+    val covRefFrame : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -49,12 +49,12 @@ class attCovariance : Table() {
                 null
             }
         }
-    val COV_REF_FRAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun COV_REF_FRAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val covRefFrameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun covRefFrameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * Epoch (ISO 8601)
      */
-    val EPOCH : String?
+    val epoch : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -63,12 +63,12 @@ class attCovariance : Table() {
                 null
             }
         }
-    val EPOCHAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun EPOCHInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val epochAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun epochInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
     /**
      * Upper-triangular covariance matrix elements (row-major)
      */
-    fun COV(j: Int) : Double {
+    fun cov(j: Int) : Double {
         val o = __offset(10)
         return if (o != 0) {
             bb.getDouble(__vector(o) + j * 8)
@@ -76,32 +76,32 @@ class attCovariance : Table() {
             0.0
         }
     }
-    val COVLength : Int
+    val covLength : Int
         get() {
             val o = __offset(10); return if (o != 0) __vector_len(o) else 0
         }
-    val COVAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 8)
-    fun COVInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 8)
+    val covAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(10, 8)
+    fun covInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 10, 8)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsattCovariance(_bb: ByteBuffer): attCovariance = getRootAsattCovariance(_bb, attCovariance())
         fun getRootAsattCovariance(_bb: ByteBuffer, obj: attCovariance): attCovariance {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createattCovariance(builder: FlatBufferBuilder, COV_TYPE: Byte, COV_REF_FRAMEOffset: Int, EPOCHOffset: Int, COVOffset: Int) : Int {
+        fun createattCovariance(builder: FlatBufferBuilder, covType: Byte, covRefFrameOffset: Int, epochOffset: Int, covOffset: Int) : Int {
             builder.startTable(4)
-            addCOV(builder, COVOffset)
-            addEPOCH(builder, EPOCHOffset)
-            addCOV_REF_FRAME(builder, COV_REF_FRAMEOffset)
-            addCOV_TYPE(builder, COV_TYPE)
+            addCOV(builder, covOffset)
+            addEPOCH(builder, epochOffset)
+            addCOVREFFRAME(builder, covRefFrameOffset)
+            addCOVTYPE(builder, covType)
             return endattCovariance(builder)
         }
         fun startattCovariance(builder: FlatBufferBuilder) = builder.startTable(4)
-        fun addCOV_TYPE(builder: FlatBufferBuilder, COV_TYPE: Byte) = builder.addByte(0, COV_TYPE, 0)
-        fun addCOV_REF_FRAME(builder: FlatBufferBuilder, COV_REF_FRAME: Int) = builder.addOffset(1, COV_REF_FRAME, 0)
-        fun addEPOCH(builder: FlatBufferBuilder, EPOCH: Int) = builder.addOffset(2, EPOCH, 0)
-        fun addCOV(builder: FlatBufferBuilder, COV: Int) = builder.addOffset(3, COV, 0)
+        fun addCOVTYPE(builder: FlatBufferBuilder, covType: Byte) = builder.addByte(0, covType, 0)
+        fun addCOVREFFRAME(builder: FlatBufferBuilder, covRefFrame: Int) = builder.addOffset(1, covRefFrame, 0)
+        fun addEPOCH(builder: FlatBufferBuilder, epoch: Int) = builder.addOffset(2, epoch, 0)
+        fun addCOV(builder: FlatBufferBuilder, cov: Int) = builder.addOffset(3, cov, 0)
         fun createCovVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
             builder.startVector(8, data.size, 8)
             for (i in data.size - 1 downTo 0) {

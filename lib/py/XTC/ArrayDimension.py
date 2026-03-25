@@ -73,15 +73,19 @@ def End(builder):
 class ArrayDimensionT(object):
 
     # ArrayDimensionT
-    def __init__(self):
-        self.SIZE = 0  # type: int
-        self.SIZE_PARAMETER_REF = None  # type: str
+    def __init__(
+        self,
+        SIZE = 0,
+        SIZE_PARAMETER_REF = None,
+    ):
+        self.SIZE = SIZE  # type: int
+        self.SIZE_PARAMETER_REF = SIZE_PARAMETER_REF  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        arrayDimension = ArrayDimension()
-        arrayDimension.Init(buf, pos)
-        return cls.InitFromObj(arrayDimension)
+        tmpArrayDimension = ArrayDimension()
+        tmpArrayDimension.Init(buf, pos)
+        return cls.InitFromObj(tmpArrayDimension)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -89,17 +93,17 @@ class ArrayDimensionT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, arrayDimension):
+    def InitFromObj(cls, tmpArrayDimension):
         x = ArrayDimensionT()
-        x._UnPack(arrayDimension)
+        x._UnPack(tmpArrayDimension)
         return x
 
     # ArrayDimensionT
-    def _UnPack(self, arrayDimension):
-        if arrayDimension is None:
+    def _UnPack(self, ArrayDimension):
+        if ArrayDimension is None:
             return
-        self.SIZE = arrayDimension.SIZE()
-        self.SIZE_PARAMETER_REF = arrayDimension.SIZE_PARAMETER_REF()
+        self.SIZE = ArrayDimension.SIZE()
+        self.SIZE_PARAMETER_REF = ArrayDimension.SIZE_PARAMETER_REF()
 
     # ArrayDimensionT
     def Pack(self, builder):
@@ -109,5 +113,5 @@ class ArrayDimensionT(object):
         ArrayDimensionAddSIZE(builder, self.SIZE)
         if self.SIZE_PARAMETER_REF is not None:
             ArrayDimensionAddSIZE_PARAMETER_REF(builder, SIZE_PARAMETER_REF)
-        arrayDimension = ArrayDimensionEnd(builder)
-        return arrayDimension
+        ArrayDimension = ArrayDimensionEnd(builder)
+        return ArrayDimension

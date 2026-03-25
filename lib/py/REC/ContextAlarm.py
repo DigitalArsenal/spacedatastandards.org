@@ -2,4 +2,135 @@
 
 # namespace: 
 
-# NOTE ContextAlarm.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Context-dependent alarm
+class ContextAlarm(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = ContextAlarm()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsContextAlarm(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def ContextAlarmBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x58\x54\x43", size_prefixed=size_prefixed)
+
+    # ContextAlarm
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Match criteria for this alarm context
+    # ContextAlarm
+    def MATCH_CRITERIA(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from MatchCriteria import MatchCriteria
+            obj = MatchCriteria()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Alarm definition for this context
+    # ContextAlarm
+    def ALARM(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from DefaultAlarm import DefaultAlarm
+            obj = DefaultAlarm()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+def ContextAlarmStart(builder):
+    builder.StartObject(2)
+
+def Start(builder):
+    ContextAlarmStart(builder)
+
+def ContextAlarmAddMATCH_CRITERIA(builder, MATCH_CRITERIA):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(MATCH_CRITERIA), 0)
+
+def AddMATCH_CRITERIA(builder, MATCH_CRITERIA):
+    ContextAlarmAddMATCH_CRITERIA(builder, MATCH_CRITERIA)
+
+def ContextAlarmAddALARM(builder, ALARM):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(ALARM), 0)
+
+def AddALARM(builder, ALARM):
+    ContextAlarmAddALARM(builder, ALARM)
+
+def ContextAlarmEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return ContextAlarmEnd(builder)
+
+import DefaultAlarm
+import MatchCriteria
+try:
+    from typing import Optional
+except:
+    pass
+
+class ContextAlarmT(object):
+
+    # ContextAlarmT
+    def __init__(
+        self,
+        MATCH_CRITERIA = None,
+        ALARM = None,
+    ):
+        self.MATCH_CRITERIA = MATCH_CRITERIA  # type: Optional[MatchCriteria.MatchCriteriaT]
+        self.ALARM = ALARM  # type: Optional[DefaultAlarm.DefaultAlarmT]
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpContextAlarm = ContextAlarm()
+        tmpContextAlarm.Init(buf, pos)
+        return cls.InitFromObj(tmpContextAlarm)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpContextAlarm):
+        x = ContextAlarmT()
+        x._UnPack(tmpContextAlarm)
+        return x
+
+    # ContextAlarmT
+    def _UnPack(self, ContextAlarm):
+        if ContextAlarm is None:
+            return
+        if ContextAlarm.MATCH_CRITERIA() is not None:
+            self.MATCH_CRITERIA = MatchCriteria.MatchCriteriaT.InitFromObj(ContextAlarm.MATCH_CRITERIA())
+        if ContextAlarm.ALARM() is not None:
+            self.ALARM = DefaultAlarm.DefaultAlarmT.InitFromObj(ContextAlarm.ALARM())
+
+    # ContextAlarmT
+    def Pack(self, builder):
+        if self.MATCH_CRITERIA is not None:
+            MATCH_CRITERIA = self.MATCH_CRITERIA.Pack(builder)
+        if self.ALARM is not None:
+            ALARM = self.ALARM.Pack(builder)
+        ContextAlarmStart(builder)
+        if self.MATCH_CRITERIA is not None:
+            ContextAlarmAddMATCH_CRITERIA(builder, MATCH_CRITERIA)
+        if self.ALARM is not None:
+            ContextAlarmAddALARM(builder, ALARM)
+        ContextAlarm = ContextAlarmEnd(builder)
+        return ContextAlarm

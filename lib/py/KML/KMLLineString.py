@@ -105,6 +105,12 @@ def KMLLineStringStartCOORDINATESVector(builder, numElems):
 def StartCOORDINATESVector(builder, numElems):
     return KMLLineStringStartCOORDINATESVector(builder, numElems)
 
+def KMLLineStringCreateCOORDINATESVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateCOORDINATESVector(builder, data):
+    KMLLineStringCreateCOORDINATESVector(builder, data)
+
 def KMLLineStringAddALTITUDE_MODE(builder, ALTITUDE_MODE):
     builder.PrependInt8Slot(1, ALTITUDE_MODE, 0)
 
@@ -144,18 +150,25 @@ except:
 class KMLLineStringT(object):
 
     # KMLLineStringT
-    def __init__(self):
-        self.COORDINATES = None  # type: List[KMLCoordinate.KMLCoordinateT]
-        self.ALTITUDE_MODE = 0  # type: int
-        self.EXTRUDE = False  # type: bool
-        self.TESSELLATE = False  # type: bool
-        self.GX_DRAW_ORDER = 0  # type: int
+    def __init__(
+        self,
+        COORDINATES = None,
+        ALTITUDE_MODE = 0,
+        EXTRUDE = False,
+        TESSELLATE = False,
+        GX_DRAW_ORDER = 0,
+    ):
+        self.COORDINATES = COORDINATES  # type: Optional[List[KMLCoordinate.KMLCoordinateT]]
+        self.ALTITUDE_MODE = ALTITUDE_MODE  # type: int
+        self.EXTRUDE = EXTRUDE  # type: bool
+        self.TESSELLATE = TESSELLATE  # type: bool
+        self.GX_DRAW_ORDER = GX_DRAW_ORDER  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        kmllineString = KMLLineString()
-        kmllineString.Init(buf, pos)
-        return cls.InitFromObj(kmllineString)
+        tmpKmllineString = KMLLineString()
+        tmpKmllineString.Init(buf, pos)
+        return cls.InitFromObj(tmpKmllineString)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -163,27 +176,27 @@ class KMLLineStringT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, kmllineString):
+    def InitFromObj(cls, tmpKmllineString):
         x = KMLLineStringT()
-        x._UnPack(kmllineString)
+        x._UnPack(tmpKmllineString)
         return x
 
     # KMLLineStringT
-    def _UnPack(self, kmllineString):
-        if kmllineString is None:
+    def _UnPack(self, KMLLineString):
+        if KMLLineString is None:
             return
-        if not kmllineString.COORDINATESIsNone():
+        if not KMLLineString.COORDINATESIsNone():
             self.COORDINATES = []
-            for i in range(kmllineString.COORDINATESLength()):
-                if kmllineString.COORDINATES(i) is None:
+            for i in range(KMLLineString.COORDINATESLength()):
+                if KMLLineString.COORDINATES(i) is None:
                     self.COORDINATES.append(None)
                 else:
-                    kMLCoordinate_ = KMLCoordinate.KMLCoordinateT.InitFromObj(kmllineString.COORDINATES(i))
+                    kMLCoordinate_ = KMLCoordinate.KMLCoordinateT.InitFromObj(KMLLineString.COORDINATES(i))
                     self.COORDINATES.append(kMLCoordinate_)
-        self.ALTITUDE_MODE = kmllineString.ALTITUDE_MODE()
-        self.EXTRUDE = kmllineString.EXTRUDE()
-        self.TESSELLATE = kmllineString.TESSELLATE()
-        self.GX_DRAW_ORDER = kmllineString.GX_DRAW_ORDER()
+        self.ALTITUDE_MODE = KMLLineString.ALTITUDE_MODE()
+        self.EXTRUDE = KMLLineString.EXTRUDE()
+        self.TESSELLATE = KMLLineString.TESSELLATE()
+        self.GX_DRAW_ORDER = KMLLineString.GX_DRAW_ORDER()
 
     # KMLLineStringT
     def Pack(self, builder):
@@ -202,5 +215,5 @@ class KMLLineStringT(object):
         KMLLineStringAddEXTRUDE(builder, self.EXTRUDE)
         KMLLineStringAddTESSELLATE(builder, self.TESSELLATE)
         KMLLineStringAddGX_DRAW_ORDER(builder, self.GX_DRAW_ORDER)
-        kmllineString = KMLLineStringEnd(builder)
-        return kmllineString
+        KMLLineString = KMLLineStringEnd(builder)
+        return KMLLineString

@@ -2,4 +2,150 @@
 
 # namespace: 
 
-# NOTE PolynomialCalibrator.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Polynomial calibrator - converts raw to engineering using polynomial
+class PolynomialCalibrator(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = PolynomialCalibrator()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsPolynomialCalibrator(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def PolynomialCalibratorBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x58\x54\x43", size_prefixed=size_prefixed)
+
+    # PolynomialCalibrator
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Polynomial terms (index is power, value is coefficient)
+    # PolynomialCalibrator
+    def COEFFICIENTS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # PolynomialCalibrator
+    def COEFFICIENTSAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
+
+    # PolynomialCalibrator
+    def COEFFICIENTSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # PolynomialCalibrator
+    def COEFFICIENTSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        return o == 0
+
+def PolynomialCalibratorStart(builder):
+    builder.StartObject(1)
+
+def Start(builder):
+    PolynomialCalibratorStart(builder)
+
+def PolynomialCalibratorAddCOEFFICIENTS(builder, COEFFICIENTS):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(COEFFICIENTS), 0)
+
+def AddCOEFFICIENTS(builder, COEFFICIENTS):
+    PolynomialCalibratorAddCOEFFICIENTS(builder, COEFFICIENTS)
+
+def PolynomialCalibratorStartCOEFFICIENTSVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
+def StartCOEFFICIENTSVector(builder, numElems):
+    return PolynomialCalibratorStartCOEFFICIENTSVector(builder, numElems)
+
+def PolynomialCalibratorCreateCOEFFICIENTSVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateCOEFFICIENTSVector(builder, data):
+    PolynomialCalibratorCreateCOEFFICIENTSVector(builder, data)
+
+def PolynomialCalibratorEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return PolynomialCalibratorEnd(builder)
+
+try:
+    from typing import List
+except:
+    pass
+
+class PolynomialCalibratorT(object):
+
+    # PolynomialCalibratorT
+    def __init__(
+        self,
+        COEFFICIENTS = None,
+    ):
+        self.COEFFICIENTS = COEFFICIENTS  # type: Optional[List[float]]
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpPolynomialCalibrator = PolynomialCalibrator()
+        tmpPolynomialCalibrator.Init(buf, pos)
+        return cls.InitFromObj(tmpPolynomialCalibrator)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpPolynomialCalibrator):
+        x = PolynomialCalibratorT()
+        x._UnPack(tmpPolynomialCalibrator)
+        return x
+
+    # PolynomialCalibratorT
+    def _UnPack(self, PolynomialCalibrator):
+        if PolynomialCalibrator is None:
+            return
+        if not PolynomialCalibrator.COEFFICIENTSIsNone():
+            if np is None:
+                self.COEFFICIENTS = []
+                for i in range(PolynomialCalibrator.COEFFICIENTSLength()):
+                    self.COEFFICIENTS.append(PolynomialCalibrator.COEFFICIENTS(i))
+            else:
+                self.COEFFICIENTS = PolynomialCalibrator.COEFFICIENTSAsNumpy()
+
+    # PolynomialCalibratorT
+    def Pack(self, builder):
+        if self.COEFFICIENTS is not None:
+            if np is not None and type(self.COEFFICIENTS) is np.ndarray:
+                COEFFICIENTS = builder.CreateNumpyVector(self.COEFFICIENTS)
+            else:
+                PolynomialCalibratorStartCOEFFICIENTSVector(builder, len(self.COEFFICIENTS))
+                for i in reversed(range(len(self.COEFFICIENTS))):
+                    builder.PrependFloat64(self.COEFFICIENTS[i])
+                COEFFICIENTS = builder.EndVector()
+        PolynomialCalibratorStart(builder)
+        if self.COEFFICIENTS is not None:
+            PolynomialCalibratorAddCOEFFICIENTS(builder, COEFFICIENTS)
+        PolynomialCalibrator = PolynomialCalibratorEnd(builder)
+        return PolynomialCalibrator

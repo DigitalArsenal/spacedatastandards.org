@@ -51,12 +51,19 @@ func (rcv *MathOperation) RPN_EXPRESSION() []byte {
 	return nil
 }
 
+func (rcv *MathOperation) RpnExpression() []byte {
+	return rcv.RPN_EXPRESSION()
+}
+
 /// Operation in Reverse Polish Notation (RPN)
 func MathOperationStart(builder *flatbuffers.Builder) {
 	builder.StartObject(1)
 }
 func MathOperationAddRPN_EXPRESSION(builder *flatbuffers.Builder, RPN_EXPRESSION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(RPN_EXPRESSION), 0)
+}
+func MathOperationAddRpnExpression(builder *flatbuffers.Builder, RPN_EXPRESSION flatbuffers.UOffsetT) {
+	MathOperationAddRPN_EXPRESSION(builder, RPN_EXPRESSION)
 }
 func MathOperationEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

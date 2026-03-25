@@ -85,6 +85,12 @@ def GJNStartFEATURESVector(builder, numElems):
 def StartFEATURESVector(builder, numElems):
     return GJNStartFEATURESVector(builder, numElems)
 
+def GJNCreateFEATURESVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateFEATURESVector(builder, data):
+    GJNCreateFEATURESVector(builder, data)
+
 def GJNAddBBOX(builder, BBOX):
     builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(BBOX), 0)
 
@@ -107,15 +113,19 @@ except:
 class GJNT(object):
 
     # GJNT
-    def __init__(self):
-        self.FEATURES = None  # type: List[GJNFeature.GJNFeatureT]
-        self.BBOX = None  # type: Optional[GJNBoundingBox.GJNBoundingBoxT]
+    def __init__(
+        self,
+        FEATURES = None,
+        BBOX = None,
+    ):
+        self.FEATURES = FEATURES  # type: Optional[List[GJNFeature.GJNFeatureT]]
+        self.BBOX = BBOX  # type: Optional[GJNBoundingBox.GJNBoundingBoxT]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        GJN = GJN()
-        GJN.Init(buf, pos)
-        return cls.InitFromObj(GJN)
+        tmpGjn = GJN()
+        tmpGjn.Init(buf, pos)
+        return cls.InitFromObj(tmpGjn)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -123,9 +133,9 @@ class GJNT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, GJN):
+    def InitFromObj(cls, tmpGjn):
         x = GJNT()
-        x._UnPack(GJN)
+        x._UnPack(tmpGjn)
         return x
 
     # GJNT

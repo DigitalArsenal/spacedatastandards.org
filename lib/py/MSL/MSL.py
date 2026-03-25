@@ -477,6 +477,16 @@ def MSLStartRESERVEDVector(builder, numElems):
 def StartRESERVEDVector(builder, numElems):
     return MSLStartRESERVEDVector(builder, numElems)
 
+def MSLCreateRESERVEDVector(builder, data):
+    data = list(data)
+    builder.StartVector(1, len(data), 1)
+    for item in reversed(data):
+        builder.PrependUint8(item)
+    return builder.EndVector()
+
+def CreateRESERVEDVector(builder, data):
+    MSLCreateRESERVEDVector(builder, data)
+
 def MSLEnd(builder):
     return builder.EndObject()
 
@@ -491,45 +501,79 @@ except:
 class MSLT(object):
 
     # MSLT
-    def __init__(self):
-        self.POSITION_X = 0.0  # type: float
-        self.POSITION_Y = 0.0  # type: float
-        self.POSITION_Z = 0.0  # type: float
-        self.VELOCITY_X = 0.0  # type: float
-        self.VELOCITY_Y = 0.0  # type: float
-        self.VELOCITY_Z = 0.0  # type: float
-        self.ATTITUDE_X = 0.0  # type: float
-        self.ATTITUDE_Y = 0.0  # type: float
-        self.ATTITUDE_Z = 0.0  # type: float
-        self.ATTITUDE_W = 0.0  # type: float
-        self.OMEGA_X = 0.0  # type: float
-        self.OMEGA_Y = 0.0  # type: float
-        self.OMEGA_Z = 0.0  # type: float
-        self.MASS = 0.0  # type: float
-        self.MASS_INITIAL = 0.0  # type: float
-        self.TARGET_POSITION_X = 0.0  # type: float
-        self.TARGET_POSITION_Y = 0.0  # type: float
-        self.TARGET_POSITION_Z = 0.0  # type: float
-        self.TARGET_VELOCITY_X = 0.0  # type: float
-        self.TARGET_VELOCITY_Y = 0.0  # type: float
-        self.TARGET_VELOCITY_Z = 0.0  # type: float
-        self.MISS_DISTANCE = 0.0  # type: float
-        self.SEEKER = None  # type: str
-        self.MOTOR = None  # type: str
-        self.GUIDANCE_CMD = None  # type: str
-        self.PHASE = 0  # type: int
-        self.GUIDANCE_LAW = 0  # type: int
-        self.TYPE = 0  # type: int
-        self.ARMED = 0  # type: int
-        self.TIME_OF_FLIGHT = 0.0  # type: float
-        self.MAX_G = 0.0  # type: float
-        self.RESERVED = None  # type: List[int]
+    def __init__(
+        self,
+        POSITION_X = 0.0,
+        POSITION_Y = 0.0,
+        POSITION_Z = 0.0,
+        VELOCITY_X = 0.0,
+        VELOCITY_Y = 0.0,
+        VELOCITY_Z = 0.0,
+        ATTITUDE_X = 0.0,
+        ATTITUDE_Y = 0.0,
+        ATTITUDE_Z = 0.0,
+        ATTITUDE_W = 0.0,
+        OMEGA_X = 0.0,
+        OMEGA_Y = 0.0,
+        OMEGA_Z = 0.0,
+        MASS = 0.0,
+        MASS_INITIAL = 0.0,
+        TARGET_POSITION_X = 0.0,
+        TARGET_POSITION_Y = 0.0,
+        TARGET_POSITION_Z = 0.0,
+        TARGET_VELOCITY_X = 0.0,
+        TARGET_VELOCITY_Y = 0.0,
+        TARGET_VELOCITY_Z = 0.0,
+        MISS_DISTANCE = 0.0,
+        SEEKER = None,
+        MOTOR = None,
+        GUIDANCE_CMD = None,
+        PHASE = 0,
+        GUIDANCE_LAW = 0,
+        TYPE = 0,
+        ARMED = 0,
+        TIME_OF_FLIGHT = 0.0,
+        MAX_G = 0.0,
+        RESERVED = None,
+    ):
+        self.POSITION_X = POSITION_X  # type: float
+        self.POSITION_Y = POSITION_Y  # type: float
+        self.POSITION_Z = POSITION_Z  # type: float
+        self.VELOCITY_X = VELOCITY_X  # type: float
+        self.VELOCITY_Y = VELOCITY_Y  # type: float
+        self.VELOCITY_Z = VELOCITY_Z  # type: float
+        self.ATTITUDE_X = ATTITUDE_X  # type: float
+        self.ATTITUDE_Y = ATTITUDE_Y  # type: float
+        self.ATTITUDE_Z = ATTITUDE_Z  # type: float
+        self.ATTITUDE_W = ATTITUDE_W  # type: float
+        self.OMEGA_X = OMEGA_X  # type: float
+        self.OMEGA_Y = OMEGA_Y  # type: float
+        self.OMEGA_Z = OMEGA_Z  # type: float
+        self.MASS = MASS  # type: float
+        self.MASS_INITIAL = MASS_INITIAL  # type: float
+        self.TARGET_POSITION_X = TARGET_POSITION_X  # type: float
+        self.TARGET_POSITION_Y = TARGET_POSITION_Y  # type: float
+        self.TARGET_POSITION_Z = TARGET_POSITION_Z  # type: float
+        self.TARGET_VELOCITY_X = TARGET_VELOCITY_X  # type: float
+        self.TARGET_VELOCITY_Y = TARGET_VELOCITY_Y  # type: float
+        self.TARGET_VELOCITY_Z = TARGET_VELOCITY_Z  # type: float
+        self.MISS_DISTANCE = MISS_DISTANCE  # type: float
+        self.SEEKER = SEEKER  # type: Optional[str]
+        self.MOTOR = MOTOR  # type: Optional[str]
+        self.GUIDANCE_CMD = GUIDANCE_CMD  # type: Optional[str]
+        self.PHASE = PHASE  # type: int
+        self.GUIDANCE_LAW = GUIDANCE_LAW  # type: int
+        self.TYPE = TYPE  # type: int
+        self.ARMED = ARMED  # type: int
+        self.TIME_OF_FLIGHT = TIME_OF_FLIGHT  # type: float
+        self.MAX_G = MAX_G  # type: float
+        self.RESERVED = RESERVED  # type: Optional[List[int]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        MSL = MSL()
-        MSL.Init(buf, pos)
-        return cls.InitFromObj(MSL)
+        tmpMsl = MSL()
+        tmpMsl.Init(buf, pos)
+        return cls.InitFromObj(tmpMsl)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -537,9 +581,9 @@ class MSLT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, MSL):
+    def InitFromObj(cls, tmpMsl):
         x = MSLT()
-        x._UnPack(MSL)
+        x._UnPack(tmpMsl)
         return x
 
     # MSLT

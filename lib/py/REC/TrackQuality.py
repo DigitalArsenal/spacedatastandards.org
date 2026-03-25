@@ -2,4 +2,10 @@
 
 # namespace: 
 
-# NOTE TrackQuality.py does not declare any structs or enums
+class TrackQuality(object):
+    NONE = 0
+    TENTATIVE = 1
+    FIRM = 2
+    LOCKED = 3
+    COASTING = 4
+    LOST = 5

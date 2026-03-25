@@ -32,8 +32,8 @@ class OCM : Table() {
     /**
      * Header section of the OCM.
      */
-    val HEADER : Header? get() = HEADER(Header())
-    fun HEADER(obj: Header) : Header? {
+    val header : Header? get() = header(Header())
+    fun header(obj: Header) : Header? {
         val o = __offset(4)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -44,8 +44,8 @@ class OCM : Table() {
     /**
      * Metadata section of the OCM.
      */
-    val METADATA : Metadata? get() = METADATA(Metadata())
-    fun METADATA(obj: Metadata) : Metadata? {
+    val metadata : Metadata? get() = metadata(Metadata())
+    fun metadata(obj: Metadata) : Metadata? {
         val o = __offset(6)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -54,25 +54,37 @@ class OCM : Table() {
         }
     }
     /**
-     * Trajectory type (e.g., PROPAGATED, ESTIMATED).
+     * Trajectory state representation type.
+     * Determines how orbit state data is parameterized in this message.
+     * For CARTESIAN_PV/CARTESIAN_PVA, use STATE_DATA array.
+     * For POLYNOMIAL_POS/POLYNOMIAL_OE, use the corresponding polynomial record arrays.
      */
-    val TRAJ_TYPE : String?
+    val trajType : Byte
         get() {
             val o = __offset(8)
+            return if(o != 0) bb.get(o + bb_pos) else 0
+        }
+    /**
+     * Legacy trajectory type string for backward compatibility and extended types
+     * (e.g., "PROPAGATED", "ESTIMATED", "FILTERED").
+     */
+    val trajTypeDescription : String?
+        get() {
+            val o = __offset(10)
             return if (o != 0) {
                 __string(o + bb_pos)
             } else {
                 null
             }
         }
-    val TRAJ_TYPEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun TRAJ_TYPEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val trajTypeDescriptionAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(10, 1)
+    fun trajTypeDescriptionInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 10, 1)
     /**
      * Time interval between state vectors in seconds (required for time-series data).
      */
-    val STATE_STEP_SIZE : Double
+    val stateStepSize : Double
         get() {
-            val o = __offset(10)
+            val o = __offset(12)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
@@ -80,9 +92,9 @@ class OCM : Table() {
      * 6 = position + velocity (X, Y, Z, X_DOT, Y_DOT, Z_DOT)
      * 9 = position + velocity + acceleration (adds X_DDOT, Y_DDOT, Z_DDOT)
      */
-    val STATE_VECTOR_SIZE : UByte
+    val stateVectorSize : UByte
         get() {
-            val o = __offset(12)
+            val o = __offset(14)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 6u
         }
     /**
@@ -91,25 +103,7 @@ class OCM : Table() {
      * Time reconstruction: epoch[i] = METADATA.START_TIME + (i * STATE_STEP_SIZE)
      * Length must be divisible by STATE_VECTOR_SIZE.
      */
-    fun STATE_DATA(j: Int) : Double {
-        val o = __offset(14)
-        return if (o != 0) {
-            bb.getDouble(__vector(o) + j * 8)
-        } else {
-            0.0
-        }
-    }
-    val STATE_DATALength : Int
-        get() {
-            val o = __offset(14); return if (o != 0) __vector_len(o) else 0
-        }
-    val STATE_DATAAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(14, 8)
-    fun STATE_DATAInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 14, 8)
-    /**
-     * Covariance data as flat array (21 elements per epoch for 6x6 lower triangular).
-     * Time alignment matches STATE_DATA epochs.
-     */
-    fun COVARIANCE_DATA(j: Int) : Double {
+    fun stateData(j: Int) : Double {
         val o = __offset(16)
         return if (o != 0) {
             bb.getDouble(__vector(o) + j * 8)
@@ -117,18 +111,74 @@ class OCM : Table() {
             0.0
         }
     }
-    val COVARIANCE_DATALength : Int
+    val stateDataLength : Int
         get() {
             val o = __offset(16); return if (o != 0) __vector_len(o) else 0
         }
-    val COVARIANCE_DATAAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(16, 8)
-    fun COVARIANCE_DATAInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 16, 8)
+    val stateDataAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(16, 8)
+    fun stateDataInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 16, 8)
+    /**
+     * Covariance data as flat array (21 elements per epoch for 6x6 lower triangular).
+     * Time alignment matches STATE_DATA epochs.
+     */
+    fun covarianceData(j: Int) : Double {
+        val o = __offset(18)
+        return if (o != 0) {
+            bb.getDouble(__vector(o) + j * 8)
+        } else {
+            0.0
+        }
+    }
+    val covarianceDataLength : Int
+        get() {
+            val o = __offset(18); return if (o != 0) __vector_len(o) else 0
+        }
+    val covarianceDataAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(18, 8)
+    fun covarianceDataInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 18, 8)
+    /**
+     * Polynomial position records.
+     * Used when TRAJ_TYPE is POLYNOMIAL_POS. Each record covers a time segment
+     * with polynomial coefficients for X, Y, Z position (and optionally velocity).
+     * See PPE schema for record structure and evaluation procedure.
+     */
+    fun polynomialPositionRecords(j: Int) : PPEPositionRecord? = polynomialPositionRecords(PPEPositionRecord(), j)
+    fun polynomialPositionRecords(obj: PPEPositionRecord, j: Int) : PPEPositionRecord? {
+        val o = __offset(20)
+        return if (o != 0) {
+            obj.__assign(__indirect(__vector(o) + j * 4), bb)
+        } else {
+            null
+        }
+    }
+    val polynomialPositionRecordsLength : Int
+        get() {
+            val o = __offset(20); return if (o != 0) __vector_len(o) else 0
+        }
+    /**
+     * Polynomial orbital element records.
+     * Used when TRAJ_TYPE is POLYNOMIAL_OE. Each record covers a time segment
+     * with polynomial coefficients for classical orbital elements.
+     * See PPE schema for record structure and evaluation procedure.
+     */
+    fun polynomialOeRecords(j: Int) : PPEOrbitalElementRecord? = polynomialOeRecords(PPEOrbitalElementRecord(), j)
+    fun polynomialOeRecords(obj: PPEOrbitalElementRecord, j: Int) : PPEOrbitalElementRecord? {
+        val o = __offset(22)
+        return if (o != 0) {
+            obj.__assign(__indirect(__vector(o) + j * 4), bb)
+        } else {
+            null
+        }
+    }
+    val polynomialOeRecordsLength : Int
+        get() {
+            val o = __offset(22); return if (o != 0) __vector_len(o) else 0
+        }
     /**
      * Physical properties of the space object.
      */
-    val PHYSICAL_PROPERTIES : PhysicalProperties? get() = PHYSICAL_PROPERTIES(PhysicalProperties())
-    fun PHYSICAL_PROPERTIES(obj: PhysicalProperties) : PhysicalProperties? {
-        val o = __offset(18)
+    val physicalProperties : PhysicalProperties? get() = physicalProperties(PhysicalProperties())
+    fun physicalProperties(obj: PhysicalProperties) : PhysicalProperties? {
+        val o = __offset(24)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
         } else {
@@ -138,25 +188,25 @@ class OCM : Table() {
     /**
      * Maneuver data.
      */
-    fun MANEUVER_DATA(j: Int) : Maneuver? = MANEUVER_DATA(Maneuver(), j)
-    fun MANEUVER_DATA(obj: Maneuver, j: Int) : Maneuver? {
-        val o = __offset(20)
+    fun maneuverData(j: Int) : Maneuver? = maneuverData(Maneuver(), j)
+    fun maneuverData(obj: Maneuver, j: Int) : Maneuver? {
+        val o = __offset(26)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
         } else {
             null
         }
     }
-    val MANEUVER_DATALength : Int
+    val maneuverDataLength : Int
         get() {
-            val o = __offset(20); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(26); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Perturbations parameters used.
      */
-    val PERTURBATIONS : Perturbations? get() = PERTURBATIONS(Perturbations())
-    fun PERTURBATIONS(obj: Perturbations) : Perturbations? {
-        val o = __offset(22)
+    val perturbations : Perturbations? get() = perturbations(Perturbations())
+    fun perturbations(obj: Perturbations) : Perturbations? {
+        val o = __offset(28)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
         } else {
@@ -166,9 +216,9 @@ class OCM : Table() {
     /**
      * Orbit determination data.
      */
-    val ORBIT_DETERMINATION : OrbitDetermination? get() = ORBIT_DETERMINATION(OrbitDetermination())
-    fun ORBIT_DETERMINATION(obj: OrbitDetermination) : OrbitDetermination? {
-        val o = __offset(24)
+    val orbitDetermination : OrbitDetermination? get() = orbitDetermination(OrbitDetermination())
+    fun orbitDetermination(obj: OrbitDetermination) : OrbitDetermination? {
+        val o = __offset(30)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
         } else {
@@ -178,50 +228,54 @@ class OCM : Table() {
     /**
      * User-defined parameters and supplemental comments.
      */
-    fun USER_DEFINED_PARAMETERS(j: Int) : UserDefinedParameters? = USER_DEFINED_PARAMETERS(UserDefinedParameters(), j)
-    fun USER_DEFINED_PARAMETERS(obj: UserDefinedParameters, j: Int) : UserDefinedParameters? {
-        val o = __offset(26)
+    fun userDefinedParameters(j: Int) : UserDefinedParameters? = userDefinedParameters(UserDefinedParameters(), j)
+    fun userDefinedParameters(obj: UserDefinedParameters, j: Int) : UserDefinedParameters? {
+        val o = __offset(32)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
         } else {
             null
         }
     }
-    val USER_DEFINED_PARAMETERSLength : Int
+    val userDefinedParametersLength : Int
         get() {
-            val o = __offset(26); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(32); return if (o != 0) __vector_len(o) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsOCM(_bb: ByteBuffer): OCM = getRootAsOCM(_bb, OCM())
         fun getRootAsOCM(_bb: ByteBuffer, obj: OCM): OCM {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun OCMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$OCM")
-        fun createOCM(builder: FlatBufferBuilder, HEADEROffset: Int, METADATAOffset: Int, TRAJ_TYPEOffset: Int, STATE_STEP_SIZE: Double, STATE_VECTOR_SIZE: UByte, STATE_DATAOffset: Int, COVARIANCE_DATAOffset: Int, PHYSICAL_PROPERTIESOffset: Int, MANEUVER_DATAOffset: Int, PERTURBATIONSOffset: Int, ORBIT_DETERMINATIONOffset: Int, USER_DEFINED_PARAMETERSOffset: Int) : Int {
-            builder.startTable(12)
-            addSTATE_STEP_SIZE(builder, STATE_STEP_SIZE)
-            addUSER_DEFINED_PARAMETERS(builder, USER_DEFINED_PARAMETERSOffset)
-            addORBIT_DETERMINATION(builder, ORBIT_DETERMINATIONOffset)
-            addPERTURBATIONS(builder, PERTURBATIONSOffset)
-            addMANEUVER_DATA(builder, MANEUVER_DATAOffset)
-            addPHYSICAL_PROPERTIES(builder, PHYSICAL_PROPERTIESOffset)
-            addCOVARIANCE_DATA(builder, COVARIANCE_DATAOffset)
-            addSTATE_DATA(builder, STATE_DATAOffset)
-            addTRAJ_TYPE(builder, TRAJ_TYPEOffset)
-            addMETADATA(builder, METADATAOffset)
-            addHEADER(builder, HEADEROffset)
-            addSTATE_VECTOR_SIZE(builder, STATE_VECTOR_SIZE)
+        fun createOCM(builder: FlatBufferBuilder, headerOffset: Int, metadataOffset: Int, trajType: Byte, trajTypeDescriptionOffset: Int, stateStepSize: Double, stateVectorSize: UByte, stateDataOffset: Int, covarianceDataOffset: Int, polynomialPositionRecordsOffset: Int, polynomialOeRecordsOffset: Int, physicalPropertiesOffset: Int, maneuverDataOffset: Int, perturbationsOffset: Int, orbitDeterminationOffset: Int, userDefinedParametersOffset: Int) : Int {
+            builder.startTable(15)
+            addSTATESTEPSIZE(builder, stateStepSize)
+            addUSERDEFINEDPARAMETERS(builder, userDefinedParametersOffset)
+            addORBITDETERMINATION(builder, orbitDeterminationOffset)
+            addPERTURBATIONS(builder, perturbationsOffset)
+            addMANEUVERDATA(builder, maneuverDataOffset)
+            addPHYSICALPROPERTIES(builder, physicalPropertiesOffset)
+            addPOLYNOMIALOERECORDS(builder, polynomialOeRecordsOffset)
+            addPOLYNOMIALPOSITIONRECORDS(builder, polynomialPositionRecordsOffset)
+            addCOVARIANCEDATA(builder, covarianceDataOffset)
+            addSTATEDATA(builder, stateDataOffset)
+            addTRAJTYPEDESCRIPTION(builder, trajTypeDescriptionOffset)
+            addMETADATA(builder, metadataOffset)
+            addHEADER(builder, headerOffset)
+            addSTATEVECTORSIZE(builder, stateVectorSize)
+            addTRAJTYPE(builder, trajType)
             return endOCM(builder)
         }
-        fun startOCM(builder: FlatBufferBuilder) = builder.startTable(12)
-        fun addHEADER(builder: FlatBufferBuilder, HEADER: Int) = builder.addOffset(0, HEADER, 0)
-        fun addMETADATA(builder: FlatBufferBuilder, METADATA: Int) = builder.addOffset(1, METADATA, 0)
-        fun addTRAJ_TYPE(builder: FlatBufferBuilder, TRAJ_TYPE: Int) = builder.addOffset(2, TRAJ_TYPE, 0)
-        fun addSTATE_STEP_SIZE(builder: FlatBufferBuilder, STATE_STEP_SIZE: Double) = builder.addDouble(3, STATE_STEP_SIZE, 0.0)
-        fun addSTATE_VECTOR_SIZE(builder: FlatBufferBuilder, STATE_VECTOR_SIZE: UByte) = builder.addByte(4, STATE_VECTOR_SIZE.toByte(), 6)
-        fun addSTATE_DATA(builder: FlatBufferBuilder, STATE_DATA: Int) = builder.addOffset(5, STATE_DATA, 0)
+        fun startOCM(builder: FlatBufferBuilder) = builder.startTable(15)
+        fun addHEADER(builder: FlatBufferBuilder, header: Int) = builder.addOffset(0, header, 0)
+        fun addMETADATA(builder: FlatBufferBuilder, metadata: Int) = builder.addOffset(1, metadata, 0)
+        fun addTRAJTYPE(builder: FlatBufferBuilder, trajType: Byte) = builder.addByte(2, trajType, 0)
+        fun addTRAJTYPEDESCRIPTION(builder: FlatBufferBuilder, trajTypeDescription: Int) = builder.addOffset(3, trajTypeDescription, 0)
+        fun addSTATESTEPSIZE(builder: FlatBufferBuilder, stateStepSize: Double) = builder.addDouble(4, stateStepSize, 0.0)
+        fun addSTATEVECTORSIZE(builder: FlatBufferBuilder, stateVectorSize: UByte) = builder.addByte(5, stateVectorSize.toByte(), 6)
+        fun addSTATEDATA(builder: FlatBufferBuilder, stateData: Int) = builder.addOffset(6, stateData, 0)
         fun createStateDataVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
             builder.startVector(8, data.size, 8)
             for (i in data.size - 1 downTo 0) {
@@ -230,7 +284,7 @@ class OCM : Table() {
             return builder.endVector()
         }
         fun startStateDataVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
-        fun addCOVARIANCE_DATA(builder: FlatBufferBuilder, COVARIANCE_DATA: Int) = builder.addOffset(6, COVARIANCE_DATA, 0)
+        fun addCOVARIANCEDATA(builder: FlatBufferBuilder, covarianceData: Int) = builder.addOffset(7, covarianceData, 0)
         fun createCovarianceDataVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
             builder.startVector(8, data.size, 8)
             for (i in data.size - 1 downTo 0) {
@@ -239,8 +293,26 @@ class OCM : Table() {
             return builder.endVector()
         }
         fun startCovarianceDataVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
-        fun addPHYSICAL_PROPERTIES(builder: FlatBufferBuilder, PHYSICAL_PROPERTIES: Int) = builder.addOffset(7, PHYSICAL_PROPERTIES, 0)
-        fun addMANEUVER_DATA(builder: FlatBufferBuilder, MANEUVER_DATA: Int) = builder.addOffset(8, MANEUVER_DATA, 0)
+        fun addPOLYNOMIALPOSITIONRECORDS(builder: FlatBufferBuilder, polynomialPositionRecords: Int) = builder.addOffset(8, polynomialPositionRecords, 0)
+        fun createPolynomialPositionRecordsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startPolynomialPositionRecordsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addPOLYNOMIALOERECORDS(builder: FlatBufferBuilder, polynomialOeRecords: Int) = builder.addOffset(9, polynomialOeRecords, 0)
+        fun createPolynomialOeRecordsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startPolynomialOeRecordsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addPHYSICALPROPERTIES(builder: FlatBufferBuilder, physicalProperties: Int) = builder.addOffset(10, physicalProperties, 0)
+        fun addMANEUVERDATA(builder: FlatBufferBuilder, maneuverData: Int) = builder.addOffset(11, maneuverData, 0)
         fun createManeuverDataVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -249,9 +321,9 @@ class OCM : Table() {
             return builder.endVector()
         }
         fun startManeuverDataVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addPERTURBATIONS(builder: FlatBufferBuilder, PERTURBATIONS: Int) = builder.addOffset(9, PERTURBATIONS, 0)
-        fun addORBIT_DETERMINATION(builder: FlatBufferBuilder, ORBIT_DETERMINATION: Int) = builder.addOffset(10, ORBIT_DETERMINATION, 0)
-        fun addUSER_DEFINED_PARAMETERS(builder: FlatBufferBuilder, USER_DEFINED_PARAMETERS: Int) = builder.addOffset(11, USER_DEFINED_PARAMETERS, 0)
+        fun addPERTURBATIONS(builder: FlatBufferBuilder, perturbations: Int) = builder.addOffset(12, perturbations, 0)
+        fun addORBITDETERMINATION(builder: FlatBufferBuilder, orbitDetermination: Int) = builder.addOffset(13, orbitDetermination, 0)
+        fun addUSERDEFINEDPARAMETERS(builder: FlatBufferBuilder, userDefinedParameters: Int) = builder.addOffset(14, userDefinedParameters, 0)
         fun createUserDefinedParametersVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {

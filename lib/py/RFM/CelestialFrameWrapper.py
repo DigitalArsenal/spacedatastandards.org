@@ -29,7 +29,7 @@ class CelestialFrameWrapper(object):
         self._tab = flatbuffers.table.Table(buf, pos)
 
     # CelestialFrameWrapper
-    def Frame(self):
+    def frame(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
@@ -41,11 +41,11 @@ def CelestialFrameWrapperStart(builder):
 def Start(builder):
     CelestialFrameWrapperStart(builder)
 
-def CelestialFrameWrapperAddFrame(builder, frame):
+def CelestialFrameWrapperAddframe(builder, frame):
     builder.PrependInt8Slot(0, frame, 0)
 
-def AddFrame(builder, frame):
-    CelestialFrameWrapperAddFrame(builder, frame)
+def Addframe(builder, frame):
+    CelestialFrameWrapperAddframe(builder, frame)
 
 def CelestialFrameWrapperEnd(builder):
     return builder.EndObject()
@@ -57,14 +57,17 @@ def End(builder):
 class CelestialFrameWrapperT(object):
 
     # CelestialFrameWrapperT
-    def __init__(self):
-        self.frame = 0  # type: int
+    def __init__(
+        self,
+        frame = 0,
+    ):
+        self.frame = frame  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        celestialFrameWrapper = CelestialFrameWrapper()
-        celestialFrameWrapper.Init(buf, pos)
-        return cls.InitFromObj(celestialFrameWrapper)
+        tmpCelestialFrameWrapper = CelestialFrameWrapper()
+        tmpCelestialFrameWrapper.Init(buf, pos)
+        return cls.InitFromObj(tmpCelestialFrameWrapper)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -72,20 +75,20 @@ class CelestialFrameWrapperT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, celestialFrameWrapper):
+    def InitFromObj(cls, tmpCelestialFrameWrapper):
         x = CelestialFrameWrapperT()
-        x._UnPack(celestialFrameWrapper)
+        x._UnPack(tmpCelestialFrameWrapper)
         return x
 
     # CelestialFrameWrapperT
-    def _UnPack(self, celestialFrameWrapper):
-        if celestialFrameWrapper is None:
+    def _UnPack(self, CelestialFrameWrapper):
+        if CelestialFrameWrapper is None:
             return
-        self.frame = celestialFrameWrapper.Frame()
+        self.frame = CelestialFrameWrapper.frame()
 
     # CelestialFrameWrapperT
     def Pack(self, builder):
         CelestialFrameWrapperStart(builder)
-        CelestialFrameWrapperAddFrame(builder, self.frame)
-        celestialFrameWrapper = CelestialFrameWrapperEnd(builder)
-        return celestialFrameWrapper
+        CelestialFrameWrapperAddframe(builder, self.frame)
+        CelestialFrameWrapper = CelestialFrameWrapperEnd(builder)
+        return CelestialFrameWrapper

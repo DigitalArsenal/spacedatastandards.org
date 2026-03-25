@@ -185,23 +185,35 @@ def End(builder):
 class EOPT(object):
 
     # EOPT
-    def __init__(self):
-        self.DATE = None  # type: str
-        self.MJD = 0  # type: int
-        self.X_POLE_WANDER_RADIANS = 0.0  # type: float
-        self.Y_POLE_WANDER_RADIANS = 0.0  # type: float
-        self.X_CELESTIAL_POLE_OFFSET_RADIANS = 0.0  # type: float
-        self.Y_CELESTIAL_POLE_OFFSET_RADIANS = 0.0  # type: float
-        self.UT1_MINUS_UTC_SECONDS = 0.0  # type: float
-        self.TAI_MINUS_UTC_SECONDS = 0  # type: int
-        self.LENGTH_OF_DAY_CORRECTION_SECONDS = 0.0  # type: float
-        self.DATA_TYPE = 0  # type: int
+    def __init__(
+        self,
+        DATE = None,
+        MJD = 0,
+        X_POLE_WANDER_RADIANS = 0.0,
+        Y_POLE_WANDER_RADIANS = 0.0,
+        X_CELESTIAL_POLE_OFFSET_RADIANS = 0.0,
+        Y_CELESTIAL_POLE_OFFSET_RADIANS = 0.0,
+        UT1_MINUS_UTC_SECONDS = 0.0,
+        TAI_MINUS_UTC_SECONDS = 0,
+        LENGTH_OF_DAY_CORRECTION_SECONDS = 0.0,
+        DATA_TYPE = 0,
+    ):
+        self.DATE = DATE  # type: Optional[str]
+        self.MJD = MJD  # type: int
+        self.X_POLE_WANDER_RADIANS = X_POLE_WANDER_RADIANS  # type: float
+        self.Y_POLE_WANDER_RADIANS = Y_POLE_WANDER_RADIANS  # type: float
+        self.X_CELESTIAL_POLE_OFFSET_RADIANS = X_CELESTIAL_POLE_OFFSET_RADIANS  # type: float
+        self.Y_CELESTIAL_POLE_OFFSET_RADIANS = Y_CELESTIAL_POLE_OFFSET_RADIANS  # type: float
+        self.UT1_MINUS_UTC_SECONDS = UT1_MINUS_UTC_SECONDS  # type: float
+        self.TAI_MINUS_UTC_SECONDS = TAI_MINUS_UTC_SECONDS  # type: int
+        self.LENGTH_OF_DAY_CORRECTION_SECONDS = LENGTH_OF_DAY_CORRECTION_SECONDS  # type: float
+        self.DATA_TYPE = DATA_TYPE  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        EOP = EOP()
-        EOP.Init(buf, pos)
-        return cls.InitFromObj(EOP)
+        tmpEop = EOP()
+        tmpEop.Init(buf, pos)
+        return cls.InitFromObj(tmpEop)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -209,9 +221,9 @@ class EOPT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, EOP):
+    def InitFromObj(cls, tmpEop):
         x = EOPT()
-        x._UnPack(EOP)
+        x._UnPack(tmpEop)
         return x
 
     # EOPT

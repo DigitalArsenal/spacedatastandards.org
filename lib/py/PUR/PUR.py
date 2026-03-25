@@ -215,6 +215,16 @@ def PURStartBUYER_ENCRYPTION_PUBKEYVector(builder, numElems):
 def StartBUYER_ENCRYPTION_PUBKEYVector(builder, numElems):
     return PURStartBUYER_ENCRYPTION_PUBKEYVector(builder, numElems)
 
+def PURCreateBUYER_ENCRYPTION_PUBKEYVector(builder, data):
+    data = list(data)
+    builder.StartVector(1, len(data), 1)
+    for item in reversed(data):
+        builder.PrependUint8(item)
+    return builder.EndVector()
+
+def CreateBUYER_ENCRYPTION_PUBKEYVector(builder, data):
+    PURCreateBUYER_ENCRYPTION_PUBKEYVector(builder, data)
+
 def PURAddPAYMENT_METHOD(builder, PAYMENT_METHOD):
     builder.PrependInt8Slot(5, PAYMENT_METHOD, 0)
 
@@ -263,6 +273,16 @@ def PURStartBUYER_SIGNATUREVector(builder, numElems):
 def StartBUYER_SIGNATUREVector(builder, numElems):
     return PURStartBUYER_SIGNATUREVector(builder, numElems)
 
+def PURCreateBUYER_SIGNATUREVector(builder, data):
+    data = list(data)
+    builder.StartVector(1, len(data), 1)
+    for item in reversed(data):
+        builder.PrependUint8(item)
+    return builder.EndVector()
+
+def CreateBUYER_SIGNATUREVector(builder, data):
+    PURCreateBUYER_SIGNATUREVector(builder, data)
+
 def PURAddTIMESTAMP(builder, TIMESTAMP):
     builder.PrependUint64Slot(12, TIMESTAMP, 0)
 
@@ -283,26 +303,41 @@ except:
 class PURT(object):
 
     # PURT
-    def __init__(self):
-        self.REQUEST_ID = None  # type: str
-        self.LISTING_ID = None  # type: str
-        self.TIER_NAME = None  # type: str
-        self.BUYER_PEER_ID = None  # type: str
-        self.BUYER_ENCRYPTION_PUBKEY = None  # type: List[int]
-        self.PAYMENT_METHOD = 0  # type: int
-        self.PAYMENT_AMOUNT = 0  # type: int
-        self.PAYMENT_CURRENCY = None  # type: str
-        self.PAYMENT_TX_HASH = None  # type: str
-        self.PAYMENT_CHAIN = None  # type: str
-        self.PAYMENT_REFERENCE = None  # type: str
-        self.BUYER_SIGNATURE = None  # type: List[int]
-        self.TIMESTAMP = 0  # type: int
+    def __init__(
+        self,
+        REQUEST_ID = None,
+        LISTING_ID = None,
+        TIER_NAME = None,
+        BUYER_PEER_ID = None,
+        BUYER_ENCRYPTION_PUBKEY = None,
+        PAYMENT_METHOD = 0,
+        PAYMENT_AMOUNT = 0,
+        PAYMENT_CURRENCY = None,
+        PAYMENT_TX_HASH = None,
+        PAYMENT_CHAIN = None,
+        PAYMENT_REFERENCE = None,
+        BUYER_SIGNATURE = None,
+        TIMESTAMP = 0,
+    ):
+        self.REQUEST_ID = REQUEST_ID  # type: Optional[str]
+        self.LISTING_ID = LISTING_ID  # type: Optional[str]
+        self.TIER_NAME = TIER_NAME  # type: Optional[str]
+        self.BUYER_PEER_ID = BUYER_PEER_ID  # type: Optional[str]
+        self.BUYER_ENCRYPTION_PUBKEY = BUYER_ENCRYPTION_PUBKEY  # type: Optional[List[int]]
+        self.PAYMENT_METHOD = PAYMENT_METHOD  # type: int
+        self.PAYMENT_AMOUNT = PAYMENT_AMOUNT  # type: int
+        self.PAYMENT_CURRENCY = PAYMENT_CURRENCY  # type: Optional[str]
+        self.PAYMENT_TX_HASH = PAYMENT_TX_HASH  # type: Optional[str]
+        self.PAYMENT_CHAIN = PAYMENT_CHAIN  # type: Optional[str]
+        self.PAYMENT_REFERENCE = PAYMENT_REFERENCE  # type: Optional[str]
+        self.BUYER_SIGNATURE = BUYER_SIGNATURE  # type: Optional[List[int]]
+        self.TIMESTAMP = TIMESTAMP  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        PUR = PUR()
-        PUR.Init(buf, pos)
-        return cls.InitFromObj(PUR)
+        tmpPur = PUR()
+        tmpPur.Init(buf, pos)
+        return cls.InitFromObj(tmpPur)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -310,9 +345,9 @@ class PURT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, PUR):
+    def InitFromObj(cls, tmpPur):
         x = PURT()
-        x._UnPack(PUR)
+        x._UnPack(tmpPur)
         return x
 
     # PURT

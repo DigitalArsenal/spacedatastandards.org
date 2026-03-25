@@ -51,6 +51,10 @@ func (rcv *SequenceContainer) NAME() []byte {
 	return nil
 }
 
+func (rcv *SequenceContainer) Name() []byte {
+	return rcv.NAME()
+}
+
 /// Container name
 /// Short description
 func (rcv *SequenceContainer) SHORT_DESCRIPTION() []byte {
@@ -59,6 +63,10 @@ func (rcv *SequenceContainer) SHORT_DESCRIPTION() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *SequenceContainer) ShortDescription() []byte {
+	return rcv.SHORT_DESCRIPTION()
 }
 
 /// Short description
@@ -71,6 +79,10 @@ func (rcv *SequenceContainer) LONG_DESCRIPTION() []byte {
 	return nil
 }
 
+func (rcv *SequenceContainer) LongDescription() []byte {
+	return rcv.LONG_DESCRIPTION()
+}
+
 /// Long description
 /// Abstract container (used as base only)
 func (rcv *SequenceContainer) ABSTRACT() bool {
@@ -81,9 +93,17 @@ func (rcv *SequenceContainer) ABSTRACT() bool {
 	return false
 }
 
+func (rcv *SequenceContainer) Abstract() bool {
+	return rcv.ABSTRACT()
+}
+
 /// Abstract container (used as base only)
 func (rcv *SequenceContainer) MutateABSTRACT(n bool) bool {
 	return rcv._tab.MutateBoolSlot(10, n)
+}
+
+func (rcv *SequenceContainer) MutateAbstract(n bool) bool {
+	return rcv.MutateABSTRACT(n)
 }
 
 /// Container entry list
@@ -93,10 +113,17 @@ func (rcv *SequenceContainer) ENTRY_LIST(obj *ContainerEntry, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(ContainerEntry)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *SequenceContainer) EntryList(obj *ContainerEntry, j int) bool {
+	return rcv.ENTRY_LIST(obj, j)
 }
 
 func (rcv *SequenceContainer) ENTRY_LISTLength() int {
@@ -105,6 +132,10 @@ func (rcv *SequenceContainer) ENTRY_LISTLength() int {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *SequenceContainer) EntryListLength() int {
+	return rcv.ENTRY_LISTLength()
 }
 
 /// Container entry list
@@ -122,6 +153,10 @@ func (rcv *SequenceContainer) BASE_CONTAINER(obj *BaseContainer) *BaseContainer 
 	return nil
 }
 
+func (rcv *SequenceContainer) BaseContainer(obj *BaseContainer) *BaseContainer {
+	return rcv.BASE_CONTAINER(obj)
+}
+
 /// Base container (inheritance)
 /// Binary encoding
 func (rcv *SequenceContainer) BINARY_ENCODING(obj *ContainerBinaryEncoding) *ContainerBinaryEncoding {
@@ -135,6 +170,10 @@ func (rcv *SequenceContainer) BINARY_ENCODING(obj *ContainerBinaryEncoding) *Con
 		return obj
 	}
 	return nil
+}
+
+func (rcv *SequenceContainer) BinaryEncoding(obj *ContainerBinaryEncoding) *ContainerBinaryEncoding {
+	return rcv.BINARY_ENCODING(obj)
 }
 
 /// Binary encoding
@@ -152,6 +191,10 @@ func (rcv *SequenceContainer) RATE_IN_STREAM(obj *RateInStream) *RateInStream {
 	return nil
 }
 
+func (rcv *SequenceContainer) RateInStream(obj *RateInStream) *RateInStream {
+	return rcv.RATE_IN_STREAM(obj)
+}
+
 /// Rate in stream
 /// Idle pattern (hex string for padding)
 func (rcv *SequenceContainer) IDLE_PATTERN() []byte {
@@ -162,6 +205,10 @@ func (rcv *SequenceContainer) IDLE_PATTERN() []byte {
 	return nil
 }
 
+func (rcv *SequenceContainer) IdlePattern() []byte {
+	return rcv.IDLE_PATTERN()
+}
+
 /// Idle pattern (hex string for padding)
 func SequenceContainerStart(builder *flatbuffers.Builder) {
 	builder.StartObject(9)
@@ -169,32 +216,62 @@ func SequenceContainerStart(builder *flatbuffers.Builder) {
 func SequenceContainerAddNAME(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(NAME), 0)
 }
+func SequenceContainerAddName(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
+	SequenceContainerAddNAME(builder, NAME)
+}
 func SequenceContainerAddSHORT_DESCRIPTION(builder *flatbuffers.Builder, SHORT_DESCRIPTION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(SHORT_DESCRIPTION), 0)
+}
+func SequenceContainerAddShortDescription(builder *flatbuffers.Builder, SHORT_DESCRIPTION flatbuffers.UOffsetT) {
+	SequenceContainerAddSHORT_DESCRIPTION(builder, SHORT_DESCRIPTION)
 }
 func SequenceContainerAddLONG_DESCRIPTION(builder *flatbuffers.Builder, LONG_DESCRIPTION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(LONG_DESCRIPTION), 0)
 }
+func SequenceContainerAddLongDescription(builder *flatbuffers.Builder, LONG_DESCRIPTION flatbuffers.UOffsetT) {
+	SequenceContainerAddLONG_DESCRIPTION(builder, LONG_DESCRIPTION)
+}
 func SequenceContainerAddABSTRACT(builder *flatbuffers.Builder, ABSTRACT bool) {
 	builder.PrependBoolSlot(3, ABSTRACT, false)
+}
+func SequenceContainerAddAbstract(builder *flatbuffers.Builder, ABSTRACT bool) {
+	SequenceContainerAddABSTRACT(builder, ABSTRACT)
 }
 func SequenceContainerAddENTRY_LIST(builder *flatbuffers.Builder, ENTRY_LIST flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(ENTRY_LIST), 0)
 }
+func SequenceContainerAddEntryList(builder *flatbuffers.Builder, ENTRY_LIST flatbuffers.UOffsetT) {
+	SequenceContainerAddENTRY_LIST(builder, ENTRY_LIST)
+}
 func SequenceContainerStartENTRY_LISTVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func SequenceContainerStartEntryListVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return SequenceContainerStartENTRY_LISTVector(builder, numElems)
 }
 func SequenceContainerAddBASE_CONTAINER(builder *flatbuffers.Builder, BASE_CONTAINER flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(BASE_CONTAINER), 0)
 }
+func SequenceContainerAddBaseContainer(builder *flatbuffers.Builder, BASE_CONTAINER flatbuffers.UOffsetT) {
+	SequenceContainerAddBASE_CONTAINER(builder, BASE_CONTAINER)
+}
 func SequenceContainerAddBINARY_ENCODING(builder *flatbuffers.Builder, BINARY_ENCODING flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(BINARY_ENCODING), 0)
+}
+func SequenceContainerAddBinaryEncoding(builder *flatbuffers.Builder, BINARY_ENCODING flatbuffers.UOffsetT) {
+	SequenceContainerAddBINARY_ENCODING(builder, BINARY_ENCODING)
 }
 func SequenceContainerAddRATE_IN_STREAM(builder *flatbuffers.Builder, RATE_IN_STREAM flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(RATE_IN_STREAM), 0)
 }
+func SequenceContainerAddRateInStream(builder *flatbuffers.Builder, RATE_IN_STREAM flatbuffers.UOffsetT) {
+	SequenceContainerAddRATE_IN_STREAM(builder, RATE_IN_STREAM)
+}
 func SequenceContainerAddIDLE_PATTERN(builder *flatbuffers.Builder, IDLE_PATTERN flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(IDLE_PATTERN), 0)
+}
+func SequenceContainerAddIdlePattern(builder *flatbuffers.Builder, IDLE_PATTERN flatbuffers.UOffsetT) {
+	SequenceContainerAddIDLE_PATTERN(builder, IDLE_PATTERN)
 }
 func SequenceContainerEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

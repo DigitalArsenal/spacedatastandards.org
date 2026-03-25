@@ -51,9 +51,17 @@ func (rcv *KMLLod) MIN_LOD_PIXELS() float64 {
 	return 0.0
 }
 
+func (rcv *KMLLod) MinLodPixels() float64 {
+	return rcv.MIN_LOD_PIXELS()
+}
+
 /// Minimum LOD pixels
 func (rcv *KMLLod) MutateMIN_LOD_PIXELS(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(4, n)
+}
+
+func (rcv *KMLLod) MutateMinLodPixels(n float64) bool {
+	return rcv.MutateMIN_LOD_PIXELS(n)
 }
 
 /// Maximum LOD pixels (-1 = infinite)
@@ -65,9 +73,17 @@ func (rcv *KMLLod) MAX_LOD_PIXELS() float64 {
 	return 0.0
 }
 
+func (rcv *KMLLod) MaxLodPixels() float64 {
+	return rcv.MAX_LOD_PIXELS()
+}
+
 /// Maximum LOD pixels (-1 = infinite)
 func (rcv *KMLLod) MutateMAX_LOD_PIXELS(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(6, n)
+}
+
+func (rcv *KMLLod) MutateMaxLodPixels(n float64) bool {
+	return rcv.MutateMAX_LOD_PIXELS(n)
 }
 
 /// Minimum fade extent
@@ -79,9 +95,17 @@ func (rcv *KMLLod) MIN_FADE_EXTENT() float64 {
 	return 0.0
 }
 
+func (rcv *KMLLod) MinFadeExtent() float64 {
+	return rcv.MIN_FADE_EXTENT()
+}
+
 /// Minimum fade extent
 func (rcv *KMLLod) MutateMIN_FADE_EXTENT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(8, n)
+}
+
+func (rcv *KMLLod) MutateMinFadeExtent(n float64) bool {
+	return rcv.MutateMIN_FADE_EXTENT(n)
 }
 
 /// Maximum fade extent
@@ -93,9 +117,17 @@ func (rcv *KMLLod) MAX_FADE_EXTENT() float64 {
 	return 0.0
 }
 
+func (rcv *KMLLod) MaxFadeExtent() float64 {
+	return rcv.MAX_FADE_EXTENT()
+}
+
 /// Maximum fade extent
 func (rcv *KMLLod) MutateMAX_FADE_EXTENT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(10, n)
+}
+
+func (rcv *KMLLod) MutateMaxFadeExtent(n float64) bool {
+	return rcv.MutateMAX_FADE_EXTENT(n)
 }
 
 func KMLLodStart(builder *flatbuffers.Builder) {
@@ -104,14 +136,26 @@ func KMLLodStart(builder *flatbuffers.Builder) {
 func KMLLodAddMIN_LOD_PIXELS(builder *flatbuffers.Builder, MIN_LOD_PIXELS float64) {
 	builder.PrependFloat64Slot(0, MIN_LOD_PIXELS, 0.0)
 }
+func KMLLodAddMinLodPixels(builder *flatbuffers.Builder, MIN_LOD_PIXELS float64) {
+	KMLLodAddMIN_LOD_PIXELS(builder, MIN_LOD_PIXELS)
+}
 func KMLLodAddMAX_LOD_PIXELS(builder *flatbuffers.Builder, MAX_LOD_PIXELS float64) {
 	builder.PrependFloat64Slot(1, MAX_LOD_PIXELS, 0.0)
+}
+func KMLLodAddMaxLodPixels(builder *flatbuffers.Builder, MAX_LOD_PIXELS float64) {
+	KMLLodAddMAX_LOD_PIXELS(builder, MAX_LOD_PIXELS)
 }
 func KMLLodAddMIN_FADE_EXTENT(builder *flatbuffers.Builder, MIN_FADE_EXTENT float64) {
 	builder.PrependFloat64Slot(2, MIN_FADE_EXTENT, 0.0)
 }
+func KMLLodAddMinFadeExtent(builder *flatbuffers.Builder, MIN_FADE_EXTENT float64) {
+	KMLLodAddMIN_FADE_EXTENT(builder, MIN_FADE_EXTENT)
+}
 func KMLLodAddMAX_FADE_EXTENT(builder *flatbuffers.Builder, MAX_FADE_EXTENT float64) {
 	builder.PrependFloat64Slot(3, MAX_FADE_EXTENT, 0.0)
+}
+func KMLLodAddMaxFadeExtent(builder *flatbuffers.Builder, MAX_FADE_EXTENT float64) {
+	KMLLodAddMAX_FADE_EXTENT(builder, MAX_FADE_EXTENT)
 }
 func KMLLodEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

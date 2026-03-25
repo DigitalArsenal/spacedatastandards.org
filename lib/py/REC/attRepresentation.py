@@ -2,4 +2,8 @@
 
 # namespace: 
 
-# NOTE attRepresentation.py does not declare any structs or enums
+class attRepresentation(object):
+    QUATERNION = 0
+    EULER = 1
+    SPIN = 2
+    DIRECTION_COSINE = 3

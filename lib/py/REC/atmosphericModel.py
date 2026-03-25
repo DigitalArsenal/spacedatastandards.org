@@ -2,4 +2,12 @@
 
 # namespace: 
 
-# NOTE atmosphericModel.py does not declare any structs or enums
+# Enum to represent common atmospheric models
+class atmosphericModel(object):
+    NONE = 0
+    JACCHIA_70 = 1
+    JB2008 = 2
+    NRLMSISE_00 = 3
+    DTM_2000 = 4
+    HWM14 = 5
+    HASDM = 6

@@ -2,4 +2,9 @@
 
 # namespace: 
 
-# NOTE sizeShapeType.py does not declare any structs or enums
+# Orbital element parameterization for the first element (size/shape).
+class sizeShapeType(object):
+    # Semi-major axis (km). Standard for elliptical orbits.
+    SMA = 0
+    # Radius of periapsis (km). Preferred for hyperbolic orbits.
+    R_PERIAPSIS = 1

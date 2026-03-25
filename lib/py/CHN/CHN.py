@@ -214,26 +214,41 @@ def End(builder):
 class CHNT(object):
 
     # CHNT
-    def __init__(self):
-        self.ID = None  # type: str
-        self.NAME = None  # type: str
-        self.TYPE = None  # type: str
-        self.BEAM_NAME = None  # type: str
-        self.ID_RFBAND = None  # type: str
-        self.ENCRYPTION = None  # type: str
-        self.PKG = None  # type: str
-        self.RES = None  # type: str
-        self.COMPRESSION = None  # type: str
-        self.VPID = None  # type: str
-        self.APID = None  # type: str
-        self.SID = None  # type: str
-        self.OWNER = None  # type: str
+    def __init__(
+        self,
+        ID = None,
+        NAME = None,
+        TYPE = None,
+        BEAM_NAME = None,
+        ID_RFBAND = None,
+        ENCRYPTION = None,
+        PKG = None,
+        RES = None,
+        COMPRESSION = None,
+        VPID = None,
+        APID = None,
+        SID = None,
+        OWNER = None,
+    ):
+        self.ID = ID  # type: Optional[str]
+        self.NAME = NAME  # type: Optional[str]
+        self.TYPE = TYPE  # type: Optional[str]
+        self.BEAM_NAME = BEAM_NAME  # type: Optional[str]
+        self.ID_RFBAND = ID_RFBAND  # type: Optional[str]
+        self.ENCRYPTION = ENCRYPTION  # type: Optional[str]
+        self.PKG = PKG  # type: Optional[str]
+        self.RES = RES  # type: Optional[str]
+        self.COMPRESSION = COMPRESSION  # type: Optional[str]
+        self.VPID = VPID  # type: Optional[str]
+        self.APID = APID  # type: Optional[str]
+        self.SID = SID  # type: Optional[str]
+        self.OWNER = OWNER  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        CHN = CHN()
-        CHN.Init(buf, pos)
-        return cls.InitFromObj(CHN)
+        tmpChn = CHN()
+        tmpChn.Init(buf, pos)
+        return cls.InitFromObj(tmpChn)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -241,9 +256,9 @@ class CHNT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, CHN):
+    def InitFromObj(cls, tmpChn):
         x = CHNT()
-        x._UnPack(CHN)
+        x._UnPack(tmpChn)
         return x
 
     # CHNT

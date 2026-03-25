@@ -56,6 +56,10 @@ func (rcv *DataCoverage) SPATIAL(obj *SpatialCoverage) *SpatialCoverage {
 	return nil
 }
 
+func (rcv *DataCoverage) Spatial(obj *SpatialCoverage) *SpatialCoverage {
+	return rcv.SPATIAL(obj)
+}
+
 /// Spatial coverage definition
 /// Temporal coverage definition
 func (rcv *DataCoverage) TEMPORAL(obj *TemporalCoverage) *TemporalCoverage {
@@ -71,6 +75,10 @@ func (rcv *DataCoverage) TEMPORAL(obj *TemporalCoverage) *TemporalCoverage {
 	return nil
 }
 
+func (rcv *DataCoverage) Temporal(obj *TemporalCoverage) *TemporalCoverage {
+	return rcv.TEMPORAL(obj)
+}
+
 /// Temporal coverage definition
 func DataCoverageStart(builder *flatbuffers.Builder) {
 	builder.StartObject(2)
@@ -78,8 +86,14 @@ func DataCoverageStart(builder *flatbuffers.Builder) {
 func DataCoverageAddSPATIAL(builder *flatbuffers.Builder, SPATIAL flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(SPATIAL), 0)
 }
+func DataCoverageAddSpatial(builder *flatbuffers.Builder, SPATIAL flatbuffers.UOffsetT) {
+	DataCoverageAddSPATIAL(builder, SPATIAL)
+}
 func DataCoverageAddTEMPORAL(builder *flatbuffers.Builder, TEMPORAL flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(TEMPORAL), 0)
+}
+func DataCoverageAddTemporal(builder *flatbuffers.Builder, TEMPORAL flatbuffers.UOffsetT) {
+	DataCoverageAddTEMPORAL(builder, TEMPORAL)
 }
 func DataCoverageEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

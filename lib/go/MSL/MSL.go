@@ -62,8 +62,16 @@ func (rcv *MSL) POSITION_X() float64 {
 	return 0.0
 }
 
+func (rcv *MSL) PositionX() float64 {
+	return rcv.POSITION_X()
+}
+
 func (rcv *MSL) MutatePOSITION_X(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(4, n)
+}
+
+func (rcv *MSL) MutatePositionX(n float64) bool {
+	return rcv.MutatePOSITION_X(n)
 }
 
 func (rcv *MSL) POSITION_Y() float64 {
@@ -74,8 +82,16 @@ func (rcv *MSL) POSITION_Y() float64 {
 	return 0.0
 }
 
+func (rcv *MSL) PositionY() float64 {
+	return rcv.POSITION_Y()
+}
+
 func (rcv *MSL) MutatePOSITION_Y(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(6, n)
+}
+
+func (rcv *MSL) MutatePositionY(n float64) bool {
+	return rcv.MutatePOSITION_Y(n)
 }
 
 func (rcv *MSL) POSITION_Z() float64 {
@@ -86,8 +102,16 @@ func (rcv *MSL) POSITION_Z() float64 {
 	return 0.0
 }
 
+func (rcv *MSL) PositionZ() float64 {
+	return rcv.POSITION_Z()
+}
+
 func (rcv *MSL) MutatePOSITION_Z(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(8, n)
+}
+
+func (rcv *MSL) MutatePositionZ(n float64) bool {
+	return rcv.MutatePOSITION_Z(n)
 }
 
 func (rcv *MSL) VELOCITY_X() float64 {
@@ -98,8 +122,16 @@ func (rcv *MSL) VELOCITY_X() float64 {
 	return 0.0
 }
 
+func (rcv *MSL) VelocityX() float64 {
+	return rcv.VELOCITY_X()
+}
+
 func (rcv *MSL) MutateVELOCITY_X(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(10, n)
+}
+
+func (rcv *MSL) MutateVelocityX(n float64) bool {
+	return rcv.MutateVELOCITY_X(n)
 }
 
 func (rcv *MSL) VELOCITY_Y() float64 {
@@ -110,8 +142,16 @@ func (rcv *MSL) VELOCITY_Y() float64 {
 	return 0.0
 }
 
+func (rcv *MSL) VelocityY() float64 {
+	return rcv.VELOCITY_Y()
+}
+
 func (rcv *MSL) MutateVELOCITY_Y(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(12, n)
+}
+
+func (rcv *MSL) MutateVelocityY(n float64) bool {
+	return rcv.MutateVELOCITY_Y(n)
 }
 
 func (rcv *MSL) VELOCITY_Z() float64 {
@@ -122,8 +162,16 @@ func (rcv *MSL) VELOCITY_Z() float64 {
 	return 0.0
 }
 
+func (rcv *MSL) VelocityZ() float64 {
+	return rcv.VELOCITY_Z()
+}
+
 func (rcv *MSL) MutateVELOCITY_Z(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(14, n)
+}
+
+func (rcv *MSL) MutateVelocityZ(n float64) bool {
+	return rcv.MutateVELOCITY_Z(n)
 }
 
 func (rcv *MSL) ATTITUDE_X() float64 {
@@ -134,8 +182,16 @@ func (rcv *MSL) ATTITUDE_X() float64 {
 	return 0.0
 }
 
+func (rcv *MSL) AttitudeX() float64 {
+	return rcv.ATTITUDE_X()
+}
+
 func (rcv *MSL) MutateATTITUDE_X(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(16, n)
+}
+
+func (rcv *MSL) MutateAttitudeX(n float64) bool {
+	return rcv.MutateATTITUDE_X(n)
 }
 
 func (rcv *MSL) ATTITUDE_Y() float64 {
@@ -146,8 +202,16 @@ func (rcv *MSL) ATTITUDE_Y() float64 {
 	return 0.0
 }
 
+func (rcv *MSL) AttitudeY() float64 {
+	return rcv.ATTITUDE_Y()
+}
+
 func (rcv *MSL) MutateATTITUDE_Y(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(18, n)
+}
+
+func (rcv *MSL) MutateAttitudeY(n float64) bool {
+	return rcv.MutateATTITUDE_Y(n)
 }
 
 func (rcv *MSL) ATTITUDE_Z() float64 {
@@ -158,8 +222,16 @@ func (rcv *MSL) ATTITUDE_Z() float64 {
 	return 0.0
 }
 
+func (rcv *MSL) AttitudeZ() float64 {
+	return rcv.ATTITUDE_Z()
+}
+
 func (rcv *MSL) MutateATTITUDE_Z(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(20, n)
+}
+
+func (rcv *MSL) MutateAttitudeZ(n float64) bool {
+	return rcv.MutateATTITUDE_Z(n)
 }
 
 func (rcv *MSL) ATTITUDE_W() float64 {
@@ -170,8 +242,16 @@ func (rcv *MSL) ATTITUDE_W() float64 {
 	return 0.0
 }
 
+func (rcv *MSL) AttitudeW() float64 {
+	return rcv.ATTITUDE_W()
+}
+
 func (rcv *MSL) MutateATTITUDE_W(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(22, n)
+}
+
+func (rcv *MSL) MutateAttitudeW(n float64) bool {
+	return rcv.MutateATTITUDE_W(n)
 }
 
 func (rcv *MSL) OMEGA_X() float64 {
@@ -182,8 +262,16 @@ func (rcv *MSL) OMEGA_X() float64 {
 	return 0.0
 }
 
+func (rcv *MSL) OmegaX() float64 {
+	return rcv.OMEGA_X()
+}
+
 func (rcv *MSL) MutateOMEGA_X(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(24, n)
+}
+
+func (rcv *MSL) MutateOmegaX(n float64) bool {
+	return rcv.MutateOMEGA_X(n)
 }
 
 func (rcv *MSL) OMEGA_Y() float64 {
@@ -194,8 +282,16 @@ func (rcv *MSL) OMEGA_Y() float64 {
 	return 0.0
 }
 
+func (rcv *MSL) OmegaY() float64 {
+	return rcv.OMEGA_Y()
+}
+
 func (rcv *MSL) MutateOMEGA_Y(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(26, n)
+}
+
+func (rcv *MSL) MutateOmegaY(n float64) bool {
+	return rcv.MutateOMEGA_Y(n)
 }
 
 func (rcv *MSL) OMEGA_Z() float64 {
@@ -206,8 +302,16 @@ func (rcv *MSL) OMEGA_Z() float64 {
 	return 0.0
 }
 
+func (rcv *MSL) OmegaZ() float64 {
+	return rcv.OMEGA_Z()
+}
+
 func (rcv *MSL) MutateOMEGA_Z(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(28, n)
+}
+
+func (rcv *MSL) MutateOmegaZ(n float64) bool {
+	return rcv.MutateOMEGA_Z(n)
 }
 
 func (rcv *MSL) MASS() float64 {
@@ -218,8 +322,16 @@ func (rcv *MSL) MASS() float64 {
 	return 0.0
 }
 
+func (rcv *MSL) Mass() float64 {
+	return rcv.MASS()
+}
+
 func (rcv *MSL) MutateMASS(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(30, n)
+}
+
+func (rcv *MSL) MutateMass(n float64) bool {
+	return rcv.MutateMASS(n)
 }
 
 func (rcv *MSL) MASS_INITIAL() float64 {
@@ -230,8 +342,16 @@ func (rcv *MSL) MASS_INITIAL() float64 {
 	return 0.0
 }
 
+func (rcv *MSL) MassInitial() float64 {
+	return rcv.MASS_INITIAL()
+}
+
 func (rcv *MSL) MutateMASS_INITIAL(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(32, n)
+}
+
+func (rcv *MSL) MutateMassInitial(n float64) bool {
+	return rcv.MutateMASS_INITIAL(n)
 }
 
 func (rcv *MSL) TARGET_POSITION_X() float64 {
@@ -242,8 +362,16 @@ func (rcv *MSL) TARGET_POSITION_X() float64 {
 	return 0.0
 }
 
+func (rcv *MSL) TargetPositionX() float64 {
+	return rcv.TARGET_POSITION_X()
+}
+
 func (rcv *MSL) MutateTARGET_POSITION_X(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(34, n)
+}
+
+func (rcv *MSL) MutateTargetPositionX(n float64) bool {
+	return rcv.MutateTARGET_POSITION_X(n)
 }
 
 func (rcv *MSL) TARGET_POSITION_Y() float64 {
@@ -254,8 +382,16 @@ func (rcv *MSL) TARGET_POSITION_Y() float64 {
 	return 0.0
 }
 
+func (rcv *MSL) TargetPositionY() float64 {
+	return rcv.TARGET_POSITION_Y()
+}
+
 func (rcv *MSL) MutateTARGET_POSITION_Y(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(36, n)
+}
+
+func (rcv *MSL) MutateTargetPositionY(n float64) bool {
+	return rcv.MutateTARGET_POSITION_Y(n)
 }
 
 func (rcv *MSL) TARGET_POSITION_Z() float64 {
@@ -266,8 +402,16 @@ func (rcv *MSL) TARGET_POSITION_Z() float64 {
 	return 0.0
 }
 
+func (rcv *MSL) TargetPositionZ() float64 {
+	return rcv.TARGET_POSITION_Z()
+}
+
 func (rcv *MSL) MutateTARGET_POSITION_Z(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(38, n)
+}
+
+func (rcv *MSL) MutateTargetPositionZ(n float64) bool {
+	return rcv.MutateTARGET_POSITION_Z(n)
 }
 
 func (rcv *MSL) TARGET_VELOCITY_X() float64 {
@@ -278,8 +422,16 @@ func (rcv *MSL) TARGET_VELOCITY_X() float64 {
 	return 0.0
 }
 
+func (rcv *MSL) TargetVelocityX() float64 {
+	return rcv.TARGET_VELOCITY_X()
+}
+
 func (rcv *MSL) MutateTARGET_VELOCITY_X(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(40, n)
+}
+
+func (rcv *MSL) MutateTargetVelocityX(n float64) bool {
+	return rcv.MutateTARGET_VELOCITY_X(n)
 }
 
 func (rcv *MSL) TARGET_VELOCITY_Y() float64 {
@@ -290,8 +442,16 @@ func (rcv *MSL) TARGET_VELOCITY_Y() float64 {
 	return 0.0
 }
 
+func (rcv *MSL) TargetVelocityY() float64 {
+	return rcv.TARGET_VELOCITY_Y()
+}
+
 func (rcv *MSL) MutateTARGET_VELOCITY_Y(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(42, n)
+}
+
+func (rcv *MSL) MutateTargetVelocityY(n float64) bool {
+	return rcv.MutateTARGET_VELOCITY_Y(n)
 }
 
 func (rcv *MSL) TARGET_VELOCITY_Z() float64 {
@@ -302,8 +462,16 @@ func (rcv *MSL) TARGET_VELOCITY_Z() float64 {
 	return 0.0
 }
 
+func (rcv *MSL) TargetVelocityZ() float64 {
+	return rcv.TARGET_VELOCITY_Z()
+}
+
 func (rcv *MSL) MutateTARGET_VELOCITY_Z(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(44, n)
+}
+
+func (rcv *MSL) MutateTargetVelocityZ(n float64) bool {
+	return rcv.MutateTARGET_VELOCITY_Z(n)
 }
 
 func (rcv *MSL) MISS_DISTANCE() float64 {
@@ -314,8 +482,16 @@ func (rcv *MSL) MISS_DISTANCE() float64 {
 	return 0.0
 }
 
+func (rcv *MSL) MissDistance() float64 {
+	return rcv.MISS_DISTANCE()
+}
+
 func (rcv *MSL) MutateMISS_DISTANCE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(46, n)
+}
+
+func (rcv *MSL) MutateMissDistance(n float64) bool {
+	return rcv.MutateMISS_DISTANCE(n)
 }
 
 func (rcv *MSL) SEEKER() []byte {
@@ -326,12 +502,20 @@ func (rcv *MSL) SEEKER() []byte {
 	return nil
 }
 
+func (rcv *MSL) Seeker() []byte {
+	return rcv.SEEKER()
+}
+
 func (rcv *MSL) MOTOR() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(50))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *MSL) Motor() []byte {
+	return rcv.MOTOR()
 }
 
 func (rcv *MSL) GUIDANCE_CMD() []byte {
@@ -342,6 +526,10 @@ func (rcv *MSL) GUIDANCE_CMD() []byte {
 	return nil
 }
 
+func (rcv *MSL) GuidanceCmd() []byte {
+	return rcv.GUIDANCE_CMD()
+}
+
 func (rcv *MSL) PHASE() byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(54))
 	if o != 0 {
@@ -350,8 +538,16 @@ func (rcv *MSL) PHASE() byte {
 	return 0
 }
 
+func (rcv *MSL) Phase() byte {
+	return rcv.PHASE()
+}
+
 func (rcv *MSL) MutatePHASE(n byte) bool {
 	return rcv._tab.MutateByteSlot(54, n)
+}
+
+func (rcv *MSL) MutatePhase(n byte) bool {
+	return rcv.MutatePHASE(n)
 }
 
 func (rcv *MSL) GUIDANCE_LAW() byte {
@@ -362,8 +558,16 @@ func (rcv *MSL) GUIDANCE_LAW() byte {
 	return 0
 }
 
+func (rcv *MSL) GuidanceLaw() byte {
+	return rcv.GUIDANCE_LAW()
+}
+
 func (rcv *MSL) MutateGUIDANCE_LAW(n byte) bool {
 	return rcv._tab.MutateByteSlot(56, n)
+}
+
+func (rcv *MSL) MutateGuidanceLaw(n byte) bool {
+	return rcv.MutateGUIDANCE_LAW(n)
 }
 
 func (rcv *MSL) TYPE() byte {
@@ -374,8 +578,16 @@ func (rcv *MSL) TYPE() byte {
 	return 0
 }
 
+func (rcv *MSL) Type() byte {
+	return rcv.TYPE()
+}
+
 func (rcv *MSL) MutateTYPE(n byte) bool {
 	return rcv._tab.MutateByteSlot(58, n)
+}
+
+func (rcv *MSL) MutateType(n byte) bool {
+	return rcv.MutateTYPE(n)
 }
 
 func (rcv *MSL) ARMED() byte {
@@ -386,8 +598,16 @@ func (rcv *MSL) ARMED() byte {
 	return 0
 }
 
+func (rcv *MSL) Armed() byte {
+	return rcv.ARMED()
+}
+
 func (rcv *MSL) MutateARMED(n byte) bool {
 	return rcv._tab.MutateByteSlot(60, n)
+}
+
+func (rcv *MSL) MutateArmed(n byte) bool {
+	return rcv.MutateARMED(n)
 }
 
 func (rcv *MSL) TIME_OF_FLIGHT() float32 {
@@ -398,8 +618,16 @@ func (rcv *MSL) TIME_OF_FLIGHT() float32 {
 	return 0.0
 }
 
+func (rcv *MSL) TimeOfFlight() float32 {
+	return rcv.TIME_OF_FLIGHT()
+}
+
 func (rcv *MSL) MutateTIME_OF_FLIGHT(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(62, n)
+}
+
+func (rcv *MSL) MutateTimeOfFlight(n float32) bool {
+	return rcv.MutateTIME_OF_FLIGHT(n)
 }
 
 func (rcv *MSL) MAX_G() float32 {
@@ -410,8 +638,16 @@ func (rcv *MSL) MAX_G() float32 {
 	return 0.0
 }
 
+func (rcv *MSL) MaxG() float32 {
+	return rcv.MAX_G()
+}
+
 func (rcv *MSL) MutateMAX_G(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(64, n)
+}
+
+func (rcv *MSL) MutateMaxG(n float32) bool {
+	return rcv.MutateMAX_G(n)
 }
 
 func (rcv *MSL) RESERVED(j int) byte {
@@ -423,6 +659,10 @@ func (rcv *MSL) RESERVED(j int) byte {
 	return 0
 }
 
+func (rcv *MSL) Reserved(j int) byte {
+	return rcv.RESERVED(j)
+}
+
 func (rcv *MSL) RESERVEDLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(66))
 	if o != 0 {
@@ -431,12 +671,20 @@ func (rcv *MSL) RESERVEDLength() int {
 	return 0
 }
 
+func (rcv *MSL) ReservedLength() int {
+	return rcv.RESERVEDLength()
+}
+
 func (rcv *MSL) RESERVEDBytes() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(66))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *MSL) ReservedBytes() []byte {
+	return rcv.RESERVEDBytes()
 }
 
 func (rcv *MSL) MutateRESERVED(j int, n byte) bool {
@@ -448,107 +696,210 @@ func (rcv *MSL) MutateRESERVED(j int, n byte) bool {
 	return false
 }
 
+func (rcv *MSL) MutateReserved(j int, n byte) bool {
+	return rcv.MutateRESERVED(j, n)
+}
+
 func MSLStart(builder *flatbuffers.Builder) {
 	builder.StartObject(32)
 }
 func MSLAddPOSITION_X(builder *flatbuffers.Builder, POSITION_X float64) {
 	builder.PrependFloat64Slot(0, POSITION_X, 0.0)
 }
+func MSLAddPositionX(builder *flatbuffers.Builder, POSITION_X float64) {
+	MSLAddPOSITION_X(builder, POSITION_X)
+}
 func MSLAddPOSITION_Y(builder *flatbuffers.Builder, POSITION_Y float64) {
 	builder.PrependFloat64Slot(1, POSITION_Y, 0.0)
+}
+func MSLAddPositionY(builder *flatbuffers.Builder, POSITION_Y float64) {
+	MSLAddPOSITION_Y(builder, POSITION_Y)
 }
 func MSLAddPOSITION_Z(builder *flatbuffers.Builder, POSITION_Z float64) {
 	builder.PrependFloat64Slot(2, POSITION_Z, 0.0)
 }
+func MSLAddPositionZ(builder *flatbuffers.Builder, POSITION_Z float64) {
+	MSLAddPOSITION_Z(builder, POSITION_Z)
+}
 func MSLAddVELOCITY_X(builder *flatbuffers.Builder, VELOCITY_X float64) {
 	builder.PrependFloat64Slot(3, VELOCITY_X, 0.0)
+}
+func MSLAddVelocityX(builder *flatbuffers.Builder, VELOCITY_X float64) {
+	MSLAddVELOCITY_X(builder, VELOCITY_X)
 }
 func MSLAddVELOCITY_Y(builder *flatbuffers.Builder, VELOCITY_Y float64) {
 	builder.PrependFloat64Slot(4, VELOCITY_Y, 0.0)
 }
+func MSLAddVelocityY(builder *flatbuffers.Builder, VELOCITY_Y float64) {
+	MSLAddVELOCITY_Y(builder, VELOCITY_Y)
+}
 func MSLAddVELOCITY_Z(builder *flatbuffers.Builder, VELOCITY_Z float64) {
 	builder.PrependFloat64Slot(5, VELOCITY_Z, 0.0)
+}
+func MSLAddVelocityZ(builder *flatbuffers.Builder, VELOCITY_Z float64) {
+	MSLAddVELOCITY_Z(builder, VELOCITY_Z)
 }
 func MSLAddATTITUDE_X(builder *flatbuffers.Builder, ATTITUDE_X float64) {
 	builder.PrependFloat64Slot(6, ATTITUDE_X, 0.0)
 }
+func MSLAddAttitudeX(builder *flatbuffers.Builder, ATTITUDE_X float64) {
+	MSLAddATTITUDE_X(builder, ATTITUDE_X)
+}
 func MSLAddATTITUDE_Y(builder *flatbuffers.Builder, ATTITUDE_Y float64) {
 	builder.PrependFloat64Slot(7, ATTITUDE_Y, 0.0)
+}
+func MSLAddAttitudeY(builder *flatbuffers.Builder, ATTITUDE_Y float64) {
+	MSLAddATTITUDE_Y(builder, ATTITUDE_Y)
 }
 func MSLAddATTITUDE_Z(builder *flatbuffers.Builder, ATTITUDE_Z float64) {
 	builder.PrependFloat64Slot(8, ATTITUDE_Z, 0.0)
 }
+func MSLAddAttitudeZ(builder *flatbuffers.Builder, ATTITUDE_Z float64) {
+	MSLAddATTITUDE_Z(builder, ATTITUDE_Z)
+}
 func MSLAddATTITUDE_W(builder *flatbuffers.Builder, ATTITUDE_W float64) {
 	builder.PrependFloat64Slot(9, ATTITUDE_W, 0.0)
+}
+func MSLAddAttitudeW(builder *flatbuffers.Builder, ATTITUDE_W float64) {
+	MSLAddATTITUDE_W(builder, ATTITUDE_W)
 }
 func MSLAddOMEGA_X(builder *flatbuffers.Builder, OMEGA_X float64) {
 	builder.PrependFloat64Slot(10, OMEGA_X, 0.0)
 }
+func MSLAddOmegaX(builder *flatbuffers.Builder, OMEGA_X float64) {
+	MSLAddOMEGA_X(builder, OMEGA_X)
+}
 func MSLAddOMEGA_Y(builder *flatbuffers.Builder, OMEGA_Y float64) {
 	builder.PrependFloat64Slot(11, OMEGA_Y, 0.0)
+}
+func MSLAddOmegaY(builder *flatbuffers.Builder, OMEGA_Y float64) {
+	MSLAddOMEGA_Y(builder, OMEGA_Y)
 }
 func MSLAddOMEGA_Z(builder *flatbuffers.Builder, OMEGA_Z float64) {
 	builder.PrependFloat64Slot(12, OMEGA_Z, 0.0)
 }
+func MSLAddOmegaZ(builder *flatbuffers.Builder, OMEGA_Z float64) {
+	MSLAddOMEGA_Z(builder, OMEGA_Z)
+}
 func MSLAddMASS(builder *flatbuffers.Builder, MASS float64) {
 	builder.PrependFloat64Slot(13, MASS, 0.0)
+}
+func MSLAddMass(builder *flatbuffers.Builder, MASS float64) {
+	MSLAddMASS(builder, MASS)
 }
 func MSLAddMASS_INITIAL(builder *flatbuffers.Builder, MASS_INITIAL float64) {
 	builder.PrependFloat64Slot(14, MASS_INITIAL, 0.0)
 }
+func MSLAddMassInitial(builder *flatbuffers.Builder, MASS_INITIAL float64) {
+	MSLAddMASS_INITIAL(builder, MASS_INITIAL)
+}
 func MSLAddTARGET_POSITION_X(builder *flatbuffers.Builder, TARGET_POSITION_X float64) {
 	builder.PrependFloat64Slot(15, TARGET_POSITION_X, 0.0)
+}
+func MSLAddTargetPositionX(builder *flatbuffers.Builder, TARGET_POSITION_X float64) {
+	MSLAddTARGET_POSITION_X(builder, TARGET_POSITION_X)
 }
 func MSLAddTARGET_POSITION_Y(builder *flatbuffers.Builder, TARGET_POSITION_Y float64) {
 	builder.PrependFloat64Slot(16, TARGET_POSITION_Y, 0.0)
 }
+func MSLAddTargetPositionY(builder *flatbuffers.Builder, TARGET_POSITION_Y float64) {
+	MSLAddTARGET_POSITION_Y(builder, TARGET_POSITION_Y)
+}
 func MSLAddTARGET_POSITION_Z(builder *flatbuffers.Builder, TARGET_POSITION_Z float64) {
 	builder.PrependFloat64Slot(17, TARGET_POSITION_Z, 0.0)
+}
+func MSLAddTargetPositionZ(builder *flatbuffers.Builder, TARGET_POSITION_Z float64) {
+	MSLAddTARGET_POSITION_Z(builder, TARGET_POSITION_Z)
 }
 func MSLAddTARGET_VELOCITY_X(builder *flatbuffers.Builder, TARGET_VELOCITY_X float64) {
 	builder.PrependFloat64Slot(18, TARGET_VELOCITY_X, 0.0)
 }
+func MSLAddTargetVelocityX(builder *flatbuffers.Builder, TARGET_VELOCITY_X float64) {
+	MSLAddTARGET_VELOCITY_X(builder, TARGET_VELOCITY_X)
+}
 func MSLAddTARGET_VELOCITY_Y(builder *flatbuffers.Builder, TARGET_VELOCITY_Y float64) {
 	builder.PrependFloat64Slot(19, TARGET_VELOCITY_Y, 0.0)
+}
+func MSLAddTargetVelocityY(builder *flatbuffers.Builder, TARGET_VELOCITY_Y float64) {
+	MSLAddTARGET_VELOCITY_Y(builder, TARGET_VELOCITY_Y)
 }
 func MSLAddTARGET_VELOCITY_Z(builder *flatbuffers.Builder, TARGET_VELOCITY_Z float64) {
 	builder.PrependFloat64Slot(20, TARGET_VELOCITY_Z, 0.0)
 }
+func MSLAddTargetVelocityZ(builder *flatbuffers.Builder, TARGET_VELOCITY_Z float64) {
+	MSLAddTARGET_VELOCITY_Z(builder, TARGET_VELOCITY_Z)
+}
 func MSLAddMISS_DISTANCE(builder *flatbuffers.Builder, MISS_DISTANCE float64) {
 	builder.PrependFloat64Slot(21, MISS_DISTANCE, 0.0)
+}
+func MSLAddMissDistance(builder *flatbuffers.Builder, MISS_DISTANCE float64) {
+	MSLAddMISS_DISTANCE(builder, MISS_DISTANCE)
 }
 func MSLAddSEEKER(builder *flatbuffers.Builder, SEEKER flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(22, flatbuffers.UOffsetT(SEEKER), 0)
 }
+func MSLAddSeeker(builder *flatbuffers.Builder, SEEKER flatbuffers.UOffsetT) {
+	MSLAddSEEKER(builder, SEEKER)
+}
 func MSLAddMOTOR(builder *flatbuffers.Builder, MOTOR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(23, flatbuffers.UOffsetT(MOTOR), 0)
+}
+func MSLAddMotor(builder *flatbuffers.Builder, MOTOR flatbuffers.UOffsetT) {
+	MSLAddMOTOR(builder, MOTOR)
 }
 func MSLAddGUIDANCE_CMD(builder *flatbuffers.Builder, GUIDANCE_CMD flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(24, flatbuffers.UOffsetT(GUIDANCE_CMD), 0)
 }
+func MSLAddGuidanceCmd(builder *flatbuffers.Builder, GUIDANCE_CMD flatbuffers.UOffsetT) {
+	MSLAddGUIDANCE_CMD(builder, GUIDANCE_CMD)
+}
 func MSLAddPHASE(builder *flatbuffers.Builder, PHASE byte) {
 	builder.PrependByteSlot(25, PHASE, 0)
+}
+func MSLAddPhase(builder *flatbuffers.Builder, PHASE byte) {
+	MSLAddPHASE(builder, PHASE)
 }
 func MSLAddGUIDANCE_LAW(builder *flatbuffers.Builder, GUIDANCE_LAW byte) {
 	builder.PrependByteSlot(26, GUIDANCE_LAW, 0)
 }
+func MSLAddGuidanceLaw(builder *flatbuffers.Builder, GUIDANCE_LAW byte) {
+	MSLAddGUIDANCE_LAW(builder, GUIDANCE_LAW)
+}
 func MSLAddTYPE(builder *flatbuffers.Builder, TYPE byte) {
 	builder.PrependByteSlot(27, TYPE, 0)
+}
+func MSLAddType(builder *flatbuffers.Builder, TYPE byte) {
+	MSLAddTYPE(builder, TYPE)
 }
 func MSLAddARMED(builder *flatbuffers.Builder, ARMED byte) {
 	builder.PrependByteSlot(28, ARMED, 0)
 }
+func MSLAddArmed(builder *flatbuffers.Builder, ARMED byte) {
+	MSLAddARMED(builder, ARMED)
+}
 func MSLAddTIME_OF_FLIGHT(builder *flatbuffers.Builder, TIME_OF_FLIGHT float32) {
 	builder.PrependFloat32Slot(29, TIME_OF_FLIGHT, 0.0)
+}
+func MSLAddTimeOfFlight(builder *flatbuffers.Builder, TIME_OF_FLIGHT float32) {
+	MSLAddTIME_OF_FLIGHT(builder, TIME_OF_FLIGHT)
 }
 func MSLAddMAX_G(builder *flatbuffers.Builder, MAX_G float32) {
 	builder.PrependFloat32Slot(30, MAX_G, 0.0)
 }
+func MSLAddMaxG(builder *flatbuffers.Builder, MAX_G float32) {
+	MSLAddMAX_G(builder, MAX_G)
+}
 func MSLAddRESERVED(builder *flatbuffers.Builder, RESERVED flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(31, flatbuffers.UOffsetT(RESERVED), 0)
 }
+func MSLAddReserved(builder *flatbuffers.Builder, RESERVED flatbuffers.UOffsetT) {
+	MSLAddRESERVED(builder, RESERVED)
+}
 func MSLStartRESERVEDVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(1, numElems, 1)
+}
+func MSLStartReservedVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return MSLStartRESERVEDVector(builder, numElems)
 }
 func MSLEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

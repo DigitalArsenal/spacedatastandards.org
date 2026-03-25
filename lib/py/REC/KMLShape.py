@@ -2,4 +2,7 @@
 
 # namespace: 
 
-# NOTE KMLShape.py does not declare any structs or enums
+class KMLShape(object):
+    RECTANGLE = 0
+    CYLINDER = 1
+    SPHERE = 2

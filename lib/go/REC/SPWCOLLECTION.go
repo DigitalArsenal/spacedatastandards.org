@@ -47,10 +47,17 @@ func (rcv *SPWCOLLECTION) RECORDS(obj *SPW, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(SPW)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *SPWCOLLECTION) Records(obj *SPW, j int) bool {
+	return rcv.RECORDS(obj, j)
 }
 
 func (rcv *SPWCOLLECTION) RECORDSLength() int {
@@ -61,14 +68,24 @@ func (rcv *SPWCOLLECTION) RECORDSLength() int {
 	return 0
 }
 
+func (rcv *SPWCOLLECTION) RecordsLength() int {
+	return rcv.RECORDSLength()
+}
+
 func SPWCOLLECTIONStart(builder *flatbuffers.Builder) {
 	builder.StartObject(1)
 }
 func SPWCOLLECTIONAddRECORDS(builder *flatbuffers.Builder, RECORDS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(RECORDS), 0)
 }
+func SPWCOLLECTIONAddRecords(builder *flatbuffers.Builder, RECORDS flatbuffers.UOffsetT) {
+	SPWCOLLECTIONAddRECORDS(builder, RECORDS)
+}
 func SPWCOLLECTIONStartRECORDSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func SPWCOLLECTIONStartRecordsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return SPWCOLLECTIONStartRECORDSVector(builder, numElems)
 }
 func SPWCOLLECTIONEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

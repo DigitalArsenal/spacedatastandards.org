@@ -1,4 +1,4 @@
-export { HYP, HYPT } from './HYP.js';
-export { Score, ScoreT } from './Score.js';
-export { ScoreType } from './ScoreType.js';
+export * from './HYP.js';
+export * from './Score.js';
+export * from './ScoreType.js';
 //# sourceMappingURL=main.d.ts.map

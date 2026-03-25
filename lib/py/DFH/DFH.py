@@ -257,6 +257,12 @@ def DFHStartRECORDSVector(builder, numElems):
 def StartRECORDSVector(builder, numElems):
     return DFHStartRECORDSVector(builder, numElems)
 
+def DFHCreateRECORDSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateRECORDSVector(builder, data):
+    DFHCreateRECORDSVector(builder, data)
+
 def DFHAddNUM_RECORDS(builder, NUM_RECORDS):
     builder.PrependUint32Slot(13, NUM_RECORDS, 0)
 
@@ -284,28 +290,45 @@ except:
 class DFHT(object):
 
     # DFHT
-    def __init__(self):
-        self.ID = None  # type: str
-        self.SAT_NO = 0  # type: int
-        self.OBJECT_DESIGNATOR = None  # type: str
-        self.OBJECT_NAME = None  # type: str
-        self.START_TIME = None  # type: str
-        self.END_TIME = None  # type: str
-        self.EFFECTIVE_UNTIL = None  # type: str
-        self.DRIFT_RATE = 0.0  # type: float
-        self.MEAN_LONGITUDE = 0.0  # type: float
-        self.SLOT_CENTER = 0.0  # type: float
-        self.SLOT_HALF_WIDTH = 0.0  # type: float
-        self.STATION_KEEPING = False  # type: bool
-        self.RECORDS = None  # type: List[driftRecord.driftRecordT]
-        self.NUM_RECORDS = 0  # type: int
-        self.NOTES = None  # type: str
+    def __init__(
+        self,
+        ID = None,
+        SAT_NO = 0,
+        OBJECT_DESIGNATOR = None,
+        OBJECT_NAME = None,
+        START_TIME = None,
+        END_TIME = None,
+        EFFECTIVE_UNTIL = None,
+        DRIFT_RATE = 0.0,
+        MEAN_LONGITUDE = 0.0,
+        SLOT_CENTER = 0.0,
+        SLOT_HALF_WIDTH = 0.0,
+        STATION_KEEPING = False,
+        RECORDS = None,
+        NUM_RECORDS = 0,
+        NOTES = None,
+    ):
+        self.ID = ID  # type: Optional[str]
+        self.SAT_NO = SAT_NO  # type: int
+        self.OBJECT_DESIGNATOR = OBJECT_DESIGNATOR  # type: Optional[str]
+        self.OBJECT_NAME = OBJECT_NAME  # type: Optional[str]
+        self.START_TIME = START_TIME  # type: Optional[str]
+        self.END_TIME = END_TIME  # type: Optional[str]
+        self.EFFECTIVE_UNTIL = EFFECTIVE_UNTIL  # type: Optional[str]
+        self.DRIFT_RATE = DRIFT_RATE  # type: float
+        self.MEAN_LONGITUDE = MEAN_LONGITUDE  # type: float
+        self.SLOT_CENTER = SLOT_CENTER  # type: float
+        self.SLOT_HALF_WIDTH = SLOT_HALF_WIDTH  # type: float
+        self.STATION_KEEPING = STATION_KEEPING  # type: bool
+        self.RECORDS = RECORDS  # type: Optional[List[driftRecord.driftRecordT]]
+        self.NUM_RECORDS = NUM_RECORDS  # type: int
+        self.NOTES = NOTES  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        DFH = DFH()
-        DFH.Init(buf, pos)
-        return cls.InitFromObj(DFH)
+        tmpDfh = DFH()
+        tmpDfh.Init(buf, pos)
+        return cls.InitFromObj(tmpDfh)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -313,9 +336,9 @@ class DFHT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, DFH):
+    def InitFromObj(cls, tmpDfh):
         x = DFHT()
-        x._UnPack(DFH)
+        x._UnPack(tmpDfh)
         return x
 
     # DFHT

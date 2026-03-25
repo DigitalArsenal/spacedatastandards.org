@@ -2,4 +2,509 @@
 
 # namespace: 
 
-# NOTE MNF.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Orbit Manifold
+class MNF(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = MNF()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsMNF(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def MNFBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x4D\x4E\x46", size_prefixed=size_prefixed)
+
+    # MNF
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Unique manifold identifier
+    # MNF
+    def ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Parent object satellite number
+    # MNF
+    def SAT_NO(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+        return 0
+
+    # Object designator
+    # MNF
+    def OBJECT_DESIGNATOR(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Manifold status
+    # MNF
+    def STATUS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # Event epoch that spawned the manifold (ISO 8601)
+    # MNF
+    def EVENT_EPOCH(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Source of detection (sensor ID or method)
+    # MNF
+    def SOURCE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Reference frame
+    # MNF
+    def REF_FRAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Original pre-event semi-major axis in km
+    # MNF
+    def ORIG_SEMI_MAJOR_AXIS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Original pre-event eccentricity
+    # MNF
+    def ORIG_ECCENTRICITY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Original pre-event inclination in degrees
+    # MNF
+    def ORIG_INCLINATION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Minimum delta-V sampled in m/s
+    # MNF
+    def DELTA_V_MIN(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Maximum delta-V sampled in m/s
+    # MNF
+    def DELTA_V_MAX(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Delta-V step size in m/s
+    # MNF
+    def DELTA_V_STEP(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Minimum delta-T sampled in seconds
+    # MNF
+    def DELTA_T_MIN(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Maximum delta-T sampled in seconds
+    # MNF
+    def DELTA_T_MAX(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Delta-T step size in seconds
+    # MNF
+    def DELTA_T_STEP(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Total number of manifold elements
+    # MNF
+    def NUM_ELEMENTS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+        return 0
+
+    # Theoretical element sets
+    # MNF
+    def ELEMENTS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from manifoldElset import manifoldElset
+            obj = manifoldElset()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # MNF
+    def ELEMENTSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # MNF
+    def ELEMENTSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        return o == 0
+
+    # Correlated catalog object ID (if matched)
+    # MNF
+    def CORRELATED_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Additional notes
+    # MNF
+    def NOTES(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+def MNFStart(builder):
+    builder.StartObject(20)
+
+def Start(builder):
+    MNFStart(builder)
+
+def MNFAddID(builder, ID):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(ID), 0)
+
+def AddID(builder, ID):
+    MNFAddID(builder, ID)
+
+def MNFAddSAT_NO(builder, SAT_NO):
+    builder.PrependUint32Slot(1, SAT_NO, 0)
+
+def AddSAT_NO(builder, SAT_NO):
+    MNFAddSAT_NO(builder, SAT_NO)
+
+def MNFAddOBJECT_DESIGNATOR(builder, OBJECT_DESIGNATOR):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(OBJECT_DESIGNATOR), 0)
+
+def AddOBJECT_DESIGNATOR(builder, OBJECT_DESIGNATOR):
+    MNFAddOBJECT_DESIGNATOR(builder, OBJECT_DESIGNATOR)
+
+def MNFAddSTATUS(builder, STATUS):
+    builder.PrependInt8Slot(3, STATUS, 0)
+
+def AddSTATUS(builder, STATUS):
+    MNFAddSTATUS(builder, STATUS)
+
+def MNFAddEVENT_EPOCH(builder, EVENT_EPOCH):
+    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(EVENT_EPOCH), 0)
+
+def AddEVENT_EPOCH(builder, EVENT_EPOCH):
+    MNFAddEVENT_EPOCH(builder, EVENT_EPOCH)
+
+def MNFAddSOURCE(builder, SOURCE):
+    builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(SOURCE), 0)
+
+def AddSOURCE(builder, SOURCE):
+    MNFAddSOURCE(builder, SOURCE)
+
+def MNFAddREF_FRAME(builder, REF_FRAME):
+    builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(REF_FRAME), 0)
+
+def AddREF_FRAME(builder, REF_FRAME):
+    MNFAddREF_FRAME(builder, REF_FRAME)
+
+def MNFAddORIG_SEMI_MAJOR_AXIS(builder, ORIG_SEMI_MAJOR_AXIS):
+    builder.PrependFloat64Slot(7, ORIG_SEMI_MAJOR_AXIS, 0.0)
+
+def AddORIG_SEMI_MAJOR_AXIS(builder, ORIG_SEMI_MAJOR_AXIS):
+    MNFAddORIG_SEMI_MAJOR_AXIS(builder, ORIG_SEMI_MAJOR_AXIS)
+
+def MNFAddORIG_ECCENTRICITY(builder, ORIG_ECCENTRICITY):
+    builder.PrependFloat64Slot(8, ORIG_ECCENTRICITY, 0.0)
+
+def AddORIG_ECCENTRICITY(builder, ORIG_ECCENTRICITY):
+    MNFAddORIG_ECCENTRICITY(builder, ORIG_ECCENTRICITY)
+
+def MNFAddORIG_INCLINATION(builder, ORIG_INCLINATION):
+    builder.PrependFloat64Slot(9, ORIG_INCLINATION, 0.0)
+
+def AddORIG_INCLINATION(builder, ORIG_INCLINATION):
+    MNFAddORIG_INCLINATION(builder, ORIG_INCLINATION)
+
+def MNFAddDELTA_V_MIN(builder, DELTA_V_MIN):
+    builder.PrependFloat64Slot(10, DELTA_V_MIN, 0.0)
+
+def AddDELTA_V_MIN(builder, DELTA_V_MIN):
+    MNFAddDELTA_V_MIN(builder, DELTA_V_MIN)
+
+def MNFAddDELTA_V_MAX(builder, DELTA_V_MAX):
+    builder.PrependFloat64Slot(11, DELTA_V_MAX, 0.0)
+
+def AddDELTA_V_MAX(builder, DELTA_V_MAX):
+    MNFAddDELTA_V_MAX(builder, DELTA_V_MAX)
+
+def MNFAddDELTA_V_STEP(builder, DELTA_V_STEP):
+    builder.PrependFloat64Slot(12, DELTA_V_STEP, 0.0)
+
+def AddDELTA_V_STEP(builder, DELTA_V_STEP):
+    MNFAddDELTA_V_STEP(builder, DELTA_V_STEP)
+
+def MNFAddDELTA_T_MIN(builder, DELTA_T_MIN):
+    builder.PrependFloat64Slot(13, DELTA_T_MIN, 0.0)
+
+def AddDELTA_T_MIN(builder, DELTA_T_MIN):
+    MNFAddDELTA_T_MIN(builder, DELTA_T_MIN)
+
+def MNFAddDELTA_T_MAX(builder, DELTA_T_MAX):
+    builder.PrependFloat64Slot(14, DELTA_T_MAX, 0.0)
+
+def AddDELTA_T_MAX(builder, DELTA_T_MAX):
+    MNFAddDELTA_T_MAX(builder, DELTA_T_MAX)
+
+def MNFAddDELTA_T_STEP(builder, DELTA_T_STEP):
+    builder.PrependFloat64Slot(15, DELTA_T_STEP, 0.0)
+
+def AddDELTA_T_STEP(builder, DELTA_T_STEP):
+    MNFAddDELTA_T_STEP(builder, DELTA_T_STEP)
+
+def MNFAddNUM_ELEMENTS(builder, NUM_ELEMENTS):
+    builder.PrependUint32Slot(16, NUM_ELEMENTS, 0)
+
+def AddNUM_ELEMENTS(builder, NUM_ELEMENTS):
+    MNFAddNUM_ELEMENTS(builder, NUM_ELEMENTS)
+
+def MNFAddELEMENTS(builder, ELEMENTS):
+    builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(ELEMENTS), 0)
+
+def AddELEMENTS(builder, ELEMENTS):
+    MNFAddELEMENTS(builder, ELEMENTS)
+
+def MNFStartELEMENTSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartELEMENTSVector(builder, numElems):
+    return MNFStartELEMENTSVector(builder, numElems)
+
+def MNFCreateELEMENTSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateELEMENTSVector(builder, data):
+    MNFCreateELEMENTSVector(builder, data)
+
+def MNFAddCORRELATED_ID(builder, CORRELATED_ID):
+    builder.PrependUOffsetTRelativeSlot(18, flatbuffers.number_types.UOffsetTFlags.py_type(CORRELATED_ID), 0)
+
+def AddCORRELATED_ID(builder, CORRELATED_ID):
+    MNFAddCORRELATED_ID(builder, CORRELATED_ID)
+
+def MNFAddNOTES(builder, NOTES):
+    builder.PrependUOffsetTRelativeSlot(19, flatbuffers.number_types.UOffsetTFlags.py_type(NOTES), 0)
+
+def AddNOTES(builder, NOTES):
+    MNFAddNOTES(builder, NOTES)
+
+def MNFEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return MNFEnd(builder)
+
+import manifoldElset
+try:
+    from typing import List
+except:
+    pass
+
+class MNFT(object):
+
+    # MNFT
+    def __init__(
+        self,
+        ID = None,
+        SAT_NO = 0,
+        OBJECT_DESIGNATOR = None,
+        STATUS = 0,
+        EVENT_EPOCH = None,
+        SOURCE = None,
+        REF_FRAME = None,
+        ORIG_SEMI_MAJOR_AXIS = 0.0,
+        ORIG_ECCENTRICITY = 0.0,
+        ORIG_INCLINATION = 0.0,
+        DELTA_V_MIN = 0.0,
+        DELTA_V_MAX = 0.0,
+        DELTA_V_STEP = 0.0,
+        DELTA_T_MIN = 0.0,
+        DELTA_T_MAX = 0.0,
+        DELTA_T_STEP = 0.0,
+        NUM_ELEMENTS = 0,
+        ELEMENTS = None,
+        CORRELATED_ID = None,
+        NOTES = None,
+    ):
+        self.ID = ID  # type: Optional[str]
+        self.SAT_NO = SAT_NO  # type: int
+        self.OBJECT_DESIGNATOR = OBJECT_DESIGNATOR  # type: Optional[str]
+        self.STATUS = STATUS  # type: int
+        self.EVENT_EPOCH = EVENT_EPOCH  # type: Optional[str]
+        self.SOURCE = SOURCE  # type: Optional[str]
+        self.REF_FRAME = REF_FRAME  # type: Optional[str]
+        self.ORIG_SEMI_MAJOR_AXIS = ORIG_SEMI_MAJOR_AXIS  # type: float
+        self.ORIG_ECCENTRICITY = ORIG_ECCENTRICITY  # type: float
+        self.ORIG_INCLINATION = ORIG_INCLINATION  # type: float
+        self.DELTA_V_MIN = DELTA_V_MIN  # type: float
+        self.DELTA_V_MAX = DELTA_V_MAX  # type: float
+        self.DELTA_V_STEP = DELTA_V_STEP  # type: float
+        self.DELTA_T_MIN = DELTA_T_MIN  # type: float
+        self.DELTA_T_MAX = DELTA_T_MAX  # type: float
+        self.DELTA_T_STEP = DELTA_T_STEP  # type: float
+        self.NUM_ELEMENTS = NUM_ELEMENTS  # type: int
+        self.ELEMENTS = ELEMENTS  # type: Optional[List[manifoldElset.manifoldElsetT]]
+        self.CORRELATED_ID = CORRELATED_ID  # type: Optional[str]
+        self.NOTES = NOTES  # type: Optional[str]
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpMnf = MNF()
+        tmpMnf.Init(buf, pos)
+        return cls.InitFromObj(tmpMnf)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpMnf):
+        x = MNFT()
+        x._UnPack(tmpMnf)
+        return x
+
+    # MNFT
+    def _UnPack(self, MNF):
+        if MNF is None:
+            return
+        self.ID = MNF.ID()
+        self.SAT_NO = MNF.SAT_NO()
+        self.OBJECT_DESIGNATOR = MNF.OBJECT_DESIGNATOR()
+        self.STATUS = MNF.STATUS()
+        self.EVENT_EPOCH = MNF.EVENT_EPOCH()
+        self.SOURCE = MNF.SOURCE()
+        self.REF_FRAME = MNF.REF_FRAME()
+        self.ORIG_SEMI_MAJOR_AXIS = MNF.ORIG_SEMI_MAJOR_AXIS()
+        self.ORIG_ECCENTRICITY = MNF.ORIG_ECCENTRICITY()
+        self.ORIG_INCLINATION = MNF.ORIG_INCLINATION()
+        self.DELTA_V_MIN = MNF.DELTA_V_MIN()
+        self.DELTA_V_MAX = MNF.DELTA_V_MAX()
+        self.DELTA_V_STEP = MNF.DELTA_V_STEP()
+        self.DELTA_T_MIN = MNF.DELTA_T_MIN()
+        self.DELTA_T_MAX = MNF.DELTA_T_MAX()
+        self.DELTA_T_STEP = MNF.DELTA_T_STEP()
+        self.NUM_ELEMENTS = MNF.NUM_ELEMENTS()
+        if not MNF.ELEMENTSIsNone():
+            self.ELEMENTS = []
+            for i in range(MNF.ELEMENTSLength()):
+                if MNF.ELEMENTS(i) is None:
+                    self.ELEMENTS.append(None)
+                else:
+                    manifoldElset_ = manifoldElset.manifoldElsetT.InitFromObj(MNF.ELEMENTS(i))
+                    self.ELEMENTS.append(manifoldElset_)
+        self.CORRELATED_ID = MNF.CORRELATED_ID()
+        self.NOTES = MNF.NOTES()
+
+    # MNFT
+    def Pack(self, builder):
+        if self.ID is not None:
+            ID = builder.CreateString(self.ID)
+        if self.OBJECT_DESIGNATOR is not None:
+            OBJECT_DESIGNATOR = builder.CreateString(self.OBJECT_DESIGNATOR)
+        if self.EVENT_EPOCH is not None:
+            EVENT_EPOCH = builder.CreateString(self.EVENT_EPOCH)
+        if self.SOURCE is not None:
+            SOURCE = builder.CreateString(self.SOURCE)
+        if self.REF_FRAME is not None:
+            REF_FRAME = builder.CreateString(self.REF_FRAME)
+        if self.ELEMENTS is not None:
+            ELEMENTSlist = []
+            for i in range(len(self.ELEMENTS)):
+                ELEMENTSlist.append(self.ELEMENTS[i].Pack(builder))
+            MNFStartELEMENTSVector(builder, len(self.ELEMENTS))
+            for i in reversed(range(len(self.ELEMENTS))):
+                builder.PrependUOffsetTRelative(ELEMENTSlist[i])
+            ELEMENTS = builder.EndVector()
+        if self.CORRELATED_ID is not None:
+            CORRELATED_ID = builder.CreateString(self.CORRELATED_ID)
+        if self.NOTES is not None:
+            NOTES = builder.CreateString(self.NOTES)
+        MNFStart(builder)
+        if self.ID is not None:
+            MNFAddID(builder, ID)
+        MNFAddSAT_NO(builder, self.SAT_NO)
+        if self.OBJECT_DESIGNATOR is not None:
+            MNFAddOBJECT_DESIGNATOR(builder, OBJECT_DESIGNATOR)
+        MNFAddSTATUS(builder, self.STATUS)
+        if self.EVENT_EPOCH is not None:
+            MNFAddEVENT_EPOCH(builder, EVENT_EPOCH)
+        if self.SOURCE is not None:
+            MNFAddSOURCE(builder, SOURCE)
+        if self.REF_FRAME is not None:
+            MNFAddREF_FRAME(builder, REF_FRAME)
+        MNFAddORIG_SEMI_MAJOR_AXIS(builder, self.ORIG_SEMI_MAJOR_AXIS)
+        MNFAddORIG_ECCENTRICITY(builder, self.ORIG_ECCENTRICITY)
+        MNFAddORIG_INCLINATION(builder, self.ORIG_INCLINATION)
+        MNFAddDELTA_V_MIN(builder, self.DELTA_V_MIN)
+        MNFAddDELTA_V_MAX(builder, self.DELTA_V_MAX)
+        MNFAddDELTA_V_STEP(builder, self.DELTA_V_STEP)
+        MNFAddDELTA_T_MIN(builder, self.DELTA_T_MIN)
+        MNFAddDELTA_T_MAX(builder, self.DELTA_T_MAX)
+        MNFAddDELTA_T_STEP(builder, self.DELTA_T_STEP)
+        MNFAddNUM_ELEMENTS(builder, self.NUM_ELEMENTS)
+        if self.ELEMENTS is not None:
+            MNFAddELEMENTS(builder, ELEMENTS)
+        if self.CORRELATED_ID is not None:
+            MNFAddCORRELATED_ID(builder, CORRELATED_ID)
+        if self.NOTES is not None:
+            MNFAddNOTES(builder, NOTES)
+        MNF = MNFEnd(builder)
+        return MNF

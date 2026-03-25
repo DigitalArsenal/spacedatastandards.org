@@ -209,6 +209,12 @@ def CustomAlgorithmStartINPUTSVector(builder, numElems):
 def StartINPUTSVector(builder, numElems):
     return CustomAlgorithmStartINPUTSVector(builder, numElems)
 
+def CustomAlgorithmCreateINPUTSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateINPUTSVector(builder, data):
+    CustomAlgorithmCreateINPUTSVector(builder, data)
+
 def CustomAlgorithmAddOUTPUTS(builder, OUTPUTS):
     builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(OUTPUTS), 0)
 
@@ -221,6 +227,12 @@ def CustomAlgorithmStartOUTPUTSVector(builder, numElems):
 def StartOUTPUTSVector(builder, numElems):
     return CustomAlgorithmStartOUTPUTSVector(builder, numElems)
 
+def CustomAlgorithmCreateOUTPUTSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateOUTPUTSVector(builder, data):
+    CustomAlgorithmCreateOUTPUTSVector(builder, data)
+
 def CustomAlgorithmAddTRIGGERS(builder, TRIGGERS):
     builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(TRIGGERS), 0)
 
@@ -232,6 +244,12 @@ def CustomAlgorithmStartTRIGGERSVector(builder, numElems):
 
 def StartTRIGGERSVector(builder, numElems):
     return CustomAlgorithmStartTRIGGERSVector(builder, numElems)
+
+def CustomAlgorithmCreateTRIGGERSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateTRIGGERSVector(builder, data):
+    CustomAlgorithmCreateTRIGGERSVector(builder, data)
 
 def CustomAlgorithmEnd(builder):
     return builder.EndObject()
@@ -250,22 +268,33 @@ except:
 class CustomAlgorithmT(object):
 
     # CustomAlgorithmT
-    def __init__(self):
-        self.NAME = None  # type: str
-        self.SHORT_DESCRIPTION = None  # type: str
-        self.LONG_DESCRIPTION = None  # type: str
-        self.LANGUAGE = None  # type: str
-        self.ALGORITHM_TEXT = None  # type: str
-        self.EXTERNAL_ALGORITHM_REF = None  # type: str
-        self.INPUTS = None  # type: List[AlgorithmInput.AlgorithmInputT]
-        self.OUTPUTS = None  # type: List[AlgorithmOutput.AlgorithmOutputT]
-        self.TRIGGERS = None  # type: List[AlgorithmTrigger.AlgorithmTriggerT]
+    def __init__(
+        self,
+        NAME = None,
+        SHORT_DESCRIPTION = None,
+        LONG_DESCRIPTION = None,
+        LANGUAGE = None,
+        ALGORITHM_TEXT = None,
+        EXTERNAL_ALGORITHM_REF = None,
+        INPUTS = None,
+        OUTPUTS = None,
+        TRIGGERS = None,
+    ):
+        self.NAME = NAME  # type: Optional[str]
+        self.SHORT_DESCRIPTION = SHORT_DESCRIPTION  # type: Optional[str]
+        self.LONG_DESCRIPTION = LONG_DESCRIPTION  # type: Optional[str]
+        self.LANGUAGE = LANGUAGE  # type: Optional[str]
+        self.ALGORITHM_TEXT = ALGORITHM_TEXT  # type: Optional[str]
+        self.EXTERNAL_ALGORITHM_REF = EXTERNAL_ALGORITHM_REF  # type: Optional[str]
+        self.INPUTS = INPUTS  # type: Optional[List[AlgorithmInput.AlgorithmInputT]]
+        self.OUTPUTS = OUTPUTS  # type: Optional[List[AlgorithmOutput.AlgorithmOutputT]]
+        self.TRIGGERS = TRIGGERS  # type: Optional[List[AlgorithmTrigger.AlgorithmTriggerT]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        customAlgorithm = CustomAlgorithm()
-        customAlgorithm.Init(buf, pos)
-        return cls.InitFromObj(customAlgorithm)
+        tmpCustomAlgorithm = CustomAlgorithm()
+        tmpCustomAlgorithm.Init(buf, pos)
+        return cls.InitFromObj(tmpCustomAlgorithm)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -273,44 +302,44 @@ class CustomAlgorithmT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, customAlgorithm):
+    def InitFromObj(cls, tmpCustomAlgorithm):
         x = CustomAlgorithmT()
-        x._UnPack(customAlgorithm)
+        x._UnPack(tmpCustomAlgorithm)
         return x
 
     # CustomAlgorithmT
-    def _UnPack(self, customAlgorithm):
-        if customAlgorithm is None:
+    def _UnPack(self, CustomAlgorithm):
+        if CustomAlgorithm is None:
             return
-        self.NAME = customAlgorithm.NAME()
-        self.SHORT_DESCRIPTION = customAlgorithm.SHORT_DESCRIPTION()
-        self.LONG_DESCRIPTION = customAlgorithm.LONG_DESCRIPTION()
-        self.LANGUAGE = customAlgorithm.LANGUAGE()
-        self.ALGORITHM_TEXT = customAlgorithm.ALGORITHM_TEXT()
-        self.EXTERNAL_ALGORITHM_REF = customAlgorithm.EXTERNAL_ALGORITHM_REF()
-        if not customAlgorithm.INPUTSIsNone():
+        self.NAME = CustomAlgorithm.NAME()
+        self.SHORT_DESCRIPTION = CustomAlgorithm.SHORT_DESCRIPTION()
+        self.LONG_DESCRIPTION = CustomAlgorithm.LONG_DESCRIPTION()
+        self.LANGUAGE = CustomAlgorithm.LANGUAGE()
+        self.ALGORITHM_TEXT = CustomAlgorithm.ALGORITHM_TEXT()
+        self.EXTERNAL_ALGORITHM_REF = CustomAlgorithm.EXTERNAL_ALGORITHM_REF()
+        if not CustomAlgorithm.INPUTSIsNone():
             self.INPUTS = []
-            for i in range(customAlgorithm.INPUTSLength()):
-                if customAlgorithm.INPUTS(i) is None:
+            for i in range(CustomAlgorithm.INPUTSLength()):
+                if CustomAlgorithm.INPUTS(i) is None:
                     self.INPUTS.append(None)
                 else:
-                    algorithmInput_ = AlgorithmInput.AlgorithmInputT.InitFromObj(customAlgorithm.INPUTS(i))
+                    algorithmInput_ = AlgorithmInput.AlgorithmInputT.InitFromObj(CustomAlgorithm.INPUTS(i))
                     self.INPUTS.append(algorithmInput_)
-        if not customAlgorithm.OUTPUTSIsNone():
+        if not CustomAlgorithm.OUTPUTSIsNone():
             self.OUTPUTS = []
-            for i in range(customAlgorithm.OUTPUTSLength()):
-                if customAlgorithm.OUTPUTS(i) is None:
+            for i in range(CustomAlgorithm.OUTPUTSLength()):
+                if CustomAlgorithm.OUTPUTS(i) is None:
                     self.OUTPUTS.append(None)
                 else:
-                    algorithmOutput_ = AlgorithmOutput.AlgorithmOutputT.InitFromObj(customAlgorithm.OUTPUTS(i))
+                    algorithmOutput_ = AlgorithmOutput.AlgorithmOutputT.InitFromObj(CustomAlgorithm.OUTPUTS(i))
                     self.OUTPUTS.append(algorithmOutput_)
-        if not customAlgorithm.TRIGGERSIsNone():
+        if not CustomAlgorithm.TRIGGERSIsNone():
             self.TRIGGERS = []
-            for i in range(customAlgorithm.TRIGGERSLength()):
-                if customAlgorithm.TRIGGERS(i) is None:
+            for i in range(CustomAlgorithm.TRIGGERSLength()):
+                if CustomAlgorithm.TRIGGERS(i) is None:
                     self.TRIGGERS.append(None)
                 else:
-                    algorithmTrigger_ = AlgorithmTrigger.AlgorithmTriggerT.InitFromObj(customAlgorithm.TRIGGERS(i))
+                    algorithmTrigger_ = AlgorithmTrigger.AlgorithmTriggerT.InitFromObj(CustomAlgorithm.TRIGGERS(i))
                     self.TRIGGERS.append(algorithmTrigger_)
 
     # CustomAlgorithmT
@@ -370,5 +399,5 @@ class CustomAlgorithmT(object):
             CustomAlgorithmAddOUTPUTS(builder, OUTPUTS)
         if self.TRIGGERS is not None:
             CustomAlgorithmAddTRIGGERS(builder, TRIGGERS)
-        customAlgorithm = CustomAlgorithmEnd(builder)
-        return customAlgorithm
+        CustomAlgorithm = CustomAlgorithmEnd(builder)
+        return CustomAlgorithm

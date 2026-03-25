@@ -32,7 +32,7 @@ class EPM : Table() {
     /**
      * Distinguished Name of the entity
      */
-    val DN : String?
+    val dn : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class EPM : Table() {
                 null
             }
         }
-    val DNAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun DNInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val dnAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun dnInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Common name of the entity (person or organization)
      */
-    val LEGAL_NAME : String?
+    val legalName : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -55,12 +55,12 @@ class EPM : Table() {
                 null
             }
         }
-    val LEGAL_NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun LEGAL_NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val legalNameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun legalNameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * Family name or surname of the person
      */
-    val FAMILY_NAME : String?
+    val familyName : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -69,12 +69,12 @@ class EPM : Table() {
                 null
             }
         }
-    val FAMILY_NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun FAMILY_NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val familyNameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun familyNameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
     /**
      * Given name or first name of the person
      */
-    val GIVEN_NAME : String?
+    val givenName : String?
         get() {
             val o = __offset(10)
             return if (o != 0) {
@@ -83,12 +83,12 @@ class EPM : Table() {
                 null
             }
         }
-    val GIVEN_NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
-    fun GIVEN_NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
+    val givenNameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(10, 1)
+    fun givenNameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 10, 1)
     /**
      * Additional name or middle name of the person
      */
-    val ADDITIONAL_NAME : String?
+    val additionalName : String?
         get() {
             val o = __offset(12)
             return if (o != 0) {
@@ -97,12 +97,12 @@ class EPM : Table() {
                 null
             }
         }
-    val ADDITIONAL_NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
-    fun ADDITIONAL_NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
+    val additionalNameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(12, 1)
+    fun additionalNameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 12, 1)
     /**
      * Honorific prefix preceding the person's name (e.g., Mr., Dr.)
      */
-    val HONORIFIC_PREFIX : String?
+    val honorificPrefix : String?
         get() {
             val o = __offset(14)
             return if (o != 0) {
@@ -111,12 +111,12 @@ class EPM : Table() {
                 null
             }
         }
-    val HONORIFIC_PREFIXAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(14, 1)
-    fun HONORIFIC_PREFIXInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 14, 1)
+    val honorificPrefixAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(14, 1)
+    fun honorificPrefixInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 14, 1)
     /**
      * Honorific suffix following the person's name (e.g., Jr., Sr.)
      */
-    val HONORIFIC_SUFFIX : String?
+    val honorificSuffix : String?
         get() {
             val o = __offset(16)
             return if (o != 0) {
@@ -125,12 +125,12 @@ class EPM : Table() {
                 null
             }
         }
-    val HONORIFIC_SUFFIXAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(16, 1)
-    fun HONORIFIC_SUFFIXInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 16, 1)
+    val honorificSuffixAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(16, 1)
+    fun honorificSuffixInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 16, 1)
     /**
      * Job title of the person
      */
-    val JOB_TITLE : String?
+    val jobTitle : String?
         get() {
             val o = __offset(18)
             return if (o != 0) {
@@ -139,12 +139,12 @@ class EPM : Table() {
                 null
             }
         }
-    val JOB_TITLEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(18, 1)
-    fun JOB_TITLEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 18, 1)
+    val jobTitleAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(18, 1)
+    fun jobTitleInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 18, 1)
     /**
      * Occupation of the person
      */
-    val OCCUPATION : String?
+    val occupation : String?
         get() {
             val o = __offset(20)
             return if (o != 0) {
@@ -153,13 +153,13 @@ class EPM : Table() {
                 null
             }
         }
-    val OCCUPATIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(20, 1)
-    fun OCCUPATIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 20, 1)
+    val occupationAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(20, 1)
+    fun occupationInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 20, 1)
     /**
      * Physical Address
      */
-    val ADDRESS : Address? get() = ADDRESS(Address())
-    fun ADDRESS(obj: Address) : Address? {
+    val address : Address? get() = address(Address())
+    fun address(obj: Address) : Address? {
         val o = __offset(22)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -170,7 +170,7 @@ class EPM : Table() {
     /**
      * Alternate names for the entity
      */
-    fun ALTERNATE_NAMES(j: Int) : String? {
+    fun alternateNames(j: Int) : String? {
         val o = __offset(24)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
@@ -178,14 +178,14 @@ class EPM : Table() {
             null
         }
     }
-    val ALTERNATE_NAMESLength : Int
+    val alternateNamesLength : Int
         get() {
             val o = __offset(24); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Email address of the entity
      */
-    val EMAIL : String?
+    val email : String?
         get() {
             val o = __offset(26)
             return if (o != 0) {
@@ -194,12 +194,12 @@ class EPM : Table() {
                 null
             }
         }
-    val EMAILAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(26, 1)
-    fun EMAILInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 26, 1)
+    val emailAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(26, 1)
+    fun emailInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 26, 1)
     /**
      * Telephone number of the entity
      */
-    val TELEPHONE : String?
+    val telephone : String?
         get() {
             val o = __offset(28)
             return if (o != 0) {
@@ -208,13 +208,13 @@ class EPM : Table() {
                 null
             }
         }
-    val TELEPHONEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(28, 1)
-    fun TELEPHONEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 28, 1)
+    val telephoneAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(28, 1)
+    fun telephoneInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 28, 1)
     /**
      * Cryptographic keys associated with the entity
      */
-    fun KEYS(j: Int) : CryptoKey? = KEYS(CryptoKey(), j)
-    fun KEYS(obj: CryptoKey, j: Int) : CryptoKey? {
+    fun keys(j: Int) : CryptoKey? = keys(CryptoKey(), j)
+    fun keys(obj: CryptoKey, j: Int) : CryptoKey? {
         val o = __offset(30)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -222,14 +222,14 @@ class EPM : Table() {
             null
         }
     }
-    val KEYSLength : Int
+    val keysLength : Int
         get() {
             val o = __offset(30); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Multiformat addresses associated with the entity
      */
-    fun MULTIFORMAT_ADDRESS(j: Int) : String? {
+    fun multiformatAddress(j: Int) : String? {
         val o = __offset(32)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
@@ -237,14 +237,14 @@ class EPM : Table() {
             null
         }
     }
-    val MULTIFORMAT_ADDRESSLength : Int
+    val multiformatAddressLength : Int
         get() {
             val o = __offset(32); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Ed25519 signature over canonical EPM content (hex), signed by the first signing key in KEYS
      */
-    val SIGNATURE : String?
+    val signature : String?
         get() {
             val o = __offset(34)
             return if (o != 0) {
@@ -253,12 +253,12 @@ class EPM : Table() {
                 null
             }
         }
-    val SIGNATUREAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(34, 1)
-    fun SIGNATUREInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 34, 1)
+    val signatureAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(34, 1)
+    fun signatureInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 34, 1)
     /**
      * Unix timestamp (seconds) when the EPM was signed
      */
-    val SIGNATURE_TIMESTAMP : Long
+    val signatureTimestamp : Long
         get() {
             val o = __offset(36)
             return if(o != 0) bb.getLong(o + bb_pos) else 0L
@@ -266,8 +266,8 @@ class EPM : Table() {
     /**
      * Chain binding proofs linking blockchain keys to the same HD wallet
      */
-    fun CHAIN_PROOFS(j: Int) : ChainProof? = CHAIN_PROOFS(ChainProof(), j)
-    fun CHAIN_PROOFS(obj: ChainProof, j: Int) : ChainProof? {
+    fun chainProofs(j: Int) : ChainProof? = chainProofs(ChainProof(), j)
+    fun chainProofs(obj: ChainProof, j: Int) : ChainProof? {
         val o = __offset(38)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -275,52 +275,52 @@ class EPM : Table() {
             null
         }
     }
-    val CHAIN_PROOFSLength : Int
+    val chainProofsLength : Int
         get() {
             val o = __offset(38); return if (o != 0) __vector_len(o) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsEPM(_bb: ByteBuffer): EPM = getRootAsEPM(_bb, EPM())
         fun getRootAsEPM(_bb: ByteBuffer, obj: EPM): EPM {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun EPMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$EPM")
-        fun createEPM(builder: FlatBufferBuilder, DNOffset: Int, LEGAL_NAMEOffset: Int, FAMILY_NAMEOffset: Int, GIVEN_NAMEOffset: Int, ADDITIONAL_NAMEOffset: Int, HONORIFIC_PREFIXOffset: Int, HONORIFIC_SUFFIXOffset: Int, JOB_TITLEOffset: Int, OCCUPATIONOffset: Int, ADDRESSOffset: Int, ALTERNATE_NAMESOffset: Int, EMAILOffset: Int, TELEPHONEOffset: Int, KEYSOffset: Int, MULTIFORMAT_ADDRESSOffset: Int, SIGNATUREOffset: Int, SIGNATURE_TIMESTAMP: Long, CHAIN_PROOFSOffset: Int) : Int {
+        fun createEPM(builder: FlatBufferBuilder, dnOffset: Int, legalNameOffset: Int, familyNameOffset: Int, givenNameOffset: Int, additionalNameOffset: Int, honorificPrefixOffset: Int, honorificSuffixOffset: Int, jobTitleOffset: Int, occupationOffset: Int, addressOffset: Int, alternateNamesOffset: Int, emailOffset: Int, telephoneOffset: Int, keysOffset: Int, multiformatAddressOffset: Int, signatureOffset: Int, signatureTimestamp: Long, chainProofsOffset: Int) : Int {
             builder.startTable(18)
-            addSIGNATURE_TIMESTAMP(builder, SIGNATURE_TIMESTAMP)
-            addCHAIN_PROOFS(builder, CHAIN_PROOFSOffset)
-            addSIGNATURE(builder, SIGNATUREOffset)
-            addMULTIFORMAT_ADDRESS(builder, MULTIFORMAT_ADDRESSOffset)
-            addKEYS(builder, KEYSOffset)
-            addTELEPHONE(builder, TELEPHONEOffset)
-            addEMAIL(builder, EMAILOffset)
-            addALTERNATE_NAMES(builder, ALTERNATE_NAMESOffset)
-            addADDRESS(builder, ADDRESSOffset)
-            addOCCUPATION(builder, OCCUPATIONOffset)
-            addJOB_TITLE(builder, JOB_TITLEOffset)
-            addHONORIFIC_SUFFIX(builder, HONORIFIC_SUFFIXOffset)
-            addHONORIFIC_PREFIX(builder, HONORIFIC_PREFIXOffset)
-            addADDITIONAL_NAME(builder, ADDITIONAL_NAMEOffset)
-            addGIVEN_NAME(builder, GIVEN_NAMEOffset)
-            addFAMILY_NAME(builder, FAMILY_NAMEOffset)
-            addLEGAL_NAME(builder, LEGAL_NAMEOffset)
-            addDN(builder, DNOffset)
+            addSIGNATURETIMESTAMP(builder, signatureTimestamp)
+            addCHAINPROOFS(builder, chainProofsOffset)
+            addSIGNATURE(builder, signatureOffset)
+            addMULTIFORMATADDRESS(builder, multiformatAddressOffset)
+            addKEYS(builder, keysOffset)
+            addTELEPHONE(builder, telephoneOffset)
+            addEMAIL(builder, emailOffset)
+            addALTERNATENAMES(builder, alternateNamesOffset)
+            addADDRESS(builder, addressOffset)
+            addOCCUPATION(builder, occupationOffset)
+            addJOBTITLE(builder, jobTitleOffset)
+            addHONORIFICSUFFIX(builder, honorificSuffixOffset)
+            addHONORIFICPREFIX(builder, honorificPrefixOffset)
+            addADDITIONALNAME(builder, additionalNameOffset)
+            addGIVENNAME(builder, givenNameOffset)
+            addFAMILYNAME(builder, familyNameOffset)
+            addLEGALNAME(builder, legalNameOffset)
+            addDN(builder, dnOffset)
             return endEPM(builder)
         }
         fun startEPM(builder: FlatBufferBuilder) = builder.startTable(18)
-        fun addDN(builder: FlatBufferBuilder, DN: Int) = builder.addOffset(0, DN, 0)
-        fun addLEGAL_NAME(builder: FlatBufferBuilder, LEGAL_NAME: Int) = builder.addOffset(1, LEGAL_NAME, 0)
-        fun addFAMILY_NAME(builder: FlatBufferBuilder, FAMILY_NAME: Int) = builder.addOffset(2, FAMILY_NAME, 0)
-        fun addGIVEN_NAME(builder: FlatBufferBuilder, GIVEN_NAME: Int) = builder.addOffset(3, GIVEN_NAME, 0)
-        fun addADDITIONAL_NAME(builder: FlatBufferBuilder, ADDITIONAL_NAME: Int) = builder.addOffset(4, ADDITIONAL_NAME, 0)
-        fun addHONORIFIC_PREFIX(builder: FlatBufferBuilder, HONORIFIC_PREFIX: Int) = builder.addOffset(5, HONORIFIC_PREFIX, 0)
-        fun addHONORIFIC_SUFFIX(builder: FlatBufferBuilder, HONORIFIC_SUFFIX: Int) = builder.addOffset(6, HONORIFIC_SUFFIX, 0)
-        fun addJOB_TITLE(builder: FlatBufferBuilder, JOB_TITLE: Int) = builder.addOffset(7, JOB_TITLE, 0)
-        fun addOCCUPATION(builder: FlatBufferBuilder, OCCUPATION: Int) = builder.addOffset(8, OCCUPATION, 0)
-        fun addADDRESS(builder: FlatBufferBuilder, ADDRESS: Int) = builder.addOffset(9, ADDRESS, 0)
-        fun addALTERNATE_NAMES(builder: FlatBufferBuilder, ALTERNATE_NAMES: Int) = builder.addOffset(10, ALTERNATE_NAMES, 0)
+        fun addDN(builder: FlatBufferBuilder, dn: Int) = builder.addOffset(0, dn, 0)
+        fun addLEGALNAME(builder: FlatBufferBuilder, legalName: Int) = builder.addOffset(1, legalName, 0)
+        fun addFAMILYNAME(builder: FlatBufferBuilder, familyName: Int) = builder.addOffset(2, familyName, 0)
+        fun addGIVENNAME(builder: FlatBufferBuilder, givenName: Int) = builder.addOffset(3, givenName, 0)
+        fun addADDITIONALNAME(builder: FlatBufferBuilder, additionalName: Int) = builder.addOffset(4, additionalName, 0)
+        fun addHONORIFICPREFIX(builder: FlatBufferBuilder, honorificPrefix: Int) = builder.addOffset(5, honorificPrefix, 0)
+        fun addHONORIFICSUFFIX(builder: FlatBufferBuilder, honorificSuffix: Int) = builder.addOffset(6, honorificSuffix, 0)
+        fun addJOBTITLE(builder: FlatBufferBuilder, jobTitle: Int) = builder.addOffset(7, jobTitle, 0)
+        fun addOCCUPATION(builder: FlatBufferBuilder, occupation: Int) = builder.addOffset(8, occupation, 0)
+        fun addADDRESS(builder: FlatBufferBuilder, address: Int) = builder.addOffset(9, address, 0)
+        fun addALTERNATENAMES(builder: FlatBufferBuilder, alternateNames: Int) = builder.addOffset(10, alternateNames, 0)
         fun createAlternateNamesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -329,9 +329,9 @@ class EPM : Table() {
             return builder.endVector()
         }
         fun startAlternateNamesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addEMAIL(builder: FlatBufferBuilder, EMAIL: Int) = builder.addOffset(11, EMAIL, 0)
-        fun addTELEPHONE(builder: FlatBufferBuilder, TELEPHONE: Int) = builder.addOffset(12, TELEPHONE, 0)
-        fun addKEYS(builder: FlatBufferBuilder, KEYS: Int) = builder.addOffset(13, KEYS, 0)
+        fun addEMAIL(builder: FlatBufferBuilder, email: Int) = builder.addOffset(11, email, 0)
+        fun addTELEPHONE(builder: FlatBufferBuilder, telephone: Int) = builder.addOffset(12, telephone, 0)
+        fun addKEYS(builder: FlatBufferBuilder, keys: Int) = builder.addOffset(13, keys, 0)
         fun createKeysVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -340,7 +340,7 @@ class EPM : Table() {
             return builder.endVector()
         }
         fun startKeysVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addMULTIFORMAT_ADDRESS(builder: FlatBufferBuilder, MULTIFORMAT_ADDRESS: Int) = builder.addOffset(14, MULTIFORMAT_ADDRESS, 0)
+        fun addMULTIFORMATADDRESS(builder: FlatBufferBuilder, multiformatAddress: Int) = builder.addOffset(14, multiformatAddress, 0)
         fun createMultiformatAddressVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -349,9 +349,9 @@ class EPM : Table() {
             return builder.endVector()
         }
         fun startMultiformatAddressVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addSIGNATURE(builder: FlatBufferBuilder, SIGNATURE: Int) = builder.addOffset(15, SIGNATURE, 0)
-        fun addSIGNATURE_TIMESTAMP(builder: FlatBufferBuilder, SIGNATURE_TIMESTAMP: Long) = builder.addLong(16, SIGNATURE_TIMESTAMP, 0L)
-        fun addCHAIN_PROOFS(builder: FlatBufferBuilder, CHAIN_PROOFS: Int) = builder.addOffset(17, CHAIN_PROOFS, 0)
+        fun addSIGNATURE(builder: FlatBufferBuilder, signature: Int) = builder.addOffset(15, signature, 0)
+        fun addSIGNATURETIMESTAMP(builder: FlatBufferBuilder, signatureTimestamp: Long) = builder.addLong(16, signatureTimestamp, 0L)
+        fun addCHAINPROOFS(builder: FlatBufferBuilder, chainProofs: Int) = builder.addOffset(17, chainProofs, 0)
         fun createChainProofsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {

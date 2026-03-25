@@ -43,7 +43,7 @@ class CelestialFrameWrapper extends Table
     /**
      * @return sbyte
      */
-    public function getFrame()
+    public function getframe()
     {
         $o = $this->__offset(4);
         return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \CelestialFrame::GCRF;
@@ -65,7 +65,7 @@ class CelestialFrameWrapper extends Table
     public static function createCelestialFrameWrapper(FlatBufferBuilder $builder, $frame)
     {
         $builder->startObject(1);
-        self::addFrame($builder, $frame);
+        self::addframe($builder, $frame);
         $o = $builder->endObject();
         return $o;
     }
@@ -75,7 +75,7 @@ class CelestialFrameWrapper extends Table
      * @param sbyte
      * @return void
      */
-    public static function addFrame(FlatBufferBuilder $builder, $frame)
+    public static function addframe(FlatBufferBuilder $builder, $frame)
     {
         $builder->addSbyteX(0, $frame, 0);
     }

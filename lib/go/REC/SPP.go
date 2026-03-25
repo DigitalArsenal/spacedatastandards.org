@@ -63,9 +63,17 @@ func (rcv *SPP) VERSION() byte {
 	return 0
 }
 
+func (rcv *SPP) Version() byte {
+	return rcv.VERSION()
+}
+
 /// Packet version number
 func (rcv *SPP) MutateVERSION(n byte) bool {
 	return rcv._tab.MutateByteSlot(4, n)
+}
+
+func (rcv *SPP) MutateVersion(n byte) bool {
+	return rcv.MutateVERSION(n)
 }
 
 /// Packet type (TM or TC)
@@ -77,9 +85,17 @@ func (rcv *SPP) PACKET_TYPE() packetType {
 	return 0
 }
 
+func (rcv *SPP) PacketType() packetType {
+	return rcv.PACKET_TYPE()
+}
+
 /// Packet type (TM or TC)
 func (rcv *SPP) MutatePACKET_TYPE(n packetType) bool {
 	return rcv._tab.MutateInt8Slot(6, int8(n))
+}
+
+func (rcv *SPP) MutatePacketType(n packetType) bool {
+	return rcv.MutatePACKET_TYPE(n)
 }
 
 /// Secondary header flag
@@ -91,9 +107,17 @@ func (rcv *SPP) SEC_HDR_FLAG() bool {
 	return false
 }
 
+func (rcv *SPP) SecHdrFlag() bool {
+	return rcv.SEC_HDR_FLAG()
+}
+
 /// Secondary header flag
 func (rcv *SPP) MutateSEC_HDR_FLAG(n bool) bool {
 	return rcv._tab.MutateBoolSlot(8, n)
+}
+
+func (rcv *SPP) MutateSecHdrFlag(n bool) bool {
+	return rcv.MutateSEC_HDR_FLAG(n)
 }
 
 /// Application Process Identifier
@@ -105,9 +129,17 @@ func (rcv *SPP) APID() uint16 {
 	return 0
 }
 
+func (rcv *SPP) Apid() uint16 {
+	return rcv.APID()
+}
+
 /// Application Process Identifier
 func (rcv *SPP) MutateAPID(n uint16) bool {
 	return rcv._tab.MutateUint16Slot(10, n)
+}
+
+func (rcv *SPP) MutateApid(n uint16) bool {
+	return rcv.MutateAPID(n)
 }
 
 /// Sequence flags (00=continuation, 01=first, 10=last, 11=standalone)
@@ -119,9 +151,17 @@ func (rcv *SPP) SEQUENCE_FLAGS() byte {
 	return 0
 }
 
+func (rcv *SPP) SequenceFlags() byte {
+	return rcv.SEQUENCE_FLAGS()
+}
+
 /// Sequence flags (00=continuation, 01=first, 10=last, 11=standalone)
 func (rcv *SPP) MutateSEQUENCE_FLAGS(n byte) bool {
 	return rcv._tab.MutateByteSlot(12, n)
+}
+
+func (rcv *SPP) MutateSequenceFlags(n byte) bool {
+	return rcv.MutateSEQUENCE_FLAGS(n)
 }
 
 /// Sequence count
@@ -133,9 +173,17 @@ func (rcv *SPP) SEQUENCE_COUNT() uint16 {
 	return 0
 }
 
+func (rcv *SPP) SequenceCount() uint16 {
+	return rcv.SEQUENCE_COUNT()
+}
+
 /// Sequence count
 func (rcv *SPP) MutateSEQUENCE_COUNT(n uint16) bool {
 	return rcv._tab.MutateUint16Slot(14, n)
+}
+
+func (rcv *SPP) MutateSequenceCount(n uint16) bool {
+	return rcv.MutateSEQUENCE_COUNT(n)
 }
 
 /// Data length minus 1
@@ -147,9 +195,17 @@ func (rcv *SPP) DATA_LENGTH() uint16 {
 	return 0
 }
 
+func (rcv *SPP) DataLength() uint16 {
+	return rcv.DATA_LENGTH()
+}
+
 /// Data length minus 1
 func (rcv *SPP) MutateDATA_LENGTH(n uint16) bool {
 	return rcv._tab.MutateUint16Slot(16, n)
+}
+
+func (rcv *SPP) MutateDataLength(n uint16) bool {
+	return rcv.MutateDATA_LENGTH(n)
 }
 
 /// Packet data zone
@@ -162,6 +218,10 @@ func (rcv *SPP) DATA(j int) byte {
 	return 0
 }
 
+func (rcv *SPP) Data(j int) byte {
+	return rcv.DATA(j)
+}
+
 func (rcv *SPP) DATALength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
 	if o != 0 {
@@ -170,12 +230,20 @@ func (rcv *SPP) DATALength() int {
 	return 0
 }
 
+func (rcv *SPP) DataLength() int {
+	return rcv.DATALength()
+}
+
 func (rcv *SPP) DATABytes() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *SPP) DataBytes() []byte {
+	return rcv.DATABytes()
 }
 
 /// Packet data zone
@@ -188,35 +256,66 @@ func (rcv *SPP) MutateDATA(j int, n byte) bool {
 	return false
 }
 
+func (rcv *SPP) MutateData(j int, n byte) bool {
+	return rcv.MutateDATA(j, n)
+}
+
 func SPPStart(builder *flatbuffers.Builder) {
 	builder.StartObject(8)
 }
 func SPPAddVERSION(builder *flatbuffers.Builder, VERSION byte) {
 	builder.PrependByteSlot(0, VERSION, 0)
 }
+func SPPAddVersion(builder *flatbuffers.Builder, VERSION byte) {
+	SPPAddVERSION(builder, VERSION)
+}
 func SPPAddPACKET_TYPE(builder *flatbuffers.Builder, PACKET_TYPE packetType) {
 	builder.PrependInt8Slot(1, int8(PACKET_TYPE), 0)
+}
+func SPPAddPacketType(builder *flatbuffers.Builder, PACKET_TYPE packetType) {
+	SPPAddPACKET_TYPE(builder, PACKET_TYPE)
 }
 func SPPAddSEC_HDR_FLAG(builder *flatbuffers.Builder, SEC_HDR_FLAG bool) {
 	builder.PrependBoolSlot(2, SEC_HDR_FLAG, false)
 }
+func SPPAddSecHdrFlag(builder *flatbuffers.Builder, SEC_HDR_FLAG bool) {
+	SPPAddSEC_HDR_FLAG(builder, SEC_HDR_FLAG)
+}
 func SPPAddAPID(builder *flatbuffers.Builder, APID uint16) {
 	builder.PrependUint16Slot(3, APID, 0)
+}
+func SPPAddApid(builder *flatbuffers.Builder, APID uint16) {
+	SPPAddAPID(builder, APID)
 }
 func SPPAddSEQUENCE_FLAGS(builder *flatbuffers.Builder, SEQUENCE_FLAGS byte) {
 	builder.PrependByteSlot(4, SEQUENCE_FLAGS, 0)
 }
+func SPPAddSequenceFlags(builder *flatbuffers.Builder, SEQUENCE_FLAGS byte) {
+	SPPAddSEQUENCE_FLAGS(builder, SEQUENCE_FLAGS)
+}
 func SPPAddSEQUENCE_COUNT(builder *flatbuffers.Builder, SEQUENCE_COUNT uint16) {
 	builder.PrependUint16Slot(5, SEQUENCE_COUNT, 0)
+}
+func SPPAddSequenceCount(builder *flatbuffers.Builder, SEQUENCE_COUNT uint16) {
+	SPPAddSEQUENCE_COUNT(builder, SEQUENCE_COUNT)
 }
 func SPPAddDATA_LENGTH(builder *flatbuffers.Builder, DATA_LENGTH uint16) {
 	builder.PrependUint16Slot(6, DATA_LENGTH, 0)
 }
+func SPPAddDataLength(builder *flatbuffers.Builder, DATA_LENGTH uint16) {
+	SPPAddDATA_LENGTH(builder, DATA_LENGTH)
+}
 func SPPAddDATA(builder *flatbuffers.Builder, DATA flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(DATA), 0)
 }
+func SPPAddData(builder *flatbuffers.Builder, DATA flatbuffers.UOffsetT) {
+	SPPAddDATA(builder, DATA)
+}
 func SPPStartDATAVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(1, numElems, 1)
+}
+func SPPStartDataVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return SPPStartDATAVector(builder, numElems)
 }
 func SPPEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

@@ -2,4 +2,15 @@
 
 # namespace: 
 
-# NOTE PropagatorMethod.py does not declare any structs or enums
+class PropagatorMethod(object):
+    KEPLER = 0
+    SGP4 = 1
+    SDP4 = 2
+    HPOP = 3
+    COWELL = 4
+    ENCKE = 5
+    GAUSS_JACKSON = 6
+    RK78 = 7
+    BROUWER = 8
+    KOZAI = 9
+    DSST = 10

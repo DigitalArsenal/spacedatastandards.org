@@ -32,7 +32,7 @@ class CZMInterval : Table() {
     /**
      * ISO 8601 interval string (e.g. "2012-03-15T10:00:00Z/2012-03-16T10:00:00Z")
      */
-    val INTERVAL : String?
+    val interval : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,22 +41,22 @@ class CZMInterval : Table() {
                 null
             }
         }
-    val INTERVALAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun INTERVALInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val intervalAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun intervalInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsCZMInterval(_bb: ByteBuffer): CZMInterval = getRootAsCZMInterval(_bb, CZMInterval())
         fun getRootAsCZMInterval(_bb: ByteBuffer, obj: CZMInterval): CZMInterval {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createCZMInterval(builder: FlatBufferBuilder, INTERVALOffset: Int) : Int {
+        fun createCZMInterval(builder: FlatBufferBuilder, intervalOffset: Int) : Int {
             builder.startTable(1)
-            addINTERVAL(builder, INTERVALOffset)
+            addINTERVAL(builder, intervalOffset)
             return endCZMInterval(builder)
         }
         fun startCZMInterval(builder: FlatBufferBuilder) = builder.startTable(1)
-        fun addINTERVAL(builder: FlatBufferBuilder, INTERVAL: Int) = builder.addOffset(0, INTERVAL, 0)
+        fun addINTERVAL(builder: FlatBufferBuilder, interval: Int) = builder.addOffset(0, interval, 0)
         fun endCZMInterval(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

@@ -2,4 +2,679 @@
 
 # namespace: 
 
-# NOTE CZMPolygon.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Polygon properties
+class CZMPolygon(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = CZMPolygon()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsCZMPolygon(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def CZMPolygonBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x43\x5A\x4D", size_prefixed=size_prefixed)
+
+    # CZMPolygon
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Whether the polygon is displayed
+    # CZMPolygon
+    def SHOW(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # Positions as cartographic degrees [lon, lat, height, ...]
+    # CZMPolygon
+    def POSITIONS_CARTOGRAPHIC_DEGREES(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # CZMPolygon
+    def POSITIONS_CARTOGRAPHIC_DEGREESAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
+
+    # CZMPolygon
+    def POSITIONS_CARTOGRAPHIC_DEGREESLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # CZMPolygon
+    def POSITIONS_CARTOGRAPHIC_DEGREESIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        return o == 0
+
+    # Positions as Cartesian [X, Y, Z, ...]
+    # CZMPolygon
+    def POSITIONS_CARTESIAN(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # CZMPolygon
+    def POSITIONS_CARTESIANAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
+
+    # CZMPolygon
+    def POSITIONS_CARTESIANLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # CZMPolygon
+    def POSITIONS_CARTESIANIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        return o == 0
+
+    # Fill flag
+    # CZMPolygon
+    def FILL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # Fill color (solid color material, legacy)
+    # CZMPolygon
+    def COLOR(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from CZMColor import CZMColor
+            obj = CZMColor()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Outline flag
+    # CZMPolygon
+    def OUTLINE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # Outline color
+    # CZMPolygon
+    def OUTLINE_COLOR(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from CZMColor import CZMColor
+            obj = CZMColor()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Extruded height in meters
+    # CZMPolygon
+    def EXTRUDED_HEIGHT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Height reference
+    # CZMPolygon
+    def HEIGHT_REFERENCE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # Classification type
+    # CZMPolygon
+    def CLASSIFICATION_TYPE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # Holes (position lists: each hole is [lon,lat,h,...])
+    # CZMPolygon
+    def HOLES(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from CZMPolygonHole import CZMPolygonHole
+            obj = CZMPolygonHole()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # CZMPolygon
+    def HOLESLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # CZMPolygon
+    def HOLESIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        return o == 0
+
+    # Arc type
+    # CZMPolygon
+    def ARC_TYPE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Height in meters
+    # CZMPolygon
+    def HEIGHT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Extruded height reference
+    # CZMPolygon
+    def EXTRUDED_HEIGHT_REFERENCE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Texture rotation in radians
+    # CZMPolygon
+    def ST_ROTATION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Granularity in radians
+    # CZMPolygon
+    def GRANULARITY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Full surface material
+    # CZMPolygon
+    def MATERIAL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from CZMMaterial import CZMMaterial
+            obj = CZMMaterial()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Outline width in pixels
+    # CZMPolygon
+    def OUTLINE_WIDTH(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Whether to use per-position heights
+    # CZMPolygon
+    def PER_POSITION_HEIGHT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # Whether to close the top of extruded polygon
+    # CZMPolygon
+    def CLOSE_TOP(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # Whether to close the bottom of extruded polygon
+    # CZMPolygon
+    def CLOSE_BOTTOM(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # Shadow mode
+    # CZMPolygon
+    def SHADOWS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Z-index for ordering
+    # CZMPolygon
+    def Z_INDEX(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+def CZMPolygonStart(builder):
+    builder.StartObject(23)
+
+def Start(builder):
+    CZMPolygonStart(builder)
+
+def CZMPolygonAddSHOW(builder, SHOW):
+    builder.PrependBoolSlot(0, SHOW, 0)
+
+def AddSHOW(builder, SHOW):
+    CZMPolygonAddSHOW(builder, SHOW)
+
+def CZMPolygonAddPOSITIONS_CARTOGRAPHIC_DEGREES(builder, POSITIONS_CARTOGRAPHIC_DEGREES):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(POSITIONS_CARTOGRAPHIC_DEGREES), 0)
+
+def AddPOSITIONS_CARTOGRAPHIC_DEGREES(builder, POSITIONS_CARTOGRAPHIC_DEGREES):
+    CZMPolygonAddPOSITIONS_CARTOGRAPHIC_DEGREES(builder, POSITIONS_CARTOGRAPHIC_DEGREES)
+
+def CZMPolygonStartPOSITIONS_CARTOGRAPHIC_DEGREESVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
+def StartPOSITIONS_CARTOGRAPHIC_DEGREESVector(builder, numElems):
+    return CZMPolygonStartPOSITIONS_CARTOGRAPHIC_DEGREESVector(builder, numElems)
+
+def CZMPolygonCreatePOSITIONS_CARTOGRAPHIC_DEGREESVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreatePOSITIONS_CARTOGRAPHIC_DEGREESVector(builder, data):
+    CZMPolygonCreatePOSITIONS_CARTOGRAPHIC_DEGREESVector(builder, data)
+
+def CZMPolygonAddPOSITIONS_CARTESIAN(builder, POSITIONS_CARTESIAN):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(POSITIONS_CARTESIAN), 0)
+
+def AddPOSITIONS_CARTESIAN(builder, POSITIONS_CARTESIAN):
+    CZMPolygonAddPOSITIONS_CARTESIAN(builder, POSITIONS_CARTESIAN)
+
+def CZMPolygonStartPOSITIONS_CARTESIANVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
+def StartPOSITIONS_CARTESIANVector(builder, numElems):
+    return CZMPolygonStartPOSITIONS_CARTESIANVector(builder, numElems)
+
+def CZMPolygonCreatePOSITIONS_CARTESIANVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreatePOSITIONS_CARTESIANVector(builder, data):
+    CZMPolygonCreatePOSITIONS_CARTESIANVector(builder, data)
+
+def CZMPolygonAddFILL(builder, FILL):
+    builder.PrependBoolSlot(3, FILL, 0)
+
+def AddFILL(builder, FILL):
+    CZMPolygonAddFILL(builder, FILL)
+
+def CZMPolygonAddCOLOR(builder, COLOR):
+    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(COLOR), 0)
+
+def AddCOLOR(builder, COLOR):
+    CZMPolygonAddCOLOR(builder, COLOR)
+
+def CZMPolygonAddOUTLINE(builder, OUTLINE):
+    builder.PrependBoolSlot(5, OUTLINE, 0)
+
+def AddOUTLINE(builder, OUTLINE):
+    CZMPolygonAddOUTLINE(builder, OUTLINE)
+
+def CZMPolygonAddOUTLINE_COLOR(builder, OUTLINE_COLOR):
+    builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(OUTLINE_COLOR), 0)
+
+def AddOUTLINE_COLOR(builder, OUTLINE_COLOR):
+    CZMPolygonAddOUTLINE_COLOR(builder, OUTLINE_COLOR)
+
+def CZMPolygonAddEXTRUDED_HEIGHT(builder, EXTRUDED_HEIGHT):
+    builder.PrependFloat64Slot(7, EXTRUDED_HEIGHT, 0.0)
+
+def AddEXTRUDED_HEIGHT(builder, EXTRUDED_HEIGHT):
+    CZMPolygonAddEXTRUDED_HEIGHT(builder, EXTRUDED_HEIGHT)
+
+def CZMPolygonAddHEIGHT_REFERENCE(builder, HEIGHT_REFERENCE):
+    builder.PrependInt8Slot(8, HEIGHT_REFERENCE, 0)
+
+def AddHEIGHT_REFERENCE(builder, HEIGHT_REFERENCE):
+    CZMPolygonAddHEIGHT_REFERENCE(builder, HEIGHT_REFERENCE)
+
+def CZMPolygonAddCLASSIFICATION_TYPE(builder, CLASSIFICATION_TYPE):
+    builder.PrependInt8Slot(9, CLASSIFICATION_TYPE, 0)
+
+def AddCLASSIFICATION_TYPE(builder, CLASSIFICATION_TYPE):
+    CZMPolygonAddCLASSIFICATION_TYPE(builder, CLASSIFICATION_TYPE)
+
+def CZMPolygonAddHOLES(builder, HOLES):
+    builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(HOLES), 0)
+
+def AddHOLES(builder, HOLES):
+    CZMPolygonAddHOLES(builder, HOLES)
+
+def CZMPolygonStartHOLESVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartHOLESVector(builder, numElems):
+    return CZMPolygonStartHOLESVector(builder, numElems)
+
+def CZMPolygonCreateHOLESVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateHOLESVector(builder, data):
+    CZMPolygonCreateHOLESVector(builder, data)
+
+def CZMPolygonAddARC_TYPE(builder, ARC_TYPE):
+    builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(ARC_TYPE), 0)
+
+def AddARC_TYPE(builder, ARC_TYPE):
+    CZMPolygonAddARC_TYPE(builder, ARC_TYPE)
+
+def CZMPolygonAddHEIGHT(builder, HEIGHT):
+    builder.PrependFloat64Slot(12, HEIGHT, 0.0)
+
+def AddHEIGHT(builder, HEIGHT):
+    CZMPolygonAddHEIGHT(builder, HEIGHT)
+
+def CZMPolygonAddEXTRUDED_HEIGHT_REFERENCE(builder, EXTRUDED_HEIGHT_REFERENCE):
+    builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(EXTRUDED_HEIGHT_REFERENCE), 0)
+
+def AddEXTRUDED_HEIGHT_REFERENCE(builder, EXTRUDED_HEIGHT_REFERENCE):
+    CZMPolygonAddEXTRUDED_HEIGHT_REFERENCE(builder, EXTRUDED_HEIGHT_REFERENCE)
+
+def CZMPolygonAddST_ROTATION(builder, ST_ROTATION):
+    builder.PrependFloat64Slot(14, ST_ROTATION, 0.0)
+
+def AddST_ROTATION(builder, ST_ROTATION):
+    CZMPolygonAddST_ROTATION(builder, ST_ROTATION)
+
+def CZMPolygonAddGRANULARITY(builder, GRANULARITY):
+    builder.PrependFloat64Slot(15, GRANULARITY, 0.0)
+
+def AddGRANULARITY(builder, GRANULARITY):
+    CZMPolygonAddGRANULARITY(builder, GRANULARITY)
+
+def CZMPolygonAddMATERIAL(builder, MATERIAL):
+    builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(MATERIAL), 0)
+
+def AddMATERIAL(builder, MATERIAL):
+    CZMPolygonAddMATERIAL(builder, MATERIAL)
+
+def CZMPolygonAddOUTLINE_WIDTH(builder, OUTLINE_WIDTH):
+    builder.PrependFloat64Slot(17, OUTLINE_WIDTH, 0.0)
+
+def AddOUTLINE_WIDTH(builder, OUTLINE_WIDTH):
+    CZMPolygonAddOUTLINE_WIDTH(builder, OUTLINE_WIDTH)
+
+def CZMPolygonAddPER_POSITION_HEIGHT(builder, PER_POSITION_HEIGHT):
+    builder.PrependBoolSlot(18, PER_POSITION_HEIGHT, 0)
+
+def AddPER_POSITION_HEIGHT(builder, PER_POSITION_HEIGHT):
+    CZMPolygonAddPER_POSITION_HEIGHT(builder, PER_POSITION_HEIGHT)
+
+def CZMPolygonAddCLOSE_TOP(builder, CLOSE_TOP):
+    builder.PrependBoolSlot(19, CLOSE_TOP, 0)
+
+def AddCLOSE_TOP(builder, CLOSE_TOP):
+    CZMPolygonAddCLOSE_TOP(builder, CLOSE_TOP)
+
+def CZMPolygonAddCLOSE_BOTTOM(builder, CLOSE_BOTTOM):
+    builder.PrependBoolSlot(20, CLOSE_BOTTOM, 0)
+
+def AddCLOSE_BOTTOM(builder, CLOSE_BOTTOM):
+    CZMPolygonAddCLOSE_BOTTOM(builder, CLOSE_BOTTOM)
+
+def CZMPolygonAddSHADOWS(builder, SHADOWS):
+    builder.PrependUOffsetTRelativeSlot(21, flatbuffers.number_types.UOffsetTFlags.py_type(SHADOWS), 0)
+
+def AddSHADOWS(builder, SHADOWS):
+    CZMPolygonAddSHADOWS(builder, SHADOWS)
+
+def CZMPolygonAddZ_INDEX(builder, Z_INDEX):
+    builder.PrependInt32Slot(22, Z_INDEX, 0)
+
+def AddZ_INDEX(builder, Z_INDEX):
+    CZMPolygonAddZ_INDEX(builder, Z_INDEX)
+
+def CZMPolygonEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return CZMPolygonEnd(builder)
+
+import CZMColor
+import CZMMaterial
+import CZMPolygonHole
+try:
+    from typing import List, Optional
+except:
+    pass
+
+class CZMPolygonT(object):
+
+    # CZMPolygonT
+    def __init__(
+        self,
+        SHOW = False,
+        POSITIONS_CARTOGRAPHIC_DEGREES = None,
+        POSITIONS_CARTESIAN = None,
+        FILL = False,
+        COLOR = None,
+        OUTLINE = False,
+        OUTLINE_COLOR = None,
+        EXTRUDED_HEIGHT = 0.0,
+        HEIGHT_REFERENCE = 0,
+        CLASSIFICATION_TYPE = 0,
+        HOLES = None,
+        ARC_TYPE = None,
+        HEIGHT = 0.0,
+        EXTRUDED_HEIGHT_REFERENCE = None,
+        ST_ROTATION = 0.0,
+        GRANULARITY = 0.0,
+        MATERIAL = None,
+        OUTLINE_WIDTH = 0.0,
+        PER_POSITION_HEIGHT = False,
+        CLOSE_TOP = False,
+        CLOSE_BOTTOM = False,
+        SHADOWS = None,
+        Z_INDEX = 0,
+    ):
+        self.SHOW = SHOW  # type: bool
+        self.POSITIONS_CARTOGRAPHIC_DEGREES = POSITIONS_CARTOGRAPHIC_DEGREES  # type: Optional[List[float]]
+        self.POSITIONS_CARTESIAN = POSITIONS_CARTESIAN  # type: Optional[List[float]]
+        self.FILL = FILL  # type: bool
+        self.COLOR = COLOR  # type: Optional[CZMColor.CZMColorT]
+        self.OUTLINE = OUTLINE  # type: bool
+        self.OUTLINE_COLOR = OUTLINE_COLOR  # type: Optional[CZMColor.CZMColorT]
+        self.EXTRUDED_HEIGHT = EXTRUDED_HEIGHT  # type: float
+        self.HEIGHT_REFERENCE = HEIGHT_REFERENCE  # type: int
+        self.CLASSIFICATION_TYPE = CLASSIFICATION_TYPE  # type: int
+        self.HOLES = HOLES  # type: Optional[List[CZMPolygonHole.CZMPolygonHoleT]]
+        self.ARC_TYPE = ARC_TYPE  # type: Optional[str]
+        self.HEIGHT = HEIGHT  # type: float
+        self.EXTRUDED_HEIGHT_REFERENCE = EXTRUDED_HEIGHT_REFERENCE  # type: Optional[str]
+        self.ST_ROTATION = ST_ROTATION  # type: float
+        self.GRANULARITY = GRANULARITY  # type: float
+        self.MATERIAL = MATERIAL  # type: Optional[CZMMaterial.CZMMaterialT]
+        self.OUTLINE_WIDTH = OUTLINE_WIDTH  # type: float
+        self.PER_POSITION_HEIGHT = PER_POSITION_HEIGHT  # type: bool
+        self.CLOSE_TOP = CLOSE_TOP  # type: bool
+        self.CLOSE_BOTTOM = CLOSE_BOTTOM  # type: bool
+        self.SHADOWS = SHADOWS  # type: Optional[str]
+        self.Z_INDEX = Z_INDEX  # type: int
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpCzmpolygon = CZMPolygon()
+        tmpCzmpolygon.Init(buf, pos)
+        return cls.InitFromObj(tmpCzmpolygon)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpCzmpolygon):
+        x = CZMPolygonT()
+        x._UnPack(tmpCzmpolygon)
+        return x
+
+    # CZMPolygonT
+    def _UnPack(self, CZMPolygon):
+        if CZMPolygon is None:
+            return
+        self.SHOW = CZMPolygon.SHOW()
+        if not CZMPolygon.POSITIONS_CARTOGRAPHIC_DEGREESIsNone():
+            if np is None:
+                self.POSITIONS_CARTOGRAPHIC_DEGREES = []
+                for i in range(CZMPolygon.POSITIONS_CARTOGRAPHIC_DEGREESLength()):
+                    self.POSITIONS_CARTOGRAPHIC_DEGREES.append(CZMPolygon.POSITIONS_CARTOGRAPHIC_DEGREES(i))
+            else:
+                self.POSITIONS_CARTOGRAPHIC_DEGREES = CZMPolygon.POSITIONS_CARTOGRAPHIC_DEGREESAsNumpy()
+        if not CZMPolygon.POSITIONS_CARTESIANIsNone():
+            if np is None:
+                self.POSITIONS_CARTESIAN = []
+                for i in range(CZMPolygon.POSITIONS_CARTESIANLength()):
+                    self.POSITIONS_CARTESIAN.append(CZMPolygon.POSITIONS_CARTESIAN(i))
+            else:
+                self.POSITIONS_CARTESIAN = CZMPolygon.POSITIONS_CARTESIANAsNumpy()
+        self.FILL = CZMPolygon.FILL()
+        if CZMPolygon.COLOR() is not None:
+            self.COLOR = CZMColor.CZMColorT.InitFromObj(CZMPolygon.COLOR())
+        self.OUTLINE = CZMPolygon.OUTLINE()
+        if CZMPolygon.OUTLINE_COLOR() is not None:
+            self.OUTLINE_COLOR = CZMColor.CZMColorT.InitFromObj(CZMPolygon.OUTLINE_COLOR())
+        self.EXTRUDED_HEIGHT = CZMPolygon.EXTRUDED_HEIGHT()
+        self.HEIGHT_REFERENCE = CZMPolygon.HEIGHT_REFERENCE()
+        self.CLASSIFICATION_TYPE = CZMPolygon.CLASSIFICATION_TYPE()
+        if not CZMPolygon.HOLESIsNone():
+            self.HOLES = []
+            for i in range(CZMPolygon.HOLESLength()):
+                if CZMPolygon.HOLES(i) is None:
+                    self.HOLES.append(None)
+                else:
+                    cZMPolygonHole_ = CZMPolygonHole.CZMPolygonHoleT.InitFromObj(CZMPolygon.HOLES(i))
+                    self.HOLES.append(cZMPolygonHole_)
+        self.ARC_TYPE = CZMPolygon.ARC_TYPE()
+        self.HEIGHT = CZMPolygon.HEIGHT()
+        self.EXTRUDED_HEIGHT_REFERENCE = CZMPolygon.EXTRUDED_HEIGHT_REFERENCE()
+        self.ST_ROTATION = CZMPolygon.ST_ROTATION()
+        self.GRANULARITY = CZMPolygon.GRANULARITY()
+        if CZMPolygon.MATERIAL() is not None:
+            self.MATERIAL = CZMMaterial.CZMMaterialT.InitFromObj(CZMPolygon.MATERIAL())
+        self.OUTLINE_WIDTH = CZMPolygon.OUTLINE_WIDTH()
+        self.PER_POSITION_HEIGHT = CZMPolygon.PER_POSITION_HEIGHT()
+        self.CLOSE_TOP = CZMPolygon.CLOSE_TOP()
+        self.CLOSE_BOTTOM = CZMPolygon.CLOSE_BOTTOM()
+        self.SHADOWS = CZMPolygon.SHADOWS()
+        self.Z_INDEX = CZMPolygon.Z_INDEX()
+
+    # CZMPolygonT
+    def Pack(self, builder):
+        if self.POSITIONS_CARTOGRAPHIC_DEGREES is not None:
+            if np is not None and type(self.POSITIONS_CARTOGRAPHIC_DEGREES) is np.ndarray:
+                POSITIONS_CARTOGRAPHIC_DEGREES = builder.CreateNumpyVector(self.POSITIONS_CARTOGRAPHIC_DEGREES)
+            else:
+                CZMPolygonStartPOSITIONS_CARTOGRAPHIC_DEGREESVector(builder, len(self.POSITIONS_CARTOGRAPHIC_DEGREES))
+                for i in reversed(range(len(self.POSITIONS_CARTOGRAPHIC_DEGREES))):
+                    builder.PrependFloat64(self.POSITIONS_CARTOGRAPHIC_DEGREES[i])
+                POSITIONS_CARTOGRAPHIC_DEGREES = builder.EndVector()
+        if self.POSITIONS_CARTESIAN is not None:
+            if np is not None and type(self.POSITIONS_CARTESIAN) is np.ndarray:
+                POSITIONS_CARTESIAN = builder.CreateNumpyVector(self.POSITIONS_CARTESIAN)
+            else:
+                CZMPolygonStartPOSITIONS_CARTESIANVector(builder, len(self.POSITIONS_CARTESIAN))
+                for i in reversed(range(len(self.POSITIONS_CARTESIAN))):
+                    builder.PrependFloat64(self.POSITIONS_CARTESIAN[i])
+                POSITIONS_CARTESIAN = builder.EndVector()
+        if self.COLOR is not None:
+            COLOR = self.COLOR.Pack(builder)
+        if self.OUTLINE_COLOR is not None:
+            OUTLINE_COLOR = self.OUTLINE_COLOR.Pack(builder)
+        if self.HOLES is not None:
+            HOLESlist = []
+            for i in range(len(self.HOLES)):
+                HOLESlist.append(self.HOLES[i].Pack(builder))
+            CZMPolygonStartHOLESVector(builder, len(self.HOLES))
+            for i in reversed(range(len(self.HOLES))):
+                builder.PrependUOffsetTRelative(HOLESlist[i])
+            HOLES = builder.EndVector()
+        if self.ARC_TYPE is not None:
+            ARC_TYPE = builder.CreateString(self.ARC_TYPE)
+        if self.EXTRUDED_HEIGHT_REFERENCE is not None:
+            EXTRUDED_HEIGHT_REFERENCE = builder.CreateString(self.EXTRUDED_HEIGHT_REFERENCE)
+        if self.MATERIAL is not None:
+            MATERIAL = self.MATERIAL.Pack(builder)
+        if self.SHADOWS is not None:
+            SHADOWS = builder.CreateString(self.SHADOWS)
+        CZMPolygonStart(builder)
+        CZMPolygonAddSHOW(builder, self.SHOW)
+        if self.POSITIONS_CARTOGRAPHIC_DEGREES is not None:
+            CZMPolygonAddPOSITIONS_CARTOGRAPHIC_DEGREES(builder, POSITIONS_CARTOGRAPHIC_DEGREES)
+        if self.POSITIONS_CARTESIAN is not None:
+            CZMPolygonAddPOSITIONS_CARTESIAN(builder, POSITIONS_CARTESIAN)
+        CZMPolygonAddFILL(builder, self.FILL)
+        if self.COLOR is not None:
+            CZMPolygonAddCOLOR(builder, COLOR)
+        CZMPolygonAddOUTLINE(builder, self.OUTLINE)
+        if self.OUTLINE_COLOR is not None:
+            CZMPolygonAddOUTLINE_COLOR(builder, OUTLINE_COLOR)
+        CZMPolygonAddEXTRUDED_HEIGHT(builder, self.EXTRUDED_HEIGHT)
+        CZMPolygonAddHEIGHT_REFERENCE(builder, self.HEIGHT_REFERENCE)
+        CZMPolygonAddCLASSIFICATION_TYPE(builder, self.CLASSIFICATION_TYPE)
+        if self.HOLES is not None:
+            CZMPolygonAddHOLES(builder, HOLES)
+        if self.ARC_TYPE is not None:
+            CZMPolygonAddARC_TYPE(builder, ARC_TYPE)
+        CZMPolygonAddHEIGHT(builder, self.HEIGHT)
+        if self.EXTRUDED_HEIGHT_REFERENCE is not None:
+            CZMPolygonAddEXTRUDED_HEIGHT_REFERENCE(builder, EXTRUDED_HEIGHT_REFERENCE)
+        CZMPolygonAddST_ROTATION(builder, self.ST_ROTATION)
+        CZMPolygonAddGRANULARITY(builder, self.GRANULARITY)
+        if self.MATERIAL is not None:
+            CZMPolygonAddMATERIAL(builder, MATERIAL)
+        CZMPolygonAddOUTLINE_WIDTH(builder, self.OUTLINE_WIDTH)
+        CZMPolygonAddPER_POSITION_HEIGHT(builder, self.PER_POSITION_HEIGHT)
+        CZMPolygonAddCLOSE_TOP(builder, self.CLOSE_TOP)
+        CZMPolygonAddCLOSE_BOTTOM(builder, self.CLOSE_BOTTOM)
+        if self.SHADOWS is not None:
+            CZMPolygonAddSHADOWS(builder, SHADOWS)
+        CZMPolygonAddZ_INDEX(builder, self.Z_INDEX)
+        CZMPolygon = CZMPolygonEnd(builder)
+        return CZMPolygon

@@ -2,4 +2,225 @@
 
 # namespace: 
 
-# NOTE CZMPath.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Path properties (orbit trail)
+class CZMPath(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = CZMPath()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsCZMPath(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def CZMPathBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x43\x5A\x4D", size_prefixed=size_prefixed)
+
+    # CZMPath
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Whether the path is displayed
+    # CZMPath
+    def SHOW(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # Trail time in seconds (how far behind)
+    # CZMPath
+    def LEAD_TIME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Lead time in seconds (how far ahead)
+    # CZMPath
+    def TRAIL_TIME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Line width in pixels
+    # CZMPath
+    def WIDTH(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Path color (legacy solid color)
+    # CZMPath
+    def COLOR(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from CZMColor import CZMColor
+            obj = CZMColor()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Resolution in seconds
+    # CZMPath
+    def RESOLUTION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Full polyline material
+    # CZMPath
+    def MATERIAL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from CZMPolylineMaterial import CZMPolylineMaterial
+            obj = CZMPolylineMaterial()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+def CZMPathStart(builder):
+    builder.StartObject(7)
+
+def Start(builder):
+    CZMPathStart(builder)
+
+def CZMPathAddSHOW(builder, SHOW):
+    builder.PrependBoolSlot(0, SHOW, 0)
+
+def AddSHOW(builder, SHOW):
+    CZMPathAddSHOW(builder, SHOW)
+
+def CZMPathAddLEAD_TIME(builder, LEAD_TIME):
+    builder.PrependFloat64Slot(1, LEAD_TIME, 0.0)
+
+def AddLEAD_TIME(builder, LEAD_TIME):
+    CZMPathAddLEAD_TIME(builder, LEAD_TIME)
+
+def CZMPathAddTRAIL_TIME(builder, TRAIL_TIME):
+    builder.PrependFloat64Slot(2, TRAIL_TIME, 0.0)
+
+def AddTRAIL_TIME(builder, TRAIL_TIME):
+    CZMPathAddTRAIL_TIME(builder, TRAIL_TIME)
+
+def CZMPathAddWIDTH(builder, WIDTH):
+    builder.PrependFloat64Slot(3, WIDTH, 0.0)
+
+def AddWIDTH(builder, WIDTH):
+    CZMPathAddWIDTH(builder, WIDTH)
+
+def CZMPathAddCOLOR(builder, COLOR):
+    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(COLOR), 0)
+
+def AddCOLOR(builder, COLOR):
+    CZMPathAddCOLOR(builder, COLOR)
+
+def CZMPathAddRESOLUTION(builder, RESOLUTION):
+    builder.PrependFloat64Slot(5, RESOLUTION, 0.0)
+
+def AddRESOLUTION(builder, RESOLUTION):
+    CZMPathAddRESOLUTION(builder, RESOLUTION)
+
+def CZMPathAddMATERIAL(builder, MATERIAL):
+    builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(MATERIAL), 0)
+
+def AddMATERIAL(builder, MATERIAL):
+    CZMPathAddMATERIAL(builder, MATERIAL)
+
+def CZMPathEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return CZMPathEnd(builder)
+
+import CZMColor
+import CZMPolylineMaterial
+try:
+    from typing import Optional
+except:
+    pass
+
+class CZMPathT(object):
+
+    # CZMPathT
+    def __init__(
+        self,
+        SHOW = False,
+        LEAD_TIME = 0.0,
+        TRAIL_TIME = 0.0,
+        WIDTH = 0.0,
+        COLOR = None,
+        RESOLUTION = 0.0,
+        MATERIAL = None,
+    ):
+        self.SHOW = SHOW  # type: bool
+        self.LEAD_TIME = LEAD_TIME  # type: float
+        self.TRAIL_TIME = TRAIL_TIME  # type: float
+        self.WIDTH = WIDTH  # type: float
+        self.COLOR = COLOR  # type: Optional[CZMColor.CZMColorT]
+        self.RESOLUTION = RESOLUTION  # type: float
+        self.MATERIAL = MATERIAL  # type: Optional[CZMPolylineMaterial.CZMPolylineMaterialT]
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpCzmpath = CZMPath()
+        tmpCzmpath.Init(buf, pos)
+        return cls.InitFromObj(tmpCzmpath)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpCzmpath):
+        x = CZMPathT()
+        x._UnPack(tmpCzmpath)
+        return x
+
+    # CZMPathT
+    def _UnPack(self, CZMPath):
+        if CZMPath is None:
+            return
+        self.SHOW = CZMPath.SHOW()
+        self.LEAD_TIME = CZMPath.LEAD_TIME()
+        self.TRAIL_TIME = CZMPath.TRAIL_TIME()
+        self.WIDTH = CZMPath.WIDTH()
+        if CZMPath.COLOR() is not None:
+            self.COLOR = CZMColor.CZMColorT.InitFromObj(CZMPath.COLOR())
+        self.RESOLUTION = CZMPath.RESOLUTION()
+        if CZMPath.MATERIAL() is not None:
+            self.MATERIAL = CZMPolylineMaterial.CZMPolylineMaterialT.InitFromObj(CZMPath.MATERIAL())
+
+    # CZMPathT
+    def Pack(self, builder):
+        if self.COLOR is not None:
+            COLOR = self.COLOR.Pack(builder)
+        if self.MATERIAL is not None:
+            MATERIAL = self.MATERIAL.Pack(builder)
+        CZMPathStart(builder)
+        CZMPathAddSHOW(builder, self.SHOW)
+        CZMPathAddLEAD_TIME(builder, self.LEAD_TIME)
+        CZMPathAddTRAIL_TIME(builder, self.TRAIL_TIME)
+        CZMPathAddWIDTH(builder, self.WIDTH)
+        if self.COLOR is not None:
+            CZMPathAddCOLOR(builder, COLOR)
+        CZMPathAddRESOLUTION(builder, self.RESOLUTION)
+        if self.MATERIAL is not None:
+            CZMPathAddMATERIAL(builder, MATERIAL)
+        CZMPath = CZMPathEnd(builder)
+        return CZMPath

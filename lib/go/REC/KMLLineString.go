@@ -49,10 +49,17 @@ func (rcv *KMLLineString) COORDINATES(obj *KMLCoordinate, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(KMLCoordinate)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *KMLLineString) Coordinates(obj *KMLCoordinate, j int) bool {
+	return rcv.COORDINATES(obj, j)
 }
 
 func (rcv *KMLLineString) COORDINATESLength() int {
@@ -61,6 +68,10 @@ func (rcv *KMLLineString) COORDINATESLength() int {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *KMLLineString) CoordinatesLength() int {
+	return rcv.COORDINATESLength()
 }
 
 /// Coordinates
@@ -73,9 +84,17 @@ func (rcv *KMLLineString) ALTITUDE_MODE() KMLAltitudeMode {
 	return 0
 }
 
+func (rcv *KMLLineString) AltitudeMode() KMLAltitudeMode {
+	return rcv.ALTITUDE_MODE()
+}
+
 /// Altitude mode
 func (rcv *KMLLineString) MutateALTITUDE_MODE(n KMLAltitudeMode) bool {
 	return rcv._tab.MutateInt8Slot(6, int8(n))
+}
+
+func (rcv *KMLLineString) MutateAltitudeMode(n KMLAltitudeMode) bool {
+	return rcv.MutateALTITUDE_MODE(n)
 }
 
 /// Whether to extrude to ground
@@ -87,9 +106,17 @@ func (rcv *KMLLineString) EXTRUDE() bool {
 	return false
 }
 
+func (rcv *KMLLineString) Extrude() bool {
+	return rcv.EXTRUDE()
+}
+
 /// Whether to extrude to ground
 func (rcv *KMLLineString) MutateEXTRUDE(n bool) bool {
 	return rcv._tab.MutateBoolSlot(8, n)
+}
+
+func (rcv *KMLLineString) MutateExtrude(n bool) bool {
+	return rcv.MutateEXTRUDE(n)
 }
 
 /// Whether to tessellate (follow terrain)
@@ -101,9 +128,17 @@ func (rcv *KMLLineString) TESSELLATE() bool {
 	return false
 }
 
+func (rcv *KMLLineString) Tessellate() bool {
+	return rcv.TESSELLATE()
+}
+
 /// Whether to tessellate (follow terrain)
 func (rcv *KMLLineString) MutateTESSELLATE(n bool) bool {
 	return rcv._tab.MutateBoolSlot(10, n)
+}
+
+func (rcv *KMLLineString) MutateTessellate(n bool) bool {
+	return rcv.MutateTESSELLATE(n)
 }
 
 /// gx:drawOrder
@@ -115,9 +150,17 @@ func (rcv *KMLLineString) GX_DRAW_ORDER() int32 {
 	return 0
 }
 
+func (rcv *KMLLineString) GxDrawOrder() int32 {
+	return rcv.GX_DRAW_ORDER()
+}
+
 /// gx:drawOrder
 func (rcv *KMLLineString) MutateGX_DRAW_ORDER(n int32) bool {
 	return rcv._tab.MutateInt32Slot(12, n)
+}
+
+func (rcv *KMLLineString) MutateGxDrawOrder(n int32) bool {
+	return rcv.MutateGX_DRAW_ORDER(n)
 }
 
 func KMLLineStringStart(builder *flatbuffers.Builder) {
@@ -126,20 +169,38 @@ func KMLLineStringStart(builder *flatbuffers.Builder) {
 func KMLLineStringAddCOORDINATES(builder *flatbuffers.Builder, COORDINATES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(COORDINATES), 0)
 }
+func KMLLineStringAddCoordinates(builder *flatbuffers.Builder, COORDINATES flatbuffers.UOffsetT) {
+	KMLLineStringAddCOORDINATES(builder, COORDINATES)
+}
 func KMLLineStringStartCOORDINATESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func KMLLineStringStartCoordinatesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return KMLLineStringStartCOORDINATESVector(builder, numElems)
 }
 func KMLLineStringAddALTITUDE_MODE(builder *flatbuffers.Builder, ALTITUDE_MODE KMLAltitudeMode) {
 	builder.PrependInt8Slot(1, int8(ALTITUDE_MODE), 0)
 }
+func KMLLineStringAddAltitudeMode(builder *flatbuffers.Builder, ALTITUDE_MODE KMLAltitudeMode) {
+	KMLLineStringAddALTITUDE_MODE(builder, ALTITUDE_MODE)
+}
 func KMLLineStringAddEXTRUDE(builder *flatbuffers.Builder, EXTRUDE bool) {
 	builder.PrependBoolSlot(2, EXTRUDE, false)
+}
+func KMLLineStringAddExtrude(builder *flatbuffers.Builder, EXTRUDE bool) {
+	KMLLineStringAddEXTRUDE(builder, EXTRUDE)
 }
 func KMLLineStringAddTESSELLATE(builder *flatbuffers.Builder, TESSELLATE bool) {
 	builder.PrependBoolSlot(3, TESSELLATE, false)
 }
+func KMLLineStringAddTessellate(builder *flatbuffers.Builder, TESSELLATE bool) {
+	KMLLineStringAddTESSELLATE(builder, TESSELLATE)
+}
 func KMLLineStringAddGX_DRAW_ORDER(builder *flatbuffers.Builder, GX_DRAW_ORDER int32) {
 	builder.PrependInt32Slot(4, GX_DRAW_ORDER, 0)
+}
+func KMLLineStringAddGxDrawOrder(builder *flatbuffers.Builder, GX_DRAW_ORDER int32) {
+	KMLLineStringAddGX_DRAW_ORDER(builder, GX_DRAW_ORDER)
 }
 func KMLLineStringEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

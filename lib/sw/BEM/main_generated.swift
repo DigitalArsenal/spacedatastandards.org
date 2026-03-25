@@ -2,9 +2,13 @@
 // swiftlint:disable all
 // swiftformat:disable all
 
+#if canImport(Common)
+import Common
+#endif
+
 import FlatBuffers
 
-public enum beamType: Int8, Enum, Verifiable {
+public enum beamType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -20,7 +24,7 @@ public enum beamType: Int8, Enum, Verifiable {
 }
 
 
-public enum beamPolarization: Int8, Enum, Verifiable {
+public enum beamPolarization: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -38,9 +42,9 @@ public enum beamPolarization: Int8, Enum, Verifiable {
 
 
 ///  Beam Contour Point (gain pattern boundary)
-public struct beamContourPoint: FlatBufferObject, Verifiable {
+public struct beamContourPoint: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -91,9 +95,9 @@ public struct beamContourPoint: FlatBufferObject, Verifiable {
 }
 
 ///  Beam Contour (iso-gain boundary)
-public struct beamContour: FlatBufferObject, Verifiable {
+public struct beamContour: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -116,9 +120,7 @@ public struct beamContour: FlatBufferObject, Verifiable {
   ///  Gain level in dBi
   public var GAIN_LEVEL: Double { let o = _accessor.offset(VTOFFSET.GAIN_LEVEL.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Contour boundary points
-  public var hasPoints: Bool { let o = _accessor.offset(VTOFFSET.POINTS.v); return o == 0 ? false : true }
-  public var POINTSCount: Int32 { let o = _accessor.offset(VTOFFSET.POINTS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func POINTS(at index: Int32) -> beamContourPoint? { let o = _accessor.offset(VTOFFSET.POINTS.v); return o == 0 ? nil : beamContourPoint(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var POINTS: FlatbufferVector<beamContourPoint> { return _accessor.vector(at: VTOFFSET.POINTS.v, byteSize: 4) }
   public static func startbeamContour(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 3) }
   public static func add(CONTOUR_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONTOUR_ID, at: VTOFFSET.CONTOUR_ID.p) }
   public static func add(GAIN_LEVEL: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GAIN_LEVEL, def: 0.0, at: VTOFFSET.GAIN_LEVEL.p) }
@@ -147,9 +149,9 @@ public struct beamContour: FlatBufferObject, Verifiable {
 }
 
 ///  Antenna Beam
-public struct BEM: FlatBufferObject, Verifiable {
+public struct BEM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -215,9 +217,7 @@ public struct BEM: FlatBufferObject, Verifiable {
   ///  Beam footprint area in km^2
   public var FOOTPRINT_AREA: Double { let o = _accessor.offset(VTOFFSET.FOOTPRINT_AREA.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Beam contour definitions
-  public var hasBeamContours: Bool { let o = _accessor.offset(VTOFFSET.BEAM_CONTOURS.v); return o == 0 ? false : true }
-  public var BEAM_CONTOURSCount: Int32 { let o = _accessor.offset(VTOFFSET.BEAM_CONTOURS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func BEAM_CONTOURS(at index: Int32) -> beamContour? { let o = _accessor.offset(VTOFFSET.BEAM_CONTOURS.v); return o == 0 ? nil : beamContour(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var BEAM_CONTOURS: FlatbufferVector<beamContour> { return _accessor.vector(at: VTOFFSET.BEAM_CONTOURS.v, byteSize: 4) }
   ///  Additional notes
   public var NOTES: String? { let o = _accessor.offset(VTOFFSET.NOTES.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var NOTESSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NOTES.v) }

@@ -32,7 +32,7 @@ class odSensorContribution : Table() {
     /**
      * Sensor identifier
      */
-    val SENSOR_ID : String?
+    val sensorId : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class odSensorContribution : Table() {
                 null
             }
         }
-    val SENSOR_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun SENSOR_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val sensorIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun sensorIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Original sensor identifier
      */
-    val ORIG_SENSOR_ID : String?
+    val origSensorId : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -55,12 +55,12 @@ class odSensorContribution : Table() {
                 null
             }
         }
-    val ORIG_SENSOR_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun ORIG_SENSOR_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val origSensorIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun origSensorIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * Number of accepted observations from this sensor
      */
-    val NUM_ACCEPTED : UInt
+    val numAccepted : UInt
         get() {
             val o = __offset(8)
             return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
@@ -68,7 +68,7 @@ class odSensorContribution : Table() {
     /**
      * Number of rejected observations from this sensor
      */
-    val NUM_REJECTED : UInt
+    val numRejected : UInt
         get() {
             val o = __offset(10)
             return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
@@ -76,7 +76,7 @@ class odSensorContribution : Table() {
     /**
      * Weighted RMS for this sensor's observations
      */
-    val WRMS : Double
+    val wrms : Double
         get() {
             val o = __offset(12)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -84,7 +84,7 @@ class odSensorContribution : Table() {
     /**
      * Observation types from this sensor
      */
-    fun OB_TYPES(j: Int) : String? {
+    fun obTypes(j: Int) : String? {
         val o = __offset(14)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
@@ -92,34 +92,34 @@ class odSensorContribution : Table() {
             null
         }
     }
-    val OB_TYPESLength : Int
+    val obTypesLength : Int
         get() {
             val o = __offset(14); return if (o != 0) __vector_len(o) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsodSensorContribution(_bb: ByteBuffer): odSensorContribution = getRootAsodSensorContribution(_bb, odSensorContribution())
         fun getRootAsodSensorContribution(_bb: ByteBuffer, obj: odSensorContribution): odSensorContribution {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createodSensorContribution(builder: FlatBufferBuilder, SENSOR_IDOffset: Int, ORIG_SENSOR_IDOffset: Int, NUM_ACCEPTED: UInt, NUM_REJECTED: UInt, WRMS: Double, OB_TYPESOffset: Int) : Int {
+        fun createodSensorContribution(builder: FlatBufferBuilder, sensorIdOffset: Int, origSensorIdOffset: Int, numAccepted: UInt, numRejected: UInt, wrms: Double, obTypesOffset: Int) : Int {
             builder.startTable(6)
-            addWRMS(builder, WRMS)
-            addOB_TYPES(builder, OB_TYPESOffset)
-            addNUM_REJECTED(builder, NUM_REJECTED)
-            addNUM_ACCEPTED(builder, NUM_ACCEPTED)
-            addORIG_SENSOR_ID(builder, ORIG_SENSOR_IDOffset)
-            addSENSOR_ID(builder, SENSOR_IDOffset)
+            addWRMS(builder, wrms)
+            addOBTYPES(builder, obTypesOffset)
+            addNUMREJECTED(builder, numRejected)
+            addNUMACCEPTED(builder, numAccepted)
+            addORIGSENSORID(builder, origSensorIdOffset)
+            addSENSORID(builder, sensorIdOffset)
             return endodSensorContribution(builder)
         }
         fun startodSensorContribution(builder: FlatBufferBuilder) = builder.startTable(6)
-        fun addSENSOR_ID(builder: FlatBufferBuilder, SENSOR_ID: Int) = builder.addOffset(0, SENSOR_ID, 0)
-        fun addORIG_SENSOR_ID(builder: FlatBufferBuilder, ORIG_SENSOR_ID: Int) = builder.addOffset(1, ORIG_SENSOR_ID, 0)
-        fun addNUM_ACCEPTED(builder: FlatBufferBuilder, NUM_ACCEPTED: UInt) = builder.addInt(2, NUM_ACCEPTED.toInt(), 0)
-        fun addNUM_REJECTED(builder: FlatBufferBuilder, NUM_REJECTED: UInt) = builder.addInt(3, NUM_REJECTED.toInt(), 0)
-        fun addWRMS(builder: FlatBufferBuilder, WRMS: Double) = builder.addDouble(4, WRMS, 0.0)
-        fun addOB_TYPES(builder: FlatBufferBuilder, OB_TYPES: Int) = builder.addOffset(5, OB_TYPES, 0)
+        fun addSENSORID(builder: FlatBufferBuilder, sensorId: Int) = builder.addOffset(0, sensorId, 0)
+        fun addORIGSENSORID(builder: FlatBufferBuilder, origSensorId: Int) = builder.addOffset(1, origSensorId, 0)
+        fun addNUMACCEPTED(builder: FlatBufferBuilder, numAccepted: UInt) = builder.addInt(2, numAccepted.toInt(), 0)
+        fun addNUMREJECTED(builder: FlatBufferBuilder, numRejected: UInt) = builder.addInt(3, numRejected.toInt(), 0)
+        fun addWRMS(builder: FlatBufferBuilder, wrms: Double) = builder.addDouble(4, wrms, 0.0)
+        fun addOBTYPES(builder: FlatBufferBuilder, obTypes: Int) = builder.addOffset(5, obTypes, 0)
         fun createObTypesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {

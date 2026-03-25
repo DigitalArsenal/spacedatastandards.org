@@ -2,4 +2,294 @@
 
 # namespace: 
 
-# NOTE TCF.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Telecommand Transfer Frame (CCSDS 232.0-B-3)
+class TCF(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = TCF()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsTCF(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def TCFBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x54\x43\x46", size_prefixed=size_prefixed)
+
+    # TCF
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Transfer frame version
+    # TCF
+    def VERSION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
+        return 0
+
+    # Bypass flag
+    # TCF
+    def BYPASS_FLAG(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # Control command flag
+    # TCF
+    def CONTROL_CMD_FLAG(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # Spacecraft identifier
+    # TCF
+    def SPACECRAFT_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint16Flags, o + self._tab.Pos)
+        return 0
+
+    # Virtual channel identifier
+    # TCF
+    def VIRTUAL_CHANNEL_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
+        return 0
+
+    # Frame length
+    # TCF
+    def FRAME_LENGTH(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint16Flags, o + self._tab.Pos)
+        return 0
+
+    # Frame sequence number
+    # TCF
+    def FRAME_SEQUENCE_NUM(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
+        return 0
+
+    # Data field
+    # TCF
+    def DATA(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 1))
+        return 0
+
+    # TCF
+    def DATAAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Uint8Flags, o)
+        return 0
+
+    # TCF
+    def DATALength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # TCF
+    def DATAIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        return o == 0
+
+    # Frame error control field
+    # TCF
+    def FECF(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint16Flags, o + self._tab.Pos)
+        return 0
+
+def TCFStart(builder):
+    builder.StartObject(9)
+
+def Start(builder):
+    TCFStart(builder)
+
+def TCFAddVERSION(builder, VERSION):
+    builder.PrependUint8Slot(0, VERSION, 0)
+
+def AddVERSION(builder, VERSION):
+    TCFAddVERSION(builder, VERSION)
+
+def TCFAddBYPASS_FLAG(builder, BYPASS_FLAG):
+    builder.PrependBoolSlot(1, BYPASS_FLAG, 0)
+
+def AddBYPASS_FLAG(builder, BYPASS_FLAG):
+    TCFAddBYPASS_FLAG(builder, BYPASS_FLAG)
+
+def TCFAddCONTROL_CMD_FLAG(builder, CONTROL_CMD_FLAG):
+    builder.PrependBoolSlot(2, CONTROL_CMD_FLAG, 0)
+
+def AddCONTROL_CMD_FLAG(builder, CONTROL_CMD_FLAG):
+    TCFAddCONTROL_CMD_FLAG(builder, CONTROL_CMD_FLAG)
+
+def TCFAddSPACECRAFT_ID(builder, SPACECRAFT_ID):
+    builder.PrependUint16Slot(3, SPACECRAFT_ID, 0)
+
+def AddSPACECRAFT_ID(builder, SPACECRAFT_ID):
+    TCFAddSPACECRAFT_ID(builder, SPACECRAFT_ID)
+
+def TCFAddVIRTUAL_CHANNEL_ID(builder, VIRTUAL_CHANNEL_ID):
+    builder.PrependUint8Slot(4, VIRTUAL_CHANNEL_ID, 0)
+
+def AddVIRTUAL_CHANNEL_ID(builder, VIRTUAL_CHANNEL_ID):
+    TCFAddVIRTUAL_CHANNEL_ID(builder, VIRTUAL_CHANNEL_ID)
+
+def TCFAddFRAME_LENGTH(builder, FRAME_LENGTH):
+    builder.PrependUint16Slot(5, FRAME_LENGTH, 0)
+
+def AddFRAME_LENGTH(builder, FRAME_LENGTH):
+    TCFAddFRAME_LENGTH(builder, FRAME_LENGTH)
+
+def TCFAddFRAME_SEQUENCE_NUM(builder, FRAME_SEQUENCE_NUM):
+    builder.PrependUint8Slot(6, FRAME_SEQUENCE_NUM, 0)
+
+def AddFRAME_SEQUENCE_NUM(builder, FRAME_SEQUENCE_NUM):
+    TCFAddFRAME_SEQUENCE_NUM(builder, FRAME_SEQUENCE_NUM)
+
+def TCFAddDATA(builder, DATA):
+    builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(DATA), 0)
+
+def AddDATA(builder, DATA):
+    TCFAddDATA(builder, DATA)
+
+def TCFStartDATAVector(builder, numElems):
+    return builder.StartVector(1, numElems, 1)
+
+def StartDATAVector(builder, numElems):
+    return TCFStartDATAVector(builder, numElems)
+
+def TCFCreateDATAVector(builder, data):
+    data = list(data)
+    builder.StartVector(1, len(data), 1)
+    for item in reversed(data):
+        builder.PrependUint8(item)
+    return builder.EndVector()
+
+def CreateDATAVector(builder, data):
+    TCFCreateDATAVector(builder, data)
+
+def TCFAddFECF(builder, FECF):
+    builder.PrependUint16Slot(8, FECF, 0)
+
+def AddFECF(builder, FECF):
+    TCFAddFECF(builder, FECF)
+
+def TCFEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return TCFEnd(builder)
+
+try:
+    from typing import List
+except:
+    pass
+
+class TCFT(object):
+
+    # TCFT
+    def __init__(
+        self,
+        VERSION = 0,
+        BYPASS_FLAG = False,
+        CONTROL_CMD_FLAG = False,
+        SPACECRAFT_ID = 0,
+        VIRTUAL_CHANNEL_ID = 0,
+        FRAME_LENGTH = 0,
+        FRAME_SEQUENCE_NUM = 0,
+        DATA = None,
+        FECF = 0,
+    ):
+        self.VERSION = VERSION  # type: int
+        self.BYPASS_FLAG = BYPASS_FLAG  # type: bool
+        self.CONTROL_CMD_FLAG = CONTROL_CMD_FLAG  # type: bool
+        self.SPACECRAFT_ID = SPACECRAFT_ID  # type: int
+        self.VIRTUAL_CHANNEL_ID = VIRTUAL_CHANNEL_ID  # type: int
+        self.FRAME_LENGTH = FRAME_LENGTH  # type: int
+        self.FRAME_SEQUENCE_NUM = FRAME_SEQUENCE_NUM  # type: int
+        self.DATA = DATA  # type: Optional[List[int]]
+        self.FECF = FECF  # type: int
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpTcf = TCF()
+        tmpTcf.Init(buf, pos)
+        return cls.InitFromObj(tmpTcf)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpTcf):
+        x = TCFT()
+        x._UnPack(tmpTcf)
+        return x
+
+    # TCFT
+    def _UnPack(self, TCF):
+        if TCF is None:
+            return
+        self.VERSION = TCF.VERSION()
+        self.BYPASS_FLAG = TCF.BYPASS_FLAG()
+        self.CONTROL_CMD_FLAG = TCF.CONTROL_CMD_FLAG()
+        self.SPACECRAFT_ID = TCF.SPACECRAFT_ID()
+        self.VIRTUAL_CHANNEL_ID = TCF.VIRTUAL_CHANNEL_ID()
+        self.FRAME_LENGTH = TCF.FRAME_LENGTH()
+        self.FRAME_SEQUENCE_NUM = TCF.FRAME_SEQUENCE_NUM()
+        if not TCF.DATAIsNone():
+            if np is None:
+                self.DATA = []
+                for i in range(TCF.DATALength()):
+                    self.DATA.append(TCF.DATA(i))
+            else:
+                self.DATA = TCF.DATAAsNumpy()
+        self.FECF = TCF.FECF()
+
+    # TCFT
+    def Pack(self, builder):
+        if self.DATA is not None:
+            if np is not None and type(self.DATA) is np.ndarray:
+                DATA = builder.CreateNumpyVector(self.DATA)
+            else:
+                TCFStartDATAVector(builder, len(self.DATA))
+                for i in reversed(range(len(self.DATA))):
+                    builder.PrependUint8(self.DATA[i])
+                DATA = builder.EndVector()
+        TCFStart(builder)
+        TCFAddVERSION(builder, self.VERSION)
+        TCFAddBYPASS_FLAG(builder, self.BYPASS_FLAG)
+        TCFAddCONTROL_CMD_FLAG(builder, self.CONTROL_CMD_FLAG)
+        TCFAddSPACECRAFT_ID(builder, self.SPACECRAFT_ID)
+        TCFAddVIRTUAL_CHANNEL_ID(builder, self.VIRTUAL_CHANNEL_ID)
+        TCFAddFRAME_LENGTH(builder, self.FRAME_LENGTH)
+        TCFAddFRAME_SEQUENCE_NUM(builder, self.FRAME_SEQUENCE_NUM)
+        if self.DATA is not None:
+            TCFAddDATA(builder, DATA)
+        TCFAddFECF(builder, self.FECF)
+        TCF = TCFEnd(builder)
+        return TCF

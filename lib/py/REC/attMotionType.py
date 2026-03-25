@@ -2,4 +2,9 @@
 
 # namespace: 
 
-# NOTE attMotionType.py does not declare any structs or enums
+class attMotionType(object):
+    STABILIZED = 0
+    SPINNING = 1
+    TUMBLING = 2
+    PRECESSING = 3
+    UNKNOWN = 4

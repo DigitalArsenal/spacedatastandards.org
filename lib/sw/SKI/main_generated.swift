@@ -2,9 +2,13 @@
 // swiftlint:disable all
 // swiftformat:disable all
 
+#if canImport(Common)
+import Common
+#endif
+
 import FlatBuffers
 
-public enum imageType: Int8, Enum, Verifiable {
+public enum imageType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -21,9 +25,9 @@ public enum imageType: Int8, Enum, Verifiable {
 
 
 ///  Sky Imagery
-public struct SKI: FlatBufferObject, Verifiable {
+public struct SKI: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -108,15 +112,11 @@ public struct SKI: FlatBufferObject, Verifiable {
   ///  Sensor ECEF Z position (km)
   public var SENZ: Double { let o = _accessor.offset(VTOFFSET.SENZ.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Sensor quaternion (scalar-last: q1, q2, q3, q0)
-  public var hasSenQuat: Bool { let o = _accessor.offset(VTOFFSET.SEN_QUAT.v); return o == 0 ? false : true }
-  public var SEN_QUATCount: Int32 { let o = _accessor.offset(VTOFFSET.SEN_QUAT.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func SEN_QUAT(at index: Int32) -> Double { let o = _accessor.offset(VTOFFSET.SEN_QUAT.v); return o == 0 ? 0 : _accessor.directRead(of: Double.self, offset: _accessor.vector(at: o) + index * 8) }
-  public var SEN_QUAT: [Double] { return _accessor.getVector(at: VTOFFSET.SEN_QUAT.v) ?? [] }
+  public var SEN_QUAT: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.SEN_QUAT.v, byteSize: 8) }
+  public func withUnsafePointerToSenQuat<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.SEN_QUAT.v, body: body) }
   ///  Sensor quaternion rate
-  public var hasSenQuatDot: Bool { let o = _accessor.offset(VTOFFSET.SEN_QUAT_DOT.v); return o == 0 ? false : true }
-  public var SEN_QUAT_DOTCount: Int32 { let o = _accessor.offset(VTOFFSET.SEN_QUAT_DOT.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func SEN_QUAT_DOT(at index: Int32) -> Double { let o = _accessor.offset(VTOFFSET.SEN_QUAT_DOT.v); return o == 0 ? 0 : _accessor.directRead(of: Double.self, offset: _accessor.vector(at: o) + index * 8) }
-  public var SEN_QUAT_DOT: [Double] { return _accessor.getVector(at: VTOFFSET.SEN_QUAT_DOT.v) ?? [] }
+  public var SEN_QUAT_DOT: FlatbufferVector<Double> { return _accessor.vector(at: VTOFFSET.SEN_QUAT_DOT.v, byteSize: 8) }
+  public func withUnsafePointerToSenQuatDot<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.SEN_QUAT_DOT.v, body: body) }
   ///  Image type
   public var IMAGE_TYPE: imageType { let o = _accessor.offset(VTOFFSET.IMAGE_TYPE.v); return o == 0 ? .visible : imageType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .visible }
   ///  Exposure start time (ISO 8601)
@@ -175,16 +175,12 @@ public struct SKI: FlatBufferObject, Verifiable {
   public var TRANSACTION_ID: String? { let o = _accessor.offset(VTOFFSET.TRANSACTION_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var TRANSACTION_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TRANSACTION_ID.v) }
   ///  Associated tags
-  public var hasTags: Bool { let o = _accessor.offset(VTOFFSET.TAGS.v); return o == 0 ? false : true }
-  public var TAGSCount: Int32 { let o = _accessor.offset(VTOFFSET.TAGS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func TAGS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.TAGS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  public var TAGS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.TAGS.v, byteSize: 4) }
   ///  Description
   public var DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.DESCRIPTION.v) }
   ///  Associated EO observation references
-  public var hasEoObservations: Bool { let o = _accessor.offset(VTOFFSET.EO_OBSERVATIONS.v); return o == 0 ? false : true }
-  public var EO_OBSERVATIONSCount: Int32 { let o = _accessor.offset(VTOFFSET.EO_OBSERVATIONS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func EO_OBSERVATIONS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.EO_OBSERVATIONS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  public var EO_OBSERVATIONS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.EO_OBSERVATIONS.v, byteSize: 4) }
   public static func startSKI(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 41) }
   public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VTOFFSET.ID.p) }
   public static func add(ON_ORBIT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ON_ORBIT, at: VTOFFSET.ON_ORBIT.p) }

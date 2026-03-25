@@ -32,7 +32,7 @@ class KMLSchemaData : Table() {
     /**
      * Schema URL reference
      */
-    val SCHEMA_URL : String?
+    val schemaUrl : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,13 +41,13 @@ class KMLSchemaData : Table() {
                 null
             }
         }
-    val SCHEMA_URLAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun SCHEMA_URLInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val schemaUrlAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun schemaUrlInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Simple data values
      */
-    fun SIMPLE_DATA(j: Int) : KMLSimpleData? = SIMPLE_DATA(KMLSimpleData(), j)
-    fun SIMPLE_DATA(obj: KMLSimpleData, j: Int) : KMLSimpleData? {
+    fun simpleData(j: Int) : KMLSimpleData? = simpleData(KMLSimpleData(), j)
+    fun simpleData(obj: KMLSimpleData, j: Int) : KMLSimpleData? {
         val o = __offset(6)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -55,26 +55,26 @@ class KMLSchemaData : Table() {
             null
         }
     }
-    val SIMPLE_DATALength : Int
+    val simpleDataLength : Int
         get() {
             val o = __offset(6); return if (o != 0) __vector_len(o) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsKMLSchemaData(_bb: ByteBuffer): KMLSchemaData = getRootAsKMLSchemaData(_bb, KMLSchemaData())
         fun getRootAsKMLSchemaData(_bb: ByteBuffer, obj: KMLSchemaData): KMLSchemaData {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createKMLSchemaData(builder: FlatBufferBuilder, SCHEMA_URLOffset: Int, SIMPLE_DATAOffset: Int) : Int {
+        fun createKMLSchemaData(builder: FlatBufferBuilder, schemaUrlOffset: Int, simpleDataOffset: Int) : Int {
             builder.startTable(2)
-            addSIMPLE_DATA(builder, SIMPLE_DATAOffset)
-            addSCHEMA_URL(builder, SCHEMA_URLOffset)
+            addSIMPLEDATA(builder, simpleDataOffset)
+            addSCHEMAURL(builder, schemaUrlOffset)
             return endKMLSchemaData(builder)
         }
         fun startKMLSchemaData(builder: FlatBufferBuilder) = builder.startTable(2)
-        fun addSCHEMA_URL(builder: FlatBufferBuilder, SCHEMA_URL: Int) = builder.addOffset(0, SCHEMA_URL, 0)
-        fun addSIMPLE_DATA(builder: FlatBufferBuilder, SIMPLE_DATA: Int) = builder.addOffset(1, SIMPLE_DATA, 0)
+        fun addSCHEMAURL(builder: FlatBufferBuilder, schemaUrl: Int) = builder.addOffset(0, schemaUrl, 0)
+        fun addSIMPLEDATA(builder: FlatBufferBuilder, simpleData: Int) = builder.addOffset(1, simpleData, 0)
         fun createSimpleDataVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {

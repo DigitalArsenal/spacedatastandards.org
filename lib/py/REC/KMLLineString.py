@@ -2,4 +2,218 @@
 
 # namespace: 
 
-# NOTE KMLLineString.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# LineString geometry
+class KMLLineString(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = KMLLineString()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsKMLLineString(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def KMLLineStringBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x4B\x4D\x4C", size_prefixed=size_prefixed)
+
+    # KMLLineString
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Coordinates
+    # KMLLineString
+    def COORDINATES(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from KMLCoordinate import KMLCoordinate
+            obj = KMLCoordinate()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # KMLLineString
+    def COORDINATESLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # KMLLineString
+    def COORDINATESIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        return o == 0
+
+    # Altitude mode
+    # KMLLineString
+    def ALTITUDE_MODE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # Whether to extrude to ground
+    # KMLLineString
+    def EXTRUDE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # Whether to tessellate (follow terrain)
+    # KMLLineString
+    def TESSELLATE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # gx:drawOrder
+    # KMLLineString
+    def GX_DRAW_ORDER(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+def KMLLineStringStart(builder):
+    builder.StartObject(5)
+
+def Start(builder):
+    KMLLineStringStart(builder)
+
+def KMLLineStringAddCOORDINATES(builder, COORDINATES):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(COORDINATES), 0)
+
+def AddCOORDINATES(builder, COORDINATES):
+    KMLLineStringAddCOORDINATES(builder, COORDINATES)
+
+def KMLLineStringStartCOORDINATESVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartCOORDINATESVector(builder, numElems):
+    return KMLLineStringStartCOORDINATESVector(builder, numElems)
+
+def KMLLineStringCreateCOORDINATESVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateCOORDINATESVector(builder, data):
+    KMLLineStringCreateCOORDINATESVector(builder, data)
+
+def KMLLineStringAddALTITUDE_MODE(builder, ALTITUDE_MODE):
+    builder.PrependInt8Slot(1, ALTITUDE_MODE, 0)
+
+def AddALTITUDE_MODE(builder, ALTITUDE_MODE):
+    KMLLineStringAddALTITUDE_MODE(builder, ALTITUDE_MODE)
+
+def KMLLineStringAddEXTRUDE(builder, EXTRUDE):
+    builder.PrependBoolSlot(2, EXTRUDE, 0)
+
+def AddEXTRUDE(builder, EXTRUDE):
+    KMLLineStringAddEXTRUDE(builder, EXTRUDE)
+
+def KMLLineStringAddTESSELLATE(builder, TESSELLATE):
+    builder.PrependBoolSlot(3, TESSELLATE, 0)
+
+def AddTESSELLATE(builder, TESSELLATE):
+    KMLLineStringAddTESSELLATE(builder, TESSELLATE)
+
+def KMLLineStringAddGX_DRAW_ORDER(builder, GX_DRAW_ORDER):
+    builder.PrependInt32Slot(4, GX_DRAW_ORDER, 0)
+
+def AddGX_DRAW_ORDER(builder, GX_DRAW_ORDER):
+    KMLLineStringAddGX_DRAW_ORDER(builder, GX_DRAW_ORDER)
+
+def KMLLineStringEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return KMLLineStringEnd(builder)
+
+import KMLCoordinate
+try:
+    from typing import List
+except:
+    pass
+
+class KMLLineStringT(object):
+
+    # KMLLineStringT
+    def __init__(
+        self,
+        COORDINATES = None,
+        ALTITUDE_MODE = 0,
+        EXTRUDE = False,
+        TESSELLATE = False,
+        GX_DRAW_ORDER = 0,
+    ):
+        self.COORDINATES = COORDINATES  # type: Optional[List[KMLCoordinate.KMLCoordinateT]]
+        self.ALTITUDE_MODE = ALTITUDE_MODE  # type: int
+        self.EXTRUDE = EXTRUDE  # type: bool
+        self.TESSELLATE = TESSELLATE  # type: bool
+        self.GX_DRAW_ORDER = GX_DRAW_ORDER  # type: int
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpKmllineString = KMLLineString()
+        tmpKmllineString.Init(buf, pos)
+        return cls.InitFromObj(tmpKmllineString)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpKmllineString):
+        x = KMLLineStringT()
+        x._UnPack(tmpKmllineString)
+        return x
+
+    # KMLLineStringT
+    def _UnPack(self, KMLLineString):
+        if KMLLineString is None:
+            return
+        if not KMLLineString.COORDINATESIsNone():
+            self.COORDINATES = []
+            for i in range(KMLLineString.COORDINATESLength()):
+                if KMLLineString.COORDINATES(i) is None:
+                    self.COORDINATES.append(None)
+                else:
+                    kMLCoordinate_ = KMLCoordinate.KMLCoordinateT.InitFromObj(KMLLineString.COORDINATES(i))
+                    self.COORDINATES.append(kMLCoordinate_)
+        self.ALTITUDE_MODE = KMLLineString.ALTITUDE_MODE()
+        self.EXTRUDE = KMLLineString.EXTRUDE()
+        self.TESSELLATE = KMLLineString.TESSELLATE()
+        self.GX_DRAW_ORDER = KMLLineString.GX_DRAW_ORDER()
+
+    # KMLLineStringT
+    def Pack(self, builder):
+        if self.COORDINATES is not None:
+            COORDINATESlist = []
+            for i in range(len(self.COORDINATES)):
+                COORDINATESlist.append(self.COORDINATES[i].Pack(builder))
+            KMLLineStringStartCOORDINATESVector(builder, len(self.COORDINATES))
+            for i in reversed(range(len(self.COORDINATES))):
+                builder.PrependUOffsetTRelative(COORDINATESlist[i])
+            COORDINATES = builder.EndVector()
+        KMLLineStringStart(builder)
+        if self.COORDINATES is not None:
+            KMLLineStringAddCOORDINATES(builder, COORDINATES)
+        KMLLineStringAddALTITUDE_MODE(builder, self.ALTITUDE_MODE)
+        KMLLineStringAddEXTRUDE(builder, self.EXTRUDE)
+        KMLLineStringAddTESSELLATE(builder, self.TESSELLATE)
+        KMLLineStringAddGX_DRAW_ORDER(builder, self.GX_DRAW_ORDER)
+        KMLLineString = KMLLineStringEnd(builder)
+        return KMLLineString

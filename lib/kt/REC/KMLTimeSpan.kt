@@ -32,7 +32,7 @@ class KMLTimeSpan : Table() {
     /**
      * Begin time (ISO 8601)
      */
-    val BEGIN : String?
+    val begin : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class KMLTimeSpan : Table() {
                 null
             }
         }
-    val BEGINAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun BEGINInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val beginAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun beginInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * End time (ISO 8601)
      */
-    val END : String?
+    val end : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -55,24 +55,24 @@ class KMLTimeSpan : Table() {
                 null
             }
         }
-    val ENDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun ENDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val endAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun endInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsKMLTimeSpan(_bb: ByteBuffer): KMLTimeSpan = getRootAsKMLTimeSpan(_bb, KMLTimeSpan())
         fun getRootAsKMLTimeSpan(_bb: ByteBuffer, obj: KMLTimeSpan): KMLTimeSpan {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createKMLTimeSpan(builder: FlatBufferBuilder, BEGINOffset: Int, ENDOffset: Int) : Int {
+        fun createKMLTimeSpan(builder: FlatBufferBuilder, beginOffset: Int, endOffset: Int) : Int {
             builder.startTable(2)
-            addEND(builder, ENDOffset)
-            addBEGIN(builder, BEGINOffset)
+            addEND(builder, endOffset)
+            addBEGIN(builder, beginOffset)
             return endKMLTimeSpan(builder)
         }
         fun startKMLTimeSpan(builder: FlatBufferBuilder) = builder.startTable(2)
-        fun addBEGIN(builder: FlatBufferBuilder, BEGIN: Int) = builder.addOffset(0, BEGIN, 0)
-        fun addEND(builder: FlatBufferBuilder, END: Int) = builder.addOffset(1, END, 0)
+        fun addBEGIN(builder: FlatBufferBuilder, begin: Int) = builder.addOffset(0, begin, 0)
+        fun addEND(builder: FlatBufferBuilder, end: Int) = builder.addOffset(1, end, 0)
         fun endKMLTimeSpan(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

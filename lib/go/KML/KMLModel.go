@@ -51,9 +51,17 @@ func (rcv *KMLModel) ALTITUDE_MODE() KMLAltitudeMode {
 	return 0
 }
 
+func (rcv *KMLModel) AltitudeMode() KMLAltitudeMode {
+	return rcv.ALTITUDE_MODE()
+}
+
 /// Altitude mode
 func (rcv *KMLModel) MutateALTITUDE_MODE(n KMLAltitudeMode) bool {
 	return rcv._tab.MutateInt8Slot(4, int8(n))
+}
+
+func (rcv *KMLModel) MutateAltitudeMode(n KMLAltitudeMode) bool {
+	return rcv.MutateALTITUDE_MODE(n)
 }
 
 /// Location longitude
@@ -65,9 +73,17 @@ func (rcv *KMLModel) LOCATION_LON() float64 {
 	return 0.0
 }
 
+func (rcv *KMLModel) LocationLon() float64 {
+	return rcv.LOCATION_LON()
+}
+
 /// Location longitude
 func (rcv *KMLModel) MutateLOCATION_LON(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(6, n)
+}
+
+func (rcv *KMLModel) MutateLocationLon(n float64) bool {
+	return rcv.MutateLOCATION_LON(n)
 }
 
 /// Location latitude
@@ -79,9 +95,17 @@ func (rcv *KMLModel) LOCATION_LAT() float64 {
 	return 0.0
 }
 
+func (rcv *KMLModel) LocationLat() float64 {
+	return rcv.LOCATION_LAT()
+}
+
 /// Location latitude
 func (rcv *KMLModel) MutateLOCATION_LAT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(8, n)
+}
+
+func (rcv *KMLModel) MutateLocationLat(n float64) bool {
+	return rcv.MutateLOCATION_LAT(n)
 }
 
 /// Location altitude
@@ -93,9 +117,17 @@ func (rcv *KMLModel) LOCATION_ALT() float64 {
 	return 0.0
 }
 
+func (rcv *KMLModel) LocationAlt() float64 {
+	return rcv.LOCATION_ALT()
+}
+
 /// Location altitude
 func (rcv *KMLModel) MutateLOCATION_ALT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(10, n)
+}
+
+func (rcv *KMLModel) MutateLocationAlt(n float64) bool {
+	return rcv.MutateLOCATION_ALT(n)
 }
 
 /// Orientation heading
@@ -107,9 +139,17 @@ func (rcv *KMLModel) ORIENTATION_HEADING() float64 {
 	return 0.0
 }
 
+func (rcv *KMLModel) OrientationHeading() float64 {
+	return rcv.ORIENTATION_HEADING()
+}
+
 /// Orientation heading
 func (rcv *KMLModel) MutateORIENTATION_HEADING(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(12, n)
+}
+
+func (rcv *KMLModel) MutateOrientationHeading(n float64) bool {
+	return rcv.MutateORIENTATION_HEADING(n)
 }
 
 /// Orientation tilt
@@ -121,9 +161,17 @@ func (rcv *KMLModel) ORIENTATION_TILT() float64 {
 	return 0.0
 }
 
+func (rcv *KMLModel) OrientationTilt() float64 {
+	return rcv.ORIENTATION_TILT()
+}
+
 /// Orientation tilt
 func (rcv *KMLModel) MutateORIENTATION_TILT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(14, n)
+}
+
+func (rcv *KMLModel) MutateOrientationTilt(n float64) bool {
+	return rcv.MutateORIENTATION_TILT(n)
 }
 
 /// Orientation roll
@@ -135,9 +183,17 @@ func (rcv *KMLModel) ORIENTATION_ROLL() float64 {
 	return 0.0
 }
 
+func (rcv *KMLModel) OrientationRoll() float64 {
+	return rcv.ORIENTATION_ROLL()
+}
+
 /// Orientation roll
 func (rcv *KMLModel) MutateORIENTATION_ROLL(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(16, n)
+}
+
+func (rcv *KMLModel) MutateOrientationRoll(n float64) bool {
+	return rcv.MutateORIENTATION_ROLL(n)
 }
 
 /// Scale X
@@ -149,9 +205,17 @@ func (rcv *KMLModel) SCALE_X() float64 {
 	return 0.0
 }
 
+func (rcv *KMLModel) ScaleX() float64 {
+	return rcv.SCALE_X()
+}
+
 /// Scale X
 func (rcv *KMLModel) MutateSCALE_X(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(18, n)
+}
+
+func (rcv *KMLModel) MutateScaleX(n float64) bool {
+	return rcv.MutateSCALE_X(n)
 }
 
 /// Scale Y
@@ -163,9 +227,17 @@ func (rcv *KMLModel) SCALE_Y() float64 {
 	return 0.0
 }
 
+func (rcv *KMLModel) ScaleY() float64 {
+	return rcv.SCALE_Y()
+}
+
 /// Scale Y
 func (rcv *KMLModel) MutateSCALE_Y(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(20, n)
+}
+
+func (rcv *KMLModel) MutateScaleY(n float64) bool {
+	return rcv.MutateSCALE_Y(n)
 }
 
 /// Scale Z
@@ -177,9 +249,17 @@ func (rcv *KMLModel) SCALE_Z() float64 {
 	return 0.0
 }
 
+func (rcv *KMLModel) ScaleZ() float64 {
+	return rcv.SCALE_Z()
+}
+
 /// Scale Z
 func (rcv *KMLModel) MutateSCALE_Z(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(22, n)
+}
+
+func (rcv *KMLModel) MutateScaleZ(n float64) bool {
+	return rcv.MutateSCALE_Z(n)
 }
 
 /// Link to 3D model file
@@ -191,6 +271,10 @@ func (rcv *KMLModel) LINK_HREF() []byte {
 	return nil
 }
 
+func (rcv *KMLModel) LinkHref() []byte {
+	return rcv.LINK_HREF()
+}
+
 /// Link to 3D model file
 /// Resource map aliases
 func (rcv *KMLModel) RESOURCE_MAP(obj *KMLResourceMapAlias, j int) bool {
@@ -199,10 +283,17 @@ func (rcv *KMLModel) RESOURCE_MAP(obj *KMLResourceMapAlias, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(KMLResourceMapAlias)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *KMLModel) ResourceMap(obj *KMLResourceMapAlias, j int) bool {
+	return rcv.RESOURCE_MAP(obj, j)
 }
 
 func (rcv *KMLModel) RESOURCE_MAPLength() int {
@@ -213,6 +304,10 @@ func (rcv *KMLModel) RESOURCE_MAPLength() int {
 	return 0
 }
 
+func (rcv *KMLModel) ResourceMapLength() int {
+	return rcv.RESOURCE_MAPLength()
+}
+
 /// Resource map aliases
 func KMLModelStart(builder *flatbuffers.Builder) {
 	builder.StartObject(12)
@@ -220,41 +315,80 @@ func KMLModelStart(builder *flatbuffers.Builder) {
 func KMLModelAddALTITUDE_MODE(builder *flatbuffers.Builder, ALTITUDE_MODE KMLAltitudeMode) {
 	builder.PrependInt8Slot(0, int8(ALTITUDE_MODE), 0)
 }
+func KMLModelAddAltitudeMode(builder *flatbuffers.Builder, ALTITUDE_MODE KMLAltitudeMode) {
+	KMLModelAddALTITUDE_MODE(builder, ALTITUDE_MODE)
+}
 func KMLModelAddLOCATION_LON(builder *flatbuffers.Builder, LOCATION_LON float64) {
 	builder.PrependFloat64Slot(1, LOCATION_LON, 0.0)
+}
+func KMLModelAddLocationLon(builder *flatbuffers.Builder, LOCATION_LON float64) {
+	KMLModelAddLOCATION_LON(builder, LOCATION_LON)
 }
 func KMLModelAddLOCATION_LAT(builder *flatbuffers.Builder, LOCATION_LAT float64) {
 	builder.PrependFloat64Slot(2, LOCATION_LAT, 0.0)
 }
+func KMLModelAddLocationLat(builder *flatbuffers.Builder, LOCATION_LAT float64) {
+	KMLModelAddLOCATION_LAT(builder, LOCATION_LAT)
+}
 func KMLModelAddLOCATION_ALT(builder *flatbuffers.Builder, LOCATION_ALT float64) {
 	builder.PrependFloat64Slot(3, LOCATION_ALT, 0.0)
+}
+func KMLModelAddLocationAlt(builder *flatbuffers.Builder, LOCATION_ALT float64) {
+	KMLModelAddLOCATION_ALT(builder, LOCATION_ALT)
 }
 func KMLModelAddORIENTATION_HEADING(builder *flatbuffers.Builder, ORIENTATION_HEADING float64) {
 	builder.PrependFloat64Slot(4, ORIENTATION_HEADING, 0.0)
 }
+func KMLModelAddOrientationHeading(builder *flatbuffers.Builder, ORIENTATION_HEADING float64) {
+	KMLModelAddORIENTATION_HEADING(builder, ORIENTATION_HEADING)
+}
 func KMLModelAddORIENTATION_TILT(builder *flatbuffers.Builder, ORIENTATION_TILT float64) {
 	builder.PrependFloat64Slot(5, ORIENTATION_TILT, 0.0)
+}
+func KMLModelAddOrientationTilt(builder *flatbuffers.Builder, ORIENTATION_TILT float64) {
+	KMLModelAddORIENTATION_TILT(builder, ORIENTATION_TILT)
 }
 func KMLModelAddORIENTATION_ROLL(builder *flatbuffers.Builder, ORIENTATION_ROLL float64) {
 	builder.PrependFloat64Slot(6, ORIENTATION_ROLL, 0.0)
 }
+func KMLModelAddOrientationRoll(builder *flatbuffers.Builder, ORIENTATION_ROLL float64) {
+	KMLModelAddORIENTATION_ROLL(builder, ORIENTATION_ROLL)
+}
 func KMLModelAddSCALE_X(builder *flatbuffers.Builder, SCALE_X float64) {
 	builder.PrependFloat64Slot(7, SCALE_X, 0.0)
+}
+func KMLModelAddScaleX(builder *flatbuffers.Builder, SCALE_X float64) {
+	KMLModelAddSCALE_X(builder, SCALE_X)
 }
 func KMLModelAddSCALE_Y(builder *flatbuffers.Builder, SCALE_Y float64) {
 	builder.PrependFloat64Slot(8, SCALE_Y, 0.0)
 }
+func KMLModelAddScaleY(builder *flatbuffers.Builder, SCALE_Y float64) {
+	KMLModelAddSCALE_Y(builder, SCALE_Y)
+}
 func KMLModelAddSCALE_Z(builder *flatbuffers.Builder, SCALE_Z float64) {
 	builder.PrependFloat64Slot(9, SCALE_Z, 0.0)
+}
+func KMLModelAddScaleZ(builder *flatbuffers.Builder, SCALE_Z float64) {
+	KMLModelAddSCALE_Z(builder, SCALE_Z)
 }
 func KMLModelAddLINK_HREF(builder *flatbuffers.Builder, LINK_HREF flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(LINK_HREF), 0)
 }
+func KMLModelAddLinkHref(builder *flatbuffers.Builder, LINK_HREF flatbuffers.UOffsetT) {
+	KMLModelAddLINK_HREF(builder, LINK_HREF)
+}
 func KMLModelAddRESOURCE_MAP(builder *flatbuffers.Builder, RESOURCE_MAP flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(RESOURCE_MAP), 0)
 }
+func KMLModelAddResourceMap(builder *flatbuffers.Builder, RESOURCE_MAP flatbuffers.UOffsetT) {
+	KMLModelAddRESOURCE_MAP(builder, RESOURCE_MAP)
+}
 func KMLModelStartRESOURCE_MAPVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func KMLModelStartResourceMapVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return KMLModelStartRESOURCE_MAPVector(builder, numElems)
 }
 func KMLModelEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

@@ -49,10 +49,17 @@ func (rcv *ArgumentTypeSet) INTEGER_TYPES(obj *IntegerArgumentType, j int) bool 
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(IntegerArgumentType)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *ArgumentTypeSet) IntegerTypes(obj *IntegerArgumentType, j int) bool {
+	return rcv.INTEGER_TYPES(obj, j)
 }
 
 func (rcv *ArgumentTypeSet) INTEGER_TYPESLength() int {
@@ -63,6 +70,10 @@ func (rcv *ArgumentTypeSet) INTEGER_TYPESLength() int {
 	return 0
 }
 
+func (rcv *ArgumentTypeSet) IntegerTypesLength() int {
+	return rcv.INTEGER_TYPESLength()
+}
+
 /// Integer argument types
 /// Float argument types
 func (rcv *ArgumentTypeSet) FLOAT_TYPES(obj *FloatArgumentType, j int) bool {
@@ -71,10 +82,17 @@ func (rcv *ArgumentTypeSet) FLOAT_TYPES(obj *FloatArgumentType, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(FloatArgumentType)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *ArgumentTypeSet) FloatTypes(obj *FloatArgumentType, j int) bool {
+	return rcv.FLOAT_TYPES(obj, j)
 }
 
 func (rcv *ArgumentTypeSet) FLOAT_TYPESLength() int {
@@ -85,6 +103,10 @@ func (rcv *ArgumentTypeSet) FLOAT_TYPESLength() int {
 	return 0
 }
 
+func (rcv *ArgumentTypeSet) FloatTypesLength() int {
+	return rcv.FLOAT_TYPESLength()
+}
+
 /// Float argument types
 /// String argument types
 func (rcv *ArgumentTypeSet) STRING_TYPES(obj *StringArgumentType, j int) bool {
@@ -93,10 +115,17 @@ func (rcv *ArgumentTypeSet) STRING_TYPES(obj *StringArgumentType, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(StringArgumentType)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *ArgumentTypeSet) StringTypes(obj *StringArgumentType, j int) bool {
+	return rcv.STRING_TYPES(obj, j)
 }
 
 func (rcv *ArgumentTypeSet) STRING_TYPESLength() int {
@@ -107,6 +136,10 @@ func (rcv *ArgumentTypeSet) STRING_TYPESLength() int {
 	return 0
 }
 
+func (rcv *ArgumentTypeSet) StringTypesLength() int {
+	return rcv.STRING_TYPESLength()
+}
+
 /// String argument types
 /// Boolean argument types
 func (rcv *ArgumentTypeSet) BOOLEAN_TYPES(obj *BooleanArgumentType, j int) bool {
@@ -115,10 +148,17 @@ func (rcv *ArgumentTypeSet) BOOLEAN_TYPES(obj *BooleanArgumentType, j int) bool 
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(BooleanArgumentType)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *ArgumentTypeSet) BooleanTypes(obj *BooleanArgumentType, j int) bool {
+	return rcv.BOOLEAN_TYPES(obj, j)
 }
 
 func (rcv *ArgumentTypeSet) BOOLEAN_TYPESLength() int {
@@ -129,6 +169,10 @@ func (rcv *ArgumentTypeSet) BOOLEAN_TYPESLength() int {
 	return 0
 }
 
+func (rcv *ArgumentTypeSet) BooleanTypesLength() int {
+	return rcv.BOOLEAN_TYPESLength()
+}
+
 /// Boolean argument types
 /// Enumerated argument types
 func (rcv *ArgumentTypeSet) ENUMERATED_TYPES(obj *EnumeratedArgumentType, j int) bool {
@@ -137,10 +181,17 @@ func (rcv *ArgumentTypeSet) ENUMERATED_TYPES(obj *EnumeratedArgumentType, j int)
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(EnumeratedArgumentType)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *ArgumentTypeSet) EnumeratedTypes(obj *EnumeratedArgumentType, j int) bool {
+	return rcv.ENUMERATED_TYPES(obj, j)
 }
 
 func (rcv *ArgumentTypeSet) ENUMERATED_TYPESLength() int {
@@ -151,6 +202,10 @@ func (rcv *ArgumentTypeSet) ENUMERATED_TYPESLength() int {
 	return 0
 }
 
+func (rcv *ArgumentTypeSet) EnumeratedTypesLength() int {
+	return rcv.ENUMERATED_TYPESLength()
+}
+
 /// Enumerated argument types
 /// Binary argument types
 func (rcv *ArgumentTypeSet) BINARY_TYPES(obj *BinaryArgumentType, j int) bool {
@@ -159,10 +214,17 @@ func (rcv *ArgumentTypeSet) BINARY_TYPES(obj *BinaryArgumentType, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(BinaryArgumentType)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *ArgumentTypeSet) BinaryTypes(obj *BinaryArgumentType, j int) bool {
+	return rcv.BINARY_TYPES(obj, j)
 }
 
 func (rcv *ArgumentTypeSet) BINARY_TYPESLength() int {
@@ -173,6 +235,10 @@ func (rcv *ArgumentTypeSet) BINARY_TYPESLength() int {
 	return 0
 }
 
+func (rcv *ArgumentTypeSet) BinaryTypesLength() int {
+	return rcv.BINARY_TYPESLength()
+}
+
 /// Binary argument types
 /// Aggregate argument types
 func (rcv *ArgumentTypeSet) AGGREGATE_TYPES(obj *AggregateArgumentType, j int) bool {
@@ -181,10 +247,17 @@ func (rcv *ArgumentTypeSet) AGGREGATE_TYPES(obj *AggregateArgumentType, j int) b
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(AggregateArgumentType)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *ArgumentTypeSet) AggregateTypes(obj *AggregateArgumentType, j int) bool {
+	return rcv.AGGREGATE_TYPES(obj, j)
 }
 
 func (rcv *ArgumentTypeSet) AGGREGATE_TYPESLength() int {
@@ -195,6 +268,10 @@ func (rcv *ArgumentTypeSet) AGGREGATE_TYPESLength() int {
 	return 0
 }
 
+func (rcv *ArgumentTypeSet) AggregateTypesLength() int {
+	return rcv.AGGREGATE_TYPESLength()
+}
+
 /// Aggregate argument types
 func ArgumentTypeSetStart(builder *flatbuffers.Builder) {
 	builder.StartObject(7)
@@ -202,44 +279,86 @@ func ArgumentTypeSetStart(builder *flatbuffers.Builder) {
 func ArgumentTypeSetAddINTEGER_TYPES(builder *flatbuffers.Builder, INTEGER_TYPES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(INTEGER_TYPES), 0)
 }
+func ArgumentTypeSetAddIntegerTypes(builder *flatbuffers.Builder, INTEGER_TYPES flatbuffers.UOffsetT) {
+	ArgumentTypeSetAddINTEGER_TYPES(builder, INTEGER_TYPES)
+}
 func ArgumentTypeSetStartINTEGER_TYPESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func ArgumentTypeSetStartIntegerTypesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return ArgumentTypeSetStartINTEGER_TYPESVector(builder, numElems)
 }
 func ArgumentTypeSetAddFLOAT_TYPES(builder *flatbuffers.Builder, FLOAT_TYPES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(FLOAT_TYPES), 0)
 }
+func ArgumentTypeSetAddFloatTypes(builder *flatbuffers.Builder, FLOAT_TYPES flatbuffers.UOffsetT) {
+	ArgumentTypeSetAddFLOAT_TYPES(builder, FLOAT_TYPES)
+}
 func ArgumentTypeSetStartFLOAT_TYPESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func ArgumentTypeSetStartFloatTypesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return ArgumentTypeSetStartFLOAT_TYPESVector(builder, numElems)
 }
 func ArgumentTypeSetAddSTRING_TYPES(builder *flatbuffers.Builder, STRING_TYPES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(STRING_TYPES), 0)
 }
+func ArgumentTypeSetAddStringTypes(builder *flatbuffers.Builder, STRING_TYPES flatbuffers.UOffsetT) {
+	ArgumentTypeSetAddSTRING_TYPES(builder, STRING_TYPES)
+}
 func ArgumentTypeSetStartSTRING_TYPESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func ArgumentTypeSetStartStringTypesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return ArgumentTypeSetStartSTRING_TYPESVector(builder, numElems)
 }
 func ArgumentTypeSetAddBOOLEAN_TYPES(builder *flatbuffers.Builder, BOOLEAN_TYPES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(BOOLEAN_TYPES), 0)
 }
+func ArgumentTypeSetAddBooleanTypes(builder *flatbuffers.Builder, BOOLEAN_TYPES flatbuffers.UOffsetT) {
+	ArgumentTypeSetAddBOOLEAN_TYPES(builder, BOOLEAN_TYPES)
+}
 func ArgumentTypeSetStartBOOLEAN_TYPESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func ArgumentTypeSetStartBooleanTypesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return ArgumentTypeSetStartBOOLEAN_TYPESVector(builder, numElems)
 }
 func ArgumentTypeSetAddENUMERATED_TYPES(builder *flatbuffers.Builder, ENUMERATED_TYPES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(ENUMERATED_TYPES), 0)
 }
+func ArgumentTypeSetAddEnumeratedTypes(builder *flatbuffers.Builder, ENUMERATED_TYPES flatbuffers.UOffsetT) {
+	ArgumentTypeSetAddENUMERATED_TYPES(builder, ENUMERATED_TYPES)
+}
 func ArgumentTypeSetStartENUMERATED_TYPESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func ArgumentTypeSetStartEnumeratedTypesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return ArgumentTypeSetStartENUMERATED_TYPESVector(builder, numElems)
 }
 func ArgumentTypeSetAddBINARY_TYPES(builder *flatbuffers.Builder, BINARY_TYPES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(BINARY_TYPES), 0)
 }
+func ArgumentTypeSetAddBinaryTypes(builder *flatbuffers.Builder, BINARY_TYPES flatbuffers.UOffsetT) {
+	ArgumentTypeSetAddBINARY_TYPES(builder, BINARY_TYPES)
+}
 func ArgumentTypeSetStartBINARY_TYPESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func ArgumentTypeSetStartBinaryTypesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return ArgumentTypeSetStartBINARY_TYPESVector(builder, numElems)
 }
 func ArgumentTypeSetAddAGGREGATE_TYPES(builder *flatbuffers.Builder, AGGREGATE_TYPES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(AGGREGATE_TYPES), 0)
 }
+func ArgumentTypeSetAddAggregateTypes(builder *flatbuffers.Builder, AGGREGATE_TYPES flatbuffers.UOffsetT) {
+	ArgumentTypeSetAddAGGREGATE_TYPES(builder, AGGREGATE_TYPES)
+}
 func ArgumentTypeSetStartAGGREGATE_TYPESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func ArgumentTypeSetStartAggregateTypesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return ArgumentTypeSetStartAGGREGATE_TYPESVector(builder, numElems)
 }
 func ArgumentTypeSetEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

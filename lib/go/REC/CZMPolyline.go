@@ -51,9 +51,17 @@ func (rcv *CZMPolyline) SHOW() bool {
 	return false
 }
 
+func (rcv *CZMPolyline) Show() bool {
+	return rcv.SHOW()
+}
+
 /// Whether the polyline is displayed
 func (rcv *CZMPolyline) MutateSHOW(n bool) bool {
 	return rcv._tab.MutateBoolSlot(4, n)
+}
+
+func (rcv *CZMPolyline) MutateShow(n bool) bool {
+	return rcv.MutateSHOW(n)
 }
 
 /// Positions as cartographic degrees [lon, lat, height, lon, lat, height, ...]
@@ -66,12 +74,20 @@ func (rcv *CZMPolyline) POSITIONS_CARTOGRAPHIC_DEGREES(j int) float64 {
 	return 0
 }
 
+func (rcv *CZMPolyline) PositionsCartographicDegrees(j int) float64 {
+	return rcv.POSITIONS_CARTOGRAPHIC_DEGREES(j)
+}
+
 func (rcv *CZMPolyline) POSITIONS_CARTOGRAPHIC_DEGREESLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *CZMPolyline) PositionsCartographicDegreesLength() int {
+	return rcv.POSITIONS_CARTOGRAPHIC_DEGREESLength()
 }
 
 /// Positions as cartographic degrees [lon, lat, height, lon, lat, height, ...]
@@ -84,6 +100,10 @@ func (rcv *CZMPolyline) MutatePOSITIONS_CARTOGRAPHIC_DEGREES(j int, n float64) b
 	return false
 }
 
+func (rcv *CZMPolyline) MutatePositionsCartographicDegrees(j int, n float64) bool {
+	return rcv.MutatePOSITIONS_CARTOGRAPHIC_DEGREES(j, n)
+}
+
 /// Positions as Cartesian [X, Y, Z, X, Y, Z, ...]
 func (rcv *CZMPolyline) POSITIONS_CARTESIAN(j int) float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
@@ -94,12 +114,20 @@ func (rcv *CZMPolyline) POSITIONS_CARTESIAN(j int) float64 {
 	return 0
 }
 
+func (rcv *CZMPolyline) PositionsCartesian(j int) float64 {
+	return rcv.POSITIONS_CARTESIAN(j)
+}
+
 func (rcv *CZMPolyline) POSITIONS_CARTESIANLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *CZMPolyline) PositionsCartesianLength() int {
+	return rcv.POSITIONS_CARTESIANLength()
 }
 
 /// Positions as Cartesian [X, Y, Z, X, Y, Z, ...]
@@ -112,6 +140,10 @@ func (rcv *CZMPolyline) MutatePOSITIONS_CARTESIAN(j int, n float64) bool {
 	return false
 }
 
+func (rcv *CZMPolyline) MutatePositionsCartesian(j int, n float64) bool {
+	return rcv.MutatePOSITIONS_CARTESIAN(j, n)
+}
+
 /// Line width in pixels
 func (rcv *CZMPolyline) WIDTH() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
@@ -121,9 +153,17 @@ func (rcv *CZMPolyline) WIDTH() float64 {
 	return 0.0
 }
 
+func (rcv *CZMPolyline) Width() float64 {
+	return rcv.WIDTH()
+}
+
 /// Line width in pixels
 func (rcv *CZMPolyline) MutateWIDTH(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(10, n)
+}
+
+func (rcv *CZMPolyline) MutateWidth(n float64) bool {
+	return rcv.MutateWIDTH(n)
 }
 
 /// Line color (solid color material, legacy)
@@ -140,6 +180,10 @@ func (rcv *CZMPolyline) COLOR(obj *CZMColor) *CZMColor {
 	return nil
 }
 
+func (rcv *CZMPolyline) Color(obj *CZMColor) *CZMColor {
+	return rcv.COLOR(obj)
+}
+
 /// Line color (solid color material, legacy)
 /// Whether to clamp to ground
 func (rcv *CZMPolyline) CLAMP_TO_GROUND() bool {
@@ -150,9 +194,17 @@ func (rcv *CZMPolyline) CLAMP_TO_GROUND() bool {
 	return false
 }
 
+func (rcv *CZMPolyline) ClampToGround() bool {
+	return rcv.CLAMP_TO_GROUND()
+}
+
 /// Whether to clamp to ground
 func (rcv *CZMPolyline) MutateCLAMP_TO_GROUND(n bool) bool {
 	return rcv._tab.MutateBoolSlot(14, n)
+}
+
+func (rcv *CZMPolyline) MutateClampToGround(n bool) bool {
+	return rcv.MutateCLAMP_TO_GROUND(n)
 }
 
 /// Arc type
@@ -162,6 +214,10 @@ func (rcv *CZMPolyline) ARC_TYPE() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *CZMPolyline) ArcType() []byte {
+	return rcv.ARC_TYPE()
 }
 
 /// Arc type
@@ -174,9 +230,17 @@ func (rcv *CZMPolyline) GRANULARITY() float64 {
 	return 0.0
 }
 
+func (rcv *CZMPolyline) Granularity() float64 {
+	return rcv.GRANULARITY()
+}
+
 /// Granularity in radians
 func (rcv *CZMPolyline) MutateGRANULARITY(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(18, n)
+}
+
+func (rcv *CZMPolyline) MutateGranularity(n float64) bool {
+	return rcv.MutateGRANULARITY(n)
 }
 
 /// Full polyline material
@@ -193,6 +257,10 @@ func (rcv *CZMPolyline) MATERIAL(obj *CZMPolylineMaterial) *CZMPolylineMaterial 
 	return nil
 }
 
+func (rcv *CZMPolyline) Material(obj *CZMPolylineMaterial) *CZMPolylineMaterial {
+	return rcv.MATERIAL(obj)
+}
+
 /// Full polyline material
 /// Shadow mode
 func (rcv *CZMPolyline) SHADOWS() []byte {
@@ -201,6 +269,10 @@ func (rcv *CZMPolyline) SHADOWS() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *CZMPolyline) Shadows() []byte {
+	return rcv.SHADOWS()
 }
 
 /// Shadow mode
@@ -218,6 +290,10 @@ func (rcv *CZMPolyline) DEPTH_FAIL_MATERIAL(obj *CZMPolylineMaterial) *CZMPolyli
 	return nil
 }
 
+func (rcv *CZMPolyline) DepthFailMaterial(obj *CZMPolylineMaterial) *CZMPolylineMaterial {
+	return rcv.DEPTH_FAIL_MATERIAL(obj)
+}
+
 /// Depth fail material
 /// Classification type
 func (rcv *CZMPolyline) CLASSIFICATION_TYPE() []byte {
@@ -226,6 +302,10 @@ func (rcv *CZMPolyline) CLASSIFICATION_TYPE() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *CZMPolyline) ClassificationType() []byte {
+	return rcv.CLASSIFICATION_TYPE()
 }
 
 /// Classification type
@@ -238,9 +318,17 @@ func (rcv *CZMPolyline) Z_INDEX() int32 {
 	return 0
 }
 
+func (rcv *CZMPolyline) ZIndex() int32 {
+	return rcv.Z_INDEX()
+}
+
 /// Z-index for ordering
 func (rcv *CZMPolyline) MutateZ_INDEX(n int32) bool {
 	return rcv._tab.MutateInt32Slot(28, n)
+}
+
+func (rcv *CZMPolyline) MutateZIndex(n int32) bool {
+	return rcv.MutateZ_INDEX(n)
 }
 
 func CZMPolylineStart(builder *flatbuffers.Builder) {
@@ -249,47 +337,92 @@ func CZMPolylineStart(builder *flatbuffers.Builder) {
 func CZMPolylineAddSHOW(builder *flatbuffers.Builder, SHOW bool) {
 	builder.PrependBoolSlot(0, SHOW, false)
 }
+func CZMPolylineAddShow(builder *flatbuffers.Builder, SHOW bool) {
+	CZMPolylineAddSHOW(builder, SHOW)
+}
 func CZMPolylineAddPOSITIONS_CARTOGRAPHIC_DEGREES(builder *flatbuffers.Builder, POSITIONS_CARTOGRAPHIC_DEGREES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(POSITIONS_CARTOGRAPHIC_DEGREES), 0)
+}
+func CZMPolylineAddPositionsCartographicDegrees(builder *flatbuffers.Builder, POSITIONS_CARTOGRAPHIC_DEGREES flatbuffers.UOffsetT) {
+	CZMPolylineAddPOSITIONS_CARTOGRAPHIC_DEGREES(builder, POSITIONS_CARTOGRAPHIC_DEGREES)
 }
 func CZMPolylineStartPOSITIONS_CARTOGRAPHIC_DEGREESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(8, numElems, 8)
 }
+func CZMPolylineStartPositionsCartographicDegreesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return CZMPolylineStartPOSITIONS_CARTOGRAPHIC_DEGREESVector(builder, numElems)
+}
 func CZMPolylineAddPOSITIONS_CARTESIAN(builder *flatbuffers.Builder, POSITIONS_CARTESIAN flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(POSITIONS_CARTESIAN), 0)
+}
+func CZMPolylineAddPositionsCartesian(builder *flatbuffers.Builder, POSITIONS_CARTESIAN flatbuffers.UOffsetT) {
+	CZMPolylineAddPOSITIONS_CARTESIAN(builder, POSITIONS_CARTESIAN)
 }
 func CZMPolylineStartPOSITIONS_CARTESIANVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(8, numElems, 8)
 }
+func CZMPolylineStartPositionsCartesianVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return CZMPolylineStartPOSITIONS_CARTESIANVector(builder, numElems)
+}
 func CZMPolylineAddWIDTH(builder *flatbuffers.Builder, WIDTH float64) {
 	builder.PrependFloat64Slot(3, WIDTH, 0.0)
+}
+func CZMPolylineAddWidth(builder *flatbuffers.Builder, WIDTH float64) {
+	CZMPolylineAddWIDTH(builder, WIDTH)
 }
 func CZMPolylineAddCOLOR(builder *flatbuffers.Builder, COLOR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(COLOR), 0)
 }
+func CZMPolylineAddColor(builder *flatbuffers.Builder, COLOR flatbuffers.UOffsetT) {
+	CZMPolylineAddCOLOR(builder, COLOR)
+}
 func CZMPolylineAddCLAMP_TO_GROUND(builder *flatbuffers.Builder, CLAMP_TO_GROUND bool) {
 	builder.PrependBoolSlot(5, CLAMP_TO_GROUND, false)
+}
+func CZMPolylineAddClampToGround(builder *flatbuffers.Builder, CLAMP_TO_GROUND bool) {
+	CZMPolylineAddCLAMP_TO_GROUND(builder, CLAMP_TO_GROUND)
 }
 func CZMPolylineAddARC_TYPE(builder *flatbuffers.Builder, ARC_TYPE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(ARC_TYPE), 0)
 }
+func CZMPolylineAddArcType(builder *flatbuffers.Builder, ARC_TYPE flatbuffers.UOffsetT) {
+	CZMPolylineAddARC_TYPE(builder, ARC_TYPE)
+}
 func CZMPolylineAddGRANULARITY(builder *flatbuffers.Builder, GRANULARITY float64) {
 	builder.PrependFloat64Slot(7, GRANULARITY, 0.0)
+}
+func CZMPolylineAddGranularity(builder *flatbuffers.Builder, GRANULARITY float64) {
+	CZMPolylineAddGRANULARITY(builder, GRANULARITY)
 }
 func CZMPolylineAddMATERIAL(builder *flatbuffers.Builder, MATERIAL flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(MATERIAL), 0)
 }
+func CZMPolylineAddMaterial(builder *flatbuffers.Builder, MATERIAL flatbuffers.UOffsetT) {
+	CZMPolylineAddMATERIAL(builder, MATERIAL)
+}
 func CZMPolylineAddSHADOWS(builder *flatbuffers.Builder, SHADOWS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(SHADOWS), 0)
+}
+func CZMPolylineAddShadows(builder *flatbuffers.Builder, SHADOWS flatbuffers.UOffsetT) {
+	CZMPolylineAddSHADOWS(builder, SHADOWS)
 }
 func CZMPolylineAddDEPTH_FAIL_MATERIAL(builder *flatbuffers.Builder, DEPTH_FAIL_MATERIAL flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(DEPTH_FAIL_MATERIAL), 0)
 }
+func CZMPolylineAddDepthFailMaterial(builder *flatbuffers.Builder, DEPTH_FAIL_MATERIAL flatbuffers.UOffsetT) {
+	CZMPolylineAddDEPTH_FAIL_MATERIAL(builder, DEPTH_FAIL_MATERIAL)
+}
 func CZMPolylineAddCLASSIFICATION_TYPE(builder *flatbuffers.Builder, CLASSIFICATION_TYPE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(CLASSIFICATION_TYPE), 0)
 }
+func CZMPolylineAddClassificationType(builder *flatbuffers.Builder, CLASSIFICATION_TYPE flatbuffers.UOffsetT) {
+	CZMPolylineAddCLASSIFICATION_TYPE(builder, CLASSIFICATION_TYPE)
+}
 func CZMPolylineAddZ_INDEX(builder *flatbuffers.Builder, Z_INDEX int32) {
 	builder.PrependInt32Slot(12, Z_INDEX, 0)
+}
+func CZMPolylineAddZIndex(builder *flatbuffers.Builder, Z_INDEX int32) {
+	CZMPolylineAddZ_INDEX(builder, Z_INDEX)
 }
 func CZMPolylineEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

@@ -177,20 +177,29 @@ except:
 class KMLStyleT(object):
 
     # KMLStyleT
-    def __init__(self):
-        self.ID = None  # type: str
-        self.ICON_STYLE = None  # type: Optional[KMLIconStyle.KMLIconStyleT]
-        self.LABEL_STYLE = None  # type: Optional[KMLLabelStyle.KMLLabelStyleT]
-        self.LINE_STYLE = None  # type: Optional[KMLLineStyle.KMLLineStyleT]
-        self.POLY_STYLE = None  # type: Optional[KMLPolyStyle.KMLPolyStyleT]
-        self.BALLOON_STYLE = None  # type: Optional[KMLBalloonStyle.KMLBalloonStyleT]
-        self.LIST_STYLE = None  # type: Optional[KMLListStyle.KMLListStyleT]
+    def __init__(
+        self,
+        ID = None,
+        ICON_STYLE = None,
+        LABEL_STYLE = None,
+        LINE_STYLE = None,
+        POLY_STYLE = None,
+        BALLOON_STYLE = None,
+        LIST_STYLE = None,
+    ):
+        self.ID = ID  # type: Optional[str]
+        self.ICON_STYLE = ICON_STYLE  # type: Optional[KMLIconStyle.KMLIconStyleT]
+        self.LABEL_STYLE = LABEL_STYLE  # type: Optional[KMLLabelStyle.KMLLabelStyleT]
+        self.LINE_STYLE = LINE_STYLE  # type: Optional[KMLLineStyle.KMLLineStyleT]
+        self.POLY_STYLE = POLY_STYLE  # type: Optional[KMLPolyStyle.KMLPolyStyleT]
+        self.BALLOON_STYLE = BALLOON_STYLE  # type: Optional[KMLBalloonStyle.KMLBalloonStyleT]
+        self.LIST_STYLE = LIST_STYLE  # type: Optional[KMLListStyle.KMLListStyleT]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        kmlstyle = KMLStyle()
-        kmlstyle.Init(buf, pos)
-        return cls.InitFromObj(kmlstyle)
+        tmpKmlstyle = KMLStyle()
+        tmpKmlstyle.Init(buf, pos)
+        return cls.InitFromObj(tmpKmlstyle)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -198,28 +207,28 @@ class KMLStyleT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, kmlstyle):
+    def InitFromObj(cls, tmpKmlstyle):
         x = KMLStyleT()
-        x._UnPack(kmlstyle)
+        x._UnPack(tmpKmlstyle)
         return x
 
     # KMLStyleT
-    def _UnPack(self, kmlstyle):
-        if kmlstyle is None:
+    def _UnPack(self, KMLStyle):
+        if KMLStyle is None:
             return
-        self.ID = kmlstyle.ID()
-        if kmlstyle.ICON_STYLE() is not None:
-            self.ICON_STYLE = KMLIconStyle.KMLIconStyleT.InitFromObj(kmlstyle.ICON_STYLE())
-        if kmlstyle.LABEL_STYLE() is not None:
-            self.LABEL_STYLE = KMLLabelStyle.KMLLabelStyleT.InitFromObj(kmlstyle.LABEL_STYLE())
-        if kmlstyle.LINE_STYLE() is not None:
-            self.LINE_STYLE = KMLLineStyle.KMLLineStyleT.InitFromObj(kmlstyle.LINE_STYLE())
-        if kmlstyle.POLY_STYLE() is not None:
-            self.POLY_STYLE = KMLPolyStyle.KMLPolyStyleT.InitFromObj(kmlstyle.POLY_STYLE())
-        if kmlstyle.BALLOON_STYLE() is not None:
-            self.BALLOON_STYLE = KMLBalloonStyle.KMLBalloonStyleT.InitFromObj(kmlstyle.BALLOON_STYLE())
-        if kmlstyle.LIST_STYLE() is not None:
-            self.LIST_STYLE = KMLListStyle.KMLListStyleT.InitFromObj(kmlstyle.LIST_STYLE())
+        self.ID = KMLStyle.ID()
+        if KMLStyle.ICON_STYLE() is not None:
+            self.ICON_STYLE = KMLIconStyle.KMLIconStyleT.InitFromObj(KMLStyle.ICON_STYLE())
+        if KMLStyle.LABEL_STYLE() is not None:
+            self.LABEL_STYLE = KMLLabelStyle.KMLLabelStyleT.InitFromObj(KMLStyle.LABEL_STYLE())
+        if KMLStyle.LINE_STYLE() is not None:
+            self.LINE_STYLE = KMLLineStyle.KMLLineStyleT.InitFromObj(KMLStyle.LINE_STYLE())
+        if KMLStyle.POLY_STYLE() is not None:
+            self.POLY_STYLE = KMLPolyStyle.KMLPolyStyleT.InitFromObj(KMLStyle.POLY_STYLE())
+        if KMLStyle.BALLOON_STYLE() is not None:
+            self.BALLOON_STYLE = KMLBalloonStyle.KMLBalloonStyleT.InitFromObj(KMLStyle.BALLOON_STYLE())
+        if KMLStyle.LIST_STYLE() is not None:
+            self.LIST_STYLE = KMLListStyle.KMLListStyleT.InitFromObj(KMLStyle.LIST_STYLE())
 
     # KMLStyleT
     def Pack(self, builder):
@@ -252,5 +261,5 @@ class KMLStyleT(object):
             KMLStyleAddBALLOON_STYLE(builder, BALLOON_STYLE)
         if self.LIST_STYLE is not None:
             KMLStyleAddLIST_STYLE(builder, LIST_STYLE)
-        kmlstyle = KMLStyleEnd(builder)
-        return kmlstyle
+        KMLStyle = KMLStyleEnd(builder)
+        return KMLStyle

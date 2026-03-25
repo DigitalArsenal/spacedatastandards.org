@@ -149,21 +149,31 @@ def End(builder):
 class BALT(object):
 
     # BALT
-    def __init__(self):
-        self.COMMAND = None  # type: str
-        self.TRAJECTORY_REQUEST = None  # type: str
-        self.TABLE_REQUEST = None  # type: str
-        self.FIRE_CONTROL = None  # type: str
-        self.PENETRATION_PROJECTILE = None  # type: str
-        self.PENETRATION_ARMOR = None  # type: str
-        self.IMPACT_VELOCITY_MPS = 0.0  # type: float
-        self.IMPACT_ANGLE_DEG = 0.0  # type: float
+    def __init__(
+        self,
+        COMMAND = None,
+        TRAJECTORY_REQUEST = None,
+        TABLE_REQUEST = None,
+        FIRE_CONTROL = None,
+        PENETRATION_PROJECTILE = None,
+        PENETRATION_ARMOR = None,
+        IMPACT_VELOCITY_MPS = 0.0,
+        IMPACT_ANGLE_DEG = 0.0,
+    ):
+        self.COMMAND = COMMAND  # type: Optional[str]
+        self.TRAJECTORY_REQUEST = TRAJECTORY_REQUEST  # type: Optional[str]
+        self.TABLE_REQUEST = TABLE_REQUEST  # type: Optional[str]
+        self.FIRE_CONTROL = FIRE_CONTROL  # type: Optional[str]
+        self.PENETRATION_PROJECTILE = PENETRATION_PROJECTILE  # type: Optional[str]
+        self.PENETRATION_ARMOR = PENETRATION_ARMOR  # type: Optional[str]
+        self.IMPACT_VELOCITY_MPS = IMPACT_VELOCITY_MPS  # type: float
+        self.IMPACT_ANGLE_DEG = IMPACT_ANGLE_DEG  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        BAL = BAL()
-        BAL.Init(buf, pos)
-        return cls.InitFromObj(BAL)
+        tmpBal = BAL()
+        tmpBal.Init(buf, pos)
+        return cls.InitFromObj(tmpBal)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -171,9 +181,9 @@ class BALT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, BAL):
+    def InitFromObj(cls, tmpBal):
         x = BALT()
-        x._UnPack(BAL)
+        x._UnPack(tmpBal)
         return x
 
     # BALT

@@ -222,25 +222,39 @@ except:
 class KMLNetworkLinkT(object):
 
     # KMLNetworkLinkT
-    def __init__(self):
-        self.NAME = None  # type: str
-        self.DESCRIPTION = None  # type: str
-        self.VISIBILITY = False  # type: bool
-        self.OPEN = False  # type: bool
-        self.HREF = None  # type: str
-        self.REFRESH_MODE = 0  # type: int
-        self.REFRESH_INTERVAL = 0.0  # type: float
-        self.VIEW_REFRESH_MODE = 0  # type: int
-        self.VIEW_REFRESH_TIME = 0.0  # type: float
-        self.REFRESH_VISIBILITY = False  # type: bool
-        self.FLY_TO_VIEW = False  # type: bool
-        self.LINK = None  # type: Optional[KMLLink.KMLLinkT]
+    def __init__(
+        self,
+        NAME = None,
+        DESCRIPTION = None,
+        VISIBILITY = False,
+        OPEN = False,
+        HREF = None,
+        REFRESH_MODE = 0,
+        REFRESH_INTERVAL = 0.0,
+        VIEW_REFRESH_MODE = 0,
+        VIEW_REFRESH_TIME = 0.0,
+        REFRESH_VISIBILITY = False,
+        FLY_TO_VIEW = False,
+        LINK = None,
+    ):
+        self.NAME = NAME  # type: Optional[str]
+        self.DESCRIPTION = DESCRIPTION  # type: Optional[str]
+        self.VISIBILITY = VISIBILITY  # type: bool
+        self.OPEN = OPEN  # type: bool
+        self.HREF = HREF  # type: Optional[str]
+        self.REFRESH_MODE = REFRESH_MODE  # type: int
+        self.REFRESH_INTERVAL = REFRESH_INTERVAL  # type: float
+        self.VIEW_REFRESH_MODE = VIEW_REFRESH_MODE  # type: int
+        self.VIEW_REFRESH_TIME = VIEW_REFRESH_TIME  # type: float
+        self.REFRESH_VISIBILITY = REFRESH_VISIBILITY  # type: bool
+        self.FLY_TO_VIEW = FLY_TO_VIEW  # type: bool
+        self.LINK = LINK  # type: Optional[KMLLink.KMLLinkT]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        kmlnetworkLink = KMLNetworkLink()
-        kmlnetworkLink.Init(buf, pos)
-        return cls.InitFromObj(kmlnetworkLink)
+        tmpKmlnetworkLink = KMLNetworkLink()
+        tmpKmlnetworkLink.Init(buf, pos)
+        return cls.InitFromObj(tmpKmlnetworkLink)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -248,28 +262,28 @@ class KMLNetworkLinkT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, kmlnetworkLink):
+    def InitFromObj(cls, tmpKmlnetworkLink):
         x = KMLNetworkLinkT()
-        x._UnPack(kmlnetworkLink)
+        x._UnPack(tmpKmlnetworkLink)
         return x
 
     # KMLNetworkLinkT
-    def _UnPack(self, kmlnetworkLink):
-        if kmlnetworkLink is None:
+    def _UnPack(self, KMLNetworkLink):
+        if KMLNetworkLink is None:
             return
-        self.NAME = kmlnetworkLink.NAME()
-        self.DESCRIPTION = kmlnetworkLink.DESCRIPTION()
-        self.VISIBILITY = kmlnetworkLink.VISIBILITY()
-        self.OPEN = kmlnetworkLink.OPEN()
-        self.HREF = kmlnetworkLink.HREF()
-        self.REFRESH_MODE = kmlnetworkLink.REFRESH_MODE()
-        self.REFRESH_INTERVAL = kmlnetworkLink.REFRESH_INTERVAL()
-        self.VIEW_REFRESH_MODE = kmlnetworkLink.VIEW_REFRESH_MODE()
-        self.VIEW_REFRESH_TIME = kmlnetworkLink.VIEW_REFRESH_TIME()
-        self.REFRESH_VISIBILITY = kmlnetworkLink.REFRESH_VISIBILITY()
-        self.FLY_TO_VIEW = kmlnetworkLink.FLY_TO_VIEW()
-        if kmlnetworkLink.LINK() is not None:
-            self.LINK = KMLLink.KMLLinkT.InitFromObj(kmlnetworkLink.LINK())
+        self.NAME = KMLNetworkLink.NAME()
+        self.DESCRIPTION = KMLNetworkLink.DESCRIPTION()
+        self.VISIBILITY = KMLNetworkLink.VISIBILITY()
+        self.OPEN = KMLNetworkLink.OPEN()
+        self.HREF = KMLNetworkLink.HREF()
+        self.REFRESH_MODE = KMLNetworkLink.REFRESH_MODE()
+        self.REFRESH_INTERVAL = KMLNetworkLink.REFRESH_INTERVAL()
+        self.VIEW_REFRESH_MODE = KMLNetworkLink.VIEW_REFRESH_MODE()
+        self.VIEW_REFRESH_TIME = KMLNetworkLink.VIEW_REFRESH_TIME()
+        self.REFRESH_VISIBILITY = KMLNetworkLink.REFRESH_VISIBILITY()
+        self.FLY_TO_VIEW = KMLNetworkLink.FLY_TO_VIEW()
+        if KMLNetworkLink.LINK() is not None:
+            self.LINK = KMLLink.KMLLinkT.InitFromObj(KMLNetworkLink.LINK())
 
     # KMLNetworkLinkT
     def Pack(self, builder):
@@ -298,5 +312,5 @@ class KMLNetworkLinkT(object):
         KMLNetworkLinkAddFLY_TO_VIEW(builder, self.FLY_TO_VIEW)
         if self.LINK is not None:
             KMLNetworkLinkAddLINK(builder, LINK)
-        kmlnetworkLink = KMLNetworkLinkEnd(builder)
-        return kmlnetworkLink
+        KMLNetworkLink = KMLNetworkLinkEnd(builder)
+        return KMLNetworkLink

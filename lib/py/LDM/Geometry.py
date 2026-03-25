@@ -2,4 +2,171 @@
 
 # namespace: 
 
-# NOTE Geometry.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Geometry table with information about geometric properties
+class Geometry(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = Geometry()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsGeometry(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def GeometryBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x53\x49\x54", size_prefixed=size_prefixed)
+
+    # Geometry
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Type of geometry
+    # Geometry
+    def GEOMETRY_TYPE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Coordinates of the geometry
+    # Geometry
+    def COORDINATES(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
+        return 0
+
+    # Geometry
+    def COORDINATESAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float32Flags, o)
+        return 0
+
+    # Geometry
+    def COORDINATESLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # Geometry
+    def COORDINATESIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        return o == 0
+
+def GeometryStart(builder):
+    builder.StartObject(2)
+
+def Start(builder):
+    GeometryStart(builder)
+
+def GeometryAddGEOMETRY_TYPE(builder, GEOMETRY_TYPE):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(GEOMETRY_TYPE), 0)
+
+def AddGEOMETRY_TYPE(builder, GEOMETRY_TYPE):
+    GeometryAddGEOMETRY_TYPE(builder, GEOMETRY_TYPE)
+
+def GeometryAddCOORDINATES(builder, COORDINATES):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(COORDINATES), 0)
+
+def AddCOORDINATES(builder, COORDINATES):
+    GeometryAddCOORDINATES(builder, COORDINATES)
+
+def GeometryStartCOORDINATESVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartCOORDINATESVector(builder, numElems):
+    return GeometryStartCOORDINATESVector(builder, numElems)
+
+def GeometryCreateCOORDINATESVector(builder, data):
+    data = list(data)
+    builder.StartVector(4, len(data), 4)
+    for item in reversed(data):
+        builder.PrependFloat32(item)
+    return builder.EndVector()
+
+def CreateCOORDINATESVector(builder, data):
+    GeometryCreateCOORDINATESVector(builder, data)
+
+def GeometryEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return GeometryEnd(builder)
+
+try:
+    from typing import List
+except:
+    pass
+
+class GeometryT(object):
+
+    # GeometryT
+    def __init__(
+        self,
+        GEOMETRY_TYPE = None,
+        COORDINATES = None,
+    ):
+        self.GEOMETRY_TYPE = GEOMETRY_TYPE  # type: Optional[str]
+        self.COORDINATES = COORDINATES  # type: Optional[List[float]]
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpGeometry = Geometry()
+        tmpGeometry.Init(buf, pos)
+        return cls.InitFromObj(tmpGeometry)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpGeometry):
+        x = GeometryT()
+        x._UnPack(tmpGeometry)
+        return x
+
+    # GeometryT
+    def _UnPack(self, Geometry):
+        if Geometry is None:
+            return
+        self.GEOMETRY_TYPE = Geometry.GEOMETRY_TYPE()
+        if not Geometry.COORDINATESIsNone():
+            if np is None:
+                self.COORDINATES = []
+                for i in range(Geometry.COORDINATESLength()):
+                    self.COORDINATES.append(Geometry.COORDINATES(i))
+            else:
+                self.COORDINATES = Geometry.COORDINATESAsNumpy()
+
+    # GeometryT
+    def Pack(self, builder):
+        if self.GEOMETRY_TYPE is not None:
+            GEOMETRY_TYPE = builder.CreateString(self.GEOMETRY_TYPE)
+        if self.COORDINATES is not None:
+            if np is not None and type(self.COORDINATES) is np.ndarray:
+                COORDINATES = builder.CreateNumpyVector(self.COORDINATES)
+            else:
+                GeometryStartCOORDINATESVector(builder, len(self.COORDINATES))
+                for i in reversed(range(len(self.COORDINATES))):
+                    builder.PrependFloat32(self.COORDINATES[i])
+                COORDINATES = builder.EndVector()
+        GeometryStart(builder)
+        if self.GEOMETRY_TYPE is not None:
+            GeometryAddGEOMETRY_TYPE(builder, GEOMETRY_TYPE)
+        if self.COORDINATES is not None:
+            GeometryAddCOORDINATES(builder, COORDINATES)
+        Geometry = GeometryEnd(builder)
+        return Geometry

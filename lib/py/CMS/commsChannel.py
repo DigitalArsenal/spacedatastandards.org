@@ -185,23 +185,35 @@ def End(builder):
 class commsChannelT(object):
 
     # commsChannelT
-    def __init__(self):
-        self.CHANNEL_ID = None  # type: str
-        self.NAME = None  # type: str
-        self.UPLINK_FREQ = 0.0  # type: float
-        self.DOWNLINK_FREQ = 0.0  # type: float
-        self.BANDWIDTH = 0.0  # type: float
-        self.MODULATION = 0  # type: int
-        self.DATA_RATE = 0.0  # type: float
-        self.ENCRYPTION = 0  # type: int
-        self.FEC_RATE = 0.0  # type: float
-        self.POWER = 0.0  # type: float
+    def __init__(
+        self,
+        CHANNEL_ID = None,
+        NAME = None,
+        UPLINK_FREQ = 0.0,
+        DOWNLINK_FREQ = 0.0,
+        BANDWIDTH = 0.0,
+        MODULATION = 0,
+        DATA_RATE = 0.0,
+        ENCRYPTION = 0,
+        FEC_RATE = 0.0,
+        POWER = 0.0,
+    ):
+        self.CHANNEL_ID = CHANNEL_ID  # type: Optional[str]
+        self.NAME = NAME  # type: Optional[str]
+        self.UPLINK_FREQ = UPLINK_FREQ  # type: float
+        self.DOWNLINK_FREQ = DOWNLINK_FREQ  # type: float
+        self.BANDWIDTH = BANDWIDTH  # type: float
+        self.MODULATION = MODULATION  # type: int
+        self.DATA_RATE = DATA_RATE  # type: float
+        self.ENCRYPTION = ENCRYPTION  # type: int
+        self.FEC_RATE = FEC_RATE  # type: float
+        self.POWER = POWER  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        commsChannel = commsChannel()
-        commsChannel.Init(buf, pos)
-        return cls.InitFromObj(commsChannel)
+        tmpCommsChannel = commsChannel()
+        tmpCommsChannel.Init(buf, pos)
+        return cls.InitFromObj(tmpCommsChannel)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -209,9 +221,9 @@ class commsChannelT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, commsChannel):
+    def InitFromObj(cls, tmpCommsChannel):
         x = commsChannelT()
-        x._UnPack(commsChannel)
+        x._UnPack(tmpCommsChannel)
         return x
 
     # commsChannelT

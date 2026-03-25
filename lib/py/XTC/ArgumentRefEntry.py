@@ -96,16 +96,21 @@ except:
 class ArgumentRefEntryT(object):
 
     # ArgumentRefEntryT
-    def __init__(self):
-        self.ARGUMENT_REF = None  # type: str
-        self.LOCATION = None  # type: Optional[LocationInContainer.LocationInContainerT]
-        self.SHORT_DESCRIPTION = None  # type: str
+    def __init__(
+        self,
+        ARGUMENT_REF = None,
+        LOCATION = None,
+        SHORT_DESCRIPTION = None,
+    ):
+        self.ARGUMENT_REF = ARGUMENT_REF  # type: Optional[str]
+        self.LOCATION = LOCATION  # type: Optional[LocationInContainer.LocationInContainerT]
+        self.SHORT_DESCRIPTION = SHORT_DESCRIPTION  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        argumentRefEntry = ArgumentRefEntry()
-        argumentRefEntry.Init(buf, pos)
-        return cls.InitFromObj(argumentRefEntry)
+        tmpArgumentRefEntry = ArgumentRefEntry()
+        tmpArgumentRefEntry.Init(buf, pos)
+        return cls.InitFromObj(tmpArgumentRefEntry)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -113,19 +118,19 @@ class ArgumentRefEntryT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, argumentRefEntry):
+    def InitFromObj(cls, tmpArgumentRefEntry):
         x = ArgumentRefEntryT()
-        x._UnPack(argumentRefEntry)
+        x._UnPack(tmpArgumentRefEntry)
         return x
 
     # ArgumentRefEntryT
-    def _UnPack(self, argumentRefEntry):
-        if argumentRefEntry is None:
+    def _UnPack(self, ArgumentRefEntry):
+        if ArgumentRefEntry is None:
             return
-        self.ARGUMENT_REF = argumentRefEntry.ARGUMENT_REF()
-        if argumentRefEntry.LOCATION() is not None:
-            self.LOCATION = LocationInContainer.LocationInContainerT.InitFromObj(argumentRefEntry.LOCATION())
-        self.SHORT_DESCRIPTION = argumentRefEntry.SHORT_DESCRIPTION()
+        self.ARGUMENT_REF = ArgumentRefEntry.ARGUMENT_REF()
+        if ArgumentRefEntry.LOCATION() is not None:
+            self.LOCATION = LocationInContainer.LocationInContainerT.InitFromObj(ArgumentRefEntry.LOCATION())
+        self.SHORT_DESCRIPTION = ArgumentRefEntry.SHORT_DESCRIPTION()
 
     # ArgumentRefEntryT
     def Pack(self, builder):
@@ -142,5 +147,5 @@ class ArgumentRefEntryT(object):
             ArgumentRefEntryAddLOCATION(builder, LOCATION)
         if self.SHORT_DESCRIPTION is not None:
             ArgumentRefEntryAddSHORT_DESCRIPTION(builder, SHORT_DESCRIPTION)
-        argumentRefEntry = ArgumentRefEntryEnd(builder)
-        return argumentRefEntry
+        ArgumentRefEntry = ArgumentRefEntryEnd(builder)
+        return ArgumentRefEntry

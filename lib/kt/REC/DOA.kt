@@ -32,7 +32,7 @@ class DOA : Table() {
     /**
      * Unique identifier
      */
-    val ID : String?
+    val id : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class DOA : Table() {
                 null
             }
         }
-    val IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val idAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun idInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Observation time (ISO 8601)
      */
-    val OB_TIME : String?
+    val obTime : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -55,12 +55,12 @@ class DOA : Table() {
                 null
             }
         }
-    val OB_TIMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun OB_TIMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val obTimeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun obTimeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * Satellite catalog number
      */
-    val SAT_NO : UInt
+    val satNo : UInt
         get() {
             val o = __offset(8)
             return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
@@ -68,7 +68,7 @@ class DOA : Table() {
     /**
      * International designator
      */
-    val ORIG_OBJECT_ID : String?
+    val origObjectId : String?
         get() {
             val o = __offset(10)
             return if (o != 0) {
@@ -77,12 +77,12 @@ class DOA : Table() {
                 null
             }
         }
-    val ORIG_OBJECT_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
-    fun ORIG_OBJECT_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
+    val origObjectIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(10, 1)
+    fun origObjectIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 10, 1)
     /**
      * On-orbit reference
      */
-    val ON_ORBIT : String?
+    val onOrbit : String?
         get() {
             val o = __offset(12)
             return if (o != 0) {
@@ -91,12 +91,12 @@ class DOA : Table() {
                 null
             }
         }
-    val ON_ORBITAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
-    fun ON_ORBITInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
+    val onOrbitAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(12, 1)
+    fun onOrbitInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 12, 1)
     /**
      * True if uncorrelated target
      */
-    val UCT : Boolean
+    val uct : Boolean
         get() {
             val o = __offset(14)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
@@ -104,7 +104,7 @@ class DOA : Table() {
     /**
      * Task identifier
      */
-    val TASK_ID : String?
+    val taskId : String?
         get() {
             val o = __offset(16)
             return if (o != 0) {
@@ -113,12 +113,12 @@ class DOA : Table() {
                 null
             }
         }
-    val TASK_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(16, 1)
-    fun TASK_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 16, 1)
+    val taskIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(16, 1)
+    fun taskIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 16, 1)
     /**
      * Transaction identifier
      */
-    val TRANSACTION_ID : String?
+    val transactionId : String?
         get() {
             val o = __offset(18)
             return if (o != 0) {
@@ -127,12 +127,12 @@ class DOA : Table() {
                 null
             }
         }
-    val TRANSACTION_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(18, 1)
-    fun TRANSACTION_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 18, 1)
+    val transactionIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(18, 1)
+    fun transactionIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 18, 1)
     /**
      * Collection mode
      */
-    val COLLECTION_MODE : Byte
+    val collectionMode : Byte
         get() {
             val o = __offset(20)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -140,7 +140,7 @@ class DOA : Table() {
     /**
      * Sensor 1 identifier
      */
-    val ID_SENSOR1 : String?
+    val idSensor1 : String?
         get() {
             val o = __offset(22)
             return if (o != 0) {
@@ -149,12 +149,12 @@ class DOA : Table() {
                 null
             }
         }
-    val ID_SENSOR1AsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(22, 1)
-    fun ID_SENSOR1InByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 22, 1)
+    val idSensor1AsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(22, 1)
+    fun idSensor1InByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 22, 1)
     /**
      * Sensor 1 original identifier
      */
-    val ORIG_SENSOR_ID1 : String?
+    val origSensorId1 : String?
         get() {
             val o = __offset(24)
             return if (o != 0) {
@@ -163,12 +163,12 @@ class DOA : Table() {
                 null
             }
         }
-    val ORIG_SENSOR_ID1AsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(24, 1)
-    fun ORIG_SENSOR_ID1InByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 24, 1)
+    val origSensorId1AsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(24, 1)
+    fun origSensorId1InByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 24, 1)
     /**
      * Sensor 1 latitude (degrees)
      */
-    val SENLAT : Double
+    val senlat : Double
         get() {
             val o = __offset(26)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -176,7 +176,7 @@ class DOA : Table() {
     /**
      * Sensor 1 longitude (degrees)
      */
-    val SENLON : Double
+    val senlon : Double
         get() {
             val o = __offset(28)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -184,7 +184,7 @@ class DOA : Table() {
     /**
      * Sensor 1 altitude (km)
      */
-    val SENALT : Double
+    val senalt : Double
         get() {
             val o = __offset(30)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -192,7 +192,7 @@ class DOA : Table() {
     /**
      * Sensor 1 processing delay (seconds)
      */
-    val SENSOR1_DELAY : Double
+    val sensor1Delay : Double
         get() {
             val o = __offset(32)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -200,7 +200,7 @@ class DOA : Table() {
     /**
      * Sensor 2 identifier
      */
-    val ID_SENSOR2 : String?
+    val idSensor2 : String?
         get() {
             val o = __offset(34)
             return if (o != 0) {
@@ -209,12 +209,12 @@ class DOA : Table() {
                 null
             }
         }
-    val ID_SENSOR2AsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(34, 1)
-    fun ID_SENSOR2InByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 34, 1)
+    val idSensor2AsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(34, 1)
+    fun idSensor2InByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 34, 1)
     /**
      * Sensor 2 original identifier
      */
-    val ORIG_SENSOR_ID2 : String?
+    val origSensorId2 : String?
         get() {
             val o = __offset(36)
             return if (o != 0) {
@@ -223,12 +223,12 @@ class DOA : Table() {
                 null
             }
         }
-    val ORIG_SENSOR_ID2AsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(36, 1)
-    fun ORIG_SENSOR_ID2InByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 36, 1)
+    val origSensorId2AsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(36, 1)
+    fun origSensorId2InByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 36, 1)
     /**
      * Sensor 2 latitude (degrees)
      */
-    val SEN2LAT : Double
+    val sen2Lat : Double
         get() {
             val o = __offset(38)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -236,7 +236,7 @@ class DOA : Table() {
     /**
      * Sensor 2 longitude (degrees)
      */
-    val SEN2LON : Double
+    val sen2Lon : Double
         get() {
             val o = __offset(40)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -244,7 +244,7 @@ class DOA : Table() {
     /**
      * Sensor 2 altitude (km)
      */
-    val SEN2ALT : Double
+    val sen2Alt : Double
         get() {
             val o = __offset(42)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -252,7 +252,7 @@ class DOA : Table() {
     /**
      * Sensor 2 processing delay (seconds)
      */
-    val SENSOR2_DELAY : Double
+    val sensor2Delay : Double
         get() {
             val o = __offset(44)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -260,7 +260,7 @@ class DOA : Table() {
     /**
      * Measured frequency (MHz)
      */
-    val FREQUENCY : Double
+    val frequency : Double
         get() {
             val o = __offset(46)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -268,7 +268,7 @@ class DOA : Table() {
     /**
      * Measurement bandwidth (MHz)
      */
-    val BANDWIDTH : Double
+    val bandwidth : Double
         get() {
             val o = __offset(48)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -276,7 +276,7 @@ class DOA : Table() {
     /**
      * Signal-to-noise ratio (dB)
      */
-    val SNR : Double
+    val snr : Double
         get() {
             val o = __offset(50)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -284,7 +284,7 @@ class DOA : Table() {
     /**
      * Differential range (km)
      */
-    val DELTA_RANGE : Double
+    val deltaRange : Double
         get() {
             val o = __offset(52)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -292,7 +292,7 @@ class DOA : Table() {
     /**
      * Differential range uncertainty (km, 1-sigma)
      */
-    val DELTA_RANGE_UNC : Double
+    val deltaRangeUnc : Double
         get() {
             val o = __offset(54)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -300,7 +300,7 @@ class DOA : Table() {
     /**
      * Differential range rate (km/s)
      */
-    val DELTA_RANGE_RATE : Double
+    val deltaRangeRate : Double
         get() {
             val o = __offset(56)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -308,7 +308,7 @@ class DOA : Table() {
     /**
      * Differential range rate uncertainty (km/s, 1-sigma)
      */
-    val DELTA_RANGE_RATE_UNC : Double
+    val deltaRangeRateUnc : Double
         get() {
             val o = __offset(58)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -316,7 +316,7 @@ class DOA : Table() {
     /**
      * Time difference of arrival (seconds)
      */
-    val TDOA : Double
+    val tdoa : Double
         get() {
             val o = __offset(60)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -324,7 +324,7 @@ class DOA : Table() {
     /**
      * TDOA uncertainty (seconds, 1-sigma)
      */
-    val TDOA_UNC : Double
+    val tdoaUnc : Double
         get() {
             val o = __offset(62)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -332,7 +332,7 @@ class DOA : Table() {
     /**
      * Frequency difference of arrival (Hz)
      */
-    val FDOA : Double
+    val fdoa : Double
         get() {
             val o = __offset(64)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -340,7 +340,7 @@ class DOA : Table() {
     /**
      * FDOA uncertainty (Hz, 1-sigma)
      */
-    val FDOA_UNC : Double
+    val fdoaUnc : Double
         get() {
             val o = __offset(66)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -348,7 +348,7 @@ class DOA : Table() {
     /**
      * Reference to raw data file
      */
-    val RAW_FILE_URI : String?
+    val rawFileUri : String?
         get() {
             val o = __offset(68)
             return if (o != 0) {
@@ -357,12 +357,12 @@ class DOA : Table() {
                 null
             }
         }
-    val RAW_FILE_URIAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(68, 1)
-    fun RAW_FILE_URIInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 68, 1)
+    val rawFileUriAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(68, 1)
+    fun rawFileUriInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 68, 1)
     /**
      * Event descriptor
      */
-    val DESCRIPTOR : String?
+    val descriptor : String?
         get() {
             val o = __offset(70)
             return if (o != 0) {
@@ -371,12 +371,12 @@ class DOA : Table() {
                 null
             }
         }
-    val DESCRIPTORAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(70, 1)
-    fun DESCRIPTORInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 70, 1)
+    val descriptorAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(70, 1)
+    fun descriptorInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 70, 1)
     /**
      * Associated tags
      */
-    fun TAGS(j: Int) : String? {
+    fun tags(j: Int) : String? {
         val o = __offset(72)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
@@ -384,93 +384,93 @@ class DOA : Table() {
             null
         }
     }
-    val TAGSLength : Int
+    val tagsLength : Int
         get() {
             val o = __offset(72); return if (o != 0) __vector_len(o) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsDOA(_bb: ByteBuffer): DOA = getRootAsDOA(_bb, DOA())
         fun getRootAsDOA(_bb: ByteBuffer, obj: DOA): DOA {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun DOABufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$DOA")
-        fun createDOA(builder: FlatBufferBuilder, IDOffset: Int, OB_TIMEOffset: Int, SAT_NO: UInt, ORIG_OBJECT_IDOffset: Int, ON_ORBITOffset: Int, UCT: Boolean, TASK_IDOffset: Int, TRANSACTION_IDOffset: Int, COLLECTION_MODE: Byte, ID_SENSOR1Offset: Int, ORIG_SENSOR_ID1Offset: Int, SENLAT: Double, SENLON: Double, SENALT: Double, SENSOR1_DELAY: Double, ID_SENSOR2Offset: Int, ORIG_SENSOR_ID2Offset: Int, SEN2LAT: Double, SEN2LON: Double, SEN2ALT: Double, SENSOR2_DELAY: Double, FREQUENCY: Double, BANDWIDTH: Double, SNR: Double, DELTA_RANGE: Double, DELTA_RANGE_UNC: Double, DELTA_RANGE_RATE: Double, DELTA_RANGE_RATE_UNC: Double, TDOA: Double, TDOA_UNC: Double, FDOA: Double, FDOA_UNC: Double, RAW_FILE_URIOffset: Int, DESCRIPTOROffset: Int, TAGSOffset: Int) : Int {
+        fun createDOA(builder: FlatBufferBuilder, idOffset: Int, obTimeOffset: Int, satNo: UInt, origObjectIdOffset: Int, onOrbitOffset: Int, uct: Boolean, taskIdOffset: Int, transactionIdOffset: Int, collectionMode: Byte, idSensor1Offset: Int, origSensorId1Offset: Int, senlat: Double, senlon: Double, senalt: Double, sensor1Delay: Double, idSensor2Offset: Int, origSensorId2Offset: Int, sen2Lat: Double, sen2Lon: Double, sen2Alt: Double, sensor2Delay: Double, frequency: Double, bandwidth: Double, snr: Double, deltaRange: Double, deltaRangeUnc: Double, deltaRangeRate: Double, deltaRangeRateUnc: Double, tdoa: Double, tdoaUnc: Double, fdoa: Double, fdoaUnc: Double, rawFileUriOffset: Int, descriptorOffset: Int, tagsOffset: Int) : Int {
             builder.startTable(35)
-            addFDOA_UNC(builder, FDOA_UNC)
-            addFDOA(builder, FDOA)
-            addTDOA_UNC(builder, TDOA_UNC)
-            addTDOA(builder, TDOA)
-            addDELTA_RANGE_RATE_UNC(builder, DELTA_RANGE_RATE_UNC)
-            addDELTA_RANGE_RATE(builder, DELTA_RANGE_RATE)
-            addDELTA_RANGE_UNC(builder, DELTA_RANGE_UNC)
-            addDELTA_RANGE(builder, DELTA_RANGE)
-            addSNR(builder, SNR)
-            addBANDWIDTH(builder, BANDWIDTH)
-            addFREQUENCY(builder, FREQUENCY)
-            addSENSOR2_DELAY(builder, SENSOR2_DELAY)
-            addSEN2ALT(builder, SEN2ALT)
-            addSEN2LON(builder, SEN2LON)
-            addSEN2LAT(builder, SEN2LAT)
-            addSENSOR1_DELAY(builder, SENSOR1_DELAY)
-            addSENALT(builder, SENALT)
-            addSENLON(builder, SENLON)
-            addSENLAT(builder, SENLAT)
-            addTAGS(builder, TAGSOffset)
-            addDESCRIPTOR(builder, DESCRIPTOROffset)
-            addRAW_FILE_URI(builder, RAW_FILE_URIOffset)
-            addORIG_SENSOR_ID2(builder, ORIG_SENSOR_ID2Offset)
-            addID_SENSOR2(builder, ID_SENSOR2Offset)
-            addORIG_SENSOR_ID1(builder, ORIG_SENSOR_ID1Offset)
-            addID_SENSOR1(builder, ID_SENSOR1Offset)
-            addTRANSACTION_ID(builder, TRANSACTION_IDOffset)
-            addTASK_ID(builder, TASK_IDOffset)
-            addON_ORBIT(builder, ON_ORBITOffset)
-            addORIG_OBJECT_ID(builder, ORIG_OBJECT_IDOffset)
-            addSAT_NO(builder, SAT_NO)
-            addOB_TIME(builder, OB_TIMEOffset)
-            addID(builder, IDOffset)
-            addCOLLECTION_MODE(builder, COLLECTION_MODE)
-            addUCT(builder, UCT)
+            addFDOAUNC(builder, fdoaUnc)
+            addFDOA(builder, fdoa)
+            addTDOAUNC(builder, tdoaUnc)
+            addTDOA(builder, tdoa)
+            addDELTARANGERATEUNC(builder, deltaRangeRateUnc)
+            addDELTARANGERATE(builder, deltaRangeRate)
+            addDELTARANGEUNC(builder, deltaRangeUnc)
+            addDELTARANGE(builder, deltaRange)
+            addSNR(builder, snr)
+            addBANDWIDTH(builder, bandwidth)
+            addFREQUENCY(builder, frequency)
+            addSENSOR2DELAY(builder, sensor2Delay)
+            addSEN2ALT(builder, sen2Alt)
+            addSEN2LON(builder, sen2Lon)
+            addSEN2LAT(builder, sen2Lat)
+            addSENSOR1DELAY(builder, sensor1Delay)
+            addSENALT(builder, senalt)
+            addSENLON(builder, senlon)
+            addSENLAT(builder, senlat)
+            addTAGS(builder, tagsOffset)
+            addDESCRIPTOR(builder, descriptorOffset)
+            addRAWFILEURI(builder, rawFileUriOffset)
+            addORIGSENSORID2(builder, origSensorId2Offset)
+            addIDSENSOR2(builder, idSensor2Offset)
+            addORIGSENSORID1(builder, origSensorId1Offset)
+            addIDSENSOR1(builder, idSensor1Offset)
+            addTRANSACTIONID(builder, transactionIdOffset)
+            addTASKID(builder, taskIdOffset)
+            addONORBIT(builder, onOrbitOffset)
+            addORIGOBJECTID(builder, origObjectIdOffset)
+            addSATNO(builder, satNo)
+            addOBTIME(builder, obTimeOffset)
+            addID(builder, idOffset)
+            addCOLLECTIONMODE(builder, collectionMode)
+            addUCT(builder, uct)
             return endDOA(builder)
         }
         fun startDOA(builder: FlatBufferBuilder) = builder.startTable(35)
-        fun addID(builder: FlatBufferBuilder, ID: Int) = builder.addOffset(0, ID, 0)
-        fun addOB_TIME(builder: FlatBufferBuilder, OB_TIME: Int) = builder.addOffset(1, OB_TIME, 0)
-        fun addSAT_NO(builder: FlatBufferBuilder, SAT_NO: UInt) = builder.addInt(2, SAT_NO.toInt(), 0)
-        fun addORIG_OBJECT_ID(builder: FlatBufferBuilder, ORIG_OBJECT_ID: Int) = builder.addOffset(3, ORIG_OBJECT_ID, 0)
-        fun addON_ORBIT(builder: FlatBufferBuilder, ON_ORBIT: Int) = builder.addOffset(4, ON_ORBIT, 0)
-        fun addUCT(builder: FlatBufferBuilder, UCT: Boolean) = builder.addBoolean(5, UCT, false)
-        fun addTASK_ID(builder: FlatBufferBuilder, TASK_ID: Int) = builder.addOffset(6, TASK_ID, 0)
-        fun addTRANSACTION_ID(builder: FlatBufferBuilder, TRANSACTION_ID: Int) = builder.addOffset(7, TRANSACTION_ID, 0)
-        fun addCOLLECTION_MODE(builder: FlatBufferBuilder, COLLECTION_MODE: Byte) = builder.addByte(8, COLLECTION_MODE, 0)
-        fun addID_SENSOR1(builder: FlatBufferBuilder, ID_SENSOR1: Int) = builder.addOffset(9, ID_SENSOR1, 0)
-        fun addORIG_SENSOR_ID1(builder: FlatBufferBuilder, ORIG_SENSOR_ID1: Int) = builder.addOffset(10, ORIG_SENSOR_ID1, 0)
-        fun addSENLAT(builder: FlatBufferBuilder, SENLAT: Double) = builder.addDouble(11, SENLAT, 0.0)
-        fun addSENLON(builder: FlatBufferBuilder, SENLON: Double) = builder.addDouble(12, SENLON, 0.0)
-        fun addSENALT(builder: FlatBufferBuilder, SENALT: Double) = builder.addDouble(13, SENALT, 0.0)
-        fun addSENSOR1_DELAY(builder: FlatBufferBuilder, SENSOR1_DELAY: Double) = builder.addDouble(14, SENSOR1_DELAY, 0.0)
-        fun addID_SENSOR2(builder: FlatBufferBuilder, ID_SENSOR2: Int) = builder.addOffset(15, ID_SENSOR2, 0)
-        fun addORIG_SENSOR_ID2(builder: FlatBufferBuilder, ORIG_SENSOR_ID2: Int) = builder.addOffset(16, ORIG_SENSOR_ID2, 0)
-        fun addSEN2LAT(builder: FlatBufferBuilder, SEN2LAT: Double) = builder.addDouble(17, SEN2LAT, 0.0)
-        fun addSEN2LON(builder: FlatBufferBuilder, SEN2LON: Double) = builder.addDouble(18, SEN2LON, 0.0)
-        fun addSEN2ALT(builder: FlatBufferBuilder, SEN2ALT: Double) = builder.addDouble(19, SEN2ALT, 0.0)
-        fun addSENSOR2_DELAY(builder: FlatBufferBuilder, SENSOR2_DELAY: Double) = builder.addDouble(20, SENSOR2_DELAY, 0.0)
-        fun addFREQUENCY(builder: FlatBufferBuilder, FREQUENCY: Double) = builder.addDouble(21, FREQUENCY, 0.0)
-        fun addBANDWIDTH(builder: FlatBufferBuilder, BANDWIDTH: Double) = builder.addDouble(22, BANDWIDTH, 0.0)
-        fun addSNR(builder: FlatBufferBuilder, SNR: Double) = builder.addDouble(23, SNR, 0.0)
-        fun addDELTA_RANGE(builder: FlatBufferBuilder, DELTA_RANGE: Double) = builder.addDouble(24, DELTA_RANGE, 0.0)
-        fun addDELTA_RANGE_UNC(builder: FlatBufferBuilder, DELTA_RANGE_UNC: Double) = builder.addDouble(25, DELTA_RANGE_UNC, 0.0)
-        fun addDELTA_RANGE_RATE(builder: FlatBufferBuilder, DELTA_RANGE_RATE: Double) = builder.addDouble(26, DELTA_RANGE_RATE, 0.0)
-        fun addDELTA_RANGE_RATE_UNC(builder: FlatBufferBuilder, DELTA_RANGE_RATE_UNC: Double) = builder.addDouble(27, DELTA_RANGE_RATE_UNC, 0.0)
-        fun addTDOA(builder: FlatBufferBuilder, TDOA: Double) = builder.addDouble(28, TDOA, 0.0)
-        fun addTDOA_UNC(builder: FlatBufferBuilder, TDOA_UNC: Double) = builder.addDouble(29, TDOA_UNC, 0.0)
-        fun addFDOA(builder: FlatBufferBuilder, FDOA: Double) = builder.addDouble(30, FDOA, 0.0)
-        fun addFDOA_UNC(builder: FlatBufferBuilder, FDOA_UNC: Double) = builder.addDouble(31, FDOA_UNC, 0.0)
-        fun addRAW_FILE_URI(builder: FlatBufferBuilder, RAW_FILE_URI: Int) = builder.addOffset(32, RAW_FILE_URI, 0)
-        fun addDESCRIPTOR(builder: FlatBufferBuilder, DESCRIPTOR: Int) = builder.addOffset(33, DESCRIPTOR, 0)
-        fun addTAGS(builder: FlatBufferBuilder, TAGS: Int) = builder.addOffset(34, TAGS, 0)
+        fun addID(builder: FlatBufferBuilder, id: Int) = builder.addOffset(0, id, 0)
+        fun addOBTIME(builder: FlatBufferBuilder, obTime: Int) = builder.addOffset(1, obTime, 0)
+        fun addSATNO(builder: FlatBufferBuilder, satNo: UInt) = builder.addInt(2, satNo.toInt(), 0)
+        fun addORIGOBJECTID(builder: FlatBufferBuilder, origObjectId: Int) = builder.addOffset(3, origObjectId, 0)
+        fun addONORBIT(builder: FlatBufferBuilder, onOrbit: Int) = builder.addOffset(4, onOrbit, 0)
+        fun addUCT(builder: FlatBufferBuilder, uct: Boolean) = builder.addBoolean(5, uct, false)
+        fun addTASKID(builder: FlatBufferBuilder, taskId: Int) = builder.addOffset(6, taskId, 0)
+        fun addTRANSACTIONID(builder: FlatBufferBuilder, transactionId: Int) = builder.addOffset(7, transactionId, 0)
+        fun addCOLLECTIONMODE(builder: FlatBufferBuilder, collectionMode: Byte) = builder.addByte(8, collectionMode, 0)
+        fun addIDSENSOR1(builder: FlatBufferBuilder, idSensor1: Int) = builder.addOffset(9, idSensor1, 0)
+        fun addORIGSENSORID1(builder: FlatBufferBuilder, origSensorId1: Int) = builder.addOffset(10, origSensorId1, 0)
+        fun addSENLAT(builder: FlatBufferBuilder, senlat: Double) = builder.addDouble(11, senlat, 0.0)
+        fun addSENLON(builder: FlatBufferBuilder, senlon: Double) = builder.addDouble(12, senlon, 0.0)
+        fun addSENALT(builder: FlatBufferBuilder, senalt: Double) = builder.addDouble(13, senalt, 0.0)
+        fun addSENSOR1DELAY(builder: FlatBufferBuilder, sensor1Delay: Double) = builder.addDouble(14, sensor1Delay, 0.0)
+        fun addIDSENSOR2(builder: FlatBufferBuilder, idSensor2: Int) = builder.addOffset(15, idSensor2, 0)
+        fun addORIGSENSORID2(builder: FlatBufferBuilder, origSensorId2: Int) = builder.addOffset(16, origSensorId2, 0)
+        fun addSEN2LAT(builder: FlatBufferBuilder, sen2Lat: Double) = builder.addDouble(17, sen2Lat, 0.0)
+        fun addSEN2LON(builder: FlatBufferBuilder, sen2Lon: Double) = builder.addDouble(18, sen2Lon, 0.0)
+        fun addSEN2ALT(builder: FlatBufferBuilder, sen2Alt: Double) = builder.addDouble(19, sen2Alt, 0.0)
+        fun addSENSOR2DELAY(builder: FlatBufferBuilder, sensor2Delay: Double) = builder.addDouble(20, sensor2Delay, 0.0)
+        fun addFREQUENCY(builder: FlatBufferBuilder, frequency: Double) = builder.addDouble(21, frequency, 0.0)
+        fun addBANDWIDTH(builder: FlatBufferBuilder, bandwidth: Double) = builder.addDouble(22, bandwidth, 0.0)
+        fun addSNR(builder: FlatBufferBuilder, snr: Double) = builder.addDouble(23, snr, 0.0)
+        fun addDELTARANGE(builder: FlatBufferBuilder, deltaRange: Double) = builder.addDouble(24, deltaRange, 0.0)
+        fun addDELTARANGEUNC(builder: FlatBufferBuilder, deltaRangeUnc: Double) = builder.addDouble(25, deltaRangeUnc, 0.0)
+        fun addDELTARANGERATE(builder: FlatBufferBuilder, deltaRangeRate: Double) = builder.addDouble(26, deltaRangeRate, 0.0)
+        fun addDELTARANGERATEUNC(builder: FlatBufferBuilder, deltaRangeRateUnc: Double) = builder.addDouble(27, deltaRangeRateUnc, 0.0)
+        fun addTDOA(builder: FlatBufferBuilder, tdoa: Double) = builder.addDouble(28, tdoa, 0.0)
+        fun addTDOAUNC(builder: FlatBufferBuilder, tdoaUnc: Double) = builder.addDouble(29, tdoaUnc, 0.0)
+        fun addFDOA(builder: FlatBufferBuilder, fdoa: Double) = builder.addDouble(30, fdoa, 0.0)
+        fun addFDOAUNC(builder: FlatBufferBuilder, fdoaUnc: Double) = builder.addDouble(31, fdoaUnc, 0.0)
+        fun addRAWFILEURI(builder: FlatBufferBuilder, rawFileUri: Int) = builder.addOffset(32, rawFileUri, 0)
+        fun addDESCRIPTOR(builder: FlatBufferBuilder, descriptor: Int) = builder.addOffset(33, descriptor, 0)
+        fun addTAGS(builder: FlatBufferBuilder, tags: Int) = builder.addOffset(34, tags, 0)
         fun createTagsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {

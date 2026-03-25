@@ -12,7 +12,6 @@ import com.google.flatbuffers.LongVector;
 import com.google.flatbuffers.ShortVector;
 import com.google.flatbuffers.StringVector;
 import com.google.flatbuffers.Struct;
-import com.google.flatbuffers.Table;
 import com.google.flatbuffers.UnionVector;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -23,8 +22,8 @@ import java.nio.ByteOrder;
  * Key derivation: X25519(private, peer_public) → HKDF-SHA256 → AES-256-GCM
  */
 @SuppressWarnings("unused")
-public final class PLK extends Table {
-  public static void ValidateVersion() { Constants.FLATBUFFERS_24_3_25(); }
+public final class PLK extends com.google.flatbuffers.Table {
+  public static void ValidateVersion() { Constants.FLATBUFFERS_25_12_19(); }
   public static PLK getRootAsPLK(ByteBuffer _bb) { return getRootAsPLK(_bb, new PLK()); }
   public static PLK getRootAsPLK(ByteBuffer _bb, PLK obj) { _bb.order(ByteOrder.LITTLE_ENDIAN); return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb)); }
   public static boolean PLKBufferHasIdentifier(ByteBuffer _bb) { return __has_identifier(_bb, "$PLK"); }

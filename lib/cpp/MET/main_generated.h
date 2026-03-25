@@ -8,9 +8,9 @@
 
 // Ensure the included flatbuffers.h is the same version as when this file was
 // generated, otherwise it may not be compatible.
-static_assert(FLATBUFFERS_VERSION_MAJOR == 24 &&
-              FLATBUFFERS_VERSION_MINOR == 3 &&
-              FLATBUFFERS_VERSION_REVISION == 25,
+static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
+              FLATBUFFERS_VERSION_MINOR == 12 &&
+              FLATBUFFERS_VERSION_REVISION == 19,
              "Non-compatible flatbuffers version included");
 
 struct MET;
@@ -65,7 +65,8 @@ struct MET FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   meanElementTheory MEAN_ELEMENT_THEORY() const {
     return static_cast<meanElementTheory>(GetField<int8_t>(VT_MEAN_ELEMENT_THEORY, 0));
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<int8_t>(verifier, VT_MEAN_ELEMENT_THEORY, 1) &&
            verifier.EndTable();
@@ -120,14 +121,16 @@ inline bool SizePrefixedMETBufferHasIdentifier(const void *buf) {
       buf, METIdentifier(), true);
 }
 
+template <bool B = false>
 inline bool VerifyMETBuffer(
-    ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifyBuffer<MET>(METIdentifier());
+    ::flatbuffers::VerifierTemplate<B> &verifier) {
+  return verifier.template VerifyBuffer<MET>(METIdentifier());
 }
 
+template <bool B = false>
 inline bool VerifySizePrefixedMETBuffer(
-    ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifySizePrefixedBuffer<MET>(METIdentifier());
+    ::flatbuffers::VerifierTemplate<B> &verifier) {
+  return verifier.template VerifySizePrefixedBuffer<MET>(METIdentifier());
 }
 
 inline void FinishMETBuffer(

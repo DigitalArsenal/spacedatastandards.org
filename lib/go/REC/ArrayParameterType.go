@@ -51,6 +51,10 @@ func (rcv *ArrayParameterType) NAME() []byte {
 	return nil
 }
 
+func (rcv *ArrayParameterType) Name() []byte {
+	return rcv.NAME()
+}
+
 /// Type name
 /// Short description
 func (rcv *ArrayParameterType) SHORT_DESCRIPTION() []byte {
@@ -59,6 +63,10 @@ func (rcv *ArrayParameterType) SHORT_DESCRIPTION() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *ArrayParameterType) ShortDescription() []byte {
+	return rcv.SHORT_DESCRIPTION()
 }
 
 /// Short description
@@ -71,6 +79,10 @@ func (rcv *ArrayParameterType) LONG_DESCRIPTION() []byte {
 	return nil
 }
 
+func (rcv *ArrayParameterType) LongDescription() []byte {
+	return rcv.LONG_DESCRIPTION()
+}
+
 /// Long description
 /// Reference to the array element type
 func (rcv *ArrayParameterType) ARRAY_TYPE_REF() []byte {
@@ -81,6 +93,10 @@ func (rcv *ArrayParameterType) ARRAY_TYPE_REF() []byte {
 	return nil
 }
 
+func (rcv *ArrayParameterType) ArrayTypeRef() []byte {
+	return rcv.ARRAY_TYPE_REF()
+}
+
 /// Reference to the array element type
 /// Dimension list
 func (rcv *ArrayParameterType) DIMENSIONS(obj *ArrayDimension, j int) bool {
@@ -89,10 +105,17 @@ func (rcv *ArrayParameterType) DIMENSIONS(obj *ArrayDimension, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(ArrayDimension)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *ArrayParameterType) Dimensions(obj *ArrayDimension, j int) bool {
+	return rcv.DIMENSIONS(obj, j)
 }
 
 func (rcv *ArrayParameterType) DIMENSIONSLength() int {
@@ -103,6 +126,10 @@ func (rcv *ArrayParameterType) DIMENSIONSLength() int {
 	return 0
 }
 
+func (rcv *ArrayParameterType) DimensionsLength() int {
+	return rcv.DIMENSIONSLength()
+}
+
 /// Dimension list
 func ArrayParameterTypeStart(builder *flatbuffers.Builder) {
 	builder.StartObject(5)
@@ -110,20 +137,38 @@ func ArrayParameterTypeStart(builder *flatbuffers.Builder) {
 func ArrayParameterTypeAddNAME(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(NAME), 0)
 }
+func ArrayParameterTypeAddName(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
+	ArrayParameterTypeAddNAME(builder, NAME)
+}
 func ArrayParameterTypeAddSHORT_DESCRIPTION(builder *flatbuffers.Builder, SHORT_DESCRIPTION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(SHORT_DESCRIPTION), 0)
+}
+func ArrayParameterTypeAddShortDescription(builder *flatbuffers.Builder, SHORT_DESCRIPTION flatbuffers.UOffsetT) {
+	ArrayParameterTypeAddSHORT_DESCRIPTION(builder, SHORT_DESCRIPTION)
 }
 func ArrayParameterTypeAddLONG_DESCRIPTION(builder *flatbuffers.Builder, LONG_DESCRIPTION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(LONG_DESCRIPTION), 0)
 }
+func ArrayParameterTypeAddLongDescription(builder *flatbuffers.Builder, LONG_DESCRIPTION flatbuffers.UOffsetT) {
+	ArrayParameterTypeAddLONG_DESCRIPTION(builder, LONG_DESCRIPTION)
+}
 func ArrayParameterTypeAddARRAY_TYPE_REF(builder *flatbuffers.Builder, ARRAY_TYPE_REF flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(ARRAY_TYPE_REF), 0)
+}
+func ArrayParameterTypeAddArrayTypeRef(builder *flatbuffers.Builder, ARRAY_TYPE_REF flatbuffers.UOffsetT) {
+	ArrayParameterTypeAddARRAY_TYPE_REF(builder, ARRAY_TYPE_REF)
 }
 func ArrayParameterTypeAddDIMENSIONS(builder *flatbuffers.Builder, DIMENSIONS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(DIMENSIONS), 0)
 }
+func ArrayParameterTypeAddDimensions(builder *flatbuffers.Builder, DIMENSIONS flatbuffers.UOffsetT) {
+	ArrayParameterTypeAddDIMENSIONS(builder, DIMENSIONS)
+}
 func ArrayParameterTypeStartDIMENSIONSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func ArrayParameterTypeStartDimensionsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return ArrayParameterTypeStartDIMENSIONSVector(builder, numElems)
 }
 func ArrayParameterTypeEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

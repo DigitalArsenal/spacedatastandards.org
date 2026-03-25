@@ -63,6 +63,10 @@ func (rcv *CZM) NAME() []byte {
 	return nil
 }
 
+func (rcv *CZM) Name() []byte {
+	return rcv.NAME()
+}
+
 /// Document-level name
 /// Document-level version
 func (rcv *CZM) VERSION() []byte {
@@ -71,6 +75,10 @@ func (rcv *CZM) VERSION() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *CZM) Version() []byte {
+	return rcv.VERSION()
 }
 
 /// Document-level version
@@ -83,6 +91,10 @@ func (rcv *CZM) CLOCK_CURRENT_TIME() []byte {
 	return nil
 }
 
+func (rcv *CZM) ClockCurrentTime() []byte {
+	return rcv.CLOCK_CURRENT_TIME()
+}
+
 /// Clock settings - current time (ISO 8601)
 /// Clock settings - interval (ISO 8601 interval)
 func (rcv *CZM) CLOCK_INTERVAL() []byte {
@@ -91,6 +103,10 @@ func (rcv *CZM) CLOCK_INTERVAL() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *CZM) ClockInterval() []byte {
+	return rcv.CLOCK_INTERVAL()
 }
 
 /// Clock settings - interval (ISO 8601 interval)
@@ -103,9 +119,17 @@ func (rcv *CZM) CLOCK_MULTIPLIER() float64 {
 	return 0.0
 }
 
+func (rcv *CZM) ClockMultiplier() float64 {
+	return rcv.CLOCK_MULTIPLIER()
+}
+
 /// Clock settings - multiplier
 func (rcv *CZM) MutateCLOCK_MULTIPLIER(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(12, n)
+}
+
+func (rcv *CZM) MutateClockMultiplier(n float64) bool {
+	return rcv.MutateCLOCK_MULTIPLIER(n)
 }
 
 /// Clock range
@@ -115,6 +139,10 @@ func (rcv *CZM) CLOCK_RANGE() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *CZM) ClockRange() []byte {
+	return rcv.CLOCK_RANGE()
 }
 
 /// Clock range
@@ -127,6 +155,10 @@ func (rcv *CZM) CLOCK_STEP() []byte {
 	return nil
 }
 
+func (rcv *CZM) ClockStep() []byte {
+	return rcv.CLOCK_STEP()
+}
+
 /// Clock step
 /// All packets in the document
 func (rcv *CZM) PACKETS(obj *CZMPacket, j int) bool {
@@ -135,10 +167,17 @@ func (rcv *CZM) PACKETS(obj *CZMPacket, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(CZMPacket)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *CZM) Packets(obj *CZMPacket, j int) bool {
+	return rcv.PACKETS(obj, j)
 }
 
 func (rcv *CZM) PACKETSLength() int {
@@ -149,6 +188,10 @@ func (rcv *CZM) PACKETSLength() int {
 	return 0
 }
 
+func (rcv *CZM) PacketsLength() int {
+	return rcv.PACKETSLength()
+}
+
 /// All packets in the document
 func CZMStart(builder *flatbuffers.Builder) {
 	builder.StartObject(8)
@@ -156,29 +199,56 @@ func CZMStart(builder *flatbuffers.Builder) {
 func CZMAddNAME(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(NAME), 0)
 }
+func CZMAddName(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
+	CZMAddNAME(builder, NAME)
+}
 func CZMAddVERSION(builder *flatbuffers.Builder, VERSION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(VERSION), 0)
+}
+func CZMAddVersion(builder *flatbuffers.Builder, VERSION flatbuffers.UOffsetT) {
+	CZMAddVERSION(builder, VERSION)
 }
 func CZMAddCLOCK_CURRENT_TIME(builder *flatbuffers.Builder, CLOCK_CURRENT_TIME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(CLOCK_CURRENT_TIME), 0)
 }
+func CZMAddClockCurrentTime(builder *flatbuffers.Builder, CLOCK_CURRENT_TIME flatbuffers.UOffsetT) {
+	CZMAddCLOCK_CURRENT_TIME(builder, CLOCK_CURRENT_TIME)
+}
 func CZMAddCLOCK_INTERVAL(builder *flatbuffers.Builder, CLOCK_INTERVAL flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(CLOCK_INTERVAL), 0)
+}
+func CZMAddClockInterval(builder *flatbuffers.Builder, CLOCK_INTERVAL flatbuffers.UOffsetT) {
+	CZMAddCLOCK_INTERVAL(builder, CLOCK_INTERVAL)
 }
 func CZMAddCLOCK_MULTIPLIER(builder *flatbuffers.Builder, CLOCK_MULTIPLIER float64) {
 	builder.PrependFloat64Slot(4, CLOCK_MULTIPLIER, 0.0)
 }
+func CZMAddClockMultiplier(builder *flatbuffers.Builder, CLOCK_MULTIPLIER float64) {
+	CZMAddCLOCK_MULTIPLIER(builder, CLOCK_MULTIPLIER)
+}
 func CZMAddCLOCK_RANGE(builder *flatbuffers.Builder, CLOCK_RANGE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(CLOCK_RANGE), 0)
+}
+func CZMAddClockRange(builder *flatbuffers.Builder, CLOCK_RANGE flatbuffers.UOffsetT) {
+	CZMAddCLOCK_RANGE(builder, CLOCK_RANGE)
 }
 func CZMAddCLOCK_STEP(builder *flatbuffers.Builder, CLOCK_STEP flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(CLOCK_STEP), 0)
 }
+func CZMAddClockStep(builder *flatbuffers.Builder, CLOCK_STEP flatbuffers.UOffsetT) {
+	CZMAddCLOCK_STEP(builder, CLOCK_STEP)
+}
 func CZMAddPACKETS(builder *flatbuffers.Builder, PACKETS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(PACKETS), 0)
 }
+func CZMAddPackets(builder *flatbuffers.Builder, PACKETS flatbuffers.UOffsetT) {
+	CZMAddPACKETS(builder, PACKETS)
+}
 func CZMStartPACKETSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func CZMStartPacketsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return CZMStartPACKETSVector(builder, numElems)
 }
 func CZMEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

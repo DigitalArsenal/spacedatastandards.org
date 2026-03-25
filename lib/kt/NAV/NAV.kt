@@ -29,92 +29,92 @@ class NAV : Table() {
         __init(_i, _bb)
         return this
     }
-    val POSITION_X : Double
+    val positionX : Double
         get() {
             val o = __offset(4)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val POSITION_Y : Double
+    val positionY : Double
         get() {
             val o = __offset(6)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val POSITION_Z : Double
+    val positionZ : Double
         get() {
             val o = __offset(8)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val VELOCITY_X : Double
+    val velocityX : Double
         get() {
             val o = __offset(10)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val VELOCITY_Y : Double
+    val velocityY : Double
         get() {
             val o = __offset(12)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val VELOCITY_Z : Double
+    val velocityZ : Double
         get() {
             val o = __offset(14)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val ATTITUDE_X : Double
+    val attitudeX : Double
         get() {
             val o = __offset(16)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val ATTITUDE_Y : Double
+    val attitudeY : Double
         get() {
             val o = __offset(18)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val ATTITUDE_Z : Double
+    val attitudeZ : Double
         get() {
             val o = __offset(20)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val ATTITUDE_W : Double
+    val attitudeW : Double
         get() {
             val o = __offset(22)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val OMEGA_X : Double
+    val omegaX : Double
         get() {
             val o = __offset(24)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val OMEGA_Y : Double
+    val omegaY : Double
         get() {
             val o = __offset(26)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val OMEGA_Z : Double
+    val omegaZ : Double
         get() {
             val o = __offset(28)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val SPEED_KNOTS : Float
+    val speedKnots : Float
         get() {
             val o = __offset(30)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
-    val HEADING : Float
+    val heading : Float
         get() {
             val o = __offset(32)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
-    val COURSE : Float
+    val course : Float
         get() {
             val o = __offset(34)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
-    val RUDDER_ANGLE : Float
+    val rudderAngle : Float
         get() {
             val o = __offset(36)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
-    val HULL : String?
+    val hull : String?
         get() {
             val o = __offset(38)
             return if (o != 0) {
@@ -123,9 +123,9 @@ class NAV : Table() {
                 null
             }
         }
-    val HULLAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(38, 1)
-    fun HULLInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 38, 1)
-    val PROPULSION : String?
+    val hullAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(38, 1)
+    fun hullInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 38, 1)
+    val propulsion : String?
         get() {
             val o = __offset(40)
             return if (o != 0) {
@@ -134,84 +134,84 @@ class NAV : Table() {
                 null
             }
         }
-    val PROPULSIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(40, 1)
-    fun PROPULSIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 40, 1)
-    val DC_STATE : UByte
+    val propulsionAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(40, 1)
+    fun propulsionInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 40, 1)
+    val dcState : UByte
         get() {
             val o = __offset(42)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
         }
-    val FIRES_ACTIVE : UByte
+    val firesActive : UByte
         get() {
             val o = __offset(44)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
         }
-    val FLOODING_ACTIVE : UByte
+    val floodingActive : UByte
         get() {
             val o = __offset(46)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
         }
-    val CREW_CASUALTIES : UByte
+    val crewCasualties : UByte
         get() {
             val o = __offset(48)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
         }
-    val HULL_INTEGRITY : Float
+    val hullIntegrity : Float
         get() {
             val o = __offset(50)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
-    val POWER_AVAILABLE : Float
+    val powerAvailable : Float
         get() {
             val o = __offset(52)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
-    val WEAPONS_ONLINE : UByte
+    val weaponsOnline : UByte
         get() {
             val o = __offset(54)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
         }
-    val SENSORS_ONLINE : UByte
+    val sensorsOnline : UByte
         get() {
             val o = __offset(56)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
         }
-    val RESERVED1 : UShort
+    val reserved1 : UShort
         get() {
             val o = __offset(58)
             return if(o != 0) bb.getShort(o + bb_pos).toUShort() else 0u
         }
-    val FUEL_REMAINING : Float
+    val fuelRemaining : Float
         get() {
             val o = __offset(60)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
-    val AMMO_MAIN : UShort
+    val ammoMain : UShort
         get() {
             val o = __offset(62)
             return if(o != 0) bb.getShort(o + bb_pos).toUShort() else 0u
         }
-    val MISSILES_REMAINING : UByte
+    val missilesRemaining : UByte
         get() {
             val o = __offset(64)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
         }
-    val TORPEDOES_REMAINING : UByte
+    val torpedoesRemaining : UByte
         get() {
             val o = __offset(66)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
         }
-    val VESSEL_TYPE : UByte
+    val vesselType : UByte
         get() {
             val o = __offset(68)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
         }
-    val PROPULSION_TYPE : UByte
+    val propulsionType : UByte
         get() {
             val o = __offset(70)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
         }
-    fun RESERVED(j: Int) : UByte {
+    fun reserved(j: Int) : UByte {
         val o = __offset(72)
         return if (o != 0) {
             bb.get(__vector(o) + j * 1).toUByte()
@@ -219,95 +219,95 @@ class NAV : Table() {
             0u
         }
     }
-    val RESERVEDLength : Int
+    val reservedLength : Int
         get() {
             val o = __offset(72); return if (o != 0) __vector_len(o) else 0
         }
-    val RESERVEDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(72, 1)
-    fun RESERVEDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 72, 1)
+    val reservedAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(72, 1)
+    fun reservedInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 72, 1)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsNAV(_bb: ByteBuffer): NAV = getRootAsNAV(_bb, NAV())
         fun getRootAsNAV(_bb: ByteBuffer, obj: NAV): NAV {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun NAVBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$NAV")
-        fun createNAV(builder: FlatBufferBuilder, POSITION_X: Double, POSITION_Y: Double, POSITION_Z: Double, VELOCITY_X: Double, VELOCITY_Y: Double, VELOCITY_Z: Double, ATTITUDE_X: Double, ATTITUDE_Y: Double, ATTITUDE_Z: Double, ATTITUDE_W: Double, OMEGA_X: Double, OMEGA_Y: Double, OMEGA_Z: Double, SPEED_KNOTS: Float, HEADING: Float, COURSE: Float, RUDDER_ANGLE: Float, HULLOffset: Int, PROPULSIONOffset: Int, DC_STATE: UByte, FIRES_ACTIVE: UByte, FLOODING_ACTIVE: UByte, CREW_CASUALTIES: UByte, HULL_INTEGRITY: Float, POWER_AVAILABLE: Float, WEAPONS_ONLINE: UByte, SENSORS_ONLINE: UByte, RESERVED1: UShort, FUEL_REMAINING: Float, AMMO_MAIN: UShort, MISSILES_REMAINING: UByte, TORPEDOES_REMAINING: UByte, VESSEL_TYPE: UByte, PROPULSION_TYPE: UByte, RESERVEDOffset: Int) : Int {
+        fun createNAV(builder: FlatBufferBuilder, positionX: Double, positionY: Double, positionZ: Double, velocityX: Double, velocityY: Double, velocityZ: Double, attitudeX: Double, attitudeY: Double, attitudeZ: Double, attitudeW: Double, omegaX: Double, omegaY: Double, omegaZ: Double, speedKnots: Float, heading: Float, course: Float, rudderAngle: Float, hullOffset: Int, propulsionOffset: Int, dcState: UByte, firesActive: UByte, floodingActive: UByte, crewCasualties: UByte, hullIntegrity: Float, powerAvailable: Float, weaponsOnline: UByte, sensorsOnline: UByte, reserved1: UShort, fuelRemaining: Float, ammoMain: UShort, missilesRemaining: UByte, torpedoesRemaining: UByte, vesselType: UByte, propulsionType: UByte, reservedOffset: Int) : Int {
             builder.startTable(35)
-            addOMEGA_Z(builder, OMEGA_Z)
-            addOMEGA_Y(builder, OMEGA_Y)
-            addOMEGA_X(builder, OMEGA_X)
-            addATTITUDE_W(builder, ATTITUDE_W)
-            addATTITUDE_Z(builder, ATTITUDE_Z)
-            addATTITUDE_Y(builder, ATTITUDE_Y)
-            addATTITUDE_X(builder, ATTITUDE_X)
-            addVELOCITY_Z(builder, VELOCITY_Z)
-            addVELOCITY_Y(builder, VELOCITY_Y)
-            addVELOCITY_X(builder, VELOCITY_X)
-            addPOSITION_Z(builder, POSITION_Z)
-            addPOSITION_Y(builder, POSITION_Y)
-            addPOSITION_X(builder, POSITION_X)
-            addRESERVED(builder, RESERVEDOffset)
-            addFUEL_REMAINING(builder, FUEL_REMAINING)
-            addPOWER_AVAILABLE(builder, POWER_AVAILABLE)
-            addHULL_INTEGRITY(builder, HULL_INTEGRITY)
-            addPROPULSION(builder, PROPULSIONOffset)
-            addHULL(builder, HULLOffset)
-            addRUDDER_ANGLE(builder, RUDDER_ANGLE)
-            addCOURSE(builder, COURSE)
-            addHEADING(builder, HEADING)
-            addSPEED_KNOTS(builder, SPEED_KNOTS)
-            addAMMO_MAIN(builder, AMMO_MAIN)
-            addRESERVED1(builder, RESERVED1)
-            addPROPULSION_TYPE(builder, PROPULSION_TYPE)
-            addVESSEL_TYPE(builder, VESSEL_TYPE)
-            addTORPEDOES_REMAINING(builder, TORPEDOES_REMAINING)
-            addMISSILES_REMAINING(builder, MISSILES_REMAINING)
-            addSENSORS_ONLINE(builder, SENSORS_ONLINE)
-            addWEAPONS_ONLINE(builder, WEAPONS_ONLINE)
-            addCREW_CASUALTIES(builder, CREW_CASUALTIES)
-            addFLOODING_ACTIVE(builder, FLOODING_ACTIVE)
-            addFIRES_ACTIVE(builder, FIRES_ACTIVE)
-            addDC_STATE(builder, DC_STATE)
+            addOMEGAZ(builder, omegaZ)
+            addOMEGAY(builder, omegaY)
+            addOMEGAX(builder, omegaX)
+            addATTITUDEW(builder, attitudeW)
+            addATTITUDEZ(builder, attitudeZ)
+            addATTITUDEY(builder, attitudeY)
+            addATTITUDEX(builder, attitudeX)
+            addVELOCITYZ(builder, velocityZ)
+            addVELOCITYY(builder, velocityY)
+            addVELOCITYX(builder, velocityX)
+            addPOSITIONZ(builder, positionZ)
+            addPOSITIONY(builder, positionY)
+            addPOSITIONX(builder, positionX)
+            addRESERVED(builder, reservedOffset)
+            addFUELREMAINING(builder, fuelRemaining)
+            addPOWERAVAILABLE(builder, powerAvailable)
+            addHULLINTEGRITY(builder, hullIntegrity)
+            addPROPULSION(builder, propulsionOffset)
+            addHULL(builder, hullOffset)
+            addRUDDERANGLE(builder, rudderAngle)
+            addCOURSE(builder, course)
+            addHEADING(builder, heading)
+            addSPEEDKNOTS(builder, speedKnots)
+            addAMMOMAIN(builder, ammoMain)
+            addRESERVED1(builder, reserved1)
+            addPROPULSIONTYPE(builder, propulsionType)
+            addVESSELTYPE(builder, vesselType)
+            addTORPEDOESREMAINING(builder, torpedoesRemaining)
+            addMISSILESREMAINING(builder, missilesRemaining)
+            addSENSORSONLINE(builder, sensorsOnline)
+            addWEAPONSONLINE(builder, weaponsOnline)
+            addCREWCASUALTIES(builder, crewCasualties)
+            addFLOODINGACTIVE(builder, floodingActive)
+            addFIRESACTIVE(builder, firesActive)
+            addDCSTATE(builder, dcState)
             return endNAV(builder)
         }
         fun startNAV(builder: FlatBufferBuilder) = builder.startTable(35)
-        fun addPOSITION_X(builder: FlatBufferBuilder, POSITION_X: Double) = builder.addDouble(0, POSITION_X, 0.0)
-        fun addPOSITION_Y(builder: FlatBufferBuilder, POSITION_Y: Double) = builder.addDouble(1, POSITION_Y, 0.0)
-        fun addPOSITION_Z(builder: FlatBufferBuilder, POSITION_Z: Double) = builder.addDouble(2, POSITION_Z, 0.0)
-        fun addVELOCITY_X(builder: FlatBufferBuilder, VELOCITY_X: Double) = builder.addDouble(3, VELOCITY_X, 0.0)
-        fun addVELOCITY_Y(builder: FlatBufferBuilder, VELOCITY_Y: Double) = builder.addDouble(4, VELOCITY_Y, 0.0)
-        fun addVELOCITY_Z(builder: FlatBufferBuilder, VELOCITY_Z: Double) = builder.addDouble(5, VELOCITY_Z, 0.0)
-        fun addATTITUDE_X(builder: FlatBufferBuilder, ATTITUDE_X: Double) = builder.addDouble(6, ATTITUDE_X, 0.0)
-        fun addATTITUDE_Y(builder: FlatBufferBuilder, ATTITUDE_Y: Double) = builder.addDouble(7, ATTITUDE_Y, 0.0)
-        fun addATTITUDE_Z(builder: FlatBufferBuilder, ATTITUDE_Z: Double) = builder.addDouble(8, ATTITUDE_Z, 0.0)
-        fun addATTITUDE_W(builder: FlatBufferBuilder, ATTITUDE_W: Double) = builder.addDouble(9, ATTITUDE_W, 0.0)
-        fun addOMEGA_X(builder: FlatBufferBuilder, OMEGA_X: Double) = builder.addDouble(10, OMEGA_X, 0.0)
-        fun addOMEGA_Y(builder: FlatBufferBuilder, OMEGA_Y: Double) = builder.addDouble(11, OMEGA_Y, 0.0)
-        fun addOMEGA_Z(builder: FlatBufferBuilder, OMEGA_Z: Double) = builder.addDouble(12, OMEGA_Z, 0.0)
-        fun addSPEED_KNOTS(builder: FlatBufferBuilder, SPEED_KNOTS: Float) = builder.addFloat(13, SPEED_KNOTS, 0.0)
-        fun addHEADING(builder: FlatBufferBuilder, HEADING: Float) = builder.addFloat(14, HEADING, 0.0)
-        fun addCOURSE(builder: FlatBufferBuilder, COURSE: Float) = builder.addFloat(15, COURSE, 0.0)
-        fun addRUDDER_ANGLE(builder: FlatBufferBuilder, RUDDER_ANGLE: Float) = builder.addFloat(16, RUDDER_ANGLE, 0.0)
-        fun addHULL(builder: FlatBufferBuilder, HULL: Int) = builder.addOffset(17, HULL, 0)
-        fun addPROPULSION(builder: FlatBufferBuilder, PROPULSION: Int) = builder.addOffset(18, PROPULSION, 0)
-        fun addDC_STATE(builder: FlatBufferBuilder, DC_STATE: UByte) = builder.addByte(19, DC_STATE.toByte(), 0)
-        fun addFIRES_ACTIVE(builder: FlatBufferBuilder, FIRES_ACTIVE: UByte) = builder.addByte(20, FIRES_ACTIVE.toByte(), 0)
-        fun addFLOODING_ACTIVE(builder: FlatBufferBuilder, FLOODING_ACTIVE: UByte) = builder.addByte(21, FLOODING_ACTIVE.toByte(), 0)
-        fun addCREW_CASUALTIES(builder: FlatBufferBuilder, CREW_CASUALTIES: UByte) = builder.addByte(22, CREW_CASUALTIES.toByte(), 0)
-        fun addHULL_INTEGRITY(builder: FlatBufferBuilder, HULL_INTEGRITY: Float) = builder.addFloat(23, HULL_INTEGRITY, 0.0)
-        fun addPOWER_AVAILABLE(builder: FlatBufferBuilder, POWER_AVAILABLE: Float) = builder.addFloat(24, POWER_AVAILABLE, 0.0)
-        fun addWEAPONS_ONLINE(builder: FlatBufferBuilder, WEAPONS_ONLINE: UByte) = builder.addByte(25, WEAPONS_ONLINE.toByte(), 0)
-        fun addSENSORS_ONLINE(builder: FlatBufferBuilder, SENSORS_ONLINE: UByte) = builder.addByte(26, SENSORS_ONLINE.toByte(), 0)
-        fun addRESERVED1(builder: FlatBufferBuilder, RESERVED1: UShort) = builder.addShort(27, RESERVED1.toShort(), 0)
-        fun addFUEL_REMAINING(builder: FlatBufferBuilder, FUEL_REMAINING: Float) = builder.addFloat(28, FUEL_REMAINING, 0.0)
-        fun addAMMO_MAIN(builder: FlatBufferBuilder, AMMO_MAIN: UShort) = builder.addShort(29, AMMO_MAIN.toShort(), 0)
-        fun addMISSILES_REMAINING(builder: FlatBufferBuilder, MISSILES_REMAINING: UByte) = builder.addByte(30, MISSILES_REMAINING.toByte(), 0)
-        fun addTORPEDOES_REMAINING(builder: FlatBufferBuilder, TORPEDOES_REMAINING: UByte) = builder.addByte(31, TORPEDOES_REMAINING.toByte(), 0)
-        fun addVESSEL_TYPE(builder: FlatBufferBuilder, VESSEL_TYPE: UByte) = builder.addByte(32, VESSEL_TYPE.toByte(), 0)
-        fun addPROPULSION_TYPE(builder: FlatBufferBuilder, PROPULSION_TYPE: UByte) = builder.addByte(33, PROPULSION_TYPE.toByte(), 0)
-        fun addRESERVED(builder: FlatBufferBuilder, RESERVED: Int) = builder.addOffset(34, RESERVED, 0)
+        fun addPOSITIONX(builder: FlatBufferBuilder, positionX: Double) = builder.addDouble(0, positionX, 0.0)
+        fun addPOSITIONY(builder: FlatBufferBuilder, positionY: Double) = builder.addDouble(1, positionY, 0.0)
+        fun addPOSITIONZ(builder: FlatBufferBuilder, positionZ: Double) = builder.addDouble(2, positionZ, 0.0)
+        fun addVELOCITYX(builder: FlatBufferBuilder, velocityX: Double) = builder.addDouble(3, velocityX, 0.0)
+        fun addVELOCITYY(builder: FlatBufferBuilder, velocityY: Double) = builder.addDouble(4, velocityY, 0.0)
+        fun addVELOCITYZ(builder: FlatBufferBuilder, velocityZ: Double) = builder.addDouble(5, velocityZ, 0.0)
+        fun addATTITUDEX(builder: FlatBufferBuilder, attitudeX: Double) = builder.addDouble(6, attitudeX, 0.0)
+        fun addATTITUDEY(builder: FlatBufferBuilder, attitudeY: Double) = builder.addDouble(7, attitudeY, 0.0)
+        fun addATTITUDEZ(builder: FlatBufferBuilder, attitudeZ: Double) = builder.addDouble(8, attitudeZ, 0.0)
+        fun addATTITUDEW(builder: FlatBufferBuilder, attitudeW: Double) = builder.addDouble(9, attitudeW, 0.0)
+        fun addOMEGAX(builder: FlatBufferBuilder, omegaX: Double) = builder.addDouble(10, omegaX, 0.0)
+        fun addOMEGAY(builder: FlatBufferBuilder, omegaY: Double) = builder.addDouble(11, omegaY, 0.0)
+        fun addOMEGAZ(builder: FlatBufferBuilder, omegaZ: Double) = builder.addDouble(12, omegaZ, 0.0)
+        fun addSPEEDKNOTS(builder: FlatBufferBuilder, speedKnots: Float) = builder.addFloat(13, speedKnots, 0.0)
+        fun addHEADING(builder: FlatBufferBuilder, heading: Float) = builder.addFloat(14, heading, 0.0)
+        fun addCOURSE(builder: FlatBufferBuilder, course: Float) = builder.addFloat(15, course, 0.0)
+        fun addRUDDERANGLE(builder: FlatBufferBuilder, rudderAngle: Float) = builder.addFloat(16, rudderAngle, 0.0)
+        fun addHULL(builder: FlatBufferBuilder, hull: Int) = builder.addOffset(17, hull, 0)
+        fun addPROPULSION(builder: FlatBufferBuilder, propulsion: Int) = builder.addOffset(18, propulsion, 0)
+        fun addDCSTATE(builder: FlatBufferBuilder, dcState: UByte) = builder.addByte(19, dcState.toByte(), 0)
+        fun addFIRESACTIVE(builder: FlatBufferBuilder, firesActive: UByte) = builder.addByte(20, firesActive.toByte(), 0)
+        fun addFLOODINGACTIVE(builder: FlatBufferBuilder, floodingActive: UByte) = builder.addByte(21, floodingActive.toByte(), 0)
+        fun addCREWCASUALTIES(builder: FlatBufferBuilder, crewCasualties: UByte) = builder.addByte(22, crewCasualties.toByte(), 0)
+        fun addHULLINTEGRITY(builder: FlatBufferBuilder, hullIntegrity: Float) = builder.addFloat(23, hullIntegrity, 0.0)
+        fun addPOWERAVAILABLE(builder: FlatBufferBuilder, powerAvailable: Float) = builder.addFloat(24, powerAvailable, 0.0)
+        fun addWEAPONSONLINE(builder: FlatBufferBuilder, weaponsOnline: UByte) = builder.addByte(25, weaponsOnline.toByte(), 0)
+        fun addSENSORSONLINE(builder: FlatBufferBuilder, sensorsOnline: UByte) = builder.addByte(26, sensorsOnline.toByte(), 0)
+        fun addRESERVED1(builder: FlatBufferBuilder, reserved1: UShort) = builder.addShort(27, reserved1.toShort(), 0)
+        fun addFUELREMAINING(builder: FlatBufferBuilder, fuelRemaining: Float) = builder.addFloat(28, fuelRemaining, 0.0)
+        fun addAMMOMAIN(builder: FlatBufferBuilder, ammoMain: UShort) = builder.addShort(29, ammoMain.toShort(), 0)
+        fun addMISSILESREMAINING(builder: FlatBufferBuilder, missilesRemaining: UByte) = builder.addByte(30, missilesRemaining.toByte(), 0)
+        fun addTORPEDOESREMAINING(builder: FlatBufferBuilder, torpedoesRemaining: UByte) = builder.addByte(31, torpedoesRemaining.toByte(), 0)
+        fun addVESSELTYPE(builder: FlatBufferBuilder, vesselType: UByte) = builder.addByte(32, vesselType.toByte(), 0)
+        fun addPROPULSIONTYPE(builder: FlatBufferBuilder, propulsionType: UByte) = builder.addByte(33, propulsionType.toByte(), 0)
+        fun addRESERVED(builder: FlatBufferBuilder, reserved: Int) = builder.addOffset(34, reserved, 0)
         @kotlin.ExperimentalUnsignedTypes
         fun createReservedVector(builder: FlatBufferBuilder, data: UByteArray) : Int {
             builder.startVector(1, data.size, 1)

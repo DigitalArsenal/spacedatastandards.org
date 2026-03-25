@@ -29,7 +29,7 @@ class TME : Table() {
         __init(_i, _bb)
         return this
     }
-    val COMMAND : String?
+    val command : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -38,9 +38,9 @@ class TME : Table() {
                 null
             }
         }
-    val COMMANDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun COMMANDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
-    val CONVERSION_REQUEST : String?
+    val commandAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun commandInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
+    val conversionRequest : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -49,9 +49,9 @@ class TME : Table() {
                 null
             }
         }
-    val CONVERSION_REQUESTAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun CONVERSION_REQUESTInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
-    val LEAP_SECOND_QUERY : String?
+    val conversionRequestAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun conversionRequestInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
+    val leapSecondQuery : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -60,9 +60,9 @@ class TME : Table() {
                 null
             }
         }
-    val LEAP_SECOND_QUERYAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun LEAP_SECOND_QUERYInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
-    val EOP_QUERY : String?
+    val leapSecondQueryAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun leapSecondQueryInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
+    val eopQuery : String?
         get() {
             val o = __offset(10)
             return if (o != 0) {
@@ -71,9 +71,9 @@ class TME : Table() {
                 null
             }
         }
-    val EOP_QUERYAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
-    fun EOP_QUERYInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
-    val SIDEREAL_QUERY : String?
+    val eopQueryAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(10, 1)
+    fun eopQueryInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 10, 1)
+    val siderealQuery : String?
         get() {
             val o = __offset(12)
             return if (o != 0) {
@@ -82,9 +82,9 @@ class TME : Table() {
                 null
             }
         }
-    val SIDEREAL_QUERYAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
-    fun SIDEREAL_QUERYInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
-    val INTERVAL_REQUEST : String?
+    val siderealQueryAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(12, 1)
+    fun siderealQueryInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 12, 1)
+    val intervalRequest : String?
         get() {
             val o = __offset(14)
             return if (o != 0) {
@@ -93,9 +93,9 @@ class TME : Table() {
                 null
             }
         }
-    val INTERVAL_REQUESTAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(14, 1)
-    fun INTERVAL_REQUESTInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 14, 1)
-    val SOLAR_POSITION_QUERY : String?
+    val intervalRequestAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(14, 1)
+    fun intervalRequestInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 14, 1)
+    val solarPositionQuery : String?
         get() {
             val o = __offset(16)
             return if (o != 0) {
@@ -104,9 +104,9 @@ class TME : Table() {
                 null
             }
         }
-    val SOLAR_POSITION_QUERYAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(16, 1)
-    fun SOLAR_POSITION_QUERYInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 16, 1)
-    val LUNAR_POSITION_QUERY : String?
+    val solarPositionQueryAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(16, 1)
+    fun solarPositionQueryInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 16, 1)
+    val lunarPositionQuery : String?
         get() {
             val o = __offset(18)
             return if (o != 0) {
@@ -115,9 +115,9 @@ class TME : Table() {
                 null
             }
         }
-    val LUNAR_POSITION_QUERYAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(18, 1)
-    fun LUNAR_POSITION_QUERYInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 18, 1)
-    fun SUNRISE_SUNSET_QUERY(j: Int) : Double {
+    val lunarPositionQueryAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(18, 1)
+    fun lunarPositionQueryInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 18, 1)
+    fun sunriseSunsetQuery(j: Int) : Double {
         val o = __offset(20)
         return if (o != 0) {
             bb.getDouble(__vector(o) + j * 8)
@@ -125,13 +125,13 @@ class TME : Table() {
             0.0
         }
     }
-    val SUNRISE_SUNSET_QUERYLength : Int
+    val sunriseSunsetQueryLength : Int
         get() {
             val o = __offset(20); return if (o != 0) __vector_len(o) else 0
         }
-    val SUNRISE_SUNSET_QUERYAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(20, 8)
-    fun SUNRISE_SUNSET_QUERYInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 20, 8)
-    val CLOCK_PROPAGATION : String?
+    val sunriseSunsetQueryAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(20, 8)
+    fun sunriseSunsetQueryInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 20, 8)
+    val clockPropagation : String?
         get() {
             val o = __offset(22)
             return if (o != 0) {
@@ -140,40 +140,40 @@ class TME : Table() {
                 null
             }
         }
-    val CLOCK_PROPAGATIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(22, 1)
-    fun CLOCK_PROPAGATIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 22, 1)
+    val clockPropagationAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(22, 1)
+    fun clockPropagationInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 22, 1)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsTME(_bb: ByteBuffer): TME = getRootAsTME(_bb, TME())
         fun getRootAsTME(_bb: ByteBuffer, obj: TME): TME {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun TMEBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$TME")
-        fun createTME(builder: FlatBufferBuilder, COMMANDOffset: Int, CONVERSION_REQUESTOffset: Int, LEAP_SECOND_QUERYOffset: Int, EOP_QUERYOffset: Int, SIDEREAL_QUERYOffset: Int, INTERVAL_REQUESTOffset: Int, SOLAR_POSITION_QUERYOffset: Int, LUNAR_POSITION_QUERYOffset: Int, SUNRISE_SUNSET_QUERYOffset: Int, CLOCK_PROPAGATIONOffset: Int) : Int {
+        fun createTME(builder: FlatBufferBuilder, commandOffset: Int, conversionRequestOffset: Int, leapSecondQueryOffset: Int, eopQueryOffset: Int, siderealQueryOffset: Int, intervalRequestOffset: Int, solarPositionQueryOffset: Int, lunarPositionQueryOffset: Int, sunriseSunsetQueryOffset: Int, clockPropagationOffset: Int) : Int {
             builder.startTable(10)
-            addCLOCK_PROPAGATION(builder, CLOCK_PROPAGATIONOffset)
-            addSUNRISE_SUNSET_QUERY(builder, SUNRISE_SUNSET_QUERYOffset)
-            addLUNAR_POSITION_QUERY(builder, LUNAR_POSITION_QUERYOffset)
-            addSOLAR_POSITION_QUERY(builder, SOLAR_POSITION_QUERYOffset)
-            addINTERVAL_REQUEST(builder, INTERVAL_REQUESTOffset)
-            addSIDEREAL_QUERY(builder, SIDEREAL_QUERYOffset)
-            addEOP_QUERY(builder, EOP_QUERYOffset)
-            addLEAP_SECOND_QUERY(builder, LEAP_SECOND_QUERYOffset)
-            addCONVERSION_REQUEST(builder, CONVERSION_REQUESTOffset)
-            addCOMMAND(builder, COMMANDOffset)
+            addCLOCKPROPAGATION(builder, clockPropagationOffset)
+            addSUNRISESUNSETQUERY(builder, sunriseSunsetQueryOffset)
+            addLUNARPOSITIONQUERY(builder, lunarPositionQueryOffset)
+            addSOLARPOSITIONQUERY(builder, solarPositionQueryOffset)
+            addINTERVALREQUEST(builder, intervalRequestOffset)
+            addSIDEREALQUERY(builder, siderealQueryOffset)
+            addEOPQUERY(builder, eopQueryOffset)
+            addLEAPSECONDQUERY(builder, leapSecondQueryOffset)
+            addCONVERSIONREQUEST(builder, conversionRequestOffset)
+            addCOMMAND(builder, commandOffset)
             return endTME(builder)
         }
         fun startTME(builder: FlatBufferBuilder) = builder.startTable(10)
-        fun addCOMMAND(builder: FlatBufferBuilder, COMMAND: Int) = builder.addOffset(0, COMMAND, 0)
-        fun addCONVERSION_REQUEST(builder: FlatBufferBuilder, CONVERSION_REQUEST: Int) = builder.addOffset(1, CONVERSION_REQUEST, 0)
-        fun addLEAP_SECOND_QUERY(builder: FlatBufferBuilder, LEAP_SECOND_QUERY: Int) = builder.addOffset(2, LEAP_SECOND_QUERY, 0)
-        fun addEOP_QUERY(builder: FlatBufferBuilder, EOP_QUERY: Int) = builder.addOffset(3, EOP_QUERY, 0)
-        fun addSIDEREAL_QUERY(builder: FlatBufferBuilder, SIDEREAL_QUERY: Int) = builder.addOffset(4, SIDEREAL_QUERY, 0)
-        fun addINTERVAL_REQUEST(builder: FlatBufferBuilder, INTERVAL_REQUEST: Int) = builder.addOffset(5, INTERVAL_REQUEST, 0)
-        fun addSOLAR_POSITION_QUERY(builder: FlatBufferBuilder, SOLAR_POSITION_QUERY: Int) = builder.addOffset(6, SOLAR_POSITION_QUERY, 0)
-        fun addLUNAR_POSITION_QUERY(builder: FlatBufferBuilder, LUNAR_POSITION_QUERY: Int) = builder.addOffset(7, LUNAR_POSITION_QUERY, 0)
-        fun addSUNRISE_SUNSET_QUERY(builder: FlatBufferBuilder, SUNRISE_SUNSET_QUERY: Int) = builder.addOffset(8, SUNRISE_SUNSET_QUERY, 0)
+        fun addCOMMAND(builder: FlatBufferBuilder, command: Int) = builder.addOffset(0, command, 0)
+        fun addCONVERSIONREQUEST(builder: FlatBufferBuilder, conversionRequest: Int) = builder.addOffset(1, conversionRequest, 0)
+        fun addLEAPSECONDQUERY(builder: FlatBufferBuilder, leapSecondQuery: Int) = builder.addOffset(2, leapSecondQuery, 0)
+        fun addEOPQUERY(builder: FlatBufferBuilder, eopQuery: Int) = builder.addOffset(3, eopQuery, 0)
+        fun addSIDEREALQUERY(builder: FlatBufferBuilder, siderealQuery: Int) = builder.addOffset(4, siderealQuery, 0)
+        fun addINTERVALREQUEST(builder: FlatBufferBuilder, intervalRequest: Int) = builder.addOffset(5, intervalRequest, 0)
+        fun addSOLARPOSITIONQUERY(builder: FlatBufferBuilder, solarPositionQuery: Int) = builder.addOffset(6, solarPositionQuery, 0)
+        fun addLUNARPOSITIONQUERY(builder: FlatBufferBuilder, lunarPositionQuery: Int) = builder.addOffset(7, lunarPositionQuery, 0)
+        fun addSUNRISESUNSETQUERY(builder: FlatBufferBuilder, sunriseSunsetQuery: Int) = builder.addOffset(8, sunriseSunsetQuery, 0)
         fun createSunriseSunsetQueryVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
             builder.startVector(8, data.size, 8)
             for (i in data.size - 1 downTo 0) {
@@ -182,7 +182,7 @@ class TME : Table() {
             return builder.endVector()
         }
         fun startSunriseSunsetQueryVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
-        fun addCLOCK_PROPAGATION(builder: FlatBufferBuilder, CLOCK_PROPAGATION: Int) = builder.addOffset(9, CLOCK_PROPAGATION, 0)
+        fun addCLOCKPROPAGATION(builder: FlatBufferBuilder, clockPropagation: Int) = builder.addOffset(9, clockPropagation, 0)
         fun endTME(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

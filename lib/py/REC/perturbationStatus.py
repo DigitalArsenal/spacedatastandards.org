@@ -2,4 +2,7 @@
 
 # namespace: 
 
-# NOTE perturbationStatus.py does not declare any structs or enums
+# Enum to represent the status of various perturbations (ON/OFF)
+class perturbationStatus(object):
+    OFF = 0
+    ON = 1

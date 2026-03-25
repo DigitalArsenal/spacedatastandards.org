@@ -101,17 +101,23 @@ def End(builder):
 class EnumerationValueT(object):
 
     # EnumerationValueT
-    def __init__(self):
-        self.LABEL = None  # type: str
-        self.VALUE = 0  # type: int
-        self.MAX_VALUE = 0  # type: int
-        self.DESCRIPTION = None  # type: str
+    def __init__(
+        self,
+        LABEL = None,
+        VALUE = 0,
+        MAX_VALUE = 0,
+        DESCRIPTION = None,
+    ):
+        self.LABEL = LABEL  # type: Optional[str]
+        self.VALUE = VALUE  # type: int
+        self.MAX_VALUE = MAX_VALUE  # type: int
+        self.DESCRIPTION = DESCRIPTION  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        enumerationValue = EnumerationValue()
-        enumerationValue.Init(buf, pos)
-        return cls.InitFromObj(enumerationValue)
+        tmpEnumerationValue = EnumerationValue()
+        tmpEnumerationValue.Init(buf, pos)
+        return cls.InitFromObj(tmpEnumerationValue)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -119,19 +125,19 @@ class EnumerationValueT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, enumerationValue):
+    def InitFromObj(cls, tmpEnumerationValue):
         x = EnumerationValueT()
-        x._UnPack(enumerationValue)
+        x._UnPack(tmpEnumerationValue)
         return x
 
     # EnumerationValueT
-    def _UnPack(self, enumerationValue):
-        if enumerationValue is None:
+    def _UnPack(self, EnumerationValue):
+        if EnumerationValue is None:
             return
-        self.LABEL = enumerationValue.LABEL()
-        self.VALUE = enumerationValue.VALUE()
-        self.MAX_VALUE = enumerationValue.MAX_VALUE()
-        self.DESCRIPTION = enumerationValue.DESCRIPTION()
+        self.LABEL = EnumerationValue.LABEL()
+        self.VALUE = EnumerationValue.VALUE()
+        self.MAX_VALUE = EnumerationValue.MAX_VALUE()
+        self.DESCRIPTION = EnumerationValue.DESCRIPTION()
 
     # EnumerationValueT
     def Pack(self, builder):
@@ -146,5 +152,5 @@ class EnumerationValueT(object):
         EnumerationValueAddMAX_VALUE(builder, self.MAX_VALUE)
         if self.DESCRIPTION is not None:
             EnumerationValueAddDESCRIPTION(builder, DESCRIPTION)
-        enumerationValue = EnumerationValueEnd(builder)
-        return enumerationValue
+        EnumerationValue = EnumerationValueEnd(builder)
+        return EnumerationValue

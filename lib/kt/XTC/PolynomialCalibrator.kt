@@ -32,7 +32,7 @@ class PolynomialCalibrator : Table() {
     /**
      * Polynomial terms (index is power, value is coefficient)
      */
-    fun COEFFICIENTS(j: Int) : Double {
+    fun coefficients(j: Int) : Double {
         val o = __offset(4)
         return if (o != 0) {
             bb.getDouble(__vector(o) + j * 8)
@@ -40,26 +40,26 @@ class PolynomialCalibrator : Table() {
             0.0
         }
     }
-    val COEFFICIENTSLength : Int
+    val coefficientsLength : Int
         get() {
             val o = __offset(4); return if (o != 0) __vector_len(o) else 0
         }
-    val COEFFICIENTSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 8)
-    fun COEFFICIENTSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 8)
+    val coefficientsAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 8)
+    fun coefficientsInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 8)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsPolynomialCalibrator(_bb: ByteBuffer): PolynomialCalibrator = getRootAsPolynomialCalibrator(_bb, PolynomialCalibrator())
         fun getRootAsPolynomialCalibrator(_bb: ByteBuffer, obj: PolynomialCalibrator): PolynomialCalibrator {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createPolynomialCalibrator(builder: FlatBufferBuilder, COEFFICIENTSOffset: Int) : Int {
+        fun createPolynomialCalibrator(builder: FlatBufferBuilder, coefficientsOffset: Int) : Int {
             builder.startTable(1)
-            addCOEFFICIENTS(builder, COEFFICIENTSOffset)
+            addCOEFFICIENTS(builder, coefficientsOffset)
             return endPolynomialCalibrator(builder)
         }
         fun startPolynomialCalibrator(builder: FlatBufferBuilder) = builder.startTable(1)
-        fun addCOEFFICIENTS(builder: FlatBufferBuilder, COEFFICIENTS: Int) = builder.addOffset(0, COEFFICIENTS, 0)
+        fun addCOEFFICIENTS(builder: FlatBufferBuilder, coefficients: Int) = builder.addOffset(0, coefficients, 0)
         fun createCoefficientsVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
             builder.startVector(8, data.size, 8)
             for (i in data.size - 1 downTo 0) {

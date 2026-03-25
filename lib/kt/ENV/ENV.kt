@@ -29,7 +29,7 @@ class ENV : Table() {
         __init(_i, _bb)
         return this
     }
-    val ATMOSPHERE : String?
+    val atmosphere : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -38,9 +38,9 @@ class ENV : Table() {
                 null
             }
         }
-    val ATMOSPHEREAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun ATMOSPHEREInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
-    val WEATHER : String?
+    val atmosphereAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun atmosphereInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
+    val weather : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -49,54 +49,54 @@ class ENV : Table() {
                 null
             }
         }
-    val WEATHERAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun WEATHERInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
-    val TIME_UTC : Double
+    val weatherAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun weatherInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
+    val timeUtc : Double
         get() {
             val o = __offset(8)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val LATITUDE : Double
+    val latitude : Double
         get() {
             val o = __offset(10)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val LONGITUDE : Double
+    val longitude : Double
         get() {
             val o = __offset(12)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val SUN_AZIMUTH : Float
+    val sunAzimuth : Float
         get() {
             val o = __offset(14)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
-    val SUN_ELEVATION : Float
+    val sunElevation : Float
         get() {
             val o = __offset(16)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
-    val MOON_PHASE : Float
+    val moonPhase : Float
         get() {
             val o = __offset(18)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
-    val ILLUMINATION : Float
+    val illumination : Float
         get() {
             val o = __offset(20)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
-    val MAGNETIC_DECLINATION : Float
+    val magneticDeclination : Float
         get() {
             val o = __offset(22)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
-    val MAGNETIC_INCLINATION : Float
+    val magneticInclination : Float
         get() {
             val o = __offset(24)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
-    fun RESERVED(j: Int) : UByte {
+    fun reserved(j: Int) : UByte {
         val o = __offset(26)
         return if (o != 0) {
             bb.get(__vector(o) + j * 1).toUByte()
@@ -104,49 +104,49 @@ class ENV : Table() {
             0u
         }
     }
-    val RESERVEDLength : Int
+    val reservedLength : Int
         get() {
             val o = __offset(26); return if (o != 0) __vector_len(o) else 0
         }
-    val RESERVEDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(26, 1)
-    fun RESERVEDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 26, 1)
+    val reservedAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(26, 1)
+    fun reservedInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 26, 1)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsENV(_bb: ByteBuffer): ENV = getRootAsENV(_bb, ENV())
         fun getRootAsENV(_bb: ByteBuffer, obj: ENV): ENV {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun ENVBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$ENV")
-        fun createENV(builder: FlatBufferBuilder, ATMOSPHEREOffset: Int, WEATHEROffset: Int, TIME_UTC: Double, LATITUDE: Double, LONGITUDE: Double, SUN_AZIMUTH: Float, SUN_ELEVATION: Float, MOON_PHASE: Float, ILLUMINATION: Float, MAGNETIC_DECLINATION: Float, MAGNETIC_INCLINATION: Float, RESERVEDOffset: Int) : Int {
+        fun createENV(builder: FlatBufferBuilder, atmosphereOffset: Int, weatherOffset: Int, timeUtc: Double, latitude: Double, longitude: Double, sunAzimuth: Float, sunElevation: Float, moonPhase: Float, illumination: Float, magneticDeclination: Float, magneticInclination: Float, reservedOffset: Int) : Int {
             builder.startTable(12)
-            addLONGITUDE(builder, LONGITUDE)
-            addLATITUDE(builder, LATITUDE)
-            addTIME_UTC(builder, TIME_UTC)
-            addRESERVED(builder, RESERVEDOffset)
-            addMAGNETIC_INCLINATION(builder, MAGNETIC_INCLINATION)
-            addMAGNETIC_DECLINATION(builder, MAGNETIC_DECLINATION)
-            addILLUMINATION(builder, ILLUMINATION)
-            addMOON_PHASE(builder, MOON_PHASE)
-            addSUN_ELEVATION(builder, SUN_ELEVATION)
-            addSUN_AZIMUTH(builder, SUN_AZIMUTH)
-            addWEATHER(builder, WEATHEROffset)
-            addATMOSPHERE(builder, ATMOSPHEREOffset)
+            addLONGITUDE(builder, longitude)
+            addLATITUDE(builder, latitude)
+            addTIMEUTC(builder, timeUtc)
+            addRESERVED(builder, reservedOffset)
+            addMAGNETICINCLINATION(builder, magneticInclination)
+            addMAGNETICDECLINATION(builder, magneticDeclination)
+            addILLUMINATION(builder, illumination)
+            addMOONPHASE(builder, moonPhase)
+            addSUNELEVATION(builder, sunElevation)
+            addSUNAZIMUTH(builder, sunAzimuth)
+            addWEATHER(builder, weatherOffset)
+            addATMOSPHERE(builder, atmosphereOffset)
             return endENV(builder)
         }
         fun startENV(builder: FlatBufferBuilder) = builder.startTable(12)
-        fun addATMOSPHERE(builder: FlatBufferBuilder, ATMOSPHERE: Int) = builder.addOffset(0, ATMOSPHERE, 0)
-        fun addWEATHER(builder: FlatBufferBuilder, WEATHER: Int) = builder.addOffset(1, WEATHER, 0)
-        fun addTIME_UTC(builder: FlatBufferBuilder, TIME_UTC: Double) = builder.addDouble(2, TIME_UTC, 0.0)
-        fun addLATITUDE(builder: FlatBufferBuilder, LATITUDE: Double) = builder.addDouble(3, LATITUDE, 0.0)
-        fun addLONGITUDE(builder: FlatBufferBuilder, LONGITUDE: Double) = builder.addDouble(4, LONGITUDE, 0.0)
-        fun addSUN_AZIMUTH(builder: FlatBufferBuilder, SUN_AZIMUTH: Float) = builder.addFloat(5, SUN_AZIMUTH, 0.0)
-        fun addSUN_ELEVATION(builder: FlatBufferBuilder, SUN_ELEVATION: Float) = builder.addFloat(6, SUN_ELEVATION, 0.0)
-        fun addMOON_PHASE(builder: FlatBufferBuilder, MOON_PHASE: Float) = builder.addFloat(7, MOON_PHASE, 0.0)
-        fun addILLUMINATION(builder: FlatBufferBuilder, ILLUMINATION: Float) = builder.addFloat(8, ILLUMINATION, 0.0)
-        fun addMAGNETIC_DECLINATION(builder: FlatBufferBuilder, MAGNETIC_DECLINATION: Float) = builder.addFloat(9, MAGNETIC_DECLINATION, 0.0)
-        fun addMAGNETIC_INCLINATION(builder: FlatBufferBuilder, MAGNETIC_INCLINATION: Float) = builder.addFloat(10, MAGNETIC_INCLINATION, 0.0)
-        fun addRESERVED(builder: FlatBufferBuilder, RESERVED: Int) = builder.addOffset(11, RESERVED, 0)
+        fun addATMOSPHERE(builder: FlatBufferBuilder, atmosphere: Int) = builder.addOffset(0, atmosphere, 0)
+        fun addWEATHER(builder: FlatBufferBuilder, weather: Int) = builder.addOffset(1, weather, 0)
+        fun addTIMEUTC(builder: FlatBufferBuilder, timeUtc: Double) = builder.addDouble(2, timeUtc, 0.0)
+        fun addLATITUDE(builder: FlatBufferBuilder, latitude: Double) = builder.addDouble(3, latitude, 0.0)
+        fun addLONGITUDE(builder: FlatBufferBuilder, longitude: Double) = builder.addDouble(4, longitude, 0.0)
+        fun addSUNAZIMUTH(builder: FlatBufferBuilder, sunAzimuth: Float) = builder.addFloat(5, sunAzimuth, 0.0)
+        fun addSUNELEVATION(builder: FlatBufferBuilder, sunElevation: Float) = builder.addFloat(6, sunElevation, 0.0)
+        fun addMOONPHASE(builder: FlatBufferBuilder, moonPhase: Float) = builder.addFloat(7, moonPhase, 0.0)
+        fun addILLUMINATION(builder: FlatBufferBuilder, illumination: Float) = builder.addFloat(8, illumination, 0.0)
+        fun addMAGNETICDECLINATION(builder: FlatBufferBuilder, magneticDeclination: Float) = builder.addFloat(9, magneticDeclination, 0.0)
+        fun addMAGNETICINCLINATION(builder: FlatBufferBuilder, magneticInclination: Float) = builder.addFloat(10, magneticInclination, 0.0)
+        fun addRESERVED(builder: FlatBufferBuilder, reserved: Int) = builder.addOffset(11, reserved, 0)
         @kotlin.ExperimentalUnsignedTypes
         fun createReservedVector(builder: FlatBufferBuilder, data: UByteArray) : Int {
             builder.startVector(1, data.size, 1)

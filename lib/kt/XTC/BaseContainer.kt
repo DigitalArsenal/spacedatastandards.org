@@ -32,7 +32,7 @@ class BaseContainer : Table() {
     /**
      * Container reference path
      */
-    val CONTAINER_REF : String?
+    val containerRef : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,13 +41,13 @@ class BaseContainer : Table() {
                 null
             }
         }
-    val CONTAINER_REFAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun CONTAINER_REFInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val containerRefAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun containerRefInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Restriction criteria
      */
-    val RESTRICTION_CRITERIA : MatchCriteria? get() = RESTRICTION_CRITERIA(MatchCriteria())
-    fun RESTRICTION_CRITERIA(obj: MatchCriteria) : MatchCriteria? {
+    val restrictionCriteria : MatchCriteria? get() = restrictionCriteria(MatchCriteria())
+    fun restrictionCriteria(obj: MatchCriteria) : MatchCriteria? {
         val o = __offset(6)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -56,21 +56,21 @@ class BaseContainer : Table() {
         }
     }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsBaseContainer(_bb: ByteBuffer): BaseContainer = getRootAsBaseContainer(_bb, BaseContainer())
         fun getRootAsBaseContainer(_bb: ByteBuffer, obj: BaseContainer): BaseContainer {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createBaseContainer(builder: FlatBufferBuilder, CONTAINER_REFOffset: Int, RESTRICTION_CRITERIAOffset: Int) : Int {
+        fun createBaseContainer(builder: FlatBufferBuilder, containerRefOffset: Int, restrictionCriteriaOffset: Int) : Int {
             builder.startTable(2)
-            addRESTRICTION_CRITERIA(builder, RESTRICTION_CRITERIAOffset)
-            addCONTAINER_REF(builder, CONTAINER_REFOffset)
+            addRESTRICTIONCRITERIA(builder, restrictionCriteriaOffset)
+            addCONTAINERREF(builder, containerRefOffset)
             return endBaseContainer(builder)
         }
         fun startBaseContainer(builder: FlatBufferBuilder) = builder.startTable(2)
-        fun addCONTAINER_REF(builder: FlatBufferBuilder, CONTAINER_REF: Int) = builder.addOffset(0, CONTAINER_REF, 0)
-        fun addRESTRICTION_CRITERIA(builder: FlatBufferBuilder, RESTRICTION_CRITERIA: Int) = builder.addOffset(1, RESTRICTION_CRITERIA, 0)
+        fun addCONTAINERREF(builder: FlatBufferBuilder, containerRef: Int) = builder.addOffset(0, containerRef, 0)
+        fun addRESTRICTIONCRITERIA(builder: FlatBufferBuilder, restrictionCriteria: Int) = builder.addOffset(1, restrictionCriteria, 0)
         fun endBaseContainer(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

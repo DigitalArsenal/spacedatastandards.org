@@ -2,4 +2,17 @@
 
 # namespace: 
 
-# NOTE signalModulation.py does not declare any structs or enums
+class signalModulation(object):
+    CW = 0
+    PULSE = 1
+    FMCW = 2
+    CHIRP = 3
+    BPSK = 4
+    QPSK = 5
+    FSK = 6
+    AM = 7
+    FM = 8
+    SPREAD_SPECTRUM = 9
+    PHASED_ARRAY = 10
+    AGILE = 11
+    UNKNOWN = 12

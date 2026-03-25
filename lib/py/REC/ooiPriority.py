@@ -2,4 +2,9 @@
 
 # namespace: 
 
-# NOTE ooiPriority.py does not declare any structs or enums
+class ooiPriority(object):
+    CRITICAL = 0
+    HIGH = 1
+    MEDIUM = 2
+    LOW = 3
+    ROUTINE = 4

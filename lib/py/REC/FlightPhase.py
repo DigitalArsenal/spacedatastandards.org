@@ -2,4 +2,14 @@
 
 # namespace: 
 
-# NOTE FlightPhase.py does not declare any structs or enums
+class FlightPhase(object):
+    PARKED = 0
+    TAXI = 1
+    TAKEOFF = 2
+    CLIMB = 3
+    CRUISE = 4
+    DESCENT = 5
+    APPROACH = 6
+    LANDING = 7
+    GO_AROUND = 8
+    EMERGENCY = 9

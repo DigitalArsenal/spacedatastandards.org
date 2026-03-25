@@ -41,7 +41,7 @@ func (rcv *OrbitFrameWrapper) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
-func (rcv *OrbitFrameWrapper) Frame() OrbitFrame {
+func (rcv *OrbitFrameWrapper) frame() OrbitFrame {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
 		return OrbitFrame(rcv._tab.GetInt8(o + rcv._tab.Pos))
@@ -49,15 +49,26 @@ func (rcv *OrbitFrameWrapper) Frame() OrbitFrame {
 	return 0
 }
 
-func (rcv *OrbitFrameWrapper) MutateFrame(n OrbitFrame) bool {
+func (rcv *OrbitFrameWrapper) Frame() OrbitFrame {
+	return rcv.frame()
+}
+
+func (rcv *OrbitFrameWrapper) Mutateframe(n OrbitFrame) bool {
 	return rcv._tab.MutateInt8Slot(4, int8(n))
+}
+
+func (rcv *OrbitFrameWrapper) MutateFrame(n OrbitFrame) bool {
+	return rcv.Mutateframe(n)
 }
 
 func OrbitFrameWrapperStart(builder *flatbuffers.Builder) {
 	builder.StartObject(1)
 }
-func OrbitFrameWrapperAddFrame(builder *flatbuffers.Builder, frame OrbitFrame) {
+func OrbitFrameWrapperAddframe(builder *flatbuffers.Builder, frame OrbitFrame) {
 	builder.PrependInt8Slot(0, int8(frame), 0)
+}
+func OrbitFrameWrapperAddFrame(builder *flatbuffers.Builder, frame OrbitFrame) {
+	OrbitFrameWrapperAddframe(builder, frame)
 }
 func OrbitFrameWrapperEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

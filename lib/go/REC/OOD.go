@@ -62,12 +62,20 @@ func (rcv *OOD) ID() []byte {
 	return nil
 }
 
+func (rcv *OOD) Id() []byte {
+	return rcv.ID()
+}
+
 func (rcv *OOD) LAST_OB_TIME() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *OOD) LastObTime() []byte {
+	return rcv.LAST_OB_TIME()
 }
 
 func (rcv *OOD) VISMAG() float64 {
@@ -78,8 +86,16 @@ func (rcv *OOD) VISMAG() float64 {
 	return 0.0
 }
 
+func (rcv *OOD) Vismag() float64 {
+	return rcv.VISMAG()
+}
+
 func (rcv *OOD) MutateVISMAG(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(8, n)
+}
+
+func (rcv *OOD) MutateVismag(n float64) bool {
+	return rcv.MutateVISMAG(n)
 }
 
 func (rcv *OOD) VISMAG_MIN() float64 {
@@ -90,8 +106,16 @@ func (rcv *OOD) VISMAG_MIN() float64 {
 	return 0.0
 }
 
+func (rcv *OOD) VismagMin() float64 {
+	return rcv.VISMAG_MIN()
+}
+
 func (rcv *OOD) MutateVISMAG_MIN(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(10, n)
+}
+
+func (rcv *OOD) MutateVismagMin(n float64) bool {
+	return rcv.MutateVISMAG_MIN(n)
 }
 
 func (rcv *OOD) VISMAG_MAX() float64 {
@@ -102,8 +126,16 @@ func (rcv *OOD) VISMAG_MAX() float64 {
 	return 0.0
 }
 
+func (rcv *OOD) VismagMax() float64 {
+	return rcv.VISMAG_MAX()
+}
+
 func (rcv *OOD) MutateVISMAG_MAX(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(12, n)
+}
+
+func (rcv *OOD) MutateVismagMax(n float64) bool {
+	return rcv.MutateVISMAG_MAX(n)
 }
 
 func (rcv *OOD) VISMAG_MEAN() float64 {
@@ -114,8 +146,16 @@ func (rcv *OOD) VISMAG_MEAN() float64 {
 	return 0.0
 }
 
+func (rcv *OOD) VismagMean() float64 {
+	return rcv.VISMAG_MEAN()
+}
+
 func (rcv *OOD) MutateVISMAG_MEAN(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(14, n)
+}
+
+func (rcv *OOD) MutateVismagMean(n float64) bool {
+	return rcv.MutateVISMAG_MEAN(n)
 }
 
 func (rcv *OOD) RCS() float64 {
@@ -126,8 +166,16 @@ func (rcv *OOD) RCS() float64 {
 	return 0.0
 }
 
+func (rcv *OOD) Rcs() float64 {
+	return rcv.RCS()
+}
+
 func (rcv *OOD) MutateRCS(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(16, n)
+}
+
+func (rcv *OOD) MutateRcs(n float64) bool {
+	return rcv.MutateRCS(n)
 }
 
 func (rcv *OOD) RCS_MIN() float64 {
@@ -138,8 +186,16 @@ func (rcv *OOD) RCS_MIN() float64 {
 	return 0.0
 }
 
+func (rcv *OOD) RcsMin() float64 {
+	return rcv.RCS_MIN()
+}
+
 func (rcv *OOD) MutateRCS_MIN(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(18, n)
+}
+
+func (rcv *OOD) MutateRcsMin(n float64) bool {
+	return rcv.MutateRCS_MIN(n)
 }
 
 func (rcv *OOD) RCS_MAX() float64 {
@@ -150,8 +206,16 @@ func (rcv *OOD) RCS_MAX() float64 {
 	return 0.0
 }
 
+func (rcv *OOD) RcsMax() float64 {
+	return rcv.RCS_MAX()
+}
+
 func (rcv *OOD) MutateRCS_MAX(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(20, n)
+}
+
+func (rcv *OOD) MutateRcsMax(n float64) bool {
+	return rcv.MutateRCS_MAX(n)
 }
 
 func (rcv *OOD) RCS_MEAN() float64 {
@@ -162,8 +226,16 @@ func (rcv *OOD) RCS_MEAN() float64 {
 	return 0.0
 }
 
+func (rcv *OOD) RcsMean() float64 {
+	return rcv.RCS_MEAN()
+}
+
 func (rcv *OOD) MutateRCS_MEAN(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(22, n)
+}
+
+func (rcv *OOD) MutateRcsMean(n float64) bool {
+	return rcv.MutateRCS_MEAN(n)
 }
 
 func (rcv *OOD) BOL_DELTA_V() float64 {
@@ -174,8 +246,16 @@ func (rcv *OOD) BOL_DELTA_V() float64 {
 	return 0.0
 }
 
+func (rcv *OOD) BolDeltaV() float64 {
+	return rcv.BOL_DELTA_V()
+}
+
 func (rcv *OOD) MutateBOL_DELTA_V(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(24, n)
+}
+
+func (rcv *OOD) MutateBolDeltaV(n float64) bool {
+	return rcv.MutateBOL_DELTA_V(n)
 }
 
 func (rcv *OOD) MAX_DELTA_V() float64 {
@@ -186,8 +266,16 @@ func (rcv *OOD) MAX_DELTA_V() float64 {
 	return 0.0
 }
 
+func (rcv *OOD) MaxDeltaV() float64 {
+	return rcv.MAX_DELTA_V()
+}
+
 func (rcv *OOD) MutateMAX_DELTA_V(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(26, n)
+}
+
+func (rcv *OOD) MutateMaxDeltaV(n float64) bool {
+	return rcv.MutateMAX_DELTA_V(n)
 }
 
 func (rcv *OOD) DELTA_VUNC() float64 {
@@ -198,8 +286,16 @@ func (rcv *OOD) DELTA_VUNC() float64 {
 	return 0.0
 }
 
+func (rcv *OOD) DeltaVunc() float64 {
+	return rcv.DELTA_VUNC()
+}
+
 func (rcv *OOD) MutateDELTA_VUNC(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(28, n)
+}
+
+func (rcv *OOD) MutateDeltaVunc(n float64) bool {
+	return rcv.MutateDELTA_VUNC(n)
 }
 
 func (rcv *OOD) EST_DELTA_VDURATION() float64 {
@@ -210,8 +306,16 @@ func (rcv *OOD) EST_DELTA_VDURATION() float64 {
 	return 0.0
 }
 
+func (rcv *OOD) EstDeltaVduration() float64 {
+	return rcv.EST_DELTA_VDURATION()
+}
+
 func (rcv *OOD) MutateEST_DELTA_VDURATION(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(30, n)
+}
+
+func (rcv *OOD) MutateEstDeltaVduration(n float64) bool {
+	return rcv.MutateEST_DELTA_VDURATION(n)
 }
 
 func (rcv *OOD) NUM_MISSION() int32 {
@@ -222,8 +326,16 @@ func (rcv *OOD) NUM_MISSION() int32 {
 	return 0
 }
 
+func (rcv *OOD) NumMission() int32 {
+	return rcv.NUM_MISSION()
+}
+
 func (rcv *OOD) MutateNUM_MISSION(n int32) bool {
 	return rcv._tab.MutateInt32Slot(32, n)
+}
+
+func (rcv *OOD) MutateNumMission(n int32) bool {
+	return rcv.MutateNUM_MISSION(n)
 }
 
 func (rcv *OOD) MISSION_TYPES(j int) []byte {
@@ -235,12 +347,20 @@ func (rcv *OOD) MISSION_TYPES(j int) []byte {
 	return nil
 }
 
+func (rcv *OOD) MissionTypes(j int) []byte {
+	return rcv.MISSION_TYPES(j)
+}
+
 func (rcv *OOD) MISSION_TYPESLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *OOD) MissionTypesLength() int {
+	return rcv.MISSION_TYPESLength()
 }
 
 func (rcv *OOD) BUS_TYPE() []byte {
@@ -251,6 +371,10 @@ func (rcv *OOD) BUS_TYPE() []byte {
 	return nil
 }
 
+func (rcv *OOD) BusType() []byte {
+	return rcv.BUS_TYPE()
+}
+
 func (rcv *OOD) GEO_SLOT() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
 	if o != 0 {
@@ -259,8 +383,16 @@ func (rcv *OOD) GEO_SLOT() float64 {
 	return 0.0
 }
 
+func (rcv *OOD) GeoSlot() float64 {
+	return rcv.GEO_SLOT()
+}
+
 func (rcv *OOD) MutateGEO_SLOT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(38, n)
+}
+
+func (rcv *OOD) MutateGeoSlot(n float64) bool {
+	return rcv.MutateGEO_SLOT(n)
 }
 
 func (rcv *OOD) DRIFT_RATE() float64 {
@@ -271,8 +403,16 @@ func (rcv *OOD) DRIFT_RATE() float64 {
 	return 0.0
 }
 
+func (rcv *OOD) DriftRate() float64 {
+	return rcv.DRIFT_RATE()
+}
+
 func (rcv *OOD) MutateDRIFT_RATE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(40, n)
+}
+
+func (rcv *OOD) MutateDriftRate(n float64) bool {
+	return rcv.MutateDRIFT_RATE(n)
 }
 
 func (rcv *OOD) DRY_MASS() float64 {
@@ -283,8 +423,16 @@ func (rcv *OOD) DRY_MASS() float64 {
 	return 0.0
 }
 
+func (rcv *OOD) DryMass() float64 {
+	return rcv.DRY_MASS()
+}
+
 func (rcv *OOD) MutateDRY_MASS(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(42, n)
+}
+
+func (rcv *OOD) MutateDryMass(n float64) bool {
+	return rcv.MutateDRY_MASS(n)
 }
 
 func (rcv *OOD) ADDITIONAL_MASS() float64 {
@@ -295,8 +443,16 @@ func (rcv *OOD) ADDITIONAL_MASS() float64 {
 	return 0.0
 }
 
+func (rcv *OOD) AdditionalMass() float64 {
+	return rcv.ADDITIONAL_MASS()
+}
+
 func (rcv *OOD) MutateADDITIONAL_MASS(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(44, n)
+}
+
+func (rcv *OOD) MutateAdditionalMass(n float64) bool {
+	return rcv.MutateADDITIONAL_MASS(n)
 }
 
 func (rcv *OOD) LAUNCH_MASS_MIN() float64 {
@@ -307,8 +463,16 @@ func (rcv *OOD) LAUNCH_MASS_MIN() float64 {
 	return 0.0
 }
 
+func (rcv *OOD) LaunchMassMin() float64 {
+	return rcv.LAUNCH_MASS_MIN()
+}
+
 func (rcv *OOD) MutateLAUNCH_MASS_MIN(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(46, n)
+}
+
+func (rcv *OOD) MutateLaunchMassMin(n float64) bool {
+	return rcv.MutateLAUNCH_MASS_MIN(n)
 }
 
 func (rcv *OOD) LAUNCH_MASS() float64 {
@@ -319,8 +483,16 @@ func (rcv *OOD) LAUNCH_MASS() float64 {
 	return 0.0
 }
 
+func (rcv *OOD) LaunchMass() float64 {
+	return rcv.LAUNCH_MASS()
+}
+
 func (rcv *OOD) MutateLAUNCH_MASS(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(48, n)
+}
+
+func (rcv *OOD) MutateLaunchMass(n float64) bool {
+	return rcv.MutateLAUNCH_MASS(n)
 }
 
 func (rcv *OOD) LAUNCH_MASS_MAX() float64 {
@@ -331,8 +503,16 @@ func (rcv *OOD) LAUNCH_MASS_MAX() float64 {
 	return 0.0
 }
 
+func (rcv *OOD) LaunchMassMax() float64 {
+	return rcv.LAUNCH_MASS_MAX()
+}
+
 func (rcv *OOD) MutateLAUNCH_MASS_MAX(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(50, n)
+}
+
+func (rcv *OOD) MutateLaunchMassMax(n float64) bool {
+	return rcv.MutateLAUNCH_MASS_MAX(n)
 }
 
 func (rcv *OOD) BOL_FUEL_MASS() float64 {
@@ -343,8 +523,16 @@ func (rcv *OOD) BOL_FUEL_MASS() float64 {
 	return 0.0
 }
 
+func (rcv *OOD) BolFuelMass() float64 {
+	return rcv.BOL_FUEL_MASS()
+}
+
 func (rcv *OOD) MutateBOL_FUEL_MASS(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(52, n)
+}
+
+func (rcv *OOD) MutateBolFuelMass(n float64) bool {
+	return rcv.MutateBOL_FUEL_MASS(n)
 }
 
 func (rcv *OOD) CURRENT_MASS() float64 {
@@ -355,8 +543,16 @@ func (rcv *OOD) CURRENT_MASS() float64 {
 	return 0.0
 }
 
+func (rcv *OOD) CurrentMass() float64 {
+	return rcv.CURRENT_MASS()
+}
+
 func (rcv *OOD) MutateCURRENT_MASS(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(54, n)
+}
+
+func (rcv *OOD) MutateCurrentMass(n float64) bool {
+	return rcv.MutateCURRENT_MASS(n)
 }
 
 func (rcv *OOD) TOTAL_MASS_UNC() float64 {
@@ -367,8 +563,16 @@ func (rcv *OOD) TOTAL_MASS_UNC() float64 {
 	return 0.0
 }
 
+func (rcv *OOD) TotalMassUnc() float64 {
+	return rcv.TOTAL_MASS_UNC()
+}
+
 func (rcv *OOD) MutateTOTAL_MASS_UNC(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(56, n)
+}
+
+func (rcv *OOD) MutateTotalMassUnc(n float64) bool {
+	return rcv.MutateTOTAL_MASS_UNC(n)
 }
 
 func (rcv *OOD) SOLAR_ARRAY_AREA() float64 {
@@ -379,8 +583,16 @@ func (rcv *OOD) SOLAR_ARRAY_AREA() float64 {
 	return 0.0
 }
 
+func (rcv *OOD) SolarArrayArea() float64 {
+	return rcv.SOLAR_ARRAY_AREA()
+}
+
 func (rcv *OOD) MutateSOLAR_ARRAY_AREA(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(58, n)
+}
+
+func (rcv *OOD) MutateSolarArrayArea(n float64) bool {
+	return rcv.MutateSOLAR_ARRAY_AREA(n)
 }
 
 func (rcv *OOD) MANEUVERABLE() bool {
@@ -391,8 +603,16 @@ func (rcv *OOD) MANEUVERABLE() bool {
 	return false
 }
 
+func (rcv *OOD) Maneuverable() bool {
+	return rcv.MANEUVERABLE()
+}
+
 func (rcv *OOD) MutateMANEUVERABLE(n bool) bool {
 	return rcv._tab.MutateBoolSlot(60, n)
+}
+
+func (rcv *OOD) MutateManeuverable(n bool) bool {
+	return rcv.MutateMANEUVERABLE(n)
 }
 
 func (rcv *OOD) FUEL_REMAINING() float64 {
@@ -403,8 +623,16 @@ func (rcv *OOD) FUEL_REMAINING() float64 {
 	return 0.0
 }
 
+func (rcv *OOD) FuelRemaining() float64 {
+	return rcv.FUEL_REMAINING()
+}
+
 func (rcv *OOD) MutateFUEL_REMAINING(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(62, n)
+}
+
+func (rcv *OOD) MutateFuelRemaining(n float64) bool {
+	return rcv.MutateFUEL_REMAINING(n)
 }
 
 func (rcv *OOD) CROSS_SECTION() float64 {
@@ -415,8 +643,16 @@ func (rcv *OOD) CROSS_SECTION() float64 {
 	return 0.0
 }
 
+func (rcv *OOD) CrossSection() float64 {
+	return rcv.CROSS_SECTION()
+}
+
 func (rcv *OOD) MutateCROSS_SECTION(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(64, n)
+}
+
+func (rcv *OOD) MutateCrossSection(n float64) bool {
+	return rcv.MutateCROSS_SECTION(n)
 }
 
 func (rcv *OOD) BUS_CROSS_SECTION() float64 {
@@ -427,8 +663,16 @@ func (rcv *OOD) BUS_CROSS_SECTION() float64 {
 	return 0.0
 }
 
+func (rcv *OOD) BusCrossSection() float64 {
+	return rcv.BUS_CROSS_SECTION()
+}
+
 func (rcv *OOD) MutateBUS_CROSS_SECTION(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(66, n)
+}
+
+func (rcv *OOD) MutateBusCrossSection(n float64) bool {
+	return rcv.MutateBUS_CROSS_SECTION(n)
 }
 
 func (rcv *OOD) MAX_RADIUS() float64 {
@@ -439,8 +683,16 @@ func (rcv *OOD) MAX_RADIUS() float64 {
 	return 0.0
 }
 
+func (rcv *OOD) MaxRadius() float64 {
+	return rcv.MAX_RADIUS()
+}
+
 func (rcv *OOD) MutateMAX_RADIUS(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(68, n)
+}
+
+func (rcv *OOD) MutateMaxRadius(n float64) bool {
+	return rcv.MutateMAX_RADIUS(n)
 }
 
 func (rcv *OOD) COLA_RADIUS() float64 {
@@ -451,8 +703,16 @@ func (rcv *OOD) COLA_RADIUS() float64 {
 	return 0.0
 }
 
+func (rcv *OOD) ColaRadius() float64 {
+	return rcv.COLA_RADIUS()
+}
+
 func (rcv *OOD) MutateCOLA_RADIUS(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(70, n)
+}
+
+func (rcv *OOD) MutateColaRadius(n float64) bool {
+	return rcv.MutateCOLA_RADIUS(n)
 }
 
 func (rcv *OOD) ADEPT_RADIUS() float64 {
@@ -463,8 +723,16 @@ func (rcv *OOD) ADEPT_RADIUS() float64 {
 	return 0.0
 }
 
+func (rcv *OOD) AdeptRadius() float64 {
+	return rcv.ADEPT_RADIUS()
+}
+
 func (rcv *OOD) MutateADEPT_RADIUS(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(72, n)
+}
+
+func (rcv *OOD) MutateAdeptRadius(n float64) bool {
+	return rcv.MutateADEPT_RADIUS(n)
 }
 
 func (rcv *OOD) NUM_DEPLOYABLE() int32 {
@@ -475,8 +743,16 @@ func (rcv *OOD) NUM_DEPLOYABLE() int32 {
 	return 0
 }
 
+func (rcv *OOD) NumDeployable() int32 {
+	return rcv.NUM_DEPLOYABLE()
+}
+
 func (rcv *OOD) MutateNUM_DEPLOYABLE(n int32) bool {
 	return rcv._tab.MutateInt32Slot(74, n)
+}
+
+func (rcv *OOD) MutateNumDeployable(n int32) bool {
+	return rcv.MutateNUM_DEPLOYABLE(n)
 }
 
 func (rcv *OOD) DEP_NAMES(j int) []byte {
@@ -488,12 +764,20 @@ func (rcv *OOD) DEP_NAMES(j int) []byte {
 	return nil
 }
 
+func (rcv *OOD) DepNames(j int) []byte {
+	return rcv.DEP_NAMES(j)
+}
+
 func (rcv *OOD) DEP_NAMESLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(76))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *OOD) DepNamesLength() int {
+	return rcv.DEP_NAMESLength()
 }
 
 func (rcv *OOD) DEP_EST_MASSES(j int) []byte {
@@ -505,12 +789,20 @@ func (rcv *OOD) DEP_EST_MASSES(j int) []byte {
 	return nil
 }
 
+func (rcv *OOD) DepEstMasses(j int) []byte {
+	return rcv.DEP_EST_MASSES(j)
+}
+
 func (rcv *OOD) DEP_EST_MASSESLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(78))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *OOD) DepEstMassesLength() int {
+	return rcv.DEP_EST_MASSESLength()
 }
 
 func (rcv *OOD) DEP_MASS_UNCS(j int) []byte {
@@ -522,12 +814,20 @@ func (rcv *OOD) DEP_MASS_UNCS(j int) []byte {
 	return nil
 }
 
+func (rcv *OOD) DepMassUncs(j int) []byte {
+	return rcv.DEP_MASS_UNCS(j)
+}
+
 func (rcv *OOD) DEP_MASS_UNCSLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(80))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *OOD) DepMassUncsLength() int {
+	return rcv.DEP_MASS_UNCSLength()
 }
 
 func (rcv *OOD) LAST_OB_SOURCE() []byte {
@@ -538,140 +838,276 @@ func (rcv *OOD) LAST_OB_SOURCE() []byte {
 	return nil
 }
 
+func (rcv *OOD) LastObSource() []byte {
+	return rcv.LAST_OB_SOURCE()
+}
+
 func OODStart(builder *flatbuffers.Builder) {
 	builder.StartObject(40)
 }
 func OODAddID(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ID), 0)
 }
+func OODAddId(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
+	OODAddID(builder, ID)
+}
 func OODAddLAST_OB_TIME(builder *flatbuffers.Builder, LAST_OB_TIME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(LAST_OB_TIME), 0)
+}
+func OODAddLastObTime(builder *flatbuffers.Builder, LAST_OB_TIME flatbuffers.UOffsetT) {
+	OODAddLAST_OB_TIME(builder, LAST_OB_TIME)
 }
 func OODAddVISMAG(builder *flatbuffers.Builder, VISMAG float64) {
 	builder.PrependFloat64Slot(2, VISMAG, 0.0)
 }
+func OODAddVismag(builder *flatbuffers.Builder, VISMAG float64) {
+	OODAddVISMAG(builder, VISMAG)
+}
 func OODAddVISMAG_MIN(builder *flatbuffers.Builder, VISMAG_MIN float64) {
 	builder.PrependFloat64Slot(3, VISMAG_MIN, 0.0)
+}
+func OODAddVismagMin(builder *flatbuffers.Builder, VISMAG_MIN float64) {
+	OODAddVISMAG_MIN(builder, VISMAG_MIN)
 }
 func OODAddVISMAG_MAX(builder *flatbuffers.Builder, VISMAG_MAX float64) {
 	builder.PrependFloat64Slot(4, VISMAG_MAX, 0.0)
 }
+func OODAddVismagMax(builder *flatbuffers.Builder, VISMAG_MAX float64) {
+	OODAddVISMAG_MAX(builder, VISMAG_MAX)
+}
 func OODAddVISMAG_MEAN(builder *flatbuffers.Builder, VISMAG_MEAN float64) {
 	builder.PrependFloat64Slot(5, VISMAG_MEAN, 0.0)
+}
+func OODAddVismagMean(builder *flatbuffers.Builder, VISMAG_MEAN float64) {
+	OODAddVISMAG_MEAN(builder, VISMAG_MEAN)
 }
 func OODAddRCS(builder *flatbuffers.Builder, RCS float64) {
 	builder.PrependFloat64Slot(6, RCS, 0.0)
 }
+func OODAddRcs(builder *flatbuffers.Builder, RCS float64) {
+	OODAddRCS(builder, RCS)
+}
 func OODAddRCS_MIN(builder *flatbuffers.Builder, RCS_MIN float64) {
 	builder.PrependFloat64Slot(7, RCS_MIN, 0.0)
+}
+func OODAddRcsMin(builder *flatbuffers.Builder, RCS_MIN float64) {
+	OODAddRCS_MIN(builder, RCS_MIN)
 }
 func OODAddRCS_MAX(builder *flatbuffers.Builder, RCS_MAX float64) {
 	builder.PrependFloat64Slot(8, RCS_MAX, 0.0)
 }
+func OODAddRcsMax(builder *flatbuffers.Builder, RCS_MAX float64) {
+	OODAddRCS_MAX(builder, RCS_MAX)
+}
 func OODAddRCS_MEAN(builder *flatbuffers.Builder, RCS_MEAN float64) {
 	builder.PrependFloat64Slot(9, RCS_MEAN, 0.0)
+}
+func OODAddRcsMean(builder *flatbuffers.Builder, RCS_MEAN float64) {
+	OODAddRCS_MEAN(builder, RCS_MEAN)
 }
 func OODAddBOL_DELTA_V(builder *flatbuffers.Builder, BOL_DELTA_V float64) {
 	builder.PrependFloat64Slot(10, BOL_DELTA_V, 0.0)
 }
+func OODAddBolDeltaV(builder *flatbuffers.Builder, BOL_DELTA_V float64) {
+	OODAddBOL_DELTA_V(builder, BOL_DELTA_V)
+}
 func OODAddMAX_DELTA_V(builder *flatbuffers.Builder, MAX_DELTA_V float64) {
 	builder.PrependFloat64Slot(11, MAX_DELTA_V, 0.0)
+}
+func OODAddMaxDeltaV(builder *flatbuffers.Builder, MAX_DELTA_V float64) {
+	OODAddMAX_DELTA_V(builder, MAX_DELTA_V)
 }
 func OODAddDELTA_VUNC(builder *flatbuffers.Builder, DELTA_VUNC float64) {
 	builder.PrependFloat64Slot(12, DELTA_VUNC, 0.0)
 }
+func OODAddDeltaVunc(builder *flatbuffers.Builder, DELTA_VUNC float64) {
+	OODAddDELTA_VUNC(builder, DELTA_VUNC)
+}
 func OODAddEST_DELTA_VDURATION(builder *flatbuffers.Builder, EST_DELTA_VDURATION float64) {
 	builder.PrependFloat64Slot(13, EST_DELTA_VDURATION, 0.0)
+}
+func OODAddEstDeltaVduration(builder *flatbuffers.Builder, EST_DELTA_VDURATION float64) {
+	OODAddEST_DELTA_VDURATION(builder, EST_DELTA_VDURATION)
 }
 func OODAddNUM_MISSION(builder *flatbuffers.Builder, NUM_MISSION int32) {
 	builder.PrependInt32Slot(14, NUM_MISSION, 0)
 }
+func OODAddNumMission(builder *flatbuffers.Builder, NUM_MISSION int32) {
+	OODAddNUM_MISSION(builder, NUM_MISSION)
+}
 func OODAddMISSION_TYPES(builder *flatbuffers.Builder, MISSION_TYPES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(15, flatbuffers.UOffsetT(MISSION_TYPES), 0)
+}
+func OODAddMissionTypes(builder *flatbuffers.Builder, MISSION_TYPES flatbuffers.UOffsetT) {
+	OODAddMISSION_TYPES(builder, MISSION_TYPES)
 }
 func OODStartMISSION_TYPESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
+func OODStartMissionTypesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return OODStartMISSION_TYPESVector(builder, numElems)
+}
 func OODAddBUS_TYPE(builder *flatbuffers.Builder, BUS_TYPE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(16, flatbuffers.UOffsetT(BUS_TYPE), 0)
+}
+func OODAddBusType(builder *flatbuffers.Builder, BUS_TYPE flatbuffers.UOffsetT) {
+	OODAddBUS_TYPE(builder, BUS_TYPE)
 }
 func OODAddGEO_SLOT(builder *flatbuffers.Builder, GEO_SLOT float64) {
 	builder.PrependFloat64Slot(17, GEO_SLOT, 0.0)
 }
+func OODAddGeoSlot(builder *flatbuffers.Builder, GEO_SLOT float64) {
+	OODAddGEO_SLOT(builder, GEO_SLOT)
+}
 func OODAddDRIFT_RATE(builder *flatbuffers.Builder, DRIFT_RATE float64) {
 	builder.PrependFloat64Slot(18, DRIFT_RATE, 0.0)
+}
+func OODAddDriftRate(builder *flatbuffers.Builder, DRIFT_RATE float64) {
+	OODAddDRIFT_RATE(builder, DRIFT_RATE)
 }
 func OODAddDRY_MASS(builder *flatbuffers.Builder, DRY_MASS float64) {
 	builder.PrependFloat64Slot(19, DRY_MASS, 0.0)
 }
+func OODAddDryMass(builder *flatbuffers.Builder, DRY_MASS float64) {
+	OODAddDRY_MASS(builder, DRY_MASS)
+}
 func OODAddADDITIONAL_MASS(builder *flatbuffers.Builder, ADDITIONAL_MASS float64) {
 	builder.PrependFloat64Slot(20, ADDITIONAL_MASS, 0.0)
+}
+func OODAddAdditionalMass(builder *flatbuffers.Builder, ADDITIONAL_MASS float64) {
+	OODAddADDITIONAL_MASS(builder, ADDITIONAL_MASS)
 }
 func OODAddLAUNCH_MASS_MIN(builder *flatbuffers.Builder, LAUNCH_MASS_MIN float64) {
 	builder.PrependFloat64Slot(21, LAUNCH_MASS_MIN, 0.0)
 }
+func OODAddLaunchMassMin(builder *flatbuffers.Builder, LAUNCH_MASS_MIN float64) {
+	OODAddLAUNCH_MASS_MIN(builder, LAUNCH_MASS_MIN)
+}
 func OODAddLAUNCH_MASS(builder *flatbuffers.Builder, LAUNCH_MASS float64) {
 	builder.PrependFloat64Slot(22, LAUNCH_MASS, 0.0)
+}
+func OODAddLaunchMass(builder *flatbuffers.Builder, LAUNCH_MASS float64) {
+	OODAddLAUNCH_MASS(builder, LAUNCH_MASS)
 }
 func OODAddLAUNCH_MASS_MAX(builder *flatbuffers.Builder, LAUNCH_MASS_MAX float64) {
 	builder.PrependFloat64Slot(23, LAUNCH_MASS_MAX, 0.0)
 }
+func OODAddLaunchMassMax(builder *flatbuffers.Builder, LAUNCH_MASS_MAX float64) {
+	OODAddLAUNCH_MASS_MAX(builder, LAUNCH_MASS_MAX)
+}
 func OODAddBOL_FUEL_MASS(builder *flatbuffers.Builder, BOL_FUEL_MASS float64) {
 	builder.PrependFloat64Slot(24, BOL_FUEL_MASS, 0.0)
+}
+func OODAddBolFuelMass(builder *flatbuffers.Builder, BOL_FUEL_MASS float64) {
+	OODAddBOL_FUEL_MASS(builder, BOL_FUEL_MASS)
 }
 func OODAddCURRENT_MASS(builder *flatbuffers.Builder, CURRENT_MASS float64) {
 	builder.PrependFloat64Slot(25, CURRENT_MASS, 0.0)
 }
+func OODAddCurrentMass(builder *flatbuffers.Builder, CURRENT_MASS float64) {
+	OODAddCURRENT_MASS(builder, CURRENT_MASS)
+}
 func OODAddTOTAL_MASS_UNC(builder *flatbuffers.Builder, TOTAL_MASS_UNC float64) {
 	builder.PrependFloat64Slot(26, TOTAL_MASS_UNC, 0.0)
+}
+func OODAddTotalMassUnc(builder *flatbuffers.Builder, TOTAL_MASS_UNC float64) {
+	OODAddTOTAL_MASS_UNC(builder, TOTAL_MASS_UNC)
 }
 func OODAddSOLAR_ARRAY_AREA(builder *flatbuffers.Builder, SOLAR_ARRAY_AREA float64) {
 	builder.PrependFloat64Slot(27, SOLAR_ARRAY_AREA, 0.0)
 }
+func OODAddSolarArrayArea(builder *flatbuffers.Builder, SOLAR_ARRAY_AREA float64) {
+	OODAddSOLAR_ARRAY_AREA(builder, SOLAR_ARRAY_AREA)
+}
 func OODAddMANEUVERABLE(builder *flatbuffers.Builder, MANEUVERABLE bool) {
 	builder.PrependBoolSlot(28, MANEUVERABLE, false)
+}
+func OODAddManeuverable(builder *flatbuffers.Builder, MANEUVERABLE bool) {
+	OODAddMANEUVERABLE(builder, MANEUVERABLE)
 }
 func OODAddFUEL_REMAINING(builder *flatbuffers.Builder, FUEL_REMAINING float64) {
 	builder.PrependFloat64Slot(29, FUEL_REMAINING, 0.0)
 }
+func OODAddFuelRemaining(builder *flatbuffers.Builder, FUEL_REMAINING float64) {
+	OODAddFUEL_REMAINING(builder, FUEL_REMAINING)
+}
 func OODAddCROSS_SECTION(builder *flatbuffers.Builder, CROSS_SECTION float64) {
 	builder.PrependFloat64Slot(30, CROSS_SECTION, 0.0)
+}
+func OODAddCrossSection(builder *flatbuffers.Builder, CROSS_SECTION float64) {
+	OODAddCROSS_SECTION(builder, CROSS_SECTION)
 }
 func OODAddBUS_CROSS_SECTION(builder *flatbuffers.Builder, BUS_CROSS_SECTION float64) {
 	builder.PrependFloat64Slot(31, BUS_CROSS_SECTION, 0.0)
 }
+func OODAddBusCrossSection(builder *flatbuffers.Builder, BUS_CROSS_SECTION float64) {
+	OODAddBUS_CROSS_SECTION(builder, BUS_CROSS_SECTION)
+}
 func OODAddMAX_RADIUS(builder *flatbuffers.Builder, MAX_RADIUS float64) {
 	builder.PrependFloat64Slot(32, MAX_RADIUS, 0.0)
+}
+func OODAddMaxRadius(builder *flatbuffers.Builder, MAX_RADIUS float64) {
+	OODAddMAX_RADIUS(builder, MAX_RADIUS)
 }
 func OODAddCOLA_RADIUS(builder *flatbuffers.Builder, COLA_RADIUS float64) {
 	builder.PrependFloat64Slot(33, COLA_RADIUS, 0.0)
 }
+func OODAddColaRadius(builder *flatbuffers.Builder, COLA_RADIUS float64) {
+	OODAddCOLA_RADIUS(builder, COLA_RADIUS)
+}
 func OODAddADEPT_RADIUS(builder *flatbuffers.Builder, ADEPT_RADIUS float64) {
 	builder.PrependFloat64Slot(34, ADEPT_RADIUS, 0.0)
+}
+func OODAddAdeptRadius(builder *flatbuffers.Builder, ADEPT_RADIUS float64) {
+	OODAddADEPT_RADIUS(builder, ADEPT_RADIUS)
 }
 func OODAddNUM_DEPLOYABLE(builder *flatbuffers.Builder, NUM_DEPLOYABLE int32) {
 	builder.PrependInt32Slot(35, NUM_DEPLOYABLE, 0)
 }
+func OODAddNumDeployable(builder *flatbuffers.Builder, NUM_DEPLOYABLE int32) {
+	OODAddNUM_DEPLOYABLE(builder, NUM_DEPLOYABLE)
+}
 func OODAddDEP_NAMES(builder *flatbuffers.Builder, DEP_NAMES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(36, flatbuffers.UOffsetT(DEP_NAMES), 0)
+}
+func OODAddDepNames(builder *flatbuffers.Builder, DEP_NAMES flatbuffers.UOffsetT) {
+	OODAddDEP_NAMES(builder, DEP_NAMES)
 }
 func OODStartDEP_NAMESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
+func OODStartDepNamesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return OODStartDEP_NAMESVector(builder, numElems)
+}
 func OODAddDEP_EST_MASSES(builder *flatbuffers.Builder, DEP_EST_MASSES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(37, flatbuffers.UOffsetT(DEP_EST_MASSES), 0)
+}
+func OODAddDepEstMasses(builder *flatbuffers.Builder, DEP_EST_MASSES flatbuffers.UOffsetT) {
+	OODAddDEP_EST_MASSES(builder, DEP_EST_MASSES)
 }
 func OODStartDEP_EST_MASSESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
+func OODStartDepEstMassesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return OODStartDEP_EST_MASSESVector(builder, numElems)
+}
 func OODAddDEP_MASS_UNCS(builder *flatbuffers.Builder, DEP_MASS_UNCS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(38, flatbuffers.UOffsetT(DEP_MASS_UNCS), 0)
+}
+func OODAddDepMassUncs(builder *flatbuffers.Builder, DEP_MASS_UNCS flatbuffers.UOffsetT) {
+	OODAddDEP_MASS_UNCS(builder, DEP_MASS_UNCS)
 }
 func OODStartDEP_MASS_UNCSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
+func OODStartDepMassUncsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return OODStartDEP_MASS_UNCSVector(builder, numElems)
+}
 func OODAddLAST_OB_SOURCE(builder *flatbuffers.Builder, LAST_OB_SOURCE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(39, flatbuffers.UOffsetT(LAST_OB_SOURCE), 0)
+}
+func OODAddLastObSource(builder *flatbuffers.Builder, LAST_OB_SOURCE flatbuffers.UOffsetT) {
+	OODAddLAST_OB_SOURCE(builder, LAST_OB_SOURCE)
 }
 func OODEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

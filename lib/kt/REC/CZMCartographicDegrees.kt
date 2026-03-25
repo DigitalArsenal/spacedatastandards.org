@@ -32,7 +32,7 @@ class CZMCartographicDegrees : Table() {
     /**
      * Longitude in degrees
      */
-    val LONGITUDE : Double
+    val longitude : Double
         get() {
             val o = __offset(4)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -40,7 +40,7 @@ class CZMCartographicDegrees : Table() {
     /**
      * Latitude in degrees
      */
-    val LATITUDE : Double
+    val latitude : Double
         get() {
             val o = __offset(6)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -48,29 +48,29 @@ class CZMCartographicDegrees : Table() {
     /**
      * Height in meters above WGS84 ellipsoid
      */
-    val HEIGHT : Double
+    val height : Double
         get() {
             val o = __offset(8)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsCZMCartographicDegrees(_bb: ByteBuffer): CZMCartographicDegrees = getRootAsCZMCartographicDegrees(_bb, CZMCartographicDegrees())
         fun getRootAsCZMCartographicDegrees(_bb: ByteBuffer, obj: CZMCartographicDegrees): CZMCartographicDegrees {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createCZMCartographicDegrees(builder: FlatBufferBuilder, LONGITUDE: Double, LATITUDE: Double, HEIGHT: Double) : Int {
+        fun createCZMCartographicDegrees(builder: FlatBufferBuilder, longitude: Double, latitude: Double, height: Double) : Int {
             builder.startTable(3)
-            addHEIGHT(builder, HEIGHT)
-            addLATITUDE(builder, LATITUDE)
-            addLONGITUDE(builder, LONGITUDE)
+            addHEIGHT(builder, height)
+            addLATITUDE(builder, latitude)
+            addLONGITUDE(builder, longitude)
             return endCZMCartographicDegrees(builder)
         }
         fun startCZMCartographicDegrees(builder: FlatBufferBuilder) = builder.startTable(3)
-        fun addLONGITUDE(builder: FlatBufferBuilder, LONGITUDE: Double) = builder.addDouble(0, LONGITUDE, 0.0)
-        fun addLATITUDE(builder: FlatBufferBuilder, LATITUDE: Double) = builder.addDouble(1, LATITUDE, 0.0)
-        fun addHEIGHT(builder: FlatBufferBuilder, HEIGHT: Double) = builder.addDouble(2, HEIGHT, 0.0)
+        fun addLONGITUDE(builder: FlatBufferBuilder, longitude: Double) = builder.addDouble(0, longitude, 0.0)
+        fun addLATITUDE(builder: FlatBufferBuilder, latitude: Double) = builder.addDouble(1, latitude, 0.0)
+        fun addHEIGHT(builder: FlatBufferBuilder, height: Double) = builder.addDouble(2, height, 0.0)
         fun endCZMCartographicDegrees(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

@@ -2,4 +2,259 @@
 
 # namespace: 
 
-# NOTE PLD.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Payload Information
+class PLD(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = PLD()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsPLD(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def PLDBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x50\x4C\x44", size_prefixed=size_prefixed)
+
+    # PLD
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # PLD
+    def PAYLOAD_DURATION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # PLD
+    def MASS_AT_LAUNCH(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # PLD
+    def DIMENSIONS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # PLD
+    def SOLAR_ARRAY_AREA(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # PLD
+    def SOLAR_ARRAY_DIMENSIONS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # PLD
+    def NOMINAL_OPERATIONAL_LIFETIME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # PLD
+    def INSTRUMENTS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from IDM import IDM
+            obj = IDM()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # PLD
+    def INSTRUMENTSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # PLD
+    def INSTRUMENTSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        return o == 0
+
+def PLDStart(builder):
+    builder.StartObject(7)
+
+def Start(builder):
+    PLDStart(builder)
+
+def PLDAddPAYLOAD_DURATION(builder, PAYLOAD_DURATION):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(PAYLOAD_DURATION), 0)
+
+def AddPAYLOAD_DURATION(builder, PAYLOAD_DURATION):
+    PLDAddPAYLOAD_DURATION(builder, PAYLOAD_DURATION)
+
+def PLDAddMASS_AT_LAUNCH(builder, MASS_AT_LAUNCH):
+    builder.PrependFloat32Slot(1, MASS_AT_LAUNCH, 0.0)
+
+def AddMASS_AT_LAUNCH(builder, MASS_AT_LAUNCH):
+    PLDAddMASS_AT_LAUNCH(builder, MASS_AT_LAUNCH)
+
+def PLDAddDIMENSIONS(builder, DIMENSIONS):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(DIMENSIONS), 0)
+
+def AddDIMENSIONS(builder, DIMENSIONS):
+    PLDAddDIMENSIONS(builder, DIMENSIONS)
+
+def PLDAddSOLAR_ARRAY_AREA(builder, SOLAR_ARRAY_AREA):
+    builder.PrependFloat32Slot(3, SOLAR_ARRAY_AREA, 0.0)
+
+def AddSOLAR_ARRAY_AREA(builder, SOLAR_ARRAY_AREA):
+    PLDAddSOLAR_ARRAY_AREA(builder, SOLAR_ARRAY_AREA)
+
+def PLDAddSOLAR_ARRAY_DIMENSIONS(builder, SOLAR_ARRAY_DIMENSIONS):
+    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(SOLAR_ARRAY_DIMENSIONS), 0)
+
+def AddSOLAR_ARRAY_DIMENSIONS(builder, SOLAR_ARRAY_DIMENSIONS):
+    PLDAddSOLAR_ARRAY_DIMENSIONS(builder, SOLAR_ARRAY_DIMENSIONS)
+
+def PLDAddNOMINAL_OPERATIONAL_LIFETIME(builder, NOMINAL_OPERATIONAL_LIFETIME):
+    builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(NOMINAL_OPERATIONAL_LIFETIME), 0)
+
+def AddNOMINAL_OPERATIONAL_LIFETIME(builder, NOMINAL_OPERATIONAL_LIFETIME):
+    PLDAddNOMINAL_OPERATIONAL_LIFETIME(builder, NOMINAL_OPERATIONAL_LIFETIME)
+
+def PLDAddINSTRUMENTS(builder, INSTRUMENTS):
+    builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(INSTRUMENTS), 0)
+
+def AddINSTRUMENTS(builder, INSTRUMENTS):
+    PLDAddINSTRUMENTS(builder, INSTRUMENTS)
+
+def PLDStartINSTRUMENTSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartINSTRUMENTSVector(builder, numElems):
+    return PLDStartINSTRUMENTSVector(builder, numElems)
+
+def PLDCreateINSTRUMENTSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateINSTRUMENTSVector(builder, data):
+    PLDCreateINSTRUMENTSVector(builder, data)
+
+def PLDEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return PLDEnd(builder)
+
+import IDM
+try:
+    from typing import List
+except:
+    pass
+
+class PLDT(object):
+
+    # PLDT
+    def __init__(
+        self,
+        PAYLOAD_DURATION = None,
+        MASS_AT_LAUNCH = 0.0,
+        DIMENSIONS = None,
+        SOLAR_ARRAY_AREA = 0.0,
+        SOLAR_ARRAY_DIMENSIONS = None,
+        NOMINAL_OPERATIONAL_LIFETIME = None,
+        INSTRUMENTS = None,
+    ):
+        self.PAYLOAD_DURATION = PAYLOAD_DURATION  # type: Optional[str]
+        self.MASS_AT_LAUNCH = MASS_AT_LAUNCH  # type: float
+        self.DIMENSIONS = DIMENSIONS  # type: Optional[str]
+        self.SOLAR_ARRAY_AREA = SOLAR_ARRAY_AREA  # type: float
+        self.SOLAR_ARRAY_DIMENSIONS = SOLAR_ARRAY_DIMENSIONS  # type: Optional[str]
+        self.NOMINAL_OPERATIONAL_LIFETIME = NOMINAL_OPERATIONAL_LIFETIME  # type: Optional[str]
+        self.INSTRUMENTS = INSTRUMENTS  # type: Optional[List[IDM.IDMT]]
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpPld = PLD()
+        tmpPld.Init(buf, pos)
+        return cls.InitFromObj(tmpPld)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpPld):
+        x = PLDT()
+        x._UnPack(tmpPld)
+        return x
+
+    # PLDT
+    def _UnPack(self, PLD):
+        if PLD is None:
+            return
+        self.PAYLOAD_DURATION = PLD.PAYLOAD_DURATION()
+        self.MASS_AT_LAUNCH = PLD.MASS_AT_LAUNCH()
+        self.DIMENSIONS = PLD.DIMENSIONS()
+        self.SOLAR_ARRAY_AREA = PLD.SOLAR_ARRAY_AREA()
+        self.SOLAR_ARRAY_DIMENSIONS = PLD.SOLAR_ARRAY_DIMENSIONS()
+        self.NOMINAL_OPERATIONAL_LIFETIME = PLD.NOMINAL_OPERATIONAL_LIFETIME()
+        if not PLD.INSTRUMENTSIsNone():
+            self.INSTRUMENTS = []
+            for i in range(PLD.INSTRUMENTSLength()):
+                if PLD.INSTRUMENTS(i) is None:
+                    self.INSTRUMENTS.append(None)
+                else:
+                    iDM_ = IDM.IDMT.InitFromObj(PLD.INSTRUMENTS(i))
+                    self.INSTRUMENTS.append(iDM_)
+
+    # PLDT
+    def Pack(self, builder):
+        if self.PAYLOAD_DURATION is not None:
+            PAYLOAD_DURATION = builder.CreateString(self.PAYLOAD_DURATION)
+        if self.DIMENSIONS is not None:
+            DIMENSIONS = builder.CreateString(self.DIMENSIONS)
+        if self.SOLAR_ARRAY_DIMENSIONS is not None:
+            SOLAR_ARRAY_DIMENSIONS = builder.CreateString(self.SOLAR_ARRAY_DIMENSIONS)
+        if self.NOMINAL_OPERATIONAL_LIFETIME is not None:
+            NOMINAL_OPERATIONAL_LIFETIME = builder.CreateString(self.NOMINAL_OPERATIONAL_LIFETIME)
+        if self.INSTRUMENTS is not None:
+            INSTRUMENTSlist = []
+            for i in range(len(self.INSTRUMENTS)):
+                INSTRUMENTSlist.append(self.INSTRUMENTS[i].Pack(builder))
+            PLDStartINSTRUMENTSVector(builder, len(self.INSTRUMENTS))
+            for i in reversed(range(len(self.INSTRUMENTS))):
+                builder.PrependUOffsetTRelative(INSTRUMENTSlist[i])
+            INSTRUMENTS = builder.EndVector()
+        PLDStart(builder)
+        if self.PAYLOAD_DURATION is not None:
+            PLDAddPAYLOAD_DURATION(builder, PAYLOAD_DURATION)
+        PLDAddMASS_AT_LAUNCH(builder, self.MASS_AT_LAUNCH)
+        if self.DIMENSIONS is not None:
+            PLDAddDIMENSIONS(builder, DIMENSIONS)
+        PLDAddSOLAR_ARRAY_AREA(builder, self.SOLAR_ARRAY_AREA)
+        if self.SOLAR_ARRAY_DIMENSIONS is not None:
+            PLDAddSOLAR_ARRAY_DIMENSIONS(builder, SOLAR_ARRAY_DIMENSIONS)
+        if self.NOMINAL_OPERATIONAL_LIFETIME is not None:
+            PLDAddNOMINAL_OPERATIONAL_LIFETIME(builder, NOMINAL_OPERATIONAL_LIFETIME)
+        if self.INSTRUMENTS is not None:
+            PLDAddINSTRUMENTS(builder, INSTRUMENTS)
+        PLD = PLDEnd(builder)
+        return PLD

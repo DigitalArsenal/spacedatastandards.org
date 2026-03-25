@@ -2,4 +2,328 @@
 
 # namespace: 
 
-# NOTE RelativeTimeParameterType.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Relative time parameter type
+class RelativeTimeParameterType(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = RelativeTimeParameterType()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsRelativeTimeParameterType(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def RelativeTimeParameterTypeBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x58\x54\x43", size_prefixed=size_prefixed)
+
+    # RelativeTimeParameterType
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Type name
+    # RelativeTimeParameterType
+    def NAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Short description
+    # RelativeTimeParameterType
+    def SHORT_DESCRIPTION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Long description
+    # RelativeTimeParameterType
+    def LONG_DESCRIPTION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Units
+    # RelativeTimeParameterType
+    def UNITS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from Unit import Unit
+            obj = Unit()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # RelativeTimeParameterType
+    def UNITSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # RelativeTimeParameterType
+    def UNITSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        return o == 0
+
+    # Data encoding
+    # RelativeTimeParameterType
+    def DATA_ENCODING(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from IntegerDataEncoding import IntegerDataEncoding
+            obj = IntegerDataEncoding()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Default alarm
+    # RelativeTimeParameterType
+    def DEFAULT_ALARM(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from DefaultAlarm import DefaultAlarm
+            obj = DefaultAlarm()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Context alarms
+    # RelativeTimeParameterType
+    def CONTEXT_ALARMS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from ContextAlarm import ContextAlarm
+            obj = ContextAlarm()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # RelativeTimeParameterType
+    def CONTEXT_ALARMSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # RelativeTimeParameterType
+    def CONTEXT_ALARMSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        return o == 0
+
+def RelativeTimeParameterTypeStart(builder):
+    builder.StartObject(7)
+
+def Start(builder):
+    RelativeTimeParameterTypeStart(builder)
+
+def RelativeTimeParameterTypeAddNAME(builder, NAME):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(NAME), 0)
+
+def AddNAME(builder, NAME):
+    RelativeTimeParameterTypeAddNAME(builder, NAME)
+
+def RelativeTimeParameterTypeAddSHORT_DESCRIPTION(builder, SHORT_DESCRIPTION):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(SHORT_DESCRIPTION), 0)
+
+def AddSHORT_DESCRIPTION(builder, SHORT_DESCRIPTION):
+    RelativeTimeParameterTypeAddSHORT_DESCRIPTION(builder, SHORT_DESCRIPTION)
+
+def RelativeTimeParameterTypeAddLONG_DESCRIPTION(builder, LONG_DESCRIPTION):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(LONG_DESCRIPTION), 0)
+
+def AddLONG_DESCRIPTION(builder, LONG_DESCRIPTION):
+    RelativeTimeParameterTypeAddLONG_DESCRIPTION(builder, LONG_DESCRIPTION)
+
+def RelativeTimeParameterTypeAddUNITS(builder, UNITS):
+    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(UNITS), 0)
+
+def AddUNITS(builder, UNITS):
+    RelativeTimeParameterTypeAddUNITS(builder, UNITS)
+
+def RelativeTimeParameterTypeStartUNITSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartUNITSVector(builder, numElems):
+    return RelativeTimeParameterTypeStartUNITSVector(builder, numElems)
+
+def RelativeTimeParameterTypeCreateUNITSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateUNITSVector(builder, data):
+    RelativeTimeParameterTypeCreateUNITSVector(builder, data)
+
+def RelativeTimeParameterTypeAddDATA_ENCODING(builder, DATA_ENCODING):
+    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(DATA_ENCODING), 0)
+
+def AddDATA_ENCODING(builder, DATA_ENCODING):
+    RelativeTimeParameterTypeAddDATA_ENCODING(builder, DATA_ENCODING)
+
+def RelativeTimeParameterTypeAddDEFAULT_ALARM(builder, DEFAULT_ALARM):
+    builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(DEFAULT_ALARM), 0)
+
+def AddDEFAULT_ALARM(builder, DEFAULT_ALARM):
+    RelativeTimeParameterTypeAddDEFAULT_ALARM(builder, DEFAULT_ALARM)
+
+def RelativeTimeParameterTypeAddCONTEXT_ALARMS(builder, CONTEXT_ALARMS):
+    builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(CONTEXT_ALARMS), 0)
+
+def AddCONTEXT_ALARMS(builder, CONTEXT_ALARMS):
+    RelativeTimeParameterTypeAddCONTEXT_ALARMS(builder, CONTEXT_ALARMS)
+
+def RelativeTimeParameterTypeStartCONTEXT_ALARMSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartCONTEXT_ALARMSVector(builder, numElems):
+    return RelativeTimeParameterTypeStartCONTEXT_ALARMSVector(builder, numElems)
+
+def RelativeTimeParameterTypeCreateCONTEXT_ALARMSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateCONTEXT_ALARMSVector(builder, data):
+    RelativeTimeParameterTypeCreateCONTEXT_ALARMSVector(builder, data)
+
+def RelativeTimeParameterTypeEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return RelativeTimeParameterTypeEnd(builder)
+
+import ContextAlarm
+import DefaultAlarm
+import IntegerDataEncoding
+import Unit
+try:
+    from typing import List, Optional
+except:
+    pass
+
+class RelativeTimeParameterTypeT(object):
+
+    # RelativeTimeParameterTypeT
+    def __init__(
+        self,
+        NAME = None,
+        SHORT_DESCRIPTION = None,
+        LONG_DESCRIPTION = None,
+        UNITS = None,
+        DATA_ENCODING = None,
+        DEFAULT_ALARM = None,
+        CONTEXT_ALARMS = None,
+    ):
+        self.NAME = NAME  # type: Optional[str]
+        self.SHORT_DESCRIPTION = SHORT_DESCRIPTION  # type: Optional[str]
+        self.LONG_DESCRIPTION = LONG_DESCRIPTION  # type: Optional[str]
+        self.UNITS = UNITS  # type: Optional[List[Unit.UnitT]]
+        self.DATA_ENCODING = DATA_ENCODING  # type: Optional[IntegerDataEncoding.IntegerDataEncodingT]
+        self.DEFAULT_ALARM = DEFAULT_ALARM  # type: Optional[DefaultAlarm.DefaultAlarmT]
+        self.CONTEXT_ALARMS = CONTEXT_ALARMS  # type: Optional[List[ContextAlarm.ContextAlarmT]]
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpRelativeTimeParameterType = RelativeTimeParameterType()
+        tmpRelativeTimeParameterType.Init(buf, pos)
+        return cls.InitFromObj(tmpRelativeTimeParameterType)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpRelativeTimeParameterType):
+        x = RelativeTimeParameterTypeT()
+        x._UnPack(tmpRelativeTimeParameterType)
+        return x
+
+    # RelativeTimeParameterTypeT
+    def _UnPack(self, RelativeTimeParameterType):
+        if RelativeTimeParameterType is None:
+            return
+        self.NAME = RelativeTimeParameterType.NAME()
+        self.SHORT_DESCRIPTION = RelativeTimeParameterType.SHORT_DESCRIPTION()
+        self.LONG_DESCRIPTION = RelativeTimeParameterType.LONG_DESCRIPTION()
+        if not RelativeTimeParameterType.UNITSIsNone():
+            self.UNITS = []
+            for i in range(RelativeTimeParameterType.UNITSLength()):
+                if RelativeTimeParameterType.UNITS(i) is None:
+                    self.UNITS.append(None)
+                else:
+                    unit_ = Unit.UnitT.InitFromObj(RelativeTimeParameterType.UNITS(i))
+                    self.UNITS.append(unit_)
+        if RelativeTimeParameterType.DATA_ENCODING() is not None:
+            self.DATA_ENCODING = IntegerDataEncoding.IntegerDataEncodingT.InitFromObj(RelativeTimeParameterType.DATA_ENCODING())
+        if RelativeTimeParameterType.DEFAULT_ALARM() is not None:
+            self.DEFAULT_ALARM = DefaultAlarm.DefaultAlarmT.InitFromObj(RelativeTimeParameterType.DEFAULT_ALARM())
+        if not RelativeTimeParameterType.CONTEXT_ALARMSIsNone():
+            self.CONTEXT_ALARMS = []
+            for i in range(RelativeTimeParameterType.CONTEXT_ALARMSLength()):
+                if RelativeTimeParameterType.CONTEXT_ALARMS(i) is None:
+                    self.CONTEXT_ALARMS.append(None)
+                else:
+                    contextAlarm_ = ContextAlarm.ContextAlarmT.InitFromObj(RelativeTimeParameterType.CONTEXT_ALARMS(i))
+                    self.CONTEXT_ALARMS.append(contextAlarm_)
+
+    # RelativeTimeParameterTypeT
+    def Pack(self, builder):
+        if self.NAME is not None:
+            NAME = builder.CreateString(self.NAME)
+        if self.SHORT_DESCRIPTION is not None:
+            SHORT_DESCRIPTION = builder.CreateString(self.SHORT_DESCRIPTION)
+        if self.LONG_DESCRIPTION is not None:
+            LONG_DESCRIPTION = builder.CreateString(self.LONG_DESCRIPTION)
+        if self.UNITS is not None:
+            UNITSlist = []
+            for i in range(len(self.UNITS)):
+                UNITSlist.append(self.UNITS[i].Pack(builder))
+            RelativeTimeParameterTypeStartUNITSVector(builder, len(self.UNITS))
+            for i in reversed(range(len(self.UNITS))):
+                builder.PrependUOffsetTRelative(UNITSlist[i])
+            UNITS = builder.EndVector()
+        if self.DATA_ENCODING is not None:
+            DATA_ENCODING = self.DATA_ENCODING.Pack(builder)
+        if self.DEFAULT_ALARM is not None:
+            DEFAULT_ALARM = self.DEFAULT_ALARM.Pack(builder)
+        if self.CONTEXT_ALARMS is not None:
+            CONTEXT_ALARMSlist = []
+            for i in range(len(self.CONTEXT_ALARMS)):
+                CONTEXT_ALARMSlist.append(self.CONTEXT_ALARMS[i].Pack(builder))
+            RelativeTimeParameterTypeStartCONTEXT_ALARMSVector(builder, len(self.CONTEXT_ALARMS))
+            for i in reversed(range(len(self.CONTEXT_ALARMS))):
+                builder.PrependUOffsetTRelative(CONTEXT_ALARMSlist[i])
+            CONTEXT_ALARMS = builder.EndVector()
+        RelativeTimeParameterTypeStart(builder)
+        if self.NAME is not None:
+            RelativeTimeParameterTypeAddNAME(builder, NAME)
+        if self.SHORT_DESCRIPTION is not None:
+            RelativeTimeParameterTypeAddSHORT_DESCRIPTION(builder, SHORT_DESCRIPTION)
+        if self.LONG_DESCRIPTION is not None:
+            RelativeTimeParameterTypeAddLONG_DESCRIPTION(builder, LONG_DESCRIPTION)
+        if self.UNITS is not None:
+            RelativeTimeParameterTypeAddUNITS(builder, UNITS)
+        if self.DATA_ENCODING is not None:
+            RelativeTimeParameterTypeAddDATA_ENCODING(builder, DATA_ENCODING)
+        if self.DEFAULT_ALARM is not None:
+            RelativeTimeParameterTypeAddDEFAULT_ALARM(builder, DEFAULT_ALARM)
+        if self.CONTEXT_ALARMS is not None:
+            RelativeTimeParameterTypeAddCONTEXT_ALARMS(builder, CONTEXT_ALARMS)
+        RelativeTimeParameterType = RelativeTimeParameterTypeEnd(builder)
+        return RelativeTimeParameterType

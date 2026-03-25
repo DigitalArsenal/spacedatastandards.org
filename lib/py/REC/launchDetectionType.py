@@ -2,4 +2,10 @@
 
 # namespace: 
 
-# NOTE launchDetectionType.py does not declare any structs or enums
+class launchDetectionType(object):
+    IR_DETECT = 0
+    RADAR_DETECT = 1
+    OPTICAL_DETECT = 2
+    ELINT_DETECT = 3
+    COMBINED = 4
+    UNKNOWN = 5

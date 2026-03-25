@@ -51,9 +51,17 @@ func (rcv *DefaultAlarm) MIN_VIOLATIONS() uint16 {
 	return 0
 }
 
+func (rcv *DefaultAlarm) MinViolations() uint16 {
+	return rcv.MIN_VIOLATIONS()
+}
+
 /// Minimum violations before alarm triggers
 func (rcv *DefaultAlarm) MutateMIN_VIOLATIONS(n uint16) bool {
 	return rcv._tab.MutateUint16Slot(4, n)
+}
+
+func (rcv *DefaultAlarm) MutateMinViolations(n uint16) bool {
+	return rcv.MutateMIN_VIOLATIONS(n)
 }
 
 /// Static numeric alarm ranges
@@ -70,6 +78,10 @@ func (rcv *DefaultAlarm) STATIC_ALARM_RANGES(obj *StaticAlarmRanges) *StaticAlar
 	return nil
 }
 
+func (rcv *DefaultAlarm) StaticAlarmRanges(obj *StaticAlarmRanges) *StaticAlarmRanges {
+	return rcv.STATIC_ALARM_RANGES(obj)
+}
+
 /// Static numeric alarm ranges
 /// Enumeration alarms for enumerated types
 func (rcv *DefaultAlarm) ENUMERATION_ALARMS(obj *EnumerationAlarm, j int) bool {
@@ -78,10 +90,17 @@ func (rcv *DefaultAlarm) ENUMERATION_ALARMS(obj *EnumerationAlarm, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(EnumerationAlarm)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *DefaultAlarm) EnumerationAlarms(obj *EnumerationAlarm, j int) bool {
+	return rcv.ENUMERATION_ALARMS(obj, j)
 }
 
 func (rcv *DefaultAlarm) ENUMERATION_ALARMSLength() int {
@@ -92,6 +111,10 @@ func (rcv *DefaultAlarm) ENUMERATION_ALARMSLength() int {
 	return 0
 }
 
+func (rcv *DefaultAlarm) EnumerationAlarmsLength() int {
+	return rcv.ENUMERATION_ALARMSLength()
+}
+
 /// Enumeration alarms for enumerated types
 func DefaultAlarmStart(builder *flatbuffers.Builder) {
 	builder.StartObject(3)
@@ -99,14 +122,26 @@ func DefaultAlarmStart(builder *flatbuffers.Builder) {
 func DefaultAlarmAddMIN_VIOLATIONS(builder *flatbuffers.Builder, MIN_VIOLATIONS uint16) {
 	builder.PrependUint16Slot(0, MIN_VIOLATIONS, 0)
 }
+func DefaultAlarmAddMinViolations(builder *flatbuffers.Builder, MIN_VIOLATIONS uint16) {
+	DefaultAlarmAddMIN_VIOLATIONS(builder, MIN_VIOLATIONS)
+}
 func DefaultAlarmAddSTATIC_ALARM_RANGES(builder *flatbuffers.Builder, STATIC_ALARM_RANGES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(STATIC_ALARM_RANGES), 0)
+}
+func DefaultAlarmAddStaticAlarmRanges(builder *flatbuffers.Builder, STATIC_ALARM_RANGES flatbuffers.UOffsetT) {
+	DefaultAlarmAddSTATIC_ALARM_RANGES(builder, STATIC_ALARM_RANGES)
 }
 func DefaultAlarmAddENUMERATION_ALARMS(builder *flatbuffers.Builder, ENUMERATION_ALARMS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(ENUMERATION_ALARMS), 0)
 }
+func DefaultAlarmAddEnumerationAlarms(builder *flatbuffers.Builder, ENUMERATION_ALARMS flatbuffers.UOffsetT) {
+	DefaultAlarmAddENUMERATION_ALARMS(builder, ENUMERATION_ALARMS)
+}
 func DefaultAlarmStartENUMERATION_ALARMSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func DefaultAlarmStartEnumerationAlarmsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return DefaultAlarmStartENUMERATION_ALARMSVector(builder, numElems)
 }
 func DefaultAlarmEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

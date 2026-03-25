@@ -32,21 +32,21 @@ class EntryFunction : Table() {
     /**
      * Function name as exported from WASM
      */
-    val NAME : String
+    val name : String
         get() {
             val o = __offset(4)
             return if (o != 0) {
                 __string(o + bb_pos)
             } else {
-                throw AssertionError("No value for (required) field NAME")
+                throw AssertionError("No value for (required) field name")
             }
         }
-    val NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val nameAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
+    fun nameInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Human-readable description
      */
-    val DESCRIPTION : String?
+    val description : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -55,12 +55,12 @@ class EntryFunction : Table() {
                 null
             }
         }
-    val DESCRIPTIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun DESCRIPTIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val descriptionAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun descriptionInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * Input parameter types (FlatBuffer schema names)
      */
-    fun INPUT_SCHEMAS(j: Int) : String? {
+    fun inputSchemas(j: Int) : String? {
         val o = __offset(8)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
@@ -68,14 +68,14 @@ class EntryFunction : Table() {
             null
         }
     }
-    val INPUT_SCHEMASLength : Int
+    val inputSchemasLength : Int
         get() {
             val o = __offset(8); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Output type (FlatBuffer schema name)
      */
-    val OUTPUT_SCHEMA : String?
+    val outputSchema : String?
         get() {
             val o = __offset(10)
             return if (o != 0) {
@@ -84,27 +84,27 @@ class EntryFunction : Table() {
                 null
             }
         }
-    val OUTPUT_SCHEMAAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
-    fun OUTPUT_SCHEMAInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
+    val outputSchemaAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(10, 1)
+    fun outputSchemaInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 10, 1)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsEntryFunction(_bb: ByteBuffer): EntryFunction = getRootAsEntryFunction(_bb, EntryFunction())
         fun getRootAsEntryFunction(_bb: ByteBuffer, obj: EntryFunction): EntryFunction {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createEntryFunction(builder: FlatBufferBuilder, NAMEOffset: Int, DESCRIPTIONOffset: Int, INPUT_SCHEMASOffset: Int, OUTPUT_SCHEMAOffset: Int) : Int {
+        fun createEntryFunction(builder: FlatBufferBuilder, nameOffset: Int, descriptionOffset: Int, inputSchemasOffset: Int, outputSchemaOffset: Int) : Int {
             builder.startTable(4)
-            addOUTPUT_SCHEMA(builder, OUTPUT_SCHEMAOffset)
-            addINPUT_SCHEMAS(builder, INPUT_SCHEMASOffset)
-            addDESCRIPTION(builder, DESCRIPTIONOffset)
-            addNAME(builder, NAMEOffset)
+            addOUTPUTSCHEMA(builder, outputSchemaOffset)
+            addINPUTSCHEMAS(builder, inputSchemasOffset)
+            addDESCRIPTION(builder, descriptionOffset)
+            addNAME(builder, nameOffset)
             return endEntryFunction(builder)
         }
         fun startEntryFunction(builder: FlatBufferBuilder) = builder.startTable(4)
-        fun addNAME(builder: FlatBufferBuilder, NAME: Int) = builder.addOffset(0, NAME, 0)
-        fun addDESCRIPTION(builder: FlatBufferBuilder, DESCRIPTION: Int) = builder.addOffset(1, DESCRIPTION, 0)
-        fun addINPUT_SCHEMAS(builder: FlatBufferBuilder, INPUT_SCHEMAS: Int) = builder.addOffset(2, INPUT_SCHEMAS, 0)
+        fun addNAME(builder: FlatBufferBuilder, name: Int) = builder.addOffset(0, name, 0)
+        fun addDESCRIPTION(builder: FlatBufferBuilder, description: Int) = builder.addOffset(1, description, 0)
+        fun addINPUTSCHEMAS(builder: FlatBufferBuilder, inputSchemas: Int) = builder.addOffset(2, inputSchemas, 0)
         fun createInputSchemasVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -113,7 +113,7 @@ class EntryFunction : Table() {
             return builder.endVector()
         }
         fun startInputSchemasVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addOUTPUT_SCHEMA(builder: FlatBufferBuilder, OUTPUT_SCHEMA: Int) = builder.addOffset(3, OUTPUT_SCHEMA, 0)
+        fun addOUTPUTSCHEMA(builder: FlatBufferBuilder, outputSchema: Int) = builder.addOffset(3, outputSchema, 0)
         fun endEntryFunction(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
                 builder.required(o, 4)

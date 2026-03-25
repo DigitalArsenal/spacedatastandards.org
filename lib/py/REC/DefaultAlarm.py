@@ -2,4 +2,191 @@
 
 # namespace: 
 
-# NOTE DefaultAlarm.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Default alarm definition
+class DefaultAlarm(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = DefaultAlarm()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsDefaultAlarm(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def DefaultAlarmBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x58\x54\x43", size_prefixed=size_prefixed)
+
+    # DefaultAlarm
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Minimum violations before alarm triggers
+    # DefaultAlarm
+    def MIN_VIOLATIONS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint16Flags, o + self._tab.Pos)
+        return 0
+
+    # Static numeric alarm ranges
+    # DefaultAlarm
+    def STATIC_ALARM_RANGES(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from StaticAlarmRanges import StaticAlarmRanges
+            obj = StaticAlarmRanges()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Enumeration alarms for enumerated types
+    # DefaultAlarm
+    def ENUMERATION_ALARMS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from EnumerationAlarm import EnumerationAlarm
+            obj = EnumerationAlarm()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # DefaultAlarm
+    def ENUMERATION_ALARMSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # DefaultAlarm
+    def ENUMERATION_ALARMSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        return o == 0
+
+def DefaultAlarmStart(builder):
+    builder.StartObject(3)
+
+def Start(builder):
+    DefaultAlarmStart(builder)
+
+def DefaultAlarmAddMIN_VIOLATIONS(builder, MIN_VIOLATIONS):
+    builder.PrependUint16Slot(0, MIN_VIOLATIONS, 0)
+
+def AddMIN_VIOLATIONS(builder, MIN_VIOLATIONS):
+    DefaultAlarmAddMIN_VIOLATIONS(builder, MIN_VIOLATIONS)
+
+def DefaultAlarmAddSTATIC_ALARM_RANGES(builder, STATIC_ALARM_RANGES):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(STATIC_ALARM_RANGES), 0)
+
+def AddSTATIC_ALARM_RANGES(builder, STATIC_ALARM_RANGES):
+    DefaultAlarmAddSTATIC_ALARM_RANGES(builder, STATIC_ALARM_RANGES)
+
+def DefaultAlarmAddENUMERATION_ALARMS(builder, ENUMERATION_ALARMS):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(ENUMERATION_ALARMS), 0)
+
+def AddENUMERATION_ALARMS(builder, ENUMERATION_ALARMS):
+    DefaultAlarmAddENUMERATION_ALARMS(builder, ENUMERATION_ALARMS)
+
+def DefaultAlarmStartENUMERATION_ALARMSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartENUMERATION_ALARMSVector(builder, numElems):
+    return DefaultAlarmStartENUMERATION_ALARMSVector(builder, numElems)
+
+def DefaultAlarmCreateENUMERATION_ALARMSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateENUMERATION_ALARMSVector(builder, data):
+    DefaultAlarmCreateENUMERATION_ALARMSVector(builder, data)
+
+def DefaultAlarmEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return DefaultAlarmEnd(builder)
+
+import EnumerationAlarm
+import StaticAlarmRanges
+try:
+    from typing import List, Optional
+except:
+    pass
+
+class DefaultAlarmT(object):
+
+    # DefaultAlarmT
+    def __init__(
+        self,
+        MIN_VIOLATIONS = 0,
+        STATIC_ALARM_RANGES = None,
+        ENUMERATION_ALARMS = None,
+    ):
+        self.MIN_VIOLATIONS = MIN_VIOLATIONS  # type: int
+        self.STATIC_ALARM_RANGES = STATIC_ALARM_RANGES  # type: Optional[StaticAlarmRanges.StaticAlarmRangesT]
+        self.ENUMERATION_ALARMS = ENUMERATION_ALARMS  # type: Optional[List[EnumerationAlarm.EnumerationAlarmT]]
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpDefaultAlarm = DefaultAlarm()
+        tmpDefaultAlarm.Init(buf, pos)
+        return cls.InitFromObj(tmpDefaultAlarm)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpDefaultAlarm):
+        x = DefaultAlarmT()
+        x._UnPack(tmpDefaultAlarm)
+        return x
+
+    # DefaultAlarmT
+    def _UnPack(self, DefaultAlarm):
+        if DefaultAlarm is None:
+            return
+        self.MIN_VIOLATIONS = DefaultAlarm.MIN_VIOLATIONS()
+        if DefaultAlarm.STATIC_ALARM_RANGES() is not None:
+            self.STATIC_ALARM_RANGES = StaticAlarmRanges.StaticAlarmRangesT.InitFromObj(DefaultAlarm.STATIC_ALARM_RANGES())
+        if not DefaultAlarm.ENUMERATION_ALARMSIsNone():
+            self.ENUMERATION_ALARMS = []
+            for i in range(DefaultAlarm.ENUMERATION_ALARMSLength()):
+                if DefaultAlarm.ENUMERATION_ALARMS(i) is None:
+                    self.ENUMERATION_ALARMS.append(None)
+                else:
+                    enumerationAlarm_ = EnumerationAlarm.EnumerationAlarmT.InitFromObj(DefaultAlarm.ENUMERATION_ALARMS(i))
+                    self.ENUMERATION_ALARMS.append(enumerationAlarm_)
+
+    # DefaultAlarmT
+    def Pack(self, builder):
+        if self.STATIC_ALARM_RANGES is not None:
+            STATIC_ALARM_RANGES = self.STATIC_ALARM_RANGES.Pack(builder)
+        if self.ENUMERATION_ALARMS is not None:
+            ENUMERATION_ALARMSlist = []
+            for i in range(len(self.ENUMERATION_ALARMS)):
+                ENUMERATION_ALARMSlist.append(self.ENUMERATION_ALARMS[i].Pack(builder))
+            DefaultAlarmStartENUMERATION_ALARMSVector(builder, len(self.ENUMERATION_ALARMS))
+            for i in reversed(range(len(self.ENUMERATION_ALARMS))):
+                builder.PrependUOffsetTRelative(ENUMERATION_ALARMSlist[i])
+            ENUMERATION_ALARMS = builder.EndVector()
+        DefaultAlarmStart(builder)
+        DefaultAlarmAddMIN_VIOLATIONS(builder, self.MIN_VIOLATIONS)
+        if self.STATIC_ALARM_RANGES is not None:
+            DefaultAlarmAddSTATIC_ALARM_RANGES(builder, STATIC_ALARM_RANGES)
+        if self.ENUMERATION_ALARMS is not None:
+            DefaultAlarmAddENUMERATION_ALARMS(builder, ENUMERATION_ALARMS)
+        DefaultAlarm = DefaultAlarmEnd(builder)
+        return DefaultAlarm

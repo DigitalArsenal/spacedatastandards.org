@@ -115,18 +115,25 @@ def End(builder):
 class KMLViewVolumeT(object):
 
     # KMLViewVolumeT
-    def __init__(self):
-        self.LEFT_FOV = 0.0  # type: float
-        self.RIGHT_FOV = 0.0  # type: float
-        self.BOTTOM_FOV = 0.0  # type: float
-        self.TOP_FOV = 0.0  # type: float
-        self.NEAR = 0.0  # type: float
+    def __init__(
+        self,
+        LEFT_FOV = 0.0,
+        RIGHT_FOV = 0.0,
+        BOTTOM_FOV = 0.0,
+        TOP_FOV = 0.0,
+        NEAR = 0.0,
+    ):
+        self.LEFT_FOV = LEFT_FOV  # type: float
+        self.RIGHT_FOV = RIGHT_FOV  # type: float
+        self.BOTTOM_FOV = BOTTOM_FOV  # type: float
+        self.TOP_FOV = TOP_FOV  # type: float
+        self.NEAR = NEAR  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        kmlviewVolume = KMLViewVolume()
-        kmlviewVolume.Init(buf, pos)
-        return cls.InitFromObj(kmlviewVolume)
+        tmpKmlviewVolume = KMLViewVolume()
+        tmpKmlviewVolume.Init(buf, pos)
+        return cls.InitFromObj(tmpKmlviewVolume)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -134,20 +141,20 @@ class KMLViewVolumeT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, kmlviewVolume):
+    def InitFromObj(cls, tmpKmlviewVolume):
         x = KMLViewVolumeT()
-        x._UnPack(kmlviewVolume)
+        x._UnPack(tmpKmlviewVolume)
         return x
 
     # KMLViewVolumeT
-    def _UnPack(self, kmlviewVolume):
-        if kmlviewVolume is None:
+    def _UnPack(self, KMLViewVolume):
+        if KMLViewVolume is None:
             return
-        self.LEFT_FOV = kmlviewVolume.LEFT_FOV()
-        self.RIGHT_FOV = kmlviewVolume.RIGHT_FOV()
-        self.BOTTOM_FOV = kmlviewVolume.BOTTOM_FOV()
-        self.TOP_FOV = kmlviewVolume.TOP_FOV()
-        self.NEAR = kmlviewVolume.NEAR()
+        self.LEFT_FOV = KMLViewVolume.LEFT_FOV()
+        self.RIGHT_FOV = KMLViewVolume.RIGHT_FOV()
+        self.BOTTOM_FOV = KMLViewVolume.BOTTOM_FOV()
+        self.TOP_FOV = KMLViewVolume.TOP_FOV()
+        self.NEAR = KMLViewVolume.NEAR()
 
     # KMLViewVolumeT
     def Pack(self, builder):
@@ -157,5 +164,5 @@ class KMLViewVolumeT(object):
         KMLViewVolumeAddBOTTOM_FOV(builder, self.BOTTOM_FOV)
         KMLViewVolumeAddTOP_FOV(builder, self.TOP_FOV)
         KMLViewVolumeAddNEAR(builder, self.NEAR)
-        kmlviewVolume = KMLViewVolumeEnd(builder)
-        return kmlviewVolume
+        KMLViewVolume = KMLViewVolumeEnd(builder)
+        return KMLViewVolume

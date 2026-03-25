@@ -104,6 +104,12 @@ def EntryFunctionStartINPUT_SCHEMASVector(builder, numElems):
 def StartINPUT_SCHEMASVector(builder, numElems):
     return EntryFunctionStartINPUT_SCHEMASVector(builder, numElems)
 
+def EntryFunctionCreateINPUT_SCHEMASVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateINPUT_SCHEMASVector(builder, data):
+    EntryFunctionCreateINPUT_SCHEMASVector(builder, data)
+
 def EntryFunctionAddOUTPUT_SCHEMA(builder, OUTPUT_SCHEMA):
     builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(OUTPUT_SCHEMA), 0)
 
@@ -124,17 +130,23 @@ except:
 class EntryFunctionT(object):
 
     # EntryFunctionT
-    def __init__(self):
-        self.NAME = None  # type: str
-        self.DESCRIPTION = None  # type: str
-        self.INPUT_SCHEMAS = None  # type: List[str]
-        self.OUTPUT_SCHEMA = None  # type: str
+    def __init__(
+        self,
+        NAME = None,
+        DESCRIPTION = None,
+        INPUT_SCHEMAS = None,
+        OUTPUT_SCHEMA = None,
+    ):
+        self.NAME = NAME  # type: Optional[str]
+        self.DESCRIPTION = DESCRIPTION  # type: Optional[str]
+        self.INPUT_SCHEMAS = INPUT_SCHEMAS  # type: Optional[List[Optional[str]]]
+        self.OUTPUT_SCHEMA = OUTPUT_SCHEMA  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        entryFunction = EntryFunction()
-        entryFunction.Init(buf, pos)
-        return cls.InitFromObj(entryFunction)
+        tmpEntryFunction = EntryFunction()
+        tmpEntryFunction.Init(buf, pos)
+        return cls.InitFromObj(tmpEntryFunction)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -142,22 +154,22 @@ class EntryFunctionT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, entryFunction):
+    def InitFromObj(cls, tmpEntryFunction):
         x = EntryFunctionT()
-        x._UnPack(entryFunction)
+        x._UnPack(tmpEntryFunction)
         return x
 
     # EntryFunctionT
-    def _UnPack(self, entryFunction):
-        if entryFunction is None:
+    def _UnPack(self, EntryFunction):
+        if EntryFunction is None:
             return
-        self.NAME = entryFunction.NAME()
-        self.DESCRIPTION = entryFunction.DESCRIPTION()
-        if not entryFunction.INPUT_SCHEMASIsNone():
+        self.NAME = EntryFunction.NAME()
+        self.DESCRIPTION = EntryFunction.DESCRIPTION()
+        if not EntryFunction.INPUT_SCHEMASIsNone():
             self.INPUT_SCHEMAS = []
-            for i in range(entryFunction.INPUT_SCHEMASLength()):
-                self.INPUT_SCHEMAS.append(entryFunction.INPUT_SCHEMAS(i))
-        self.OUTPUT_SCHEMA = entryFunction.OUTPUT_SCHEMA()
+            for i in range(EntryFunction.INPUT_SCHEMASLength()):
+                self.INPUT_SCHEMAS.append(EntryFunction.INPUT_SCHEMAS(i))
+        self.OUTPUT_SCHEMA = EntryFunction.OUTPUT_SCHEMA()
 
     # EntryFunctionT
     def Pack(self, builder):
@@ -184,5 +196,5 @@ class EntryFunctionT(object):
             EntryFunctionAddINPUT_SCHEMAS(builder, INPUT_SCHEMAS)
         if self.OUTPUT_SCHEMA is not None:
             EntryFunctionAddOUTPUT_SCHEMA(builder, OUTPUT_SCHEMA)
-        entryFunction = EntryFunctionEnd(builder)
-        return entryFunction
+        EntryFunction = EntryFunctionEnd(builder)
+        return EntryFunction

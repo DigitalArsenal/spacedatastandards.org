@@ -2,4 +2,217 @@
 
 # namespace: 
 
-# NOTE sensorMaintenanceEvent.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Sensor Maintenance Event
+class sensorMaintenanceEvent(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = sensorMaintenanceEvent()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAssensorMaintenanceEvent(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def sensorMaintenanceEventBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x53\x45\x4E", size_prefixed=size_prefixed)
+
+    # sensorMaintenanceEvent
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Maintenance start time (ISO 8601)
+    # sensorMaintenanceEvent
+    def START_TIME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Maintenance end time (ISO 8601)
+    # sensorMaintenanceEvent
+    def END_TIME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Type of maintenance
+    # sensorMaintenanceEvent
+    def TYPE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # Description of maintenance performed
+    # sensorMaintenanceEvent
+    def DESCRIPTION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Components affected
+    # sensorMaintenanceEvent
+    def COMPONENTS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
+        return ""
+
+    # sensorMaintenanceEvent
+    def COMPONENTSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # sensorMaintenanceEvent
+    def COMPONENTSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        return o == 0
+
+def sensorMaintenanceEventStart(builder):
+    builder.StartObject(5)
+
+def Start(builder):
+    sensorMaintenanceEventStart(builder)
+
+def sensorMaintenanceEventAddSTART_TIME(builder, START_TIME):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(START_TIME), 0)
+
+def AddSTART_TIME(builder, START_TIME):
+    sensorMaintenanceEventAddSTART_TIME(builder, START_TIME)
+
+def sensorMaintenanceEventAddEND_TIME(builder, END_TIME):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(END_TIME), 0)
+
+def AddEND_TIME(builder, END_TIME):
+    sensorMaintenanceEventAddEND_TIME(builder, END_TIME)
+
+def sensorMaintenanceEventAddTYPE(builder, TYPE):
+    builder.PrependInt8Slot(2, TYPE, 0)
+
+def AddTYPE(builder, TYPE):
+    sensorMaintenanceEventAddTYPE(builder, TYPE)
+
+def sensorMaintenanceEventAddDESCRIPTION(builder, DESCRIPTION):
+    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(DESCRIPTION), 0)
+
+def AddDESCRIPTION(builder, DESCRIPTION):
+    sensorMaintenanceEventAddDESCRIPTION(builder, DESCRIPTION)
+
+def sensorMaintenanceEventAddCOMPONENTS(builder, COMPONENTS):
+    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(COMPONENTS), 0)
+
+def AddCOMPONENTS(builder, COMPONENTS):
+    sensorMaintenanceEventAddCOMPONENTS(builder, COMPONENTS)
+
+def sensorMaintenanceEventStartCOMPONENTSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartCOMPONENTSVector(builder, numElems):
+    return sensorMaintenanceEventStartCOMPONENTSVector(builder, numElems)
+
+def sensorMaintenanceEventCreateCOMPONENTSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateCOMPONENTSVector(builder, data):
+    sensorMaintenanceEventCreateCOMPONENTSVector(builder, data)
+
+def sensorMaintenanceEventEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return sensorMaintenanceEventEnd(builder)
+
+try:
+    from typing import List
+except:
+    pass
+
+class sensorMaintenanceEventT(object):
+
+    # sensorMaintenanceEventT
+    def __init__(
+        self,
+        START_TIME = None,
+        END_TIME = None,
+        TYPE = 0,
+        DESCRIPTION = None,
+        COMPONENTS = None,
+    ):
+        self.START_TIME = START_TIME  # type: Optional[str]
+        self.END_TIME = END_TIME  # type: Optional[str]
+        self.TYPE = TYPE  # type: int
+        self.DESCRIPTION = DESCRIPTION  # type: Optional[str]
+        self.COMPONENTS = COMPONENTS  # type: Optional[List[Optional[str]]]
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpSensorMaintenanceEvent = sensorMaintenanceEvent()
+        tmpSensorMaintenanceEvent.Init(buf, pos)
+        return cls.InitFromObj(tmpSensorMaintenanceEvent)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpSensorMaintenanceEvent):
+        x = sensorMaintenanceEventT()
+        x._UnPack(tmpSensorMaintenanceEvent)
+        return x
+
+    # sensorMaintenanceEventT
+    def _UnPack(self, sensorMaintenanceEvent):
+        if sensorMaintenanceEvent is None:
+            return
+        self.START_TIME = sensorMaintenanceEvent.START_TIME()
+        self.END_TIME = sensorMaintenanceEvent.END_TIME()
+        self.TYPE = sensorMaintenanceEvent.TYPE()
+        self.DESCRIPTION = sensorMaintenanceEvent.DESCRIPTION()
+        if not sensorMaintenanceEvent.COMPONENTSIsNone():
+            self.COMPONENTS = []
+            for i in range(sensorMaintenanceEvent.COMPONENTSLength()):
+                self.COMPONENTS.append(sensorMaintenanceEvent.COMPONENTS(i))
+
+    # sensorMaintenanceEventT
+    def Pack(self, builder):
+        if self.START_TIME is not None:
+            START_TIME = builder.CreateString(self.START_TIME)
+        if self.END_TIME is not None:
+            END_TIME = builder.CreateString(self.END_TIME)
+        if self.DESCRIPTION is not None:
+            DESCRIPTION = builder.CreateString(self.DESCRIPTION)
+        if self.COMPONENTS is not None:
+            COMPONENTSlist = []
+            for i in range(len(self.COMPONENTS)):
+                COMPONENTSlist.append(builder.CreateString(self.COMPONENTS[i]))
+            sensorMaintenanceEventStartCOMPONENTSVector(builder, len(self.COMPONENTS))
+            for i in reversed(range(len(self.COMPONENTS))):
+                builder.PrependUOffsetTRelative(COMPONENTSlist[i])
+            COMPONENTS = builder.EndVector()
+        sensorMaintenanceEventStart(builder)
+        if self.START_TIME is not None:
+            sensorMaintenanceEventAddSTART_TIME(builder, START_TIME)
+        if self.END_TIME is not None:
+            sensorMaintenanceEventAddEND_TIME(builder, END_TIME)
+        sensorMaintenanceEventAddTYPE(builder, self.TYPE)
+        if self.DESCRIPTION is not None:
+            sensorMaintenanceEventAddDESCRIPTION(builder, DESCRIPTION)
+        if self.COMPONENTS is not None:
+            sensorMaintenanceEventAddCOMPONENTS(builder, COMPONENTS)
+        sensorMaintenanceEvent = sensorMaintenanceEventEnd(builder)
+        return sensorMaintenanceEvent

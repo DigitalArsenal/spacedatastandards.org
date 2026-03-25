@@ -2,4 +2,400 @@
 
 # namespace: 
 
-# NOTE FloatParameterType.py does not declare any structs or enums
+import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
+
+# Float parameter type
+class FloatParameterType(object):
+    __slots__ = ['_tab']
+
+    @classmethod
+    def GetRootAs(cls, buf, offset=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, offset)
+        x = FloatParameterType()
+        x.Init(buf, n + offset)
+        return x
+
+    @classmethod
+    def GetRootAsFloatParameterType(cls, buf, offset=0):
+        """This method is deprecated. Please switch to GetRootAs."""
+        return cls.GetRootAs(buf, offset)
+    @classmethod
+    def FloatParameterTypeBufferHasIdentifier(cls, buf, offset, size_prefixed=False):
+        return flatbuffers.util.BufferHasIdentifier(buf, offset, b"\x24\x58\x54\x43", size_prefixed=size_prefixed)
+
+    # FloatParameterType
+    def Init(self, buf, pos):
+        self._tab = flatbuffers.table.Table(buf, pos)
+
+    # Type name
+    # FloatParameterType
+    def NAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Short description
+    # FloatParameterType
+    def SHORT_DESCRIPTION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Long description
+    # FloatParameterType
+    def LONG_DESCRIPTION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Units
+    # FloatParameterType
+    def UNITS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from Unit import Unit
+            obj = Unit()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # FloatParameterType
+    def UNITSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # FloatParameterType
+    def UNITSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        return o == 0
+
+    # Data encoding
+    # FloatParameterType
+    def DATA_ENCODING(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from FloatDataEncoding import FloatDataEncoding
+            obj = FloatDataEncoding()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Default alarm
+    # FloatParameterType
+    def DEFAULT_ALARM(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from DefaultAlarm import DefaultAlarm
+            obj = DefaultAlarm()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Context alarms
+    # FloatParameterType
+    def CONTEXT_ALARMS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from ContextAlarm import ContextAlarm
+            obj = ContextAlarm()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # FloatParameterType
+    def CONTEXT_ALARMSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # FloatParameterType
+    def CONTEXT_ALARMSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        return o == 0
+
+    # Minimum valid value
+    # FloatParameterType
+    def VALID_MIN(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Maximum valid value
+    # FloatParameterType
+    def VALID_MAX(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Size in bits (32 or 64)
+    # FloatParameterType
+    def SIZE_IN_BITS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint16Flags, o + self._tab.Pos)
+        return 0
+
+    # Initial/default value
+    # FloatParameterType
+    def INITIAL_VALUE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+def FloatParameterTypeStart(builder):
+    builder.StartObject(11)
+
+def Start(builder):
+    FloatParameterTypeStart(builder)
+
+def FloatParameterTypeAddNAME(builder, NAME):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(NAME), 0)
+
+def AddNAME(builder, NAME):
+    FloatParameterTypeAddNAME(builder, NAME)
+
+def FloatParameterTypeAddSHORT_DESCRIPTION(builder, SHORT_DESCRIPTION):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(SHORT_DESCRIPTION), 0)
+
+def AddSHORT_DESCRIPTION(builder, SHORT_DESCRIPTION):
+    FloatParameterTypeAddSHORT_DESCRIPTION(builder, SHORT_DESCRIPTION)
+
+def FloatParameterTypeAddLONG_DESCRIPTION(builder, LONG_DESCRIPTION):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(LONG_DESCRIPTION), 0)
+
+def AddLONG_DESCRIPTION(builder, LONG_DESCRIPTION):
+    FloatParameterTypeAddLONG_DESCRIPTION(builder, LONG_DESCRIPTION)
+
+def FloatParameterTypeAddUNITS(builder, UNITS):
+    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(UNITS), 0)
+
+def AddUNITS(builder, UNITS):
+    FloatParameterTypeAddUNITS(builder, UNITS)
+
+def FloatParameterTypeStartUNITSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartUNITSVector(builder, numElems):
+    return FloatParameterTypeStartUNITSVector(builder, numElems)
+
+def FloatParameterTypeCreateUNITSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateUNITSVector(builder, data):
+    FloatParameterTypeCreateUNITSVector(builder, data)
+
+def FloatParameterTypeAddDATA_ENCODING(builder, DATA_ENCODING):
+    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(DATA_ENCODING), 0)
+
+def AddDATA_ENCODING(builder, DATA_ENCODING):
+    FloatParameterTypeAddDATA_ENCODING(builder, DATA_ENCODING)
+
+def FloatParameterTypeAddDEFAULT_ALARM(builder, DEFAULT_ALARM):
+    builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(DEFAULT_ALARM), 0)
+
+def AddDEFAULT_ALARM(builder, DEFAULT_ALARM):
+    FloatParameterTypeAddDEFAULT_ALARM(builder, DEFAULT_ALARM)
+
+def FloatParameterTypeAddCONTEXT_ALARMS(builder, CONTEXT_ALARMS):
+    builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(CONTEXT_ALARMS), 0)
+
+def AddCONTEXT_ALARMS(builder, CONTEXT_ALARMS):
+    FloatParameterTypeAddCONTEXT_ALARMS(builder, CONTEXT_ALARMS)
+
+def FloatParameterTypeStartCONTEXT_ALARMSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartCONTEXT_ALARMSVector(builder, numElems):
+    return FloatParameterTypeStartCONTEXT_ALARMSVector(builder, numElems)
+
+def FloatParameterTypeCreateCONTEXT_ALARMSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateCONTEXT_ALARMSVector(builder, data):
+    FloatParameterTypeCreateCONTEXT_ALARMSVector(builder, data)
+
+def FloatParameterTypeAddVALID_MIN(builder, VALID_MIN):
+    builder.PrependFloat64Slot(7, VALID_MIN, 0.0)
+
+def AddVALID_MIN(builder, VALID_MIN):
+    FloatParameterTypeAddVALID_MIN(builder, VALID_MIN)
+
+def FloatParameterTypeAddVALID_MAX(builder, VALID_MAX):
+    builder.PrependFloat64Slot(8, VALID_MAX, 0.0)
+
+def AddVALID_MAX(builder, VALID_MAX):
+    FloatParameterTypeAddVALID_MAX(builder, VALID_MAX)
+
+def FloatParameterTypeAddSIZE_IN_BITS(builder, SIZE_IN_BITS):
+    builder.PrependUint16Slot(9, SIZE_IN_BITS, 0)
+
+def AddSIZE_IN_BITS(builder, SIZE_IN_BITS):
+    FloatParameterTypeAddSIZE_IN_BITS(builder, SIZE_IN_BITS)
+
+def FloatParameterTypeAddINITIAL_VALUE(builder, INITIAL_VALUE):
+    builder.PrependFloat64Slot(10, INITIAL_VALUE, 0.0)
+
+def AddINITIAL_VALUE(builder, INITIAL_VALUE):
+    FloatParameterTypeAddINITIAL_VALUE(builder, INITIAL_VALUE)
+
+def FloatParameterTypeEnd(builder):
+    return builder.EndObject()
+
+def End(builder):
+    return FloatParameterTypeEnd(builder)
+
+import ContextAlarm
+import DefaultAlarm
+import FloatDataEncoding
+import Unit
+try:
+    from typing import List, Optional
+except:
+    pass
+
+class FloatParameterTypeT(object):
+
+    # FloatParameterTypeT
+    def __init__(
+        self,
+        NAME = None,
+        SHORT_DESCRIPTION = None,
+        LONG_DESCRIPTION = None,
+        UNITS = None,
+        DATA_ENCODING = None,
+        DEFAULT_ALARM = None,
+        CONTEXT_ALARMS = None,
+        VALID_MIN = 0.0,
+        VALID_MAX = 0.0,
+        SIZE_IN_BITS = 0,
+        INITIAL_VALUE = 0.0,
+    ):
+        self.NAME = NAME  # type: Optional[str]
+        self.SHORT_DESCRIPTION = SHORT_DESCRIPTION  # type: Optional[str]
+        self.LONG_DESCRIPTION = LONG_DESCRIPTION  # type: Optional[str]
+        self.UNITS = UNITS  # type: Optional[List[Unit.UnitT]]
+        self.DATA_ENCODING = DATA_ENCODING  # type: Optional[FloatDataEncoding.FloatDataEncodingT]
+        self.DEFAULT_ALARM = DEFAULT_ALARM  # type: Optional[DefaultAlarm.DefaultAlarmT]
+        self.CONTEXT_ALARMS = CONTEXT_ALARMS  # type: Optional[List[ContextAlarm.ContextAlarmT]]
+        self.VALID_MIN = VALID_MIN  # type: float
+        self.VALID_MAX = VALID_MAX  # type: float
+        self.SIZE_IN_BITS = SIZE_IN_BITS  # type: int
+        self.INITIAL_VALUE = INITIAL_VALUE  # type: float
+
+    @classmethod
+    def InitFromBuf(cls, buf, pos):
+        tmpFloatParameterType = FloatParameterType()
+        tmpFloatParameterType.Init(buf, pos)
+        return cls.InitFromObj(tmpFloatParameterType)
+
+    @classmethod
+    def InitFromPackedBuf(cls, buf, pos=0):
+        n = flatbuffers.encode.Get(flatbuffers.packer.uoffset, buf, pos)
+        return cls.InitFromBuf(buf, pos+n)
+
+    @classmethod
+    def InitFromObj(cls, tmpFloatParameterType):
+        x = FloatParameterTypeT()
+        x._UnPack(tmpFloatParameterType)
+        return x
+
+    # FloatParameterTypeT
+    def _UnPack(self, FloatParameterType):
+        if FloatParameterType is None:
+            return
+        self.NAME = FloatParameterType.NAME()
+        self.SHORT_DESCRIPTION = FloatParameterType.SHORT_DESCRIPTION()
+        self.LONG_DESCRIPTION = FloatParameterType.LONG_DESCRIPTION()
+        if not FloatParameterType.UNITSIsNone():
+            self.UNITS = []
+            for i in range(FloatParameterType.UNITSLength()):
+                if FloatParameterType.UNITS(i) is None:
+                    self.UNITS.append(None)
+                else:
+                    unit_ = Unit.UnitT.InitFromObj(FloatParameterType.UNITS(i))
+                    self.UNITS.append(unit_)
+        if FloatParameterType.DATA_ENCODING() is not None:
+            self.DATA_ENCODING = FloatDataEncoding.FloatDataEncodingT.InitFromObj(FloatParameterType.DATA_ENCODING())
+        if FloatParameterType.DEFAULT_ALARM() is not None:
+            self.DEFAULT_ALARM = DefaultAlarm.DefaultAlarmT.InitFromObj(FloatParameterType.DEFAULT_ALARM())
+        if not FloatParameterType.CONTEXT_ALARMSIsNone():
+            self.CONTEXT_ALARMS = []
+            for i in range(FloatParameterType.CONTEXT_ALARMSLength()):
+                if FloatParameterType.CONTEXT_ALARMS(i) is None:
+                    self.CONTEXT_ALARMS.append(None)
+                else:
+                    contextAlarm_ = ContextAlarm.ContextAlarmT.InitFromObj(FloatParameterType.CONTEXT_ALARMS(i))
+                    self.CONTEXT_ALARMS.append(contextAlarm_)
+        self.VALID_MIN = FloatParameterType.VALID_MIN()
+        self.VALID_MAX = FloatParameterType.VALID_MAX()
+        self.SIZE_IN_BITS = FloatParameterType.SIZE_IN_BITS()
+        self.INITIAL_VALUE = FloatParameterType.INITIAL_VALUE()
+
+    # FloatParameterTypeT
+    def Pack(self, builder):
+        if self.NAME is not None:
+            NAME = builder.CreateString(self.NAME)
+        if self.SHORT_DESCRIPTION is not None:
+            SHORT_DESCRIPTION = builder.CreateString(self.SHORT_DESCRIPTION)
+        if self.LONG_DESCRIPTION is not None:
+            LONG_DESCRIPTION = builder.CreateString(self.LONG_DESCRIPTION)
+        if self.UNITS is not None:
+            UNITSlist = []
+            for i in range(len(self.UNITS)):
+                UNITSlist.append(self.UNITS[i].Pack(builder))
+            FloatParameterTypeStartUNITSVector(builder, len(self.UNITS))
+            for i in reversed(range(len(self.UNITS))):
+                builder.PrependUOffsetTRelative(UNITSlist[i])
+            UNITS = builder.EndVector()
+        if self.DATA_ENCODING is not None:
+            DATA_ENCODING = self.DATA_ENCODING.Pack(builder)
+        if self.DEFAULT_ALARM is not None:
+            DEFAULT_ALARM = self.DEFAULT_ALARM.Pack(builder)
+        if self.CONTEXT_ALARMS is not None:
+            CONTEXT_ALARMSlist = []
+            for i in range(len(self.CONTEXT_ALARMS)):
+                CONTEXT_ALARMSlist.append(self.CONTEXT_ALARMS[i].Pack(builder))
+            FloatParameterTypeStartCONTEXT_ALARMSVector(builder, len(self.CONTEXT_ALARMS))
+            for i in reversed(range(len(self.CONTEXT_ALARMS))):
+                builder.PrependUOffsetTRelative(CONTEXT_ALARMSlist[i])
+            CONTEXT_ALARMS = builder.EndVector()
+        FloatParameterTypeStart(builder)
+        if self.NAME is not None:
+            FloatParameterTypeAddNAME(builder, NAME)
+        if self.SHORT_DESCRIPTION is not None:
+            FloatParameterTypeAddSHORT_DESCRIPTION(builder, SHORT_DESCRIPTION)
+        if self.LONG_DESCRIPTION is not None:
+            FloatParameterTypeAddLONG_DESCRIPTION(builder, LONG_DESCRIPTION)
+        if self.UNITS is not None:
+            FloatParameterTypeAddUNITS(builder, UNITS)
+        if self.DATA_ENCODING is not None:
+            FloatParameterTypeAddDATA_ENCODING(builder, DATA_ENCODING)
+        if self.DEFAULT_ALARM is not None:
+            FloatParameterTypeAddDEFAULT_ALARM(builder, DEFAULT_ALARM)
+        if self.CONTEXT_ALARMS is not None:
+            FloatParameterTypeAddCONTEXT_ALARMS(builder, CONTEXT_ALARMS)
+        FloatParameterTypeAddVALID_MIN(builder, self.VALID_MIN)
+        FloatParameterTypeAddVALID_MAX(builder, self.VALID_MAX)
+        FloatParameterTypeAddSIZE_IN_BITS(builder, self.SIZE_IN_BITS)
+        FloatParameterTypeAddINITIAL_VALUE(builder, self.INITIAL_VALUE)
+        FloatParameterType = FloatParameterTypeEnd(builder)
+        return FloatParameterType

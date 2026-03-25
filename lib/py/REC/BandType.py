@@ -2,4 +2,17 @@
 
 # namespace: 
 
-# NOTE BandType.py does not declare any structs or enums
+class BandType(object):
+    HF = 0
+    VHF = 1
+    UHF = 2
+    L_BAND = 3
+    S_BAND = 4
+    C_BAND = 5
+    X_BAND = 6
+    KU_BAND = 7
+    K_BAND = 8
+    KA_BAND = 9
+    V_BAND = 10
+    W_BAND = 11
+    MM_WAVE = 12

@@ -2,4 +2,10 @@
 
 # namespace: 
 
-# NOTE beamType.py does not declare any structs or enums
+class beamType(object):
+    SPOT = 0
+    REGIONAL = 1
+    GLOBAL = 2
+    SHAPED = 3
+    STEERABLE = 4
+    HOPPING = 5

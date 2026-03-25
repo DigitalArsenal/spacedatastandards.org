@@ -307,6 +307,12 @@ def ParameterTypeSetStartINTEGER_TYPESVector(builder, numElems):
 def StartINTEGER_TYPESVector(builder, numElems):
     return ParameterTypeSetStartINTEGER_TYPESVector(builder, numElems)
 
+def ParameterTypeSetCreateINTEGER_TYPESVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateINTEGER_TYPESVector(builder, data):
+    ParameterTypeSetCreateINTEGER_TYPESVector(builder, data)
+
 def ParameterTypeSetAddFLOAT_TYPES(builder, FLOAT_TYPES):
     builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(FLOAT_TYPES), 0)
 
@@ -318,6 +324,12 @@ def ParameterTypeSetStartFLOAT_TYPESVector(builder, numElems):
 
 def StartFLOAT_TYPESVector(builder, numElems):
     return ParameterTypeSetStartFLOAT_TYPESVector(builder, numElems)
+
+def ParameterTypeSetCreateFLOAT_TYPESVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateFLOAT_TYPESVector(builder, data):
+    ParameterTypeSetCreateFLOAT_TYPESVector(builder, data)
 
 def ParameterTypeSetAddSTRING_TYPES(builder, STRING_TYPES):
     builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(STRING_TYPES), 0)
@@ -331,6 +343,12 @@ def ParameterTypeSetStartSTRING_TYPESVector(builder, numElems):
 def StartSTRING_TYPESVector(builder, numElems):
     return ParameterTypeSetStartSTRING_TYPESVector(builder, numElems)
 
+def ParameterTypeSetCreateSTRING_TYPESVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateSTRING_TYPESVector(builder, data):
+    ParameterTypeSetCreateSTRING_TYPESVector(builder, data)
+
 def ParameterTypeSetAddBOOLEAN_TYPES(builder, BOOLEAN_TYPES):
     builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(BOOLEAN_TYPES), 0)
 
@@ -342,6 +360,12 @@ def ParameterTypeSetStartBOOLEAN_TYPESVector(builder, numElems):
 
 def StartBOOLEAN_TYPESVector(builder, numElems):
     return ParameterTypeSetStartBOOLEAN_TYPESVector(builder, numElems)
+
+def ParameterTypeSetCreateBOOLEAN_TYPESVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateBOOLEAN_TYPESVector(builder, data):
+    ParameterTypeSetCreateBOOLEAN_TYPESVector(builder, data)
 
 def ParameterTypeSetAddENUMERATED_TYPES(builder, ENUMERATED_TYPES):
     builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(ENUMERATED_TYPES), 0)
@@ -355,6 +379,12 @@ def ParameterTypeSetStartENUMERATED_TYPESVector(builder, numElems):
 def StartENUMERATED_TYPESVector(builder, numElems):
     return ParameterTypeSetStartENUMERATED_TYPESVector(builder, numElems)
 
+def ParameterTypeSetCreateENUMERATED_TYPESVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateENUMERATED_TYPESVector(builder, data):
+    ParameterTypeSetCreateENUMERATED_TYPESVector(builder, data)
+
 def ParameterTypeSetAddBINARY_TYPES(builder, BINARY_TYPES):
     builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(BINARY_TYPES), 0)
 
@@ -366,6 +396,12 @@ def ParameterTypeSetStartBINARY_TYPESVector(builder, numElems):
 
 def StartBINARY_TYPESVector(builder, numElems):
     return ParameterTypeSetStartBINARY_TYPESVector(builder, numElems)
+
+def ParameterTypeSetCreateBINARY_TYPESVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateBINARY_TYPESVector(builder, data):
+    ParameterTypeSetCreateBINARY_TYPESVector(builder, data)
 
 def ParameterTypeSetAddABSOLUTE_TIME_TYPES(builder, ABSOLUTE_TIME_TYPES):
     builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(ABSOLUTE_TIME_TYPES), 0)
@@ -379,6 +415,12 @@ def ParameterTypeSetStartABSOLUTE_TIME_TYPESVector(builder, numElems):
 def StartABSOLUTE_TIME_TYPESVector(builder, numElems):
     return ParameterTypeSetStartABSOLUTE_TIME_TYPESVector(builder, numElems)
 
+def ParameterTypeSetCreateABSOLUTE_TIME_TYPESVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateABSOLUTE_TIME_TYPESVector(builder, data):
+    ParameterTypeSetCreateABSOLUTE_TIME_TYPESVector(builder, data)
+
 def ParameterTypeSetAddRELATIVE_TIME_TYPES(builder, RELATIVE_TIME_TYPES):
     builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(RELATIVE_TIME_TYPES), 0)
 
@@ -390,6 +432,12 @@ def ParameterTypeSetStartRELATIVE_TIME_TYPESVector(builder, numElems):
 
 def StartRELATIVE_TIME_TYPESVector(builder, numElems):
     return ParameterTypeSetStartRELATIVE_TIME_TYPESVector(builder, numElems)
+
+def ParameterTypeSetCreateRELATIVE_TIME_TYPESVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateRELATIVE_TIME_TYPESVector(builder, data):
+    ParameterTypeSetCreateRELATIVE_TIME_TYPESVector(builder, data)
 
 def ParameterTypeSetAddARRAY_TYPES(builder, ARRAY_TYPES):
     builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(ARRAY_TYPES), 0)
@@ -403,6 +451,12 @@ def ParameterTypeSetStartARRAY_TYPESVector(builder, numElems):
 def StartARRAY_TYPESVector(builder, numElems):
     return ParameterTypeSetStartARRAY_TYPESVector(builder, numElems)
 
+def ParameterTypeSetCreateARRAY_TYPESVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateARRAY_TYPESVector(builder, data):
+    ParameterTypeSetCreateARRAY_TYPESVector(builder, data)
+
 def ParameterTypeSetAddAGGREGATE_TYPES(builder, AGGREGATE_TYPES):
     builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(AGGREGATE_TYPES), 0)
 
@@ -414,6 +468,12 @@ def ParameterTypeSetStartAGGREGATE_TYPESVector(builder, numElems):
 
 def StartAGGREGATE_TYPESVector(builder, numElems):
     return ParameterTypeSetStartAGGREGATE_TYPESVector(builder, numElems)
+
+def ParameterTypeSetCreateAGGREGATE_TYPESVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateAGGREGATE_TYPESVector(builder, data):
+    ParameterTypeSetCreateAGGREGATE_TYPESVector(builder, data)
 
 def ParameterTypeSetEnd(builder):
     return builder.EndObject()
@@ -439,23 +499,35 @@ except:
 class ParameterTypeSetT(object):
 
     # ParameterTypeSetT
-    def __init__(self):
-        self.INTEGER_TYPES = None  # type: List[IntegerParameterType.IntegerParameterTypeT]
-        self.FLOAT_TYPES = None  # type: List[FloatParameterType.FloatParameterTypeT]
-        self.STRING_TYPES = None  # type: List[StringParameterType.StringParameterTypeT]
-        self.BOOLEAN_TYPES = None  # type: List[BooleanParameterType.BooleanParameterTypeT]
-        self.ENUMERATED_TYPES = None  # type: List[EnumeratedParameterType.EnumeratedParameterTypeT]
-        self.BINARY_TYPES = None  # type: List[BinaryParameterType.BinaryParameterTypeT]
-        self.ABSOLUTE_TIME_TYPES = None  # type: List[AbsoluteTimeParameterType.AbsoluteTimeParameterTypeT]
-        self.RELATIVE_TIME_TYPES = None  # type: List[RelativeTimeParameterType.RelativeTimeParameterTypeT]
-        self.ARRAY_TYPES = None  # type: List[ArrayParameterType.ArrayParameterTypeT]
-        self.AGGREGATE_TYPES = None  # type: List[AggregateParameterType.AggregateParameterTypeT]
+    def __init__(
+        self,
+        INTEGER_TYPES = None,
+        FLOAT_TYPES = None,
+        STRING_TYPES = None,
+        BOOLEAN_TYPES = None,
+        ENUMERATED_TYPES = None,
+        BINARY_TYPES = None,
+        ABSOLUTE_TIME_TYPES = None,
+        RELATIVE_TIME_TYPES = None,
+        ARRAY_TYPES = None,
+        AGGREGATE_TYPES = None,
+    ):
+        self.INTEGER_TYPES = INTEGER_TYPES  # type: Optional[List[IntegerParameterType.IntegerParameterTypeT]]
+        self.FLOAT_TYPES = FLOAT_TYPES  # type: Optional[List[FloatParameterType.FloatParameterTypeT]]
+        self.STRING_TYPES = STRING_TYPES  # type: Optional[List[StringParameterType.StringParameterTypeT]]
+        self.BOOLEAN_TYPES = BOOLEAN_TYPES  # type: Optional[List[BooleanParameterType.BooleanParameterTypeT]]
+        self.ENUMERATED_TYPES = ENUMERATED_TYPES  # type: Optional[List[EnumeratedParameterType.EnumeratedParameterTypeT]]
+        self.BINARY_TYPES = BINARY_TYPES  # type: Optional[List[BinaryParameterType.BinaryParameterTypeT]]
+        self.ABSOLUTE_TIME_TYPES = ABSOLUTE_TIME_TYPES  # type: Optional[List[AbsoluteTimeParameterType.AbsoluteTimeParameterTypeT]]
+        self.RELATIVE_TIME_TYPES = RELATIVE_TIME_TYPES  # type: Optional[List[RelativeTimeParameterType.RelativeTimeParameterTypeT]]
+        self.ARRAY_TYPES = ARRAY_TYPES  # type: Optional[List[ArrayParameterType.ArrayParameterTypeT]]
+        self.AGGREGATE_TYPES = AGGREGATE_TYPES  # type: Optional[List[AggregateParameterType.AggregateParameterTypeT]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        parameterTypeSet = ParameterTypeSet()
-        parameterTypeSet.Init(buf, pos)
-        return cls.InitFromObj(parameterTypeSet)
+        tmpParameterTypeSet = ParameterTypeSet()
+        tmpParameterTypeSet.Init(buf, pos)
+        return cls.InitFromObj(tmpParameterTypeSet)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -463,94 +535,94 @@ class ParameterTypeSetT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, parameterTypeSet):
+    def InitFromObj(cls, tmpParameterTypeSet):
         x = ParameterTypeSetT()
-        x._UnPack(parameterTypeSet)
+        x._UnPack(tmpParameterTypeSet)
         return x
 
     # ParameterTypeSetT
-    def _UnPack(self, parameterTypeSet):
-        if parameterTypeSet is None:
+    def _UnPack(self, ParameterTypeSet):
+        if ParameterTypeSet is None:
             return
-        if not parameterTypeSet.INTEGER_TYPESIsNone():
+        if not ParameterTypeSet.INTEGER_TYPESIsNone():
             self.INTEGER_TYPES = []
-            for i in range(parameterTypeSet.INTEGER_TYPESLength()):
-                if parameterTypeSet.INTEGER_TYPES(i) is None:
+            for i in range(ParameterTypeSet.INTEGER_TYPESLength()):
+                if ParameterTypeSet.INTEGER_TYPES(i) is None:
                     self.INTEGER_TYPES.append(None)
                 else:
-                    integerParameterType_ = IntegerParameterType.IntegerParameterTypeT.InitFromObj(parameterTypeSet.INTEGER_TYPES(i))
+                    integerParameterType_ = IntegerParameterType.IntegerParameterTypeT.InitFromObj(ParameterTypeSet.INTEGER_TYPES(i))
                     self.INTEGER_TYPES.append(integerParameterType_)
-        if not parameterTypeSet.FLOAT_TYPESIsNone():
+        if not ParameterTypeSet.FLOAT_TYPESIsNone():
             self.FLOAT_TYPES = []
-            for i in range(parameterTypeSet.FLOAT_TYPESLength()):
-                if parameterTypeSet.FLOAT_TYPES(i) is None:
+            for i in range(ParameterTypeSet.FLOAT_TYPESLength()):
+                if ParameterTypeSet.FLOAT_TYPES(i) is None:
                     self.FLOAT_TYPES.append(None)
                 else:
-                    floatParameterType_ = FloatParameterType.FloatParameterTypeT.InitFromObj(parameterTypeSet.FLOAT_TYPES(i))
+                    floatParameterType_ = FloatParameterType.FloatParameterTypeT.InitFromObj(ParameterTypeSet.FLOAT_TYPES(i))
                     self.FLOAT_TYPES.append(floatParameterType_)
-        if not parameterTypeSet.STRING_TYPESIsNone():
+        if not ParameterTypeSet.STRING_TYPESIsNone():
             self.STRING_TYPES = []
-            for i in range(parameterTypeSet.STRING_TYPESLength()):
-                if parameterTypeSet.STRING_TYPES(i) is None:
+            for i in range(ParameterTypeSet.STRING_TYPESLength()):
+                if ParameterTypeSet.STRING_TYPES(i) is None:
                     self.STRING_TYPES.append(None)
                 else:
-                    stringParameterType_ = StringParameterType.StringParameterTypeT.InitFromObj(parameterTypeSet.STRING_TYPES(i))
+                    stringParameterType_ = StringParameterType.StringParameterTypeT.InitFromObj(ParameterTypeSet.STRING_TYPES(i))
                     self.STRING_TYPES.append(stringParameterType_)
-        if not parameterTypeSet.BOOLEAN_TYPESIsNone():
+        if not ParameterTypeSet.BOOLEAN_TYPESIsNone():
             self.BOOLEAN_TYPES = []
-            for i in range(parameterTypeSet.BOOLEAN_TYPESLength()):
-                if parameterTypeSet.BOOLEAN_TYPES(i) is None:
+            for i in range(ParameterTypeSet.BOOLEAN_TYPESLength()):
+                if ParameterTypeSet.BOOLEAN_TYPES(i) is None:
                     self.BOOLEAN_TYPES.append(None)
                 else:
-                    booleanParameterType_ = BooleanParameterType.BooleanParameterTypeT.InitFromObj(parameterTypeSet.BOOLEAN_TYPES(i))
+                    booleanParameterType_ = BooleanParameterType.BooleanParameterTypeT.InitFromObj(ParameterTypeSet.BOOLEAN_TYPES(i))
                     self.BOOLEAN_TYPES.append(booleanParameterType_)
-        if not parameterTypeSet.ENUMERATED_TYPESIsNone():
+        if not ParameterTypeSet.ENUMERATED_TYPESIsNone():
             self.ENUMERATED_TYPES = []
-            for i in range(parameterTypeSet.ENUMERATED_TYPESLength()):
-                if parameterTypeSet.ENUMERATED_TYPES(i) is None:
+            for i in range(ParameterTypeSet.ENUMERATED_TYPESLength()):
+                if ParameterTypeSet.ENUMERATED_TYPES(i) is None:
                     self.ENUMERATED_TYPES.append(None)
                 else:
-                    enumeratedParameterType_ = EnumeratedParameterType.EnumeratedParameterTypeT.InitFromObj(parameterTypeSet.ENUMERATED_TYPES(i))
+                    enumeratedParameterType_ = EnumeratedParameterType.EnumeratedParameterTypeT.InitFromObj(ParameterTypeSet.ENUMERATED_TYPES(i))
                     self.ENUMERATED_TYPES.append(enumeratedParameterType_)
-        if not parameterTypeSet.BINARY_TYPESIsNone():
+        if not ParameterTypeSet.BINARY_TYPESIsNone():
             self.BINARY_TYPES = []
-            for i in range(parameterTypeSet.BINARY_TYPESLength()):
-                if parameterTypeSet.BINARY_TYPES(i) is None:
+            for i in range(ParameterTypeSet.BINARY_TYPESLength()):
+                if ParameterTypeSet.BINARY_TYPES(i) is None:
                     self.BINARY_TYPES.append(None)
                 else:
-                    binaryParameterType_ = BinaryParameterType.BinaryParameterTypeT.InitFromObj(parameterTypeSet.BINARY_TYPES(i))
+                    binaryParameterType_ = BinaryParameterType.BinaryParameterTypeT.InitFromObj(ParameterTypeSet.BINARY_TYPES(i))
                     self.BINARY_TYPES.append(binaryParameterType_)
-        if not parameterTypeSet.ABSOLUTE_TIME_TYPESIsNone():
+        if not ParameterTypeSet.ABSOLUTE_TIME_TYPESIsNone():
             self.ABSOLUTE_TIME_TYPES = []
-            for i in range(parameterTypeSet.ABSOLUTE_TIME_TYPESLength()):
-                if parameterTypeSet.ABSOLUTE_TIME_TYPES(i) is None:
+            for i in range(ParameterTypeSet.ABSOLUTE_TIME_TYPESLength()):
+                if ParameterTypeSet.ABSOLUTE_TIME_TYPES(i) is None:
                     self.ABSOLUTE_TIME_TYPES.append(None)
                 else:
-                    absoluteTimeParameterType_ = AbsoluteTimeParameterType.AbsoluteTimeParameterTypeT.InitFromObj(parameterTypeSet.ABSOLUTE_TIME_TYPES(i))
+                    absoluteTimeParameterType_ = AbsoluteTimeParameterType.AbsoluteTimeParameterTypeT.InitFromObj(ParameterTypeSet.ABSOLUTE_TIME_TYPES(i))
                     self.ABSOLUTE_TIME_TYPES.append(absoluteTimeParameterType_)
-        if not parameterTypeSet.RELATIVE_TIME_TYPESIsNone():
+        if not ParameterTypeSet.RELATIVE_TIME_TYPESIsNone():
             self.RELATIVE_TIME_TYPES = []
-            for i in range(parameterTypeSet.RELATIVE_TIME_TYPESLength()):
-                if parameterTypeSet.RELATIVE_TIME_TYPES(i) is None:
+            for i in range(ParameterTypeSet.RELATIVE_TIME_TYPESLength()):
+                if ParameterTypeSet.RELATIVE_TIME_TYPES(i) is None:
                     self.RELATIVE_TIME_TYPES.append(None)
                 else:
-                    relativeTimeParameterType_ = RelativeTimeParameterType.RelativeTimeParameterTypeT.InitFromObj(parameterTypeSet.RELATIVE_TIME_TYPES(i))
+                    relativeTimeParameterType_ = RelativeTimeParameterType.RelativeTimeParameterTypeT.InitFromObj(ParameterTypeSet.RELATIVE_TIME_TYPES(i))
                     self.RELATIVE_TIME_TYPES.append(relativeTimeParameterType_)
-        if not parameterTypeSet.ARRAY_TYPESIsNone():
+        if not ParameterTypeSet.ARRAY_TYPESIsNone():
             self.ARRAY_TYPES = []
-            for i in range(parameterTypeSet.ARRAY_TYPESLength()):
-                if parameterTypeSet.ARRAY_TYPES(i) is None:
+            for i in range(ParameterTypeSet.ARRAY_TYPESLength()):
+                if ParameterTypeSet.ARRAY_TYPES(i) is None:
                     self.ARRAY_TYPES.append(None)
                 else:
-                    arrayParameterType_ = ArrayParameterType.ArrayParameterTypeT.InitFromObj(parameterTypeSet.ARRAY_TYPES(i))
+                    arrayParameterType_ = ArrayParameterType.ArrayParameterTypeT.InitFromObj(ParameterTypeSet.ARRAY_TYPES(i))
                     self.ARRAY_TYPES.append(arrayParameterType_)
-        if not parameterTypeSet.AGGREGATE_TYPESIsNone():
+        if not ParameterTypeSet.AGGREGATE_TYPESIsNone():
             self.AGGREGATE_TYPES = []
-            for i in range(parameterTypeSet.AGGREGATE_TYPESLength()):
-                if parameterTypeSet.AGGREGATE_TYPES(i) is None:
+            for i in range(ParameterTypeSet.AGGREGATE_TYPESLength()):
+                if ParameterTypeSet.AGGREGATE_TYPES(i) is None:
                     self.AGGREGATE_TYPES.append(None)
                 else:
-                    aggregateParameterType_ = AggregateParameterType.AggregateParameterTypeT.InitFromObj(parameterTypeSet.AGGREGATE_TYPES(i))
+                    aggregateParameterType_ = AggregateParameterType.AggregateParameterTypeT.InitFromObj(ParameterTypeSet.AGGREGATE_TYPES(i))
                     self.AGGREGATE_TYPES.append(aggregateParameterType_)
 
     # ParameterTypeSetT
@@ -656,5 +728,5 @@ class ParameterTypeSetT(object):
             ParameterTypeSetAddARRAY_TYPES(builder, ARRAY_TYPES)
         if self.AGGREGATE_TYPES is not None:
             ParameterTypeSetAddAGGREGATE_TYPES(builder, AGGREGATE_TYPES)
-        parameterTypeSet = ParameterTypeSetEnd(builder)
-        return parameterTypeSet
+        ParameterTypeSet = ParameterTypeSetEnd(builder)
+        return ParameterTypeSet

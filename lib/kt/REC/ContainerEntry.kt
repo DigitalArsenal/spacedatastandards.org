@@ -32,8 +32,8 @@ class ContainerEntry : Table() {
     /**
      * Parameter reference entry
      */
-    val PARAMETER_REF_ENTRY : ParameterRefEntry? get() = PARAMETER_REF_ENTRY(ParameterRefEntry())
-    fun PARAMETER_REF_ENTRY(obj: ParameterRefEntry) : ParameterRefEntry? {
+    val parameterRefEntry : ParameterRefEntry? get() = parameterRefEntry(ParameterRefEntry())
+    fun parameterRefEntry(obj: ParameterRefEntry) : ParameterRefEntry? {
         val o = __offset(4)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -44,8 +44,8 @@ class ContainerEntry : Table() {
     /**
      * Container reference entry
      */
-    val CONTAINER_REF_ENTRY : ContainerRefEntry? get() = CONTAINER_REF_ENTRY(ContainerRefEntry())
-    fun CONTAINER_REF_ENTRY(obj: ContainerRefEntry) : ContainerRefEntry? {
+    val containerRefEntry : ContainerRefEntry? get() = containerRefEntry(ContainerRefEntry())
+    fun containerRefEntry(obj: ContainerRefEntry) : ContainerRefEntry? {
         val o = __offset(6)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -56,8 +56,8 @@ class ContainerEntry : Table() {
     /**
      * Fixed value entry
      */
-    val FIXED_VALUE_ENTRY : FixedValueEntry? get() = FIXED_VALUE_ENTRY(FixedValueEntry())
-    fun FIXED_VALUE_ENTRY(obj: FixedValueEntry) : FixedValueEntry? {
+    val fixedValueEntry : FixedValueEntry? get() = fixedValueEntry(FixedValueEntry())
+    fun fixedValueEntry(obj: FixedValueEntry) : FixedValueEntry? {
         val o = __offset(8)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -68,8 +68,8 @@ class ContainerEntry : Table() {
     /**
      * Array parameter reference entry
      */
-    val ARRAY_PARAMETER_REF_ENTRY : ArrayParameterRefEntry? get() = ARRAY_PARAMETER_REF_ENTRY(ArrayParameterRefEntry())
-    fun ARRAY_PARAMETER_REF_ENTRY(obj: ArrayParameterRefEntry) : ArrayParameterRefEntry? {
+    val arrayParameterRefEntry : ArrayParameterRefEntry? get() = arrayParameterRefEntry(ArrayParameterRefEntry())
+    fun arrayParameterRefEntry(obj: ArrayParameterRefEntry) : ArrayParameterRefEntry? {
         val o = __offset(10)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -78,25 +78,25 @@ class ContainerEntry : Table() {
         }
     }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsContainerEntry(_bb: ByteBuffer): ContainerEntry = getRootAsContainerEntry(_bb, ContainerEntry())
         fun getRootAsContainerEntry(_bb: ByteBuffer, obj: ContainerEntry): ContainerEntry {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createContainerEntry(builder: FlatBufferBuilder, PARAMETER_REF_ENTRYOffset: Int, CONTAINER_REF_ENTRYOffset: Int, FIXED_VALUE_ENTRYOffset: Int, ARRAY_PARAMETER_REF_ENTRYOffset: Int) : Int {
+        fun createContainerEntry(builder: FlatBufferBuilder, parameterRefEntryOffset: Int, containerRefEntryOffset: Int, fixedValueEntryOffset: Int, arrayParameterRefEntryOffset: Int) : Int {
             builder.startTable(4)
-            addARRAY_PARAMETER_REF_ENTRY(builder, ARRAY_PARAMETER_REF_ENTRYOffset)
-            addFIXED_VALUE_ENTRY(builder, FIXED_VALUE_ENTRYOffset)
-            addCONTAINER_REF_ENTRY(builder, CONTAINER_REF_ENTRYOffset)
-            addPARAMETER_REF_ENTRY(builder, PARAMETER_REF_ENTRYOffset)
+            addARRAYPARAMETERREFENTRY(builder, arrayParameterRefEntryOffset)
+            addFIXEDVALUEENTRY(builder, fixedValueEntryOffset)
+            addCONTAINERREFENTRY(builder, containerRefEntryOffset)
+            addPARAMETERREFENTRY(builder, parameterRefEntryOffset)
             return endContainerEntry(builder)
         }
         fun startContainerEntry(builder: FlatBufferBuilder) = builder.startTable(4)
-        fun addPARAMETER_REF_ENTRY(builder: FlatBufferBuilder, PARAMETER_REF_ENTRY: Int) = builder.addOffset(0, PARAMETER_REF_ENTRY, 0)
-        fun addCONTAINER_REF_ENTRY(builder: FlatBufferBuilder, CONTAINER_REF_ENTRY: Int) = builder.addOffset(1, CONTAINER_REF_ENTRY, 0)
-        fun addFIXED_VALUE_ENTRY(builder: FlatBufferBuilder, FIXED_VALUE_ENTRY: Int) = builder.addOffset(2, FIXED_VALUE_ENTRY, 0)
-        fun addARRAY_PARAMETER_REF_ENTRY(builder: FlatBufferBuilder, ARRAY_PARAMETER_REF_ENTRY: Int) = builder.addOffset(3, ARRAY_PARAMETER_REF_ENTRY, 0)
+        fun addPARAMETERREFENTRY(builder: FlatBufferBuilder, parameterRefEntry: Int) = builder.addOffset(0, parameterRefEntry, 0)
+        fun addCONTAINERREFENTRY(builder: FlatBufferBuilder, containerRefEntry: Int) = builder.addOffset(1, containerRefEntry, 0)
+        fun addFIXEDVALUEENTRY(builder: FlatBufferBuilder, fixedValueEntry: Int) = builder.addOffset(2, fixedValueEntry, 0)
+        fun addARRAYPARAMETERREFENTRY(builder: FlatBufferBuilder, arrayParameterRefEntry: Int) = builder.addOffset(3, arrayParameterRefEntry, 0)
         fun endContainerEntry(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

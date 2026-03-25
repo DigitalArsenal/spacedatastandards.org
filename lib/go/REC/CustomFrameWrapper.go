@@ -41,7 +41,7 @@ func (rcv *CustomFrameWrapper) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
-func (rcv *CustomFrameWrapper) Frame() CustomFrame {
+func (rcv *CustomFrameWrapper) frame() CustomFrame {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
 		return CustomFrame(rcv._tab.GetInt8(o + rcv._tab.Pos))
@@ -49,15 +49,26 @@ func (rcv *CustomFrameWrapper) Frame() CustomFrame {
 	return 0
 }
 
-func (rcv *CustomFrameWrapper) MutateFrame(n CustomFrame) bool {
+func (rcv *CustomFrameWrapper) Frame() CustomFrame {
+	return rcv.frame()
+}
+
+func (rcv *CustomFrameWrapper) Mutateframe(n CustomFrame) bool {
 	return rcv._tab.MutateInt8Slot(4, int8(n))
+}
+
+func (rcv *CustomFrameWrapper) MutateFrame(n CustomFrame) bool {
+	return rcv.Mutateframe(n)
 }
 
 func CustomFrameWrapperStart(builder *flatbuffers.Builder) {
 	builder.StartObject(1)
 }
-func CustomFrameWrapperAddFrame(builder *flatbuffers.Builder, frame CustomFrame) {
+func CustomFrameWrapperAddframe(builder *flatbuffers.Builder, frame CustomFrame) {
 	builder.PrependInt8Slot(0, int8(frame), 0)
+}
+func CustomFrameWrapperAddFrame(builder *flatbuffers.Builder, frame CustomFrame) {
+	CustomFrameWrapperAddframe(builder, frame)
 }
 func CustomFrameWrapperEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

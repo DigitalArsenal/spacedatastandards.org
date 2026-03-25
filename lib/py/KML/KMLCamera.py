@@ -143,20 +143,29 @@ def End(builder):
 class KMLCameraT(object):
 
     # KMLCameraT
-    def __init__(self):
-        self.LONGITUDE = 0.0  # type: float
-        self.LATITUDE = 0.0  # type: float
-        self.ALTITUDE = 0.0  # type: float
-        self.HEADING = 0.0  # type: float
-        self.TILT = 0.0  # type: float
-        self.ROLL = 0.0  # type: float
-        self.ALTITUDE_MODE = 0  # type: int
+    def __init__(
+        self,
+        LONGITUDE = 0.0,
+        LATITUDE = 0.0,
+        ALTITUDE = 0.0,
+        HEADING = 0.0,
+        TILT = 0.0,
+        ROLL = 0.0,
+        ALTITUDE_MODE = 0,
+    ):
+        self.LONGITUDE = LONGITUDE  # type: float
+        self.LATITUDE = LATITUDE  # type: float
+        self.ALTITUDE = ALTITUDE  # type: float
+        self.HEADING = HEADING  # type: float
+        self.TILT = TILT  # type: float
+        self.ROLL = ROLL  # type: float
+        self.ALTITUDE_MODE = ALTITUDE_MODE  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        kmlcamera = KMLCamera()
-        kmlcamera.Init(buf, pos)
-        return cls.InitFromObj(kmlcamera)
+        tmpKmlcamera = KMLCamera()
+        tmpKmlcamera.Init(buf, pos)
+        return cls.InitFromObj(tmpKmlcamera)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -164,22 +173,22 @@ class KMLCameraT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, kmlcamera):
+    def InitFromObj(cls, tmpKmlcamera):
         x = KMLCameraT()
-        x._UnPack(kmlcamera)
+        x._UnPack(tmpKmlcamera)
         return x
 
     # KMLCameraT
-    def _UnPack(self, kmlcamera):
-        if kmlcamera is None:
+    def _UnPack(self, KMLCamera):
+        if KMLCamera is None:
             return
-        self.LONGITUDE = kmlcamera.LONGITUDE()
-        self.LATITUDE = kmlcamera.LATITUDE()
-        self.ALTITUDE = kmlcamera.ALTITUDE()
-        self.HEADING = kmlcamera.HEADING()
-        self.TILT = kmlcamera.TILT()
-        self.ROLL = kmlcamera.ROLL()
-        self.ALTITUDE_MODE = kmlcamera.ALTITUDE_MODE()
+        self.LONGITUDE = KMLCamera.LONGITUDE()
+        self.LATITUDE = KMLCamera.LATITUDE()
+        self.ALTITUDE = KMLCamera.ALTITUDE()
+        self.HEADING = KMLCamera.HEADING()
+        self.TILT = KMLCamera.TILT()
+        self.ROLL = KMLCamera.ROLL()
+        self.ALTITUDE_MODE = KMLCamera.ALTITUDE_MODE()
 
     # KMLCameraT
     def Pack(self, builder):
@@ -191,5 +200,5 @@ class KMLCameraT(object):
         KMLCameraAddTILT(builder, self.TILT)
         KMLCameraAddROLL(builder, self.ROLL)
         KMLCameraAddALTITUDE_MODE(builder, self.ALTITUDE_MODE)
-        kmlcamera = KMLCameraEnd(builder)
-        return kmlcamera
+        KMLCamera = KMLCameraEnd(builder)
+        return KMLCamera

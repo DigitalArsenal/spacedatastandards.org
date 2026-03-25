@@ -129,6 +129,12 @@ def ArrayParameterTypeStartDIMENSIONSVector(builder, numElems):
 def StartDIMENSIONSVector(builder, numElems):
     return ArrayParameterTypeStartDIMENSIONSVector(builder, numElems)
 
+def ArrayParameterTypeCreateDIMENSIONSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateDIMENSIONSVector(builder, data):
+    ArrayParameterTypeCreateDIMENSIONSVector(builder, data)
+
 def ArrayParameterTypeEnd(builder):
     return builder.EndObject()
 
@@ -144,18 +150,25 @@ except:
 class ArrayParameterTypeT(object):
 
     # ArrayParameterTypeT
-    def __init__(self):
-        self.NAME = None  # type: str
-        self.SHORT_DESCRIPTION = None  # type: str
-        self.LONG_DESCRIPTION = None  # type: str
-        self.ARRAY_TYPE_REF = None  # type: str
-        self.DIMENSIONS = None  # type: List[ArrayDimension.ArrayDimensionT]
+    def __init__(
+        self,
+        NAME = None,
+        SHORT_DESCRIPTION = None,
+        LONG_DESCRIPTION = None,
+        ARRAY_TYPE_REF = None,
+        DIMENSIONS = None,
+    ):
+        self.NAME = NAME  # type: Optional[str]
+        self.SHORT_DESCRIPTION = SHORT_DESCRIPTION  # type: Optional[str]
+        self.LONG_DESCRIPTION = LONG_DESCRIPTION  # type: Optional[str]
+        self.ARRAY_TYPE_REF = ARRAY_TYPE_REF  # type: Optional[str]
+        self.DIMENSIONS = DIMENSIONS  # type: Optional[List[ArrayDimension.ArrayDimensionT]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        arrayParameterType = ArrayParameterType()
-        arrayParameterType.Init(buf, pos)
-        return cls.InitFromObj(arrayParameterType)
+        tmpArrayParameterType = ArrayParameterType()
+        tmpArrayParameterType.Init(buf, pos)
+        return cls.InitFromObj(tmpArrayParameterType)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -163,26 +176,26 @@ class ArrayParameterTypeT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, arrayParameterType):
+    def InitFromObj(cls, tmpArrayParameterType):
         x = ArrayParameterTypeT()
-        x._UnPack(arrayParameterType)
+        x._UnPack(tmpArrayParameterType)
         return x
 
     # ArrayParameterTypeT
-    def _UnPack(self, arrayParameterType):
-        if arrayParameterType is None:
+    def _UnPack(self, ArrayParameterType):
+        if ArrayParameterType is None:
             return
-        self.NAME = arrayParameterType.NAME()
-        self.SHORT_DESCRIPTION = arrayParameterType.SHORT_DESCRIPTION()
-        self.LONG_DESCRIPTION = arrayParameterType.LONG_DESCRIPTION()
-        self.ARRAY_TYPE_REF = arrayParameterType.ARRAY_TYPE_REF()
-        if not arrayParameterType.DIMENSIONSIsNone():
+        self.NAME = ArrayParameterType.NAME()
+        self.SHORT_DESCRIPTION = ArrayParameterType.SHORT_DESCRIPTION()
+        self.LONG_DESCRIPTION = ArrayParameterType.LONG_DESCRIPTION()
+        self.ARRAY_TYPE_REF = ArrayParameterType.ARRAY_TYPE_REF()
+        if not ArrayParameterType.DIMENSIONSIsNone():
             self.DIMENSIONS = []
-            for i in range(arrayParameterType.DIMENSIONSLength()):
-                if arrayParameterType.DIMENSIONS(i) is None:
+            for i in range(ArrayParameterType.DIMENSIONSLength()):
+                if ArrayParameterType.DIMENSIONS(i) is None:
                     self.DIMENSIONS.append(None)
                 else:
-                    arrayDimension_ = ArrayDimension.ArrayDimensionT.InitFromObj(arrayParameterType.DIMENSIONS(i))
+                    arrayDimension_ = ArrayDimension.ArrayDimensionT.InitFromObj(ArrayParameterType.DIMENSIONS(i))
                     self.DIMENSIONS.append(arrayDimension_)
 
     # ArrayParameterTypeT
@@ -214,5 +227,5 @@ class ArrayParameterTypeT(object):
             ArrayParameterTypeAddARRAY_TYPE_REF(builder, ARRAY_TYPE_REF)
         if self.DIMENSIONS is not None:
             ArrayParameterTypeAddDIMENSIONS(builder, DIMENSIONS)
-        arrayParameterType = ArrayParameterTypeEnd(builder)
-        return arrayParameterType
+        ArrayParameterType = ArrayParameterTypeEnd(builder)
+        return ArrayParameterType

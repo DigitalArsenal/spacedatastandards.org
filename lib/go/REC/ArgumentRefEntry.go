@@ -51,6 +51,10 @@ func (rcv *ArgumentRefEntry) ARGUMENT_REF() []byte {
 	return nil
 }
 
+func (rcv *ArgumentRefEntry) ArgumentRef() []byte {
+	return rcv.ARGUMENT_REF()
+}
+
 /// Argument reference
 /// Location in container
 func (rcv *ArgumentRefEntry) LOCATION(obj *LocationInContainer) *LocationInContainer {
@@ -66,6 +70,10 @@ func (rcv *ArgumentRefEntry) LOCATION(obj *LocationInContainer) *LocationInConta
 	return nil
 }
 
+func (rcv *ArgumentRefEntry) Location(obj *LocationInContainer) *LocationInContainer {
+	return rcv.LOCATION(obj)
+}
+
 /// Location in container
 /// Short description
 func (rcv *ArgumentRefEntry) SHORT_DESCRIPTION() []byte {
@@ -76,6 +84,10 @@ func (rcv *ArgumentRefEntry) SHORT_DESCRIPTION() []byte {
 	return nil
 }
 
+func (rcv *ArgumentRefEntry) ShortDescription() []byte {
+	return rcv.SHORT_DESCRIPTION()
+}
+
 /// Short description
 func ArgumentRefEntryStart(builder *flatbuffers.Builder) {
 	builder.StartObject(3)
@@ -83,11 +95,20 @@ func ArgumentRefEntryStart(builder *flatbuffers.Builder) {
 func ArgumentRefEntryAddARGUMENT_REF(builder *flatbuffers.Builder, ARGUMENT_REF flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ARGUMENT_REF), 0)
 }
+func ArgumentRefEntryAddArgumentRef(builder *flatbuffers.Builder, ARGUMENT_REF flatbuffers.UOffsetT) {
+	ArgumentRefEntryAddARGUMENT_REF(builder, ARGUMENT_REF)
+}
 func ArgumentRefEntryAddLOCATION(builder *flatbuffers.Builder, LOCATION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(LOCATION), 0)
 }
+func ArgumentRefEntryAddLocation(builder *flatbuffers.Builder, LOCATION flatbuffers.UOffsetT) {
+	ArgumentRefEntryAddLOCATION(builder, LOCATION)
+}
 func ArgumentRefEntryAddSHORT_DESCRIPTION(builder *flatbuffers.Builder, SHORT_DESCRIPTION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(SHORT_DESCRIPTION), 0)
+}
+func ArgumentRefEntryAddShortDescription(builder *flatbuffers.Builder, SHORT_DESCRIPTION flatbuffers.UOffsetT) {
+	ArgumentRefEntryAddSHORT_DESCRIPTION(builder, SHORT_DESCRIPTION)
 }
 func ArgumentRefEntryEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

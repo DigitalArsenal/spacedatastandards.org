@@ -62,8 +62,16 @@ func (rcv *GVH) POSITION_X() float64 {
 	return 0.0
 }
 
+func (rcv *GVH) PositionX() float64 {
+	return rcv.POSITION_X()
+}
+
 func (rcv *GVH) MutatePOSITION_X(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(4, n)
+}
+
+func (rcv *GVH) MutatePositionX(n float64) bool {
+	return rcv.MutatePOSITION_X(n)
 }
 
 func (rcv *GVH) POSITION_Y() float64 {
@@ -74,8 +82,16 @@ func (rcv *GVH) POSITION_Y() float64 {
 	return 0.0
 }
 
+func (rcv *GVH) PositionY() float64 {
+	return rcv.POSITION_Y()
+}
+
 func (rcv *GVH) MutatePOSITION_Y(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(6, n)
+}
+
+func (rcv *GVH) MutatePositionY(n float64) bool {
+	return rcv.MutatePOSITION_Y(n)
 }
 
 func (rcv *GVH) POSITION_Z() float64 {
@@ -86,8 +102,16 @@ func (rcv *GVH) POSITION_Z() float64 {
 	return 0.0
 }
 
+func (rcv *GVH) PositionZ() float64 {
+	return rcv.POSITION_Z()
+}
+
 func (rcv *GVH) MutatePOSITION_Z(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(8, n)
+}
+
+func (rcv *GVH) MutatePositionZ(n float64) bool {
+	return rcv.MutatePOSITION_Z(n)
 }
 
 func (rcv *GVH) VELOCITY_X() float64 {
@@ -98,8 +122,16 @@ func (rcv *GVH) VELOCITY_X() float64 {
 	return 0.0
 }
 
+func (rcv *GVH) VelocityX() float64 {
+	return rcv.VELOCITY_X()
+}
+
 func (rcv *GVH) MutateVELOCITY_X(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(10, n)
+}
+
+func (rcv *GVH) MutateVelocityX(n float64) bool {
+	return rcv.MutateVELOCITY_X(n)
 }
 
 func (rcv *GVH) VELOCITY_Y() float64 {
@@ -110,8 +142,16 @@ func (rcv *GVH) VELOCITY_Y() float64 {
 	return 0.0
 }
 
+func (rcv *GVH) VelocityY() float64 {
+	return rcv.VELOCITY_Y()
+}
+
 func (rcv *GVH) MutateVELOCITY_Y(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(12, n)
+}
+
+func (rcv *GVH) MutateVelocityY(n float64) bool {
+	return rcv.MutateVELOCITY_Y(n)
 }
 
 func (rcv *GVH) VELOCITY_Z() float64 {
@@ -122,8 +162,16 @@ func (rcv *GVH) VELOCITY_Z() float64 {
 	return 0.0
 }
 
+func (rcv *GVH) VelocityZ() float64 {
+	return rcv.VELOCITY_Z()
+}
+
 func (rcv *GVH) MutateVELOCITY_Z(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(14, n)
+}
+
+func (rcv *GVH) MutateVelocityZ(n float64) bool {
+	return rcv.MutateVELOCITY_Z(n)
 }
 
 func (rcv *GVH) ATTITUDE_X() float64 {
@@ -134,8 +182,16 @@ func (rcv *GVH) ATTITUDE_X() float64 {
 	return 0.0
 }
 
+func (rcv *GVH) AttitudeX() float64 {
+	return rcv.ATTITUDE_X()
+}
+
 func (rcv *GVH) MutateATTITUDE_X(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(16, n)
+}
+
+func (rcv *GVH) MutateAttitudeX(n float64) bool {
+	return rcv.MutateATTITUDE_X(n)
 }
 
 func (rcv *GVH) ATTITUDE_Y() float64 {
@@ -146,8 +202,16 @@ func (rcv *GVH) ATTITUDE_Y() float64 {
 	return 0.0
 }
 
+func (rcv *GVH) AttitudeY() float64 {
+	return rcv.ATTITUDE_Y()
+}
+
 func (rcv *GVH) MutateATTITUDE_Y(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(18, n)
+}
+
+func (rcv *GVH) MutateAttitudeY(n float64) bool {
+	return rcv.MutateATTITUDE_Y(n)
 }
 
 func (rcv *GVH) ATTITUDE_Z() float64 {
@@ -158,8 +222,16 @@ func (rcv *GVH) ATTITUDE_Z() float64 {
 	return 0.0
 }
 
+func (rcv *GVH) AttitudeZ() float64 {
+	return rcv.ATTITUDE_Z()
+}
+
 func (rcv *GVH) MutateATTITUDE_Z(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(20, n)
+}
+
+func (rcv *GVH) MutateAttitudeZ(n float64) bool {
+	return rcv.MutateATTITUDE_Z(n)
 }
 
 func (rcv *GVH) ATTITUDE_W() float64 {
@@ -170,8 +242,16 @@ func (rcv *GVH) ATTITUDE_W() float64 {
 	return 0.0
 }
 
+func (rcv *GVH) AttitudeW() float64 {
+	return rcv.ATTITUDE_W()
+}
+
 func (rcv *GVH) MutateATTITUDE_W(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(22, n)
+}
+
+func (rcv *GVH) MutateAttitudeW(n float64) bool {
+	return rcv.MutateATTITUDE_W(n)
 }
 
 func (rcv *GVH) OMEGA_X() float64 {
@@ -182,8 +262,16 @@ func (rcv *GVH) OMEGA_X() float64 {
 	return 0.0
 }
 
+func (rcv *GVH) OmegaX() float64 {
+	return rcv.OMEGA_X()
+}
+
 func (rcv *GVH) MutateOMEGA_X(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(24, n)
+}
+
+func (rcv *GVH) MutateOmegaX(n float64) bool {
+	return rcv.MutateOMEGA_X(n)
 }
 
 func (rcv *GVH) OMEGA_Y() float64 {
@@ -194,8 +282,16 @@ func (rcv *GVH) OMEGA_Y() float64 {
 	return 0.0
 }
 
+func (rcv *GVH) OmegaY() float64 {
+	return rcv.OMEGA_Y()
+}
+
 func (rcv *GVH) MutateOMEGA_Y(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(26, n)
+}
+
+func (rcv *GVH) MutateOmegaY(n float64) bool {
+	return rcv.MutateOMEGA_Y(n)
 }
 
 func (rcv *GVH) OMEGA_Z() float64 {
@@ -206,8 +302,16 @@ func (rcv *GVH) OMEGA_Z() float64 {
 	return 0.0
 }
 
+func (rcv *GVH) OmegaZ() float64 {
+	return rcv.OMEGA_Z()
+}
+
 func (rcv *GVH) MutateOMEGA_Z(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(28, n)
+}
+
+func (rcv *GVH) MutateOmegaZ(n float64) bool {
+	return rcv.MutateOMEGA_Z(n)
 }
 
 func (rcv *GVH) SPEED() float32 {
@@ -218,8 +322,16 @@ func (rcv *GVH) SPEED() float32 {
 	return 0.0
 }
 
+func (rcv *GVH) Speed() float32 {
+	return rcv.SPEED()
+}
+
 func (rcv *GVH) MutateSPEED(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(30, n)
+}
+
+func (rcv *GVH) MutateSpeed(n float32) bool {
+	return rcv.MutateSPEED(n)
 }
 
 func (rcv *GVH) HEADING() float32 {
@@ -230,8 +342,16 @@ func (rcv *GVH) HEADING() float32 {
 	return 0.0
 }
 
+func (rcv *GVH) Heading() float32 {
+	return rcv.HEADING()
+}
+
 func (rcv *GVH) MutateHEADING(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(32, n)
+}
+
+func (rcv *GVH) MutateHeading(n float32) bool {
+	return rcv.MutateHEADING(n)
 }
 
 func (rcv *GVH) LATERAL_G() float32 {
@@ -242,8 +362,16 @@ func (rcv *GVH) LATERAL_G() float32 {
 	return 0.0
 }
 
+func (rcv *GVH) LateralG() float32 {
+	return rcv.LATERAL_G()
+}
+
 func (rcv *GVH) MutateLATERAL_G(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(34, n)
+}
+
+func (rcv *GVH) MutateLateralG(n float32) bool {
+	return rcv.MutateLATERAL_G(n)
 }
 
 func (rcv *GVH) LONGITUDINAL_G() float32 {
@@ -254,8 +382,16 @@ func (rcv *GVH) LONGITUDINAL_G() float32 {
 	return 0.0
 }
 
+func (rcv *GVH) LongitudinalG() float32 {
+	return rcv.LONGITUDINAL_G()
+}
+
 func (rcv *GVH) MutateLONGITUDINAL_G(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(36, n)
+}
+
+func (rcv *GVH) MutateLongitudinalG(n float32) bool {
+	return rcv.MutateLONGITUDINAL_G(n)
 }
 
 func (rcv *GVH) TURRET() []byte {
@@ -266,12 +402,20 @@ func (rcv *GVH) TURRET() []byte {
 	return nil
 }
 
+func (rcv *GVH) Turret() []byte {
+	return rcv.TURRET()
+}
+
 func (rcv *GVH) DRIVETRAIN() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *GVH) Drivetrain() []byte {
+	return rcv.DRIVETRAIN()
 }
 
 func (rcv *GVH) SUSPENSION_LF() []byte {
@@ -282,12 +426,20 @@ func (rcv *GVH) SUSPENSION_LF() []byte {
 	return nil
 }
 
+func (rcv *GVH) SuspensionLf() []byte {
+	return rcv.SUSPENSION_LF()
+}
+
 func (rcv *GVH) SUSPENSION_RF() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(44))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *GVH) SuspensionRf() []byte {
+	return rcv.SUSPENSION_RF()
 }
 
 func (rcv *GVH) SUSPENSION_LR() []byte {
@@ -298,12 +450,20 @@ func (rcv *GVH) SUSPENSION_LR() []byte {
 	return nil
 }
 
+func (rcv *GVH) SuspensionLr() []byte {
+	return rcv.SUSPENSION_LR()
+}
+
 func (rcv *GVH) SUSPENSION_RR() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(48))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *GVH) SuspensionRr() []byte {
+	return rcv.SUSPENSION_RR()
 }
 
 func (rcv *GVH) VEHICLE_TYPE() byte {
@@ -314,8 +474,16 @@ func (rcv *GVH) VEHICLE_TYPE() byte {
 	return 0
 }
 
+func (rcv *GVH) VehicleType() byte {
+	return rcv.VEHICLE_TYPE()
+}
+
 func (rcv *GVH) MutateVEHICLE_TYPE(n byte) bool {
 	return rcv._tab.MutateByteSlot(50, n)
+}
+
+func (rcv *GVH) MutateVehicleType(n byte) bool {
+	return rcv.MutateVEHICLE_TYPE(n)
 }
 
 func (rcv *GVH) DRIVE_TYPE() byte {
@@ -326,8 +494,16 @@ func (rcv *GVH) DRIVE_TYPE() byte {
 	return 0
 }
 
+func (rcv *GVH) DriveType() byte {
+	return rcv.DRIVE_TYPE()
+}
+
 func (rcv *GVH) MutateDRIVE_TYPE(n byte) bool {
 	return rcv._tab.MutateByteSlot(52, n)
+}
+
+func (rcv *GVH) MutateDriveType(n byte) bool {
+	return rcv.MutateDRIVE_TYPE(n)
 }
 
 func (rcv *GVH) ENGINE_RUNNING() byte {
@@ -338,8 +514,16 @@ func (rcv *GVH) ENGINE_RUNNING() byte {
 	return 0
 }
 
+func (rcv *GVH) EngineRunning() byte {
+	return rcv.ENGINE_RUNNING()
+}
+
 func (rcv *GVH) MutateENGINE_RUNNING(n byte) bool {
 	return rcv._tab.MutateByteSlot(54, n)
+}
+
+func (rcv *GVH) MutateEngineRunning(n byte) bool {
+	return rcv.MutateENGINE_RUNNING(n)
 }
 
 func (rcv *GVH) LIGHTS() byte {
@@ -350,8 +534,16 @@ func (rcv *GVH) LIGHTS() byte {
 	return 0
 }
 
+func (rcv *GVH) Lights() byte {
+	return rcv.LIGHTS()
+}
+
 func (rcv *GVH) MutateLIGHTS(n byte) bool {
 	return rcv._tab.MutateByteSlot(56, n)
+}
+
+func (rcv *GVH) MutateLights(n byte) bool {
+	return rcv.MutateLIGHTS(n)
 }
 
 func (rcv *GVH) FUEL_LEVEL() float32 {
@@ -362,8 +554,16 @@ func (rcv *GVH) FUEL_LEVEL() float32 {
 	return 0.0
 }
 
+func (rcv *GVH) FuelLevel() float32 {
+	return rcv.FUEL_LEVEL()
+}
+
 func (rcv *GVH) MutateFUEL_LEVEL(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(58, n)
+}
+
+func (rcv *GVH) MutateFuelLevel(n float32) bool {
+	return rcv.MutateFUEL_LEVEL(n)
 }
 
 func GVHStart(builder *flatbuffers.Builder) {
@@ -372,86 +572,170 @@ func GVHStart(builder *flatbuffers.Builder) {
 func GVHAddPOSITION_X(builder *flatbuffers.Builder, POSITION_X float64) {
 	builder.PrependFloat64Slot(0, POSITION_X, 0.0)
 }
+func GVHAddPositionX(builder *flatbuffers.Builder, POSITION_X float64) {
+	GVHAddPOSITION_X(builder, POSITION_X)
+}
 func GVHAddPOSITION_Y(builder *flatbuffers.Builder, POSITION_Y float64) {
 	builder.PrependFloat64Slot(1, POSITION_Y, 0.0)
+}
+func GVHAddPositionY(builder *flatbuffers.Builder, POSITION_Y float64) {
+	GVHAddPOSITION_Y(builder, POSITION_Y)
 }
 func GVHAddPOSITION_Z(builder *flatbuffers.Builder, POSITION_Z float64) {
 	builder.PrependFloat64Slot(2, POSITION_Z, 0.0)
 }
+func GVHAddPositionZ(builder *flatbuffers.Builder, POSITION_Z float64) {
+	GVHAddPOSITION_Z(builder, POSITION_Z)
+}
 func GVHAddVELOCITY_X(builder *flatbuffers.Builder, VELOCITY_X float64) {
 	builder.PrependFloat64Slot(3, VELOCITY_X, 0.0)
+}
+func GVHAddVelocityX(builder *flatbuffers.Builder, VELOCITY_X float64) {
+	GVHAddVELOCITY_X(builder, VELOCITY_X)
 }
 func GVHAddVELOCITY_Y(builder *flatbuffers.Builder, VELOCITY_Y float64) {
 	builder.PrependFloat64Slot(4, VELOCITY_Y, 0.0)
 }
+func GVHAddVelocityY(builder *flatbuffers.Builder, VELOCITY_Y float64) {
+	GVHAddVELOCITY_Y(builder, VELOCITY_Y)
+}
 func GVHAddVELOCITY_Z(builder *flatbuffers.Builder, VELOCITY_Z float64) {
 	builder.PrependFloat64Slot(5, VELOCITY_Z, 0.0)
+}
+func GVHAddVelocityZ(builder *flatbuffers.Builder, VELOCITY_Z float64) {
+	GVHAddVELOCITY_Z(builder, VELOCITY_Z)
 }
 func GVHAddATTITUDE_X(builder *flatbuffers.Builder, ATTITUDE_X float64) {
 	builder.PrependFloat64Slot(6, ATTITUDE_X, 0.0)
 }
+func GVHAddAttitudeX(builder *flatbuffers.Builder, ATTITUDE_X float64) {
+	GVHAddATTITUDE_X(builder, ATTITUDE_X)
+}
 func GVHAddATTITUDE_Y(builder *flatbuffers.Builder, ATTITUDE_Y float64) {
 	builder.PrependFloat64Slot(7, ATTITUDE_Y, 0.0)
+}
+func GVHAddAttitudeY(builder *flatbuffers.Builder, ATTITUDE_Y float64) {
+	GVHAddATTITUDE_Y(builder, ATTITUDE_Y)
 }
 func GVHAddATTITUDE_Z(builder *flatbuffers.Builder, ATTITUDE_Z float64) {
 	builder.PrependFloat64Slot(8, ATTITUDE_Z, 0.0)
 }
+func GVHAddAttitudeZ(builder *flatbuffers.Builder, ATTITUDE_Z float64) {
+	GVHAddATTITUDE_Z(builder, ATTITUDE_Z)
+}
 func GVHAddATTITUDE_W(builder *flatbuffers.Builder, ATTITUDE_W float64) {
 	builder.PrependFloat64Slot(9, ATTITUDE_W, 0.0)
+}
+func GVHAddAttitudeW(builder *flatbuffers.Builder, ATTITUDE_W float64) {
+	GVHAddATTITUDE_W(builder, ATTITUDE_W)
 }
 func GVHAddOMEGA_X(builder *flatbuffers.Builder, OMEGA_X float64) {
 	builder.PrependFloat64Slot(10, OMEGA_X, 0.0)
 }
+func GVHAddOmegaX(builder *flatbuffers.Builder, OMEGA_X float64) {
+	GVHAddOMEGA_X(builder, OMEGA_X)
+}
 func GVHAddOMEGA_Y(builder *flatbuffers.Builder, OMEGA_Y float64) {
 	builder.PrependFloat64Slot(11, OMEGA_Y, 0.0)
+}
+func GVHAddOmegaY(builder *flatbuffers.Builder, OMEGA_Y float64) {
+	GVHAddOMEGA_Y(builder, OMEGA_Y)
 }
 func GVHAddOMEGA_Z(builder *flatbuffers.Builder, OMEGA_Z float64) {
 	builder.PrependFloat64Slot(12, OMEGA_Z, 0.0)
 }
+func GVHAddOmegaZ(builder *flatbuffers.Builder, OMEGA_Z float64) {
+	GVHAddOMEGA_Z(builder, OMEGA_Z)
+}
 func GVHAddSPEED(builder *flatbuffers.Builder, SPEED float32) {
 	builder.PrependFloat32Slot(13, SPEED, 0.0)
+}
+func GVHAddSpeed(builder *flatbuffers.Builder, SPEED float32) {
+	GVHAddSPEED(builder, SPEED)
 }
 func GVHAddHEADING(builder *flatbuffers.Builder, HEADING float32) {
 	builder.PrependFloat32Slot(14, HEADING, 0.0)
 }
+func GVHAddHeading(builder *flatbuffers.Builder, HEADING float32) {
+	GVHAddHEADING(builder, HEADING)
+}
 func GVHAddLATERAL_G(builder *flatbuffers.Builder, LATERAL_G float32) {
 	builder.PrependFloat32Slot(15, LATERAL_G, 0.0)
+}
+func GVHAddLateralG(builder *flatbuffers.Builder, LATERAL_G float32) {
+	GVHAddLATERAL_G(builder, LATERAL_G)
 }
 func GVHAddLONGITUDINAL_G(builder *flatbuffers.Builder, LONGITUDINAL_G float32) {
 	builder.PrependFloat32Slot(16, LONGITUDINAL_G, 0.0)
 }
+func GVHAddLongitudinalG(builder *flatbuffers.Builder, LONGITUDINAL_G float32) {
+	GVHAddLONGITUDINAL_G(builder, LONGITUDINAL_G)
+}
 func GVHAddTURRET(builder *flatbuffers.Builder, TURRET flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(17, flatbuffers.UOffsetT(TURRET), 0)
+}
+func GVHAddTurret(builder *flatbuffers.Builder, TURRET flatbuffers.UOffsetT) {
+	GVHAddTURRET(builder, TURRET)
 }
 func GVHAddDRIVETRAIN(builder *flatbuffers.Builder, DRIVETRAIN flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(18, flatbuffers.UOffsetT(DRIVETRAIN), 0)
 }
+func GVHAddDrivetrain(builder *flatbuffers.Builder, DRIVETRAIN flatbuffers.UOffsetT) {
+	GVHAddDRIVETRAIN(builder, DRIVETRAIN)
+}
 func GVHAddSUSPENSION_LF(builder *flatbuffers.Builder, SUSPENSION_LF flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(19, flatbuffers.UOffsetT(SUSPENSION_LF), 0)
+}
+func GVHAddSuspensionLf(builder *flatbuffers.Builder, SUSPENSION_LF flatbuffers.UOffsetT) {
+	GVHAddSUSPENSION_LF(builder, SUSPENSION_LF)
 }
 func GVHAddSUSPENSION_RF(builder *flatbuffers.Builder, SUSPENSION_RF flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(20, flatbuffers.UOffsetT(SUSPENSION_RF), 0)
 }
+func GVHAddSuspensionRf(builder *flatbuffers.Builder, SUSPENSION_RF flatbuffers.UOffsetT) {
+	GVHAddSUSPENSION_RF(builder, SUSPENSION_RF)
+}
 func GVHAddSUSPENSION_LR(builder *flatbuffers.Builder, SUSPENSION_LR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(21, flatbuffers.UOffsetT(SUSPENSION_LR), 0)
+}
+func GVHAddSuspensionLr(builder *flatbuffers.Builder, SUSPENSION_LR flatbuffers.UOffsetT) {
+	GVHAddSUSPENSION_LR(builder, SUSPENSION_LR)
 }
 func GVHAddSUSPENSION_RR(builder *flatbuffers.Builder, SUSPENSION_RR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(22, flatbuffers.UOffsetT(SUSPENSION_RR), 0)
 }
+func GVHAddSuspensionRr(builder *flatbuffers.Builder, SUSPENSION_RR flatbuffers.UOffsetT) {
+	GVHAddSUSPENSION_RR(builder, SUSPENSION_RR)
+}
 func GVHAddVEHICLE_TYPE(builder *flatbuffers.Builder, VEHICLE_TYPE byte) {
 	builder.PrependByteSlot(23, VEHICLE_TYPE, 0)
+}
+func GVHAddVehicleType(builder *flatbuffers.Builder, VEHICLE_TYPE byte) {
+	GVHAddVEHICLE_TYPE(builder, VEHICLE_TYPE)
 }
 func GVHAddDRIVE_TYPE(builder *flatbuffers.Builder, DRIVE_TYPE byte) {
 	builder.PrependByteSlot(24, DRIVE_TYPE, 0)
 }
+func GVHAddDriveType(builder *flatbuffers.Builder, DRIVE_TYPE byte) {
+	GVHAddDRIVE_TYPE(builder, DRIVE_TYPE)
+}
 func GVHAddENGINE_RUNNING(builder *flatbuffers.Builder, ENGINE_RUNNING byte) {
 	builder.PrependByteSlot(25, ENGINE_RUNNING, 0)
+}
+func GVHAddEngineRunning(builder *flatbuffers.Builder, ENGINE_RUNNING byte) {
+	GVHAddENGINE_RUNNING(builder, ENGINE_RUNNING)
 }
 func GVHAddLIGHTS(builder *flatbuffers.Builder, LIGHTS byte) {
 	builder.PrependByteSlot(26, LIGHTS, 0)
 }
+func GVHAddLights(builder *flatbuffers.Builder, LIGHTS byte) {
+	GVHAddLIGHTS(builder, LIGHTS)
+}
 func GVHAddFUEL_LEVEL(builder *flatbuffers.Builder, FUEL_LEVEL float32) {
 	builder.PrependFloat32Slot(27, FUEL_LEVEL, 0.0)
+}
+func GVHAddFuelLevel(builder *flatbuffers.Builder, FUEL_LEVEL float32) {
+	GVHAddFUEL_LEVEL(builder, FUEL_LEVEL)
 }
 func GVHEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

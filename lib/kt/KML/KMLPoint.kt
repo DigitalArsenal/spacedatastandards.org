@@ -32,8 +32,8 @@ class KMLPoint : Table() {
     /**
      * Coordinate
      */
-    val COORDINATES : KMLCoordinate? get() = COORDINATES(KMLCoordinate())
-    fun COORDINATES(obj: KMLCoordinate) : KMLCoordinate? {
+    val coordinates : KMLCoordinate? get() = coordinates(KMLCoordinate())
+    fun coordinates(obj: KMLCoordinate) : KMLCoordinate? {
         val o = __offset(4)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -44,7 +44,7 @@ class KMLPoint : Table() {
     /**
      * Altitude mode
      */
-    val ALTITUDE_MODE : Byte
+    val altitudeMode : Byte
         get() {
             val o = __offset(6)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -52,29 +52,29 @@ class KMLPoint : Table() {
     /**
      * Whether to extrude to ground
      */
-    val EXTRUDE : Boolean
+    val extrude : Boolean
         get() {
             val o = __offset(8)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsKMLPoint(_bb: ByteBuffer): KMLPoint = getRootAsKMLPoint(_bb, KMLPoint())
         fun getRootAsKMLPoint(_bb: ByteBuffer, obj: KMLPoint): KMLPoint {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createKMLPoint(builder: FlatBufferBuilder, COORDINATESOffset: Int, ALTITUDE_MODE: Byte, EXTRUDE: Boolean) : Int {
+        fun createKMLPoint(builder: FlatBufferBuilder, coordinatesOffset: Int, altitudeMode: Byte, extrude: Boolean) : Int {
             builder.startTable(3)
-            addCOORDINATES(builder, COORDINATESOffset)
-            addEXTRUDE(builder, EXTRUDE)
-            addALTITUDE_MODE(builder, ALTITUDE_MODE)
+            addCOORDINATES(builder, coordinatesOffset)
+            addEXTRUDE(builder, extrude)
+            addALTITUDEMODE(builder, altitudeMode)
             return endKMLPoint(builder)
         }
         fun startKMLPoint(builder: FlatBufferBuilder) = builder.startTable(3)
-        fun addCOORDINATES(builder: FlatBufferBuilder, COORDINATES: Int) = builder.addOffset(0, COORDINATES, 0)
-        fun addALTITUDE_MODE(builder: FlatBufferBuilder, ALTITUDE_MODE: Byte) = builder.addByte(1, ALTITUDE_MODE, 0)
-        fun addEXTRUDE(builder: FlatBufferBuilder, EXTRUDE: Boolean) = builder.addBoolean(2, EXTRUDE, false)
+        fun addCOORDINATES(builder: FlatBufferBuilder, coordinates: Int) = builder.addOffset(0, coordinates, 0)
+        fun addALTITUDEMODE(builder: FlatBufferBuilder, altitudeMode: Byte) = builder.addByte(1, altitudeMode, 0)
+        fun addEXTRUDE(builder: FlatBufferBuilder, extrude: Boolean) = builder.addBoolean(2, extrude, false)
         fun endKMLPoint(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

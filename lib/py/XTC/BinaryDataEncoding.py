@@ -87,16 +87,21 @@ def End(builder):
 class BinaryDataEncodingT(object):
 
     # BinaryDataEncodingT
-    def __init__(self):
-        self.SIZE_IN_BITS = 0  # type: int
-        self.MAX_SIZE_IN_BITS = 0  # type: int
-        self.LEADING_SIZE_BITS = 0  # type: int
+    def __init__(
+        self,
+        SIZE_IN_BITS = 0,
+        MAX_SIZE_IN_BITS = 0,
+        LEADING_SIZE_BITS = 0,
+    ):
+        self.SIZE_IN_BITS = SIZE_IN_BITS  # type: int
+        self.MAX_SIZE_IN_BITS = MAX_SIZE_IN_BITS  # type: int
+        self.LEADING_SIZE_BITS = LEADING_SIZE_BITS  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        binaryDataEncoding = BinaryDataEncoding()
-        binaryDataEncoding.Init(buf, pos)
-        return cls.InitFromObj(binaryDataEncoding)
+        tmpBinaryDataEncoding = BinaryDataEncoding()
+        tmpBinaryDataEncoding.Init(buf, pos)
+        return cls.InitFromObj(tmpBinaryDataEncoding)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -104,18 +109,18 @@ class BinaryDataEncodingT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, binaryDataEncoding):
+    def InitFromObj(cls, tmpBinaryDataEncoding):
         x = BinaryDataEncodingT()
-        x._UnPack(binaryDataEncoding)
+        x._UnPack(tmpBinaryDataEncoding)
         return x
 
     # BinaryDataEncodingT
-    def _UnPack(self, binaryDataEncoding):
-        if binaryDataEncoding is None:
+    def _UnPack(self, BinaryDataEncoding):
+        if BinaryDataEncoding is None:
             return
-        self.SIZE_IN_BITS = binaryDataEncoding.SIZE_IN_BITS()
-        self.MAX_SIZE_IN_BITS = binaryDataEncoding.MAX_SIZE_IN_BITS()
-        self.LEADING_SIZE_BITS = binaryDataEncoding.LEADING_SIZE_BITS()
+        self.SIZE_IN_BITS = BinaryDataEncoding.SIZE_IN_BITS()
+        self.MAX_SIZE_IN_BITS = BinaryDataEncoding.MAX_SIZE_IN_BITS()
+        self.LEADING_SIZE_BITS = BinaryDataEncoding.LEADING_SIZE_BITS()
 
     # BinaryDataEncodingT
     def Pack(self, builder):
@@ -123,5 +128,5 @@ class BinaryDataEncodingT(object):
         BinaryDataEncodingAddSIZE_IN_BITS(builder, self.SIZE_IN_BITS)
         BinaryDataEncodingAddMAX_SIZE_IN_BITS(builder, self.MAX_SIZE_IN_BITS)
         BinaryDataEncodingAddLEADING_SIZE_BITS(builder, self.LEADING_SIZE_BITS)
-        binaryDataEncoding = BinaryDataEncodingEnd(builder)
-        return binaryDataEncoding
+        BinaryDataEncoding = BinaryDataEncodingEnd(builder)
+        return BinaryDataEncoding

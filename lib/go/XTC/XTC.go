@@ -66,6 +66,10 @@ func (rcv *XTC) NAME() []byte {
 	return nil
 }
 
+func (rcv *XTC) Name() []byte {
+	return rcv.NAME()
+}
+
 /// Name of this space system
 /// Short description
 func (rcv *XTC) SHORT_DESCRIPTION() []byte {
@@ -74,6 +78,10 @@ func (rcv *XTC) SHORT_DESCRIPTION() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *XTC) ShortDescription() []byte {
+	return rcv.SHORT_DESCRIPTION()
 }
 
 /// Short description
@@ -86,6 +94,10 @@ func (rcv *XTC) LONG_DESCRIPTION() []byte {
 	return nil
 }
 
+func (rcv *XTC) LongDescription() []byte {
+	return rcv.LONG_DESCRIPTION()
+}
+
 /// Long description
 /// Operational status
 func (rcv *XTC) OPERATIONAL_STATUS() []byte {
@@ -94,6 +106,10 @@ func (rcv *XTC) OPERATIONAL_STATUS() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *XTC) OperationalStatus() []byte {
+	return rcv.OPERATIONAL_STATUS()
 }
 
 /// Operational status
@@ -111,6 +127,10 @@ func (rcv *XTC) HEADER(obj *XTCHeader) *XTCHeader {
 	return nil
 }
 
+func (rcv *XTC) Header(obj *XTCHeader) *XTCHeader {
+	return rcv.HEADER(obj)
+}
+
 /// Document header
 /// Telemetry metadata
 func (rcv *XTC) TELEMETRY_META_DATA(obj *TelemetryMetaData) *TelemetryMetaData {
@@ -124,6 +144,10 @@ func (rcv *XTC) TELEMETRY_META_DATA(obj *TelemetryMetaData) *TelemetryMetaData {
 		return obj
 	}
 	return nil
+}
+
+func (rcv *XTC) TelemetryMetaData(obj *TelemetryMetaData) *TelemetryMetaData {
+	return rcv.TELEMETRY_META_DATA(obj)
 }
 
 /// Telemetry metadata
@@ -141,6 +165,10 @@ func (rcv *XTC) COMMAND_META_DATA(obj *CommandMetaData) *CommandMetaData {
 	return nil
 }
 
+func (rcv *XTC) CommandMetaData(obj *CommandMetaData) *CommandMetaData {
+	return rcv.COMMAND_META_DATA(obj)
+}
+
 /// Command metadata
 /// Service definitions
 func (rcv *XTC) SERVICE_SET(obj *ServiceSet) *ServiceSet {
@@ -156,6 +184,10 @@ func (rcv *XTC) SERVICE_SET(obj *ServiceSet) *ServiceSet {
 	return nil
 }
 
+func (rcv *XTC) ServiceSet(obj *ServiceSet) *ServiceSet {
+	return rcv.SERVICE_SET(obj)
+}
+
 /// Service definitions
 /// Child space systems (hierarchical structure)
 func (rcv *XTC) CHILD_SYSTEMS(obj *XTC, j int) bool {
@@ -164,10 +196,17 @@ func (rcv *XTC) CHILD_SYSTEMS(obj *XTC, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(XTC)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *XTC) ChildSystems(obj *XTC, j int) bool {
+	return rcv.CHILD_SYSTEMS(obj, j)
 }
 
 func (rcv *XTC) CHILD_SYSTEMSLength() int {
@@ -178,6 +217,10 @@ func (rcv *XTC) CHILD_SYSTEMSLength() int {
 	return 0
 }
 
+func (rcv *XTC) ChildSystemsLength() int {
+	return rcv.CHILD_SYSTEMSLength()
+}
+
 /// Child space systems (hierarchical structure)
 func XTCStart(builder *flatbuffers.Builder) {
 	builder.StartObject(9)
@@ -185,32 +228,62 @@ func XTCStart(builder *flatbuffers.Builder) {
 func XTCAddNAME(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(NAME), 0)
 }
+func XTCAddName(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
+	XTCAddNAME(builder, NAME)
+}
 func XTCAddSHORT_DESCRIPTION(builder *flatbuffers.Builder, SHORT_DESCRIPTION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(SHORT_DESCRIPTION), 0)
+}
+func XTCAddShortDescription(builder *flatbuffers.Builder, SHORT_DESCRIPTION flatbuffers.UOffsetT) {
+	XTCAddSHORT_DESCRIPTION(builder, SHORT_DESCRIPTION)
 }
 func XTCAddLONG_DESCRIPTION(builder *flatbuffers.Builder, LONG_DESCRIPTION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(LONG_DESCRIPTION), 0)
 }
+func XTCAddLongDescription(builder *flatbuffers.Builder, LONG_DESCRIPTION flatbuffers.UOffsetT) {
+	XTCAddLONG_DESCRIPTION(builder, LONG_DESCRIPTION)
+}
 func XTCAddOPERATIONAL_STATUS(builder *flatbuffers.Builder, OPERATIONAL_STATUS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(OPERATIONAL_STATUS), 0)
+}
+func XTCAddOperationalStatus(builder *flatbuffers.Builder, OPERATIONAL_STATUS flatbuffers.UOffsetT) {
+	XTCAddOPERATIONAL_STATUS(builder, OPERATIONAL_STATUS)
 }
 func XTCAddHEADER(builder *flatbuffers.Builder, HEADER flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(HEADER), 0)
 }
+func XTCAddHeader(builder *flatbuffers.Builder, HEADER flatbuffers.UOffsetT) {
+	XTCAddHEADER(builder, HEADER)
+}
 func XTCAddTELEMETRY_META_DATA(builder *flatbuffers.Builder, TELEMETRY_META_DATA flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(TELEMETRY_META_DATA), 0)
+}
+func XTCAddTelemetryMetaData(builder *flatbuffers.Builder, TELEMETRY_META_DATA flatbuffers.UOffsetT) {
+	XTCAddTELEMETRY_META_DATA(builder, TELEMETRY_META_DATA)
 }
 func XTCAddCOMMAND_META_DATA(builder *flatbuffers.Builder, COMMAND_META_DATA flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(COMMAND_META_DATA), 0)
 }
+func XTCAddCommandMetaData(builder *flatbuffers.Builder, COMMAND_META_DATA flatbuffers.UOffsetT) {
+	XTCAddCOMMAND_META_DATA(builder, COMMAND_META_DATA)
+}
 func XTCAddSERVICE_SET(builder *flatbuffers.Builder, SERVICE_SET flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(SERVICE_SET), 0)
+}
+func XTCAddServiceSet(builder *flatbuffers.Builder, SERVICE_SET flatbuffers.UOffsetT) {
+	XTCAddSERVICE_SET(builder, SERVICE_SET)
 }
 func XTCAddCHILD_SYSTEMS(builder *flatbuffers.Builder, CHILD_SYSTEMS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(CHILD_SYSTEMS), 0)
 }
+func XTCAddChildSystems(builder *flatbuffers.Builder, CHILD_SYSTEMS flatbuffers.UOffsetT) {
+	XTCAddCHILD_SYSTEMS(builder, CHILD_SYSTEMS)
+}
 func XTCStartCHILD_SYSTEMSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func XTCStartChildSystemsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return XTCStartCHILD_SYSTEMSVector(builder, numElems)
 }
 func XTCEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

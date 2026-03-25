@@ -2,9 +2,13 @@
 // swiftlint:disable all
 // swiftformat:disable all
 
+#if canImport(Common)
+import Common
+#endif
+
 import FlatBuffers
 
-public enum mtiStandard: Int8, Enum, Verifiable {
+public enum mtiStandard: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -19,9 +23,9 @@ public enum mtiStandard: Int8, Enum, Verifiable {
 
 
 ///  Moving Target Indicator
-public struct MTI: FlatBufferObject, Verifiable {
+public struct MTI: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -72,33 +76,19 @@ public struct MTI: FlatBufferObject, Verifiable {
   ///  Security classification (P10)
   public var P10: UInt16 { let o = _accessor.offset(VTOFFSET.P10.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
   ///  Mission segment identifiers
-  public var hasMissions: Bool { let o = _accessor.offset(VTOFFSET.MISSIONS.v); return o == 0 ? false : true }
-  public var MISSIONSCount: Int32 { let o = _accessor.offset(VTOFFSET.MISSIONS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func MISSIONS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.MISSIONS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  public var MISSIONS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.MISSIONS.v, byteSize: 4) }
   ///  Dwell segment data references
-  public var hasDwells: Bool { let o = _accessor.offset(VTOFFSET.DWELLS.v); return o == 0 ? false : true }
-  public var DWELLSCount: Int32 { let o = _accessor.offset(VTOFFSET.DWELLS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func DWELLS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.DWELLS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  public var DWELLS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.DWELLS.v, byteSize: 4) }
   ///  High range resolution profile references
-  public var hasHrrs: Bool { let o = _accessor.offset(VTOFFSET.HRRS.v); return o == 0 ? false : true }
-  public var HRRSCount: Int32 { let o = _accessor.offset(VTOFFSET.HRRS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func HRRS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.HRRS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  public var HRRS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.HRRS.v, byteSize: 4) }
   ///  Job definition references
-  public var hasJobDefs: Bool { let o = _accessor.offset(VTOFFSET.JOB_DEFS.v); return o == 0 ? false : true }
-  public var JOB_DEFSCount: Int32 { let o = _accessor.offset(VTOFFSET.JOB_DEFS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func JOB_DEFS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.JOB_DEFS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  public var JOB_DEFS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.JOB_DEFS.v, byteSize: 4) }
   ///  Free text entries
-  public var hasFreeTexts: Bool { let o = _accessor.offset(VTOFFSET.FREE_TEXTS.v); return o == 0 ? false : true }
-  public var FREE_TEXTSCount: Int32 { let o = _accessor.offset(VTOFFSET.FREE_TEXTS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func FREE_TEXTS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.FREE_TEXTS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  public var FREE_TEXTS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.FREE_TEXTS.v, byteSize: 4) }
   ///  Platform location data references
-  public var hasPlatformLocs: Bool { let o = _accessor.offset(VTOFFSET.PLATFORM_LOCS.v); return o == 0 ? false : true }
-  public var PLATFORM_LOCSCount: Int32 { let o = _accessor.offset(VTOFFSET.PLATFORM_LOCS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func PLATFORM_LOCS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.PLATFORM_LOCS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  public var PLATFORM_LOCS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.PLATFORM_LOCS.v, byteSize: 4) }
   ///  Job request references
-  public var hasJobRequests: Bool { let o = _accessor.offset(VTOFFSET.JOB_REQUESTS.v); return o == 0 ? false : true }
-  public var JOB_REQUESTSCount: Int32 { let o = _accessor.offset(VTOFFSET.JOB_REQUESTS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func JOB_REQUESTS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.JOB_REQUESTS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  public var JOB_REQUESTS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.JOB_REQUESTS.v, byteSize: 4) }
   public static func startMTI(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 15) }
   public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VTOFFSET.ID.p) }
   public static func add(STANDARD: mtiStandard, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STANDARD.rawValue, def: 0, at: VTOFFSET.STANDARD.p) }

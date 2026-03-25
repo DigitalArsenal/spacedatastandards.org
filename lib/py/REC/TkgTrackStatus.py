@@ -2,4 +2,9 @@
 
 # namespace: 
 
-# NOTE TkgTrackStatus.py does not declare any structs or enums
+class TkgTrackStatus(object):
+    TENTATIVE = 0
+    CONFIRMED = 1
+    COASTING = 2
+    LOST = 3
+    DELETED = 4

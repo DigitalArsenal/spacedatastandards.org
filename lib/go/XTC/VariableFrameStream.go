@@ -51,6 +51,10 @@ func (rcv *VariableFrameStream) NAME() []byte {
 	return nil
 }
 
+func (rcv *VariableFrameStream) Name() []byte {
+	return rcv.NAME()
+}
+
 /// Stream name
 /// Short description
 func (rcv *VariableFrameStream) SHORT_DESCRIPTION() []byte {
@@ -59,6 +63,10 @@ func (rcv *VariableFrameStream) SHORT_DESCRIPTION() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *VariableFrameStream) ShortDescription() []byte {
+	return rcv.SHORT_DESCRIPTION()
 }
 
 /// Short description
@@ -71,9 +79,17 @@ func (rcv *VariableFrameStream) MIN_FRAME_SIZE_IN_BITS() uint32 {
 	return 0
 }
 
+func (rcv *VariableFrameStream) MinFrameSizeInBits() uint32 {
+	return rcv.MIN_FRAME_SIZE_IN_BITS()
+}
+
 /// Minimum frame size in bits
 func (rcv *VariableFrameStream) MutateMIN_FRAME_SIZE_IN_BITS(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(8, n)
+}
+
+func (rcv *VariableFrameStream) MutateMinFrameSizeInBits(n uint32) bool {
+	return rcv.MutateMIN_FRAME_SIZE_IN_BITS(n)
 }
 
 /// Maximum frame size in bits
@@ -85,9 +101,17 @@ func (rcv *VariableFrameStream) MAX_FRAME_SIZE_IN_BITS() uint32 {
 	return 0
 }
 
+func (rcv *VariableFrameStream) MaxFrameSizeInBits() uint32 {
+	return rcv.MAX_FRAME_SIZE_IN_BITS()
+}
+
 /// Maximum frame size in bits
 func (rcv *VariableFrameStream) MutateMAX_FRAME_SIZE_IN_BITS(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(10, n)
+}
+
+func (rcv *VariableFrameStream) MutateMaxFrameSizeInBits(n uint32) bool {
+	return rcv.MutateMAX_FRAME_SIZE_IN_BITS(n)
 }
 
 /// Size field location in bits
@@ -99,9 +123,17 @@ func (rcv *VariableFrameStream) SIZE_FIELD_OFFSET() uint32 {
 	return 0
 }
 
+func (rcv *VariableFrameStream) SizeFieldOffset() uint32 {
+	return rcv.SIZE_FIELD_OFFSET()
+}
+
 /// Size field location in bits
 func (rcv *VariableFrameStream) MutateSIZE_FIELD_OFFSET(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(12, n)
+}
+
+func (rcv *VariableFrameStream) MutateSizeFieldOffset(n uint32) bool {
+	return rcv.MutateSIZE_FIELD_OFFSET(n)
 }
 
 /// Size field size in bits
@@ -113,9 +145,17 @@ func (rcv *VariableFrameStream) SIZE_FIELD_SIZE() uint16 {
 	return 0
 }
 
+func (rcv *VariableFrameStream) SizeFieldSize() uint16 {
+	return rcv.SIZE_FIELD_SIZE()
+}
+
 /// Size field size in bits
 func (rcv *VariableFrameStream) MutateSIZE_FIELD_SIZE(n uint16) bool {
 	return rcv._tab.MutateUint16Slot(14, n)
+}
+
+func (rcv *VariableFrameStream) MutateSizeFieldSize(n uint16) bool {
+	return rcv.MutateSIZE_FIELD_SIZE(n)
 }
 
 func VariableFrameStreamStart(builder *flatbuffers.Builder) {
@@ -124,20 +164,38 @@ func VariableFrameStreamStart(builder *flatbuffers.Builder) {
 func VariableFrameStreamAddNAME(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(NAME), 0)
 }
+func VariableFrameStreamAddName(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
+	VariableFrameStreamAddNAME(builder, NAME)
+}
 func VariableFrameStreamAddSHORT_DESCRIPTION(builder *flatbuffers.Builder, SHORT_DESCRIPTION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(SHORT_DESCRIPTION), 0)
+}
+func VariableFrameStreamAddShortDescription(builder *flatbuffers.Builder, SHORT_DESCRIPTION flatbuffers.UOffsetT) {
+	VariableFrameStreamAddSHORT_DESCRIPTION(builder, SHORT_DESCRIPTION)
 }
 func VariableFrameStreamAddMIN_FRAME_SIZE_IN_BITS(builder *flatbuffers.Builder, MIN_FRAME_SIZE_IN_BITS uint32) {
 	builder.PrependUint32Slot(2, MIN_FRAME_SIZE_IN_BITS, 0)
 }
+func VariableFrameStreamAddMinFrameSizeInBits(builder *flatbuffers.Builder, MIN_FRAME_SIZE_IN_BITS uint32) {
+	VariableFrameStreamAddMIN_FRAME_SIZE_IN_BITS(builder, MIN_FRAME_SIZE_IN_BITS)
+}
 func VariableFrameStreamAddMAX_FRAME_SIZE_IN_BITS(builder *flatbuffers.Builder, MAX_FRAME_SIZE_IN_BITS uint32) {
 	builder.PrependUint32Slot(3, MAX_FRAME_SIZE_IN_BITS, 0)
+}
+func VariableFrameStreamAddMaxFrameSizeInBits(builder *flatbuffers.Builder, MAX_FRAME_SIZE_IN_BITS uint32) {
+	VariableFrameStreamAddMAX_FRAME_SIZE_IN_BITS(builder, MAX_FRAME_SIZE_IN_BITS)
 }
 func VariableFrameStreamAddSIZE_FIELD_OFFSET(builder *flatbuffers.Builder, SIZE_FIELD_OFFSET uint32) {
 	builder.PrependUint32Slot(4, SIZE_FIELD_OFFSET, 0)
 }
+func VariableFrameStreamAddSizeFieldOffset(builder *flatbuffers.Builder, SIZE_FIELD_OFFSET uint32) {
+	VariableFrameStreamAddSIZE_FIELD_OFFSET(builder, SIZE_FIELD_OFFSET)
+}
 func VariableFrameStreamAddSIZE_FIELD_SIZE(builder *flatbuffers.Builder, SIZE_FIELD_SIZE uint16) {
 	builder.PrependUint16Slot(5, SIZE_FIELD_SIZE, 0)
+}
+func VariableFrameStreamAddSizeFieldSize(builder *flatbuffers.Builder, SIZE_FIELD_SIZE uint16) {
+	VariableFrameStreamAddSIZE_FIELD_SIZE(builder, SIZE_FIELD_SIZE)
 }
 func VariableFrameStreamEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

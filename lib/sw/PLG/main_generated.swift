@@ -2,10 +2,14 @@
 // swiftlint:disable all
 // swiftformat:disable all
 
+#if canImport(Common)
+import Common
+#endif
+
 import FlatBuffers
 
 ///  Plugin type category
-public enum pluginType: Int8, Enum, Verifiable {
+public enum pluginType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -34,9 +38,9 @@ public enum pluginType: Int8, Enum, Verifiable {
 
 
 ///  Plugin capability declaration
-public struct PluginCapability: FlatBufferObject, Verifiable {
+public struct PluginCapability: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -90,9 +94,9 @@ public struct PluginCapability: FlatBufferObject, Verifiable {
 }
 
 ///  Plugin dependency on another plugin
-public struct PluginDependency: FlatBufferObject, Verifiable {
+public struct PluginDependency: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -146,9 +150,9 @@ public struct PluginDependency: FlatBufferObject, Verifiable {
 }
 
 ///  Plugin entry point function definition
-public struct EntryFunction: FlatBufferObject, Verifiable {
+public struct EntryFunction: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -173,9 +177,7 @@ public struct EntryFunction: FlatBufferObject, Verifiable {
   public var DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.DESCRIPTION.v) }
   ///  Input parameter types (FlatBuffer schema names)
-  public var hasInputSchemas: Bool { let o = _accessor.offset(VTOFFSET.INPUT_SCHEMAS.v); return o == 0 ? false : true }
-  public var INPUT_SCHEMASCount: Int32 { let o = _accessor.offset(VTOFFSET.INPUT_SCHEMAS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func INPUT_SCHEMAS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.INPUT_SCHEMAS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  public var INPUT_SCHEMAS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.INPUT_SCHEMAS.v, byteSize: 4) }
   ///  Output type (FlatBuffer schema name)
   public var OUTPUT_SCHEMA: String? { let o = _accessor.offset(VTOFFSET.OUTPUT_SCHEMA.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var OUTPUT_SCHEMASegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OUTPUT_SCHEMA.v) }
@@ -211,9 +213,9 @@ public struct EntryFunction: FlatBufferObject, Verifiable {
 }
 
 ///  Plugin Manifest - WASM plugin distribution
-public struct PLG: FlatBufferObject, Verifiable {
+public struct PLG: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -267,31 +269,21 @@ public struct PLG: FlatBufferObject, Verifiable {
   ///  ABI version for compatibility checking
   public var ABI_VERSION: UInt32 { let o = _accessor.offset(VTOFFSET.ABI_VERSION.v); return o == 0 ? 1 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  SHA256 hash of the decrypted WASM binary
-  public var hasWasmHash: Bool { let o = _accessor.offset(VTOFFSET.WASM_HASH.v); return o == 0 ? false : true }
-  public var WASM_HASHCount: Int32 { let o = _accessor.offset(VTOFFSET.WASM_HASH.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func WASM_HASH(at index: Int32) -> UInt8 { let o = _accessor.offset(VTOFFSET.WASM_HASH.v); return o == 0 ? 0 : _accessor.directRead(of: UInt8.self, offset: _accessor.vector(at: o) + index * 1) }
-  public var WASM_HASH: [UInt8] { return _accessor.getVector(at: VTOFFSET.WASM_HASH.v) ?? [] }
+  public var WASM_HASH: FlatbufferVector<UInt8> { return _accessor.vector(at: VTOFFSET.WASM_HASH.v, byteSize: 1) }
+  public func withUnsafePointerToWasmHash<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.WASM_HASH.v, body: body) }
   ///  Size of WASM binary in bytes
   public var WASM_SIZE: UInt64 { let o = _accessor.offset(VTOFFSET.WASM_SIZE.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
   ///  IPFS CID of the encrypted WASM binary
   public var WASM_CID: String? { let o = _accessor.offset(VTOFFSET.WASM_CID.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var WASM_CIDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.WASM_CID.v) }
   ///  Entry point functions exported by the plugin
-  public var hasEntryFunctions: Bool { let o = _accessor.offset(VTOFFSET.ENTRY_FUNCTIONS.v); return o == 0 ? false : true }
-  public var ENTRY_FUNCTIONSCount: Int32 { let o = _accessor.offset(VTOFFSET.ENTRY_FUNCTIONS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func ENTRY_FUNCTIONS(at index: Int32) -> EntryFunction? { let o = _accessor.offset(VTOFFSET.ENTRY_FUNCTIONS.v); return o == 0 ? nil : EntryFunction(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var ENTRY_FUNCTIONS: FlatbufferVector<EntryFunction> { return _accessor.vector(at: VTOFFSET.ENTRY_FUNCTIONS.v, byteSize: 4) }
   ///  FlatBuffer schemas required by this plugin
-  public var hasRequiredSchemas: Bool { let o = _accessor.offset(VTOFFSET.REQUIRED_SCHEMAS.v); return o == 0 ? false : true }
-  public var REQUIRED_SCHEMASCount: Int32 { let o = _accessor.offset(VTOFFSET.REQUIRED_SCHEMAS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func REQUIRED_SCHEMAS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.REQUIRED_SCHEMAS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  public var REQUIRED_SCHEMAS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.REQUIRED_SCHEMAS.v, byteSize: 4) }
   ///  Other plugins this depends on
-  public var hasDependencies: Bool { let o = _accessor.offset(VTOFFSET.DEPENDENCIES.v); return o == 0 ? false : true }
-  public var DEPENDENCIESCount: Int32 { let o = _accessor.offset(VTOFFSET.DEPENDENCIES.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func DEPENDENCIES(at index: Int32) -> PluginDependency? { let o = _accessor.offset(VTOFFSET.DEPENDENCIES.v); return o == 0 ? nil : PluginDependency(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var DEPENDENCIES: FlatbufferVector<PluginDependency> { return _accessor.vector(at: VTOFFSET.DEPENDENCIES.v, byteSize: 4) }
   ///  Capabilities provided by this plugin
-  public var hasCapabilities: Bool { let o = _accessor.offset(VTOFFSET.CAPABILITIES.v); return o == 0 ? false : true }
-  public var CAPABILITIESCount: Int32 { let o = _accessor.offset(VTOFFSET.CAPABILITIES.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func CAPABILITIES(at index: Int32) -> PluginCapability? { let o = _accessor.offset(VTOFFSET.CAPABILITIES.v); return o == 0 ? nil : PluginCapability(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public var CAPABILITIES: FlatbufferVector<PluginCapability> { return _accessor.vector(at: VTOFFSET.CAPABILITIES.v, byteSize: 4) }
   ///  Peer ID of the plugin provider
   public var PROVIDER_PEER_ID: String? { let o = _accessor.offset(VTOFFSET.PROVIDER_PEER_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var PROVIDER_PEER_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.PROVIDER_PEER_ID.v) }
@@ -301,9 +293,7 @@ public struct PLG: FlatBufferObject, Verifiable {
   ///  Whether the WASM binary is encrypted
   public var ENCRYPTED: Bool { let o = _accessor.offset(VTOFFSET.ENCRYPTED.v); return o == 0 ? true : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Minimum permissions required to run
-  public var hasMinPermissions: Bool { let o = _accessor.offset(VTOFFSET.MIN_PERMISSIONS.v); return o == 0 ? false : true }
-  public var MIN_PERMISSIONSCount: Int32 { let o = _accessor.offset(VTOFFSET.MIN_PERMISSIONS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func MIN_PERMISSIONS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.MIN_PERMISSIONS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  public var MIN_PERMISSIONS: FlatbufferVector<String?> { return _accessor.vector(at: VTOFFSET.MIN_PERMISSIONS.v, byteSize: 4) }
   ///  Unix timestamp when plugin was created
   public var CREATED_AT: UInt64 { let o = _accessor.offset(VTOFFSET.CREATED_AT.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
   ///  Unix timestamp when plugin was last updated
@@ -318,10 +308,8 @@ public struct PLG: FlatBufferObject, Verifiable {
   public var LICENSE: String? { let o = _accessor.offset(VTOFFSET.LICENSE.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var LICENSESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LICENSE.v) }
   ///  Ed25519 signature from provider over manifest
-  public var hasSignature: Bool { let o = _accessor.offset(VTOFFSET.SIGNATURE.v); return o == 0 ? false : true }
-  public var SIGNATURECount: Int32 { let o = _accessor.offset(VTOFFSET.SIGNATURE.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func SIGNATURE(at index: Int32) -> UInt8 { let o = _accessor.offset(VTOFFSET.SIGNATURE.v); return o == 0 ? 0 : _accessor.directRead(of: UInt8.self, offset: _accessor.vector(at: o) + index * 1) }
-  public var SIGNATURE: [UInt8] { return _accessor.getVector(at: VTOFFSET.SIGNATURE.v) ?? [] }
+  public var SIGNATURE: FlatbufferVector<UInt8> { return _accessor.vector(at: VTOFFSET.SIGNATURE.v, byteSize: 1) }
+  public func withUnsafePointerToSignature<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.SIGNATURE.v, body: body) }
   public static func startPLG(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 23) }
   public static func add(PLUGIN_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PLUGIN_ID, at: VTOFFSET.PLUGIN_ID.p) }
   public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }

@@ -2,11 +2,15 @@
 // swiftlint:disable all
 // swiftformat:disable all
 
+#if canImport(Common)
+import Common
+#endif
+
 import FlatBuffers
 
 ///  Encryption Header for FlatBuffers field-level encryption
 ///  Key exchange algorithm used to derive the shared secret
-public enum KeyExchange: Int8, Enum, Verifiable {
+public enum KeyExchange: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -20,7 +24,7 @@ public enum KeyExchange: Int8, Enum, Verifiable {
 
 
 ///  Symmetric encryption algorithm
-public enum SymmetricAlgo: Int8, Enum, Verifiable {
+public enum SymmetricAlgo: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -32,7 +36,7 @@ public enum SymmetricAlgo: Int8, Enum, Verifiable {
 
 
 ///  Key derivation function
-public enum KDF: Int8, Enum, Verifiable {
+public enum KDF: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -44,9 +48,9 @@ public enum KDF: Int8, Enum, Verifiable {
 
 
 ///  Encryption Header containing all parameters needed for decryption
-public struct ENC: FlatBufferObject, Verifiable {
+public struct ENC: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
@@ -80,28 +84,20 @@ public struct ENC: FlatBufferObject, Verifiable {
   ///  Key derivation function used
   public var KEY_DERIVATION: KDF { let o = _accessor.offset(VTOFFSET.KEY_DERIVATION.v); return o == 0 ? .hkdfSha256 : KDF(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .hkdfSha256 }
   ///  Ephemeral public key for ECDH key agreement (32-65 bytes depending on algorithm)
-  public var hasEphemeralPublicKey: Bool { let o = _accessor.offset(VTOFFSET.EPHEMERAL_PUBLIC_KEY.v); return o == 0 ? false : true }
-  public var EPHEMERAL_PUBLIC_KEYCount: Int32 { let o = _accessor.offset(VTOFFSET.EPHEMERAL_PUBLIC_KEY.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func EPHEMERAL_PUBLIC_KEY(at index: Int32) -> UInt8 { let o = _accessor.offset(VTOFFSET.EPHEMERAL_PUBLIC_KEY.v); return o == 0 ? 0 : _accessor.directRead(of: UInt8.self, offset: _accessor.vector(at: o) + index * 1) }
-  public var EPHEMERAL_PUBLIC_KEY: [UInt8] { return _accessor.getVector(at: VTOFFSET.EPHEMERAL_PUBLIC_KEY.v) ?? [] }
+  public var EPHEMERAL_PUBLIC_KEY: FlatbufferVector<UInt8> { return _accessor.vector(at: VTOFFSET.EPHEMERAL_PUBLIC_KEY.v, byteSize: 1) }
+  public func withUnsafePointerToEphemeralPublicKey<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.EPHEMERAL_PUBLIC_KEY.v, body: body) }
   ///  Random 12-byte nonce starting value. Incremented for each record in the stream to ensure unique nonces.
-  public var hasNonceStart: Bool { let o = _accessor.offset(VTOFFSET.NONCE_START.v); return o == 0 ? false : true }
-  public var NONCE_STARTCount: Int32 { let o = _accessor.offset(VTOFFSET.NONCE_START.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func NONCE_START(at index: Int32) -> UInt8 { let o = _accessor.offset(VTOFFSET.NONCE_START.v); return o == 0 ? 0 : _accessor.directRead(of: UInt8.self, offset: _accessor.vector(at: o) + index * 1) }
-  public var NONCE_START: [UInt8] { return _accessor.getVector(at: VTOFFSET.NONCE_START.v) ?? [] }
+  public var NONCE_START: FlatbufferVector<UInt8> { return _accessor.vector(at: VTOFFSET.NONCE_START.v, byteSize: 1) }
+  public func withUnsafePointerToNonceStart<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.NONCE_START.v, body: body) }
   ///  Optional identifier for the recipient's public key (up to 32 bytes)
-  public var hasRecipientKeyId: Bool { let o = _accessor.offset(VTOFFSET.RECIPIENT_KEY_ID.v); return o == 0 ? false : true }
-  public var RECIPIENT_KEY_IDCount: Int32 { let o = _accessor.offset(VTOFFSET.RECIPIENT_KEY_ID.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func RECIPIENT_KEY_ID(at index: Int32) -> UInt8 { let o = _accessor.offset(VTOFFSET.RECIPIENT_KEY_ID.v); return o == 0 ? 0 : _accessor.directRead(of: UInt8.self, offset: _accessor.vector(at: o) + index * 1) }
-  public var RECIPIENT_KEY_ID: [UInt8] { return _accessor.getVector(at: VTOFFSET.RECIPIENT_KEY_ID.v) ?? [] }
+  public var RECIPIENT_KEY_ID: FlatbufferVector<UInt8> { return _accessor.vector(at: VTOFFSET.RECIPIENT_KEY_ID.v, byteSize: 1) }
+  public func withUnsafePointerToRecipientKeyId<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.RECIPIENT_KEY_ID.v, body: body) }
   ///  Optional domain separation context string
   public var CONTEXT: String? { let o = _accessor.offset(VTOFFSET.CONTEXT.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var CONTEXTSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CONTEXT.v) }
   ///  Optional SHA-256 hash of the FlatBuffers schema (32 bytes)
-  public var hasSchemaHash: Bool { let o = _accessor.offset(VTOFFSET.SCHEMA_HASH.v); return o == 0 ? false : true }
-  public var SCHEMA_HASHCount: Int32 { let o = _accessor.offset(VTOFFSET.SCHEMA_HASH.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func SCHEMA_HASH(at index: Int32) -> UInt8 { let o = _accessor.offset(VTOFFSET.SCHEMA_HASH.v); return o == 0 ? 0 : _accessor.directRead(of: UInt8.self, offset: _accessor.vector(at: o) + index * 1) }
-  public var SCHEMA_HASH: [UInt8] { return _accessor.getVector(at: VTOFFSET.SCHEMA_HASH.v) ?? [] }
+  public var SCHEMA_HASH: FlatbufferVector<UInt8> { return _accessor.vector(at: VTOFFSET.SCHEMA_HASH.v, byteSize: 1) }
+  public func withUnsafePointerToSchemaHash<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VTOFFSET.SCHEMA_HASH.v, body: body) }
   ///  Optional root type name from the schema
   public var ROOT_TYPE: String? { let o = _accessor.offset(VTOFFSET.ROOT_TYPE.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var ROOT_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ROOT_TYPE.v) }

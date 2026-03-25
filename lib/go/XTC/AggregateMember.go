@@ -51,6 +51,10 @@ func (rcv *AggregateMember) NAME() []byte {
 	return nil
 }
 
+func (rcv *AggregateMember) Name() []byte {
+	return rcv.NAME()
+}
+
 /// Member name
 /// Reference to parameter type
 func (rcv *AggregateMember) TYPE_REF() []byte {
@@ -59,6 +63,10 @@ func (rcv *AggregateMember) TYPE_REF() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *AggregateMember) TypeRef() []byte {
+	return rcv.TYPE_REF()
 }
 
 /// Reference to parameter type
@@ -71,6 +79,10 @@ func (rcv *AggregateMember) SHORT_DESCRIPTION() []byte {
 	return nil
 }
 
+func (rcv *AggregateMember) ShortDescription() []byte {
+	return rcv.SHORT_DESCRIPTION()
+}
+
 /// Short description
 func AggregateMemberStart(builder *flatbuffers.Builder) {
 	builder.StartObject(3)
@@ -78,11 +90,20 @@ func AggregateMemberStart(builder *flatbuffers.Builder) {
 func AggregateMemberAddNAME(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(NAME), 0)
 }
+func AggregateMemberAddName(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
+	AggregateMemberAddNAME(builder, NAME)
+}
 func AggregateMemberAddTYPE_REF(builder *flatbuffers.Builder, TYPE_REF flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(TYPE_REF), 0)
 }
+func AggregateMemberAddTypeRef(builder *flatbuffers.Builder, TYPE_REF flatbuffers.UOffsetT) {
+	AggregateMemberAddTYPE_REF(builder, TYPE_REF)
+}
 func AggregateMemberAddSHORT_DESCRIPTION(builder *flatbuffers.Builder, SHORT_DESCRIPTION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(SHORT_DESCRIPTION), 0)
+}
+func AggregateMemberAddShortDescription(builder *flatbuffers.Builder, SHORT_DESCRIPTION flatbuffers.UOffsetT) {
+	AggregateMemberAddSHORT_DESCRIPTION(builder, SHORT_DESCRIPTION)
 }
 func AggregateMemberEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

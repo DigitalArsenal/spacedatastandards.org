@@ -87,15 +87,19 @@ except:
 class ContextAlarmT(object):
 
     # ContextAlarmT
-    def __init__(self):
-        self.MATCH_CRITERIA = None  # type: Optional[MatchCriteria.MatchCriteriaT]
-        self.ALARM = None  # type: Optional[DefaultAlarm.DefaultAlarmT]
+    def __init__(
+        self,
+        MATCH_CRITERIA = None,
+        ALARM = None,
+    ):
+        self.MATCH_CRITERIA = MATCH_CRITERIA  # type: Optional[MatchCriteria.MatchCriteriaT]
+        self.ALARM = ALARM  # type: Optional[DefaultAlarm.DefaultAlarmT]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        contextAlarm = ContextAlarm()
-        contextAlarm.Init(buf, pos)
-        return cls.InitFromObj(contextAlarm)
+        tmpContextAlarm = ContextAlarm()
+        tmpContextAlarm.Init(buf, pos)
+        return cls.InitFromObj(tmpContextAlarm)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -103,19 +107,19 @@ class ContextAlarmT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, contextAlarm):
+    def InitFromObj(cls, tmpContextAlarm):
         x = ContextAlarmT()
-        x._UnPack(contextAlarm)
+        x._UnPack(tmpContextAlarm)
         return x
 
     # ContextAlarmT
-    def _UnPack(self, contextAlarm):
-        if contextAlarm is None:
+    def _UnPack(self, ContextAlarm):
+        if ContextAlarm is None:
             return
-        if contextAlarm.MATCH_CRITERIA() is not None:
-            self.MATCH_CRITERIA = MatchCriteria.MatchCriteriaT.InitFromObj(contextAlarm.MATCH_CRITERIA())
-        if contextAlarm.ALARM() is not None:
-            self.ALARM = DefaultAlarm.DefaultAlarmT.InitFromObj(contextAlarm.ALARM())
+        if ContextAlarm.MATCH_CRITERIA() is not None:
+            self.MATCH_CRITERIA = MatchCriteria.MatchCriteriaT.InitFromObj(ContextAlarm.MATCH_CRITERIA())
+        if ContextAlarm.ALARM() is not None:
+            self.ALARM = DefaultAlarm.DefaultAlarmT.InitFromObj(ContextAlarm.ALARM())
 
     # ContextAlarmT
     def Pack(self, builder):
@@ -128,5 +132,5 @@ class ContextAlarmT(object):
             ContextAlarmAddMATCH_CRITERIA(builder, MATCH_CRITERIA)
         if self.ALARM is not None:
             ContextAlarmAddALARM(builder, ALARM)
-        contextAlarm = ContextAlarmEnd(builder)
-        return contextAlarm
+        ContextAlarm = ContextAlarmEnd(builder)
+        return ContextAlarm

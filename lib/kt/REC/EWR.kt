@@ -29,32 +29,32 @@ class EWR : Table() {
         __init(_i, _bb)
         return this
     }
-    val SYSTEM_ID : UInt
+    val systemId : UInt
         get() {
             val o = __offset(4)
             return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
         }
-    val ENTITY_ID : UInt
+    val entityId : UInt
         get() {
             val o = __offset(6)
             return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
         }
-    val ESM_ACTIVE : Boolean
+    val esmActive : Boolean
         get() {
             val o = __offset(8)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
-    val ECM_ACTIVE : Boolean
+    val ecmActive : Boolean
         get() {
             val o = __offset(10)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
-    val RWR_ACTIVE : Boolean
+    val rwrActive : Boolean
         get() {
             val o = __offset(12)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
-    fun ESM_CONTACTS(j: Int) : String? {
+    fun esmContacts(j: Int) : String? {
         val o = __offset(14)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
@@ -62,11 +62,11 @@ class EWR : Table() {
             null
         }
     }
-    val ESM_CONTACTSLength : Int
+    val esmContactsLength : Int
         get() {
             val o = __offset(14); return if (o != 0) __vector_len(o) else 0
         }
-    fun ACTIVE_JAMMING(j: Int) : String? {
+    fun activeJamming(j: Int) : String? {
         val o = __offset(16)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
@@ -74,11 +74,11 @@ class EWR : Table() {
             null
         }
     }
-    val ACTIVE_JAMMINGLength : Int
+    val activeJammingLength : Int
         get() {
             val o = __offset(16); return if (o != 0) __vector_len(o) else 0
         }
-    val COUNTERMEASURES : String?
+    val countermeasures : String?
         get() {
             val o = __offset(18)
             return if (o != 0) {
@@ -87,9 +87,9 @@ class EWR : Table() {
                 null
             }
         }
-    val COUNTERMEASURESAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(18, 1)
-    fun COUNTERMEASURESInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 18, 1)
-    fun THREAT_WARNINGS(j: Int) : String? {
+    val countermeasuresAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(18, 1)
+    fun countermeasuresInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 18, 1)
+    fun threatWarnings(j: Int) : String? {
         val o = __offset(20)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
@@ -97,50 +97,50 @@ class EWR : Table() {
             null
         }
     }
-    val THREAT_WARNINGSLength : Int
+    val threatWarningsLength : Int
         get() {
             val o = __offset(20); return if (o != 0) __vector_len(o) else 0
         }
-    val EMCON_LEVEL : UByte
+    val emconLevel : UByte
         get() {
             val o = __offset(22)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
         }
-    val LAST_UPDATE_MS : Long
+    val lastUpdateMs : Long
         get() {
             val o = __offset(24)
             return if(o != 0) bb.getLong(o + bb_pos) else 0L
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsEWR(_bb: ByteBuffer): EWR = getRootAsEWR(_bb, EWR())
         fun getRootAsEWR(_bb: ByteBuffer, obj: EWR): EWR {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun EWRBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$EWR")
-        fun createEWR(builder: FlatBufferBuilder, SYSTEM_ID: UInt, ENTITY_ID: UInt, ESM_ACTIVE: Boolean, ECM_ACTIVE: Boolean, RWR_ACTIVE: Boolean, ESM_CONTACTSOffset: Int, ACTIVE_JAMMINGOffset: Int, COUNTERMEASURESOffset: Int, THREAT_WARNINGSOffset: Int, EMCON_LEVEL: UByte, LAST_UPDATE_MS: Long) : Int {
+        fun createEWR(builder: FlatBufferBuilder, systemId: UInt, entityId: UInt, esmActive: Boolean, ecmActive: Boolean, rwrActive: Boolean, esmContactsOffset: Int, activeJammingOffset: Int, countermeasuresOffset: Int, threatWarningsOffset: Int, emconLevel: UByte, lastUpdateMs: Long) : Int {
             builder.startTable(11)
-            addLAST_UPDATE_MS(builder, LAST_UPDATE_MS)
-            addTHREAT_WARNINGS(builder, THREAT_WARNINGSOffset)
-            addCOUNTERMEASURES(builder, COUNTERMEASURESOffset)
-            addACTIVE_JAMMING(builder, ACTIVE_JAMMINGOffset)
-            addESM_CONTACTS(builder, ESM_CONTACTSOffset)
-            addENTITY_ID(builder, ENTITY_ID)
-            addSYSTEM_ID(builder, SYSTEM_ID)
-            addEMCON_LEVEL(builder, EMCON_LEVEL)
-            addRWR_ACTIVE(builder, RWR_ACTIVE)
-            addECM_ACTIVE(builder, ECM_ACTIVE)
-            addESM_ACTIVE(builder, ESM_ACTIVE)
+            addLASTUPDATEMS(builder, lastUpdateMs)
+            addTHREATWARNINGS(builder, threatWarningsOffset)
+            addCOUNTERMEASURES(builder, countermeasuresOffset)
+            addACTIVEJAMMING(builder, activeJammingOffset)
+            addESMCONTACTS(builder, esmContactsOffset)
+            addENTITYID(builder, entityId)
+            addSYSTEMID(builder, systemId)
+            addEMCONLEVEL(builder, emconLevel)
+            addRWRACTIVE(builder, rwrActive)
+            addECMACTIVE(builder, ecmActive)
+            addESMACTIVE(builder, esmActive)
             return endEWR(builder)
         }
         fun startEWR(builder: FlatBufferBuilder) = builder.startTable(11)
-        fun addSYSTEM_ID(builder: FlatBufferBuilder, SYSTEM_ID: UInt) = builder.addInt(0, SYSTEM_ID.toInt(), 0)
-        fun addENTITY_ID(builder: FlatBufferBuilder, ENTITY_ID: UInt) = builder.addInt(1, ENTITY_ID.toInt(), 0)
-        fun addESM_ACTIVE(builder: FlatBufferBuilder, ESM_ACTIVE: Boolean) = builder.addBoolean(2, ESM_ACTIVE, false)
-        fun addECM_ACTIVE(builder: FlatBufferBuilder, ECM_ACTIVE: Boolean) = builder.addBoolean(3, ECM_ACTIVE, false)
-        fun addRWR_ACTIVE(builder: FlatBufferBuilder, RWR_ACTIVE: Boolean) = builder.addBoolean(4, RWR_ACTIVE, false)
-        fun addESM_CONTACTS(builder: FlatBufferBuilder, ESM_CONTACTS: Int) = builder.addOffset(5, ESM_CONTACTS, 0)
+        fun addSYSTEMID(builder: FlatBufferBuilder, systemId: UInt) = builder.addInt(0, systemId.toInt(), 0)
+        fun addENTITYID(builder: FlatBufferBuilder, entityId: UInt) = builder.addInt(1, entityId.toInt(), 0)
+        fun addESMACTIVE(builder: FlatBufferBuilder, esmActive: Boolean) = builder.addBoolean(2, esmActive, false)
+        fun addECMACTIVE(builder: FlatBufferBuilder, ecmActive: Boolean) = builder.addBoolean(3, ecmActive, false)
+        fun addRWRACTIVE(builder: FlatBufferBuilder, rwrActive: Boolean) = builder.addBoolean(4, rwrActive, false)
+        fun addESMCONTACTS(builder: FlatBufferBuilder, esmContacts: Int) = builder.addOffset(5, esmContacts, 0)
         fun createEsmContactsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -149,7 +149,7 @@ class EWR : Table() {
             return builder.endVector()
         }
         fun startEsmContactsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addACTIVE_JAMMING(builder: FlatBufferBuilder, ACTIVE_JAMMING: Int) = builder.addOffset(6, ACTIVE_JAMMING, 0)
+        fun addACTIVEJAMMING(builder: FlatBufferBuilder, activeJamming: Int) = builder.addOffset(6, activeJamming, 0)
         fun createActiveJammingVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -158,8 +158,8 @@ class EWR : Table() {
             return builder.endVector()
         }
         fun startActiveJammingVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addCOUNTERMEASURES(builder: FlatBufferBuilder, COUNTERMEASURES: Int) = builder.addOffset(7, COUNTERMEASURES, 0)
-        fun addTHREAT_WARNINGS(builder: FlatBufferBuilder, THREAT_WARNINGS: Int) = builder.addOffset(8, THREAT_WARNINGS, 0)
+        fun addCOUNTERMEASURES(builder: FlatBufferBuilder, countermeasures: Int) = builder.addOffset(7, countermeasures, 0)
+        fun addTHREATWARNINGS(builder: FlatBufferBuilder, threatWarnings: Int) = builder.addOffset(8, threatWarnings, 0)
         fun createThreatWarningsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -168,8 +168,8 @@ class EWR : Table() {
             return builder.endVector()
         }
         fun startThreatWarningsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addEMCON_LEVEL(builder: FlatBufferBuilder, EMCON_LEVEL: UByte) = builder.addByte(9, EMCON_LEVEL.toByte(), 0)
-        fun addLAST_UPDATE_MS(builder: FlatBufferBuilder, LAST_UPDATE_MS: Long) = builder.addLong(10, LAST_UPDATE_MS, 0L)
+        fun addEMCONLEVEL(builder: FlatBufferBuilder, emconLevel: UByte) = builder.addByte(9, emconLevel.toByte(), 0)
+        fun addLASTUPDATEMS(builder: FlatBufferBuilder, lastUpdateMs: Long) = builder.addLong(10, lastUpdateMs, 0L)
         fun endEWR(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

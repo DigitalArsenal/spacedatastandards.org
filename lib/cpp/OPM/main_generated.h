@@ -8,9 +8,9 @@
 
 // Ensure the included flatbuffers.h is the same version as when this file was
 // generated, otherwise it may not be compatible.
-static_assert(FLATBUFFERS_VERSION_MAJOR == 24 &&
-              FLATBUFFERS_VERSION_MINOR == 3 &&
-              FLATBUFFERS_VERSION_REVISION == 25,
+static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
+              FLATBUFFERS_VERSION_MINOR == 12 &&
+              FLATBUFFERS_VERSION_REVISION == 19,
              "Non-compatible flatbuffers version included");
 
 struct OPM;
@@ -133,7 +133,8 @@ struct OPM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   double DRAG_COEFF() const {
     return GetField<double>(VT_DRAG_COEFF, 0.0);
   }
-  bool Verify(::flatbuffers::Verifier &verifier) const {
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_CCSDS_OPM_VERS) &&
            verifier.VerifyString(CCSDS_OPM_VERS()) &&
@@ -430,14 +431,16 @@ inline bool SizePrefixedOPMBufferHasIdentifier(const void *buf) {
       buf, OPMIdentifier(), true);
 }
 
+template <bool B = false>
 inline bool VerifyOPMBuffer(
-    ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifyBuffer<OPM>(OPMIdentifier());
+    ::flatbuffers::VerifierTemplate<B> &verifier) {
+  return verifier.template VerifyBuffer<OPM>(OPMIdentifier());
 }
 
+template <bool B = false>
 inline bool VerifySizePrefixedOPMBuffer(
-    ::flatbuffers::Verifier &verifier) {
-  return verifier.VerifySizePrefixedBuffer<OPM>(OPMIdentifier());
+    ::flatbuffers::VerifierTemplate<B> &verifier) {
+  return verifier.template VerifySizePrefixedBuffer<OPM>(OPMIdentifier());
 }
 
 inline void FinishOPMBuffer(

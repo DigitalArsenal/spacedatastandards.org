@@ -2,10 +2,10 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-export { GPX, GPXT } from './GPX.js';
-export { GPXFixType } from './GPXFixType.js';
-export { GPXLink, GPXLinkT } from './GPXLink.js';
-export { GPXRoute, GPXRouteT } from './GPXRoute.js';
-export { GPXTrack, GPXTrackT } from './GPXTrack.js';
-export { GPXTrackSegment, GPXTrackSegmentT } from './GPXTrackSegment.js';
-export { GPXWaypoint, GPXWaypointT } from './GPXWaypoint.js';
+export * from './GPX.js';
+export * from './GPXFixType.js';
+export * from './GPXLink.js';
+export * from './GPXRoute.js';
+export * from './GPXTrack.js';
+export * from './GPXTrackSegment.js';
+export * from './GPXWaypoint.js';

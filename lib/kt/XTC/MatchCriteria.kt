@@ -32,8 +32,8 @@ class MatchCriteria : Table() {
     /**
      * Single comparison
      */
-    val COMPARISON : ParameterComparison? get() = COMPARISON(ParameterComparison())
-    fun COMPARISON(obj: ParameterComparison) : ParameterComparison? {
+    val comparison : ParameterComparison? get() = comparison(ParameterComparison())
+    fun comparison(obj: ParameterComparison) : ParameterComparison? {
         val o = __offset(4)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -44,8 +44,8 @@ class MatchCriteria : Table() {
     /**
      * List of comparisons (implicit AND)
      */
-    fun COMPARISON_LIST(j: Int) : ParameterComparison? = COMPARISON_LIST(ParameterComparison(), j)
-    fun COMPARISON_LIST(obj: ParameterComparison, j: Int) : ParameterComparison? {
+    fun comparisonList(j: Int) : ParameterComparison? = comparisonList(ParameterComparison(), j)
+    fun comparisonList(obj: ParameterComparison, j: Int) : ParameterComparison? {
         val o = __offset(6)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -53,15 +53,15 @@ class MatchCriteria : Table() {
             null
         }
     }
-    val COMPARISON_LISTLength : Int
+    val comparisonListLength : Int
         get() {
             val o = __offset(6); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Boolean expression
      */
-    val BOOLEAN_EXPRESSION : BooleanExpression? get() = BOOLEAN_EXPRESSION(BooleanExpression())
-    fun BOOLEAN_EXPRESSION(obj: BooleanExpression) : BooleanExpression? {
+    val booleanExpression : BooleanExpression? get() = booleanExpression(BooleanExpression())
+    fun booleanExpression(obj: BooleanExpression) : BooleanExpression? {
         val o = __offset(8)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -72,7 +72,7 @@ class MatchCriteria : Table() {
     /**
      * Custom algorithm reference
      */
-    val CUSTOM_ALGORITHM : String?
+    val customAlgorithm : String?
         get() {
             val o = __offset(10)
             return if (o != 0) {
@@ -81,26 +81,26 @@ class MatchCriteria : Table() {
                 null
             }
         }
-    val CUSTOM_ALGORITHMAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
-    fun CUSTOM_ALGORITHMInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
+    val customAlgorithmAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(10, 1)
+    fun customAlgorithmInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 10, 1)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsMatchCriteria(_bb: ByteBuffer): MatchCriteria = getRootAsMatchCriteria(_bb, MatchCriteria())
         fun getRootAsMatchCriteria(_bb: ByteBuffer, obj: MatchCriteria): MatchCriteria {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createMatchCriteria(builder: FlatBufferBuilder, COMPARISONOffset: Int, COMPARISON_LISTOffset: Int, BOOLEAN_EXPRESSIONOffset: Int, CUSTOM_ALGORITHMOffset: Int) : Int {
+        fun createMatchCriteria(builder: FlatBufferBuilder, comparisonOffset: Int, comparisonListOffset: Int, booleanExpressionOffset: Int, customAlgorithmOffset: Int) : Int {
             builder.startTable(4)
-            addCUSTOM_ALGORITHM(builder, CUSTOM_ALGORITHMOffset)
-            addBOOLEAN_EXPRESSION(builder, BOOLEAN_EXPRESSIONOffset)
-            addCOMPARISON_LIST(builder, COMPARISON_LISTOffset)
-            addCOMPARISON(builder, COMPARISONOffset)
+            addCUSTOMALGORITHM(builder, customAlgorithmOffset)
+            addBOOLEANEXPRESSION(builder, booleanExpressionOffset)
+            addCOMPARISONLIST(builder, comparisonListOffset)
+            addCOMPARISON(builder, comparisonOffset)
             return endMatchCriteria(builder)
         }
         fun startMatchCriteria(builder: FlatBufferBuilder) = builder.startTable(4)
-        fun addCOMPARISON(builder: FlatBufferBuilder, COMPARISON: Int) = builder.addOffset(0, COMPARISON, 0)
-        fun addCOMPARISON_LIST(builder: FlatBufferBuilder, COMPARISON_LIST: Int) = builder.addOffset(1, COMPARISON_LIST, 0)
+        fun addCOMPARISON(builder: FlatBufferBuilder, comparison: Int) = builder.addOffset(0, comparison, 0)
+        fun addCOMPARISONLIST(builder: FlatBufferBuilder, comparisonList: Int) = builder.addOffset(1, comparisonList, 0)
         fun createComparisonListVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -109,8 +109,8 @@ class MatchCriteria : Table() {
             return builder.endVector()
         }
         fun startComparisonListVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addBOOLEAN_EXPRESSION(builder: FlatBufferBuilder, BOOLEAN_EXPRESSION: Int) = builder.addOffset(2, BOOLEAN_EXPRESSION, 0)
-        fun addCUSTOM_ALGORITHM(builder: FlatBufferBuilder, CUSTOM_ALGORITHM: Int) = builder.addOffset(3, CUSTOM_ALGORITHM, 0)
+        fun addBOOLEANEXPRESSION(builder: FlatBufferBuilder, booleanExpression: Int) = builder.addOffset(2, booleanExpression, 0)
+        fun addCUSTOMALGORITHM(builder: FlatBufferBuilder, customAlgorithm: Int) = builder.addOffset(3, customAlgorithm, 0)
         fun endMatchCriteria(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

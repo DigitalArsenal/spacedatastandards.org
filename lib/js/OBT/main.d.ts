@@ -1,4 +1,4 @@
-export { OBT, OBTT } from './OBT.js';
-export { aouType } from './aouType.js';
-export { orbitObjectType } from './orbitObjectType.js';
+export * from './aouType.js';
+export * from './OBT.js';
+export * from './orbitObjectType.js';
 //# sourceMappingURL=main.d.ts.map

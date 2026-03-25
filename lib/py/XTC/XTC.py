@@ -204,6 +204,12 @@ def XTCStartCHILD_SYSTEMSVector(builder, numElems):
 def StartCHILD_SYSTEMSVector(builder, numElems):
     return XTCStartCHILD_SYSTEMSVector(builder, numElems)
 
+def XTCCreateCHILD_SYSTEMSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateCHILD_SYSTEMSVector(builder, data):
+    XTCCreateCHILD_SYSTEMSVector(builder, data)
+
 def XTCEnd(builder):
     return builder.EndObject()
 
@@ -222,22 +228,33 @@ except:
 class XTCT(object):
 
     # XTCT
-    def __init__(self):
-        self.NAME = None  # type: str
-        self.SHORT_DESCRIPTION = None  # type: str
-        self.LONG_DESCRIPTION = None  # type: str
-        self.OPERATIONAL_STATUS = None  # type: str
-        self.HEADER = None  # type: Optional[XTCHeader.XTCHeaderT]
-        self.TELEMETRY_META_DATA = None  # type: Optional[TelemetryMetaData.TelemetryMetaDataT]
-        self.COMMAND_META_DATA = None  # type: Optional[CommandMetaData.CommandMetaDataT]
-        self.SERVICE_SET = None  # type: Optional[ServiceSet.ServiceSetT]
-        self.CHILD_SYSTEMS = None  # type: List[XTC.XTCT]
+    def __init__(
+        self,
+        NAME = None,
+        SHORT_DESCRIPTION = None,
+        LONG_DESCRIPTION = None,
+        OPERATIONAL_STATUS = None,
+        HEADER = None,
+        TELEMETRY_META_DATA = None,
+        COMMAND_META_DATA = None,
+        SERVICE_SET = None,
+        CHILD_SYSTEMS = None,
+    ):
+        self.NAME = NAME  # type: Optional[str]
+        self.SHORT_DESCRIPTION = SHORT_DESCRIPTION  # type: Optional[str]
+        self.LONG_DESCRIPTION = LONG_DESCRIPTION  # type: Optional[str]
+        self.OPERATIONAL_STATUS = OPERATIONAL_STATUS  # type: Optional[str]
+        self.HEADER = HEADER  # type: Optional[XTCHeader.XTCHeaderT]
+        self.TELEMETRY_META_DATA = TELEMETRY_META_DATA  # type: Optional[TelemetryMetaData.TelemetryMetaDataT]
+        self.COMMAND_META_DATA = COMMAND_META_DATA  # type: Optional[CommandMetaData.CommandMetaDataT]
+        self.SERVICE_SET = SERVICE_SET  # type: Optional[ServiceSet.ServiceSetT]
+        self.CHILD_SYSTEMS = CHILD_SYSTEMS  # type: Optional[List[XTC.XTCT]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        XTC = XTC()
-        XTC.Init(buf, pos)
-        return cls.InitFromObj(XTC)
+        tmpXtc = XTC()
+        tmpXtc.Init(buf, pos)
+        return cls.InitFromObj(tmpXtc)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -245,9 +262,9 @@ class XTCT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, XTC):
+    def InitFromObj(cls, tmpXtc):
         x = XTCT()
-        x._UnPack(XTC)
+        x._UnPack(tmpXtc)
         return x
 
     # XTCT

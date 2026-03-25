@@ -63,6 +63,10 @@ func (rcv *MNF) ID() []byte {
 	return nil
 }
 
+func (rcv *MNF) Id() []byte {
+	return rcv.ID()
+}
+
 /// Unique manifold identifier
 /// Parent object satellite number
 func (rcv *MNF) SAT_NO() uint32 {
@@ -73,9 +77,17 @@ func (rcv *MNF) SAT_NO() uint32 {
 	return 0
 }
 
+func (rcv *MNF) SatNo() uint32 {
+	return rcv.SAT_NO()
+}
+
 /// Parent object satellite number
 func (rcv *MNF) MutateSAT_NO(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(6, n)
+}
+
+func (rcv *MNF) MutateSatNo(n uint32) bool {
+	return rcv.MutateSAT_NO(n)
 }
 
 /// Object designator
@@ -85,6 +97,10 @@ func (rcv *MNF) OBJECT_DESIGNATOR() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *MNF) ObjectDesignator() []byte {
+	return rcv.OBJECT_DESIGNATOR()
 }
 
 /// Object designator
@@ -97,9 +113,17 @@ func (rcv *MNF) STATUS() manifoldStatus {
 	return 0
 }
 
+func (rcv *MNF) Status() manifoldStatus {
+	return rcv.STATUS()
+}
+
 /// Manifold status
 func (rcv *MNF) MutateSTATUS(n manifoldStatus) bool {
 	return rcv._tab.MutateInt8Slot(10, int8(n))
+}
+
+func (rcv *MNF) MutateStatus(n manifoldStatus) bool {
+	return rcv.MutateSTATUS(n)
 }
 
 /// Event epoch that spawned the manifold (ISO 8601)
@@ -109,6 +133,10 @@ func (rcv *MNF) EVENT_EPOCH() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *MNF) EventEpoch() []byte {
+	return rcv.EVENT_EPOCH()
 }
 
 /// Event epoch that spawned the manifold (ISO 8601)
@@ -121,6 +149,10 @@ func (rcv *MNF) SOURCE() []byte {
 	return nil
 }
 
+func (rcv *MNF) Source() []byte {
+	return rcv.SOURCE()
+}
+
 /// Source of detection (sensor ID or method)
 /// Reference frame
 func (rcv *MNF) REF_FRAME() []byte {
@@ -129,6 +161,10 @@ func (rcv *MNF) REF_FRAME() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *MNF) RefFrame() []byte {
+	return rcv.REF_FRAME()
 }
 
 /// Reference frame
@@ -141,9 +177,17 @@ func (rcv *MNF) ORIG_SEMI_MAJOR_AXIS() float64 {
 	return 0.0
 }
 
+func (rcv *MNF) OrigSemiMajorAxis() float64 {
+	return rcv.ORIG_SEMI_MAJOR_AXIS()
+}
+
 /// Original pre-event semi-major axis in km
 func (rcv *MNF) MutateORIG_SEMI_MAJOR_AXIS(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(18, n)
+}
+
+func (rcv *MNF) MutateOrigSemiMajorAxis(n float64) bool {
+	return rcv.MutateORIG_SEMI_MAJOR_AXIS(n)
 }
 
 /// Original pre-event eccentricity
@@ -155,9 +199,17 @@ func (rcv *MNF) ORIG_ECCENTRICITY() float64 {
 	return 0.0
 }
 
+func (rcv *MNF) OrigEccentricity() float64 {
+	return rcv.ORIG_ECCENTRICITY()
+}
+
 /// Original pre-event eccentricity
 func (rcv *MNF) MutateORIG_ECCENTRICITY(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(20, n)
+}
+
+func (rcv *MNF) MutateOrigEccentricity(n float64) bool {
+	return rcv.MutateORIG_ECCENTRICITY(n)
 }
 
 /// Original pre-event inclination in degrees
@@ -169,9 +221,17 @@ func (rcv *MNF) ORIG_INCLINATION() float64 {
 	return 0.0
 }
 
+func (rcv *MNF) OrigInclination() float64 {
+	return rcv.ORIG_INCLINATION()
+}
+
 /// Original pre-event inclination in degrees
 func (rcv *MNF) MutateORIG_INCLINATION(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(22, n)
+}
+
+func (rcv *MNF) MutateOrigInclination(n float64) bool {
+	return rcv.MutateORIG_INCLINATION(n)
 }
 
 /// Minimum delta-V sampled in m/s
@@ -183,9 +243,17 @@ func (rcv *MNF) DELTA_V_MIN() float64 {
 	return 0.0
 }
 
+func (rcv *MNF) DeltaVMin() float64 {
+	return rcv.DELTA_V_MIN()
+}
+
 /// Minimum delta-V sampled in m/s
 func (rcv *MNF) MutateDELTA_V_MIN(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(24, n)
+}
+
+func (rcv *MNF) MutateDeltaVMin(n float64) bool {
+	return rcv.MutateDELTA_V_MIN(n)
 }
 
 /// Maximum delta-V sampled in m/s
@@ -197,9 +265,17 @@ func (rcv *MNF) DELTA_V_MAX() float64 {
 	return 0.0
 }
 
+func (rcv *MNF) DeltaVMax() float64 {
+	return rcv.DELTA_V_MAX()
+}
+
 /// Maximum delta-V sampled in m/s
 func (rcv *MNF) MutateDELTA_V_MAX(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(26, n)
+}
+
+func (rcv *MNF) MutateDeltaVMax(n float64) bool {
+	return rcv.MutateDELTA_V_MAX(n)
 }
 
 /// Delta-V step size in m/s
@@ -211,9 +287,17 @@ func (rcv *MNF) DELTA_V_STEP() float64 {
 	return 0.0
 }
 
+func (rcv *MNF) DeltaVStep() float64 {
+	return rcv.DELTA_V_STEP()
+}
+
 /// Delta-V step size in m/s
 func (rcv *MNF) MutateDELTA_V_STEP(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(28, n)
+}
+
+func (rcv *MNF) MutateDeltaVStep(n float64) bool {
+	return rcv.MutateDELTA_V_STEP(n)
 }
 
 /// Minimum delta-T sampled in seconds
@@ -225,9 +309,17 @@ func (rcv *MNF) DELTA_T_MIN() float64 {
 	return 0.0
 }
 
+func (rcv *MNF) DeltaTMin() float64 {
+	return rcv.DELTA_T_MIN()
+}
+
 /// Minimum delta-T sampled in seconds
 func (rcv *MNF) MutateDELTA_T_MIN(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(30, n)
+}
+
+func (rcv *MNF) MutateDeltaTMin(n float64) bool {
+	return rcv.MutateDELTA_T_MIN(n)
 }
 
 /// Maximum delta-T sampled in seconds
@@ -239,9 +331,17 @@ func (rcv *MNF) DELTA_T_MAX() float64 {
 	return 0.0
 }
 
+func (rcv *MNF) DeltaTMax() float64 {
+	return rcv.DELTA_T_MAX()
+}
+
 /// Maximum delta-T sampled in seconds
 func (rcv *MNF) MutateDELTA_T_MAX(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(32, n)
+}
+
+func (rcv *MNF) MutateDeltaTMax(n float64) bool {
+	return rcv.MutateDELTA_T_MAX(n)
 }
 
 /// Delta-T step size in seconds
@@ -253,9 +353,17 @@ func (rcv *MNF) DELTA_T_STEP() float64 {
 	return 0.0
 }
 
+func (rcv *MNF) DeltaTStep() float64 {
+	return rcv.DELTA_T_STEP()
+}
+
 /// Delta-T step size in seconds
 func (rcv *MNF) MutateDELTA_T_STEP(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(34, n)
+}
+
+func (rcv *MNF) MutateDeltaTStep(n float64) bool {
+	return rcv.MutateDELTA_T_STEP(n)
 }
 
 /// Total number of manifold elements
@@ -267,9 +375,17 @@ func (rcv *MNF) NUM_ELEMENTS() uint32 {
 	return 0
 }
 
+func (rcv *MNF) NumElements() uint32 {
+	return rcv.NUM_ELEMENTS()
+}
+
 /// Total number of manifold elements
 func (rcv *MNF) MutateNUM_ELEMENTS(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(36, n)
+}
+
+func (rcv *MNF) MutateNumElements(n uint32) bool {
+	return rcv.MutateNUM_ELEMENTS(n)
 }
 
 /// Theoretical element sets
@@ -279,10 +395,17 @@ func (rcv *MNF) ELEMENTS(obj *manifoldElset, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(manifoldElset)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *MNF) Elements(obj *manifoldElset, j int) bool {
+	return rcv.ELEMENTS(obj, j)
 }
 
 func (rcv *MNF) ELEMENTSLength() int {
@@ -291,6 +414,10 @@ func (rcv *MNF) ELEMENTSLength() int {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *MNF) ElementsLength() int {
+	return rcv.ELEMENTSLength()
 }
 
 /// Theoretical element sets
@@ -303,6 +430,10 @@ func (rcv *MNF) CORRELATED_ID() []byte {
 	return nil
 }
 
+func (rcv *MNF) CorrelatedId() []byte {
+	return rcv.CORRELATED_ID()
+}
+
 /// Correlated catalog object ID (if matched)
 /// Additional notes
 func (rcv *MNF) NOTES() []byte {
@@ -313,6 +444,10 @@ func (rcv *MNF) NOTES() []byte {
 	return nil
 }
 
+func (rcv *MNF) Notes() []byte {
+	return rcv.NOTES()
+}
+
 /// Additional notes
 func MNFStart(builder *flatbuffers.Builder) {
 	builder.StartObject(20)
@@ -320,65 +455,128 @@ func MNFStart(builder *flatbuffers.Builder) {
 func MNFAddID(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ID), 0)
 }
+func MNFAddId(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
+	MNFAddID(builder, ID)
+}
 func MNFAddSAT_NO(builder *flatbuffers.Builder, SAT_NO uint32) {
 	builder.PrependUint32Slot(1, SAT_NO, 0)
+}
+func MNFAddSatNo(builder *flatbuffers.Builder, SAT_NO uint32) {
+	MNFAddSAT_NO(builder, SAT_NO)
 }
 func MNFAddOBJECT_DESIGNATOR(builder *flatbuffers.Builder, OBJECT_DESIGNATOR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(OBJECT_DESIGNATOR), 0)
 }
+func MNFAddObjectDesignator(builder *flatbuffers.Builder, OBJECT_DESIGNATOR flatbuffers.UOffsetT) {
+	MNFAddOBJECT_DESIGNATOR(builder, OBJECT_DESIGNATOR)
+}
 func MNFAddSTATUS(builder *flatbuffers.Builder, STATUS manifoldStatus) {
 	builder.PrependInt8Slot(3, int8(STATUS), 0)
+}
+func MNFAddStatus(builder *flatbuffers.Builder, STATUS manifoldStatus) {
+	MNFAddSTATUS(builder, STATUS)
 }
 func MNFAddEVENT_EPOCH(builder *flatbuffers.Builder, EVENT_EPOCH flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(EVENT_EPOCH), 0)
 }
+func MNFAddEventEpoch(builder *flatbuffers.Builder, EVENT_EPOCH flatbuffers.UOffsetT) {
+	MNFAddEVENT_EPOCH(builder, EVENT_EPOCH)
+}
 func MNFAddSOURCE(builder *flatbuffers.Builder, SOURCE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(SOURCE), 0)
+}
+func MNFAddSource(builder *flatbuffers.Builder, SOURCE flatbuffers.UOffsetT) {
+	MNFAddSOURCE(builder, SOURCE)
 }
 func MNFAddREF_FRAME(builder *flatbuffers.Builder, REF_FRAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(REF_FRAME), 0)
 }
+func MNFAddRefFrame(builder *flatbuffers.Builder, REF_FRAME flatbuffers.UOffsetT) {
+	MNFAddREF_FRAME(builder, REF_FRAME)
+}
 func MNFAddORIG_SEMI_MAJOR_AXIS(builder *flatbuffers.Builder, ORIG_SEMI_MAJOR_AXIS float64) {
 	builder.PrependFloat64Slot(7, ORIG_SEMI_MAJOR_AXIS, 0.0)
+}
+func MNFAddOrigSemiMajorAxis(builder *flatbuffers.Builder, ORIG_SEMI_MAJOR_AXIS float64) {
+	MNFAddORIG_SEMI_MAJOR_AXIS(builder, ORIG_SEMI_MAJOR_AXIS)
 }
 func MNFAddORIG_ECCENTRICITY(builder *flatbuffers.Builder, ORIG_ECCENTRICITY float64) {
 	builder.PrependFloat64Slot(8, ORIG_ECCENTRICITY, 0.0)
 }
+func MNFAddOrigEccentricity(builder *flatbuffers.Builder, ORIG_ECCENTRICITY float64) {
+	MNFAddORIG_ECCENTRICITY(builder, ORIG_ECCENTRICITY)
+}
 func MNFAddORIG_INCLINATION(builder *flatbuffers.Builder, ORIG_INCLINATION float64) {
 	builder.PrependFloat64Slot(9, ORIG_INCLINATION, 0.0)
+}
+func MNFAddOrigInclination(builder *flatbuffers.Builder, ORIG_INCLINATION float64) {
+	MNFAddORIG_INCLINATION(builder, ORIG_INCLINATION)
 }
 func MNFAddDELTA_V_MIN(builder *flatbuffers.Builder, DELTA_V_MIN float64) {
 	builder.PrependFloat64Slot(10, DELTA_V_MIN, 0.0)
 }
+func MNFAddDeltaVMin(builder *flatbuffers.Builder, DELTA_V_MIN float64) {
+	MNFAddDELTA_V_MIN(builder, DELTA_V_MIN)
+}
 func MNFAddDELTA_V_MAX(builder *flatbuffers.Builder, DELTA_V_MAX float64) {
 	builder.PrependFloat64Slot(11, DELTA_V_MAX, 0.0)
+}
+func MNFAddDeltaVMax(builder *flatbuffers.Builder, DELTA_V_MAX float64) {
+	MNFAddDELTA_V_MAX(builder, DELTA_V_MAX)
 }
 func MNFAddDELTA_V_STEP(builder *flatbuffers.Builder, DELTA_V_STEP float64) {
 	builder.PrependFloat64Slot(12, DELTA_V_STEP, 0.0)
 }
+func MNFAddDeltaVStep(builder *flatbuffers.Builder, DELTA_V_STEP float64) {
+	MNFAddDELTA_V_STEP(builder, DELTA_V_STEP)
+}
 func MNFAddDELTA_T_MIN(builder *flatbuffers.Builder, DELTA_T_MIN float64) {
 	builder.PrependFloat64Slot(13, DELTA_T_MIN, 0.0)
+}
+func MNFAddDeltaTMin(builder *flatbuffers.Builder, DELTA_T_MIN float64) {
+	MNFAddDELTA_T_MIN(builder, DELTA_T_MIN)
 }
 func MNFAddDELTA_T_MAX(builder *flatbuffers.Builder, DELTA_T_MAX float64) {
 	builder.PrependFloat64Slot(14, DELTA_T_MAX, 0.0)
 }
+func MNFAddDeltaTMax(builder *flatbuffers.Builder, DELTA_T_MAX float64) {
+	MNFAddDELTA_T_MAX(builder, DELTA_T_MAX)
+}
 func MNFAddDELTA_T_STEP(builder *flatbuffers.Builder, DELTA_T_STEP float64) {
 	builder.PrependFloat64Slot(15, DELTA_T_STEP, 0.0)
+}
+func MNFAddDeltaTStep(builder *flatbuffers.Builder, DELTA_T_STEP float64) {
+	MNFAddDELTA_T_STEP(builder, DELTA_T_STEP)
 }
 func MNFAddNUM_ELEMENTS(builder *flatbuffers.Builder, NUM_ELEMENTS uint32) {
 	builder.PrependUint32Slot(16, NUM_ELEMENTS, 0)
 }
+func MNFAddNumElements(builder *flatbuffers.Builder, NUM_ELEMENTS uint32) {
+	MNFAddNUM_ELEMENTS(builder, NUM_ELEMENTS)
+}
 func MNFAddELEMENTS(builder *flatbuffers.Builder, ELEMENTS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(17, flatbuffers.UOffsetT(ELEMENTS), 0)
+}
+func MNFAddElements(builder *flatbuffers.Builder, ELEMENTS flatbuffers.UOffsetT) {
+	MNFAddELEMENTS(builder, ELEMENTS)
 }
 func MNFStartELEMENTSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
+func MNFStartElementsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return MNFStartELEMENTSVector(builder, numElems)
+}
 func MNFAddCORRELATED_ID(builder *flatbuffers.Builder, CORRELATED_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(18, flatbuffers.UOffsetT(CORRELATED_ID), 0)
 }
+func MNFAddCorrelatedId(builder *flatbuffers.Builder, CORRELATED_ID flatbuffers.UOffsetT) {
+	MNFAddCORRELATED_ID(builder, CORRELATED_ID)
+}
 func MNFAddNOTES(builder *flatbuffers.Builder, NOTES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(19, flatbuffers.UOffsetT(NOTES), 0)
+}
+func MNFAddNotes(builder *flatbuffers.Builder, NOTES flatbuffers.UOffsetT) {
+	MNFAddNOTES(builder, NOTES)
 }
 func MNFEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

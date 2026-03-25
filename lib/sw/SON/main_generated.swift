@@ -2,9 +2,13 @@
 // swiftlint:disable all
 // swiftformat:disable all
 
+#if canImport(Common)
+import Common
+#endif
+
 import FlatBuffers
 
-public enum SonarType: Int8, Enum, Verifiable {
+public enum SonarType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -25,7 +29,7 @@ public enum SonarType: Int8, Enum, Verifiable {
 }
 
 
-public enum SONPropagationModel: Int8, Enum, Verifiable {
+public enum SONPropagationModel: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -41,7 +45,7 @@ public enum SONPropagationModel: Int8, Enum, Verifiable {
 }
 
 
-public enum BottomType: Int8, Enum, Verifiable {
+public enum BottomType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -60,7 +64,7 @@ public enum BottomType: Int8, Enum, Verifiable {
 }
 
 
-public enum SeaState: Int8, Enum, Verifiable {
+public enum SeaState: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -80,7 +84,7 @@ public enum SeaState: Int8, Enum, Verifiable {
 }
 
 
-public enum NoiseSource: Int8, Enum, Verifiable {
+public enum NoiseSource: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -100,7 +104,7 @@ public enum NoiseSource: Int8, Enum, Verifiable {
 }
 
 
-public enum TargetType: Int8, Enum, Verifiable {
+public enum TargetType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -117,7 +121,7 @@ public enum TargetType: Int8, Enum, Verifiable {
 }
 
 
-public enum TorpedoGuidanceMode: Int8, Enum, Verifiable {
+public enum TorpedoGuidanceMode: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -135,9 +139,9 @@ public enum TorpedoGuidanceMode: Int8, Enum, Verifiable {
 
 
 ///  Sonar and Underwater Acoustics
-public struct SON: FlatBufferObject, Verifiable {
+public struct SON: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
-  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 

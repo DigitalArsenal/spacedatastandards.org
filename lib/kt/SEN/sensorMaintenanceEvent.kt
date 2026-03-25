@@ -32,7 +32,7 @@ class sensorMaintenanceEvent : Table() {
     /**
      * Maintenance start time (ISO 8601)
      */
-    val START_TIME : String?
+    val startTime : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class sensorMaintenanceEvent : Table() {
                 null
             }
         }
-    val START_TIMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun START_TIMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val startTimeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun startTimeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Maintenance end time (ISO 8601)
      */
-    val END_TIME : String?
+    val endTime : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -55,12 +55,12 @@ class sensorMaintenanceEvent : Table() {
                 null
             }
         }
-    val END_TIMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun END_TIMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val endTimeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun endTimeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * Type of maintenance
      */
-    val TYPE : Byte
+    val type : Byte
         get() {
             val o = __offset(8)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -68,7 +68,7 @@ class sensorMaintenanceEvent : Table() {
     /**
      * Description of maintenance performed
      */
-    val DESCRIPTION : String?
+    val description : String?
         get() {
             val o = __offset(10)
             return if (o != 0) {
@@ -77,12 +77,12 @@ class sensorMaintenanceEvent : Table() {
                 null
             }
         }
-    val DESCRIPTIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
-    fun DESCRIPTIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
+    val descriptionAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(10, 1)
+    fun descriptionInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 10, 1)
     /**
      * Components affected
      */
-    fun COMPONENTS(j: Int) : String? {
+    fun components(j: Int) : String? {
         val o = __offset(12)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
@@ -90,32 +90,32 @@ class sensorMaintenanceEvent : Table() {
             null
         }
     }
-    val COMPONENTSLength : Int
+    val componentsLength : Int
         get() {
             val o = __offset(12); return if (o != 0) __vector_len(o) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAssensorMaintenanceEvent(_bb: ByteBuffer): sensorMaintenanceEvent = getRootAssensorMaintenanceEvent(_bb, sensorMaintenanceEvent())
         fun getRootAssensorMaintenanceEvent(_bb: ByteBuffer, obj: sensorMaintenanceEvent): sensorMaintenanceEvent {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createsensorMaintenanceEvent(builder: FlatBufferBuilder, START_TIMEOffset: Int, END_TIMEOffset: Int, TYPE: Byte, DESCRIPTIONOffset: Int, COMPONENTSOffset: Int) : Int {
+        fun createsensorMaintenanceEvent(builder: FlatBufferBuilder, startTimeOffset: Int, endTimeOffset: Int, type: Byte, descriptionOffset: Int, componentsOffset: Int) : Int {
             builder.startTable(5)
-            addCOMPONENTS(builder, COMPONENTSOffset)
-            addDESCRIPTION(builder, DESCRIPTIONOffset)
-            addEND_TIME(builder, END_TIMEOffset)
-            addSTART_TIME(builder, START_TIMEOffset)
-            addTYPE(builder, TYPE)
+            addCOMPONENTS(builder, componentsOffset)
+            addDESCRIPTION(builder, descriptionOffset)
+            addENDTIME(builder, endTimeOffset)
+            addSTARTTIME(builder, startTimeOffset)
+            addTYPE(builder, type)
             return endsensorMaintenanceEvent(builder)
         }
         fun startsensorMaintenanceEvent(builder: FlatBufferBuilder) = builder.startTable(5)
-        fun addSTART_TIME(builder: FlatBufferBuilder, START_TIME: Int) = builder.addOffset(0, START_TIME, 0)
-        fun addEND_TIME(builder: FlatBufferBuilder, END_TIME: Int) = builder.addOffset(1, END_TIME, 0)
-        fun addTYPE(builder: FlatBufferBuilder, TYPE: Byte) = builder.addByte(2, TYPE, 0)
-        fun addDESCRIPTION(builder: FlatBufferBuilder, DESCRIPTION: Int) = builder.addOffset(3, DESCRIPTION, 0)
-        fun addCOMPONENTS(builder: FlatBufferBuilder, COMPONENTS: Int) = builder.addOffset(4, COMPONENTS, 0)
+        fun addSTARTTIME(builder: FlatBufferBuilder, startTime: Int) = builder.addOffset(0, startTime, 0)
+        fun addENDTIME(builder: FlatBufferBuilder, endTime: Int) = builder.addOffset(1, endTime, 0)
+        fun addTYPE(builder: FlatBufferBuilder, type: Byte) = builder.addByte(2, type, 0)
+        fun addDESCRIPTION(builder: FlatBufferBuilder, description: Int) = builder.addOffset(3, description, 0)
+        fun addCOMPONENTS(builder: FlatBufferBuilder, components: Int) = builder.addOffset(4, components, 0)
         fun createComponentsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {

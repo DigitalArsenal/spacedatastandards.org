@@ -32,7 +32,7 @@ class KMLCoordinate : Table() {
     /**
      * Longitude in decimal degrees
      */
-    val LONGITUDE : Double
+    val longitude : Double
         get() {
             val o = __offset(4)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -40,7 +40,7 @@ class KMLCoordinate : Table() {
     /**
      * Latitude in decimal degrees
      */
-    val LATITUDE : Double
+    val latitude : Double
         get() {
             val o = __offset(6)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -48,29 +48,29 @@ class KMLCoordinate : Table() {
     /**
      * Altitude in meters
      */
-    val ALTITUDE : Double
+    val altitude : Double
         get() {
             val o = __offset(8)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsKMLCoordinate(_bb: ByteBuffer): KMLCoordinate = getRootAsKMLCoordinate(_bb, KMLCoordinate())
         fun getRootAsKMLCoordinate(_bb: ByteBuffer, obj: KMLCoordinate): KMLCoordinate {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createKMLCoordinate(builder: FlatBufferBuilder, LONGITUDE: Double, LATITUDE: Double, ALTITUDE: Double) : Int {
+        fun createKMLCoordinate(builder: FlatBufferBuilder, longitude: Double, latitude: Double, altitude: Double) : Int {
             builder.startTable(3)
-            addALTITUDE(builder, ALTITUDE)
-            addLATITUDE(builder, LATITUDE)
-            addLONGITUDE(builder, LONGITUDE)
+            addALTITUDE(builder, altitude)
+            addLATITUDE(builder, latitude)
+            addLONGITUDE(builder, longitude)
             return endKMLCoordinate(builder)
         }
         fun startKMLCoordinate(builder: FlatBufferBuilder) = builder.startTable(3)
-        fun addLONGITUDE(builder: FlatBufferBuilder, LONGITUDE: Double) = builder.addDouble(0, LONGITUDE, 0.0)
-        fun addLATITUDE(builder: FlatBufferBuilder, LATITUDE: Double) = builder.addDouble(1, LATITUDE, 0.0)
-        fun addALTITUDE(builder: FlatBufferBuilder, ALTITUDE: Double) = builder.addDouble(2, ALTITUDE, 0.0)
+        fun addLONGITUDE(builder: FlatBufferBuilder, longitude: Double) = builder.addDouble(0, longitude, 0.0)
+        fun addLATITUDE(builder: FlatBufferBuilder, latitude: Double) = builder.addDouble(1, latitude, 0.0)
+        fun addALTITUDE(builder: FlatBufferBuilder, altitude: Double) = builder.addDouble(2, altitude, 0.0)
         fun endKMLCoordinate(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

@@ -51,6 +51,10 @@ func (rcv *KMLStyleMap) ID() []byte {
 	return nil
 }
 
+func (rcv *KMLStyleMap) Id() []byte {
+	return rcv.ID()
+}
+
 /// Style map identifier
 /// Pairs
 func (rcv *KMLStyleMap) PAIRS(obj *KMLStyleMapPair, j int) bool {
@@ -59,10 +63,17 @@ func (rcv *KMLStyleMap) PAIRS(obj *KMLStyleMapPair, j int) bool {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(KMLStyleMapPair)
+		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
 	}
 	return false
+}
+
+func (rcv *KMLStyleMap) Pairs(obj *KMLStyleMapPair, j int) bool {
+	return rcv.PAIRS(obj, j)
 }
 
 func (rcv *KMLStyleMap) PAIRSLength() int {
@@ -73,6 +84,10 @@ func (rcv *KMLStyleMap) PAIRSLength() int {
 	return 0
 }
 
+func (rcv *KMLStyleMap) PairsLength() int {
+	return rcv.PAIRSLength()
+}
+
 /// Pairs
 func KMLStyleMapStart(builder *flatbuffers.Builder) {
 	builder.StartObject(2)
@@ -80,11 +95,20 @@ func KMLStyleMapStart(builder *flatbuffers.Builder) {
 func KMLStyleMapAddID(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ID), 0)
 }
+func KMLStyleMapAddId(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
+	KMLStyleMapAddID(builder, ID)
+}
 func KMLStyleMapAddPAIRS(builder *flatbuffers.Builder, PAIRS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(PAIRS), 0)
 }
+func KMLStyleMapAddPairs(builder *flatbuffers.Builder, PAIRS flatbuffers.UOffsetT) {
+	KMLStyleMapAddPAIRS(builder, PAIRS)
+}
 func KMLStyleMapStartPAIRSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func KMLStyleMapStartPairsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return KMLStyleMapStartPAIRSVector(builder, numElems)
 }
 func KMLStyleMapEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

@@ -63,6 +63,10 @@ func (rcv *IRO) ID() []byte {
 	return nil
 }
 
+func (rcv *IRO) Id() []byte {
+	return rcv.ID()
+}
+
 /// Unique identifier
 /// Reference to source entity
 func (rcv *IRO) ID_ENTITY() []byte {
@@ -71,6 +75,10 @@ func (rcv *IRO) ID_ENTITY() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *IRO) IdEntity() []byte {
+	return rcv.ID_ENTITY()
 }
 
 /// Reference to source entity
@@ -83,6 +91,10 @@ func (rcv *IRO) NAME() []byte {
 	return nil
 }
 
+func (rcv *IRO) Name() []byte {
+	return rcv.NAME()
+}
+
 /// Sensor or observation name
 /// Description of observation
 func (rcv *IRO) DESCRIPTION() []byte {
@@ -91,6 +103,10 @@ func (rcv *IRO) DESCRIPTION() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *IRO) Description() []byte {
+	return rcv.DESCRIPTION()
 }
 
 /// Description of observation
@@ -103,6 +119,10 @@ func (rcv *IRO) ENTITY() []byte {
 	return nil
 }
 
+func (rcv *IRO) Entity() []byte {
+	return rcv.ENTITY()
+}
+
 /// Source entity designator
 /// Observation epoch (ISO 8601)
 func (rcv *IRO) EPOCH() []byte {
@@ -111,6 +131,10 @@ func (rcv *IRO) EPOCH() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *IRO) Epoch() []byte {
+	return rcv.EPOCH()
 }
 
 /// Observation epoch (ISO 8601)
@@ -123,6 +147,10 @@ func (rcv *IRO) SENSOR_ID() []byte {
 	return nil
 }
 
+func (rcv *IRO) SensorId() []byte {
+	return rcv.SENSOR_ID()
+}
+
 /// Sensor identifier
 /// Target satellite number (if identified)
 func (rcv *IRO) SAT_NO() uint32 {
@@ -133,9 +161,17 @@ func (rcv *IRO) SAT_NO() uint32 {
 	return 0
 }
 
+func (rcv *IRO) SatNo() uint32 {
+	return rcv.SAT_NO()
+}
+
 /// Target satellite number (if identified)
 func (rcv *IRO) MutateSAT_NO(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(18, n)
+}
+
+func (rcv *IRO) MutateSatNo(n uint32) bool {
+	return rcv.MutateSAT_NO(n)
 }
 
 /// Target object designator
@@ -145,6 +181,10 @@ func (rcv *IRO) OBJECT_DESIGNATOR() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *IRO) ObjectDesignator() []byte {
+	return rcv.OBJECT_DESIGNATOR()
 }
 
 /// Target object designator
@@ -157,9 +197,17 @@ func (rcv *IRO) BAND() irBand {
 	return 0
 }
 
+func (rcv *IRO) Band() irBand {
+	return rcv.BAND()
+}
+
 /// IR spectral band
 func (rcv *IRO) MutateBAND(n irBand) bool {
 	return rcv._tab.MutateInt8Slot(22, int8(n))
+}
+
+func (rcv *IRO) MutateBand(n irBand) bool {
+	return rcv.MutateBAND(n)
 }
 
 /// Detection type
@@ -171,9 +219,17 @@ func (rcv *IRO) DETECTION_TYPE() irDetectionType {
 	return 0
 }
 
+func (rcv *IRO) DetectionType() irDetectionType {
+	return rcv.DETECTION_TYPE()
+}
+
 /// Detection type
 func (rcv *IRO) MutateDETECTION_TYPE(n irDetectionType) bool {
 	return rcv._tab.MutateInt8Slot(24, int8(n))
+}
+
+func (rcv *IRO) MutateDetectionType(n irDetectionType) bool {
+	return rcv.MutateDETECTION_TYPE(n)
 }
 
 /// Right ascension in degrees
@@ -185,9 +241,17 @@ func (rcv *IRO) RA() float64 {
 	return 0.0
 }
 
+func (rcv *IRO) Ra() float64 {
+	return rcv.RA()
+}
+
 /// Right ascension in degrees
 func (rcv *IRO) MutateRA(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(26, n)
+}
+
+func (rcv *IRO) MutateRa(n float64) bool {
+	return rcv.MutateRA(n)
 }
 
 /// Declination in degrees
@@ -199,9 +263,17 @@ func (rcv *IRO) DEC() float64 {
 	return 0.0
 }
 
+func (rcv *IRO) Dec() float64 {
+	return rcv.DEC()
+}
+
 /// Declination in degrees
 func (rcv *IRO) MutateDEC(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(28, n)
+}
+
+func (rcv *IRO) MutateDec(n float64) bool {
+	return rcv.MutateDEC(n)
 }
 
 /// Right ascension uncertainty in arcseconds
@@ -213,9 +285,17 @@ func (rcv *IRO) RA_UNC() float64 {
 	return 0.0
 }
 
+func (rcv *IRO) RaUnc() float64 {
+	return rcv.RA_UNC()
+}
+
 /// Right ascension uncertainty in arcseconds
 func (rcv *IRO) MutateRA_UNC(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(30, n)
+}
+
+func (rcv *IRO) MutateRaUnc(n float64) bool {
+	return rcv.MutateRA_UNC(n)
 }
 
 /// Declination uncertainty in arcseconds
@@ -227,9 +307,17 @@ func (rcv *IRO) DEC_UNC() float64 {
 	return 0.0
 }
 
+func (rcv *IRO) DecUnc() float64 {
+	return rcv.DEC_UNC()
+}
+
 /// Declination uncertainty in arcseconds
 func (rcv *IRO) MutateDEC_UNC(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(32, n)
+}
+
+func (rcv *IRO) MutateDecUnc(n float64) bool {
+	return rcv.MutateDEC_UNC(n)
 }
 
 /// Azimuth angle in degrees
@@ -241,9 +329,17 @@ func (rcv *IRO) AZIMUTH() float64 {
 	return 0.0
 }
 
+func (rcv *IRO) Azimuth() float64 {
+	return rcv.AZIMUTH()
+}
+
 /// Azimuth angle in degrees
 func (rcv *IRO) MutateAZIMUTH(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(34, n)
+}
+
+func (rcv *IRO) MutateAzimuth(n float64) bool {
+	return rcv.MutateAZIMUTH(n)
 }
 
 /// Elevation angle in degrees
@@ -255,9 +351,17 @@ func (rcv *IRO) ELEVATION() float64 {
 	return 0.0
 }
 
+func (rcv *IRO) Elevation() float64 {
+	return rcv.ELEVATION()
+}
+
 /// Elevation angle in degrees
 func (rcv *IRO) MutateELEVATION(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(36, n)
+}
+
+func (rcv *IRO) MutateElevation(n float64) bool {
+	return rcv.MutateELEVATION(n)
 }
 
 /// Range in km (if available)
@@ -269,9 +373,17 @@ func (rcv *IRO) RANGE() float64 {
 	return 0.0
 }
 
+func (rcv *IRO) Range() float64 {
+	return rcv.RANGE()
+}
+
 /// Range in km (if available)
 func (rcv *IRO) MutateRANGE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(38, n)
+}
+
+func (rcv *IRO) MutateRange(n float64) bool {
+	return rcv.MutateRANGE(n)
 }
 
 /// Irradiance in W/m^2
@@ -283,9 +395,17 @@ func (rcv *IRO) IRRADIANCE() float64 {
 	return 0.0
 }
 
+func (rcv *IRO) Irradiance() float64 {
+	return rcv.IRRADIANCE()
+}
+
 /// Irradiance in W/m^2
 func (rcv *IRO) MutateIRRADIANCE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(40, n)
+}
+
+func (rcv *IRO) MutateIrradiance(n float64) bool {
+	return rcv.MutateIRRADIANCE(n)
 }
 
 /// Irradiance uncertainty in W/m^2
@@ -297,9 +417,17 @@ func (rcv *IRO) IRRADIANCE_UNC() float64 {
 	return 0.0
 }
 
+func (rcv *IRO) IrradianceUnc() float64 {
+	return rcv.IRRADIANCE_UNC()
+}
+
 /// Irradiance uncertainty in W/m^2
 func (rcv *IRO) MutateIRRADIANCE_UNC(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(42, n)
+}
+
+func (rcv *IRO) MutateIrradianceUnc(n float64) bool {
+	return rcv.MutateIRRADIANCE_UNC(n)
 }
 
 /// Apparent IR magnitude
@@ -311,9 +439,17 @@ func (rcv *IRO) IR_MAG() float64 {
 	return 0.0
 }
 
+func (rcv *IRO) IrMag() float64 {
+	return rcv.IR_MAG()
+}
+
 /// Apparent IR magnitude
 func (rcv *IRO) MutateIR_MAG(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(44, n)
+}
+
+func (rcv *IRO) MutateIrMag(n float64) bool {
+	return rcv.MutateIR_MAG(n)
 }
 
 /// Magnitude uncertainty
@@ -325,9 +461,17 @@ func (rcv *IRO) MAG_UNC() float64 {
 	return 0.0
 }
 
+func (rcv *IRO) MagUnc() float64 {
+	return rcv.MAG_UNC()
+}
+
 /// Magnitude uncertainty
 func (rcv *IRO) MutateMAG_UNC(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(46, n)
+}
+
+func (rcv *IRO) MutateMagUnc(n float64) bool {
+	return rcv.MutateMAG_UNC(n)
 }
 
 /// Effective temperature in Kelvin
@@ -339,9 +483,17 @@ func (rcv *IRO) TEMPERATURE() float64 {
 	return 0.0
 }
 
+func (rcv *IRO) Temperature() float64 {
+	return rcv.TEMPERATURE()
+}
+
 /// Effective temperature in Kelvin
 func (rcv *IRO) MutateTEMPERATURE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(48, n)
+}
+
+func (rcv *IRO) MutateTemperature(n float64) bool {
+	return rcv.MutateTEMPERATURE(n)
 }
 
 /// Integration time in seconds
@@ -353,9 +505,17 @@ func (rcv *IRO) INTEGRATION_TIME() float64 {
 	return 0.0
 }
 
+func (rcv *IRO) IntegrationTime() float64 {
+	return rcv.INTEGRATION_TIME()
+}
+
 /// Integration time in seconds
 func (rcv *IRO) MutateINTEGRATION_TIME(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(50, n)
+}
+
+func (rcv *IRO) MutateIntegrationTime(n float64) bool {
+	return rcv.MutateINTEGRATION_TIME(n)
 }
 
 /// Background irradiance in W/m^2/sr
@@ -367,9 +527,17 @@ func (rcv *IRO) BACKGROUND() float64 {
 	return 0.0
 }
 
+func (rcv *IRO) Background() float64 {
+	return rcv.BACKGROUND()
+}
+
 /// Background irradiance in W/m^2/sr
 func (rcv *IRO) MutateBACKGROUND(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(52, n)
+}
+
+func (rcv *IRO) MutateBackground(n float64) bool {
+	return rcv.MutateBACKGROUND(n)
 }
 
 /// Signal-to-noise ratio
@@ -381,9 +549,17 @@ func (rcv *IRO) SNR() float64 {
 	return 0.0
 }
 
+func (rcv *IRO) Snr() float64 {
+	return rcv.SNR()
+}
+
 /// Signal-to-noise ratio
 func (rcv *IRO) MutateSNR(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(54, n)
+}
+
+func (rcv *IRO) MutateSnr(n float64) bool {
+	return rcv.MutateSNR(n)
 }
 
 /// Spectral data wavelengths in micrometers
@@ -396,12 +572,20 @@ func (rcv *IRO) WAVELENGTHS(j int) float64 {
 	return 0
 }
 
+func (rcv *IRO) Wavelengths(j int) float64 {
+	return rcv.WAVELENGTHS(j)
+}
+
 func (rcv *IRO) WAVELENGTHSLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(56))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *IRO) WavelengthsLength() int {
+	return rcv.WAVELENGTHSLength()
 }
 
 /// Spectral data wavelengths in micrometers
@@ -414,6 +598,10 @@ func (rcv *IRO) MutateWAVELENGTHS(j int, n float64) bool {
 	return false
 }
 
+func (rcv *IRO) MutateWavelengths(j int, n float64) bool {
+	return rcv.MutateWAVELENGTHS(j, n)
+}
+
 /// Spectral data values in W/m^2/um
 func (rcv *IRO) SPECTRAL_VALUES(j int) float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(58))
@@ -424,12 +612,20 @@ func (rcv *IRO) SPECTRAL_VALUES(j int) float64 {
 	return 0
 }
 
+func (rcv *IRO) SpectralValues(j int) float64 {
+	return rcv.SPECTRAL_VALUES(j)
+}
+
 func (rcv *IRO) SPECTRAL_VALUESLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(58))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
+}
+
+func (rcv *IRO) SpectralValuesLength() int {
+	return rcv.SPECTRAL_VALUESLength()
 }
 
 /// Spectral data values in W/m^2/um
@@ -442,6 +638,10 @@ func (rcv *IRO) MutateSPECTRAL_VALUES(j int, n float64) bool {
 	return false
 }
 
+func (rcv *IRO) MutateSpectralValues(j int, n float64) bool {
+	return rcv.MutateSPECTRAL_VALUES(j, n)
+}
+
 /// Data quality indicator (0-9, 9=best)
 func (rcv *IRO) QUALITY() byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(60))
@@ -451,9 +651,17 @@ func (rcv *IRO) QUALITY() byte {
 	return 0
 }
 
+func (rcv *IRO) Quality() byte {
+	return rcv.QUALITY()
+}
+
 /// Data quality indicator (0-9, 9=best)
 func (rcv *IRO) MutateQUALITY(n byte) bool {
 	return rcv._tab.MutateByteSlot(60, n)
+}
+
+func (rcv *IRO) MutateQuality(n byte) bool {
+	return rcv.MutateQUALITY(n)
 }
 
 /// Additional notes
@@ -465,6 +673,10 @@ func (rcv *IRO) NOTES() []byte {
 	return nil
 }
 
+func (rcv *IRO) Notes() []byte {
+	return rcv.NOTES()
+}
+
 /// Additional notes
 func IROStart(builder *flatbuffers.Builder) {
 	builder.StartObject(30)
@@ -472,98 +684,194 @@ func IROStart(builder *flatbuffers.Builder) {
 func IROAddID(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ID), 0)
 }
+func IROAddId(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
+	IROAddID(builder, ID)
+}
 func IROAddID_ENTITY(builder *flatbuffers.Builder, ID_ENTITY flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(ID_ENTITY), 0)
+}
+func IROAddIdEntity(builder *flatbuffers.Builder, ID_ENTITY flatbuffers.UOffsetT) {
+	IROAddID_ENTITY(builder, ID_ENTITY)
 }
 func IROAddNAME(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(NAME), 0)
 }
+func IROAddName(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
+	IROAddNAME(builder, NAME)
+}
 func IROAddDESCRIPTION(builder *flatbuffers.Builder, DESCRIPTION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(DESCRIPTION), 0)
+}
+func IROAddDescription(builder *flatbuffers.Builder, DESCRIPTION flatbuffers.UOffsetT) {
+	IROAddDESCRIPTION(builder, DESCRIPTION)
 }
 func IROAddENTITY(builder *flatbuffers.Builder, ENTITY flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(ENTITY), 0)
 }
+func IROAddEntity(builder *flatbuffers.Builder, ENTITY flatbuffers.UOffsetT) {
+	IROAddENTITY(builder, ENTITY)
+}
 func IROAddEPOCH(builder *flatbuffers.Builder, EPOCH flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(EPOCH), 0)
+}
+func IROAddEpoch(builder *flatbuffers.Builder, EPOCH flatbuffers.UOffsetT) {
+	IROAddEPOCH(builder, EPOCH)
 }
 func IROAddSENSOR_ID(builder *flatbuffers.Builder, SENSOR_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(SENSOR_ID), 0)
 }
+func IROAddSensorId(builder *flatbuffers.Builder, SENSOR_ID flatbuffers.UOffsetT) {
+	IROAddSENSOR_ID(builder, SENSOR_ID)
+}
 func IROAddSAT_NO(builder *flatbuffers.Builder, SAT_NO uint32) {
 	builder.PrependUint32Slot(7, SAT_NO, 0)
+}
+func IROAddSatNo(builder *flatbuffers.Builder, SAT_NO uint32) {
+	IROAddSAT_NO(builder, SAT_NO)
 }
 func IROAddOBJECT_DESIGNATOR(builder *flatbuffers.Builder, OBJECT_DESIGNATOR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(OBJECT_DESIGNATOR), 0)
 }
+func IROAddObjectDesignator(builder *flatbuffers.Builder, OBJECT_DESIGNATOR flatbuffers.UOffsetT) {
+	IROAddOBJECT_DESIGNATOR(builder, OBJECT_DESIGNATOR)
+}
 func IROAddBAND(builder *flatbuffers.Builder, BAND irBand) {
 	builder.PrependInt8Slot(9, int8(BAND), 0)
+}
+func IROAddBand(builder *flatbuffers.Builder, BAND irBand) {
+	IROAddBAND(builder, BAND)
 }
 func IROAddDETECTION_TYPE(builder *flatbuffers.Builder, DETECTION_TYPE irDetectionType) {
 	builder.PrependInt8Slot(10, int8(DETECTION_TYPE), 0)
 }
+func IROAddDetectionType(builder *flatbuffers.Builder, DETECTION_TYPE irDetectionType) {
+	IROAddDETECTION_TYPE(builder, DETECTION_TYPE)
+}
 func IROAddRA(builder *flatbuffers.Builder, RA float64) {
 	builder.PrependFloat64Slot(11, RA, 0.0)
+}
+func IROAddRa(builder *flatbuffers.Builder, RA float64) {
+	IROAddRA(builder, RA)
 }
 func IROAddDEC(builder *flatbuffers.Builder, DEC float64) {
 	builder.PrependFloat64Slot(12, DEC, 0.0)
 }
+func IROAddDec(builder *flatbuffers.Builder, DEC float64) {
+	IROAddDEC(builder, DEC)
+}
 func IROAddRA_UNC(builder *flatbuffers.Builder, RA_UNC float64) {
 	builder.PrependFloat64Slot(13, RA_UNC, 0.0)
+}
+func IROAddRaUnc(builder *flatbuffers.Builder, RA_UNC float64) {
+	IROAddRA_UNC(builder, RA_UNC)
 }
 func IROAddDEC_UNC(builder *flatbuffers.Builder, DEC_UNC float64) {
 	builder.PrependFloat64Slot(14, DEC_UNC, 0.0)
 }
+func IROAddDecUnc(builder *flatbuffers.Builder, DEC_UNC float64) {
+	IROAddDEC_UNC(builder, DEC_UNC)
+}
 func IROAddAZIMUTH(builder *flatbuffers.Builder, AZIMUTH float64) {
 	builder.PrependFloat64Slot(15, AZIMUTH, 0.0)
+}
+func IROAddAzimuth(builder *flatbuffers.Builder, AZIMUTH float64) {
+	IROAddAZIMUTH(builder, AZIMUTH)
 }
 func IROAddELEVATION(builder *flatbuffers.Builder, ELEVATION float64) {
 	builder.PrependFloat64Slot(16, ELEVATION, 0.0)
 }
+func IROAddElevation(builder *flatbuffers.Builder, ELEVATION float64) {
+	IROAddELEVATION(builder, ELEVATION)
+}
 func IROAddRANGE(builder *flatbuffers.Builder, RANGE float64) {
 	builder.PrependFloat64Slot(17, RANGE, 0.0)
+}
+func IROAddRange(builder *flatbuffers.Builder, RANGE float64) {
+	IROAddRANGE(builder, RANGE)
 }
 func IROAddIRRADIANCE(builder *flatbuffers.Builder, IRRADIANCE float64) {
 	builder.PrependFloat64Slot(18, IRRADIANCE, 0.0)
 }
+func IROAddIrradiance(builder *flatbuffers.Builder, IRRADIANCE float64) {
+	IROAddIRRADIANCE(builder, IRRADIANCE)
+}
 func IROAddIRRADIANCE_UNC(builder *flatbuffers.Builder, IRRADIANCE_UNC float64) {
 	builder.PrependFloat64Slot(19, IRRADIANCE_UNC, 0.0)
+}
+func IROAddIrradianceUnc(builder *flatbuffers.Builder, IRRADIANCE_UNC float64) {
+	IROAddIRRADIANCE_UNC(builder, IRRADIANCE_UNC)
 }
 func IROAddIR_MAG(builder *flatbuffers.Builder, IR_MAG float64) {
 	builder.PrependFloat64Slot(20, IR_MAG, 0.0)
 }
+func IROAddIrMag(builder *flatbuffers.Builder, IR_MAG float64) {
+	IROAddIR_MAG(builder, IR_MAG)
+}
 func IROAddMAG_UNC(builder *flatbuffers.Builder, MAG_UNC float64) {
 	builder.PrependFloat64Slot(21, MAG_UNC, 0.0)
+}
+func IROAddMagUnc(builder *flatbuffers.Builder, MAG_UNC float64) {
+	IROAddMAG_UNC(builder, MAG_UNC)
 }
 func IROAddTEMPERATURE(builder *flatbuffers.Builder, TEMPERATURE float64) {
 	builder.PrependFloat64Slot(22, TEMPERATURE, 0.0)
 }
+func IROAddTemperature(builder *flatbuffers.Builder, TEMPERATURE float64) {
+	IROAddTEMPERATURE(builder, TEMPERATURE)
+}
 func IROAddINTEGRATION_TIME(builder *flatbuffers.Builder, INTEGRATION_TIME float64) {
 	builder.PrependFloat64Slot(23, INTEGRATION_TIME, 0.0)
+}
+func IROAddIntegrationTime(builder *flatbuffers.Builder, INTEGRATION_TIME float64) {
+	IROAddINTEGRATION_TIME(builder, INTEGRATION_TIME)
 }
 func IROAddBACKGROUND(builder *flatbuffers.Builder, BACKGROUND float64) {
 	builder.PrependFloat64Slot(24, BACKGROUND, 0.0)
 }
+func IROAddBackground(builder *flatbuffers.Builder, BACKGROUND float64) {
+	IROAddBACKGROUND(builder, BACKGROUND)
+}
 func IROAddSNR(builder *flatbuffers.Builder, SNR float64) {
 	builder.PrependFloat64Slot(25, SNR, 0.0)
+}
+func IROAddSnr(builder *flatbuffers.Builder, SNR float64) {
+	IROAddSNR(builder, SNR)
 }
 func IROAddWAVELENGTHS(builder *flatbuffers.Builder, WAVELENGTHS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(26, flatbuffers.UOffsetT(WAVELENGTHS), 0)
 }
+func IROAddWavelengths(builder *flatbuffers.Builder, WAVELENGTHS flatbuffers.UOffsetT) {
+	IROAddWAVELENGTHS(builder, WAVELENGTHS)
+}
 func IROStartWAVELENGTHSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(8, numElems, 8)
+}
+func IROStartWavelengthsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return IROStartWAVELENGTHSVector(builder, numElems)
 }
 func IROAddSPECTRAL_VALUES(builder *flatbuffers.Builder, SPECTRAL_VALUES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(27, flatbuffers.UOffsetT(SPECTRAL_VALUES), 0)
 }
+func IROAddSpectralValues(builder *flatbuffers.Builder, SPECTRAL_VALUES flatbuffers.UOffsetT) {
+	IROAddSPECTRAL_VALUES(builder, SPECTRAL_VALUES)
+}
 func IROStartSPECTRAL_VALUESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(8, numElems, 8)
+}
+func IROStartSpectralValuesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return IROStartSPECTRAL_VALUESVector(builder, numElems)
 }
 func IROAddQUALITY(builder *flatbuffers.Builder, QUALITY byte) {
 	builder.PrependByteSlot(28, QUALITY, 0)
 }
+func IROAddQuality(builder *flatbuffers.Builder, QUALITY byte) {
+	IROAddQUALITY(builder, QUALITY)
+}
 func IROAddNOTES(builder *flatbuffers.Builder, NOTES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(29, flatbuffers.UOffsetT(NOTES), 0)
+}
+func IROAddNotes(builder *flatbuffers.Builder, NOTES flatbuffers.UOffsetT) {
+	IROAddNOTES(builder, NOTES)
 }
 func IROEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

@@ -32,7 +32,7 @@ class ArgumentRefEntry : Table() {
     /**
      * Argument reference
      */
-    val ARGUMENT_REF : String?
+    val argumentRef : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,13 +41,13 @@ class ArgumentRefEntry : Table() {
                 null
             }
         }
-    val ARGUMENT_REFAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun ARGUMENT_REFInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val argumentRefAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun argumentRefInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Location in container
      */
-    val LOCATION : LocationInContainer? get() = LOCATION(LocationInContainer())
-    fun LOCATION(obj: LocationInContainer) : LocationInContainer? {
+    val location : LocationInContainer? get() = location(LocationInContainer())
+    fun location(obj: LocationInContainer) : LocationInContainer? {
         val o = __offset(6)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -58,7 +58,7 @@ class ArgumentRefEntry : Table() {
     /**
      * Short description
      */
-    val SHORT_DESCRIPTION : String?
+    val shortDescription : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -67,26 +67,26 @@ class ArgumentRefEntry : Table() {
                 null
             }
         }
-    val SHORT_DESCRIPTIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun SHORT_DESCRIPTIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    val shortDescriptionAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun shortDescriptionInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsArgumentRefEntry(_bb: ByteBuffer): ArgumentRefEntry = getRootAsArgumentRefEntry(_bb, ArgumentRefEntry())
         fun getRootAsArgumentRefEntry(_bb: ByteBuffer, obj: ArgumentRefEntry): ArgumentRefEntry {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createArgumentRefEntry(builder: FlatBufferBuilder, ARGUMENT_REFOffset: Int, LOCATIONOffset: Int, SHORT_DESCRIPTIONOffset: Int) : Int {
+        fun createArgumentRefEntry(builder: FlatBufferBuilder, argumentRefOffset: Int, locationOffset: Int, shortDescriptionOffset: Int) : Int {
             builder.startTable(3)
-            addSHORT_DESCRIPTION(builder, SHORT_DESCRIPTIONOffset)
-            addLOCATION(builder, LOCATIONOffset)
-            addARGUMENT_REF(builder, ARGUMENT_REFOffset)
+            addSHORTDESCRIPTION(builder, shortDescriptionOffset)
+            addLOCATION(builder, locationOffset)
+            addARGUMENTREF(builder, argumentRefOffset)
             return endArgumentRefEntry(builder)
         }
         fun startArgumentRefEntry(builder: FlatBufferBuilder) = builder.startTable(3)
-        fun addARGUMENT_REF(builder: FlatBufferBuilder, ARGUMENT_REF: Int) = builder.addOffset(0, ARGUMENT_REF, 0)
-        fun addLOCATION(builder: FlatBufferBuilder, LOCATION: Int) = builder.addOffset(1, LOCATION, 0)
-        fun addSHORT_DESCRIPTION(builder: FlatBufferBuilder, SHORT_DESCRIPTION: Int) = builder.addOffset(2, SHORT_DESCRIPTION, 0)
+        fun addARGUMENTREF(builder: FlatBufferBuilder, argumentRef: Int) = builder.addOffset(0, argumentRef, 0)
+        fun addLOCATION(builder: FlatBufferBuilder, location: Int) = builder.addOffset(1, location, 0)
+        fun addSHORTDESCRIPTION(builder: FlatBufferBuilder, shortDescription: Int) = builder.addOffset(2, shortDescription, 0)
         fun endArgumentRefEntry(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

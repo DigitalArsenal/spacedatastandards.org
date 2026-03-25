@@ -51,6 +51,10 @@ func (rcv *GPXLink) HREF() []byte {
 	return nil
 }
 
+func (rcv *GPXLink) Href() []byte {
+	return rcv.HREF()
+}
+
 /// URL
 /// Link text
 func (rcv *GPXLink) TEXT() []byte {
@@ -59,6 +63,10 @@ func (rcv *GPXLink) TEXT() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *GPXLink) Text() []byte {
+	return rcv.TEXT()
 }
 
 /// Link text
@@ -71,6 +79,10 @@ func (rcv *GPXLink) TYPE() []byte {
 	return nil
 }
 
+func (rcv *GPXLink) Type() []byte {
+	return rcv.TYPE()
+}
+
 /// MIME type
 func GPXLinkStart(builder *flatbuffers.Builder) {
 	builder.StartObject(3)
@@ -78,11 +90,20 @@ func GPXLinkStart(builder *flatbuffers.Builder) {
 func GPXLinkAddHREF(builder *flatbuffers.Builder, HREF flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(HREF), 0)
 }
+func GPXLinkAddHref(builder *flatbuffers.Builder, HREF flatbuffers.UOffsetT) {
+	GPXLinkAddHREF(builder, HREF)
+}
 func GPXLinkAddTEXT(builder *flatbuffers.Builder, TEXT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(TEXT), 0)
 }
+func GPXLinkAddText(builder *flatbuffers.Builder, TEXT flatbuffers.UOffsetT) {
+	GPXLinkAddTEXT(builder, TEXT)
+}
 func GPXLinkAddTYPE(builder *flatbuffers.Builder, TYPE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(TYPE), 0)
+}
+func GPXLinkAddType(builder *flatbuffers.Builder, TYPE flatbuffers.UOffsetT) {
+	GPXLinkAddTYPE(builder, TYPE)
 }
 func GPXLinkEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

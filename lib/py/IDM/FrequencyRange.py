@@ -73,15 +73,19 @@ def End(builder):
 class FrequencyRangeT(object):
 
     # FrequencyRangeT
-    def __init__(self):
-        self.LOWER = 0.0  # type: float
-        self.UPPER = 0.0  # type: float
+    def __init__(
+        self,
+        LOWER = 0.0,
+        UPPER = 0.0,
+    ):
+        self.LOWER = LOWER  # type: float
+        self.UPPER = UPPER  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        frequencyRange = FrequencyRange()
-        frequencyRange.Init(buf, pos)
-        return cls.InitFromObj(frequencyRange)
+        tmpFrequencyRange = FrequencyRange()
+        tmpFrequencyRange.Init(buf, pos)
+        return cls.InitFromObj(tmpFrequencyRange)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -89,22 +93,22 @@ class FrequencyRangeT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, frequencyRange):
+    def InitFromObj(cls, tmpFrequencyRange):
         x = FrequencyRangeT()
-        x._UnPack(frequencyRange)
+        x._UnPack(tmpFrequencyRange)
         return x
 
     # FrequencyRangeT
-    def _UnPack(self, frequencyRange):
-        if frequencyRange is None:
+    def _UnPack(self, FrequencyRange):
+        if FrequencyRange is None:
             return
-        self.LOWER = frequencyRange.LOWER()
-        self.UPPER = frequencyRange.UPPER()
+        self.LOWER = FrequencyRange.LOWER()
+        self.UPPER = FrequencyRange.UPPER()
 
     # FrequencyRangeT
     def Pack(self, builder):
         FrequencyRangeStart(builder)
         FrequencyRangeAddLOWER(builder, self.LOWER)
         FrequencyRangeAddUPPER(builder, self.UPPER)
-        frequencyRange = FrequencyRangeEnd(builder)
-        return frequencyRange
+        FrequencyRange = FrequencyRangeEnd(builder)
+        return FrequencyRange

@@ -51,9 +51,17 @@ func (rcv *ContainerBinaryEncoding) ERROR_DETECTION() ErrorDetectionType {
 	return 0
 }
 
+func (rcv *ContainerBinaryEncoding) ErrorDetection() ErrorDetectionType {
+	return rcv.ERROR_DETECTION()
+}
+
 /// Error detection type
 func (rcv *ContainerBinaryEncoding) MutateERROR_DETECTION(n ErrorDetectionType) bool {
 	return rcv._tab.MutateInt8Slot(4, int8(n))
+}
+
+func (rcv *ContainerBinaryEncoding) MutateErrorDetection(n ErrorDetectionType) bool {
+	return rcv.MutateERROR_DETECTION(n)
 }
 
 /// CRC polynomial (for CRC error detection)
@@ -63,6 +71,10 @@ func (rcv *ContainerBinaryEncoding) CRC_POLYNOMIAL() []byte {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+func (rcv *ContainerBinaryEncoding) CrcPolynomial() []byte {
+	return rcv.CRC_POLYNOMIAL()
 }
 
 /// CRC polynomial (for CRC error detection)
@@ -75,9 +87,17 @@ func (rcv *ContainerBinaryEncoding) SIZE_IN_BITS() uint32 {
 	return 0
 }
 
+func (rcv *ContainerBinaryEncoding) SizeInBits() uint32 {
+	return rcv.SIZE_IN_BITS()
+}
+
 /// Size in bits
 func (rcv *ContainerBinaryEncoding) MutateSIZE_IN_BITS(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(8, n)
+}
+
+func (rcv *ContainerBinaryEncoding) MutateSizeInBits(n uint32) bool {
+	return rcv.MutateSIZE_IN_BITS(n)
 }
 
 func ContainerBinaryEncodingStart(builder *flatbuffers.Builder) {
@@ -86,11 +106,20 @@ func ContainerBinaryEncodingStart(builder *flatbuffers.Builder) {
 func ContainerBinaryEncodingAddERROR_DETECTION(builder *flatbuffers.Builder, ERROR_DETECTION ErrorDetectionType) {
 	builder.PrependInt8Slot(0, int8(ERROR_DETECTION), 0)
 }
+func ContainerBinaryEncodingAddErrorDetection(builder *flatbuffers.Builder, ERROR_DETECTION ErrorDetectionType) {
+	ContainerBinaryEncodingAddERROR_DETECTION(builder, ERROR_DETECTION)
+}
 func ContainerBinaryEncodingAddCRC_POLYNOMIAL(builder *flatbuffers.Builder, CRC_POLYNOMIAL flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(CRC_POLYNOMIAL), 0)
 }
+func ContainerBinaryEncodingAddCrcPolynomial(builder *flatbuffers.Builder, CRC_POLYNOMIAL flatbuffers.UOffsetT) {
+	ContainerBinaryEncodingAddCRC_POLYNOMIAL(builder, CRC_POLYNOMIAL)
+}
 func ContainerBinaryEncodingAddSIZE_IN_BITS(builder *flatbuffers.Builder, SIZE_IN_BITS uint32) {
 	builder.PrependUint32Slot(2, SIZE_IN_BITS, 0)
+}
+func ContainerBinaryEncodingAddSizeInBits(builder *flatbuffers.Builder, SIZE_IN_BITS uint32) {
+	ContainerBinaryEncodingAddSIZE_IN_BITS(builder, SIZE_IN_BITS)
 }
 func ContainerBinaryEncodingEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

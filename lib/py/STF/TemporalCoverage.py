@@ -101,17 +101,23 @@ def End(builder):
 class TemporalCoverageT(object):
 
     # TemporalCoverageT
-    def __init__(self):
-        self.START_EPOCH = None  # type: str
-        self.END_EPOCH = None  # type: str
-        self.UPDATE_FREQUENCY = None  # type: str
-        self.HISTORICAL_DEPTH = 0  # type: int
+    def __init__(
+        self,
+        START_EPOCH = None,
+        END_EPOCH = None,
+        UPDATE_FREQUENCY = None,
+        HISTORICAL_DEPTH = 0,
+    ):
+        self.START_EPOCH = START_EPOCH  # type: Optional[str]
+        self.END_EPOCH = END_EPOCH  # type: Optional[str]
+        self.UPDATE_FREQUENCY = UPDATE_FREQUENCY  # type: Optional[str]
+        self.HISTORICAL_DEPTH = HISTORICAL_DEPTH  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        temporalCoverage = TemporalCoverage()
-        temporalCoverage.Init(buf, pos)
-        return cls.InitFromObj(temporalCoverage)
+        tmpTemporalCoverage = TemporalCoverage()
+        tmpTemporalCoverage.Init(buf, pos)
+        return cls.InitFromObj(tmpTemporalCoverage)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -119,19 +125,19 @@ class TemporalCoverageT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, temporalCoverage):
+    def InitFromObj(cls, tmpTemporalCoverage):
         x = TemporalCoverageT()
-        x._UnPack(temporalCoverage)
+        x._UnPack(tmpTemporalCoverage)
         return x
 
     # TemporalCoverageT
-    def _UnPack(self, temporalCoverage):
-        if temporalCoverage is None:
+    def _UnPack(self, TemporalCoverage):
+        if TemporalCoverage is None:
             return
-        self.START_EPOCH = temporalCoverage.START_EPOCH()
-        self.END_EPOCH = temporalCoverage.END_EPOCH()
-        self.UPDATE_FREQUENCY = temporalCoverage.UPDATE_FREQUENCY()
-        self.HISTORICAL_DEPTH = temporalCoverage.HISTORICAL_DEPTH()
+        self.START_EPOCH = TemporalCoverage.START_EPOCH()
+        self.END_EPOCH = TemporalCoverage.END_EPOCH()
+        self.UPDATE_FREQUENCY = TemporalCoverage.UPDATE_FREQUENCY()
+        self.HISTORICAL_DEPTH = TemporalCoverage.HISTORICAL_DEPTH()
 
     # TemporalCoverageT
     def Pack(self, builder):
@@ -149,5 +155,5 @@ class TemporalCoverageT(object):
         if self.UPDATE_FREQUENCY is not None:
             TemporalCoverageAddUPDATE_FREQUENCY(builder, UPDATE_FREQUENCY)
         TemporalCoverageAddHISTORICAL_DEPTH(builder, self.HISTORICAL_DEPTH)
-        temporalCoverage = TemporalCoverageEnd(builder)
-        return temporalCoverage
+        TemporalCoverage = TemporalCoverageEnd(builder)
+        return TemporalCoverage

@@ -11,52 +11,52 @@ public struct SCHEMA_STANDARD : IFlatbufferObject
 {
   private Table __p;
   public ByteBuffer ByteBuffer { get { return __p.bb; } }
-  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_24_3_25(); }
+  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_25_12_19(); }
   public static SCHEMA_STANDARD GetRootAsSCHEMA_STANDARD(ByteBuffer _bb) { return GetRootAsSCHEMA_STANDARD(_bb, new SCHEMA_STANDARD()); }
   public static SCHEMA_STANDARD GetRootAsSCHEMA_STANDARD(ByteBuffer _bb, SCHEMA_STANDARD obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public SCHEMA_STANDARD __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
   /// Unique identifier for the standard
-  public string Key { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string key { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetKeyBytes() { return __p.__vector_as_span<byte>(4, 1); }
+  public Span<byte> GetkeyBytes() { return __p.__vector_as_span<byte>(4, 1); }
 #else
-  public ArraySegment<byte>? GetKeyBytes() { return __p.__vector_as_arraysegment(4); }
+  public ArraySegment<byte>? GetkeyBytes() { return __p.__vector_as_arraysegment(4); }
 #endif
-  public byte[] GetKeyArray() { return __p.__vector_as_array<byte>(4); }
+  public byte[] GetkeyArray() { return __p.__vector_as_array<byte>(4); }
   /// IDL
-  public string Idl { get { int o = __p.__offset(6); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string idl { get { int o = __p.__offset(6); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetIdlBytes() { return __p.__vector_as_span<byte>(6, 1); }
+  public Span<byte> GetidlBytes() { return __p.__vector_as_span<byte>(6, 1); }
 #else
-  public ArraySegment<byte>? GetIdlBytes() { return __p.__vector_as_arraysegment(6); }
+  public ArraySegment<byte>? GetidlBytes() { return __p.__vector_as_arraysegment(6); }
 #endif
-  public byte[] GetIdlArray() { return __p.__vector_as_array<byte>(6); }
+  public byte[] GetidlArray() { return __p.__vector_as_array<byte>(6); }
   /// List Of File Paths
-  public string Files(int j) { int o = __p.__offset(8); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
-  public int FilesLength { get { int o = __p.__offset(8); return o != 0 ? __p.__vector_len(o) : 0; } }
+  public string files(int j) { int o = __p.__offset(8); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
+  public int filesLength { get { int o = __p.__offset(8); return o != 0 ? __p.__vector_len(o) : 0; } }
 
   public static Offset<SCHEMA_STANDARD> CreateSCHEMA_STANDARD(FlatBufferBuilder builder,
       StringOffset keyOffset = default(StringOffset),
       StringOffset idlOffset = default(StringOffset),
       VectorOffset filesOffset = default(VectorOffset)) {
     builder.StartTable(3);
-    SCHEMA_STANDARD.AddFiles(builder, filesOffset);
-    SCHEMA_STANDARD.AddIdl(builder, idlOffset);
-    SCHEMA_STANDARD.AddKey(builder, keyOffset);
+    SCHEMA_STANDARD.Addfiles(builder, filesOffset);
+    SCHEMA_STANDARD.Addidl(builder, idlOffset);
+    SCHEMA_STANDARD.Addkey(builder, keyOffset);
     return SCHEMA_STANDARD.EndSCHEMA_STANDARD(builder);
   }
 
   public static void StartSCHEMA_STANDARD(FlatBufferBuilder builder) { builder.StartTable(3); }
-  public static void AddKey(FlatBufferBuilder builder, StringOffset keyOffset) { builder.AddOffset(0, keyOffset.Value, 0); }
-  public static void AddIdl(FlatBufferBuilder builder, StringOffset idlOffset) { builder.AddOffset(1, idlOffset.Value, 0); }
-  public static void AddFiles(FlatBufferBuilder builder, VectorOffset filesOffset) { builder.AddOffset(2, filesOffset.Value, 0); }
-  public static VectorOffset CreateFilesVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
-  public static VectorOffset CreateFilesVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateFilesVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateFilesVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
-  public static void StartFilesVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void Addkey(FlatBufferBuilder builder, StringOffset keyOffset) { builder.AddOffset(0, keyOffset.Value, 0); }
+  public static void Addidl(FlatBufferBuilder builder, StringOffset idlOffset) { builder.AddOffset(1, idlOffset.Value, 0); }
+  public static void Addfiles(FlatBufferBuilder builder, VectorOffset filesOffset) { builder.AddOffset(2, filesOffset.Value, 0); }
+  public static VectorOffset CreatefilesVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreatefilesVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreatefilesVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreatefilesVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartfilesVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static Offset<SCHEMA_STANDARD> EndSCHEMA_STANDARD(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<SCHEMA_STANDARD>(o);
@@ -67,20 +67,20 @@ public struct SCHEMA_STANDARD : IFlatbufferObject
     return _o;
   }
   public void UnPackTo(SCHEMA_STANDARDT _o) {
-    _o.Key = this.Key;
-    _o.Idl = this.Idl;
-    _o.Files = new List<string>();
-    for (var _j = 0; _j < this.FilesLength; ++_j) {_o.Files.Add(this.Files(_j));}
+    _o.key = this.key;
+    _o.idl = this.idl;
+    _o.files = new List<string>();
+    for (var _j = 0; _j < this.filesLength; ++_j) {_o.files.Add(this.files(_j));}
   }
   public static Offset<SCHEMA_STANDARD> Pack(FlatBufferBuilder builder, SCHEMA_STANDARDT _o) {
     if (_o == null) return default(Offset<SCHEMA_STANDARD>);
-    var _key = _o.Key == null ? default(StringOffset) : builder.CreateString(_o.Key);
-    var _idl = _o.Idl == null ? default(StringOffset) : builder.CreateString(_o.Idl);
+    var _key = _o.key == null ? default(StringOffset) : builder.CreateString(_o.key);
+    var _idl = _o.idl == null ? default(StringOffset) : builder.CreateString(_o.idl);
     var _files = default(VectorOffset);
-    if (_o.Files != null) {
-      var __files = new StringOffset[_o.Files.Count];
-      for (var _j = 0; _j < __files.Length; ++_j) { __files[_j] = builder.CreateString(_o.Files[_j]); }
-      _files = CreateFilesVector(builder, __files);
+    if (_o.files != null) {
+      var __files = new StringOffset[_o.files.Count];
+      for (var _j = 0; _j < __files.Length; ++_j) { __files[_j] = builder.CreateString(_o.files[_j]); }
+      _files = CreatefilesVector(builder, __files);
     }
     return CreateSCHEMA_STANDARD(
       builder,
@@ -92,14 +92,14 @@ public struct SCHEMA_STANDARD : IFlatbufferObject
 
 public class SCHEMA_STANDARDT
 {
-  public string Key { get; set; }
-  public string Idl { get; set; }
-  public List<string> Files { get; set; }
+  public string key { get; set; }
+  public string idl { get; set; }
+  public List<string> files { get; set; }
 
   public SCHEMA_STANDARDT() {
-    this.Key = null;
-    this.Idl = null;
-    this.Files = null;
+    this.key = null;
+    this.idl = null;
+    this.files = null;
   }
 }
 
@@ -109,9 +109,9 @@ static public class SCHEMA_STANDARDVerify
   static public bool Verify(Google.FlatBuffers.Verifier verifier, uint tablePos)
   {
     return verifier.VerifyTableStart(tablePos)
-      && verifier.VerifyString(tablePos, 4 /*Key*/, false)
-      && verifier.VerifyString(tablePos, 6 /*Idl*/, false)
-      && verifier.VerifyVectorOfStrings(tablePos, 8 /*Files*/, false)
+      && verifier.VerifyString(tablePos, 4 /*key*/, false)
+      && verifier.VerifyString(tablePos, 6 /*idl*/, false)
+      && verifier.VerifyVectorOfStrings(tablePos, 8 /*files*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

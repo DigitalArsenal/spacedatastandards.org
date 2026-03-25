@@ -73,15 +73,19 @@ def End(builder):
 class CommandSignificanceT(object):
 
     # CommandSignificanceT
-    def __init__(self):
-        self.CONSEQUENCE_LEVEL = 0  # type: int
-        self.REASON_FOR_WARNING = None  # type: str
+    def __init__(
+        self,
+        CONSEQUENCE_LEVEL = 0,
+        REASON_FOR_WARNING = None,
+    ):
+        self.CONSEQUENCE_LEVEL = CONSEQUENCE_LEVEL  # type: int
+        self.REASON_FOR_WARNING = REASON_FOR_WARNING  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        commandSignificance = CommandSignificance()
-        commandSignificance.Init(buf, pos)
-        return cls.InitFromObj(commandSignificance)
+        tmpCommandSignificance = CommandSignificance()
+        tmpCommandSignificance.Init(buf, pos)
+        return cls.InitFromObj(tmpCommandSignificance)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -89,17 +93,17 @@ class CommandSignificanceT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, commandSignificance):
+    def InitFromObj(cls, tmpCommandSignificance):
         x = CommandSignificanceT()
-        x._UnPack(commandSignificance)
+        x._UnPack(tmpCommandSignificance)
         return x
 
     # CommandSignificanceT
-    def _UnPack(self, commandSignificance):
-        if commandSignificance is None:
+    def _UnPack(self, CommandSignificance):
+        if CommandSignificance is None:
             return
-        self.CONSEQUENCE_LEVEL = commandSignificance.CONSEQUENCE_LEVEL()
-        self.REASON_FOR_WARNING = commandSignificance.REASON_FOR_WARNING()
+        self.CONSEQUENCE_LEVEL = CommandSignificance.CONSEQUENCE_LEVEL()
+        self.REASON_FOR_WARNING = CommandSignificance.REASON_FOR_WARNING()
 
     # CommandSignificanceT
     def Pack(self, builder):
@@ -109,5 +113,5 @@ class CommandSignificanceT(object):
         CommandSignificanceAddCONSEQUENCE_LEVEL(builder, self.CONSEQUENCE_LEVEL)
         if self.REASON_FOR_WARNING is not None:
             CommandSignificanceAddREASON_FOR_WARNING(builder, REASON_FOR_WARNING)
-        commandSignificance = CommandSignificanceEnd(builder)
-        return commandSignificance
+        CommandSignificance = CommandSignificanceEnd(builder)
+        return CommandSignificance

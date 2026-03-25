@@ -32,7 +32,7 @@ class AlgorithmTrigger : Table() {
     /**
      * Trigger on parameter update
      */
-    val PARAMETER_REF : String?
+    val parameterRef : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,12 +41,12 @@ class AlgorithmTrigger : Table() {
                 null
             }
         }
-    val PARAMETER_REFAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun PARAMETER_REFInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val parameterRefAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun parameterRefInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Trigger on container reception
      */
-    val CONTAINER_REF : String?
+    val containerRef : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -55,34 +55,34 @@ class AlgorithmTrigger : Table() {
                 null
             }
         }
-    val CONTAINER_REFAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun CONTAINER_REFInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val containerRefAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun containerRefInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     /**
      * Trigger rate (per second)
      */
-    val RATE : Double
+    val rate : Double
         get() {
             val o = __offset(8)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsAlgorithmTrigger(_bb: ByteBuffer): AlgorithmTrigger = getRootAsAlgorithmTrigger(_bb, AlgorithmTrigger())
         fun getRootAsAlgorithmTrigger(_bb: ByteBuffer, obj: AlgorithmTrigger): AlgorithmTrigger {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createAlgorithmTrigger(builder: FlatBufferBuilder, PARAMETER_REFOffset: Int, CONTAINER_REFOffset: Int, RATE: Double) : Int {
+        fun createAlgorithmTrigger(builder: FlatBufferBuilder, parameterRefOffset: Int, containerRefOffset: Int, rate: Double) : Int {
             builder.startTable(3)
-            addRATE(builder, RATE)
-            addCONTAINER_REF(builder, CONTAINER_REFOffset)
-            addPARAMETER_REF(builder, PARAMETER_REFOffset)
+            addRATE(builder, rate)
+            addCONTAINERREF(builder, containerRefOffset)
+            addPARAMETERREF(builder, parameterRefOffset)
             return endAlgorithmTrigger(builder)
         }
         fun startAlgorithmTrigger(builder: FlatBufferBuilder) = builder.startTable(3)
-        fun addPARAMETER_REF(builder: FlatBufferBuilder, PARAMETER_REF: Int) = builder.addOffset(0, PARAMETER_REF, 0)
-        fun addCONTAINER_REF(builder: FlatBufferBuilder, CONTAINER_REF: Int) = builder.addOffset(1, CONTAINER_REF, 0)
-        fun addRATE(builder: FlatBufferBuilder, RATE: Double) = builder.addDouble(2, RATE, 0.0)
+        fun addPARAMETERREF(builder: FlatBufferBuilder, parameterRef: Int) = builder.addOffset(0, parameterRef, 0)
+        fun addCONTAINERREF(builder: FlatBufferBuilder, containerRef: Int) = builder.addOffset(1, containerRef, 0)
+        fun addRATE(builder: FlatBufferBuilder, rate: Double) = builder.addDouble(2, rate, 0.0)
         fun endAlgorithmTrigger(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

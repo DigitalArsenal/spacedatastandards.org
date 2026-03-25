@@ -32,7 +32,7 @@ class EnumerationAlarm : Table() {
     /**
      * Enumerated value label
      */
-    val LABEL : String?
+    val label : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,32 +41,32 @@ class EnumerationAlarm : Table() {
                 null
             }
         }
-    val LABELAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
-    fun LABELInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    val labelAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun labelInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Alarm level for this value
      */
-    val ALARM_LEVEL : Byte
+    val alarmLevel : Byte
         get() {
             val o = __offset(6)
             return if(o != 0) bb.get(o + bb_pos) else 0
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsEnumerationAlarm(_bb: ByteBuffer): EnumerationAlarm = getRootAsEnumerationAlarm(_bb, EnumerationAlarm())
         fun getRootAsEnumerationAlarm(_bb: ByteBuffer, obj: EnumerationAlarm): EnumerationAlarm {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createEnumerationAlarm(builder: FlatBufferBuilder, LABELOffset: Int, ALARM_LEVEL: Byte) : Int {
+        fun createEnumerationAlarm(builder: FlatBufferBuilder, labelOffset: Int, alarmLevel: Byte) : Int {
             builder.startTable(2)
-            addLABEL(builder, LABELOffset)
-            addALARM_LEVEL(builder, ALARM_LEVEL)
+            addLABEL(builder, labelOffset)
+            addALARMLEVEL(builder, alarmLevel)
             return endEnumerationAlarm(builder)
         }
         fun startEnumerationAlarm(builder: FlatBufferBuilder) = builder.startTable(2)
-        fun addLABEL(builder: FlatBufferBuilder, LABEL: Int) = builder.addOffset(0, LABEL, 0)
-        fun addALARM_LEVEL(builder: FlatBufferBuilder, ALARM_LEVEL: Byte) = builder.addByte(1, ALARM_LEVEL, 0)
+        fun addLABEL(builder: FlatBufferBuilder, label: Int) = builder.addOffset(0, label, 0)
+        fun addALARMLEVEL(builder: FlatBufferBuilder, alarmLevel: Byte) = builder.addByte(1, alarmLevel, 0)
         fun endEnumerationAlarm(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

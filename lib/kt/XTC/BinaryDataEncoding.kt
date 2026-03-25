@@ -32,7 +32,7 @@ class BinaryDataEncoding : Table() {
     /**
      * Fixed size in bits
      */
-    val SIZE_IN_BITS : UShort
+    val sizeInBits : UShort
         get() {
             val o = __offset(4)
             return if(o != 0) bb.getShort(o + bb_pos).toUShort() else 0u
@@ -40,7 +40,7 @@ class BinaryDataEncoding : Table() {
     /**
      * Maximum size in bits (for variable length)
      */
-    val MAX_SIZE_IN_BITS : UShort
+    val maxSizeInBits : UShort
         get() {
             val o = __offset(6)
             return if(o != 0) bb.getShort(o + bb_pos).toUShort() else 0u
@@ -48,29 +48,29 @@ class BinaryDataEncoding : Table() {
     /**
      * Leading size field bits (for variable length)
      */
-    val LEADING_SIZE_BITS : UByte
+    val leadingSizeBits : UByte
         get() {
             val o = __offset(8)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
         }
     companion object {
-        fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
+        fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsBinaryDataEncoding(_bb: ByteBuffer): BinaryDataEncoding = getRootAsBinaryDataEncoding(_bb, BinaryDataEncoding())
         fun getRootAsBinaryDataEncoding(_bb: ByteBuffer, obj: BinaryDataEncoding): BinaryDataEncoding {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createBinaryDataEncoding(builder: FlatBufferBuilder, SIZE_IN_BITS: UShort, MAX_SIZE_IN_BITS: UShort, LEADING_SIZE_BITS: UByte) : Int {
+        fun createBinaryDataEncoding(builder: FlatBufferBuilder, sizeInBits: UShort, maxSizeInBits: UShort, leadingSizeBits: UByte) : Int {
             builder.startTable(3)
-            addMAX_SIZE_IN_BITS(builder, MAX_SIZE_IN_BITS)
-            addSIZE_IN_BITS(builder, SIZE_IN_BITS)
-            addLEADING_SIZE_BITS(builder, LEADING_SIZE_BITS)
+            addMAXSIZEINBITS(builder, maxSizeInBits)
+            addSIZEINBITS(builder, sizeInBits)
+            addLEADINGSIZEBITS(builder, leadingSizeBits)
             return endBinaryDataEncoding(builder)
         }
         fun startBinaryDataEncoding(builder: FlatBufferBuilder) = builder.startTable(3)
-        fun addSIZE_IN_BITS(builder: FlatBufferBuilder, SIZE_IN_BITS: UShort) = builder.addShort(0, SIZE_IN_BITS.toShort(), 0)
-        fun addMAX_SIZE_IN_BITS(builder: FlatBufferBuilder, MAX_SIZE_IN_BITS: UShort) = builder.addShort(1, MAX_SIZE_IN_BITS.toShort(), 0)
-        fun addLEADING_SIZE_BITS(builder: FlatBufferBuilder, LEADING_SIZE_BITS: UByte) = builder.addByte(2, LEADING_SIZE_BITS.toByte(), 0)
+        fun addSIZEINBITS(builder: FlatBufferBuilder, sizeInBits: UShort) = builder.addShort(0, sizeInBits.toShort(), 0)
+        fun addMAXSIZEINBITS(builder: FlatBufferBuilder, maxSizeInBits: UShort) = builder.addShort(1, maxSizeInBits.toShort(), 0)
+        fun addLEADINGSIZEBITS(builder: FlatBufferBuilder, leadingSizeBits: UByte) = builder.addByte(2, leadingSizeBits.toByte(), 0)
         fun endBinaryDataEncoding(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

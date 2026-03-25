@@ -129,19 +129,27 @@ def End(builder):
 class StringDataEncodingT(object):
 
     # StringDataEncodingT
-    def __init__(self):
-        self.ENCODING = 3  # type: int
-        self.SIZE_TYPE = 0  # type: int
-        self.SIZE_IN_BITS = 0  # type: int
-        self.TERMINATION_CHAR = 0  # type: int
-        self.MAX_SIZE_IN_BITS = 0  # type: int
-        self.LEADING_SIZE_BITS = 0  # type: int
+    def __init__(
+        self,
+        ENCODING = 3,
+        SIZE_TYPE = 0,
+        SIZE_IN_BITS = 0,
+        TERMINATION_CHAR = 0,
+        MAX_SIZE_IN_BITS = 0,
+        LEADING_SIZE_BITS = 0,
+    ):
+        self.ENCODING = ENCODING  # type: int
+        self.SIZE_TYPE = SIZE_TYPE  # type: int
+        self.SIZE_IN_BITS = SIZE_IN_BITS  # type: int
+        self.TERMINATION_CHAR = TERMINATION_CHAR  # type: int
+        self.MAX_SIZE_IN_BITS = MAX_SIZE_IN_BITS  # type: int
+        self.LEADING_SIZE_BITS = LEADING_SIZE_BITS  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
-        stringDataEncoding = StringDataEncoding()
-        stringDataEncoding.Init(buf, pos)
-        return cls.InitFromObj(stringDataEncoding)
+        tmpStringDataEncoding = StringDataEncoding()
+        tmpStringDataEncoding.Init(buf, pos)
+        return cls.InitFromObj(tmpStringDataEncoding)
 
     @classmethod
     def InitFromPackedBuf(cls, buf, pos=0):
@@ -149,21 +157,21 @@ class StringDataEncodingT(object):
         return cls.InitFromBuf(buf, pos+n)
 
     @classmethod
-    def InitFromObj(cls, stringDataEncoding):
+    def InitFromObj(cls, tmpStringDataEncoding):
         x = StringDataEncodingT()
-        x._UnPack(stringDataEncoding)
+        x._UnPack(tmpStringDataEncoding)
         return x
 
     # StringDataEncodingT
-    def _UnPack(self, stringDataEncoding):
-        if stringDataEncoding is None:
+    def _UnPack(self, StringDataEncoding):
+        if StringDataEncoding is None:
             return
-        self.ENCODING = stringDataEncoding.ENCODING()
-        self.SIZE_TYPE = stringDataEncoding.SIZE_TYPE()
-        self.SIZE_IN_BITS = stringDataEncoding.SIZE_IN_BITS()
-        self.TERMINATION_CHAR = stringDataEncoding.TERMINATION_CHAR()
-        self.MAX_SIZE_IN_BITS = stringDataEncoding.MAX_SIZE_IN_BITS()
-        self.LEADING_SIZE_BITS = stringDataEncoding.LEADING_SIZE_BITS()
+        self.ENCODING = StringDataEncoding.ENCODING()
+        self.SIZE_TYPE = StringDataEncoding.SIZE_TYPE()
+        self.SIZE_IN_BITS = StringDataEncoding.SIZE_IN_BITS()
+        self.TERMINATION_CHAR = StringDataEncoding.TERMINATION_CHAR()
+        self.MAX_SIZE_IN_BITS = StringDataEncoding.MAX_SIZE_IN_BITS()
+        self.LEADING_SIZE_BITS = StringDataEncoding.LEADING_SIZE_BITS()
 
     # StringDataEncodingT
     def Pack(self, builder):
@@ -174,5 +182,5 @@ class StringDataEncodingT(object):
         StringDataEncodingAddTERMINATION_CHAR(builder, self.TERMINATION_CHAR)
         StringDataEncodingAddMAX_SIZE_IN_BITS(builder, self.MAX_SIZE_IN_BITS)
         StringDataEncodingAddLEADING_SIZE_BITS(builder, self.LEADING_SIZE_BITS)
-        stringDataEncoding = StringDataEncodingEnd(builder)
-        return stringDataEncoding
+        StringDataEncoding = StringDataEncodingEnd(builder)
+        return StringDataEncoding
